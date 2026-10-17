@@ -85,7 +85,7 @@ button.bat { border-color:var(--vang); color:var(--vang); }
 <h2>Toàn bộ khung của animation</h2>
 <div class="pixel"><canvas id="dai"></canvas></div>
 <div class="ghi">Mỗi khung ×3 · số dưới khung là hold (ms) · khung vàng = cờ hit. Lệch khép vòng (áo/chuông, px): <code id="lech">–</code></div>
-<div class="ghi"><b>Idle 64</b> (vòng 2 – ngoại hình chỉnh theo review: mũ nhọn ngả sau, áo choàng dài vạt rách, chuôi/chắn kiếm lộ, chuông ngoài mũ, ủng to có vạch): 6 khung · 8 FPS · ô 64×64 · pivot [32,63] · kiếm ở tay xa, chuông sau vai gần – xuất bằng <code>python3 proto-lam/xuat-idle.py</code> → <code>out/idle/</code> + <code>game/anim/lam-idle-proto.png</code>. Run/Slash là bản cũ (chưa chỉnh theo mô hình mới). Xuất cũ: <code>xuat.py</code>. Đề xuất kỹ thuật: <code>DE-XUAT.md</code>.</div>
+<div class="ghi"><b>Idle 64</b> (vòng 3 – chỉnh ngoại hình cuối: chuông treo sau mũ cách mép mũ 3 px có dây chéo 1 px, áo choàng xoè sau thêm 2–3 px với 3 vạt rách mũi 1 px, mũi/gót ủng nhô 1 px, đầu kiếm hạ 3 px; vòng 2: mũ nhọn ngả sau, áo choàng dài, chuôi/chắn kiếm lộ, ủng to có vạch): 6 khung · 8 FPS · ô 64×64 · pivot [32,63] · kiếm ở tay xa, chuông sau vai gần – xuất bằng <code>python3 proto-lam/xuat-idle.py</code> → <code>out/idle/</code> + <code>game/anim/lam-idle-proto.png</code>. Run/Slash là bản cũ (chưa chỉnh theo mô hình mới). Xuất cũ: <code>xuat.py</code>. Đề xuất kỹ thuật: <code>DE-XUAT.md</code>.</div>
 
 <script>/* vendor/three.min.js */
 console.warn( 'Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation' );
@@ -315,19 +315,19 @@ PROTO.tao = function (THREE, tuy) {
     var ban = xuong('banChan' + s, co, 0, 0, 0);
     var ong = luoi(capsule(0.062, 0.08, 10), vlG, ban); ong.position.set(0, 0.05, 0);   // ống ủng to hơn (vòng 2); đỉnh ống + vạch ≈ 0,19 → luôn dưới gấu áo ≥ 1 hàng pixel
     var vong = luoi(new THREE.TorusGeometry(0.06, 0.02, 6, 14), vlV, ban); vong.rotation.x = Math.PI / 2; vong.position.set(0, 0.125, 0);   // vạch xanh cổ ủng ≈ 2 px ở mép trên ống
-    var g = capsule(0.04, 0.10, 8); g.rotateZ(Math.PI / 2); var bc = luoi(g, vlG, ban); bc.position.set(0.04, 0.006, 0);
+    var g = capsule(0.04, 0.16, 8); g.rotateZ(Math.PI / 2); var bc = luoi(g, vlG, ban); bc.position.set(0.03, 0.006, 0);   // vòng 3: bàn chân dài 0,10 → 0,16, tâm lùi 0,01 → gót nhô thêm ≈1–2 px, mũi ≈1 px; cao/đáy giữ nguyên
     return { dui: dui, goi: goi, co: co, ban: ban };
   }
   B.chanG = chan('G', VL.quanG, VL.giayG, VL.vachG, 0.07);
   B.chanX = chan('X', VL.quanX, VL.giayX, VL.vachX, -0.07);
 
   /* ---------- áo choàng dài (lưới tham số, 5 đoạn con lắc, hở trước) ---------- */
-  var AO_ROWS = 7, AO_COLS = 19, AO_L = [0.06, 0.06, 0.06, 0.06, 0.06, 0.06], AO_PHI = 96 * deg;   // phủ lưng 192°, hở trước để thấy thân, trâm và tay; vòng 2: 6 đoạn, dài tới gần mắt cá
-  var AO_REST = [0.06, 0.15, 0.25, 0.36, 0.46, 0.54];   // góc xoè tĩnh về sau (rad) – vạt áo hất mạnh ra sau như mẫu
+  var AO_ROWS = 7, AO_COLS = 19, AO_L = [0.062, 0.062, 0.062, 0.062, 0.062, 0.062], AO_PHI = 96 * deg;   // phủ lưng 192°, hở trước để thấy thân, trâm và tay; vòng 2: 6 đoạn, dài tới gần mắt cá
+  var AO_REST = [0.06, 0.16, 0.28, 0.40, 0.52, 0.62];   // góc xoè tĩnh về sau (rad) – vạt áo hất mạnh ra sau như mẫu; vòng 3: 3 đoạn dưới xoè thêm → gấu lùi ra sau thêm 2–3 px
   // gấu: phía sau dài (gần mắt cá), hai mép trước ngắn hơn (≈ ngang hông như mẫu); 3 vạt rách rõ ở lưng/bên gần
   // AO_DAI: hệ số chiều dài từng cột (cột 0 = mép trước bên gần, 6 = giữa lưng, 12 = mép trước bên xa); AO_VAT: gấu kéo xuống thêm (+) / ngắn bớt (−) → 3 vạt rách dọc mép dưới (x≈15, 19, 24 px), khía (−) ở giữa
   var AO_DAI = [0.62, 0.68, 0.75, 0.84, 0.95, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.97, 0.94, 0.9, 0.87, 0.85];
-  var AO_VAT = [0.05, -0.03, 0.07, 0.07, -0.03, 0.08, 0.08, 0.08, 0.08, 0.06, -0.03, -0.03, 0.07, -0.03, 0.05, -0.02, 0, 0, 0];   // 19 cột, chọn theo vị trí chiếu lên màn hình (cột gần và cột xa trùng x thì cùng vạt/khía)   // kéo THẲNG XUỐNG (không theo hướng rủ) để vạt không gập chồng lên khía khi chiếu
+  var AO_VAT = [0.03, 0.14, -0.04, 0.14, -0.04, 0.07, 0.14, 0.14, 0.07, -0.02, -0.04, -0.04, -0.04, -0.04, -0.02, 0, 0, 0, 0];   // vòng 3: mỗi vạt = 1 cột kéo sâu (+0,14 ≈ 6 px; mũi tam giác mất ≈1 px khi gộp 2×2 → còn ≈5 px) kẹp giữa 2 khía −0,04 → tam giác nhọn, mũi 1–2 px; vạt ở cột 1 (x≈22), 3 (x≈18), 6–7 (lưng, x≈13); bên xa (cột 10–14) khía bằng để không lấp khía bên gần   // 19 cột, chọn theo vị trí chiếu lên màn hình (cột gần và cột xa trùng x thì cùng vạt/khía)   // kéo THẲNG XUỐNG (không theo hướng rủ) để vạt không gập chồng lên khía khi chiếu
   var aoGeo = luoiThamSo(AO_ROWS, AO_COLS, true);
   var aoMesh = luoi(aoGeo, VL.ao, top, 'ao');   // dựng trong hệ top (thế giới nhân vật)
   var AO_NEO = new V3(0.0, 0.10, 0);            // điểm giữa vòng cổ trong hệ nguc (y≈0.53)
@@ -347,7 +347,7 @@ PROTO.tao = function (THREE, tuy) {
       tmpV2.set(-Math.cos(phi), 0, Math.sin(phi)); tmpV2.applyQuaternion(B.nguc.getWorldQuaternion(tmpQ)); tmpV2.y = 0; tmpV2.normalize();
       for (var r = 0; r < AO_ROWS; r++) {
         var i = r * AO_COLS + c;
-        var fl = r * 0.022;   // vòng 2: toả hình quạt ra ngoài theo hàng (gấu rộng, không bị nhìn cạnh)
+        var fl = r * 0.030;   // vòng 2: toả hình quạt ra ngoài theo hàng (gấu rộng, không bị nhìn cạnh); vòng 3: 0,022 → 0,030 → gấu lưng lùi ra sau thêm ≈1,5–2 px mà không nâng gấu
         P[i * 3] = x + tmpV2.x * fl; P[i * 3 + 1] = y; P[i * 3 + 2] = z + tmpV2.z * fl;
         T[i] = (r === AO_ROWS - 1 || c === 0 || c === AO_COLS - 1) ? 1 : 0;
         if (r < AO_ROWS - 1) {
@@ -364,10 +364,11 @@ PROTO.tao = function (THREE, tuy) {
     aoGeo.attributes.position.needsUpdate = true; aoGeo.attributes.aTrim.needsUpdate = true; aoGeo.computeVertexNormals();
   }
   /* ---------- chuông sau vai trái (gần camera) – con lắc cầu ---------- */
-  var CH_NEO = new V3(-0.245, 0.275, -0.06);   // hệ nguc: sau vai trái, ngoài mép lưng mũ (y≈0,72) → chuông nổi hẳn ngoài mũ, dưới chỏm mũ như mẫu
-  var CH_L = 0.05;   // dây
+  var CH_NEO = new V3(-0.248, 0.275, -0.06);   // hệ nguc: sau vai trái, khoen treo chạm đúng mép lưng mũ (y≈0,72, pixel (22,30))
+  var CH_L = 0.10;   // dây (vòng 3: 0,05 → 0,10 ≈ 4–5 px, thấy rõ từ khoen xuống chuông)
+  var CH_REST = 0.50;   // vòng 3: chuông treo ngả ra sau 0,5 rad (như khoen bị mũ đẩy ra) → thân chuông cách mép lưng mũ 3 px nền, không che mặt; không đổi camera
   var chuong = new THREE.Object3D(); top.add(chuong); lam.chuong = chuong;
-  luoi(new THREE.CylinderGeometry(0.008, 0.008, CH_L + 0.01, 6), VL.day, chuong, 'ao').position.set(0, -CH_L / 2 + 0.005, 0);   // dây 1 px liền
+  luoi(new THREE.CylinderGeometry(0.005, 0.005, CH_L + 0.01, 6), VL.day, chuong, 'ao').position.set(0, -CH_L / 2 + 0.005, 0);   // dây 1 px liền (vòng 3: bán kính 0,008 → 0,005 để dây chéo ra đúng 1 px)
   (function () {
     var y0 = -CH_L;
     var pts = [[0.0, y0 + 0.01], [0.016, y0 + 0.008], [0.026, y0 - 0.01], [0.034, y0 - 0.04], [0.042, y0 - 0.072], [0.058, y0 - 0.096], [0.061, y0 - 0.108], [0.044, y0 - 0.106], [0.0, y0 - 0.10]];
@@ -382,7 +383,7 @@ PROTO.tao = function (THREE, tuy) {
     B.nguc.updateWorldMatrix(true, false);
     tmpV.copy(CH_NEO); B.nguc.localToWorld(tmpV); top.worldToLocal(tmpV);
     chuong.position.copy(tmpV);
-    var th = chSt.th[0], ps = chSt.ps[0];
+    var th = chSt.th[0] + CH_REST, ps = chSt.ps[0];
     var dx = -Math.sin(th), dy = -Math.cos(th);
     var dir = new V3(dx, dy * Math.cos(ps), dy * Math.sin(ps)).normalize();
     chuong.quaternion.setFromUnitVectors(_down2, dir);
@@ -393,7 +394,7 @@ PROTO.tao = function (THREE, tuy) {
     pG: 14, rG: 10, yG: 12, eG: 28, wG: 72, tG: 0,
     pX: -6, rX: 10, yX: 0, eX: 22, wX: 0,
     fGx: -0.085, fGy: 0.03, fGa: 0, fXx: 0.07, fXy: 0.03, fXa: 0, v: 0,
-    ik: 0, gHx: 0.20, gHy: 0.36, gHz: 0.05, gBx: 1, gBy: 0.17, gBz: -0.05, xHx: -0.11, xHy: 0.30, xHz: -0.13 };   // vòng 2: bàn tay xa đưa ra trước bụng (x 0,20, z 0,05) để tay + chuôi + chắn không bị thân che   // tay gần để trống, buông sau hông (không che vạt áo xanh)   // ik=1: tay đặt theo mục tiêu (idle); gH = bàn tay xa (cầm kiếm), gB = hướng lưỡi, xH = bàn tay gần
+    ik: 0, gHx: 0.20, gHy: 0.36, gHz: 0.05, gBx: 1, gBy: 0.02, gBz: -0.05, xHx: -0.11, xHy: 0.30, xHz: -0.13 };   // vòng 2: bàn tay xa đưa ra trước bụng (x 0,20, z 0,05) để tay + chuôi + chắn không bị thân che; vòng 3: gBy 0,17 → 0,02 (xoay cổ tay) → đầu kiếm hạ ≈3 px, lưỡi gần ngang   // tay gần để trống, buông sau hông (không che vạt áo xanh)   // ik=1: tay đặt theo mục tiêu (idle); gH = bàn tay xa (cầm kiếm), gB = hướng lưỡi, xH = bàn tay gần
   lam.BASE = BASE;
   var KENH = Object.keys(BASE);
   function tron(a, b) { var o = {}; KENH.forEach(function (k) { o[k] = a[k]; }); if (b) for (var k in b) o[k] = b[k]; return o; }
@@ -466,7 +467,7 @@ PROTO.tao = function (THREE, tuy) {
   var ANIMS = {};
   // idle: 6 khung · 8 FPS (750 ms) – thở nhẹ (hông +0,5 px, ngực/vai ≤ 1 px), đầu gật rất nhẹ; chân cố định tuyệt đối (mục tiêu IK không đổi)
   ANIMS.idle = { loop: true, label: 'Idle – thở', T: 750,
-    keys: keys([[0, { ik: 1 }], [375, { ik: 1, tho: 1, hy: 0.302, headPitch: 0, headYaw: 25, lean: 4, gHy: 0.372, gHx: 0.198, xHy: 0.309, gBy: 0.15 }], [750, { ik: 1 }]]),
+    keys: keys([[0, { ik: 1 }], [375, { ik: 1, tho: 1, hy: 0.302, headPitch: 0, headYaw: 25, lean: 4, gHy: 0.372, gHx: 0.198, xHy: 0.309, gBy: 0.0 }], [750, { ik: 1 }]]),
     gio: function (t) { return 0.25 * Math.sin(2 * Math.PI * t / 750) + 0.1; },
     frames: [[0, 125, 'thở ra'], [125, 125, ''], [250, 125, ''], [375, 125, 'hít vào'], [500, 125, ''], [625, 125, '']] };
   // run: thủ tục (liên tục) – sải 0,36, nhún 2 nhịp/vòng

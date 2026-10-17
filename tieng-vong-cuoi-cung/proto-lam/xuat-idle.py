@@ -5,8 +5,8 @@
   idle.gif                      ×4, 8 FPS, lặp
   overlay-mau.png               ảnh mẫu (cùng chiều cao) | render mượt | chồng 50% | viền silhouette 2 màu
   so-sanh-mau-x4.png            mẫu | khung 1 ×4
-  so-sanh-v1-v2-x4.png          khung 1 vòng 1 (vong1-idle-0.png, giữ lại để so) | khung 1 vòng 2 | mẫu – ×4
-  kiem-tra.json                 số màu, bbox từng khung, mặt nạ chân, sai khác pixel giữa các khung (khép vòng)
+  so-sanh-v2-v3-x4.png          khung 1 vòng 2 (vong2-idle-0.png, giữ lại để so) | khung 1 vòng 3 | mẫu – ×4   (so-sanh-v1-v2-x4.png của vòng 2 giữ nguyên)
+  kiem-tra.json                 số màu, bbox từng khung, mặt nạ ủng, bề rộng thân trước/sau, độ cao đầu kiếm trước/sau, kiếm liền tay, chuông ngoài mũ + dây liền, vạt áo, sai khác pixel giữa các khung (khép vòng)
 và sheet thử cho game:  game/anim/lam-idle-proto.png (512×320, hàng 0 = idle) + lam-idle-proto.anim.json
 Chạy:  python3 proto-lam/xuat-idle.py [--xem]   (--xem: chỉ ghi overlay + idle-x8 vào out/idle/ để chỉnh mô hình nhanh)
 """
@@ -142,12 +142,12 @@ def so_sanh_x4(frames):
     return out
 
 
-def so_sanh_v1_v2(frames):
-    v1p = os.path.join(OUT, 'vong1-idle-0.png')
+def so_sanh_vong(frames, truoc='vong2-idle-0.png', ten_truoc='khung 1 – vòng 2', ten_sau='khung 1 – vòng 3'):
+    v1p = os.path.join(OUT, truoc)
     if not os.path.isfile(v1p): return None
     v1 = Image.open(v1p).convert('RGBA'); im0 = frames[0]; bb = bbox(im0); hchar = bb[3] - bb[1] + 1
     mau = mau_scaled(hchar * 4)
-    cot = [('khung 1 – vòng 1', v1.resize((v1.width * 4, v1.height * 4), Image.NEAREST)), ('khung 1 – vòng 2', im0.resize((im0.width * 4, im0.height * 4), Image.NEAREST)), ('mẫu (cùng cao)', mau)]
+    cot = [(ten_truoc, v1.resize((v1.width * 4, v1.height * 4), Image.NEAREST)), (ten_sau, im0.resize((im0.width * 4, im0.height * 4), Image.NEAREST)), ('mẫu (cùng cao)', mau)]
     H = max(im.height for _, im in cot) + 28; W = sum(im.width for _, im in cot) + 8 * (len(cot) + 1)
     out = Image.new('RGBA', (W, H), NEN); dr = ImageDraw.Draw(out); fnt = chu(12); x = 8
     for t, im in cot:
@@ -218,6 +218,115 @@ def kiem_tra(data, frames):
         return [round(sum(p[0] for p in pts) / len(pts), 1), round(sum(p[1] for p in pts) / len(pts), 1), len(pts)]
     kq['tamLuoiKiem'] = [tam(mat_na_id(f, n), ID_LUOI) for f in data['frames']]
     kq['tamChuong'] = [tam(mat_na_id(f, n), ID_CHUONG) for f in data['frames']]
+    kq.update(kiem_tra_vong3(ids, pxs, n))
+    return kq
+
+
+def kiem_tra_vong3(ids, pxs, n):
+    """Số liệu cho 3 điểm sửa của vòng 3, so với khung 1 vòng 2 (vong2-id-0.png = mặt nạ ID khung 1 vòng 2, vong2-idle-0.png = ảnh)."""
+    kq = {}
+    v2p = os.path.join(OUT, 'vong2-id.png')   # dải 6 mặt nạ ID 64×64 của 6 khung vòng 2 (giá trị pixel = ID bộ phận)
+    ids2 = None
+    if os.path.isfile(v2p):
+        st = Image.open(v2p).convert('L'); ids2 = [list(st.crop((i * n, 0, (i + 1) * n, n)).getdata()) for i in range(st.width // n)]
+    id2 = ids2[0] if ids2 else None
+    ID_THAN = (4, 14, 17)            # thân áo xanh + đai + trâm (không tính tay, áo choàng)
+    ID_UNG = (15, 16, 18, 19)
+    def be_rong(d, hang, idv):
+        out = {}
+        for y in hang:
+            xs = [x for x in range(n) if d[y * n + x] in idv]
+            out[str(y)] = (max(xs) - min(xs) + 1) if xs else 0
+        return out
+    def bb_id(d, idv):
+        pts = [(i % n, i // n) for i, v in enumerate(d) if v in idv]
+        return [min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts)] if pts else None
+    def dau_kiem(d):   # đầu kiếm = pixel lưỡi (ID 10) xa nhất về bên phải (Lam nhìn sang phải); lấy hàng thấp nhất nếu có vài pixel cùng cột
+        pts = [(i % n, i // n) for i, v in enumerate(d) if v == 10]
+        if not pts: return None
+        mx = max(p[0] for p in pts); return [mx, max(p[1] for p in pts if p[0] == mx)]
+    HANG_NGUC = range(40, 46)
+    # 2) bề rộng thân ngang ngực (hàng 40–45) trước/sau – phải bằng nhau
+    kq['beRongThanNguc'] = {'hang': [40, 45], 'truoc_v2': [be_rong(d, HANG_NGUC, ID_THAN) for d in ids2] if ids2 else None, 'sau_v3': [be_rong(d, HANG_NGUC, ID_THAN) for d in ids]}
+    kq['beRongThanBangNhau'] = bool(ids2) and kq['beRongThanNguc']['truoc_v2'] == kq['beRongThanNguc']['sau_v3']   # từng khung vòng 2 == khung tương ứng vòng 3
+    # 2) áo choàng xoè ra sau: bbox áo (ID 5) trước/sau; ủng: bbox ủng trước/sau (mũi/gót)
+    kq['aoBbox'] = {'truoc_v2': bb_id(id2, (5,)) if id2 else None, 'sau_v3': [bb_id(d, (5,)) for d in ids]}
+    kq['aoXoeThemPx'] = [(kq['aoBbox']['truoc_v2'][0] - b[0]) for b in kq['aoBbox']['sau_v3']] if id2 else None   # cột trái bbox áo lùi ra sau bao nhiêu px (khung 1 vòng 2 → từng khung vòng 3)
+    kq['ungBboxTruocSau'] = {'truoc_v2': bb_id(id2, ID_UNG) if id2 else None, 'sau_v3': bb_id(ids[0], ID_UNG), 'thanUng_truoc_v2': bb_id(id2, (18, 19)) if id2 else None, 'thanUng_sau_v3': bb_id(ids[0], (18, 19))}
+    def hang_ung(d):   # cột trái/phải của thân ủng (18/19) theo hàng – để thấy gót/mũi nhô
+        out = {}
+        for y in range(54, n):
+            xs = [x for x in range(n) if d[y * n + x] in (18, 19)]
+            if xs: out[str(y)] = [min(xs), max(xs)]
+        return out
+    kq['ungTheoHang'] = {'truoc_v2': hang_ung(id2) if id2 else None, 'sau_v3': hang_ung(ids[0])}
+    # 2) vạt áo: đáy áo theo cột → mũi vạt = cột thấp hơn hẳn 2 cột bên cạnh; ghi [x, hàng đáy, bề rộng mũi (pixel áo liền nhau ở hàng đáy)]
+    def vat(d):   # mũi vạt = cụm cột liền nhau có cùng đáy, rộng ≤ 2, hai cột kề bên ngoài có đáy cao hơn (hoặc không có áo); ghi [x đầu, hàng đáy, bề rộng mũi, dài vạt = đáy − đáy nông nhất của 2 cột bên]
+        day = {}
+        for x in range(n):
+            ys = [y for y in range(n) if d[y * n + x] == 5]
+            if ys and max(ys) >= 50: day[x] = max(ys)   # chỉ xét gấu (hàng ≥ 50), bỏ mép vai
+        out = []; x = 0
+        while x < n:
+            if x not in day: x += 1; continue
+            x2 = x
+            while x2 + 1 in day and day[x2 + 1] == day[x]: x2 += 1
+            y = day[x]; tr, ph = day.get(x - 1, -1), day.get(x2 + 1, -1)
+            if x2 - x + 1 <= 2 and tr < y and ph < y: out.append([x, y, x2 - x + 1, y - max(tr, ph)])
+            x = x2 + 1
+        return out
+    kq['vatAo'] = {'truoc_v2': vat(id2) if id2 else None, 'sau_v3': [vat(d) for d in ids]}
+    # 3) độ cao đầu kiếm trước/sau (hàng pixel; số lớn = thấp hơn)
+    dk2 = dau_kiem(id2) if id2 else None; dk3 = [dau_kiem(d) for d in ids]
+    kq['dauKiem'] = {'truoc_v2': dk2, 'sau_v3': dk3, 'haXuongPx': [(k[1] - dk2[1]) if (dk2 and k) else None for k in dk3]}
+    # 3) kiếm liền tay: tập pixel {bàn tay xa (6) + chuôi/chắn (11) + lưỡi (10)} phải là MỘT thành phần liên thông 4 (không pixel trong suốt cắt ngang),
+    #    và có cặp pixel kề nhau tay–chuôi, chuôi–lưỡi
+    def lien(d):
+        S = set(i for i, v in enumerate(d) if v in (6, 10, 11))
+        if not S: return {'motKhoi': False}
+        start = next(i for i in S if d[i] == 10); seen = {start}; st = [start]
+        while st:
+            i = st.pop(); x, y = i % n, i // n
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                j = (y + dy) * n + x + dx
+                if 0 <= x + dx < n and 0 <= y + dy < n and j in S and j not in seen: seen.add(j); st.append(j)
+        def ke(a, b): return any(d[j] == b for i in S if d[i] == a for j in (i + 1, i - 1, i + n, i - n) if 0 <= j < n * n)
+        kiem = set(i for i in S if d[i] in (10, 11))
+        # motKhoi: toàn bộ lưỡi + chuôi/chắn nằm trong một thành phần liên thông 4 đi từ lưỡi và thành phần đó chạm bàn tay xa (ID 6; không đòi cả cánh tay – phần trên bị thân che)
+        return {'motKhoi': kiem <= seen and any(d[i] == 6 for i in seen), 'tayChuoiKe': ke(6, 11), 'chuoiLuoiKe': ke(11, 10)}
+    kq['kiemLien'] = [lien(d) for d in ids]
+    kq['kiemLienMoiKhung'] = all(k.get('motKhoi') and k.get('tayChuoiKe') and k.get('chuoiLuoiKe') for k in kq['kiemLien'])
+    # 1) chuông ngoài mũ: bbox chuông (12) so với mép lưng mũ (cột nhỏ nhất của ID mũ/mặt 1–3) ở các hàng chuông; khoảng cách ≥ 1 → không chạm, không che mặt
+    def chuong_mu(d):
+        ch = bb_id(d, (12,)); 
+        if not ch: return None
+        mep = []
+        for y in range(ch[1], ch[3] + 1):
+            xs = [x for x in range(n) if d[y * n + x] in (1, 2, 3)]
+            if xs: mep.append(min(xs))
+        mat = bb_id(d, (1,))
+        return {'bboxChuong': ch, 'mepLungMuNhoNhat': min(mep) if mep else None, 'khoangCachToiMu': (min(mep) - ch[2] - 1) if mep else None,
+                'heRaNgoaiMuPx': (min(mep) - ch[0]) if mep else ch[2] - ch[0] + 1, 'chuongTrumMat': bool(mat) and not (ch[2] < mat[0] or ch[0] > mat[2] or ch[3] < mat[1] or ch[1] > mat[3])}
+    kq['chuongNgoaiMu'] = {'truoc_v2': chuong_mu(id2) if id2 else None, 'sau_v3': [chuong_mu(d) for d in ids]}
+    # 1) dây chuông liền (8 liên thông): từ pixel dây cao nhất đi qua pixel dây/chuông tới chuông; dây rộng ≤ 1 px mỗi hàng; đỉnh dây chạm mép mũ (kề 8 với pixel mũ)
+    def day_lien8(d):
+        ds = [(i % n, i // n) for i, v in enumerate(d) if v == 13]
+        if not ds: return {'lien': False}
+        S = set(i for i, v in enumerate(d) if v in (12, 13)); top = min(ds, key=lambda p: p[1]); start = top[1] * n + top[0]
+        seen = {start}; st = [start]; toiChuong = False
+        while st:
+            i = st.pop(); x, y = i % n, i // n
+            if d[i] == 12: toiChuong = True; continue
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    if 0 <= x + dx < n and 0 <= y + dy < n:
+                        j = (y + dy) * n + x + dx
+                        if j in S and j not in seen: seen.add(j); st.append(j)
+        rong = max(sum(1 for p in ds if p[1] == y) for y in set(p[1] for p in ds))
+        chamMu = any(d[(top[1] + dy) * n + top[0] + dx] in (1, 2, 3) for dx in (-1, 0, 1) for dy in (-1, 0, 1) if 0 <= top[0] + dx < n and 0 <= top[1] + dy < n)
+        return {'lien': toiChuong, 'soPixel': len(ds), 'rongToiDa': rong, 'dinhDay': list(top), 'dinhChamMu': chamMu}
+    kq['dayChuongLien8'] = [day_lien8(d) for d in ids]
+    kq['dayChuongLien'] = [k['lien'] for k in kq['dayChuongLien8']]   # vòng 3: dây treo chéo → kiểm liên thông 8 (thay kiểm "pixel chuông ngay dưới" của vòng 2)
     return kq
 
 
@@ -233,13 +342,13 @@ def main():
     day_khung(frames, 8).save(os.path.join(OUT, 'idle-x8.png'))
     kq = kiem_tra(data, frames)
     print('màu: %d (kể cả trong suốt) · ngoài bảng: %s · cao: %s · chân cố định: %s · sai khác kề nhau: %s' % (kq['soMauKeCaTrongSuot'], kq['mauNgoaiBang'], kq['caoNhanVat'], kq['chanCoDinh'], kq['saiKhacKeNhau']))
-    if xem: print('chân khác:', kq['chanKhac']); return
+    if xem: print('ủng khác:', kq['ungKhac']); return
     for i, im in enumerate(frames): im.save(os.path.join(OUT, 'idle-%d.png' % i))
     day_khung(frames, 4).save(os.path.join(OUT, 'idle-x4.png'))
     gif(frames, os.path.join(OUT, 'idle.gif'))
     so_sanh_x4(frames).save(os.path.join(OUT, 'so-sanh-mau-x4.png'))
-    ss = so_sanh_v1_v2(frames)
-    if ss: ss.save(os.path.join(OUT, 'so-sanh-v1-v2-x4.png'))
+    ss = so_sanh_vong(frames)
+    if ss: ss.save(os.path.join(OUT, 'so-sanh-v2-v3-x4.png'))
     json.dump(kq, open(os.path.join(OUT, 'kiem-tra.json'), 'w'), ensure_ascii=False, indent=1)
     # sheet thử cho game: 512×320, hàng 0 = 6 khung idle
     os.makedirs(GAME_ANIM, exist_ok=True)
