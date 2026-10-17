@@ -1,0 +1,646 @@
+{
+ "nguon": "art/nhan-vat/lam-chatgpt/jump-sheet-v1.png",
+ "hangChon": 0,
+ "soKhung": 4,
+ "cao": 64,
+ "o": [
+  80,
+  80
+ ],
+ "pivot": [
+  40,
+  79
+ ],
+ "fps": 10,
+ "loop": false,
+ "khung": {
+  "0": {
+   "bboxNguon": [
+    35,
+    262,
+    566,
+    708
+   ],
+   "caoNguon": 447,
+   "rongNguon": 532,
+   "matNguon": [
+    [
+     323.6,
+     426.4
+    ],
+    [
+     351.5,
+     433.9
+    ]
+   ],
+   "tamMatNguon": [
+    337.6,
+    430.2
+   ],
+   "cachMat": "2 cụm",
+   "matDinhMuNguon": 168.2,
+   "matDatLai": 0,
+   "loLap": 0,
+   "domHoa": 1,
+   "domDenBo": 62,
+   "mauBo": 2,
+   "vienNgoaiDoi": 2,
+   "dich": [
+    27,
+    58
+   ],
+   "chongDat": true,
+   "hangMat": 46,
+   "cotMat": 48,
+   "nhunDauSoChuan": 9,
+   "pixelRoiNgoaiNoiBo112": 0,
+   "bbox": [
+    11,
+    26,
+    75,
+    79
+   ],
+   "cao": 54,
+   "rong": 65,
+   "hangDay": 79,
+   "hangDayThan": 79,
+   "chanCaoHonPivot": 0,
+   "soPixel": 1770,
+   "soMau": 11,
+   "mau": {
+    "#0C0F14": 790,
+    "#1A212B": 45,
+    "#212835": 363,
+    "#2C3546": 33,
+    "#4A5A6E": 24,
+    "#21413A": 58,
+    "#32804F": 324,
+    "#9C6B30": 15,
+    "#E1B85A": 45,
+    "#F3E6C8": 43,
+    "#CEF0D6": 30
+   },
+   "luoiKiemPx": 30,
+   "vangChuongChanPx": 60,
+   "domLeCuoi": null,
+   "matO": [
+    [
+     46,
+     44
+    ],
+    [
+     46,
+     45
+    ],
+    [
+     50,
+     45
+    ],
+    [
+     46,
+     46
+    ],
+    [
+     49,
+     46
+    ],
+    [
+     50,
+     46
+    ],
+    [
+     49,
+     47
+    ]
+   ],
+   "roiNgoaiO": {
+    "soPixelMat": 0,
+    "trai": 0,
+    "phai": 0,
+    "tren": 0,
+    "duoi": 0,
+    "bboxNoiBoSoVoiO": [
+     11,
+     26,
+     75,
+     79
+    ]
+   }
+  },
+  "1": {
+   "bboxNguon": [
+    551,
+    194,
+    1047,
+    708
+   ],
+   "caoNguon": 515,
+   "rongNguon": 497,
+   "matNguon": [
+    [
+     836.0,
+     351.0
+    ],
+    [
+     863.0,
+     360.0
+    ]
+   ],
+   "tamMatNguon": [
+    849.5,
+    355.5
+   ],
+   "cachMat": "2 cụm",
+   "matDinhMuNguon": 161.5,
+   "matDatLai": 0,
+   "loLap": 1,
+   "domHoa": 3,
+   "domDenBo": 74,
+   "mauBo": 3,
+   "vienNgoaiDoi": 3,
+   "dich": [
+    28,
+    49
+   ],
+   "chongDat": true,
+   "hangMat": 37,
+   "cotMat": 48,
+   "nhunDauSoChuan": 0,
+   "pixelRoiNgoaiNoiBo112": 0,
+   "bbox": [
+    12,
+    17,
+    71,
+    79
+   ],
+   "cao": 63,
+   "rong": 60,
+   "hangDay": 79,
+   "hangDayThan": 79,
+   "chanCaoHonPivot": 0,
+   "soPixel": 1930,
+   "soMau": 11,
+   "mau": {
+    "#0C0F14": 848,
+    "#1A212B": 34,
+    "#212835": 414,
+    "#2C3546": 37,
+    "#4A5A6E": 22,
+    "#21413A": 59,
+    "#32804F": 394,
+    "#9C6B30": 15,
+    "#E1B85A": 39,
+    "#F3E6C8": 40,
+    "#CEF0D6": 28
+   },
+   "luoiKiemPx": 28,
+   "vangChuongChanPx": 54,
+   "domLeCuoi": null,
+   "matO": [
+    [
+     46,
+     35
+    ],
+    [
+     46,
+     36
+    ],
+    [
+     50,
+     36
+    ],
+    [
+     46,
+     37
+    ],
+    [
+     49,
+     37
+    ],
+    [
+     50,
+     37
+    ],
+    [
+     46,
+     38
+    ],
+    [
+     49,
+     38
+    ]
+   ],
+   "roiNgoaiO": {
+    "soPixelMat": 0,
+    "trai": 0,
+    "phai": 0,
+    "tren": 0,
+    "duoi": 0,
+    "bboxNoiBoSoVoiO": [
+     12,
+     17,
+     71,
+     79
+    ]
+   }
+  },
+  "2": {
+   "bboxNguon": [
+    1041,
+    103,
+    1538,
+    663
+   ],
+   "caoNguon": 561,
+   "rongNguon": 498,
+   "matNguon": [
+    [
+     1300.3,
+     266.2
+    ],
+    [
+     1327.4,
+     273.9
+    ]
+   ],
+   "tamMatNguon": [
+    1313.8,
+    270.0
+   ],
+   "cachMat": "2 cụm",
+   "matDinhMuNguon": 167.0,
+   "matDatLai": 0,
+   "loLap": 3,
+   "domHoa": 1,
+   "domDenBo": 80,
+   "mauBo": 4,
+   "vienNgoaiDoi": 5,
+   "dich": [
+    31,
+    49
+   ],
+   "chongDat": false,
+   "hangMat": 37,
+   "cotMat": 48,
+   "nhunDauSoChuan": 0,
+   "pixelRoiNgoaiNoiBo112": 26,
+   "bbox": [
+    15,
+    17,
+    74,
+    79
+   ],
+   "cao": 63,
+   "rong": 60,
+   "hangDay": 79,
+   "hangDayThan": 79,
+   "chanCaoHonPivot": 0,
+   "soPixel": 1869,
+   "soMau": 11,
+   "mau": {
+    "#0C0F14": 802,
+    "#1A212B": 74,
+    "#212835": 373,
+    "#2C3546": 25,
+    "#4A5A6E": 15,
+    "#21413A": 62,
+    "#32804F": 385,
+    "#9C6B30": 16,
+    "#E1B85A": 47,
+    "#F3E6C8": 35,
+    "#CEF0D6": 35
+   },
+   "luoiKiemPx": 35,
+   "vangChuongChanPx": 63,
+   "domLeCuoi": null,
+   "matO": [
+    [
+     46,
+     35
+    ],
+    [
+     46,
+     36
+    ],
+    [
+     50,
+     36
+    ],
+    [
+     46,
+     37
+    ],
+    [
+     49,
+     37
+    ],
+    [
+     50,
+     37
+    ],
+    [
+     49,
+     38
+    ]
+   ],
+   "roiNgoaiO": {
+    "soPixelMat": 0,
+    "trai": 0,
+    "phai": 0,
+    "tren": 0,
+    "duoi": 0,
+    "bboxNoiBoSoVoiO": [
+     15,
+     17,
+     74,
+     79
+    ]
+   }
+  },
+  "3": {
+   "bboxNguon": [
+    1532,
+    71,
+    2040,
+    565
+   ],
+   "caoNguon": 495,
+   "rongNguon": 509,
+   "matNguon": [
+    [
+     1792.9,
+     228.5
+    ],
+    [
+     1819.9,
+     235.8
+    ]
+   ],
+   "tamMatNguon": [
+    1806.4,
+    232.1
+   ],
+   "cachMat": "2 cụm",
+   "matDinhMuNguon": 161.1,
+   "matDatLai": 1,
+   "loLap": 0,
+   "domHoa": 2,
+   "domDenBo": 51,
+   "mauBo": 3,
+   "vienNgoaiDoi": 2,
+   "dich": [
+    31,
+    49
+   ],
+   "chongDat": false,
+   "hangMat": 37,
+   "cotMat": 48,
+   "nhunDauSoChuan": 0,
+   "pixelRoiNgoaiNoiBo112": 0,
+   "bbox": [
+    15,
+    17,
+    76,
+    76
+   ],
+   "cao": 60,
+   "rong": 62,
+   "hangDay": 76,
+   "hangDayThan": 76,
+   "chanCaoHonPivot": 3,
+   "soPixel": 1786,
+   "soMau": 11,
+   "mau": {
+    "#0C0F14": 817,
+    "#1A212B": 62,
+    "#212835": 378,
+    "#2C3546": 12,
+    "#4A5A6E": 21,
+    "#21413A": 64,
+    "#32804F": 308,
+    "#9C6B30": 11,
+    "#E1B85A": 39,
+    "#F3E6C8": 38,
+    "#CEF0D6": 36
+   },
+   "luoiKiemPx": 36,
+   "vangChuongChanPx": 50,
+   "domLeCuoi": null,
+   "matO": [
+    [
+     46,
+     35
+    ],
+    [
+     46,
+     36
+    ],
+    [
+     50,
+     36
+    ],
+    [
+     46,
+     37
+    ],
+    [
+     49,
+     37
+    ],
+    [
+     50,
+     37
+    ],
+    [
+     46,
+     38
+    ],
+    [
+     49,
+     38
+    ]
+   ],
+   "roiNgoaiO": {
+    "soPixelMat": 0,
+    "trai": 0,
+    "phai": 0,
+    "tren": 0,
+    "duoi": 0,
+    "bboxNoiBoSoVoiO": [
+     15,
+     17,
+     76,
+     76
+    ]
+   }
+  }
+ },
+ "kichThuocSheet": [
+  2079,
+  756
+ ],
+ "tachNen": "alpha ≥ 128 (sheet có alpha thật; viền mềm alpha < 128 bị bỏ)",
+ "tachKhung": "thành phần liên thông: 4 mảnh lớn → 1 hàng × 4 cột (chia hàng theo tâm y, cột theo mép trái)",
+ "vecMat": [
+  27.1,
+  7.6
+ ],
+ "tyLe": {
+  "s": 0.12146,
+  "cach": "hoa",
+  "sDau": 0.11872,
+  "sCao": 0.12427,
+  "matDinhMuNguon": [
+   168.2,
+   161.5,
+   167.0,
+   161.1
+  ],
+  "matDinhMuDungDeDo": 164.3,
+  "doTrenToanSheet": false,
+  "matDinhMuToanSheet": null,
+  "caoNguonToanSheet": null,
+  "matDinhMuRa": 20.0,
+  "khungCaoChuan": [
+   1
+  ],
+  "caoNguon": [
+   447,
+   515,
+   561,
+   495
+  ],
+  "caoRaTheoKhung": [
+   54.3,
+   62.6,
+   68.1,
+   60.1
+  ],
+  "giaiThich": "dau: mắt→đỉnh mũ = 19.5 px như Run 64; cao: khung chuẩn cao 64; hoa: trung bình nhân"
+ },
+ "thuNho": {
+  "diem": {
+   "da-so": [
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 62,
+     "matMat": 0,
+     "diem": 64
+    },
+    {
+     "manhRoi": 0,
+     "lo": 0,
+     "dom12px": 63,
+     "matMat": 0,
+     "diem": 63
+    },
+    {
+     "manhRoi": 0,
+     "lo": 2,
+     "dom12px": 51,
+     "matMat": 0,
+     "diem": 55
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 37,
+     "matMat": 1,
+     "diem": 49
+    }
+   ],
+   "da-soTong": 231,
+   "nearest": [
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 96,
+     "matMat": 0,
+     "diem": 98
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 110,
+     "matMat": 0,
+     "diem": 112
+    },
+    {
+     "manhRoi": 0,
+     "lo": 2,
+     "dom12px": 94,
+     "matMat": 0,
+     "diem": 98
+    },
+    {
+     "manhRoi": 0,
+     "lo": 1,
+     "dom12px": 94,
+     "matMat": 0,
+     "diem": 96
+    }
+   ],
+   "nearestTong": 404
+  },
+  "chon": "da-so"
+ },
+ "can": {
+  "cotMat": 48,
+  "hangMatBay": 37,
+  "khungChongDat": [
+   0,
+   1
+  ],
+  "quyTac": "ngang: tâm 2 mắt → cột 48; dọc: khung chống đất đáy THÂN (bỏ lưỡi kiếm) = 79, khung bay giữ hàng mắt = 37"
+ },
+ "onDinhThoiGianPx": [
+  70,
+  73,
+  54,
+  76
+ ],
+ "tongMau": [
+  "#0C0F14",
+  "#1A212B",
+  "#212835",
+  "#21413A",
+  "#2C3546",
+  "#32804F",
+  "#4A5A6E",
+  "#9C6B30",
+  "#CEF0D6",
+  "#E1B85A",
+  "#F3E6C8"
+ ],
+ "pixelRoiNgoaiO": {
+  "0": 0,
+  "1": 0,
+  "2": 0,
+  "3": 0
+ },
+ "saiKhacKhungKe": [
+  1845,
+  1157,
+  1173
+ ],
+ "muiKiem": [
+  [
+   71,
+   59
+  ],
+  [
+   69,
+   55
+  ],
+  [
+   30,
+   57
+  ],
+  [
+   74,
+   44
+  ]
+ ],
+ "gif": "GIF luôn loop=0 (lặp) để xem; animation NON-LOOP giữ khung cuối trong game"
+}
