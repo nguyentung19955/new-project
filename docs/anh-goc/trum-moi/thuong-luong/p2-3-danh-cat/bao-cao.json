@@ -1,0 +1,100 @@
+{
+ "anh": "../gop-p2.png",
+ "cong_cu": "docs/review/ke-hoach-cai-thien/thuong-luong-that/cong-cu/cat-thuong-luong.py",
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 1027,
+  "vien_khu": 32099,
+  "nga_mau_nen_trong_hinh": 14550,
+  "bo_suong_xanh": 6969
+ },
+ "hang": [
+  {
+   "ten": "p2-3-danh",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      1,
+      522,
+      252,
+      765
+     ],
+     "co": [
+      251,
+      243
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      257,
+      524,
+      555,
+      766
+     ],
+     "co": [
+      298,
+      242
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      516,
+      531,
+      810,
+      765
+     ],
+     "co": [
+      294,
+      234
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      770,
+      526,
+      1061,
+      766
+     ],
+     "co": [
+      291,
+      240
+     ],
+     "sua": "bỏ 4049 điểm ảnh luồng băng của khung trước bay sang"
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1031,
+      525,
+      1291,
+      767
+     ],
+     "co": [
+      260,
+      242
+     ],
+     "sua": "bỏ 5136 điểm ảnh luồng băng của khung trước bay sang"
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1284,
+      526,
+      1533,
+      767
+     ],
+     "co": [
+      249,
+      241
+     ],
+     "sua": "bỏ 6040 điểm ảnh luồng băng của khung trước bay sang"
+    }
+   ]
+  }
+ ]
+}

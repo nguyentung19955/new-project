@@ -1,0 +1,97 @@
+{
+ "anh": "../gop-p3.png",
+ "cong_cu": "docs/review/ke-hoach-cai-thien/thuong-luong-that/cong-cu/cat-thuong-luong.py",
+ "tach_nen": {
+  "nen": "xanh",
+  "cham_nhieu_bo": 519,
+  "vien_khu": 28865,
+  "nga_mau_nen_trong_hinh": 12719,
+  "bo_suong_xanh": 46829
+ },
+ "hang": [
+  {
+   "ten": "p3-1-dung",
+   "so_khung": 6,
+   "khung": [
+    {
+     "stt": 1,
+     "khung_bao": [
+      5,
+      10,
+      254,
+      260
+     ],
+     "co": [
+      249,
+      250
+     ]
+    },
+    {
+     "stt": 2,
+     "khung_bao": [
+      257,
+      12,
+      510,
+      260
+     ],
+     "co": [
+      253,
+      248
+     ]
+    },
+    {
+     "stt": 3,
+     "khung_bao": [
+      516,
+      16,
+      768,
+      260
+     ],
+     "co": [
+      252,
+      244
+     ]
+    },
+    {
+     "stt": 4,
+     "khung_bao": [
+      768,
+      17,
+      1024,
+      260
+     ],
+     "co": [
+      256,
+      243
+     ]
+    },
+    {
+     "stt": 5,
+     "khung_bao": [
+      1027,
+      17,
+      1278,
+      260
+     ],
+     "co": [
+      251,
+      243
+     ]
+    },
+    {
+     "stt": 6,
+     "khung_bao": [
+      1283,
+      17,
+      1533,
+      260
+     ],
+     "co": [
+      250,
+      243
+     ]
+    }
+   ]
+  }
+ ]
+}

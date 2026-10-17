@@ -15,7 +15,8 @@
     if (G.DINH_QUAI === false || !e || e.isPlayer) return null;
     const B = G.DINH_QUAI_BANG;
     if (!B) return null;
-    const key = e.isBoss && e.kind !== 'mini' ? 'trum:' + e.kind : e.art;
+    let key = e.isBoss && e.kind !== 'mini' ? 'trum:' + e.kind : e.art;
+    if (key === 'trum:thuong' && B['trum:thuongMoi'] && G.thuongLuong && G.thuongLuong.moiVe && G.thuongLuong.moiVe(e)) key = 'trum:thuongMoi'; // thuong-luong-that: ảnh thật 3 pha
     const T = key && B[key];
     if (!T || !T.length) return null;
     const p = e.isBoss ? clamp(e.phase | 0, 0, T.length - 1) : 0, m = e.face > 0 ? 1 : 0;

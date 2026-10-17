@@ -129,7 +129,8 @@ def main():
                 + style + '\n</head>\n<body>\n' + markup + '\n<script>\n' + js + '</script>\n</body>\n</html>\n')
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
-    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
+    # 17/10 thuong-luong-that: tấm ghi "chi_hai_tep" (Thuồng Luồng thật 3 pha, ~2,9 MB) chỉ ở bản web — bản một tệp (trần 30 MB, đã sát trần) vẽ hình tạm cũ.
+    js = gom([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('chi_hai_tep')], khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
     frag = title + '\n' + link + '\n' + style + '\n' + markup + '\n' + script + '\n'
@@ -632,7 +633,7 @@ TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
 TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_tinhlinh.js', 'js/env_art.js', 'js/monster_art.js', 'js/room_art.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js', 'js/btn_art.js']  # mapgen + minimap + btn_art: trang Tách Giao Diện vẽ thử bản đồ và nút bằng đúng code game; env_art: trang Tách Phòng vẽ thử đồ vật trong phòng
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
-RUNTIME_KEYS = ('loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
+RUNTIME_KEYS = ('chi_hai_tep', 'loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi',
                 'tam_n3', 'tam_n4', 'o_n3', 'o_n4')  # tam_n3/4 + o_n3/4 (17/10 net-cao-quai): ảnh nét cao quái / trùm / người làng (trang ảnh + chỗ từng khung) — chỉ bản ảnh rời (bo_net_cao bỏ ở bản một tệp). net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)

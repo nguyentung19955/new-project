@@ -1,0 +1,192 @@
+{
+ "web": {
+  "kind": "thuong",
+  "art": "nguTinh",
+  "moi": true,
+  "pha": 2,
+  "chet": true,
+  "tron": true,
+  "loiVe": null,
+  "terrs": [],
+  "anh": [
+   "tran-sau-pha1.png",
+   "tran-sau-pha2.png",
+   "tran-sau-pha3.png"
+  ],
+  "dinh": [
+   {
+    "ve": [
+     -58.5,
+     107,
+     -111,
+     9.5
+    ],
+    "than": [
+     -58.5,
+     107.5,
+     -112.5,
+     1,
+     12
+    ],
+    "caoTrung": 33.05,
+    "moi": true
+   },
+   {
+    "ve": [
+     -46.5,
+     79.5,
+     -111,
+     26
+    ],
+    "than": [
+     -58.5,
+     107.5,
+     -112.5,
+     1,
+     12
+    ],
+    "caoTrung": 33.05,
+    "moi": true
+   },
+   {
+    "ve": [
+     -46,
+     79.5,
+     -113,
+     25.5
+    ],
+    "than": [
+     -58.5,
+     107.5,
+     -112.5,
+     1,
+     12
+    ],
+    "caoTrung": 33.05,
+    "moi": true
+   }
+  ],
+  "gif": {
+   "sau-pha1-dung": 16,
+   "sau-pha1-bao-don-danh": 31,
+   "sau-pha1-trung-don": 9,
+   "sau-pha1-lan": 21,
+   "sau-pha2-dung": 16,
+   "sau-pha2-bao-don-danh": 31,
+   "sau-pha2-trung-don": 9,
+   "sau-pha2-lan": 21,
+   "sau-pha3-dung": 16,
+   "sau-pha3-bao-don-danh": 31,
+   "sau-pha3-trung-don": 9,
+   "sau-pha3-lan": 21
+  },
+  "loi_js": []
+ },
+ "web-tlmoi0": {
+  "kind": "thuong",
+  "art": "nguTinh",
+  "moi": false,
+  "pha": 2,
+  "chet": true,
+  "tron": true,
+  "loiVe": null,
+  "terrs": [],
+  "anh": [
+   "tran-truoc-pha1.png",
+   "tran-truoc-pha2.png",
+   "tran-truoc-pha3.png"
+  ],
+  "dinh": [
+   {
+    "ve": [
+     -49,
+     40,
+     -111.5,
+     9.5
+    ],
+    "than": [
+     -52,
+     41,
+     -111.5,
+     1,
+     -5.5
+    ],
+    "caoTrung": 32.75,
+    "moi": false
+   },
+   {
+    "ve": [
+     -61.5,
+     50,
+     -101,
+     26
+    ],
+    "than": [
+     -52,
+     41,
+     -111.5,
+     1,
+     -5.5
+    ],
+    "caoTrung": 32.75,
+    "moi": false
+   },
+   {
+    "ve": [
+     -47,
+     45.5,
+     -108,
+     26
+    ],
+    "than": [
+     -52,
+     41,
+     -111.5,
+     1,
+     -5.5
+    ],
+    "caoTrung": 32.75,
+    "moi": false
+   }
+  ],
+  "gif": {
+   "truoc-pha1-dung": 16,
+   "truoc-pha1-bao-don-danh": 31,
+   "truoc-pha1-trung-don": 9,
+   "truoc-pha1-lan": 21,
+   "truoc-pha2-dung": 16,
+   "truoc-pha2-bao-don-danh": 31,
+   "truoc-pha2-trung-don": 9,
+   "truoc-pha2-lan": 21,
+   "truoc-pha3-dung": 16,
+   "truoc-pha3-bao-don-danh": 31,
+   "truoc-pha3-trung-don": 9,
+   "truoc-pha3-lan": 21
+  },
+  "loi_js": []
+ },
+ "mot-tep": {
+  "kind": "thuong",
+  "art": "nguTinh",
+  "moi": false,
+  "pha": 2,
+  "chet": true,
+  "tron": true,
+  "loiVe": null,
+  "terrs": [],
+  "anh": [],
+  "loi_js": []
+ },
+ "mot-tep-tlmoi0": {
+  "kind": "thuong",
+  "art": "nguTinh",
+  "moi": false,
+  "pha": 2,
+  "chet": true,
+  "tron": true,
+  "loiVe": null,
+  "terrs": [],
+  "anh": [],
+  "loi_js": []
+ }
+}

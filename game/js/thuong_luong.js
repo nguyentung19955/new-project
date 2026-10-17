@@ -23,6 +23,11 @@
 // Cờ: ?tl3c=0 (G.TL_3C = false) → bản 3B. ?tldoihe=0 (G.TL_DOI_HE = false) → một hệ Độc suốt trận. ?tlrieng=0 (G.TL_RIENG = false) → tắt cả phiên 3B (Thuồng Luồng như phiên 1:
 // chiêu Ngư Tinh, sân thường). ?vung4=0 → không có vùng 4, tệp này không làm gì.
 // Ảnh thật: khi có sprite 'thuongLuong' (C71–C85, js/sprite_custom.js / G.monsterArt) thì tự dùng, thôi nhuộm; thân trồi vẫn vẽ code tới khi có D2.
+// 17/10 THUỒNG LUỒNG THẬT (docs/review/ke-hoach-cai-thien/thuong-luong-that/bao-cao.md): ảnh rắn sông 3 pha (thuongLuong, -p2, -p3) chỉ dùng lúc VẼ —
+// b.art vẫn là 'nguTinh' cho luật (hộp thân BODY, thời lượng / mốc chiêu, báo trước) nên vùng trúng, thời lượng đòn không đổi. Lúc vẽ: đổi tạm
+// b.art sang 'thuongLuong', nhịp khung theo thời lượng cử động của Ngư Tinh (sp.durMuon, mốc moc chép từ Ngư Tinh), không nhuộm; lặn = hàng
+// 'die' (lặn xuống nước) của ảnh; quầng điểm yếu đặt ở mảnh trống trên trán ảnh. Ảnh chưa tải / bản một tệp (không chứa ảnh này) / ?tlmoi=0:
+// vẽ Ngư Tinh nhuộm như trước. Thân trồi vòm, đuôi quét, siết sân, xoáy, mảnh đồng, cảnh bỏ trốn vẫn vẽ code (chờ ảnh TL5–TL7).
 // Nạp sau js/chieu_trum.js, js/song_luat.js.
 (function () {
   const G = window.G;
@@ -99,7 +104,6 @@
   TL.c3 = C3;
   const heCua = (ph) => (G.TL_DOI_HE === false ? 'poison' : CFG.HE[clamp(ph | 0, 0, 2)]);
   TL.heCua = heCua;
-  const coAnhThat = () => !!(G.monsterArt && G.monsterArt.list && G.monsterArt.list.some((x) => x.id === CFG.anh));
 
   // ---------- HỆ THEO PHA ----------
   // Lớp kháng của pha (he: true) đứng đầu b.layers; trùng hệ với lớp thích nghi cũ thì gộp (1 − (1 − a)(1 − b)), thẻ chỉ hiện một lần.
@@ -125,9 +129,10 @@
       w.x0 += C.trai; w.x1 -= C.phai; w.y0 += C.tren; w.y1 -= C.duoi;
       w.props.push({ type: 'tlThan', ben: 'tren', x: 0, y: w.y0 - 14 }, { type: 'tlThan', ben: 'duoi', x: 0, y: w.y1 + 12 });
     }
-    if (coAnhThat()) b.art = CFG.anh; // chỗ dựng ảnh thật (C71–C85): cùng tên cử động như trùm cũ
+    // thuong-luong-that: KHÔNG đổi b.art (luật giữ của Ngư Tinh); ảnh thật chỉ dùng lúc vẽ (TL.anhMoi). Vào phòng trùm: báo tải trước 3 dáng (bản web).
+    if (G.TL_MOI !== false && G.spriteCustom && G.spriteCustom.uuTienTrum) { try { G.spriteCustom.uuTienTrum(CFG.anh, true); } catch (e) { /* bỏ qua */ } }
     b.x = w.x1 - CFG.dau.lui; b.y = (w.y0 + w.y1) / 2; b.face = -1; b.dirA = PI;
-    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: b.art !== CFG.anh, lan: null, lanCd: G.rr(CFG.lan.moi[0], CFG.lan.moi[1]),
+    b.tl = { mepT: 0, mepCd: 0, duoi: null, song: [], vom: [], tia: [], goiY: false, nhuom: true, lan: null, lanCd: G.rr(CFG.lan.moi[0], CFG.lan.moi[1]),
       xoay: [], troi: null, dong: null, manh: [], siet: null, quet: [], troiGo: null, raKhoi: false }; // (3C)
     datHe(b, 0);
     b.doiPha = doiPha;
@@ -954,12 +959,44 @@
     if (!o || (o.type !== 'tlThan' && o.type !== 'tlVom' && o.type !== 'tlTron')) return prop0.apply(this, arguments);
     try { if (o.type === 'tlThan') veThan(cx, o); else if (o.type === 'tlTron') veTron(cx, o); else veVom(cx, o); } catch (e) { if (!TL.loiVe) { TL.loiVe = e; if (window.console) console.warn('thuong_luong', e); } }
   };
+  // --- thuong-luong-that: ảnh thật 3 pha (chỉ khi đã nạp xong; ?tlmoi=0 thì sprite_custom.js không nạp) ---
+  const TRAN = [[9.5, -87.5], [-4.5, -87.5], [6, -89]]; // mảnh trống trên trán ở khung đứng (điểm game so với điểm neo, ảnh quay PHẢI) — đo từ tấm (bao-cao.md)
+  const NHIP_LAN = { xuong: 0.45, len: 0.3 };    // lặn đổi chỗ (1 giây, không đổi): 45% đầu phát hàng lặn, 30% cuối phát ngược (trồi lên), giữa chỉ gợn nước
+  function anhMoi() {
+    if (G.TL_MOI === false) return null;
+    const SC = G.spriteCustom, MA = G.monsterArt, sp = SC && SC.ds && SC.ds[CFG.anh];
+    if (!sp || !sp.ready || !MA) return null;
+    if (!sp.durMuon) { // nhịp khung = thời lượng cử động của Ngư Tinh (thân luật), mốc ra đòn chép từ Ngư Tinh
+      sp.durMuon = (n) => (n ? MA.dur('nguTinh', n) : 0) || 0;
+      const l = MA.list && MA.list.find((x) => x.id === CFG.anh), ng = MA.list && MA.list.find((x) => x.id === 'nguTinh');
+      if (l && ng && ng.anims) l.anims = ng.anims.map((x) => Object.assign({}, x));
+      if (!MA.__tlDur) { const d0 = MA.dur; MA.dur = function (id, a) { return typeof id === 'string' && /^thuongLuong/.test(id) ? d0.call(MA, 'nguTinh', a) : d0.apply(MA, arguments); }; MA.__tlDur = true; }
+    }
+    return sp;
+  }
+  TL.anhMoi = anhMoi;
+  TL.moiVe = (e) => !!(e && e.tlMoiT != null && (G.time || 0) - e.tlMoiT <= 0.25); // js/dinh_quai.js: dùng bảng neo của ảnh thật
+  function veLanMoi(cx, b, u) { // hàng lặn của ảnh pha đang ở (hiện chỉ pha 1 có)
+    const SC = G.spriteCustom, p = (b.phase | 0) + 1, sp0 = SC.ds[CFG.anh];
+    const sp = p >= 2 ? SC.ds[CFG.anh + '-p' + p] : sp0; // pha 2, 3: tệp pha chưa có hàng lặn (bỏ để đỡ dung lượng) → gợn nước vẽ code như cũ
+    const d = sp && sp.ready && sp.dt.die; if (!d) return false;
+    let k;
+    if (u < NHIP_LAN.xuong) k = u / NHIP_LAN.xuong; else if (u > 1 - NHIP_LAN.len) k = (1 - u) / NHIP_LAN.len; else return false;
+    const i = Math.min(d.so - 1, Math.floor(clamp(k, 0, 0.999) * d.so));
+    cx.save(); cx.translate(Math.round(b.x), Math.round(b.y));
+    try { SC.veKhung(cx, sp, 'die', i, b.face || -1, {}); } finally { cx.restore(); }
+    return true;
+  }
   // --- đầu: ảnh mượn nhuộm theo hệ, bọt nước quanh chỗ trồi, mảnh trống trên trán sáng khi lộ điểm yếu ---
   const boss0 = A.boss;
   A.boss = function (cx, b) {
     if (!b || b.kind !== 'thuong' || b.illusion || !b.tl) return boss0.apply(this, arguments);
     const t = G.time || 0, M = mauB(b), pv = c;
+    const moi = anhMoi();
     if ((b.tl.lan || (b.tl.troi && b.hidden)) && b.dying == null) { // đang lặn: chỉ thấy gợn nước + vây lưng rẽ nước chạy dọc mép phải
+      if (moi && b.tl.lan && !b.illusion) { // ảnh thật: đầu lặn xuống / trồi lên theo hàng lặn của ảnh (thời gian lặn, chỗ trồi không đổi)
+        try { if (veLanMoi(cx, b, clamp(b.tl.lan.t / CFG.lan.giay, 0, 1))) return; } catch (e) { if (!TL.loiVe) TL.loiVe = e; }
+      }
       c = cx;
       try {
         for (let i = 0; i < 3; i++) { const r = 8 + ((t * 30 + i * 9) % 26); E(b.x, b.y + 2, r, r * 0.3, 'rgba(220,240,232,' + (0.5 - r / 70).toFixed(2) + ')'); }
@@ -971,9 +1008,14 @@
     try {
       if (b.dying == null) { E(b.x, b.y + 2, 30, 8, 'rgba(8,20,22,0.55)'); for (let i = 0; i < 8; i++) { const a = i / 8 * TAU + t; E(b.x + Math.cos(a) * 28, b.y + 2 + Math.sin(a) * 7, 3, 1.2, 'rgba(220,240,232,0.6)'); } }
     } finally { c = pv; }
-    const V4 = G.vung4, dv = V4 ? V4.dangVe : false, nh = b.tl.nhuom && 'filter' in cx;
+    const V4 = G.vung4, dv = V4 ? V4.dangVe : false, nh = !moi && b.tl.nhuom && 'filter' in cx;
     let f0 = null;
-    if (nh && G.locVe) { // 16/10 vẽ tay 9: nhuộm nhanh (G.locVe, js/fx_anh.js; ?songnhanh=0 như cũ)
+    if (moi) { // ảnh thật: vẽ đúng màu (không nhuộm, không phủ nước đục của vùng 4), đổi tạm mã ảnh chỉ trong lúc vẽ
+      const a0 = b.art;
+      if (V4) V4.dangVe = false;
+      b.art = CFG.anh; b.tlMoiT = G.time || 0;
+      try { boss0.apply(this, arguments); } finally { b.art = a0; if (V4) V4.dangVe = dv; }
+    } else if (nh && G.locVe) { // 16/10 vẽ tay 9: nhuộm nhanh (G.locVe, js/fx_anh.js; ?songnhanh=0 như cũ)
       if (V4) V4.dangVe = false;
       const th = this, ar = arguments;
       try { G.locVe(cx, NHUOM[b.el] || '', () => boss0.apply(th, ar)); } finally { if (V4) V4.dangVe = dv; }
@@ -984,9 +1026,15 @@
     if (b.dying == null && !b.hidden) {
       c = cx;
       try {
-        const x = b.x - 8, y = b.y - (b.h || 100) * 0.62, lo = b.exposed > 0;
+        const lo = b.exposed > 0;
+        if (moi) { // ảnh thật đã có mảnh trống trên trán: chỉ thêm quầng sáng khi lộ điểm yếu, đúng chỗ mảnh trống của ảnh
+          const T0 = TRAN[clamp(b.phase | 0, 0, 2)], f = b.face > 0 ? 1 : -1, x = b.x + T0[0] * f, y = b.y + T0[1];
+          if (lo) { E(x, y, 10 + Math.sin(t * 10) * 1.5, 8, 'rgba(255,214,120,0.35)'); E(x, y, 5, 4, 'rgba(255,243,176,0.45)'); }
+        } else {
+        const x = b.x - 8, y = b.y - (b.h || 100) * 0.62;
         if (lo) E(x, y, 9 + Math.sin(t * 10) * 1.5, 7, 'rgba(255,214,120,0.35)');
         E(x, y, 4.5, 3.5, lo ? '#ffd27a' : '#a8743a'); R(x - 1, y - 1, 2, 2, lo ? '#fff3b0' : '#d8a050');
+        }
       } finally { c = pv; }
     }
   };
