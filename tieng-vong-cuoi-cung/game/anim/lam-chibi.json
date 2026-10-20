@@ -1,0 +1,69 @@
+{
+ "version": 1,
+ "image": "lam-chibi.png",
+ "frameWidth": 240,
+ "frameHeight": 240,
+ "pivot": [
+  120,
+  234
+ ],
+ "nguon": "art/chibi/lam/khung/*/khung-N.png (512×512, pivot y=500) → Lanczos 240",
+ "animations": {
+  "idle": {
+   "row": 0,
+   "frames": 1,
+   "fps": 4,
+   "loop": true,
+   "nguon": "goc-nhin [7]",
+   "ghiChu": "TẠM: 1 khung góc nhìn ngang phải (goc-nhin 7). idle.gif gốc là rút dao nên không dùng."
+  },
+  "run": {
+   "row": 1,
+   "frames": 6,
+   "fps": 12,
+   "loop": true,
+   "nguon": "run [1, 2, 3, 4, 5, 6]",
+   "ghiChu": "run-6 thật (khung 2, 5 là pha bay)."
+  },
+  "jump": {
+   "row": 2,
+   "frames": 1,
+   "fps": 8,
+   "loop": false,
+   "nguon": "run [5]",
+   "ghiChu": "TẠM: khung bay run 5."
+  },
+  "fall": {
+   "row": 3,
+   "frames": 1,
+   "fps": 8,
+   "loop": true,
+   "nguon": "run [2]",
+   "ghiChu": "TẠM: khung bay run 2."
+  },
+  "combo1": {
+   "row": 4,
+   "frames": 4,
+   "fps": 14,
+   "loop": false,
+   "nguon": "combo-1 [1, 2, 3, 4]",
+   "ghiChu": "Đòn 1 của combo (chém/lao). Lỗi gốc: khung 1 dao ở tay sau."
+  },
+  "attack": {
+   "row": 5,
+   "frames": 4,
+   "fps": 14,
+   "loop": false,
+   "nguon": "combo-3 [1, 2, 3, 4]",
+   "ghiChu": "Đâm (combo-3) — đòn chính, đòn 2 của combo, chém hất, chém trên không."
+  },
+  "combo4": {
+   "row": 6,
+   "frames": 4,
+   "fps": 14,
+   "loop": false,
+   "nguon": "combo-4 [1, 2, 3, 4]",
+   "ghiChu": "Đòn 3 của combo (nhảy bổ). Khung 3–4 (đâm xuống) dùng cho chém nảy."
+  }
+ }
+}
