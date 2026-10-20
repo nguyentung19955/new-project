@@ -1,69 +1,781 @@
 {
- "version": 1,
+ "version": 2,
  "image": "lam-chibi.png",
- "frameWidth": 240,
- "frameHeight": 240,
- "pivot": [
-  120,
-  234
- ],
- "nguon": "art/chibi/lam/khung/*/khung-N.png (512×512, pivot y=500) → Lanczos 240",
- "animations": {
+ "donVi": "px game (960×540)",
+ "tiLe": 0.46875,
+ "pivotGoc": "ô 240, pivot [120, 234] = giữa đế ủng; frames: [x, y, w, h, ox, oy] (ox, oy = góc hình so với pivot)",
+ "nguon": "art/chibi/lam/khung-chuan (cỡ đồng nhất theo mũ trùm, xem khung-chuan.json)",
+ "frames": {
+  "idle/1": [
+   0,
+   0,
+   87,
+   166,
+   -53.0,
+   -163.62
+  ],
+  "idle/2": [
+   89,
+   0,
+   88,
+   166,
+   -54.0,
+   -163.62
+  ],
+  "idle/3": [
+   179,
+   0,
+   87,
+   168,
+   -55.0,
+   -165.62
+  ],
+  "idle/4": [
+   268,
+   0,
+   89,
+   170,
+   -57.0,
+   -167.62
+  ],
+  "run8/1": [
+   359,
+   0,
+   103,
+   139,
+   -49.0,
+   -137.62
+  ],
+  "run8/2": [
+   464,
+   0,
+   87,
+   139,
+   -29.0,
+   -136.62
+  ],
+  "run8/3": [
+   553,
+   0,
+   90,
+   140,
+   -34.0,
+   -138.62
+  ],
+  "run8/4": [
+   645,
+   0,
+   98,
+   134,
+   -34.0,
+   -132.62
+  ],
+  "run8/5": [
+   745,
+   0,
+   104,
+   139,
+   -49.0,
+   -137.62
+  ],
+  "run8/6": [
+   851,
+   0,
+   85,
+   139,
+   -32.0,
+   -137.62
+  ],
+  "run8/7": [
+   938,
+   0,
+   94,
+   139,
+   -42.0,
+   -136.62
+  ],
+  "run8/8": [
+   1034,
+   0,
+   92,
+   136,
+   -31.0,
+   -134.62
+  ],
+  "jump/1": [
+   1128,
+   0,
+   105,
+   109,
+   -47.0,
+   -106.62
+  ],
+  "jump/2": [
+   1235,
+   0,
+   103,
+   136,
+   -22.0,
+   -159.62
+  ],
+  "jump/3": [
+   1340,
+   0,
+   96,
+   124,
+   -47.0,
+   -164.62
+  ],
+  "jump/4": [
+   1438,
+   0,
+   103,
+   139,
+   -47.0,
+   -163.62
+  ],
+  "rut-dao/1": [
+   1543,
+   0,
+   114,
+   160,
+   -55.0,
+   -157.62
+  ],
+  "rut-dao/2": [
+   1659,
+   0,
+   112,
+   159,
+   -53.0,
+   -156.62
+  ],
+  "rut-dao/3": [
+   1773,
+   0,
+   114,
+   160,
+   -55.0,
+   -157.62
+  ],
+  "rut-dao/4": [
+   1889,
+   0,
+   131,
+   155,
+   -69.0,
+   -152.62
+  ],
+  "rut-dao/5": [
+   0,
+   172,
+   149,
+   154,
+   -86.0,
+   -151.62
+  ],
+  "rut-dao/6": [
+   151,
+   172,
+   150,
+   154,
+   -88.0,
+   -151.62
+  ],
+  "combo-3/1": [
+   303,
+   172,
+   148,
+   138,
+   -71.0,
+   -134.62
+  ],
+  "combo-3/2": [
+   453,
+   172,
+   198,
+   138,
+   -74.0,
+   -135.62
+  ],
+  "combo-3/3": [
+   653,
+   172,
+   219,
+   136,
+   -72.0,
+   -133.62
+  ],
+  "combo-3/4": [
+   874,
+   172,
+   157,
+   137,
+   -60.0,
+   -134.62
+  ],
+  "combo-1/2": [
+   1033,
+   172,
+   171,
+   152,
+   -63.0,
+   -149.62
+  ],
+  "combo-1/3": [
+   1206,
+   172,
+   186,
+   153,
+   -65.0,
+   -149.62
+  ],
+  "combo-1/4": [
+   1394,
+   172,
+   152,
+   153,
+   -38.0,
+   -149.62
+  ],
+  "combo-4/1": [
+   1548,
+   172,
+   133,
+   145,
+   -75.0,
+   -143.62
+  ],
+  "combo-4/2": [
+   1683,
+   172,
+   125,
+   144,
+   -84.0,
+   -142.62
+  ],
+  "combo-4/3": [
+   1810,
+   172,
+   134,
+   139,
+   -34.0,
+   -137.62
+  ],
+  "combo-4/4": [
+   0,
+   328,
+   138,
+   137,
+   -68.0,
+   -133.62
+  ],
+  "combo-5/1": [
+   140,
+   328,
+   134,
+   160,
+   -65.0,
+   -157.62
+  ],
+  "combo-2/1": [
+   276,
+   328,
+   163,
+   147,
+   -87.0,
+   -160.62
+  ],
+  "combo-2/2": [
+   441,
+   328,
+   176,
+   147,
+   -123.0,
+   -178.62
+  ],
+  "combo-2/3": [
+   619,
+   328,
+   194,
+   146,
+   -73.0,
+   -179.62
+  ],
+  "combo-2/4": [
+   815,
+   328,
+   151,
+   144,
+   -27.0,
+   -161.62
+  ]
+ },
+ "anims": {
   "idle": {
-   "row": 0,
-   "frames": 1,
-   "fps": 4,
+   "khoa": "tâm mắt",
    "loop": true,
-   "nguon": "goc-nhin [7]",
-   "ghiChu": "TẠM: 1 khung góc nhìn ngang phải (goc-nhin 7). idle.gif gốc là rút dao nên không dùng."
+   "buoc": [
+    {
+     "f": "idle/1",
+     "ms": 125,
+     "dx": -0.91,
+     "dy": 0
+    },
+    {
+     "f": "idle/2",
+     "ms": 125,
+     "dx": -0.73,
+     "dy": 0
+    },
+    {
+     "f": "idle/3",
+     "ms": 125,
+     "dx": 0.73,
+     "dy": 0
+    },
+    {
+     "f": "idle/4",
+     "ms": 125,
+     "dx": 1.2,
+     "dy": 0
+    },
+    {
+     "f": "idle/3",
+     "ms": 125,
+     "dx": 0.73,
+     "dy": 0
+    },
+    {
+     "f": "idle/2",
+     "ms": 125,
+     "dx": -0.73,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "idle 8 FPS phát 1-2-3-4-3-2 (khung 5≈1, 6≈2 trong ảnh gốc nên bỏ) để giảm nhấp dọc."
   },
   "run": {
-   "row": 1,
-   "frames": 6,
-   "fps": 12,
+   "khoa": "tâm mắt",
    "loop": true,
-   "nguon": "run [1, 2, 3, 4, 5, 6]",
-   "ghiChu": "run-6 thật (khung 2, 5 là pha bay)."
+   "buoc": [
+    {
+     "f": "run8/1",
+     "ms": 83,
+     "dx": 0.91,
+     "dy": 0
+    },
+    {
+     "f": "run8/2",
+     "ms": 83,
+     "dx": -0.91,
+     "dy": 0
+    },
+    {
+     "f": "run8/3",
+     "ms": 83,
+     "dx": -1.43,
+     "dy": 0
+    },
+    {
+     "f": "run8/4",
+     "ms": 83,
+     "dx": -6.02,
+     "dy": 0
+    },
+    {
+     "f": "run8/5",
+     "ms": 83,
+     "dx": 1.8,
+     "dy": 0
+    },
+    {
+     "f": "run8/6",
+     "ms": 83,
+     "dx": 2.23,
+     "dy": 0
+    },
+    {
+     "f": "run8/7",
+     "ms": 83,
+     "dx": 3.59,
+     "dy": 0
+    },
+    {
+     "f": "run8/8",
+     "ms": 83,
+     "dx": -5.23,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "run-8, 12 FPS."
   },
   "jump": {
-   "row": 2,
-   "frames": 1,
-   "fps": 8,
+   "khoa": "tâm mắt",
    "loop": false,
-   "nguon": "run [5]",
-   "ghiChu": "TẠM: khung bay run 5."
+   "buoc": [
+    {
+     "f": "jump/1",
+     "ms": 100,
+     "dx": -4.17,
+     "dy": 0
+    },
+    {
+     "f": "jump/2",
+     "ms": 100,
+     "dx": -17.63,
+     "dy": 0
+    },
+    {
+     "f": "jump/3",
+     "ms": 100,
+     "dx": 4.17,
+     "dy": 0
+    },
+    {
+     "f": "jump/4",
+     "ms": 100,
+     "dx": 4.17,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "chọn khung theo vận tốc: 1 khuỵu lúc bật, 2 lên, 3 đỉnh, 4 rơi."
   },
-  "fall": {
-   "row": 3,
-   "frames": 1,
-   "fps": 8,
+  "rutdao": {
+   "khoa": "gót chân sau",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "rut-dao/1",
+     "ms": 140,
+     "dx": 0.0,
+     "dy": 0
+    },
+    {
+     "f": "rut-dao/2",
+     "ms": 140,
+     "dx": -0.47,
+     "dy": 0
+    },
+    {
+     "f": "rut-dao/3",
+     "ms": 120,
+     "dx": 0.0,
+     "dy": 0
+    },
+    {
+     "f": "rut-dao/4",
+     "ms": 100,
+     "dx": 2.81,
+     "dy": 0
+    },
+    {
+     "f": "rut-dao/5",
+     "ms": 100,
+     "dx": 2.81,
+     "dy": 0
+    },
+    {
+     "f": "rut-dao/6",
+     "ms": 260,
+     "dx": 3.75,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Rút dao khi vào ải (đầu màn, sau hồi sinh). Khoá điều khiển trong lúc phát."
+  },
+  "atk1": {
+   "khoa": "gót chân sau",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-3/1",
+     "ms": 120,
+     "dx": 0.0,
+     "dy": 0
+    },
+    {
+     "f": "combo-3/2",
+     "ms": 60,
+     "dx": 3.28,
+     "dy": 0
+    },
+    {
+     "f": "combo-3/3",
+     "ms": 140,
+     "dx": 1.88,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      4,
+      -97,
+      147,
+      48
+     ]
+    },
+    {
+     "f": "combo-3/4",
+     "ms": 140,
+     "dx": -11.25,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Đòn 1 = combo-3 (đâm)."
+  },
+  "atk2": {
+   "khoa": "gót chân sau",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-1/2",
+     "ms": 120,
+     "dx": -7.5,
+     "dy": 0
+    },
+    {
+     "f": "combo-1/3",
+     "ms": 60,
+     "dx": -5.62,
+     "dy": 0
+    },
+    {
+     "f": "combo-1/4",
+     "ms": 140,
+     "dx": -37.97,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      -36,
+      -100,
+      116,
+      48
+     ]
+    },
+    {
+     "f": "combo-1/3",
+     "ms": 140,
+     "dx": -5.62,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Đòn 2 = combo-1 bỏ khung 1 (khung 1 dao ở tay sau). Thu = khung 3."
+  },
+  "atk3": {
+   "khoa": "tâm thân",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-4/1",
+     "ms": 120,
+     "dx": 0.0,
+     "dy": -28
+    },
+    {
+     "f": "combo-4/2",
+     "ms": 60,
+     "dx": 15.47,
+     "dy": -44
+    },
+    {
+     "f": "combo-4/3",
+     "ms": 140,
+     "dx": -14.53,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      -13,
+      -59,
+      99,
+      64
+     ]
+    },
+    {
+     "f": "combo-4/4",
+     "ms": 140,
+     "dx": 6.56,
+     "dy": 0
+    },
+    {
+     "f": "combo-5/1",
+     "ms": 140,
+     "dx": 7.03,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Đòn 3 = combo-4 nhảy bổ (khoá tâm thân, vì hai chân rời đất): khung 1–2 cộng độ cao 28/44 px (ảnh gốc vẽ chạm đất); sau đòn 1 khung combo-5/1 thu thế."
+  },
+  "atk4": {
+   "khoa": "tâm thân",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-4/3",
+     "ms": 183,
+     "dx": 0.0,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      -26,
+      -24,
+      64,
+      82
+     ]
+    },
+    {
+     "f": "combo-4/4",
+     "ms": 67,
+     "dx": 21.09,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Chém nảy (↓+Chém trên không) = combo-4 khung 3–4."
+  },
+  "atk5": {
+   "khoa": "gót chân sau",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-3/1",
+     "ms": 120,
+     "dx": 0.0,
+     "dy": 0
+    },
+    {
+     "f": "combo-3/2",
+     "ms": 60,
+     "dx": 3.28,
+     "dy": 0
+    },
+    {
+     "f": "combo-3/4",
+     "ms": 140,
+     "dx": -11.25,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      -9,
+      -140,
+      97,
+      60
+     ]
+    },
+    {
+     "f": "combo-5/1",
+     "ms": 140,
+     "dx": -5.62,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Chém hất (↑+Chém) = combo-3 khung 1, 2, 4 (dao giơ chéo lên) + thu combo-5/1."
+  },
+  "atk6": {
+   "khoa": "tâm thân",
+   "loop": false,
+   "buoc": [
+    {
+     "f": "combo-2/1",
+     "ms": 50,
+     "dx": 0.0,
+     "dy": 0
+    },
+    {
+     "f": "combo-2/2",
+     "ms": 50,
+     "dx": 26.72,
+     "dy": 0
+    },
+    {
+     "f": "combo-2/3",
+     "ms": 50,
+     "dx": 13.59,
+     "dy": 0
+    },
+    {
+     "f": "combo-2/4",
+     "ms": 140,
+     "dx": -5.16,
+     "dy": 0,
+     "hit": true,
+     "box": [
+      -3,
+      -107,
+      127,
+      48
+     ]
+    },
+    {
+     "f": "combo-2/4",
+     "ms": 60,
+     "dx": -5.16,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Đòn trên không = combo-2 (xoay). Khoá theo tâm thân (mắt khung 2 nhìn lưng không đo được)."
+  },
+  "dash": {
+   "khoa": "tâm mắt",
    "loop": true,
-   "nguon": "run [2]",
-   "ghiChu": "TẠM: khung bay run 2."
+   "buoc": [
+    {
+     "f": "run8/1",
+     "ms": 100,
+     "dx": 0.0,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "TẠM: lướt = run8 khung 1 (chưa có sheet lướt)."
   },
-  "combo1": {
-   "row": 4,
-   "frames": 4,
-   "fps": 14,
+  "land": {
+   "khoa": "tâm mắt",
    "loop": false,
-   "nguon": "combo-1 [1, 2, 3, 4]",
-   "ghiChu": "Đòn 1 của combo (chém/lao). Lỗi gốc: khung 1 dao ở tay sau."
+   "buoc": [
+    {
+     "f": "jump/1",
+     "ms": 100,
+     "dx": 0.0,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "Tiếp đất = jump khung 1 (khuỵu)."
   },
-  "attack": {
-   "row": 5,
-   "frames": 4,
-   "fps": 14,
+  "hurt": {
+   "khoa": "tâm mắt",
    "loop": false,
-   "nguon": "combo-3 [1, 2, 3, 4]",
-   "ghiChu": "Đâm (combo-3) — đòn chính, đòn 2 của combo, chém hất, chém trên không."
+   "buoc": [
+    {
+     "f": "jump/1",
+     "ms": 100,
+     "dx": 0.0,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "TẠM: bị đánh = jump khung 1 (khuỵu) + nháy."
   },
-  "combo4": {
-   "row": 6,
-   "frames": 4,
-   "fps": 14,
+  "wall": {
+   "khoa": "tâm mắt",
+   "loop": true,
+   "buoc": [
+    {
+     "f": "jump/4",
+     "ms": 100,
+     "dx": 0.0,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "TẠM: bám tường = jump khung 4."
+  },
+  "dead": {
+   "khoa": "tâm mắt",
    "loop": false,
-   "nguon": "combo-4 [1, 2, 3, 4]",
-   "ghiChu": "Đòn 3 của combo (nhảy bổ). Khung 3–4 (đâm xuống) dùng cho chém nảy."
+   "buoc": [
+    {
+     "f": "jump/1",
+     "ms": 100,
+     "dx": 0.0,
+     "dy": 0
+    }
+   ],
+   "ghiChu": "TẠM: chết = jump khung 1, mờ dần."
   }
  }
 }

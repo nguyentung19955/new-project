@@ -1,5 +1,7 @@
 # Độ phân giải 960×540 + Lam chibi (2026-10-20)
 
+> Cập nhật: toàn bộ demo đã sang chibi (môi trường, quái, boss, đồ vật, Lam cỡ đồng nhất) — xem `docs/demo-chibi.md`. Phần "Còn TẠM" dưới đây đã cũ.
+
 Chơi thử: https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/demo.html
 (bản artifact tự chứa: https://claude.ai/artifact/Q7zF46xo6ZbqnNtfPBa1My — dựng bằng `python3 game/build-demo.py`).
 
