@@ -29,7 +29,7 @@ Tách lại (`python3 tools/chibi-khung-chuan.py`, KHÔNG ghi đè `khung/`), m�
 
 - Hệ toạ độ vẫn "ô 240, pivot [120, 234] = giữa đế ủng" (×240/512). Khung được **cắt sát rồi xếp kệ** (1 sheet 2048×488, ~1 MB PNG),
   json ghi `[x, y, w, h, ox, oy]` so với pivot, mỗi bước animation có `ms`, `dx`, `dy`, `hit`, `box`.
-- **Quy tắc căn** (sẵn trong dx/dy): chạy / idle / nhảy khoá ngang theo tâm mắt; đòn đánh + rút dao khoá theo gót chân sau
+- **[CŨ – đã thay, xem `docs/fix-animation.md`: tâm thân trên pivot cho mọi animation, đế chạm đất, không độ cao giả]** Quy tắc căn (sẵn trong dx/dy): chạy / idle / nhảy khoá ngang theo tâm mắt; đòn đánh + rút dao khoá theo gót chân sau
   (mọi đòn dưới đất cùng 1 điểm gót → nối combo liền); khung bay giữ đầu ngang idle; khung đất chạm đất.
   Ngoại lệ: đòn 3 (nhảy bổ, hai chân rời đất) và đòn trên không khoá theo tâm thân.
 - **Thời lượng từng khung khác nhau:** idle 125 ms phát 1-2-3-4-3-2; chạy run-8, 83 ms (12 FPS); đòn: chuẩn bị 120 → vung 60 → **chạm 140** (hitbox bật đúng khung này) → thu 140.

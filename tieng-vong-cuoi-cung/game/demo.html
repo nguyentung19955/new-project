@@ -105,6 +105,10 @@ body.touch .tc{display:block}
 @keyframes ring{0%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}100%{transform:rotate(-14deg)}}
 .bellico{font-size:34px;display:inline-block;animation:ring 1.2s ease-in-out infinite;transform-origin:50% 10%}
 #fade{position:absolute;inset:0;background:#0C0F14;opacity:0;pointer-events:none}
+/* Debug Animation (?debug=anim hoặc ⚙ → Debug animation): nút chạm phát từng khung / dừng / chậm */
+#dbg{position:absolute;right:max(8px,calc(env(safe-area-inset-right,0px) + 6px));top:calc(env(safe-area-inset-top,0px) + 46px);display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:300px;z-index:3}
+#dbg button{height:36px;min-width:44px;padding:0 9px;border-radius:8px;border:1px solid #e070e0;background:rgba(26,33,43,.9);color:#f6d0f6;font-size:14px;font-weight:700;cursor:pointer}
+#dbg button.on{background:#7a2f7a;color:#fff}
 #rotate{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;background:rgba(12,15,20,.95);font-size:18px;font-weight:700;color:var(--bell);z-index:6}
 @media (max-width:760px){ #hint{font-size:14px} #boss{width:min(40vw,300px)} }
 @media (orientation:portrait){ body.touch #rotate{display:grid} }
@@ -157,8 +161,16 @@ body.touch .tc{display:block}
       <input id="set-size" type="range" min="80" max="130" step="5" value="100" aria-label="Cỡ nút">
       <button id="set-plus" class="alt" type="button" aria-label="To hơn">+</button><span id="set-val">100%</span></div>
     <p>Chỉnh to nhỏ cần chạy và các nút cảm ứng.</p>
+    <button id="set-dbg" class="alt" type="button">Debug animation: Tắt</button>
     <button id="btn-set-ok" type="button">Xong</button>
   </div></div>
+  <div id="dbg" class="ui" hidden>
+    <button id="dbg-play" type="button" aria-label="Tạm dừng / chạy">⏸</button>
+    <button id="dbg-step" type="button" aria-label="Phát 1 bước">+1</button>
+    <button id="dbg-step5" type="button" aria-label="Phát 5 bước">+5</button>
+    <button id="dbg-speed" type="button" aria-label="Tốc độ">×1</button>
+    <button id="dbg-off" type="button" aria-label="Tắt debug">✕</button>
+  </div>
   <div id="rotate">Xoay ngang điện thoại để chơi</div>
 </div>
 
@@ -667,8 +679,9 @@ function updatePlayer(){
 
 /* ================= LAM CHIBI: chọn animation + khung =================
    anim/lam-chibi.json: mỗi animation là dãy BƯỚC {khung, ms, dx, dy, hit, box}. ms khác nhau từng bước (đòn: chuẩn bị 120,
-   vung 60, chạm 140, thu 140; chạy 83 = 12 FPS; idle 125 phát 1-2-3-4-3-2). dx/dy đã căn sẵn: chạy/idle/nhảy khoá theo tâm mắt,
-   đòn đánh + rút dao khoá theo gót chân sau, khung bay giữ đầu.
+   vung 60, chạm 140, thu 140; chạy 83 = 12 FPS; idle 125 phát 1-2-3-4-3-2). dx/dy đã căn sẵn (docs/fix-animation.md):
+   ngang = TÂM THÂN đúng trên pivot cho MỌI animation (đổi animation / lật mặt không trượt người); dọc = đế ủng chạm đất,
+   trên không = tâm thân ở độ cao cố định (không cộng độ cao giả). Số khung tính theo bước logic 60 Hz, KHÔNG theo số lần vẽ.
    Chọn khung CHỈ trong bước logic 60 Hz rồi ghi a2/k2/l2 vào pl (và bản ghi Tiếng Vọng) → bóng phát lại đúng khung.
    Hitbox/vật lý KHÔNG theo ảnh: vẫn 20×30. Vùng ăn đòn 40×120 (hurtBox). */
 let LAM=null, LAM_E=null, QB=null, TG=null;   // sheet Lam (+ bản tô màu cho bóng), sheet quái+boss, sheet thế giới
@@ -694,7 +707,7 @@ function lamChibi(){
   else if(pl.st==='wall'){ ten='wall'; flip=pl.lastWall>0; }
   else if(!pl.onGround){ ten='jump'; k = (pl.vy<0 && pl.airT<5) ? 0 : pl.vy<-2.2 ? 1 : pl.vy<2.2 ? 2 : 3; }
   else if(pl.landT>4) ten='land';
-  else if(Math.abs(pl.vx)>0.6) ten='run';
+  else if(Math.abs(pl.vx)>0.6 || (CH.ten==='run' && Math.abs(pl.vx)>0.05)) ten='run';   // trễ: quay đầu khi chạy (vx qua 0) không chen 1 khung idle cao hơn 26 px
   else ten='idle';
   if(ten!==CH.ten){ CH.ten=ten; CH.t=0; } else CH.t++;
   if(ten==='run'||ten==='idle') k=animK(A[ten],CH.t);
@@ -1138,9 +1151,13 @@ function savePrev(){
   if(echo){ echo.px=echo.cur.x; echo.py=echo.cur.y; }
 }
 /* 1 bước animation của sheet chibi: (x,y) = pivot trên màn hình; lật ngang quanh pivot. sh={img, frames}, a = animation json */
+/* Làm tròn CHỈ ở bước vẽ, theo PIXEL THẬT của màn (1/BK px logic) – cùng một cách cho camera, nhân vật, quái:
+   trước đây camera làm tròn px logic (≈2,2 px thật trên iPhone) còn nhân vật không → nhân vật rung ±1 px thật so với nền. */
+function snap(v){ return Math.round(v*BK)/BK; }
 function veBuoc(sh,img,a,k,flip,x,y,sx,sy){
   if(!a) return; const b=a.buoc[Math.min(k,a.buoc.length-1)], f=sh.frames[b.f]; if(!f) return;
-  const dx=f[4]+b.dx, dy=f[5]+(b.dy||0);
+  const dx=snap(f[4]+b.dx), dy=snap(f[5]+(b.dy||0)); x=snap(x); y=snap(y);
+  if(DBG.on) dbgGhi(sh,a,k,b,f,flip,x,y,dx,dy,sx,sy);
   if(flip||sx||sy){ ctx.save(); ctx.translate(x,y); ctx.scale((flip?-1:1)*(sx||1),sy||1); ctx.drawImage(img,f[0],f[1],f[2],f[3],dx,dy,f[2],f[3]); ctx.restore(); }
   else ctx.drawImage(img,f[0],f[1],f[2],f[3],x+dx,y+dy,f[2],f[3]);
 }
@@ -1336,7 +1353,7 @@ function drawBoss(al){
   if(b.st==='die' && b.t>120) ctx.globalAlpha=Math.max(0,1-(b.t-120)/50);
   const a=QB.anims['boss-tho'];
   if(b.st==='stun'){ ctx.save(); ctx.translate(X,Y); ctx.rotate(Math.sin(S.frame*0.12)*0.04); veBuoc(QB,b.flash>0?QB.w:QB.img,a,b.k2,flip,0,0,sx,sy); ctx.restore(); }
-  else veBuoc(QB,b.flash>0?QB.w:QB.img,a,b.k2,flip,X,Y,sx,sy);
+  else veBuoc(QB,b.flash>0?QB.w:QB.img,a,b.k2||0,flip,X,Y,sx,sy);
   if(b.st==='slamPrep'||b.st==='sweepPrep'||b.st==='intro'){ ctx.globalAlpha=0.12+0.3*(0.5+0.5*Math.sin(b.t*0.7)); veBuoc(QB,QB.g,a,b.k2,flip,X,Y,sx,sy); ctx.globalAlpha=1;
     if(b.st!=='intro'){ at(X,top-30); ctx.fillStyle='#0C0F14'; ctx.fillRect(-3,-1,7,13); ctx.fillStyle='#E1B85A'; ctx.fillRect(-1,0,3,7); ctx.fillRect(-1,9,3,2); ctx.restore(); } }
   ctx.globalAlpha=1;
@@ -1347,10 +1364,10 @@ function drawBoss(al){
     ctx.restore(); }
 }
 function render(al){
-  ctx.setTransform(BK,0,0,BK,0,0);
+  ctx.setTransform(BK,0,0,BK,0,0); DBG.n=0;
   const shk=S.sht/8, sm=S.sht>0?Math.min(3,S.shm*0.6)*shk*shk*((S.sht%2)?1:-1)*2:0;   // rung ×2 theo độ phân giải
   const camx=lerp(S.pcx,S.camx,al);
-  ox=Math.round(camx)+Math.round(S.shx*sm); oy=Math.round(S.camy)+Math.round(S.shy*sm);
+  ox=snap(camx+S.shx*sm); oy=snap(S.camy+S.shy*sm);   // camera theo pixel thật (cũ: Math.round px logic)
   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
   ctx.fillStyle='#1A212B'; ctx.fillRect(0,0,W,H);
   veLap(IMG.xa,camx*0.25,-oy*0.3,1);
@@ -1418,6 +1435,7 @@ function render(al){
   ctx.fillStyle=col; ctx.fillRect(bx,by,Math.round(bw*fill),5);
   ctx.restore();
   if(S.fade>0){ ctx.globalAlpha=S.fade; ctx.fillStyle='#0C0F14'; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1; }
+  if(DBG.on) drawDebug(al);
   updRecUI();
 }
 /* Vẽ pixel thật (đơn vị px cũ, trong khối at()): mỗi điểm 1 ô, không trùng điểm */
@@ -1559,16 +1577,85 @@ function endScreen(){
   endEl.hidden=false;
 }
 
+/* ================= DEBUG ANIMATION =================
+   Bật: thêm ?debug=anim vào địa chỉ, hoặc ⚙ → "Debug animation". Vẽ đè: khung sprite gốc (trắng đứt), pivot (hồng),
+   tâm thân (xanh lá), hitbox vật lý (xanh dương), vùng ăn đòn (lục), hộp đòn (đỏ), đường đất (vàng), toạ độ, tên animation,
+   chỉ số bước/khung, FPS thật. Nút chạm: ⏸/▶ dừng, +1 / +5 phát từng bước logic, ×1/×½/×¼/×⅒ phát chậm, ✕ tắt. Phím: 9 dừng, 0 +1 bước, 8 đổi tốc độ. */
+const DBG={on:false,paused:false,speed:1,req:0,fps:0,sps:0,fN:0,sN:0,fT:0,n:0,L:[]};
+for(let i=0;i<40;i++) DBG.L.push({});
+function dbgGhi(sh,a,k,b,f,flip,x,y,dx,dy,sx,sy){   // ghi lại lần vẽ sprite (toạ độ màn hình logic) để vẽ khung debug
+  if(DBG.n>=DBG.L.length) return; const r=DBG.L[DBG.n++], kx=(sx||1)*(flip?-1:1), ky=sy||1;
+  r.x=x; r.y=y; r.x0=x+(kx>0?dx*kx:(dx+f[2])*kx); r.y0=y+dy*ky; r.w=f[2]*Math.abs(kx); r.h=f[3]*ky; r.f=b.f; r.k=k; r.n=a.buoc.length; r.lam=(sh===LAM);
+  const m=sh.moc&&sh.moc[b.f]; r.tx=m?x+(m.tx+b.dx)*kx:null; r.ty=m?y+(m.ty+(b.dy||0))*ky:null;
+}
+const dbgEl=document.getElementById('dbg'), dbgPlay=document.getElementById('dbg-play'), dbgSpeed=document.getElementById('dbg-speed'), setDbg=document.getElementById('set-dbg');
+const SPEEDS=[1,0.5,0.25,0.1];
+function dbgUI(){ dbgEl.hidden=!DBG.on; dbgPlay.textContent=DBG.paused?'▶':'⏸'; dbgPlay.classList.toggle('on',DBG.paused);
+  dbgSpeed.textContent='×'+(DBG.speed===1?'1':DBG.speed===0.5?'½':DBG.speed===0.25?'¼':'⅒'); dbgSpeed.classList.toggle('on',DBG.speed!==1);
+  setDbg.textContent='Debug animation: '+(DBG.on?'Bật':'Tắt'); }
+function dbgOn(v){ DBG.on=v; if(!v){ DBG.paused=false; DBG.speed=1; } dbgUI(); }
+function dbgPause(){ DBG.paused=!DBG.paused; dbgUI(); }
+function dbgStep(n){ if(!DBG.paused){ DBG.paused=true; } DBG.req+=n; dbgUI(); }
+function dbgSpd(){ DBG.speed=SPEEDS[(SPEEDS.indexOf(DBG.speed)+1)%SPEEDS.length]; dbgUI(); }
+dbgPlay.addEventListener('click',e=>{ dbgPause(); e.currentTarget.blur(); });
+document.getElementById('dbg-step').addEventListener('click',e=>{ dbgStep(1); e.currentTarget.blur(); });
+document.getElementById('dbg-step5').addEventListener('click',e=>{ dbgStep(5); e.currentTarget.blur(); });
+dbgSpeed.addEventListener('click',e=>{ dbgSpd(); e.currentTarget.blur(); });
+document.getElementById('dbg-off').addEventListener('click',e=>{ dbgOn(false); e.currentTarget.blur(); });
+setDbg.addEventListener('click',()=>dbgOn(!DBG.on));
+addEventListener('keydown',e=>{ if(!DBG.on) return; if(e.code==='Digit9') dbgPause(); else if(e.code==='Digit0') dbgStep(1); else if(e.code==='Digit8') dbgSpd(); });
+try{ if(new URLSearchParams(location.search).get('debug')==='anim') dbgOn(true); }catch(e){}
+function dbgRect(x,y,w,h,c,dash){ ctx.strokeStyle=c; ctx.setLineDash(dash||[]); ctx.strokeRect(x,y,w,h); ctx.setLineDash([]); }
+function drawDebug(al){
+  ctx.save(); ctx.lineWidth=1;
+  // đường đất: sàn chính + mặt đứng của Lam
+  const px=lerp(pl.px,pl.x,al), py=lerp(pl.py,pl.y,al);
+  ctx.strokeStyle='rgba(255,214,90,.9)'; ctx.beginPath(); ctx.moveTo(0,FLOOR-oy+.5); ctx.lineTo(W,FLOOR-oy+.5); ctx.stroke();
+  ctx.setLineDash([2,3]); ctx.beginPath(); ctx.moveTo(px+10-ox-70,py+30-oy); ctx.lineTo(px+10-ox+70,py+30-oy); ctx.stroke(); ctx.setLineDash([]);
+  // khung sprite gốc + pivot + tâm thân (mọi lần vẽ sprite chibi trong khung này: Lam, bóng, quái, boss)
+  for(let i=0;i<DBG.n;i++){ const r=DBG.L[i];
+    dbgRect(r.x0,r.y0,r.w,r.h,'rgba(255,255,255,.85)',[4,3]);
+    ctx.strokeStyle='#ff4fd8'; ctx.beginPath(); ctx.moveTo(r.x-7,r.y); ctx.lineTo(r.x+7,r.y); ctx.moveTo(r.x,r.y-7); ctx.lineTo(r.x,r.y+7); ctx.stroke();
+    if(r.tx!==null){ ctx.strokeStyle='#5dff8a'; ctx.beginPath(); ctx.arc(r.tx,r.ty,4,0,7); ctx.stroke(); }
+  }
+  // hitbox vật lý Lam (20×30), vùng ăn đòn, hộp đòn
+  dbgRect(px-ox,py-oy,pl.w,pl.h,'#4fb4ff');
+  const hu=hurtBox(); dbgRect(hu.x-ox+(px-pl.x),hu.y-oy+(py-pl.y),hu.w,hu.h,'rgba(120,230,140,.8)',[3,3]);
+  const hb=pl.dead?null:atkBox(pl,pl.atkN,pl.atkT,pl.face,{x:0,y:0,w:0,h:0}); if(hb) dbgRect(hb.x-ox,hb.y-oy,hb.w,hb.h,'#ff4a4a');
+  for(const q of Q){ if(q.gone) continue; const qx=lerp(q.px,q.x,al), qy=lerp(q.py,q.y,al); if(qx-ox<-150||qx-ox>W+150) continue;
+    dbgRect(qx-ox,qy-oy,q.w,q.h,'#4fb4ff'); if(q.st==='strike'&&q.t>=5&&q.t<=10){ const r=quaiHitbox(q,{}); dbgRect(r.x-ox,r.y-oy,r.w,r.h,'#ff4a4a'); }
+    ctx.fillStyle='#fff'; ctx.font='bold 10px sans-serif'; ctx.fillText(q.c2+' #'+(q.k2+1)+' '+q.st,qx-ox,qy-oy-128); }
+  if(S.room>=ROOMS.length-2){ const bx=lerp(boss.px,boss.x,al), by=lerp(boss.py,boss.y,al); dbgRect(bx-ox,by-oy,boss.w,boss.h,'#4fb4ff'); }
+  // bảng chữ
+  const a=LAM&&pl.a2?LAM.anims[pl.a2]:null, b=a?a.buoc[Math.min(pl.k2,a.buoc.length-1)]:null;
+  const L=['Lam: '+(pl.a2||'-')+'  bước '+(pl.k2+1)+'/'+(a?a.buoc.length:0)+'  khung '+(b?b.f:'-')+(b?'  '+b.ms+' ms':''),
+    'vật lý x '+pl.x.toFixed(2)+'  y '+pl.y.toFixed(2)+'  vx '+pl.vx.toFixed(2)+'  vy '+pl.vy.toFixed(2)+(pl.onGround?'  đất':'  không')+(pl.face<0?'  ←':'  →'),
+    'vẽ pivot '+(px+10-ox).toFixed(2)+', '+(py+30-oy).toFixed(2)+'  dx '+(b?b.dx:0)+' dy '+(b?b.dy||0:0)+'  cam '+ox.toFixed(2),
+    'FPS vẽ '+DBG.fps.toFixed(0)+'  bước logic/giây '+DBG.sps.toFixed(0)+'  tốc độ ×'+DBG.speed+(DBG.paused?'  ⏸ DỪNG':'')+'  BK '+BK.toFixed(2)];
+  ctx.font='bold 11px ui-monospace,Menlo,monospace'; ctx.textBaseline='top';
+  ctx.fillStyle='rgba(12,15,20,.8)'; ctx.fillRect(6,96,ctx.measureText(L[1]).width+40,L.length*14+6);   // dưới hàng nút debug, không đè dòng hướng dẫn
+  ctx.fillStyle='#f6d0f6'; L.forEach((t,i)=>ctx.fillText(t,10,99+i*14));
+  ctx.restore(); ctx.textBaseline='alphabetic';
+}
+dbgUI();
+
 /* ================= CHẠY: logic cố định 60 bước/giây, vẽ theo tần số màn hình + nội suy ================= */
 const DT=1000/60, MAX_STEPS=4;
 let last=-1, accT=0;
+// Animation chạy theo SỐ BƯỚC LOGIC (60/giây, đo bằng thời gian thật của rAF) → 60 Hz, 120 Hz hay 90 Hz đều cùng tốc độ;
+// vẽ có nội suy vị trí (al). Debug: tạm dừng / phát từng bước / chậm (nhân thời gian thật với DBG.speed).
 function loop(now){
   requestAnimationFrame(loop);
   if(last<0) last=now;
   let dt=now-last; last=now;
   if(dt>250) dt=DT;
-  accT+=dt; let n=0;
-  while(accT>=DT && n<MAX_STEPS){ savePrev(); step(); accT-=DT; n++; }
+  DBG.fN++; DBG.fT+=dt; if(DBG.fT>=500){ DBG.fps=DBG.fN*1000/DBG.fT; DBG.sps=DBG.sN*1000/DBG.fT; DBG.fN=DBG.sN=0; DBG.fT=0; }
+  if(DBG.on && DBG.paused){
+    while(DBG.req>0){ savePrev(); step(); DBG.req--; DBG.sN++; accT=0; }
+    render(1); return;
+  }
+  accT+=dt*(DBG.on?DBG.speed:1); let n=0;
+  while(accT>=DT && n<MAX_STEPS){ savePrev(); step(); accT-=DT; n++; DBG.sN++; }
   if(n===MAX_STEPS && accT>=DT) accT%=DT;
   render(accT/DT);
 }

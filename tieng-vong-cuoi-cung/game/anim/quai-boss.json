@@ -182,48 +182,48 @@
  "anims": {
   "quai-di": {
    "loop": true,
-   "khoa": "tâm mắt",
+   "khoa": "ô gốc",
    "buoc": [
     {
      "f": "quai-di/1",
      "ms": 125,
-     "dx": -2.5
+     "dx": 0
     },
     {
      "f": "quai-di/2",
      "ms": 125,
-     "dx": 2.5
+     "dx": 0
     },
     {
      "f": "quai-di/3",
      "ms": 125,
-     "dx": 6.83
+     "dx": 0
     },
     {
      "f": "quai-di/4",
      "ms": 125,
-     "dx": -8.0
+     "dx": 0
     }
    ]
   },
   "quai-tan-cong": {
    "loop": false,
-   "khoa": "gót chân sau (quái nhìn trái → mép phải)",
+   "khoa": "ô gốc (giữ đà đấm vẽ sẵn)",
    "buoc": [
     {
      "f": "quai-tan-cong/1",
      "ms": 500,
-     "dx": 0.0
+     "dx": 0
     },
     {
      "f": "quai-tan-cong/2",
      "ms": 83,
-     "dx": 3.0
+     "dx": 0
     },
     {
      "f": "quai-tan-cong/3",
      "ms": 100,
-     "dx": 0.0,
+     "dx": 0,
      "box": [
       -90,
       -81,
@@ -234,7 +234,7 @@
     {
      "f": "quai-tan-cong/4",
      "ms": 430,
-     "dx": 6.0
+     "dx": 0
     }
    ],
    "ghiChu": "khung 1 lấy đà (0,5 s, chuông lóe vàng), 2 đấm, 3 duỗi = CHẠM (hitbox), 4 thu."

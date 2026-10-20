@@ -1,3 +1,5 @@
+> **Cập nhật 2026-10-20:** quy tắc khoá mắt / khoá gót dưới đây đã được THAY trong game (đo thấy gây giật 14–24 px) — xem `docs/fix-animation.md`.
+
 # Vì sao trước đây giật, và cách sửa (áp dụng cho mọi animation chibi)
 
 1. **Căn ngang sai mốc.** Trước căn theo giữa 2 bàn chân → khi chạy chân đổi chỗ nên cả người trượt ±17 px (ô 512). Sửa: **chạy/đi = khoá theo đầu/mắt** (thân đứng yên, chỉ chân tay chuyển động – cách các game 2D làm "run tại chỗ"); **tấn công = khoá theo gót chân sau** (chân trụ đứng yên, thân lao tới).

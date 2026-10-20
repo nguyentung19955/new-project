@@ -9,10 +9,15 @@ Mỗi khung được CẮT SÁT (bỏ lề trong suốt) rồi xếp kệ; json 
 với (ox, oy) = góc trên-trái của hình so với PIVOT (giữa đế ủng / đáy giữa), đơn vị px game.
 Hệ toạ độ vẫn là "ô 240, pivot [120, 234]" của Lam: 640 px ô khung-chuan → 300 px (×0,46875 = 240/512).
 
-Quy tắc căn (GHI-CHU xem-thu-muot): mỗi bước animation có thêm dx, dy (px game):
-  - chạy / đi / idle / nhảy: khoá ngang theo TÂM MẮT (mắt đứng yên, thân không trượt);
-  - tấn công + rút dao: khoá ngang theo GÓT CHÂN SAU (chân trụ đứng yên);
-  - khung bay giữ đầu (đã đặt sẵn ở khung-chuan), khung đất chạm đất.
+Quy tắc căn MỚI (docs/fix-animation.md, thay quy tắc "khoá mắt / khoá gót" cũ): mỗi bước có dx, dy (px game):
+  - NGANG: mọi khung Lam đặt TÂM THÂN (trọng tâm vùng thân dưới mắt, không tính dao) đúng trên pivot (x = 0).
+    Cùng một mốc cho MỌI animation → đổi animation / lật mặt không làm người trượt ngang.
+    Đầu, tay, chân vẫn chuyển động tự do như ảnh (dao động tự nhiên của chạy được giữ).
+  - DỌC dưới đất: đế ủng thấp nhất (không tính dao) chạm pivot (y = 0). KHÔNG cộng độ cao giả.
+  - DỌC trên không (jump 2–4, bám tường, chém nảy, chém xoay): tâm thân cao bằng tâm thân của jump/2
+    (khung duỗi chân, đế chạm pivot); đế không bao giờ thấp hơn pivot. Độ cao nhảy chỉ do vật lý.
+  - Quái / boss: giữ đúng vị trí ô gốc (dx = 0) – đo cho thấy ô gốc đã ổn định, khoá mắt cũ làm quái giật 14 px.
+  - Hitbox đòn giữ NGUYÊN số cũ (không đổi chiến đấu).
 Thời lượng từng bước (ms) khác nhau: chuẩn bị 120, vung 60, chạm 140 (hitbox bật), thu 140.
 
 Chạy: python3 game/tools/chibi-sheets.py
@@ -93,7 +98,7 @@ def mask_ung(a):
 def lam():
     so_do = json.load(open(os.path.join(KC, 'khung-chuan.json'), encoding='utf-8'))
     ke = Ke()
-    frames, info = {}, {}
+    frames, info, moc = {}, {}, {}
 
     def nap(key):
         if key in frames:
@@ -108,8 +113,13 @@ def lam():
         dayu = yu.max(); band = max(6, int((dayu - np.where(al.any(1))[0].min()) * 0.05))
         xs = np.where(ung[dayu - band:dayu + 1].any(0))[0]
         got = float(xs.min())                       # gót sau = mép sau đế ủng thấp nhất (không tính dao)
-        than = float(np.median(np.where(al)[1]))    # tâm thân (không tính dao)
+        than = float(np.median(np.where(al)[1]))    # (cũ) trung vị ngang toàn thân
         kk = so_do['tam'][nm]['khung'][int(so) - 1]
+        ys_, xs_ = np.where(al); top, day = ys_.min(), ys_.max()
+        ey = kk['mat'][1] if kk['mat'] else top + 0.3 * (day - top)
+        y0 = int(ey); y1 = int(y0 + 0.55 * (day - y0))
+        by, bx = np.where(al[y0:y1])
+        tx, ty = float(bx.mean()), float(by.mean() + y0)   # TÂM THÂN: trọng tâm dải mắt → 55 % xuống chân
         im = premul_resize(im512, (300, 300))
         a = np.asarray(im)
         d = mask_dao(a)
@@ -120,7 +130,11 @@ def lam():
         crop, x0, y0 = cat_sat(im)
         pos = ke.them(crop)
         frames[key] = [pos[0], pos[1], crop.width, crop.height, round(x0 - PV[0], 2), round(y0 - PV[1], 2)]
-        info[key] = dict(mat=kk['mat'], got=got, than=than, dao=dao_box)
+        info[key] = dict(mat=kk['mat'], got=got, than=than, dao=dao_box, tx=tx, ty=ty, top=float(top), day=float(day))
+        g = lambda v, o: round((v - o) * K, 1)
+        moc[key] = dict(tx=g(tx, 320), ty=g(ty, 620), dinh=g(top, 620), de=g(day, 620),
+                        mat=[g(kk['mat'][0], 320), g(kk['mat'][1], 620)] if kk['mat'] else None,
+                        mu=round(kk['mu'] * K, 1) if kk['mu'] else None)
 
     # (tên, kiểu khoá, [(khung, ms, thêm)])
     def seq(*ds):
@@ -138,9 +152,9 @@ def lam():
         'atk1':   ('got', seq(('combo-3/1', 120), ('combo-3/2', 60), ('combo-3/3', 140, HIT), ('combo-3/4', 140)), False, 'Đòn 1 = combo-3 (đâm).'),
         'atk2':   ('got', seq(('combo-1/2', 120), ('combo-1/3', 60), ('combo-1/4', 140, HIT), ('combo-1/3', 140)), False,
                    'Đòn 2 = combo-1 bỏ khung 1 (khung 1 dao ở tay sau). Thu = khung 3.'),
-        'atk3':   ('than', seq(('combo-4/1', 120, {'dy': -28}), ('combo-4/2', 60, {'dy': -44}), ('combo-4/3', 140, HIT), ('combo-4/4', 140),
+        'atk3':   ('than', seq(('combo-4/1', 120), ('combo-4/2', 60), ('combo-4/3', 140, HIT), ('combo-4/4', 140),
                               ('combo-5/1', 140)), False,
-                   'Đòn 3 = combo-4 nhảy bổ (khoá tâm thân, vì hai chân rời đất): khung 1–2 cộng độ cao 28/44 px (ảnh gốc vẽ chạm đất); sau đòn 1 khung combo-5/1 thu thế.'),
+                   'Đòn 3 = combo-4 bổ xuống; KHÔNG cộng độ cao giả (vật lý đòn 3 không nhảy). Sau đòn 1 khung combo-5/1 thu thế.'),
         'atk4':   ('than', seq(('combo-4/3', 183, HIT), ('combo-4/4', 67)), False, 'Chém nảy (↓+Chém trên không) = combo-4 khung 3–4.'),
         'atk5':   ('got', seq(('combo-3/1', 120), ('combo-3/2', 60), ('combo-3/4', 140, HIT), ('combo-5/1', 140)), False,
                    'Chém hất (↑+Chém) = combo-3 khung 1, 2, 4 (dao giơ chéo lên) + thu combo-5/1.'),
@@ -156,40 +170,36 @@ def lam():
     for nm, (kh, sq, loop, ghi) in ANIMS.items():
         for st in sq:
             nap(st['f'])
-    HREF = info['combo-3/1']['got']       # mọi đòn dưới đất: gót sau đứng tại đây → nối liền giữa các đòn
+    TREN_KHONG = {'jump', 'wall', 'atk4', 'atk6'}           # animation phát khi ở trên không
+    j2 = info['jump/2']; T_AIR = (j2['ty'] - j2['day']) * K   # tâm thân so với đế, khung duỗi chân
+    # hitbox đòn: GIỮ NGUYÊN số cũ (so với chân, mặt phải) – không đổi chiến đấu
+    HOP = {'atk1': [4, -97, 147, 48], 'atk2': [-36, -100, 116, 48], 'atk3': [-13, -59, 99, 64],
+           'atk4': [-26, -24, 64, 82], 'atk5': [-9, -140, 97, 60], 'atk6': [-3, -107, 127, 48]}
     out = {}
     for nm, (kh, sq, loop, ghi) in ANIMS.items():
-        if kh == 'mat':
-            ref = float(np.median([info[s['f']]['mat'][0] for s in sq]))
-            gia = lambda s: info[s['f']]['mat'][0]
-        elif kh == 'than':
-            # đòn 3 nhảy bổ: hai chân rời đất nên khoá gót không hợp → giữ tâm thân bằng tâm thân đòn 1 (nối liền combo)
-            ref = info['combo-3/1']['than'] if nm == 'atk3' else info[sq[0]['f']]['than']
-            gia = lambda s: info[s['f']]['than']
-        else:
-            ref = info[sq[0]['f']]['got'] if nm == 'rutdao' else HREF
-            gia = lambda s: info[s['f']]['got']
         buoc = []
-        for s in sq:
-            b = dict(f=s['f'], ms=s['ms'], dx=round((ref - gia(s)) * K, 2), dy=s.get('dy', 0))
-            if s.get('hit'):
+        for i, s_ in enumerate(sq):
+            f = info[s_['f']]
+            dx = -(f['tx'] - 320) * K                       # tâm thân lên pivot
+            de = (f['day'] - 620) * K                       # đế so với pivot (âm = cao hơn)
+            if nm in TREN_KHONG and not (nm == 'jump' and i == 0):
+                dy = min(T_AIR - (f['ty'] - 620) * K, -de)  # tâm thân ở độ cao cố định, đế không xuống dưới pivot
+            else:
+                dy = -de                                    # đế chạm pivot
+            b = dict(f=s_['f'], ms=s_['ms'], dx=round(dx, 2), dy=round(dy, 2))
+            if s_.get('hit'):
                 b['hit'] = True
-                dbox = info[s['f']]['dao']
-                if dbox:
-                    x0, y0, x1, y1 = dbox
-                    x0 = min(x0, 8.0)                   # phủ từ thân ra tới mũi dao
-                    h = max(y1 - y0 + 16, 48.0); cy = (y0 + y1) / 2   # cao tối thiểu 48 px
-                    b['box'] = [round(x0 - 6 + b['dx']), round(cy - h / 2 + b['dy']), round(x1 - x0 + 12), round(h)]
+                b['box'] = HOP[nm] if nm in HOP else None
             buoc.append(b)
-        out[nm] = dict(khoa={'mat': 'tâm mắt', 'got': 'gót chân sau', 'than': 'tâm thân'}[kh], loop=loop, buoc=buoc, ghiChu=ghi)
+        out[nm] = dict(khoa='tâm thân (ngang) + ' + ('tâm thân cố định trên không' if nm in TREN_KHONG else 'đế ủng chạm đất (dọc)'),
+                       loop=loop, buoc=buoc, ghiChu=ghi)
     # chém nảy: hộp dưới chân (giữ tầm với của bản cũ)
-    out['atk4']['buoc'][0]['box'] = [-26, -24, 64, 82]
     sheet = ke.anh()
     sheet.save(os.path.join(OUT, 'lam-chibi.png'), optimize=True)
     meta = dict(version=2, image='lam-chibi.png', donVi='px game (960×540)', tiLe=K,
                 pivotGoc='ô 240, pivot [120, 234] = giữa đế ủng; frames: [x, y, w, h, ox, oy] (ox, oy = góc hình so với pivot)',
                 nguon='art/chibi/lam/khung-chuan (cỡ đồng nhất theo mũ trùm, xem khung-chuan.json)',
-                frames=frames, anims=out)
+                frames=frames, moc=moc, anims=out)
     json.dump(meta, open(os.path.join(OUT, 'lam-chibi.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('lam-chibi.png', sheet.size, os.path.getsize(os.path.join(OUT, 'lam-chibi.png')) // 1024, 'KB')
     for nm, a in out.items():
@@ -238,6 +248,7 @@ def quai_boss():
         frames['boss/%d' % i] = [pos[0], pos[1], crop.width, crop.height, round(x0 - BP[0], 2), round(y0 - BP[1], 2)]
 
     def buoc(keys, ms, kieu):
+        kieu = ''   # MỚI: giữ vị trí ô gốc (đo: ô gốc ổn định ±1,3 px; khoá mắt cũ làm thân nhảy 14 px)
         if kieu == 'mat':
             xs = [info[k]['mat'][0] for k in keys if info[k]['mat']]
             ref = float(np.median(xs))
@@ -247,8 +258,8 @@ def quai_boss():
             return [dict(f=k, ms=m, dx=round(ref - info[k]['got'], 2)) for k, m in zip(keys, ms)]
         return [dict(f=k, ms=m, dx=0) for k, m in zip(keys, ms)]
     anims = {
-        'quai-di': dict(loop=True, khoa='tâm mắt', buoc=buoc(['quai-di/%d' % i for i in range(1, 5)], [125] * 4, 'mat')),
-        'quai-tan-cong': dict(loop=False, khoa='gót chân sau (quái nhìn trái → mép phải)',
+        'quai-di': dict(loop=True, khoa='ô gốc', buoc=buoc(['quai-di/%d' % i for i in range(1, 5)], [125] * 4, 'mat')),
+        'quai-tan-cong': dict(loop=False, khoa='ô gốc (giữ đà đấm vẽ sẵn)',
                               buoc=buoc(['quai-tan-cong/%d' % i for i in range(1, 5)], [500, 83, 100, 430], 'got'),
                               ghiChu='khung 1 lấy đà (0,5 s, chuông lóe vàng), 2 đấm, 3 duỗi = CHẠM (hitbox), 4 thu.'),
         'quai-trung': dict(loop=False, khoa='—', buoc=buoc(['quai-trung/1'], [270], '')),
