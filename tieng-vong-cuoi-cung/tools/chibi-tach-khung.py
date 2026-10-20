@@ -5,7 +5,7 @@ Ví dụ:
   python3 tools/chibi-tach-khung.py art/chibi/lam/run-6.png --hang 2 --cot 3 --ra art/chibi/lam/khung/run --fps 12
   python3 tools/chibi-tach-khung.py art/chibi/lam/combo-20.png --hang 5 --cot 4 --tach-hang \
       --ra art/chibi/lam/khung/combo --bay 4,5,6,7,8,13,14 --fps 14
-  python3 tools/chibi-tach-khung.py art/chibi/lam/idle.gif --ra art/chibi/lam/khung/idle --fps 8
+  python3 tools/chibi-tach-khung.py art/chibi/lam/idle-6.png --hang 1 --cot 6 --ra art/chibi/lam/khung/idle --ti-le 0.585 --pivot de --fps 8
 
 Tỉ lệ: đo chiều cao MẮT (đốm vàng phát sáng, ổn định nhất trong ảnh gen) – lấy trung vị
 (phân vị 75) của cả tấm sheet, so với mau-goc.png → MỘT hệ số cho mọi khung trong tấm (không scale riêng
@@ -170,13 +170,17 @@ def mask_ung(rgba):
     return (rgba[..., 3] > 200) & (r > 70) & (r > g + 12) & (g > b + 4) & (r < 190)
 
 
-def pivot_chan(rgba):
-    """x giữa hai bàn chân (2 đốm ủng nâu lớn nhất ở 40% dưới), y = đáy alpha."""
+def pivot_chan(rgba, kieu='ung'):
+    """x giữa hai bàn chân (2 đốm ủng nâu lớn nhất ở 40% dưới), y = đáy alpha.
+    kieu='de': x = trung bình alpha trong dải 6% dưới cùng (đế ủng) – ổn định hơn khi ủng đứng sát nhau."""
     H = rgba.shape[0]
     al = rgba[..., 3] > 128
     ys = np.where(al.any(1))[0]
     day = ys.max()
     top = ys.min()
+    if kieu == 'de':
+        b = al[day - max(2, int((day - top) * 0.06)):day + 1]
+        return float(np.where(b)[1].mean()), float(day), 2
     lim = int(top + (day - top) * 0.6)
     m = mask_ung(rgba); m[:lim] = False
     m = ndi.binary_closing(m, iterations=3)
@@ -268,6 +272,8 @@ def main():
     ap.add_argument('--ti-le', type=float, help='ép hệ số scale (bỏ qua đo mắt)')
     ap.add_argument('--mat', type=float, default=MAT_CHUAN, help='chiều cao mắt mong muốn trong ô 512')
     ap.add_argument('--fps', type=int, default=12)
+    ap.add_argument('--pivot', default='ung', choices=['ung', 'de'], help="ung: đốm ủng nâu; de: tâm dải đế")
+    ap.add_argument('--mat-bay', type=float, help='khung bay: đặt tâm mắt cao hơn chân N px (ô 512) thay vì theo khung đất kề')
     ap.add_argument('--json', help='ghi số đo ra file json')
     a = ap.parse_args()
 
@@ -291,7 +297,7 @@ def main():
 
     for k in ds:
         k['mat_n'], k['mat_h'], k['mat_y'] = do_mat(k['img'])
-        k['px'], k['py'], k['n_ung'] = pivot_chan(k['img'])
+        k['px'], k['py'], k['n_ung'] = pivot_chan(k['img'], a.pivot)
     hm = [k['mat_h'] for k in ds if k['mat_h']]
     if a.ti_le:
         s = a.ti_le
@@ -321,7 +327,9 @@ def main():
             # khung đất kề bên: ưu tiên khung TRƯỚC gần nhất (đà nhảy), không có thì khung sau
             truoc = [q for q in dat_list if q['so'] < k['so']]
             gan = max(truoc, key=lambda q: q['so']) if truoc else min(dat_list, key=lambda q: q['so'])
-            if k['mat_y'] is not None and gan['mat_rel'] is not None:
+            if a.mat_bay and k['mat_y'] is not None:
+                py = k['mat_y'] * s + a.mat_bay                # mắt ngang mắt dáng đứng chuẩn
+            elif k['mat_y'] is not None and gan['mat_rel'] is not None:
                 py = k['mat_y'] * s - gan['mat_rel']      # mắt cùng độ cao
             else:
                 dinh_y = np.where((k['sc'][..., 3] > 128).any(1))[0].min()

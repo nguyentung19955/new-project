@@ -1,6 +1,9 @@
 # Báo cáo tách khung chibi Lam (2026-10-20)
 
 Chỉ xử lý ảnh, chưa đụng game. Chạy lại toàn bộ: `sh tools/chibi-lam-chay-het.sh` (từ thư mục `tieng-vong-cuoi-cung/`; gồm cả `tools/chibi-so-sanh-co.py`).
+
+> Cập nhật đợt 2: idle thật lấy từ `idle-6.png`; bộ khung từ `idle.gif` cũ chuyển sang `khung/rut-dao/`. Xem `art/chibi/BAO-CAO-2.md`.
+
 Script chính: `tools/chibi-tach-khung.py` (vào: ảnh/GIF; `--hang/--cot` hoặc tự dò; `--ra` thư mục ra; `--bay` khung bay; `--mat` cỡ; `--ti-le` ép tỉ lệ).
 
 ## Kết quả
