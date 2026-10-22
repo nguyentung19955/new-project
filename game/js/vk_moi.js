@@ -611,12 +611,16 @@
   const NHUOM = new Map();
   function anhVk(V, loai, cap, he, w) {
     const r = V.tep.vk[loai][cap];
-    // 16/10 gan-vk: vũ khí w đang ở cấp Luyện giữa hai mốc → ảnh "gân" cùng cỡ ô (zed-vk-gan, js/vien_vk.js G.vkGan; ?gan=0 tắt)
+    // 22/10 vk-he-3-loai (docs/review/ke-hoach-cai-thien/vk-he-3-loai/bao-cao.md): ẢNH HỆ ĐỨNG TRƯỚC ảnh gân — cấp ≥ 1 có hệ và tấm
+    // zed-vk-he đã về thì dùng thẳng ảnh hệ (vân Lửa / Độc / Băng hiện từ Lv 3 Mầm, Lv 6 Thành hình, Lv 12 Thức tỉnh), không nhuộm.
+    // (Trước 22/10: gân đứng trước nên có gân là ảnh hệ bị che.) G.vkHeAnh trả null khi chưa tải xong (tự gọi SC.canAnh) hoặc cờ tắt.
+    const anhHe = he && typeof document !== 'undefined' && G.vkHeAnh ? G.vkHeAnh(loai, cap, he, r) : null;
+    if (anhHe) return anhHe;
+    // 16/10 gan-vk: vũ khí w đang ở cấp Luyện có gân (zed-vk-gan, js/vien_vk.js G.vkGan; ?gan=0 tắt) → ảnh "gân" cùng cỡ ô — CHỈ khi
+    // không có ảnh hệ (vd Trắng Lv 2, hoặc tấm hệ chưa tải về / loại chưa có ô hệ)
     const gan = w && G.vkGan && G.vkGanAnh && G.vkGan(w, cap) ? G.vkGanAnh(loai, cap, r) : null;
     const goc = gan || { img: V.img, x: r[0], y: r[1], w: r[2], h: r[3] };
     if (!he || typeof document === 'undefined') return goc;
-    const anhHe = !gan && G.vkHeAnh && G.vkHeAnh(loai, cap, he, r); // 16/10: có ảnh vũ khí theo hệ (zed-vk-he, js/vien_vk.js) thì dùng, không nhuộm
-    if (anhHe) return anhHe;
     const k = loai + cap + he + (gan ? 'g' : ''); // ảnh gân nhuộm hệ như ảnh thường
     let cv = NHUOM.get(k);
     if (!cv) {

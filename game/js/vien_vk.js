@@ -208,14 +208,19 @@
   const coTat = (t) => { try { return typeof location !== 'undefined' && new RegExp('[?&]' + t + '=0(&|$)').test(location.search || ''); } catch (e) { return false; } };
   if (G.KIEM_VUONG_HE === undefined) G.KIEM_VUONG_HE = !coTat('kiemvuonghe');
   if (G.KIEM_VUONG_GAN === undefined) G.KIEM_VUONG_GAN = !coTat('kiemvuonggan');
+  // THƯƠNG / BÚA / PHI TIÊU theo hệ (22/10, docs/review/ke-hoach-cai-thien/vk-he-3-loai/bao-cao.md): tấm zed-vk-he có thêm vk.thuong /
+  // vk.bua / vk.phitieu [hệ][cấp] (ảnh moi/vk-thuong-he.png, vk-bua-he.png, vk-phi-tieu-he.png; dựng docs/anh-goc/zed/dung-vk-he-3-loai.py,
+  // cùng cỡ ô zed-vk). ?hevk=0 (G.HE_VK_3 = false): tắt ảnh hệ của RIÊNG 3 loại này → nhuộm 30 % màu hệ như trước 22/10 (kiếm vuông giữ ?kiemvuonghe).
+  if (G.HE_VK_3 === undefined) G.HE_VK_3 = !coTat('hevk');
   G.vkHeAnh = function (loai, cap, he, r) {
     if (G.VK_HE_ANH === false || !he || !(cap > 0) || !r) return null;
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk-he'];
     // KIẾM VUÔNG 17/10 tối (docs/review/ke-hoach-cai-thien/gan-anh-17-10-toi/bao-cao.md): kiếm vuông đang bật → ô kiếm vuông theo hệ
     // vk.kiem_vuong[hệ][cấp] (ảnh moi/vk-kiem-vuong-he.png, docs/anh-goc/zed/dung-kiem-vuong-he.py, cùng cỡ ô kiếm vuông). ?kiemvuonghe=0:
     // không dùng → nhuộm 30 % màu hệ trên ảnh kiếm vuông như phiên kiem-vuong. Kiếm Trắng (cấp 0) không vào đây (ảnh thường).
+    // Loại khác (thuong / bua / phitieu; kiem cũ khi ?kiemvuong=0): đọc vk[loại][hệ][cấp] — tấm chỉ có ô nào thì loại đó có ảnh hệ.
     const kv = loai === 'kiem' && SC && SC.kiemVuong && SC.kiemVuong();
-    if (!z || (kv && G.KIEM_VUONG_HE === false)) return null;
+    if (!z || (kv && G.KIEM_VUONG_HE === false) || (loai !== 'kiem' && G.HE_VK_3 === false)) return null;
     if (!z.ready || !z.img) { if (SC.canAnh) SC.canAnh('zed-vk-he'); return null; }
     const h = z.tep && z.tep.vk && z.tep.vk[kv ? 'kiem_vuong' : loai] && z.tep.vk[kv ? 'kiem_vuong' : loai][he], q = h && h[cap];
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;

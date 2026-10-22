@@ -1,0 +1,677 @@
+{
+ "thuong-fire-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.0
+  ],
+  "cap": "Mam",
+  "he": "Lua",
+  "o": [
+   117,
+   32
+  ],
+  "ti_le_co": [
+   0.895,
+   0.9404
+  ],
+  "doi": [
+   1,
+   -1
+  ],
+  "iou": 0.8612,
+  "phu_goc": 0.9412,
+  "ngoai_goc": 0.0878,
+  "phu_o_game": 0.8468,
+  "cat_tran_o": 0.55
+ },
+ "thuong-fire-2": {
+  "lech_cam_px_o": [
+   1.0,
+   0.0
+  ],
+  "cap": "Thanh hinh",
+  "he": "Lua",
+  "o": [
+   128,
+   66
+  ],
+  "ti_le_co": [
+   0.9881,
+   1.0406
+  ],
+  "doi": [
+   2,
+   -18
+  ],
+  "iou": 0.7697,
+  "phu_goc": 0.8981,
+  "ngoai_goc": 0.1497,
+  "phu_o_game": 0.8512,
+  "cat_tran_o": 1.38
+ },
+ "thuong-fire-3": {
+  "lech_cam_px_o": [
+   1.0,
+   0.0
+  ],
+  "cap": "Thuc tinh",
+  "he": "Lua",
+  "o": [
+   155,
+   93
+  ],
+  "ti_le_co": [
+   1.0628,
+   1.1136
+  ],
+  "doi": [
+   1,
+   -22
+  ],
+  "iou": 0.7437,
+  "phu_goc": 0.8592,
+  "ngoai_goc": 0.1469,
+  "phu_o_game": 0.8129,
+  "cat_tran_o": 1.33
+ },
+ "thuong-poison-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.5
+  ],
+  "cap": "Mam",
+  "he": "Doc",
+  "o": [
+   117,
+   32
+  ],
+  "ti_le_co": [
+   0.8971,
+   0.9286
+  ],
+  "doi": [
+   1,
+   -18
+  ],
+  "iou": 0.8183,
+  "phu_goc": 0.9295,
+  "ngoai_goc": 0.1124,
+  "phu_o_game": 0.8581,
+  "cat_tran_o": 0.41
+ },
+ "thuong-poison-2": {
+  "lech_cam_px_o": [
+   0.0,
+   -0.5
+  ],
+  "cap": "Thanh hinh",
+  "he": "Doc",
+  "o": [
+   128,
+   66
+  ],
+  "ti_le_co": [
+   0.9906,
+   1.0279
+  ],
+  "doi": [
+   1,
+   -15
+  ],
+  "iou": 0.7352,
+  "phu_goc": 0.8925,
+  "ngoai_goc": 0.1847,
+  "phu_o_game": 0.8426,
+  "cat_tran_o": 1.91
+ },
+ "thuong-poison-3": {
+  "lech_cam_px_o": [
+   0.0,
+   -0.5
+  ],
+  "cap": "Thuc tinh",
+  "he": "Doc",
+  "o": [
+   155,
+   93
+  ],
+  "ti_le_co": [
+   1.071,
+   1.1297
+  ],
+  "doi": [
+   -2,
+   -21
+  ],
+  "iou": 0.7167,
+  "phu_goc": 0.8679,
+  "ngoai_goc": 0.188,
+  "phu_o_game": 0.8305,
+  "cat_tran_o": 0.98
+ },
+ "thuong-ice-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.0
+  ],
+  "cap": "Mam",
+  "he": "Bang",
+  "o": [
+   117,
+   32
+  ],
+  "ti_le_co": [
+   0.8943,
+   0.9142
+  ],
+  "doi": [
+   1,
+   -15
+  ],
+  "iou": 0.8075,
+  "phu_goc": 0.9149,
+  "ngoai_goc": 0.1133,
+  "phu_o_game": 0.8355,
+  "cat_tran_o": 2.35
+ },
+ "thuong-ice-2": {
+  "lech_cam_px_o": [
+   0.0,
+   0.0
+  ],
+  "cap": "Thanh hinh",
+  "he": "Bang",
+  "o": [
+   128,
+   66
+  ],
+  "ti_le_co": [
+   0.9922,
+   1.0345
+  ],
+  "doi": [
+   1,
+   -32
+  ],
+  "iou": 0.7288,
+  "phu_goc": 0.9043,
+  "ngoai_goc": 0.1922,
+  "phu_o_game": 0.842,
+  "cat_tran_o": 3.97
+ },
+ "thuong-ice-3": {
+  "lech_cam_px_o": [
+   0.0,
+   0.5
+  ],
+  "cap": "Thuc tinh",
+  "he": "Bang",
+  "o": [
+   155,
+   93
+  ],
+  "ti_le_co": [
+   1.0647,
+   1.1075
+  ],
+  "doi": [
+   0,
+   -38
+  ],
+  "iou": 0.6853,
+  "phu_goc": 0.859,
+  "ngoai_goc": 0.2125,
+  "phu_o_game": 0.821,
+  "cat_tran_o": 2.02
+ },
+ "bua-fire-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.0
+  ],
+  "cap": "Mam",
+  "he": "Lua",
+  "o": [
+   118,
+   44
+  ],
+  "ti_le_co": [
+   1.2159,
+   1.3175
+  ],
+  "doi": [
+   -4,
+   -10
+  ],
+  "iou": 0.869,
+  "phu_goc": 0.9201,
+  "ngoai_goc": 0.0135,
+  "phu_o_game": 0.8873,
+  "cat_tran_o": 5.53
+ },
+ "bua-fire-2": {
+  "lech_cam_px_o": [
+   0.0,
+   -0.5
+  ],
+  "cap": "Thanh hinh",
+  "he": "Lua",
+  "o": [
+   118,
+   83
+  ],
+  "ti_le_co": [
+   1.2747,
+   1.3913
+  ],
+  "doi": [
+   -2,
+   -25
+  ],
+  "iou": 0.848,
+  "phu_goc": 0.9514,
+  "ngoai_goc": 0.0684,
+  "phu_o_game": 0.9357,
+  "cat_tran_o": 5.26
+ },
+ "bua-fire-3": {
+  "lech_cam_px_o": [
+   1.0,
+   0.5
+  ],
+  "cap": "Thuc tinh",
+  "he": "Lua",
+  "o": [
+   146,
+   139
+  ],
+  "ti_le_co": [
+   1.3131,
+   1.4261
+  ],
+  "doi": [
+   5,
+   20
+  ],
+  "iou": 0.8561,
+  "phu_goc": 0.9245,
+  "ngoai_goc": 0.0781,
+  "phu_o_game": 0.8998,
+  "cat_tran_o": 0.9
+ },
+ "bua-poison-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.5
+  ],
+  "cap": "Mam",
+  "he": "Doc",
+  "o": [
+   118,
+   44
+  ],
+  "ti_le_co": [
+   1.2502,
+   1.3507
+  ],
+  "doi": [
+   -2,
+   -32
+  ],
+  "iou": 0.8199,
+  "phu_goc": 0.9346,
+  "ngoai_goc": 0.0034,
+  "phu_o_game": 0.8866,
+  "cat_tran_o": 14.99
+ },
+ "bua-poison-2": {
+  "lech_cam_px_o": [
+   0.0,
+   0.0
+  ],
+  "cap": "Thanh hinh",
+  "he": "Doc",
+  "o": [
+   118,
+   83
+  ],
+  "ti_le_co": [
+   1.2667,
+   1.3649
+  ],
+  "doi": [
+   0,
+   -2
+  ],
+  "iou": 0.8452,
+  "phu_goc": 0.9467,
+  "ngoai_goc": 0.0652,
+  "phu_o_game": 0.932,
+  "cat_tran_o": 5.31
+ },
+ "bua-poison-3": {
+  "lech_cam_px_o": [
+   1.0,
+   0.5
+  ],
+  "cap": "Thuc tinh",
+  "he": "Doc",
+  "o": [
+   146,
+   139
+  ],
+  "ti_le_co": [
+   1.3255,
+   1.4431
+  ],
+  "doi": [
+   2,
+   50
+  ],
+  "iou": 0.8223,
+  "phu_goc": 0.9088,
+  "ngoai_goc": 0.103,
+  "phu_o_game": 0.8867,
+  "cat_tran_o": 0.33
+ },
+ "bua-ice-1": {
+  "lech_cam_px_o": [
+   0.0,
+   0.5
+  ],
+  "cap": "Mam",
+  "he": "Bang",
+  "o": [
+   118,
+   44
+  ],
+  "ti_le_co": [
+   1.1998,
+   1.2519
+  ],
+  "doi": [
+   0,
+   -29
+  ],
+  "iou": 0.8458,
+  "phu_goc": 0.9089,
+  "ngoai_goc": 0.0108,
+  "phu_o_game": 0.8931,
+  "cat_tran_o": 5.45
+ },
+ "bua-ice-2": {
+  "lech_cam_px_o": [
+   2.0,
+   -0.5
+  ],
+  "cap": "Thanh hinh",
+  "he": "Bang",
+  "o": [
+   118,
+   83
+  ],
+  "ti_le_co": [
+   1.2183,
+   1.2937
+  ],
+  "doi": [
+   6,
+   -15
+  ],
+  "iou": 0.8211,
+  "phu_goc": 0.9137,
+  "ngoai_goc": 0.0777,
+  "phu_o_game": 0.9067,
+  "cat_tran_o": 4.22
+ },
+ "bua-ice-3": {
+  "lech_cam_px_o": [
+   2.0,
+   0.0
+  ],
+  "cap": "Thuc tinh",
+  "he": "Bang",
+  "o": [
+   146,
+   139
+  ],
+  "ti_le_co": [
+   1.3051,
+   1.4138
+  ],
+  "doi": [
+   8,
+   55
+  ],
+  "iou": 0.8361,
+  "phu_goc": 0.9164,
+  "ngoai_goc": 0.0919,
+  "phu_o_game": 0.8959,
+  "cat_tran_o": 0.85
+ },
+ "phitieu-fire-1": {
+  "lech_cam_px_o": [
+   0.02,
+   -0.03
+  ],
+  "cap": "Mam",
+  "he": "Lua",
+  "o": [
+   126,
+   122
+  ],
+  "ti_le_co": [
+   1.3909,
+   1.4993
+  ],
+  "doi": [
+   4,
+   5
+  ],
+  "iou": 0.8907,
+  "phu_goc": 0.9445,
+  "ngoai_goc": 0.0601,
+  "phu_o_game": 0.9027,
+  "cat_tran_o": 0.76
+ },
+ "phitieu-fire-2": {
+  "lech_cam_px_o": [
+   0.85,
+   -1.64
+  ],
+  "cap": "Thanh hinh",
+  "he": "Lua",
+  "o": [
+   111,
+   121
+  ],
+  "ti_le_co": [
+   1.4702,
+   1.496
+  ],
+  "doi": [
+   -7,
+   -21
+  ],
+  "iou": 0.858,
+  "phu_goc": 0.965,
+  "ngoai_goc": 0.095,
+  "phu_o_game": 0.9408,
+  "cat_tran_o": 2.88
+ },
+ "phitieu-fire-3": {
+  "lech_cam_px_o": [
+   1.0,
+   -0.33
+  ],
+  "cap": "Thuc tinh",
+  "he": "Lua",
+  "o": [
+   140,
+   138
+  ],
+  "ti_le_co": [
+   1.5064,
+   1.6203
+  ],
+  "doi": [
+   -10,
+   -20
+  ],
+  "iou": 0.9073,
+  "phu_goc": 0.9686,
+  "ngoai_goc": 0.0524,
+  "phu_o_game": 0.9407,
+  "cat_tran_o": 1.24
+ },
+ "phitieu-poison-1": {
+  "lech_cam_px_o": [
+   -0.09,
+   -0.19
+  ],
+  "cap": "Mam",
+  "he": "Doc",
+  "o": [
+   126,
+   122
+  ],
+  "ti_le_co": [
+   1.4,
+   1.5048
+  ],
+  "doi": [
+   5,
+   -6
+  ],
+  "iou": 0.8748,
+  "phu_goc": 0.9569,
+  "ngoai_goc": 0.0891,
+  "phu_o_game": 0.9165,
+  "cat_tran_o": 0.59
+ },
+ "phitieu-poison-2": {
+  "lech_cam_px_o": [
+   1.0,
+   -1.04
+  ],
+  "cap": "Thanh hinh",
+  "he": "Doc",
+  "o": [
+   111,
+   121
+  ],
+  "ti_le_co": [
+   1.4693,
+   1.4766
+  ],
+  "doi": [
+   -11,
+   -11
+  ],
+  "iou": 0.8494,
+  "phu_goc": 0.9643,
+  "ngoai_goc": 0.1049,
+  "phu_o_game": 0.9401,
+  "cat_tran_o": 2.48
+ },
+ "phitieu-poison-3": {
+  "lech_cam_px_o": [
+   1.38,
+   0.22
+  ],
+  "cap": "Thuc tinh",
+  "he": "Doc",
+  "o": [
+   140,
+   138
+  ],
+  "ti_le_co": [
+   1.5147,
+   1.6093
+  ],
+  "doi": [
+   -5,
+   -7
+  ],
+  "iou": 0.8958,
+  "phu_goc": 0.966,
+  "ngoai_goc": 0.0683,
+  "phu_o_game": 0.9424,
+  "cat_tran_o": 0.54
+ },
+ "phitieu-ice-1": {
+  "lech_cam_px_o": [
+   -0.15,
+   -0.56
+  ],
+  "cap": "Mam",
+  "he": "Bang",
+  "o": [
+   126,
+   122
+  ],
+  "ti_le_co": [
+   1.406,
+   1.4201
+  ],
+  "doi": [
+   -10,
+   1
+  ],
+  "iou": 0.8402,
+  "phu_goc": 0.9478,
+  "ngoai_goc": 0.1101,
+  "phu_o_game": 0.9102,
+  "cat_tran_o": 1.07
+ },
+ "phitieu-ice-2": {
+  "lech_cam_px_o": [
+   0.28,
+   -0.69
+  ],
+  "cap": "Thanh hinh",
+  "he": "Bang",
+  "o": [
+   111,
+   121
+  ],
+  "ti_le_co": [
+   1.4771,
+   1.4808
+  ],
+  "doi": [
+   -21,
+   -23
+  ],
+  "iou": 0.7973,
+  "phu_goc": 0.9753,
+  "ngoai_goc": 0.1389,
+  "phu_o_game": 0.9546,
+  "cat_tran_o": 6.21
+ },
+ "phitieu-ice-3": {
+  "lech_cam_px_o": [
+   1.25,
+   -0.76
+  ],
+  "cap": "Thuc tinh",
+  "he": "Bang",
+  "o": [
+   140,
+   138
+  ],
+  "ti_le_co": [
+   1.48,
+   1.5841
+  ],
+  "doi": [
+   -18,
+   -14
+  ],
+  "iou": 0.864,
+  "phu_goc": 0.9654,
+  "ngoai_goc": 0.0914,
+  "phu_o_game": 0.9427,
+  "cat_tran_o": 1.76
+ }
+}
