@@ -13,8 +13,9 @@ Có **hai chuyện** cùng lúc:
 1. **Web chưa nhận được bản mới nào từ chiều 17/10.** Hai lần đẩy mã hôm nay (gân-từ-mốc lúc 09:29 và thương/búa/phi tiêu có vân hệ lúc 09:53)
    đều **đăng thất bại** (GitHub Actions run #486, #487): Google từ chối tài khoản dịch vụ dùng để đăng — lỗi `403 Permission denied to get
    service [firebasehosting.googleapis.com]`. Web hiện vẫn là bản `c2d13c94` (17/10 15:23). Vì thế mọi thứ sửa hôm nay (kể cả bản này) **chưa
-   lên web** cho tới khi việc đăng chạy lại được. Tôi đã thêm một bước vào quy trình đăng để **né** đúng chỗ bị từ chối (mục 5); nếu vẫn
-   hỏng, chủ game cần vào Google Cloud → IAM cấp thêm vai trò **"Service Usage Viewer"** cho tài khoản dịch vụ đang dùng để đăng (mục 5).
+   lên web** cho tới khi việc đăng chạy lại được. Tôi đã thêm một bước vào quy trình đăng để **né** đúng chỗ bị từ chối (mục 5) —
+   **đã đăng được lại**: run #488 (10:35 UTC 22/10) ✅ https://spiritblade.web.app nay là bản `f94ebce4` (có cả gân-từ-mốc, vân hệ 3 loại
+   và bản sửa này). Chủ game **tải lại trang** trên iPhone để nhận bản mới. Nếu sau này đăng lại hỏng, xem cách gốc ở mục 5.
 2. **Cách tải ảnh rời của bản web có hai chỗ yếu** làm tấm gân / tấm hệ **có thể không bao giờ về** trong cả buổi chơi khi mạng 4G chập chờn
    hoặc khoá máy / chuyển ứng dụng lúc game mới mở — đúng kiểu dùng trên iPhone. Tôi mô phỏng được cả hai trên máy (mục 3) và đã sửa (mục 4):
    nay hình nào game **đang cần** (gân, ảnh hệ trên tay / trong bảng Luyện) mà chưa về thì **được tải lại ngay**, và một lượt tải bị treo
@@ -106,6 +107,7 @@ Dung lượng: bản một tệp **26,19 MB** / trần 30; người chơi tải 
 | #485 (17/10 15:23) | `c2d13c94` | ✅ đăng — **bản đang chạy trên web** |
 | #486 (22/10 09:29) | `c6921d01` (gân từ mốc) | ❌ `firebase deploy`: `403 Permission denied to get service [firebasehosting.googleapis.com]` |
 | #487 (22/10 09:53) | `84a54d9f` (vân hệ 3 loại) | ❌ cùng lỗi |
+| #488 (22/10 10:33) | `f94ebce4` (bản này, có bước né) | ✅ đăng — `##[notice] https://spiritblade.web.app` |
 
 Cả hai lần `firebase-tools@latest` vẫn là **15.33.0** như 17/10 (bản mới nhất từ 08/10), nên không phải do CLI đổi bản; là **quyền của
 tài khoản dịch vụ** (`FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH`) trên dự án Google Cloud `sontinhthuytinh`: trước khi đăng, CLI hỏi
@@ -138,4 +140,4 @@ Lv 9 `?vkhe=0` (gân Thành hình). Cả 4 ô: `zed-vk-gan`, `zed-vk-he` ready =
 
 ## 8. Commit
 
-Đẩy lên nhánh `khoi-tao-du-an` (tên commit ghi ở cuối sau khi đẩy).
+Đẩy lên nhánh `khoi-tao-du-an`: **`f94ebce4`** — *"Gân / ảnh hệ vũ khí không hiện trên web (iPhone): hình đang cần mà tải hỏng thì tải lại ngay, lượt tải treo không kẹt hàng chờ; sửa đăng web lỗi 403 + dựng lại dist"*; workflow run #488 đăng thành công lên spiritblade.web.app. Kèm một commit nhỏ sau đó chỉ ghi dòng này và kết quả đăng vào báo cáo.
