@@ -1799,7 +1799,8 @@
   //   Ngoài hình màn chào / làng, chỉ bắt đầu sau khi màn chào đã vẽ (js/engine.js gọi SC.napSau).
   // - Cùng lúc nhiều nhất 24 tệp (hình màn chào / làng / đang cần) hoặc 16 (phần còn lại; trùm / vùng khác: 3), ảnh giải mã ngoài luồng
   //   chính (img.decode), báo cho game theo từng đợt ngắn (không làm trễ chạm). Chưa về thì game vẽ bằng code như khi chưa có ảnh AI.
-  // - Tệp hỏng / mất mạng: thử lại sau 3 và 10 giây, vẫn hỏng thì thôi (hình đó vẽ code), có mạng lại thì thử thêm.
+  // - Tệp hỏng / mất mạng: thử lại sau 3 và 10 giây, vẫn hỏng thì thôi (hình đó vẽ code), có mạng lại thì thử thêm; 22/10: hình game ĐANG CẦN
+  //   (roiCan) mà đã hỏng thì tải lại ngay; lượt tải đứng im quá lâu / decode() không trả lời thì trả chỗ (xem tai()).
   // Tắt khi đóng gói: LK_ANH_ROI=0 (về tệp linh-khi-anh.<mã>.json như Đợt 10).
   const ROI = G.ANH_ROI && typeof G.ANH_ROI === 'object' && Array.isArray(G.customSpriteData) ? G.ANH_ROI : null;
   let roiMo = null;
@@ -1857,9 +1858,22 @@
       bom();
       return true;
     };
+    // 22/10 gan-web-khong-tai (docs/review/ke-hoach-cai-thien/gan-web-khong-tai/bao-cao.md): hình game ĐANG CẦN mà đã tải hỏng 3 lượt
+    // (4G chập chờn / khoá máy lúc mới mở game: zed-vk-gan, zed-vk-he nằm ngay sau ảnh lõi nên hay gặp đúng lúc đó) trước đây chỉ được
+    // thử lại khi có sự kiện 'online' hoặc quay lại trang → cả buổi chơi vũ khí không có gân / ảnh hệ. Nay: cần tới là tải lại ngay
+    // (ưu tiên 0 như hình đang cần), không hơn một lần mỗi THU_LAI_CAN ms cho một hình để không dội mạng khi vẫn mất mạng.
+    const THU_LAI_CAN = 15000;
     roiCan = function (ma) {
       const it = theoMa.get(ma);
-      if (!it || it.can || it.ve) return;
+      if (!it || it.ve) return;
+      const i = hongDs.indexOf(it);
+      if (i >= 0) {
+        const t = Date.now();
+        if (it.tThuCan && t - it.tThuCan < THU_LAI_CAN) return;
+        it.tThuCan = t; hongDs.splice(i, 1); it.lan = 0; it.can = 1; hang.push(it); ketThuc = false; bom();
+        return;
+      }
+      if (it.can) return;
       it.can = 1;
       if (!it.dangTai) bom();
     };
@@ -1956,14 +1970,23 @@
       G.setScene(G.ChoVung);
       return undefined;
     };
+    // 22/10 gan-web-khong-tai: trước đây một lượt tải chỉ "xong" khi img.decode() trả lời (onload / onerror không gắn). Trình duyệt treo
+    // decode(), hoặc một kết nối đứng im không báo lỗi (đổi mạng Wi‑Fi ↔ 4G, khoá máy giữa chừng) thì lượt đó giữ chỗ MÃI; đủ 24 chỗ
+    // là cả hàng chờ đứng im, hình "đang cần" (gân / ảnh hệ vũ khí) cũng không bao giờ được tải (mô phỏng trong báo cáo). Nay:
+    //  (1) onload / onerror luôn gắn: ảnh đã nạp mà decode() không trả lời sau DECODE_CHO ms thì vẫn báo xong (vẽ như ảnh thường);
+    //  (2) quá lâu không nạp xong (QUA_LAU_MIN + theo cỡ tệp) thì trả chỗ, xếp lại hàng với URL mới (?lan=…t<n>), tối đa TREO_MAX lần;
+    //      kết quả muộn của lượt cũ bị bỏ qua (lanTai).
+    const DECODE_CHO = 2000, QUA_LAU_MIN = 45000, QUA_LAU_MOI_KB = 50, TREO_MAX = 3; // 50 ms mỗi KB ≈ 20 KB/s: tệp 3 MB được chờ tới ~3 phút
     function tai(it, thap, gap) {
       dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio();
-      const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan ? '?lan=' + it.lan : ''), img = it.img;
+      const lanTai = (it.lanTai = (it.lanTai | 0) + 1);
+      const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan || it.treo ? '?lan=' + (it.lan | 0) + (it.treo ? 't' + it.treo : '') : ''), img = it.img;
       let het = false;
-      const xongTai = () => { het = true; dang--; it.dangTai = false; if (it.thap) dangThap--; if (it.gap) dangGap--; };
-      const ok = () => { if (het) return; xongTai(); it.tGiai = bayGio(); choApDung.push(it); keo(); bom(); };
+      const xongTai = () => { het = true; dang--; it.dangTai = false; if (it.thap) dangThap--; if (it.gap) dangGap--; if (it.hen) { clearTimeout(it.hen); it.hen = 0; } };
+      const cu = () => het || it.lanTai !== lanTai; // lượt này đã kết thúc (hoặc đã có lượt mới hơn): bỏ qua tin muộn
+      const ok = () => { if (cu()) return; xongTai(); it.tGiai = bayGio(); choApDung.push(it); keo(); bom(); };
       const hong = () => {
-        if (het) return; xongTai();
+        if (cu()) return; xongTai();
         if (url.indexOf('.webp') > 0) { // WebP lỗi: thử bản PNG; hỏng liền 3 ảnh WebP thì thôi WebP cho mọi ảnh còn lại
           it.boWebp = true; hang.push(it);
           if (++webpHong === 3 && coWebp) { coWebp = false; ghi('Ảnh WebP không đọc được: chuyển sang tải PNG.'); }
@@ -1972,10 +1995,20 @@
         else { hongDs.push(it); SC.loi.push(it.ma + ': không tải được ảnh'); ghi('Không tải được ảnh ' + it.ma + ' (đã thử ' + (it.lan + 1) + ' lần): hình này vẽ bằng code.'); }
         bom();
       };
+      const coDecode = typeof img.decode === 'function';
+      img.onload = coDecode ? () => { if (cu()) return; setTimeout(() => { if (!cu() && img.complete && img.naturalWidth) ok(); }, DECODE_CHO); } : ok; // decode() không trả lời → vẫn xong
+      img.onerror = hong;
+      it.hen = setTimeout(() => {
+        if (cu()) return;
+        if (img.complete && img.naturalWidth) { ok(); return; }
+        xongTai(); it.treo = (it.treo | 0) + 1;
+        if (it.treo > TREO_MAX) { hongDs.push(it); SC.loi.push(it.ma + ': tải quá lâu'); ghi('Ảnh ' + it.ma + ' tải quá lâu ' + it.treo + ' lần: hình này vẽ bằng code.'); }
+        else { ghi('Ảnh ' + it.ma + ' tải quá lâu: trả chỗ, xếp lại hàng.'); hang.push(it); }
+        bom();
+      }, QUA_LAU_MIN + (it.co / 1024) * QUA_LAU_MOI_KB);
       img.src = url;
-      // Safari đôi khi từ chối img.decode() với ảnh lớn dù ảnh vẫn nạp được (xem SC.napAnh): chưa nạp xong thì chờ onload / onerror thật.
-      if (typeof img.decode === 'function') img.decode().then(ok, () => { if (img.complete && img.naturalWidth) ok(); else if (img.complete) hong(); else { img.onload = ok; img.onerror = hong; } });
-      else { img.onload = ok; img.onerror = hong; }
+      // Safari đôi khi từ chối img.decode() với ảnh lớn dù ảnh vẫn nạp được (xem SC.napAnh): chưa nạp xong thì chờ onload / onerror (đã gắn ở trên).
+      if (coDecode) img.decode().then(ok, () => { if (cu()) return; if (img.complete && img.naturalWidth) ok(); else if (img.complete) hong(); });
     }
     // Ảnh đã giải mã xong: báo cho game (onload gốc của SC.add / themDo / themGd / fxAnh.add) theo từng đợt ngắn (≤ 6 ms),
     // giữa hai đợt nhường cho chạm và khung hình (setTimeout), để chạm không bị trễ mà máy chậm vẫn nhận kịp vài trăm hình.

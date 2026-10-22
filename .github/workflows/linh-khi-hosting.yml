@@ -135,6 +135,22 @@ jobs:
             echo "- $s: $(wc -l < all.txt) bản → giữ 2" >> "$GITHUB_STEP_SUMMARY"
           done
 
+      # 22/10 (docs/review/ke-hoach-cai-thien/gan-web-khong-tai/bao-cao.md): hai lần đăng ngày 22/10 hỏng với lỗi
+      # "serviceusage.googleapis.com … 403 Permission denied to get service [firebasehosting.googleapis.com]": trước khi đăng, firebase-tools
+      # hỏi Google "API Hosting đã bật chưa?" và tài khoản dịch vụ không có quyền hỏi (serviceusage.services.get). Khi câu trả lời đã nằm
+      # sẵn trong bộ nhớ của CLI (configstore: apiEnablementCache) thì CLI không hỏi nữa (src/ensureApiEnabled.ts). API Hosting của dự án
+      # vốn đã bật (đăng được tới 17/10) nên ghi sẵn "đã bật". Cách gốc: cấp thêm vai trò "Service Usage Viewer" cho tài khoản dịch vụ
+      # trong Google Cloud IAM; làm xong thì bước này không còn cần nhưng để lại cũng không hại.
+      - name: Nhớ sẵn "API Hosting đã bật" cho firebase-tools
+        run: |
+          mkdir -p "$HOME/.config/configstore"
+          f="$HOME/.config/configstore/firebase-tools.json"
+          if [ -f "$f" ]; then
+            jq '.apiEnablementCache.sontinhthuytinh["firebasehosting.googleapis.com"] = true | .apiEnablementCache.sontinhthuytinh["firebase.googleapis.com"] = true' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+          else
+            printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$f"
+          fi
+
       - name: Tạo site và đăng
         working-directory: ${{ runner.temp }}/web
         run: |
