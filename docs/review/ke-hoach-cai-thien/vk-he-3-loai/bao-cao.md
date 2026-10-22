@@ -87,4 +87,4 @@ thích; `G.vkGan` (phiên gan-tu-moc, đã pull về trước khi sửa) không 
 
 ## 6. Commit
 
-Đẩy lên nhánh `khoi-tao-du-an` (tự deploy spiritblade.web.app), commit *"Thương / búa / phi tiêu có vân hệ (Lửa/Độc/Băng × Mầm/Thành hình/Thức tỉnh), ảnh hệ ưu tiên hơn gân; ?hevk=0 quay lui + dựng lại dist"* — mã commit ghi ở dòng dưới sau khi đẩy.
+Đẩy lên nhánh `khoi-tao-du-an` (tự deploy spiritblade.web.app), commit *"Thương / búa / phi tiêu có vân hệ (Lửa/Độc/Băng × Mầm/Thành hình/Thức tỉnh), ảnh hệ ưu tiên hơn gân; ?hevk=0 quay lui + dựng lại dist"*: mã **`84a54d9f`** (đã đẩy); kèm một commit nhỏ sau đó chỉ ghi dòng này vào báo cáo.
