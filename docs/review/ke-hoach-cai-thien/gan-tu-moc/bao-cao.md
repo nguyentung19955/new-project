@@ -52,4 +52,5 @@ Tấm `game/art/custom/zed-vk-gan.sprite.json` hiện có:
 
 - `node --check game/js/vien_vk.js`: OK.
 - `python3 game/build.py` rồi `LK_ANH_ROI=1 python3 game/build.py --hai-tep`: OK (dist dựng lại, bản một tệp 26,07 MB / trần 30 MB).
-- Commit: *(ghi bên dưới sau khi đẩy)*
+- Đã đẩy lên nhánh `khoi-tao-du-an` (tự deploy spiritblade.web.app): commit **`0eaa17f`** — *Gân vũ khí hiện từ mốc hình thái: Mầm Lv 3–5, Thành hình Lv 6–11 (trước: chỉ 4–5, 7–11) + dựng lại dist*;
+  kèm một commit nhỏ sau đó chỉ ghi dòng này vào báo cáo.
