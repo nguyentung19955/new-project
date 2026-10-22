@@ -236,8 +236,9 @@
   // Bộ zed-vk-gan (doi_tuong "zed", tải sau; dựng bằng docs/review/ke-hoach-cai-thien/gan-vk/dung_zed_vk_gan.py):
   //   vk[loại] = [Trắng, Mầm, Thành hình, null] mỗi ô [x, y, rộng, cao] hoặc null — cùng thứ tự và PHẢI cùng cỡ ô zed-vk (lệch thì bỏ qua),
   //   nên điểm cầm / nắm tay / neo cam-vk-chuan giữ nguyên.
-  // Hiện khi tiến độ tới mốc kế ≥ 25% (thanh L.tienDo ở các cấp này ≥ 33%; riêng Lv 9 thanh đếm lại từ mốc Tinh luyện), tức là ở các cấp Luyện GIỮA hai mốc hình thái:
-  //   Trắng Lv 2 (tới Mầm 3), Mầm Lv 4–5 (tới Thành hình 6), Thành hình Lv 7–11 (tới Thức tỉnh 12). Đúng cấp mốc (1, 3, 6) và Thức tỉnh: ảnh thường.
+  // Hiện TỪ MỐC hình thái tới trước mốc kế (22/10, docs/review/ke-hoach-cai-thien/gan-tu-moc/bao-cao.md — chủ game: "đã lên 3 thì hiện gân của 3 4 5,
+  // lên 6 thì hiện 6 7 8"): Trắng Lv 2 (Lv 1 vũ khí mới: ảnh thường), Mầm Lv 3–5, Thành hình Lv 6–11. Thức tỉnh (12–15): ảnh thường / ảnh hệ (ô gân null).
+  // (Luật cũ 16/10: chỉ các cấp GIỮA hai mốc — Lv 2, 4–5, 7–11; đúng mốc 3 và 6 không gân.)
   // Tắt: ?gan=0 (G.VK_GAN = false) hoặc ?luyen=0 (không có cấp Luyện). Dùng ở js/zed_moi.js (trên tay) và js/vk_moi.js (ô đồ, bảng Luyện).
   G.VK_GAN = true;
   try { if (typeof location !== 'undefined' && /[?&]gan=0(&|$)/.test(location.search || '')) G.VK_GAN = false; } catch (e) { /* giữ mặc định */ }
@@ -245,7 +246,7 @@
     const L = G.luyen, CF = G.LUYEN;
     if (G.VK_GAN === false || !w || !L || !L.bat || !L.bat() || !CF || !(cap >= 0 && cap <= 2)) return false;
     const lv = L.cap(w), tu = cap === 0 ? 1 : CF.hinhThai[cap - 1], toi = CF.hinhThai[cap];
-    return L.hinhThai(lv) === cap && lv > tu && lv < toi; // = danh sách cấp ở trên (Lv 9 Tinh luyện: thanh tiến độ về 0 nhưng vẫn giữa Thành hình → Thức tỉnh)
+    return L.hinhThai(lv) === cap && lv >= (cap === 0 ? 2 : tu) && lv < toi; // = danh sách cấp ở trên (Lv 9 Tinh luyện: thanh tiến độ về 0 nhưng vẫn trong Thành hình → Thức tỉnh)
   };
   G.vkGanAnh = function (loai, cap, r) {
     if (G.VK_GAN === false || !r) return null;

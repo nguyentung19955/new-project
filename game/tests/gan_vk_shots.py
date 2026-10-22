@@ -7,7 +7,7 @@ Ra:
   o-vk-cap-1-12-x3.png   ô vũ khí 4 loại × cấp Luyện 1..12 — hàng trên: gân (mặc định), hàng dưới: ?gan=0. Phóng ×3.
   tren-tay-x3.png        Cu Tí đứng cầm vũ khí ở cấp có gân (thương 2, búa 5, búa 8, phi tiêu 2, 4, 9) — trái gân, phải ?gan=0. ×3.
   bang-luyen-*.jpg       bảng Luyện ở Ông Thợ Rèn (thương Lv 2, búa Lv 5, phi tiêu Lv 8).
-In: kiểm G.vkGan theo cấp (đúng Lv 2, 4–5, 7–11), ô gân cùng cỡ ô zed-vk, lỗi JS."""
+In: kiểm G.vkGan theo cấp (từ 22/10 gan-tu-moc: Lv 2, 3–5, 6–11; đúng mốc 3 và 6 cũng có gân), ô gân cùng cỡ ô zed-vk, lỗi JS."""
 import io, os, sys
 from PIL import Image, ImageDraw, ImageFont
 from playwright.sync_api import sync_playwright
@@ -88,9 +88,9 @@ def main():
     with sync_playwright() as p:
         b, pg, errs = mo(p, {'width': 1440, 'height': 810})
         kq = pg.evaluate(KIEM)
-        print('G.vkGan bật ở cấp Luyện:', kq['cap'], '(cần [2, 4, 5, 7, 8, 9, 10, 11])')
+        print('G.vkGan bật ở cấp Luyện:', kq['cap'], '(cần [2, 3, 4, 5, 6, 7, 8, 9, 10, 11])')
         print('ô zed-vk-gan có ảnh:', kq['co'], '| lệch cỡ ô zed-vk:', kq['lech'] or 'không')
-        if kq['cap'] != [2, 4, 5, 7, 8, 9, 10, 11]: errs.append('G.vkGan sai cấp: %s' % kq['cap'])
+        if kq['cap'] != [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]: errs.append('G.vkGan sai cấp: %s' % kq['cap'])
         if kq['lech']: errs.append('ô gân lệch cỡ: %s' % kq['lech'])
         # 1) ô vũ khí cấp 1..12, gân / ?gan=0
         pg.evaluate("G.testSave({ lvl: 30, luyen: 1 }); G.setScene(G.Village); T.run({}, 2)")
@@ -110,7 +110,7 @@ def main():
             for j, (_, ten) in enumerate(LOAI):
                 d.text((8, y0 + (6 + j * 40 + 12) * Z), ten, font=F, fill='#f1ead9')
         for L in range(1, 13):
-            d.text((150 + (8 + (L - 1) * 39 + 10) * Z, 40 + h + 2), 'Lv%d' % L, font=F, fill='#9fd49f' if L in (2, 4, 5, 7, 8, 9, 10, 11) else '#888')
+            d.text((150 + (8 + (L - 1) * 39 + 10) * Z, 40 + h + 2), 'Lv%d' % L, font=F, fill='#9fd49f' if 2 <= L <= 11 else '#888')
         out.save(os.path.join(OUT, 'o-vk-cap-1-12-x3.png')); print('ghi o-vk-cap-1-12-x3.png')
         # 2) trên tay (đứng), gân | ?gan=0
         CANH = [('spear', 2), ('hammer', 5), ('hammer', 8), ('bow', 2), ('bow', 4), ('bow', 9), ('spear', 3)]
@@ -132,7 +132,7 @@ def main():
             y0 = 36 + i * (ch + 30)
             for k, im in enumerate(cap):
                 out.paste(im, (10 + k * (cw + 10), y0))
-            d.text((14, y0 + ch + 4), '%s Lv%d%s' % (dict(LOAI)[t], L, '  (Lv 3 = moc Mam: khong gan, 2 ben nhu nhau)' if L == 3 else ''), font=F, fill='#f1ead9')
+            d.text((14, y0 + ch + 4), '%s Lv%d%s' % (dict(LOAI)[t], L, '  (Lv 3 = moc Mam: co gan tu 22/10; thuong o gan Mam trong → 2 ben nhu nhau)' if L == 3 else ''), font=F, fill='#f1ead9')
         out.save(os.path.join(OUT, 'tren-tay-x3.png')); print('ghi tren-tay-x3.png')
         errs += pg.evaluate('T.errs')
         b.close()
