@@ -1,0 +1,743 @@
+{
+ "luat_v4": {
+  "manh": [
+   "cang-chan-gan",
+   "ung-gan"
+  ],
+  "slot": 115,
+  "khi": {
+   "bien": "goc:dui-gan",
+   "nho_hon": 30,
+   "bu": [
+    {
+     "bien": "gap:cang-chan-gan",
+     "tu": 60,
+     "he_so": 0.85
+    }
+   ]
+  },
+  "ghi_chu": "đổi khi goc(dui-gan) + 0,85·max(0, |goc(cang-chan-gan)| − 60) < 30; hai mảnh cùng slot 115, thứ tự phụ thu_tu_phu cẳng 1 < ủng 2"
+ },
+ "luat_v3_tren_rig_v4": {
+  "manh": [
+   "cang-chan-gan",
+   "ung-gan"
+  ],
+  "slot": 115,
+  "khi": {
+   "bien": "goc:dui-gan",
+   "nho_hon": 30
+  },
+  "ghi_chu": "đổi khi goc(dui-gan) + 0,85·max(0, |goc(cang-chan-gan)| − 60) < 30; hai mảnh cùng slot 115, thứ tự phụ thu_tu_phu cẳng 1 < ủng 2"
+ },
+ "quet": {
+  "v3 đùi xuong | gối 0 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 0 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 0 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 0 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 40 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 40 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 40 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 40 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 40 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi len | gối 40 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v3 đùi xuong | gối 80 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    90
+   ]
+  },
+  "v3 đùi len | gối 80 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    94
+   ]
+  },
+  "v3 đùi xuong | gối 80 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    83
+   ]
+  },
+  "v3 đùi len | gối 80 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    92
+   ]
+  },
+  "v3 đùi xuong | gối 80 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    87
+   ]
+  },
+  "v3 đùi len | gối 80 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    95
+   ]
+  },
+  "v3 đùi xuong | gối 110 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    727
+   ]
+  },
+  "v3 đùi len | gối 110 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    755
+   ]
+  },
+  "v3 đùi xuong | gối 110 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    718
+   ]
+  },
+  "v3 đùi len | gối 110 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    747
+   ]
+  },
+  "v3 đùi xuong | gối 110 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    718
+   ]
+  },
+  "v3 đùi len | gối 110 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    752
+   ]
+  },
+  "v3 gối mo | đùi 0 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v3 gối gap | đùi 0 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v3 gối mo | đùi 15 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v3 gối gap | đùi 15 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v3 gối mo | đùi 25 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v3 gối gap | đùi 25 lean +0": {
+   "so_lan_doi": 0,
+   "tai": [],
+   "px_doi_tai_khung_doi": []
+  },
+  "v4 đùi xuong | gối 0 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 0 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 0 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 0 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     0.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 40 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 40 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 40 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 40 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 40 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     29.5,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi len | gối 40 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     30.0,
+     40.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    0
+   ]
+  },
+  "v4 đùi xuong | gối 80 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     12.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    4
+   ]
+  },
+  "v4 đùi len | gối 80 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     13.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    5
+   ]
+  },
+  "v4 đùi xuong | gối 80 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     12.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    4
+   ]
+  },
+  "v4 đùi len | gối 80 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     13.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    5
+   ]
+  },
+  "v4 đùi xuong | gối 80 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     12.5,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    3
+   ]
+  },
+  "v4 đùi len | gối 80 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     13.0,
+     80.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    4
+   ]
+  },
+  "v4 đùi xuong | gối 110 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -13.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    7
+   ]
+  },
+  "v4 đùi len | gối 110 lean -8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -12.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    7
+   ]
+  },
+  "v4 đùi xuong | gối 110 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -13.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 đùi len | gối 110 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -12.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 đùi xuong | gối 110 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -13.0,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 đùi len | gối 110 lean +8": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     -12.5,
+     110.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 gối mo | đùi 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     0.0,
+     95.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    4
+   ]
+  },
+  "v4 gối gap | đùi 0 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     0.0,
+     95.5
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    4
+   ]
+  },
+  "v4 gối mo | đùi 15 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     15.0,
+     77.5
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 gối gap | đùi 15 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     15.0,
+     78.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 gối mo | đùi 25 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     25.0,
+     65.5
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  },
+  "v4 gối gap | đùi 25 lean +0": {
+   "so_lan_doi": 1,
+   "tai": [
+    [
+     25.0,
+     66.0
+    ]
+   ],
+   "px_doi_tai_khung_doi": [
+    6
+   ]
+  }
+ },
+ "rung": {
+  "bien_do 0.5 không hyst": {
+   "so_lan_doi_2s": 28
+  },
+  "bien_do 0.5 hyst 28/32": {
+   "so_lan_doi_2s": 0
+  },
+  "bien_do 1.5 không hyst": {
+   "so_lan_doi_2s": 14
+  },
+  "bien_do 1.5 hyst 28/32": {
+   "so_lan_doi_2s": 0
+  },
+  "bien_do 3.0 không hyst": {
+   "so_lan_doi_2s": 6
+  },
+  "bien_do 3.0 hyst 28/32": {
+   "so_lan_doi_2s": 5
+  },
+  "bien_do 6.0 không hyst": {
+   "so_lan_doi_2s": 6
+  },
+  "bien_do 6.0 hyst 28/32": {
+   "so_lan_doi_2s": 6
+  }
+ },
+ "v3_px_doi_lop_max": 755,
+ "v3_so_lan_doi_moi_luot_max": 1,
+ "v4_px_doi_lop_max": 7,
+ "v4_so_lan_doi_moi_luot_max": 1
+}

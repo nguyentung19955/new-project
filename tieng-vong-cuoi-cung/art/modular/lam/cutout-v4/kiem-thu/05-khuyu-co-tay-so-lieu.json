@@ -1,0 +1,805 @@
+{
+ "bao_cao_dung": {
+  "v3": {},
+  "Z8": {
+   "khuyu-gan": {
+    "cha_nua_rong_D": [
+     29.5,
+     28.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.0,
+     27.0
+    ],
+    "con_nua_rong_PZ": [
+     22.0,
+     27.0
+    ],
+    "con_nua_rong_P_cu": [
+     21.0,
+     26.5
+    ],
+    "Z": 8.0,
+    "R": 27.0,
+    "khoang_toi_cha": null,
+    "khoang_toi_con": [
+     -0.09259259259259259,
+     1.5
+    ]
+   },
+   "khuyu-xa": {
+    "cha_nua_rong_D": [
+     28.75,
+     29.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.5,
+     27.5
+    ],
+    "con_nua_rong_PZ": [
+     23.0,
+     28.0
+    ],
+    "con_nua_rong_P_cu": [
+     23.0,
+     27.25
+    ],
+    "Z": 8.0,
+    "R": 27.5,
+    "khoang_toi_cha": [
+     -1.5,
+     1.5
+    ],
+    "khoang_toi_con": [
+     -1.5,
+     1.5
+    ]
+   }
+  },
+  "Z10": {
+   "khuyu-gan": {
+    "cha_nua_rong_D": [
+     29.5,
+     28.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.0,
+     27.0
+    ],
+    "con_nua_rong_PZ": [
+     22.25,
+     26.75
+    ],
+    "con_nua_rong_P_cu": [
+     21.0,
+     26.5
+    ],
+    "Z": 10.0,
+    "R": 27.0,
+    "khoang_toi_cha": null,
+    "khoang_toi_con": [
+     -0.06542056074766354,
+     1.5
+    ]
+   },
+   "khuyu-xa": {
+    "cha_nua_rong_D": [
+     28.75,
+     29.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.5,
+     27.5
+    ],
+    "con_nua_rong_PZ": [
+     22.25,
+     27.75
+    ],
+    "con_nua_rong_P_cu": [
+     23.0,
+     27.25
+    ],
+    "Z": 10.0,
+    "R": 27.5,
+    "khoang_toi_cha": [
+     -1.5,
+     1.5
+    ],
+    "khoang_toi_con": [
+     -1.5,
+     1.5
+    ]
+   }
+  },
+  "Z12": {
+   "khuyu-gan": {
+    "cha_nua_rong_D": [
+     29.5,
+     28.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.0,
+     27.0
+    ],
+    "con_nua_rong_PZ": [
+     21.5,
+     27.5
+    ],
+    "con_nua_rong_P_cu": [
+     21.0,
+     26.5
+    ],
+    "Z": 12.0,
+    "R": 27.0,
+    "khoang_toi_cha": null,
+    "khoang_toi_con": [
+     -0.05454545454545454,
+     1.5
+    ]
+   },
+   "khuyu-xa": {
+    "cha_nua_rong_D": [
+     28.75,
+     29.75
+    ],
+    "cha_nua_rong_D_moi": [
+     27.5,
+     27.5
+    ],
+    "con_nua_rong_PZ": [
+     21.5,
+     28.5
+    ],
+    "con_nua_rong_P_cu": [
+     23.0,
+     27.25
+    ],
+    "Z": 12.0,
+    "R": 27.5,
+    "khoang_toi_cha": [
+     -1.5,
+     1.5
+    ],
+    "khoang_toi_con": [
+     -1.5,
+     1.5
+    ]
+   }
+  }
+ },
+ "buoc_be_rong_duoi_thang": {
+  "v3 tay-gan": {
+   "buoc_lon_nhat_trong_4px": [
+    3.5,
+    4.5
+   ],
+   "nua_rong_tren": [
+    30.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    27.0
+   ]
+  },
+  "Z8 tay-gan": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    30.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    27.0
+   ]
+  },
+  "Z10 tay-gan": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    30.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    27.0
+   ]
+  },
+  "Z12 tay-gan": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    30.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    27.0
+   ]
+  },
+  "v3 tay-xa": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    5.5
+   ],
+   "nua_rong_tren": [
+    31.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    28.0
+   ]
+  },
+  "Z8 tay-xa": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    31.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    28.0
+   ]
+  },
+  "Z10 tay-xa": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    31.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    28.0
+   ]
+  },
+  "Z12 tay-xa": {
+   "buoc_lon_nhat_trong_4px": [
+    2.5,
+    2.5
+   ],
+   "nua_rong_tren": [
+    31.0,
+    22.0
+   ],
+   "nua_rong_duoi": [
+    23.0,
+    28.0
+   ]
+  }
+ },
+ "loi_khuyu": {
+  "v3 tay-gan 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 4,
+   "net_trong_khop": 57
+  },
+  "v3 tay-gan 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 3,
+   "net_trong_khop": 56
+  },
+  "v3 tay-gan 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 53
+  },
+  "v3 tay-gan 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 56
+  },
+  "v3 tay-gan 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 168
+  },
+  "Z8 tay-gan 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 48
+  },
+  "Z8 tay-gan 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 1,
+   "net_trong_khop": 50
+  },
+  "Z8 tay-gan 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 51
+  },
+  "Z8 tay-gan 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 55
+  },
+  "Z8 tay-gan 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 164
+  },
+  "Z10 tay-gan 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 48
+  },
+  "Z10 tay-gan 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 50
+  },
+  "Z10 tay-gan 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 51
+  },
+  "Z10 tay-gan 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 55
+  },
+  "Z10 tay-gan 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 164
+  },
+  "Z12 tay-gan 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 48
+  },
+  "Z12 tay-gan 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 50
+  },
+  "Z12 tay-gan 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 51
+  },
+  "Z12 tay-gan 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 56
+  },
+  "Z12 tay-gan 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 162
+  },
+  "v3 tay-xa 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 49
+  },
+  "v3 tay-xa 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 51
+  },
+  "v3 tay-xa 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 54
+  },
+  "v3 tay-xa 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 53
+  },
+  "v3 tay-xa 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 11,
+   "net_trong_khop": 170
+  },
+  "Z8 tay-xa 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 49
+  },
+  "Z8 tay-xa 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 50
+  },
+  "Z8 tay-xa 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 52
+  },
+  "Z8 tay-xa 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 52
+  },
+  "Z8 tay-xa 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 11,
+   "net_trong_khop": 167
+  },
+  "Z10 tay-xa 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 49
+  },
+  "Z10 tay-xa 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 50
+  },
+  "Z10 tay-xa 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 52
+  },
+  "Z10 tay-xa 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 52
+  },
+  "Z10 tay-xa 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 11,
+   "net_trong_khop": 166
+  },
+  "Z12 tay-xa 0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 49
+  },
+  "Z12 tay-xa 15": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 4,
+   "net_trong_khop": 50
+  },
+  "Z12 tay-xa 30": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 52
+  },
+  "Z12 tay-xa 60": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 52
+  },
+  "Z12 tay-xa 100": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 11,
+   "net_trong_khop": 167
+  }
+ },
+ "co_tay": {
+  "tay-gan chạy: tay trước co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 268
+  },
+  "tay-gan chạy: tay trước co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 282
+  },
+  "tay-gan chạy: tay trước co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 310
+  },
+  "tay-gan chạy: tay sau co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 223
+  },
+  "tay-gan chạy: tay sau co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 230
+  },
+  "tay-gan chạy: tay sau co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 266
+  },
+  "tay-gan chém: giơ co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 232
+  },
+  "tay-gan chém: giơ co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 212
+  },
+  "tay-gan chém: giơ co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 244
+  },
+  "tay-gan chém: kết co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 218
+  },
+  "tay-gan chém: kết co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 215
+  },
+  "tay-gan chém: kết co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 253
+  },
+  "tay-gan chém: đâm co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 4,
+   "net_trong_khop": 213
+  },
+  "tay-gan chém: đâm co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 10,
+   "net_trong_khop": 216
+  },
+  "tay-gan chém: đâm co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 12,
+   "net_trong_khop": 249
+  },
+  "tay-xa chạy: tay trước co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 254
+  },
+  "tay-xa chạy: tay trước co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 274
+  },
+  "tay-xa chạy: tay trước co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 7,
+   "net_trong_khop": 312
+  },
+  "tay-xa chạy: tay sau co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 217
+  },
+  "tay-xa chạy: tay sau co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 9,
+   "net_trong_khop": 230
+  },
+  "tay-xa chạy: tay sau co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 11,
+   "net_trong_khop": 262
+  },
+  "tay-xa chém: giơ co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 224
+  },
+  "tay-xa chém: giơ co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 219
+  },
+  "tay-xa chém: giơ co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 253
+  },
+  "tay-xa chém: kết co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 213
+  },
+  "tay-xa chém: kết co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 6,
+   "net_trong_khop": 220
+  },
+  "tay-xa chém: kết co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 12,
+   "net_trong_khop": 267
+  },
+  "tay-xa chém: đâm co tay -40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 2,
+   "net_trong_khop": 211
+  },
+  "tay-xa chém: đâm co tay +0": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 5,
+   "net_trong_khop": 225
+  },
+  "tay-xa chém: đâm co tay +40": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "khe_gan_khop": 0,
+   "khe_mo_gan_khop": 8,
+   "net_trong_khop": 260
+  }
+ },
+ "tu_the_tay": {
+  "chạy: tay trước": [
+   60,
+   -20,
+   -10
+  ],
+  "chạy: tay sau": [
+   125,
+   65,
+   70
+  ],
+  "chém: giơ": [
+   -60,
+   -120,
+   -140
+  ],
+  "chém: kết": [
+   70,
+   40,
+   30
+  ],
+  "chém: đâm": [
+   20,
+   15,
+   10
+  ]
+ }
+}

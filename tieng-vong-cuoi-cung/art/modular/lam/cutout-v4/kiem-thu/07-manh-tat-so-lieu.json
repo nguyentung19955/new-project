@@ -1,0 +1,104 @@
+{
+ "nghỉ": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 264,
+   "capelet-truoc": 948
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ },
+ "đầu −10": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 15,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 264,
+   "capelet-truoc": 1009
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ },
+ "đầu +10": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 264,
+   "capelet-truoc": 844
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ },
+ "lean −8": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 261,
+   "capelet-truoc": 957
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ },
+ "lean +8": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 4,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 256,
+   "capelet-truoc": 999
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ },
+ "lean +8 đầu −10": {
+  "v3": {
+   "vat-truoc": 0,
+   "capelet-truoc": 28,
+   "so_lop_ve": 25
+  },
+  "v4": {
+   "vat-truoc": 0,
+   "capelet-truoc": 0,
+   "so_lop_ve": 23
+  },
+  "v4_neu_bat": {
+   "vat-truoc": 256,
+   "capelet-truoc": 1052
+  },
+  "v4_khac_khi_bo_thu_cong_px": 0
+ }
+}
