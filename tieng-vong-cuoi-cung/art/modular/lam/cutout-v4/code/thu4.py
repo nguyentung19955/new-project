@@ -709,6 +709,9 @@ def t_slot():
                         label(z, '%s %s đùi %.1f gối %d: %s' % (name, l2, seq[i][0], seq[i][1], pv), Fs); cells.append(z)
         res['%s_px_doi_lop_max' % name] = int(max(pops)) if pops else 0
         res['%s_so_lan_doi_moi_luot_max' % name] = max(v['so_lan_doi'] for k, v in res['quet'].items() if k.startswith(name))
+    # lưới nhảy ảnh nếu đổi lớp tại (đùi, gối) – căn cứ chọn hệ số bù gối của luật v4
+    res['luoi_px_doi'] = dict(dui=list(range(-30, 61, 10)), goi=list(range(0, 121, 10)),
+                              px=[[pop_at(th, kn, 0)[0] for kn in range(0, 121, 10)] for th in range(-30, 61, 10)])
     # rung quanh ngưỡng (mô phỏng biến đầu vào có nhiễu), có/không hysteresis 28/32 (reset = trạng thái theo ngưỡng gốc)
     rng = np.random.default_rng(1)
     for amp in (0.5, 1.5, 3.0, 6.0):
