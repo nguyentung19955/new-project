@@ -1,0 +1,146 @@
+{
+ "v2 tay-gan 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 473
+ },
+ "v3 tay-gan 0": {
+  "vien_ho": 0,
+  "khe_nen": 9,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 196
+ },
+ "v2 tay-gan 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 473
+ },
+ "v3 tay-gan 50": {
+  "vien_ho": 0,
+  "khe_nen": 9,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 177
+ },
+ "v2 tay-gan 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 491
+ },
+ "v3 tay-gan 105": {
+  "vien_ho": 0,
+  "khe_nen": 9,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 197
+ },
+ "v2 tay-xa 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 727
+ },
+ "v3 tay-xa 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 188
+ },
+ "v2 tay-xa 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 652
+ },
+ "v3 tay-xa 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 330
+ },
+ "v2 tay-xa 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 655
+ },
+ "v3 tay-xa 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 286
+ },
+ "v2 chan-gan 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 337
+ },
+ "v3 chan-gan 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 461
+ },
+ "v2 chan-gan 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 524
+ },
+ "v3 chan-gan 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 432
+ },
+ "v2 chan-gan 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 597
+ },
+ "v3 chan-gan 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 517
+ },
+ "v2 chan-xa 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 608
+ },
+ "v3 chan-xa 0": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 556
+ },
+ "v2 chan-xa 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 516
+ },
+ "v3 chan-xa 50": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 483
+ },
+ "v2 chan-xa 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 433
+ },
+ "v3 chan-xa 105": {
+  "vien_ho": 0,
+  "khe_nen": 0,
+  "khe_gan_khop": 0,
+  "net_trong_khop": 643
+ }
+}

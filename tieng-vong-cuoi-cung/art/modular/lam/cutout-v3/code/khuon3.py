@@ -234,26 +234,38 @@ BROWN = ['ink', 'nau', 'nau_bong', 'nau_toi']
 
 
 # ---------- khớp lồng: cha có nắp R ở D, con có nắp ẩn ở P ----------
-def sweep_back(mask, P, u, length, band=2.0):
+def sweep_back(mask, P, u, length, band=3.0):
     """Kéo tiết diện của mask tại P lùi về phía -u một đoạn length (dùng cho ring_base)."""
     sl = mask & half_plane(mask.shape, P, u, +1, 0.0) & half_plane(mask.shape, P, u, -1, band)
     out = mask.copy()
     if not sl.any():
         return out
-    for k in np.arange(1.0, length + 1.0, 1.0):
+    for k in np.arange(0.5, length + 0.5, 0.5):
         sh = ndimage.shift(sl.astype(float), (-u[1] * k, -u[0] * k), order=0) > 0.5
         out |= sh
     return out
 
 
-def child_cap(p, R, t=T_LINE):
-    """Đầu gần của mảnh con: bỏ phần sau P, thay bằng nắp ẩn bán kính R - t (không viền)."""
+def child_cap(p, R, t=T_LINE, c=6.0):
+    """Đầu gần của mảnh con (khớp lồng):
+    - đệm khung ảnh đủ rộng để hình kéo dài (ring_base) không chạm mép ảnh;
+    - lấy tiết diện tại P + c·u (c = 6 px, tránh mép đầu xiên của ảnh nguồn), kéo lùi về sau P
+      một đoạn R + t + c → hai cạnh bên liền mạch, mép cắt không có viền;
+    - phần giữa P và P + c lấp bằng tiết diện kéo lùi (vá góc xiên); sau P chỉ còn nắp ẩn R − t."""
+    pad_piece(p, int(math.ceil(R + t + c + 4)))
     u = np.subtract(p.D, p.P); u = u / np.linalg.norm(u)
-    keep = p.mask & half_plane(p.mask.shape, p.P, u, +1, 0.0)
-    cap = disc(p.mask.shape, p.P, max(R - t, 2))
-    new = keep | cap
-    rb = sweep_back(keep, p.P, u, R + t + 2) | new
-    p.mat = nearest_fill(p.mat, p.mask | ~new) if (new & ~p.mask).any() else p.mat
+    sh = p.mask.shape
+    keep = p.mask & half_plane(sh, p.P, u, +1, c)
+    slab_origin = (p.P[0] + c * u[0], p.P[1] + c * u[1])
+    sw = sweep_back(keep, slab_origin, u, R + t + c + 2)
+    body = keep | (sw & half_plane(sh, p.P, u, +1, 0.0))
+    cap = disc(sh, p.P, max(R - t, 2))
+    new = body | cap
+    rb = ndimage.binary_fill_holes(ndimage.binary_closing(sw | new, iterations=2) | sw | new)
+    # vật liệu phần vá/nắp: lấy từ điểm thật sâu hơn tiết diện lấy mẫu (tránh mảnh vụn khử răng cưa ở đầu nguồn)
+    p.mat = nearest_fill(p.mat, keep & half_plane(sh, p.P, u, +1, c + 2))
+    # không kẻ viền phía sau P: nắp ẩn nằm trọn trong nắp cha (R − t < R) → không vạch đen trong khuỷu/gối
+    p.noline = half_plane(sh, p.P, u, -1, 0.0)
     p.inner = p.inner & keep
     p.inner_px = p.inner_px & keep
     p.mask, p.ring_base = new, rb

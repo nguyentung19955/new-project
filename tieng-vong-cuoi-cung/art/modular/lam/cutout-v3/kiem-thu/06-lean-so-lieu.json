@@ -1,0 +1,65 @@
+{
+ "v3 -8": {
+  "troi_ban_chan": {
+   "ung-gan": [
+    1.0,
+    -3.4
+   ],
+   "ung-xa": [
+    1.5,
+    3.4
+   ]
+  },
+  "loi_vung_co": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "net_trong_khop": 0
+  },
+  "tam_mu": [
+   193.5,
+   254.8
+  ]
+ },
+ "v3 +0": {
+  "troi_ban_chan": {
+   "ung-gan": [
+    0.0,
+    0.0
+   ],
+   "ung-xa": [
+    0.0,
+    0.0
+   ]
+  },
+  "loi_vung_co": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "net_trong_khop": 0
+  },
+  "tam_mu": [
+   207.0,
+   252.0
+  ]
+ },
+ "v3 +8": {
+  "troi_ban_chan": {
+   "ung-gan": [
+    -1.5,
+    3.3
+   ],
+   "ung-xa": [
+    -1.0,
+    -3.6
+   ]
+  },
+  "loi_vung_co": {
+   "vien_ho": 0,
+   "khe_nen": 0,
+   "net_trong_khop": 0
+  },
+  "tam_mu": [
+   220.8,
+   251.1
+  ]
+ }
+}

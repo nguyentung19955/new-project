@@ -182,16 +182,16 @@
     58
    ],
    "P": [
-    22.5,
-    29.0
+    22.0,
+    4.0
    ],
    "D": null,
    "xuong": null,
    "huong_anh": 0.0,
    "cha": "than",
    "gan": [
-    87.5,
-    -5.0
+    80.97,
+    -29.14
    ],
    "goc_nghi": -14.0,
    "kieu_goc": "tuong_doi",
@@ -320,16 +320,16 @@
   "cang-tay-gan": {
    "anh": "cang-tay-gan.png",
    "kich_thuoc": [
-    70,
-    64
+    160,
+    154
    ],
    "P": [
-    14.0,
-    27.0
+    59.0,
+    72.0
    ],
    "D": [
-    56.0,
-    43.0
+    101.0,
+    88.0
    ],
    "xuong": 44.94,
    "huong_anh": 20.8545,
@@ -361,8 +361,8 @@
    "huong_anh": 0.0,
    "cha": "cang-tay-gan",
    "gan": [
-    56.0,
-    43.0
+    101.0,
+    88.0
    ],
    "goc_nghi": 15.482,
    "kieu_goc": "tuong_doi",
@@ -398,16 +398,16 @@
   "cang-tay-xa": {
    "anh": "cang-tay-xa.png",
    "kich_thuoc": [
-    69,
-    62
+    161,
+    154
    ],
    "P": [
-    14.0,
-    27.0
+    60.0,
+    73.0
    ],
    "D": [
-    56.0,
-    43.0
+    102.0,
+    89.0
    ],
    "xuong": 44.94,
    "huong_anh": 20.8545,
@@ -439,8 +439,8 @@
    "huong_anh": 0.0,
    "cha": "cang-tay-xa",
    "gan": [
-    56.0,
-    43.0
+    102.0,
+    89.0
    ],
    "goc_nghi": -171.207,
    "kieu_goc": "tuong_doi",
@@ -476,16 +476,16 @@
   "cang-chan-gan": {
    "anh": "cang-chan-gan.png",
    "kich_thuoc": [
-    62,
-    64
+    148,
+    150
    ],
    "P": [
-    31.0,
-    6.0
+    74.0,
+    49.0
    ],
    "D": [
-    31.0,
-    44.0
+    74.0,
+    87.0
    ],
    "xuong": 38.0,
    "huong_anh": 90.0,
@@ -517,8 +517,8 @@
    "huong_anh": 90.0,
    "cha": "cang-chan-gan",
    "gan": [
-    31.0,
-    44.0
+    74.0,
+    87.0
    ],
    "goc_nghi": -40.11,
    "kieu_goc": "tuong_doi",
@@ -554,16 +554,16 @@
   "cang-chan-xa": {
    "anh": "cang-chan-xa.png",
    "kich_thuoc": [
-    62,
-    64
+    148,
+    150
    ],
    "P": [
-    31.0,
-    6.0
+    74.0,
+    49.0
    ],
    "D": [
-    31.0,
-    44.0
+    74.0,
+    87.0
    ],
    "xuong": 38.0,
    "huong_anh": 90.0,
@@ -595,8 +595,8 @@
    "huong_anh": 90.0,
    "cha": "cang-chan-xa",
    "gan": [
-    31.0,
-    44.0
+    74.0,
+    87.0
    ],
    "goc_nghi": -44.992,
    "kieu_goc": "tuong_doi",
@@ -705,6 +705,28 @@
    "khuyu-xa": 27.5
   }
  },
- "phu": [],
- "slot_theo_tu_the": []
+ "phu": [
+  {
+   "manh": "mu",
+   "theo": "than",
+   "he_so": -0.3,
+   "gioi_han": [
+    -6,
+    6
+   ]
+  }
+ ],
+ "slot_theo_tu_the": [
+  {
+   "manh": [
+    "cang-chan-gan",
+    "ung-gan"
+   ],
+   "slot": 115,
+   "khi": {
+    "bien": "goc:dui-gan",
+    "nho_hon": 30
+   }
+  }
+ ]
 }

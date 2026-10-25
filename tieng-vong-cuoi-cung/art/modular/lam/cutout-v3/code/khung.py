@@ -41,8 +41,9 @@ def rig_tu_v2(dims):
     R['than'] = dict(anh='than', cha=None, gan=None, P=list(V2['than_P']), goc_nghi=0.0)
     for n, (wx, wy) in V2['at'].items():
         w, h = dims[n]['w'], dims[n]['h']
-        P = [w / 2.0, h / 2.0]
-        R[n] = dict(anh=n, cha='than', gan=[wx - tx, wy - ty], P=P, goc_nghi=0.0)
+        # v2 đặt TÂM ảnh tại (wx, wy); nếu mảnh có P riêng (chuông treo ở P) thì gắn tại P, cùng vị trí thế giới
+        P = list(dims[n]['P']) if dims[n]['P'] is not None else [w / 2.0, h / 2.0]
+        R[n] = dict(anh=n, cha='than', gan=[wx - w / 2.0 + P[0] - tx, wy - h / 2.0 + P[1] - ty], P=P, goc_nghi=0.0)
     R['mu'] = dict(anh='mu', cha='than', gan=[V2['head_pos'][0] - tx, V2['head_pos'][1] - ty],
                    P=list(V2['head_P']), goc_nghi=0.0)
     g = dims['chop-mu']['chop_goc']; Pt = dims['chop-mu']['P']
@@ -97,6 +98,14 @@ IK_SIDES = {'tay-gan': ('gang-gan', 1), 'tay-xa': ('gang-xa', -1),
 AN_KHI_NGHI = {'capelet-truoc': (-15, -25, 0.0), 'vat-truoc': (0, -25, 0.0)}
 
 # ---------- chuyển động phụ (pose delta của nguồn × hệ số, cộng vào mảnh) ----------
-PHU = []
+# Đầu: khi thân nghiêng (lean), đầu bù ngược 30 % để giữ nhìn thẳng – chuyển động phụ riêng của đầu
+# (pose vẫn cộng delta 'mu' riêng nếu cần). Kiểm tra: kiem-thu/06-lean.png.
+PHU = [{'manh': 'mu', 'theo': 'than', 'he_so': -0.3, 'gioi_han': [-6, 6]}]
 # ---------- slot vẽ đổi theo tư thế ----------
-SLOT_THEO_TU_THE = []
+# Chân gần: khi đùi đưa ra trước (góc cục bộ đùi so với thân < 30°, tức nâng gối), cẳng + ủng gần vẽ
+# NGAY TRÊN thân (dưới vạt sau/đai) để không biến mất sau vạt áo; đùi vẫn nằm dưới thân.
+# Ngưỡng 30° chọn theo số điểm ảnh đổi khi chuyển slot (thu3.py slot): ≤ 6 px ở 30° (gối 60°/90°),
+# 16–31 px ở 35–40°, 200+ px nếu chuyển cả đùi. Xem kiem-thu/11-slot-chan-gan.png.
+_TS = 10 * (ORDER_V3.index('than') + 1)
+SLOT_THEO_TU_THE = [{'manh': ['cang-chan-gan', 'ung-gan'], 'slot': _TS + 5,
+                     'khi': {'bien': 'goc:dui-gan', 'nho_hon': 30}}]

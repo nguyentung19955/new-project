@@ -1,0 +1,18 @@
+{
+ "dui 40°": {
+  "diem_doi_khi_bat_luat": 0,
+  "luat_ap_dung": false
+ },
+ "dui 31°": {
+  "diem_doi_khi_bat_luat": 0,
+  "luat_ap_dung": false
+ },
+ "dui 29°": {
+  "diem_doi_khi_bat_luat": 6,
+  "luat_ap_dung": true
+ },
+ "dui 15°": {
+  "diem_doi_khi_bat_luat": 2,
+  "luat_ap_dung": true
+ }
+}

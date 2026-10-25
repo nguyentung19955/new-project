@@ -1,0 +1,26 @@
+{
+ "px_the_gioi_moi_px_logic": 4.196,
+ "he_so_thiet_bi": 2.17,
+ "khung_the_gioi": [
+  600,
+  520
+ ],
+ "khung_logic": [
+  143,
+  124
+ ],
+ "khung_thiet_bi": [
+  310,
+  269
+ ],
+ "dat_logic": 116.29,
+ "dat_thiet_bi": 252.35,
+ "goc_the_gioi_trong_khung": [
+  40,
+  20
+ ],
+ "lam_cao_logic": 112,
+ "lam_cao_thiet_bi": 243.0,
+ "vien_logic": 1.91,
+ "vien_thiet_bi": 4.14
+}
