@@ -1,0 +1,450 @@
+{
+ "don_vi": "px logic (Lam cao 112) / giây, trừ khi ghi khác",
+ "he_so_112": 0.10458,
+ "cao_nghi_px_anh_ngang": 1071.0,
+ "chu_ky_s": 0.64,
+ "so_khung": 32,
+ "toc_do_dat_px_logic_s": 130.72,
+ "toc_do_dat_px_logic_moi_khung": 2.614,
+ "ung_chiu_luc": {
+  "ung-gan": {
+   "so_mau_chiu_luc": 241,
+   "vx_diem_cham_tb": -130.718,
+   "lech_vx_lon_nhat": 0.148,
+   "lech_vx_lon_nhat_phan_tram": 0.11,
+   "truot_tich_luy_px_logic": 0.0001,
+   "vy_diem_cham_lon_nhat": 0.545,
+   "khe_ho_lon_nhat_khi_chiu_luc_px_logic": 0.0
+  },
+  "ung-xa": {
+   "so_mau_chiu_luc": 241,
+   "vx_diem_cham_tb": -130.718,
+   "lech_vx_lon_nhat": 0.148,
+   "lech_vx_lon_nhat_phan_tram": 0.11,
+   "truot_tich_luy_px_logic": 0.0001,
+   "vy_diem_cham_lon_nhat": 2.793,
+   "khe_ho_lon_nhat_khi_chiu_luc_px_logic": 0.0
+  }
+ },
+ "dich_diem_cham_moi_khung_px_logic": {
+  "dat_troi": -2.614,
+  "khung": [
+   {
+    "khung": 0,
+    "ms": 0.0,
+    "ung-gan": -2.612
+   },
+   {
+    "khung": 1,
+    "ms": 20.0,
+    "ung-gan": -2.607
+   },
+   {
+    "khung": 2,
+    "ms": 40.0,
+    "ung-gan": -2.614
+   },
+   {
+    "khung": 3,
+    "ms": 60.0,
+    "ung-gan": -2.614
+   },
+   {
+    "khung": 4,
+    "ms": 80.0,
+    "ung-gan": -2.614
+   },
+   {
+    "khung": 5,
+    "ms": 100.0,
+    "ung-gan": -2.614
+   },
+   {
+    "khung": 6,
+    "ms": 120.0,
+    "ung-gan": -2.614
+   },
+   {
+    "khung": 7,
+    "ms": 140.0,
+    "ung-gan": -2.609
+   },
+   {
+    "khung": 8,
+    "ms": 160.0,
+    "ung-gan": -2.589
+   },
+   {
+    "khung": 9,
+    "ms": 180.0,
+    "ung-gan": -2.61
+   },
+   {
+    "khung": 10,
+    "ms": 200.0,
+    "ung-gan": -2.605
+   },
+   {
+    "khung": 11,
+    "ms": 220.0,
+    "ung-gan": -2.612
+   },
+   {
+    "khung": 12,
+    "ms": 240.0
+   },
+   {
+    "khung": 13,
+    "ms": 260.0
+   },
+   {
+    "khung": 14,
+    "ms": 280.0
+   },
+   {
+    "khung": 15,
+    "ms": 300.0
+   },
+   {
+    "khung": 16,
+    "ms": 320.0,
+    "ung-xa": -2.612
+   },
+   {
+    "khung": 17,
+    "ms": 340.0,
+    "ung-xa": -2.609
+   },
+   {
+    "khung": 18,
+    "ms": 360.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 19,
+    "ms": 380.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 20,
+    "ms": 400.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 21,
+    "ms": 420.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 22,
+    "ms": 440.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 23,
+    "ms": 460.0,
+    "ung-xa": -2.607
+   },
+   {
+    "khung": 24,
+    "ms": 480.0,
+    "ung-xa": -2.599
+   },
+   {
+    "khung": 25,
+    "ms": 500.0,
+    "ung-xa": -2.608
+   },
+   {
+    "khung": 26,
+    "ms": 520.0,
+    "ung-xa": -2.606
+   },
+   {
+    "khung": 27,
+    "ms": 540.0,
+    "ung-xa": -2.614
+   },
+   {
+    "khung": 28,
+    "ms": 560.0
+   },
+   {
+    "khung": 29,
+    "ms": 580.0
+   },
+   {
+    "khung": 30,
+    "ms": 600.0
+   },
+   {
+    "khung": 31,
+    "ms": 620.0
+   }
+  ]
+ },
+ "vao_roi_dat": {
+  "ung-gan_cham_dat": {
+   "v_truoc": [
+    -127.21,
+    20.94
+   ],
+   "v_sau": [
+    -127.35,
+    20.82
+   ],
+   "nhay_van_toc": 0.185
+  },
+  "ung-gan_roi_dat": {
+   "v_truoc": [
+    -109.66,
+    -41.68
+   ],
+   "v_sau": [
+    -109.68,
+    -42.16
+   ],
+   "nhay_van_toc": 0.477
+  },
+  "ung-xa_cham_dat": {
+   "v_truoc": [
+    -127.43,
+    20.09
+   ],
+   "v_sau": [
+    -127.57,
+    19.96
+   ],
+   "nhay_van_toc": 0.188
+  },
+  "ung-xa_roi_dat": {
+   "v_truoc": [
+    -109.93,
+    -42.16
+   ],
+   "v_sau": [
+    -109.95,
+    -42.63
+   ],
+   "nhay_van_toc": 0.477
+  }
+ },
+ "vong_noi": {
+  "nhay_vi_tri_lon_nhat_px_anh_ngang": 0.00078,
+  "nhay_goc_lon_nhat_do": 0.00015,
+  "nhay_van_toc_lon_nhat_px_logic_s": 0.146,
+  "gia_toc_roi_rac_tai_khung_0_px_logic": 1.0111,
+  "gia_toc_roi_rac_lon_nhat_ca_chu_ky_px_logic": 3.0121,
+  "khung_co_gia_toc_lon_nhat": 14,
+  "ghi_chu": "gia tốc rời rạc = |p(k+1) − 2p(k) + p(k−1)| của gốc từng nút; khung 0 dùng khung 31 và 1 → nếu vòng nối giật thì khung 0 sẽ nổi bật"
+ },
+ "vuot_bien_noi_suy_px_hoac_do": {
+  "ung_nhac": 0.0,
+  "ung_goc": 0.0,
+  "than_dy": 0.0,
+  "than_goc": 0.0,
+  "mu_dy": 0.0,
+  "mu_goc": 0.0,
+  "chop": 0.0,
+  "chuong": 0.0,
+  "ung_x_ung-gan": 0.0,
+  "ung_x_ung-xa": 0.0
+ },
+ "tay_sau_thay_phan_tram_112px": {
+  "theo_khung": {
+   "0": 96.5,
+   "1": 97.3,
+   "2": 98.2,
+   "3": 99.8,
+   "4": 100.0,
+   "5": 100.0,
+   "6": 100.0,
+   "7": 100.0,
+   "8": 100.0,
+   "9": 100.0,
+   "10": 100.0,
+   "11": 100.0,
+   "12": 100.0,
+   "13": 100.0,
+   "14": 100.0,
+   "15": 100.0,
+   "16": 100.0,
+   "17": 100.0,
+   "18": 100.0,
+   "19": 100.0,
+   "20": 100.0,
+   "21": 100.0,
+   "22": 100.0,
+   "23": 100.0,
+   "24": 100.0,
+   "25": 100.0,
+   "26": 100.0,
+   "27": 100.0,
+   "28": 100.0,
+   "29": 100.0,
+   "30": 98.6,
+   "31": 97.6
+  },
+  "nho_nhat": 96.5,
+  "tu_the": {
+   "cham-dat": 96.5,
+   "chiu-luc": 100.0,
+   "dap": 100.0,
+   "bay": 100.0
+  },
+  "v1_tu_the": {
+   "cham-dat": 69.7,
+   "chiu-luc": 85.7,
+   "dap": 100.0,
+   "bay": 100.0
+  }
+ },
+ "dao_chong_ung_px_anh_ngang": {
+  "lon_nhat": 0,
+  "theo_khung": {
+   "0": 0,
+   "1": 0,
+   "2": 0,
+   "3": 0,
+   "4": 0,
+   "5": 0,
+   "6": 0,
+   "7": 0,
+   "8": 0,
+   "9": 0,
+   "10": 0,
+   "11": 0,
+   "12": 0,
+   "13": 0,
+   "14": 0,
+   "15": 0,
+   "16": 0,
+   "17": 0,
+   "18": 0,
+   "19": 0,
+   "20": 0,
+   "21": 0,
+   "22": 0,
+   "23": 0,
+   "24": 0,
+   "25": 0,
+   "26": 0,
+   "27": 0,
+   "28": 0,
+   "29": 0,
+   "30": 0,
+   "31": 0
+  }
+ },
+ "khe_ho_khi_bay_px_logic": {
+  "theo_khung_[gan,xa]": {
+   "13": [
+    2.43,
+    3.65
+   ],
+   "14": [
+    5.75,
+    2.51
+   ],
+   "15": [
+    7.35,
+    0.96
+   ],
+   "29": [
+    3.65,
+    2.43
+   ],
+   "30": [
+    2.51,
+    5.75
+   ],
+   "31": [
+    0.96,
+    7.35
+   ]
+  },
+  "nho_nhat": 0.96
+ },
+ "bien_do": {
+  "than_nhun_thap_nhat_px_logic": 3.14,
+  "than_cao_nhat_px_logic": 3.14,
+  "tay_dao_vung_do": [
+   -14.0,
+   14.0
+  ],
+  "sai_diem_cham_px_anh_ngang": "xem chu_ky.kenh.ung_x_*",
+  "chop_mu_do": [
+   -6.0,
+   7.0
+  ],
+  "pivot_ung_khi_chiu_luc_px_anh_ngang": [
+   148.7,
+   -139.2
+  ]
+ },
+ "nghi_so_voi_anh_ngang": {
+  "iou_v1": 0.913,
+  "iou_v2": 0.954,
+  "px_mau_co_rap_khong_v1": 44555,
+  "px_mau_co_rap_khong_v2": 24838,
+  "px_rap_co_mau_khong_v1": 5840,
+  "px_rap_co_mau_khong_v2": 1596,
+  "vung_mu_px_lech_v1": [
+   19502,
+   3420
+  ],
+  "vung_mu_px_lech_v2": [
+   786,
+   0
+  ]
+ },
+ "chop_mu_lac": {
+  "-10": {
+   "lo_thung_px": 0
+  },
+  "-6": {
+   "lo_thung_px": 0
+  },
+  "0": {
+   "lo_thung_px": 0
+  },
+  "7": {
+   "lo_thung_px": 3
+  },
+  "10": {
+   "lo_thung_px": 0
+  }
+ },
+ "ung_bong_rong_cao_px": {
+  "rig-v1_ung-xa": [
+   207,
+   162
+  ],
+  "rig-v1_ung-gan": [
+   196,
+   155
+  ],
+  "rig-v2_ung-xa": [
+   202,
+   158
+  ],
+  "rig-v2_ung-gan": [
+   201,
+   159
+  ]
+ },
+ "tu_the_112": {
+  "cham-dat": {
+   "cao_px": 114
+  },
+  "chiu-luc": {
+   "cao_px": 110
+  },
+  "dap": {
+   "cao_px": 112
+  },
+  "bay": {
+   "cao_px": 113
+  }
+ }
+}
