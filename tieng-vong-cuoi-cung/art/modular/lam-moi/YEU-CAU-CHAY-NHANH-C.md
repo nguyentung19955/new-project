@@ -31,3 +31,6 @@ Nền Làng Chuông tiếp tục làm song song.
 
 Giữ bản demo hiện tại để đối chiếu. Chưa đổi thêm độ lắc
 đầu/chóp hoặc thiết kế nhân vật trong lượt này.
+
+## Bổ sung (26/10/2026, 23:57) – nguyên văn
+Nhớ các động tác nên cod thêm hieự ứng nhé, dash cũng cần hiệu ứng, đứng trượt trên tường cũng cần, và quan trọng là hình ảnh nên bám vào game play nữa
