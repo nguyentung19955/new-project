@@ -1,50 +1,65 @@
 #!/usr/bin/env python3
-"""Ghép demo.html thành MỘT file tự chứa để đăng artifact:
-nhúng 3 sheet chibi (anim/lam-chibi, anim/quai-boss, anim/the-gioi: json + ảnh) và 2 lớp nền parallax
-(art/chibi/nen/parallax/xa-1920.png, gan-1920.png) vào TV.NHUNG dạng data URI WebP (nhỏ hơn PNG nhiều, Safari iOS 14+ đọc được).
-Sheet tạo bằng tools/chibi-sheets.py. Nếu file build > 15 MB thì tự giảm chất lượng WebP.
+"""Ghép demo.html thành MỘT file tự chứa để đăng artifact / chơi offline, nhúng vào TV.NHUNG:
+  - lam : Lam mới (rig-v3) = JSON + PNG CÙNG lấy từ art/modular/lam-moi/rig-v3/sprite/ (lam-chay-2x.json + lam-chay-2x.png),
+          nhúng PNG NGUYÊN BẢN (không nén lại, không đổi cỡ) – kiểm ảnh đúng 2142×970 = co_sheet trong JSON, sai thì dừng;
+          + dáng nghỉ TẠM anim/lam-nghi-2x.png (tools/lam-dang-nghi.py) cũng nhúng PNG nguyên bản.
+  - qb, tg : sheet quái+boss và thế giới (anim/quai-boss.*, anim/the-gioi.*) dạng data URI WebP (Safari iOS 14+ đọc được).
+Nền parallax cũ (art/chibi/…) đã bị xoá: demo.html vẽ nền gradient TẠM, không cần nhúng ảnh nền.
+Nếu file build > 15 MB thì tự giảm chất lượng WebP của qb/tg.
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
-import base64, io, json, os, re
+import base64, io, json, os
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 src = open(os.path.join(HERE, 'demo.html'), encoding='utf-8').read()
 ANIM = os.path.join(HERE, 'anim')
-NEN = os.path.normpath(os.path.join(HERE, '..', 'art', 'chibi', 'nen', 'parallax'))
-SHEETS = {'lam': 'lam-chibi.json', 'qb': 'quai-boss.json', 'tg': 'the-gioi.json'}
-NENS = {'xa': 'xa-1920.png', 'gan': 'gan-1920.png'}
+LAM_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v3', 'sprite'))
+LAM_CO = (2142, 970)
+SHEETS = {'qb': 'quai-boss.json', 'tg': 'the-gioi.json'}
 
 
-def webp(path, q, alpha=True):
+def webp(path, q):
     b = io.BytesIO()
-    im = Image.open(path)
-    if alpha:
-        im.convert('RGBA').save(b, 'WEBP', quality=q, method=6, alpha_quality=100)
-    else:
-        im.convert('RGB').save(b, 'WEBP', quality=q, method=6)
+    Image.open(path).convert('RGBA').save(b, 'WEBP', quality=q, method=6, alpha_quality=100)
     return 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()
 
 
-def khoi(q_sheet, q_nen):
-    nh = {}
+def png_uri(path):
+    return 'data:image/png;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
+
+
+def lam():
+    meta = json.load(open(os.path.join(LAM_DIR, 'lam-chay-2x.json'), encoding='utf-8'))
+    p = os.path.join(LAM_DIR, meta['anh'])
+    co = Image.open(p).size
+    if co != LAM_CO or tuple(meta['co_sheet']) != co:
+        raise SystemExit('LỖI: %s cỡ %s – phải đúng %s và trùng co_sheet %s trong JSON (PNG + JSON cùng từ rig-v3/sprite/)'
+                         % (p, co, LAM_CO, meta['co_sheet']))
+    pn = os.path.join(ANIM, 'lam-nghi-2x.png')
+    if Image.open(pn).size != tuple(meta['co_khung']):
+        raise SystemExit('LỖI: %s phải cùng cỡ ô %s – chạy lại tools/lam-dang-nghi.py' % (pn, meta['co_khung']))
+    return {'json': meta, 'anh': png_uri(p), 'nghi': png_uri(pn)}
+
+
+def khoi(q_sheet, L):
+    nh = {'lam': L}
     for k, jf in SHEETS.items():
         meta = json.load(open(os.path.join(ANIM, jf), encoding='utf-8'))
         nh[k] = {'json': meta, 'anh': webp(os.path.join(ANIM, meta['image']), q_sheet)}
-    for k, f in NENS.items():
-        nh[k] = {'anh': webp(os.path.join(NEN, f), q_nen, alpha=(k == 'gan'))}
     js = json.dumps(nh, ensure_ascii=False, separators=(',', ':'))
-    return '<script>/* tài nguyên chibi nhúng sẵn */\nwindow.TV=window.TV||{};TV.NHUNG=' + js.replace('</', '<\\/') + ';\n</script>\n'
+    return '<script>/* tài nguyên nhúng sẵn */\nwindow.TV=window.TV||{};TV.NHUNG=' + js.replace('</', '<\\/') + ';\n</script>\n'
 
 
 tag = "<script>\n'use strict';"
 assert src.count(tag) == 1
 assert '<script src=' not in src, 'demo.html không còn nạp lib/*.js'
-for qs, qn in [(92, 85), (85, 78), (75, 70), (60, 60)]:
-    out = src.replace(tag, khoi(qs, qn) + tag)
+L = lam()
+for qs in (92, 85, 75, 60):
+    out = src.replace(tag, khoi(qs, L) + tag)
     mb = len(out.encode('utf-8')) / 1024 / 1024
     if mb <= 15:
         break
     print('Bản build %.1f MB > 15 MB → giảm chất lượng WebP' % mb)
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('Đã ghi', dst, '%.2f MB' % mb, '· WebP sheet q%d, nền q%d' % (qs, qn))
+print('Đã ghi', dst, '%.2f MB' % mb, '· Lam PNG nguyên bản %dx%d · WebP quái/thế giới q%d' % (LAM_CO + (qs,)))

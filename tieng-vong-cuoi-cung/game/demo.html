@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Tiếng Vọng – Demo Làng Chuông</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -176,15 +177,19 @@ body.touch .tc{display:block}
 
 <script>
 'use strict';
-/* Tài nguyên chibi (bản build tự chứa nhúng sẵn vào TV.NHUNG thay vì tải theo đường dẫn):
-   sheet Lam / quái+boss / thế giới (mảnh tileset + đồ vật) tạo bằng tools/chibi-sheets.py; nền parallax hốc cây. */
+/* Tài nguyên (bản build tự chứa nhúng sẵn vào TV.NHUNG thay vì tải theo đường dẫn):
+   - Lam MỚI (phong cách One Mage Army): clip chạy rig-v3 = PNG + JSON CÙNG lấy từ art/modular/lam-moi/rig-v3/sprite/
+     (ảnh phải đúng 2142×970 – kiểm khi nạp); dáng nghỉ TẠM anim/lam-nghi-2x.png (render từ rig-v3 bằng tools/lam-dang-nghi.py,
+     cùng ô 266×241, cùng neo, cùng tỉ lệ 2x).
+   - quái+boss / thế giới (mảnh tileset + đồ vật): sheet cũ, chưa thay ở bước này.
+   - Nền parallax hốc cây cũ (art/chibi/…) đã bị xoá → TẠM vẽ nền gradient (drawNenTam) cho tới khi có nền mới. */
 const SRC = {
-  lam:  'anim/lam-chibi.json',
+  lam:  '../art/modular/lam-moi/rig-v3/sprite/lam-chay-2x.json',
+  nghi: 'anim/lam-nghi-2x.png',
   qb:   'anim/quai-boss.json',
-  tg:   'anim/the-gioi.json',
-  xa:   '../art/chibi/nen/parallax/xa-1920.png',
-  gan:  '../art/chibi/nen/parallax/gan-1920.png'
+  tg:   'anim/the-gioi.json'
 };
+const LAM_CO_SHEET=[2142,970];   // cỡ ảnh thực bắt buộc của lam-chay-2x.png (JSON co_sheet phải trùng)
 /* ================= THAM SỐ (lõi chuyển động lấy từ Phòng xám) ================= */
 /* Độ phân giải logic 960×540 (gấp đôi 480×270 cũ): mọi khoảng cách / tốc độ / gia tốc ×2, số khung giữ nguyên → cùng cảm giác */
 const P = { runSpeed:4.4, jumpHeight:112, gravity:0.64, echoFrames:180, wallJumpVx:5.4, wallStick:6, autoPogo:1,
@@ -194,9 +199,8 @@ const P = { runSpeed:4.4, jumpHeight:112, gravity:0.64, echoFrames:180, wallJump
   dashSpeed:11, dashFrames:8, dashIFrames:11, dashCooldown:18,
   pogoMul:1, lunge:2.2, pogoReach:56, pogoDown:0.35, pogoBuf:6,
   maxHp:5, hurtIFrames:60, resWindow:12 };
-// Đòn đánh: su (chuẩn bị+vung), ac (khung CHẠM: hitbox bật), re (thu) — tính theo số khung logic 60 Hz từ thời lượng từng khung ảnh
-// trong anim/lam-chibi.json (chuẩn bị 120 ms, vung 60, chạm 140, thu 140). box [dx,dy,w,h] so với CHÂN (giữa đáy hitbox), mặt hướng phải,
-// lấy theo lưỡi dao ở khung chạm. Số dưới đây chỉ là mặc định trước khi nạp sheet.
+// Đòn đánh: su (chuẩn bị+vung), ac (khung CHẠM: hitbox bật), re (thu) — số khung logic 60 Hz. Trước đây đọc lại từ sheet chibi cũ
+// (anim/lam-chibi.json, đã xoá); số dưới đây CHÍNH LÀ các giá trị đó (giữ nguyên gameplay). box [dx,dy,w,h] so với CHÂN, mặt hướng phải.
 // 1–3: combo dưới đất (combo-3 → combo-1 → combo-4), 4: chém nảy, 5: chém hất, 6: chém trên không (combo-2 xoay)
 const ATK = {
   1:{su:11, ac:8, re:8,  hs:3, mag:1.5, sh:[1,0],      box:[4,-97,147,48],   ch:'atk1'},
@@ -239,12 +243,13 @@ const S={frame:0, play:0, hitstop:0, room:0, paused:true, shx:0, shy:0, sht:0, s
   btnToast:false, kengN:0, cp:null, won:false, winT:0, hintKey:'', echoId:0};
 const pl={x:0,y:0,w:20,h:30,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
   dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atkN:0,atkT:0,atkSw:0,atkBounced:false,anim:0,st:'idle',px:0,py:0,airJump:false,pogoBuf:0,pogoSafe:0,
-  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0, a2:null, k2:0, l2:false, drawT:0, airT:0};
+  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0, a2:null, k2:0, l2:false, drawT:0, airT:0, pha:0, dxT:0};
   // drawT: đang rút dao khi vào ải (khoá điều khiển); airT: số khung đã rời đất (chọn khung nhảy 1 = khuỵu lúc bật)
-  // a2/k2/l2: tên animation + khung + lật của Lam chibi — ghi vào bản ghi Tiếng Vọng y như ak/af/flip
+  // a2/k2/l2: trạng thái hình + khung (0–31 = ô sheet chạy, -1 = dáng nghỉ TẠM) + lật của Lam mới — ghi vào bản ghi Tiếng Vọng
+  // pha: pha chạy liên tục ∈ [0,1) (phát theo quãng đường); dxT: dịch ngang THỰC của bước (sau moveX, không tính camera)
 let swingId=0;
 let rec=null, echo=null;            // rec: đang ghi; echo: bóng (phát lại rồi giữ tư thế)
-const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
+const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,p2:0,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
 const RECST={n:0,sx:0,sy:0}, ECHO={id:0,n:0,i:0,cur:null,done:false,px:0,py:0,warn:false};
 
 /* pool hạt / hiệu ứng / vệt lướt: tạo sẵn, dùng vòng tròn, không tạo đối tượng mỗi khung */
@@ -576,6 +581,7 @@ function finishGround(){
   else if(pl.coyote>0) pl.coyote--;
 }
 function updatePlayer(){
+  pl.dxT=0;
   if(pl.dead){
     pl.deadT++; pl.vx*=0.9; pl.vy=Math.min(pl.vy+P.gravity,P.maxFall);
     moveX(pl,pl.vx,false); if(moveY(pl,pl.vy,true)) pl.vy=0;
@@ -655,7 +661,9 @@ function updatePlayer(){
   }
   if(pl.jumping && !I.j && pl.vy<0){ pl.vy*=P.jumpCut; pl.jumping=false; }
   if(pl.vy>=0) pl.jumping=false;
+  const xTruoc=pl.x;
   if(moveX(pl,pl.vx,false)) pl.vx=0;
+  pl.dxT=pl.x-xTruoc;   // dịch ngang THỰC sau va chạm (va tường → 0), không dính camera
   const vyWas=pl.vy, ry=moveY(pl,pl.vy,true);
   if(ry!==0){ if(ry===1 && vyWas>5) pl.landT=10; if(ry===-1) pl.jumping=false; pl.vy=0; }
   finishGround();
@@ -677,40 +685,43 @@ function updatePlayer(){
   pl.st = sliding?'wall' : !pl.onGround?(pl.vy<0?'jump':'fall') : Math.abs(pl.vx)>0.6?'run':'idle';
 }
 
-/* ================= LAM CHIBI: chọn animation + khung =================
-   anim/lam-chibi.json: mỗi animation là dãy BƯỚC {khung, ms, dx, dy, hit, box}. ms khác nhau từng bước (đòn: chuẩn bị 120,
-   vung 60, chạm 140, thu 140; chạy 83 = 12 FPS; idle 125 phát 1-2-3-4-3-2). dx/dy đã căn sẵn (docs/fix-animation.md):
-   ngang = TÂM THÂN đúng trên pivot cho MỌI animation (đổi animation / lật mặt không trượt người); dọc = đế ủng chạm đất,
-   trên không = tâm thân ở độ cao cố định (không cộng độ cao giả). Số khung tính theo bước logic 60 Hz, KHÔNG theo số lần vẽ.
-   Chọn khung CHỈ trong bước logic 60 Hz rồi ghi a2/k2/l2 vào pl (và bản ghi Tiếng Vọng) → bóng phát lại đúng khung.
-   Hitbox/vật lý KHÔNG theo ảnh: vẫn 20×30. Vùng ăn đòn 40×120 (hurtBox). */
-let LAM=null, LAM_E=null, QB=null, TG=null;   // sheet Lam (+ bản tô màu cho bóng), sheet quái+boss, sheet thế giới
+/* ================= LAM MỚI (rig-v3): chọn khung =================
+   Clip CHẠY: sprite sheet rig-v3 (32 khung, ô 266×241, neo chân (123,234) trong ô, nguồn 2x → vẽ ½ = cao 112 px logic).
+   PHÁT THEO QUÃNG ĐƯỜNG (không theo thời gian): một biến pha liên tục pl.pha ∈ [0,1) sống qua mọi trạng thái, KHÔNG reset:
+     chỉ khi đang CHẠY TRÊN ĐẤT: pha += |dx_thực| / 83,66 ; pha %= 1 ; khung = floor(pha × 32)
+   dx_thực = pl.dxT = dịch ngang sau moveX (va tường → 0 → chân không đạp; camera không tính). 83,66 px logic = quãng đường
+   một chu kỳ ở tốc độ chuẩn rig (JSON toc_do_chuan) → ở 264 px/s: chu kỳ ≈ 0,317 s, chân không trượt ở mọi tốc độ.
+   Lướt, nhảy/rơi, bị đẩy, đòn đánh… KHÔNG cộng pha (trạng thái riêng).
+   Các trạng thái CHƯA có clip mới dùng khung TẠM (không trộn sheet chibi cũ):
+     k2 = -1 → dáng nghỉ render từ rig-v3 (đứng, tiếp đất, rút dao, đòn đánh, bị đánh, bám tường, chết)
+     k2 = 14 → khung bay của clip chạy (nhảy, rơi, lướt)
+   Chọn khung CHỈ trong bước logic 60 Hz rồi ghi a2/k2/l2 (+ pha) vào pl → bản ghi Tiếng Vọng → bóng vẽ ĐÚNG k2 đã ghi.
+   Hitbox/vật lý KHÔNG theo ảnh: vẫn 20×30; vùng ăn đòn 40×120 (hurtBox) giữ nguyên. */
+let LAM=null, QB=null, TG=null;   // LAM = {meta, sheet, nghi, E:{sheet,nghi} bản tô màu cho bóng}; sheet quái+boss; sheet thế giới
 const CH={ten:'',t:0};
-let RUT_T=52;                                  // số khung logic của rút dao (tính lại khi nạp sheet)
-// bảng tra: mỗi animation → mảng (khung logic → chỉ số bước)
+let RUT_T=52;                      // số khung logic rút dao (giá trị cũ của sheet chibi, giữ nguyên gameplay)
+let LAM_QUANG=83.66, LAM_N=32;     // đọc lại từ JSON khi nạp
+const KHUNG_BAY=14, KHUNG_NGHI=-1;
+// bảng tra animation dạng bước (dùng cho sheet quái/boss)
 function lutAnim(a){ if(a.lut) return a.lut; const l=[]; a.buoc.forEach((b,i)=>{ const n=Math.max(1,Math.round(b.ms*0.06)); for(let k=0;k<n;k++) l.push(i); }); a.lut=l; return l; }
 function animK(a,t){ const l=lutAnim(a); return a.loop ? l[t%l.length] : l[Math.min(t,l.length-1)]; }
-function nhanATK(){   // su/ac/re + box từ sheet
-  for(const n in ATK){ const d=ATK[n], a=LAM.anims[d.ch]; if(!a) continue; const l=lutAnim(a);
-    const hi=a.buoc.findIndex(b=>b.hit); const h0=l.indexOf(hi), h1=l.lastIndexOf(hi);
-    d.su=h0; d.ac=h1-h0+1; d.re=l.length-h1-1; if(a.buoc[hi].box) d.box=a.buoc[hi].box; }
-  RUT_T=lutAnim(LAM.anims.rutdao).length;
-}
-function lamChibi(){
-  if(!LAM) return;
-  const A=LAM.anims; let ten, k=0, flip=pl.face<0;
+function lamChon(){
+  let ten, k=KHUNG_NGHI, flip=pl.face<0;
   if(pl.dead) ten='dead';
-  else if(pl.drawT>0){ ten='rutdao'; k=animK(A.rutdao,RUT_T-pl.drawT); }
-  else if(pl.atkN){ ten=ATK[pl.atkN].ch; k=animK(A[ten],pl.atkT); }
+  else if(pl.drawT>0) ten='rutdao';
+  else if(pl.atkN) ten=ATK[pl.atkN].ch;
   else if(pl.hurtT>0) ten='hurt';
-  else if(pl.dash>0) ten='dash';
+  else if(pl.dash>0){ ten='dash'; k=KHUNG_BAY; }
   else if(pl.st==='wall'){ ten='wall'; flip=pl.lastWall>0; }
-  else if(!pl.onGround){ ten='jump'; k = (pl.vy<0 && pl.airT<5) ? 0 : pl.vy<-2.2 ? 1 : pl.vy<2.2 ? 2 : 3; }
+  else if(!pl.onGround){ ten=pl.vy<0?'jump':'fall'; k=KHUNG_BAY; }
+  else if(Math.abs(pl.dxT)>0.001 && (Math.abs(pl.vx)>0.6 || (CH.ten==='run' && Math.abs(pl.vx)>0.05))) ten='run';   // trễ khi quay đầu / giảm tốc
   else if(pl.landT>4) ten='land';
-  else if(Math.abs(pl.vx)>0.6 || (CH.ten==='run' && Math.abs(pl.vx)>0.05)) ten='run';   // trễ: quay đầu khi chạy (vx qua 0) không chen 1 khung idle cao hơn 26 px
   else ten='idle';
+  if(ten==='run'){
+    pl.pha=(pl.pha+Math.abs(pl.dxT)/LAM_QUANG)%1;   // chỉ chạy trên đất mới cộng pha; không reset khi đổi tốc độ
+    k=Math.floor(pl.pha*LAM_N); if(k>=LAM_N) k=LAM_N-1;
+  }
   if(ten!==CH.ten){ CH.ten=ten; CH.t=0; } else CH.t++;
-  if(ten==='run'||ten==='idle') k=animK(A[ten],CH.t);
   pl.a2=ten; pl.k2=k; pl.l2=flip;
 }
 
@@ -725,7 +736,7 @@ function stopRec(){
 }
 function recordFrame(hb){
   const s=REC[rec.n++];
-  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.a2=pl.a2; s.k2=pl.k2; s.l2=pl.l2; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
+  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.a2=pl.a2; s.k2=pl.k2; s.l2=pl.l2; s.p2=pl.pha; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
   if(hb){ s.hb=true; s.hx=hb.x; s.hy=hb.y; s.hw=hb.w; s.hh=hb.h; } else s.hb=false;
 }
 function updateEcho(){
@@ -1105,7 +1116,7 @@ function step(){
   if(S.hitstop>0){ S.hitstop--; return; }
   S.frame++; if(!S.won) S.play++;
   updatePlayer();
-  lamChibi();
+  lamChon();
   const hb=pl.dead?null:atkBox(pl,pl.atkN,pl.atkT,pl.face,HB);
   if(hb){
     const n=pl.atkN, hit=applyHits(hb,'p',pl.atkSw,pl.face,n);
@@ -1140,7 +1151,6 @@ function step(){
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
 let BK=1;   // bộ đệm / logic (vd. iPhone 844×390 @3x: 2,17)
 const W0=480, H0=270;
-const IMG={xa:null,gan:null};
 let ox=0, oy=0;
 function at(x,y){ ctx.save(); ctx.translate(x,y); ctx.scale(2,2); ctx.imageSmoothingEnabled=false; }
 function old(){ ctx.save(); ctx.scale(2,2); ctx.imageSmoothingEnabled=false; }
@@ -1169,10 +1179,19 @@ function veKhung(sh,img,key,x,y,w,h,flip){
   else ctx.drawImage(img,f[0],f[1],f[2],f[3],x+f[4]*kx,y+f[5]*ky,dw,dh);
 }
 function bong(x,y,rx,a){ ctx.save(); ctx.globalAlpha*=a; ctx.fillStyle='#0C0F14'; ctx.beginPath(); ctx.ellipse(x,y,rx,rx*0.2,0,0,Math.PI*2); ctx.fill(); ctx.restore(); }
-// Lam: chân = giữa đáy hitbox (x+10, y+30); không làm tròn để chuyển động mượt
-function drawLam(img,s,x,y){
+// Lam mới: chân = giữa đáy hitbox (x+10, y+30) trùng điểm neo (123,234) của ô; vẽ ½ cỡ nguồn (ô 266×241 → 133×120,5 px logic,
+// Lam cao 112 px); lật ngang quanh neo x. Lọc ảnh chất lượng cao (không nearest). bo = LAM (thường) hoặc LAM.E (bóng/vệt lướt).
+function drawLam(bo,s,x,y){
   if(!LAM || !s.a2) return;
-  veBuoc(LAM,img,LAM.anims[s.a2],s.k2,s.l2,x-ox+pl.w/2,y-oy+pl.h);
+  const M=LAM.meta, sc=1/M.ty_le.px_nguon_moi_px_logic, fw=M.co_khung[0], fh=M.co_khung[1], ax=M.diem_neo.x, ay=M.diem_neo.y;
+  let img, sx=0, sy=0;
+  if(s.k2>=0){ const f=M.frames[s.k2]; img=bo.sheet; sx=f.x; sy=f.y; } else img=bo.nghi;
+  const X=snap(x-ox+pl.w/2), Y=snap(y-oy+pl.h);
+  ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+  ctx.save(); ctx.translate(X,Y); if(s.l2) ctx.scale(-1,1);
+  ctx.drawImage(img,sx,sy,fw,fh,-ax*sc,-ay*sc,fw*sc,fh*sc);
+  ctx.restore();
+  if(DBG.on && DBG.n<DBG.L.length){ const r=DBG.L[DBG.n++]; r.x=X; r.y=Y; r.x0=X-(s.l2?(fw-ax):ax)*sc; r.y0=Y-ay*sc; r.w=fw*sc; r.h=fh*sc; r.tx=null; }
 }
 
 /* ---------- Cảnh: dựng danh sách mảnh tileset từ lưới gạch 32 (va chạm vẫn theo lưới; HÌNH = mảnh rễ cây) ----------
@@ -1269,15 +1288,15 @@ function drawDen(){
     veKhung(TG,TG.img,'den-long',x+sw,y);
   }
 }
-/* nền parallax hốc cây (ảnh chỉ vừa 1 màn 960×540): lớp xa chạy 0,25 × camera, lặp ngang bằng bản LẬT xen kẽ để không lộ đường nối;
-   lớp gần (rễ tiền cảnh 2 góc dưới) chạy 1,15 ×, cũng lặp lật, vẽ mờ 50 % vì đè lên sàn/nhân vật. */
-function veLap(im,p,y,a){
-  if(!im) return; const tw=W; let i=Math.floor(p/tw);
-  ctx.save(); ctx.globalAlpha=a;
-  for(let n=0;n<2;n++,i++){ const x=i*tw-p;
-    if(i&1){ ctx.save(); ctx.translate(x+tw,y); ctx.scale(-1,1); ctx.drawImage(im,0,0,tw,H); ctx.restore(); }
-    else ctx.drawImage(im,x,y,tw,H); }
-  ctx.restore();
+/* NỀN TẠM: nền parallax hốc cây cũ (art/chibi/nen/parallax) đã bị xoá → vẽ gradient tối + vài dải rễ mờ trôi chậm
+   (0,25 × camera) cho có chiều sâu. Thay bằng nền mới ở art/the-gioi-moi/ khi phiên làm nền xong. */
+let NEN_GRAD=null;
+function drawNenTam(camx){
+  if(!NEN_GRAD){ NEN_GRAD=ctx.createLinearGradient(0,0,0,H); NEN_GRAD.addColorStop(0,'#141a24'); NEN_GRAD.addColorStop(0.55,'#1f2a36'); NEN_GRAD.addColorStop(1,'#2a2a2c'); }
+  ctx.fillStyle=NEN_GRAD; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(60,78,92,.22)'; const p=camx*0.25, bw=240;
+  for(let i=Math.floor(p/bw)-1;i<=Math.floor((p+W)/bw)+1;i++){ const x=i*bw-p, h=180+((i*73)%5+5)%5*40;
+    ctx.fillRect(x+40,0,26+((i*31)%3+3)%3*10,h); }
 }
 function drawSaveBell(b){
   const X=b.x-ox, Y=b.y-oy+4; if(X<-90||X>W+90) return;
@@ -1369,8 +1388,7 @@ function render(al){
   const camx=lerp(S.pcx,S.camx,al);
   ox=snap(camx+S.shx*sm); oy=snap(S.camy+S.shy*sm);   // camera theo pixel thật (cũ: Math.round px logic)
   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
-  ctx.fillStyle='#1A212B'; ctx.fillRect(0,0,W,H);
-  veLap(IMG.xa,camx*0.25,-oy*0.3,1);
+  drawNenTam(camx);
   drawDen();
   drawCanh();
   for(const b of BELLS) drawSaveBell(b);
@@ -1387,25 +1405,25 @@ function render(al){
   if(echo && echo.cur.a2){
     const c=echo.cur, ex=lerp(echo.px,c.x,al), ey=lerp(echo.py,c.y,al);
     if(!echo.done){
-      for(let k=2;k>=1;k--){ const j=echo.i-1-k*4; if(j<0) continue; const s=REC[j]; ctx.globalAlpha=0.1*k*0.9; drawLam(LAM_E,s,s.x,s.y); }
-      ctx.globalAlpha=0.64; drawLam(LAM_E,c,ex,ey);
+      for(let k=2;k>=1;k--){ const j=echo.i-1-k*4; if(j<0) continue; const s=REC[j]; ctx.globalAlpha=0.1*k*0.9; drawLam(LAM.E,s,s.x,s.y); }
+      ctx.globalAlpha=0.64; drawLam(LAM.E,c,ex,ey);
     } else {
       const pz=0.5+0.5*Math.sin(S.frame*0.09);
       ctx.globalAlpha=0.16+0.16*pz; ctx.fillStyle='#CEF0D6'; ctx.beginPath(); ctx.ellipse(ex+10-ox,ey+30-oy,26,5,0,0,7); ctx.fill();
-      ctx.globalAlpha=0.36+0.14*pz; drawLam(LAM_E,c,ex,ey);
+      ctx.globalAlpha=0.36+0.14*pz; drawLam(LAM.E,c,ex,ey);
     }
     ctx.globalAlpha=1;
-    if(echo.warn){ at(Math.round(ex)-ox+10, Math.round(ey)-oy+30-190);   // dấu "!" trên đầu (Lam chibi cao ≈160 px)
+    if(echo.warn){ at(Math.round(ex)-ox+10, Math.round(ey)-oy+30-140);   // dấu "!" trên đầu (Lam mới cao 112 px)
       ctx.fillStyle='#0C0F14'; ctx.fillRect(-4,-1,9,12); ctx.fillStyle='#E1B85A'; ctx.fillRect(-1,1,3,6); ctx.fillRect(-1,8,3,2); ctx.restore(); ctx.imageSmoothingEnabled=true; }
   }
   // vệt lướt
-  for(const t of TRAIL){ if(!t.on||!t.a2) continue; ctx.globalAlpha=t.t/24; drawLam(LAM_E,t,t.x,t.y); }
+  for(const t of TRAIL){ if(!t.on||!t.a2) continue; ctx.globalAlpha=t.t/24; drawLam(LAM.E,t,t.x,t.y); }
   ctx.globalAlpha=1;
   // Lam
   const px=lerp(pl.px,pl.x,al), py=lerp(pl.py,pl.y,al);
   if(pl.onGround && !pl.dead) bong(px+10-ox,py+30-oy,30,0.32);
   if(pl.dead) ctx.globalAlpha=Math.max(0,1-pl.deadT/80);
-  if(!(pl.iframes>0 && pl.dash<=0 && !pl.dead && (S.frame>>2)%2===0)) drawLam(LAM.img,pl,px,py);
+  if(!(pl.iframes>0 && pl.dash<=0 && !pl.dead && (S.frame>>2)%2===0)) drawLam(LAM,pl,px,py);
   ctx.globalAlpha=1;
   // hạt (p.s đã ×2 trong part())
   for(const p of PARTS){ if(!p.on) continue; ctx.fillStyle=p.c; ctx.globalAlpha=Math.min(1,p.t/8); ctx.fillRect(Math.round(p.x)-ox,Math.round(p.y)-oy,p.s,p.s); }
@@ -1420,8 +1438,6 @@ function render(al){
     ctx.restore();
   }
   ctx.globalAlpha=1; ctx.textAlign='left'; ctx.imageSmoothingEnabled=true;
-  // lớp gần: rễ tiền cảnh hai góc dưới, mờ 50 % (đè lên sàn và chân nhân vật)
-  veLap(IMG.gan,camx*1.15,0,0.5);
   if(S.flashT>0){ ctx.globalAlpha=0.6*S.flashT/S.flashMax; ctx.fillStyle=S.flashC; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1; }
   // HUD (TẠM, pixel cũ ×2): máu = 5 chuông nhỏ; thanh Vọng
   old();
@@ -1499,7 +1515,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function loadImg(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
 function tint(src,color,a){ const c=document.createElement('canvas'); c.width=src.width; c.height=src.height; const g=c.getContext('2d'); g.drawImage(src,0,0);
   g.globalCompositeOperation='source-atop'; g.globalAlpha=a; g.fillStyle=color; g.fillRect(0,0,c.width,c.height); return c; }
-/* Nạp 1 sheet chibi: json + ảnh. Bản build tự chứa nhúng sẵn TV.NHUNG[ten] = {json, anh: data URI}. */
+/* Nạp 1 sheet (quái/boss, thế giới): json + ảnh. Bản build tự chứa nhúng sẵn TV.NHUNG[ten] = {json, anh: data URI}. */
 async function napSheet(ten){
   const N=window.TV && TV.NHUNG && TV.NHUNG[ten];
   let json, src;
@@ -1508,7 +1524,26 @@ async function napSheet(ten){
   const img=await loadImg(src); if(!img) throw new Error('không tải được ảnh '+json.image);
   return Object.assign({img},json);
 }
-async function napAnhNen(ten){ const N=window.TV && TV.NHUNG && TV.NHUNG[ten]; return loadImg(N?N.anh:SRC[ten]); }
+/* Nạp Lam mới: PNG + JSON CÙNG thư mục rig-v3/sprite/ + dáng nghỉ TẠM. Kiểm cỡ ảnh thực = 2142×970 = co_sheet trong JSON
+   (PNG gửi rời từng bị thu thành 2048×927 → toạ độ khung sai) — sai thì báo lỗi rõ, không chạy. */
+async function napLam(){
+  const N=window.TV && TV.NHUNG && TV.NHUNG.lam;
+  let meta, src, srcNghi;
+  if(N){ meta=N.json; src=N.anh; srcNghi=N.nghi; }
+  else {
+    const r=await fetch(SRC.lam,{cache:'no-cache'}); if(!r.ok) throw new Error('lỗi mạng '+r.status+' khi tải '+SRC.lam);
+    meta=await r.json(); src=new URL(meta.anh,new URL(SRC.lam,location.href)).href; srcNghi=SRC.nghi;
+  }
+  const [sheet,nghi]=await Promise.all([loadImg(src),loadImg(srcNghi)]);
+  if(!sheet) throw new Error('không tải được ảnh '+meta.anh);
+  if(!nghi) throw new Error('không tải được dáng nghỉ '+SRC.nghi);
+  const w=sheet.naturalWidth, h=sheet.naturalHeight;
+  if(w!==LAM_CO_SHEET[0] || h!==LAM_CO_SHEET[1] || meta.co_sheet[0]!==w || meta.co_sheet[1]!==h)
+    throw new Error('ảnh '+meta.anh+' cỡ '+w+'×'+h+' – phải đúng '+LAM_CO_SHEET.join('×')+' và trùng co_sheet trong JSON ('+meta.co_sheet.join('×')+'). Dùng PNG + JSON cùng lấy từ rig-v3/sprite/.');
+  if(meta.frames.length!==meta.so_khung || nghi.naturalWidth!==meta.co_khung[0] || nghi.naturalHeight!==meta.co_khung[1])
+    throw new Error('JSON / dáng nghỉ không khớp cỡ ô '+meta.co_khung.join('×'));
+  return {meta, sheet, nghi};
+}
 const loadErr=document.getElementById('load-err'), loadBtns=document.getElementById('load-btns'), loadH=document.getElementById('load-h'), loadBell=loadEl.querySelector('.bellico');
 let booting=false;
 function baoLoi(msg,phan){
@@ -1531,23 +1566,18 @@ function warn(msg,ms){ warnEl.textContent=msg; warnEl.style.opacity='1'; warnEl.
 async function boot(){
   booting=true;
   try{
-    setLoad(0.05,'Nạp nền hốc cây');
-    const ims=await Promise.all([napAnhNen('xa'),napAnhNen('gan')]);
-    IMG.xa=ims[0]; IMG.gan=ims[1];
-    if(ims.some(i=>!i)) warn('Không tải được nền – vẫn chơi được',0);   // ẩn sau khi bắt đầu chơi vài giây
     const loi=[];
-    async function thu(ten,msg,p){ setLoad(p,msg); try{ return await napSheet(ten); }catch(e){ loi.push(msg+' — '+String(e&&e.message||e)); return null; } }
-    const lam=await thu('lam','Nạp Lam chibi',0.3), qb=await thu('qb','Nạp Quái Chuông Gỗ và Chuông Gác Làng',0.55), tg=await thu('tg','Lát rễ cây làng',0.75);
+    async function thu(f,msg,p){ setLoad(p,msg); try{ return await f(); }catch(e){ loi.push(msg+' — '+String(e&&e.message||e)); return null; } }
+    const lam=await thu(napLam,'Nạp Lam',0.3), qb=await thu(()=>napSheet('qb'),'Nạp Quái Chuông Gỗ và Chuông Gác Làng',0.55), tg=await thu(()=>napSheet('tg'),'Lát rễ cây làng',0.75);
     if(loi.length){ baoLoi('Không nạp được hình. Bấm "Thử lại"; nếu vẫn lỗi, tải lại trang.',loi); return; }
-    for(const k of ['idle','run','jump','rutdao','atk1','atk2','atk3','atk4','atk5','atk6','dash','land','hurt','wall','dead']) if(!lam.anims[k]) throw new Error('sheet Lam thiếu '+k);
-    LAM=lam; LAM_E=tint(lam.img,'#CEF0D6',0.8);   // bản tô màu ngọc cho bóng Tiếng Vọng + vệt lướt
-    nhanATK();
+    LAM=lam; LAM_QUANG=lam.meta.toc_do_chuan.quang_duong_moi_chu_ky_px_logic; LAM_N=lam.meta.so_khung;
+    LAM.E={sheet:tint(lam.sheet,'#CEF0D6',0.8), nghi:tint(lam.nghi,'#CEF0D6',0.8)};   // bản tô màu ngọc cho bóng Tiếng Vọng + vệt lướt
     setLoad(0.85,'Tô màu quái'); await wait(10);
     QB=qb; QB.w=tint(qb.img,'#ffffff',0.85); QB.g=tint(qb.img,'#E1B85A',0.7);   // nháy trắng khi trúng đòn, lóe vàng khi lấy đà
     const hd=qb.anims['quai-tan-cong'].buoc[2].box; if(hd){ QHB.dx=hd[0]; QHB.dy=hd[1]; QHB.w=hd[2]; QHB.h=hd[3]; }
     TG=tg; dungCanh();
     newGame();
-    window.TVDEMO={ready:true, imgs:ims.filter(Boolean).length, lam:Object.keys(LAM.anims), atk:ATK, rut:RUT_T, manh:SCN.length, W, H, T};
+    window.TVDEMO={ready:true, lam:{co:[LAM.sheet.naturalWidth,LAM.sheet.naturalHeight], khung:LAM_N, quang:LAM_QUANG}, atk:ATK, rut:RUT_T, manh:SCN.length, W, H, T};
     setLoad(1,'Xong!'); await wait(150);
     loadEl.hidden=true; startEl.hidden=false; booting=false;
     requestAnimationFrame(loop);
@@ -1627,10 +1657,9 @@ function drawDebug(al){
     ctx.fillStyle='#fff'; ctx.font='bold 10px sans-serif'; ctx.fillText(q.c2+' #'+(q.k2+1)+' '+q.st,qx-ox,qy-oy-128); }
   if(S.room>=ROOMS.length-2){ const bx=lerp(boss.px,boss.x,al), by=lerp(boss.py,boss.y,al); dbgRect(bx-ox,by-oy,boss.w,boss.h,'#4fb4ff'); }
   // bảng chữ
-  const a=LAM&&pl.a2?LAM.anims[pl.a2]:null, b=a?a.buoc[Math.min(pl.k2,a.buoc.length-1)]:null;
-  const L=['Lam: '+(pl.a2||'-')+'  bước '+(pl.k2+1)+'/'+(a?a.buoc.length:0)+'  khung '+(b?b.f:'-')+(b?'  '+b.ms+' ms':''),
+  const L=['Lam: '+(pl.a2||'-')+'  khung '+(pl.k2<0?'nghỉ (TẠM)':pl.k2+'/'+LAM_N+(pl.a2==='run'?'':' (TẠM)'))+'  pha '+pl.pha.toFixed(3)+'  dx '+pl.dxT.toFixed(2),
     'vật lý x '+pl.x.toFixed(2)+'  y '+pl.y.toFixed(2)+'  vx '+pl.vx.toFixed(2)+'  vy '+pl.vy.toFixed(2)+(pl.onGround?'  đất':'  không')+(pl.face<0?'  ←':'  →'),
-    'vẽ pivot '+(px+10-ox).toFixed(2)+', '+(py+30-oy).toFixed(2)+'  dx '+(b?b.dx:0)+' dy '+(b?b.dy||0:0)+'  cam '+ox.toFixed(2),
+    'vẽ neo chân '+(px+10-ox).toFixed(2)+', '+(py+30-oy).toFixed(2)+'  cam '+ox.toFixed(2),
     'FPS vẽ '+DBG.fps.toFixed(0)+'  bước logic/giây '+DBG.sps.toFixed(0)+'  tốc độ ×'+DBG.speed+(DBG.paused?'  ⏸ DỪNG':'')+'  BK '+BK.toFixed(2)];
   ctx.font='bold 11px ui-monospace,Menlo,monospace'; ctx.textBaseline='top';
   ctx.fillStyle='rgba(12,15,20,.8)'; ctx.fillRect(6,96,ctx.measureText(L[1]).width+40,L.length*14+6);   // dưới hàng nút debug, không đè dòng hướng dẫn

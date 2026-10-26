@@ -1,0 +1,77 @@
+{
+ "nap_sheet": {
+  "co": [
+   2142,
+   970
+  ],
+  "khung": 32,
+  "quang": 83.66
+ },
+ "assert_co_anh_sai_2048x927": {
+  "game_bao_loi": true,
+  "thong_bao": "Nạp Lam — ảnh lam-chay-2x.png cỡ 2048×927 – phải đúng 2142×970 và trùng co_sheet trong JSON (2142×970). Dùng PNG + JSON cùng lấy từ rig-v3/sprite/."
+ },
+ "loi_trang": [],
+ "so_buoc_logic": 700,
+ "pha": {
+  "lech_lon_nhat_so_voi_|dx|/83.66": 1.1102230246251565e-16,
+  "so_buoc_pha_nhay_hoac_reset": 0,
+  "buoc_loi": [],
+  "so_lan_doi_toc_do_khi_dang_chay": 64,
+  "khung_nhay_lon_nhat_giua_2_buoc_chay": 2,
+  "ghi_chu": "ở 4,4 px/bước mỗi bước tiến 4,4/83,66×32 = 1,68 khung → bước nhảy khung 1 hoặc 2 là đúng; không có bước nhảy lớn hơn khi đổi tốc độ"
+ },
+ "va_tuong": {
+  "so_buoc_giu_phim_vao_tuong_dx_0": 112,
+  "gia_tri_pha_khac_nhau_trong_cac_buoc_do": 3,
+  "doan": [
+   {
+    "buoc": [
+     83,
+     119
+    ],
+    "pha_dung_yen": 0.1921,
+    "khung_ve": [
+     -1
+    ],
+    "canh": "1. Chạy TRÁI → va tường trái (giữ phím)"
+   },
+   {
+    "buoc": [
+     223,
+     269
+    ],
+    "pha_dung_yen": 0.9849,
+    "khung_ve": [
+     -1
+    ],
+    "canh": "4. Chạy phải → va bậc đá (tường phải, giữ phím)"
+   },
+   {
+    "buoc": [
+     368,
+     395
+    ],
+    "pha_dung_yen": 0.7891,
+    "khung_ve": [
+     -1
+    ],
+    "canh": "6. Quay đầu trái khi đang chạy"
+   }
+  ]
+ },
+ "chu_ky": {
+  "buoc_logic_moi_chu_ky_o_4.4": 19.014,
+  "giay": 0.3169,
+  "buoc_chan_moi_giay": 6.31,
+  "so_buoc_chay_toc_do_toi_da": 137,
+  "so_vong_pha_quan_sat": 8
+ },
+ "tieng_vong": {
+  "so_buoc_da_ghi": 104,
+  "ban_ghi_khop_khung_va_pha_cua_Lam": true,
+  "so_buoc_bong_phat": 103,
+  "buoc_bong_sai_khung_ghi": [],
+  "buoc_bong_VE_sai_khung": []
+ }
+}
