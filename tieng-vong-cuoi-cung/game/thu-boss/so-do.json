@@ -1,0 +1,1703 @@
+{
+ "ghi_chu": "Chromium headless (Playwright, GPU phần mềm). iPhone = chỉ giả lập cỡ màn/dpr/UA + CPU chậm 4×; KHÔNG phải đo trên iPhone thật.",
+ "ket_qua": [
+  {
+   "cach": "0",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "bk": 1.3333333333333333,
+   "xong": true,
+   "anh": [],
+   "soAnh": 0,
+   "byteGiai": 0,
+   "byteFile": 0,
+   "byteDinh": 0,
+   "tamN": 0,
+   "tamByte": 0,
+   "msNap": 49,
+   "msNhap": 35.20000000006985,
+   "msTai": 0,
+   "msGiai": 0,
+   "cachGiai": "–",
+   "buf": [
+    1280,
+    720
+   ],
+   "ve": {
+    "tb": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 1290
+   },
+   "dt": {
+    "tb": 16.66602017067494,
+    "p95": 16.700000000000728,
+    "max": 16.80000000000291,
+    "n": 1289
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 0,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.700000000000045,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 16.599999999999454,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 16.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.5,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 0,
+   "veDoi": {
+    "tb": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0
+   },
+   "msChay": 21511.79999999993,
+   "ram_chromium_truoc": 517558272,
+   "ram_chromium_sau_nap": 583376896,
+   "ram_chromium_luc_xong": 563617792,
+   "cau_hinh": "may-ban"
+  },
+  {
+   "cach": "A",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "bk": 1.3333333333333333,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "tay-sau",
+     "w": 281,
+     "h": 319,
+     "file": 83599,
+     "msTai": 24,
+     "msGiai": 10.4
+    },
+    {
+     "ten": "xich",
+     "w": 260,
+     "h": 321,
+     "file": 60972,
+     "msTai": 28.8,
+     "msGiai": 8.5
+    },
+    {
+     "ten": "tay-truoc",
+     "w": 343,
+     "h": 381,
+     "file": 134956,
+     "msTai": 32.1,
+     "msGiai": 9.2
+    },
+    {
+     "ten": "than-phai",
+     "w": 544,
+     "h": 1084,
+     "file": 386748,
+     "msTai": 32.5,
+     "msGiai": 22.8
+    },
+    {
+     "ten": "than-trai",
+     "w": 487,
+     "h": 1101,
+     "file": 498617,
+     "msTai": 33.1,
+     "msGiai": 22
+    },
+    {
+     "ten": "than",
+     "w": 958,
+     "h": 1101,
+     "file": 892048,
+     "msTai": 37.1,
+     "msGiai": 19.4
+    }
+   ],
+   "soAnh": 6,
+   "byteGiai": 9937692,
+   "byteFile": 2056940,
+   "byteDinh": 9937692,
+   "tamN": 12,
+   "tamByte": 7170840,
+   "msNap": 143.19999999995343,
+   "msNhap": 62,
+   "msTai": 37.10000000009313,
+   "msGiai": 92.30000000004657,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1280,
+    720
+   ],
+   "ve": {
+    "tb": 0.07521367521660595,
+    "p95": 0.19999999995343387,
+    "max": 1.5,
+    "n": 1287
+   },
+   "dt": {
+    "tb": 16.704821150855366,
+    "p95": 16.799999999999272,
+    "max": 33.400000000001455,
+    "n": 1286
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 3,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0.40000000002328306,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.700000000000045,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.19999999995343387,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.30000000004656613,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.800000000000182,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0.09999999997671694,
+     "dt": 16.5,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.2000000000698492,
+     "dt": 16.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.69999999999709,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.09999999997671694,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.600000000002183,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0.10000000009313226,
+     "dt": 16.799999999999272,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 0,
+   "veDoi": {
+    "tb": 0.11875000000145519,
+    "p95": 0.40000000002328306,
+    "max": 0.40000000002328306,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0.40000000002328306
+   },
+   "msChay": 21518.79999999993,
+   "ram_chromium_truoc": 476585984,
+   "ram_chromium_sau_nap": 571850752,
+   "ram_chromium_luc_xong": 586354688,
+   "cau_hinh": "may-ban"
+  },
+  {
+   "cach": "A2",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "bk": 1.3333333333333333,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "tay-sau",
+     "w": 169,
+     "h": 192,
+     "w0": 281,
+     "h0": 319,
+     "file": 83599,
+     "msTai": 29.5,
+     "msGiai": 12
+    },
+    {
+     "ten": "tay-truoc",
+     "w": 206,
+     "h": 229,
+     "w0": 343,
+     "h0": 381,
+     "file": 134956,
+     "msTai": 30.9,
+     "msGiai": 15.4
+    },
+    {
+     "ten": "than-phai",
+     "w": 327,
+     "h": 651,
+     "w0": 544,
+     "h0": 1084,
+     "file": 386748,
+     "msTai": 31.3,
+     "msGiai": 31
+    },
+    {
+     "ten": "than-trai",
+     "w": 293,
+     "h": 661,
+     "w0": 487,
+     "h0": 1101,
+     "file": 498617,
+     "msTai": 30.8,
+     "msGiai": 31.7
+    },
+    {
+     "ten": "than",
+     "w": 575,
+     "h": 661,
+     "w0": 958,
+     "h0": 1101,
+     "file": 892048,
+     "msTai": 30.3,
+     "msGiai": 36.7
+    },
+    {
+     "ten": "xich",
+     "w": 156,
+     "h": 193,
+     "w0": 260,
+     "h0": 321,
+     "file": 60972,
+     "msTai": 31.2,
+     "msGiai": 25.7
+    }
+   ],
+   "soAnh": 6,
+   "byteGiai": 3585420,
+   "byteFile": 2056940,
+   "byteDinh": 9937692,
+   "tamN": 12,
+   "tamByte": 7170840,
+   "msNap": 170.39999999990687,
+   "msNhap": 56,
+   "msTai": 31.300000000046566,
+   "msGiai": 152.49999999976717,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1280,
+    720
+   ],
+   "ve": {
+    "tb": 0.08407148407108607,
+    "p95": 0.19999999995343387,
+    "max": 2.5,
+    "n": 1287
+   },
+   "dt": {
+    "tb": 16.704898911353034,
+    "p95": 16.700000000000728,
+    "max": 33.399999999999636,
+    "n": 1286
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 3,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0.5999999999767169,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.700000000000045,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.10000000009313226,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.599999999999454,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.19999999995343387,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 16.799999999999272,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.799999999999272,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.80000000000109,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.600000000002183,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.09999999997671694,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 0,
+   "veDoi": {
+    "tb": 0.08124999999563443,
+    "p95": 0.5999999999767169,
+    "max": 0.5999999999767169,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0.5999999999767169
+   },
+   "msChay": 21515.099999999977,
+   "ram_chromium_truoc": 482545664,
+   "ram_chromium_sau_nap": 567447552,
+   "ram_chromium_luc_xong": 581574656,
+   "cau_hinh": "may-ban"
+  },
+  {
+   "cach": "B",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "bk": 1.3333333333333333,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "boss-dung-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 9552664,
+     "msTai": 39.2,
+     "msGiai": 187.4
+    },
+    {
+     "ten": "boss-dung-2x-p2.png",
+     "w": 4078,
+     "h": 2236,
+     "file": 5749100,
+     "msTai": 22.1,
+     "msGiai": 113.1
+    },
+    {
+     "ten": "boss-dap-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 9601883,
+     "msTai": 28.7,
+     "msGiai": 193.1
+    },
+    {
+     "ten": "boss-dap-2x-p2.png",
+     "w": 4078,
+     "h": 2982,
+     "file": 5662482,
+     "msTai": 24.3,
+     "msGiai": 135.1
+    },
+    {
+     "ten": "boss-quet-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 8968477,
+     "msTai": 34.4,
+     "msGiai": 154.9
+    },
+    {
+     "ten": "boss-quet-2x-p2.png",
+     "w": 4078,
+     "h": 1490,
+     "file": 3369390,
+     "msTai": 13.1,
+     "msGiai": 56.6
+    },
+    {
+     "ten": "boss-trung-2x.png",
+     "w": 4078,
+     "h": 1490,
+     "file": 2602479,
+     "msTai": 11.1,
+     "msGiai": 73.9
+    },
+    {
+     "ten": "boss-chet-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 8082957,
+     "msTai": 23.7,
+     "msGiai": 154.2
+    },
+    {
+     "ten": "boss-chet-2x-p2.png",
+     "w": 4078,
+     "h": 2982,
+     "file": 5267975,
+     "msTai": 17.4,
+     "msGiai": 110.2
+    }
+   ],
+   "soAnh": 9,
+   "byteGiai": 425612704,
+   "byteFile": 58857407,
+   "byteDinh": 425612704,
+   "tamN": 0,
+   "tamByte": 0,
+   "msNap": 1473.0999999999767,
+   "msNhap": 26.5,
+   "msTai": 214.00000000011642,
+   "msGiai": 1178.5,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1280,
+    720
+   ],
+   "ve": {
+    "tb": 0.02797202797238979,
+    "p95": 0.10000000009313226,
+    "max": 1.8000000000465661,
+    "n": 1287
+   },
+   "dt": {
+    "tb": 16.7049766718507,
+    "p95": 16.700000000000728,
+    "max": 50.100000000000364,
+    "n": 1286
+   },
+   "nguongGiat": 25.049999999998363,
+   "giat": 2,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0.09999999997671694,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.800000000000182,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.699999999999818,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 16.600000000000364,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0.10000000009313226,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 16.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 16.599999999998545,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.69999999999709,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 16.69999999999709,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.599999999998545,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 16.700000000000728,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 0,
+   "veDoi": {
+    "tb": 0.02500000000145519,
+    "p95": 0.10000000009313226,
+    "max": 0.10000000009313226,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0.09999999997671694
+   },
+   "msChay": 21517.400000000023,
+   "ram_chromium_truoc": 483713024,
+   "ram_chromium_sau_nap": 976367616,
+   "ram_chromium_luc_xong": 994009088,
+   "cau_hinh": "may-ban"
+  },
+  {
+   "cach": "0",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "bk": 1.9,
+   "xong": true,
+   "anh": [],
+   "soAnh": 0,
+   "byteGiai": 0,
+   "byteFile": 0,
+   "byteDinh": 0,
+   "tamN": 0,
+   "tamByte": 0,
+   "msNap": 173.70000000006985,
+   "msNhap": 112.40000000002328,
+   "msTai": 0,
+   "msGiai": 0,
+   "cachGiai": "–",
+   "buf": [
+    1824,
+    1026
+   ],
+   "ve": {
+    "tb": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 603
+   },
+   "dt": {
+    "tb": 35.62956810631229,
+    "p95": 50.100000000000364,
+    "max": 116.5,
+    "n": 602
+   },
+   "nguongGiat": 49.95000000000164,
+   "giat": 115,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 33.30000000000018,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 49.90000000000009,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 50.100000000000364,
+     "giat": true
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": true
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 33.30000000000018,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 33.30000000000018,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 33.19999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 33.30000000000109,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 33.19999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": true
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 33.400000000001455,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": true
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 33.29999999999927,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 33.29999999999927,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 33.29999999999927,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 4,
+   "veDoi": {
+    "tb": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0
+   },
+   "msChay": 21541.800000000047,
+   "ram_chromium_truoc": 484970496,
+   "ram_chromium_sau_nap": 576012288,
+   "ram_chromium_luc_xong": 591224832,
+   "cau_hinh": "gia-lap-iphone13-cpu4x"
+  },
+  {
+   "cach": "A",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "bk": 1.9,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "tay-sau",
+     "w": 281,
+     "h": 319,
+     "file": 83599,
+     "msTai": 109.5,
+     "msGiai": 29.6
+    },
+    {
+     "ten": "xich",
+     "w": 260,
+     "h": 321,
+     "file": 60972,
+     "msTai": 89.7,
+     "msGiai": 44.6
+    },
+    {
+     "ten": "tay-truoc",
+     "w": 343,
+     "h": 381,
+     "file": 134956,
+     "msTai": 85.8,
+     "msGiai": 44.5
+    },
+    {
+     "ten": "than-trai",
+     "w": 487,
+     "h": 1101,
+     "file": 498617,
+     "msTai": 98.8,
+     "msGiai": 54.4
+    },
+    {
+     "ten": "than-phai",
+     "w": 544,
+     "h": 1084,
+     "file": 386748,
+     "msTai": 109.7,
+     "msGiai": 57.7
+    },
+    {
+     "ten": "than",
+     "w": 958,
+     "h": 1101,
+     "file": 892048,
+     "msTai": 111.8,
+     "msGiai": 68.4
+    }
+   ],
+   "soAnh": 6,
+   "byteGiai": 9937692,
+   "byteFile": 2056940,
+   "byteDinh": 9937692,
+   "tamN": 12,
+   "tamByte": 7170840,
+   "msNap": 669.7999999999302,
+   "msNhap": 408.69999999995343,
+   "msTai": 111.79999999993015,
+   "msGiai": 299.20000000018626,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1824,
+    1026
+   ],
+   "ve": {
+    "tb": 0.1508305647852908,
+    "p95": 0.5,
+    "max": 4.199999999953434,
+    "n": 301
+   },
+   "dt": {
+    "tb": 71.55233333333335,
+    "p95": 116.79999999999927,
+    "max": 150,
+    "n": 300
+   },
+   "nguongGiat": 100.04999999999973,
+   "giat": 28,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 4.199999999953434,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 66.59999999999991,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 66.59999999999945,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.09999999997671694,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.10000000009313226,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 83.29999999999927,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 133.40000000000146,
+     "giat": true
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 66.69999999999891,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.19999999995343387,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.09999999997671694,
+     "dt": 66.69999999999709,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 133.39999999999782,
+     "giat": true
+    },
+    {
+     "clip": "chet",
+     "ve": 0.09999999997671694,
+     "dt": 66.70000000000073,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 2,
+   "veDoi": {
+    "tb": 0.31874999999126885,
+    "p95": 4.199999999953434,
+    "max": 4.199999999953434,
+    "n": 16
+   },
+   "dau": {
+    "ve": 4.199999999953434
+   },
+   "msChay": 21618.900000000023,
+   "ram_chromium_truoc": 487243776,
+   "ram_chromium_sau_nap": 592187392,
+   "ram_chromium_luc_xong": 616099840,
+   "cau_hinh": "gia-lap-iphone13-cpu4x"
+  },
+  {
+   "cach": "A2",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "bk": 1.9,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "tay-sau",
+     "w": 169,
+     "h": 192,
+     "w0": 281,
+     "h0": 319,
+     "file": 83599,
+     "msTai": 59.2,
+     "msGiai": 62.9
+    },
+    {
+     "ten": "than",
+     "w": 575,
+     "h": 661,
+     "w0": 958,
+     "h0": 1101,
+     "file": 892048,
+     "msTai": 60.5,
+     "msGiai": 144.3
+    },
+    {
+     "ten": "than-trai",
+     "w": 293,
+     "h": 661,
+     "w0": 487,
+     "h0": 1101,
+     "file": 498617,
+     "msTai": 60.6,
+     "msGiai": 96.7
+    },
+    {
+     "ten": "tay-truoc",
+     "w": 206,
+     "h": 229,
+     "w0": 343,
+     "h0": 381,
+     "file": 134956,
+     "msTai": 66.4,
+     "msGiai": 55.6
+    },
+    {
+     "ten": "xich",
+     "w": 156,
+     "h": 193,
+     "w0": 260,
+     "h0": 321,
+     "file": 60972,
+     "msTai": 71,
+     "msGiai": 49.2
+    },
+    {
+     "ten": "than-phai",
+     "w": 327,
+     "h": 651,
+     "w0": 544,
+     "h0": 1084,
+     "file": 386748,
+     "msTai": 63.6,
+     "msGiai": 96.5
+    }
+   ],
+   "soAnh": 6,
+   "byteGiai": 3585420,
+   "byteFile": 2056940,
+   "byteDinh": 9937692,
+   "tamN": 12,
+   "tamByte": 7170840,
+   "msNap": 1001.5,
+   "msNhap": 491.80000000004657,
+   "msTai": 71,
+   "msGiai": 505.19999999995343,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1824,
+    1026
+   ],
+   "ve": {
+    "tb": 0.19394904458754442,
+    "p95": 1.400000000023283,
+    "max": 2.6000000000931323,
+    "n": 314
+   },
+   "dt": {
+    "tb": 68.52779552715656,
+    "p95": 116.80000000000109,
+    "max": 150.10000000000036,
+    "n": 313
+   },
+   "nguongGiat": 99.90000000000055,
+   "giat": 37,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 2.3999999999068677,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 83.19999999999982,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 1.099999999976717,
+     "dt": 116.59999999999854,
+     "giat": true
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0.10000000009313226,
+     "dt": 49.899999999999636,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 116.60000000000036,
+     "giat": true
+    },
+    {
+     "clip": "dap",
+     "ve": 0.09999999997671694,
+     "dt": 99.89999999999964,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 49.899999999999636,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 66.59999999999854,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0.09999999997671694,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0.10000000009313226,
+     "dt": 83.29999999999927,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 2,
+   "veDoi": {
+    "tb": 0.2687499999956344,
+    "p95": 2.3999999999068677,
+    "max": 2.3999999999068677,
+    "n": 16
+   },
+   "dau": {
+    "ve": 2.3999999999068677
+   },
+   "msChay": 21590.199999999953,
+   "ram_chromium_truoc": 486932480,
+   "ram_chromium_sau_nap": 584593408,
+   "ram_chromium_luc_xong": 610615296,
+   "cau_hinh": "gia-lap-iphone13-cpu4x"
+  },
+  {
+   "cach": "B",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "bk": 1.9,
+   "xong": true,
+   "anh": [
+    {
+     "ten": "boss-dung-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 9552664,
+     "msTai": 58.9,
+     "msGiai": 231.8
+    },
+    {
+     "ten": "boss-dung-2x-p2.png",
+     "w": 4078,
+     "h": 2236,
+     "file": 5749100,
+     "msTai": 30.1,
+     "msGiai": 133.6
+    },
+    {
+     "ten": "boss-dap-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 9601883,
+     "msTai": 46.9,
+     "msGiai": 211.1
+    },
+    {
+     "ten": "boss-dap-2x-p2.png",
+     "w": 4078,
+     "h": 2982,
+     "file": 5662482,
+     "msTai": 30.2,
+     "msGiai": 133.5
+    },
+    {
+     "ten": "boss-quet-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 8968477,
+     "msTai": 51.1,
+     "msGiai": 205.1
+    },
+    {
+     "ten": "boss-quet-2x-p2.png",
+     "w": 4078,
+     "h": 1490,
+     "file": 3369390,
+     "msTai": 33.1,
+     "msGiai": 86.7
+    },
+    {
+     "ten": "boss-trung-2x.png",
+     "w": 4078,
+     "h": 1490,
+     "file": 2602479,
+     "msTai": 25,
+     "msGiai": 69.2
+    },
+    {
+     "ten": "boss-chet-2x.png",
+     "w": 4078,
+     "h": 3728,
+     "file": 8082957,
+     "msTai": 33.4,
+     "msGiai": 201.4
+    },
+    {
+     "ten": "boss-chet-2x-p2.png",
+     "w": 4078,
+     "h": 2982,
+     "file": 5267975,
+     "msTai": 33.5,
+     "msGiai": 138.7
+    }
+   ],
+   "soAnh": 9,
+   "byteGiai": 425612704,
+   "byteFile": 58857407,
+   "byteDinh": 425612704,
+   "tamN": 0,
+   "tamByte": 0,
+   "msNap": 1977.8000000000466,
+   "msNhap": 65.20000000006985,
+   "msTai": 342.19999999995343,
+   "msGiai": 1411.1000000002095,
+   "cachGiai": "createImageBitmap",
+   "buf": [
+    1824,
+    1026
+   ],
+   "ve": {
+    "tb": 0.07988826815408327,
+    "p95": 0.10000000009313226,
+    "max": 3.099999999976717,
+    "n": 358
+   },
+   "dt": {
+    "tb": 60.12829131652662,
+    "p95": 83.39999999999964,
+    "max": 116.79999999999927,
+    "n": 357
+   },
+   "nguongGiat": 99.89999999999782,
+   "giat": 9,
+   "doi": [
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 16.666666666666668,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 83.30000000000018,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0.09999999997671694,
+     "dt": 83.39999999999964,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "dap",
+     "ve": 0,
+     "dt": 66.60000000000036,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 50,
+     "giat": false
+    },
+    {
+     "clip": "quet",
+     "ve": 0,
+     "dt": 83.39999999999782,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0.09999999997671694,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "trung",
+     "ve": 0,
+     "dt": 66.70000000000073,
+     "giat": false
+    },
+    {
+     "clip": "dung",
+     "ve": 0,
+     "dt": 66.59999999999854,
+     "giat": false
+    },
+    {
+     "clip": "chet",
+     "ve": 0,
+     "dt": 66.70000000000073,
+     "giat": false
+    }
+   ],
+   "giatKhiDoi": 0,
+   "veDoi": {
+    "tb": 0.031249999992724042,
+    "p95": 0.09999999997671694,
+    "max": 0.09999999997671694,
+    "n": 16
+   },
+   "dau": {
+    "ve": 0.09999999997671694
+   },
+   "msChay": 21554,
+   "ram_chromium_truoc": 495906816,
+   "ram_chromium_sau_nap": 1003507712,
+   "ram_chromium_luc_xong": 1029287936,
+   "cau_hinh": "gia-lap-iphone13-cpu4x"
+  }
+ ],
+ "so_diem_anh": {
+  "A": {
+   "rows": [
+    {
+     "clip": "dung",
+     "khung": 32,
+     "tb": 1.4370333600049716,
+     "pt": 0.052413171417675715,
+     "max": 73,
+     "xau": {
+      "pt": 0.06682364920766244,
+      "k": 0
+     }
+    },
+    {
+     "clip": "dap",
+     "khung": 34,
+     "tb": 1.6245321930792296,
+     "pt": 0.26934634614226854,
+     "max": 91,
+     "xau": {
+      "pt": 0.9860085723456883,
+      "k": 5
+     }
+    },
+    {
+     "clip": "quet",
+     "khung": 27,
+     "tb": 1.4213952865923725,
+     "pt": 0.04814789200226454,
+     "max": 72,
+     "xau": {
+      "pt": 0.06682364920766244,
+      "k": 0
+     }
+    },
+    {
+     "clip": "trung",
+     "khung": 6,
+     "tb": 1.4567677067874714,
+     "pt": 0.60584146603743,
+     "max": 89,
+     "xau": {
+      "pt": 1.9269730421087123,
+      "k": 0
+     }
+    },
+    {
+     "clip": "chet",
+     "khung": 33,
+     "tb": 1.5259153237023806,
+     "pt": 0.3963249660412105,
+     "max": 89,
+     "xau": {
+      "pt": 1.9269730421087123,
+      "k": 0
+     }
+    }
+   ],
+   "tb": 1.5052473238314419,
+   "te": {
+    "pt": 1.9269730421087123,
+    "c": "trung",
+    "k": 0
+   }
+  },
+  "A2": {
+   "rows": [
+    {
+     "clip": "dung",
+     "khung": 32,
+     "tb": 3.255321623846172,
+     "pt": 2.1415330645142236,
+     "max": 84,
+     "xau": {
+      "pt": 2.31747138826364,
+      "k": 15
+     }
+    },
+    {
+     "clip": "dap",
+     "khung": 34,
+     "tb": 3.3158051032146543,
+     "pt": 2.227459963427132,
+     "max": 103,
+     "xau": {
+      "pt": 2.6567193393208015,
+      "k": 5
+     }
+    },
+    {
+     "clip": "quet",
+     "khung": 27,
+     "tb": 3.225758278876689,
+     "pt": 2.0745639867674806,
+     "max": 102,
+     "xau": {
+      "pt": 2.2061388517929945,
+      "k": 23
+     }
+    },
+    {
+     "clip": "trung",
+     "khung": 6,
+     "tb": 2.826987279803402,
+     "pt": 1.9715229518200834,
+     "max": 116,
+     "xau": {
+      "pt": 2.112475121968403,
+      "k": 1
+     }
+    },
+    {
+     "clip": "chet",
+     "khung": 33,
+     "tb": 3.10092934097913,
+     "pt": 2.0220975278768862,
+     "max": 108,
+     "xau": {
+      "pt": 2.562928899391823,
+      "k": 14
+     }
+    }
+   ],
+   "tb": 3.2067858404028646,
+   "te": {
+    "pt": 2.6567193393208015,
+    "c": "dap",
+    "k": 5
+   }
+  }
+ }
+}

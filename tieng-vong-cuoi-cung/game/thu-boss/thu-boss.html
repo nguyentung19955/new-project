@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Thử boss – mảnh (A) hay sprite sheet (B)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+/* Trang thử RIÊNG (không đụng game/demo.html). Canvas logic 960×540 letterbox, bộ đệm = cỡ CSS × devicePixelRatio – giống demo. */
+:root{--night:#0C0F14;--ink:#F3E6C8;--soft:#a9b3bf;--panel:rgba(20,26,34,.88);--line:#4A5A6E;--bell:#E1B85A;--echo:#CEF0D6;--bad:#ff8a7a;color-scheme:dark}
+html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font:13px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#game{position:fixed;inset:0;display:grid;place-items:center}
+#cv{display:block}
+button{font:inherit;font-weight:700;color:var(--ink);background:#1A212B;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+button.on{border-color:var(--bell);color:var(--bell)}
+#bar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);right:max(6px,env(safe-area-inset-right,0px));display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:70vw}
+#so{position:fixed;top:calc(env(safe-area-inset-top,0px) + 4px);left:max(6px,env(safe-area-inset-left,0px));background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:6px 8px;max-width:min(46vw,420px);max-height:calc(100vh - 16px);overflow:auto;font-variant-numeric:tabular-nums;-webkit-user-select:text;user-select:text}
+#so table{border-collapse:collapse}#so td{padding:0 6px 0 0;vertical-align:top}#so td:first-child{color:var(--soft)}
+#so h3{margin:0 0 4px;font-size:13px;color:var(--bell)}
+.bad{color:var(--bad)}.ok{color:var(--echo)}
+#nap,#chon{position:fixed;inset:0;display:grid;place-items:center;background:rgba(12,15,20,.93)}
+.box{max-width:560px;padding:16px 20px;text-align:center}
+.box h1{font-size:20px;margin:0 0 8px}
+.box p{color:var(--soft);margin:6px 0}
+.box .row{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.box .row button{font-size:16px;padding:10px 16px}
+#napbar{display:block;width:min(70vw,360px);height:12px;border:1px solid var(--line);border-radius:6px;margin:10px auto;overflow:hidden}
+#napfill{display:block;height:100%;width:0;background:var(--bell)}
+#ss{position:fixed;inset:0;background:rgba(12,15,20,.96);display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;overflow:auto;box-sizing:border-box}
+#ss canvas{max-width:100%;height:auto;background:#2a3340}
+#ss .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center}
+#ssinfo{font-variant-numeric:tabular-nums;max-width:900px;-webkit-user-select:text;user-select:text}
+#ssinfo table{border-collapse:collapse;margin:4px auto}#ssinfo td,#ssinfo th{border:1px solid var(--line);padding:2px 6px}
+@media (max-height:500px){ #so{font-size:10.5px;max-width:42vw;padding:4px 6px} #bar button{font-size:11px;padding:4px 7px} #bar{max-width:56vw} }
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="game"><canvas id="cv" width="960" height="540"></canvas></div>
+<div id="so"><h3 id="so-h">Thử boss</h3><div id="so-b"></div></div>
+<div id="bar">
+  <button id="b-a" type="button">Cách A: mảnh</button>
+  <button id="b-a2" type="button">A2: mảnh nhỏ</button>
+  <button id="b-b" type="button">Cách B: sheet</button>
+  <button id="b-lai" type="button">Đo lại</button>
+  <button id="b-ss" type="button">So A↔B</button>
+  <button id="b-an" type="button">Ẩn số</button>
+  <button id="b-chep" type="button">Chép số</button>
+</div>
+<div id="chon"><div class="box">
+  <h1>Thử vẽ boss Chuông Gác Làng</h1>
+  <p><b>A</b>: vẽ từ 6 mảnh + tư thế từng khung trong <code>boss.json</code> (xoay/dịch mảnh mỗi khung).</p>
+  <p><b>B</b>: nạp + giải mã TOÀN BỘ sprite sheet 2x của boss trước khi vào đấu trường.</p>
+  <p>Mỗi cách mở trong một lần tải trang riêng (bộ nhớ sạch). Boss tự diễn: đứng → đập → đứng → quét → đứng → trúng → đứng → chết, lặp 2 vòng, rồi hiện bảng số.</p>
+  <div class="row"><button id="c-a" type="button">Vào trận – Cách A</button><button id="c-b" type="button">Vào trận – Cách B</button></div>
+  <p style="margin-top:12px"><button id="c-a2" type="button" style="font-size:13px">A2: mảnh thu nhỏ sẵn</button> – như A nhưng mảnh thu về cỡ ≈ sheet 2x ngay khi nạp (ít bộ nhớ hơn).</p>
+  <p style="margin-top:12px"><button id="c-0" type="button" style="font-size:13px">Đối chứng: không vẽ boss</button> – đo độ giật sẵn có của máy/trình duyệt để so.</p>
+</div></div>
+<div id="nap" hidden><div class="box"><h1 id="nap-h">Đang nạp boss…</h1><span id="napbar"><span id="napfill"></span></span><p id="nap-m"></p></div></div>
+<div id="ss" hidden>
+  <div class="row"><b>So A (mảnh) ↔ B (sheet) ở cỡ sheet 2x</b>
+    <select id="ss-clip"></select><input id="ss-k" type="range" min="0" max="31" value="0"><span id="ss-kv"></span>
+    <button id="ss-het" type="button">So hết 132 khung</button><button id="ss-dong" type="button">Đóng</button></div>
+  <canvas id="ss-cv" width="1527" height="372"></canvas>
+  <div style="color:var(--soft)">trái: A vẽ từ mảnh · giữa: B ô sheet · phải: chỗ lệch (đỏ = lệch &gt; 24/255)</div>
+  <div id="ssinfo"></div>
+</div>
+<script>
+'use strict';
+/* ====== hằng số giống game/demo.html ====== */
+const W=960, H=540, FLOOR=448, TICK=1000/60;
+const GOC='../../art/the-gioi-moi/quai-boss/';
+const CLIPS=['dung','dap','quet','trung','chet'];
+const TEN={dung:'đứng',dap:'đập',quet:'quét',trung:'trúng',chet:'chết'};
+const SEQ=[['dung',1600],['dap'],['dung',1600],['quet'],['dung',800],['trung'],['dung',800],['chet',2600]];   // chết: 1,6 s + giữ khung cuối 1 s
+const Q=new URLSearchParams(location.search);
+const CACH=(Q.get('cach')||'').toUpperCase();
+const TU=Q.get('tu')==='1', VONG=Math.max(1,+Q.get('vong')||2);
+const BOSS_X=650;     // điểm neo boss (px logic), quay trái về phía Lam
+const $=id=>document.getElementById(id);
+const cv=$('cv'), ctx=cv.getContext('2d');
+let BK=1;
+function resize(){
+  const dpr=Math.min(window.devicePixelRatio||1,3), css=Math.min(innerWidth/W,innerHeight/H);
+  const cw=Math.max(1,Math.floor(W*css)), ch=Math.max(1,Math.floor(H*css));
+  cv.style.width=cw+'px'; cv.style.height=ch+'px';
+  const bw=Math.round(cw*dpr), bh=Math.round(ch*dpr);
+  if(cv.width!==bw||cv.height!==bh){ cv.width=bw; cv.height=bh; }
+  BK=bw/W;
+}
+addEventListener('resize',resize); addEventListener('orientationchange',()=>setTimeout(resize,200)); resize();
+
+const KQ=window.KQ={cach:CACH, ua:navigator.userAgent, dpr:window.devicePixelRatio, bk:0, xong:false};
+const MB=b=>(b/1048576).toFixed(1)+' MB';
+const f1=x=>x==null?'–':(+x).toFixed(1), f2=x=>x==null?'–':(+x).toFixed(2);
+
+/* ====== nạp + giải mã một ảnh: ưu tiên createImageBitmap (giữ bản đã giải mã), dự phòng img.decode() ====== */
+async function napAnh(url){
+  const t0=performance.now();
+  const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('lỗi mạng '+r.status+' '+url);
+  const blob=await r.blob(); const t1=performance.now();
+  let bmp=null, cach='createImageBitmap';
+  if(window.createImageBitmap){ try{ bmp=await createImageBitmap(blob); }catch(e){ bmp=null; } }
+  if(!bmp){ cach='img.decode'; const im=new Image(); im.src=URL.createObjectURL(blob); await im.decode(); bmp=im; }
+  const t2=performance.now();
+  const w=bmp.width||bmp.naturalWidth, h=bmp.height||bmp.naturalHeight;
+  return {bmp,w,h,file:blob.size,msTai:t1-t0,msGiai:t2-t1,cach,url};
+}
+async function napJson(url){ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('lỗi mạng '+r.status+' '+url); return r.json(); }
+function setNap(p,m){ $('napfill').style.width=Math.round(p*100)+'%'; if(m) $('nap-m').textContent=m; }
+
+/* ====== CÁCH A: rig từ mảnh ====== */
+const LA_A=CACH==='A'||CACH==='A2';   // A2 = cách A nhưng mảnh thu nhỏ sẵn về cỡ ≈ sheet 2x (0,6) ngay lúc nạp
+const A={rig:null,clip:null,k:0,root:null,img:{},w0:{},h0:{},tam:{},anh:[],tamBytes:0};
+async function napA(onP){
+  const doc=await napJson(GOC+'boss.json');
+  A.rig=doc.rig; A.clip=doc.clip; A.k=doc.ty_le.px_nguon_sang_px_logic; A.root=doc.rig.goc_the_gioi; A.sprite=doc.sprite;
+  const ns=A.rig.thu_tu_ve.filter(n=>A.rig.nut[n].anh);
+  let i=0;
+  await Promise.all(ns.map(async n=>{ const a=await napAnh(GOC+A.rig.nut[n].anh); A.img[n]=a.bmp; A.w0[n]=a.w; A.h0[n]=a.h; a.ten=n; A.anh.push(a); onP(++i/ns.length,'mảnh '+n); }));
+  // bóng đen / bóng trắng của mảnh (cỡ 0,6 ≈ cỡ sheet 2x), làm SẴN trước trận, chỉ cho mảnh có hoà trắng / làm tối (clip trúng, chết).
+  // Trong trận: vẽ mảnh rồi vẽ đè bóng với độ đục = toi / trang → màu = c·(1−toi)·(1−trang) + trắng·trang, đúng công thức rig.py
+  // ở phần đặc của mảnh (chỉ lệch nhẹ ở viền khử răng cưa). Không vẽ lại canvas nào mỗi khung.
+  const can={};
+  for(const c of CLIPS) for(const f of A.clip[c].khung) for(const n in f.tu_the){ const p=f.tu_the[n]; can[n]=can[n]||{};
+    if(p.trang) can[n].trang=1; if(p.toi) can[n].toi=1; }
+  for(const n in can) for(const mau of ['toi','trang']){ if(!can[n][mau]) continue;
+    const im=A.img[n], c=document.createElement('canvas'); c.width=Math.ceil(im.width*0.6); c.height=Math.ceil(im.height*0.6);
+    const g=c.getContext('2d'); g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high'; g.drawImage(im,0,0,c.width,c.height);
+    g.globalCompositeOperation='source-in'; g.fillStyle=mau==='toi'?'#000':'#fff'; g.fillRect(0,0,c.width,c.height);
+    (A.tam[n]=A.tam[n]||{})[mau]={c,q:c.width/im.width}; A.tamBytes+=c.width*c.height*4; A.tamN=(A.tamN||0)+1; }
+  if(CACH==='A2') for(const a of A.anh){   // thu nhỏ mảnh 1 lần (chất lượng cao), bỏ bản gốc → giữ ít bộ nhớ hơn, mỗi khung lấy mẫu ít hơn
+    const t=performance.now(), im=A.img[a.ten], c=document.createElement('canvas'); c.width=Math.ceil(im.width*0.6); c.height=Math.ceil(im.height*0.6);
+    const g=c.getContext('2d'); g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high'; g.drawImage(im,0,0,c.width,c.height);
+    let nho=c; if(window.createImageBitmap){ try{ nho=await createImageBitmap(c); }catch(e){} }
+    if(im.close) im.close(); A.img[a.ten]=nho; a.bmp=nho; a.w0=a.w; a.h0=a.h; a.w=c.width; a.h=c.height; a.msGiai+=performance.now()-t; }
+}
+function mul(P,L){ return [P[0]*L[0]+P[2]*L[1], P[1]*L[0]+P[3]*L[1], P[0]*L[2]+P[2]*L[3], P[1]*L[2]+P[3]*L[3], P[0]*L[4]+P[2]*L[5]+P[4], P[1]*L[4]+P[3]*L[5]+P[5]]; }
+function matNut(pose){
+  const N=A.rig.nut, out={};
+  const get=n=>{ if(out[n]) return out[n]; const nd=N[n], d=pose[n]||{};
+    const dx=d.dich?d.dich[0]:0, dy=d.dich?d.dich[1]:0, sx=d.ty?d.ty[0]:1, sy=d.ty?d.ty[1]:1;
+    const g=((nd.goc_nghi||0)+(d.goc||0))*Math.PI/180, c=Math.cos(g), s=Math.sin(g);
+    const L=[c*sx, s*sx, -s*sy, c*sy, nd.diem_gan[0]+dx, nd.diem_gan[1]+dy];
+    return out[n]= nd.cha==null ? L : mul(get(nd.cha),L); };
+  for(const n in N) get(n);
+  return out;
+}
+/* vẽ tư thế lên g; base = ma trận px nguồn → px bộ đệm */
+function veA(g,base,pose){
+  const N=A.rig.nut, M=matNut(pose);
+  for(const n of A.rig.thu_tu_ve){
+    const nd=N[n], p=pose[n]||{};
+    const hien=p.hien!=null?p.hien:(nd.hien!==false); if(!hien||!nd.anh) continue;
+    const mo=p.mo!=null?p.mo:1; if(mo<=0) continue;
+    const m=mul(base,M[n]);
+    g.setTransform(m[0],m[1],m[2],m[3],m[4],m[5]); g.globalAlpha=mo;
+    g.drawImage(A.img[n],-nd.pivot[0],-nd.pivot[1],A.w0[n],A.h0[n]);
+    const T=A.tam[n];
+    for(const mau of ['toi','trang']){ const v=p[mau]; if(!v||!T||!T[mau]) continue;
+      g.globalAlpha=mo*v; g.drawImage(T[mau].c,-nd.pivot[0],-nd.pivot[1],A.w0[n],A.h0[n]); }
+  }
+  g.globalAlpha=1;
+}
+function baseGame(x){ const s=BK*A.k; return [s,0,0,s, BK*x - A.root[0]*s, BK*FLOOR - A.root[1]*s]; }
+function baseSheet(){ const s=A.k*2; return [s,0,0,s, 538 - A.root[0]*s, 737 - A.root[1]*s]; }
+
+/* ====== CÁCH B: sprite sheet 2x ====== */
+const B={json:{},trang:{},anh:[]};
+async function napB(onP){
+  const js=await Promise.all(CLIPS.map(c=>napJson(GOC+'sprite/boss-'+c+'-2x.json')));
+  CLIPS.forEach((c,i)=>B.json[c]=js[i]);
+  const ds=[]; for(const c of CLIPS) for(const t of B.json[c].trang) ds.push(t.anh);
+  let i=0;
+  // tuần tự để thanh nạp tiến đều và đỉnh bộ nhớ lúc giải mã không dồn 9 trang cùng lúc
+  for(const f of ds){ onP(i/ds.length,'trang '+f+' ('+(i+1)+'/'+ds.length+')'); const a=await napAnh(GOC+'sprite/'+f); a.ten=f; B.trang[f]=a.bmp; B.anh.push(a); i++; }
+  onP(1,'xong');
+}
+function oB(c,k){ const J=B.json[c], fr=J.frames[k]; return {bmp:B.trang[J.trang[fr.trang].anh], fr}; }
+function veB(g,c,k,x,y,w,h){ const {bmp,fr}=oB(c,k); g.drawImage(bmp,fr.x,fr.y,fr.w,fr.h,x,y,w,h); }
+
+/* ====== khung theo thời gian ====== */
+function soKhung(c){ return CACH!=='B'||!B.json[c] ? A.clip[c].so_khung : B.json[c].frames.length; }
+function khungLuc(c,t){ const n=soKhung(c); let k=Math.floor(t/50+1e-6); if(c==='dung') k%=n; return Math.min(k,n-1); }
+
+/* ====== đấu trường ====== */
+const S={seq:0,t:0,vong:0,acc:0,last:0,clip:'dung',k:0,doi:false,chay:false};
+const D={ve:[],dt:[],doiVe:[],doiDt:[],doiTen:[],dau:null,t0:0};
+function nen(){
+  ctx.setTransform(BK,0,0,BK,0,0);
+  const gr=ctx.createLinearGradient(0,0,0,H); gr.addColorStop(0,'#1b2433'); gr.addColorStop(1,'#0f141c');
+  ctx.fillStyle=gr; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#2b2118'; ctx.fillRect(0,FLOOR,W,H-FLOOR); ctx.fillStyle='#4a3826'; ctx.fillRect(0,FLOOR,W,4);
+  for(let x=0;x<W;x+=32){ ctx.fillStyle='rgba(255,255,255,.04)'; ctx.fillRect(x,FLOOR+4,1,H-FLOOR); }
+  // Lam giữ chỗ 112 px để thấy cỡ (không phải hình Lam thật)
+  ctx.fillStyle='rgba(206,240,214,.22)'; ctx.strokeStyle='rgba(206,240,214,.6)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.roundRect?ctx.roundRect(150,FLOOR-112,44,112,14):ctx.rect(150,FLOOR-112,44,112); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(206,240,214,.8)'; ctx.font='11px system-ui'; ctx.textAlign='center'; ctx.fillText('Lam 112',172,FLOOR-118);
+}
+function veBoss(){
+  const t0=performance.now();
+  if(CACH==='0') return 0;
+  if(LA_A){ veA(ctx,baseGame(BOSS_X),A.clip[S.clip].khung[S.k].tu_the); ctx.setTransform(BK,0,0,BK,0,0); }
+  else { ctx.setTransform(BK,0,0,BK,0,0); veB(ctx,S.clip,S.k,BOSS_X-538/2,FLOOR-737/2,1018/2,744/2); }
+  return performance.now()-t0;
+}
+function nhanCanh(){
+  ctx.setTransform(BK,0,0,BK,0,0); ctx.fillStyle='rgba(243,230,200,.85)'; ctx.font='bold 16px system-ui'; ctx.textAlign='center';
+  ctx.fillText('Cách '+CACH+' · '+TEN[S.clip]+' · khung '+S.k+(S.chay?' · vòng '+(S.vong+1)+'/'+VONG:''),W/2,H-20);
+}
+function tick(){
+  S.t+=TICK;
+  const [c,dur]=SEQ[S.seq]; const len=dur||A_or_B_ms(c);
+  if(S.t>=len-1e-6){ S.t-=len; S.seq++; if(S.seq>=SEQ.length){ S.seq=0; if(S.chay){ S.vong++; if(S.vong>=VONG) ketThuc(); } } S.doi=true; }
+  S.clip=SEQ[S.seq][0]; S.k=khungLuc(S.clip,S.t);
+}
+function A_or_B_ms(c){ return CACH!=='B' ? A.clip[c].ms : B.json[c].tong_ms; }
+function loop(now){
+  const dt=S.last?now-S.last:TICK; S.last=now;
+  S.acc+=Math.min(dt,250); let n=0; while(S.acc>=TICK && n<8){ S.acc-=TICK; tick(); n++; }
+  nen(); const ve=veBoss(); nhanCanh();
+  if(S.chay){
+    if(D.dau==null) D.dau={ve};      // khung đầu trận: tính vào thời gian vẽ, không tính khoảng cách khung (chưa có khung trước)
+    else D.dt.push(dt);
+    D.ve.push(ve);
+    if(S.doi){ D.doiVe.push(ve); D.doiDt.push(dt); D.doiTen.push(S.clip); }
+  }
+  S.doi=false;
+  if(now-hudT>300){ hudT=now; hud(); }
+  requestAnimationFrame(loop);
+}
+let hudT=0;
+function thongKe(a){ if(!a.length) return {tb:null,p95:null,max:null,n:0}; const s=[...a].sort((x,y)=>x-y);
+  return {tb:a.reduce((x,y)=>x+y,0)/a.length, p95:s[Math.min(s.length-1,Math.floor(s.length*0.95))], max:s[s.length-1], n:a.length}; }
+function ketThuc(){
+  S.chay=false;
+  const dts=D.dt, nguong=Math.max(25,1.5*[...dts].sort((x,y)=>x-y)[dts.length>>1]);
+  KQ.ve=thongKe(D.ve); KQ.dt=thongKe(D.dt); KQ.nguongGiat=nguong;
+  KQ.giat=dts.filter(x=>x>nguong).length;
+  KQ.doi=D.doiTen.map((c,i)=>({clip:c,ve:D.doiVe[i],dt:D.doiDt[i],giat:D.doiDt[i]>nguong}));
+  KQ.giatKhiDoi=KQ.doi.filter(x=>x.giat).length;
+  KQ.veDoi=thongKe(D.doiVe); KQ.dau=D.dau; KQ.xong=true; KQ.msChay=performance.now()-D.t0;
+  hud();
+}
+function batDauDo(){ D.ve=[];D.dt=[];D.doiVe=[];D.doiDt=[];D.doiTen=[];D.dau=null; D.t0=performance.now(); KQ.xong=false;
+  S.seq=0;S.t=0;S.vong=0;S.acc=0;S.clip='dung';S.k=0;S.doi=true;S.chay=true; }
+
+/* ====== bảng số trên màn hình ====== */
+function hud(){
+  const r=[];
+  const row=(a,b)=>r.push('<tr><td>'+a+'</td><td>'+b+'</td></tr>');
+  row('Màn','CSS '+innerWidth+'×'+innerHeight+', dpr '+(window.devicePixelRatio||1)+', bộ đệm '+cv.width+'×'+cv.height+' (×'+BK.toFixed(2)+')');
+  if(KQ.anh){ row('Ảnh giữ cùng lúc',KQ.soAnh+' ảnh'+(KQ.tamN?' + '+KQ.tamN+' bóng tô (canvas)':''));
+    row('Giải mã (w×h×4)','<b>'+MB(KQ.byteGiai)+'</b>'+(KQ.tamByte?' + bóng tô '+MB(KQ.tamByte):'')+' · file '+MB(KQ.byteFile)+(KQ.byteDinh>KQ.byteGiai?' · đỉnh lúc nạp '+MB(KQ.byteDinh):''));
+    row('Nạp+giải mã','<b>'+Math.round(KQ.msNap)+' ms</b> (tải '+Math.round(KQ.msTai)+', giải mã '+Math.round(KQ.msGiai)+', vẽ nháp '+Math.round(KQ.msNhap)+') · '+KQ.cachGiai); }
+  if(S.chay) row('Đang đo','vòng '+(S.vong+1)+'/'+VONG+', '+D.ve.length+' khung');
+  if(KQ.xong){
+    row('Vẽ boss / khung','TB <b>'+f2(KQ.ve.tb)+'</b> · p95 <b>'+f2(KQ.ve.p95)+'</b> · tệ nhất <b>'+f2(KQ.ve.max)+'</b> ms ('+KQ.ve.n+' khung)');
+    row('Khung đầu trận',f2(KQ.dau&&KQ.dau.ve)+' ms');
+    row('Khoảng cách khung','TB '+f1(KQ.dt.tb)+' · p95 '+f1(KQ.dt.p95)+' · tệ nhất '+f1(KQ.dt.max)+' ms');
+    row('Giật (> '+f1(KQ.nguongGiat)+' ms)', '<span class="'+(KQ.giat?'bad':'ok')+'">'+KQ.giat+' lần</span> / '+KQ.dt.n);
+    row('Lúc đổi động tác','<span class="'+(KQ.giatKhiDoi?'bad':'ok')+'">giật '+KQ.giatKhiDoi+'/'+KQ.doi.length+'</span> · vẽ tệ nhất '+f2(KQ.veDoi.max)+' ms');
+    row('Chi tiết đổi',KQ.doi.slice(0,SEQ.length).map(x=>TEN[x.clip]+' '+f1(x.ve)+'/'+f1(x.dt)).join(', ')+' <span style="color:var(--soft)">(vẽ/khoảng ms, vòng 1)</span>');
+  }
+  if(KQ.ssTom) row('So điểm ảnh',KQ.ssTom);
+  row('Thiết bị',/iPhone|iPad/.test(navigator.userAgent)?'iOS':'khác iOS');
+  $('so-h').textContent='Thử boss – Cách '+(CACH||'?')+(CACH==='A'?' (6 mảnh)':CACH==='A2'?' (6 mảnh thu nhỏ sẵn)':CACH==='B'?' (sheet 2x)':CACH==='0'?' (đối chứng, không vẽ boss)':'');
+  $('so-b').innerHTML='<table>'+r.join('')+'</table>';
+}
+
+/* ====== nạp + vào trận ====== */
+async function vao(){
+  $('chon').hidden=true; $('nap').hidden=false; $('nap-h').textContent='Đang nạp boss – Cách '+CACH+'…';
+  $('b-a').classList.toggle('on',CACH==='A'); $('b-a2').classList.toggle('on',CACH==='A2'); $('b-b').classList.toggle('on',CACH==='B');
+  const t0=performance.now();
+  try{
+    if(LA_A) await napA((p,m)=>setNap(p*0.9,'Nạp + giải mã '+m));
+    else if(CACH==='0') await napJson(GOC+'boss.json').then(d=>{ A.clip=d.clip; });
+    else await napB((p,m)=>setNap(p*0.9,'Nạp + giải mã '+m));
+  }catch(e){ $('nap-h').textContent='Lỗi nạp'; $('nap-m').textContent=String(e&&e.message||e); KQ.loi=String(e); return; }
+  // vẽ nháp từng ảnh một lần (đẩy lên GPU trước trận), rồi chờ 2 khung
+  setNap(0.95,'Vẽ nháp'); const t1=performance.now();
+  const ds=LA_A?A.anh:CACH==='B'?B.anh:[];
+  ctx.setTransform(1,0,0,1,0,0); for(const a of ds) ctx.drawImage(a.bmp,0,0,8,8);
+  if(LA_A) for(const n in A.tam) for(const mau in A.tam[n]) ctx.drawImage(A.tam[n][mau].c,0,0,8,8);
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  const t2=performance.now();
+  KQ.anh=ds.map(a=>({ten:a.ten,w:a.w,h:a.h,w0:a.w0,h0:a.h0,file:a.file,msTai:+a.msTai.toFixed(1),msGiai:+a.msGiai.toFixed(1)}));
+  KQ.soAnh=ds.length; KQ.byteGiai=ds.reduce((s,a)=>s+a.w*a.h*4,0); KQ.byteFile=ds.reduce((s,a)=>s+a.file,0);
+  KQ.byteDinh=ds.reduce((s,a)=>s+(a.w0?a.w0*a.h0*4:a.w*a.h*4),0);   // A2: lúc nạp có giữ bản gốc trong chốc lát
+  KQ.tamN=LA_A?(A.tamN||0):0; KQ.tamByte=LA_A?A.tamBytes:0;
+  KQ.msNap=t2-t0; KQ.msNhap=t2-t1; KQ.msTai=CACH==='B'?ds.reduce((s,a)=>s+a.msTai,0):Math.max(0,...ds.map(a=>a.msTai));   // A nạp song song, B tuần tự
+   KQ.msGiai=ds.reduce((s,a)=>s+a.msGiai,0); KQ.cachGiai=ds.length?ds[0].cach:'–'; if(!ds.length) KQ.msTai=KQ.msGiai=0;
+  KQ.bk=BK; KQ.buf=[cv.width,cv.height];
+  setNap(1,'Xong'); $('nap').hidden=true;
+  batDauDo(); requestAnimationFrame(loop);
+  if(Q.get('so')==='1') setTimeout(()=>moSS(true),100);
+}
+
+/* ====== so điểm ảnh A ↔ B ở cỡ sheet (1018×744) ====== */
+let ssA,ssB,ssDa=false;
+async function canDu(){
+  if(!A.rig){ $('ssinfo').textContent='Đang nạp mảnh (A) để so…'; await napA(()=>{}); }
+  if(!B.json.dung){ $('ssinfo').textContent='Đang nạp sheet (B) để so… (tốn thêm bộ nhớ – đo trận nên làm TRƯỚC khi so)'; await napB(p=>$('ssinfo').textContent='Đang nạp sheet (B) '+Math.round(p*100)+'%'); }
+}
+function mk(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return [c,c.getContext('2d',{willReadFrequently:true})]; }
+function soKhungAB(c,k){
+  if(!ssA){ ssA=mk(1018,744); ssB=mk(1018,744); }
+  const [ca,ga]=ssA,[cb,gb]=ssB;
+  ga.setTransform(1,0,0,1,0,0); ga.clearRect(0,0,1018,744); ga.imageSmoothingEnabled=true; ga.imageSmoothingQuality='high';
+  veA(ga,baseSheet(),A.clip[c].khung[k].tu_the); ga.setTransform(1,0,0,1,0,0);
+  gb.setTransform(1,0,0,1,0,0); gb.clearRect(0,0,1018,744); gb.imageSmoothingEnabled=false; veB(gb,c,k,0,0,1018,744);
+  const a=ga.getImageData(0,0,1018,744).data, b=gb.getImageData(0,0,1018,744).data;
+  let tong=0, lech=0, max=0, co=0; const map=new Uint8Array(1018*744);
+  for(let i=0,j=0;i<a.length;i+=4,j++){
+    const aa=a[i+3], ab=b[i+3]; if(!aa&&!ab) continue; co++;
+    // so trong không gian nhân-trước-alpha (viền trong suốt không bị tính sai màu)
+    const d=Math.max(Math.abs(a[i]*aa-b[i]*ab)/255,Math.abs(a[i+1]*aa-b[i+1]*ab)/255,Math.abs(a[i+2]*aa-b[i+2]*ab)/255,Math.abs(aa-ab));
+    tong+=d; if(d>max) max=d; if(d>24){ lech++; map[j]=2; } else if(d>8) map[j]=1;
+  }
+  return {tb:tong/Math.max(co,1), pt:100*lech/Math.max(co,1), max, co, map};
+}
+function veSS(c,k){
+  const r=soKhungAB(c,k), o=$('ss-cv'), g=o.getContext('2d');
+  g.clearRect(0,0,o.width,o.height); g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high';
+  g.drawImage(ssA[0],0,0,509,372); g.drawImage(ssB[0],509,0,509,372);
+  const [cm,gm]=mk(1018,744), id=gm.createImageData(1018,744);
+  for(let j=0;j<r.map.length;j++){ const v=r.map[j]; if(v===2){id.data[j*4]=255;id.data[j*4+1]=60;id.data[j*4+2]=40;id.data[j*4+3]=255;} else if(v===1){id.data[j*4]=255;id.data[j*4+1]=200;id.data[j*4+2]=80;id.data[j*4+3]=140;} }
+  gm.putImageData(id,0,0); g.globalAlpha=.35; g.drawImage(ssB[0],1018,0,509,372); g.globalAlpha=1; g.drawImage(cm,1018,0,509,372);
+  $('ss-kv').textContent=TEN[c]+' khung '+k;
+  $('ssinfo').innerHTML='Khung này: lệch TB <b>'+r.tb.toFixed(2)+'</b>/255 · điểm lệch &gt;24: <b>'+r.pt.toFixed(2)+'%</b> · lệch lớn nhất '+Math.round(r.max)+' (trên '+r.co+' điểm có hình)';
+}
+async function moSS(het){
+  $('ss').hidden=false; await canDu(); ssDa=true;
+  const sel=$('ss-clip'); if(!sel.options.length) for(const c of CLIPS){ const o=document.createElement('option'); o.value=c; o.textContent=TEN[c]; sel.appendChild(o); }
+  const capNhat=()=>{ const c=sel.value; $('ss-k').max=A.clip[c].so_khung-1; if(+$('ss-k').value>+$('ss-k').max) $('ss-k').value=0; veSS(c,+$('ss-k').value); };
+  sel.onchange=capNhat; $('ss-k').oninput=capNhat; capNhat();
+  if(het) await soHet();
+}
+async function soHet(){
+  const rows=[]; let tong=0,n=0,te={pt:-1};
+  for(const c of CLIPS){ let tb=0,pt=0,mx=0,xau={pt:-1,k:0};
+    const nk=A.clip[c].so_khung;
+    for(let k=0;k<nk;k++){ const r=soKhungAB(c,k); tb+=r.tb; pt+=r.pt; mx=Math.max(mx,r.max); if(r.pt>xau.pt) xau={pt:r.pt,k}; if(r.pt>te.pt) te={pt:r.pt,c,k};
+      if(k%6===0){ $('ssinfo').textContent='Đang so '+TEN[c]+' '+k+'/'+nk; await new Promise(r=>setTimeout(r,0)); } }
+    rows.push({clip:c,khung:nk,tb:tb/nk,pt:pt/nk,max:mx,xau}); tong+=tb; n+=nk; }
+  KQ.ss={rows,tb:tong/n,te}; KQ.ssTom='lệch TB '+(tong/n).toFixed(2)+'/255; tệ nhất '+TEN[te.c]+' k'+te.k+' '+te.pt.toFixed(2)+'% điểm lệch>24';
+  $('ssinfo').innerHTML='<table><tr><th>Động tác</th><th>Khung</th><th>Lệch TB /255</th><th>% điểm lệch &gt;24 (TB)</th><th>Khung tệ nhất</th><th>Lệch lớn nhất</th></tr>'+
+    rows.map(r=>'<tr><td>'+TEN[r.clip]+'</td><td>'+r.khung+'</td><td>'+r.tb.toFixed(2)+'</td><td>'+r.pt.toFixed(2)+'%</td><td>k'+r.xau.k+' ('+r.xau.pt.toFixed(2)+'%)</td><td>'+Math.round(r.max)+'</td></tr>').join('')+'</table>'+
+    '<div>Tổng 132 khung: lệch TB <b>'+(tong/n).toFixed(2)+'</b>/255. Chọn khung tệ nhất ở trên để xem chỗ lệch.</div>';
+  $('ss-clip').value=te.c; $('ss-k').max=A.clip[te.c].so_khung-1; $('ss-k').value=te.k; veSS(te.c,te.k);
+  KQ.ssXong=true; hud();
+}
+
+/* ====== nút ====== */
+const di=c=>{ const u=new URL(location.href); u.searchParams.set('cach',c); u.searchParams.delete('tu'); location.href=u.href; };
+$('b-a').onclick=()=>di('A'); $('b-b').onclick=()=>di('B'); $('b-a2').onclick=()=>di('A2'); $('c-a').onclick=()=>di('A'); $('c-b').onclick=()=>di('B'); $('c-0').onclick=()=>di('0'); $('c-a2').onclick=()=>di('A2');
+$('b-lai').onclick=()=>{ if(CACH) batDauDo(); };
+$('b-ss').onclick=()=>moSS(false);
+$('ss-het').onclick=()=>soHet(); $('ss-dong').onclick=()=>{ $('ss').hidden=true; };
+$('b-an').onclick=()=>{ const s=$('so'); s.hidden=!s.hidden; $('b-an').textContent=s.hidden?'Hiện số':'Ẩn số'; };
+$('b-chep').onclick=async()=>{ const t=JSON.stringify(KQ,(k,v)=>k==='map'?undefined:(typeof v==='number'?+v.toFixed(3):v));
+  try{ await navigator.clipboard.writeText(t); $('b-chep').textContent='Đã chép'; }catch(e){ prompt('Chép số này:',t); } };
+if(LA_A||CACH==='B'||CACH==='0') vao(); else hud();
+</script>
+</body>
+</html>
