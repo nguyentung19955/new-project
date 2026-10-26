@@ -1,0 +1,193 @@
+{
+ "kiem": [
+  "ĐẠT   quai: dáng nghỉ khớp ảnh nguồn  IoU 0.9939",
+  "ĐẠT   quai.dung: không vượt biên (7 kênh)  0.00e+00",
+  "ĐẠT   quai.dung: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   quai.dung: nối vòng liền  0.0000 px logic",
+  "ĐẠT   quai.di: không vượt biên (14 kênh)  0.00e+00",
+  "ĐẠT   quai.di: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   quai.di: nối vòng liền  0.0001 px logic",
+  "ĐẠT   quai.di: chan-gan chịu lực bám đất  {'van_toc_lech_toi_da_px_logic_moi_s': 0.0, 'truot_tuyet_doi_tich_luy_px_logic': 0.0, 'khe_dat_min_max_px_logic': [0.0, 0.0], 'goc_de_lon_nhat': 0.0}",
+  "ĐẠT   quai.di: chan-xa chịu lực bám đất  {'van_toc_lech_toi_da_px_logic_moi_s': 0.0, 'truot_tuyet_doi_tich_luy_px_logic': 0.0, 'khe_dat_min_max_px_logic': [1.2806, 1.2806], 'goc_de_lon_nhat': 0.0}",
+  "ĐẠT   quai.dam: không vượt biên (17 kênh)  0.00e+00",
+  "ĐẠT   quai.dam: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   quai.dam: đầu/cuối = dáng nghỉ  0.000 / 0.000 px logic",
+  "ĐẠT   quai.dam: có khung chạm  [18, 19, 20]",
+  "ĐẠT   quai.dam: nắm tay trước nằm trong hộp đấm ở khung chạm  [1.0, 1.0, 1.0]",
+  "ĐẠT   quai.trung: không vượt biên (11 kênh)  0.00e+00",
+  "ĐẠT   quai.trung: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   quai.trung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px logic",
+  "ĐẠT   quai.chet: không vượt biên (28 kênh)  0.00e+00",
+  "ĐẠT   quai.chet: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   quai.dung: sprite sheet  khung [544, 251], neo (265,244), 24 khung, 1 trang",
+  "ĐẠT   quai.di: sprite sheet  khung [544, 251], neo (265,244), 18 khung, 1 trang",
+  "ĐẠT   quai.dam: sprite sheet  khung [544, 251], neo (265,244), 36 khung, 1 trang",
+  "ĐẠT   quai.trung: sprite sheet  khung [544, 251], neo (265,244), 8 khung, 1 trang",
+  "ĐẠT   quai.chet: sprite sheet  khung [544, 251], neo (265,244), 31 khung, 1 trang",
+  "ĐẠT   boss: dáng nghỉ khớp ảnh nguồn  IoU 0.9957",
+  "ĐẠT   boss.dung: không vượt biên (7 kênh)  0.00e+00",
+  "ĐẠT   boss.dung: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   boss.dung: nối vòng liền  0.0000 px logic",
+  "ĐẠT   boss.dap: không vượt biên (17 kênh)  0.00e+00",
+  "ĐẠT   boss.dap: không xuyên đất (mỗi 5 ms)  0.013 px logic",
+  "ĐẠT   boss.dap: đầu/cuối = dáng nghỉ  0.000 / 0.000 px logic",
+  "ĐẠT   boss.dap: có khung chạm  [19, 20, 21]",
+  "ĐẠT   boss.dap: nắm tay chạm đất ở khung chạm  [0.0, 0.0, 0.0]",
+  "ĐẠT   boss.quet: không vượt biên (13 kênh)  0.00e+00",
+  "ĐẠT   boss.quet: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   boss.quet: đầu/cuối = dáng nghỉ  0.000 / 0.000 px logic",
+  "ĐẠT   boss.quet: có khung chạm  [11, 12, 13]",
+  "ĐẠT   boss.quet: nắm tay chạm đất ở khung chạm  [0.0, 0.0, -0.0]",
+  "ĐẠT   boss.quet: nắm tay chồng hộp quét ở mọi khung chạm  [True, True, True]",
+  "ĐẠT   boss.trung: không vượt biên (8 kênh)  0.00e+00",
+  "ĐẠT   boss.trung: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   boss.trung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px logic",
+  "ĐẠT   boss.chet: không vượt biên (22 kênh)  0.00e+00",
+  "ĐẠT   boss.chet: không xuyên đất (mỗi 5 ms)  0.000 px logic",
+  "ĐẠT   boss.dung: sprite sheet  khung [1018, 744], neo (538,737), 32 khung, 2 trang",
+  "ĐẠT   boss.dap: sprite sheet  khung [1018, 744], neo (538,737), 34 khung, 2 trang",
+  "ĐẠT   boss.quet: sprite sheet  khung [1018, 744], neo (538,737), 27 khung, 2 trang",
+  "ĐẠT   boss.trung: sprite sheet  khung [1018, 744], neo (538,737), 6 khung, 1 trang",
+  "ĐẠT   boss.chet: sprite sheet  khung [1018, 744], neo (538,737), 33 khung, 2 trang"
+ ],
+ "so_lieu": {
+  "quai": {
+   "iou_dang_nghi": 0.99393,
+   "dung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px_logic": 0.0,
+    "khung_cham": [],
+    "dung_khung0_lech_dang_nghi_px_logic": 0.0
+   },
+   "di": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px_logic": 0.0001,
+    "khung_cham": [],
+    "chan_chiu_luc": {
+     "chan-gan": {
+      "van_toc_lech_toi_da_px_logic_moi_s": 0.0,
+      "truot_tuyet_doi_tich_luy_px_logic": 0.0,
+      "khe_dat_min_max_px_logic": [
+       0.0,
+       0.0
+      ],
+      "goc_de_lon_nhat": 0.0
+     },
+     "chan-xa": {
+      "van_toc_lech_toi_da_px_logic_moi_s": 0.0,
+      "truot_tuyet_doi_tich_luy_px_logic": 0.0,
+      "khe_dat_min_max_px_logic": [
+       1.2806,
+       1.2806
+      ],
+      "goc_de_lon_nhat": 0.0
+     }
+    }
+   },
+   "dam": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px_logic": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     18,
+     19,
+     20
+    ],
+    "ty_le_bien_nam_tay_trong_hop_dam": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "trung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px_logic": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": []
+   },
+   "chet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "khung_cham": []
+   },
+   "bo_nho_giai_nen_MB": {
+    "moi_khung": 0.52,
+    "tat_ca_clip": 60.9,
+    "so_khung": 117
+   }
+  },
+  "boss": {
+   "iou_dang_nghi": 0.99571,
+   "dung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px_logic": 0.0,
+    "khung_cham": [],
+    "dung_khung0_lech_dang_nghi_px_logic": 0.0
+   },
+   "dap": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0132,
+    "lech_dang_nghi_dau_cuoi_px_logic": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     19,
+     20,
+     21
+    ],
+    "khe_nam_tay_dat_o_khung_cham_px_logic": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "quet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px_logic": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     11,
+     12,
+     13
+    ],
+    "khe_nam_tay_dat_o_khung_cham_px_logic": [
+     0.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "trung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px_logic": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": []
+   },
+   "chet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0002,
+    "khung_cham": []
+   },
+   "bo_nho_giai_nen_MB": {
+    "moi_khung": 2.89,
+    "tat_ca_clip": 381.4,
+    "so_khung": 132
+   }
+  }
+ }
+}

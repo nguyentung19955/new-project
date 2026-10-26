@@ -1,0 +1,10 @@
+{
+ "ghi_chu": "Lam rig-v2 dáng nghỉ (tu_the_nghi), vẽ 4× cỡ logic: 4 px ảnh = 1 px logic. neo = gốc rig (giữa hai ủng, mặt đất) trong ảnh này.",
+ "px_anh_moi_px_logic": 4,
+ "neo": [
+  237.82,
+  452.9
+ ],
+ "cao_logic": 112.25,
+ "nguon": "art/modular/lam-moi/rig-v2"
+}

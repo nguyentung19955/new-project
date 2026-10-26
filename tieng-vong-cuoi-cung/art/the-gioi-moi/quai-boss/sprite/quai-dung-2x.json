@@ -1,0 +1,357 @@
+{
+ "ten": "Quái chuông gỗ – đứng, sprite sheet 2x",
+ "nhan_vat": "quai",
+ "clip": "dung",
+ "trang": [
+  {
+   "anh": "quai-dung-2x.png",
+   "co": [
+    3820,
+    1010
+   ],
+   "cot": 7,
+   "hang": 4
+  }
+ ],
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "luoi": {
+  "khe_px": 2,
+  "thu_tu": "trái→phải, trên→dưới",
+  "toi_da_moi_trang_px": 4096
+ },
+ "co_khung": [
+  544,
+  251
+ ],
+ "diem_neo": {
+  "x": 265,
+  "y": 244,
+  "y_nghia": "toạ độ trong MỖI khung (tính từ góc trái-trên ô): x = giữa hai chân / trục chuông (cố định), y = mặt đất (ranh giới điểm ảnh: hàng ay−1 là hàng thấp nhất có thể chạm đất). Mọi khung, mọi clip của nhân vật cùng một điểm neo; không crop riêng khung."
+ },
+ "ty_le": {
+  "px_sheet_moi_px_logic": 2,
+  "ve_trong_game": "vẽ ở ½ cỡ sheet",
+  "cao_dang_nghi_px_logic": 116.0,
+  "cao_dang_nghi_px_sheet": 232.0,
+  "he_so_px_nguon_sang_px_sheet": 0.213432,
+  "ghi_chu": "một scale cố định cho mọi khung/clip"
+ },
+ "huong": "quay mặt sang TRÁI (như ảnh nguồn). Quay phải: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân); hộp đòn cũng lật.",
+ "lap": true,
+ "giu_khung_cuoi": false,
+ "tong_ms": 1600,
+ "buoc_ms": 66.6667,
+ "tick_60hz_moi_khung": 4.0,
+ "pha": [
+  [
+   "hit-vao",
+   0,
+   800
+  ],
+  [
+   "tho-ra",
+   800,
+   1600
+  ]
+ ],
+ "khung_cham": [],
+ "cua_so_cham_ms": null,
+ "hop_don_gameplay": null,
+ "hitbox_than_gameplay": {
+  "w": 72,
+  "h": 108,
+  "ghi_chu": "QW×QH, giữa đáy = điểm neo"
+ },
+ "hitbox_ghi_chu": "hitbox/va chạm lấy từ gameplay (game/demo.html), KHÔNG lấy theo hình. Đơn vị px logic so với điểm neo, nhìn trái.",
+ "ghi_chu": "thân co giãn nhẹ quanh đáy (đáy đứng yên, chân không động); hai nắm tay nổi lên xuống lệch pha; quả lắc đưa nhẹ. 66,7 ms/khung (thở chậm, đủ mượt, sheet nhẹ hơn).",
+ "frames": [
+  {
+   "i": 0,
+   "trang": 0,
+   "x": 0,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 0.0,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 1,
+   "trang": 0,
+   "x": 546,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 66.667,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 2,
+   "trang": 0,
+   "x": 1092,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 133.333,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 3,
+   "trang": 0,
+   "x": 1638,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 200.0,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 4,
+   "trang": 0,
+   "x": 2184,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 266.667,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 5,
+   "trang": 0,
+   "x": 2730,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 333.333,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 6,
+   "trang": 0,
+   "x": 3276,
+   "y": 0,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 400.0,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 7,
+   "trang": 0,
+   "x": 0,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 466.667,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 8,
+   "trang": 0,
+   "x": 546,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 533.333,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 9,
+   "trang": 0,
+   "x": 1092,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 600.0,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 10,
+   "trang": 0,
+   "x": 1638,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 666.667,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 11,
+   "trang": 0,
+   "x": 2184,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 733.333,
+   "cham": false,
+   "pha": "hit-vao"
+  },
+  {
+   "i": 12,
+   "trang": 0,
+   "x": 2730,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 800.0,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 13,
+   "trang": 0,
+   "x": 3276,
+   "y": 253,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 866.667,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 14,
+   "trang": 0,
+   "x": 0,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 933.333,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 15,
+   "trang": 0,
+   "x": 546,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1000.0,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 16,
+   "trang": 0,
+   "x": 1092,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1066.667,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 17,
+   "trang": 0,
+   "x": 1638,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1133.333,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 18,
+   "trang": 0,
+   "x": 2184,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1200.0,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 19,
+   "trang": 0,
+   "x": 2730,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1266.667,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 20,
+   "trang": 0,
+   "x": 3276,
+   "y": 506,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1333.333,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 21,
+   "trang": 0,
+   "x": 0,
+   "y": 759,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1400.0,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 22,
+   "trang": 0,
+   "x": 546,
+   "y": 759,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1466.667,
+   "cham": false,
+   "pha": "tho-ra"
+  },
+  {
+   "i": 23,
+   "trang": 0,
+   "x": 1092,
+   "y": 759,
+   "w": 544,
+   "h": 251,
+   "ms": 66.667,
+   "t_ms": 1533.333,
+   "cham": false,
+   "pha": "tho-ra"
+  }
+ ]
+}

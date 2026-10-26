@@ -1,0 +1,420 @@
+{
+ "ten": "Boss Chuông Gác Làng – quét ngang, sprite sheet 2x",
+ "nhan_vat": "boss",
+ "clip": "quet",
+ "trang": [
+  {
+   "anh": "boss-quet-2x.png",
+   "co": [
+    4078,
+    3728
+   ],
+   "cot": 4,
+   "hang": 5
+  },
+  {
+   "anh": "boss-quet-2x-p2.png",
+   "co": [
+    4078,
+    1490
+   ],
+   "cot": 4,
+   "hang": 2
+  }
+ ],
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "luoi": {
+  "khe_px": 2,
+  "thu_tu": "trái→phải, trên→dưới",
+  "toi_da_moi_trang_px": 4096
+ },
+ "co_khung": [
+  1018,
+  744
+ ],
+ "diem_neo": {
+  "x": 538,
+  "y": 737,
+  "y_nghia": "toạ độ trong MỖI khung (tính từ góc trái-trên ô): x = giữa hai chân / trục chuông (cố định), y = mặt đất (ranh giới điểm ảnh: hàng ay−1 là hàng thấp nhất có thể chạm đất). Mọi khung, mọi clip của nhân vật cùng một điểm neo; không crop riêng khung."
+ },
+ "ty_le": {
+  "px_sheet_moi_px_logic": 2,
+  "ve_trong_game": "vẽ ở ½ cỡ sheet",
+  "cao_dang_nghi_px_logic": 330.0,
+  "cao_dang_nghi_px_sheet": 660.0,
+  "he_so_px_nguon_sang_px_sheet": 0.592864,
+  "ghi_chu": "một scale cố định cho mọi khung/clip"
+ },
+ "huong": "quay mặt sang TRÁI (như ảnh nguồn). Quay phải: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân); hộp đòn cũng lật.",
+ "lap": false,
+ "giu_khung_cuoi": false,
+ "tong_ms": 1350,
+ "buoc_ms": 50.0,
+ "tick_60hz_moi_khung": 3.0,
+ "pha": [
+  [
+   "chuan-bi",
+   0,
+   500
+  ],
+  [
+   "quet",
+   500,
+   733.33
+  ],
+  [
+   "thu",
+   733.33,
+   1350
+  ]
+ ],
+ "khung_cham": [
+  11,
+  12,
+  13
+ ],
+ "cua_so_cham_ms": [
+  533.33,
+  666.67
+ ],
+ "hop_don_gameplay": {
+  "dx": -220,
+  "dy": -40,
+  "w": 170,
+  "h": 40,
+  "ghi_chu": "sweepRect: so với điểm neo, boss nhìn trái"
+ },
+ "hitbox_than_gameplay": {
+  "w": 200,
+  "h": 290,
+  "ghi_chu": "boss.w×boss.h, giữa đáy = điểm neo"
+ },
+ "hitbox_ghi_chu": "hitbox/va chạm lấy từ gameplay (game/demo.html), KHÔNG lấy theo hình. Đơn vị px logic so với điểm neo, nhìn trái.",
+ "ghi_chu": "chuẩn bị: thân xoay ngả ra sau, nắm tay trước kéo vòng ra sau thấp; quét: nắm tay trước miết sát đất từ sau ra trước (chạm đất, giãn ngang 1,15×), thân chúi tới; thu về.",
+ "frames": [
+  {
+   "i": 0,
+   "trang": 0,
+   "x": 0,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 0.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 1,
+   "trang": 0,
+   "x": 1020,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 50.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 2,
+   "trang": 0,
+   "x": 2040,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 100.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 3,
+   "trang": 0,
+   "x": 3060,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 150.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 4,
+   "trang": 0,
+   "x": 0,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 200.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 5,
+   "trang": 0,
+   "x": 1020,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 250.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 6,
+   "trang": 0,
+   "x": 2040,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 300.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 7,
+   "trang": 0,
+   "x": 3060,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 350.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 8,
+   "trang": 0,
+   "x": 0,
+   "y": 1492,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 400.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 9,
+   "trang": 0,
+   "x": 1020,
+   "y": 1492,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 450.0,
+   "cham": false,
+   "pha": "chuan-bi"
+  },
+  {
+   "i": 10,
+   "trang": 0,
+   "x": 2040,
+   "y": 1492,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 500.0,
+   "cham": false,
+   "pha": "quet"
+  },
+  {
+   "i": 11,
+   "trang": 0,
+   "x": 3060,
+   "y": 1492,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 550.0,
+   "cham": true,
+   "pha": "quet"
+  },
+  {
+   "i": 12,
+   "trang": 0,
+   "x": 0,
+   "y": 2238,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 600.0,
+   "cham": true,
+   "pha": "quet"
+  },
+  {
+   "i": 13,
+   "trang": 0,
+   "x": 1020,
+   "y": 2238,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 650.0,
+   "cham": true,
+   "pha": "quet"
+  },
+  {
+   "i": 14,
+   "trang": 0,
+   "x": 2040,
+   "y": 2238,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 700.0,
+   "cham": false,
+   "pha": "quet"
+  },
+  {
+   "i": 15,
+   "trang": 0,
+   "x": 3060,
+   "y": 2238,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 750.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 16,
+   "trang": 0,
+   "x": 0,
+   "y": 2984,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 800.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 17,
+   "trang": 0,
+   "x": 1020,
+   "y": 2984,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 850.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 18,
+   "trang": 0,
+   "x": 2040,
+   "y": 2984,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 900.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 19,
+   "trang": 0,
+   "x": 3060,
+   "y": 2984,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 950.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 20,
+   "trang": 1,
+   "x": 0,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1000.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 21,
+   "trang": 1,
+   "x": 1020,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1050.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 22,
+   "trang": 1,
+   "x": 2040,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1100.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 23,
+   "trang": 1,
+   "x": 3060,
+   "y": 0,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1150.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 24,
+   "trang": 1,
+   "x": 0,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1200.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 25,
+   "trang": 1,
+   "x": 1020,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1250.0,
+   "cham": false,
+   "pha": "thu"
+  },
+  {
+   "i": 26,
+   "trang": 1,
+   "x": 2040,
+   "y": 746,
+   "w": 1018,
+   "h": 744,
+   "ms": 50.0,
+   "t_ms": 1300.0,
+   "cham": false,
+   "pha": "thu"
+  }
+ ]
+}

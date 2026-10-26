@@ -1,0 +1,7220 @@
+{
+ "ten": "Quái chuông gỗ",
+ "phong_cach": "tay chân rời (One Mage Army) – mảnh tách từ ảnh nguồn, không gen ảnh",
+ "nguon": "code/nguon/quai-chuong-go.png",
+ "quy_uoc": {
+  "don_vi": "px của ảnh nguồn 1254×1254 (code/nguon/*.png); nhân ty_le.px_nguon_sang_px_logic ra px logic game",
+  "truc": "gốc trái-trên, x sang phải, y xuống",
+  "goc": "độ; dương = thuận chiều kim đồng hồ trên màn hình (ctx.rotate). Nhân vật quay mặt sang TRÁI.",
+  "bien_doi": "W = W_cha · T(diem_gan + dich) · R(goc_nghi + goc) · S(ty); ảnh mảnh vẽ với pivot trùng gốc nút",
+  "tu_the": "mỗi nút: dich [dx,dy] (px nguồn, hệ cha), goc, ty [sx,sy], trang (0..1 hoà trắng), toi (0..1 tối), mo (0..1 đục), hien",
+  "thu_tu_ve": "phần tử đầu vẽ trước (nằm sau cùng)",
+  "neo_dat": "nút \"goc\" = điểm neo đất (mặt đất, giữa hai chân / trục chuông); không bao giờ dịch"
+ },
+ "ty_le": {
+  "px_nguon_sang_px_logic": 0.106716,
+  "cao_dang_nghi_px_nguon": 1087.0,
+  "cao_dang_nghi_px_logic": 116.0,
+  "so_voi_Lam": 1.036,
+  "sheet_px_moi_px_logic": 2,
+  "ly_do": "- Quái: 116 px logic từ đỉnh quai treo tới đế chân. Lý do: hitbox gameplay 72×108 (game/demo.html, QW/QH) bỏ\n  vòng treo → phần thân + chân (không tính quai) ≈ 102 px, thân chuông rộng ≈ 77 px – khớp hitbox; quái cao ngang\n  Lam (116 vs 112: chỉ hơn nhờ cái quai)."
+ },
+ "rig": {
+  "nut": {
+   "goc": {
+    "cha": null,
+    "diem_gan": [
+     636.25,
+     1170.0
+    ],
+    "goc_nghi": 0.0
+   },
+   "than": {
+    "cha": "goc",
+    "diem_gan": [
+     18.25,
+     -212.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/than.png",
+    "pivot": [
+     364.5,
+     879.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     654.5,
+     958.0
+    ]
+   },
+   "qua-lac": {
+    "cha": "than",
+    "diem_gan": [
+     -66.5,
+     -126.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/qua-lac.png",
+    "pivot": [
+     83.0,
+     28.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     588.0,
+     832.0
+    ]
+   },
+   "than-trai": {
+    "cha": "than",
+    "diem_gan": [
+     -358.0,
+     -82.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/than-trai.png",
+    "pivot": [
+     6.5,
+     797.0
+    ],
+    "hien": false,
+    "pivot_tren_nguon": [
+     296.5,
+     876.0
+    ]
+   },
+   "than-phai": {
+    "cha": "than",
+    "diem_gan": [
+     357.0,
+     -50.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/than-phai.png",
+    "pivot": [
+     325.5,
+     829.0
+    ],
+    "hien": false,
+    "pivot_tren_nguon": [
+     1011.5,
+     908.0
+    ]
+   },
+   "tay-truoc": {
+    "cha": "goc",
+    "diem_gan": [
+     -435.7,
+     -459.07
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/tay-truoc.png",
+    "pivot": [
+     136.55,
+     134.93
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     200.55,
+     710.93
+    ]
+   },
+   "tay-sau": {
+    "cha": "goc",
+    "diem_gan": [
+     451.24,
+     -400.91
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/tay-sau.png",
+    "pivot": [
+     112.49,
+     114.09
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     1087.49,
+     769.09
+    ]
+   },
+   "chan-xa": {
+    "cha": "goc",
+    "diem_gan": [
+     -121.25,
+     -12.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/chan-xa.png",
+    "pivot": [
+     183.0,
+     186.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     515.0,
+     1158.0
+    ]
+   },
+   "chan-gan": {
+    "cha": "goc",
+    "diem_gan": [
+     121.25,
+     0.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/quai/chan-gan.png",
+    "pivot": [
+     109.5,
+     186.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     757.5,
+     1170.0
+    ]
+   }
+  },
+  "thu_tu_ve": [
+   "tay-sau",
+   "chan-xa",
+   "than",
+   "than-phai",
+   "than-trai",
+   "qua-lac",
+   "chan-gan",
+   "tay-truoc"
+  ],
+  "mat_dat_y": 1170.0,
+  "goc_the_gioi": [
+   636.25,
+   1170.0
+  ]
+ },
+ "huong": "quay TRÁI như ảnh nguồn; quay phải: lật ngang quanh điểm neo (ctx.scale(-1,1) tại chân)",
+ "clip": {
+  "dung": {
+   "ten": "đứng",
+   "ms": 1600,
+   "buoc_ms": 66.6667,
+   "so_khung": 24,
+   "lap": true,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "hit-vao",
+     0,
+     800
+    ],
+    [
+     "tho-ra",
+     800,
+     1600
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "ghi_chu": "thân co giãn nhẹ quanh đáy (đáy đứng yên, chân không động); hai nắm tay nổi lên xuống lệch pha; quả lắc đưa nhẹ. 66,7 ms/khung (thở chậm, đủ mượt, sheet nhẹ hơn).",
+   "kenh_moc": {
+    "than.sy": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0
+      ],
+      [
+       800.0,
+       0.982,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0
+      ],
+      [
+       800.0,
+       1.008,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-truoc.X": {
+     "moc": [
+      [
+       400.0,
+       -47.296,
+       0.0
+      ],
+      [
+       1200.0,
+       -45.696,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-truoc.Y": {
+     "moc": [
+      [
+       400.0,
+       -50.49,
+       0.0
+      ],
+      [
+       1200.0,
+       -47.49,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-sau.X": {
+     "moc": [
+      [
+       400.0,
+       48.955,
+       0.0
+      ],
+      [
+       1200.0,
+       47.355,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-sau.Y": {
+     "moc": [
+      [
+       400.0,
+       -41.284,
+       0.0
+      ],
+      [
+       1200.0,
+       -44.284,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       400.0,
+       3.0,
+       0.0
+      ],
+      [
+       1200.0,
+       -3.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 1600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {}
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "qua-lac": {
+       "goc": 0.7431
+      },
+      "tay-truoc": {
+       "dich": [
+        -1.857,
+        -3.481
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        1.857,
+        3.481
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.001,
+        0.999
+       ]
+      },
+      "qua-lac": {
+       "goc": 1.4444
+      },
+      "tay-truoc": {
+       "dich": [
+        -3.609,
+        -6.768
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        3.609,
+        6.768
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.001,
+        0.997
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.0625
+      },
+      "tay-truoc": {
+       "dich": [
+        -5.154,
+        -9.663
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        5.154,
+        9.663
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.002,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.5556
+      },
+      "tay-truoc": {
+       "dich": [
+        -6.386,
+        -11.974
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        6.386,
+        11.974
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.003,
+        0.993
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.8819
+      },
+      "tay-truoc": {
+       "dich": [
+        -7.202,
+        -13.503
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        7.202,
+        13.503
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.004,
+        0.991
+       ]
+      },
+      "qua-lac": {
+       "goc": 3.0
+      },
+      "tay-truoc": {
+       "dich": [
+        -7.497,
+        -14.056
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        7.497,
+        14.056
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.005,
+        0.989
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.8819
+      },
+      "tay-truoc": {
+       "dich": [
+        -7.202,
+        -13.503
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        7.202,
+        13.503
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.006,
+        0.987
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.5556
+      },
+      "tay-truoc": {
+       "dich": [
+        -6.386,
+        -11.974
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        6.386,
+        11.974
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 600.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.007,
+        0.985
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.0625
+      },
+      "tay-truoc": {
+       "dich": [
+        -5.154,
+        -9.663
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        5.154,
+        9.663
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 666.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.007,
+        0.983
+       ]
+      },
+      "qua-lac": {
+       "goc": 1.4444
+      },
+      "tay-truoc": {
+       "dich": [
+        -3.609,
+        -6.768
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        3.609,
+        6.768
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 733.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.008,
+        0.982
+       ]
+      },
+      "qua-lac": {
+       "goc": 0.7431
+      },
+      "tay-truoc": {
+       "dich": [
+        -1.857,
+        -3.481
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        1.857,
+        3.481
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 800.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.008,
+        0.982
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 866.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.008,
+        0.982
+       ]
+      },
+      "qua-lac": {
+       "goc": -0.7431
+      },
+      "tay-truoc": {
+       "dich": [
+        1.857,
+        3.481
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -1.857,
+        -3.481
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 933.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.007,
+        0.983
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.4444
+      },
+      "tay-truoc": {
+       "dich": [
+        3.609,
+        6.768
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -3.609,
+        -6.768
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1000.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.007,
+        0.985
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.0625
+      },
+      "tay-truoc": {
+       "dich": [
+        5.154,
+        9.663
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -5.154,
+        -9.663
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1066.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.006,
+        0.987
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.5556
+      },
+      "tay-truoc": {
+       "dich": [
+        6.386,
+        11.974
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -6.386,
+        -11.974
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1133.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.005,
+        0.989
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.8819
+      },
+      "tay-truoc": {
+       "dich": [
+        7.202,
+        13.503
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -7.202,
+        -13.503
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1200.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.004,
+        0.991
+       ]
+      },
+      "qua-lac": {
+       "goc": -3.0
+      },
+      "tay-truoc": {
+       "dich": [
+        7.497,
+        14.056
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -7.497,
+        -14.056
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1266.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.003,
+        0.993
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.8819
+      },
+      "tay-truoc": {
+       "dich": [
+        7.202,
+        13.503
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -7.202,
+        -13.503
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1333.333,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.002,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.5556
+      },
+      "tay-truoc": {
+       "dich": [
+        6.386,
+        11.974
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -6.386,
+        -11.974
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1400.0,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.001,
+        0.997
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.0625
+      },
+      "tay-truoc": {
+       "dich": [
+        5.154,
+        9.663
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -5.154,
+        -9.663
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1466.667,
+     "tu_the": {
+      "than": {
+       "ty": [
+        1.001,
+        0.999
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.4444
+      },
+      "tay-truoc": {
+       "dich": [
+        3.609,
+        6.768
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -3.609,
+        -6.768
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1533.333,
+     "tu_the": {
+      "qua-lac": {
+       "goc": -0.7431
+      },
+      "tay-truoc": {
+       "dich": [
+        1.857,
+        3.481
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -1.857,
+        -3.481
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "di": {
+   "ten": "đi tuần",
+   "ms": 600.0,
+   "buoc_ms": 33.3333,
+   "so_khung": 18,
+   "lap": true,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "chan-gan-cham-dat",
+     0,
+     330.0
+    ],
+    [
+     "chan-xa-cham-dat",
+     300.0,
+     630.0
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "ghi_chu": "2 bước/0,6 s; mỗi chân chịu lực 330 ms (55 %), sải 17.82 px logic; khi chịu lực đế phẳng và giữa đế trôi sang phải đúng 54 px logic/s → game dời quái sang trái 0,9 px/tick thì chân đứng yên trên đất. Thân nhún 2 lần/chu kỳ, chúi trước ~3°, lắc ±1°; tay đánh ngược nhịp.",
+   "kenh_moc": {
+    "chan-gan.x": {
+     "moc": [
+      [
+       0.0,
+       -8.91,
+       0.054
+      ],
+      [
+       330.0,
+       8.91,
+       0.054
+      ],
+      [
+       370.0,
+       9.99,
+       0.0
+      ],
+      [
+       560.0,
+       -9.99,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "chan-gan.nhac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       330.0,
+       0.0,
+       0.0
+      ],
+      [
+       451.5,
+       5.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "chan-gan.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       330.0,
+       0.0,
+       0.0
+      ],
+      [
+       390.0,
+       -14.0,
+       0.0
+      ],
+      [
+       490.0,
+       1.0,
+       0.099
+      ],
+      [
+       570.0,
+       7.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "chan-xa.x": {
+     "moc": [
+      [
+       30.0,
+       8.91,
+       0.054
+      ],
+      [
+       70.0,
+       9.99,
+       0.0
+      ],
+      [
+       260.0,
+       -9.99,
+       0.0
+      ],
+      [
+       300.0,
+       -8.91,
+       0.054
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "chan-xa.nhac": {
+     "moc": [
+      [
+       30.0,
+       1.281,
+       0.0
+      ],
+      [
+       151.5,
+       6.281,
+       0.0
+      ],
+      [
+       300.0,
+       1.281,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "chan-xa.goc": {
+     "moc": [
+      [
+       30.0,
+       0.0,
+       0.0
+      ],
+      [
+       90.0,
+       -14.0,
+       0.0
+      ],
+      [
+       190.0,
+       1.0,
+       0.099
+      ],
+      [
+       270.0,
+       7.0,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.y": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       150.0,
+       -1.8,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       -1.8,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       -2.0,
+       0.0
+      ],
+      [
+       300.0,
+       -4.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.sy": {
+     "moc": [
+      [
+       0.0,
+       0.985,
+       0.0
+      ],
+      [
+       150.0,
+       1.01,
+       0.0
+      ],
+      [
+       300.0,
+       0.985,
+       0.0
+      ],
+      [
+       450.0,
+       1.01,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-truoc.X": {
+     "moc": [
+      [
+       150.0,
+       -50.496,
+       0.0
+      ],
+      [
+       450.0,
+       -42.996,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-truoc.Y": {
+     "moc": [
+      [
+       0.0,
+       -47.99,
+       0.0
+      ],
+      [
+       150.0,
+       -50.49,
+       0.0
+      ],
+      [
+       300.0,
+       -47.99,
+       0.0
+      ],
+      [
+       450.0,
+       -50.49,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-sau.X": {
+     "moc": [
+      [
+       150.0,
+       51.155,
+       0.0
+      ],
+      [
+       450.0,
+       44.655,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "tay-sau.Y": {
+     "moc": [
+      [
+       0.0,
+       -41.784,
+       0.0
+      ],
+      [
+       150.0,
+       -44.284,
+       0.0
+      ],
+      [
+       300.0,
+       -41.784,
+       0.0
+      ],
+      [
+       450.0,
+       -44.284,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       75.0,
+       8.0,
+       0.0
+      ],
+      [
+       375.0,
+       -8.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 600.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "than": {
+       "goc": -2.0,
+       "ty": [
+        1.0,
+        0.985
+       ]
+      },
+      "qua-lac": {
+       "goc": 7.5
+      },
+      "tay-truoc": {
+       "dich": [
+        -2.343,
+        9.371
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -2.343,
+        9.371
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        68.312,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        -83.493,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.129
+       ],
+       "goc": -2.0686,
+       "ty": [
+        1.0,
+        0.988
+       ]
+      },
+      "qua-lac": {
+       "goc": 9.2284
+      },
+      "tay-truoc": {
+       "dich": [
+        -13.863,
+        6.414
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        7.642,
+        6.414
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        85.109,
+        -0.083
+       ],
+       "goc": -0.1248
+      },
+      "chan-gan": {
+       "dich": [
+        -66.625,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -7.034
+       ],
+       "goc": -2.2524,
+       "ty": [
+        1.0,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": 10.216
+      },
+      "tay-truoc": {
+       "dich": [
+        -24.227,
+        -0.398
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        16.624,
+        -0.398
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        93.543,
+        -12.156
+       ],
+       "goc": -9.2949
+      },
+      "chan-gan": {
+       "dich": [
+        -49.758,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -12.494
+       ],
+       "goc": -2.5185,
+       "ty": [
+        1.0,
+        1.004
+       ]
+      },
+      "qua-lac": {
+       "goc": 10.2037
+      },
+      "tay-truoc": {
+       "dich": [
+        -32.277,
+        -7.982
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        23.6,
+        -7.982
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        81.084,
+        -35.626
+       ],
+       "goc": -13.6689
+      },
+      "chan-gan": {
+       "dich": [
+        -32.891,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -16.289
+       ],
+       "goc": -2.834,
+       "ty": [
+        1.0,
+        1.009
+       ]
+      },
+      "qua-lac": {
+       "goc": 9.2545
+      },
+      "tay-truoc": {
+       "dich": [
+        -36.856,
+        -13.253
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        27.569,
+        -13.253
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        45.073,
+        -45.766
+       ],
+       "goc": -9.0422
+      },
+      "chan-gan": {
+       "dich": [
+        -16.024,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -16.289
+       ],
+       "goc": -3.166,
+       "ty": [
+        1.0,
+        1.009
+       ]
+      },
+      "qua-lac": {
+       "goc": 7.5974
+      },
+      "tay-truoc": {
+       "dich": [
+        -36.856,
+        -13.253
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        27.569,
+        -13.253
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -2.463,
+        -45.085
+       ],
+       "goc": -2.4236
+      },
+      "chan-gan": {
+       "dich": [
+        0.843,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -12.494
+       ],
+       "goc": -3.4815,
+       "ty": [
+        1.0,
+        1.004
+       ]
+      },
+      "qua-lac": {
+       "goc": 5.463
+      },
+      "tay-truoc": {
+       "dich": [
+        -32.277,
+        -7.982
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        23.6,
+        -7.982
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -49.393,
+        -35.951
+       ],
+       "goc": 2.0141
+      },
+      "chan-gan": {
+       "dich": [
+        17.711,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -7.034
+       ],
+       "goc": -3.7476,
+       "ty": [
+        1.0,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": 3.0816
+      },
+      "tay-truoc": {
+       "dich": [
+        -24.227,
+        -0.398
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        16.624,
+        -0.398
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -83.584,
+        -22.301
+       ],
+       "goc": 5.2733
+      },
+      "chan-gan": {
+       "dich": [
+        34.578,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.129
+       ],
+       "goc": -3.9314,
+       "ty": [
+        1.0,
+        0.988
+       ]
+      },
+      "qua-lac": {
+       "goc": 0.6838
+      },
+      "tay-truoc": {
+       "dich": [
+        -13.863,
+        6.414
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        7.642,
+        6.414
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -93.332,
+        -9.589
+       ],
+       "goc": 6.9828
+      },
+      "chan-gan": {
+       "dich": [
+        51.445,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "goc": -4.0,
+       "ty": [
+        1.0,
+        0.985
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.5
+      },
+      "tay-truoc": {
+       "dich": [
+        -2.343,
+        9.371
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -2.343,
+        9.371
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -83.493,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        68.312,
+        0.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.129
+       ],
+       "goc": -3.9314,
+       "ty": [
+        1.0,
+        0.988
+       ]
+      },
+      "qua-lac": {
+       "goc": -3.2284
+      },
+      "tay-truoc": {
+       "dich": [
+        9.178,
+        6.414
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -12.327,
+        6.414
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -66.625,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        85.109,
+        -0.163
+       ],
+       "goc": -0.1248
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -7.034
+       ],
+       "goc": -3.7476,
+       "ty": [
+        1.0,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": -4.216
+      },
+      "tay-truoc": {
+       "dich": [
+        19.542,
+        -0.398
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -21.309,
+        -0.398
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -49.758,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        93.543,
+        -16.472
+       ],
+       "goc": -9.2949
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -12.494
+       ],
+       "goc": -3.4815,
+       "ty": [
+        1.0,
+        1.004
+       ]
+      },
+      "qua-lac": {
+       "goc": -4.2037
+      },
+      "tay-truoc": {
+       "dich": [
+        27.591,
+        -7.982
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -28.286,
+        -7.982
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -32.891,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        81.084,
+        -40.393
+       ],
+       "goc": -13.6689
+      }
+     }
+    },
+    {
+     "t_ms": 433.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -16.289
+       ],
+       "goc": -3.166,
+       "ty": [
+        1.0,
+        1.009
+       ]
+      },
+      "qua-lac": {
+       "goc": -3.2545
+      },
+      "tay-truoc": {
+       "dich": [
+        32.171,
+        -13.253
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -32.254,
+        -13.253
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        -16.024,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        45.073,
+        -50.02
+       ],
+       "goc": -9.0422
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -16.289
+       ],
+       "goc": -2.834,
+       "ty": [
+        1.0,
+        1.009
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.5974
+      },
+      "tay-truoc": {
+       "dich": [
+        32.171,
+        -13.253
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -32.254,
+        -13.253
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        0.843,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        -2.463,
+        -46.629
+       ],
+       "goc": -2.4236
+      }
+     }
+    },
+    {
+     "t_ms": 500.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -12.494
+       ],
+       "goc": -2.5185,
+       "ty": [
+        1.0,
+        1.004
+       ]
+      },
+      "qua-lac": {
+       "goc": 0.537
+      },
+      "tay-truoc": {
+       "dich": [
+        27.591,
+        -7.982
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -28.286,
+        -7.982
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        17.711,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        -49.393,
+        -35.898
+       ],
+       "goc": 2.0141
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -7.034
+       ],
+       "goc": -2.2524,
+       "ty": [
+        1.0,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": 2.9184
+      },
+      "tay-truoc": {
+       "dich": [
+        19.542,
+        -0.398
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -21.309,
+        -0.398
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        34.578,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        -83.584,
+        -22.255
+       ],
+       "goc": 5.2733
+      }
+     }
+    },
+    {
+     "t_ms": 566.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.129
+       ],
+       "goc": -2.0686,
+       "ty": [
+        1.0,
+        0.988
+       ]
+      },
+      "qua-lac": {
+       "goc": 5.3162
+      },
+      "tay-truoc": {
+       "dich": [
+        9.178,
+        6.414
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -12.327,
+        6.414
+       ]
+      },
+      "chan-xa": {
+       "dich": [
+        51.445,
+        0.0
+       ]
+      },
+      "chan-gan": {
+       "dich": [
+        -93.332,
+        -9.629
+       ],
+       "goc": 6.9828
+      }
+     }
+    }
+   ],
+   "toc_do_dat_px_logic_moi_s": 54.0,
+   "chiu_luc": {
+    "chan-gan": [
+     0,
+     330.0
+    ],
+    "chan-xa": [
+     300.0,
+     30.0
+    ]
+   }
+  },
+  "dam": {
+   "ten": "đấm",
+   "ms": 1200,
+   "buoc_ms": 33.3333,
+   "so_khung": 36,
+   "lap": false,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "chuan-bi",
+     0,
+     500
+    ],
+    [
+     "vung",
+     500,
+     583.33
+    ],
+    [
+     "cham",
+     583.33,
+     683.33
+    ],
+    [
+     "thu",
+     683.33,
+     1200
+    ]
+   ],
+   "khung_cham": [
+    18,
+    19,
+    20
+   ],
+   "cua_so_cham_ms": [
+    583.33,
+    683.33
+   ],
+   "ghi_chu": "lấy đà: ngả ra sau, nắm tay trước kéo về sát thân và lên cao; vung: thân chúi tới, nắm tay phóng thẳng ra trước, giãn ngang 1,2× (khung 17), chạm: duỗi hết + nén nhẹ (khung 18–20), hai chân nhón nhảy nhỏ 3 px khi lao tới (game dời quái 18 px ở tick 0–5); thu về dáng nghỉ.",
+   "kenh_moc": {
+    "tay-truoc.X": {
+     "moc": [
+      [
+       0.0,
+       -46.4962,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       -37.0,
+       0.02415,
+       0.02415
+      ],
+      [
+       500.0,
+       -33.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       -64.0,
+       -0.09859,
+       -0.09859
+      ],
+      [
+       600.0,
+       -66.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       -65.0,
+       0.01571,
+       0.01571
+      ],
+      [
+       900.0,
+       -54.0,
+       0.03527,
+       0.03527
+      ],
+      [
+       1200.0,
+       -46.4962,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.Y": {
+     "moc": [
+      [
+       0.0,
+       -48.9901,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       -59.0,
+       -0.02019,
+       -0.02019
+      ],
+      [
+       500.0,
+       -62.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       -62.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       -62.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       -55.0,
+       0.02595,
+       0.02595
+      ],
+      [
+       1200.0,
+       -48.9901,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       0.95,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       1.2,
+       0.0,
+       0.0
+      ],
+      [
+       633.0,
+       1.06,
+       -0.0008,
+       -0.0008
+      ],
+      [
+       767.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.sy": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       1.04,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       0.86,
+       0.0,
+       0.0
+      ],
+      [
+       633.0,
+       0.96,
+       0.00054,
+       0.00054
+      ],
+      [
+       767.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       -15.0,
+       -0.03261,
+       -0.03261
+      ],
+      [
+       500.0,
+       -20.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       4.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.X": {
+     "moc": [
+      [
+       0.0,
+       48.1545,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       40.0,
+       0.0,
+       0.0
+      ],
+      [
+       600.0,
+       53.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       48.1545,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.Y": {
+     "moc": [
+      [
+       0.0,
+       -42.7835,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       -52.0,
+       0.0,
+       0.0
+      ],
+      [
+       600.0,
+       -40.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       -42.7835,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       -10.0,
+       0.0,
+       0.0
+      ],
+      [
+       600.0,
+       8.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       9.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       9.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       -10.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       -8.0,
+       0.01779,
+       0.01779
+      ],
+      [
+       1000.0,
+       -1.0,
+       0.00789,
+       0.00789
+      ],
+      [
+       1200.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       2.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       -3.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       -3.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.sy": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       1.03,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       0.95,
+       0.0,
+       0.0
+      ],
+      [
+       650.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       0.98,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       1.04,
+       0.0,
+       0.0
+      ],
+      [
+       650.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       6.0,
+       0.0,
+       0.0
+      ],
+      [
+       567.0,
+       -18.0,
+       0.0,
+       0.0
+      ],
+      [
+       733.0,
+       10.0,
+       0.0,
+       0.0
+      ],
+      [
+       933.0,
+       -4.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-gan.nhac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       533.0,
+       3.0,
+       0.0,
+       0.0
+      ],
+      [
+       583.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-gan.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       533.0,
+       6.0,
+       0.0,
+       0.0
+      ],
+      [
+       583.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-xa.nhac": {
+     "moc": [
+      [
+       0.0,
+       1.2806,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       1.2806,
+       0.0,
+       0.0
+      ],
+      [
+       533.0,
+       4.2806,
+       0.0,
+       0.0
+      ],
+      [
+       583.0,
+       1.2806,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       1.2806,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-xa.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       533.0,
+       6.0,
+       0.0,
+       0.0
+      ],
+      [
+       583.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {}
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.239,
+        0.0
+       ],
+       "goc": 0.1408
+      },
+      "qua-lac": {
+       "goc": -0.0469
+      },
+      "tay-truoc": {
+       "dich": [
+        2.307,
+        -2.594
+       ],
+       "goc": -0.407,
+       "ty": [
+        0.999,
+        1.001
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -1.196,
+        -1.351
+       ],
+       "goc": -0.1565
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.911,
+        0.0
+       ],
+       "goc": 0.5341,
+       "ty": [
+        0.999,
+        1.002
+       ]
+      },
+      "qua-lac": {
+       "goc": -0.178
+      },
+      "tay-truoc": {
+       "dich": [
+        8.622,
+        -9.658
+       ],
+       "goc": -1.5173,
+       "ty": [
+        0.998,
+        1.002
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -4.534,
+        -5.125
+       ],
+       "goc": -0.5934
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        1.949,
+        0.0
+       ],
+       "goc": 1.1358,
+       "ty": [
+        0.997,
+        1.004
+       ]
+      },
+      "qua-lac": {
+       "goc": -0.3786
+      },
+      "tay-truoc": {
+       "dich": [
+        18.042,
+        -20.115
+       ],
+       "goc": -3.1643,
+       "ty": [
+        0.995,
+        1.004
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -9.643,
+        -10.899
+       ],
+       "goc": -1.262
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        3.287,
+        0.0
+       ],
+       "goc": 1.9021,
+       "ty": [
+        0.996,
+        1.006
+       ]
+      },
+      "qua-lac": {
+       "goc": -0.634
+      },
+      "tay-truoc": {
+       "dich": [
+        29.658,
+        -32.888
+       ],
+       "goc": -5.1816,
+       "ty": [
+        0.991,
+        1.007
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -16.15,
+        -18.253
+       ],
+       "goc": -2.1135
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        4.859,
+        0.0
+       ],
+       "goc": 2.7892,
+       "ty": [
+        0.994,
+        1.009
+       ]
+      },
+      "qua-lac": {
+       "goc": -0.9297
+      },
+      "tay-truoc": {
+       "dich": [
+        42.565,
+        -46.9
+       ],
+       "goc": -7.4029,
+       "ty": [
+        0.987,
+        1.01
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -23.681,
+        -26.765
+       ],
+       "goc": -3.0991
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        6.597,
+        0.0
+       ],
+       "goc": 3.7531,
+       "ty": [
+        0.992,
+        1.013
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.251
+      },
+      "tay-truoc": {
+       "dich": [
+        55.858,
+        -61.074
+       ],
+       "goc": -9.6618,
+       "ty": [
+        0.982,
+        1.014
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -31.865,
+        -36.015
+       ],
+       "goc": -4.1701
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        8.435,
+        0.0
+       ],
+       "goc": 4.7499,
+       "ty": [
+        0.989,
+        1.016
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.5833
+      },
+      "tay-truoc": {
+       "dich": [
+        68.629,
+        -74.334
+       ],
+       "goc": -11.7919,
+       "ty": [
+        0.977,
+        1.018
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -40.328,
+        -45.58
+       ],
+       "goc": -5.2777
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        10.306,
+        0.0
+       ],
+       "goc": 5.7357,
+       "ty": [
+        0.987,
+        1.019
+       ]
+      },
+      "qua-lac": {
+       "goc": -1.9119
+      },
+      "tay-truoc": {
+       "dich": [
+        79.974,
+        -85.601
+       ],
+       "goc": -13.6268,
+       "ty": [
+        0.973,
+        1.022
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -48.698,
+        -55.04
+       ],
+       "goc": -6.373
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        12.144,
+        0.0
+       ],
+       "goc": 6.6667,
+       "ty": [
+        0.985,
+        1.022
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.2222
+      },
+      "tay-truoc": {
+       "dich": [
+        88.985,
+        -93.799
+       ],
+       "goc": -15.0,
+       "ty": [
+        0.968,
+        1.026
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -56.602,
+        -63.974
+       ],
+       "goc": -7.4074
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        13.882,
+        0.0
+       ],
+       "goc": 7.4989,
+       "ty": [
+        0.983,
+        1.025
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.4996
+      },
+      "tay-truoc": {
+       "dich": [
+        97.0,
+        -100.26
+       ],
+       "goc": -16.1252,
+       "ty": [
+        0.963,
+        1.03
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -63.668,
+        -71.96
+       ],
+       "goc": -8.3321
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        15.454,
+        0.0
+       ],
+       "goc": 8.1884,
+       "ty": [
+        0.982,
+        1.027
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.7295
+      },
+      "tay-truoc": {
+       "dich": [
+        105.408,
+        -106.692
+       ],
+       "goc": -17.2625,
+       "ty": [
+        0.959,
+        1.033
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -69.522,
+        -78.576
+       ],
+       "goc": -9.0982
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        16.792,
+        0.0
+       ],
+       "goc": 8.6914,
+       "ty": [
+        0.981,
+        1.029
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.8971
+      },
+      "tay-truoc": {
+       "dich": [
+        113.384,
+        -112.584
+       ],
+       "goc": -18.3152,
+       "ty": [
+        0.955,
+        1.036
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -73.793,
+        -83.403
+       ],
+       "goc": -9.6571
+      }
+     }
+    },
+    {
+     "t_ms": 433.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        17.831,
+        0.0
+       ],
+       "goc": 8.9639,
+       "ty": [
+        0.98,
+        1.03
+       ]
+      },
+      "qua-lac": {
+       "goc": -2.988
+      },
+      "tay-truoc": {
+       "dich": [
+        120.103,
+        -117.425
+       ],
+       "goc": -19.1868,
+       "ty": [
+        0.952,
+        1.038
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -76.107,
+        -86.018
+       ],
+       "goc": -9.9599
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        18.503,
+        0.0
+       ],
+       "goc": 9.0,
+       "ty": [
+        0.983,
+        1.026
+       ]
+      },
+      "qua-lac": {
+       "goc": -4.3223
+      },
+      "tay-truoc": {
+       "dich": [
+        124.739,
+        -120.705
+       ],
+       "goc": -19.7806,
+       "ty": [
+        0.951,
+        1.039
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -72.236,
+        -82.508
+       ],
+       "goc": -9.3827
+      }
+     }
+    },
+    {
+     "t_ms": 500.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        18.741,
+        0.0
+       ],
+       "goc": 9.0,
+       "ty": [
+        1.004,
+        0.999
+       ]
+      },
+      "qua-lac": {
+       "goc": -12.403
+      },
+      "tay-truoc": {
+       "dich": [
+        126.468,
+        -121.911
+       ],
+       "goc": -20.0,
+       "ty": [
+        0.95,
+        1.04
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -44.831,
+        -57.211
+       ],
+       "goc": -5.3333
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -4.511,
+        0.0
+       ],
+       "goc": -0.4291,
+       "ty": [
+        1.028,
+        0.966
+       ]
+      },
+      "qua-lac": {
+       "goc": -12.7529
+      },
+      "tay-truoc": {
+       "dich": [
+        -9.995,
+        -121.911
+       ],
+       "goc": -8.0896,
+       "ty": [
+        1.074,
+        0.951
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        -5.394,
+        -20.809
+       ],
+       "goc": 0.4938
+      },
+      "chan-xa": {
+       "dich": [
+        0.0,
+        -31.033
+       ],
+       "goc": 5.9992
+      },
+      "chan-gan": {
+       "dich": [
+        0.0,
+        -30.981
+       ],
+       "goc": 5.9992
+      }
+     }
+    },
+    {
+     "t_ms": 566.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -28.109,
+        0.0
+       ],
+       "goc": -9.9986,
+       "ty": [
+        1.04,
+        0.95
+       ]
+      },
+      "qua-lac": {
+       "goc": -8.0008
+      },
+      "tay-truoc": {
+       "dich": [
+        -163.696,
+        -121.911
+       ],
+       "goc": 3.9982,
+       "ty": [
+        1.2,
+        0.86
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        30.032,
+        11.892
+       ],
+       "goc": 5.7284
+      },
+      "chan-xa": {
+       "dich": [
+        0.0,
+        -7.656
+       ],
+       "goc": 1.5025
+      },
+      "chan-gan": {
+       "dich": [
+        0.0,
+        -7.617
+       ],
+       "goc": 1.5025
+      }
+     }
+    },
+    {
+     "t_ms": 600.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -28.112,
+        0.0
+       ],
+       "goc": -9.8013,
+       "ty": [
+        1.026,
+        0.967
+       ]
+      },
+      "qua-lac": {
+       "goc": -5.319
+      },
+      "tay-truoc": {
+       "dich": [
+        -182.764,
+        -121.911
+       ],
+       "goc": 3.3834,
+       "ty": [
+        1.137,
+        0.906
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        45.405,
+        26.083
+       ],
+       "goc": 8.0
+      }
+     }
+    },
+    {
+     "t_ms": 633.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -28.112,
+        0.0
+       ],
+       "goc": -9.2988,
+       "ty": [
+        1.004,
+        0.995
+       ]
+      },
+      "qua-lac": {
+       "goc": 1.1387
+      },
+      "tay-truoc": {
+       "dich": [
+        -181.425,
+        -121.911
+       ],
+       "goc": 2.0075,
+       "ty": [
+        1.06,
+        0.96
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        45.0,
+        25.851
+       ],
+       "goc": 7.9287
+      }
+     }
+    },
+    {
+     "t_ms": 666.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -28.112,
+        0.0
+       ],
+       "goc": -8.647
+      },
+      "qua-lac": {
+       "goc": 8.8072
+      },
+      "tay-truoc": {
+       "dich": [
+        -178.004,
+        -121.911
+       ],
+       "goc": 0.6278,
+       "ty": [
+        1.035,
+        0.976
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        43.848,
+        25.189
+       ],
+       "goc": 7.7257
+      }
+     }
+    },
+    {
+     "t_ms": 700.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -28.112,
+        0.0
+       ],
+       "goc": -8.0
+      },
+      "qua-lac": {
+       "goc": 15.1203
+      },
+      "tay-truoc": {
+       "dich": [
+        -173.393,
+        -121.911
+       ],
+       "ty": [
+        1.017,
+        0.989
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        42.042,
+        24.151
+       ],
+       "goc": 7.4074
+      }
+     }
+    },
+    {
+     "t_ms": 733.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -27.754,
+        0.0
+       ],
+       "goc": -7.3173
+      },
+      "qua-lac": {
+       "goc": 17.3172
+      },
+      "tay-truoc": {
+       "dich": [
+        -163.879,
+        -118.178
+       ],
+       "ty": [
+        1.004,
+        0.997
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        39.675,
+        22.792
+       ],
+       "goc": 6.9904
+      }
+     }
+    },
+    {
+     "t_ms": 766.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -26.746,
+        0.0
+       ],
+       "goc": -6.4899
+      },
+      "qua-lac": {
+       "goc": 15.4334
+      },
+      "tay-truoc": {
+       "dich": [
+        -147.203,
+        -108.508
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        36.841,
+        21.164
+       ],
+       "goc": 6.4911
+      }
+     }
+    },
+    {
+     "t_ms": 800.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -25.188,
+        0.0
+       ],
+       "goc": -5.5698
+      },
+      "qua-lac": {
+       "goc": 11.909
+      },
+      "tay-truoc": {
+       "dich": [
+        -126.435,
+        -95.194
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        33.634,
+        19.321
+       ],
+       "goc": 5.9259
+      }
+     }
+    },
+    {
+     "t_ms": 833.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -23.181,
+        0.0
+       ],
+       "goc": -4.6086
+      },
+      "qua-lac": {
+       "goc": 7.5736
+      },
+      "tay-truoc": {
+       "dich": [
+        -104.65,
+        -80.528
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        30.146,
+        17.317
+       ],
+       "goc": 5.3114
+      }
+     }
+    },
+    {
+     "t_ms": 866.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -20.824,
+        0.0
+       ],
+       "goc": -3.6581
+      },
+      "qua-lac": {
+       "goc": 3.2567
+      },
+      "tay-truoc": {
+       "dich": [
+        -84.92,
+        -66.805
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        26.471,
+        15.206
+       ],
+       "goc": 4.6639
+      }
+     }
+    },
+    {
+     "t_ms": 900.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -18.217,
+        0.0
+       ],
+       "goc": -2.7703
+      },
+      "qua-lac": {
+       "goc": -0.2121
+      },
+      "tay-truoc": {
+       "dich": [
+        -70.316,
+        -56.317
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        22.703,
+        13.042
+       ],
+       "goc": 4.0
+      }
+     }
+    },
+    {
+     "t_ms": 933.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -15.46,
+        0.0
+       ],
+       "goc": -1.9968
+      },
+      "qua-lac": {
+       "goc": -2.0032
+      },
+      "tay-truoc": {
+       "dich": [
+        -59.2,
+        -47.98
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        18.934,
+        10.877
+       ],
+       "goc": 3.3361
+      }
+     }
+    },
+    {
+     "t_ms": 966.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -12.652,
+        0.0
+       ],
+       "goc": -1.3894
+      },
+      "qua-lac": {
+       "goc": -2.4358
+      },
+      "tay-truoc": {
+       "dich": [
+        -48.114,
+        -39.402
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        15.26,
+        8.766
+       ],
+       "goc": 2.6886
+      }
+     }
+    },
+    {
+     "t_ms": 1000.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -9.895,
+        0.0
+       ],
+       "goc": -1.0
+      },
+      "qua-lac": {
+       "goc": -2.3708
+      },
+      "tay-truoc": {
+       "dich": [
+        -37.398,
+        -30.908
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        11.772,
+        6.762
+       ],
+       "goc": 2.0741
+      }
+     }
+    },
+    {
+     "t_ms": 1033.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -7.288,
+        0.0
+       ],
+       "goc": -0.7432
+      },
+      "qua-lac": {
+       "goc": -1.9868
+      },
+      "tay-truoc": {
+       "dich": [
+        -27.393,
+        -22.824
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        8.564,
+        4.92
+       ],
+       "goc": 1.5089
+      }
+     }
+    },
+    {
+     "t_ms": 1066.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -4.931,
+        0.0
+       ],
+       "goc": -0.5068
+      },
+      "qua-lac": {
+       "goc": -1.4894
+      },
+      "tay-truoc": {
+       "dich": [
+        -18.442,
+        -15.478
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        5.73,
+        3.292
+       ],
+       "goc": 1.0096
+      }
+     }
+    },
+    {
+     "t_ms": 1100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -2.924,
+        0.0
+       ],
+       "goc": -0.3026
+      },
+      "qua-lac": {
+       "goc": -0.9604
+      },
+      "tay-truoc": {
+       "dich": [
+        -10.886,
+        -9.196
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        3.363,
+        1.932
+       ],
+       "goc": 0.5926
+      }
+     }
+    },
+    {
+     "t_ms": 1133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -1.366,
+        0.0
+       ],
+       "goc": -0.1423
+      },
+      "qua-lac": {
+       "goc": -0.4813
+      },
+      "tay-truoc": {
+       "dich": [
+        -5.066,
+        -4.305
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        1.557,
+        0.894
+       ],
+       "goc": 0.2743
+      }
+     }
+    },
+    {
+     "t_ms": 1166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        -0.358,
+        0.0
+       ],
+       "goc": -0.0375
+      },
+      "qua-lac": {
+       "goc": -0.1339
+      },
+      "tay-truoc": {
+       "dich": [
+        -1.323,
+        -1.131
+       ]
+      },
+      "tay-sau": {
+       "dich": [
+        0.405,
+        0.233
+       ],
+       "goc": 0.0713
+      }
+     }
+    }
+   ]
+  },
+  "trung": {
+   "ten": "trúng đòn",
+   "ms": 266.667,
+   "buoc_ms": 33.3333,
+   "so_khung": 8,
+   "lap": false,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "giat",
+     0,
+     67
+    ],
+    [
+     "hoi",
+     67,
+     266.67
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "ghi_chu": "giật lùi (thân ra sau 5 px, ngả 12°), tay văng ra sau, quả lắc lắc mạnh; nháy trắng ở khung 0–1 và 4–5 (đã nướng vào sheet; game vẫn có thể nháy thêm bằng q.flash). Chân đứng yên.",
+   "kenh_moc": {
+    "*.trang": {
+     "moc": [
+      [
+       0.0,
+       0.85,
+       0.0,
+       0.0
+      ],
+      [
+       60.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       130.0,
+       0.6,
+       0.0,
+       0.0
+      ],
+      [
+       190.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       5.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       12.0,
+       0.0,
+       0.0
+      ],
+      [
+       167.0,
+       4.0,
+       -0.05344,
+       -0.05344
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.sy": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       0.95,
+       0.0,
+       0.0
+      ],
+      [
+       167.0,
+       1.01,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.X": {
+     "moc": [
+      [
+       0.0,
+       -46.4962,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       -38.9962,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       -46.4962,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.Y": {
+     "moc": [
+      [
+       0.0,
+       -48.9901,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       -54.9901,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       -48.9901,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       20.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.X": {
+     "moc": [
+      [
+       0.0,
+       48.1545,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       55.1545,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       48.1545,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.Y": {
+     "moc": [
+      [
+       0.0,
+       -42.7835,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       -48.7835,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       -42.7835,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       15.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       22.0,
+       0.0,
+       0.0
+      ],
+      [
+       167.0,
+       -10.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "than": {
+       "trang": 0.85
+      },
+      "qua-lac": {
+       "trang": 0.85
+      },
+      "than-trai": {
+       "trang": 0.85
+      },
+      "than-phai": {
+       "trang": 0.85
+      },
+      "tay-truoc": {
+       "trang": 0.85
+      },
+      "tay-sau": {
+       "trang": 0.85
+      },
+      "chan-xa": {
+       "trang": 0.85
+      },
+      "chan-gan": {
+       "trang": 0.85
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        23.252,
+        0.0
+       ],
+       "goc": 5.9552,
+       "ty": [
+        1.0,
+        0.975
+       ],
+       "trang": 0.85
+      },
+      "qua-lac": {
+       "goc": 4.9627,
+       "trang": 0.85
+      },
+      "than-trai": {
+       "trang": 0.85
+      },
+      "than-phai": {
+       "trang": 0.85
+      },
+      "tay-truoc": {
+       "dich": [
+        34.878,
+        -27.902
+       ],
+       "goc": 9.9254,
+       "trang": 0.85
+      },
+      "tay-sau": {
+       "dich": [
+        32.553,
+        -27.902
+       ],
+       "goc": 7.444,
+       "trang": 0.85
+      },
+      "chan-xa": {
+       "trang": 0.85
+      },
+      "chan-gan": {
+       "trang": 0.85
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        46.85,
+        0.0
+       ],
+       "goc": 11.9991,
+       "ty": [
+        1.0,
+        0.95
+       ]
+      },
+      "qua-lac": {
+       "goc": 9.9993
+      },
+      "tay-truoc": {
+       "dich": [
+        70.275,
+        -56.22
+       ],
+       "goc": 19.9985
+      },
+      "tay-sau": {
+       "dich": [
+        65.59,
+        -56.22
+       ],
+       "goc": 14.9989
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        43.437,
+        0.0
+       ],
+       "goc": 10.3513,
+       "ty": [
+        1.0,
+        0.965
+       ]
+      },
+      "qua-lac": {
+       "goc": 3.4942
+      },
+      "tay-truoc": {
+       "dich": [
+        65.155,
+        -52.124
+       ],
+       "goc": 18.5416
+      },
+      "tay-sau": {
+       "dich": [
+        60.812,
+        -52.124
+       ],
+       "goc": 13.9062
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        34.776,
+        0.0
+       ],
+       "goc": 6.9014,
+       "ty": [
+        1.0,
+        0.994
+       ],
+       "trang": 0.6
+      },
+      "qua-lac": {
+       "goc": -8.4625,
+       "trang": 0.6
+      },
+      "than-trai": {
+       "trang": 0.6
+      },
+      "than-phai": {
+       "trang": 0.6
+      },
+      "tay-truoc": {
+       "dich": [
+        52.163,
+        -41.731
+       ],
+       "goc": 14.8445,
+       "trang": 0.6
+      },
+      "tay-sau": {
+       "dich": [
+        48.686,
+        -41.731
+       ],
+       "goc": 11.1334,
+       "trang": 0.6
+      },
+      "chan-xa": {
+       "trang": 0.6
+      },
+      "chan-gan": {
+       "trang": 0.6
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        23.485,
+        0.0
+       ],
+       "goc": 4.018,
+       "ty": [
+        1.0,
+        1.01
+       ],
+       "trang": 0.6
+      },
+      "qua-lac": {
+       "goc": -14.0169,
+       "trang": 0.6
+      },
+      "than-trai": {
+       "trang": 0.6
+      },
+      "than-phai": {
+       "trang": 0.6
+      },
+      "tay-truoc": {
+       "dich": [
+        35.228,
+        -28.182
+       ],
+       "goc": 10.025,
+       "trang": 0.6
+      },
+      "tay-sau": {
+       "dich": [
+        32.879,
+        -28.182
+       ],
+       "goc": 7.5188,
+       "trang": 0.6
+      },
+      "chan-xa": {
+       "trang": 0.6
+      },
+      "chan-gan": {
+       "trang": 0.6
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        12.182,
+        0.0
+       ],
+       "goc": 2.1858,
+       "ty": [
+        1.0,
+        1.007
+       ]
+      },
+      "qua-lac": {
+       "goc": -9.6228
+      },
+      "tay-truoc": {
+       "dich": [
+        18.273,
+        -14.618
+       ],
+       "goc": 5.2
+      },
+      "tay-sau": {
+       "dich": [
+        17.055,
+        -14.618
+       ],
+       "goc": 3.9
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        3.481,
+        0.0
+       ],
+       "goc": 0.6465,
+       "ty": [
+        1.0,
+        1.003
+       ]
+      },
+      "qua-lac": {
+       "goc": -3.2539
+      },
+      "tay-truoc": {
+       "dich": [
+        5.222,
+        -4.178
+       ],
+       "goc": 1.4861
+      },
+      "tay-sau": {
+       "dich": [
+        4.874,
+        -4.178
+       ],
+       "goc": 1.1146
+      }
+     }
+    }
+   ]
+  },
+  "chet": {
+   "ten": "chết",
+   "ms": 1000,
+   "buoc_ms": 33.3333,
+   "so_khung": 31,
+   "lap": false,
+   "giu_khung_cuoi": true,
+   "pha": [
+    [
+     "giat",
+     0,
+     133
+    ],
+    [
+     "vo-roi",
+     133,
+     400
+    ],
+    [
+     "do",
+     400,
+     800
+    ],
+    [
+     "nam",
+     800,
+     1000
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "ghi_chu": "giật + nháy; khung 4 (133 ms) thân vỡ đôi theo vết nứt (than → than-trai + than-phai); hai nửa rơi xuống đất (như trọng lực) rồi đổ nghiêng sang hai bên, nảy nhẹ, nằm yên; quả lắc rơi lăn ra; nắm tay rơi xuống nảy; hai chân ngã sang hai bên; tối dần 30 %. Mọi mảnh nằm ĐÚNG mặt đất (giải từ hình mảnh). Mảnh vụn/mờ dần: game tự làm (shatter, q.fade).",
+   "kenh_moc": {
+    "*.trang": {
+     "moc": [
+      [
+       0.0,
+       0.85,
+       0.0,
+       0.0
+      ],
+      [
+       60.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       95.0,
+       0.7,
+       0.0,
+       0.0
+      ],
+      [
+       130.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "*.toi": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.3,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       4.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       14.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.hien": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.hien": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       133.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.nhac": {
+     "moc": [
+      [
+       133.0,
+       21.3432,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       0.0,
+       -0.17282,
+       0.0
+      ],
+      [
+       430.0,
+       1.5,
+       0.0,
+       0.0
+      ],
+      [
+       480.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.goc": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       -6.0,
+       -0.04266,
+       -0.04266
+      ],
+      [
+       720.0,
+       -97.0,
+       -0.35,
+       0.0
+      ],
+      [
+       790.0,
+       -90.0,
+       0.0,
+       0.0
+      ],
+      [
+       860.0,
+       -97.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.x": {
+     "moc": [
+      [
+       133.0,
+       -0.5,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       -1.5,
+       -0.00436,
+       -0.00436
+      ],
+      [
+       860.0,
+       -4.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.hien": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       133.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.nhac": {
+     "moc": [
+      [
+       133.0,
+       21.4499,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       0.0,
+       -0.17368,
+       0.0
+      ],
+      [
+       440.0,
+       1.2,
+       0.0,
+       0.0
+      ],
+      [
+       490.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.goc": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       5.0,
+       0.0353,
+       0.0353
+      ],
+      [
+       760.0,
+       99.0,
+       0.32,
+       0.0
+      ],
+      [
+       830.0,
+       93.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       99.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.x": {
+     "moc": [
+      [
+       133.0,
+       0.5,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       1.5,
+       0.00422,
+       0.00422
+      ],
+      [
+       900.0,
+       4.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.nhac": {
+     "moc": [
+      [
+       133.0,
+       19.9559,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       0.0,
+       -0.16159,
+       0.0
+      ],
+      [
+       430.0,
+       1.2,
+       0.0,
+       0.0
+      ],
+      [
+       480.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.goc": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       25.0,
+       0.14337,
+       0.14337
+      ],
+      [
+       700.0,
+       109.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       109.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.x": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       700.0,
+       8.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.nhac": {
+     "moc": [
+      [
+       100.0,
+       34.6827,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       0.0,
+       -0.23122,
+       0.0
+      ],
+      [
+       460.0,
+       2.5,
+       0.0,
+       0.0
+      ],
+      [
+       520.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.goc": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       -40.0,
+       -0.09929,
+       -0.09929
+      ],
+      [
+       520.0,
+       -50.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-truoc.X": {
+     "moc": [
+      [
+       100.0,
+       -46.4962,
+       0.0,
+       0.0
+      ],
+      [
+       520.0,
+       -54.4962,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.nhac": {
+     "moc": [
+      [
+       100.0,
+       29.7738,
+       0.0,
+       0.0
+      ],
+      [
+       420.0,
+       0.0,
+       -0.18609,
+       0.0
+      ],
+      [
+       480.0,
+       2.0,
+       0.0,
+       0.0
+      ],
+      [
+       540.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.goc": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       420.0,
+       35.0,
+       0.0927,
+       0.0927
+      ],
+      [
+       540.0,
+       45.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "tay-sau.X": {
+     "moc": [
+      [
+       100.0,
+       48.1545,
+       0.0,
+       0.0
+      ],
+      [
+       540.0,
+       56.1545,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-xa.nhac": {
+     "moc": [
+      [
+       133.0,
+       1.2806,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-xa.goc": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       420.0,
+       -120.0,
+       -0.6,
+       0.0
+      ],
+      [
+       480.0,
+       -112.0,
+       0.0,
+       0.0
+      ],
+      [
+       540.0,
+       -120.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-xa.x": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       540.0,
+       -6.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-gan.nhac": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-gan.goc": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       440.0,
+       112.5,
+       0.55,
+       0.0
+      ],
+      [
+       500.0,
+       104.5,
+       0.0,
+       0.0
+      ],
+      [
+       560.0,
+       112.5,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "chan-gan.x": {
+     "moc": [
+      [
+       133.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       560.0,
+       6.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "than": {
+       "hien": true,
+       "trang": 0.85
+      },
+      "qua-lac": {
+       "trang": 0.85
+      },
+      "than-trai": {
+       "dich": [
+        -4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.85
+      },
+      "than-phai": {
+       "dich": [
+        4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.85
+      },
+      "tay-truoc": {
+       "trang": 0.85
+      },
+      "tay-sau": {
+       "trang": 0.85
+      },
+      "chan-xa": {
+       "trang": 0.85
+      },
+      "chan-gan": {
+       "trang": 0.85
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        9.718,
+        0.0
+       ],
+       "goc": 3.6296,
+       "hien": true,
+       "trang": 0.85
+      },
+      "qua-lac": {
+       "trang": 0.85
+      },
+      "than-trai": {
+       "dich": [
+        -4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.85
+      },
+      "than-phai": {
+       "dich": [
+        4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.85
+      },
+      "tay-truoc": {
+       "trang": 0.85
+      },
+      "tay-sau": {
+       "trang": 0.85
+      },
+      "chan-xa": {
+       "trang": 0.85
+      },
+      "chan-gan": {
+       "trang": 0.85
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        27.765,
+        0.0
+       ],
+       "goc": 10.3704,
+       "hien": true
+      },
+      "than-trai": {
+       "dich": [
+        -4.685,
+        0.0
+       ],
+       "hien": false
+      },
+      "than-phai": {
+       "dich": [
+        4.685,
+        0.0
+       ],
+       "hien": false
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        37.483,
+        0.0
+       ],
+       "goc": 14.0,
+       "hien": true,
+       "trang": 0.7
+      },
+      "qua-lac": {
+       "trang": 0.7
+      },
+      "than-trai": {
+       "dich": [
+        -4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.7
+      },
+      "than-phai": {
+       "dich": [
+        4.685,
+        0.0
+       ],
+       "hien": false,
+       "trang": 0.7
+      },
+      "tay-truoc": {
+       "trang": 0.7
+      },
+      "tay-sau": {
+       "trang": 0.7
+      },
+      "chan-xa": {
+       "trang": 0.7
+      },
+      "chan-gan": {
+       "trang": 0.7
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        34.706,
+        0.0
+       ],
+       "goc": 12.963,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        0.0,
+        13.164
+       ],
+       "goc": 0.0001
+      },
+      "than-trai": {
+       "dich": [
+        -4.685,
+        -28.913
+       ],
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        4.685,
+        -45.56
+       ],
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -1.342,
+        4.289
+       ],
+       "goc": -1.0449
+      },
+      "tay-sau": {
+       "dich": [
+        1.226,
+        2.567
+       ],
+       "goc": 0.7719
+      },
+      "chan-xa": {
+       "goc": -0.0003
+      },
+      "chan-gan": {
+       "goc": 0.0002
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        27.765,
+        0.0
+       ],
+       "goc": 10.3704,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        0.762,
+        14.103
+       ],
+       "goc": 0.6985
+      },
+      "than-trai": {
+       "dich": [
+        -4.943,
+        -17.883
+       ],
+       "goc": -0.1349,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        4.948,
+        -29.522
+       ],
+       "goc": 0.1134,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -5.067,
+        17.31
+       ],
+       "goc": -3.9039
+      },
+      "tay-sau": {
+       "dich": [
+        4.641,
+        10.492
+       ],
+       "goc": 2.9051
+      },
+      "chan-xa": {
+       "dich": [
+        -1.09,
+        0.934
+       ],
+       "goc": -2.4748
+      },
+      "chan-gan": {
+       "dich": [
+        0.993,
+        -0.75
+       ],
+       "goc": 1.9541
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        18.741,
+        0.0
+       ],
+       "goc": 7.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        2.893,
+        21.081
+       ],
+       "goc": 2.6217
+      },
+      "than-trai": {
+       "dich": [
+        -5.644,
+        4.296
+       ],
+       "goc": -0.5199,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        5.661,
+        -4.019
+       ],
+       "goc": 0.4365,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -10.726,
+        39.451
+       ],
+       "goc": -8.1639
+      },
+      "tay-sau": {
+       "dich": [
+        9.856,
+        24.206
+       ],
+       "goc": 6.1261
+      },
+      "chan-xa": {
+       "dich": [
+        -4.069,
+        -0.1
+       ],
+       "goc": -9.3723
+      },
+      "chan-gan": {
+       "dich": [
+        3.718,
+        -4.026
+       ],
+       "goc": 7.449
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        9.718,
+        0.0
+       ],
+       "goc": 3.6296,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        6.211,
+        34.749
+       ],
+       "goc": 5.5544
+      },
+      "than-trai": {
+       "dich": [
+        -6.698,
+        35.265
+       ],
+       "goc": -1.1333,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        6.73,
+        27.256
+       ],
+       "goc": 0.9504,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -17.868,
+        71.089
+       ],
+       "goc": -13.4116
+      },
+      "tay-sau": {
+       "dich": [
+        16.48,
+        44.173
+       ],
+       "goc": 10.1615
+      },
+      "chan-xa": {
+       "dich": [
+        -8.566,
+        -14.118
+       ],
+       "goc": -20.0553
+      },
+      "chan-gan": {
+       "dich": [
+        7.854,
+        -16.121
+       ],
+       "goc": 16.0535
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        2.776,
+        0.0
+       ],
+       "goc": 1.037,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        10.534,
+        56.236
+       ],
+       "goc": 9.2816
+      },
+      "than-trai": {
+       "dich": [
+        -8.013,
+        71.252
+       ],
+       "goc": -1.9536,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        8.058,
+        62.399
+       ],
+       "goc": 1.6362,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -26.046,
+        107.312
+       ],
+       "goc": -19.2336
+      },
+      "tay-sau": {
+       "dich": [
+        24.12,
+        70.433
+       ],
+       "goc": 14.7375
+      },
+      "chan-xa": {
+       "dich": [
+        -14.21,
+        -48.386
+       ],
+       "goc": -33.8866
+      },
+      "chan-gan": {
+       "dich": [
+        13.079,
+        -37.799
+       ],
+       "goc": 27.3365
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        15.679,
+        86.805
+       ],
+       "goc": 13.5881
+      },
+      "than-trai": {
+       "dich": [
+        -9.498,
+        109.38
+       ],
+       "goc": -2.9593,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        9.55,
+        101.268
+       ],
+       "goc": 2.4751,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -34.807,
+        150.904
+       ],
+       "goc": -25.2167
+      },
+      "tay-sau": {
+       "dich": [
+        32.385,
+        103.106
+       ],
+       "goc": 19.5806
+      },
+      "chan-xa": {
+       "dich": [
+        -20.63,
+        -92.903
+       ],
+       "goc": -50.2287
+      },
+      "chan-gan": {
+       "dich": [
+        19.073,
+        -64.046
+       ],
+       "goc": 40.8666
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        21.462,
+        126.103
+       ],
+       "goc": 18.2588
+      },
+      "than-trai": {
+       "dich": [
+        -11.061,
+        156.124
+       ],
+       "goc": -4.1287,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        11.111,
+        145.325
+       ],
+       "goc": 3.4482,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -43.704,
+        203.677
+       ],
+       "goc": -30.9477
+      },
+      "tay-sau": {
+       "dich": [
+        40.886,
+        142.542
+       ],
+       "goc": 24.4174
+      },
+      "chan-xa": {
+       "dich": [
+        -27.456,
+        -134.382
+       ],
+       "goc": -68.4444
+      },
+      "chan-gan": {
+       "dich": [
+        25.515,
+        -89.992
+       ],
+       "goc": 56.2126
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        27.701,
+        172.869
+       ],
+       "goc": 23.0785
+      },
+      "than-trai": {
+       "dich": [
+        -12.61,
+        210.369
+       ],
+       "goc": -5.4404,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        12.644,
+        196.892
+       ],
+       "goc": 4.5366,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -52.286,
+        264.976
+       ],
+       "goc": -36.0132
+      },
+      "tay-sau": {
+       "dich": [
+        49.23,
+        188.767
+       ],
+       "goc": 28.9742
+      },
+      "chan-xa": {
+       "dich": [
+        -34.317,
+        -163.839
+       ],
+       "goc": -87.8964
+      },
+      "chan-gan": {
+       "dich": [
+        32.083,
+        -111.506
+       ],
+       "goc": 72.9434
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        34.214,
+        191.959
+       ],
+       "goc": 28.4635
+      },
+      "than-trai": {
+       "dich": [
+        -14.056,
+        234.899
+       ],
+       "goc": -7.2759,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        14.056,
+        219.953
+       ],
+       "goc": 6.0684,
+       "hien": true
+      },
+      "tay-truoc": {
+       "dich": [
+        -60.103,
+        334.047
+       ],
+       "goc": -40.0
+      },
+      "tay-sau": {
+       "dich": [
+        57.027,
+        241.535
+       ],
+       "goc": 32.9775
+      },
+      "chan-xa": {
+       "dich": [
+        -40.843,
+        -176.584
+       ],
+       "goc": -107.9472
+      },
+      "chan-gan": {
+       "dich": [
+        38.458,
+        -124.376
+       ],
+       "goc": 90.6276
+      }
+     }
+    },
+    {
+     "t_ms": 433.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0027
+      },
+      "qua-lac": {
+       "dich": [
+        40.817,
+        191.1
+       ],
+       "goc": 36.5322,
+       "toi": 0.0027
+      },
+      "than-trai": {
+       "dich": [
+        -15.58,
+        239.443
+       ],
+       "goc": -11.1636,
+       "hien": true,
+       "toi": 0.0027
+      },
+      "than-phai": {
+       "dich": [
+        15.503,
+        220.831
+       ],
+       "goc": 9.3675,
+       "hien": true,
+       "toi": 0.0027
+      },
+      "tay-truoc": {
+       "dich": [
+        -66.707,
+        321.158
+       ],
+       "goc": -43.6125,
+       "toi": 0.0027
+      },
+      "tay-sau": {
+       "dich": [
+        63.884,
+        274.348
+       ],
+       "goc": 36.3195,
+       "toi": 0.0027
+      },
+      "chan-xa": {
+       "dich": [
+        -46.663,
+        -176.3
+       ],
+       "goc": -118.9904,
+       "toi": 0.0027
+      },
+      "chan-gan": {
+       "dich": [
+        44.317,
+        -131.785
+       ],
+       "goc": 108.834,
+       "toi": 0.0027
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0103
+      },
+      "qua-lac": {
+       "dich": [
+        47.328,
+        210.038
+       ],
+       "goc": 46.7532,
+       "toi": 0.0103
+      },
+      "than-trai": {
+       "dich": [
+        -17.383,
+        265.765
+       ],
+       "goc": -17.0154,
+       "hien": true,
+       "toi": 0.0103
+      },
+      "than-phai": {
+       "dich": [
+        17.175,
+        236.32
+       ],
+       "goc": 14.3789,
+       "hien": true,
+       "toi": 0.0103
+      },
+      "tay-truoc": {
+       "dich": [
+        -71.646,
+        312.573
+       ],
+       "goc": -47.1374,
+       "toi": 0.0103
+      },
+      "tay-sau": {
+       "dich": [
+        69.412,
+        262.296
+       ],
+       "goc": 39.9763,
+       "toi": 0.0103
+      },
+      "chan-xa": {
+       "dich": [
+        -51.406,
+        -177.013
+       ],
+       "goc": -113.0096,
+       "toi": 0.0103
+      },
+      "chan-gan": {
+       "dich": [
+        49.34,
+        -131.975
+       ],
+       "goc": 109.1639,
+       "toi": 0.0103
+      }
+     }
+    },
+    {
+     "t_ms": 500.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0222
+      },
+      "qua-lac": {
+       "dich": [
+        53.564,
+        220.94
+       ],
+       "goc": 58.2985,
+       "toi": 0.0222
+      },
+      "than-trai": {
+       "dich": [
+        -19.4,
+        280.994
+       ],
+       "goc": -24.5571,
+       "hien": true,
+       "toi": 0.0222
+      },
+      "than-phai": {
+       "dich": [
+        19.024,
+        249.844
+       ],
+       "goc": 20.8879,
+       "hien": true,
+       "toi": 0.0222
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.472,
+        329.255
+       ],
+       "goc": -49.5351,
+       "toi": 0.0222
+      },
+      "tay-sau": {
+       "dich": [
+        73.219,
+        266.952
+       ],
+       "goc": 43.2314,
+       "toi": 0.0222
+      },
+      "chan-xa": {
+       "dich": [
+        -54.702,
+        -177.003
+       ],
+       "goc": -114.0741,
+       "toi": 0.0222
+      },
+      "chan-gan": {
+       "dich": [
+        53.206,
+        -129.732
+       ],
+       "goc": 104.5,
+       "toi": 0.0222
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0379
+      },
+      "qua-lac": {
+       "dich": [
+        59.341,
+        232.988
+       ],
+       "goc": 70.3398,
+       "toi": 0.0379
+      },
+      "than-trai": {
+       "dich": [
+        -21.569,
+        289.699
+       ],
+       "goc": -33.5143,
+       "hien": true,
+       "toi": 0.0379
+      },
+      "than-phai": {
+       "dich": [
+        21.002,
+        256.452
+       ],
+       "goc": 28.6799,
+       "hien": true,
+       "toi": 0.0379
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.0379
+      },
+      "tay-sau": {
+       "dich": [
+        74.914,
+        281.485
+       ],
+       "goc": 44.9433,
+       "toi": 0.0379
+      },
+      "chan-xa": {
+       "dich": [
+        -56.179,
+        -176.104
+       ],
+       "goc": -119.7257,
+       "toi": 0.0379
+      },
+      "chan-gan": {
+       "dich": [
+        55.594,
+        -131.975
+       ],
+       "goc": 109.1639,
+       "toi": 0.0379
+      }
+     }
+    },
+    {
+     "t_ms": 566.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0566
+      },
+      "qua-lac": {
+       "dich": [
+        64.479,
+        246.494
+       ],
+       "goc": 82.049,
+       "toi": 0.0566
+      },
+      "than-trai": {
+       "dich": [
+        -23.825,
+        293.658
+       ],
+       "goc": -43.6131,
+       "hien": true,
+       "toi": 0.0566
+      },
+      "than-phai": {
+       "dich": [
+        23.06,
+        260.59
+       ],
+       "goc": 37.5404,
+       "hien": true,
+       "toi": 0.0566
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.0566
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.0566
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.0566
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.0566
+      }
+     }
+    },
+    {
+     "t_ms": 600.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.0778
+      },
+      "qua-lac": {
+       "dich": [
+        68.792,
+        259.575
+       ],
+       "goc": 92.5978,
+       "toi": 0.0778
+      },
+      "than-trai": {
+       "dich": [
+        -26.103,
+        294.0
+       ],
+       "goc": -54.5791,
+       "hien": true,
+       "toi": 0.0778
+      },
+      "than-phai": {
+       "dich": [
+        25.15,
+        262.0
+       ],
+       "goc": 47.2548,
+       "hien": true,
+       "toi": 0.0778
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.0778
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.0778
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.0778
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.0778
+      }
+     }
+    },
+    {
+     "t_ms": 633.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.1008
+      },
+      "qua-lac": {
+       "dich": [
+        72.1,
+        270.633
+       ],
+       "goc": 101.158,
+       "toi": 0.1008
+      },
+      "than-trai": {
+       "dich": [
+        -28.341,
+        293.895
+       ],
+       "goc": -66.1382,
+       "hien": true,
+       "toi": 0.1008
+      },
+      "than-phai": {
+       "dich": [
+        27.225,
+        262.0
+       ],
+       "goc": 57.6086,
+       "hien": true,
+       "toi": 0.1008
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.1008
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.1008
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.1008
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.1008
+      }
+     }
+    },
+    {
+     "t_ms": 666.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.1251
+      },
+      "qua-lac": {
+       "dich": [
+        74.219,
+        278.009
+       ],
+       "goc": 106.9015,
+       "toi": 0.1251
+      },
+      "than-trai": {
+       "dich": [
+        -30.473,
+        293.437
+       ],
+       "goc": -78.0162,
+       "hien": true,
+       "toi": 0.1251
+      },
+      "than-phai": {
+       "dich": [
+        29.236,
+        261.614
+       ],
+       "goc": 68.3871,
+       "hien": true,
+       "toi": 0.1251
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.1251
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.1251
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.1251
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.1251
+      }
+     }
+    },
+    {
+     "t_ms": 700.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.15
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.15
+      },
+      "than-trai": {
+       "dich": [
+        -32.436,
+        293.002
+       ],
+       "goc": -89.939,
+       "hien": true,
+       "toi": 0.15
+      },
+      "than-phai": {
+       "dich": [
+        31.135,
+        260.772
+       ],
+       "goc": 79.3757,
+       "hien": true,
+       "toi": 0.15
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.15
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.15
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.15
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.15
+      }
+     }
+    },
+    {
+     "t_ms": 733.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.1749
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.1749
+      },
+      "than-trai": {
+       "dich": [
+        -34.165,
+        291.682
+       ],
+       "goc": -96.3348,
+       "hien": true,
+       "toi": 0.1749
+      },
+      "than-phai": {
+       "dich": [
+        32.874,
+        259.893
+       ],
+       "goc": 90.36,
+       "hien": true,
+       "toi": 0.1749
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.1749
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.1749
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.1749
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.1749
+      }
+     }
+    },
+    {
+     "t_ms": 766.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.1992
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.1992
+      },
+      "than-trai": {
+       "dich": [
+        -35.598,
+        292.62
+       ],
+       "goc": -91.8148,
+       "hien": true,
+       "toi": 0.1992
+      },
+      "than-phai": {
+       "dich": [
+        34.405,
+        256.579
+       ],
+       "goc": 98.8471,
+       "hien": true,
+       "toi": 0.1992
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.1992
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.1992
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.1992
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.1992
+      }
+     }
+    },
+    {
+     "t_ms": 800.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2222
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2222
+      },
+      "than-trai": {
+       "dich": [
+        -36.669,
+        292.919
+       ],
+       "goc": -90.3878,
+       "hien": true,
+       "toi": 0.2222
+      },
+      "than-phai": {
+       "dich": [
+        35.679,
+        258.42
+       ],
+       "goc": 95.3615,
+       "hien": true,
+       "toi": 0.2222
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2222
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2222
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2222
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2222
+      }
+     }
+    },
+    {
+     "t_ms": 833.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2434
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2434
+      },
+      "than-trai": {
+       "dich": [
+        -37.315,
+        292.015
+       ],
+       "goc": -94.7264,
+       "hien": true,
+       "toi": 0.2434
+      },
+      "than-phai": {
+       "dich": [
+        36.649,
+        259.101
+       ],
+       "goc": 93.0395,
+       "hien": true,
+       "toi": 0.2434
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2434
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2434
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2434
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2434
+      }
+     }
+    },
+    {
+     "t_ms": 866.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2621
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2621
+      },
+      "than-trai": {
+       "dich": [
+        -37.483,
+        290.978
+       ],
+       "goc": -97.0,
+       "hien": true,
+       "toi": 0.2621
+      },
+      "than-phai": {
+       "dich": [
+        37.266,
+        258.172
+       ],
+       "goc": 96.2141,
+       "hien": true,
+       "toi": 0.2621
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2621
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2621
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2621
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2621
+      }
+     }
+    },
+    {
+     "t_ms": 900.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2778
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2778
+      },
+      "than-trai": {
+       "dich": [
+        -37.483,
+        290.978
+       ],
+       "goc": -97.0,
+       "hien": true,
+       "toi": 0.2778
+      },
+      "than-phai": {
+       "dich": [
+        37.483,
+        255.393
+       ],
+       "goc": 99.0,
+       "hien": true,
+       "toi": 0.2778
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2778
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2778
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2778
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2778
+      }
+     }
+    },
+    {
+     "t_ms": 933.333,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2897
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2897
+      },
+      "than-trai": {
+       "dich": [
+        -37.483,
+        290.978
+       ],
+       "goc": -97.0,
+       "hien": true,
+       "toi": 0.2897
+      },
+      "than-phai": {
+       "dich": [
+        37.483,
+        255.393
+       ],
+       "goc": 99.0,
+       "hien": true,
+       "toi": 0.2897
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2897
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2897
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2897
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2897
+      }
+     }
+    },
+    {
+     "t_ms": 966.667,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.2973
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.2973
+      },
+      "than-trai": {
+       "dich": [
+        -37.483,
+        290.978
+       ],
+       "goc": -97.0,
+       "hien": true,
+       "toi": 0.2973
+      },
+      "than-phai": {
+       "dich": [
+        37.483,
+        255.393
+       ],
+       "goc": 99.0,
+       "hien": true,
+       "toi": 0.2973
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.2973
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.2973
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.2973
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.2973
+      }
+     }
+    },
+    {
+     "t_ms": 1000.0,
+     "tu_the": {
+      "than": {
+       "hien": false,
+       "toi": 0.3
+      },
+      "qua-lac": {
+       "dich": [
+        74.965,
+        280.675
+       ],
+       "goc": 109.0,
+       "toi": 0.3
+      },
+      "than-trai": {
+       "dich": [
+        -37.483,
+        290.978
+       ],
+       "goc": -97.0,
+       "hien": true,
+       "toi": 0.3
+      },
+      "than-phai": {
+       "dich": [
+        37.483,
+        255.393
+       ],
+       "goc": 99.0,
+       "hien": true,
+       "toi": 0.3
+      },
+      "tay-truoc": {
+       "dich": [
+        -74.965,
+        335.309
+       ],
+       "goc": -50.0,
+       "toi": 0.3
+      },
+      "tay-sau": {
+       "dich": [
+        74.965,
+        282.173
+       ],
+       "goc": 45.0,
+       "toi": 0.3
+      },
+      "chan-xa": {
+       "dich": [
+        -56.224,
+        -176.059
+       ],
+       "goc": -120.0,
+       "toi": 0.3
+      },
+      "chan-gan": {
+       "dich": [
+        56.224,
+        -133.641
+       ],
+       "goc": 112.5,
+       "toi": 0.3
+      }
+     }
+    }
+   ]
+  }
+ },
+ "sprite": {
+  "khung_px": [
+   544,
+   251
+  ],
+  "neo_px": [
+   265,
+   244
+  ],
+  "hop_the_gioi_px_nguon": [
+   -605.363,
+   26.779,
+   1943.458,
+   1202.797
+  ],
+  "ghi_chu": "mọi clip cùng canvas & điểm neo; xem sprite/<nv>-<clip>-2x.json"
+ }
+}

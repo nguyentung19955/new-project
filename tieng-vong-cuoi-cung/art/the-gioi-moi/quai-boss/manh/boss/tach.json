@@ -1,0 +1,120 @@
+{
+ "nguon": "code/nguon/boss-chuong-gac-lang.png",
+ "manh": {
+  "tay-truoc": {
+   "anh": "manh/boss/tay-truoc.png",
+   "hop_tren_nguon": [
+    12,
+    561,
+    343,
+    381
+   ]
+  },
+  "tay-sau": {
+   "anh": "manh/boss/tay-sau.png",
+   "hop_tren_nguon": [
+    962,
+    611,
+    281,
+    319
+   ]
+  },
+  "xich": {
+   "anh": "manh/boss/xich.png",
+   "hop_tren_nguon": [
+    886,
+    821,
+    260,
+    321
+   ]
+  },
+  "than": {
+   "anh": "manh/boss/than.png",
+   "hop_tren_nguon": [
+    222,
+    56,
+    958,
+    1101
+   ]
+  },
+  "than-trai": {
+   "anh": "manh/boss/than-trai.png",
+   "hop_tren_nguon": [
+    222,
+    56,
+    487,
+    1101
+   ]
+  },
+  "than-phai": {
+   "anh": "manh/boss/than-phai.png",
+   "hop_tren_nguon": [
+    636,
+    56,
+    544,
+    1084
+   ]
+  }
+ },
+ "xich": {
+  "cach": "đoạn xích ngoài thân chuông; phần xích nằm trên thân giữ trong thân",
+  "mep_mau_than_theo_hang": {
+   "890": 877,
+   "950": 880,
+   "960": 888,
+   "970": 900,
+   "980": 912,
+   "990": 925,
+   "1000": 937,
+   "1010": 940,
+   "1020": 944,
+   "1030": 947,
+   "1040": 950,
+   "1050": 953,
+   "1060": 949,
+   "1070": 937,
+   "1080": 925,
+   "1090": 918,
+   "1110": 918
+  },
+  "vien_than_px": 14
+ },
+ "duong_che_doi": [
+  [
+   700,
+   40
+  ],
+  [
+   700,
+   450
+  ],
+  [
+   680,
+   560
+  ],
+  [
+   650,
+   650
+  ],
+  [
+   640,
+   720
+  ],
+  [
+   655,
+   800
+  ],
+  [
+   690,
+   870
+  ],
+  [
+   705,
+   960
+  ],
+  [
+   700,
+   1140
+  ]
+ ]
+}

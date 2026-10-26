@@ -1,0 +1,125 @@
+{
+ "nguon": "code/nguon/quai-chuong-go.png",
+ "manh": {
+  "tay-truoc": {
+   "anh": "manh/quai/tay-truoc.png",
+   "hop_tren_nguon": [
+    64,
+    576,
+    270,
+    273
+   ]
+  },
+  "tay-sau": {
+   "anh": "manh/quai/tay-sau.png",
+   "hop_tren_nguon": [
+    975,
+    655,
+    216,
+    241
+   ]
+  },
+  "chan-xa": {
+   "anh": "manh/quai/chan-xa.png",
+   "hop_tren_nguon": [
+    332,
+    972,
+    247,
+    190
+   ]
+  },
+  "chan-gan": {
+   "anh": "manh/quai/chan-gan.png",
+   "hop_tren_nguon": [
+    648,
+    984,
+    239,
+    191
+   ]
+  },
+  "qua-lac": {
+   "anh": "manh/quai/qua-lac.png",
+   "hop_tren_nguon": [
+    505,
+    804,
+    169,
+    183
+   ]
+  },
+  "than": {
+   "anh": "manh/quai/than.png",
+   "hop_tren_nguon": [
+    290,
+    79,
+    729,
+    896
+   ]
+  },
+  "than-trai": {
+   "anh": "manh/quai/than-trai.png",
+   "hop_tren_nguon": [
+    290,
+    79,
+    514,
+    896
+   ]
+  },
+  "than-phai": {
+   "anh": "manh/quai/than-phai.png",
+   "hop_tren_nguon": [
+    686,
+    79,
+    333,
+    894
+   ]
+  }
+ },
+ "bu": {
+  "qua-lac": {
+   "so_px_bu": 25113,
+   "cach": "nội suy theo mép dưới miệng chuông",
+   "mep_duoi_cot_bi_che": [
+    501,
+    677
+   ]
+  }
+ },
+ "duong_che_doi": [
+  [
+   690,
+   200
+  ],
+  [
+   700,
+   290
+  ],
+  [
+   742,
+   340
+  ],
+  [
+   750,
+   450
+  ],
+  [
+   758,
+   560
+  ],
+  [
+   790,
+   625
+  ],
+  [
+   800,
+   700
+  ],
+  [
+   795,
+   820
+  ],
+  [
+   790,
+   1000
+  ]
+ ]
+}
