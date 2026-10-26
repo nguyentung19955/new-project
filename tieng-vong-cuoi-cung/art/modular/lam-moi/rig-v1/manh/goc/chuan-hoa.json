@@ -1,0 +1,208 @@
+{
+ "mu": {
+  "tu_manh_goc": "mu",
+  "co_goc": [
+   499,
+   441
+  ],
+  "he_so": 1.3512,
+  "co_moi": [
+   674,
+   596
+  ],
+  "tam_tren_anh_ngang": [
+   634.0,
+   407.9
+  ],
+  "goc_nghi": 1.03,
+  "tam_moi": [
+   337.1244,
+   297.9396
+  ]
+ },
+ "chop-mu": {
+  "tu_manh_goc": "chop-mu",
+  "co_goc": [
+   397,
+   278
+  ],
+  "he_so": 1.4,
+  "co_moi": [
+   556,
+   389
+  ],
+  "tam_tren_anh_ngang": [
+   332.8,
+   336.6
+  ],
+  "goc_nghi": -2.0,
+  "tam_moi": [
+   277.9,
+   194.6
+  ]
+ },
+ "than": {
+  "tu_manh_goc": "than",
+  "co_goc": [
+   302,
+   260
+  ],
+  "he_so": 1.2589,
+  "co_moi": [
+   380,
+   327
+  ],
+  "tam_tren_anh_ngang": [
+   612.6,
+   804.5
+  ],
+  "goc_nghi": 0.0,
+  "tam_moi": [
+   190.0939,
+   163.65699999999998
+  ]
+ },
+ "tay-truoc-dao": {
+  "tu_manh_goc": "tay-truoc",
+  "co_goc": [
+   410,
+   174
+  ],
+  "he_so": 1.0153,
+  "co_moi": [
+   416,
+   177
+  ],
+  "tam_tren_anh_ngang": [
+   1012.0,
+   792.0
+  ],
+  "goc_nghi": -1.41,
+  "tam_moi": [
+   208.1365,
+   88.3311
+  ]
+ },
+ "tay-sau": {
+  "tu_manh_goc": "tay-sau",
+  "co_goc": [
+   183,
+   185
+  ],
+  "he_so": 1.0474,
+  "co_moi": [
+   192,
+   194
+  ],
+  "tam_tren_anh_ngang": [
+   348.7,
+   830.3
+  ],
+  "goc_nghi": -3.27,
+  "tam_moi": [
+   95.8371,
+   96.88450000000002
+  ]
+ },
+ "chuong": {
+  "tu_manh_goc": "chuong",
+  "co_goc": [
+   147,
+   178
+  ],
+  "he_so": 1.0121,
+  "co_moi": [
+   149,
+   180
+  ],
+  "tam_tren_anh_ngang": [
+   736.6,
+   738.2
+  ],
+  "goc_nghi": -0.0,
+  "tam_moi": [
+   74.38935,
+   90.0769
+  ]
+ },
+ "ung-gan": {
+  "tu_manh_goc": "ung-a",
+  "co_goc": [
+   218,
+   174
+  ],
+  "he_so": 0.9341,
+  "co_moi": [
+   204,
+   163
+  ],
+  "tam_tren_anh_ngang": [
+   738.2,
+   1075.5
+  ],
+  "goc_nghi": -5.19,
+  "tam_moi": [
+   101.8169,
+   81.2667
+  ]
+ },
+ "ung-xa": {
+  "tu_manh_goc": "ung-b",
+  "co_goc": [
+   223,
+   175
+  ],
+  "he_so": 0.9705,
+  "co_moi": [
+   216,
+   170
+  ],
+  "tam_tren_anh_ngang": [
+   513.1,
+   1063.4
+  ],
+  "goc_nghi": 7.93,
+  "tam_moi": [
+   108.21075,
+   84.91875
+  ]
+ },
+ "mat-gan": {
+  "tu_manh_goc": "mat",
+  "co_goc": [
+   55,
+   119
+  ],
+  "he_so_ngang": 1.0,
+  "he_so_doc": 1.1636,
+  "co_moi": [
+   55,
+   138
+  ],
+  "tam_tren_anh_ngang": [
+   828.0,
+   480.0
+  ],
+  "goc_nghi": 0.0,
+  "tam_moi": [
+   27.5,
+   69.2342
+  ]
+ },
+ "mat-xa": {
+  "tu_manh_goc": "mat",
+  "tu_mat_gan": {
+   "ngang": 0.7,
+   "doc": 0.94,
+   "sang": 0.8
+  },
+  "co_moi": [
+   38,
+   130
+  ],
+  "tam_moi": [
+   19.0,
+   65.0
+  ]
+ }
+}

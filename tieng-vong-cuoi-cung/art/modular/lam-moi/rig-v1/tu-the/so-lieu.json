@@ -1,0 +1,99 @@
+{
+ "cao_nhan_vat_px_anh_ngang": 1040.0,
+ "he_so_112": 0.10769,
+ "khung_the_gioi": [
+  22.0,
+  50.0,
+  1303.4,
+  1229.3
+ ],
+ "khung_112_px": [
+  138,
+  127
+ ],
+ "duong_dat_112_hang": 119,
+ "cao_logic": 112,
+ "px_thiet_bi_uoc_tinh": 243,
+ "tu_the": {
+  "nghi": {
+   "day_px_anh_ngang": 0.0,
+   "dinh_px_anh_ngang": 116.0,
+   "rong_px_anh_ngang": 1152,
+   "cao_112_px": 112
+  },
+  "cham-dat": {
+   "day_px_anh_ngang": -1.0,
+   "dinh_px_anh_ngang": 121.0,
+   "rong_px_anh_ngang": 1080,
+   "chong_tay_dao_va_ung_px": 0,
+   "ung_gan_cach_dat_px": 1.0,
+   "ung_xa_cach_dat_px": 45.0,
+   "dich_than_y": 6,
+   "nghieng_than": 5,
+   "chop_mu_goc": 3,
+   "vung_tay_truoc": 14.0,
+   "vung_tay_sau": -20.0,
+   "cao_112_px": 111
+  },
+  "chiu-luc": {
+   "day_px_anh_ngang": -1.0,
+   "dinh_px_anh_ngang": 143.0,
+   "rong_px_anh_ngang": 1067,
+   "chong_tay_dao_va_ung_px": 0,
+   "ung_gan_cach_dat_px": 1.0,
+   "ung_xa_cach_dat_px": 92.0,
+   "dich_than_y": 30,
+   "nghieng_than": 7,
+   "chop_mu_goc": 9,
+   "vung_tay_truoc": 9.9,
+   "vung_tay_sau": -14.14,
+   "cao_112_px": 109
+  },
+  "dap": {
+   "day_px_anh_ngang": 0.0,
+   "dinh_px_anh_ngang": 119.0,
+   "rong_px_anh_ngang": 1105,
+   "chong_tay_dao_va_ung_px": 0,
+   "ung_gan_cach_dat_px": 0.0,
+   "ung_xa_cach_dat_px": 95.0,
+   "dich_than_y": -6,
+   "nghieng_than": 8,
+   "chop_mu_goc": 2,
+   "vung_tay_truoc": 0.0,
+   "vung_tay_sau": -0.0,
+   "cao_112_px": 112
+  },
+  "bay": {
+   "day_px_anh_ngang": -32.0,
+   "dinh_px_anh_ngang": 98.0,
+   "rong_px_anh_ngang": 1146,
+   "chong_tay_dao_va_ung_px": 0,
+   "ung_gan_cach_dat_px": 32.0,
+   "ung_xa_cach_dat_px": 64.0,
+   "dich_than_y": -8,
+   "nghieng_than": 6,
+   "chop_mu_goc": -7,
+   "vung_tay_truoc": -9.9,
+   "vung_tay_sau": 14.14,
+   "cao_112_px": 111
+  }
+ },
+ "nghi_iou_silhouette_voi_anh_ngang": 0.913,
+ "nghi_px_mau_co_rap_khong": 44555,
+ "nghi_px_rap_co_mau_khong": 5840,
+ "chop_mu_lac": {
+  "-10": {
+   "lo_trong_px": 0,
+   "khe_hep_px": 126
+  },
+  "0": {
+   "lo_trong_px": 0,
+   "khe_hep_px": 33
+  },
+  "10": {
+   "lo_trong_px": 0,
+   "khe_hep_px": 40
+  }
+ },
+ "so_sanh_v5": true
+}
