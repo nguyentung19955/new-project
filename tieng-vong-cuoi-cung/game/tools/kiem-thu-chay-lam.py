@@ -3,7 +3,8 @@
 Chạy từng bước logic bằng tay (savePrev → step → render(1)) nên kết quả xác định, mỗi bước = 1 khung video 60 fps.
 Ghi log từng bước (x, dx thực, vx, pha, khung, trạng thái, bóng) → so-do.json; chụp màn 960×540 → video + GIF.
 Cần: playwright (Python) + Chromium, ffmpeg. Phục vụ trang qua http (đường dẫn tương đối ../art/... như trên githack).
-Chạy: PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers python3 game/tools/kiem-thu-chay-lam.py [--khong-quay]"""
+Chạy: PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers python3 game/tools/kiem-thu-chay-lam.py [--khong-quay]
+Từ 26/10/2026 (rig-v4) demo.html mặc định là clip rig-v4 → công cụ này mở demo.html?clip=v3 để vẫn đo đúng clip rig-v3."""
 import asyncio, json, os, sys, subprocess, shutil, threading, functools, http.server, io
 from playwright.async_api import async_playwright
 
@@ -108,12 +109,12 @@ async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch()
         # (0) kiểm assert cỡ ảnh
-        pg, _ = await mo(b, f'http://127.0.0.1:{PORT}/game/demo.html', route_sai=True)
+        pg, _ = await mo(b, f'http://127.0.0.1:{PORT}/game/demo.html?clip=v3', route_sai=True)
         kq['assert_co_anh_sai'] = await pg.evaluate('window.TVDEMO')
         kq['assert_co_anh_sai']['thong_bao'] = await pg.evaluate("document.getElementById('load-err').innerText")
         await pg.close()
         # (1) màn chơi thật
-        pg, loi = await mo(b, f'http://127.0.0.1:{PORT}/game/demo.html')
+        pg, loi = await mo(b, f'http://127.0.0.1:{PORT}/game/demo.html?clip=v3')
         kq['nap'] = await pg.evaluate('window.TVDEMO.lam')
         await pg.evaluate(JS_HOOK)
         await pg.click('#btn-start')

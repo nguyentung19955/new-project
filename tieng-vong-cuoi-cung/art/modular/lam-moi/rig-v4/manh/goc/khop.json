@@ -1,0 +1,94 @@
+{
+ "mu": {
+  "tam": [
+   634.0,
+   407.9
+  ],
+  "he_so": 1.3512,
+  "goc": 1.03,
+  "sai_mau": 16.64
+ },
+ "chuong": {
+  "tam": [
+   736.6,
+   738.2
+  ],
+  "he_so": 1.0121,
+  "goc": -0.0,
+  "sai_mau": 20.27
+ },
+ "tay-truoc": {
+  "tam": [
+   1012.0,
+   792.0
+  ],
+  "he_so": 1.0153,
+  "goc": -1.41,
+  "sai_mau": 10.11
+ },
+ "tay-sau": {
+  "tam": [
+   348.7,
+   830.3
+  ],
+  "he_so": 1.0474,
+  "goc": -3.27,
+  "sai_mau": 7.24
+ },
+ "ung-a": {
+  "tam": [
+   738.2,
+   1075.5
+  ],
+  "he_so": 0.9341,
+  "goc": -5.19,
+  "sai_mau": 15.59
+ },
+ "ung-b": {
+  "tam": [
+   513.1,
+   1063.4
+  ],
+  "he_so": 0.9705,
+  "goc": 7.93,
+  "sai_mau": 19.97
+ },
+ "_gan_ung": {
+  "cho_truoc": "ung-a",
+  "cho_sau": "ung-b"
+ },
+ "than": {
+  "tam": [
+   612.6,
+   804.5
+  ],
+  "he_so": 1.2589,
+  "goc": 0.0,
+  "sai_mau": 22.61
+ },
+ "chop-mu": {
+  "tam": [
+   332.8,
+   336.6
+  ],
+  "he_so": 1.4,
+  "goc": -2.0,
+  "sai_mau": null,
+  "goc_khuat": 0.986,
+  "lo_ra_nen": 0.0247,
+  "px_gay_chua_phu": 16108,
+  "ghi_chu": "neo đỉnh chóp vào đỉnh chóp ảnh ngang; gốc chóp phải khuất sau mũ"
+ },
+ "mat": {
+  "tam": [
+   828.0,
+   480.0
+  ],
+  "he_so": 1.1636,
+  "he_so_ngang": 1.0,
+  "he_so_doc": 1.1636,
+  "goc": 0.0,
+  "sai_mau": null,
+  "ghi_chu": "đo trực tiếp vùng vàng (mắt không viền nên dò màu bị co lại); ảnh ngang có quầng sáng nên cao hơn"
+ }
+}

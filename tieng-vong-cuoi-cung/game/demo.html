@@ -147,6 +147,7 @@ body.touch .tc{display:block}
     <p class="big">Demo Làng Chuông · khoảng 5–8 phút</p>
     <p><span id="start-v">Bấm nút <b style="color:var(--echo)">Vọng</b></span> để ghi 3 giây chuyển động. Bóng của bạn sẽ lặp lại y hệt — rồi đứng giữ nguyên chỗ cuối.</p>
     <p id="start-keys"></p>
+    <p id="start-clip" style="opacity:.7;font-size:12px"></p>
     <button id="btn-start" type="button">Bắt đầu</button>
   </div></div>
   <div id="end" class="panel ui" hidden><div class="box">
@@ -178,18 +179,28 @@ body.touch .tc{display:block}
 <script>
 'use strict';
 /* Tài nguyên (bản build tự chứa nhúng sẵn vào TV.NHUNG thay vì tải theo đường dẫn):
-   - Lam MỚI (phong cách One Mage Army): clip chạy rig-v3 = PNG + JSON CÙNG lấy từ art/modular/lam-moi/rig-v3/sprite/
-     (ảnh phải đúng 2142×970 – kiểm khi nạp); dáng nghỉ TẠM anim/lam-nghi-2x.png (render từ rig-v3 bằng tools/lam-dang-nghi.py,
-     cùng ô 266×241, cùng neo, cùng tỉ lệ 2x).
+   - Lam MỚI (phong cách One Mage Army): clip chạy = PNG + JSON CÙNG lấy từ một thư mục sprite/ của rig (kiểm cỡ ảnh khi nạp)
+     + dáng nghỉ TẠM render từ CHÍNH rig đó (tools/lam-dang-nghi.py, cùng ô, cùng neo, cùng tỉ lệ 2x).
+     MẶC ĐỊNH = clip CHẠY NHANH rig-v4 (sải dài, 132 px logic/chu kỳ, 0,50 s ở 264 px/s) – BẢN CHỜ DUYỆT chuyển động.
+     ?clip=v3 → clip cũ rig-v3 (83,66 px logic/chu kỳ, phát nhanh 0,317 s ở 264 px/s) trong cùng game, để so.
    - quái+boss / thế giới (mảnh tileset + đồ vật): sheet cũ, chưa thay ở bước này.
    - Nền parallax hốc cây cũ (art/chibi/…) đã bị xoá → TẠM vẽ nền gradient (drawNenTam) cho tới khi có nền mới. */
+const CLIPS = {
+  // v4 giữ ĐÚNG ô 266×241 + neo (123,234) + hộp thế giới của v3 → sheet cùng cỡ 2142×970 và dáng nghỉ TẠM dùng chung
+  // (đã kiểm: render dáng nghỉ từ rig-v4 trùng anim/lam-nghi-2x.png từng điểm ảnh). Phân biệt clip bằng JSON phien_ban_clip.
+  v4: {ten:'v4', lam:'../art/modular/lam-moi/rig-v4/sprite/lam-chay-2x.json', nghi:'anim/lam-nghi-2x.png', co:[2142,970], bay:12, nhung:'lam',
+       mo_ta:'rig-v4 chạy nhanh (sải dài, 132 px/chu kỳ, 30 khung)'},
+  v3: {ten:'v3', lam:'../art/modular/lam-moi/rig-v3/sprite/lam-chay-2x.json', nghi:'anim/lam-nghi-2x.png', co:[2142,970], bay:14, nhung:'lam_v3',
+       mo_ta:'rig-v3 cũ (83,66 px/chu kỳ, phát nhanh)'}
+};
+const CLIP = (()=>{ try{ return new URLSearchParams(location.search).get('clip')==='v3' ? CLIPS.v3 : CLIPS.v4; }catch(e){ return CLIPS.v4; } })();
 const SRC = {
-  lam:  '../art/modular/lam-moi/rig-v3/sprite/lam-chay-2x.json',
-  nghi: 'anim/lam-nghi-2x.png',
+  lam:  CLIP.lam,
+  nghi: CLIP.nghi,
   qb:   'anim/quai-boss.json',
   tg:   'anim/the-gioi.json'
 };
-const LAM_CO_SHEET=[2142,970];   // cỡ ảnh thực bắt buộc của lam-chay-2x.png (JSON co_sheet phải trùng)
+const LAM_CO_SHEET=CLIP.co;      // cỡ ảnh thực bắt buộc của lam-chay-2x.png của clip đang chọn (JSON co_sheet phải trùng)
 /* ================= THAM SỐ (lõi chuyển động lấy từ Phòng xám) ================= */
 /* Độ phân giải logic 960×540 (gấp đôi 480×270 cũ): mọi khoảng cách / tốc độ / gia tốc ×2, số khung giữ nguyên → cùng cảm giác */
 const P = { runSpeed:4.4, jumpHeight:112, gravity:0.64, echoFrames:180, wallJumpVx:5.4, wallStick:6, autoPogo:1,
@@ -243,13 +254,13 @@ const S={frame:0, play:0, hitstop:0, room:0, paused:true, shx:0, shy:0, sht:0, s
   btnToast:false, kengN:0, cp:null, won:false, winT:0, hintKey:'', echoId:0};
 const pl={x:0,y:0,w:20,h:30,vx:0,vy:0,face:1,onGround:false,coyote:0,jumpBuf:0,atkBuf:0,dashBuf:0,jumping:false,wallDir:0,wallLock:0,wallCoy:0,lastWall:0,wallStickT:0,wjBack:0,
   dash:0,dashDir:1,dashCd:0,airDash:false,iframes:0,hp:5,atkN:0,atkT:0,atkSw:0,atkBounced:false,anim:0,st:'idle',px:0,py:0,airJump:false,pogoBuf:0,pogoSafe:0,
-  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0, a2:null, k2:0, l2:false, drawT:0, airT:0, pha:0, dxT:0};
+  dead:false,deadT:0,hurtT:0,wjT:0,wjDir:0,landT:0,castT:0,runPh:0,idleT:0,dropT:0, ak:null, af:0, flip:false, sdx:0, a2:null, k2:0, l2:false, cl:CLIP.ten, drawT:0, airT:0, pha:0, dxT:0};
   // drawT: đang rút dao khi vào ải (khoá điều khiển); airT: số khung đã rời đất (chọn khung nhảy 1 = khuỵu lúc bật)
   // a2/k2/l2: trạng thái hình + khung (0–31 = ô sheet chạy, -1 = dáng nghỉ TẠM) + lật của Lam mới — ghi vào bản ghi Tiếng Vọng
   // pha: pha chạy liên tục ∈ [0,1) (phát theo quãng đường); dxT: dịch ngang THỰC của bước (sau moveX, không tính camera)
 let swingId=0;
 let rec=null, echo=null;            // rec: đang ghi; echo: bóng (phát lại rồi giữ tư thế)
-const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,p2:0,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
+const REC=[]; for(let i=0;i<P.echoFrames+2;i++) REC.push({x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,p2:0,cl:CLIP.ten,hb:false,hx:0,hy:0,hw:0,hh:0,n:0,sw:0,f:1,at:0});
 const RECST={n:0,sx:0,sy:0}, ECHO={id:0,n:0,i:0,cur:null,done:false,px:0,py:0,warn:false};
 
 /* pool hạt / hiệu ứng / vệt lướt: tạo sẵn, dùng vòng tròn, không tạo đối tượng mỗi khung */
@@ -260,7 +271,7 @@ function part(x,y,vx,vy,t,c,s,g){ const p=PARTS[partI]; partI=(partI+1)%PARTS.le
 const FXS=[]; for(let i=0;i<48;i++) FXS.push({on:false,k:'',x:0,y:0,t:0,T:1,s:'',r:0,c:'',big:false});
 let fxI=0;
 function fx(k,x,y,t,s,r,c,big){ const f=FXS[fxI]; fxI=(fxI+1)%FXS.length; f.on=true; f.k=k; f.x=x; f.y=y; f.t=t; f.T=t; f.s=s||''; f.r=r||0; f.c=c||''; f.big=!!big; return f; }
-const TRAIL=[]; for(let i=0;i<10;i++) TRAIL.push({on:false,x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,t:0});
+const TRAIL=[]; for(let i=0;i<10;i++) TRAIL.push({on:false,x:0,y:0,ak:null,af:0,flip:false,sdx:0,a2:null,k2:0,l2:false,cl:CLIP.ten,t:0});
 let trailI=0;
 
 /* ================= TIỆN ÍCH ================= */
@@ -608,7 +619,7 @@ function updatePlayer(){
       pl.dash--; pl.vx=pl.dashDir*P.dashSpeed; pl.vy=0;
       if(moveX(pl,pl.vx,true)) pl.dash=0;
       if(pl.dash===0) pl.vx=pl.dashDir*P.runSpeed;
-      if(S.frame%2===0){ const t=TRAIL[trailI]; trailI=(trailI+1)%TRAIL.length; t.on=true; t.x=pl.x; t.y=pl.y; t.ak=pl.ak; t.af=pl.af; t.flip=pl.flip; t.sdx=pl.sdx; t.a2=pl.a2; t.k2=pl.k2; t.l2=pl.l2; t.t=12; }
+      if(S.frame%2===0){ const t=TRAIL[trailI]; trailI=(trailI+1)%TRAIL.length; t.on=true; t.x=pl.x; t.y=pl.y; t.ak=pl.ak; t.af=pl.af; t.flip=pl.flip; t.sdx=pl.sdx; t.a2=pl.a2; t.k2=pl.k2; t.l2=pl.l2; t.cl=pl.cl; t.t=12; }
       pl.st='dash'; finishGround(); return;
     }
   }
@@ -685,23 +696,26 @@ function updatePlayer(){
   pl.st = sliding?'wall' : !pl.onGround?(pl.vy<0?'jump':'fall') : Math.abs(pl.vx)>0.6?'run':'idle';
 }
 
-/* ================= LAM MỚI (rig-v3): chọn khung =================
-   Clip CHẠY: sprite sheet rig-v3 (32 khung, ô 266×241, neo chân (123,234) trong ô, nguồn 2x → vẽ ½ = cao 112 px logic).
+/* ================= LAM MỚI: chọn khung (clip rig-v4 mặc định, ?clip=v3 = clip cũ) =================
+   Clip CHẠY: sprite sheet (v4: 30 khung, v3: 32 khung; ô + neo chân trong ô đọc từ JSON, nguồn 2x → vẽ ½ = cao 112 px logic).
    PHÁT THEO QUÃNG ĐƯỜNG (không theo thời gian): một biến pha liên tục pl.pha ∈ [0,1) sống qua mọi trạng thái, KHÔNG reset:
-     chỉ khi đang CHẠY TRÊN ĐẤT: pha += |dx_thực| / 83,66 ; pha %= 1 ; khung = floor(pha × 32)
-   dx_thực = pl.dxT = dịch ngang sau moveX (va tường → 0 → chân không đạp; camera không tính). 83,66 px logic = quãng đường
-   một chu kỳ ở tốc độ chuẩn rig (JSON toc_do_chuan) → ở 264 px/s: chu kỳ ≈ 0,317 s, chân không trượt ở mọi tốc độ.
+     chỉ khi đang CHẠY TRÊN ĐẤT: pha += |dx_thực| / QUANG ; pha %= 1 ; khung = floor(pha × số khung)
+   QUANG = JSON toc_do_chuan.quang_duong_moi_chu_ky_px_logic: v4 = 132 (chu kỳ 0,50 s ở 264 px/s, 4 bước chân/s),
+   v3 = 83,66 (0,317 s, 6,3 bước/s). dx_thực = pl.dxT = dịch ngang sau moveX (va tường → 0 → chân không đạp; camera không
+   tính) → chân không trượt ở mọi tốc độ.
    Lướt, nhảy/rơi, bị đẩy, đòn đánh… KHÔNG cộng pha (trạng thái riêng).
    Các trạng thái CHƯA có clip mới dùng khung TẠM (không trộn sheet chibi cũ):
-     k2 = -1 → dáng nghỉ render từ rig-v3 (đứng, tiếp đất, rút dao, đòn đánh, bị đánh, bám tường, chết)
-     k2 = 14 → khung bay của clip chạy (nhảy, rơi, lướt)
+     k2 = -1 → dáng nghỉ render từ rig của clip (đứng, tiếp đất, rút dao, đòn đánh, bị đánh, bám tường, chết)
+     k2 = KHUNG_BAY → khung bay của clip chạy (v4: 12/30, v3: 14/32; nhảy, rơi, lướt)
+   cl = tên clip ('v4'/'v3') cũng ghi vào pl → bản ghi Tiếng Vọng → bóng vẽ bằng ĐÚNG clip + khung đã ghi.
    Chọn khung CHỈ trong bước logic 60 Hz rồi ghi a2/k2/l2 (+ pha) vào pl → bản ghi Tiếng Vọng → bóng vẽ ĐÚNG k2 đã ghi.
    Hitbox/vật lý KHÔNG theo ảnh: vẫn 20×30; vùng ăn đòn 40×120 (hurtBox) giữ nguyên. */
 let LAM=null, QB=null, TG=null;   // LAM = {meta, sheet, nghi, E:{sheet,nghi} bản tô màu cho bóng}; sheet quái+boss; sheet thế giới
 const CH={ten:'',t:0};
 let RUT_T=52;                      // số khung logic rút dao (giá trị cũ của sheet chibi, giữ nguyên gameplay)
 let LAM_QUANG=83.66, LAM_N=32;     // đọc lại từ JSON khi nạp
-const KHUNG_BAY=14, KHUNG_NGHI=-1;
+const KHUNG_BAY=CLIP.bay, KHUNG_NGHI=-1;
+const LAMS={};                     // clip đã nạp theo tên (bóng Tiếng Vọng vẽ theo s.cl đã ghi)
 // bảng tra animation dạng bước (dùng cho sheet quái/boss)
 function lutAnim(a){ if(a.lut) return a.lut; const l=[]; a.buoc.forEach((b,i)=>{ const n=Math.max(1,Math.round(b.ms*0.06)); for(let k=0;k<n;k++) l.push(i); }); a.lut=l; return l; }
 function animK(a,t){ const l=lutAnim(a); return a.loop ? l[t%l.length] : l[Math.min(t,l.length-1)]; }
@@ -722,7 +736,7 @@ function lamChon(){
     k=Math.floor(pl.pha*LAM_N); if(k>=LAM_N) k=LAM_N-1;
   }
   if(ten!==CH.ten){ CH.ten=ten; CH.t=0; } else CH.t++;
-  pl.a2=ten; pl.k2=k; pl.l2=flip;
+  pl.a2=ten; pl.k2=k; pl.l2=flip; pl.cl=CLIP.ten;
 }
 
 /* ================= TIẾNG VỌNG ================= */
@@ -736,7 +750,7 @@ function stopRec(){
 }
 function recordFrame(hb){
   const s=REC[rec.n++];
-  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.a2=pl.a2; s.k2=pl.k2; s.l2=pl.l2; s.p2=pl.pha; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
+  s.x=pl.x; s.y=pl.y; s.ak=pl.ak; s.af=pl.af; s.flip=pl.flip; s.sdx=pl.sdx; s.a2=pl.a2; s.k2=pl.k2; s.l2=pl.l2; s.p2=pl.pha; s.cl=pl.cl; s.f=pl.face; s.n=pl.atkN; s.at=pl.atkT; s.sw=pl.atkSw;
   if(hb){ s.hb=true; s.hx=hb.x; s.hy=hb.y; s.hw=hb.w; s.hh=hb.h; } else s.hb=false;
 }
 function updateEcho(){
@@ -1183,7 +1197,8 @@ function bong(x,y,rx,a){ ctx.save(); ctx.globalAlpha*=a; ctx.fillStyle='#0C0F14'
 // Lam cao 112 px); lật ngang quanh neo x. Lọc ảnh chất lượng cao (không nearest). bo = LAM (thường) hoặc LAM.E (bóng/vệt lướt).
 function drawLam(bo,s,x,y){
   if(!LAM || !s.a2) return;
-  const M=LAM.meta, sc=1/M.ty_le.px_nguon_moi_px_logic, fw=M.co_khung[0], fh=M.co_khung[1], ax=M.diem_neo.x, ay=M.diem_neo.y;
+  const L=LAMS[s.cl]||LAM; bo=(bo===LAM.E)?L.E:L;     // clip đã ghi cùng khung (bóng / vệt lướt)
+  const M=L.meta, sc=1/M.ty_le.px_nguon_moi_px_logic, fw=M.co_khung[0], fh=M.co_khung[1], ax=M.diem_neo.x, ay=M.diem_neo.y;
   let img, sx=0, sy=0;
   if(s.k2>=0){ const f=M.frames[s.k2]; img=bo.sheet; sx=f.x; sy=f.y; } else img=bo.nghi;
   const X=snap(x-ox+pl.w/2), Y=snap(y-oy+pl.h);
@@ -1524,10 +1539,10 @@ async function napSheet(ten){
   const img=await loadImg(src); if(!img) throw new Error('không tải được ảnh '+json.image);
   return Object.assign({img},json);
 }
-/* Nạp Lam mới: PNG + JSON CÙNG thư mục rig-v3/sprite/ + dáng nghỉ TẠM. Kiểm cỡ ảnh thực = 2142×970 = co_sheet trong JSON
+/* Nạp Lam mới (clip đang chọn): PNG + JSON CÙNG thư mục rig-v?/sprite/ + dáng nghỉ TẠM. Kiểm cỡ ảnh thực = CLIP.co = co_sheet trong JSON
    (PNG gửi rời từng bị thu thành 2048×927 → toạ độ khung sai) — sai thì báo lỗi rõ, không chạy. */
 async function napLam(){
-  const N=window.TV && TV.NHUNG && TV.NHUNG.lam;
+  const N=window.TV && TV.NHUNG && TV.NHUNG[CLIP.nhung];
   let meta, src, srcNghi;
   if(N){ meta=N.json; src=N.anh; srcNghi=N.nghi; }
   else {
@@ -1539,10 +1554,11 @@ async function napLam(){
   if(!nghi) throw new Error('không tải được dáng nghỉ '+SRC.nghi);
   const w=sheet.naturalWidth, h=sheet.naturalHeight;
   if(w!==LAM_CO_SHEET[0] || h!==LAM_CO_SHEET[1] || meta.co_sheet[0]!==w || meta.co_sheet[1]!==h)
-    throw new Error('ảnh '+meta.anh+' cỡ '+w+'×'+h+' – phải đúng '+LAM_CO_SHEET.join('×')+' và trùng co_sheet trong JSON ('+meta.co_sheet.join('×')+'). Dùng PNG + JSON cùng lấy từ rig-v3/sprite/.');
+    throw new Error('ảnh '+meta.anh+' cỡ '+w+'×'+h+' – phải đúng '+LAM_CO_SHEET.join('×')+' và trùng co_sheet trong JSON ('+meta.co_sheet.join('×')+'). Dùng PNG + JSON cùng lấy từ '+CLIP.lam.replace(/[^/]*$/,'')+'.');
+  if((meta.phien_ban_clip||'v3')!==CLIP.ten) throw new Error('JSON '+SRC.lam+' là clip '+(meta.phien_ban_clip||'v3')+', không phải '+CLIP.ten);
   if(meta.frames.length!==meta.so_khung || nghi.naturalWidth!==meta.co_khung[0] || nghi.naturalHeight!==meta.co_khung[1])
     throw new Error('JSON / dáng nghỉ không khớp cỡ ô '+meta.co_khung.join('×'));
-  return {meta, sheet, nghi};
+  return {meta, sheet, nghi, ten:CLIP.ten};
 }
 const loadErr=document.getElementById('load-err'), loadBtns=document.getElementById('load-btns'), loadH=document.getElementById('load-h'), loadBell=loadEl.querySelector('.bellico');
 let booting=false;
@@ -1570,14 +1586,15 @@ async function boot(){
     async function thu(f,msg,p){ setLoad(p,msg); try{ return await f(); }catch(e){ loi.push(msg+' — '+String(e&&e.message||e)); return null; } }
     const lam=await thu(napLam,'Nạp Lam',0.3), qb=await thu(()=>napSheet('qb'),'Nạp Quái Chuông Gỗ và Chuông Gác Làng',0.55), tg=await thu(()=>napSheet('tg'),'Lát rễ cây làng',0.75);
     if(loi.length){ baoLoi('Không nạp được hình. Bấm "Thử lại"; nếu vẫn lỗi, tải lại trang.',loi); return; }
-    LAM=lam; LAM_QUANG=lam.meta.toc_do_chuan.quang_duong_moi_chu_ky_px_logic; LAM_N=lam.meta.so_khung;
+    LAM=lam; LAMS[lam.ten]=lam; LAM_QUANG=lam.meta.toc_do_chuan.quang_duong_moi_chu_ky_px_logic; LAM_N=lam.meta.so_khung;
     LAM.E={sheet:tint(lam.sheet,'#CEF0D6',0.8), nghi:tint(lam.nghi,'#CEF0D6',0.8)};   // bản tô màu ngọc cho bóng Tiếng Vọng + vệt lướt
     setLoad(0.85,'Tô màu quái'); await wait(10);
     QB=qb; QB.w=tint(qb.img,'#ffffff',0.85); QB.g=tint(qb.img,'#E1B85A',0.7);   // nháy trắng khi trúng đòn, lóe vàng khi lấy đà
     const hd=qb.anims['quai-tan-cong'].buoc[2].box; if(hd){ QHB.dx=hd[0]; QHB.dy=hd[1]; QHB.w=hd[2]; QHB.h=hd[3]; }
     TG=tg; dungCanh();
     newGame();
-    window.TVDEMO={ready:true, lam:{co:[LAM.sheet.naturalWidth,LAM.sheet.naturalHeight], khung:LAM_N, quang:LAM_QUANG}, atk:ATK, rut:RUT_T, manh:SCN.length, W, H, T};
+    window.TVDEMO={ready:true, lam:{clip:CLIP.ten, co:[LAM.sheet.naturalWidth,LAM.sheet.naturalHeight], khung:LAM_N, quang:LAM_QUANG, bay:KHUNG_BAY}, atk:ATK, rut:RUT_T, manh:SCN.length, W, H, T};
+    document.getElementById('start-clip').textContent='Clip chạy: '+CLIP.mo_ta+(CLIP.ten==='v4'?' – bản chờ duyệt chuyển động (thêm ?clip=v3 để xem clip cũ)':' – để so sánh (bỏ ?clip=v3 để xem clip mới)');
     setLoad(1,'Xong!'); await wait(150);
     loadEl.hidden=true; startEl.hidden=false; booting=false;
     requestAnimationFrame(loop);
@@ -1657,7 +1674,7 @@ function drawDebug(al){
     ctx.fillStyle='#fff'; ctx.font='bold 10px sans-serif'; ctx.fillText(q.c2+' #'+(q.k2+1)+' '+q.st,qx-ox,qy-oy-128); }
   if(S.room>=ROOMS.length-2){ const bx=lerp(boss.px,boss.x,al), by=lerp(boss.py,boss.y,al); dbgRect(bx-ox,by-oy,boss.w,boss.h,'#4fb4ff'); }
   // bảng chữ
-  const L=['Lam: '+(pl.a2||'-')+'  khung '+(pl.k2<0?'nghỉ (TẠM)':pl.k2+'/'+LAM_N+(pl.a2==='run'?'':' (TẠM)'))+'  pha '+pl.pha.toFixed(3)+'  dx '+pl.dxT.toFixed(2),
+  const L=['Lam ['+CLIP.ten+']: '+(pl.a2||'-')+'  khung '+(pl.k2<0?'nghỉ (TẠM)':pl.k2+'/'+LAM_N+(pl.a2==='run'?'':' (TẠM)'))+'  pha '+pl.pha.toFixed(3)+'  dx '+pl.dxT.toFixed(2),
     'vật lý x '+pl.x.toFixed(2)+'  y '+pl.y.toFixed(2)+'  vx '+pl.vx.toFixed(2)+'  vy '+pl.vy.toFixed(2)+(pl.onGround?'  đất':'  không')+(pl.face<0?'  ←':'  →'),
     'vẽ neo chân '+(px+10-ox).toFixed(2)+', '+(py+30-oy).toFixed(2)+'  cam '+ox.toFixed(2),
     'FPS vẽ '+DBG.fps.toFixed(0)+'  bước logic/giây '+DBG.sps.toFixed(0)+'  tốc độ ×'+DBG.speed+(DBG.paused?'  ⏸ DỪNG':'')+'  BK '+BK.toFixed(2)];
