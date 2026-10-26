@@ -1,0 +1,714 @@
+[
+ {
+  "o": "da-canh-phai",
+  "canh": "duoi",
+  "ke": "da-canh-phai",
+  "chenh_noi": 7.8,
+  "chenh_trong": 8.94,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-canh-phai",
+  "canh": "duoi",
+  "ke": "da-day-phai",
+  "chenh_noi": 8.07,
+  "chenh_trong": 9.2,
+  "ti_le": 0.88
+ },
+ {
+  "o": "da-canh-trai",
+  "canh": "duoi",
+  "ke": "da-canh-trai",
+  "chenh_noi": 5.35,
+  "chenh_trong": 6.65,
+  "ti_le": 0.8
+ },
+ {
+  "o": "da-canh-trai",
+  "canh": "duoi",
+  "ke": "da-day-trai",
+  "chenh_noi": 6.1,
+  "chenh_trong": 7.08,
+  "ti_le": 0.86
+ },
+ {
+  "o": "da-canh-trai",
+  "canh": "phai",
+  "ke": "da-than",
+  "chenh_noi": 1.4,
+  "chenh_trong": 2.39,
+  "ti_le": 0.58
+ },
+ {
+  "o": "da-cot-than",
+  "canh": "duoi",
+  "ke": "da-cot-day",
+  "chenh_noi": 6.52,
+  "chenh_trong": 7.99,
+  "ti_le": 0.81
+ },
+ {
+  "o": "da-cot-than",
+  "canh": "duoi",
+  "ke": "da-cot-than",
+  "chenh_noi": 6.52,
+  "chenh_trong": 7.99,
+  "ti_le": 0.81
+ },
+ {
+  "o": "da-cot-tren",
+  "canh": "duoi",
+  "ke": "da-cot-than",
+  "chenh_noi": 6.47,
+  "chenh_trong": 7.54,
+  "ti_le": 0.86
+ },
+ {
+  "o": "da-cot-tren-2",
+  "canh": "duoi",
+  "ke": "da-cot-than",
+  "chenh_noi": 6.46,
+  "chenh_trong": 7.8,
+  "ti_le": 0.83
+ },
+ {
+  "o": "da-day-co",
+  "canh": "phai",
+  "ke": "da-day-co",
+  "chenh_noi": 12.41,
+  "chenh_trong": 12.15,
+  "ti_le": 1.02
+ },
+ {
+  "o": "da-day-co",
+  "canh": "tren",
+  "ke": "da-than",
+  "chenh_noi": 6.33,
+  "chenh_trong": 7.22,
+  "ti_le": 0.88
+ },
+ {
+  "o": "da-day-giua",
+  "canh": "phai",
+  "ke": "da-day-giua",
+  "chenh_noi": 1.24,
+  "chenh_trong": 2.69,
+  "ti_le": 0.46
+ },
+ {
+  "o": "da-day-giua",
+  "canh": "phai",
+  "ke": "da-day-phai",
+  "chenh_noi": 1.24,
+  "chenh_trong": 2.69,
+  "ti_le": 0.46
+ },
+ {
+  "o": "da-day-trai",
+  "canh": "phai",
+  "ke": "da-day-giua",
+  "chenh_noi": 1.24,
+  "chenh_trong": 2.69,
+  "ti_le": 0.46
+ },
+ {
+  "o": "da-noi-giua",
+  "canh": "phai",
+  "ke": "da-noi-giua",
+  "chenh_noi": 6.47,
+  "chenh_trong": 4.77,
+  "ti_le": 1.36
+ },
+ {
+  "o": "da-noi-phai",
+  "canh": "trai",
+  "ke": "da-noi-giua",
+  "chenh_noi": 6.46,
+  "chenh_trong": 4.79,
+  "ti_le": 1.35
+ },
+ {
+  "o": "da-noi-trai",
+  "canh": "phai",
+  "ke": "da-noi-giua",
+  "chenh_noi": 9.33,
+  "chenh_trong": 6.32,
+  "ti_le": 1.48
+ },
+ {
+  "o": "da-than",
+  "canh": "duoi",
+  "ke": "da-cot-than",
+  "chenh_noi": 1.03,
+  "chenh_trong": 2.44,
+  "ti_le": 0.42
+ },
+ {
+  "o": "da-than",
+  "canh": "duoi",
+  "ke": "da-day-giua",
+  "chenh_noi": 6.63,
+  "chenh_trong": 7.6,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-than",
+  "canh": "duoi",
+  "ke": "da-than",
+  "chenh_noi": 6.63,
+  "chenh_trong": 7.6,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-than",
+  "canh": "phai",
+  "ke": "da-canh-phai",
+  "chenh_noi": 1.4,
+  "chenh_trong": 2.39,
+  "ti_le": 0.58
+ },
+ {
+  "o": "da-than",
+  "canh": "phai",
+  "ke": "da-than",
+  "chenh_noi": 1.4,
+  "chenh_trong": 2.39,
+  "ti_le": 0.58
+ },
+ {
+  "o": "da-than-2",
+  "canh": "duoi",
+  "ke": "da-than",
+  "chenh_noi": 6.6,
+  "chenh_trong": 7.58,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-than-2",
+  "canh": "phai",
+  "ke": "da-than",
+  "chenh_noi": 1.42,
+  "chenh_trong": 2.32,
+  "ti_le": 0.61
+ },
+ {
+  "o": "da-than-2",
+  "canh": "trai",
+  "ke": "da-than",
+  "chenh_noi": 1.38,
+  "chenh_trong": 2.21,
+  "ti_le": 0.62
+ },
+ {
+  "o": "da-than-2",
+  "canh": "tren",
+  "ke": "da-than",
+  "chenh_noi": 6.63,
+  "chenh_trong": 7.6,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-than-3",
+  "canh": "duoi",
+  "ke": "da-than",
+  "chenh_noi": 6.63,
+  "chenh_trong": 7.6,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-than-3",
+  "canh": "phai",
+  "ke": "da-than",
+  "chenh_noi": 1.4,
+  "chenh_trong": 2.39,
+  "ti_le": 0.58
+ },
+ {
+  "o": "da-than-3",
+  "canh": "trai",
+  "ke": "da-than",
+  "chenh_noi": 1.4,
+  "chenh_trong": 2.39,
+  "ti_le": 0.58
+ },
+ {
+  "o": "da-than-3",
+  "canh": "tren",
+  "ke": "da-than",
+  "chenh_noi": 6.64,
+  "chenh_trong": 7.6,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-tren-giua",
+  "canh": "duoi",
+  "ke": "da-than",
+  "chenh_noi": 7.12,
+  "chenh_trong": 8.91,
+  "ti_le": 0.8
+ },
+ {
+  "o": "da-tren-giua",
+  "canh": "phai",
+  "ke": "da-tren-giua",
+  "chenh_noi": 6.59,
+  "chenh_trong": 6.4,
+  "ti_le": 1.03
+ },
+ {
+  "o": "da-tren-phai",
+  "canh": "duoi",
+  "ke": "da-canh-phai",
+  "chenh_noi": 7.8,
+  "chenh_trong": 8.93,
+  "ti_le": 0.87
+ },
+ {
+  "o": "da-tren-phai",
+  "canh": "trai",
+  "ke": "da-tren-giua",
+  "chenh_noi": 6.59,
+  "chenh_trong": 6.39,
+  "ti_le": 1.03
+ },
+ {
+  "o": "da-tren-trai",
+  "canh": "duoi",
+  "ke": "da-canh-trai",
+  "chenh_noi": 5.78,
+  "chenh_trong": 7.13,
+  "ti_le": 0.81
+ },
+ {
+  "o": "da-tren-trai",
+  "canh": "phai",
+  "ke": "da-tren-giua",
+  "chenh_noi": 9.04,
+  "chenh_trong": 7.87,
+  "ti_le": 1.15
+ },
+ {
+  "o": "dat-canh-phai",
+  "canh": "duoi",
+  "ke": "dat-canh-phai",
+  "chenh_noi": 12.34,
+  "chenh_trong": 12.94,
+  "ti_le": 0.95
+ },
+ {
+  "o": "dat-canh-phai",
+  "canh": "duoi",
+  "ke": "dat-day-phai",
+  "chenh_noi": 12.59,
+  "chenh_trong": 13.05,
+  "ti_le": 0.96
+ },
+ {
+  "o": "dat-canh-trai",
+  "canh": "duoi",
+  "ke": "dat-canh-trai",
+  "chenh_noi": 10.55,
+  "chenh_trong": 13.31,
+  "ti_le": 0.79
+ },
+ {
+  "o": "dat-canh-trai",
+  "canh": "duoi",
+  "ke": "dat-day-trai",
+  "chenh_noi": 10.63,
+  "chenh_trong": 13.33,
+  "ti_le": 0.8
+ },
+ {
+  "o": "dat-canh-trai",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.43,
+  "chenh_trong": 5.99,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-cot-than",
+  "canh": "duoi",
+  "ke": "dat-cot-day",
+  "chenh_noi": 11.06,
+  "chenh_trong": 13.02,
+  "ti_le": 0.85
+ },
+ {
+  "o": "dat-cot-than",
+  "canh": "duoi",
+  "ke": "dat-cot-than",
+  "chenh_noi": 11.06,
+  "chenh_trong": 13.02,
+  "ti_le": 0.85
+ },
+ {
+  "o": "dat-cot-tren",
+  "canh": "duoi",
+  "ke": "dat-cot-than",
+  "chenh_noi": 11.06,
+  "chenh_trong": 13.04,
+  "ti_le": 0.85
+ },
+ {
+  "o": "dat-cot-tren-2",
+  "canh": "duoi",
+  "ke": "dat-cot-than",
+  "chenh_noi": 11.06,
+  "chenh_trong": 13.02,
+  "ti_le": 0.85
+ },
+ {
+  "o": "dat-day-giua",
+  "canh": "phai",
+  "ke": "dat-day-giua",
+  "chenh_noi": 5.19,
+  "chenh_trong": 5.56,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-day-giua",
+  "canh": "phai",
+  "ke": "dat-day-phai",
+  "chenh_noi": 5.19,
+  "chenh_trong": 5.56,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-day-trai",
+  "canh": "phai",
+  "ke": "dat-day-giua",
+  "chenh_noi": 5.19,
+  "chenh_trong": 5.56,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-noi-giua",
+  "canh": "phai",
+  "ke": "dat-noi-giua",
+  "chenh_noi": 8.89,
+  "chenh_trong": 7.79,
+  "ti_le": 1.14
+ },
+ {
+  "o": "dat-noi-phai",
+  "canh": "trai",
+  "ke": "dat-noi-giua",
+  "chenh_noi": 8.89,
+  "chenh_trong": 7.79,
+  "ti_le": 1.14
+ },
+ {
+  "o": "dat-noi-trai",
+  "canh": "phai",
+  "ke": "dat-noi-giua",
+  "chenh_noi": 8.89,
+  "chenh_trong": 7.78,
+  "ti_le": 1.14
+ },
+ {
+  "o": "dat-than",
+  "canh": "duoi",
+  "ke": "dat-cot-than",
+  "chenh_noi": 10.02,
+  "chenh_trong": 12.47,
+  "ti_le": 0.8
+ },
+ {
+  "o": "dat-than",
+  "canh": "duoi",
+  "ke": "dat-day-giua",
+  "chenh_noi": 11.83,
+  "chenh_trong": 13.23,
+  "ti_le": 0.89
+ },
+ {
+  "o": "dat-than",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 11.83,
+  "chenh_trong": 13.23,
+  "ti_le": 0.89
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-canh-phai",
+  "chenh_noi": 6.43,
+  "chenh_trong": 5.99,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.43,
+  "chenh_trong": 5.99,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-than-2",
+  "chenh_noi": 6.43,
+  "chenh_trong": 6.01,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-than-3",
+  "chenh_noi": 7.43,
+  "chenh_trong": 7.21,
+  "ti_le": 1.03
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-than-4",
+  "chenh_noi": 6.12,
+  "chenh_trong": 5.76,
+  "ti_le": 1.06
+ },
+ {
+  "o": "dat-than",
+  "canh": "phai",
+  "ke": "dat-than-5",
+  "chenh_noi": 6.53,
+  "chenh_trong": 6.03,
+  "ti_le": 1.08
+ },
+ {
+  "o": "dat-than-2",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 14.07,
+  "chenh_trong": 15.21,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-than-2",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.66,
+  "chenh_trong": 6.03,
+  "ti_le": 1.1
+ },
+ {
+  "o": "dat-than-2",
+  "canh": "trai",
+  "ke": "dat-than",
+  "chenh_noi": 6.43,
+  "chenh_trong": 6.01,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-than-2",
+  "canh": "tren",
+  "ke": "dat-than",
+  "chenh_noi": 12.15,
+  "chenh_trong": 13.12,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-than-3",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 14.56,
+  "chenh_trong": 15.17,
+  "ti_le": 0.96
+ },
+ {
+  "o": "dat-than-3",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.44,
+  "chenh_trong": 6.07,
+  "ti_le": 1.06
+ },
+ {
+  "o": "dat-than-3",
+  "canh": "trai",
+  "ke": "dat-than",
+  "chenh_noi": 7.43,
+  "chenh_trong": 7.21,
+  "ti_le": 1.03
+ },
+ {
+  "o": "dat-than-3",
+  "canh": "tren",
+  "ke": "dat-than",
+  "chenh_noi": 11.94,
+  "chenh_trong": 13.17,
+  "ti_le": 0.91
+ },
+ {
+  "o": "dat-than-4",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 11.83,
+  "chenh_trong": 13.24,
+  "ti_le": 0.89
+ },
+ {
+  "o": "dat-than-4",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.59,
+  "chenh_trong": 6.48,
+  "ti_le": 1.02
+ },
+ {
+  "o": "dat-than-4",
+  "canh": "trai",
+  "ke": "dat-than",
+  "chenh_noi": 6.12,
+  "chenh_trong": 5.76,
+  "ti_le": 1.06
+ },
+ {
+  "o": "dat-than-4",
+  "canh": "tren",
+  "ke": "dat-than",
+  "chenh_noi": 11.94,
+  "chenh_trong": 13.06,
+  "ti_le": 0.91
+ },
+ {
+  "o": "dat-than-5",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 11.83,
+  "chenh_trong": 13.23,
+  "ti_le": 0.89
+ },
+ {
+  "o": "dat-than-5",
+  "canh": "phai",
+  "ke": "dat-than",
+  "chenh_noi": 6.42,
+  "chenh_trong": 6.02,
+  "ti_le": 1.07
+ },
+ {
+  "o": "dat-than-5",
+  "canh": "trai",
+  "ke": "dat-than",
+  "chenh_noi": 6.53,
+  "chenh_trong": 6.03,
+  "ti_le": 1.08
+ },
+ {
+  "o": "dat-than-5",
+  "canh": "tren",
+  "ke": "dat-than",
+  "chenh_noi": 12.44,
+  "chenh_trong": 13.39,
+  "ti_le": 0.93
+ },
+ {
+  "o": "dat-tren-giua",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 11.83,
+  "chenh_trong": 13.27,
+  "ti_le": 0.89
+ },
+ {
+  "o": "dat-tren-giua",
+  "canh": "phai",
+  "ke": "dat-tren-giua",
+  "chenh_noi": 10.07,
+  "chenh_trong": 8.84,
+  "ti_le": 1.14
+ },
+ {
+  "o": "dat-tren-phai",
+  "canh": "duoi",
+  "ke": "dat-canh-phai",
+  "chenh_noi": 13.59,
+  "chenh_trong": 14.2,
+  "ti_le": 0.96
+ },
+ {
+  "o": "dat-tren-phai",
+  "canh": "trai",
+  "ke": "dat-tren-giua",
+  "chenh_noi": 10.07,
+  "chenh_trong": 8.84,
+  "ti_le": 1.14
+ },
+ {
+  "o": "dat-tren-trai",
+  "canh": "duoi",
+  "ke": "dat-canh-trai",
+  "chenh_noi": 10.53,
+  "chenh_trong": 13.3,
+  "ti_le": 0.79
+ },
+ {
+  "o": "dat-tren-trai",
+  "canh": "phai",
+  "ke": "dat-tren-giua",
+  "chenh_noi": 10.07,
+  "chenh_trong": 8.84,
+  "ti_le": 1.14
+ },
+ {
+  "o": "doc-len",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 16.55,
+  "chenh_trong": 18.38,
+  "ti_le": 0.9
+ },
+ {
+  "o": "doc-len",
+  "canh": "phai",
+  "ke": "dat-tren-giua",
+  "chenh_noi": 10.07,
+  "chenh_trong": 8.84,
+  "ti_le": 1.14
+ },
+ {
+  "o": "doc-xuong",
+  "canh": "duoi",
+  "ke": "dat-than",
+  "chenh_noi": 11.9,
+  "chenh_trong": 12.93,
+  "ti_le": 0.92
+ },
+ {
+  "o": "doc-xuong",
+  "canh": "trai",
+  "ke": "dat-tren-giua",
+  "chenh_noi": 10.02,
+  "chenh_trong": 9.55,
+  "ti_le": 1.05
+ },
+ {
+  "o": "van-giua",
+  "canh": "phai",
+  "ke": "van-giua",
+  "chenh_noi": 0.58,
+  "chenh_trong": 0.69,
+  "ti_le": 0.85
+ },
+ {
+  "o": "van-phai",
+  "canh": "trai",
+  "ke": "van-giua",
+  "chenh_noi": 0.58,
+  "chenh_trong": 0.69,
+  "ti_le": 0.85
+ },
+ {
+  "o": "van-trai",
+  "canh": "phai",
+  "ke": "van-giua",
+  "chenh_noi": 0.58,
+  "chenh_trong": 0.69,
+  "ti_le": 0.85
+ }
+]

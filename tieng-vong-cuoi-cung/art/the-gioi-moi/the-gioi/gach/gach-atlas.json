@@ -1,0 +1,1139 @@
+{
+ "ten": "Gạch nền thế giới mới (rễ cây / rêu / đá / ván) – phong cách viền đen dày",
+ "anh": "gach-atlas.png",
+ "quy_uoc": {
+  "o_logic": 32,
+  "boi_so": 2,
+  "o_anh": 64,
+  "khung": "[x, y, rộng, cao] trong atlas (px ảnh 2x)",
+  "ve_lech": "[dx, dy] px ảnh 2x: góc trái-trên khung so với góc trái-trên ô. Vẽ ở logic: drawImage(atlas, x,y,w,h, tx*32 + dx/2, ty*32 + dy/2, w/2, h/2). dx/dy âm = phần rêu/viền thò ra ngoài ô.",
+  "vien_giu": "cạnh còn viền đen: L trái, R phải, T trên, B dưới. Cạnh không có chữ đã cắt viền và khớp liền với ô kề.",
+  "khop": "cạnh cắt → tên ô mà mép này khớp liền (đặt ô đó bên cạnh phía này là liền). Ô có \"lap\" x/y tự lặp liền.",
+  "thu_tu_ve": "vẽ theo hàng từ trên xuống: rêu của ô dưới thò lên đè chân ô trên là đúng ý (giống mép cỏ).",
+  "phu": "ô tên phu-* là trang trí, KHÔNG khớp lưới – đặt tự do."
+ },
+ "o": {
+  "dat-than": {
+   "mo_ta": "thân (đặc bên trong) – lặp liền 2 chiều",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r1c4",
+   "vien_giu": "",
+   "lap": "xy",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.4444,
+    0.4593
+   ],
+   "khung": [
+    348,
+    150,
+    64,
+    64
+   ]
+  },
+  "dat-canh-trai": {
+   "mo_ta": "cạnh trái (tường) – lặp dọc",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô dat-than",
+   "vien_giu": "L",
+   "lap": "y",
+   "khop": {
+    "trai": "_dat-vien-L"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    414,
+    150,
+    67,
+    64
+   ]
+  },
+  "dat-canh-phai": {
+   "mo_ta": "cạnh phải (tường) – lặp dọc",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô dat-than",
+   "vien_giu": "R",
+   "lap": "y",
+   "khop": {
+    "phai": "_dat-vien-R"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    483,
+    150,
+    67,
+    64
+   ]
+  },
+  "dat-day-giua": {
+   "mo_ta": "mặt dưới (trần) – lặp ngang",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô dat-than",
+   "vien_giu": "B",
+   "lap": "x",
+   "khop": {
+    "duoi": "_dat-vien-B"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    798,
+    77,
+    64,
+    67
+   ]
+  },
+  "dat-day-trai": {
+   "mo_ta": "góc dưới trái",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô dat-day-giua",
+   "vien_giu": "LB",
+   "lap": "",
+   "khop": {
+    "trai": "_dat-goc-LB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    864,
+    77,
+    67,
+    67
+   ]
+  },
+  "dat-day-phai": {
+   "mo_ta": "góc dưới phải",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô dat-day-giua",
+   "vien_giu": "RB",
+   "lap": "",
+   "khop": {
+    "phai": "_dat-goc-RB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    933,
+    77,
+    67,
+    67
+   ]
+  },
+  "dat-cot-than": {
+   "mo_ta": "cột rộng 1 ô – thân, lặp dọc",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô dat-than",
+   "vien_giu": "LR",
+   "lap": "y",
+   "khop": {
+    "trai": "_dat-vien-L",
+    "phai": "_dat-vien-R"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    552,
+    150,
+    70,
+    64
+   ]
+  },
+  "dat-cot-day": {
+   "mo_ta": "cột rộng 1 ô – đáy (cột treo)",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô dat-cot-than",
+   "vien_giu": "LRB",
+   "lap": "",
+   "khop": {
+    "duoi": "_dat-vien-B",
+    "trai": "_dat-goc-LB",
+    "phai": "_dat-goc-RB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    0,
+    150,
+    70,
+    67
+   ]
+  },
+  "dat-tren-giua": {
+   "mo_ta": "mặt trên giữa – lặp ngang",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r1c2",
+   "vien_giu": "T",
+   "lap": "x",
+   "khop": {
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4351,
+    0.3249
+   ],
+   "khung": [
+    423,
+    0,
+    64,
+    72
+   ]
+  },
+  "dat-tren-trai": {
+   "mo_ta": "góc trên trái",
+   "ve_lech": [
+    -5,
+    -8
+   ],
+   "nguon": "r1c1",
+   "vien_giu": "LT",
+   "lap": "",
+   "khop": {
+    "phai": "dat-tren-giua",
+    "duoi": "dat-canh-trai"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3404,
+    0.3282
+   ],
+   "khung": [
+    489,
+    0,
+    69,
+    72
+   ]
+  },
+  "dat-tren-phai": {
+   "mo_ta": "góc trên phải",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r1c3",
+   "vien_giu": "RT",
+   "lap": "",
+   "khop": {
+    "trai": "dat-tren-giua",
+    "duoi": "dat-canh-phai"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3368,
+    0.3265
+   ],
+   "khung": [
+    560,
+    0,
+    70,
+    72
+   ]
+  },
+  "dat-cot-tren": {
+   "mo_ta": "cột rộng 1 ô – đỉnh",
+   "ve_lech": [
+    -6,
+    -8
+   ],
+   "nguon": "r1c5",
+   "vien_giu": "LRT",
+   "lap": "",
+   "khop": {
+    "duoi": "dat-cot-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4025,
+    0.3249
+   ],
+   "khung": [
+    632,
+    0,
+    77,
+    72
+   ]
+  },
+  "dat-cot-tren-2": {
+   "mo_ta": "cột rộng 1 ô – đỉnh (biến thể)",
+   "ve_lech": [
+    -8,
+    -8
+   ],
+   "nguon": "r1c6",
+   "vien_giu": "LRT",
+   "lap": "",
+   "khop": {
+    "duoi": "dat-cot-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4051,
+    0.3265
+   ],
+   "khung": [
+    711,
+    0,
+    78,
+    72
+   ]
+  },
+  "dat-noi-giua": {
+   "mo_ta": "gờ nổi cao 1 ô – giữa, lặp ngang",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r1c2",
+   "vien_giu": "TB",
+   "lap": "x",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.4351,
+    0.3048
+   ],
+   "khung": [
+    0,
+    0,
+    64,
+    75
+   ]
+  },
+  "dat-noi-trai": {
+   "mo_ta": "gờ nổi cao 1 ô – đầu trái",
+   "ve_lech": [
+    -5,
+    -8
+   ],
+   "nguon": "r1c1",
+   "vien_giu": "LTB",
+   "lap": "",
+   "khop": {
+    "phai": "dat-noi-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3404,
+    0.3077
+   ],
+   "khung": [
+    66,
+    0,
+    69,
+    75
+   ]
+  },
+  "dat-noi-phai": {
+   "mo_ta": "gờ nổi cao 1 ô – đầu phải",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r1c3",
+   "vien_giu": "RTB",
+   "lap": "",
+   "khop": {
+    "trai": "dat-noi-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3368,
+    0.3062
+   ],
+   "khung": [
+    137,
+    0,
+    70,
+    75
+   ]
+  },
+  "dat-khoi": {
+   "mo_ta": "khối rời 1 ô (đủ 4 viền)",
+   "ve_lech": [
+    -3,
+    -3
+   ],
+   "nguon": "r1c4",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.3019,
+    0.3107
+   ],
+   "khung": [
+    66,
+    77,
+    70,
+    70
+   ]
+  },
+  "dat-than-2": {
+   "mo_ta": "thân biến thể 2 (ô thân thứ 2 của bảng) – 4 mép khớp dat-than, xen kẽ cho đỡ lặp",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c6",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "dat-than",
+    "phai": "dat-than",
+    "tren": "dat-than",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3556,
+    0.3678
+   ],
+   "khung": [
+    624,
+    150,
+    64,
+    64
+   ]
+  },
+  "dat-than-3": {
+   "mo_ta": "thân biến thể 3 (thân lật ngang) – 4 mép khớp dat-than, xen kẽ cho đỡ lặp",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r1c4|lat",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "dat-than",
+    "phai": "dat-than",
+    "tren": "dat-than",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3441,
+    0.3556
+   ],
+   "khung": [
+    690,
+    150,
+    64,
+    64
+   ]
+  },
+  "dat-than-4": {
+   "mo_ta": "thân biến thể 4 (thân 2 lật ngang) – 4 mép khớp dat-than, xen kẽ cho đỡ lặp",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c6|lat",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "dat-than",
+    "phai": "dat-than",
+    "tren": "dat-than",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3556,
+    0.3678
+   ],
+   "khung": [
+    756,
+    150,
+    64,
+    64
+   ]
+  },
+  "dat-than-5": {
+   "mo_ta": "thân biến thể 5 (thân xoay 180°) – 4 mép khớp dat-than, xen kẽ cho đỡ lặp",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r1c4|xoay",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "dat-than",
+    "phai": "dat-than",
+    "tren": "dat-than",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3459,
+    0.3556
+   ],
+   "khung": [
+    822,
+    150,
+    64,
+    64
+   ]
+  },
+  "da-than": {
+   "mo_ta": "thân (đặc bên trong) – lặp liền 2 chiều",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r3c4",
+   "vien_giu": "",
+   "lap": "xy",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.4567,
+    0.4751
+   ],
+   "khung": [
+    888,
+    150,
+    64,
+    64
+   ]
+  },
+  "da-canh-trai": {
+   "mo_ta": "cạnh trái (tường) – lặp dọc",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô da-than",
+   "vien_giu": "L",
+   "lap": "y",
+   "khop": {
+    "trai": "_da-vien-L"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    954,
+    150,
+    67,
+    64
+   ]
+  },
+  "da-canh-phai": {
+   "mo_ta": "cạnh phải (tường) – lặp dọc",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô da-than",
+   "vien_giu": "R",
+   "lap": "y",
+   "khop": {
+    "phai": "_da-vien-R"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    0,
+    219,
+    67,
+    64
+   ]
+  },
+  "da-day-giua": {
+   "mo_ta": "mặt dưới (trần) – lặp ngang",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô da-than",
+   "vien_giu": "B",
+   "lap": "x",
+   "khop": {
+    "duoi": "_da-vien-B"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    72,
+    150,
+    64,
+    67
+   ]
+  },
+  "da-day-trai": {
+   "mo_ta": "góc dưới trái",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô da-day-giua",
+   "vien_giu": "LB",
+   "lap": "",
+   "khop": {
+    "trai": "_da-goc-LB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    138,
+    150,
+    67,
+    67
+   ]
+  },
+  "da-day-phai": {
+   "mo_ta": "góc dưới phải",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "dựng từ ô da-day-giua",
+   "vien_giu": "RB",
+   "lap": "",
+   "khop": {
+    "phai": "_da-goc-RB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    207,
+    150,
+    67,
+    67
+   ]
+  },
+  "da-cot-than": {
+   "mo_ta": "cột rộng 1 ô – thân, lặp dọc",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô da-than",
+   "vien_giu": "LR",
+   "lap": "y",
+   "khop": {
+    "trai": "_da-vien-L",
+    "phai": "_da-vien-R"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    69,
+    219,
+    70,
+    64
+   ]
+  },
+  "da-cot-day": {
+   "mo_ta": "cột rộng 1 ô – đáy (cột treo)",
+   "ve_lech": [
+    -3,
+    0
+   ],
+   "nguon": "dựng từ ô da-cot-than",
+   "vien_giu": "LRB",
+   "lap": "",
+   "khop": {
+    "duoi": "_da-vien-B",
+    "trai": "_da-goc-LB",
+    "phai": "_da-goc-RB"
+   },
+   "he_so_nguon_sang_2x": null,
+   "khung": [
+    276,
+    150,
+    70,
+    67
+   ]
+  },
+  "da-tren-giua": {
+   "mo_ta": "mặt trên giữa – lặp ngang",
+   "ve_lech": [
+    0,
+    -7
+   ],
+   "nguon": "r3c2",
+   "vien_giu": "T",
+   "lap": "x",
+   "khop": {
+    "duoi": "da-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4239,
+    0.32
+   ],
+   "khung": [
+    939,
+    0,
+    64,
+    71
+   ]
+  },
+  "da-tren-trai": {
+   "mo_ta": "góc trên trái",
+   "ve_lech": [
+    -8,
+    -8
+   ],
+   "nguon": "r3c1",
+   "vien_giu": "LT",
+   "lap": "",
+   "khop": {
+    "phai": "da-tren-giua",
+    "duoi": "da-canh-trai"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3516,
+    0.32
+   ],
+   "khung": [
+    791,
+    0,
+    72,
+    72
+   ]
+  },
+  "da-tren-phai": {
+   "mo_ta": "góc trên phải",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r3c3",
+   "vien_giu": "RT",
+   "lap": "",
+   "khop": {
+    "trai": "da-tren-giua",
+    "duoi": "da-canh-phai"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3478,
+    0.32
+   ],
+   "khung": [
+    865,
+    0,
+    72,
+    72
+   ]
+  },
+  "da-cot-tren": {
+   "mo_ta": "cột rộng 1 ô – đỉnh",
+   "ve_lech": [
+    -7,
+    -6
+   ],
+   "nguon": "r3c5",
+   "vien_giu": "LRT",
+   "lap": "",
+   "khop": {
+    "duoi": "da-cot-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4414,
+    0.3299
+   ],
+   "khung": [
+    138,
+    77,
+    79,
+    70
+   ]
+  },
+  "da-cot-tren-2": {
+   "mo_ta": "cột rộng 1 ô – đỉnh (biến thể)",
+   "ve_lech": [
+    -6,
+    -6
+   ],
+   "nguon": "r3c6",
+   "vien_giu": "LRT",
+   "lap": "",
+   "khop": {
+    "duoi": "da-cot-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4476,
+    0.3299
+   ],
+   "khung": [
+    219,
+    77,
+    77,
+    70
+   ]
+  },
+  "da-noi-giua": {
+   "mo_ta": "gờ nổi cao 1 ô – giữa, lặp ngang",
+   "ve_lech": [
+    0,
+    -6
+   ],
+   "nguon": "r3c2",
+   "vien_giu": "TB",
+   "lap": "x",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.4239,
+    0.3005
+   ],
+   "khung": [
+    357,
+    0,
+    64,
+    73
+   ]
+  },
+  "da-noi-trai": {
+   "mo_ta": "gờ nổi cao 1 ô – đầu trái",
+   "ve_lech": [
+    -8,
+    -8
+   ],
+   "nguon": "r3c1",
+   "vien_giu": "LTB",
+   "lap": "",
+   "khop": {
+    "phai": "da-noi-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3516,
+    0.3005
+   ],
+   "khung": [
+    209,
+    0,
+    72,
+    75
+   ]
+  },
+  "da-noi-phai": {
+   "mo_ta": "gờ nổi cao 1 ô – đầu phải",
+   "ve_lech": [
+    0,
+    -8
+   ],
+   "nguon": "r3c3",
+   "vien_giu": "RTB",
+   "lap": "",
+   "khop": {
+    "trai": "da-noi-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3478,
+    0.3005
+   ],
+   "khung": [
+    283,
+    0,
+    72,
+    75
+   ]
+  },
+  "da-khoi": {
+   "mo_ta": "khối rời 1 ô (đủ 4 viền)",
+   "ve_lech": [
+    -3,
+    -3
+   ],
+   "nguon": "r3c4",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.3092,
+    0.32
+   ],
+   "khung": [
+    517,
+    77,
+    70,
+    69
+   ]
+  },
+  "da-than-2": {
+   "mo_ta": "thân đá biến thể 2 (lật ngang)",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r3c4|lat",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "da-than",
+    "phai": "da-than",
+    "tren": "da-than",
+    "duoi": "da-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3536,
+    0.3678
+   ],
+   "khung": [
+    141,
+    219,
+    64,
+    64
+   ]
+  },
+  "da-than-3": {
+   "mo_ta": "thân đá biến thể 3 (xoay 180°)",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r3c4|xoay",
+   "vien_giu": "",
+   "lap": "",
+   "khop": {
+    "trai": "da-than",
+    "phai": "da-than",
+    "tren": "da-than",
+    "duoi": "da-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3536,
+    0.3678
+   ],
+   "khung": [
+    207,
+    219,
+    64,
+    64
+   ]
+  },
+  "da-day-co": {
+   "mo_ta": "đáy đá có cỏ mọc (trần đá/chân tường) – lặp ngang",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r4c6",
+   "vien_giu": "B",
+   "lap": "x",
+   "khop": {
+    "tren": "da-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.4444,
+    0.4571
+   ],
+   "khung": [
+    0,
+    77,
+    64,
+    71
+   ]
+  },
+  "doc-len": {
+   "mo_ta": "dốc 45° đi lên sang phải (1×1 ô)",
+   "ve_lech": [
+    -3,
+    -5
+   ],
+   "nguon": "r4c4",
+   "vien_giu": "LT",
+   "lap": "",
+   "khop": {
+    "phai": "dat-tren-giua",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.2991,
+    0.2991
+   ],
+   "khung": [
+    589,
+    77,
+    67,
+    69
+   ]
+  },
+  "doc-xuong": {
+   "mo_ta": "dốc 45° đi xuống sang phải (1×1 ô)",
+   "ve_lech": [
+    0,
+    -6
+   ],
+   "nguon": "r4c5",
+   "vien_giu": "RT",
+   "lap": "",
+   "khop": {
+    "trai": "dat-tren-giua",
+    "duoi": "dat-than"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3092,
+    0.3092
+   ],
+   "khung": [
+    298,
+    77,
+    67,
+    70
+   ]
+  },
+  "van-giua": {
+   "mo_ta": "ván một chiều – giữa, lặp ngang",
+   "ve_lech": [
+    0,
+    -3
+   ],
+   "nguon": "r4c2",
+   "vien_giu": "TB",
+   "lap": "x",
+   "khop": {},
+   "he_so_nguon_sang_2x": [
+    0.4013,
+    0.32
+   ],
+   "khung": [
+    489,
+    219,
+    64,
+    22
+   ]
+  },
+  "van-trai": {
+   "mo_ta": "ván một chiều – đầu trái (có giá đỡ)",
+   "ve_lech": [
+    -3,
+    -3
+   ],
+   "nguon": "r4c1",
+   "vien_giu": "LTB",
+   "lap": "",
+   "khop": {
+    "phai": "van-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3282,
+    0.32
+   ],
+   "khung": [
+    273,
+    219,
+    67,
+    45
+   ]
+  },
+  "van-phai": {
+   "mo_ta": "ván một chiều – đầu phải (có giá đỡ)",
+   "ve_lech": [
+    0,
+    -3
+   ],
+   "nguon": "r4c3",
+   "vien_giu": "RTB",
+   "lap": "",
+   "khop": {
+    "trai": "van-giua"
+   },
+   "he_so_nguon_sang_2x": [
+    0.3249,
+    0.32
+   ],
+   "khung": [
+    342,
+    219,
+    67,
+    45
+   ]
+  },
+  "phu-goc-tuong-trai": {
+   "mo_ta": "trang trí: rễ dựng bên trái + rêu nửa ô (chưa khớp lưới)",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c1",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": 0.32,
+   "khung": [
+    367,
+    77,
+    72,
+    70
+   ]
+  },
+  "phu-ria-reu": {
+   "mo_ta": "trang trí: gờ rêu mỏng nửa ô",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c2",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": 0.32,
+   "khung": [
+    411,
+    219,
+    76,
+    40
+   ]
+  },
+  "phu-goc-tuong-phai": {
+   "mo_ta": "trang trí: rễ dựng bên phải + rêu nửa ô",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c3",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": 0.32,
+   "khung": [
+    441,
+    77,
+    74,
+    70
+   ]
+  },
+  "phu-bac-xuong": {
+   "mo_ta": "trang trí: bậc rễ cao trái thấp phải",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c4",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": 0.32,
+   "khung": [
+    658,
+    77,
+    68,
+    69
+   ]
+  },
+  "phu-bac-len": {
+   "mo_ta": "trang trí: bậc rễ thấp trái cao phải",
+   "ve_lech": [
+    0,
+    0
+   ],
+   "nguon": "r2c5",
+   "vien_giu": "LRTB",
+   "lap": "",
+   "khop": {},
+   "he_so_nguon_sang_2x": 0.32,
+   "khung": [
+    728,
+    77,
+    68,
+    69
+   ]
+  }
+ }
+}

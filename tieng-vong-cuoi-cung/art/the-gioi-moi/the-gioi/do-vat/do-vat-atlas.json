@@ -1,0 +1,260 @@
+{
+ "ten": "Đồ vật thế giới mới – phong cách viền đen dày",
+ "anh": "do-vat-atlas.png",
+ "quy_uoc": {
+  "boi_so": 2,
+  "khung": "[x, y, rộng, cao] px ảnh 2x trong atlas",
+  "neo": "[nx, ny] px ảnh 2x trong khung = điểm đáy-giữa (chỗ chạm đất). Vẽ ở logic: drawImage(atlas, x,y,w,h, X - nx/2, Y - ny/2, w/2, h/2) với (X,Y) = điểm đáy-giữa trong thế giới.",
+  "cong": "3 trạng thái cổng cùng cỡ khung + cùng neo → vẽ chồng, đổi alpha theo d.open (0 đóng → 0,5 hé → 1 mở).",
+  "co_logic": "cỡ khung tính theo px logic (= px ảnh / 2)"
+ },
+ "vat": {
+  "cong-tac-len": {
+   "neo": [
+    39.9,
+    47
+   ],
+   "nhom": "cong-tac",
+   "mo_ta": "công tắc chuông – rộng ~1,25 ô · chưa ấn",
+   "co_logic": [
+    40.0,
+    24.0
+   ],
+   "he_so_nguon_sang_2x": 0.2606,
+   "khung": [
+    695,
+    258,
+    80,
+    48
+   ]
+  },
+  "cong-tac-an": {
+   "neo": [
+    39.9,
+    32
+   ],
+   "nhom": "cong-tac",
+   "mo_ta": "công tắc chuông – rộng ~1,25 ô · đã ấn",
+   "co_logic": [
+    40.0,
+    16.5
+   ],
+   "he_so_nguon_sang_2x": 0.2606,
+   "khung": [
+    814,
+    258,
+    80,
+    33
+   ]
+  },
+  "cong-tac-an-tia": {
+   "neo": [
+    39.9,
+    54
+   ],
+   "nhom": "cong-tac",
+   "mo_ta": "công tắc chuông – rộng ~1,25 ô · đã ấn + tia \"!\" (khung hiệu ứng lúc vừa ấn)",
+   "co_logic": [
+    40.0,
+    27.5
+   ],
+   "he_so_nguon_sang_2x": 0.2606,
+   "khung": [
+    613,
+    258,
+    80,
+    55
+   ]
+  },
+  "cong-dong": {
+   "neo": [
+    146.9,
+    249
+   ],
+   "nhom": "cong",
+   "mo_ta": "cổng gỗ – cao 4 ô (cao hơn Lam 112) · đóng",
+   "co_logic": [
+    147.5,
+    128.0
+   ],
+   "he_so_nguon_sang_2x": 0.7552,
+   "khung": [
+    0,
+    0,
+    295,
+    256
+   ]
+  },
+  "cong-he": {
+   "neo": [
+    146.9,
+    249
+   ],
+   "nhom": "cong",
+   "mo_ta": "cổng gỗ – cao 4 ô (cao hơn Lam 112) · hé (bước 1)",
+   "co_logic": [
+    147.5,
+    128.0
+   ],
+   "he_so_nguon_sang_2x": 0.7552,
+   "khung": [
+    297,
+    0,
+    295,
+    256
+   ]
+  },
+  "cong-mo": {
+   "neo": [
+    146.9,
+    249
+   ],
+   "nhom": "cong",
+   "mo_ta": "cổng gỗ – cao 4 ô (cao hơn Lam 112) · mở (bước 2)",
+   "co_logic": [
+    147.5,
+    128.0
+   ],
+   "he_so_nguon_sang_2x": 0.7552,
+   "khung": [
+    594,
+    0,
+    295,
+    256
+   ]
+  },
+  "diem-luu-tat": {
+   "neo": [
+    71.2,
+    173
+   ],
+   "nhom": "diem-luu",
+   "mo_ta": "điểm lưu có chuông – cao ~2,75 ô · chuông thường",
+   "co_logic": [
+    71.5,
+    88.0
+   ],
+   "he_so_nguon_sang_2x": 0.3577,
+   "khung": [
+    146,
+    258,
+    143,
+    176
+   ]
+  },
+  "diem-luu-sang": {
+   "neo": [
+    72.1,
+    174
+   ],
+   "nhom": "diem-luu",
+   "mo_ta": "điểm lưu có chuông – cao ~2,75 ô · chuông sáng (đã lưu)",
+   "co_logic": [
+    72.0,
+    88.5
+   ],
+   "he_so_nguon_sang_2x": 0.3577,
+   "khung": [
+    0,
+    258,
+    144,
+    177
+   ]
+  },
+  "manh-chuong": {
+   "neo": [
+    27.2,
+    56
+   ],
+   "nhom": "manh-chuong",
+   "mo_ta": "mảnh chuông vàng – tinh thể cao 0,75 ô (quầng sáng thêm ngoài) · lõi + tia lấp lánh, KHÔNG quầng (game vẽ quầng bằng gradient)",
+   "co_logic": [
+    26.5,
+    30.0
+   ],
+   "he_so_nguon_sang_2x": 0.2682,
+   "khung": [
+    558,
+    258,
+    53,
+    60
+   ]
+  },
+  "manh-chuong-quang": {
+   "neo": [
+    27.2,
+    56
+   ],
+   "nhom": "manh-chuong",
+   "mo_ta": "mảnh chuông vàng – tinh thể cao 0,75 ô (quầng sáng thêm ngoài) · có quầng vàng bán trong suốt (tách theo màu quầng) – khung to, chỉ dùng nếu muốn quầng vẽ sẵn",
+   "co_logic": [
+    27.5,
+    30.5
+   ],
+   "he_so_nguon_sang_2x": 0.2682,
+   "khung": [
+    501,
+    258,
+    55,
+    61
+   ]
+  },
+  "binh-mau": {
+   "neo": [
+    17.5,
+    46
+   ],
+   "nhom": "binh-mau",
+   "mo_ta": "bình máu – cao 0,75 ô",
+   "co_logic": [
+    17.5,
+    24.0
+   ],
+   "he_so_nguon_sang_2x": 0.2474,
+   "khung": [
+    777,
+    258,
+    35,
+    48
+   ]
+  },
+  "thung-go": {
+   "neo": [
+    48.0,
+    82
+   ],
+   "nhom": "thung-go",
+   "mo_ta": "thùng gỗ – rộng 1,5 ô",
+   "co_logic": [
+    48.0,
+    43.0
+   ],
+   "he_so_nguon_sang_2x": 0.3322,
+   "khung": [
+    403,
+    258,
+    96,
+    86
+   ]
+  },
+  "bien-chi-duong": {
+   "neo": [
+    55.0,
+    141
+   ],
+   "nhom": "bien-chi-duong",
+   "mo_ta": "biển chỉ đường – cao 2,25 ô",
+   "co_logic": [
+    55.0,
+    72.0
+   ],
+   "he_so_nguon_sang_2x": 0.4472,
+   "khung": [
+    291,
+    258,
+    110,
+    144
+   ]
+  }
+ }
+}

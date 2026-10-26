@@ -1,0 +1,58 @@
+{
+ "ten": "Nền làng rừng hoàng hôn – lớp parallax (từ nguon/nen-lang.png)",
+ "co": [
+  1920,
+  1080
+ ],
+ "boi_so": 2,
+ "logic": [
+  960,
+  540
+ ],
+ "lop": {
+  "xa": {
+   "anh": "xa.png",
+   "goi_y_toc_do": 0.2,
+   "mo_ta": "trời + núi xa + sương; đã lấp chỗ bị che; không alpha"
+  },
+  "mat-troi": {
+   "anh": "mat-troi.png",
+   "goi_y_toc_do": 0.2,
+   "tam": [
+    1336.8,
+    415.7
+   ],
+   "ban_kinh": 37.1,
+   "mo_ta": "vẽ 1 lần (KHÔNG lặp), cùng tốc độ với lớp xa, ngay sau lớp xa → khớp đúng chỗ cũ; các bản lặp của lớp xa không có mặt trời"
+  },
+  "giua": {
+   "anh": "giua.png",
+   "goi_y_toc_do": 0.45,
+   "mo_ta": "làng giữa, có alpha, chân và 2 mép mờ vào sương; nên lặp THẲNG (lật sẽ ra 2 tháp chuông đối xứng)"
+  },
+  "gan-cay": {
+   "anh": "gan-cay.png",
+   "goi_y_toc_do": 1.15,
+   "goi_y_alpha": 1.0,
+   "mo_ta": "cây cổ thụ góc trên-trái (tán, cành, thân, rễ, đèn lồng, dây leo); vẽ SAU nhân vật"
+  },
+  "gan-la": {
+   "anh": "gan-la.png",
+   "goi_y_toc_do": 1.15,
+   "goi_y_alpha": 0.5,
+   "mo_ta": "bụi lá tối 2 góc dưới + mép dưới; đè lên sàn/nhân vật nên vẽ mờ"
+  },
+  "dat": {
+   "anh": "dat.png",
+   "goi_y_toc_do": 1.0,
+   "mo_ta": "dải đất cỏ đã bỏ khỏi nền (tuỳ chọn, mặc định không dùng)"
+  }
+ },
+ "ban_diu": "mỗi lớp có thêm <ten>-diu.png: bão hoà / tương phản / làm mờ / phủ sương = xa (0.78, 0.8, 1.6, 0.14), mat-troi (0.9, 1.0, 0.0, 0.0), giua (0.82, 0.86, 0.7, 0.1), gan-cay (0.85, 0.9, 0.0, 0.05), gan-la (0.85, 0.9, 0.0, 0.05), dat (0.85, 0.88, 0.0, 0.06)",
+ "duong_co_y_2x": {
+  "trai": 844.0,
+  "giua": 844.0,
+  "phai": 859.3
+ },
+ "lap_ngang": "xa, dat: lặp bằng bản LẬT xen kẽ (như veLap trong demo.html) → liền mép. giua: lặp thẳng (2 mép đã mờ). gan-cay: nên vẽ 1 lần mỗi phòng (khung tranh), lặp lật cũng được nhưng hiện 2 cây đối xứng. gan-la: lặp lật."
+}
