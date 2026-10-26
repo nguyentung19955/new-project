@@ -131,6 +131,9 @@ Phần cần ghép (8 chỗ):
 7. Đầu `render()`: `ANIM_AL=(S.paused||S.hitstop>0)?1:al;`.
 8. Debug: chữ trạng thái quái dùng `q.H.info`.
 
+Đã thử chạy script trên `demo.html` mới nhất (sau khi phiên khác ghép clip chạy Lam rig-v4): **cả 8 chỗ cần ghép vẫn khớp**; chỉ khối
+`SRC` (đường dẫn của riêng bản thử, không ghép) báo lệch vì demo có thêm đường dẫn rig-v4. Bản thử này vẫn dùng Lam rig-v3 như lúc sao chép.
+
 Không ghép: khối THỬ (`cong-cu/khoi-thu.js`: bot, kiểm đòn, API quay, overlay hitbox, bất tử). Overlay hitbox có thể ghép riêng nếu muốn (độc lập).
 Bản build tự chứa (`build-demo.py`) hiện cấm `<script src=`: khi ghép cần cho build nhúng `runtime/quai-boss-runtime.js` và 14 PNG
 (data URI) + JSON vào `TV.NHUNG` – `QBR.nap` khi đó nên nhận URL data thay cho `base+nd.anh` (chưa làm).
