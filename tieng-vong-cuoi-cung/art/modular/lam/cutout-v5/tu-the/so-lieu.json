@@ -1,0 +1,297 @@
+{
+ "ghi_chu": "px thế giới; px logic = × 0.2383. Đất y = 468.",
+ "tu_the": {
+  "cham-dat": {
+   "root_dy": -6.08,
+   "root_dy_logic": -1.45,
+   "de_thap_nhat_y": {
+    "chan-gan": 468.0,
+    "chan-xa": 459.35
+   },
+   "chan_tru": "chan-gan",
+   "nghieng_than": 6.0,
+   "hong_gan": [
+    245.0,
+    335.5
+   ],
+   "chuoi_dao": [
+    297.2,
+    368.7
+   ],
+   "mui_dao": [
+    437.5,
+    335.4
+   ],
+   "dao_che_hong_chan_px": 0,
+   "dao_che_hong_chan_px_v4": 0,
+   "huong_luoi_dao_do": -11.0,
+   "huong_luoi_dao_do_v4": 17.0,
+   "gap_khuyu_tay_dao": 105,
+   "gap_khuyu_tay_dao_v4": 86.0,
+   "thiet_ke": {
+    "chan": {
+     "chan-gan": [
+      62,
+      15,
+      80
+     ],
+     "chan-xa": [
+      90,
+      120,
+      148
+     ]
+    },
+    "tay": {
+     "tay-gan": [
+      100,
+      105,
+      -15
+     ],
+     "tay-xa": [
+      56,
+      90,
+      -10
+     ]
+    }
+   },
+   "phoi_canh_chan_xa": {
+    "a": {
+     "co_chan": [
+      161.28723110257565,
+      378.25797412043505
+     ],
+     "de_y": 459.35
+    },
+    "b": {
+     "co_chan": [
+      129.82759167374923,
+      395.37413687861573
+     ],
+     "de_y": 476.46,
+     "gap_ik": 52.4,
+     "gap": 45,
+     "thieu_tam_px": 0.0
+    }
+   }
+  },
+  "chiu-luc": {
+   "root_dy": 9.7,
+   "root_dy_logic": 2.31,
+   "de_thap_nhat_y": {
+    "chan-gan": 468.0,
+    "chan-xa": 449.91
+   },
+   "chan_tru": "chan-gan",
+   "nghieng_than": 8.0,
+   "hong_gan": [
+    245.3,
+    352.1
+   ],
+   "chuoi_dao": [
+    303.2,
+    378.8
+   ],
+   "mui_dao": [
+    438.3,
+    328.6
+   ],
+   "dao_che_hong_chan_px": 0,
+   "dao_che_hong_chan_px_v4": 0,
+   "huong_luoi_dao_do": -18.0,
+   "huong_luoi_dao_do_v4": 5.0,
+   "gap_khuyu_tay_dao": 105,
+   "gap_khuyu_tay_dao_v4": 92.0,
+   "thiet_ke": {
+    "chan": {
+     "chan-gan": [
+      66,
+      75,
+      90
+     ],
+     "chan-xa": [
+      34,
+      135,
+      92
+     ]
+    },
+    "tay": {
+     "tay-gan": [
+      92,
+      105,
+      -14
+     ],
+     "tay-xa": [
+      66,
+      75,
+      -10
+     ]
+    }
+   },
+   "phoi_canh_chan_xa": {
+    "a": {
+     "co_chan": [
+      195.65367331189586,
+      398.66787634612587
+     ],
+     "de_y": 449.91
+    },
+    "b": {
+     "co_chan": [
+      163.26905821181242,
+      407.38050113839694
+     ],
+     "de_y": 458.62,
+     "gap_ik": 109.0,
+     "gap": 105,
+     "thieu_tam_px": 0.0
+    }
+   }
+  },
+  "dap": {
+   "root_dy": -20.41,
+   "root_dy_logic": -4.86,
+   "de_thap_nhat_y": {
+    "chan-gan": 468.0,
+    "chan-xa": 447.3
+   },
+   "chan_tru": "chan-gan",
+   "nghieng_than": 10.0,
+   "hong_gan": [
+    245.5,
+    322.9
+   ],
+   "chuoi_dao": [
+    316.2,
+    348.2
+   ],
+   "mui_dao": [
+    453.8,
+    305.1
+   ],
+   "dao_che_hong_chan_px": 0,
+   "dao_che_hong_chan_px_v4": 0,
+   "huong_luoi_dao_do": -15.0,
+   "huong_luoi_dao_do_v4": -5.0,
+   "gap_khuyu_tay_dao": 90,
+   "gap_khuyu_tay_dao_v4": 98.0,
+   "thiet_ke": {
+    "chan": {
+     "chan-gan": [
+      96,
+      30,
+      110
+     ],
+     "chan-xa": [
+      28,
+      90,
+      98
+     ]
+    },
+    "tay": {
+     "tay-gan": [
+      76,
+      90,
+      -10
+     ],
+     "tay-xa": [
+      96,
+      60,
+      -8
+     ]
+    }
+   },
+   "phoi_canh_chan_xa": {
+    "a": {
+     "co_chan": [
+      217.4755900541981,
+      389.727184017557
+     ],
+     "de_y": 447.3
+    },
+    "b": {
+     "co_chan": [
+      187.99542384756393,
+      401.5163262786531
+     ],
+     "de_y": 459.09,
+     "gap_ik": 80.9,
+     "gap": 75,
+     "thieu_tam_px": 0.0
+    }
+   }
+  },
+  "bay": {
+   "root_dy": -14.89,
+   "root_dy_logic": -3.55,
+   "de_thap_nhat_y": {
+    "chan-gan": 447.05,
+    "chan-xa": 456.0
+   },
+   "chan_tru": null,
+   "nghieng_than": 8.0,
+   "hong_gan": [
+    245.3,
+    327.6
+   ],
+   "chuoi_dao": [
+    329.1,
+    342.2
+   ],
+   "mui_dao": [
+    465.9,
+    296.8
+   ],
+   "dao_che_hong_chan_px": 0,
+   "dao_che_hong_chan_px_v4": 0,
+   "huong_luoi_dao_do": -16.0,
+   "huong_luoi_dao_do_v4": -15.0,
+   "gap_khuyu_tay_dao": 75,
+   "gap_khuyu_tay_dao_v4": 100.0,
+   "thiet_ke": {
+    "chan": {
+     "chan-gan": [
+      118,
+      60,
+      126
+     ],
+     "chan-xa": [
+      36,
+      30,
+      82
+     ]
+    },
+    "tay": {
+     "tay-gan": [
+      56,
+      75,
+      -6
+     ],
+     "tay-xa": [
+      126,
+      45,
+      -6
+     ]
+    }
+   },
+   "phoi_canh_chan_xa": {
+    "a": {
+     "co_chan": [
+      247.47053154532307,
+      402.8841522999809
+     ],
+     "de_y": 456.0
+    },
+    "b": {
+     "co_chan": [
+      211.40763073277327,
+      405.92052899064333
+     ],
+     "de_y": 459.04,
+     "gap_ik": 68.3,
+     "gap": 75,
+     "thieu_tam_px": 0.0
+    }
+   }
+  }
+ }
+}
