@@ -1,0 +1,99 @@
+{
+ "ten": "Nền parallax Làng Chuông (trong lòng Cây Chuông Vĩnh Hằng)",
+ "quy_uoc": {
+  "boi_so": 2,
+  "khung_logic": [
+   960,
+   540
+  ],
+  "ve": "vẽ ở ½ cỡ ảnh; y = 0 trùng mép trên màn. Lặp ngang: x0 = -((cam_x * he_so) mod rong_logic), vẽ các bản ở x0, x0 + rong, x0 + 2·rong… tới khi phủ hết 960 (lớp rộng < 960 logic cần 2–3 bản).",
+  "thu_tu": "xa (hoặc xa-hoc → xa-vach) → giua → gan → [gạch, đồ vật, Lam, quái] → tien-canh",
+  "kiem_noi_mep": "chênh màu ở chỗ nối mép phải→trái chia cho chênh trung bình 2 cột kề bên trong ảnh (≈1 là không thấy nối)"
+ },
+ "lop": {
+  "lang-xa.png": {
+   "co_anh": [
+    1619,
+    1080
+   ],
+   "co_logic": [
+    809.5,
+    540.0
+   ],
+   "he_so_cuon": 0.08,
+   "lap_ngang": true,
+   "mo_ta": "Lớp xa (đục). Dùng MỘT trong hai cách: ảnh này ở 0,08, HOẶC cặp xa-hoc + xa-vach.",
+   "kiem_noi_mep": 1.07
+  },
+  "lang-xa-hoc.png": {
+   "co_anh": [
+    1619,
+    1080
+   ],
+   "co_logic": [
+    809.5,
+    540.0
+   ],
+   "he_so_cuon": 0.08,
+   "lap_ngang": true,
+   "mo_ta": "Tuỳ chọn: hốc sâu xanh lam (đục), chỗ vách đã lấp màu hốc tối.",
+   "kiem_noi_mep": 1.48
+  },
+  "lang-xa-vach.png": {
+   "co_anh": [
+    1619,
+    1080
+   ],
+   "co_logic": [
+    809.5,
+    540.0
+   ],
+   "he_so_cuon": 0.2,
+   "lap_ngang": true,
+   "mo_ta": "Tuỳ chọn: vách gỗ cong + tia sáng (trong suốt chỗ hốc), vẽ đè lên xa-hoc.",
+   "kiem_noi_mep": 1.34
+  },
+  "lang-giua.png": {
+   "co_anh": [
+    1559,
+    1080
+   ],
+   "co_logic": [
+    779.5,
+    540.0
+   ],
+   "he_so_cuon": 0.4,
+   "lap_ngang": true,
+   "mo_ta": "Nhà, cầu, giá chuông (trong suốt).",
+   "kiem_noi_mep": 1.05
+  },
+  "lang-gan.png": {
+   "co_anh": [
+    1619,
+    1080
+   ],
+   "co_logic": [
+    809.5,
+    540.0
+   ],
+   "he_so_cuon": 0.65,
+   "lap_ngang": true,
+   "mo_ta": "Khung rễ sau gameplay (trong suốt), tối hơn lớp giữa.",
+   "kiem_noi_mep": 0.88
+  },
+  "lang-tien-canh.png": {
+   "co_anh": [
+    3840,
+    1080
+   ],
+   "co_logic": [
+    1920.0,
+    540.0
+   ],
+   "he_so_cuon": 1.05,
+   "lap_ngang": true,
+   "mo_ta": "Tiền cảnh: rễ treo gần đen, chỉ nửa trên màn; vẽ SAU nhân vật.",
+   "kiem_noi_mep": null
+  }
+ }
+}

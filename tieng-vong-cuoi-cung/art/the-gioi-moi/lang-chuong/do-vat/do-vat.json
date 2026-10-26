@@ -1,0 +1,79 @@
+{
+ "ten": "Đồ vật Làng Chuông: cổng 3 trạng thái + đồ nhỏ",
+ "quy_uoc": {
+  "boi_so": 2,
+  "ve": "vẽ ở ½ cỡ ảnh, neo giữa đáy trên mặt sàn",
+  "vien": "đồ nhỏ đã thêm 1 px (2x) viền đen ngoài sau khi thu nhỏ"
+ },
+ "cong": {
+  "co_anh": [
+   308,
+   256
+  ],
+  "co_logic": [
+   154.0,
+   128
+  ],
+  "neo": "giữa đáy (x = rộng/2, y = 256)",
+  "he_so_nguon_sang_2x": 0.3386,
+  "cot_trai_logic": [
+   0,
+   30.3
+  ],
+  "cot_phai_logic": [
+   123.8,
+   154.0
+  ],
+  "ghi_chu": "cả 3 trạng thái cùng khung; collider khi đóng = khoảng giữa 2 cột; mở/chỉ trụ = chỉ 2 cột."
+ },
+ "do_nho": {
+  "cong-tac-len": {
+   "co_anh": [
+    72,
+    54
+   ],
+   "co_logic": [
+    36.0,
+    27.0
+   ],
+   "he_so_nguon_sang_2x": 0.1711,
+   "neo": "giữa đáy"
+  },
+  "cong-tac-an": {
+   "co_anh": [
+    72,
+    54
+   ],
+   "co_logic": [
+    36.0,
+    27.0
+   ],
+   "he_so_nguon_sang_2x": 0.1711,
+   "neo": "giữa đáy"
+  },
+  "binh-mau": {
+   "co_anh": [
+    38,
+    48
+   ],
+   "co_logic": [
+    19.0,
+    24.0
+   ],
+   "he_so_nguon_sang_2x": 0.1716,
+   "neo": "giữa đáy"
+  },
+  "manh-chuong": {
+   "co_anh": [
+    38,
+    56
+   ],
+   "co_logic": [
+    19.0,
+    28.0
+   ],
+   "he_so_nguon_sang_2x": 0.1753,
+   "neo": "giữa đáy"
+  }
+ }
+}
