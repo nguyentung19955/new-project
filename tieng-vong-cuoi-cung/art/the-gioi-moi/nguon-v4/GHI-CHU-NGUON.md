@@ -1,0 +1,6 @@
+# Ảnh gen v4 (27/10/2026) – nền trắng, phong cách One Mage Army
+- re-treo-cot.png – 3 biến thể rễ treo từ trên ôm lấy đầu cột gỗ (neo cột lơ lửng Cổng làng)
+- xa-moc-day.png – 3 biến thể xà/cành rêu có 2 vòng dây buộc, dây rủ xuống (điểm móc cho bệ ván treo dây)
+- mang-go-van.png – 6 mảng gỗ có vân nhẹ, không viền, mép răng cưa (thay mảng gỗ trơ che vân lặp)
+- mep-da-reu.png – 2 hàng × 3: đầu trái / giữa lặp / đầu phải mép đá rêu (cho khối đá Sân chuông, thay mép đất nâu)
+- cong-re.png – cổng rễ cây thay cổng gỗ: ảnh gen cho ĐÓNG (rễ đan kín, 2 trụ) + 4 trụ đơn; KHÔNG có trạng thái "mở" đúng nghĩa → dựng bản mở bằng code (rễ ngang co rút/kéo về hai trụ, hoặc mờ dần + 2 trụ), bản "chỉ trụ" = 2 trụ đơn. Mắt xanh ngọc trên trụ = đèn báo (sáng khi mở).
