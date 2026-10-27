@@ -1,0 +1,156 @@
+{
+ "ghi_chu": "Chromium headless trên máy chủ Linux, KHÔNG GPU (vẽ bằng CPU) – chưa đo trên iPhone thật. ms = thời gian hàm render() mỗi khung.",
+ "truoc": {
+  "do_ve_ms": {
+   "dung_yen_600_khung": {
+    "n": 600,
+    "tb": 21.442,
+    "p50": 19.7,
+    "p95": 29,
+    "max": 45.5
+   },
+   "bot_chay_qua_canh": {
+    "n": 150,
+    "tb": 19.898,
+    "p50": 18,
+    "p95": 29.2,
+    "max": 37.8
+   }
+  },
+  "nap": {
+   "hm": {
+    "ms": 0,
+    "ms_grade": 0,
+    "ms_dat": 0,
+    "anh": 0,
+    "mpx": 0
+   },
+   "co": {
+    "bat": false,
+    "grade": false,
+    "dat": false,
+    "sang": false,
+    "suong": false,
+    "vignette": false,
+    "bui": false,
+    "bot": false,
+    "vuc": false,
+    "quai": false
+   },
+   "lc": {
+    "ms": 429,
+    "mb_anh": 28.4
+   },
+   "tt": {
+    "ms": 306,
+    "mb_anh": 6.44,
+    "so_anh": 9,
+    "o": 39,
+    "tep": [
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png"
+    ],
+    "mb_nuong": 4.24
+   },
+   "bk": 1
+  },
+  "loi": {
+   "console_loi": [],
+   "trang_loi": []
+  }
+ },
+ "sau": {
+  "do_ve_ms": {
+   "dung_yen_600_khung": {
+    "n": 600,
+    "tb": 12.209,
+    "p50": 11,
+    "p95": 18.1,
+    "max": 29.7
+   },
+   "bot_chay_qua_canh": {
+    "n": 150,
+    "tb": 13.902,
+    "p50": 13.2,
+    "p95": 19,
+    "max": 28
+   }
+  },
+  "nap": {
+   "hm": {
+    "ms": 1471,
+    "ms_grade": 922,
+    "ms_dat": 364,
+    "anh": 23,
+    "mpx": 8.72,
+    "ms_doi_anh": 532
+   },
+   "co": {
+    "bat": true,
+    "grade": true,
+    "dat": true,
+    "sang": true,
+    "suong": true,
+    "vignette": true,
+    "bui": true,
+    "bot": true,
+    "vuc": true,
+    "quai": false
+   },
+   "lc": {
+    "ms": 273,
+    "mb_anh": 28.4
+   },
+   "tt": {
+    "ms": 189,
+    "mb_anh": 6.44,
+    "so_anh": 9,
+    "o": 39,
+    "tep": [
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png"
+    ],
+    "mb_nuong": 4.24
+   },
+   "bk": 1
+  },
+  "loi": {
+   "console_loi": [],
+   "trang_loi": []
+  }
+ },
+ "co_quai_loi": {
+  "console_loi": [],
+  "trang_loi": []
+ },
+ "iphone_truoc": {
+  "loi": {
+   "console_loi": [],
+   "trang_loi": []
+  },
+  "bk": 0.721875,
+  "cam_ung": true
+ },
+ "iphone_sau": {
+  "loi": {
+   "console_loi": [],
+   "trang_loi": []
+  },
+  "bk": 0.721875,
+  "cam_ung": true
+ }
+}
