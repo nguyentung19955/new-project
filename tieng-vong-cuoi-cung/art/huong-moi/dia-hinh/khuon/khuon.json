@@ -1,0 +1,382 @@
+{
+ "canh-trai-dau": {
+  "tep_khuon": "khuon/canh-trai-dau.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   4,
+   0,
+   36,
+   64
+  ],
+  "phia_lo": "trái",
+  "canh_noi": "dưới; trên = nằm dưới đầu trái của mặt trên (mờ vào)",
+  "ma_lo": "L",
+  "ma_noi": "B",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "đầu trên của tường lộ bên trái",
+  "tep_anh_gen": null
+ },
+ "canh-trai-giua": {
+  "tep_khuon": "khuon/canh-trai-giua.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   4,
+   0,
+   36,
+   64
+  ],
+  "phia_lo": "trái",
+  "canh_noi": "trên, dưới (lặp dọc)",
+  "ma_lo": "L",
+  "ma_noi": "TB",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "lặp dọc",
+  "tep_anh_gen": null
+ },
+ "canh-trai-cuoi": {
+  "tep_khuon": "khuon/canh-trai-cuoi.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   4,
+   0,
+   36,
+   64
+  ],
+  "phia_lo": "trái",
+  "canh_noi": "trên; dưới = gặp góc lồi dưới / sàn",
+  "ma_lo": "L",
+  "ma_noi": "T",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "đầu dưới",
+  "tep_anh_gen": null
+ },
+ "canh-phai-dau": {
+  "tep_khuon": "khuon/canh-phai-dau.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   0,
+   0,
+   32,
+   64
+  ],
+  "phia_lo": "phải",
+  "canh_noi": "dưới; trên = dưới đầu phải mặt trên",
+  "ma_lo": "R",
+  "ma_noi": "B",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ },
+ "canh-phai-giua": {
+  "tep_khuon": "khuon/canh-phai-giua.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   0,
+   0,
+   32,
+   64
+  ],
+  "phia_lo": "phải",
+  "canh_noi": "trên, dưới (lặp dọc)",
+  "ma_lo": "R",
+  "ma_noi": "TB",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ },
+ "canh-phai-cuoi": {
+  "tep_khuon": "khuon/canh-phai-cuoi.png",
+  "co_logic": [
+   36,
+   64
+  ],
+  "co_anh_2x": [
+   72,
+   128
+  ],
+  "collider_logic": [
+   0,
+   0,
+   32,
+   64
+  ],
+  "phia_lo": "phải",
+  "canh_noi": "trên",
+  "ma_lo": "R",
+  "ma_noi": "T",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ },
+ "day-trai": {
+  "tep_khuon": "khuon/day-trai.png",
+  "co_logic": [
+   68,
+   36
+  ],
+  "co_anh_2x": [
+   136,
+   72
+  ],
+  "collider_logic": [
+   4,
+   0,
+   68,
+   32
+  ],
+  "phia_lo": "dưới + trái (góc lồi dưới trái)",
+  "canh_noi": "phải, trên",
+  "ma_lo": "LB",
+  "ma_noi": "RT",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "mép đáy trần C / đáy bệ",
+  "tep_anh_gen": null
+ },
+ "day-giua": {
+  "tep_khuon": "khuon/day-giua.png",
+  "co_logic": [
+   64,
+   36
+  ],
+  "co_anh_2x": [
+   128,
+   72
+  ],
+  "collider_logic": [
+   0,
+   0,
+   64,
+   32
+  ],
+  "phia_lo": "dưới",
+  "canh_noi": "trái, phải (lặp ngang), trên",
+  "ma_lo": "B",
+  "ma_noi": "LRT",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "lặp ngang",
+  "tep_anh_gen": null
+ },
+ "day-phai": {
+  "tep_khuon": "khuon/day-phai.png",
+  "co_logic": [
+   68,
+   36
+  ],
+  "co_anh_2x": [
+   136,
+   72
+  ],
+  "collider_logic": [
+   0,
+   0,
+   64,
+   32
+  ],
+  "phia_lo": "dưới + phải (góc lồi dưới phải)",
+  "canh_noi": "trái, trên",
+  "ma_lo": "RB",
+  "ma_noi": "LT",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ },
+ "goc-lom-san-trai": {
+  "tep_khuon": "khuon/goc-lom-san-trai.png",
+  "co_logic": [
+   64,
+   64
+  ],
+  "co_anh_2x": [
+   128,
+   128
+  ],
+  "collider_logic": null,
+  "phia_lo": "mặt tường (x 32, y 0–32) + mặt sàn (y 32, x 32–64)",
+  "canh_noi": "trái, dưới, phải",
+  "ma_lo": "",
+  "ma_noi": "LBR",
+  "mat_dung_y": 32,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "sàn gặp tường cao bên TRÁI",
+  "tep_anh_gen": null
+ },
+ "goc-lom-san-phai": {
+  "tep_khuon": "khuon/goc-lom-san-phai.png",
+  "co_logic": [
+   64,
+   64
+  ],
+  "co_anh_2x": [
+   128,
+   128
+  ],
+  "collider_logic": null,
+  "phia_lo": "mặt tường (x 32) + mặt sàn (y 32, x 0–32)",
+  "canh_noi": "trái, dưới, phải",
+  "ma_lo": "",
+  "ma_noi": "LBR",
+  "mat_dung_y": 32,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "sàn gặp tường cao bên PHẢI",
+  "tep_anh_gen": null
+ },
+ "goc-lom-tran-trai": {
+  "tep_khuon": "khuon/goc-lom-tran-trai.png",
+  "co_logic": [
+   64,
+   64
+  ],
+  "co_anh_2x": [
+   128,
+   128
+  ],
+  "collider_logic": null,
+  "phia_lo": "mặt tường + đáy trần (y 32)",
+  "canh_noi": "trái, trên, phải",
+  "ma_lo": "",
+  "ma_noi": "LTR",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "trần gặp tường bên trái",
+  "tep_anh_gen": null
+ },
+ "goc-lom-tran-phai": {
+  "tep_khuon": "khuon/goc-lom-tran-phai.png",
+  "co_logic": [
+   64,
+   64
+  ],
+  "co_anh_2x": [
+   128,
+   128
+  ],
+  "collider_logic": null,
+  "phia_lo": "mặt tường + đáy trần",
+  "canh_noi": "trái, trên, phải",
+  "ma_lo": "",
+  "ma_noi": "LTR",
+  "mat_dung_y": null,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ },
+ "van-trai": {
+  "tep_khuon": "khuon/van-trai.png",
+  "co_logic": [
+   36,
+   28
+  ],
+  "co_anh_2x": [
+   72,
+   56
+  ],
+  "collider_logic": [
+   4,
+   0,
+   36,
+   16
+  ],
+  "phia_lo": "trái, dưới",
+  "canh_noi": "phải",
+  "ma_lo": "LB",
+  "ma_noi": "R",
+  "mat_dung_y": 0,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "ván một chiều: dày 16, giá đỡ chỉ chĩa xuống (tới 28)",
+  "tep_anh_gen": null
+ },
+ "van-giua": {
+  "tep_khuon": "khuon/van-giua.png",
+  "co_logic": [
+   32,
+   28
+  ],
+  "co_anh_2x": [
+   64,
+   56
+  ],
+  "collider_logic": [
+   0,
+   0,
+   32,
+   16
+  ],
+  "phia_lo": "dưới",
+  "canh_noi": "trái, phải (lặp ngang)",
+  "ma_lo": "B",
+  "ma_noi": "LR",
+  "mat_dung_y": 0,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "lặp ngang; ván B dài 4 ô = trái + giữa ×2 + phải",
+  "tep_anh_gen": null
+ },
+ "van-phai": {
+  "tep_khuon": "khuon/van-phai.png",
+  "co_logic": [
+   36,
+   28
+  ],
+  "co_anh_2x": [
+   72,
+   56
+  ],
+  "collider_logic": [
+   0,
+   0,
+   32,
+   16
+  ],
+  "phia_lo": "phải, dưới",
+  "canh_noi": "trái",
+  "ma_lo": "RB",
+  "ma_noi": "L",
+  "mat_dung_y": 0,
+  "nho_toi_da_logic": 4,
+  "ghi_chu": "",
+  "tep_anh_gen": null
+ }
+}

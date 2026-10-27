@@ -1,0 +1,248 @@
+{
+ "anh_chien_dau": {
+  "truoc": {
+   "f": 77,
+   "atkN": 1,
+   "atkT": 7,
+   "q3": "hit",
+   "q4": "wind:15",
+   "camx": 7040
+  },
+  "truoc_loi": [],
+  "sau": {
+   "f": 77,
+   "atkN": 1,
+   "atkT": 7,
+   "q3": "hit",
+   "q4": "wind:15",
+   "camx": 7040
+  },
+  "sau_loi": []
+ },
+ "ngay": "2026-10-27 18:34",
+ "iphone": {
+  "truoc": {
+   "canh": {
+    "f": 77,
+    "atkN": 1,
+    "atkT": 7,
+    "q3": "hit",
+    "q4": "wind:15",
+    "camx": 7040
+   },
+   "loi": [],
+   "BK": 2.165625,
+   "touch": true,
+   "vung_cham": [
+    [
+     "dpad",
+     6,
+     249,
+     135,
+     135
+    ],
+    [
+     "b-v",
+     717,
+     205,
+     62,
+     62
+    ],
+    [
+     "b-a",
+     657,
+     263,
+     62,
+     62
+    ],
+    [
+     "b-s",
+     776,
+     263,
+     62,
+     62
+    ],
+    [
+     "b-j",
+     711,
+     312,
+     74,
+     74
+    ]
+   ]
+  },
+  "sau": {
+   "canh": {
+    "f": 77,
+    "atkN": 1,
+    "atkT": 7,
+    "q3": "hit",
+    "q4": "wind:15",
+    "camx": 7040
+   },
+   "loi": [],
+   "BK": 2.165625,
+   "touch": true,
+   "vung_cham": [
+    [
+     "dpad",
+     6,
+     249,
+     135,
+     135
+    ],
+    [
+     "b-v",
+     717,
+     205,
+     62,
+     62
+    ],
+    [
+     "b-a",
+     657,
+     263,
+     62,
+     62
+    ],
+    [
+     "b-s",
+     776,
+     263,
+     62,
+     62
+    ],
+    [
+     "b-j",
+     711,
+     312,
+     74,
+     74
+    ]
+   ]
+  }
+ },
+ "kiem_mep": {
+  "anh": [
+   "kiem-mep-hang-dai.png",
+   "kiem-mep-hang-dai-collider.png",
+   "kiem-mep-mang-4x4.png",
+   "kiem-mep-mang-4x4-collider.png",
+   "kiem-mep-goc-lom.png",
+   "kiem-mep-goc-lom-collider.png",
+   "kiem-mep-be-don.png",
+   "kiem-mep-be-don-collider.png"
+  ],
+  "so": {
+   "pbk": {
+    "ms_chuan_bi": 71
+   },
+   "dhm": {
+    "ms_nap": 65,
+    "ms_dung": 0,
+    "mb_anh": 16.2,
+    "lenh": 39,
+    "ve": 294,
+    "vien_mau": [
+     "LF",
+     "L",
+     "RF",
+     "R",
+     "LB",
+     "B",
+     "RB"
+    ]
+   },
+   "hm": {
+    "ms": 1257,
+    "ms_grade": 634,
+    "ms_dat": 192,
+    "anh": 29,
+    "mpx": 10.56,
+    "ms_doi_anh": 610
+   },
+   "vien": [
+    "LF",
+    "L",
+    "RF",
+    "R",
+    "LB",
+    "B",
+    "RB"
+   ],
+   "loi": ""
+  },
+  "loi": []
+ },
+ "do_ve": {
+  "ghi_chu": "Chromium headless, máy chủ Linux KHÔNG GPU, viewport 960×540 dsf 1. Chỉ so TRƯỚC/SAU; CHƯA đo trên iPhone thật.",
+  "bot_600_khung": {
+   "truoc": {
+    "n": 600,
+    "tb": 6.454,
+    "p50": 6.1,
+    "p95": 8.5,
+    "max": 66.9,
+    "q3": "die",
+    "q4": "die",
+    "hp": 5
+   },
+   "sau": {
+    "n": 600,
+    "tb": 1.554,
+    "p50": 1.8,
+    "p95": 2.7,
+    "max": 50.3,
+    "q3": "die",
+    "q4": "die",
+    "hp": 5
+   }
+  },
+  "nap_sau": {
+   "pbk": {
+    "ms_chuan_bi": 70
+   },
+   "dhm": {
+    "ms_nap": 64,
+    "ms_dung": 1,
+    "mb_anh": 16.2,
+    "lenh": 39,
+    "ve": 15313,
+    "vien_mau": []
+   },
+   "hm": {
+    "ms": 1234,
+    "ms_grade": 620,
+    "ms_dat": 198,
+    "anh": 29,
+    "mpx": 10.56,
+    "ms_doi_anh": 601
+   },
+   "vien": [],
+   "loi": ""
+  },
+  "loi_trang": [],
+  "dung_yen_600_khung": {
+   "truoc": {
+    "n": 600,
+    "tb": 6.366,
+    "p50": 6.2,
+    "p95": 9.3,
+    "max": 117.8
+   },
+   "sau": {
+    "n": 600,
+    "tb": 1.45,
+    "p50": 1.3,
+    "p95": 2,
+    "max": 120.5
+   }
+  }
+ },
+ "video": {
+  "file": "lam-danh-2-chuong-go-60fps.mp4",
+  "khung": 452,
+  "giay": 7.53,
+  "loi_trang": []
+ }
+}
