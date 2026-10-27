@@ -139,7 +139,7 @@ def do(log, meta):
                                'khung': [log[k]['ten'] for k in range(i, j)]})
         if r['landT'] == 10 and prev and prev['landT'] != 10:
             kq['tiep_dat'].append({'buoc': r['n'], 'canh': r['canh'], 'khung': [log[k]['ten'] for k in range(i, min(i + 7, len(log)))],
-                                   'bui': [f[0] + '/' + f[1] for f in r['fx'] if f[0] == 'bui' and f[2] <= 1]})
+                                   'bui': [f[0] + '/' + f[1] for f in r['fx'] if f[0] == 'bui' and f[2] <= 2]})
         if r['hurtT'] and not (prev and prev['hurtT']):
             kq['bi_danh'].append({'buoc': r['n'], 'canh': r['canh'], 'huong_day': 'lùi' if r['hurtK'] < 0 else 'tới',
                                   'khung_17_buoc': [log[k]['ten'] for k in range(i, min(i + 17, len(log)))],

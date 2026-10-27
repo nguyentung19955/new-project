@@ -1,0 +1,1248 @@
+n,canh,giu,nhan,x,y,vx,vy,g,face,st,a2,ten,atkN,atkT,hb,hit,dash,hurtT,landT,wst,wjT,fx
+0,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+1,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+2,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+3,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+4,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+5,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+6,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+7,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+8,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+9,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+10,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+11,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+12,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+13,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+14,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+15,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+16,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+17,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+18,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+19,combo,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,0,,0,0,0,0,0,0,[]
+20,combo,,a,2338,418,2.2,0,True,1,run,atk1,nghi~c1-chuanbi,1,1,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 2334, 448]]"
+21,combo,,,2339.76,418,1.76,0,True,1,run,atk1,nghi~c1-chuanbi,1,2,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 2334, 448]]"
+22,combo,,,2341.08,418,1.32,0,True,1,run,atk1,c1-chuanbi,1,3,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 2334, 448]]"
+23,combo,,,2341.96,418,0.88,0,True,1,run,atk1,c1-chuanbi,1,4,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 2334, 448]]"
+24,combo,,,2342.4,418,0.44,0,True,1,idle,atk1,c1-chuanbi,1,5,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 2334, 448]]"
+25,combo,,,2342.4,418,0.0,0,True,1,idle,atk1,c1-giuong,1,6,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 2334, 448]]"
+26,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-giuong,1,7,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 2334, 448]]"
+27,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-giuong,1,8,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 2334, 448]]"
+28,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-giuong~c1-vung,1,9,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 2334, 448]]"
+29,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-vung,1,10,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 2334, 448], [""vet-chem"", ""ngang"", 1, 2440, 376]]"
+30,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,11,"[2356.4000000000005, 351, 147, 48]",3,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2334, 448], [""vet-chem"", ""ngang"", 2, 2440, 376], [""trung-don"", ""trung-don"", 1, 2409, 375]]"
+31,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,11,"[2356.4000000000005, 351, 147, 48]",2,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2334, 448], [""vet-chem"", ""ngang"", 2, 2440, 376], [""trung-don"", ""trung-don"", 1, 2409, 375]]"
+32,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,11,"[2356.4000000000005, 351, 147, 48]",1,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2334, 448], [""vet-chem"", ""ngang"", 2, 2440, 376], [""trung-don"", ""trung-don"", 1, 2409, 375]]"
+33,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,11,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2334, 448], [""vet-chem"", ""ngang"", 2, 2440, 376], [""trung-don"", ""trung-don"", 1, 2409, 375]]"
+34,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,12,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2334, 448], [""vet-chem"", ""ngang"", 3, 2440, 376], [""trung-don"", ""trung-don"", 2, 2409, 375]]"
+35,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung,1,13,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 4, 2440, 376], [""trung-don"", ""trung-don"", 3, 2409, 375]]"
+36,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung2,1,14,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 5, 2440, 376], [""trung-don"", ""trung-don"", 4, 2409, 375]]"
+37,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung2,1,15,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 6, 2440, 376], [""trung-don"", ""trung-don"", 5, 2409, 375]]"
+38,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung2,1,16,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 7, 2440, 376], [""trung-don"", ""trung-don"", 6, 2409, 375]]"
+39,combo,,a,2342.4,418,0,0,True,1,idle,atk1,c1-trung2,1,17,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 8, 2440, 376], [""trung-don"", ""trung-don"", 7, 2409, 375]]"
+40,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-trung2,1,18,"[2356.4000000000005, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 9, 2440, 376], [""trung-don"", ""trung-don"", 8, 2409, 375]]"
+41,combo,,,2342.4,418,0,0,True,1,idle,atk1,c1-thu,1,19,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 10, 2440, 376], [""trung-don"", ""trung-don"", 9, 2409, 375]]"
+42,combo,,,2342.4,418,2.2,0,True,1,run,atk2,c2-chuanbi,2,1,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 10, 2409, 375], [""bui"", ""nho"", 1, 2338, 448]]"
+43,combo,,,2344.16,418,1.76,0,True,1,run,atk2,c2-chuanbi,2,2,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 11, 2409, 375], [""bui"", ""nho"", 2, 2338, 448]]"
+44,combo,,,2345.48,418,1.32,0,True,1,run,atk2,c2-chuanbi,2,3,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 12, 2409, 375], [""bui"", ""nho"", 3, 2338, 448]]"
+45,combo,,,2346.36,418,0.88,0,True,1,run,atk2,c2-giuong,2,4,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 13, 2409, 375], [""bui"", ""nho"", 4, 2338, 448]]"
+46,combo,,,2346.8,418,0.44,0,True,1,idle,atk2,c2-giuong,2,5,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 2338, 448]]"
+47,combo,,,2346.8,418,0.0,0,True,1,idle,atk2,c2-giuong,2,6,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 2338, 448]]"
+48,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-giuong,2,7,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 2338, 448]]"
+49,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-giuong,2,8,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 2338, 448]]"
+50,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-giuong~c2-vung,2,9,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 2338, 448]]"
+51,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-vung,2,10,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 2338, 448], [""vet-chem"", ""cheo-len"", 1, 2411, 362]]"
+52,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,11,"[2320.800000000001, 348, 116, 48]",4,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2338, 448], [""vet-chem"", ""cheo-len"", 2, 2411, 362], [""trung-don"", ""trung-don"", 1, 2413, 372]]"
+53,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,11,"[2320.800000000001, 348, 116, 48]",3,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2338, 448], [""vet-chem"", ""cheo-len"", 2, 2411, 362], [""trung-don"", ""trung-don"", 1, 2413, 372]]"
+54,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,11,"[2320.800000000001, 348, 116, 48]",2,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2338, 448], [""vet-chem"", ""cheo-len"", 2, 2411, 362], [""trung-don"", ""trung-don"", 1, 2413, 372]]"
+55,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,11,"[2320.800000000001, 348, 116, 48]",1,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2338, 448], [""vet-chem"", ""cheo-len"", 2, 2411, 362], [""trung-don"", ""trung-don"", 1, 2413, 372]]"
+56,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,11,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2338, 448], [""vet-chem"", ""cheo-len"", 2, 2411, 362], [""trung-don"", ""trung-don"", 1, 2413, 372]]"
+57,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,12,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2338, 448], [""vet-chem"", ""cheo-len"", 3, 2411, 362], [""trung-don"", ""trung-don"", 2, 2413, 372]]"
+58,combo,,a,2346.8,418,0,0,True,1,idle,atk2,c2-trung,2,13,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 4, 2411, 362], [""trung-don"", ""trung-don"", 3, 2413, 372]]"
+59,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung2,2,14,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 5, 2411, 362], [""trung-don"", ""trung-don"", 4, 2413, 372]]"
+60,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung2,2,15,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 6, 2411, 362], [""trung-don"", ""trung-don"", 5, 2413, 372]]"
+61,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung2,2,16,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 7, 2411, 362], [""trung-don"", ""trung-don"", 6, 2413, 372]]"
+62,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung2,2,17,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 8, 2411, 362], [""trung-don"", ""trung-don"", 7, 2413, 372]]"
+63,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-trung2,2,18,"[2320.800000000001, 348, 116, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 9, 2411, 362], [""trung-don"", ""trung-don"", 8, 2413, 372]]"
+64,combo,,,2346.8,418,0,0,True,1,idle,atk2,c2-thu,2,19,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 10, 2411, 362], [""trung-don"", ""trung-don"", 9, 2413, 372]]"
+65,combo,,,2346.8,418,3.08,0,True,1,run,atk3,c3-chuanbi,3,1,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 10, 2413, 372], [""bui"", ""nho"", 1, 2343, 448]]"
+66,combo,,,2349.44,418,2.64,0,True,1,run,atk3,c3-chuanbi,3,2,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 11, 2413, 372], [""bui"", ""nho"", 2, 2343, 448]]"
+67,combo,,,2351.64,418,2.2,0,True,1,run,atk3,c3-chuanbi,3,3,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 12, 2413, 372], [""bui"", ""nho"", 3, 2343, 448]]"
+68,combo,,,2353.4,418,1.76,0,True,1,run,atk3,c3-giuong,3,4,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 13, 2413, 372], [""bui"", ""nho"", 4, 2343, 448]]"
+69,combo,,,2354.72,418,1.32,0,True,1,run,atk3,c3-giuong,3,5,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 2343, 448]]"
+70,combo,,,2355.6,418,0.88,0,True,1,run,atk3,c3-giuong,3,6,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 2343, 448]]"
+71,combo,,,2356.04,418,0.44,0,True,1,idle,atk3,c3-giuong,3,7,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 2343, 448]]"
+72,combo,,,2356.04,418,0.0,0,True,1,idle,atk3,c3-giuong,3,8,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 2343, 448]]"
+73,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-giuong~c3-vung,3,9,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 2343, 448]]"
+74,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-vung,3,10,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 2343, 448], [""vet-chem"", ""cheo-xuong"", 1, 2438, 412]]"
+75,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",6,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+76,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",5,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+77,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",4,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+78,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",3,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+79,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",2,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+80,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",1,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+81,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,11,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2343, 448], [""vet-chem"", ""cheo-xuong"", 2, 2438, 412], [""trung-don"", ""trung-don"", 1, 2429, 419]]"
+82,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,12,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2343, 448], [""vet-chem"", ""cheo-xuong"", 3, 2438, 412], [""trung-don"", ""trung-don"", 2, 2429, 419]]"
+83,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung,3,13,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 4, 2438, 412], [""trung-don"", ""trung-don"", 3, 2429, 419]]"
+84,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung2,3,14,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2438, 412], [""trung-don"", ""trung-don"", 4, 2429, 419]]"
+85,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung2,3,15,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 6, 2438, 412], [""trung-don"", ""trung-don"", 5, 2429, 419]]"
+86,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung2,3,16,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 7, 2438, 412], [""trung-don"", ""trung-don"", 6, 2429, 419]]"
+87,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung2,3,17,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 8, 2438, 412], [""trung-don"", ""trung-don"", 7, 2429, 419]]"
+88,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-trung2,3,18,"[2353.0400000000013, 389, 99, 64]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 9, 2438, 412], [""trung-don"", ""trung-don"", 8, 2429, 419]]"
+89,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,19,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 10, 2438, 412], [""trung-don"", ""trung-don"", 9, 2429, 419]]"
+90,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,20,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 11, 2438, 412], [""trung-don"", ""trung-don"", 10, 2429, 419]]"
+91,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,21,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 12, 2438, 412], [""trung-don"", ""trung-don"", 11, 2429, 419]]"
+92,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,22,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 12, 2429, 419]]"
+93,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,23,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 13, 2429, 419]]"
+94,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,24,,0,0,0,0,0,0,[]
+95,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,25,,0,0,0,0,0,0,[]
+96,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-thu,3,26,,0,0,0,0,0,0,[]
+97,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,27,,0,0,0,0,0,0,[]
+98,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,28,,0,0,0,0,0,0,[]
+99,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,29,,0,0,0,0,0,0,[]
+100,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,30,,0,0,0,0,0,0,[]
+101,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,31,,0,0,0,0,0,0,[]
+102,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,32,,0,0,0,0,0,0,[]
+103,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,33,,0,0,0,0,0,0,[]
+104,combo,,,2356.04,418,0,0,True,1,idle,atk3,c3-ve,3,34,,0,0,0,0,0,0,[]
+105,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+106,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+107,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+108,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+109,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+110,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+111,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+112,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+113,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+114,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+115,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+116,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+117,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+118,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+119,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+120,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+121,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+122,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+123,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+124,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+125,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+126,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+127,combo,,,2356.04,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+128,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+129,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+130,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+131,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+132,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+133,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+134,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+135,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+136,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+137,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+138,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+139,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+140,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+141,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+142,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+143,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+144,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+145,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+146,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+147,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+148,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+149,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+150,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+151,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+152,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+153,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+154,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+155,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+156,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+157,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+158,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+159,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+160,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+161,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+162,bidanh-lui,,,2338,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+163,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,6,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+164,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,5,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+165,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,4,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+166,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,3,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+167,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,2,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+168,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,1,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+169,bidanh-lui,,,2338,418,-4.8,-6,True,1,idle,hurt,bd-1,0,35,,0,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2352, 392]]"
+170,bidanh-lui,,,2333.2,412.64,-4.8,-5.36,False,1,jump,hurt,bd-1,0,35,,0,0,17,0,0,0,"[[""bui"", ""to"", 2, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 2, 2352, 392]]"
+171,bidanh-lui,,,2328.4,407.92,-4.8,-4.72,False,1,jump,hurt,bd-1,0,35,,0,0,16,0,0,0,"[[""bui"", ""to"", 3, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 3, 2352, 392]]"
+172,bidanh-lui,,,2323.6,403.84,-4.8,-4.08,False,1,jump,hurt,bd-1,0,35,,0,0,15,0,0,0,"[[""bui"", ""to"", 4, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 4, 2352, 392]]"
+173,bidanh-lui,,,2318.8,400.4,-4.8,-3.44,False,1,jump,hurt,bd-1,0,35,,0,0,14,0,0,0,"[[""bui"", ""to"", 5, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 5, 2352, 392]]"
+174,bidanh-lui,,,2314.0,397.6,-4.8,-2.8,False,1,jump,hurt,bd-1,0,35,,0,0,13,0,0,0,"[[""bui"", ""to"", 6, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 6, 2352, 392]]"
+175,bidanh-lui,,,2309.2,395.44,-4.8,-2.16,False,1,jump,hurt,bd-2,0,35,,0,0,12,0,0,0,"[[""bui"", ""to"", 7, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 7, 2352, 392]]"
+176,bidanh-lui,,,2304.4,393.92,-4.8,-1.52,False,1,jump,hurt,bd-2,0,35,,0,0,11,0,0,0,"[[""bui"", ""to"", 8, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 8, 2352, 392]]"
+177,bidanh-lui,,,2299.6,393.02,-4.8,-0.9,False,1,jump,hurt,bd-2,0,35,,0,0,10,0,0,0,"[[""bui"", ""to"", 9, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 9, 2352, 392]]"
+178,bidanh-lui,,,2294.8,392.696,-4.8,-0.324,False,1,jump,hurt,bd-2,0,35,,0,0,9,0,0,0,"[[""bui"", ""to"", 10, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 10, 2352, 392]]"
+179,bidanh-lui,,,2290.396,392.907,-4.404,0.211,False,1,fall,hurt,bd-2,0,35,,0,0,8,0,0,0,"[[""bui"", ""to"", 11, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 11, 2352, 392]]"
+180,bidanh-lui,,,2286.388,393.653,-4.008,0.746,False,1,fall,hurt,bd-2,0,35,,0,0,7,0,0,0,"[[""bui"", ""to"", 12, 2347, 448]]"
+181,bidanh-lui,,,2282.776,394.991,-3.612,1.339,False,1,fall,hurt,bd-3,0,35,,0,0,6,0,0,0,"[[""bui"", ""to"", 13, 2347, 448]]"
+182,bidanh-lui,,,2279.56,396.992,-3.216,2.0,False,1,fall,hurt,bd-3,0,35,,0,0,5,0,0,0,"[[""bui"", ""to"", 14, 2347, 448]]"
+183,bidanh-lui,,,2276.74,399.708,-2.82,2.717,False,1,fall,hurt,bd-3,0,35,,0,0,4,0,0,0,"[[""bui"", ""to"", 15, 2347, 448]]"
+184,bidanh-lui,,,2274.316,403.142,-2.424,3.434,False,1,fall,hurt,bd-3,0,35,,0,0,3,0,0,0,"[[""bui"", ""to"", 16, 2347, 448]]"
+185,bidanh-lui,,,2272.288,407.292,-2.028,4.15,False,1,fall,hurt,bd-3,0,35,,0,0,2,0,0,0,"[[""bui"", ""to"", 17, 2347, 448]]"
+186,bidanh-lui,,,2270.656,412.16,-1.632,4.867,False,1,fall,hurt,bd-3,0,35,,0,0,1,0,0,0,[]
+187,bidanh-lui,,,2269.42,417.744,-1.236,5.584,True,1,run,run,chay#0,0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 2279, 448]]"
+188,bidanh-lui,,,2269.064,417.744,-0.356,0,True,1,idle,run,chay#0,0,35,,0,0,0,10,0,0,"[[""bui"", ""nho"", 2, 2279, 448]]"
+189,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,land,tiep-dat-1,0,35,,0,0,0,9,0,0,"[[""bui"", ""nho"", 3, 2279, 448]]"
+190,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,land,tiep-dat-1,0,35,,0,0,0,8,0,0,"[[""bui"", ""nho"", 4, 2279, 448]]"
+191,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,land,tiep-dat-2,0,35,,0,0,0,7,0,0,"[[""bui"", ""nho"", 5, 2279, 448]]"
+192,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,land,tiep-dat-2,0,35,,0,0,0,6,0,0,"[[""bui"", ""nho"", 6, 2279, 448]]"
+193,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,land,tiep-dat-2,0,35,,0,0,0,5,0,0,"[[""bui"", ""nho"", 7, 2279, 448]]"
+194,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,4,0,0,"[[""bui"", ""nho"", 8, 2279, 448]]"
+195,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,3,0,0,"[[""bui"", ""nho"", 9, 2279, 448]]"
+196,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,2,0,0,"[[""bui"", ""nho"", 10, 2279, 448]]"
+197,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,1,0,0,"[[""bui"", ""nho"", 11, 2279, 448]]"
+198,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2279, 448]]"
+199,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 2279, 448]]"
+200,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 2279, 448]]"
+201,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+202,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+203,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+204,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+205,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+206,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+207,bidanh-lui,,,2269.064,417.744,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+208,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+209,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+210,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+211,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+212,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+213,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+214,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+215,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+216,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+217,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+218,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+219,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+220,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+221,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+222,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+223,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+224,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+225,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+226,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+227,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+228,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+229,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+230,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+231,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+232,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+233,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+234,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+235,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+236,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+237,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+238,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+239,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+240,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+241,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+242,bidanh-toi,,,2338,418,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+243,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,6,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+244,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,5,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+245,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,4,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+246,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,3,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+247,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,2,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+248,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,1,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+249,bidanh-toi,,,2338,418,-4.8,-6,True,-1,idle,hurt,bdt-1,0,35,,0,0,18,0,0,0,"[[""bui"", ""to"", 1, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 1, 2344, 392]]"
+250,bidanh-toi,,,2333.2,412.64,-4.8,-5.36,False,-1,jump,hurt,bdt-1,0,35,,0,0,17,0,0,0,"[[""bui"", ""to"", 2, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 2, 2344, 392]]"
+251,bidanh-toi,,,2328.4,407.92,-4.8,-4.72,False,-1,jump,hurt,bdt-1,0,35,,0,0,16,0,0,0,"[[""bui"", ""to"", 3, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 3, 2344, 392]]"
+252,bidanh-toi,,,2323.6,403.84,-4.8,-4.08,False,-1,jump,hurt,bdt-1,0,35,,0,0,15,0,0,0,"[[""bui"", ""to"", 4, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 4, 2344, 392]]"
+253,bidanh-toi,,,2318.8,400.4,-4.8,-3.44,False,-1,jump,hurt,bdt-1,0,35,,0,0,14,0,0,0,"[[""bui"", ""to"", 5, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 5, 2344, 392]]"
+254,bidanh-toi,,,2314.0,397.6,-4.8,-2.8,False,-1,jump,hurt,bdt-1,0,35,,0,0,13,0,0,0,"[[""bui"", ""to"", 6, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 6, 2344, 392]]"
+255,bidanh-toi,,,2309.2,395.44,-4.8,-2.16,False,-1,jump,hurt,bdt-2,0,35,,0,0,12,0,0,0,"[[""bui"", ""to"", 7, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 7, 2344, 392]]"
+256,bidanh-toi,,,2304.4,393.92,-4.8,-1.52,False,-1,jump,hurt,bdt-2,0,35,,0,0,11,0,0,0,"[[""bui"", ""to"", 8, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 8, 2344, 392]]"
+257,bidanh-toi,,,2299.6,393.02,-4.8,-0.9,False,-1,jump,hurt,bdt-2,0,35,,0,0,10,0,0,0,"[[""bui"", ""to"", 9, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 9, 2344, 392]]"
+258,bidanh-toi,,,2294.8,392.696,-4.8,-0.324,False,-1,jump,hurt,bdt-2,0,35,,0,0,9,0,0,0,"[[""bui"", ""to"", 10, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 10, 2344, 392]]"
+259,bidanh-toi,,,2290.396,392.907,-4.404,0.211,False,-1,fall,hurt,bdt-2,0,35,,0,0,8,0,0,0,"[[""bui"", ""to"", 11, 2347, 448], [""lam-bi-danh"", ""lam-bi-danh"", 11, 2344, 392]]"
+260,bidanh-toi,,,2286.388,393.653,-4.008,0.746,False,-1,fall,hurt,bdt-2,0,35,,0,0,7,0,0,0,"[[""bui"", ""to"", 12, 2347, 448]]"
+261,bidanh-toi,,,2282.776,394.991,-3.612,1.339,False,-1,fall,hurt,bdt-3,0,35,,0,0,6,0,0,0,"[[""bui"", ""to"", 13, 2347, 448]]"
+262,bidanh-toi,,,2279.56,396.992,-3.216,2.0,False,-1,fall,hurt,bdt-3,0,35,,0,0,5,0,0,0,"[[""bui"", ""to"", 14, 2347, 448]]"
+263,bidanh-toi,,,2276.74,399.708,-2.82,2.717,False,-1,fall,hurt,bdt-3,0,35,,0,0,4,0,0,0,"[[""bui"", ""to"", 15, 2347, 448]]"
+264,bidanh-toi,,,2274.316,403.142,-2.424,3.434,False,-1,fall,hurt,bdt-3,0,35,,0,0,3,0,0,0,"[[""bui"", ""to"", 16, 2347, 448]]"
+265,bidanh-toi,,,2272.288,407.292,-2.028,4.15,False,-1,fall,hurt,bdt-3,0,35,,0,0,2,0,0,0,"[[""bui"", ""to"", 17, 2347, 448]]"
+266,bidanh-toi,,,2270.656,412.16,-1.632,4.867,False,-1,fall,hurt,bdt-3,0,35,,0,0,1,0,0,0,[]
+267,bidanh-toi,,,2269.42,417.744,-1.236,5.584,True,-1,run,run,chay#0,0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 2279, 448]]"
+268,bidanh-toi,,,2269.064,417.744,-0.356,0,True,-1,idle,run,chay#0,0,35,,0,0,0,10,0,0,"[[""bui"", ""nho"", 2, 2279, 448]]"
+269,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,land,tiep-dat-1,0,35,,0,0,0,9,0,0,"[[""bui"", ""nho"", 3, 2279, 448]]"
+270,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,land,tiep-dat-1,0,35,,0,0,0,8,0,0,"[[""bui"", ""nho"", 4, 2279, 448]]"
+271,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,land,tiep-dat-2,0,35,,0,0,0,7,0,0,"[[""bui"", ""nho"", 5, 2279, 448]]"
+272,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,land,tiep-dat-2,0,35,,0,0,0,6,0,0,"[[""bui"", ""nho"", 6, 2279, 448]]"
+273,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,land,tiep-dat-2,0,35,,0,0,0,5,0,0,"[[""bui"", ""nho"", 7, 2279, 448]]"
+274,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,4,0,0,"[[""bui"", ""nho"", 8, 2279, 448]]"
+275,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,3,0,0,"[[""bui"", ""nho"", 9, 2279, 448]]"
+276,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,2,0,0,"[[""bui"", ""nho"", 10, 2279, 448]]"
+277,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,1,0,0,"[[""bui"", ""nho"", 11, 2279, 448]]"
+278,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2279, 448]]"
+279,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 2279, 448]]"
+280,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 2279, 448]]"
+281,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+282,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+283,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+284,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+285,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+286,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+287,bidanh-toi,,,2269.064,417.744,0,0,True,-1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+288,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+289,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+290,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+291,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+292,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+293,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+294,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+295,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+296,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+297,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,35,,0,0,0,0,0,0,[]
+298,tren-khong,u,a,2230,418,0,0,True,1,idle,atk5,nghi~c5-chuanbi,5,1,,0,0,0,0,0,0,[]
+299,tren-khong,u,,2230,418,0,0,True,1,idle,atk5,nghi~c5-chuanbi,5,2,,0,0,0,0,0,0,[]
+300,tren-khong,u,,2230,418,0,0,True,1,idle,atk5,c5-chuanbi,5,3,,0,0,0,0,0,0,[]
+301,tren-khong,u,,2230,418,0,0,True,1,idle,atk5,c5-chuanbi,5,4,,0,0,0,0,0,0,[]
+302,tren-khong,u,,2230,418,0,0,True,1,idle,atk5,c5-chuanbi,5,5,,0,0,0,0,0,0,[]
+303,tren-khong,u,,2230,418,0,0,True,1,idle,atk5,c5-giuong,5,6,,0,0,0,0,0,0,[]
+304,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-giuong,5,7,,0,0,0,0,0,0,[]
+305,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-giuong,5,8,,0,0,0,0,0,0,[]
+306,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-giuong~c5-vung,5,9,,0,0,0,0,0,0,[]
+307,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-vung,5,10,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 1, 2266, 344]]"
+308,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung,5,11,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 2, 2266, 344]]"
+309,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung,5,12,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 3, 2266, 344]]"
+310,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung,5,13,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 4, 2266, 344]]"
+311,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung2,5,14,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 5, 2266, 344]]"
+312,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung2,5,15,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 6, 2266, 344]]"
+313,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung2,5,16,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 7, 2266, 344]]"
+314,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung2,5,17,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 8, 2266, 344]]"
+315,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-trung2,5,18,"[2231, 308, 97, 60]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 9, 2266, 344]]"
+316,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-thu,5,19,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-len"", 10, 2266, 344]]"
+317,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-thu,5,20,,0,0,0,0,0,0,[]
+318,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-thu,5,21,,0,0,0,0,0,0,[]
+319,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-ve,5,22,,0,0,0,0,0,0,[]
+320,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-ve,5,23,,0,0,0,0,0,0,[]
+321,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-ve,5,24,,0,0,0,0,0,0,[]
+322,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-ve,5,25,,0,0,0,0,0,0,[]
+323,tren-khong,,,2230,418,0,0,True,1,idle,atk5,c5-ve,5,26,,0,0,0,0,0,0,[]
+324,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+325,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+326,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+327,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+328,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+329,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+330,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+331,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+332,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+333,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+334,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+335,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+336,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+337,tren-khong,,,2230,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+338,tren-khong,r,j,2230.733,406.027,0.733,-11.973,False,1,jump,jump,nhay-bat,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 2240, 448]]"
+339,tren-khong,r,,2232.017,400.36,1.283,-5.667,False,1,jump,jump,nhay-len,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 2240, 448]]"
+340,tren-khong,r,,2233.85,395.333,1.833,-5.027,False,1,jump,jump,nhay-len,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 2240, 448]]"
+341,tren-khong,r,,2236.233,390.947,2.383,-4.387,False,1,jump,jump,nhay-len,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 2240, 448]]"
+342,tren-khong,r,,2239.167,387.2,2.933,-3.747,False,1,jump,jump,nhay-dinh,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 2240, 448]]"
+343,tren-khong,r,,2242.65,384.093,3.483,-3.107,False,1,jump,jump,nhay-dinh,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 2240, 448]]"
+344,tren-khong,r,,2246.683,381.627,4.033,-2.467,False,1,jump,jump,nhay-dinh,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 2240, 448]]"
+345,tren-khong,r,,2251.083,379.8,4.4,-1.827,False,1,jump,jump,nhay-dinh,0,27,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 2240, 448]]"
+346,tren-khong,r,a,2255.483,378.613,4.4,-1.187,False,1,jump,atk6,c6-giuong,6,1,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 2240, 448]]"
+347,tren-khong,r,,2259.883,378.023,4.4,-0.59,False,1,jump,atk6,c6-giuong,6,2,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 2240, 448]]"
+348,tren-khong,r,,2264.283,377.987,4.4,-0.036,False,1,jump,atk6,c6-giuong,6,3,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2240, 448]]"
+349,tren-khong,r,,2268.683,378.465,4.4,0.478,False,1,fall,atk6,c6-giuong,6,4,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2240, 448]]"
+350,tren-khong,r,,2273.083,379.507,4.4,1.042,False,1,fall,atk6,c6-giuong,6,5,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 2240, 448]]"
+351,tren-khong,r,,2277.483,381.175,4.4,1.668,False,1,fall,atk6,c6-giuong~c6-vung,6,6,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 2240, 448]]"
+352,tren-khong,r,,2281.883,383.545,4.4,2.369,False,1,fall,atk6,c6-vung,6,7,,0,0,0,0,0,0,[]
+353,tren-khong,r,,2286.283,386.631,4.4,3.086,False,1,fall,atk6,c6-vung,6,8,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 1, 2382, 333]]"
+354,tren-khong,r,,2290.683,390.434,4.4,3.803,False,1,fall,atk6,c6-trung,6,9,"[2297.683333333334, 313.433659698624, 127, 48]",3,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 2, 2387, 336], [""trung-don"", ""trung-don"", 1, 2377, 351]]"
+355,tren-khong,r,,2290.683,390.434,4.4,3.803,False,1,fall,atk6,c6-trung,6,9,"[2297.683333333334, 313.433659698624, 127, 48]",2,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 2, 2387, 336], [""trung-don"", ""trung-don"", 1, 2377, 351]]"
+356,tren-khong,r,,2290.683,390.434,4.4,3.803,False,1,fall,atk6,c6-trung,6,9,"[2297.683333333334, 313.433659698624, 127, 48]",1,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 2, 2387, 336], [""trung-don"", ""trung-don"", 1, 2377, 351]]"
+357,tren-khong,r,,2290.683,390.434,4.4,3.803,False,1,fall,atk6,c6-trung,6,9,"[2297.683333333334, 313.433659698624, 127, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 2, 2387, 336], [""trung-don"", ""trung-don"", 1, 2377, 351]]"
+358,tren-khong,r,,2295.083,394.953,4.4,4.52,False,1,fall,atk6,c6-trung,6,10,"[2302.083333333334, 317.95334424286494, 127, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 3, 2391, 341], [""trung-don"", ""trung-don"", 2, 2377, 351]]"
+359,tren-khong,r,,2299.483,400.19,4.4,5.236,False,1,fall,atk6,c6-trung,6,11,"[2306.483333333334, 323.18982878710585, 127, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 4, 2395, 346], [""trung-don"", ""trung-don"", 3, 2377, 351]]"
+360,tren-khong,,,2303.487,406.143,4.004,5.953,False,1,fall,atk6,c6-trung2,6,12,"[2310.487333333334, 329.14311333134674, 127, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 5, 2399, 352], [""trung-don"", ""trung-don"", 4, 2377, 351]]"
+361,tren-khong,,,2307.095,412.813,3.608,6.67,False,1,fall,atk6,c6-trung2,6,13,"[2314.095333333334, 335.81319787558766, 127, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 6, 2403, 359], [""trung-don"", ""trung-don"", 5, 2377, 351]]"
+362,tren-khong,,,2310.307,417.813,3.212,0,True,1,run,atk6,c6-trung2,6,14,"[2317.307333333334, 340.81319787558766, 127, 48]",0,0,0,10,0,0,"[[""vet-chem"", ""ngang"", 7, 2406, 364], [""trung-don"", ""trung-don"", 6, 2377, 351], [""bui"", ""nho"", 1, 2320, 448]]"
+363,tren-khong,,,2313.079,417.813,2.772,0,True,1,run,atk6,c6-trung2,6,15,"[2320.079333333334, 340.81319787558766, 127, 48]",0,0,0,9,0,0,"[[""vet-chem"", ""ngang"", 8, 2409, 364], [""trung-don"", ""trung-don"", 7, 2377, 351], [""bui"", ""nho"", 2, 2320, 448]]"
+364,tren-khong,,,2315.411,417.813,2.332,0,True,1,run,atk6,c6-trung2,6,16,"[2322.411333333334, 340.81319787558766, 127, 48]",0,0,0,8,0,0,"[[""vet-chem"", ""ngang"", 9, 2411, 364], [""trung-don"", ""trung-don"", 8, 2377, 351], [""bui"", ""nho"", 3, 2320, 448]]"
+365,tren-khong,,,2317.303,417.813,1.892,0,True,1,run,atk6,c6-thu,6,17,,0,0,0,7,0,0,"[[""vet-chem"", ""ngang"", 10, 2413, 364], [""trung-don"", ""trung-don"", 9, 2377, 351], [""bui"", ""nho"", 4, 2320, 448]]"
+366,tren-khong,,,2318.755,417.813,1.452,0,True,1,run,atk6,c6-thu,6,18,,0,0,0,6,0,0,"[[""trung-don"", ""trung-don"", 10, 2377, 351], [""bui"", ""nho"", 5, 2320, 448]]"
+367,tren-khong,,,2319.767,417.813,1.012,0,True,1,run,atk6,c6-thu,6,19,,0,0,0,5,0,0,"[[""trung-don"", ""trung-don"", 11, 2377, 351], [""bui"", ""nho"", 6, 2320, 448]]"
+368,tren-khong,,,2320.339,417.813,0.572,0,True,1,idle,atk6,c6-thu,6,20,,0,0,0,4,0,0,"[[""trung-don"", ""trung-don"", 12, 2377, 351], [""bui"", ""nho"", 7, 2320, 448]]"
+369,tren-khong,,,2320.471,417.813,0.132,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,3,0,0,"[[""trung-don"", ""trung-don"", 13, 2377, 351], [""bui"", ""nho"", 8, 2320, 448]]"
+370,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,2,0,0,"[[""bui"", ""nho"", 9, 2320, 448]]"
+371,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,1,0,0,"[[""bui"", ""nho"", 10, 2320, 448]]"
+372,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 2320, 448]]"
+373,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 2320, 448]]"
+374,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 2320, 448]]"
+375,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 2320, 448]]"
+376,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+377,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+378,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+379,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+380,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+381,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+382,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+383,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+384,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+385,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+386,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+387,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+388,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+389,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+390,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+391,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+392,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+393,tren-khong,,,2320.471,417.813,0,0,True,1,idle,idle,nghi(TAM),0,21,,0,0,0,0,0,0,[]
+394,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,6,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+395,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,5,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+396,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,4,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+397,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,3,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+398,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,2,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+399,tren-khong,,,2320.471,417.813,-4.8,-6,True,1,idle,hurt,bd-1,0,21,,1,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+400,nay,d,,2426,150,0,0,False,1,idle,hurt,bd-1,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2334, 392]]"
+401,nay,d,,2426,150.512,0,0.512,False,1,fall,fall,nhay-dinh,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 2, 2334, 392]]"
+402,nay,d,,2426,151.591,0,1.079,False,1,fall,fall,nhay-dinh,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 3, 2334, 392]]"
+403,nay,d,,2426,153.301,0,1.71,False,1,fall,fall,nhay-dinh,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 4, 2334, 392]]"
+404,nay,d,,2426,155.717,0,2.416,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 5, 2334, 392]]"
+405,nay,d,,2426,158.85,0,3.133,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 6, 2334, 392]]"
+406,nay,d,,2426,162.7,0,3.85,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 7, 2334, 392]]"
+407,nay,d,,2426,167.266,0,4.566,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 8, 2334, 392]]"
+408,nay,d,,2426,172.55,0,5.283,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 9, 2334, 392]]"
+409,nay,d,,2426,178.55,0,6.0,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 10, 2334, 392]]"
+410,nay,d,,2426,185.267,0,6.717,False,1,fall,fall,roi,0,21,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 11, 2334, 392]]"
+411,nay,d,,2426,192.7,0,7.434,False,1,fall,fall,roi-nhanh,0,21,,0,0,0,0,0,0,[]
+412,nay,d,,2426,200.851,0,8.15,False,1,fall,fall,roi-nhanh,0,21,,0,0,0,0,0,0,[]
+413,nay,d,,2426,209.718,0,8.867,False,1,fall,fall,roi-nhanh,0,21,,0,0,0,0,0,0,[]
+414,nay,d,a,2426,219.302,0,9.584,False,1,fall,atk4,c4-dam,4,1,"[2410, 225.3022069560029, 64, 82]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 1, 2460, 271]]"
+415,nay,d,,2426,229.603,0,10.301,False,1,fall,atk4,c4-giu,4,2,"[2410, 235.60308497785456, 64, 82]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 2, 2460, 282]]"
+416,nay,d,,2426,240.003,0,10.4,False,1,fall,atk4,c4-giu,4,3,"[2410, 246.0030849778546, 64, 82]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 3, 2460, 292]]"
+417,nay,d,,2426,250.403,0,10.4,False,1,fall,atk4,c4-giu,4,4,"[2410, 256.40308497785463, 64, 82]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 4, 2460, 302]]"
+418,nay,d,,2426,260.803,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,3,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2460, 313], [""trung-don"", ""trung-don"", 1, 2433, 344], [""trung-don"", ""trung-don"", 1, 2436, 311]]"
+419,nay,d,,2426,260.803,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,2,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2460, 313], [""trung-don"", ""trung-don"", 1, 2433, 344], [""trung-don"", ""trung-don"", 1, 2436, 311]]"
+420,nay,d,,2426,260.803,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,1,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2460, 313], [""trung-don"", ""trung-don"", 1, 2433, 344], [""trung-don"", ""trung-don"", 1, 2436, 311]]"
+421,nay,d,,2426,260.803,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2460, 313], [""trung-don"", ""trung-don"", 1, 2433, 344], [""trung-don"", ""trung-don"", 1, 2436, 311]]"
+422,nay,d,,2426,249.47,0,-11.333,False,1,jump,atk4,c4-thu,4,12,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 6, 2460, 301], [""trung-don"", ""trung-don"", 2, 2433, 344], [""trung-don"", ""trung-don"", 2, 2436, 311]]"
+423,nay,d,,2426,238.776,0,-10.693,False,1,jump,atk4,c4-thu,4,13,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 7, 2460, 291], [""trung-don"", ""trung-don"", 3, 2433, 344], [""trung-don"", ""trung-don"", 3, 2436, 311]]"
+424,nay,d,,2426,228.723,0,-10.053,False,1,jump,atk4,c4-thu,4,14,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 8, 2460, 281], [""trung-don"", ""trung-don"", 4, 2433, 344], [""trung-don"", ""trung-don"", 4, 2436, 311]]"
+425,nay,d,,2426,219.31,0,-9.413,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 9, 2460, 271], [""trung-don"", ""trung-don"", 5, 2433, 344], [""trung-don"", ""trung-don"", 5, 2436, 311]]"
+426,nay,d,,2426,210.537,0,-8.773,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 10, 2460, 263], [""trung-don"", ""trung-don"", 6, 2433, 344], [""trung-don"", ""trung-don"", 6, 2436, 311]]"
+427,nay,d,,2426,202.403,0,-8.133,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 7, 2433, 344], [""trung-don"", ""trung-don"", 7, 2436, 311]]"
+428,nay,d,,2426,194.91,0,-7.493,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 8, 2433, 344], [""trung-don"", ""trung-don"", 8, 2436, 311]]"
+429,nay,d,,2426,188.057,0,-6.853,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 9, 2433, 344], [""trung-don"", ""trung-don"", 9, 2436, 311]]"
+430,nay,d,,2426,181.843,0,-6.213,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 10, 2433, 344], [""trung-don"", ""trung-don"", 10, 2436, 311]]"
+431,nay,d,,2426,176.27,0,-5.573,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 11, 2433, 344], [""trung-don"", ""trung-don"", 11, 2436, 311]]"
+432,nay,d,,2426,171.337,0,-4.933,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 12, 2433, 344], [""trung-don"", ""trung-don"", 12, 2436, 311]]"
+433,nay,d,,2426,167.043,0,-4.293,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 13, 2433, 344], [""trung-don"", ""trung-don"", 13, 2436, 311]]"
+434,nay,d,,2426,163.39,0,-3.653,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+435,nay,d,,2426,160.377,0,-3.013,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+436,nay,d,,2426,158.004,0,-2.373,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+437,nay,d,,2426,156.27,0,-1.733,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+438,nay,d,,2426,155.172,0,-1.098,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+439,nay,d,,2426,154.664,0,-0.508,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+440,nay,d,,2426,154.704,0,0.04,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+441,nay,d,,2426,155.261,0,0.556,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+442,nay,d,,2426,156.389,0,1.128,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+443,nay,d,,2426,158.154,0,1.765,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+444,nay,d,,2426,160.632,0,2.478,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+445,nay,d,,2426,163.827,0,3.195,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+446,nay,d,,2426,167.738,0,3.911,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+447,nay,d,,2426,172.366,0,4.628,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+448,nay,d,,2426,177.711,0,5.345,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+449,nay,d,,2426,183.773,0,6.062,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+450,nay,d,,2426,190.552,0,6.779,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+451,nay,d,,2426,198.047,0,7.495,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+452,nay,d,,2426,206.259,0,8.212,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+453,nay,d,,2426,215.188,0,8.929,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+454,nay,d,,2426,224.834,0,9.646,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+455,nay,d,,2426,235.196,0,10.363,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+456,nay,d,a,2426,245.596,0,10.4,False,1,fall,atk4,c4-dam,4,1,"[2410, 251.5963776165387, 64, 82]",0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 1, 2460, 298]]"
+457,nay,d,,2426,255.996,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,3,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 2, 2460, 308], [""trung-don"", ""trung-don"", 1, 2434, 342], [""trung-don"", ""trung-don"", 1, 2436, 306]]"
+458,nay,d,,2426,255.996,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,2,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 2, 2460, 308], [""trung-don"", ""trung-don"", 1, 2434, 342], [""trung-don"", ""trung-don"", 1, 2436, 306]]"
+459,nay,d,,2426,255.996,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,1,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 2, 2460, 308], [""trung-don"", ""trung-don"", 1, 2434, 342], [""trung-don"", ""trung-don"", 1, 2436, 306]]"
+460,nay,d,,2426,255.996,0,-11.973,False,1,fall,atk4,c4-giu,4,11,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 2, 2460, 308], [""trung-don"", ""trung-don"", 1, 2434, 342], [""trung-don"", ""trung-don"", 1, 2436, 306]]"
+461,nay,d,,2426,244.663,0,-11.333,False,1,jump,atk4,c4-thu,4,12,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 3, 2460, 297], [""trung-don"", ""trung-don"", 2, 2434, 342], [""trung-don"", ""trung-don"", 2, 2436, 306]]"
+462,nay,d,,2426,233.97,0,-10.693,False,1,jump,atk4,c4-thu,4,13,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 4, 2460, 286], [""trung-don"", ""trung-don"", 3, 2434, 342], [""trung-don"", ""trung-don"", 3, 2436, 306]]"
+463,nay,d,,2426,223.916,0,-10.053,False,1,jump,atk4,c4-thu,4,14,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 5, 2460, 276], [""trung-don"", ""trung-don"", 4, 2434, 342], [""trung-don"", ""trung-don"", 4, 2436, 306]]"
+464,nay,d,,2426,214.503,0,-9.413,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 6, 2460, 267], [""trung-don"", ""trung-don"", 5, 2434, 342], [""trung-don"", ""trung-don"", 5, 2436, 306]]"
+465,nay,d,,2426,205.73,0,-8.773,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 7, 2460, 258], [""trung-don"", ""trung-don"", 6, 2434, 342], [""trung-don"", ""trung-don"", 6, 2436, 306]]"
+466,nay,d,,2426,197.597,0,-8.133,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 8, 2460, 250], [""trung-don"", ""trung-don"", 7, 2434, 342], [""trung-don"", ""trung-don"", 7, 2436, 306]]"
+467,nay,d,,2426,190.103,0,-7.493,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 9, 2460, 242], [""trung-don"", ""trung-don"", 8, 2434, 342], [""trung-don"", ""trung-don"", 8, 2436, 306]]"
+468,nay,,,2426,183.25,0,-6.853,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""vet-chem"", ""cheo-xuong"", 10, 2460, 235], [""trung-don"", ""trung-don"", 9, 2434, 342], [""trung-don"", ""trung-don"", 9, 2436, 306]]"
+469,nay,,,2426,177.037,0,-6.213,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 10, 2434, 342], [""trung-don"", ""trung-don"", 10, 2436, 306]]"
+470,nay,,,2426,171.463,0,-5.573,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 11, 2434, 342], [""trung-don"", ""trung-don"", 11, 2436, 306]]"
+471,nay,,,2426,166.53,0,-4.933,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 12, 2434, 342], [""trung-don"", ""trung-don"", 12, 2436, 306]]"
+472,nay,,,2426,162.237,0,-4.293,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""trung-don"", ""trung-don"", 13, 2434, 342], [""trung-don"", ""trung-don"", 13, 2436, 306]]"
+473,nay,,,2426,158.583,0,-3.653,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+474,nay,,,2426,155.57,0,-3.013,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+475,nay,,,2426,153.197,0,-2.373,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+476,nay,,,2426,151.464,0,-1.733,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+477,nay,,,2426,150.365,0,-1.098,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+478,nay,,,2426,149.858,0,-0.508,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+479,nay,,,2426,149.898,0,0.04,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+480,nay,,,2426,150.454,0,0.556,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+481,nay,,,2426,151.582,0,1.128,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+482,nay,,,2426,153.348,0,1.765,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+483,nay,,,2426,155.825,0,2.478,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+484,nay,,,2426,159.02,0,3.195,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+485,nay,,,2426,162.931,0,3.911,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+486,nay,,,2426,167.56,0,4.628,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+487,nay,,,2426,172.905,0,5.345,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+488,nay,,,2426,178.966,0,6.062,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+489,nay,,,2426,185.745,0,6.779,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+490,nay,,,2426,193.24,0,7.495,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+491,nay,,,2426,201.452,0,8.212,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+492,nay,,,2426,210.381,0,8.929,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+493,nay,,,2426,220.027,0,9.646,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+494,nay,,,2426,230.39,0,10.363,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+495,nay,,,2426,240.79,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+496,nay,,,2426,251.19,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+497,nay,,,2426,261.59,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+498,nay,,,2426,271.99,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+499,nay,,,2426,282.39,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+500,nay,,,2426,292.79,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+501,nay,,,2426,303.19,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+502,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,6,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+503,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,5,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+504,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,4,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+505,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,3,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+506,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,2,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+507,nay,,,2426,313.59,4.8,-6,False,1,fall,hurt,bdt-1,0,15,,1,0,18,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+508,nhay,,,128,418,0,0,True,1,fall,hurt,bdt-1,0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 1, 2440, 288]]"
+509,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 2, 2440, 288]]"
+510,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 3, 2440, 288]]"
+511,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 4, 2440, 288]]"
+512,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 5, 2440, 288]]"
+513,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 6, 2440, 288]]"
+514,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 7, 2440, 288]]"
+515,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 8, 2440, 288]]"
+516,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 9, 2440, 288]]"
+517,nhay,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 10, 2440, 288]]"
+518,nhay,j,j,128,406.027,0,-11.973,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""lam-bi-danh"", ""lam-bi-danh"", 11, 2440, 288], [""bui"", ""nho"", 1, 138, 448]]"
+519,nhay,j,,128,394.693,0,-11.333,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 138, 448]]"
+520,nhay,j,,128,384.0,0,-10.693,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 138, 448]]"
+521,nhay,j,,128,373.947,0,-10.053,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 138, 448]]"
+522,nhay,j,,128,364.533,0,-9.413,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 138, 448]]"
+523,nhay,j,,128,355.76,0,-8.773,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 138, 448]]"
+524,nhay,j,,128,347.627,0,-8.133,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 138, 448]]"
+525,nhay,j,,128,340.134,0,-7.493,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 138, 448]]"
+526,nhay,j,,128,333.28,0,-6.853,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 138, 448]]"
+527,nhay,j,,128,327.067,0,-6.213,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 138, 448]]"
+528,nhay,j,,128,321.494,0,-5.573,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 138, 448]]"
+529,nhay,j,,128,316.56,0,-4.933,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 138, 448]]"
+530,nhay,j,,128,312.267,0,-4.293,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 138, 448]]"
+531,nhay,j,,128,308.614,0,-3.653,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 138, 448]]"
+532,nhay,j,,128,305.6,0,-3.013,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+533,nhay,j,,128,303.227,0,-2.373,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+534,nhay,j,,128,301.494,0,-1.733,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+535,nhay,j,,128,300.389,0,-1.105,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+536,nhay,j,,128,299.8,0,-0.589,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+537,nhay,j,,128,299.636,0,-0.164,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+538,nhay,j,,128,299.821,0,0.185,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+539,nhay,j,,128,300.363,0,0.542,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+540,nhay,j,,128,301.337,0,0.974,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+541,nhay,j,,128,302.836,0,1.499,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+542,nhay,j,,128,304.981,0,2.144,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+543,nhay,j,,128,307.841,0,2.861,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+544,nhay,j,,128,311.419,0,3.578,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+545,nhay,j,,128,315.714,0,4.295,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+546,nhay,j,,128,320.725,0,5.011,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+547,nhay,j,,128,326.453,0,5.728,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+548,nhay,j,,128,332.898,0,6.445,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+549,nhay,j,,128,340.06,0,7.162,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+550,nhay,j,,128,347.938,0,7.879,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+551,nhay,j,,128,356.534,0,8.595,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+552,nhay,j,,128,365.846,0,9.312,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+553,nhay,j,,128,375.875,0,10.029,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+554,nhay,j,,128,386.275,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+555,nhay,j,,128,396.675,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+556,nhay,j,,128,407.075,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+557,nhay,j,,128,417.475,0,10.4,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 138, 447]]"
+558,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,10,0,0,"[[""bui"", ""nho"", 2, 138, 447]]"
+559,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,9,0,0,"[[""bui"", ""nho"", 3, 138, 447]]"
+560,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,8,0,0,"[[""bui"", ""nho"", 4, 138, 447]]"
+561,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,7,0,0,"[[""bui"", ""nho"", 5, 138, 447]]"
+562,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,6,0,0,"[[""bui"", ""nho"", 6, 138, 447]]"
+563,nhay,j,,128,417.475,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,5,0,0,"[[""bui"", ""nho"", 7, 138, 447]]"
+564,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,4,0,0,"[[""bui"", ""nho"", 8, 138, 447]]"
+565,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,3,0,0,"[[""bui"", ""nho"", 9, 138, 447]]"
+566,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,2,0,0,"[[""bui"", ""nho"", 10, 138, 447]]"
+567,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,1,0,0,"[[""bui"", ""nho"", 11, 138, 447]]"
+568,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 138, 447]]"
+569,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 138, 447]]"
+570,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 138, 447]]"
+571,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+572,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+573,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+574,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+575,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+576,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+577,nhay,j,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+578,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+579,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+580,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+581,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+582,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+583,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+584,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+585,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+586,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+587,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+588,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+589,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+590,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+591,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+592,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+593,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+594,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+595,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+596,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+597,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+598,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+599,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+600,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+601,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+602,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+603,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+604,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+605,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+606,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+607,nhay,,,128,417.475,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+608,nhay,r,,128.733,417.475,0.733,0,True,1,run,run,chay#0,0,15,,0,0,0,0,0,0,[]
+609,nhay,r,,130.2,417.475,1.467,0,True,1,run,run,chay#1,0,15,,0,0,0,0,0,0,[]
+610,nhay,r,,132.4,417.475,2.2,0,True,1,run,run,chay#1,0,15,,0,0,0,0,0,0,[]
+611,nhay,r,,135.333,417.475,2.933,0,True,1,run,run,chay#2,0,15,,0,0,0,0,0,0,[]
+612,nhay,r,,139.0,417.475,3.667,0,True,1,run,run,chay#3,0,15,,0,0,0,0,0,0,[]
+613,nhay,r,,143.4,417.475,4.4,0,True,1,run,run,chay#4,0,15,,0,0,0,0,0,0,[]
+614,nhay,r,,147.8,417.475,4.4,0,True,1,run,run,chay#5,0,15,,0,0,0,0,0,0,[]
+615,nhay,r,,152.2,417.475,4.4,0,True,1,run,run,chay#6,0,15,,0,0,0,0,0,0,[]
+616,nhay,rj,j,156.6,405.502,4.4,-11.973,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 162, 447]]"
+617,nhay,rj,,161,394.168,4.4,-11.333,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 162, 447]]"
+618,nhay,rj,,165.4,383.475,4.4,-10.693,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 162, 447]]"
+619,nhay,rj,,169.8,373.422,4.4,-10.053,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 162, 447]]"
+620,nhay,rj,,174.2,364.008,4.4,-9.413,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 162, 447]]"
+621,nhay,rj,,178.6,355.235,4.4,-8.773,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 162, 447]]"
+622,nhay,rj,,183.0,347.102,4.4,-8.133,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 162, 447]]"
+623,nhay,rj,,187.4,339.608,4.4,-7.493,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 162, 447]]"
+624,nhay,rj,,191.8,332.755,4.4,-6.853,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 162, 447]]"
+625,nhay,rj,,196.2,326.542,4.4,-6.213,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 162, 447]]"
+626,nhay,rj,,200.6,320.969,4.4,-5.573,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 162, 447]]"
+627,nhay,rj,,205.0,316.035,4.4,-4.933,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 162, 447]]"
+628,nhay,rj,,209.4,311.742,4.4,-4.293,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 162, 447]]"
+629,nhay,rj,,213.8,308.089,4.4,-3.653,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 162, 447]]"
+630,nhay,rj,,218.2,305.075,4.4,-3.013,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+631,nhay,rj,,222.6,302.702,4.4,-2.373,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+632,nhay,rj,,227.0,300.969,4.4,-1.733,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+633,nhay,rj,,231.4,299.864,4.4,-1.105,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+634,nhay,rj,,235.8,299.275,4.4,-0.589,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+635,nhay,rj,,240.2,299.111,4.4,-0.164,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+636,nhay,rj,,244.6,299.296,4.4,0.185,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+637,nhay,rj,,249.0,299.838,4.4,0.542,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+638,nhay,rj,,253.4,300.812,4.4,0.974,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+639,nhay,rj,,257.8,302.311,4.4,1.499,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,[]
+640,nhay,rj,,262.2,304.455,4.4,2.144,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+641,nhay,rj,,266.6,307.316,4.4,2.861,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+642,nhay,rj,,271,310.894,4.4,3.578,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+643,nhay,rj,,275.4,315.189,4.4,4.295,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+644,nhay,rj,,279.8,320.2,4.4,5.011,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+645,nhay,rj,,284.2,325.928,4.4,5.728,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+646,nhay,rj,,288.6,332.373,4.4,6.445,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+647,nhay,rj,,293.0,339.535,4.4,7.162,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+648,nhay,rj,,297.4,347.413,4.4,7.879,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+649,nhay,rj,,301.8,356.009,4.4,8.595,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+650,nhay,rj,,306.2,365.321,4.4,9.312,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+651,nhay,rj,,310.6,375.35,4.4,10.029,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+652,nhay,rj,,315.0,385.75,4.4,10.4,True,1,run,run,chay#7,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 325, 416]]"
+653,nhay,rj,,319.4,385.75,4.4,0,True,1,run,run,chay#8,0,15,,0,0,0,10,0,0,"[[""bui"", ""nho"", 2, 325, 416]]"
+654,nhay,rj,,323.8,385.75,4.4,0,True,1,run,run,chay#9,0,15,,0,0,0,9,0,0,"[[""bui"", ""nho"", 3, 325, 416]]"
+655,nhay,rj,,328.2,385.75,4.4,0,True,1,run,run,chay#10,0,15,,0,0,0,8,0,0,"[[""bui"", ""nho"", 4, 325, 416]]"
+656,nhay,rj,,332.6,385.75,4.4,0,True,1,run,run,chay#11,0,15,,0,0,0,7,0,0,"[[""bui"", ""nho"", 5, 325, 416]]"
+657,nhay,rj,,337.0,385.75,4.4,0,True,1,run,run,chay#12,0,15,,0,0,0,6,0,0,"[[""bui"", ""nho"", 6, 325, 416]]"
+658,nhay,rj,,341.4,385.75,4.4,0,True,1,run,run,chay#13,0,15,,0,0,0,5,0,0,"[[""bui"", ""nho"", 7, 325, 416]]"
+659,nhay,rj,,345.8,385.75,4.4,0,True,1,run,run,chay#14,0,15,,0,0,0,4,0,0,"[[""bui"", ""nho"", 8, 325, 416]]"
+660,nhay,rj,,350.2,385.75,4.4,0,True,1,run,run,chay#15,0,15,,0,0,0,3,0,0,"[[""bui"", ""nho"", 1, 346, 416], [""bui"", ""nho"", 9, 325, 416]]"
+661,nhay,rj,,354.6,385.75,4.4,0,True,1,run,run,chay#16,0,15,,0,0,0,2,0,0,"[[""bui"", ""nho"", 2, 346, 416], [""bui"", ""nho"", 10, 325, 416]]"
+662,nhay,rj,,359.0,385.75,4.4,0,True,1,run,run,chay#17,0,15,,0,0,0,1,0,0,"[[""bui"", ""nho"", 3, 346, 416], [""bui"", ""nho"", 11, 325, 416]]"
+663,nhay,rj,,363.4,385.75,4.4,0,True,1,run,run,chay#18,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 346, 416], [""bui"", ""nho"", 12, 325, 416]]"
+664,nhay,rj,,367.8,385.75,4.4,0,True,1,run,run,chay#19,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 346, 416], [""bui"", ""nho"", 13, 325, 416]]"
+665,nhay,rj,,372.2,385.75,4.4,0,True,1,run,run,chay#20,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 346, 416], [""bui"", ""nho"", 14, 325, 416]]"
+666,nhay,,,375.72,385.75,3.52,0,True,1,run,run,chay#21,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 346, 416]]"
+667,nhay,,,378.36,385.75,2.64,0,True,1,run,run,chay#21,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 346, 416]]"
+668,nhay,,,380.12,385.75,1.76,0,True,1,run,run,chay#22,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 346, 416]]"
+669,nhay,,,381.0,385.75,0.88,0,True,1,run,run,chay#22,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 346, 416]]"
+670,nhay,,,381.0,385.75,0.0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 346, 416]]"
+671,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 346, 416]]"
+672,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+673,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+674,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+675,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+676,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+677,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+678,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+679,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+680,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+681,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+682,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+683,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+684,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+685,nhay,,,381.0,385.75,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+686,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+687,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+688,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+689,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+690,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+691,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+692,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+693,roi-cao,,,928,98,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+694,roi-cao,r,,928.733,98,0.733,0,True,1,run,run,chay#22,0,15,,0,0,0,0,0,0,[]
+695,roi-cao,r,,930.2,98,1.467,0,True,1,run,run,chay#22,0,15,,0,0,0,0,0,0,[]
+696,roi-cao,r,,932.4,98,2.2,0,True,1,run,run,chay#23,0,15,,0,0,0,0,0,0,[]
+697,roi-cao,r,,935.333,98,2.933,0,True,1,run,run,chay#23,0,15,,0,0,0,0,0,0,[]
+698,roi-cao,r,,939,98,3.667,0,True,1,run,run,chay#24,0,15,,0,0,0,0,0,0,[]
+699,roi-cao,r,,943.4,98,4.4,0,True,1,run,run,chay#25,0,15,,0,0,0,0,0,0,[]
+700,roi-cao,r,,947.8,98,4.4,0,True,1,run,run,chay#26,0,15,,0,0,0,0,0,0,[]
+701,roi-cao,r,,952.2,98,4.4,0,True,1,run,run,chay#27,0,15,,0,0,0,0,0,0,[]
+702,roi-cao,r,,956.6,98,4.4,0,True,1,run,run,chay#28,0,15,,0,0,0,0,0,0,[]
+703,roi-cao,r,,961.0,98,4.4,0,True,1,run,run,chay#29,0,15,,0,0,0,0,0,0,[]
+704,roi-cao,r,,965.4,98,4.4,0,True,1,run,run,chay#0,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 961, 128]]"
+705,roi-cao,r,,969.8,98,4.4,0,True,1,run,run,chay#1,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 961, 128]]"
+706,roi-cao,r,,974.2,98,4.4,0,True,1,run,run,chay#2,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 961, 128]]"
+707,roi-cao,r,,978.6,98,4.4,0,True,1,run,run,chay#3,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 961, 128]]"
+708,roi-cao,r,,983.0,98,4.4,0,True,1,run,run,chay#4,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 961, 128]]"
+709,roi-cao,r,,987.4,98,4.4,0,True,1,run,run,chay#5,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 961, 128]]"
+710,roi-cao,r,,991.8,98,4.4,0,True,1,run,run,chay#6,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 961, 128]]"
+711,roi-cao,r,,996.2,98.64,4.4,0.64,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 961, 128]]"
+712,roi-cao,r,,1000.6,99.861,4.4,1.221,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 961, 128]]"
+713,roi-cao,,,1004.604,101.73,4.004,1.869,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 961, 128]]"
+714,roi-cao,,,1008.212,104.316,3.608,2.586,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 961, 128]]"
+715,roi-cao,,,1011.424,107.618,3.212,3.303,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 961, 128]]"
+716,roi-cao,,,1014.24,111.638,2.816,4.019,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+717,roi-cao,,,1016.66,116.374,2.42,4.736,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+718,roi-cao,,,1018.684,121.827,2.024,5.453,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+719,roi-cao,,,1020.312,127.996,1.628,6.17,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+720,roi-cao,,,1021.544,134.883,1.232,6.887,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+721,roi-cao,,,1022.38,142.486,0.836,7.603,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+722,roi-cao,,,1022.82,150.806,0.44,8.32,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+723,roi-cao,,,1022.864,159.843,0.044,9.037,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+724,roi-cao,,,1022.864,169.597,0,9.754,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+725,roi-cao,,,1022.864,179.997,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+726,roi-cao,,,1022.864,190.397,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+727,roi-cao,,,1022.864,200.797,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+728,roi-cao,,,1022.864,211.197,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+729,roi-cao,,,1022.864,221.597,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+730,roi-cao,,,1022.864,231.997,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+731,roi-cao,,,1022.864,242.397,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+732,roi-cao,,,1022.864,252.797,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+733,roi-cao,,,1022.864,263.197,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+734,roi-cao,,,1022.864,273.597,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+735,roi-cao,,,1022.864,283.997,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+736,roi-cao,,,1022.864,294.397,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+737,roi-cao,,,1022.864,304.797,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+738,roi-cao,,,1022.864,315.197,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+739,roi-cao,,,1022.864,325.597,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+740,roi-cao,,,1022.864,335.997,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+741,roi-cao,,,1022.864,346.397,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+742,roi-cao,,,1022.864,356.797,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+743,roi-cao,,,1022.864,367.197,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+744,roi-cao,,,1022.864,377.597,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+745,roi-cao,,,1022.864,387.997,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+746,roi-cao,,,1022.864,398.397,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+747,roi-cao,,,1022.864,408.797,0,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+748,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,10,0,0,"[[""bui"", ""to"", 1, 1033, 448]]"
+749,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,9,0,0,"[[""bui"", ""to"", 2, 1033, 448]]"
+750,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-1,0,15,,0,0,0,8,0,0,"[[""bui"", ""to"", 3, 1033, 448]]"
+751,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,7,0,0,"[[""bui"", ""to"", 4, 1033, 448]]"
+752,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,6,0,0,"[[""bui"", ""to"", 5, 1033, 448]]"
+753,roi-cao,,,1022.864,417.797,0,0,True,1,idle,land,tiep-dat-2,0,15,,0,0,0,5,0,0,"[[""bui"", ""to"", 6, 1033, 448]]"
+754,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,4,0,0,"[[""bui"", ""to"", 7, 1033, 448]]"
+755,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,3,0,0,"[[""bui"", ""to"", 8, 1033, 448]]"
+756,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,2,0,0,"[[""bui"", ""to"", 9, 1033, 448]]"
+757,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,1,0,0,"[[""bui"", ""to"", 10, 1033, 448]]"
+758,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 11, 1033, 448]]"
+759,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 12, 1033, 448]]"
+760,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 13, 1033, 448]]"
+761,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 14, 1033, 448]]"
+762,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 15, 1033, 448]]"
+763,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 16, 1033, 448]]"
+764,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 17, 1033, 448]]"
+765,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+766,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+767,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+768,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+769,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+770,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+771,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+772,roi-cao,,,1022.864,417.797,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+773,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+774,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+775,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+776,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+777,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+778,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+779,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+780,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+781,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+782,luot,,,96,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+783,luot,,s,107,418,11,0,True,1,dash,dash,luot-1,0,15,,0,7,0,0,0,0,"[[""bui"", ""nho"", 1, 88, 448], [""dash"", ""dash"", 1, 71, 402]]"
+784,luot,,,118,418,11,0,True,1,dash,dash,luot-2,0,15,,0,6,0,0,0,0,"[[""bui"", ""nho"", 2, 88, 448], [""dash"", ""dash"", 2, 82, 402]]"
+785,luot,,,129,418,11,0,True,1,dash,dash,luot-2,0,15,,0,5,0,0,0,0,"[[""bui"", ""nho"", 3, 88, 448], [""dash"", ""dash"", 3, 93, 402]]"
+786,luot,,,140,418,11,0,True,1,dash,dash,luot-2,0,15,,0,4,0,0,0,0,"[[""bui"", ""nho"", 4, 88, 448], [""dash"", ""dash"", 4, 104, 402]]"
+787,luot,,,151,418,11,0,True,1,dash,dash,luot-2,0,15,,0,3,0,0,0,0,"[[""bui"", ""nho"", 5, 88, 448], [""dash"", ""dash"", 5, 115, 402]]"
+788,luot,,,162,418,11,0,True,1,dash,dash,luot-2,0,15,,0,2,0,0,0,0,"[[""bui"", ""nho"", 6, 88, 448], [""dash"", ""dash"", 6, 126, 402]]"
+789,luot,,,173,418,11,0,True,1,dash,dash,luot-3,0,15,,0,1,0,0,0,0,"[[""bui"", ""nho"", 7, 88, 448], [""dash"", ""dash"", 7, 137, 402]]"
+790,luot,,,184,418,4.4,0,True,1,dash,dash,luot-3,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 88, 448], [""dash"", ""dash"", 8, 137, 402]]"
+791,luot,,,187.52,418,3.52,0,True,1,run,run,chay#7,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 88, 448], [""dash"", ""dash"", 9, 137, 402]]"
+792,luot,,,190.16,418,2.64,0,True,1,run,run,chay#8,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 88, 448], [""dash"", ""dash"", 10, 137, 402]]"
+793,luot,,,191.92,418,1.76,0,True,1,run,run,chay#8,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 88, 448]]"
+794,luot,,,192.8,418,0.88,0,True,1,run,run,chay#8,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 88, 448]]"
+795,luot,,,192.8,418,0.0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+796,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+797,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+798,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+799,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+800,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+801,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+802,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+803,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+804,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+805,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+806,luot,,,192.8,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+807,luot,r,,193.533,418,0.733,0,True,1,run,run,chay#8,0,15,,0,0,0,0,0,0,[]
+808,luot,r,,195,418,1.467,0,True,1,run,run,chay#9,0,15,,0,0,0,0,0,0,[]
+809,luot,r,,197.2,418,2.2,0,True,1,run,run,chay#9,0,15,,0,0,0,0,0,0,[]
+810,luot,r,,200.133,418,2.933,0,True,1,run,run,chay#10,0,15,,0,0,0,0,0,0,[]
+811,luot,r,,203.8,418,3.667,0,True,1,run,run,chay#11,0,15,,0,0,0,0,0,0,[]
+812,luot,r,,208.2,418,4.4,0,True,1,run,run,chay#12,0,15,,0,0,0,0,0,0,[]
+813,luot,r,,212.6,418,4.4,0,True,1,run,run,chay#13,0,15,,0,0,0,0,0,0,[]
+814,luot,r,,217,418,4.4,0,True,1,run,run,chay#14,0,15,,0,0,0,0,0,0,[]
+815,luot,r,,221.4,418,4.4,0,True,1,run,run,chay#15,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 217, 448]]"
+816,luot,r,,225.8,418,4.4,0,True,1,run,run,chay#16,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 217, 448]]"
+817,luot,rj,j,230.2,406.027,4.4,-11.973,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 217, 448], [""bui"", ""nho"", 1, 236, 448]]"
+818,luot,rj,,234.6,394.693,4.4,-11.333,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 217, 448], [""bui"", ""nho"", 2, 236, 448]]"
+819,luot,rj,,239.0,384.0,4.4,-10.693,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 217, 448], [""bui"", ""nho"", 3, 236, 448]]"
+820,luot,rj,,243.4,373.947,4.4,-10.053,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 217, 448], [""bui"", ""nho"", 4, 236, 448]]"
+821,luot,rj,,247.8,364.533,4.4,-9.413,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 217, 448], [""bui"", ""nho"", 5, 236, 448]]"
+822,luot,rj,,252.2,355.76,4.4,-8.773,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 217, 448], [""bui"", ""nho"", 6, 236, 448]]"
+823,luot,r,s,263.2,355.76,11,0,False,1,dash,dash,luot-1,0,15,,0,7,0,0,0,0,"[[""bui"", ""nho"", 9, 217, 448], [""bui"", ""nho"", 7, 236, 448], [""bui"", ""nho"", 1, 244, 386], [""dash"", ""dash"", 1, 227, 340]]"
+824,luot,r,,274.2,355.76,11,0,False,1,dash,dash,luot-2,0,15,,0,6,0,0,0,0,"[[""bui"", ""nho"", 10, 217, 448], [""bui"", ""nho"", 8, 236, 448], [""bui"", ""nho"", 2, 244, 386], [""dash"", ""dash"", 2, 238, 340]]"
+825,luot,r,,285.2,355.76,11,0,False,1,dash,dash,luot-2,0,15,,0,5,0,0,0,0,"[[""bui"", ""nho"", 11, 217, 448], [""bui"", ""nho"", 9, 236, 448], [""bui"", ""nho"", 3, 244, 386], [""dash"", ""dash"", 3, 249, 340]]"
+826,luot,r,,296.2,355.76,11,0,False,1,dash,dash,luot-2,0,15,,0,4,0,0,0,0,"[[""bui"", ""nho"", 12, 217, 448], [""bui"", ""nho"", 10, 236, 448], [""bui"", ""nho"", 4, 244, 386], [""dash"", ""dash"", 4, 260, 340]]"
+827,luot,r,,307.2,355.76,11,0,False,1,dash,dash,luot-2,0,15,,0,3,0,0,0,0,"[[""bui"", ""nho"", 11, 236, 448], [""bui"", ""nho"", 5, 244, 386], [""dash"", ""dash"", 5, 271, 340]]"
+828,luot,r,,318.2,355.76,11,0,False,1,dash,dash,luot-2,0,15,,0,2,0,0,0,0,"[[""bui"", ""nho"", 12, 236, 448], [""bui"", ""nho"", 6, 244, 386], [""dash"", ""dash"", 6, 282, 340]]"
+829,luot,r,,329.2,355.76,11,0,False,1,dash,dash,luot-3,0,15,,0,1,0,0,0,0,"[[""bui"", ""nho"", 13, 236, 448], [""bui"", ""nho"", 7, 244, 386], [""dash"", ""dash"", 7, 293, 340]]"
+830,luot,r,,340.2,355.76,4.4,0,False,1,dash,dash,luot-3,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 236, 448], [""bui"", ""nho"", 8, 244, 386], [""dash"", ""dash"", 8, 293, 340]]"
+831,luot,r,,344.6,356.272,4.4,0.512,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 244, 386], [""dash"", ""dash"", 9, 293, 340]]"
+832,luot,r,,349,357.351,4.4,1.079,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 244, 386], [""dash"", ""dash"", 10, 293, 340]]"
+833,luot,r,,353.4,359.062,4.4,1.71,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 244, 386]]"
+834,luot,r,,357.8,361.478,4.4,2.416,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 244, 386]]"
+835,luot,r,,362.2,364.61,4.4,3.133,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+836,luot,r,,366.6,368.46,4.4,3.85,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+837,luot,r,,371.0,373.027,4.4,4.566,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+838,luot,r,,375.4,378.31,4.4,5.283,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+839,luot,r,,379.8,384.31,4.4,6.0,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+840,luot,r,,384.2,391.027,4.4,6.717,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+841,luot,r,,388.6,398.461,4.4,7.434,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+842,luot,r,,393.0,406.611,4.4,8.15,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+843,luot,r,,397.4,415.478,4.4,8.867,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+844,luot,r,,401.8,417.478,4.4,0,True,1,run,run,chay#17,0,15,,0,0,0,10,0,0,"[[""bui"", ""nho"", 1, 412, 447]]"
+845,luot,r,,406.2,417.478,4.4,0,True,1,run,run,chay#18,0,15,,0,0,0,9,0,0,"[[""bui"", ""nho"", 2, 412, 447]]"
+846,luot,r,,410.6,417.478,4.4,0,True,1,run,run,chay#19,0,15,,0,0,0,8,0,0,"[[""bui"", ""nho"", 3, 412, 447]]"
+847,luot,r,,415.0,417.478,4.4,0,True,1,run,run,chay#20,0,15,,0,0,0,7,0,0,"[[""bui"", ""nho"", 4, 412, 447]]"
+848,luot,r,,419.4,417.478,4.4,0,True,1,run,run,chay#21,0,15,,0,0,0,6,0,0,"[[""bui"", ""nho"", 5, 412, 447]]"
+849,luot,r,,423.8,417.478,4.4,0,True,1,run,run,chay#22,0,15,,0,0,0,5,0,0,"[[""bui"", ""nho"", 6, 412, 447]]"
+850,luot,r,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,4,0,0,"[[""bui"", ""nho"", 7, 412, 447]]"
+851,luot,r,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,3,0,0,"[[""bui"", ""nho"", 8, 412, 447]]"
+852,luot,r,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,2,0,0,"[[""bui"", ""nho"", 9, 412, 447]]"
+853,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,1,0,0,"[[""bui"", ""nho"", 10, 412, 447]]"
+854,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 412, 447]]"
+855,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 412, 447]]"
+856,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 412, 447]]"
+857,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 412, 447]]"
+858,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+859,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+860,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+861,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+862,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+863,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+864,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+865,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+866,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+867,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+868,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+869,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+870,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+871,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+872,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+873,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+874,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+875,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+876,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+877,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+878,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+879,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+880,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+881,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+882,luot,,,427.8,417.478,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+883,tuong,r,,874.55,160,0.55,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,1,0,[]
+884,tuong,r,,875.65,160,1.1,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,2,0,[]
+885,tuong,r,,875.65,160,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,3,0,[]
+886,tuong,r,,875.65,160,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,4,0,[]
+887,tuong,r,,875.65,160,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,5,0,[]
+888,tuong,r,,875.65,160,0,0,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+889,tuong,r,,875.65,160.512,0,0.512,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+890,tuong,r,,875.65,161.591,0,1.079,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+891,tuong,r,,875.65,163.191,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+892,tuong,r,,875.65,164.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+893,tuong,r,,875.65,166.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+894,tuong,r,,875.65,167.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+895,tuong,r,,875.65,169.591,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+896,tuong,r,,875.65,171.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+897,tuong,r,,875.65,172.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+898,tuong,r,,875.65,174.391,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 1, 896, 161]]"
+899,tuong,r,,875.65,175.991,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 2, 896, 161]]"
+900,tuong,r,,875.65,177.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 3, 896, 162]]"
+901,tuong,r,,875.65,179.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 4, 896, 162]]"
+902,tuong,r,,875.65,180.791,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 5, 896, 163]]"
+903,tuong,r,,875.65,182.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 163]]"
+904,tuong,r,,875.65,183.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 164]]"
+905,tuong,r,,875.65,185.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 164]]"
+906,tuong,r,,875.65,187.191,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 165]]"
+907,tuong,r,,875.65,188.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 165], [""truot-tuong"", ""truot-tuong"", 1, 896, 175]]"
+908,tuong,r,,875.65,190.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 166], [""truot-tuong"", ""truot-tuong"", 2, 896, 176]]"
+909,tuong,r,,875.65,191.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 166], [""truot-tuong"", ""truot-tuong"", 3, 896, 176]]"
+910,tuong,r,,875.65,193.591,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 167], [""truot-tuong"", ""truot-tuong"", 4, 896, 177]]"
+911,tuong,r,,875.65,195.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 167], [""truot-tuong"", ""truot-tuong"", 5, 896, 177]]"
+912,tuong,r,,875.65,196.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 178]]"
+913,tuong,r,,875.65,198.391,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 178]]"
+914,tuong,r,,875.65,199.991,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 179]]"
+915,tuong,r,,875.65,201.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 179]]"
+916,tuong,r,,875.65,203.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 180], [""truot-tuong"", ""truot-tuong"", 1, 896, 190]]"
+917,tuong,r,,875.65,204.791,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 180], [""truot-tuong"", ""truot-tuong"", 2, 896, 190]]"
+918,tuong,r,,875.65,206.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 181], [""truot-tuong"", ""truot-tuong"", 3, 896, 191]]"
+919,tuong,r,,875.65,207.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 181], [""truot-tuong"", ""truot-tuong"", 4, 896, 191]]"
+920,tuong,r,,875.65,209.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 182], [""truot-tuong"", ""truot-tuong"", 5, 896, 192]]"
+921,tuong,r,,875.65,211.191,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 192]]"
+922,tuong,r,,875.65,212.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 193]]"
+923,tuong,r,,875.65,214.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 193]]"
+924,tuong,r,,875.65,215.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 194]]"
+925,tuong,r,,875.65,217.591,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 194], [""truot-tuong"", ""truot-tuong"", 1, 896, 204]]"
+926,tuong,r,,875.65,219.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 195], [""truot-tuong"", ""truot-tuong"", 2, 896, 205]]"
+927,tuong,r,,875.65,220.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 195], [""truot-tuong"", ""truot-tuong"", 3, 896, 205]]"
+928,tuong,r,,875.65,222.391,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 196], [""truot-tuong"", ""truot-tuong"", 4, 896, 206]]"
+929,tuong,r,,875.65,223.991,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 196], [""truot-tuong"", ""truot-tuong"", 5, 896, 206]]"
+930,tuong,r,,875.65,225.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 207]]"
+931,tuong,r,,875.65,227.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 207]]"
+932,tuong,r,,875.65,228.791,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 208]]"
+933,tuong,r,,875.65,230.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 208], [""truot-tuong"", ""truot-tuong"", 1, 896, 217]]"
+934,tuong,r,,875.65,231.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 209], [""truot-tuong"", ""truot-tuong"", 2, 896, 217]]"
+935,tuong,r,,875.65,233.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 209], [""truot-tuong"", ""truot-tuong"", 3, 896, 218]]"
+936,tuong,r,,875.65,235.191,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 210], [""truot-tuong"", ""truot-tuong"", 4, 896, 218]]"
+937,tuong,r,,875.65,236.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 210], [""truot-tuong"", ""truot-tuong"", 5, 896, 219]]"
+938,tuong,r,,875.65,238.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 211], [""truot-tuong"", ""truot-tuong"", 6, 896, 219]]"
+939,tuong,r,,875.65,239.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 220]]"
+940,tuong,r,,875.65,241.591,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 220]]"
+941,tuong,r,,875.65,243.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 221]]"
+942,tuong,r,,875.65,244.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 221], [""truot-tuong"", ""truot-tuong"", 1, 896, 231]]"
+943,tuong,r,,875.65,246.391,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 222], [""truot-tuong"", ""truot-tuong"", 2, 896, 232]]"
+944,tuong,r,,875.65,247.991,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 222], [""truot-tuong"", ""truot-tuong"", 3, 896, 232]]"
+945,tuong,r,,875.65,249.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 223], [""truot-tuong"", ""truot-tuong"", 4, 896, 233]]"
+946,tuong,r,,875.65,251.191,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 223], [""truot-tuong"", ""truot-tuong"", 5, 896, 233]]"
+947,tuong,r,,875.65,252.791,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 234]]"
+948,tuong,r,,875.65,254.391,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 234]]"
+949,tuong,r,,875.65,255.991,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 235]]"
+950,tuong,r,,875.65,257.591,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 235]]"
+951,tuong,r,,875.65,259.191,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 1, 896, 246], [""truot-tuong"", ""truot-tuong"", 10, 896, 236]]"
+952,tuong,r,,875.65,260.791,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 2, 896, 246], [""truot-tuong"", ""truot-tuong"", 11, 896, 236]]"
+953,tuong,,j,870.25,249.776,-5.4,-11.015,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,0,16,"[[""truot-tuong"", ""truot-tuong"", 3, 896, 247], [""bui"", ""nho"", 1, 896, 267], [""truot-tuong"", ""truot-tuong"", 12, 896, 237]]"
+954,tuong,,,864.85,244.588,-5.4,-5.188,False,-1,jump,walljump,nhay-tuong,0,15,,0,0,0,0,0,15,"[[""truot-tuong"", ""truot-tuong"", 4, 896, 247], [""bui"", ""nho"", 2, 896, 267], [""truot-tuong"", ""truot-tuong"", 13, 896, 237]]"
+955,tuong,,,859.45,240.04,-5.4,-4.548,False,-1,jump,walljump,nhay-tuong,0,15,,0,0,0,0,0,14,"[[""truot-tuong"", ""truot-tuong"", 5, 896, 248], [""bui"", ""nho"", 3, 896, 267], [""truot-tuong"", ""truot-tuong"", 14, 896, 238]]"
+956,tuong,,,854.05,236.133,-5.4,-3.908,False,-1,jump,walljump,nhay-tuong,0,15,,0,0,0,0,0,13,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 248], [""bui"", ""nho"", 4, 896, 267]]"
+957,tuong,,,848.65,232.865,-5.4,-3.268,False,-1,jump,walljump,nhay-tuong,0,15,,0,0,0,0,0,12,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 249], [""bui"", ""nho"", 5, 896, 267]]"
+958,tuong,,,843.25,230.237,-5.4,-2.628,False,-1,jump,walljump,nhay-tuong,0,15,,0,0,0,0,0,11,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 249], [""bui"", ""nho"", 6, 896, 267]]"
+959,tuong,,,837.85,228.249,-5.4,-1.988,False,-1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,10,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 250], [""bui"", ""nho"", 7, 896, 267]]"
+960,tuong,,,832.45,226.902,-5.4,-1.348,False,-1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,9,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 250], [""bui"", ""nho"", 8, 896, 267]]"
+961,tuong,,,827.05,226.162,-5.4,-0.74,False,-1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,8,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 251], [""bui"", ""nho"", 9, 896, 267]]"
+962,tuong,,,822.046,225.987,-5.004,-0.175,False,-1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,7,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 251], [""bui"", ""nho"", 10, 896, 267]]"
+963,tuong,r,,817.922,226.336,-4.124,0.349,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,6,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 252], [""bui"", ""nho"", 11, 896, 267]]"
+964,tuong,r,,814.678,227.234,-3.244,0.899,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,5,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 252], [""bui"", ""nho"", 12, 896, 267]]"
+965,tuong,r,,812.314,228.743,-2.364,1.509,False,1,fall,fall,nhay-dinh,0,15,,0,0,0,0,0,4,[]
+966,tuong,r,,810.83,230.934,-1.484,2.191,False,1,fall,fall,roi,0,15,,0,0,0,0,0,3,[]
+967,tuong,r,,810.226,233.841,-0.604,2.907,False,1,fall,fall,roi,0,15,,0,0,0,0,0,2,[]
+968,tuong,r,,810.502,237.465,0.276,3.624,False,1,fall,fall,roi,0,15,,0,0,0,0,0,1,[]
+969,tuong,r,,811.328,241.806,0.826,4.341,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+970,tuong,r,,812.704,246.864,1.376,5.058,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+971,tuong,r,,814.63,252.638,1.926,5.775,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+972,tuong,r,,817.106,259.13,2.476,6.491,False,1,fall,fall,roi,0,15,,0,0,0,0,0,0,[]
+973,tuong,r,,820.132,266.338,3.026,7.208,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+974,tuong,r,,823.708,274.263,3.576,7.925,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+975,tuong,r,,827.834,282.904,4.126,8.642,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+976,tuong,r,,832.234,292.263,4.4,9.359,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+977,tuong,r,,836.634,302.338,4.4,10.075,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+978,tuong,r,,841.034,312.738,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+979,tuong,r,,845.434,323.138,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+980,tuong,r,,849.834,333.538,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+981,tuong,r,,854.234,343.938,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+982,tuong,r,,858.634,354.338,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+983,tuong,r,,863.034,364.738,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+984,tuong,r,,867.434,375.138,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+985,tuong,r,,871.834,385.538,4.4,10.4,False,1,fall,fall,roi-nhanh,0,15,,0,0,0,0,0,0,[]
+986,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,1,0,[]
+987,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,2,0,[]
+988,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,3,0,[]
+989,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,4,0,[]
+990,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,5,0,[]
+991,tuong,r,,875.834,385.538,0,0,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+992,tuong,r,,875.834,386.05,0,0.512,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+993,tuong,r,,875.834,387.129,0,1.079,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+994,tuong,r,,875.834,388.729,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+995,tuong,r,,875.834,390.329,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+996,tuong,r,,875.834,391.929,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+997,tuong,r,,875.834,393.529,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+998,tuong,r,,875.834,395.129,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+999,tuong,r,,875.834,396.729,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+1000,tuong,r,,875.834,398.329,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1001,tuong,r,,875.834,399.929,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 1, 896, 386]]"
+1002,tuong,r,,875.834,401.529,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 2, 896, 387]]"
+1003,tuong,r,,875.834,403.129,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 3, 896, 387]]"
+1004,tuong,r,,875.834,404.729,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 4, 896, 388]]"
+1005,tuong,r,,875.834,406.329,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 5, 896, 388]]"
+1006,tuong,r,,875.834,407.929,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 389]]"
+1007,tuong,r,,875.834,409.529,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 389]]"
+1008,tuong,r,,875.834,411.129,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 390]]"
+1009,tuong,r,,875.834,412.729,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 390]]"
+1010,tuong,r,,875.834,414.329,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 391], [""truot-tuong"", ""truot-tuong"", 1, 896, 401]]"
+1011,tuong,r,,875.834,415.929,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 391], [""truot-tuong"", ""truot-tuong"", 2, 896, 401]]"
+1012,tuong,r,,875.834,417.529,0,1.6,True,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 392], [""truot-tuong"", ""truot-tuong"", 3, 896, 402], [""bui"", ""to"", 1, 886, 448]]"
+1013,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 392], [""truot-tuong"", ""truot-tuong"", 4, 896, 402], [""bui"", ""to"", 2, 886, 448]]"
+1014,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 393], [""truot-tuong"", ""truot-tuong"", 5, 896, 403], [""bui"", ""to"", 3, 886, 448]]"
+1015,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 403], [""bui"", ""to"", 4, 886, 448]]"
+1016,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 404], [""bui"", ""to"", 5, 886, 448]]"
+1017,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 404], [""bui"", ""to"", 6, 886, 448]]"
+1018,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 405], [""bui"", ""to"", 7, 886, 448]]"
+1019,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 405], [""bui"", ""to"", 8, 886, 448]]"
+1020,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 406], [""bui"", ""to"", 9, 886, 448]]"
+1021,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 406], [""bui"", ""to"", 10, 886, 448]]"
+1022,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 407], [""bui"", ""to"", 11, 886, 448]]"
+1023,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 407], [""bui"", ""to"", 12, 886, 448]]"
+1024,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 13, 886, 448]]"
+1025,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 14, 886, 448]]"
+1026,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 15, 886, 448]]"
+1027,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 16, 886, 448]]"
+1028,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""to"", 17, 886, 448]]"
+1029,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+1030,tuong,r,,875.834,417.529,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,[]
+1031,tuong,,j,875.834,405.556,0,-11.973,False,1,jump,jump,nhay-bat,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 1, 886, 448]]"
+1032,tuong,,,875.834,399.889,0,-5.667,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 2, 886, 448]]"
+1033,tuong,,,875.834,394.863,0,-5.027,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 886, 448]]"
+1034,tuong,,,875.834,390.476,0,-4.387,False,1,jump,jump,nhay-len,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 886, 448]]"
+1035,tuong,,,875.834,386.729,0,-3.747,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 886, 448]]"
+1036,tuong,,,875.834,383.623,0,-3.107,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 886, 448]]"
+1037,tuong,,,875.834,381.156,0,-2.467,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 886, 448]]"
+1038,tuong,,,875.834,379.329,0,-1.827,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 886, 448]]"
+1039,tuong,,,875.834,378.143,0,-1.187,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 886, 448]]"
+1040,tuong,,,875.834,377.552,0,-0.59,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 886, 448]]"
+1041,tuong,,,875.834,377.516,0,-0.036,False,1,jump,jump,nhay-dinh,0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 886, 448]]"
+1042,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,1,0,"[[""bui"", ""nho"", 12, 886, 448]]"
+1043,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,2,0,"[[""bui"", ""nho"", 13, 886, 448]]"
+1044,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,3,0,"[[""bui"", ""nho"", 14, 886, 448]]"
+1045,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,4,0,[]
+1046,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,bam-tuong,0,15,,0,0,0,0,5,0,[]
+1047,tuong,,,875.834,377.516,0,0,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1048,tuong,,,875.834,378.028,0,0.512,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1049,tuong,,,875.834,379.107,0,1.079,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1050,tuong,,,875.834,380.707,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1051,tuong,,,875.834,382.307,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1052,tuong,,,875.834,383.907,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+1053,tuong,,,875.834,385.507,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+1054,tuong,,,875.834,387.107,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+1055,tuong,,,875.834,388.707,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,[]
+1056,tuong,,,875.834,390.307,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,[]
+1057,tuong,,,875.834,391.907,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 1, 896, 378]]"
+1058,tuong,,,875.834,393.507,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 2, 896, 379]]"
+1059,tuong,,,875.834,395.107,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 3, 896, 379]]"
+1060,tuong,,,875.834,396.707,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 4, 896, 380]]"
+1061,tuong,,,875.834,398.307,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 5, 896, 380]]"
+1062,tuong,,,875.834,399.907,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 381]]"
+1063,tuong,,,875.834,401.507,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 381]]"
+1064,tuong,,,875.834,403.107,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 382]]"
+1065,tuong,,,875.834,404.707,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 382]]"
+1066,tuong,,,875.834,406.307,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 383], [""truot-tuong"", ""truot-tuong"", 1, 896, 393]]"
+1067,tuong,,,875.834,407.907,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 383], [""truot-tuong"", ""truot-tuong"", 2, 896, 393]]"
+1068,tuong,,,875.834,409.507,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 384], [""truot-tuong"", ""truot-tuong"", 3, 896, 394]]"
+1069,tuong,,,875.834,411.107,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 384], [""truot-tuong"", ""truot-tuong"", 4, 896, 394]]"
+1070,tuong,,,875.834,412.707,0,1.6,False,-1,wall,wall,truot-2,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 385], [""truot-tuong"", ""truot-tuong"", 5, 896, 395]]"
+1071,tuong,,,875.834,414.307,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 6, 896, 395]]"
+1072,tuong,,,875.834,415.907,0,1.6,False,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 7, 896, 396]]"
+1073,tuong,,,875.834,417.507,0,1.6,True,-1,wall,wall,truot-1,0,15,,0,0,0,0,6,0,"[[""truot-tuong"", ""truot-tuong"", 8, 896, 396], [""bui"", ""nho"", 1, 886, 448]]"
+1074,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 9, 896, 397], [""bui"", ""nho"", 2, 886, 448]]"
+1075,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 10, 896, 397], [""bui"", ""nho"", 3, 886, 448]]"
+1076,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 11, 896, 398], [""bui"", ""nho"", 4, 886, 448]]"
+1077,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 12, 896, 398], [""bui"", ""nho"", 5, 886, 448]]"
+1078,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 13, 896, 399], [""bui"", ""nho"", 6, 886, 448]]"
+1079,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""truot-tuong"", ""truot-tuong"", 14, 896, 399], [""bui"", ""nho"", 7, 886, 448]]"
+1080,tuong,,,875.834,417.507,0,0,True,-1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 886, 448]]"
+1081,vong,,v,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 886, 448]]"
+1082,vong,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 886, 448]]"
+1083,vong,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 886, 448]]"
+1084,vong,,,128,418,0,0,True,1,idle,idle,nghi(TAM),0,15,,0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 886, 448]]"
+1085,vong,,a,128,418,2.2,0,True,1,run,atk1,nghi~c1-chuanbi,1,1,,0,0,0,0,0,0,"[[""bui"", ""nho"", 13, 886, 448], [""bui"", ""nho"", 1, 124, 448]]"
+1086,vong,,,129.76,418,1.76,0,True,1,run,atk1,nghi~c1-chuanbi,1,2,,0,0,0,0,0,0,"[[""bui"", ""nho"", 14, 886, 448], [""bui"", ""nho"", 2, 124, 448]]"
+1087,vong,,,131.08,418,1.32,0,True,1,run,atk1,c1-chuanbi,1,3,,0,0,0,0,0,0,"[[""bui"", ""nho"", 3, 124, 448]]"
+1088,vong,,,131.96,418,0.88,0,True,1,run,atk1,c1-chuanbi,1,4,,0,0,0,0,0,0,"[[""bui"", ""nho"", 4, 124, 448]]"
+1089,vong,,,132.4,418,0.44,0,True,1,idle,atk1,c1-chuanbi,1,5,,0,0,0,0,0,0,"[[""bui"", ""nho"", 5, 124, 448]]"
+1090,vong,,,132.4,418,0.0,0,True,1,idle,atk1,c1-giuong,1,6,,0,0,0,0,0,0,"[[""bui"", ""nho"", 6, 124, 448]]"
+1091,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-giuong,1,7,,0,0,0,0,0,0,"[[""bui"", ""nho"", 7, 124, 448]]"
+1092,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-giuong,1,8,,0,0,0,0,0,0,"[[""bui"", ""nho"", 8, 124, 448]]"
+1093,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-giuong~c1-vung,1,9,,0,0,0,0,0,0,"[[""bui"", ""nho"", 9, 124, 448]]"
+1094,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-vung,1,10,,0,0,0,0,0,0,"[[""bui"", ""nho"", 10, 124, 448], [""vet-chem"", ""ngang"", 1, 230, 376]]"
+1095,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung,1,11,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 11, 124, 448], [""vet-chem"", ""ngang"", 2, 230, 376]]"
+1096,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung,1,12,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""bui"", ""nho"", 12, 124, 448], [""vet-chem"", ""ngang"", 3, 230, 376]]"
+1097,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung,1,13,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 4, 230, 376]]"
+1098,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung2,1,14,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 5, 230, 376]]"
+1099,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung2,1,15,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 6, 230, 376]]"
+1100,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung2,1,16,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 7, 230, 376]]"
+1101,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung2,1,17,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 8, 230, 376]]"
+1102,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-trung2,1,18,"[146.39999999999998, 351, 147, 48]",0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 9, 230, 376]]"
+1103,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-thu,1,19,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 10, 230, 376]]"
+1104,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-thu,1,20,,0,0,0,0,0,0,[]
+1105,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-thu,1,21,,0,0,0,0,0,0,[]
+1106,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-ve,1,22,,0,0,0,0,0,0,[]
+1107,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-ve,1,23,,0,0,0,0,0,0,[]
+1108,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-ve,1,24,,0,0,0,0,0,0,[]
+1109,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-ve,1,25,,0,0,0,0,0,0,[]
+1110,vong,,,132.4,418,0,0,True,1,idle,atk1,c1-ve,1,26,,0,0,0,0,0,0,[]
+1111,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1112,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1113,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1114,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1115,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1116,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1117,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1118,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1119,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1120,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1121,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1122,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1123,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1124,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1125,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1126,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1127,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1128,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1129,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1130,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1131,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1132,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1133,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1134,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1135,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1136,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1137,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1138,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1139,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1140,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1141,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1142,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1143,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1144,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1145,vong,,v,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1146,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1147,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1148,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1149,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1150,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1151,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1152,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1153,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1154,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1155,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1156,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1157,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1158,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 1, 230, 376]]"
+1159,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 2, 230, 376]]"
+1160,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 3, 230, 376]]"
+1161,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 4, 230, 376]]"
+1162,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 5, 230, 376]]"
+1163,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 6, 230, 376]]"
+1164,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 7, 230, 376]]"
+1165,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 8, 230, 376]]"
+1166,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 9, 230, 376]]"
+1167,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,"[[""vet-chem"", ""ngang"", 10, 230, 376]]"
+1168,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1169,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1170,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1171,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1172,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1173,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1174,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1175,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1176,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1177,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1178,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1179,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1180,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1181,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1182,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1183,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1184,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1185,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1186,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1187,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1188,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1189,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1190,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1191,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1192,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1193,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1194,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1195,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1196,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1197,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1198,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1199,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1200,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1201,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1202,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1203,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1204,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1205,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1206,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1207,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1208,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1209,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1210,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1211,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1212,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1213,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1214,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1215,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1216,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1217,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1218,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1219,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1220,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1221,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1222,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1223,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1224,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1225,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1226,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1227,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1228,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1229,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1230,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1231,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1232,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1233,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1234,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1235,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1236,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1237,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1238,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1239,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1240,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1241,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1242,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1243,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1244,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1245,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
+1246,vong,,,132.4,418,0,0,True,1,idle,idle,nghi(TAM),0,27,,0,0,0,0,0,0,[]
