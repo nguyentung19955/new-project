@@ -119,3 +119,12 @@ game/thu-cong-lang/thu-cong-lang.html   bản thử (sinh ra, đừng sửa tay)
   xem-thu/                          ảnh duyệt, video, so-do.json
 ```
 Không có kiểm thử tự động; `chup.py` / `quay-video.py` chỉ chụp và ghi số đo để người duyệt xem.
+
+## Trả lời của chủ dự án (27/10/2026, 12:08) – nguyên văn
+1, ván treo
+2. Tối thêm
+3.nhiều
+4.giữ cả
+5. Bỏ
+6. Ok
+(Điều phối hiểu: 1 = bệ neo dùng kiểu VÁN TREO DÂY; 2 = mảng gỗ làm tối thêm 5–8 % cho chìm vào thân; 3 = ba chỗ ngắt rêu là NHIỀU → giảm bớt; 4 = giữ cả tiền cảnh rễ-đá và rễ treo; 5 = BỎ cửa nhà ở chân tường; 6 = duyệt hướng, áp sang Sân chuông và Phòng boss, rồi ghép vào game chính.)
