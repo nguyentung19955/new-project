@@ -1,0 +1,304 @@
+{
+ "video": [
+  {
+   "file": "vong-ra-sau-danh-bung-60fps.mp4",
+   "khung": 717,
+   "giay": 11.95,
+   "trang_thai": [
+    [
+     1,
+     "di"
+    ],
+    [
+     40,
+     "bao"
+    ],
+    [
+     70,
+     "huc"
+    ],
+    [
+     94,
+     "hoi"
+    ],
+    [
+     104,
+     "dau"
+    ],
+    [
+     119,
+     "di"
+    ],
+    [
+     120,
+     "quay"
+    ],
+    [
+     137,
+     "keng"
+    ],
+    [
+     150,
+     "di"
+    ],
+    [
+     173,
+     "bao"
+    ],
+    [
+     203,
+     "huc"
+    ],
+    [
+     227,
+     "hoi"
+    ],
+    [
+     236,
+     "dau"
+    ],
+    [
+     251,
+     "di"
+    ],
+    [
+     271,
+     "dau"
+    ],
+    [
+     286,
+     "di"
+    ],
+    [
+     289,
+     "quay"
+    ],
+    [
+     304,
+     "keng"
+    ],
+    [
+     317,
+     "di"
+    ],
+    [
+     338,
+     "bao"
+    ],
+    [
+     368,
+     "huc"
+    ],
+    [
+     392,
+     "hoi"
+    ],
+    [
+     401,
+     "chet"
+    ]
+   ]
+  },
+  {
+   "file": "danh-mai-vo-lat-ngua-60fps.mp4",
+   "khung": 823,
+   "giay": 13.72,
+   "trang_thai": [
+    [
+     1,
+     "di"
+    ],
+    [
+     40,
+     "bao"
+    ],
+    [
+     70,
+     "huc"
+    ],
+    [
+     94,
+     "hoi"
+    ],
+    [
+     132,
+     "keng"
+    ],
+    [
+     145,
+     "di"
+    ],
+    [
+     146,
+     "bao"
+    ],
+    [
+     176,
+     "huc"
+    ],
+    [
+     200,
+     "hoi"
+    ],
+    [
+     206,
+     "keng"
+    ],
+    [
+     219,
+     "di"
+    ],
+    [
+     220,
+     "quay"
+    ],
+    [
+     244,
+     "di"
+    ],
+    [
+     285,
+     "quay"
+    ],
+    [
+     302,
+     "dau"
+    ],
+    [
+     317,
+     "di"
+    ],
+    [
+     318,
+     "quay"
+    ],
+    [
+     339,
+     "keng"
+    ],
+    [
+     352,
+     "di"
+    ],
+    [
+     362,
+     "keng"
+    ],
+    [
+     375,
+     "di"
+    ],
+    [
+     389,
+     "lat"
+    ],
+    [
+     418,
+     "choang"
+    ],
+    [
+     477,
+     "chet"
+    ]
+   ]
+  },
+  {
+   "file": "cac-clip-60fps.mp4",
+   "khung": 804,
+   "giay": 13.4,
+   "trang_thai": [
+    [
+     1,
+     "xem",
+     "xem"
+    ]
+   ]
+  }
+ ],
+ "anh": {
+  "do_ve_600_khung": {
+   "n": 600,
+   "tb": 9.767,
+   "p95": 13.1,
+   "max": 148.1,
+   "quaiTb": 0.143
+  },
+  "nap": {
+   "nap": {
+    "ms_json": 7.1,
+    "ms_anh_va_decode": 25.6,
+    "ms_cache_va_ve_thu": 7.1,
+    "ms_tong": 39.8,
+    "so_anh_png": 7,
+    "so_anh_cache": 21,
+    "byte_png": 74169,
+    "byte_giai_ma_png": 420784,
+    "byte_giai_ma_cache": 1262352,
+    "mb_giai_ma_tong": 1.61,
+    "loai": [
+     "bo"
+    ],
+    "bang": [
+     {
+      "anh": "manh/chan-sau.png",
+      "w": 93,
+      "h": 47,
+      "byte": 17484,
+      "so_nut": 2
+     },
+     {
+      "anh": "manh/chan-truoc.png",
+      "w": 81,
+      "h": 43,
+      "byte": 13932,
+      "so_nut": 2
+     },
+     {
+      "anh": "manh/bung.png",
+      "w": 117,
+      "h": 91,
+      "byte": 42588,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/mai.png",
+      "w": 200,
+      "h": 135,
+      "byte": 108000,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/mai-nut-1.png",
+      "w": 200,
+      "h": 135,
+      "byte": 108000,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/mai-nut-2.png",
+      "w": 200,
+      "h": 135,
+      "byte": 108000,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/dau.png",
+      "w": 85,
+      "h": 67,
+      "byte": 22780,
+      "so_nut": 1
+     }
+    ]
+   },
+   "hm": {
+    "ms": 1237,
+    "ms_grade": 660,
+    "ms_dat": 179,
+    "anh": 29,
+    "mpx": 10.56,
+    "ms_doi_anh": 563
+   },
+   "bk": 1
+  }
+ }
+}
