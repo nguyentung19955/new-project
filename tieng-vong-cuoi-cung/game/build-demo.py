@@ -4,11 +4,14 @@
   - lam_v3 : clip cũ rig-v3 (dùng khi mở ?clip=v3) = JSON + PNG từ art/modular/lam-moi/rig-v3/sprite/
            Cả hai nhúng PNG NGUYÊN BẢN (không nén lại, không đổi cỡ) – kiểm ảnh đúng 2142×970 = co_sheet trong JSON và đúng
            phien_ban_clip, sai thì dừng; + dáng nghỉ TẠM anim/lam-nghi-2x.png (dùng chung, cùng ô/neo) nhúng PNG nguyên bản.
-  - qb, tg : sheet quái+boss và thế giới (anim/quai-boss.*, anim/the-gioi.*) dạng data URI WebP (Safari iOS 14+ đọc được).
+  - qbr    : QUÁI + BOSS vẽ từ mảnh = runtime/quai-boss/quai-boss-rig.json + 14 PNG mảnh (PNG nguyên bản, data URI; kiểm cỡ = co_anh
+             trong JSON). QBR.nap(…, TV.NHUNG.qbr) đọc thẳng data URI. KHÔNG nhúng sheet boss 2x (không dùng).
+           runtime/quai-boss-runtime.js được chèn INLINE thay cho thẻ <script src="runtime/quai-boss-runtime.js">.
+  - tg     : sheet thế giới (anim/the-gioi.*) dạng data URI WebP (Safari iOS 14+ đọc được).
   - lam_hd : hoạt ảnh HÀNH ĐỘNG Lam (art/modular/lam-moi/hanh-dong/sprite/lam-hanh-dong-2x.*) – PNG nguyên bản, kiểm co_sheet
   - hu     : hiệu ứng ảnh gen (art/hieu-ung/sprite/<ten>-2x.*) – PNG nguyên bản; thiếu ảnh nào thì bỏ qua (game vẽ khung TẠM)
 Nền parallax cũ (art/chibi/…) đã bị xoá: demo.html vẽ nền gradient TẠM, không cần nhúng ảnh nền.
-Nếu file build > 15 MB thì tự giảm chất lượng WebP của qb/tg.
+Nếu file build > 15 MB thì tự giảm chất lượng WebP của tg.
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
 import base64, io, json, os
 from PIL import Image
@@ -19,7 +22,10 @@ ANIM = os.path.join(HERE, 'anim')
 LAM_DIRS = {'v4': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v4', 'sprite')),
             'v3': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v3', 'sprite'))}
 LAM_CO = (2142, 970)
-SHEETS = {'qb': 'quai-boss.json', 'tg': 'the-gioi.json'}
+SHEETS = {'tg': 'the-gioi.json'}
+QBR_DIR = os.path.join(HERE, 'runtime', 'quai-boss')
+QBR_JS = os.path.join(HERE, 'runtime', 'quai-boss-runtime.js')
+QBR_TAG = '<script src="runtime/quai-boss-runtime.js"></script>'
 HD_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'hanh-dong', 'sprite'))
 HU_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'hieu-ung', 'sprite'))
 HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh']
@@ -42,6 +48,22 @@ def hieu_ung():
         meta = json.load(open(j, encoding='utf-8'))
         out[t] = {'json': meta, 'anh': png_uri(os.path.join(HU_DIR, meta['anh']))}
     return out
+
+
+def quai_boss():
+    meta = json.load(open(os.path.join(QBR_DIR, 'quai-boss-rig.json'), encoding='utf-8'))
+    anh = {}
+    for nv in meta['nv'].values():
+        for nd in nv['nut'].values():
+            if not nd.get('anh'):
+                continue
+            p = os.path.join(QBR_DIR, nd['anh'])
+            if list(Image.open(p).size) != list(nd['co_anh']):
+                raise SystemExit('LỖI: %s không đúng co_anh %s' % (p, nd['co_anh']))
+            anh[nd['anh']] = png_uri(p)
+    if len(anh) != 14:
+        raise SystemExit('LỖI: gói quái+boss phải có 14 mảnh PNG, thấy %d' % len(anh))
+    return {'json': meta, 'anh': anh}
 
 
 def webp(path, q):
@@ -71,7 +93,7 @@ def lam(clip):
 
 
 def khoi(q_sheet, L):
-    nh = {'lam': L['v4'], 'lam_v3': L['v3'], 'lam_hd': hanh_dong(), 'hu': hieu_ung()}
+    nh = {'lam': L['v4'], 'lam_v3': L['v3'], 'lam_hd': hanh_dong(), 'hu': hieu_ung(), 'qbr': quai_boss()}
     for k, jf in SHEETS.items():
         meta = json.load(open(os.path.join(ANIM, jf), encoding='utf-8'))
         nh[k] = {'json': meta, 'anh': webp(os.path.join(ANIM, meta['image']), q_sheet)}
@@ -81,7 +103,11 @@ def khoi(q_sheet, L):
 
 tag = "<script>\n'use strict';"
 assert src.count(tag) == 1
-assert '<script src=' not in src, 'demo.html không còn nạp lib/*.js'
+assert src.count(QBR_TAG) == 1, 'demo.html phải nạp runtime/quai-boss-runtime.js đúng 1 lần'
+rt = open(QBR_JS, encoding='utf-8').read()
+assert '</script' not in rt
+src = src.replace(QBR_TAG, '<script>/* runtime/quai-boss-runtime.js (nhúng) */\n' + rt + '\n</script>')
+assert '<script src=' not in src, 'demo.html chỉ được nạp runtime quái+boss bằng <script src> (đã nhúng ở trên)'
 L = {c: lam(c) for c in ('v4', 'v3')}
 for qs in (92, 85, 75, 60):
     out = src.replace(tag, khoi(qs, L) + tag)
@@ -91,4 +117,4 @@ for qs in (92, 85, 75, 60):
     print('Bản build %.1f MB > 15 MB → giảm chất lượng WebP' % mb)
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · WebP quái/thế giới q%d (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (qs,)))
+print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · WebP thế giới q%d (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (qs,)))

@@ -120,6 +120,9 @@ Lưu ý gameplay quan sát được (không sửa vì là logic game): phòng bo
 - Video boss: bot giữ khoảng cách ở pha 1 để boss ra đủ đòn (3 cú đập, 2 cú quét – 1 quay trái, 1 quay phải) rồi mới dồn đánh. Hai bản (thường / hitbox) dài lệch nhau vài chục khung vì mảnh rơi pha 2 ngẫu nhiên.
 
 ## 7. Cách ghép vào `game/demo.html`
+> **27/10/2026: ĐÃ GHÉP** vào `game/demo.html` (8 chỗ + overlay hitbox, build tự chứa nhúng mảnh) – xem `game/kiem-thu-ghep-quai-boss/GHI-CHU.md`.
+> `tao-tu-demo.py` không chạy lại được trên demo.html mới nữa; bản thử giữ làm mốc.
+
 Mọi thay đổi so với demo nằm trong `cong-cu/tao-tu-demo.py` (danh sách cặp "cũ → mới", mỗi cặp ghi có ghép hay không).
 Phần cần ghép (8 chỗ):
 1. Thêm `<script src="runtime/quai-boss-runtime.js"></script>` trước khối `<script>` chính (đường dẫn từ `game/`).

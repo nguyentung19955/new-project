@@ -43,11 +43,15 @@ function vang(img){        // ánh vàng (giống bản tô vàng của demo cũ
   const g=c.getContext('2d'); g.drawImage(img,0,0); g.globalCompositeOperation='source-atop'; g.globalAlpha=0.7; g.fillStyle='#E1B85A'; g.fillRect(0,0,c.width,c.height);
   return c;
 }
-QBR.nap = async function(base, tienDo){
+// nhung (tuỳ chọn, bản build tự chứa): {json: rig đã parse, anh: {'quai/than.png': 'data:image/png;base64,…', …}} → không tải mạng
+QBR.nap = async function(base, tienDo, nhung){
   const T0=performance.now();
-  const r=await fetch(base+'quai-boss-rig.json',{cache:'no-cache'});
-  if(!r.ok) throw new Error('lỗi mạng '+r.status+' khi tải '+base+'quai-boss-rig.json');
-  J=await r.json();
+  if(nhung){ J=JSON.parse(JSON.stringify(nhung.json)); }
+  else {
+    const r=await fetch(base+'quai-boss-rig.json',{cache:'no-cache'});
+    if(!r.ok) throw new Error('lỗi mạng '+r.status+' khi tải '+base+'quai-boss-rig.json');
+    J=await r.json();
+  }
   const T1=performance.now();
   const ds=[];
   for(const nv in J.nv){
@@ -62,7 +66,7 @@ QBR.nap = async function(base, tienDo){
     for(const n of N.nut_ds){ const nd=N.nut[n]; if(nd.anh) ds.push(nd); }
   }
   let xong=0;
-  await Promise.all(ds.map(nd=>loadImg(base+nd.anh).then(im=>{ nd.img=im; xong++; if(tienDo) tienDo(xong/ds.length); })));
+  await Promise.all(ds.map(nd=>loadImg(nhung?nhung.anh[nd.anh]:base+nd.anh).then(im=>{ nd.img=im; xong++; if(tienDo) tienDo(xong/ds.length); })));
   const T2=performance.now();
   let byteGoc=0, byteCache=0; const bang=[];
   for(const nd of ds){
