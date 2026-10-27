@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Tạo game/thu-p0a/am-dao.html (trang thử Âm Đao cấp 1–4) từ game/thu-p0a/index.html (bản P0-A, KHÔNG sửa file đó)
++ khối cong-cu/khoi-am-dao.js (chèn SAU khối P0-A, trước boot()). Cùng thư mục với index.html nên mọi đường dẫn tài nguyên giữ nguyên.
+Bản P0-A gốc (index.html) để nguyên để so. Mỗi chỗ thay phải khớp đúng số lần – lệch thì dừng.
+Chạy: python3 game/thu-p0a/cong-cu/tao-tu-demo.py && python3 game/thu-p0a/cong-cu/tao-am-dao.py"""
+import os, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+THU = os.path.normpath(os.path.join(HERE, '..'))
+src = open(os.path.join(THU, 'index.html'), encoding='utf-8').read()
+KHOI = open(os.path.join(HERE, 'khoi-am-dao.js'), encoding='utf-8').read()
+
+R = []
+def thay(mo_ta, cu, moi, lan=1):
+    R.append((mo_ta, cu, moi, lan))
+
+thay('tiêu đề', '<title>Tiếng Vọng – Thử P0-A (nhịp đánh + Thế)</title>', '<title>Tiếng Vọng – Thử Âm Đao cấp 1–4 (trên P0-A)</title>')
+thay('màn bắt đầu', '<p class="big">Thử P0-A · nhịp đánh, hàng chờ 1 nhát, Chuông Gỗ, quái gác có Thế</p>',
+     '<p class="big">Thử Âm Đao cấp 1–4 · đánh thường + âm nhận, giữ Chém = Dư Âm (cấp 3+)</p>')
+# Âm Đao dựng trên nhịp MỚI của P0-A: không có nhịp cũ ở trang này (so nhịp cũ/mới ở index.html)
+thay('luôn nhịp mới', "bat: P0_Q.get('p0') !== '0',", "bat: true,   // trang Âm Đao: luôn nhịp P0-A")
+thay('tên đòn 7 (chém vang)', "6: 'trên không'})[n]; }", "6: 'trên không', 7: 'CHÉM VANG'})[n] || ''; }")
+thay('log trúng: nguồn vết k', "ghi((bong ? 'bóng ' : 'Lam ') + 'D ' + h.D.ma + (bong ? '' : ' ' + tenDon(h.n))",
+     "ghi((bong ? 'bóng ' : h.D.src === 'k' ? 'VẾT ' : 'Lam ') + 'D ' + h.D.ma + (bong || h.D.src === 'k' ? '' : ' ' + tenDon(h.n)) + (h.D.chiMang ? ' CHÍ MẠNG' : '')")
+thay('số trúng: chí mạng có "!", vết màu ngà',
+     "String(h.m), bong ? '#7FE0C8' : '#FFF4DC'); }",
+     "String(h.m) + (h.D.chiMang ? '!' : ''), bong ? '#7FE0C8' : h.D.chiMang ? '#FFD25A' : h.D.src === 'k' ? '#F3D9A8' : '#FFF4DC'); }")
+thay('màu log kỹ năng', "r.loai === 'tre' ? '#FFD25A' : '#c9c9c9'",
+     "r.loai === 'tre' ? '#FFD25A' : r.loai === 'ky' ? '#FFD9A0' : r.loai === 'vet' ? '#F3C38A' : r.loai === 'giu' ? '#B8A890' : '#c9c9c9'")
+thay('khối Âm Đao, rồi khởi động', "\nboot();\n</script>", "\n" + KHOI + "\nboot();\n</script>")
+
+out = src; loi = []
+for mo_ta, cu, moi, lan in R:
+    n = out.count(cu)
+    if n != lan:
+        loi.append('%s: khớp %d lần (cần %d)' % (mo_ta, n, lan)); continue
+    out = out.replace(cu, moi)
+if loi:
+    sys.exit('LỖI – index.html (P0-A) đã đổi, sửa script:\n  ' + '\n  '.join(loi))
+dst = os.path.join(THU, 'am-dao.html')
+open(dst, 'w', encoding='utf-8').write(out)
+print('ghi', dst, len(out.encode('utf-8')), 'byte')

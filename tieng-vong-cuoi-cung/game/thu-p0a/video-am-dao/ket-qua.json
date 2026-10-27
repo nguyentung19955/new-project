@@ -1,0 +1,1077 @@
+{
+ "do": {
+  "cham_hop_cap1": {
+   "cham": [
+    7
+   ],
+   "giu30": [
+    7
+   ],
+   "so_lan": {
+    "cham": 20,
+    "giu30": 20
+   }
+  },
+  "chi_mang": {
+   "so_nhat": 400,
+   "nhat_chi_mang": [
+    24,
+    28,
+    52,
+    59,
+    76,
+    84,
+    161,
+    164,
+    169,
+    190,
+    192,
+    193,
+    220,
+    225,
+    262,
+    295,
+    299,
+    302,
+    304,
+    322,
+    333,
+    363,
+    392,
+    396
+   ],
+   "so_chi_mang": 24,
+   "ti_le": 0.06,
+   "hai_luot_giong_nhau": true
+  },
+  "thong_so_cap1": {
+   "cap": 1,
+   "don1": [
+    10,
+    10
+   ],
+   "don3": [
+    10,
+    30
+   ],
+   "chem": [
+    15,
+    20
+   ],
+   "vet": [
+    10,
+    10
+   ],
+   "hoi": 150,
+   "duAm": false,
+   "box1": [
+    4,
+    -97,
+    86,
+    48
+   ],
+   "box7": [
+    -13,
+    -66,
+    103,
+    66
+   ]
+  },
+  "cham_hop_cap2": {
+   "cham": [
+    7
+   ],
+   "giu30": [
+    7
+   ],
+   "so_lan": {
+    "cham": 20,
+    "giu30": 20
+   }
+  },
+  "thong_so_cap2": {
+   "cap": 2,
+   "don1": [
+    12,
+    10
+   ],
+   "don3": [
+    12,
+    30
+   ],
+   "chem": [
+    15,
+    20
+   ],
+   "vet": [
+    10,
+    10
+   ],
+   "hoi": 150,
+   "duAm": false,
+   "box1": [
+    4,
+    -97,
+    86,
+    48
+   ],
+   "box7": [
+    -13,
+    -66,
+    103,
+    66
+   ]
+  },
+  "cham_hop_cap3": {
+   "cham": [
+    7
+   ],
+   "giu30": [
+    7
+   ],
+   "so_lan": {
+    "cham": 20,
+    "giu30": 20
+   }
+  },
+  "thong_so_cap3": {
+   "cap": 3,
+   "don1": [
+    12,
+    10
+   ],
+   "don3": [
+    12,
+    30
+   ],
+   "chem": [
+    15,
+    20
+   ],
+   "vet": [
+    10,
+    10
+   ],
+   "hoi": 150,
+   "duAm": true,
+   "box1": [
+    4,
+    -97,
+    86,
+    48
+   ],
+   "box7": [
+    -13,
+    -66,
+    103,
+    66
+   ]
+  },
+  "cham_hop_cap4": {
+   "cham": [
+    7
+   ],
+   "giu30": [
+    7
+   ],
+   "so_lan": {
+    "cham": 20,
+    "giu30": 20
+   }
+  },
+  "thong_so_cap4": {
+   "cap": 4,
+   "don1": [
+    12,
+    10
+   ],
+   "don3": [
+    12,
+    30
+   ],
+   "chem": [
+    15,
+    20
+   ],
+   "vet": [
+    16,
+    20
+   ],
+   "hoi": 150,
+   "duAm": true,
+   "box1": [
+    4,
+    -97,
+    86,
+    48
+   ],
+   "box7": [
+    -13,
+    -66,
+    103,
+    66
+   ]
+  },
+  "am_nhan": {
+   "atk1": {
+    "so_tick_ve": 24,
+    "dai_min": 7.6,
+    "dai_max": 10.2,
+    "mep_tren_canh_hop": 24,
+    "tick": [
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   },
+   "atk5": {
+    "so_tick_ve": 8,
+    "dai_min": 24.4,
+    "dai_max": 25.7,
+    "mep_tren_canh_hop": 8,
+    "tick": [
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18
+    ]
+   },
+   "atk6": {
+    "so_tick_ve": 8,
+    "dai_min": 12.5,
+    "dai_max": 17.9,
+    "mep_tren_canh_hop": 8,
+    "tick": [
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16
+    ]
+   },
+   "atk7": {
+    "so_tick_ve": 8,
+    "dai_min": 10.3,
+    "dai_max": 14,
+    "mep_tren_canh_hop": 8,
+    "tick": [
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13
+    ]
+   },
+   "atk2": {
+    "so_tick_ve": 8,
+    "dai_min": 13.3,
+    "dai_max": 14.9,
+    "mep_tren_canh_hop": 8,
+    "tick": [
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   },
+   "atk3": {
+    "so_tick_ve": 8,
+    "dai_min": 10.3,
+    "dai_max": 11.4,
+    "mep_tren_canh_hop": 8,
+    "tick": [
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16
+    ]
+   }
+  },
+  "loi_trang": []
+ },
+ "giu": {
+  "file": "2-debug-giu-nha.mp4",
+  "khung": 1335,
+  "giay": 22.25,
+  "loi_trang": [],
+  "phan": [
+   {
+    "phan": "cấp 3 · chạm 1 tick → nhả sớm (chỉ đánh thường)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 1,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 15 → nhả sớm, không có kỹ năng",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 1,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 21 → nhả khi nhát 1 CHƯA xong → xếp hàng → tung khi hết re",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 1,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 22 → nhả ở tick cuối nhát 1 → xếp hàng 1 tick",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 1,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 40 → thế tụ → nhả → tung NGAY",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 100 → tụ quá 60 tick → TỰ TUNG (không kẹt)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 1,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 30 rồi LƯỚT ở tick 26 → xoá, không mất hồi",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 1,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · dùng Dư Âm rồi giữ 40 khi ĐANG HỒI CHIÊU → không nạp",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 1,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · giữ 21 (xếp hàng) rồi CHẠM MỚI ngay → chạm mới thắng, kỹ năng xoá",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 1,
+     "nap": 1,
+     "xepHang": 1,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 1,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 3 · bị Chuông Gỗ đập lúc đang giữ → xoá (bi-danh)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 1,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 1 · giữ 40 → không có Dư Âm (chỉ nhát 1)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 1,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 2 · giữ 40 → không có Dư Âm (chỉ nhát 1)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 1,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 4 · giữ 30 → Dư Âm, vết [16,20]",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   }
+  ]
+ },
+ "vet": {
+  "file": "3-debug-vet-du-am.mp4",
+  "khung": 900,
+  "giay": 15.0,
+  "loi_trang": [],
+  "phan": [
+   {
+    "phan": "vết theo LẦN DÙNG: 10 lần Dư Âm (5 trúng – 1 lần trúng 2 con – 5 hụt) → đúng 10 vết; 10 nhát thường → 0 vết",
+    "tk_tang": {
+     "giu": 20,
+     "nhaSom": 10,
+     "nap": 10,
+     "xepHang": 1,
+     "tungNgay": 9,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 10,
+     "vet": 10,
+     "vetTrung": 5,
+     "vetHut": 5,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   }
+  ]
+ },
+ "proc": {
+  "file": "4-debug-chong-proc-cong-huong.mp4",
+  "khung": 1301,
+  "giay": 21.68,
+  "loi_trang": [],
+  "phan": [
+   {
+    "phan": "bóng phát lại CHÉM VANG: bóng gây [15,20]×0,25/0,5, KHÔNG sinh vết (đếm vết không tăng)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "vết 'k' vang CÙNG TICK bóng chém vào hình nộm → gom 2 lần trúng, KHÔNG Cộng hưởng",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 1,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 4 · vết vào quái gác còn vỏ → Keng, máu 0 (không thành 1), Thế −20",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 1 (Âm Đao) · hộp bóng bật 8 tick → trúng 1 lần (mã đòn bền)",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 1,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 1 · cùng tick Lam + bóng vào quái gác Thế 10 → gom, cả hai bị chặn, +10",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 2,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 1 · Lam trước 5 tick (Thế 10) → Lam phá vỏ, bóng 2 + thêm 10 = 12",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 2,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "cấp 1 · quái gác ĐÃ MẤT VỎ, cùng tick → 10 + 2 + 10 = 22",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 2,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "ghi ở cấp 1, đổi cấp 2 trước khi bóng phát → bóng 2 (đã chốt), Lam 12, thêm 12",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 2,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0
+    },
+    "thieu_ket_cuc": 0
+   }
+  ]
+ },
+ "cham": {
+  "file": "5-debug-cham-am-nhan-hop-don.mp4",
+  "khung": 680,
+  "tick_am_nhan_lech_hop": 0,
+  "loi_trang": []
+ },
+ "sach": {
+  "file": "1-sach-cap-1-2-3-4.mp4",
+  "khung": 1170,
+  "giay": 19.5,
+  "loi_trang": [],
+  "ket_qua": {
+   "Hình nộm: combo · GIỮ Chém · combo": {
+    "cap1": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 70,
+     "tk": {
+      "giu": 7,
+      "nhaSom": 7,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 7
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap2": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 84,
+     "tk": {
+      "giu": 7,
+      "nhaSom": 7,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 7
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap3": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 109,
+     "tk": {
+      "giu": 7,
+      "nhaSom": 6,
+      "nap": 1,
+      "xepHang": 0,
+      "tungNgay": 1,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 1,
+      "vet": 1,
+      "vetTrung": 1,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 9
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap4": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 115,
+     "tk": {
+      "giu": 7,
+      "nhaSom": 6,
+      "nap": 1,
+      "xepHang": 0,
+      "tungNgay": 1,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 1,
+      "vet": 1,
+      "vetTrung": 1,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 9
+     },
+     "thieu_ket_cuc": 0
+    }
+   },
+   "Chuông Gỗ: giữ Chém mở đầu rồi chém tới chết": {
+    "cap1": {
+     "tick_chet": 161,
+     "tong_hinh_nom_10s": 70,
+     "tk": {
+      "giu": 14,
+      "nhaSom": 14,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 4
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap2": {
+     "tick_chet": 161,
+     "tong_hinh_nom_10s": 84,
+     "tk": {
+      "giu": 14,
+      "nhaSom": 14,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 4
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap3": {
+     "tick_chet": 105,
+     "tong_hinh_nom_10s": 109,
+     "tk": {
+      "giu": 11,
+      "nhaSom": 9,
+      "nap": 2,
+      "xepHang": 0,
+      "tungNgay": 2,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 2,
+      "vet": 2,
+      "vetTrung": 2,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 4
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap4": {
+     "tick_chet": 71,
+     "tong_hinh_nom_10s": 115,
+     "tk": {
+      "giu": 9,
+      "nhaSom": 7,
+      "nap": 2,
+      "xepHang": 0,
+      "tungNgay": 2,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 2,
+      "vet": 2,
+      "vetTrung": 2,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 3
+     },
+     "thieu_ket_cuc": 0
+    }
+   },
+   "Quái gác (vỏ): giữ Chém mở đầu rồi chém tới chết": {
+    "cap1": {
+     "tick_chet": 201,
+     "tong_hinh_nom_10s": 30,
+     "tk": {
+      "giu": 24,
+      "nhaSom": 24,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 8
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap2": {
+     "tick_chet": 201,
+     "tong_hinh_nom_10s": 36,
+     "tk": {
+      "giu": 24,
+      "nhaSom": 24,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 8
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap3": {
+     "tick_chet": 171,
+     "tong_hinh_nom_10s": 36,
+     "tk": {
+      "giu": 20,
+      "nhaSom": 17,
+      "nap": 3,
+      "xepHang": 0,
+      "tungNgay": 3,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 3,
+      "vet": 3,
+      "vetTrung": 3,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 9
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap4": {
+     "tick_chet": 155,
+     "tong_hinh_nom_10s": 36,
+     "tk": {
+      "giu": 17,
+      "nhaSom": 14,
+      "nap": 3,
+      "xepHang": 0,
+      "tungNgay": 3,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 3,
+      "vet": 3,
+      "vetTrung": 3,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 8
+     },
+     "thieu_ket_cuc": 0
+    }
+   },
+   "Bẫy Dư Âm: chém HỤT, lướt lùi, địch đi vào vết": {
+    "cap1": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 25,
+      "nhaSom": 25,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 0
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap2": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 25,
+      "nhaSom": 25,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "trungLam": 0
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap3": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 21,
+      "nhaSom": 17,
+      "nap": 4,
+      "xepHang": 1,
+      "tungNgay": 3,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 4,
+      "vet": 4,
+      "vetTrung": 3,
+      "vetHut": 1,
+      "huyTruocHop": 0,
+      "trungLam": 1
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap4": {
+     "tick_chet": null,
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 18,
+      "nhaSom": 14,
+      "nap": 4,
+      "xepHang": 1,
+      "tungNgay": 3,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 4,
+      "vet": 4,
+      "vetTrung": 3,
+      "vetHut": 1,
+      "huyTruocHop": 0,
+      "trungLam": 1
+     },
+     "thieu_ket_cuc": 0
+    }
+   }
+  }
+ }
+}

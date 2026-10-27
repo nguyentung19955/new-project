@@ -1,0 +1,205 @@
+== cấp 3 · chạm 1 tick → nhả sớm (chỉ đánh thường)
+f4 #1 ra-ngay → atk1  cần y=0.00
+f5 giu #1: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f10 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)
+f10 Lam D 1 atk1 trúng hình nộm#6: máu 12  Thế 10
+f10   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f11   D 1 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 1, "nhaSom": 1, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 15 → nhả sớm, không có kỹ năng
+f45 #2 ra-ngay → atk1  cần y=0.00
+f51 hộp atk1 bật: chạm #2 → hộp 7 tick (tính tick bấm = 1; su 7)
+f51 Lam D 2 atk1 trúng hình nộm#6: máu 12  Thế 10
+f51   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f52   D 2 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f57 giu #2: nha-som (giữ 15 tick < 20) → chỉ là đánh thường
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 2, "nhaSom": 2, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 21 → nhả khi nhát 1 CHƯA xong → xếp hàng → tung khi hết re
+f105 #3 ra-ngay → atk1  cần y=0.00
+f111 hộp atk1 bật: chạm #3 → hộp 7 tick (tính tick bấm = 1; su 7)
+f111 Lam D 3 atk1 trúng hình nộm#6: máu 12  Thế 10
+f111   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f112   D 3 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f121 giu #3: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f123 ky-nang: xep-hang (nhả khi atk1 t18/23, tung sau tối đa 5 tick, hạn f134)
+f128 ky-nang #1: TUNG (xep-hang → tung khi đòn trước hết re, chờ 4 tick) – chém vang D 4 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung), hồi 150 tick
+f133 vết #1 ĐẶT (lần dùng Dư Âm #1, từ chém vang D 4) ở hộp [6511,382 103×66] – vang sau 24 tick, [10,10] chốt cấp 3
+f133 Lam D 4 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f133   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f134   D 4 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f155 Dư Âm #1: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f157 vết #1 VANG (D 200001 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f157 VẾT D 200001 trúng hình nộm#6: máu 10  Thế 10
+f157   → hình nộm#6 tick này: máu −10 (972 → 962), Thế 30 → 20 [thuong]
+f158   D 200001 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f161 vết #1 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 17}
+tk Âm Đao {"giu": 3, "nhaSom": 2, "nap": 1, "xepHang": 1, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 1, "vet": 1, "vetTrung": 1, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 22 → nhả ở tick cuối nhát 1 → xếp hàng 1 tick
+f209 #4 ra-ngay → atk1  cần y=0.00
+f215 hộp atk1 bật: chạm #4 → hộp 7 tick (tính tick bấm = 1; su 7)
+f215 Lam D 5 atk1 trúng hình nộm#6: máu 12  Thế 10
+f215   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f216   D 5 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f225 giu #4: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f228 ky-nang: xep-hang (nhả khi atk1 t19/23, tung sau tối đa 4 tick, hạn f238)
+f232 ky-nang #2: TUNG (xep-hang → tung khi đòn trước hết re, chờ 3 tick) – chém vang D 6 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung), hồi 150 tick
+f237 vết #2 ĐẶT (lần dùng Dư Âm #2, từ chém vang D 6) ở hộp [6511,382 103×66] – vang sau 24 tick, [10,10] chốt cấp 3
+f237 Lam D 6 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f237   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f238   D 6 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f259 Dư Âm #2: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f261 vết #2 VANG (D 200002 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f261 VẾT D 200002 trúng hình nộm#6: máu 10  Thế 10
+f261   → hình nộm#6 tick này: máu −10 (972 → 962), Thế 30 → 20 [thuong]
+f262   D 200002 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f265 vết #2 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 17}
+tk Âm Đao {"giu": 4, "nhaSom": 2, "nap": 2, "xepHang": 2, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 2, "vet": 2, "vetTrung": 2, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 40 → thế tụ → nhả → tung NGAY
+f314 #5 ra-ngay → atk1  cần y=0.00
+f320 hộp atk1 bật: chạm #5 → hộp 7 tick (tính tick bấm = 1; su 7)
+f320 Lam D 7 atk1 trúng hình nộm#6: máu 12  Thế 10
+f320   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f321   D 7 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f330 giu #5: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f337 giu #5: vào thế tụ
+f351 ky-nang #3: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 8 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung), hồi 150 tick
+f356 vết #3 ĐẶT (lần dùng Dư Âm #3, từ chém vang D 8) ở hộp [6511,382 103×66] – vang sau 24 tick, [10,10] chốt cấp 3
+f356 Lam D 8 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f356   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f357   D 8 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f378 Dư Âm #3: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f380 vết #3 VANG (D 200003 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f380 VẾT D 200003 trúng hình nộm#6: máu 10  Thế 10
+f380   → hình nộm#6 tick này: máu −10 (972 → 962), Thế 30 → 20 [thuong]
+f381   D 200003 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f384 vết #3 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 17}
+tk Âm Đao {"giu": 5, "nhaSom": 2, "nap": 3, "xepHang": 2, "tungNgay": 1, "tuTung": 0, "xoa": 0, "tung": 3, "vet": 3, "vetTrung": 3, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 100 → tụ quá 60 tick → TỰ TUNG (không kẹt)
+f437 #6 ra-ngay → atk1  cần y=0.00
+f443 hộp atk1 bật: chạm #6 → hộp 7 tick (tính tick bấm = 1; su 7)
+f443 Lam D 9 atk1 trúng hình nộm#6: máu 12  Thế 10
+f443   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f444   D 9 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f453 giu #6: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f460 giu #6: vào thế tụ
+f520 ky-nang #4: TUNG (tu-tung: giữ quá 60 tick ở thế tụ) – chém vang D 10 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung), hồi 150 tick
+f525 vết #4 ĐẶT (lần dùng Dư Âm #4, từ chém vang D 10) ở hộp [6511,382 103×66] – vang sau 24 tick, [10,10] chốt cấp 3
+f525 Lam D 10 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f525   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f526   D 10 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f547 Dư Âm #4: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f549 vết #4 VANG (D 200004 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f549 VẾT D 200004 trúng hình nộm#6: máu 10  Thế 10
+f549   → hình nộm#6 tick này: máu −10 (972 → 962), Thế 30 → 20 [thuong]
+f550   D 200004 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f553 vết #4 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 17}
+tk Âm Đao {"giu": 6, "nhaSom": 2, "nap": 4, "xepHang": 2, "tungNgay": 1, "tuTung": 1, "xoa": 0, "tung": 4, "vet": 4, "vetTrung": 4, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 30 rồi LƯỚT ở tick 26 → xoá, không mất hồi
+f570 #7 ra-ngay → atk1  cần y=0.00
+f576 hộp atk1 bật: chạm #7 → hộp 7 tick (tính tick bấm = 1; su 7)
+f576 Lam D 11 atk1 trúng hình nộm#6: máu 12  Thế 10
+f576   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f577   D 11 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f586 giu #7: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f593 giu #7: vào thế tụ
+f593 ky-nang: xoa:luot (đang ở thế tụ) – KHÔNG mất hồi chiêu vì chưa tung
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 7, "nhaSom": 2, "nap": 5, "xepHang": 2, "tungNgay": 1, "tuTung": 1, "xoa": 1, "tung": 4, "vet": 4, "vetTrung": 4, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · dùng Dư Âm rồi giữ 40 khi ĐANG HỒI CHIÊU → không nạp
+f650 #8 ra-ngay → atk1  cần y=0.00
+f656 hộp atk1 bật: chạm #8 → hộp 7 tick (tính tick bấm = 1; su 7)
+f656 Lam D 12 atk1 trúng hình nộm#6: máu 12  Thế 10
+f656   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f657   D 12 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f666 giu #8: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f673 giu #8: vào thế tụ
+f675 ky-nang #5: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 13 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung), hồi 150 tick
+f680 vết #5 ĐẶT (lần dùng Dư Âm #5, từ chém vang D 13) ở hộp [6511,382 103×66] – vang sau 24 tick, [10,10] chốt cấp 3
+f680 Lam D 13 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f680   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f681   D 13 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f702 Dư Âm #5: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f704 vết #5 VANG (D 200005 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f704 VẾT D 200005 trúng hình nộm#6: máu 10  Thế 10
+f704   → hình nộm#6 tick này: máu −10 (972 → 962), Thế 30 → 20 [thuong]
+f705   D 200005 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f708 vết #5 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+f740 #9 ra-ngay → atk1  cần y=0.00
+f746 hộp atk1 bật: chạm #9 → hộp 7 tick (tính tick bấm = 1; su 7)
+f746 Lam D 14 atk1 trúng hình nộm#6: máu 12  Thế 10
+f746   → hình nộm#6 tick này: máu −12 (962 → 950), Thế 20 → 10 [thuong]
+f747   D 14 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f777 giu #9: nha-som (giữ 40 tick < 20; Dư Âm đang hồi 48) → chỉ là đánh thường
+tk P0 {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 4, "ch": 0, "boQua": 24}
+tk Âm Đao {"giu": 9, "nhaSom": 3, "nap": 6, "xepHang": 2, "tungNgay": 2, "tuTung": 1, "xoa": 1, "tung": 5, "vet": 5, "vetTrung": 5, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · giữ 21 (xếp hàng) rồi CHẠM MỚI ngay → chạm mới thắng, kỹ năng xoá
+f820 #10 ra-ngay → atk1  cần y=0.00
+f826 hộp atk1 bật: chạm #10 → hộp 7 tick (tính tick bấm = 1; su 7)
+f826 Lam D 15 atk1 trúng hình nộm#6: máu 12  Thế 10
+f826   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f827   D 15 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f836 giu #10: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f838 ky-nang: xep-hang (nhả khi atk1 t18/23, tung sau tối đa 5 tick, hạn f849)
+f838 #11 xep-hang  cần y=0.00  (đang atk1 t19)  hạn f848
+f838 ky-nang: xoa:bi-thay (chạm Chém mới #11 sau khi đã xếp hàng #10) – không mất hồi chiêu
+f839 #11 → thuc-hien atk2  chờ 0 tick
+f840 giu #11: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f845 hộp atk2 bật: chạm #11 → hộp 7 tick (tính tick bấm = 1; su 7)
+f845 Lam D 16 atk2 trúng hình nộm#6: máu 12  Thế 10
+f845   → hình nộm#6 tick này: máu −12 (987 → 975), Thế 50 → 40 [thuong]
+f846   D 16 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+tk P0 {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 2, "ch": 0, "boQua": 14}
+tk Âm Đao {"giu": 11, "nhaSom": 4, "nap": 7, "xepHang": 3, "tungNgay": 2, "tuTung": 1, "xoa": 2, "tung": 5, "vet": 5, "vetTrung": 5, "vetHut": 0, "huyTruocHop": 0}
+== cấp 3 · bị Chuông Gỗ đập lúc đang giữ → xoá (bi-danh)
+f903 #12 ra-ngay → atk1  cần y=0.00
+f909 hộp atk1 bật: chạm #12 → hộp 7 tick (tính tick bấm = 1; su 7)
+f922 giu #12: DA NAP (giữ 20 tick, đòn atk1 còn 4 tick – chạy hết, không cắt)
+f926 giu #12: vào thế tụ
+f929 ky-nang: xoa:bi-danh (đang ở thế tụ) – KHÔNG mất hồi chiêu vì chưa tung
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 0, "ch": 0, "boQua": 0}
+tk Âm Đao {"giu": 12, "nhaSom": 4, "nap": 8, "xepHang": 3, "tungNgay": 2, "tuTung": 1, "xoa": 3, "tung": 5, "vet": 5, "vetTrung": 5, "vetHut": 0, "huyTruocHop": 0}
+== cấp 1 · giữ 40 → không có Dư Âm (chỉ nhát 1)
+f1021 #13 ra-ngay → atk1  cần y=0.00
+f1027 hộp atk1 bật: chạm #13 → hộp 7 tick (tính tick bấm = 1; su 7)
+f1027 Lam D 18 atk1 trúng hình nộm#6: máu 10  Thế 10
+f1027   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f1028   D 18 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f1058 giu #13: nha-som (giữ 40 tick < 20; cấp 1 chưa có Dư Âm) → chỉ là đánh thường
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 13, "nhaSom": 5, "nap": 8, "xepHang": 3, "tungNgay": 2, "tuTung": 1, "xoa": 3, "tung": 5, "vet": 5, "vetTrung": 5, "vetHut": 0, "huyTruocHop": 0}
+== cấp 2 · giữ 40 → không có Dư Âm (chỉ nhát 1)
+f1101 #14 ra-ngay → atk1  cần y=0.00
+f1107 hộp atk1 bật: chạm #14 → hộp 7 tick (tính tick bấm = 1; su 7)
+f1107 Lam D 19 atk1 trúng hình nộm#6: máu 12  Thế 10
+f1107   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f1108   D 19 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f1138 giu #14: nha-som (giữ 40 tick < 20; cấp 2 chưa có Dư Âm) → chỉ là đánh thường
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 14, "nhaSom": 6, "nap": 8, "xepHang": 3, "tungNgay": 2, "tuTung": 1, "xoa": 3, "tung": 5, "vet": 5, "vetTrung": 5, "vetHut": 0, "huyTruocHop": 0}
+== cấp 4 · giữ 30 → Dư Âm, vết [16,20]
+f1181 #15 ra-ngay → atk1  cần y=0.00
+f1187 hộp atk1 bật: chạm #15 → hộp 7 tick (tính tick bấm = 1; su 7)
+f1187 Lam D 20 atk1 trúng hình nộm#6: máu 12  Thế 10
+f1187   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f1188   D 20 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f1197 giu #15: DA NAP (giữ 20 tick, đòn atk1 còn 7 tick – chạy hết, không cắt)
+f1204 giu #15: vào thế tụ
+f1208 ky-nang #6: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 21 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung), hồi 150 tick
+f1213 vết #6 ĐẶT (lần dùng Dư Âm #6, từ chém vang D 21) ở hộp [6511,382 103×66] – vang sau 24 tick, [16,20] chốt cấp 4
+f1213 Lam D 21 CHÉM VANG trúng hình nộm#6: máu 15  Thế 20
+f1213   → hình nộm#6 tick này: máu −15 (987 → 972), Thế 50 → 30 [thuong]
+f1214   D 21 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f1235 Dư Âm #6: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
+f1237 vết #6 VANG (D 200006 src 'k' [16,20], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
+f1237 VẾT D 200006 trúng hình nộm#6: máu 16  Thế 20
+f1237   → hình nộm#6 tick này: máu −16 (972 → 956), Thế 30 → 10 [thuong]
+f1238   D 200006 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f1241 vết #6 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 17}
+tk Âm Đao {"giu": 15, "nhaSom": 6, "nap": 9, "xepHang": 3, "tungNgay": 3, "tuTung": 1, "xoa": 3, "tung": 6, "vet": 6, "vetTrung": 6, "vetHut": 0, "huyTruocHop": 0}

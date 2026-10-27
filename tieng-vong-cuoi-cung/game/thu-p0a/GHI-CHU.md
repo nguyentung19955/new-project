@@ -194,4 +194,4 @@ Chi tiết + video quay lại: `game/thu-bo-vo-moc/GHI-CHU.md` mục "Sửa theo
 ### 6.7. Chưa làm / cần biết
 - Chưa thử trên iPhone thật (mục 3b, 6.4). Mọi số trên là đo trong Chromium headless.
 - Phân bố khung mới là đề xuất để xem; nếu nhát 1 vẫn thiếu lực trên máy thật thì mới tính vẽ khung chuẩn bị ngắn riêng.
-- Âm Đao cấp 1–4: làm tiếp sau các sửa nhỏ này, ở lượt sau.
+- Âm Đao cấp 1–4: **đã làm** ở trang con `am-dao.html` (bản này giữ nguyên để so) – xem `GHI-CHU-AM-DAO.md`.

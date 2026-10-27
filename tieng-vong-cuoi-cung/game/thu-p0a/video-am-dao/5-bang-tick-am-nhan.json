@@ -1,0 +1,3099 @@
+[
+{
+"f": 4,
+"atkN": 1,
+"atkT": 1,
+"hop": false,
+"khung": "c1-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 5,
+"atkN": 1,
+"atkT": 2,
+"hop": false,
+"khung": "c1-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 6,
+"atkN": 1,
+"atkT": 3,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 7,
+"atkN": 1,
+"atkT": 4,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 8,
+"atkN": 1,
+"atkT": 5,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 9,
+"atkN": 1,
+"atkT": 6,
+"hop": false,
+"khung": "c1-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 10,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 10,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 10,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 10,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 10,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 10,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 10,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 10,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 11,
+"atkN": 1,
+"atkT": 8,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 11,
+"n": 1,
+"at": 8,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 12,
+"atkN": 1,
+"atkT": 9,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 12,
+"n": 1,
+"at": 9,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 13,
+"atkN": 1,
+"atkT": 10,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 13,
+"n": 1,
+"at": 10,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 14,
+"atkN": 1,
+"atkT": 11,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 14,
+"n": 1,
+"at": 11,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 15,
+"atkN": 1,
+"atkT": 12,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 15,
+"n": 1,
+"at": 12,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 16,
+"atkN": 1,
+"atkT": 13,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 16,
+"n": 1,
+"at": 13,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 17,
+"atkN": 1,
+"atkT": 14,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 17,
+"n": 1,
+"at": 14,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 18,
+"atkN": 1,
+"atkT": 15,
+"hop": false,
+"khung": "c1-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 19,
+"atkN": 2,
+"atkT": 1,
+"hop": false,
+"khung": "c2-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 20,
+"atkN": 2,
+"atkT": 2,
+"hop": false,
+"khung": "c2-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 21,
+"atkN": 2,
+"atkT": 3,
+"hop": false,
+"khung": "c2-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 22,
+"atkN": 2,
+"atkT": 4,
+"hop": false,
+"khung": "c2-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 23,
+"atkN": 2,
+"atkT": 5,
+"hop": false,
+"khung": "c2-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 24,
+"atkN": 2,
+"atkT": 6,
+"hop": false,
+"khung": "c2-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 25,
+"atkN": 2,
+"atkT": 7,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 25,
+"n": 2,
+"at": 7,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 25,
+"atkN": 2,
+"atkT": 7,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 25,
+"n": 2,
+"at": 7,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 25,
+"atkN": 2,
+"atkT": 7,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 25,
+"n": 2,
+"at": 7,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 25,
+"atkN": 2,
+"atkT": 7,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 25,
+"n": 2,
+"at": 7,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 25,
+"atkN": 2,
+"atkT": 7,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 25,
+"n": 2,
+"at": 7,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 26,
+"atkN": 2,
+"atkT": 8,
+"hop": true,
+"khung": "c2-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 26,
+"n": 2,
+"at": 8,
+"bong": false,
+"mui": [
+68.9,
+-86.3
+],
+"mep": [
+80,
+-93.6
+],
+"dai": 13.3,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 27,
+"atkN": 2,
+"atkT": 9,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 27,
+"n": 2,
+"at": 9,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 28,
+"atkN": 2,
+"atkT": 10,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 28,
+"n": 2,
+"at": 10,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 29,
+"atkN": 2,
+"atkT": 11,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 29,
+"n": 2,
+"at": 11,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 30,
+"atkN": 2,
+"atkT": 12,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 30,
+"n": 2,
+"at": 12,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 31,
+"atkN": 2,
+"atkT": 13,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 31,
+"n": 2,
+"at": 13,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 32,
+"atkN": 2,
+"atkT": 14,
+"hop": true,
+"khung": "c2-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 32,
+"n": 2,
+"at": 14,
+"bong": false,
+"mui": [
+65.5,
+-91.8
+],
+"mep": [
+77.9,
+-100
+],
+"dai": 14.9,
+"hop": [
+-36,
+-100,
+116,
+48
+]
+}
+]
+},
+{
+"f": 33,
+"atkN": 2,
+"atkT": 15,
+"hop": false,
+"khung": "c2-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 34,
+"atkN": 3,
+"atkT": 1,
+"hop": false,
+"khung": "c3-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 35,
+"atkN": 3,
+"atkT": 2,
+"hop": false,
+"khung": "c3-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 36,
+"atkN": 3,
+"atkT": 3,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 37,
+"atkN": 3,
+"atkT": 4,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 38,
+"atkN": 3,
+"atkT": 5,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 39,
+"atkN": 3,
+"atkT": 6,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 40,
+"atkN": 3,
+"atkT": 7,
+"hop": false,
+"khung": "c3-giuong~c3-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 41,
+"atkN": 3,
+"atkT": 8,
+"hop": false,
+"khung": "c3-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 42,
+"atkN": 3,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 42,
+"n": 3,
+"at": 9,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 43,
+"atkN": 3,
+"atkT": 10,
+"hop": true,
+"khung": "c3-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 43,
+"n": 3,
+"at": 10,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+86,
+-1.7
+],
+"dai": 11.4,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 44,
+"atkN": 3,
+"atkT": 11,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 44,
+"n": 3,
+"at": 11,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 45,
+"atkN": 3,
+"atkT": 12,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 45,
+"n": 3,
+"at": 12,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 46,
+"atkN": 3,
+"atkT": 13,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 46,
+"n": 3,
+"at": 13,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 47,
+"atkN": 3,
+"atkT": 14,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 47,
+"n": 3,
+"at": 14,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 48,
+"atkN": 3,
+"atkT": 15,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 48,
+"n": 3,
+"at": 15,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 49,
+"atkN": 3,
+"atkT": 16,
+"hop": true,
+"khung": "c3-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 49,
+"n": 3,
+"at": 16,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-59,
+99,
+59
+]
+}
+]
+},
+{
+"f": 50,
+"atkN": 3,
+"atkT": 17,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 51,
+"atkN": 3,
+"atkT": 18,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 52,
+"atkN": 3,
+"atkT": 19,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 53,
+"atkN": 3,
+"atkT": 20,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 54,
+"atkN": 3,
+"atkT": 21,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 55,
+"atkN": 3,
+"atkT": 22,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 56,
+"atkN": 3,
+"atkT": 23,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 57,
+"atkN": 3,
+"atkT": 24,
+"hop": false,
+"khung": "c3-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 58,
+"atkN": 3,
+"atkT": 25,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 59,
+"atkN": 3,
+"atkT": 26,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 60,
+"atkN": 3,
+"atkT": 27,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 61,
+"atkN": 3,
+"atkT": 28,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 62,
+"atkN": 3,
+"atkT": 29,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 63,
+"atkN": 3,
+"atkT": 30,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 64,
+"atkN": 3,
+"atkT": 31,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 65,
+"atkN": 3,
+"atkT": 32,
+"hop": false,
+"khung": "c3-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 66,
+"atkN": 0,
+"atkT": 33,
+"hop": false,
+"khung": "tho-0",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 67,
+"atkN": 1,
+"atkT": 1,
+"hop": false,
+"khung": "c1-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 68,
+"atkN": 1,
+"atkT": 2,
+"hop": false,
+"khung": "c1-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 69,
+"atkN": 1,
+"atkT": 3,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 70,
+"atkN": 1,
+"atkT": 4,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 71,
+"atkN": 1,
+"atkT": 5,
+"hop": false,
+"khung": "c1-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 72,
+"atkN": 1,
+"atkT": 6,
+"hop": false,
+"khung": "c1-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 73,
+"atkN": 1,
+"atkT": 7,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 73,
+"n": 1,
+"at": 7,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 74,
+"atkN": 1,
+"atkT": 8,
+"hop": true,
+"khung": "c1-trung",
+"vet": null,
+"am_nhan": [
+{
+"f": 74,
+"n": 1,
+"at": 8,
+"bong": false,
+"mui": [
+79.8,
+-71.5
+],
+"mep": [
+90,
+-72.1
+],
+"dai": 10.2,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 75,
+"atkN": 1,
+"atkT": 9,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 75,
+"n": 1,
+"at": 9,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 76,
+"atkN": 1,
+"atkT": 10,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 76,
+"n": 1,
+"at": 10,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 77,
+"atkN": 1,
+"atkT": 11,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 77,
+"n": 1,
+"at": 11,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 78,
+"atkN": 1,
+"atkT": 12,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 78,
+"n": 1,
+"at": 12,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 79,
+"atkN": 1,
+"atkT": 13,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 79,
+"n": 1,
+"at": 13,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 80,
+"atkN": 1,
+"atkT": 14,
+"hop": true,
+"khung": "c1-trung2",
+"vet": null,
+"am_nhan": [
+{
+"f": 80,
+"n": 1,
+"at": 14,
+"bong": false,
+"mui": [
+82.6,
+-57
+],
+"mep": [
+90,
+-55.2
+],
+"dai": 7.6,
+"hop": [
+4,
+-97,
+86,
+48
+]
+}
+]
+},
+{
+"f": 81,
+"atkN": 1,
+"atkT": 15,
+"hop": false,
+"khung": "c1-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 82,
+"atkN": 1,
+"atkT": 16,
+"hop": false,
+"khung": "c1-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 83,
+"atkN": 1,
+"atkT": 17,
+"hop": false,
+"khung": "c1-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 84,
+"atkN": 1,
+"atkT": 18,
+"hop": false,
+"khung": "c1-thu",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 85,
+"atkN": 1,
+"atkT": 19,
+"hop": false,
+"khung": "c1-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 86,
+"atkN": 1,
+"atkT": 20,
+"hop": false,
+"khung": "c1-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 87,
+"atkN": 1,
+"atkT": 21,
+"hop": false,
+"khung": "c1-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 88,
+"atkN": 1,
+"atkT": 22,
+"hop": false,
+"khung": "c1-ve",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 89,
+"atkN": 0,
+"atkT": 23,
+"hop": false,
+"khung": "tho-0",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 90,
+"atkN": 7,
+"atkT": 1,
+"hop": false,
+"khung": "c3-chuanbi",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 91,
+"atkN": 7,
+"atkT": 2,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 92,
+"atkN": 7,
+"atkT": 3,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 93,
+"atkN": 7,
+"atkT": 4,
+"hop": false,
+"khung": "c3-giuong",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 94,
+"atkN": 7,
+"atkT": 5,
+"hop": false,
+"khung": "c3-vung",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 95,
+"atkN": 7,
+"atkT": 6,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 0,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 95,
+"n": 7,
+"at": 6,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 96,
+"atkN": 7,
+"atkT": 7,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 1,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 96,
+"n": 7,
+"at": 7,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 97,
+"atkN": 7,
+"atkT": 8,
+"hop": true,
+"khung": "c3-trung",
+"vet": {
+"t": 2,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 97,
+"n": 7,
+"at": 8,
+"bong": false,
+"mui": [
+77.7,
+-9.6
+],
+"mep": [
+87.8,
+0
+],
+"dai": 14,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 98,
+"atkN": 7,
+"atkT": 9,
+"hop": true,
+"khung": "c3-trung2",
+"vet": {
+"t": 3,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 98,
+"n": 7,
+"at": 9,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 99,
+"atkN": 7,
+"atkT": 10,
+"hop": true,
+"khung": "c3-trung2",
+"vet": {
+"t": 4,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 99,
+"n": 7,
+"at": 10,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 100,
+"atkN": 7,
+"atkT": 11,
+"hop": true,
+"khung": "c3-trung2",
+"vet": {
+"t": 5,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 100,
+"n": 7,
+"at": 11,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 101,
+"atkN": 7,
+"atkT": 12,
+"hop": true,
+"khung": "c3-trung2",
+"vet": {
+"t": 6,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 101,
+"n": 7,
+"at": 12,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 102,
+"atkN": 7,
+"atkT": 13,
+"hop": true,
+"khung": "c3-trung2",
+"vet": {
+"t": 7,
+"bat": false
+},
+"am_nhan": [
+{
+"f": 102,
+"n": 7,
+"at": 13,
+"bong": false,
+"mui": [
+77,
+-7.1
+],
+"mep": [
+84.5,
+0
+],
+"dai": 10.3,
+"hop": [
+-13,
+-66,
+103,
+66
+]
+}
+]
+},
+{
+"f": 103,
+"atkN": 7,
+"atkT": 14,
+"hop": false,
+"khung": "c3-trung2",
+"vet": {
+"t": 8,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 104,
+"atkN": 7,
+"atkT": 15,
+"hop": false,
+"khung": "c3-trung2",
+"vet": {
+"t": 9,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 105,
+"atkN": 7,
+"atkT": 16,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 10,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 106,
+"atkN": 7,
+"atkT": 17,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 11,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 107,
+"atkN": 7,
+"atkT": 18,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 12,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 108,
+"atkN": 7,
+"atkT": 19,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 13,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 109,
+"atkN": 7,
+"atkT": 20,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 14,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 110,
+"atkN": 7,
+"atkT": 21,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 15,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 111,
+"atkN": 7,
+"atkT": 22,
+"hop": false,
+"khung": "c3-thu",
+"vet": {
+"t": 16,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 112,
+"atkN": 7,
+"atkT": 23,
+"hop": false,
+"khung": "c3-ve",
+"vet": {
+"t": 17,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 113,
+"atkN": 7,
+"atkT": 24,
+"hop": false,
+"khung": "c3-ve",
+"vet": {
+"t": 18,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 114,
+"atkN": 7,
+"atkT": 25,
+"hop": false,
+"khung": "c3-ve",
+"vet": {
+"t": 19,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 115,
+"atkN": 7,
+"atkT": 26,
+"hop": false,
+"khung": "c3-ve",
+"vet": {
+"t": 20,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 116,
+"atkN": 7,
+"atkT": 27,
+"hop": false,
+"khung": "c3-ve",
+"vet": {
+"t": 21,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 117,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 22,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 118,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 23,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 119,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 24,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 119,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 24,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 119,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 24,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 120,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 25,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 121,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 26,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 122,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 27,
+"bat": true
+},
+"am_nhan": []
+},
+{
+"f": 123,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 28,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 124,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 29,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 125,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 30,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 126,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 31,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 127,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 32,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 128,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 33,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 129,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 34,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 130,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-0",
+"vet": {
+"t": 35,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 131,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 36,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 132,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 37,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 133,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 38,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 134,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 39,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 135,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 40,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 136,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 41,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 137,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 42,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 138,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 43,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 139,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 44,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 140,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": {
+"t": 45,
+"bat": false
+},
+"am_nhan": []
+},
+{
+"f": 141,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 142,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 143,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 144,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-1",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 145,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-2",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 146,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-2",
+"vet": null,
+"am_nhan": []
+},
+{
+"f": 147,
+"atkN": 0,
+"atkT": 28,
+"hop": false,
+"khung": "tho-2",
+"vet": null,
+"am_nhan": []
+}
+]
