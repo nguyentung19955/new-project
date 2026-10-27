@@ -21,6 +21,8 @@ def thay(mo_ta, cu, moi, ghep=True):
 thay('tiêu đề', '<title>Tiếng Vọng – Demo Làng Chuông</title>', '<title>Tiếng Vọng – Thử hướng mới "Cổ tích chuông tàn"</title>', False)
 for m in ('quai-boss-runtime', 'trang-tri-dia-hinh'):
     thay('script ' + m, '<script src="runtime/%s.js"></script>' % m, '<script src="../runtime/%s.js"></script>' % m, False)
+thay('script lang-hoan-thien', '<script src="runtime/lang-hoan-thien.js"></script>', '<script src="../runtime/lang-hoan-thien.js"></script>', False)
+thay('đường dẫn lht', "lht:  '../art/lang-hoan-thien/", "lht:  '../../art/lang-hoan-thien/", False)
 for m in ('cong-lang', 'san-chuong', 'phong-boss'):
     thay('dữ liệu ' + m, '<script src="runtime/trang-tri/%s.js"></script>' % m, '<script src="../runtime/trang-tri/%s.js"></script>' % m, False)
 for cu, moi in [("lam:'../art/modular/lam-moi/rig-v4/", "lam:'../../art/modular/lam-moi/rig-v4/"), ("lam:'../art/modular/lam-moi/rig-v3/", "lam:'../../art/modular/lam-moi/rig-v3/"),
@@ -36,10 +38,8 @@ for cu, moi in [("lam:'../art/modular/lam-moi/rig-v4/", "lam:'../../art/modular/
 thay('nền: sương mỏng + bóng tối dưới mặt sàn (lộ ra ở vực), sau nền trước gạch',
      "  for(const L of NEN.lop) veLop(L,ox,oy);\n}",
      "  for(const L of NEN.lop) veLop(L,ox,oy);   // ảnh nền đã được HM tô màu SẴN lúc nạp (không xử lý pixel mỗi khung)\n  HM.veSauNen(ox,oy);   // HM: sương mỏng + tối dần dưới mặt sàn (gạch che → chỉ thấy ở vực) + ánh cam đỏ đáy vực\n}")
-thay('đèn lồng: lọc theo cảnh + quầng vẽ sẵn', "function drawDen(){\n  for(const d of DEN){ const x=d.x-ox, y=d.y-oy; if(x<-60||x>W+60) continue;",
-     "function drawDen(){ if(HM.veDen()) return;   // HM: đèn lồng vẽ trong khối HM (quầng vẽ sẵn, không tạo gradient mỗi khung)\n  for(const d of DEN){ const x=d.x-ox, y=d.y-oy; if(x<-60||x>W+60) continue;")
-thay('điểm lưu: quầng vẽ sẵn', "function drawSaveBell(b){\n  const X=b.x-ox, Y=b.y-oy+4; if(X<-90||X>W+90) return;",
-     "function drawSaveBell(b){ if(HM.veChuong(b)) return;\n  const X=b.x-ox, Y=b.y-oy+4; if(X<-90||X>W+90) return;")
+thay('đèn lồng: ẩn theo cảnh + quầng vẽ sẵn', "function drawDen(lop){\n",
+     "function drawDen(lop){ if(HM.veDen(lop)) return;   // HM: đèn vẽ trong khối HM (quầng vẽ sẵn, không tạo gradient mỗi khung) + chuông làng\n")
 thay('lớp ánh sáng sau nhân vật: quầng + bụi + vignette (trước hiệu ứng / HUD)',
      "  drawTienCanh();   // tiền cảnh rễ treo (hệ số 1,05) vẽ SAU Lam, quái, đồ vật; trước hiệu ứng + HUD",
      "  drawTienCanh();   // tiền cảnh rễ treo (hệ số 1,05) vẽ SAU Lam, quái, đồ vật; trước hiệu ứng + HUD\n  HM.veTruoc(ox,oy);   // HM: bụi sáng trong vùng đèn + vignette vẽ sẵn")

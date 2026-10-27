@@ -29,7 +29,6 @@ const HM_SO = {
     den:     {r: 150, a: 0.80},     // quầng đèn lồng (vẽ sau nền, trước gạch)
     denSan:  {r: 200, a: 0.16},     // vệt sáng rơi xuống sàn + Lam quanh đèn (vẽ sau Lam, rất nhẹ)
     chuong:  {r: 70,  a: 0.34},     // quầng chuông làng khi còn sáng
-    chuongLuu: 0.42,                // quầng điểm lưu (như cũ, nhưng vẽ sẵn)
     tatSau: 84,                     // chuông tắt dần trong 84 bước (1,4 s) sau khi Lam đi qua
     vucDo:   {r: 120, a: 0.20}      // ánh cam đỏ rất mờ dưới đáy vực = nguy hiểm
   },
@@ -42,9 +41,10 @@ const HM_SO = {
 const HM_CANH = {
   camx: 192, camy: 0,
   den: {x: 17 * 32 + 16, y: 140},               // đèn lồng DUY NHẤT giữ lại trong cảnh (trên bậc 2, chỉ ra mép vực); hạ 92 → 140 để trên iPhone không bị dòng hướng dẫn che
-  anDen: [6 * 32 + 16],                          // đèn ở cột 6 A1: ẩn (cờ, không xoá)
-  chuong: {x: 848, y: 214, k: 0.82},             // chuông làng treo dây giữa cột treo và khối tường – tắt khi Lam đi qua
+  anDen: [6 * 32 + 16, 12 * 32 + 16],             // đèn cột 6 và đèn treo thêm cột 12 (A1): ẩn (cờ, không xoá)
+  chuong: {x: 848, y: 214, k: 0.82, kMoi: 1.3},  // chuông làng treo dây giữa cột treo và khối tường – tắt khi Lam đi qua (y = đáy chuông)
   vuc: {x0: 608, x1: 704},                       // hố cột 19–21 → đào thành vực (chỉ bản thử)
+  anDoLang: ['bang-nhiem-vu'],                   // bảng nhiệm vụ đứng ở sàn A1: ẩn
   // trang trí bỏ ở góc này (cờ ?bot=1 để giữ): chân rễ nhỏ, rễ treo đầu cột, đáy hố, mảng rễ rong-re trên sàn A1
   boTT: it => it.x !== undefined && it.x < 1152 && it.x > 200 && (/^chan-re|^re-treo-cot/.test(it.o || '')),
   boMep: it => it.giai === 'mep' && it.y === 512 && it.x0 === 608
@@ -226,6 +226,7 @@ const HM = (() => {
 
   /* ---------- chuông làng (cắt từ khung "điểm lưu tắt" có sẵn: chỉ quả chuông + quai, loang từ tâm theo alpha) ---------- */
   const CH = {img: null, sang: null, w: 0, h: 0, tat: false, t: 0, lac: 0};
+  const LHT_TO = [];
   function catChuong() {
     const f = GIU.frames['diem-luu-tat'], X = f[0] + 52, Y = f[1] + 44, w = 50, h = 86;
     const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', {willReadFrequently: true});
@@ -267,6 +268,10 @@ const HM = (() => {
         if (!m) { const go = /^mang-go/.test(k); m = tom(o.img, /^tien-canh/.test(k) ? 'tien' : 'dat', go ? HM_SO.DAT.kTT : 0, go ? HM_SO.DAT.sangThan : 0); da.set(o.img, m); } o.img = m; }
       for (const k of Object.keys(DOV)) DOV[k] = tom(DOV[k], 'doVat', 0);
       GIU.img0 = GIU.img; GIU.img = tom(GIU.img, 'doVat', 0);
+      if (lhOn()) { const daL = new Map();   // ảnh gen làng mới: điểm lưu, đèn, rễ trần, chuông lớn, đồ làng, NPC (KHÔNG tô HUD, nút, chân dung)
+        for (const [k, o] of Object.entries(LHT.O)) { if (!o.img || /^(hud|nut|can|cd)-/.test(k)) continue;
+          if (!daL.has(o.img)) daL.set(o.img, tom(o.img, 'doVat', 0)); o.img = daL.get(o.img); }
+        for (const m of daL.values()) LHT_TO.push(m); }
       if (CO.quai && CO.grade && QBR.json && QBR.json()) for (const nv of Object.values(QBR.json().nv)) for (const n of Object.values(nv.nut)) if (n.img) {
         n.img = tom(n.img, 'quai', 0);
         const c = n.vang; if (c && c.getContext) { const g = c.getContext('2d'); g.clearRect(0, 0, c.width, c.height); g.drawImage(n.img, 0, 0); g.globalCompositeOperation = 'source-atop';
@@ -280,6 +285,7 @@ const HM = (() => {
     if (CO.grade || CO.dat) GCH.cv = await img(GCH.cv);
     const bmo = new Map(); for (const o of Object.values(TT.O)) if (o.img && o.img.getContext) { if (!bmo.has(o.img)) bmo.set(o.img, await img(o.img)); o.img = bmo.get(o.img); }
     for (const k of Object.keys(DOV)) DOV[k] = await bm(DOV[k]);
+    if (LHT_TO.length) { const doi = new Map(); for (const c of LHT_TO) doi.set(c, await img(c)); for (const o of Object.values(LHT.O)) if (doi.has(o.img)) o.img = doi.get(o.img); }
     if (GIU.img.getContext) GIU.img = await bm(GIU.img);
     CH.img = await bm(CH.img); CH.sang = await bm(CH.sang);
     for (const k of Object.keys(VE)) VE[k] = await bm(VE[k]);
@@ -289,6 +295,7 @@ const HM = (() => {
       for (const d of Object.values(TT.DL)) if (d.dat) d.dat = d.dat.filter(it => !HM_CANH.boTT(it) && !(CO.vuc && HM_CANH.boMep(it)));
       for (let i = RE_DAT.length - 1; i >= 0; i--) if (RE_DAT[i].x < 1152) RE_DAT.splice(i, 1);
       for (const d of DEN) if (d.x === HM_CANH.den.x && d.x < 1152) d.y = HM_CANH.den.y;
+      for (let i = LANG_DV.length - 1; i >= 0; i--) if (LANG_DV[i].x < 1152 && HM_CANH.anDoLang.includes(LANG_DV[i].o)) LANG_DV.splice(i, 1);
     }
     SO.ms = Math.round(performance.now() - t0); SO.ms_grade = Math.round(SO.ms_grade); SO.ms_dat = Math.round(SO.ms_dat); SO.mpx = +SO.mpx.toFixed(2);
   }
@@ -327,16 +334,19 @@ const HM = (() => {
     ctx.imageSmoothingQuality = 'high';
   }
   // đèn lồng (thay drawDen) + chuông làng treo
-  function veDen() {
+  function veDen(lop) {
     if (!bat) return false; ctx.imageSmoothingEnabled = true;
-    for (const d of DEN) { const x = d.x - ox, y = d.y - oy; if (x < -160 || x > W + 160) continue;
+    const moi = lhOn();
+    for (const d of DEN) { if (d.lop !== (lop || 'sau') || (d.them && !moi)) continue; const x = d.x - ox, y = d.y - oy; if (x < -160 || x > W + 160) continue;
       if (CO.bot && d.x < 1152 && HM_CANH.anDen.includes(d.x)) continue;
-      const sw = Math.sin(S.frame * 0.03 + d.ph) * 3;
+      const sw = Math.sin(S.frame * 0.03 + d.ph) * 3, sang = !(moi && d.boss && !boss.dead);
       ctx.strokeStyle = 'rgba(20,16,13,.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, -oy - 4); ctx.lineTo(x + sw, y - 46); ctx.stroke();
-      if (CO.sang) { const r = HM_SO.SANG.den.r; ctx.save(); ctx.imageSmoothingQuality = 'low'; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = HM_SO.SANG.den.a;
-        ctx.drawImage(VE.den, x + sw - r, y - 22 - r, r * 2, r * 2); ctx.restore(); }
-      veKhung(GIU, GIU.img, 'den-long', x + sw, y);
+      if (CO.sang && sang) { const r = HM_SO.SANG.den.r; ctx.save(); ctx.imageSmoothingQuality = 'low'; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = HM_SO.SANG.den.a;
+        ctx.drawImage(VE.den, x + sw - r, y - 22 - r, r * 2, r * 2); ctx.restore(); ctx.imageSmoothingQuality = 'high'; }
+      if (moi) LHT.ve(ctx, 'den-' + d.kieu + '-' + (sang ? 'sang' : 'tat'), x + sw, y - 46, {xoay: sw * 0.012});
+      else if (d.lop === 'sau') veKhung(GIU, GIU.img, 'den-long', x + sw, y);
     }
+    if ((lop || 'sau') !== 'sau') return true;
     // chuông làng: treo dây từ mép trên; còn sáng → ánh đồng + quầng; Lam đi qua → ngân 1 lần, lắc, tắt dần, ở lại tắt
     const C = HM_CANH.chuong, X = C.x - ox, Y = C.y - oy;
     if (X > -80 && X < W + 80 && CH.img) {
@@ -345,22 +355,16 @@ const HM = (() => {
       ctx.strokeStyle = 'rgba(20,16,13,.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X, -oy - 4); ctx.lineTo(X + Math.sin(lac) * 6, Y - h + 2); ctx.stroke();
       if (CO.sang && s > 0) { const r = HM_SO.SANG.chuong.r; ctx.save(); ctx.imageSmoothingQuality = 'low'; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = HM_SO.SANG.chuong.a * s;
         ctx.drawImage(VE.chuong, X - r, Y - h * 0.45 - r, r * 2, r * 2); ctx.restore(); }
-      ctx.save(); ctx.translate(X, Y - h); ctx.rotate(lac);
-      ctx.drawImage(CH.img, -w / 2, 0, w, h);
-      if (s > 0) { ctx.globalAlpha = s; ctx.drawImage(CH.sang, -w / 2, 0, w, h); }
-      ctx.restore();
+      if (lhOn() && LHT.O['diem-luu-chuong-tat']) {   // chuông rời ảnh gen mới (neo = vòng treo)
+        LHT.ve(ctx, 'diem-luu-chuong-tat', X, Y - h, {xoay: lac, k: C.kMoi});
+        if (s > 0) LHT.ve(ctx, 'diem-luu-chuong-sang', X, Y - h, {xoay: lac, k: C.kMoi, al: s});
+      } else {
+        ctx.save(); ctx.translate(X, Y - h); ctx.rotate(lac);
+        ctx.drawImage(CH.img, -w / 2, 0, w, h);
+        if (s > 0) { ctx.globalAlpha = s; ctx.drawImage(CH.sang, -w / 2, 0, w, h); }
+        ctx.restore();
+      }
     }
-    return true;
-  }
-  // điểm lưu: như cũ nhưng quầng là ảnh vẽ sẵn (không tạo gradient mỗi khung)
-  function veChuong(b) {
-    if (!bat) return false;
-    const X = b.x - ox, Y = b.y - oy + 4; if (X < -90 || X > W + 90) return true;
-    if (b.on && CO.sang) { const pz = 0.75 + 0.25 * Math.sin(S.frame * 0.06) + (b.ring > 0 ? b.ring / 70 * 0.6 : 0);
-      ctx.save(); ctx.imageSmoothingQuality = 'low'; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, HM_SO.SANG.chuongLuu * pz); ctx.drawImage(VE.luu, X - 92, Y - 190, 184, 184); ctx.restore(); }
-    const rot = b.ring > 0 ? Math.sin(b.ring * 0.45) * 0.05 * b.ring / 70 : 0;
-    if (rot) { ctx.save(); ctx.translate(X, Y - 150); ctx.rotate(rot); veKhung(GIU, GIU.img, b.on ? 'diem-luu-sang' : 'diem-luu-tat', 0, 150); ctx.restore(); }
-    else veKhung(GIU, GIU.img, b.on ? 'diem-luu-sang' : 'diem-luu-tat', X, Y);
     return true;
   }
   // sau Lam + tiền cảnh: ánh đèn rơi xuống sàn / Lam (rất nhẹ), bụi sáng trong vùng đèn, vignette
@@ -379,7 +383,7 @@ const HM = (() => {
     ctx.imageSmoothingQuality = 'high';
   }
 
-  return {CO, SO, CH, BUI, VE, bat, chuanBi, buoc, veSauNen, veDen, veChuong, veTruoc, toMau, chuongSang,
+  return {CO, SO, CH, BUI, VE, bat, chuanBi, buoc, veSauNen, veDen, veTruoc, toMau, chuongSang,
     datLaiChuong() { CH.tat = false; CH.t = 0; }, tatChuong() { CH.tat = true; CH.t = 999; }};
 })();
 

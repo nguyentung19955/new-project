@@ -2,7 +2,8 @@
 
 Viết cho người không rành kỹ thuật. Làm theo `art/huong-moi/TU-VAN-CHUYEN-GIA-2-CO-TICH-CHUONG-TAN.md`: **mục 5 bước 1–2 + mục 3 (ánh sáng)**.
 **Chưa gen ảnh mới**: chỉ chỉnh bằng code trên asset hiện có + **Lam cũ**. Đây là **trang thử riêng**, sinh từ `game/demo.html` bằng script
-(như các thư mục `thu-*`); **KHÔNG sửa** `demo.html`, `build-demo.py`, `demo-doi-chieu-v3.html`.
+(như các thư mục `thu-*`); **KHÔNG sửa** `demo.html`, `build-demo.py`, `demo-doi-chieu-v3.html`. Đã sinh lại theo `demo.html` mới nhất (đợt
+"Làng hoàn thiện": đèn lồng 3 kiểu, điểm lưu mới, HUD + nút ảnh gen) – TRƯỚC trong ảnh chính là bản đó.
 
 **Chơi thử:** https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-huong-moi/thu-huong-moi.html
 — cảnh chuẩn là **màn hình thứ hai của Cổng làng**: chạy sang phải qua 2 bậc là tới (đèn treo, vực, chuông làng treo giữa cột treo và khối tường).
@@ -18,7 +19,7 @@ Viết cho người không rành kỹ thuật. Làm theo `art/huong-moi/TU-VAN-C
 | `?vignette=0` | không tối góc |
 | `?bui=0` | không hạt bụi sáng |
 | `?dat=0` | không dịu vân rễ / không bo góc / không làm tối thân đất |
-| `?bot=1` | giữ đủ trang trí cũ ở góc cảnh chuẩn (đèn thứ 2, chân rễ, rễ treo đầu cột, mảng rễ trên sàn) |
+| `?bot=1` | giữ đủ đồ ở góc cảnh chuẩn (2 đèn khác, bảng nhiệm vụ, chân rễ, rễ treo đầu cột, mảng rễ trên sàn) |
 | `?vuc=0` | giữ hố nông cũ (không đào thành vực) |
 | `?quai=1` | thêm 1 Chuông Gỗ đứng sau vực (để xem "nguy hiểm nổi nhất", rêu olive, lóe đòn cam đỏ) |
 
@@ -43,8 +44,10 @@ Viết cho người không rành kỹ thuật. Làm theo `art/huong-moi/TU-VAN-C
 ## 2. Đã chỉnh gì
 
 **Cảnh chuẩn (bước 1)** – góc phải phòng Cổng làng 1, camera x 192:
-- **Một đèn**: giữ đèn treo trên bậc 2 (hạ thấp 92 → 140 để trên iPhone không bị dòng hướng dẫn che), **ẩn** đèn thứ hai (cờ, không xoá).
-- **Một chuông**: chuông làng treo dây giữa cột treo và khối tường – quả chuông cắt từ ảnh "điểm lưu tắt" có sẵn (chỉ chuông + quai). Còn sáng
+- **Một đèn**: giữ đèn treo trên bậc 2 (hạ thấp 92 → 140 để trên iPhone không bị dòng hướng dẫn che), **ẩn** đèn cột 6, đèn treo thêm cột 12
+  và bảng nhiệm vụ (cờ, không xoá).
+- **Một chuông**: chuông làng treo dây giữa cột treo và khối tường – dùng quả chuông RỜI của điểm lưu ảnh gen mới (`diem-luu-chuong-tat/-sang`,
+  phóng 1,3; nếu ảnh mới nạp lỗi thì cắt từ ảnh điểm lưu cũ). Còn sáng
   khi Lam chưa tới; **Lam đi qua dưới chuông → ngân trầm 1 lần, lắc, tắt dần trong 1,4 s và ở lại tắt** (thay đổi có nguyên nhân, mục 3 file tư vấn).
   Không phải điểm lưu, không chạm được.
 - **Một vực tối**: hố cũ cột 19–21 đào thành vực không đáy (CHỈ trong trang thử; rơi xuống → về mép vực trái, không mất máu).
@@ -54,6 +57,7 @@ Viết cho người không rành kỹ thuật. Làm theo `art/huong-moi/TU-VAN-C
 - Mỗi màu được kéo về **dải màu bảng khởi đầu**: dải ẤM `#17272C → #39312E → #65503C → #A78046 → #F2D69A` (gỗ, đất, đồng, đèn) trộn với dải
   LẠNH `#17272C → #35465C → #648D88` (nền xa). Lớp càng xa: càng lạnh, càng tối, **càng ít tương phản**; sàn chơi giữ sáng nhất trong cảnh.
 - **Rêu xanh chanh → olive xỉn** (mọi ảnh cảnh; và quái khi `?quai=1`).
+- Ảnh gen làng mới (điểm lưu, đèn, rễ trần, chuông lớn, đồ làng, NPC) tô nhẹ (`doVat`); **HUD, nút cảm ứng, chân dung KHÔNG tô**.
 - Viền đen tuyền thành đen xanh đậm (bớt "đồ chơi").
 - **Lam KHÔNG bị tô màu** (Lam cũ giữ nguyên) → Lam là thứ rực nhất cảnh.
 
@@ -70,7 +74,7 @@ ctx.filter mỗi khung** (theo MDN trong file tư vấn):
 - **Sương mỏng sau địa hình**: chỉ vẽ dưới mặt sàn, trước gạch → gạch che, chỉ lộ ra ở vực; không phủ sàn hay nhân vật. Đáy vực tối dần.
 - **Vignette 13 %** ở góc; dải chân sàn chỉ tối ≤ 3 % (tránh vùng tiếp đất).
 - **18 hạt bụi** chỉ trong vùng sáng của đèn, trôi chậm.
-- Quầng điểm lưu: như cũ nhưng là ảnh vẽ sẵn (bản cũ tạo gradient mới mỗi khung).
+- Quầng điểm lưu: chưa đổi (vẫn là code của demo, tạo gradient mỗi khung; điểm lưu không nằm trong cảnh chuẩn).
 
 ## 3. Số đang dùng (chỉnh ở đầu `cong-cu/khoi-huong-moi.js`, bảng `HM_SO` và `HM_CANH`, rồi chạy lại `tao-tu-demo.py`)
 
@@ -95,20 +99,21 @@ ctx.filter mỗi khung** (theo MDN trong file tư vấn):
 | `SUONG` | a 0,55, màu `#648D88`, tốc 0,12, đáy tối 88 % | sương trong vực |
 | `VIGNETTE.a` | 0,13 | tối góc (tư vấn: 8–15 %) |
 | `BUI.n` | 18 | số hạt bụi (tư vấn: 12–24) |
-| `HM_CANH.den / chuong / vuc` | đèn x 560 y 140 · chuông x 848 y 214 · vực x 608–704 | vị trí trong cảnh chuẩn |
+| `HM_CANH.den / chuong / vuc` | đèn x 560 y 140 · chuông x 848 đáy y 214, cỡ ×1,3 (`kMoi`) · vực x 608–704 | vị trí trong cảnh chuẩn |
 
 ## 4. Đo
 
 | | TRƯỚC (`?hm=0`) | SAU |
 |---|---|---|
-| Vẽ 1 khung, đứng yên 600 khung (trung bình / 95 % / tối đa) | 21,4 / 29,0 / 45,5 ms | 12,2 / 18,1 / 29,7 ms |
-| Vẽ 1 khung, bot chạy qua cảnh | 19,9 / 29,2 / 37,8 ms | 13,9 / 19,0 / 28,0 ms |
-| Thêm lúc nạp (tô màu + dịu vân + đổi lại thành ảnh) | 0 | ≈ 1,5 s (tô 0,9 s, trong đó dịu vân 0,36 s; đổi ảnh 0,5 s), 8,7 triệu điểm ảnh, 23 ảnh |
+| Vẽ 1 khung, đứng yên 600 khung (trung bình / 95 % / tối đa) | 21,6 / 33,3 / 50,9 ms | 16,1 / 23,7 / 87,9 ms |
+| Vẽ 1 khung, bot chạy qua cảnh | 22,1 / 30,2 / 39,3 ms | 17,0 / 27,3 / 34,9 ms |
+| Thêm lúc nạp (tô màu + dịu vân + đổi lại thành ảnh) | 0 | ≈ 1,9 s (tô 1,1 s, trong đó dịu vân 0,34 s; đổi ảnh 0,8 s), 10,6 triệu điểm ảnh, 29 ảnh |
 
 - Máy đo là **CPU không GPU** nên số tuyệt đối lớn hơn iPhone nhiều; chỉ nên so TRƯỚC / SAU. SAU nhanh hơn chủ yếu vì cảnh ít đồ hơn và đèn
-  không tạo gradient mỗi khung; lớp sáng + sương + vignette + bụi tốn ≈ 6 ms ở máy này. Số dao động ± vài ms giữa các lần chạy.
+  không tạo gradient mỗi khung; lớp sáng + sương + vignette + bụi tốn ≈ 6 ms ở máy này. Số dao động ± vài ms giữa các lần chạy
+  (khung tối đa 87,9 ms của SAU là 1 lần giật đơn lẻ của máy đo, 95 % khung dưới 24 ms).
 - Lần đầu thử, ảnh đã tô để dạng canvas → vẽ chậm gấp 5 (trình duyệt không thu nhỏ sẵn được); đã sửa: ảnh tô xong được đổi lại thành ảnh thường.
-- **Chưa đo iPhone thật.** Riêng 1,5 s nạp thêm có thể thành 2–4 s trên iPhone → khi duyệt xong hướng màu, nên **tô sẵn ra file PNG/WebP
+- **Chưa đo iPhone thật.** Riêng 1,9 s nạp thêm có thể thành 3–5 s trên iPhone → khi duyệt xong hướng màu, nên **tô sẵn ra file PNG/WebP
   bằng script** (cùng công thức) thay vì tô lúc nạp: không tốn gì khi chơi.
 
 ## 5. Tự đánh giá theo tiêu chí duyệt (mục 5 file tư vấn)
@@ -139,8 +144,8 @@ ctx.filter mỗi khung** (theo MDN trong file tư vấn):
 
 ## 7. Cách ghép vào `demo.html` (khi duyệt)
 
-Mọi chỗ đổi nằm trong `cong-cu/tao-tu-demo.py` dạng cặp (cũ → mới); cột `ghep=True` là **7 chỗ cần ghép** (in ra khi chạy script): gọi
-`HM.veSauNen` sau nền, `HM.veDen` trong `drawDen`, `HM.veChuong` trong `drawSaveBell`, `HM.veTruoc` sau tiền cảnh, `HM.buoc` sau
+Mọi chỗ đổi nằm trong `cong-cu/tao-tu-demo.py` dạng cặp (cũ → mới); cột `ghep=True` là **6 chỗ cần ghép** (in ra khi chạy script): gọi
+`HM.veSauNen` sau nền, `HM.veDen(lop)` đầu `drawDen`, `HM.veTruoc` sau tiền cảnh, `HM.buoc` sau
 `updateHazards`, `await HM.chuanBi(lc)` sau `dungGach(); dungDen();`, và khối `HM_SO` / `HM_CANH` / `HM` của `khoi-huong-moi.js`
 (từ đầu tới trước dòng `/* === THỬ`). Phần sau dòng đó (đào vực, thêm quái, bot, `TVTHU`) KHÔNG ghép.
 
