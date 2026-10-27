@@ -7,7 +7,7 @@
   - qbr    : QUÁI + BOSS vẽ từ mảnh = runtime/quai-boss/quai-boss-rig.json + 14 PNG mảnh (PNG nguyên bản, data URI; kiểm cỡ = co_anh
              trong JSON). QBR.nap(…, TV.NHUNG.qbr) đọc thẳng data URI. KHÔNG nhúng sheet boss 2x (không dùng).
            runtime/quai-boss-runtime.js được chèn INLINE thay cho thẻ <script src="runtime/quai-boss-runtime.js">.
-  - lc     : LÀNG CHUÔNG (art/the-gioi-moi/lang-chuong/): nen/nen.json + lang-xa/giua/gan/tien-canh.png, gach/gach-atlas.*,
+  - lc     : LÀNG CHUÔNG (art/the-gioi-moi/lang-chuong/): nen/nen.json + lang-xa/giua/gan/tien-canh.png, gach/gach-atlas.* + rong-re.png,
              do-vat/do-vat.json + 7 PNG (cổng 3 trạng thái, công tắc lên/ấn, bình máu, mảnh chuông). Kiểm cỡ ảnh = cỡ trong JSON.
              4 ảnh nền nhúng WebP q92 (giữ bản build < 15 MB); atlas gạch + đồ vật PNG nguyên bản.
   - giu    : điểm lưu + đèn lồng (anim/lang-chuong-giu.*, tách từ the-gioi.png) – PNG nguyên bản.
@@ -96,7 +96,10 @@ def lang_chuong(_q=None):
     da = {}
     for t in LC_DV:
         p = os.path.join(LC, 'do-vat', t + '.png'); kiem_co(p, (dv['do_nho'].get(t) or dv['cong'])['co_anh']); da[t] = png_uri(p)
-    return {'nen': {'json': nen, 'anh': an}, 'gach': {'json': gm, 'anh': png_uri(os.path.join(LC, 'gach', gm['anh']))},
+    tt = {}
+    for v in gm.get('trang_tri', {}).values():          # mảng rễ trang trí (v2)
+        p = os.path.join(LC, 'gach', v['anh']); kiem_co(p, v['co_anh']); tt[v['anh']] = png_uri(p)
+    return {'nen': {'json': nen, 'anh': an}, 'gach': {'json': gm, 'anh': png_uri(os.path.join(LC, 'gach', gm['anh'])), 'tt': tt},
             'dv': {'json': dv, 'anh': da}}
 
 

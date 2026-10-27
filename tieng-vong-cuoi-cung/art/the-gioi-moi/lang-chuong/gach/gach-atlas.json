@@ -14,7 +14,7 @@
  "o": {
   "go-than": {
    "mo_ta": "thân (đặc bên trong) – lặp liền 2 chiều",
-   "nguon": "code (màu lấy từ gen)",
+   "nguon": "gen gach-than-go.png ô 1, làm lặp liền bằng code",
    "canh_ghep": "BLRT",
    "khung": [
     0,
@@ -24,8 +24,8 @@
    ]
   },
   "go-than-2": {
-   "mo_ta": "thân – biến thể 2 (mắt gỗ); 4 mép y hệt thân",
-   "nguon": "code (chỉ đổi phần giữa ô)",
+   "mo_ta": "thân – biến thể 2 (ô gen 2); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
    "canh_ghep": "BLRT",
    "khung": [
     66,
@@ -35,8 +35,8 @@
    ]
   },
   "go-than-3": {
-   "mo_ta": "thân – biến thể 3 (rễ nhánh chéo); 4 mép y hệt thân",
-   "nguon": "code (chỉ đổi phần giữa ô)",
+   "mo_ta": "thân – biến thể 3 (ô gen 3); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
    "canh_ghep": "BLRT",
    "khung": [
     132,
@@ -45,12 +45,56 @@
     64
    ]
   },
-  "go-than-diu": {
-   "mo_ta": "thân – biến thể ÍT chi tiết (bỏ nét sẫm giữa ô); 4 mép y hệt thân",
-   "nguon": "code (chỉ đổi phần giữa ô)",
+  "go-than-4": {
+   "mo_ta": "thân – biến thể 4 (ô gen 4); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
    "canh_ghep": "BLRT",
    "khung": [
     198,
+    0,
+    64,
+    64
+   ]
+  },
+  "go-than-5": {
+   "mo_ta": "thân – biến thể 5 (ô gen 5); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    264,
+    0,
+    64,
+    64
+   ]
+  },
+  "go-than-6": {
+   "mo_ta": "thân – biến thể 6 (ô gen 6); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    330,
+    0,
+    64,
+    64
+   ]
+  },
+  "go-than-7": {
+   "mo_ta": "thân – biến thể 7 (ô gen 7); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    396,
+    0,
+    64,
+    64
+   ]
+  },
+  "go-than-8": {
+   "mo_ta": "thân – biến thể 8 (ô gen 8); 4 mép y hệt thân",
+   "nguon": "gen gach-than-go.png (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    462,
     0,
     64,
     64
@@ -61,7 +105,7 @@
    "nguon": "rêu: gen hàng 0 (dải 4 ô); thân: code",
    "canh_ghep": "BLR",
    "khung": [
-    264,
+    528,
     0,
     64,
     64
@@ -72,7 +116,7 @@
    "nguon": "rêu: gen dải r4-03",
    "canh_ghep": "BLR",
    "khung": [
-    330,
+    594,
     0,
     64,
     64
@@ -83,7 +127,7 @@
    "nguon": "rêu: gen dải r4-56",
    "canh_ghep": "BLR",
    "khung": [
-    396,
+    660,
     0,
     64,
     64
@@ -94,7 +138,7 @@
    "nguon": "rêu: gen dải r1-12",
    "canh_ghep": "BLR",
    "khung": [
-    462,
+    726,
     0,
     64,
     64
@@ -105,7 +149,7 @@
    "nguon": "code: thân + viền trái",
    "canh_ghep": "BRT",
    "khung": [
-    528,
+    792,
     0,
     64,
     64
@@ -116,7 +160,7 @@
    "nguon": "code: thân + viền phải",
    "canh_ghep": "BLT",
    "khung": [
-    594,
+    858,
     0,
     64,
     64
@@ -127,7 +171,7 @@
    "nguon": "code: thân + viền dưới",
    "canh_ghep": "LRT",
    "khung": [
-    660,
+    924,
     0,
     64,
     64
@@ -138,8 +182,8 @@
    "nguon": "code",
    "canh_ghep": "RT",
    "khung": [
-    726,
     0,
+    66,
     64,
     64
    ]
@@ -149,8 +193,107 @@
    "nguon": "code",
    "canh_ghep": "LT",
    "khung": [
-    792,
-    0,
+    66,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-trai-2": {
+   "mo_ta": "cạnh trái – biến thể 2",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BRT",
+   "khung": [
+    132,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-phai-2": {
+   "mo_ta": "cạnh phải – biến thể 2",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BLT",
+   "khung": [
+    198,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-day-giua-2": {
+   "mo_ta": "mặt dưới – biến thể 2",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "LRT",
+   "khung": [
+    264,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-trai-3": {
+   "mo_ta": "cạnh trái – biến thể 3",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BRT",
+   "khung": [
+    330,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-phai-3": {
+   "mo_ta": "cạnh phải – biến thể 3",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BLT",
+   "khung": [
+    396,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-day-giua-3": {
+   "mo_ta": "mặt dưới – biến thể 3",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "LRT",
+   "khung": [
+    462,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-trai-4": {
+   "mo_ta": "cạnh trái – biến thể 4",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BRT",
+   "khung": [
+    528,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-canh-phai-4": {
+   "mo_ta": "cạnh phải – biến thể 4",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "BLT",
+   "khung": [
+    594,
+    66,
+    64,
+    64
+   ]
+  },
+  "go-day-giua-4": {
+   "mo_ta": "mặt dưới – biến thể 4",
+   "nguon": "thân biến thể + viền code",
+   "canh_ghep": "LRT",
+   "khung": [
+    660,
+    66,
     64,
     64
    ]
@@ -160,8 +303,8 @@
    "nguon": "code: thân + viền trái/phải",
    "canh_ghep": "BT",
    "khung": [
-    858,
-    0,
+    726,
+    66,
     64,
     64
    ]
@@ -171,8 +314,8 @@
    "nguon": "code",
    "canh_ghep": "T",
    "khung": [
-    924,
-    0,
+    792,
+    66,
     64,
     64
    ]
@@ -182,7 +325,7 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    0,
+    858,
     66,
     64,
     64
@@ -193,7 +336,7 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    66,
+    924,
     66,
     64,
     64
@@ -204,8 +347,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
+    0,
     132,
-    66,
     64,
     64
    ]
@@ -215,8 +358,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    198,
     66,
+    132,
     64,
     64
    ]
@@ -226,8 +369,8 @@
    "nguon": "rêu: gen hàng 0 ô 0",
    "canh_ghep": "BR",
    "khung": [
-    264,
-    66,
+    132,
+    132,
     64,
     64
    ]
@@ -237,8 +380,8 @@
    "nguon": "rêu: gen hàng 0, đầu phải dải",
    "canh_ghep": "BL",
    "khung": [
-    330,
-    66,
+    198,
+    132,
     64,
     64
    ]
@@ -248,8 +391,8 @@
    "nguon": "rêu: gen hàng 2 ô 0",
    "canh_ghep": "BR",
    "khung": [
-    396,
-    66,
+    264,
+    132,
     64,
     64
    ]
@@ -259,8 +402,8 @@
    "nguon": "rêu: gen hàng 2 ô 1",
    "canh_ghep": "BL",
    "khung": [
-    462,
-    66,
+    330,
+    132,
     64,
     64
    ]
@@ -270,8 +413,8 @@
    "nguon": "rêu: gen hàng 0 ô 5",
    "canh_ghep": "B",
    "khung": [
-    528,
-    66,
+    396,
+    132,
     64,
     64
    ]
@@ -281,8 +424,8 @@
    "nguon": "rêu: gen hàng 4 ô 4",
    "canh_ghep": "",
    "khung": [
-    594,
-    66,
+    462,
+    132,
     64,
     64
    ]
@@ -292,8 +435,8 @@
    "nguon": "code: mặt trên + viền dưới",
    "canh_ghep": "LR",
    "khung": [
-    660,
-    66,
+    528,
+    132,
     64,
     64
    ]
@@ -303,8 +446,8 @@
    "nguon": "rêu gen + code",
    "canh_ghep": "R",
    "khung": [
-    726,
-    66,
+    594,
+    132,
     64,
     64
    ]
@@ -314,8 +457,8 @@
    "nguon": "rêu gen + code",
    "canh_ghep": "L",
    "khung": [
-    792,
-    66,
+    660,
+    132,
     64,
     64
    ]
@@ -325,8 +468,8 @@
    "nguon": "code: ghép phần trong 2 đầu ván gen",
    "canh_ghep": "LR",
    "khung": [
-    858,
-    66,
+    726,
+    132,
     64,
     64
    ]
@@ -336,8 +479,8 @@
    "nguon": "gen r0c6",
    "canh_ghep": "R",
    "khung": [
-    924,
-    66,
+    792,
+    132,
     64,
     64
    ]
@@ -347,7 +490,7 @@
    "nguon": "gen r0c7",
    "canh_ghep": "L",
    "khung": [
-    0,
+    858,
     132,
     64,
     64
@@ -358,7 +501,7 @@
    "nguon": "gen r3c6",
    "canh_ghep": "R",
    "khung": [
-    66,
+    924,
     132,
     64,
     64
@@ -369,8 +512,8 @@
    "nguon": "gen r3c7",
    "canh_ghep": "L",
    "khung": [
-    132,
-    132,
+    0,
+    198,
     64,
     64
    ]
@@ -380,8 +523,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BR",
    "khung": [
+    66,
     198,
-    132,
     64,
     64
    ]
@@ -391,8 +534,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BLR",
    "khung": [
-    264,
     132,
+    198,
     64,
     64
    ]
@@ -402,8 +545,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BLR",
    "khung": [
-    330,
-    132,
+    198,
+    198,
     64,
     64
    ]
@@ -413,8 +556,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BL",
    "khung": [
-    396,
-    132,
+    264,
+    198,
     64,
     64
    ]
@@ -424,8 +567,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BR",
    "khung": [
-    462,
-    132,
+    330,
+    198,
     64,
     64
    ]
@@ -435,8 +578,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BL",
    "khung": [
-    528,
-    132,
+    396,
+    198,
     64,
     64
    ]
@@ -446,8 +589,8 @@
    "nguon": "code (màu lấy từ gen)",
    "canh_ghep": "BLRT",
    "khung": [
-    594,
-    132,
+    462,
+    198,
     64,
     64
    ]
@@ -457,8 +600,8 @@
    "nguon": "code (chỉ đổi phần giữa ô)",
    "canh_ghep": "BLRT",
    "khung": [
-    660,
-    132,
+    528,
+    198,
     64,
     64
    ]
@@ -468,8 +611,8 @@
    "nguon": "code (chỉ đổi phần giữa ô)",
    "canh_ghep": "BLRT",
    "khung": [
-    726,
-    132,
+    594,
+    198,
     64,
     64
    ]
@@ -479,8 +622,8 @@
    "nguon": "code (chỉ đổi phần giữa ô)",
    "canh_ghep": "BLRT",
    "khung": [
-    792,
-    132,
+    660,
+    198,
     64,
     64
    ]
@@ -490,8 +633,8 @@
    "nguon": "rêu: gen hàng 0 (dải 4 ô); thân: code",
    "canh_ghep": "BLR",
    "khung": [
-    858,
-    132,
+    726,
+    198,
     64,
     64
    ]
@@ -501,8 +644,8 @@
    "nguon": "rêu: gen dải r4-03",
    "canh_ghep": "BLR",
    "khung": [
-    924,
-    132,
+    792,
+    198,
     64,
     64
    ]
@@ -512,7 +655,7 @@
    "nguon": "rêu: gen dải r4-56",
    "canh_ghep": "BLR",
    "khung": [
-    0,
+    858,
     198,
     64,
     64
@@ -523,7 +666,7 @@
    "nguon": "rêu: gen dải r1-12",
    "canh_ghep": "BLR",
    "khung": [
-    66,
+    924,
     198,
     64,
     64
@@ -534,8 +677,8 @@
    "nguon": "code: thân + viền trái",
    "canh_ghep": "BRT",
    "khung": [
-    132,
-    198,
+    0,
+    264,
     64,
     64
    ]
@@ -545,8 +688,8 @@
    "nguon": "code: thân + viền phải",
    "canh_ghep": "BLT",
    "khung": [
-    198,
-    198,
+    66,
+    264,
     64,
     64
    ]
@@ -556,8 +699,8 @@
    "nguon": "code: thân + viền dưới",
    "canh_ghep": "LRT",
    "khung": [
+    132,
     264,
-    198,
     64,
     64
    ]
@@ -567,8 +710,8 @@
    "nguon": "code",
    "canh_ghep": "RT",
    "khung": [
-    330,
     198,
+    264,
     64,
     64
    ]
@@ -578,8 +721,8 @@
    "nguon": "code",
    "canh_ghep": "LT",
    "khung": [
-    396,
-    198,
+    264,
+    264,
     64,
     64
    ]
@@ -589,8 +732,8 @@
    "nguon": "code: thân + viền trái/phải",
    "canh_ghep": "BT",
    "khung": [
-    462,
-    198,
+    330,
+    264,
     64,
     64
    ]
@@ -600,8 +743,8 @@
    "nguon": "code",
    "canh_ghep": "T",
    "khung": [
-    528,
-    198,
+    396,
+    264,
     64,
     64
    ]
@@ -611,8 +754,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    594,
-    198,
+    462,
+    264,
     64,
     64
    ]
@@ -622,8 +765,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    660,
-    198,
+    528,
+    264,
     64,
     64
    ]
@@ -633,8 +776,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    726,
-    198,
+    594,
+    264,
     64,
     64
    ]
@@ -644,8 +787,8 @@
    "nguon": "code: thân + chấm viền góc",
    "canh_ghep": "BLRT",
    "khung": [
-    792,
-    198,
+    660,
+    264,
     64,
     64
    ]
@@ -655,8 +798,8 @@
    "nguon": "rêu: gen hàng 0 ô 0",
    "canh_ghep": "BR",
    "khung": [
-    858,
-    198,
+    726,
+    264,
     64,
     64
    ]
@@ -666,8 +809,8 @@
    "nguon": "rêu: gen hàng 0, đầu phải dải",
    "canh_ghep": "BL",
    "khung": [
-    924,
-    198,
+    792,
+    264,
     64,
     64
    ]
@@ -677,7 +820,7 @@
    "nguon": "rêu: gen hàng 2 ô 0",
    "canh_ghep": "BR",
    "khung": [
-    0,
+    858,
     264,
     64,
     64
@@ -688,7 +831,7 @@
    "nguon": "rêu: gen hàng 2 ô 1",
    "canh_ghep": "BL",
    "khung": [
-    66,
+    924,
     264,
     64,
     64
@@ -699,8 +842,8 @@
    "nguon": "rêu: gen hàng 0 ô 5",
    "canh_ghep": "B",
    "khung": [
-    132,
-    264,
+    0,
+    330,
     64,
     64
    ]
@@ -710,8 +853,8 @@
    "nguon": "rêu: gen hàng 4 ô 4",
    "canh_ghep": "",
    "khung": [
-    198,
-    264,
+    66,
+    330,
     64,
     64
    ]
@@ -721,8 +864,8 @@
    "nguon": "code: mặt trên + viền dưới",
    "canh_ghep": "LR",
    "khung": [
-    264,
-    264,
+    132,
+    330,
     64,
     64
    ]
@@ -732,8 +875,8 @@
    "nguon": "rêu gen + code",
    "canh_ghep": "R",
    "khung": [
+    198,
     330,
-    264,
     64,
     64
    ]
@@ -743,8 +886,8 @@
    "nguon": "rêu gen + code",
    "canh_ghep": "L",
    "khung": [
-    396,
     264,
+    330,
     64,
     64
    ]
@@ -754,8 +897,8 @@
    "nguon": "code: ghép phần trong 2 đầu ván gen",
    "canh_ghep": "LR",
    "khung": [
-    462,
-    264,
+    330,
+    330,
     64,
     64
    ]
@@ -765,8 +908,8 @@
    "nguon": "gen r0c6",
    "canh_ghep": "R",
    "khung": [
-    528,
-    264,
+    396,
+    330,
     64,
     64
    ]
@@ -776,8 +919,8 @@
    "nguon": "gen r0c7",
    "canh_ghep": "L",
    "khung": [
-    594,
-    264,
+    462,
+    330,
     64,
     64
    ]
@@ -787,8 +930,8 @@
    "nguon": "gen r3c6",
    "canh_ghep": "R",
    "khung": [
-    660,
-    264,
+    528,
+    330,
     64,
     64
    ]
@@ -798,8 +941,8 @@
    "nguon": "gen r3c7",
    "canh_ghep": "L",
    "khung": [
-    726,
-    264,
+    594,
+    330,
     64,
     64
    ]
@@ -809,8 +952,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BR",
    "khung": [
-    792,
-    264,
+    660,
+    330,
     64,
     64
    ]
@@ -820,8 +963,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BLR",
    "khung": [
-    858,
-    264,
+    726,
+    330,
     64,
     64
    ]
@@ -831,8 +974,8 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BLR",
    "khung": [
-    924,
-    264,
+    792,
+    330,
     64,
     64
    ]
@@ -842,7 +985,7 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BL",
    "khung": [
-    0,
+    858,
     330,
     64,
     64
@@ -853,7 +996,7 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BR",
    "khung": [
-    66,
+    924,
     330,
     64,
     64
@@ -864,11 +1007,25 @@
    "nguon": "code: trượt cột ô mặt trên theo mặt dốc + thân + viền",
    "canh_ghep": "BL",
    "khung": [
-    132,
-    330,
+    0,
+    396,
     64,
     64
    ]
+  }
+ },
+ "trang_tri": {
+  "rong-re": {
+   "anh": "rong-re.png",
+   "co_anh": [
+    256,
+    256
+   ],
+   "co_logic": [
+    128.0,
+    128.0
+   ],
+   "mo_ta": "mảng rễ trang trí 4×4 ô phủ lên thân gỗ (ảnh gen rong-re.png). Neo góc trên-trái; chỉ đặt trên vùng thân gỗ đặc (không che mặt rêu, không chạm cạnh lộ); có thể lật ngang."
   }
  }
 }

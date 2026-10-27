@@ -4,9 +4,9 @@
   • gộp nhiều ô thành DẢI, mỗi dải có viền hộp bao ngoài;
   • MỌI dải đều có thảm rêu ở mặt trên (kể cả hàng khuôn dành cho ô thân / tường / đáy) → không có ô thân, tường, đáy dùng được.
 Nên dựng như sau (làm ở độ phân giải R = 192 px/ô = ảnh gen ×1,25, cuối cùng thu ⅓ về 64 px):
-  1. THÂN (ô đặc bên trong): ghép chồng nhiều dải "phần thân dưới rêu" lấy từ các dải gen (image quilting: chọn dải khớp
-     nhất, nối bằng đường cắt nhỏ nhất), làm lặp liền 2 chiều, tối hơn mặt trên 15 % + giảm bão hoà ("phần trong dịu hơn").
-     Gỗ: các hốc tối xanh lam dưới rễ (trông như lỗ thủng xuyên nền) đổi màu thành nâu gỗ sẫm.
+  1. THÂN (ô đặc bên trong): GỖ = 8 ô từ ảnh gen riêng nguon-v2/gach-than-go.png (than_go.py: làm lặp liền, 5 tông phẳng,
+     mọi biến thể chung dải mép) – v2, 27/10; ĐÁ = dựng bằng code (khối xây). Tối hơn mặt trên 20 % + giảm bão hoà.
+     Mọi ô gỗ có phần thân (mặt trên, tường, đáy, góc, cột, gờ, dốc, khối) dựng lại trên thân mới.
   2. MẶT TRÊN (rêu): cắt từ dải gen, làm lặp ngang liền, đáy thay bằng mép trên ô thân (đường cắt nhỏ nhất) → xếp chồng liền.
   3. TƯỜNG / ĐÁY / CỘT / GÓC NGOÀI DƯỚI / GÓC TRONG: dựng bằng code từ ô thân + vẽ viền đen đúng độ dày viền gen
      (8 px ở R ≈ 2,7 px ở 2x ≈ 1,3 px logic), có dải bóng nhẹ phía trong viền.
@@ -18,6 +18,8 @@ import numpy as np
 import scipy.ndimage as nd
 from PIL import Image
 
+from than_go import bo_than_go
+from trang_tri import rong_re
 from chung import GACH, NGUON, T2, T_LOGIC, doi_co, khu_vien_trang, lap_ngang, luu_json, luu_png, nen_trang, \
     thay_le, xep_atlas
 
@@ -277,16 +279,13 @@ def _rgba(f):
 
 
 def bo_than(go, seed=11):
-    """[thân chính, biến thể 2, biến thể 3, biến thể ít chi tiết] – 4 mép của mọi biến thể Y HỆT thân chính
-    (chỉ đổi phần giữa ô) → xen kẽ tự do không lộ nối."""
+    """Gỗ: 8 ô thân từ ảnh gen gach-than-go.png (than_go.py), tương phản nén 0,8 cho thân bớt rối (không còn ô 'dịu':
+    trộn mờ giữa ô trông bẩn trên mảng phẳng). Đá: [thân chính, biến thể 2, 3, ít chi tiết] dựng bằng code.
+    4 mép của mọi biến thể Y HỆT thân chính (chỉ đổi phần giữa ô) → xen kẽ tự do không lộ nối."""
     if go:
-        f0 = go_than(seed)
-        out = [f0]
-        for lop in (go_mat(seed + 1), go_nhanh(seed + 2)):
-            a = (lop[..., 3:4] / 255) * (_mat_na_trong(14, 1)[..., None] > 0)
-            out.append(f0 * (1 - a) + lop[..., :3] * a)
-        q = _mat_na_trong(16, 40)[..., None]
-        out.append(f0 * (1 - q) + go_than(seed, diu=True) * q)
+        o, C = bo_than_go()
+        tb = float(np.mean(C, 0) @ np.array([0.299, 0.587, 0.114]))
+        out = [tb + (f - tb) * 0.8 for f in o]
     else:
         out = [da_than(seed), da_than(seed, 'mau'), da_than(seed, 'tach'), da_than(seed, 'gop')]
     return [_rgba(f) for f in out]
@@ -463,11 +462,18 @@ def bo_o(A, pre, go):
         return ve_vien(nen, lo, gt, **kw)
 
     # --- thân + biến thể
-    O[f'{pre}-than'] = (F0, {'L': F0, 'R': F0, 'T': F0, 'B': F0}, 'thân (đặc bên trong) – lặp liền 2 chiều', 'code (màu lấy từ gen)')
-    for ten, f, mt in ((f'{pre}-than-2', F[1], 'thân – biến thể 2 (' + ('mắt gỗ' if go else 'đổi sáng vài khối') + ')'),
-                       (f'{pre}-than-3', F[2], 'thân – biến thể 3 (' + ('rễ nhánh chéo' if go else 'chia đôi khối dài') + ')'),
-                       (f'{pre}-than-diu', F[3], 'thân – biến thể ÍT chi tiết (' + ('bỏ nét sẫm giữa ô' if go else 'gộp khối') + ')')):
-        O[ten] = (f, {'L': F0, 'R': F0, 'T': F0, 'B': F0}, mt + '; 4 mép y hệt thân', 'code (chỉ đổi phần giữa ô)')
+    O[f'{pre}-than'] = (F0, {'L': F0, 'R': F0, 'T': F0, 'B': F0}, 'thân (đặc bên trong) – lặp liền 2 chiều',
+                        'gen gach-than-go.png ô 1, làm lặp liền bằng code' if go else 'code (màu lấy từ gen)')
+    if go:
+        bt = [(f'{pre}-than-{i}', F[i - 1], f'thân – biến thể {i} (ô gen {i})') for i in range(2, 9)]
+        ng = 'gen gach-than-go.png (phần giữa ô), mép = ô gốc'
+    else:
+        bt = [(f'{pre}-than-2', F[1], 'thân – biến thể 2 (đổi sáng vài khối)'),
+              (f'{pre}-than-3', F[2], 'thân – biến thể 3 (chia đôi khối dài)'),
+              (f'{pre}-than-diu', F[3], 'thân – biến thể ÍT chi tiết (gộp khối)')]
+        ng = 'code (chỉ đổi phần giữa ô)'
+    for ten, f, mt in bt:
+        O[ten] = (f, {'L': F0, 'R': F0, 'T': F0, 'B': F0}, mt + '; 4 mép y hệt thân', ng)
 
     # --- mặt trên giữa (T0) + biến thể: thảm rêu gen phủ lên thân code
     def lay_tren(ten_dai, dx, lap=False):
@@ -491,6 +497,12 @@ def bo_o(A, pre, go):
     O[f'{pre}-day-trai'] = (tu_than('LB'), {'R': DB, 'T': WL}, 'góc ngoài dưới trái', 'code')
     O[f'{pre}-day-phai'] = (tu_than('RB'), {'L': DB, 'T': WR}, 'góc ngoài dưới phải', 'code')
     CT = tu_than('LR')
+    if go:   # tường / trần dài: biến thể dùng thân biến thể (mép giống hệt → ghép liền)
+        for i in (2, 3, 4):
+            Fi = F[i - 1]
+            O[f'{pre}-canh-trai-{i}'] = (tu_than('L', nen=Fi), {'R': F0, 'T': WL, 'B': WL}, f'cạnh trái – biến thể {i}', 'thân biến thể + viền code')
+            O[f'{pre}-canh-phai-{i}'] = (tu_than('R', nen=Fi), {'L': F0, 'T': WR, 'B': WR}, f'cạnh phải – biến thể {i}', 'thân biến thể + viền code')
+            O[f'{pre}-day-giua-{i}'] = (tu_than('B', nen=Fi), {'L': DB, 'R': DB, 'T': F0}, f'mặt dưới – biến thể {i}', 'thân biến thể + viền code')
     O[f'{pre}-cot-than'] = (CT, {'T': CT, 'B': CT}, 'cột rộng 1 ô – thân, lặp dọc', 'code: thân + viền trái/phải')
     O[f'{pre}-cot-day'] = (tu_than('LRB'), {'T': CT}, 'cột rộng 1 ô – đáy (cột treo)', 'code')
     for g, mt in (('TL', 'trên-trái'), ('TR', 'trên-phải'), ('BL', 'dưới-trái'), ('BR', 'dưới-phải')):
@@ -600,6 +612,7 @@ def chay():
             luu_png(o, f'{GACH}/o/{ten}.png')
             items.append((ten, o))
             meta[ten] = {'mo_ta': mt, 'nguon': ng, 'canh_ghep': ''.join(sorted(ke.keys()))}
+    re = rong_re()
     at, pos = xep_atlas(items, rong=1024)
     luu_png(at, f'{GACH}/gach-atlas.png')
     for k, v in pos.items():
@@ -616,6 +629,12 @@ def chay():
             'doc': 'dốc thoải: 2 ô liền (nửa thấp + nửa cao), mỗi ô cao 16 px logic; dốc 45°: 1 ô.',
         },
         'o': meta,
+        'trang_tri': {
+            'rong-re': {'anh': 'rong-re.png', 'co_anh': [int(re.shape[1]), int(re.shape[0])],
+                        'co_logic': [re.shape[1] / 2, re.shape[0] / 2],
+                        'mo_ta': 'mảng rễ trang trí 4×4 ô phủ lên thân gỗ (ảnh gen rong-re.png). Neo góc trên-trái; '
+                                 'chỉ đặt trên vùng thân gỗ đặc (không che mặt rêu, không chạm cạnh lộ); có thể lật ngang.'},
+        },
     }, f'{GACH}/gach-atlas.json')
     print('gạch:', len(meta), 'ô · atlas', at.shape[1], '×', at.shape[0])
     return tat_ca

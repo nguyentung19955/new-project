@@ -1,0 +1,41 @@
+{
+ "build": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 91
+   },
+   "lc": {
+    "ms": 138,
+    "mb_anh": 28.4
+   },
+   "re": 12
+  }
+ },
+ "demo": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 91
+   },
+   "lc": {
+    "ms": 171,
+    "mb_anh": 28.4
+   },
+   "re": 12
+  },
+  "loi_sau_chup": {
+   "trang_loi": []
+  }
+ }
+}

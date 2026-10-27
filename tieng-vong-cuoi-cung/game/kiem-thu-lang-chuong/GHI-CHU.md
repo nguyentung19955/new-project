@@ -1,5 +1,28 @@
 # Ghi chú – ghép Làng Chuông + clip chết của Lam (27/10/2026)
 
+> **Cập nhật v2 (27/10, tối)**: thân gỗ từ ảnh gen mới, mảng rễ trang trí, tiền cảnh rễ treo mới – xem **mục 0** và ảnh
+> `anh-960-*-v2.png`. Các mục 1–7 bên dưới là lần ghép đầu (vẫn đúng, trừ chỗ mục 0 nói đã đổi).
+
+## 0. Bản v2 – đã đổi gì trong game
+
+| Phần | Trước | Bây giờ |
+|---|---|---|
+| Thân gỗ (`#`, `W`) | 4 ô thân dựng bằng code, lặp nhịp 32 px thành "sóng" | **8 ô thân từ ảnh gen** (`go-than`, `go-than-2…8`), mọi ô chung mép nên ghép liền; mỗi ô chọn theo vị trí (băm cố định, chia đều 8 ô) |
+| Tường / trần gỗ | 1 ô lặp | 4 biến thể (`canh-trai`, `canh-phai`, `day-giua` + `-2/-3/-4`), 60 % là biến thể |
+| Mặt rêu, góc, cột, gờ, khối gỗ | trên thân code | dựng lại trên thân mới (viền đen chỉ ở cạnh lộ, như cũ) |
+| Mảng rễ 4×4 ô | chưa có | `rong-re.png` (128×128 logic) vẽ ngay sau gạch, **12 chỗ cố định** (2 chỗ/phòng, xen lật ngang), bắt đầu từ hàng 15 = ngay dưới hàng mặt rêu → **không che mặt trên**; chỗ nào không còn là khối gỗ đặc (hàng 14–16, rộng thêm 1 ô mỗi bên) thì tự bỏ → không đè cạnh lộ / hố. Chỉ là hình, không va chạm |
+| Tiền cảnh | vệt tối mờ dựng từ lớp gần | 3 cụm **rễ treo thật** (ảnh gen), cùng file + cùng cỡ cũ, cuộn 1,05, vẽ SAU Lam/quái; rễ chỉ xuống tới 36 % màn (≈195 logic) – đầu Lam đứng sàn ở ≈336 logic nên không bị che |
+
+**Không đổi**: bản đồ, va chạm, gameplay, Lam, hiệu ứng, quái/boss, đá xây (`S`), `demo-doi-chieu-v3.html`.
+Bộ nhớ ảnh Làng Chuông: 28,4 MB (thêm ≈0,5 MB: atlas cao hơn 396 → 460, mảng rễ 256×256). Bản build: 12,84 MB.
+Kiểm nhanh (`python3 -B game/tools/chup-lang-chuong-v2.py`, số đo `so-do-v2.json`): demo.html và bản build `file://`
+**không lỗi console / lỗi trang / tải hỏng**; 91 ô atlas, 12/12 chỗ mảng rễ hợp lệ. Video `lang-chuong-60fps.mp4` là bản cũ
+(chưa quay lại).
+
+**Còn chưa đẹp (v2)**: thân gỗ co về 32 logic nên rễ thành lưới nhỏ dày, hơi rối; xen 8 ô vẫn hơi thấy lưới ô; mảng rễ trên sàn
+chỉ lộ nửa trên (sàn dày 3 hàng) và hay nằm dưới dòng chữ hướng dẫn phím; tiền cảnh tối gần giống rễ của nền nên đôi chỗ khó nhận
+ra. Gợi ý gen lại (prompt): xem `art/the-gioi-moi/lang-chuong/GHI-CHU.md` mục 5 (a2, b2, c2).
+
 Viết cho người không rành kỹ thuật. Xem trước: **`lang-chuong-60fps.mp4`** (≈ 25 giây, 60 khung/giây, mỗi khung = đúng 1 bước
 của game) và các ảnh **`anh-960-*.png`** (đúng cỡ màn 960×540).
 
@@ -82,6 +105,7 @@ game/demo.html                       ghép nền + gạch + đồ vật Làng Ch
 game/build-demo.py                   nhúng Làng Chuông (TV.NHUNG.lc) + lang-chuong-giu; bỏ the-gioi
 game/anim/lang-chuong-giu.png/.json  điểm lưu + đèn lồng (tools/tach-do-vat-giu.py)
 game/tools/quay-lang-chuong.py       kiểm nhanh + quay video + ảnh
+game/tools/chup-lang-chuong-v2.py    v2: kiểm nạp + 6 ảnh anh-960-*-v2.png + so-do-v2.json
 game/kiem-thu-lang-chuong/           video, ảnh, so-do.json, file này
 art/modular/lam-moi/hanh-dong/       code/ (tư thế chết, dao), sprite/ (sheet mới), gif/chet-*, manh-them/
 ```

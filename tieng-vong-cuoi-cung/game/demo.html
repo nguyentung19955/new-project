@@ -1370,7 +1370,9 @@ function tintKhung(f){
    Bản đồ / va chạm KHÔNG đổi (lưới G). Chỉ HÌNH: mỗi ô đặc chọn 1 ô atlas theo 4 hàng xóm (đặc/rỗng):
      cạnh LỘ (hàng xóm rỗng) = cạnh có viền đen; ô atlas có canh_ghep = các cạnh nối liền → chọn ô có đúng tập cạnh nối.
      16 tổ hợp: thân / mặt trên / tường trái, phải / đáy / góc trên, dưới / cột (đỉnh, thân, đáy) / gờ nổi / khối rời.
-   Thân đủ 4 phía nhưng thiếu ô chéo → góc trong (lõm). Biến thể (thân 2/3/dịu, mặt trên 2/3/4, góc 2) chọn theo băm (x,y) cố định.
+   Thân đủ 4 phía nhưng thiếu ô chéo → góc trong (lõm). Biến thể (thân, mặt trên 2/3/4, góc 2, tường/đáy gỗ 2/3/4) chọn theo băm (x,y)
+   cố định. Thân GỖ (v2, ảnh gen gach-than-go.png): 8 ô chung mép, chia đều; thân ĐÁ: than / 2 / 3 / dịu như cũ.
+   Mảng rễ trang trí 4×4 ô (gach/rong-re.png) vẽ ngay sau gạch ở vài chỗ cố định (RE_RE), xem dungRe().
    Vật liệu: 'S' = đá xây (da-*), '#' và 'W' = gỗ-rễ (go-*). Ván một chiều '=' → van-trai / van-giua / van-phai.
    Màn hiện không có dốc (lưới không có ký tự dốc) → ô dốc chưa dùng. Dưới đáy lưới (hàng ≥ 17) vẽ tiếp thân như hàng cuối
    (camera cảm ứng lệch 28 px làm lộ mép dưới). Atlas được KÉO MÉP 2 px vào canvas riêng (GX) lúc nạp → vẽ co giãn không hở khe;
@@ -1397,12 +1399,29 @@ function dungGach(){
     if(ten==='than'){
       if(ty>0 && !solidD(tx-1,ty-1)) ten='goc-trong-tl'; else if(ty>0 && !solidD(tx+1,ty-1)) ten='goc-trong-tr';
       else if(!solidD(tx-1,ty+1)) ten='goc-trong-bl'; else if(!solidD(tx+1,ty+1)) ten='goc-trong-br';
+      else if(mat==='go'){ const i=Math.floor(h*8); ten=i?'than-'+(i+1):'than'; }   // gỗ v2: 8 ô thân gen, chia đều theo băm vị trí
       else { const sau=!solidD(tx,ty-2)?1:0; ten=h<0.12?'than-2':h<0.2?'than-3':(h<(sau?0.35:0.6)?'than-diu':'than'); } }
+    else if(mat==='go' && (ten==='canh-trai'||ten==='canh-phai'||ten==='day-giua') && h>=0.4) ten+='-'+(2+Math.floor((h-0.4)/0.2));
     else if(ten==='tren-giua') ten=h<0.5?'tren-giua':h<0.67?'tren-giua-2':h<0.84?'tren-giua-3':'tren-giua-4';
     else if((ten==='tren-trai'||ten==='tren-phai') && h<0.5) ten+='-2';
     M[ty*WW+tx]=id(mat+'-'+ten);
   }
   GCH.map=M; GCH.n=0; for(const v of M) if(v>=0) GCH.n++;
+  dungRe();
+}
+/* Mảng rễ trang trí (128×128 logic) phủ lên sàn gỗ: [phòng, cột trái, lật]. Đặt từ hàng 15 (ngay dưới hàng mặt rêu 14) → không che
+   mặt trên; phần dưới (hàng 17–18) nằm ở dải thân vẽ thêm dưới đáy lưới. Chỉ HÌNH, không va chạm. Chỗ nào không còn là khối gỗ đặc
+   (cột trái-1 … cột phải+1, hàng 14–16 đều là '#'/'W') thì bỏ qua → không bao giờ đè lên cạnh lộ / hố. */
+const RE_RE=[[A1,2,0],[A1,23,1],[A2,11,1],[A2,24,0],[RB,3,0],[RB,27,1],[RC,2,1],[RC,19,0],[RD,12,0],[RD,25,1],[RE,6,1],[RE,19,0]], RE_DAT=[];
+function dungRe(){ RE_DAT.length=0;
+  for(const [r,c,lat] of RE_RE){ const x0=r.x0+c; let ok=true;
+    for(let x=x0-1;x<=x0+4&&ok;x++) for(let y=14;y<=16;y++){ const t=tile(x,y); if(t!=='#'&&t!=='W'){ ok=false; break; } }
+    if(ok) RE_DAT.push({x:x0*T, y:15*T, lat}); } }
+function drawRe(){
+  const im=NEN.re; if(!im) return; const w=im.w, h=im.h;
+  for(const d of RE_DAT){ const x=d.x-ox, y=d.y-oy; if(x>W||x+w<0||y>H) continue;
+    if(d.lat){ ctx.save(); ctx.translate(x+w,y); ctx.scale(-1,1); ctx.drawImage(im.img,0,0,w,h); ctx.restore(); }
+    else ctx.drawImage(im.img,x,y,w,h); }
 }
 // atlas → canvas kéo mép 2 px (mỗi ô 64 → ô 68); trả bảng tên → chỉ số
 function keoMepGach(meta,img){
@@ -1424,13 +1443,15 @@ function drawGach(){
     for(let tx=tx0;tx<=tx1;tx++){ const v=M[ty*WW+tx]; if(v<0) continue; const q=GCH.k[v];
       const x0=Math.round((tx*T-ox)*K)/K, x1=Math.round(((tx+1)*T-ox)*K)/K;
       ctx.drawImage(cv,q[0],q[1],64,64,x0,y0,x1-x0,y1-y0); } }
+  drawRe();
 }
 /* ---------- LÀNG CHUÔNG: nền parallax (nen/nen.json) ----------
    xa 0,08 (lang-xa.png, đục) → giữa 0,40 → gần 0,65 → [gạch, đồ vật, Lam, quái] → tiền cảnh 1,05 (vẽ SAU Lam).
    Lặp ngang: x0 = −((cam_x × hệ số) mod rộng), vẽ các bản x0, x0+rộng… tới khi phủ 960. Ảnh 2x vẽ ½ cỡ (cao 540 logic).
-   Dọc: dời theo camera × hệ số (camera cảm ứng lệch 28 px). Tiền cảnh 3840×1080 thu còn 1920×540 lúc nạp (chỉ là bóng rễ tối,
-   đỡ ~12 MB bộ nhớ ảnh). */
-const NEN={lop:[], tien:null};
+   Dọc: dời theo camera × hệ số (camera cảm ứng lệch 28 px). Tiền cảnh 3840×1080 thu còn 1920×540 lúc nạp (rễ treo tối,
+   đỡ ~12 MB bộ nhớ ảnh). Tiền cảnh v2 (27/10): 3 cụm rễ treo từ ảnh gen riêng, sát mép trên, xuống tối đa 36 % màn (≈195 logic)
+   → không tới đầu Lam / quái đứng trên sàn. */
+const NEN={lop:[], tien:null, re:null};
 function veLop(L,cx,cy){
   const w=L.w, K=BK; let x=-(((cx*L.k)%w)+w)%w; const y=Math.round(-cy*L.k*K)/K;
   for(;x<W;x+=w){ const X=Math.round(x*K)/K, X1=Math.round((x+w)*K)/K; ctx.drawImage(L.img,0,0,L.img.width,L.img.height,X,y,X1-X+0.02,H); }
@@ -1713,8 +1734,8 @@ async function napSheet(ten){
   const img=await loadImgDecode(src); if(!img) throw new Error('không tải được ảnh '+json.image);
   return Object.assign({img},json);
 }
-/* Làng Chuông: 4 ảnh nền + atlas gạch + 7 ảnh đồ vật, DECODE SẴN ở màn nạp. Bản build: TV.NHUNG.lc = {nen:{json,anh:{tên:uri}},
-   gach:{json,anh}, dv:{json,anh:{tên:uri}}}. Kiểm cỡ ảnh = cỡ ghi trong JSON (sai → báo lỗi rõ). */
+/* Làng Chuông: 4 ảnh nền + atlas gạch + mảng rễ + 7 ảnh đồ vật, DECODE SẴN ở màn nạp. Bản build: TV.NHUNG.lc = {nen:{json,anh:{tên:uri}},
+   gach:{json,anh,tt:{tên:uri}}, dv:{json,anh:{tên:uri}}}. Kiểm cỡ ảnh = cỡ ghi trong JSON (sai → báo lỗi rõ). */
 const LC_NEN=[['lang-xa.png',0], ['lang-giua.png',1], ['lang-gan.png',2]], LC_DV=['cong-dong','cong-mo','cong-chi-tru','cong-tac-len','cong-tac-an','binh-mau','manh-chuong'];
 let LC_SO=null;
 async function napLC(){
@@ -1726,6 +1747,7 @@ async function napLC(){
   const tenNen=[...LC_NEN.map(x=>x[0]),'lang-tien-canh.png'];
   const imgsNen=await Promise.all(tenNen.map(t=>anh(N?N.nen.anh[t]:SRC.lc+'nen/'+t,t,nen.lop[t].co_anh)));
   const gimg=await anh(N?N.gach.anh:SRC.lc+'gach/'+gm.anh,gm.anh,null);
+  const RT=gm.trang_tri['rong-re'], reimg=await anh(N?N.gach.tt[RT.anh]:SRC.lc+'gach/'+RT.anh,RT.anh,RT.co_anh);
   const coDV=t=>(dvm.do_nho[t]||dvm.cong).co_anh;
   const dimgs=await Promise.all(LC_DV.map(t=>anh(N?N.dv.anh[t]:SRC.lc+'do-vat/'+t+'.png',t+'.png',coDV(t))));
   const lop=LC_NEN.map(([t],i)=>({img:imgsNen[i], k:nen.lop[t].he_so_cuon, w:nen.lop[t].co_logic[0]}));
@@ -1734,9 +1756,9 @@ async function napLC(){
   const tg=tc.getContext('2d'); tg.imageSmoothingEnabled=true; tg.imageSmoothingQuality='high'; tg.drawImage(ti,0,0,tc.width,tc.height);
   const L=nen.lop['lang-tien-canh.png'], tien={img:tc, k:L.he_so_cuon, w:L.co_logic[0]};
   const dv={}; LC_DV.forEach((t,i)=>dv[t]=dimgs[i]);
-  let px=0; for(const im of [...imgsNen.slice(0,3),gimg,...dimgs]) px+=im.naturalWidth*im.naturalHeight; px+=tc.width*tc.height+16*68*Math.ceil(Object.keys(gm.o).length/16)*68;
+  let px=0; for(const im of [...imgsNen.slice(0,3),gimg,...dimgs]) px+=im.naturalWidth*im.naturalHeight; px+=reimg.naturalWidth*reimg.naturalHeight+tc.width*tc.height+16*68*Math.ceil(Object.keys(gm.o).length/16)*68;
   LC_SO={ms:Math.round(performance.now()-t0), mb_anh:+(px*4/1048576).toFixed(1)};
-  return {lop, tien, gach:{meta:gm, img:gimg}, dv};
+  return {lop, tien, re:{img:reimg, w:RT.co_logic[0], h:RT.co_logic[1]}, gach:{meta:gm, img:gimg}, dv};
 }
 /* Nạp Lam mới (clip đang chọn): PNG + JSON CÙNG thư mục rig-v?/sprite/ + dáng nghỉ TẠM. Kiểm cỡ ảnh thực = CLIP.co = co_sheet trong JSON
    (PNG gửi rời từng bị thu thành 2048×927 → toạ độ khung sai) — sai thì báo lỗi rõ, không chạy. */
@@ -1823,7 +1845,7 @@ async function boot(){
     LAM=lam; LAMS[lam.ten]=lam; LAM_QUANG=lam.meta.toc_do_chuan.quang_duong_moi_chu_ky_px_logic; LAM_N=lam.meta.so_khung;
     LAM.E={sheet:tint(lam.sheet,'#CEF0D6',0.8), nghi:tint(lam.nghi,'#CEF0D6',0.8)};   // bản tô màu ngọc cho bóng Tiếng Vọng + vệt lướt
     QB=qbr;   // số đo nạp mảnh (QBR.so); ảnh trắng / vàng / tối đã cache trong QBR.nap; hộp đấm quái QHB giữ nguyên số gameplay {-90,-81,66,37}
-    GIU=giu; NEN.lop=lc.lop; NEN.tien=lc.tien; keoMepGach(lc.gach.meta,lc.gach.img); Object.assign(DOV,lc.dv); dungGach(); dungDen();
+    GIU=giu; NEN.lop=lc.lop; NEN.tien=lc.tien; NEN.re=lc.re; keoMepGach(lc.gach.meta,lc.gach.img); Object.assign(DOV,lc.dv); dungGach(); dungDen();
     newGame();
     window.TVDEMO={ready:true, lam:{clip:CLIP.ten, co:[LAM.sheet.naturalWidth,LAM.sheet.naturalHeight], khung:LAM_N, quang:LAM_QUANG, bay:KHUNG_BAY,
       hd:{co:LAM.HD.meta.co_sheet, khung:LAM.HD.meta.so_khung}}, hu:Object.fromEntries(HU_TEN.map(t=>[t,!!(HUI[t]&&HUI[t].img)])), atk:ATK, rut:RUT_T, gach:{o:GCH.n, atlas:Object.keys(GCH.o).length}, lc:LC_SO, qbr:QBR.so, W, H, T};
