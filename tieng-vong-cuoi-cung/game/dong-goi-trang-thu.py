@@ -66,11 +66,14 @@ for p in tep:
 moc = r"""<script>
 /* bản nhúng: đường dẫn tương đối của trang → data URI */
 (()=>{const M=%s;const G=location.origin+'/%s';
+const tim=p=>{p=decodeURIComponent(p);if(M[p])return M[p];const a=p.split('/');for(let i=1;i<a.length;i++){const k='/'+a.slice(i).join('/');if(M[k])return M[k]}return null};
 const R=u=>{try{if(typeof u!=='string'||u.startsWith('data:')||u.startsWith('blob:'))return u;const x=new URL(u,'http://g/%s');
-if(x.host!=='g')return u;return M[decodeURIComponent(x.pathname)]||u}catch(e){return u}};
+if(x.host==='g')return M[decodeURIComponent(x.pathname)]||tim(x.pathname)||u;
+const y=new URL(u,location.href);if(y.origin===location.origin||y.protocol==='file:')return tim(y.pathname)||u;return u}catch(e){return u}};
 const d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');
 Object.defineProperty(HTMLImageElement.prototype,'src',{get(){return d.get.call(this)},set(v){d.set.call(this,R(v))}});
 const sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){return sa.call(this,k,(k==='src'||k==='href')?R(v):v)};
+const sp=CSSStyleDeclaration.prototype.setProperty;CSSStyleDeclaration.prototype.setProperty=function(k,v,...a){if(typeof v==='string')v=v.replace(/url\(["']?([^"')]+)["']?\)/g,(m,u)=>'url("'+R(u)+'")');return sp.call(this,k,v,...a)};
 const f=window.fetch;window.fetch=(u,o)=>f(typeof u==='string'?R(u):u,o);
 const xo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u,...a){return xo.call(this,m,R(u),...a)};
 const A=window.Audio;if(A)window.Audio=function(u){return new A(u===undefined?u:R(u))};
