@@ -236,7 +236,7 @@ Không có bóng: từ Thế 40 cần thêm nhát 1 + nhát 2 + nhát 3 mới v�
 | **P0-C** | Tinh anh + một nâng cấp có tạo cảm giác tiến triển không? | Phòng E tinh anh 2 đòn, rơi **Ấn Rèn I**; phòng F đe rèn → **Âm Đao cấp 3 (mở Dư Âm)** | Đủ 8 cấp, vật liệu, menu, lưu game |
 
 - **Prototype Âm Đao cấp 1–4** (`KE-HOACH-VU-KHI.md` mục 10) đã được duyệt, làm **sau P0-A**, song song P0-B, trên cùng phòng A–C. P0-C dùng lại phần Dư Âm của nó.
-- **Bọ Vỏ Mộc** là quái mới đầu tiên, thử phá Thế bằng đổi hướng (giáp trước `mat`, bụng sau mềm). Một phiên khác đang làm `game/thu-bo-vo-moc/` – **không sửa thư mục đó**; P0-B chỉ lấy rig/clip khi trang đó xong. Chưa xong → P0-B dùng lại B + C, Bọ dời sang P0-C.
+- **Bọ Vỏ Mộc** là quái mới đầu tiên, thử phá Thế bằng đổi hướng (giáp trước `mat`, bụng sau mềm). Trang thử `game/thu-bo-vo-moc/` của phiên khác đã lên nhánh (commit `58e0eb0`: rig 5 mảnh, 13 clip, mai dội, vỡ mai lật ngửa) – **không sửa thư mục đó**; P0-B chỉ dùng lại rig/clip sau khi chủ dự án trả lời các câu hỏi trong `game/kiem-thu-bo-vo-moc/GHI-CHU.md`. Lưu ý lệch số: trang Bọ choáng **3 s (180 tick)**, bảng mục 5 đề xuất vỏ cứng 120 – chốt một số khi duyệt Bọ. Nếu Bọ chưa được duyệt → P0-B dùng lại B + C, Bọ dời sang P0-C.
 - **Tinh anh đầu tiên: Chuông Gỗ biến thể** ("Chuông Gỗ Gác Lớn", [160, 80], nặng, 2 đòn: đập như Chuông Gỗ + húc ngang báo trước 36 tick). Lý do so với Người Gác Câm:
 
 | | Chuông Gỗ biến thể (chọn cho P0-C) | Người Gác Câm |
@@ -291,7 +291,7 @@ Theo `BO-QUAI-DE-XUAT.md`: không phải quái nào cũng là chuông. Chuông G
 |---|---|---|---|---|
 | Cận chiến nền | **Chuông Gỗ** (có sẵn) → sau thay vai bằng Phu Đèn Lạc | P0-A | [40, –] | vừa |
 | Giữ cổng, học Thế | **Quái gác** (Chuông Gỗ có vỏ) | P0-A | [30, 60, `vo`] | neo |
-| Giáp trước, đổi hướng | **Bọ Vỏ Mộc** | P0-B (hoặc C) | [50, 30, `mat`] | nặng |
+| Giáp trước, đổi hướng | **Bọ Vỏ Mộc** | P0-B (hoặc C) | [40, 40, `mat`] (= trang thử: máu 4, mai 4 nấc, ×10) | nặng |
 | Tinh anh | **Chuông Gỗ Gác Lớn** → **Người Gác Câm** | P0-C → P1 | [160, 80] → [240, 120] | nặng |
 | Cận chiến cung đánh | Phu Đèn Lạc | P1 | [40, –] | vừa |
 | Bay / lao | Dơi Rễ | P1 (hoãn) | [20, –] | nhẹ |
@@ -301,7 +301,7 @@ Theo `BO-QUAI-DE-XUAT.md`: không phải quái nào cũng là chuông. Chuông G
 
 | Quái | Mảnh cần (BO-QUAI mục 5) | Đã có trên ảnh gốc | Còn thiếu |
 |---|---|---|---|
-| Bọ Vỏ Mộc | thân, mai, đầu, 2 cụm chân | nguyên con, mai, bụng mềm, đầu, 2 cặp chân | Phiên khác đang làm `thu-bo-vo-moc` |
+| Bọ Vỏ Mộc | thân, mai, đầu, 2 cụm chân | **Đã tách 5 mảnh + 2 lớp nứt, rig, 13 clip** (`art/huong-moi/quai-rig/bo-vo-moc/`) | Chờ duyệt trang thử của phiên khác |
 | Phu Đèn Lạc | đầu, áo, tay, đèn, 2 bàn chân | mũ trùm, áo choàng, tay, cán, đèn, giày | tách nền, cắt mảnh, rig, clip, hộp đòn |
 | Dơi Rễ | thân, 2 cánh | dáng treo, dáng bay, thân, 2 cánh lá | như trên |
 | Nấm Thở | thân, mũ, túi phồng | túi xẹp, túi phồng, gốc, mũ, túi bào tử | như trên |
