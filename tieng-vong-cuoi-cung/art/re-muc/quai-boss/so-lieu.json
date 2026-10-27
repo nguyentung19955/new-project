@@ -1,0 +1,219 @@
+{
+ "ket_qua": [
+  "ĐẠT   nam: dáng nghỉ khớp ảnh nguồn  IoU 0.9945",
+  "ĐẠT   nam.dung: không vượt biên (9 kênh)  0.00e+00",
+  "ĐẠT   nam.dung: không nướng nháy trắng  ",
+  "ĐẠT   nam.dung: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   nam.dung: nối vòng liền  0.000 px",
+  "ĐẠT   nam.dung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   nam.di: không vượt biên (17 kênh)  0.00e+00",
+  "ĐẠT   nam.di: không nướng nháy trắng  ",
+  "ĐẠT   nam.di: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   nam.di: nối vòng liền  0.000 px",
+  "ĐẠT   nam.dam: không vượt biên (20 kênh)  0.00e+00",
+  "ĐẠT   nam.dam: không nướng nháy trắng  ",
+  "ĐẠT   nam.dam: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   nam.dam: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   nam.dam: nắm tay trước trong hộp đấm ở mọi khung chạm  khung [18, 19, 20]",
+  "ĐẠT   nam.trung: không vượt biên (12 kênh)  0.00e+00",
+  "ĐẠT   nam.trung: không nướng nháy trắng  ",
+  "ĐẠT   nam.trung: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   nam.trung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   nam.chet: không vượt biên (51 kênh)  0.00e+00",
+  "ĐẠT   nam.chet: không nướng nháy trắng  ",
+  "ĐẠT   nam.chet: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   doi: dáng nghỉ khớp ảnh nguồn  IoU 0.9923",
+  "ĐẠT   doi.bay: không vượt biên (7 kênh)  0.00e+00",
+  "ĐẠT   doi.bay: không nướng nháy trắng  ",
+  "ĐẠT   doi.bay: nối vòng liền  0.000 px",
+  "ĐẠT   doi.lao: không vượt biên (8 kênh)  0.00e+00",
+  "ĐẠT   doi.lao: không nướng nháy trắng  ",
+  "ĐẠT   doi.lao: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   doi.trung: không vượt biên (5 kênh)  0.00e+00",
+  "ĐẠT   doi.trung: không nướng nháy trắng  ",
+  "ĐẠT   doi.trung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   doi.chet-roi: không vượt biên (7 kênh)  0.00e+00",
+  "ĐẠT   doi.chet-roi: không nướng nháy trắng  ",
+  "ĐẠT   doi.chet-roi: nối vòng liền  0.000 px",
+  "ĐẠT   doi.chet-vo: không vượt biên (23 kênh)  0.00e+00",
+  "ĐẠT   doi.chet-vo: không nướng nháy trắng  ",
+  "ĐẠT   doi.chet-vo: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam: dáng nghỉ khớp ảnh nguồn  IoU 0.9937",
+  "ĐẠT   menam.dung: không vượt biên (16 kênh)  0.00e+00",
+  "ĐẠT   menam.dung: không nướng nháy trắng  ",
+  "ĐẠT   menam.dung: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam.dung: nối vòng liền  0.000 px",
+  "ĐẠT   menam.dung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   menam.quet: không vượt biên (14 kênh)  0.00e+00",
+  "ĐẠT   menam.quet: không nướng nháy trắng  ",
+  "ĐẠT   menam.quet: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam.quet: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   menam.quet: vuốt trước chồng hộp quét + sát đất (≤ 2 px)  [(np.True_, 0.0), (np.True_, 0.0), (np.True_, 0.0)]",
+  "ĐẠT   menam.dap: không vượt biên (20 kênh)  0.00e+00",
+  "ĐẠT   menam.dap: không nướng nháy trắng  ",
+  "ĐẠT   menam.dap: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam.dap: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   menam.dap: hai vuốt chạm đất lúc sự kiện chạm đất  khe [0.0, 0.0] px",
+  "ĐẠT   menam.phun: không vượt biên (63 kênh)  0.00e+00",
+  "ĐẠT   menam.phun: không nướng nháy trắng  ",
+  "ĐẠT   menam.phun: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam.phun: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   menam.trung: không vượt biên (11 kênh)  0.00e+00",
+  "ĐẠT   menam.trung: không nướng nháy trắng  ",
+  "ĐẠT   menam.trung: không xuyên đất (mỗi 5 ms)  0.00 px logic",
+  "ĐẠT   menam.trung: đầu/cuối = dáng nghỉ  0.000 / 0.000 px",
+  "ĐẠT   menam.chet: không vượt biên (71 kênh)  0.00e+00",
+  "ĐẠT   menam.chet: không nướng nháy trắng  ",
+  "ĐẠT   menam.chet: không xuyên đất (mỗi 5 ms)  0.00 px logic"
+ ],
+ "so": {
+  "nam": {
+   "iou_dang_nghi": 0.99454,
+   "dung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ]
+   },
+   "di": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px": 0.0
+   },
+   "dam": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     18,
+     19,
+     20
+    ]
+   },
+   "trung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ]
+   },
+   "chet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0
+   }
+  },
+  "doi": {
+   "iou_dang_nghi": 0.99226,
+   "bay": {
+    "vuot_bien_lon_nhat": 0.0,
+    "noi_vong_px": 0.0
+   },
+   "lao": {
+    "vuot_bien_lon_nhat": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27
+    ]
+   },
+   "trung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ]
+   },
+   "chet-roi": {
+    "vuot_bien_lon_nhat": 0.0,
+    "noi_vong_px": 0.0
+   },
+   "chet-vo": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0
+   }
+  },
+  "menam": {
+   "iou_dang_nghi": 0.99368,
+   "dung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "noi_vong_px": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ]
+   },
+   "quet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     10,
+     11,
+     12
+    ]
+   },
+   "dap": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     12,
+     13
+    ]
+   },
+   "phun": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ],
+    "khung_cham": [
+     10,
+     11
+    ]
+   },
+   "trung": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0,
+    "lech_dang_nghi_dau_cuoi_px": [
+     0.0,
+     0.0
+    ]
+   },
+   "chet": {
+    "vuot_bien_lon_nhat": 0.0,
+    "xuyen_dat_lon_nhat_px_logic": 0.0
+   }
+  }
+ },
+ "tat_ca_dat": true
+}

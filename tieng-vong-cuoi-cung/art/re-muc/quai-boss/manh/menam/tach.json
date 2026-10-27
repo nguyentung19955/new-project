@@ -1,0 +1,368 @@
+{
+ "nguon": "boss-me-nam-moc.png",
+ "lat_ngang": true,
+ "rong_nguon": 1536,
+ "ghi_chu": "toạ độ trên ảnh nguồn ĐÃ LẬT NGANG (x' = W − x); mảnh cắt từ bản nguyên, phần khuất bù theo \"bu\"",
+ "manh": {
+  "than": {
+   "anh": "manh/menam/than.png",
+   "hop_tren_nguon": [
+    856,
+    329,
+    506,
+    527
+   ]
+  },
+  "mu": {
+   "anh": "manh/menam/mu.png",
+   "hop_tren_nguon": [
+    732,
+    139,
+    750,
+    434
+   ]
+  },
+  "tui-xa": {
+   "anh": "manh/menam/tui-xa.png",
+   "hop_tren_nguon": [
+    857,
+    633,
+    142,
+    144
+   ]
+  },
+  "go-re": {
+   "anh": "manh/menam/go-re.png",
+   "hop_tren_nguon": [
+    720,
+    756,
+    795,
+    185
+   ]
+  },
+  "chuong": {
+   "anh": "manh/menam/chuong.png",
+   "hop_tren_nguon": [
+    864,
+    89,
+    316,
+    304
+   ]
+  },
+  "tui-gan": {
+   "anh": "manh/menam/tui-gan.png",
+   "hop_tren_nguon": [
+    1103,
+    598,
+    208,
+    206
+   ]
+  },
+  "vuot-sau": {
+   "anh": "manh/menam/vuot-sau.png",
+   "hop_tren_nguon": [
+    1330,
+    549,
+    188,
+    284
+   ]
+  },
+  "vuot-truoc": {
+   "anh": "manh/menam/vuot-truoc.png",
+   "hop_tren_nguon": [
+    660,
+    572,
+    209,
+    279
+   ]
+  },
+  "bao-tu": {
+   "anh": "manh/menam/bao-tu.png",
+   "hop_tren_nguon": [
+    0,
+    0,
+    53,
+    54
+   ],
+   "nguon": "bong bóng bào tử cắt từ art/re-muc/nguon/re-muc-do-vat.png (hiệu ứng, không thuộc ảnh nhân vật)"
+  }
+ },
+ "bu": {
+  "than": {
+   "cach": "mảnh rời căn khớp (dang_ky)",
+   "ty_le": 1.575,
+   "goc": -2.5,
+   "phu_phan_dang_thay": 0.8828,
+   "lan_ra_nen_px": 3934,
+   "so_px_bu": 85616
+  },
+  "mu": {
+   "cach": "chép vân dịch [(0, 150), (-80, 160), (80, 160), (0, 230), (-150, 200)] + inpaint Telea + nét viền tối ở mép vá",
+   "so_px_bu": 39011
+  },
+  "tui-xa": {
+   "cach": "mảnh rời căn khớp (dang_ky)",
+   "ty_le": 0.849,
+   "goc": 14.0,
+   "phu_phan_dang_thay": 0.9777,
+   "lan_ra_nen_px": 353,
+   "so_px_bu": 9206
+  },
+  "go-re": {
+   "cach": "mảnh rời căn khớp (dang_ky)",
+   "ty_le": 1.194,
+   "goc": 0.0,
+   "phu_phan_dang_thay": 0.9806,
+   "lan_ra_nen_px": 6495,
+   "so_px_bu": 2285
+  }
+ },
+ "duong_cat": {
+  "mu_duoi": [
+   [
+    0,
+    640
+   ],
+   [
+    175,
+    640
+   ],
+   [
+    190,
+    560
+   ],
+   [
+    262,
+    520
+   ],
+   [
+    300,
+    500
+   ],
+   [
+    340,
+    488
+   ],
+   [
+    380,
+    470
+   ],
+   [
+    420,
+    455
+   ],
+   [
+    470,
+    455
+   ],
+   [
+    520,
+    470
+   ],
+   [
+    560,
+    485
+   ],
+   [
+    600,
+    500
+   ],
+   [
+    640,
+    520
+   ],
+   [
+    660,
+    560
+   ],
+   [
+    672,
+    640
+   ],
+   [
+    900,
+    640
+   ]
+  ],
+  "chuong": [
+   [
+    355,
+    140
+   ],
+   [
+    360,
+    100
+   ],
+   [
+    400,
+    86
+   ],
+   [
+    450,
+    98
+   ],
+   [
+    458,
+    138
+   ],
+   [
+    500,
+    162
+   ],
+   [
+    560,
+    198
+   ],
+   [
+    600,
+    238
+   ],
+   [
+    650,
+    266
+   ],
+   [
+    672,
+    298
+   ],
+   [
+    670,
+    346
+   ],
+   [
+    642,
+    378
+   ],
+   [
+    590,
+    388
+   ],
+   [
+    528,
+    378
+   ],
+   [
+    494,
+    346
+   ],
+   [
+    470,
+    312
+   ],
+   [
+    430,
+    280
+   ],
+   [
+    400,
+    250
+   ],
+   [
+    385,
+    200
+   ]
+  ],
+  "vuot_sau": [
+   [
+    15,
+    540
+   ],
+   [
+    176,
+    540
+   ],
+   [
+    205,
+    578
+   ],
+   [
+    214,
+    700
+   ],
+   [
+    192,
+    800
+   ],
+   [
+    176,
+    828
+   ],
+   [
+    15,
+    828
+   ]
+  ],
+  "go_tren": [
+   [
+    0,
+    820
+   ],
+   [
+    150,
+    820
+   ],
+   [
+    200,
+    800
+   ],
+   [
+    250,
+    790
+   ],
+   [
+    300,
+    800
+   ],
+   [
+    360,
+    790
+   ],
+   [
+    420,
+    770
+   ],
+   [
+    470,
+    760
+   ],
+   [
+    520,
+    770
+   ],
+   [
+    560,
+    785
+   ],
+   [
+    600,
+    790
+   ],
+   [
+    650,
+    800
+   ],
+   [
+    700,
+    815
+   ],
+   [
+    760,
+    820
+   ],
+   [
+    900,
+    820
+   ]
+  ],
+  "tui_gan": [
+   328,
+   702,
+   100
+  ],
+  "tui_xa": [
+   683,
+   702,
+   72
+  ]
+ }
+}

@@ -291,5 +291,113 @@ QBR.capNhatBoss = function(b,frame,G){
   H.info=b.st+' t'+b.t+' → '+(H.clip?H.clip+' '+Math.round(H.t)+' ms (khung '+khungSo(B,H.clip,H.t)+')':H.k+' (tư thế tự đặt)');
 };
 
+/* =====================================================================================================
+   NHÂN VẬT MỚI (27/10/2026): quái Nấm Mốc ('nam'), Dơi Chuông ('doi'), boss Mẹ Nấm Mốc ('menam').
+   Gói: game/runtime/quai-boss/quai-moi-rig.json + nam/ doi/ menam/ (sinh bởi game/runtime/xuat-quai-moi.py),
+   CÙNG định dạng quai-boss-rig.json → QBR.ve / QBR.mau / QBR.hoa / QBR.hopManh dùng y nguyên cho loại mới.
+   Chỉ THÊM, không đổi gì ở trên: QBR.nap(...) cũ vẫn chạy như trước.
+     await QBR.nap(base,…)                         // (tuỳ chọn) quái chuông gỗ + boss cũ
+     await QBR.napThem(base,'quai-moi-rig.json')  // gộp thêm 3 loại mới vào cùng bộ rig (gọi SAU QBR.nap nếu có cả hai)
+   Ảnh dùng chung (bào tử) chỉ tải + giải mã + cache 1 lần. Ảnh trắng / đen / vàng cache 1 lần mỗi ảnh (nháy do game).
+   ===================================================================================================== */
+QBR.soThem = {};
+QBR.napThem = async function(base, tenJson, tienDo, nhung){
+  const T0=performance.now();
+  let K;
+  if(nhung) K=JSON.parse(JSON.stringify(nhung.json));
+  else { const r=await fetch(base+tenJson,{cache:'no-cache'}); if(!r.ok) throw new Error('lỗi mạng '+r.status+' khi tải '+base+tenJson); K=await r.json(); }
+  const T1=performance.now();
+  if(!J) J={nv:{}, tong:{anh:0,byte_png:0,byte_giai_ma:0}};
+  const theoAnh={};                       // đường dẫn ảnh → danh sách nút dùng ảnh đó
+  for(const nv in K.nv){
+    if(J.nv[nv]) throw new Error('loại '+nv+' đã có trong rig');
+    const N=K.nv[nv];
+    N.idx={}; N.nut_ds.forEach((n,i)=>N.idx[n]=i);
+    N.cha=N.nut_ds.map(n=>N.nut[n].cha===null?-1:N.idx[N.nut[n].cha]);
+    N.cha.forEach((p,i)=>{ if(p>=i) throw new Error('rig '+nv+': nút cha phải đứng trước nút con'); });
+    N.ve=N.thu_tu_ve.map(n=>N.idx[n]);
+    N.nghi=new Float32Array(N.nut_ds.length*NC);
+    N.nut_ds.forEach((n,i)=>{ const o=i*NC; N.nghi[o+3]=1; N.nghi[o+4]=1; N.nghi[o+6]=1; N.nghi[o+7]=(N.nut[n].hien===false)?0:1; });
+    for(const cn in N.clip){ const c=N.clip[cn]; c.F=c.khung.map(k=>{ const a=new Float32Array(k.length*NC); k.forEach((v,i)=>a.set(v,i*NC)); return a; }); }
+    for(const n of N.nut_ds){ const nd=N.nut[n]; if(nd.anh) (theoAnh[nd.anh]=theoAnh[nd.anh]||[]).push(nd); }
+    J.nv[nv]=N;
+  }
+  const ds=Object.keys(theoAnh); let xong=0;
+  const imgs=await Promise.all(ds.map(a=>loadImg(nhung?nhung.anh[a]:base+a).then(im=>{ xong++; if(tienDo) tienDo(xong/ds.length); return im; })));
+  const T2=performance.now();
+  let byteGoc=0, byteCache=0; const bang=[];
+  const tc=document.createElement('canvas'); tc.width=4; tc.height=4; const tg=tc.getContext('2d');
+  ds.forEach((a,i)=>{
+    const im=imgs[i], w=im.naturalWidth, h=im.naturalHeight, n0=theoAnh[a][0];
+    if(w!==n0.co_anh[0]||h!==n0.co_anh[1]) throw new Error(a+' cỡ '+w+'×'+h+' – JSON ghi '+n0.co_anh.join('×'));
+    const tr=boc(im,'#ffffff'), de=boc(im,'#0C0F14'), va=vang(im);
+    for(const nd of theoAnh[a]){ nd.img=im; nd.trang=tr; nd.den=de; nd.vang=va; }
+    tg.drawImage(im,0,0,4,4); tg.drawImage(tr,0,0,4,4); tg.drawImage(de,0,0,4,4); tg.drawImage(va,0,0,4,4);   // đẩy lên GPU trước trận
+    byteGoc+=w*h*4; byteCache+=w*h*4*3; bang.push({anh:a,w,h,byte:w*h*4,so_nut:theoAnh[a].length});
+  });
+  tg.getImageData(0,0,1,1);
+  const T3=performance.now();
+  for(const k in K.tong) J.tong[k]=(J.tong[k]||0)+K.tong[k];
+  return QBR.soThem[tenJson]={ms_json:+(T1-T0).toFixed(1), ms_anh_va_decode:+(T2-T1).toFixed(1), ms_cache_va_ve_thu:+(T3-T2).toFixed(1), ms_tong:+(T3-T0).toFixed(1),
+    so_anh_png:ds.length, so_anh_cache:ds.length*3, byte_png:K.tong.byte_png, byte_giai_ma_png:byteGoc, byte_giai_ma_cache:byteCache,
+    mb_giai_ma_tong:+((byteGoc+byteCache)/1048576).toFixed(2), loai:Object.keys(K.nv), bang};
+};
+
+/* ---- NẤM MỐC: dùng NGUYÊN máy trạng thái quái chuông gỗ (updateQuai) – clip cùng nhịp:
+   walk → 'di' · wind 30 → 'dam' 0–500 · strike 16 → 500–767 (khung chạm 18–20) · rec 26 → 767–1200 · hit 16 → 'trung' · die → 'chet' */
+QBR.capNhatNam = function(q,frame){
+  const H=q.H||(q.H=Hoat('nam'));
+  switch(q.st){
+    case 'walk':   datH(H,frame,'di','di',null,q.at*D,D,6); break;
+    case 'wind':   datH(H,frame,'dam','dam',null,q.t*D,D,5); break;
+    case 'strike': datH(H,frame,'dam','dam',null,500+q.t*D,D,5); break;
+    case 'rec':    datH(H,frame,'dam','dam',null,500+16*D+q.t*D,D,5); break;
+    case 'hit':    datH(H,frame,'trung','trung',null,q.t*D,D,3); break;
+    case 'die':    datH(H,frame,'chet','chet',null,q.t*D,D,2); break;
+    case 'sleep':  datH(H,frame,'ngu','dung',null,q.at*D*0.5,D*0.5,8); break;
+    default:       datH(H,frame,'dung','dung',null,q.at*D,D,6);
+  }
+  H.info=q.st+' t'+q.t+' → '+H.clip+' '+Math.round(H.t)+' ms (khung '+khungSo('nam',H.clip,H.t)+')';
+};
+/* ---- DƠI CHUÔNG (trạng thái ĐỀ XUẤT, xem art/nhan-vat/doi-chuong/GHI-CHU.md):
+   fly → 'bay' · diveWind (27 bước) → 'lao' 0–450 · dive → 'lao' 450 + t (giữ dáng chúi tới 950 dù game lao lâu hơn)
+   · diveRec → 'lao' 950–1400 · hit → 'trung' · fall (game cho rơi) → 'chet-roi' · dead (sự kiện chạm đất) → 'chet-vo' */
+QBR.capNhatDoi = function(d,frame){
+  const H=d.H||(d.H=Hoat('doi'));
+  switch(d.st){
+    case 'diveWind': datH(H,frame,'lao','lao',null,d.t*D,D,4); break;
+    case 'dive':     datH(H,frame,'lao','lao',null,Math.min(450+d.t*D,940),D,4); break;
+    case 'diveRec':  datH(H,frame,'lao','lao',null,950+d.t*D,D,4); break;
+    case 'hit':      datH(H,frame,'trung','trung',null,d.t*D,D,2); break;
+    case 'fall':     datH(H,frame,'roi','chet-roi',null,d.at*D,D,3); break;
+    case 'dead':     datH(H,frame,'vo','chet-vo',null,d.t*D,D,1); break;
+    default:         datH(H,frame,'bay','bay',null,d.at*D,D,6);
+  }
+  H.info=d.st+' t'+d.t+' → '+H.clip+' '+Math.round(H.t)+' ms (khung '+khungSo('doi',H.clip,H.t)+')';
+};
+/* ---- MẸ NẤM MỐC (trạng thái ĐỀ XUẤT, xem art/re-muc/quai-boss/GHI-CHU.md):
+   idle/walk → 'dung' · sweepPrep 27 → 'quet' 0–450 · sweep 14 → 450–683 · sweepRec → 683–1300
+   clawPrep 30 → 'dap' 0–500 · clawSlam 5 → 500–583 (sự kiện chạm đất ở 583) · clawRec → 583–1500
+   sporePrep 30 → 'phun' 0–500 (sự kiện nổ ở 500) · sporeBurst 5 → 500–583 · sporeRec → 583–1300
+   hit (chỉ khi boss đứng yên – trúng đòn KHÔNG ngắt đòn đang đánh) → 'trung' · die → 'chet' */
+QBR.capNhatMeNam = function(b,frame){
+  const H=b.H||(b.H=Hoat('menam')), M='menam';
+  switch(b.st){
+    case 'sweepPrep':  datH(H,frame,'quet','quet',null,b.t*D,D,6); break;
+    case 'sweep':      datH(H,frame,'quet','quet',null,450+b.t*D,D,6); break;
+    case 'sweepRec':   datH(H,frame,'quet','quet',null,450+14*D+b.t*D,D,6); break;
+    case 'clawPrep':   datH(H,frame,'dap','dap',null,b.t*D,D,6); break;
+    case 'clawSlam':   datH(H,frame,'dap','dap',null,500+b.t*D,D,6); break;
+    case 'clawRec':    datH(H,frame,'dap','dap',null,500+5*D+b.t*D,D,6); break;
+    case 'sporePrep':  datH(H,frame,'phun','phun',null,b.t*D,D,6); break;
+    case 'sporeBurst': datH(H,frame,'phun','phun',null,500+b.t*D,D,6); break;
+    case 'sporeRec':   datH(H,frame,'phun','phun',null,500+5*D+b.t*D,D,6); break;
+    case 'hit':        datH(H,frame,'trung','trung',null,b.t*D,D,3); break;
+    case 'die':        datH(H,frame,'chet','chet',null,b.t*D,D,4); break;
+    default:           datH(H,frame,'dung','dung',null,b.at*D,D,10);
+  }
+  H.info=b.st+' t'+b.t+' → '+H.clip+' '+Math.round(H.t)+' ms (khung '+khungSo(M,H.clip,H.t)+')';
+};
+
 window.QBR = QBR;
 })();

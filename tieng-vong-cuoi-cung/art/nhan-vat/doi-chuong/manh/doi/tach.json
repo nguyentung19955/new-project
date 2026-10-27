@@ -1,0 +1,134 @@
+{
+ "nguon": "quai-doi-chuong.png",
+ "lat_ngang": true,
+ "rong_nguon": 1254,
+ "ghi_chu": "toạ độ trên ảnh nguồn ĐÃ LẬT NGANG (x' = W − x); mảnh cắt từ bản nguyên, phần khuất bù theo \"bu\"",
+ "manh": {
+  "than": {
+   "anh": "manh/doi/than.png",
+   "hop_tren_nguon": [
+    398,
+    143,
+    425,
+    512
+   ]
+  },
+  "qua-lac": {
+   "anh": "manh/doi/qua-lac.png",
+   "hop_tren_nguon": [
+    593,
+    554,
+    151,
+    199
+   ]
+  },
+  "canh-sau": {
+   "anh": "manh/doi/canh-sau.png",
+   "hop_tren_nguon": [
+    738,
+    198,
+    369,
+    293
+   ]
+  },
+  "canh-truoc": {
+   "anh": "manh/doi/canh-truoc.png",
+   "hop_tren_nguon": [
+    147,
+    283,
+    269,
+    288
+   ]
+  },
+  "than-phai": {
+   "anh": "manh/doi/than-phai.png",
+   "hop_tren_nguon": [
+    662,
+    312,
+    161,
+    329
+   ]
+  },
+  "than-trai": {
+   "anh": "manh/doi/than-trai.png",
+   "hop_tren_nguon": [
+    398,
+    143,
+    330,
+    512
+   ]
+  }
+ },
+ "bu": {
+  "than": {
+   "cach": "inpaint Telea + nét viền tối ở mép vá",
+   "so_px_bu": 4654
+  }
+ },
+ "duong_cat": {
+  "qua_lac": [
+   [
+    600,
+    558
+   ],
+   [
+    654,
+    558
+   ],
+   [
+    636,
+    632
+   ],
+   [
+    690,
+    640
+   ],
+   [
+    700,
+    760
+   ],
+   [
+    500,
+    760
+   ],
+   [
+    510,
+    640
+   ],
+   [
+    582,
+    632
+   ]
+  ],
+  "che_doi_than": [
+   [
+    560,
+    120
+   ],
+   [
+    555,
+    250
+   ],
+   [
+    530,
+    330
+   ],
+   [
+    560,
+    400
+   ],
+   [
+    545,
+    470
+   ],
+   [
+    570,
+    560
+   ],
+   [
+    600,
+    680
+   ]
+  ]
+ }
+}

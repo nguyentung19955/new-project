@@ -1,0 +1,4726 @@
+{
+ "ten": "Dơi Chuông",
+ "nv": "doi",
+ "phong_cach": "tay chân rời (One Mage Army) – mảnh tách từ ảnh nguồn, không gen ảnh",
+ "nguon": "code/nguon/quai-doi-chuong.png",
+ "quy_uoc": {
+  "don_vi": "px của ảnh nguồn (code/nguon/*.png) ĐÃ LẬT NGANG; nhân ty_le.px_nguon_sang_px_logic ra px logic game",
+  "truc": "gốc trái-trên, x sang phải, y xuống",
+  "goc": "độ; dương = thuận chiều kim đồng hồ trên màn hình (ctx.rotate). Nhân vật quay mặt sang TRÁI.",
+  "bien_doi": "W = W_cha · T(diem_gan + dich) · R(goc_nghi + goc) · S(ty); ảnh mảnh vẽ với pivot trùng gốc nút",
+  "tu_the": "mỗi nút: dich [dx,dy] (px nguồn, hệ cha), goc, ty [sx,sy], toi (0..1 tối), mo (0..1 đục), hien. KHÔNG có kênh nháy trắng: game tự nháy (ảnh trắng cache sẵn trong runtime).",
+  "thu_tu_ve": "phần tử đầu vẽ trước (nằm sau cùng)",
+  "neo_dat": "nút \"goc\" = điểm neo (giữa đáy hitbox: mặt đất cho Nấm / Mẹ Nấm, đáy quả lắc cho Dơi); không dịch",
+  "hien": "cờ bật/tắt mảnh: ĐỔI BẬC theo khung, không nội suy (thân chẻ đôi của Dơi, bào tử)"
+ },
+ "ty_le": {
+  "px_nguon_sang_px_logic": 0.093178,
+  "cao_dang_nghi_px_nguon": 601.0,
+  "cao_dang_nghi_px_logic": 56.0,
+  "rong_dang_nghi_px_logic": 88.5,
+  "so_voi_Lam": 0.5,
+  "ly_do": "doi: 56 px logic từ đỉnh quai chuông tới đáy quả lắc (≈ ½ Lam). Quái BAY: điểm neo = đáy quả lắc, giữa trục chuông (= giữa đáy hitbox, cùng quy ước \"neo = giữa đáy hitbox\" của quái/boss cũ). Khi chết rơi xuống, game đặt neo trên mặt đất → clip chết-vỡ nằm đúng đất."
+ },
+ "rig": {
+  "nut": {
+   "goc": {
+    "cha": null,
+    "diem_gan": [
+     612.0,
+     748.0
+    ],
+    "goc_nghi": 0.0
+   },
+   "than": {
+    "cha": "goc",
+    "diem_gan": [
+     0.0,
+     -328.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/than.png",
+    "pivot": [
+     214.0,
+     277.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     612.0,
+     420.0
+    ]
+   },
+   "qua-lac": {
+    "cha": "than",
+    "diem_gan": [
+     14.0,
+     142.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/qua-lac.png",
+    "pivot": [
+     33.0,
+     8.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     626.0,
+     562.0
+    ]
+   },
+   "canh-truoc": {
+    "cha": "than",
+    "diem_gan": [
+     -224.0,
+     -20.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/canh-truoc.png",
+    "pivot": [
+     241.0,
+     117.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     388.0,
+     400.0
+    ]
+   },
+   "canh-sau": {
+    "cha": "than",
+    "diem_gan": [
+     150.0,
+     -36.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/canh-sau.png",
+    "pivot": [
+     24.0,
+     186.0
+    ],
+    "hien": true,
+    "pivot_tren_nguon": [
+     762.0,
+     384.0
+    ]
+   },
+   "than-trai": {
+    "cha": "than",
+    "diem_gan": [
+     -207.5,
+     207.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/than-trai.png",
+    "pivot": [
+     6.5,
+     484.0
+    ],
+    "hien": false,
+    "pivot_tren_nguon": [
+     404.5,
+     627.0
+    ]
+   },
+   "than-phai": {
+    "cha": "than",
+    "diem_gan": [
+     194.5,
+     142.0
+    ],
+    "goc_nghi": 0.0,
+    "anh": "manh/doi/than-phai.png",
+    "pivot": [
+     144.5,
+     250.0
+    ],
+    "hien": false,
+    "pivot_tren_nguon": [
+     806.5,
+     562.0
+    ]
+   }
+  },
+  "thu_tu_ve": [
+   "canh-sau",
+   "than",
+   "than-phai",
+   "than-trai",
+   "qua-lac",
+   "canh-truoc"
+  ],
+  "mat_dat_y": 748.0,
+  "goc_the_gioi": [
+   612.0,
+   748.0
+  ]
+ },
+ "huong": "quay TRÁI (ảnh nguồn nhìn phải đã lật); quay phải: lật ngang quanh điểm neo",
+ "clip": {
+  "bay": {
+   "ten": "bay",
+   "ms": 400,
+   "buoc_ms": 33.3333,
+   "so_khung": 12,
+   "lap": true,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "canh-len",
+     0,
+     100
+    ],
+    [
+     "dap-xuong",
+     100,
+     250
+    ],
+    [
+     "nang-len",
+     250,
+     400
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "hop_don": null,
+   "ghi_chu": "cánh trước: dáng nghỉ → giơ lên 18° → đập xuống −42° (co ngắn 0,8× như cánh quay về phía người xem) → về; cánh sau ngược dấu, trễ 20 ms; thân nhô lên khi cánh đập xuống; quả lắc lắc trễ nhịp ±7°. Qua đúng dáng nghỉ ở t = 0.",
+   "kenh_moc": {
+    "canh-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.216
+      ],
+      [
+       100.0,
+       18.0,
+       0.0
+      ],
+      [
+       250.0,
+       -42.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-truoc.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0
+      ],
+      [
+       100.0,
+       1.0,
+       0.0
+      ],
+      [
+       250.0,
+       0.8,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-sau.goc": {
+     "moc": [
+      [
+       20.0,
+       0.0,
+       -0.216
+      ],
+      [
+       120.0,
+       -18.0,
+       0.0
+      ],
+      [
+       270.0,
+       42.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-sau.sx": {
+     "moc": [
+      [
+       20.0,
+       1.0,
+       0.0
+      ],
+      [
+       120.0,
+       1.0,
+       0.0
+      ],
+      [
+       270.0,
+       0.82,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.y": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.015
+      ],
+      [
+       130.0,
+       1.6,
+       0.0
+      ],
+      [
+       290.0,
+       -2.2,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.017
+      ],
+      [
+       130.0,
+       2.0,
+       0.0
+      ],
+      [
+       290.0,
+       -2.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.067
+      ],
+      [
+       180.0,
+       7.0,
+       0.0
+      ],
+      [
+       360.0,
+       -5.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 400.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "canh-sau": {
+       "goc": 5.2857,
+       "ty": [
+        0.991,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        5.842
+       ],
+       "goc": 0.6349
+      },
+      "qua-lac": {
+       "goc": 1.4738
+      },
+      "canh-truoc": {
+       "goc": 7.8667
+      },
+      "canh-sau": {
+       "goc": -3.0379
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        11.521
+       ],
+       "goc": 1.3028
+      },
+      "qua-lac": {
+       "goc": 2.6311
+      },
+      "canh-truoc": {
+       "goc": 14.9333
+      },
+      "canh-sau": {
+       "goc": -10.9685
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        15.727
+       ],
+       "goc": 1.8186
+      },
+      "qua-lac": {
+       "goc": 3.5811
+      },
+      "canh-truoc": {
+       "goc": 18.0
+      },
+      "canh-sau": {
+       "goc": -16.8192
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        17.119
+       ],
+       "goc": 1.9949
+      },
+      "qua-lac": {
+       "goc": 4.4359
+      },
+      "canh-truoc": {
+       "goc": 10.428,
+       "ty": [
+        0.975,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -16.6621,
+       "ty": [
+        0.996,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        11.728
+       ],
+       "goc": 1.4661
+      },
+      "qua-lac": {
+       "goc": 5.4854
+      },
+      "canh-truoc": {
+       "goc": -7.0206,
+       "ty": [
+        0.917,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -4.1913,
+       "ty": [
+        0.959,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        0.584
+       ],
+       "goc": 0.373
+      },
+      "qua-lac": {
+       "goc": 6.2154
+      },
+      "canh-truoc": {
+       "goc": -26.4444,
+       "ty": [
+        0.852,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 14.9956,
+       "ty": [
+        0.901,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -11.888
+       ],
+       "goc": -0.8502
+      },
+      "qua-lac": {
+       "goc": 5.314
+      },
+      "canh-truoc": {
+       "goc": -39.9424,
+       "ty": [
+        0.807,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 32.9972,
+       "ty": [
+        0.847,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -21.262
+       ],
+       "goc": -1.7696
+      },
+      "qua-lac": {
+       "goc": 3.1028
+      },
+      "canh-truoc": {
+       "goc": -40.9152,
+       "ty": [
+        0.807,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 41.9124,
+       "ty": [
+        0.82,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -23.197
+       ],
+       "goc": -1.9672
+      },
+      "qua-lac": {
+       "goc": 0.0783
+      },
+      "canh-truoc": {
+       "goc": -33.5111,
+       "ty": [
+        0.852,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 38.6688,
+       "ty": [
+        0.839,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -17.208
+       ],
+       "goc": -1.4862
+      },
+      "qua-lac": {
+       "goc": -2.8017
+      },
+      "canh-truoc": {
+       "goc": -21.9588,
+       "ty": [
+        0.917,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 29.1977,
+       "ty": [
+        0.889,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -7.856
+       ],
+       "goc": -0.7102
+      },
+      "qua-lac": {
+       "goc": -3.9813
+      },
+      "canh-truoc": {
+       "goc": -9.656,
+       "ty": [
+        0.975,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 16.9375,
+       "ty": [
+        0.948,
+        1.0
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "lao": {
+   "ten": "lao xuống",
+   "ms": 1400,
+   "buoc_ms": 33.3333,
+   "so_khung": 42,
+   "lap": false,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "chuan-bi",
+     0,
+     450
+    ],
+    [
+     "lao",
+     450,
+     950
+    ],
+    [
+     "hoi",
+     950,
+     1400
+    ]
+   ],
+   "khung_cham": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+   ],
+   "cua_so_cham_ms": [
+    500,
+    900
+   ],
+   "hop_don": {
+    "dung_hitbox_than": true,
+    "ghi_chu": "đề xuất: lúc lao dùng chính hitbox thân 44×44 gây sát thương"
+   },
+   "ghi_chu": "chuẩn bị (27 bước): bốc lên 6 px, ngửa 22°, hai cánh giơ cao và rung, quả lắc văng ra sau → lao: chúi mũi −35°, cụp cánh (giơ thẳng ra sau, co 0,7×), quả lắc kéo ngược lên sau; hộp lao bật 500–900 ms (game dời dơi chéo xuống) → hồi: ngóc lên 15°, xoè cánh đập một nhịp, về dáng bay.",
+   "kenh_moc": {
+    "than.y": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       350.0,
+       -6.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       -6.0,
+       0.0,
+       0.0
+      ],
+      [
+       520.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       950.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       1100.0,
+       -3.0,
+       0.0,
+       0.0
+      ],
+      [
+       1400.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       22.0,
+       0.02095,
+       0.02095
+      ],
+      [
+       450.0,
+       24.0,
+       0.0,
+       0.0
+      ],
+      [
+       530.0,
+       -35.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       -35.0,
+       0.0,
+       0.0
+      ],
+      [
+       1050.0,
+       15.0,
+       0.0,
+       0.0
+      ],
+      [
+       1250.0,
+       -3.0,
+       0.0,
+       0.0
+      ],
+      [
+       1400.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       3.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       3.0,
+       0.0,
+       0.0
+      ],
+      [
+       530.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       35.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       28.0,
+       0.0,
+       0.0
+      ],
+      [
+       350.0,
+       38.0,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       30.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       40.0,
+       0.2549,
+       0.2549
+      ],
+      [
+       530.0,
+       70.0,
+       0.01347,
+       0.01347
+      ],
+      [
+       900.0,
+       72.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       20.0,
+       -0.51011,
+       -0.51011
+      ],
+      [
+       1120.0,
+       -40.0,
+       0.0,
+       0.0
+      ],
+      [
+       1250.0,
+       10.0,
+       0.0,
+       0.0
+      ],
+      [
+       1400.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       530.0,
+       0.7,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       0.7,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       1120.0,
+       0.82,
+       0.0,
+       0.0
+      ],
+      [
+       1250.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       -35.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       -28.0,
+       0.0,
+       0.0
+      ],
+      [
+       350.0,
+       -38.0,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       -30.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       -40.0,
+       -0.2549,
+       -0.2549
+      ],
+      [
+       530.0,
+       -70.0,
+       -0.01347,
+       -0.01347
+      ],
+      [
+       900.0,
+       -72.0,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       -20.0,
+       0.47241,
+       0.47241
+      ],
+      [
+       1140.0,
+       40.0,
+       0.0,
+       0.0
+      ],
+      [
+       1270.0,
+       -10.0,
+       0.0,
+       0.0
+      ],
+      [
+       1400.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.sx": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       530.0,
+       0.72,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       0.72,
+       0.0,
+       0.0
+      ],
+      [
+       1000.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       1140.0,
+       0.84,
+       0.0,
+       0.0
+      ],
+      [
+       1270.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       25.0,
+       0.0,
+       0.0
+      ],
+      [
+       450.0,
+       18.0,
+       0.0,
+       0.0
+      ],
+      [
+       530.0,
+       50.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       45.0,
+       -0.03021,
+       -0.03021
+      ],
+      [
+       1050.0,
+       -20.0,
+       0.0,
+       0.0
+      ],
+      [
+       1200.0,
+       8.0,
+       0.0,
+       0.0
+      ],
+      [
+       1400.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {}
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        1.104,
+        -1.641
+       ],
+       "goc": 0.6855
+      },
+      "qua-lac": {
+       "goc": 0.1719
+      },
+      "canh-truoc": {
+       "goc": 1.7007
+      },
+      "canh-sau": {
+       "goc": -1.7007
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        4.063,
+        -6.119
+       ],
+       "goc": 2.535
+      },
+      "qua-lac": {
+       "goc": 0.62
+      },
+      "canh-truoc": {
+       "goc": 6.1393
+      },
+      "canh-sau": {
+       "goc": -6.1393
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        8.347,
+        -12.766
+       ],
+       "goc": 5.2381
+      },
+      "qua-lac": {
+       "goc": 1.2434
+      },
+      "canh-truoc": {
+       "goc": 12.32
+      },
+      "canh-sau": {
+       "goc": -12.32
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        13.426,
+        -20.915
+       ],
+       "goc": 8.4844
+      },
+      "qua-lac": {
+       "goc": 1.9408
+      },
+      "canh-truoc": {
+       "goc": 19.2474
+      },
+      "canh-sau": {
+       "goc": -19.2474
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        18.77,
+        -29.898
+       ],
+       "goc": 11.9636
+      },
+      "qua-lac": {
+       "goc": 2.6112
+      },
+      "canh-truoc": {
+       "goc": 25.9259
+      },
+      "canh-sau": {
+       "goc": -25.9259
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        23.849,
+        -39.049
+       ],
+       "goc": 15.3651
+      },
+      "qua-lac": {
+       "goc": 3.1534
+      },
+      "canh-truoc": {
+       "goc": 31.36
+      },
+      "canh-sau": {
+       "goc": -31.36
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        28.133,
+        -47.698
+       ],
+       "goc": 18.3786
+      },
+      "qua-lac": {
+       "goc": 3.4664
+      },
+      "canh-truoc": {
+       "goc": 34.5541
+      },
+      "canh-sau": {
+       "goc": -34.5541
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        31.092,
+        -55.18
+       ],
+       "goc": 20.6937
+      },
+      "qua-lac": {
+       "goc": 3.449
+      },
+      "canh-truoc": {
+       "goc": 33.1852
+      },
+      "canh-sau": {
+       "goc": -33.1852
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.196,
+        -60.826
+       ],
+       "goc": 22.0
+      },
+      "qua-lac": {
+       "goc": 3.0
+      },
+      "canh-truoc": {
+       "goc": 28.0
+      },
+      "canh-sau": {
+       "goc": -28.0
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.196,
+        -63.969
+       ],
+       "goc": 22.6749
+      },
+      "qua-lac": {
+       "goc": 1.4417
+      },
+      "canh-truoc": {
+       "goc": 35.4074
+      },
+      "canh-sau": {
+       "goc": -35.4074
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.196,
+        -64.393
+       ],
+       "goc": 23.2651
+      },
+      "qua-lac": {
+       "goc": -1.1842
+      },
+      "canh-truoc": {
+       "goc": 35.9259
+      },
+      "canh-sau": {
+       "goc": -35.9259
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.196,
+        -64.393
+       ],
+       "goc": 23.7143
+      },
+      "qua-lac": {
+       "goc": -3.8995
+      },
+      "canh-truoc": {
+       "goc": 30.0
+      },
+      "canh-sau": {
+       "goc": -30.0
+      }
+     }
+    },
+    {
+     "t_ms": 433.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.196,
+        -64.393
+       ],
+       "goc": 23.9659
+      },
+      "qua-lac": {
+       "goc": -5.7258
+      },
+      "canh-truoc": {
+       "goc": 35.5192
+      },
+      "canh-sau": {
+       "goc": -35.5192
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        28.586,
+        -55.18
+       ],
+       "goc": 17.3847
+      },
+      "qua-lac": {
+       "goc": 4.2033
+      },
+      "canh-truoc": {
+       "goc": 45.9893,
+       "ty": [
+        0.966,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -45.9893,
+       "ty": [
+        0.969,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 500.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        10.187,
+        -12.766
+       ],
+       "goc": -16.332
+      },
+      "qua-lac": {
+       "goc": 56.207
+      },
+      "canh-truoc": {
+       "goc": 62.1423,
+       "ty": [
+        0.795,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -62.1423,
+       "ty": [
+        0.809,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.9997
+      },
+      "canh-truoc": {
+       "goc": 70.0446,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -70.0446,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 566.667,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.9613
+      },
+      "canh-truoc": {
+       "goc": 70.4558,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -70.4558,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 600.0,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.8552
+      },
+      "canh-truoc": {
+       "goc": 70.8075,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -70.8075,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 633.333,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.6763
+      },
+      "canh-truoc": {
+       "goc": 71.1038,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.1038,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 666.667,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.4192
+      },
+      "canh-truoc": {
+       "goc": 71.349,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.349,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 700.0,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 84.079
+      },
+      "canh-truoc": {
+       "goc": 71.5476,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.5476,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 733.333,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 83.6503
+      },
+      "canh-truoc": {
+       "goc": 71.7038,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.7038,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 766.667,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 83.1281
+      },
+      "canh-truoc": {
+       "goc": 71.8219,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.8219,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 800.0,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 82.5071
+      },
+      "canh-truoc": {
+       "goc": 71.9063,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.9063,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 833.333,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 81.7822
+      },
+      "canh-truoc": {
+       "goc": 71.9612,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.9612,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 866.667,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 80.9482
+      },
+      "canh-truoc": {
+       "goc": 71.991,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -71.991,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 900.0,
+     "tu_the": {
+      "than": {
+       "goc": -35.0
+      },
+      "qua-lac": {
+       "goc": 80.0
+      },
+      "canh-truoc": {
+       "goc": 72.0,
+       "ty": [
+        0.7,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -72.0,
+       "ty": [
+        0.72,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 933.333,
+     "tu_the": {
+      "than": {
+       "goc": -28.69
+      },
+      "qua-lac": {
+       "goc": 64.8777
+      },
+      "canh-truoc": {
+       "goc": 62.2971,
+       "ty": [
+        0.778,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -62.0178,
+       "ty": [
+        0.793,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 966.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -1.104
+       ],
+       "goc": -14.1495
+      },
+      "qua-lac": {
+       "goc": 31.4222
+      },
+      "canh-truoc": {
+       "goc": 41.0386,
+       "ty": [
+        0.922,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -40.4801,
+       "ty": [
+        0.927,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1000.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -8.347
+       ],
+       "goc": 2.037
+      },
+      "qua-lac": {
+       "goc": -5.5209
+      },
+      "canh-truoc": {
+       "goc": 20.0
+      },
+      "canh-sau": {
+       "goc": -20.0
+      }
+     }
+    },
+    {
+     "t_ms": 1033.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -18.77
+       ],
+       "goc": 13.2853
+      },
+      "qua-lac": {
+       "goc": -31.106
+      },
+      "canh-truoc": {
+       "goc": -0.186,
+       "ty": [
+        0.966,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -2.2745,
+       "ty": [
+        0.977,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1066.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -28.133
+       ],
+       "goc": 14.6458
+      },
+      "qua-lac": {
+       "goc": -33.6856
+      },
+      "canh-truoc": {
+       "goc": -21.6969,
+       "ty": [
+        0.895,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 16.5,
+       "ty": [
+        0.926,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -32.196
+       ],
+       "goc": 12.1875
+      },
+      "qua-lac": {
+       "goc": -24.9282
+      },
+      "canh-truoc": {
+       "goc": -36.9725,
+       "ty": [
+        0.833,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 31.9614,
+       "ty": [
+        0.872,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -31.092
+       ],
+       "goc": 8.2292
+      },
+      "qua-lac": {
+       "goc": -11.9054
+      },
+      "canh-truoc": {
+       "goc": -38.53,
+       "ty": [
+        0.825,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 39.7476,
+       "ty": [
+        0.841,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -28.133
+       ],
+       "goc": 3.7708
+      },
+      "qua-lac": {
+       "goc": 0.6956
+      },
+      "canh-truoc": {
+       "goc": -25.2964,
+       "ty": [
+        0.873,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 34.5515,
+       "ty": [
+        0.857,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -23.849
+       ],
+       "goc": -0.1875
+      },
+      "qua-lac": {
+       "goc": 8.1875
+      },
+      "canh-truoc": {
+       "goc": -6.4998,
+       "ty": [
+        0.941,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 17.8789,
+       "ty": [
+        0.911,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -18.77
+       ],
+       "goc": -2.6458
+      },
+      "qua-lac": {
+       "goc": 10.0532
+      },
+      "canh-truoc": {
+       "goc": 7.7452,
+       "ty": [
+        0.992,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": -0.3109,
+       "ty": [
+        0.969,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 1266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -13.426
+       ],
+       "goc": -2.8971
+      },
+      "qua-lac": {
+       "goc": 8.823
+      },
+      "canh-truoc": {
+       "goc": 9.6571
+      },
+      "canh-sau": {
+       "goc": -9.9031
+      }
+     }
+    },
+    {
+     "t_ms": 1300.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -8.347
+       ],
+       "goc": -2.2222
+      },
+      "qua-lac": {
+       "goc": 6.2222
+      },
+      "canh-truoc": {
+       "goc": 7.4074
+      },
+      "canh-sau": {
+       "goc": -8.6482
+      }
+     }
+    },
+    {
+     "t_ms": 1333.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -4.063
+       ],
+       "goc": -1.251
+      },
+      "qua-lac": {
+       "goc": 3.3251
+      },
+      "canh-truoc": {
+       "goc": 4.1701
+      },
+      "canh-sau": {
+       "goc": -5.1923
+      }
+     }
+    },
+    {
+     "t_ms": 1366.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -1.104
+       ],
+       "goc": -0.3786
+      },
+      "qua-lac": {
+       "goc": 0.9712
+      },
+      "canh-truoc": {
+       "goc": 1.262
+      },
+      "canh-sau": {
+       "goc": -1.6352
+      }
+     }
+    }
+   ]
+  },
+  "trung": {
+   "ten": "trúng đòn",
+   "ms": 266.667,
+   "buoc_ms": 33.3333,
+   "so_khung": 8,
+   "lap": false,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "giat",
+     0,
+     67
+    ],
+    [
+     "hoi",
+     67,
+     266.67
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "hop_don": null,
+   "ghi_chu": "giật lùi 3 px, ngửa 18°, hai cánh xoè bật lên, quả lắc văng; không nháy trắng (game tự nháy).",
+   "kenh_moc": {
+    "than.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       3.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       18.0,
+       0.0,
+       0.0
+      ],
+      [
+       167.0,
+       5.0,
+       -0.07238,
+       -0.07238
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       28.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.goc": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       -28.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       67.0,
+       30.0,
+       0.0,
+       0.0
+      ],
+      [
+       167.0,
+       -12.0,
+       0.0,
+       0.0
+      ],
+      [
+       266.67,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {}
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        15.978,
+        0.0
+       ],
+       "goc": 8.9328
+      },
+      "qua-lac": {
+       "goc": 5.9552
+      },
+      "canh-truoc": {
+       "goc": 13.8955
+      },
+      "canh-sau": {
+       "goc": -13.8955
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        32.194,
+        0.0
+       ],
+       "goc": 17.9987
+      },
+      "qua-lac": {
+       "goc": 11.9991
+      },
+      "canh-truoc": {
+       "goc": 27.9979
+      },
+      "canh-sau": {
+       "goc": -27.9979
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        29.849,
+        0.0
+       ],
+       "goc": 15.2154
+      },
+      "qua-lac": {
+       "goc": 4.0819
+      },
+      "canh-truoc": {
+       "goc": 25.9583
+      },
+      "canh-sau": {
+       "goc": -25.9583
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        23.897,
+        0.0
+       ],
+       "goc": 9.5005
+      },
+      "qua-lac": {
+       "goc": -10.4245
+      },
+      "canh-truoc": {
+       "goc": 20.7823
+      },
+      "canh-sau": {
+       "goc": -20.7823
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        16.139,
+        0.0
+       ],
+       "goc": 5.0244
+      },
+      "qua-lac": {
+       "goc": -17.023
+      },
+      "canh-truoc": {
+       "goc": 14.0351
+      },
+      "canh-sau": {
+       "goc": -14.0351
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        8.371,
+        0.0
+       ],
+       "goc": 2.6499
+      },
+      "qua-lac": {
+       "goc": -11.5744
+      },
+      "canh-truoc": {
+       "goc": 7.28
+      },
+      "canh-sau": {
+       "goc": -7.28
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        2.392,
+        0.0
+       ],
+       "goc": 0.7667
+      },
+      "qua-lac": {
+       "goc": -3.8957
+      },
+      "canh-truoc": {
+       "goc": 2.0806
+      },
+      "canh-sau": {
+       "goc": -2.0806
+      }
+     }
+    }
+   ]
+  },
+  "chet-roi": {
+   "ten": "chết – rơi",
+   "ms": 300,
+   "buoc_ms": 33.3333,
+   "so_khung": 9,
+   "lap": true,
+   "giu_khung_cuoi": false,
+   "pha": [
+    [
+     "lon-nhao",
+     0,
+     300
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "hop_don": null,
+   "ghi_chu": "lộn nhào khi rơi: thân lắc 20°↔45°, cánh rũ xuống đập yếu, quả lắc văng ngược. Game dời dơi rơi tới đất rồi chuyển sang chet-vo.",
+   "kenh_moc": {
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       20.0,
+       0.0
+      ],
+      [
+       150.0,
+       45.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "than.y": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       150.0,
+       -2.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       -45.0,
+       0.0
+      ],
+      [
+       150.0,
+       -25.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-truoc.sx": {
+     "moc": [
+      [
+       0.0,
+       0.85,
+       0.0
+      ],
+      [
+       150.0,
+       0.95,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-sau.goc": {
+     "moc": [
+      [
+       40.0,
+       50.0,
+       0.0
+      ],
+      [
+       190.0,
+       30.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "canh-sau.sx": {
+     "moc": [
+      [
+       40.0,
+       0.85,
+       0.0
+      ],
+      [
+       190.0,
+       0.95,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       -30.0,
+       0.0
+      ],
+      [
+       150.0,
+       20.0,
+       0.0
+      ]
+     ],
+     "chu_ky": 300.0,
+     "ghi_chu": "[thời điểm (phần chu kỳ), giá trị, tiếp tuyến (giá trị / 1 chu kỳ)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "than": {
+       "goc": 20.0
+      },
+      "qua-lac": {
+       "goc": -50.0
+      },
+      "canh-truoc": {
+       "goc": -45.0,
+       "ty": [
+        0.85,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 46.4919,
+       "ty": [
+        0.868,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.709
+       ],
+       "goc": 23.155
+      },
+      "qua-lac": {
+       "goc": -46.845
+      },
+      "canh-truoc": {
+       "goc": -42.476,
+       "ty": [
+        0.863,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 49.885,
+       "ty": [
+        0.851,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -8.951
+       ],
+       "goc": 30.4252
+      },
+      "qua-lac": {
+       "goc": -39.5748
+      },
+      "canh-truoc": {
+       "goc": -36.6598,
+       "ty": [
+        0.892,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 48.3284,
+       "ty": [
+        0.858,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -15.899
+       ],
+       "goc": 38.5185
+      },
+      "qua-lac": {
+       "goc": -31.4815
+      },
+      "canh-truoc": {
+       "goc": -30.1852,
+       "ty": [
+        0.924,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 42.96,
+       "ty": [
+        0.885,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -20.728
+       ],
+       "goc": 44.1427
+      },
+      "qua-lac": {
+       "goc": -25.8573
+      },
+      "canh-truoc": {
+       "goc": -25.6859,
+       "ty": [
+        0.947,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 36.4064,
+       "ty": [
+        0.918,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -20.728
+       ],
+       "goc": 44.1427
+      },
+      "qua-lac": {
+       "goc": -25.8573
+      },
+      "canh-truoc": {
+       "goc": -25.6859,
+       "ty": [
+        0.947,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 31.3013,
+       "ty": [
+        0.943,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -15.899
+       ],
+       "goc": 38.5185
+      },
+      "qua-lac": {
+       "goc": -31.4815
+      },
+      "canh-truoc": {
+       "goc": -30.1852,
+       "ty": [
+        0.924,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 30.2548,
+       "ty": [
+        0.949,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -8.951
+       ],
+       "goc": 30.4252
+      },
+      "qua-lac": {
+       "goc": -39.5748
+      },
+      "canh-truoc": {
+       "goc": -36.6598,
+       "ty": [
+        0.892,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 34.043,
+       "ty": [
+        0.93,
+        1.0
+       ]
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "dich": [
+        0.0,
+        -2.709
+       ],
+       "goc": 23.155
+      },
+      "qua-lac": {
+       "goc": -46.845
+      },
+      "canh-truoc": {
+       "goc": -42.476,
+       "ty": [
+        0.863,
+        1.0
+       ]
+      },
+      "canh-sau": {
+       "goc": 40.3333,
+       "ty": [
+        0.898,
+        1.0
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "chet-vo": {
+   "ten": "chết – chạm đất, chuông vỡ",
+   "ms": 900,
+   "buoc_ms": 33.3333,
+   "so_khung": 28,
+   "lap": false,
+   "giu_khung_cuoi": true,
+   "pha": [
+    [
+     "cham-dat",
+     0,
+     100
+    ],
+    [
+     "vo",
+     100,
+     500
+    ],
+    [
+     "nam",
+     500,
+     900
+    ]
+   ],
+   "khung_cham": [],
+   "cua_so_cham_ms": null,
+   "hop_don": null,
+   "ghi_chu": "nảy dẹt khi chạm đất; khung 3 (100 ms) chuông nứt đôi theo vết nứt (thân → hai nửa, bật/tắt mảnh đổi bậc, không nội suy), hai nửa toác ra (thân đang nghiêng 30° → nửa trước đổ úp, nửa sau dựng lại) và nằm đúng mặt đất; quả lắc tuột ra lăn tới trước; hai cánh rũ nằm xuống đất; tối dần 30 %.",
+   "kenh_moc": {
+    "*.toi": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       0.3,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.goc": {
+     "moc": [
+      [
+       0.0,
+       30.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       30.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.sy": {
+     "moc": [
+      [
+       0.0,
+       0.85,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.sx": {
+     "moc": [
+      [
+       0.0,
+       1.12,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.hien": {
+     "moc": [
+      [
+       0.0,
+       1.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than.y": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.hien": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.nhac": {
+     "moc": [
+      [
+       100.0,
+       10.8478,
+       0.0,
+       0.0
+      ],
+      [
+       300.0,
+       0.0,
+       -0.10848,
+       0.0
+      ],
+      [
+       900.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.goc": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       380.0,
+       -58.0,
+       0.0,
+       0.0
+      ],
+      [
+       440.0,
+       -50.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       -55.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-trai.x": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       500.0,
+       -6.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.hien": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       1.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": true,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.nhac": {
+     "moc": [
+      [
+       100.0,
+       8.2297,
+       0.0,
+       0.0
+      ],
+      [
+       320.0,
+       0.0,
+       -0.07482,
+       0.0
+      ],
+      [
+       900.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.goc": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       400.0,
+       -10.0,
+       -0.05625,
+       -0.05625
+      ],
+      [
+       460.0,
+       -16.0,
+       0.0,
+       0.0
+      ],
+      [
+       520.0,
+       -12.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "than-phai.x": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       520.0,
+       7.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.nhac": {
+     "moc": [
+      [
+       0.0,
+       3.863,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       900.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.lac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       600.0,
+       120.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "qua-lac.x": {
+     "moc": [
+      [
+       100.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       600.0,
+       -14.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.goc": {
+     "moc": [
+      [
+       0.0,
+       -40.0,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       -40.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.nhac": {
+     "moc": [
+      [
+       0.0,
+       28.8776,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       0.0,
+       -0.23102,
+       0.0
+      ],
+      [
+       900.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-truoc.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       -4.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.goc": {
+     "moc": [
+      [
+       0.0,
+       45.0,
+       0.0,
+       0.0
+      ],
+      [
+       250.0,
+       45.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.nhac": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       270.0,
+       0.0,
+       -0.0,
+       0.0
+      ],
+      [
+       900.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    },
+    "canh-sau.x": {
+     "moc": [
+      [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      [
+       270.0,
+       4.0,
+       0.0,
+       0.0
+      ]
+     ],
+     "bat_thang": false,
+     "ghi_chu": "[t ms, giá trị, tiếp tuyến trái, tiếp tuyến phải (giá trị/ms)]"
+    }
+   },
+   "khung": [
+    {
+     "t_ms": 0.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "ty": [
+        1.12,
+        0.85
+       ],
+       "hien": true
+      },
+      "qua-lac": {
+       "dich": [
+        0.0,
+        -3.719
+       ],
+       "goc": -30.0
+      },
+      "canh-truoc": {
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        0.0,
+        -50.147
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "hien": false
+      },
+      "than-phai": {
+       "hien": false
+      }
+     }
+    },
+    {
+     "t_ms": 33.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "ty": [
+        1.089,
+        0.889
+       ],
+       "hien": true
+      },
+      "qua-lac": {
+       "dich": [
+        0.0,
+        1.415
+       ],
+       "goc": -30.0
+      },
+      "canh-truoc": {
+       "dich": [
+        -2.086,
+        -3.244
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        1.801,
+        -48.916
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "hien": false
+      },
+      "than-phai": {
+       "hien": false
+      }
+     }
+    },
+    {
+     "t_ms": 66.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "ty": [
+        1.031,
+        0.961
+       ],
+       "hien": true
+      },
+      "qua-lac": {
+       "dich": [
+        0.0,
+        9.848
+       ],
+       "goc": -30.0
+      },
+      "canh-truoc": {
+       "dich": [
+        -7.53,
+        -0.242
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        6.559,
+        -47.59
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "hien": false
+      },
+      "than-phai": {
+       "hien": false
+      }
+     }
+    },
+    {
+     "t_ms": 100.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        0.0,
+        13.885
+       ],
+       "goc": -30.0
+      },
+      "canh-truoc": {
+       "dich": [
+        -15.111,
+        25.263
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        13.304,
+        -49.239
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "hien": true
+      },
+      "than-phai": {
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 133.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -1.914,
+        13.418
+       ],
+       "goc": -28.4711
+      },
+      "canh-truoc": {
+       "dich": [
+        -23.608,
+        74.702
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        21.067,
+        -53.721
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -1.267,
+        14.728
+       ],
+       "goc": -2.2703,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        1.344,
+        1.195
+       ],
+       "goc": -0.1578,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 166.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -7.301,
+        12.935
+       ],
+       "goc": -24.1689
+      },
+      "canh-truoc": {
+       "dich": [
+        -31.799,
+        136.69
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        28.878,
+        -58.231
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -4.77,
+        56.277
+       ],
+       "goc": -8.2982,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        5.077,
+        4.996
+       ],
+       "goc": -0.6139,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 200.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -15.626,
+        14.261
+       ],
+       "goc": -17.52
+      },
+      "canh-truoc": {
+       "dich": [
+        -38.464,
+        210.52
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        35.768,
+        -62.209
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -10.061,
+        120.658
+       ],
+       "goc": -16.9096,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        10.748,
+        11.725
+       ],
+       "goc": -1.3426,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 233.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -26.355,
+        19.666
+       ],
+       "goc": -8.9511
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.382,
+        295.488
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        40.769,
+        -65.096
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -16.694,
+        192.618
+       ],
+       "goc": -26.9301,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        17.906,
+        21.708
+       ],
+       "goc": -2.3182,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 266.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -38.954,
+        30.112
+       ],
+       "goc": 1.1111
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        42.909,
+        -66.332
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -24.222,
+        248.201
+       ],
+       "goc": -37.1855,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        26.101,
+        35.271
+       ],
+       "goc": -3.5151,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 300.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false
+      },
+      "qua-lac": {
+       "dich": [
+        -52.888,
+        45.406
+       ],
+       "goc": 12.24
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0
+      },
+      "than-trai": {
+       "dich": [
+        -32.196,
+        303.568
+       ],
+       "goc": -46.5015,
+       "hien": true
+      },
+      "than-phai": {
+       "dich": [
+        34.882,
+        52.741
+       ],
+       "goc": -4.9074,
+       "hien": true
+      }
+     }
+    },
+    {
+     "t_ms": 333.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0027
+      },
+      "qua-lac": {
+       "dich": [
+        -67.624,
+        67.359
+       ],
+       "goc": 24.0089,
+       "toi": 0.0027
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0027
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0027
+      },
+      "than-trai": {
+       "dich": [
+        -40.171,
+        312.389
+       ],
+       "goc": -53.7037,
+       "hien": true,
+       "toi": 0.0027
+      },
+      "than-phai": {
+       "dich": [
+        43.797,
+        61.71
+       ],
+       "goc": -6.4695,
+       "hien": true,
+       "toi": 0.0027
+      }
+     }
+    },
+    {
+     "t_ms": 366.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0103
+      },
+      "qua-lac": {
+       "dich": [
+        -82.626,
+        97.649
+       ],
+       "goc": 35.9911,
+       "toi": 0.0103
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0103
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0103
+      },
+      "than-trai": {
+       "dich": [
+        -47.698,
+        318.2
+       ],
+       "goc": -57.618,
+       "hien": true,
+       "toi": 0.0103
+      },
+      "than-phai": {
+       "dich": [
+        52.397,
+        52.864
+       ],
+       "goc": -8.1756,
+       "hien": true,
+       "toi": 0.0103
+      }
+     }
+    },
+    {
+     "t_ms": 400.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0222
+      },
+      "qua-lac": {
+       "dich": [
+        -97.362,
+        129.576
+       ],
+       "goc": 47.76,
+       "toi": 0.0222
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0222
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0222
+      },
+      "than-trai": {
+       "dich": [
+        -54.331,
+        321.584
+       ],
+       "goc": -55.9259,
+       "hien": true,
+       "toi": 0.0222
+      },
+      "than-phai": {
+       "dich": [
+        60.231,
+        44.231
+       ],
+       "goc": -10.0,
+       "hien": true,
+       "toi": 0.0222
+      }
+     }
+    },
+    {
+     "t_ms": 433.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0379
+      },
+      "qua-lac": {
+       "dich": [
+        -111.296,
+        160.484
+       ],
+       "goc": 58.8889,
+       "toi": 0.0379
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0379
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0379
+      },
+      "than-trai": {
+       "dich": [
+        -59.623,
+        321.887
+       ],
+       "goc": -50.2743,
+       "hien": true,
+       "toi": 0.0379
+      },
+      "than-phai": {
+       "dich": [
+        66.849,
+        31.855
+       ],
+       "goc": -13.8683,
+       "hien": true,
+       "toi": 0.0379
+      }
+     }
+    },
+    {
+     "t_ms": 466.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0566
+      },
+      "qua-lac": {
+       "dich": [
+        -123.895,
+        190.014
+       ],
+       "goc": 68.9511,
+       "toi": 0.0566
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0566
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0566
+      },
+      "than-trai": {
+       "dich": [
+        -63.126,
+        324.901
+       ],
+       "goc": -52.085,
+       "hien": true,
+       "toi": 0.0566
+      },
+      "than-phai": {
+       "dich": [
+        71.799,
+        24.679
+       ],
+       "goc": -15.8628,
+       "hien": true,
+       "toi": 0.0566
+      }
+     }
+    },
+    {
+     "t_ms": 500.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.0778
+      },
+      "qua-lac": {
+       "dich": [
+        -134.624,
+        217.615
+       ],
+       "goc": 77.52,
+       "toi": 0.0778
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.0778
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.0778
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.0778
+      },
+      "than-phai": {
+       "dich": [
+        74.63,
+        29.181
+       ],
+       "goc": -13.037,
+       "hien": true,
+       "toi": 0.0778
+      }
+     }
+    },
+    {
+     "t_ms": 533.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.1008
+      },
+      "qua-lac": {
+       "dich": [
+        -142.949,
+        240.423
+       ],
+       "goc": 84.1689,
+       "toi": 0.1008
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.1008
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.1008
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.1008
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.1008
+      }
+     }
+    },
+    {
+     "t_ms": 566.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.1251
+      },
+      "qua-lac": {
+       "dich": [
+        -148.336,
+        255.619
+       ],
+       "goc": 88.4711,
+       "toi": 0.1251
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.1251
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.1251
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.1251
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.1251
+      }
+     }
+    },
+    {
+     "t_ms": 600.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.15
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.15
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.15
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.15
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.15
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.15
+      }
+     }
+    },
+    {
+     "t_ms": 633.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.1749
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.1749
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.1749
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.1749
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.1749
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.1749
+      }
+     }
+    },
+    {
+     "t_ms": 666.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.1992
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.1992
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.1992
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.1992
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.1992
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.1992
+      }
+     }
+    },
+    {
+     "t_ms": 700.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2222
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2222
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2222
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2222
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2222
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2222
+      }
+     }
+    },
+    {
+     "t_ms": 733.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2434
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2434
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2434
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2434
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2434
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2434
+      }
+     }
+    },
+    {
+     "t_ms": 766.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2621
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2621
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2621
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2621
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2621
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2621
+      }
+     }
+    },
+    {
+     "t_ms": 800.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2778
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2778
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2778
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2778
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2778
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2778
+      }
+     }
+    },
+    {
+     "t_ms": 833.333,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2897
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2897
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2897
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2897
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2897
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2897
+      }
+     }
+    },
+    {
+     "t_ms": 866.667,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.2973
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.2973
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.2973
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.2973
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.2973
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.2973
+      }
+     }
+    },
+    {
+     "t_ms": 900.0,
+     "tu_the": {
+      "than": {
+       "goc": 30.0,
+       "hien": false,
+       "toi": 0.3
+      },
+      "qua-lac": {
+       "dich": [
+        -150.25,
+        261.063
+       ],
+       "goc": 90.0,
+       "toi": 0.3
+      },
+      "canh-truoc": {
+       "dich": [
+        -42.929,
+        341.928
+       ],
+       "goc": -40.0,
+       "toi": 0.3
+      },
+      "canh-sau": {
+       "dich": [
+        42.929,
+        -66.343
+       ],
+       "goc": 45.0,
+       "toi": 0.3
+      },
+      "than-trai": {
+       "dich": [
+        -64.393,
+        326.968
+       ],
+       "goc": -55.0,
+       "hien": true,
+       "toi": 0.3
+      },
+      "than-phai": {
+       "dich": [
+        75.125,
+        31.181
+       ],
+       "goc": -12.0,
+       "hien": true,
+       "toi": 0.3
+      }
+     }
+    }
+   ]
+  }
+ },
+ "khung_bao_moi_clip_px_nguon": [
+  -34.49,
+  15.52,
+  1163.46,
+  812.6
+ ],
+ "hitbox_than_gameplay": {
+  "w": 44,
+  "h": 44,
+  "ghi_chu": "đề xuất: chuông + quả lắc (không tính cánh); giữa đáy = neo"
+ }
+}

@@ -1,0 +1,241 @@
+{
+ "nguon": "quai-nam-moc.png",
+ "lat_ngang": true,
+ "rong_nguon": 1536,
+ "ghi_chu": "toạ độ trên ảnh nguồn ĐÃ LẬT NGANG (x' = W − x); mảnh cắt từ bản nguyên, phần khuất bù theo \"bu\"",
+ "manh": {
+  "tay-sau": {
+   "anh": "manh/nam/tay-sau.png",
+   "hop_tren_nguon": [
+    1302,
+    576,
+    199,
+    199
+   ]
+  },
+  "tay-truoc": {
+   "anh": "manh/nam/tay-truoc.png",
+   "hop_tren_nguon": [
+    797,
+    614,
+    170,
+    179
+   ]
+  },
+  "chan-gan": {
+   "anh": "manh/nam/chan-gan.png",
+   "hop_tren_nguon": [
+    1134,
+    813,
+    218,
+    153
+   ]
+  },
+  "chan-xa": {
+   "anh": "manh/nam/chan-xa.png",
+   "hop_tren_nguon": [
+    918,
+    816,
+    208,
+    136
+   ]
+  },
+  "than": {
+   "anh": "manh/nam/than.png",
+   "hop_tren_nguon": [
+    937,
+    421,
+    400,
+    396
+   ]
+  },
+  "mu": {
+   "anh": "manh/nam/mu.png",
+   "hop_tren_nguon": [
+    806,
+    86,
+    695,
+    494
+   ]
+  },
+  "chuong": {
+   "anh": "manh/nam/chuong.png",
+   "hop_tren_nguon": [
+    905,
+    47,
+    227,
+    212
+   ]
+  },
+  "bao-tu": {
+   "anh": "manh/nam/bao-tu.png",
+   "hop_tren_nguon": [
+    0,
+    0,
+    86,
+    88
+   ],
+   "nguon": "bong bóng bào tử cắt từ art/re-muc/nguon/re-muc-do-vat.png (hiệu ứng, không thuộc ảnh nhân vật)"
+  }
+ },
+ "bu": {
+  "than": {
+   "cach": "mảnh rời căn khớp (dang_ky)",
+   "ty_le": 1.132,
+   "goc": 0.5,
+   "phu_phan_dang_thay": 0.9875,
+   "lan_ra_nen_px": 1780,
+   "so_px_bu": 13040
+  },
+  "mu": {
+   "cach": "chép vân dịch [(0, 110), (-60, 120), (60, 120), (0, 190)] + inpaint Telea + nét viền tối ở mép vá",
+   "so_px_bu": 14210
+  }
+ },
+ "duong_cat": {
+  "mu_duoi": [
+   [
+    0,
+    600
+   ],
+   [
+    235,
+    600
+   ],
+   [
+    248,
+    540
+   ],
+   [
+    300,
+    522
+   ],
+   [
+    330,
+    505
+   ],
+   [
+    355,
+    492
+   ],
+   [
+    400,
+    488
+   ],
+   [
+    440,
+    478
+   ],
+   [
+    475,
+    470
+   ],
+   [
+    493,
+    470
+   ],
+   [
+    498,
+    512
+   ],
+   [
+    535,
+    514
+   ],
+   [
+    545,
+    505
+   ],
+   [
+    560,
+    526
+   ],
+   [
+    575,
+    545
+   ],
+   [
+    590,
+    548
+   ],
+   [
+    598,
+    600
+   ],
+   [
+    760,
+    600
+   ]
+  ],
+  "chuong": [
+   [
+    408,
+    168
+   ],
+   [
+    412,
+    148
+   ],
+   [
+    440,
+    126
+   ],
+   [
+    470,
+    108
+   ],
+   [
+    500,
+    90
+   ],
+   [
+    522,
+    72
+   ],
+   [
+    540,
+    46
+   ],
+   [
+    600,
+    45
+   ],
+   [
+    658,
+    92
+   ],
+   [
+    642,
+    190
+   ],
+   [
+    628,
+    236
+   ],
+   [
+    606,
+    254
+   ],
+   [
+    585,
+    250
+   ],
+   [
+    560,
+    238
+   ],
+   [
+    520,
+    218
+   ],
+   [
+    480,
+    198
+   ],
+   [
+    440,
+    181
+   ]
+  ]
+ }
+}

@@ -1,0 +1,1671 @@
+{
+ "ghi_chu": "Chromium headless (Playwright, GPU phần mềm). iPhone = chỉ giả lập cỡ màn/dpr/UA + CPU chậm 4×; KHÔNG phải iPhone thật.",
+ "video": {
+  "nam": {
+   "video": "nam-60fps.mp4",
+   "so_khung": 538,
+   "giay": 8.97,
+   "loi_trang": []
+  },
+  "doi": {
+   "video": "doi-60fps.mp4",
+   "so_khung": 444,
+   "giay": 7.4,
+   "loi_trang": []
+  },
+  "menam": {
+   "video": "menam-60fps.mp4",
+   "so_khung": 614,
+   "giay": 10.23,
+   "loi_trang": []
+  },
+  "ca-ba": {
+   "video": "ca-ba-60fps.mp4",
+   "so_khung": 1800,
+   "giay": 30.0,
+   "loi_trang": []
+  }
+ },
+ "do": [
+  {
+   "con": "nam",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "xong": true,
+   "nap": {
+    "ms_json": 20.4,
+    "ms_anh_va_decode": 100.4,
+    "ms_cache_va_ve_thu": 31.5,
+    "ms_tong": 152.3,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 154.6999999997206,
+   "ve": {
+    "tb": 0.219,
+    "p95": 0.3,
+    "max": 72.7,
+    "n": 1090
+   },
+   "dt": {
+    "tb": 16.758,
+    "p95": 16.7,
+    "max": 83.3,
+    "n": 1090
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 3,
+   "giatKhiDoi": 0,
+   "soLanDoi": 19,
+   "cau_hinh": "may-ban",
+   "loi_trang": []
+  },
+  {
+   "con": "doi",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "xong": true,
+   "nap": {
+    "ms_json": 22.2,
+    "ms_anh_va_decode": 103.4,
+    "ms_cache_va_ve_thu": 47.1,
+    "ms_tong": 172.7,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 180,
+   "ve": {
+    "tb": 0.091,
+    "p95": 0.2,
+    "max": 1.6,
+    "n": 868
+   },
+   "dt": {
+    "tb": 16.666,
+    "p95": 16.8,
+    "max": 16.8,
+    "n": 868
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 0,
+   "giatKhiDoi": 0,
+   "soLanDoi": 17,
+   "cau_hinh": "may-ban",
+   "loi_trang": []
+  },
+  {
+   "con": "menam",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "xong": true,
+   "nap": {
+    "ms_json": 14.5,
+    "ms_anh_va_decode": 82.1,
+    "ms_cache_va_ve_thu": 33.8,
+    "ms_tong": 130.4,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 136.8000000002794,
+   "ve": {
+    "tb": 0.121,
+    "p95": 0.2,
+    "max": 2.2,
+    "n": 1248
+   },
+   "dt": {
+    "tb": 16.666,
+    "p95": 16.7,
+    "max": 16.8,
+    "n": 1248
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 0,
+   "giatKhiDoi": 0,
+   "soLanDoi": 31,
+   "cau_hinh": "may-ban",
+   "loi_trang": []
+  },
+  {
+   "con": "ca-ba",
+   "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+   "dpr": 1,
+   "xong": true,
+   "nap": {
+    "ms_json": 15.6,
+    "ms_anh_va_decode": 79.2,
+    "ms_cache_va_ve_thu": 28.9,
+    "ms_tong": 123.7,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 127.60000000009313,
+   "ve": {
+    "tb": 0.218,
+    "p95": 0.4,
+    "max": 2.7,
+    "n": 1247
+   },
+   "dt": {
+    "tb": 16.679,
+    "p95": 16.7,
+    "max": 33.3,
+    "n": 1247
+   },
+   "nguongGiat": 25.049999999999727,
+   "giat": 1,
+   "giatKhiDoi": 0,
+   "soLanDoi": 78,
+   "cau_hinh": "may-ban",
+   "loi_trang": []
+  },
+  {
+   "con": "nam",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "xong": true,
+   "nap": {
+    "ms_json": 76,
+    "ms_anh_va_decode": 139.7,
+    "ms_cache_va_ve_thu": 191.4,
+    "ms_tong": 407.1,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 419.10000000009313,
+   "ve": {
+    "tb": 0.255,
+    "p95": 1.2,
+    "max": 5.1,
+    "n": 740
+   },
+   "dt": {
+    "tb": 24.661,
+    "p95": 33.4,
+    "max": 116.7,
+    "n": 740
+   },
+   "nguongGiat": 25.05000000000109,
+   "giat": 315,
+   "giatKhiDoi": 12,
+   "soLanDoi": 19,
+   "cau_hinh": "gia-lap-iphone13-cpu4x",
+   "loi_trang": []
+  },
+  {
+   "con": "doi",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "xong": true,
+   "nap": {
+    "ms_json": 129.8,
+    "ms_anh_va_decode": 183.8,
+    "ms_cache_va_ve_thu": 265.4,
+    "ms_tong": 579,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 597.7999999998137,
+   "ve": {
+    "tb": 0.247,
+    "p95": 1.1,
+    "max": 3.8,
+    "n": 479
+   },
+   "dt": {
+    "tb": 30.2,
+    "p95": 50,
+    "max": 116.6,
+    "n": 479
+   },
+   "nguongGiat": 49.94999999999993,
+   "giat": 51,
+   "giatKhiDoi": 4,
+   "soLanDoi": 17,
+   "cau_hinh": "gia-lap-iphone13-cpu4x",
+   "loi_trang": []
+  },
+  {
+   "con": "menam",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "xong": true,
+   "nap": {
+    "ms_json": 140.5,
+    "ms_anh_va_decode": 194.7,
+    "ms_cache_va_ve_thu": 291.1,
+    "ms_tong": 626.3,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 646.9000000003725,
+   "ve": {
+    "tb": 0.369,
+    "p95": 1.9,
+    "max": 8.1,
+    "n": 384
+   },
+   "dt": {
+    "tb": 54.121,
+    "p95": 100,
+    "max": 183.3,
+    "n": 384
+   },
+   "nguongGiat": 75,
+   "giat": 49,
+   "giatKhiDoi": 6,
+   "soLanDoi": 31,
+   "cau_hinh": "gia-lap-iphone13-cpu4x",
+   "loi_trang": []
+  },
+  {
+   "con": "ca-ba",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "xong": true,
+   "nap": {
+    "ms_json": 146.3,
+    "ms_anh_va_decode": 136.3,
+    "ms_cache_va_ve_thu": 180.8,
+    "ms_tong": 463.4,
+    "so_anh_png": 23,
+    "so_anh_cache": 69,
+    "byte_png": 855918,
+    "byte_giai_ma_png": 2853380,
+    "byte_giai_ma_cache": 8560140,
+    "mb_giai_ma_tong": 10.88,
+    "loai": [
+     "nam",
+     "doi",
+     "menam"
+    ],
+    "bang": [
+     {
+      "anh": "nam/than.png",
+      "w": 106,
+      "h": 105,
+      "byte": 44520,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/mu.png",
+      "w": 181,
+      "h": 130,
+      "byte": 94120,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chuong.png",
+      "w": 62,
+      "h": 58,
+      "byte": 14384,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-truoc.png",
+      "w": 47,
+      "h": 50,
+      "byte": 9400,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/tay-sau.png",
+      "w": 55,
+      "h": 55,
+      "byte": 12100,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-xa.png",
+      "w": 57,
+      "h": 39,
+      "byte": 8892,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/chan-gan.png",
+      "w": 60,
+      "h": 43,
+      "byte": 10320,
+      "so_nut": 1
+     },
+     {
+      "anh": "nam/bao-tu.png",
+      "w": 26,
+      "h": 26,
+      "byte": 2704,
+      "so_nut": 6
+     },
+     {
+      "anh": "doi/than.png",
+      "w": 83,
+      "h": 99,
+      "byte": 32868,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/qua-lac.png",
+      "w": 32,
+      "h": 41,
+      "byte": 5248,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-truoc.png",
+      "w": 54,
+      "h": 58,
+      "byte": 12528,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/canh-sau.png",
+      "w": 73,
+      "h": 59,
+      "byte": 17228,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-trai.png",
+      "w": 65,
+      "h": 99,
+      "byte": 25740,
+      "so_nut": 1
+     },
+     {
+      "anh": "doi/than-phai.png",
+      "w": 34,
+      "h": 65,
+      "byte": 8840,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/go-re.png",
+      "w": 626,
+      "h": 149,
+      "byte": 373096,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/than.png",
+      "w": 400,
+      "h": 417,
+      "byte": 667200,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/mu.png",
+      "w": 591,
+      "h": 344,
+      "byte": 813216,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/chuong.png",
+      "w": 251,
+      "h": 242,
+      "byte": 242968,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-gan.png",
+      "w": 167,
+      "h": 165,
+      "byte": 110220,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/tui-xa.png",
+      "w": 115,
+      "h": 117,
+      "byte": 53820,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-truoc.png",
+      "w": 168,
+      "h": 222,
+      "byte": 149184,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/vuot-sau.png",
+      "w": 151,
+      "h": 226,
+      "byte": 136504,
+      "so_nut": 1
+     },
+     {
+      "anh": "menam/bao-tu.png",
+      "w": 45,
+      "h": 46,
+      "byte": 8280,
+      "so_nut": 8
+     }
+    ]
+   },
+   "msTrang": 478.3000000002794,
+   "ve": {
+    "tb": 0.582,
+    "p95": 2.4,
+    "max": 10.2,
+    "n": 360
+   },
+   "dt": {
+    "tb": 57.498,
+    "p95": 100,
+    "max": 133.3,
+    "n": 360
+   },
+   "nguongGiat": 75,
+   "giat": 57,
+   "giatKhiDoi": 13,
+   "soLanDoi": 73,
+   "cau_hinh": "gia-lap-iphone13-cpu4x",
+   "loi_trang": []
+  }
+ ]
+}
