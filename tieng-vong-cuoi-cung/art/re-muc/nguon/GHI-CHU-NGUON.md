@@ -5,4 +5,4 @@ Vùng rễ cây mục dưới Làng Chuông (docs/gdd.md: "Tường mục leo đ
 - re-muc-gan.png – lớp gần (sau gameplay), RGBA trong suốt: khung rễ tối hai mép, giữa trống
 - re-muc-gach.png – 8 ô thân rễ mục (xám nâu, đốm mốc xanh), nền trắng, cần làm liền mạch
 - re-muc-do-vat.png – đồ vật nền trắng: nấm sáng nhỏ/lớn, gốc rễ mục, kén treo, chuông vỡ mốc, giọt nước + vũng, bào tử kín / nổ
-- CHƯA có: re-muc-mep.png (mép sàn + tường mục leo được 3 trạng thái) – chủ dự án sẽ gen sau; tạm dựng mép từ gạch + viền bằng code.
+- re-muc-mep.png – hàng 1: mép sàn rễ mục đầu trái / giữa lặp / đầu phải (mốc xanh ngọc); hàng 2: tường mục leo được 3 trạng thái cùng cỡ: lành / nứt / gãy rơi mảnh. ĐÃ CÓ (17:41) – dùng thay bản TẠM dựng bằng code.
