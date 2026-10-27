@@ -149,14 +149,14 @@ NUT = [   # tên, ảnh, cha, pivot (px mảnh nguồn), vị trí neo (toạ đ
     ('mai', 'mai', 'than', (308, 330), neo('mai', (308, 330)), True),
     ('nut1', 'mai-nut-1', 'mai', (308, 330), None, False),
     ('nut2', 'mai-nut-2', 'mai', (308, 330), None, False),
-    # PH3: mảng BỤNG MỀM lộ khi LẬT NGỬA – cùng ảnh bụng, đặt ở mặt dưới thân (lật sy=−1 → nằm trên mai), vẽ SAU mai.
-    # Ẩn mặc định; clip lat / lat_giu / day / chet_lat bật + mờ dần vào (lat_tu_the).
-    ('bung_lat', 'bung', 'than', (177, 136), (GOC_X - 14, DINH_Y + 0.64 * (DAT_Y - DINH_Y)), False),
+    # Bản 4 (bỏ lật ngửa): mảng BỤNG MỀM lộ ra DƯỚI / SAU mai khi mai vỡ bật hé lệch lên trước và thân sụp sấp – cùng ảnh bụng,
+    # vẽ TRƯỚC mai (mai vỡ hé ra thì thấy nó). Ẩn mặc định; clip vo_mai / sup_choang / day / chet_sup bật.
+    ('bung_lo', 'bung', 'than', (177, 136), (GOC_X + 40, DINH_Y + 0.66 * (DAT_Y - DINH_Y)), False),
     ('dau', 'dau', 'than', (205, 95), neo('dau', (205, 95)), True),
     ('chan_sau', 'chan-sau', 'than', (140, 25), neo('chan-sau', (140, 25)), True),
     ('chan_truoc', 'chan-truoc', 'than', (121, 25), neo('chan-truoc', (121, 25)), True),
 ]
-THU_TU_VE = ['chan_sau_xa', 'chan_truoc_xa', 'bung', 'mai', 'nut1', 'nut2', 'bung_lat', 'dau', 'chan_sau', 'chan_truoc']
+THU_TU_VE = ['chan_sau_xa', 'chan_truoc_xa', 'bung', 'bung_lo', 'mai', 'nut1', 'nut2', 'mai_m3', 'mai_m2', 'mai_m1', 'dau', 'chan_sau', 'chan_truoc']
 VTRI = {}
 for ten, a_, cha, piv, vt, hien in NUT:
     if vt is None: vt = VTRI[cha]
@@ -182,7 +182,39 @@ for ten, a_, cha, piv, vt, hien in NUT:
                   'hop_dac': [float(hb[0]) + PAD * kx, float(hb[1]) + PAD * ky, float(hb[2]) + PAD * kx, float(hb[3]) + PAD * ky],
                   'vien': [[round(x + PAD * kx, 1), round(y + PAD * ky, 1)] for x, y in hull], 'hien': hien})
     R[ten] = r
-DS = [n[0] for n in NUT]
+# ---- Bản 4: 3 MẢNG MAI VỠ (m1 trước · m2 giữa · m3 sau) – cắt từ ảnh mai (đã trộn 2 lớp nứt) theo 2 đường gãy răng cưa,
+# mép gãy tối 3 px + vệt sáng 1 px. Con của nút 'mai' (theo mọi chuyển động của mai), điểm xoay = trọng tâm từng mảng.
+# Ẩn mặc định; mai vỡ thì game / clip tắt 'mai' + 'nut1/2' và bật 3 mảng (mai vỡ GIỮ tới chết – phản hồi 5).
+def tach_mai():
+    can, W0, H0, w, h = anh['mai']; kx, ky = W0 / w, H0 / h
+    nen_ = can.copy(); nen_.alpha_composite(anh['mai-nut-1'][0]); nen_.alpha_composite(anh['mai-nut-2'][0])
+    Wc, Hc = nen_.size; rnd = np.random.RandomState(11)
+    def duong(u0, u1):
+        n = 10; return [((u0 + (u1 - u0) * i / n) * Wc + (rnd.uniform(-0.03, 0.03) * Wc if 0 < i < n else 0), i / n * Hc) for i in range(n + 1)]
+    c1 = duong(0.37, 0.43); c2 = duong(0.69, 0.63)
+    g = ImageDraw.Draw(nen_)
+    for c in (c1, c2):
+        g.line(c, fill=(14, 10, 9, 255), width=3, joint='curve')
+        g.line([(x - 1, y) for x, y in c], fill=(242, 214, 154, 120), width=1)
+    al0 = np.array(can)[..., 3]; a = np.array(nen_); a[..., 3] = np.minimum(a[..., 3], al0); nen_ = Image.fromarray(a, 'RGBA')
+    vung = [[(0, 0)] + c1 + [(0, Hc)], c1 + c2[::-1], c2 + [(Wc, Hc), (Wc, 0)]]
+    mai_pv = R['mai']['pivot']; ra = []
+    for i, pg in enumerate(vung):
+        m = Image.new('L', (Wc, Hc), 0); ImageDraw.Draw(m).polygon(pg, fill=255)
+        a = np.array(nen_); a[..., 3] = (a[..., 3].astype(np.float32) * np.array(m) / 255).astype(np.uint8); a[a[..., 3] == 0] = 0
+        ys, xs = np.nonzero(a[..., 3] > 32); x0, y0, x1, y1 = max(0, xs.min() - 1), max(0, ys.min() - 1), min(Wc, xs.max() + 2), min(Hc, ys.max() + 2)
+        cx, cy = xs.mean(), ys.mean(); im = Image.fromarray(a[y0:y1, x0:x1], 'RGBA')
+        ten = 'mai-manh-%d' % (i + 1); im.save(os.path.join(MANH, ten + '.png'), optimize=True)
+        pts = np.concatenate([np.stack([xs, ys], 1), np.stack([xs + 1, ys + 1], 1)]).astype(float); hull = pts[ConvexHull(pts).vertices]
+        if len(hull) > 32: hull = hull[np.linspace(0, len(hull) - 1, 32).astype(int)]
+        R['mai_m%d' % (i + 1)] = {'cha': 'mai', 'goc_nghi': 0.0, 'gan': [round(cx * kx - mai_pv[0], 2), round(cy * ky - mai_pv[1], 2)],
+            'anh': 'manh/' + ten + '.png', 'co_anh': list(im.size), 'pivot': [(cx - x0) * kx, (cy - y0) * ky], 'co': [im.width * kx, im.height * ky],
+            'hop_dac': [float(xs.min() - x0) * kx, float(ys.min() - y0) * ky, float(xs.max() + 1 - x0) * kx, float(ys.max() + 1 - y0) * ky],
+            'vien': [[round((x - x0) * kx, 1), round((y - y0) * ky, 1)] for x, y in hull], 'hien': False}
+        da_ghi['manh/' + ten + '.png'] = (im.size, None, None); ra.append(ten)
+    return ra
+MANH_MAI = tach_mai()
+DS = [n[0] for n in NUT] + ['mai_m1', 'mai_m2', 'mai_m3']
 IDX = {n: i for i, n in enumerate(DS)}
 
 # ---------------- CLIP ----------------
@@ -260,12 +292,34 @@ def f_hoi(P, t):   # sau cú húc (0,67 s): ngẩng lên lắc đầu, thân l�
          dx=-18 * k, dy=12 * k)
     cong(P, 'mai', dx=5 * lo_xo(t, 4.5, 4), goc=1.2 * lo_xo(t, 4.5, 4))
     for n in CHAN: cong(P, n, dy=-8 * k)
-def f_quay(P, t):   # 0,4 s; game lật hướng ở giữa (bước 12) – lúc thân hẹp nhất
-    u = t / 0.4; s = 1 - 0.42 * math.sin(math.pi * min(1, u))
-    cong(P, 'than', sx=s, dy=5 * math.sin(math.pi * min(1, u)))
-    cong(P, 'dau', goc=-7 * math.sin(math.pi * min(1, u)))
-    for n in CHAN: cong(P, n, dy=-5 * math.sin(math.pi * min(1, u)))
-    buoc_chan(P, t, 0.4, 14, 16)
+# QUAY ĐẦU (bản 4) – kiểu game 2D (lật gương TỨC THÌ trong 1 bước, che bằng tư thế trước / sau), KHÔNG co dẹt ngang qua 0.
+# Game lật hướng ở bước 12 (= 200 ms). Clip khoá MỖI BƯỚC (16,7 ms) để khung 11 (trước) và 12 (sau) không bị nội suy lẫn nhau.
+#   0–200 ms  HÃM: chân trước cắm, thân dồn ra sau + ngả nhẹ, đầu rụt vào mai, mai trễ theo
+#   200 ms    LẬT GƯƠNG (game) – thân đang dồn về phía cũ = phía TRƯỚC mới, đầu vẫn rụt → bóng gần đối xứng, đổi hướng không lộ
+#   200–400   mai nảy nhẹ (quán tính), thân về giữa, chân bước lại tại chỗ, đầu thò ra
+QUAY_LAT = 0.200
+DON = 34.0          # thân dồn ra sau (px nguồn ≈ 5,4 px logic)
+def f_quay(P, t):
+    if t < QUAY_LAT - 1e-6:
+        k = ease(t / 0.13)
+        cong(P, 'than', dx=DON * k, dy=9 * k, goc=2.2 * k, sy=1 - 0.02 * k)
+        cong(P, 'mai', dx=-6 * math.sin(math.pi * min(1, t / 0.16)), goc=-1.2 * k)          # mai trễ một nhịp
+        cong(P, 'dau', dx=48 * k, dy=12 * k, goc=8 * k)                                    # rụt vào dưới mép mai
+        for n in ('chan_truoc', 'chan_truoc_xa'): cong(P, n, dx=-DON * k - 10 * k, dy=-9 * k, goc=-12 * k)   # cắm: giữ chỗ trên đất, chống chéo
+        for n in ('chan_sau', 'chan_sau_xa'): cong(P, n, dx=-DON * k + 4 * k, dy=-9 * k, goc=5 * k, sy=1 - 0.06 * k)
+        cong(P, 'bung', sx=1 + 0.03 * k, sy=1 - 0.03 * k)
+        return
+    s = t - QUAY_LAT; u = min(1.0, s / 0.2)
+    v = 1 - ease(min(1, s / 0.15))                                                          # thân về giữa trong 150 ms
+    cong(P, 'than', dx=-DON * v, dy=9 * v, goc=-2.2 * v, sy=1 - 0.02 * v)                   # thân giữ CHỖ cũ trên màn (đã lật)
+    b = lo_xo(s, 5.5, 9)
+    cong(P, 'mai', dy=-11 * max(0.0, b) + 4 * max(0.0, -b), goc=2.0 * b, dx=-7 * b)         # mai nảy nhẹ do quán tính
+    r = 1 - ram(s, 0.06, 0.18)
+    cong(P, 'dau', dx=48 * r, dy=12 * r, goc=8 * r - 3 * math.sin(math.pi * ram(s, 0.12, 0.2)))   # đầu thò ra
+    for n, lech in (('chan_truoc', 0.0), ('chan_sau', 0.5), ('chan_truoc_xa', 0.5), ('chan_sau_xa', 0.0)):
+        cong(P, n, dx=DON * v - 0.0, dy=-9 * v)                                            # chân giữ chỗ (bù thân về giữa)
+        w = ((u * 2 + lech) % 1.0) if u < 1 else 0.0                                        # 2 nhịp bước tại chỗ
+        cong(P, n, dy=-14 * math.sin(math.pi * w) * (1 - ram(u, 0.8, 1.0)), goc=4 * math.sin(2 * math.pi * w) * (1 - u))
 def f_keng(P, t):   # trúng MAI (0,23 s): mai dội về sau, đầu rụt vào, thân nén – không đau
     s = lo_xo(t, 7, 9)
     cong(P, 'mai', dx=12 * s, goc=3.5 * s, dy=-3 * s)
@@ -280,74 +334,91 @@ def f_dau(P, t):    # trúng BỤNG (0,27 s): CẢ THÂN CO LẠI (gập ngắn 
     cong(P, 'dau', goc=12 * (1 - ram(t, 0.05, 0.27)) * ram(t, 0, 0.05), dy=-4 * (1 - ram(t, 0.05, 0.27)))
     cong(P, 'mai', dy=-6 * max(0, s))
     for n in CHAN: cong(P, n, goc=6 * s)
-LAT_DY = 0.0   # thân ở GIỮA chiều cao → lật sy=−1 thì đỉnh mai rơi đúng mặt đất, không cần dời
-def lat_tu_the(P, t_lat, u):
-    """u: 0 = đứng, 1 = nằm ngửa. Lật quanh trục ngang qua tâm thân (sy 1 → −1), bật lên giữa chừng."""
-    sy = math.cos(math.pi * ease(u)); hop = math.sin(math.pi * u)
-    cong(P, 'than', sy=sy if abs(sy) > 0.08 else math.copysign(0.08, sy if sy else 1), dy=-70 * hop + LAT_DY * ease(u), goc=10 * hop)
-    # mảng bụng mềm: hiện từ lúc đã lật quá nửa, to 1,5 × bụng (đủ lớn để đọc "chỗ mềm" ở cỡ 74 px)
-    if u > 0.5: P['bung_lat'][7] = 1; P['bung_lat'][6] = ram(u, 0.5, 0.8)
-    cong(P, 'bung_lat', sx=1.5, sy=1.05, goc=-4)
-def f_lat(P, t):    # VỠ MAI → bị hất lật ngửa (0,5 s)
-    nen_ = math.sin(math.pi * ram(t, 0, 0.12)) * (t < 0.12)
-    cong(P, 'than', dy=10 * nen_, sy=1 - 0.05 * nen_)
-    u = ram(t, 0.10, 0.36)
-    lat_tu_the(P, t, u)
-    if t > 0.36: b = lo_xo(t - 0.36, 4, 7); cong(P, 'than', dy=-10 * max(0, b), sx=1 + 0.06 * max(0, -b))
-    for n in CHAN: cong(P, n, goc=18 * math.sin(2 * math.pi * 6 * t) * u * (1 if 'truoc' in n else -1))
-    cong(P, 'dau', goc=-10 * u)
-def f_lat_giu(P, t):   # nằm ngửa giãy (lặp 0,6 s): chân quờ trên không, thân lắc trên mai, bụng thở gấp
-    lat_tu_the(P, t, 1.0)
-    w = 2 * math.pi * t / 0.6
-    cong(P, 'than', goc=2.5 * math.sin(w), dx=4 * math.sin(w))
-    for i, n in enumerate(CHAN):
-        cong(P, n, goc=20 * math.sin(2 * w + i * 1.7), dx=6 * math.sin(2 * w + i * 1.7))
-    cong(P, 'bung', sx=1 + 0.035 * math.sin(2 * w), sy=1 + 0.03 * math.sin(2 * w + 0.5))
-    cong(P, 'bung_lat', sx=1 + 0.04 * math.sin(2 * w), sy=1 + 0.06 * math.sin(2 * w + 0.5))
-    cong(P, 'dau', goc=-10 + 6 * math.sin(w + 0.7))
-def f_day(P, t):    # lật lại (0,5 s): lắc mạnh 2 nhịp rồi bật úp xuống
-    w = 2 * math.pi * t / 0.25
-    u = 1 - ram(t, 0.22, 0.42)
-    lat_tu_the(P, t, u)
-    cong(P, 'than', goc=7 * math.sin(w) * (t < 0.22))
-    if t > 0.42: b = lo_xo(t - 0.42, 4, 8); cong(P, 'than', dy=-6 * max(0, b), sy=1 - 0.04 * max(0, -b))
-    for n in CHAN: cong(P, n, goc=14 * math.sin(2 * w) * u)
-    cong(P, 'dau', goc=-10 * u)
-def f_chet(P, t):   # chết (0,9 s): giật, MAI BẬT RA rơi ra sau, BỤNG XẸP, thân sụp, đầu gục
-    g = math.sin(math.pi * ram(t, 0, 0.12)) * (t < 0.12)
-    cong(P, 'than', dy=-8 * g, sy=1 + 0.04 * g)
-    u = ram(t, 0.10, 0.75)
-    cong(P, 'than', dy=58 * ease(ram(t, 0.12, 0.45)))
-    for n in CHAN: cong(P, n, dy=-58 * ease(ram(t, 0.12, 0.45)), sy=1 - 0.25 * ram(t, 0.12, 0.45),
-                        goc=(14 if 'truoc' in n else -14) * ram(t, 0.12, 0.45), dx=(-14 if 'truoc' in n else 14) * ram(t, 0.12, 0.45))
-    bay = ram(t, 0.12, 0.62); roi = ram(t, 0.40, 0.75)
-    cong(P, 'mai', dx=130 * ease(bay), dy=-55 * math.sin(math.pi * min(1, bay * 1.25)) + 66 * roi, goc=22 * ease(bay) - 6 * roi)
-    if t > 0.75: cong(P, 'mai', dy=-5 * max(0, lo_xo(t - 0.75, 4, 9)))
-    xep = ram(t, 0.25, 0.85)
-    cong(P, 'bung', sx=1 + 0.10 * xep, sy=1 - 0.42 * xep, dy=40 * xep, dx=-10 * xep, toi=0.35 * xep)
-    cong(P, 'dau', goc=-20 * ram(t, 0.2, 0.6), dy=30 * ram(t, 0.2, 0.6), toi=0.3 * ram(t, 0.4, 0.9))
-def f_chet_lat(P, t):   # chết khi đang nằm ngửa: chân co lại, ngừng giãy, bụng xẹp
-    lat_tu_the(P, t, 1.0)
-    k = 1 - ram(t, 0, 0.6)
-    for i, n in enumerate(CHAN): cong(P, n, goc=16 * k * math.sin(2 * math.pi * 3 * t + i) + 10 * (1 - k) * (1 if 'truoc' in n else -1), sy=1 - 0.3 * (1 - k))
-    xep = ram(t, 0.15, 0.8)
-    cong(P, 'bung', sx=1 + 0.08 * xep, sy=1 - 0.35 * xep, toi=0.35 * xep)
-    cong(P, 'bung_lat', sx=1 + 0.06 * xep, sy=1 - 0.35 * xep, toi=0.35 * xep)
-    cong(P, 'dau', goc=-10 - 8 * xep, toi=0.3 * xep)
+# ---------------- VỠ MAI · CHOÁNG · DẬY · CHẾT (bản 4: bỏ lật ngửa) ----------------
+# Mai vỡ = 3 mảng (mai_m1 trước, m2 giữa, m3 sau). LECH_* = độ lệch [dx, dy, goc] (px nguồn, độ) của từng mảng so với chỗ liền:
+#   CHOÁNG: mảng trước bật hé lên-ra trước, mảng sau vểnh đuôi lên → lộ khe + mảng bụng mềm phía sau/dưới.
+#   ĐỨNG (mai vỡ giữ tới chết – PH5): lệch nhỏ hơn, vẫn thấy rõ mai không liền. Game đặt LECH_DUNG cho mọi clip thường khi mai đã vỡ.
+LECH_CHOANG = {'mai_m1': (-26, -30, 13), 'mai_m2': (-4, -12, -3), 'mai_m3': (16, -20, -15)}
+LECH_DUNG = {'mai_m1': (-10, -11, 6), 'mai_m2': (-2, -4, -1.5), 'mai_m3': (7, -8, -6)}
+SUP = 76.0          # thân sụp xuống (px nguồn ≈ 12 px logic): bụng / mép mai gần chạm đất
+def mai_vo(P, lech, k=1.0):
+    P['mai'][7] = 0; P['nut1'][7] = 0; P['nut2'][7] = 0
+    for n, (dx, dy, g) in lech.items(): P[n][7] = 1; cong(P, n, dx=dx * k, dy=dy * k, goc=g * k)
+def tron_lech(a, b, u): return {n: tuple(a[n][i] + (b[n][i] - a[n][i]) * u for i in range(3)) for n in a}
+def sup(P, k, run=0.0, t=0.0):
+    """k: 0 = đứng, 1 = sụp sấp. Chân khuỵu (gập ngắn, xoè), thân hạ thấp chúi nhẹ về trước; chân vẫn bám đất."""
+    cong(P, 'than', dy=SUP * k, goc=-3.0 * k)
+    for n in CHAN:
+        tr = 'truoc' in n
+        cong(P, n, dy=-SUP * k + (6 if tr else 2) * k, dx=(-16 if tr else 18) * k, goc=(22 if tr else -20) * k, sy=1 - 0.42 * k)
+        if run: cong(P, n, goc=run * math.sin(2 * math.pi * 11 * t + (1.3 if tr else 0) + (0.7 if 'xa' in n else 0)))   # run nhẹ
+    cong(P, 'dau', dy=16 * k, dx=6 * k, goc=-9 * k)                                        # đầu gục xuống sát đất
+    cong(P, 'bung', dy=6 * k, sy=1 - 0.05 * k)
+def bung_lo(P, mo, tho=0.0):
+    P['bung_lo'][7] = 1 if mo > 0.01 else 0; P['bung_lo'][6] = mo
+    cong(P, 'bung_lo', sx=1.18 + tho * 0.03, sy=0.92 + tho * 0.05, goc=-6, dy=-44)
+def f_vo_mai(P, t):   # VỠ MAI (0,5 s, game 'lat' 30 bước): giật, mai vỡ bật hé lên-ra trước, thân sụp sấp, chân khuỵu
+    g = math.sin(math.pi * ram(t, 0, 0.07)) * (t < 0.07)
+    cong(P, 'than', dy=-8 * g)
+    k = ram(t, 0.05, 0.26); bo = lo_xo(max(0, t - 0.26), 5, 9) * (t > 0.26)
+    sup(P, k); cong(P, 'than', dy=-7 * max(0.0, bo))
+    for n in CHAN: cong(P, n, dy=7 * max(0.0, bo))
+    if t >= 0.034:
+        p = ram(t, 0.03, 0.16); vot = 1 + 0.35 * math.sin(math.pi * ram(t, 0.03, 0.30))     # bật quá đà rồi lắng
+        mai_vo(P, LECH_CHOANG, p * vot if t < 0.30 else 1 + 0.12 * lo_xo(t - 0.30, 6, 10))
+    bung_lo(P, ram(t, 0.10, 0.30))
+def f_sup_choang(P, t):   # CHOÁNG (lặp 1,2 s): nằm sấp, chân run nhẹ, bụng mềm thở, mai vỡ hé
+    w = 2 * math.pi * t / 1.2
+    sup(P, 1.0, run=2.2, t=t)
+    cong(P, 'than', dy=2.5 * math.sin(w), goc=0.4 * math.sin(w))
+    mai_vo(P, LECH_CHOANG); cong(P, 'mai_m1', goc=1.2 * math.sin(w + 0.6)); cong(P, 'mai_m3', goc=-1.0 * math.sin(w + 1.1))
+    bung_lo(P, 1.0, math.sin(w))
+    cong(P, 'bung', sx=1 + 0.025 * math.sin(w - 0.5), sy=1 + 0.03 * math.sin(w - 0.5))
+    cong(P, 'dau', goc=1.5 * math.sin(w + 1.4))
+def f_day(P, t):    # ĐỨNG DẬY (0,5 s): chân chống, thân nhấc (2 nhịp), mai vỡ vẫn lệch
+    k = 1 - ram(t, 0.05, 0.40) ** 0.8
+    if t < 0.18: k = 1 - 0.18 * math.sin(math.pi * t / 0.18)                                 # nhấc thử một lần rồi khuỵu lại
+    else: k = (1 - ram(t, 0.20, 0.42)) * 0.9 + 0.1 * (1 - ram(t, 0.30, 0.42))
+    sup(P, k, run=1.5 * k, t=t)
+    if t > 0.42: b = lo_xo(t - 0.42, 4.5, 9); cong(P, 'than', dy=5 * max(0.0, -b))
+    mai_vo(P, tron_lech(LECH_CHOANG, LECH_DUNG, ram(t, 0.18, 0.44)))
+    bung_lo(P, 1 - ram(t, 0.22, 0.42))
+CHET_MANH = {'mai_m1': (-44, 34, -50), 'mai_m2': (6, 40, 20), 'mai_m3': (52, 30, 52)}   # mảng trượt / rơi xuống đất (cộng thêm vào độ lệch đang có)
+def chet_chung(P, t, k0):
+    """k0: độ sụp lúc bắt đầu (0 đứng / 1 đang choáng). Khựng → chân khuỵu, thân đổ sụp → mai nứt tách 3 mảng trượt rơi → bụng xẹp → nằm im."""
+    kh = math.sin(math.pi * ram(t, 0, 0.10)) * (t < 0.10)
+    cong(P, 'than', dy=-5 * kh * (1 - k0)); cong(P, 'dau', goc=5 * kh)                     # khựng
+    k = k0 + (1 - k0) * ram(t, 0.10, 0.42) ** 1.6                                           # đổ nặng: chậm rồi nhanh
+    sup(P, k, run=(2.0 * k0 * (1 - ram(t, 0, 0.3))), t=t)
+    cong(P, 'than', dy=10 * ram(t, 0.38, 0.55))                                             # dồn hết sức nặng xuống đất
+    for n in CHAN: cong(P, n, dy=-10 * ram(t, 0.38, 0.55), sy=1 - 0.1 * ram(t, 0.38, 0.55))
+    if t >= 0.30 or k0 > 0.5:
+        lech = LECH_CHOANG if k0 > 0.5 else {n: (0, 0, 0) for n in LECH_CHOANG}
+        mai_vo(P, lech)
+        for i, (n, (dx, dy, g)) in enumerate(CHET_MANH.items()):
+            u = ram(t, 0.32 + 0.05 * i, 0.72 + 0.05 * i) ** 1.4; nay = 3 * max(0.0, lo_xo(max(0, t - 0.72 - 0.05 * i), 6, 10)) * (t > 0.72 + 0.05 * i)
+            cong(P, n, dx=dx * u, dy=dy * u - nay * 3, goc=g * u, toi=0.18 * ram(t, 0.6, 1.0))
+    xep = ram(t, 0.30, 0.85)
+    cong(P, 'bung', sx=1 + 0.08 * xep, sy=1 - 0.38 * xep, dy=18 * xep, toi=0.35 * xep)
+    bung_lo(P, k0 * (1 - 0.0 * xep)); cong(P, 'bung_lo', sy=1 - 0.4 * xep, dy=14 * xep, toi=0.35 * xep)
+    cong(P, 'dau', dy=12 * ram(t, 0.2, 0.6), goc=-10 * ram(t, 0.2, 0.6), toi=0.3 * ram(t, 0.4, 0.95))
+    for n in CHAN: cong(P, n, toi=0.2 * ram(t, 0.5, 1.0))
+def f_chet(P, t): chet_chung(P, t, 0.0)          # chết khi đang đứng (game cộng LECH_DUNG nếu mai đã vỡ từ trước)
+def f_chet_sup(P, t): chet_chung(P, t, 1.0)      # chết khi đang sụp choáng
 
 clip('dung', 1600, True, f_dung, 'đứng thở')
 clip('di', T_DI * 1000, True, f_di, 'đi (chân bước, mai nhấp nhô) – phát theo QUÃNG ĐƯỜNG: %.0f px logic/chu kỳ' % (TOC_DI * T_DI))
 clip('bao', 500, False, f_bao, 'báo trước cú húc 0,5 s: cúi đầu, rung mai, 2 lần khép mai gõ (ms 200, 383)')
 clip('huc', T_HUC * 1000, True, f_huc, 'lao húc (lặp chân chạy nhanh, thân chúi, đầu cúi)')
 clip('hoi', 667, False, f_hoi, 'hồi sau húc: ngẩng đầu lắc, thân lắng')
-clip('quay', 400, False, f_quay, 'quay đầu (game lật hướng ở giữa clip)')
+clip('quay', 400, False, f_quay, 'quay đầu: hãm (thân dồn sau, đầu rụt) → game lật gương TỨC THÌ ở bước 12 → mai nảy, bước tại chỗ, đầu thò ra', buoc=1000 / 60)
 clip('keng', 233, False, f_keng, 'bị đánh vào mai: keng, dội, rụt đầu')
 clip('dau', 267, False, f_dau, 'bị đánh vào bụng: giật, mất máu')
-clip('lat', 500, False, f_lat, 'vỡ mai → lật ngửa')
-clip('lat_giu', 600, True, f_lat_giu, 'nằm ngửa choáng (lặp)')
-clip('day', 500, False, f_day, 'lật lại, đứng dậy')
-clip('chet', 900, False, f_chet, 'chết: mai rơi, bụng xẹp')
-clip('chet_lat', 800, False, f_chet_lat, 'chết khi đang nằm ngửa')
+clip('vo_mai', 500, False, f_vo_mai, 'vỡ mai: mai bật hé lệch lên trước, thân sụp sấp, chân khuỵu, lộ bụng mềm')
+clip('sup_choang', 1200, True, f_sup_choang, 'choáng (lặp): nằm sấp, chân run nhẹ, bụng thở, mai vỡ hé')
+clip('day', 500, False, f_day, 'đứng dậy: chân chống, thân nhấc, mai vỡ vẫn lệch')
+clip('chet', 1000, False, f_chet, 'chết: khựng, chân khuỵu, thân đổ sụp, mai nứt tách 3 mảng trượt rơi, bụng xẹp (game làm tan vụn)')
+clip('chet_sup', 1000, False, f_chet_sup, 'chết khi đang sụp choáng')
 
 # ---------------- HỘP THÂN (gameplay) ----------------
 def bao_tu_the(P):
@@ -365,9 +436,9 @@ def bao_tu_the(P):
 def P_khung(ten, i):
     k = CLIPS[ten]['khung'][i]; return {n: k[j] for j, n in enumerate(DS)}
 hop_nghi, _ = bao_tu_the(P_khung('dung', 0))
-hop_lat, _ = bao_tu_the(P_khung('lat_giu', 0))
+hop_lat, _ = bao_tu_the(P_khung('sup_choang', 0))
 print('dáng nghỉ (px logic, so với neo):', [round(v, 1) for v in hop_nghi], 'cao', round(hop_nghi[3] - hop_nghi[1], 1), 'rộng', round(hop_nghi[2] - hop_nghi[0], 1))
-print('nằm ngửa:', [round(v, 1) for v in hop_lat])
+print('sụp choáng:', [round(v, 1) for v in hop_lat])
 BUNG_X = (TL['bung'][0] + 40 - GOC_X) * TY   # mép trước phần bụng lộ ra (px logic, quay trái → dương = phía sau)
 out = {'phien_ban': 1,
        'ghi_chu': 'Sinh bởi art/huong-moi/quai-rig/bo-vo-moc/code/dung_rig.py. Cùng định dạng game/runtime/quai-boss/quai-moi-rig.json '
@@ -375,7 +446,8 @@ out = {'phien_ban': 1,
                   '[dx,dy,goc,sx,sy,toi,mo,hien] theo nut_ds. nut1/nut2 = lớp nứt mai (game bật theo thanh mai). Không có kênh nháy trắng.',
        'px_anh_moi_px_logic': PX,
        'nv': {'bo': {'ten': 'Bọ Vỏ Mộc', 'ty_le': TY, 'cao_px_logic': round(hop_nghi[3] - hop_nghi[1], 1),
-                     'hop_nghi_logic': [round(v, 1) for v in hop_nghi], 'hop_nam_ngua_logic': [round(v, 1) for v in hop_lat],
+                     'hop_nghi_logic': [round(v, 1) for v in hop_nghi], 'hop_sup_choang_logic': [round(v, 1) for v in hop_lat],
+                     'mai_vo_lech_dung': {n: list(v) for n, v in LECH_DUNG.items()},
                      'bung_tu_x_logic': round(BUNG_X, 1),
                      'hitbox_than_de_xuat': {'w': 108, 'h': 62, 'ghi_chu': 'hộp thân gameplay, đáy = mặt đất, giữa = điểm neo'},
                      'nut_ds': DS, 'nut': R, 'thu_tu_ve': THU_TU_VE, 'clip': CLIPS,
@@ -424,4 +496,16 @@ if __name__ == '__main__':
     tl = Image.new('RGBA', (W_, H_), (23, 39, 44, 255))
     for a, im in ANH.items(): tl.alpha_composite(im, (xs, 8)); xs += im.width + 8
     tl.convert('RGB').save(os.path.join(KIEM, 'manh-2x.png'))
+    # 3) bản 4: tư thế chính (2 px ảnh / px logic, không phóng nearest). Quay: khung sau bước 12 vẽ LẬT GƯƠNG như game.
+    HANG = [[('quay', 0, 0), ('quay', 100, 0), ('quay', 183, 0), ('quay', 200, 1), ('quay', 267, 1), ('quay', 400, 1)],
+            [('vo_mai', 0, 0), ('vo_mai', 100, 0), ('vo_mai', 200, 0), ('sup_choang', 300, 0), ('day', 250, 0), ('day', 500, 0)],
+            [('chet', 50, 0), ('chet', 300, 0), ('chet', 450, 0), ('chet', 600, 0), ('chet', 1000, 0), ('chet_sup', 1000, 0)]]
+    Wc, Hc = 300, 180; tt = Image.new('RGBA', (Wc * 6, Hc * 3), (23, 39, 44, 255))
+    for j, hang in enumerate(HANG):
+        for i, (cn, ms, lt) in enumerate(hang):
+            c = CLIPS[cn]; P = P_khung(cn, min(len(c['khung']) - 1, int(round(ms / c['buoc_ms']))))
+            o = ve(P, 2.0, co=(Wc, Hc), neo_=(Wc / 2, Hc - 24), lat=bool(lt)); d = ImageDraw.Draw(o)
+            d.line([(0, Hc - 24), (Wc, Hc - 24)], fill=(101, 80, 60, 255)); d.text((4, 4), '%s %d ms%s' % (cn, ms, ' (lat guong)' if lt else ''), fill=(242, 214, 154, 255))
+            tt.alpha_composite(o, (i * Wc, j * Hc))
+    tt.convert('RGB').save(os.path.join(KIEM, 'tu-the-ban-4.png'))
     print('ghi kiem/*.png')

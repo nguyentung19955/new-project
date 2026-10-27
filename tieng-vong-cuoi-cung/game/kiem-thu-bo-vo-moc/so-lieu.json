@@ -100,7 +100,7 @@
    ]
   },
   {
-   "file": "danh-mai-vo-lat-ngua-60fps.mp4",
+   "file": "danh-mai-vo-sup-choang-60fps.mp4",
    "khung": 1069,
    "giay": 17.82,
    "trang_thai": [
@@ -224,8 +224,8 @@
   },
   {
    "file": "cac-clip-60fps.mp4",
-   "khung": 804,
-   "giay": 13.4,
+   "khung": 912,
+   "giay": 15.2,
    "trang_thai": [
     [
      1,
@@ -238,23 +238,23 @@
  "anh": {
   "do_ve_600_khung": {
    "n": 600,
-   "tb": 9.619,
-   "p95": 13.3,
-   "max": 168,
-   "quaiTb": 0.125
+   "tb": 13.929,
+   "p95": 18.7,
+   "max": 155.1,
+   "quaiTb": 0.182
   },
   "nap": {
    "nap": {
-    "ms_json": 10.1,
-    "ms_anh_va_decode": 28.9,
-    "ms_cache_va_ve_thu": 6.1,
-    "ms_tong": 45.1,
-    "so_anh_png": 7,
-    "so_anh_cache": 21,
-    "byte_png": 73672,
-    "byte_giai_ma_png": 420784,
-    "byte_giai_ma_cache": 1262352,
-    "mb_giai_ma_tong": 1.61,
+    "ms_json": 18.7,
+    "ms_anh_va_decode": 47,
+    "ms_cache_va_ve_thu": 7.1,
+    "ms_tong": 72.8,
+    "so_anh_png": 10,
+    "so_anh_cache": 30,
+    "byte_png": 111150,
+    "byte_giai_ma_png": 538060,
+    "byte_giai_ma_cache": 1614180,
+    "mb_giai_ma_tong": 2.05,
     "loai": [
      "bo"
     ],
@@ -307,16 +307,37 @@
       "h": 67,
       "byte": 22780,
       "so_nut": 1
+     },
+     {
+      "anh": "manh/mai-manh-1.png",
+      "w": 89,
+      "h": 117,
+      "byte": 41652,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/mai-manh-2.png",
+      "w": 74,
+      "h": 129,
+      "byte": 38184,
+      "so_nut": 1
+     },
+     {
+      "anh": "manh/mai-manh-3.png",
+      "w": 78,
+      "h": 120,
+      "byte": 37440,
+      "so_nut": 1
      }
     ]
    },
    "hm": {
-    "ms": 1429,
-    "ms_grade": 778,
-    "ms_dat": 242,
+    "ms": 1603,
+    "ms_grade": 944,
+    "ms_dat": 274,
     "anh": 29,
     "mpx": 10.56,
-    "ms_doi_anh": 639
+    "ms_doi_anh": 641
    },
    "bk": 1
   }

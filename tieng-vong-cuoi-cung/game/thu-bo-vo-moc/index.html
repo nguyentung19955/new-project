@@ -2621,6 +2621,10 @@ const HM = (() => {
    Quái thường mới (docs/gameplay/BO-QUAI-DE-XUAT.md): tiến chậm, húc ngắn; MAI cứng phía trước, BỤNG mềm phía sau.
    Vẽ từ 5 mảnh + JSON (art/huong-moi/quai-rig/bo-vo-moc/, QBR.napThem) – không sprite sheet.
 
+   ĐỘNG TÁC bản 4 (chủ dự án chê "lật trang sách" / "bọ chết hoạt hình"; quy ước art/huong-moi/quai-rig/QUY-UOC-DONG-TAC-QUAI.md;
+   chỉ hình, KHÔNG đổi luật / số): QUAY ĐẦU = hãm → lật gương TỨC THÌ ở bước 12 (+ bụi nhỏ ở chân) → mai nảy, bước tại chỗ, không co
+   dẹt ngang; VỠ MAI / CHOÁNG = mai vỡ 3 mảng bật hé lệch lên trước, thân sụp sấp, chân run, lộ bụng; CHẾT = khựng, khuỵu, đổ sụp,
+   mai tách 3 mảng trượt rơi, bụng xẹp, rồi TAN thành vụn vỏ cây + bụi bào tử xám ấm (1 s, bước 150 → 210 như cũ).
    HÌNH/VFX bản 3 (PHAN-HOI-4 mục 2–3, chỉ hình, không đổi luật): trúng bụng chớp ngắn + ấm chỉ ở bụng (giữ mảng tối / đường bao),
    tia trúng bụng nhỏ đặt ở bụng, thân co rõ hơn; đánh mai tia nhỏ sắc; chữ "Keng! Mai cứng" chỉ lần đầu (?huongdan=1: mỗi lần).
 
@@ -2629,7 +2633,8 @@ const HM = (() => {
      Lam bị dội NHẸ: tổng 4 px trong 3 bước, KHÔNG khoá điều khiển, không đẩy vào hố, không xuyên vật.
    - Đánh TỪ SAU (vào bụng) → mất 1 máu, thân co lại.  Chém nảy (bổ xuống) tính theo CHỖ CHẠM:
      chạm phần bụng lộ phía sau = bụng, còn lại = mai (nảy lên được trên mai).
-   - Thanh mai về 0 → VỠ MAI: lật ngửa (lộ mảng bụng mềm), choáng 120 bước (2 s) – lúc này đánh hướng nào cũng mất máu.
+   - Thanh mai về 0 → VỠ MAI: mai vỡ bật hé lệch lên trước, thân SỤP SẤP (lộ mảng bụng mềm), choáng 120 bước (2 s) – lúc này đánh
+     hướng nào cũng mất máu. (Trạng thái vẫn tên 'lat' / b.nam như cũ; bản 4 chỉ đổi HÌNH: không còn lật ngửa.)
      Nhát làm vỡ mai KHÔNG gây máu. PHẢN HỒI 5: mai vỡ MỘT lần, GIỮ VỠ sau khi đứng dậy tới chết (không "dậy lại → mai đầy",
     không tự hồi mai); hết choáng Bọ đứng dậy và tiếp tục đánh (báo trước + húc), mọi nhát vào nó (mọi hướng) đều mất máu.
    - CỘNG HƯỞNG (Lam + bóng ≤ 12 bước, công thức chung KE-HOACH-GAMEPLAY-V2 mục 6b): hai nhát xử lý như thường, rồi THÊM:
@@ -2712,12 +2717,12 @@ const BO = (() => {
       g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
     }
     /* PH4 mục 2: CHỚP KHI TRÚNG BỤNG – thay lớp "trắng" (bóng trắng đặc cả mảnh) bằng lớp chớp riêng của Bọ:
-       mảnh BỤNG (cả bung_lat) chớp ẤM kem-mật mạnh; mai / đầu / chân chỉ hắt ấm rất nhẹ. Cả hai BỎ đường bao (mép 2 px ảnh)
+       mảnh BỤNG (cả bung_lo) chớp ẤM kem-mật mạnh; mai / đầu / chân chỉ hắt ấm rất nhẹ. Cả hai BỎ đường bao (mép 2 px ảnh)
        và mảng tối (độ sáng < 0,22) → giữ được khối tối + viền, vẫn thấy thân co. Tạo 1 lần lúc nạp, không xử lý pixel mỗi khung. */
     const chop = new Map();
     for (const [ten, n] of Object.entries(N.nut)) {
       if (!n.img || !n.trang) continue;
-      const bung = ten === 'bung' || ten === 'bung_lat', key = n.img;
+      const bung = ten === 'bung' || ten === 'bung_lo', key = n.img;
       if (chop.has(key) && !bung) { n.trang = chop.get(key); continue; }
       n.trang = lopChop(n.img, bung ? [246, 204, 150] : [236, 206, 166], bung ? 0.95 : 0.22); chop.set(key, n.trang);
     }
@@ -2754,7 +2759,10 @@ const BO = (() => {
     if (H.k !== clip) { if (H.k) tinh(H, frame - 1, 1, H.tu); else QBR.nghi('bo', H.tu); H.k = clip; H.b0 = frame; H.bn = bn; }
     H.clip = clip; H.t = t; H.r = r;
   }
-  const XEM = [['di', 2400], ['bao', 700], ['huc', 700], ['hoi', 900], ['quay', 600], ['keng', 600], ['dau', 600], ['lat', 700], ['lat_giu', 1800], ['day', 700], ['dung', 1200], ['chet', 1700]];
+  // ?xem=1: chuỗi clip (ms). 'quay' lật gương ở 200 ms như game; 'chet' 3600 ms = sụp + nằm im + tan vụn (bước 150 → 210 như game)
+  const LAT_BUOC = Math.round(BO_SO.quay / 2);   // bước 12: lật gương tức thì
+  const XEM = [['di', 2400], ['bao', 700], ['huc', 700], ['hoi', 900], ['quay', 700], ['keng', 600], ['dau', 600], ['vo_mai', 600], ['sup_choang', 2000], ['day', 700], ['dung', 1200], ['chet', 3600]];
+  const CLIP_VO = new Set(['vo_mai', 'sup_choang', 'day', 'chet_sup']);   // clip tự vẽ mai vỡ (độ lệch riêng) – game không đè
   function anim(b, frame) {
     const H = b.H || (b.H = Object.assign(QBR.Hoat('bo'), {k: ''}));
     const t = b.t * D;
@@ -2763,15 +2771,17 @@ const BO = (() => {
       case 'bao': dat(H, frame, 'bao', t, D, 4); break;
       case 'huc': dat(H, frame, 'huc', t, D, 3); break;
       case 'hoi': dat(H, frame, 'hoi', t, D, 3); break;
-      case 'quay': dat(H, frame, 'quay', t, D, 3); break;
+      case 'quay': dat(H, frame, 'quay', t, b.t === LAT_BUOC ? 0 : D, 3); break;   // clip khoá mỗi bước; bước lật không nội suy với bước trước
       case 'keng': dat(H, frame, 'keng', t, D, 2); break;
       case 'dau': dat(H, frame, 'dau', t, D, 2); break;
-      case 'lat': dat(H, frame, 'lat', t, D, 2); break;
-      case 'choang': dat(H, frame, 'lat_giu', t, D, 4); break;
+      case 'lat': dat(H, frame, 'vo_mai', t, D, 2); break;
+      case 'choang': dat(H, frame, 'sup_choang', t, D, 4); break;
       case 'day': dat(H, frame, 'day', t, D, 3); break;
-      case 'chet': dat(H, frame, b.nam ? 'chet_lat' : 'chet', t, D, b.nam ? 4 : 2); break;
+      case 'chet': dat(H, frame, b.nam ? 'chet_sup' : 'chet', t, D, b.nam ? 4 : 2); break;
       case 'xem': { let tt = b.at * D, i = 0; const tong = XEM.reduce((s, x) => s + x[1], 0); tt %= tong; while (tt >= XEM[i][1]) { tt -= XEM[i][1]; i++; }
-        const c = XEM[i][0]; dat(H, frame, c, tt, D, 4); b.xem = c; if (c === 'bao') b.xemBao = tt; break; }
+        const c = XEM[i][0], lb = Math.round(tt / D); b.xemT = lb;
+        if (c === 'quay' && lb >= LAT_BUOC && !b.xemLat) { b.face *= -1; b.xemLat = true; } else if (c !== 'quay') b.xemLat = false;   // lật gương như game
+        dat(H, frame, c, c === 'quay' ? lb * D : tt, c === 'quay' && lb === LAT_BUOC ? 0 : D, 4); b.xem = c; if (c === 'bao') b.xemBao = tt; break; }
       default: dat(H, frame, 'dung', b.at * D, D, 6);
     }
     H.info = b.st + ' t' + b.t + ' → ' + H.clip + ' ' + Math.round(H.t) + ' ms · máu ' + b.hp + '/' + BO_SO.mau + ' · mai ' + b.mai + '/' + BO_SO.mai;
@@ -2804,6 +2814,30 @@ const BO = (() => {
   function goGo() { noise(0.05, 0.22, 'bandpass', 950); tone(260, 150, 0.08, 0.07, 'square'); }   // khép mai gõ gỗ (có dấu hình tương ứng)
   function choang() { bell(165, 1.2, 0.2); noise(0.25, 0.25, 'lowpass', 600); bell(990, 0.4, 0.06, 0.02, TINKP); }
   function doiTrangThai(b, st) { b.st = st; b.t = 0; }
+  /* ---- VFX động tác bản 4 (chỉ hình). Màu: vỏ cây #39312E / #65503C / #A78046, bụi bào tử xám ấm – KHÔNG teal ---- */
+  const VUN = ['#39312E', '#65503C', '#A78046', '#4A3E35'], BAO_TU = ['#8E857A', '#A39A8C', '#B8AE9F', '#7A7066'];
+  function buiQuay(b) {   // bụi nhỏ ở chân lúc lật gương (che cú lật): 2 cụm thấp, sát đất, tắt nhanh
+    const cx = b.x + b.w / 2, y = b.y + b.h;
+    for (const k of [-34, 30]) for (let i = 0; i < 3; i++)
+      part(cx + k + (Math.random() * 10 - 5), y - 1, (k < 0 ? -1 : 1) * (0.25 + Math.random() * 0.45), -0.15 - Math.random() * 0.3, 12 + (Math.random() * 6 | 0), BAO_TU[i % 4], 1.5, 0.02);
+  }
+  function vfxChet(b) {   // theo bước của trạng thái 'chet' (clip 1 s; tan vụn bước 150 → 210)
+    const cx = b.x + b.w / 2, y = b.y + b.h, t = b.t;
+    if (t === 18) { tone(150, 70, 0.25, 0.08, 'triangle'); noise(0.12, 0.12, 'bandpass', 700);   // mai nứt tách (gỗ khô, trầm)
+      for (let i = 0; i < 6; i++) part(cx + (Math.random() * 60 - 30), y - 40 - Math.random() * 14, (Math.random() - 0.5) * 0.8, -0.3 - Math.random() * 0.4, 26 + (Math.random() * 10 | 0), VUN[i % 4], 2, 0.09); }
+    if (t === 27 || t === 44) { const n = t === 27 ? 7 : 4;   // thân đổ chạm đất / mảng mai rơi chạm đất: bụi thấp, chậm
+      if (t === 27) noise(0.22, 0.14, 'lowpass', 300);
+      for (let i = 0; i < n; i++) part(cx + (Math.random() * 110 - 55), y - 2, (Math.random() - 0.5) * 0.7, -0.1 - Math.random() * 0.25, 30 + (Math.random() * 14 | 0), BAO_TU[i % 4], 2, 0.0); }
+    if (t === 150) noise(0.6, 0.08, 'lowpass', 380);   // tan: tiếng xào xạc khô rất nhỏ
+    if (t >= 150 && t < 206) {   // tan vụn: vụn vỏ rơi + bụi bào tử bay lên chậm, thưa dần
+      const u = (t - 150) / 56, n = Math.random() < 1.6 * (1 - u) ? 2 : 1;
+      for (let i = 0; i < n; i++) {
+        const px = cx + (Math.random() * 110 - 55), py = y - 4 - Math.random() * 40 * (1 - 0.6 * u);
+        if (Math.random() < 0.5) part(px, py, (Math.random() - 0.5) * 0.4, 0.1, 18 + (Math.random() * 12 | 0), VUN[Math.random() * 4 | 0], 2, 0.06);
+        else part(px, py, (Math.random() - 0.5) * 0.25, -0.12 - Math.random() * 0.18, 40 + (Math.random() * 20 | 0), BAO_TU[Math.random() * 4 | 0], 1.5, -0.002);
+      }
+    }
+  }
   function capNhat1(b) {
     if (b.gone) return;
     if (b.flash > 0) b.flash--;
@@ -2851,7 +2885,7 @@ const BO = (() => {
         if (b.t >= BO_SO.hoi) { b.cd = BO_SO.cdHuc; if (b.sau >= 10) { b.sau = 0; doiTrangThai(b, 'quay'); } else doiTrangThai(b, 'di'); }
         break;
       case 'quay':
-        if (b.t === Math.round(BO_SO.quay / 2)) b.face *= -1;
+        if (b.t === Math.round(BO_SO.quay / 2)) { b.face *= -1; buiQuay(b); }   // lật gương TỨC THÌ (bản 4: + bụi nhỏ ở chân)
         if (b.t >= BO_SO.quay) { b.sau = 0; doiTrangThai(b, 'di'); b.cd = Math.max(b.cd, 20); }
         break;
       case 'keng': if (b.t >= BO_SO.keng) doiTrangThai(b, 'di'); break;
@@ -2859,7 +2893,7 @@ const BO = (() => {
       case 'lat': if (b.t >= BO_SO.lat) doiTrangThai(b, 'choang'); break;
       case 'choang': if (b.t >= BO_SO.choang) doiTrangThai(b, 'day'); break;
       case 'day': if (b.t >= BO_SO.day) { b.nam = false; b.maiT = 0; b.cd = 50; doiTrangThai(b, 'di'); } break;   // PH5: mai GIỮ VỠ (b.maiVo), đứng dậy đánh tiếp
-      case 'chet': if (b.t > 150) b.fade = Math.max(0, 1 - (b.t - 150) / 60); if (b.t >= 210) { b.dead = true; b.gone = true; } break;
+      case 'chet': vfxChet(b); if (b.t > 150) b.fade = Math.max(0, 1 - (b.t - 150) / 60); if (b.t >= 210) { b.dead = true; b.gone = true; } break;
     }
     // sát thương chạm (PH3): CHỈ cú húc chủ động, dùng vùng húc (nửa trước + đầu chìa ra). Đi / đứng / quay / hồi: chạm thân không mất máu.
     if (!pl.dead && b.st === 'huc' && overlap(pl, hopHuc(b))) hurt(b.face);
@@ -2884,7 +2918,7 @@ const BO = (() => {
     const ix0 = Math.max(hb.x, b.x), ix1 = Math.min(hb.x + hb.w, b.x + b.w), iy0 = Math.max(hb.y, b.y), iy1 = Math.min(hb.y + hb.h, b.y + b.h);
     const tx = ix1 > ix0 ? (ix0 + ix1) / 2 : cx, ty = iy1 > iy0 ? (iy0 + iy1) / 2 : cy;
     const al = src === 'e' ? 0.6 : 1, a = ATK[n] || ATK[1];
-    // bụng hay mai? Nằm ngửa (đầu bước): bụng lộ hết. Đòn ngang: theo HƯỚNG đòn (đánh cùng chiều quái nhìn = từ sau lưng).
+    // bụng hay mai? Đang sụp choáng (đầu bước): bụng lộ hết. Đòn ngang: theo HƯỚNG đòn (đánh cùng chiều quái nhìn = từ sau lưng).
     // Chém nảy (4, bổ xuống): theo chỗ chạm – phần bụng lộ phía sau (x > bung_tu_x) là bụng.
     let bung;
     if (b.namDau || b.voDau) bung = true;   // PH5: mai đã vỡ (đầu bước) → không còn gì chặn, đánh hướng nào cũng vào thân
@@ -2909,7 +2943,7 @@ const BO = (() => {
       if (res) congHuong(b, cx, cy, face);
       return true;
     }
-    // ---- BỤNG (hoặc đang nằm ngửa): mất 1 máu, thân CO lại, hiệu ứng "bụp" mềm – khác hẳn keng ----
+    // ---- BỤNG (hoặc đang sụp choáng / mai đã vỡ): mất 1 máu, thân CO lại, hiệu ứng "bụp" mềm – khác hẳn keng ----
     // PH4: chớp NGẮN (4 → hiện 3 khung), chỉ ấm mạnh ở bụng (lopChop); tia trúng NHỎ (0,85 → 0,38) đặt ở GIỮA BỤNG phía sau,
     // thấp hơn đầu và lệch khỏi lưỡi dao; vòng + hạt ấm, mềm, rơi chậm (đánh mai: tia sắc kem-trắng, ngắn)
     b.flash = 4; b.co = 10;
@@ -2949,7 +2983,7 @@ const BO = (() => {
   }
   function chet(b, face) {
     doiTrangThai(b, 'chet'); b.hp = 0; b.kvx = (face || 1) * 2.4; sfx.thud(); b.mai = 0;
-    shatter(b.x + b.w / 2, b.y + 30, '#39312E', '#A78046'); dropShards(b.x + b.w / 2, b.y + 30, 1);
+    dropShards(b.x + b.w / 2, b.y + 30, 1);   // bản 4: bỏ shatter (vỡ tung) – xác sụp rồi tan vụn (vfxChet)
   }
   function trung(hb, src, sw, face, n) {
     let hit = false;
@@ -2968,13 +3002,43 @@ const BO = (() => {
     // lớp nứt mai theo thanh mai (mất 1–2 nấc: nứt nhẹ; ≥ 3: nứt nặng; vỡ / chết: nặng)
     const mat = BO_SO.mai - b.mai, P = b.H.cur;
     P[idxNut1 * 8 + 7] = (mat >= 1 || b.nam) ? 1 : 0; P[idxNut2 * 8 + 7] = (mat >= 3 || b.nam) ? 1 : 0;
-    ctx.globalAlpha = b.fade; if (b.st !== 'chet') bong(x, y - 1, 56, 0.32); ctx.globalAlpha = 1;
+    // bản 4 + PH5: mai đã vỡ → vẽ 3 MẢNG mai lệch (giữ tới chết). Clip vỡ / choáng / dậy / chết-khi-sụp tự đặt độ lệch; clip thường: game đặt
+    // LECH_DUNG (rig 'mai_vo_lech_dung'); clip 'chet' (đứng chết với mai đã vỡ): CỘNG độ lệch vào chuyển động trượt rơi của clip.
+    const ck = b.H.k, voXem = b.st === 'xem' && (ck === 'chet' || CLIP_VO.has(ck));
+    if ((b.maiVo || b.nam) && !CLIP_VO.has(ck) && !voXem) {
+      P[N.idx.mai * 8 + 7] = 0; P[idxNut1 * 8 + 7] = 0; P[idxNut2 * 8 + 7] = 0;
+      for (const [ten, l] of Object.entries(N.mai_vo_lech_dung)) { const o = N.idx[ten] * 8;
+        if (ck === 'chet') { P[o] += l[0]; P[o + 1] += l[1]; P[o + 2] += l[2]; } else { P[o] = l[0]; P[o + 1] = l[1]; P[o + 2] = l[2]; }
+        P[o + 7] = 1; }
+    }
+    ctx.globalAlpha = b.fade; if (b.st !== 'chet' && !(b.st === 'xem' && b.xem === 'chet' && b.xemT > 150)) bong(x, y - 1, 56, 0.32); ctx.globalAlpha = 1;
     let va = 0; const baoT = b.st === 'bao' ? b.t : (b.st === 'xem' && b.xem === 'bao' ? b.xemBao / D : -1);
     if (baoT >= 0) va = 0.10 + 0.26 * (0.5 + 0.5 * Math.sin(baoT * 0.9)) * Math.min(1, baoT / 8);   // lóe CAM ĐỎ lúc báo trước
-    QBR.ve(ctx, 'bo', P, snap(x), snap(y), lat, {alpha: b.fade, trang: chopBo(b.flash), vang: va});
+    const tan = b.st === 'chet' ? (b.t - 150) / 60 : (b.st === 'xem' && b.xem === 'chet' ? (b.xemT - 150) / 60 : -1);
+    if (tan > 0) veTan(P, snap(x), snap(y), lat, Math.min(1, tan));
+    else QBR.ve(ctx, 'bo', P, snap(x), snap(y), lat, {alpha: b.st === 'chet' ? 1 : b.fade, trang: chopBo(b.flash), vang: va});
     if (baoT >= 0 && BO_THU.dauThan) veDauThan(x - (lat ? -1 : 1) * 30, y - 128, baoT);   // trên thanh mai / chấm máu (y − 92), không bị che
     if (b.st !== 'chet' && b.st !== 'xem') veThanh(b, x, y);
     DO.qbT(performance.now() - t0);
+  }
+  /* TAN VỤN (bản 4): vẽ xác vào canvas phụ rồi khoét theo mặt nạ ô 3 px (ngẫu nhiên, phía trên tan trước) → vỡ thành vụn,
+     12 mức tạo 1 lần; 40 % cuối mờ dần thêm. Không xử lý pixel mỗi khung. */
+  const OW = 320, OH = 190, OD = 34, TAN_N = 12; let OC = null, OG = null, OK = 0; const MASK = [];
+  function veTan(P, x, y, lat, u) {
+    if (!OC || OK !== BK) {
+      OC = document.createElement('canvas'); OC.width = Math.ceil(OW * BK); OC.height = Math.ceil(OH * BK); OG = OC.getContext('2d'); OK = BK;
+      if (!MASK.length) { const bw = OW / 3 | 0, bh = OH / 3 | 0, v = new Float32Array(bw * bh);
+        for (let j = 0; j < bh; j++) for (let i = 0; i < bw; i++) v[j * bw + i] = 0.72 * Math.random() + 0.28 * (j / bh);
+        for (let k = 1; k <= TAN_N; k++) { const c = document.createElement('canvas'); c.width = bw; c.height = bh; const g = c.getContext('2d'); g.fillStyle = '#000';
+          for (let q = 0; q < v.length; q++) if (v[q] < k / TAN_N) g.fillRect(q % bw, q / bw | 0, 1, 1); MASK.push(c); } }
+    }
+    OG.setTransform(BK, 0, 0, BK, 0, 0); OG.globalCompositeOperation = 'source-over'; OG.clearRect(0, 0, OW, OH);
+    QBR.ve(OG, 'bo', P, OW / 2, OH - OD, lat, {alpha: 1});
+    const k = Math.min(TAN_N - 1, Math.floor(u * TAN_N));
+    if (u > 0.04) { OG.globalCompositeOperation = 'destination-out'; OG.imageSmoothingEnabled = false; OG.drawImage(MASK[k], 0, 0, OW, OH); OG.globalCompositeOperation = 'source-over'; }
+    const a = 1 - Math.max(0, (u - 0.6) / 0.4);
+    if (a <= 0) return;
+    ctx.save(); ctx.globalAlpha *= a; ctx.drawImage(OC, x - OW / 2, y - (OH - OD), OW, OH); ctx.restore();
   }
   /* dấu "!" báo húc (PH3: rõ hơn): to gấp ~3 lần cũ (8×22 px), viền tối 2 px, bật lên lúc xuất hiện rồi nhấp theo 2 tiếng gõ mai.
      ?dauthan=0 tắt hẳn để so: chỉ còn cúi đầu + rung mai + chân cào + lóe cam đỏ + tiếng gõ. */
@@ -3044,7 +3108,7 @@ const BO = (() => {
 })();
 
 /* ---------- hướng dẫn 1 dòng trong phòng thử ---------- */
-HINT.bo = 'Mai cứng phía trước dội đòn – vòng ra sau đánh bụng, hoặc chém mai tới vỡ rồi đánh lúc nó lật ngửa';
+HINT.bo = 'Mai cứng phía trước dội đòn – vòng ra sau đánh bụng, hoặc chém mai tới vỡ rồi đánh lúc nó sụp xuống';
 const _boHint = hintNow;
 hintNow = function () { return ROOMS[S.room] === RD ? 'bo' : _boHint(); };
 /* ---------- bất tử khi quay thử (?battu=1) ---------- */
@@ -3054,7 +3118,7 @@ hurt = function (dir) { if (BO_THU.batTu && pl.hp <= 1) pl.hp = 2; _boHurt(dir);
 /* ======================= THỬ (không ghép vào demo.html): bot + API quay / chụp ======================= */
 const BO_BOT = {on: false, kieu: '', t: 0, pha: '', nhay: 0, luot: 0, xong: false, daNe: false};
 function boMucTieu() { let m = null, d = 1e9; for (const b of BO.DS) { if (b.gone || b.st === 'chet') continue; const k = Math.abs(b.x + b.w / 2 - pl.x - pl.w / 2); if (k < d) { d = k; m = b; } } return m; }
-/* kiểu 'mai': đứng trước mặt chém mai tới vỡ (lùi xa khi nó báo trước húc), rồi chém lúc nằm ngửa
+/* kiểu 'mai': đứng trước mặt chém mai tới vỡ (lùi xa khi nó báo trước húc), rồi chém lúc nó sụp choáng
    kiểu 'vong': chờ nó húc, LƯỚT xuyên qua ra sau lưng, chém bụng */
 function boBotBuoc() {
   if (!BO_BOT.on) return;

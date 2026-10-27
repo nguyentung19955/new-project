@@ -1,4 +1,4 @@
-# Thử quái mới: Bọ Vỏ Mộc – BẢN 3 (hình/VFX theo phản hồi 4); luật = bản 2 theo phản hồi 3, **mai vỡ giữ tới chết theo phản hồi 5** (27/10/2026)
+# Thử quái mới: Bọ Vỏ Mộc – BẢN 4 (động tác quay đầu / choáng / chết, 28/10/2026); hình/VFX bản 3; luật = bản 2 theo phản hồi 3, **mai vỡ giữ tới chết theo phản hồi 5**
 
 Viết cho người không rành kỹ thuật. Đây là **trang thử riêng**, sinh từ `game/demo.html` bằng script (`cong-cu/tao-tu-demo.py`), giống các
 thư mục `thu-*` khác. **KHÔNG sửa** `game/demo.html`, `build-demo.py`, `docs/gameplay/`, `game/thu-p0a/`, `game/thu-quai-huong-moi/`.
@@ -22,6 +22,35 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 | `?mau=0` | ẩn chấm máu (chấm máu chỉ có ở bản thử) |
 | `?hm=0` | tắt màu/ánh sáng hướng mới (cảnh như demo hiện tại) |
 
+## Bản 4 – sửa ĐỘNG TÁC quay đầu / choáng / chết (chủ dự án chê "lật trang sách" + "bọ chết hoạt hình")
+
+**Chỉ đổi hình, KHÔNG đổi luật / số** (`BO_SO` giữ nguyên: quay 24 bước, lật hướng ở bước 12, `lat` 30, choáng 120, `day` 30; biến mất ở bước 210 như cũ).
+Đã quay lại 3 video: trạng thái Bọ từng bước trong `so-lieu.json` **trùng khít** bản trước (715 / 1069 khung như cũ). Quy ước chung cho mọi quái từ nay:
+**`art/huong-moi/quai-rig/QUY-UOC-DONG-TAC-QUAI.md`**. Chi tiết rig: `art/huong-moi/quai-rig/bo-vo-moc/README.md` mục "Bản 4".
+
+| | Trước (bản 1–3) | **Bản 4 (bây giờ)** |
+|---|---|---|
+| **Quay đầu** | thân co dẹt ngang tới 0,58 rồi lật = "lật trang sách" | **hãm** (chân trước cắm, thân dồn ra sau ~5 px, đầu rụt vào mai) → **bước 12 lật gương tức thì** + bụi nhỏ ở chân → mai **nảy nhẹ** do quán tính, chân **bước lại tại chỗ**, đầu thò ra. Không khung nào co ngang (đo: `sx` thấp nhất 1,0; quy ước ≥ 0,9). Clip khoá mỗi bước, bước lật không nội suy với bước trước |
+| **Vỡ mai → choáng** | hất lật ngửa, giãy chân trên không | mai vỡ thành **3 mảng bật hé, lệch lên phía trước** (mảng sau vểnh đuôi), **thân sụp sấp**, chân khuỵu **run nhẹ**, lộ **mảng bụng mềm** dưới / sau mai (vẫn đánh được mọi hướng như luật). Tia/vòng/chữ "Vỡ mai!" giữ |
+| **Đứng dậy** | lật úp lại, mai liền | nhấc thử – khuỵu lại – **chân chống, thân nhấc**; mai vỡ **vẫn lệch** (mảng lệch nhỏ hơn lúc choáng) và giữ tới chết (PH5) |
+| **Chết** | giật, mai bay văng ra sau; nếu đang lật thì chết ngửa; vỡ tung hạt (`shatter`) | **khựng** → chân khuỵu, **thân đổ sụp** (chậm rồi nhanh, bụi thấp) → mai **nứt tách 3 mảng trượt rơi** (tiếng gỗ khô trầm) → **bụng xẹp**, tối dần → nằm im → **tan** thành vụn vỏ cây + **bụi bào tử xám ấm** bay lên chậm (không teal), xác khoét vụn dần + mờ hẳn trong **1 s** (bước 150 → 210). Bỏ `shatter`; rơi đồ (`dropShards`) giữ nguyên |
+
+**Xem trong `game/kiem-thu-bo-vo-moc/`** (đã quay / chụp lại, H.264 60 hình/s `-preset veryfast`):
+- `pha-quay-dau.png` – 9 khung (t1 … t24), lật gương giữa **t11 → t12**.
+- `pha-vo-mai-choang-day.png` – vỡ mai → sụp choáng → dậy → đi tiếp với mai vẫn vỡ. `pha-chet-sup-tan-vun.png` – chết khi đứng (khựng → sụp → tách mai → tan).
+  `pha-chet-mai-da-vo.png` – chết khi mai đã vỡ từ trước. Ảnh cắt 300×170 quanh Bọ, cỡ thật, nhãn = trạng thái + bước.
+- `danh-mai-vo-sup-choang-60fps.mp4` (**đổi tên** từ `danh-mai-vo-lat-ngua-60fps.mp4`), `vong-ra-sau-danh-bung-60fps.mp4`, `cac-clip-60fps.mp4` (15,2 s, chuỗi `?xem=1` mới: quay có lật gương, chết có tan vụn).
+- `sup-choang-lo-bung.png` (thay `nam-ngua-choang.png`), `chet-sup-tan-vun.png` (thay `chet-mai-roi.png`); các ảnh khác chụp lại cùng khung.
+- Tư thế vẽ bằng Python (cùng ma trận): `art/huong-moi/quai-rig/bo-vo-moc/kiem/tu-the-ban-4.png`.
+
+**Chưa thử trên iPhone thật** (vẫn Chromium headless, máy chủ không GPU). Chưa kiểm: cú lật ở 120 Hz (bước lật vẽ không nội suy nên ở 120 Hz đứng 2 khung);
+tan vụn dùng 1 canvas phụ 320×190 × tỉ lệ màn trong 60 bước cho mỗi con đang tan – cần đo trên iPhone. Vẽ Bọ trên máy chủ 0,13 → **0,18 ms/khung**
+(thêm 3 mảng mai khi mai đã vỡ). Gói hình 7 → 10 PNG ≈ 111 KB (thêm `mai-manh-1/2/3`).
+**Còn hơi "hoạt hình", chưa đổi (không thuộc yêu cầu lần này):** 3 chấm quay tròn trên đầu lúc choáng (dấu choáng của bản thử) – có thể thay bằng thanh choáng
+đơn giản nếu muốn; đầu khi chết gục hơi lún dưới mặt đất 1–2 px (bị mảng mai che, rồi tan).
+
+Chạy lại riêng phần bản 4: `python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py video anh pha` (sau khi chạy `dung_rig.py` và `tao-tu-demo.py`).
+
 ## Sửa theo phản hồi 5 (`docs/gameplay/PHAN-HOI-5-P0A.md` mục 3)
 
 **Luật mới:** mai là **vỏ vật lý của quái thường** → phá **một lần**, **giữ vỡ** tới chết.
@@ -37,8 +66,8 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 
 Nhát làm vỡ mai vẫn **không** gây máu; choáng vẫn 120 bước (2 s); mọi số khác giữ nguyên. Thứ tự trong cùng bước: "mai đã vỡ" xét theo **đầu bước** như các luật cũ.
 
-**Quay lại** `game/kiem-thu-bo-vo-moc/danh-mai-vo-lat-ngua-60fps.mp4` (17,8 s, 1069 hình, H.264 60 hình/s `-preset veryfast`, bot + bất tử):
-chém mai keng → mai vỡ bước 367 → lật ngửa + choáng → bot chém 2 nhát (còn 2 máu) rồi **lùi ra chờ** → Bọ đứng dậy bước 546, **mai vẫn vỡ** →
+**Quay lại** `game/kiem-thu-bo-vo-moc/danh-mai-vo-lat-ngua-60fps.mp4` (bản 4 đổi tên `danh-mai-vo-sup-choang-60fps.mp4`; 17,8 s, 1069 hình, H.264 60 hình/s `-preset veryfast`, bot + bất tử):
+chém mai keng → mai vỡ bước 367 → (bản 4: sụp) + choáng → bot chém 2 nhát (còn 2 máu) rồi **lùi ra chờ** → Bọ đứng dậy bước 546, **mai vẫn vỡ** →
 Bọ **báo trước 596 → húc 626 → hồi 650** (bot lùi + nhảy né) → bot chém **trực diện**: mất máu (bước 711 phản ứng "đau") → chết bước 738.
 Trạng thái từng bước: `so-lieu.json` → `video`. Cũng quay lại `vong-ra-sau-danh-bung-60fps.mp4` và 2 ảnh so mai / bụng (luật không đổi ở hai cảnh này, trạng thái trùng bản trước).
 Bot chỉ để minh hoạ: đoạn "chờ Bọ dậy rồi húc một lần" là kịch bản của bot cho video, không phải luật.
@@ -107,14 +136,14 @@ Nhát ở bước sau dùng trạng thái thật lúc trúng (mai đã vỡ thì
 ## 2. Xem gì trước (`game/kiem-thu-bo-vo-moc/`, đã quay lại)
 | File | Nội dung |
 |---|---|
-| **`danh-mai-vo-lat-ngua-60fps.mp4`** | **Quay lại theo PH5**, 17,8 s: Lam đứng trước chém mai: keng + tia, dội nhẹ, mai nứt → **Vỡ mai!** → lật ngửa lộ bụng, choáng 2 s (bot chém 2 nhát rồi lùi) → **đứng dậy, mai vẫn vỡ** → Bọ báo trước + húc lại → bot chém trực diện mất máu → chết (bot, bật bất tử) |
+| **`danh-mai-vo-sup-choang-60fps.mp4`** | **Quay lại bản 4**, 17,8 s: Lam đứng trước chém mai: keng + tia, dội nhẹ, mai nứt → **Vỡ mai!** → mai bật hé, sụp sấp lộ bụng, choáng 2 s (bot chém 2 nhát rồi lùi) → **đứng dậy, mai vẫn vỡ** → Bọ báo trước + húc lại → bot chém trực diện mất máu → chết (bot, bật bất tử) |
 | **`vong-ra-sau-danh-bung-60fps.mp4`** | 11,9 s: Bọ báo trước (chân cào, "!") → húc, Lam lướt xuyên qua ra sau lưng, chém bụng (thân co), lặp tới chết |
-| `cac-clip-60fps.mp4` | 13,4 s: mọi clip theo thứ tự đi · báo trước · húc · hồi · quay · keng · trúng bụng · lật · nằm ngửa · dậy · đứng · chết |
+| `cac-clip-60fps.mp4` | 15,2 s (bản 4): mọi clip theo thứ tự đi · báo trước · húc · hồi · quay (lật gương) · keng · trúng bụng · vỡ mai · sụp choáng · dậy · đứng · chết + tan |
 | **`bao-truoc-huc.png`** / **`bao-truoc-huc-tat-dau-than.png`** | cùng một khung báo trước, có và **không** có dấu "!" – để so |
 | **`keng-tia-tren-mai.png`** / **`trung-bung-co-than.png`** | chém mai (tia trên mai) và chém bụng (thân co + bụp mềm), cùng con, cùng chỗ |
-| `nam-ngua-choang.png` | lật ngửa, mảng bụng mềm |
+| `sup-choang-lo-bung.png` | (bản 4) sụp choáng, mai vỡ hé, mảng bụng mềm · `pha-*.png`: từng pha quay đầu / choáng / chết |
 | **`canh-huong-moi.png` / `canh-huong-moi-xam.png`** | Bọ trong cảnh tối hướng mới, bản màu + **xám** (chấm "không chìm nền"); `canh-mau-demo-hien-tai(-xam).png` = màu demo cũ |
-| `so-co-lam-112-bo-74.png`, `man-choi.png`, `chet-mai-roi.png`, `hitbox-bao-truoc.png` | ảnh 960×540 cỡ thật |
+| `so-co-lam-112-bo-74.png`, `man-choi.png`, `chet-sup-tan-vun.png`, `hitbox-bao-truoc.png` | ảnh 960×540 cỡ thật |
 
 Video H.264 60 hình/s (`-preset veryfast`), mỗi hình = đúng 1 bước game. Số đo ở `so-lieu.json` (máy chủ không GPU): vẽ Bọ **0,13 ms/khung**,
 cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB (mảnh bụng lật dùng lại ảnh bụng, không thêm file).
@@ -125,7 +154,7 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
 | Đánh **trước mặt** (vào mai) | Keng + tia trên mai, dội nhẹ 4 px, **0 máu**, thanh mai −1 (nhát 3: −2). Mai nứt dần |
 | Đánh **từ sau** (vào bụng) | −1 máu, thân co lại. Máu 4 |
 | Chém nảy (bổ xuống) | theo chỗ chạm: phần bụng lộ phía sau = bụng; trên mai = keng, **nảy lên được** |
-| Thanh mai về 0 | **Vỡ mai** (nhát này 0 máu): lật ngửa lộ bụng, choáng **2 s**, đánh hướng nào cũng −1. **PH5: dậy lại mai vẫn vỡ tới chết**, Bọ đánh tiếp, đánh hướng nào cũng −1 |
+| Thanh mai về 0 | **Vỡ mai** (nhát này 0 máu): (bản 4: sụp sấp, mai vỡ hé) lộ bụng, choáng **2 s**, đánh hướng nào cũng −1. **PH5: dậy lại mai vẫn vỡ tới chết**, Bọ đánh tiếp, đánh hướng nào cũng −1 |
 | Cộng hưởng | như đòn thường + **thêm** vỡ mai ngay + 1 máu (công thức chung) |
 | Mai hồi | **PH5: bỏ** (trước: không bị đánh vào mai 1,5 s → hồi 1 nấc mỗi 0,5 s). Mai chỉ nứt thêm, không tự lành |
 | Tấn công | Lam **trước mặt** trong 240 px → **báo trước 0,5 s** → **húc** 0,4 s (~144 px) → **hồi 0,67 s** (húc vào tường hồi 1 s). **Chỉ cú húc** gây sát thương |
@@ -141,7 +170,7 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
 6. Bóng (Vọng) đánh Bọ hiện vẫn mất **1 máu đủ** như Lam (trang thử chưa có `BONG_MAU`); khi Bọ vào P0-B sẽ dùng `BONG_MAU`/`BONG_THE` chung (0,25 → tối thiểu 1, nên kết quả hiện giống nhau).
 
 ## 5. Cái chưa đẹp / cần biết
-- Lúc **nằm ngửa** cả đầu cũng lộn ngược (lật quanh trục ngang) – ở cỡ chơi đọc được là "lật ngửa giãy chân".
+- ~~Lúc nằm ngửa cả đầu cũng lộn ngược~~ → bản 4 bỏ lật ngửa (sụp sấp).
 - **Đầu đặt đè lên mai** (để che khoang tối dưới mai); viền tối mới làm mép này rõ hơn.
 - Lớp nứt mai và tia va chạm vẽ bằng code, chưa phải art gen.
 - Lam vẫn là Lam cũ (blue chibi) – lệch tông với Bọ hướng mới.
