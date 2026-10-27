@@ -1,0 +1,30 @@
+== Chuông Gỗ [40]: khựng · lấy đà ≥ 18 không ngắt · chết
+f1 #1 ra-ngay → atk1  cần y=0.00
+f3 #2 xep-hang  cần y=0.00  (đang atk1 t3)  hạn f29
+f7 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)
+f7 Lam D 1 atk1 trúng Chuông Gỗ#3: máu 10
+f7   → Chuông Gỗ#3 tick này: máu −10 (40 → 30)
+f8   D 1 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
+f16 #2 → thuc-hien atk2  chờ 12 tick
+f22 hộp atk2 bật: chạm #2 → hộp 19 tick (tính tick bấm = 1; su 7)
+f22 Lam D 2 atk2 trúng Chuông Gỗ#3: máu 10
+f22   → Chuông Gỗ#3 tick này: máu −10 (30 → 20)
+f23   D 2 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
+f83 #3 ra-ngay → atk1  cần y=0.00
+f89 hộp atk1 bật: chạm #3 → hộp 7 tick (tính tick bấm = 1; su 7)
+f89 Lam D 3 atk1 trúng Chuông Gỗ#3: máu 10
+f89   → Chuông Gỗ#3 tick này: máu −10 (20 → 10)
+f89   Chuông Gỗ#3 đã lấy đà 25 tick (≥ 18) → không bị ngắt
+f123 #4 ra-ngay → atk1  cần y=0.00 đang chạy
+f124 #5 xep-hang  cần y=0.00  (đang atk1 t2)  hạn f151
+f126 #5 → bi-thay  bởi #6
+f126 #6 thay-the  cần y=0.00  (đang atk1 t4)  hạn f151
+f128 #6 → bi-thay  bởi #7
+f128 #7 thay-the  cần y=0.00  (đang atk1 t6)  hạn f151
+f129 hộp atk1 bật: chạm #4 → hộp 7 tick (tính tick bấm = 1; su 7)
+f129 Lam D 4 atk1 trúng Chuông Gỗ#3: máu 10
+f129   → Chuông Gỗ#3 tick này: máu −10 (10 → 0)
+f129   Chuông Gỗ#3 CHẾT
+f138 #7 → thuc-hien atk2  chờ 9 tick
+f144 hộp atk2 bật: chạm #7 → hộp 16 tick (tính tick bấm = 1; su 7)
+tk {"thieu": 0, "bam": 7, "ketCuc": 7, "raDon": 5, "datChay": 1, "hatKhiChay": 0, "trung": 4, "ch": 0, "boQua": 14}

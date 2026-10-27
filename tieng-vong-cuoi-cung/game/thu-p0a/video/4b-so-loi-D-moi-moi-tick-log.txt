@@ -1,0 +1,33 @@
+== CHỈ ĐỂ SO LỖI (?dmoi=1): D bóng mới mỗi tick → 1 hộp trúng nhiều lần
+f9 #1 ra-ngay → atk1  cần y=0.00
+f15 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)
+f15 Lam D 1 atk1 trúng hình nộm#6: máu 10  Thế 10
+f15   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f16   D 1 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f37 bóng phát lần 1 (bảng maGoc→maReplay mới)
+f38 — bóng sẽ chém ở tick 52; Lam không chém
+f52 D bóng 100001 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f52 bóng D 100001 trúng hình nộm#6: máu 2  Thế 5
+f52   → hình nộm#6 tick này: máu −2 (999 → 997), Thế 60 → 55 [thuong]
+f53 D bóng 100002 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f53 bóng D 100002 trúng hình nộm#6: máu 2  Thế 5
+f53   → hình nộm#6 tick này: máu −2 (997 → 995), Thế 55 → 50 [thuong]
+f54 D bóng 100003 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f54 bóng D 100003 trúng hình nộm#6: máu 2  Thế 5
+f54   → hình nộm#6 tick này: máu −2 (995 → 993), Thế 50 → 45 [thuong]
+f55 D bóng 100004 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f55 bóng D 100004 trúng hình nộm#6: máu 2  Thế 5
+f55   → hình nộm#6 tick này: máu −2 (993 → 991), Thế 45 → 40 [thuong]
+f56 D bóng 100005 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f56 bóng D 100005 trúng hình nộm#6: máu 2  Thế 5
+f56   → hình nộm#6 tick này: máu −2 (991 → 989), Thế 40 → 35 [thuong]
+f57 D bóng 100006 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f57 bóng D 100006 trúng hình nộm#6: máu 2  Thế 5
+f57   → hình nộm#6 tick này: máu −2 (989 → 987), Thế 35 → 30 [thuong]
+f58 D bóng 100007 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f58 bóng D 100007 trúng hình nộm#6: máu 2  Thế 5
+f58   → hình nộm#6 tick này: máu −2 (987 → 985), Thế 30 → 25 [thuong]
+f59 D bóng 100008 ← maGoc 1 (lần phát 1)  [dmoi=1: D MỚI MỖI TICK – lỗi để so]
+f59 bóng D 100008 trúng hình nộm#6: máu 2  Thế 5
+f59   → hình nộm#6 tick này: máu −2 (985 → 983), Thế 25 → 20 [thuong]
+tk {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 9, "ch": 0, "boQua": 7}

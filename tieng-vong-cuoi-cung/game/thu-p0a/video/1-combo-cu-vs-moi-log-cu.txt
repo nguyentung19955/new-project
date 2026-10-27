@@ -1,0 +1,105 @@
+== bấm nhanh: 5 lần trong 9 tick
+f0 #1 ra-ngay?  cần y=0.00
+f1 #1 → thuc-hien atk1  chờ 0 tick
+f2 #2 atkBuf-8  cần y=0.00  (đang atk1 t2)
+f4 #2 → bi-de (atkBuf 8 nạp lại)
+f4 #3 atkBuf-8  cần y=0.00  (đang atk1 t4)
+f6 #3 → bi-de (atkBuf 8 nạp lại)
+f6 #4 atkBuf-8  cần y=0.00  (đang atk1 t6)
+f8 #4 → bi-de (atkBuf 8 nạp lại)
+f8 #5 atkBuf-8  cần y=0.00  (đang atk1 t8)
+f11 hộp atk1 bật: chạm #1 → hộp 11 tick (tính tick bấm = 1; su 11)
+f11 Lam D 1 atk1 trúng hình nộm#6: máu 10  Thế 10
+f11   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f12   D 1 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f16 #5 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+tk {"thieu": 0, "bam": 5, "ketCuc": 5, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+== bấm sớm: 4–5 tick sau mỗi nhát
+f77 #6 ra-ngay?  cần y=0.00
+f78 #6 → thuc-hien atk1  chờ 0 tick
+f82 #7 atkBuf-8  cần y=0.00  (đang atk1 t5)
+f88 hộp atk1 bật: chạm #6 → hộp 11 tick (tính tick bấm = 1; su 11)
+f88 Lam D 2 atk1 trúng hình nộm#6: máu 10  Thế 10
+f88   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f89   D 2 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f90 #7 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+f99 #8 atkBuf-8  cần y=0.00  (đang atk1 t22)
+f100 #8 → thuc-hien atk2  chờ 0 tick
+f104 #9 atkBuf-8  cần y=0.00  (đang atk2 t5)
+f110 hộp atk2 bật: chạm #8 → hộp 11 tick (tính tick bấm = 1; su 11)
+f110 Lam D 3 atk2 trúng hình nộm#6: máu 10  Thế 10
+f110   → hình nộm#6 tick này: máu −10 (989 → 979), Thế 50 → 40 [thuong]
+f111   D 3 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f112 #9 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+f120 #10 atkBuf-8  cần y=0.00  (đang atk2 t21)
+f121 #10 → thuc-hien atk3  chờ 0 tick
+f125 #11 atkBuf-8  cần y=0.00  (đang atk3 t5)
+f131 hộp atk3 bật: chạm #10 → hộp 11 tick (tính tick bấm = 1; su 11)
+f131 Lam D 4 atk3 trúng hình nộm#6: máu 10  Thế 30
+f131   → hình nộm#6 tick này: máu −10 (979 → 969), Thế 40 → 10 [thuong]
+f132   D 4 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f133 #11 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+tk {"thieu": 0, "bam": 6, "ketCuc": 6, "raDon": 3, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 0, "boQua": 21}
+== bấm đều 16 tick
+f174 #12 ra-ngay?  cần y=0.00
+f175 #12 → thuc-hien atk1  chờ 0 tick
+f185 hộp atk1 bật: chạm #12 → hộp 11 tick (tính tick bấm = 1; su 11)
+f185 Lam D 5 atk1 trúng hình nộm#6: máu 10  Thế 10
+f185   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f186   D 5 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f187 #13 atkBuf-8  cần y=0.00  (đang atk1 t13)
+f194 #13 → thuc-hien atk2  chờ 6 tick
+f203 #14 atkBuf-8  cần y=0.00  (đang atk2 t10)
+f204 hộp atk2 bật: chạm #13 → hộp 17 tick (tính tick bấm = 1; su 11)
+f204 Lam D 6 atk2 trúng hình nộm#6: máu 10  Thế 10
+f204   → hình nộm#6 tick này: máu −10 (989 → 979), Thế 50 → 40 [thuong]
+f205   D 6 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f211 #14 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+f231 #15 ra-ngay?  cần y=0.00
+f232 #15 → thuc-hien atk1  chờ 0 tick
+f242 hộp atk1 bật: chạm #15 → hộp 11 tick (tính tick bấm = 1; su 11)
+f242 Lam D 7 atk1 trúng hình nộm#6: máu 10  Thế 10
+f242   → hình nộm#6 tick này: máu −10 (979 → 969), Thế 40 → 30 [thuong]
+f243   D 7 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f244 #16 atkBuf-8  cần y=0.00  (đang atk1 t13)
+f251 #16 → thuc-hien atk2  chờ 6 tick
+f260 #17 atkBuf-8  cần y=0.00  (đang atk2 t10)
+f261 hộp atk2 bật: chạm #16 → hộp 17 tick (tính tick bấm = 1; su 11)
+f261 Lam D 8 atk2 trúng hình nộm#6: máu 10  Thế 10
+f261   → hình nộm#6 tick này: máu −10 (969 → 959), Thế 30 → 20 [thuong]
+f262   D 8 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+f268 #17 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+tk {"thieu": 0, "bam": 6, "ketCuc": 6, "raDon": 4, "datChay": 0, "hatKhiChay": 0, "trung": 4, "ch": 0, "boQua": 28}
+== bấm khi bị Chuông Gỗ đánh
+f311 #18 ra-ngay?  cần y=0.00
+f312 #18 → thuc-hien atk1  chờ 0 tick
+f314 #19 atkBuf-8  cần y=0.00  (đang atk1 t3)
+f322 hộp atk1 bật: chạm #18 → hộp 11 tick (tính tick bấm = 1; su 11)
+f322 Lam D 9 atk1 trúng Chuông Gỗ#3: máu 10
+f322   → Chuông Gỗ#3 tick này: máu −10 (40 → 30)
+f322   Chuông Gỗ#3 đã lấy đà 0 tick (≥ 18) → không bị ngắt
+f322 #19 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+f323   D 9 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
+f326 #20 atkBuf-8  cần y=0.00
+f334 #20 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+f345 #21 ra-ngay?  cần y=0.00
+f346 #21 → thuc-hien atk1  chờ 0 tick
+f349 #22 atkBuf-8  cần y=0.00  (đang atk1 t4)
+f356 hộp atk1 bật: chạm #21 → hộp 11 tick (tính tick bấm = 1; su 11)
+f356 Lam D 10 atk1 trúng Chuông Gỗ#3: máu 10
+f356   → Chuông Gỗ#3 tick này: máu −10 (30 → 20)
+f357 #22 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
+tk {"thieu": 0, "bam": 5, "ketCuc": 5, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 2, "ch": 0, "boQua": 4}
+== chạy + cần chéo lên 30°, rồi 50°
+f502 #23 ra-ngay?  cần y=-0.50 đang chạy
+f503 #23 → thuc-hien HẤT  chờ 0 tick  (cần y -0.50 > ngưỡng 0,38)
+f513 hộp HẤT bật: chạm #23 → hộp 11 tick (tính tick bấm = 1; su 11)
+tk {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 1, "hatKhiChay": 1, "trung": 0, "ch": 0, "boQua": 0}
+== cần chéo lên 50°
+f502 #23 ra-ngay?  cần y=-0.50 đang chạy
+f503 #23 → thuc-hien HẤT  chờ 0 tick  (cần y -0.50 > ngưỡng 0,38)
+f513 hộp HẤT bật: chạm #23 → hộp 11 tick (tính tick bấm = 1; su 11)
+f562 #24 ra-ngay?  cần y=-0.77 đang chạy
+f563 #24 → thuc-hien HẤT  chờ 0 tick  (cần y -0.77 > ngưỡng 0,38)
+f573 hộp HẤT bật: chạm #24 → hộp 11 tick (tính tick bấm = 1; su 11)
+tk {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 2, "hatKhiChay": 2, "trung": 0, "ch": 0, "boQua": 0}

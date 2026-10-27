@@ -1,0 +1,88 @@
+{
+ "cu": {
+  "tre_cham_hop_ranh": [
+   11
+  ],
+  "bam_nhanh_moi_3_tick_120": {
+   "thieu": 0,
+   "bam": 40,
+   "ketCuc": 40,
+   "raDon": 6,
+   "datChay": 0,
+   "hatKhiChay": 0,
+   "trung": 0,
+   "ch": 0,
+   "boQua": 0
+  },
+  "bam_som_4_tick": {
+   "atk2": 0,
+   "atk3": 0,
+   "mat": 8,
+   "tk": {
+    "thieu": 0,
+    "bam": 16,
+    "ketCuc": 16,
+    "raDon": 8,
+    "datChay": 0,
+    "hatKhiChay": 0,
+    "trung": 0,
+    "ch": 0,
+    "boQua": 0
+   }
+  },
+  "cheo_len": {
+   "15": "thường",
+   "25": "HẤT",
+   "30": "HẤT",
+   "35": "HẤT",
+   "40": "HẤT",
+   "44": "HẤT",
+   "46": "HẤT",
+   "50": "HẤT",
+   "60": "HẤT"
+  }
+ },
+ "moi": {
+  "tre_cham_hop_ranh": [
+   7
+  ],
+  "bam_nhanh_moi_3_tick_120": {
+   "thieu": 0,
+   "bam": 40,
+   "ketCuc": 40,
+   "raDon": 7,
+   "datChay": 0,
+   "hatKhiChay": 0,
+   "trung": 0,
+   "ch": 0,
+   "boQua": 0
+  },
+  "bam_som_4_tick": {
+   "atk2": 6,
+   "atk3": 6,
+   "mat": 0,
+   "tk": {
+    "thieu": 0,
+    "bam": 20,
+    "ketCuc": 19,
+    "raDon": 19,
+    "datChay": 0,
+    "hatKhiChay": 0,
+    "trung": 3,
+    "ch": 0,
+    "boQua": 17
+   }
+  },
+  "cheo_len": {
+   "15": "thường",
+   "25": "thường",
+   "30": "thường",
+   "35": "thường",
+   "40": "thường",
+   "44": "thường",
+   "46": "HẤT",
+   "50": "HẤT",
+   "60": "HẤT"
+  }
+ }
+}
