@@ -6,3 +6,4 @@
 - cong-re.png – cổng rễ cây thay cổng gỗ: ảnh gen cho ĐÓNG (rễ đan kín, 2 trụ) + 4 trụ đơn; KHÔNG có trạng thái "mở" đúng nghĩa → dựng bản mở bằng code (rễ ngang co rút/kéo về hai trụ, hoặc mờ dần + 2 trụ), bản "chỉ trụ" = 2 trụ đơn. Mắt xanh ngọc trên trụ = đèn báo (sáng khi mở).
 - diem-luu.png – điểm lưu: cổng rễ có chuông treo, 2 trạng thái cùng khung: chưa kích hoạt (chuông xỉn) / kích hoạt (chuông sáng, vòng ngọc)
 - den-long.png – 3 kiểu đèn lồng treo móc (tròn / lồng vuông / hình chuông), hàng trên SÁNG, hàng dưới TẮT, cùng khung
+- re-tran.png – rễ + rêu treo từ trần đá, 3 đoạn: đầu trái / giữa lặp / đầu phải (cho trần Phòng boss)

@@ -6,3 +6,5 @@ Vùng rễ cây mục dưới Làng Chuông (docs/gdd.md: "Tường mục leo đ
 - re-muc-gach.png – 8 ô thân rễ mục (xám nâu, đốm mốc xanh), nền trắng, cần làm liền mạch
 - re-muc-do-vat.png – đồ vật nền trắng: nấm sáng nhỏ/lớn, gốc rễ mục, kén treo, chuông vỡ mốc, giọt nước + vũng, bào tử kín / nổ
 - re-muc-mep.png – hàng 1: mép sàn rễ mục đầu trái / giữa lặp / đầu phải (mốc xanh ngọc); hàng 2: tường mục leo được 3 trạng thái cùng cỡ: lành / nứt / gãy rơi mảnh. ĐÃ CÓ (17:41) – dùng thay bản TẠM dựng bằng code.
+- quai-nam-moc.png – quái Nấm Mốc ≈ cao Lam: bản nguyên + mảnh rời (mũ nấm, chuông nứt, thân, 2 nắm tay, 2 chân).
+- boss-me-nam-moc.png – boss Mẹ Nấm Mốc ≈ 3× Lam: bản nguyên + mảnh (mũ, chuông, thân, 2 vuốt, 2 túi bào tử, gò rễ).
