@@ -357,7 +357,7 @@
    "atkN": 1,
    "atkT": 2,
    "hop": false,
-   "khung": "c1-giuong",
+   "khung": "c1-chuanbi",
    "vet": -1,
    "ehop": false,
    "eat": 0
@@ -387,7 +387,7 @@
    "atkN": 1,
    "atkT": 5,
    "hop": false,
-   "khung": "c1-giuong~c1-vung",
+   "khung": "c1-giuong",
    "vet": -1,
    "ehop": false,
    "eat": 0
@@ -427,7 +427,7 @@
    "atkN": 1,
    "atkT": 9,
    "hop": true,
-   "khung": "c1-trung",
+   "khung": "c1-trung2",
    "vet": 1,
    "ehop": false,
    "eat": 0
@@ -517,7 +517,7 @@
    "atkN": 1,
    "atkT": 18,
    "hop": false,
-   "khung": "c1-ve",
+   "khung": "c1-thu",
    "vet": -1,
    "ehop": false,
    "eat": 0

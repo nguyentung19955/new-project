@@ -194,7 +194,7 @@ async def canh_2(p, cong):
     return await canh_don(p, cong, '2-chuong-go.mp4', '', [('Chuông Gỗ [40]: khựng · lấy đà ≥ 18 không ngắt · chết', cb, cg_buoc, 900)])
 
 
-# ---- 3. quái gác: Keng → nứt → vỡ → choáng → hồi phục → ổn định → phá lại → chết
+# ---- 3. quái gác (PH5): Keng → nứt → vỡ MỘT lần → choáng → hồi phục (vỏ vẫn vỡ) → mọi nhát gây máu → chết
 async def gac_buoc(i, t, s):
     g = await t.js('({p:Q[5].T.pha,v:Q[5].T.v,t:Q[5].T.t,hp:Q[5].hp,st:Q[5].st,atk:pl.atkN,at:pl.atkT,x:Q[5].x+36,lx:pl.x+10})')
     pha = s.setdefault('pha', 0); d = g['x'] - g['lx']
@@ -204,21 +204,18 @@ async def gac_buoc(i, t, s):
     if pha == 0:   # combo tới khi vỡ
         if g['p'] == 'choang': s['pha'] = 1; s['i0'] = i; return ('', None)
         return (nhip(), None)
-    if pha == 1:   # 1 nhát máu lúc choáng, rồi đứng xem hết choáng
+    if pha == 1:   # 1 nhát máu lúc choáng, rồi đứng xem hết choáng + đứng dậy
         if i - s['i0'] == 20: return ('a', None)
-        if g['p'] == 'onDinh': s['pha'] = 2; s['i0'] = i
+        if g['p'] == 'matVo': s['pha'] = 2; s['i0'] = i
         return ('', None)
-    if pha == 2:   # đánh trong ổn định: vỏ vẫn chặn, Thế không xuống dưới 1
-        if g['p'] == 'thuong': s['pha'] = 3; s['i0'] = i; return ('', None)
-        return (nhip() if i - s['i0'] > 6 else '', None)
-    if pha == 3:   # hết ổn định: phá lại rồi hạ
-        return (nhip(), None)
+    if pha == 2:   # đã đứng dậy, vỏ VẪN VỠ: chờ 20 tick cho thấy nhãn "VỎ VỠ", rồi combo – mọi nhát gây máu tới chết
+        return (nhip() if i - s['i0'] > 20 else '', None)
     return ('', None)
 
 
 async def canh_3(p, cong):
     async def cb(t): await t.js('TVP0.datLaiQuai(5); TVP0.datLam(Q[5].x-260,1); TVP0.xoaLog()')
-    return await canh_don(p, cong, '3-quai-gac-the.mp4', '', [('Quái gác [30, Thế 60, vỏ]: Keng → vỡ → choáng 120 → hồi phục 20 → ổn định 60', cb, gac_buoc, 1400)])
+    return await canh_don(p, cong, '3-quai-gac-the.mp4', '', [('Quái gác [30, vỏ 60]: Keng → vỡ 1 lần → choáng 120 → dậy, vỏ vẫn vỡ → máu', cb, gac_buoc, 1400)])
 
 
 # ---- 4. replay / Cộng hưởng
@@ -232,6 +229,7 @@ def ghi_bong(off, the=10, muc='gac'):
         if i == 41:
             k = (await t.js('TVP0.recHb()'))[0]; su = await t.js('ATK[1].su')
             if muc == 'gac': await t.js('TVP0.datLaiQuai(%d); TVP0.datThe(%d,%d); Q[%d].T.lastHit=S.frame+500' % (GAC, GAC, the, GAC))
+            elif muc == 'gacvo': await t.js('TVP0.datLaiQuai(%d); TVP0.datMatVo(%d)' % (GAC, GAC))
             else: await t.js('TVP0.datLaiQuai(6)')
             s['fv'] = t.st['f']   # tick của bước bấm V (bóng phát REC[0])
             s['ban'] = None if off is None else s['fv'] + k + off - su
@@ -251,6 +249,8 @@ async def canh_4(p, cong):
         ('Khác tick: bóng trước 5 tick (Thế 10) → tổng 10', cb_gac, ghi_bong(5), 150),
         ('Khác tick: Lam trước 5 tick (Thế 10) → Lam phá vỏ, bóng 2 + 10 = 12', cb_gac, ghi_bong(-5), 150),
         ('Cộng hưởng vỏ đầy (Thế 60) → vỡ ngay', cb_gac, ghi_bong(0, the=60), 150),
+        ('PH5: quái gác ĐÃ MẤT VỎ, cùng tick → Lam 10 + bóng 2 + thêm 10 = 22', cb_gac, ghi_bong(0, muc='gacvo'), 150),
+        ('PH5: đã mất vỏ, Lam trước 5 tick → 10 + 2 + 10 = 22 (giống cùng tick)', cb_gac, ghi_bong(-5, muc='gacvo'), 150),
     ])]
     r.append(await canh_don(p, cong, '4b-so-loi-D-moi-moi-tick.mp4', '&dmoi=1', [
         ('CHỈ ĐỂ SO LỖI (?dmoi=1): D bóng mới mỗi tick → 1 hộp trúng nhiều lần', cb_nom, ghi_bong(None, muc='nom'), 150)]))
@@ -293,11 +293,55 @@ async def canh_5(p, cong):
     return {'file': '5-debug-cham-quy-uoc-tick.mp4', 'khung': n, 'giay': round(n / 60, 2), 'ket_qua': kq}
 
 
-# ---- 6. đo nhanh không quay: độ trễ chạm → hộp, combo đủ 3 nhát, tỉ lệ hất khi chạy, mọi lần bấm có kết cục
+# ---- 6. PH5: debug chậm ¼ – phân bố khung nhát 1–2–3 TRƯỚC (?khung=cat: cắt 4/4/2 phần tử đầu) | SAU (phân bố lại), cùng su 7/7/9
+async def canh_6(p, cong):
+    A = await Trang(p, cong, '&khung=cat').mo(); B = await Trang(p, cong, '').mo()
+    ff = ffmpeg(os.path.join(OUT, '6-debug-cham-phan-bo-khung-truoc-sau.mp4')); n = 0; bang = {'truoc': [], 'sau': []}
+    for t in (A, B):
+        await t.js('TVP0.datLam((PA.x0+4)*T,1); TVP0.xoaLog()')
+        for _ in range(6): await t.buoc()
+        await t.js('TVP0.xoaLog()')
+    for i in range(108):   # 0–79: combo 1-2-3 · 80–107: một nhát 1 lẻ (không nối) để thấy hết phần hồi
+        ks = []
+        for t in (A, B):   # combo 1-2-3: nhát đầu ở i = 0, mỗi nhát sau bấm ở tick 3 của nhát đang chạy (vào chỗ chờ, ra ở su + ac)
+            st = t.st; ks.append('a' if i in (0, 80) or (i < 80 and st.get('atkN') in (1, 2) and st.get('atkT') == 3) else '')
+        for t, k in zip((A, B), ks): await t.buoc(k)
+        hang = []
+        for t, ten in ((A, 'truoc'), (B, 'sau')):
+            tk = (await t.js('TVP0.tick()'))[-1]; tk['i'] = i; bang[ten].append(tk); hang.append(tk)
+        ia, ib = await A.anh(), await B.anh()
+        for im, tk, ten, mau in ((ia, hang[0], 'TRƯỚC (?khung=cat): cắt đầu bảng', (255, 176, 138)), (ib, hang[1], 'SAU (PH5): phân bố lại trong startup', (127, 224, 200))):
+            nhan(im, ten + ' · ¼ tốc độ', mau)
+            s = 'nhát %s  tick %s  │  hộp %s  │  khung %s' % (tk['atkN'] or '–', tk['atkT'] or '–', 'BẬT' if tk['hop'] else '–', tk['khung'] or '–')
+            nhan(im, s, (255, 90, 90) if tk['hop'] else (240, 240, 240), y=500)
+        g = Image.new('RGB', (1920, 540)); g.paste(ia, (0, 0)); g.paste(ib, (960, 0))
+        for _ in range(4): ff.stdin.write(jpg(g)); n += 1
+    ts = [await A.js('TVP0.thongSo()'), await B.js('TVP0.thongSo()')]
+    ff.stdin.close(); ff.wait(); loi = A.loi + B.loi; await A.dong(); await B.dong()
+    kq = {}
+    for ten, L in bang.items():
+        kq[ten] = {}
+        for nh, ten_n, lo, hi in ((1, 'nhat1', 0, 80), (2, 'nhat2', 0, 80), (3, 'nhat3', 0, 80), (1, 'nhat1_le_khong_noi', 80, 999)):
+            R_ = [r for r in L if r['atkN'] == nh and lo <= r['i'] < hi]
+            hop = [r['atkT'] for r in R_ if r['hop']]
+            chuoi = []
+            for r in R_:
+                if chuoi and chuoi[-1][0] == r['khung']: chuoi[-1][1] += 1
+                else: chuoi.append([r['khung'], 1])
+            kq[ten][ten_n] = {'hop_tick': [hop[0], hop[-1]] if hop else None,
+                                     'khung_trung_tu_tick': next((r['atkT'] for r in R_ if r['khung'].endswith('trung')), None),
+                                     'khung_theo_tick (tên × số tick)': ' '.join('%s×%d' % (a, b) for a, b in chuoi)}
+    kq['thong_so'] = {'truoc': ts[0], 'sau': ts[1]}
+    json.dump({'tom_tat': kq, 'tung_tick': bang}, open(os.path.join(OUT, '6-bang-khung-truoc-sau.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print('6-debug-cham-phan-bo: %d khung, lỗi trang %d' % (n, len(loi)), json.dumps(kq, ensure_ascii=False)[:1500])
+    return {'file': '6-debug-cham-phan-bo-khung-truoc-sau.mp4', 'khung': n, 'giay': round(n / 60, 2), 'ket_qua': kq, 'loi_trang': loi}
+
+
+# ---- đo nhanh không quay: độ trễ chạm → hộp, combo đủ 3 nhát, tỉ lệ hất khi chạy, mọi lần bấm có kết cục
 async def do_so(p, cong):
     kq = {}
     for q, ten in (('&p0=0', 'cu'), ('', 'moi')):
-        t = await Trang(p, cong, q).mo(); r = {}
+        t = await Trang(p, cong, q).mo(); r = {'thong_so': await t.js('TVP0.thongSo()')}   # PH5: BONG_MAU / BONG_THE phải giống nhau ở cũ và mới
         # (a) chạm lúc rảnh → hộp: 20 lần, mỗi kiểu atk1 / atk5 (cần lên phím) / atk6 (trên không)
         await t.js('TVP0.datLam((PA.x0+4)*T,1); TVP0.xoaLog()')
         for _ in range(20):
@@ -336,7 +380,7 @@ async def do_so(p, cong):
 async def main():
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
-    chon = sys.argv[1:] or ['do', '1', '2', '3', '4', '5']
+    chon = sys.argv[1:] or ['do', '1', '2', '3', '4', '5', '6']
     kq = {}
     async with async_playwright() as p:
         for c in chon:

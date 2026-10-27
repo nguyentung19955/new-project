@@ -7,6 +7,8 @@
    ?hitbox=1   lớp hộp đòn (phím H / nút ▣)      ?debug=anim  debug chậm (⏸ +1 ×¼) có sẵn của demo
    ?vao=lang   vào làng cũ như demo (kiểm phần cũ không hỏng)   ?bm=0.25 BONG_MAU, ?dmoi=1 (CHỈ ĐỂ SO LỖI: tạo D bóng mới mỗi tick)
    ?battu=1    không chết (quay video)            ?ghi=1  tắt vòng lặp rAF, để công cụ quay tự bước (TVP0.khung)
+   ?khung=cat  CHỈ ĐỂ SO (PH5): bảng khung đòn đất kiểu P0-A trước phản hồi 5 (cắt 4/4/2 phần tử đầu) thay cho phân bố lại
+   Mặc định (không thêm gì): TẮT log input và lớp hộp đòn – link để người chơi thử trên iPhone.
 */
 
 /* ========== 1. KHỐI CẤU HÌNH – mọi thông số P0-A ở đây ========== */
@@ -21,11 +23,25 @@ const P0_SO = {
   ghi: P0_Q.get('ghi') === '1',
   batTu: P0_Q.get('battu') === '1',
   dMoiMoiTick: P0_Q.get('dmoi') === '1',   // CHỈ ĐỂ SO LỖI cũ của kế hoạch: mỗi tick một D bóng mới → hộp nhiều tick trúng nhiều lần
-  vao: P0_Q.get('vao') || ''
+  vao: P0_Q.get('vao') || '',
+  // PH5 mục 4: PHÂN BỐ LẠI khung trong cùng startup (KHÔNG vẽ / gen lại ảnh, KHÔNG đổi hitstop / rung). [tên khung trong sheet, số tick].
+  // Tổng = su + ac + re − 1; khung "trung" rơi đúng tick su. Lấy đà ngắn nhưng đọc rõ (chuanbi + giuong giữ 4–6 tick) → vung 1 tick
+  // (bỏ khung trộn giuong~vung ở nhát 1, 2) → điểm chạm sắc (trung 2 tick) → hồi có trọng lượng (trung2 giữ 6, thu 4 / 8, ve 4 / 8).
+  phanBo: P0_Q.get('khung') === 'cat' ? null : {
+    1: [['c1-chuanbi', 2], ['c1-giuong', 3], ['c1-vung', 1], ['c1-trung', 2], ['c1-trung2', 6], ['c1-thu', 4], ['c1-ve', 4]],
+    2: [['c2-chuanbi', 1], ['c2-giuong', 4], ['c2-vung', 1], ['c2-trung', 2], ['c2-trung2', 6], ['c2-thu', 4], ['c2-ve', 4]],
+    3: [['c3-chuanbi', 2], ['c3-giuong', 4], ['c3-giuong~c3-vung', 1], ['c3-vung', 1], ['c3-trung', 2], ['c3-trung2', 6], ['c3-thu', 8], ['c3-ve', 8]]}
 };
-// Thế (thang ×10, tick). Mục 5 kế hoạch V2.
-const THE_VO  = {toiDa: 60, vo: true,  mat: false, choang: 120, hoiPhuc: 20, onDinh: 60, choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 1, 1],     cuaSoLap: 600, chThe: 'voNgay'};
-const THE_NOM = {toiDa: 60, vo: false, mat: false, choang: 60,  hoiPhuc: 20, onDinh: 60, choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 0.6, 0.4], cuaSoLap: 600, chThe: 0.5};
+// Thế (thang ×10, tick). Mục 5 kế hoạch V2, sửa theo PHẢN HỒI 5 mục 3.
+//   phaMotLan: true  = VỎ VẬT LÝ của quái thường: phá MỘT lần, giữ vỡ tới chết (Thế không về đầy, không có ổn định, không hồi khi không bị đánh).
+//                      Mất vỏ → mọi đòn (kể cả bóng, Cộng hưởng) gây máu bình thường. Choáng 1 lần rồi đứng dậy (hồi phục), vỏ vẫn vỡ.
+//   phaMotLan: false = Thế hồi được, phá nhiều lần; ổn định chỉ CHỐNG CHUỖI CHOÁNG (Thế không xuống dưới 1), không khôi phục vỏ đã mất.
+//   hoiThe: Thế tự hồi khi không bị đánh (choHoi rồi +1 / hoiMoi). Vỏ quái thường: TẮT (không có bộ đếm vô hình làm kín vỏ).
+const THE_VO  = {toiDa: 60, vo: true,  mat: false, phaMotLan: true,  hoiThe: false, choang: 120, hoiPhuc: 20, onDinh: 0,  choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 1, 1],     cuaSoLap: 600, chThe: 'voNgay'};
+const THE_NOM = {toiDa: 60, vo: false, mat: false, phaMotLan: false, hoiThe: true,  choang: 60,  hoiPhuc: 20, onDinh: 60, choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 0.6, 0.4], cuaSoLap: 600, chThe: 0.5};   // hình nộm: công cụ đo, giữ như cũ
+// CHO SAU (chưa có trong P0-A, không quái nào dùng): Thế tinh anh / boss – hồi được, phá nhiều lần, ổn định chống chuỗi choáng (mục 5)
+const THE_TINH_ANH = {toiDa: 80, vo: false, mat: false, phaMotLan: false, hoiThe: true, choang: 150, hoiPhuc: 20, onDinh: 120, choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 0.6, 0.4], cuaSoLap: 600, chThe: 0.5};
+const THE_BOSS     = {toiDa: 120, vo: false, mat: false, phaMotLan: false, hoiThe: true, choang: 90, hoiPhuc: 20, onDinh: 120, choHoi: 90, hoiMoi: 3, giamChoangLap: [1, 0.6, 0.4], cuaSoLap: 600, chThe: 0.5};
 const CFG = {resWindow: P.resWindow, khoaCH: 45, hsCH: 8, CH_MAU: 1, CH_THE: 0.5,
   BONG_MAU: P0_Q.get('bm') !== null && P0_Q.get('bm') !== '' ? +P0_Q.get('bm') : 0.25, BONG_THE: 0.5,
   hsKeng: 2, hsVo: 6, choangToiThieu: 45};
@@ -149,10 +165,19 @@ const P0 = (() => {
     for (const d of Object.values(meta.don)) {
       d.su_goc = d.su; d.vet_goc = d.vet_chem.bat_dau;
       const moi = ATK[d.atk].su, cat = d.su - moi;
-      if (cat > 0) { d.khung_theo_atkT = d.khung_theo_atkT.slice(cat); d.tu_the_theo_atkT = d.tu_the_theo_atkT.slice(cat); d.su = moi; }
+      if (cat > 0 && !(SO.bat && phanBo(meta, d))) { d.khung_theo_atkT = d.khung_theo_atkT.slice(cat); d.tu_the_theo_atkT = d.tu_the_theo_atkT.slice(cat); d.su = moi; }
       if (SO.bat) d.vet_chem.bat_dau = d.su;       // MỚI: vệt hiện cùng tick hộp (khung 0 hiện nhờ t = −1)
       VK.dao.don[d.atk] && (VK.dao.don[d.atk].vetBatDau = d.vet_chem.bat_dau);
     }
+  }
+  // PH5: dựng lại bảng khung theo SO.phanBo (dùng đúng các khung có sẵn trong sheet, không ảnh mới). Sai tổng / sai tên → lùi về cắt bảng.
+  function phanBo(meta, d) {
+    const spec = SO.phanBo && SO.phanBo[d.atk]; if (!spec) return false;
+    const idx = {}; meta.frames.forEach((f, i) => { if (!(f.ten in idx)) idx[f.ten] = i; });
+    const k = [], tt = [], a = ATK[d.atk];
+    for (const [ten, n] of spec) { if (!(ten in idx)) { console.warn('P0 phanBo: không có khung ' + ten); return false; } for (let i = 0; i < n; i++) { k.push(idx[ten]); tt.push(ten); } }
+    if (k.length !== a.su + a.ac + a.re - 1 || !/trung$/.test(tt[a.su - 1]) || /trung/.test(tt[a.su - 2])) { console.warn('P0 phanBo atk' + d.atk + ': tổng ' + k.length + ' hoặc khung trúng không ở tick su'); return false; }
+    d.khung_theo_atkT = k; d.tu_the_theo_atkT = tt; d.su = a.su; d.phan_bo = spec.map(x => x[0] + '×' + x[1]).join(' '); return true;
   }
   /* ---- dữ liệu đòn D (pool, không tạo mới mỗi tick) ---- */
   const DP = []; for (let i = 0; i < 64; i++) DP.push({ma: 0, src: '', vk: '', loai: 0, goc: [0, 0], chiMang: false, heSoCM: 1, hs: 0, co: CO_LAM, hb: null, daTrung: [], tBam: -1, idBam: 0, tickHop: -1, boQua: 0});
@@ -210,11 +235,12 @@ const P0 = (() => {
   function nhanThe(e) { return e.T && (e.T.pha === 'thuong' || e.T.pha === 'onDinh'); }
   function vo(e, lyDo) {   // Thế về 0 → vỡ
     const T = e.T, C = T.cfg; let k = 0; T.lanVo = T.lanVo.filter(f => S.frame - f < C.cuaSoLap); k = Math.min(T.lanVo.length, C.giamChoangLap.length - 1); T.lanVo.push(S.frame);
-    T.v = 0; T.pha = 'choang'; T.t = Math.max(k ? CFG.choangToiThieu : 0, Math.round(C.choang * C.giamChoangLap[k])); T.tong = T.t;
+    T.v = 0; T.pha = 'choang'; if (C.phaMotLan) T.matVo = true; T.t = Math.max(k ? CFG.choangToiThieu : 0, Math.round(C.choang * C.giamChoangLap[k])); T.tong = T.t;
     S.hitstop = Math.max(S.hitstop, CFG.hsVo); sfx.thud(); bell(330, 1.4, 0.12); shake(0, 1, 2.2);
     const cx = e.x + e.w / 2, cy = e.y + 40;
     fx('ring', cx, cy, 22, '', 0, '#D9894A'); fx('ring', cx, cy, 30, '', 0, '#F3C38A'); shatter(cx, cy, '#8A6A45', '#D9894A');
     popText(cx, e.y - 64, 'Choang! Vỡ ' + (C.vo ? 'vỏ' : 'Thế'), '#F3C38A');
+    if (C.phaMotLan) ghi('  ' + tenQ(e) + ': vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu', 'the');
     if (e.guard || e.nom) { e.st = 'choang'; e.t = 0; }
     ghi('  ' + tenQ(e) + ' VỠ (' + lyDo + ') → choáng ' + T.t + ' tick' + (k ? ' (lần vỡ thứ ' + (k + 1) + ' trong ' + C.cuaSoLap + ' tick)' : ''), 'the');
   }
@@ -247,18 +273,21 @@ const P0 = (() => {
       // Cộng hưởng: cặp Lam ↔ bóng, chọn theo NGUỒN (không theo thứ tự duyệt)
       let cap = null;
       const memP = e.chP && S.frame - e.chP.f <= CFG.resWindow ? e.chP : null, memE = e.chE && S.frame - e.chE.f <= CFG.resWindow ? e.chE : null;
+      // Mỗi mục tiêu có nhớ riêng (e.chP / e.chE) + danh sách nhát đã ghép (e.daGhep): một nhát (mã D) ghép tối đa 1 lần TRÊN MỤC TIÊU NÀY.
+      // Một cú quét trúng 2 con cùng bóng → mỗi con 1 Cộng hưởng (không phụ thuộc con nào được duyệt trước).
       if (S.frame >= (e.khoaCH || 0)) {
         if (L && E) cap = {mau: L.D.goc[0], kieu: 'cùng tick', a: L.D.ma, b: E.D.ma};
         else if (L && memE) cap = {mau: L.D.goc[0], kieu: 'bóng trước ' + (S.frame - memE.f) + ' tick', a: L.D.ma, b: memE.ma};
         else if (E && memP) cap = {mau: memP.mau, kieu: 'Lam trước ' + (S.frame - memP.f) + ' tick', a: memP.ma, b: E.D.ma};
+        if (cap && (e.daGhep.indexOf(cap.a) >= 0 || e.daGhep.indexOf(cap.b) >= 0)) { ghi('  bỏ Cộng hưởng ' + tenQ(e) + ': nhát ' + cap.a + '/' + cap.b + ' đã ghép trên mục tiêu này', 'ch'); cap = null; }
       }
       let them = 0;
       if (cap) {
-        e.chP = e.chE = null; e.khoaCH = S.frame + CFG.khoaCH; TK.ch++;
+        e.chP = e.chE = null; e.khoaCH = S.frame + CFG.khoaCH; TK.ch++; e.daGhep.push(cap.a, cap.b); if (e.daGhep.length > 16) e.daGhep.splice(0, 2);
         if (T) { const C = T.cfg;
           if (C.vo || C.mat) { if (T.pha === 'thuong' && !vuaVo) { vo(e, 'Cộng hưởng'); vuaVo = true; } else if (T.pha === 'onDinh') T.v = Math.max(1, T.v); }
           else if (nhanThe(e) && !vuaVo) { const tru = Math.round(CFG.CH_THE * C.toiDa); if (T.pha === 'thuong') { T.v -= tru; if (T.v <= 0) { vo(e, 'Cộng hưởng −' + tru); vuaVo = true; } } else T.v = Math.max(1, T.v - tru); } }
-        const chanThem = voConNguyen(e);   // vỏ còn nguyên sau bước Thế (chỉ khi đang ổn định / hồi phục) → phần thêm cũng bị chặn
+        const chanThem = voConNguyen(e);   // chỉ vỏ HỒI ĐƯỢC (phaMotLan false, cho sau) còn nguyên lúc ổn định mới chặn; quái gác đã mất vỏ → nhận máu bình thường
         them = chanThem ? 0 : Math.floor(CFG.CH_MAU * cap.mau);
         hsMax = Math.max(hsMax, CFG.hsCH); S.resCount++; lhRung(150); LH.chPulse = 40; sfx.res();
         const cx = e.x + e.w / 2, cy = e.y + e.h / 2;
@@ -302,16 +331,19 @@ const P0 = (() => {
   /* ---- Thế theo thời gian (mỗi tick, sau updateQuai) ---- */
   function capNhatThe(q) {
     const T = q.T; if (!T || q.dead) return; const C = T.cfg;
-    if (T.pha === 'choang') { if (--T.t <= 0) { T.pha = 'hoiPhuc'; T.t = C.hoiPhuc; T.v = C.toiDa; ghi('  ' + tenQ(q) + ' hồi phục (' + C.hoiPhuc + ' tick, Thế về đầy ' + C.toiDa + ')', 'the'); if (q.guard || q.nom) { q.st = q.nom ? 'nom' : 'awake'; q.t = 0; } } }
-    else if (T.pha === 'hoiPhuc') { if (--T.t <= 0) { T.pha = 'onDinh'; T.t = C.onDinh; ghi('  ' + tenQ(q) + ' ổn định (' + C.onDinh + ' tick, Thế không xuống dưới 1)', 'the'); } }
+    if (T.pha === 'choang') { if (--T.t <= 0) { T.pha = 'hoiPhuc'; T.t = C.hoiPhuc; if (!T.matVo) T.v = C.toiDa;
+        ghi('  ' + tenQ(q) + ' hồi phục (' + C.hoiPhuc + ' tick, ' + (T.matVo ? 'đứng dậy, vỏ VẪN VỠ' : 'Thế về đầy ' + C.toiDa) + ')', 'the'); if (q.guard || q.nom) { q.st = q.nom ? 'nom' : 'awake'; q.t = 0; } } }
+    else if (T.pha === 'hoiPhuc') { if (--T.t <= 0) {
+        if (T.matVo) { T.pha = 'matVo'; ghi('  ' + tenQ(q) + ' mất vỏ tới chết (không ổn định, không hồi vỏ)', 'the'); }
+        else { T.pha = 'onDinh'; T.t = C.onDinh; ghi('  ' + tenQ(q) + ' ổn định (' + C.onDinh + ' tick, Thế không xuống dưới 1; không khôi phục vỏ)', 'the'); } } }
     else if (T.pha === 'onDinh') { if (--T.t <= 0) { T.pha = 'thuong'; ghi('  ' + tenQ(q) + ' bình thường (phá lại được)', 'the'); } }
-    if ((T.pha === 'thuong' || T.pha === 'onDinh') && T.v < C.toiDa) { const k = S.frame - T.lastHit - C.choHoi; if (k >= 0 && k % C.hoiMoi === 0) T.v++; }
+    if (C.hoiThe && (T.pha === 'thuong' || T.pha === 'onDinh') && T.v < C.toiDa) { const k = S.frame - T.lastHit - C.choHoi; if (k >= 0 && k % C.hoiMoi === 0) T.v++; }
     if (q.guard && T.pha === 'choang' && q.st !== 'die') { q.st = 'choang'; }
   }
   function datQuai(q) {   // gọi cuối resetQuai
     const L = q.nom ? LOAI_QUAI.hinhNom : q.guard ? LOAI_QUAI.quaiGac : LOAI_QUAI.chuongGo;
-    q.L = L; q.hp = L.mau; q.max = L.mau; q.chP = q.chE = null; q.khoaCH = 0;
-    q.T = L.the ? {cfg: L.the, v: L.the.toiDa, pha: 'thuong', t: 0, tong: 0, lastHit: -999, lanVo: [], tPrev: L.the.toiDa} : null;
+    q.L = L; q.hp = L.mau; q.max = L.mau; q.chP = q.chE = null; q.khoaCH = 0; q.daGhep = [];
+    q.T = L.the ? {cfg: L.the, v: L.the.toiDa, pha: 'thuong', t: 0, tong: 0, lastHit: -999, lanVo: [], tPrev: L.the.toiDa, matVo: false} : null;
     if (q.nom) { q.st = 'nom'; q.nomS = []; q.nomTong = 0; q.nomF = -999; }
   }
   /* ---- hình nộm ---- */
@@ -355,7 +387,7 @@ const P0 = (() => {
       if (T.pha === 'choang') { for (let i = 0; i < 3; i++) { const a = S.frame * 0.12 + i * 2.094; ctx.fillStyle = '#F3E6C8'; ctx.beginPath(); ctx.arc(x + Math.cos(a) * 22, top - 10 + Math.sin(a) * 6, 3, 0, 7); ctx.fill(); }
         ctx.fillStyle = '#C98A4B'; ctx.fillRect(x - bw / 2, top + 6, Math.round(bw * T.t / T.tong), 2); }
       ctx.font = 'bold 10px ui-monospace,Menlo,monospace'; ctx.textAlign = 'center'; ctx.fillStyle = '#F3E6C8';
-      ctx.fillText((C.vo ? 'vỏ ' : 'Thế ') + Math.max(0, T.v) + '/' + C.toiDa + ({choang: ' choáng ' + T.t, hoiPhuc: ' hồi phục', onDinh: ' ổn định ' + T.t, thuong: ''})[T.pha], x, top - 18); ctx.textAlign = 'left'; }
+      ctx.fillText(T.matVo && T.pha !== 'choang' ? 'VỎ VỠ' : (C.vo ? 'vỏ ' : 'Thế ') + Math.max(0, T.v) + '/' + C.toiDa + ({choang: ' choáng ' + T.t, hoiPhuc: ' hồi phục', onDinh: ' ổn định ' + T.t, thuong: '', matVo: ''})[T.pha], x, top - 18); ctx.textAlign = 'left'; }
     if (!q.nom && (q.hp < q.max || T)) { const bw = 48, yy = top + (T ? 10 : 0); ctx.fillStyle = 'rgba(12,15,20,.7)'; ctx.fillRect(x - bw / 2 - 1, yy - 1, bw + 2, 5); ctx.fillStyle = '#B4553E'; ctx.fillRect(x - bw / 2, yy, Math.round(bw * Math.max(0, q.hp) / q.max), 3); }
     ctx.restore();
   }
@@ -418,7 +450,7 @@ const _p0Hurt = hurt;
 hurt = function (dir) { if (P0_SO.batTu && pl.hp <= 1) pl.hp = 2; _p0Hurt(dir); };
 HINT.p0a = '{B} {A} vào hình nộm để xem số · ⚙ đổi nhịp cũ / mới';
 HINT.p0b = 'Chuông Gỗ lóe vàng = sắp đập · đã lấy đà lâu thì chém không ngắt, hãy {S}';
-HINT.p0c = 'Vỏ chặn máu (Keng) · chém tới vỡ rồi đánh lúc choáng';
+HINT.p0c = 'Vỏ chặn máu (Keng) · nhát 3 làm nứt mạnh · vỏ vỡ là vỡ hẳn tới chết';
 const _p0Hint = hintNow;
 hintNow = function () { const r = ROOMS[S.room]; return r === PA ? 'p0a' : r === PB ? 'p0b' : r === PC ? (qDown(Q[5]) ? 'go' : 'p0c') : _p0Hint(); };
 // ⚙: đổi nhịp cũ / mới (tải lại trang với ?p0=0 / bỏ)
@@ -430,7 +462,7 @@ hintNow = function () { const r = ROOMS[S.room]; return r === PA ? 'p0a' : r ===
 /* ========== 5. API cho công cụ quay / đo (chỉ dùng với ?ghi=1) ========== */
 if (P0_SO.ghi) loop = function () {};
 window.TVP0 = {
-  P0, SO: P0_SO, CFG, VK, LOAI_QUAI, THE_VO, THE_NOM,
+  P0, SO: P0_SO, CFG, VK, LOAI_QUAI, THE_VO, THE_NOM, THE_TINH_ANH, THE_BOSS,
   async batDau() { while (!(window.TVDEMO && TVDEMO.ready && loadEl.hidden)) await wait(50); audioInit(); startEl.hidden = true; S.paused = false; document.getElementById('warn').hidden = true; },
   anUI(v) { let st = document.getElementById('p0-an'); if (!st) { st = document.createElement('style'); st.id = 'p0-an'; document.head.appendChild(st); }
     st.textContent = v ? '#hint,#keys,#toast,.ui:not(.panel),button:not(#btn-start),#dpad,#acts{visibility:hidden!important}' : ''; },
@@ -444,9 +476,11 @@ window.TVP0 = {
   quai(i) { return Q[i]; },
   datLaiQuai(i) { const q = Q[i]; resetQuai(q); q.H = null; },
   datThe(i, v) { const q = Q[i]; q.T.v = v; q.T.lastHit = S.frame; },
+  datMatVo(i) { const T = Q[i].T; T.v = 0; T.pha = 'matVo'; T.matVo = true; Q[i].st = 'awake'; },   // quái gác đã mất vỏ (đứng, không choáng)
   log() { return P0.LOG.map(r => r.s); }, tick() { return P0.TICK.slice(); }, tk() { return Object.assign({thieu: P0.thieuKetCuc()}, P0.TK); },
   xoaLog() { P0.LOG.length = 0; P0.TICK.length = 0; for (const k in P0.TK) P0.TK[k] = 0; },
   echo() { return echo ? {i: echo.i, n: echo.n, done: echo.done} : null; }, rec() { return rec ? rec.n : -1; },
   recHb() { const r = []; const n = echo ? echo.n : 0; for (let i = 0; i < n; i++) if (REC[i].hb) r.push(i); return r; },
-  thongSo() { return {bat: P0_SO.bat, su: [ATK[1].su, ATK[2].su, ATK[3].su], vet: [1, 2, 3].map(n => LAM.HD.meta.don['atk' + n].vet_chem.bat_dau), khung: [1, 2, 3].map(n => LAM.HD.meta.don['atk' + n].khung_theo_atkT.length)}; }
+  thongSo() { return {bat: P0_SO.bat, su: [ATK[1].su, ATK[2].su, ATK[3].su], vet: [1, 2, 3].map(n => LAM.HD.meta.don['atk' + n].vet_chem.bat_dau), khung: [1, 2, 3].map(n => LAM.HD.meta.don['atk' + n].khung_theo_atkT.length),
+    phanBo: [1, 2, 3].map(n => LAM.HD.meta.don['atk' + n].phan_bo || 'cắt bảng'), bongMau: CFG.BONG_MAU, bongThe: CFG.BONG_THE}; }
 };

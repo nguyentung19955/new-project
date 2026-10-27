@@ -1,5 +1,30 @@
 {
  "cu": {
+  "thong_so": {
+   "bat": false,
+   "su": [
+    11,
+    11,
+    11
+   ],
+   "vet": [
+    10,
+    10,
+    10
+   ],
+   "khung": [
+    26,
+    26,
+    34
+   ],
+   "phanBo": [
+    "cắt bảng",
+    "cắt bảng",
+    "cắt bảng"
+   ],
+   "bongMau": 0.25,
+   "bongThe": 0.5
+  },
   "tre_cham_hop_ranh": [
    11
   ],
@@ -43,6 +68,31 @@
   }
  },
  "moi": {
+  "thong_so": {
+   "bat": true,
+   "su": [
+    7,
+    7,
+    9
+   ],
+   "vet": [
+    7,
+    7,
+    9
+   ],
+   "khung": [
+    22,
+    22,
+    32
+   ],
+   "phanBo": [
+    "c1-chuanbi×2 c1-giuong×3 c1-vung×1 c1-trung×2 c1-trung2×6 c1-thu×4 c1-ve×4",
+    "c2-chuanbi×1 c2-giuong×4 c2-vung×1 c2-trung×2 c2-trung2×6 c2-thu×4 c2-ve×4",
+    "c3-chuanbi×2 c3-giuong×4 c3-giuong~c3-vung×1 c3-vung×1 c3-trung×2 c3-trung2×6 c3-thu×8 c3-ve×8"
+   ],
+   "bongMau": 0.25,
+   "bongThe": 0.5
+  },
   "tre_cham_hop_ranh": [
    7
   ],

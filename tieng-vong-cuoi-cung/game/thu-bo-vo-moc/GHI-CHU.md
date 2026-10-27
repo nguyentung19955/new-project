@@ -1,4 +1,4 @@
-# Thử quái mới: Bọ Vỏ Mộc – BẢN 3 (hình/VFX theo phản hồi 4); luật = bản 2 theo phản hồi 3 (27/10/2026)
+# Thử quái mới: Bọ Vỏ Mộc – BẢN 3 (hình/VFX theo phản hồi 4); luật = bản 2 theo phản hồi 3, **mai vỡ giữ tới chết theo phản hồi 5** (27/10/2026)
 
 Viết cho người không rành kỹ thuật. Đây là **trang thử riêng**, sinh từ `game/demo.html` bằng script (`cong-cu/tao-tu-demo.py`), giống các
 thư mục `thu-*` khác. **KHÔNG sửa** `game/demo.html`, `build-demo.py`, `docs/gameplay/`, `game/thu-p0a/`, `game/thu-quai-huong-moi/`.
@@ -21,6 +21,30 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 | `?battu=1` | Lam không chết |
 | `?mau=0` | ẩn chấm máu (chấm máu chỉ có ở bản thử) |
 | `?hm=0` | tắt màu/ánh sáng hướng mới (cảnh như demo hiện tại) |
+
+## Sửa theo phản hồi 5 (`docs/gameplay/PHAN-HOI-5-P0A.md` mục 3)
+
+**Luật mới:** mai là **vỏ vật lý của quái thường** → phá **một lần**, **giữ vỡ** tới chết.
+
+| | Trước (bản 2–3) | **Bây giờ** |
+|---|---|---|
+| Hết choáng, đứng dậy | "Dậy lại → mai đầy" (4 / 4) | Mai **vẫn vỡ** (0 / 4) tới chết. Thanh mai rỗng có gạch đồng, lớp nứt mai nặng giữ nguyên |
+| Mai tự hồi | Không bị đánh vào mai 1,5 s → +1 nấc / 0,5 s | **Bỏ** (`BO_SO.maiHoi: false` – không có bộ đếm vô hình làm kín vỏ) |
+| Sau khi dậy | – | Bọ **đánh tiếp** bình thường: đi, báo trước 0,5 s, húc, hồi, quay đầu |
+| Đánh Bọ đã mất mai | – | **Mọi hướng** vào thân, mất 1 máu (hiệu ứng bụng: thân co + bụp ấm), không keng, không dội |
+| Cộng hưởng vào Bọ đã mất mai | – | Không lật lại, chỉ **cộng 1 máu thêm** (không bị chặn) |
+| Hộp đòn (`?hitbox=1`) | xanh = mai còn | **lục** cả thân khi mai đã vỡ (đứng hay nằm) |
+
+Nhát làm vỡ mai vẫn **không** gây máu; choáng vẫn 120 bước (2 s); mọi số khác giữ nguyên. Thứ tự trong cùng bước: "mai đã vỡ" xét theo **đầu bước** như các luật cũ.
+
+**Quay lại** `game/kiem-thu-bo-vo-moc/danh-mai-vo-lat-ngua-60fps.mp4` (17,8 s, 1069 hình, H.264 60 hình/s `-preset veryfast`, bot + bất tử):
+chém mai keng → mai vỡ bước 367 → lật ngửa + choáng → bot chém 2 nhát (còn 2 máu) rồi **lùi ra chờ** → Bọ đứng dậy bước 546, **mai vẫn vỡ** →
+Bọ **báo trước 596 → húc 626 → hồi 650** (bot lùi + nhảy né) → bot chém **trực diện**: mất máu (bước 711 phản ứng "đau") → chết bước 738.
+Trạng thái từng bước: `so-lieu.json` → `video`. Cũng quay lại `vong-ra-sau-danh-bung-60fps.mp4` và 2 ảnh so mai / bụng (luật không đổi ở hai cảnh này, trạng thái trùng bản trước).
+Bot chỉ để minh hoạ: đoạn "chờ Bọ dậy rồi húc một lần" là kịch bản của bot cho video, không phải luật.
+
+**Cần biết / hỏi:** Bọ đã mất mai bị chém trực diện vẫn **khựng "đau" 16 bước** như khi trúng bụng (luật cũ không đổi). Nếu Lam chém liên tục thì Bọ có thể bị khựng
+liên tục và ít có cơ hội húc. Lần này **không** đổi (không thêm luật mới); nếu muốn Bọ "đánh tiếp" rõ hơn, có thể cho cú húc đã báo trước không bị ngắt (như Chuông Gỗ ≥ 18 tick).
 
 ## Bản 3 – chỉnh HÌNH/VFX theo phản hồi 4 (`docs/gameplay/PHAN-HOI-4-QUAI-HUONG-MOI-VA-BO.md` mục 2, 3)
 
@@ -83,7 +107,7 @@ Nhát ở bước sau dùng trạng thái thật lúc trúng (mai đã vỡ thì
 ## 2. Xem gì trước (`game/kiem-thu-bo-vo-moc/`, đã quay lại)
 | File | Nội dung |
 |---|---|
-| **`danh-mai-vo-lat-ngua-60fps.mp4`** | 13,6 s: Lam đứng trước chém mai: keng + tia, dội nhẹ (bây giờ Lam **gần như đứng tại chỗ**), mai nứt → **Vỡ mai!** → lật ngửa lộ bụng, choáng 2 s → chém tới chết (bot, bật bất tử) |
+| **`danh-mai-vo-lat-ngua-60fps.mp4`** | **Quay lại theo PH5**, 17,8 s: Lam đứng trước chém mai: keng + tia, dội nhẹ, mai nứt → **Vỡ mai!** → lật ngửa lộ bụng, choáng 2 s (bot chém 2 nhát rồi lùi) → **đứng dậy, mai vẫn vỡ** → Bọ báo trước + húc lại → bot chém trực diện mất máu → chết (bot, bật bất tử) |
 | **`vong-ra-sau-danh-bung-60fps.mp4`** | 11,9 s: Bọ báo trước (chân cào, "!") → húc, Lam lướt xuyên qua ra sau lưng, chém bụng (thân co), lặp tới chết |
 | `cac-clip-60fps.mp4` | 13,4 s: mọi clip theo thứ tự đi · báo trước · húc · hồi · quay · keng · trúng bụng · lật · nằm ngửa · dậy · đứng · chết |
 | **`bao-truoc-huc.png`** / **`bao-truoc-huc-tat-dau-than.png`** | cùng một khung báo trước, có và **không** có dấu "!" – để so |
@@ -101,14 +125,14 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
 | Đánh **trước mặt** (vào mai) | Keng + tia trên mai, dội nhẹ 4 px, **0 máu**, thanh mai −1 (nhát 3: −2). Mai nứt dần |
 | Đánh **từ sau** (vào bụng) | −1 máu, thân co lại. Máu 4 |
 | Chém nảy (bổ xuống) | theo chỗ chạm: phần bụng lộ phía sau = bụng; trên mai = keng, **nảy lên được** |
-| Thanh mai về 0 | **Vỡ mai** (nhát này 0 máu): lật ngửa lộ bụng, choáng **2 s**, đánh hướng nào cũng −1. Dậy lại → mai đầy |
+| Thanh mai về 0 | **Vỡ mai** (nhát này 0 máu): lật ngửa lộ bụng, choáng **2 s**, đánh hướng nào cũng −1. **PH5: dậy lại mai vẫn vỡ tới chết**, Bọ đánh tiếp, đánh hướng nào cũng −1 |
 | Cộng hưởng | như đòn thường + **thêm** vỡ mai ngay + 1 máu (công thức chung) |
-| Mai hồi | không bị đánh vào mai 1,5 s → hồi 1 nấc mỗi 0,5 s |
+| Mai hồi | **PH5: bỏ** (trước: không bị đánh vào mai 1,5 s → hồi 1 nấc mỗi 0,5 s). Mai chỉ nứt thêm, không tự lành |
 | Tấn công | Lam **trước mặt** trong 240 px → **báo trước 0,5 s** → **húc** 0,4 s (~144 px) → **hồi 0,67 s** (húc vào tường hồi 1 s). **Chỉ cú húc** gây sát thương |
 | Quay đầu | Lam ở sau lưng 0,5 s → quay **chậm** 0,4 s |
 
 ## 4. Câu hỏi còn lại
-1. **Choáng 2 s vẫn đủ giết từ đầy máu** nếu Lam đứng sát: trong video "đánh mai" bot (vụng) vẫn chém đủ 4 nhát trong lúc choáng (mai vỡ bước 367,
+1. (PH5: mai giờ giữ vỡ sau khi dậy, nên dù không giết kịp trong lúc choáng thì phần còn lại vẫn đánh được mọi hướng.) **Choáng 2 s vẫn đủ giết từ đầy máu** nếu Lam đứng sát: trong video "đánh mai" bot (vụng) vẫn chém đủ 4 nhát trong lúc choáng (mai vỡ bước 367,
    chết bước 482). Có muốn hạ còn ~1,5 s, hoặc để Bọ **dậy sớm** khi bị đánh N nhát, để "phá mai" và "vòng ra sau" cân hơn? Hay giữ để thử người thật trước?
 2. **Dội 4 px** có còn cảm được "keng" không, hay bây giờ quá nhẹ (trên máy chủ nhìn Lam gần như đứng yên)? Có thể thử 5 px hoặc thêm khựng tay 2–3 bước (không khoá di chuyển).
 3. **Dấu "!"**: so `bao-truoc-huc.png` với bản tắt. Khi có người mới thử, hỏi họ có tự nhận ra "khép mai + cào chân = sắp húc" khi tắt "!" không.

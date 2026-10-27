@@ -22,6 +22,7 @@ f185 — bóng sẽ chém ở tick 199; Lam bấm ở f193 → hộp tick 199 (l
 f193 #3 ra-ngay → atk1  cần y=0.00
 f199 hộp atk1 bật: chạm #3 → hộp 7 tick (tính tick bấm = 1; su 7)
 f199 D bóng 100002 ← maGoc 2 (lần phát 2)
+f199   quái gác#5: vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu
 f199   quái gác#5 VỠ (Thế 10 − 15) → choáng 120 tick
 f199   CỘNG HƯỞNG quái gác#5 (cùng tick; Lam 3 + bóng 100002) thêm 10 máu = CH_MAU × máuCơSở 10
 f199 Lam D 3 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 10)  Thế 10
@@ -45,6 +46,7 @@ f339 bóng D 100003 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 
 f339   → quái gác#5 tick này: máu −0 (30 → 30), Thế 10 → 5 [thuong]
 f340   D 100003 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 f344 hộp atk1 bật: chạm #5 → hộp 7 tick (tính tick bấm = 1; su 7)
+f344   quái gác#5: vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu
 f344   quái gác#5 VỠ (Thế 5 − 10) → choáng 120 tick
 f344   CỘNG HƯỞNG quái gác#5 (bóng trước 5 tick; Lam 5 + bóng 100003) thêm 10 máu = CH_MAU × máuCơSở 10
 f344 Lam D 5 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 5)  Thế 10
@@ -61,6 +63,7 @@ f462 bóng phát lần 4 (bảng maGoc→maReplay mới)
 f463 — bóng sẽ chém ở tick 477; Lam bấm ở f466 → hộp tick 472 (lệch -5)
 f466 #7 ra-ngay → atk1  cần y=0.00
 f472 hộp atk1 bật: chạm #7 → hộp 7 tick (tính tick bấm = 1; su 7)
+f472   quái gác#5: vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu
 f472   quái gác#5 VỠ (Thế 10 − 10) → choáng 120 tick
 f472 Lam D 7 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 10)  Thế 10
 f472   → quái gác#5 tick này: máu −0 (30 → 30), Thế 10 → 0 [choang]
@@ -82,6 +85,7 @@ f597 — bóng sẽ chém ở tick 611; Lam bấm ở f605 → hộp tick 611 (l
 f605 #9 ra-ngay → atk1  cần y=0.00
 f611 hộp atk1 bật: chạm #9 → hộp 7 tick (tính tick bấm = 1; su 7)
 f611 D bóng 100005 ← maGoc 8 (lần phát 5)
+f611   quái gác#5: vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu
 f611   quái gác#5 VỠ (Cộng hưởng) → choáng 120 tick
 f611   CỘNG HƯỞNG quái gác#5 (cùng tick; Lam 9 + bóng 100005) thêm 10 máu = CH_MAU × máuCơSở 10
 f611 Lam D 9 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 60)  Thế 10
@@ -90,4 +94,42 @@ f611   → quái gác#5 tick này: máu −10 (30 → 20), Thế 60 → 0 [choan
 f611   gom 2 lần trúng cùng tick trên quái gác#5: chặn theo Thế đầu tick (60), Thế trừ tổng 15
 f612   D 9 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 f612   D 100005 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+tk {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 1, "boQua": 21}
+== PH5: quái gác ĐÃ MẤT VỎ, cùng tick → Lam 10 + bóng 2 + thêm 10 = 22
+f707 #10 ra-ngay → atk1  cần y=0.00
+f713 hộp atk1 bật: chạm #10 → hộp 7 tick (tính tick bấm = 1; su 7)
+f713 Lam D 10 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 60)  Thế 10
+f713   → quái gác#5 tick này: máu −0 (30 → 30), Thế 60 → 50 [thuong]
+f714   D 10 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+f736 bóng phát lần 6 (bảng maGoc→maReplay mới)
+f737 — bóng sẽ chém ở tick 751; Lam bấm ở f745 → hộp tick 751 (lệch +0)
+f745 #11 ra-ngay → atk1  cần y=0.00
+f751 hộp atk1 bật: chạm #11 → hộp 7 tick (tính tick bấm = 1; su 7)
+f751 D bóng 100006 ← maGoc 10 (lần phát 6)
+f751   CỘNG HƯỞNG quái gác#5 (cùng tick; Lam 11 + bóng 100006) thêm 10 máu = CH_MAU × máuCơSở 10
+f751 Lam D 11 atk1 trúng quái gác#5: máu 10  Thế 0 (matVo)
+f751 bóng D 100006 trúng quái gác#5: máu 2  Thế 0 (matVo)
+f751   → quái gác#5 tick này: máu −22 (30 → 8), Thế 0 → 0 [matVo]
+f751   gom 2 lần trúng cùng tick trên quái gác#5: chặn theo Thế đầu tick (0), Thế trừ tổng 0
+f752   D 11 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+f752   D 100006 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+tk {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 1, "boQua": 21}
+== PH5: đã mất vỏ, Lam trước 5 tick → 10 + 2 + 10 = 22 (giống cùng tick)
+f847 #12 ra-ngay → atk1  cần y=0.00
+f853 hộp atk1 bật: chạm #12 → hộp 7 tick (tính tick bấm = 1; su 7)
+f853 Lam D 12 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 60)  Thế 10
+f853   → quái gác#5 tick này: máu −0 (30 → 30), Thế 60 → 50 [thuong]
+f854   D 12 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+f876 bóng phát lần 7 (bảng maGoc→maReplay mới)
+f877 — bóng sẽ chém ở tick 891; Lam bấm ở f880 → hộp tick 886 (lệch -5)
+f880 #13 ra-ngay → atk1  cần y=0.00
+f886 hộp atk1 bật: chạm #13 → hộp 7 tick (tính tick bấm = 1; su 7)
+f886 Lam D 13 atk1 trúng quái gác#5: máu 10  Thế 0 (matVo)
+f886   → quái gác#5 tick này: máu −10 (30 → 20), Thế 0 → 0 [matVo]
+f887   D 13 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
+f891 D bóng 100007 ← maGoc 12 (lần phát 7)
+f891   CỘNG HƯỞNG quái gác#5 (Lam trước 5 tick; Lam 13 + bóng 100007) thêm 10 máu = CH_MAU × máuCơSở 10
+f891 bóng D 100007 trúng quái gác#5: máu 2  Thế 0 (matVo)
+f891   → quái gác#5 tick này: máu −12 (20 → 8), Thế 0 → 0 [matVo]
+f892   D 100007 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 tk {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 3, "ch": 1, "boQua": 21}

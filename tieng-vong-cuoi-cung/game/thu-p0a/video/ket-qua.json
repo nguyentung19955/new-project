@@ -2,8 +2,8 @@
  "canh_4": [
   {
    "file": "4-replay-cong-huong.mp4",
-   "khung": 751,
-   "giay": 12.52,
+   "khung": 1051,
+   "giay": 17.52,
    "loi_trang": []
   },
   {
@@ -15,6 +15,31 @@
  ],
  "do_so": {
   "cu": {
+   "thong_so": {
+    "bat": false,
+    "su": [
+     11,
+     11,
+     11
+    ],
+    "vet": [
+     10,
+     10,
+     10
+    ],
+    "khung": [
+     26,
+     26,
+     34
+    ],
+    "phanBo": [
+     "cắt bảng",
+     "cắt bảng",
+     "cắt bảng"
+    ],
+    "bongMau": 0.25,
+    "bongThe": 0.5
+   },
    "tre_cham_hop_ranh": [
     11
    ],
@@ -58,6 +83,31 @@
    }
   },
   "moi": {
+   "thong_so": {
+    "bat": true,
+    "su": [
+     7,
+     7,
+     9
+    ],
+    "vet": [
+     7,
+     7,
+     9
+    ],
+    "khung": [
+     22,
+     22,
+     32
+    ],
+    "phanBo": [
+     "c1-chuanbi×2 c1-giuong×3 c1-vung×1 c1-trung×2 c1-trung2×6 c1-thu×4 c1-ve×4",
+     "c2-chuanbi×1 c2-giuong×4 c2-vung×1 c2-trung×2 c2-trung2×6 c2-thu×4 c2-ve×4",
+     "c3-chuanbi×2 c3-giuong×4 c3-giuong~c3-vung×1 c3-vung×1 c3-trung×2 c3-trung2×6 c3-thu×8 c3-ve×8"
+    ],
+    "bongMau": 0.25,
+    "bongThe": 0.5
+   },
    "tre_cham_hop_ranh": [
     7
    ],
@@ -115,8 +165,8 @@
  },
  "canh_3": {
   "file": "3-quai-gac-the.mp4",
-  "khung": 497,
-  "giay": 8.28,
+  "khung": 418,
+  "giay": 6.97,
   "loi_trang": []
  },
  "canh_5": {
@@ -155,5 +205,133 @@
     "lech_khung_so_hop": 0
    }
   }
+ },
+ "canh_6": {
+  "file": "6-debug-cham-phan-bo-khung-truoc-sau.mp4",
+  "khung": 432,
+  "giay": 7.2,
+  "ket_qua": {
+   "truoc": {
+    "nhat1": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c1-chuanbi×1 c1-giuong×3 c1-giuong~c1-vung×1 c1-vung×1 c1-trung×3 c1-trung2×5 c1-thu×1"
+    },
+    "nhat2": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c2-giuong×4 c2-giuong~c2-vung×1 c2-vung×1 c2-trung×3 c2-trung2×5 c2-thu×1"
+    },
+    "nhat3": {
+     "hop_tick": [
+      9,
+      16
+     ],
+     "khung_trung_tu_tick": 9,
+     "khung_theo_tick (tên × số tick)": "c3-chuanbi×1 c3-giuong×5 c3-giuong~c3-vung×1 c3-vung×1 c3-trung×3 c3-trung2×5 c3-thu×8 c3-ve×8"
+    },
+    "nhat1_le_khong_noi": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c1-chuanbi×1 c1-giuong×3 c1-giuong~c1-vung×1 c1-vung×1 c1-trung×3 c1-trung2×5 c1-thu×3 c1-ve×5"
+    }
+   },
+   "sau": {
+    "nhat1": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c1-chuanbi×2 c1-giuong×3 c1-vung×1 c1-trung×2 c1-trung2×6 c1-thu×1"
+    },
+    "nhat2": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c2-chuanbi×1 c2-giuong×4 c2-vung×1 c2-trung×2 c2-trung2×6 c2-thu×1"
+    },
+    "nhat3": {
+     "hop_tick": [
+      9,
+      16
+     ],
+     "khung_trung_tu_tick": 9,
+     "khung_theo_tick (tên × số tick)": "c3-chuanbi×2 c3-giuong×4 c3-giuong~c3-vung×1 c3-vung×1 c3-trung×2 c3-trung2×6 c3-thu×8 c3-ve×8"
+    },
+    "nhat1_le_khong_noi": {
+     "hop_tick": [
+      7,
+      14
+     ],
+     "khung_trung_tu_tick": 7,
+     "khung_theo_tick (tên × số tick)": "c1-chuanbi×2 c1-giuong×3 c1-vung×1 c1-trung×2 c1-trung2×6 c1-thu×4 c1-ve×4"
+    }
+   },
+   "thong_so": {
+    "truoc": {
+     "bat": true,
+     "su": [
+      7,
+      7,
+      9
+     ],
+     "vet": [
+      7,
+      7,
+      9
+     ],
+     "khung": [
+      22,
+      22,
+      32
+     ],
+     "phanBo": [
+      "cắt bảng",
+      "cắt bảng",
+      "cắt bảng"
+     ],
+     "bongMau": 0.25,
+     "bongThe": 0.5
+    },
+    "sau": {
+     "bat": true,
+     "su": [
+      7,
+      7,
+      9
+     ],
+     "vet": [
+      7,
+      7,
+      9
+     ],
+     "khung": [
+      22,
+      22,
+      32
+     ],
+     "phanBo": [
+      "c1-chuanbi×2 c1-giuong×3 c1-vung×1 c1-trung×2 c1-trung2×6 c1-thu×4 c1-ve×4",
+      "c2-chuanbi×1 c2-giuong×4 c2-vung×1 c2-trung×2 c2-trung2×6 c2-thu×4 c2-ve×4",
+      "c3-chuanbi×2 c3-giuong×4 c3-giuong~c3-vung×1 c3-vung×1 c3-trung×2 c3-trung2×6 c3-thu×8 c3-ve×8"
+     ],
+     "bongMau": 0.25,
+     "bongThe": 0.5
+    }
+   }
+  },
+  "loi_trang": []
  }
 }

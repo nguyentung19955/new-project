@@ -11,7 +11,8 @@
    - Đánh TỪ SAU (vào bụng) → mất 1 máu, thân co lại.  Chém nảy (bổ xuống) tính theo CHỖ CHẠM:
      chạm phần bụng lộ phía sau = bụng, còn lại = mai (nảy lên được trên mai).
    - Thanh mai về 0 → VỠ MAI: lật ngửa (lộ mảng bụng mềm), choáng 120 bước (2 s) – lúc này đánh hướng nào cũng mất máu.
-     Nhát làm vỡ mai KHÔNG gây máu. Dậy lại thì mai đầy. Không bị đánh 1,5 s → mai hồi dần.
+     Nhát làm vỡ mai KHÔNG gây máu. PHẢN HỒI 5: mai vỡ MỘT lần, GIỮ VỠ sau khi đứng dậy tới chết (không "dậy lại → mai đầy",
+    không tự hồi mai); hết choáng Bọ đứng dậy và tiếp tục đánh (báo trước + húc), mọi nhát vào nó (mọi hướng) đều mất máu.
    - CỘNG HƯỞNG (Lam + bóng ≤ 12 bước, công thức chung KE-HOACH-GAMEPLAY-V2 mục 6b): hai nhát xử lý như thường, rồi THÊM:
      mai vỡ ngay + máu thêm floor(CH_MAU × máu gốc nhát Lam) = 1, không bị mai chặn; khoá Cộng hưởng 45 bước. Bỏ luật riêng "mất 3 máu".
    - Các nhát trong CÙNG MỘT BƯỚC xét chặn theo trạng thái ĐẦU BƯỚC (mai còn / đã lật) → không phụ thuộc thứ tự duyệt.
@@ -26,8 +27,9 @@ const BO_SO = {
   mau: 4,                 // máu (nhát Lam = 1; Cộng hưởng thêm floor(chMau × mauGoc))
   mai: 4,                 // thanh mai
   maiNhat3: 2,            // nhát 3 (đòn nặng) trừ 2 nấc mai
-  maiHoiSau: 90,          // không bị đánh vào mai 90 bước → bắt đầu hồi
-  maiHoiMoi: 30,          // rồi hồi 1 nấc mỗi 30 bước
+  maiHoi: false,          // PH5: TẮT mai tự hồi (không có bộ đếm vô hình làm kín vỏ). Bật lại = cách cũ, chỉ để so
+  maiHoiSau: 90,          // (khi maiHoi) không bị đánh vào mai 90 bước → bắt đầu hồi
+  maiHoiMoi: 30,          // (khi maiHoi) rồi hồi 1 nấc mỗi 30 bước
   di: 0.6,                // px/bước (36 px/s) – khớp clip đi (chân không trượt)
   thay: 240, thayY: 90,   // thấy Lam phía TRƯỚC trong 240 px → báo trước húc
   bao: 30,                // báo trước 0,5 s
@@ -70,7 +72,7 @@ const BO = (() => {
     for (const b of DS) {
       b.x = b.sx - b.w / 2; b.y = FLOOR - b.h; b.px = b.x; b.py = b.y; b.face = b.face0; b.vy = 0; b.kvx = 0; b.hp = BO_SO.mau; b.mai = BO_SO.mai;
       b.st = BO_THU.xem ? 'xem' : 'di'; b.t = 0; b.at = 0; b.dist = 0; b.flash = 0; b.cd = 40; b.sau = 0; b.maiT = 0; b.swP = b.swE = -1;
-      b.lastP = b.lastE = -999; b.fade = 1; b.dead = b.gone = false; b.H = null; b.hien = 0; b.nam = false; b.khoaCH = -1; b.tickT = -1; b.co = 0;
+      b.lastP = b.lastE = -999; b.fade = 1; b.dead = b.gone = false; b.H = null; b.hien = 0; b.nam = false; b.maiVo = false; b.voDau = false; b.khoaCH = -1; b.tickT = -1; b.co = 0;
     }
     DOI.con = 0; TIA.length = 0;
     if (BO_THU.xem) { DS[0].face = -1; if (DS[1]) DS[1].face = 1; }
@@ -193,7 +195,7 @@ const BO = (() => {
     const cx = b.x + b.w / 2, dx = (pl.x + pl.w / 2) - cx, dy = (pl.y + pl.h) - (b.y + b.h);
     const truoc = dx * b.face > 0, gan = Math.abs(dx) < BO_SO.thay && Math.abs(dy) < BO_SO.thayY;
     // mai hồi khi lâu không bị đánh vào mai (không hồi lúc đang choáng)
-    if (b.st !== 'lat' && b.st !== 'choang' && b.st !== 'day' && b.st !== 'chet') {
+    if (BO_SO.maiHoi && !b.maiVo && b.st !== 'lat' && b.st !== 'choang' && b.st !== 'day' && b.st !== 'chet') {
       b.maiT++; if (b.mai < BO_SO.mai && b.maiT > BO_SO.maiHoiSau && (b.maiT - BO_SO.maiHoiSau) % BO_SO.maiHoiMoi === 0) b.mai++;
     }
     if (b.hien > 0) b.hien--;
@@ -237,7 +239,7 @@ const BO = (() => {
       case 'dau': if (b.t >= BO_SO.dau) { doiTrangThai(b, 'di'); b.cd = Math.max(b.cd, 24); } break;
       case 'lat': if (b.t >= BO_SO.lat) doiTrangThai(b, 'choang'); break;
       case 'choang': if (b.t >= BO_SO.choang) doiTrangThai(b, 'day'); break;
-      case 'day': if (b.t >= BO_SO.day) { b.nam = false; b.mai = BO_SO.mai; b.maiT = 0; b.cd = 50; doiTrangThai(b, 'di'); } break;
+      case 'day': if (b.t >= BO_SO.day) { b.nam = false; b.maiT = 0; b.cd = 50; doiTrangThai(b, 'di'); } break;   // PH5: mai GIỮ VỠ (b.maiVo), đứng dậy đánh tiếp
       case 'chet': if (b.t > 150) b.fade = Math.max(0, 1 - (b.t - 150) / 60); if (b.t >= 210) { b.dead = true; b.gone = true; } break;
     }
     // sát thương chạm (PH3): CHỈ cú húc chủ động, dùng vùng húc (nửa trước + đầu chìa ra). Đi / đứng / quay / hồi: chạm thân không mất máu.
@@ -254,7 +256,7 @@ const BO = (() => {
   function trung1(b, hb, src, sw, face, n) {
     if (src === 'p') { if (b.swP === sw) return false; b.swP = sw; } else { if (b.swE === sw) return false; b.swE = sw; }
     // trạng thái ĐẦU BƯỚC: mọi nhát trúng trong cùng một bước xét chặn theo đây → kết quả không phụ thuộc thứ tự duyệt (PH3 mục 2)
-    if (b.tickT !== S.frame) { b.tickT = S.frame; b.namDau = b.nam; }
+    if (b.tickT !== S.frame) { b.tickT = S.frame; b.namDau = b.nam; b.voDau = b.maiVo; }
     let res = false;
     const moKhoa = S.frame >= b.khoaCH;
     if (src === 'p') { if (moKhoa && S.frame - b.lastE <= P.resWindow) res = true; b.lastP = S.frame; } else { if (moKhoa && S.frame - b.lastP <= P.resWindow) res = true; b.lastE = S.frame; }
@@ -266,7 +268,7 @@ const BO = (() => {
     // bụng hay mai? Nằm ngửa (đầu bước): bụng lộ hết. Đòn ngang: theo HƯỚNG đòn (đánh cùng chiều quái nhìn = từ sau lưng).
     // Chém nảy (4, bổ xuống): theo chỗ chạm – phần bụng lộ phía sau (x > bung_tu_x) là bụng.
     let bung;
-    if (b.namDau) bung = true;
+    if (b.namDau || b.voDau) bung = true;   // PH5: mai đã vỡ (đầu bước) → không còn gì chặn, đánh hướng nào cũng vào thân
     else if (n === 4) bung = (tx - cx) * (-b.face) > N.bung_tu_x_logic;
     else bung = face === b.face;
     b.hien = 120;
@@ -312,16 +314,16 @@ const BO = (() => {
   /* CỘNG HƯỞNG theo công thức chung (V2 mục 6b): hai nhát đã xử lý như thường; THÊM: vỏ vỡ ngay + floor(CH_MAU × máu gốc nhát Lam),
      phần thêm không bị mai chặn. Không dùng resonance() của demo vì nó in "Cộng hưởng ×3". */
   function congHuong(b, x, y, face) {
-    if (!b.nam && b.st !== 'chet') voMai(b, x, y);
+    if (!b.nam && !b.maiVo && b.st !== 'chet') voMai(b, x, y);   // PH5: mai đã vỡ thì không lật lại; chỉ cộng máu thêm
     S.resCount++; S.hitstop = Math.max(S.hitstop, 8); lhRung(150); LH.chPulse = 40; sfx.res();
     hu('cong_huong', x, y, false, {k: S.resFirst ? 1 : 1.3});
     if (!S.resFirst) { S.resFirst = true; flash('#CEF0D6', 14); shake(0, -1, 4.5); banner('Cộng hưởng!'); } else { flash('#CEF0D6', 6); shake(0, -1, 3); }
-    popText(x, y - 40, 'Cộng hưởng: vỡ mai', '#CEF0D6');
+    popText(x, y - 40, b.voDau ? 'Cộng hưởng' : 'Cộng hưởng: vỡ mai', '#CEF0D6');
     const them = Math.floor(BO_SO.chMau * BO_SO.mauGoc);
     if (them > 0) matMau(b, them, face, '#CEF0D6');
   }
   function voMai(b, x, y) {
-    b.mai = 0; b.nam = true; b.flash = 6; doiTrangThai(b, 'lat');
+    b.mai = 0; b.nam = true; b.maiVo = true; b.flash = 6; doiTrangThai(b, 'lat');
     choang(); S.hitstop = Math.max(S.hitstop, 6); shake(0, 1, 2.4);
     fx('ring', x, y, 18, '', 0, '#A78046'); burst(x, y, '#A78046', 10, 1.6); burst(x, y - 10, '#65503C', 8, 2);
     banner('Vỡ mai!');
@@ -394,6 +396,11 @@ const BO = (() => {
       if (BO_THU.mau) veMau(b, x, top + 14);
       return;
     }
+    if (b.maiVo) {   // PH5: đứng dậy với mai đã vỡ – thanh mai rỗng có gạch chéo đồng, giữ tới chết
+      const n = BO_SO.mai, w = 11, g = 2, x0 = x - (n * w + (n - 1) * g) / 2; ctx.globalAlpha = 0.85;
+      ctx.fillStyle = 'rgba(12,15,20,.75)'; ctx.fillRect(x0 - 2, top - 2, n * w + (n - 1) * g + 4, 8);
+      for (let i = 0; i < n; i++) { ctx.fillStyle = '#2a2622'; ctx.fillRect(x0 + i * (w + g), top, w, 4); ctx.fillStyle = '#A78046'; ctx.fillRect(x0 + i * (w + g) + 4, top, 2, 4); }
+      ctx.globalAlpha = 1; if (BO_THU.mau) veMau(b, x, top + 8); return; }
     if (b.hien <= 0 && b.mai >= BO_SO.mai) return;
     const a = b.hien > 0 ? Math.min(1, b.hien / 20) : 0.55; ctx.globalAlpha = a;
     const n = BO_SO.mai, w = 11, g = 2, x0 = x - (n * w + (n - 1) * g) / 2;
@@ -409,8 +416,8 @@ const BO = (() => {
   function ve(al) { for (const b of DS) veMot(b, al); veTia(); }
   function veHitbox(al) {
     for (const b of DS) { if (b.gone || !b.H) continue; const bx = lerp(b.px, b.x, al), by = lerp(b.py, b.y, al), d = bx - b.x;
-      hbRect(bx, by, b.w, b.h, b.nam ? '#78e68c' : '#4fb4ff');
-      if (!b.nam) { const bx0 = b.face < 0 ? bx + b.w / 2 + N.bung_tu_x_logic : bx; hbRect(bx0, by + 10, b.w / 2 - N.bung_tu_x_logic, b.h - 10, '#78e68c', 'dash'); }   // phần bụng lộ (chém nảy)
+      hbRect(bx, by, b.w, b.h, b.nam || b.maiVo ? '#78e68c' : '#4fb4ff');
+      if (!b.nam && !b.maiVo) { const bx0 = b.face < 0 ? bx + b.w / 2 + N.bung_tu_x_logic : bx; hbRect(bx0, by + 10, b.w / 2 - N.bung_tu_x_logic, b.h - 10, '#78e68c', 'dash'); }   // phần bụng lộ (chém nảy)
       if (b.st === 'bao' || b.st === 'huc') { hopHuc(b); hbRect(HUC.x + d, HUC.y, HUC.w, HUC.h, b.st === 'huc' ? '#ff4a4a' : '#ffa640', b.st === 'huc' ? 'fill' : 'dash'); }
       hbChu(b.H.info, bx - ox - 40, by - oy - 120, '#f6d0f6'); }
   }
@@ -426,7 +433,7 @@ const _boHurt = hurt;
 hurt = function (dir) { if (BO_THU.batTu && pl.hp <= 1) pl.hp = 2; _boHurt(dir); };
 
 /* ======================= THỬ (không ghép vào demo.html): bot + API quay / chụp ======================= */
-const BO_BOT = {on: false, kieu: '', t: 0, pha: '', nhay: 0, luot: 0, xong: false};
+const BO_BOT = {on: false, kieu: '', t: 0, pha: '', nhay: 0, luot: 0, xong: false, daNe: false};
 function boMucTieu() { let m = null, d = 1e9; for (const b of BO.DS) { if (b.gone || b.st === 'chet') continue; const k = Math.abs(b.x + b.w / 2 - pl.x - pl.w / 2); if (k < d) { d = k; m = b; } } return m; }
 /* kiểu 'mai': đứng trước mặt chém mai tới vỡ (lùi xa khi nó báo trước húc), rồi chém lúc nằm ngửa
    kiểu 'vong': chờ nó húc, LƯỚT xuyên qua ra sau lưng, chém bụng */
@@ -438,8 +445,11 @@ function boBotBuoc() {
   const cx = b.x + b.w / 2, lx = pl.x + pl.w / 2, dx = cx - lx, ad = Math.abs(dx), ve = dx > 0 ? 'r' : 'l', xa = dx > 0 ? 'l' : 'r';
   const truoc = (lx - cx) * b.face > 0;       // Lam đang ở phía trước quái
   const danh = () => { if (pl.atkN === 0 && BO_BOT.t % 2 === 0) kb.a = 1; };
+  if (b.nam && BO_BOT.kieu === 'mai' && b.hp <= 2) { if (ad < 170) kb[xa] = 1; return; }   // PH5 (video): để lại 2 máu, lùi chờ Bọ dậy
   if (b.nam) { if (ad > 70) kb[ve] = 1; else { pl.face = dx > 0 ? 1 : -1; danh(); } return; }
   if (BO_BOT.kieu === 'mai') {
+    if (b.maiVo && b.st === 'hoi') BO_BOT.daNe = true;
+    if (b.maiVo && !BO_BOT.daNe && !(b.st === 'bao' || b.st === 'huc')) { if (ad < 200) kb[xa] = 1; else if (ad > 230) kb[ve] = 1; return; }   // PH5 (video): chờ Bọ (mai vỡ) báo trước + húc lại một lần
     if (truoc && (b.st === 'bao' || b.st === 'huc')) { kb[xa] = 1; if (b.st === 'huc' && ad < 150 && pl.onGround) kb.j = 1; return; }   // lùi + nhảy tránh
     if (!truoc) { kb[ve] = 1; return; }
     if (ad > 96) kb[ve] = 1; else { pl.face = dx > 0 ? 1 : -1; danh(); }
@@ -461,7 +471,7 @@ window.TVTHU = {
     st.textContent = v ? '#hint,#keys,#toast,.ui:not(.panel),button:not(#btn-start){visibility:hidden!important}' : ''; },
   khung(n) { for (let i = 0; i < (n || 1); i++) { savePrev(); step(); } render(1);
     return {f: S.frame, lam: [+(pl.x + pl.w / 2).toFixed(1), pl.hp], bo: BO.DS.map(b => [b.st, b.t, b.hp, b.mai, b.face, +(b.x + b.w / 2).toFixed(1), b.gone ? 1 : 0]), xong: BO_BOT.xong}; },
-  batBot(kieu) { Object.assign(BO_BOT, {on: true, kieu, t: 0, xong: false}); },
+  batBot(kieu) { Object.assign(BO_BOT, {on: true, kieu, t: 0, xong: false, daNe: false}); },
   tatBot() { BO_BOT.on = false; for (const k of KEYS) kb[k] = 0; },
   datLam(x, f) { placePlayer(x - pl.w / 2, FLOOR - pl.h); pl.drawT = 0; pl.face = f || 1; },
   datBo(i, x, f, st) { const b = BO.DS[i]; b.x = x - b.w / 2; b.px = b.x; b.face = f; if (st) { b.st = st; b.t = 0; } b.H = null; },

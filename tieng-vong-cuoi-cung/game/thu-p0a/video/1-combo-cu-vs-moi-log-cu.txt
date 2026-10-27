@@ -77,7 +77,7 @@ f314 #19 atkBuf-8  cần y=0.00  (đang atk1 t3)
 f322 hộp atk1 bật: chạm #18 → hộp 11 tick (tính tick bấm = 1; su 11)
 f322 Lam D 9 atk1 trúng Chuông Gỗ#3: máu 10
 f322   → Chuông Gỗ#3 tick này: máu −10 (40 → 30)
-f322   Chuông Gỗ#3 đã lấy đà 0 tick (≥ 18) → không bị ngắt
+f322   Chuông Gỗ#3 đang đập → không bị ngắt
 f322 #19 → MAT (hết 8 tick, đòn đang chạy chưa cho nối)
 f323   D 9 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
 f326 #20 atkBuf-8  cần y=0.00

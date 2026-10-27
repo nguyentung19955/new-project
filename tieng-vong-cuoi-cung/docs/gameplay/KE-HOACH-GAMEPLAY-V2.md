@@ -1,7 +1,8 @@
-# Kế hoạch gameplay V2 – BẢN RÚT GỌN THEO PHẢN HỒI 1, SỬA THEO PHẢN HỒI 3 (27/10/2026)
+# Kế hoạch gameplay V2 – BẢN RÚT GỌN THEO PHẢN HỒI 1, SỬA THEO PHẢN HỒI 3 VÀ 5 (27/10/2026)
 
 **Game chính chưa sửa, chưa publish.** Mọi con số là số để thử. Chưa chơi thử trên iPhone thật.
 **Phản hồi 3** (`PHAN-HOI-3-KE-HOACH-V2-VA-BO-VO-MOC.md`, **PH3**): duyệt bắt đầu P0-A trên trang riêng sau khi sửa 3 luật – đã sửa, xem bảng cuối file "Đã sửa theo phản hồi 3".
+**Phản hồi 5** (`PHAN-HOI-5-P0A.md`, **PH5**): P0-A đủ để thử người chơi và làm tiếp Âm Đao cấp 1–4, **chưa ghép vào game chính**. Sửa luật vỏ (mục 5), chốt 6 câu – xem bảng cuối file "Đã sửa theo phản hồi 5".
 Bản cũ `KE-HOACH-GAMEPLAY.md` (**KHGP**) giữ nguyên để đối chiếu. Bản này theo đúng 10 điểm chốt của `PHAN-HOI-1-KE-HOACH-GAMEPLAY.md` (**PH1**), và khớp `KE-HOACH-VU-KHI.md` đã sửa theo `PHAN-HOI-2-KE-HOACH-VU-KHI.md` (**PH2**).
 
 **Ưu tiên lúc này** (PH1): làm đánh thường ngon trước, rồi chứng minh bóng khiến chiến đấu hay hơn. Không dựng phòng lớn.
@@ -100,7 +101,7 @@ Log mỗi lần chạm Chém (một dòng khi nhận + đúng một dòng kết 
 
 **P0-A chốt:** `vetBatDau = su` (7 / 7 / 9) và vệt tạo với `t = −1`, nên sau `huUpdate()` cùng bước là `t = 0` → **khung 0 hiện đúng ở render của tick `su`**, cùng tick với hộp và khung trúng. Bóng phát lại theo cùng luật (`c.at === vetBatDau` trong bản ghi). Không chỉ đổi số theo phép trừ: phải đo.
 
-- Cắt bảng `khung_theo_atkT` cho `su` mới: atk1/atk2 bỏ 4 phần tử chuẩn bị đầu (11 → 7), atk3 bỏ 2 (11 → 9). Khung "trúng" phải rơi **đúng tick `su`**.
+- ~~Cắt bảng `khung_theo_atkT` cho `su` mới (bỏ 4 / 4 / 2 phần tử đầu)~~ → **PH5: phân bố lại** khung trong cùng startup 7 / 7 / 9 (không vẽ lại): nhát 1 `chuanbi×2 giuong×3 vung×1` → `trung` ở tick 7 (×2) → `trung2×6 thu×4 ve×4`; nhát 2 `chuanbi×1 giuong×4 vung×1`; nhát 3 `chuanbi×2 giuong×4 giuong~vung×1 vung×1` → `trung` ở tick 9. Còn tư thế lấy đà đọc rõ, không bật thẳng sang vung; không tăng rung / hitstop. Khung "trúng" vẫn rơi **đúng tick `su`**. Bản cắt cũ giữ ở `?khung=cat` chỉ để so.
 - Bóng dùng cùng bảng (`updateEcho` 906) nên tự khớp.
 - Kiểm bằng **debug chậm**: lớp debug hộp đòn + số `atkT` / hộp / khung / khung vệt trên đầu Lam, chạy ¼ tốc độ (mỗi tick giữ 4 hình video), ghi bảng từng tick cho cả nhịp cũ (`?p0=0`) và mới. **Lệch 0 tick** mới đạt.
 
@@ -112,7 +113,9 @@ Log mỗi lần chạm Chém (một dòng khi nhận + đúng một dòng kết 
 | Mọi lần bấm có kết cục | Log 3b không có dòng thiếu kết cục |
 | Không ra nhầm hướng | Chém hất ra khi đang chạy < 5 % số đòn (log hướng cần gạt lúc ra đòn), trên iPhone thật |
 | Hình khớp | 3c lệch 0 tick |
-| Thế đọc được | Người chưa chơi tự phá được quái gác, nói được "nhát 3 làm nứt vỏ" |
+| Thế đọc được | Người chưa chơi tự phá được quái gác, nói được "nhát 3 làm nứt vỏ" (quái gác không đánh: chỉ kiểm **đọc vỏ**, không kết luận trận đánh đã hay – PH5) |
+
+**Thử người chơi (PH5), trước khi ghép vào game chính:** link mặc định (tắt log / hộp đòn) trên iPhone; so nhịp cũ / mới **cùng điều kiện** (cùng phòng, cùng quái, cùng máy), **đổi thứ tự** giữa người thử; hỏi **riêng** 3 câu: phản hồi có nhanh không · có đánh tiếp ngoài ý muốn không · có ra nhầm chém hất không. Báo cáo **tách hai phần**: số đo code (log, tick) và cảm nhận người chơi.
 
 ---
 
@@ -129,6 +132,7 @@ Log mỗi lần chạm Chém (một dòng khi nhận + đúng một dòng kết 
 
 - **"Dư Âm" chỉ là kỹ năng Âm Đao.** Không dùng tên này cho Vọng.
 - Chung cho A và B: 1 bóng; gọi bóng mới thì bóng cũ mất; **đổi phòng xoá bóng** (hiện code không xoá); chết xoá bóng.
+- Ghi chú (PH5): demo cũ được các báo cáo trước xác định **bóng gây 1 máu như Lam** (không phải 0). Trang P0-A giữ `BONG_MAU` 0,25 làm **cấu hình kiểm công thức**, giống hệt ở nhịp cũ và mới; `?bm=0` chỉ là cấu hình thử **tắt** sát thương bóng, không phải bản tái hiện demo cũ.
 - Bóng trúng **có sát thương phụ**: `goc × BONG_MAU` (thử 0,25) máu và `× BONG_THE` (thử 0,5) Thế, tối thiểu 1 máu khi đòn gốc có máu (mục 6b). Quái nhỏ không Thế vẫn mất máu vì bóng.
 - **Phản hồi rõ** khi bóng trúng: số nhỏ màu teal mờ, chớp viền mục tiêu, tiếng "tíc" nhẹ. Bị vỏ chặn thì hiện "Keng" mờ.
 - Phòng P0-B **không có câu đố cần ghi** (cấu hình B không có ghi chủ động). Game chính không đổi.
@@ -149,23 +153,31 @@ Mọi log ghi kèm chuỗi cấu hình (ví dụ `B|bm0.25|bt0.5|ch1|ct0.5|n2|h1
 
 ---
 
-## 5. Thế: vỏ cứng tách khỏi tinh anh / boss
+## 5. Thế: vỏ cứng tách khỏi tinh anh / boss (sửa theo PH5)
+
+**Luật chốt PH5:** vỏ **vật lý** của quái thường phá **một lần** và giữ vỡ tới chết. Thế của tinh anh / boss hồi được và phá nhiều lần, có trạng thái ổn định để chống chuỗi choáng. **Ổn định chỉ ngăn phá Thế tiếp, không tự khôi phục vỏ đã mất.** Mục tiêu đã mất vỏ nhận máu bình thường từ mọi nguồn (Lam, bóng, phần thêm của Cộng hưởng). Nếu sau này có quái tái tạo vỏ, đó là **một hành động riêng có báo trước và ngắt được**, không phải bộ đếm vô hình.
 
 | | **Vỏ cứng** (quái thường có `vo` hoặc `mat`: quái gác, Bọ Vỏ Mộc) | **Tinh anh / boss** |
 |---|---|---|
 | Thế còn | Đòn bị chặn máu ("Keng") – `vo`: mọi hướng; `mat`: chỉ phía trước | Vừa mất máu vừa mất Thế |
-| Cộng hưởng | **Vỡ ngay** | Trừ `CH_THE` (thử 50 % Thế tối đa), **không về 0 mặc định** |
+| Thế về 0 | **Vỏ vỡ hẳn** (`phaMotLan`): choáng 1 lần, đứng dậy với vỏ **vẫn vỡ** tới chết, đánh hướng nào cũng mất máu, quái **đánh tiếp** bình thường | Vỡ Thế: choáng → hồi phục (Thế về đầy) → ổn định → phá lại được |
+| Cộng hưởng | **Vỡ ngay** (nếu vỏ còn); vỏ đã mất → chỉ cộng máu thêm, không bị chặn | Trừ `CH_THE` (thử 50 % Thế tối đa), **không về 0 mặc định** |
+| Hồi khi không bị đánh | **Không** (vết nứt chỉ tăng) | Có |
 
 **Các trạng thái Thế** (số thử, tick):
 
 | Trạng thái | Nghĩa | Vỏ cứng | Tinh anh | Boss | Nhận Thế? |
 |---|---|---|---|---|---|
 | Bình thường | | | | | Có |
-| Vỡ | Thế ≤ 0: "Choang", hitstop 6, vòng đồng | tức thì | tức thì | tức thì | – |
+| Vỡ | Thế ≤ 0: "Choang", hitstop 6, vòng đồng | tức thì, **một lần** | tức thì | tức thì | – |
 | **Choáng** | Không đánh, đòn đang ra bị hủy, 3 chấm quay | 120 | 150 | 90 | **Không** (không trừ, không tích cho lần phá sau) |
-| Hồi phục | Đứng dậy, Thế về đầy | 20 | 20 | 20 | Không |
-| **Ổn định** | Đánh được bình thường; Thế giảm nhưng **không xuống dưới 1**. Viền vòng Thế sáng | 60 | 120 | 120 | Có, sàn 1 |
-| Hồi Thế khi không bị đánh | Chờ 90 tick, rồi +1 Thế / 3 tick | ✓ | ✓ | ✓ | |
+| Hồi phục | Đứng dậy | 20 – **vỏ vẫn vỡ** | 20 – Thế về đầy | 20 – Thế về đầy | Không |
+| **Ổn định** | Đánh được bình thường; Thế giảm nhưng **không xuống dưới 1**. Viền vòng Thế sáng. Không khôi phục vỏ / Thế đã mất | **không có** (không còn vỏ để bảo vệ) | 120 | 120 | Có, sàn 1 |
+| **Mất vỏ** | Sau hồi phục, tới chết: không chặn máu, không nhận Thế, không hồi | ✓ | – | – | Không |
+| Hồi Thế khi không bị đánh | Chờ 90 tick, rồi +1 Thế / 3 tick | **không** | ✓ | ✓ | |
+
+Cấu hình (trang P0-A, `cong-cu/khoi-p0a.js`): `THE_VO` (`phaMotLan: true`, `hoiThe: false`, `onDinh: 0`) cho quái gác; `THE_TINH_ANH`, `THE_BOSS` (`phaMotLan: false`, `hoiThe: true`) **ghi sẵn cho sau**, chưa quái nào dùng trong P0-A; hình nộm giữ luật Thế hồi được (công cụ đo).
+**Quái gác không đánh** → chỉ là **bài kiểm đọc vỏ** (Keng / nứt / vỡ / mất vỏ), **không dùng để kết luận trận đánh đã hay**.
 
 **Chống chuỗi choáng** (tinh anh / boss): lần vỡ thứ 2 trong 600 tick → choáng ×0,6; lần 3 trở đi ×0,4 (tối thiểu 45). Cộng hưởng khóa 45 tick mỗi mục tiêu (giữ từ KHGP).
 Ước lượng xấu nhất với tinh anh [160, 80]: choáng 150 / (150 + 20 + 120 + ~60 tick để phá lại) ≈ **43 %** thời gian ở vòng đầu, rồi ≈ 30 %, ≈ 23 %. Không có lúc địch bị khóa liên tục.
@@ -231,7 +243,7 @@ Trả lời PH1 mục 6: Cộng hưởng là **cộng thêm**, không phải "×
 **Thứ tự trúng – cái gì được bảo đảm, cái gì không (PH3 sửa 2).** Luật "nhát làm vỡ vỏ không gây máu" **không** bảo đảm mọi thứ tự trúng cho cùng tổng máu: nếu nhát Lam đến trước vừa đủ phá Thế, bóng đến sau đánh vào vỏ đã vỡ và gây máu; đổi thứ tự thì bóng bị chặn, Lam phá vỏ – tổng máu lệch vì hai nhát có sát thương khác nhau. Không cố ép đối xứng tuyệt đối. Bảo đảm ba điều:
 1. **Phần thưởng Cộng hưởng dùng cùng công thức** dù ai trúng trước: máu thêm từ `máuCơSở` của nhát Lam (chưa chí mạng), Thế theo bước 6.
 2. **Hit trong cùng tick không phụ thuộc thứ tự duyệt mảng**: mọi lần trúng cùng tick trên một mục tiêu được gom lại rồi xét **một lần**: chặn máu theo trạng thái Thế **đầu tick** (trước mọi lần trúng của tick đó), Thế trừ = tổng, cặp Cộng hưởng chọn theo nguồn (`'p'` ↔ `'e'`, mã nhỏ nhất nếu nhiều), không theo ai được duyệt trước. Duyệt Lam trước hay bóng trước, mục tiêu nào trước → cùng kết quả.
-3. **Hit ở tick sau xử lý theo trạng thái thực tại lúc trúng**: vỏ đã vỡ thì nhát sau gây máu; đang choáng không trừ Thế; đang ổn định không xuống dưới 1. Nhất quán cho mọi nguồn.
+3. **Hit ở tick sau xử lý theo trạng thái thực tại lúc trúng**: vỏ đã vỡ thì nhát sau gây máu (vỏ quái thường vỡ tới chết – PH5); đang choáng không trừ Thế; Thế tinh anh / boss đang ổn định không xuống dưới 1. Nhất quán cho mọi nguồn.
 
 ### 6c. Ví dụ số (dao placeholder P0-A: nhát 1–2 [10,10], nhát 3 [10,30])
 
@@ -383,7 +395,7 @@ Trường `dauAm` trong `DON` không được dùng nếu thiếu `dauHinh` (m�
 | Boss | KHGP P1: hồi sinh vào pha 2 | Không mặc định; thử riêng sau P0 |
 | Tiêu chí bấm | KHGP: "0 lần bấm bị mất" | "Mọi lần bấm có dòng nhận + đúng một kết cục" (3b) |
 | Âm Phù | KHGP/VK cũ: cấm tăng sát thương / giảm hồi | Cho phép có điều kiện / đánh đổi (VK 6a); không làm ở P0 |
-| Thế khi choáng | KHGP: Thế đầy lại sau choáng | Thêm hồi phục 20, ổn định, không tích Thế khi choáng, giảm choáng lặp (mục 5) |
+| Thế khi choáng | KHGP: Thế đầy lại sau choáng | Tinh anh / boss: hồi phục 20, ổn định, không tích Thế khi choáng, giảm choáng lặp. **Vỏ quái thường (PH5): vỡ một lần, không đầy lại** (mục 5) |
 
 ---
 
@@ -406,3 +418,22 @@ Trường `dauAm` trong `DON` không được dùng nếu thiếu `dauHinh` (m�
 | 2 | Bỏ khẳng định "cùng tổng máu mọi thứ tự" | 6b (đoạn "Thứ tự trúng"), 6c ví dụ 3–4, 10, `KE-HOACH-VU-KHI.md` 5c bước 3, 5e ví dụ 3 | Chỉ bảo đảm: thưởng Cộng hưởng cùng công thức; hit cùng tick gom lại, chặn theo Thế đầu tick, không phụ thuộc thứ tự duyệt; hit khác tick theo trạng thái thực tại. Ví dụ 4 cho thấy tổng lệch (12 / 10) là đúng luật |
 | 3 | Quy ước tick của `su`, khung trúng, `vetBatDau` | 3c (bảng quy ước) | Tick đòn = `atkT` sau `updatePlayer`, bước ra đòn = tick 1; hộp tick `su…su+ac−1`; khung `khung_theo_atkT[t−1]`; `vetBatDau = su` + tạo vệt với `t = −1`. Giải thích vì sao code cũ ghi `su − 1` (khung 0 bị `huUpdate` cùng bước nuốt, vệt sớm 1 tick). Kiểm bằng debug chậm ¼ ở trang P0-A |
 | + | Bọ: choáng 120, vào P0-B bài thử thứ hai | 7, 11 | Ghi số chốt; chưa làm trong P0-A |
+
+---
+
+## Đã sửa theo phản hồi 5
+
+`PHAN-HOI-5-P0A.md` (**PH5**). Code ở `game/thu-p0a/` và `game/thu-bo-vo-moc/`; chi tiết + video: `game/thu-p0a/GHI-CHU.md` mục "Sửa theo phản hồi 5".
+
+| # | Điểm PH5 | Đã sửa ở đâu | Tóm tắt |
+|---|---|---|---|
+| 1 | Vỏ tự trở lại làm mất ý nghĩa phá giáp | Mục 5 (viết lại), 6b bước 3 luật 3, 10; trang P0-A (`THE_VO`), trang Bọ | Vỏ vật lý quái thường vỡ **một lần**, giữ vỡ tới chết; không ổn định, không hồi Thế khi không bị đánh. Tinh anh / boss giữ hồi + ổn định (ghi cấu hình cho sau). Ổn định không khôi phục vỏ. Mất vỏ → nhận máu bình thường, kể cả Cộng hưởng |
+| 2 | Cộng hưởng xuyên ổn định? | Mục 5, 6b | Không phá Thế xuyên ổn định (tinh anh / boss); mục tiêu đã mất vỏ vẫn nhận máu bình thường |
+| 3 | Một Cộng hưởng mỗi mục tiêu | 6b bước 6 (giữ), code P0-A | Tính theo **từng mục tiêu**; mỗi cặp nhát ghép tối đa 1 lần trên mỗi mục tiêu (code ghi rõ danh sách nhát đã ghép trên từng mục tiêu) |
+| 4 | Bóng 0,25 máu phụ | Mục 4 (ghi chú), P0-A | Giữ làm cấu hình kiểm công thức, **giống nhau** ở nhịp cũ và mới. Demo cũ được báo cáo bóng gây **1 máu như Lam**; `?bm=0` = cấu hình thử tắt sát thương bóng, không phải "giống demo cũ" |
+| 5 | Nhát 1 bật thẳng sang vung | 3c, trang P0-A | Không vẽ / gen lại; phân bố lại khung trong cùng startup 7 / 7 / 9 tick (tư thế lấy đà đọc rõ → vung 1 tick → chạm sắc → hồi có trọng lượng); không tăng rung / hitstop |
+| 6 | Luật dash | 3b (giữ) | Xoá lệnh chờ cũ; chém mới trong dash giữ một lệnh, ra khi được phép |
+| 7 | Gen vòng Thế / vết nứt | – | Chưa gen; dùng hình code |
+| 8 | Thử người chơi trước khi ghép | 3d, GHI-CHU P0-A | Link mặc định tắt log / hộp đòn; so nhịp cũ / mới cùng điều kiện, **đổi thứ tự** giữa người thử; hỏi riêng 3 câu; tách số đo code và cảm nhận người chơi |
+| 9 | Quái gác không đánh | Mục 5 | Chỉ là bài kiểm đọc vỏ, không dùng kết luận trận đánh đã hay |
+| 10 | Bọ: mai vẫn vỡ sau khi đứng dậy | Mục 5, trang Bọ | Bỏ "dậy lại → mai đầy" và mai tự hồi; hết choáng Bọ đánh tiếp |

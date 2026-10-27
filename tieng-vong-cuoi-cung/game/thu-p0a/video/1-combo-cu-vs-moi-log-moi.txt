@@ -92,7 +92,7 @@ f299   Chuông Gỗ#3 đã lấy đà 26 tick (≥ 18) → không bị ngắt
 f300   D 12 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
 f307 #19 → xoa:bi-danh
 f307 #20 loai:bi-danh  cần y=0.00 (hurtT 18)
-f313   hình nộm#6 ổn định (60 tick, Thế không xuống dưới 1)
+f313   hình nộm#6 ổn định (60 tick, Thế không xuống dưới 1; không khôi phục vỏ)
 f327 #21 ra-ngay → atk1  cần y=0.00
 f330 #22 xep-hang  cần y=0.00  (đang atk1 t4)  hạn f355
 f333 hộp atk1 bật: chạm #21 → hộp 7 tick (tính tick bấm = 1; su 7)
