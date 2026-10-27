@@ -50,8 +50,11 @@ def hsv_rgb(h, s, v):
     r = np.choose(k, [c, x, z, z, x, c]); g = np.choose(k, [x, c, c, x, z, z]); b = np.choose(k, [z, z, x, c, c, x])
     return np.stack([r + m, g + m, b + m], -1)
 # mỗi mảnh: tron = mức thay bằng dải màu ấm; tp = tương phản giữ lại; sang = độ sáng
-GRADE = {'mai': (0.38, 1.12, 0.84), 'dau': (0.38, 1.12, 0.86), 'chan-truoc': (0.38, 1.05, 0.76), 'chan-sau': (0.38, 1.05, 0.76),
+GRADE = {'mai': (0.38, 1.12, 0.82), 'dau': (0.38, 1.28, 0.92), 'chan-truoc': (0.38, 1.05, 0.76), 'chan-sau': (0.38, 1.05, 0.76),
          'bung': (0.22, 1.0, 0.80)}   # bụng: giữ màu ngà (điểm yếu phải SÁNG hơn mai) nhưng dịu và tối hơn ảnh gốc
+# PH3 mục 3–4 (không tăng viền sáng toàn thân): mai TỐI hơn chút (0,84 → 0,82); ĐẦU tương phản 1,12 → 1,28, sáng 0,86 → 0,92;
+# BỤNG nâng sáng một chút, kéo về XÁM ĐẤT NHẠT (bớt ngà vàng, gần mai ít hơn về độ sáng chứ không về độ rực)
+XAM_DAT = '#B9AE9C'; BUNG_XAM = 0.38; BUNG_SANG = 1.06
 def to_mau(t, a):
     rgb = a[..., :3].astype(np.float32) / 255; al = a[..., 3:4]
     tron, tp, sang = GRADE[t]
@@ -65,6 +68,9 @@ def to_mau(t, a):
     Lm = 0.42 + (L - 0.42) * tp
     out = rgb * (1 - tron) + dai(np.clip(Lm * 1.02, 0, 1)) * tron
     out = np.clip(out * sang, 0, 1)
+    if t == 'bung':   # trộn về xám đất nhạt giữ sắc độ từng chỗ (khía đốt vẫn thấy), rồi nâng sáng nhẹ
+        Lo = out @ np.array([0.299, 0.587, 0.114], np.float32); xd = hex3(XAM_DAT); Lx = float(xd @ np.array([0.299, 0.587, 0.114]))
+        out = np.clip((out * (1 - BUNG_XAM) + xd * (Lo / Lx)[..., None] * BUNG_XAM) * BUNG_SANG, 0, 1)
     if t == 'dau': out = np.where(mat[..., None], np.clip(rgb0 * 0.6 + hex3('#F2D69A') * 0.5, 0, 1), out)
     return np.dstack([(out * 255).round().astype(np.uint8), al])
 
@@ -87,6 +93,16 @@ def rim(img, day, manh):
     k = (acc * w * manh)[..., None]
     a[..., :3] = a[..., :3] * (1 - k) + hex3(RIM) * 255 * k
     return Image.fromarray(a.clip(0, 255).round().astype(np.uint8), 'RGBA')
+
+def vien_toi(img, day):
+    """viền TỐI mỏng quanh mảnh (đầu): tách đầu khỏi mai cùng tông – làm rõ đầu mà không thêm vệt sáng."""
+    a = np.array(img).astype(np.float32); al = a[..., 3] / 255
+    ngoai = nd.binary_dilation(al > 0.5, iterations=day) & ~(al > 0.5)
+    k = nd.gaussian_filter(ngoai.astype(np.float32), 0.6) * ngoai
+    toi = np.array([14, 11, 10], np.float32)
+    out = a.copy(); w = (k * 0.85)[..., None]
+    out[..., :3] = np.where(ngoai[..., None], toi, a[..., :3]); out[..., 3] = np.maximum(a[..., 3], (k * 0.85 * 255))
+    return Image.fromarray(out.clip(0, 255).round().astype(np.uint8), 'RGBA')
 
 def nut_mai(img, muc):
     """lớp NỨT mai (mức 1: 2 vết, mức 2: thêm 3 vết dài) – vẽ đè lên mai, cùng cỡ/neo; game bật theo thanh mai."""
@@ -114,6 +130,7 @@ for t, im in IM.items():
     sm = g.convert('RGBa').resize((w, h), Image.LANCZOS).convert('RGBA')
     can = Image.new('RGBA', (w + 2 * PAD, h + 2 * PAD), (0, 0, 0, 0)); can.paste(sm, (PAD, PAD))
     can = rim(can, *RIM_SO[t])
+    if t == 'dau': can = vien_toi(can, 2)
     a = np.array(can); a[a[..., 3] == 0] = 0; can = Image.fromarray(a, 'RGBA')
     anh[t] = (can, W0, H0, w, h)
 for muc in (1, 2):
@@ -131,11 +148,14 @@ NUT = [   # tên, ảnh, cha, pivot (px mảnh nguồn), vị trí neo (toạ đ
     ('mai', 'mai', 'than', (308, 330), neo('mai', (308, 330)), True),
     ('nut1', 'mai-nut-1', 'mai', (308, 330), None, False),
     ('nut2', 'mai-nut-2', 'mai', (308, 330), None, False),
+    # PH3: mảng BỤNG MỀM lộ khi LẬT NGỬA – cùng ảnh bụng, đặt ở mặt dưới thân (lật sy=−1 → nằm trên mai), vẽ SAU mai.
+    # Ẩn mặc định; clip lat / lat_giu / day / chet_lat bật + mờ dần vào (lat_tu_the).
+    ('bung_lat', 'bung', 'than', (177, 136), (GOC_X - 14, DINH_Y + 0.64 * (DAT_Y - DINH_Y)), False),
     ('dau', 'dau', 'than', (205, 95), neo('dau', (205, 95)), True),
     ('chan_sau', 'chan-sau', 'than', (140, 25), neo('chan-sau', (140, 25)), True),
     ('chan_truoc', 'chan-truoc', 'than', (121, 25), neo('chan-truoc', (121, 25)), True),
 ]
-THU_TU_VE = ['chan_sau_xa', 'chan_truoc_xa', 'bung', 'mai', 'nut1', 'nut2', 'dau', 'chan_sau', 'chan_truoc']
+THU_TU_VE = ['chan_sau_xa', 'chan_truoc_xa', 'bung', 'mai', 'nut1', 'nut2', 'bung_lat', 'dau', 'chan_sau', 'chan_truoc']
 VTRI = {}
 for ten, a_, cha, piv, vt, hien in NUT:
     if vt is None: vt = VTRI[cha]
@@ -216,7 +236,8 @@ def f_bao(P, t):
     k = ram(t, 0, 0.18)
     cong(P, 'than', dy=10 * k, goc=-3.5 * k, dx=6 * k)
     cong(P, 'dau', goc=-15 * k, dx=-8 * k, dy=10 * k)
-    cong(P, 'chan_sau', dx=10 * k, goc=-6 * k); cong(P, 'chan_sau_xa', dx=10 * k, goc=-6 * k)
+    cao = max(0.0, math.sin(2 * math.pi * 7.5 * t)) * ram(t, 0.06, 0.16)          # chân sau CÀO đất lùi (cùng nhịp bụi trong game)
+    cong(P, 'chan_sau', dx=10 * k + 9 * cao, goc=-6 * k - 10 * cao, dy=-4 * cao); cong(P, 'chan_sau_xa', dx=10 * k + 9 * (1 - cao) * k, goc=-6 * k)
     cong(P, 'chan_truoc', dx=-5 * k); cong(P, 'chan_truoc_xa', dx=-5 * k)
     for n in CHAN: cong(P, n, dy=-10 * k)
     amp = 6 * ram(t, 0.05, 0.45)
@@ -250,10 +271,10 @@ def f_keng(P, t):   # trúng MAI (0,23 s): mai dội về sau, đầu rụt vào
     cong(P, 'than', dx=7 * s, sy=1 - 0.04 * max(0, s), sx=1 + 0.02 * max(0, s))
     r = 1 - ram(t, 0.04, 0.22)
     cong(P, 'dau', dx=18 * r * ram(t, 0, 0.03), dy=5 * r * ram(t, 0, 0.03), goc=-4 * r)
-def f_dau(P, t):    # trúng BỤNG (0,27 s): bụng co giật, thân chúi tới, đầu ngẩng lên đau
-    s = lo_xo(t, 5.5, 6)
-    cong(P, 'bung', sx=1 - 0.12 * s, sy=1 + 0.07 * s, goc=-3 * s)
-    cong(P, 'than', goc=-5 * s, dx=-6 * s)
+def f_dau(P, t):    # trúng BỤNG (0,27 s): CẢ THÂN CO LẠI (gập ngắn + dẹt), bụng thắt mạnh, chân quắp, đầu ngẩng đau
+    s = lo_xo(t, 5.5, 6); co = math.sin(math.pi * ram(t, 0, 0.16)) * (t < 0.16) + max(0, s) * 0.5 * (t >= 0.16)
+    cong(P, 'bung', sx=1 - 0.24 * co - 0.06 * s, sy=1 + 0.10 * co, goc=-3 * s, dx=-14 * co)
+    cong(P, 'than', goc=-5 * s, dx=-6 * s, sx=1 - 0.10 * co, sy=1 - 0.06 * co, dy=4 * co)
     cong(P, 'dau', goc=12 * (1 - ram(t, 0.05, 0.27)) * ram(t, 0, 0.05), dy=-4 * (1 - ram(t, 0.05, 0.27)))
     cong(P, 'mai', dy=-6 * max(0, s))
     for n in CHAN: cong(P, n, goc=6 * s)
@@ -262,6 +283,9 @@ def lat_tu_the(P, t_lat, u):
     """u: 0 = đứng, 1 = nằm ngửa. Lật quanh trục ngang qua tâm thân (sy 1 → −1), bật lên giữa chừng."""
     sy = math.cos(math.pi * ease(u)); hop = math.sin(math.pi * u)
     cong(P, 'than', sy=sy if abs(sy) > 0.08 else math.copysign(0.08, sy if sy else 1), dy=-70 * hop + LAT_DY * ease(u), goc=10 * hop)
+    # mảng bụng mềm: hiện từ lúc đã lật quá nửa, to 1,5 × bụng (đủ lớn để đọc "chỗ mềm" ở cỡ 74 px)
+    if u > 0.5: P['bung_lat'][7] = 1; P['bung_lat'][6] = ram(u, 0.5, 0.8)
+    cong(P, 'bung_lat', sx=1.5, sy=1.05, goc=-4)
 def f_lat(P, t):    # VỠ MAI → bị hất lật ngửa (0,5 s)
     nen_ = math.sin(math.pi * ram(t, 0, 0.12)) * (t < 0.12)
     cong(P, 'than', dy=10 * nen_, sy=1 - 0.05 * nen_)
@@ -277,6 +301,7 @@ def f_lat_giu(P, t):   # nằm ngửa giãy (lặp 0,6 s): chân quờ trên kh�
     for i, n in enumerate(CHAN):
         cong(P, n, goc=20 * math.sin(2 * w + i * 1.7), dx=6 * math.sin(2 * w + i * 1.7))
     cong(P, 'bung', sx=1 + 0.035 * math.sin(2 * w), sy=1 + 0.03 * math.sin(2 * w + 0.5))
+    cong(P, 'bung_lat', sx=1 + 0.04 * math.sin(2 * w), sy=1 + 0.06 * math.sin(2 * w + 0.5))
     cong(P, 'dau', goc=-10 + 6 * math.sin(w + 0.7))
 def f_day(P, t):    # lật lại (0,5 s): lắc mạnh 2 nhịp rồi bật úp xuống
     w = 2 * math.pi * t / 0.25
@@ -305,6 +330,7 @@ def f_chet_lat(P, t):   # chết khi đang nằm ngửa: chân co lại, ngừng
     for i, n in enumerate(CHAN): cong(P, n, goc=16 * k * math.sin(2 * math.pi * 3 * t + i) + 10 * (1 - k) * (1 if 'truoc' in n else -1), sy=1 - 0.3 * (1 - k))
     xep = ram(t, 0.15, 0.8)
     cong(P, 'bung', sx=1 + 0.08 * xep, sy=1 - 0.35 * xep, toi=0.35 * xep)
+    cong(P, 'bung_lat', sx=1 + 0.06 * xep, sy=1 - 0.35 * xep, toi=0.35 * xep)
     cong(P, 'dau', goc=-10 - 8 * xep, toi=0.3 * xep)
 
 clip('dung', 1600, True, f_dung, 'đứng thở')

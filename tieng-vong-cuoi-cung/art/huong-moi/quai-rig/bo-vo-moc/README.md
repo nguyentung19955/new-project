@@ -10,10 +10,19 @@ Trang thử + ghi chú cho chủ dự án: **`game/thu-bo-vo-moc/GHI-CHU.md`**.
 | `kiem/rap-so-nguyen-con.png` | trái: hình nguyên con trong ảnh gốc · phải: ráp lại từ 5 mảnh (đã tô màu) |
 | `kiem/manh-2x.png` | 7 ảnh mảnh đúng cỡ |
 
+**Chỉnh theo phản hồi 3 (27/10, bằng code, không gen lại)** – `dung_rig.py`:
+- **Không tăng viền sáng** (vệt mép `RIM_SO` giữ nguyên). Mai **tối hơn chút** (`GRADE` sáng 0,84 → 0,82), không neon.
+- **Bụng** kéo về **xám đất nhạt** `#B9AE9C` (trộn 38 %, giữ sắc độ từng đốt) và sáng thêm ×1,06 → tách khỏi mai về độ sáng, bớt vàng ngà.
+- **Đầu**: tương phản 1,12 → 1,28, sáng 0,86 → 0,92 + **viền tối** 2 px (ảnh 2x) quanh mảnh đầu → đầu tách khỏi mai cùng tông.
+- Nút mới **`bung_lat`** (dùng lại ảnh bụng, ẩn mặc định, vẽ sau mai): khi **lật ngửa** hiện mảng **bụng mềm** to 1,5× ở mặt dưới thân
+  (clip `lat` / `lat_giu` / `day` / `chet_lat`, mờ dần vào lúc đã lật quá nửa).
+- Clip `dau` (trúng bụng): **cả thân co lại** (thân hẹp 10 %, dẹt 6 %, bụng thắt 24 % và rút về trước) – khác hẳn `keng` (mai dội ngang, đầu rụt).
+- Clip `bao`: **chân sau cào đất** lùi (7,5 nhịp/s) – game bắn bụi + sỏi ra sau cùng nhịp.
+
 **Cỡ**: dáng nghỉ cao **74 px logic**, dài 128 px (Lam 112). `ty_le` = 0,159 px logic / px mảnh nguồn.
 **Cây nút** (quay trái): `goc` (neo trên mặt đất, giữa thân) → `than` (giữa mai, nửa chiều cao – trục lật ngửa) → `bung`, `mai` (→ `nut1`, `nut2`), `dau`,
 `chan_truoc`, `chan_sau` + `chan_truoc_xa`, `chan_sau_xa` (cùng ảnh, tối 45 %, lệch pha bước). Điểm neo: mai = giữa mép dưới, bụng = khớp trước,
-đầu = cổ, chân = hông (đỉnh cụm chân). Thứ tự vẽ: chân xa, bụng, mai, nứt, đầu, chân gần.
+đầu = cổ, chân = hông (đỉnh cụm chân). Thứ tự vẽ: chân xa, bụng, mai, nứt, bụng lật (`bung_lat`), đầu, chân gần.
 **Clip**: `dung`, `di` (phát theo quãng đường 28,8 px/chu kỳ, chân chống không trượt ở 36 px/s), `bao` (0,5 s), `huc` (lặp), `hoi`, `quay`, `keng`,
 `dau`, `lat`, `lat_giu` (lặp), `day`, `chet`, `chet_lat`. Khoá mỗi 33 ms, runtime nội suy.
 
@@ -25,5 +34,5 @@ python3 khop.py      # đo tỉ lệ mảnh so với nguyên con (0,89) → ../t
 python3 dung_rig.py  # tô màu, vệt sáng, nứt, rig, clip → manh/, bo-vo-moc-rig.json, kiem/
 ```
 Vị trí ráp từng mảnh nằm ở bảng `VI_TRI` trong `dung_rig.py` (khop.py dò được mai; đầu/chân/bụng chỉnh tay theo hình nguyên con).
-Màu: bảng `GRADE` (mức thay bằng dải màu ấm #17272C → #39312E → #65503C → #A78046 → #F2D69A, tương phản, độ sáng), rêu → olive xỉn,
+Màu: bảng `GRADE` + `XAM_DAT`/`BUNG_XAM`/`BUNG_SANG` (bụng) (mức thay bằng dải màu ấm #17272C → #39312E → #65503C → #A78046 → #F2D69A, tương phản, độ sáng), rêu → olive xỉn,
 mắt hổ phách giữ sáng; vệt sáng mép `RIM_SO` (#F2D69A).

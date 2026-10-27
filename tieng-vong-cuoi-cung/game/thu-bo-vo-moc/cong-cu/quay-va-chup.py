@@ -63,6 +63,17 @@ async def chup(p, cong):
         cur = (await pg.evaluate('TVTHU.khung(0)'))['f']; await pg.evaluate('TVTHU.khung(%d)' % (f - cur))
         await pg.screenshot(path=os.path.join(OUT, ten + '.png'))
     await b.close()
+    # 2b) PH3: cùng khung báo trước nhưng TẮT dấu "!" (?dauthan=0) để so
+    b, pg, loi = await mo(p, cong, '&xem=1&mot=1&dauthan=0')
+    await pg.evaluate('TVTHU.khung(%d)' % (150 + 12)); await pg.screenshot(path=os.path.join(OUT, 'bao-truoc-huc-tat-dau-than.png')); await b.close()
+    # 2c) PH3: chém MAI (tia va chạm trên mai, Lam dội nhẹ) và chém BỤNG (thân co + bụp mềm) – cùng một con, đứng yên
+    b, pg, loi = await mo(p, cong, '&mot=1&mau=0')
+    for f, ten, mai in ((-1, 'keng-tia-tren-mai', 4), (1, 'trung-bung-co-than', 4)):
+        await pg.evaluate('''() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, %d, 'di'); b.cd = 999; b.hp = 4; b.mai = %d; b.nam = false;
+          TVTHU.datLam(b.sx - 92, 1); TVTHU.khung(3); TVTHU.bo.trung({x: b.x, y: b.y + 24, w: 30, h: 20}, 'p', 7000 + %d, 1, 1); TVTHU.khung(%d); }''' % (f, mai, f, 5 if f < 0 else 6))
+        await pg.screenshot(path=os.path.join(OUT, ten + '.png'))
+        await pg.evaluate('TVTHU.khung(80)')
+    await b.close()
     # 3) cảnh tối hướng mới vs màu demo hiện tại (?hm=0) + bản xám (kiểm Bọ không chìm nền)
     for q, ten in (('', 'canh-huong-moi'), ('&hm=0', 'canh-mau-demo-hien-tai')):
         b, pg, loi = await mo(p, cong, q)

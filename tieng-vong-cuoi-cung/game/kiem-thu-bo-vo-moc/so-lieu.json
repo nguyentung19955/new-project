@@ -2,8 +2,8 @@
  "video": [
   {
    "file": "vong-ra-sau-danh-bung-60fps.mp4",
-   "khung": 717,
-   "giay": 11.95,
+   "khung": 715,
+   "giay": 11.92,
    "trang_thai": [
     [
      1,
@@ -94,15 +94,15 @@
      "hoi"
     ],
     [
-     401,
+     399,
      "chet"
     ]
    ]
   },
   {
    "file": "danh-mai-vo-lat-ngua-60fps.mp4",
-   "khung": 823,
-   "giay": 13.72,
+   "khung": 813,
+   "giay": 13.55,
    "trang_thai": [
     [
      1,
@@ -157,47 +157,35 @@
      "di"
     ],
     [
-     285,
-     "quay"
-    ],
-    [
-     302,
-     "dau"
-    ],
-    [
-     317,
-     "di"
-    ],
-    [
-     318,
-     "quay"
-    ],
-    [
-     339,
+     262,
      "keng"
     ],
     [
-     352,
+     275,
      "di"
     ],
     [
-     362,
-     "keng"
+     280,
+     "bao"
     ],
     [
-     375,
-     "di"
+     310,
+     "huc"
     ],
     [
-     389,
+     334,
+     "hoi"
+    ],
+    [
+     367,
      "lat"
     ],
     [
-     418,
+     396,
      "choang"
     ],
     [
-     477,
+     482,
      "chet"
     ]
    ]
@@ -218,20 +206,20 @@
  "anh": {
   "do_ve_600_khung": {
    "n": 600,
-   "tb": 9.767,
-   "p95": 13.1,
-   "max": 148.1,
-   "quaiTb": 0.143
+   "tb": 9.619,
+   "p95": 13.3,
+   "max": 168,
+   "quaiTb": 0.125
   },
   "nap": {
    "nap": {
-    "ms_json": 7.1,
-    "ms_anh_va_decode": 25.6,
-    "ms_cache_va_ve_thu": 7.1,
-    "ms_tong": 39.8,
+    "ms_json": 10.1,
+    "ms_anh_va_decode": 28.9,
+    "ms_cache_va_ve_thu": 6.1,
+    "ms_tong": 45.1,
     "so_anh_png": 7,
     "so_anh_cache": 21,
-    "byte_png": 74169,
+    "byte_png": 73672,
     "byte_giai_ma_png": 420784,
     "byte_giai_ma_cache": 1262352,
     "mb_giai_ma_tong": 1.61,
@@ -258,7 +246,7 @@
       "w": 117,
       "h": 91,
       "byte": 42588,
-      "so_nut": 1
+      "so_nut": 2
      },
      {
       "anh": "manh/mai.png",
@@ -291,12 +279,12 @@
     ]
    },
    "hm": {
-    "ms": 1237,
-    "ms_grade": 660,
-    "ms_dat": 179,
+    "ms": 1429,
+    "ms_grade": 778,
+    "ms_dat": 242,
     "anh": 29,
     "mpx": 10.56,
-    "ms_doi_anh": 563
+    "ms_doi_anh": 639
    },
    "bk": 1
   }
