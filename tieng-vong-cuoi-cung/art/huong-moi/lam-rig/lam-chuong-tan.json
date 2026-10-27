@@ -1,0 +1,320 @@
+{
+ "ten": "Lam – rig \"Cổ tích chuông tàn\" (13 mảnh)",
+ "he_toa_do": "điểm ảnh của art/huong-moi/nguon/lam-moi-chuong-tan.png (1254×1254)",
+ "goc_rig": {
+  "x": 615.0,
+  "y": 1185.0,
+  "y_nghia": "x giữa hai ủng, y mặt đất"
+ },
+ "cao_dang_nghi_px_anh_chot": 1107.0,
+ "he_so_sang_sheet_2x": 0.2023486901535682,
+ "he_so_sang_px_logic": 0.1011743450767841,
+ "thu_tu_ve": [
+  "gang-xa",
+  "ung-xa",
+  "vat-sau",
+  "than",
+  "ung-gan",
+  "vat-truoc",
+  "ao-vai",
+  "mu",
+  "chop",
+  "mat",
+  "chuong",
+  "dao",
+  "gang-gan"
+ ],
+ "manh": {
+  "gang-xa": {
+   "anh": "manh/gang-xa.png",
+   "ten_viet": "găng xa",
+   "goc_tren_trai": [
+    533,
+    824
+   ],
+   "co": [
+    86,
+    90
+   ],
+   "cha": "than",
+   "neo": [
+    560,
+    716
+   ],
+   "lam_toi": 0.1
+  },
+  "ung-xa": {
+   "anh": "manh/ung-xa.png",
+   "ten_viet": "ủng xa",
+   "goc_tren_trai": [
+    522,
+    1139
+   ],
+   "co": [
+    90,
+    36
+   ],
+   "cha": "gốc (đất)",
+   "neo": [
+    566,
+    1172
+   ],
+   "lam_toi": 0.1
+  },
+  "vat-sau": {
+   "anh": "manh/vat-sau.png",
+   "ten_viet": "vạt sau",
+   "goc_tren_trai": [
+    310,
+    945
+   ],
+   "co": [
+    162,
+    205
+   ],
+   "cha": "than",
+   "neo": [
+    425,
+    975
+   ],
+   "lam_toi": 0
+  },
+  "than": {
+   "anh": "manh/than.png",
+   "ten_viet": "thân áo",
+   "goc_tren_trai": [
+    374,
+    548
+   ],
+   "co": [
+    505,
+    637
+   ],
+   "cha": "gốc + dịch thân",
+   "neo": [
+    615,
+    1100
+   ],
+   "lam_toi": 0
+  },
+  "ung-gan": {
+   "anh": "manh/ung-gan.png",
+   "ten_viet": "ủng gần",
+   "goc_tren_trai": [
+    669,
+    1146
+   ],
+   "co": [
+    74,
+    32
+   ],
+   "cha": "gốc (đất)",
+   "neo": [
+    706,
+    1172
+   ],
+   "lam_toi": 0
+  },
+  "vat-truoc": {
+   "anh": "manh/vat-truoc.png",
+   "ten_viet": "vạt trước",
+   "goc_tren_trai": [
+    583,
+    985
+   ],
+   "co": [
+    296,
+    196
+   ],
+   "cha": "than",
+   "neo": [
+    720,
+    995
+   ],
+   "lam_toi": 0
+  },
+  "ao-vai": {
+   "anh": "manh/ao-vai.png",
+   "ten_viet": "áo choàng vai",
+   "goc_tren_trai": [
+    418,
+    579
+   ],
+   "co": [
+    318,
+    215
+   ],
+   "cha": "than",
+   "neo": [
+    600,
+    612
+   ],
+   "lam_toi": 0
+  },
+  "mu": {
+   "anh": "manh/mu.png",
+   "ten_viet": "mũ",
+   "goc_tren_trai": [
+    397,
+    82
+   ],
+   "co": [
+    491,
+    555
+   ],
+   "cha": "than",
+   "neo": [
+    645,
+    592
+   ],
+   "lam_toi": 0
+  },
+  "chop": {
+   "anh": "manh/chop.png",
+   "ten_viet": "chóp mũ",
+   "goc_tren_trai": [
+    299,
+    78
+   ],
+   "co": [
+    277,
+    386
+   ],
+   "cha": "mu",
+   "neo": [
+    528,
+    188
+   ],
+   "lam_toi": 0
+  },
+  "mat": {
+   "anh": "manh/mat.png",
+   "ten_viet": "mắt",
+   "goc_tren_trai": [
+    774,
+    438
+   ],
+   "co": [
+    23,
+    60
+   ],
+   "cha": "mu",
+   "neo": [
+    785,
+    468
+   ],
+   "lam_toi": 0
+  },
+  "chuong": {
+   "anh": "manh/chuong.png",
+   "ten_viet": "chuông (có dây)",
+   "goc_tren_trai": [
+    710,
+    615
+   ],
+   "co": [
+    120,
+    193
+   ],
+   "cha": "than",
+   "neo": [
+    733,
+    620
+   ],
+   "lam_toi": 0
+  },
+  "dao": {
+   "anh": "manh/dao.png",
+   "ten_viet": "dao",
+   "goc_tren_trai": [
+    633,
+    872
+   ],
+   "co": [
+    307,
+    98
+   ],
+   "cha": "gang-gan",
+   "neo": [
+    678,
+    902
+   ],
+   "lam_toi": 0
+  },
+  "gang-gan": {
+   "anh": "manh/gang-gan.png",
+   "ten_viet": "găng gần + tay áo",
+   "goc_tren_trai": [
+    552,
+    698
+   ],
+   "co": [
+    176,
+    265
+   ],
+   "cha": "than",
+   "neo": [
+    616,
+    714
+   ],
+   "lam_toi": 0
+  }
+ },
+ "tu_the": "tư thế = {mảnh: [tx, ty, xoay°, sx, sy]} cục bộ quanh neo (xoay dương = chiều kim đồng hồ trên màn); ma trận = cha · T(neo+t) · R · S · T(−neo)",
+ "diem_do": {
+  "mui_dao": {
+   "manh": "dao",
+   "xy": [
+    939.0,
+    949.0
+   ]
+  },
+  "dinh_mu": {
+   "manh": "mu",
+   "xy": [
+    545.0,
+    80.0
+   ]
+  },
+  "mui_chop": {
+   "manh": "chop",
+   "xy": [
+    302.0,
+    408.0
+   ]
+  },
+  "de_ung_gan": {
+   "manh": "ung-gan",
+   "xy": [
+    706.0,
+    1184.0
+   ]
+  },
+  "de_ung_xa": {
+   "manh": "ung-xa",
+   "xy": [
+    566.0,
+    1184.0
+   ]
+  },
+  "mat": {
+   "manh": "mat",
+   "xy": [
+    785.0,
+    468.0
+   ]
+  },
+  "gay_mu": {
+   "manh": "mu",
+   "xy": [
+    420.0,
+    520.0
+   ]
+  }
+ },
+ "clip": {
+  "dung": "sprite/lam-ct-dung-2x.json",
+  "chay": "sprite/lam-ct-chay-2x.json",
+  "chem1": "sprite/lam-ct-chem1-2x.json"
+ }
+}

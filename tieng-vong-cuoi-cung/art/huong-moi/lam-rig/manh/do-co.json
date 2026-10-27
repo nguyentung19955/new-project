@@ -1,0 +1,99 @@
+{
+ "dao": {
+  "cach_do": "khoảng cách giữa chắn tay → mũi dao",
+  "bang_manh_px": 193.0,
+  "anh_chot_px": 207.1,
+  "ty_le": [
+   1.073
+  ]
+ },
+ "chuong": {
+  "cach_do": "chiều cao phần đồng (vòng treo → quả lắc)",
+  "bang_manh_px": 142,
+  "anh_chot_px": 150,
+  "rong_bang_manh": 79,
+  "rong_anh_chot": 78,
+  "ty_le": [
+   1.056
+  ]
+ },
+ "mat": {
+  "cach_do": "cao × rộng phần hổ phách",
+  "bang_manh_px": [
+   54,
+   22
+  ],
+  "anh_chot_px": [
+   56,
+   19
+  ],
+  "ty_le": [
+   1.037,
+   0.864
+  ]
+ },
+ "mu": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   1.1523,
+   1.1225
+  ],
+  "xoay_do": 0.0,
+  "sai_so_mau_tb": 9.0
+ },
+ "chop": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.8606,
+   0.9105
+  ],
+  "xoay_do": 16.63,
+  "sai_so_mau_tb": 13.4
+ },
+ "than": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.8904,
+   0.8136
+  ],
+  "xoay_do": 0.0,
+  "sai_so_mau_tb": 20.8
+ },
+ "ao-vai": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.9999,
+   0.8716
+  ],
+  "xoay_do": 0.0,
+  "sai_so_mau_tb": 19.7
+ },
+ "vat-truoc": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.8304,
+   0.8699
+  ],
+  "xoay_do": -5.05,
+  "sai_so_mau_tb": 17.3
+ },
+ "vat-sau": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.8592,
+   0.9203
+  ],
+  "xoay_do": 5.05,
+  "sai_so_mau_tb": 17.0
+ },
+ "gang-gan": {
+  "cach_do": "khớp tự động (dò lưới + Nelder–Mead)",
+  "co_xy": [
+   0.8097,
+   0.7818
+  ],
+  "xoay_do": 0.0,
+  "sai_so_mau_tb": 10.8
+ },
+ "_ket_luan": "Bảng mảnh gần đúng cỡ ảnh chốt: dao 1,07; chuông ~1,06 (cao) / 0,99 (rộng); mắt ~1,04; mũ 1,15 × 1,12 (khớp tốt, sai số màu 9). Vải (thân, vạt, áo choàng vai) trong bảng mảnh KHÁC HÌNH ảnh chốt (thân là nón dài, vạt là váy rời) nên khớp kém (sai số màu 17–21) → phần nhìn thấy lấy từ ảnh chốt, bảng mảnh chỉ dùng lấp phần khuất của mũ, dao, găng xa, 2 ủng."
+}

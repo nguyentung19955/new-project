@@ -1,0 +1,282 @@
+{
+ "gang-xa": {
+  "ten_viet": "găng xa",
+  "goc_tren_trai": [
+   533,
+   824
+  ],
+  "co": [
+   86,
+   90
+  ],
+  "px_nhin_thay": 0,
+  "px_khuat_lap": 5994,
+  "tu_bang_manh": {
+   "co_so_voi_anh_chot": [
+    0.92,
+    0.92
+   ],
+   "xoay_do": -8,
+   "M_bang_sang_anh_chot": [
+    [
+     0.91105,
+     0.12804,
+     520.71146
+    ],
+    [
+     -0.12804,
+     0.91105,
+     825.46152
+    ]
+   ]
+  }
+ },
+ "ung-xa": {
+  "ten_viet": "ủng xa",
+  "goc_tren_trai": [
+   522,
+   1139
+  ],
+  "co": [
+   90,
+   36
+  ],
+  "px_nhin_thay": 37,
+  "px_khuat_lap": 2117,
+  "tu_bang_manh": {
+   "co_so_voi_anh_chot": [
+    1.25,
+    1.25
+   ],
+   "xoay_do": 0,
+   "M_bang_sang_anh_chot": [
+    [
+     1.25,
+     0.0,
+     542.25
+    ],
+    [
+     0.0,
+     1.25,
+     1140.25
+    ]
+   ]
+  }
+ },
+ "vat-sau": {
+  "ten_viet": "vạt sau",
+  "goc_tren_trai": [
+   310,
+   945
+  ],
+  "co": [
+   162,
+   205
+  ],
+  "px_nhin_thay": 8046,
+  "px_khuat_lap": 14717
+ },
+ "than": {
+  "ten_viet": "thân áo",
+  "goc_tren_trai": [
+   374,
+   548
+  ],
+  "co": [
+   505,
+   637
+  ],
+  "px_nhin_thay": 102255,
+  "px_khuat_lap": 131127
+ },
+ "ung-gan": {
+  "ten_viet": "ủng gần",
+  "goc_tren_trai": [
+   669,
+   1146
+  ],
+  "co": [
+   74,
+   32
+  ],
+  "px_nhin_thay": 1401,
+  "px_khuat_lap": 332,
+  "tu_bang_manh": {
+   "co_so_voi_anh_chot": [
+    1.0,
+    1.0
+   ],
+   "xoay_do": 0,
+   "M_bang_sang_anh_chot": [
+    [
+     1.0,
+     0.0,
+     664.0
+    ],
+    [
+     0.0,
+     1.0,
+     1142.0
+    ]
+   ]
+  }
+ },
+ "vat-truoc": {
+  "ten_viet": "vạt trước",
+  "goc_tren_trai": [
+   583,
+   985
+  ],
+  "co": [
+   296,
+   196
+  ],
+  "px_nhin_thay": 41218,
+  "px_khuat_lap": 0
+ },
+ "ao-vai": {
+  "ten_viet": "áo choàng vai",
+  "goc_tren_trai": [
+   418,
+   579
+  ],
+  "co": [
+   318,
+   215
+  ],
+  "px_nhin_thay": 30041,
+  "px_khuat_lap": 2537
+ },
+ "mu": {
+  "ten_viet": "mũ",
+  "goc_tren_trai": [
+   397,
+   82
+  ],
+  "co": [
+   491,
+   555
+  ],
+  "px_nhin_thay": 185854,
+  "px_khuat_lap": 5957,
+  "tu_bang_manh": {
+   "co_so_voi_anh_chot": [
+    1.152,
+    1.123
+   ],
+   "xoay_do": 0.0,
+   "M_bang_sang_anh_chot": [
+    [
+     1.15232,
+     -1e-05,
+     391.88514
+    ],
+    [
+     1e-05,
+     1.12248,
+     76.4841
+    ]
+   ]
+  }
+ },
+ "chop": {
+  "ten_viet": "chóp mũ",
+  "goc_tren_trai": [
+   299,
+   78
+  ],
+  "co": [
+   277,
+   386
+  ],
+  "px_nhin_thay": 25100,
+  "px_khuat_lap": 0
+ },
+ "mat": {
+  "ten_viet": "mắt",
+  "goc_tren_trai": [
+   774,
+   438
+  ],
+  "co": [
+   23,
+   60
+  ],
+  "px_nhin_thay": 1014,
+  "px_khuat_lap": 0
+ },
+ "chuong": {
+  "ten_viet": "chuông (có dây)",
+  "goc_tren_trai": [
+   710,
+   615
+  ],
+  "co": [
+   120,
+   193
+  ],
+  "px_nhin_thay": 13073,
+  "px_khuat_lap": 0
+ },
+ "dao": {
+  "ten_viet": "dao",
+  "goc_tren_trai": [
+   633,
+   872
+  ],
+  "co": [
+   307,
+   98
+  ],
+  "px_nhin_thay": 12408,
+  "px_khuat_lap": 3132,
+  "tu_bang_manh": {
+   "co_so_voi_anh_chot": [
+    1.073,
+    1.073
+   ],
+   "xoay_do": 6.71,
+   "M_bang_sang_anh_chot": [
+    [
+     1.06546,
+     -0.12541,
+     633.59338
+    ],
+    [
+     0.12541,
+     1.06546,
+     854.72031
+    ]
+   ]
+  }
+ },
+ "gang-gan": {
+  "ten_viet": "găng gần + tay áo",
+  "goc_tren_trai": [
+   552,
+   698
+  ],
+  "co": [
+   176,
+   265
+  ],
+  "px_nhin_thay": 31477,
+  "px_khuat_lap": 0
+ },
+ "_thu_tu_ve": [
+  "gang-xa",
+  "ung-xa",
+  "vat-sau",
+  "than",
+  "ung-gan",
+  "vat-truoc",
+  "ao-vai",
+  "mu",
+  "chop",
+  "mat",
+  "chuong",
+  "dao",
+  "gang-gan"
+ ],
+ "_he_toa_do": "điểm ảnh của art/huong-moi/nguon/lam-moi-chuong-tan.png (1254×1254)"
+}

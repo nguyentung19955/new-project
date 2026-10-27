@@ -1,0 +1,441 @@
+{
+ "ten": "Lam \"Cổ tích chuông tàn\" – CHẠY (264 px logic/s, 132 px/chu kỳ), sprite sheet 2x",
+ "phien_ban_clip": "chuong-tan-1",
+ "anh": "lam-ct-chay-2x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1342,
+  1034
+ ],
+ "luoi": {
+  "cot": 8,
+  "hang": 4,
+  "khe_px": 2
+ },
+ "co_khung": [
+  166,
+  257
+ ],
+ "diem_neo": {
+  "x": 75,
+  "y": 247,
+  "y_nghia": "toạ độ trong MỖI khung (từ góc trái-trên ô): x = gốc rig (giữa hai ủng = giữa collider), y = mặt đất (hàng y−1 là hàng thấp nhất của đế khi chạm đất). Mọi khung cùng một điểm neo; không crop riêng khung."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 2,
+  "ve_trong_game": "vẽ ở ½ cỡ nguồn",
+  "cao_dang_nghi_px_nguon": 224,
+  "cao_dang_nghi_px_logic": 112.0,
+  "he_so_px_anh_chot_sang_px_nguon": 0.202349,
+  "ghi_chu": "một tỉ lệ cố định cho mọi tư thế; dáng nghỉ (đỉnh mũ → đế) cao 224 px nguồn"
+ },
+ "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân).",
+ "lam_toi": {
+  "gang-xa": 0.1,
+  "ung-xa": 0.1,
+  "ghi_chu": "găng xa + ủng xa đã tối 10 % sẵn trong sheet"
+ },
+ "anh_vet_sang": "lam-ct-chay-rim-2x.png",
+ "vet_sang_ghi_chu": "cùng lưới ô/neo; chỉ mép mũ, chóp, áo choàng vai phía có đèn (trên, chếch trước); vẽ chồng lên khung",
+ "lap": true,
+ "cach_phat": "theo QUÃNG ĐƯỜNG (như rig-v4): pha += |dx_thực| / quang ; khung = floor(pha × so_khung); pha không reset",
+ "toc_do_chuan": {
+  "quang_duong_moi_chu_ky_px_logic": 132.0,
+  "toc_do_px_logic_s": 264.0,
+  "so_tick_moi_chu_ky": 30
+ },
+ "so_khung": 30,
+ "ty_le_cham_dat_moi_chan": 0.22,
+ "frames": [
+  {
+   "i": 0,
+   "x": 0,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.0,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 1,
+   "x": 168,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.03333,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 2,
+   "x": 336,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.06667,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 3,
+   "x": 504,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.1,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 4,
+   "x": 672,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.13333,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 5,
+   "x": 840,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.16667,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 6,
+   "x": 1008,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.2,
+   "chiu_luc": {
+    "ung-gan": true,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 7,
+   "x": 1176,
+   "y": 0,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.23333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 8,
+   "x": 0,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.26667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 9,
+   "x": 168,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.3,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 10,
+   "x": 336,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.33333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 11,
+   "x": 504,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.36667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 12,
+   "x": 672,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.4,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 13,
+   "x": 840,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.43333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 14,
+   "x": 1008,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.46667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 15,
+   "x": 1176,
+   "y": 259,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.5,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 16,
+   "x": 0,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.53333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 17,
+   "x": 168,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.56667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 18,
+   "x": 336,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.6,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 19,
+   "x": 504,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.63333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 20,
+   "x": 672,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.66667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 21,
+   "x": 840,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.7,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": true
+   }
+  },
+  {
+   "i": 22,
+   "x": 1008,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.73333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 23,
+   "x": 1176,
+   "y": 518,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.76667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 24,
+   "x": 0,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.8,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 25,
+   "x": 168,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.83333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 26,
+   "x": 336,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.86667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 27,
+   "x": 504,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.9,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 28,
+   "x": 672,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.93333,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  },
+  {
+   "i": 29,
+   "x": 840,
+   "y": 777,
+   "w": 166,
+   "h": 257,
+   "ms": 16.667,
+   "pha": 0.96667,
+   "chiu_luc": {
+    "ung-gan": false,
+    "ung-xa": false
+   }
+  }
+ ]
+}

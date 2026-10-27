@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Thử Lam mới – Cổ tích chuông tàn</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0d1215; overflow: hidden; touch-action: none;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  #khung { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  canvas { display: block; width: 100%; height: 100%; }
+  .nut { position: absolute; bottom: 4%; width: 10%; aspect-ratio: 1; border-radius: 50%;
+    border: 2px solid rgba(242,214,154,.35); background: rgba(23,39,44,.45); color: rgba(242,214,154,.8);
+    font: 600 clamp(14px, 2.6vw, 28px)/1 system-ui, sans-serif; display: flex; align-items: center; justify-content: center; }
+  .nut.bam { background: rgba(242,214,154,.25); }
+  #trai { left: 3%; } #phai { left: 15%; } #chem { right: 4%; width: 11%; }
+  #loi { position: absolute; left: 10px; top: 10px; color: #f2d69a; font: 14px system-ui, sans-serif; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="khung">
+  <canvas id="c" width="1920" height="1080"></canvas>
+  <div class="nut" id="trai">◀</div><div class="nut" id="phai">▶</div><div class="nut" id="chem">Chém</div>
+</div>
+<div id="loi"></div>
+<script>
+/* TRANG DUYỆT CHUYỂN ĐỘNG LAM MỚI ("Cổ tích chuông tàn") – riêng, KHÔNG phải game; demo.html không đổi.
+   Màn logic 960×540, 60 bước/giây cố định. Lam cao 112 px logic (sheet 2x vẽ ở ½ cỡ).
+   Vật lý chạy/chém chép đúng game/demo.html: runSpeed 4.4, tăng tốc 6 bước, giảm tốc 5 bước, quay đầu ×1,6;
+   chém đòn 1: atkT tăng 1/bước, 26 khung (su 11 + ac 8 + re 8), hộp đòn bật atkT 11–18, lunge 2,2 giảm 0,44/bước.
+   Chọn khung: ĐỨNG theo thời gian (khung 0 = dáng nghỉ), CHẠY theo QUÃNG ĐƯỜNG (pha += |dx thực| / 132, không reset),
+   CHÉM theo atkT. Cờ: ?so=1 thêm Lam cũ (rig-v4) bên cạnh · ?rim=0 tắt vệt sáng mép mũ/vai + vũng sáng dưới chân
+   · ?debug=1 hộp đòn + số · ?hud=0 ẩn nút/chữ · ?tu=0 không tự chạy (để quay: window.TLM.buoc(n)). */
+'use strict';
+const Q = new URLSearchParams(location.search);
+const SO = Q.get('so') === '1', RIM = Q.get('rim') !== '0', DEBUG = Q.get('debug') === '1',
+      HUD = Q.get('hud') !== '0', TU_CHAY = Q.get('tu') !== '0', XAM = Q.get('xam') === '1';
+const W = 960, H = 540, DAT = 416;                  // mặt sàn rễ trong ảnh cảnh chuẩn co về 960×540 (~¾ dưới)
+const XMIN = 50, XMAX = 910;
+const P = { runSpeed: 4.4, accelFrames: 6, decelFrames: 5, turnBoost: 1.6, lunge: 2.2 };
+const ATK1 = { su: 11, ac: 8, re: 8, box: [4, -97, 91, 48] };
+const R = '../../art/';
+const NGUON = {
+  nen: R + 'huong-moi/nguon/canh-chuan-lang.png',
+  moi: { dung: R + 'huong-moi/lam-rig/sprite/lam-ct-dung-2x', chay: R + 'huong-moi/lam-rig/sprite/lam-ct-chay-2x',
+         chem: R + 'huong-moi/lam-rig/sprite/lam-ct-chem1-2x' },
+  cu: { chay: R + 'modular/lam-moi/rig-v4/sprite/lam-chay-2x', hd: R + 'modular/lam-moi/hanh-dong/sprite/lam-hanh-dong-2x' },
+};
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+
+function anh(src) { return new Promise((ok, loi) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => loi(new Error('không nạp được ' + src)); i.src = src; }); }
+async function json(src) { const r = await fetch(src); if (!r.ok) throw new Error('không nạp được ' + src); return r.json(); }
+async function clip(base, rim) {
+  const meta = await json(base + '.json');
+  const c = { meta, sheet: await anh(base + '.png') };
+  if (rim) c.rim = await anh(base.replace(/-2x$/, '-rim-2x') + '.png');
+  return c;
+}
+
+/* ---------- vũng sáng dưới chân: vẽ sẵn 1 lần (không shadowBlur, không lọc mỗi khung) ---------- */
+function taoVung() {
+  const c = document.createElement('canvas'); c.width = 320; c.height = 72;
+  const g = c.getContext('2d');
+  g.setTransform(1, 0, 0, 72 / 320, 0, 0);
+  const r = g.createRadialGradient(160, 160, 0, 160, 160, 160);
+  r.addColorStop(0, 'rgba(242,214,154,0.55)'); r.addColorStop(0.45, 'rgba(242,214,154,0.22)'); r.addColorStop(1, 'rgba(242,214,154,0)');
+  g.fillStyle = r; g.fillRect(0, 0, 320, 320);
+  return c;
+}
+/* quầng sáng mờ sau lưng (nền sáng lên một chút quanh bóng Lam → bóng tối của áo tách khỏi nền); vẽ sẵn 1 lần */
+function taoQuang() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+  const g = c.getContext('2d');
+  const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  r.addColorStop(0, 'rgba(214,200,160,0.20)'); r.addColorStop(0.55, 'rgba(214,200,160,0.08)'); r.addColorStop(1, 'rgba(214,200,160,0)');
+  g.fillStyle = r; g.fillRect(0, 0, 256, 256);
+  return c;
+}
+
+/* ---------- nhân vật ---------- */
+function taoLam(loai, x) { return { loai, x, vx: 0, face: 1, atkN: 0, atkT: 0, atkBuf: 0, dxT: 0, pha: 0, ten: 'idle', t: 0, k: 0 }; }
+const approach = (v, t, d) => v < t ? Math.min(v + d, t) : Math.max(v - d, t);
+const IN = { l: false, r: false, chem: false, chemMoi: false };
+
+function buocLam(L) {
+  const dir = (IN.r ? 1 : 0) - (IN.l ? 1 : 0);
+  if (IN.chemMoi) L.atkBuf = 8;
+  // ngang – như demo.html (đang chém dưới đất: mục tiêu 0, giảm tốc ½)
+  const atkGround = L.atkN > 0;
+  const target = atkGround ? 0 : dir * P.runSpeed;
+  const acc = P.runSpeed / P.accelFrames, dec = P.runSpeed / P.decelFrames;
+  if (target !== 0) { const quay = L.vx !== 0 && Math.sign(L.vx) !== Math.sign(target); L.vx = approach(L.vx, target, quay ? acc * P.turnBoost : acc); }
+  else L.vx = approach(L.vx, 0, atkGround ? dec * 0.5 : dec);
+  if (dir && !L.atkN) L.face = dir;
+  const x0 = L.x; L.x += L.vx;
+  if (L.x < XMIN) { L.x = XMIN; L.vx = 0; } if (L.x > XMAX) { L.x = XMAX; L.vx = 0; }
+  L.dxT = L.x - x0;                                     // dịch THỰC (va mép → 0 → chân không đạp)
+  if (L.atkBuf > 0 && !L.atkN) { if (dir) L.face = dir; L.atkN = 1; L.atkT = 0; L.atkBuf = 0; L.vx = L.face * P.lunge; }
+  if (L.atkBuf > 0) L.atkBuf--;
+  if (L.atkN) { L.atkT++; if (L.atkT >= ATK1.su + ATK1.ac + ATK1.re) L.atkN = 0; }
+  chonKhung(L);
+}
+
+function chonKhung(L) {
+  let ten;
+  if (L.atkN) ten = 'chem';
+  else if (Math.abs(L.dxT) > 0.001 && (Math.abs(L.vx) > 0.6 || (L.ten === 'run' && Math.abs(L.vx) > 0.05))) ten = 'run';
+  else ten = 'idle';
+  L.t = (ten === L.ten) ? L.t + 1 : 0; L.ten = ten;
+  if (ten === 'run') L.pha = (L.pha + Math.abs(L.dxT) / QD[L.loai]) % 1;
+  if (L.loai === 'moi') {
+    const M = LAM.moi;
+    if (ten === 'chem') { L.c = M.chem; L.k = M.chem.meta.khung_theo_atkT[Math.min(L.atkT, 26) - 1]; }
+    else if (ten === 'run') { L.c = M.chay; L.k = Math.floor(L.pha * M.chay.meta.so_khung) % M.chay.meta.so_khung; }
+    else { L.c = M.dung; const m = M.dung.meta; L.k = Math.floor(L.t / m.tick_moi_khung) % m.so_khung; }
+  } else {
+    const C = LAM.cu, hd = C.hd.meta;
+    if (ten === 'chem') { L.c = C.hd; L.k = hd.don.atk1.khung_theo_atkT[Math.min(L.atkT, hd.don.atk1.khung_theo_atkT.length) - 1]; }
+    else if (ten === 'run') { L.c = C.chay; const n = C.chay.meta.frames.length; L.k = Math.floor(L.pha * n) % n; }
+    else { L.c = C.hd; L.k = hd.khac.tho[Math.floor(L.t / hd.tho.buoc_moi_khung) % hd.tho.so_khung]; }
+  }
+}
+
+/* ---------- vẽ ---------- */
+function veLam(L) {
+  const c = L.c, m = c.meta, f = m.frames[L.k];
+  const ax = f.ax !== undefined ? f.ax : m.diem_neo.x, ay = f.ay !== undefined ? f.ay : m.diem_neo.y;
+  if (RIM) { ctx.globalAlpha = 1; ctx.drawImage(QUANG, L.x - 85, DAT - 150, 170, 170); ctx.drawImage(VUNG, L.x - 80, DAT - 15, 160, 36); }
+  ctx.save(); ctx.translate(L.x, DAT); if (L.face < 0) ctx.scale(-1, 1);
+  ctx.drawImage(c.sheet, f.x, f.y, f.w, f.h, -ax / 2, -ay / 2, f.w / 2, f.h / 2);
+  if (RIM && c.rim) ctx.drawImage(c.rim, f.x, f.y, f.w, f.h, -ax / 2, -ay / 2, f.w / 2, f.h / 2);
+  ctx.restore();
+  if (DEBUG) {
+    ctx.strokeStyle = '#f33'; ctx.lineWidth = 1;
+    if (L.atkN && L.atkT >= ATK1.su && L.atkT < ATK1.su + ATK1.ac) {
+      const b = ATK1.box, x = L.face > 0 ? L.x + b[0] : L.x - b[0] - b[2];
+      ctx.strokeRect(x, DAT + b[1], b[2], b[3]);
+    }
+    ctx.strokeStyle = '#6cf'; ctx.beginPath(); ctx.moveTo(L.x - 6, DAT); ctx.lineTo(L.x + 6, DAT); ctx.moveTo(L.x, DAT - 6); ctx.lineTo(L.x, DAT + 3); ctx.stroke();
+  }
+  if (SO && HUD) {
+    ctx.fillStyle = 'rgba(242,214,154,.85)'; ctx.font = '600 13px system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(L.loai === 'moi' ? 'Lam mới' : 'Lam cũ (rig-v4)', L.x, DAT - 128);
+  }
+}
+
+function ve() {
+  ctx.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
+  ctx.globalAlpha = 1;
+  ctx.drawImage(NEN, 0, 0, W, H);
+  // Lam đang hành động vẽ sau cùng
+  const ds = LAMS.slice().sort((a, b) => (a.atkN ? 1 : 0) - (b.atkN ? 1 : 0));
+  for (const L of ds) veLam(L);
+  if (HUD) {
+    ctx.fillStyle = 'rgba(242,214,154,.7)'; ctx.font = '13px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('← → / A D: chạy · X / J: chém · ?so=1 so Lam cũ · ?rim=0 tắt vệt sáng', 12, 20);
+  }
+  if (DEBUG) {
+    const L = LAMS[0]; ctx.fillStyle = '#fff'; ctx.font = '12px monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`${L.ten} khung ${L.k} pha ${L.pha.toFixed(3)} atkT ${L.atkT} vx ${L.vx.toFixed(2)} dx ${L.dxT.toFixed(2)}`, 12, 38);
+  }
+  if (XAM) {    // bản xám để chấm sáng–tối (chỉ khi chụp ảnh, không dùng khi chơi)
+    const d = ctx.getImageData(0, 0, cv.width, cv.height), a = d.data;
+    for (let i = 0; i < a.length; i += 4) { const y = 0.299 * a[i] + 0.587 * a[i + 1] + 0.114 * a[i + 2]; a[i] = a[i + 1] = a[i + 2] = y; }
+    ctx.putImageData(d, 0, 0);
+  }
+}
+
+function buoc(n = 1) { for (let i = 0; i < n; i++) { for (const L of LAMS) buocLam(L); IN.chemMoi = false; } ve(); }
+
+/* ---------- điều khiển: phím + cảm ứng ---------- */
+const PHIM = { ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r', KeyX: 'chem', KeyJ: 'chem', KeyK: 'chem' };
+addEventListener('keydown', e => { const k = PHIM[e.code]; if (!k) return; e.preventDefault(); if (k === 'chem' && !IN.chem) IN.chemMoi = true; IN[k] = true; });
+addEventListener('keyup', e => { const k = PHIM[e.code]; if (k) IN[k] = false; });
+const NUT = { trai: 'l', phai: 'r', chem: 'chem' }, CHAM = new Map();
+function capNhatNut() {
+  const dang = new Set(CHAM.values());
+  for (const [id, k] of Object.entries(NUT)) { const v = dang.has(k); if (k === 'chem' && v && !IN.chem) IN.chemMoi = true; IN[k] = v; document.getElementById(id).classList.toggle('bam', v); }
+}
+for (const id of Object.keys(NUT)) {
+  const el = document.getElementById(id);
+  el.addEventListener('pointerdown', e => { e.preventDefault(); el.setPointerCapture(e.pointerId); CHAM.set(e.pointerId, NUT[id]); capNhatNut(); });
+  const tha = e => { CHAM.delete(e.pointerId); capNhatNut(); };
+  el.addEventListener('pointerup', tha); el.addEventListener('pointercancel', tha);
+  if (!HUD) el.style.display = 'none';
+}
+function coKhung() {
+  const k = document.getElementById('khung'), s = Math.min(innerWidth / W, innerHeight / H);
+  k.style.width = W * s + 'px'; k.style.height = H * s + 'px';
+}
+addEventListener('resize', coKhung); coKhung();
+
+/* ---------- khởi động ---------- */
+let LAM, NEN, VUNG, QUANG, LAMS = [];
+const QD = { moi: 132, cu: 132 };
+(async () => {
+  try {
+    NEN = await anh(NGUON.nen);
+    VUNG = taoVung(); QUANG = taoQuang();
+    LAM = { moi: { dung: await clip(NGUON.moi.dung, true), chay: await clip(NGUON.moi.chay, true), chem: await clip(NGUON.moi.chem, true) } };
+    const mc = LAM.moi.chay.meta;
+    QD.moi = mc.toc_do_chuan.quang_duong_moi_chu_ky_px_logic;
+    if (LAM.moi.chem.meta.su !== ATK1.su || LAM.moi.chem.meta.ac !== ATK1.ac || LAM.moi.chem.meta.re !== ATK1.re)
+      throw new Error('sheet chém không khớp ATK[1] của game');
+    LAMS.push(taoLam('moi', SO ? 600 : 480));
+    if (SO) {
+      LAM.cu = { chay: await clip(NGUON.cu.chay, false), hd: await clip(NGUON.cu.hd, false) };
+      QD.cu = LAM.cu.chay.meta.toc_do_chuan.quang_duong_moi_chu_ky_px_logic;
+      LAMS.push(taoLam('cu', 330));
+    }
+    for (const L of LAMS) chonKhung(L);
+    window.TLM = { buoc, IN, LAMS, san_sang: true };
+    ve();
+    if (TU_CHAY) {
+      let truoc = performance.now(), du = 0;
+      const vong = now => { du += Math.min(250, now - truoc); truoc = now; let n = 0; while (du >= 1000 / 60) { du -= 1000 / 60; n++; } if (n) buoc(n); requestAnimationFrame(vong); };
+      requestAnimationFrame(vong);
+    }
+  } catch (e) { document.getElementById('loi').textContent = 'Lỗi: ' + e.message; window.TLM = { loi: e.message }; }
+})();
+</script>
+</body>
+</html>
