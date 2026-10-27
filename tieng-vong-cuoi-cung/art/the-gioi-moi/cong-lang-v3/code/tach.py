@@ -6,11 +6,15 @@ Mỗi ảnh: tách nền trắng bằng flood-fill từ mép (chung.nen_trang: v
 khử viền trắng (chung.khu_vien_trang: điểm sát nền coi là trộn màu đặc với trắng → alpha), cắt từng mảnh theo hộp
 cố định bên dưới, thu về cỡ logic đã chọn (×2 ảnh), dán vào atlas của họ. Cỡ logic chọn theo lưới ô 32 / Lam 112:
 
-  mang-go-lon   6 mảng gỗ trơ, rộng ≈ 3,5 ô (112 logic) – phủ lên thân sàn / tường
+  mang-go-lon   6 mảng gỗ trơ, rộng ≈ 3,5 ô (112 logic) – phủ lên thân sàn / tường; làm tối 7 % + bớt màu 5 % (duyệt 27/10:
+                "tối thêm" cho chìm vào thân gạch – màu trung bình in ra khi chạy để so với ô go-than)
   chan-re-goc   2 chân rễ (đủ + bản thấp đã cắt thân, mờ dần ở mép cắt), 2 rễ ôm cột đá (đã BỎ phần đá, chỉ giữ rễ + rêu),
                 2 rễ ôm góc đá (đủ cả đá – chưa dùng ở Cổng làng)
   mep-dat-re    2 bộ × (đầu trái, giữa, đầu phải): dày ≈ 30 logic (1 ô), giữa dài 4 ô; đầu cắt được làm mờ dần 6 px để nối
-  be-neo        6 bệ gốc + 1 bệ GHÉP "be-re-do": rễ đỡ dưới bệ 3 ô (96 logic) × cao 96 logic (3 ô) → mặt đứng = mép trên
+  be-neo        2 bệ VÁN TREO DÂY "be-van-day-3" (96 logic = 3 ô) và "be-van-day-2" (64 logic = 2 ô, cắt bớt khúc giữa ván)
+                + ô dây "day-treo" (≈ 33 logic, LẶP DỌC LIỀN: đầu trên hoà trộn chéo sang đầu dưới) – game xếp dây từ nút buộc
+                ở 2 đầu ván lên quá mép trên màn (bản duyệt 27/10: chọn ván treo). Bệ GHÉP "be-re-do" (rễ đỡ, 3 ô) chuyển sang
+                be-neo-kho (để dành, game không nạp)
   cua-cong-nha  cửa nhà trong thân cây (khung cửa + đèn lồng + cờ, rộng khung = 96 logic = 3 ô), ban công, cổng vòm, cửa chặn rễ
   tien-canh-re-da  2 cụm rễ-đá mép trái / phải, thu 0,8 (tip thấp nhất ≈ 47 % màn sau khi dời lên 60 logic trong game)
 
@@ -131,16 +135,17 @@ def chay():
             'anh': {}, 'o': {}}
     ho = {}                                                       # họ → list (tên, rgba, neo, ghi chú)
 
-    def them(h, ten, im, neo, chu=''):
-        ho.setdefault(h, []).append((ten, im, neo, chu))
+    def them(h, ten, im, neo, chu='', them_meta=None):
+        ho.setdefault(h, []).append((ten, im, neo, chu, them_meta or {}))
 
     # ---- mảng gỗ lớn: 6 mảng, rộng ≈ 3,5 ô
     im, fg, a = tach('mang-go-lon')
     K_GO = 224 / 470.0
     for i, box in enumerate([(34, 13, 502, 468), (539, 23, 987, 469), (1046, 24, 1510, 468),
                              (33, 525, 500, 982), (535, 511, 997, 982), (1030, 515, 1507, 981)]):
-        p = thu(cat(im, box), K_GO)
-        them('mang-go-lon', 'mang-go-%d' % (i + 1), p, [0, 0], 'neo góc trên-trái')
+        p = toi(thu(cat(im, box), K_GO), 0.93, 0.95)                # tối 7 %, bớt màu 5 % (duyệt: chìm vào thân)
+        them('mang-go-lon', 'mang-go-%d' % (i + 1), p, [0, 0], 'neo góc trên-trái; đã tối 0,93')
+    in_mau_tb('mảng gỗ (đã tối)', [d[1] for d in ho['mang-go-lon']])
 
     # ---- chân rễ / rễ ôm cột / rễ ôm góc đá
     im, fg, a = tach('chan-re-goc')
@@ -192,8 +197,11 @@ def chay():
     ten_be = ['gia-go-1', 're-do-1', 'van-day-1', 're-do-2', 'van-day-2', 'gia-go-2']
     for i, box in enumerate([(26, 133, 483, 436), (553, 48, 1029, 456), (1085, 42, 1514, 388),
                              (538, 535, 1032, 966), (1085, 551, 1514, 906), (26, 611, 483, 927)]):
-        them('be-neo-kho', 'be-' + ten_be[i], thu(cat(im, box), K_BE), [0, 0], 'bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)')
-    them('be-neo', 'be-re-do', *be_re_do(im, a))
+        them('be-neo-kho', 'be-goc-' + ten_be[i], thu(cat(im, box), K_BE), [0, 0], 'bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp')
+    them('be-neo-kho', 'be-re-do', *be_re_do(im, a))
+    for n in (3, 2):
+        them('be-neo', 'be-van-day-%d' % n, *be_van_day(im, n))
+    them('be-neo', 'day-treo', *day_treo(im))
 
     # ---- cửa / cổng / nhà
     im, fg, a = tach('cua-cong-nha')
@@ -216,17 +224,17 @@ def chay():
 
     # ---- xếp atlas từng họ + JSON + ảnh kiểm viền
     for h, ds in ho.items():
-        items = [(t, im) for t, im, _, _ in ds]
+        items = [(t, im) for t, im, _, _, _ in ds]
         tong = sum(im.shape[1] + 2 for _, im in items) + 2
         rong = tong if tong <= 1024 else (1200 if h == 'tien-canh-re-da' else 1024)   # atlas vừa khít khi đủ nhỏ (đỡ bộ nhớ)
         at, pos = xep_atlas(items, rong=rong)
         luu_png(at, os.path.join(GOC, h + '.png'))
         meta['anh'][h] = {'tep': h + '.png', 'co_anh': [at.shape[1], at.shape[0]]}
-        for t, im, neo, chu in ds:
+        for t, im, neo, chu, tm in ds:
             hh, ww = im.shape[:2]
             if neo is None:
                 neo = [ww // 2, hh]
-            meta['o'][t] = {'anh': h + '.png', 'khung': pos[t], 'neo': [int(neo[0]), int(neo[1])], 'co_logic': [ww / BOI, hh / BOI], 'ghi_chu': chu}
+            meta['o'][t] = dict({'anh': h + '.png', 'khung': pos[t], 'neo': [int(neo[0]), int(neo[1])], 'co_logic': [ww / BOI, hh / BOI], 'ghi_chu': chu}, **tm)
         kiem_vien(h, ds)
     luu_json(meta, os.path.join(GOC, 'cong-lang-v3.json'))
     print('xong:', ', '.join('%s %d ô' % (h, len(ds)) for h, ds in ho.items()))
@@ -326,6 +334,62 @@ def be_re_do(im, a):
     return q, [0, 0], 'bệ GHÉP: rễ đỡ cho bệ 3 ô; neo góc trên-trái = (mép trái collider, mặt bệ); cao 96 + 6 lún'
 
 
+def in_mau_tb(ten, ds):
+    """In màu trung bình (RGB) của các mảnh (điểm alpha > 128) – để so với thân gạch go-than (xem GHI-CHU)."""
+    px = np.concatenate([im[im[..., 3] > 128][:, :3] for im in ds]).astype(float)
+    print('%s: màu trung bình %d/%d/%d' % (ten, *np.round(px.mean(0)).astype(int)))
+
+
+# ---- bệ VÁN TREO DÂY (mảnh 3 của be-neo: x 1085..1513, y 42..388 ảnh gen). Ván y 320..373, dây tại x ≈ 1134 / 1464 (rộng ≈ 19),
+#      nút buộc dưới (quấn ván) y 278..320, dây sạch y 132..276, nút trên + vòng y 42..130 (BỎ: dây đi lên quá mép trên màn).
+VD_BOX = (1085, 42, 1514, 388)
+VD_Y_CAT = 278            # cắt ngang: trên = dây, dưới = nút buộc + ván
+VD_Y_MAT = 320            # mặt ván (mặt đứng) trong ảnh gen
+VD_DAY_X = (1134, 1464)   # tâm 2 dây
+VD_K = 192 / 429.0        # ván 429 px gen → 192 px 2x = 96 logic (3 ô)
+
+
+def be_van_day(im, n_o):
+    """Ván treo dây rộng n_o ô (3 → 96 logic; 2 → 64 logic: cắt bỏ khúc giữa ván 143 px gen rồi hoà trộn ngang 10 px).
+    Neo = (mép trái ván = mép trái collider, mặt ván = mặt bệ một chiều). Thêm 'day': [[dx, dy], …] (px 2x, so với neo) =
+    chân của mỗi dây (game vẽ day-treo từ đó đi LÊN)."""
+    x0, y0, x1, y1 = VD_BOX
+    p = im[VD_Y_CAT:y1, x0:x1].copy()
+    dx = [VD_DAY_X[0] - x0, VD_DAY_X[1] - x0]
+    if n_o == 2:
+        w, OV = x1 - x0, 10
+        bo = w - round(w * 2 / 3) - OV                            # bỏ 133 px giữa + hoà trộn 10 px → còn 286 px = 2/3 bề rộng
+        cA = w // 2 - bo // 2
+        p = tron_ngang(p[:, :cA], p[:, cA + bo:], OV)
+        dx[1] -= bo + OV
+    q = thu(p, VD_K)
+    k = q.shape[1] / p.shape[1]
+    neo = [0, round((VD_Y_MAT - VD_Y_CAT) * k)]
+    day = [[round(d * k), 0] for d in dx]                        # chân dây = mép trên mảnh (y = 0 so với mép trên) → dy so với neo
+    day = [[a, -neo[1]] for a, _ in day]
+    return q, neo, 'ván treo dây %d ô; neo (mép trái, mặt ván); day = chân 2 dây (px 2x so với neo), dây vẽ từ đó đi lên' % n_o, {'day': day}
+
+
+def day_treo(im):
+    """Ô dây treo LẶP DỌC LIỀN: đoạn dây sạch (y 132..278 ảnh gen, 146 px) – đáy ô = đúng hàng 277 (nối liền nút buộc của ván),
+    đỉnh ô = 12 hàng hoà trộn chéo từ cuối đoạn sang đầu đoạn → xếp ô nọ lên ô kia không thấy mối. Neo = giữa đáy (= chân dây)."""
+    x0, OV = VD_DAY_X[0], 12
+    seg = im[132:VD_Y_CAT, x0 - 30:x0 + 30].copy()
+    n = seg.shape[0]
+    strip = tron_doc(seg, seg, OV)                               # A[:-OV] + mid + B[OV:]
+    tile = strip[n - OV:n - OV + n]                              # mid (OV hàng) + B[OV:] → đáy = cuối đoạn, đỉnh = chuyển tiếp sang đầu đoạn
+    q = thu(tile, VD_K)
+    ys, xs = np.nonzero(q[..., 3] > 0)
+    q = q[:, xs.min():xs.max() + 1]
+    tam = round(30 * VD_K) - xs.min()                             # tâm dây trong mảnh đã cắt
+    return q, [int(np.clip(tam, 0, q.shape[1] - 1)), q.shape[0]], 'ô dây treo lặp dọc liền (%d logic), neo giữa đáy = chân dây; game xếp lên tới quá mép trên màn' % round(q.shape[0] / BOI), {}
+
+
+def tron_ngang(A, B, OV):
+    """Nối A bên trái B theo chiều ngang, OV cột cuối của A hoà trộn chéo với OV cột đầu của B."""
+    return np.transpose(tron_doc(np.transpose(A, (1, 0, 2)), np.transpose(B, (1, 0, 2)), OV), (1, 0, 2))
+
+
 def tron_doc(A, B, OV):
     """Nối A trên B theo chiều dọc, OV hàng cuối của A hoà trộn chéo với OV hàng đầu của B (premultiplied alpha)."""
     A = A.astype(np.float64); B = B.astype(np.float64)
@@ -348,6 +412,7 @@ def kiem_vien(h, ds):
     """Ảnh kiểm viền: mọi ô của họ xếp cạnh nhau, đúng cỡ ảnh 2x, trên nền hồng (#ff00ff) và nền đen – soi viền trắng / rìa bẩn."""
     f = font(12, True)
     khe, dau = 16, 34
+    ds = [d[:4] for d in ds]
     W = sum(max(im.shape[1], 90) for _, im, _, _ in ds) + khe * (len(ds) + 1)
     if W > 2400:                                                  # 2 hàng
         n = (len(ds) + 1) // 2

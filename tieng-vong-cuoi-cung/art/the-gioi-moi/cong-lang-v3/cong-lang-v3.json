@@ -34,14 +34,14 @@
    "tep": "be-neo-kho.png",
    "co_anh": [
     1024,
-    300
+    336
    ]
   },
   "be-neo": {
    "tep": "be-neo.png",
    "co_anh": [
-    196,
-    204
+    342,
+    68
    ]
   },
   "cua-cong-nha": {
@@ -83,7 +83,7 @@
     112.0,
     108.5
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "mang-go-2": {
    "anh": "mang-go-lon.png",
@@ -101,7 +101,7 @@
     107.0,
     106.5
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "mang-go-3": {
    "anh": "mang-go-lon.png",
@@ -119,7 +119,7 @@
     111.0,
     106.0
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "mang-go-4": {
    "anh": "mang-go-lon.png",
@@ -137,7 +137,7 @@
     111.5,
     109.0
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "mang-go-5": {
    "anh": "mang-go-lon.png",
@@ -155,7 +155,7 @@
     110.5,
     112.5
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "mang-go-6": {
    "anh": "mang-go-lon.png",
@@ -173,7 +173,7 @@
     114.0,
     111.5
    ],
-   "ghi_chu": "neo góc trên-trái"
+   "ghi_chu": "neo góc trên-trái; đã tối 0,93"
   },
   "chan-re-1": {
    "anh": "chan-re-goc.png",
@@ -427,11 +427,11 @@
    ],
    "ghi_chu": "neo = (cột kết thúc mặt rêu, 2 logic dưới đỉnh); đầu phải"
   },
-  "be-gia-go-1": {
+  "be-goc-gia-go-1": {
    "anh": "be-neo-kho.png",
    "khung": [
-    0,
-    175,
+    185,
+    206,
     183,
     122
    ],
@@ -443,12 +443,12 @@
     91.5,
     61.0
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
-  "be-re-do-1": {
+  "be-goc-re-do-1": {
    "anh": "be-neo-kho.png",
    "khung": [
-    200,
+    394,
     0,
     191,
     164
@@ -461,12 +461,12 @@
     95.5,
     82.0
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
-  "be-van-day-1": {
+  "be-goc-van-day-1": {
    "anh": "be-neo-kho.png",
    "khung": [
-    567,
+    761,
     0,
     172,
     139
@@ -479,12 +479,12 @@
     86.0,
     69.5
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
-  "be-re-do-2": {
+  "be-goc-re-do-2": {
    "anh": "be-neo-kho.png",
    "khung": [
-    0,
+    194,
     0,
     198,
     173
@@ -497,12 +497,12 @@
     99.0,
     86.5
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
-  "be-van-day-2": {
+  "be-goc-van-day-2": {
    "anh": "be-neo-kho.png",
    "khung": [
-    393,
+    587,
     0,
     172,
     142
@@ -515,13 +515,13 @@
     86.0,
     71.0
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
-  "be-gia-go-2": {
+  "be-goc-gia-go-2": {
    "anh": "be-neo-kho.png",
    "khung": [
-    741,
     0,
+    206,
     183,
     127
    ],
@@ -533,10 +533,10 @@
     91.5,
     63.5
    ],
-   "ghi_chu": "bệ gốc, neo góc trên-trái (chưa đặt – để chọn kiểu)"
+   "ghi_chu": "bệ gốc (6 kiểu gen), neo góc trên-trái – để dành, game không nạp"
   },
   "be-re-do": {
-   "anh": "be-neo.png",
+   "anh": "be-neo-kho.png",
    "khung": [
     0,
     0,
@@ -552,6 +552,80 @@
     102.0
    ],
    "ghi_chu": "bệ GHÉP: rễ đỡ cho bệ 3 ô; neo góc trên-trái = (mép trái collider, mặt bệ); cao 96 + 6 lún"
+  },
+  "be-van-day-3": {
+   "anh": "be-neo.png",
+   "khung": [
+    16,
+    0,
+    192,
+    49
+   ],
+   "neo": [
+    0,
+    19
+   ],
+   "co_logic": [
+    96.0,
+    24.5
+   ],
+   "ghi_chu": "ván treo dây 3 ô; neo (mép trái, mặt ván); day = chân 2 dây (px 2x so với neo), dây vẽ từ đó đi lên",
+   "day": [
+    [
+     22,
+     -19
+    ],
+    [
+     170,
+     -19
+    ]
+   ]
+  },
+  "be-van-day-2": {
+   "anh": "be-neo.png",
+   "khung": [
+    210,
+    0,
+    128,
+    49
+   ],
+   "neo": [
+    0,
+    19
+   ],
+   "co_logic": [
+    64.0,
+    24.5
+   ],
+   "ghi_chu": "ván treo dây 2 ô; neo (mép trái, mặt ván); day = chân 2 dây (px 2x so với neo), dây vẽ từ đó đi lên",
+   "day": [
+    [
+     22,
+     -19
+    ],
+    [
+     106,
+     -19
+    ]
+   ]
+  },
+  "day-treo": {
+   "anh": "be-neo.png",
+   "khung": [
+    0,
+    0,
+    14,
+    65
+   ],
+   "neo": [
+    6,
+    65
+   ],
+   "co_logic": [
+    7.0,
+    32.5
+   ],
+   "ghi_chu": "ô dây treo lặp dọc liền (32 logic), neo giữa đáy = chân dây; game xếp lên tới quá mép trên màn"
   },
   "cua-nha": {
    "anh": "cua-cong-nha.png",

@@ -181,6 +181,10 @@ body.touch .tc{display:block}
 </div>
 
 <script src="runtime/quai-boss-runtime.js"></script>
+<script src="runtime/trang-tri-dia-hinh.js"></script>
+<script src="runtime/trang-tri/cong-lang.js"></script>
+<script src="runtime/trang-tri/san-chuong.js"></script>
+<script src="runtime/trang-tri/phong-boss.js"></script>
 <script>
 'use strict';
 /* Tài nguyên (bản build tự chứa nhúng sẵn vào TV.NHUNG thay vì tải theo đường dẫn):
@@ -209,7 +213,8 @@ const SRC = {
   hu:   '../art/hieu-ung/sprite/',                                       // hiệu ứng ẢNH GEN (ChatGPT) đã tách khung: <ten>-2x.json/png
   qbr:  'runtime/quai-boss/',   // GÓI RUNTIME quái + boss vẽ từ mảnh: quai-boss-rig.json + 14 PNG mảnh (bản build: TV.NHUNG.qbr)
   lc:   '../art/the-gioi-moi/lang-chuong/',   // Làng Chuông: nen/nen.json, gach/gach-atlas.json, do-vat/do-vat.json (bản build: TV.NHUNG.lc)
-  giu:  'anim/lang-chuong-giu.json'           // điểm lưu tắt/sáng + đèn lồng (hình cũ giữ lại)
+  giu:  'anim/lang-chuong-giu.json',          // điểm lưu tắt/sáng + đèn lồng (hình cũ giữ lại)
+  tt:   '../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json'   // TRANG TRÍ ĐỊA HÌNH (3 màn; atlas 2x cùng thư mục; bản build: TV.NHUNG.tt)
 };
 const LAM_CO_SHEET=CLIP.co;      // cỡ ảnh thực bắt buộc của lam-chay-2x.png của clip đang chọn (JSON co_sheet phải trùng)
 /* ================= THAM SỐ (lõi chuyển động lấy từ Phòng xám) ================= */
@@ -1437,13 +1442,16 @@ function keoMepGach(meta,img){
 }
 function drawGach(){
   const M=GCH.map, cv=GCH.cv, K=BK; if(!M) return;
+  TT.ve('sau',ox,oy);   // trang trí vẽ TRƯỚC gạch (bệ ván treo / rễ đỡ: phần lún dưới sàn bị gạch che)
   const tx0=Math.max(0,Math.floor(ox/T)), tx1=Math.min(WW-1,Math.floor((ox+W)/T)), ty0=Math.max(0,Math.floor(oy/T)), ty1=Math.min(GCH.rows-1,Math.floor((oy+H)/T));
   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
   for(let ty=ty0;ty<=ty1;ty++){ const y0=Math.round((ty*T-oy)*K)/K, y1=Math.round(((ty+1)*T-oy)*K)/K;
     for(let tx=tx0;tx<=tx1;tx++){ const v=M[ty*WW+tx]; if(v<0) continue; const q=GCH.k[v];
       const x0=Math.round((tx*T-ox)*K)/K, x1=Math.round(((tx+1)*T-ox)*K)/K;
       ctx.drawImage(cv,q[0],q[1],64,64,x0,y0,x1-x0,y1-y0); } }
+  TT.ve('than',ox,oy);   // mảng gỗ lớn phủ thân (cắt theo ô đặc)
   drawRe();
+  TT.ve('mat',ox,oy);    // mép đất rễ-rêu, chân rễ – trước Lam / quái / đồ vật
 }
 /* ---------- LÀNG CHUÔNG: nền parallax (nen/nen.json) ----------
    xa 0,08 (lang-xa.png, đục) → giữa 0,40 → gần 0,65 → [gạch, đồ vật, Lam, quái] → tiền cảnh 1,05 (vẽ SAU Lam).
@@ -1461,7 +1469,7 @@ function drawNen(){
   ctx.fillStyle='#14110d'; ctx.fillRect(0,0,W,H);
   for(const L of NEN.lop) veLop(L,ox,oy);
 }
-function drawTienCanh(){ if(NEN.tien){ ctx.imageSmoothingEnabled=true; veLop(NEN.tien,ox,oy); } }
+function drawTienCanh(){ if(NEN.tien){ ctx.imageSmoothingEnabled=true; veLop(NEN.tien,ox,oy); } TT.veTienCanh(ox,oy); }   // rễ-đá (cuộn 1,05) vẽ cùng chỗ với tiền cảnh rễ treo
 // đèn lồng trang trí (hình cũ, treo dây từ mép trên) – vị trí như trước
 const DEN=[];
 function dungDen(){ DEN.length=0;
@@ -1836,6 +1844,7 @@ async function boot(){
     const loi=[];
     async function thu(f,msg,p){ setLoad(p,msg); try{ return await f(); }catch(e){ loi.push(msg+' — '+String(e&&e.message||e)); return null; } }
     const lam=await thu(napLam,'Nạp Lam',0.2), qbr=await thu(()=>QBR.nap(SRC.qbr,p=>setLoad(0.3+0.45*p),window.TV&&TV.NHUNG&&TV.NHUNG.qbr),'Nạp + giải mã mảnh Quái Chuông Gỗ và Chuông Gác Làng',0.3), giu=await thu(()=>napSheet('giu'),'Nạp điểm lưu',0.72), lc=await thu(napLC,'Nạp + giải mã Làng Chuông (nền, gạch, cổng, công tắc)',0.75);
+    let ttLoi=''; setLoad(0.77,'Nạp + giải mã trang trí địa hình'); try{ await TT.nap(SRC.tt,window.TV&&TV.NHUNG&&TV.NHUNG.tt,p=>setLoad(0.77+0.02*p)); }catch(e){ ttLoi=String(e&&e.message||e); TT.bat=false; }   // trang trí lỗi → TẮT, game vẫn chạy
     if(loi.length){ baoLoi('Không nạp được hình. Bấm "Thử lại"; nếu vẫn lỗi, tải lại trang.',loi); return; }
     const hdL=await thu(napHD,'Nạp hoạt ảnh chém / nhảy / lướt của Lam',0.4);
     if(loi.length){ baoLoi('Không nạp được hình. Bấm "Thử lại"; nếu vẫn lỗi, tải lại trang.',loi); return; }
@@ -1846,10 +1855,13 @@ async function boot(){
     LAM.E={sheet:tint(lam.sheet,'#CEF0D6',0.8), nghi:tint(lam.nghi,'#CEF0D6',0.8)};   // bản tô màu ngọc cho bóng Tiếng Vọng + vệt lướt
     QB=qbr;   // số đo nạp mảnh (QBR.so); ảnh trắng / vàng / tối đã cache trong QBR.nap; hộp đấm quái QHB giữ nguyên số gameplay {-90,-81,66,37}
     GIU=giu; NEN.lop=lc.lop; NEN.tien=lc.tien; NEN.re=lc.re; keoMepGach(lc.gach.meta,lc.gach.img); Object.assign(DOV,lc.dv); dungGach(); dungDen();
+    TT.khoiTao({ctx, W, H, T, rows:ROWS, tile, solid:solidC, go:c=>c==='#'||c==='W'}); if(TT.bat){ TT.anO(GCH.map,WW); TT.nuong(); }   // trang trí địa hình: cùng hệ toạ độ camera với gạch; nướng sẵn mảnh cắt theo ô đặc
+    if(ttLoi) warn('Không nạp được trang trí địa hình (đang tắt): '+ttLoi);
     newGame();
     window.TVDEMO={ready:true, lam:{clip:CLIP.ten, co:[LAM.sheet.naturalWidth,LAM.sheet.naturalHeight], khung:LAM_N, quang:LAM_QUANG, bay:KHUNG_BAY,
-      hd:{co:LAM.HD.meta.co_sheet, khung:LAM.HD.meta.so_khung}}, hu:Object.fromEntries(HU_TEN.map(t=>[t,!!(HUI[t]&&HUI[t].img)])), atk:ATK, rut:RUT_T, gach:{o:GCH.n, atlas:Object.keys(GCH.o).length}, lc:LC_SO, qbr:QBR.so, W, H, T};
+      hd:{co:LAM.HD.meta.co_sheet, khung:LAM.HD.meta.so_khung}}, hu:Object.fromEntries(HU_TEN.map(t=>[t,!!(HUI[t]&&HUI[t].img)])), atk:ATK, rut:RUT_T, gach:{o:GCH.n, atlas:Object.keys(GCH.o).length}, lc:LC_SO, qbr:QBR.so, tt:TT.so, W, H, T};
     document.getElementById('start-qb').textContent='Quái + boss vẽ từ mảnh: nạp + giải mã '+QBR.so.ms_tong+' ms · '+QBR.so.so_anh_png+' ảnh PNG ('+(QBR.so.byte_png/1024).toFixed(0)+' KB) + '+QBR.so.so_anh_cache+' ảnh cache · bộ nhớ ảnh ≈ '+QBR.so.mb_giai_ma_tong+' MB';
+    document.getElementById('start-qb').textContent+=' · Trang trí địa hình: '+TT.so.so_anh+' atlas, nạp '+TT.so.ms+' ms, bộ nhớ ảnh ≈ '+TT.so.mb_anh+' MB + nướng '+(TT.so.mb_nuong||0)+' MB'+(TT.bat?'':' (ĐANG TẮT)');
     document.getElementById('start-clip').textContent='Clip chạy: '+CLIP.mo_ta+(CLIP.ten==='v4'?' – bản chờ duyệt chuyển động (thêm ?clip=v3 để xem clip cũ)':' – để so sánh (bỏ ?clip=v3 để xem clip mới)');
     setLoad(1,'Xong!'); await wait(150);
     loadEl.hidden=true; startEl.hidden=false; booting=false;
@@ -1945,9 +1957,10 @@ dbgUI();
    xanh = thân (hitbox gameplay) · lục đứt = vùng ăn đòn của Lam · ĐỎ ĐẶC = đòn đang gây sát thương ở bước này
    cam đứt = đòn sắp bật (lấy đà / boss đang bay) · tím đứt = hộp bao nắm tay theo HÌNH VẼ (để so với hộp gameplay)
    Chữ trên mỗi con: trạng thái game t → clip thời điểm (khung).
-   ?vao=quai | ?vao=boss: vào thẳng Sân chuông / phòng boss (xem nhanh, quay video). */
+   ?vao=quai | ?vao=boss: vào thẳng Sân chuông / phòng boss (xem nhanh, quay video). ?tt=0: tắt trang trí địa hình. */
 const URLQ=(()=>{ try{ return new URLSearchParams(location.search); }catch(e){ return new Map(); } })();
 const VAO=URLQ.get('vao')||'';
+TT.bat=URLQ.get('tt')!=='0';   // ?tt=0: TẮT trang trí địa hình (xem đúng gạch cũ, để so trước / sau)
 const HBO={on:false, btn:document.getElementById('btn-hb')};
 function hbSet(v){ HBO.on=v; HBO.btn.classList.toggle('on',v); document.body.classList.toggle('hb',v); HBO.btn.setAttribute('aria-pressed',v?'true':'false'); }
 HBO.btn.addEventListener('click',e=>{ audioInit(); hbSet(!HBO.on); e.currentTarget.blur(); });
@@ -1963,6 +1976,9 @@ function hbRect(x,y,w,h,c,kieu){   // toạ độ thế giới → màn
 function hbChu(s,x,y,c){ ctx.fillStyle='rgba(12,15,20,.75)'; const w=ctx.measureText(s).width; ctx.fillRect(x-2,y-1,w+4,13); ctx.fillStyle=c||'#fff'; ctx.fillText(s,x,y); }
 function drawHitbox(al){
   ctx.save(); ctx.lineWidth=1.5; ctx.font='bold 10px ui-monospace,Menlo,monospace'; ctx.textBaseline='top';
+  TT.veCollider(ox,oy);   // ô chặn (vàng; đá: xanh), cạnh lộ cam, bệ một chiều: vạch lục ở mép trên
+  for(const d of DOORS) if(doorSolid(d)){ const b=doorBox(d); hbRect(b.x,b.y,b.w,b.h,'#ffd25a','dash'); }
+  ctx.lineWidth=1.5;
   const px=lerp(pl.px,pl.x,al), py=lerp(pl.py,pl.y,al), ddx=px-pl.x, ddy=py-pl.y;
   hbRect(px,py,pl.w,pl.h,'#4fb4ff');
   const hu=hurtBox(); hbRect(hu.x+ddx,hu.y+ddy,hu.w,hu.h,'#78e68c','dash');
@@ -1983,7 +1999,7 @@ function drawHitbox(al){
     hbChu(b.H.info+'  máu '+b.hp+'/'+b.max+'  pha '+b.phase,Math.max(4,Math.min(W-330,fx-ox-140)),Math.max(118,by-oy-16),'#f6d0f6'); }
   for(const w of WAVES) if(w.on) hbRect(w.x-10,FLOOR-24,20,24,'#ff4a4a','fill');
   for(const s of SHARDS) if(s.on){ if(s.st==='warn') hbRect(s.x-8,70,16,FLOOR-70,'#ffa640','dash'); else hbRect(s.x-8,s.y,16,22,'#ff4a4a','fill'); }
-  hbChu('HITBOX (H)  xanh: thân  lục: vùng ăn đòn Lam  đỏ: đòn ĐANG gây sát thương  cam: sắp bật  tím: nắm tay (hình)',8,H-16,'#fff');
+  hbChu('COLLIDER (H)  vàng/xanh nhạt: ô chặn (gỗ/đá), cam: cạnh lộ  lục đậm: bệ một chiều  vàng đứt: cổng đóng  xanh: thân  lục đứt: ăn đòn  đỏ: đòn đang gây sát thương',8,H-16,'#fff');
   ctx.restore(); ctx.textBaseline='alphabetic';
 }
 

@@ -10,14 +10,18 @@
               'mat'  = vẽ SAU rong-re, TRƯỚC Lam / quái / đồ vật (mép đất rễ, chân rễ, cửa nhà…)
         o:    tên ô trong atlas, hoặc tên HỌ + '*' (vd. 'mang-go*') → chọn biến thể theo băm vị trí (cố định, không random mỗi khung)
         lat:  1 = lật ngang (neo góc trái: hộp giữ nguyên, hình lật; neo khác: lật quanh neo)
-        cat:  'dac' = chỉ vẽ trong vùng ô ĐẶC của bản đồ, lùi 1,5 px ở cạnh lộ (giữ viền đen gạch, không bao giờ thò ra ngoài collider)
+        cat:  'dac' = chỉ vẽ trong vùng ô ĐẶC của bản đồ (chỉ ô GỖ nếu khoiTao có `go`; không lan sang ô đá), lùi 1,5 px ở cạnh lộ
+              (giữ viền đen gạch, không bao giờ thò ra ngoài collider)
               [x0,y0,x1,y1] = cắt theo hộp thế giới
         giai: 'mep' → DẢI mép đất: x0, x1 (mép collider), y (mặt đứng), bo (1|2|0 = băm), trai/phai (true = đầu thật có nắp cuộn,
               false = cắt phẳng vì sàn chạy tiếp vào tường/bậc)
-     tien_canh: [ {x0, x1, tren}, … ]   mỗi phòng: cụm rễ-đá mép trái ở x0, mép phải ở x1 (thế giới), dời lên `tren` px; cuộn 1,05
+        giai: 'van-day' → bệ VÁN TREO DÂY thay bệ một chiều lơ lửng: x0, x1 (mép collider, rộng 2 hoặc 3 ô), y (mặt bệ = mặt ván);
+              ván 'be-van-day-<số ô>' + 2 dây 'day-treo' xếp từ nút buộc lên quá mép trên màn (cùng hệ toạ độ camera, không parallax)
+     tien_canh: [ {x0, x1, tren, k}, … ]   mỗi phòng: cụm rễ-đá mép trái ở x0, mép phải ở x1 (thế giới), dời lên `tren` px, thu `k`
+              (mặc định 1; phòng boss 0,6 để không che boss); cuộn 1,05
 
    API:
-     TT.khoiTao({ctx, W, H, T, rows, tile, solid})   tile(tx,ty)→ký tự ô, solid(c)→đặc?, rows = số hàng bản đồ (gọi 1 lần)
+     TT.khoiTao({ctx, W, H, T, rows, tile, solid, go})   tile(tx,ty)→ký tự ô, solid(c)→đặc?, go(c)→ô gỗ? (tuỳ chọn), rows = số hàng (gọi 1 lần)
      await TT.nap(srcJson, nhung, onTien)            nạp JSON + CHỈ các atlas mà dữ liệu đang dùng, decode sẵn; trả số đo
      TT.anO(map, WW)                                  xoá hình các ô an_o trong bảng gạch (sau dungGach)
      TT.nuong()                                       nướng sẵn các mảnh cắt theo ô đặc vào canvas riêng (ở màn nạp; số đo SO.mb_nuong)
@@ -28,7 +32,7 @@
    ============================================================================================================ */
 'use strict';
 const TT = (() => {
-  const M = {ctx: null, W: 960, H: 540, T: 32, rows: 17, tile: null, solid: null};
+  const M = {ctx: null, W: 960, H: 540, T: 32, rows: 17, tile: null, solid: null, go: null};
   const DL = {};                     // tên màn → dữ liệu
   const O = {};                      // tên ô → {img, sx, sy, sw, sh, w, h, ax, ay}  (w,h,ax,ay: logic)
   const HO = {};                     // họ → [tên ô…] (cho 'ho*')
@@ -59,7 +63,8 @@ const TT = (() => {
     const can = new Set();
     const oCua = ten => { if (ten.endsWith('*')) { const h = ten.slice(0, -1); return Object.keys(meta.o).filter(k => k.startsWith(h)); } return [ten]; };
     for (const d of Object.values(DL)) {
-      for (const it of d.dat || []) for (const k of (it.giai === 'mep' ? ['mep-1-trai', 'mep-1-giua', 'mep-1-phai', 'mep-2-trai', 'mep-2-giua', 'mep-2-phai'] : oCua(it.o)))
+      for (const it of d.dat || []) for (const k of (it.giai === 'mep' ? ['mep-1-trai', 'mep-1-giua', 'mep-1-phai', 'mep-2-trai', 'mep-2-giua', 'mep-2-phai']
+                                                : it.giai === 'van-day' ? ['be-van-day-' + Math.round((it.x1 - it.x0) / M.T), 'day-treo'] : oCua(it.o)))
         { if (!meta.o[k]) throw new Error('trang trí: thiếu ô ' + k + ' trong atlas'); can.add(meta.o[k].anh); }
       if ((d.tien_canh || []).length) { can.add(meta.o['tien-canh-trai'].anh); can.add(meta.o['tien-canh-phai'].anh); }
     }
@@ -79,7 +84,8 @@ const TT = (() => {
     for (const [ten, v] of Object.entries(meta.o)) {
       const A = IMG[v.anh]; if (!A) continue;
       const [sx, sy, sw, sh] = v.khung, k = A.k;
-      O[ten] = {img: A.img, sx: sx * k, sy: sy * k, sw: sw * k, sh: sh * k, w: sw / B, h: sh / B, ax: v.neo[0] / B, ay: v.neo[1] / B};
+      O[ten] = {img: A.img, sx: sx * k, sy: sy * k, sw: sw * k, sh: sh * k, w: sw / B, h: sh / B, ax: v.neo[0] / B, ay: v.neo[1] / B,
+        day: v.day ? v.day.map(d => [d[0] / B, d[1] / B]) : null};
       const h = ten.replace(/-\d+(?=-|$)/, ''); (HO[h] = HO[h] || []).push(ten);   // 'mang-go-3' → họ 'mang-go'; 'chan-re-1-thap' → 'chan-re-thap'
     }
     Object.assign(SO, {ms: Math.round(performance.now() - t0), mb_anh: +(px * 4 / 1048576).toFixed(2), so_anh: tep.length, o: Object.keys(O).length, tep});
@@ -104,14 +110,15 @@ const TT = (() => {
     else ctx.drawImage(o.img, o.sx, o.sy, o.sw, o.sh, X - ax, Y - o.ay, o.w, o.h);
   }
 
-  /* vùng cắt = hợp các ô ĐẶC trong hộp (x0,y0,x1,y1) thế giới, lùi 1,5 px ở cạnh lộ → hình không bao giờ ra ngoài collider */
+  /* vùng cắt = hợp các ô ĐẶC (ô GỖ nếu có M.go – mảng gỗ không lan sang khối đá) trong hộp (x0,y0,x1,y1) thế giới,
+     lùi 1,5 px ở cạnh LỘ (cạnh giáp ô trống) → hình không bao giờ ra ngoài collider; cạnh giáp ô đá không lùi (không có cạnh lộ) */
   function catDac(x0, y0, x1, y1, ox, oy) {
-    const T = M.T, ctx = M.ctx, I = 1.5, R = M.solid, t = M.tile;
+    const T = M.T, ctx = M.ctx, I = 1.5, R = M.solid, t = M.tile, G = M.go || M.solid;
     const tx0 = Math.floor(x0 / T), tx1 = Math.floor((x1 - 0.01) / T), ty0 = Math.max(0, Math.floor(y0 / T)), ty1 = Math.floor((y1 - 0.01) / T);
     const dac = (tx, ty) => R(t(tx, Math.min(ty, M.rows - 1)));
     ctx.beginPath(); let n = 0;
     for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) {
-      if (!dac(tx, ty)) continue; n++;
+      if (!G(t(tx, Math.min(ty, M.rows - 1)))) continue; n++;
       const l = dac(tx - 1, ty) ? 0 : I, r = dac(tx + 1, ty) ? 0 : I, u = (ty === 0 || dac(tx, ty - 1)) ? 0 : I, d = dac(tx, ty + 1) ? 0 : I;
       ctx.rect(tx * T + l - ox, ty * T + u - oy, T - l - r, T - u - d);
     }
@@ -142,6 +149,19 @@ const TT = (() => {
     ctx.restore();
   }
 
+  /* bệ ván treo dây: ván 'be-van-day-<n>' neo (mép trái collider, mặt ván); từ chân mỗi dây (o.day) xếp ô 'day-treo' (lặp dọc liền)
+     đi LÊN tới quá mép trên màn. Mặt ván = đúng mặt collider '='; nút buộc 2 đầu nhô lên ~9 px là DÂY (không phải mặt đứng). */
+  function veVanDay(it, ox, oy) {
+    const n = Math.round((it.x1 - it.x0) / M.T), o = O['be-van-day-' + n], D = O['day-treo']; if (!o || !D) return;
+    if (it.x1 - ox < -20 || it.x0 - ox > M.W + 20 || it.y - oy > M.H + 40) return;
+    const ctx = M.ctx;
+    for (const [dx, dy] of o.day || []) {
+      let y = it.y + dy;                                         // chân dây (nút buộc)
+      for (let i = 0; i < 40 && y - oy > -2; i++, y -= D.h - 0.5) ctx.drawImage(D.img, D.sx, D.sy, D.sw, D.sh, it.x0 + dx - D.ax - ox, y - D.h - oy, D.w, D.h);
+    }
+    veO(o, it.x0, it.y, 0, ox, oy);
+  }
+
   /* mảnh cắt theo ô đặc ('dac'): vùng cắt chỉ phụ thuộc bản đồ (tĩnh) → NƯỚNG SẴN 1 lần vào canvas 2x riêng (đã cắt),
      lúc chơi chỉ drawImage, không clip mỗi khung (clip nhiều hình chữ nhật tốn thời gian trên máy không GPU) */
   function nuongDac(it, o) {
@@ -163,6 +183,7 @@ const TT = (() => {
     for (const d of Object.values(DL)) for (const it of d.dat || []) {
       if (it.lop !== lop) continue;
       if (it.giai === 'mep') { veMep(it, ox, oy); continue; }
+      if (it.giai === 'van-day') { veVanDay(it, ox, oy); continue; }
       const o = chon(it.o, it.x, it.y); if (!o) continue;
       const X = it.x - ox; if (X + o.w < -4 || X - o.w > M.W + 4) continue;
       if (it.al !== undefined) ctx.globalAlpha = it.al;
@@ -181,11 +202,11 @@ const TT = (() => {
     const L = O['tien-canh-trai'], R = O['tien-canh-phai']; if (!L || !R) return;
     const ctx = M.ctx, K = 1.05; ctx.imageSmoothingEnabled = true;
     for (const d of Object.values(DL)) for (const p of d.tien_canh || []) {
-      const Y = (p.tren || 0) - oy * K;
+      const Y = (p.tren || 0) - oy * K, k = p.k || 1, LW = L.w * k, LH = L.h * k, RW = R.w * k, RH = R.h * k;
       const XL = (p.x0 - ox) * K;                                   // mép trái phòng
-      if (XL < M.W && XL + L.w > 0) ctx.drawImage(L.img, L.sx, L.sy, L.sw, L.sh, XL, Y, L.w, L.h);
+      if (XL < M.W && XL + LW > 0) ctx.drawImage(L.img, L.sx, L.sy, L.sw, L.sh, XL, Y, LW, LH);
       const XR = M.W + (p.x1 - M.W - ox) * K;                        // mép phải phòng (khi camera ở cuối phòng thì sát mép phải màn)
-      if (XR - R.w < M.W && XR > 0) ctx.drawImage(R.img, R.sx, R.sy, R.sw, R.sh, XR - R.w, Y, R.w, R.h);
+      if (XR - RW < M.W && XR > 0) ctx.drawImage(R.img, R.sx, R.sy, R.sw, R.sh, XR - RW, Y, RW, RH);
     }
   }
 

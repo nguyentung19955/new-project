@@ -1,5 +1,10 @@
 # Bản thử trang trí địa hình – Cổng làng (27/10/2026)
 
+> **ĐÃ THAY BẰNG GAME CHÍNH (27/10, chiều):** sau khi chủ dự án duyệt (mục cuối), trang trí địa hình đã được sửa theo duyệt và ghép thẳng
+> vào `game/demo.html` cho cả 3 màn. `thu-cong-lang.html` giờ chỉ là trang báo + link sang demo.html; thư mục `cong-cu/` đã bỏ
+> (công cụ chụp / quay chuyển sang `game/kiem-thu-trang-tri/cong-cu/`). Ảnh dưới `xem-thu/` là bản thử CŨ (bệ rễ đỡ, cửa nhà) – để
+> đối chiếu. Bản mới: **`game/kiem-thu-trang-tri/GHI-CHU.md`**.
+
 Viết cho người không rành kỹ thuật. Mục tiêu: cảnh Cổng làng bớt giống Mario (khối vuông đều, bệ lơ lửng, bố cục phẳng) bằng
 6 ảnh gen v3 (`art/the-gioi-moi/nguon-v3/`), **chỉ ở Cổng làng, chỉ trong bản thử** – `game/demo.html` và
 `demo-doi-chieu-v3.html` KHÔNG đổi. Collider, vị trí sàn, độ cao nhảy, tỷ lệ Lam giữ nguyên 100 %.
