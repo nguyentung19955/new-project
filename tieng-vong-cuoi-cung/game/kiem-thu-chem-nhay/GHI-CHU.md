@@ -147,3 +147,5 @@ Cần pillow, numpy, scipy, playwright + Chromium, ffmpeg.
 5. Ok
 6. Ok
 (Điều phối hiểu: 1 = trượt tường quay lưng vào tường/mặt ra ngoài, được cắt chóp mũ chỗ chạm tường; 2 = thu hộp đòn đòn 1/6 về sát tầm dao; 3 = sửa hộp đòn đòn 3 không xuống dưới đất; 4 = giữ hitstop; 5 = giữ tắt nháy trong hitstop; 6 = làm cả clip đứng thở + rút dao, và ảnh Vọng/Cộng hưởng/keng – ảnh do chủ dự án gen.)
+Bổ sung (07:33) – nguyên văn: "Ý tôi là cắt hẳn chóp mũ trong giao diện"
+(Điều phối hiểu: bỏ hẳn mảnh chóp mũ khỏi Lam ở MỌI hình trong game – clip chạy, sheet hành động, dáng nghỉ, bóng Tiếng Vọng – không chỉ lúc trượt tường.)
