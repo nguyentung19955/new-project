@@ -30,7 +30,9 @@ def kiem_game():
         m = re.search(r'\b%s:([\d.]+)' % k, src)
         if float(m[1]) != v:
             raise SystemExit('LỆCH gameplay: P.%s = %s trong demo.html, anim_hd = %s' % (k, m[1], v))
-    m = re.search(r'pl\.w,\s*pl\.h\)?', src)
+    m = re.search(r'let RUT_T=(\d+);', src)
+    if int(m[1]) != A.RUT_T:
+        raise SystemExit('LỆCH gameplay: RUT_T = %s trong demo.html, anim_hd = %d' % (m[1], A.RUT_T))
     assert 'w:20,h:30' in src.replace(' ', ''), 'collider Lam không còn 20×30'
     print('đã kiểm: ATK su/ac/re/box + P (dash, tường, nhảy) trùng demo.html')
 
@@ -130,13 +132,17 @@ def main():
                  khop[ten]['so_buoc_mui_dao_trong_hop'], len(do), max(d['cach_hop_px'] for d in do)))
     meta = {
         'ten': 'Lam – hoạt ảnh hành động (chém, bị đánh, nhảy/rơi/tiếp đất, lướt, bám/trượt tường) từ rig-v4, sprite sheet 2x',
-        'phien_ban': 'hd1', 'anh': 'lam-hanh-dong-2x.png', 'co_sheet': [W, H], 'so_khung': len(frames),
+        'phien_ban': 'hd2', 'anh': 'lam-hanh-dong-2x.png', 'co_sheet': [W, H], 'so_khung': len(frames),
         'nguon': 'art/modular/lam-moi/hanh-dong/code/tu_the_hd.py (mốc tư thế) + anim_hd.py (bảng tick) trên rig-v4 (lam-moi-v4.json, manh/)',
         'ty_le': {'px_nguon_moi_px_logic': 2, 'cung_ty_le_voi': 'rig-v4/sprite/lam-chay-2x.png (Lam cao 112 px logic)'},
         'neo': 'mỗi khung: (ax, ay) = gốc rig (giữa hai chân, mặt đất) trong khung, px sheet. Game: chân = (pl.x+10, pl.y+30); '
                'vẽ drawImage(sheet, x,y,w,h, −ax/2, −ay/2, w/2, h/2) sau translate(chân); quay trái: scale(−1,1) tại chân.',
         'lam_toi': LAM_TOI, 'frames': frames, 'tu_the': idx, 'don': don, 'khac': {k: [idx[p] for p in v] for k, v in A.KHAC.items()},
         'khop_hop_don': khop, 'hieu_ung': A.HIEU_UNG,
+        'tho': {'buoc_moi_khung': A.THO_BUOC, 'so_khung': len(A.KHAC['tho']),
+                'cach': 'khung = khac.tho[floor(số bước đang đứng yên / buoc_moi_khung) mod so_khung]; khung 0 = dáng nghỉ'},
+        'rut_dao': {'so_buoc': A.RUT_T, 'cach': 'khung = khac.rutdao[RUT_T − drawT] (0 … 51); mục cuối = dáng nghỉ'},
+        'chop_mu': 'ĐÃ BỎ (27/10/2026) – rig-v4 chop-mu hien = False',
         'gameplay_doc_tu_demo_html': {'ATK': A.ATK, 'P': A.P_GAME, 'tuong_x_px_logic': T.TUONG_X},
         'dinh_dang': 'PNG RGBA, alpha thẳng; điểm trong suốt RGB = 0; tay sau + ủng xa đã tối 10 % như sheet chạy',
     }

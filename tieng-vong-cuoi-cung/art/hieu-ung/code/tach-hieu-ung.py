@@ -32,11 +32,18 @@ DS = {
     'dash':        (1, 5, ['dash'], 104, 'hop'),
     'truot-tuong': (1, 5, ['truot-tuong'], 64, 'hop'),
     'lam-bi-danh': (1, 4, ['lam-bi-danh'], 76, 'tam'),
+    # (27/10/2026) 3 ảnh gen mới của chủ dự án
+    # tuỳ chọn: deu = chia khung theo CỤM: mỗi mảnh rời (hạt, cung vòng) gán vào khung có tâm gần nhất (k-means 1 chiều theo
+    #           x, khởi đầu ô đều) – vòng rỗng giữa khung rộng hơn khe giữa các khung, và hạt của khung này lấn sang ô khung kia;
+    #           lo_kin = lỗ trắng kín bao bởi nét mực cũng là nền (lòng vòng sáng Cộng hưởng khung 2 khép kín)
+    'vong':        (1, 5, ['vong'], 110, 'hop', {'deu': True}),                       # bấm Vọng / bóng bắt đầu phát
+    'cong-huong':  (1, 5, ['cong-huong'], 150, 'hop', {'deu': True, 'lo_kin': True}), # Cộng hưởng
+    'keng':        (1, 4, ['keng'], 60, 'hop', {'deu': True}),                        # chém trúng vỏ cứng
 }
 CO_BUI = {'nho': 46, 'to': 92}     # bụi nhỏ (bước chân, nhảy) / to (tiếp đất rơi cao) – cạnh dài khung lớn nhất, px logic
 
 
-def tach_nen(path):
+def tach_nen(path, lo_kin=False):
     im = Image.open(path)
     if im.mode == 'RGBA' and (np.array(im)[..., 3] < 250).mean() > 0.2:
         a = np.array(im)
@@ -49,6 +56,10 @@ def tach_nen(path):
     lab, _ = nd.label(w)
     edge = np.unique(np.r_[lab[0], lab[-1], lab[:, 0], lab[:, -1]])
     bg = np.isin(lab, edge[edge > 0])
+    if lo_kin:     # lỗ trắng kín LỚN (≥ 2000 px) bao bởi nét mực → nền (giữ lõi trắng nhỏ của tia sáng)
+        sz = nd.sum(np.ones_like(lab), lab, index=np.arange(1, lab.max() + 1))
+        lon = np.nonzero(sz >= 2000)[0] + 1
+        bg |= np.isin(lab, lon) & w
     out = unmix_white(a, ~bg)
     return out, 'xoá nền trắng (flood-fill từ mép) + khử viền trắng'
 
@@ -77,6 +88,32 @@ def chia(proj, k, thr):
     return [(cuts[i], cuts[i + 1]) for i in range(len(cuts) - 1)], g
 
 
+def cum(band, k, y0, H_anh):
+    """gán mỗi mảnh rời của một hàng vào 1 trong k khung (k-means 1 chiều theo x, trọng số = diện tích, khởi đầu ô đều).
+    Trả list (x0, x1, mask toàn ảnh) – mask cắt đúng mảnh của khung."""
+    lab, n = nd.label(nd.binary_dilation(band, iterations=2))
+    lab = lab * band
+    idx = np.arange(1, n + 1)
+    area = nd.sum(band, lab, idx)
+    cx = np.array([c[1] for c in nd.center_of_mass(band, lab, idx)])
+    Wd = band.shape[1]
+    tam = np.array([(i + 0.5) * Wd / k for i in range(k)])
+    for _ in range(30):
+        g = np.argmin(np.abs(cx[:, None] - tam[None]), 1)
+        moi = np.array([np.average(cx[g == i], weights=area[g == i]) if (g == i).any() else tam[i] for i in range(k)])
+        if np.allclose(moi, tam):
+            break
+        tam = moi
+    out = []
+    for i in range(k):
+        m = np.isin(lab, idx[g == i])
+        xs = np.nonzero(m.any(0))[0]
+        full = np.zeros((H_anh, Wd), bool)
+        full[y0:y0 + band.shape[0]] = m
+        out.append((int(xs.min()), int(xs.max()) + 1, full))
+    return out
+
+
 def thu_nho(a, s):
     im = Image.fromarray(a, 'RGBA').convert('RGBa')
     w, h = max(1, round(a.shape[1] * s)), max(1, round(a.shape[0] * s))
@@ -84,15 +121,21 @@ def thu_nho(a, s):
 
 
 def xu_ly(ten):
-    nhang, nk, hang_ten, co, neo = DS[ten]
-    a, cach = tach_nen(os.path.join(NGUON, ten + '.png'))
+    nhang, nk, hang_ten, co, neo = DS[ten][:5]
+    opt = DS[ten][5] if len(DS[ten]) > 5 else {}
+    a, cach = tach_nen(os.path.join(NGUON, ten + '.png'), opt.get('lo_kin', False))
+    if opt.get('lo_kin'):
+        cach += ' + lỗ trắng kín lớn = nền'
     al = a[..., 3].astype(np.float64)
     rows, _ = chia((al > 20).sum(1), nhang, 0)
     o_list = []
     for ri, (y0, y1) in enumerate(rows):
         band = al[y0:y1]
         ys = np.nonzero((band > 20).any(1))[0]
-        cols, g = chia((band > 20).sum(0), nk, 0)
+        if opt.get('deu'):
+            cols = cum(band > 20, nk, y0, al.shape[0])
+        else:
+            cols, g = chia((band > 20).sum(0), nk, 0)
         if len(cols) != nk:
             raise SystemExit('%s hàng %d: tìm được %d khung, cần %d' % (ten, ri, len(cols), nk))
         o_list.append((ri, y0 + ys.min(), y0 + ys.max() + 1, cols))
@@ -102,15 +145,19 @@ def xu_ly(ten):
     for ri, ry0, ry1, cols in o_list:
         ht = hang_ten[ri]
         boxes = []
-        for (x0, x1) in cols:
+        for c_ in cols:
+            x0, x1 = c_[:2]
             sub = al[ry0:ry1, x0:x1] > 20
+            if len(c_) > 2:
+                sub &= c_[2][ry0:ry1, x0:x1]
             xs = np.nonzero(sub.any(0))[0]; ys = np.nonzero(sub.any(1))[0]
             boxes.append((x0 + xs.min(), ry0 + ys.min(), x0 + xs.max() + 1, ry0 + ys.max() + 1))
         dai = max(max(b[2] - b[0], b[3] - b[1]) for b in boxes)
         c = CO_BUI[ht] if ten == 'bui' else co
         s = c * PX2 / dai
         ids = []
-        for fi, ((x0, x1), b) in enumerate(zip(cols, boxes)):
+        for fi, (c_, b) in enumerate(zip(cols, boxes)):
+            x0, x1 = c_[:2]
             # neo trong ảnh gốc: tâm ô (giữa đoạn cột, giữa hàng) hoặc giữa đáy hàng
             if neo == 'tam':
                 yy, xx = np.nonzero(al[b[1]:b[3], b[0]:b[2]] > 128)
@@ -122,6 +169,8 @@ def xu_ly(ten):
             m = 3
             bx0, by0, bx1, by1 = max(b[0] - m, 0), max(b[1] - m, 0), min(b[2] + m, a.shape[1]), min(b[3] + m, a.shape[0])
             cut = a[by0:by1, bx0:bx1].copy()
+            if len(c_) > 2:          # chỉ giữ mảnh của khung này (hạt khung bên cạnh lấn vào hộp)
+                cut[~c_[2][by0:by1, bx0:bx1]] = 0
             cut[..., :3][cut[..., 3] == 0] = 0
             t = thu_nho(cut, s)
             ys, xs = np.nonzero(t[..., 3] > 0)

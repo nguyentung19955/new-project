@@ -18,7 +18,7 @@ SHEET = Image.open(os.path.join(SPRITE, META['anh'])).convert('RGBA')
 FR = META['frames']
 IDX = META['tu_the']
 FX = {}
-for t in ('vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh'):
+for t in ('vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh', 'vong', 'cong-huong', 'keng'):
     m = json.load(open(os.path.join(HU, t + '-2x.json'), encoding='utf-8'))
     FX[t] = (m, Image.open(os.path.join(HU, m['anh'])).convert('RGBA'))
 QW, QH = 72, 108          # hộp quái Chuông Gỗ (demo.html)
@@ -64,6 +64,8 @@ class Sim:
 
     def khung(s):
         """chọn khung – CÙNG luật với demo.html lamChon"""
+        if getattr(s, 'rd', -1) >= 0:                      # rút dao: mục RUT_T − drawT
+            return META['khac']['rutdao'][s.rd], s.face < 0
         if s.atkN:
             return META['don']['atk%d' % s.atkN]['khung_theo_atkT'][s.atkT - 1], s.face < 0
         if s.hurtT > 0:
@@ -74,7 +76,7 @@ class Sim:
             return k[0 if s.dashT == 1 else 1 if s.dashT <= 6 else 2], s.face < 0
         if s.wall:
             k = META['khac']['wall']
-            return (k[0] if s.stick < P['wallStick'] else k[1 + int(s.wpha // 6) % 2]), s.wall < 0
+            return (k[0] if s.stick < P['wallStick'] else k[1 + int(s.wpha // 6) % 2]), s.face < 0   # quay LƯNG vào tường
         if not s.g:
             if s.wjT >= 11:
                 return META['khac']['walljump'][0], s.face < 0
@@ -85,7 +87,10 @@ class Sim:
             return (f[0] if s.vy < 7 else f[1]), s.face < 0
         if s.landT > 4:
             return META['khac']['land'][0 if s.landT >= 8 else 1], s.face < 0
-        return None, s.face < 0                           # đứng: dáng nghỉ
+        if getattr(s, 'tho', -1) >= 0:                     # đứng thở: số bước đứng yên
+            T = META['tho']
+            return META['khac']['tho'][(s.tho // T['buoc_moi_khung']) % T['so_khung']], s.face < 0
+        return None, s.face < 0                           # đứng: dáng nghỉ (= khung thở 0)
 
     def trong_luc(s, jump_held=True):
         g = P['gravity']
@@ -96,7 +101,7 @@ class Sim:
         s.vy = min(s.vy + g, P['maxFall'])
 
 
-NGHI = Image.open(os.path.join(HD, '..', '..', '..', '..', 'game', 'anim', 'lam-nghi-2x.png')).convert('RGBA')
+NGHI = Image.open(os.path.join(HD, '..', '..', '..', '..', 'game', 'anim', 'lam-nghi-v4-2x.png')).convert('RGBA')   # không chóp
 NGHI_NEO = (123, 234)
 
 
@@ -347,6 +352,21 @@ def chay_tuong():
     return seq
 
 
+def chay_dung():
+    """vào ải: rút dao 52 bước (drawT 52 → 1 … như game) rồi đứng thở 2 nhịp (224 bước)"""
+    sim = Sim(face=1)
+    seq = []
+    for i in range(A.RUT_T):
+        sim.rd = i
+        seq.append(snap(sim, 'RÚT DAO bước %d/%d (drawT %d)' % (i + 1, A.RUT_T, A.RUT_T - i))); sim.frame += 1
+    sim.rd = -1
+    for t in range(2 * META['tho']['buoc_moi_khung'] * META['tho']['so_khung']):
+        sim.tho = t
+        seq.append(snap(sim, 'ĐỨNG THỞ bước %d  khung %d' % (t, (t // META['tho']['buoc_moi_khung']) % META['tho']['so_khung'])))
+        sim.frame += 1
+    return seq
+
+
 def xuat(ten, seq, khung_logic, goc_logic, quai=None):
     """khung_logic = (rộng, cao) px logic; goc_logic = vị trí gốc thế giới trong khung (px logic)"""
     os.makedirs(GIF, exist_ok=True)
@@ -379,6 +399,7 @@ def main():
     xuat('roi-cao', chay_nhay(cao=200), (220, 330), (110, 300))
     xuat('luot', chay_luot(), (300, 170), (60, 140))
     xuat('tuong-truot-nhay', chay_tuong(), (320, 320), (230, 300))
+    xuat('rut-dao-dung-tho', chay_dung(), (200, 170), (80, 150))
 
 
 if __name__ == '__main__':

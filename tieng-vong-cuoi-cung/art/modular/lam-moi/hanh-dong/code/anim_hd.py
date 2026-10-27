@@ -31,12 +31,13 @@ DON = {
 # Vệt chém (ảnh gen vet-chem): kiểu, tâm (px logic so với chân, nhìn phải), góc xoay (độ), tỉ lệ, lật dọc,
 # thời điểm: khung 0 hiện ở atkT = su−1 (đang vung), khung 1 ĐÚNG atkT = su (hộp đòn bật) … khung 3 mờ dần.
 VET = {
-    'atk1': dict(kieu='ngang', x=88, y=-72, goc=0, k=0.6, lat_doc=False, bat_dau=10, buoc=[1, 3, 3, 4]),
+    # (27/10) đòn 1, 3, 6: hộp đòn thu về sát tầm dao → vệt chém thu nhỏ + dời về: mép trước vệt ≈ mép trước hộp đòn mới
+    'atk1': dict(kieu='ngang', x=58, y=-66, goc=0, k=0.5, lat_doc=False, bat_dau=10, buoc=[1, 3, 3, 4]),
     'atk2': dict(kieu='cheo-len', x=54, y=-86, goc=-10, k=0.5, lat_doc=False, bat_dau=10, buoc=[1, 3, 3, 4]),
-    'atk3': dict(kieu='cheo-xuong', x=72, y=-36, goc=0, k=0.52, lat_doc=False, bat_dau=10, buoc=[1, 3, 4, 5]),
+    'atk3': dict(kieu='cheo-xuong', x=48, y=-35, goc=0, k=0.52, lat_doc=False, bat_dau=10, buoc=[1, 3, 4, 5]),
     'atk4': dict(kieu='cheo-xuong', x=24, y=22, goc=30, k=0.42, lat_doc=False, bat_dau=1, buoc=[1, 3, 3, 4]),
     'atk5': dict(kieu='cheo-len', x=26, y=-104, goc=-30, k=0.5, lat_doc=False, bat_dau=10, buoc=[1, 3, 3, 4]),
-    'atk6': dict(kieu='ngang', x=86, y=-84, goc=0, k=0.56, lat_doc=False, bat_dau=8, buoc=[1, 3, 3, 4]),
+    'atk6': dict(kieu='ngang', x=55, y=-78, goc=0, k=0.5, lat_doc=False, bat_dau=8, buoc=[1, 3, 3, 4]),
 }
 
 # Trạng thái không phải đòn đánh: các tư thế dùng (game chọn khung theo biến gameplay, xem demo.html lamChon)
@@ -48,8 +49,17 @@ KHAC = {
     'land':  ['tiep-dat-1', 'tiep-dat-2'],        # landT 10–8 / 7–5 (chỉ khi rơi vy > 5, đúng như game)
     'walljump': ['nhay-tuong'],                   # wjT 16–11 (6 bước đầu sau khi đạp tường)
     'dash':  ['luot-1', 'luot-2', 'luot-3'],      # bước lướt 1 / 2–6 / 7–8
-    'wall':  ['bam-tuong', 'truot-1', 'truot-2'], # bám (wallStickT < 6, vy = 0) / trượt xen kẽ theo quãng trượt
+    'wall':  ['bam-tuong', 'truot-1', 'truot-2'], # bám (wallStickT < 6, vy = 0) / trượt xen kẽ theo quãng trượt – QUAY LƯNG vào tường
+    'tho':   ['tho-%d' % i for i in range(8)],    # đứng thở (lặp): khung = floor(số bước đứng yên / THO_BUOC) mod 8; khung 0 = dáng nghỉ
 }
+THO_BUOC = 14                                     # 8 khung × 14 bước = 112 bước = 1,87 s mỗi nhịp thở
+# Rút dao: 52 bước đầu ải (game RUT_T = 52, dung_hd kiểm). Mục i = RUT_T − drawT (0 … 51) → tư thế.
+RUT_T = 52
+_RD = [('rd-giau', 8), ('rd-giau~rd-hit', 3), ('rd-hit', 5), ('rd-hit~rd-lay-da', 2), ('rd-lay-da', 6),
+       ('rd-lay-da~rd-hat', 2), ('rd-hat', 2), ('rd-hat~rd-gio', 1), ('rd-gio', 5), ('rd-gio~rd-chao', 2), ('rd-chao', 4),
+       ('rd-chao2', 5), ('rd-chao2~rd-ha', 2), ('rd-ha', 2), ('rd-ha~nghi', 2), ('nghi', 1)]
+KHAC['rutdao'] = [p for p, b in _RD for _ in range(b)]
+assert len(KHAC['rutdao']) == RUT_T
 
 # Hiệu ứng ẢNH GEN (art/hieu-ung/sprite/*-2x.*): chỉ đặt vị trí / hướng / thời điểm / mờ dần. Toạ độ px logic so với CHÂN,
 # Lam nhìn phải (quay trái → lật x). buoc = số bước logic mỗi khung ảnh; k = tỉ lệ so với cỡ trong sheet hiệu ứng.
@@ -62,10 +72,15 @@ HIEU_UNG = {
     'bui_luot':      dict(anh='bui', anim='nho', x=-18, y=0, k=0.85, buoc=[2, 2, 3, 3, 3]),     # bắt đầu lướt (sau lưng)
     'bui_tuong':     dict(anh='bui', anim='nho', x=0, y=-24, k=0.75, goc=-90, buoc=[2, 2, 3, 3, 3]),  # đạp tường (xoay vào tường)
     'dash':          dict(anh='dash', anim='dash', x=-46, y=-46, k=0.85, buoc=[2, 2, 2, 2, 3], bam_nguoi=8),  # bám người 8 bước lướt
-    'truot_tuong':   dict(anh='truot-tuong', anim='truot-tuong', x=10, y=-44, k=0.8, buoc=[3, 3, 3, 3, 3],
-                          moi_px_truot=14, troi=0.5, toi_da=3),                                 # theo QUÃNG trượt
+    'truot_tuong':   dict(anh='truot-tuong', anim='truot-tuong', x=9, y=-14, k=0.8, buoc=[3, 3, 3, 3, 3],
+                          moi_px_truot=14, troi=0.5, toi_da=3),   # theo QUÃNG trượt; (27/10) chỗ gót ủng chạm tường (x = phía tường)
     'lam_bi_danh':   dict(anh='lam-bi-danh', anim='lam-bi-danh', x=4, y=-56, k=0.85, buoc=[2, 3, 3, 4]),
     'trung_don':     dict(anh='trung-don', anim='trung-don', k=0.85, buoc=[2, 2, 3, 3, 4]),     # tại điểm chạm (giữa phần giao)
+    # (27/10) 3 ảnh gen mới: Vọng (bấm ghi / bóng bắt đầu phát, quanh chuông), Cộng hưởng (tâm mục tiêu), keng (vỏ cứng)
+    'vong':          dict(anh='vong', anim='vong', x=12, y=-46, k=0.9, buoc=[3, 3, 4, 4, 6], bam_nguoi=20),
+    'vong_bong':     dict(anh='vong', anim='vong', x=12, y=-46, k=0.75, buoc=[3, 3, 4, 4, 6], bam_nguoi=20, al=0.85),
+    'cong_huong':    dict(anh='cong-huong', anim='cong-huong', k=1.0, buoc=[2, 3, 4, 5, 6]),   # lần đầu k 1,3
+    'keng':          dict(anh='keng', anim='keng', k=1.0, buoc=[2, 3, 3, 4]),                  # tại điểm chạm
     'bong_mo':       dict(moi_buoc=2, song=12, alpha=0.5),                                     # bóng mờ lướt = chính sprite Lam
     'gioi_han_dong_thoi': 16,
 }

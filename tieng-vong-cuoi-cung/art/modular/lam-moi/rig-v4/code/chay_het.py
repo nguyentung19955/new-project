@@ -9,11 +9,12 @@ import chuan_hoa
 import sua_mu
 import sua_chan_chop
 import chu_ky
+import bo_chop
 import kiem_tra
 
 if __name__ == '__main__':
-    buoc = [chuan_hoa, sua_mu, sua_chan_chop, chu_ky] if '--nhanh' in sys.argv else \
-        [tach_manh, khop_co, chuan_hoa, sua_mu, sua_chan_chop, chu_ky]
+    buoc = [chuan_hoa, sua_mu, sua_chan_chop, chu_ky, bo_chop] if '--nhanh' in sys.argv else \
+        [tach_manh, khop_co, chuan_hoa, sua_mu, sua_chan_chop, chu_ky, bo_chop]
     for m in buoc:
         print(f'\n===== {m.__name__} =====')
         m.main()

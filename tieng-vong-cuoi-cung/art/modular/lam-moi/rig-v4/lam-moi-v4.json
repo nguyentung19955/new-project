@@ -358,12 +358,13 @@
      -156.34
     ],
     "goc_nghi": 1.03,
-    "anh": "manh/mu.png",
+    "anh": "manh/mu-khong-chop.png",
     "pivot": [
      404.8,
      628.62
     ],
-    "hien": true
+    "hien": true,
+    "ghi_chu": "mũ không chóp: đỉnh-sau đã lấp khấc + kẻ lại viền đen (bo_chop.py); bản có chóp = manh/mu.png"
    },
    "chop-mu": {
     "cha": "mu",
@@ -377,7 +378,8 @@
      528.92,
      179.43
     ],
-    "hien": true
+    "hien": false,
+    "ghi_chu": "TẮT 27/10/2026 – chủ dự án bỏ hẳn chóp mũ (bo_chop.py)"
    },
    "mat-gan": {
     "cha": "mu",
@@ -472,13 +474,13 @@
      0.0
     ],
     "goc_nghi": 0.0,
-    "anh": "manh/mu-gay.png",
+    "anh": "manh/mu-gay-khong-chop.png",
     "pivot": [
      404.8,
      628.62
     ],
     "hien": true,
-    "ghi_chu": "lớp gáy mũ: cùng biến đổi với mũ, vẽ sau chóp; chỉ lộ ra khi chóp lắc"
+    "ghi_chu": "lớp gáy mũ (vẽ sau thân); không chóp nên luôn lộ – đỉnh đã cắt theo đường bao mới (bo_chop.py)"
    }
   },
   "thu_tu_ve": [
@@ -3495,5 +3497,12 @@
     "so_px": 4087
    }
   }
+ },
+ "bo_chop": {
+  "ngay": "2026-10-27",
+  "chop_mu_hien": false,
+  "manh_mu": "manh/mu-khong-chop.png",
+  "manh_mu_gay": "manh/mu-gay-khong-chop.png",
+  "ly_do": "chủ dự án: \"Ý tôi là cắt hẳn chóp mũ trong giao diện\""
  }
 }

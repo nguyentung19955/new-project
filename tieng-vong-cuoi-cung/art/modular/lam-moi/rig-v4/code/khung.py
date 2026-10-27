@@ -20,6 +20,17 @@ def alpha_box(im, thr=8):
     return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
 
+def co_chop(rig):
+    """bản sao rig bật lại chóp + mảnh mũ gốc (chỉ để đo tỉ lệ 112 px như trước khi bỏ chóp)"""
+    import copy
+    r = copy.deepcopy(rig)
+    if not r['nut']['chop-mu'].get('hien', True):
+        r['nut']['chop-mu']['hien'] = True
+        r['nut']['mu']['anh'] = 'manh/mu.png'
+        r['nut']['mu-gay']['anh'] = 'manh/mu-gay.png'
+    return r
+
+
 def khung_co_dinh(doc):
     rig = doc['rig']
     ground = rig['mat_dat_y']
@@ -31,7 +42,9 @@ def khung_co_dinh(doc):
         im = render(rig, p, big, s)
         x0, y0, x1, y1 = alpha_box(im)
         boxes.append((x0 / s + big[0], y0 / s + big[1], x1 / s + big[0], y1 / s + big[1]))
-    im = render(rig, doc['tu_the_nghi'], big, 1.0)
+    # Tỉ lệ 112 px đo trên dáng nghỉ CÓ chóp (thiết kế đã khoá) – bỏ chóp (bo_chop.py) KHÔNG được phóng to người.
+    rig_do = co_chop(rig)
+    im = render(rig_do, doc['tu_the_nghi'], big, 1.0)
     rx0, ry0, rx1, ry1 = alpha_box(im, 128)
     top = ry0 + big[1]
     H_char = ground - top

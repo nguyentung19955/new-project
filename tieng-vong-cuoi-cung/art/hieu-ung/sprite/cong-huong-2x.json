@@ -1,0 +1,68 @@
+{
+ "ten": "cong-huong",
+ "anh": "cong-huong-2x.png",
+ "nguon": "../nguon/cong-huong.png",
+ "co_sheet": [
+  1148,
+  265
+ ],
+ "px_nguon_moi_px_logic": 2,
+ "neo": "hop",
+ "cach_tach": "xoá nền trắng (flood-fill từ mép) + khử viền trắng + lỗ trắng kín lớn = nền; chia khung theo khe trống rộng nhất; thu LANCZOS (nhân alpha trước) một lần",
+ "frames": [
+  {
+   "w": 176,
+   "h": 186,
+   "ax": 88.22,
+   "ay": 93.44,
+   "x": 2,
+   "y": 2
+  },
+  {
+   "w": 241,
+   "h": 238,
+   "ax": 120.11,
+   "ay": 118.95,
+   "x": 180,
+   "y": 2
+  },
+  {
+   "w": 304,
+   "h": 261,
+   "ax": 151.84,
+   "ay": 130.64,
+   "x": 423,
+   "y": 2
+  },
+  {
+   "w": 253,
+   "h": 208,
+   "ax": 126.64,
+   "ay": 104.2,
+   "x": 729,
+   "y": 2
+  },
+  {
+   "w": 162,
+   "h": 151,
+   "ax": 80.84,
+   "ay": 75.61,
+   "x": 984,
+   "y": 2
+  }
+ ],
+ "anims": {
+  "cong-huong": {
+   "khung": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "he_so_thu_tu_anh_gen": 0.6148,
+   "co_lon_nhat_px_logic": 150
+  }
+ },
+ "quy_uoc": "frames[i] = ô trong sheet (x,y,w,h, px nguồn 2x) + điểm neo (ax,ay) trong ô. Vẽ trong game: drawImage(sheet, x,y,w,h, X − ax/2·k, Y − ay/2·k, w/2·k, h/2·k) với (X,Y) = điểm đặt (px logic), k = tỉ lệ thêm (1 = cỡ gốc); lật = scale(−1,1) quanh (X,Y). Ảnh RGBA alpha thẳng, RGB=0 ở chỗ trong suốt."
+}

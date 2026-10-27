@@ -47,6 +47,30 @@
     497,
     158
    ]
+  },
+  {
+   "ten": "vong",
+   "anh": "vong-2x.png",
+   "co_sheet": [
+    895,
+    224
+   ]
+  },
+  {
+   "ten": "cong-huong",
+   "anh": "cong-huong-2x.png",
+   "co_sheet": [
+    1148,
+    265
+   ]
+  },
+  {
+   "ten": "keng",
+   "anh": "keng-2x.png",
+   "co_sheet": [
+    364,
+    122
+   ]
   }
  ]
 }

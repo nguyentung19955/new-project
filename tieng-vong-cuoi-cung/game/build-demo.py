@@ -3,7 +3,7 @@
   - lam    : Lam mới, clip CHẠY NHANH rig-v4 (mặc định) = JSON + PNG CÙNG lấy từ art/modular/lam-moi/rig-v4/sprite/
   - lam_v3 : clip cũ rig-v3 (dùng khi mở ?clip=v3) = JSON + PNG từ art/modular/lam-moi/rig-v3/sprite/
            Cả hai nhúng PNG NGUYÊN BẢN (không nén lại, không đổi cỡ) – kiểm ảnh đúng 2142×970 = co_sheet trong JSON và đúng
-           phien_ban_clip, sai thì dừng; + dáng nghỉ TẠM anim/lam-nghi-2x.png (dùng chung, cùng ô/neo) nhúng PNG nguyên bản.
+           phien_ban_clip, sai thì dừng; + dáng nghỉ anim/lam-nghi-v4-2x.png (v4, không chóp) / lam-nghi-2x.png (v3), cùng ô/neo, PNG nguyên bản.
   - qbr    : QUÁI + BOSS vẽ từ mảnh = runtime/quai-boss/quai-boss-rig.json + 14 PNG mảnh (PNG nguyên bản, data URI; kiểm cỡ = co_anh
              trong JSON). QBR.nap(…, TV.NHUNG.qbr) đọc thẳng data URI. KHÔNG nhúng sheet boss 2x (không dùng).
            runtime/quai-boss-runtime.js được chèn INLINE thay cho thẻ <script src="runtime/quai-boss-runtime.js">.
@@ -28,7 +28,7 @@ QBR_JS = os.path.join(HERE, 'runtime', 'quai-boss-runtime.js')
 QBR_TAG = '<script src="runtime/quai-boss-runtime.js"></script>'
 HD_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'hanh-dong', 'sprite'))
 HU_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'hieu-ung', 'sprite'))
-HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh']
+HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh', 'vong', 'cong-huong', 'keng']
 
 
 def hanh_dong():
@@ -86,7 +86,7 @@ def lam(clip):
     if co != LAM_CO or tuple(meta['co_sheet']) != co:
         raise SystemExit('LỖI: %s cỡ %s – phải đúng %s và trùng co_sheet %s trong JSON (PNG + JSON cùng từ rig-%s/sprite/)'
                          % (p, co, LAM_CO, meta['co_sheet'], clip))
-    pn = os.path.join(ANIM, 'lam-nghi-2x.png')
+    pn = os.path.join(ANIM, 'lam-nghi-v4-2x.png' if clip == 'v4' else 'lam-nghi-2x.png')   # v4: không chóp (27/10)
     if Image.open(pn).size != tuple(meta['co_khung']):
         raise SystemExit('LỖI: %s phải cùng cỡ ô %s – chạy lại tools/lam-dang-nghi.py' % (pn, meta['co_khung']))
     return {'json': meta, 'anh': png_uri(p), 'nghi': png_uri(pn)}

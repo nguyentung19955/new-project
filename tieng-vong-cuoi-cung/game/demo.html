@@ -190,9 +190,10 @@ body.touch .tc{display:block}
    - quái+boss / thế giới (mảnh tileset + đồ vật): sheet cũ, chưa thay ở bước này.
    - Nền parallax hốc cây cũ (art/chibi/…) đã bị xoá → TẠM vẽ nền gradient (drawNenTam) cho tới khi có nền mới. */
 const CLIPS = {
-  // v4 giữ ĐÚNG ô 266×241 + neo (123,234) + hộp thế giới của v3 → sheet cùng cỡ 2142×970 và dáng nghỉ TẠM dùng chung
-  // (đã kiểm: render dáng nghỉ từ rig-v4 trùng anim/lam-nghi-2x.png từng điểm ảnh). Phân biệt clip bằng JSON phien_ban_clip.
-  v4: {ten:'v4', lam:'../art/modular/lam-moi/rig-v4/sprite/lam-chay-2x.json', nghi:'anim/lam-nghi-2x.png', co:[2142,970], bay:12, nhung:'lam',
+  // v4 giữ ĐÚNG ô 266×241 + neo (123,234) + hộp thế giới của v3 → sheet cùng cỡ 2142×970. Phân biệt clip bằng JSON phien_ban_clip.
+  // Dáng nghỉ (ảnh dự phòng khi chưa nạp sheet hành động; đứng = clip thở trong sheet hành động) – v4 không chóp, v3 có chóp.
+  // 27/10: Lam BỎ CHÓP MŨ → v4 dùng dáng nghỉ riêng anim/lam-nghi-v4-2x.png (render rig-v4 không chóp, cùng ô/neo); v3 giữ ảnh cũ.
+  v4: {ten:'v4', lam:'../art/modular/lam-moi/rig-v4/sprite/lam-chay-2x.json', nghi:'anim/lam-nghi-v4-2x.png', co:[2142,970], bay:12, nhung:'lam',
        mo_ta:'rig-v4 chạy nhanh (sải dài, 132 px/chu kỳ, 30 khung)'},
   v3: {ten:'v3', lam:'../art/modular/lam-moi/rig-v3/sprite/lam-chay-2x.json', nghi:'anim/lam-nghi-2x.png', co:[2142,970], bay:14, nhung:'lam_v3',
        mo_ta:'rig-v3 cũ (83,66 px/chu kỳ, phát nhanh)'}
@@ -220,12 +221,12 @@ const P = { runSpeed:4.4, jumpHeight:112, gravity:0.64, echoFrames:180, wallJump
 // (anim/lam-chibi.json, đã xoá); số dưới đây CHÍNH LÀ các giá trị đó (giữ nguyên gameplay). box [dx,dy,w,h] so với CHÂN, mặt hướng phải.
 // 1–3: combo dưới đất (combo-3 → combo-1 → combo-4), 4: chém nảy, 5: chém hất, 6: chém trên không (combo-2 xoay)
 const ATK = {
-  1:{su:11, ac:8, re:8,  hs:3, mag:1.5, sh:[1,0],      box:[4,-97,147,48],   ch:'atk1'},
+  1:{su:11, ac:8, re:8,  hs:3, mag:1.5, sh:[1,0],      box:[4,-97,91,48],    ch:'atk1'},   // 27/10: rộng 147 → 91 (sát tầm dao)
   2:{su:11, ac:8, re:8,  hs:4, mag:1.8, sh:[0.6,-0.8], box:[-36,-100,116,48], ch:'atk2'},
-  3:{su:11, ac:8, re:16, hs:6, mag:2.6, sh:[0,1],      box:[-13,-59,99,64],  ch:'atk3'},
+  3:{su:11, ac:8, re:16, hs:6, mag:2.6, sh:[0,1],      box:[-13,-59,99,59],  ch:'atk3'},   // 27/10: cao 64 → 59 (không xuống dưới đất)
   4:{su:0,  ac:11, re:4, hs:3, mag:1,   sh:[0,1],      box:[-26,-24,64,82],  ch:'atk4'},  // chém nảy
   5:{su:11, ac:8, re:8,  hs:3, mag:1.5, sh:[0,-1],     box:[-9,-140,97,60],  ch:'atk5'},  // chém hất
-  6:{su:9,  ac:8, re:4,  hs:3, mag:1.5, sh:[1,0.4],    box:[-3,-107,127,48],  ch:'atk6'}   // chém trên không
+  6:{su:9,  ac:8, re:4,  hs:3, mag:1.5, sh:[1,0.4],    box:[-3,-107,95,48],  ch:'atk6'}   // chém trên không; 27/10: rộng 127 → 95
 };
 let jumpVel = Math.sqrt(2*P.gravity*P.jumpHeight);
 
@@ -289,7 +290,7 @@ let trailI=0;
    Thông số đặt (toạ độ so với CHÂN, nhìn phải; số bước mỗi khung) đọc từ lam-hanh-dong-2x.json → hieu_ung / don[*].vet_chem.
    Ảnh nào không nạp được → khung giữ chỗ TẠM (viền đứt + chữ) để vẫn thấy móc đặt đúng chỗ.
    Pool cố định HU_MAX ô (mặc định 16, theo JSON) – đầy thì bỏ hiệu ứng cũ nhất; ảnh decode sẵn khi nạp. */
-const HU_TEN=['vet-chem','trung-don','bui','dash','truot-tuong','lam-bi-danh'];
+const HU_TEN=['vet-chem','trung-don','bui','dash','truot-tuong','lam-bi-danh','vong','cong-huong','keng'];   // 3 ảnh cuối: 27/10
 const HUI={};                      // ten → {meta, img} (img null = TẠM)
 let HUC=null;                      // cấu hình đặt hiệu ứng (lam-hanh-dong-2x.json → hieu_ung)
 const IFX=[]; for(let i=0;i<24;i++) IFX.push({on:false,anh:'',anim:'',x:0,y:0,t:0,buoc:null,tong:0,k:1,goc:0,lat:false,bam:0,dx:0,dy:0,al:1,troi:0});
@@ -787,23 +788,24 @@ function animK(a,t){ const l=lutAnim(a); return a.loop ? l[t%l.length] : l[Math.
      đòn n      : don['atk'+n].khung_theo_atkT[atkT−1] – khung TRÚNG bắt đầu đúng atkT = su (bước hộp đòn bật), đo trong JSON khop_hop_don
      bị đánh    : hurtT 17–13 / 12–7 / 6–1 (hurt() gọi lamChon ngay → tư thế trúng hiện suốt 6 bước hitstop); lùi/tới theo hướng lực đẩy
      lướt       : bước lướt 1 / 2–6 / 7–8 (pl.st==='dash' gồm cả bước thứ 8 khi pl.dash vừa về 0) – 8 × 11 px = 88 px
-     bám tường  : wallStickT < 6 (vy = 0) → bám; sau đó trượt (vy ≤ 1,6): 2 khung xen kẽ mỗi 6 px trượt; mặt quay VÀO tường
+     bám tường  : wallStickT < 6 (vy = 0) → bám; sau đó trượt (vy ≤ 1,6): 2 khung xen kẽ mỗi 6 px trượt; LƯNG áp tường, mặt ra ngoài
      nhảy tường : wjT 16–11 (6 bước đầu) → đạp tường
      trên không : airT ≤ 3 & vy < −6 bật; vy < −4 lên; vy < 2 đỉnh; vy < 7 rơi; còn lại rơi nhanh (maxFall 10,4)
      tiếp đất   : landT 10–8 / 7–5 (game chỉ đặt landT khi rơi vy > 5)
-   Chưa có clip: rút dao, đứng → dáng nghỉ TẠM; chết → khung bị đánh 2 (TẠM). */
+     rút dao    : 52 bước đầu ải: khac.rutdao[RUT_T − drawT]; đứng: khac.tho theo số bước đứng yên (lặp 8 khung × 14 bước)
+   Chưa có clip: chết → khung bị đánh 2 (TẠM). Lam KHÔNG còn chóp mũ (27/10). */
 function hdK(ten,i){ const L=LAM&&LAM.HD; if(!L) return -1; const a=L.meta.khac[ten]; return a?a[Math.min(i,a.length-1)]:-1; }
 function lamChon(chiHinh){
   let ten, k=KHUNG_NGHI, flip=pl.face<0, h2=false;
   const HD=LAM&&LAM.HD;
   if(pl.dead){ ten='dead'; if(HD){ k=hdK('hurt',1); h2=true; } }
-  else if(pl.drawT>0) ten='rutdao';
+  else if(pl.drawT>0){ ten='rutdao'; if(HD){ k=hdK('rutdao',clamp(RUT_T-pl.drawT,0,RUT_T-1)); h2=true; } }   // 52 bước đầu ải
   else if(pl.atkN){ ten=ATK[pl.atkN].ch;
     if(HD){ const d=HD.meta.don[ten]; if(d){ k=d.khung_theo_atkT[clamp(pl.atkT,1,d.khung_theo_atkT.length)-1]; h2=true; } } }
   else if(pl.hurtT>0){ ten='hurt'; if(HD){ k=hdK(pl.hurtK<0?'hurt':'hurtt',pl.hurtT>=13?0:pl.hurtT>=7?1:2); h2=true; } }
   else if(pl.dash>0 || pl.st==='dash'){ ten='dash'; const i=P.dashFrames-pl.dash;
     if(HD){ k=hdK('dash',i<=1?0:i<=6?1:2); h2=true; } else k=KHUNG_BAY; }
-  else if(pl.st==='wall'){ ten='wall'; flip=pl.lastWall<0;   // quay MẶT VÀO tường (cắm dao hãm)
+  else if(pl.st==='wall'){ ten='wall'; flip=pl.lastWall>0;   // 27/10: QUAY LƯNG vào tường, mặt hướng ra (= pl.face = −wallDir)
     if(!chiHinh && pl.wallStickT>=P.wallStick){ pl.wpha+=pl.vy; pl.wtroi+=pl.vy;
       if(HUC && pl.wtroi>=HUC.truot_tuong.moi_px_truot){ pl.wtroi-=HUC.truot_tuong.moi_px_truot; const H=HUC.truot_tuong;
         let n=0; for(const f of IFX) if(f.on && f.ten==='truot_tuong') n++;
@@ -819,7 +821,8 @@ function lamChon(chiHinh){
     else k=KHUNG_BAY; }
   else if(Math.abs(pl.dxT)>0.001 && (Math.abs(pl.vx)>0.6 || (CH.ten==='run' && Math.abs(pl.vx)>0.05))) ten='run';   // trễ khi quay đầu / giảm tốc
   else if(pl.landT>4 || pl.vy>5){ ten='land'; if(HD){ k=hdK('land',pl.landT>=8||pl.landT===0?0:1); h2=true; } }   // vy>5 trên đất: vừa chạm đất khít mép, bước sau game mới đặt landT – không cho lóe dáng nghỉ 1 bước
-  else ten='idle';
+  else { ten='idle';   // đứng thở (lặp): khung 0 = dáng nghỉ, đếm từ lúc vào đứng → từ chạy sang không lóe
+    if(HD){ const t=(CH.ten==='idle')?CH.t+(chiHinh?0:1):0, M=HD.meta.tho; k=hdK('tho',Math.floor(t/M.buoc_moi_khung)%M.so_khung); h2=true; } }
   if(ten==='run'){
     if(!chiHinh){
       const ph0=pl.pha;
@@ -838,11 +841,14 @@ function lamChon(chiHinh){
 
 /* ================= TIẾNG VỌNG ================= */
 // Bấm Vọng: ghi tối đa 3 giây (bấm lần nữa để dừng sớm). Bóng phát lại 1 lần rồi giữ nguyên tư thế cuối cho tới lần bấm sau.
-function startRec(){ rec=RECST; rec.n=0; rec.sx=pl.x; rec.sy=pl.y; echo=null; pl.castT=26; sfx.rec(); }
+// hiệu ứng ảnh gen 'vong' (27/10): bấm Vọng → quanh chuông Lam (bám người); bóng bắt đầu phát → quanh chuông bóng
+function huVong(ten,o,face,src){ if(!HUC||!HUC[ten]) return; const H=HUC[ten];
+  hu(ten,o.x+10+H.x*face,o.y+30+H.y,face<0,{bam:H.bam_nguoi||0,dx:H.x*face,dy:H.y,al:H.al||1,src}); }
+function startRec(){ rec=RECST; rec.n=0; rec.sx=pl.x; rec.sy=pl.y; echo=null; pl.castT=26; sfx.rec(); huVong('vong',pl,pl.face,'p'); }
 function stopRec(){
   if(!rec) return;
   if(rec.n>3){ echo=ECHO; echo.id=++S.echoId; echo.n=rec.n; echo.i=0; echo.cur=REC[0]; echo.done=false; echo.px=REC[0].x; echo.py=REC[0].y; echo.warn=false;
-    burst(rec.sx+10,rec.sy+14,'#CEF0D6',12,1.2); sfx.echoGo(); if(!pl.atkN && pl.onGround) pl.castT=26; }
+    huVong('vong_bong',REC[0],REC[0].f,'e'); sfx.echoGo(); if(!pl.atkN && pl.onGround) pl.castT=26; }   // (hạt vuông cũ bỏ – ảnh gen)
   rec=null;
 }
 function recordFrame(hb){
@@ -876,7 +882,7 @@ function strike(e,src,sw,face,n,hb){
   const tx=ix1>ix0?(ix0+ix1)/2:cx, ty=iy1>iy0?(iy0+iy1)/2:cy;
   if(e.kind==='quai' && e.guard && !res){
     // vỏ cứng: chỉ Cộng hưởng mới làm nó đau
-    S.kengN++; sfx.keng(); hu('trung_don',tx,ty,face<0,{k:0.55,al:src==='e'?0.6:1}); e.flash=4;
+    S.kengN++; sfx.keng(); hu('keng',tx,ty,face<0,{al:src==='e'?0.6:1}); e.flash=4;   // ảnh gen keng (27/10)
     S.hitstop=Math.max(S.hitstop,2); shake(face,0,0.8);
     if(S.kengN<=3 || S.kengN%4===0) popText(cx,e.y-12,S.kengN<=1?'Keng! Vỏ cứng':'Keng!','#F3E6C8');
     if(e.st==='sleep'){ e.st='awake'; e.t=0; }
@@ -900,13 +906,11 @@ function strike(e,src,sw,face,n,hb){
 function resonance(x,y,e){
   S.resCount++; S.hitstop=Math.max(S.hitstop,8);
   sfx.res();
-  fx('ring',x,y,34,'',0,'#CEF0D6'); fx('ring',x,y,44,'',0,'#E1B85A');
-  burst(x,y,'#CEF0D6',22,2.8,2); burst(x,y,'#E1B85A',8,2,2);
+  // 27/10: vòng sáng = ẢNH GEN cong-huong (bỏ vòng pixel + hạt vẽ bằng code); lần đầu to hơn
+  hu('cong_huong',x,y,false,{k:S.resFirst?1:1.3});
   if(!S.resFirst){
     S.resFirst=true; S.hitstop=Math.max(S.hitstop,8);
     flash('#CEF0D6',14); shake(0,-1,4.5);
-    fx('ring',x,y,58,'',0,'#ffffff'); fx('ring',x,y,70,'',0,'#CEF0D6');
-    burst(x,y,'#ffffff',16,3.4,3);
     banner('Cộng hưởng!');
   } else {
     flash('#CEF0D6',6); shake(0,-1,3);
@@ -1842,7 +1846,7 @@ function drawDebug(al){
     ctx.fillStyle='#fff'; ctx.font='bold 10px sans-serif'; ctx.fillText(q.H?q.H.info:q.st,qx-ox,qy-oy-128); }
   if(S.room>=ROOMS.length-2){ const bx=lerp(boss.px,boss.x,al), by=lerp(boss.py,boss.y,al); dbgRect(bx-ox,by-oy,boss.w,boss.h,'#4fb4ff'); }
   // bảng chữ
-  const L=['Lam ['+CLIP.ten+']: '+(pl.a2||'-')+'  khung '+(pl.h2?('hành động '+LAM.HD.meta.frames[pl.k2].ten):pl.k2<0?'nghỉ (TẠM)':pl.k2+'/'+LAM_N+(pl.a2==='run'?'':' (TẠM)'))+(pl.atkN?'  atkT '+pl.atkT:'')+'  pha '+pl.pha.toFixed(3)+'  dx '+pl.dxT.toFixed(2),
+  const L=['Lam ['+CLIP.ten+']: '+(pl.a2||'-')+'  khung '+(pl.h2?('hành động '+LAM.HD.meta.frames[pl.k2].ten):pl.k2<0?'nghỉ':pl.k2+'/'+LAM_N+(pl.a2==='run'?'':' (TẠM)'))+(pl.atkN?'  atkT '+pl.atkT:'')+'  pha '+pl.pha.toFixed(3)+'  dx '+pl.dxT.toFixed(2),
     'vật lý x '+pl.x.toFixed(2)+'  y '+pl.y.toFixed(2)+'  vx '+pl.vx.toFixed(2)+'  vy '+pl.vy.toFixed(2)+(pl.onGround?'  đất':'  không')+(pl.face<0?'  ←':'  →'),
     'vẽ neo chân '+(px+10-ox).toFixed(2)+', '+(py+30-oy).toFixed(2)+'  cam '+ox.toFixed(2),
     'FPS vẽ '+DBG.fps.toFixed(0)+'  bước logic/giây '+DBG.sps.toFixed(0)+'  tốc độ ×'+DBG.speed+(DBG.paused?'  ⏸ DỪNG':'')+'  BK '+BK.toFixed(2)];

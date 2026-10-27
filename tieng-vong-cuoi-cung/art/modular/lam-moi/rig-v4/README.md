@@ -37,3 +37,9 @@ Chỉnh chuyển động: đầu `code/chu_ky.py` (`QUANG_LOGIC`, `DUTY`, `UNG_X
 | `chay.py` | GIF đúng nhịp 25 × 20 ms; bỏ GIF so nhún v2/v3 và bản phóng nearest |
 | `sprite.py` | giữ đúng ô + neo của v3 nếu vừa; JSON thêm `phien_ban_clip` |
 | `phan_tich.py`, `duyet.py`, `kiem_tra.py` | theo 30 khung / 0,50 s / 264 px/s; kiểm biên độ đầu/chóp = v3 |
+
+## 27/10/2026 – BỎ HẲN CHÓP MŨ (chủ dự án: "cắt hẳn chóp mũ trong giao diện")
+`code/bo_chop.py` (chạy sau `chu_ky` trong `chay_het.py`): tắt mảnh `chop-mu` (hien = False), lấp khấc + kẻ lại viền đen ở
+đỉnh-sau mũ → `manh/mu-khong-chop.png`, `manh/mu-gay-khong-chop.png`. Tỉ lệ 112 px vẫn đo theo dáng nghỉ CÓ chóp
+(`khung.co_chop`) → người không đổi cỡ; sheet chạy xuất lại cùng ô/neo/30 khung/132 px. Mảnh chóp gốc giữ trong `manh/`.
+So sánh có/không chóp: `game/kiem-thu-chem-nhay-v2/so-sanh-chop-*.png`. (Ảnh `tu-the/`, biểu đồ `chay/bieu-do-*` chưa xuất lại.)

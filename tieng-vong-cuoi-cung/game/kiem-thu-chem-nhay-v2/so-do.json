@@ -1,0 +1,734 @@
+{
+ "don": [
+  {
+   "buoc": 954,
+   "canh": "combo",
+   "don": 1,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c1-trung",
+   "khung_trung_mong_doi": "c1-trung",
+   "khop": true
+  },
+  {
+   "buoc": 976,
+   "canh": "combo",
+   "don": 2,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c2-trung",
+   "khung_trung_mong_doi": "c2-trung",
+   "khop": true
+  },
+  {
+   "buoc": 999,
+   "canh": "combo",
+   "don": 3,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c3-trung",
+   "khung_trung_mong_doi": "c3-trung",
+   "khop": true
+  },
+  {
+   "buoc": 1072,
+   "canh": "tren-khong",
+   "don": 5,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c5-trung",
+   "khung_trung_mong_doi": "c5-trung",
+   "khop": true
+  },
+  {
+   "buoc": 1118,
+   "canh": "tren-khong",
+   "don": 6,
+   "atkT_hop_bat": 9,
+   "su": 9,
+   "khung_hien": "c6-trung",
+   "khung_trung_mong_doi": "c6-trung",
+   "khop": true
+  },
+  {
+   "buoc": 1178,
+   "canh": "nay",
+   "don": 4,
+   "atkT_hop_bat": 1,
+   "su": 0,
+   "khung_hien": "c4-dam",
+   "khung_trung_mong_doi": "c4-dam",
+   "khop": true
+  },
+  {
+   "buoc": 1220,
+   "canh": "nay",
+   "don": 4,
+   "atkT_hop_bat": 1,
+   "su": 0,
+   "khung_hien": "c4-dam",
+   "khung_trung_mong_doi": "c4-dam",
+   "khop": true
+  },
+  {
+   "buoc": 1292,
+   "canh": "cong-huong",
+   "don": 1,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c1-trung",
+   "khung_trung_mong_doi": "c1-trung",
+   "khop": true
+  },
+  {
+   "buoc": 1345,
+   "canh": "cong-huong",
+   "don": 1,
+   "atkT_hop_bat": 11,
+   "su": 11,
+   "khung_hien": "c1-trung",
+   "khung_trung_mong_doi": "c1-trung",
+   "khop": true
+  }
+ ],
+ "trung": [
+  {
+   "buoc": 954,
+   "canh": "combo",
+   "don": 1,
+   "atkT": 11,
+   "hitstop": 3,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2409,
+     375
+    ]
+   ]
+  },
+  {
+   "buoc": 976,
+   "canh": "combo",
+   "don": 2,
+   "atkT": 11,
+   "hitstop": 4,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2413,
+     372
+    ]
+   ]
+  },
+  {
+   "buoc": 999,
+   "canh": "combo",
+   "don": 3,
+   "atkT": 11,
+   "hitstop": 6,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2429,
+     419
+    ]
+   ]
+  },
+  {
+   "buoc": 1118,
+   "canh": "tren-khong",
+   "don": 6,
+   "atkT": 9,
+   "hitstop": 3,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2367,
+     351
+    ]
+   ]
+  },
+  {
+   "buoc": 1158,
+   "canh": "tren-khong",
+   "don": 0,
+   "atkT": 21,
+   "hitstop": 6,
+   "tia_trung": []
+  },
+  {
+   "buoc": 1182,
+   "canh": "nay",
+   "don": 4,
+   "atkT": 11,
+   "hitstop": 3,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2433,
+     344
+    ],
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2436,
+     311
+    ]
+   ]
+  },
+  {
+   "buoc": 1221,
+   "canh": "nay",
+   "don": 4,
+   "atkT": 11,
+   "hitstop": 3,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2434,
+     342
+    ],
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     2436,
+     306
+    ]
+   ]
+  },
+  {
+   "buoc": 1266,
+   "canh": "nay",
+   "don": 0,
+   "atkT": 15,
+   "hitstop": 6,
+   "tia_trung": []
+  },
+  {
+   "buoc": 1292,
+   "canh": "cong-huong",
+   "don": 1,
+   "atkT": 11,
+   "hitstop": 2,
+   "tia_trung": []
+  },
+  {
+   "buoc": 1341,
+   "canh": "cong-huong",
+   "don": 1,
+   "atkT": 9,
+   "hitstop": 2,
+   "tia_trung": []
+  },
+  {
+   "buoc": 1345,
+   "canh": "cong-huong",
+   "don": 1,
+   "atkT": 11,
+   "hitstop": 8,
+   "tia_trung": [
+    [
+     "trung-don",
+     "trung-don",
+     1,
+     3098,
+     375
+    ]
+   ]
+  }
+ ],
+ "luot": [],
+ "tuong": {
+  "so_buoc_bam_tuong": 260,
+  "bam_vy0": 30,
+  "vy_truot_max": 1.6,
+  "khung": [
+   "bam-tuong",
+   "truot-1",
+   "truot-2"
+  ],
+  "so_vun_go": 22,
+  "nhay_tuong_khung": [
+   "bam-tuong",
+   "nhay-tuong",
+   "nhay-tuong",
+   "nhay-tuong",
+   "nhay-tuong",
+   "nhay-tuong",
+   "bam-tuong",
+   "nhay-tuong"
+  ]
+ },
+ "tiep_dat": [
+  {
+   "buoc": 1126,
+   "canh": "tren-khong",
+   "khung": [
+    "c6-trung2",
+    "c6-trung2",
+    "c6-trung2",
+    "c6-thu",
+    "c6-thu",
+    "c6-thu",
+    "c6-thu"
+   ],
+   "bui": [
+    "bui/nho"
+   ]
+  }
+ ],
+ "bi_danh": [
+  {
+   "buoc": 1158,
+   "canh": "tren-khong",
+   "huong_day": "lùi",
+   "khung_17_buoc": [
+    "bd-1",
+    "bd-1",
+    "bd-1",
+    "bd-1",
+    "bd-1",
+    "bd-1",
+    "bd-1",
+    "nhay-dinh",
+    "nhay-dinh",
+    "nhay-dinh",
+    "roi",
+    "roi",
+    "roi",
+    "roi",
+    "roi",
+    "roi",
+    "roi"
+   ],
+   "hieu_ung": [
+    "lam-bi-danh"
+   ]
+  },
+  {
+   "buoc": 1266,
+   "canh": "nay",
+   "huong_day": "tới",
+   "khung_17_buoc": [
+    "bdt-1",
+    "bdt-1",
+    "bdt-1",
+    "bdt-1",
+    "bdt-1",
+    "bdt-1",
+    "bdt-1",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "tho-0",
+    "nghi~c1-chuanbi"
+   ],
+   "hieu_ung": [
+    "lam-bi-danh"
+   ]
+  }
+ ],
+ "vong": {
+  "so_buoc_phat": 56,
+  "buoc_bong_chem": 36,
+  "khung_bong_hanh_dong": 56
+ },
+ "res": {
+  "keng": 6,
+  "cong_huong": 9,
+  "vong": 2
+ },
+ "rut_dao_dung": {
+  "so_buoc_rut_dao": 51,
+  "khung_rut_dao": [
+   "rd-giau",
+   "rd-giau",
+   "rd-giau",
+   "rd-giau",
+   "rd-giau",
+   "rd-giau",
+   "rd-giau",
+   "rd-giau~rd-hit",
+   "rd-giau~rd-hit",
+   "rd-giau~rd-hit",
+   "rd-hit",
+   "rd-hit",
+   "rd-hit",
+   "rd-hit",
+   "rd-hit",
+   "rd-hit~rd-lay-da",
+   "rd-hit~rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da",
+   "rd-lay-da~rd-hat",
+   "rd-lay-da~rd-hat",
+   "rd-hat",
+   "rd-hat",
+   "rd-hat~rd-gio",
+   "rd-gio",
+   "rd-gio",
+   "rd-gio",
+   "rd-gio",
+   "rd-gio",
+   "rd-gio~rd-chao",
+   "rd-gio~rd-chao",
+   "rd-chao",
+   "rd-chao",
+   "rd-chao",
+   "rd-chao",
+   "rd-chao2",
+   "rd-chao2",
+   "rd-chao2",
+   "rd-chao2",
+   "rd-chao2",
+   "rd-chao2~rd-ha",
+   "rd-chao2~rd-ha",
+   "rd-ha",
+   "rd-ha",
+   "rd-ha~nghi",
+   "rd-ha~nghi",
+   "nghi"
+  ],
+  "so_buoc_dung": 171,
+  "khung_dau_dung": [
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-0",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-1",
+   "tho-2",
+   "tho-2"
+  ]
+ },
+ "chay_dung": {
+  "chuyen": [
+   [
+    262,
+    "idle→run",
+    "tho-2→chay#0"
+   ],
+   [
+    302,
+    "run→idle",
+    "chay#5→tho-0"
+   ],
+   [
+    368,
+    "idle→run",
+    "tho-4→chay#5"
+   ],
+   [
+    402,
+    "run→idle",
+    "chay#5→tho-0"
+   ],
+   [
+    468,
+    "idle→run",
+    "tho-4→chay#5"
+   ],
+   [
+    492,
+    "run→idle",
+    "chay#24→tho-0"
+   ]
+  ],
+  "buoc_khung_nghi_TAM": 1
+ },
+ "tom_tat": {
+  "so_lan_ra_don_co_hop_bat": 9,
+  "khung_trung_dung_tick": 9,
+  "so_lan_trung": 11
+ },
+ "loi_trang": [],
+ "nap": {
+  "ready": true,
+  "lam": {
+   "clip": "v4",
+   "co": [
+    2142,
+    970
+   ],
+   "khung": 30,
+   "quang": 132,
+   "bay": 12,
+   "hd": {
+    "co": [
+     2037,
+     2048
+    ],
+    "khung": 87
+   }
+  },
+  "hu": {
+   "vet-chem": true,
+   "trung-don": true,
+   "bui": true,
+   "dash": true,
+   "truot-tuong": true,
+   "lam-bi-danh": true,
+   "vong": true,
+   "cong-huong": true,
+   "keng": true
+  },
+  "atk": {
+   "1": {
+    "su": 11,
+    "ac": 8,
+    "re": 8,
+    "hs": 3,
+    "mag": 1.5,
+    "sh": [
+     1,
+     0
+    ],
+    "box": [
+     4,
+     -97,
+     91,
+     48
+    ],
+    "ch": "atk1"
+   },
+   "2": {
+    "su": 11,
+    "ac": 8,
+    "re": 8,
+    "hs": 4,
+    "mag": 1.8,
+    "sh": [
+     0.6,
+     -0.8
+    ],
+    "box": [
+     -36,
+     -100,
+     116,
+     48
+    ],
+    "ch": "atk2"
+   },
+   "3": {
+    "su": 11,
+    "ac": 8,
+    "re": 16,
+    "hs": 6,
+    "mag": 2.6,
+    "sh": [
+     0,
+     1
+    ],
+    "box": [
+     -13,
+     -59,
+     99,
+     59
+    ],
+    "ch": "atk3"
+   },
+   "4": {
+    "su": 0,
+    "ac": 11,
+    "re": 4,
+    "hs": 3,
+    "mag": 1,
+    "sh": [
+     0,
+     1
+    ],
+    "box": [
+     -26,
+     -24,
+     64,
+     82
+    ],
+    "ch": "atk4"
+   },
+   "5": {
+    "su": 11,
+    "ac": 8,
+    "re": 8,
+    "hs": 3,
+    "mag": 1.5,
+    "sh": [
+     0,
+     -1
+    ],
+    "box": [
+     -9,
+     -140,
+     97,
+     60
+    ],
+    "ch": "atk5"
+   },
+   "6": {
+    "su": 9,
+    "ac": 8,
+    "re": 4,
+    "hs": 3,
+    "mag": 1.5,
+    "sh": [
+     1,
+     0.4
+    ],
+    "box": [
+     -3,
+     -107,
+     95,
+     48
+    ],
+    "ch": "atk6"
+   }
+  },
+  "rut": 52,
+  "manh": 170,
+  "qbr": {
+   "ms_json": 12.3,
+   "ms_anh_va_decode": 107.3,
+   "ms_cache_va_ve_thu": 97,
+   "ms_tong": 216.6,
+   "so_anh_png": 14,
+   "so_anh_cache": 42,
+   "byte_png": 983323,
+   "byte_giai_ma_png": 3890192,
+   "byte_giai_ma_cache": 11670576,
+   "mb_giai_ma_tong": 14.84,
+   "bang": [
+    {
+     "anh": "quai/than.png",
+     "w": 160,
+     "h": 195,
+     "byte": 124800
+    },
+    {
+     "anh": "quai/qua-lac.png",
+     "w": 40,
+     "h": 43,
+     "byte": 6880
+    },
+    {
+     "anh": "quai/than-trai.png",
+     "w": 114,
+     "h": 195,
+     "byte": 88920
+    },
+    {
+     "anh": "quai/than-phai.png",
+     "w": 75,
+     "h": 195,
+     "byte": 58500
+    },
+    {
+     "anh": "quai/tay-truoc.png",
+     "w": 62,
+     "h": 62,
+     "byte": 15376
+    },
+    {
+     "anh": "quai/tay-sau.png",
+     "w": 50,
+     "h": 55,
+     "byte": 11000
+    },
+    {
+     "anh": "quai/chan-xa.png",
+     "w": 57,
+     "h": 45,
+     "byte": 10260
+    },
+    {
+     "anh": "quai/chan-gan.png",
+     "w": 55,
+     "h": 45,
+     "byte": 9900
+    },
+    {
+     "anh": "boss/than.png",
+     "w": 572,
+     "h": 657,
+     "byte": 1503216
+    },
+    {
+     "anh": "boss/xich.png",
+     "w": 158,
+     "h": 194,
+     "byte": 122608
+    },
+    {
+     "anh": "boss/than-trai.png",
+     "w": 293,
+     "h": 657,
+     "byte": 770004
+    },
+    {
+     "anh": "boss/than-phai.png",
+     "w": 327,
+     "h": 647,
+     "byte": 846276
+    },
+    {
+     "anh": "boss/tay-truoc.png",
+     "w": 207,
+     "h": 230,
+     "byte": 190440
+    },
+    {
+     "anh": "boss/tay-sau.png",
+     "w": 171,
+     "h": 193,
+     "byte": 132012
+    }
+   ]
+  },
+  "W": 960,
+  "H": 540,
+  "T": 32
+ }
+}

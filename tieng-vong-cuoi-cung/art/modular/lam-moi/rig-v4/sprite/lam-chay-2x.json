@@ -27,6 +27,11 @@
   "cao_dang_nghi_px_nguon": 224,
   "cao_dang_nghi_px_logic": 112.0,
   "he_so_px_anh_ngang_sang_px_nguon": 0.20915,
+  "bo_chop": {
+   "chop_mu": "TẮT (27/10/2026)",
+   "cao_dang_nghi_khong_chop_px_nguon": 222,
+   "ghi_chu": "tỉ lệ vẫn đo theo dáng nghỉ có chóp (224 px nguồn = 112 px logic) → người không đổi cỡ; bỏ chóp chỉ làm đỉnh mũ thấp xuống"
+  },
   "ghi_chu": "một scale cố định cho mọi tư thế; dáng nghỉ cao 224 px nguồn = 112 px logic"
  },
  "hop_the_gioi_px_anh_ngang": [

@@ -71,9 +71,13 @@ def main(doc=None, K=None):
                        'chiu_luc': {'ung-gan': p['_ung']['ung-gan']['chiu_luc'], 'ung-xa': p['_ung']['ung-xa']['chiu_luc']}})
     sheet.save(os.path.join(SPRITE, 'lam-chay-2x.png'), optimize=True)
     # chiều cao dáng nghỉ ở 2x (cùng cách vẽ)
+    from khung import co_chop
+    nghi = np.array(thu_nho(render(co_chop(rig), doc['tu_the_nghi'], hop, 1.0), (fw, fh)))[..., 3]
+    ys = np.nonzero((nghi > 128).any(1))[0]
+    cao_nghi = int(ay - ys.min())          # đo như trước (có chóp) → tỉ lệ không đổi
     nghi = np.array(thu_nho(render(rig, doc['tu_the_nghi'], hop, 1.0), (fw, fh)))[..., 3]
     ys = np.nonzero((nghi > 128).any(1))[0]
-    cao_nghi = int(ay - ys.min())
+    cao_khong_chop = int(ay - ys.min())
     v_logic = ck['van_toc_dat_px_moi_s'] * K['k112']
     quang = v_logic * ck['thoi_gian_s']
     from toc_do_game import doi_chieu
@@ -90,6 +94,9 @@ def main(doc=None, K=None):
         'ty_le': {'px_nguon_moi_px_logic': TY_LE, 've_trong_game': 'vẽ ở ½ cỡ nguồn',
                   'cao_dang_nghi_px_nguon': cao_nghi, 'cao_dang_nghi_px_logic': cao_nghi / TY_LE,
                   'he_so_px_anh_ngang_sang_px_nguon': round(S, 6),
+                  'bo_chop': {'chop_mu': 'TẮT (27/10/2026)', 'cao_dang_nghi_khong_chop_px_nguon': cao_khong_chop,
+                              'ghi_chu': 'tỉ lệ vẫn đo theo dáng nghỉ có chóp (224 px nguồn = 112 px logic) → người không đổi cỡ; '
+                                         'bỏ chóp chỉ làm đỉnh mũ thấp xuống'},
                   'ghi_chu': 'một scale cố định cho mọi tư thế; dáng nghỉ cao %d px nguồn = %g px logic' % (cao_nghi, cao_nghi / TY_LE)},
         'hop_the_gioi_px_anh_ngang': [round(v, 6) for v in hop],
         'huong': 'Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân).',
