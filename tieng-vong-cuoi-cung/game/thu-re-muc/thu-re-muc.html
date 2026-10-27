@@ -215,9 +215,9 @@ const SRC = {
   qbr:  '../runtime/quai-boss/',   // GÓI RUNTIME quái + boss vẽ từ mảnh: quai-boss-rig.json + 14 PNG mảnh (bản build: TV.NHUNG.qbr)
   lc:   '../../art/the-gioi-moi/lang-chuong/',   // Làng Chuông: nen/nen.json, gach/gach-atlas.json, do-vat/do-vat.json (bản build: TV.NHUNG.lc)
   giu:  '../anim/lang-chuong-giu.json',          // điểm lưu tắt/sáng + đèn lồng (hình cũ giữ lại)
-  tt:   '../../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json',
+  tt:   '../../art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json',
   rm:   '../../art/re-muc/',                              // RỄ MỤC: nen/nen.json, gach/rm-atlas.json, do-vat/do-vat.json
-  rmtt: '../../art/re-muc/trang-tri/re-muc-tt.json'      // trang trí Rễ Mục (gộp với cong-lang-v3 lúc nạp)   // TRANG TRÍ ĐỊA HÌNH (3 màn; atlas 2x cùng thư mục; bản build: TV.NHUNG.tt)
+  rmtt: '../../art/re-muc/trang-tri/re-muc-tt.json'      // trang trí Rễ Mục (gộp với cong-lang-v3 lúc nạp)   // TRANG TRÍ ĐỊA HÌNH v4 (3 màn; JSON gồm cả ô v3 còn dùng ở ../cong-lang-v3/; atlas 2x; bản build: TV.NHUNG.tt)
 };
 const LAM_CO_SHEET=CLIP.co;      // cỡ ảnh thực bắt buộc của lam-chay-2x.png của clip đang chọn (JSON co_sheet phải trùng)
 /* ================= THAM SỐ (lõi chuyển động lấy từ Phòng xám) ================= */
@@ -1511,6 +1511,11 @@ function veDV(ten,x,y,k,al){ const im=DOV[ten]; if(!im) return; const w=im.width
 function drawDoor(d){
   const X=d.px-ox, Y=FLOOR-oy; if(X<-140||X>W+140) return;
   const o=clamp(d.open,0,1);
+  // 27/10 v4: CỔNG RỄ CÂY (trang trí địa hình, TT.veCong): đóng = rễ đan + 2 trụ; mở = rễ co rút về 2 trụ (bóp ngang + mờ) rồi chỉ 2 trụ đơn;
+  // mắt ngọc trên trụ = đèn báo: sáng dần theo số điều kiện đã xong (lvl = số đèn bật / tổng), sáng hẳn khi cổng được mở. Hộp chặn GATE giữ nguyên.
+  // ?tt=0 (hoặc trang trí nạp lỗi) → cổng gỗ Làng Chuông + chấm đèn cũ như trước.
+  if(TT.bat){ let lvl=1; if(d.lamps&&!d.latched&&!(d.open>0)){ let n=0; for(const f of d.lamps) if(f()) n++; lvl=n/d.lamps.length; }
+    if(TT.veCong(d.px,FLOOR,o,lvl,ox,oy)) return; }
   // 2 cột luôn đặc (ảnh 'chỉ trụ'), cánh đóng mờ dần ↔ cánh mở hiện dần (cùng khung, bản lề cột trái)
   veDV('cong-chi-tru',X,Y,K_CONG,1);
   if(o<1) veDV('cong-dong',X,Y,K_CONG,1-o);

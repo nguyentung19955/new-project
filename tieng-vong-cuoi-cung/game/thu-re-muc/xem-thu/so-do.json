@@ -11,16 +11,20 @@
     "atlas": 150
    },
    "tt": {
-    "ms": 57,
-    "mb_anh": 5.11,
-    "so_anh": 6,
-    "o": 27,
+    "ms": 104,
+    "mb_anh": 7.9,
+    "so_anh": 10,
+    "o": 43,
     "tep": [
-     "be-neo.png",
-     "mang-go-lon.png",
-     "mep-dat-re.png",
-     "chan-re-goc.png",
-     "tien-canh-re-da.png",
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png",
      "re-muc-tt.png"
     ],
     "mb_nuong": 6.6
@@ -28,35 +32,39 @@
   },
   "so": {
    "rm": {
-    "ms": 175,
+    "ms": 210,
     "mb_anh": 21.4,
     "so_anh": 19,
     "o_gach": 59
    },
    "tt": {
-    "ms": 57,
-    "mb_anh": 5.11,
-    "so_anh": 6,
-    "o": 27,
+    "ms": 104,
+    "mb_anh": 7.9,
+    "so_anh": 10,
+    "o": 43,
     "tep": [
-     "be-neo.png",
-     "mang-go-lon.png",
-     "mep-dat-re.png",
-     "chan-re-goc.png",
-     "tien-canh-re-da.png",
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png",
      "re-muc-tt.png"
     ],
     "mb_nuong": 6.6
    },
    "lc": {
-    "ms": 170,
+    "ms": 175,
     "mb_anh": 28.4
    },
    "qbr": {
-    "ms_json": 7.7,
-    "ms_anh_va_decode": 65.4,
-    "ms_cache_va_ve_thu": 45.8,
-    "ms_tong": 118.9,
+    "ms_json": 7.6,
+    "ms_anh_va_decode": 73,
+    "ms_cache_va_ve_thu": 43.6,
+    "ms_tong": 124.2,
     "so_anh_png": 14,
     "so_anh_cache": 42,
     "byte_png": 983323,
@@ -179,16 +187,20 @@
     "atlas": 150
    },
    "tt": {
-    "ms": 58,
-    "mb_anh": 5.11,
-    "so_anh": 6,
-    "o": 27,
+    "ms": 96,
+    "mb_anh": 7.9,
+    "so_anh": 10,
+    "o": 43,
     "tep": [
-     "be-neo.png",
-     "mang-go-lon.png",
-     "mep-dat-re.png",
-     "chan-re-goc.png",
-     "tien-canh-re-da.png",
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png",
      "re-muc-tt.png"
     ],
     "mb_nuong": 6.6
@@ -207,16 +219,20 @@
     "atlas": 150
    },
    "tt": {
-    "ms": 89,
-    "mb_anh": 5.11,
-    "so_anh": 6,
-    "o": 27,
+    "ms": 117,
+    "mb_anh": 7.9,
+    "so_anh": 10,
+    "o": 43,
     "tep": [
-     "be-neo.png",
-     "mang-go-lon.png",
-     "mep-dat-re.png",
-     "chan-re-goc.png",
-     "tien-canh-re-da.png",
+     "../cong-lang-v3/be-neo.png",
+     "xa-moc-day.png",
+     "mang-go-van.png",
+     "../cong-lang-v3/mep-dat-re.png",
+     "../cong-lang-v3/chan-re-goc.png",
+     "re-treo-cot.png",
+     "../cong-lang-v3/tien-canh-re-da.png",
+     "cong-re.png",
+     "mep-da-reu.png",
      "re-muc-tt.png"
     ],
     "mb_nuong": 6.6

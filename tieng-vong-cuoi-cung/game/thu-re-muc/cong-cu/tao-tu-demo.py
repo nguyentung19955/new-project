@@ -33,8 +33,8 @@ for cu, moi in [("lam:'../art/modular/lam-moi/rig-v4/", "lam:'../../art/modular/
                 ("json=await r.json(); src='anim/'+json.image; }", "json=await r.json(); src='../anim/'+json.image; }")]:
     thay('đường dẫn ' + cu.split("'")[1], cu, moi, False)
 thay('đường dẫn trang trí + thêm SRC.rm / SRC.rmtt (Rễ Mục)',
-     "tt:   '../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json'",
-     "tt:   '../../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json',\n  rm:   '../../art/re-muc/',                              // RỄ MỤC: nen/nen.json, gach/rm-atlas.json, do-vat/do-vat.json\n  rmtt: '../../art/re-muc/trang-tri/re-muc-tt.json'      // trang trí Rễ Mục (gộp với cong-lang-v3 lúc nạp)")
+     "tt:   '../art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json'",
+     "tt:   '../../art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json',\n  rm:   '../../art/re-muc/',                              // RỄ MỤC: nen/nen.json, gach/rm-atlas.json, do-vat/do-vat.json\n  rmtt: '../../art/re-muc/trang-tri/re-muc-tt.json'      // trang trí Rễ Mục (gộp với cong-lang-v3 lúc nạp)")
 
 # ---- phần GHÉP: bản đồ
 thay('bản đồ cao 36 hàng (Rễ Mục cuộn dọc)', 'const W=960, H=540, T=32, ROWS=17, FLOOR=14*T;', 'const W=960, H=540, T=32, ROWS=36, FLOOR=14*T;   // Rễ Mục: 36 hàng (phòng cũ chỉ dùng 17 hàng trên)')

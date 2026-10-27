@@ -102,13 +102,13 @@ như tiền cảnh Làng Chuông (−6 MB) hoặc nhúng WebP khi build.
 
 ## 8. Cách ghép vào `demo.html` (khi duyệt)
 
-Mọi chỗ đổi đã nằm trong `cong-cu/tao-tu-demo.py` dạng cặp (cũ → mới); cột `ghep=True` là **30 chỗ cần ghép**, in ra khi chạy script. Gồm:
+Mọi chỗ đổi đã nằm trong `cong-cu/tao-tu-demo.py` dạng cặp (cũ → mới); cột `ghep=True` là **30 chỗ cần ghép**, in ra khi chạy script (đã khớp với `demo.html` sau đợt trang trí v4 – cổng rễ, xà móc dây). Gồm:
 1. `ROWS` 17 → 36; thêm phòng `RM=room('Rễ Mục',42); RM.h=36`; phòng cũ đặc từ hàng 14 tới đáy; mở chân tường phải phòng boss + gọi `dungBanDoRM()`.
 2. `solidC` thêm `R`, `M`; điểm lưu + 2 quái Rễ Mục; boss chỉ thức khi `S.room===RE.i` (không thức khi Lam đã xuống Rễ Mục).
 3. Camera dọc: `S.camy=camYRM(r)`, lưu `S.pcy` và nội suy `oy` trong `render`; `placePlayer` đặt `camy`.
 4. Gạch: chất liệu `rm-` cho ô `R`/`M`, ván `rm-van-*` trong phòng RM; vẽ ô `M` qua `MUC.ve`; `RMV.ve` sau `TT.ve('mat')`.
 5. Nền: `veNenRM` thay vòng `veLop`; `drawTienCanh` bỏ rễ treo Làng Chuông ở Rễ Mục; hook `MUC.bam()` ở chỗ bám tường, `RMV.buoc()` sau `updateHazards()`.
-6. Nạp: `napRM()` + gộp atlas gạch (`gopGach` → `keoMepGach`), trang trí gộp 2 JSON (`napTTGop` – hoặc chép 6 ô Rễ Mục vào `cong-lang-v3.json` + thêm atlas `re-muc-tt.png`); `TT.khoiTao` `go` thêm `R`; sau `TT.nuong()` gọi `MUC.dung(); RMV.dungDoVat()`; overlay H thêm `MUC.veCollider`.
+6. Nạp: `napRM()` + gộp atlas gạch (`gopGach` → `keoMepGach`), trang trí gộp 2 JSON (`napTTGop` – hoặc chép 6 ô Rễ Mục vào `dia-hinh-v4.json` + thêm atlas `re-muc-tt.png`); `TT.khoiTao` `go` thêm `R`; sau `TT.nuong()` gọi `MUC.dung(); RMV.dungDoVat()`; overlay H thêm `MUC.veCollider`.
 7. Thêm `<script src="runtime/trang-tri/re-muc.js">`, `SRC.rm`, `SRC.rmtt`; chèn phần GHÉP của `khoi-re-muc.js` (từ đầu tới trước dòng `/* === THỬ`) trước `boot()`.
 `build-demo.py` khi đó cần nhúng thêm `art/re-muc/` (nền WebP, atlas, đồ vật) như `TV.NHUNG.lc`. Không ghép phần THỬ (`?vao=remuc`, bot, `TVTHU`).
 
