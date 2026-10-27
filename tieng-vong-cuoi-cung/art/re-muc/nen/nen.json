@@ -1,0 +1,71 @@
+{
+ "ten": "Nền parallax Rễ Mục (rễ cây mục dưới Làng Chuông)",
+ "quy_uoc": {
+  "boi_so": 2,
+  "khung_logic": [
+   960,
+   540
+  ],
+  "ve": "vẽ ở ½ cỡ ảnh. Ngang: x0 = -((cam_x * he_so) mod rong_logic), vẽ các bản x0, x0 + rong… tới khi phủ 960. Dọc: y0 = -(cam_y * he_so_cuon_doc); lớp lap_doc = true thì vẽ thêm bản ở y0 + cao, lớp khác chỉ 1 bản (đã đủ cao).",
+  "thu_tu": "xa → giua → gan → [gạch, trang trí, đồ vật, Lam, quái] → hiệu ứng → HUD (lớp gần vẽ TRƯỚC gameplay – xem GHI-CHU)",
+  "kiem_noi_mep": "chênh màu ở chỗ nối mép phải→trái (và dưới→trên) chia cho chênh trung bình 2 cột kề bên trong ảnh (≈1 là không thấy nối)",
+  "man_thu": {
+   "cao_logic": 1152,
+   "cuon_doc_toi_da": 612
+  }
+ },
+ "lop": {
+  "re-muc-xa.png": {
+   "co_anh": [
+    1773,
+    1178
+   ],
+   "co_logic": [
+    886.5,
+    589.0
+   ],
+   "he_so_cuon": 0.08,
+   "he_so_cuon_doc": 0.08,
+   "lap_ngang": true,
+   "lap_doc": false,
+   "mo_ta": "Lớp xa (đục): vòm rễ mục đan nhau, sương xanh ngọc dưới, nấm sáng nhỏ. Cao 1180 (phóng 9 %) để cuộn dọc 0,08 không hở.",
+   "kiem_noi_mep": 0.86,
+   "do_sang_tb": 34.4
+  },
+  "re-muc-giua.png": {
+   "co_anh": [
+    1559,
+    1080
+   ],
+   "co_logic": [
+    779.5,
+    540.0
+   ],
+   "he_so_cuon": 0.4,
+   "he_so_cuon_doc": 0.4,
+   "lap_ngang": true,
+   "lap_doc": false,
+   "mo_ta": "Lớp giữa (trong suốt): rễ rủ, cầu ván gãy, nấm sáng, giọt nước – chỉ ở nửa trên hang; cuộn dọc 0,40, dưới mép ảnh để trống (không lặp dọc).",
+   "kiem_noi_mep": 0.67,
+   "do_sang_tb": 27.7
+  },
+  "re-muc-gan.png": {
+   "co_anh": [
+    1619,
+    880
+   ],
+   "co_logic": [
+    809.5,
+    440.0
+   ],
+   "he_so_cuon": 0.65,
+   "he_so_cuon_doc": 0.65,
+   "lap_ngang": true,
+   "lap_doc": true,
+   "mo_ta": "Lớp gần (trong suốt): khung rễ tối hai mép; LẶP DỌC liền (cuộn dọc 0,65: vẽ 2 bản chồng dọc). Vẽ TRƯỚC gameplay.",
+   "kiem_noi_mep": 6.48,
+   "do_sang_tb": 18.5,
+   "kiem_noi_doc": 0.81
+  }
+ }
+}

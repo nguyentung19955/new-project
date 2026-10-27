@@ -1,0 +1,123 @@
+{
+ "boi": 2,
+ "ghi_chu": "Trang trí địa hình Rễ Mục – cùng dạng cong-lang-v3.json (khung / neo px 2x). Mảng rễ: mang-re* (cat dac); chân rễ góc: chan-re-1/2. Ghép vào game: gộp o + anh vào JSON trang trí đang nạp (xem game/thu-re-muc/GHI-CHU.md).",
+ "anh": {
+  "re-muc-tt": {
+   "tep": "re-muc-tt.png",
+   "co_anh": [
+    1024,
+    372
+   ]
+  }
+ },
+ "o": {
+  "mang-re-2": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    0,
+    0,
+    208,
+    260
+   ],
+   "co_logic": [
+    104.0,
+    130.0
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "ghi_chu": "mảng rễ lớn che vân lặp (thân gen phóng 2,3×, tối 7 %); neo góc trên-trái; cat dac"
+  },
+  "mang-re-4": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    210,
+    0,
+    244,
+    225
+   ],
+   "co_logic": [
+    122.0,
+    112.5
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "ghi_chu": "mảng rễ lớn che vân lặp (thân gen phóng 2,3×, tối 7 %); neo góc trên-trái; cat dac"
+  },
+  "mang-re-3": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    456,
+    0,
+    228,
+    223
+   ],
+   "co_logic": [
+    114.0,
+    111.5
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "ghi_chu": "mảng rễ lớn che vân lặp (thân gen phóng 2,3×, tối 7 %); neo góc trên-trái; cat dac"
+  },
+  "mang-re-1": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    686,
+    0,
+    237,
+    212
+   ],
+   "co_logic": [
+    118.5,
+    106.0
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "ghi_chu": "mảng rễ lớn che vân lặp (thân gen phóng 2,3×, tối 7 %); neo góc trên-trái; cat dac"
+  },
+  "chan-re-1": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    925,
+    0,
+    91,
+    153
+   ],
+   "co_logic": [
+    45.5,
+    76.5
+   ],
+   "neo": [
+    0,
+    153
+   ],
+   "ghi_chu": "chân rễ góc: nửa phải gốc rễ mục, mép cắt dán vào tường; neo (mặt tường, mặt sàn); lat=1 cho góc phải"
+  },
+  "chan-re-2": {
+   "anh": "re-muc-tt.png",
+   "khung": [
+    0,
+    262,
+    118,
+    107
+   ],
+   "co_logic": [
+    59.0,
+    53.5
+   ],
+   "neo": [
+    41,
+    107
+   ],
+   "ghi_chu": "gốc rễ mục thu 0,7 làm chân rễ thấp; neo (35 % bề rộng, đáy)"
+  }
+ }
+}

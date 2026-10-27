@@ -1,0 +1,251 @@
+{
+ "ten": "Đồ vật Rễ Mục (nguon/re-muc-do-vat.png), ảnh 2x, tỷ lệ chung 0,42",
+ "quy_uoc": {
+  "boi_so": 2,
+  "ve": "vẽ ở ½ cỡ ảnh tại neo (day = giữa đáy trên mặt sàn; dinh = giữa đỉnh dưới trần; giua = tâm)",
+  "hieu_ung_lap": {
+   "giot": "rơi từ trần: giot-2 (0–10 bước) → giot-3 (10–20) → giot-1 rơi tới vũng (tốc độ ~6 px/bước) → vung 10 bước → vung-yen; chu kỳ ~150 bước",
+   "bao-tu": "kín; Lam tới gần (< 70 px) → nổ: đổi sang bao-tu-no + 3 bong bóng bay lên mờ dần; ~180 bước sau kín lại"
+  }
+ },
+ "do_vat": {
+  "nam-nho": {
+   "co_anh": [
+    129,
+    105
+   ],
+   "co_logic": [
+    64.5,
+    52.5
+   ],
+   "neo": "day",
+   "neo_px": [
+    64.5,
+    105
+   ],
+   "ghi_chu": "cụm nấm sáng nhỏ – đặt trên sàn; là nguồn sáng, không làm dịu"
+  },
+  "nam-lon": {
+   "co_anh": [
+    157,
+    144
+   ],
+   "co_logic": [
+    78.5,
+    72.0
+   ],
+   "neo": "day",
+   "neo_px": [
+    78.5,
+    144
+   ],
+   "ghi_chu": "cụm nấm sáng lớn – đặt trên sàn"
+  },
+  "goc-re": {
+   "co_anh": [
+    169,
+    153
+   ],
+   "co_logic": [
+    84.5,
+    76.5
+   ],
+   "neo": "day",
+   "neo_px": [
+    84.5,
+    153
+   ],
+   "ghi_chu": "gốc rễ mục – đặt trên sàn (cũng dùng làm chân rễ góc ở trang-tri)"
+  },
+  "ken": {
+   "co_anh": [
+    81,
+    194
+   ],
+   "co_logic": [
+    40.5,
+    97.0
+   ],
+   "neo": "dinh",
+   "neo_px": [
+    40.5,
+    0
+   ],
+   "ghi_chu": "kén treo – neo GIỮA ĐỈNH, dán vào mặt dưới trần"
+  },
+  "chuong-vo": {
+   "co_anh": [
+    158,
+    146
+   ],
+   "co_logic": [
+    79.0,
+    73.0
+   ],
+   "neo": "day",
+   "neo_px": [
+    79.0,
+    146
+   ],
+   "ghi_chu": "chuông vỡ mốc – đặt trên sàn"
+  },
+  "bao-tu-kin": {
+   "co_anh": [
+    134,
+    147
+   ],
+   "co_logic": [
+    67.0,
+    73.5
+   ],
+   "neo": "day",
+   "neo_px": [
+    67.0,
+    147
+   ],
+   "ghi_chu": "bào tử trạng thái KÍN"
+  },
+  "bao-tu-no": {
+   "co_anh": [
+    150,
+    146
+   ],
+   "co_logic": [
+    75.0,
+    73.0
+   ],
+   "neo": "day",
+   "neo_px": [
+    75.0,
+    146
+   ],
+   "ghi_chu": "bào tử trạng thái NỔ (vỏ mở, không gồm bong bóng); cùng neo đáy với bản kín"
+  },
+  "bong-1": {
+   "co_anh": [
+    21,
+    21
+   ],
+   "co_logic": [
+    10.5,
+    10.5
+   ],
+   "neo": "giua",
+   "neo_px": [
+    10.5,
+    10.5
+   ],
+   "ghi_chu": "bong bóng bào tử (bay lên khi nổ, mờ dần) – neo giữa"
+  },
+  "bong-2": {
+   "co_anh": [
+    13,
+    13
+   ],
+   "co_logic": [
+    6.5,
+    6.5
+   ],
+   "neo": "giua",
+   "neo_px": [
+    6.5,
+    6.5
+   ],
+   "ghi_chu": "bong bóng bào tử (bay lên khi nổ, mờ dần) – neo giữa"
+  },
+  "bong-3": {
+   "co_anh": [
+    11,
+    12
+   ],
+   "co_logic": [
+    5.5,
+    6.0
+   ],
+   "neo": "giua",
+   "neo_px": [
+    5.5,
+    6.0
+   ],
+   "ghi_chu": "bong bóng bào tử (bay lên khi nổ, mờ dần) – neo giữa"
+  },
+  "giot-1": {
+   "co_anh": [
+    11,
+    32
+   ],
+   "co_logic": [
+    5.5,
+    16.0
+   ],
+   "neo": "dinh",
+   "neo_px": [
+    5.5,
+    0
+   ],
+   "ghi_chu": "giọt nước to (khung rơi); giot-2 nhỏ, giot-3 vừa – lặp: 2 → 3 → 1 rơi xuống vũng"
+  },
+  "giot-2": {
+   "co_anh": [
+    7,
+    21
+   ],
+   "co_logic": [
+    3.5,
+    10.5
+   ],
+   "neo": "dinh",
+   "neo_px": [
+    3.5,
+    0
+   ]
+  },
+  "giot-3": {
+   "co_anh": [
+    11,
+    32
+   ],
+   "co_logic": [
+    5.5,
+    16.0
+   ],
+   "neo": "dinh",
+   "neo_px": [
+    5.5,
+    0
+   ]
+  },
+  "vung": {
+   "co_anh": [
+    114,
+    47
+   ],
+   "co_logic": [
+    57.0,
+    23.5
+   ],
+   "neo": "day",
+   "neo_px": [
+    57.0,
+    47
+   ],
+   "ghi_chu": "vũng + cột nước bắn (khung chạm)"
+  },
+  "vung-yen": {
+   "co_anh": [
+    114,
+    47
+   ],
+   "co_logic": [
+    57.0,
+    23.5
+   ],
+   "neo": "day",
+   "neo_px": [
+    57.0,
+    47
+   ],
+   "ghi_chu": "vũng lặng (khung chờ)"
+  }
+ }
+}

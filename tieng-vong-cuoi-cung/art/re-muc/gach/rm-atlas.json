@@ -1,0 +1,697 @@
+{
+ "ten": "Gạch Rễ Mục (rm-*): thân rễ mục, mặt trên mép mục + mốc xanh ngọc (không rêu), ván mục, dốc, tường mục leo được (TẠM)",
+ "anh": "rm-atlas.png",
+ "quy_uoc": {
+  "o_logic": 32,
+  "boi_so": 2,
+  "o_anh": 64,
+  "khung": "[x, y, rộng, cao] trong atlas (px 2x). Ô gạch đúng 64×64; rm-muc-manh-* là mảnh rời (cỡ khác).",
+  "canh_ghep": "cạnh đã khớp liền với ô kề (L trái, R phải, T trên, B dưới). Cạnh không ghi = cạnh lộ (viền đen) hoặc mép tự do.",
+  "mat_tren": "mép trên ô = mặt đứng (va chạm), viền đen nằm trong ô; mép mục dày 4–7 logic, KHÔNG rêu xanh.",
+  "van": "ván mục một chiều: mặt ván = mép trên ô, dày ~11 logic.",
+  "doc": "dốc thoải 2 ô (nửa thấp + nửa cao), dốc 45° 1 ô.",
+  "tuong_muc": "rm-muc-lanh / rm-muc-nut / rm-muc-nut-2: 3 trạng thái tường mục leo được (TẠM – chờ ảnh gen re-muc-mep.png); viền đen ở cạnh PHẢI; tường lộ bên trái → lật ngang khi vẽ. Gãy: vẽ 4 mảnh rm-muc-manh-1..4 rơi, ô trống.",
+  "bang_mau_than": [
+   [
+    62,
+    48,
+    36
+   ],
+   [
+    72,
+    59,
+    45
+   ],
+   [
+    81,
+    65,
+    51
+   ],
+   [
+    88,
+    72,
+    57
+   ],
+   [
+    104,
+    84,
+    68
+   ]
+  ]
+ },
+ "o": {
+  "rm-than": {
+   "mo_ta": "thân rễ mục – lặp liền 2 chiều",
+   "nguon": "gen re-muc-gach.png ô 1, làm lặp liền bằng code",
+   "canh_ghep": "BLRT",
+   "khung": [
+    0,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-2": {
+   "mo_ta": "thân – biến thể 2 (ô gen 2); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    66,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-3": {
+   "mo_ta": "thân – biến thể 3 (ô gen 3); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    132,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-4": {
+   "mo_ta": "thân – biến thể 4 (ô gen 4); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    198,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-5": {
+   "mo_ta": "thân – biến thể 5 (ô gen 5); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    264,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-6": {
+   "mo_ta": "thân – biến thể 6 (ô gen 6); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    330,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-7": {
+   "mo_ta": "thân – biến thể 7 (ô gen 7); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    396,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-than-8": {
+   "mo_ta": "thân – biến thể 8 (ô gen 8); 4 mép y hệt thân",
+   "nguon": "gen (phần giữa ô), mép = ô gốc",
+   "canh_ghep": "BLRT",
+   "khung": [
+    462,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-tren-giua": {
+   "mo_ta": "mặt trên giữa – mép mục + mốc xanh ngọc (KHÔNG rêu), lặp ngang",
+   "nguon": "code trên thân gen",
+   "canh_ghep": "BLR",
+   "khung": [
+    528,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-tren-giua-2": {
+   "mo_ta": "mặt trên giữa – biến thể 2",
+   "nguon": "code",
+   "canh_ghep": "BLR",
+   "khung": [
+    594,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-tren-giua-3": {
+   "mo_ta": "mặt trên giữa – biến thể 3",
+   "nguon": "code",
+   "canh_ghep": "BLR",
+   "khung": [
+    660,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-tren-giua-4": {
+   "mo_ta": "mặt trên giữa – biến thể 4",
+   "nguon": "code",
+   "canh_ghep": "BLR",
+   "khung": [
+    726,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-canh-trai": {
+   "mo_ta": "cạnh trái (tường) – lặp dọc",
+   "nguon": "code: thân + viền trái",
+   "canh_ghep": "BRT",
+   "khung": [
+    792,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-canh-phai": {
+   "mo_ta": "cạnh phải (tường) – lặp dọc",
+   "nguon": "code: thân + viền phải",
+   "canh_ghep": "BLT",
+   "khung": [
+    858,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-day-giua": {
+   "mo_ta": "mặt dưới (trần) – lặp ngang",
+   "nguon": "code",
+   "canh_ghep": "LRT",
+   "khung": [
+    924,
+    0,
+    64,
+    64
+   ]
+  },
+  "rm-day-trai": {
+   "mo_ta": "góc ngoài dưới trái",
+   "nguon": "code",
+   "canh_ghep": "RT",
+   "khung": [
+    0,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-day-phai": {
+   "mo_ta": "góc ngoài dưới phải",
+   "nguon": "code",
+   "canh_ghep": "LT",
+   "khung": [
+    66,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-trai-2": {
+   "mo_ta": "cạnh trái – biến thể 2",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BRT",
+   "khung": [
+    132,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-phai-2": {
+   "mo_ta": "cạnh phải – biến thể 2",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BLT",
+   "khung": [
+    198,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-day-giua-2": {
+   "mo_ta": "mặt dưới – biến thể 2",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "LRT",
+   "khung": [
+    264,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-trai-3": {
+   "mo_ta": "cạnh trái – biến thể 3",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BRT",
+   "khung": [
+    330,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-phai-3": {
+   "mo_ta": "cạnh phải – biến thể 3",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BLT",
+   "khung": [
+    396,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-day-giua-3": {
+   "mo_ta": "mặt dưới – biến thể 3",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "LRT",
+   "khung": [
+    462,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-trai-4": {
+   "mo_ta": "cạnh trái – biến thể 4",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BRT",
+   "khung": [
+    528,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-canh-phai-4": {
+   "mo_ta": "cạnh phải – biến thể 4",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "BLT",
+   "khung": [
+    594,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-day-giua-4": {
+   "mo_ta": "mặt dưới – biến thể 4",
+   "nguon": "thân biến thể + viền",
+   "canh_ghep": "LRT",
+   "khung": [
+    660,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-cot-than": {
+   "mo_ta": "cột rộng 1 ô – thân, lặp dọc",
+   "nguon": "code",
+   "canh_ghep": "BT",
+   "khung": [
+    726,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-cot-day": {
+   "mo_ta": "cột rộng 1 ô – đáy (cột treo)",
+   "nguon": "code",
+   "canh_ghep": "T",
+   "khung": [
+    792,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-goc-trong-tl": {
+   "mo_ta": "góc trong (lõm) trên-trái",
+   "nguon": "code",
+   "canh_ghep": "BLRT",
+   "khung": [
+    858,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-goc-trong-tr": {
+   "mo_ta": "góc trong (lõm) trên-phải",
+   "nguon": "code",
+   "canh_ghep": "BLRT",
+   "khung": [
+    924,
+    66,
+    64,
+    64
+   ]
+  },
+  "rm-goc-trong-bl": {
+   "mo_ta": "góc trong (lõm) dưới-trái",
+   "nguon": "code",
+   "canh_ghep": "BLRT",
+   "khung": [
+    0,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-goc-trong-br": {
+   "mo_ta": "góc trong (lõm) dưới-phải",
+   "nguon": "code",
+   "canh_ghep": "BLRT",
+   "khung": [
+    66,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-tren-trai": {
+   "mo_ta": "góc trên trái (mép trái + mặt mục)",
+   "nguon": "code",
+   "canh_ghep": "BR",
+   "khung": [
+    132,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-tren-phai": {
+   "mo_ta": "góc trên phải",
+   "nguon": "code",
+   "canh_ghep": "BL",
+   "khung": [
+    198,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-tren-trai-2": {
+   "mo_ta": "góc trên trái – biến thể",
+   "nguon": "code",
+   "canh_ghep": "BR",
+   "khung": [
+    264,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-tren-phai-2": {
+   "mo_ta": "góc trên phải – biến thể",
+   "nguon": "code",
+   "canh_ghep": "BL",
+   "khung": [
+    330,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-cot-tren": {
+   "mo_ta": "cột rộng 1 ô – đỉnh",
+   "nguon": "code",
+   "canh_ghep": "B",
+   "khung": [
+    396,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-khoi": {
+   "mo_ta": "khối rời 1 ô (đủ 4 viền)",
+   "nguon": "code",
+   "canh_ghep": "",
+   "khung": [
+    462,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-noi-giua": {
+   "mo_ta": "gờ nổi cao 1 ô – giữa, lặp ngang",
+   "nguon": "code",
+   "canh_ghep": "LR",
+   "khung": [
+    528,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-noi-trai": {
+   "mo_ta": "gờ nổi – đầu trái",
+   "nguon": "code",
+   "canh_ghep": "R",
+   "khung": [
+    594,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-noi-phai": {
+   "mo_ta": "gờ nổi – đầu phải",
+   "nguon": "code",
+   "canh_ghep": "L",
+   "khung": [
+    660,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-van-giua": {
+   "mo_ta": "ván mục một chiều – giữa, lặp ngang (KHÔNG viền dọc)",
+   "nguon": "code",
+   "canh_ghep": "LR",
+   "khung": [
+    726,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-van-trai": {
+   "mo_ta": "ván mục – đầu trái",
+   "nguon": "code",
+   "canh_ghep": "R",
+   "khung": [
+    792,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-van-phai": {
+   "mo_ta": "ván mục – đầu phải",
+   "nguon": "code",
+   "canh_ghep": "L",
+   "khung": [
+    858,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-van-trai-2": {
+   "mo_ta": "ván mục – đầu trái, biến thể",
+   "nguon": "code",
+   "canh_ghep": "R",
+   "khung": [
+    924,
+    132,
+    64,
+    64
+   ]
+  },
+  "rm-van-phai-2": {
+   "mo_ta": "ván mục – đầu phải, biến thể",
+   "nguon": "code",
+   "canh_ghep": "L",
+   "khung": [
+    0,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-thoai-len-1": {
+   "mo_ta": "dốc thoải đi lên – nửa thấp",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BR",
+   "khung": [
+    66,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-thoai-len-2": {
+   "mo_ta": "dốc thoải đi lên – nửa cao",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BLR",
+   "khung": [
+    132,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-thoai-xuong-1": {
+   "mo_ta": "dốc thoải đi xuống – nửa cao",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BLR",
+   "khung": [
+    198,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-thoai-xuong-2": {
+   "mo_ta": "dốc thoải đi xuống – nửa thấp",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BL",
+   "khung": [
+    264,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-len": {
+   "mo_ta": "dốc 45° đi lên",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BR",
+   "khung": [
+    330,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-doc-xuong": {
+   "mo_ta": "dốc 45° đi xuống",
+   "nguon": "code: trượt cột ô mặt trên theo mặt dốc",
+   "canh_ghep": "BL",
+   "khung": [
+    396,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-muc-lanh": {
+   "mo_ta": "TƯỜNG MỤC leo được – lành (TẠM, dựng từ thân; viền phải; lộ trái thì lật)",
+   "nguon": "code TẠM",
+   "canh_ghep": "BLT",
+   "khung": [
+    462,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-muc-nut": {
+   "mo_ta": "tường mục – nứt (TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "BLT",
+   "khung": [
+    528,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-muc-nut-2": {
+   "mo_ta": "tường mục – nứt rộng, mẻ (TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "BLT",
+   "khung": [
+    594,
+    198,
+    64,
+    64
+   ]
+  },
+  "rm-muc-manh-1": {
+   "mo_ta": "mảnh tường mục 1 (rơi khi gãy, TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "",
+   "co_khac": true,
+   "khung": [
+    660,
+    198,
+    35,
+    34
+   ]
+  },
+  "rm-muc-manh-2": {
+   "mo_ta": "mảnh tường mục 2 (rơi khi gãy, TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "",
+   "co_khac": true,
+   "khung": [
+    697,
+    198,
+    35,
+    34
+   ]
+  },
+  "rm-muc-manh-3": {
+   "mo_ta": "mảnh tường mục 3 (rơi khi gãy, TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "",
+   "co_khac": true,
+   "khung": [
+    734,
+    198,
+    34,
+    34
+   ]
+  },
+  "rm-muc-manh-4": {
+   "mo_ta": "mảnh tường mục 4 (rơi khi gãy, TẠM)",
+   "nguon": "code TẠM",
+   "canh_ghep": "",
+   "co_khac": true,
+   "khung": [
+    770,
+    198,
+    35,
+    34
+   ]
+  }
+ }
+}
