@@ -2,6 +2,9 @@
    Quái thường mới (docs/gameplay/BO-QUAI-DE-XUAT.md): tiến chậm, húc ngắn; MAI cứng phía trước, BỤNG mềm phía sau.
    Vẽ từ 5 mảnh + JSON (art/huong-moi/quai-rig/bo-vo-moc/, QBR.napThem) – không sprite sheet.
 
+   HÌNH/VFX bản 3 (PHAN-HOI-4 mục 2–3, chỉ hình, không đổi luật): trúng bụng chớp ngắn + ấm chỉ ở bụng (giữ mảng tối / đường bao),
+   tia trúng bụng nhỏ đặt ở bụng, thân co rõ hơn; đánh mai tia nhỏ sắc; chữ "Keng! Mai cứng" chỉ lần đầu (?huongdan=1: mỗi lần).
+
    LUẬT (số ở BO_SO, chỉnh được) – đã chỉnh theo PHẢN HỒI 3 (docs/gameplay/PHAN-HOI-3-KE-HOACH-V2-VA-BO-VO-MOC.md mục 3–4):
    - Đánh TRƯỚC MẶT (vào mai) → "Keng" + tia va chạm nhỏ trên mai, quái KHÔNG mất máu, chỉ trừ THANH MAI (đòn thường −1, nhát 3 −2).
      Lam bị dội NHẸ: tổng 4 px trong 3 bước, KHÔNG khoá điều khiển, không đẩy vào hố, không xuyên vật.
@@ -41,7 +44,8 @@ const BO_BASE = '../../art/huong-moi/quai-rig/bo-vo-moc/';
 const BO_Q = (() => { let q; try { q = new URLSearchParams(location.search); } catch (e) { q = new Map(); } return q; })();
 const BO_THU = {xem: BO_Q.get('xem') === '1', mot: BO_Q.get('mot') === '1', batTu: BO_Q.get('battu') === '1', mau: BO_Q.get('mau') !== '0',
   ghi: BO_Q.get('ghi') === '1', vien: BO_Q.get('vien') !== '0',
-  dauThan: BO_Q.get('dauthan') !== '0'};   // ?dauthan=0: TẮT dấu "!" báo húc (so xem người mới có đọc được khép mai + cào chân không)
+  dauThan: BO_Q.get('dauthan') !== '0',   // ?dauthan=0: TẮT dấu "!" báo húc (so xem người mới có đọc được khép mai + cào chân không)
+  huongDan: BO_Q.get('huongdan') === '1'};   // ?huongdan=1 (PH4): chữ "Keng! Mai cứng" hiện mỗi lần mai chặn; mặc định chỉ LẦN ĐẦU   // ?dauthan=0: TẮT dấu "!" báo húc (so xem người mới có đọc được khép mai + cào chân không)
 
 /* ---------- PHÒNG THỬ: phòng "Điểm lưu" (RD, 30 ô = đúng 1 màn) làm phẳng, chặn hai đầu ---------- */
 RD.name = 'Phòng thử Bọ Vỏ Mộc';
@@ -86,8 +90,35 @@ const BO = (() => {
       g.globalCompositeOperation = 'source-atop'; g.globalAlpha = 0.75; g.fillStyle = '#D8583A'; g.fillRect(0, 0, c.width, c.height);
       g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
     }
+    /* PH4 mục 2: CHỚP KHI TRÚNG BỤNG – thay lớp "trắng" (bóng trắng đặc cả mảnh) bằng lớp chớp riêng của Bọ:
+       mảnh BỤNG (cả bung_lat) chớp ẤM kem-mật mạnh; mai / đầu / chân chỉ hắt ấm rất nhẹ. Cả hai BỎ đường bao (mép 2 px ảnh)
+       và mảng tối (độ sáng < 0,22) → giữ được khối tối + viền, vẫn thấy thân co. Tạo 1 lần lúc nạp, không xử lý pixel mỗi khung. */
+    const chop = new Map();
+    for (const [ten, n] of Object.entries(N.nut)) {
+      if (!n.img || !n.trang) continue;
+      const bung = ten === 'bung' || ten === 'bung_lat', key = n.img;
+      if (chop.has(key) && !bung) { n.trang = chop.get(key); continue; }
+      n.trang = lopChop(n.img, bung ? [246, 204, 150] : [236, 206, 166], bung ? 0.95 : 0.22); chop.set(key, n.trang);
+    }
     SO.nap = so; return so;
   }
+  function lopChop(img, rgb, manh) {
+    const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    let d; try { d = g.getImageData(0, 0, w, h); } catch (e) { g.globalCompositeOperation = 'source-in'; g.fillStyle = 'rgb(' + rgb + ')'; g.globalAlpha = manh; g.fillRect(0, 0, w, h); return c; }
+    const A = d.data, o = new Uint8ClampedArray(A.length), R = 2;
+    const dac = (x, y) => x >= 0 && y >= 0 && x < w && y < h && A[(y * w + x) * 4 + 3] > 140;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4; if (A[i + 3] < 140) continue;
+      if (!dac(x - R, y) || !dac(x + R, y) || !dac(x, y - R) || !dac(x, y + R)) continue;   // mép (đường bao) giữ nguyên
+      const L = (0.299 * A[i] + 0.587 * A[i + 1] + 0.114 * A[i + 2]) / 255;
+      const k = Math.max(0, Math.min(1, (L - 0.22) / 0.25));                                    // mảng tối giữ nguyên
+      if (k <= 0) continue;
+      o[i] = rgb[0]; o[i + 1] = rgb[1]; o[i + 2] = rgb[2]; o[i + 3] = Math.round(255 * manh * k);
+    }
+    d.data.set(o); g.putImageData(d, 0, 0); return c;
+  }
+  function chopBo(f) { return f > 0 ? Math.min(0.9, 0.2 + 0.25 * f) : 0; }   // 3 khung: 0,7 → 0,45 → 0,2 (cũ: 7 khung trắng 0,8/0,45)
 
   /* ---------- HOẠT HOẠ: trạng thái gameplay → clip (hoà từ tư thế đang hiện khi đổi clip, như QBR.capNhatQuai) ---------- */
   function smooth(x) { x = x < 0 ? 0 : x > 1 ? 1 : x; return x * x * (3 - 2 * x); }
@@ -138,7 +169,7 @@ const BO = (() => {
     if (moveX(pl, DOI.huong * d, false)) { DOI.con = 0; return; }   // vướng vật → dừng
     DOI.con -= d;
   }
-  /* TIA va chạm nhỏ NGAY TRÊN MAI khi bị chặn (vẽ bằng code, 9 bước) */
+  /* TIA va chạm nhỏ NGAY TRÊN MAI khi bị chặn (vẽ bằng code, 6 bước) */
   const TIA = [];
   function diemMai(b, tx, ty, n) {   // điểm trên mặt mai gần chỗ chạm (toạ độ thế giới)
     const cx = b.x + b.w / 2, dat = b.y + b.h;
@@ -215,7 +246,7 @@ const BO = (() => {
   }
   function capNhat() {
     doiBuoc();
-    for (let i = TIA.length - 1; i >= 0; i--) if (++TIA[i].t > 9) TIA.splice(i, 1);
+    for (let i = TIA.length - 1; i >= 0; i--) if (++TIA[i].t > 6) TIA.splice(i, 1);   // PH4: 9 → 6 bước
     for (const b of DS) { capNhat1(b); if (!b.gone) anim(b, S.frame); }
   }
 
@@ -244,23 +275,28 @@ const BO = (() => {
       if (!b.nam) b.mai = Math.max(0, b.mai - (n === 3 ? BO_SO.maiNhat3 : 1));
       b.maiT = 0;
       const [mx, my] = diemMai(b, tx, ty, n);
-      S.kengN++; sfx.keng(); hu('keng', mx, my, face < 0, {al: al * 0.8});
+      S.kengN++; sfx.keng(); hu('keng', mx, my, face < 0, {al: al * 0.7, k: 0.5});   // PH4: ảnh keng nhỏ lại (1 → 0,5)
       TIA.push({x: mx, y: my, f: -face, t: 0, al, nay: n === 4});
       S.hitstop = Math.max(S.hitstop, 3); shake(face, 0, 0.9);
       if (src === 'p' && n !== 4 && pl.onGround) { DOI.con = BO_SO.doiLam; DOI.huong = -face; }   // dội nhẹ, không đụng pl.vx
       if (!b.nam && b.mai <= 0) voMai(b, mx, my);
       else if (!b.nam) {
-        if (!res && (S.kengN <= 2 || S.kengN % 4 === 0)) popText(cx, b.y - 22, S.kengN <= 1 ? 'Keng! Mai cứng' : 'Keng!', '#F3E6C8');
+        // PH4: chữ chỉ LẦN ĐẦU (hoặc ?huongdan=1); sau đó chỉ âm + tia + dội nhẹ
+        if (!res && (S.kengN <= 1 || BO_THU.huongDan)) popText(cx, b.y - 22, 'Keng! Mai cứng', '#F3E6C8');
         if (b.st === 'di' || b.st === 'hoi' || b.st === 'quay' || b.st === 'keng') { const f = b.face; doiTrangThai(b, 'keng'); b.face = f; }
       }
       if (res) congHuong(b, cx, cy, face);
       return true;
     }
     // ---- BỤNG (hoặc đang nằm ngửa): mất 1 máu, thân CO lại, hiệu ứng "bụp" mềm – khác hẳn keng ----
-    b.flash = 8; b.co = 10;
-    hu('trung_don', tx, ty, face < 0, {al});
-    fx('ring', tx, ty, 10, '', 0, '#C9BBA4');
-    for (let i = 0; i < 7; i++) part(tx, ty, face * (0.4 + Math.random() * 1.1), -1.1 - Math.random() * 1.0, 18 + (Math.random() * 8 | 0), i % 2 ? '#C9BBA4' : '#8F8170', 2, 0.16);
+    // PH4: chớp NGẮN (4 → hiện 3 khung), chỉ ấm mạnh ở bụng (lopChop); tia trúng NHỎ (0,85 → 0,38) đặt ở GIỮA BỤNG phía sau,
+    // thấp hơn đầu và lệch khỏi lưỡi dao; vòng + hạt ấm, mềm, rơi chậm (đánh mai: tia sắc kem-trắng, ngắn)
+    b.flash = 4; b.co = 10;
+    let px = tx, py = ty;
+    if (!b.namDau && !b.nam) { px = cx - b.face * b.w * 0.30; py = b.y + b.h * 0.58; }
+    hu('trung_don', px, py, face < 0, {al: al * 0.85, k: 0.38});
+    fx('ring', px, py, 6, '', 0, '#E2B47E');
+    for (let i = 0; i < 5; i++) part(px, py, face * (0.3 + Math.random() * 0.7), -0.6 - Math.random() * 0.7, 20 + (Math.random() * 8 | 0), i % 2 ? '#E2B47E' : '#9C8468', 2, 0.10);
     noise(0.07, 0.2, 'lowpass', 520);   // "bụp" trầm (keng là tiếng kim cao)
     matMau(b, 1, face, '#F2D69A');
     if (res) congHuong(b, cx, cy, face);
@@ -314,7 +350,7 @@ const BO = (() => {
     ctx.globalAlpha = b.fade; if (b.st !== 'chet') bong(x, y - 1, 56, 0.32); ctx.globalAlpha = 1;
     let va = 0; const baoT = b.st === 'bao' ? b.t : (b.st === 'xem' && b.xem === 'bao' ? b.xemBao / D : -1);
     if (baoT >= 0) va = 0.10 + 0.26 * (0.5 + 0.5 * Math.sin(baoT * 0.9)) * Math.min(1, baoT / 8);   // lóe CAM ĐỎ lúc báo trước
-    QBR.ve(ctx, 'bo', P, snap(x), snap(y), lat, {alpha: b.fade, trang: nhay(b.flash), vang: va});
+    QBR.ve(ctx, 'bo', P, snap(x), snap(y), lat, {alpha: b.fade, trang: chopBo(b.flash), vang: va});
     if (baoT >= 0 && BO_THU.dauThan) veDauThan(x - (lat ? -1 : 1) * 30, y - 128, baoT);   // trên thanh mai / chấm máu (y − 92), không bị che
     if (b.st !== 'chet' && b.st !== 'xem') veThanh(b, x, y);
     DO.qbT(performance.now() - t0);
@@ -330,18 +366,20 @@ const BO = (() => {
     ctx.fillStyle = '#FFD7A8'; ctx.fillRect(X - 4, Y, 2, 9);   // mép sáng 2 px bên trái (không quầng)
     ctx.globalAlpha = 1;
   }
-  /* tia va chạm trên mai: 5 tia ngắn toả về phía người đánh + lõi sáng 3 bước; màu kem/đồng, không quầng */
+  /* tia va chạm trên mai (PH4: NHỎ, SẮC – khác hẳn bụp mềm ấm ở bụng): 4 vạch mảnh 1 px dài/ngắn xen kẽ, bay nhanh ra ngoài
+     rồi tắt trong 6 bước, lõi 2 px chỉ 2 bước; màu kem trắng / đồng nhạt, không quầng, không teal */
   function veTia() {
     for (const k of TIA) {
-      const u = k.t / 9, X = k.x - ox, Y = k.y - oy, L0 = 3 + 9 * Math.min(1, u * 2.2), L1 = L0 + 6 * (1 - u);
-      ctx.globalAlpha = k.al * (1 - u * u); ctx.lineWidth = 2; ctx.lineCap = 'square';
-      for (let i = 0; i < 5; i++) {
-        const g = (k.nay ? -Math.PI / 2 : (k.f > 0 ? 0 : Math.PI) - k.f * 0.35) + (i - 2) * 0.42;   // ngang: toả về phía người đánh, chếch lên
-        const c = Math.cos(g), d = Math.sin(g);
-        ctx.strokeStyle = i % 2 ? '#F2D69A' : '#FFF4DC';
+      if (k.t > 6) continue;
+      const u = k.t / 6, X = k.x - ox, Y = k.y - oy;
+      ctx.globalAlpha = k.al * (1 - u * u); ctx.lineWidth = 1; ctx.lineCap = 'butt';
+      for (let i = 0; i < 4; i++) {
+        const g = (k.nay ? -Math.PI / 2 : (k.f > 0 ? 0 : Math.PI) - k.f * 0.35) + (i - 1.5) * 0.5;   // ngang: toả về phía người đánh, chếch lên
+        const c = Math.cos(g), d = Math.sin(g), dai = i % 2 ? 5 : 8, L0 = 2 + 7 * Math.min(1, u * 2.5), L1 = L0 + dai * (1 - u);
+        ctx.strokeStyle = i % 2 ? '#E9CF98' : '#FFF6E2';
         ctx.beginPath(); ctx.moveTo(X + c * L0, Y + d * L0); ctx.lineTo(X + c * L1, Y + d * L1); ctx.stroke();
       }
-      if (k.t < 3) { ctx.fillStyle = '#FFF4DC'; ctx.fillRect(Math.round(X) - 2, Math.round(Y) - 2, 4, 4); }
+      if (k.t < 2) { ctx.fillStyle = '#FFF6E2'; ctx.fillRect(Math.round(X) - 1, Math.round(Y) - 1, 2, 2); }
     }
     ctx.globalAlpha = 1;
   }

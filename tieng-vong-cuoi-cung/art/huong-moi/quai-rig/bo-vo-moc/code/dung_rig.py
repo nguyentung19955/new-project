@@ -50,11 +50,12 @@ def hsv_rgb(h, s, v):
     r = np.choose(k, [c, x, z, z, x, c]); g = np.choose(k, [x, c, c, x, z, z]); b = np.choose(k, [z, z, x, c, c, x])
     return np.stack([r + m, g + m, b + m], -1)
 # mỗi mảnh: tron = mức thay bằng dải màu ấm; tp = tương phản giữ lại; sang = độ sáng
-GRADE = {'mai': (0.38, 1.12, 0.82), 'dau': (0.38, 1.28, 0.92), 'chan-truoc': (0.38, 1.05, 0.76), 'chan-sau': (0.38, 1.05, 0.76),
+GRADE = {'mai': (0.38, 1.12, 0.82), 'dau': (0.38, 1.28, 0.96), 'chan-truoc': (0.38, 1.05, 0.76), 'chan-sau': (0.38, 1.05, 0.76),
          'bung': (0.22, 1.0, 0.80)}   # bụng: giữ màu ngà (điểm yếu phải SÁNG hơn mai) nhưng dịu và tối hơn ảnh gốc
 # PH3 mục 3–4 (không tăng viền sáng toàn thân): mai TỐI hơn chút (0,84 → 0,82); ĐẦU tương phản 1,12 → 1,28, sáng 0,86 → 0,92;
 # BỤNG nâng sáng một chút, kéo về XÁM ĐẤT NHẠT (bớt ngà vàng, gần mai ít hơn về độ sáng chứ không về độ rực)
-XAM_DAT = '#B9AE9C'; BUNG_XAM = 0.38; BUNG_SANG = 1.06
+XAM_DAT = '#B9AE9C'; BUNG_XAM = 0.38; BUNG_SANG = 1.10
+# PH4 mục 3 (nâng sáng CÓ CHỌN LỌC, không rim, không tươi hơn): ĐẦU sáng 0,92 → 0,96; BỤNG ×1,06 → ×1,10. Mai / chân giữ nguyên.
 def to_mau(t, a):
     rgb = a[..., :3].astype(np.float32) / 255; al = a[..., 3:4]
     tron, tp, sang = GRADE[t]
@@ -268,13 +269,14 @@ def f_quay(P, t):   # 0,4 s; game lật hướng ở giữa (bước 12) – lú
 def f_keng(P, t):   # trúng MAI (0,23 s): mai dội về sau, đầu rụt vào, thân nén – không đau
     s = lo_xo(t, 7, 9)
     cong(P, 'mai', dx=12 * s, goc=3.5 * s, dy=-3 * s)
-    cong(P, 'than', dx=7 * s, sy=1 - 0.04 * max(0, s), sx=1 + 0.02 * max(0, s))
+    cong(P, 'than', dx=7 * s, sy=1 - 0.025 * max(0, s), sx=1 + 0.01 * max(0, s))   # PH4: nén thân NHẸ hơn (để co bụng nổi bật hơn)
     r = 1 - ram(t, 0.04, 0.22)
     cong(P, 'dau', dx=18 * r * ram(t, 0, 0.03), dy=5 * r * ram(t, 0, 0.03), goc=-4 * r)
 def f_dau(P, t):    # trúng BỤNG (0,27 s): CẢ THÂN CO LẠI (gập ngắn + dẹt), bụng thắt mạnh, chân quắp, đầu ngẩng đau
     s = lo_xo(t, 5.5, 6); co = math.sin(math.pi * ram(t, 0, 0.16)) * (t < 0.16) + max(0, s) * 0.5 * (t >= 0.16)
-    cong(P, 'bung', sx=1 - 0.24 * co - 0.06 * s, sy=1 + 0.10 * co, goc=-3 * s, dx=-14 * co)
-    cong(P, 'than', goc=-5 * s, dx=-6 * s, sx=1 - 0.10 * co, sy=1 - 0.06 * co, dy=4 * co)
+    # PH4: co RÕ hơn (bụng thắt 24 → 34 %, thân hẹp 10 → 15 %, dẹt 6 → 10 %) – phải đọc được khi chớp đã ngắn lại
+    cong(P, 'bung', sx=1 - 0.34 * co - 0.06 * s, sy=1 + 0.12 * co, goc=-4 * s, dx=-18 * co)
+    cong(P, 'than', goc=-5 * s, dx=-6 * s, sx=1 - 0.15 * co, sy=1 - 0.10 * co, dy=6 * co)
     cong(P, 'dau', goc=12 * (1 - ram(t, 0.05, 0.27)) * ram(t, 0, 0.05), dy=-4 * (1 - ram(t, 0.05, 0.27)))
     cong(P, 'mai', dy=-6 * max(0, s))
     for n in CHAN: cong(P, n, goc=6 * s)

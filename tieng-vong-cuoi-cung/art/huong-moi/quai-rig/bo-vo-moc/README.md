@@ -19,6 +19,11 @@ Trang thử + ghi chú cho chủ dự án: **`game/thu-bo-vo-moc/GHI-CHU.md`**.
 - Clip `dau` (trúng bụng): **cả thân co lại** (thân hẹp 10 %, dẹt 6 %, bụng thắt 24 % và rút về trước) – khác hẳn `keng` (mai dội ngang, đầu rụt).
 - Clip `bao`: **chân sau cào đất** lùi (7,5 nhịp/s) – game bắn bụi + sỏi ra sau cùng nhịp.
 
+**Chỉnh theo phản hồi 4 (27/10, bản 3 trang thử, chỉ hình)** – `dung_rig.py`:
+- Nâng sáng **có chọn lọc**: **đầu** `GRADE` sáng 0,92 → 0,96; **bụng** `BUNG_SANG` 1,06 → 1,10. Mai / chân giữ nguyên, **không** tăng viền, không tăng độ rực.
+- Clip `dau` (trúng bụng) co **rõ hơn**: bụng thắt 24 → 34 %, thân hẹp 10 → 15 %, dẹt 6 → 10 %. Clip `keng` nén thân **nhẹ hơn** (4 → 2,5 %, phình 2 → 1 %).
+- Chớp trúng bụng (ấm, chỉ bụng, giữ mép + mảng tối) **không** nằm trong PNG: game tạo lớp chớp từ mảnh lúc nạp (`game/thu-bo-vo-moc/cong-cu/khoi-bo.js`, `lopChop`).
+
 **Cỡ**: dáng nghỉ cao **74 px logic**, dài 128 px (Lam 112). `ty_le` = 0,159 px logic / px mảnh nguồn.
 **Cây nút** (quay trái): `goc` (neo trên mặt đất, giữa thân) → `than` (giữa mai, nửa chiều cao – trục lật ngửa) → `bung`, `mai` (→ `nut1`, `nut2`), `dau`,
 `chan_truoc`, `chan_sau` + `chan_truoc_xa`, `chan_sau_xa` (cùng ảnh, tối 45 %, lệch pha bước). Điểm neo: mai = giữa mép dưới, bụng = khớp trước,

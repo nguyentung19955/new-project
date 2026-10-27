@@ -1,4 +1,4 @@
-# Thử quái mới: Bọ Vỏ Mộc – BẢN 2, đã chỉnh theo phản hồi 3 (27/10/2026)
+# Thử quái mới: Bọ Vỏ Mộc – BẢN 3 (hình/VFX theo phản hồi 4); luật = bản 2 theo phản hồi 3 (27/10/2026)
 
 Viết cho người không rành kỹ thuật. Đây là **trang thử riêng**, sinh từ `game/demo.html` bằng script (`cong-cu/tao-tu-demo.py`), giống các
 thư mục `thu-*` khác. **KHÔNG sửa** `game/demo.html`, `build-demo.py`, `docs/gameplay/`, `game/thu-p0a/`, `game/thu-quai-huong-moi/`.
@@ -13,13 +13,42 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 
 | Cờ thêm vào cuối link (nối bằng `&`) | Làm gì |
 |---|---|
-| **`?dauthan=0`** (mới) | **tắt dấu "!"** báo húc – để so: chỉ còn cúi đầu, rung mai, chân sau cào đất + bụi, lóe cam đỏ, 2 tiếng gõ mai |
+| **`?dauthan=0`** | **tắt dấu "!"** báo húc – để so: chỉ còn cúi đầu, rung mai, chân sau cào đất + bụi, lóe cam đỏ, 2 tiếng gõ mai |
+| **`?huongdan=1`** (mới, bản 3) | chữ **"Keng! Mai cứng"** hiện **mỗi lần** mai chặn (chế độ hướng dẫn). Mặc định chỉ hiện **lần đầu** |
 | `?hitbox=1` (hoặc phím H / nút ▣) | hộp thân (xanh), phần bụng lộ (lục đứt), vùng húc (cam = sắp húc, đỏ = đang húc) + chữ trạng thái/clip |
 | `?xem=1` | 2 con đứng yên diễn lần lượt **mọi clip** (con trái nhìn trái, con phải nhìn phải) |
 | `?mot=1` | chỉ 1 con |
 | `?battu=1` | Lam không chết |
 | `?mau=0` | ẩn chấm máu (chấm máu chỉ có ở bản thử) |
 | `?hm=0` | tắt màu/ánh sáng hướng mới (cảnh như demo hiện tại) |
+
+## Bản 3 – chỉnh HÌNH/VFX theo phản hồi 4 (`docs/gameplay/PHAN-HOI-4-QUAI-HUONG-MOI-VA-BO.md` mục 2, 3)
+
+**Chỉ đổi hình, KHÔNG đổi luật / số gameplay** (`BO_SO` giữ nguyên). Đã quay lại 2 video chính: trạng thái Bọ từng bước ghi trong `so-lieu.json` **trùng khít** bản 2.
+
+| | Bản 2 | **Bản 3 (bây giờ)** |
+|---|---|---|
+| Dấu "!" báo húc | có, tắt bằng `?dauthan=0` | **giữ nguyên** (cam đỏ, không teal), vẫn tắt được |
+| Viền sáng toàn thân | không tăng | **không tăng** |
+| Chớp khi **trúng bụng** | bóng **trắng đặc phủ cả con**, 7 khung (0,8 → 0,45) | **3 khung** (0,7 → 0,45 → 0,2), lớp chớp riêng của Bọ: **chỉ bụng** chớp **ấm** (kem-mật), mai/đầu/chân hắt ấm rất nhẹ; lớp chớp **bỏ đường bao (mép 2 px) và mảng tối** → vẫn thấy khối tối, viền và thân co |
+| Tia **trúng bụng** | ảnh trúng đòn cỡ 0,85, đặt đúng chỗ dao chạm (che dao + một phần thân) | cỡ **0,38**, đặt ở **giữa bụng phía sau**, thấp hơn đầu, lệch khỏi lưỡi dao; vòng nhỏ **ấm** + 5 hạt ấm rơi chậm (mềm) |
+| Thân co khi trúng bụng | bụng thắt 24 %, thân hẹp 10 %, dẹt 6 % | **bụng thắt 34 %, thân hẹp 15 %, dẹt 10 %** (clip `dau`) |
+| Phản ứng khi **đánh mai** | thân nén 4 % / phình 2 % | **nhẹ hơn: 2,5 % / 1 %** (mai vẫn dội, đầu rụt) → co bụng khác hẳn |
+| Tia **trên mai** | 5 tia dày 2 px, 9 bước, lõi 4 px; ảnh "keng" cỡ 1 | **nhỏ, sắc**: 4 vạch mảnh 1 px dài/ngắn xen kẽ, **6 bước**, lõi 2 px; ảnh "keng" cỡ **0,5**; kem trắng / đồng nhạt |
+| Chữ "Keng! Mai cứng" | nhát 1–2 + mỗi nhát thứ 4 | **chỉ lần đầu** (hoặc mỗi lần khi `?huongdan=1`); sau đó chỉ **âm keng + tia + dội nhẹ** |
+| Nâng sáng có chọn lọc | – | **đầu** sáng 0,92 → **0,96**, **bụng** ×1,06 → **×1,10** (mảnh PNG, `dung_rig.py`). Mai, chân **giữ nguyên**; không tăng độ rực, không chỉnh Bọ cho khớp Lam cũ |
+
+**Đã quay lại** (`game/kiem-thu-bo-vo-moc/`, **cùng khung** với bản 2 để so): `keng-tia-tren-mai.png` (bước 5 sau nhát; là lần keng đầu nên vẫn có chữ),
+`trung-bung-co-than.png` (bước 6 sau nhát: chớp đã tắt, thấy thân co + bụp ấm nhỏ ở bụng), `vong-ra-sau-danh-bung-60fps.mp4`, `danh-mai-vo-lat-ngua-60fps.mp4`
+(H.264 60 hình/s, `-preset veryfast`; trong video "đánh mai" chữ chỉ hiện ở nhát đầu). **Chưa quay lại** các ảnh/video khác (`cac-clip-60fps.mp4`,
+ảnh báo trước, cảnh, hitbox…) – chúng chỉ khác ở đầu/bụng sáng hơn chút.
+
+**Chưa thử trên iPhone thật** (vẫn chỉ Chromium headless, máy chủ không GPU). Chưa kiểm: chớp 3 khung có còn đủ "trúng" trên màn nhỏ không;
+tia mai 1 px có quá mảnh trên màn iPhone không; tạo lớp chớp lúc nạp (đọc pixel 7 mảnh, một lần) mất bao lâu trên iPhone.
+**Chưa làm** từ mục 3: làm nền ngay sau vùng chiến đấu ít tương phản hơn (cảnh thuộc khối hướng mới, ngoài phạm vi lần này); "mép vũ khí" (Bọ không có vũ khí).
+Lưu ý: lớp chớp dùng `getImageData`; mở trang bằng `file://` trình duyệt có thể chặn → tự lùi về chớp ấm một màu phủ mảnh (vẫn 3 khung).
+
+Chạy lại riêng phần bản 3: `python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py video2 so` (2 video chính + 2 ảnh so).
 
 ## 1. Đã đổi gì theo phản hồi 3 (mục 3, 4 và điểm 4 trong đoạn chốt)
 
@@ -46,7 +75,7 @@ Nhát ở bước sau dùng trạng thái thật lúc trúng (mai đã vỡ thì
 - **Bụng phía sau** sáng hơn chút, kéo về **xám đất nhạt** (bớt vàng ngà) → tách mai / bụng bằng độ sáng.
 - **Đầu**: tương phản cao hơn + viền **tối** mỏng tách khỏi mai.
 - **Bị chặn**: tia va chạm nhỏ (5 tia kem/đồng, 9 bước) **ngay trên mép mai** chỗ chạm + "Keng" nhỏ; Bọ **không** nháy trắng.
-- **Trúng bụng**: **cả thân co lại** (hẹp + dẹt, bụng thắt), nháy trắng, vòng mềm + hạt xám đất rơi, tiếng "bụp" trầm – khác hẳn keng (tiếng kim cao, tia sáng, không nháy).
+- **Trúng bụng**: **cả thân co lại** (hẹp + dẹt, bụng thắt), nháy trắng (bản 3: thay bằng chớp ấm ngắn chỉ ở bụng), vòng mềm + hạt xám đất rơi, tiếng "bụp" trầm – khác hẳn keng (tiếng kim cao, tia sáng, không nháy).
 - **Lật ngửa**: hiện **mảng bụng mềm** to (1,5× bụng) phủ mặt dưới thân, thở phập phồng.
 - **Báo húc**: dấu "!" to ~3 lần (8×22 px, viền tối, bật lên rồi nhấp theo 2 tiếng gõ), đặt **trên** thanh mai để không bị che;
   thêm **chân sau cào đất** + bụi + sỏi bắn ra sau (cả khi tắt "!").
@@ -83,7 +112,7 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
    chết bước 482). Có muốn hạ còn ~1,5 s, hoặc để Bọ **dậy sớm** khi bị đánh N nhát, để "phá mai" và "vòng ra sau" cân hơn? Hay giữ để thử người thật trước?
 2. **Dội 4 px** có còn cảm được "keng" không, hay bây giờ quá nhẹ (trên máy chủ nhìn Lam gần như đứng yên)? Có thể thử 5 px hoặc thêm khựng tay 2–3 bước (không khoá di chuyển).
 3. **Dấu "!"**: so `bao-truoc-huc.png` với bản tắt. Khi có người mới thử, hỏi họ có tự nhận ra "khép mai + cào chân = sắp húc" khi tắt "!" không.
-4. **Trúng bụng nháy trắng cả thân** – rất rõ nhưng có thể quá chói trong cảnh tối; muốn chỉ nháy phần bụng không? (cần tách cache nháy theo mảnh, chưa làm).
+4. ~~Trúng bụng nháy trắng cả thân~~ → **bản 3**: chỉ bụng chớp ấm, 3 khung, giữ mảng tối + viền. Cần người thật xem có còn đủ "trúng" không.
 5. **Bụng xám đất nhạt** đã đủ tách khỏi mai trong bản xám chưa, hay cần sáng hơn nữa? (Đã giữ "một chút" theo phản hồi.)
 6. Bóng (Vọng) đánh Bọ hiện vẫn mất **1 máu đủ** như Lam (trang thử chưa có `BONG_MAU`); khi Bọ vào P0-B sẽ dùng `BONG_MAU`/`BONG_THE` chung (0,25 → tối thiểu 1, nên kết quả hiện giống nhau).
 

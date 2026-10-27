@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Quay video 60 hình/s (mỗi hình = đúng 1 bước logic) + chụp ảnh trang thử Bọ Vỏ Mộc → game/kiem-thu-bo-vo-moc/
 Video H.264 (-preset veryfast). Ảnh 960×540 cỡ thật (không phóng).
-Cần playwright + Chromium + ffmpeg.   Chạy: python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py [video] [anh]"""
+Cần playwright + Chromium + ffmpeg.   Chạy: python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py [video] [anh] | [video2] [so]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
 from playwright.async_api import async_playwright
 from PIL import Image, ImageOps
@@ -49,6 +49,17 @@ async def quay(p, cong, q, ten, bot=None, toi_da=1500, sau=90):
     return {'file': ten, 'khung': n, 'giay': round(n / 60, 2), 'trang_thai': nhat}
 
 
+async def chup_so(p, cong):
+    # 2c) PH3/PH4: chém MAI (tia sắc trên mai, Lam dội nhẹ) và chém BỤNG (thân co + chớp ấm ngắn) – cùng một con, đứng yên, CÙNG KHUNG mọi bản
+    b, pg, loi = await mo(p, cong, '&mot=1&mau=0')
+    for f, ten, mai in ((-1, 'keng-tia-tren-mai', 4), (1, 'trung-bung-co-than', 4)):
+        await pg.evaluate('''() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, %d, 'di'); b.cd = 999; b.hp = 4; b.mai = %d; b.nam = false;
+          TVTHU.datLam(b.sx - 92, 1); TVTHU.khung(3); TVTHU.bo.trung({x: b.x, y: b.y + 24, w: 30, h: 20}, 'p', 7000 + %d, 1, 1); TVTHU.khung(%d); }''' % (f, mai, f, 5 if f < 0 else 6))
+        await pg.screenshot(path=os.path.join(OUT, ten + '.png'))
+        await pg.evaluate('TVTHU.khung(80)')
+    await b.close()
+
+
 async def chup(p, cong):
     kq = {}
     # 1) màn chơi đầu: 2 con, Lam ở chuông lưu
@@ -66,14 +77,7 @@ async def chup(p, cong):
     # 2b) PH3: cùng khung báo trước nhưng TẮT dấu "!" (?dauthan=0) để so
     b, pg, loi = await mo(p, cong, '&xem=1&mot=1&dauthan=0')
     await pg.evaluate('TVTHU.khung(%d)' % (150 + 12)); await pg.screenshot(path=os.path.join(OUT, 'bao-truoc-huc-tat-dau-than.png')); await b.close()
-    # 2c) PH3: chém MAI (tia va chạm trên mai, Lam dội nhẹ) và chém BỤNG (thân co + bụp mềm) – cùng một con, đứng yên
-    b, pg, loi = await mo(p, cong, '&mot=1&mau=0')
-    for f, ten, mai in ((-1, 'keng-tia-tren-mai', 4), (1, 'trung-bung-co-than', 4)):
-        await pg.evaluate('''() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, %d, 'di'); b.cd = 999; b.hp = 4; b.mai = %d; b.nam = false;
-          TVTHU.datLam(b.sx - 92, 1); TVTHU.khung(3); TVTHU.bo.trung({x: b.x, y: b.y + 24, w: 30, h: 20}, 'p', 7000 + %d, 1, 1); TVTHU.khung(%d); }''' % (f, mai, f, 5 if f < 0 else 6))
-        await pg.screenshot(path=os.path.join(OUT, ten + '.png'))
-        await pg.evaluate('TVTHU.khung(80)')
-    await b.close()
+    await chup_so(p, cong)
     # 3) cảnh tối hướng mới vs màu demo hiện tại (?hm=0) + bản xám (kiểm Bọ không chìm nền)
     for q, ten in (('', 'canh-huong-moi'), ('&hm=0', 'canh-mau-demo-hien-tai')):
         b, pg, loi = await mo(p, cong, q)
@@ -99,6 +103,12 @@ async def main(lam):
     threading.Thread(target=s.serve_forever, daemon=True).start()
     cong = s.server_address[1]; so = {}
     async with async_playwright() as p:
+        if 'video2' in lam:   # PH4: chỉ 2 video chính (cập nhật đúng 2 mục trong so-lieu.json, giữ mục cac-clip)
+            moi = [await quay(p, cong, '&mot=1', 'vong-ra-sau-danh-bung-60fps.mp4', 'vong'),
+                   await quay(p, cong, '&mot=1&battu=1', 'danh-mai-vo-lat-ngua-60fps.mp4', 'mai')]
+            cu_ = json.load(open(os.path.join(OUT, 'so-lieu.json'))).get('video', [])
+            so['video'] = [next((m for m in moi if m['file'] == v['file']), v) for v in cu_] or moi
+        if 'so' in lam: await chup_so(p, cong)   # PH4: chỉ 2 ảnh so mai / bụng
         if 'video' in lam:
             so['video'] = [await quay(p, cong, '&mot=1', 'vong-ra-sau-danh-bung-60fps.mp4', 'vong'),
                            await quay(p, cong, '&mot=1&battu=1', 'danh-mai-vo-lat-ngua-60fps.mp4', 'mai'),
