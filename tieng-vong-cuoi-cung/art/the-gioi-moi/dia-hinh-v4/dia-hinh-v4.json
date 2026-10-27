@@ -1,0 +1,949 @@
+{
+ "boi": 2,
+ "ghi_chu": "khung [x,y,w,h] và neo [ax,ay] tính bằng px ảnh (2x); chia 2 ra logic. Cỡ logic = w/2 × h/2. Gồm cả ô v3 còn dùng (tệp ../cong-lang-v3/…).",
+ "anh": {
+  "re-treo-cot": {
+   "tep": "re-treo-cot.png",
+   "co_anh": [
+    1080,
+    292
+   ]
+  },
+  "xa-moc-day": {
+   "tep": "xa-moc-day.png",
+   "co_anh": [
+    604,
+    152
+   ]
+  },
+  "xa-moc-day-kho": {
+   "tep": "xa-moc-day-kho.png",
+   "co_anh": [
+    799,
+    284
+   ]
+  },
+  "mang-go-van": {
+   "tep": "mang-go-van.png",
+   "co_anh": [
+    1024,
+    440
+   ]
+  },
+  "mep-da-reu": {
+   "tep": "mep-da-reu.png",
+   "co_anh": [
+    1004,
+    72
+   ]
+  },
+  "cong-re": {
+   "tep": "cong-re.png",
+   "co_anh": [
+    776,
+    324
+   ]
+  },
+  "cong-re-kho": {
+   "tep": "cong-re-kho.png",
+   "co_anh": [
+    330,
+    324
+   ]
+  },
+  "chan-re-goc": {
+   "tep": "../cong-lang-v3/chan-re-goc.png",
+   "co_anh": [
+    858,
+    240
+   ]
+  },
+  "mep-dat-re": {
+   "tep": "../cong-lang-v3/mep-dat-re.png",
+   "co_anh": [
+    1024,
+    160
+   ]
+  },
+  "be-neo": {
+   "tep": "../cong-lang-v3/be-neo.png",
+   "co_anh": [
+    342,
+    68
+   ]
+  },
+  "tien-canh-re-da": {
+   "tep": "../cong-lang-v3/tien-canh-re-da.png",
+   "co_anh": [
+    727,
+    632
+   ]
+  }
+ },
+ "o": {
+  "re-treo-cot-1": {
+   "anh": "re-treo-cot.png",
+   "khung": [
+    354,
+    0,
+    359,
+    286
+   ],
+   "neo": [
+    194,
+    204
+   ],
+   "co_logic": [
+    179.5,
+    143.0
+   ],
+   "ghi_chu": "neo = (tâm cột, đỉnh cột); đặt lên đỉnh cột treo; đã bỏ cột gỗ, ngón ôm phủ xuống ~38 logic"
+  },
+  "re-treo-cot-2": {
+   "anh": "re-treo-cot.png",
+   "khung": [
+    0,
+    0,
+    352,
+    290
+   ],
+   "neo": [
+    174,
+    208
+   ],
+   "co_logic": [
+    176.0,
+    145.0
+   ],
+   "ghi_chu": "neo = (tâm cột, đỉnh cột); đặt lên đỉnh cột treo; đã bỏ cột gỗ, ngón ôm phủ xuống ~38 logic"
+  },
+  "re-treo-cot-3": {
+   "anh": "re-treo-cot.png",
+   "khung": [
+    715,
+    0,
+    361,
+    279
+   ],
+   "neo": [
+    187,
+    203
+   ],
+   "co_logic": [
+    180.5,
+    139.5
+   ],
+   "ghi_chu": "neo = (tâm cột, đỉnh cột); đặt lên đỉnh cột treo; đã bỏ cột gỗ, ngón ôm phủ xuống ~37 logic"
+  },
+  "xa-day-3": {
+   "anh": "xa-moc-day.png",
+   "khung": [
+    0,
+    0,
+    346,
+    150
+   ],
+   "neo": [
+    104,
+    150
+   ],
+   "co_logic": [
+    173.0,
+    75.0
+   ],
+   "ghi_chu": "xà móc dây cho ván treo 3 ô: neo = (tâm dây trái, đáy đoạn dây giữ lại); 2 dây cách 74 logic; game xếp day-treo từ nút ván lên tới đây",
+   "day": [
+    [
+     0,
+     0
+    ],
+    [
+     148,
+     0
+    ]
+   ],
+   "k_gen": 0.5239
+  },
+  "xa-day-2": {
+   "anh": "xa-moc-day.png",
+   "khung": [
+    348,
+    0,
+    252,
+    132
+   ],
+   "neo": [
+    94,
+    132
+   ],
+   "co_logic": [
+    126.0,
+    66.0
+   ],
+   "ghi_chu": "xà móc dây cho ván treo 2 ô: neo = (tâm dây trái, đáy đoạn dây giữ lại); 2 dây cách 42 logic; game xếp day-treo từ nút ván lên tới đây",
+   "day": [
+    [
+     0,
+     0
+    ],
+    [
+     84,
+     0
+    ]
+   ],
+   "k_gen": 0.4528
+  },
+  "xa-goc-1": {
+   "anh": "xa-moc-day-kho.png",
+   "khung": [
+    533,
+    0,
+    262,
+    274
+   ],
+   "neo": [
+    131,
+    274
+   ],
+   "co_logic": [
+    131.0,
+    137.0
+   ],
+   "ghi_chu": "xà gốc (gen), neo giữa đáy – để dành"
+  },
+  "xa-goc-2": {
+   "anh": "xa-moc-day-kho.png",
+   "khung": [
+    265,
+    0,
+    266,
+    279
+   ],
+   "neo": [
+    133,
+    279
+   ],
+   "co_logic": [
+    133.0,
+    139.5
+   ],
+   "ghi_chu": "xà gốc (gen), neo giữa đáy – để dành"
+  },
+  "xa-goc-3": {
+   "anh": "xa-moc-day-kho.png",
+   "khung": [
+    0,
+    0,
+    263,
+    282
+   ],
+   "neo": [
+    131,
+    282
+   ],
+   "co_logic": [
+    131.5,
+    141.0
+   ],
+   "ghi_chu": "xà gốc (gen), neo giữa đáy – để dành"
+  },
+  "mang-go-van-1": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    679,
+    0,
+    224,
+    217
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    112.0,
+    108.5
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mang-go-van-2": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    0,
+    227,
+    214,
+    212
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    107.0,
+    106.0
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mang-go-van-3": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    216,
+    227,
+    222,
+    212
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    111.0,
+    106.0
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mang-go-van-4": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    454,
+    0,
+    223,
+    219
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    111.5,
+    109.5
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mang-go-van-5": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    0,
+    0,
+    221,
+    225
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    110.5,
+    112.5
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mang-go-van-6": {
+   "anh": "mang-go-van.png",
+   "khung": [
+    223,
+    0,
+    229,
+    223
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    114.5,
+    111.5
+   ],
+   "ghi_chu": "neo góc trên-trái; có vân; màu TB chỉnh về 99/70/51"
+  },
+  "mep-da-1-trai": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    0,
+    0,
+    158,
+    70
+   ],
+   "neo": [
+    0,
+    4
+   ],
+   "co_logic": [
+    79.0,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (mép trái thân đá, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "mep-da-1-giua": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    160,
+    0,
+    183,
+    70
+   ],
+   "neo": [
+    0,
+    4
+   ],
+   "co_logic": [
+    91.5,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (góc trái, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "mep-da-1-phai": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    345,
+    0,
+    156,
+    70
+   ],
+   "neo": [
+    156,
+    4
+   ],
+   "co_logic": [
+    78.0,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (mép phải thân đá, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "mep-da-2-trai": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    503,
+    0,
+    156,
+    70
+   ],
+   "neo": [
+    2,
+    4
+   ],
+   "co_logic": [
+    78.0,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (mép trái thân đá, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "mep-da-2-giua": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    661,
+    0,
+    182,
+    70
+   ],
+   "neo": [
+    0,
+    4
+   ],
+   "co_logic": [
+    91.0,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (góc trái, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "mep-da-2-phai": {
+   "anh": "mep-da-reu.png",
+   "khung": [
+    845,
+    0,
+    155,
+    70
+   ],
+   "neo": [
+    155,
+    4
+   ],
+   "co_logic": [
+    77.5,
+    35.0
+   ],
+   "ghi_chu": "mép ĐÁ rêu, neo = (mép phải thân đá, 1 logic dưới mặt rêu); cao 34 logic"
+  },
+  "cong-re-dong-trai": {
+   "anh": "cong-re.png",
+   "khung": [
+    0,
+    0,
+    136,
+    324
+   ],
+   "neo": [
+    221,
+    324
+   ],
+   "co_logic": [
+    68.0,
+    162.0
+   ],
+   "ghi_chu": "bản ĐÓNG, trụ trái (cắt thẳng mép trong); neo = (tâm cổng, chân)",
+   "mat": [
+    -66.1,
+    -90.7,
+    3.1
+   ]
+  },
+  "cong-re-dong-phai": {
+   "anh": "cong-re.png",
+   "khung": [
+    138,
+    0,
+    142,
+    323
+   ],
+   "neo": [
+    -81,
+    323
+   ],
+   "co_logic": [
+    71.0,
+    161.5
+   ],
+   "ghi_chu": "bản ĐÓNG, trụ phải; neo = (tâm cổng, chân)",
+   "mat": [
+    67.5,
+    -90.7,
+    3.5
+   ]
+  },
+  "cong-re-dong-giua": {
+   "anh": "cong-re.png",
+   "khung": [
+    606,
+    0,
+    166,
+    316
+   ],
+   "neo": [
+    85,
+    322
+   ],
+   "co_logic": [
+    83.0,
+    158.0
+   ],
+   "ghi_chu": "bản ĐÓNG, rễ đan giữa 2 trụ; neo = (tâm cổng, chân); MỞ: game bóp ngang 2 nửa về 2 trụ + mờ dần"
+  },
+  "cong-re-tru-trai": {
+   "anh": "cong-re.png",
+   "khung": [
+    282,
+    0,
+    157,
+    323
+   ],
+   "neo": [
+    215,
+    323
+   ],
+   "co_logic": [
+    78.5,
+    161.5
+   ],
+   "ghi_chu": "trụ ĐƠN (chỉ trụ / mở hẳn), tâm thân đặt đúng tâm trụ bản đóng; neo = (tâm cổng, chân)",
+   "mat": [
+    -65.8,
+    -91.7,
+    1.1
+   ]
+  },
+  "cong-re-tru-phai": {
+   "anh": "cong-re.png",
+   "khung": [
+    441,
+    0,
+    163,
+    323
+   ],
+   "neo": [
+    -26,
+    323
+   ],
+   "co_logic": [
+    81.5,
+    161.5
+   ],
+   "ghi_chu": "trụ ĐƠN (chỉ trụ / mở hẳn), tâm thân đặt đúng tâm trụ bản đóng; neo = (tâm cổng, chân)",
+   "mat": [
+    56.5,
+    -90.7,
+    2.5
+   ]
+  },
+  "cong-re-tru-kho-1": {
+   "anh": "cong-re-kho.png",
+   "khung": [
+    0,
+    0,
+    161,
+    323
+   ],
+   "neo": [
+    186,
+    323
+   ],
+   "co_logic": [
+    80.5,
+    161.5
+   ],
+   "ghi_chu": "trụ ĐƠN (chỉ trụ / mở hẳn), tâm thân đặt đúng tâm trụ bản đóng; neo = (tâm cổng, chân)",
+   "mat": [
+    -55.7,
+    -90.6,
+    2.7
+   ]
+  },
+  "cong-re-tru-kho-2": {
+   "anh": "cong-re-kho.png",
+   "khung": [
+    163,
+    0,
+    163,
+    323
+   ],
+   "neo": [
+    -56,
+    323
+   ],
+   "co_logic": [
+    81.5,
+    161.5
+   ],
+   "ghi_chu": "trụ ĐƠN (chỉ trụ / mở hẳn), tâm thân đặt đúng tâm trụ bản đóng; neo = (tâm cổng, chân)",
+   "mat": [
+    65.4,
+    -90.7,
+    3.1
+   ]
+  },
+  "chan-re-1": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    467,
+    0,
+    130,
+    84
+   ],
+   "neo": [
+    65,
+    84
+   ],
+   "co_logic": [
+    65.0,
+    42.0
+   ],
+   "ghi_chu": "neo giữa đáy"
+  },
+  "chan-re-1-thap": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    724,
+    0,
+    130,
+    42
+   ],
+   "neo": [
+    65,
+    42
+   ],
+   "co_logic": [
+    65.0,
+    21.0
+   ],
+   "ghi_chu": "neo giữa đáy; chỉ rễ, mép cắt mờ dần"
+  },
+  "chan-re-2": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    342,
+    0,
+    123,
+    92
+   ],
+   "neo": [
+    61,
+    92
+   ],
+   "co_logic": [
+    61.5,
+    46.0
+   ],
+   "ghi_chu": "neo giữa đáy"
+  },
+  "chan-re-2-thap": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    599,
+    0,
+    123,
+    46
+   ],
+   "neo": [
+    61,
+    46
+   ],
+   "co_logic": [
+    61.5,
+    23.0
+   ],
+   "ghi_chu": "neo giữa đáy; chỉ rễ, mép cắt mờ dần"
+  },
+  "re-om-cot-1": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    0,
+    0,
+    174,
+    239
+   ],
+   "neo": [
+    87,
+    239
+   ],
+   "co_logic": [
+    87.0,
+    119.5
+   ],
+   "ghi_chu": "neo giữa đáy; đã bỏ đá – đặt đè lên cột đá của game"
+  },
+  "re-om-cot-2": {
+   "anh": "../cong-lang-v3/chan-re-goc.png",
+   "khung": [
+    176,
+    0,
+    164,
+    225
+   ],
+   "neo": [
+    82,
+    225
+   ],
+   "co_logic": [
+    82.0,
+    112.5
+   ],
+   "ghi_chu": "neo giữa đáy; đã bỏ đá – đặt đè lên cột đá của game"
+  },
+  "mep-1-trai": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    744,
+    0,
+    248,
+    65
+   ],
+   "neo": [
+    34,
+    4
+   ],
+   "co_logic": [
+    124.0,
+    32.5
+   ],
+   "ghi_chu": "neo = (cột bắt đầu mặt rêu, 2 logic dưới đỉnh); đầu trái"
+  },
+  "mep-1-giua": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    258,
+    99,
+    256,
+    60
+   ],
+   "neo": [
+    0,
+    4
+   ],
+   "co_logic": [
+    128.0,
+    30.0
+   ],
+   "ghi_chu": "neo góc trên-trái (−2 logic); xếp kề nhau, đầu mờ dần 7 px"
+  },
+  "mep-1-phai": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    247,
+    0,
+    245,
+    84
+   ],
+   "neo": [
+    220,
+    4
+   ],
+   "co_logic": [
+    122.5,
+    42.0
+   ],
+   "ghi_chu": "neo = (cột kết thúc mặt rêu, 2 logic dưới đỉnh); đầu phải"
+  },
+  "mep-2-trai": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    494,
+    0,
+    248,
+    78
+   ],
+   "neo": [
+    49,
+    4
+   ],
+   "co_logic": [
+    124.0,
+    39.0
+   ],
+   "ghi_chu": "neo = (cột bắt đầu mặt rêu, 2 logic dưới đỉnh); đầu trái"
+  },
+  "mep-2-giua": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    0,
+    99,
+    256,
+    61
+   ],
+   "neo": [
+    0,
+    4
+   ],
+   "co_logic": [
+    128.0,
+    30.5
+   ],
+   "ghi_chu": "neo góc trên-trái (−2 logic); xếp kề nhau, đầu mờ dần 7 px"
+  },
+  "mep-2-phai": {
+   "anh": "../cong-lang-v3/mep-dat-re.png",
+   "khung": [
+    0,
+    0,
+    245,
+    97
+   ],
+   "neo": [
+    202,
+    4
+   ],
+   "co_logic": [
+    122.5,
+    48.5
+   ],
+   "ghi_chu": "neo = (cột kết thúc mặt rêu, 2 logic dưới đỉnh); đầu phải"
+  },
+  "be-van-day-3": {
+   "anh": "../cong-lang-v3/be-neo.png",
+   "khung": [
+    16,
+    0,
+    192,
+    49
+   ],
+   "neo": [
+    0,
+    19
+   ],
+   "co_logic": [
+    96.0,
+    24.5
+   ],
+   "ghi_chu": "ván treo dây 3 ô; neo (mép trái, mặt ván); day = chân 2 dây (px 2x so với neo), dây vẽ từ đó đi lên",
+   "day": [
+    [
+     22,
+     -19
+    ],
+    [
+     170,
+     -19
+    ]
+   ]
+  },
+  "be-van-day-2": {
+   "anh": "../cong-lang-v3/be-neo.png",
+   "khung": [
+    210,
+    0,
+    128,
+    49
+   ],
+   "neo": [
+    0,
+    19
+   ],
+   "co_logic": [
+    64.0,
+    24.5
+   ],
+   "ghi_chu": "ván treo dây 2 ô; neo (mép trái, mặt ván); day = chân 2 dây (px 2x so với neo), dây vẽ từ đó đi lên",
+   "day": [
+    [
+     22,
+     -19
+    ],
+    [
+     106,
+     -19
+    ]
+   ]
+  },
+  "day-treo": {
+   "anh": "../cong-lang-v3/be-neo.png",
+   "khung": [
+    0,
+    0,
+    14,
+    65
+   ],
+   "neo": [
+    6,
+    65
+   ],
+   "co_logic": [
+    7.0,
+    32.5
+   ],
+   "ghi_chu": "ô dây treo lặp dọc liền (32 logic), neo giữa đáy = chân dây; game xếp lên tới quá mép trên màn"
+  },
+  "tien-canh-trai": {
+   "anh": "../cong-lang-v3/tien-canh-re-da.png",
+   "khung": [
+    0,
+    0,
+    338,
+    631
+   ],
+   "neo": [
+    0,
+    0
+   ],
+   "co_logic": [
+    169.0,
+    315.5
+   ],
+   "ghi_chu": "neo góc trên-TRÁI màn (cuộn 1,05); đã làm tối 0,62"
+  },
+  "tien-canh-phai": {
+   "anh": "../cong-lang-v3/tien-canh-re-da.png",
+   "khung": [
+    340,
+    0,
+    383,
+    631
+   ],
+   "neo": [
+    383,
+    0
+   ],
+   "co_logic": [
+    191.5,
+    315.5
+   ],
+   "ghi_chu": "neo góc trên-PHẢI màn (cuộn 1,05); đã làm tối 0,62"
+  }
+ }
+}

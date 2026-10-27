@@ -14,9 +14,11 @@
   (anim/the-gioi.* KHÔNG còn nhúng: demo.html không dùng nữa.)
   - lam_hd : hoạt ảnh HÀNH ĐỘNG Lam (art/modular/lam-moi/hanh-dong/sprite/lam-hanh-dong-2x.*) – PNG nguyên bản, kiểm co_sheet
   - hu     : hiệu ứng ảnh gen (art/hieu-ung/sprite/<ten>-2x.*) – PNG nguyên bản; thiếu ảnh nào thì bỏ qua (game vẽ khung TẠM)
-  - tt     : TRANG TRÍ ĐỊA HÌNH v3 (art/the-gioi-moi/cong-lang-v3/): cong-lang-v3.json + CHỈ các atlas PNG mà 3 file dữ liệu màn
-             (runtime/trang-tri/*.js) đang dùng (họ "-kho" không nhúng; kiểm cỡ = co_anh trong JSON). TT.nap(…, TV.NHUNG.tt) đọc thẳng
-             data URI. runtime/trang-tri-dia-hinh.js + runtime/trang-tri/{cong-lang,san-chuong,phong-boss}.js chèn INLINE thay <script src>.
+  - tt     : TRANG TRÍ ĐỊA HÌNH v4 (art/the-gioi-moi/dia-hinh-v4/): dia-hinh-v4.json (gồm cả ô v3 còn dùng, tệp ../cong-lang-v3/…) + CHỈ các
+             atlas PNG mà 3 file dữ liệu màn (runtime/trang-tri/*.js) đang dùng (họ "-kho" không nhúng; kiểm cỡ = co_anh trong JSON).
+             TT.nap(…, TV.NHUNG.tt) đọc thẳng data URI. runtime/trang-tri-dia-hinh.js + runtime/trang-tri/{cong-lang,san-chuong,phong-boss}.js
+             chèn INLINE thay <script src>. Ô cần = o:'…' / 'họ*' + mép (giai 'mep', kieu 'da' → mép đá) + ván treo & dây + xà (xa:'…')
+             + 5 ô cổng rễ (cong: true) + tiền cảnh. Atlas nhúng WebP KHÔNG MẤT DỮ LIỆU (lossless, ≈ 65 % cỡ PNG; giữ bản build < 15 MB).
 Nếu file build > 15 MB thì báo (không còn ảnh nào nén WebP).
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
 import base64, io, json, os
@@ -37,7 +39,7 @@ QBR_TAG = '<script src="runtime/quai-boss-runtime.js"></script>'
 HD_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'hanh-dong', 'sprite'))
 HU_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'hieu-ung', 'sprite'))
 HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh', 'vong', 'cong-huong', 'keng']
-TT_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'the-gioi-moi', 'cong-lang-v3'))
+TT_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4'))
 TT_JS = ['runtime/trang-tri-dia-hinh.js', 'runtime/trang-tri/cong-lang.js', 'runtime/trang-tri/san-chuong.js', 'runtime/trang-tri/phong-boss.js']
 
 
@@ -45,7 +47,7 @@ def trang_tri():
     """JSON atlas + các atlas mà dữ liệu 3 màn dùng. Tên ô dùng = mọi 'o:' trong runtime/trang-tri/*.js (họ 'x*' → mọi ô bắt đầu
     bằng 'x'), + bộ mép đất khi có giai:'mep', + ván treo / dây khi có giai:'van-day', + tiền cảnh khi có tien_canh."""
     import re
-    meta = json.load(open(os.path.join(TT_DIR, 'cong-lang-v3.json'), encoding='utf-8'))
+    meta = json.load(open(os.path.join(TT_DIR, 'dia-hinh-v4.json'), encoding='utf-8'))
     js = ''.join(open(os.path.join(HERE, t), encoding='utf-8').read() for t in TT_JS[1:])
     ten = set()
     for o in re.findall(r"\bo:\s*'([^']+)'", js):
@@ -55,8 +57,13 @@ def trang_tri():
             ten.add(o)
     if "giai: 'mep'" in js:
         ten.update('mep-%d-%s' % (b, v) for b in (1, 2) for v in ('trai', 'giua', 'phai'))
+    if "kieu: 'da'" in js:
+        ten.update('mep-da-%d-%s' % (b, v) for b in (1, 2) for v in ('trai', 'giua', 'phai'))
     if "giai: 'van-day'" in js:
         ten.update(k for k in meta['o'] if k.startswith('be-van-day') or k == 'day-treo')
+    ten.update(re.findall(r"\bxa:\s*'([^']+)'", js))
+    if re.search(r"\bcong:\s*true", js):
+        ten.update(('cong-re-dong-trai', 'cong-re-dong-giua', 'cong-re-dong-phai', 'cong-re-tru-trai', 'cong-re-tru-phai'))
     if 'tien_canh: [{' in js:
         ten.update(('tien-canh-trai', 'tien-canh-phai'))
     thieu = [t for t in ten if t not in meta['o']]
@@ -66,7 +73,7 @@ def trang_tri():
     anh = {}
     for t in tep:
         co = next(a for a in meta['anh'].values() if a['tep'] == t)
-        p = os.path.join(TT_DIR, t); kiem_co(p, co['co_anh']); anh[t] = png_uri(p)
+        p = os.path.join(TT_DIR, t); kiem_co(p, co['co_anh']); anh[t] = webp_lossless(p)
     return {'json': meta, 'anh': anh}
 
 
@@ -118,6 +125,12 @@ def quai_boss():
 def webp(path, q):
     b = io.BytesIO()
     Image.open(path).convert('RGBA').save(b, 'WEBP', quality=q, method=6, alpha_quality=100)
+    return 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()
+
+
+def webp_lossless(path):
+    b = io.BytesIO()
+    Image.open(path).convert('RGBA').save(b, 'WEBP', lossless=True, quality=100, method=6)
     return 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()
 
 
@@ -189,4 +202,4 @@ if mb > 15:
     print('CẢNH BÁO: bản build %.1f MB > 15 MB' % mb)
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · Làng Chuông nền WebP q92 + gạch/đồ vật PNG · trang trí địa hình %d atlas PNG (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (len(TT_SO),)))
+print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · Làng Chuông nền WebP q92 + gạch/đồ vật PNG · trang trí địa hình %d atlas WebP lossless (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (len(TT_SO),)))

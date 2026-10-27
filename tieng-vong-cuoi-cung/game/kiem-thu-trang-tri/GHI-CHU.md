@@ -1,5 +1,8 @@
 # Trang trí địa hình 3 màn – đã ghép vào game chính (27/10/2026)
 
+> **Cập nhật 27/10 (đợt 4):** các điểm 1–4 ở mục 6 "còn chưa đẹp" đã sửa bằng ảnh gen v4 (rễ neo cột, xà móc dây, mảng gỗ vân,
+> mép đá rêu) + cổng gỗ thay bằng cổng rễ cây – xem `game/kiem-thu-trang-tri-v4/GHI-CHU.md`. Thư mục này giữ nguyên làm mốc đợt 3.
+
 Viết cho người không rành kỹ thuật. Đây là bước tiếp theo của bản thử Cổng làng (`game/thu-cong-lang/GHI-CHU.md`), làm theo
 **trả lời duyệt 12:08** của chủ dự án: sửa Cổng làng (ván treo dây, mảng gỗ tối hơn, bớt ngắt rêu, bỏ cửa nhà, giữ cả 2 tiền cảnh)
 rồi áp cùng bộ quy tắc sang **Sân chuông** và **Phòng boss**, và **ghép thẳng vào `game/demo.html`**. Collider, vị trí sàn, độ cao

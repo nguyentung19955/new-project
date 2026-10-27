@@ -27,7 +27,7 @@ for cu, moi in [("lam:'../art/modular/lam-moi/rig-v4/", "lam:'../../art/modular/
                 ("hd:   '../art/modular/", "hd:   '../../art/modular/"), ("hu:   '../art/hieu-ung/", "hu:   '../../art/hieu-ung/"),
                 ("qbr:  'runtime/quai-boss/'", "qbr:  '../runtime/quai-boss/'"), ("lc:   '../art/the-gioi-moi/lang-chuong/'", "lc:   '../../art/the-gioi-moi/lang-chuong/'"),
                 ("giu:  'anim/lang-chuong-giu.json'", "giu:  '../anim/lang-chuong-giu.json'"),
-                ("tt:   '../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json'", "tt:   '../../art/the-gioi-moi/cong-lang-v3/cong-lang-v3.json'"),
+                ("tt:   '../art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json'", "tt:   '../../art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json'"),
                 ("json=await r.json(); src='anim/'+json.image; }", "json=await r.json(); src='../anim/'+json.image; }")]:
     thay('đường dẫn ' + cu.split("'")[1], cu, moi)
 thay('khối THỬ + khởi động', "\nboot();\n</script>", "\n" + THU + "\nboot();\n</script>")

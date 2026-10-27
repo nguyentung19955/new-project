@@ -9,13 +9,14 @@
    Không có cạnh sàn lộ (sàn chạy suốt dưới 2 tường) → không đặt mép đất. Không đổi bản đồ / collider / gameplay. */
 TT.them('phong-boss', {
   phong: ['Chuông Gác Làng (RE)'],
+  cong: true,   // cửa vào phòng boss (x 5360, luôn mở) = 2 trụ đơn của cổng rễ cây
   dat: [
-    // ---- LỚP THÂN: mảng gỗ phủ thân sàn (cắt theo ô gỗ; ô đá của tường phải không dính)
-    {lop: 'than', o: 'mang-go*', x: 5330, y: 470, cat: 'dac', lat: 1},
-    {lop: 'than', o: 'mang-go*', x: 5560, y: 452, cat: 'dac'},
-    {lop: 'than', o: 'mang-go*', x: 5790, y: 410, cat: 'dac', lat: 1},   // ngắt rêu (1 chỗ duy nhất ở phòng boss)
-    {lop: 'than', o: 'mang-go*', x: 6010, y: 466, cat: 'dac'},
-    {lop: 'than', o: 'mang-go*', x: 6190, y: 452, cat: 'dac', lat: 1},
+    // ---- LỚP THÂN: mảng gỗ CÓ VÂN (v4) phủ thân sàn (cắt theo ô gỗ; ô đá của tường phải không dính)
+    {lop: 'than', o: 'mang-go-van*', x: 5330, y: 470, cat: 'dac', lat: 1},
+    {lop: 'than', o: 'mang-go-van*', x: 5560, y: 452, cat: 'dac'},
+    {lop: 'than', o: 'mang-go-van*', x: 5790, y: 410, cat: 'dac', lat: 1},   // ngắt rêu (1 chỗ duy nhất ở phòng boss)
+    {lop: 'than', o: 'mang-go-van*', x: 6010, y: 466, cat: 'dac'},
+    {lop: 'than', o: 'mang-go-van*', x: 6190, y: 452, cat: 'dac', lat: 1},
 
     // ---- LỚP MẶT: rễ ôm chân tường đá phải (chỗ ĐÁ GẶP GỖ) – lật để rễ bám mặt trái tường, loang ra sàn; vẽ TRƯỚC boss
     {lop: 'mat', o: 're-om-cot-1', x: 6232, y: 450, lat: 1},
