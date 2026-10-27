@@ -1,0 +1,314 @@
+{
+ "truoc": {
+  "man-bat-dau": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "iphone-hud-nut": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "san-chuong": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "san-chuong-noi-chuyen": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "san-chuong-cong-huong": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "diem-luu-tat": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "diem-luu-sang": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "cong-lang-do-lang": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "cong-lang-bien": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "phong-boss-re-tran": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "phong-boss-treo": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  },
+  "man-ket": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": null
+   }
+  }
+ },
+ "sau": {
+  "man-bat-dau": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 171,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "iphone-hud-nut": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 181,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "san-chuong": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 173,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "san-chuong-noi-chuyen": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 209,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "san-chuong-cong-huong": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 164,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "diem-luu-tat": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 211,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "diem-luu-sang": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 208,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "cong-lang-do-lang": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 171,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "cong-lang-bien": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 177,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "phong-boss-re-tran": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 185,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "phong-boss-treo": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 199,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  },
+  "man-ket": {
+   "tvdemo": {
+    "ready": true,
+    "err": "",
+    "lht": {
+     "ms": 203,
+     "so_anh": 11,
+     "mb_anh": 23.45,
+     "o": 50
+    }
+   }
+  }
+ },
+ "demo_http": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "lht": {
+    "ms": 182,
+    "so_anh": 11,
+    "mb_anh": 23.45,
+    "o": 50
+   }
+  }
+ },
+ "file_build": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "lht": {
+    "ms": 171,
+    "so_anh": 11,
+    "mb_anh": 23.45,
+    "o": 50
+   }
+  },
+  "vao_game": true,
+  "nut_anh_gen": true
+ },
+ "iphone_844x390": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "lht": {
+    "ms": 179,
+    "so_anh": 11,
+    "mb_anh": 23.45,
+    "o": 50
+   }
+  },
+  "nut_trong_man": true,
+  "nut_bat_dau": {
+   "x": 362.421875,
+   "y": 121.546875,
+   "width": 119.15625,
+   "height": 46
+  },
+  "bam_duoc": true,
+  "nut_cam_ung_anh_gen": true
+ },
+ "iphone_844x390_file_build": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "lht": {
+    "ms": 184,
+    "so_anh": 11,
+    "mb_anh": 23.45,
+    "o": 50
+   }
+  },
+  "nut_trong_man": true,
+  "nut_bat_dau": {
+   "x": 362.421875,
+   "y": 121.546875,
+   "width": 119.15625,
+   "height": 46
+  },
+  "bam_duoc": true,
+  "nut_cam_ung_anh_gen": true
+ }
+}

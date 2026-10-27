@@ -19,6 +19,10 @@
              TT.nap(…, TV.NHUNG.tt) đọc thẳng data URI. runtime/trang-tri-dia-hinh.js + runtime/trang-tri/{cong-lang,san-chuong,phong-boss}.js
              chèn INLINE thay <script src>. Ô cần = o:'…' / 'họ*' + mép (giai 'mep', kieu 'da' → mép đá) + ván treo & dây + xà (xa:'…')
              + 5 ô cổng rễ (cong: true) + tiền cảnh. Atlas nhúng WebP KHÔNG MẤT DỮ LIỆU (lossless, ≈ 65 % cỡ PNG; giữ bản build < 15 MB).
+  - lht    : LÀNG HOÀN THIỆN (art/lang-hoan-thien/): lang-hoan-thien.json + mọi atlas KHÔNG thuộc họ "-kho" (điểm lưu, đèn lồng, rễ trần,
+             chuông lớn, đồ làng, HUD, nút cảm ứng, NPC, chân dung; kiểm cỡ = co_anh trong JSON) nhúng WebP q90 (alpha giữ nguyên) + 2 tranh
+             màn bắt đầu / kết (WebP q84) – lossless thì bản build 17,4 MB. runtime/lang-hoan-thien.js chèn INLINE thay <script src>. Họ "-kho" (thang, vật phẩm
+             chưa có cơ chế) KHÔNG nhúng.
 Nếu file build > 15 MB thì báo (không còn ảnh nào nén WebP).
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
 import base64, io, json, os
@@ -40,6 +44,8 @@ HD_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 
 HU_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'hieu-ung', 'sprite'))
 HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh', 'vong', 'cong-huong', 'keng']
 TT_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4'))
+LHT_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'lang-hoan-thien'))
+LHT_JS = 'runtime/lang-hoan-thien.js'
 TT_JS = ['runtime/trang-tri-dia-hinh.js', 'runtime/trang-tri/cong-lang.js', 'runtime/trang-tri/san-chuong.js', 'runtime/trang-tri/phong-boss.js']
 
 
@@ -75,6 +81,29 @@ def trang_tri():
         co = next(a for a in meta['anh'].values() if a['tep'] == t)
         p = os.path.join(TT_DIR, t); kiem_co(p, co['co_anh']); anh[t] = webp_lossless(p)
     return {'json': meta, 'anh': anh}
+
+
+def lang_hoan_thien():
+    meta = json.load(open(os.path.join(LHT_DIR, 'lang-hoan-thien.json'), encoding='utf-8'))
+    anh = {}
+    for a in meta['anh'].values():
+        if a.get('kho'):
+            continue
+        p = os.path.join(LHT_DIR, a['tep']); kiem_co(p, a['co_anh']); anh[a['tep']] = webp(p, 90)   # WebP q90, alpha giữ nguyên (đỡ ≈ 1,9 MB so với lossless)
+    tranh = {}
+    for t in meta['tranh'].values():
+        p = os.path.join(LHT_DIR, t['tep']); kiem_co(p, t['co_anh'])
+        bb = io.BytesIO(); Image.open(p).convert('RGB').save(bb, 'WEBP', quality=84, method=6)   # tranh: WebP q84
+        tranh[t['tep']] = 'data:image/webp;base64,' + base64.b64encode(bb.getvalue()).decode()
+    return {'json': meta, 'anh': anh, 'tranh': tranh}
+
+
+def nhung_lht(src):
+    tag = '<script src="%s"></script>' % LHT_JS
+    assert src.count(tag) == 1, 'demo.html phải nạp %s đúng 1 lần' % LHT_JS
+    js = open(os.path.join(HERE, LHT_JS), encoding='utf-8').read()
+    assert '</script' not in js
+    return src.replace(tag, '<script>/* %s (nhúng) */\n%s\n</script>' % (LHT_JS, js))
 
 
 def nhung_tt(src):
@@ -180,6 +209,7 @@ def khoi(q_sheet, L):
     nh = {'lam': L['v4'], 'lam_v3': L['v3'], 'lam_hd': hanh_dong(), 'hu': hieu_ung(), 'qbr': quai_boss()}
     nh['lc'] = lang_chuong(q_sheet)
     nh['tt'] = trang_tri(); TT_SO.extend(nh['tt']['anh'])
+    nh['lht'] = lang_hoan_thien(); LHT_SO.extend(nh['lht']['anh'])
     gj = json.load(open(os.path.join(ANIM, 'lang-chuong-giu.json'), encoding='utf-8'))
     nh['giu'] = {'json': gj, 'anh': png_uri(os.path.join(ANIM, gj['image']))}
     js = json.dumps(nh, ensure_ascii=False, separators=(',', ':'))
@@ -193,13 +223,15 @@ rt = open(QBR_JS, encoding='utf-8').read()
 assert '</script' not in rt
 src = src.replace(QBR_TAG, '<script>/* runtime/quai-boss-runtime.js (nhúng) */\n' + rt + '\n</script>')
 src = nhung_tt(src)
+src = nhung_lht(src)
 assert '<script src=' not in src, 'demo.html chỉ được nạp runtime quái+boss và trang trí bằng <script src> (đã nhúng ở trên)'
 L = {c: lam(c) for c in ('v4', 'v3')}
 TT_SO = []
+LHT_SO = []
 out = src.replace(tag, khoi(None, L) + tag)
 mb = len(out.encode('utf-8')) / 1024 / 1024
 if mb > 15:
     print('CẢNH BÁO: bản build %.1f MB > 15 MB' % mb)
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · Làng Chuông nền WebP q92 + gạch/đồ vật PNG · trang trí địa hình %d atlas WebP lossless (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (len(TT_SO),)))
+print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · Làng Chuông nền WebP q92 + gạch/đồ vật PNG · trang trí địa hình %d atlas WebP lossless · làng hoàn thiện %d atlas WebP q90 + 2 tranh WebP q84 (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (len(TT_SO), len(LHT_SO))))

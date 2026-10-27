@@ -1,0 +1,1003 @@
+{
+ "phien_ban": 1,
+ "boi": 2,
+ "ghi_chu": "Atlas 2x (px ảnh = logic × 2). o[tên] = {anh, khung [x,y,w,h] px atlas, neo [x,y] px trong mảnh}. Họ \"-kho\" là mảnh để dành (demo chưa có cơ chế) – game không nạp. Sinh bởi code/tach.py",
+ "anh": {
+  "diem-luu": {
+   "tep": "diem-luu.png",
+   "co_anh": [
+    1024,
+    288
+   ],
+   "kho": false
+  },
+  "den-long": {
+   "tep": "den-long.png",
+   "co_anh": [
+    1024,
+    92
+   ],
+   "kho": false
+  },
+  "re-tran": {
+   "tep": "re-tran.png",
+   "co_anh": [
+    1895,
+    208
+   ],
+   "kho": false
+  },
+  "chuong-lon": {
+   "tep": "chuong-lon.png",
+   "co_anh": [
+    1128,
+    568
+   ],
+   "kho": false
+  },
+  "do-lang": {
+   "tep": "do-lang.png",
+   "co_anh": [
+    1024,
+    256
+   ],
+   "kho": false
+  },
+  "thang-kho": {
+   "tep": "thang-kho.png",
+   "co_anh": [
+    1024,
+    172
+   ],
+   "kho": true
+  },
+  "hud": {
+   "tep": "hud.png",
+   "co_anh": [
+    1024,
+    48
+   ],
+   "kho": false
+  },
+  "nut": {
+   "tep": "nut.png",
+   "co_anh": [
+    1024,
+    860
+   ],
+   "kho": false
+  },
+  "vat-pham-kho": {
+   "tep": "vat-pham-kho.png",
+   "co_anh": [
+    1024,
+    108
+   ],
+   "kho": true
+  },
+  "npc": {
+   "tep": "npc.png",
+   "co_anh": [
+    1024,
+    156
+   ],
+   "kho": false
+  },
+  "chan-dung": {
+   "tep": "chan-dung.png",
+   "co_anh": [
+    1024,
+    220
+   ],
+   "kho": false
+  }
+ },
+ "o": {
+  "diem-luu-khung": {
+   "anh": "diem-luu.png",
+   "khung": [
+    0,
+    0,
+    406,
+    286
+   ],
+   "neo": [
+    203,
+    286
+   ]
+  },
+  "diem-luu-chuong-tat": {
+   "anh": "diem-luu.png",
+   "khung": [
+    408,
+    0,
+    63,
+    100
+   ],
+   "neo": [
+    31,
+    0
+   ],
+   "treo": [
+    1.91,
+    -101.24
+   ]
+  },
+  "diem-luu-chuong-sang": {
+   "anh": "diem-luu.png",
+   "khung": [
+    473,
+    0,
+    63,
+    100
+   ],
+   "neo": [
+    31,
+    0
+   ],
+   "treo": [
+    1.91,
+    -101.24
+   ],
+   "lech_nguon": [
+    886,
+    0
+   ]
+  },
+  "den-tron-sang": {
+   "anh": "den-long.png",
+   "khung": [
+    0,
+    0,
+    65,
+    90
+   ],
+   "neo": [
+    34,
+    0
+   ]
+  },
+  "den-vuong-sang": {
+   "anh": "den-long.png",
+   "khung": [
+    281,
+    0,
+    60,
+    85
+   ],
+   "neo": [
+    31,
+    0
+   ]
+  },
+  "den-chuong-sang": {
+   "anh": "den-long.png",
+   "khung": [
+    67,
+    0,
+    71,
+    90
+   ],
+   "neo": [
+    35,
+    0
+   ]
+  },
+  "den-tron-tat": {
+   "anh": "den-long.png",
+   "khung": [
+    140,
+    0,
+    65,
+    90
+   ],
+   "neo": [
+    29,
+    0
+   ]
+  },
+  "den-vuong-tat": {
+   "anh": "den-long.png",
+   "khung": [
+    343,
+    0,
+    61,
+    84
+   ],
+   "neo": [
+    28,
+    0
+   ]
+  },
+  "den-chuong-tat": {
+   "anh": "den-long.png",
+   "khung": [
+    207,
+    0,
+    72,
+    90
+   ],
+   "neo": [
+    32,
+    0
+   ]
+  },
+  "re-tran-trai": {
+   "anh": "re-tran.png",
+   "khung": [
+    451,
+    0,
+    444,
+    199
+   ],
+   "neo": [
+    107,
+    28
+   ]
+  },
+  "re-tran-giua": {
+   "anh": "re-tran.png",
+   "khung": [
+    897,
+    0,
+    497,
+    162
+   ],
+   "neo": [
+    0,
+    6
+   ],
+   "rong": 248.5
+  },
+  "re-tran-giua-tron": {
+   "anh": "re-tran.png",
+   "khung": [
+    1396,
+    0,
+    497,
+    162
+   ],
+   "neo": [
+    0,
+    6
+   ],
+   "rong": 248.5
+  },
+  "re-tran-phai": {
+   "anh": "re-tran.png",
+   "khung": [
+    0,
+    0,
+    449,
+    208
+   ],
+   "neo": [
+    364,
+    36
+   ]
+  },
+  "chuong-lon-im": {
+   "anh": "chuong-lon.png",
+   "khung": [
+    0,
+    0,
+    562,
+    565
+   ],
+   "neo": [
+    282,
+    565
+   ]
+  },
+  "chuong-lon-rung": {
+   "anh": "chuong-lon.png",
+   "khung": [
+    564,
+    0,
+    562,
+    565
+   ],
+   "neo": [
+    282,
+    565
+   ]
+  },
+  "quay-hang": {
+   "anh": "do-lang.png",
+   "khung": [
+    181,
+    0,
+    310,
+    252
+   ],
+   "neo": [
+    155,
+    252
+   ]
+  },
+  "bang-nhiem-vu": {
+   "anh": "do-lang.png",
+   "khung": [
+    493,
+    0,
+    257,
+    231
+   ],
+   "neo": [
+    129,
+    231
+   ]
+  },
+  "bien-chi-duong": {
+   "anh": "do-lang.png",
+   "khung": [
+    0,
+    0,
+    179,
+    255
+   ],
+   "neo": [
+    89,
+    255
+   ]
+  },
+  "thang-dau": {
+   "anh": "thang-kho.png",
+   "khung": [
+    199,
+    0,
+    100,
+    136
+   ],
+   "neo": [
+    50,
+    136
+   ]
+  },
+  "thang-giua": {
+   "anh": "thang-kho.png",
+   "khung": [
+    112,
+    0,
+    85,
+    168
+   ],
+   "neo": [
+    43,
+    168
+   ]
+  },
+  "thang-chan": {
+   "anh": "thang-kho.png",
+   "khung": [
+    0,
+    0,
+    110,
+    169
+   ],
+   "neo": [
+    55,
+    169
+   ]
+  },
+  "hud-chuong-day": {
+   "anh": "hud.png",
+   "khung": [
+    0,
+    0,
+    43,
+    47
+   ],
+   "neo": [
+    22,
+    24
+   ]
+  },
+  "hud-chuong-rong": {
+   "anh": "hud.png",
+   "khung": [
+    45,
+    0,
+    43,
+    47
+   ],
+   "neo": [
+    22,
+    24
+   ]
+  },
+  "hud-vong-san": {
+   "anh": "hud.png",
+   "khung": [
+    180,
+    0,
+    52,
+    39
+   ],
+   "neo": [
+    26,
+    20
+   ]
+  },
+  "hud-vong-hoi": {
+   "anh": "hud.png",
+   "khung": [
+    234,
+    0,
+    52,
+    39
+   ],
+   "neo": [
+    26,
+    20
+   ]
+  },
+  "hud-cong-huong": {
+   "anh": "hud.png",
+   "khung": [
+    90,
+    0,
+    48,
+    43
+   ],
+   "neo": [
+    24,
+    22
+   ]
+  },
+  "hud-manh-chuong": {
+   "anh": "hud.png",
+   "khung": [
+    140,
+    0,
+    38,
+    40
+   ],
+   "neo": [
+    19,
+    20
+   ]
+  },
+  "nut-nhay": {
+   "anh": "nut.png",
+   "khung": [
+    452,
+    412,
+    224,
+    222
+   ],
+   "neo": [
+    112,
+    111
+   ]
+  },
+  "nut-chem": {
+   "anh": "nut.png",
+   "khung": [
+    678,
+    412,
+    224,
+    222
+   ],
+   "neo": [
+    112,
+    111
+   ]
+  },
+  "nut-luot": {
+   "anh": "nut.png",
+   "khung": [
+    0,
+    637,
+    224,
+    222
+   ],
+   "neo": [
+    112,
+    111
+   ]
+  },
+  "nut-vong": {
+   "anh": "nut.png",
+   "khung": [
+    226,
+    637,
+    224,
+    222
+   ],
+   "neo": [
+    112,
+    111
+   ]
+  },
+  "nut-nhay-nhan": {
+   "anh": "nut.png",
+   "khung": [
+    638,
+    0,
+    224,
+    223
+   ],
+   "neo": [
+    112,
+    112
+   ]
+  },
+  "nut-chem-nhan": {
+   "anh": "nut.png",
+   "khung": [
+    412,
+    0,
+    224,
+    224
+   ],
+   "neo": [
+    112,
+    112
+   ]
+  },
+  "nut-luot-nhan": {
+   "anh": "nut.png",
+   "khung": [
+    0,
+    412,
+    224,
+    223
+   ],
+   "neo": [
+    112,
+    112
+   ]
+  },
+  "nut-vong-nhan": {
+   "anh": "nut.png",
+   "khung": [
+    226,
+    412,
+    224,
+    223
+   ],
+   "neo": [
+    112,
+    112
+   ]
+  },
+  "can-de": {
+   "anh": "nut.png",
+   "khung": [
+    0,
+    0,
+    410,
+    410
+   ],
+   "neo": [
+    205,
+    205
+   ]
+  },
+  "can-num": {
+   "anh": "nut.png",
+   "khung": [
+    452,
+    637,
+    128,
+    127
+   ],
+   "neo": [
+    64,
+    64
+   ]
+  },
+  "manh-ky-uc-mo": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    485,
+    0,
+    50,
+    62
+   ],
+   "neo": [
+    25,
+    62
+   ]
+  },
+  "manh-ky-uc-sang": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    424,
+    0,
+    59,
+    63
+   ],
+   "neo": [
+    30,
+    63
+   ]
+  },
+  "am-phu-ngoc": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    253,
+    0,
+    55,
+    65
+   ],
+   "neo": [
+    28,
+    65
+   ]
+  },
+  "am-phu-vang": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    310,
+    0,
+    55,
+    65
+   ],
+   "neo": [
+    28,
+    65
+   ]
+  },
+  "am-phu-do": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    367,
+    0,
+    55,
+    65
+   ],
+   "neo": [
+    28,
+    65
+   ]
+  },
+  "ruong-dong": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    127,
+    0,
+    124,
+    92
+   ],
+   "neo": [
+    62,
+    92
+   ]
+  },
+  "ruong-mo": {
+   "anh": "vat-pham-kho.png",
+   "khung": [
+    0,
+    0,
+    125,
+    107
+   ],
+   "neo": [
+    62,
+    107
+   ]
+  },
+  "npc-ren-ung-sau": {
+   "anh": "npc.png",
+   "khung": [
+    875,
+    0,
+    49,
+    35
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-ren-ung-truoc": {
+   "anh": "npc.png",
+   "khung": [
+    821,
+    0,
+    52,
+    36
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-ren-than": {
+   "anh": "npc.png",
+   "khung": [
+    513,
+    0,
+    128,
+    114
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-ren-dau": {
+   "anh": "npc.png",
+   "khung": [
+    229,
+    0,
+    139,
+    138
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-ren-gang-sau": {
+   "anh": "npc.png",
+   "khung": [
+    732,
+    0,
+    43,
+    45
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-ren-gang-truoc": {
+   "anh": "npc.png",
+   "khung": [
+    643,
+    0,
+    87,
+    92
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-ung-sau": {
+   "anh": "npc.png",
+   "khung": [
+    978,
+    0,
+    46,
+    32
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-ung-truoc": {
+   "anh": "npc.png",
+   "khung": [
+    926,
+    0,
+    50,
+    35
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-than": {
+   "anh": "npc.png",
+   "khung": [
+    370,
+    0,
+    141,
+    124
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-dau": {
+   "anh": "npc.png",
+   "khung": [
+    0,
+    0,
+    150,
+    156
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-gang-sau": {
+   "anh": "npc.png",
+   "khung": [
+    777,
+    0,
+    42,
+    43
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "npc-truong-gang-truoc": {
+   "anh": "npc.png",
+   "khung": [
+    152,
+    0,
+    75,
+    154
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "cd-lam": {
+   "anh": "chan-dung.png",
+   "khung": [
+    381,
+    0,
+    180,
+    214
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "cd-lam-ngac-nhien": {
+   "anh": "chan-dung.png",
+   "khung": [
+    199,
+    0,
+    180,
+    216
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "cd-tho-ren": {
+   "anh": "chan-dung.png",
+   "khung": [
+    563,
+    0,
+    190,
+    214
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  },
+  "cd-truong-lang": {
+   "anh": "chan-dung.png",
+   "khung": [
+    0,
+    0,
+    197,
+    217
+   ],
+   "neo": [
+    0,
+    0
+   ]
+  }
+ },
+ "npc_rig": {
+  "ren": {
+   "manh": [
+    {
+     "o": "npc-ren-ung-sau",
+     "x": -27.54,
+     "y": -18.53,
+     "w": 24.65,
+     "h": 17.51
+    },
+    {
+     "o": "npc-ren-ung-truoc",
+     "x": 1.53,
+     "y": -17.85,
+     "w": 26.18,
+     "h": 17.77
+    },
+    {
+     "o": "npc-ren-than",
+     "x": -19.89,
+     "y": -68.17,
+     "w": 63.75,
+     "h": 56.77
+    },
+    {
+     "o": "npc-ren-dau",
+     "x": -19.89,
+     "y": -108.8,
+     "w": 69.7,
+     "h": 68.78
+    },
+    {
+     "o": "npc-ren-gang-sau",
+     "x": -23.63,
+     "y": -46.41,
+     "w": 21.42,
+     "h": 22.43
+    },
+    {
+     "o": "npc-ren-gang-truoc",
+     "x": 29.41,
+     "y": -74.8,
+     "w": 43.69,
+     "h": 46.19
+    }
+   ],
+   "cao": 108.8
+  },
+  "truong": {
+   "manh": [
+    {
+     "o": "npc-truong-ung-sau",
+     "x": -26.01,
+     "y": -16.32,
+     "w": 23.12,
+     "h": 16.21
+    },
+    {
+     "o": "npc-truong-ung-truoc",
+     "x": 1.19,
+     "y": -15.98,
+     "w": 24.82,
+     "h": 17.25
+    },
+    {
+     "o": "npc-truong-than",
+     "x": -40.63,
+     "y": -76.5,
+     "w": 70.38,
+     "h": 61.89
+    },
+    {
+     "o": "npc-truong-dau",
+     "x": -43.01,
+     "y": -109.14,
+     "w": 75.14,
+     "h": 77.9
+    },
+    {
+     "o": "npc-truong-gang-sau",
+     "x": -25.33,
+     "y": -44.2,
+     "w": 21.08,
+     "h": 21.37
+    },
+    {
+     "o": "npc-truong-gang-truoc",
+     "x": 28.05,
+     "y": -74.46,
+     "w": 37.4,
+     "h": 76.88
+    }
+   ],
+   "cao": 109.1
+  }
+ },
+ "tranh": {
+  "man-bat-dau": {
+   "tep": "man-bat-dau.jpg",
+   "co_anh": [
+    1672,
+    941
+   ]
+  },
+  "man-ket": {
+   "tep": "man-ket.jpg",
+   "co_anh": [
+    1672,
+    941
+   ]
+  }
+ }
+}
