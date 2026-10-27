@@ -9,7 +9,9 @@ Chạy: python3 -B dung_hd.py   (rồi gif_hd.py để xuất GIF kiểm)"""
 import os, re, json
 import numpy as np
 from PIL import Image
-from chung_hd import RIG, GX, GY, S, SPRITE, render, thu_nho, dao, LAM_TOI, HD
+from chung_hd import RIG, GX, GY, S, SPRITE, render, thu_nho, dao, LAM_TOI, HD, MANH_THEM, DAO_TAM, world_mats
+from rig import piece_matrix
+import math
 import tu_the_hd as T
 import anim_hd as A
 
@@ -62,6 +64,26 @@ def ve_khung(pose):
     return a, A_ - xs.min(), C - ys.min()
 
 
+def khung_dao():
+    """dao rời (chắn + lưỡi, lưỡi chĩa PHẢI) ở đúng tỉ lệ sheet 2x; neo = tâm dao (DAO_TAM) → game xoay quanh neo"""
+    im = Image.open(os.path.join(MANH_THEM, 'dao.png')).convert('RGBA')
+    bx = im.getbbox()
+    c = im.crop(bx)
+    w, h = max(1, round(c.width * S)), max(1, round(c.height * S))
+    t = c.convert('RGBa').resize((w, h), Image.LANCZOS).convert('RGBA')
+    a = np.array(t); a[a[..., 3] == 0] = 0
+    return a, int(round((DAO_TAM[0] - bx[0]) * S)), int(round((DAO_TAM[1] - bx[1]) * S))
+
+
+def dao_chet(ten):
+    """tâm dao (px logic so với chân) + góc lưỡi (độ) trong tư thế trúng đòn của clip chết → chỗ dao bắt đầu văng"""
+    from chung_hd import diem_the_gioi, logic
+    pose = tu_the(ten)
+    x, y = logic(diem_the_gioi(RIG, pose, 'tay-truoc-dao', DAO_TAM))
+    m = piece_matrix(RIG['nut']['tay-truoc-dao'], world_mats(RIG, pose)['tay-truoc-dao'])
+    return [round(x, 1), round(y, 1)], round(math.degrees(math.atan2(m[1, 0], m[0, 0])), 1)
+
+
 def main():
     kiem_game()
     os.makedirs(SPRITE, exist_ok=True)
@@ -82,6 +104,8 @@ def main():
     tiles = {}
     for i, p in enumerate(can):
         tiles[p] = ve_khung(tu_the(p))
+    tiles['dao-roi'] = khung_dao()
+    can.append('dao-roi')
     # xếp kệ (shelf) theo chiều cao giảm dần
     order = sorted(can, key=lambda p: -tiles[p][0].shape[0])
     x, y, hang_h, W = KHE, KHE, 0, 0
@@ -141,6 +165,13 @@ def main():
         'khop_hop_don': khop, 'hieu_ung': A.HIEU_UNG,
         'tho': {'buoc_moi_khung': A.THO_BUOC, 'so_khung': len(A.KHAC['tho']),
                 'cach': 'khung = khac.tho[floor(số bước đang đứng yên / buoc_moi_khung) mod so_khung]; khung 0 = dáng nghỉ'},
+        'chet': dict(A.CHET, khung_dao=idx['dao-roi'],
+                     dao_bat_dau={k: dict(zip(('tam', 'goc'), dao_chet(k + '-trung'))) for k in ('chet', 'chett')},
+                     cach='pl.dead: danh sách khac.chet (ngã ngửa, pl.hurtK < 0) hoặc khac.chett (chúi tới). Chưa chạm đất: '
+                          'deadT 0 → [0]; vy < vy_bay_len → [1]; còn lại [2]. Đã chạm đất (t = deadT − bước chạm): t < cham → [3]; '
+                          '< nay → [4]; < lang → [5]; còn lại [6]. Dao: khung khung_dao, bắt đầu ở dao_bat_dau[..].tam/goc '
+                          '(px logic so với chân, nhìn phải) khi deadT = 1, vận tốc dao.vx (theo hướng ngã) / dao.vy, quay dao.xoay °/bước; '
+                          'Lam + dao mờ dần từ deadT mo_tu → mo_het.'),
         'rut_dao': {'so_buoc': A.RUT_T, 'cach': 'khung = khac.rutdao[RUT_T − drawT] (0 … 51); mục cuối = dáng nghỉ'},
         'chop_mu': 'ĐÃ BỎ (27/10/2026) – rig-v4 chop-mu hien = False',
         'gameplay_doc_tu_demo_html': {'ATK': A.ATK, 'P': A.P_GAME, 'tuong_x_px_logic': T.TUONG_X},

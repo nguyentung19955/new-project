@@ -4,7 +4,7 @@ Viết cho người không rành kỹ thuật. Mở trước 3 ảnh duyệt tro
 `canh-ghep-960.png` (đúng cỡ màn 960×540), `canh-ghep-2x.png` (ảnh lớn 1920×1080), `canh-ghep-xam.png` (bản xám để kiểm
 tương phản). Bảng tất cả ô gạch có tên: `xem-thu/bang-o-gach.png`.
 Mọi số "logic" theo khung 960×540, ô 32, Lam cao 112; mọi ảnh xuất ở **2x** (vẽ trong game ở ½ cỡ ảnh).
-**Chưa ghép vào game, chưa chạy trên máy thật** – `game/demo.html` không bị sửa.
+**27/10: đã ghép vào `game/demo.html`** (xem `game/kiem-thu-lang-chuong/GHI-CHU.md`); chưa chạy trên máy thật.
 
 Chạy lại tất cả: `python3 code/chay_het.py` (cần Pillow, numpy, scipy; ~45 giây). Ảnh nguồn đọc thẳng từ `../nguon-v2/`.
 

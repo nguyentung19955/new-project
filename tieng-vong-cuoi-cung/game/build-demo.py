@@ -7,11 +7,14 @@
   - qbr    : QUÁI + BOSS vẽ từ mảnh = runtime/quai-boss/quai-boss-rig.json + 14 PNG mảnh (PNG nguyên bản, data URI; kiểm cỡ = co_anh
              trong JSON). QBR.nap(…, TV.NHUNG.qbr) đọc thẳng data URI. KHÔNG nhúng sheet boss 2x (không dùng).
            runtime/quai-boss-runtime.js được chèn INLINE thay cho thẻ <script src="runtime/quai-boss-runtime.js">.
-  - tg     : sheet thế giới (anim/the-gioi.*) dạng data URI WebP (Safari iOS 14+ đọc được).
+  - lc     : LÀNG CHUÔNG (art/the-gioi-moi/lang-chuong/): nen/nen.json + lang-xa/giua/gan/tien-canh.png, gach/gach-atlas.*,
+             do-vat/do-vat.json + 7 PNG (cổng 3 trạng thái, công tắc lên/ấn, bình máu, mảnh chuông). Kiểm cỡ ảnh = cỡ trong JSON.
+             4 ảnh nền nhúng WebP q92 (giữ bản build < 15 MB); atlas gạch + đồ vật PNG nguyên bản.
+  - giu    : điểm lưu + đèn lồng (anim/lang-chuong-giu.*, tách từ the-gioi.png) – PNG nguyên bản.
+  (anim/the-gioi.* KHÔNG còn nhúng: demo.html không dùng nữa.)
   - lam_hd : hoạt ảnh HÀNH ĐỘNG Lam (art/modular/lam-moi/hanh-dong/sprite/lam-hanh-dong-2x.*) – PNG nguyên bản, kiểm co_sheet
   - hu     : hiệu ứng ảnh gen (art/hieu-ung/sprite/<ten>-2x.*) – PNG nguyên bản; thiếu ảnh nào thì bỏ qua (game vẽ khung TẠM)
-Nền parallax cũ (art/chibi/…) đã bị xoá: demo.html vẽ nền gradient TẠM, không cần nhúng ảnh nền.
-Nếu file build > 15 MB thì tự giảm chất lượng WebP của tg.
+Nếu file build > 15 MB thì báo (không còn ảnh nào nén WebP).
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
 import base64, io, json, os
 from PIL import Image
@@ -22,7 +25,9 @@ ANIM = os.path.join(HERE, 'anim')
 LAM_DIRS = {'v4': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v4', 'sprite')),
             'v3': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v3', 'sprite'))}
 LAM_CO = (2142, 970)
-SHEETS = {'tg': 'the-gioi.json'}
+LC = os.path.normpath(os.path.join(HERE, '..', 'art', 'the-gioi-moi', 'lang-chuong'))
+LC_NEN = ['lang-xa.png', 'lang-giua.png', 'lang-gan.png', 'lang-tien-canh.png']
+LC_DV = ['cong-dong', 'cong-mo', 'cong-chi-tru', 'cong-tac-len', 'cong-tac-an', 'binh-mau', 'manh-chuong']
 QBR_DIR = os.path.join(HERE, 'runtime', 'quai-boss')
 QBR_JS = os.path.join(HERE, 'runtime', 'quai-boss-runtime.js')
 QBR_TAG = '<script src="runtime/quai-boss-runtime.js"></script>'
@@ -76,6 +81,25 @@ def png_uri(path):
     return 'data:image/png;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
 
 
+def kiem_co(p, co):
+    if co and list(Image.open(p).size) != list(co):
+        raise SystemExit('LỖI: %s cỡ %s ≠ %s trong JSON' % (p, Image.open(p).size, co))
+
+
+def lang_chuong(_q=None):
+    nen = json.load(open(os.path.join(LC, 'nen', 'nen.json'), encoding='utf-8'))
+    gm = json.load(open(os.path.join(LC, 'gach', 'gach-atlas.json'), encoding='utf-8'))
+    dv = json.load(open(os.path.join(LC, 'do-vat', 'do-vat.json'), encoding='utf-8'))
+    an = {}
+    for t in LC_NEN:
+        p = os.path.join(LC, 'nen', t); kiem_co(p, nen['lop'][t]['co_anh']); an[t] = webp(p, 92)   # nền: WebP q92 (lớp đã làm tối + giảm chi tiết), giữ file build < 15 MB
+    da = {}
+    for t in LC_DV:
+        p = os.path.join(LC, 'do-vat', t + '.png'); kiem_co(p, (dv['do_nho'].get(t) or dv['cong'])['co_anh']); da[t] = png_uri(p)
+    return {'nen': {'json': nen, 'anh': an}, 'gach': {'json': gm, 'anh': png_uri(os.path.join(LC, 'gach', gm['anh']))},
+            'dv': {'json': dv, 'anh': da}}
+
+
 def lam(clip):
     LAM_DIR = LAM_DIRS[clip]
     meta = json.load(open(os.path.join(LAM_DIR, 'lam-chay-2x.json'), encoding='utf-8'))
@@ -94,9 +118,9 @@ def lam(clip):
 
 def khoi(q_sheet, L):
     nh = {'lam': L['v4'], 'lam_v3': L['v3'], 'lam_hd': hanh_dong(), 'hu': hieu_ung(), 'qbr': quai_boss()}
-    for k, jf in SHEETS.items():
-        meta = json.load(open(os.path.join(ANIM, jf), encoding='utf-8'))
-        nh[k] = {'json': meta, 'anh': webp(os.path.join(ANIM, meta['image']), q_sheet)}
+    nh['lc'] = lang_chuong(q_sheet)
+    gj = json.load(open(os.path.join(ANIM, 'lang-chuong-giu.json'), encoding='utf-8'))
+    nh['giu'] = {'json': gj, 'anh': png_uri(os.path.join(ANIM, gj['image']))}
     js = json.dumps(nh, ensure_ascii=False, separators=(',', ':'))
     return '<script>/* tài nguyên nhúng sẵn */\nwindow.TV=window.TV||{};TV.NHUNG=' + js.replace('</', '<\\/') + ';\n</script>\n'
 
@@ -109,12 +133,10 @@ assert '</script' not in rt
 src = src.replace(QBR_TAG, '<script>/* runtime/quai-boss-runtime.js (nhúng) */\n' + rt + '\n</script>')
 assert '<script src=' not in src, 'demo.html chỉ được nạp runtime quái+boss bằng <script src> (đã nhúng ở trên)'
 L = {c: lam(c) for c in ('v4', 'v3')}
-for qs in (92, 85, 75, 60):
-    out = src.replace(tag, khoi(qs, L) + tag)
-    mb = len(out.encode('utf-8')) / 1024 / 1024
-    if mb <= 15:
-        break
-    print('Bản build %.1f MB > 15 MB → giảm chất lượng WebP' % mb)
+out = src.replace(tag, khoi(None, L) + tag)
+mb = len(out.encode('utf-8')) / 1024 / 1024
+if mb > 15:
+    print('CẢNH BÁO: bản build %.1f MB > 15 MB' % mb)
 dst = os.path.join(HERE, 'demo.build.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · WebP thế giới q%d (mở ?clip=v3 để xem clip cũ)' % (LAM_CO + (qs,)))
+print('Đã ghi', dst, '%.2f MB' % mb, '· Lam v4 + v3 PNG nguyên bản %dx%d · 14 mảnh quái+boss PNG · Làng Chuông nền WebP q92 + gạch/đồ vật PNG (mở ?clip=v3 để xem clip cũ)' % LAM_CO)

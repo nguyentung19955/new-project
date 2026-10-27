@@ -1,0 +1,32 @@
+{
+ "version": 1,
+ "image": "lang-chuong-giu.png",
+ "donVi": "px game",
+ "ghiChu": "tách từ the-gioi.png (tools/tach-do-vat-giu.py): điểm lưu + đèn lồng giữ lại khi ghép Làng Chuông; pivot đáy giữa",
+ "frames": {
+  "diem-luu-tat": [
+   2,
+   2,
+   148,
+   161,
+   -74,
+   -161
+  ],
+  "diem-luu-sang": [
+   152,
+   2,
+   148,
+   161,
+   -74,
+   -161
+  ],
+  "den-long": [
+   302,
+   2,
+   25,
+   49,
+   -12,
+   -49
+  ]
+ }
+}

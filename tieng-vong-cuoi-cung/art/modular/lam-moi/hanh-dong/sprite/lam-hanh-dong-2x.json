@@ -4,9 +4,9 @@
  "anh": "lam-hanh-dong-2x.png",
  "co_sheet": [
   2037,
-  2048
+  2396
  ],
- "so_khung": 87,
+ "so_khung": 102,
  "nguon": "art/modular/lam-moi/hanh-dong/code/tu_the_hd.py (mốc tư thế) + anim_hd.py (bảng tick) trên rig-v4 (lam-moi-v4.json, manh/)",
  "ty_le": {
   "px_nguon_moi_px_logic": 2,
@@ -209,7 +209,7 @@
   },
   {
    "ten": "c3-trung",
-   "x": 1162,
+   "x": 1344,
    "y": 1837,
    "w": 269,
    "h": 203,
@@ -218,7 +218,7 @@
   },
   {
    "ten": "c3-trung2",
-   "x": 1433,
+   "x": 1615,
    "y": 1837,
    "w": 267,
    "h": 202,
@@ -658,6 +658,132 @@
    "ay": 225
   },
   {
+   "ten": "chet-trung",
+   "x": 1162,
+   "y": 1837,
+   "w": 180,
+   "h": 204,
+   "ax": 125,
+   "ay": 211
+  },
+  {
+   "ten": "chet-bay-1",
+   "x": 232,
+   "y": 2048,
+   "w": 203,
+   "h": 186,
+   "ax": 149,
+   "ay": 206
+  },
+  {
+   "ten": "chet-bay-2",
+   "x": 870,
+   "y": 2048,
+   "w": 233,
+   "h": 148,
+   "ax": 182,
+   "ay": 169
+  },
+  {
+   "ten": "chet-cham",
+   "x": 1105,
+   "y": 2048,
+   "w": 246,
+   "h": 147,
+   "ax": 207,
+   "ay": 145
+  },
+  {
+   "ten": "chet-nay",
+   "x": 751,
+   "y": 2250,
+   "w": 252,
+   "h": 141,
+   "ax": 209,
+   "ay": 149
+  },
+  {
+   "ten": "chet-nay~chet-nam",
+   "x": 2,
+   "y": 2250,
+   "w": 249,
+   "h": 144,
+   "ax": 210,
+   "ay": 146
+  },
+  {
+   "ten": "chet-nam",
+   "x": 1353,
+   "y": 2048,
+   "w": 246,
+   "h": 146,
+   "ax": 210,
+   "ay": 143
+  },
+  {
+   "ten": "chett-trung",
+   "x": 2,
+   "y": 2048,
+   "w": 228,
+   "h": 200,
+   "ax": 56,
+   "ay": 210
+  },
+  {
+   "ten": "chett-bay-1",
+   "x": 437,
+   "y": 2048,
+   "w": 211,
+   "h": 179,
+   "ax": 53,
+   "ay": 197
+  },
+  {
+   "ten": "chett-bay-2",
+   "x": 650,
+   "y": 2048,
+   "w": 218,
+   "h": 152,
+   "ax": 46,
+   "ay": 165
+  },
+  {
+   "ten": "chett-cham",
+   "x": 1005,
+   "y": 2250,
+   "w": 242,
+   "h": 141,
+   "ax": 39,
+   "ay": 138
+  },
+  {
+   "ten": "chett-nay",
+   "x": 253,
+   "y": 2250,
+   "w": 247,
+   "h": 143,
+   "ax": 43,
+   "ay": 150
+  },
+  {
+   "ten": "chett-nay~chett-nam",
+   "x": 502,
+   "y": 2250,
+   "w": 247,
+   "h": 142,
+   "ax": 42,
+   "ay": 144
+  },
+  {
+   "ten": "chett-nam",
+   "x": 1601,
+   "y": 2048,
+   "w": 246,
+   "h": 145,
+   "ax": 40,
+   "ay": 138
+  },
+  {
    "ten": "rd-giau",
    "x": 688,
    "y": 947,
@@ -800,6 +926,15 @@
    "h": 227,
    "ax": 79,
    "ay": 224
+  },
+  {
+   "ten": "dao-roi",
+   "x": 1249,
+   "y": 2250,
+   "w": 56,
+   "h": 33,
+   "ax": 31,
+   "ay": 16
   }
  ],
  "tu_the": {
@@ -874,22 +1009,37 @@
   "tho-5": 68,
   "tho-6": 69,
   "tho-7": 70,
-  "rd-giau": 71,
-  "rd-giau~rd-hit": 72,
-  "rd-hit": 73,
-  "rd-hit~rd-lay-da": 74,
-  "rd-lay-da": 75,
-  "rd-lay-da~rd-hat": 76,
-  "rd-hat": 77,
-  "rd-hat~rd-gio": 78,
-  "rd-gio": 79,
-  "rd-gio~rd-chao": 80,
-  "rd-chao": 81,
-  "rd-chao2": 82,
-  "rd-chao2~rd-ha": 83,
-  "rd-ha": 84,
-  "rd-ha~nghi": 85,
-  "nghi": 86
+  "chet-trung": 71,
+  "chet-bay-1": 72,
+  "chet-bay-2": 73,
+  "chet-cham": 74,
+  "chet-nay": 75,
+  "chet-nay~chet-nam": 76,
+  "chet-nam": 77,
+  "chett-trung": 78,
+  "chett-bay-1": 79,
+  "chett-bay-2": 80,
+  "chett-cham": 81,
+  "chett-nay": 82,
+  "chett-nay~chett-nam": 83,
+  "chett-nam": 84,
+  "rd-giau": 85,
+  "rd-giau~rd-hit": 86,
+  "rd-hit": 87,
+  "rd-hit~rd-lay-da": 88,
+  "rd-lay-da": 89,
+  "rd-lay-da~rd-hat": 90,
+  "rd-hat": 91,
+  "rd-hat~rd-gio": 92,
+  "rd-gio": 93,
+  "rd-gio~rd-chao": 94,
+  "rd-chao": 95,
+  "rd-chao2": 96,
+  "rd-chao2~rd-ha": 97,
+  "rd-ha": 98,
+  "rd-ha~nghi": 99,
+  "nghi": 100,
+  "dao-roi": 101
  },
  "don": {
   "atk1": {
@@ -1418,59 +1568,77 @@
    69,
    70
   ],
-  "rutdao": [
-   71,
-   71,
-   71,
-   71,
-   71,
-   71,
-   71,
+  "chet": [
    71,
    72,
-   72,
-   72,
-   73,
-   73,
-   73,
-   73,
    73,
    74,
-   74,
-   75,
-   75,
-   75,
-   75,
-   75,
    75,
    76,
-   76,
-   77,
-   77,
+   77
+  ],
+  "chett": [
    78,
    79,
-   79,
-   79,
-   79,
-   79,
-   80,
    80,
    81,
-   81,
-   81,
-   81,
-   82,
-   82,
-   82,
-   82,
    82,
    83,
-   83,
-   84,
-   84,
+   84
+  ],
+  "rutdao": [
    85,
    85,
-   86
+   85,
+   85,
+   85,
+   85,
+   85,
+   85,
+   86,
+   86,
+   86,
+   87,
+   87,
+   87,
+   87,
+   87,
+   88,
+   88,
+   89,
+   89,
+   89,
+   89,
+   89,
+   89,
+   90,
+   90,
+   91,
+   91,
+   92,
+   93,
+   93,
+   93,
+   93,
+   93,
+   94,
+   94,
+   95,
+   95,
+   95,
+   95,
+   96,
+   96,
+   96,
+   96,
+   96,
+   97,
+   97,
+   98,
+   98,
+   99,
+   99,
+   100
   ]
  },
  "khop_hop_don": {
@@ -2256,6 +2424,41 @@
   "buoc_moi_khung": 14,
   "so_khung": 8,
   "cach": "khung = khac.tho[floor(số bước đang đứng yên / buoc_moi_khung) mod so_khung]; khung 0 = dáng nghỉ"
+ },
+ "chet": {
+  "vy_bay_len": 1,
+  "cham": 3,
+  "nay": 7,
+  "lang": 10,
+  "mo_tu": 56,
+  "mo_het": 80,
+  "hoi_sinh": 104,
+  "dao": {
+   "vx": -2.4,
+   "vy": -4.0,
+   "xoay": -22,
+   "trong_luc": 0.7,
+   "nay": 0.3,
+   "ma_sat": 0.6
+  },
+  "khung_dao": 101,
+  "dao_bat_dau": {
+   "chet": {
+    "tam": [
+     -2.6,
+     -72.6
+    ],
+    "goc": 30.6
+   },
+   "chett": {
+    "tam": [
+     76.9,
+     -67.0
+    ],
+    "goc": -53.4
+   }
+  },
+  "cach": "pl.dead: danh sách khac.chet (ngã ngửa, pl.hurtK < 0) hoặc khac.chett (chúi tới). Chưa chạm đất: deadT 0 → [0]; vy < vy_bay_len → [1]; còn lại [2]. Đã chạm đất (t = deadT − bước chạm): t < cham → [3]; < nay → [4]; < lang → [5]; còn lại [6]. Dao: khung khung_dao, bắt đầu ở dao_bat_dau[..].tam/goc (px logic so với chân, nhìn phải) khi deadT = 1, vận tốc dao.vx (theo hướng ngã) / dao.vy, quay dao.xoay °/bước; Lam + dao mờ dần từ deadT mo_tu → mo_het."
  },
  "rut_dao": {
   "so_buoc": 52,

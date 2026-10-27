@@ -64,6 +64,14 @@ class Sim:
 
     def khung(s):
         """chọn khung – CÙNG luật với demo.html lamChon"""
+        if getattr(s, 'dead', False):                      # chết (27/10)
+            C = META['chet']; k = META['khac']['chet' if s.hk < 0 else 'chett']
+            if s.dD < 0:
+                i = 0 if s.deadT == 0 else 1 if s.vy < C['vy_bay_len'] else 2
+            else:
+                t = s.deadT - s.dD
+                i = 3 if t < C['cham'] else 4 if t < C['nay'] else 5 if t < C['lang'] else 6
+            return k[i], s.face < 0
         if getattr(s, 'rd', -1) >= 0:                      # rút dao: mục RUT_T − drawT
             return META['khac']['rutdao'][s.rd], s.face < 0
         if s.atkN:
@@ -117,9 +125,14 @@ def ve(sim, cv, sc, ox, oy, hop=True, quai=None, nhan=''):
         dan(cv, t, ax, ay, ox + x * sc, oy + y * sc, sc / 2, lat=lat, alpha=A.HIEU_UNG['bong_mo']['alpha'] * tr['t'] / A.HIEU_UNG['bong_mo']['song'])
     k, lat = sim.khung()
     nhay = sim.iframes > 0 and sim.dash <= 0 and (sim.frame >> 2) % 2 == 0
-    if not nhay:
+    if getattr(sim, 'dead', False):
+        nhay = False
+    al = getattr(sim, 'al', 1.0)
+    if not nhay and al > 0:
         t, ax, ay = tile_lam(k) if k is not None else (NGHI, *NGHI_NEO)
-        dan(cv, t, ax, ay, ox + sim.x * sc, oy + sim.y * sc, sc / 2, lat=lat)
+        dan(cv, t, ax, ay, ox + sim.x * sc, oy + sim.y * sc, sc / 2, lat=lat, alpha=al)
+    if getattr(sim, 'dao', None) is not None and al > 0:
+        sim.dao.ve(cv, sc, ox, oy, al)
     for f in sim.fx:
         H = f['H']
         m, img = FX[H.get('anh', 'vet-chem') if 'anh' in H else 'vet-chem']
@@ -244,6 +257,8 @@ def snap(sim, nhan, dong=False):
     import copy
     s = copy.copy(sim)
     s.fx = [dict(f) for f in sim.fx]; s.trail = [dict(t) for t in sim.trail]
+    if getattr(sim, 'dao', None) is not None:
+        s.dao = copy.copy(sim.dao)
     return (s, nhan)
 
 
@@ -270,6 +285,65 @@ def chay_bi_danh(dir_, ten):
                 sim.them_fx('bui_tiep_dat', sim.x, 0)
         sim.landT = max(0, sim.landT - 1) if sim.landT and t else sim.landT
         seq.append(snap(sim, '%s  hurtT %d  vx %.1f vy %.1f  iframes %d' % (ten, sim.hurtT, sim.vx, sim.vy, sim.iframes)))
+        buoc_fx(sim); sim.frame += 1
+    return seq
+
+
+class Dao:
+    """dao văng khi chết – CÙNG công thức với demo.html (daoChet / daoBuoc), mặt đất y = 0"""
+    def __init__(s, sim):
+        C = META['chet']; B = C['dao_bat_dau']['chet' if sim.hk < 0 else 'chett']; D = C['dao']
+        s.f = -1 if sim.face < 0 else 1
+        s.x = sim.x + B['tam'][0] * s.f; s.y = sim.y + B['tam'][1]
+        day = (1 if sim.vx > 0 else -1) if sim.vx else -s.f
+        s.vx = abs(D['vx']) * day; s.vy = D['vy']
+        s.goc = B['goc']; s.xoay = abs(D['xoay']) * (1 if s.vx * s.f > 0 else -1); s.nam = False
+
+    def buoc(s, dat=lambda x, y: y >= 0, mat=lambda x, y: 0):
+        D = META['chet']['dao']
+        if s.nam:
+            return
+        s.vy = min(s.vy + D['trong_luc'], 10.4)
+        s.x += s.vx; s.y += s.vy; s.goc += s.xoay
+        if dat(s.x, s.y + 4):
+            s.y = mat(s.x, s.y + 4) - 4
+            s.vx *= D['ma_sat']; s.xoay *= D['ma_sat']
+            if abs(s.vy) < 2.5:
+                s.vy = 0; s.goc = round(s.goc / 180) * 180; s.nam = True
+            else:
+                s.vy = -s.vy * D['nay']
+
+    def ve(s, cv, sc, ox, oy, alpha=1.0):
+        i = META['chet']['khung_dao']
+        t, ax, ay = tile_lam(i)
+        dan(cv, t, ax, ay, ox + s.x * sc, oy + s.y * sc, sc / 2, s.goc * s.f, s.f < 0, alpha)
+
+
+def chay_chet(dir_, ten):
+    """hurt() lúc còn 1 máu → chết: vx = dir*4.8, vy = −6, hitstop 6; rồi updatePlayer nhánh dead tới deadT 104"""
+    C = META['chet']
+    sim = Sim(face=1)
+    seq = [snap(sim, 'đứng')] * 6
+    sim.vx, sim.vy, sim.g = dir_ * 4.8, -6.0, False
+    sim.hk = -1 if dir_ == 0 else (1 if dir_ * sim.face > 0 else -1)
+    sim.dead, sim.deadT, sim.dD = True, 0, -1
+    sim.them_fx('lam_bi_danh', sim.x + 4 * sim.face, sim.y - 56, sim.face < 0)
+    sim.dao = None
+    for h in range(6):
+        seq.append(snap(sim, '%s – trúng đòn cuối, hitstop %d/6' % (ten, h + 1)))
+    while sim.deadT < C['hoi_sinh'] - 1:
+        sim.deadT += 1
+        if sim.deadT == 1:
+            sim.dao = Dao(sim)
+        sim.vx *= 0.9; sim.vy = min(sim.vy + P['gravity'], P['maxFall'])
+        sim.x += sim.vx; sim.y += sim.vy
+        if sim.y >= 0:
+            sim.y = 0; sim.vy = 0
+            if sim.dD < 0: sim.dD = sim.deadT
+        sim.dao.buoc()
+        sim.al = 1.0 if sim.deadT < C['mo_tu'] else max(0.0, 1 - (sim.deadT - C['mo_tu']) / (C['mo_het'] - C['mo_tu']))
+        seq.append(snap(sim, '%s  deadT %d  vy %.1f  %s' % (ten, sim.deadT, sim.vy,
+                                                          'bay' if sim.dD < 0 else 'chạm đất +%d' % (sim.deadT - sim.dD))))
         buoc_fx(sim); sim.frame += 1
     return seq
 
@@ -388,6 +462,11 @@ def xuat(ten, seq, khung_logic, goc_logic, quai=None):
 
 
 def main():
+    import sys
+    if sys.argv[1:] == ['chet']:                 # chỉ xuất GIF chết
+        xuat('chet-nga-ngua', chay_chet(-1, 'CHẾT – ngã ngửa'), (320, 200), (230, 170))
+        xuat('chet-nga-chui', chay_chet(1, 'CHẾT – ngã chúi'), (320, 200), (90, 170))
+        return
     xuat('chem-combo-1-2-3', chay_don([1, 2, 3], quai=(118, -QH)), (360, 190), (90, 160), quai=(118, -QH))
     for n in (1, 2, 3, 5):
         xuat('chem-%d' % n, chay_don([n], quai=(110, -QH)), (300, 190), (90, 160), quai=(110, -QH))
@@ -400,6 +479,8 @@ def main():
     xuat('luot', chay_luot(), (300, 170), (60, 140))
     xuat('tuong-truot-nhay', chay_tuong(), (320, 320), (230, 300))
     xuat('rut-dao-dung-tho', chay_dung(), (200, 170), (80, 150))
+    xuat('chet-nga-ngua', chay_chet(-1, 'CHẾT – ngã ngửa'), (320, 200), (230, 170))
+    xuat('chet-nga-chui', chay_chet(1, 'CHẾT – ngã chúi'), (320, 200), (90, 170))
 
 
 if __name__ == '__main__':

@@ -50,8 +50,16 @@ KHAC = {
     'walljump': ['nhay-tuong'],                   # wjT 16–11 (6 bước đầu sau khi đạp tường)
     'dash':  ['luot-1', 'luot-2', 'luot-3'],      # bước lướt 1 / 2–6 / 7–8
     'wall':  ['bam-tuong', 'truot-1', 'truot-2'], # bám (wallStickT < 6, vy = 0) / trượt xen kẽ theo quãng trượt – QUAY LƯNG vào tường
-    'tho':   ['tho-%d' % i for i in range(8)],    # đứng thở (lặp): khung = floor(số bước đứng yên / THO_BUOC) mod 8; khung 0 = dáng nghỉ
+    'tho':   ['tho-%d' % i for i in range(8)],
+    # CHẾT (27/10): 0 trúng (deadT 0 = 6 bước hitstop, dao còn trong tay) · 1 bay lên (vy < 1) · 2 bay xuống · sau khi chạm đất
+    # (t = deadT − bước chạm đất): 3 chạm (t 0–2) · 4 nảy nhẹ (t 3–6) · 5 lắng (t 7–9) · 6 nằm yên (t ≥ 10, tới deadT 104)
+    'chet':  ['chet-trung', 'chet-bay-1', 'chet-bay-2', 'chet-cham', 'chet-nay', 'chet-nay~chet-nam', 'chet-nam'],
+    'chett': ['chett-trung', 'chett-bay-1', 'chett-bay-2', 'chett-cham', 'chett-nay', 'chett-nay~chett-nam', 'chett-nam'],    # đứng thở (lặp): khung = floor(số bước đứng yên / THO_BUOC) mod 8; khung 0 = dáng nghỉ
 }
+# Chết: ngưỡng chọn khung (bước logic) + dao văng (chỉ để VẼ, không ảnh hưởng gameplay). Vận tốc dao px logic / bước, Lam nhìn
+# phải, lực đẩy về −x ('chet') → game nhân dấu theo hướng ngã. Trọng lực dao 0,7; chạm đất nảy 30 %, quay chậm dần, nằm ngang.
+CHET = dict(vy_bay_len=1, cham=3, nay=7, lang=10, mo_tu=56, mo_het=80, hoi_sinh=104,
+            dao=dict(vx=-2.4, vy=-4.0, xoay=-22, trong_luc=0.7, nay=0.3, ma_sat=0.6))
 THO_BUOC = 14                                     # 8 khung × 14 bước = 112 bước = 1,87 s mỗi nhịp thở
 # Rút dao: 52 bước đầu ải (game RUT_T = 52, dung_hd kiểm). Mục i = RUT_T − drawT (0 … 51) → tư thế.
 RUT_T = 52

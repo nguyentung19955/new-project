@@ -29,13 +29,46 @@ UNG0 = {'ung-gan': RIG['nut']['ung-gan']['diem_gan'][0], 'ung-xa': RIG['nut']['u
 DAO_MUI = (410.0, 79.0)       # mũi dao trong ảnh mảnh tay-truoc-dao
 DAO_CHUOI = (190.0, 80.0)     # chắn tay (gốc lưỡi)
 
+# ----------------------------------------------------------------- (27/10) clip CHẾT: tay KHÔNG dao + dao rời
+# Không sửa rig-v4: cắt từ manh/tay-truoc-dao.png ra 2 ảnh trong ../manh-them/ (tạo lại mỗi lần chạy):
+#   tay-truoc-khong-dao.png – nắm tay (cùng khung + pivot với tay-truoc-dao), cắt ở x = 146 và kẻ viền đen 6 px chỗ cắt
+#   dao.png                 – chắn tay + lưỡi (x ≥ 144), dùng làm khung 'dao-roi' (dao văng khỏi tay khi chết)
+# Thêm vào RIG (trong bộ nhớ) nút 'tay-truoc-tay' = bản sao nút tay-truoc-dao dùng ảnh nắm tay, mặc định ẨN.
+MANH_THEM = os.path.join(HD, 'manh-them')
+DAO_CAT = 146
+DAO_TAM = (290.0, 80.0)       # tâm dao rời (giữa lưỡi + chắn) trong ảnh tay-truoc-dao
+
+
+def _tao_manh_them():
+    from PIL import Image
+    os.makedirs(MANH_THEM, exist_ok=True)
+    a = np.array(Image.open(os.path.join(RIG4, 'manh', 'tay-truoc-dao.png')).convert('RGBA'))
+    tay = a.copy()
+    tay[:, DAO_CAT:] = 0
+    vien = tay[:, DAO_CAT - 6:DAO_CAT]
+    m = vien[..., 3] > 0
+    vien[m, 0:3] = (6, 4, 3)
+    Image.fromarray(tay, 'RGBA').save(os.path.join(MANH_THEM, 'tay-truoc-khong-dao.png'), optimize=True)
+    dao_ = a.copy()
+    dao_[:, :DAO_CAT - 2] = 0
+    Image.fromarray(dao_, 'RGBA').save(os.path.join(MANH_THEM, 'dao.png'), optimize=True)
+
+
+_tao_manh_them()
+_n = dict(RIG['nut']['tay-truoc-dao'])
+_n['anh'] = os.path.join(MANH_THEM, 'tay-truoc-khong-dao.png')
+_n['hien'] = False
+RIG['nut']['tay-truoc-tay'] = _n
+RIG['thu_tu_ve'] = list(RIG['thu_tu_ve']) + ['tay-truoc-tay']
+
 
 def tu_the(than=(0, 0, 0), mu=(0, 0), chop=0, chuong=0, vt=0, td=0, vs=(0, 0), vsg=0, ts=0,
-           ug=None, ux=None, X=0.0):
+           ug=None, ux=None, X=0.0, co_dao=True):
     """Dựng một tư thế. than=(dx,dy,góc) (+dy = xuống, +góc = chúi trước); mu=(dy,góc) so với thân; vt = góc vai trước
     (− = vung tay ra TRƯỚC/lên, + = ra SAU); td = góc tay cầm dao quanh nắm tay (hướng lưỡi = vt+td+góc thân, 0 = chĩa
     trước, −90 = chĩa lên, +90 = chĩa xuống); vs/vsg/ts = vai sau (dịch, góc) + tay sau; ug/ux = ủng gần/xa
-    (x so với gốc, khe hở với đất (+ lên), góc: − mũi hếch, + gót nhấc) – None = đứng nghỉ; X = dời CẢ người ngang."""
+    (x so với gốc, khe hở với đất (+ lên), góc: − mũi hếch, + gót nhấc) – None = đứng nghỉ; X = dời CẢ người ngang.
+    co_dao=False: tay trước KHÔNG còn dao (dao đã văng – clip chết)."""
     p = {'than': {'dich': [than[0] + X, than[1]], 'goc': than[2]}, 'mu': {'dich': [0.0, mu[0]], 'goc': mu[1]},
          'chop-mu': {'goc': chop}, 'chuong': {'goc': chuong}, 'vai-truoc': {'goc': vt}, 'tay-truoc-dao': {'goc': td},
          'vai-sau': {'dich': [vs[0], vs[1]], 'goc': vsg}, 'tay-sau': {'goc': ts}}
@@ -44,6 +77,9 @@ def tu_the(than=(0, 0, 0), mu=(0, 0), chop=0, chuong=0, vt=0, td=0, vs=(0, 0), v
             p[ten] = {'dich': [X, 0.0], 'goc': g0}
         else:
             p[ten] = dat_ung(RIG, ten, u[0] + X, u[1], u[2])
+    if not co_dao:
+        p['tay-truoc-dao']['hien'] = False
+        p['tay-truoc-tay'] = {'goc': td, 'hien': True}
     return p
 
 

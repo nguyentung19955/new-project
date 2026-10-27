@@ -23,6 +23,9 @@ def tron(a, b, t):
         da, db = pa.get('dich', [0, 0]), pb.get('dich', [0, 0])
         d['dich'] = [da[0] + (db[0] - da[0]) * t, da[1] + (db[1] - da[1]) * t]
         d['goc'] = pa.get('goc', 0) + (pb.get('goc', 0) - pa.get('goc', 0)) * t
+        src = pa if t < 0.5 else pb               # cờ ẩn/hiện (tay có/không dao) lấy theo tư thế gần hơn
+        if 'hien' in src:
+            d['hien'] = src['hien']
         out[n] = d
     return out
 
@@ -187,3 +190,43 @@ HOP = {}
 for k in P:
     if k[0] == 'c' and k[1].isdigit():
         HOP[k] = HOP_ATK[int(k[1])]
+
+# ----------------------------------------------------------------- CHẾT (27/10/2026) – thay khung TẠM (bị đánh 2)
+# Game: hurt() khi hết máu → pl.dead, vx = ±4,8, vy = −6 (bật lên), hitstop 6; sau đó mỗi bước vx ×0,9, trọng lực 0,64 →
+# bay ~18 bước rồi chạm đất, nằm tới deadT 104 (hồi sinh). 'chet-*' = ngã NGỬA ra sau (lực ngược hướng nhìn),
+# 'chett-*' = ngã CHÚI tới (đòn từ sau lưng). Từ khung bay đầu tiên tay KHÔNG còn dao (co_dao=False): dao rời thành khung
+# 'dao-roi' – game cho dao văng theo đường riêng (chỉ để vẽ). Khung nằm: tự hạ thân cho điểm thấp nhất (trừ tay, ủng) chạm đất.
+def _nam(g, dx, nhac=0, **kw):
+    from chung_hd import render, RIG, GX, GY
+    import numpy as _np
+    p = tu_the(than=(dx, 0, g), **kw)
+    W0 = (GX - 1700, GY - 1500, GX + 1700, GY + 300)
+    a = _np.array(render(RIG, p, W0, 0.1, an=('ung-gan', 'ung-xa', 'tay-truoc-dao', 'tay-truoc-tay', 'tay-sau')))[..., 3]
+    day = W0[1] + (_np.nonzero(a > 40)[0].max() + 1) / 0.1
+    return tu_the(than=(dx, GY - day - nhac, g), **kw)
+
+
+P['chet-trung'] = tu_the(than=(-70, -5, -28), mu=(3, 1.25), chuong=3, vt=150, td=-90, vs=(90, -50), vsg=-50, ts=-35,
+                         ug=(180, 80, -35), ux=(-60, 45, 10))
+P['chet-bay-1'] = tu_the(than=(-90, -30, -48), mu=(3, 1.25), chuong=4, vt=175, td=-60, vs=(100, -70), vsg=-60, ts=-40,
+                         ug=(200, 150, -55), ux=(40, 110, -30), co_dao=False)
+P['chet-bay-2'] = tu_the(than=(-150, 20, -72), mu=(2, 1), chuong=5, vt=150, td=-40, vs=(90, -60), vsg=-50, ts=-30,
+                         ug=(220, 200, -75), ux=(90, 150, -55), co_dao=False)
+P['chet-cham'] = _nam(-92, -250, mu=(0, -6), chuong=-6, vt=120, td=-60, vs=(60, -30), vsg=-40, ts=-30,
+                      ug=(170, 150, -85), ux=(80, 110, -70), co_dao=False)
+P['chet-nay'] = _nam(-86, -255, nhac=45, mu=(0, -4), chuong=-3, vt=90, td=-50, vs=(50, -10), vsg=-30, ts=-20,
+                     ug=(170, 80, -70), ux=(80, 60, -55), co_dao=False)
+P['chet-nam'] = _nam(-90, -262, mu=(0, -6), chuong=-8, vt=60, td=-40, vs=(30, 10), vsg=-10, ts=-10,
+                     ug=(150, 25, -80), ux=(70, 10, -62), co_dao=False)
+P['chett-trung'] = tu_the(than=(55, 10, 28), mu=(-3, -1.25), chuong=-3, vt=-120, td=40, vs=(0, 0), vsg=-30, ts=20,
+                          ug=(170, 60, -10), ux=(-210, 80, 55))
+P['chett-bay-1'] = tu_the(than=(80, -10, 48), mu=(-3, -1.25), chuong=-4, vt=-150, td=30, vs=(0, 0), vsg=-50, ts=20,
+                          ug=(120, 100, 10), ux=(-220, 140, 70), co_dao=False)
+P['chett-bay-2'] = tu_the(than=(140, 20, 70), mu=(-2, -1), chuong=-5, vt=-165, td=25, vs=(0, 0), vsg=-70, ts=10,
+                          ug=(40, 150, 40), ux=(-200, 180, 80), co_dao=False)
+P['chett-cham'] = _nam(88, 240, mu=(0, 6), chuong=6, vt=-175, td=30, vs=(0, 0), vsg=-90, ts=0,
+                       ug=(-60, 140, 80), ux=(-170, 110, 85), co_dao=False)
+P['chett-nay'] = _nam(84, 245, nhac=45, mu=(0, 4), chuong=3, vt=-165, td=25, vs=(0, 0), vsg=-90, ts=0,
+                      ug=(-70, 70, 70), ux=(-170, 60, 70), co_dao=False)
+P['chett-nam'] = _nam(88, 252, mu=(0, 6), chuong=8, vt=-160, td=20, vs=(0, 0), vsg=-90, ts=0,
+                      ug=(-60, 20, 80), ux=(-160, 10, 70), co_dao=False)

@@ -1,0 +1,213 @@
+{
+ "nap_demo": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "giay_mo_den_san_sang": 0.91,
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 78
+   },
+   "lc": {
+    "ms": 195,
+    "mb_anh": 27.6
+   },
+   "hd": {
+    "co": [
+     2037,
+     2396
+    ],
+    "khung": 102
+   }
+  }
+ },
+ "nap_build": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "giay_mo_den_san_sang": 1.35,
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 78
+   },
+   "lc": {
+    "ms": 198,
+    "mb_anh": 27.6
+   },
+   "hd": {
+    "co": [
+     2037,
+     2396
+    ],
+    "khung": 102
+   }
+  },
+  "mb": 12.73
+ },
+ "iphone_ngang": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "giay_mo_den_san_sang": 0.82,
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 78
+   },
+   "lc": {
+    "ms": 167,
+    "mb_anh": 27.6
+   },
+   "hd": {
+    "co": [
+     2037,
+     2396
+    ],
+    "khung": 102
+   }
+  },
+  "nut_bat_dau": {
+   "trai": 362.4,
+   "tren": 265.5,
+   "rong": 119.2,
+   "cao": 46,
+   "trong_man": true,
+   "tren_cung": true,
+   "sau_khi_cham_dang_choi": true
+  }
+ },
+ "quay": {
+  "console_loi": [],
+  "trang_loi": [],
+  "yeu_cau_loi": [],
+  "giay_mo_den_san_sang": 0.74,
+  "tvdemo": {
+   "ready": true,
+   "err": "",
+   "gach": {
+    "o": 1420,
+    "atlas": 78
+   },
+   "lc": {
+    "ms": 157,
+    "mb_anh": 27.6
+   },
+   "hd": {
+    "co": [
+     2037,
+     2396
+    ],
+    "khung": 102
+   }
+  },
+  "doan": {
+   "lang": {
+    "so_buoc": 218,
+    "cuoi": {
+     "doan": "lang",
+     "n": 218,
+     "x": 25,
+     "dead": false,
+     "deadT": 0,
+     "hp": 5,
+     "quai": [
+      "walk",
+      "walk",
+      "sleep"
+     ],
+     "cong": 0
+    }
+   },
+   "cong": {
+    "so_buoc": 170,
+    "cuoi": {
+     "doan": "cong",
+     "n": 170,
+     "x": 50,
+     "dead": false,
+     "deadT": 0,
+     "hp": 5,
+     "quai": [
+      "walk",
+      "walk",
+      "sleep"
+     ],
+     "cong": 1
+    }
+   },
+   "quai": {
+    "so_buoc": 649,
+    "cuoi": {
+     "doan": "quai",
+     "n": 649,
+     "x": 95,
+     "dead": false,
+     "deadT": 0,
+     "hp": 5,
+     "quai": [
+      "x",
+      "x",
+      "die"
+     ],
+     "cong": 0
+    }
+   },
+   "chet-ngua_chet": true,
+   "chet-ngua": {
+    "so_buoc": 296,
+    "cuoi": {
+     "doan": "chet-ngua",
+     "n": 296,
+     "x": 68,
+     "dead": false,
+     "deadT": 0,
+     "hp": 5,
+     "quai": [
+      "wind",
+      "x",
+      "x"
+     ],
+     "cong": 0
+    }
+   },
+   "chet-chui_chet": true,
+   "chet-chui": {
+    "so_buoc": 146,
+    "cuoi": {
+     "doan": "chet-chui",
+     "n": 146,
+     "x": 68,
+     "dead": false,
+     "deadT": 0,
+     "hp": 5,
+     "quai": [
+      "wind",
+      "x",
+      "x"
+     ],
+     "cong": 0
+    }
+   }
+  },
+  "lam_chet": [
+   {
+    "doan": "chet-ngua",
+    "f": 1186,
+    "huong": "ngửa (lực ngược hướng nhìn)"
+   },
+   {
+    "doan": "chet-chui",
+    "f": 1326,
+    "huong": "chúi (đòn sau lưng)"
+   }
+  ]
+ }
+}
