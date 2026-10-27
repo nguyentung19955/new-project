@@ -6,7 +6,8 @@ Viết cho người không rành kỹ thuật. Mục tiêu: cảnh Cổng làng 
 
 **Chơi thử:** https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-cong-lang/thu-cong-lang.html
 (thêm `?tt=0` để xem đúng bản cũ; phím **H** hoặc nút ▣ góc phải: bật overlay collider; `?vao=cong2`: vào thẳng nửa sau có bệ + cổng).
-**Chưa thử trên iPhone thật** – mọi số đo dưới đây là Chromium headless trên máy chủ Linux (không GPU).
+**Chưa thử trên iPhone thật** – mọi số đo dưới đây là Chromium headless trên máy chủ Linux (không GPU). Link githack **chưa mở thử được
+từ máy chủ này** (mạng bị chặn); đường dẫn tài nguyên đặt giống bản thử quái + boss (`thu-quai-boss/`) đã chạy trên githack.
 
 ## 1. Xem gì trước (thư mục `xem-thu/`)
 
