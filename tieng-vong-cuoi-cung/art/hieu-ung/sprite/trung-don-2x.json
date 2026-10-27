@@ -1,0 +1,68 @@
+{
+ "ten": "trung-don",
+ "anh": "trung-don-2x.png",
+ "nguon": "../nguon/trung-don.png",
+ "co_sheet": [
+  424,
+  129
+ ],
+ "px_nguon_moi_px_logic": 2,
+ "neo": "tam",
+ "cach_tach": "xoá nền trắng (flood-fill từ mép) + khử viền trắng; chia khung theo khe trống rộng nhất; thu LANCZOS (nhân alpha trước) một lần",
+ "frames": [
+  {
+   "w": 62,
+   "h": 61,
+   "ax": 30.62,
+   "ay": 31.57,
+   "x": 2,
+   "y": 2
+  },
+  {
+   "w": 130,
+   "h": 125,
+   "ax": 65.63,
+   "ay": 62.54,
+   "x": 66,
+   "y": 2
+  },
+  {
+   "w": 119,
+   "h": 105,
+   "ax": 56.04,
+   "ay": 53.99,
+   "x": 198,
+   "y": 2
+  },
+  {
+   "w": 62,
+   "h": 64,
+   "ax": 28.21,
+   "ay": 35.09,
+   "x": 319,
+   "y": 2
+  },
+  {
+   "w": 39,
+   "h": 42,
+   "ax": 16.54,
+   "ay": 21.33,
+   "x": 383,
+   "y": 2
+  }
+ ],
+ "anims": {
+  "trung-don": {
+   "khung": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "he_so_thu_tu_anh_gen": 0.3168,
+   "co_lon_nhat_px_logic": 64
+  }
+ },
+ "quy_uoc": "frames[i] = ô trong sheet (x,y,w,h, px nguồn 2x) + điểm neo (ax,ay) trong ô. Vẽ trong game: drawImage(sheet, x,y,w,h, X − ax/2·k, Y − ay/2·k, w/2·k, h/2·k) với (X,Y) = điểm đặt (px logic), k = tỉ lệ thêm (1 = cỡ gốc); lật = scale(−1,1) quanh (X,Y). Ảnh RGBA alpha thẳng, RGB=0 ở chỗ trong suốt."
+}

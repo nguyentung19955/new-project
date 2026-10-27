@@ -1,0 +1,59 @@
+{
+ "ten": "lam-bi-danh",
+ "anh": "lam-bi-danh-2x.png",
+ "nguon": "../nguon/lam-bi-danh.png",
+ "co_sheet": [
+  497,
+  158
+ ],
+ "px_nguon_moi_px_logic": 2,
+ "neo": "tam",
+ "cach_tach": "giữ alpha sẵn có; chia khung theo khe trống rộng nhất; thu LANCZOS (nhân alpha trước) một lần",
+ "frames": [
+  {
+   "w": 115,
+   "h": 127,
+   "ax": 59.45,
+   "ay": 65.65,
+   "x": 2,
+   "y": 2
+  },
+  {
+   "w": 152,
+   "h": 154,
+   "ax": 76.62,
+   "ay": 78.68,
+   "x": 119,
+   "y": 2
+  },
+  {
+   "w": 126,
+   "h": 121,
+   "ax": 62.25,
+   "ay": 62.28,
+   "x": 273,
+   "y": 2
+  },
+  {
+   "w": 94,
+   "h": 97,
+   "ax": 45.11,
+   "ay": 44.34,
+   "x": 401,
+   "y": 2
+  }
+ ],
+ "anims": {
+  "lam-bi-danh": {
+   "khung": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "he_so_thu_tu_anh_gen": 0.2836,
+   "co_lon_nhat_px_logic": 76
+  }
+ },
+ "quy_uoc": "frames[i] = ô trong sheet (x,y,w,h, px nguồn 2x) + điểm neo (ax,ay) trong ô. Vẽ trong game: drawImage(sheet, x,y,w,h, X − ax/2·k, Y − ay/2·k, w/2·k, h/2·k) với (X,Y) = điểm đặt (px logic), k = tỉ lệ thêm (1 = cỡ gốc); lật = scale(−1,1) quanh (X,Y). Ảnh RGBA alpha thẳng, RGB=0 ở chỗ trong suốt."
+}

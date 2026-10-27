@@ -1,0 +1,52 @@
+{
+ "hieu_ung": [
+  {
+   "ten": "vet-chem",
+   "anh": "vet-chem-2x.png",
+   "co_sheet": [
+    1125,
+    773
+   ]
+  },
+  {
+   "ten": "trung-don",
+   "anh": "trung-don-2x.png",
+   "co_sheet": [
+    424,
+    129
+   ]
+  },
+  {
+   "ten": "bui",
+   "anh": "bui-2x.png",
+   "co_sheet": [
+    724,
+    180
+   ]
+  },
+  {
+   "ten": "dash",
+   "anh": "dash-2x.png",
+   "co_sheet": [
+    863,
+    97
+   ]
+  },
+  {
+   "ten": "truot-tuong",
+   "anh": "truot-tuong-2x.png",
+   "co_sheet": [
+    181,
+    134
+   ]
+  },
+  {
+   "ten": "lam-bi-danh",
+   "anh": "lam-bi-danh-2x.png",
+   "co_sheet": [
+    497,
+    158
+   ]
+  }
+ ]
+}

@@ -5,6 +5,8 @@
            Cả hai nhúng PNG NGUYÊN BẢN (không nén lại, không đổi cỡ) – kiểm ảnh đúng 2142×970 = co_sheet trong JSON và đúng
            phien_ban_clip, sai thì dừng; + dáng nghỉ TẠM anim/lam-nghi-2x.png (dùng chung, cùng ô/neo) nhúng PNG nguyên bản.
   - qb, tg : sheet quái+boss và thế giới (anim/quai-boss.*, anim/the-gioi.*) dạng data URI WebP (Safari iOS 14+ đọc được).
+  - lam_hd : hoạt ảnh HÀNH ĐỘNG Lam (art/modular/lam-moi/hanh-dong/sprite/lam-hanh-dong-2x.*) – PNG nguyên bản, kiểm co_sheet
+  - hu     : hiệu ứng ảnh gen (art/hieu-ung/sprite/<ten>-2x.*) – PNG nguyên bản; thiếu ảnh nào thì bỏ qua (game vẽ khung TẠM)
 Nền parallax cũ (art/chibi/…) đã bị xoá: demo.html vẽ nền gradient TẠM, không cần nhúng ảnh nền.
 Nếu file build > 15 MB thì tự giảm chất lượng WebP của qb/tg.
 Chạy: python3 build-demo.py  →  ra demo.build.html cạnh file này (không commit file build)."""
@@ -18,6 +20,28 @@ LAM_DIRS = {'v4': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'l
             'v3': os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'rig-v3', 'sprite'))}
 LAM_CO = (2142, 970)
 SHEETS = {'qb': 'quai-boss.json', 'tg': 'the-gioi.json'}
+HD_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'modular', 'lam-moi', 'hanh-dong', 'sprite'))
+HU_DIR = os.path.normpath(os.path.join(HERE, '..', 'art', 'hieu-ung', 'sprite'))
+HU_TEN = ['vet-chem', 'trung-don', 'bui', 'dash', 'truot-tuong', 'lam-bi-danh']
+
+
+def hanh_dong():
+    meta = json.load(open(os.path.join(HD_DIR, 'lam-hanh-dong-2x.json'), encoding='utf-8'))
+    p = os.path.join(HD_DIR, meta['anh'])
+    if list(Image.open(p).size) != meta['co_sheet']:
+        raise SystemExit('LỖI: %s không đúng co_sheet %s' % (p, meta['co_sheet']))
+    return {'json': meta, 'anh': png_uri(p)}
+
+
+def hieu_ung():
+    out = {}
+    for t in HU_TEN:
+        j = os.path.join(HU_DIR, t + '-2x.json')
+        if not os.path.isfile(j):
+            print('thiếu hiệu ứng', t, '→ game vẽ khung TẠM'); continue
+        meta = json.load(open(j, encoding='utf-8'))
+        out[t] = {'json': meta, 'anh': png_uri(os.path.join(HU_DIR, meta['anh']))}
+    return out
 
 
 def webp(path, q):
@@ -47,7 +71,7 @@ def lam(clip):
 
 
 def khoi(q_sheet, L):
-    nh = {'lam': L['v4'], 'lam_v3': L['v3']}
+    nh = {'lam': L['v4'], 'lam_v3': L['v3'], 'lam_hd': hanh_dong(), 'hu': hieu_ung()}
     for k, jf in SHEETS.items():
         meta = json.load(open(os.path.join(ANIM, jf), encoding='utf-8'))
         nh[k] = {'json': meta, 'anh': webp(os.path.join(ANIM, meta['image']), q_sheet)}

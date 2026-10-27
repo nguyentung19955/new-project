@@ -1,0 +1,143 @@
+{
+ "ten": "vet-chem",
+ "anh": "vet-chem-2x.png",
+ "nguon": "../nguon/vet-chem.png",
+ "co_sheet": [
+  1125,
+  773
+ ],
+ "px_nguon_moi_px_logic": 2,
+ "neo": "hop",
+ "cach_tach": "xoá nền trắng (flood-fill từ mép) + khử viền trắng; chia khung theo khe trống rộng nhất; thu LANCZOS (nhân alpha trước) một lần",
+ "frames": [
+  {
+   "w": 274,
+   "h": 145,
+   "ax": 137.67,
+   "ay": 72.26,
+   "x": 2,
+   "y": 2
+  },
+  {
+   "w": 302,
+   "h": 203,
+   "ax": 150.95,
+   "ay": 100.77,
+   "x": 278,
+   "y": 2
+  },
+  {
+   "w": 263,
+   "h": 196,
+   "ax": 131.77,
+   "ay": 97.84,
+   "x": 582,
+   "y": 2
+  },
+  {
+   "w": 190,
+   "h": 179,
+   "ax": 94.89,
+   "ay": 89.46,
+   "x": 847,
+   "y": 2
+  },
+  {
+   "w": 276,
+   "h": 238,
+   "ax": 138.17,
+   "ay": 119.22,
+   "x": 2,
+   "y": 207
+  },
+  {
+   "w": 304,
+   "h": 295,
+   "ax": 152.25,
+   "ay": 147.38,
+   "x": 280,
+   "y": 207
+  },
+  {
+   "w": 297,
+   "h": 300,
+   "ax": 148.46,
+   "ay": 150.08,
+   "x": 586,
+   "y": 207
+  },
+  {
+   "w": 238,
+   "h": 266,
+   "ax": 119.22,
+   "ay": 132.75,
+   "x": 885,
+   "y": 207
+  },
+  {
+   "w": 264,
+   "h": 221,
+   "ax": 132.04,
+   "ay": 110.31,
+   "x": 2,
+   "y": 509
+  },
+  {
+   "w": 304,
+   "h": 262,
+   "ax": 152.18,
+   "ay": 130.51,
+   "x": 268,
+   "y": 509
+  },
+  {
+   "w": 282,
+   "h": 252,
+   "ax": 141.05,
+   "ay": 126.21,
+   "x": 574,
+   "y": 509
+  },
+  {
+   "w": 240,
+   "h": 221,
+   "ax": 119.85,
+   "ay": 110.31,
+   "x": 858,
+   "y": 509
+  }
+ ],
+ "anims": {
+  "ngang": {
+   "khung": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "he_so_thu_tu_anh_gen": 0.9836,
+   "co_lon_nhat_px_logic": 150
+  },
+  "cheo-len": {
+   "khung": [
+    4,
+    5,
+    6,
+    7
+   ],
+   "he_so_thu_tu_anh_gen": 1.083,
+   "co_lon_nhat_px_logic": 150
+  },
+  "cheo-xuong": {
+   "khung": [
+    8,
+    9,
+    10,
+    11
+   ],
+   "he_so_thu_tu_anh_gen": 1.0601,
+   "co_lon_nhat_px_logic": 150
+  }
+ },
+ "quy_uoc": "frames[i] = ô trong sheet (x,y,w,h, px nguồn 2x) + điểm neo (ax,ay) trong ô. Vẽ trong game: drawImage(sheet, x,y,w,h, X − ax/2·k, Y − ay/2·k, w/2·k, h/2·k) với (X,Y) = điểm đặt (px logic), k = tỉ lệ thêm (1 = cỡ gốc); lật = scale(−1,1) quanh (X,Y). Ảnh RGBA alpha thẳng, RGB=0 ở chỗ trong suốt."
+}
