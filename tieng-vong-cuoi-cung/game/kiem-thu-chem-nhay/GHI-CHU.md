@@ -138,3 +138,12 @@ python3 -B game/tools/kiem-thu-chem-nhay.py                   # quay + đo trong
 python3 game/build-demo.py                                    # bản build tự chứa
 ```
 Cần pillow, numpy, scipy, playwright + Chromium, ffmpeg.
+
+## Trả lời của chủ dự án (27/10/2026, 07:32) – nguyên văn
+1. Quay mặt ra, cắt chóp mũ luôn cũng được
+2. Sát tầm
+3. Sửa
+4. Ok sửa sau nếu tôi thấy chưa ổn
+5. Ok
+6. Ok
+(Điều phối hiểu: 1 = trượt tường quay lưng vào tường/mặt ra ngoài, được cắt chóp mũ chỗ chạm tường; 2 = thu hộp đòn đòn 1/6 về sát tầm dao; 3 = sửa hộp đòn đòn 3 không xuống dưới đất; 4 = giữ hitstop; 5 = giữ tắt nháy trong hitstop; 6 = làm cả clip đứng thở + rút dao, và ảnh Vọng/Cộng hưởng/keng – ảnh do chủ dự án gen.)
