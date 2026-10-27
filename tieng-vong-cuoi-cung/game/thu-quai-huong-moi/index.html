@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Thử 4 quái hướng mới – Cổ tích chuông tàn</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0d1215; overflow: hidden; touch-action: none;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  #khung { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  canvas { display: block; width: 100%; height: 100%; }
+  .hang { position: absolute; left: 1.2%; right: 1.2%; display: flex; gap: .8%; flex-wrap: wrap; }
+  #con { top: 1.6%; } #che { bottom: 2.4%; }
+  .nut { flex: 0 0 auto; padding: .55em .9em; border-radius: .6em; border: 1px solid rgba(242,214,154,.35);
+    background: rgba(13,18,21,.55); color: rgba(242,214,154,.85); font: 600 clamp(11px, 1.9vw, 18px)/1 system-ui, sans-serif; }
+  .nut.chon { background: rgba(242,214,154,.85); color: #17272C; }
+  #loi { position: absolute; left: 10px; top: 60px; color: #f2d69a; font: 14px system-ui, sans-serif; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div id="khung">
+  <canvas id="c" width="1920" height="1080"></canvas>
+  <div class="hang" id="con"></div>
+  <div class="hang" id="che"></div>
+</div>
+<div id="loi"></div>
+<script src="../runtime/quai-boss-runtime.js"></script>
+<script>
+/* TRANG XEM 4 QUÁI HƯỚNG MỚI "Cổ tích chuông tàn" – chỉ để DUYỆT HÌNH + 2 clip cơ bản. KHÔNG phải game, không có luật/đòn đánh.
+   Màn logic 960×540, 60 bước/giây cố định; cảnh chuẩn art/huong-moi/nguon/canh-chuan-lang.png (mặt sàn y = 416).
+   Quái vẽ thẳng từ MẢNH + JSON bằng game/runtime/quai-boss-runtime.js (QBR.napThem, QBR.mau, QBR.ve – không sửa runtime).
+   Lam mới: sheet 2x art/huong-moi/lam-rig/sprite/ (đứng lắng nghe) – cao 112 px để so cỡ.
+   Viền sáng: vệt sáng mép vẽ SẴN trong mảnh + quầng sáng mờ sau lưng vẽ sẵn 1 lần (không shadowBlur, không lọc mỗi khung).
+   Cờ: ?con=phuden|doire|namtho|gaccam|ca4 · ?che=dung|di · ?quang=0 tắt quầng sau lưng · ?hud=0 ẩn nút · ?tu=0 không tự chạy
+   (quay video: window.TQ.buoc(n), window.TQ.chon(con, che)) · ?cham=4 chậm 4 lần. */
+'use strict';
+const Q = new URLSearchParams(location.search);
+const HUD = Q.get('hud') !== '0', TU_CHAY = Q.get('tu') !== '0', QUANG_BAT = Q.get('quang') !== '0';
+let CHAM = Math.max(1, +(Q.get('cham') || 1));
+const W = 960, H = 540, DAT = 416, D = 1000 / 60;
+const R = '../../art/huong-moi/';
+const LOAI = {
+  phuden: { ten: 'Phu Đèn Lạc', thu_muc: 'phu-den-lac', json: 'phu-den-lac-rig.json', dung: 'dung', di: 'di', nut_di: 'Đi (kéo đèn)' },
+  doire:  { ten: 'Dơi Rễ', thu_muc: 'doi-re', json: 'doi-re-rig.json', dung: 'treo', di: 'bay', nut_dung: 'Treo trần', nut_di: 'Bay' },
+  namtho: { ten: 'Nấm Thở', thu_muc: 'nam-tho', json: 'nam-tho-rig.json', dung: 'dung', di: 'tho', nut_dung: 'Thở nhẹ', nut_di: 'Phồng ↔ xẹp' },
+  gaccam: { ten: 'Người Gác Câm', thu_muc: 'nguoi-gac-cam', json: 'nguoi-gac-cam-rig.json', dung: 'dung', di: 'di', nut_di: 'Đi nặng nề' },
+};
+const TREO = { x: 760, y: 266 };      // chỗ Dơi treo: mép dưới ban công gỗ trong cảnh chuẩn
+
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+function anh(src) { return new Promise((ok, loi) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => loi(new Error('không nạp được ' + src)); i.src = src; }); }
+async function json(src) { const r = await fetch(src, { cache: 'no-cache' }); if (!r.ok) throw new Error('không nạp được ' + src); return r.json(); }
+
+/* ---------- vẽ sẵn 1 lần: quầng sáng mờ sau lưng (tách bóng tối khỏi nền) + quầng đèn ấm ---------- */
+function taoQuang(mau, a0, a1) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+  const g = c.getContext('2d'), r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  r.addColorStop(0, `rgba(${mau},${a0})`); r.addColorStop(0.55, `rgba(${mau},${a1})`); r.addColorStop(1, `rgba(${mau},0)`);
+  g.fillStyle = r; g.fillRect(0, 0, 256, 256); return c;
+}
+
+/* ---------- quái ---------- */
+function taoQuai(loai, x, y, huong) {
+  const L = LOAI[loai];
+  return { loai, L, x, y, x0: x, huong, ten_clip: L.dung, t: 0, quang: 0, P: QBR.tuThe(loai), tu: QBR.tuThe(loai), tmp: QBR.tuThe(loai),
+           hoa: 0, hoaN: 0, dang_di: false, vung: null };
+}
+function datClip(q, ten) {
+  if (q.ten_clip === ten) return;
+  q.tu.set(q.P); q.hoa = 0; q.hoaN = 10;          // hoà 10 bước từ tư thế đang hiện
+  q.ten_clip = ten; q.t = 0; q.quang = 0;
+}
+// mỗi bước logic
+function buocQuai(q, diChuyen) {
+  const J = QBR.json().nv[q.loai];
+  if (q.loai === 'doire') {
+    if (!diChuyen) {                                  // treo dưới ban công
+      datClip(q, 'treo'); q.x = TREO.x; q.y = TREO.y; q.bay = null;
+    } else {
+      datClip(q, 'bay');
+      if (!q.bay) q.bay = { pha: 0, vx: -1.25 };      // rời chỗ treo, bay qua lại 460–820, nhấp nhô
+      const b = q.bay; b.pha += 1;
+      q.x += b.vx; if (q.x < 470) { q.x = 470; b.vx = 1.25; } if (q.x > 820) { q.x = 820; b.vx = -1.25; }
+      q.huong = b.vx < 0 ? -1 : 1;
+      const vao = Math.min(1, b.pha / 40);            // 40 bước đầu: hạ từ chỗ treo xuống đường bay
+      q.y = (TREO.y + 30) * (1 - vao) + (300 + 16 * Math.sin(b.pha * 0.045)) * vao;
+    }
+    q.t += D;
+  } else if (q.loai === 'namtho') {
+    datClip(q, diChuyen ? 'tho' : 'dung'); q.t += D;
+  } else {
+    datClip(q, diChuyen ? q.L.di : q.L.dung);
+    if (diChuyen) {                                   // đi qua lại trong vùng, clip đi phát theo QUÃNG ĐƯỜNG (chân không trượt)
+      const c = J.clip[q.L.di], v = c.toc_do_px_s / 60;
+      const [a, b] = q.vung;
+      q.x += q.huong * v; if (q.x < a) { q.x = a; q.huong = 1; } if (q.x > b) { q.x = b; q.huong = -1; }
+      q.quang += v; q.t = (q.quang / c.px_logic_moi_chu_ky) * c.ms;
+    } else q.t += D;
+  }
+  if (q.hoaN && q.hoa < q.hoaN) q.hoa++;
+}
+function tuTheQuai(q) {
+  QBR.mau(q.loai, q.ten_clip, q.t, q.tmp);
+  if (q.hoaN && q.hoa < q.hoaN) { const w = q.hoa / q.hoaN, s = w * w * (3 - 2 * w); QBR.hoa(q.P, q.tu, q.tmp, s); }
+  else q.P.set(q.tmp);
+  return q.P;
+}
+function veQuai(q) {
+  const P = tuTheQuai(q), lat = q.huong > 0;         // rig quay trái; quay phải = lật
+  const J = QBR.json().nv[q.loai];
+  if (QUANG_BAT) {                                    // quầng sáng mờ sau lưng (cỡ theo hộp nghỉ), vẽ sẵn
+    const h = J.hop_nghi_logic, cx = (h[0] + h[2]) / 2, cy = (h[1] + h[3]) / 2, r = Math.max(h[2] - h[0], h[3] - h[1]) * 0.95;
+    const X = q.x + (lat ? -cx : cx), Y = (q.loai === 'doire' && q.ten_clip === 'treo') ? q.y + 30 : q.y + cy;
+    ctx.globalAlpha = 1; ctx.drawImage(QUANG, X - r, Y - r, 2 * r, 2 * r);
+  }
+  QBR.ve(ctx, q.loai, P, q.x, q.y, lat);
+  if (q.loai === 'phuden' && QUANG_BAT) {             // quầng đèn ấm quanh đèn (theo nút 'den')
+    const [dx, dy] = QBR.diemNut('phuden', P, 'den');
+    const X = q.x + (lat ? -dx : dx), Y = q.y + dy + 13;
+    ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(QUANG_DEN, X - 34, Y - 34, 68, 68); ctx.globalCompositeOperation = 'source-over';
+  }
+}
+
+/* ---------- Lam mới (đứng lắng nghe, sheet 2x) ---------- */
+let LAM;
+function veLam(x, t, mat) {
+  const m = LAM.meta, k = Math.floor(t / m.tick_moi_khung) % m.so_khung, f = m.frames[k], ax = m.diem_neo.x, ay = m.diem_neo.y;
+  if (QUANG_BAT) ctx.drawImage(QUANG, x - 85, DAT - 150, 170, 170);
+  ctx.save(); ctx.translate(x, DAT); if (mat < 0) ctx.scale(-1, 1);
+  ctx.drawImage(LAM.sheet, f.x, f.y, f.w, f.h, -ax / 2, -ay / 2, f.w / 2, f.h / 2);
+  ctx.drawImage(LAM.rim, f.x, f.y, f.w, f.h, -ax / 2, -ay / 2, f.w / 2, f.h / 2);
+  ctx.restore();
+}
+
+/* ---------- cảnh ---------- */
+let NEN, QUANG, QUANG_DEN, BUOC = 0;
+const S = { con: 'phuden', che: 'dung', ds: [], lamX: 300, lamMat: 1 };
+function bo(con) {     // bố trí theo con đang chọn
+  const ds = [];
+  if (con === 'ca4') {
+    S.lamX = 90; S.lamMat = 1;
+    const p = taoQuai('phuden', 300, DAT, -1); p.vung = [200, 420]; ds.push(p);
+    const n = taoQuai('namtho', 470, DAT, -1); ds.push(n);
+    const g = taoQuai('gaccam', 620, DAT, -1); g.vung = [580, 690]; ds.push(g);
+    ds.push(taoQuai('doire', TREO.x, TREO.y, -1));
+  } else {
+    S.lamX = 300; S.lamMat = 1;
+    const q = taoQuai(con, con === 'doire' ? TREO.x : 600, con === 'doire' ? TREO.y : DAT, -1);
+    q.vung = [470, 820]; ds.push(q);
+  }
+  S.ds = ds;
+}
+function chon(con, che) {
+  if (con && con !== S.con) { S.con = con; bo(con); }
+  if (che) S.che = che;
+  capNhatNut();
+}
+function buoc(n = 1) {
+  for (let i = 0; i < n; i++) { BUOC++; for (const q of S.ds) buocQuai(q, S.che === 'di'); }
+  ve();
+}
+function ve() {
+  ctx.setTransform(cv.width / W, 0, 0, cv.height / H, 0, 0);
+  ctx.globalAlpha = 1; ctx.drawImage(NEN, 0, 0, W, H);
+  veLam(S.lamX, BUOC, S.lamMat);
+  for (const q of S.ds) veQuai(q);
+  ctx.fillStyle = 'rgba(242,214,154,.78)'; ctx.font = '600 13px system-ui, sans-serif'; ctx.textAlign = 'left';
+  if (S.con === 'ca4') ctx.fillText('Lam mới 112 · Phu Đèn Lạc 112 · Nấm Thở 84 · Người Gác Câm 168 · Dơi Rễ 56 (treo)   (px logic, màn 960×540)', 12, H - 74);
+  else {
+    const q = S.ds[0], J = QBR.json().nv[q.loai];
+    ctx.fillText(`${q.L.ten} – cao ${q.loai === 'doire' ? J.cao_treo_px_logic + ' (treo)' : J.cao_px_logic} px logic · Lam mới 112 · clip “${q.ten_clip}”: ${J.clip[q.ten_clip].ten}`, 12, H - 74);
+  }
+}
+
+/* ---------- nút ---------- */
+function nut(cha, nhan, fn, id) { const b = document.createElement('div'); b.className = 'nut'; b.textContent = nhan; b.dataset.id = id;
+  b.addEventListener('pointerdown', e => { e.preventDefault(); fn(); }); cha.appendChild(b); return b; }
+function capNhatNut() {
+  const con = document.getElementById('con'), che = document.getElementById('che');
+  if (!con.children.length) {
+    for (const k of Object.keys(LOAI)) nut(con, LOAI[k].ten, () => chon(k), 'c-' + k);
+    nut(con, 'Cả 4', () => chon('ca4'), 'c-ca4');
+    nut(che, 'Đứng / thở', () => chon(null, 'dung'), 'h-dung');
+    nut(che, 'Di chuyển', () => chon(null, 'di'), 'h-di');
+    nut(che, 'Chậm ×4', () => { CHAM = CHAM === 1 ? 4 : 1; capNhatNut(); }, 'h-cham');
+  }
+  for (const b of document.querySelectorAll('.nut')) {
+    const id = b.dataset.id;
+    b.classList.toggle('chon', id === 'c-' + S.con || id === 'h-' + S.che || (id === 'h-cham' && CHAM > 1));
+  }
+  const L = LOAI[S.con];
+  document.querySelector('[data-id="h-dung"]').textContent = (L && L.nut_dung) || 'Đứng / thở';
+  document.querySelector('[data-id="h-di"]').textContent = (L && L.nut_di) || 'Di chuyển';
+  if (!HUD) { con.style.display = 'none'; che.style.display = 'none'; }
+}
+addEventListener('keydown', e => {
+  const k = { Digit1: 'phuden', Digit2: 'doire', Digit3: 'namtho', Digit4: 'gaccam', Digit5: 'ca4' }[e.code];
+  if (k) chon(k); if (e.code === 'KeyD') chon(null, 'dung'); if (e.code === 'KeyM') chon(null, 'di');
+});
+function coKhung() { const k = document.getElementById('khung'), s = Math.min(innerWidth / W, innerHeight / H); k.style.width = W * s + 'px'; k.style.height = H * s + 'px'; }
+addEventListener('resize', coKhung); coKhung();
+
+/* ---------- khởi động ---------- */
+(async () => {
+  try {
+    NEN = await anh(R + 'nguon/canh-chuan-lang.png');
+    QUANG = taoQuang('214,200,160', 0.20, 0.08); QUANG_DEN = taoQuang('242,214,154', 0.55, 0.16);
+    const base = R + 'lam-rig/sprite/lam-ct-dung-2x';
+    LAM = { meta: await json(base + '.json'), sheet: await anh(base + '.png'), rim: await anh(base.replace(/-2x$/, '-rim-2x') + '.png') };
+    for (const k of Object.keys(LOAI)) await QBR.napThem(R + 'quai-rig/' + LOAI[k].thu_muc + '/', LOAI[k].json);
+    const con = Q.get('con'); S.con = LOAI[con] || con === 'ca4' ? con : 'phuden'; S.che = Q.get('che') === 'di' ? 'di' : 'dung';
+    bo(S.con); capNhatNut();
+    window.TQ = { buoc, chon, S, san_sang: true, so: QBR.soThem };
+    buoc(1);
+    if (TU_CHAY) {
+      let truoc = performance.now(), du = 0;
+      const vong = now => { du += Math.min(250, now - truoc) / CHAM; truoc = now; let n = 0; while (du >= D) { du -= D; n++; } if (n) buoc(n); requestAnimationFrame(vong); };
+      requestAnimationFrame(vong);
+    }
+  } catch (e) { document.getElementById('loi').textContent = 'Lỗi: ' + e.message; window.TQ = { loi: e.message }; console.error(e); }
+})();
+</script>
+</body>
+</html>
