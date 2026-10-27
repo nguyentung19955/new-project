@@ -2,7 +2,7 @@
 
 Trả lời `docs/gameplay/YEU-CAU-KE-HOACH-VU-KHI.md`. **Chưa sửa code, chưa publish.** Mọi con số là **số để thử, chưa cân bằng**.
 Chưa chơi thử trên iPhone thật: nhận xét về cảm ứng là suy luận từ code, phải kiểm lại trên máy.
-Đọc cùng `KE-HOACH-GAMEPLAY.md` (gọi tắt **KHGP**). Chỗ nào kế hoạch này muốn đổi KHGP thì ghi **"Đề xuất sửa KHGP mục …"** (gom lại ở cuối mục 1).
+Đọc cùng `KE-HOACH-GAMEPLAY.md` (gọi tắt **KHGP**) và **phản hồi của anh `PHAN-HOI-1-KE-HOACH-GAMEPLAY.md`** (gọi tắt **PH1**, có trên nhánh trong lúc viết; chỗ PH1 đã chốt thì kế hoạch này theo PH1). Chỗ nào kế hoạch này muốn đổi KHGP thì ghi **"Đề xuất sửa KHGP mục …"** (gom lại ở cuối mục 1).
 
 Thuật ngữ (giống KHGP):
 - **tick**: một bước mô phỏng, 60 tick = 1 giây (1 tick ≈ 16,7 ms).
@@ -60,23 +60,24 @@ Số dòng theo nhánh `tieng-vong-cuoi-cung`, commit `d3181a6`. `game/demo.html
 | Một lần chạm thường giữ dưới ~12 tick trên iPhone, nên ngưỡng "giữ" 20 tick không ra nhầm kỹ năng | Log thời gian giữ của mỗi lần chạm Chém trong phòng thử, 3 người |
 | Ngón cái giữ Chém 20–24 tick không thấy "ì" vì nhát 1 vẫn ra ngay | Hỏi người thử + log |
 | iPhone chịu được thêm 1 lớp vũ khí vẽ trực tiếp + đạn/xích/Vệ Hồn ở 60 tick/s | Nút "Chép số" trên máy thật |
-| Mọi hệ thống KHGP P0 (Thế, bấm chờ, `su` 7/7/9, chạm đúp Vọng) sẽ được duyệt như đề xuất | Kế hoạch này dựa trên chúng. Nếu P0 đổi thì phải xem lại mục 5 |
+| KHGP P0-A (bấm chờ 1 nhát, `su` 7/7/9, Thế cho quái gác) được làm như PH1 mục 1–2. Tỷ lệ sát thương bóng và lượng Thế Cộng hưởng của tinh anh/boss **chưa chốt** (PH1 mục 3–5) | Kế hoạch này để chúng thành **biến cấu hình**, không gắn số cứng. Kết quả thử P0-B đổi số ở mục 5 |
 | Nút đổi vũ khí nhỏ ở góc trên-trái khung nút không bị chạm nhầm | Thử trên iPhone (mục 7) |
 
 ### 1c. Chỗ đụng KHGP – đề xuất sửa
 
 | # | Đề xuất sửa KHGP mục … | Vì sao |
 |---|---|---|
-| S1 | **Mục C, 4, D, E, F – đổi tên "Dư Âm" của Tiếng Vọng (chạm đúp V) thành "Hồi Vọng"** | "Dư Âm" nay là kỹ năng của Âm Đao. Hai thứ cùng tên mà khác luật sẽ rối. Luật Hồi Vọng giữ nguyên |
+| S1 | **Đã chốt ở PH1 mục 2–3**: prototype Vọng quá khứ tên **"Vọng Chiến"** (bấm 1 lần, cấu hình B chọn trước khi vào phòng), bỏ chạm đúp. "Dư Âm" chỉ dành cho Âm Đao | Kế hoạch này chỉ cần: Vọng Chiến ghi cùng các trường mới của bản ghi (mục 5d) |
 | S2 | **Mục C, 6, I#7: bỏ Búa Chuông Nứt** | Yêu cầu mới bỏ Chùy/Búa. Việc phá Thế chia cho Liềm (dấu vỡ) và Xích (Hồi Chấn) |
 | S3 | **Mục 3 (đòn nặng giữ–thả) → "giữ Chém = kỹ năng của vũ khí đang cầm"** | Dùng đúng cách KHGP đã chọn: nhát 1 ra ngay khi bấm, giữ tiếp mới tụ. Không còn đòn nặng riêng |
 | S4 | **Mục 6: "Dao Giữ Chuông" = Âm Đao cấp 1** | Cùng bộ đòn `ATK[1..6]`. Chỉ thay mảnh dao bằng lưỡi âm thoa và thêm âm nhận. Không tốn clip mới |
-| S5 | **Mục F: nhân máu và Thế ×10** (Chuông Gỗ 4 → 40, Mẹ Nấm 24/12 → 240/120, bóng [0,1] → [0,10]…) | Cần chỗ cho tăng 15–25 % mỗi cấp. Số nguyên vẫn đủ |
+| S5 | **Mục F: nhân máu và Thế ×10** (Chuông Gỗ 4 → 40, Mẹ Nấm 24/12 → 240/120…) | Cần chỗ cho tăng 15–25 % mỗi cấp, và cho **sát thương phụ của bóng** (PH1 mục 3) không bị làm tròn về 0. Số nguyên vẫn đủ |
 | S6 | **Mục 4 "không thêm nút thứ năm": cho phép 1 nút phụ đổi vũ khí** (nhỏ, chỉ hiện khi mang 2 vũ khí) | Yêu cầu mới muốn đổi bằng một nút. Nút này không phải nút chiến đấu (mục 7) |
 | S7 | **Mục 4 "không proc vô hạn": thay ô nhớ `swP/swE` bằng danh sách "đã trúng" gắn theo từng hộp đòn** | Bắt buộc khi có xích / âm cầu / Vệ Hồn sống cùng lúc với nhát chém (xem 1a) |
 | S8 | **Mục 9: thưởng boss = Ấn Rèn I** (thay "Búa ở P2") | Mốc lớn gắn với boss (mục 6) |
 
-Không đổi: thanh Thế + 2 cờ `vo`/`mat`, né sát đòn (P1), bóng một mình chỉ trừ Thế, Cộng hưởng "Thế về 0 + máu ×2 nhát của Lam", khóa 45 tick, 2 nấc Vọng, ghi chủ động miễn phí, Âm Phù Dư Chấn / Tàn Ảnh / Bóng Chắn.
+Theo PH1 (không còn là đề xuất của KHGP): bóng **có sát thương phụ thấp** (không phải 0); Cộng hưởng **chỉ phá ngay vỏ cứng**, tinh anh/boss nhận lượng Thế lớn có bảo vệ chống chuỗi choáng; phạm vi chia P0-A/B/C.
+Không đổi: thanh Thế + 2 cờ `vo`/`mat`, né sát đòn (P1), khóa Cộng hưởng 45 tick mỗi mục tiêu, ghi chủ động miễn phí, Âm Phù Dư Chấn / Tàn Ảnh / Bóng Chắn.
 
 ---
 
@@ -86,7 +87,7 @@ Không đổi: thanh Thế + 2 cờ `vo`/`mat`, né sát đòn (P1), bóng một
 
 | Vấn đề | Ở đâu | Xử lý đề xuất |
 |---|---|---|
-| **Trùng tên + trùng ý** | Dư Âm (Âm Đao) và "Dư Âm" chạm đúp V (KHGP) đều là "đòn lặp lại" | Đổi tên bên Vọng (S1). Phân biệt bằng luật: Dư Âm của Âm Đao **chỉ là vết chém**, không có thân, vang **1 lần sau 24 tick**, **không** kích Cộng hưởng. Bóng là thân Lam phát lại cả đoạn |
+| **Trùng tên + trùng ý** | Dư Âm (Âm Đao) và "Dư Âm" chạm đúp V (KHGP cũ) đều là "đòn lặp lại" | Tên đã tách ở PH1: bên Vọng là Vọng Chiến (S1). Phân biệt bằng luật: Dư Âm của Âm Đao **chỉ là vết chém**, không có thân, vang **1 lần sau 24 tick**, **không** kích Cộng hưởng. Bóng là thân Lam phát lại cả đoạn |
 | **Trùng ý** | Vệ Hồn (Trượng) và bóng Tiếng Vọng đều là "đồng minh ma" | Vệ Hồn màu **đồng tàn**, không teal. Hình người giữ chuông xưa, không phải Lam. Chỉ làm **1 động tác định sẵn**. Không công tắc, không Cộng hưởng, không bị đánh |
 | **Ba cách phá Thế chồng nhau** | Cộng hưởng, dấu vỡ (Liềm), Hồi Chấn (Xích) | Mỗi cách một việc. **Cộng hưởng**: vỡ ngay 1 mục tiêu. **Dấu vỡ**: trừ nhiều Thế trên cả nhóm, nhưng không vỡ ngay một mình. **Hồi Chấn**: trừ Thế từ xa, an toàn nhưng phải giữ |
 | **Hai vũ khí tầm xa** | Xích và Trượng | **Xích**: nhanh, thẳng, đi rồi về, trúng theo tuyến, Lam đứng neo. **Trượng**: chậm, nổ vùng nhỏ, Lam đi lại tự do |
@@ -270,10 +271,17 @@ Luật chung:
 1. **Trúng?** Hộp đòn chồng mục tiêu, và mục tiêu **chưa nằm trong danh sách "đã trúng" của hộp này** (S7).
 2. **Số gốc [máu, Thế]** = bảng đòn của vũ khí **đã gộp cấp** (tính sẵn lúc trang bị, không tính lại mỗi nhát).
 3. **Âm Phù**: chỉ chỉnh **Thế** hoặc hành vi, **không cộng máu** (mục 6c).
-4. **Hệ số đặc biệt: chọn MỘT** – cái lớn nhất trong {Cộng hưởng, chí mạng}.
-   - Có Cộng hưởng thì **không gieo chí mạng**.
-   - Cộng hưởng: máu ×2 và Thế về 0 (KHGP).
-5. **Trừ Thế**. Thế về 0 → vỡ, choáng (KHGP mục F).
+4. **Chí mạng** (nếu đòn có): nhân **máu** của chính nhát đó. Nhát của Lam **kích** Cộng hưởng (đến sau trong cặp) thì không gieo chí mạng.
+5. **Trừ Thế**. Thế về 0 → vỡ, choáng (KHGP mục F; đang choáng thì không tích Thế, sau choáng có thời gian ổn định – PH1 mục 4).
+
+**Cộng hưởng – trả lời PH1 mục 6:**
+- **Cặp** = 1 nhát `'p'` của Lam + 1 nhát `'e'` của bóng trúng **cùng mục tiêu**, cách nhau ≤ `resWindow` (12) tick. Ai trúng trước cũng được.
+- Cộng hưởng xảy ra ở **nhát đến sau**, thành một lần trúng **cộng thêm**: máu = **1 × máu của nhát Lam trong cặp, lấy số chưa chí mạng** (đã gộp cấp). Tổng của cặp = nhát Lam + phần cộng thêm + sát thương phụ của bóng ≈ **Lam ×2 + phụ của bóng**.
+- Thế: địch có `vo` → **vỏ vỡ ngay**. Tinh anh/boss → trừ thêm `CH_THE` (biến, chưa chốt; thử 50 % Thế tối đa), **không mặc định về 0**.
+- **Mỗi nhát chỉ ghép được 1 lần.** Mục tiêu nhớ mã nhát cuối của mỗi bên (`e.chP = {t, ma}`, `e.chE`). Ghép xong thì xóa cả hai (code hiện đã đặt `lastP = lastE = −999`, dòng 921). Nhát mới phải có mã mới, nên không thể dùng lại dấu thời gian của nhát cũ.
+- Khóa 45 tick mỗi mục tiêu (KHGP).
+- Hitstop của Cộng hưởng = 8, gộp bằng `Math.max` với hitstop nhát đó (không cộng).
+- Vết Dư Âm, dấu vỡ, Vệ Hồn (`'k'`) không vào cặp.
 6. **Cờ vỏ / mặt** (KHGP mục 1): địch có `vo` mà Thế còn → máu = 0 ("Keng"). Địch có `mat` bị đánh từ trước → máu = 0. Bước 5 đi trước bước 6, nên đòn vừa làm vỡ Thế thì được tính máu luôn.
 7. **Làm tròn xuống**, tối thiểu 1 nếu không bị chặn ở bước 6.
 8. **Hiệu ứng phụ** (chỉ khi `src='p'`): mỗi loại tối đa **1 lần mỗi đòn**. Đặt hẹn giờ vết Dư Âm, đặt dấu, kéo, kích dấu vỡ.
@@ -290,12 +298,14 @@ Luật chung:
 
 ### 5d. Bóng Tiếng Vọng dùng chỉ số nào
 
-- **Bóng có chỉ số cố định [0 máu, 10 Thế]** cho mọi vũ khí, mọi cấp (KHGP "bóng một mình chỉ trừ Thế", ×10). Nhờ vậy không cần "chốt cấp" cho bóng, và nâng cấp không làm bóng thành máy cắt máu.
+- **Sát thương phụ của bóng** (PH1 mục 3, chưa chốt tỷ lệ) = [máu, Thế] của **đòn đã ghi** × 2 hệ số riêng `BONG_MAU` (thử 0,25) và `BONG_THE` (thử 0,5). Tối thiểu 1 máu nếu đòn gốc có máu, nên quái nhỏ không Thế vẫn thấy bóng có tác dụng (số nhỏ màu teal mờ).
+- **Thời điểm chốt**: bảng đòn lấy theo **vũ khí ghi ở tick đó** và **cấp của vũ khí đó lúc bóng xuất hiện** (dừng ghi, hoặc bấm Vọng Chiến). Bóng bị xóa khi đổi phòng (KHGP), còn nâng cấp chỉ làm ở Thợ Rèn, nên trên thực tế cấp không đổi trong lúc bóng sống.
+- Ba biến **tách riêng** để thử từng cái một (PH1): `BONG_MAU`, `BONG_THE`, sát thương cộng thêm của Cộng hưởng (`CH_MAU`, mặc định 1 × nhát Lam).
 - **Hình dạng hộp đòn của bóng** = hộp đã ghi ở từng tick, gồm hộp cận chiến + tối đa **2 hộp đạn** (đầu xích, âm cầu). Hiện REC chỉ có 1 hộp → thêm 2 ô.
 - **Vũ khí của bóng** = vũ khí **ghi trong từng tick** (`REC[i].vk`), chỉ để vẽ đúng hình. Đổi vũ khí giữa lúc ghi thì bóng cũng đổi đúng tick đó.
 - **Cộng hưởng** lấy sát thương **nhát của Lam tại lúc Lam trúng** (vũ khí + cấp hiện tại), không lấy của bóng.
 - **Bóng không phát lại**: vết Dư Âm, đặt dấu, kéo địch, Vệ Hồn, Chuông Treo. Nó chỉ phát lại hộp đòn.
-- Áp cho cả Hồi Vọng (S1): vòng đệm 90 tick ghi cùng các trường này.
+- Áp cho cả Vọng Chiến (S1): vòng đệm 90 tick ghi cùng các trường này.
 
 ### 5e. Ví dụ tính bằng số
 
@@ -311,8 +321,8 @@ Luật chung:
 
 | Bước | Thế | Máu | Ghi chú |
 |---|---|---|---|
-| Bóng trúng | 60 → 50 | 30 | Bóng [0,10] |
-| Lam nhát 3 trong 12 tick → Cộng hưởng | 50 → **0**, vỡ, choáng 120 | 30 − 24 = **6** | Nhát 3 = [12,30]. Cộng hưởng: máu 12 × 2 = 24. **Không gieo chí mạng.** Thế vỡ trước (bước 5) nên vỏ không chặn (bước 6) |
+| Bóng phát lại nhát 3 đã ghi | 60 → 45 | 30 (vỏ chặn) | Phụ của bóng = [12,30] × (0,25; 0,5) = [3,15]. Thế còn nên vỏ chặn máu: "Keng" mờ |
+| Lam nhát 3 trong 12 tick → Cộng hưởng | 45 − 30 → vỏ **vỡ ngay**, choáng 120 | 30 − 12 − 12 = **6** | Nhát 3 = [12,30], **không gieo chí mạng** vì là nhát kích. Cộng thêm = 1 × 12. Vỏ vỡ trước (bước 5) nên không chặn máu (bước 6) |
 | 24 tick sau, vết Dư Âm vang | – | 6 − 16 → **chết** | Vết [16,20], `src='k'`: không chí mạng, không Cộng hưởng lần 2 |
 
 Không có Cộng hưởng: nhát 3 chỉ trừ 30 Thế, máu = 0 ("Keng"). Cần nhát 3 thứ hai để vỡ → vẫn qua được, chỉ chậm hơn (đúng KHGP: bóng là đường tắt, không bắt buộc).
@@ -384,6 +394,7 @@ Dựa trên KHGP mục 3 (bấm chờ 1 lần, `su` 7/7/9):
 5. Bấm dồn không bao giờ ra kỹ năng, vì mỗi lần chạm `giuT` về 0.
 6. Kỹ năng đang hồi: giữ không làm gì, nút Chém không có vòng sáng.
 7. **Lướt hủy thế tụ** (về trạng thái thường, không mất thời gian hồi).
+8. Theo PH1 mục 9: hàng chờ chỉ giữ **1 nhát**, và cả hàng chờ lẫn thế tụ bị **xóa khi bị đánh, chết, đổi phòng hoặc lướt hủy**. Log ghi rõ mỗi lần chạm: nhận / xếp hàng / thay thế / loại, và lần giữ: đạt ngưỡng / nhả sớm / tự tung.
 
 **Riêng Xích**: lần chạm đầu là phóng. Nếu **vẫn giữ** khi đầu xích đi tới tầm → chuông **treo** chờ (tối đa 40 tick). Nhả → giật về (Hồi Chấn).
 - Nhả sớm khi đầu xích chưa đi được 40 % tầm → coi như phóng thường.
@@ -600,7 +611,7 @@ Giảm chi phí:
 | Số liệu nhân chồng | Trung bình | Luật 5c + log mỗi lần trúng: `src`, hệ số được chọn, [máu, Thế] |
 | Xích + tường + thiết kế màn (tầm 230) | Trung bình | Va tường là dừng; kiểm phòng có hành lang ngắn |
 | Đổi vũ khí lách thời gian hồi | Thấp | Hồi gắn vũ khí, vẫn đếm khi cất; 1 Vệ Hồn toàn cục |
-| Phụ thuộc KHGP P0 (Thế, bấm chờ) | Cao | Prototype Âm Đao dựng trên P0 (mục 10) |
+| Phụ thuộc P0-A / P0-B (Thế, bấm chờ, tỷ lệ bóng) | Cao | Prototype Âm Đao dựng trên P0-A; số bóng là biến cấu hình (mục 5d) |
 
 ### 9d. Nên hoãn
 
@@ -618,7 +629,7 @@ Giảm chi phí:
 
 ## 10. Kế hoạch prototype nhỏ: Âm Đao trước
 
-**Điều kiện**: dựng **sau** KHGP P0 #1–#2 (bấm chờ, `su` 7/7/9, Thế). Nếu P0 chưa xong thì chỉ thêm Thế cho hình nộm và quái gác trong trang thử.
+**Điều kiện**: dựng **sau P0-A** của PH1 (bấm chờ 1 nhát, `su` 7/7/9, ngưỡng cần gạt, Chuông Gỗ + quái gác có Thế). Phần bóng/Cộng hưởng trong prototype dùng cấu hình **A (ghi chủ động)**; chỉ thử với Vọng Chiến sau khi P0-B có kết quả.
 
 **Trang**: `game/thu-am-dao/`, sinh từ `demo.html` bằng script (cách `thu-re-muc`). `demo.html` không đổi tới khi duyệt.
 - Lam **rig-v4** (đang chạy trong game). Âm nhận vẽ bằng code nối từ mũi dao.
@@ -649,7 +660,7 @@ Giảm chi phí:
 | Không ra nhầm | Kỹ năng ra ngoài ý muốn < 3 % số lần giữ (log + hỏi). Trên iPhone thật |
 | Thấy rõ | 3 người chưa chơi tự nói được "phần sáng nối dài cũng trúng" và "vết sẽ vang lại" |
 | Cấp có ý nghĩa | Hình nộm 10 s: cấp 2 ≈ +20 % đánh thường. Cấp 4 so cấp 3: Dư Âm trừ thêm ≈ 60 % ở vết. Người thử nhận ra khác biệt **không cần xem số** |
-| Không vỡ luật | Hitstop ≤ 8; mỗi `D` trúng mỗi mục tiêu ≤ 1 lần; Cộng hưởng không có chí mạng; vết `'k'` không Cộng hưởng |
+| Không vỡ luật | Hitstop ≤ 8; mỗi `D` trúng mỗi mục tiêu ≤ 1 lần; nhát kích Cộng hưởng không chí mạng; mỗi nhát ghép ≤ 1 lần; vết `'k'` không Cộng hưởng |
 | Replay | Cùng đoạn ghi → bóng đúng vị trí ở 60 / 120 Hz và khi có hitstop. Bóng không sinh vết Dư Âm |
 
 **Công sức**: **M** (3–4 ngày).
@@ -661,7 +672,7 @@ Sau khi duyệt: **Xích** (L) → **Liềm** (L) → **Trượng** (L+). Mỗi 
 
 1. Đồng ý **8 cấp, mốc 1/3/6/8**, hay vẫn muốn 10 cấp?
 2. **Giữ Chém = kỹ năng** cho cả 4 vũ khí (không thêm nút kỹ năng)?
-3. Đổi tên tính năng chạm đúp Vọng thành **"Hồi Vọng"** (S1)?
+3. Sát thương phụ của bóng **tính theo đòn đã ghi × hệ số** (mục 5d) – đồng ý hướng này để thử ở P0-B?
 4. Âm Đao **chính là** dao hiện tại (S4), và mép hộp đòn 90 thay vì thu về 66?
 5. Nút đổi **⇄** nhỏ ở góc trên-trái khung nút (S6), hay chỉ đổi ở chuông lưu?
 6. Trước khi làm clip vũ khí: cho đo thử **vẽ Lam từ mảnh** (9a) không?
