@@ -1,6 +1,7 @@
-# Kế hoạch gameplay V2 – BẢN RÚT GỌN THEO PHẢN HỒI 1 (27/10/2026)
+# Kế hoạch gameplay V2 – BẢN RÚT GỌN THEO PHẢN HỒI 1, SỬA THEO PHẢN HỒI 3 (27/10/2026)
 
-**Chưa sửa code, chưa publish.** Mọi con số là số để thử. Chưa chơi thử trên iPhone thật.
+**Game chính chưa sửa, chưa publish.** Mọi con số là số để thử. Chưa chơi thử trên iPhone thật.
+**Phản hồi 3** (`PHAN-HOI-3-KE-HOACH-V2-VA-BO-VO-MOC.md`, **PH3**): duyệt bắt đầu P0-A trên trang riêng sau khi sửa 3 luật – đã sửa, xem bảng cuối file "Đã sửa theo phản hồi 3".
 Bản cũ `KE-HOACH-GAMEPLAY.md` (**KHGP**) giữ nguyên để đối chiếu. Bản này theo đúng 10 điểm chốt của `PHAN-HOI-1-KE-HOACH-GAMEPLAY.md` (**PH1**), và khớp `KE-HOACH-VU-KHI.md` đã sửa theo `PHAN-HOI-2-KE-HOACH-VU-KHI.md` (**PH2**).
 
 **Ưu tiên lúc này** (PH1): làm đánh thường ngon trước, rồi chứng minh bóng khiến chiến đấu hay hơn. Không dựng phòng lớn.
@@ -83,12 +84,25 @@ Log mỗi lần chạm Chém (một dòng khi nhận + đúng một dòng kết 
 
 **Tiêu chí** (thay "0 lần bấm bị mất"): **mọi lần bấm đều có dòng nhận và đúng một kết cục theo luật trên**; không lần nào biến mất không lý do; không đòn nào ra mà không có lần bấm tương ứng.
 
-### 3c. Hình và VFX khớp hộp đòn
+### 3c. Hình và VFX khớp hộp đòn – quy ước đếm tick (PH3 sửa 3)
 
-- Cắt bảng `khung_theo_atkT` cho `su` mới: atk1/atk2 bỏ 4 phần tử chuẩn bị đầu (11 → 7), atk3 bỏ 2 (11 → 9). Khung "trúng" phải rơi **đúng `atkT = su`**.
-- Dời `vet_chem.bat_dau` theo cùng số tick bị cắt (10 → 6 / 6 / 8), để vệt chém bật cùng tick hộp đòn.
+**Quy ước đếm** (một chỗ, mọi số trong file này theo quy ước này):
+
+| Khái niệm | Định nghĩa (đọc từ `step()` / `updatePlayer()` / `atkBox()` / `huUpdate()`) |
+|---|---|
+| Tick | Một lần `step()` chạy qua dòng `if(S.hitstop>0)…return` (`S.frame++`). **Bước hitstop không đếm** (đòn, hiệu ứng, bóng cùng đứng) |
+| Tick của đòn | Giá trị `atkT` **sau** `updatePlayer()` của bước đó. Bước ra đòn = **tick 1** (`startAtk` đặt 0, cuối `updatePlayer` tăng lên 1). Bấm lúc rảnh → bước bấm cũng là tick 1 |
+| `su` | Số tick của đòn **tới và gồm** tick hộp bật đầu tiên: hộp bật ở tick `su … su+ac−1` (`atkBox`: `t ≥ su` và `t < su+ac`). Từ bước bấm (tick 1) tới bước hộp bật là `su − 1` bước sau |
+| Khung trúng | Hình vẽ ở lần render sau tick `t` là `khung_theo_atkT[t−1]`. "Khung trúng ở `su`" ⇔ phần tử thứ `su` (chỉ số `su−1`) là khung trúng |
+| `vetBatDau` | Tick của đòn mà **khung 0 của vệt chém hiện ra lần đầu** ở render. Đúng luật khi `vetBatDau = su` |
+
+**Vì sao code cũ ghi `bat_dau` = 10 = su − 1 mà vẫn gọi là "cùng tick":** hiệu ứng tạo bằng `hu()` có `t = 0`, nhưng `huUpdate()` chạy **trong cùng bước** (sau `huVet`) nên `t` thành 1 trước khi vẽ. Khung 0 của vệt dài 1 bước (`buoc [1,3,3,4]`) **không bao giờ hiện**, còn khung 1 hiện ngay ở render của tick 10 – **sớm 1 tick** so với hộp (tick 11). Trừ 1 là bù sai chỗ: vệt sớm 1 tick và mất khung 0.
+
+**P0-A chốt:** `vetBatDau = su` (7 / 7 / 9) và vệt tạo với `t = −1`, nên sau `huUpdate()` cùng bước là `t = 0` → **khung 0 hiện đúng ở render của tick `su`**, cùng tick với hộp và khung trúng. Bóng phát lại theo cùng luật (`c.at === vetBatDau` trong bản ghi). Không chỉ đổi số theo phép trừ: phải đo.
+
+- Cắt bảng `khung_theo_atkT` cho `su` mới: atk1/atk2 bỏ 4 phần tử chuẩn bị đầu (11 → 7), atk3 bỏ 2 (11 → 9). Khung "trúng" phải rơi **đúng tick `su`**.
 - Bóng dùng cùng bảng (`updateEcho` 906) nên tự khớp.
-- Kiểm: lớp debug hộp đòn + số `atkT` trên đầu Lam, chạy ¼ tốc độ, chụp từng tick. **Lệch 0 tick** mới đạt.
+- Kiểm bằng **debug chậm**: lớp debug hộp đòn + số `atkT` / hộp / khung / khung vệt trên đầu Lam, chạy ¼ tốc độ (mỗi tick giữ 4 hình video), ghi bảng từng tick cho cả nhịp cũ (`?p0=0`) và mới. **Lệch 0 tick** mới đạt.
 
 ### 3d. Đạt P0-A khi
 
@@ -179,15 +193,24 @@ THE        = { toiDa, vo, mat, choang, hoiPhuc, onDinh, choHoi:90, hoiMoi:3,
 LOAI_QUAI[id] = { ten, mau, the:THE|null, nang:'nhe'|'vua'|'nang'|'neo',
                   than:[w,h], anDon:[w,h], khongNgatSau:18, vaiTro, don:{…DON} }
 CFG = { resWindow:12, khoaCH:45, hsCH:8, CH_MAU:1, CH_THE:0.5, BONG_MAU:0.25, BONG_THE:0.5 }
-// Lần đòn: tạo LÚC RA ĐÒN GỐC, chỉ số CHỐT tại đây, không đọc lại khi trúng
+// Lần đòn: tạo LÚC RA ĐÒN GỐC, chỉ số CHỐT tại đây, không đọc lại khi trúng. SỐNG SUỐT VÒNG ĐỜI ĐÒN (mọi tick hộp bật)
 D   = { ma, src:'p'|'e'|'k', vk, loai, goc:[mau,the], chiMang, heSoCM, hs, co, hb, daTrung:[] }
-// Bản ghi bóng mỗi tick (cả cấu hình A và B)
+// Bản ghi bóng mỗi tick (cả cấu hình A và B). maGoc = D.ma của đòn gốc (giống nhau ở mọi tick của cùng một đòn)
 REC[i] = { x, y, khung, vk, n, hop:[ {loai, x,y,w,h, ve, goc, co, maGoc} ×≤4 ] }
+// Mỗi LẦN PHÁT bóng có một bảng ánh xạ riêng, xoá khi bóng mới phát / bóng mất
+PHAT = { id, bang:{ maGoc → D bóng } }   // D bóng tạo ở tick ĐẦU TIÊN gặp maGoc đó, dùng lại ở các tick sau
 ```
 
 - `pl.cs` = gốc vũ khí → cấp → Âm Phù, gộp **một lần** khi trang bị / nâng cấp / đổi Âm Phù. `D.goc` chép từ `pl.cs` lúc tạo đòn.
 - Bản ghi bóng giữ `goc` đã chốt → bóng không tra lại cấp lúc phát (PH2 mục 4).
 - Danh sách hộp ≤ 4 và luật "có hộp phải có hình": `KE-HOACH-VU-KHI.md` mục 5f.
+
+**Mã đòn bền suốt vòng đời đòn (PH3 sửa 1).**
+- Lam: `D` tạo **một lần** lúc ra đòn (`startAtk`), dùng cho mọi tick hộp bật (`su … su+ac−1`). `daTrung` chỉ xoá khi đòn mới bắt đầu.
+- Bóng: mỗi **lần phát** có bảng `maGoc → maReplay`. Tick đầu tiên gặp hộp có `maGoc` chưa có trong bảng → tạo **một** `D` bóng (`src 'e'`, mã mới, `goc`/`co` lấy từ bản ghi, `daTrung` rỗng); các tick sau của cùng hộp **dùng lại đúng `D` đó**. **Không** tạo `D`/`daTrung` mới mỗi tick → hộp bật 8 tick vẫn trúng mỗi mục tiêu **1 lần**.
+- Lần phát sau (bản ghi mới, hoặc phát lại bản ghi cũ) có bảng mới → mã mới: không "dùng lại" dấu Cộng hưởng của lần phát trước.
+- Xích (sau này): lượt đi và lượt về là **hai `maGoc` khác nhau** (`ma·2 + lượt`) khi luật cho phép trúng cả hai lượt; nếu luật chỉ cho 1 lần / ném thì dùng chung một `maGoc`.
+- Kiểm: log mỗi lần trúng ghi `ma`, `maGoc`, tick; video "hộp nhiều tick" phải ra đúng 1 dòng trúng / mục tiêu / đòn.
 
 ### 6b. Công thức (một lần `D` trúng mục tiêu `e`)
 
@@ -197,13 +220,18 @@ REC[i] = { x, y, khung, vk, n, hop:[ {loai, x,y,w,h, ve, goc, co, maGoc} ×≤4 
 4. **Trừ Thế** theo trạng thái ở mục 5. Về 0 → vỡ.
 5. **Làm tròn xuống. Tối thiểu 1 chỉ khi `goc.máu > 0` và không bị chặn.** `goc.máu = 0` → luôn 0.
 6. **Cộng hưởng**: nhát Lam (`'p'`) và nhát bóng (`'e'`), cả hai có `co.ch`, trúng cùng `e` cách ≤ `resWindow` tick, **chưa ghép lần nào**, `e` không bị khóa → **thêm một lần trúng**:
-   - máu thêm = `floor(CH_MAU × máuCơSở)`; `máuCơSở` = `goc.máu` đã lưu của nhát Lam, **chưa nhân chí mạng**. Ai trúng trước cũng như nhau.
+   - máu thêm = `floor(CH_MAU × máuCơSở)`; `máuCơSở` = `goc.máu` đã lưu của nhát Lam, **chưa nhân chí mạng**. Ai trúng trước cũng dùng **cùng công thức, cùng số** này.
    - Thế: vỏ cứng → vỡ ngay; tinh anh / boss → `−CH_THE × Thế tối đa` theo luật mục 5.
    - Phần thêm không bị vỏ chặn. Xoá nhớ của cả hai nhát (mỗi nhát ghép ≤ 1 lần), khóa `e` 45 tick, hitstop 8.
 7. **Hitstop** = `Math.max` của các lần trúng trong tick, không cộng. Bóng `hs − 1`.
 8. **Hiệu ứng vũ khí**: chỉ khi `D.co` cho phép (kéo, dấu, Dư Chấn). Vết Dư Âm sinh **theo lần dùng kỹ năng**, không theo lần trúng (`KE-HOACH-VU-KHI.md` 5b–5c).
 
-Trả lời PH1 mục 6: Cộng hưởng là **cộng thêm**, không phải "×2 tổng". Cặp ghép = 1 nhát Lam + 1 nhát bóng, mỗi nhát ghép tối đa một lần; mỗi lần bóng phát là mã nhát mới. Bóng trúng trước hay Lam trúng trước cho **cùng tổng**.
+Trả lời PH1 mục 6: Cộng hưởng là **cộng thêm**, không phải "×2 tổng". Cặp ghép = 1 nhát Lam + 1 nhát bóng, mỗi nhát ghép tối đa một lần trên một mục tiêu; mỗi lần phát bóng có mã đòn riêng (6a).
+
+**Thứ tự trúng – cái gì được bảo đảm, cái gì không (PH3 sửa 2).** Luật "nhát làm vỡ vỏ không gây máu" **không** bảo đảm mọi thứ tự trúng cho cùng tổng máu: nếu nhát Lam đến trước vừa đủ phá Thế, bóng đến sau đánh vào vỏ đã vỡ và gây máu; đổi thứ tự thì bóng bị chặn, Lam phá vỏ – tổng máu lệch vì hai nhát có sát thương khác nhau. Không cố ép đối xứng tuyệt đối. Bảo đảm ba điều:
+1. **Phần thưởng Cộng hưởng dùng cùng công thức** dù ai trúng trước: máu thêm từ `máuCơSở` của nhát Lam (chưa chí mạng), Thế theo bước 6.
+2. **Hit trong cùng tick không phụ thuộc thứ tự duyệt mảng**: mọi lần trúng cùng tick trên một mục tiêu được gom lại rồi xét **một lần**: chặn máu theo trạng thái Thế **đầu tick** (trước mọi lần trúng của tick đó), Thế trừ = tổng, cặp Cộng hưởng chọn theo nguồn (`'p'` ↔ `'e'`, mã nhỏ nhất nếu nhiều), không theo ai được duyệt trước. Duyệt Lam trước hay bóng trước, mục tiêu nào trước → cùng kết quả.
+3. **Hit ở tick sau xử lý theo trạng thái thực tại lúc trúng**: vỏ đã vỡ thì nhát sau gây máu; đang choáng không trừ Thế; đang ổn định không xuống dưới 1. Nhất quán cho mọi nguồn.
 
 ### 6c. Ví dụ số (dao placeholder P0-A: nhát 1–2 [10,10], nhát 3 [10,30])
 
@@ -223,7 +251,17 @@ Trả lời PH1 mục 6: Cộng hưởng là **cộng thêm**, không phải "×
 
 Không có bóng: từ Thế 40 cần thêm nhát 1 + nhát 2 + nhát 3 mới vỡ (nhát 3 không gây máu), rồi thêm 3 nhát máu → chậm khoảng **một combo**. Bóng là đường tắt, không bắt buộc.
 
-**Ví dụ 3 – thứ tự không đổi kết quả** (tinh anh [160, 80], Âm Đao cấp 5, Lam chí mạng 18, bóng phụ [3,5]): Lam trước hay bóng trước đều ra **[33 máu, 55 Thế]** = Lam 18 + bóng 3 + thêm 12 / Thế 10 + 5 + 40. Chi tiết: `KE-HOACH-VU-KHI.md` 5e ví dụ 3.
+**Ví dụ 3 – phần thưởng Cộng hưởng không đổi theo thứ tự** (tinh anh [160, 80], **không có vỏ**, Âm Đao cấp 5, Lam chí mạng 18, bóng phụ [3,5]): Lam trước hay bóng trước đều ra **[33 máu, 55 Thế]** = Lam 18 + bóng 3 + thêm 12 / Thế 10 + 5 + 40. Cùng tổng ở đây vì tinh anh không có vỏ chặn máu. Chi tiết: `KE-HOACH-VU-KHI.md` 5e ví dụ 3.
+
+**Ví dụ 4 – có vỏ, khác tick, tổng máu được phép khác** (quái gác [30, 60, vỏ], Thế còn 10; Lam [10,10], bóng [2,5]):
+
+| Thứ tự | Lần trúng 1 | Lần trúng 2 (cách 5 tick, ≤ 12) | Cộng hưởng | Tổng máu |
+|---|---|---|---|---|
+| Lam trước | Lam: Thế 10 > 0 → chặn máu, Thế 10 → 0 **vỡ** | Bóng: vỏ đã vỡ → **2** máu; đang choáng không trừ Thế | thêm 10 (vỏ đã vỡ) | **12** |
+| Bóng trước | Bóng: Thế 10 > 0 → chặn, Thế 10 → 5 | Lam: Thế 5 > 0 → chặn; Cộng hưởng → vỡ ngay | thêm 10 | **10** |
+| Cùng tick | Gom: Thế đầu tick 10 > 0 → **cả hai bị chặn**; Thế 10 − 10 − 5 → vỡ | – | thêm 10 | **10** (đổi thứ tự duyệt vẫn 10) |
+
+Phần thưởng (10) giống nhau ở cả ba dòng; chỉ phần máu thường của bóng (2) phụ thuộc vỏ đã vỡ hay chưa **lúc nó trúng** – đúng luật 3.
 
 ---
 
@@ -236,7 +274,7 @@ Không có bóng: từ Thế 40 cần thêm nhát 1 + nhát 2 + nhát 3 mới v�
 | **P0-C** | Tinh anh + một nâng cấp có tạo cảm giác tiến triển không? | Phòng E tinh anh 2 đòn, rơi **Ấn Rèn I**; phòng F đe rèn → **Âm Đao cấp 3 (mở Dư Âm)** | Đủ 8 cấp, vật liệu, menu, lưu game |
 
 - **Prototype Âm Đao cấp 1–4** (`KE-HOACH-VU-KHI.md` mục 10) đã được duyệt, làm **sau P0-A**, song song P0-B, trên cùng phòng A–C. P0-C dùng lại phần Dư Âm của nó.
-- **Bọ Vỏ Mộc** là quái mới đầu tiên, thử phá Thế bằng đổi hướng (giáp trước `mat`, bụng sau mềm). Trang thử `game/thu-bo-vo-moc/` của phiên khác đã lên nhánh (commit `58e0eb0`: rig 5 mảnh, 13 clip, mai dội, vỡ mai lật ngửa) – **không sửa thư mục đó**; P0-B chỉ dùng lại rig/clip sau khi chủ dự án trả lời các câu hỏi trong `game/kiem-thu-bo-vo-moc/GHI-CHU.md`. Lưu ý lệch số: trang Bọ choáng **3 s (180 tick)**, bảng mục 5 đề xuất vỏ cứng 120 – chốt một số khi duyệt Bọ. Nếu Bọ chưa được duyệt → P0-B dùng lại B + C, Bọ dời sang P0-C.
+- **Bọ Vỏ Mộc** là quái mới đầu tiên, thử phá Thế bằng đổi hướng (giáp trước `mat`, bụng sau mềm). Trang thử `game/thu-bo-vo-moc/` của phiên khác đã lên nhánh (commit `58e0eb0`: rig 5 mảnh, 13 clip, mai dội, vỡ mai lật ngửa) – **không sửa thư mục đó**; P0-B chỉ dùng lại rig/clip sau khi chủ dự án trả lời các câu hỏi trong `game/kiem-thu-bo-vo-moc/GHI-CHU.md`. Lệch số trang Bọ (choáng 180 tick) đã được PH3 chốt: **120 tick**, cùng bảng mục 5. PH3: Bọ vào P0-B **như bài thử thứ hai** (so Vọng A/B trên B + C trước, rồi mới thử phòng Bọ).
 - **Tinh anh đầu tiên: Chuông Gỗ biến thể** ("Chuông Gỗ Gác Lớn", [160, 80], nặng, 2 đòn: đập như Chuông Gỗ + húc ngang báo trước 36 tick). Lý do so với Người Gác Câm:
 
 | | Chuông Gỗ biến thể (chọn cho P0-C) | Người Gác Câm |
@@ -336,7 +374,7 @@ Trường `dauAm` trong `DON` không được dùng nếu thiếu `dauHinh` (m�
 | Lấy chỉ số cho bóng | VK cũ: cấp lúc bóng xuất hiện | **Chốt lúc tạo đòn gốc**, lưu trong bản ghi |
 | Tối thiểu 1 sát thương | VK cũ: mọi đòn | Chỉ khi `goc.máu > 0` (0 là 0) |
 | Chí mạng khi Cộng hưởng | VK cũ: nhát kích không gieo chí mạng | Gieo lúc vung, không hồi tố; thêm từ `máuCơSở` chưa chí mạng → đối xứng |
-| Nhát làm vỡ vỏ có gây máu? | KHGP/VK cũ: có | **Không** (chặn theo Thế trước lần trúng) – cần để Cộng hưởng đối xứng |
+| Nhát làm vỡ vỏ có gây máu? | KHGP/VK cũ: có | **Không** (chặn theo Thế trước lần trúng) – luật thử "Keng → vỡ → đánh phần mềm" (PH3). **Không** bảo đảm cùng tổng máu mọi thứ tự; chỉ bảo đảm 3 điều ở 6b |
 | Hộp đòn trong bản ghi | VK cũ: 1 cận chiến + 2 đạn | Danh sách ≤ 4 hộp, hộp nào cũng có hình (VK 5f) |
 | Mở kỹ năng | VK cũ: Ấn I từ boss | **Ấn I từ tinh anh trước boss** (P0-C thử đúng việc này); boss thưởng Xích |
 | Xích kéo | VK cũ: "máu ≤ 60" | Hạng nặng nhẹ/vừa/nặng/neo (`LOAI_QUAI.nang`, mục 9) |
@@ -349,9 +387,22 @@ Trường `dauAm` trong `DON` không được dùng nếu thiếu `dauHinh` (m�
 
 ---
 
-## 11. Cần chủ dự án quyết
+## 11. Bốn câu hỏi trước – đã có trả lời (PH3)
 
-1. Duyệt **giao diện dữ liệu 6a + công thức 6b** để bắt đầu P0-A?
-2. Đồng ý **nhát làm vỡ vỏ không gây máu** (đổi so với KHGP) để Cộng hưởng đối xứng?
-3. Tinh anh P0-C dùng **Chuông Gỗ biến thể**, Người Gác Câm để P1?
-4. Bọ Vỏ Mộc vào **P0-B** (nếu trang của phiên kia xong kịp), hay để P0-C cho P0-B chỉ đo Vọng?
+| Câu hỏi | Chủ dự án chốt |
+|---|---|
+| Giao diện dữ liệu 6a + công thức 6b đủ cho P0-A? | Đủ, sau khi sửa mã đòn replay (đã sửa ở 6a) |
+| Nhát làm vỡ vỏ không gây máu? | Đồng ý làm **luật thử**, nhưng không coi là cách bảo đảm đối xứng (đã sửa ở 6b) |
+| Tinh anh P0-C dùng Chuông Gỗ biến thể? | Đồng ý, hai đòn khác rõ nhịp |
+| Bọ vào P0-B hay P0-C? | **P0-B, bài thử thứ hai**: so Vọng A/B trên B+C trước, rồi mới thử trên phòng Bọ. Số Bọ để thử: cao 74, máu 4, mai 4, choáng **120** tick (PH3 mục 4) |
+
+---
+
+## Đã sửa theo phản hồi 3
+
+| # | Điểm PH3 | Đã sửa ở đâu | Tóm tắt |
+|---|---|---|---|
+| 1 | Mã đòn replay bền suốt vòng đời đòn | 6a (khối dữ liệu + đoạn "Mã đòn bền"), `KE-HOACH-VU-KHI.md` 5d, 8c, 8e | `maGoc → maReplay` theo từng lần phát; `D` bóng tạo ở tick đầu gặp `maGoc`, dùng lại các tick sau; không tạo `D`/`daTrung` mỗi tick; xích tách lượt đi/về bằng hai `maGoc` khi luật cho phép |
+| 2 | Bỏ khẳng định "cùng tổng máu mọi thứ tự" | 6b (đoạn "Thứ tự trúng"), 6c ví dụ 3–4, 10, `KE-HOACH-VU-KHI.md` 5c bước 3, 5e ví dụ 3 | Chỉ bảo đảm: thưởng Cộng hưởng cùng công thức; hit cùng tick gom lại, chặn theo Thế đầu tick, không phụ thuộc thứ tự duyệt; hit khác tick theo trạng thái thực tại. Ví dụ 4 cho thấy tổng lệch (12 / 10) là đúng luật |
+| 3 | Quy ước tick của `su`, khung trúng, `vetBatDau` | 3c (bảng quy ước) | Tick đòn = `atkT` sau `updatePlayer`, bước ra đòn = tick 1; hộp tick `su…su+ac−1`; khung `khung_theo_atkT[t−1]`; `vetBatDau = su` + tạo vệt với `t = −1`. Giải thích vì sao code cũ ghi `su − 1` (khung 0 bị `huUpdate` cùng bước nuốt, vệt sớm 1 tick). Kiểm bằng debug chậm ¼ ở trang P0-A |
+| + | Bọ: choáng 120, vào P0-B bài thử thứ hai | 7, 11 | Ghi số chốt; chưa làm trong P0-A |

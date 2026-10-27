@@ -1,4 +1,4 @@
-# Kế hoạch 4 vũ khí + tiến trình nâng cấp – BẢN SỬA THEO PHẢN HỒI 2 (27/10/2026)
+# Kế hoạch 4 vũ khí + tiến trình nâng cấp – BẢN SỬA THEO PHẢN HỒI 2 + PHẢN HỒI 3 (27/10/2026)
 
 Trả lời `docs/gameplay/YEU-CAU-KE-HOACH-VU-KHI.md`. **Chưa sửa code, chưa publish.** Mọi con số là **số để thử, chưa cân bằng**.
 Chưa chơi thử trên iPhone thật: nhận xét về cảm ứng là suy luận từ code, phải kiểm lại trên máy.
@@ -329,7 +329,7 @@ Bóng không rút hồi nấc Vọng (KHGP).
 **Mỗi lần `D` trúng mục tiêu `e`:**
 1. Trúng nếu hộp chồng `e` và `e` chưa có trong `D.daTrung`.
 2. Số của lần trúng: Lam / phụ: `m = goc.máu × (chí mạng ? hệ số : 1)`, `t = goc.Thế`. Bóng: `m = goc.máu × BONG_MAU`, `t = goc.Thế × BONG_THE`, với `goc` là số đã chốt lưu trong bản ghi (5d).
-3. Chặn máu, xét theo Thế **trước** lần trúng này: `e` có `vo` và Thế > 0 → `m = 0` ("Keng"); `e` có `mat`, bị đánh từ phía trước và Thế > 0 → `m = 0`. Vì vậy **nhát làm vỡ vỏ không gây máu, từ nhát sau mới gây máu** (luật này giữ Cộng hưởng đối xứng, xem ví dụ 3).
+3. Chặn máu, xét theo Thế **trước** lần trúng này: `e` có `vo` và Thế > 0 → `m = 0` ("Keng"); `e` có `mat`, bị đánh từ phía trước và Thế > 0 → `m = 0`. Vì vậy **nhát làm vỡ vỏ không gây máu, từ nhát sau mới gây máu** (luật thử "Keng → vỡ → đánh phần mềm", PH3). Luật này **không** bảo đảm mọi thứ tự trúng cho cùng tổng máu; chỉ bảo đảm 3 điều ở KHGP2 mục 6b (thưởng Cộng hưởng cùng công thức; hit cùng tick gom lại, chặn theo Thế đầu tick, không phụ thuộc thứ tự duyệt; hit khác tick theo trạng thái thực tại).
 4. Trừ Thế theo trạng thái Thế của `e` (KHGP2 mục 5: đang choáng không trừ, đang ổn định không xuống dưới 1). Về 0 → vỡ.
 5. Làm tròn xuống. **Chỉ khi `goc.máu > 0` và không bị chặn ở bước 3 thì mới áp tối thiểu 1.** `goc.máu = 0` thì luôn ra 0 (PH2 mục 5.5).
 6. **Cộng hưởng** (cả hai nhát có `co.ch`, `e` không bị khóa 45 tick): lần trúng này ghép được với nhát của bên kia (Lam ↔ bóng) trúng `e` trong ≤ `resWindow` tick và **chưa ghép lần nào**. Khi đó thêm **một lần trúng cộng thêm**:
@@ -357,7 +357,7 @@ Giới hạn proc còn lại: Cộng hưởng 1 lần / 45 tick / mục tiêu (K
 
 - **Sát thương phụ của bóng** (PH1 mục 3, chưa chốt tỷ lệ) = `goc` **đã chốt của đòn gốc** × `BONG_MAU` (thử 0,25) và × `BONG_THE` (thử 0,5). Tối thiểu 1 máu **chỉ khi** `goc.máu > 0` (số nhỏ màu teal mờ).
 - **Thời điểm chốt = lúc Lam tạo đòn gốc trong đoạn ghi** (PH2 mục 5.4). Bản ghi lưu luôn `goc`, `co`, vũ khí và loại đòn của từng hộp. Bóng **không tra lại** vũ khí hay cấp lúc phát. Trong prototype có nút đổi cấp ở ⚙ giữa trận, nên luật này phải đúng cả khi cấp đổi lúc bóng còn.
-- Mỗi lần bóng phát lại một hộp là một `D` mới (mã nhát mới, `daTrung` mới), nên phát lại không "dùng lại" dấu thời gian của nhát cũ để Cộng hưởng thêm lần nữa.
+- **Mã đòn bền (PH3):** mỗi **lần phát** bóng có bảng `maGoc → maReplay`. Hộp có `maGoc` chưa gặp trong lần phát này → tạo **một** `D` bóng (mã mới, `daTrung` rỗng); các tick sau của cùng hộp dùng lại `D` đó. **Không tạo `D` / `daTrung` mới mỗi tick** (hộp bật 8 tick vẫn trúng mỗi mục tiêu 1 lần). Lần phát sau có bảng mới, nên không "dùng lại" dấu thời gian của lần phát trước để Cộng hưởng thêm. Xích: lượt đi / về là hai `maGoc` khi luật cho trúng cả hai lượt.
 - Ba biến **tách riêng** để thử từng cái một (PH1): `BONG_MAU`, `BONG_THE`, `CH_MAU` (mặc định 1 × nhát Lam). Cách so: KHGP2 mục 4.
 - **Cộng hưởng** lấy `máuCơSở` của **nhát Lam** (số đã lưu, chưa chí mạng), không lấy của bóng.
 - **Bóng không phát lại**: vết Dư Âm, đặt dấu, kéo địch, Vệ Hồn, Chuông Treo. Nó chỉ phát lại hộp đòn (5f).
@@ -392,7 +392,7 @@ Cấu hình thử dùng trong mọi ví dụ: `BONG_MAU 0,25`, `BONG_THE 0,5`, `
 
 Không dùng Dư Âm (chỉ đánh thường) cần combo + 1 nhát để vỡ vỏ (mục 4b), chậm hơn khoảng 1 nhịp combo.
 
-**Ví dụ 3 – Cộng hưởng đối xứng: Âm Đao cấp 5 + bóng vào tinh anh [160, 80].** Nhát Lam chí mạng. Bóng phát lại nhát 1 đã ghi cũng ở cấp 5: `goc` = [12,10] → phụ của bóng = [floor(3) = **3**, **5**].
+**Ví dụ 3 – phần thưởng Cộng hưởng nhất quán: Âm Đao cấp 5 + bóng vào tinh anh [160, 80] (không có vỏ).** Nhát Lam chí mạng. Bóng phát lại nhát 1 đã ghi cũng ở cấp 5: `goc` = [12,10] → phụ của bóng = [floor(3) = **3**, **5**].
 
 | Thứ tự | Lần trúng 1 | Lần trúng 2 (cách ≤ 12 tick) | Cộng thêm | Tổng |
 |---|---|---|---|---|
@@ -400,6 +400,7 @@ Không dùng Dư Âm (chỉ đánh thường) cần combo + 1 nhát để vỡ v
 | Bóng trước | Bóng [3,5] | Lam [18,10] (vẫn chí mạng) | [12, 40] | **[33, 55]** |
 
 Cộng thêm = 1 × `máuCơSở` 12 (chưa chí mạng) và `CH_THE` = 40. Thế 80 → 25, **không về 0**.
+Cùng tổng ở đây vì tinh anh không có vỏ chặn máu. Với quái có vỏ, hai thứ tự khác tick có thể ra tổng khác (KHGP2 6c ví dụ 4) – điều được bảo đảm là phần thưởng dùng cùng công thức.
 Nếu đoạn ghi được tạo lúc Lam còn cấp 1 rồi đổi lên cấp 5 ở ⚙: bóng vẫn dùng `goc` [10,10] đã chốt → phụ [2,5]; cộng thêm vẫn lấy 12 của nhát Lam hiện tại.
 
 **Ví dụ 4 – 0 là 0.** Sóng Dư Chấn [0,15] trúng Chuông Gỗ (không Thế): **0 máu**, không có Thế để trừ, chỉ nhấp nháy viền. Trúng quái gác Thế 60: Thế 45, máu **0** (không phải 1).
@@ -641,7 +642,7 @@ Bảng debug trong ⚙ hiện 3 cột riêng (gốc / +cấp / +Âm Phù) để 
 
 `strike(e, src, sw, face, n, hb)` (917) đổi thành `strike(e, D)`.
 
-`D = { ma, src, vk, loai, goc:[máu,Thế], chiMang, heSoCM, hs, co:{ch,duChan,hieuUng,kichDau}, nang, hb, daTrung:[] }` – lấy từ pool, không tạo mới mỗi tick. **`goc`, `chiMang`, `co` điền một lần lúc tạo đòn gốc**, không đọc lại `pl.cs` khi trúng.
+`D = { ma, src, vk, loai, goc:[máu,Thế], chiMang, heSoCM, hs, co:{ch,duChan,hieuUng,kichDau}, nang, hb, daTrung:[] }` – lấy từ pool, không tạo mới mỗi tick. **Sống suốt vòng đời đòn**: Lam tạo 1 lần ở `startAtk`, dùng cho mọi tick hộp bật; bóng tạo 1 lần / `maGoc` / lần phát (8e). **`goc`, `chiMang`, `co` điền một lần lúc tạo đòn gốc**, không đọc lại `pl.cs` khi trúng.
 
 `applyHits(D)` kiểm `D.daTrung` thay cho `swP/swE` (S7).
 - Mỗi lượt xích (đi / về), mỗi âm cầu, mỗi vết Dư Âm, mỗi lần nện của Vệ Hồn = **một `D` riêng**.
@@ -670,7 +671,7 @@ Mỗi ô `REC` (310) thêm:
 - `hop[0..3]`: **danh sách tối đa 4 hộp** (5f), mỗi hộp `{loai, x, y, w, h, ve:{…}, goc:[máu,Thế], co, maGoc}`,
 - `n`: số hộp đang dùng.
 
-`recordFrame()` (898) chép hộp đang bật **cùng `goc` đã chốt** của `D` sinh ra nó. `step()` dòng 1315 gọi `applyHits` cho từng hộp, mỗi hộp một `D` bóng mới (`src 'e'`, mã mới, `goc` lấy từ bản ghi). Loại hộp chưa có hàm vẽ cho bóng thì không ghi (5f).
+`recordFrame()` (898) chép hộp đang bật **cùng `goc` đã chốt** của `D` sinh ra nó. `step()` dòng 1315 gọi `applyHits` cho từng hộp với `D` bóng **tra theo `maGoc` trong bảng của lần phát này** (`src 'e'`, mã mới, `goc` lấy từ bản ghi): chưa có thì tạo, có rồi thì dùng lại – **không** tạo `D` mới mỗi tick (PH3 sửa 1). Loại hộp chưa có hàm vẽ cho bóng thì không ghi (5f).
 Vẫn ghi **trạng thái**, không ghi phím → tính xác định giữ nguyên.
 
 ### 8f. Lưu game (hiện chưa có)
@@ -805,7 +806,7 @@ Giảm chi phí:
 
 | Tiêu chí | Đạt khi |
 |---|---|
-| Hình khớp hộp | Khung "trúng" và vệt chém bắt đầu đúng tick hộp bật sau khi cắt `khung_theo_atkT` (mục 1a); âm nhận chỉ sáng khi hộp bật. Kiểm bằng lớp debug hộp đòn ở tốc độ ¼ |
+| Hình khớp hộp | Khung "trúng" và khung 0 của vệt chém hiện đúng tick hộp bật theo quy ước tick KHGP2 3c (`vetBatDau = su`) sau khi cắt `khung_theo_atkT` (mục 1a); âm nhận chỉ sáng khi hộp bật. Kiểm bằng lớp debug hộp đòn ở tốc độ ¼ |
 | Không vỡ luật | Hitstop ≤ 8; mỗi `D` trúng mỗi mục tiêu ≤ 1 lần; mỗi nhát ghép Cộng hưởng ≤ 1 lần; chí mạng không bị bỏ dù bóng trúng trước; `goc.máu = 0` → 0; vết `'k'` không Cộng hưởng; sóng Dư Chấn không sinh sóng |
 | Vết theo lần dùng | 10 lần dùng Dư Âm (5 trúng, 5 hụt, 1 lần trúng 2 con) → đúng 10 vết; 0 vết từ đánh thường |
 | Replay | Cùng đoạn ghi → bóng đúng vị trí ở 60 / 120 Hz và khi có hitstop. Bóng không sinh vết. Mọi hộp của bóng có hình tương ứng |
@@ -847,3 +848,13 @@ Sau khi duyệt: **Xích** (L) → **Liềm** (L) → **Trượng** (L+). Mỗi 
 | 13 | Âm Phù đổi sát thương / hồi chiêu có điều kiện | 6a | Bỏ lệnh cấm tuyệt đối; bảng ví dụ đánh đổi; cùng định dạng dữ liệu với bảng cấp |
 | 14 | Đo riêng Lam vẽ từ mảnh, không khẳng định RAM Safari | 1a, 1b, 9a, 9c | Bài đo thời gian khung + bộ nhớ ảnh **ước tính**; mọi số "MB" trong file là ước tính rộng × cao × 4 |
 | + | Ba câu prototype phải trả lời | 10a | Bảng cách đo + tiêu chí đạt cho từng câu |
+
+---
+
+## Đã sửa theo phản hồi 3
+
+| # | Điểm PH3 | Đã sửa ở đâu | Tóm tắt |
+|---|---|---|---|
+| 1 | Mã đòn replay bền suốt vòng đời đòn | 5d, 8c, 8e | Bảng `maGoc → maReplay` theo từng lần phát; không tạo `D`/`daTrung` mỗi tick; xích tách lượt đi/về bằng hai `maGoc` khi luật cho phép |
+| 2 | Không khẳng định luật phá vỏ cho cùng tổng mọi thứ tự | 5c bước 3, 5e ví dụ 3 | Chỉ bảo đảm 3 điều của KHGP2 6b; dòng 6 bảng "Đã sửa theo phản hồi 2" ("cùng tổng dù ai trước") chỉ đúng khi mục tiêu không có vỏ |
+| 3 | Quy ước tick | 10b | Theo KHGP2 3c: `vetBatDau = su`, khung 0 vệt hiện cùng tick hộp |
