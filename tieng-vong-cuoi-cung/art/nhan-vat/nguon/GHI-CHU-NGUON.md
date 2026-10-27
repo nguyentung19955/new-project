@@ -2,3 +2,4 @@
 - npc-lang.png – 2 NPC nhìn ngang, cao ≈ Lam: thợ rèn (mũ nâu đỏ, tạp dề, búa) và trưởng làng (áo choàng lá xanh, gậy chuông, kính). Chỉ có tư thế đứng, chưa tách mảnh.
 - quai-doi-chuong.png – Dơi Chuông (quái bay nhỏ ≈ ½ Lam): thân chuông + 2 cánh + quả lắc; có cả bản nguyên và mảnh rời.
 - chan-dung.png – chân dung hội thoại 4 ô: Lam bình thường, Lam ngạc nhiên (mắt to), thợ rèn, trưởng làng. LƯU Ý: Lam vẫn có chóp mũ → cắt chóp bằng code cho khớp Lam trong game.
+- npc-lang-manh.png – mảnh rời 2 NPC: đầu+mũ, thân, 2 găng (1 cầm dụng cụ), 2 ủng, dụng cụ rời (búa / gậy chuông) → làm rig đứng thở/gật như Lam.

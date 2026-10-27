@@ -7,3 +7,5 @@
 - diem-luu.png – điểm lưu: cổng rễ có chuông treo, 2 trạng thái cùng khung: chưa kích hoạt (chuông xỉn) / kích hoạt (chuông sáng, vòng ngọc)
 - den-long.png – 3 kiểu đèn lồng treo móc (tròn / lồng vuông / hình chuông), hàng trên SÁNG, hàng dưới TẮT, cùng khung
 - re-tran.png – rễ + rêu treo từ trần đá, 3 đoạn: đầu trái / giữa lặp / đầu phải (cho trần Phòng boss)
+- chuong-lon.png – chuông lớn Cây Chuông Vĩnh Hằng treo trên khung rễ, 2 trạng thái cùng khung: im / rung (ký hiệu chuông phát sáng ngọc, vạch chuyển động) – đặt giữa Làng Chuông (Sân chuông) làm điểm nhấn.
+- do-lang.png – thang gỗ 3 đoạn (đầu / giữa lặp / chân), quầy hàng mái vải có biển chuông, bảng nhiệm vụ, biển chỉ đường 2 mũi tên.
