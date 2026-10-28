@@ -1,0 +1,84 @@
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f0 ==== CA 3a · lướt SỚM ~3 tick (khe ≈ 70 px) vào húc đối đầu → bản trước TRÚNG; giờ giữ miễn tới khi ra khỏi thân
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f36 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f43 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] LƯỚT XUYÊN thân: chạm thân lúc còn miễn (7 tick, lướt còn 3) khi tinh anh huc → giữ miễn tới khi ra khỏi thân
+f52 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   ra khỏi thân sau 9 tick (đã ra, dời 101 px) → thêm 4 tick miễn
+f72 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: dừng (hết 36 tick) → hồi 46 tick
+f100 ==== CA 3b · lướt QUÁ SỚM (ngay khi nó vừa lao, khe ≈ 250 px) → hết lướt + hết miễn trước khi chạm → vẫn trúng (đúng luật)
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f36 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f59 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] tinh anh HÚC TRÚNG Lam → máu Lam 5 → 4
+f72 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: dừng (hết 36 tick) → hồi 46 tick
+f84 ==== CA 4 · RỜI E khi tinh anh đang đánh → ngừng đánh, không truy vào F, về chỗ, hồi đầy · vết Dư Âm vang lúc Lam đã ở F không trừ máu
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f7 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 120 → 108 · Thế 80 → 70 [thuong]
+f25 DƯ ÂM tung #1 (Âm Đao cấp 3)
+f30 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 108 → 93 · Thế 70 → 50 [thuong]
+f31   Dư Âm: chém vang TRÚNG
+f46 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] Lam RỜI sân E (sang Lò rèn) khi tinh anh đang di → NGỪNG đánh, không truy đuổi, về chỗ (cột 19); tới nơi HỒI ĐẦY máu + Thế · máu lúc rời 93, Thế 50
+f46 vào phòng Lò rèn
+f58   Dư Âm: vết vang HỤT (Lam ở ngoài E → tinh anh không nhận đòn)
+f105 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] tinh anh VỀ TỚI chỗ → HỒI ĐẦY 160 máu, Thế 80/80 → ngủ gác (Lam vào E, cách ≤ 560 px → thức lại)
+f279 vào phòng Đấu trường tinh anh
+f280 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 291 px
+f321 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ĐẬP #1 báo trước 30 tick (GIƠ TAY + lóe hổ phách + ! + ting) · Lam cách 110 px
+f332 ==== CA 6 · mốc hồi sinh gần E: đang lưu ở chuông A, đi D → E (đặt mốc đầu E) → ngã → hồi sinh ĐẦU E, không phải qua A–D
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 bắt đầu ở phòng Bọ Vỏ Mộc
+f44 vào phòng Đấu trường tinh anh
+f44 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f68 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 556 px
+f184 LAM NGÃ (lần 1) ở phòng Đấu trường tinh anh · hồi sinh ở MỐC đầu sân E · Ấn: chưa rơi · Âm Đao cấp 1
+f184 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] Lam ngã → tinh anh đặt lại đầy máu / Thế (máu lúc đó 160, Thế 80)
+f224 ==== CA 5a · tinh anh chết → Lam ngã TRƯỚC khi nhặt Ấn → hồi sinh, Ấn vẫn trên đất, nhặt được
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 204 px
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f30 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH HẠ (frame 30) · đập 0 · húc 0 · vỡ Thế 0 · Lam bị đánh 0 · Dư Âm đã dùng 0
+f30 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ẤN RÈN I rơi ở x 10774 (phòng E)
+f31 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 160 → 0 (nhát kết liễu)
+f174 LAM NGÃ (lần 1) ở phòng Đấu trường tinh anh · hồi sinh ở MỐC đầu sân E · Ấn: còn trên đất ở x 10774 (giữ) · Âm Đao cấp 1
+f363 NHẶT ẤN RÈN I (frame 363, sau khi rơi 333 tick)
+f414 ==== CA 5b · đã nhặt Ấn rồi ngã → không mất quyền rèn
+f518 LAM NGÃ (lần 2) ở phòng Đấu trường tinh anh · hồi sinh ở MỐC đầu sân E · Ấn: ĐÃ NHẶT (giữ) · Âm Đao cấp 1
+f558 ==== CA 5c · đứng cạnh đe có Ấn 150 tick → KHÔNG tự rèn (phải bấm Rèn)
+f779 vào phòng Lò rèn
+f816 Lam tới đe rèn · CÓ Ấn Rèn I → hiện nút Rèn
+f1038 MỞ CẤP: Âm Đao cấp 1 → 3 ở đe rèn (phím KeyF) · Dư Âm: chém vang 15/20, vết 10/10, giữ 20 tick, hồi 150 · đánh thường 12/10 (nhát 3 12/30)
+f1138 ==== CA 5d · đã rèn → ra xa rồi quay lại đe, bấm Rèn 2 lần nữa → không rèn lặp, không thưởng thêm
+f1183 vào phòng Đấu trường tinh anh
+f1183 SAU RÈN: 2 Chuông Gỗ thường ra sân E (Chuông Gỗ#8 40 máu, Chuông Gỗ#9 40 máu) – quái đã biết, máu thường; né đập rồi dùng Dư Âm lúc nó hồi (26 + nghỉ 60 tick)
+f1206 vào phòng Lò rèn
+f1243 Lam tới đe rèn · đã cấp 3
+f1258 bấm Rèn lần nữa (phím KeyF) khi ĐÃ rèn → bỏ qua (không rèn lặp, không thưởng thêm)
+f1278 bấm Rèn lần nữa (phím KeyF) khi ĐÃ rèn → bỏ qua (không rèn lặp, không thưởng thêm)
+f1318 ==== CA 5e · rời phòng khi Ấn còn trên đất: sang F rồi quay lại E → Ấn vẫn còn
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 84 px
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f20 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH HẠ (frame 20) · đập 0 · húc 0 · vỡ Thế 0 · Lam bị đánh 0 · Dư Âm đã dùng 0
+f20 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ẤN RÈN I rơi ở x 10774 (phòng E)
+f21 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 160 → 0 (nhát kết liễu)
+f102 vào phòng Lò rèn
+f185 vào phòng Đấu trường tinh anh
+f317 NHẶT ẤN RÈN I (frame 317, sau khi rơi 297 tick)
+f400 ==== CA 5e′ · rời phòng khi Ấn còn trên đất: sang D rồi quay lại E → Ấn vẫn còn
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 172 px
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f20 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH HẠ (frame 20) · đập 0 · húc 0 · vỡ Thế 0 · Lam bị đánh 0 · Dư Âm đã dùng 0
+f20 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ẤN RÈN I rơi ở x 10774 (phòng E)
+f21 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 160 → 0 (nhát kết liễu)
+f164 vào phòng Bọ Vỏ Mộc
+f263 vào phòng Đấu trường tinh anh
+f469 NHẶT ẤN RÈN I (frame 469, sau khi rơi 449 tick)

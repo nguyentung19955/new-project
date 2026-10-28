@@ -1,748 +1,938 @@
 {
- "luong_chinh": {
-  "buoc": 1192,
-  "lech_sach_debug": 0,
+ "do_luot_day": "xem do-luot-day.json",
+ "choang120": {
+  "buoc": 854,
   "tom_tat": {
-   "phien": "p0c-2810-17f2d243",
-   "frame": 1106,
+   "phien": "p0c-2810-a905c9cc",
+   "frame": 793,
    "tk": {
     "thuc": 1,
-    "dap": 2,
+    "dap": 3,
     "huc": 2,
-    "trungLamDap": 2,
-    "trungLamHuc": 1,
+    "trungLamDap": 0,
+    "trungLamHuc": 0,
     "trungLamCham": 0,
-    "lamDanh": 3,
+    "lamDanh": 0,
     "mauMat": 155,
     "voThe": 1,
-    "tickChoang": 149,
+    "tickChoang": 119,
     "chanOnDinh": 0,
-    "hoiThe": 0,
-    "dayThan": 13,
+    "hoiThe": 1,
+    "dayThan": 0,
     "chet": 1,
     "anRoi": 1,
-    "anNhat": 1,
-    "deGan": 1,
+    "anNhat": 0,
+    "deGan": 0,
     "deKhongAn": 0,
-    "ren": 1,
-    "duAm": 1,
+    "ren": 0,
+    "duAm": 0,
     "vetTrung": 0,
-    "xoaBongDoiPhong": 0
+    "xoaBongDoiPhong": 0,
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "chanNgoaiE": 0,
+    "xuyen": 2,
+    "xuyenGiu": 7,
+    "xuyenTrungSau": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "sauRen": 0,
+    "cgHa": 0
    },
    "ta": {
+    "enemyId": "Chuông Gỗ#7",
+    "elite": "chuong-go-gac-lon",
+    "ten": "Chuông Gỗ Gác Lớn",
     "ta": "chet",
     "hp": 0,
-    "the": 40,
+    "the": 52,
     "pha": "thuong",
-    "chet": true
+    "chet": true,
+    "choang": 120
+   },
+   "moc": "E",
+   "ren_lan": 0,
+   "sau_ren": {
+    "mo": false,
+    "cg": [
+     {
+      "id": "Chuông Gỗ#8",
+      "hp": 40,
+      "ha": true
+     },
+     {
+      "id": "Chuông Gỗ#9",
+      "hp": 40,
+      "ha": true
+     }
+    ]
    },
    "an": {
-    "tren_dat": false,
-    "co": true,
-    "f_nhat": 722
+    "tren_dat": true,
+    "co": false,
+    "f_nhat": -1
    },
-   "cap": 3,
-   "du_am": true
+   "cap": 1,
+   "du_am": false
   },
-  "tom_tat_debug": {
-   "phien": "p0c-2810-17f2d243",
-   "frame": 1106,
-   "tk": {
-    "thuc": 1,
-    "dap": 2,
-    "huc": 2,
-    "trungLamDap": 2,
-    "trungLamHuc": 1,
-    "trungLamCham": 0,
-    "lamDanh": 3,
-    "mauMat": 155,
-    "voThe": 1,
-    "tickChoang": 149,
-    "chanOnDinh": 0,
-    "hoiThe": 0,
-    "dayThan": 13,
-    "chet": 1,
-    "anRoi": 1,
-    "anNhat": 1,
-    "deGan": 1,
-    "deKhongAn": 0,
-    "ren": 1,
-    "duAm": 1,
-    "vetTrung": 0,
-    "xoaBongDoiPhong": 0
-   },
-   "ta": {
-    "ta": "chet",
-    "hp": 0,
-    "the": 40,
-    "pha": "thuong",
-    "chet": true
-   },
-   "an": {
-    "tren_dat": false,
-    "co": true,
-    "f_nhat": 722
-   },
-   "cap": 3,
-   "du_am": true
-  },
-  "trang_thai_cuoi": {
-   "f": 1106,
-   "x": 11172.7,
-   "y": 447.9,
-   "face": -1,
-   "hp": 5,
-   "atkN": 0,
-   "dash": 0,
-   "g": true,
-   "room": "Lò rèn",
-   "iframes": 0,
-   "ta": {
-    "ta": "chet",
-    "t": 210,
-    "x": 10752.2,
-    "face": 1,
-    "dl": 0,
-    "cdH": 0,
-    "cdD": 0,
-    "hp": 0,
-    "the": 40,
-    "pha": "thuong",
-    "gone": true,
-    "hucDir": 1
-   },
-   "an": {
-    "on": false,
-    "x": 10752.2,
-    "y": 423,
-    "co": true
-   },
-   "de": 11312,
-   "cap": 3,
-   "coTheRen": false,
-   "kn": 54,
-   "echo": false,
-   "rec": false
-  },
-  "moc_bot": [
-   [
-    0,
-    "tiến vào"
-   ],
-   [
-    48,
-    "áp sát"
-   ],
-   [
-    60,
-    "thấy báo HÚC → chờ"
-   ],
-   [
-    96,
-    "húc"
-   ],
-   [
-    121,
-    "HÚC lao tới → LƯỚT xuyên qua"
-   ],
-   [
-    122,
-    "húc"
-   ],
-   [
-    129,
-    "HÚC lao tới → LƯỚT xuyên qua"
-   ],
-   [
-    132,
-    "giãn cách (thân to)"
-   ],
-   [
-    142,
-    "quay mặt"
-   ],
-   [
-    143,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    144,
-    "đánh thường"
-   ],
-   [
-    157,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    158,
-    "đánh thường"
-   ],
-   [
-    161,
-    "giãn cách (thân to)"
-   ],
-   [
-    183,
-    "quay mặt"
-   ],
-   [
-    184,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    185,
-    "đánh thường"
-   ],
-   [
-    186,
-    "giãn cách (thân to)"
-   ],
-   [
-    188,
-    "thấy báo ĐẬP → lùi"
-   ],
-   [
-    234,
-    "áp sát"
-   ],
-   [
-    255,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    256,
-    "đánh thường"
-   ],
-   [
-    269,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    270,
-    "đánh thường"
-   ],
-   [
-    283,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    284,
-    "đánh thường"
-   ],
-   [
-    297,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    298,
-    "đánh thường"
-   ],
-   [
-    311,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    312,
-    "đánh thường"
-   ],
-   [
-    325,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    325,
-    "đánh thường"
-   ],
-   [
-    339,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    340,
-    "đánh thường"
-   ],
-   [
-    353,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    354,
-    "đánh thường"
-   ],
-   [
-    367,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    368,
-    "đánh thường"
-   ],
-   [
-    381,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    382,
-    "đánh thường"
-   ],
-   [
-    395,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    396,
-    "đánh thường"
-   ],
-   [
-    409,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    410,
-    "đánh thường"
-   ],
-   [
-    423,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    424,
-    "đánh thường"
-   ],
-   [
-    437,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    438,
-    "đánh thường"
-   ],
-   [
-    443,
-    "giãn cách (thân to)"
-   ],
-   [
-    472,
-    "quay mặt"
-   ],
-   [
-    473,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    474,
-    "đánh thường"
-   ],
-   [
-    483,
-    "thấy báo ĐẬP → lùi"
-   ],
-   [
-    529,
-    "áp sát"
-   ],
-   [
-    558,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    559,
-    "đánh thường"
-   ],
-   [
-    571,
-    "áp sát"
-   ],
-   [
-    592,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    593,
-    "đánh thường"
-   ],
-   [
-    597,
-    "áp sát"
-   ],
-   [
-    598,
-    "thấy báo HÚC → giãn cách"
-   ],
-   [
-    625,
-    "thấy báo HÚC → chờ"
-   ],
-   [
-    634,
-    "húc"
-   ],
-   [
-    636,
-    "HÚC lao tới → LƯỚT xuyên qua"
-   ],
-   [
-    637,
-    "húc"
-   ],
-   [
-    644,
-    "HÚC lao tới → LƯỚT xuyên qua"
-   ],
-   [
-    670,
-    "giãn cách (thân to)"
-   ],
-   [
-    680,
-    "quay mặt"
-   ],
-   [
-    681,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    682,
-    "đánh thường"
-   ],
-   [
-    688,
-    "tinh anh hạ"
-   ],
-   [
-    688,
-    "tới nhặt Ấn"
-   ],
-   [
-    722,
-    "đã nhặt Ấn Rèn I"
-   ],
-   [
-    723,
-    "sang phòng F, tới đe rèn"
-   ],
-   [
-    833,
-    "ở đe rèn"
-   ],
-   [
-    852,
-    "bấm Rèn (phím F)"
-   ],
-   [
-    853,
-    "ở đe rèn"
-   ],
-   [
-    854,
-    "Âm Đao cấp 3 – mở Dư Âm"
-   ],
-   [
-    963,
-    "quay ra khoảng trống"
-   ],
-   [
-    978,
-    "GIỮ Chém 1 tick"
-   ],
-   [
-    979,
-    "GIỮ Chém 2 tick"
-   ],
-   [
-    980,
-    "GIỮ Chém 3 tick"
-   ],
-   [
-    981,
-    "GIỮ Chém 4 tick"
-   ],
-   [
-    982,
-    "GIỮ Chém 5 tick"
-   ],
-   [
-    983,
-    "GIỮ Chém 6 tick"
-   ],
-   [
-    984,
-    "GIỮ Chém 7 tick"
-   ],
-   [
-    985,
-    "GIỮ Chém 8 tick"
-   ],
-   [
-    986,
-    "GIỮ Chém 9 tick"
-   ],
-   [
-    987,
-    "GIỮ Chém 10 tick"
-   ],
-   [
-    988,
-    "GIỮ Chém 11 tick"
-   ],
-   [
-    989,
-    "GIỮ Chém 12 tick"
-   ],
-   [
-    990,
-    "GIỮ Chém 13 tick"
-   ],
-   [
-    991,
-    "GIỮ Chém 14 tick"
-   ],
-   [
-    992,
-    "GIỮ Chém 15 tick"
-   ],
-   [
-    993,
-    "GIỮ Chém 16 tick"
-   ],
-   [
-    994,
-    "GIỮ Chém 17 tick"
-   ],
-   [
-    995,
-    "GIỮ Chém 18 tick"
-   ],
-   [
-    996,
-    "GIỮ Chém 19 tick"
-   ],
-   [
-    997,
-    "GIỮ Chém 20 tick"
-   ],
-   [
-    998,
-    "GIỮ Chém 21 tick"
-   ],
-   [
-    999,
-    "GIỮ Chém 22 tick"
-   ],
-   [
-    1000,
-    "GIỮ Chém 23 tick"
-   ],
-   [
-    1001,
-    "GIỮ Chém 24 tick"
-   ],
-   [
-    1002,
-    "GIỮ Chém 25 tick"
-   ],
-   [
-    1003,
-    "GIỮ Chém 26 tick"
-   ],
-   [
-    1004,
-    "thả → DƯ ÂM"
-   ],
-   [
-    1005,
-    "Dư Âm: chém vang + vết"
-   ]
-  ],
-  "loi_trang": {
-   "sach": [],
-   "debug": []
-  },
-  "p0_log_cuoi": [
-   "f395 #14 xep-hang  cần y=0.00  (đang atk1 t14)  hạn f410",
-   "f397 giu #14: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f397 #14 → thuc-hien atk2  chờ 1 tick",
-   "f403 hộp atk2 bật: chạm #14 → hộp 8 tick (tính tick bấm = 1; su 7)",
-   "f403 Lam D 11 atk2 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f403   → Chuông Gỗ#7 tick này: máu −10 (60 → 50), Thế 0 → 0 [choang]",
-   "f404   D 11 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f409 #15 xep-hang  cần y=0.00  (đang atk2 t13)  hạn f425",
-   "f411 giu #15: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f412 #15 → thuc-hien atk3  chờ 2 tick",
-   "f420 hộp atk3 bật: chạm #15 → hộp 11 tick (tính tick bấm = 1; su 9)",
-   "f420 Lam D 12 atk3 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f420   → Chuông Gỗ#7 tick này: máu −10 (50 → 40), Thế 0 → 0 [choang]",
-   "f421   D 12 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f423 #16 xep-hang  cần y=0.00  (đang atk3 t12)  hạn f450",
-   "f425 giu #16: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f437 #16 → bi-thay  bởi #17",
-   "f437 #17 thay-the  cần y=0.00  (đang atk3 t26)  hạn f450",
-   "f439 giu #17: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f443   Chuông Gỗ#7 hồi phục (20 tick, Thế về đầy 80)",
-   "f445 #17 → thuc-hien atk1  chờ 7 tick",
-   "f451 hộp atk1 bật: chạm #17 → hộp 14 tick (tính tick bấm = 1; su 7)",
-   "f463   Chuông Gỗ#7 ổn định (120 tick, Thế không xuống dưới 1; không khôi phục vỏ)",
-   "f474 #18 ra-ngay → atk1  cần y=0.00",
-   "f475 giu #18: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f480 hộp atk1 bật: chạm #18 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f480 Lam D 14 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f480   → Chuông Gỗ#7 tick này: máu −10 (40 → 30), Thế 80 → 70 [onDinh]",
-   "f481   D 14 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f559 #19 ra-ngay → atk1  cần y=0.00",
-   "f560 giu #19: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f565 hộp atk1 bật: chạm #19 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f565 Lam D 15 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f565   → Chuông Gỗ#7 tick này: máu −10 (30 → 20), Thế 70 → 60 [onDinh]",
-   "f566   D 15 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f583   Chuông Gỗ#7 bình thường (phá lại được)",
-   "f593 D 16 atk1: CHÍ MẠNG (gieo lúc vung, 5%) → máu ×1.5, Thế không nhân",
-   "f593 #20 ra-ngay → atk1  cần y=0.00",
-   "f594 giu #20: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f599 hộp atk1 bật: chạm #20 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f599 Lam D 16 atk1 CHÍ MẠNG trúng Chuông Gỗ#7: máu 15  Thế 10",
-   "f599   → Chuông Gỗ#7 tick này: máu −15 (20 → 5), Thế 60 → 50 [thuong]",
-   "f600   D 16 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f682 #21 ra-ngay → atk1  cần y=0.00",
-   "f683 giu #21: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f688 hộp atk1 bật: chạm #21 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f688 Lam D 17 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f688   → Chuông Gỗ#7 tick này: máu −10 (5 → -5), Thế 50 → 40 [thuong]",
-   "f688   Chuông Gỗ#7 CHẾT",
-   "f852 ÂM ĐAO cấp 3 (đe rèn – Ấn Rèn I): đánh thường 12/10 (nhát 3 12/30) · Dư Âm: chém vang (cú quét thấp) 15/20, vết 10/10, hồi 150 (tính từ lúc hộp bật) · giữ 20 tick (mặc định) · hộp nảy [-26,-24,64,82] (mặc định) · chí mạng 5% ×1.5 · Chuông Gỗ 40 máu (mặc định)  (đòn / vết / bóng đã tạo giữ số đã chốt)",
-   "f979 #22 ra-ngay → atk1  cần y=0.00",
-   "f985 hộp atk1 bật: chạm #22 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f998 giu #22: DA NAP (giữ 20 tick mô phỏng (20 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 4 tick – chạy hết, không cắt)",
-   "f1002 giu #22: vào thế tụ",
-   "f1005 ky-nang #1: TUNG (nhả trong thế tụ sau 26 tick mô phỏng (26 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) → tung ngay) – chém vang (cú quét thấp) D 19 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)",
-   "f1010 vết #1 ĐẶT (lần dùng Dư Âm #1, từ chém vang D 19) ở hộp [11083,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [10,10] chốt cấp 3",
-   "f1010 Dư Âm #1: hộp chém vang BẬT (f1010) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi",
-   "f1032 Dư Âm #1: chém vang HỤT (vết vẫn đặt – bẫy) → đúng 1 vết",
-   "f1034 vết #1 VANG (D 200001 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)",
-   "f1038 vết #1 hết hộp: trúng 0 mục tiêu"
+  "log_the": [
+   "f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 120 (BIẾN THỂ ?choang=120) · ĐỐI CHIẾU: tinh anh = Q[7] = \"Chuông Gỗ#7\" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên \"Chuông Gỗ Gác Lớn\" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10",
+   "f530 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] VỠ THẾ lần 1 (lần 1 trong 600 tick) → CHOÁNG 120 tick (đủ 120)",
+   "f793 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH HẠ (frame 793) · đập 3 · húc 2 · vỡ Thế 1 · Lam bị đánh 0 · Dư Âm đã dùng 0"
   ]
  },
- "kiem_the": {
-  "buoc": 1363,
-  "lech_sach_debug": 0,
-  "tom_tat": {
-   "phien": "p0c-2810-17f2d243",
-   "frame": 1201,
-   "tk": {
-    "thuc": 1,
-    "dap": 5,
-    "huc": 2,
-    "trungLamDap": 3,
-    "trungLamHuc": 1,
-    "trungLamCham": 0,
-    "lamDanh": 4,
-    "mauMat": 345,
-    "voThe": 3,
-    "tickChoang": 327,
-    "chanOnDinh": 0,
-    "hoiThe": 0,
-    "dayThan": 20,
-    "chet": 0,
-    "anRoi": 0,
-    "anNhat": 0,
-    "deGan": 0,
-    "deKhongAn": 0,
-    "ren": 0,
-    "duAm": 0,
-    "vetTrung": 0,
-    "xoaBongDoiPhong": 0
-   },
-   "ta": {
-    "ta": "dapBao",
-    "hp": 255,
-    "the": 60,
-    "pha": "onDinh",
-    "chet": false
-   },
-   "an": {
-    "tren_dat": false,
-    "co": false,
-    "f_nhat": -1
-   },
-   "cap": 1,
-   "du_am": false
-  },
-  "tom_tat_debug": {
-   "phien": "p0c-2810-17f2d243",
-   "frame": 1201,
-   "tk": {
-    "thuc": 1,
-    "dap": 5,
-    "huc": 2,
-    "trungLamDap": 3,
-    "trungLamHuc": 1,
-    "trungLamCham": 0,
-    "lamDanh": 4,
-    "mauMat": 345,
-    "voThe": 3,
-    "tickChoang": 327,
-    "chanOnDinh": 0,
-    "hoiThe": 0,
-    "dayThan": 20,
-    "chet": 0,
-    "anRoi": 0,
-    "anNhat": 0,
-    "deGan": 0,
-    "deKhongAn": 0,
-    "ren": 0,
-    "duAm": 0,
-    "vetTrung": 0,
-    "xoaBongDoiPhong": 0
-   },
-   "ta": {
-    "ta": "dapBao",
-    "hp": 255,
-    "the": 60,
-    "pha": "onDinh",
-    "chet": false
-   },
-   "an": {
-    "tren_dat": false,
-    "co": false,
-    "f_nhat": -1
-   },
-   "cap": 1,
-   "du_am": false
-  },
-  "trang_thai_cuoi": {
-   "f": 1201,
-   "x": 10616.8,
-   "y": 447.6,
-   "face": -1,
-   "hp": 2,
-   "atkN": 0,
-   "dash": 0,
-   "g": true,
+ "trang_thai": {
+  "luot_som": {
+   "f": 100,
+   "taPos": 10444,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10683.2,
    "room": "Đấu trường tinh anh",
-   "iframes": 0,
-   "ta": {
-    "ta": "dapBao",
-    "t": 21,
-    "x": 10717.6,
-    "face": -1,
-    "dl": 2,
-    "cdH": 0,
-    "cdD": 0,
-    "hp": 255,
-    "the": 60,
-    "pha": "onDinh",
-    "gone": false,
-    "hucDir": 1
-   },
+   "hp": 5,
+   "moc": "E",
    "an": {
     "on": false,
     "x": 0,
     "y": 0,
     "co": false
    },
-   "de": 11312,
    "cap": 1,
+   "renLan": 0,
    "coTheRen": false,
-   "kn": 0,
+   "ta": {
+    "ta": "hucHoi",
+    "hp": 160,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 1,
+    "xuyenGiu": 4,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "luot_qua_som": {
+   "f": 84,
+   "taPos": 10444,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10373.9,
+   "room": "Đấu trường tinh anh",
+   "hp": 4,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "hucHoi",
+    "hp": 160,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "sau_chem_vang": {
+   "f": 30,
+   "taPos": 10858,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10949.6,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 3,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "di",
+    "hp": 93,
+    "the": 50
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "vet_vang_khi_o_F": {
+   "f": 68,
+   "taPos": 10833.2,
+   "taHome": 10774,
+   "khongDanh": true,
+   "x": 11137.3,
+   "room": "Lò rèn",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 3,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "ve",
+    "hp": 93,
+    "the": 50
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 1,
+    "veCho": 1,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "roi_E": {
+   "f": 262,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": true,
+   "x": 11132.9,
+   "room": "Lò rèn",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 3,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "ngu",
+    "hp": 160,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 1,
+    "veCho": 1,
+    "hoiDayVe": 1,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "vao_lai_E": {
+   "f": 332,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10877,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 3,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "dapBao",
+    "hp": 160,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 1,
+    "veCho": 1,
+    "hoiDayVe": 1,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "moc_E": {
+   "f": 224,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10160,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 0,
+    "y": 0,
+    "co": false
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "ngu",
+    "hp": 160,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 1,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "chet_truoc_nhat": {
+   "f": 214,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10160,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": true,
+    "x": 10774,
+    "y": 448,
+    "co": false
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 1,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "nhat_lai": {
+   "f": 414,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10765,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 1,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 1
+   }
+  },
+  "chet_sau_nhat": {
+   "f": 558,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10160,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 2,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 1
+   }
+  },
+  "dung_gan_de": {
+   "f": 1038,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 11257.8,
+   "room": "Lò rèn",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": true,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": true,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 2,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 1
+   }
+  },
+  "da_ren": {
+   "f": 1138,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 11257.8,
+   "room": "Lò rèn",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 3,
+   "renLan": 1,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 2,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 1,
+    "anNhat": 1
+   }
+  },
+  "ren_lap": {
+   "f": 1318,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 11257.8,
+   "room": "Lò rèn",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 3,
+   "renLan": 1,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 2,
+    "mocE": 1,
+    "renLap": 2,
+    "ren": 1,
+    "anNhat": 1
+   }
+  },
+  "roi_sang_F_quay_lai": {
+   "f": 280,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10946,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": true,
+    "x": 10774,
+    "y": 448,
+    "co": false
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "nhat_sau_F": {
+   "f": 400,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10785.4,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "F",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 1
+   }
+  },
+  "roi_sang_D_quay_lai": {
+   "f": 380,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10373.2,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": true,
+    "x": 10774,
+    "y": 448,
+    "co": false
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 0
+   }
+  },
+  "nhat_sau_D": {
+   "f": 500,
+   "taPos": 10774,
+   "taHome": 10774,
+   "khongDanh": false,
+   "x": 10762.6,
+   "room": "Đấu trường tinh anh",
+   "hp": 5,
+   "moc": "E",
+   "an": {
+    "on": false,
+    "x": 10774,
+    "y": 448,
+    "co": true
+   },
+   "cap": 1,
+   "renLan": 0,
+   "coTheRen": false,
+   "ta": {
+    "ta": "chet",
+    "hp": 0,
+    "the": 80
+   },
+   "nutRen": false,
+   "tk": {
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "xuyen": 0,
+    "xuyenGiu": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "ren": 0,
+    "anNhat": 1
+   }
+  },
+  "_loi_trang": [],
+  "_buoc": 3020
+ },
+ "luong_nguoi_choi": {
+  "buoc": 1773,
+  "lech_sach_debug": 0,
+  "lam_nga_o_frame": [],
+  "tom_tat": {
+   "phien": "p0c-2810-a905c9cc",
+   "frame": 1663,
+   "tk": {
+    "thuc": 1,
+    "dap": 3,
+    "huc": 2,
+    "trungLamDap": 0,
+    "trungLamHuc": 0,
+    "trungLamCham": 0,
+    "lamDanh": 0,
+    "mauMat": 155,
+    "voThe": 1,
+    "tickChoang": 149,
+    "chanOnDinh": 0,
+    "hoiThe": 1,
+    "dayThan": 4,
+    "chet": 1,
+    "anRoi": 1,
+    "anNhat": 1,
+    "deGan": 1,
+    "deKhongAn": 0,
+    "ren": 1,
+    "duAm": 3,
+    "vetTrung": 3,
+    "xoaBongDoiPhong": 0,
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "chanNgoaiE": 0,
+    "xuyen": 2,
+    "xuyenGiu": 7,
+    "xuyenTrungSau": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "sauRen": 1,
+    "cgHa": 2
+   },
+   "ta": {
+    "enemyId": "Chuông Gỗ#7",
+    "elite": "chuong-go-gac-lon",
+    "ten": "Chuông Gỗ Gác Lớn",
+    "ta": "chet",
+    "hp": 0,
+    "the": 70,
+    "pha": "onDinh",
+    "chet": true,
+    "choang": 150
+   },
+   "moc": "F",
+   "ren_lan": 1,
+   "sau_ren": {
+    "mo": true,
+    "cg": [
+     {
+      "id": "Chuông Gỗ#8",
+      "hp": 0,
+      "ha": true
+     },
+     {
+      "id": "Chuông Gỗ#9",
+      "hp": 0,
+      "ha": true
+     }
+    ]
+   },
+   "an": {
+    "tren_dat": false,
+    "co": true,
+    "f_nhat": 847
+   },
+   "cap": 3,
+   "du_am": true
+  },
+  "tom_tat_debug": {
+   "phien": "p0c-2810-a905c9cc",
+   "frame": 1663,
+   "tk": {
+    "thuc": 1,
+    "dap": 3,
+    "huc": 2,
+    "trungLamDap": 0,
+    "trungLamHuc": 0,
+    "trungLamCham": 0,
+    "lamDanh": 0,
+    "mauMat": 155,
+    "voThe": 1,
+    "tickChoang": 149,
+    "chanOnDinh": 0,
+    "hoiThe": 1,
+    "dayThan": 4,
+    "chet": 1,
+    "anRoi": 1,
+    "anNhat": 1,
+    "deGan": 1,
+    "deKhongAn": 0,
+    "ren": 1,
+    "duAm": 3,
+    "vetTrung": 3,
+    "xoaBongDoiPhong": 0,
+    "roiE": 0,
+    "veCho": 0,
+    "hoiDayVe": 0,
+    "chanNgoaiE": 0,
+    "xuyen": 2,
+    "xuyenGiu": 7,
+    "xuyenTrungSau": 0,
+    "lamChet": 0,
+    "mocE": 1,
+    "renLap": 0,
+    "sauRen": 1,
+    "cgHa": 2
+   },
+   "ta": {
+    "enemyId": "Chuông Gỗ#7",
+    "elite": "chuong-go-gac-lon",
+    "ten": "Chuông Gỗ Gác Lớn",
+    "ta": "chet",
+    "hp": 0,
+    "the": 70,
+    "pha": "onDinh",
+    "chet": true,
+    "choang": 150
+   },
+   "moc": "F",
+   "ren_lan": 1,
+   "sau_ren": {
+    "mo": true,
+    "cg": [
+     {
+      "id": "Chuông Gỗ#8",
+      "hp": 0,
+      "ha": true
+     },
+     {
+      "id": "Chuông Gỗ#9",
+      "hp": 0,
+      "ha": true
+     }
+    ]
+   },
+   "an": {
+    "tren_dat": false,
+    "co": true,
+    "f_nhat": 847
+   },
+   "cap": 3,
+   "du_am": true
+  },
+  "trang_thai_cuoi": {
+   "f": 1663,
+   "x": 10464.3,
+   "y": 448,
+   "face": -1,
+   "hp": 5,
+   "atkN": 1,
+   "dash": 0,
+   "g": true,
+   "room": "Đấu trường tinh anh",
+   "iframes": 0,
+   "ta": {
+    "ta": "chet",
+    "t": 210,
+    "x": 10731.8,
+    "face": -1,
+    "dl": 1,
+    "cdH": 0,
+    "cdD": 0,
+    "hp": 0,
+    "the": 70,
+    "pha": "onDinh",
+    "gone": true,
+    "hucDir": 1,
+    "w": 108
+   },
+   "cg": [
+    {
+     "on": false,
+     "x": 10349,
+     "st": "die",
+     "t": 9,
+     "hp": 0,
+     "face": 1
+    },
+    {
+     "on": false,
+     "x": 10757.2,
+     "st": "die",
+     "t": 210,
+     "hp": 0,
+     "face": 1
+    }
+   ],
+   "nom": 11460,
+   "duam": true,
+   "knHoi": 104,
+   "knNap": false,
+   "knTu": false,
+   "xu": false,
+   "moc": "F",
+   "renLan": 1,
+   "dashCd": 0,
+   "an": {
+    "on": false,
+    "x": 10731.8,
+    "y": 445.4,
+    "co": true
+   },
+   "de": 11312,
+   "cap": 3,
+   "coTheRen": false,
+   "kn": 104,
    "echo": false,
    "rec": false
   },
@@ -757,574 +947,840 @@
    ],
    [
     60,
-    "thấy báo HÚC → chờ"
+    "thấy RỤT NGƯỜI + » (báo húc) → chờ"
    ],
    [
     96,
     "húc"
    ],
    [
-    121,
+    125,
     "HÚC lao tới → LƯỚT xuyên qua"
    ],
    [
-    122,
+    126,
     "húc"
    ],
    [
-    129,
-    "HÚC lao tới → LƯỚT xuyên qua"
+    128,
+    "đang xuyên thân"
    ],
    [
     132,
     "giãn cách (thân to)"
    ],
    [
-    142,
+    141,
     "quay mặt"
+   ],
+   [
+    142,
+    "chạm Chém (đánh thường)"
    ],
    [
     143,
-    "chạm Chém (đánh thường)"
+    "đánh thường"
    ],
    [
-    144,
-    "đánh thường"
+    156,
+    "chạm Chém (đánh thường)"
    ],
    [
     157,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    158,
     "đánh thường"
    ],
    [
-    161,
-    "giãn cách (thân to)"
-   ],
-   [
-    183,
-    "quay mặt"
-   ],
-   [
-    184,
+    170,
     "chạm Chém (đánh thường)"
    ],
    [
-    185,
+    171,
     "đánh thường"
    ],
    [
-    186,
+    174,
     "giãn cách (thân to)"
    ],
    [
     188,
-    "thấy báo ĐẬP → lùi"
+    "thấy GIƠ TAY (báo đập) → lướt lùi"
+   ],
+   [
+    189,
+    "thấy báo đập → lùi khỏi tầm"
+   ],
+   [
+    218,
+    "chờ đập hụt"
+   ],
+   [
+    220,
+    "thấy báo đập → lùi khỏi tầm"
+   ],
+   [
+    223,
+    "chờ đập hụt"
    ],
    [
     234,
     "áp sát"
    ],
    [
-    255,
+    271,
     "chạm Chém (đánh thường)"
    ],
    [
-    256,
+    272,
     "đánh thường"
    ],
    [
-    269,
+    285,
     "chạm Chém (đánh thường)"
    ],
    [
-    270,
+    286,
     "đánh thường"
    ],
    [
-    283,
+    299,
     "chạm Chém (đánh thường)"
    ],
    [
-    284,
+    300,
     "đánh thường"
    ],
    [
-    297,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    302,
+    "thấy GIƠ TAY (báo đập) → lướt lùi"
    ],
    [
-    298,
-    "đánh thường"
+    303,
+    "thấy báo đập → lùi khỏi tầm"
    ],
    [
-    311,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    329,
+    "chờ đập hụt"
    ],
    [
-    312,
-    "đánh thường"
-   ],
-   [
-    325,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    325,
-    "đánh thường"
-   ],
-   [
-    339,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    336,
+    "thấy báo đập → lùi khỏi tầm"
    ],
    [
     340,
-    "đánh thường"
+    "chờ đập hụt"
    ],
    [
-    353,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    348,
+    "áp sát"
    ],
    [
-    354,
-    "đánh thường"
-   ],
-   [
-    367,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    368,
-    "đánh thường"
-   ],
-   [
-    381,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    382,
-    "đánh thường"
-   ],
-   [
-    395,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    396,
-    "đánh thường"
-   ],
-   [
-    409,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    410,
-    "đánh thường"
-   ],
-   [
-    423,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    424,
-    "đánh thường"
-   ],
-   [
-    437,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    438,
-    "đánh thường"
-   ],
-   [
-    443,
-    "giãn cách (thân to)"
-   ],
-   [
-    472,
-    "quay mặt"
-   ],
-   [
-    473,
+    385,
     "chạm Chém (đánh thường)"
+   ],
+   [
+    386,
+    "đánh thường"
+   ],
+   [
+    391,
+    "áp sát"
+   ],
+   [
+    417,
+    "báo húc → giãn cách"
+   ],
+   [
+    431,
+    "thấy RỤT NGƯỜI + » (báo húc) → chờ"
+   ],
+   [
+    453,
+    "húc"
+   ],
+   [
+    461,
+    "HÚC lao tới → LƯỚT xuyên qua"
+   ],
+   [
+    462,
+    "húc"
+   ],
+   [
+    464,
+    "đang xuyên thân"
    ],
    [
     474,
-    "đánh thường"
+    "húc"
    ],
    [
-    483,
-    "thấy báo ĐẬP → lùi"
-   ],
-   [
-    529,
+    489,
     "áp sát"
    ],
    [
-    558,
+    508,
     "chạm Chém (đánh thường)"
    ],
    [
-    559,
+    509,
     "đánh thường"
    ],
    [
-    571,
-    "áp sát"
+    522,
+    "chạm Chém (đánh thường)"
+   ],
+   [
+    523,
+    "đánh thường"
+   ],
+   [
+    536,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    537,
+    "đánh thường"
+   ],
+   [
+    550,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    551,
+    "đánh thường"
+   ],
+   [
+    564,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    565,
+    "đánh thường"
+   ],
+   [
+    578,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    578,
+    "đánh thường"
    ],
    [
     592,
-    "chạm Chém (đánh thường)"
+    "chạm Chém (đánh thường) – tinh anh choáng"
    ],
    [
     593,
     "đánh thường"
    ],
    [
-    597,
-    "áp sát"
+    606,
+    "chạm Chém (đánh thường) – tinh anh choáng"
    ],
    [
-    598,
-    "thấy báo HÚC → giãn cách"
+    607,
+    "đánh thường"
    ],
    [
-    625,
-    "thấy báo HÚC → chờ"
+    620,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    621,
+    "đánh thường"
    ],
    [
     634,
-    "húc"
+    "chạm Chém (đánh thường) – tinh anh choáng"
    ],
    [
-    636,
-    "HÚC lao tới → LƯỚT xuyên qua"
+    635,
+    "đánh thường"
    ],
    [
-    637,
-    "húc"
+    648,
+    "chạm Chém (đánh thường) – tinh anh choáng"
    ],
    [
-    644,
-    "HÚC lao tới → LƯỚT xuyên qua"
+    649,
+    "đánh thường"
    ],
    [
-    670,
+    662,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    663,
+    "đánh thường"
+   ],
+   [
+    676,
+    "chạm Chém (đánh thường) – tinh anh choáng"
+   ],
+   [
+    677,
+    "đánh thường"
+   ],
+   [
+    679,
     "giãn cách (thân to)"
    ],
    [
-    680,
-    "quay mặt"
-   ],
-   [
-    681,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    682,
-    "đánh thường"
-   ],
-   [
-    695,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    696,
-    "đánh thường"
-   ],
-   [
-    709,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    710,
-    "đánh thường"
-   ],
-   [
-    713,
-    "giãn cách (thân to)"
+    719,
+    "thấy GIƠ TAY (báo đập) → lướt lùi"
    ],
    [
     720,
-    "đánh thường"
+    "thấy báo đập → lùi khỏi tầm"
    ],
    [
-    723,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    724,
-    "đánh thường"
-   ],
-   [
-    737,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    738,
-    "đánh thường"
-   ],
-   [
-    751,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    751,
-    "đánh thường"
+    755,
+    "chờ đập hụt"
    ],
    [
     765,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    "áp sát"
    ],
    [
-    766,
-    "đánh thường"
+    802,
+    "chạm Chém (đánh thường)"
    ],
    [
-    779,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    780,
-    "đánh thường"
-   ],
-   [
-    793,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    794,
-    "đánh thường"
-   ],
-   [
-    807,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    808,
+    803,
     "đánh thường"
    ],
    [
     809,
-    "giãn cách (thân to)"
+    "tinh anh hạ"
    ],
    [
-    836,
-    "quay mặt"
+    809,
+    "tới nhặt Ấn"
    ],
    [
-    837,
-    "chạm Chém (đánh thường)"
+    847,
+    "đã nhặt Ấn Rèn I"
    ],
    [
-    838,
-    "đánh thường"
+    848,
+    "sang phòng F (qua chuông lưu), tới đe rèn"
    ],
    [
-    849,
-    "thấy báo ĐẬP → lùi"
+    969,
+    "đứng cạnh đe – KHÔNG tự rèn (cấp 1)"
    ],
    [
-    895,
-    "áp sát"
-   ],
-   [
-    923,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    924,
-    "đánh thường"
-   ],
-   [
-    937,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    938,
-    "đánh thường"
-   ],
-   [
-    951,
-    "chạm Chém (đánh thường)"
-   ],
-   [
-    952,
-    "đánh thường"
-   ],
-   [
-    963,
-    "thấy báo ĐẬP → lùi"
+    1008,
+    "bấm Rèn (phím F)"
    ],
    [
     1009,
-    "áp sát"
+    "ở đe rèn"
    ],
    [
-    1029,
-    "chạm Chém (đánh thường)"
+    1010,
+    "Đánh thường mạnh hơn · Mở Dư Âm"
    ],
    [
-    1030,
-    "đánh thường"
+    1109,
+    "tới hình nộm F (chỗ an toàn)"
    ],
    [
-    1043,
-    "chạm Chém (đánh thường)"
+    1135,
+    "tập: GIỮ Chém 1 tick"
    ],
    [
-    1044,
-    "đánh thường"
+    1136,
+    "tập: GIỮ Chém 2 tick"
    ],
    [
-    1057,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    1137,
+    "tập: GIỮ Chém 3 tick"
    ],
    [
-    1058,
-    "đánh thường"
+    1138,
+    "tập: GIỮ Chém 4 tick"
    ],
    [
-    1071,
-    "chạm Chém (đánh thường) – tinh anh choáng"
+    1139,
+    "tập: GIỮ Chém 5 tick"
    ],
    [
-    1072,
-    "đánh thường"
-   ],
-   [
-    1085,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    1086,
-    "đánh thường"
-   ],
-   [
-    1099,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    1099,
-    "đánh thường"
-   ],
-   [
-    1113,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    1114,
-    "đánh thường"
-   ],
-   [
-    1127,
-    "chạm Chém (đánh thường) – tinh anh choáng"
-   ],
-   [
-    1128,
-    "đánh thường"
+    1140,
+    "tập: GIỮ Chém 6 tick"
    ],
    [
     1141,
-    "chạm Chém (đánh thường)"
+    "tập: GIỮ Chém 7 tick"
    ],
    [
     1142,
-    "đánh thường"
+    "tập: GIỮ Chém 8 tick"
+   ],
+   [
+    1142,
+    "tập: GIỮ Chém 9 tick"
+   ],
+   [
+    1142,
+    "tập: GIỮ Chém 10 tick"
+   ],
+   [
+    1142,
+    "tập: GIỮ Chém 11 tick"
+   ],
+   [
+    1143,
+    "tập: GIỮ Chém 12 tick"
+   ],
+   [
+    1144,
+    "tập: GIỮ Chém 13 tick"
+   ],
+   [
+    1145,
+    "tập: GIỮ Chém 14 tick"
+   ],
+   [
+    1146,
+    "tập: GIỮ Chém 15 tick"
+   ],
+   [
+    1147,
+    "tập: GIỮ Chém 16 tick"
+   ],
+   [
+    1148,
+    "tập: GIỮ Chém 17 tick"
+   ],
+   [
+    1149,
+    "tập: GIỮ Chém 18 tick"
+   ],
+   [
+    1150,
+    "tập: GIỮ Chém 19 tick"
+   ],
+   [
+    1151,
+    "tập: GIỮ Chém 20 tick"
+   ],
+   [
+    1152,
+    "tập: GIỮ Chém 21 tick"
+   ],
+   [
+    1153,
+    "tập: GIỮ Chém 22 tick"
+   ],
+   [
+    1154,
+    "tập: GIỮ Chém 23 tick"
    ],
    [
     1155,
-    "chạm Chém (đánh thường)"
+    "tập: GIỮ Chém 24 tick"
    ],
    [
     1156,
-    "đánh thường"
+    "tập: GIỮ Chém 25 tick"
    ],
    [
-    1169,
-    "chạm Chém (đánh thường)"
+    1157,
+    "tập: GIỮ Chém 26 tick"
    ],
    [
-    1170,
-    "đánh thường"
+    1158,
+    "thả → DƯ ÂM vào hình nộm"
    ],
    [
-    1173,
-    "giãn cách (thân to)"
+    1159,
+    "Dư Âm: chém vang + vết vang"
    ],
    [
-    1180,
-    "thấy báo ĐẬP → lùi"
+    1232,
+    "quay lại sân E"
+   ],
+   [
+    1317,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1326,
+    "chờ nó đập hụt"
+   ],
+   [
+    1356,
+    "né – đập hụt"
+   ],
+   [
+    1367,
+    "nó đang hồi → áp sát"
+   ],
+   [
+    1378,
+    "nó đang hồi → GIỮ Chém 1"
+   ],
+   [
+    1379,
+    "nó đang hồi → GIỮ Chém 2"
+   ],
+   [
+    1380,
+    "nó đang hồi → GIỮ Chém 3"
+   ],
+   [
+    1381,
+    "nó đang hồi → GIỮ Chém 4"
+   ],
+   [
+    1382,
+    "nó đang hồi → GIỮ Chém 5"
+   ],
+   [
+    1383,
+    "nó đang hồi → GIỮ Chém 6"
+   ],
+   [
+    1384,
+    "nó đang hồi → GIỮ Chém 7"
+   ],
+   [
+    1385,
+    "nó đang hồi → GIỮ Chém 8"
+   ],
+   [
+    1385,
+    "nó đang hồi → GIỮ Chém 9"
+   ],
+   [
+    1385,
+    "nó đang hồi → GIỮ Chém 10"
+   ],
+   [
+    1385,
+    "nó đang hồi → GIỮ Chém 11"
+   ],
+   [
+    1386,
+    "nó đang hồi → GIỮ Chém 12"
+   ],
+   [
+    1387,
+    "nó đang hồi → GIỮ Chém 13"
+   ],
+   [
+    1388,
+    "nó đang hồi → GIỮ Chém 14"
+   ],
+   [
+    1389,
+    "nó đang hồi → GIỮ Chém 15"
+   ],
+   [
+    1390,
+    "nó đang hồi → GIỮ Chém 16"
+   ],
+   [
+    1391,
+    "nó đang hồi → GIỮ Chém 17"
+   ],
+   [
+    1392,
+    "nó đang hồi → GIỮ Chém 18"
+   ],
+   [
+    1393,
+    "nó đang hồi → GIỮ Chém 19"
+   ],
+   [
+    1394,
+    "nó đang hồi → GIỮ Chém 20"
+   ],
+   [
+    1395,
+    "nó đang hồi → GIỮ Chém 21"
+   ],
+   [
+    1396,
+    "nó đang hồi → GIỮ Chém 22"
+   ],
+   [
+    1397,
+    "nó đang hồi → GIỮ Chém 23"
+   ],
+   [
+    1398,
+    "nó đang hồi → GIỮ Chém 24"
+   ],
+   [
+    1399,
+    "nó đang hồi → GIỮ Chém 25"
+   ],
+   [
+    1400,
+    "thả → DƯ ÂM trong khoảng hồi"
+   ],
+   [
+    1401,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1403,
+    "chờ thời điểm"
+   ],
+   [
+    1407,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1438,
+    "đánh thường (Dư Âm đang hồi 119)"
+   ],
+   [
+    1439,
+    "chờ thời điểm"
+   ],
+   [
+    1445,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1536,
+    "chờ nó đập hụt"
+   ],
+   [
+    1566,
+    "né – đập hụt"
+   ],
+   [
+    1571,
+    "né đập"
+   ],
+   [
+    1572,
+    "né – đập hụt"
+   ],
+   [
+    1577,
+    "nó đang hồi → áp sát"
+   ],
+   [
+    1588,
+    "nó đang hồi → GIỮ Chém 1"
+   ],
+   [
+    1589,
+    "nó đang hồi → GIỮ Chém 2"
+   ],
+   [
+    1590,
+    "nó đang hồi → GIỮ Chém 3"
+   ],
+   [
+    1591,
+    "nó đang hồi → GIỮ Chém 4"
+   ],
+   [
+    1592,
+    "nó đang hồi → GIỮ Chém 5"
+   ],
+   [
+    1593,
+    "nó đang hồi → GIỮ Chém 6"
+   ],
+   [
+    1594,
+    "nó đang hồi → GIỮ Chém 7"
+   ],
+   [
+    1595,
+    "nó đang hồi → GIỮ Chém 8"
+   ],
+   [
+    1595,
+    "nó đang hồi → GIỮ Chém 9"
+   ],
+   [
+    1595,
+    "nó đang hồi → GIỮ Chém 10"
+   ],
+   [
+    1595,
+    "nó đang hồi → GIỮ Chém 11"
+   ],
+   [
+    1596,
+    "nó đang hồi → GIỮ Chém 12"
+   ],
+   [
+    1597,
+    "nó đang hồi → GIỮ Chém 13"
+   ],
+   [
+    1598,
+    "nó đang hồi → GIỮ Chém 14"
+   ],
+   [
+    1599,
+    "nó đang hồi → GIỮ Chém 15"
+   ],
+   [
+    1600,
+    "nó đang hồi → GIỮ Chém 16"
+   ],
+   [
+    1601,
+    "nó đang hồi → GIỮ Chém 17"
+   ],
+   [
+    1602,
+    "nó đang hồi → GIỮ Chém 18"
+   ],
+   [
+    1603,
+    "nó đang hồi → GIỮ Chém 19"
+   ],
+   [
+    1604,
+    "nó đang hồi → GIỮ Chém 20"
+   ],
+   [
+    1605,
+    "nó đang hồi → GIỮ Chém 21"
+   ],
+   [
+    1606,
+    "nó đang hồi → GIỮ Chém 22"
+   ],
+   [
+    1607,
+    "nó đang hồi → GIỮ Chém 23"
+   ],
+   [
+    1608,
+    "nó đang hồi → GIỮ Chém 24"
+   ],
+   [
+    1609,
+    "nó đang hồi → GIỮ Chém 25"
+   ],
+   [
+    1610,
+    "thả → DƯ ÂM trong khoảng hồi"
+   ],
+   [
+    1611,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1612,
+    "chờ thời điểm"
+   ],
+   [
+    1617,
+    "áp sát Chuông Gỗ"
+   ],
+   [
+    1648,
+    "đánh thường (Dư Âm đang hồi 119)"
+   ],
+   [
+    1649,
+    "chờ thời điểm"
+   ],
+   [
+    1655,
+    "sau rèn: hạ 2 Chuông Gỗ"
    ]
   ],
   "loi_trang": {
    "sach": [],
    "debug": []
   },
+  "p0_log_tinh_anh": [
+   "f149 Lam D 1 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f149   → Chuông Gỗ#7 tick này: máu −10 (160 → 150), Thế 80 → 70 [thuong]",
+   "f150   D 1 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f164 Lam D 2 atk2 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f164   → Chuông Gỗ#7 tick này: máu −10 (150 → 140), Thế 70 → 60 [thuong]",
+   "f165   D 2 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f181 Lam D 3 atk3 trúng Chuông Gỗ#7: máu 10  Thế 30",
+   "f181   → Chuông Gỗ#7 tick này: máu −10 (140 → 130), Thế 60 → 30 [thuong]",
+   "f182   D 3 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f278 Lam D 4 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f278   → Chuông Gỗ#7 tick này: máu −10 (130 → 120), Thế 33 → 23 [thuong]",
+   "f279   D 4 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f293 Lam D 5 atk2 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f293   → Chuông Gỗ#7 tick này: máu −10 (120 → 110), Thế 23 → 13 [thuong]",
+   "f294   D 5 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f392 Lam D 7 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f392   → Chuông Gỗ#7 tick này: máu −10 (110 → 100), Thế 16 → 6 [thuong]",
+   "f393   D 7 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f515 Lam D 8 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f515   → Chuông Gỗ#7 tick này: máu −10 (100 → 90), Thế 17 → 7 [thuong]",
+   "f516   D 8 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f530   Chuông Gỗ#7 VỠ (Thế 7 − 10) → choáng 150 tick",
+   "f530 Lam D 9 atk2 trúng Chuông Gỗ#7: máu 10  Thế 10",
+   "f530   → Chuông Gỗ#7 tick này: máu −10 (90 → 80), Thế 7 → 0 [choang]",
+   "f531   D 9 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f547 Lam D 10 atk3 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
+   "f547   → Chuông Gỗ#7 tick này: máu −10 (80 → 70), Thế 0 → 0 [choang]",
+   "f548   D 10 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f578 Lam D 11 atk1 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
+   "f578   → Chuông Gỗ#7 tick này: máu −10 (70 → 60), Thế 0 → 0 [choang]",
+   "f579   D 11 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f593 Lam D 12 atk2 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
+   "f593   → Chuông Gỗ#7 tick này: máu −10 (60 → 50), Thế 0 → 0 [choang]",
+   "f594   D 12 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f610 Lam D 13 atk3 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
+   "f610   → Chuông Gỗ#7 tick này: máu −10 (50 → 40), Thế 0 → 0 [choang]",
+   "f611   D 13 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
+   "f641 Lam D 14 atk1 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
+   "f641   → Chuông Gỗ#7 tick này: máu −10 (40 → 30), Thế 0 → 0 [choang]",
+   "f642   D 14 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau"
+  ],
   "p0_log_cuoi": [
-   "f1043 #36 xep-hang  cần y=0.00  (đang atk1 t14)  hạn f1058",
-   "f1045 giu #36: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1045 #36 → thuc-hien atk2  chờ 1 tick",
-   "f1051 hộp atk2 bật: chạm #36 → hộp 8 tick (tính tick bấm = 1; su 7)",
-   "f1051   Chuông Gỗ#7 VỠ (Thế 10 − 10) → choáng 90 tick (lần vỡ thứ 2 trong 600 tick)",
-   "f1051 Lam D 29 atk2 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f1051   → Chuông Gỗ#7 tick này: máu −10 (325 → 315), Thế 10 → 0 [choang]",
-   "f1052   D 29 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1057 #37 xep-hang  cần y=0.00  (đang atk2 t13)  hạn f1073",
-   "f1059 giu #37: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1060 #37 → thuc-hien atk3  chờ 2 tick",
-   "f1068 hộp atk3 bật: chạm #37 → hộp 11 tick (tính tick bấm = 1; su 9)",
-   "f1068 Lam D 30 atk3 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f1068   → Chuông Gỗ#7 tick này: máu −10 (315 → 305), Thế 0 → 0 [choang]",
-   "f1069   D 30 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1071 #38 xep-hang  cần y=0.00  (đang atk3 t12)  hạn f1098",
-   "f1073 giu #38: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1085 #38 → bi-thay  bởi #39",
-   "f1085 #39 thay-the  cần y=0.00  (đang atk3 t26)  hạn f1098",
-   "f1087 giu #39: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1093 #39 → thuc-hien atk1  chờ 7 tick",
-   "f1099 hộp atk1 bật: chạm #39 → hộp 14 tick (tính tick bấm = 1; su 7)",
-   "f1099 Lam D 31 atk1 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f1099   → Chuông Gỗ#7 tick này: máu −10 (305 → 295), Thế 0 → 0 [choang]",
-   "f1099 #40 xep-hang  cần y=0.00  (đang atk1 t7)  hạn f1121",
-   "f1100 giu #40: nha-som (giữ 1 tick mô phỏng (0 bước logic + 1 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1100   D 31 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1108 #40 → thuc-hien atk2  chờ 8 tick",
-   "f1113 #41 xep-hang  cần y=0.00  (đang atk2 t6)  hạn f1136",
-   "f1114 hộp atk2 bật: chạm #40 → hộp 15 tick (tính tick bấm = 1; su 7)",
-   "f1114 Lam D 32 atk2 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f1114   → Chuông Gỗ#7 tick này: máu −10 (295 → 285), Thế 0 → 0 [choang]",
-   "f1115 giu #41: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1115   D 32 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1123 #41 → thuc-hien atk3  chờ 9 tick",
-   "f1127 #42 xep-hang  cần y=0.00  (đang atk3 t5)  hạn f1161",
-   "f1129 giu #42: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1131 hộp atk3 bật: chạm #41 → hộp 18 tick (tính tick bấm = 1; su 9)",
-   "f1131 Lam D 33 atk3 trúng Chuông Gỗ#7: máu 10  Thế 0 (choang)",
-   "f1131   → Chuông Gỗ#7 tick này: máu −10 (285 → 275), Thế 0 → 0 [choang]",
-   "f1132   D 33 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1140   Chuông Gỗ#7 hồi phục (20 tick, Thế về đầy 80)",
-   "f1141 #42 → bi-thay  bởi #43",
-   "f1141 #43 thay-the  cần y=0.00  (đang atk3 t19)  hạn f1161",
-   "f1143 giu #43: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1155 #43 → bi-thay  bởi #44",
-   "f1156 #44 ra-ngay → atk1  cần y=0.00",
-   "f1157 giu #44: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1160   Chuông Gỗ#7 ổn định (120 tick, Thế không xuống dưới 1; không khôi phục vỏ)",
-   "f1162 hộp atk1 bật: chạm #44 → hộp 7 tick (tính tick bấm = 1; su 7)",
-   "f1162 Lam D 34 atk1 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f1162   → Chuông Gỗ#7 tick này: máu −10 (275 → 265), Thế 80 → 70 [onDinh]",
-   "f1163   D 34 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau",
-   "f1169 #45 xep-hang  cần y=0.00  (đang atk1 t14)  hạn f1184",
-   "f1171 giu #45: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường",
-   "f1171 #45 → thuc-hien atk2  chờ 1 tick",
-   "f1177 hộp atk2 bật: chạm #45 → hộp 8 tick (tính tick bấm = 1; su 7)",
-   "f1177 Lam D 35 atk2 trúng Chuông Gỗ#7: máu 10  Thế 10",
-   "f1177   → Chuông Gỗ#7 tick này: máu −10 (265 → 255), Thế 70 → 60 [onDinh]",
-   "f1178   D 35 vẫn chồng Chuông Gỗ#7 nhưng đã trúng → bỏ qua các tick sau"
+   "f1407   → Chuông Gỗ#9 tick này: máu −15 (28 → 13)",
+   "f1408   D 22 vẫn chồng Chuông Gỗ#9 nhưng đã trúng → bỏ qua các tick sau",
+   "f1429 Dư Âm #2: chém vang TRÚNG 1 mục tiêu → đúng 1 vết",
+   "f1431 vết #2 VANG (D 200002 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)",
+   "f1431 VẾT D 200002 trúng Chuông Gỗ#9: máu 10",
+   "f1431   → Chuông Gỗ#9 tick này: máu −10 (13 → 3)",
+   "f1432   D 200002 vẫn chồng Chuông Gỗ#9 nhưng đã trúng → bỏ qua các tick sau",
+   "f1435 vết #2 hết hộp: trúng 1 mục tiêu (bỏ qua 1 lần chồng lặp – mỗi mục tiêu 1 lần)",
+   "f1439 #24 ra-ngay → atk1  cần y=0.00",
+   "f1440 giu #24: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 117) → chỉ là đánh thường",
+   "f1445 hộp atk1 bật: chạm #24 → hộp 7 tick (tính tick bấm = 1; su 7)",
+   "f1445 Lam D 23 atk1 trúng Chuông Gỗ#9: máu 12",
+   "f1445   → Chuông Gỗ#9 tick này: máu −12 (3 → -9)",
+   "f1445   Chuông Gỗ#9 CHẾT",
+   "f1557 Dư Âm: hết hồi chiêu – sẵn sàng",
+   "f1589 #25 ra-ngay → atk1  cần y=0.00",
+   "f1595 hộp atk1 bật: chạm #25 → hộp 7 tick (tính tick bấm = 1; su 7)",
+   "f1595 Lam D 24 atk1 trúng Chuông Gỗ#8: máu 12",
+   "f1595   → Chuông Gỗ#8 tick này: máu −12 (40 → 28)",
+   "f1596   D 24 vẫn chồng Chuông Gỗ#8 nhưng đã trúng → bỏ qua các tick sau",
+   "f1605 giu #25: DA NAP (giữ 20 tick mô phỏng (17 bước logic + 3 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 7 tick – chạy hết, không cắt)",
+   "f1611 ky-nang: xep-hang (nhả sau 25 tick mô phỏng (22 bước logic + 3 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), khi atk1 t22/23, tung sau tối đa 1 tick, hạn f1618)",
+   "f1612 ky-nang #3: TUNG (xep-hang → tung khi đòn trước hết re, chờ 0 tick) – chém vang (cú quét thấp) D 25 chốt [15,20], vết sẽ [10,10] (cấp 3 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)",
+   "f1617 vết #3 ĐẶT (lần dùng Dư Âm #3, từ chém vang D 25) ở hộp [10411,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [10,10] chốt cấp 3",
+   "f1617 Dư Âm #3: hộp chém vang BẬT (f1617) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi",
+   "f1617 Lam D 25 CHÉM VANG trúng Chuông Gỗ#8: máu 15",
+   "f1617   → Chuông Gỗ#8 tick này: máu −15 (28 → 13)",
+   "f1618   D 25 vẫn chồng Chuông Gỗ#8 nhưng đã trúng → bỏ qua các tick sau",
+   "f1639 Dư Âm #3: chém vang TRÚNG 1 mục tiêu → đúng 1 vết",
+   "f1641 vết #3 VANG (D 200003 src 'k' [10,10], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)",
+   "f1641 VẾT D 200003 trúng Chuông Gỗ#8: máu 10",
+   "f1641   → Chuông Gỗ#8 tick này: máu −10 (13 → 3)",
+   "f1642   D 200003 vẫn chồng Chuông Gỗ#8 nhưng đã trúng → bỏ qua các tick sau",
+   "f1645 vết #3 hết hộp: trúng 1 mục tiêu (bỏ qua 1 lần chồng lặp – mỗi mục tiêu 1 lần)",
+   "f1649 #26 ra-ngay → atk1  cần y=0.00",
+   "f1650 giu #26: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 117) → chỉ là đánh thường",
+   "f1655 hộp atk1 bật: chạm #26 → hộp 7 tick (tính tick bấm = 1; su 7)",
+   "f1655 Lam D 26 atk1 trúng Chuông Gỗ#8: máu 12",
+   "f1655   → Chuông Gỗ#8 tick này: máu −12 (3 → -9)",
+   "f1655   Chuông Gỗ#8 CHẾT"
   ]
  }
 }

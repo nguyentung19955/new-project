@@ -82,6 +82,11 @@ thay('PH9: thanh Vọng không nhấp nháy khi bóng đã nghỉ (2 HUD)',
      "  else if(echo && echo.done){ col=(S.frame>>4)%2?'#CEF0D6':'#83CC93'; }",
      "  else if(echo && echo.done){ col='#5f7f6a'; }   // P0-C (PH9): bóng nghỉ – không nhấp nháy", 2)
 
+# PH10 mục 4: tinh anh không nhận đòn khi Lam ở ngoài E (q.khongDanh – chỉ tinh anh có; quái khác không đổi)
+thay('PH10: P0.thuThap bỏ qua mục tiêu khongDanh()',
+     "      if (q.dead || q.gone || q.st === 'die' || !overlap(hb, q)) continue;\n",
+     "      if (q.dead || q.gone || q.st === 'die' || !overlap(hb, q) || (q.khongDanh && q.khongDanh())) continue;   // P0-C (PH10): tinh anh khi Lam ngoài E\n")
+
 # ---------- 3. Khối chèn: màu HM + Bọ (bản chép) + phòng B (bản chép) + P0-C ----------
 MOC = '/* ---------- bản đồ bản thử'
 if HM_FULL.count(MOC) != 1: loi.append('khoi-huong-moi.js: không thấy "%s"' % MOC)

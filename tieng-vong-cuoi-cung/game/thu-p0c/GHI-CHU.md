@@ -1,117 +1,132 @@
-# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026)
+# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026, sửa theo PH10)
 
-Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-9-P0B.md` mục 4 + "GỬI CLAUDE" điểm 9 (chuẩn bị P0-C **độc lập**),
-`KE-HOACH-GAMEPLAY-V2.md` mục 5 (Thế tinh anh), 7 (phạm vi P0-C), 8 (phòng), `KE-HOACH-VU-KHI.md` mục 3, 4b, 6b (Ấn Rèn I trước boss đầu, cấp 3 mở Dư Âm),
-PHAN-HOI-2, PHAN-HOI-5 (Thế tinh anh hồi + ổn định chống chuỗi choáng; vỏ quái thường vỡ tới chết), PHAN-HOI-7, PHAN-HOI-8.
+Viết cho người không rành kỹ thuật. Bản đầu làm theo `docs/gameplay/PHAN-HOI-9-P0B.md` mục 4 + "GỬI CLAUDE" điểm 9, `KE-HOACH-GAMEPLAY-V2.md` mục 5, 7, 8,
+`KE-HOACH-VU-KHI.md` mục 3, 4b, 6b, PHAN-HOI-2, 5, 7, 8. **Lần này sửa theo `docs/gameplay/PHAN-HOI-10-P0C-AMDAO-P0B-DEF.md`** mục 1, 2, 5 và "6. ĐOẠN GỬI CLAUDE".
 
 > **Chưa thử trên iPhone thật.** Mọi ảnh / video / số đo là Chromium headless (máy chủ Linux không GPU), người chơi là **bot**.
-> Số bot chỉ là kiểm chức năng / một kịch bản – **không kết luận "cảm giác tiến triển đã đạt"**. PH9: đánh giá cảm giác chờ các sửa hitbox / điều khiển đã thống nhất.
+> Bot đọc trạng thái tinh anh "hoàn hảo" (biết ngay đòn nào đang báo) – số bot chỉ là kiểm chức năng, **không kết luận "người mới sống đủ lâu" hay "cảm giác tiến triển đã đạt"**.
 
-**Không sửa** `game/thu-p0a/`, `game/thu-p0b/`, `game/thu-bo-vo-moc/`, `game/thu-phong-b/`, `demo.html`, `build-demo.py`, `docs/gameplay/`, ảnh nguồn, rig. Không publish.
-Không viết bộ kiểm thử tự động (chỉ có script quay video + ghi log).
+**Không sửa** `game/thu-p0a/`, `game/thu-p0b/` (phiên khác đang đóng băng), `game/thu-bo-vo-moc/`, `game/thu-phong-b/`, `demo.html`, `build-demo.py`, `docs/gameplay/`, ảnh nguồn, rig.
+Không publish. Không gen ảnh. Không viết bộ kiểm thử tự động (chỉ script quay video + ghi số / log, không có đạt / trượt).
 
 ## Link chơi thử
 
 | Link | Dùng để |
 |---|---|
-| https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0c/index.html | **Người chơi thử** (log nền vẫn thu, không hiện bảng / hộp đòn). Vào phòng **A (điểm lưu)**, đi A → B → C → D → **E (tinh anh)** → **F (đe rèn)**. Âm Đao **cấp 1** |
+| https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0c/index.html | **Người chơi thử** (log nền vẫn thu, không hiện bảng / hộp đòn). Vào phòng **A (điểm lưu)**, đi A → B → C → D → **E (tinh anh)** → **F (đe rèn + hình nộm)** → quay lại E (2 Chuông Gỗ sau rèn). Âm Đao **cấp 1**. **Không bất tử**. Vào E là có **mốc hồi sinh ở đầu E** |
 | …/thu-p0c/index.html?vao=e | **Rút gọn**: vào thẳng đầu phòng E (tinh anh). Mốc hồi sinh ở đầu E |
-| …/thu-p0c/index.html?vao=f | Vào thẳng phòng F – chỉ để xem đe (chưa có Ấn thì **không** rèn được, gợi ý "Đe rèn · cần Ấn Rèn I") |
-| …/thu-p0c/index.html?vao=e&hitbox=1&debug=p0c | Bảng log P0-C trên màn + hộp đòn (hộp đập / hộp húc của tinh anh đúng tỉ lệ ×1,5) + chữ trạng thái tinh anh dưới chân |
-| …/thu-p0c/index.html?vao=e&tamau=600 | **CHỈ ĐỂ KIỂM** chu trình Thế (tinh anh 600 máu để thấy vỡ → choáng → ổn định → vỡ lại ×0,6). **Mặc định tắt (160)** – không dùng khi thử người chơi |
+| …/thu-p0c/index.html?vao=f | Vào thẳng phòng F – chỉ để xem đe / hình nộm (chưa có Ấn thì **không** rèn được) |
+| …/thu-p0c/index.html?vao=e&hitbox=1&debug=p0c | Bảng log P0-C trên màn + hộp đòn + chữ trạng thái tinh anh dưới chân |
+| …/thu-p0c/index.html?vao=e&choang=120 | **BIẾN THỂ (tắt mặc định)**: choáng lần vỡ Thế đầu **120** tick thay 150. Chỉ dùng nếu người thử thấy trận thành "đứng chém quái bất động" |
+| …/thu-p0c/index.html?vao=e&tamau=600 | **CHỈ ĐỂ KIỂM** chu trình Thế (tinh anh 600 máu). Mặc định tắt (160) – không dùng khi thử người chơi |
 
-Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn – app Claude không cho tải file) và thử tải file .txt (tóm tắt + từng dòng, có ms thật). Không cần tải lại trang để bật debug.
-Nút đổi cấp Âm Đao của trang Âm Đao bị **ẩn** (người thử lên cấp bằng đe); chỉ hiện ở `?debug=p0c`.
-Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A (bật / tắt ghi). Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím: **F**).
+Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn) và thử tải file .txt.
+Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A. Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím **F**).
 
-## Đã làm
+## Sửa theo phản hồi 10
 
-| # | Yêu cầu | Đã làm |
+### Đã làm
+
+| # | Yêu cầu PH10 | Đã làm |
 |---|---|---|
-| 0 | Trang riêng sinh bằng script | `cong-cu/tao-p0c.py`: nền = `thu-p0a/am-dao.html` (bản đã sửa PH8) + **bộ đất mới A → F, phòng D/E/F, Bọ** lấy đúng danh sách chỗ thay của `thu-phong-b/cong-cu/tao-tu-p0a.py` (đọc bằng AST, không chạy script đó) + bản chép `khoi-phong-b.js` (chỉ đổi: mặc định vào phòng A; tên phòng E) + bản chép `khoi-bo.js` + khối riêng `cong-cu/khoi-p0c.js`. Mỗi chỗ thay phải khớp đúng số lần – nguồn đổi thì script dừng và báo |
-| 1 | Phòng E: tinh anh "Chuông Gỗ Gác Lớn" | Chuông Gỗ biến thể: **cùng rig + clip Chuông Gỗ** (`QBR.capNhatQuai` / `QBR.ve`), **phóng ×1,5** (cao ≈ 180 px, thân va chạm 108 × 162) + **tô màu** gỗ sơn sẫm (phủ `source-atop` trên canvas phụ) + ánh đồng nhẹ + tên trên đầu. **[160 máu, Thế 80]**, Thế dùng **`THE_TINH_ANH`** của khối P0-A (hồi khi không bị đánh, vỡ → choáng → hồi phục → **ổn định**, chống chuỗi choáng ×0,6 / ×0,4). Nặng: đòn thường **không** làm khựng / đẩy lùi; chỉ vỡ Thế mới huỷ đòn đang ra |
-| 1a | Đòn 1 – ĐẬP | Như Chuông Gỗ: báo trước **30 tick** (dấu hình: **lóe vàng toàn thân + dấu "!"**; dấu âm: ting `sfx.warn`), hộp đập = hộp Chuông Gỗ **×1,5** bật tick 5–10, lao 3,6 px/tick trong 5 tick, hồi 34 |
-| 1b | Đòn 2 – HÚC NGANG | Báo trước **36 tick** (dấu hình: **lóe ĐỎ CAM** + **ngả người ra sau** + **mũi tên »** trên đầu chỉ hướng + bụi chân; dấu âm: tiếng trầm kéo `sfx.sweepPrep` – khác tiếng đập), rồi **lao ngang 6,5 px/tick tối đa 36 tick** (dừng ở mép sân), **hồi 46 tick** (đứng thở, đánh được). Né: lùi xa khi thấy báo, hoặc **lướt xuyên qua** (miễn sát thương 11 tick) |
-| 1c | Nhịp khác rõ | Đập: báo 30 → chạm ngay → hồi 34 (gần). Húc: tầm xa 150–440 px, báo 36 → lao dài → hồi 46. Sau **2 lần đập liên tiếp** tinh anh **lùi lấy đà** (34 tick) rồi húc → người chơi bám sát cũng gặp húc |
-| 1d | Mọi dấu âm có dấu hình | Bảng `LOAI_TA.don` ghi `dauHinh` / `dauAm` cho cả 2 đòn; trang cảnh báo trong console nếu đòn nào có âm mà thiếu hình |
-| 1e | Hạ được bằng đánh thường | Video 1–2: bot **chỉ chạm Chém** (cấp 1, không bấm V, không Dư Âm) hạ tinh anh ở **tick 688**. Vọng **không bắt buộc** (bóng chỉ cộng thêm nếu người chơi muốn) |
-| 2 | Rơi Ấn Rèn I | Ảnh `p0c/an-ren-2x.png` cắt từ `art/huong-moi/nguon/vu-khi/an-ren.png` (khung 1 "rơi trên đất" + khung 2 "đã nhặt – khắc sáng"; tách nền trắng loang từ mép, script `cong-cu/tao-asset-p0c.py`). Vẽ **cao 24 px** (trong 20–28). Rơi tung lên rồi nảy 1 lần, quầng sáng ấm nhấp nháy. **Chạm để nhặt** (sau 18 tick): tiếng 2 nốt, tia + vòng sáng, chớp nhẹ, chữ "Ấn Rèn I", biểu tượng **bay về HUD** (48 tick) rồi nằm cạnh bảng vũ khí. Ấn không tiêu hao |
-| 3 | Phòng F: đe rèn | Dùng đe 2 trạng thái của bước 3 phòng B (`do-vat-f.png` cắt từ `nguon/vu-khi/de-ren.png`: nguội / đang rèn – than đỏ, quầng lò). Có Ấn + đứng ≤ 80 px: nút **"🔨 Rèn Âm Đao"** (phím **F**) + nhãn **"RÈN"** nổi trên đe (thấy cả khi nút bị ngón che). Rèn → **Âm Đao cấp 3 (mở Dư Âm)**: 3 tiếng búa + 2 nốt, tia lửa, đe đỏ rực 1,5 s, chữ lớn **"Âm Đao cấp 3 · mở Dư Âm"**, sau 1,6 s dòng nhắc "Giữ Chém rồi thả = Dư Âm". **Không menu, không vật liệu, không cấp khác**. Không có Ấn → gợi ý "Đe rèn · cần Ấn Rèn I", không có nút |
-| 4 | Vọng | **Cấu hình tạm A (ghi chủ động)**, nút V một nghĩa (bật / tắt ghi, đúng code trang Âm Đao). Áp **sửa PH9 mục 1.3–1.4** như P0-B: mẫu cuối của đoạn xử lý **đủ** hình + hộp + hit rồi bước sau mới kết thúc → bóng **nghỉ** theo hướng cuối, **không hộp đòn**, mờ hơn, không nhấp nháy. Đổi phòng gameplay / chết → xoá bóng. **Không có B ở trang này** (không gộp hai cách vào một nút). Luật Vọng, chi phí, kỹ năng vũ khí **không đổi** trong lượt |
-| 5 | Đi phòng | A (điểm lưu) → B → C (quái gác – cổng mở khi nó chết, như P0-A) → D (2 Bọ) → E → F. `?vao=e` vào thẳng E. Âm Đao **luôn bắt đầu cấp 1** (bỏ `?cap=`) |
-| 6 | Log chức năng | **Log nền luôn thu** (`P0C.LOG`, 6000 dòng): tinh anh thức / mỗi đòn (báo trước, hộp bật, lao, dừng) / trúng Lam / máu + Thế từng lần / **vỡ Thế (lần thứ mấy trong 600 tick, choáng bao nhiêu, hệ số chống chuỗi)** / hồi phục / **ổn định (và khi ổn định giữ Thế ở sàn 1)** / hết ổn định / Thế tự hồi / hạ; **Ấn rơi / nhặt**; **đe**: tới đe có / chưa có Ấn, **mở cấp** (số chỉ số mới); **Dư Âm** tung / vết trúng; Vọng: xoá bóng khi đổi phòng, bóng nghỉ. Log P0-A (công thức, Cộng hưởng…) vẫn có ở `?debug=input` |
+| chốt | Giữ: cấp 3 gồm +20 % cấp 2 · chạm thân chỉ đẩy, húc vẫn đau · choáng 150 · Lam chết → tinh anh hồi đầy · E không cổng · Vọng tạm A · chưa gen Ấn | Giữ nguyên. Rèn xong: chữ lớn **"Đánh thường mạnh hơn · Mở Dư Âm"** + chữ nổi "Âm Đao cấp 3" trên đe, sau 1,6 s nhắc "Giữ Chém rồi thả = Dư Âm · thử vào hình nộm". **`?choang=120`** thêm làm biến thể tắt mặc định (một dòng cấu hình) |
+| 1 | Log đối chiếu ID tinh anh | **Mọi dòng về tinh anh** trong log P0-C có tiền tố `[Chuông Gỗ#7 \| elite:chuong-go-gac-lon \| Chuông Gỗ Gác Lớn]` = enemyId (đúng tên `Chuông Gỗ#7` mà log P0-A `?debug=input` dùng – chỉ số trong mảng quái) · loại elite · tên hiển thị. Dòng **VÁN MỚI** ghi bảng đối chiếu (tinh anh = Q[7]; Chuông Gỗ sau rèn = #8, #9; hình nộm F = #10). Tóm tắt xuất log có `ta.enemyId / elite / ten`. Bảng log trên màn (hẹp) chỉ ghi `#7`. Ví dụ cùng frame: P0-A `f149 → Chuông Gỗ#7 tick này: máu −10 (160 → 150)` ↔ P0-C `f149 [Chuông Gỗ#7 \| …] tinh anh: máu 160 → 150` |
+| 2 | Báo đòn: bỏ vàng, phân biệt bằng tư thế | **ĐẬP**: **giơ tay cao** (tay trước giơ quá đầu) + **vươn người** (cao 6 %) + lóe **hổ phách ngả cam** `#F0882A` + dấu "!" cùng màu + ting. **HÚC**: **rụt người** (thấp 14 %, bè 8 %, cúi đầu, tay ôm sát) + **mũi tên » trước ngực chỉ hướng lao** (dời từ trên đầu xuống – trên đầu bị tên tinh anh che) + lóe **đỏ** `#E5432E` + bụi chân + tiếng trầm. Ánh nền thường của tinh anh đổi từ vàng đồng sang đồng sẫm `#9A6A44` (vàng ấm chỉ còn cho dẫn đường / an toàn: nút Rèn, Ấn, điểm lưu). Gợi ý chữ: "Giơ tay = sắp đập · lùi ra hoặc lướt", "Rụt người + » = sắp húc · lùi xa hoặc lướt xuyên" |
+| 3 | Lướt xuyên thân lớn | **Có lỗi, đã sửa trước** (số đo dưới). Luật mới: lướt mà **chạm thân lúc còn miễn sát thương của lướt** → **giữ miễn tới khi ra khỏi thân**; hết lướt mà còn trong thân → **đẩy tiếp theo hướng lướt 7 px/tick** (không kéo ngược về chỗ cũ); hướng lướt bị tường chặn → đẩy ra phía kia; tối đa 40 tick; ra khỏi thân → thêm 4 tick miễn. Lướt **quá sớm** (hết lướt + hết miễn trước khi chạm) **vẫn trúng** – không thành "lướt luôn an toàn". Chạm thân thường: đẩy ra **tới mép thân** (≤ 6 px/tick, nhanh hơn chạy 4,4) thay vì 2,5 px/tick – không còn đi chậm xuyên qua thân; hướng đẩy chọn một lần và giữ (không lật mỗi tick); phía gần có tường → đẩy sang phía kia |
+| 4 | Luật rời E khi đang đánh | Lam ra khỏi E (sang **F** hoặc **D**) khi tinh anh đang thức / đánh → tinh anh **ngừng ngay** (huỷ cả đòn đang báo / đang lao), **không truy đuổi** (vẫn chỉ trong sân cột 3–27), **đi về chỗ** (cột 19, 1,6 px/tick), tới nơi **HỒI ĐẦY máu + Thế** ("Hồi đầy" nổi trên đầu) rồi ngủ gác; Lam vào lại E → thức lại. Vào lại **trước** khi nó về tới → đánh tiếp với máu hiện có (chưa hồi). Chữ báo: "Rời sân · tinh anh về chỗ, hồi đầy". **Không đánh được từ vùng an toàn**: khi Lam ở ngoài E tinh anh **không nhận đòn nào** (đòn Lam, chém vang, vết Dư Âm vang muộn, bóng Vọng). **Không đòn nào lọt vào F**: đòn của tinh anh chỉ tính khi Lam ở trong E (vị trí thật, không trễ 1 bước) |
+| 5 | Trạng thái tiến trình | Kiểm từng ca (video 3, `log-debug-trang-thai.txt`). Sửa thêm: **rèn đúng MỘT lần** (`REN.lan`, bấm lại → ghi log "không rèn lặp, không thưởng thêm"); **ván mới đặt lại cấp 1** (bản trước: tạo ván mới sau khi rèn thì Ấn mất mà cấp 3 vẫn giữ). **Mảng sáng ấm nhẹ** hình elip trên sàn quanh đe (rõ hơn, nhịp chậm khi rèn được) |
+| 6 | Hồi sinh gần E | **Mốc hồi sinh ẩn ở đầu E** (cột 1): vào E là đặt (chữ "Mốc hồi sinh: đầu sân tinh anh"), trừ khi đã lưu ở chuông F (sau E). Không phải chuông: **không hồi máu khi chạm** (không thành chỗ hồi máu giữa trận). Hồi sinh: "Hồi sinh ở đầu sân tinh anh". Tinh anh cách mốc ≈ 600 px > 560 → hồi sinh xong nó vẫn ngủ |
+| 7 | Đoạn ngắn sau rèn | Dùng lại phòng / quái có sẵn, không dựng vùng mới: **(a)** **hình nộm** (cùng hình nộm phòng A, 999 máu, bảng số trên đầu) ở **F cột 11** – sau đe, sát tường cuối, chỗ an toàn; gợi ý "Thử: giữ Chém rồi thả vào hình nộm". **(b)** Rèn xong **quay lại E** → **2 Chuông Gỗ thường** (40 máu, đúng loại đã gặp ở B; `Chuông Gỗ#8`, `#9`) ra sân E (ngoài F), cột 5–13 và 17–25. **(c)** Chuông Gỗ có nhịp rõ: lóe báo 30 tick → đập → **hồi 26 + nghỉ 60 tick** – đủ để né rồi giữ 20 tick + thả Dư Âm; gợi ý lúc nó hồi: "Nó đang hồi · giữ Chém rồi thả". Không đặt quái nhiều máu |
+| 8 | Video không bất tử | Video 1–2 **không** `?battu=1`. Video 3 debug riêng cho các ca trạng thái (và lướt / rời E / mốc hồi sinh) |
+
+### KIỂM BẰNG CODE (Chromium headless, bot)
+
+| Kiểm | Kết quả |
+|---|---|
+| Trang sinh đúng | `tao-p0c.py`: 18 chỗ thay của phòng B + **9** chỗ riêng P0-C trên trang Âm Đao (thêm 1: `P0.thuThap` bỏ qua mục tiêu `khongDanh()` – chỉ tinh anh có) + 2 + 5 chỗ trên bản chép – khớp đủ. Lỗi trang **0** ở mọi lần chạy |
+| **Lướt xuyên – TRƯỚC sửa** (đo trên bản cũ, cùng cách đo) | Húc đối đầu ở giữa sân, Lam cách 150 / 200 / 250 px: chỉ lướt khi khe hở **3–25 px** mới qua (≈ 1–2 tick); lướt sớm hơn **2–4 tick (khe 36–77 px) → TRÚNG** lúc vừa hết 11 tick miễn mà còn mắc trong thân (thân 108 + vùng ăn đòn Lam 40 = 148 px > lướt 88 px). Khe 25 px mà không giữ phím tiến → cũng trúng |
+| **Lướt xuyên – SAU sửa** (`video/do-luot-day.json`, 72 lần) | Cách 150 / 250 px: lướt ở **mọi khe 1–159 px → qua, 0 lần trúng** (có giữ hoặc không giữ phím tiến); miễn được giữ thêm 0–11 tick (lướt đúng lúc: 0 – không đổi gì). Cách 400 px: khe 95–160 → qua; khe ≤ 80 → húc dừng (hết 36 tick) trước khi tới, không chạm. Khe 0 (đã chạm rồi mới lướt) → **trúng** (đúng) |
+| Lướt – mép sân | Tinh anh lao về mép trái sân (cột 3), Lam đứng sát mép: khe 1–99 px → qua cả 4 lần |
+| Lướt – sát tường | Tường giả cột 0–2 của E sau lưng Lam (E thật không có tường trong tầm thân tinh anh): khe 1–99 px → qua cả 4 lần (trong thân 8–10 tick). Tường **ngay sau thân** tinh anh, Lam lướt vào phía tường: đổi hướng đẩy ra phía kia, không trúng; nếu Lam **cố giữ phím vào tường** thì hết 40 tick giữ miễn, sau đó đẩy thường đưa ra ngoài – không kẹt |
+| Lướt quá sớm vẫn trúng | Video 3 ca 3b: lướt ngay khi húc vừa lao (khe ≈ 250 px) → hết lướt + hết miễn trước khi chạm → trúng (máu 5 → 4) |
+| Đẩy chạm thân | Bản cũ: đẩy 2,5 px/tick < chạy 4,4 → **đi chậm xuyên qua thân** (≈ 60 tick). Bản mới: đi vào thân từ trái / phải → dừng đúng mép (tâm cách 64 px), **0 lần đổi chiều** trong 120 tick (không rung). **Ép giữa tường giả và thân**: bản nháp đầu bị **rung 0 ↔ 6 px mỗi tick** (đẩy vào tường bị chặn rồi đẩy ngược) – đã sửa bằng chọn hướng một lần + giữ; giờ đẩy sang phía kia, ra khỏi thân sau ≈ 16 tick, 0 lần đổi chiều, không mất máu |
+| Rời E khi đang đánh | Video 3 ca 4 (DEBUG: cấp 3, tinh anh 120 máu): Dư Âm trúng (120 → 93), lướt sang F. f46 "Lam RỜI sân E … NGỪNG đánh, không truy đuổi, về chỗ"; **vết Dư Âm vang lúc Lam đã ở F → HỤT** "(Lam ở ngoài E → tinh anh không nhận đòn)", máu giữ 93; chém về phía E từ F: không trúng; f105 "VỀ TỚI chỗ → HỒI ĐẦY 160 máu, Thế 80/80 → ngủ gác"; vào lại E → thức, 160 máu |
+| Không đòn lọt vào F | Đòn tinh anh chỉ tính khi Lam ở trong E; ngoài ra hình học: hộp đập vươn tối đa 81 px ngoài mép phải sân (cột 27) → dừng 15 px trước F |
+| Mốc hồi sinh E | Ca 6: đang lưu ở chuông A, đi D → E → log "MỐC HỒI SINH = đầu sân E"; ngã → hồi sinh ở x 10160 (đầu E), tinh anh ngủ, đầy máu |
+| Tinh anh chết → Lam ngã trước khi nhặt | Ca 5a: "LAM NGÃ … Ấn: còn trên đất ở x 10774 (giữ)" → hồi sinh mốc E → đi lại nhặt được |
+| Đã nhặt rồi ngã | Ca 5b: "Ấn: ĐÃ NHẶT (giữ)"; sang F → nút Rèn hiện |
+| F không tự rèn | Ca 5c: đứng cạnh đe có Ấn **150 tick** → vẫn cấp 1 (nút hiện, chưa bấm); bấm F → cấp 3. Luồng chính: đứng 40 tick, cấp 1, rồi mới bấm |
+| Rèn rồi quay lại | Ca 5d: ra xa, quay lại, bấm F **2 lần** → cấp 3, `REN.lan` 1, log 2 dòng "không rèn lặp"; nút Rèn không hiện lại |
+| Rời phòng khi Ấn trên đất | Ca 5e: sang F rồi quay lại E → Ấn còn → nhặt. Ca 5e′: sang D rồi quay lại E → Ấn còn → nhặt |
+| **Luồng người chơi, không bất tử** (video 1–2, `log-luong-nguoi-choi-*.txt`) | Bot chỉ đánh thường, cấp 1: 2 húc đều **lướt xuyên** (giữ miễn thêm tổng 7 tick), 3 đập đều né; **Lam bị đánh 0, không ngã**; vỡ Thế f530 → choáng 150; hạ tinh anh **f809**; nhặt Ấn f847; tới đe f966, đứng 40 tick (cấp 1); rèn **f1008**; hình nộm: đòn chạm 12 + chém vang 15 + vết 10 = 37 (f1159); vào lại E f1302 → 2 Chuông Gỗ; né đập → **Dư Âm trong lúc hồi** 2 lần (f1402, f1612; chém vang + vết đều trúng); hạ #9 f1445, #8 f1655. 1773 hình; trang sạch / debug lệch **0** bước. Bot đọc trạng thái hoàn hảo nên không bị đánh – **không nói lên người mới** |
+| `?choang=120` | Cùng bot, không video: vỡ Thế f530 → "CHOÁNG 120 tick", hạ f793 (mặc định 150: f809). Log VÁN MỚI ghi "choáng 120 (BIẾN THỂ ?choang=120)" |
+| Màu / tư thế báo đòn | Ảnh trích video 1: đập = tay giơ quá đầu + vươn + lóe cam; húc = thấp bè, đỏ, » trước ngực. Không còn vàng trên tinh anh |
+
+### CẦN THỬ IPHONE (chưa làm – không đánh dấu đạt)
+
+| Câu | Cần gì |
+|---|---|
+| Đọc hai đòn bằng tư thế | Không giải thích trước: người thử có phân biệt **giơ tay = đập gần** / **rụt người + » = húc lao xa** không, sau mấy lần bị trúng. Lóe cam (đập) và đỏ (húc) có lẫn nhau trên màn iPhone không (không được dựa vào màu) |
+| Lướt xuyên | Lướt sớm một chút vẫn qua – có thấy "ăn gian" / quá dễ không; lướt quá sớm bị trúng có hiểu vì sao không. Bị đẩy theo hướng lướt khi còn trong thân có thấy giật không |
+| Chạm thân | Đứng sát thân bị chặn ở mép (không đi xuyên được nữa, phải lướt) có thấy cứng / kẹt không; có rung trên Safari không |
+| Rời E | Người thử có chạy sang F để hồi rồi quay lại không; chữ "Rời sân · tinh anh về chỗ, hồi đầy" có đọc kịp không; có thấy bị phạt oan không |
+| Mốc hồi sinh | Chết ở E hồi sinh đầu E – có thấy hợp lý, có cần dấu hình trên sàn không (hiện chỉ có chữ báo) |
+| Sau rèn | Có tự đến hình nộm thử giữ–thả không; với 2 Chuông Gỗ có chủ động chờ nó hồi để dùng Dư Âm không, có nói được đánh thường mạnh hơn không (12 so với 10) – KHVK 10a câu 3 |
+| Choáng 150 | Lần vỡ Thế đầu: có dồn hết máu trong lúc choáng, trận có thành "đứng chém quái bất động" không – nếu có mới so `?choang=120` (lượt riêng, không ghép) |
+| Đe | Mảng sáng ấm trên sàn có thấy không (đang để nhẹ); nút / nhãn "RÈN" đủ rõ |
+| Ấn Rèn | Ấn cao 24 px có thấy giữa đống vụn tinh anh không (chưa gen ảnh mới – PH10 chốt 6) |
+| Hiệu năng | Tinh anh vẽ qua canvas phụ ≈ 360 × 290 × tỉ lệ màn mỗi khung + giờ thêm co giãn khi báo – đo khung hình Safari |
+
+## Phần đã có từ bản đầu (vẫn đúng)
+
+| # | Nội dung |
+|---|---|
+| 0 | Trang sinh bằng `cong-cu/tao-p0c.py`: nền = `thu-p0a/am-dao.html` (bản PH8) + bộ đất / phòng D–F của `thu-phong-b` (đọc danh sách chỗ thay bằng AST, không chạy script đó) + bản chép khối phòng B / Bọ + khối riêng `cong-cu/khoi-p0c.js`. Mỗi chỗ thay phải khớp đúng số lần – nguồn đổi thì script dừng và báo |
+| 1 | Tinh anh "Chuông Gỗ Gác Lớn" = Chuông Gỗ biến thể: cùng rig + clip, phóng ×1,5 (thân 108 × 162), tô màu gỗ sơn sẫm. [160 máu, Thế 80], `THE_TINH_ANH` (hồi khi không bị đánh, vỡ → choáng → hồi phục → ổn định, chống chuỗi choáng ×0,6 / ×0,4). Nặng: đòn thường không làm khựng; chỉ vỡ Thế mới huỷ đòn |
+| 1a–c | ĐẬP: báo 30, hộp ×1,5 tick 5–10, hồi 34. HÚC: báo 36, lao 6,5 px/tick ≤ 36 tick, hồi 46. Sau 2 đập liên tiếp: lùi lấy đà rồi húc |
+| 2 | Ấn Rèn I (`p0c/an-ren-2x.png`, cao 24 px): rơi, nảy, quầng ấm, chạm để nhặt (sau 18 tick), bay về HUD. Không tiêu hao |
+| 3 | Đe 2 trạng thái (nguội / đang rèn) của phòng B. Có Ấn + đứng ≤ 80 px: nút Rèn + nhãn "RÈN" trên đe |
+| 4 | Vọng tạm A + sửa PH9 (mẫu cuối xử lý đủ, bóng nghỉ không hộp). Đổi phòng / chết → xoá bóng |
+| 6 | Log nền P0-C luôn thu (6000 dòng) |
 
 ## Thông số (số thử, thang ×10, tick = 1/60 s)
 
 | | Số | Ghi chú |
 |---|---|---|
-| Tinh anh máu / Thế | **160 / 80** | KHGP2 mục 7. `?tamau=N` chỉ để kiểm |
-| Thế tinh anh | `THE_TINH_ANH`: choáng **150**, hồi phục 20 (Thế về đầy), **ổn định 120** (Thế không xuống dưới 1), chờ 90 rồi +1 / 3 tick, lần vỡ 2 / 3 trong 600 tick: ×0,6 / ×0,4 (tối thiểu 45), Cộng hưởng −50 % Thế | Không đổi số – lấy nguyên cấu hình khối P0-A |
-| Cỡ | rig ×1,5 → cao ≈ 180 px; thân 108 × 162 | Chuông Gỗ 72 × 108 |
-| Đi | 0,8 px/tick, dừng khi tâm cách Lam ≤ 96 px; thức khi Lam vào E và cách ≤ 560 px | Ở trong cột 3–27 của E |
-| Đập | báo 30 · hộp tick 5–10 · hồi 34 · nghỉ 34 · tầm kích hoạt < 175 px · hộp `{dx −135, dy −121, w 99, h 55}` (= Chuông Gỗ ×1,5) · sát thương 1 | Chuông Gỗ: báo 30, hồi 26, nghỉ 60 |
-| Húc | báo 36 · lao 6,5 px/tick ≤ 36 tick (≤ 234 px) · hồi 46 · nghỉ 150 · tầm kích hoạt 150–440 px · hộp = thân, 30 → 150 px trên chân · sát thương 1 | Lùi lấy đà 34 tick (1,7 px/tick) sau 2 lần đập liên tiếp |
-| Chạm thân | **đẩy Lam ra 2,5 px/tick, không sát thương** (lướt đi xuyên được) | Khác Chuông Gỗ thường – xem câu hỏi 2 |
-| Ấn Rèn I | cao 24 px, nhặt sau 18 tick, vùng nhặt 24 × 24 | |
-| Đe | tương tác ≤ 80 px từ tâm đe (cùng ngưỡng "đang rèn" của phòng B) | |
-| Âm Đao cấp 3 | đánh thường **12** (nhát 3 [12, 30]), Dư Âm: chém vang [15, 20], vết [10, 10], giữ 20 tick, hồi 150 | Bảng cấp có sẵn của trang Âm Đao: cấp 3 **gồm** +20 % của cấp 2 – xem câu hỏi 1 |
+| Tinh anh máu / Thế | **160 / 80** | `?tamau=N` chỉ để kiểm |
+| Thế tinh anh | `THE_TINH_ANH`: choáng **150** (`?choang=120` biến thể tắt mặc định), hồi phục 20, ổn định 120, chờ 90 rồi +1 / 3 tick, chống chuỗi ×0,6 / ×0,4 (tối thiểu 45) | |
+| Đập | báo 30 (giơ tay + lóe `#F0882A` + "!") · hộp tick 5–10 · hồi 34 · nghỉ 34 · tầm < 175 px | |
+| Húc | báo 36 (rụt người 14 % / bè 8 % + » trước ngực + lóe `#E5432E`) · lao 6,5 px/tick ≤ 36 tick · hồi 46 · nghỉ 150 · tầm 150–440 px | |
+| Chạm thân | đẩy ra **tới mép thân, ≤ 6 px/tick**, không sát thương; hướng giữ tới khi hết chồng; sát tường → phía kia | PH10 chốt 2 |
+| Lướt xuyên | chạm thân lúc còn miễn của lướt → giữ miễn tới khi ra; đẩy theo hướng lướt **7 px/tick**, tối đa **40 tick**, ra rồi **+4 tick** | Lướt: 8 tick × 11 px, miễn 11 tick (không đổi) |
+| Rời E | về chỗ **1,6 px/tick**, tới nơi hồi đầy máu + Thế, ngủ gác; thức lại khi Lam trong E cách ≤ 560 px | |
+| Mốc hồi sinh | E cột 1 (ẩn, không hồi máu) | Chuông F (sau E) được ưu tiên nếu đã lưu |
+| Sau rèn | hình nộm F cột 11 (999 máu); 2 Chuông Gỗ 40 máu ở E cột 9 (tuần 5–13) và 21 (17–25); Chuông Gỗ: báo 30, hồi 26, nghỉ 60 | Không đổi số Chuông Gỗ |
+| Âm Đao cấp 3 | đánh thường **12** (nhát 3 [12, 30]), Dư Âm: chém vang [15, 20], vết [10, 10], giữ 20 tick, hồi 150 | Gồm +20 % cấp 2 (chốt PH10) |
 
 ## Video (`video/`, 60 hình/s, mỗi hình = 1 bước logic, H.264 `-preset veryfast`)
 
 | File | Nội dung |
 |---|---|
-| `1-sach-tinh-anh-an-ren-du-am.mp4` / `2-debug-…` | `?vao=e`, bot **chỉ đánh thường** hạ tinh anh (tick 688) → nhặt Ấn (722) → sang F, tới đe (836) → bấm F rèn → **cấp 3** (852) → giữ Chém 26 tick, thả → **Dư Âm** (1005). Bản debug thêm `?hitbox=1&debug=p0c`. 1192 hình |
-| `3-sach-kiem-the-tamau600.mp4` / `4-debug-…` | **CHỈ ĐỂ KIỂM** `?tamau=600`: cùng bot đánh 1200 tick – vỡ Thế 3 lần (150 → 90 → 90 tick), ổn định sau mỗi lần |
-| `log-luong-chinh-*.txt`, `log-kiem-the-*.txt` | Log P0-C từng dòng (bản sạch và debug giống hệt) |
-| `ket-qua.json` | Tóm tắt số, mốc của bot, 60 dòng cuối log P0-A, lỗi trang |
+| `1-sach-luong-nguoi-choi-khong-bat-tu.mp4` / `2-debug-…` | `?vao=e`, **không bất tử**: tinh anh (chỉ đánh thường) → Ấn → F (đứng cạnh đe 40 tick, bấm Rèn) → hình nộm (giữ–thả Dư Âm) → quay lại E: 2 Chuông Gỗ, né rồi Dư Âm lúc nó hồi. Bản debug thêm `?hitbox=1&debug=p0c`. 1773 hình. Dòng chữ dưới: việc bot đang làm + máu Lam |
+| `3-debug-trang-thai-luot-roi-E-hoi-sinh-an-de.mp4` | Một trang debug, từng ca dựng bằng lệnh debug (tên ca ở góc dưới trái): 3a lướt sớm · 3b lướt quá sớm · 4 rời E (+ vết vang lúc ở F) · 6 mốc hồi sinh · 5a chết trước khi nhặt · 5b nhặt rồi chết · 5c đứng cạnh đe không tự rèn · 5d rèn lặp · 5e / 5e′ rời phòng khi Ấn trên đất |
+| `log-luong-nguoi-choi-*.txt`, `log-debug-trang-thai.txt` | Log P0-C từng dòng |
+| `do-luot-day.json` | Số đo lướt xuyên (đối đầu / mép sân / sát tường) + đẩy chạm thân |
+| `ket-qua.json` | Tóm tắt luồng (mốc bot, log P0-A dòng `Chuông Gỗ#7`), kết quả từng ca, `?choang=120` |
 
-Bot (`cong-cu/quay-p0c.py`): thấy báo đập → lùi khỏi tầm; thấy báo húc → đứng cách ≥ 150 px, lúc nó lao tới trong 150 px thì lướt xuyên qua;
-tinh anh không ra đòn → áp sát, chạm Chém mỗi 14 tick (giữ cách ≥ 78 px trừ lúc choáng). `?battu=1` chỉ để video không bị cắt (số lần trúng vẫn ghi).
-Trong trận **không dời quái, không đặt lại hồi chiêu, không can thiệp**. Hai trang sạch / debug chạy cùng đầu vào: lệch trạng thái **0** bước.
-Quay lại: `python3 -B game/thu-p0c/cong-cu/quay-p0c.py` (khoảng 10 phút).
+Bản video cũ (`?battu=1`, `?tamau=600`) đã bỏ – chu trình Thế không đổi code từ bản trước.
+Quay lại: `python3 -B game/thu-p0c/cong-cu/quay-p0c.py` (≈ 10 phút; thêm `do`, `choang`, `trang`, `luong` để chạy riêng phần đó, `--khong-video` để chỉ ghi số).
 
-## KIỂM BẰNG CODE (Chromium headless)
+## Câu hỏi bản trước – đã chốt ở PH10
 
-| Kiểm | Kết quả |
-|---|---|
-| Trang sinh đúng | `tao-p0c.py`: 18 chỗ thay bộ đất / phòng D–F của phòng B + 8 chỗ riêng P0-C trên trang Âm Đao + 2 chỗ trên bản chép khối phòng B + 5 trên bản chép khối Bọ – khớp đủ; lỗi trang **0** ở mọi lần chạy (chỉ có lỗi tải font Google bị chặn có chủ ý trong máy quay) |
-| Mặc định | Link không thêm gì: vào phòng **Khởi đầu (A)**, Âm Đao **cấp 1**, nút đổi cấp ẩn, có nút "Xuất log P0-C" |
-| Hạ tinh anh bằng đánh thường | Video 1–2, log `log-luong-chinh-sach.txt`: 2 đập + 2 húc, **vỡ Thế 1 lần** (f294, Thế 30 → 0) → choáng 150 → hồi phục (Thế về 80) → **ổn định 120** → hạ ở f688. Không bấm V, không Dư Âm (Dư Âm chỉ có sau đe). Lam bị đánh **3** lần (2 đập – bot chưa lùi kịp ra khỏi tầm; 1 húc – bot lướt chưa đúng lúc) |
-| Thế tinh anh hồi + chống chuỗi choáng | `?tamau=600` (`log-kiem-the-sach.txt`): vỡ f294 → choáng **150**; vỡ f720 (lần 2 trong 600 tick) → choáng **90 (×0,6)**; vỡ f1051 (lần đầu đã quá 600 tick → tính lần 2) → **90**. Sau mỗi lần: hồi phục 20 → Thế đầy 80 → ổn định 120 |
-| Ổn định giữ Thế ở sàn 1 | Kiểm riêng (đặt tinh anh vào ổn định với Thế 5, chém 3 nhát): Thế **5 → 1 → 1 → 1**, không vỡ, máu vẫn trừ 160 → 150 → 140 → 130; log "ổn định: Thế giữ ở sàn 1 (không phá tiếp được)". Trong 2 video bot chưa lần nào phá hết 80 Thế trong 120 tick ổn định nên dòng này không xuất hiện ở đó |
-| Nặng, không khựng | Đòn thường trúng lúc tinh anh đang báo / hồi: đòn **không** bị huỷ, bộ đếm tick của đòn **không** bị đặt lại (đã sửa lỗi ở bản nháp: P0 đặt `t = 0` khi trúng làm tinh anh kẹt mãi trong hồi đòn) |
-| Vỡ Thế huỷ đòn | Log "vỡ Thế HUỶ đòn đang ra (…)" khi vỡ lúc đang báo / ra đòn |
-| Ấn Rèn | Rơi đúng chỗ tinh anh hạ (f688), nhặt f722 (sau 35 tick), biểu tượng về HUD. `?vao=f` không có Ấn: không nút, gợi ý "cần Ấn Rèn I", log "CHƯA có Ấn → không rèn được" |
-| Mở cấp | f852 "MỞ CẤP: Âm Đao cấp 1 → 3 ở đe rèn (phím KeyF) · Dư Âm: chém vang 15/20, vết 10/10, giữ 20 tick, hồi 150 · đánh thường 12/10 (nhát 3 12/30)"; f1005 "DƯ ÂM tung #1". Nút rèn tự ẩn sau khi lên cấp 3 |
-| Vọng A + sửa PH9 | Kiểm riêng ở phòng E: V → 3 nhát → V: bóng phát 40 mẫu, trúng tinh anh, **Cộng hưởng** (Lam trước 8 tick, +10 máu, −50 % Thế) – log "bóng #1 phát xong đủ 40 mẫu (mẫu cuối đã xử lý) → tư thế nghỉ, không hộp đòn"; sang phòng F → "đổi phòng gameplay → xoá bóng (PH9)" |
-| Dấu báo | Ảnh / video: đập = lóe vàng + "!" trên đầu; húc = lóe đỏ cam + ngả người + » + bụi. Hai dấu khác màu, khác hình |
+1. Cấp 3 gồm +20 % cấp 2 → **giữ**, thông báo "Đánh thường mạnh hơn · Mở Dư Âm". 2. Chạm thân chỉ đẩy → **giữ**, húc vẫn đau. 3. Choáng → **150**, 120 là biến thể phụ.
+4. Chết hồi đầy, E không cổng → **giữ** + luật rời E (ở trên). 5. Vọng B → **chờ** kết quả iPhone A/B. 6. Gen Ấn → **chưa**. 7. Log → **đối chiếu ID** (ở trên).
 
-## CẦN THỬ IPHONE (chưa làm – không đánh dấu đạt)
-
-| Câu | Cần gì |
-|---|---|
-| Đọc hai đòn | Không giải thích trước: người thử có phân biệt được **lóe vàng = đập gần** và **lóe đỏ + » = húc lao xa** không, sau mấy lần bị trúng |
-| Né húc | Lùi xa hay lướt xuyên qua – người thử tự tìm ra cách nào, có thấy 36 tick báo trước là đủ / dư không. Lướt xuyên qua thân to có thấy "ăn gian" không |
-| Chạm thân không đau | Có thấy lạ khi đứng chồng lên tinh anh mà không mất máu (chỉ bị đẩy) không |
-| Choáng 150 | Lần vỡ Thế đầu: người thử có dồn hết máu tinh anh trong lúc choáng không, trận có thấy quá dễ / quá ngắn không |
-| Ấn Rèn | Ấn cao 24 px có thấy rõ khi rơi giữa đống vụn tinh anh không; có hiểu phải mang tới đe không (chưa có NPC dẫn) |
-| Đe | Nút "Rèn" + nhãn "RÈN" trên đe có đủ rõ, có bấm nhầm với nút khác không. Chữ "Âm Đao cấp 3 · mở Dư Âm" có quá to / quá lâu không |
-| Cảm giác tiến triển | **Không kết luận từ bot.** Hỏi: sau khi rèn, người thử có muốn thử Dư Âm ngay không, có nói được khác gì với cấp 1 không (KHVK 10a câu 3). PH9: chờ sửa hitbox / điều khiển đã thống nhất rồi mới đánh giá |
-| Hiệu năng | Tinh anh vẽ qua một canvas phụ ≈ 360 × 290 × tỉ lệ màn mỗi khung (iPhone ngang @3x ≈ 780 × 630 px) – đo khung hình trên Safari |
-
-## Câu hỏi cần chủ dự án quyết
-
-1. **Cấp 3 gồm luôn +20 % của cấp 2** (đánh thường 10 → 12) vì bảng cấp có sẵn cộng dồn 1 → 3. P0-C không có cấp 2 riêng (không vật liệu, không cấp khác). Giữ như vậy, hay ở P0-C cấp 3 **chỉ mở Dư Âm** (đánh thường giữ 10) để người thử chỉ cảm nhận một thay đổi?
-2. **Chạm thân tinh anh: đẩy ra, không mất máu** (Chuông Gỗ thường thì mất máu). Lý do: thân to + Lam lao tới khi chém → hay chạm oan, nhất là lúc tinh anh vừa đứng dậy sau choáng. Đồng ý, hay giữ sát thương chạm thân như Chuông Gỗ?
-3. **Choáng 150 tick khá dài**: trong lượt bot, ≈ 60 / 160 máu mất trong lần choáng đầu, và bot không cần phá Thế lần 2. Giữ số kế hoạch tới buổi thử iPhone, hay chuẩn bị biến thể choáng 120 (tắt mặc định)?
-4. Lam chết → tinh anh **đặt lại đầy máu / Thế**; phòng E **không khoá cửa** (đi qua F được nhưng không rèn được khi chưa có Ấn). Giữ, hay cần cổng E mở khi tinh anh hạ?
-5. **Vọng B** chưa có ở trang P0-C (PH9 cho phép dùng A làm tạm). Có cần thêm lựa chọn `?vong=b` trước lượt (dùng lại khối P0-B) không, hay chờ kết quả A/B trên iPhone?
-6. Ảnh Ấn rơi trên đất dùng khung "khắc tối" của tranh gốc + quầng sáng code. Có cần gen riêng một hình Ấn nằm nghiêng / có bóng không?
-7. Log P0-A (`?debug=input`) gọi tinh anh là "Chuông Gỗ#7" (tên lấy từ code P0-A, không sửa). Log P0-C ghi đúng tên. Chấp nhận?
+Không còn câu hỏi mới bắt buộc. Một điểm để ý khi thử: luật lướt xuyên mới khá rộng tay (lướt sớm ≈ 2–9 tick vẫn qua khi tinh anh đang lao tới) – nếu người thử thấy húc quá dễ né, có thể thu lại (vd chỉ giữ miễn khi chạm thân trong 8 tick đầu của lướt) ở lượt sau, không đổi giữa buổi.
 
 ## Tập tin
 
-- `index.html` – trang thử (SINH RA, không sửa tay). `p0c/an-ren-2x.png/.json` – ảnh Ấn Rèn I (2 khung).
-- `cong-cu/tao-p0c.py` – sinh trang. `cong-cu/khoi-p0c.js` – khối P0-C (tinh anh, Ấn, đe, log, móc Vọng PH9). `cong-cu/tao-asset-p0c.py` – cắt ảnh Ấn.
-- `cong-cu/quay-p0c.py` – quay video + ghi log / số (không phải kiểm thử tự động).
-- Khi `thu-p0a/am-dao.html`, `thu-phong-b`, khối Bọ đổi: chạy lại `python3 game/thu-p0c/cong-cu/tao-p0c.py` (script báo rõ chỗ nào không khớp).
+- `index.html` – trang thử (SINH RA, không sửa tay). `p0c/an-ren-2x.png/.json` – ảnh Ấn Rèn I.
+- `cong-cu/tao-p0c.py` – sinh trang. `cong-cu/khoi-p0c.js` – khối P0-C. `cong-cu/tao-asset-p0c.py` – cắt ảnh Ấn.
+- `cong-cu/quay-p0c.py` – quay video + ghi số. `cong-cu/do-luot-day.js` – đo lướt xuyên / đẩy chạm thân (chạy trong trang, chỉ ghi số).
+- Khi `thu-p0a/am-dao.html`, `thu-phong-b`, khối Bọ đổi: chạy lại `python3 game/thu-p0c/cong-cu/tao-p0c.py`.

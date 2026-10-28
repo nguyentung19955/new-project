@@ -1,0 +1,60 @@
+f0 VÁN MỚI · phiên p0c-2810-a905c9cc · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80, choáng 150 (mặc định) · ĐỐI CHIẾU: tinh anh = Q[7] = "Chuông Gỗ#7" trong log P0-A (?debug=input) · elite:chuong-go-gac-lon · tên "Chuông Gỗ Gác Lớn" · Chuông Gỗ sau rèn = Chuông Gỗ#8, Chuông Gỗ#9 · hình nộm F = hình nộm#10
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f1 MỐC HỒI SINH = đầu sân E (cột 1, ẩn, không hồi máu) – chết ở E hồi sinh ở đây, không phải qua lại A → D
+f8 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 558 px
+f60 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] HÚC #1 báo trước 36 tick (RỤT NGƯỜI + » trước ngực + lóe đỏ + bụi + tiếng trầm) · Lam cách 320 px
+f96 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f128 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] LƯỚT XUYÊN thân: chạm thân lúc còn miễn (9 tick, lướt còn 5) khi tinh anh huc → giữ miễn tới khi ra khỏi thân
+f132 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: dừng (hết 36 tick) → hồi 46 tick
+f139 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   ra khỏi thân sau 11 tick (đã ra, dời 123 px) → thêm 4 tick miễn
+f149 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 160 → 150 · Thế 80 → 70 [thuong]
+f164 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 150 → 140 · Thế 70 → 60 [thuong]
+f181 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 140 → 130 · Thế 60 → 30 [thuong]
+f188 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ĐẬP #1 báo trước 30 tick (GIƠ TAY + lóe hổ phách + ! + ting) · Lam cách 75 px
+f223 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   đập: hộp BẬT (tick 5–10)
+f278 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 130 → 120 · Thế 33 → 23 [thuong]
+f293 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 120 → 110 · Thế 23 → 13 [thuong]
+f302 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ĐẬP #2 báo trước 30 tick (GIƠ TAY + lóe hổ phách + ! + ting) · Lam cách 91 px
+f337 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   đập: hộp BẬT (tick 5–10)
+f383 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] tinh anh lùi lấy đà (sau 2 lần đập liên tiếp)
+f392 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 110 → 100 · Thế 16 → 6 [thuong]
+f417 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] HÚC #2 báo trước 36 tick (RỤT NGƯỜI + » trước ngực + lóe đỏ + bụi + tiếng trầm) · Lam cách 132 px
+f453 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f464 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] LƯỚT XUYÊN thân: chạm thân lúc còn miễn (9 tick, lướt còn 5) khi tinh anh huc → giữ miễn tới khi ra khỏi thân
+f474 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   ra khỏi thân sau 10 tick (đã ra, dời -95 px) → thêm 4 tick miễn
+f489 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   húc: dừng (hết 36 tick) → hồi 46 tick
+f491 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   Thế tự hồi (không bị đánh ≥ 90 tick, +1 / 3 tick) → 10
+f515 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 100 → 90 · Thế 17 → 7 [thuong]
+f530 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 90 → 80 · Thế 7 → 0 [choang]
+f530 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] VỠ THẾ lần 1 (lần 1 trong 600 tick) → CHOÁNG 150 tick (đủ 150)
+f547 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 80 → 70 · Thế – (đang choáng: không nhận Thế)
+f578 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 70 → 60 · Thế – (đang choáng: không nhận Thế)
+f593 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 60 → 50 · Thế – (đang choáng: không nhận Thế)
+f610 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 50 → 40 · Thế – (đang choáng: không nhận Thế)
+f641 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 40 → 30 · Thế – (đang choáng: không nhận Thế)
+f656 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 30 → 20 · Thế – (đang choáng: không nhận Thế)
+f673 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 20 → 5 · Thế – (đang choáng: không nhận Thế)
+f679 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   hồi phục 20 tick → Thế về đầy 80
+f699 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   ỔN ĐỊNH 120 tick: đánh được, Thế giảm nhưng không xuống dưới 1 (chống chuỗi choáng)
+f719 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ĐẬP #3 báo trước 30 tick (GIƠ TAY + lóe hổ phách + ! + ting) · Lam cách 69 px
+f754 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   đập: hộp BẬT (tick 5–10)
+f809 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] TINH ANH HẠ (frame 809) · đập 3 · húc 2 · vỡ Thế 1 · Lam bị đánh 0 · Dư Âm đã dùng 0
+f809 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn] ẤN RÈN I rơi ở x 10732 (phòng E)
+f809 [Chuông Gỗ#7 | elite:chuong-go-gac-lon | Chuông Gỗ Gác Lớn]   tinh anh: máu 5 → 0 (nhát kết liễu)
+f847 NHẶT ẤN RÈN I (frame 847, sau khi rơi 39 tick)
+f929 vào phòng Lò rèn
+f966 Lam tới đe rèn · CÓ Ấn Rèn I → hiện nút Rèn
+f1008 MỞ CẤP: Âm Đao cấp 1 → 3 ở đe rèn (phím KeyF) · Dư Âm: chém vang 15/20, vết 10/10, giữ 20 tick, hồi 150 · đánh thường 12/10 (nhát 3 12/30)
+f1159 DƯ ÂM tung #1 (Âm Đao cấp 3)
+f1186   Dư Âm: chém vang TRÚNG
+f1192   Dư Âm: vết vang TRÚNG (tổng 1)
+f1302 vào phòng Đấu trường tinh anh
+f1302 SAU RÈN: 2 Chuông Gỗ thường ra sân E (Chuông Gỗ#8 40 máu, Chuông Gỗ#9 40 máu) – quái đã biết, máu thường; né đập rồi dùng Dư Âm lúc nó hồi (26 + nghỉ 60 tick)
+f1402 DƯ ÂM tung #2 (Âm Đao cấp 3)
+f1429   Dư Âm: chém vang TRÚNG
+f1435   Dư Âm: vết vang TRÚNG (tổng 2)
+f1445 SAU RÈN: hạ Chuông Gỗ#9 (1/2) · Dư Âm đã dùng 2, vết trúng 2
+f1612 DƯ ÂM tung #3 (Âm Đao cấp 3)
+f1639   Dư Âm: chém vang TRÚNG
+f1645   Dư Âm: vết vang TRÚNG (tổng 3)
+f1655 SAU RÈN: hạ Chuông Gỗ#8 (2/2) · Dư Âm đã dùng 3, vết trúng 3
