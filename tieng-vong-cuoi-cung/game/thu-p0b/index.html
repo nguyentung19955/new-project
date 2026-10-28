@@ -2736,14 +2736,21 @@ window.TVP0 = {
    Mặc định (không thêm gì): TẮT log và lớp hộp đòn – link cho người chơi thử trên iPhone.
    Sửa theo PHAN-HOI-7 (28/10): lưỡi dài 17,8 px + khe hai nhánh rõ (tầm/hộp 90 GIỮ); chém vang = CÚ QUÉT THẤP (tư thế nhát 3, duyệt tạm);
    hồi chiêu Dư Âm bắt đầu khi hộp chém vang bật; vết chỉ lấy phần TRƯỚC Lam; tạm dừng / ⚙ / mất focus / chuyển tab huỷ giữ (không tích, không tự tung);
-   vệt "quét âm" phủ đúng vùng quét trong hộp; VFX vết cắt theo hộp (cấp 4 mạnh hơn bằng độ sáng / rung / tiếng, KHÔNG to hơn hộp). */
+   vệt "quét âm" phủ đúng vùng quét trong hộp; VFX vết cắt theo hộp (cấp 4 mạnh hơn bằng độ sáng / rung / tiếng, KHÔNG to hơn hộp).
+   Sửa theo PHAN-HOI-8 (28/10): hộp nhát 2 thu phần sau lưng [−36 → −10]; hộp hất thu mép trước [88 → 78]; vệt chém (ảnh P0-A) dời / thu cỡ / xoay
+   để LÕI sáng nằm trong hộp (không cắt ảnh); vết Dư Âm bản sạch: mặt nạ bầu dục mờ dần (không cắt cứng chữ nhật, bỏ viền chữ nhật lúc vang).
+   ?pogo=moi     BIẾN THỂ THỬ (PH8): hộp nảy theo đường bổ xuống, dung sai nhỏ [−2,−24,48,82] thay [−26,−24,64,82]. Mặc định TẮT (giữ hộp cũ).
+   ?giu=16       BIẾN THỂ THỬ (PH8): ngưỡng giữ Dư Âm 16 tick (nhận 15 hoặc 16) thay 20; hồi chiêu / sát thương GIỮ NGUYÊN. Mặc định TẮT (20). */
 
 /* ========== 1. KHỐI CẤU HÌNH Âm Đao (giao diện VK / CAP_VK / DON của KHGP2 6a) ========== */
 const AD_Q = P0_Q;
 const VK_AM_DAO = {
   ten: 'Âm Đao', pogo: 4, luotHuy: true,
-  // đánh thường = bộ đòn ATK[1..6] (P0-A: su 7/7/9). Chỉ đổi: hộp nhát 1 mép trước 95 → 90 (KHVK 2d) để âm nhận khớp mép
-  don: {1: {box: [4, -97, 86, 48], goc: [10, 10]}, 2: {goc: [10, 10]}, 3: {goc: [10, 30]}, 4: {goc: [10, 10]}, 5: {goc: [10, 10]}, 6: {goc: [10, 10]}},
+  // đánh thường = bộ đòn ATK[1..6] (P0-A: su 7/7/9). Hộp đổi so với P0-A (chỉ trên trang này; index.html giữ nguyên):
+  //   nhát 1 mép trước 95 → 90 (KHVK 2d) để âm nhận khớp mép
+  //   PH8: nhát 2 [−36,−100,116,48] → [−10,−100,90,48]: bỏ 26 px sau lưng (đường quét nhát 2 chỉ ở phía trước; mép sau = lưng Lam, sát thân)
+  //   PH8: hất  [−9,−140,97,60]  → [−9,−140,87,60]:  mép trước 88 → 78 (đường quét hất đi từ trước-thấp lên đỉnh đầu, không tới 88)
+  don: {1: {box: [4, -97, 86, 48], goc: [10, 10]}, 2: {box: [-10, -100, 90, 48], goc: [10, 10]}, 3: {goc: [10, 30]}, 4: {goc: [10, 10]}, 5: {box: [-9, -140, 87, 60], goc: [10, 10]}, 6: {goc: [10, 10]}},
   chiMang: {kieu: 'ngauNhien', tyLe: 0.05, heSo: 1.5},          // gieo 1 lần LÚC TẠO ĐÒN, hạt giống đặt lại mỗi lần vào phòng
   kyNang: {id: 'duAm', giu: 20, hoi: 150, tuToiDa: 60, choThem: 6,
     // chém vang = CÚ QUÉT THẤP: tư thế nhát 3 (chưa có clip mới). Hộp theo hình nhát 3 (thấp, quét trước-dưới), mép trước 90 – KHÔNG dùng [0,−100,96,56] của bản kế hoạch
@@ -2759,8 +2766,24 @@ const CAP_AM_DAO = [null,
   {mo: ['duAm'], an: 1},                                  // 3: mở Dư Âm
   {dat: {'kyNang.vet.goc': [16, 20], 'kyNang.vet.hs': 3, 'kyNang.vet.keo': 1.35}}   // 4: vết [10,10] → [16,20] (+ hình / tiếng / khựng mạnh hơn, hitstop vẫn ≤ 3)
 ];
+// PH8 mục 3: pogo GIỮ hộp cũ làm mặc định; ?pogo=moi = biến thể thử hộp theo đường bổ xuống (lưỡi thẳng xuống ở x ≈ 22–25 so với chân),
+// dung sai nhỏ: x −2…46 (lưỡi ± ≈ 23 px, vẫn phủ nửa trước thân). CHƯA giảm 64 → 30.
+const AD_POGO_MOI = AD_Q.get('pogo') === 'moi';
+const HOP_POGO = {cu: [-26, -24, 64, 82], moi: [-2, -24, 48, 82]};
+if (AD_POGO_MOI) VK_AM_DAO.don[4].box = HOP_POGO.moi.slice();
+// PH8 (Dư Âm): ngưỡng giữ – mặc định 20; ?giu=15 / ?giu=16 = biến thể thử RIÊNG (chỉ đổi ngưỡng, hồi 150 và sát thương giữ nguyên)
+const AD_GIU = ['15', '16'].includes(AD_Q.get('giu')) ? +AD_Q.get('giu') : 0;
+if (AD_GIU) VK_AM_DAO.kyNang.giu = AD_GIU;
 VK.amDao = VK_AM_DAO; CAP_VK.amDao = CAP_AM_DAO;
-ATK[1].box = VK_AM_DAO.don[1].box.slice();
+for (const k of [1, 2, 3, 4, 5, 6]) if (VK_AM_DAO.don[k].box) ATK[k].box = VK_AM_DAO.don[k].box.slice();
+// PH8 mục 5: vệt chém (ảnh P0-A art/hieu-ung vet-chem) đặt lại cho trang Âm Đao – dời / thu cỡ / xoay để LÕI sáng (2 khung đầu, alpha ≥ 0,5)
+// nằm trong hộp thực (lệch ≤ 1,5 px); mảnh vỡ trang trí (2 khung sau) được vượt nhẹ. KHÔNG cắt ảnh theo hộp. Số do cong-cu/can-vet-chem.py tìm.
+// cũ (sheet): 1 {x58 y−66 k.5 g0} · 2 {54 −86 .5 −10} · 3 {48 −35 .52 0} · 5 {26 −104 .5 −30} · 6 {55 −78 .5 0} · 7 {48 −35 .598 0}
+const VET_CHEM_AD = {1: {x: 54.1, y: -72.7, k: 0.5, goc: 0}, 2: {x: 49.4, y: -77.5, k: 0.4, goc: 10}, 3: {x: 45, y: -34.5, k: 0.52, goc: -10},
+  5: {x: 26, y: -109.6, k: 0.39, goc: -10}, 6: {x: 55, y: -82.7, k: 0.5, goc: 0}, 7: {x: 42.6, y: -35, k: 0.598, goc: -10}};
+{ const _cb = P0.catBang; P0.catBang = function (meta) {   // trước khi game kiểm sheet ↔ ATK: chép hộp mới + vệt mới vào bảng sheet
+    for (const d of Object.values(meta.don)) { if (ATK[d.atk]) d.hop_don = ATK[d.atk].box.slice(); const v = VET_CHEM_AD[d.atk]; if (v) Object.assign(d.vet_chem, v); }
+    _cb(meta); }; }
 { const c = VK_AM_DAO.kyNang.chem; ATK[7] = {su: c.su, ac: c.ac, re: c.re, hs: c.hs, mag: c.mag, sh: c.sh, box: c.box, ch: 'atk7'}; }
 const AD_CG36 = AD_Q.get('cg') === '36';   // BIẾN THỂ THỬ – mặc định Chuông Gỗ 40 máu (PH7)
 if (AD_CG36) LOAI_QUAI.chuongGo.mau = 36;
@@ -2773,7 +2796,7 @@ const AD = (() => {
   // giuT = tick MÔ PHỎNG đã giữ (= giuLogic bước logic + giuKhung bước khựng/hitstop); msBam = đồng hồ thật (performance.now) lúc nhận chạm
   // choNha: vừa huỷ giữ vì tạm dừng / mất focus → phải NHẢ hẳn rồi chạm lại mới đếm giữ mới (không tự nối lần giữ cũ)
   const KN = {giu: false, giuT: 0, giuLogic: 0, giuKhung: 0, msBam: 0, idBam: 0, nap: false, tu: false, tuT: 0, cho: null, hoi: 0, dung: 0, nVet: 0, choNha: false, dangChem: null};
-  const TK = {giu: 0, nhaSom: 0, nap: 0, xepHang: 0, tungNgay: 0, tuTung: 0, xoa: 0, tung: 0, vet: 0, vetTrung: 0, vetHut: 0, huyTruocHop: 0, hoanHoi: 0, huyDung: 0};
+  const TK = {giu: 0, nhaSom: 0, nap: 0, xepHang: 0, tungNgay: 0, tuTung: 0, xoa: 0, tung: 0, vet: 0, vetTrung: 0, vetHut: 0, huyTruocHop: 0, hoanHoi: 0, huyDung: 0, huyGiu: 0, vetVangTrung: 0, vetVangHut: 0};
   const A = {cap: CAP0, cs: null, KN, TK};
   /* ---- chỉ số: gốc → cấp 1..cap (một lần khi đổi cấp). Không đọc lại lúc trúng ---- */
   function datDuong(o, duong, f) { const p = duong.split('.'); let os = [o];
@@ -2795,7 +2818,8 @@ const AD = (() => {
     if (!cs.co.duAm) huyKyNang('doi-cap');
     P0.ghi('ÂM ĐAO cấp ' + cap + (lyDo ? ' (' + lyDo + ')' : '') + ': đánh thường ' + cs.don[1].goc.join('/') + ' (nhát 3 ' + cs.don[3].goc.join('/') + ')' +
       (cs.co.duAm ? ' · Dư Âm: chém vang (cú quét thấp) ' + c.goc.join('/') + ', vết ' + cs.kyNang.vet.goc.join('/') + ', hồi ' + cs.kyNang.hoi + ' (tính từ lúc hộp bật)' : ' · chưa có Dư Âm') +
-      ' · chí mạng ' + Math.round(cs.chiMang.tyLe * 100) + '% ×' + cs.chiMang.heSo + ' · Chuông Gỗ ' + LOAI_QUAI.chuongGo.mau + ' máu' + (AD_CG36 ? ' (BIẾN THỂ THỬ ?cg=36)' : ' (mặc định)') +
+      (cs.co.duAm ? ' · giữ ' + cs.kyNang.giu + ' tick' + (AD_GIU ? ' (BIẾN THỂ THỬ ?giu=' + AD_GIU + ')' : ' (mặc định)') : '') +
+      ' · hộp nảy ' + JSON.stringify(ATK[4].box) + (AD_POGO_MOI ? ' (BIẾN THỂ THỬ ?pogo=moi)' : ' (mặc định)') + ' · chí mạng ' + Math.round(cs.chiMang.tyLe * 100) + '% ×' + cs.chiMang.heSo + ' · Chuông Gỗ ' + LOAI_QUAI.chuongGo.mau + ' máu' + (AD_CG36 ? ' (BIẾN THỂ THỬ ?cg=36)' : ' (mặc định)') +
       '  (đòn / vết / bóng đã tạo giữ số đã chốt)', 'ky');
     const b = document.getElementById('set-cap'); if (b) b.textContent = 'Âm Đao cấp ' + cap + ' – bấm để đổi (1→2→3→4)';
   }
@@ -2810,7 +2834,7 @@ const AD = (() => {
   function coTheNap() { return A.cs.co.duAm && KN.hoi <= 0 && pl.onGround && !pl.dead && pl.hurtT <= 8 && pl.dash <= 0 && pl.drawT <= 0 && pl.atkN !== 7; }
   function huyKyNang(lyDo) {
     if (KN.nap || KN.cho || KN.tu) { TK.xoa++; ghi('ky-nang: xoa:' + lyDo + (KN.cho ? ' (đang chờ tung từ #' + KN.cho.id + ')' : KN.tu ? ' (đang ở thế tụ)' : ' (đã nạp, chưa nhả)') + ' – KHÔNG mất hồi chiêu vì chưa tung'); }
-    else if (KN.giu && KN.giuT >= 6 && A.cs && A.cs.co.duAm) ghi('giu #' + KN.idBam + ': huy:' + lyDo + ' (đang giữ ' + moTaGiu() + ')');
+    else if (KN.giu && KN.giuT >= 6 && A.cs && A.cs.co.duAm && (TK.huyGiu++, true)) ghi('giu #' + KN.idBam + ': huy:' + lyDo + ' (đang giữ ' + moTaGiu() + ')');
     KN.nap = false; KN.tu = false; KN.tuT = 0; KN.cho = null; if (lyDo !== 'cham-moi') KN.giu = false; nutCSS();
   }
   // PH7 mục 6: thời gian giữ = tick MÔ PHỎNG (bước logic + bước khựng) và ms THẬT (đồng hồ trang) – log ghi cả hai, tách riêng
@@ -2907,6 +2931,7 @@ const AD = (() => {
         shake(0, 1, k ? 2.4 : 1.4);
         ghi('vết #' + v.id + ' VANG (D ' + D.ma + " src 'k' [" + v.goc.join(',') + '], hộp bật ' + v.bat + ' tick; không chí mạng, không Cộng hưởng, không sinh vết)', 'vet'); }
       if (v.D && v.t >= v.tre && v.t < v.tre + v.bat) { VB.x = v.x; VB.y = v.y; VB.w = v.w; VB.h = v.h; if (P0.thuThap(v.D, VB, v.face, 0, v.x + v.w / 2 - v.face * 40)) v.trung++; }
+      if (v.t === v.tre + v.bat) { if (v.D.daTrung.length) TK.vetVangTrung++; else TK.vetVangHut++; }
       if (v.t === v.tre + v.bat) ghi('vết #' + v.id + ' hết hộp: trúng ' + v.D.daTrung.length + ' mục tiêu' + (v.D.boQua ? ' (bỏ qua ' + v.D.boQua + ' lần chồng lặp – mỗi mục tiêu 1 lần)' : ''), 'vet');
       if (v.t >= v.tre + 22) { v.on = false; v.D = null; }
     }
@@ -3006,7 +3031,39 @@ const AD = (() => {
   }
   // PH7 mục 8: VFX vết tách 2 lớp. (a) VÙNG SÁT THƯƠNG: mọi hình vết vẽ CẮT trong đúng hộp vết (không lố mép) + viền hộp sáng lúc vang.
   // (b) TRANG TRÍ không mang hướng/khoảng cách: rung màn hình, tiếng, độ sáng. Cấp 4 mạnh hơn ở (b) và độ sáng (a), KHÔNG to hơn hộp.
+  // PH8 mục 6: bản sạch KHÔNG được trông như "ô sáng vuông". Ảnh vết (nền đen, cộng sáng) vẽ vào canvas phụ cỡ hộp, đặt VỪA hộp (không phóng
+  // phủ kín rồi cắt), rồi nhân mặt nạ BẦU DỤC mờ dần (đặc tới 55 % bán kính → 0 ở mép hộp): mọi phần sáng vẫn ở trong hộp, góc hộp tối hẳn,
+  // không còn đường cắt thẳng. Bỏ viền chữ nhật lúc vang ở bản sạch (khung hộp chỉ còn ở lớp ?hitbox=1). Cấp 4: sáng hơn, CÙNG cỡ.
+  // AD.vetCu = true → vẽ kiểu PH7 (chỉ để công cụ chụp ảnh so trước/sau).
+  let VC = null, VG = null;
   function veVet(g, OX, OY) {
+    if (A.vetCu) return veVetCu(g, OX, OY);
+    if (!VIMG || !VMETA) return; g = g || ctx; OX = OX === undefined ? ox : OX; OY = OY === undefined ? oy : OY;
+    if (!VC) { VC = document.createElement('canvas'); VC.width = 128; VC.height = 96; VG = VC.getContext('2d'); }
+    for (const v of VET) { if (!v.on) continue;
+      const t = v.t, c4 = v.cap >= 4;
+      let fi, al = 1;
+      if (t < 6) fi = 0; else if (t < 15) fi = 1; else if (t < v.tre) { fi = 2; al = 0.75 + 0.25 * Math.sin(t * 0.9); }
+      else if (t < v.tre + 7) { fi = 3; al = c4 ? 1 : 0.85; }
+      else { fi = 4; al = Math.max(0, 1 - (t - v.tre - 7) / 15); }
+      const F = VMETA.frames[fi], w = Math.ceil(v.w), h = Math.ceil(v.h);
+      if (VC.width < w || VC.height < h) { VC.width = Math.max(VC.width, w); VC.height = Math.max(VC.height, h); }
+      const G = VG; G.setTransform(1, 0, 0, 1, 0, 0); G.globalCompositeOperation = 'source-over'; G.globalAlpha = 1; G.clearRect(0, 0, VC.width, VC.height);
+      // khung 0–2 (cung sáng): vừa chiều cao hộp; khung 3–4 (nổ / tàn): vừa hộp theo cạnh lớn hơn một chút – mặt nạ lo phần lố
+      const sc = fi >= 3 ? Math.max(w / F.w, h / F.h) * 0.92 : Math.min(w / F.w, h / F.h) * 1.12;
+      G.save(); G.translate(w / 2, h / 2); if (v.face > 0 && fi < 3) G.scale(-1, 1);   // cung trong ảnh lồi sang trái → nhìn phải thì lật
+      G.globalCompositeOperation = 'lighter';
+      G.drawImage(VIMG, F.x, F.y, F.w, F.h, -F.ax * sc, -F.ay * sc, F.w * sc, F.h * sc);
+      if (fi === 3 && c4) { G.globalAlpha = 0.55; G.drawImage(VIMG, F.x, F.y, F.w, F.h, -F.ax * sc, -F.ay * sc, F.w * sc, F.h * sc); }
+      G.restore();
+      // mặt nạ bầu dục mờ dần theo hình vết
+      G.save(); G.globalCompositeOperation = 'destination-in'; G.translate(w / 2, h / 2); G.scale(w / 2, h / 2);
+      const gr = G.createRadialGradient(0, 0, 0, 0, 0, 1); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.55, 'rgba(0,0,0,1)'); gr.addColorStop(0.85, 'rgba(0,0,0,.45)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      G.fillStyle = gr; G.fillRect(-1, -1, 2, 2); G.restore();
+      g.save(); g.globalCompositeOperation = 'lighter'; g.globalAlpha = al; g.drawImage(VC, 0, 0, w, h, v.x - OX, v.y - OY, w, h); g.restore();
+    }
+  }
+  function veVetCu(g, OX, OY) {   // kiểu PH7 (phủ kín hộp rồi CẮT cứng theo hộp + viền chữ nhật lúc vang) – giữ để chụp so trước/sau
     if (!VIMG || !VMETA) return; g = g || ctx; OX = OX === undefined ? ox : OX; OY = OY === undefined ? oy : OY;
     g.save(); g.imageSmoothingEnabled = true;
     for (const v of VET) { if (!v.on) continue;
@@ -3063,7 +3120,7 @@ const AD = (() => {
   const st = document.createElement('style');
   st.textContent = '#b-a.ad-tu{box-shadow:0 0 0 3px rgba(201,165,106,.7)}#b-a.ad-san{box-shadow:0 0 0 4px #FFF4DC,0 0 18px #F3D9A8}#b-a.ad-cho{box-shadow:0 0 0 4px #E0A060,0 0 12px #E0A060}#b-a.ad-hoi{opacity:.85}';
   document.head.appendChild(st);
-  return Object.assign(A, {datCap, datHat, rng, bam, truocCapNhat, chonDon, huyKyNang, huyDung, tung, ghiQuet, QUET, CHAM, raHop, luoiKhung, capNhatVet, hopLam, hetChemVang, veAmNhan, veTu, veVet, veHUD, veDebug, veHop, VET,
+  return Object.assign(A, {datCap, datHat, rng, bam, truocCapNhat, chonDon, huyKyNang, huyDung, tung, ghiQuet, QUET, CHAM, raHop, luoiKhung, capNhatVet, hopLam, hetChemVang, veAmNhan, veTu, veVet, veVetCu, veHUD, veDebug, veHop, VET,
     batDo() { DO_AN = []; }, layDo() { const r = DO_AN; DO_AN = null; return r; }});
 })();
 const CO_VET = {ch: false, duChan: true, hieuUng: false, kichDau: false};   // vết 'k' (KHVK 5b)
@@ -3128,37 +3185,44 @@ HINT.p0a = '{B} chạm {A} = đánh thường · GIỮ {A} (cấp 3+) = Dư Âm 
   const b = document.createElement('button'); b.id = 'set-cap'; b.className = 'alt'; b.type = 'button'; if (b0) b0.after(b);
   b.textContent = 'Âm Đao cấp ' + AD.cap + ' – bấm để đổi (1→2→3→4)';
   b.addEventListener('click', () => AD.datCap(AD.cap % 4 + 1, 'nút ⚙')); })();
-(document.getElementById('start-p0') || {}).textContent = 'Âm Đao cấp ' + AD.cap + ' (cấp 1–4: ⚙) · chạm Chém = đánh thường · GIỮ Chém ≥ 20 tick (cấp 3+) = Dư Âm · nhịp P0-A: su 7/7/9, hàng chờ 1 nhát. ?debug=input: log.';
+(document.getElementById('start-p0') || {}).textContent = 'Âm Đao cấp ' + AD.cap + ' (cấp 1–4: ⚙) · chạm Chém = đánh thường · GIỮ Chém ≥ ' + VK_AM_DAO.kyNang.giu + ' tick (cấp 3+) = Dư Âm · nhịp P0-A: su 7/7/9, hàng chờ 1 nhát. ?debug=input: log.';
 /* ---- PH7 mục 7–8: công cụ ĐO "chỗ gây sát thương có VFX không" (chỉ dùng từ công cụ quay, không chạy khi chơi) ----
    Mỗi tick hộp bật: vẽ lại riêng phần nhìn thấy của đòn (vệt chém của Lam, thân lưỡi, quét âm, âm nhận) lên canvas phụ theo toạ độ CHÂN Lam,
    cộng dồn độ đục lớn nhất; rồi lấy mẫu trong hộp đòn: pixel có độ đục ≥ 0,2 = "có VFX". Vết: vẽ veVet lên canvas phụ, đo phần sáng lọt ra ngoài hộp. */
 const PHU = {W: 520, H: 380, OX: 260, OY: 250, cv: null, g: null, acc: null, hop: null, so: 0, vet: null};
 function phuMoi() { if (!PHU.cv) { PHU.cv = document.createElement('canvas'); PHU.cv.width = PHU.W; PHU.cv.height = PHU.H; PHU.g = PHU.cv.getContext('2d', {willReadFrequently: true}); }
-  PHU.acc = new Float32Array(PHU.W * PHU.H); PHU.hop = null; PHU.so = 0; PHU.vet = null; }
-function phuGop() { const d = PHU.g.getImageData(0, 0, PHU.W, PHU.H).data, A = PHU.acc; for (let i = 0; i < A.length; i++) { const a = d[i * 4 + 3] / 255; if (a > A[i]) A[i] = a; } }
+  PHU.acc = new Float32Array(PHU.W * PHU.H); PHU.loi = new Float32Array(PHU.W * PHU.H); PHU.hop = null; PHU.so = 0; PHU.vet = null; }
+// PH8: sang = true → đo ĐỘ SÁNG (alpha × kênh sáng nhất) thay alpha – dùng cho vết (ảnh nền đen cộng sáng: alpha luôn 1, chỉ độ sáng mới là "thấy")
+function phuGop(dich, sang) { const d = PHU.g.getImageData(0, 0, PHU.W, PHU.H).data, A = dich || PHU.acc;
+  for (let i = 0; i < A.length; i++) { const a = d[i * 4 + 3] / 255 * (sang ? Math.max(d[i * 4], d[i * 4 + 1], d[i * 4 + 2]) / 255 : 1); if (a > A[i]) A[i] = a; } }
 function phuDon(chiN) {   // gọi SAU mỗi bước (sau render): chỉ đo khi hộp đòn Lam đang bật (chiN: chỉ đo đòn số đó)
   const n = pl.atkN; if (!n || !ATK[n] || (chiN && n !== chiN)) return false; const a = ATK[n], at = pl.atkT; if (at < a.su || at >= a.su + a.ac) return false;
   const g = PHU.g, X = PHU.OX, Y = PHU.OY, f = pl.face, fx = pl.x + pl.w / 2, fy = pl.y + pl.h;
+  // PH8: hai lượt – (1) chỉ LÕI vệt chém (2 khung đầu của ảnh vệt) → PHU.loi; (2) mọi thứ nhìn thấy → PHU.acc
+  for (const chiLoi of [true, false]) {
   g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, PHU.W, PHU.H);
   // vệt chém của Lam (đúng phép vẽ của huVe)
   for (const F of IFX) { if (!F.on || F.ten !== 'vet' || F.src !== 'p') continue;
     let fi = 0, acc = 0; for (; fi < F.buoc.length; fi++) { if (F.t < acc + F.buoc[fi]) break; acc += F.buoc[fi]; } if (fi >= F.buoc.length) continue;
+    if (chiLoi && fi > 1) continue;
     const last = fi === F.buoc.length - 1, al = F.al * (last ? Math.max(0.15, 1 - (F.t - acc) / F.buoc[fi]) : 1), R = HUI[F.anh]; if (!R || !R.img) continue;
     g.save(); g.globalAlpha = al; g.translate(X + (F.x - fx) * f, Y + (F.y - fy)); if (f < 0) g.scale(-1, 1);   // đo theo hướng phải
     if (F.goc) g.rotate(F.goc * Math.PI / 180); if (F.lat) g.scale(-1, 1);
     const id = R.meta.anims[F.anim].khung[Math.min(fi, R.meta.anims[F.anim].khung.length - 1)], fr = R.meta.frames[id], s = F.k / 2;
     g.drawImage(R.img, fr.x, fr.y, fr.w, fr.h, -fr.ax * s, -fr.ay * s, fr.w * s, fr.h * s); g.restore(); }
+  if (chiLoi) { phuGop(PHU.loi); continue; }
   // thân lưỡi (hình kiếm trong sheet): đoạn chắn → mũi, dày 6 px
   const L = AD.luoiKhung(pl); if (L) { g.save(); g.globalAlpha = 1; g.strokeStyle = '#fff'; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.moveTo(X + L.goc[0], Y + L.goc[1]); g.lineTo(X + L.mui[0], Y + L.mui[1]); g.stroke(); g.restore(); }
   // quét âm + âm nhận (đúng hàm vẽ trong game, đặt nhìn phải)
   const s0 = {h2: pl.h2, k2: pl.k2, l2: false}; AD.veAmNhan(s0, X, Y, n, at, false, pl.D && pl.D.chiMang, pl.D, g);
-  phuGop(); PHU.so++; PHU.hop = a.box.slice(); return true;
+  phuGop(); }
+  PHU.so++; PHU.hop = a.box.slice(); return true;
 }
 function phuVet() {   // gọi sau mỗi bước: vẽ mọi vết đang có lên canvas phụ; trả số pixel sáng NGOÀI hộp vết
   const v = AD.VET.find(x => x.on); if (!v) return null;
   if (!PHU.vet || PHU.vet.id !== v.id) PHU.vet = {id: v.id, OX: v.x - 80, OY: v.y - 120, hop: [80, 120, v.w, v.h]};
   const g = PHU.g; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, PHU.W, PHU.H);
-  AD.veVet(g, PHU.vet.OX, PHU.vet.OY); phuGop(); PHU.so++; PHU.hop = PHU.vet.hop; return v.t;
+  AD.veVet(g, PHU.vet.OX, PHU.vet.OY); phuGop(null, true); PHU.so++; PHU.hop = PHU.vet.hop; return v.t;
 }
 function phuKetQua(laVet) {   // lấy mẫu trong hộp (toạ độ canvas phụ). Dải mép 8 px; "cửa sổ" 8 px dọc mép: có VFX nếu ≥ 1 pixel phủ
   const A = PHU.acc, W = PHU.W, NG = 0.2; if (!PHU.hop) return null;
@@ -3173,20 +3237,33 @@ function phuKetQua(laVet) {   // lấy mẫu trong hộp (toạ độ canvas ph�
     else for (let y = yA; y + 8 <= yB; y += 4) { n++; let h = false; for (let x = xA; x < xB && !h; x++) for (let yy = y; yy < y + 8 && !h; yy++) h = phu(x, yy); c += h; }
     return n ? Math.round(100 * c / n) : null; };
   const X0 = Math.ceil(x0), Y0 = Math.ceil(y0), X1 = Math.floor(x0 + bw), Y1 = Math.floor(y0 + bh);
-  let ngoai = 0; for (let y = 0; y < PHU.H; y++) for (let x = 0; x < W; x++) if (A[y * W + x] >= 0.02 && (x < x0 - 0.5 || x >= x0 + bw + 0.5 || y < y0 - 0.5 || y >= y0 + bh + 0.5)) ngoai++;
+  // PH8: tách "lõi vệt chém" (2 khung đầu, độ đục ≥ 0,5) với mọi phần mờ / mảnh; đo số px ngoài hộp + khoảng vượt xa nhất
+  let ngoai = 0, ngoaiDuc = 0, loiNgoai = 0, loiVuot = 0, moVuot = 0; const L = PHU.loi;
+  for (let y = 0; y < PHU.H; y++) for (let x = 0; x < W; x++) { const ra = x < x0 - 0.5 || x >= x0 + bw + 0.5 || y < y0 - 0.5 || y >= y0 + bh + 0.5; if (!ra) continue;
+    const kc = Math.hypot(Math.max(x0 - x - 0.5, x + 0.5 - x0 - bw, 0), Math.max(y0 - y - 0.5, y + 0.5 - y0 - bh, 0)), i = y * W + x;
+    if (A[i] >= 0.02) { ngoai++; moVuot = Math.max(moVuot, kc); } if (A[i] >= NG) ngoaiDuc++; if (L && L[i] >= 0.5) { loiNgoai++; loiVuot = Math.max(loiVuot, kc); } }
+  // vết: góc hộp có sáng không (4 ô 8×8 ở 4 góc – "ô sáng vuông" thì góc sáng), và độ sáng TB dải mép 3 px so với lõi giữa hộp
+  let goc = null, mep = null;
+  if (laVet) { const o = (cx, cy) => { let n = 0, c = 0; for (let y = cy; y < cy + 8; y++) for (let x = cx; x < cx + 8; x++) { n++; c += A[y * W + x] >= NG; } return c / n; };
+    goc = Math.round(25 * (o(X0, Y0) + o(X1 - 8, Y0) + o(X0, Y1 - 8) + o(X1 - 8, Y1 - 8)));
+    let sm = 0, nm = 0, sg = 0, ng = 0; for (let y = Y0; y < Y1; y++) for (let x = X0; x < X1; x++) { const v = A[y * W + x];
+      if (x < X0 + 3 || x >= X1 - 3 || y < Y0 + 3 || y >= Y1 - 3) { sm += v; nm++; } else if (Math.abs(x - (X0 + X1) / 2) < bw / 4 && Math.abs(y - (Y0 + Y1) / 2) < bh / 4) { sg += v; ng++; } }
+    mep = {sang_tb_dai_mep_3px: +(sm / nm).toFixed(3), sang_tb_giua: +(sg / ng).toFixed(3)}; }
   const pct = r => r[0] ? Math.round(100 * r[1] / r[0]) : null;
   return {hop: PHU.hop, tick_do: PHU.so, phu_ca_hop: Math.round(100 * co / tong), dai_8px: {tren: pct(dai.tren), duoi: pct(dai.duoi), truoc: pct(dai.truoc), sau_tam_lam: pct(dai.sau)},
     cua_so_mep: {tren: cuaSo(true, Y0, Y0 + 8, X0, X1), duoi: cuaSo(true, Y1 - 8, Y1, X0, X1), truoc: cuaSo(false, Y0, Y1, X1 - 8, X1), sau: laVet ? null : cuaSo(false, Y0, Y1, X0, Math.min(X1, X0 + 8))},
-    pixel_sang_ngoai_hop: ngoai};
+    pixel_sang_ngoai_hop: ngoai, pixel_duc_ngoai_hop: ngoaiDuc, loi_vet_chem_ngoai_hop_px: laVet ? null : loiNgoai, loi_vuot_xa_nhat_px: laVet ? null : +loiVuot.toFixed(1),
+    mo_vuot_xa_nhat_px: +moVuot.toFixed(1), goc_hop_sang_pct: goc, vet_mep: mep};
 }
 function phuAnh() {   // ảnh bản đồ phủ: xám = có VFX, khung đỏ = hộp đòn, chấm xanh = chân Lam
   const g = PHU.g, A = PHU.acc, W = PHU.W; g.setTransform(1, 0, 0, 1, 0, 0); const im = g.createImageData(W, PHU.H);
-  for (let i = 0; i < A.length; i++) { const v = A[i] >= 0.2 ? 235 : A[i] >= 0.02 ? 120 : 28; im.data[i * 4] = v; im.data[i * 4 + 1] = v; im.data[i * 4 + 2] = v; im.data[i * 4 + 3] = 255; }
+  for (let i = 0; i < A.length; i++) { const v = A[i] >= 0.2 ? 235 : A[i] >= 0.02 ? 120 : 28, l = !PHU.vet && PHU.loi && PHU.loi[i] >= 0.5;   // vàng = lõi vệt chém
+    im.data[i * 4] = l ? 255 : v; im.data[i * 4 + 1] = l ? 200 : v; im.data[i * 4 + 2] = l ? 90 : v; im.data[i * 4 + 3] = 255; }
   g.putImageData(im, 0, 0); if (PHU.hop) { const [bx, by, bw, bh] = PHU.hop, la = !!PHU.vet; g.strokeStyle = '#ff4040'; g.lineWidth = 1; g.strokeRect((la ? bx : PHU.OX + bx) + 0.5, (la ? by : PHU.OY + by) + 0.5, bw - 1, bh - 1); }
   if (!PHU.vet) { g.fillStyle = '#40a0ff'; g.fillRect(PHU.OX - 2, PHU.OY - 2, 4, 4); g.fillStyle = '#40a0ff'; g.fillRect(PHU.OX - 10, PHU.OY - 30, 20, 30 - 0); g.globalAlpha = 1; }
   return PHU.cv.toDataURL('image/png');
 }
-window.TVAD = {AD, VK_AM_DAO, CAP_AM_DAO,
+window.TVAD = {AD, VK_AM_DAO, CAP_AM_DAO, VET_CHEM_AD, HOP_POGO,
   phuMoi, phuDon, phuVet, phuKetQua, phuAnh,
   cap(n) { AD.datCap(n, 'công cụ'); }, hoiNgay() { AD.KN.hoi = 0; }, kn() { const K = AD.KN; return {giu: K.giu, giuT: K.giuT, nap: K.nap, tu: K.tu, cho: !!K.cho, hoi: K.hoi, dung: K.dung, nVet: K.nVet, choNha: K.choNha, giuLogic: K.giuLogic, giuKhung: K.giuKhung}; },
   tk() { return Object.assign({}, AD.TK); }, vet() { return AD.VET.map(v => ({on: v.on, id: v.id, t: v.t, x: v.x, w: v.w, trung: v.D ? v.D.daTrung.length : -1})); },
@@ -3770,7 +3847,7 @@ hurt = function (dir) { if (BO_THU.batTu && pl.hp <= 1) pl.hp = 2; _boHurt(dir);
    ?debug=vong  bảng log Vọng trên màn (chỉ để xem; log nền vẫn thu khi tắt)   ?battu=1 Lam không chết (quay video)
    Các cờ của P0-A / Âm Đao giữ nguyên (?hitbox=1, ?debug=input …). */
 
-const VB_PHIEN = 'p0b-2810-e58986fc';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
+const VB_PHIEN = 'p0b-2810-6390f6b6';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
 const VB_Q = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new Map(); } })();
 const VB_SO = {
   cau: (() => { const v = (VB_Q.get('vong') || '').toLowerCase(); return v === 'a' || v === 'b' || v === 'b2' ? v : ''; })(),   // '' = chưa chọn (màn bắt đầu)
