@@ -1,0 +1,69 @@
+f0 VÁN MỚI · phiên p0c-2810-17f2d243 · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 600 máu (BIẾN THỂ KIỂM ?tamau=600), Thế 80
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f8 TINH ANH thức: Chuông Gỗ Gác Lớn [600 máu, Thế 80/80] · Lam cách 558 px
+f60 HÚC #1 báo trước 36 tick (lóe đỏ cam + ngả người + » + bụi + tiếng trầm) · Lam cách 320 px
+f96   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f132   húc: dừng (hết 36 tick) → hồi 46 tick
+f150   tinh anh: máu 600 → 590 · Thế 80 → 70 [thuong]
+f165   tinh anh: máu 590 → 580 · Thế 70 → 60 [thuong]
+f188 ĐẬP #1 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 74 px
+f191   tinh anh: máu 580 → 570 · Thế 60 → 50 [thuong]
+f223   đập: hộp BẬT (tick 5–10)
+f223 tinh anh ĐẬP TRÚNG Lam → máu Lam 5 → 4
+f262   tinh anh: máu 570 → 560 · Thế 50 → 40 [thuong]
+f277   tinh anh: máu 560 → 550 · Thế 40 → 30 [thuong]
+f294   tinh anh: máu 550 → 540 · Thế 30 → 0 [choang]
+f294 VỠ THẾ lần 1 (lần 1 trong 600 tick) → CHOÁNG 150 tick (đủ 150)
+f325   tinh anh: máu 540 → 530 · Thế – (đang choáng: không nhận Thế)
+f340   tinh anh: máu 530 → 520 · Thế – (đang choáng: không nhận Thế)
+f357   tinh anh: máu 520 → 510 · Thế – (đang choáng: không nhận Thế)
+f388   tinh anh: máu 510 → 500 · Thế – (đang choáng: không nhận Thế)
+f403   tinh anh: máu 500 → 490 · Thế – (đang choáng: không nhận Thế)
+f420   tinh anh: máu 490 → 480 · Thế – (đang choáng: không nhận Thế)
+f443   hồi phục 20 tick → Thế về đầy 80
+f463   ỔN ĐỊNH 120 tick: đánh được, Thế giảm nhưng không xuống dưới 1 (chống chuỗi choáng)
+f480   tinh anh: máu 480 → 470 · Thế 80 → 70 [onDinh]
+f483 ĐẬP #2 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 81 px
+f518   đập: hộp BẬT (tick 5–10)
+f518 tinh anh ĐẬP TRÚNG Lam → máu Lam 4 → 3
+f564 tinh anh lùi lấy đà (sau 2 lần đập liên tiếp)
+f565   tinh anh: máu 470 → 460 · Thế 70 → 60 [onDinh]
+f583   hết ổn định → bình thường (phá Thế lại được) · Thế 60
+f598 HÚC #2 báo trước 36 tick (lóe đỏ cam + ngả người + » + bụi + tiếng trầm) · Lam cách 118 px
+f599   tinh anh: máu 460 → 445 · Thế 60 → 50 [thuong]
+f634   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f648 tinh anh HÚC TRÚNG Lam → máu Lam 3 → 2
+f670   húc: dừng (hết 36 tick) → hồi 46 tick
+f688   tinh anh: máu 445 → 435 · Thế 50 → 40 [thuong]
+f703   tinh anh: máu 435 → 425 · Thế 40 → 30 [thuong]
+f720   tinh anh: máu 425 → 415 · Thế 30 → 0 [choang]
+f720 VỠ THẾ lần 2 (lần 2 trong 600 tick) → CHOÁNG 90 tick (chống chuỗi choáng: ×0.6, tối thiểu 45)
+f751   tinh anh: máu 415 → 405 · Thế – (đang choáng: không nhận Thế)
+f766   tinh anh: máu 405 → 395 · Thế – (đang choáng: không nhận Thế)
+f783   tinh anh: máu 395 → 385 · Thế – (đang choáng: không nhận Thế)
+f809   hồi phục 20 tick → Thế về đầy 80
+f814   tinh anh: máu 385 → 375 · Thế 80 → 80 [hoiPhuc]
+f829   ỔN ĐỊNH 120 tick: đánh được, Thế giảm nhưng không xuống dưới 1 (chống chuỗi choáng)
+f844   tinh anh: máu 375 → 365 · Thế 80 → 70 [onDinh]
+f849 ĐẬP #3 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 81 px
+f884   đập: hộp BẬT (tick 5–10)
+f930   tinh anh: máu 365 → 355 · Thế 70 → 60 [onDinh]
+f945   tinh anh: máu 355 → 345 · Thế 60 → 50 [onDinh]
+f949   hết ổn định → bình thường (phá Thế lại được) · Thế 50
+f962   tinh anh: máu 345 → 335 · Thế 50 → 20 [thuong]
+f963 ĐẬP #4 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 85 px
+f998   đập: hộp BẬT (tick 5–10)
+f998 tinh anh ĐẬP TRÚNG Lam → máu Lam 2 → 1
+f1036   tinh anh: máu 335 → 325 · Thế 20 → 10 [thuong]
+f1044 tinh anh lùi lấy đà (sau 2 lần đập liên tiếp)
+f1051   tinh anh: máu 325 → 315 · Thế 10 → 0 [choang]
+f1051 VỠ THẾ lần 3 (lần 2 trong 600 tick) → CHOÁNG 90 tick (chống chuỗi choáng: ×0.6, tối thiểu 45)
+f1068   tinh anh: máu 315 → 305 · Thế – (đang choáng: không nhận Thế)
+f1099   tinh anh: máu 305 → 295 · Thế – (đang choáng: không nhận Thế)
+f1114   tinh anh: máu 295 → 285 · Thế – (đang choáng: không nhận Thế)
+f1131   tinh anh: máu 285 → 275 · Thế – (đang choáng: không nhận Thế)
+f1140   hồi phục 20 tick → Thế về đầy 80
+f1160   ỔN ĐỊNH 120 tick: đánh được, Thế giảm nhưng không xuống dưới 1 (chống chuỗi choáng)
+f1162   tinh anh: máu 275 → 265 · Thế 80 → 70 [onDinh]
+f1177   tinh anh: máu 265 → 255 · Thế 70 → 60 [onDinh]
+f1180 ĐẬP #5 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 77 px

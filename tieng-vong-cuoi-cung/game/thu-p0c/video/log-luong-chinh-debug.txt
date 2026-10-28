@@ -1,0 +1,44 @@
+f0 VÁN MỚI · phiên p0c-2810-17f2d243 · Âm Đao cấp 1 · Vọng: A ghi chủ động (cấu hình tạm) · tinh anh 160 máu (mặc định), Thế 80
+f1 bắt đầu ở phòng Đấu trường tinh anh
+f8 TINH ANH thức: Chuông Gỗ Gác Lớn [160 máu, Thế 80/80] · Lam cách 558 px
+f60 HÚC #1 báo trước 36 tick (lóe đỏ cam + ngả người + » + bụi + tiếng trầm) · Lam cách 320 px
+f96   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f132   húc: dừng (hết 36 tick) → hồi 46 tick
+f150   tinh anh: máu 160 → 150 · Thế 80 → 70 [thuong]
+f165   tinh anh: máu 150 → 140 · Thế 70 → 60 [thuong]
+f188 ĐẬP #1 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 74 px
+f191   tinh anh: máu 140 → 130 · Thế 60 → 50 [thuong]
+f223   đập: hộp BẬT (tick 5–10)
+f223 tinh anh ĐẬP TRÚNG Lam → máu Lam 5 → 4
+f262   tinh anh: máu 130 → 120 · Thế 50 → 40 [thuong]
+f277   tinh anh: máu 120 → 110 · Thế 40 → 30 [thuong]
+f294   tinh anh: máu 110 → 100 · Thế 30 → 0 [choang]
+f294 VỠ THẾ lần 1 (lần 1 trong 600 tick) → CHOÁNG 150 tick (đủ 150)
+f325   tinh anh: máu 100 → 90 · Thế – (đang choáng: không nhận Thế)
+f340   tinh anh: máu 90 → 80 · Thế – (đang choáng: không nhận Thế)
+f357   tinh anh: máu 80 → 70 · Thế – (đang choáng: không nhận Thế)
+f388   tinh anh: máu 70 → 60 · Thế – (đang choáng: không nhận Thế)
+f403   tinh anh: máu 60 → 50 · Thế – (đang choáng: không nhận Thế)
+f420   tinh anh: máu 50 → 40 · Thế – (đang choáng: không nhận Thế)
+f443   hồi phục 20 tick → Thế về đầy 80
+f463   ỔN ĐỊNH 120 tick: đánh được, Thế giảm nhưng không xuống dưới 1 (chống chuỗi choáng)
+f480   tinh anh: máu 40 → 30 · Thế 80 → 70 [onDinh]
+f483 ĐẬP #2 báo trước 30 tick (lóe vàng + ! + ting) · Lam cách 81 px
+f518   đập: hộp BẬT (tick 5–10)
+f518 tinh anh ĐẬP TRÚNG Lam → máu Lam 4 → 3
+f564 tinh anh lùi lấy đà (sau 2 lần đập liên tiếp)
+f565   tinh anh: máu 30 → 20 · Thế 70 → 60 [onDinh]
+f583   hết ổn định → bình thường (phá Thế lại được) · Thế 60
+f598 HÚC #2 báo trước 36 tick (lóe đỏ cam + ngả người + » + bụi + tiếng trầm) · Lam cách 118 px
+f599   tinh anh: máu 20 → 5 · Thế 60 → 50 [thuong]
+f634   húc: LAO (tốc 6.5 px/tick, tối đa 36 tick)
+f648 tinh anh HÚC TRÚNG Lam → máu Lam 3 → 2
+f670   húc: dừng (hết 36 tick) → hồi 46 tick
+f688 TINH ANH HẠ (frame 688) · đập 2 · húc 2 · vỡ Thế 1 · Lam bị đánh 3 · Dư Âm đã dùng 0
+f688 ẤN RÈN I rơi ở x 10752 (phòng E)
+f688   tinh anh: máu 5 → 0 (nhát kết liễu)
+f722 NHẶT ẤN RÈN I (frame 722, sau khi rơi 35 tick)
+f799 vào phòng Lò rèn
+f836 Lam tới đe rèn · CÓ Ấn Rèn I → hiện nút Rèn
+f852 MỞ CẤP: Âm Đao cấp 1 → 3 ở đe rèn (phím KeyF) · Dư Âm: chém vang 15/20, vết 10/10, giữ 20 tick, hồi 150 · đánh thường 12/10 (nhát 3 12/30)
+f1005 DƯ ÂM tung #1 (Âm Đao cấp 3)
