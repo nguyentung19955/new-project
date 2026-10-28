@@ -27,6 +27,15 @@ thay('số trúng: chí mạng có "!", vết màu ngà',
      "String(h.m) + (h.D.chiMang ? '!' : ''), bong ? '#7FE0C8' : h.D.chiMang ? '#FFD25A' : h.D.src === 'k' ? '#F3D9A8' : '#FFF4DC'); }")
 thay('màu log kỹ năng', "r.loai === 'tre' ? '#FFD25A' : '#c9c9c9'",
      "r.loai === 'tre' ? '#FFD25A' : r.loai === 'ky' ? '#FFD9A0' : r.loai === 'vet' ? '#F3C38A' : r.loai === 'giu' ? '#B8A890' : '#c9c9c9'")
+# 28/10 (nhận xét iPhone): vệt chém tan MỀM – khung áp chót mờ 1 → 0,65, khung cuối 0,65 → 0 (cũ: chỉ khung cuối, còn 15 % rồi tắt phụt)
+thay('vệt chém tan mềm', "const last=fi===f.buoc.length-1, a=f.al*(last?Math.max(0.15,1-(f.t-acc)/f.buoc[fi]):1);",
+     "const last=fi===f.buoc.length-1, p_=(f.t-acc)/f.buoc[fi], a=f.al*(f.ten==='vet'?(last?0.65*(1-p_)*(1-p_*0.4):fi===f.buoc.length-2?1-0.35*p_:1):(last?Math.max(0.15,1-p_):1));")
+# 28/10 (nhận xét iPhone "nhảy lên rơi xuống hơi cứng, nặng"): đường cong trọng lực MỀM khi bật NHAY.moi (khối Âm Đao) – vùng đỉnh chuyển mượt
+# (smoothstep thay đường thẳng) + tốc độ rơi tiến DẦN tới trần (không gãy ở maxFall). ?nhay=cu → đúng công thức cũ.
+thay('nhảy mềm: vùng đỉnh smoothstep', "const a=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), top=I.j?P.apexGravMul:0.8;",
+     "const a0=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), a=NHAY.moi?a0*a0*(3-2*a0):a0, top=I.j?P.apexGravMul:0.8;")
+thay('nhảy mềm: rơi tiến dần tới trần', "  pl.vy=Math.min(pl.vy+g,P.maxFall);\n  const ws=",
+     "  pl.vy=NHAY.moi?NHAY.tran(pl.vy+g):Math.min(pl.vy+g,P.maxFall);\n  const ws=")
 thay('khối Âm Đao, rồi khởi động', "\nboot();\n</script>", "\n" + KHOI + "\nboot();\n</script>")
 
 out = src; loi = []

@@ -1,4 +1,4 @@
-# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026, sửa theo PH10)
+# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026, sửa theo PH10 + nhận xét iPhone 28/10)
 
 Viết cho người không rành kỹ thuật. Bản đầu làm theo `docs/gameplay/PHAN-HOI-9-P0B.md` mục 4 + "GỬI CLAUDE" điểm 9, `KE-HOACH-GAMEPLAY-V2.md` mục 5, 7, 8,
 `KE-HOACH-VU-KHI.md` mục 3, 4b, 6b, PHAN-HOI-2, 5, 7, 8. **Lần này sửa theo `docs/gameplay/PHAN-HOI-10-P0C-AMDAO-P0B-DEF.md`** mục 1, 2, 5 và "6. ĐOẠN GỬI CLAUDE".
@@ -17,11 +17,26 @@ Không publish. Không gen ảnh. Không viết bộ kiểm thử tự động (
 | …/thu-p0c/index.html?vao=e | **Rút gọn**: vào thẳng đầu phòng E (tinh anh). Mốc hồi sinh ở đầu E |
 | …/thu-p0c/index.html?vao=f | Vào thẳng phòng F – chỉ để xem đe / hình nộm (chưa có Ấn thì **không** rèn được) |
 | …/thu-p0c/index.html?vao=e&hitbox=1&debug=p0c | Bảng log P0-C trên màn + hộp đòn + chữ trạng thái tinh anh dưới chân |
+| …/thu-p0c/index.html?nhay=cu | **So nhảy (28/10)**: nhảy CŨ (mặc định = nhảy mềm mới) |
 | …/thu-p0c/index.html?vao=e&choang=120 | **BIẾN THỂ (tắt mặc định)**: choáng lần vỡ Thế đầu **120** tick thay 150. Chỉ dùng nếu người thử thấy trận thành "đứng chém quái bất động" |
 | …/thu-p0c/index.html?vao=e&tamau=600 | **CHỈ ĐỂ KIỂM** chu trình Thế (tinh anh 600 máu). Mặc định tắt (160) – không dùng khi thử người chơi |
 
 Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn) và thử tải file .txt.
 Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A. Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím **F**).
+
+## Sửa theo nhận xét iPhone 28/10
+
+Người thử trang này trên iPhone nhận xét: **kiếm quá bé**, **cuối đường chém có vạch kẻ thẳng**, **nhảy lên rơi xuống hơi cứng, nặng**. Sửa ở nguồn Âm Đao (`game/thu-p0a/`), rồi sinh lại trang này bằng `cong-cu/tao-p0c.py` (khối P0-C **không đổi**) → phiên **`p0c-2810-91df6356`**. Chi tiết + số đo + ảnh trước/sau: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục **"Sửa theo nhận xét iPhone 28/10"**.
+
+| Nhận xét | Đã sửa |
+|---|---|
+| Kiếm quá bé | Lưỡi Âm Đao **×1,48** (17,8 → 26,3 px, ≈ chiều cao thân Lam), lấy lại từ ảnh nguồn nên không nhoè. **Hộp đòn / tầm 90 không đổi** – mũi lưỡi lố hộp tối đa 3 px (nhát 1) |
+| Vạch thẳng cuối vệt chém | Do lớp sáng vẽ bằng code (dải "quét âm" + quầng âm nhận) bị **cắt bằng khung chữ nhật của hộp đòn** + vạch đồng đặt ở mép hộp. Nay: tắt dải quét, quầng mờ dần về 0 trước mép, bỏ vạch mép; ảnh vệt chém tan mềm về 0. Vị trí vệt giữ như PH8 |
+| Nhảy cứng, nặng | Lên nhanh hơn (vận tốc bật 11,97 → 13,46), treo đỉnh lâu hơn (trong 8 px quanh đỉnh 11 → 15 tick), rơi tăng tốc mượt tới trần (không gãy). Đỉnh 118,4 → 127,8 px (+7,9 %). Mọi bệ phòng A–F vẫn tới được (quỹ đạo mới luôn cao hơn/bằng cũ khi rơi qua mọi độ cao); nhảy tường, nảy vẫn chạy |
+
+- **So nhảy cũ**: thêm `?nhay=cu` vào link (vd. `…/thu-p0c/index.html?vao=e&nhay=cu`). `?quet=1` = bật lại dải quét âm cũ để so.
+- Video ngắn (không bất tử, chạy – nhảy – chém, trang Âm Đao): `game/thu-p0a/video-am-dao/2810/2810-chay-nhay-chem.mp4`.
+- Đã tải P0-C trong Chromium cả mặc định lẫn `?nhay=cu`: 0 lỗi trang. **Chưa thử iPhone.**
 
 ## Sửa theo phản hồi 10
 

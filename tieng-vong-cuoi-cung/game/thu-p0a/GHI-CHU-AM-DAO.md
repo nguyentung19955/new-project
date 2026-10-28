@@ -1,4 +1,4 @@
-# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7 và 8
+# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7, 8 và nhận xét iPhone 28/10
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-6-BO-BAN-3-VA-AM-DAO.md`, `KE-HOACH-VU-KHI.md` mục 2d, 3, 4b, 5, 7a, 8, 10,
 `KE-HOACH-GAMEPLAY-V2.md` mục 3, 5, 6. **Trang con riêng** `am-dao.html`; bản P0-A gốc `index.html` **giữ nguyên** để so.
@@ -13,10 +13,106 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 | …/am-dao.html?debug=input&hitbox=1 | Log (lần bấm, giữ Chém, kỹ năng, vết, trúng) + lớp hộp đòn (đỏ = đang gây sát thương; cam đứt = vết Dư Âm đang chờ vang) |
 | …/am-dao.html?pogo=moi | **Biến thể thử PH8**: hộp nảy theo đường bổ xuống `[−2,−24,48,82]`. Mặc định giữ hộp cũ `[−26,−24,64,82]` |
 | …/am-dao.html?cap=3&giu=16 | **Biến thể thử PH8**: ngưỡng giữ Dư Âm 16 tick (nhận 15/16) thay 20; hồi + sát thương giữ nguyên. Mặc định tắt |
+| …/am-dao.html?nhay=cu | **So nhảy (28/10)**: số + công thức nhảy CŨ. Mặc định = nhảy mềm mới |
+| …/am-dao.html?quet=1 | **So vệt (28/10)**: bật lại dải "quét âm" PH7 (đã làm mờ dần về mép). Mặc định tắt |
 | …/am-dao.html?cg=36 | **Chỉ là biến thể thử** (KHVK 4b): Chuông Gỗ máu 36. **Mặc định và số chính thức: 40** (PH7 chốt) – không đưa 36 vào game chính |
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0a/index.html | Bản **P0-A gốc** (dao placeholder) – nhịp MỚI. Thêm `?p0=0` = nhịp CŨ, **cùng dao** (dùng để so độ nhạy – mục PH7-9) |
 
 Điều khiển: chạm **Chém** = đánh thường (luôn ra ngay). **Giữ Chém ≥ 20 tick (⅓ giây)** ở cấp 3–4 = **Dư Âm**. Phòng A hình nộm → B hai Chuông Gỗ → C quái gác (giống P0-A).
+
+## Sửa theo nhận xét iPhone 28/10
+
+Người chơi thử P0-C trên iPhone nhận xét 3 điều: (1) **kiếm quá bé** (trông như dao găm), (2) **chém xong cuối đường chém có vạch kẻ thẳng** (như bị cắt sai), (3) **nhảy lên rơi xuống hơi cứng, nặng**.
+Sửa ở nguồn `game/thu-p0a/` (`cong-cu/tao-asset-am-dao.py`, `cong-cu/khoi-am-dao.js`, `cong-cu/tao-am-dao.py`) rồi sinh lại `am-dao.html` → **P0-C** (`tao-p0c.py`) và **P0-B** (`tao-p0b.py`).
+`index.html` (P0-A gốc), `demo.html`, ảnh nguồn, rig **không đổi**. Không gen ảnh mới. **Hộp đòn / sát thương / nhịp đánh không đổi.**
+
+### 1. Kiếm to hơn (chỉ hình)
+
+| | Trước | Sau |
+|---|---|---|
+| Lưỡi (chắn tay → mũi) | 170 px rig = **17,8 px logic** | **×1,48 → 252 px rig = 26,3 px logic** (≈ chiều cao thân Lam ~28 px; đầu Lam ~70 px nên không quá đầu) |
+| Bản lưỡi / khe hai nhánh | ×1,3 / 2,5 px | phóng theo lưỡi, bản nới ×1,15 (thay ×1,3) / khe **3,8 px** |
+| Chuôi dưới nắm tay | 60 px ảnh nguồn | rút theo tỉ lệ → dài **bằng cũ** trên rig, chắn tay vẫn ở đúng chỗ nắm tay (x 168 của mảnh tay) |
+
+- Lấy lại **từ ảnh nguồn** `art/huong-moi/nguon/vu-khi/vu-khi-mau.png` (kiếm ≈ 450 px → thu còn 252 px) nên **không nhoè** (vẫn là thu nhỏ, không phóng ảnh nhỏ lên).
+- Vì sao 1,48 mà không 1,55: sheet chạy rig-v4 phải giữ đúng ô 266 × 241 (game bắt buộc cỡ 2142 × 970). Ở ×1,55 mũi kiếm lúc chạy lố khỏi ô 1 px → công cụ tự đổi ô → trang báo lỗi. ×1,48 vừa ô (cần 140/141 px).
+- Dựng lại bằng đúng công cụ cũ: `python3 -B game/thu-p0a/cong-cu/tao-asset-am-dao.py` (≈ 80 s) → `am-dao-cap1.png` (không đổi), `tay-truoc-am-dao.png`, `lam-hanh-dong-am-dao-2x.*` (2034×2317 → 2010×2404), `lam-chay-am-dao-2x.*` (cỡ giữ nguyên).
+
+**Mũi lưỡi so với hộp đòn lúc hộp bật** (bảng `luoi` của sheet, px logic so với chân, nhìn phải – `video-am-dao/2810/ket-qua-truoc.json` / `ket-qua-sau.json → mui`):
+
+| Đòn | Hộp (không đổi) | Mũi x trước | Mũi x sau | Tick mũi trong hộp (sau) | **Mũi vượt hộp xa nhất** |
+|---|---|---|---|---|---|
+| nhát 1 | `[4,−97,86,48]` (mép 90) | 82–84,7 | 90,4–93 | 0/8 | **3 px** |
+| nhát 2 | `[−10,−100,90,48]` | 67–71 | 74–78 | 8/8 | 0 |
+| nhát 3 | `[−13,−59,99,59]` | 78,6–79,3 | 84,8–85,4 | 2/8 | 0,3 px (mũi chạm đất) |
+| nảy / bổ xuống | `[−26,−24,64,82]` | 22,6–25,4 | 22,8–25,6 | 11/11 | 0 |
+| hất | `[−9,−140,87,60]` | 10,7–24,3 | 7,2–22,5 | 8/8 | 0 |
+| trên không | `[−3,−107,95,48]` (mép 92) | 76,6–81,8 | 84,9–90,3 | 8/8 | 0 |
+| chém vang | `[−13,−66,103,66]` | 78,6–79,3 | 84,8–85,4 | 3/8 | 0,3 px |
+
+→ Mũi chỉ lố hộp **tối đa 3 px** (nhát 1) – gần như đúng "thấy lưỡi tới đâu là trúng tới đó". Mũi lố hộp thì phần "âm nhận" nối dài không còn vẽ (lưỡi đã tự chạm mép).
+
+### 2. Bỏ vạch thẳng cuối vệt chém
+
+**Nguyên nhân** (chụp từng tick, phóng ×3 – `video-am-dao/2810/so-nhat1-phong-to.jpg`): **không phải** ảnh vệt chém bị cắt ở mép ô (đã kiểm 12 khung sheet `vet-chem-2x.png`: mép ô đều trong suốt) và **không phải** vị trí PH8. Vạch thẳng là lớp vẽ bằng code của PH7:
+dải **"quét âm"** (đa giác nối đường lưỡi giữa các tick, tô mờ) + **quầng âm nhận** (nét dày 15 px) được tô **đặc tới mép hộp** rồi **cắt bằng khung chữ nhật của hộp đòn** → mép hộp hiện thành một đường thẳng sáng; thêm **vạch đồng vuông góc** cố ý đặt đúng mép hộp. Lưỡi dài ra thì mũi lố hộp, dải quét càng bị cắt ngang rõ hơn.
+
+**Sửa** (`khoi-am-dao.js`):
+- **Tắt dải quét âm mặc định** (đa giác luôn có cạnh thẳng ở hai đầu; vệt chém + lưỡi dài đã cho thấy đường quét). `?quet=1` bật lại để so (bản bật lại cũng đã mờ dần về mép, đoạn lưỡi lố hộp được cắt đúng chỗ ra khỏi hộp).
+- Quầng + tia âm nhận **mờ dần về 0 trước khi chạm mép hộp** (gradient dọc tia); **bỏ vạch đồng + chấm trắng ở mép**; 2 cung sóng lùi vào trong 5 px. Khung cắt hộp vẫn giữ làm lưới an toàn nhưng tới mép thì nét đã tắt hẳn → không còn cạnh.
+- Ảnh vệt chém (sprite) **tan mềm**: khung áp chót mờ 1 → 0,65, khung cuối 0,65 → **0** (trước: chỉ khung cuối, còn 15 % rồi tắt phụt). Vị trí / cỡ / góc vệt **giữ đúng PH8** → lõi sáng vẫn trong hộp như bảng PH8.
+
+Ảnh từng tick trước / sau (bản sạch + bản `?hitbox=1`) cho **nhát 1, 2, 3, hất, trên không, bổ xuống, chém vang**: `video-am-dao/2810/khung-<đòn>-truoc[-hop].jpg` / `khung-<đòn>-sau[-hop].jpg`. Bổ xuống (nảy) không có ảnh vệt chém (như trước), chỉ lưỡi.
+
+### 3. Nhảy mềm hơn – `?nhay=cu` = bản cũ để so
+
+| Số | Cũ (`?nhay=cu`) | Mới (mặc định) |
+|---|---|---|
+| jumpHeight / gravity (lúc lên) | 112 / 0,64 | 118 / **0,768** (lên nhanh hơn) |
+| Vận tốc bật | 11,97 | **13,46** |
+| Vùng đỉnh (apexThreshold / apexGravMul khi giữ) | \|vy\| < 1,8 / ×0,5, chuyển **thẳng** | \|vy\| < **4** / ×**0,3**, chuyển **mượt** (smoothstep) → treo đỉnh lâu hơn |
+| Trọng lực rơi | 0,64 × 1,12 = 0,717 | **giữ 0,717** (0,768 × 0,933) |
+| Trần tốc độ rơi | 10,4 – **cắt cứng** (gãy đột ngột) | 10,4 – **tiến dần** (trên 7,4 cong mềm, không gãy) |
+| jumpCut, coyote, đệm nhảy, nhảy tường, lướt | giữ | giữ |
+
+**Đo trong game** (Chromium, đứng yên, `ket-qua-sau.json → nhay`; tick = 1/60 s):
+
+| Kiểu nhảy | Chiều cao cũ → mới | Lên đỉnh (tick) | Rơi về đất (tick) | Tới 90 % đỉnh (tick) | Ở trong 8 px quanh đỉnh (tick) |
+|---|---|---|---|---|---|
+| Giữ nhảy hết | **118,4 → 127,8 px (+7,9 %)** | 20 → 22 | 20 → 24 | 14 → **13** | 11 → **15** |
+| Chạm 1 tick | 40,0 → 43,4 | 11 → 10 | 11 → 12 | 7 → 7 | 10 → 10 |
+| Giữ 8 tick | 88,9 → 97,3 | 14 → 14 | 17 → 18 | 9 → 9 | 11 → 10 |
+
+Hoạt ảnh (giữ nhảy hết): cũ `bật×3 · lên×10 · đỉnh×11 · rơi×7 · rơi-nhanh×8`; mới `bật×3 · lên×10 · đỉnh×15 · rơi×8 · rơi-nhanh×9` – khung đỉnh dài theo đúng đoạn treo, không khung nào lệch trạng thái.
+
+**Không phá bệ / phòng:**
+- So quỹ đạo (cùng công thức game, `cong-cu` mô phỏng giống hệt – khớp số đo trong game): ở **mọi độ cao** từ −200 tới đỉnh cũ, lúc Lam **rơi qua** độ cao đó luôn **muộn hơn hoặc bằng** bản cũ → bay được xa hơn hoặc bằng → bệ nào nhảy tới được bằng bản cũ thì vẫn tới được. Đúng cho nhảy đất (giữ 1, 2, 4, 6, 8, 10, 12, 16, 20 tick, giữ hết) và **nhảy tường** (cùng các mức giữ; đỉnh 100,7 → 109,2). **Nảy (pogo) không giữ nhảy**: đỉnh 118,1 → 125,3; có một điểm (27 px trên chỗ nảy) rơi qua **sớm 1 tick** – không đáng kể (≈ 4 px ngang), mọi điểm khác muộn hơn / bằng.
+- Trần: ô 32 px nên khoảng trống trên chỗ đứng chỉ có 98 px (4 ô – cả hai bản đều chạm trần) hoặc 130 px (5 ô – cả hai bản đều không chạm: đỉnh mới 127,8 < 130). Không có chỗ nào **mới** bị cụng đầu.
+- Quét bản đồ trong trang (P0-B và P0-C, cả `?nhay=cu` lẫn mặc định): mọi bậc phải nhảy lên trong 5 ô ngang ≤ 32 px, trừ đỉnh tường treo phòng Câu đố chuông (128 px – leo bằng nhảy tường, như cũ). 0 lỗi trang.
+- Nhảy tường thử trong game: ôm tường → nhảy tường ra đúng (cả hai bản), Lam lên cao hơn 12 px. Nảy trên hình nộm: có trong video.
+
+### 4. Sinh lại các trang
+
+- `am-dao.html` ← `tao-am-dao.py` (thêm 3 chỗ thay: vùng đỉnh smoothstep, trần rơi mềm, vệt tan mềm).
+- **P0-C** ← `tao-p0c.py` → phiên **`p0c-2810-91df6356`**.
+- **P0-B** ← `tao-p0b.py` → phiên đóng băng mới **`p0b-2810-8210801c`**, nhãn **"28/10/2026 lần 2 (kiếm to, vệt chém mềm, nhảy mềm)"**. Cấu hình Vọng A/B, số, luật **giữ nguyên**; `?nhay=cu` / `?quet=1` bị trang tính là **BIẾN THỂ** như mọi cờ thử khác.
+
+### 5. Video / ảnh (`video-am-dao/2810/`)
+
+| File | Nội dung |
+|---|---|
+| `2810-chay-nhay-chem.mp4` (7 s, **không bất tử**) | Bản sạch, nhảy mới, kiếm mới: nhảy tới → combo 1-2-3 → hất → nhảy chém trên không → lùi → nhảy bổ xuống hình nộm (nảy) → combo |
+| `so-nhat1-phong-to.jpg` | Nhát 1 phóng ×3: hàng trên TRƯỚC (dải sáng bị cắt thẳng ở mép hộp, kiếm nhỏ), hàng dưới SAU |
+| `khung-*-truoc*.jpg` / `khung-*-sau*.jpg` | Từng tick 7 đòn, bản sạch + bản hộp đòn |
+| `ket-qua-truoc.json` / `ket-qua-sau.json` | Số mũi lưỡi, quỹ đạo nhảy (từng tick + tên khung hoạt ảnh) |
+
+Chụp lại: `python3 -B game/thu-p0a/cong-cu/quay-2810.py [khung mui nhay video]` (bản trước: thêm `--goc <git worktree commit 29a9ac9> --nhan truoc`).
+
+### 6. Cần thử iPhone (chưa làm – không đánh dấu đạt)
+
+- Kiếm: còn thấy "dao găm" không; lưỡi to có che mặt / lệch nét rig không.
+- Vệt chém: còn thấy vạch / cạnh thẳng nào không (nhất là nhát 1 và trên không).
+- Nhảy: so `…/am-dao.html` với `…/am-dao.html?nhay=cu` (hoặc P0-C / P0-B thêm `?nhay=cu`). Hết "cứng, nặng" chưa; có thấy **quá bay** không (nếu bay quá: giảm apexThreshold 4 → 3 trong `khoi-am-dao.js`).
 
 ## Sửa theo phản hồi 8 (28/10/2026)
 

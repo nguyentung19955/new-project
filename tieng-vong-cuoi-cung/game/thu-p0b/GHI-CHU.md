@@ -1,8 +1,8 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-cceea180` – đóng băng ngày 28/10/2026.**
-> In trên màn bắt đầu ("… · p0b-2810-cceea180 · bản ĐÓNG BĂNG 28/10/2026") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
-> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm).
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-8210801c` – đóng băng lần 2 ngày 28/10/2026 (kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
+> In trên màn bắt đầu ("… · p0b-2810-8210801c · bản ĐÓNG BĂNG 28/10/2026 lần 2 (kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa theo nhận xét iPhone 28/10").
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
 `PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
@@ -18,6 +18,7 @@ Không publish. Không có bộ kiểm thử tự động – chỉ công cụ q
 | Link | Dùng để |
 |---|---|
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0b/index.html | **BẢN ĐÓNG BĂNG – người chơi thử trên iPhone.** Màn bắt đầu có 2 nút **A – Ghi chủ động** / **B – Vọng Chiến** và hướng dẫn riêng từng cách. Log nền LUÔN thu; hộp đòn TẮT |
+| …/index.html?nhay=cu | **Biến thể so nhảy (28/10)**: nhảy CŨ – không phải bản đóng băng |
 | …/index.html?vong=a · …?vong=b | Vào thẳng A / B – vẫn là **bản đóng băng** (cả hai **miễn phí**, bóng xong đứng **nghỉ**) |
 | *Các link dưới đây là BIẾN THỂ – không dùng trong lượt so A/B (màn bắt đầu ghi "BIẾN THỂ")* | |
 | …/index.html?vong=b2 | **B2 – biến thể, TẮT mặc định**: phát từ lúc bắt đầu nhát chém gần nhất (chỉ thử SAU A và B gốc) |
@@ -35,6 +36,23 @@ Trong game, ⚙ (tạm dừng, không che lúc chơi):
   Nếu trình duyệt chặn bộ nhớ (vd. duyệt riêng tư) thì không kèm được → **chép log TRƯỚC khi đổi** cho chắc.
 
 Đường đi: phòng A (hình nộm) → **B** (2 Chuông Gỗ) → **C** (quái gác có vỏ) → **D** (2 Bọ Vỏ Mộc). HUD dưới máu ghi cấu hình; B có thanh lịch sử + chữ trạng thái (và ô nấc ở lượt tài nguyên).
+
+## Sửa theo nhận xét iPhone 28/10 – ĐÓNG BĂNG LẦN 2 (`p0b-2810-8210801c`)
+
+Nhận xét iPhone (trên P0-C, chung nguồn Âm Đao): **kiếm quá bé**, **cuối đường chém có vạch kẻ thẳng**, **nhảy hơi cứng, nặng**. Sửa ở nguồn `game/thu-p0a/` rồi sinh lại trang này bằng `cong-cu/tao-p0b.py`.
+Chi tiết + số đo + ảnh: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục **"Sửa theo nhận xét iPhone 28/10"**.
+
+| Đổi | Nội dung |
+|---|---|
+| Kiếm to | Lưỡi Âm Đao ×1,48 (17,8 → 26,3 px). **Chỉ hình** – hộp đòn, sát thương, nhịp **không đổi** |
+| Vệt chém | Hết vạch thẳng ở mép hộp (bỏ lớp sáng bị cắt chữ nhật, vệt tan mềm). Vị trí vệt như PH8 |
+| Nhảy | Nhảy mềm: lên nhanh hơn, treo đỉnh lâu hơn, rơi mượt; đỉnh 118,4 → 127,8 px. `?nhay=cu` = nhảy cũ |
+| **Giữ nguyên** | Cấu hình Vọng A / B (miễn phí, bóng nghỉ, 180 / 90 tick, …), Bọ, phòng, quái, log nền, nút chép log |
+
+- Phiên đóng băng mới: **`p0b-2810-8210801c`**, nhãn **"28/10/2026 lần 2 (kiếm to, vệt chém mềm, nhảy mềm)"** (khối `khoi-p0b.js` chỉ đổi dòng nhãn `VB_DONG_BANG`). Màn bắt đầu ghi "… · p0b-2810-8210801c · bản ĐÓNG BĂNG 28/10/2026 lần 2 (…)".
+- Phiên cũ `p0b-2810-cceea180` (đóng băng lần 1) **thay bằng phiên này** – log có `phien` cũ là bản kiếm nhỏ / nhảy cũ.
+- `?nhay=cu`, `?quet=1` → trang tự ghi **BIẾN THỂ** (không phải bản đóng băng), như mọi cờ thử khác.
+- Đã tải trong Chromium (`?vong=a`, mặc định và `?nhay=cu`): 0 lỗi trang; bậc / tường các phòng như trước. **Số Vọng mục 3 không quay lại** (Vọng không đổi; nhảy cao hơn có thể làm bot nhảy khác vài tick). Chưa thử iPhone.
 
 ## Phản hồi 10: sinh lại từ Âm Đao PH8, kiểm lại, đóng băng (28/10/2026)
 
@@ -91,7 +109,7 @@ Chưa chọn B vì ít lần bấm hơn, chưa loại B vì bot phát chậm (PH
 
 ### 5. Checklist kiểm nhanh trên Safari THẬT (iPhone, xoay ngang) – người dùng làm trước buổi thử
 Mở link mặc định. Mỗi dòng: làm → nhìn đúng điều ghi → đánh dấu.
-1. ☐ **Phiên bản**: màn bắt đầu ghi `p0b-2810-cceea180 · bản ĐÓNG BĂNG 28/10/2026` (không có chữ "BIẾN THỂ"). Có 2 nút A / B.
+1. ☐ **Phiên bản**: màn bắt đầu ghi `p0b-2810-8210801c · bản ĐÓNG BĂNG 28/10/2026 lần 2 (…)` (đóng băng lần 2 – trước là `cceea180`) (không có chữ "BIẾN THỂ"). Có 2 nút A / B.
 2. ☐ **Đa chạm**: chọn A. Giữ nút di chuyển (phải) + chạm **Chém** + chạm **Lướt** cùng lúc → Lam vừa chạy vừa chém / lướt, không nút nào "kẹt".
    Giữ di chuyển + chạm **V** (bắt đầu ghi) + chém + chạm V lần nữa → bóng phát. Bấm V cùng lúc chém / lướt vài lần: có lần nào V không ăn, hoặc chạm nhầm nút bên cạnh không. Ghi lại.
 3. ☐ **Mất focus / chuyển app**: đang chơi (có bóng đang phát) → vuốt về màn chính / mở app khác 5 giây → quay lại. Game chạy tiếp **từ đúng chỗ cũ** (trình duyệt ngừng
@@ -170,7 +188,7 @@ Báo kết quả từng dòng (đạt / không + mô tả). **Chưa dòng nào �
 
 ## Hướng dẫn buổi thử (theo PH9 mục 3)
 
-**Trước buổi**: ĐÃ đóng băng – phiên **`p0b-2810-cceea180`** (28/10/2026, sinh từ Âm Đao PH8). Kiểm màn bắt đầu ghi đúng phiên + "bản ĐÓNG BĂNG"; làm checklist Safari thật (mục "Phản hồi 10" → 5).
+**Trước buổi**: ĐÃ đóng băng – phiên **`p0b-2810-8210801c`** (lần 2, 28/10/2026, sau nhận xét iPhone: kiếm to, vệt chém, nhảy; lần 1 `cceea180` sinh từ Âm Đao PH8). Kiểm màn bắt đầu ghi đúng phiên + "bản ĐÓNG BĂNG"; làm checklist Safari thật (mục "Phản hồi 10" → 5).
 Cấp 1, không Dư Âm, pogo cũ, không đổi quái / tầm / VFX giữa A và B; **không đổi số giữa buổi, không ghép biến thể vào cùng lượt**. Ghi máy, iOS, trình duyệt, hướng màn (log tự ghi), **không** bật `?battu`.
 
 **Thứ tự**: mỗi người chơi **cả A và B**, thời gian tương đương. Chia **A→B** và **B→A** (4 người: 2 người mỗi thứ tự; 3 người: dùng để phát hiện vấn đề, không làm thống kê).

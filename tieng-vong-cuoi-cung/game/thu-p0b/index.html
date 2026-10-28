@@ -364,7 +364,7 @@ function huVe(){
   for(let i=0;i<HU_MAX;i++){ const f=IFX[i]; if(!f.on) continue;
     let fi=0, acc=0; for(;fi<f.buoc.length;fi++){ if(f.t<acc+f.buoc[fi]) break; acc+=f.buoc[fi]; }
     if(fi>=f.buoc.length) continue;
-    const last=fi===f.buoc.length-1, a=f.al*(last?Math.max(0.15,1-(f.t-acc)/f.buoc[fi]):1);
+    const last=fi===f.buoc.length-1, p_=(f.t-acc)/f.buoc[fi], a=f.al*(f.ten==='vet'?(last?0.65*(1-p_)*(1-p_*0.4):fi===f.buoc.length-2?1-0.35*p_:1):(last?Math.max(0.15,1-p_):1));
     const X=snap(f.x-ox), Y=snap(f.y-oy), R=HUI[f.anh];
     ctx.save(); ctx.globalAlpha=a; ctx.translate(X,Y); if(f.goc) ctx.rotate(f.goc*Math.PI/180); if(f.lat) ctx.scale(-1,1);
     if(R && R.img){ const id=R.meta.anims[f.anim].khung[Math.min(fi,R.meta.anims[f.anim].khung.length-1)], fr=R.meta.frames[id], s=f.k/2;
@@ -754,11 +754,11 @@ function updatePlayer(){
   // Dọc: trọng lực đổi mượt quanh đỉnh nhảy, rơi nặng dần
   let g=P.gravity;
   if(!pl.onGround){
-    const a=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), top=I.j?P.apexGravMul:0.8;
+    const a0=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), a=NHAY.moi?a0*a0*(3-2*a0):a0, top=I.j?P.apexGravMul:0.8;
     g*=top+(1-top)*a;
     if(pl.vy>0) g*=1+(P.fallGravMul-1)*a;
   }
-  pl.vy=Math.min(pl.vy+g,P.maxFall);
+  pl.vy=NHAY.moi?NHAY.tran(pl.vy+g):Math.min(pl.vy+g,P.maxFall);
   const ws=P.wallSense+0.5;
   pl.wallDir=pl.onGround?0:(collide(pl.x-ws,pl.y,pl.w,pl.h)?-1:(collide(pl.x+ws,pl.y,pl.w,pl.h)?1:0));
   if(pl.wallDir){ pl.wallCoy=P.wallCoyote; pl.lastWall=pl.wallDir; }
@@ -2769,6 +2769,18 @@ const CAP_AM_DAO = [null,
 // PH8 mục 3: pogo GIỮ hộp cũ làm mặc định; ?pogo=moi = biến thể thử hộp theo đường bổ xuống (lưỡi thẳng xuống ở x ≈ 22–25 so với chân),
 // dung sai nhỏ: x −2…46 (lưỡi ± ≈ 23 px, vẫn phủ nửa trước thân). CHƯA giảm 64 → 30.
 const AD_POGO_MOI = AD_Q.get('pogo') === 'moi';
+const AD_QUET = AD_Q.get('quet') === '1';
+// 28/10 (nhận xét iPhone "nhảy hơi cứng, nặng") – NHẢY MỀM (mặc định). ?nhay=cu = số + công thức cũ để so.
+//   cũ : jumpHeight 112, gravity 0.64, apexGravMul 0.5, apexThreshold 1.8, fallGravMul 1.12, maxFall 10.4 (cắt cứng), vùng đỉnh tuyến tính
+//   mới: lên nhanh hơn (trọng lực lên ×1,2 = 0.768, vận tốc bật 11,97 → 13,46), vùng đỉnh rộng hơn (|vy| < 4, smoothstep) và nhẹ hơn khi GIỮ
+//        nhảy (×0,3) → treo đỉnh lâu hơn; rơi: trọng lực rơi giữ như cũ (0.768 × 0.933 = 0.717), tốc độ tiến DẦN tới trần 10,4 (không gãy).
+//        Đỉnh khi giữ: 118,4 → 127,8 px (+7,9 %, dưới mức 10 %). Ở mọi độ cao, lúc rơi qua độ cao đó luôn MUỘN hơn hoặc bằng bản cũ
+//        (giữ đủ / chạm 1 / giữ 4–16 tick) → bệ nào tới được bằng nhảy cũ thì vẫn tới được (số đo: GHI-CHU-AM-DAO.md, mục 28/10).
+const NHAY = (() => { const moi = AD_Q.get('nhay') !== 'cu', K = 3;
+  if (moi) Object.assign(P, {jumpHeight: 118, gravity: 0.768, apexGravMul: 0.3, apexThreshold: 4, fallGravMul: 1.12 / 1.2, maxFall: 10.4});
+  jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
+  const goi = P.maxFall - K;   // dưới "gối" tốc độ rơi tăng bình thường; trên gối tiến mềm (tanh) về maxFall
+  return {moi, che: moi ? 'moi' : 'cu', tran: v => v <= goi ? v : goi + K * Math.tanh((v - goi) / K)}; })();   // 28/10: dải quét âm PH7 – tắt mặc định (xem veAmNhan)
 const HOP_POGO = {cu: [-26, -24, 64, 82], moi: [-2, -24, 48, 82]};
 if (AD_POGO_MOI) VK_AM_DAO.don[4].box = HOP_POGO.moi.slice();
 // PH8 (Dư Âm): ngưỡng giữ – mặc định 20; ?giu=15 / ?giu=16 = biến thể thử RIÊNG (chỉ đổi ngưỡng, hồi 150 và sát thương giữ nguyên)
@@ -2975,7 +2987,14 @@ const AD = (() => {
   function ghiQuet(s, n, at, D) {
     if (!D || !n || !ATK[n]) return; if (QUET.ma !== D.ma) { QUET.ma = D.ma; QUET.n = n; QUET.L = []; }
     const L = luoiKhung(s); if (!L) return; const R = raHop(L, ATK[n].box);
-    QUET.L[at] = R ? [R.gx, R.gy, R.ex, R.ey] : [L.goc[0], L.goc[1], L.mui[0], L.mui[1]];
+    QUET.L[at] = R ? [R.gx, R.gy, R.ex, R.ey] : catHop(L, ATK[n].box);
+  }
+  // 28/10: mũi ngoài hộp (lưỡi dài ×1,48) → cắt đoạn chắn→mũi ĐÚNG chỗ ra khỏi hộp (thay vì để clip chữ nhật cắt ngang dải sáng = vạch thẳng)
+  function catHop(L, box) {
+    const [gx, gy] = L.goc, [mx, my] = L.mui, [bx, by, bw, bh] = box, dx = mx - gx, dy = my - gy;
+    let t = 1; if (dx > 1e-6) t = Math.min(t, (bx + bw - gx) / dx); if (dx < -1e-6) t = Math.min(t, (bx - gx) / dx);
+    if (dy > 1e-6) t = Math.min(t, (by + bh - gy) / dy); if (dy < -1e-6) t = Math.min(t, (by - gy) / dy);
+    t = Math.max(0, t); return [gx, gy, gx + dx * t, gy + dy * t];
   }
   function veQuet(g, X, Y, n, at, f, cm, D) {
     if (!D || QUET.ma !== D.ma) return; const a = ATK[n]; if (at < a.su || at >= a.su + a.ac) return;
@@ -2985,16 +3004,26 @@ const AD = (() => {
     for (let t = Math.max(0, a.su - 3); t <= at; t++) { const l = QUET.L[t]; if (!l) continue;
       if (truoc && t >= a.su - 1) {
         const tuoi = at - t, al = Math.max(0, 0.34 - 0.05 * tuoi) * (at === a.su + a.ac - 1 ? 0.6 : 1);
-        if (al > 0.01) { g.globalAlpha = al; g.fillStyle = cm ? C.cm : C.quang; g.beginPath();
+        if (al > 0.01) { g.globalAlpha = al; g.fillStyle = mo(g, X, Y, f, truoc, l, cm ? C.cm : C.quang); g.beginPath();
           g.moveTo(X + truoc[0] * f, Y + truoc[1]); g.lineTo(X + truoc[2] * f, Y + truoc[3]); g.lineTo(X + l[2] * f, Y + l[3]); g.lineTo(X + l[0] * f, Y + l[1]); g.closePath(); g.fill(); } }
       truoc = l; }
     g.restore();
   }
+  // 28/10 (nhận xét iPhone "cuối đường chém có vạch kẻ thẳng"): nguyên nhân = dải quét âm + quầng âm nhận tô ĐẶC tới mép hộp rồi bị clip chữ nhật
+  // cắt ngang (mép hộp thành một đường thẳng sáng) + vạch đồng vuông góc đặt đúng mép hộp. Nay: mọi dải sáng MỜ DẦN về 0 trước khi chạm mép hộp
+  // (gradient dọc lưỡi: đặc tới 45 %, tắt hẳn ở mép) → mép hộp không còn lộ; bỏ vạch đồng + chấm trắng ở mép. Clip hộp giữ làm lưới an toàn.
+  function mo(g, X, Y, f, a, b, mau) {   // gradient từ chắn (giữa 2 tick) ra mép (giữa 2 tick)
+    const x0 = X + (a[0] + b[0]) / 2 * f, y0 = Y + (a[1] + b[1]) / 2, x1 = X + (a[2] + b[2]) / 2 * f, y1 = Y + (a[3] + b[3]) / 2;
+    const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, mau); gr.addColorStop(0.45, mau); gr.addColorStop(1, 'rgba(255,240,210,0)'); return gr;
+  }
+  function moTia(g, x0, y0, x1, y1, mau, dac) { const gr = g.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, mau); gr.addColorStop(dac, mau); gr.addColorStop(1, 'rgba(255,240,210,0)'); return gr; }
   function veAmNhan(s, X, Y, n, at, bong, cm, D, g) {
     g = g || ctx;
     if (!n || !ATK[n]) return; const a = ATK[n]; if (at < a.su || at >= a.su + a.ac) return;   // CHỈ các tick hộp bật
     const f = s.l2 ? -1 : 1;
-    if (!bong) veQuet(g, X, Y, n, at, f, cm, D);
+    // 28/10: dải "quét âm" (PH7) là đa giác → luôn có cạnh thẳng ở hai đầu dải; lưỡi nay dài ×1,48 + vệt chém đã cho thấy đường quét → TẮT mặc định.
+    // ?quet=1 = bật lại (bản đã làm mờ dần về mép) để so.
+    if (!bong && AD_QUET) veQuet(g, X, Y, n, at, f, cm, D);
     const L = luoiKhung(s); if (!L) return; const R = raHop(L, a.box); if (!R) return;
     const C = VK_AM_DAO.amNhan, k = cm ? 1.3 : 1;
     const P = (x, y) => [X + x * f, Y + y];
@@ -3003,15 +3032,13 @@ const AD = (() => {
     g.save(); g.lineCap = 'round';
     // PH7: mọi nét âm nhận CẮT trong hộp (quầng / vạch mép / cung sóng không lố ra ngoài mép hộp)
     g.beginPath(); g.rect(f > 0 ? X + a.box[0] : X - a.box[0] - a.box[2], Y + a.box[1], a.box[2], a.box[3]); g.clip();
-    g.globalAlpha = 0.38 * al; g.strokeStyle = bong ? '#CEF0D6' : C.quang; g.lineWidth = 15 * k; g.beginPath(); g.moveTo(g0x, g0y); g.lineTo(eX, eY); g.stroke();
-    g.globalAlpha = 0.9 * al; g.strokeStyle = bong ? '#E6FFF6' : (cm ? C.cm : C.mau); g.lineWidth = 5.5 * k; g.beginPath(); g.moveTo(mX, mY); g.lineTo(eX, eY); g.stroke();
-    g.lineWidth = 2 * k; g.beginPath(); g.moveTo(g0x, g0y); g.lineTo(mX, mY); g.stroke();
-    // mép sáng = mép hộp đòn: vạch đồng vuông góc tia + 2 cung sóng âm
-    const px = -R.dy * f, py = R.dx;   // pháp tuyến trên màn (đã lật)
-    g.globalAlpha = al; g.strokeStyle = bong ? '#9FE3D2' : C.vien; g.lineWidth = 3.4 * k; g.beginPath(); g.moveTo(eX - px * 10 * k, eY - py * 8 * k); g.lineTo(eX + px * 10 * k, eY + py * 10 * k); g.stroke();
-    g.fillStyle = '#FFFFFF'; g.beginPath(); g.arc(eX, eY, 3 * k, 0, 7); g.fill();
-    g.globalAlpha = 0.45 * al; g.lineWidth = 1.5; const an = Math.atan2(R.dy, R.dx * f);
-    for (const r of [5, 9]) { g.beginPath(); g.arc(eX - Math.cos(an) * (r + 2), eY - Math.sin(an) * (r + 2), r + 2, an - 0.9, an + 0.9); g.stroke(); }
+    // 28/10: quầng + tia mờ dần tới 0 ở mép hộp (không còn đầu tia đặc bị cắt thẳng); không vạch đồng / chấm trắng ở mép
+    g.globalAlpha = 0.38 * al; g.strokeStyle = moTia(g, g0x, g0y, eX, eY, bong ? '#CEF0D6' : C.quang, 0.35); g.lineWidth = 15 * k; g.beginPath(); g.moveTo(g0x, g0y); g.lineTo(eX, eY); g.stroke();
+    g.globalAlpha = 0.9 * al; g.strokeStyle = moTia(g, mX, mY, eX, eY, bong ? '#E6FFF6' : (cm ? C.cm : C.mau), 0.25); g.lineWidth = 5.5 * k; g.beginPath(); g.moveTo(mX, mY); g.lineTo(eX, eY); g.stroke();
+    g.strokeStyle = bong ? '#E6FFF6' : (cm ? C.cm : C.mau); g.lineWidth = 2 * k; g.beginPath(); g.moveTo(g0x, g0y); g.lineTo(mX, mY); g.stroke();
+    // 2 cung sóng âm (cong, mờ) lùi vào trong mép 5 px
+    g.strokeStyle = bong ? '#9FE3D2' : C.vien; g.globalAlpha = 0.4 * al; g.lineWidth = 1.5; const an = Math.atan2(R.dy, R.dx * f);
+    for (const r of [5, 9]) { g.beginPath(); g.arc(eX - Math.cos(an) * (r + 7), eY - Math.sin(an) * (r + 7), r + 2, an - 0.8, an + 0.8); g.stroke(); }
     g.restore();
     if (DO_AN && g === ctx) DO_AN.push({f: S.frame, n, at, bong: !!bong, mui: [R.mx, R.my], mep: [+R.ex.toFixed(1), +R.ey.toFixed(1)], dai: +R.dai.toFixed(1), hop: a.box.slice()});
   }
@@ -3848,8 +3875,8 @@ hurt = function (dir) { if (BO_THU.batTu && pl.hp <= 1) pl.hp = 2; _boHurt(dir);
    ?debug=vong  bảng log Vọng trên màn (chỉ để xem; log nền vẫn thu khi tắt)   ?battu=1 Lam không chết (quay video)
    Các cờ của P0-A / Âm Đao giữ nguyên (?hitbox=1, ?debug=input …). */
 
-const VB_PHIEN = 'p0b-2810-cceea180';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
-const VB_DONG_BANG = '28/10/2026';   // PH10: ngày đóng băng cấu hình mặc định cho buổi thử iPhone (chỉ là nhãn – không đổi luật / số)
+const VB_PHIEN = 'p0b-2810-8210801c';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
+const VB_DONG_BANG = '28/10/2026 lần 2 (kiếm to, vệt chém mềm, nhảy mềm)';   // PH10 đóng băng 28/10; lần 2 = sửa theo nhận xét iPhone 28/10 (chỉ hình kiếm, vệt chém, nhảy – cấu hình Vọng giữ nguyên)
 const VB_Q = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new Map(); } })();
 const VB_SO = {
   cau: (() => { const v = (VB_Q.get('vong') || '').toLowerCase(); return v === 'a' || v === 'b' || v === 'b2' ? v : ''; })(),   // '' = chưa chọn (màn bắt đầu)

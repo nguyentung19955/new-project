@@ -1,0 +1,1423 @@
+{
+ "mui": {
+  "atk1": {
+   "hop": [
+    4,
+    -97,
+    86,
+    48
+   ],
+   "tick": [
+    {
+     "at": 7,
+     "khung": "c1-trung",
+     "mui": [
+      90.4,
+      -72.2
+     ],
+     "goc": [
+      64.2,
+      -70.6
+     ],
+     "dai": 26.2,
+     "vuot": 0.4
+    },
+    {
+     "at": 8,
+     "khung": "c1-trung",
+     "mui": [
+      90.4,
+      -72.2
+     ],
+     "goc": [
+      64.2,
+      -70.6
+     ],
+     "dai": 26.2,
+     "vuot": 0.4
+    },
+    {
+     "at": 9,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    },
+    {
+     "at": 10,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    },
+    {
+     "at": 11,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    },
+    {
+     "at": 12,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    },
+    {
+     "at": 13,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    },
+    {
+     "at": 14,
+     "khung": "c1-trung2",
+     "mui": [
+      93,
+      -54.5
+     ],
+     "goc": [
+      67.5,
+      -60.6
+     ],
+     "dai": 26.2,
+     "vuot": 3
+    }
+   ],
+   "vuot_max": 3,
+   "trong_hop": "0/8"
+  },
+  "atk2": {
+   "hop": [
+    -10,
+    -100,
+    90,
+    48
+   ],
+   "tick": [
+    {
+     "at": 7,
+     "khung": "c2-trung",
+     "mui": [
+      77.8,
+      -92.2
+     ],
+     "goc": [
+      55.9,
+      -77.7
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 8,
+     "khung": "c2-trung",
+     "mui": [
+      77.8,
+      -92.2
+     ],
+     "goc": [
+      55.9,
+      -77.7
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 9,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 10,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 11,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 12,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 13,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 14,
+     "khung": "c2-trung2",
+     "mui": [
+      74.4,
+      -97.7
+     ],
+     "goc": [
+      52.5,
+      -83.2
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    }
+   ],
+   "vuot_max": 0,
+   "trong_hop": "8/8"
+  },
+  "atk3": {
+   "hop": [
+    -13,
+    -59,
+    99,
+    59
+   ],
+   "tick": [
+    {
+     "at": 9,
+     "khung": "c3-trung",
+     "mui": [
+      85.4,
+      -2.2
+     ],
+     "goc": [
+      66.4,
+      -20.3
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 10,
+     "khung": "c3-trung",
+     "mui": [
+      85.4,
+      -2.2
+     ],
+     "goc": [
+      66.4,
+      -20.3
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 11,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 12,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 13,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 14,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 15,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 16,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    }
+   ],
+   "vuot_max": 0.3,
+   "trong_hop": "2/8"
+  },
+  "atk4": {
+   "hop": [
+    -26,
+    -24,
+    64,
+    82
+   ],
+   "tick": [
+    {
+     "at": 0,
+     "khung": "c4-dam",
+     "mui": [
+      25.6,
+      6.7
+     ],
+     "goc": [
+      25,
+      -19.6
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 1,
+     "khung": "c4-dam",
+     "mui": [
+      25.6,
+      6.7
+     ],
+     "goc": [
+      25,
+      -19.6
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 2,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 3,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 4,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 5,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 6,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 7,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 8,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 9,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 10,
+     "khung": "c4-giu",
+     "mui": [
+      22.8,
+      11.9
+     ],
+     "goc": [
+      22.2,
+      -14.4
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    }
+   ],
+   "vuot_max": 0,
+   "trong_hop": "11/11"
+  },
+  "atk5": {
+   "hop": [
+    -9,
+    -140,
+    87,
+    60
+   ],
+   "tick": [
+    {
+     "at": 11,
+     "khung": "c5-trung",
+     "mui": [
+      22.5,
+      -126.6
+     ],
+     "goc": [
+      28.1,
+      -101
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 12,
+     "khung": "c5-trung",
+     "mui": [
+      22.5,
+      -126.6
+     ],
+     "goc": [
+      28.1,
+      -101
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 13,
+     "khung": "c5-trung",
+     "mui": [
+      22.5,
+      -126.6
+     ],
+     "goc": [
+      28.1,
+      -101
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 14,
+     "khung": "c5-trung2",
+     "mui": [
+      7.2,
+      -126.3
+     ],
+     "goc": [
+      18,
+      -102.4
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 15,
+     "khung": "c5-trung2",
+     "mui": [
+      7.2,
+      -126.3
+     ],
+     "goc": [
+      18,
+      -102.4
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 16,
+     "khung": "c5-trung2",
+     "mui": [
+      7.2,
+      -126.3
+     ],
+     "goc": [
+      18,
+      -102.4
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 17,
+     "khung": "c5-trung2",
+     "mui": [
+      7.2,
+      -126.3
+     ],
+     "goc": [
+      18,
+      -102.4
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 18,
+     "khung": "c5-trung2",
+     "mui": [
+      7.2,
+      -126.3
+     ],
+     "goc": [
+      18,
+      -102.4
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    }
+   ],
+   "vuot_max": 0,
+   "trong_hop": "8/8"
+  },
+  "atk6": {
+   "hop": [
+    -3,
+    -107,
+    95,
+    48
+   ],
+   "tick": [
+    {
+     "at": 9,
+     "khung": "c6-trung",
+     "mui": [
+      84.9,
+      -85.1
+     ],
+     "goc": [
+      59.2,
+      -79.9
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 10,
+     "khung": "c6-trung",
+     "mui": [
+      84.9,
+      -85.1
+     ],
+     "goc": [
+      59.2,
+      -79.9
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 11,
+     "khung": "c6-trung",
+     "mui": [
+      84.9,
+      -85.1
+     ],
+     "goc": [
+      59.2,
+      -79.9
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 12,
+     "khung": "c6-trung2",
+     "mui": [
+      90.3,
+      -68.3
+     ],
+     "goc": [
+      64.1,
+      -70.9
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 13,
+     "khung": "c6-trung2",
+     "mui": [
+      90.3,
+      -68.3
+     ],
+     "goc": [
+      64.1,
+      -70.9
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 14,
+     "khung": "c6-trung2",
+     "mui": [
+      90.3,
+      -68.3
+     ],
+     "goc": [
+      64.1,
+      -70.9
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 15,
+     "khung": "c6-trung2",
+     "mui": [
+      90.3,
+      -68.3
+     ],
+     "goc": [
+      64.1,
+      -70.9
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    },
+    {
+     "at": 16,
+     "khung": "c6-trung2",
+     "mui": [
+      90.3,
+      -68.3
+     ],
+     "goc": [
+      64.1,
+      -70.9
+     ],
+     "dai": 26.3,
+     "vuot": 0
+    }
+   ],
+   "vuot_max": 0,
+   "trong_hop": "8/8"
+  },
+  "atk7": {
+   "hop": [
+    -13,
+    -66,
+    103,
+    66
+   ],
+   "tick": [
+    {
+     "at": 6,
+     "khung": "c3-trung",
+     "mui": [
+      85.4,
+      -2.2
+     ],
+     "goc": [
+      66.4,
+      -20.3
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 7,
+     "khung": "c3-trung",
+     "mui": [
+      85.4,
+      -2.2
+     ],
+     "goc": [
+      66.4,
+      -20.3
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 8,
+     "khung": "c3-trung",
+     "mui": [
+      85.4,
+      -2.2
+     ],
+     "goc": [
+      66.4,
+      -20.3
+     ],
+     "dai": 26.2,
+     "vuot": 0
+    },
+    {
+     "at": 9,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 10,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 11,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 12,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    },
+    {
+     "at": 13,
+     "khung": "c3-trung2",
+     "mui": [
+      84.8,
+      0.3
+     ],
+     "goc": [
+      65.7,
+      -17.8
+     ],
+     "dai": 26.3,
+     "vuot": 0.3
+    }
+   ],
+   "vuot_max": 0.3,
+   "trong_hop": "3/8"
+  }
+ },
+ "nhay": {
+  "cu": {
+   "P": {
+    "jumpHeight": 112,
+    "gravity": 0.64,
+    "apexGravMul": 0.5,
+    "apexThreshold": 1.8,
+    "jumpCut": 0.5,
+    "maxFall": 10.4,
+    "fallGravMul": 1.12,
+    "jumpVel": 11.973303637676613,
+    "che": "cu"
+   },
+   "giu": {
+    "cao": 118.36,
+    "tick_len_dinh": 20,
+    "tick_roi": 20,
+    "tong": 40,
+    "gan_dinh_8px": 11,
+    "toi_90": 14,
+    "quy_dao": [
+     11.97,
+     23.31,
+     34.0,
+     44.05,
+     53.47,
+     62.24,
+     70.37,
+     77.87,
+     84.72,
+     90.93,
+     96.51,
+     101.44,
+     105.73,
+     109.39,
+     112.4,
+     114.77,
+     116.51,
+     117.61,
+     118.2,
+     118.36,
+     118.18,
+     117.64,
+     116.66,
+     115.16,
+     113.02,
+     110.16,
+     106.58,
+     102.29,
+     97.27,
+     91.55,
+     85.1,
+     77.94,
+     70.06,
+     61.47,
+     52.15,
+     42.13,
+     31.73,
+     21.33,
+     10.93,
+     0.53
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "tiep-dat-1"
+    ]
+   },
+   "cham-1": {
+    "cao": 40.01,
+    "tick_len_dinh": 11,
+    "tick_roi": 11,
+    "tong": 22,
+    "gan_dinh_8px": 10,
+    "toi_90": 7,
+    "quy_dao": [
+     11.97,
+     17.64,
+     22.67,
+     27.05,
+     30.8,
+     33.91,
+     36.37,
+     38.2,
+     39.39,
+     39.98,
+     40.01,
+     39.53,
+     38.49,
+     36.82,
+     34.46,
+     31.37,
+     27.57,
+     23.05,
+     17.81,
+     11.86,
+     5.19,
+     0.19
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "tiep-dat-1"
+    ]
+   },
+   "giu-8": {
+    "cao": 88.93,
+    "tick_len_dinh": 14,
+    "tick_roi": 17,
+    "tong": 31,
+    "gan_dinh_8px": 11,
+    "toi_90": 9,
+    "quy_dao": [
+     11.97,
+     23.31,
+     34.0,
+     44.05,
+     53.47,
+     62.24,
+     70.37,
+     77.87,
+     81.29,
+     84.08,
+     86.23,
+     87.73,
+     88.62,
+     88.93,
+     88.71,
+     87.95,
+     86.6,
+     84.59,
+     81.86,
+     78.41,
+     74.24,
+     69.36,
+     63.76,
+     57.45,
+     50.41,
+     42.66,
+     34.2,
+     25.02,
+     15.12,
+     4.72,
+     0.72
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "tiep-dat-1"
+    ]
+   }
+  },
+  "moi": {
+   "P": {
+    "jumpHeight": 118,
+    "gravity": 0.768,
+    "apexGravMul": 0.3,
+    "apexThreshold": 4,
+    "jumpCut": 0.5,
+    "maxFall": 10.4,
+    "fallGravMul": 0.9333333333333335,
+    "jumpVel": 13.462837739496083,
+    "che": "moi"
+   },
+   "giu": {
+    "cao": 127.83,
+    "tick_len_dinh": 22,
+    "tick_roi": 24,
+    "tong": 46,
+    "gan_dinh_8px": 15,
+    "toi_90": 13,
+    "quy_dao": [
+     13.46,
+     26.16,
+     38.08,
+     49.24,
+     59.63,
+     69.26,
+     78.11,
+     86.2,
+     93.52,
+     100.07,
+     105.85,
+     110.87,
+     115.11,
+     118.59,
+     121.33,
+     123.42,
+     125.0,
+     126.16,
+     126.98,
+     127.51,
+     127.79,
+     127.83,
+     127.64,
+     127.21,
+     126.54,
+     125.59,
+     124.35,
+     122.75,
+     120.75,
+     118.26,
+     115.21,
+     111.5,
+     107.08,
+     101.95,
+     96.1,
+     89.53,
+     82.24,
+     74.25,
+     65.62,
+     56.5,
+     47.09,
+     37.53,
+     27.9,
+     18.24,
+     8.56,
+     0.56
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "tiep-dat-1"
+    ]
+   },
+   "cham-1": {
+    "cao": 43.44,
+    "tick_len_dinh": 10,
+    "tick_roi": 12,
+    "tong": 22,
+    "gan_dinh_8px": 10,
+    "toi_90": 7,
+    "quy_dao": [
+     13.46,
+     19.81,
+     25.39,
+     30.2,
+     34.24,
+     37.52,
+     40.04,
+     41.84,
+     42.96,
+     43.44,
+     43.29,
+     42.54,
+     41.15,
+     39.12,
+     36.43,
+     33.04,
+     28.93,
+     24.12,
+     18.58,
+     12.33,
+     5.36,
+     0.36
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "tiep-dat-1"
+    ]
+   },
+   "giu-8": {
+    "cao": 97.32,
+    "tick_len_dinh": 14,
+    "tick_roi": 18,
+    "tong": 32,
+    "gan_dinh_8px": 10,
+    "toi_90": 9,
+    "quy_dao": [
+     13.46,
+     26.16,
+     38.08,
+     49.24,
+     59.63,
+     69.26,
+     78.11,
+     86.2,
+     89.86,
+     92.75,
+     94.91,
+     96.36,
+     97.16,
+     97.32,
+     96.87,
+     95.8,
+     94.1,
+     91.74,
+     88.7,
+     84.95,
+     80.49,
+     75.32,
+     69.42,
+     62.81,
+     55.48,
+     47.45,
+     38.78,
+     29.64,
+     20.22,
+     10.65,
+     1.02,
+     0.02
+    ],
+    "hoat_anh": [
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-bat",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-len",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "nhay-dinh",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "roi-nhanh",
+     "tiep-dat-1"
+    ]
+   }
+  }
+ },
+ "khung": {
+  "khung-nhat1-sau.png": 25,
+  "khung-nhat2-sau.png": 26,
+  "khung-nhat3-sau.png": 33,
+  "khung-hat-sau.png": 29,
+  "khung-tren-khong-sau.png": 20,
+  "khung-bo-xuong-sau.png": 7,
+  "khung-chem-vang-sau.png": 32,
+  "khung-nhat1-sau-hop.png": 25,
+  "khung-nhat2-sau-hop.png": 26,
+  "khung-nhat3-sau-hop.png": 33,
+  "khung-hat-sau-hop.png": 29,
+  "khung-tren-khong-sau-hop.png": 20,
+  "khung-bo-xuong-sau-hop.png": 7,
+  "khung-chem-vang-sau-hop.png": 32
+ },
+ "video": {
+  "file": "2810-chay-nhay-chem.mp4",
+  "khung": 423,
+  "giay": 7.05,
+  "bat_tu": false,
+  "loi_trang": []
+ }
+}
