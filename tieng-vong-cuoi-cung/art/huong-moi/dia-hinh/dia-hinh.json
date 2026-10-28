@@ -793,5 +793,37 @@
    56.0,
    108.0
   ]
+ },
+ "do_vat_f": {
+  "ghi_chu": "Đe rèn phòng F, 2 trạng thái (nguội / đang rèn) từ nguon/vu-khi/de-ren.png – sinh bởi code/tao-do-vat-f.py. Ảnh 2x. Neo giữa đáy khung. Hai khung đã khớp vị trí (hoà dần không nhảy). lo = tâm lò than so với neo (logic).",
+  "tep": "do-vat-f.png",
+  "co_anh": [
+   328,
+   132
+  ],
+  "khung": {
+   "de-nguoi": [
+    2,
+    2,
+    160,
+    128
+   ],
+   "de-nong": [
+    166,
+    2,
+    160,
+    128
+   ]
+  },
+  "de_logic": [
+   80,
+   64
+  ],
+  "mat_de_logic": 48.0,
+  "lo": [
+   1.1,
+   -21.3
+  ],
+  "gian_ngang": 1.023
  }
 }

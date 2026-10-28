@@ -5,7 +5,7 @@ Viết cho người không rành kỹ thuật. Làm đúng bước đầu của 
 Chưa áp sang A, C–F. **Chưa thử trên iPhone thật** – mọi ảnh / số đo là Chromium headless trên máy chủ Linux không GPU.
 
 **Chơi thử:** https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-phong-b/index.html
-(vào thẳng phòng B; đi sang trái là phòng A, sang phải là phòng C – bước 2: cả A, B, C đều dùng bộ đất mới).
+(vào thẳng phòng B; đi sang trái là phòng A, sang phải là C → D → E → F – bước 3: cả A–F dùng bộ đất mới; `?vao=d|e|f` vào thẳng phòng đó).
 
 | Thêm vào địa chỉ | Để làm gì |
 |---|---|
@@ -17,6 +17,123 @@ Chưa áp sang A, C–F. **Chưa thử trên iPhone thật** – mọi ảnh / s
 
 Trang này **sinh bằng script** từ `game/thu-p0a/index.html` hiện tại (`cong-cu/tao-tu-p0a.py`) – không sửa `thu-p0a/`, `demo.html`,
 `build-demo.py`, `thu-bo-vo-moc/`, `docs/gameplay/`. Khi phiên Âm Đao sửa `thu-p0a` xong, chạy lại script là có bản mới (script báo lỗi rõ nếu chỗ móc bị đổi).
+
+## Bước 3 (29/10) – dựng D / E / F, kiểm ranh khi cuộn, Bọ trên nền mới, tháp B, gợi ý ngắn (phản hồi 8)
+
+> Mục mới nhất. **Chưa thử trên iPhone thật** – mọi ảnh / video / số đo là Chromium headless, máy chủ Linux không GPU.
+> Không gen ảnh mới (đe rèn cắt từ `nguon/vu-khi/de-ren.png` có sẵn). Không sửa `thu-p0a/`, `thu-p0b/`, code Bọ, `demo.html`, `build-demo.py`, `docs/gameplay/`.
+
+Cờ mới: `?vao=d|e|f` (vào đầu phòng D / E / F), `?goiy=cu` (dòng hướng dẫn dài cũ), `?thapB=cu` (tháp B chưa nén sáng), `?nenD=goc` (nền D chưa giảm).
+Mọi cờ cũ (`?moi=0`, `?dv=0`, `?hitbox=1` …) và của Bọ (`?dauthan=0`, `?huongdan=1`, `?mot=1`) vẫn dùng được.
+
+### B3.1 Đã dựng (sơ đồ v2: D 30 ô, E 30 ô, F 16 ô; mỗi phòng 17 hàng, không trần)
+
+- **Thế giới**: C → D → E → F nối liền (tường phải hành lang C bỏ; tường cuối F cột 15). Cả A → F vẽ bằng bộ đất / ván / nền bước 2
+  (`PB_SO.cot` = cột đầu A → cuối F), cùng luật: collider không đổi (chỉ đọc lưới ô), nhô ≤ 3–4 px, không mặt đứng giả, băm vị trí cố định.
+- **D – Bọ Vỏ Mộc**: 2 Bọ (cột 13 tuần tra 6–17, cột 23 tuần tra 18–28), ván một chiều 4 ô (cột 9–12, hàng 9). Khối Bọ **chép CHỈ ĐỌC** từ
+  `thu-bo-vo-moc/cong-cu/khoi-bo.js` trong `tao-tu-p0a.py` (giống `thu-p0b/cong-cu/tao-p0b.py`: RD → PD, bỏ phần bot / quay, không đặt Lam / chuông):
+  `LOAI_QUAI.bo` thang ×10 + rig Bọ giữ nguyên. Đòn Lam (cả nhịp P0 và `?p0=0`), chém nảy, hitbox, xác / dấu báo đều nối như trang Bọ.
+  Sàn thoáng; nền giữa chỉ 2 cây sát 2 mép (al 0,8); 1 đèn, 1 nấm ở mép trái.
+- **E – sân tinh anh (chưa có tinh anh)**: trống đúng 30 ô, sàn phẳng. Tháp nền nén sáng (như B) lệch về cuối sân, 2 đèn cao sát mép.
+  Vào phòng hiện "ĐẤU TRƯỜNG TINH ANH · chưa có tinh anh".
+- **F – lò rèn**: ấm, an toàn như A – tháp cửa sổ vàng, 3 đèn sáng (quầng 54–58), quầng ấm nền, 2 nấm; **chuông lưu** cột 2 (điểm lưu mới bước 2,
+  `BELLS[4]`, lưu / hồi máu như cũ); **đe rèn** tâm cột 7.
+  - Ảnh: `art/huong-moi/dia-hinh/code/tao-do-vat-f.py` → `do-vat-f.png` + khoá `do_vat_f` trong `dia-hinh.json` (tách nền trắng như bước 2,
+    cả khe trắng bị bao kín giữa đe và cột treo búa; khớp vị trí 2 trạng thái bằng mask; rêu giảm bão hoà nhẹ). Kiểm: `art/huong-moi/dia-hinh/xem-thu/do-vat-f-ban-co.png`.
+  - Cỡ **80 × 64 logic** (cao 64 gồm cột treo búa; mặt đe cao 48 = ngang hông Lam). Tỉ lệ ảnh cho 78 → giãn ngang 2,3 % lên 80 cho vừa "rộng 80–112".
+  - Vẽ ở lớp địa hình (sau chuông lưu, quái, **Lam**), neo giữa đáy, lún 2 px + bóng đổ nhỏ. 2 trạng thái **hoà dần**: nguội; Lam đứng cách ≤ 80 px →
+    "đang rèn" (than đỏ) + quầng lò nhỏ cộng sáng (nhấp nháy nhẹ), rời đi thì nguội lại. Chưa gắn nâng cấp (P0-C).
+- **Camera F**: F (16 ô) hẹp hơn màn ở cuối thế giới – hàm kẹp gốc với phòng hẹp sẽ nhảy qua lại, nên ở F camera **dính mép phải**
+  (thấy thêm 14 ô cuối E, cùng nhịp trôi 0,1). Nền: phần màn chia theo cỡ phòng → nền F đủ đậm, nền E mờ về 0 trong 256 px cuối (không chồng 2 tháp).
+- **Chưa đặt cổng D / E** (cổng cũ kiểu chibi; D chưa có điều kiện mở, E chưa có tinh anh) – vị trí theo sơ đồ: D cột ~26, E cột ~27.
+
+### B3.2 Ranh mảng đất nướng khi camera cuộn (phản hồi 8 mục 3)
+
+- **Video** `xem-thu/buoc-3/cuon-cham-a-f-60fps.mp4`: camera đặt thẳng, cuộn **1,5 px / khung** từ đầu A tới chỗ camera dừng ở F (4352 px, 2902 khung, 48,4 s),
+  đi qua mọi ranh 256 × 128. Xem bằng mắt: không thấy khe / lệch.
+- **Soi bằng số** (`TVPB.soiRanh`): vẽ RIÊNG lớp đất (đúng hàm game) trên nền đen rồi nền trắng, điểm nào khác nhau = chưa phủ kín; đếm trong mọi ô đặc
+  có 8 ô kề cũng đặc (phải kín 100 %). 48 vị trí camera lẻ (A → F) × tỉ lệ K 1 / 1,5 / 2 / **2,1656 (= iPhone 844×390 @3x)** / 3.
+  - Kiểm cách đo có bắt được lỗi: dời giả 0,6 px một nửa số mảng → báo 415 điểm hở ở ranh (rồi bỏ dời giả).
+  - Lần đầu: **0 điểm hở ở mọi ranh mảng**, nhưng 70 / 96 điểm (K 2,17 / 3) ở **cột điểm ảnh cuối màn khi camera dừng ở F** = mép thế giới:
+    dải mép lố ra ngoài thế giới (trong suốt dần) bị pha vào điểm ảnh cuối khi vẽ phóng. **Đã sửa** (`dia-hinh-huong-moi.js`: cắt mảng nướng ở 0 … WW·T).
+  - Sau sửa: **0 điểm hở** ở cả 5 tỉ lệ (`so-do.json` → `buoc_3.ranh.soi`). Video quay trước bản sửa này (K = 1, không bị ảnh hưởng).
+- **Ảnh phóng 4× quanh giao điểm ranh** (đường đứt hồng = ranh): `ranh-{san-b,tran-c,san-d,san-e}-k{2,2_165625}.png` – không thấy đường nối.
+
+### B3.3 Bọ màu trầm trong nền mới (phòng D)
+
+`bo-tren-nen-d-ghep.png` (màu + xám, nền D gốc / đã giảm), ảnh rời `bo-nen-{goc,giam}[-xam].png`. Nền gốc: Bọ 1 (đang báo húc, lóe cam đỏ) nổi;
+**Bọ 2 (xám xanh trầm) hơi chìm** – đầu và chân lẫn vào vòm teal / thân cây nền. Làm theo hướng phản hồi: **giảm tương phản NỀN, không đổi viền / màu Bọ**:
+- "màn tầm đánh": dải màu nền tối phẳng phủ lên nền xa ở tầm Bọ (y 250 → 470, đậm 0,42 ở 330–440), chỉ lớp nền (sau địa hình, sau mọi nhân vật);
+- thân cây nền giữa ở D al 0,8 và đặt sát 2 mép (không đứng sau vùng tuần tra).
+
+| Đo trên ảnh xám (độ sáng 0–255; "nền quanh" lấy từ CÙNG khung vẽ lại không có Bọ) | Bọ 1 gốc → giảm | Bọ 2 gốc → giảm |
+|---|---|---|
+| Bọ (trung vị) / nền quanh (trung vị) | 72 / 43 → 69 / 33 | 62 / 42 → 61 / 33 |
+| chênh (Weber) | 0,67 → **1,09** | 0,48 → **0,85** |
+| % điểm của Bọ sáng hơn nền ≥ 10 | 96,9 → 99,9 | **71,4 → 94,1** |
+| độ lệch chuẩn nền quanh Bọ 2 (tương phản nền) | – | 4,3 → 2,7 |
+
+### B3.4 Phòng B: cửa sổ sáng / ban công sau giữa sân
+
+`thap-b-truoc-sau[-xam].png`, phóng: `thap-b-phong-cua-so.png`. Chọn **giảm sáng** (không dời cụm – tháp vẫn đứng sau ván một chiều, chỗ không có quái):
+mảnh tháp ở B được **nén vùng sáng** (điểm sáng hơn ngưỡng 92 chỉ giữ 30 % phần trên ngưỡng, giảm bão hoà 55 %) + al 0,88. Cửa sổ / lan can còn đọc
+được nhưng không còn là điểm sáng nhất sau giữa sân. A giữ cửa sổ vàng (A, F cần ấm). `?thapB=cu` để so.
+Mảnh nén dựng 1 lần lúc nạp rồi đổi thành **ảnh** (`DHM.taoGiam`): để canvas thì Chromium thu nhỏ lại mỗi khung, đo **+1,8–2 ms / khung** ở B; đổi sang ảnh thì hết.
+
+### B3.5 Gợi ý ngắn theo tình huống (thay dòng hướng dẫn dài đầu màn)
+
+Vào phòng: chỉ **tên phòng 2,5 s**. Sau đó màn **không có chữ**, trừ khi xảy ra tình huống (hiện tối thiểu 1 s, tối đa 3,3 s, cùng câu không lặp trong 15 s):
+
+| Tình huống | Câu |
+|---|---|
+| gần chuông lưu chưa bật | Chạm chuông: lưu + hồi máu |
+| A, gần hình nộm chưa chém | Bấm Chém vào hình nộm để xem số |
+| B, Chuông Gỗ đang lấy đà trong 320 px | Lóe vàng = sắp đập · Lướt né |
+| C, quái gác thức trong 300 px | Vỏ cứng · nhát 3 làm nứt mạnh |
+| D, Bọ còn mai, Lam ở phía trước | Mai cứng phía trước · vòng ra sau |
+| D, Bọ vỡ mai đang sụp | Mai vỡ · đánh lúc nó sụp |
+| F, cạnh đe | Đe rèn · nâng cấp ở bản P0-C |
+
+Câu không kèm tên phòng (bản cũ: "TÊN PHÒNG" + câu dài). Nút được nhắc vẫn sáng viền như cũ. `?goiy=cu` = dòng cũ.
+Dòng phím ở đáy màn (chỉ hiện khi dùng bàn phím) chưa đổi.
+
+### B3.6 Xem gì (`xem-thu/buoc-3/`)
+
+| File | Nội dung |
+|---|---|
+| `ghep-phong-def[-xam].png`, `phong-{d,e,f}[-xam].png` | 960×540: D Lam trước Bọ đang báo húc + Bọ 2; E sân trống; F chuông đã lưu, Lam cạnh đe (đang rèn) |
+| `iphone-844x390-{d,e,f}.png` | giả lập iPhone ngang @3x, HUD + nút + gợi ý; vùng chạm giữ nguyên (`so-do.json` → `buoc_3.iphone`) |
+| `lam-d-e-f-60fps.mp4` | 17,7 s, 60 hình/s, H.264 `-preset veryfast`: bot đánh gục 2 Bọ (vỡ mai → sụp → chết), qua E, tới đe (đe nóng lên) |
+| `cuon-cham-a-f-60fps.mp4` | 48,4 s cuộn chậm A → F (mục B3.2) |
+| `ranh-*.png`, `bo-*.png`, `thap-b-*.png` | B3.2, B3.3, B3.4 |
+
+Chạy lại: `python3 -B game/thu-phong-b/cong-cu/chup-va-quay.py phong-def iphone-def bo-nen thap-b do-def ranh video-def` (`soi` = chỉ soi ranh, không quay).
+Chỉ chụp / quay / ghi số, **không phải kiểm thử tự động**.
+
+### B3.7 Đo (`so-do.json` → `buoc_3.do_ve`; Chromium headless, máy không GPU – **chưa đo iPhone**)
+
+| Vẽ 1 khung, đứng yên 300 khung (ms) | tb | 95 % |
+|---|---|---|
+| A | 7,5 | 9,9 |
+| B | 3,2 | 7,6 |
+| C | 10,1 | 13,3 |
+| D (2 Bọ tuần tra) | 7,1 | 11,2 |
+| E | 4,5 | 7,9 |
+| F | 7,2 | 9,0 |
+
+Máy đo lần này chậm hơn lần bước 2: trang bước 2 đo lại cùng lúc được A 7,5–8,0 / B 2,9–4,3 / C 10,3–11,9 (bước 2 ghi 4,1 / 1,7 / 4,6) → so trong cùng bảng này, không so với B2.3.
+Nạp: nướng đất **A–F 75 ms** (1473 lệnh → 64 mảng); **bộ nhớ**: ảnh địa hình giải mã 23,8 MB + **mảng nướng 20,1 MB** (A–C: 12,9) – trên iPhone cần để ý;
+cách giảm như B2.3 (nướng 1,5x, hoặc chỉ nướng phòng đang ở ± 1). Khối màu HM ~1,3 s như cũ.
+
+### B3.8 Ghi lại – CHƯA làm, không gen
+
+- **Nhịp lặp sàn**: hàng sàn dài D / E (30 ô liền) vẫn nhận ra vòm rễ lặp 128 logic (3 đoạn). Sửa sau bằng **biến thể mảng lớn** (đoạn 256–384 logic
+  ghép từ ảnh hiện có / ảnh gen thêm), không phủ thêm chi tiết dày.
+- Nếu gen tiếp, chỉ ưu tiên (mẫu đính kèm: `bo-dat-3x3.png` + ảnh chụp phòng D, nền trắng, không chữ):
+  1. **Bệ rễ mỏng, bụng ít rêu**: *"2D side-view thin root ledge matching the attached terrain: left cap, repeatable middle, right cap, flat top, thin underside with very little moss, pure white background, no text."*
+  2. **Góc lõm theo khuôn** (`khuon/goc-lom-*.png`): *"Fill the attached template exactly: inner corner where a root floor meets a root wall, same texture and scale as the attached tiles, nothing outside the template, pure white outside."*
+  3. **1–2 biến thể mặt sàn / vân lớn**: *"One wide repeatable floor top strip (4× the attached piece's width) matching the attached root terrain, flat standing line, sparse moss, varied large root pattern, pure white background."*
+- Bệ mỏng 1 ô, trần C, giá ván: như B2.4 (chưa đổi).
 
 ## Bước 2 (28/10) – bộ đất mới từ ảnh gen, áp cho A + B + C, điểm lưu + hình nộm mới
 

@@ -24,7 +24,13 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 
 ## Bản 5 – theo phản hồi 7 (`docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` mục 3, mục 4 dòng Bọ)
 
-**Nhịp chơi không đổi:** quay lại 3 video, trạng thái Bọ từng bước trong `so-lieu.json` → `video` **trùng khít** bản 4 (715 / 1069 / 912 khung).
+**Video không đổi, nhưng luật số KHÔNG chỉ là nhân thang** (sửa câu "nhịp chơi không đổi" theo phản hồi 8 mục 4): quay lại 3 video, trạng thái Bọ
+từng bước trong `so-lieu.json` → `video` **trùng khít** bản 4 (715 / 1069 / 912 khung) – vì 3 chuỗi đòn trong video không dùng tới hai chỗ đổi dưới đây:
+- **Nhát 3 vào mai đổi tỷ lệ**: bản 4 trừ 2 / 4 nấc mai (50 %), bản 5 trừ **30 / 40 Thế (75 %)** – không phải 2 × 10. Combo 1-2-3 vẫn vỡ mai ở nhát 3 như cũ,
+  nhưng chuỗi khác mạnh hơn trước: **nhát 3 + 1 đòn thường** đã vỡ mai (bản 4 cần nhát 3 + 2 đòn, hoặc 2 nhát 3).
+- **Bóng**: hệ số danh nghĩa `BONG_MAU` 0,25 nhưng máu làm tròn xuống: floor(10 × 0,25) = floor(2,5) = **2 máu = 20 %** nhát Lam (không phải 25 %);
+  bản 4 bóng = 1 máu = bằng Lam (100 %). Thế bóng: floor(10 × 0,5) = 5 (đúng 50 %), nhát 3: floor(30 × 0,5) = 15 (50 %).
+  Cân bằng bóng theo **số thực sau làm tròn** (2 / 10 máu), không theo hệ số 0,25.
 
 ### 5a. Thang máu / Thế ×10 + công thức chung (mục 4: "không bê nguyên máu 4 rồi dùng sát thương bóng tối thiểu 1")
 Số / luật Bọ gom vào **một khối dữ liệu** đầu `cong-cu/khoi-bo.js`: `LOAI_QUAI.bo` (= `BO_LOAI`, Thế = `THE_BO`), cùng dạng `LOAI_QUAI` của P0-A
@@ -38,8 +44,8 @@ trang thử này không có P0-A → `BO_CFG` chép đúng các hệ số chung 
 | Mai | 4 nấc | **Thế 40** (`mat` – chỉ che phía trước, `phaMotLan`) | thanh vẫn vẽ 4 ô (10 Thế / ô), chấm máu 4 chấm (10 máu / chấm) |
 | Lam đòn thường vào **bụng** | −1 | **−10** | **4 nhát** chết (như cũ) |
 | Lam đòn thường vào **mai** | 0 máu, mai −1 | 0 máu, **Thế −10** | **4 đòn** vỡ mai (như cũ) |
-| Lam **nhát 3** vào mai | mai −2 | **Thế −30** | nhanh hơn: **nhát 3 + 1 đòn thường** = vỡ (cũ: cần 2 nhát 3 hoặc nhát 3 + 2 đòn). Combo 1-2-3 vẫn vỡ ở nhát 3 |
-| **Bóng** vào bụng / mai đã vỡ | −1 (**bằng Lam**) | **−2** = floor(10 × 0,25), tối thiểu 1 chỉ khi gốc > 0 và không bị chặn | bóng = 1/5 Lam |
+| Lam **nhát 3** vào mai | mai −2 / 4 (50 %) | **Thế −30 / 40 (75 %)** – đổi tỷ lệ, không chỉ nhân thang | nhanh hơn: **nhát 3 + 1 đòn thường** = vỡ (cũ: cần 2 nhát 3 hoặc nhát 3 + 2 đòn). Combo 1-2-3 vẫn vỡ ở nhát 3 |
+| **Bóng** vào bụng / mai đã vỡ | −1 (**bằng Lam**) | **−2** = floor(10 × 0,25 = 2,5), tối thiểu 1 chỉ khi gốc > 0 và không bị chặn | bóng = **20 %** Lam (hệ số danh nghĩa 0,25, làm tròn xuống) |
 | Bóng vào mai còn | mai −1 | **0 máu**, Thế −5 (nhát 3: −15) | |
 | Cộng hưởng | +1 máu + vỡ mai | **+10** = floor(`CH_MAU` × máu gốc nhát Lam) + vỡ mai ngay (mai đã vỡ: chỉ +10) | cùng tỉ lệ |
 | Đòn húc của Bọ | 1 máu Lam | `goc` [1, 0] (thang máu Lam như Chuông Gỗ P0-A) | như cũ |

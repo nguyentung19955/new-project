@@ -31,6 +31,9 @@
      DHM.veNen(ctx, ox, oy, K, W, H, camx, rc, ch)   vẽ nền xa + nền giữa thưa (ch = cấu hình phòng: {giua:[{m, x}], sanY})
      DHM.taoDen(p, cao) / DHM.veDen(ctx, ox, oy, ds, frame)   đèn lồng cũ: giảm nét, thu cỡ, quầng nhỏ vẽ SAU địa hình + nhân vật (d.tran: dây từ trần)
      DHM.coDoVat() / DHM.veDiemLuu(ctx, X, Y, on, xoay) / DHM.veNomMoi(ctx, x, y, lac, sang)   đồ vật phòng A mới (neo giữa đáy)
+     DHM.coDeRen() / DHM.veDeRen(ctx, X, Y, nong, frame)   bước 3: đe rèn phòng F (neo giữa đáy; nong 0..1 hoà nguội → đang rèn + quầng lò nhỏ)
+     nền giữa: mảnh có p.giam = {nguong, k, bh} → bản NÉN VÙNG SÁNG (cửa sổ, ban công): await DHM.taoGiam(m, giam) lúc nạp (thành Image);
+        thiếu thì dựng canvas ở lần vẽ đầu. Không xử lý điểm ảnh mỗi khung
      opt thêm: boCu (đường cũ bước 1), daLaDat (false: ô 'S' vẽ đá cũ), lop ([0..4]: chỉ nướng các lớp này – để soi lỗi)
    Không xử lý điểm ảnh mỗi khung: mọi mask / giảm nét làm 1 lần lúc dựng. */
 const DHM = (() => {
@@ -51,6 +54,7 @@ const DHM = (() => {
     const ds = {xa: M.nen.xa, giua: M.nen.giua, mat: M.mat_tren, than: M.than, tt: M.trang_tri};
     if (M.bo_moi) ds.dat = M.bo_moi;          // bộ đất mới (ảnh gen chủ dự án) – code/tao-bo-moi.py
     if (M.do_vat_a) ds.dv = M.do_vat_a;       // điểm lưu + hình nộm mới
+    if (M.do_vat_f) ds.dvf = M.do_vat_f;      // bước 3: đe rèn phòng F (code/tao-do-vat-f.py)
     let px = 0;
     await Promise.all(Object.entries(ds).map(async ([k, d]) => {
       const im = await anh(goc + d.tep);
@@ -272,6 +276,9 @@ const DHM = (() => {
     const MAP = new Map();
     for (const o of ops) {
       const r = o.c ? [Math.max(o.x, o.c[0]), Math.max(o.y, o.c[1]), Math.min(o.x + o.w, o.c[2]), Math.min(o.y + o.h, o.c[3])] : [o.x, o.y, o.x + o.w, o.y + o.h];
+      // bước 3: cắt ở mép thế giới (0 … WW·T) – phần dải mép lố ra ngoài thế giới (trong suốt dần) làm điểm ảnh CUỐI màn ở phòng F
+      // bị pha nền khi vẽ phóng (K = 2,17 / 3): đo bằng TVPB.soiRanh, 70–96 điểm ở cột cuối → 0 sau khi cắt
+      r[0] = Math.max(r[0], 0); r[2] = Math.min(r[2], opt.WW * T);
       if (r[2] <= r[0] || r[3] <= r[1]) continue;
       for (let cy = Math.floor(r[1] / CHH); cy * CHH < r[3]; cy++) for (let cx = Math.floor(r[0] / CW); cx * CW < r[2]; cx++) {
         const key = cx + ',' + cy; let m = MAP.get(key); if (!m) MAP.set(key, m = {cx, cy, ops: [], bb: [1e9, 1e9, -1e9, -1e9]});
@@ -345,6 +352,39 @@ const DHM = (() => {
     if (sang > 0) { const b = K['nom-sang']; ctx.globalAlpha = Math.min(1, sang); ctx.drawImage(IMG.dv, b[0], b[1], b[2], b[3], -w / 2, -h, w, h); }
     ctx.restore();
   }
+  /* bước 3 – đe rèn phòng F (do-vat-f.png): nguội, rồi bản "đang rèn" phủ lên theo nong; quầng ấm nhỏ ở lò than (cộng sáng, nằm trong khối đe) */
+  function coDeRen() { return !!(bat && IMG.dvf && M.do_vat_f); }
+  function veDeRen(ctx, X, Y, nong, frame) {
+    const D = M.do_vat_f, a = D.khung['de-nguoi'], b = D.khung['de-nong'], w = a[2] / 2, h = a[3] / 2, x0 = X - w / 2, y0 = Y - h;
+    ctx.drawImage(IMG.dvf, a[0], a[1], a[2], a[3], x0, y0, w, h);
+    if (nong <= 0.002) return;
+    ctx.globalAlpha = Math.min(1, nong); ctx.drawImage(IMG.dvf, b[0], b[1], b[2], b[3], x0, y0, w, h); ctx.globalAlpha = 1;
+    const lx = X + D.lo[0], ly = Y + D.lo[1], r = 15 + 2 * Math.sin((frame || 0) * 0.11) + Math.sin((frame || 0) * 0.37);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const g = ctx.createRadialGradient(lx, ly, 1, lx, ly, r);
+    g.addColorStop(0, 'rgba(255,150,70,' + (0.34 * nong).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,110,40,0)');
+    ctx.fillStyle = g; ctx.fillRect(lx - r, ly - r, r * 2, r * 2); ctx.restore();
+  }
+  /* bước 3 – nền giữa: mảnh NÉN VÙNG SÁNG (p.giam = {nguong 0..255, k: giữ bao nhiêu phần sáng trên ngưỡng, bh: bão hoà vùng đó}).
+     Dựng 1 lần (cache theo khoá), dùng cho cửa sổ / ban công sau giữa sân B. */
+  const GIAM = new Map();
+  function mangGiam(m, f, gm) {
+    const key = m + ':' + gm.nguong + ':' + gm.k + ':' + gm.bh; let c = GIAM.get(key); if (c) return c;
+    c = canvas(f[2], f[3]); const g = c.getContext('2d', {willReadFrequently: true}); g.drawImage(IMG.giua, f[0], f[1], f[2], f[3], 0, 0, f[2], f[3]);
+    let id; try { id = g.getImageData(0, 0, f[2], f[3]); } catch (e) { GIAM.set(key, c); return c; }
+    const d = id.data, t = gm.nguong, k = gm.k, bh = gm.bh === undefined ? 1 : gm.bh;
+    for (let i = 0; i < d.length; i += 4) { if (!d[i + 3]) continue;
+      const L = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]; if (L <= t) continue;
+      const u = Math.min(1, (L - t) / 40), s2 = (t + (L - t) * k) / L, bb = 1 - (1 - bh) * u;
+      for (let j = 0; j < 3; j++) { const v = d[i + j] * s2, Lm = L * s2; d[i + j] = Lm + (v - Lm) * bb; } }
+    g.putImageData(id, 0, 0); GIAM.set(key, c); return c;
+  }
+  /* gọi lúc nạp (await): dựng mảng nén sáng rồi đổi sang ẢNH (Image) – vẽ canvas thu nhỏ chất lượng cao mỗi khung chậm hơn ảnh
+     (Chromium giữ sẵn bản thu nhỏ của ảnh, không giữ của canvas: đo +1,8–2 ms/khung ở phòng B) */
+  async function taoGiam(m, gm) {
+    const f = M.nen.giua.khung[m]; if (!f || !bat) return;
+    const c = mangGiam(m, f, gm), key = m + ':' + gm.nguong + ':' + gm.k + ':' + gm.bh;
+    try { const bl = await new Promise(r => c.toBlob(r, 'image/png')); if (!bl) return; const u = URL.createObjectURL(bl), im = await anh(u); URL.revokeObjectURL(u); GIAM.set(key, im); } catch (e) {}
+  }
   function coCot(tx) { return !!(bat && COT && COT.has(tx)); }
 
   /* ---------- vẽ ---------- */
@@ -391,8 +431,10 @@ const DHM = (() => {
       const w = f[2] / 2, h = f[3] / 2, gx = p.x - (p.rc === undefined ? dx : camx - p.rc) * G.he_so; if (gx > W || gx + w < 0) continue;
       const al = (p.al === undefined ? 1 : p.al) * (p.w === undefined ? 1 : p.w); if (al <= 0.003) continue;
       ctx.globalAlpha = al;
-      if (p.lat) { ctx.save(); ctx.translate(Math.round((gx + w) * K) / K, 0); ctx.scale(-1, 1); ctx.drawImage(IMG.giua, f[0], f[1], f[2], f[3], 0, Math.round(y0 * K) / K, w, h); ctx.restore(); }
-      else ctx.drawImage(IMG.giua, f[0], f[1], f[2], f[3], Math.round(gx * K) / K, Math.round(y0 * K) / K, w, h);
+      const im = p.giam ? mangGiam(p.m, f, p.giam) : IMG.giua, sx = p.giam ? 0 : f[0], sy = p.giam ? 0 : f[1];
+      const yy = Math.round((y0 + (p.dy || 0)) * K) / K;   // p.dy: dời mảnh lên / xuống (bước 3)
+      if (p.lat) { ctx.save(); ctx.translate(Math.round((gx + w) * K) / K, 0); ctx.scale(-1, 1); ctx.drawImage(im, sx, sy, f[2], f[3], 0, yy, w, h); ctx.restore(); }
+      else ctx.drawImage(im, sx, sy, f[2], f[3], Math.round(gx * K) / K, yy, w, h);
       ctx.globalAlpha = 1; }
     return true;
   }
@@ -427,5 +469,5 @@ const DHM = (() => {
       ctx.save(); ctx.translate(x + sw, top); ctx.rotate(sw * 0.01); ctx.drawImage(DEN.c, -DEN.ax, 0, DEN.w, DEN.h); ctx.restore();
     }
   }
-  return {SO, IMG, nap, dung, coCot, veDat, veNen, taoDen, veDen, coDoVat, veDiemLuu, veNomMoi, get CHK() { return CHK; }, get bat() { return bat; }, get M() { return M; }, get L() { return L; }, get VIEN() { return VIEN; }};
+  return {SO, IMG, nap, dung, coCot, veDat, veNen, taoDen, veDen, coDoVat, veDiemLuu, veNomMoi, coDeRen, veDeRen, taoGiam, get CHK() { return CHK; }, get bat() { return bat; }, get M() { return M; }, get L() { return L; }, get VIEN() { return VIEN; }};
 })();

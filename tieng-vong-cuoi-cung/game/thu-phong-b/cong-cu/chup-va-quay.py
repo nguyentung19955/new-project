@@ -4,7 +4,9 @@ Không phải kiểm thử tự động: chỉ chụp, quay, ghi số đo để 
   TRƯỚC = game/thu-p0a/index.html (phòng B như hiện tại)   SAU = game/thu-phong-b/index.html
 Cần playwright + Chromium + ffmpeg + Pillow.
 Chạy: python3 -B game/thu-phong-b/cong-cu/chup-va-quay.py [mep] [anh] [iphone] [do] [video] [phong] [iphone-phong] [do-phong] [video-abc]
-     (không ghi gì = làm hết). Bước 2: phong / iphone-phong / do-phong / video-abc = 3 phòng A, B, C."""
+     (không ghi gì = làm hết). Bước 2: phong / iphone-phong / do-phong / video-abc = 3 phòng A, B, C.
+     Bước 3 (D / E / F): phong-def iphone-def do-def video-def ranh bo-nen thap-b
+       (ranh = video cuộn chậm A → F + soi ranh mảng nướng; bo-nen = Bọ trên nền D, màu + xám; thap-b = cửa sổ tháp phòng B trước / sau)."""
 import asyncio, base64, functools, http.server, io, json, os, socketserver, subprocess, sys, threading, time
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -279,6 +281,188 @@ async def do_ve_phong(p, cong):
     print('đo phòng', json.dumps(kq, ensure_ascii=False)); return kq
 
 
+# ---------------- BƯỚC 3: phòng D / E / F ----------------
+OUT3 = os.path.join(OUT, 'buoc-3'); os.makedirs(OUT3, exist_ok=True)
+CANH_DEF = {
+    # D: Lam trước mặt Bọ 1 (Bọ đang BÁO TRƯỚC húc: cúi đầu, lóe cam đỏ, "!"), Bọ 2 đi phía sau
+    'd': ('d', '''(async () => { const b = BO.DS[0], c = BO.DS[1]; TVP0.datLam((PD.x0 + 8) * T, 1);
+      b.x = b.px = (PD.x0 + 12) * T - b.w / 2; b.face = -1; b.st = 'di'; b.t = 0; b.cd = 999; c.x = c.px = (PD.x0 + 22) * T - c.w / 2; c.face = -1; c.cd = 999;
+      for (let i = 0; i < 40; i++) { TVP0.khung(1, ''); b.x = b.px = (PD.x0 + 12) * T - b.w / 2; b.cd = 999; c.cd = 999; }
+      b.st = 'bao'; b.t = 0; b.cd = 0; for (let i = 0; i < 14; i++) TVP0.khung(1, '');
+      return {f: S.frame, b: b.st + ':' + b.t, c: c.st, camx: S.camx}; })()'''),
+    # E: sân trống, Lam giữa sân
+    'e': ('e', '''(async () => { TVP0.datLam((PE.x0 + 13) * T, 1); for (let i = 0; i < 60; i++) TVP0.khung(1, ''); return {f: S.frame, camx: S.camx}; })()'''),
+    # F: chuông lưu đã bật, Lam đứng cạnh đe (đe đã nóng)
+    'f': ('f', '''(async () => { const bl = BELLS[4]; for (const x of BELLS) x.on = false; bl.on = true; S.cp = bl;
+      TVP0.datLam((PF.x0 + 9) * T + 18, -1); for (let i = 0; i < 70; i++) TVP0.khung(1, ''); return {f: S.frame, camx: S.camx, nong: TVPB.ttD().nong}; })()'''),
+}
+
+
+def luu_mx(im, ten):
+    im.save(os.path.join(OUT3, ten + '.png')); ImageOps.grayscale(im).save(os.path.join(OUT3, ten + '-xam.png'))
+
+
+async def anh_phong_def(p, cong):
+    kq = {}
+    for ph, (vao, js) in CANH_DEF.items():
+        b, pg, loi = await mo(p, cong, SAU, q='&vao=' + vao)
+        r = await pg.evaluate(js); kq[ph] = {'canh': r, 'loi': loi}
+        luu_mx(Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB'), 'phong-' + ph); await b.close()
+    for xam in (False, True):
+        g = Image.new('RGB', (960, 1620))
+        for j, ph in enumerate('def'):
+            a = Image.open(os.path.join(OUT3, 'phong-%s%s.png' % (ph, '-xam' if xam else ''))).convert('RGB')
+            g.paste(nhan(a, 'Phòng %s' % ph.upper() + (' – xám' if xam else ''), (127, 224, 200), 500), (0, 540 * j))
+        g.save(os.path.join(OUT3, 'ghep-phong-def%s.png' % ('-xam' if xam else '')))
+    print('ảnh D/E/F', json.dumps(kq, ensure_ascii=False)); return kq
+
+
+async def anh_iphone_def(p, cong):
+    kq = {}
+    for ph, (vao, js) in CANH_DEF.items():
+        b, pg, loi = await mo(p, cong, SAU, q='&vao=' + vao, vp=(844, 390), dsf=3, touch=True, an_ui=False)
+        await pg.evaluate(js)
+        await pg.screenshot(path=os.path.join(OUT3, 'iphone-844x390-%s.png' % ph))
+        kq[ph] = {'loi': loi, 'BK': await pg.evaluate('BK'), 'goi_y': await pg.evaluate('hintEl.textContent'),
+                  'vung_cham': await pg.evaluate('''[...document.querySelectorAll('#dpad,.ab')].map(e => { const r = e.getBoundingClientRect(); return [e.id, Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)]; })''')}
+        await b.close()
+    print('iphone D/E/F', json.dumps(kq, ensure_ascii=False)); return kq
+
+
+async def anh_bo_nen(p, cong):
+    """Bọ màu trầm trên nền D: cảnh D (báo húc) với nền D GỐC (al 1) và nền D đã GIẢM tương phản (al 0,8), cắt quanh Bọ, màu + xám,
+    + độ tương phản độ sáng Bọ / nền quanh Bọ (trung vị) để có số chứ không chỉ mắt nhìn"""
+    kq = {}; anh = {}
+    vao, js = CANH_DEF['d']
+    for ten, them in (('nen-goc', '&nenD=goc'), ('nen-giam', '')):
+        b, pg, loi = await mo(p, cong, SAU, q='&vao=d' + them)
+        await pg.evaluate(js)
+        hop = await pg.evaluate('''BO.DS.map(b => [Math.round(b.x - ox), Math.round(b.y - oy - 22), b.w, b.h + 22])''')
+        im = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB'); anh[ten] = (im, hop)
+        await pg.evaluate('TVP0.anUI(1); PBK.anBo = true; render(1)')   # cùng khung, KHÔNG vẽ Bọ → lấy nền thật sau Bọ
+        nen = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB')
+        await pg.evaluate('PBK.anBo = false')
+        import numpy as np
+        L = np.asarray(ImageOps.grayscale(im)).astype(float); Ln = np.asarray(ImageOps.grayscale(nen)).astype(float)
+        do = []
+        for (x, y, w, h) in hop:
+            m = np.abs(L[y:y + h, x:x + w] - Ln[y:y + h, x:x + w]) > 12          # điểm thuộc Bọ = khác ảnh không Bọ
+            if m.sum() < 50: continue
+            bo = np.median(L[y:y + h, x:x + w][m]); quanh = np.median(Ln[max(0, y - 30):y + h, max(0, x - 40):x + w + 40])
+            lech = float(np.std(Ln[max(0, y - 30):y + h, max(0, x - 40):x + w + 40]))   # độ lệch chuẩn độ sáng nền quanh Bọ = tương phản nền
+            do.append({'L_bo': round(float(bo), 1), 'L_nen_quanh': round(float(quanh), 1), 'chenh': round(float(bo - quanh), 1), 'do_lech_nen': round(lech, 1),
+                       'ti_le_weber': round(float((bo - quanh) / max(quanh, 1)), 2), 'phan_tram_diem_bo_sang_hon_nen': round(float((L[y:y + h, x:x + w][m] > quanh + 10).mean() * 100), 1)})
+        kq[ten] = {'loi': loi, 'do': do}; await b.close()
+    # ghép: 2 hàng (nền gốc / nền giảm) × (màu, xám), cắt 640×260 quanh 2 Bọ
+    g = Image.new('RGB', (1280, 520))
+    for j, ten in enumerate(('nen-goc', 'nen-giam')):
+        im, hop = anh[ten]; x0 = max(0, min(320, hop[0][0] - 120)); vung = (x0, 230, x0 + 640, 490)
+        a = im.crop(vung); x = ImageOps.grayscale(a).convert('RGB')
+        g.paste(nhan(a, ('Nền D gốc' if j == 0 else 'Nền D giảm tương phản (đang dùng)'), (255, 230, 160)), (0, 260 * j)); g.paste(nhan(x, 'xám'), (640, 260 * j))
+        luu_mx(im, 'bo-' + ten)
+    g.save(os.path.join(OUT3, 'bo-tren-nen-d-ghep.png'))
+    print('Bọ trên nền', json.dumps(kq, ensure_ascii=False)); return kq
+
+
+async def anh_thap_b(p, cong):
+    """phòng B: cùng cảnh chiến đấu, tháp nền chưa nén sáng (?thapB=cu) / đã nén sáng (mặc định) – màu + xám + phóng vùng cửa sổ"""
+    kq = {}; ims = {}
+    for ten, them in (('truoc', '&thapB=cu'), ('sau', '')):
+        b, pg, loi = await mo(p, cong, SAU, q=them)
+        kq[ten] = {'canh': await pg.evaluate(CANH + '(8)'), 'loi': loi}
+        im = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB'); ims[ten] = im; luu_mx(im, 'thap-b-' + ten); await b.close()
+    g = Image.new('RGB', (1920, 540)); g2 = Image.new('RGB', (1920, 540)); z = Image.new('RGB', (1280, 640))
+    for i, ten in enumerate(('truoc', 'sau')):
+        lb = 'TRƯỚC – cửa sổ sáng' if i == 0 else 'SAU – nén vùng sáng tháp'
+        g.paste(nhan(ims[ten].copy(), lb, (255, 230, 160), 500), (960 * i, 0)); g2.paste(nhan(ImageOps.grayscale(ims[ten]).convert('RGB'), lb + ' (xám)', (255, 255, 255), 500), (960 * i, 0))
+        z.paste(nhan(ims[ten].crop((400, 140, 720, 460)).resize((640, 640), Image.LANCZOS), lb), (640 * i, 0))
+    g.save(os.path.join(OUT3, 'thap-b-truoc-sau.png')); g2.save(os.path.join(OUT3, 'thap-b-truoc-sau-xam.png')); z.save(os.path.join(OUT3, 'thap-b-phong-cua-so.png'))
+    print('tháp B', kq); return kq
+
+
+def ffmpeg_ra(dst):
+    return subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', '60', '-c:v', 'mjpeg', '-i', '-',
+                             '-vf', 'format=yuv420p', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-r', '60', '-movflags', '+faststart', dst], stdin=subprocess.PIPE)
+
+
+async def ranh(p, cong, quay=True):
+    """(1) video cuộn chậm A → F: camera đặt thẳng, 1,5 px / khung (đi qua mọi ranh mảng 256 × 128), Lam đứng ở A, ẩn UI.
+       (2) soi ranh: ở nhiều vị trí camera lẻ × tỉ lệ K (1 / 1,5 / 2 / 2,1656 = iPhone 844×390@3x / 3) vẽ riêng lớp đất trên nền đen + trắng,
+           đếm điểm hở trong ô đặc (phải = 0) + ảnh phóng 4× quanh giao điểm ranh mảng."""
+    b, pg, loi = await mo(p, cong, SAU, q='&vao=a')
+    gi = await pg.evaluate('TVPB.gioi()')
+    dst = os.path.join(OUT3, 'cuon-cham-a-f-60fps.mp4'); ff = ffmpeg_ra(dst) if quay else None
+    x = gi['a0']; n = 0
+    while quay and x <= gi['cF']:
+        await pg.evaluate('(x) => TVPB.datCam(x)', x)
+        im = Image.open(io.BytesIO(await pg.screenshot(type='jpeg', quality=95))); bb = io.BytesIO(); im.save(bb, 'JPEG', quality=95); ff.stdin.write(bb.getvalue())
+        x += 1.5; n += 1
+    if ff: ff.stdin.close(); ff.wait()
+    kq = {} if not quay else {'video': {'file': 'buoc-3/' + os.path.basename(dst), 'khung': n, 'giay': round(n / 60, 2), 'px_moi_khung': 1.5, 'tu': gi['a0'], 'den': gi['cF']}}
+    # soi ranh
+    soi = []; tong = {}
+    import random; rd = random.Random(20261029)
+    xs = [min(gi['cF'], gi['a0'] + i * (gi['cF'] - gi['a0']) / 47 + rd.random() * 3) for i in range(48)]   # camera game không vượt mép phải F
+    for K in (1, 1.5, 2, 2.165625, 3):
+        ho = ranh_ho = 0
+        for cx in xs:
+            r = await pg.evaluate('([cx, K]) => { const r = TVPB.soiRanh(cx, 0, K, false); delete r.url; return r; }', [cx, K])
+            ho += r['ho']; ranh_ho += r['ranh']
+            if r['ho']: soi.append(r)
+        tong[str(K)] = {'vi_tri': len(xs), 'diem_ho_trong_o_dac': ho, 'trong_do_sat_ranh_mang': ranh_ho}
+    kq['soi'] = {'tong': tong, 'chi_tiet_cho_ho': soi[:20]}
+    # ảnh phóng 4× quanh giao điểm ranh mảng ở 4 chỗ (sàn B, trần C, tường A, sàn E) × K 2,1656 (iPhone) và 2
+    anh = []
+    for ten, cx, gy in (('san-b', gi['phong'][1][1] + 300.37, 512), ('tran-c', gi['phong'][2][1] + 64.61, 128), ('san-d', gi['phong'][3][1] + 0.5, 512), ('san-e', gi['phong'][4][1] + 130.83, 512)):
+        for K in (2, 2.165625):
+            r = await pg.evaluate('([cx, K, gy]) => TVPB.soiRanh(cx, 0, K, gy)', [cx, K, gy])
+            f = 'ranh-%s-k%s.png' % (ten, str(K).replace('.', '_')); open(os.path.join(OUT3, f), 'wb').write(base64.b64decode(r['url'].split(',')[1])); anh.append([f, r['ho']])
+    # thêm: ranh trần C (ranh dọc + ngang trong khối thân dày) – chọn đúng giao điểm (x bội 256, y = 128) trong trần
+    kq['anh_phong'] = anh; kq['loi_trang'] = loi
+    await b.close()
+    print('ranh', json.dumps(kq, ensure_ascii=False)[:3000]); return kq
+
+
+TT_D = 'TVPB.ttD()'
+
+
+def bot_d(s, i, nho):
+    x = s['x']; song = [b for b in s['bo'] if not b['chet']]
+    if s['room'] == s['pd'] and song:
+        tg = min(song, key=lambda b: abs(b['x'] - x)); dx = tg['x'] - x
+        if abs(dx) > 72: return 'r' if dx > 0 else 'l'
+        if (s['face'] > 0) != (dx > 0): return 'r' if dx > 0 else 'l'
+        return 'a' if i % 2 == 0 else ''
+    if s['room'] != s['pf'] or s['de'] - x > 40: return 'r'
+    nho['de'] = nho.get('de', 0) + 1
+    return ''
+
+
+async def video_def(p, cong):
+    b, pg, loi = await mo(p, cong, SAU, q='&vao=d')
+    dst = os.path.join(OUT3, 'lam-d-e-f-60fps.mp4'); ff = ffmpeg_ra(dst)
+    n = 0; nho = {}; ghi = []
+    while n < 3000:
+        s = await pg.evaluate(TT_D); k = bot_d(s, n, nho)
+        if n % 30 == 0: ghi.append([n, s['room'], round(s['x']), [(bb['st'], bb['hp'], bb['mai']) for bb in s['bo']], s['nong'], s['goiy']])
+        if nho.get('de', 0) > 150: break
+        await pg.evaluate('(k) => TVP0.khung(1, k)', k)
+        im = Image.open(io.BytesIO(await pg.screenshot(type='jpeg', quality=92))); bb = io.BytesIO(); im.save(bb, 'JPEG', quality=92); ff.stdin.write(bb.getvalue()); n += 1
+    ff.stdin.close(); ff.wait(); await b.close()
+    print('video D→F', n, loi); return {'file': 'buoc-3/' + os.path.basename(dst), 'khung': n, 'giay': round(n / 60, 2), 'loi_trang': loi, 'nhat_ky_30_khung': ghi}
+
+
+async def do_ve_def(p, cong):
+    kq = {'ghi_chu': 'Chromium headless, máy chủ Linux KHÔNG GPU, 960×540 dsf 1, đứng yên 300 khung (D: 2 Bọ tuần tra). CHƯA đo trên iPhone thật.'}
+    b, pg, loi = await mo(p, cong, SAU)
+    for ph, x in (('a', '(PA.x0 + 6) * T'), ('b', '(PB.x0 + 9) * T'), ('c', '(PC.x0 + 8) * T'), ('d', '(PD.x0 + 3) * T'), ('e', '(PE.x0 + 13) * T'), ('f', '(PF.x0 + 9) * T')):
+        await pg.evaluate('TVP0.datLam(%s, 1)' % x)
+        kq[ph] = await pg.evaluate('''(() => { DO.reset(); for (let i = 0; i < 300; i++) { savePrev(); step(); render(1); }
+          const a = DO.ds.slice().sort((p, q) => p - q); return {n: a.length, tb: +(DO.tong / DO.n).toFixed(3), p50: +a[a.length >> 1].toFixed(3), p95: +a[Math.floor(a.length * 0.95)].toFixed(3), max: +DO.max.toFixed(3)}; })()''')
+    kq['nap'] = await pg.evaluate('TVPB.so()'); kq['loi'] = loi; await b.close()
+    print('đo D/E/F', json.dumps(kq, ensure_ascii=False)); return kq
+
+
 async def main(viec):
     s, cong = server()
     so_path = os.path.join(OUT, 'so-do.json')
@@ -293,6 +477,15 @@ async def main(viec):
         if 'iphone-phong' in viec: so['iphone_phong'] = await anh_iphone_phong(p, cong)
         if 'do-phong' in viec: so['do_phong'] = await do_ve_phong(p, cong)
         if 'video-abc' in viec: so['video_abc'] = await video_abc(p, cong)
+        b3 = so.setdefault('buoc_3', {})
+        if 'phong-def' in viec: b3['phong'] = await anh_phong_def(p, cong)
+        if 'iphone-def' in viec: b3['iphone'] = await anh_iphone_def(p, cong)
+        if 'bo-nen' in viec: b3['bo_nen'] = await anh_bo_nen(p, cong)
+        if 'thap-b' in viec: b3['thap_b'] = await anh_thap_b(p, cong)
+        if 'do-def' in viec: b3['do_ve'] = await do_ve_def(p, cong)
+        if 'ranh' in viec: b3['ranh'] = await ranh(p, cong)
+        if 'soi' in viec: b3.setdefault('ranh', {}).update(await ranh(p, cong, quay=False))   # chỉ soi ranh, không quay lại video
+        if 'video-def' in viec: b3['video'] = await video_def(p, cong)
     so['ngay'] = time.strftime('%Y-%m-%d %H:%M')
     json.dump(so, open(so_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     s.shutdown()
