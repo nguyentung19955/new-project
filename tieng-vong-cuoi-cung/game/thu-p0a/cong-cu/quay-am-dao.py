@@ -2,6 +2,7 @@
 """Quay video + đo trang thử Âm Đao cấp 1–4 (game/thu-p0a/am-dao.html) → game/thu-p0a/video-am-dao/
   VIDEO SẠCH (không log, không hộp đòn – để xem CẢM GIÁC): 4 ô cùng lúc cấp 1 | 2 | 3 | 4, cùng phòng, cùng đối thủ, cùng kịch bản bấm
   VIDEO DEBUG (hộp đòn + log – để KIỂM LUẬT): giữ/nhả, vết Dư Âm, chống proc, Cộng hưởng, debug chậm ¼
+  PH7: ph7 (tạm dừng / mất focus / chuyển tab, lướt huỷ & hồi chiêu, mục tiêu sau lưng), vung (bản đồ VFX phủ hộp), tudo (chiến đấu tự do 4 cấp)
 60 hình/s, H.264 -preset veryfast; mỗi hình = 1 bước logic (debug chậm: 4 hình / bước). Đầu vào do kịch bản bấm phím giả.
 Không phải bộ kiểm thử tự động: chỉ quay + ghi số đo / log ra file để chủ dự án xem.
 Chạy: python3 -B game/thu-p0a/cong-cu/quay-am-dao.py [sach debug cham do ...]   (cần playwright, Chromium, ffmpeg, Pillow)"""
@@ -151,7 +152,7 @@ async def quay_4o(b, cong, ten, phan, sach=True):
         for j, t in enumerate(T4):
             tk = await t.js('Object.assign(TVAD.tk(), {trungLam: TVP0.tk().trung})')
             nom = await t.js('(Q[6].n10||[]).reduce((a,r)=>a+r[1],0)')
-            kq.setdefault(tieu_de, {})['cap%d' % (j + 1)] = {'tick_chet': S[j].get('fchet'), 'tong_hinh_nom_10s': nom, 'tk': tk, 'thieu_ket_cuc': (await t.js('TVP0.tk()'))['thieu']}
+            kq.setdefault(tieu_de, {})['cap%d' % (j + 1)] = {'tick_chet': S[j].get('fchet'), 'bot': S[j].get('so'), 'tong_hinh_nom_10s': nom, 'tk': tk, 'thieu_ket_cuc': (await t.js('TVP0.tk()'))['thieu']}
             logs[j + 1] += ['== ' + tieu_de] + await t.js('TVP0.log()')
             await t.js('TVP0.xoaLog()')
     ff.stdin.close(); ff.wait()
@@ -427,10 +428,11 @@ async def do_so(b, cong):
     await t.js('TVP0.datLaiQuai(6); TVP0.datLam(%s-200,1); TVP0.xoaLog()' % NOM)
     for _ in range(3): await t.buoc()
     an = {}
-    for ten, phim_dau, so in (('atk1', 'a', 30), ('atk5', 'au', 30), ('atk6', 'ja', 40), ('chem_vang_7', 'a', 70)):
+    for ten, phim_dau, so in (('atk1', 'a', 30), ('atk5', 'au', 30), ('atk6', 'ja', 40), ('atk4_nay', 'da', 50), ('chem_vang_7', 'a', 70)):
         await t.js('TVAD.hoiNgay()'); ve = []
         for i in range(so):
             if ten == 'atk6': k = 'j' if i < 8 else ('ja' if i == 8 else ('j' if i < 14 else ''))
+            elif ten == 'atk4_nay': k = 'j' if i < 10 else ('d' if i < 14 else ('da' if i == 14 else 'd'))   # PH7: đòn nảy (pogo) – nhảy, giữ xuống, Chém
             elif ten == 'chem_vang_7': k = 'a' if i < 30 else ''
             else: k = phim_dau if i == 0 else ''
             await t.js('AD.batDo()'); await t.buoc(k); ve += [d for d in (await t.js('AD.layDo()') or [])]
@@ -458,15 +460,171 @@ async def do_so(b, cong):
     return kq
 
 
+# ================================================================== PHẢN HỒI 7 (28/10)
+# ---- mục 7–8: đo vùng hộp có VFX không (canh_vung) – ảnh bản đồ phủ + số
+DON_VUNG = [
+    ('atk1 nhát 1', 1, lambda i: 'a' if i == 0 else '', 40),
+    ('atk2 nhát 2', 2, lambda i: 'a' if i in (0, 9) else '', 50),
+    ('atk3 nhát 3', 3, lambda i: 'a' if i in (0, 9, 24) else '', 75),
+    ('atk4 nảy (pogo)', 4, lambda i: 'j' if i < 10 else ('d' if i < 14 else ('da' if i == 14 else 'd')), 50),
+    ('atk5 hất', 5, lambda i: 'au' if i == 0 else '', 40),
+    ('atk6 trên không', 6, lambda i: 'j' if i < 8 else ('ja' if i == 8 else ('j' if i < 14 else '')), 40),
+    ('atk7 chém vang (cú quét thấp)', 7, lambda i: 'a' if i < 30 else '', 70),
+]
+
+
+async def canh_vung(b, cong):
+    import base64
+    t = await Trang(b, cong, 3, True).mo(); kq = {}; anh = []
+    for ten, n, kb, so in DON_VUNG:
+        await t.js('TVP0.datLaiQuai(6); TVP0.datLam((PA.x0+10)*T-250,1); TVAD.hoiNgay(); TVAD.phuMoi()')
+        for _ in range(5): await t.buoc()
+        for i in range(so):
+            await t.buoc(kb(i)); await t.js('TVAD.phuDon(%d)' % n)
+        kq[ten] = await t.js('TVAD.phuKetQua()')
+        anh.append((ten, Image.open(io.BytesIO(base64.b64decode((await t.js('TVAD.phuAnh()')).split(',')[1]))).convert('RGB')))
+    for cap in (3, 4):   # vết: phần sáng NGOÀI hộp vết (mục 8)
+        await t.js('TVAD.cap(%d); TVP0.datLaiQuai(6); TVP0.datLam((PA.x0+10)*T-250,1); TVAD.hoiNgay(); TVAD.phuMoi()' % cap)
+        for _ in range(5): await t.buoc()
+        for i in range(100):
+            await t.buoc('a' if i < 30 else ''); await t.js('TVAD.phuVet()')
+        ten = 'vết Dư Âm cấp %d' % cap
+        kq[ten] = await t.js('TVAD.phuKetQua(true)')
+        anh.append((ten, Image.open(io.BytesIO(base64.b64decode((await t.js('TVAD.phuAnh()')).split(',')[1]))).convert('RGB')))
+    loi = t.loi; await t.dong()
+    W, H = anh[0][1].size; g = Image.new('RGB', (W * 3, H * 3), (20, 20, 20))
+    for j, (ten, im) in enumerate(anh):
+        r = kq[ten]; c = r['cua_so_mep']
+        nhan(im, ten, (255, 217, 160))
+        nhan(im, 'phủ %d%% hộp · sáng ngoài hộp %d px' % (r['phu_ca_hop'], r['pixel_sang_ngoai_hop']), (240, 240, 240), y=H - 56)
+        nhan(im, 'mép có VFX: trên %s%% dưới %s%% trước %s%% sau %s%%' % (c['tren'], c['duoi'], c['truoc'], c['sau']), (240, 240, 240), y=H - 30)
+        g.paste(im, ((j % 3) * W, (j // 3) * H))
+    g.save(os.path.join(OUT, '8-vung-hop-phu-vfx.png'))
+    json.dump(kq, open(os.path.join(OUT, '8-vung-hop-phu-vfx.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print('8-vung-hop: lỗi trang %d' % len(loi)); print(json.dumps(kq, ensure_ascii=False)[:2500])
+    return {'file': '8-vung-hop-phu-vfx.png', 'ket_qua': kq, 'loi_trang': loi}
+
+
+# ---- mục 4, 5, 6 (+ mục tiêu sau lưng của mục 7): video debug
+def giu_tam_dung(i, t, s):
+    """giữ 15 → MỞ ⚙ (60 bước, ngón vẫn đè) → ĐÓNG ⚙ (vẫn đè thêm 45) → nhả: không tích, không Dư Âm"""
+    async def f():
+        if i == 15: await t.js('openSet()')
+        if i == 75: await t.js('closeSet()')
+        if i >= 180: return None
+        return ('a' if i < 120 else '', None)
+    return f()
+
+
+def giu_blur(i, t, s):
+    """giữ 35 (đã nạp, thế tụ) → cửa sổ MẤT FOCUS → ngón vẫn đè thêm 40 → nhả: không tự tung"""
+    async def f():
+        if i == 35: await t.js("window.dispatchEvent(new Event('blur'))")
+        if i >= 150: return None
+        return ('a' if i < 75 else '', None)
+    return f()
+
+
+def giu_an_tab(i, t, s):
+    """giữ 21, nhả khi nhát 1 chưa xong (XẾP HÀNG) → ngay tick sau trang bị ẨN (chuyển tab) → quay lại: không tung"""
+    async def f():
+        if i == 22: await t.js("Object.defineProperty(document,'hidden',{configurable:true,get:()=>true}); document.dispatchEvent(new Event('visibilitychange')); delete document.hidden")
+        if i >= 110: return None
+        return ('a' if i < 21 else '', None)
+    return f()
+
+
+def luot_truoc_hop(i, t, s):
+    """giữ 40 (thế tụ) → nhả: tung; LƯỚT 2 tick sau (trước hộp, su 6) → huỷ, KHÔNG mất hồi → giữ lại 30 ngay: Dư Âm ra lần 2"""
+    if i >= 190: return None
+    k = 'a' if i < 40 or 70 <= i < 100 else ''
+    if i == 42: k += 's'
+    return (k, None)
+
+
+def luot_sau_hop(i, t, s):
+    """giữ 40 → nhả: tung; LƯỚT 9 tick sau (hộp đã bật ở tick 6) → hồi chiêu GIỮ → giữ lại 30: không nạp (đang hồi)"""
+    if i >= 160: return None
+    k = 'a' if i < 40 or 70 <= i < 100 else ''
+    if i == 49: k += 's'
+    return (k, None)
+
+
+def cb_sau_lung(dx):
+    """hình nộm SAU LƯNG Lam: mép phải hình nộm cách tâm Lam dx px về phía sau (Lam nhìn phải)"""
+    async def cb(t):
+        await t.js('TVAD.cap(3); TVP0.datLaiQuai(6); TVP0.datLam(Q[6].x+Q[6].w+%d-10,1); TVAD.hoiNgay(); echo=null; rec=null' % dx)
+        for _ in range(3): await t.buoc()
+        await t.js('TVP0.xoaLog()')
+    return cb
+
+
+async def canh_ph7(b, cong):
+    return await canh_don(b, cong, '6-debug-sua-ph7.mp4', 3, [
+        ('PH7-6 · giữ 15 → MỞ ⚙ 60 bước (ngón vẫn đè) → đóng ⚙, đè thêm → nhả: KHÔNG tích, KHÔNG Dư Âm', cb_hoi(3), giu_tam_dung, 180),
+        ('PH7-6 · giữ 35 (thế tụ) → MẤT FOCUS → đè thêm 40 → nhả: huỷ, KHÔNG tự tung', cb_hoi(), giu_blur, 150),
+        ('PH7-6 · giữ 21 → nhả (xếp hàng) → CHUYỂN TAB ngay → quay lại: huỷ, KHÔNG tung', cb_hoi(), giu_an_tab, 110),
+        ('PH7-4 · tung → LƯỚT trước khi hộp bật → không vết, KHÔNG mất hồi → giữ lại: Dư Âm ra ngay', cb_hoi(), luot_truoc_hop, 190),
+        ('PH7-4 · tung → hộp bật (hồi bắt đầu) → LƯỚT sau đó → hồi GIỮ → giữ lại: không nạp', cb_hoi(), luot_sau_hop, 160),
+        ('PH7-5/7 · hình nộm SAU LƯNG 6 px: chém vang (hộp cũ) TRÚNG, vết (chỉ phía trước) KHÔNG trúng', cb_sau_lung(6), giu(30, 80), 110),
+        ('PH7-7 · hình nộm SAU LƯNG 25 px: nhát 2 (hộp −36) TRÚNG – xem có VFX ở sau lưng không', cb_sau_lung(25), lambda i, t, s: None if i >= 60 else ('a' if i in (0, 9) else '', None), 60),
+    ])
+
+
+# ---- mục 10: chiến đấu TỰ DO – không dời quái, không đặt lại hồi chiêu giữa trận
+JS_TU_DO = """(()=>{const K=TVAD.kn(); return {lx:pl.x+pl.w/2, hurt:pl.hurtT, atkN:pl.atkN, g:pl.onGround, hoi:K.hoi, duAm:!!AD.cs.co.duAm, giu:K.giu, f:S.frame,
+  q:[3,4,5].map(i=>({i, x:Q[i].x+Q[i].w/2, chet:Q[i].dead||Q[i].st==='die'||Q[i].gone, hp:Q[i].hp}))};})()"""
+
+
+async def cb_tu_do(t):
+    # trạng thái đầu GIỐNG NHAU ở 4 cấp (đặt MỘT lần trước trận): quái ở chỗ gốc, Lam đầu Sân hai chuông, hồi chiêu 0, không vết
+    await t.js('for(const i of [3,4,5]) TVP0.datLaiQuai(i); TVAD.hoiNgay(); for(const v of AD.VET) v.on=false; echo=null; rec=null; TVP0.datLam((PB.x0+1)*T,1); TVP0.xoaLog()')
+    for _ in range(4): await t.buoc()
+
+
+def bot_tu_do():
+    """luật bot CHUNG cho mọi cấp: đi tới quái gần nhất còn sống; trong tầm thì chạm Chém mỗi 14 tick;
+    nếu Dư Âm CÓ (cấp 3+) và hết hồi → giữ Chém 24 tick (nhát 1 + Dư Âm), nhả, 30 tick sau mới được giữ lại. Không né, không đặt lại gì giữa trận"""
+    async def f(i, t, s):
+        st = await t.js(JS_TU_DO); so = s.setdefault('so', {'trung_lam': 0, 'giu_du_am': 0, 'chet': {}})
+        if st['hurt'] > 0 and s.get('hurt0', 0) <= 0: so['trung_lam'] += 1
+        s['hurt0'] = st['hurt']
+        for q in st['q']:
+            if q['chet'] and str(q['i']) not in so['chet']: so['chet'][str(q['i'])] = i
+        song = [q for q in st['q'] if not q['chet']]
+        if not song:
+            if 'fchet' not in s: s['fchet'] = i; so['tick_xong'] = i
+            s['xong'] = s.get('xong', 0) + 1
+            return None if s['xong'] > 60 else ('', None)
+        if i >= 3000: so['het_gio'] = True; return None
+        if s.get('giu', 0) > 0:
+            s['giu'] -= 1
+            if s['giu'] == 0: s['nha'] = 30   # nhả rồi chờ: không giữ lại liền (tránh giữ nối thành thế tụ)
+            return ('a', None)
+        if s.get('nha', 0) > 0: s['nha'] -= 1
+        q = min(song, key=lambda q: abs(q['x'] - st['lx'])); d = q['x'] - st['lx']; h = 'r' if d > 0 else 'l'
+        if abs(d) > 62: s['n'] = 0; return (h, None)
+        if st['duAm'] and st['hoi'] <= 0 and not st['atkN'] and st['g'] and s.get('nha', 0) <= 0:
+            s['giu'] = 23; so['giu_du_am'] += 1; return (h + 'a', None)
+        s['n'] = s.get('n', 0) + 1
+        return ('a' if s['n'] % 14 == 1 else '', None)
+    return f
+
+
+async def canh_tu_do(b, cong):
+    return await quay_4o(b, cong, '7-tu-do-cap-1-2-3-4.mp4', [
+        ('TỰ DO: 2 Chuông Gỗ + quái gác, không dời quái, không đặt lại hồi chiêu', cb_tu_do, bot_tu_do, 3100),
+    ])
+
 async def main():
-    can = sys.argv[1:] or ['sach', 'giu', 'vet', 'proc', 'cham', 'do']
+    can = sys.argv[1:] or ['sach', 'giu', 'vet', 'proc', 'cham', 'do', 'ph7', 'vung', 'tudo']
     os.chdir(GOC)
     srv = socketserver.ThreadingTCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     kq_p = os.path.join(OUT, 'ket-qua.json'); kq = json.load(open(kq_p, encoding='utf-8')) if os.path.exists(kq_p) else {}
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        for ten, fn in (('sach', canh_sach), ('giu', canh_giu), ('vet', canh_vet), ('proc', canh_proc), ('cham', canh_cham), ('do', do_so)):
+        for ten, fn in (('sach', canh_sach), ('giu', canh_giu), ('vet', canh_vet), ('proc', canh_proc), ('cham', canh_cham), ('do', do_so), ('ph7', canh_ph7), ('vung', canh_vung), ('tudo', canh_tu_do)):
             if ten in can: kq[ten] = await fn(b, cong); json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=list)
         await b.close()
     srv.shutdown()

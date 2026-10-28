@@ -1,0 +1,209 @@
+{
+ "atk1 nhát 1": {
+  "hop": [
+   4,
+   -97,
+   86,
+   48
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 47,
+  "dai_8px": {
+   "tren": 6,
+   "duoi": 95,
+   "truoc": 69,
+   "sau_tam_lam": null
+  },
+  "cua_so_mep": {
+   "tren": 40,
+   "duoi": 100,
+   "truoc": 82,
+   "sau": 27
+  },
+  "pixel_sang_ngoai_hop": 437
+ },
+ "atk2 nhát 2": {
+  "hop": [
+   -36,
+   -100,
+   116,
+   48
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 27,
+  "dai_8px": {
+   "tren": 21,
+   "duoi": 30,
+   "truoc": 82,
+   "sau_tam_lam": 0
+  },
+  "cua_so_mep": {
+   "tren": 25,
+   "duoi": 50,
+   "truoc": 100,
+   "sau": 0
+  },
+  "pixel_sang_ngoai_hop": 860
+ },
+ "atk3 nhát 3": {
+  "hop": [
+   -13,
+   -59,
+   99,
+   59
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 50,
+  "dai_8px": {
+   "tren": 23,
+   "duoi": 42,
+   "truoc": 31,
+   "sau_tam_lam": 0
+  },
+  "cua_so_mep": {
+   "tren": 48,
+   "duoi": 70,
+   "truoc": 46,
+   "sau": 0
+  },
+  "pixel_sang_ngoai_hop": 58
+ },
+ "atk4 nảy (pogo)": {
+  "hop": [
+   -26,
+   -24,
+   64,
+   82
+  ],
+  "tick_do": 10,
+  "phu_ca_hop": 27,
+  "dai_8px": {
+   "tren": 11,
+   "duoi": 32,
+   "truoc": 41,
+   "sau_tam_lam": 0
+  },
+  "cua_so_mep": {
+   "tren": 33,
+   "duoi": 47,
+   "truoc": 100,
+   "sau": 0
+  },
+  "pixel_sang_ngoai_hop": 0
+ },
+ "atk5 hất": {
+  "hop": [
+   -9,
+   -140,
+   97,
+   60
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 64,
+  "dai_8px": {
+   "tren": 85,
+   "duoi": 46,
+   "truoc": 0,
+   "sau_tam_lam": 13
+  },
+  "cua_so_mep": {
+   "tren": 96,
+   "duoi": 61,
+   "truoc": 0,
+   "sau": 21
+  },
+  "pixel_sang_ngoai_hop": 615
+ },
+ "atk6 trên không": {
+  "hop": [
+   -3,
+   -107,
+   95,
+   48
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 40,
+  "dai_8px": {
+   "tren": 14,
+   "duoi": 57,
+   "truoc": 73,
+   "sau_tam_lam": 0
+  },
+  "cua_so_mep": {
+   "tren": 64,
+   "duoi": 77,
+   "truoc": 91,
+   "sau": 0
+  },
+  "pixel_sang_ngoai_hop": 266
+ },
+ "atk7 chém vang (cú quét thấp)": {
+  "hop": [
+   -13,
+   -66,
+   103,
+   66
+  ],
+  "tick_do": 8,
+  "phu_ca_hop": 53,
+  "dai_8px": {
+   "tren": 43,
+   "duoi": 55,
+   "truoc": 23,
+   "sau_tam_lam": 0
+  },
+  "cua_so_mep": {
+   "tren": 71,
+   "duoi": 63,
+   "truoc": 33,
+   "sau": 0
+  },
+  "pixel_sang_ngoai_hop": 132
+ },
+ "vết Dư Âm cấp 3": {
+  "hop": [
+   80,
+   120,
+   90,
+   66
+  ],
+  "tick_do": 52,
+  "phu_ca_hop": 100,
+  "dai_8px": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau_tam_lam": null
+  },
+  "cua_so_mep": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau": null
+  },
+  "pixel_sang_ngoai_hop": 0
+ },
+ "vết Dư Âm cấp 4": {
+  "hop": [
+   80,
+   120,
+   90,
+   66
+  ],
+  "tick_do": 46,
+  "phu_ca_hop": 100,
+  "dai_8px": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau_tam_lam": null
+  },
+  "cua_so_mep": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau": null
+  },
+  "pixel_sang_ngoai_hop": 0
+ }
+}

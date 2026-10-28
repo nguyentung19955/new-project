@@ -24,7 +24,12 @@ HDC = os.path.join(GOC, 'art', 'modular', 'lam-moi', 'hanh-dong', 'code')
 RIG4C = os.path.join(GOC, 'art', 'modular', 'lam-moi', 'rig-v4', 'code')
 
 # ---- thông số (px THẾ GIỚI của rig: 9,56 px thế giới = 1 px logic) ----
-LUOI_DAI = 150.0        # chắn tay → mũi lưỡi âm thoa (dao cũ: 220 = 23 px logic). Ngắn hơn để phần âm nhận (vẽ bằng code) lấp tới mép hộp 90
+LUOI_DAI = 170.0        # chắn tay → mũi lưỡi âm thoa (dao cũ: 220 = 23 px logic). PH7: 150 → 170 (15,7 → 17,8 px logic) để đọc rõ HAI nhánh;
+                        # tầm / hộp 90 GIỮ NGUYÊN → âm nhận ngắn lại nhưng còn (nhát 1 ≥ 5 px – đo ở do-so.json)
+RONG_K = 1.3            # PH7: bản lưỡi rộng thêm ×1,3 so với tỉ lệ dài (≈ 7 px logic) để mỗi nhánh ≥ 2 px logic ở cỡ 112 px
+KHE = 24                # PH7: khe giữa hai nhánh mở tới 24 px rig ≈ 2,5 px logic (bản gốc thu nhỏ chỉ còn ≈ 1 px → nhoè mất ở 112 px)
+VIEN_KHE = 12           # khe tô tối kín (viền tối lấn vào khe): khe đọc thành vạch tối giữa hai nhánh sáng trên mọi nền
+SANG_THEP = 0.72        # thép lưỡi: khoảng cách tới trắng ×0,72 (sáng hơn ảnh gốc) – chỉ phần lưỡi, chắn tay giữ nguyên
 CHAN_X = 168.0          # tâm chắn tay trong ảnh mảnh tay-truoc-dao (vòng chắn dao cũ ở x 150–190)
 TRUC_Y = 80.0           # trục lưỡi (DAO_MUI / DAO_CHUOI cũ: y 79–80)
 HOP1 = [4, -97, 86, 48]  # hộp nhát 1 của Âm Đao (= VK_AM_DAO.don[1].box trong khoi-am-dao.js)
@@ -75,13 +80,29 @@ def manh_tay(k):
     luoi = Image.fromarray(a[:y1c + 1 + 60], 'RGBA')           # từ mũi tới hết chắn tay + 60 px chuôi (nằm DƯỚI nắm tay, lấp khe chỗ cắt dao cũ)
     dai_nguon = yc                                             # mũi (hàng 0) → tâm chắn
     s = LUOI_DAI / dai_nguon
-    luoi = luoi.resize((max(1, round(luoi.width * s)), max(1, round(luoi.height * s))), Image.LANCZOS)
-    luoi = luoi.rotate(-90, expand=True, resample=Image.BICUBIC)   # mũi sang PHẢI
+    luoi = luoi.resize((max(1, round(luoi.width * s * RONG_K)), max(1, round(luoi.height * s))), Image.LANCZOS)
+    # PH7: mở rộng khe giữa hai nhánh (lưỡi đang dựng đứng, mũi lên → khe là dải dọc): khoét đều hai mép trong của nhánh
     L = np.array(luoi)
-    # viền tối như nét rig
+    al0 = L[..., 3] > 60
+    kin0 = ndimage.binary_closing(al0, structure=np.ones((3, 3)), iterations=14)
+    khe0 = kin0 & ~al0
+    khe0[round((yc - 4) * s):] = False                         # chỉ phần lưỡi (trên chắn tay)
+    rong_cu = int(np.median([r.sum() for r in khe0 if r.sum() > 0])) if khe0.any() else 0
+    mo = max(0, (KHE - rong_cu) // 2)
+    if mo:
+        khe = ndimage.binary_dilation(khe0, structure=np.ones((1, 3)), iterations=mo) & kin0
+        L[khe] = 0
+    # PH7: thép lưỡi sáng lên (chỉ phần lưỡi, không đụng chắn tay) để hai nhánh sáng tách khỏi vạch khe tối ở cỡ nhỏ
+    yl = round((yc - 4) * s); m = L[:yl, :, 3] > 0
+    rgb = L[:yl, :, :3].astype(np.float32); rgb[m] = 255 - (255 - rgb[m]) * SANG_THEP; L[:yl, :, :3] = rgb.round().clip(0, 255).astype(np.uint8)
+    print('  khe hai nhánh: %d → %d px rig (≈ %.1f px logic), bản lưỡi %d px rig' % (rong_cu, rong_cu + 2 * mo, (rong_cu + 2 * mo) / 9.56, L.shape[1]))
+    luoi = Image.fromarray(L, 'RGBA').rotate(-90, expand=True, resample=Image.BICUBIC)   # mũi sang PHẢI
+    L = np.array(luoi)
+    # viền tối như nét rig + viền tối mỏng trong khe (khe giữ trong suốt ở giữa)
     al = L[..., 3] > 60
-    kin = ndimage.binary_closing(al, iterations=6)             # lấp khe giữa hai nhánh để viền KHÔNG lấp khe (khe giữ trong suốt)
-    to = ndimage.binary_dilation(kin, iterations=VIEN) & ~(kin & ~al)
+    kin = ndimage.binary_closing(al, structure=np.ones((3, 3)), iterations=14)
+    khe = kin & ~al
+    to = (ndimage.binary_dilation(kin, iterations=VIEN) & ~khe) | (ndimage.binary_dilation(al, iterations=VIEN_KHE) & khe)
     H, W = tay.shape[:2]
     can = np.zeros((max(H, 200), max(W, 420), 4), np.uint8)
     # vị trí: tâm chắn (cột = (y1c - yc)·s tính từ trái của ảnh đã xoay) trùng CHAN_X; trục giữa ảnh trùng TRUC_Y

@@ -214,8 +214,8 @@
  "am_nhan": {
   "atk1": {
    "so_tick_ve": 24,
-   "dai_min": 7.6,
-   "dai_max": 10.2,
+   "dai_min": 5.5,
+   "dai_max": 8,
    "mep_tren_canh_hop": 24,
    "tick": [
     7,
@@ -230,8 +230,8 @@
   },
   "atk5": {
    "so_tick_ve": 8,
-   "dai_min": 24.4,
-   "dai_max": 25.7,
+   "dai_min": 22.1,
+   "dai_max": 23.5,
    "mep_tren_canh_hop": 8,
    "tick": [
     11,
@@ -246,8 +246,8 @@
   },
   "atk6": {
    "so_tick_ve": 8,
-   "dai_min": 12.5,
-   "dai_max": 17.9,
+   "dai_min": 10.3,
+   "dai_max": 15.7,
    "mep_tren_canh_hop": 8,
    "tick": [
     9,
@@ -260,10 +260,28 @@
     16
    ]
   },
+  "atk4": {
+   "so_tick_ve": 10,
+   "dai_min": 54.6,
+   "dai_max": 59.8,
+   "mep_tren_canh_hop": 10,
+   "tick": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ]
+  },
   "atk7": {
    "so_tick_ve": 8,
-   "dai_min": 10.3,
-   "dai_max": 14,
+   "dai_min": 8.1,
+   "dai_max": 11.6,
    "mep_tren_canh_hop": 8,
    "tick": [
     6,
@@ -278,8 +296,8 @@
   },
   "atk2": {
    "so_tick_ve": 8,
-   "dai_min": 13.3,
-   "dai_max": 14.9,
+   "dai_min": 11,
+   "dai_max": 12.7,
    "mep_tren_canh_hop": 8,
    "tick": [
     7,
@@ -294,8 +312,8 @@
   },
   "atk3": {
    "so_tick_ve": 8,
-   "dai_min": 10.3,
-   "dai_max": 11.4,
+   "dai_min": 8.1,
+   "dai_max": 9.3,
    "mep_tren_canh_hop": 8,
    "tick": [
     9,

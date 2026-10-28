@@ -215,8 +215,8 @@
   "am_nhan": {
    "atk1": {
     "so_tick_ve": 24,
-    "dai_min": 7.6,
-    "dai_max": 10.2,
+    "dai_min": 5.5,
+    "dai_max": 8,
     "mep_tren_canh_hop": 24,
     "tick": [
      7,
@@ -231,8 +231,8 @@
    },
    "atk5": {
     "so_tick_ve": 8,
-    "dai_min": 24.4,
-    "dai_max": 25.7,
+    "dai_min": 22.1,
+    "dai_max": 23.5,
     "mep_tren_canh_hop": 8,
     "tick": [
      11,
@@ -247,8 +247,8 @@
    },
    "atk6": {
     "so_tick_ve": 8,
-    "dai_min": 12.5,
-    "dai_max": 17.9,
+    "dai_min": 10.3,
+    "dai_max": 15.7,
     "mep_tren_canh_hop": 8,
     "tick": [
      9,
@@ -261,10 +261,28 @@
      16
     ]
    },
+   "atk4": {
+    "so_tick_ve": 10,
+    "dai_min": 54.6,
+    "dai_max": 59.8,
+    "mep_tren_canh_hop": 10,
+    "tick": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10
+    ]
+   },
    "atk7": {
     "so_tick_ve": 8,
-    "dai_min": 10.3,
-    "dai_max": 14,
+    "dai_min": 8.1,
+    "dai_max": 11.6,
     "mep_tren_canh_hop": 8,
     "tick": [
      6,
@@ -279,8 +297,8 @@
    },
    "atk2": {
     "so_tick_ve": 8,
-    "dai_min": 13.3,
-    "dai_max": 14.9,
+    "dai_min": 11,
+    "dai_max": 12.7,
     "mep_tren_canh_hop": 8,
     "tick": [
      7,
@@ -295,8 +313,8 @@
    },
    "atk3": {
     "so_tick_ve": 8,
-    "dai_min": 10.3,
-    "dai_max": 11.4,
+    "dai_min": 8.1,
+    "dai_max": 9.3,
     "mep_tren_canh_hop": 8,
     "tick": [
      9,
@@ -332,7 +350,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -350,7 +370,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -368,7 +390,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -386,7 +410,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -404,7 +430,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -422,7 +450,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -440,7 +470,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -458,7 +490,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -476,7 +510,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -494,7 +530,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -512,7 +550,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -530,7 +570,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -548,7 +590,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    }
@@ -574,7 +618,9 @@
      "vet": 10,
      "vetTrung": 5,
      "vetHut": 5,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    }
@@ -600,7 +646,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -618,7 +666,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -636,7 +686,9 @@
      "vet": 1,
      "vetTrung": 1,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -654,7 +706,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -672,7 +726,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -690,7 +746,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -708,7 +766,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    },
@@ -726,7 +786,9 @@
      "vet": 0,
      "vetTrung": 0,
      "vetHut": 0,
-     "huyTruocHop": 0
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
     },
     "thieu_ket_cuc": 0
    }
@@ -747,6 +809,7 @@
    "Hình nộm: combo · GIỮ Chém · combo": {
     "cap1": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 70,
      "tk": {
       "giu": 7,
@@ -761,12 +824,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 7
      },
      "thieu_ket_cuc": 0
     },
     "cap2": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 84,
      "tk": {
       "giu": 7,
@@ -781,12 +847,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 7
      },
      "thieu_ket_cuc": 0
     },
     "cap3": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 109,
      "tk": {
       "giu": 7,
@@ -801,12 +870,15 @@
       "vetTrung": 1,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 9
      },
      "thieu_ket_cuc": 0
     },
     "cap4": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 115,
      "tk": {
       "giu": 7,
@@ -821,6 +893,8 @@
       "vetTrung": 1,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 9
      },
      "thieu_ket_cuc": 0
@@ -829,6 +903,7 @@
    "Chuông Gỗ: giữ Chém mở đầu rồi chém tới chết": {
     "cap1": {
      "tick_chet": 161,
+     "bot": null,
      "tong_hinh_nom_10s": 70,
      "tk": {
       "giu": 14,
@@ -843,12 +918,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 4
      },
      "thieu_ket_cuc": 0
     },
     "cap2": {
      "tick_chet": 161,
+     "bot": null,
      "tong_hinh_nom_10s": 84,
      "tk": {
       "giu": 14,
@@ -863,12 +941,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 4
      },
      "thieu_ket_cuc": 0
     },
     "cap3": {
      "tick_chet": 105,
+     "bot": null,
      "tong_hinh_nom_10s": 109,
      "tk": {
       "giu": 11,
@@ -883,12 +964,15 @@
       "vetTrung": 2,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 4
      },
      "thieu_ket_cuc": 0
     },
     "cap4": {
      "tick_chet": 71,
+     "bot": null,
      "tong_hinh_nom_10s": 115,
      "tk": {
       "giu": 9,
@@ -903,6 +987,8 @@
       "vetTrung": 2,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 3
      },
      "thieu_ket_cuc": 0
@@ -911,6 +997,7 @@
    "Quái gác (vỏ): giữ Chém mở đầu rồi chém tới chết": {
     "cap1": {
      "tick_chet": 201,
+     "bot": null,
      "tong_hinh_nom_10s": 30,
      "tk": {
       "giu": 24,
@@ -925,12 +1012,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 8
      },
      "thieu_ket_cuc": 0
     },
     "cap2": {
      "tick_chet": 201,
+     "bot": null,
      "tong_hinh_nom_10s": 36,
      "tk": {
       "giu": 24,
@@ -945,12 +1035,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 8
      },
      "thieu_ket_cuc": 0
     },
     "cap3": {
      "tick_chet": 171,
+     "bot": null,
      "tong_hinh_nom_10s": 36,
      "tk": {
       "giu": 20,
@@ -965,12 +1058,15 @@
       "vetTrung": 3,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 9
      },
      "thieu_ket_cuc": 0
     },
     "cap4": {
      "tick_chet": 155,
+     "bot": null,
      "tong_hinh_nom_10s": 36,
      "tk": {
       "giu": 17,
@@ -985,6 +1081,8 @@
       "vetTrung": 3,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 8
      },
      "thieu_ket_cuc": 0
@@ -993,6 +1091,7 @@
    "Bẫy Dư Âm: chém HỤT, lướt lùi, địch đi vào vết": {
     "cap1": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 0,
      "tk": {
       "giu": 25,
@@ -1007,12 +1106,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 0
      },
      "thieu_ket_cuc": 0
     },
     "cap2": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 0,
      "tk": {
       "giu": 25,
@@ -1027,12 +1129,15 @@
       "vetTrung": 0,
       "vetHut": 0,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 0
      },
      "thieu_ket_cuc": 0
     },
     "cap3": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 0,
      "tk": {
       "giu": 21,
@@ -1047,12 +1152,15 @@
       "vetTrung": 3,
       "vetHut": 1,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 1
      },
      "thieu_ket_cuc": 0
     },
     "cap4": {
      "tick_chet": null,
+     "bot": null,
      "tong_hinh_nom_10s": 0,
      "tk": {
       "giu": 18,
@@ -1067,11 +1175,512 @@
       "vetTrung": 3,
       "vetHut": 1,
       "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
       "trungLam": 1
      },
      "thieu_ket_cuc": 0
     }
    }
   }
+ },
+ "tudo": {
+  "file": "7-tu-do-cap-1-2-3-4.mp4",
+  "khung": 888,
+  "giay": 14.8,
+  "loi_trang": [],
+  "ket_qua": {
+   "TỰ DO: 2 Chuông Gỗ + quái gác, không dời quái, không đặt lại hồi chiêu": {
+    "cap1": {
+     "tick_chet": 761,
+     "bot": {
+      "trung_lam": 2,
+      "giu_du_am": 0,
+      "chet": {
+       "3": 149,
+       "4": 372,
+       "5": 761
+      },
+      "tick_xong": 761
+     },
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 23,
+      "nhaSom": 23,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
+      "trungLam": 16
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap2": {
+     "tick_chet": 761,
+     "bot": {
+      "trung_lam": 2,
+      "giu_du_am": 0,
+      "chet": {
+       "3": 149,
+       "4": 372,
+       "5": 761
+      },
+      "tick_xong": 761
+     },
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 23,
+      "nhaSom": 23,
+      "nap": 0,
+      "xepHang": 0,
+      "tungNgay": 0,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 0,
+      "vet": 0,
+      "vetTrung": 0,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
+      "trungLam": 16
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap3": {
+     "tick_chet": 820,
+     "bot": {
+      "trung_lam": 2,
+      "giu_du_am": 6,
+      "chet": {
+       "3": 144,
+       "4": 403,
+       "5": 820
+      },
+      "tick_xong": 820
+     },
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 19,
+      "nhaSom": 13,
+      "nap": 3,
+      "xepHang": 2,
+      "tungNgay": 1,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 3,
+      "vet": 3,
+      "vetTrung": 3,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
+      "trungLam": 17
+     },
+     "thieu_ket_cuc": 0
+    },
+    "cap4": {
+     "tick_chet": 804,
+     "bot": {
+      "trung_lam": 2,
+      "giu_du_am": 6,
+      "chet": {
+       "3": 144,
+       "4": 403,
+       "5": 804
+      },
+      "tick_xong": 804
+     },
+     "tong_hinh_nom_10s": 0,
+     "tk": {
+      "giu": 18,
+      "nhaSom": 13,
+      "nap": 3,
+      "xepHang": 2,
+      "tungNgay": 1,
+      "tuTung": 0,
+      "xoa": 0,
+      "tung": 3,
+      "vet": 3,
+      "vetTrung": 3,
+      "vetHut": 0,
+      "huyTruocHop": 0,
+      "hoanHoi": 0,
+      "huyDung": 0,
+      "trungLam": 16
+     },
+     "thieu_ket_cuc": 0
+    }
+   }
+  }
+ },
+ "ph7": {
+  "file": "6-debug-sua-ph7.mp4",
+  "khung": 960,
+  "giay": 16.0,
+  "loi_trang": [],
+  "phan": [
+   {
+    "phan": "PH7-6 · giữ 15 → MỞ ⚙ 60 bước (ngón vẫn đè) → đóng ⚙, đè thêm → nhả: KHÔNG tích, KHÔNG Dư Âm",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 1
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-6 · giữ 35 (thế tụ) → MẤT FOCUS → đè thêm 40 → nhả: huỷ, KHÔNG tự tung",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 1
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-6 · giữ 21 → nhả (xếp hàng) → CHUYỂN TAB ngay → quay lại: huỷ, KHÔNG tung",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 1,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 1
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-4 · tung → LƯỚT trước khi hộp bật → không vết, KHÔNG mất hồi → giữ lại: Dư Âm ra ngay",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 0,
+     "nap": 2,
+     "xepHang": 0,
+     "tungNgay": 2,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 2,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 1,
+     "hoanHoi": 1,
+     "huyDung": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-4 · tung → hộp bật (hồi bắt đầu) → LƯỚT sau đó → hồi GIỮ → giữ lại: không nạp",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 1,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-5/7 · hình nộm SAU LƯNG 6 px: chém vang (hộp cũ) TRÚNG, vết (chỉ phía trước) KHÔNG trúng",
+    "tk_tang": {
+     "giu": 1,
+     "nhaSom": 0,
+     "nap": 1,
+     "xepHang": 0,
+     "tungNgay": 1,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 1,
+     "vet": 1,
+     "vetTrung": 1,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
+    },
+    "thieu_ket_cuc": 0
+   },
+   {
+    "phan": "PH7-7 · hình nộm SAU LƯNG 25 px: nhát 2 (hộp −36) TRÚNG – xem có VFX ở sau lưng không",
+    "tk_tang": {
+     "giu": 2,
+     "nhaSom": 2,
+     "nap": 0,
+     "xepHang": 0,
+     "tungNgay": 0,
+     "tuTung": 0,
+     "xoa": 0,
+     "tung": 0,
+     "vet": 0,
+     "vetTrung": 0,
+     "vetHut": 0,
+     "huyTruocHop": 0,
+     "hoanHoi": 0,
+     "huyDung": 0
+    },
+    "thieu_ket_cuc": 0
+   }
+  ]
+ },
+ "vung": {
+  "file": "8-vung-hop-phu-vfx.png",
+  "ket_qua": {
+   "atk1 nhát 1": {
+    "hop": [
+     4,
+     -97,
+     86,
+     48
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 47,
+    "dai_8px": {
+     "tren": 6,
+     "duoi": 95,
+     "truoc": 69,
+     "sau_tam_lam": null
+    },
+    "cua_so_mep": {
+     "tren": 40,
+     "duoi": 100,
+     "truoc": 82,
+     "sau": 27
+    },
+    "pixel_sang_ngoai_hop": 437
+   },
+   "atk2 nhát 2": {
+    "hop": [
+     -36,
+     -100,
+     116,
+     48
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 27,
+    "dai_8px": {
+     "tren": 21,
+     "duoi": 30,
+     "truoc": 82,
+     "sau_tam_lam": 0
+    },
+    "cua_so_mep": {
+     "tren": 25,
+     "duoi": 50,
+     "truoc": 100,
+     "sau": 0
+    },
+    "pixel_sang_ngoai_hop": 860
+   },
+   "atk3 nhát 3": {
+    "hop": [
+     -13,
+     -59,
+     99,
+     59
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 50,
+    "dai_8px": {
+     "tren": 23,
+     "duoi": 42,
+     "truoc": 31,
+     "sau_tam_lam": 0
+    },
+    "cua_so_mep": {
+     "tren": 48,
+     "duoi": 70,
+     "truoc": 46,
+     "sau": 0
+    },
+    "pixel_sang_ngoai_hop": 58
+   },
+   "atk4 nảy (pogo)": {
+    "hop": [
+     -26,
+     -24,
+     64,
+     82
+    ],
+    "tick_do": 10,
+    "phu_ca_hop": 27,
+    "dai_8px": {
+     "tren": 11,
+     "duoi": 32,
+     "truoc": 41,
+     "sau_tam_lam": 0
+    },
+    "cua_so_mep": {
+     "tren": 33,
+     "duoi": 47,
+     "truoc": 100,
+     "sau": 0
+    },
+    "pixel_sang_ngoai_hop": 0
+   },
+   "atk5 hất": {
+    "hop": [
+     -9,
+     -140,
+     97,
+     60
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 64,
+    "dai_8px": {
+     "tren": 85,
+     "duoi": 46,
+     "truoc": 0,
+     "sau_tam_lam": 13
+    },
+    "cua_so_mep": {
+     "tren": 96,
+     "duoi": 61,
+     "truoc": 0,
+     "sau": 21
+    },
+    "pixel_sang_ngoai_hop": 615
+   },
+   "atk6 trên không": {
+    "hop": [
+     -3,
+     -107,
+     95,
+     48
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 40,
+    "dai_8px": {
+     "tren": 14,
+     "duoi": 57,
+     "truoc": 73,
+     "sau_tam_lam": 0
+    },
+    "cua_so_mep": {
+     "tren": 64,
+     "duoi": 77,
+     "truoc": 91,
+     "sau": 0
+    },
+    "pixel_sang_ngoai_hop": 266
+   },
+   "atk7 chém vang (cú quét thấp)": {
+    "hop": [
+     -13,
+     -66,
+     103,
+     66
+    ],
+    "tick_do": 8,
+    "phu_ca_hop": 53,
+    "dai_8px": {
+     "tren": 43,
+     "duoi": 55,
+     "truoc": 23,
+     "sau_tam_lam": 0
+    },
+    "cua_so_mep": {
+     "tren": 71,
+     "duoi": 63,
+     "truoc": 33,
+     "sau": 0
+    },
+    "pixel_sang_ngoai_hop": 132
+   },
+   "vết Dư Âm cấp 3": {
+    "hop": [
+     80,
+     120,
+     90,
+     66
+    ],
+    "tick_do": 52,
+    "phu_ca_hop": 100,
+    "dai_8px": {
+     "tren": 100,
+     "duoi": 100,
+     "truoc": 100,
+     "sau_tam_lam": null
+    },
+    "cua_so_mep": {
+     "tren": 100,
+     "duoi": 100,
+     "truoc": 100,
+     "sau": null
+    },
+    "pixel_sang_ngoai_hop": 0
+   },
+   "vết Dư Âm cấp 4": {
+    "hop": [
+     80,
+     120,
+     90,
+     66
+    ],
+    "tick_do": 46,
+    "phu_ca_hop": 100,
+    "dai_8px": {
+     "tren": 100,
+     "duoi": 100,
+     "truoc": 100,
+     "sau_tam_lam": null
+    },
+    "cua_so_mep": {
+     "tren": 100,
+     "duoi": 100,
+     "truoc": 100,
+     "sau": null
+    },
+    "pixel_sang_ngoai_hop": 0
+   }
+  },
+  "loi_trang": []
  }
 }

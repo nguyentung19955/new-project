@@ -1,18 +1,18 @@
 == Hình nộm: combo · GIỮ Chém · combo
 f5 #1 ra-ngay → atk1  cần y=0.00
-f6 giu #1: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f6 giu #1: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
 f11 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)
 f11 Lam D 1 atk1 trúng hình nộm#6: máu 12  Thế 10
 f11   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
 f12   D 1 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
 f15 #2 xep-hang  cần y=0.00  (đang atk1 t11)  hạn f33
-f17 giu #2: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f17 giu #2: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
 f20 #2 → thuc-hien atk2  chờ 4 tick
 f26 hộp atk2 bật: chạm #2 → hộp 11 tick (tính tick bấm = 1; su 7)
 f26 Lam D 2 atk2 trúng hình nộm#6: máu 12  Thế 10
 f26   → hình nộm#6 tick này: máu −12 (987 → 975), Thế 50 → 40 [thuong]
 f26 #3 xep-hang  cần y=0.00  (đang atk2 t7)  hạn f48
-f27 giu #3: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f27 giu #3: nha-som (giữ 1 tick mô phỏng (0 bước logic + 1 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
 f27   D 2 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
 f35 #3 → thuc-hien atk3  chờ 8 tick
 f43 hộp atk3 bật: chạm #3 → hộp 17 tick (tính tick bấm = 1; su 9)
@@ -25,10 +25,11 @@ f98   hình nộm#6 VỠ (Thế 10 − 10) → choáng 60 tick
 f98 Lam D 4 atk1 trúng hình nộm#6: máu 12  Thế 10
 f98   → hình nộm#6 tick này: máu −12 (963 → 951), Thế 10 → 0 [choang]
 f99   D 4 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
-f105 giu #4: DA NAP (giữ 20 tick, đòn atk1 còn 10 tick – chạy hết, không cắt)
+f105 giu #4: DA NAP (giữ 20 tick mô phỏng (14 bước logic + 6 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 10 tick – chạy hết, không cắt)
 f115 giu #4: vào thế tụ
-f116 ky-nang #1: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 5 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung), hồi 150 tick
-f121 vết #1 ĐẶT (lần dùng Dư Âm #1, từ chém vang D 5) ở hộp [6529,382 103×66] – vang sau 24 tick, [16,20] chốt cấp 4
+f116 ky-nang #1: TUNG (nhả trong thế tụ sau 30 tick mô phỏng (24 bước logic + 6 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) → tung ngay) – chém vang (cú quét thấp) D 5 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)
+f121 vết #1 ĐẶT (lần dùng Dư Âm #1, từ chém vang D 5) ở hộp [6542,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [16,20] chốt cấp 4
+f121 Dư Âm #1: hộp chém vang BẬT (f121) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi
 f121 Lam D 5 CHÉM VANG trúng hình nộm#6: máu 15  Thế 0 (choang)
 f121   → hình nộm#6 tick này: máu −15 (951 → 936), Thế 0 → 0 [choang]
 f122   D 5 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
@@ -40,20 +41,20 @@ f146   D 200001 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các
 f149 vết #1 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
 f157   hình nộm#6 hồi phục (20 tick, Thế về đầy 60)
 f168 #5 ra-ngay → atk1  cần y=0.00
-f169 giu #5: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 97) → chỉ là đánh thường
+f169 giu #5: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 102) → chỉ là đánh thường
 f174 hộp atk1 bật: chạm #5 → hộp 7 tick (tính tick bấm = 1; su 7)
 f174 Lam D 6 atk1 trúng hình nộm#6: máu 12  Thế 0 (hoiPhuc)
 f174   → hình nộm#6 tick này: máu −12 (920 → 908), Thế 60 → 60 [hoiPhuc]
 f175   D 6 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
 f177   hình nộm#6 ổn định (60 tick, Thế không xuống dưới 1; không khôi phục vỏ)
 f178 #6 xep-hang  cần y=0.00  (đang atk1 t11)  hạn f196
-f180 giu #6: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 86) → chỉ là đánh thường
+f180 giu #6: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 91) → chỉ là đánh thường
 f183 #6 → thuc-hien atk2  chờ 4 tick
 f189 hộp atk2 bật: chạm #6 → hộp 11 tick (tính tick bấm = 1; su 7)
 f189 Lam D 7 atk2 trúng hình nộm#6: máu 12  Thế 10
 f189   → hình nộm#6 tick này: máu −12 (908 → 896), Thế 60 → 50 [onDinh]
 f189 #7 xep-hang  cần y=0.00  (đang atk2 t7)  hạn f211
-f190 giu #7: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 76) → chỉ là đánh thường
+f190 giu #7: nha-som (giữ 1 tick mô phỏng (0 bước logic + 1 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 81) → chỉ là đánh thường
 f190   D 7 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
 f198 #7 → thuc-hien atk3  chờ 8 tick
 f206 hộp atk3 bật: chạm #7 → hộp 17 tick (tính tick bấm = 1; su 9)
@@ -64,17 +65,18 @@ f237   hình nộm#6 bình thường (phá lại được)
 == Chuông Gỗ: giữ Chém mở đầu rồi chém tới chết
 f269 #8 ra-ngay → atk1  cần y=0.00
 f275 hộp atk1 bật: chạm #8 → hộp 7 tick (tính tick bấm = 1; su 7)
-f288 giu #8: DA NAP (giữ 20 tick, đòn atk1 còn 4 tick – chạy hết, không cắt)
+f288 giu #8: DA NAP (giữ 20 tick mô phỏng (20 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 4 tick – chạy hết, không cắt)
 f292 giu #8: vào thế tụ
-f297 ky-nang #2: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 10 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung), hồi 150 tick
-f302 vết #2 ĐẶT (lần dùng Dư Âm #2, từ chém vang D 10) ở hộp [7187,382 103×66] – vang sau 24 tick, [16,20] chốt cấp 4
+f297 ky-nang #2: TUNG (nhả trong thế tụ sau 28 tick mô phỏng (28 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) → tung ngay) – chém vang (cú quét thấp) D 10 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)
+f302 vết #2 ĐẶT (lần dùng Dư Âm #2, từ chém vang D 10) ở hộp [7200,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [16,20] chốt cấp 4
+f302 Dư Âm #2: hộp chém vang BẬT (f302) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi
 f302 Lam D 10 CHÉM VANG trúng Chuông Gỗ#3: máu 15
 f302   → Chuông Gỗ#3 tick này: máu −15 (40 → 25)
 f302   Chuông Gỗ#3 đang đập → không bị ngắt
 f303   D 10 vẫn chồng Chuông Gỗ#3 nhưng đã trúng → bỏ qua các tick sau
 f323 #9 xep-hang  cần y=0.00  (đang CHÉM VANG t27)  hạn f330
 f324 Dư Âm #2: chém vang TRÚNG 1 mục tiêu → đúng 1 vết
-f325 giu #9: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 122) → chỉ là đánh thường
+f325 giu #9: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 127) → chỉ là đánh thường
 f325 #9 → thuc-hien atk1  chờ 1 tick
 f326 vết #2 VANG (D 200002 src 'k' [16,20], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
 f326 VẾT D 200002 trúng Chuông Gỗ#3: máu 16
@@ -85,17 +87,18 @@ f331 hộp atk1 bật: chạm #9 → hộp 8 tick (tính tick bấm = 1; su 7)
 f331 Lam D 11 atk1 trúng Chuông Gỗ#3: máu 12
 f331   → Chuông Gỗ#3 tick này: máu −12 (9 → -3)
 f331   Chuông Gỗ#3 CHẾT
-f447 Dư Âm: hết hồi chiêu – sẵn sàng
+f452 Dư Âm: hết hồi chiêu – sẵn sàng
 == Quái gác (vỏ): giữ Chém mở đầu rồi chém tới chết
 f494 #10 ra-ngay → atk1  cần y=0.00
 f500 hộp atk1 bật: chạm #10 → hộp 7 tick (tính tick bấm = 1; su 7)
 f500 Lam D 12 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 60)  Thế 10
 f500   → quái gác#5 tick này: máu −0 (30 → 30), Thế 60 → 50 [thuong]
 f501   D 12 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
-f511 giu #10: DA NAP (giữ 20 tick, đòn atk1 còn 6 tick – chạy hết, không cắt)
+f511 giu #10: DA NAP (giữ 20 tick mô phỏng (18 bước logic + 2 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 6 tick – chạy hết, không cắt)
 f517 giu #10: vào thế tụ
-f520 ky-nang #3: TUNG (nhả trong thế tụ → tung ngay) – chém vang D 13 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung), hồi 150 tick
-f525 vết #3 ĐẶT (lần dùng Dư Âm #3, từ chém vang D 13) ở hộp [8588,382 103×66] – vang sau 24 tick, [16,20] chốt cấp 4
+f520 ky-nang #3: TUNG (nhả trong thế tụ sau 28 tick mô phỏng (26 bước logic + 2 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) → tung ngay) – chém vang (cú quét thấp) D 13 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)
+f525 vết #3 ĐẶT (lần dùng Dư Âm #3, từ chém vang D 13) ở hộp [8601,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [16,20] chốt cấp 4
+f525 Dư Âm #3: hộp chém vang BẬT (f525) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi
 f525 Lam D 13 CHÉM VANG trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 50)  Thế 20
 f525   → quái gác#5 tick này: máu −0 (30 → 30), Thế 50 → 30 [thuong]
 f526   D 13 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
@@ -106,7 +109,7 @@ f549   → quái gác#5 tick này: máu −0 (30 → 30), Thế 30 → 10 [thuon
 f550   D 200003 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 f553 vết #3 hết hộp: trúng 1 mục tiêu (bỏ qua 3 lần chồng lặp – mỗi mục tiêu 1 lần)
 f557 #11 ra-ngay → atk1  cần y=0.00
-f558 giu #11: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 112) → chỉ là đánh thường
+f558 giu #11: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 117) → chỉ là đánh thường
 f563 hộp atk1 bật: chạm #11 → hộp 7 tick (tính tick bấm = 1; su 7)
 f563   quái gác#5: vỏ vật lý vỡ MỘT lần – giữ vỡ tới chết, từ giờ mọi đòn gây máu
 f563   quái gác#5 VỠ (Thế 10 − 10) → choáng 120 tick
@@ -114,37 +117,37 @@ f563 Lam D 14 atk1 trúng quái gác#5: máu 0 (vỏ chặn, Thế đầu tick 1
 f563   → quái gác#5 tick này: máu −0 (30 → 30), Thế 10 → 0 [choang]
 f564   D 14 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 f566 #12 xep-hang  cần y=0.00  (đang atk1 t10)  hạn f585
-f568 giu #12: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 102) → chỉ là đánh thường
+f568 giu #12: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 107) → chỉ là đánh thường
 f572 #12 → thuc-hien atk2  chờ 5 tick
 f578 hộp atk2 bật: chạm #12 → hộp 12 tick (tính tick bấm = 1; su 7)
 f578 Lam D 15 atk2 trúng quái gác#5: máu 12  Thế 0 (choang)
 f578   → quái gác#5 tick này: máu −12 (30 → 18), Thế 0 → 0 [choang]
 f578 #13 xep-hang  cần y=0.00  (đang atk2 t7)  hạn f600
 f579   D 15 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
-f580 giu #13: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 90) → chỉ là đánh thường
+f580 giu #13: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 95) → chỉ là đánh thường
 f587 #13 → thuc-hien atk3  chờ 8 tick
 f594 #14 xep-hang  cần y=0.00  (đang atk3 t8)  hạn f625
 f595 hộp atk3 bật: chạm #13 → hộp 17 tick (tính tick bấm = 1; su 9)
 f595 Lam D 16 atk3 trúng quái gác#5: máu 12  Thế 0 (choang)
 f595   → quái gác#5 tick này: máu −12 (18 → 6), Thế 0 → 0 [choang]
-f596 giu #14: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 74) → chỉ là đánh thường
+f596 giu #14: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 79) → chỉ là đánh thường
 f596   D 16 vẫn chồng quái gác#5 nhưng đã trúng → bỏ qua các tick sau
 f604 #14 → bi-thay  bởi #15
 f604 #15 thay-the  cần y=0.00  (đang atk3 t18)  hạn f625
-f606 giu #15: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 64) → chỉ là đánh thường
+f606 giu #15: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 69) → chỉ là đánh thường
 f620 #15 → thuc-hien atk1  chờ 15 tick
 f620 #16 xep-hang  cần y=0.00  (đang atk1 t1)  hạn f648
-f622 giu #16: nha-som (giữ 1 tick < 20; Dư Âm đang hồi 48) → chỉ là đánh thường
+f622 giu #16: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; Dư Âm đang hồi 53) → chỉ là đánh thường
 f626 hộp atk1 bật: chạm #15 → hộp 22 tick (tính tick bấm = 1; su 7)
 f626 Lam D 17 atk1 trúng quái gác#5: máu 12  Thế 0 (choang)
 f626   → quái gác#5 tick này: máu −12 (6 → -6), Thế 0 → 0 [choang]
 f626   quái gác#5 CHẾT
 f635 #16 → thuc-hien atk2  chờ 14 tick
 f641 hộp atk2 bật: chạm #16 → hộp 21 tick (tính tick bấm = 1; su 7)
-f670 Dư Âm: hết hồi chiêu – sẵn sàng
+f675 Dư Âm: hết hồi chiêu – sẵn sàng
 f682   quái gác#5 hồi phục (20 tick, đứng dậy, vỏ VẪN VỠ)
 f693 #17 ra-ngay → atk1  cần y=0.00
-f694 giu #17: nha-som (giữ 1 tick < 20) → chỉ là đánh thường
+f694 giu #17: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
 f699 hộp atk1 bật: chạm #17 → hộp 7 tick (tính tick bấm = 1; su 7)
 f699 Lam D 19 atk1 trúng quái gác#5: máu 12  Thế 0 (hoiPhuc)
 f699   → quái gác#5 tick này: máu −12 (0 → -12), Thế 0 → 0 [hoiPhuc]
@@ -152,10 +155,11 @@ f702   quái gác#5 mất vỏ tới chết (không ổn định, không hồi v
 == Bẫy Dư Âm: chém HỤT, lướt lùi, địch đi vào vết
 f954 #18 ra-ngay → atk1  cần y=0.00
 f960 hộp atk1 bật: chạm #18 → hộp 7 tick (tính tick bấm = 1; su 7)
-f973 giu #18: DA NAP (giữ 20 tick, đòn atk1 còn 4 tick – chạy hết, không cắt)
-f975 ky-nang: xep-hang (nhả khi atk1 t21/23, tung sau tối đa 2 tick, hạn f983)
-f977 ky-nang #4: TUNG (xep-hang → tung khi đòn trước hết re, chờ 1 tick) – chém vang D 21 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung), hồi 150 tick
-f982 vết #4 ĐẶT (lần dùng Dư Âm #4, từ chém vang D 21) ở hộp [7440,382 103×66] – vang sau 24 tick, [16,20] chốt cấp 4
+f973 giu #18: DA NAP (giữ 20 tick mô phỏng (20 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), đòn atk1 còn 4 tick – chạy hết, không cắt)
+f975 ky-nang: xep-hang (nhả sau 21 tick mô phỏng (21 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật), khi atk1 t21/23, tung sau tối đa 2 tick, hạn f983)
+f977 ky-nang #4: TUNG (xep-hang → tung khi đòn trước hết re, chờ 1 tick) – chém vang (cú quét thấp) D 21 chốt [15,20], vết sẽ [16,20] (cấp 4 lúc tung); hồi chiêu 150 tick CHƯA chạy – bắt đầu khi hộp bật (sau 6 tick)
+f982 vết #4 ĐẶT (lần dùng Dư Âm #4, từ chém vang D 21) ở hộp [7440,382 90×66] = phần TRƯỚC Lam của hộp chém vang (bỏ 13 px sau tâm Lam) – vang sau 24 tick, [16,20] chốt cấp 4
+f982 Dư Âm #4: hộp chém vang BẬT (f982) → hồi chiêu BẮT ĐẦU 150 tick; từ giờ lướt / bị đánh KHÔNG hoàn hồi
 f983 Dư Âm #4: chém vang HỤT (vết vẫn đặt – bẫy) → đúng 1 vết
 f1006 vết #4 VANG (D 200004 src 'k' [16,20], hộp bật 4 tick; không chí mạng, không Cộng hưởng, không sinh vết)
 f1006 VẾT D 200004 trúng Chuông Gỗ#3: máu 16
