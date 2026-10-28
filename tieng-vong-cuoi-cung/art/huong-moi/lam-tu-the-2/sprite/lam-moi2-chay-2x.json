@@ -1,0 +1,401 @@
+{
+ "ten": "Lam mới thử 2 – CHẠY 8 tư thế (264 px logic/s, 132 px/vòng), sprite sheet 2x",
+ "phien_ban_clip": "lam-moi-thu2",
+ "anh": "lam-moi2-chay-2x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  946,
+  480
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 2,
+  "khe_px": 2
+ },
+ "co_khung": [
+  235,
+  239
+ ],
+ "diem_neo": {
+  "x": 134,
+  "y": 235,
+  "y_nghia": "toạ độ trong MỖI khung (từ góc trái-trên ô): x = trục thân / giữa collider, y = mặt đất (hàng y−1 là hàng thấp nhất của đế khi chạm đất). Mọi khung cùng một điểm neo; không crop riêng khung.",
+  "x_chay_ghi_chu": "CHẠY: x neo = trung bình giữa-mũ-ở-hàng-mắt của 8 ô (229.8 px gen trong ô), cùng một số cho mọi ô; vị trí trong ô của ảnh gen giữ nguyên"
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 2,
+  "ve_trong_game": "vẽ ở ½ cỡ nguồn",
+  "cao_dang_nghi_px_nguon": 224,
+  "cao_dang_nghi_px_logic": 112.0,
+  "he_so_px_anh_gen_sang_px_nguon": 0.575466,
+  "ghi_chu": "một tỉ lệ cố định cho mọi tư thế của sheet (không co từng hình theo bounding box)"
+ },
+ "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân).",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu2-chay-8o.png",
+ "frames": [
+  {
+   "i": 0,
+   "x": 0,
+   "y": 0,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    229.8,
+    460
+   ],
+   "pha": 0.0,
+   "ms": 62.5
+  },
+  {
+   "i": 1,
+   "x": 237,
+   "y": 0,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    613.8,
+    463
+   ],
+   "pha": 0.125,
+   "ms": 62.5
+  },
+  {
+   "i": 2,
+   "x": 474,
+   "y": 0,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    997.8,
+    463
+   ],
+   "pha": 0.25,
+   "ms": 62.5
+  },
+  {
+   "i": 3,
+   "x": 711,
+   "y": 0,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    1381.8,
+    463
+   ],
+   "pha": 0.375,
+   "ms": 62.5
+  },
+  {
+   "i": 4,
+   "x": 0,
+   "y": 241,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    229.8,
+    931
+   ],
+   "pha": 0.5,
+   "ms": 62.5
+  },
+  {
+   "i": 5,
+   "x": 237,
+   "y": 241,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    613.8,
+    933
+   ],
+   "pha": 0.625,
+   "ms": 62.5
+  },
+  {
+   "i": 6,
+   "x": 474,
+   "y": 241,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    997.8,
+    934
+   ],
+   "pha": 0.75,
+   "ms": 62.5
+  },
+  {
+   "i": 7,
+   "x": 711,
+   "y": 241,
+   "w": 235,
+   "h": 239,
+   "neo_gen": [
+    1381.8,
+    934
+   ],
+   "pha": 0.875,
+   "ms": 62.5
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "cao_logic": 114.2,
+   "dinh_mu_tren_dat_logic": 113.9,
+   "mat_logic": [
+    16.6,
+    -73.5
+   ],
+   "mat_dien_tich_logic2": 10.2,
+   "mu_cao_tren_mat_logic": 40.6,
+   "mu_rong_hang_mat_logic": 46.3,
+   "mat_cach_mep_truoc_mu_ty_le": 0.152,
+   "mau_mu_trung_vi": [
+    47.0,
+    53.0,
+    73.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.1,
+     -49.7
+    ],
+    "rong": 9.8,
+    "cao": 13.8
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 460,
+   "day_hang_gen": 463
+  },
+  {
+   "o": 2,
+   "cao_logic": 107.0,
+   "dinh_mu_tren_dat_logic": 107.0,
+   "mat_logic": [
+    16.3,
+    -69.4
+   ],
+   "mat_dien_tich_logic2": 9.9,
+   "mu_cao_tren_mat_logic": 37.7,
+   "mu_rong_hang_mat_logic": 47.2,
+   "mat_cach_mep_truoc_mu_ty_le": 0.144,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.6,
+     -46.4
+    ],
+    "rong": 9.8,
+    "cao": 10.9
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 463,
+   "day_hang_gen": 463
+  },
+  {
+   "o": 3,
+   "cao_logic": 111.9,
+   "dinh_mu_tren_dat_logic": 111.9,
+   "mat_logic": [
+    15.9,
+    -70.9
+   ],
+   "mat_dien_tich_logic2": 9.7,
+   "mu_cao_tren_mat_logic": 41.1,
+   "mu_rong_hang_mat_logic": 46.9,
+   "mat_cach_mep_truoc_mu_ty_le": 0.152,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.1,
+     -48.3
+    ],
+    "rong": 9.8,
+    "cao": 10.9
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 463,
+   "day_hang_gen": 463
+  },
+  {
+   "o": 4,
+   "cao_logic": 109.6,
+   "dinh_mu_tren_dat_logic": 114.2,
+   "mat_logic": [
+    14.2,
+    -74.6
+   ],
+   "mat_dien_tich_logic2": 9.4,
+   "mu_cao_tren_mat_logic": 39.7,
+   "mu_rong_hang_mat_logic": 44.9,
+   "mat_cach_mep_truoc_mu_ty_le": 0.153,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.1,
+     -51.2
+    ],
+    "rong": 9.8,
+    "cao": 10.6
+   },
+   "bay": true,
+   "nhac_gen": 16,
+   "day_gen": 447,
+   "day_hang_gen": 463
+  },
+  {
+   "o": 5,
+   "cao_logic": 111.6,
+   "dinh_mu_tren_dat_logic": 111.6,
+   "mat_logic": [
+    17.8,
+    -70.9
+   ],
+   "mat_dien_tich_logic2": 9.8,
+   "mu_cao_tren_mat_logic": 40.6,
+   "mu_rong_hang_mat_logic": 44.9,
+   "mat_cach_mep_truoc_mu_ty_le": 0.15,
+   "mau_mu_trung_vi": [
+    46.0,
+    53.0,
+    73.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     11.9,
+     -48.7
+    ],
+    "rong": 9.2,
+    "cao": 10.4
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 931,
+   "day_hang_gen": 934
+  },
+  {
+   "o": 6,
+   "cao_logic": 105.3,
+   "dinh_mu_tren_dat_logic": 105.0,
+   "mat_logic": [
+    16.2,
+    -67.2
+   ],
+   "mat_dien_tich_logic2": 10.4,
+   "mu_cao_tren_mat_logic": 37.7,
+   "mu_rong_hang_mat_logic": 46.6,
+   "mat_cach_mep_truoc_mu_ty_le": 0.148,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    72.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.7,
+     -44.7
+    ],
+    "rong": 9.8,
+    "cao": 13.2
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 933,
+   "day_hang_gen": 934
+  },
+  {
+   "o": 7,
+   "cao_logic": 110.2,
+   "dinh_mu_tren_dat_logic": 109.9,
+   "mat_logic": [
+    16.2,
+    -69.4
+   ],
+   "mat_dien_tich_logic2": 10.2,
+   "mu_cao_tren_mat_logic": 40.6,
+   "mu_rong_hang_mat_logic": 47.5,
+   "mat_cach_mep_truoc_mu_ty_le": 0.15,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    71.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.0,
+     -47.0
+    ],
+    "rong": 9.5,
+    "cao": 10.6
+   },
+   "bay": false,
+   "nhac_gen": 0,
+   "day_gen": 934,
+   "day_hang_gen": 934
+  },
+  {
+   "o": 8,
+   "cao_logic": 107.9,
+   "dinh_mu_tren_dat_logic": 112.5,
+   "mat_logic": [
+    15.2,
+    -72.3
+   ],
+   "mat_dien_tich_logic2": 9.8,
+   "mu_cao_tren_mat_logic": 40.3,
+   "mu_rong_hang_mat_logic": 46.0,
+   "mat_cach_mep_truoc_mu_ty_le": 0.152,
+   "mau_mu_trung_vi": [
+    47.0,
+    54.0,
+    73.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     10.0,
+     -48.5
+    ],
+    "rong": 9.8,
+    "cao": 13.5
+   },
+   "bay": true,
+   "nhac_gen": 16,
+   "day_gen": 918,
+   "day_hang_gen": 934
+  }
+ ],
+ "lap": true,
+ "so_khung": 8,
+ "cach_phat": "theo QUÃNG ĐƯỜNG: pha += |dx_thực| / quang ; khung = floor(pha × 8) ; pha không reset (mỗi ô = 16,5 px)",
+ "toc_do_chuan": {
+  "quang_duong_moi_chu_ky_px_logic": 132.0,
+  "toc_do_px_logic_s": 264.0,
+  "ms_moi_o_o_toc_do_chuan": 62.5
+ },
+ "tu_the": [
+  "1 chân gần chạm đất",
+  "2 chịu lực chân gần",
+  "3 đẩy đất chân gần",
+  "4 bay – chân xa đưa trước",
+  "5 chân xa chạm đất",
+  "6 chịu lực chân xa",
+  "7 đẩy đất chân xa",
+  "8 bay – chân gần đưa trước"
+ ]
+}
