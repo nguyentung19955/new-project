@@ -343,6 +343,10 @@ async function vbXuat() {
   const ten = 'p0b-log-' + (VB.SO.cau || 'chua-chon') + '-' + g.luc.replace(/[:.]/g, '-').slice(0, 19) + '.json';
   const tt = document.getElementById('vb-xuat-tt'); if (tt) { tt.hidden = false; tt.textContent = g.tomTat + (g.luotTruoc ? '\n\n(kèm lượt trước: ' + g.luotTruoc.cfg + ')\n' + g.luotTruoc.tomTat : ''); }
   VB.ghi('XUẤT LOG ' + ten, 'xuat');
+  /* Trong app Claude (artifact) không tải file được → CHÉP log vào bộ nhớ tạm (ngay trong lần bấm) để dán gửi đi; vẫn hiện tóm tắt chọn-copy được */
+  try { const txt = g.tomTat + '\n\n' + JSON.stringify(g); navigator.clipboard.writeText(txt).then(
+    () => { if (tt) tt.textContent = '✓ ĐÃ CHÉP LOG – dán (Paste) vào tin nhắn gửi Claude.\n\n' + tt.textContent; },
+    () => { if (tt) tt.textContent = '(Không chép tự động được – giữ ngón tay để chọn và copy đoạn dưới.)\n\n' + tt.textContent; }); } catch (e) {}
   const blob = new Blob([JSON.stringify(g, null, 1)], {type: 'application/json'});
   try { const f = new File([blob], ten, {type: 'application/json'});
     if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: ten}); return; } }
