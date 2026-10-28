@@ -1,0 +1,195 @@
+{
+ "ten": "Lam mới bộ 3 – tuong (W1 / W2 / W3 / W4), sprite sheet 2x",
+ "phien_ban_clip": "lam-moi-thu3",
+ "vai": "tuong",
+ "tu_the": [
+  "W1",
+  "W2",
+  "W3",
+  "W4"
+ ],
+ "anh": "lam-moi3-tuong-2x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1082,
+  327
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  269,
+  327
+ ],
+ "diem_neo": {
+  "x": 243,
+  "y": 230,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 2,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (4 ô hàng mắt dính tay/áo → rộng = cao × 1.18)"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.276887
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Mẫu VÁCH BÊN PHẢI: Lam nhìn vào vách (phải). Vách trái → lật cả hình quanh neo x (không tráo tay).",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu3-tuong-4o.png",
+ "thu_co": {
+  "loc": "cv2 INTER_AREA",
+  "lam_net": null
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "W1",
+   "x": 0,
+   "y": 0,
+   "w": 269,
+   "h": 327,
+   "neo_gen": [
+    477.9,
+    461
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 1,
+   "nhan": "W2",
+   "x": 271,
+   "y": 0,
+   "w": 269,
+   "h": 327,
+   "neo_gen": [
+    988.9,
+    493
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "W3",
+   "x": 542,
+   "y": 0,
+   "w": 269,
+   "h": 327,
+   "neo_gen": [
+    1531.9,
+    521
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 3,
+   "nhan": "W4",
+   "x": 813,
+   "y": 0,
+   "w": 269,
+   "h": 327,
+   "neo_gen": [
+    2074.9,
+    555
+   ],
+   "nguon": "chinh"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "W1",
+   "cao_logic": 154.5,
+   "dinh_tren_neo_logic": 109.0,
+   "mu_rong_hang_mat_logic": 53.2,
+   "mu_so_chot_phan_tram": 27.8,
+   "mat_logic": [
+    -17.0,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.3,
+   "co_mu_so_chot_phan_tram": -2.6,
+   "mat_dien_tich_logic": 12.5,
+   "mau_mu_trung_vi": [
+    45.0,
+    53.0,
+    71.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "W2",
+   "cao_logic": 157.5,
+   "dinh_tren_neo_logic": 110.9,
+   "mu_rong_hang_mat_logic": 52.3,
+   "mu_so_chot_phan_tram": 25.8,
+   "mat_logic": [
+    -17.8,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 38.2,
+   "co_mu_so_chot_phan_tram": 2.6,
+   "mat_dien_tich_logic": 12.2,
+   "mau_mu_trung_vi": [
+    44.0,
+    51.0,
+    68.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "W3",
+   "cao_logic": 150.9,
+   "dinh_tren_neo_logic": 111.5,
+   "mu_rong_hang_mat_logic": 52.6,
+   "mu_so_chot_phan_tram": 26.5,
+   "mat_logic": [
+    -17.5,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 38.8,
+   "co_mu_so_chot_phan_tram": 4.1,
+   "mat_dien_tich_logic": 12.6,
+   "mau_mu_trung_vi": [
+    44.0,
+    52.0,
+    69.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "W4",
+   "cao_logic": 139.6,
+   "dinh_tren_neo_logic": 109.0,
+   "mu_rong_hang_mat_logic": 52.3,
+   "mu_so_chot_phan_tram": 25.8,
+   "mat_logic": [
+    -16.8,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.3,
+   "co_mu_so_chot_phan_tram": -2.6,
+   "mat_dien_tich_logic": 12.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    70.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  }
+ ]
+}

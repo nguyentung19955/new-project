@@ -49,9 +49,9 @@ if len(R_PB) < 15: loi.append('tao-tu-p0a.py: chỉ đọc được %d chỗ tha
 R = []
 def thay(mo_ta, cu, moi, lan=1): R.append((mo_ta, cu, moi, lan))
 
-thay('tiêu đề', '<title>Tiếng Vọng – Thử Âm Đao cấp 1–4 (trên P0-A)</title>', '<title>Tiếng Vọng – Thử Lam mới 2 (chạy + chém 1)</title>')
+thay('tiêu đề', '<title>Tiếng Vọng – Thử Âm Đao cấp 1–4 (trên P0-A)</title>', '<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3)</title>')
 thay('màn bắt đầu', '<p class="big">Thử Âm Đao cấp 1–4 · đánh thường + âm nhận, giữ Chém = Dư Âm (cấp 3+)</p>',
-     '<p class="big">Thử Lam mới 2 · CHẠY 8 tư thế + CHÉM 1 (A lấy đà · B cắt · C kết thúc · D hồi). Động tác khác dùng hình TẠM. '
+     '<p class="big">Thử Lam mới · bộ tư thế 3: đứng, chạy, chém 1, nhảy/rơi/tiếp đất, pogo, bám/trượt tường. Chém 2/3, hất, lướt, bị đánh còn hình TẠM. '
      '⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>')
 thay('ảnh Âm Đao ở thư mục thu-p0a', "'am-dao/", "'../thu-p0a/am-dao/", 5)
 # móc vẽ: Lam mới thay phần thân của drawLam (bóng Vọng / vệt lướt cũng đi qua đây); ?lam=cu → LM2.ve trả false → vẽ Lam cũ

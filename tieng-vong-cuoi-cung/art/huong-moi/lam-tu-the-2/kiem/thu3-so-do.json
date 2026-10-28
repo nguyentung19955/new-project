@@ -1,0 +1,667 @@
+{
+ "pogo": [
+  {
+   "o": 1,
+   "nhan": "P1",
+   "cao_logic": 90.7,
+   "dinh_tren_neo_logic": 109.8,
+   "mu_rong_hang_mat_logic": 52.0,
+   "mu_so_chot_phan_tram": 25.1,
+   "mat_logic": [
+    19.3,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 37.2,
+   "co_mu_so_chot_phan_tram": 0.0,
+   "mat_dien_tich_logic": 10.8,
+   "mau_mu_trung_vi": [
+    51.0,
+    57.0,
+    74.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "P2",
+   "cao_logic": 100.3,
+   "dinh_tren_neo_logic": 110.5,
+   "mu_rong_hang_mat_logic": 43.9,
+   "mu_so_chot_phan_tram": 5.6,
+   "mat_logic": [
+    15.5,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 37.9,
+   "co_mu_so_chot_phan_tram": 0.8,
+   "mat_dien_tich_logic": 10.9,
+   "mau_mu_trung_vi": [
+    50.0,
+    56.0,
+    73.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "P3",
+   "cao_logic": 103.6,
+   "dinh_tren_neo_logic": 104.8,
+   "mu_rong_hang_mat_logic": 39.4,
+   "mu_so_chot_phan_tram": -5.4,
+   "mat_logic": [
+    13.2,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 32.2,
+   "co_mu_so_chot_phan_tram": -12.0,
+   "mat_dien_tich_logic": 10.0,
+   "mau_mu_trung_vi": [
+    51.0,
+    56.0,
+    74.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  }
+ ],
+ "tuong": [
+  {
+   "o": 1,
+   "nhan": "W1",
+   "cao_logic": 154.5,
+   "dinh_tren_neo_logic": 109.0,
+   "mu_rong_hang_mat_logic": 53.2,
+   "mu_so_chot_phan_tram": 27.8,
+   "mat_logic": [
+    -17.0,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.3,
+   "co_mu_so_chot_phan_tram": -2.6,
+   "mat_dien_tich_logic": 12.5,
+   "mau_mu_trung_vi": [
+    45.0,
+    53.0,
+    71.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "W2",
+   "cao_logic": 157.5,
+   "dinh_tren_neo_logic": 110.9,
+   "mu_rong_hang_mat_logic": 52.3,
+   "mu_so_chot_phan_tram": 25.8,
+   "mat_logic": [
+    -17.8,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 38.2,
+   "co_mu_so_chot_phan_tram": 2.6,
+   "mat_dien_tich_logic": 12.2,
+   "mau_mu_trung_vi": [
+    44.0,
+    51.0,
+    68.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "W3",
+   "cao_logic": 150.9,
+   "dinh_tren_neo_logic": 111.5,
+   "mu_rong_hang_mat_logic": 52.6,
+   "mu_so_chot_phan_tram": 26.5,
+   "mat_logic": [
+    -17.5,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 38.8,
+   "co_mu_so_chot_phan_tram": 4.1,
+   "mat_dien_tich_logic": 12.6,
+   "mau_mu_trung_vi": [
+    44.0,
+    52.0,
+    69.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "W4",
+   "cao_logic": 139.6,
+   "dinh_tren_neo_logic": 109.0,
+   "mu_rong_hang_mat_logic": 52.3,
+   "mu_so_chot_phan_tram": 25.8,
+   "mat_logic": [
+    -16.8,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.3,
+   "co_mu_so_chot_phan_tram": -2.6,
+   "mat_dien_tich_logic": 12.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    70.0
+   ],
+   "neo_x": "tuong",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  }
+ ],
+ "nhay": [
+  {
+   "o": 1,
+   "nhan": "J1",
+   "cao_logic": 118.9,
+   "dinh_tren_neo_logic": 109.9,
+   "mu_rong_hang_mat_logic": 44.2,
+   "mu_so_chot_phan_tram": 6.3,
+   "mat_logic": [
+    15.3,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 37.2,
+   "co_mu_so_chot_phan_tram": 0.2,
+   "mat_dien_tich_logic": 8.4,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    73.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "J2",
+   "cao_logic": 104.6,
+   "dinh_tren_neo_logic": 108.9,
+   "mu_rong_hang_mat_logic": 43.9,
+   "mu_so_chot_phan_tram": 5.6,
+   "mat_logic": [
+    15.3,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.1,
+   "co_mu_so_chot_phan_tram": -1.6,
+   "mat_dien_tich_logic": 7.7,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    73.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "J3",
+   "cao_logic": 106.6,
+   "dinh_tren_neo_logic": 107.9,
+   "mu_rong_hang_mat_logic": 44.2,
+   "mu_so_chot_phan_tram": 6.3,
+   "mat_logic": [
+    15.1,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 35.0,
+   "co_mu_so_chot_phan_tram": -2.8,
+   "mat_dien_tich_logic": 8.4,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    73.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "F1",
+   "cao_logic": 107.4,
+   "dinh_tren_neo_logic": 109.3,
+   "mu_rong_hang_mat_logic": 45.0,
+   "mu_so_chot_phan_tram": 8.3,
+   "mat_logic": [
+    15.5,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.6,
+   "co_mu_so_chot_phan_tram": 0.4,
+   "mat_dien_tich_logic": 8.5,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    73.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 5,
+   "nhan": "F2",
+   "cao_logic": 108.2,
+   "dinh_tren_neo_logic": 109.6,
+   "mu_rong_hang_mat_logic": 44.5,
+   "mu_so_chot_phan_tram": 6.9,
+   "mat_logic": [
+    14.9,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.6,
+   "co_mu_so_chot_phan_tram": -0.2,
+   "mat_dien_tich_logic": 7.7,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    72.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "mat",
+   "nguon": "chinh"
+  },
+  {
+   "o": 6,
+   "nhan": "L",
+   "cao_logic": 96.2,
+   "dinh_tren_neo_logic": 95.4,
+   "mu_rong_hang_mat_logic": 46.4,
+   "mu_so_chot_phan_tram": 11.7,
+   "mat_logic": [
+    15.9,
+    -57.5
+   ],
+   "mu_cao_tren_mat_logic": 37.8,
+   "co_mu_so_chot_phan_tram": 3.5,
+   "mat_dien_tich_logic": 8.4,
+   "mau_mu_trung_vi": [
+    47.0,
+    54.0,
+    76.0
+   ],
+   "neo_x": "mu",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "dung": [
+  {
+   "o": 1,
+   "nhan": "I1",
+   "cao_logic": 108.9,
+   "dinh_tren_neo_logic": 108.9,
+   "mu_rong_hang_mat_logic": 42.4,
+   "mu_so_chot_phan_tram": 2.0,
+   "mat_logic": [
+    13.5,
+    -70.9
+   ],
+   "mu_cao_tren_mat_logic": 38.0,
+   "co_mu_so_chot_phan_tram": -0.7,
+   "mat_dien_tich_logic": 7.5,
+   "mau_mu_trung_vi": [
+    44.0,
+    52.0,
+    70.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "I2",
+   "cao_logic": 109.2,
+   "dinh_tren_neo_logic": 109.0,
+   "mu_rong_hang_mat_logic": 43.4,
+   "mu_so_chot_phan_tram": 4.4,
+   "mat_logic": [
+    13.5,
+    -71.2
+   ],
+   "mu_cao_tren_mat_logic": 37.7,
+   "co_mu_so_chot_phan_tram": 0.0,
+   "mat_dien_tich_logic": 7.5,
+   "mau_mu_trung_vi": [
+    44.0,
+    52.0,
+    70.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "I3",
+   "cao_logic": 109.0,
+   "dinh_tren_neo_logic": 108.9,
+   "mu_rong_hang_mat_logic": 43.4,
+   "mu_so_chot_phan_tram": 4.4,
+   "mat_logic": [
+    12.5,
+    -71.0
+   ],
+   "mu_cao_tren_mat_logic": 37.9,
+   "co_mu_so_chot_phan_tram": 0.2,
+   "mat_dien_tich_logic": 7.5,
+   "mau_mu_trung_vi": [
+    44.0,
+    53.0,
+    71.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "chay": [
+  {
+   "o": 1,
+   "nhan": "R1",
+   "cao_logic": 107.0,
+   "dinh_tren_neo_logic": 107.0,
+   "mu_rong_hang_mat_logic": 43.4,
+   "mu_so_chot_phan_tram": 4.3,
+   "mat_logic": [
+    15.5,
+    -68.8
+   ],
+   "mu_cao_tren_mat_logic": 38.0,
+   "co_mu_so_chot_phan_tram": 0.3,
+   "mat_dien_tich_logic": 8.9,
+   "mau_mu_trung_vi": [
+    47.0,
+    53.0,
+    73.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 2,
+   "nhan": "R2",
+   "cao_logic": 99.9,
+   "dinh_tren_neo_logic": 99.9,
+   "mu_rong_hang_mat_logic": 44.5,
+   "mu_so_chot_phan_tram": 6.9,
+   "mat_logic": [
+    14.9,
+    -63.5
+   ],
+   "mu_cao_tren_mat_logic": 36.4,
+   "co_mu_so_chot_phan_tram": -0.6,
+   "mat_dien_tich_logic": 8.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    72.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 3,
+   "nhan": "R3",
+   "cao_logic": 104.8,
+   "dinh_tren_neo_logic": 104.8,
+   "mu_rong_hang_mat_logic": 43.9,
+   "mu_so_chot_phan_tram": 5.6,
+   "mat_logic": [
+    14.9,
+    -66.4
+   ],
+   "mu_cao_tren_mat_logic": 38.5,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mat_dien_tich_logic": 8.5,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 4,
+   "nhan": "R4",
+   "cao_logic": 102.6,
+   "dinh_tren_neo_logic": 107.0,
+   "mu_rong_hang_mat_logic": 42.0,
+   "mu_so_chot_phan_tram": 1.1,
+   "mat_logic": [
+    13.3,
+    -69.9
+   ],
+   "mu_cao_tren_mat_logic": 37.2,
+   "co_mu_so_chot_phan_tram": -2.3,
+   "mat_dien_tich_logic": 8.2,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": true
+  },
+  {
+   "o": 5,
+   "nhan": "R5",
+   "cao_logic": 101.8,
+   "dinh_tren_neo_logic": 101.8,
+   "mu_rong_hang_mat_logic": 43.6,
+   "mu_so_chot_phan_tram": 5.0,
+   "mat_logic": [
+    16.4,
+    -63.0
+   ],
+   "mu_cao_tren_mat_logic": 38.8,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mat_dien_tich_logic": 9.0,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 6,
+   "nhan": "R6",
+   "cao_logic": 96.4,
+   "dinh_tren_neo_logic": 96.4,
+   "mu_rong_hang_mat_logic": 44.2,
+   "mu_so_chot_phan_tram": 6.2,
+   "mat_logic": [
+    15.1,
+    -60.3
+   ],
+   "mu_cao_tren_mat_logic": 36.1,
+   "co_mu_so_chot_phan_tram": -1.3,
+   "mat_dien_tich_logic": 8.4,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 7,
+   "nhan": "R7",
+   "cao_logic": 103.2,
+   "dinh_tren_neo_logic": 103.2,
+   "mu_rong_hang_mat_logic": 44.5,
+   "mu_so_chot_phan_tram": 6.9,
+   "mat_logic": [
+    15.2,
+    -65.0
+   ],
+   "mu_cao_tren_mat_logic": 38.0,
+   "co_mu_so_chot_phan_tram": 1.6,
+   "mat_dien_tich_logic": 8.9,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 8,
+   "nhan": "R8",
+   "cao_logic": 101.0,
+   "dinh_tren_neo_logic": 105.3,
+   "mu_rong_hang_mat_logic": 43.1,
+   "mu_so_chot_phan_tram": 3.7,
+   "mat_logic": [
+    14.2,
+    -67.7
+   ],
+   "mu_cao_tren_mat_logic": 37.7,
+   "co_mu_so_chot_phan_tram": -0.3,
+   "mat_dien_tich_logic": 8.6,
+   "mau_mu_trung_vi": [
+    47.0,
+    54.0,
+    73.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": true
+  }
+ ],
+ "chem1": [
+  {
+   "o": 1,
+   "nhan": "A",
+   "cao_logic": 97.5,
+   "dinh_tren_neo_logic": 96.5,
+   "mu_rong_hang_mat_logic": 46.4,
+   "mu_so_chot_phan_tram": 11.5,
+   "mat_logic": [
+    22.6,
+    -60.3
+   ],
+   "mu_cao_tren_mat_logic": 36.2,
+   "co_mu_so_chot_phan_tram": 1.3,
+   "mat_dien_tich_logic": 6.7,
+   "mau_mu_trung_vi": [
+    47.0,
+    55.0,
+    75.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "B",
+   "cao_logic": 97.7,
+   "dinh_tren_neo_logic": 96.7,
+   "mu_rong_hang_mat_logic": 44.9,
+   "mu_so_chot_phan_tram": 8.0,
+   "mat_logic": [
+    20.5,
+    -63.0
+   ],
+   "mu_cao_tren_mat_logic": 33.7,
+   "co_mu_so_chot_phan_tram": -3.8,
+   "mat_dien_tich_logic": 6.8,
+   "mau_mu_trung_vi": [
+    46.0,
+    53.0,
+    74.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "C",
+   "cao_logic": 97.5,
+   "dinh_tren_neo_logic": 96.7,
+   "mu_rong_hang_mat_logic": 45.1,
+   "mu_so_chot_phan_tram": 8.5,
+   "mat_logic": [
+    20.0,
+    -61.4
+   ],
+   "mu_cao_tren_mat_logic": 35.4,
+   "co_mu_so_chot_phan_tram": -1.3,
+   "mat_dien_tich_logic": 7.0,
+   "mau_mu_trung_vi": [
+    47.0,
+    54.0,
+    76.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "D",
+   "cao_logic": 97.5,
+   "dinh_tren_neo_logic": 96.7,
+   "mu_rong_hang_mat_logic": 46.8,
+   "mu_so_chot_phan_tram": 12.5,
+   "mat_logic": [
+    16.3,
+    -60.5
+   ],
+   "mu_cao_tren_mat_logic": 36.2,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mat_dien_tich_logic": 7.0,
+   "mau_mu_trung_vi": [
+    47.0,
+    55.0,
+    76.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "_lam_chot_mu_rong_logic": 41.6
+}

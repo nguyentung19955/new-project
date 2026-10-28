@@ -1,0 +1,353 @@
+{
+ "ten": "Lam mới bộ 3 – chay (R1 / R2 / R3 / R4 / R5 / R6 / R7 / R8), sprite sheet 2x",
+ "phien_ban_clip": "lam-moi-thu3",
+ "vai": "chay",
+ "tu_the": [
+  "R1",
+  "R2",
+  "R3",
+  "R4",
+  "R5",
+  "R6",
+  "R7",
+  "R8"
+ ],
+ "anh": "lam-moi3-chay-2x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  890,
+  452
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 2,
+  "khe_px": 2
+ },
+ "co_khung": [
+  221,
+  225
+ ],
+ "diem_neo": {
+  "x": 126,
+  "y": 221,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 2,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 8 ô",
+   "goc": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 8 ô"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.269396,
+   "goc": 0.269396
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh neo x.",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu3-chay-sua.png + thu2-chay-8o.png (ô [1, 3, 4, 7, 8])",
+ "thu_co": {
+  "loc": "cv2 INTER_AREA",
+  "lam_net": null
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "R1",
+   "x": 0,
+   "y": 0,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    229.8,
+    460
+   ],
+   "nguon": "goc"
+  },
+  {
+   "i": 1,
+   "nhan": "R2",
+   "x": 223,
+   "y": 0,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    613.0,
+    463
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "R3",
+   "x": 446,
+   "y": 0,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    997.8,
+    463
+   ],
+   "nguon": "goc"
+  },
+  {
+   "i": 3,
+   "nhan": "R4",
+   "x": 669,
+   "y": 0,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    1381.8,
+    463
+   ],
+   "nguon": "goc"
+  },
+  {
+   "i": 4,
+   "nhan": "R5",
+   "x": 0,
+   "y": 227,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    229.0,
+    920
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 5,
+   "nhan": "R6",
+   "x": 223,
+   "y": 227,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    613.0,
+    927
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 6,
+   "nhan": "R7",
+   "x": 446,
+   "y": 227,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    997.8,
+    934
+   ],
+   "nguon": "goc"
+  },
+  {
+   "i": 7,
+   "nhan": "R8",
+   "x": 669,
+   "y": 227,
+   "w": 221,
+   "h": 225,
+   "neo_gen": [
+    1381.8,
+    934
+   ],
+   "nguon": "goc"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "R1",
+   "cao_logic": 107.0,
+   "dinh_tren_neo_logic": 107.0,
+   "mu_rong_hang_mat_logic": 43.4,
+   "mu_so_chot_phan_tram": 4.3,
+   "mat_logic": [
+    15.5,
+    -68.8
+   ],
+   "mu_cao_tren_mat_logic": 38.0,
+   "co_mu_so_chot_phan_tram": 0.3,
+   "mat_dien_tich_logic": 8.9,
+   "mau_mu_trung_vi": [
+    47.0,
+    53.0,
+    73.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 2,
+   "nhan": "R2",
+   "cao_logic": 99.9,
+   "dinh_tren_neo_logic": 99.9,
+   "mu_rong_hang_mat_logic": 44.5,
+   "mu_so_chot_phan_tram": 6.9,
+   "mat_logic": [
+    14.9,
+    -63.5
+   ],
+   "mu_cao_tren_mat_logic": 36.4,
+   "co_mu_so_chot_phan_tram": -0.6,
+   "mat_dien_tich_logic": 8.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    72.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 3,
+   "nhan": "R3",
+   "cao_logic": 104.8,
+   "dinh_tren_neo_logic": 104.8,
+   "mu_rong_hang_mat_logic": 43.9,
+   "mu_so_chot_phan_tram": 5.6,
+   "mat_logic": [
+    14.9,
+    -66.4
+   ],
+   "mu_cao_tren_mat_logic": 38.5,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mat_dien_tich_logic": 8.5,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 4,
+   "nhan": "R4",
+   "cao_logic": 102.6,
+   "dinh_tren_neo_logic": 107.0,
+   "mu_rong_hang_mat_logic": 42.0,
+   "mu_so_chot_phan_tram": 1.1,
+   "mat_logic": [
+    13.3,
+    -69.9
+   ],
+   "mu_cao_tren_mat_logic": 37.2,
+   "co_mu_so_chot_phan_tram": -2.3,
+   "mat_dien_tich_logic": 8.2,
+   "mau_mu_trung_vi": [
+    46.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": true
+  },
+  {
+   "o": 5,
+   "nhan": "R5",
+   "cao_logic": 101.8,
+   "dinh_tren_neo_logic": 101.8,
+   "mu_rong_hang_mat_logic": 43.6,
+   "mu_so_chot_phan_tram": 5.0,
+   "mat_logic": [
+    16.4,
+    -63.0
+   ],
+   "mu_cao_tren_mat_logic": 38.8,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mat_dien_tich_logic": 9.0,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 6,
+   "nhan": "R6",
+   "cao_logic": 96.4,
+   "dinh_tren_neo_logic": 96.4,
+   "mu_rong_hang_mat_logic": 44.2,
+   "mu_so_chot_phan_tram": 6.2,
+   "mat_logic": [
+    15.1,
+    -60.3
+   ],
+   "mu_cao_tren_mat_logic": 36.1,
+   "co_mu_so_chot_phan_tram": -1.3,
+   "mat_dien_tich_logic": 8.4,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "chinh",
+   "bay": false
+  },
+  {
+   "o": 7,
+   "nhan": "R7",
+   "cao_logic": 103.2,
+   "dinh_tren_neo_logic": 103.2,
+   "mu_rong_hang_mat_logic": 44.5,
+   "mu_so_chot_phan_tram": 6.9,
+   "mat_logic": [
+    15.2,
+    -65.0
+   ],
+   "mu_cao_tren_mat_logic": 38.0,
+   "co_mu_so_chot_phan_tram": 1.6,
+   "mat_dien_tich_logic": 8.9,
+   "mau_mu_trung_vi": [
+    45.0,
+    52.0,
+    71.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": false
+  },
+  {
+   "o": 8,
+   "nhan": "R8",
+   "cao_logic": 101.0,
+   "dinh_tren_neo_logic": 105.3,
+   "mu_rong_hang_mat_logic": 43.1,
+   "mu_so_chot_phan_tram": 3.7,
+   "mat_logic": [
+    14.2,
+    -67.7
+   ],
+   "mu_cao_tren_mat_logic": 37.7,
+   "co_mu_so_chot_phan_tram": -0.3,
+   "mat_dien_tich_logic": 8.6,
+   "mau_mu_trung_vi": [
+    47.0,
+    54.0,
+    73.0
+   ],
+   "neo_x": "o",
+   "neo_y": "chay",
+   "nguon": "goc",
+   "bay": true
+  }
+ ]
+}

@@ -12,4 +12,7 @@ Ghi chú đầy đủ, số đo, tự kiểm, đề xuất gen lại: **`game/th
 | `kiem/so-do.json` | số đo từng tư thế (px logic) + Lam chốt |
 | `gif/` | GIF tại chỗ 112 px / 2x, màu / bóng đen, bản chậm ×4 |
 | `code/tach.py`, `dung_sheet.py`, `xuat.py` | tách nền, dựng sheet, xuất ảnh kiểm + GIF |
-| `code/dung_thu3.py` + `code/bang-thu3.json` | **PH13 (29/10)**: dựng sheet bộ 3 (pogo / tường / nhảy-rơi / đứng / chạy sửa / chém 1 sửa) bằng 1 lệnh, tỉ lệ theo mũ Lam chốt, xuất 2x + 3x → `sprite/lam-moi3-*`, cập nhật `sprite/thu3-danh-sach.json` (hiện rỗng – chưa có ảnh). Hướng dẫn: GHI-CHU mục "Khung code cho các sheet sắp gen" |
+| `code/dung_thu3.py` + `code/bang-thu3.json` | **PH13 (29/10)**: dựng sheet bộ 3 (pogo / tường / nhảy-rơi / đứng / chạy sửa / chém 1 sửa) bằng 1 lệnh, tỉ lệ theo mũ Lam chốt, xuất 2x + 3x → `sprite/lam-moi3-*`, cập nhật `sprite/thu3-danh-sach.json`. Hướng dẫn: GHI-CHU mục "Khung code cho các sheet sắp gen" |
+| `sprite/lam-moi3-{dung,chay,chem1,nhay,pogo,tuong}-{2x,3x}.png/.json` | **Bộ tư thế 3 (29/10)**: đứng I1–I3, chạy sửa R1–R8 (ô 2/5/6 mới + ô 1/3/4/7/8 lấy lại từ thử 2), chém 1 sửa A–D, nhảy/rơi/tiếp đất J1 J2 J3 F1 F2 L, pogo P1–P3, tường W1–W4 (vách phải). MỘT luật tỉ lệ: cỡ mũ khớp Lam chốt |
+| `kiem/thu3-so-mu.png` | đầu mọi tư thế bộ 3 cạnh Lam chốt, căn theo mắt; ⚠ = lệch rõ |
+| `kiem/thu3-*-dai.png`, `kiem/thu3-so-do.json`, `kiem/thu3-do-dao.png` | ảnh dải từng sheet, số đo mũ/mắt, lưới đo tay/mũi dao đặt vệt |

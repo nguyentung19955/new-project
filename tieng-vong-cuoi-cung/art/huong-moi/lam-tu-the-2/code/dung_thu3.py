@@ -12,15 +12,16 @@ Ra: sprite/lam-moi3-<ten>-{2x,3x}.{png,json}, sprite/thu3-danh-sach.json (game �
     kiem/thu3-<ten>-dai.png (2x trên xám + 112 px nền tối + bóng đen 112, có Lam chốt cùng thang), kiem/thu3-so-do.json.
 
 TỈ LỆ (PH13 mục 1.3 + 4): MỘT tỉ lệ cho mỗi ảnh nguồn, lấy từ ẢNH LAM CHỐT – KHÔNG co từng hình theo khung bao, không theo chiều cao:
-    k (px gen → px logic) = bề rộng mũ ở hàng mắt của Lam chốt (cao 112 logic) / TRUNG VỊ bề rộng mũ ở hàng mắt các ô đo được.
-    Ô nào không thấy mắt (quay lưng…) thì không góp số đo; nếu < một nửa số ô đo được → dùng chiều cao mũ trên mắt (cùng cách).
+    k (px gen → px logic) = CỠ MŨ Lam chốt (cao 112 logic) / TRUNG VỊ cỡ mũ các ô; cỡ mũ = căn(bề rộng ở hàng mắt × cao trên mắt)
+    (bộ 3, 29/10: chỉ bề rộng thì sai ở tường – tay áp vách dính hàng mắt – và pogo P1 – vạt áo; xem co_mu). Ô không thấy mắt không góp số.
     → Mũ cùng cỡ ảnh chốt giữa mọi sheet bộ 3 (sheet chạy/chém thử 2 dựng theo chiều cao nên mũ to hơn chốt 8–31 %: xem so-do).
 NEO (toạ độ chân của game: x = trục thân / giữa collider, y = mặt đất / đáy hình), chọn theo từng sheet (hoặc từng ô):
     neo_x  'mu'    = giữa mũ ở hàng mắt của TỪNG ô (trục thân; tư thế trên không, không có chân trụ)
            'ung'   = giữa hai ủng của từng ô + MỘT hằng số (giữa mũ − giữa ủng của ô 'trung_tinh') – như chém thử 2 (chân trụ đứng yên)
            'o'     = giữ NGUYÊN vị trí trong ô của ảnh gen (một hằng số = trung bình giữa mũ các ô) – như chạy thử 2
            'tuong' = điểm XA NHẤT bên phải (tay/ủng áp vách, mẫu vách bên phải) đặt cách trục 10 px logic (= nửa collider 20 px)
-    neo_y  'day'   = đáy hình ; 'ung' = đáy ủng (thiếu ủng → đáy hình) ; 'chay' = như chạy thử 2 (đất theo hàng, ô 4/8 giữ độ nhấc)
+    neo_y  'mat'   = mắt cao đúng như Lam chốt trên chân (72,6 px logic) – tư thế trên không / tường: đầu liền mạch giữa các hình ;
+           'day'   = đáy hình ; 'ung' = đáy ủng (thiếu ủng → đáy hình) ; 'chay' = như chạy thử 2 (đất theo hàng, ô 4/8 giữ độ nhấc)
 Chia ô: thành phần liên thông lớn nhất trong từng ô lưới (tach.cat_o) – ảnh gen phải là lưới đều, nền trắng.
 Tuỳ chọn trong bảng: "lay_o_tu": {"file": "thu2-chay-8o.png", "o": [1, 3, 4, 7, 8]} → các ô này lấy từ ảnh gốc (PH13: máy gen đổi ô "giữ
 nguyên" thì lấy lại ô cũ); mỗi ảnh nguồn có tỉ lệ riêng theo CÙNG luật mũ chốt.
@@ -58,13 +59,29 @@ def nap_nguon(path, cot, hang):
     return rgba, tt, [do_tu_the(rgba, m) for *_, m in tt]
 
 
-def ty_le(do, C):
-    """k = px gen → px logic, từ mũ Lam chốt (trung vị). Trả (k, cách, số ô đo)"""
-    w = [d['mu_rong_hang_mat'] for d in do if d['mat'] and d['mu_rong_hang_mat']]
-    if len(w) * 2 >= len(do): return C['mu_rong'] / float(np.median(w)), 'bề rộng mũ ở hàng mắt (trung vị %d ô)' % len(w), len(w)
-    h = [d['mu_cao_tren_mat'] for d in do if d['mat'] and d['mu_cao_tren_mat']]
-    if h: return C['mu_cao'] / float(np.median(h)), 'chiều cao mũ trên mắt (trung vị %d ô – ít ô thấy mắt)' % len(h), len(h)
-    raise SystemExit('không đo được mũ ở ô nào (không thấy mắt) – kiểm ảnh nguồn')
+R_MU = 1.18   # tỉ lệ rộng/cao mũ điển hình ở các ô "sạch" (chạy, đứng, nhảy, pogo P2/P3: 1,14–1,22) – dùng khi hàng mắt dính tay/áo
+
+
+def co_mu(d):
+    """CỠ MŨ một ô (px gen) = căn(bề rộng ở hàng mắt × cao trên mắt). Nếu rộng/cao > 1,35 (hàng mắt dính tay áp vách / vạt áo) thì
+    bề rộng thay bằng cao × R_MU. Trả (cỡ, có thay không) hoặc None khi không thấy mắt."""
+    if not d['mat'] or not d['mu_cao_tren_mat']: return None
+    h = float(d['mu_cao_tren_mat']); w = float(d['mu_rong_hang_mat'] or 0); thay = (not w) or w / h > 1.35
+    if thay: w = h * R_MU
+    return float(np.sqrt(w * h)), thay
+
+
+def co_mu_chot(C):
+    return float(np.sqrt(C['mu_rong'] * C['mu_cao']))
+
+
+def ty_le(do_list, C):
+    """k = px gen → px logic: cỡ mũ Lam chốt / TRUNG VỊ cỡ mũ các ô (MỘT số cho cả sheet). Trả (k, cách, số ô)"""
+    c = [co_mu(d) for d in do_list]; c = [x for x in c if x]
+    if not c: raise SystemExit('không đo được mũ ở ô nào (không thấy mắt) – kiểm ảnh nguồn')
+    nt = sum(1 for x in c if x[1])
+    return co_mu_chot(C) / float(np.median([x[0] for x in c])), 'cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị %d ô%s' % (
+        len(c), (' (%d ô hàng mắt dính tay/áo → rộng = cao × %.2f)' % (nt, R_MU)) if nt else ''), len(c)
 
 
 def theo_o(v, i):
@@ -82,7 +99,12 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
     if lay: nguon['goc'] = nap_nguon(os.path.join(dir_nguon, lay['file']), cot, hang)
     tu = ['goc' if lay and (i + 1) in lay['o'] else 'chinh' for i in range(n)]
     K = {}
-    for kn, (rgba, tt, do) in nguon.items(): K[kn] = ty_le(do, C)
+    cung_co = len({v[0].shape for v in nguon.values()}) == 1
+    if cung_co:   # các ảnh nguồn cùng khổ / bố cục (chạy sửa + chạy gốc) → MỘT tỉ lệ chung, đo trên đúng các ô được dùng
+        kk = ty_le([nguon[tu[i]][2][i] for i in range(n)], C)
+        for kn in nguon: K[kn] = kk
+    else:
+        for kn, (rgba, tt, do) in nguon.items(): K[kn] = ty_le(do, C)
     # neo từng ô (px gen của ảnh nguồn ô đó)
     hang_so = {}
     for kn, (rgba, tt, do) in nguon.items():
@@ -107,12 +129,13 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
         else:
             if mx != 'o': g['neo_x_thay'] = 'o (không đo được %s)' % mx
             xn = ci * cw + hang_so[kn]['o']
-        if my == 'ung' and u: yd = max(t[2] for t in u)
+        if my == 'mat' and d['mat']: yd = d['mat'][1] - C['mat_y'] / k   # mắt đặt cao đúng như Lam chốt trên chân (trên không: đầu không nhảy giữa các hình)
+        elif my == 'ung' and u: yd = max(t[2] for t in u)
         elif my == 'chay':
             day_hang = max(t[3] for kk, t in enumerate(tt) if kk // cot == cj); bay = (i % 4) == 3
             yd = day_hang if bay else y1; g['bay'] = bay
         else:
-            if my not in ('day',): g['neo_y_thay'] = 'day (không thấy ủng)'
+            if my not in ('day',): g['neo_y_thay'] = 'day (không đo được %s)' % my
             yd = y1
         neo.append((xn, yd)); ghi.append(g)
     meta_ra = {}
@@ -153,6 +176,9 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
                        'mu_rong_hang_mat_logic': round(d['mu_rong_hang_mat'] * k, 1) if d['mu_rong_hang_mat'] else None,
                        'mu_so_chot_phan_tram': round(float(d['mu_rong_hang_mat'] * k / C['mu_rong'] - 1) * 100, 1) if d['mu_rong_hang_mat'] else None,
                        'mat_logic': [round((d['mat'][0] - xn) * k, 1), round((d['mat'][1] - yd) * k, 1)] if d['mat'] else None,
+                       'mu_cao_tren_mat_logic': round(d['mu_cao_tren_mat'] * k, 1) if d['mu_cao_tren_mat'] else None,
+                       'co_mu_so_chot_phan_tram': round((co_mu(d)[0] * k / co_mu_chot(C) - 1) * 100, 1) if co_mu(d) else None,
+                       'mat_dien_tich_logic': round(d['mat_co'] * k * k, 1) if d['mat'] else None,
                        'mau_mu_trung_vi': d['mau_mu'], **ghi[i]})
         meta = {'ten': 'Lam mới bộ 3 – %s (%s), sprite sheet %dx' % (ten, ' / '.join(nhan), boi), 'phien_ban_clip': 'lam-moi-thu3',
                 'vai': cfg.get('vai', ten), 'tu_the': nhan, 'anh': anh,
@@ -168,7 +194,7 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
                 'thu_co': {'loc': {'area': 'cv2 INTER_AREA', 'lanczos': 'Lanczos (PIL)'}[loc],
                            'lam_net': {'sigma_px_nguon': net[0], 'luong': net[1]} if net else None},
                 'frames': frames, 'so_do': so}
-        for kk in ('vet_pogo', 'nhip'):
+        for kk in ('vet_pogo', 'vet_chem1', 'nhip'):
             if kk in cfg: meta[kk] = cfg[kk]
         json.dump(meta, open(os.path.join(dir_ra, 'lam-moi3-%s-%dx.json' % (ten, boi)), 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=_np)
         meta_ra[boi] = (meta, out)
@@ -207,6 +233,37 @@ def dai(ten, mo, C, dir_kiem):
     o.save(os.path.join(dir_kiem, 'thu3-%s-dai.png' % ten))
 
 
+def so_mu(dir_ra, dir_kiem, C):
+    """kiem/thu3-so-mu.png: ĐẦU của mọi tư thế bộ 3 (2x) cạnh Lam chốt, căn theo MẮT (chấm đỏ) – xem mũ có phình / mắt có đổi giữa trạng thái.
+    Khung vàng = cỡ mũ Lam chốt (rộng × cao trên mắt) đặt từ mắt. Ô ⚠ = cỡ mũ lệch chốt > 8 % hoặc mắt to hơn chốt > 30 %."""
+    bang = json.load(open(BANG, encoding='utf-8')); o = []
+    r = C['anh']; k = C['k'] * 2; a = r.astype(np.float32) / 255; pm = a.copy(); pm[..., :3] *= a[..., 3:4]
+    sm = cv2.resize(pm, (round(r.shape[1] * k), round(r.shape[0] * k)), interpolation=cv2.INTER_AREA)
+    al = sm[..., 3:4]; big = Image.fromarray((np.dstack([np.where(al > 1e-4, sm[..., :3] / np.maximum(al, 1e-4), 0), al]).clip(0, 1) * 255).round().astype(np.uint8))
+    d0 = do_tu_the(r, cat_o(r, 1, 1)[0][4]); o.append(('Lam chốt', big, (d0['mat'][0] * k, d0['mat'][1] * k), False))
+    mat_chot = d0['mat_co'] * C['k'] ** 2
+    for ten in [t for t in bang if not t.startswith('_')]:
+        j = os.path.join(dir_ra, 'lam-moi3-%s-2x.json' % ten)
+        if not os.path.exists(j): continue
+        m = json.load(open(j, encoding='utf-8')); sh = Image.open(os.path.join(dir_ra, m['anh'])); ax, ay = m['diem_neo']['x'], m['diem_neo']['y']
+        for f, s_ in zip(m['frames'], m['so_do']):
+            if not s_['mat_logic']: continue
+            canh = (s_['co_mu_so_chot_phan_tram'] is not None and abs(s_['co_mu_so_chot_phan_tram']) > 8) or (s_['mat_dien_tich_logic'] or 0) > mat_chot * 1.3
+            fr = sh.crop((f['x'], f['y'], f['x'] + f['w'], f['y'] + f['h']))
+            o.append(('%s %s' % (ten, f['nhan']), fr, (ax + s_['mat_logic'][0] * 2, ay + s_['mat_logic'][1] * 2), canh))
+    W, H, cot = 150, 150, 12; hang = (len(o) + cot - 1) // cot
+    out = Image.new('RGB', (cot * (W + 4) + 4, hang * (H + 22) + 30), (40, 44, 52)); d = ImageDraw.Draw(out)
+    rw, rc = C['mu_rong'] * 2, C['mu_cao'] * 2
+    for i, (t, im, (ex, ey), canh) in enumerate(o):
+        x, y = 4 + (i % cot) * (W + 4), 4 + (i // cot) * (H + 22)
+        g = Image.new('RGBA', (W, H), (128, 128, 128, 255)); g.alpha_composite(im, (int(round(W * 0.62 - ex)), int(round(H * 0.6 - ey))))
+        gd = ImageDraw.Draw(g); cx, cy = W * 0.62, H * 0.6
+        gd.rectangle([cx - rw * 0.8, cy - rc, cx + rw * 0.2, cy], outline=(240, 200, 60)); gd.ellipse([cx - 2, cy - 2, cx + 2, cy + 2], fill=(220, 40, 40))
+        out.paste(g.convert('RGB'), (x, y + 18)); d.text((x + 2, y), ('⚠ ' if canh else '') + t, font=FONT, fill=(255, 120, 90) if canh else (230, 230, 230))
+    d.text((6, out.height - 22), 'căn theo mắt (chấm đỏ) · khung vàng = cỡ mũ Lam chốt · ⚠ = cỡ mũ lệch > 8 % hoặc mắt to hơn chốt > 30 %', font=FONT, fill=(200, 200, 200))
+    out.save(os.path.join(dir_kiem, 'thu3-so-mu.png'))
+
+
 def main(av):
     op = {'--nguon': os.path.normpath(os.path.join(GOC, '..', 'nguon', 'lam-tu-the')), '--ra': os.path.join(GOC, 'sprite'), '--kiem': os.path.join(GOC, 'kiem')}
     rest = []; i = 0
@@ -229,8 +286,8 @@ def main(av):
         m = dung_mot(ten, bang[ten], op['--nguon'], op['--ra'], op['--kiem'], C)
         if m is None: print('  bỏ qua %-6s – chưa có %s' % (ten, bang[ten]['file'])); continue
         so[ten] = m['so_do']
-        print('  dựng  %-6s %s ô %s neo (%d,%d) mũ so chốt %s %%' % (ten, m['co_sheet'], m['co_khung'], m['diem_neo']['x'], m['diem_neo']['y'],
-              [None if s['mu_so_chot_phan_tram'] is None else float(s['mu_so_chot_phan_tram']) for s in m['so_do']]))
+        print('  dựng  %-6s %s ô %s neo (%d,%d) cỡ mũ so chốt %s %%' % (ten, m['co_sheet'], m['co_khung'], m['diem_neo']['x'], m['diem_neo']['y'],
+              [None if s['co_mu_so_chot_phan_tram'] is None else float(s['co_mu_so_chot_phan_tram']) for s in m['so_do']]))
     # danh sách cho game: MỌI sheet bộ 3 đang có trên đĩa (cả các lần dựng trước)
     ds = []
     for ten, cfg in bang.items():
@@ -244,6 +301,7 @@ def main(av):
     p = os.path.join(op['--kiem'], 'thu3-so-do.json'); cu = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}
     cu.update(so); cu['_lam_chot_mu_rong_logic'] = round(C['mu_rong'], 1)
     json.dump(cu, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=_np)
+    so_mu(op['--ra'], op['--kiem'], C)
     print('danh sách game:', [d['ten'] for d in ds])
 
 

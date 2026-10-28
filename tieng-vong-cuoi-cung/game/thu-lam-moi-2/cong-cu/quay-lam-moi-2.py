@@ -6,6 +6,7 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
   3. video: chơi thật (KHÔNG bất tử) 60 hình/s – trên: Lam mới, dưới: Lam cũ (?lam=cu), cùng chuỗi phím → so-moi-cu-60fps.mp4
             + choi-that-vfx0-hitbox-60fps.mp4 (Lam mới, tắt VFX, hiện hộp đòn) – duyệt tạo dáng / vùng chạm
   4. anh : màn có nút cảm ứng kiểu iPhone ngang (844×390, chạm) → man-choi-co-nut.png
+  6. bo3 : BỘ TƯ THẾ 3 – GIF từng động tác (màu + bóng đen, ≈toàn tốc + chậm 4) → xem-thu/bo3/ ; videobo3: video chơi thật qua đủ động tác
   5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
 60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
@@ -117,12 +118,12 @@ def cat(im, x, y, w=200, h=150, duoi=22):
     return im.crop((x0, y0, x0 + w, y0 + h))
 
 
-def luu_gif(fr, ten, ms=1000 / 60, buoc=1):
-    """fr: list ảnh mỗi bước logic; GIF lấy mỗi `buoc` bước, dồn dư 10 ms"""
+def luu_gif(fr, ten, ms=1000 / 60, buoc=1, dither=True):
+    """fr: list ảnh mỗi bước logic; GIF lấy mỗi `buoc` bước, dồn dư 10 ms. dither=False: không rải điểm (file nhỏ hơn nhiều)"""
     chon = fr[::buoc]; du = 0; ds = []
     for _ in chon:
         t = ms * buoc + du; r = max(20, int(round(t / 10)) * 10); du = t - r; ds.append(r)
-    pal = [f.quantize(colors=255, method=Image.Quantize.MEDIANCUT) for f in chon]
+    pal = [f.quantize(colors=255, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.FLOYDSTEINBERG if dither else Image.Dither.NONE) for f in chon]
     pal[0].save(os.path.join(OUT, ten), save_all=True, append_images=pal[1:], duration=ds, loop=0, disposal=1)
 
 
@@ -255,6 +256,116 @@ async def anh(b, cong):
     print('anh', t.loi)
 
 
+# ---------------- BỘ TƯ THẾ 3 (PH13 mục 2 + 5) ----------------
+TRANG_THAI_JS = ('[pl.m2n, pl.a2, pl.atkN, pl.atkT, +pl.vy.toFixed(2), pl.onGround, S.hitstop, pl.hp, LM2.bo, '
+                 '!!(pl.atkN && atkBox(pl,pl.atkN,pl.atkT,pl.face,{})), pl.atkBounced]')
+FONT_N = None
+
+
+def nho(im, chu):
+    global FONT_N
+    if FONT_N is None:
+        try: FONT_N = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
+        except Exception: FONT_N = ImageFont.load_default()
+    o = Image.new('RGB', (im.width, im.height + 18), (12, 15, 20)); o.paste(im, (0, 0))
+    ImageDraw.Draw(o).text((4, im.height + 2), chu, font=FONT_N, fill=(243, 230, 200)); return o
+
+
+async def bo3(b, cong):
+    """GIF từng động tác ở đúng cỡ game (Lam ~112 px, viewport 960×540 @1x) trên NỀN THẬT phòng A. Mỗi GIF: TRÁI màu có vệt,
+    PHẢI bóng đen (?bong=1&vfx=0) – hai trang chạy cùng phím, cùng bước. Dưới mỗi hình: tư thế · trạng thái · bước.
+    Ra xem-thu/bo3/<động-tác>.gif (≈ toàn tốc: GIF tối đa 50 hình/s → mỗi bước 20 ms = 0,83×) + <động-tác>-cham4.gif (67 ms/bước) + log-bo3.json."""
+    BD = os.path.join(OUT, 'bo3'); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'bong=1&vfx=0').mo()
+    log = {'ghi_chu': 'mỗi dòng 1 bước logic 60 Hz: [tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, bộ sheet, hộp bật, đã nảy]'}
+
+    async def dat(x, f):
+        for t in (A, B): await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', 40)
+
+    async def quay(ten, kb, khung, w=220, h=170, duoi=22):
+        """kb: list (phím) mỗi bước, hoặc hàm (i, trạng thái) → phím; khung: 'lam' (bám chân) hoặc (x, y) điểm cố định trong THẾ GIỚI"""
+        fr = []; lg = []; st = await A.js(TRANG_THAI_JS)
+        n = len(kb) if isinstance(kb, list) else kb('n', None)
+        for i in range(n):
+            ph = kb[i] if isinstance(kb, list) else kb(i, st)
+            await A.buoc(ph); await B.buoc(ph); st = await A.js(TRANG_THAI_JS); lg.append(st)
+            if khung == 'lam': p = await A.lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await A.js('([x, y]) => [x - ox, y - oy]', list(khung))   # điểm THẾ GIỚI cố định → màn (camera trôi theo Lam)
+            a = cat(await A.anh(), X, Y, w, h, duoi); c = cat(await B.anh(), X, Y, w, h, duoi)
+            o = Image.new('RGB', (2 * w + 4, h), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (w + 4, 0))
+            fr.append(nho(o, '%s · %s%s · bước %d%s' % (st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '')))
+        luu_gif(fr, 'bo3/%s.gif' % ten, ms=20, dither=False); luu_gif(fr, 'bo3/%s-cham4.gif' % ten, ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + r[0] for j, r in enumerate(lg)))
+
+    x0 = '(PA.x0+5)*T'
+    await dat(x0, 1); await A.buoc('', 80); await B.buoc('', 80); await quay('dung', [''] * 130, 'lam')   # 40 + 80 = 120 bước đứng → vòng mới bắt đầu ở I1
+    await dat(x0, 1); await quay('chay', [''] * 4 + ['r'] * 70 + [''] * 16, 'lam')
+    await dat('Q[6].x-70', 1); await quay('chem1', [''] * 4 + ['a'] + [''] * 34, 'lam', w=240)
+    the = 'pl.x+pl.w/2, pl.y+pl.h'
+    await dat(x0, 1); p = await A.js('[%s]' % the)
+    await quay('nhay-roi-tiep-dat', [''] * 4 + ['j'] * 18 + [''] * 50, (p[0] + 20, p[1]), w=240, h=300, duoi=30)
+    await dat('Q[6].x+16', 1); p = await A.js('[%s]' % the)
+
+    def pogo(i, st):
+        if i == 'n': return 150
+        if i < 12: return 'j'
+        return 'da' if (st[4] > 5 and st[2] != 4) else ''   # bổ khi đã rơi gần hình nộm → thấy P1, P2 rồi nảy P3
+    await quay('pogo-trung-hinh-nom', pogo, (p[0], p[1]), w=260, h=380, duoi=20)
+    await dat('(PA.x0+1)*T', -1); p = await A.js('[%s]' % the)
+    await quay('bam-truot-tuong', [''] * 4 + ['lj'] * 20 + ['l'] * 50 + ['lj'] + ['r'] * 12 + [''] * 30, (p[0] + 40, p[1]), w=260, h=300, duoi=30)
+    json.dump(log, open(os.path.join(BD, 'log-bo3.json'), 'w'), ensure_ascii=False)
+    print('loi', A.loi, B.loi)
+
+
+KICH_BAN_BO3 = ([('', 130)] + [('r', 60), ('', 20)]                                                  # đứng 2 s, chạy, dừng
+                + [('a', 1), ('', 34)]                                                                # chém 1 hình nộm
+                + [('j', 18), ('', 50)]                                                               # nhảy-rơi-tiếp đất
+                + [('POGO', 3), ('', 30)]                                                             # tới hình nộm, nhảy, pogo trúng 3 lần
+                + [('l', 170), ('lj', 20), ('l', 50), ('lj', 1), ('r', 14), ('', 40)]                 # vách trái: bám, trượt, nhảy tường
+                + [('r', 330), ('', 10), ('a', 1), ('', 30), ('a', 1), ('', 30), ('r', 20), ('rj', 14), ('r', 10), ('', 60)])   # sang phòng B, Chuông Gỗ
+
+
+async def video_bo3(b, cong):
+    """chơi thật KHÔNG bất tử, 60 hình/s, Lam mới bộ 3: đứng → chạy → chém 1 → nhảy-rơi-tiếp đất → pogo hình nộm → bám/trượt/nhảy tường
+    → sang phòng B gặp Chuông Gỗ. Góc trên: tư thế hiện tại (nhãn máy hình). → xem-thu/bo3/choi-that-bo3-60fps.mp4 + log"""
+    BD = os.path.join(OUT, 'bo3'); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo()
+    await A.js('TVP0.datLam((PA.x0+3)*T, 1)'); await A.buoc('', 1)
+    ff = ffmpeg(os.path.join(BD, 'choi-that-bo3-60fps.mp4'), 960, 540); lg = []
+    i = 0
+    async def mot(ph):
+        nonlocal i
+        await A.buoc(ph); i += 1; s = await A.js(TRANG_THAI_JS); lg.append(s)
+        ff.stdin.write(jpg(nhan(await A.anh(), 'Lam mới bộ 3 · %s · %s · máu %d · bước %d' % (s[0], s[1], s[7], i))))
+
+    for phim, k in KICH_BAN_BO3:
+        if phim == 'POGO':   # lái như người chơi: đi tới hình nộm, nhảy, bổ xuống khi đang rơi gần, nảy k lần rồi để rơi xuống đất
+            nay = 0; nhay = 0; da_bat = False; f_nay = await A.js('LM2.nay ? LM2.nay.f : -1')
+            for _ in range(400):
+                st = await A.js('[Q[6].x+Q[6].w/2-(pl.x+pl.w/2), pl.onGround, pl.vy, pl.atkN, pl.atkBounced]')
+                dx, dat_, vy, an, bn = st; hg = 'r' if dx > 3 else 'l' if dx < -3 else ''
+                if nay >= k:
+                    if dat_ and da_bat: break
+                    ph = 'r' if nay >= k else ''
+                elif dat_ and nhay == 0:
+                    ph = hg if abs(dx) > 3 else 'j'
+                    if ph == 'j': nhay = 12
+                elif nhay > 0: ph = 'j' + hg; nhay -= 1
+                else: ph = ('da' + hg) if (vy > 5 and an != 4) else hg
+                await mot(ph)
+                f = await A.js('LM2.nay ? LM2.nay.f : -1')
+                if f != f_nay: f_nay = f; nay += 1; da_bat = True      # mỗi sự kiện nảy (pogoBounce) đếm 1 lần
+            continue
+        for _ in range(k):
+            st = await A.js('[pl.vy, pl.atkN]')
+            ph = phim
+            if phim == 'da' and not (st[0] > 0): ph = ''          # pogo chỉ bấm khi đang rơi
+            await mot(ph)
+    ff.stdin.close(); ff.wait()
+    json.dump({'ghi_chu': TRANG_THAI_JS, 'buoc': lg}, open(os.path.join(BD, 'log-video.json'), 'w'), ensure_ascii=False)
+    seen = sorted({r[0] for r in lg}); print('video bo3', i, 'bước, tư thế đã hiện:', seen, 'máu cuối', lg[-1][7], A.loi, await A.lam_man())
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -265,6 +376,8 @@ async def main(viec):
         if 'video' in viec: await video(b, cong)
         if 'anh' in viec: await anh(b, cong)
         if 'vet' in viec: await vet(b, cong)
+        if 'bo3' in viec: await bo3(b, cong)
+        if 'videobo3' in viec: await video_bo3(b, cong)
         await b.close()
 
 

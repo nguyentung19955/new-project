@@ -1,12 +1,136 @@
 {
- "_ghi_chu": "Bảng sheet Lam mới bộ 3 (PH13 mục 2). Thêm sheet: python3 dung_thu3.py them <ten> <file> <cot> <hang> <nhãn,...> [neo_x] [neo_y] [vai]. Nhãn tư thế phải đúng tên game dùng (P1–P3, W1–W4, J1–J3, F1, F2, L, I1–I3, R1–R8, A–D). vet_pogo = điểm gốc vệt pogo (px logic so với chân, nhìn phải) – đo lại theo mũi dao P1 khi có ảnh.",
- "pogo": {"file": "thu3-pogo-3o.png", "cot": 3, "hang": 1, "vai": "pogo", "tu_the": ["P1", "P2", "P3"], "neo_x": "mu", "neo_y": "day",
-          "vet_pogo": {"x": 8, "y": 2}},
- "tuong": {"file": "thu3-tuong-4o.png", "cot": 4, "hang": 1, "vai": "tuong", "tu_the": ["W1", "W2", "W3", "W4"], "neo_x": "tuong", "neo_y": "day",
-           "huong": "Mẫu VÁCH BÊN PHẢI: Lam nhìn vào vách (phải). Vách trái → lật cả hình quanh neo x (không tráo tay)."},
- "nhay": {"file": "thu3-nhay-roi-6o.png", "cot": 3, "hang": 2, "vai": "nhay", "tu_the": ["J1", "J2", "J3", "F1", "F2", "L"], "neo_x": "mu",
-          "neo_y": ["day", "day", "day", "day", "day", "ung"]},
- "dung": {"file": "thu3-dung-3o.png", "cot": 3, "hang": 1, "vai": "dung", "tu_the": ["I1", "I2", "I3"], "neo_x": "ung", "neo_y": "ung", "trung_tinh": 0},
- "chay": {"file": "thu3-chay-sua.png", "cot": 4, "hang": 2, "vai": "chay", "tu_the": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"], "neo_x": "o", "neo_y": "chay"},
- "chem1": {"file": "thu3-chem1-sua.png", "cot": 4, "hang": 1, "vai": "chem1", "tu_the": ["A", "B", "C", "D"], "neo_x": "ung", "neo_y": "ung", "trung_tinh": 3}
+ "_ghi_chu": "Bảng sheet Lam mới bộ 3 (PH13 mục 2). Thêm sheet: python3 dung_thu3.py them <ten> <file> <cot> <hang> <nhãn,...> [neo_x] [neo_y] [vai]. Nhãn tư thế phải đúng tên game dùng (P1–P3, W1–W4, J1–J3, F1, F2, L, I1–I3, R1–R8, A–D). vet_pogo = điểm gốc vệt pogo (px logic so với chân, nhìn phải) – đo lại theo mũi dao P1 khi có ảnh. neo_y \"mat\" = mắt cao như Lam chốt (trên không/tường). Tỉ lệ: cỡ mũ = căn(rộng hàng mắt × cao trên mắt) khớp Lam chốt.",
+ "pogo": {
+  "file": "thu3-pogo-3o.png",
+  "cot": 3,
+  "hang": 1,
+  "vai": "pogo",
+  "tu_the": [
+   "P1",
+   "P2",
+   "P3"
+  ],
+  "neo_x": "mu",
+  "neo_y": "mat",
+  "vet_pogo": {
+   "P1": {
+    "x": 19,
+    "y": -20,
+    "goc": 25
+   },
+   "P2": {
+    "x": -8,
+    "y": -11,
+    "goc": 0
+   },
+   "_do": "đo tay trên lưới 1 px logic (kiem/thu3-do-dao.png): mũi dao P1 (19, −20), lưỡi chéo xuống trước ~42°; mũi P2 (−8, −11) thẳng xuống; goc = độ nghiêng mũi vệt về phía trước (0 = thẳng xuống)"
+  }
+ },
+ "tuong": {
+  "file": "thu3-tuong-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "tuong",
+  "tu_the": [
+   "W1",
+   "W2",
+   "W3",
+   "W4"
+  ],
+  "neo_x": "tuong",
+  "neo_y": "mat",
+  "huong": "Mẫu VÁCH BÊN PHẢI: Lam nhìn vào vách (phải). Vách trái → lật cả hình quanh neo x (không tráo tay)."
+ },
+ "nhay": {
+  "file": "thu3-nhay-roi-6o.png",
+  "cot": 6,
+  "hang": 1,
+  "vai": "nhay",
+  "tu_the": [
+   "J1",
+   "J2",
+   "J3",
+   "F1",
+   "F2",
+   "L"
+  ],
+  "neo_x": "mu",
+  "neo_y": [
+   "mat",
+   "mat",
+   "mat",
+   "mat",
+   "mat",
+   "ung"
+  ],
+  "bo_cuc": "6 ô MỘT hàng (ảnh gen thu3-nhay-roi-6o.png)"
+ },
+ "dung": {
+  "file": "thu3-dung-3o.png",
+  "cot": 3,
+  "hang": 1,
+  "vai": "dung",
+  "tu_the": [
+   "I1",
+   "I2",
+   "I3"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 0
+ },
+ "chay": {
+  "file": "thu3-chay-sua.png",
+  "cot": 4,
+  "hang": 2,
+  "vai": "chay",
+  "tu_the": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5",
+   "R6",
+   "R7",
+   "R8"
+  ],
+  "neo_x": "o",
+  "neo_y": "chay",
+  "lay_o_tu": {
+   "file": "thu2-chay-8o.png",
+   "o": [
+    1,
+    3,
+    4,
+    7,
+    8
+   ],
+   "ly_do": "29/10: ô không cần sửa trong thu3-chay-sua.png bị máy gen vẽ lại (lệch trung bình 3,1–3,6/255, mềm hơn 2–4 % theo Laplacian) → lấy lại ô cũ; giữ ô sửa 2, 5, 6"
+  }
+ },
+ "chem1": {
+  "file": "thu3-chem1-sua.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "chem1",
+  "tu_the": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 3,
+  "vet_chem1": {
+   "x": 6,
+   "y": -47,
+   "R": 80,
+   "h": 12,
+   "T": 10,
+   "goc": 5,
+   "tm": 1.83,
+   "_do": "đo tay (kiem/thu3-do-dao.png): B tay (10, −47) mũi (57, −48) lưỡi ngang; C tay (−2, −34) mũi (47, −20) lưỡi chúc ~16°. Liềm: hai đầu ở x 6 (giữa tay B và C), bụng x 86, tâm y −47 (đường lưỡi B), cao 24 → dài:cao ≈ 3,3:1, nghiêng xuống 5°. Hộp chém 1 (x 4…95, y −97…−49) KHÔNG đổi → lõi nằm sát mép dưới hộp"
+  }
+ }
 }

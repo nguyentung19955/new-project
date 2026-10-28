@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Tiếng Vọng – Thử Lam mới 2 (chạy + chém 1)</title>
+<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3)</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&display=swap">
@@ -173,7 +173,7 @@ body.lht-nut #knob{background:var(--nut) center/100% 100% no-repeat;border:0;wid
   </div></div>
   <div id="start" class="panel ui" hidden><div class="box">
     <h1>Tiếng Vọng Cuối Cùng</h1>
-    <p class="big">Thử Lam mới 2 · CHẠY 8 tư thế + CHÉM 1 (A lấy đà · B cắt · C kết thúc · D hồi). Động tác khác dùng hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
+    <p class="big">Thử Lam mới · bộ tư thế 3: đứng, chạy, chém 1, nhảy/rơi/tiếp đất, pogo, bám/trượt tường. Chém 2/3, hất, lướt, bị đánh còn hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
     <p id="start-p0" style="color:#7FE0C8"></p>
     <button id="btn-start" type="button">Bắt đầu</button>
     <p><span id="start-v">Bấm nút <b style="color:var(--echo)">Vọng</b></span> để ghi 3 giây chuyển động. Bóng của bạn sẽ lặp lại y hệt — rồi đứng giữ nguyên chỗ cuối.</p>
@@ -4696,7 +4696,7 @@ window.TVPB = {
    và VỆT (hình vẽ) của chém 1 + pogo.
 
    Sheet thử 2: art/huong-moi/lam-tu-the-2/sprite/lam-moi2-chay (8 tư thế) + lam-moi2-chem1 (A/B/C/D), bản 2x và 3x (BK ≤ 2 → 2x, lớn hơn → 3x).
-   Sheet bộ 3 (PH13 mục 2, CHƯA CÓ ẢNH – khung code sẵn): sprite/thu3-danh-sach.json liệt kê sheet lam-moi3-* đã dựng bằng
+   Sheet bộ 3 (PH13 mục 2 – ĐÃ CÓ ẢNH 29/10, dựng bằng dung_thu3.py, game ưu tiên bản bộ 3): sprite/thu3-danh-sach.json liệt kê sheet lam-moi3-* đã dựng bằng
    code/dung_thu3.py (pogo P1–P3, tường W1–W4, nhảy/rơi J1 J2 J3 F1 F2 L, đứng I1–I3, chạy sửa R1–R8, chém 1 sửa A–D).
    Có nhãn trong sheet bộ 3 → dùng; không có → HÌNH TẠM như trước (D hồi / ô chạy 4 / ô chạy 8).
 
@@ -4743,7 +4743,9 @@ const LM2 = (() => {
     return goi(img, meta);
   }
   const ganNhan = (bo, nhan) => nhan.forEach((n, i) => { TU[n] = [bo, i]; });
-  let VP = {x: 8, y: 2};   // gốc vệt pogo (px logic so với chân, nhìn phải) – sheet pogo bộ 3 ghi lại theo mũi dao P1
+  // gốc vệt pogo (px logic so với chân, nhìn phải) theo tư thế: P1 = pha nêm bật (atkT 1–2), P2 = các pha sau. goc = nghiêng mũi vệt về trước (độ).
+  // Mặc định = bản trước bộ 3; sheet pogo bộ 3 ghi lại theo mũi dao đo trên ảnh (bang-thu3.json → vet_pogo).
+  let VP = {P1: {x: 8, y: 2, goc: 0}, P2: {x: 8, y: 2, goc: 0}};
   async function nap() {
     for (const [k, ten] of [['chay', 'lam-moi2-chay'], ['chem', 'lam-moi2-chem1']]) {
       SH[k] = await nap1(ten + '-2x');
@@ -4756,7 +4758,9 @@ const LM2 = (() => {
     try { ds = (await (await fetch(DUONG + 'thu3-danh-sach.json')).json()).sheets || []; } catch (e) { console.warn('LM2: không đọc được thu3-danh-sach.json → chưa có sheet bộ 3'); }
     for (const d of ds) {
       try { const b = {2: await nap1(d.ten + '-2x')}; if (d.co_3x) try { b[3] = await nap1(d.ten + '-3x'); } catch (e) { console.warn('LM2: ' + d.ten + '-3x lỗi → 2x'); }
-        ganNhan(b, b[2].meta.tu_the); BO3.push(d.ten); if (b[2].meta.vet_pogo) VP = b[2].meta.vet_pogo; }
+        ganNhan(b, b[2].meta.tu_the); BO3.push(d.ten); const mv = b[2].meta;
+        if (mv.vet_pogo && mv.vet_pogo.P1) VP = mv.vet_pogo;
+        if (mv.vet_chem1) for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) if (typeof mv.vet_chem1[k] === 'number') V1[k] = mv.vet_chem1[k]; }
       catch (e) { console.warn('LM2: không nạp được ' + d.ten, e); }
     }
     const a = ATK[1]; if (a.su !== 7 || a.ac !== 8 || a.re !== 8) console.warn('LM2: ATK[1] = ' + a.su + '/' + a.ac + '/' + a.re + ' – lịch A/B/C/D tính theo hộp thật, số bước mỗi hình sẽ khác 6/4/4/8');
@@ -4792,6 +4796,7 @@ const LM2 = (() => {
     if (pl.atkN === 1 && a2 === 'atk1') { const A = ATK[1], t = pl.atkT; return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
     if (pl.atkN === 4 && a2 === 'atk4') return M.nay >= 0 ? 'P3' : pl.atkBounced ? nhanBay() : pl.atkT <= 2 ? 'P1' : 'P2';   // sau P3: về J2/J3 theo vy
     if (M.nay >= 0 && !pl.atkN && (a2 === 'jump' || a2 === 'fall')) return 'P3';
+    if (a2 === 'wall' && pl.vy < -1) return 'J1';   // bấm nhảy tường: physics đã bật lên ngay bước này → hình bật nhảy, không giữ W2
     if (a2 === 'wall') return pl.wallStickT < P.wallStick ? (M.wT <= 2 ? 'W1' : 'W2') : pl.vy > 0 ? (((M.sT - 1) % 12) < 6 ? 'W3' : 'W4') : 'W2';
     if (a2 === 'walljump') return pl.wjT >= 15 ? 'J1' : nhanBay();
     if (a2 === 'jump' || a2 === 'fall') return nhanBay();
@@ -4843,6 +4848,7 @@ const LM2 = (() => {
   // chém 1: đo trên sheet thử 2 (px logic so với chân, nhìn phải): B tay (−8, −59) mũi (48, −52); C tay (31, −61) mũi (86, −56)
   //   → dải quét y ≈ −52…−61. Hộp atk1 [4, −97, 91, 48] = x 4…95, y −97…−49.
   //   Liềm: hai đầu ở x 14 (giữa tay B và C), bụng ở x 88; y tâm −60, nửa cao 12,5 → dài:cao = 74 : 25 ≈ 3 : 1; nghiêng xuống 4° (theo C).
+  // Bộ tư thế 3 (sheet chém 1 sửa): ghi đè bằng vet_chem1 trong JSON sheet – B tay (10, −47) mũi (57, −48); C tay (−2, −34) mũi (47, −20).
   const V1 = {x: 14, y: -60, R: 74, h: 12.5, T: 10, goc: 4, tm: 1.83};   // tm = nửa góc quét của tham số (rad, > 90° → đầu cong về sau)
   // pogo: gốc VP (dưới bàn tay / mũi dao), mũi hướng XUỐNG. Hộp atk4 [−26, −24, 64, 82] = x −26…38, y −24…58.
   function liem(g, R, h, T, a0, a1, tm, mo) {   // đường bao lưỡi liềm (gốc = điểm hai đầu, bụng ở +x), tham số θ ∈ [a0, a1] (đơn vị tm)
@@ -4878,7 +4884,8 @@ const LM2 = (() => {
   }
   function vePogo(g, at, al) {
     const pha = phaPogo(at); if (pha < 0) return;
-    g.save(); g.translate(VP.x, VP.y); g.rotate(Math.PI / 2);   // +x cục bộ = hướng XUỐNG; h = nửa bề ngang
+    const v = at <= 2 ? VP.P1 : VP.P2;   // P1 hiện atkT 1–2, P2 từ atkT 3 (cùng lịch tư thế)
+    g.save(); g.translate(v.x, v.y); g.rotate(Math.PI / 2 - (v.goc || 0) * Math.PI / 180);   // +x cục bộ = hướng XUỐNG (nghiêng goc về trước); h = nửa bề ngang
     if (pha === 0) lop(g, at === 1 ? 17 : 21, at === 1 ? 12 : 14, 9, -1, 1, 1.75, al, 0.9);            // nêm bật: hẹp, sâu, đặc
     else if (pha === 1) { const q = at - 3; lop(g, 22 + q, 21 + q, 8, -1, 1, 1.7, al, 0.75 - 0.1 * q); }  // cung ép: rộng, nông
     else if (pha === 2) { const q = at - 6;
@@ -4912,7 +4919,7 @@ const LM2 = (() => {
   /* ---------- nút trong ⚙ ---------- */
   function dungNut() {
     const box = document.querySelector('#set .box'), ok = document.getElementById('btn-set-ok'); if (!box || !ok) return;
-    const h = document.createElement('p'); h.className = 'big'; h.textContent = 'Lam mới 2 (chạy + chém 1 + vệt mẫu PH13)'; box.insertBefore(h, ok);
+    const h = document.createElement('p'); h.className = 'big'; h.textContent = 'Lam mới – bộ tư thế 3 (đứng, chạy, chém 1, nhảy/rơi, pogo, tường + vệt mẫu)'; box.insertBefore(h, ok);
     const nut = (ten, lay, doi) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'alt';
       const cap = () => { b.textContent = ten + ': ' + lay(); }; cap();
       b.addEventListener('click', e => { e.preventDefault(); doi(); cap(); }); box.insertBefore(b, ok); };

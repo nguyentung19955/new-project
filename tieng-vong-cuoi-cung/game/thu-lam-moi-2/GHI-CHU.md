@@ -1,6 +1,7 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **Mới nhất (PH13): xem mục "Vệt mẫu PH13" ở cuối** – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick, khung code nhận các sheet tư thế sắp gen.
+> **Mới nhất (29/10): xem mục "Bộ tư thế 3" ở cuối** – đứng 3, chạy sửa, chém 1 sửa, nhảy/rơi/tiếp đất 6, pogo 3, tường 4 đã gắn vào game; GIF từng động tác + video chơi thật trong `xem-thu/bo3/`.
+> Trước đó (PH13): mục "Vệt mẫu PH13" – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick.
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-11-LAM-MOI-ANIMATION.md` và `PHAN-HOI-12-THIET-KE-CHAY-CHEM1-LAM.md`
 (mục "Gửi Claude"): **bỏ rig 13 mảnh**, dùng thẳng các tư thế đã gen (`art/huong-moi/nguon/lam-tu-the/thu2-chay-8o.png`, `thu2-chem1-4o.png`).
@@ -273,4 +274,126 @@ F2 khi rơi nhanh; P1 atkT 1–2 → P2; P3 đúng bước nảy, 3 bước; I1 
 python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py                 # khi có ảnh bộ 3
 python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py               # sinh lại index.html
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py vet do         # ảnh/GIF vệt + log
+```
+
+## Bộ tư thế 3 (29/10)
+
+Làm theo `docs/gameplay/PHAN-HOI-13-LAM-MOI-DONG-TAC.md` (mục 2, 5, "Gửi Claude"). Ảnh gen mới trong `art/huong-moi/nguon/lam-tu-the/thu3-*.png`.
+**Gameplay, hộp đòn, startup, tốc độ, va chạm KHÔNG đổi** – chỉ đổi HÌNH. `am-dao.html`, P0-B, P0-C, `demo.html` không sửa (vẫn Lam cũ).
+**Chưa thử trên iPhone thật** – mọi ảnh/GIF/video quay trong Chromium trên máy chủ.
+
+**Chơi thử:** cùng link ở đầu file (trang `thu-lam-moi-2/index.html`). Trên iPhone: ⚙ → mục "Lam mới – bộ tư thế 3" có 5 nút (Lam mới/cũ · vệt · bóng đen · chậm ×4 · hộp đòn).
+
+### Xem gì trước (`xem-thu/bo3/`)
+
+Mọi GIF: Lam đúng cỡ game (~112 px), **nền thật phòng A**; **trái = màu có vệt, phải = bóng đen (tắt vệt)**, hai bên cùng phím cùng bước.
+Dưới mỗi hình ghi: tư thế · trạng thái · bước. Bản thường ≈ toàn tốc (GIF tối đa 50 hình/s → 0,83×; video mới đúng 60 hình/s); `-cham4` = chậm 4 lần.
+
+| File | Nội dung |
+|---|---|
+| **`choi-that-bo3-60fps.mp4`** | **xem đầu tiên** – chơi thật 22 s, **không bất tử**: đứng 2 s → chạy → chém 1 hình nộm → nhảy-rơi-tiếp đất → pogo trúng hình nộm 3 lần → bám/trượt/nhảy tường (vách trái = hình lật) → sang phòng B đánh Chuông Gỗ (bị đánh 4 lần, còn 1 máu – thấy cả hình tạm "bị đánh"). Góc trên ghi tư thế đang hiện |
+| `dung.gif` / `-cham4` | đứng 130 bước: I1 → I2 → I3 → I1 |
+| `chay.gif` / `-cham4` | chạy từ đứng, 2 vòng 8 ô rồi dừng |
+| `chem1.gif` / `-cham4` | chém 1 vào hình nộm (có khựng), vệt liềm ngang mới |
+| `nhay-roi-tiep-dat.gif` / `-cham4` | nhảy tại chỗ: J1 → J2 → J3 → F1 → F2 → L → I1 (khung cố định theo thế giới, thấy cả quỹ đạo) |
+| `pogo-trung-hinh-nom.gif` / `-cham4` | 4 lần pogo trên hình nộm: có lần thấy đủ P1 → P2 → P3 |
+| `bam-truot-tuong.gif` / `-cham4` | vách TRÁI (hình lật): W1 → W2 → W3/W4 trượt → nhảy tường → rơi → tiếp đất |
+| `man-iphone-ngang.png` | màn kiểu iPhone ngang 844×390 @3x có nút cảm ứng (game tự chọn sheet 3x, không lỗi) |
+| `log-bo3.json`, `log-video.json` | từng bước: [tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, sheet 2x/3x, hộp bật, đã nảy] |
+| **`art/huong-moi/lam-tu-the-2/kiem/thu3-so-mu.png`** | **so đầu**: mọi tư thế cạnh Lam chốt, căn theo mắt; khung vàng = cỡ mũ chốt; ⚠ = lệch rõ |
+| `art/huong-moi/lam-tu-the-2/kiem/thu3-<sheet>-dai.png` | ảnh dải từng sheet: Lam chốt cùng thang + từng tư thế 2x (đỏ = chân, xanh = trục, vàng = hàng mắt chốt) + 112 px + bóng đen |
+| `art/huong-moi/lam-tu-the-2/kiem/thu3-do-dao.png` | lưới 1 px logic trên B, C, P1, P2 – chỗ đo tay / mũi dao để đặt vệt |
+| `xem-thu/vet-ph13/` | (quay lại 29/10 với tư thế mới) ảnh dải vệt chém 1 / pogo theo từng bước + GIF + log |
+
+### Đã làm
+
+**1. Tách nền + dựng sheet** (`art/huong-moi/lam-tu-the-2/code/dung_thu3.py`, bảng `code/bang-thu3.json`; một lệnh dựng cả 6 sheet 2x + 3x):
+- **Tỉ lệ: MỘT luật chung cho mọi sheet, lấy từ ảnh Lam chốt.** k (px ảnh gen → px logic) = cỡ mũ Lam chốt / trung vị cỡ mũ các ô của sheet;
+  **cỡ mũ = căn(bề rộng mũ ở hàng mắt × cao mũ trên mắt)**. Không co theo khung bao, không theo chiều cao người. Mỗi ảnh gen vẽ Lam ở cỡ khác nhau
+  (mũ cao 125 → 233 px gen) nên mỗi ảnh có một số k, nhưng tất cả khớp **cùng một cỡ mũ chốt**.
+  Vì sao không chỉ bề rộng như khung cũ: ở tường tay áp vách nằm đúng hàng mắt, ở pogo P1 vạt áo chạm hàng mắt → bề rộng đo ra to giả 25–40 %.
+  Ô nào rộng/cao > 1,35 thì bề rộng thay bằng cao × 1,18 (tỉ lệ ở các ô sạch). Tường: cả 4 ô; pogo: P1.
+- **Chạy sửa**: so `thu3-chay-sua.png` với `thu2-chay-8o.png` từng ô: ô 2/5/6 đổi thật (lệch 10,7–12,0/255); **ô 1/3/4/7/8 máy gen đã vẽ lại dù không
+  yêu cầu** (lệch 3,1–3,6/255, mềm hơn 2–4 % theo độ nét Laplacian) → **lấy lại ô cũ 1/3/4/7/8 từ thử 2**, ô 2/5/6 từ bản sửa. Hai ảnh cùng khổ nên dùng
+  MỘT tỉ lệ chung (đo trên đúng 8 ô được dùng).
+- **Nhảy-rơi**: ảnh là 6 ô MỘT hàng (bảng đã sửa 6 × 1).
+- **Neo** (chân của game): đứng/chém 1 = giữa hai ủng (chân trụ đứng yên); chạy = giữ vị trí trong ô như thử 2; **nhảy J1–F2, pogo, tường = mắt đặt
+  cao đúng như Lam chốt (72,6 px trên chân)** → đầu không nhảy khi đổi hình trên không; tiếp đất L = đáy ủng; tường: điểm xa nhất bên phải
+  (bàn tay áp vách) đặt đúng mép collider (10 px từ trục).
+- Xuất `sprite/lam-moi3-{dung,chay,chem1,nhay,pogo,tuong}-{2x,3x}.png/.json` (3x thu thẳng từ ảnh gen bằng Lanczos + làm nét nhẹ có kẹp như trước;
+  mọi sheet đều là THU nhỏ ảnh gen, không phóng). Game tự nạp qua `sprite/thu3-danh-sach.json`, bản bộ 3 thay bản thử 2 cho chạy/chém 1.
+
+**2. Gắn vào máy hình** (`cong-cu/khoi-lam-moi-2.js` – máy hình có sẵn từ phiên trước, chỉ sửa 1 chỗ): **bấm nhảy tường → J1 ngay bước đó** (trước đó
+còn 1 bước W2). Đo trong game (log-bo3.json):
+
+| Động tác | PH13 yêu cầu | Đo được (bước 60 Hz) |
+|---|---|---|
+| Đứng | I1 36 / I2 24 / I3 24 / I1 36 | I1 36 → I2 24 → I3 24 → I1 36 (+36 đầu vòng sau) ✔ |
+| Chạy | 8 ô / 132 px | mỗi ô 3–4 bước (16,5 px) ✔ |
+| Chém 1 | A/B/C/D theo hộp | A 6 · B 4 (+3 khựng) · C 4 · D 8 ✔ |
+| Nhảy | J1 ≤ 2 sau khi bật; J2 khi lên; J3 quanh đỉnh | J1 2 · J2 16 · J3 4 (vy −0,26…+1,61; ngưỡng = vùng giảm trọng lực ở đỉnh của game 1,8) ✔ |
+| Rơi | F1/F2 có trễ | F1 7 → F2 khi vy > 7 (giữ tới khi < 5,5) → không nháy ✔ |
+| Tiếp đất | L ≤ 3 khi đứng yên; chạy/đánh → bỏ ngay | L 3 ✔; đang chạy chạm đất → R ngay ✔ |
+| Pogo | P1 ngay tick pogo; P2 sau 2; P3 ngay sự kiện nảy 2–3 | P1 2 (hộp bật cùng bước) · P2 tới hết · P3 ngay bước nảy, đứng yên 3 bước khựng rồi 3 bước ✔. Nảy ngay atkT 1–2 thì không kịp thấy P1/P2 (đúng luật) |
+| Tường | W1 2 → W2 4 → W3/W4 mỗi 6; vách trái lật | W1 2 · W2 4 · W3 6 / W4 6 lặp ✔; vách trái lật cả hình ✔; nhảy tường → J1 2 bước ✔ |
+
+**Vệt mẫu PH13 ghép vào tư thế mới** (đo tay trên lưới, `kiem/thu3-do-dao.png`; số ghi trong JSON sheet → game đọc, không viết cứng):
+- **Chém 1**: B tay (10, −47) mũi (57, −48) lưỡi ngang; C tay (−2, −34) mũi (47, −20) lưỡi chúc ~16°. Liềm đặt hai đầu ở x 6 (giữa tay B và C),
+  bụng x 86, **tâm y −47 = đường lưỡi B**, cao 24 (dài:cao ≈ 3,3:1), nghiêng xuống 5° theo C. Pha 1/3/2/2 như cũ (cung đầy trùng B, vỡ trùng C).
+- **Pogo**: gốc vệt dưới mũi dao THEO TƯ THẾ: P1 (19, −20), nêm nghiêng 25° về trước theo lưỡi chéo; P2 (−8, −11) thẳng xuống.
+
+**3. Hình còn TẠM** (chưa có tư thế – máy hình ghi nhãn `tam:<trạng thái>`):
+
+| Động tác | Đang dùng |
+|---|---|
+| chém 2, chém 3, chém hất, chém trên không, chém vang (Dư Âm), tụ Dư Âm | **D** (hồi chém 1 mới) |
+| bị đánh, chết, rút dao lúc vào màn | **D** |
+| lướt | ô chạy 4 (bay) |
+| tư thế đẩy khỏi vách riêng (PH13 gợi ý "bước sau") | chưa có – nhảy tường dùng J1 |
+
+Vì vậy combo 1→2→3 vẫn trông như chém một lần rồi đứng (vệt nhát 2/3 vẫn là vệt ảnh cũ). Chóp/chuông/tà chuyển động phụ: **chưa làm** (PH13: chỉ khi tách sạch).
+
+### Số đo mũ / mắt giữa các sheet (px logic, cùng thang Lam chốt cao 112) – `kiem/thu3-so-do.json`
+
+| Sheet | Cỡ mũ so chốt | Rộng mũ hàng mắt (chốt 41,6) | Cao mũ trên mắt (chốt 39,4) | Mắt (diện tích; chốt 7,3) | Mắt trên chân | Đỉnh mũ trên chân |
+|---|---|---|---|---|---|---|
+| Đứng I1–I3 | −0,7…+0,2 % | 42,4–43,4 | 37,7–38,0 | 7,5 | 70,9–71,2 | 108,9–109,0 |
+| Chạy R1–R8 | −2,3…+1,7 % | 42,0–44,5 | 36,1–38,8 | 8,2–9,0 | 60,3–69,9 | 96,4–107,0 |
+| Chém 1 A–D | −3,8…+1,7 % | 44,9–46,8 | 33,7–36,2 | 6,7–7,0 | 60,3–63,0 ⚠ | 96,5–96,7 ⚠ |
+| Nhảy/rơi J1–F2 · L | −2,8…+3,5 % | 43,9–46,4 | 35,0–37,8 | 7,7–8,5 | 72,6 (neo) · L 57,5 | 95–110 |
+| Pogo P1–P3 | P1 0 · P2 +0,8 · **P3 −12 %** ⚠ | 39,4–52,0 | 32,2–37,9 | **10,0–10,9** ⚠ | 72,6 (neo) | 105–111 |
+| Tường W1–W4 | −2,6…+4,1 % | (52–53, dính tay) | 36,3–38,8 | **12,2–12,6** ⚠ | 72,6 (neo) | 109–112 |
+
+**Lệch rõ (đánh dấu ⚠ trong `thu3-so-mu.png`):**
+- **Tường: mắt to hơn chốt ~65 %, mũ trông rộng hơn** (cao mũ khớp, phần mặt tối/khe mũ mở to hơn). Ảnh gen vẽ đầu tường kiểu "cận" hơn. Không co thêm
+  vì cao mũ đã khớp; nếu nhìn thấy phình khi nhảy → bám, nên gen lại tường với "same hood opening and eye size as approved Lam".
+- **Pogo: mắt to hơn ~40 %; P3 mũ nhỏ hơn 12 %** (đầu ngửa lên nên cao mũ trên mắt ngắn). P3 chỉ hiện 3–6 bước.
+- **Chém 1: mũ khớp nhưng người thấp hơn đứng ~11 %** (ảnh gen vẽ chém thân ngắn, đầu to) → khi bấm chém từ đứng, **đầu hạ 8–11 px**. Theo đúng yêu cầu
+  "một tỉ lệ từ cỡ mũ" nên không kéo cao người (PH13 cấm thu người để sửa đầu; ở đây là ngược lại – giữ mũ, thân ngắn là do ảnh). Đọc như hạ thấp người
+  khi vung; nếu thấy tụt đầu thì cần gen lại chém với thân cao như ảnh chốt.
+- **Chạy: nhún vẫn lớn – mắt dao động 9,6 px logic** (60,3–69,9), không giảm so với thử 2: ô sửa 2 và 6 **thấp hơn** ô cũ (mắt 65,0 → 63,5 và
+  63,2 → 62,2 khi đo cùng tỉ lệ, cùng mặt đất hàng), ô 5 gần như cũ. Cỡ mũ thì đều (±2,3 %). Ô 5 đã khác ô 1 hơn (ủng xa) – cần mắt người duyệt.
+- Màu mũ (trung vị RGB) giữa các sheet: 44–51, 51–57, 68–76 – pogo sáng hơn nhẹ, không thấy nháy trong GIF.
+
+### Tự kiểm theo PH13 mục 5
+
+| Dòng kiểm | Kết quả | Ghi chú |
+|---|---|---|
+| 112 px, màu + bóng đen, nền thật; toàn tốc rồi chậm | **Đạt** | `xem-thu/bo3/*.gif` (trái màu, phải bóng đen) + `-cham4` + video 60 hình/s |
+| Tường: tay/chân tiếp xúc hợp lý, dao không xuyên vách | **Đạt một phần** | bàn tay xa đặt đúng mép vách, dao chúc xuống trong tay gần, không chạm vách, mũi ủng nhỏ phía vách ✔. Thân cách vách ~27 px (chỉ tay chạm) – đúng ảnh gen. **Mũi dao thòng 31–47 px dưới chân** (neo theo mắt) → mấy bước cuối trượt chạm đất dao lấn vào sàn trước khi chuyển L |
+| Nhảy: đang lên và rơi khác nhau | **Đạt** | J2 gấu rủ / F1–F2 gấu nhấc, bóng đen phân biệt được |
+| Pogo nhận ra người đang bổ khi tắt VFX | **Đạt** | bóng đen P1 dao chéo xuống, P2 dao thẳng dưới gấu |
+| Mũ không phình khi đổi trạng thái (không chỉ căn chiều cao) | **Đạt một phần** | cỡ mũ ±4 % mọi tư thế trừ P3 −12 %; **mắt tường +65 %, pogo +40 %** ⚠ (xem trên) |
+| Chém thấp đi cùng cung thấp | **Đạt một phần** | vệt nằm trên đường lưỡi B, nghiêng theo C; **nhưng hộp chém 1 cũ (y −97…−49) cao hơn đường quét mới** → lõi vệt sát/dưới mép dưới hộp. Không đổi hộp (luật gameplay) – cần quyết định khi duyệt |
+| Pogo = dao ngắn + sóng ngắn, không cọc dài | **Đạt** | dao giữ kích thước thật, vệt nêm/cung ngắn dưới mũi dao. Lưu ý: hộp pogo cũ sâu 58 px dưới chân nên trúng hình nộm khi mũi dao P2 còn cách tới ~70 px (hộp tới 58 px dưới chân, mũi dao 11 px trên chân) |
+| Pogo bật ngay, nảy đúng sự kiện, hitstop không phát tiếp hình; không startup / khoá tiếp đất | **Đạt** | bảng nhịp ở trên; khựng giữ nguyên hình |
+| Không làm lại gameplay; trang thử riêng; P0-A/B/C giữ Lam cũ | **Đạt** | chỉ sửa `thu-lam-moi-2/` + `art/huong-moi/lam-tu-the-2/` |
+
+### Chạy lại
+
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py                   # 6 sheet + ảnh dải + thu3-so-mu.png + số đo
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py                 # sinh lại index.html
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py bo3 videobo3     # GIF từng động tác + video chơi thật (~12 phút)
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py vet              # ảnh dải vệt chém 1 / pogo
 ```
