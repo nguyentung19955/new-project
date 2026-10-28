@@ -1,4 +1,6 @@
-# Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) – 28/10/2026 – BẢN CHỜ DUYỆT HÌNH
+# Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
+
+> **Mới nhất (PH13): xem mục "Vệt mẫu PH13" ở cuối** – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick, khung code nhận các sheet tư thế sắp gen.
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-11-LAM-MOI-ANIMATION.md` và `PHAN-HOI-12-THIET-KE-CHAY-CHEM1-LAM.md`
 (mục "Gửi Claude"): **bỏ rig 13 mảnh**, dùng thẳng các tư thế đã gen (`art/huong-moi/nguon/lam-tu-the/thu2-chay-8o.png`, `thu2-chem1-4o.png`).
@@ -32,7 +34,7 @@ Nối nhiều cờ bằng `&`, ví dụ `index.html?vfx=0&bong=1&cham=4`. **Trê
 | `xem-thu/chem1-nen-that-2x-*.gif`, `*-cham4.gif` | phóng 2 lần; bản chậm 4 lần |
 | `xem-thu/man-choi-co-nut.png` | màn kiểu iPhone ngang 844×390 có nút cảm ứng |
 | `art/huong-moi/lam-tu-the-2/gif/chay-tai-cho-{112,2x}-{mau,bong}.gif` | chạy **tại chỗ**, nền tối, 8 ô × 62,5 ms (0,5 s/vòng) |
-| `art/huong-moi/lam-tu-the-2/gif/chem1-tai-cho-{112,2x}-{mau,bong}.gif` | chém tại chỗ: đứng → A 7 tick → B 4 → C 4 → D 8; có bản `-cham4` |
+| `art/huong-moi/lam-tu-the-2/gif/chem1-tai-cho-{112,2x}-{mau,bong}.gif` | chém tại chỗ: đứng → A 6 bước → B 4 → C 4 → D 8 (quy ước engine, xem mục "Quy ước tick"); có bản `-cham4` |
 | **`art/huong-moi/lam-tu-the-2/kiem/dai-khung-chay.png`**, **`dai-khung-chem1.png`** | **ảnh dải khung**: Lam chốt cùng thang + từng tư thế (cỡ 2x trên xám, có đường đất đỏ, trục thân xanh, vạch vàng = hàng mắt Lam chốt) + bản 112 px nền tối + bóng đen 112 px |
 | `art/huong-moi/lam-tu-the-2/kiem/so-do.json` | số đo từng tư thế (px logic) |
 | `xem-thu/do-trong-game.json` | đo trong game: lịch chém theo từng bước, quãng chạy mỗi ô, nối nhát 2 |
@@ -56,7 +58,7 @@ khe hai nhánh Âm Đao gần chuôi). Mép: tách màu khỏi trắng theo màu
 **Trang thử** (`cong-cu/tao-thu-lam-moi-2.py` sinh `index.html` từ `thu-p0a/am-dao.html`, cùng cách P0-C lấy bộ đất/nền mới A → F):
 - **CHẠY**: khung = phần nguyên(pha × 8), pha là biến có sẵn của game cộng theo **quãng đường thật** (132 px/vòng) → mỗi ô 16,5 px, không
   đổi tốc độ. Đo trong game: ô đổi sau 17,6 / 13,2 / 17,6 / 17,6 px (trung bình đúng 16,5 – game bước 4,4 px nên ô giữ 4 hoặc 3 bước).
-- **CHÉM 1**: hình chọn theo **chính điều kiện hộp đòn** của game: trước hộp → A; 4 bước đầu hộp → B; 4 bước sau → C; sau hộp → D.
+- **CHÉM 1**: hình chọn theo **chính điều kiện hộp đòn** của game: trước hộp → A (atkT 1–6); 4 bước đầu hộp → B (atkT 7–10); 4 bước sau → C (11–14); sau hộp → D (15–22).
   Đo trong game: **B + C hiện đúng 8 bước hộp bật**, D 8 bước, nối nhát 2 trong lúc D vẫn được (bấm lúc atkT 15 → nhát 2 ra ngay).
 - **Không crossfade**: mỗi bước vẽ đúng một hình.
 - Bóng Vọng + vệt lướt cũng vẽ bằng sheet mới (tô ngọc như cũ).
@@ -106,8 +108,8 @@ Khung lệch rõ:
 | Đặt vào nền + nút cảm ứng thật | **Đạt trong máy, chưa thử iPhone thật** | `man-choi-co-nut.png` |
 
 Cần biết thêm:
-- **Lịch tick chém**: hình đổi ĐÚNG lúc hộp bật/tắt. Game tính bước bấm = atkT 1 và hộp bật ở atkT 7 (su 7 – không đổi), nên A thực tế hiện
-  **6 bước**, B 4, C 4, D 8 (tài liệu ghi A 1–7 / hộp 8–15 theo cách đếm khác một tick). Không sửa startup để khớp số.
+- **Lịch tick chém**: hình đổi ĐÚNG lúc hộp bật/tắt. Game tính bước bấm = atkT 1 và hộp bật ở atkT 7 (su 7 – không đổi), nên A hiện
+  **6 bước**, B 4, C 4, D 8. (29/10: tài liệu, JSON sheet, GIF tại chỗ và log đã sửa theo quy ước này – xem mục "Quy ước tick".)
 - Lúc lấy đà, game tự đẩy Lam tới 4,4 px (lunge có sẵn) → hình A trôi tới 4,4 px trên đất. Chưa bù.
 - Chạy 8 hình: mỗi hình giữ 16,5 px nên chân chịu lực trượt trong lúc giữ hình (giới hạn của 8 tư thế, tài liệu đã nói trước). Xem video.
 - `?lam=cu` dùng đúng Lam cũ cầm Âm Đao như trang Âm Đao.
@@ -172,3 +174,103 @@ phóng 4 lần từng điểm ảnh. Cột 1 = ảnh gen gốc thu thẳng đún
 **Giới hạn**: đo bằng Chromium (Skia); Safari iPhone dùng bộ lọc riêng nên con số có thể lệch vài %, nhưng ở BK 2,17 giờ là THU nhỏ (×0,72)
 chứ không còn phóng to, nên hết nguyên nhân chính. **Chưa thử trên iPhone thật** – nhờ xem lại trên iPhone; nếu vẫn thấy mềm, có thể tăng
 lượng làm nét (một số trong `dung_sheet.py`: `NET_3X`). Màn @2x (iPhone cũ, BK ≤ 2) vẫn dùng sheet 2x như trước.
+
+## Vệt mẫu PH13 (29/10)
+
+Làm theo `docs/gameplay/PHAN-HOI-13-LAM-MOI-DONG-TAC.md` mục 1.4, 3 và "Gửi Claude". **Gameplay, hộp đòn, startup, tốc độ không đổi** – chỉ đổi
+HÌNH vệt của Lam MỚI ở chém 1 và pogo. Vệt vẽ bằng **path Canvas** (chưa gen ảnh) để duyệt hướng + thời điểm trước. `?lam=cu` giữ nguyên vệt ảnh +
+âm nhận cũ. Các đòn khác (chém 2/3, hất, trên không, chém vang) vẫn vệt cũ vì chưa có tư thế. **Chưa thử trên iPhone thật.**
+
+**Xem ngay** (`xem-thu/vet-ph13/`, Lam cao ~112 px, nền thật phòng A):
+
+| File | Nội dung |
+|---|---|
+| **`dai-chem1-vet.png`** | chém 1 vào không khí, mỗi bước atkT 6 → 15 một ô (phóng 2, điểm ảnh thật); hàng dưới có hộp đòn (đỏ) |
+| **`dai-pogo-vet.png`** | pogo không trúng (thấy đủ các pha), atkT 1 → 11; hàng dưới có hộp đòn |
+| `chem1-vet-112-mau.gif` / `-mau-cham4.gif` / `-hitbox-cham4.gif` | chém 1 vào hình nộm (trúng thật, có khựng) – toàn tốc / chậm 4 / chậm 4 có hộp |
+| `pogo-truot-112-*.gif` | pogo vào không khí: nêm bật → cung ép → mảnh tách → dấu nhỏ, hết hộp là tắt |
+| `pogo-trung-112-*.gif` | pogo trúng hình nộm nhiều lần: nảy → vệt tắt ngay, vòng va chạm nhỏ tại điểm trúng |
+| `do-vet.json` | log từng bước: atkT, hộp bật?, tư thế, pha vệt, khựng, điểm nảy |
+
+**Chém 1 – lưỡi liềm ngang thấp** (`cong-cu/khoi-lam-moi-2.js`, `V1`):
+- Đo trên sheet thử 2 (px logic so với chân, nhìn phải): **B** tay (−8, −59), mũi dao (48, −52); **C** tay (31, −61), mũi (86, −56) → dải quét
+  y ≈ −52…−61. Hộp chém 1 = x 4…95, y −97…−49.
+- Liềm mở về TRÁI, bụng cong phía trước phải: hai đầu mảnh ở x 14 (giữa tay B và tay C), bụng ở x 88; tâm y −60, cao 25 → **dài : cao ≈ 74 : 25 ≈ 3 : 1**;
+  nghiêng xuống 4° theo tư thế C. Lõi nằm trong hộp (chỉ đầu dưới mảnh chạm mép dưới hộp ~1 px); không tô kín hộp.
+- Màu: cạnh đồng trầm `#8C6C3C`, thân ngà `#E8DCBC`, lõi `#FFF2D2` (sáng vừa, không trắng chói), viền than mảnh. Không vàng neon, không teal.
+- 4 pha trong 8 bước active (atkT 7–14) chia **1 / 3 / 2 / 2**: atkT 7 nét mảnh · 8–10 cung đầy (lõi giảm dần) · 11–12 vỡ (4 mảnh, lõi mờ ở bước đầu)
+  · 13–14 mảnh tắt (3 mảnh nhỏ, KHÔNG lõi). **atkT 15 trở đi không vẽ gì** → không còn lõi sáng giả sau active. Pha 1/3 trùng hình B, 2/2 trùng hình C.
+- Vệt bám chân Lam mỗi khung (Lam bị đẩy tới khi lấy đà thì vệt đi theo); khựng (hitstop) → vệt đứng yên cùng hình.
+- Bóng Vọng: cùng vệt, độ đục 0,5.
+
+**Pogo – nêm/cung ngắn ép xuống** (`VP`, `vePogo`):
+- Gốc ở (8, 2) px logic so với chân = ngay dưới mép gấu trước, nơi mũi dao P1 sẽ nhô ra (đổi bằng `vet_pogo` trong `code/bang-thu3.json` khi có
+  ảnh P1). Mũi hướng xuống; bề ngang ~28 → 46 px, sâu ~17 → 25 px: **rộng và thuôn, không phải tia dài**. Không kéo dài vũ khí. Nằm trong hộp pogo
+  (x −26…38, y −24…58).
+- Pha theo atkT (hộp bật NGAY atkT 1): 1–2 nêm bật · 3–5 cung ép · 6–8 mảnh tách · 9–10 dấu rất nhỏ gần lưỡi (không bùng lại).
+- **Nảy hoặc hết hộp → tắt ngay** (nảy đặt atkT 11 cùng bước). Trúng → **vòng va chạm nhỏ** (bầu dục ngà viền đồng, 7 bước rồi tắt) tại điểm
+  trúng = giữa phần giao hộp ↔ mục tiêu (không vẽ bụi sàn). Lam mới bỏ tia ảnh `trung_don` cũ dưới chân lúc nảy (tia trúng của mục tiêu vẫn có).
+- Lưu ý đọc log: pogo tự động / bấm khi đứng ngay trên mục tiêu thường **trúng ngay atkT 1** → nảy cùng bước → không kịp thấy nêm, chỉ thấy vòng
+  va chạm + P3. Đúng luật PH13 ("nảy phải tắt ngay vệt bổ"); muốn xem đủ pha vệt thì xem bản pogo trượt.
+
+**Cách tắt/bật để duyệt** (như cũ): `?vfx=0` tắt cả vệt mẫu · `?hitbox=1` hộp đòn · `?cham=4` · `?lam=cu` vệt cũ; trên iPhone: ⚙ → "Lam mới 2".
+
+**Tự đánh giá (chưa phải duyệt)**: liềm đọc rõ hướng ngang thấp ở 112 px; pha vỡ/mảnh tắt còn hơi giống "mũi tên" vì mảnh tách theo trục dài – có
+thể chỉnh khi duyệt. Pogo vẫn đang dùng hình tạm D (dao chĩa ngang) nên vệt nằm dưới gấu, chưa nối với mũi dao – sẽ khớp khi có tư thế P1/P2.
+
+### Quy ước tick (sửa 29/10 theo engine thật)
+
+`startAtk` đặt atkT = 0 rồi **cùng bước** cộng 1 → bước đầu vẽ ra màn là **atkT 1**. Hộp bật khi su ≤ atkT < su + ac.
+
+| Đòn | Hình | atkT | Số bước |
+|---|---|---|---|
+| Chém 1 (su 7, ac 8, re 8) | A lấy đà | 1–6 | 6 |
+| | B cắt (hộp bật) | 7–10 | 4 |
+| | C kết thúc (hộp bật) | 11–14 | 4 |
+| | D hồi | 15–22 | 8 (atkT 23 đòn hết) |
+| Pogo (su 0, ac 11, re 4) | P1 (hộp bật ngay) | 1–2 | 2 |
+| | P2 | 3 → hết | – |
+| | nảy: P3 | từ bước nảy (atkT nhảy lên 11) | 3 bước rồi J2/J3/F |
+
+**Không thêm tick startup.** PH12 ghi "A 1–7, hộp 8–15" là cách đếm lệch 1 tick. Đã sửa cùng quy ước ở: JSON `lam-moi2-chem1-{2x,3x}.json`
+(`lich_tick`, `khung_theo_atkT`, `tick` của từng khung), `code/dung_sheet.py`, `code/xuat.py` (GIF tại chỗ A = 6 bước, nhãn ảnh dải),
+`khoi-lam-moi-2.js` (chú thích), `xem-thu/do-trong-game.json` (thêm `quy_uoc`, `tu_the`, `vet_pha`, `hitstop` từng bước), `vet-ph13/do-vet.json`.
+
+### Khung code cho các sheet sắp gen (PH13 mục 2)
+
+**Máy hình** đã chạy sẵn trong game (mỗi bước logic, khựng không cộng bước, ghi vào bản ghi Vọng). Khi CHƯA có ảnh thì vẫn vẽ hình tạm như trước;
+log `LM2.nhan` cho biết tư thế đáng lẽ hiện (đã kiểm trong Chromium: W1 2 bước → W2 4 → W3/W4 6/6 lặp; J1 2 bước → J2 → J3 2–3 bước quanh đỉnh;
+F2 khi rơi nhanh; P1 atkT 1–2 → P2; P3 đúng bước nảy, 3 bước; I1 36 → I2 24 → I3 24 → I1 36).
+
+| Tư thế | Khi nào hiện |
+|---|---|
+| W1 / W2 | bám tường: 2 bước đầu W1, sau đó W2 (giữ W2 nếu đứng yên trên vách) |
+| W3 / W4 | trượt: W3 6 bước + W4 6 bước lặp. Mẫu vách PHẢI; vách trái lật cả hình |
+| J1 | tối đa 2 bước đầu sau khi physics đã bật nhảy (nhảy tường: wjT 16–15) – không thêm chờ trên đất |
+| J2 | còn đi lên |
+| J3 | quanh đỉnh: từ lúc vy ≥ −0,8, tối đa 4 bước, khi vy ≤ 1,8 (= `P.apexThreshold`, vùng game giảm trọng lực ở đỉnh) |
+| F1 / F2 | rơi; vào F2 khi vy > 7, về F1 khi vy < 5,5 (trễ chống nháy; maxFall 10,4) |
+| L | vừa chạm đất (vy trước chạm > 2) và đứng yên: tối đa 3 bước; chạy/đánh → bỏ ngay; không khoá điều khiển |
+| P1 / P2 / P3 | xem bảng quy ước tick |
+| I1 / I2 / I3 | đứng: 36 / 24 / 24 / 36 bước (vòng 2 s) |
+
+**Dựng sheet bằng 1 lệnh** (`art/huong-moi/lam-tu-the-2/code/dung_thu3.py`, bảng `code/bang-thu3.json`):
+1. Lưu ảnh gen vào `art/huong-moi/nguon/lam-tu-the/` đúng tên: `thu3-pogo-3o.png`, `thu3-tuong-4o.png`, `thu3-nhay-roi-6o.png` (2 hàng × 3:
+   J1 J2 J3 / F1 F2 L), `thu3-dung-3o.png`, `thu3-chay-sua.png` (8 ô 2×4), `thu3-chem1-sua.png` (4 ô) – nền trắng, ô đều.
+2. Chạy `python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py` (hoặc chỉ một sheet: `… dung_thu3.py pogo`). Ra `sprite/lam-moi3-<tên>-{2x,3x}.png/.json`,
+   ảnh kiểm `kiem/thu3-<tên>-dai.png`, số đo `kiem/thu3-so-do.json`, và cập nhật `sprite/thu3-danh-sach.json` – game tự nạp, không cần sửa code.
+3. Sheet hoàn toàn mới: `… dung_thu3.py them <tên> <file.png> <cột> <hàng> <nhãn1,nhãn2,…> [neo_x] [neo_y]` (thêm vào bảng rồi dựng).
+- **Tỉ lệ từ ảnh Lam chốt**: mỗi ảnh nguồn MỘT tỉ lệ = bề rộng mũ ở hàng mắt của Lam chốt (41,6 px logic) / trung vị bề rộng mũ các ô – không theo
+  khung bao, không theo chiều cao. Mũ các sheet bộ 3 vì vậy cùng cỡ ảnh chốt. ⚠ Sheet chạy/chém thử 2 dựng theo chiều cao nên mũ to hơn chốt 8–31 %;
+  khi gen `thu3-chay-sua` / `thu3-chem1-sua` thì dựng lại cả hai bằng lệnh này để cùng luật (game tự ưu tiên bản bộ 3).
+- Neo: pogo/nhảy theo giữa mũ (trên không); đứng/chém theo giữa hai ủng + hằng số (chân trụ đứng yên); chạy giữ vị trí trong ô; tường đặt điểm xa
+  nhất bên phải (tay áp vách) cách trục 10 px logic (= nửa collider). Đổi trong bảng nếu ảnh thật cần khác.
+- Chạy sửa: nếu máy gen đổi các ô yêu cầu giữ, thêm `"lay_o_tu": {"file": "thu2-chay-8o.png", "o": [1, 3, 4, 7, 8]}` vào mục `chay` của bảng.
+- Đã chạy thử script bằng ảnh GIẢ (cắt từ sheet thử 2) ngoài repo: dựng đủ 6 sheet, game nạp được; không commit ảnh giả – danh sách hiện rỗng.
+
+**Chạy lại phần PH13:**
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py                 # khi có ảnh bộ 3
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py               # sinh lại index.html
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py vet do         # ảnh/GIF vệt + log
+```

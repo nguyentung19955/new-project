@@ -1,4 +1,5 @@
 {
+ "quy_uoc": "Số bước theo ENGINE THẬT (PH13 mục 1.4): \"buoc_sau_bam\" 1 = bước bấm Chém, đã là atkT 1 (startAtk đặt 0 rồi cùng bước cộng 1). Hộp bật khi su ≤ atkT < su+ac (chém 1: su 7, ac 8 → atkT 7–14). A hiện 6 bước (atkT 1–6), B 4 (7–10), C 4 (11–14), D 8 (15–22). Không thêm tick startup. Bước khựng (hitstop) không cộng atkT – hình + vệt đứng yên, dòng log lặp lại cùng atkT.",
  "chem1": [
   {
    "buoc_sau_bam": 1,
@@ -6,6 +7,9 @@
    "atkT": 1,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6464
   },
   {
@@ -14,6 +18,9 @@
    "atkT": 2,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6465.76
   },
   {
@@ -22,6 +29,9 @@
    "atkT": 3,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6467.08
   },
   {
@@ -30,6 +40,9 @@
    "atkT": 4,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6467.96
   },
   {
@@ -38,6 +51,9 @@
    "atkT": 5,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -46,6 +62,9 @@
    "atkT": 6,
    "hop": false,
    "hinh": "chem:0",
+   "tu_the": "A",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -54,6 +73,9 @@
    "atkT": 7,
    "hop": true,
    "hinh": "chem:1",
+   "tu_the": "B",
+   "vet_pha": "nét mảnh",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -62,6 +84,9 @@
    "atkT": 8,
    "hop": true,
    "hinh": "chem:1",
+   "tu_the": "B",
+   "vet_pha": "cung đầy",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -70,6 +95,9 @@
    "atkT": 9,
    "hop": true,
    "hinh": "chem:1",
+   "tu_the": "B",
+   "vet_pha": "cung đầy",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -78,6 +106,9 @@
    "atkT": 10,
    "hop": true,
    "hinh": "chem:1",
+   "tu_the": "B",
+   "vet_pha": "cung đầy",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -86,6 +117,9 @@
    "atkT": 11,
    "hop": true,
    "hinh": "chem:2",
+   "tu_the": "C",
+   "vet_pha": "vỡ",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -94,6 +128,9 @@
    "atkT": 12,
    "hop": true,
    "hinh": "chem:2",
+   "tu_the": "C",
+   "vet_pha": "vỡ",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -102,6 +139,9 @@
    "atkT": 13,
    "hop": true,
    "hinh": "chem:2",
+   "tu_the": "C",
+   "vet_pha": "mảnh tắt",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -110,6 +150,9 @@
    "atkT": 14,
    "hop": true,
    "hinh": "chem:2",
+   "tu_the": "C",
+   "vet_pha": "mảnh tắt",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -118,6 +161,9 @@
    "atkT": 15,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -126,6 +172,9 @@
    "atkT": 16,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -134,6 +183,9 @@
    "atkT": 17,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -142,6 +194,9 @@
    "atkT": 18,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -150,6 +205,9 @@
    "atkT": 19,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -158,6 +216,9 @@
    "atkT": 20,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -166,6 +227,9 @@
    "atkT": 21,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -174,6 +238,9 @@
    "atkT": 22,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "D",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -182,6 +249,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -190,6 +260,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -198,6 +271,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -206,6 +282,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -214,6 +293,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -222,6 +304,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -230,6 +315,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   },
   {
@@ -238,6 +326,9 @@
    "atkT": 23,
    "hop": false,
    "hinh": "chem:3",
+   "tu_the": "I1",
+   "vet_pha": "",
+   "hitstop": 0,
    "x": 6468.4
   }
  ],

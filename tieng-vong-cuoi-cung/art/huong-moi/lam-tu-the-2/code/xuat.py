@@ -5,7 +5,7 @@
                                                     hàng 2 = 112 px trên nền tối; hàng 3 = bóng đen 112 px trên xám.
                                                     Ô đầu = Lam chốt cùng thang (cao 112 / 224) để so mũ, mắt, chuông.
   ../gif/{chay,chem1}-{112,2x}-{mau,bong}.gif     : tại chỗ, đúng nhịp: chạy 8 ô × 62,5 ms (GIF làm tròn 60/70 ms, tổng 500 ms);
-                                                    chém: đứng (D) 300 ms → A 7 tick → B 4 → C 4 → D 8 → đứng (tick = 1/60 s; GIF làm tròn 10 ms)
+                                                    chém: đứng (D) 300 ms → A 6 bước (atkT 1–6) → B 4 (7–10, hộp bật) → C 4 (11–14) → D 8 (15–22) → đứng (tick = 1/60 s; GIF làm tròn 10 ms)
   ../gif/chem1-2x-mau-cham4.gif                    : chém chậm 4 lần (soi tư thế)
 "112" = vẽ ½ sheet 2x (lọc vùng, không phóng nearest) – đúng cỡ trong game. "2x" = cỡ nguồn của sheet (phóng 2 lần so với game).
 """
@@ -104,10 +104,10 @@ def gif(ten, khung_ms, ra, nua_co, bong_den, cham=1):
 
 def main():
     dai('chay', ['1 chạm (gần)', '2 chịu lực', '3 đẩy', '4 bay', '5 chạm (xa)', '6 chịu lực', '7 đẩy', '8 bay'])
-    dai('chem1', ['A lấy đà t1–7', 'B cắt t8–11', 'C kết thúc t12–15', 'D hồi t16–23'])
+    dai('chem1', ['A lấy đà atkT1–6', 'B cắt atkT7–10', 'C kết thúc 11–14', 'D hồi atkT15–22'])
     T = 1000 / 60
     chay = [(i, 62.5) for i in range(8)]
-    chem = [(3, 300), (0, 7 * T), (1, 4 * T), (2, 4 * T), (3, 8 * T), (3, 400)]
+    chem = [(3, 300), (0, 6 * T), (1, 4 * T), (2, 4 * T), (3, 8 * T), (3, 400)]
     for nc, tg in [(True, '112'), (False, '2x')]:
         for bd, tb in [(False, 'mau'), (True, 'bong')]:
             gif('chay', chay, 'chay-tai-cho-%s-%s.gif' % (tg, tb), nc, bd)

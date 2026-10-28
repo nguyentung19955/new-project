@@ -6,7 +6,8 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
   3. video: chơi thật (KHÔNG bất tử) 60 hình/s – trên: Lam mới, dưới: Lam cũ (?lam=cu), cùng chuỗi phím → so-moi-cu-60fps.mp4
             + choi-that-vfx0-hitbox-60fps.mp4 (Lam mới, tắt VFX, hiện hộp đòn) – duyệt tạo dáng / vùng chạm
   4. anh : màn có nút cảm ứng kiểu iPhone ngang (844×390, chạm) → man-choi-co-nut.png
-60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh]"""
+  5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
+60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw, ImageFont
@@ -72,11 +73,12 @@ class Trang:
 async def do(b, cong):
     t = await Trang(b, cong, '').mo()
     await t.js('TVP0.datLam((PA.x0+6)*T, 1)'); await t.buoc('', 20)
-    kq = {'chem1': [], 'chay': []}
+    kq = {'quy_uoc': QUY_UOC, 'chem1': [], 'chay': []}
     await t.buoc('a')
     for i in range(30):
-        r = await t.js('[pl.atkN,pl.atkT,!!atkBox(pl,pl.atkN,pl.atkT,pl.face,{}),LM2.dang,+(pl.x).toFixed(2)]')
-        kq['chem1'].append({'buoc_sau_bam': i + 1, 'atkN': r[0], 'atkT': r[1], 'hop': r[2], 'hinh': r[3], 'x': r[4]})
+        r = await t.js('[pl.atkN,pl.atkT,!!atkBox(pl,pl.atkN,pl.atkT,pl.face,{}),LM2.dang,+(pl.x).toFixed(2),LM2.nhan,pl.atkN===1?LM2.phaChem(pl.atkT):-1,S.hitstop]')
+        kq['chem1'].append({'buoc_sau_bam': i + 1, 'atkN': r[0], 'atkT': r[1], 'hop': r[2], 'hinh': r[3], 'tu_the': r[5],
+                            'vet_pha': TEN_PHA_CHEM[r[6]] if r[6] >= 0 else '', 'hitstop': r[7], 'x': r[4]})
         await t.buoc('')
     # cho phép nối nhát 2 trong recovery (code cũ): bấm lại ở atkT 16
     await t.buoc('', 30); await t.buoc('a'); await t.buoc('', 14); await t.buoc('a')
@@ -101,6 +103,13 @@ async def do(b, cong):
     json.dump(kq, open(os.path.join(OUT, 'do-trong-game.json'), 'w'), ensure_ascii=False, indent=1)
     print('chém:', [(r['atkT'], r['hop'], r['hinh']) for r in kq['chem1'][:24]])
     print('chạy quãng mỗi ô:', doi[:12]); print('nối nhát 2:', noi[:6]); print('lỗi:', t.loi)
+
+
+QUY_UOC = ('Số bước theo ENGINE THẬT (PH13 mục 1.4): "buoc_sau_bam" 1 = bước bấm Chém, đã là atkT 1 (startAtk đặt 0 rồi cùng bước cộng 1). '
+           'Hộp bật khi su ≤ atkT < su+ac (chém 1: su 7, ac 8 → atkT 7–14). A hiện 6 bước (atkT 1–6), B 4 (7–10), C 4 (11–14), D 8 (15–22). '
+           'Không thêm tick startup. Bước khựng (hitstop) không cộng atkT – hình + vệt đứng yên, dòng log lặp lại cùng atkT.')
+TEN_PHA_CHEM = ['nét mảnh', 'cung đầy', 'vỡ', 'mảnh tắt']
+TEN_PHA_POGO = ['nêm bật', 'cung ép', 'mảnh tách', 'dấu nhỏ']
 
 
 def cat(im, x, y, w=200, h=150, duoi=22):
@@ -146,6 +155,75 @@ KICH_BAN = ([('', 20)] + [('r', 70)] + [('', 10)] + [('a', 1), ('', 30)] + [('a'
             + [('r', 150), ('', 10), ('a', 1), ('', 24), ('a', 1), ('', 24), ('a', 1), ('', 60)] + [('l', 50), ('', 30)])
 
 
+async def vet(b, cong):
+    """VỆT MẪU PH13 trên NỀN THẬT phòng A, đúng cỡ game (Lam cao ~112 px) – xem-thu/vet-ph13/:
+    chem1-vet-112-{mau,hitbox}[-cham4].gif · pogo-{truot,trung}-112-{mau,hitbox}[-cham4].gif · dai-chem1-vet.png / dai-pogo-vet.png (mỗi bước
+    active một ô, phóng 2 lần, có / không hộp đòn) · do-vet.json (log từng bước: atkT, hộp, tư thế, pha vệt, khựng, sự kiện nảy)."""
+    VD = os.path.join(OUT, 'vet-ph13'); os.makedirs(VD, exist_ok=True)
+    log = {'quy_uoc': QUY_UOC, 'quy_uoc_pogo': 'Pogo: ATK[4] su 0 → hộp bật NGAY atkT 1 (tick pogo), tới atkT 10; nảy đặt atkT 11 → hộp + vệt tắt cùng bước. '
+           'P1 atkT 1–2, P2 từ 3; P3 từ bước nảy (đặt trong pogoBounce), 3 bước logic rồi về J2/J3/F.',
+           'chem1': [], 'pogo_truot': [], 'pogo_trung': []}
+    o = {}
+    for q, tb in [('', 'mau'), ('hitbox=1', 'hitbox')]:
+        t = await Trang(b, cong, q).mo()
+        # CHÉM 1 cạnh hình nộm (trúng thật → có khựng)
+        await t.js('TVP0.datLam(Q[6].x-70, 1)'); await t.buoc('', 40)
+        p = await t.lam_man(); X, Y = p['x'], p['y']; fr = []; dai = []
+        for i in range(30):
+            await t.buoc('a' if i == 0 else '')
+            r = await t.js('[pl.atkN,pl.atkT,!!atkBox(pl,pl.atkN,pl.atkT,pl.face,{}),LM2.nhan,pl.atkN===1?LM2.phaChem(pl.atkT):-1,S.hitstop]')
+            im = await t.anh(); fr.append(cat(im, X + 40, Y, 220, 150))
+            if tb == 'mau': log['chem1'].append({'buoc': i + 1, 'atkN': r[0], 'atkT': r[1], 'hop': r[2], 'tu_the': r[3], 'vet_pha': TEN_PHA_CHEM[r[4]] if r[4] >= 0 else '', 'hitstop': r[5]})
+        if tb == 'mau': luu_gif(fr, 'vet-ph13/chem1-vet-112-%s.gif' % tb)
+        luu_gif(fr, 'vet-ph13/chem1-vet-112-%s-cham4.gif' % tb, ms=4000 / 60)
+        # ảnh dải: chém vào KHÔNG KHÍ (xa hình nộm) để tia trúng / số sát thương không che vệt
+        await t.js('TVP0.datLam(Q[6].x+170, 1)'); await t.buoc('', 40); p = await t.lam_man(); X, Y = p['x'], p['y']
+        for i in range(17):
+            await t.buoc('a' if i == 0 else ''); r = await t.js('[pl.atkN,pl.atkT,pl.atkN===1?LM2.phaChem(pl.atkT):-1]')
+            if 6 <= r[1] <= 15: dai.append((r[1], r[2], cat(await t.anh(), X + 40, Y, 170, 120, 16)))
+        o['chem-' + tb] = dai
+        # POGO trượt (không có gì bên dưới): thấy đủ 4 pha vệt
+        await t.js('TVP0.datLam(Q[6].x-260, 1)'); await t.buoc('', 30)
+        fr = []; dai = []; da = False
+        for i in range(70):
+            vy = await t.js('pl.vy')
+            ph = 'j' if i < 14 else ('da' if (vy > 0 and not da) else '')
+            if ph == 'da': da = True
+            await t.buoc(ph); p = await t.lam_man()
+            r = await t.js('[pl.atkN,pl.atkT,!!atkBox(pl,pl.atkN,pl.atkT,pl.face,{}),LM2.nhan,pl.atkN===4?LM2.phaPogo(pl.atkT):-1,S.hitstop,pl.atkBounced,+pl.vy.toFixed(2)]')
+            im = await t.anh(); fr.append(cat(im, p['x'], p['y'] + 40, 180, 200, 0))
+            if tb == 'mau': log['pogo_truot'].append({'buoc': i + 1, 'atkN': r[0], 'atkT': r[1], 'hop': r[2], 'tu_the': r[3], 'vet_pha': TEN_PHA_POGO[r[4]] if r[4] >= 0 else '', 'vy': r[7]})
+            if r[0] == 4 and 1 <= r[1] <= 11 and not (dai and dai[-1][0] == r[1]): dai.append((r[1], r[4], cat(im, p['x'], p['y'] + 46, 120, 140, 0)))
+        if tb == 'mau': luu_gif(fr, 'vet-ph13/pogo-truot-112-%s.gif' % tb)
+        luu_gif(fr, 'vet-ph13/pogo-truot-112-%s-cham4.gif' % tb, ms=4000 / 60)
+        o['pogo-' + tb] = dai
+        # POGO trúng hình nộm (nảy → vệt tắt ngay, vòng va chạm tại điểm trúng); bấm xuống+chém khi đang rơi
+        await t.js('TVP0.datLam(Q[6].x+16, 1)'); await t.buoc('', 30)
+        fr = []
+        for i in range(90):
+            st = await t.js('[pl.vy, pl.atkN]')
+            ph = 'j' if i < 12 else ('da' if (st[0] > 0 and st[1] != 4) else '')
+            await t.buoc(ph); p = await t.lam_man()
+            r = await t.js('[pl.atkN,pl.atkT,!!atkBox(pl,pl.atkN,pl.atkT,pl.face,{}),LM2.nhan,pl.atkN===4&&!pl.atkBounced?LM2.phaPogo(pl.atkT):-1,S.hitstop,pl.atkBounced,+pl.vy.toFixed(2),LM2.nay]')
+            fr.append(cat(await t.anh(), p['x'], p['y'] + 90, 200, 280, 0))
+            if tb == 'mau': log['pogo_trung'].append({'buoc': i + 1, 'phim': ph, 'atkN': r[0], 'atkT': r[1], 'hop': r[2], 'tu_the': r[3], 'vet_pha': TEN_PHA_POGO[r[4]] if r[4] >= 0 else '',
+                                                    'hitstop': r[5], 'da_nay': r[6], 'vy': r[7], 'nay_cuoi': r[8]})
+        if tb == 'mau': luu_gif(fr, 'vet-ph13/pogo-trung-112-%s.gif' % tb)
+        luu_gif(fr, 'vet-ph13/pogo-trung-112-%s-cham4.gif' % tb, ms=4000 / 60)
+        print('vet', tb, t.loi)
+    json.dump(log, open(os.path.join(VD, 'do-vet.json'), 'w'), ensure_ascii=False, indent=1)
+    # ảnh dải: mỗi bước một ô, phóng 2 lần (nearest – thấy điểm ảnh thật), hàng trên màu, hàng dưới có hộp đòn
+    for ten, ds_m, ds_h, ten_pha in [('chem1', o['chem-mau'], o['chem-hitbox'], TEN_PHA_CHEM), ('pogo', o['pogo-mau'], o['pogo-hitbox'], TEN_PHA_POGO)]:
+        n = min(len(ds_m), len(ds_h)); w, h = ds_m[0][2].size; W2, H2 = w * 2, h * 2
+        im = Image.new('RGB', (n * (W2 + 6) + 6, 2 * (H2 + 30) + 10), (30, 33, 40)); d = ImageDraw.Draw(im)
+        for i in range(n):
+            for j, ds in enumerate((ds_m, ds_h)):
+                at, pha, c = ds[i]; x = 6 + i * (W2 + 6); y = 6 + j * (H2 + 30)
+                d.text((x, y), 'atkT %d · %s' % (at, ten_pha[pha] if pha >= 0 else '(không vệt)'), font=FONT, fill=(243, 230, 200))
+                im.paste(c.resize((W2, H2), Image.NEAREST), (x, y + 24))
+        im.save(os.path.join(VD, 'dai-%s-vet.png' % ten))
+
+
 async def video(b, cong):
     """chơi thật (không ?battu): phòng A → B. Trên: Lam mới; dưới: Lam cũ – cùng chuỗi phím, cùng tick"""
     A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'lam=cu').mo()
@@ -186,8 +264,9 @@ async def main(viec):
         if 'gif' in viec: await gif(b, cong)
         if 'video' in viec: await video(b, cong)
         if 'anh' in viec: await anh(b, cong)
+        if 'vet' in viec: await vet(b, cong)
         await b.close()
 
 
 if __name__ == '__main__':
-    asyncio.run(main(sys.argv[1:] or ['do', 'gif', 'video', 'anh']))
+    asyncio.run(main(sys.argv[1:] or ['do', 'gif', 'video', 'anh', 'vet']))

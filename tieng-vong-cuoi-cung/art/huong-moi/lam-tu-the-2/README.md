@@ -12,3 +12,4 @@ Ghi chú đầy đủ, số đo, tự kiểm, đề xuất gen lại: **`game/th
 | `kiem/so-do.json` | số đo từng tư thế (px logic) + Lam chốt |
 | `gif/` | GIF tại chỗ 112 px / 2x, màu / bóng đen, bản chậm ×4 |
 | `code/tach.py`, `dung_sheet.py`, `xuat.py` | tách nền, dựng sheet, xuất ảnh kiểm + GIF |
+| `code/dung_thu3.py` + `code/bang-thu3.json` | **PH13 (29/10)**: dựng sheet bộ 3 (pogo / tường / nhảy-rơi / đứng / chạy sửa / chém 1 sửa) bằng 1 lệnh, tỉ lệ theo mũ Lam chốt, xuất 2x + 3x → `sprite/lam-moi3-*`, cập nhật `sprite/thu3-danh-sach.json` (hiện rỗng – chưa có ảnh). Hướng dẫn: GHI-CHU mục "Khung code cho các sheet sắp gen" |

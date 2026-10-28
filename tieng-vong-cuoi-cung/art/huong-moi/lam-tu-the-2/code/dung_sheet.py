@@ -208,12 +208,13 @@ def dung_ca(boi=2, loc='area', net=None, luu=True):
     chem['diem_neo']['x_chem_ghi_chu'] = ('CHÉM: x neo = giữa hai ủng của TỪNG tư thế + %.1f px gen (hằng số chung = giữa mũ ở hàng mắt − giữa hai ủng của D) '
                                           '→ chân trụ đứng yên giữa các tư thế, D cùng trục thân với CHẠY' % LECH_CHEM)
     chem.update({'lap': False, 'atk': 1, 'tu_the': ['A lấy đà', 'B cắt qua', 'C kết thúc', 'D hồi'],
-                 'lich_tick': {'A': [1, 7], 'B': [8, 11], 'C': [12, 15], 'D': [16, 23],
-                               'ghi_chu': 'tick đếm từ 1 = bước logic đầu tiên của đòn. Hộp chỉ bật tick 8–15 (= B + C). '
-                                          'Trong game chọn hình theo CHÍNH điều kiện hộp: atkT < su → A; su ≤ atkT < su+4 → B; '
-                                          '< su+ac → C; còn lại → D (su 7, ac 8, re 8 của game – KHÔNG đổi).'},
-                 'khung_theo_tick': [0] * 7 + [1] * 4 + [2] * 4 + [3] * 8})
-    for f, n in zip(chem['frames'], [7, 4, 4, 8]): f['tick'] = n; f['ms'] = round(n * 1000 / 60, 1)
+                 'lich_tick': {'A': [1, 6], 'B': [7, 10], 'C': [11, 14], 'D': [15, 22],
+                               'ghi_chu': 'QUY ƯỚC ENGINE THẬT (PH13 mục 1.4): số = atkT. Bước bấm đầu tiên vẽ ra màn đã là atkT 1 '
+                                          '(startAtk đặt 0 rồi cùng bước cộng 1). Hộp bật khi su ≤ atkT < su+ac = atkT 7–14 (= B + C). '
+                                          'Vậy A hiện 6 bước, B 4, C 4, D 8 (atkT 15–22; atkT 23 đòn hết). KHÔNG thêm tick startup: '
+                                          'su 7, ac 8, re 8 của game giữ nguyên. (PH12 ghi "A 1–7, hộp 8–15" là cách đếm lệch 1 tick – bỏ.)'},
+                 'khung_theo_atkT': [0] * 6 + [1] * 4 + [2] * 4 + [3] * 8})
+    for f, n in zip(chem['frames'], [6, 4, 4, 8]): f['tick'] = n; f['ms'] = round(n * 1000 / 60, 1)
     for meta in (chay, chem):
         meta['thu_co'] = {'loc': {'area': 'cv2 INTER_AREA', 'lanczos': 'Lanczos (PIL)'}[loc],
                           'lam_net': ({'kieu': 'unsharp nhỏ, kẹp vào min/max 3×3 của bản thu INTER_AREA cùng cỡ (không halo, không gợn Lanczos)', 'sigma_px_nguon': net[0], 'luong': net[1]}
