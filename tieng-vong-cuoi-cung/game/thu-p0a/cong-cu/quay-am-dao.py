@@ -3,6 +3,8 @@
   VIDEO SẠCH (không log, không hộp đòn – để xem CẢM GIÁC): 4 ô cùng lúc cấp 1 | 2 | 3 | 4, cùng phòng, cùng đối thủ, cùng kịch bản bấm
   VIDEO DEBUG (hộp đòn + log – để KIỂM LUẬT): giữ/nhả, vết Dư Âm, chống proc, Cộng hưởng, debug chậm ¼
   PH7: ph7 (tạm dừng / mất focus / chuyển tab, lướt huỷ & hồi chiêu, mục tiêu sau lưng), vung (bản đồ VFX phủ hộp), tudo (chiến đấu tự do 4 cấp)
+  PH8: vetanh (vết Dư Âm bản sạch trước/sau), vung8 (bản đồ phủ sau sửa + ?pogo=moi), pogo (lệch ngang nảy được: cũ / mới), hop8 (debug hộp đổi + ?giu=16),
+       kb (Dư Âm 3 kịch bản so: sạch + debug)
 60 hình/s, H.264 -preset veryfast; mỗi hình = 1 bước logic (debug chậm: 4 hình / bước). Đầu vào do kịch bản bấm phím giả.
 Không phải bộ kiểm thử tự động: chỉ quay + ghi số đo / log ra file để chủ dự án xem.
 Chạy: python3 -B game/thu-p0a/cong-cu/quay-am-dao.py [sach debug cham do ...]   (cần playwright, Chromium, ffmpeg, Pillow)"""
@@ -473,17 +475,18 @@ DON_VUNG = [
 ]
 
 
-async def canh_vung(b, cong):
+async def canh_vung(b, cong, ten_ra='8-vung-hop-phu-vfx', them='', don=None, vet=True, js=None):
     import base64
-    t = await Trang(b, cong, 3, True).mo(); kq = {}; anh = []
-    for ten, n, kb, so in DON_VUNG:
+    t = await Trang(b, cong, 3, True, them).mo(); kq = {}; anh = []
+    if js: await t.js(js)
+    for ten, n, kb, so in (DON_VUNG if don is None else don):
         await t.js('TVP0.datLaiQuai(6); TVP0.datLam((PA.x0+10)*T-250,1); TVAD.hoiNgay(); TVAD.phuMoi()')
         for _ in range(5): await t.buoc()
         for i in range(so):
             await t.buoc(kb(i)); await t.js('TVAD.phuDon(%d)' % n)
         kq[ten] = await t.js('TVAD.phuKetQua()')
         anh.append((ten, Image.open(io.BytesIO(base64.b64decode((await t.js('TVAD.phuAnh()')).split(',')[1]))).convert('RGB')))
-    for cap in (3, 4):   # vết: phần sáng NGOÀI hộp vết (mục 8)
+    for cap in ((3, 4) if vet else ()):   # vết: phần sáng NGOÀI hộp vết (mục 8)
         await t.js('TVAD.cap(%d); TVP0.datLaiQuai(6); TVP0.datLam((PA.x0+10)*T-250,1); TVAD.hoiNgay(); TVAD.phuMoi()' % cap)
         for _ in range(5): await t.buoc()
         for i in range(100):
@@ -492,17 +495,19 @@ async def canh_vung(b, cong):
         kq[ten] = await t.js('TVAD.phuKetQua(true)')
         anh.append((ten, Image.open(io.BytesIO(base64.b64decode((await t.js('TVAD.phuAnh()')).split(',')[1]))).convert('RGB')))
     loi = t.loi; await t.dong()
-    W, H = anh[0][1].size; g = Image.new('RGB', (W * 3, H * 3), (20, 20, 20))
+    W, H = anh[0][1].size
+    g = Image.new('RGB', (W * 3, H * ((len(anh) + 2) // 3)), (20, 20, 20))
     for j, (ten, im) in enumerate(anh):
         r = kq[ten]; c = r['cua_so_mep']
-        nhan(im, ten, (255, 217, 160))
-        nhan(im, 'phủ %d%% hộp · sáng ngoài hộp %d px' % (r['phu_ca_hop'], r['pixel_sang_ngoai_hop']), (240, 240, 240), y=H - 56)
+        nhan(im, ten + ('  ' + json.dumps(r['hop']) if 'vết' not in ten else ''), (255, 217, 160))
+        if 'vết' in ten: nhan(im, 'sáng ngoài hộp %d px · góc hộp sáng %s%% · mép %s / giữa %s' % (r['pixel_sang_ngoai_hop'], r['goc_hop_sang_pct'], r['vet_mep']['sang_tb_dai_mep_3px'], r['vet_mep']['sang_tb_giua']), (240, 240, 240), y=H - 56)
+        else: nhan(im, 'phủ %d%% · LÕI vệt ngoài hộp %d px (xa %.1f) · mờ ngoài %d px (xa %.1f)' % (r['phu_ca_hop'], r['loi_vet_chem_ngoai_hop_px'], r['loi_vuot_xa_nhat_px'], r['pixel_sang_ngoai_hop'], r['mo_vuot_xa_nhat_px']), (240, 240, 240), y=H - 56)
         nhan(im, 'mép có VFX: trên %s%% dưới %s%% trước %s%% sau %s%%' % (c['tren'], c['duoi'], c['truoc'], c['sau']), (240, 240, 240), y=H - 30)
         g.paste(im, ((j % 3) * W, (j // 3) * H))
-    g.save(os.path.join(OUT, '8-vung-hop-phu-vfx.png'))
-    json.dump(kq, open(os.path.join(OUT, '8-vung-hop-phu-vfx.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print('8-vung-hop: lỗi trang %d' % len(loi)); print(json.dumps(kq, ensure_ascii=False)[:2500])
-    return {'file': '8-vung-hop-phu-vfx.png', 'ket_qua': kq, 'loi_trang': loi}
+    g.save(os.path.join(OUT, ten_ra + '.png'))
+    json.dump(kq, open(os.path.join(OUT, ten_ra + '.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print('%s: lỗi trang %d' % (ten_ra, len(loi))); print(json.dumps(kq, ensure_ascii=False)[:2500])
+    return {'file': ten_ra + '.png', 'ket_qua': kq, 'loi_trang': loi}
 
 
 # ---- mục 4, 5, 6 (+ mục tiêu sau lưng của mục 7): video debug
@@ -616,15 +621,220 @@ async def canh_tu_do(b, cong):
         ('TỰ DO: 2 Chuông Gỗ + quái gác, không dời quái, không đặt lại hồi chiêu', cb_tu_do, bot_tu_do, 3100),
     ])
 
+# ================================================================== PHẢN HỒI 8 (28/10)
+# ---- mục 6: vết Dư Âm BẢN SẠCH trước (PH7: phủ kín rồi cắt chữ nhật + viền chữ nhật lúc vang) / sau (PH8: vừa hộp + mặt nạ bầu dục mờ dần)
+async def canh_vet_anh(b, cong):
+    """ảnh chụp đúng màn game (bản sạch, không hộp đòn), cắt quanh hộp vết ×3: hàng trên PH7 (cũ), hàng dưới PH8 (mới)"""
+    t = await Trang(b, cong, 3, True).mo(); hang = []
+    CHUP = [('cấp 3 · treo (t 10)', 3, 10), ('cấp 3 · chờ vang (t 20)', 3, 20), ('cấp 3 · VANG (t 26)', 3, 26), ('cấp 3 · tàn (t 34)', 3, 34), ('cấp 4 · VANG (t 26)', 4, 26)]
+    for cu in (True, False):
+        o = []
+        for ten, cap, tv in CHUP:
+            await t.js('TVAD.AD.vetCu=%s; TVAD.cap(%d); TVP0.datLaiQuai(6); TVP0.datLam((PA.x0+10)*T-330,1); TVAD.hoiNgay(); for(const v of AD.VET) v.on=false; echo=null; rec=null' % ('true' if cu else 'false', cap))
+            for _ in range(5): await t.buoc()
+            for i in range(140):
+                await t.buoc('a' if i < 26 else '')
+                v = await t.js('(()=>{const v=AD.VET.find(v=>v.on); return v?{t:v.t,x:v.x-ox,y:v.y-oy,w:v.w,h:v.h}:null})()')
+                if v and v['t'] == tv: break
+            im = await t.anh(); M = 26
+            c = im.crop((int(v['x']) - M, int(v['y']) - M, int(v['x'] + v['w']) + M, int(v['y'] + v['h']) + M)).resize(((int(v['w']) + 2 * M) * 3, (int(v['h']) + 2 * M) * 3), Image.NEAREST)
+            nhan(c, ('PH7 cũ · ' if cu else 'PH8 mới · ') + ten, (255, 217, 160)); o.append(c)
+        hang.append(o)
+    await t.js('TVAD.AD.vetCu=false'); loi = t.loi; await t.dong()
+    w, h = hang[0][0].size; g = Image.new('RGB', (w * len(CHUP), h * 2), (20, 20, 20))
+    for r, o in enumerate(hang):
+        for j, c in enumerate(o): g.paste(c, (j * w, r * h))
+    g.save(os.path.join(OUT, '9-vet-du-am-sach-truoc-sau.png'))
+    print('9-vet-du-am-sach-truoc-sau.png, lỗi trang %d' % len(loi))
+    return {'file': '9-vet-du-am-sach-truoc-sau.png', 'loi_trang': loi}
+
+
+async def canh_vung8(b, cong):
+    """bản đồ vùng phủ sau PH8 (hộp mới + vệt mới + vết mới) + biến thể ?pogo=moi"""
+    a = await canh_vung(b, cong, '9-vung-hop-phu-vfx-ph8')
+    p = await canh_vung(b, cong, '9-vung-hop-pogo-moi', '&pogo=moi', [x for x in DON_VUNG if x[1] == 4], vet=False)
+    c = await canh_vung(b, cong, '9-vung-vet-kieu-ph7-do-lai', don=[], js='TVAD.AD.vetCu=true')   # vết kiểu PH7 đo lại bằng ĐỘ SÁNG (so với vết mới)
+    return {'mac_dinh': a, 'pogo_moi': p, 'vet_kieu_ph7': c}
+
+
+# ---- mục 3: pogo cũ / ?pogo=moi – lệch ngang nào thì nảy được (hình nộm, Lam rơi từ 40 px trên đỉnh, nhìn phải)
+JS_POGO = """(dx)=>{TVP0.datLaiQuai(6); const q=Q[6]; TVP0.datLam(q.x+q.w/2+dx-10,1); pl.y=pl.py=q.y-40-pl.h; pl.vy=0; pl.onGround=false; savePrev(); return 0;}"""
+
+
+async def do_pogo(b, cong):
+    kq = {}
+    for kieu, them in (('cu', ''), ('moi', '&pogo=moi')):
+        t = await Trang(b, cong, 1, True, them).mo(); r = {}
+        for dx in range(-100, 101, 4):
+            await t.js(JS_POGO, dx); nay = False; trung = False; hp0 = await t.js('Q[6].hp')
+            for i in range(30):
+                await t.buoc('da' if i == 0 else 'd')
+                st = await t.js('({b:pl.atkBounced, n:pl.atkN, g:pl.onGround})')
+                nay = nay or bool(st['b'] and st['n'] == 4)
+                if st['g']: break
+            r[dx] = nay
+        kq[kieu] = {'hop': await t.js('ATK[4].box'), 'nay_theo_lech': r, 'dai_lech_nay_duoc': [min(k for k, v in r.items() if v), max(k for k, v in r.items() if v)] if any(r.values()) else None, 'so_lech_nay': sum(r.values())}
+        await t.dong()
+    print('pogo', json.dumps({k: (v['hop'], v['dai_lech_nay_duoc']) for k, v in kq.items()}))
+    return kq
+
+
+# ---- mục 1–2: debug hộp đổi (mục tiêu sau lưng nhát 2, mép trước hất), + ?giu=16
+def cb_truoc(mep):
+    """hình nộm PHÍA TRƯỚC: mép trái hình nộm cách tâm Lam `mep` px (Lam nhìn phải)"""
+    async def cb(t):
+        await t.js('TVAD.cap(1); TVP0.datLaiQuai(6); TVP0.datLam(Q[6].x-%d-10,1); TVAD.hoiNgay(); echo=null; rec=null' % mep)
+        for _ in range(3): await t.buoc()
+        await t.js('TVP0.xoaLog()')
+    return cb
+
+
+async def canh_hop8(b, cong):
+    """kết quả trúng / hụt đọc ở log (-log.txt): dòng 'Lam D … trúng hình nộm'. Lam lao tới trong combo (lunge) nên mục tiêu sau lưng còn xa hơn lúc hộp nhát 2 bật"""
+    combo2 = lambda i, t, s: None if i >= 60 else ('a' if i in (0, 9) else '', None)
+    hat = lambda i, t, s: None if i >= 50 else ('au' if i == 0 else '', None)
+    r = await canh_don(b, cong, '10-debug-hop-ph8.mp4', 3, [
+        ('PH8-1 · nhát 2 · hình nộm SAU LƯNG 25 px (PH7 hộp −36: trúng 12) – hộp mới −10', cb_sau_lung(25), combo2, 60),
+        ('PH8-1 · nhát 2 · hình nộm SAU LƯNG 6 px (chạm lưng lúc bắt đầu combo)', cb_sau_lung(6), combo2, 60),
+        ('PH8-1 · nhát 2 · hình nộm lấn 6 px vào nửa TRƯỚC thân (−6)', cb_sau_lung(-6), combo2, 60),
+        ('PH8-2 · hình nộm trước 82 px: chém hất (mép mới 78) KHÔNG trúng (PH7: trúng)', cb_truoc(82), hat, 50),
+        ('PH8-2 · hình nộm trước 70 px: chém hất TRÚNG', cb_truoc(70), hat, 50),
+    ])
+    g = await canh_don(b, cong, '10b-debug-giu16.mp4', 3, [
+        ('?giu=16 (BIẾN THỂ THỬ) · giữ 15 → nhả sớm', cb_hoi(3), giu(15, 45), 60),
+        ('?giu=16 · giữ 17 → Dư Âm (hồi 150, [15,20] giữ nguyên)', cb_hoi(), giu(17, 80), 97),
+    ], '&giu=16')
+    return {'hop': r, 'giu16': g}
+
+
+# ---- Dư Âm: 3 kịch bản so (PH8 mục 2), cùng đối thủ (2 Chuông Gỗ + quái gác), trạng thái đầu giống nhau, trong trận KHÔNG dời quái / đặt lại hồi
+JS_KB = """(()=>{const K=TVAD.kn(), H=hurtBox(), R={x:0,y:0,w:0,h:0}; let nguy=false;
+  const q=[3,4,5].map(i=>{const e=Q[i], chet=e.dead||e.st==='die'||e.gone;
+    if(!chet && (e.st==='wind' || (e.st==='strike' && e.t<=10))){ quaiHitbox(e,R); const lao=e.st==='wind'?18:Math.max(0,(5-e.t)*3.6);
+      if(e.face>0) R.w+=lao; else { R.x-=lao; R.w+=lao; } if(H.x<R.x+R.w && H.x+H.w>R.x && H.y<R.y+R.h && H.y+H.h>R.y) nguy=true; }
+    return {i, x:e.x+e.w/2, chet, hp:e.hp, st:e.st, t:e.t, cd:e.cd||0};});
+  return {lx:pl.x+pl.w/2, hurt:pl.hurtT, atkN:pl.atkN, g:pl.onGround, hoi:K.hoi, duAm:!!AD.cs.co.duAm, giu:K.giu, f:S.frame, nguy, q,
+    vet:AD.VET.some(v=>v.on&&v.t>=0&&v.t<v.tre+v.bat)};})()"""
+
+
+def bot_kb(kieu):
+    """kieu: 'thuong' = bot tự do PH7 KHÔNG dùng kỹ năng · 'moc' = bot tự do PH7 (giữ khi hết hồi) · 'ne' = né đòn rồi chém thường ·
+    'hut' = 'ne' + Dư Âm SAU khi quái đánh hụt · 'bay' = 'ne' + khi Dư Âm sẵn: giữ khoảng ~120, quái lấy đà thì đặt vết rồi LƯỚT lùi, quái lao vào vết"""
+    async def f(i, t, s):
+        st = await t.js(JS_KB); so = s.setdefault('so', {'trung_lam': 0, 'tick_nguy_hiem': 0, 'giu_du_am': 0, 'chet': {}, 'hut_thay': 0})
+        if st['hurt'] > 0 and s.get('hurt0', 0) <= 0: so['trung_lam'] += 1
+        s['hurt0'] = st['hurt']; so['tick_nguy_hiem'] += st['nguy']
+        for q in st['q']:
+            if q['chet'] and str(q['i']) not in so['chet']: so['chet'][str(q['i'])] = i
+            k = 'q%d' % q['i']; truoc = s.get(k)
+            if truoc == 'strike' and q['st'] == 'rec' and st['hurt'] <= 0: so['hut_thay'] += 1; s['co_hoi'] = i + 45; s['co_hoi_q'] = q['i']   # quái vừa ĐÁNH HỤT
+            s[k] = q['st']
+        song = [q for q in st['q'] if not q['chet']]
+        if not song:
+            if 'fchet' not in s: s['fchet'] = i; so['tick_xong'] = i
+            s['xong'] = s.get('xong', 0) + 1
+            return None if s['xong'] > 60 else ('', None)
+        if i >= 4000: so['het_gio'] = True; return None
+        q = min(song, key=lambda q: abs(q['x'] - st['lx'])); d = q['x'] - st['lx']; h = 'r' if d > 0 else 'l'; xa = 'l' if h == 'r' else 'r'
+        # đang giữ Chém (Dư Âm)
+        if s.get('giu', 0) > 0:
+            s['giu'] -= 1
+            if s['giu'] == 0: s['nha'] = 30; s['cho_vet'] = kieu == 'bay'
+            return ('a', None)
+        if s.get('nha', 0) > 0: s['nha'] -= 1
+        if kieu in ('thuong', 'moc'):   # bot tự do PH7 (không né)
+            if abs(d) > 62: s['n'] = 0; return (h, None)
+            if kieu == 'moc' and st['duAm'] and st['hoi'] <= 0 and not st['atkN'] and st['g'] and s.get('nha', 0) <= 0:
+                s['giu'] = 23; so['giu_du_am'] += 1; return (h + 'a', None)
+            s['n'] = s.get('n', 0) + 1
+            return ('a' if s['n'] % 14 == 1 else '', None)
+        san = st['duAm'] and st['hoi'] <= 0 and st['g'] and s.get('nha', 0) <= 0
+        doa = q['st'] == 'wind' or (q['st'] == 'strike' and q['t'] <= 10)
+        # bẫy: vết đã đặt → lướt lùi rồi lùi tiếp, đứng chờ vết vang
+        if s.get('cho_vet') and st['vet']:
+            s['cho_vet'] = False; s['lui'] = 14; return (xa + 's', None)
+        if s.get('lui', 0) > 0: s['lui'] -= 1; return (xa, None)
+        if kieu == 'bay' and st['vet']: return ('', None)
+        if kieu == 'bay' and san and not st['atkN']:
+            if q['st'] == 'wind' and q['t'] <= 6 and 70 <= abs(d) <= 150:
+                s['cho_bay'] = 0; s['giu'] = 21; so['giu_du_am'] += 1; return (h + 'a', None)
+            cho = s['cho_bay'] = s.get('cho_bay', 0) + (0 if doa else 1)
+            if s.get('danh_tiep', -1) == i: s['cho_bay'] = 0
+            if cho == 150: so['bo_cho_bay'] = so.get('bo_cho_bay', 0) + 1; s['danh_tiep'] = i + 240   # chờ 150 tick quái không lấy đà → đánh thường 240 tick rồi thử lại
+            if not doa and cho < 150 and s.get('danh_tiep', -1) < i:   # chờ quái tới: giữ khoảng ~115–130, không chém
+                if abs(d) < 115: return (xa, None)
+                if abs(d) > 130: return (h, None)
+                return ('', None)
+        # né: quái lấy đà / đang đập mà Lam trong tầm → lùi (lướt nếu sát)
+        if doa and abs(d) < 140:
+            if abs(d) < 95 and not s.get('da_luot') and q['st'] == 'wind' and q['t'] >= 12: s['da_luot'] = True; return (xa + 's', None)
+            return (xa, None)
+        if not doa: s['da_luot'] = False
+        if kieu == 'hut' and san and not st['atkN'] and s.get('co_hoi', -1) >= i:
+            if abs(d) > 66: return (h, None)
+            s['giu'] = 21; s['co_hoi'] = -1; so['giu_du_am'] += 1; return (h + 'a', None)
+        if abs(d) > 62: s['n'] = 0; return (h, None)
+        s['n'] = s.get('n', 0) + 1
+        return ('a' if s['n'] % 14 == 1 else '', None)
+    return f
+
+
+KB = [('(a) cấp 1 · CHỈ đánh thường (bot PH7, không né)', 1, 'thuong'), ('(a) cấp 3 · CHỈ đánh thường (bot PH7, không né)', 3, 'thuong'),
+      ('mốc PH7 · cấp 3 · bot tự do (giữ khi hết hồi)', 3, 'moc'), ('nền né · cấp 3 · né + CHỈ đánh thường', 3, 'ne'),
+      ('(b) cấp 3 · né + Dư Âm SAU đòn hụt', 3, 'hut'), ('(c) cấp 3 · né + đặt vết rồi lùi', 3, 'bay')]
+
+
+async def quay_kb(b, cong, ten, sach):
+    KB_ = [KB[int(x)] for x in os.environ['KB_LOC'].split(',')] if os.environ.get('KB_LOC') else KB   # KB_LOC=5: chỉ chạy kịch bản số 5 (chỉnh bot)
+    T = [await Trang(b, cong, c, sach).mo() for _, c, _ in KB_]
+    for t in T: await cb_tu_do(t)
+    nhanh = os.environ.get('KB_NHANH')   # chỉ chạy số, không quay (để chỉnh bot)
+    ff = None if nhanh else ffmpeg(os.path.join(OUT, ten), 1920, 720); n = 0; bots = [bot_kb(k) for _, _, k in KB_]; S = [{} for _ in T]; xong = [False] * len(T)
+    for i in range(4100):
+        for j, t in enumerate(T):
+            k = None if xong[j] else await bots[j](i, t, S[j])
+            if k is None: xong[j] = True; k = ('', None)
+            await t.buoc(*k)
+        n += 1
+        if all(xong): break
+        if nhanh: continue
+        g = Image.new('RGB', (1920, 720))
+        for j, t in enumerate(T):
+            im = await t.anh(); nhan(im, KB_[j][0], (255, 217, 160)); g.paste(im.resize((640, 360)), ((j % 3) * 640, (j // 3) * 360))
+        ff.stdin.write(jpg(g))
+    if ff: ff.stdin.close(); ff.wait()
+    kq = {}
+    for j, t in enumerate(T):
+        tk = await t.js('TVAD.tk()'); so = S[j]['so']
+        kq[KB_[j][0]] = {'cap': KB_[j][1], 'bot': KB_[j][2], 'tick_xong': so.get('tick_xong'), 'chet': so['chet'], 'lam_bi_danh': so['trung_lam'], 'tick_nguy_hiem': so['tick_nguy_hiem'],
+                        'quai_danh_hut_thay': so['hut_thay'], 'bo_cho_bay': so.get('bo_cho_bay', 0), 'bot_bat_dau_giu': so['giu_du_am'], 'tung': tk['tung'], 'huy_giu_chua_nap': tk['huyGiu'], 'xoa_da_nap': tk['xoa'],
+                        'chem_vang_trung': tk['vetTrung'], 'chem_vang_hut': tk['vetHut'], 'vet_dat': tk['vet'], 'vet_vang_trung': tk['vetVangTrung'], 'vet_vang_hut': tk['vetVangHut'],
+                        'thieu_ket_cuc': (await t.js('TVP0.tk()'))['thieu']}
+        if not sach: open(os.path.join(OUT, ten.replace('.mp4', '-log-%d.txt' % (j + 1))), 'w', encoding='utf-8').write('== ' + KB_[j][0] + '\n' + '\n'.join(await t.js('TVP0.log()')) + '\n')
+    loi = sum([t.loi for t in T], [])
+    for t in T: await t.dong()
+    print('%s: %d khung, lỗi trang %d' % (ten, n, len(loi)))
+    for k, v in kq.items(): print(' ', k, json.dumps(v, ensure_ascii=False))
+    return {'file': ten, 'khung': n, 'loi_trang': loi, 'ket_qua': kq}
+
+
+async def canh_kb(b, cong):
+    chi = os.environ.get('KB_CHI')
+    r = {}
+    if chi != 'debug': r['sach'] = await quay_kb(b, cong, '11-sach-du-am-3-kich-ban.mp4', True)
+    if chi != 'sach': r['debug'] = await quay_kb(b, cong, '12-debug-du-am-3-kich-ban.mp4', False)
+    return r
+
 async def main():
-    can = sys.argv[1:] or ['sach', 'giu', 'vet', 'proc', 'cham', 'do', 'ph7', 'vung', 'tudo']
+    can = sys.argv[1:] or ['sach', 'giu', 'vet', 'proc', 'cham', 'do', 'ph7', 'vung', 'tudo', 'vetanh', 'vung8', 'pogo', 'hop8', 'kb']
     os.chdir(GOC)
     srv = socketserver.ThreadingTCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     kq_p = os.path.join(OUT, 'ket-qua.json'); kq = json.load(open(kq_p, encoding='utf-8')) if os.path.exists(kq_p) else {}
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        for ten, fn in (('sach', canh_sach), ('giu', canh_giu), ('vet', canh_vet), ('proc', canh_proc), ('cham', canh_cham), ('do', do_so), ('ph7', canh_ph7), ('vung', canh_vung), ('tudo', canh_tu_do)):
+        for ten, fn in (('sach', canh_sach), ('giu', canh_giu), ('vet', canh_vet), ('proc', canh_proc), ('cham', canh_cham), ('do', do_so), ('ph7', canh_ph7), ('vung', canh_vung), ('tudo', canh_tu_do),
+                         ('vetanh', canh_vet_anh), ('vung8', canh_vung8), ('pogo', do_pogo), ('hop8', canh_hop8), ('kb', canh_kb)):
             if ten in can: kq[ten] = await fn(b, cong); json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=list)
         await b.close()
     srv.shutdown()

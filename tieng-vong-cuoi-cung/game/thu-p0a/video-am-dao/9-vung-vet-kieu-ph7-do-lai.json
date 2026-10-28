@@ -1,0 +1,66 @@
+{
+ "vết Dư Âm cấp 3": {
+  "hop": [
+   80,
+   120,
+   90,
+   66
+  ],
+  "tick_do": 46,
+  "phu_ca_hop": 65,
+  "dai_8px": {
+   "tren": 55,
+   "duoi": 85,
+   "truoc": 56,
+   "sau_tam_lam": null
+  },
+  "cua_so_mep": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau": null
+  },
+  "pixel_sang_ngoai_hop": 0,
+  "pixel_duc_ngoai_hop": 0,
+  "loi_vet_chem_ngoai_hop_px": null,
+  "loi_vuot_xa_nhat_px": null,
+  "mo_vuot_xa_nhat_px": 0,
+  "goc_hop_sang_pct": 59,
+  "vet_mep": {
+   "sang_tb_dai_mep_3px": 0.457,
+   "sang_tb_giua": 0.295
+  }
+ },
+ "vết Dư Âm cấp 4": {
+  "hop": [
+   80,
+   120,
+   90,
+   66
+  ],
+  "tick_do": 46,
+  "phu_ca_hop": 74,
+  "dai_8px": {
+   "tren": 72,
+   "duoi": 93,
+   "truoc": 70,
+   "sau_tam_lam": null
+  },
+  "cua_so_mep": {
+   "tren": 100,
+   "duoi": 100,
+   "truoc": 100,
+   "sau": null
+  },
+  "pixel_sang_ngoai_hop": 0,
+  "pixel_duc_ngoai_hop": 0,
+  "loi_vet_chem_ngoai_hop_px": null,
+  "loi_vuot_xa_nhat_px": null,
+  "mo_vuot_xa_nhat_px": 0,
+  "goc_hop_sang_pct": 77,
+  "vet_mep": {
+   "sang_tb_dai_mep_3px": 0.833,
+   "sang_tb_giua": 0.326
+  }
+ }
+}

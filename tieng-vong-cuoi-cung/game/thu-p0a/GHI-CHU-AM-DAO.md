@@ -1,4 +1,4 @@
-# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7
+# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7 và 8
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-6-BO-BAN-3-VA-AM-DAO.md`, `KE-HOACH-VU-KHI.md` mục 2d, 3, 4b, 5, 7a, 8, 10,
 `KE-HOACH-GAMEPLAY-V2.md` mục 3, 5, 6. **Trang con riêng** `am-dao.html`; bản P0-A gốc `index.html` **giữ nguyên** để so.
@@ -11,10 +11,110 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0a/am-dao.html | **Người chơi thử trên iPhone** (log + hộp đòn TẮT). Vào cấp 1. Đổi cấp: ⚙ → nút **"Âm Đao cấp N – bấm để đổi"** (1→2→3→4→1) |
 | …/am-dao.html?cap=3 | Vào thẳng cấp 3 (cấp 1–4) |
 | …/am-dao.html?debug=input&hitbox=1 | Log (lần bấm, giữ Chém, kỹ năng, vết, trúng) + lớp hộp đòn (đỏ = đang gây sát thương; cam đứt = vết Dư Âm đang chờ vang) |
+| …/am-dao.html?pogo=moi | **Biến thể thử PH8**: hộp nảy theo đường bổ xuống `[−2,−24,48,82]`. Mặc định giữ hộp cũ `[−26,−24,64,82]` |
+| …/am-dao.html?cap=3&giu=16 | **Biến thể thử PH8**: ngưỡng giữ Dư Âm 16 tick (nhận 15/16) thay 20; hồi + sát thương giữ nguyên. Mặc định tắt |
 | …/am-dao.html?cg=36 | **Chỉ là biến thể thử** (KHVK 4b): Chuông Gỗ máu 36. **Mặc định và số chính thức: 40** (PH7 chốt) – không đưa 36 vào game chính |
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0a/index.html | Bản **P0-A gốc** (dao placeholder) – nhịp MỚI. Thêm `?p0=0` = nhịp CŨ, **cùng dao** (dùng để so độ nhạy – mục PH7-9) |
 
 Điều khiển: chạm **Chém** = đánh thường (luôn ra ngay). **Giữ Chém ≥ 20 tick (⅓ giây)** ở cấp 3–4 = **Dư Âm**. Phòng A hình nộm → B hai Chuông Gỗ → C quái gác (giống P0-A).
+
+## Sửa theo phản hồi 8 (28/10/2026)
+
+Làm theo `docs/gameplay/PHAN-HOI-8-AM-DAO-PHONG-ABC-BO5.md` mục 1, 2 và phần "Âm Đao", "Dư Âm" trong "GỬI CLAUDE". Chỉ sửa `game/thu-p0a/` (`am-dao.html`, `cong-cu/`, `video-am-dao/`, ghi chú này). `index.html` (P0-A gốc), `thu-p0b/`, `thu-bo-vo-moc/`, `thu-phong-b/`, `demo.html`, `build-demo.py`, `docs/gameplay/` **không đổi**. Mọi đổi chỉ có trên trang Âm Đao.
+
+| # | Yêu cầu | Đã làm |
+|---|---|---|
+| 1 | Nhát 2: thu hộp sau lưng | **`[−36,−100,116,48]` → `[−10,−100,90,48]`** (mép sau −36 → −10 = lưng Lam; mép trước 80 giữ). Đường lưỡi nhát 2 (bảng `luoi` của sheet) ở x ≈ +52…+76, không có tick nào ở sau lưng |
+| 2 | Chém hất: thu mép trước thừa | **`[−9,−140,97,60]` → `[−9,−140,87,60]`** (mép trước 88 → 78). Không kéo thêm tia: vệt chém hất được dời/thu cỡ vào trong hộp (mục 5) nên mép trước nay có nét chém ở 71 % vị trí (trước: 0 %) |
+| 3 | Pogo: giữ cũ, thêm biến thể | Mặc định **giữ `[−26,−24,64,82]`**. `?pogo=moi` = **`[−2,−24,48,82]`** (lưỡi bổ thẳng xuống ở x ≈ 22–25 so với chân, dung sai ≈ ±23 px, vẫn phủ nửa trước thân). **Chưa giảm 64 → 30** |
+| 4 | Không bắt phủ 100 % | Không thêm VFX lấp hộp. Thước đo đổi sang "lõi sáng có nằm trong hộp không" + "mép có nét chém không" |
+| 5 | Vệt chém lố: lõi sáng trong tầm | **Không cắt ảnh**. Dời / thu cỡ / xoay ảnh vệt P0-A cho trang Âm Đao (bảng `VET_CHEM_AD` trong `khoi-am-dao.js`, số tìm bằng `cong-cu/can-vet-chem.py`): mọi điểm lõi (2 khung đầu, độ đục ≥ 0,5) trong hộp ± 1,5 px; 2 khung mảnh vỡ sau được vượt nhẹ (≤ 3,5 px đo được) |
+| 6 | Vết Dư Âm bản sạch không như ô vuông | Ảnh vết đặt **vừa** hộp (không phóng phủ kín rồi cắt) + **mặt nạ bầu dục mờ dần** (đặc tới 55 % bán kính → 0 ở mép hộp); **bỏ viền chữ nhật lúc vang ở bản sạch** (khung hộp chỉ còn ở `?hitbox=1`). Ảnh so: `video-am-dao/9-vet-du-am-sach-truoc-sau.png` |
+| Dư Âm | Giữ cấu hình làm mốc | **Không đổi** sát thương / hồi 150 / chống ngắt. Thêm biến thể **`?giu=16`** (nhận 15 hoặc 16; **mặc định tắt = 20**): chỉ đổi ngưỡng giữ, hồi + sát thương giữ nguyên (`10b-debug-giu16.mp4`: giữ 15 → nhả sớm; giữ 17 → nạp ở 16, Dư Âm [15,20], vết [10,10]) |
+
+### Bảng vùng hộp đo lại (PH8)
+
+`video-am-dao/9-vung-hop-phu-vfx-ph8.png/.json` (trước: `8-vung-hop-phu-vfx.*`). Cách đo như PH7; thêm: **vàng** trên ảnh = lõi vệt chém; "lõi ngoài hộp" = px lõi (độ đục ≥ 0,5) ngoài hộp và khoảng vượt xa nhất; "mờ ngoài" = mọi px ≥ 0,02 ngoài hộp (gồm viền khử răng cưa, mảnh vỡ).
+
+| Đòn | Hộp (cũ → mới) | Phủ cả hộp | Mép trên / dưới / trước / sau | Sáng ngoài hộp (px) | Lõi vệt ngoài hộp |
+|---|---|---|---|---|---|
+| nhát 1 | `[4,−97,86,48]` (giữ) | 47 → 53 % | 40→85 / 100 / 82→91 / 27 % | **437 → 56** | 34 px, xa nhất 1,5 px |
+| nhát 2 | **`[−36,−100,116,48]` → `[−10,−100,90,48]`** | 27 → 38 % | 25→33 / 50→76 / 100 / 0 % ¹ | **860 → 43** | 3 px, 1,5 |
+| nhát 3 | `[−13,−59,99,59]` (giữ) | 50 % | 48 / 70→74 / 46 / 0 % | 58 → 7 | 1 px, 0,5 |
+| nảy (mặc định) | `[−26,−24,64,82]` (giữ) | 27 % | 33 / 47 / 100 / 0 % | 0 | 0 |
+| nảy `?pogo=moi` | `[−2,−24,48,82]` (biến thể) | 35 % | 45 / 82 / **0** / 0 % ² | 0 | 0 |
+| hất | **`[−9,−140,97,60]` → `[−9,−140,87,60]`** | 64 → 74 % | 96→100 / 61→90 / **0→71** / 21 % | **615 → 44** | 7 px, 1,5 |
+| trên không | `[−3,−107,95,48]` (giữ) | 40 → 45 % | 64→73 / 77→82 / 91 / 0 % | 266 → 48 | 30 px, 1,5 |
+| chém vang | `[−13,−66,103,66]` (giữ) | 53 → 54 % | 71→63 / 63→67 / 33→40 / 0→33 % | 132 → 15 | 0 |
+| vết cấp 3 / 4 | `[0,−66,90,66]` (giữ) | (đo theo **độ sáng**) 38 / 44 % | góc hộp sáng **59 / 77 % → 0 / 0 %** | 0 / 0 | – |
+
+¹ Dải 10 px sau tâm Lam của nhát 2 nay là **thân Lam** (không có nét chém, nhưng mục tiêu ở đó đang chồng người Lam). Debug `10-debug-hop-ph8.mp4`: hình nộm sau lưng 25 px và 6 px **không trúng** (Lam lao tới trong combo nên hộp nhát 2 bật thì hình nộm đã ra sau mép −10); lấn 6 px vào nửa trước thân → **trúng 12**. Hất: hình nộm cách 82 px **không trúng** (PH7 trúng), 70 px **trúng**.
+² Biến thể pogo: lưỡi ở x ≈ 23 nên dải 8 px sát mép trước (38–46) **không có nét** – nếu chọn hướng này thì còn thu được nữa, nhưng PH8 dặn chưa chốt bề rộng từ bản đồ VFX.
+
+Vệt chém – số đặt (so với chân, nhìn phải; `x, y, k (cỡ), góc`), cũ (sheet) → mới (trang Âm Đao): nhát 1 `58,−66,0.5,0` → `54.1,−72.7,0.5,0` · nhát 2 `54,−86,0.5,−10` → `49.4,−77.5,`**`0.4`**`,10` · nhát 3 `48,−35,0.52,0` → `45,−34.5,0.52,−10` · hất `26,−104,0.5,−30` → `26,−109.6,`**`0.39`**`,−10` · trên không `55,−78,0.5,0` → `55,−82.7,0.5,0` · chém vang `48,−35,0.598,0` → `42.6,−35,0.598,−10`. Nhát 2 và hất **nhỏ đi ≈ 20 %** (hộp hai đòn này thấp 48 / 60 px, vệt cũ cao hơn hộp); các đòn khác chỉ dời 0–7 px / xoay 10°.
+
+**Pogo – lệch ngang nảy được** (`do-so`, `ket-qua.json → pogo`; Lam rơi từ 40 px trên đỉnh hình nộm rộng 72 px, nhìn phải, tâm Lam − tâm hình nộm, bước 4 px): cũ **−72 … +60** (33 vị trí) · `?pogo=moi` **−80 … +36** (30 vị trí). Với mục tiêu rộng như hình nộm/Chuông Gỗ, biến thể chủ yếu **dời** vùng nảy về phía trước (theo lưỡi) và hẹp đi ≈ 16 px, không phải giảm một nửa.
+
+**Vết Dư Âm bản sạch** (`9-vet-du-am-sach-truoc-sau.png` hàng trên PH7 / hàng dưới PH8; đo độ sáng `9-vung-vet-kieu-ph7-do-lai.json` so `9-vung-hop-phu-vfx-ph8.json`): PH7 sáng TB dải mép 3 px **0,46 / 0,83** (cấp 3 / 4) – **sáng hơn giữa hộp** (0,30 / 0,33), 4 góc hộp sáng 59 / 77 %, cộng viền chữ nhật lúc vang → đọc như ô vuông. PH8: dải mép **0,009 / 0,009**, góc 0 %, giữa 0,37 / 0,43; 0 px sáng ngoài hộp.
+
+### Dư Âm – 3 kịch bản so (PH8 mục 2)
+
+Cùng đối thủ (2 Chuông Gỗ 40 máu + quái gác có vỏ, đi liền một mạch), trạng thái đầu giống nhau ở 6 ô (đặt **một lần** trước trận như PH7), **trong trận không dời quái, không đặt lại hồi chiêu**. Cấu hình Dư Âm = mốc (giữ 20, hồi 150, [15,20] / vết [10,10], không chống ngắt). Video **sạch** `11-sach-du-am-3-kich-ban.mp4` (6 ô cùng lúc) + **debug** `12-debug-du-am-3-kich-ban.mp4` (hộp đòn + log, log từng ô `-log-1..6.txt`), `ket-qua.json → kb`. Hai lần quay cho **cùng số** (chạy tất định).
+
+Bot (`bot_kb` trong `quay-am-dao.py`): **"PH7"** = bot tự do cũ (đi tới, chạm Chém mỗi 14 tick, không né). **"né"** = như PH7 nhưng khi quái lấy đà / đang đập mà Lam trong 140 px thì lùi (lướt nếu sát), quái đập hụt hoặc đang đi thì áp sát chém. **(b)** = "né" + khi quái vừa **đánh hụt** (đập → hồi mà Lam không bị trúng) và Dư Âm sẵn: áp sát ≤ 66 px, giữ 21 tick. **(c)** = "né" + khi Dư Âm sẵn: không chém, giữ khoảng 115–130 px chờ quái; quái bắt đầu lấy đà ở 70–150 px thì giữ 21 tick (vết đặt), **lướt lùi** + lùi 14 tick, quái lao vào vết; chờ 150 tick không thấy quái lấy đà thì đánh thường 240 tick rồi thử lại.
+
+| | (a) cấp 1 chỉ thường | (a) cấp 3 chỉ thường | mốc PH7 cấp 3 (giữ khi hết hồi) | nền "né" cấp 3 chỉ thường | **(b)** cấp 3 sau đòn hụt | **(c)** cấp 3 đặt vết rồi lùi |
+|---|---|---|---|---|---|---|
+| Chuông Gỗ #1 / #2 chết (tick) | 149 / 372 | 149 / 372 | 144 / 403 | 166 / 404 | 156 / 393 | 229 / 578 |
+| **Xong trận (quái gác chết)** | **761** | **761** | 820 | 798 | **775** | 942 |
+| **Lam bị đánh trúng** | 2 | 2 | 2 | **0** | **0** | **0** |
+| **Tick đứng trong vùng nguy hiểm** ³ | 78 | 78 | 78 | 0 | **0** | 8 |
+| Quái đánh hụt | 0 | 0 | 0 | 2 | 2 | 3 |
+| Bot bắt đầu giữ / tung Dư Âm | – | – | 6 / 3 | – | 2 / 2 | 2 / 2 |
+| **Lần giữ bị huỷ** (chưa nạp / đã nạp bị xoá) | – | – | **2** / 0 | – | 0 / 0 | 0 / 0 |
+| Chém vang trúng / hụt | – | – | 3 / 0 | – | 2 / 0 | 0 / 2 (cố ý – bẫy) |
+| **Vết vang trúng / hụt** | – | – | 1 / **2** | – | **2 / 0** | 1 / **1** |
+| Bỏ chờ bẫy (quá 150 tick) | – | – | – | – | – | 1 |
+| Thiếu kết cục bấm | 0 | 0 | 0 | 0 | 0 | 0 |
+
+³ Tick mà vùng ăn đòn của Lam chồng hộp đập của một quái **đang lấy đà hoặc đang đập** (hộp đập nới thêm đoạn lao tới còn lại). Không tính chạm thân.
+
+Đọc số (bot, chưa phải cảm nhận):
+- **(a)** cấp 1 và cấp 3 chỉ đánh thường cho **cùng từng tick** (761, cùng tick chết, cùng 2 lần bị đánh): mở skill **không làm yếu bộ đánh nền**. (Cấp 3 đánh thường 12/nhát nhờ +20 % của cấp 2, cấp 1 là 10 – với 40 máu / vỏ quái gác cả hai vẫn cùng số nhát nên cùng tick, như PH7 đã ghi về cấp 2.) Phần chậm của mốc PH7 (+59 tick) hoàn toàn do **cách dùng** skill: 2/6 lần giữ bị Chuông Gỗ đập huỷ, 2/3 vết hụt.
+- **(b)** Dùng sau đòn hụt: **nhanh hơn nền "né" cùng hành vi 23 tick** (775 so 798), **0 lần bị đánh, 0 tick nguy hiểm, 0 lần giữ bị huỷ, 2/2 vết trúng**. So bot PH7 không né (761) thì vẫn chậm 14 tick nhưng bot PH7 ăn 2 đòn và đứng nguy hiểm 78 tick. Tức là **phần thưởng của chọn thời cơ có thật**: Dư Âm bù gần hết thời gian mất vì né.
+- **(c)** Đặt vết rồi lùi: **an toàn** (0 lần bị đánh) nhưng **chậm nhất** (942, +144 so nền né): bot đứng chờ không chém, 1 lần chờ quá 150 tick; 1/2 vết hụt (vết thứ 2 vang khi quái đã dừng ngoài vùng) và 8 tick nguy hiểm khi đang giữ. Với **quái thường đánh gần** như Chuông Gỗ, bẫy chủ yếu là lợi ích an toàn, không phải tốc độ – đúng như PH8 dự đoán; bot đặt bẫy còn thô (người thật có thể canh tốt hơn).
+- Không đổi số Dư Âm. **Nếu người thật thấy giữ ì: chỉ thử riêng `?giu=16`** (biến thể có sẵn, tắt mặc định), giữ nguyên hồi 150 và sát thương.
+
+### PH8 – KIỂM BẰNG CODE (Chromium headless)
+
+| Kiểm | Kết quả |
+|---|---|
+| Hộp mới đúng ở game và sheet | Trang tự kiểm sheet ↔ `ATK` lúc nạp (sheet nhận hộp mới qua `P0.catBang`); lỗi trang 0 ở mọi cảnh |
+| Nhát 2 không còn trúng sau lưng / hất không trúng ở 82 px | `10-debug-hop-ph8.mp4` + log (bảng trên, chú thích ¹) |
+| Lõi vệt chém trong hộp | 6/6 đòn: lõi vượt ≤ 1,5 px (viền khử răng cưa); sáng ngoài hộp giảm 437/860/58/615/266/132 → 56/43/7/44/48/15 px |
+| Vết không còn "ô vuông" | góc hộp 0 %, mép tối (số trên); ảnh so trước/sau |
+| `?pogo=moi`, `?giu=16` mặc định TẮT | Log đầu ván ghi "hộp nảy … (mặc định)", "giữ 20 tick (mặc định)"; bật thì ghi "BIẾN THỂ THỬ" |
+| Dư Âm 3 kịch bản | Bảng trên, `11-sach-…mp4` (sạch), `12-debug-…mp4` + `-log-1..6.txt`; thiếu kết cục bấm 0 ở cả 6 |
+
+Video 1–7 và `8-vung-hop-phu-vfx.*` là **trạng thái PH7** (hộp / vệt cũ) – giữ để so, không quay lại. Video mới: `10-debug-hop-ph8.mp4`, `10b-debug-giu16.mp4`, `11-sach-du-am-3-kich-ban.mp4`, `12-debug-du-am-3-kich-ban.mp4` (60 hình/s, H.264 `-preset veryfast`, mỗi hình = 1 bước logic). Quay lại: `python3 -B game/thu-p0a/cong-cu/quay-am-dao.py vetanh vung8 pogo hop8 kb`; số vệt: `cong-cu/can-vet-chem.py`.
+
+### PH8 – CẦN THỬ IPHONE (chưa làm – không đánh dấu đạt)
+
+| Câu | Cần gì |
+|---|---|
+| Hộp mới | Người thử có thấy "trúng mà không thấy nét" / "thấy nét mà không trúng" ở nhát 2 (lưng) và hất (mép trước) không. Hất ngắn đi 10 px có làm hụt đòn chống trên không không |
+| Pogo | So `am-dao.html` với `am-dao.html?pogo=moi` trên cùng đoạn nảy (Chuông Gỗ, hình nộm): có nảy hụt nhiều hơn không; có thấy nảy "ăn" chỗ không có lưỡi không |
+| Vệt chém | Nhát 2 / hất vệt nhỏ đi ≈ 20 %: còn đủ "đã" không; vệt các đòn có trông xa hơn tầm thật không |
+| Vết sạch | Không xem hộp đòn: vết có còn trông như ô vuông không; có đoán được vùng vết gây sát thương (rộng ≈ 90 px trước Lam) không |
+| Giữ ì | Nếu người thử thấy giữ 20 ì → thử **riêng** `?giu=16` (các số khác giữ nguyên) |
+| Thời cơ / bẫy | Người thử có tự dùng Dư Âm sau đòn hụt / đặt bẫy không, sau bao lâu |
+
+### PH8 – câu hỏi còn lại
+
+1. Nhát 2 nay hụt mục tiêu chạm lưng lúc bắt đầu combo (vì Lam lao tới). Chấp nhận (đúng đường quét), hay để −14 … −16 cho dung sai lao?
+2. Vệt nhát 2 / hất nhỏ đi ≈ 20 % để lõi vào hộp. Chấp nhận, hay muốn clip vệt riêng thấp hơn cho Âm Đao (không đổi hộp)?
+3. Pogo `?pogo=moi` còn dải 8 px trước không có nét. Sau buổi thử, nếu biến thể không làm nảy khó hơn thì thu tiếp về ≈ `[−2,−24,40,82]`?
+4. Dư Âm: xem bảng 3 kịch bản – giữ mốc tới buổi thử iPhone?
 
 ## Sửa theo phản hồi 7 (28/10/2026)
 
@@ -126,7 +226,7 @@ Chạy trong Chromium headless, đọc trạng thái từng bước. **Không c�
 | Số | Giá trị | Ghi chú |
 |---|---|---|
 | Đánh thường | bộ `ATK[1..6]`, su 7/7/9 (P0-A); [máu, Thế] nhát 1, 2, hất, trên không, nảy [10,10], nhát 3 [10,30] | Không đổi nhịp theo cấp |
-| Hộp nhát 1 | mép trước **95 → 90** (`[4,−97,86,48]`) | Theo KHVK 2d. Hộp đòn 2–6 giữ như cũ |
+| Hộp nhát 1 | mép trước **95 → 90** (`[4,−97,86,48]`) | Theo KHVK 2d. **PH8**: nhát 2 `[−10,−100,90,48]` (cũ −36…80), hất `[−9,−140,87,60]` (cũ mép trước 88); nảy giữ `[−26,−24,64,82]` (`?pogo=moi` = `[−2,−24,48,82]`); nhát 3, trên không giữ |
 | Lưỡi âm thoa | chắn → mũi **170 px rig ≈ 17,8 px logic** (PH7; trước 15,7; dao cũ 23), bản ×1,3, khe hai nhánh 2,5 px | Tầm / hộp 90 **giữ**; âm nhận lấp phần còn lại tới mép hộp |
 | Âm nhận (đo, PH7) | nhát 1: **5,5–8 px**; nhát 2: 11–12,7; nhát 3: 8,1–9,3; hất: 22–23,5 (lên); trên không: 10,3–15,7; **nảy (pogo): 54,6–59,8 (xuống)**; chém vang: 8,1–11,6 | Điểm cuối tia nằm trên cạnh hộp ở 100 % tick đo của **7/7 đòn**. Đây chỉ là MỘT tia – vùng còn lại của hộp xem mục PH7-7 (`do-so.json → am_nhan`) |
 | Cấp 2 | máu đánh thường ×1,2 (10 → **12**) | Thế không đổi |
@@ -199,6 +299,10 @@ Chạy trong Chromium headless, đọc trạng thái từng bước. **Không c�
 | `7-luoi-112px-cu-moi.png` | Lưỡi cũ / mới ở cỡ game (Lam ≈ 112 px) + phóng ×8 |
 | `8-vung-hop-phu-vfx.png` / `.json` | PH7-7/8: bản đồ phần hộp có VFX của 7 đòn + vết cấp 3/4 |
 | `do-so.json`, `ket-qua.json`, `5-bang-tick-am-nhan.json` | Số đo ở mục 4 |
+| `9-vung-hop-phu-vfx-ph8.png/.json`, `9-vung-hop-pogo-moi.*`, `9-vung-vet-kieu-ph7-do-lai.*` | **PH8**: bản đồ vùng phủ sau sửa (vàng = lõi vệt chém), biến thể pogo, vết kiểu PH7 đo lại theo độ sáng |
+| `9-vet-du-am-sach-truoc-sau.png` | **PH8**: vết Dư Âm bản sạch, chụp màn game: hàng trên PH7, hàng dưới PH8 |
+| `10-debug-hop-ph8.mp4`, `10b-debug-giu16.mp4` (+ `-log.txt`) | **PH8**: mục tiêu sau lưng nhát 2 / mép trước hất; biến thể `?giu=16` |
+| `11-sach-du-am-3-kich-ban.mp4` / `12-debug-du-am-3-kich-ban.mp4` (+ `-log-1..6.txt`) | **PH8**: Dư Âm 6 ô – (a) cấp 1 / cấp 3 chỉ thường, mốc PH7, nền né, (b) sau đòn hụt, (c) đặt vết rồi lùi |
 
 Quay lại: `python3 -B game/thu-p0a/cong-cu/quay-am-dao.py [sach giu vet proc cham do ph7 vung tudo]` (video 1–5 đã quay lại 28/10 với lưỡi mới); ảnh lưỡi: `cong-cu/so-luoi-112.py`. Dựng lại: `tao-asset-am-dao.py` (≈ 80 s) → `tao-am-dao.py`. Chỉ là quay + ghi số, không phải bộ kiểm thử tự động.
 

@@ -1,0 +1,48 @@
+== PH8-1 · nhát 2 · hình nộm SAU LƯNG 25 px (PH7 hộp −36: trúng 12) – hộp mới −10
+f4 #1 ra-ngay → atk1  cần y=0.00
+f5 giu #1: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f10 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)
+f12 #2 xep-hang  cần y=0.00  (đang atk1 t9)  hạn f32
+f14 giu #2: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f19 #2 → thuc-hien atk2  chờ 6 tick
+f25 hộp atk2 bật: chạm #2 → hộp 13 tick (tính tick bấm = 1; su 7)
+tk P0 {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 0, "ch": 0, "boQua": 0}
+tk Âm Đao {"giu": 2, "nhaSom": 2, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0, "hoanHoi": 0, "huyDung": 0, "huyGiu": 0, "vetVangTrung": 0, "vetVangHut": 0}
+== PH8-1 · nhát 2 · hình nộm SAU LƯNG 6 px (chạm lưng lúc bắt đầu combo)
+f67 #3 ra-ngay → atk1  cần y=0.00
+f68 giu #3: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f73 hộp atk1 bật: chạm #3 → hộp 7 tick (tính tick bấm = 1; su 7)
+f75 #4 xep-hang  cần y=0.00  (đang atk1 t9)  hạn f95
+f77 giu #4: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f82 #4 → thuc-hien atk2  chờ 6 tick
+f88 hộp atk2 bật: chạm #4 → hộp 13 tick (tính tick bấm = 1; su 7)
+tk P0 {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 0, "ch": 0, "boQua": 0}
+tk Âm Đao {"giu": 4, "nhaSom": 4, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0, "hoanHoi": 0, "huyDung": 0, "huyGiu": 0, "vetVangTrung": 0, "vetVangHut": 0}
+== PH8-1 · nhát 2 · hình nộm lấn 6 px vào nửa TRƯỚC thân (−6)
+f130 #5 ra-ngay → atk1  cần y=0.00
+f131 giu #5: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f136 hộp atk1 bật: chạm #5 → hộp 7 tick (tính tick bấm = 1; su 7)
+f138 #6 xep-hang  cần y=0.00  (đang atk1 t9)  hạn f158
+f140 giu #6: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick) → chỉ là đánh thường
+f145 #6 → thuc-hien atk2  chờ 6 tick
+f151 hộp atk2 bật: chạm #6 → hộp 13 tick (tính tick bấm = 1; su 7)
+f151 Lam D 6 atk2 trúng hình nộm#6: máu 12  Thế 10
+f151   → hình nộm#6 tick này: máu −12 (999 → 987), Thế 60 → 50 [thuong]
+f152   D 6 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+tk P0 {"thieu": 0, "bam": 2, "ketCuc": 2, "raDon": 2, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 6, "nhaSom": 6, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0, "hoanHoi": 0, "huyDung": 0, "huyGiu": 0, "vetVangTrung": 0, "vetVangHut": 0}
+== PH8-2 · hình nộm trước 82 px: chém hất (mép mới 78) KHÔNG trúng (PH7: trúng)
+f189 #7 ra-ngay → HẤT  cần y=-1.00  hướng u
+f190 giu #7: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường
+f199 hộp HẤT bật: chạm #7 → hộp 11 tick (tính tick bấm = 1; su 11)
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 0, "ch": 0, "boQua": 0}
+tk Âm Đao {"giu": 7, "nhaSom": 7, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0, "hoanHoi": 0, "huyDung": 0, "huyGiu": 0, "vetVangTrung": 0, "vetVangHut": 0}
+== PH8-2 · hình nộm trước 70 px: chém hất TRÚNG
+f242 #8 ra-ngay → HẤT  cần y=-1.00  hướng u
+f243 giu #8: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường
+f252 hộp HẤT bật: chạm #8 → hộp 11 tick (tính tick bấm = 1; su 11)
+f252 Lam D 8 HẤT trúng hình nộm#6: máu 10  Thế 10
+f252   → hình nộm#6 tick này: máu −10 (999 → 989), Thế 60 → 50 [thuong]
+f253   D 8 vẫn chồng hình nộm#6 nhưng đã trúng → bỏ qua các tick sau
+tk P0 {"thieu": 0, "bam": 1, "ketCuc": 1, "raDon": 1, "datChay": 0, "hatKhiChay": 0, "trung": 1, "ch": 0, "boQua": 7}
+tk Âm Đao {"giu": 8, "nhaSom": 8, "nap": 0, "xepHang": 0, "tungNgay": 0, "tuTung": 0, "xoa": 0, "tung": 0, "vet": 0, "vetTrung": 0, "vetHut": 0, "huyTruocHop": 0, "hoanHoi": 0, "huyDung": 0, "huyGiu": 0, "vetVangTrung": 0, "vetVangHut": 0}
