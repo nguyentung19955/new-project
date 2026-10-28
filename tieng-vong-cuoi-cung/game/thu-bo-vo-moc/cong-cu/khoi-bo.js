@@ -508,7 +508,8 @@ const BO = (() => {
   function veThanh(b, x, y) {
     const top = y - 92;
     if (b.nam) {
-      if (BO_THU.chamQuay) for (let i = 0; i < 3; i++) {   // PH7: chỉ ở ?debug / ?hitbox=1 const a = S.frame * 0.1 + i * 2.094, sx = Math.cos(a) * 26, sy = Math.sin(a) * 5;
+      if (BO_THU.chamQuay) for (let i = 0; i < 3; i++) {   // PH7: chỉ ở ?debug / ?hitbox=1
+        const a = S.frame * 0.1 + i * 2.094, sx = Math.cos(a) * 26, sy = Math.sin(a) * 5;
         ctx.globalAlpha = 0.9; ctx.fillStyle = '#0C0F14'; ctx.fillRect(x + sx - 3, top + 30 + sy - 3, 6, 6); ctx.fillStyle = i % 2 ? '#F2D69A' : '#A78046'; ctx.fillRect(x + sx - 2, top + 30 + sy - 2, 4, 4); }
       ctx.globalAlpha = 1;
       if (b.st === 'choang') { const k = b.t / BO_SO.choang; ctx.fillStyle = 'rgba(12,15,20,.7)'; ctx.fillRect(x - 25, top + 6, 50, 5); ctx.fillStyle = '#65503C'; ctx.fillRect(x - 24, top + 7, 48 * k, 3); }
