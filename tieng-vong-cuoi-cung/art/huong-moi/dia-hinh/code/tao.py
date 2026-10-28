@@ -393,8 +393,9 @@ J_OUT = {
 }
 _cu = os.path.join(DH, 'dia-hinh.json')
 if os.path.exists(_cu):   # giữ phần "khuon" do code/khuon.py ghi
-    _k = json.load(open(_cu, encoding='utf-8')).get('khuon')
-    if _k: J_OUT['khuon'] = _k
+    _jc = json.load(open(_cu, encoding='utf-8'))
+    for _kk in ('khuon', 'bo_moi', 'do_vat_a'):   # khuon: code/khuon.py; bo_moi + do_vat_a: code/tao-bo-moi.py
+        if _jc.get(_kk): J_OUT[_kk] = _jc[_kk]
 json.dump(J_OUT, open(os.path.join(DH, 'dia-hinh.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('mặt trên cao %d px (%.1f logic); đoạn %d; đầu %d; thân %s; trang trí %d mảnh; nền xa %s; nền giữa %s' %
       (H_DAI, H_DAI / 2, W_DOAN, DAU_T.shape[1], TH.shape[:2], len(CAY), xa.size, GA2.shape[:2]))

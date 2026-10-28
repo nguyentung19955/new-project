@@ -5,7 +5,7 @@ Viết cho người không rành kỹ thuật. Làm đúng bước đầu của 
 Chưa áp sang A, C–F. **Chưa thử trên iPhone thật** – mọi ảnh / số đo là Chromium headless trên máy chủ Linux không GPU.
 
 **Chơi thử:** https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-phong-b/index.html
-(vào thẳng phòng B; đi sang trái là phòng A, sang phải là phòng C – hai phòng đó vẫn là đất / nền cũ đã chỉnh màu).
+(vào thẳng phòng B; đi sang trái là phòng A, sang phải là phòng C – bước 2: cả A, B, C đều dùng bộ đất mới).
 
 | Thêm vào địa chỉ | Để làm gì |
 |---|---|
@@ -17,6 +17,99 @@ Chưa áp sang A, C–F. **Chưa thử trên iPhone thật** – mọi ảnh / s
 
 Trang này **sinh bằng script** từ `game/thu-p0a/index.html` hiện tại (`cong-cu/tao-tu-p0a.py`) – không sửa `thu-p0a/`, `demo.html`,
 `build-demo.py`, `thu-bo-vo-moc/`, `docs/gameplay/`. Khi phiên Âm Đao sửa `thu-p0a` xong, chạy lại script là có bản mới (script báo lỗi rõ nếu chỗ móc bị đổi).
+
+## Bước 2 (28/10) – bộ đất mới từ ảnh gen, áp cho A + B + C, điểm lưu + hình nộm mới
+
+> Mục này là phần mới nhất. Mục 1–8 bên dưới là bước 1 (giữ để đối chiếu; chỗ nào bước 2 thay thì đã ghi ở đây).
+> **Chưa thử trên iPhone thật** – mọi ảnh / số đo là Chromium headless, máy chủ Linux không GPU.
+
+Thêm cờ: `?vao=c` (vào đầu phòng C), `?bo=cu` (đất bước 1: thân mới + mép cũ), `?dv=0` (điểm lưu + hình nộm cũ). `?moi=0` vẫn tắt hết.
+
+### B2.1 Đã ghép gì
+
+**Ảnh nguồn** (`art/huong-moi/nguon/dia-hinh/`) → `art/huong-moi/dia-hinh/code/tao-bo-moi.py` (~20 s) → `dat-moi.png` (atlas đất 1600×1144) + `do-vat-a.png` + khoá `bo_moi`, `do_vat_a` trong `dia-hinh.json`.
+
+- **Tách nền trắng**: flood-fill từ mép ảnh qua điểm gần trắng (chỉ phần nối với mép mới là nền → vải hình nộm, dấu ngà trên chuông giữ nguyên),
+  alpha dải mép 3 px theo độ trắng, khử viền trắng (un-premultiply), hạ alpha điểm mép sáng hơn hẳn bên trong. Kiểm trên ô bàn cờ: `art/huong-moi/dia-hinh/xem-thu/bo-moi-tach-nen-*.png`.
+- **Quy mô**: mọi mảnh đất cùng tỉ lệ **0,48 logic / px gen** (mảnh thân 330 px gen = 160 logic, mảnh mặt trên 419 px = 200 logic) – không nén mảnh vào ô 32;
+  game cắt theo ô ở toạ độ thế giới. Khuôn bước 1 (36×64…) dùng làm **hình học lát cắt** (32 trong + nhô), vật liệu lấy từ dải đủ cỡ.
+- **Ép mép** (thay cho cắt phẳng): cục rêu / rễ lồi ra ngoài đường collider bị *nén* lại (giữ nét viền), chỉ còn ≤ 3 logic (mặt trên, cạnh đứng), ≤ 4 logic (đáy);
+  chỗ lõm vào được kéo ra lấp kín (không còn khe giữa hình và collider).
+- **Các phần** (đều 2x, liền mép bằng "khớp chung" + mask nhiễu như bước 1):
+  - thân: 4 mảnh (thân giữa 2 phần, trong cạnh trái, trong cạnh phải) → khối lặp liền 320×320 logic (`xem-thu/bo-moi-than-lap-2x2.png`)
+  - mặt trên: 3 đoạn 128 logic (A: mặt trên giữa, B: trong đầu trái, C: trong đầu phải) + đầu trái / phải (= góc lồi trên) 96 logic; dải cao 116 logic
+  - cạnh đứng trái / phải: mỗi bên 3 đoạn lặp dọc 128 logic (từ đầu / giữa / cuối của `canh-day-re`), dải 47 logic (3 nhô + 44 vào trong, mờ vào thân)
+  - đáy: 3 đoạn (đáy giữa của 2 tấm + trong đáy trái) + đầu đáy trái / phải (= góc lồi dưới), dải 61,5 logic, rêu rủ ≤ 4 logic dưới collider
+  - ván một chiều: 2 bộ × (đầu trái 64 + giữa 64 + đầu phải 64 logic); ván dày ≈ 15 logic, **mặt ván = mặt collider ô `=`**, giá đỡ chỉ chĩa xuống (nén dọc 0,6 → sâu ~29 logic dưới ván);
+    ngang nén nhẹ (0,25 / 0,34) để giá đỡ nằm gọn trong đầu 64 logic. Ván B 4 ô = đầu trái + đầu phải.
+  - góc lõm: không gen; code làm mặt trên / đáy sát tường mờ về phía tường + bóng tối nhỏ ở chân tường.
+- **Trong game** (`game/runtime/dia-hinh-huong-moi.js`, hàm `dungMoi`): 5 lớp (thân → cạnh đứng → đáy + đầu đáy → mặt trên + đầu → ván) được **nướng sẵn 1 lần** vào
+  các mảng canvas 256×128 logic (chỉ giữ khung bao phần có hình). Lớp mặt trên bị **xoá dần 26 logic sát mọi mép đáy lộ** → bệ mỏng thấy rêu đáy, hết "đáy cắt thẳng".
+  Mỗi khung chỉ vẽ các mảng trong màn (~6–12 lệnh). Collider không đổi (chỉ đọc lưới ô); ô `S` (đá) trong A–C cũng vẽ bằng đất mới (trần C, tường trái A, khối trên cổng C).
+  Chọn đoạn A/B/C theo băm vị trí cố định.
+- **A + B + C cùng bộ mới** (`PB_SO.cot` = cột đầu A → cuối C). Nền giữa / đèn / trang trí theo từng phòng (`PA_SO`, `PB_SO`, `PC_SO` trong `cong-cu/khoi-phong-b.js`);
+  khi đổi phòng nền giữa **hoà dần** theo phần màn mỗi phòng chiếm (không nhảy). Hết chỗ đổi đột ngột ở ranh giới A|B|C (mục 6.6 cũ).
+  - **A ấm, an toàn**: tháp cửa sổ vàng sau khoảng trống giữa hình nộm và cuối phòng, 3 đèn sáng hơn (quầng 52–58), quầng ấm rất nhẹ ở lớp nền, 2 nấm.
+  - **B** giữ bố cục bước 1 (2 cây sát mép, tháp sau ván, 2 đèn, 2 nấm). **C** thoáng: 1 cây mép trái (ngọn khuất sau trần), 1 đèn treo từ trần, không đồ sàn.
+- **Điểm lưu mới** (A, cột 2): vòm rễ **cao 110, rộng 112** logic (ngang nén 0,8 vì chân rễ choãi), vẽ ở lớp điểm lưu = **sau Lam**. Chuông **tách rời** khỏi vòm, lắc quanh
+  điểm treo (lắc mạnh khi vừa lưu). 2 trạng thái: tắt = đồng xỉn; đã lưu = chuông có dấu ngà + quầng ấm nhỏ (không quầng teal, không cổng sáng).
+  Rêu giảm bão hoà 50 %, tối 10 %, phần rêu không sát bóng kéo 28 % về màu vỏ gỗ (trông mỏng hơn) – bằng code, không gen lại. Vùng lưu / hồi máu giữ nguyên.
+- **Hình nộm mới** (A, cột 10): cao 108, rộng 56 logic, neo giữa đáy hộp va chạm 72×108 (không đổi), cùng lớp quái (sau Lam, trước hiệu ứng → không che điểm va chạm / vệt chém / số).
+  Giữ hành vi cũ: lắc khi trúng (nghiêng quanh gốc), sáng lên (bản sáng vẽ sẵn), bảng số trên đầu, thanh Thế, hồi máu.
+
+### B2.2 Xem gì (`xem-thu/`)
+
+| File | Nội dung |
+|---|---|
+| `ghep-phong-abc.png` / `-xam.png` | **3 hàng A / B / C × TRƯỚC (thu-p0a) \| SAU**, mỗi ô 960×540 (từng ảnh rời: `phong-{a,b,c}-{truoc,sau}[-xam].png`). A: vừa chém hình nộm, điểm lưu đã bật; B: cảnh chiến đấu bước 1; C: Lam trước quái gác + cổng |
+| `iphone-844x390-{a,b,c}-{truoc,sau}.png` | giả lập iPhone ngang @3x, có HUD + nút + gợi ý. Vùng chạm giống hệt TRƯỚC / SAU (`so-do.json` → `iphone_phong`) |
+| `lam-di-a-b-c-60fps.mp4` | 18,7 s, 60 hình/giây, H.264 `-preset veryfast`: bot đi từ điểm lưu A, chém hình nộm 4 lần, đánh gục 2 Chuông Gỗ ở B, sang C đánh quái gác |
+| `kiem-mep-{hang-dai,mang-4x4,goc-lom,be-don,hanh-lang-tran}[-collider].png` | ảnh kiểm liền mép, vẽ bằng chính code game; bản collider: đỏ = mặt trên (đứt = ván), cam = cạnh |
+| `art/huong-moi/dia-hinh/xem-thu/bo-moi-*.png` | từng bước xử lý: tách nền, mặt trên / đáy / cạnh đứng / ván ghép nối tiếp, thân lặp 2×2, đồ vật A |
+
+Ảnh / video bước 1 (`ghep-truoc-sau*`, `iphone-844x390-{truoc,sau}`, `lam-danh-2-chuong-go-60fps.mp4`) đã **chụp lại** với bộ mới.
+Chạy lại: `python3 -B game/thu-phong-b/cong-cu/chup-va-quay.py phong iphone-phong do-phong video-abc` (chỉ chụp / quay / đo, không phải kiểm thử tự động).
+
+### B2.3 Đo (`so-do.json` → `do_phong`, `do_ve`; Chromium headless, máy không GPU – **chưa đo iPhone**)
+
+| Vẽ 1 khung (ms), đứng yên 300 khung | TRƯỚC tb / 95 % | SAU tb / 95 % |
+|---|---|---|
+| phòng A | 7,5 / 9,1 | 4,1 / 4,9 |
+| phòng B | 5,1 / 22,8 | 1,7 / 2,7 |
+| phòng C | 8,3 / 10,6 | 4,6 / 6,4 |
+| B, bot đánh 600 khung | 6,2 / 8,3 | 2,1 / 4,1 |
+
+(A, C nặng hơn B một phần vì phần vẽ cũ khác: số Thế, bảng hình nộm, cổng rễ.) Khung tối đa (47–105 ms) là giật lẻ của máy đo, có ở cả TRƯỚC.
+Nạp: ảnh địa hình 0,1 s; **nướng đất A–C 57 ms** (917 lệnh → 40 mảng). **Bộ nhớ ảnh**: ảnh địa hình giải mã 23,7 MB (trong đó `dat-moi.png` 7,3 MB)
++ mảng đất nướng 12,9 MB (trần C chiếm nhiều) – trên iPhone nên để ý; nếu cần giảm: nướng mảng ở 1,5x thay vì 2x, hoặc bỏ ảnh đất bước 1 (`mat-tren.png`, `than-dat.png`) khi không dùng `?bo=cu`.
+Khối màu HM (tô đồ cũ lúc nạp) vẫn ~1,2 s như bước 1.
+
+### B2.4 Còn chưa đẹp
+
+1. **Bệ mỏng 1 ô** (be-don): sau khi xoá dần mặt trên, gần như cả bệ là rêu đáy + đầu – đọc được nhưng "rậm". Cần một dải mép riêng cho bệ mỏng nếu dùng nhiều.
+2. **Góc lõm** chỉ là mờ + bóng; nhìn kỹ chân tường vẫn thấy mặt trên sàn "chui" vào thân tường. Bậc cao (goc-lom): đầu trái của bậc hơi nhiều rêu so với tường bên cạnh.
+3. Cạnh đứng: rêu chạy đều suốt chiều cao → tường cao (A cột 0, tường phải C) trông lặp nhịp 128 logic.
+4. Hàng sàn dài vẫn nhận ra 3 đoạn (vòm rễ), đỡ hơn bước 1 (2 đoạn) nhưng chưa hết.
+5. Ván: giá đỡ nén dọc 0,6 nên thanh chéo hơi bẹt; mặt ván + giá đỡ hơi sáng hơn đất (gỗ khác gỗ rễ – cố ý cho dễ nhận ván một chiều).
+6. Điểm lưu: chuông hơi nhỏ trong vòm (vòm 110 logic) – dấu ngà khó thấy trên điện thoại; có thể vẽ thêm dấu ngà bằng code khi đã lưu.
+7. Trần C là một khối thân lớn phẳng (không có gì ngoài vân rễ) – có thể thêm vài rễ rủ / lỗ tối bằng trang trí sau.
+8. Lam, quái, cổng vẫn hình cũ (viền cyan, rêu xanh) – không thuộc bước này.
+
+### B2.5 Ảnh còn cần gen (prompt ngắn; mẫu đính kèm: `bo-dat-3x3.png` + Lam mới, nền trắng, không chữ)
+
+- **Bệ mỏng 1–2 ô**: *"2D side-view thin floating root-ledge sheet matching the attached terrain: left cap, repeatable middle, right cap, 1:4 thickness to length, level top, mossy underside, pure white background, no text."*
+- **Góc lõm** (theo khuôn `khuon/goc-lom-*.png`, tô vào khuôn): *"Fill the attached template: inner corner where a root floor meets a root wall, same texture and scale as the attached tiles, no plants above the floor line, pure white outside the template."*
+- **Thêm 1–2 đoạn mặt trên giữa** (bớt nhịp lặp): *"Two more repeatable middle top-edge pieces matching the attached root terrain, flat standing line, sparse moss, pure white background."*
+- **Trang trí trần C** (sau P0): *"Sparse hanging root tips and dark hollows for a root ceiling, separate small pieces, pure white background, no glow."*
+
+### B2.6 Ghép sang thu-p0a / demo
+
+Như mục 7, thêm:
+1. Đường dẫn ảnh: `art/huong-moi/dia-hinh/dia-hinh.json` (có khoá `bo_moi`, `do_vat_a`; DHM tự nạp `dat-moi.png`, `do-vat-a.png`).
+2. `DHM.dung({..., cot: [[PA.x0, PC.x0 + PC.w - 1]]})` – muốn phòng nào dùng đất mới thì thêm khoảng cột phòng đó. Phòng có đá `S` muốn giữ đá cũ: `daLaDat: false`.
+3. Bọc `drawSaveBell` và `drawQuai` như trong `khoi-phong-b.js` (khối "ĐIỂM LƯU MỚI", "HÌNH NỘM MỚI") – chỉ vẽ, không đổi luật.
+4. Nền giữa / đèn mỗi phòng: bảng `PA_SO` / `PB_SO` / `PC_SO` + `NEN_ABC` (mảnh mang `rc` của phòng nó, trọng số theo phần màn).
+5. Sinh lại ảnh: `python3 -B art/huong-moi/dia-hinh/code/tao-bo-moi.py` (bộ mới), `tao.py` (nền + đất bước 1 – giữ khoá bo_moi), rồi `python3 game/thu-phong-b/cong-cu/tao-tu-p0a.py`.
 
 ## 1. Xem gì trước (`xem-thu/`)
 
@@ -129,7 +222,8 @@ Mọi code mới ở **module riêng**, trang chỉ cần vài dòng:
 ```
 game/runtime/dia-hinh-huong-moi.js         module DHM: nền, đất, đèn (dùng chung cho mọi phòng)
 game/runtime/giao-dien-huong-moi.js        module GDHM: HUD + nút cảm ứng
-art/huong-moi/dia-hinh/                    ảnh 2x + dia-hinh.json; code/tao.py (nền, đất), code/khuon.py (khuôn); xem-thu/ ảnh kiểm từng bước xử lý
+art/huong-moi/dia-hinh/                    ảnh 2x + dia-hinh.json; code/tao.py (nền, đất bước 1), code/tao-bo-moi.py (bộ đất mới + điểm lưu + hình nộm, bước 2),
+                                           code/khuon.py (khuôn); xem-thu/ ảnh kiểm từng bước xử lý
 game/thu-phong-b/index.html                trang thử (SINH RA, đừng sửa tay)      python3 game/thu-phong-b/cong-cu/tao-tu-p0a.py
   cong-cu/khoi-phong-b.js                  số đặt phòng B (PB_SO) + móc vẽ + API chụp (TVPB)
   cong-cu/chup-va-quay.py                  ảnh, video, số đo → xem-thu/

@@ -552,5 +552,246 @@
    "ghi_chu": "",
    "tep_anh_gen": null
   }
+ },
+ "bo_moi": {
+  "ghi_chu": "Bộ đất mới từ ảnh gen của chủ dự án (bo-dat-3x3, canh-day-re, van-mot-chieu) – sinh bởi code/tao-bo-moi.py. Ảnh 2x. Mọi dải: px 2x; \"khung\" = [x, y, rộng, cao] trong dat-moi.png. Mặt trên: hàng 0 của dải = collider − nho_logic. Đáy: hàng cuối = collider đáy + nho_day_logic. Cạnh đứng trái: cột 0 = collider − nho_logic (phải: cột cuối = collider + nho). Ván: hàng nho_logic*2 = mặt ván (collider ô \"=\"); đầu trái: cột 0 = mép ô − nho.",
+  "tep": "dat-moi.png",
+  "co_anh": [
+   1600,
+   1144
+  ],
+  "khung": {
+   "than": [
+    2,
+    2,
+    640,
+    640
+   ],
+   "mat-giua-a": [
+    648,
+    2,
+    256,
+    232
+   ],
+   "mat-giua-b": [
+    910,
+    2,
+    256,
+    232
+   ],
+   "mat-giua-c": [
+    1172,
+    2,
+    256,
+    232
+   ],
+   "mat-dau-trai": [
+    2,
+    648,
+    198,
+    232
+   ],
+   "mat-dau-phai": [
+    206,
+    648,
+    198,
+    232
+   ],
+   "day-giua-a": [
+    410,
+    648,
+    256,
+    123
+   ],
+   "day-giua-b": [
+    672,
+    648,
+    256,
+    123
+   ],
+   "day-giua-c": [
+    934,
+    648,
+    256,
+    123
+   ],
+   "day-dau-trai": [
+    1196,
+    648,
+    198,
+    123
+   ],
+   "day-dau-phai": [
+    1400,
+    648,
+    198,
+    123
+   ],
+   "tuong-trai-a": [
+    2,
+    886,
+    94,
+    256
+   ],
+   "tuong-trai-b": [
+    102,
+    886,
+    94,
+    256
+   ],
+   "tuong-trai-c": [
+    202,
+    886,
+    94,
+    256
+   ],
+   "tuong-phai-a": [
+    302,
+    886,
+    94,
+    256
+   ],
+   "tuong-phai-b": [
+    402,
+    886,
+    94,
+    256
+   ],
+   "tuong-phai-c": [
+    502,
+    886,
+    94,
+    256
+   ],
+   "van-1-trai": [
+    602,
+    886,
+    134,
+    89
+   ],
+   "van-1-giua": [
+    742,
+    886,
+    128,
+    89
+   ],
+   "van-1-phai": [
+    876,
+    886,
+    134,
+    89
+   ],
+   "van-2-trai": [
+    1016,
+    886,
+    134,
+    89
+   ],
+   "van-2-giua": [
+    1156,
+    886,
+    128,
+    89
+   ],
+   "van-2-phai": [
+    1290,
+    886,
+    134,
+    89
+   ]
+  },
+  "ti_le_gen": 0.48,
+  "than_logic": 320,
+  "doan_logic": 128,
+  "nho_logic": 3,
+  "nho_day_logic": 4,
+  "mat_cao_logic": 116.0,
+  "day_cao_logic": 61.5,
+  "dau_logic": 96,
+  "tuong_rong_logic": 47.0,
+  "van_cao_logic": 44.5,
+  "van_dau_logic": 64,
+  "van_giua_logic": 64,
+  "mat_doan": [
+   "giua-a",
+   "giua-b",
+   "giua-c"
+  ],
+  "day_doan": [
+   "giua-a",
+   "giua-b",
+   "giua-c"
+  ],
+  "tuong_doan": [
+   "a",
+   "b",
+   "c"
+  ],
+  "van_bo": [
+   1,
+   2
+  ]
+ },
+ "do_vat_a": {
+  "ghi_chu": "Điểm lưu mới (vòm rễ, chuông RỜI 2 trạng thái) + hình nộm mới – sinh bởi code/tao-bo-moi.py. Ảnh 2x. vòm: cao 110 logic, neo giữa đáy; treo = điểm treo chuông trong khung vòm (px 2x); chuông: neo_treo = điểm treo trong khung chuông. Rêu giảm bão hoà + mỏng hơn bằng code.",
+  "tep": "do-vat-a.png",
+  "co_anh": [
+   554,
+   224
+  ],
+  "khung": {
+   "vom": [
+    2,
+    2,
+    224,
+    220
+   ],
+   "chuong-tat": [
+    230,
+    2,
+    43,
+    87
+   ],
+   "chuong-sang": [
+    277,
+    2,
+    43,
+    87
+   ],
+   "nom": [
+    324,
+    2,
+    112,
+    216
+   ],
+   "nom-sang": [
+    440,
+    2,
+    112,
+    216
+   ]
+  },
+  "treo": [
+   122.6,
+   66.4
+  ],
+  "chuong_neo": {
+   "chuong-tat": [
+    21.6,
+    0.4
+   ],
+   "chuong-sang": [
+    21.6,
+    0.4
+   ]
+  },
+  "vom_logic": [
+   112.0,
+   110.0
+  ],
+  "nom_logic": [
+   56.0,
+   108.0
+  ]
  }
 }
