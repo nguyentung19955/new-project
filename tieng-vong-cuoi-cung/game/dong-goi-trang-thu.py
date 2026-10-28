@@ -69,16 +69,21 @@ moc = r"""<script>
 const tim=p=>{p=decodeURIComponent(p);if(M[p])return M[p];const a=p.split('/');for(let i=1;i<a.length;i++){const k='/'+a.slice(i).join('/');if(M[k])return M[k]}return null};
 const R=u=>{try{if(typeof u!=='string'||u.startsWith('data:')||u.startsWith('blob:'))return u;const x=new URL(u,'http://g/%s');
 if(x.host==='g')return M[decodeURIComponent(x.pathname)]||tim(x.pathname)||u;
-const y=new URL(u,location.href);if(y.origin===location.origin||y.protocol==='file:')return tim(y.pathname)||u;return u}catch(e){return u}};
+const y=new URL(u,location.href);if(y.origin===location.origin||y.protocol==='file:'){
+const dir=location.pathname.replace(/[^/]*$/,'');
+if(y.pathname.startsWith(dir)){const z=new URL(y.pathname.slice(dir.length),'http://g/%s');const k=decodeURIComponent(z.pathname);if(M[k])return M[k]}
+return tim(y.pathname)||u}return u}catch(e){return u}};
 const d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');
 Object.defineProperty(HTMLImageElement.prototype,'src',{get(){return d.get.call(this)},set(v){d.set.call(this,R(v))}});
 const sa=Element.prototype.setAttribute;Element.prototype.setAttribute=function(k,v){return sa.call(this,k,(k==='src'||k==='href')?R(v):v)};
 const sp=CSSStyleDeclaration.prototype.setProperty;CSSStyleDeclaration.prototype.setProperty=function(k,v,...a){if(typeof v==='string')v=v.replace(/url\(["']?([^"')]+)["']?\)/g,(m,u)=>'url("'+R(u)+'")');return sp.call(this,k,v,...a)};
-const f=window.fetch;window.fetch=(u,o)=>f(typeof u==='string'?R(u):u,o);
+/* fetch/XHR tới data: bị CSP của artifact chặn (Safari: "Load failed") → tự dựng Response từ base64, không đi mạng */
+const DU=d=>{const i=d.indexOf(',');const mime=d.slice(5,d.indexOf(';'));const s=atob(d.slice(i+1));const b=new Uint8Array(s.length);for(let k=0;k<s.length;k++)b[k]=s.charCodeAt(k);return new Response(new Blob([b],{type:mime}),{status:200,headers:{'Content-Type':mime}})};
+const f=window.fetch;window.fetch=(u,o)=>{const x=(typeof u==='string')?R(u):(u&&u.url?R(u.url):u);if(typeof x==='string'&&x.startsWith('data:'))return Promise.resolve(DU(x));return f(u,o)};
 const xo=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(m,u,...a){return xo.call(this,m,R(u),...a)};
 const A=window.Audio;if(A)window.Audio=function(u){return new A(u===undefined?u:R(u))};
 window.__NHUNG_R=R;})();
-</script>""" % (json.dumps(ban_do), thu_muc, trang)
+</script>""" % (json.dumps(ban_do), thu_muc, trang, trang)
 if '<meta charset="utf-8">' in html:
     html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + moc, 1)
 else:
