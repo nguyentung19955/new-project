@@ -20,7 +20,7 @@ Không viết bộ kiểm thử tự động (chỉ có script quay video + ghi 
 | …/thu-p0c/index.html?vao=e&hitbox=1&debug=p0c | Bảng log P0-C trên màn + hộp đòn (hộp đập / hộp húc của tinh anh đúng tỉ lệ ×1,5) + chữ trạng thái tinh anh dưới chân |
 | …/thu-p0c/index.html?vao=e&tamau=600 | **CHỈ ĐỂ KIỂM** chu trình Thế (tinh anh 600 máu để thấy vỡ → choáng → ổn định → vỡ lại ×0,6). **Mặc định tắt (160)** – không dùng khi thử người chơi |
 
-Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"** (tải file .txt: tóm tắt + từng dòng, có ms thật). Không cần tải lại trang để bật debug.
+Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn – app Claude không cho tải file) và thử tải file .txt (tóm tắt + từng dòng, có ms thật). Không cần tải lại trang để bật debug.
 Nút đổi cấp Âm Đao của trang Âm Đao bị **ẩn** (người thử lên cấp bằng đe); chỉ hiện ở `?debug=p0c`.
 Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A (bật / tắt ghi). Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím: **F**).
 

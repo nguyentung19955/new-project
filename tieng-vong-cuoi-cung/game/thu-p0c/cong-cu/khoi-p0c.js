@@ -350,6 +350,8 @@ const P0C = (() => {
     an: {tren_dat: AN.on, co: AN.coAn, f_nhat: AN.fNhat}, cap: AD.cap, du_am: !!(AD.cs && AD.cs.co.duAm)}; }
   function xuatLog() {
     const txt = JSON.stringify(tomTat(), null, 1) + '\n\n' + LOG.map(r => r.s + (r.t !== null ? '  [' + r.t + ' ms]' : '')).join('\n');
+    // app Claude (artifact) không cho tải file → CHÉP vào bộ nhớ tạm ngay trong lần bấm (như P0-B), vẫn thử tải file
+    try { navigator.clipboard.writeText(txt).then(() => toast('Đã chép log P0-C – dán vào tin nhắn'), () => toast('Không chép tự động được – xem file tải về')); } catch (e) {}
     try { const b = new Blob([txt], {type: 'text/plain'}), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'log-p0c-' + P0C_PHIEN + '-f' + S.frame + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
     catch (e) { console.log(txt); }
     return txt;
