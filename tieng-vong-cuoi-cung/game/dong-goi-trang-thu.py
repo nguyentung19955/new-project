@@ -71,7 +71,7 @@ const R=u=>{try{if(typeof u!=='string'||u.startsWith('data:')||u.startsWith('blo
 if(x.host==='g')return M[decodeURIComponent(x.pathname)]||tim(x.pathname)||u;
 const y=new URL(u,location.href);if(y.origin===location.origin||y.protocol==='file:'){
 const dir=location.pathname.replace(/[^/]*$/,'');
-if(y.pathname.startsWith(dir)){const z=new URL(y.pathname.slice(dir.length),'http://g/%s');const k=decodeURIComponent(z.pathname);if(M[k])return M[k]}
+{const A=dir.split('/').filter(Boolean),B=y.pathname.split('/').filter(Boolean);let i=0;while(i<A.length&&i<B.length-1&&A[i]===B[i])i++;const rel='../'.repeat(A.length-i)+B.slice(i).join('/');const z=new URL(rel,'http://g/%s');const k=decodeURIComponent(z.pathname);if(M[k])return M[k]}
 return tim(y.pathname)||u}return u}catch(e){return u}};
 const d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,'src');
 Object.defineProperty(HTMLImageElement.prototype,'src',{get(){return d.get.call(this)},set(v){d.set.call(this,R(v))}});
