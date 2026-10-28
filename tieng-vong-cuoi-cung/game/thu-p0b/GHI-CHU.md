@@ -38,6 +38,14 @@ Trong game, ⚙ (tạm dừng, không che lúc chơi):
 
 Đường đi: phòng A (hình nộm) → **B** (2 Chuông Gỗ) → **C** (quái gác có vỏ) → **D** (2 Bọ Vỏ Mộc). HUD dưới máu ghi cấu hình; B có thanh lịch sử + chữ trạng thái (và ô nấc ở lượt tài nguyên).
 
+## Đất mới 28/10 – KHÔNG áp vào P0-B, phiên đóng băng giữ nguyên `p0b-2810-d219ca3a`
+
+- Kiểm trước khi làm: **P0-B không dùng bộ đất "Cổ tích chuông tàn"**. Trang sinh từ `thu-p0a/am-dao.html` + khối Bọ + `khoi-p0b.js`, không có
+  `dia-hinh-huong-moi.js` / khoá đất nào (0 chỗ `DHM`) – đất P0-B vẫn là gạch cũ. Đất mới (góc lõm, biến thể sàn, bệ mỏng) vì vậy **không hiện ở P0-B**.
+- Đã chạy `tao-p0b.py`: ra **đúng từng byte** file cũ (mã băm không đổi) → **không tăng nhãn đóng băng** (ghi "đất mới" lên nhãn sẽ sai: trang không đổi gì).
+- Muốn P0-B có đất mới thì phải ghép cả bộ đất phòng A–F (như P0-C lấy từ `thu-phong-b/cong-cu/tao-tu-p0a.py`) – đổi hình nền / đất của bản đang đóng băng
+  và phòng D của P0-B (trần 8 ô) khác phòng D của bộ đất. **Chờ chủ dự án quyết** (nên làm sau buổi thử iPhone).
+
 ## Camera kiểu Dead Cells 28/10 – ĐÓNG BĂNG LẦN 3 (`p0b-2810-d219ca3a`)
 
 Người dùng thấy **"màn hình bị kéo"** khi sang phòng → **camera kiểu Dead Cells**. Sửa ở nguồn Âm Đao (`game/thu-p0a/cong-cu/camera-dead-cells.js` + `tao-am-dao.py`),

@@ -825,5 +825,110 @@
    -21.3
   ],
   "gian_ngang": 1.023
+ },
+ "bo_sung": {
+  "ghi_chu": "Đất bổ sung 28/10 (góc lõm, biến thể mặt sàn, bệ rễ mỏng) – sinh bởi code/tao-dat-bo-sung.py. Ảnh 2x; \"khung\" = [x, y, rộng, cao] trong dat-bo-sung.png. Góc lõm: cửa sổ 64×64 logic, ĐIỂM GÓC Ở GIỮA (32, 32), mép mờ 8 logic; tên theo phía có TƯỜNG (khuôn goc-lom-*). mat-giua-d/e: cùng cỡ, cùng đường mặt, cùng khớp 2 đầu với mat-giua-a/b/c của bo_moi. Bệ: hàng NHO*2 = mặt collider, hàng (NHO+32)*2 = đáy collider (thân kín), đầu rễ ≤ be_duoi_logic dưới đó; đầu trái: cột 0 = mép ô − nhô; phía trong đầu mờ be_mo_logic.",
+  "tep": "dat-bo-sung.png",
+  "co_anh": [
+   1024,
+   594
+  ],
+  "khung": {
+   "goc-lom-san-phai": [
+    2,
+    2,
+    128,
+    128
+   ],
+   "goc-lom-san-trai": [
+    136,
+    2,
+    128,
+    128
+   ],
+   "goc-lom-tran-phai": [
+    270,
+    2,
+    128,
+    128
+   ],
+   "goc-lom-tran-trai": [
+    404,
+    2,
+    128,
+    128
+   ],
+   "mat-giua-d": [
+    538,
+    2,
+    256,
+    232
+   ],
+   "mat-giua-e": [
+    2,
+    240,
+    256,
+    232
+   ],
+   "be-giua-a": [
+    264,
+    240,
+    256,
+    114
+   ],
+   "be-giua-b": [
+    526,
+    240,
+    256,
+    114
+   ],
+   "be-giua-c": [
+    2,
+    478,
+    256,
+    114
+   ],
+   "be-dau-trai": [
+    264,
+    478,
+    134,
+    114
+   ],
+   "be-dau-phai": [
+    404,
+    478,
+    134,
+    114
+   ]
+  },
+  "ti_le_gen_goc": 0.48,
+  "ti_le_gen_bien_the": 0.36,
+  "goc_logic": 64,
+  "goc_vien_logic": 8,
+  "mat_bien_the": [
+   "giua-d",
+   "giua-e"
+  ],
+  "be_cao_logic": 57,
+  "be_dau_logic": 64,
+  "be_doan_logic": 128,
+  "be_duoi_logic": 22,
+  "be_mo_logic": 24,
+  "be_doan": [
+   "giua-a",
+   "giua-b",
+   "giua-c"
+  ],
+  "kiem_noi_mat": {
+   "cho_noi": [
+    5.7,
+    6.1,
+    6.2,
+    6.0,
+    6.2,
+    5.5
+   ],
+   "trong_doan_tb": 3.6
+  }
  }
 }

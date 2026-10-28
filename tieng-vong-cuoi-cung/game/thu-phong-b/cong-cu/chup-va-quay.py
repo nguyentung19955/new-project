@@ -6,7 +6,8 @@ Cần playwright + Chromium + ffmpeg + Pillow.
 Chạy: python3 -B game/thu-phong-b/cong-cu/chup-va-quay.py [mep] [anh] [iphone] [do] [video] [phong] [iphone-phong] [do-phong] [video-abc]
      (không ghi gì = làm hết). Bước 2: phong / iphone-phong / do-phong / video-abc = 3 phòng A, B, C.
      Bước 3 (D / E / F): phong-def iphone-def do-def video-def ranh bo-nen thap-b
-       (ranh = video cuộn chậm A → F + soi ranh mảng nướng; bo-nen = Bọ trên nền D, màu + xám; thap-b = cửa sổ tháp phòng B trước / sau)."""
+       (ranh = video cuộn chậm A → F + soi ranh mảng nướng; bo-nen = Bọ trên nền D, màu + xám; thap-b = cửa sổ tháp phòng B trước / sau).
+     Đất mới 28/10: dat-moi (ảnh trước ?bosung=0 / sau ở bệ mỏng, góc lõm, sàn dài A/B + video cuộn A → F → xem-thu/dat-moi-2810/)."""
 import asyncio, base64, functools, http.server, io, json, os, socketserver, subprocess, sys, threading, time
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -463,6 +464,59 @@ async def do_ve_def(p, cong):
     print('đo D/E/F', json.dumps(kq, ensure_ascii=False)); return kq
 
 
+# ---------------------------------------------------------------- ĐẤT MỚI 28/10: góc lõm, biến thể mặt sàn, bệ rễ mỏng (khoá bo_sung)
+OUT_DM = os.path.join(OUT, 'dat-moi-2810')
+
+
+async def dat_moi(p, cong):
+    """ảnh TRƯỚC (?bosung=0 = đất trước 28/10) / SAU ở cùng chỗ: bệ mỏng, góc lõm sàn, góc lõm trần, sàn dài A / B (+ trần C trong game);
+    video cuộn A → F (SAU); soi ranh mảng nướng (0 điểm hở trong ô đặc)."""
+    os.makedirs(OUT_DM, exist_ok=True)
+    gi = None; anh = {}
+    for ten, q in (('truoc', '&bosung=0'), ('sau', '')):
+        b, pg, loi = await mo(p, cong, SAU, q='&vao=a' + q)
+        gi = await pg.evaluate('TVPB.gioi()'); a = anh[ten] = {'loi': loi}
+        for k in ('be-don', 'goc-lom', 'hanh-lang-tran', 'hang-dai'):
+            u = await pg.evaluate('([k]) => TVPB.kiemMep(k, 2, 0)', [k])
+            a['mep-' + k] = Image.open(io.BytesIO(base64.b64decode(u.split(',')[1]))).convert('RGB')
+        for k, x in (('a', gi['phong'][0][1] + 200), ('b', gi['phong'][1][1] + 560), ('c', gi['phong'][2][1] + 22 * 32 - 480)):
+            await pg.evaluate('(x) => TVPB.datCam(x)', x)
+            a['game-' + k] = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB')
+        if ten == 'sau':
+            dst = os.path.join(OUT_DM, 'cuon-a-f-sau-60fps.mp4'); ff = ffmpeg_ra(dst); x = gi['a0']; n = 0
+            while x <= gi['cF']:
+                await pg.evaluate('(x) => TVPB.datCam(x)', x)
+                ff.stdin.write(await pg.screenshot(type='jpeg', quality=92)); x += 6; n += 1
+            ff.stdin.close(); ff.wait(); a['video'] = {'file': os.path.basename(dst), 'khung': n, 'giay': round(n / 60, 1), 'px_moi_khung': 6}
+            ho = 0
+            for i in range(24):
+                cx = gi['a0'] + i * (gi['cF'] - gi['a0']) / 23
+                for K in (1, 2.165625):
+                    r = await pg.evaluate('([cx, K]) => { const r = TVPB.soiRanh(cx, 0, K, false); delete r.url; return r; }', [cx, K]); ho += r['ho']
+            a['soi_ranh'] = {'vi_tri': 24, 'ti_le': [1, 2.165625], 'diem_ho_trong_o_dac': ho}
+            a['so'] = await pg.evaluate('TVPB.so()')
+        await b.close()
+
+    def cap(ten, khoa, hop, z=1):
+        imgs = []
+        for i, t in enumerate(('truoc', 'sau')):
+            im = anh[t][khoa].crop(hop); im = im.resize((im.width * z, im.height * z), Image.LANCZOS)
+            nhan(im, 'TRƯỚC (đất 28/10 sáng)' if i == 0 else 'SAU (góc lõm · biến thể sàn · bệ mỏng)', (255, 176, 138) if i == 0 else (127, 224, 200))
+            imgs.append(im)
+        g = Image.new('RGB', (imgs[0].width, imgs[0].height * 2 + 8), (20, 20, 20)); g.paste(imgs[0], (0, 0)); g.paste(imgs[1], (0, imgs[0].height + 8))
+        g.save(os.path.join(OUT_DM, ten + '.png')); return ten + '.png'
+    ds = [cap('1-be-mong', 'mep-be-don', (40, 100, 470, 260), 2),
+          cap('2-goc-lom-san', 'mep-goc-lom', (60, 150, 860, 420)),
+          cap('3-goc-lom-tran', 'mep-hanh-lang-tran', (860, 180, 1110, 470), 2),
+          cap('3b-goc-lom-tran-phong-c', 'game-c', (400, 150, 600, 310), 3),
+          cap('4-san-dai-kiem', 'mep-hang-dai', (0, 120, 2560, 448)),
+          cap('4a-san-dai-phong-a', 'game-a', (0, 380, 960, 540)),
+          cap('4b-san-dai-phong-b', 'game-b', (0, 380, 960, 540))]
+    kq = {'anh': ds, 'video': anh['sau'].get('video'), 'soi_ranh': anh['sau'].get('soi_ranh'), 'so': anh['sau'].get('so'),
+          'loi_trang': {t: anh[t]['loi'] for t in anh}}
+    print('đất mới', json.dumps(kq, ensure_ascii=False)[:1500]); return kq
+
+
 async def main(viec):
     s, cong = server()
     so_path = os.path.join(OUT, 'so-do.json')
@@ -486,6 +540,7 @@ async def main(viec):
         if 'ranh' in viec: b3['ranh'] = await ranh(p, cong)
         if 'soi' in viec: b3.setdefault('ranh', {}).update(await ranh(p, cong, quay=False))   # chỉ soi ranh, không quay lại video
         if 'video-def' in viec: b3['video'] = await video_def(p, cong)
+        if 'dat-moi' in viec: so['dat_moi_2810'] = await dat_moi(p, cong)
     so['ngay'] = time.strftime('%Y-%m-%d %H:%M')
     json.dump(so, open(so_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     s.shutdown()

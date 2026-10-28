@@ -19,7 +19,7 @@
   },
   "sau_loi": []
  },
- "ngay": "2026-10-28 03:35",
+ "ngay": "2026-10-28 09:50",
  "iphone": {
   "truoc": {
    "canh": {
@@ -1683,6 +1683,61 @@
      "Đe rèn · nâng cấp ở bản P0-C"
     ]
    ]
+  }
+ },
+ "dat_moi_2810": {
+  "anh": [
+   "1-be-mong.png",
+   "2-goc-lom-san.png",
+   "3-goc-lom-tran.png",
+   "3b-goc-lom-tran-phong-c.png",
+   "4-san-dai-kiem.png",
+   "4a-san-dai-phong-a.png",
+   "4b-san-dai-phong-b.png"
+  ],
+  "video": {
+   "file": "cuon-a-f-sau-60fps.mp4",
+   "khung": 726,
+   "giay": 12.1,
+   "px_moi_khung": 6
+  },
+  "soi_ranh": {
+   "vi_tri": 24,
+   "ti_le": [
+    1,
+    2.165625
+   ],
+   "diem_ho_trong_o_dac": 70
+  },
+  "so": {
+   "pbk": {
+    "ms_chuan_bi": 297
+   },
+   "dhm": {
+    "ms_nap": 95,
+    "ms_dung": 53,
+    "mb_anh": 26.2,
+    "lenh": 71,
+    "ve": 11697,
+    "mang": 64,
+    "mb_mang": 20,
+    "lenh_nuong": 1477,
+    "vien_mau": []
+   },
+   "hm": {
+    "ms": 1148,
+    "ms_grade": 622,
+    "ms_dat": 174,
+    "anh": 29,
+    "mpx": 10.56,
+    "ms_doi_anh": 515
+   },
+   "vien": [],
+   "loi": ""
+  },
+  "loi_trang": {
+   "truoc": [],
+   "sau": []
   }
  }
 }

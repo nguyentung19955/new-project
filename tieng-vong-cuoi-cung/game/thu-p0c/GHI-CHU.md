@@ -25,6 +25,14 @@ Không publish. Không gen ảnh. Không viết bộ kiểm thử tự động (
 Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn) và thử tải file .txt.
 Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A. Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím **F**).
 
+## Đất mới 28/10 – góc lõm, biến thể mặt sàn, bệ rễ mỏng
+
+- P0-C dùng chung bộ đất `game/runtime/dia-hinh-huong-moi.js` + `art/huong-moi/dia-hinh/` → tự có đất mới: **góc lõm** tô theo khuôn (2 góc trần ở cột treo
+  hành lang C), **biến thể mặt sàn** (mắt gỗ / rễ ngang, thưa, không kề nhau) trên sàn dài A–F, **bệ rễ mỏng** cho bệ treo 1 ô cao (A–F hiện chưa có bệ như vậy).
+  Collider, luật, số, camera Dead Cells **không đổi**. `?bosung=0` = đất cũ để so.
+- `tao-p0c.py` chạy lại ra **đúng file cũ** (phiên vẫn `p0c-2810-2c7f3936` – mã băm tính theo khối code, không tính ảnh đất). Kiểm: trang nạp không lỗi, `DHM.IMG.bs` có.
+- Ảnh trước / sau + video cuộn A → F: `game/thu-phong-b/xem-thu/dat-moi-2810/` (giải thích ở `game/thu-phong-b/GHI-CHU.md` mục "Đất mới 28/10").
+
 ## Camera kiểu Dead Cells 28/10
 
 Người dùng thấy **"màn hình bị kéo"** khi sang phòng → làm **camera kiểu Dead Cells**. Code camera ở nguồn Âm Đao (`game/thu-p0a/cong-cu/camera-dead-cells.js`,

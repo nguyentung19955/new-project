@@ -18,6 +18,33 @@ Chưa áp sang A, C–F. **Chưa thử trên iPhone thật** – mọi ảnh / s
 Trang này **sinh bằng script** từ `game/thu-p0a/index.html` hiện tại (`cong-cu/tao-tu-p0a.py`) – không sửa `thu-p0a/`, `demo.html`,
 `build-demo.py`, `thu-bo-vo-moc/`, `docs/gameplay/`. Khi phiên Âm Đao sửa `thu-p0a` xong, chạy lại script là có bản mới (script báo lỗi rõ nếu chỗ móc bị đổi).
 
+## Đất mới 28/10 – góc lõm, biến thể mặt sàn, bệ rễ mỏng (góp ý chuyên gia PH8)
+
+> Mục mới nhất. **Chưa thử trên iPhone thật** – ảnh / video là Chromium headless. Collider **không đổi** (chỉ đọc lưới ô như trước).
+
+Cờ mới: **`?bosung=0`** = đất như sáng 28/10 (không góc lõm, không biến thể, bệ rêu dày) – để so. Dùng được cả ở P0-C.
+
+- **Ảnh**: 3 ảnh gen mới (`art/huong-moi/nguon/dia-hinh/goc-lom.png`, `mat-san-bien-the.png`, `be-re-mong.png`) → `art/huong-moi/dia-hinh/code/tao-dat-bo-sung.py`
+  (cùng công cụ tách nền / ép mép / đoạn khớp với bộ đất trước) → `dat-bo-sung.png` + khoá `bo_sung` trong `dia-hinh.json`. Bộ cũ `dat-moi.png` giữ nguyên.
+  Chi tiết + cách đọc ảnh góc lõm: `art/huong-moi/nguon/dia-hinh/GHI-CHU.md` mục "Đất mới 28/10".
+- **Góc lõm** (`game/runtime/dia-hinh-huong-moi.js`, lớp 3.8): mảnh 64×64 logic tô theo khuôn, tự đặt GIỮA tại điểm góc khi sàn gặp tường cao ≥ 2 ô,
+  hoặc đáy trần gặp tường thõng ≥ 2 ô; mép mờ 8 logic phủ lên mặt trên / cạnh đứng / thân → thay "mặt trên mờ dần + bóng tối nhỏ" ở đó.
+  Bậc chỉ cao 1 ô vẫn dùng cách cũ (mặt trên của bậc nằm trong cửa sổ). Trong A–F: 2 góc trần ở cột treo hành lang C; sàn gặp tường (ảnh kiểm `goc-lom`).
+- **Biến thể mặt sàn**: đoạn giữa 128 logic chọn thêm **D (mắt gỗ)** ~10 % và **E (rễ ngang)** ~16 % theo băm (đoạn, hàng) cố định;
+  không 2 biến thể kề nhau, không cùng biến thể cách 1 đoạn. Cùng cỡ, cùng đường mặt, cùng khớp 2 đầu với A/B/C gốc → nối liền cả 2 phía.
+- **Bệ mỏng** (lớp 3.7): ô đất lộ CẢ trên lẫn dưới (bệ treo 1 ô cao) bỏ thân / cạnh / đáy rêu, thay bằng bệ rễ mỏng: đoạn giữa 128 logic theo băm +
+  đầu trái / phải phủ lên (phía trong mờ dần), thân kín đúng ô, chỉ đầu rễ thõng ≤ 22 logic dưới (đo được ~20). Đầu chạm tường thì không có đầu.
+  **A–F hiện không có bệ 1 ô cao** (chỉ có ván một chiều) → thấy ở ảnh kiểm `be-don`; phòng nào thêm bệ 1 ô sẽ tự dùng bệ mới.
+- **Ảnh trước / sau** (`xem-thu/dat-moi-2810/`, trên = TRƯỚC `?bosung=0`, dưới = SAU): `1-be-mong.png`, `2-goc-lom-san.png`, `3-goc-lom-tran.png`,
+  `3b-goc-lom-tran-phong-c.png` (trong game, phóng 3×), `4-san-dai-kiem.png`, `4a-san-dai-phong-a.png`, `4b-san-dai-phong-b.png`.
+  Video `cuon-a-f-sau-60fps.mp4`: camera cuộn A → F 6 px / khung (12 s). Ảnh kiểm từng mảnh: `art/huong-moi/dia-hinh/xem-thu/bs-*.png`.
+- **Soi ranh mảng nướng** (24 vị trí × K 1 / 2,1656): 0 điểm hở mới. Còn 70 điểm ở 1 cột điểm ảnh **mép trái A khi camera đặt đúng x = đầu A**
+  (ranh giữa đất mới và gạch cũ của các phòng trước A) – có y hệt ở `?bosung=0`, không do lần này.
+- Chạy lại: `python3 -B art/huong-moi/dia-hinh/code/tao-dat-bo-sung.py` rồi `python3 -B game/thu-phong-b/cong-cu/chup-va-quay.py dat-moi`.
+  `tao-tu-p0a.py` sinh lại ra đúng file cũ (đất nằm ở `game/runtime/`, trang chỉ nạp).
+- **Còn chưa đẹp**: nhịp "vòm rễ" của sàn dài chủ yếu do khối thân 320 logic lặp – biến thể mặt trên chỉ phá lặp ở dải 116 logic trên cùng.
+  Rêu ở góc lõm dày hơn mặt trên kề (ảnh gen như vậy) – trông như rêu tụ ở góc.
+
 ## Bước 3 (29/10) – dựng D / E / F, kiểm ranh khi cuộn, Bọ trên nền mới, tháp B, gợi ý ngắn (phản hồi 8)
 
 > Mục mới nhất. **Chưa thử trên iPhone thật** – mọi ảnh / video / số đo là Chromium headless, máy chủ Linux không GPU.

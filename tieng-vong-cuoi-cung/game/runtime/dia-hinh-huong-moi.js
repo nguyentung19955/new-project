@@ -55,6 +55,7 @@ const DHM = (() => {
     if (M.bo_moi) ds.dat = M.bo_moi;          // bộ đất mới (ảnh gen chủ dự án) – code/tao-bo-moi.py
     if (M.do_vat_a) ds.dv = M.do_vat_a;       // điểm lưu + hình nộm mới
     if (M.do_vat_f) ds.dvf = M.do_vat_f;      // bước 3: đe rèn phòng F (code/tao-do-vat-f.py)
+    if (M.bo_sung && !/[?&]bosung=0/.test(location.search)) ds.bs = M.bo_sung;   // 28/10: góc lõm, biến thể mặt sàn, bệ rễ mỏng (code/tao-dat-bo-sung.py); ?bosung=0 = đất trước 28/10 để so
     let px = 0;
     await Promise.all(Object.entries(ds).map(async ([k, d]) => {
       const im = await anh(goc + d.tep);
@@ -181,6 +182,14 @@ const DHM = (() => {
                       mép đáy lộ (bệ mỏng: mặt trên mờ đi để lộ đáy rêu, không còn "đáy cắt thẳng")
        lớp 4 VÁN '='  đầu trái 64 + giữa 64 × n + đầu phải 64 (2 bộ, băm theo vị trí); mặt ván = mặt collider ô '='; giá đỡ chỉ chĩa xuống
      Góc lõm: mặt trên / đáy cột sát tường mờ dần về phía tường + bóng tối nhỏ (sàn gặp tường).
+     ĐẤT BỔ SUNG 28/10 (khoá "bo_sung", dat-bo-sung.png – thiếu thì như cũ):
+       lớp 3.8 GÓC LÕM  mảnh 64×64 logic tô theo khuôn, đặt GIỮA tại điểm góc (sàn gặp tường cao ≥ 2 ô, hoặc đáy trần gặp tường thõng ≥ 2 ô),
+                       mép mờ 8 logic phủ lên mặt trên / cạnh đứng / thân đã vẽ (thay bóng tối nhỏ ở góc đó)
+       mặt trên        đoạn giữa chọn thêm 2 biến thể D (mắt gỗ) / E (rễ ngang) theo băm (đoạn, hàng): D ~10 %, E ~16 %; không 2 biến thể
+                       kề nhau, không cùng biến thể cách 1 đoạn (matDoan) – cùng cỡ, cùng đường mặt, cùng khớp 2 đầu với A/B/C
+       lớp 3.7 BỆ MỎNG  ô đất lộ CẢ trên lẫn dưới (bệ treo 1 ô cao): bỏ thân / cạnh / đáy / mặt trên rêu, thay bằng bệ rễ mỏng ít rêu
+                       (đoạn giữa 128 logic theo băm, đầu trái / phải 67 logic phủ lên, phía trong mờ dần); thân kín đúng ô collider,
+                       chỉ đầu rễ thõng ≤ 22 logic dưới (như giá đỡ ván). Đầu nào chạm tường → không có đầu, đoạn giữa chạy tới tường.
      Tất cả vẽ 1 lần vào canvas mảng 256×128 logic (ảnh 2x, chỉ giữ khung bao phần có hình) → mỗi khung chỉ vẽ các mảng trong màn hình.
      Collider KHÔNG đổi: chỉ đọc lưới ô. */
   const CW = 256, CHH = 128;
@@ -199,11 +208,19 @@ const DHM = (() => {
     const runUp = (tx, ty) => { let d = 0; while (ty - d >= 0 && dac(tx, ty - d)) d++; return d; };
     L = {than: [], cu: [], mat: [], dau: [], vien: [], tt: []};
     const ops = [], xoa = [], ao = [];
-    const op = (l, k, du, dv, sw, sh, x, y, w, h, c, mo) => { if (opt.lop && !opt.lop.includes(Math.floor(l))) return; const f = KH[k]; ops.push({l, sx: f[0] + du, sy: f[1] + dv, sw, sh, x, y, w, h, c, mo}); };
+    const BS = M.bo_sung && IMG.bs ? M.bo_sung : null, KS = BS ? BS.khung : {};
+    const op = (l, k, du, dv, sw, sh, x, y, w, h, c, mo) => { if (opt.lop && !opt.lop.includes(Math.floor(l))) return; const f = KH[k] || KS[k];
+      ops.push({l, sx: f[0] + du, sy: f[1] + dv, sw, sh, x, y, w, h, c, mo, im: KH[k] ? IM : IMG.bs}); };
+    // biến thể mặt trên (bo_sung): đoạn sg hàng ty → tên đoạn; D / E thưa, không kề nhau, không cùng loại cách 1 đoạn
+    const tho = (sg, ty) => { const u = bam(sg, 7 + ty * 31); return !BS ? null : u < 0.10 ? 'giua-d' : u < 0.26 ? 'giua-e' : null; };
+    const matDoan = (sg, ty) => { const v = tho(sg, ty); if (v && !tho(sg - 1, ty) && tho(sg - 2, ty) !== v) return v; return chon(B.mat_doan, sg, 7); };
+    // bệ mỏng (bo_sung): ô đất lộ cả trên lẫn dưới
+    const laBe = (tx, ty) => !!BS && laDat(tx, ty) && ty > 0 && !dac(tx, ty - 1) && !dac(tx, ty + 1);
     const cot = [...COT].sort((a, b) => a - b);
     for (const tx of cot) for (let ty = 0; ty < R; ty++) {
       const X = tx * T, Y = ty * T;
       if (!laDat(tx, ty)) { if (ch(tx, ty) !== '=') { const v = opt.cuIdx(tx, ty); if (v >= 0) { const q = opt.cuK[v]; L.cu.push(['cu', q[0], q[1], 64, 64, X, Y, T, T]); } } continue; }
+      if (laBe(tx, ty)) continue;   // bệ mỏng: vẽ riêng ở lớp 3.7 bên dưới
       const oL = !dac(tx - 1, ty), oR = !dac(tx + 1, ty), oT = !dac(tx, ty - 1), oB = !dac(tx, ty + 1);
       // lớp 0: thân
       op(0, 'than', mod(X, KB) * 2, mod(Y, KB) * 2, 64, 64, X, Y, T, T, null);
@@ -222,6 +239,8 @@ const DHM = (() => {
         const k = 'day-' + chon(B.day_doan, Math.floor(X / DO), 17), u = mod(X, DO);
         const vach = dx => dac(tx + dx, ty) && dac(tx + dx, ty + 1);
         op(2, k, u * 2, 0, 64, KH[k][3], X, yb - HD, T, HD, [X, Math.max(yTop, yb - HD), X + T, yb], vach(1) ? 'p' : vach(-1) ? 't' : null);
+        if (BS && !oT) for (const dx of [1, -1]) if (vach(dx) && dac(tx + dx, ty + 2))   // góc lõm trần: tường thõng ≥ 2 ô dưới đáy trần
+          op(3.8, dx > 0 ? 'goc-lom-tran-phai' : 'goc-lom-tran-trai', 0, 0, BS.goc_logic * 2, BS.goc_logic * 2, (dx > 0 ? X + T : X) - 32, Y + T - 32, 64, 64, null);
         for (const phai of [false, true]) {
           if (!(phai ? oR : oL)) continue;
           const kd = 'day-dau-' + (phai ? 'phai' : 'trai'), xa = phai ? X + T + NHO - DAU : X - NHO;
@@ -240,10 +259,13 @@ const DHM = (() => {
       // lớp 3: mặt trên + đầu
       if (oT) {
         const d = runDown(tx, ty), hl = Math.min(HS, NHO + d * T);
-        const k = 'mat-' + chon(B.mat_doan, Math.floor(X / DO), 7), u = mod(X, DO);
+        const k = 'mat-' + matDoan(Math.floor(X / DO), ty), u = mod(X, DO);
         const tuong = dx => dac(tx + dx, ty) && dac(tx + dx, ty - 1);
         op(3, k, u * 2, 0, 64, hl * 2, X, Y - NHO, T, hl, null, tuong(1) ? 'p' : tuong(-1) ? 't' : null);
-        if (tuong(1)) ao.push([X + T, Y]); if (tuong(-1)) ao.push([X, Y]);
+        for (const dx of [1, -1]) { if (!tuong(dx)) continue; const gx = dx > 0 ? X + T : X;
+          // góc lõm tô theo khuôn: tường cao ≥ 2 ô trên mặt sàn (bậc 1 ô thì mặt trên bậc nằm trong cửa sổ → giữ cách cũ)
+          if (BS && !oB && dac(tx + dx, ty - 2)) op(3.8, dx > 0 ? 'goc-lom-san-phai' : 'goc-lom-san-trai', 0, 0, BS.goc_logic * 2, BS.goc_logic * 2, gx - 32, Y - 32, 64, 64, null);
+          else ao.push([gx, Y]); }
         for (const phai of [false, true]) {
           if (!(phai ? oR : oL)) continue;
           const kd = 'mat-dau-' + (phai ? 'phai' : 'trai'), xa = phai ? X + T + NHO - DAU : X - NHO;
@@ -257,6 +279,22 @@ const DHM = (() => {
             op(3.5, kd, 0, 0, KH[kd][2], KH[kd][3], xa, Y - NHO, DAU, HS, [c0, Y - NHO, c1, Y - NHO + h2]);
           }
         }
+      }
+    }
+    // lớp 3.7: bệ rễ mỏng (dải ô bệ liền nhau cùng hàng)
+    if (BS) {
+      const BH = BS.be_cao_logic, BD = BS.be_doan_logic, BDA = BS.be_dau_logic + NHO, kf = k => KS[k];
+      for (let ty = 0; ty < R; ty++) for (const tx of cot) {
+        if (!laBe(tx, ty) || laBe(tx - 1, ty)) continue;
+        let n = 0; while (laBe(tx + n, ty)) n++;
+        const x0 = tx * T, x1 = (tx + n) * T, y = ty * T - NHO, moL = !dac(tx - 1, ty), moR = !dac(tx + n, ty);
+        const c0 = x0 - (moL ? NHO : 0), c1 = x1 + (moR ? NHO : 0);
+        for (let sg = Math.floor(x0 / BD); sg * BD < x1; sg++) {
+          const k = 'be-' + chon(BS.be_doan, sg, ty * 5 + 3), f = kf(k);
+          op(3.7, k, 0, 0, f[2], f[3], sg * BD, y, BD, BH, [Math.max(x0, sg * BD), y - 2, Math.min(x1, (sg + 1) * BD), y + BH]);
+        }
+        if (moL) { const f = kf('be-dau-trai'); op(3.75, 'be-dau-trai', 0, 0, f[2], f[3], x0 - NHO, y, BDA, BH, [c0, y - 2, c1, y + BH]); }
+        if (moR) { const f = kf('be-dau-phai'); op(3.76, 'be-dau-phai', 0, 0, f[2], f[3], x1 + NHO - BDA, y, BDA, BH, [c0, y - 2, c1, y + BH]); }
       }
     }
     // lớp 4: ván một chiều (dải '=' liền trong các cột được bật)
@@ -292,11 +330,11 @@ const DHM = (() => {
     const ve = (g, o, bx, by) => {
       g.save(); g.setTransform(2, 0, 0, 2, -bx * 2, -by * 2);
       if (o.c) { g.beginPath(); g.rect(o.c[0], o.c[1], o.c[2] - o.c[0], o.c[3] - o.c[1]); g.clip(); }
-      if (!o.mo) g.drawImage(IM, o.sx, o.sy, o.sw, o.sh, o.x, o.y, o.w, o.h);
+      if (!o.mo) g.drawImage(o.im, o.sx, o.sy, o.sw, o.sh, o.x, o.y, o.w, o.h);
       else {   // góc lõm: mờ dần về phía tường
         const w = Math.round(o.w * 2), h = Math.round(o.h * 2);
         g2.setTransform(1, 0, 0, 1, 0, 0); g2.globalCompositeOperation = 'source-over'; g2.clearRect(0, 0, T2.width, T2.height);
-        g2.drawImage(IM, o.sx, o.sy, o.sw, o.sh, 0, 0, w, h);
+        g2.drawImage(o.im, o.sx, o.sy, o.sw, o.sh, 0, 0, w, h);
         g2.globalCompositeOperation = 'destination-in'; const gr = g2.createLinearGradient(0, 0, w, 0);
         if (o.mo === 'p') { gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(0.35, 'rgba(0,0,0,.85)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); }
         else { gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.65, 'rgba(0,0,0,.85)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); }
@@ -322,7 +360,8 @@ const DHM = (() => {
         g3.globalCompositeOperation = 'source-over'; g3.setTransform(1, 0, 0, 1, 0, 0);
         g.drawImage(T3, 0, 0, w * 2, h * 2, 0, 0, w * 2, h * 2);
       }
-      // bóng góc lõm (sàn gặp tường)
+      for (const l of [3.7, 3.75, 3.76, 3.8]) for (const o of m.ops) if (o.l === l) ve(g, o, bx, by);   // bệ mỏng, góc lõm (bo_sung)
+      // bóng góc lõm (sàn gặp tường) – chỉ chỗ không có mảnh góc lõm
       g.save(); g.setTransform(2, 0, 0, 2, -bx * 2, -by * 2);
       for (const [x, y] of ao) { if (x < bx - 24 || x > bx + w + 24 || y < by - 24 || y > by + h + 24) continue;
         const gr = g.createRadialGradient(x, y, 0, x, y, 22); gr.addColorStop(0, 'rgba(14,10,8,.42)'); gr.addColorStop(1, 'rgba(14,10,8,0)');
