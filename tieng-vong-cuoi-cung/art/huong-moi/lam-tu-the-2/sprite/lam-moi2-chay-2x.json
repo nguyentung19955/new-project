@@ -397,5 +397,10 @@
   "6 chịu lực chân xa",
   "7 đẩy đất chân xa",
   "8 bay – chân gần đưa trước"
- ]
+ ],
+ "thu_co": {
+  "loc": "cv2 INTER_AREA",
+  "lam_net": null,
+  "ghi_chu": "thu THẲNG từ ảnh gen gốc (không phóng sheet khác), alpha nhân trước"
+ }
 }

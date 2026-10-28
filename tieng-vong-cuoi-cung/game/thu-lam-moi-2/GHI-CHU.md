@@ -131,3 +131,44 @@ python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py      # sinh index.html t
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py      # đo + GIF nền thật + video + ảnh nút cảm ứng (~5 phút)
 ```
 Khi `am-dao.html` đổi → chạy lại dòng 3 (script báo lỗi nếu chỗ thay không còn khớp).
+
+## Làm nét 28/10
+
+Phản hồi: "duyệt hướng nhưng hơi nhoè". Đã đo, tìm ra lý do và thêm bản sheet nét hơn. **Gameplay, tư thế, neo, tỉ lệ, thời gian khung không đổi.**
+
+**Xem ngay** (`xem-thu/net-28-10/`): `so-net-bk217-phong4.png` (iPhone ngang) và `so-net-bk3-phong4.png` – đầu + thân trên của Lam,
+phóng 4 lần từng điểm ảnh. Cột 1 = ảnh gen gốc thu thẳng đúng cỡ (chuẩn) · cột 2 = trước (2x PNG) · cột 3 = trước, qua đóng gói WebP · cột 4 = **mới (3x)**.
+`so-net-*-1x1.png` = cùng các bản ở đúng cỡ trên màn. Số đo trong `do-net.json`.
+
+**Lý do nhoè (đo trong Chromium, vẽ đúng như game; độ nét = gradient so với ảnh gen thu thẳng, 100 % = chuẩn):**
+
+| Màn | Lam cao (điểm ảnh thật) | Trước (sheet 2x) | Trước, qua WebP q90 | **Mới (3x)** |
+|---|---|---|---|---|
+| iPhone 844×390 @3x ngang (BK 2,17) – chém D / chạy ô 1 | 243 | 86 % / 84 % | 86 % / 84 % | **96 % / 95 %** |
+| màn rộng @3x (BK 3) – chém D / chạy ô 1 | 336 | 78 % / 75 % | 79 % / 75 % | **101 % / 100 %** |
+
+1. **Nguyên nhân chính: sheet 2x bị PHÓNG to** trên iPhone @3x: sheet có 224 px cho dáng đứng nhưng màn vẽ Lam cao ~243 px thật (×1,08),
+   màn @3x đủ rộng là 336 px (×1,5). Phóng ảnh trong canvas luôn làm mềm. Mất ~9 % độ nét ở iPhone, ~20 % ở BK 3.
+2. **Phụ: cách thu ảnh gen → 2x** (INTER_AREA) mềm hơn Lanczos ~6 % (sheet 2x đạt 94 % so với Lanczos cùng cỡ).
+3. **Đóng gói WebP q90 KHÔNG làm mất nét đáng kể**: độ nét 99,5–99,8 %, PSNR ~46 dB, lệch màu trung bình ~2/255. → **không sửa**
+   `game/dong-goi-trang-thu.py` (theo đúng điều kiện của việc). Nếu muốn tuyệt đối: WebP lossless cho 4 file này giống PNG ở mọi điểm thấy được
+   (2x: 262 + 163 KB; 3x: 584 + 367 KB) – chưa làm.
+
+**Đã làm:**
+- Thêm `art/huong-moi/lam-tu-the-2/sprite/lam-moi2-{chay,chem1}-3x.png/.json`: dựng bằng cùng `dung_sheet.py` (cùng neo gen, cùng MỘT tỉ lệ/sheet,
+  cùng frame, pha, tick) nhưng cao dáng trung tính 336 px, **thu thẳng từ ảnh gen gốc** (không phóng sheet 2x) bằng Lanczos,
+  rồi **làm nét nhẹ có kẹp** (unsharp σ 0,8 px, lượng 0,45; mỗi kênh bị kẹp vào min–max 3×3 của bản thu INTER_AREA cùng cỡ →
+  đo được **0 % điểm viền sáng/tối vượt**, mép không răng cưa). JSON ghi `px_nguon_moi_px_logic: 3` + mục `thu_co`.
+  Sheet 2x giữ NGUYÊN từng điểm ảnh (JSON chỉ thêm mục `thu_co`).
+- **Vì sao 3x, không 4x**: ảnh gen chạy chỉ có ~389 px cho dáng trung tính → 4x (448 px) là phóng ảnh gen, không thêm chi tiết.
+  3x khớp đúng iPhone @3x ở BK 3 (1 điểm sheet = 1 điểm màn).
+- **RAM giải nén**: 3x chạy 3,9 MB + chém 2,7 MB; 2x 1,7 + 1,2 MB → tổng 4 ảnh ~9,5 MB; bản tô bóng (ngọc cho bóng Vọng, đen cho `?bong=1`)
+  giờ chỉ tạo khi cần lần đầu → tối đa ~28 MB nếu dùng hết (< 40 MB).
+- Game (`cong-cu/khoi-lam-moi-2.js`): **BK ≤ 2 dùng 2x, BK > 2 dùng 3x** (BK = bộ đệm/logic; tự đổi khi xoay máy). drawImage +
+  `imageSmoothingQuality 'high'` như cũ; góc đặt hình làm tròn theo điểm ảnh thật (lệch < ½ điểm thật) để ở BK 3 vẽ 1:1 không nội suy.
+  Kiểm trong Chromium: 844×390 @3x → BK 2,17 dùng 3x; 960×540 @3x → BK 3 dùng 3x; 844×390 @2x → BK 1,44 dùng 2x; không lỗi.
+- Đã sinh lại `index.html`. Đo lại: `python3 -B game/thu-lam-moi-2/cong-cu/do-net.py` (~2 phút).
+
+**Giới hạn**: đo bằng Chromium (Skia); Safari iPhone dùng bộ lọc riêng nên con số có thể lệch vài %, nhưng ở BK 2,17 giờ là THU nhỏ (×0,72)
+chứ không còn phóng to, nên hết nguyên nhân chính. **Chưa thử trên iPhone thật** – nhờ xem lại trên iPhone; nếu vẫn thấy mềm, có thể tăng
+lượng làm nét (một số trong `dung_sheet.py`: `NET_3X`). Màn @2x (iPhone cũ, BK ≤ 2) vẫn dùng sheet 2x như trước.

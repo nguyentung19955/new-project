@@ -1,0 +1,131 @@
+{
+ "cach_do": "- Vẽ một khung (chém D = dáng đứng tạm, chạy ô 1) trong Chromium bằng ĐÚNG cách của khoi-lam-moi-2.js: canvas bộ đệm = logic × BK,\n    setTransform(BK), translate(snap(X)), drawImage(sheet, …, cỡ logic), imageSmoothingQuality 'high'.\n    BK 2,166 = iPhone 844×390 @3x ngang (bộ đệm 2079 / 960) ; BK 3 = màn đủ rộng @3x.\n  - Tham chiếu = ảnh gen GỐC thu THẲNG một lần (Lanczos, không làm nét) tới đúng cỡ điểm ảnh thật của màn (112 × BK px), cùng neo.\n  - Độ nét = trung bình độ lớn gradient (Sobel) của độ sáng (hình phủ lên xám giữa) trong vùng nhân vật, so với tham chiếu (= 100 %).\n    Viền vượt (halo) = tỉ lệ điểm có kênh (nhân trước) vượt khoảng min–max 3×3 của bản thu INTER_AREA cùng cỡ quá 4/255 (đo trên sheet).\n  - Các bản: sheet 2x PNG (trước) · sheet 2x qua WebP q90 (đúng cách đóng gói artifact trước đây) · sheet 3x mới (PNG = WebP lossless).",
+ "sheet": {
+  "chay-2x": {
+   "png_kb": 414,
+   "ram_giai_nen_mb": 1.73,
+   "do_net_so_voi_lanczos_cung_co": 0.936,
+   "halo_ty_le_diem": 0.0,
+   "webp_q90": {
+    "kb": 81,
+    "do_net_so_voi_png": 0.998,
+    "psnr_db": 45.7,
+    "lech_mau_trung_binh_255": 2.19
+   },
+   "webp_q95": {
+    "kb": 106,
+    "do_net_so_voi_png": 1.0,
+    "psnr_db": 49.6
+   },
+   "webp_lossless": {
+    "kb": 262,
+    "giong_png_moi_diem_nhin_thay": true
+   }
+  },
+  "chay-3x": {
+   "png_kb": 908,
+   "ram_giai_nen_mb": 3.87,
+   "do_net_so_voi_lanczos_cung_co": 1.003,
+   "halo_ty_le_diem": 0.0,
+   "webp_q90": {
+    "kb": 167,
+    "do_net_so_voi_png": 0.997,
+    "psnr_db": 45.9,
+    "lech_mau_trung_binh_255": 2.08
+   },
+   "webp_q95": {
+    "kb": 221,
+    "do_net_so_voi_png": 1.001,
+    "psnr_db": 49.6
+   },
+   "webp_lossless": {
+    "kb": 584,
+    "giong_png_moi_diem_nhin_thay": true
+   }
+  },
+  "chem1-2x": {
+   "png_kb": 256,
+   "ram_giai_nen_mb": 1.21,
+   "do_net_so_voi_lanczos_cung_co": 0.947,
+   "halo_ty_le_diem": 0.0,
+   "webp_q90": {
+    "kb": 46,
+    "do_net_so_voi_png": 0.998,
+    "psnr_db": 46.2,
+    "lech_mau_trung_binh_255": 2.15
+   },
+   "webp_q95": {
+    "kb": 62,
+    "do_net_so_voi_png": 1.0,
+    "psnr_db": 50.0
+   },
+   "webp_lossless": {
+    "kb": 163,
+    "giong_png_moi_diem_nhin_thay": true
+   }
+  },
+  "chem1-3x": {
+   "png_kb": 561,
+   "ram_giai_nen_mb": 2.71,
+   "do_net_so_voi_lanczos_cung_co": 1.012,
+   "halo_ty_le_diem": 0.0,
+   "webp_q90": {
+    "kb": 92,
+    "do_net_so_voi_png": 0.995,
+    "psnr_db": 46.0,
+    "lech_mau_trung_binh_255": 2.13
+   },
+   "webp_q95": {
+    "kb": 128,
+    "do_net_so_voi_png": 1.0,
+    "psnr_db": 50.1
+   },
+   "webp_lossless": {
+    "kb": 367,
+    "giong_png_moi_diem_nhin_thay": true
+   }
+  }
+ },
+ "ve": {
+  "BK 2,17 · chém D (đứng tạm)": {
+   "cao_lam_px_that": 242.5,
+   "he_so_phong_2x": 1.083,
+   "he_so_phong_3x": 0.722,
+   "do_net_so_voi_gen_thu_thang": {
+    "2x PNG (trước)": 0.857,
+    "2x WebP q90 (đóng gói trước)": 0.858,
+    "3x mới": 0.963
+   }
+  },
+  "BK 2,17 · chạy ô 1": {
+   "cao_lam_px_that": 242.5,
+   "he_so_phong_2x": 1.083,
+   "he_so_phong_3x": 0.722,
+   "do_net_so_voi_gen_thu_thang": {
+    "2x PNG (trước)": 0.838,
+    "2x WebP q90 (đóng gói trước)": 0.836,
+    "3x mới": 0.95
+   }
+  },
+  "BK 3 · chém D (đứng tạm)": {
+   "cao_lam_px_that": 336.0,
+   "he_so_phong_2x": 1.5,
+   "he_so_phong_3x": 1.0,
+   "do_net_so_voi_gen_thu_thang": {
+    "2x PNG (trước)": 0.783,
+    "2x WebP q90 (đóng gói trước)": 0.785,
+    "3x mới": 1.012
+   }
+  },
+  "BK 3 · chạy ô 1": {
+   "cao_lam_px_that": 336.0,
+   "he_so_phong_2x": 1.5,
+   "he_so_phong_3x": 1.0,
+   "do_net_so_voi_gen_thu_thang": {
+    "2x PNG (trước)": 0.754,
+    "2x WebP q90 (đóng gói trước)": 0.754,
+    "3x mới": 1.002
+   }
+  }
+ }
+}

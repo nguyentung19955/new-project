@@ -1,0 +1,316 @@
+{
+ "ten": "Lam mới thử 2 – CHÉM 1 (ngang thấp) 4 tư thế A lấy đà / B cắt / C kết thúc / D hồi, sprite sheet 3x",
+ "phien_ban_clip": "lam-moi-thu2",
+ "anh": "lam-moi2-chem1-3x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1982,
+  358
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  494,
+  358
+ ],
+ "diem_neo": {
+  "x": 227,
+  "y": 349,
+  "y_nghia": "toạ độ trong MỖI khung (từ góc trái-trên ô): x = trục thân / giữa collider, y = mặt đất (hàng y−1 là hàng thấp nhất của đế khi chạm đất). Mọi khung cùng một điểm neo; không crop riêng khung.",
+  "x_chem_ghi_chu": "CHÉM: x neo = giữa hai ủng của TỪNG tư thế + 47.2 px gen (hằng số chung = giữa mũ ở hàng mắt − giữa hai ủng của D) → chân trụ đứng yên giữa các tư thế, D cùng trục thân với CHẠY"
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 3,
+  "ve_trong_game": "vẽ ở 1/3 cỡ nguồn",
+  "cao_dang_nghi_px_nguon": 336,
+  "cao_dang_nghi_px_logic": 112.0,
+  "he_so_px_anh_gen_sang_px_nguon": 0.72885,
+  "ghi_chu": "một tỉ lệ cố định cho mọi tư thế của sheet (không co từng hình theo bounding box)"
+ },
+ "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh điểm neo x (ctx.scale(-1,1) tại chân).",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu2-chem1-4o.png",
+ "frames": [
+  {
+   "i": 0,
+   "x": 0,
+   "y": 0,
+   "w": 494,
+   "h": 358,
+   "neo_gen": [
+    292.8,
+    625
+   ],
+   "tick": 7,
+   "ms": 116.7
+  },
+  {
+   "i": 1,
+   "x": 496,
+   "y": 0,
+   "w": 494,
+   "h": 358,
+   "neo_gen": [
+    812.2,
+    625
+   ],
+   "tick": 4,
+   "ms": 66.7
+  },
+  {
+   "i": 2,
+   "x": 992,
+   "y": 0,
+   "w": 494,
+   "h": 358,
+   "neo_gen": [
+    1352.0,
+    625
+   ],
+   "tick": 4,
+   "ms": 66.7
+  },
+  {
+   "i": 3,
+   "x": 1488,
+   "y": 0,
+   "w": 494,
+   "h": 358,
+   "neo_gen": [
+    1944.0,
+    625
+   ],
+   "tick": 8,
+   "ms": 133.3
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "cao_logic": 109.1,
+   "dinh_mu_tren_dat_logic": 107.9,
+   "mat_logic": [
+    26.2,
+    -67.7
+   ],
+   "mat_dien_tich_logic2": 9.0,
+   "mu_cao_tren_mat_logic": 40.1,
+   "mu_rong_hang_mat_logic": 54.7,
+   "mat_cach_mep_truoc_mu_ty_le": 0.148,
+   "mau_mu_trung_vi": [
+    48.0,
+    56.0,
+    76.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     13.3,
+     -41.5
+    ],
+    "rong": 13.1,
+    "cao": 12.6
+   },
+   "ung_gen": [
+    [
+     97,
+     157,
+     625
+    ],
+    [
+     327,
+     401,
+     624
+    ]
+   ],
+   "giua_hai_ung_trong_o_gen": 245.5,
+   "ung_sau_logic": -60.4,
+   "ung_truoc_logic": 26.0
+  },
+  {
+   "o": 2,
+   "cao_logic": 113.7,
+   "dinh_mu_tren_dat_logic": 112.7,
+   "mat_logic": [
+    19.7,
+    -74.7
+   ],
+   "mat_dien_tich_logic2": 9.4,
+   "mu_cao_tren_mat_logic": 37.9,
+   "mu_rong_hang_mat_logic": 50.3,
+   "mat_cach_mep_truoc_mu_ty_le": 0.152,
+   "mau_mu_trung_vi": [
+    46.0,
+    54.0,
+    74.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     15.5,
+     -43.9
+    ],
+    "rong": 10.4,
+    "cao": 10.2
+   },
+   "ung_gen": [
+    [
+     613,
+     678,
+     625
+    ],
+    [
+     849,
+     920,
+     624
+    ]
+   ],
+   "giua_hai_ung_trong_o_gen": 222.0,
+   "ung_sau_logic": -60.8,
+   "ung_truoc_logic": 26.3
+  },
+  {
+   "o": 3,
+   "cao_logic": 112.0,
+   "dinh_mu_tren_dat_logic": 111.0,
+   "mat_logic": [
+    18.4,
+    -75.6
+   ],
+   "mat_dien_tich_logic2": 7.3,
+   "mu_cao_tren_mat_logic": 35.5,
+   "mu_rong_hang_mat_logic": 48.1,
+   "mat_cach_mep_truoc_mu_ty_le": 0.112,
+   "mau_mu_trung_vi": [
+    40.0,
+    46.0,
+    65.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     16.6,
+     -39.0
+    ],
+    "rong": 10.9,
+    "cao": 12.1
+   },
+   "ung_gen": [
+    [
+     1157,
+     1217,
+     625
+    ],
+    [
+     1385,
+     1460,
+     624
+    ]
+   ],
+   "giua_hai_ung_trong_o_gen": 218.75,
+   "ung_sau_logic": -60.1,
+   "ung_truoc_logic": 25.7
+  },
+  {
+   "o": 4,
+   "cao_logic": 112.0,
+   "dinh_mu_tren_dat_logic": 111.0,
+   "mat_logic": [
+    18.6,
+    -69.2
+   ],
+   "mat_dien_tich_logic2": 9.2,
+   "mu_cao_tren_mat_logic": 41.8,
+   "mu_rong_hang_mat_logic": 53.2,
+   "mat_cach_mep_truoc_mu_ty_le": 0.149,
+   "mau_mu_trung_vi": [
+    48.0,
+    55.0,
+    76.0
+   ],
+   "chuong_logic": {
+    "tam": [
+     8.8,
+     -43.5
+    ],
+    "rong": 10.9,
+    "cao": 14.3
+   },
+   "ung_gen": [
+    [
+     1765,
+     1825,
+     625
+    ],
+    [
+     1960,
+     2037,
+     624
+    ]
+   ],
+   "giua_hai_ung_trong_o_gen": 267.75,
+   "ung_sau_logic": -54.3,
+   "ung_truoc_logic": 19.9
+  }
+ ],
+ "lap": false,
+ "atk": 1,
+ "tu_the": [
+  "A lấy đà",
+  "B cắt qua",
+  "C kết thúc",
+  "D hồi"
+ ],
+ "lich_tick": {
+  "A": [
+   1,
+   7
+  ],
+  "B": [
+   8,
+   11
+  ],
+  "C": [
+   12,
+   15
+  ],
+  "D": [
+   16,
+   23
+  ],
+  "ghi_chu": "tick đếm từ 1 = bước logic đầu tiên của đòn. Hộp chỉ bật tick 8–15 (= B + C). Trong game chọn hình theo CHÍNH điều kiện hộp: atkT < su → A; su ≤ atkT < su+4 → B; < su+ac → C; còn lại → D (su 7, ac 8, re 8 của game – KHÔNG đổi)."
+ },
+ "khung_theo_tick": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  2,
+  2,
+  2,
+  2,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3
+ ],
+ "thu_co": {
+  "loc": "Lanczos (PIL)",
+  "lam_net": {
+   "kieu": "unsharp nhỏ, kẹp vào min/max 3×3 của bản thu INTER_AREA cùng cỡ (không halo, không gợn Lanczos)",
+   "sigma_px_nguon": 0.8,
+   "luong": 0.45
+  },
+  "ghi_chu": "thu THẲNG từ ảnh gen gốc (không phóng sheet khác), alpha nhân trước"
+ }
+}
