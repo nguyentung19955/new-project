@@ -1,8 +1,8 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-8210801c` – đóng băng lần 2 ngày 28/10/2026 (kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
-> In trên màn bắt đầu ("… · p0b-2810-8210801c · bản ĐÓNG BĂNG 28/10/2026 lần 2 (kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
-> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa theo nhận xét iPhone 28/10").
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-d219ca3a` – đóng băng lần 3 ngày 28/10/2026 (camera kiểu Dead Cells; giữ mọi thứ của lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
+> In trên màn bắt đầu ("… · p0b-2810-d219ca3a · bản ĐÓNG BĂNG 28/10/2026 lần 3 (camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
 `PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
@@ -19,6 +19,7 @@ Không publish. Không có bộ kiểm thử tự động – chỉ công cụ q
 |---|---|
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0b/index.html | **BẢN ĐÓNG BĂNG – người chơi thử trên iPhone.** Màn bắt đầu có 2 nút **A – Ghi chủ động** / **B – Vọng Chiến** và hướng dẫn riêng từng cách. Log nền LUÔN thu; hộp đòn TẮT |
 | …/index.html?nhay=cu | **Biến thể so nhảy (28/10)**: nhảy CŨ – không phải bản đóng băng |
+| …/index.html?cam=phong | **Biến thể so camera (28/10)**: camera CŨ khoá theo phòng – không phải bản đóng băng |
 | …/index.html?vong=a · …?vong=b | Vào thẳng A / B – vẫn là **bản đóng băng** (cả hai **miễn phí**, bóng xong đứng **nghỉ**) |
 | *Các link dưới đây là BIẾN THỂ – không dùng trong lượt so A/B (màn bắt đầu ghi "BIẾN THỂ")* | |
 | …/index.html?vong=b2 | **B2 – biến thể, TẮT mặc định**: phát từ lúc bắt đầu nhát chém gần nhất (chỉ thử SAU A và B gốc) |
@@ -36,6 +37,24 @@ Trong game, ⚙ (tạm dừng, không che lúc chơi):
   Nếu trình duyệt chặn bộ nhớ (vd. duyệt riêng tư) thì không kèm được → **chép log TRƯỚC khi đổi** cho chắc.
 
 Đường đi: phòng A (hình nộm) → **B** (2 Chuông Gỗ) → **C** (quái gác có vỏ) → **D** (2 Bọ Vỏ Mộc). HUD dưới máu ghi cấu hình; B có thanh lịch sử + chữ trạng thái (và ô nấc ở lượt tài nguyên).
+
+## Camera kiểu Dead Cells 28/10 – ĐÓNG BĂNG LẦN 3 (`p0b-2810-d219ca3a`)
+
+Người dùng thấy **"màn hình bị kéo"** khi sang phòng → **camera kiểu Dead Cells**. Sửa ở nguồn Âm Đao (`game/thu-p0a/cong-cu/camera-dead-cells.js` + `tao-am-dao.py`),
+sinh lại trang này bằng `cong-cu/tao-p0b.py`. Cách chạy + số đầy đủ: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục **"Camera kiểu Dead Cells 28/10"**.
+
+| Đổi | Nội dung |
+|---|---|
+| Camera ngang | Đi theo Lam **liên tục A → D** (không khoá theo phòng), chỉ kẹp ở mép thế giới (tường trái A, cuối D) – không lộ ngoài bản đồ. Bám 11 % / bước |
+| Nhìn trước | Đứng 24 px → chạy hết tốc 120 px, tăng / giảm mượt; quay đầu đổi dần ≈ 1 s; phải giữ hướng mới 8 bước mới đổi (bấm qua lại không rung) |
+| Camera dọc | Vùng chết: nhảy thường không kéo; đứng lên mặt đất lệch > 44 px hoặc rơi > 120 px mới theo; rơi nhanh nhìn xuống 48 px; **giữ lệch +28 cảm ứng** (thế giới chỉ cao hơn màn 4 px → dọc dịch trong 0 → 28 px) |
+| Nền | Nền lớp lặp của trang này vốn theo camera → cuộn liên tục, không chỉnh thêm |
+| **Giữ nguyên** | Cấu hình Vọng A / B, Bọ, phòng, quái, luật đổi phòng (log đổi phòng, xoá bóng Vọng B khi đổi phòng gameplay, huỷ kỹ năng…), log nền, nút chép log |
+
+- Nhãn **"28/10/2026 lần 3 (camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)"** (khối `khoi-p0b.js` chỉ đổi dòng nhãn `VB_DONG_BANG`). Cấu hình khác giữ nguyên.
+- Kiểm Chromium: 0 lỗi trang; `?cam=phong` so từng bước với bản lần 2 (900 bước cùng đầu vào: vị trí Lam, camx, camy, trục nền) → **0 khác**;
+  bản mới: camera chạy liền mép A (6272) → … không vượt mép thế giới. Video qua các ranh: trên P0-C (`game/thu-p0c/video/camera-dead-cells-2810.mp4`, cùng code camera).
+  **Số Vọng mục 3 không quay lại** (Vọng không đổi; camera không đụng logic). Chưa thử iPhone.
 
 ## Sửa theo nhận xét iPhone 28/10 – ĐÓNG BĂNG LẦN 2 (`p0b-2810-8210801c`)
 

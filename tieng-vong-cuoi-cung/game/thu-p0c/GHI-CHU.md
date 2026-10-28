@@ -1,4 +1,4 @@
-# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026, sửa theo PH10 + nhận xét iPhone 28/10)
+# Trang thử P0-C – tinh anh · Ấn Rèn I · đe rèn · Âm Đao cấp 3 (28/10/2026, sửa theo PH10 + nhận xét iPhone 28/10 + camera kiểu Dead Cells 28/10)
 
 Viết cho người không rành kỹ thuật. Bản đầu làm theo `docs/gameplay/PHAN-HOI-9-P0B.md` mục 4 + "GỬI CLAUDE" điểm 9, `KE-HOACH-GAMEPLAY-V2.md` mục 5, 7, 8,
 `KE-HOACH-VU-KHI.md` mục 3, 4b, 6b, PHAN-HOI-2, 5, 7, 8. **Lần này sửa theo `docs/gameplay/PHAN-HOI-10-P0C-AMDAO-P0B-DEF.md`** mục 1, 2, 5 và "6. ĐOẠN GỬI CLAUDE".
@@ -18,11 +18,44 @@ Không publish. Không gen ảnh. Không viết bộ kiểm thử tự động (
 | …/thu-p0c/index.html?vao=f | Vào thẳng phòng F – chỉ để xem đe / hình nộm (chưa có Ấn thì **không** rèn được) |
 | …/thu-p0c/index.html?vao=e&hitbox=1&debug=p0c | Bảng log P0-C trên màn + hộp đòn + chữ trạng thái tinh anh dưới chân |
 | …/thu-p0c/index.html?nhay=cu | **So nhảy (28/10)**: nhảy CŨ (mặc định = nhảy mềm mới) |
+| …/thu-p0c/index.html?cam=phong | **So camera (28/10)**: camera CŨ khoá theo phòng (dính mép phải ở F, nền giữa hoà theo phòng). Mặc định = camera kiểu Dead Cells |
 | …/thu-p0c/index.html?vao=e&choang=120 | **BIẾN THỂ (tắt mặc định)**: choáng lần vỡ Thế đầu **120** tick thay 150. Chỉ dùng nếu người thử thấy trận thành "đứng chém quái bất động" |
 | …/thu-p0c/index.html?vao=e&tamau=600 | **CHỈ ĐỂ KIỂM** chu trình Thế (tinh anh 600 máu). Mặc định tắt (160) – không dùng khi thử người chơi |
 
 Xuất log sau lượt chơi: ⚙ → **"Xuất log P0-C (lượt này)"**: **chép vào bộ nhớ tạm** (dán vào tin nhắn) và thử tải file .txt.
 Điều khiển như trang Âm Đao: chạm **Chém** = đánh thường; ở cấp 3 **giữ Chém ≥ 20 tick rồi thả** = Dư Âm. **V** = Vọng A. Cạnh đe có Ấn: nút **"🔨 Rèn Âm Đao"** (bàn phím **F**).
+
+## Camera kiểu Dead Cells 28/10
+
+Người dùng thấy **"màn hình bị kéo"** khi sang phòng → làm **camera kiểu Dead Cells**. Code camera ở nguồn Âm Đao (`game/thu-p0a/cong-cu/camera-dead-cells.js`,
+cách chạy + số: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục **"Camera kiểu Dead Cells 28/10"**), trang này sinh lại bằng `cong-cu/tao-p0c.py` → phiên **`p0c-2810-2c7f3936`**.
+`?cam=phong` = camera cũ y nguyên (so từng bước 1591 bước cùng đầu vào: 0 khác). **Luật chơi không đổi** – chỉ camera + vị trí mảnh nền giữa.
+
+**Số dùng**: bám ngang 11 % / bước · nhìn trước 24 px (đứng) → 120 px (chạy hết tốc), quay đầu đổi dần ≈ 1 s · trễ quay đầu 8 bước ·
+vùng chết dọc 44 px khi đứng đất, 120 px khi rơi, rơi nhanh nhìn xuống 48 px · bám dọc 6 % / bước · lệch dọc cảm ứng +28.
+
+**Riêng P0-C**
+- Camera đi liền **A → F** (một khu: tường trái A ngăn với khu demo cũ; F là cuối thế giới). Kẹp mép thế giới **trùng đúng chỗ camera F cũ dừng** (camx 10624)
+  → **bỏ ghi đè dính mép riêng của F** (`camF()` trong bản chép khối phòng B; chỉ còn chạy ở `?cam=phong`). `datCam` (công cụ quay cuộn) dùng trục nền cố định của khu.
+- **Phòng E (tinh anh) không khoá camera** – đi theo Lam liên tục như mọi phòng. Luật tinh anh giữ nguyên: chỉ đánh / nhận đòn khi Lam trong E, Lam rời E thì nó về chỗ hồi đầy.
+- **Nền giữa đặt lại** (`cong-cu/nen-giua-lien.js`, chèn vào bản chép khối phòng B): bản cũ mỗi phòng một bộ mảnh, hoà theo phần màn phòng đó chiếm – camera mới
+  có thể dừng giữa 2 phòng → 2 bộ chồng nhau mờ 50 % (12 mảnh trong dải parallax 2700 px, gần như dính liền). Nay **một dải 7 mảnh, luôn hiện đủ**, đặt theo toạ độ
+  parallax liên tục (hệ số 0,4 như cũ): cây A · tháp A cửa sổ vàng (như cũ) · tháp B nén sáng, **lật ngang** cho khác tháp A, sau ván B · cây C · cây phải D (giữa D vẫn tối) ·
+  tháp + cây F **y như cũ** ở cuối thế giới. E không còn mảnh riêng (thấy cây D bên trái, tháp F bên phải). Khoảng hở giữa 2 mảnh: 413 / 130 / 110 / 583 / 297 px
+  (cặp tháp + cây F chồng 20 px như thiết kế F). Quầng ấm A / F và màn tầm đánh D vẫn hoà theo phần màn (lớp màu, không phải mảnh hình).
+- Nền xa lặp soi gương → cuộn liên tục không có đường nối; lệch dọc 0 → 28 vẫn trong ảnh (ảnh cao 570, đặt từ −12).
+
+**Đã kiểm (Chromium headless, bot – chưa thử iPhone)** – công cụ `cong-cu/quay-camera.py` (chỉ quay + ghi số, không đạt / trượt) → `video/camera-dead-cells-2810.json`
+- **Video `video/camera-dead-cells-2810.mp4`** (25 s, 1511 bước, **không bất tử**, chế độ cảm ứng): bot chạy liền từ chuông A → B (chém 2 Chuông Gỗ) → C (chém quái gác mở cổng)
+  → D (lướt qua Bọ) → E (lướt qua tinh anh) → giữa F. Tới F, không chết; mất 1 máu ở D (Bọ húc), hồi đầy ở chuông F.
+- Qua cả 5 ranh phòng (7 lần qua – 2 lần lùi qua lại ranh A|B khi né Chuông Gỗ): camera ở bước qua ranh đi đúng như bước trước (A|B 4,4 · B|C 4,6 · C|D 4,4 · D|E 4,6 · E|F 0,4 px / bước – ở E|F camera đã chạm mép thế giới) → **không còn cú trượt nguyên màn**.
+  0 bước camera ra ngoài thế giới (camx 6272 → 10624 = đúng mép A → mép cuối F). Lam trên màn x 145 → 705 / 960.
+- **Quái phòng kề trên màn**: Chuông Gỗ B thấy được từ A, tinh anh E thấy từ D… – không quái nào nằm trong màn mà đứng im: chỉ 2 lần **1 bước lẻ** không đếm nhịp
+  (bị trúng đòn đặt lại bộ đếm), không có chuỗi ≥ 2 bước. Mọi lần mất máu: quái cùng phòng với Lam (không đánh xuyên ranh).
+- **Ảnh nền quét A → F** (12 vị trí, lệch dọc 28): `video/camera-dead-cells-nen-2810.png` – không lộ mép / khe nền, không mảnh chồng mờ.
+- **Ranh mảng đất** (`TVPB.soiRanh`): 26 vị trí × 5 tỉ lệ × lệch dọc 0 / 28 → **0 điểm hở**. 0 lỗi trang.
+
+**Cần thử iPhone (chưa làm)**: qua ranh còn cảm giác "bị kéo" không · nhìn trước khi chạy đủ chưa · nền giữa mới có trống quá đoạn C → D không.
 
 ## Sửa theo nhận xét iPhone 28/10
 

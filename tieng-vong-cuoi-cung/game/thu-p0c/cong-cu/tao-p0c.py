@@ -8,6 +8,7 @@ Nguồn (CHỈ ĐỌC, không ghi lại):
   - game/thu-bo-vo-moc/cong-cu/khoi-bo.js          Bọ Vỏ Mộc phòng D (chỉnh trên BẢN CHÉP như thu-p0b / thu-phong-b)
   - game/thu-phong-b/cong-cu/khoi-phong-b.js       số đặt phòng A–F + đe rèn + gợi ý ngắn (chỉnh trên BẢN CHÉP: mặc định vào phòng A)
   + cong-cu/khoi-p0c.js (khối riêng P0-C)
+  + cong-cu/nen-giua-lien.js (28/10 camera kiểu Dead Cells: nền giữa một dải liên tục, chèn vào bản chép khối phòng B; ?cam=phong = bộ cũ)
 Mỗi chỗ thay phải khớp ĐÚNG số lần – lệch thì dừng và báo (nguồn đã đổi → sửa script).
 Vọng: cấu hình tạm A (ghi chủ động, đúng code trang Âm Đao) + sửa lỗi replay bỏ mẫu cuối của PH9 mục 1.3 (giống tao-p0b.py), bóng nghỉ hạ độ nổi.
 Âm Đao luôn bắt đầu CẤP 1 (bỏ ?cap=); lên cấp 3 chỉ qua đe rèn khi có Ấn Rèn I.
@@ -25,6 +26,7 @@ NGUON = {
     'bo': P('thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'),
     'pb': P('thu-phong-b', 'cong-cu', 'khoi-phong-b.js'),
     'p0c': os.path.join(HERE, 'khoi-p0c.js'),
+    'nen_lien': os.path.join(HERE, 'nen-giua-lien.js'),   # 28/10 camera Dead Cells: nền giữa liên tục
 }
 doc = lambda k: open(NGUON[k], encoding='utf-8').read()
 src, HM_FULL, BO, PB, KHOI = doc('am_dao'), doc('hm'), doc('bo'), doc('pb'), doc('p0c')
@@ -115,6 +117,21 @@ PB = doi(PB, [
      "vaoA: q.get('vao') === 'a' || q.get('vao') === 'lang',",
      "vaoA: !q.get('vao') || q.get('vao') === 'a' || q.get('vao') === 'lang',   // P0-C: mặc định vào phòng A", 1),
     ('P0-C: phòng E đã có tinh anh', "(r === PE ? 'chưa có tinh anh' : '')", "(r === PE ? 'tinh anh · Chuông Gỗ Gác Lớn' : '')", 1),
+    # 28/10 camera kiểu Dead Cells (camera-dead-cells.js trong am-dao.html): F hết cần ghi đè dính mép riêng – kẹp mép thế giới là đủ.
+    # ?cam=phong: giữ nguyên hành vi cũ (ghi đè F + trục nền theo phòng + nền giữa hoà theo phòng).
+    ('camera DC: bỏ ghi đè camera F (chỉ còn ở ?cam=phong)', "  if (ROOMS[S.room] === PF) { const tx = camF();",
+     "  if (CAM.phong && ROOMS[S.room] === PF) { const tx = camF();", 1),
+    ('camera DC: bỏ ghi đè đặt camera F (chỉ còn ở ?cam=phong)', "placePlayer = function (x, y) { _pbPlace(x, y); if (ROOMS[S.room] === PF)",
+     "placePlayer = function (x, y) { _pbPlace(x, y); if (CAM.phong && ROOMS[S.room] === PF)", 1),
+    ('camera DC: datCam (quay cuộn) dùng trục nền cố định của khu',
+     "const r = ROOMS[roomAt(x + W / 2)], rc = r.x0 * T + r.w * T / 2 - W / 2; S.rc = S.prc = rc;",
+     "const r = ROOMS[roomAt(x + W / 2)], rc = CAM.phong ? r.x0 * T + r.w * T / 2 - W / 2 : camKhuCua(x + W / 2).rc; S.rc = S.prc = rc;", 1),
+    ('camera DC: nền giữa LIÊN TỤC (đặt theo toạ độ parallax, không hoà theo phòng)',
+     "for (const [r, so] of PHONG_SO) for (const p of so.nen.giua) NEN_ABC.giua.push(Object.assign({}, p, {phong: r, rc: r.x0 * T + r.w * T / 2 - W / 2, w: 0}));\n",
+     "for (const [r, so] of PHONG_SO) for (const p of so.nen.giua) NEN_ABC.giua.push(Object.assign({}, p, {phong: r, rc: r.x0 * T + r.w * T / 2 - W / 2, w: 0}));\n"
+     + open(os.path.join(HERE, 'nen-giua-lien.js'), encoding='utf-8').read().rstrip() + "\n", 1),
+    ('camera DC: nền giữa không hoà theo phòng', "function nenTrongSo(ox) {\n",
+     "function nenTrongSo(ox) {\n  if (!CAM.phong) { for (const p of NEN_ABC.giua) p.w = 1; return; }   // camera Dead Cells: mảnh nền giữa luôn hiện đủ (đặt thưa, không chồng)\n", 1),
 ], 'khoi-phong-b.js (bản chép)')
 
 R += [(m, c, n, l) for (m, c, n, l) in R_PB]

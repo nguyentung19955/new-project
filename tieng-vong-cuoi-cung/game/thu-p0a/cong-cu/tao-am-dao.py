@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Tạo game/thu-p0a/am-dao.html (trang thử Âm Đao cấp 1–4) từ game/thu-p0a/index.html (bản P0-A, KHÔNG sửa file đó)
-+ khối cong-cu/khoi-am-dao.js (chèn SAU khối P0-A, trước boot()). Cùng thư mục với index.html nên mọi đường dẫn tài nguyên giữ nguyên.
++ khối cong-cu/khoi-am-dao.js (chèn SAU khối P0-A, trước boot()) + cong-cu/camera-dead-cells.js (28/10, chèn sau roomAt()). Cùng thư mục với index.html nên mọi đường dẫn tài nguyên giữ nguyên.
 Bản P0-A gốc (index.html) để nguyên để so. Mỗi chỗ thay phải khớp đúng số lần – lệch thì dừng.
 Chạy: python3 game/thu-p0a/cong-cu/tao-tu-demo.py && python3 game/thu-p0a/cong-cu/tao-am-dao.py"""
 import os, sys
@@ -36,6 +36,22 @@ thay('nhảy mềm: vùng đỉnh smoothstep', "const a=Math.min(1,Math.abs(pl.v
      "const a0=Math.min(1,Math.abs(pl.vy)/P.apexThreshold), a=NHAY.moi?a0*a0*(3-2*a0):a0, top=I.j?P.apexGravMul:0.8;")
 thay('nhảy mềm: rơi tiến dần tới trần', "  pl.vy=Math.min(pl.vy+g,P.maxFall);\n  const ws=",
      "  pl.vy=NHAY.moi?NHAY.tran(pl.vy+g):Math.min(pl.vy+g,P.maxFall);\n  const ws=")
+# 28/10 (người dùng: "màn hình bị kéo khi sang phòng" → LÀM CAMERA KIỂU DEAD CELLS): camera đi theo Lam LIÊN TỤC qua các phòng nối liền,
+# chỉ kẹp ở mép KHU chơi (= mép thế giới: các phòng liền nhau, tách bằng ranh bịt kín cả chiều cao); look-ahead theo tốc độ chạy + trễ quay đầu;
+# dọc có vùng chết. Trục nền S.rc cố định trong khu (parallax liên tục). Đánh boss thật → khoá sân boss như cũ. ?cam=phong = camera cũ (so).
+thay('camera Dead Cells: hàm + số', "function roomAt(x){ for(const r of ROOMS) if(x>=r.x0*T && x<(r.x0+r.w)*T) return r.i; return x<0?0:ROOMS.length-1; }",
+     "function roomAt(x){ for(const r of ROOMS) if(x>=r.x0*T && x<(r.x0+r.w)*T) return r.i; return x<0?0:ROOMS.length-1; }\n" + open(os.path.join(HERE, 'camera-dead-cells.js'), encoding='utf-8').read().rstrip())
+thay('camera Dead Cells: đặt camera khi đặt Lam',
+     "  S.camx=clamp(pl.x+pl.w/2-W/2,r.x0*T,(r.x0+r.w)*T-W); S.pcx=S.camx; S.rc=r.x0*T+r.w*T/2-W/2; S.prc=S.rc; S.look=48;\n",
+     "  if(CAM.phong){ S.camx=clamp(pl.x+pl.w/2-W/2,r.x0*T,(r.x0+r.w)*T-W); S.pcx=S.camx; S.rc=r.x0*T+r.w*T/2-W/2; S.prc=S.rc; S.look=48; }\n  else camDat();   // 28/10: camera kiểu Dead Cells\n")
+thay('camera Dead Cells: mỗi bước',
+     "  S.look=approach(S.look,pl.face*48,2.4);\n  const tx=clamp(pl.x+pl.w/2-W/2+S.look,r.x0*T,(r.x0+r.w)*T-W);\n  S.camx+=(tx-S.camx)*0.1; if(Math.abs(tx-S.camx)<0.02) S.camx=tx;\n"
+     "  S.camy=approach(S.camy,touchMode?28:0,1);   // cảm ứng: đặt nhân vật lệch lên để nút không che\n"
+     "  const rcT=r.x0*T+r.w*T/2-W/2; S.rc+=(rcT-S.rc)*0.1; if(Math.abs(rcT-S.rc)<0.02) S.rc=rcT;\n",
+     "  if(!CAM.phong) camBuoc();   // 28/10: camera kiểu Dead Cells (đi theo Lam liên tục, kẹp mép thế giới) – ?cam=phong: khoá theo phòng như cũ ↓\n  else {\n"
+     "  S.look=approach(S.look,pl.face*48,2.4);\n  const tx=clamp(pl.x+pl.w/2-W/2+S.look,r.x0*T,(r.x0+r.w)*T-W);\n  S.camx+=(tx-S.camx)*0.1; if(Math.abs(tx-S.camx)<0.02) S.camx=tx;\n"
+     "  S.camy=approach(S.camy,touchMode?28:0,1);   // cảm ứng: đặt nhân vật lệch lên để nút không che\n"
+     "  const rcT=r.x0*T+r.w*T/2-W/2; S.rc+=(rcT-S.rc)*0.1; if(Math.abs(rcT-S.rc)<0.02) S.rc=rcT;\n  }\n")
 thay('khối Âm Đao, rồi khởi động', "\nboot();\n</script>", "\n" + KHOI + "\nboot();\n</script>")
 
 out = src; loi = []

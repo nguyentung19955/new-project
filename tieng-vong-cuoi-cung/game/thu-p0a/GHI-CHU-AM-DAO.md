@@ -1,4 +1,4 @@
-# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7, 8 và nhận xét iPhone 28/10
+# Trang thử Âm Đao cấp 1–4 (trên P0-A) – 27/10/2026 theo phản hồi 6, sửa 28/10/2026 theo phản hồi 7, 8, nhận xét iPhone 28/10 và camera kiểu Dead Cells 28/10
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-6-BO-BAN-3-VA-AM-DAO.md`, `KE-HOACH-VU-KHI.md` mục 2d, 3, 4b, 5, 7a, 8, 10,
 `KE-HOACH-GAMEPLAY-V2.md` mục 3, 5, 6. **Trang con riêng** `am-dao.html`; bản P0-A gốc `index.html` **giữ nguyên** để so.
@@ -14,11 +14,53 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 | …/am-dao.html?pogo=moi | **Biến thể thử PH8**: hộp nảy theo đường bổ xuống `[−2,−24,48,82]`. Mặc định giữ hộp cũ `[−26,−24,64,82]` |
 | …/am-dao.html?cap=3&giu=16 | **Biến thể thử PH8**: ngưỡng giữ Dư Âm 16 tick (nhận 15/16) thay 20; hồi + sát thương giữ nguyên. Mặc định tắt |
 | …/am-dao.html?nhay=cu | **So nhảy (28/10)**: số + công thức nhảy CŨ. Mặc định = nhảy mềm mới |
+| …/am-dao.html?cam=phong | **So camera (28/10)**: camera CŨ khoá theo phòng. Mặc định = camera kiểu Dead Cells |
 | …/am-dao.html?quet=1 | **So vệt (28/10)**: bật lại dải "quét âm" PH7 (đã làm mờ dần về mép). Mặc định tắt |
 | …/am-dao.html?cg=36 | **Chỉ là biến thể thử** (KHVK 4b): Chuông Gỗ máu 36. **Mặc định và số chính thức: 40** (PH7 chốt) – không đưa 36 vào game chính |
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0a/index.html | Bản **P0-A gốc** (dao placeholder) – nhịp MỚI. Thêm `?p0=0` = nhịp CŨ, **cùng dao** (dùng để so độ nhạy – mục PH7-9) |
 
 Điều khiển: chạm **Chém** = đánh thường (luôn ra ngay). **Giữ Chém ≥ 20 tick (⅓ giây)** ở cấp 3–4 = **Dư Âm**. Phòng A hình nộm → B hai Chuông Gỗ → C quái gác (giống P0-A).
+
+## Camera kiểu Dead Cells 28/10
+
+Người dùng thấy **"màn hình bị kéo"** khi sang phòng: camera cũ khoá trong từng phòng (Lam tới mép phòng thì camera đứng, qua ranh thì camera trượt nguyên
+một màn + nền trôi theo vì trục nền `S.rc` nhảy theo tâm phòng). Yêu cầu: **làm camera kiểu Dead Cells**. Sửa ở nguồn `game/thu-p0a/`:
+code camera mới ở **`cong-cu/camera-dead-cells.js`**, chèn vào trang bằng 3 chỗ thay trong `cong-cu/tao-am-dao.py` (sau `roomAt()`, trong `placePlayer()`,
+trong `step()`), rồi sinh lại `am-dao.html` → **P0-C** (`thu-p0c/cong-cu/tao-p0c.py`) và **P0-B** (`thu-p0b/cong-cu/tao-p0b.py`, đóng băng lần 3).
+`index.html` (P0-A gốc), `demo.html` **không đổi**. **`?cam=phong`** = camera cũ y nguyên để so.
+
+**Cách camera chạy bây giờ**
+
+- **Ngang – đi theo Lam liên tục** qua các phòng nối liền, **không khoá theo phòng**. Chỉ kẹp ở **mép thế giới**: trang tự tìm các "khu" = chuỗi phòng liền nhau;
+  ranh phòng bị tường đặc bịt kín cả chiều cao thì tách khu (vd. tường trái phòng A ngăn với phòng boss cũ) → camera **không bao giờ lộ ra ngoài bản đồ**.
+  Khu ở trang này: A → C (Khởi đầu → Hành lang gác); P0-B: A → D; P0-C: A → F.
+- **Bám ngang mềm**: mỗi bước camera đi **11 %** quãng còn lại tới đích (≈ 0,35 s đuổi kịp).
+- **Nhìn trước (look-ahead) theo hướng chạy**: đứng **24 px**, chạy hết tốc **120 px**. Mức "đang chạy" tăng 0,04 / bước (≈ 0,4 s), giảm 0,02 / bước (≈ 0,8 s), đường cong mềm (smoothstep).
+  Look-ahead đi 8 % quãng còn lại mỗi bước, tối đa 4 px / bước → **quay đầu khi đang chạy: đổi dần ≈ 1 s**, không giật.
+- **Chống rung khi bấm qua lại**: phải giữ hướng mới **8 bước (≈ 0,13 s)** thì hướng nhìn mới đổi.
+- **Dọc – vùng chết**: nhảy thường **không** kéo camera. Mốc dọc chỉ đổi khi Lam **đứng** lên mặt đất cao / thấp hơn mốc **> 44 px** (hơn 1 ô), hoặc **rơi xa hơn 120 px**
+  dưới mốc; rơi nhanh (vy > 7) → nhìn xuống trước tối đa **48 px**. Bám dọc 6 % / bước. **Giữ lệch +28 cho cảm ứng** (nút không che nhân vật).
+  Thế giới cao 17 ô = 544 px, gần bằng màn 540 → dọc chỉ dịch được trong **0 → 28 px** (cảm ứng) hoặc 0 → 4 px (bàn phím) để không lộ ngoài bản đồ:
+  đứng lên ván cao (vd. ván phòng D, cao hơn sàn 160 px) camera nâng 28 → 0, xuống sàn trở lại 28 trong ≈ 1 s.
+- **Boss thật** (phòng "Chuông Gác Làng" của demo cũ, chỉ có ở khu cũ): khi boss đang đánh và Lam trong sân boss → **khoá trong sân boss như cũ**
+  (đo: boss thức → camx 5312 = mép sân, đứng yên suốt trận). **Tinh anh không khoá** (P0-C phòng E).
+- **Nền (parallax)**: trục `S.rc` **cố định trong khu** (= trục giữa phòng đầu khu) → nền xa / giữa cuộn **liên tục** theo camera, không nhảy theo tâm phòng.
+  Nền của trang này (lớp lặp) vốn đã theo camera, không cần chỉnh; nền giữa từng mảnh của P0-C: xem `thu-p0c/GHI-CHU.md`.
+- **Giữ nguyên luật** (chỉ camera đổi): `S.room` / đổi phòng (log đổi phòng, huỷ kỹ năng khi đổi phòng, xoá chỗ chờ, xoá bóng Vọng B), quái, va chạm.
+  Quái thường đã chỉ "đứng yên khi xa Lam > 1152 px" (không theo phòng) → mọi quái nằm trong màn (cách Lam ≤ ~600 px) đều được cập nhật.
+- Lỗi cũ tiện thấy: camera cũ ở phòng A (24 ô, hẹp hơn màn) có lúc lộ ~190 px phòng boss bên kia tường trái A (đo camx 6085 < mép A 6272). Camera mới hết.
+
+**Đã kiểm (Chromium headless, bot – chưa thử iPhone)**
+
+- `?cam=phong` **trùng khít** bản cũ: cùng đầu vào, so từng bước camx / camy / trục nền / vị trí Lam → 0 bước khác (P0-C 1591 bước, P0-B 900 bước, trang này 600 bước).
+- Qua ranh mọi phòng (P0-C A → F): camera đi **đúng tốc độ chạy (4,4 px / bước)** cả bước trước lẫn bước qua ranh – không còn cú trượt nguyên màn.
+  Lam trên màn khi chạy phải: x ≈ 396 / 960 (nhìn trước 84 px); đứng: ≈ 456. Camera trong suốt lượt: 0 bước ra ngoài thế giới.
+- Bấm trái / phải luân phiên mỗi 4 bước: hướng nhìn không lật theo (camera xê dịch ≤ 2,7 px / bước).
+- Ranh mảng đất nướng (cách soi `TVPB.soiRanh` của thu-phong-b B3.2) ở 26 vị trí camera lẻ × 5 tỉ lệ (1 / 1,5 / 2 / 2,17 iPhone / 3) × lệch dọc 0 / 28: **0 điểm hở**.
+- 0 lỗi trang ở `am-dao.html`, P0-B, P0-C (mặc định và `?cam=phong`). Video + số: `thu-p0c/video/camera-dead-cells-2810.*` (xem `thu-p0c/GHI-CHU.md`).
+
+**Cần thử iPhone (chưa làm – không đánh dấu đạt)**: qua ranh phòng còn thấy "bị kéo" không; nhìn trước 120 px khi chạy có đủ / quá; quay đầu ≈ 1 s có chậm quá;
+đứng lên ván cao camera nâng 28 px có khó chịu; nền giữa P0-C (đặt lại) có trống / dày chỗ nào.
 
 ## Sửa theo nhận xét iPhone 28/10
 

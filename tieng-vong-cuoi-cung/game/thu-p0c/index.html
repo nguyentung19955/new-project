@@ -665,9 +665,73 @@ function placePlayer(x,y){
   pl.x=x; pl.y=y; pl.vx=pl.vy=0; pl.px=x; pl.py=y; pl.atkN=0; pl.dash=0; pl.dead=false; pl.deadT=0; pl.hurtT=0; pl.wjT=0; pl.landT=0; pl.castT=0;
   P0.xoaCho('dat-lai'); pl.jumpBuf=pl.atkBuf=pl.dashBuf=0; pl.airJump=false; pl.pogoBuf=0; pl.pogoSafe=0; pl.iframes=0; pl.onGround=true; pl.dropT=0; pl.airT=0; pl.drawT=0; CH.ten=''; pl.dD=-1; DAO.on=false;
   S.room=roomAt(pl.x+pl.w/2); const r=ROOMS[S.room];
-  S.camx=clamp(pl.x+pl.w/2-W/2,r.x0*T,(r.x0+r.w)*T-W); S.pcx=S.camx; S.rc=r.x0*T+r.w*T/2-W/2; S.prc=S.rc; S.look=48;
+  if(CAM.phong){ S.camx=clamp(pl.x+pl.w/2-W/2,r.x0*T,(r.x0+r.w)*T-W); S.pcx=S.camx; S.rc=r.x0*T+r.w*T/2-W/2; S.prc=S.rc; S.look=48; }
+  else camDat();   // 28/10: camera kiểu Dead Cells
 }
 function roomAt(x){ for(const r of ROOMS) if(x>=r.x0*T && x<(r.x0+r.w)*T) return r.i; return x<0?0:ROOMS.length-1; }
+/* ===== CAMERA KIỂU DEAD CELLS (28/10) – chèn bởi tao-am-dao.py ngay sau roomAt(). ?cam=phong: camera khoá theo phòng như cũ (để so) =====
+   Ngang: đi theo Lam LIÊN TỤC qua các phòng nối liền (không khoá theo phòng), chỉ kẹp ở mép KHU chơi = mép thế giới (đầu / cuối bản đồ).
+          Khu = các phòng liền nhau; ranh phòng bịt kín cả chiều cao (tường đặc mọi hàng trên sàn) tách khu → không bao giờ thấy sang khu khác.
+          Look-ahead theo TỐC ĐỘ chạy (đứng: nhỏ, chạy hết tốc: lớn), đổi mượt; quay đầu phải giữ hướng mới TRE_QUAY bước mới đổi hướng nhìn.
+   Dọc:   vùng chết – nhảy thường không kéo camera; chỉ theo khi Lam ĐỨNG lên mặt đất cao / thấp hơn mốc > VC_DAT, hoặc rơi xa hơn VC_ROI;
+          rơi nhanh → nhìn xuống trước. Giữ lệch +28 cho cảm ứng (nút không che nhân vật). Kẹp dọc trong [min(0, lệch), max(đáy thế giới − màn, lệch)].
+   Boss thật đang đánh (bossActive) và Lam trong sân boss → khoá sân boss như cũ. Tinh anh (P0-C phòng E) KHÔNG khoá.
+   Trục nền S.rc: CỐ ĐỊNH trong khu (= trục giữa phòng đầu khu) → nền xa cuộn liên tục theo camera, không nhảy theo tâm phòng. */
+const CAM={phong:(()=>{ try{ return new URLSearchParams(location.search).get('cam')==='phong'; }catch(e){ return false; } })(),
+  BAM:0.11,                        // bám ngang: mỗi bước camera đi 11 % quãng còn lại tới đích (≈ 0,35 s đuổi kịp)
+  LOOK_DUNG:24, LOOK_CHAY:120,     // look-ahead (px logic) khi đứng / khi chạy hết tốc
+  CHAY_LEN:0.04, CHAY_XUONG:0.02,  // mức "đang chạy" (0–1) tăng / giảm mỗi bước → look-ahead tăng mượt khi chạy, giảm chậm hơn khi dừng
+  LOOK_MEM:0.08, LOOK_TOC:4,       // look-ahead đi 8 % quãng còn lại mỗi bước, tối đa 4 px / bước (quay đầu: đổi dần ≈ 1 s)
+  TRE_QUAY:8,                      // quay đầu phải giữ hướng mới 8 bước (≈ 0,13 s) mới đổi hướng nhìn → bấm qua lại không rung
+  VC_DAT:44,                       // vùng chết dọc khi đứng đất: mặt đất mới lệch mốc > 44 px (hơn 1 ô) mới theo
+  VC_ROI:120,                      // trên không: chân thấp hơn mốc > 120 px (rơi xa) mới kéo theo
+  NHIN_XUONG:48, VY_NHANH:7,       // rơi nhanh (vy > 7): nhìn xuống trước tối đa 48 px
+  BAM_DOC:0.06, LECH_CAM:28,       // bám dọc 6 % / bước; lệch dọc cảm ứng +28
+  huong:1, giu:0, chay:0, moc:0, xuong:0, khu:null};
+function camKhu(lai){
+  if(CAM.khu && !lai) return CAM.khu;
+  const K=[], hang=Math.floor(FLOOR/T); let a=ROOMS[0];
+  for(let i=1;i<=ROOMS.length;i++){ const b=ROOMS[i]; let kin=true;
+    if(b){ const X=b.x0; for(let y=0;y<hang;y++) if(!solidC(tile(X-1,y)) && !solidC(tile(X,y))){ kin=false; break; } }
+    if(!b || kin){ const z=ROOMS[i-1]; K.push({a:a.x0*T, b:(z.x0+z.w)*T, rc:a.x0*T+a.w*T/2-W/2, tu:a.name, den:z.name}); a=b; }
+  }
+  return CAM.khu=K;
+}
+function camKhuCua(x){ const K=camKhu(); for(const k of K) if(x>=k.a && x<k.b) return k; return x<K[0].a?K[0]:K[K.length-1]; }
+function camKep(x){
+  const k=camKhuCua(pl.x+pl.w/2); let a=k.a, b=k.b-W;
+  if(typeof RE!=='undefined' && bossActive() && ROOMS[S.room]===RE){ a=RE.x0*T; b=(RE.x0+RE.w)*T-W; }   // boss thật: khoá sân boss như cũ
+  return b<a?a:clamp(x,a,b);
+}
+function camDocDich(){
+  const lech=touchMode?CAM.LECH_CAM:0, ty=lech+(CAM.moc-FLOOR)+CAM.xuong;
+  return clamp(ty,Math.min(0,lech),Math.max(ROWS*T-H,lech));
+}
+function camDat(){   // đặt thẳng (vào ván / hồi sinh / dịch chỗ): không trôi
+  camKhu(true);
+  CAM.huong=pl.face||1; CAM.giu=0; CAM.chay=0; CAM.xuong=0; CAM.moc=pl.y+pl.h; S.look=CAM.huong*CAM.LOOK_DUNG;
+  S.camx=camKep(pl.x+pl.w/2-W/2+S.look); S.pcx=S.camx;
+  S.rc=S.prc=camKhuCua(pl.x+pl.w/2).rc;
+}
+function camBuoc(){
+  // hướng nhìn (trễ quay đầu)
+  if(pl.face!==CAM.huong){ if(++CAM.giu>=CAM.TRE_QUAY){ CAM.huong=pl.face; CAM.giu=0; } } else CAM.giu=0;
+  // mức chạy 0–1 theo dịch ngang THỰC (va tường → 0), lướt tính như chạy hết tốc
+  const v=Math.min(1,Math.abs(pl.dxT||0)/P.runSpeed), chayT=v>0.5?1:0;
+  CAM.chay=approach(CAM.chay,chayT,chayT>CAM.chay?CAM.CHAY_LEN:CAM.CHAY_XUONG);
+  const e=CAM.chay*CAM.chay*(3-2*CAM.chay), lookT=CAM.huong*(CAM.LOOK_DUNG+(CAM.LOOK_CHAY-CAM.LOOK_DUNG)*e);
+  S.look+=clamp((lookT-S.look)*CAM.LOOK_MEM,-CAM.LOOK_TOC,CAM.LOOK_TOC);
+  const tx=camKep(pl.x+pl.w/2-W/2+S.look);
+  S.camx+=(tx-S.camx)*CAM.BAM; if(Math.abs(tx-S.camx)<0.02) S.camx=tx;
+  // dọc: vùng chết
+  const chan=pl.y+pl.h;
+  if(pl.dead){}
+  else if(pl.onGround){ if(Math.abs(chan-CAM.moc)>CAM.VC_DAT) CAM.moc=chan; }
+  else if(chan-CAM.moc>CAM.VC_ROI) CAM.moc=chan-CAM.VC_ROI;
+  CAM.xuong=approach(CAM.xuong,(!pl.onGround && pl.vy>CAM.VY_NHANH)?CAM.NHIN_XUONG:0,1.5);
+  const ty=camDocDich(); S.camy+=(ty-S.camy)*CAM.BAM_DOC; if(Math.abs(ty-S.camy)<0.05) S.camy=ty;
+  S.rc=camKhuCua(pl.x+pl.w/2).rc;   // cố định trong khu → nền cuộn liên tục
+}
 function bossActive(){ return boss.st!=='sleep' && !boss.dead; }
 function respawn(){
   const c=S.cp; rec=null; echo=null;
@@ -1332,11 +1396,14 @@ function step(){
   // đổi phòng + camera: khóa trong phòng, cuộn mượt; trục giữa phòng (cho parallax) trôi theo cùng nhịp
   S.room=roomAt(pl.x+pl.w/2); P0.doiPhong();
   const r=ROOMS[S.room];
+  if(!CAM.phong) camBuoc();   // 28/10: camera kiểu Dead Cells (đi theo Lam liên tục, kẹp mép thế giới) – ?cam=phong: khoá theo phòng như cũ ↓
+  else {
   S.look=approach(S.look,pl.face*48,2.4);
   const tx=clamp(pl.x+pl.w/2-W/2+S.look,r.x0*T,(r.x0+r.w)*T-W);
   S.camx+=(tx-S.camx)*0.1; if(Math.abs(tx-S.camx)<0.02) S.camx=tx;
   S.camy=approach(S.camy,touchMode?28:0,1);   // cảm ứng: đặt nhân vật lệch lên để nút không che
   const rcT=r.x0*T+r.w*T/2-W/2; S.rc+=(rcT-S.rc)*0.1; if(Math.abs(rcT-S.rc)<0.02) S.rc=rcT;
+  }
   setHint(hintNow());
   if(LH.rung>0) LH.rung--; if(LH.chPulse>0) LH.chPulse--; npcBuoc(); thBuoc();   // 27/10: làng hoàn thiện (chỉ hình / hộp thoại)
   for(const p of PARTS){ if(!p.on) continue; p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; if(--p.t<=0) p.on=false; }
@@ -4327,9 +4394,18 @@ const DEN_ABC = PHONG_SO.flatMap(([r, so]) => so.den);
 // nền giữa 3 phòng: mỗi mảnh mang trục giữa phòng của nó (rc) + trọng số theo phần màn phòng đó chiếm (đổi phòng → hoà dần, không nhảy)
 const NEN_ABC = {sanY: FLOOR, catDuoi: 22, giua: []};
 for (const [r, so] of PHONG_SO) for (const p of so.nen.giua) NEN_ABC.giua.push(Object.assign({}, p, {phong: r, rc: r.x0 * T + r.w * T / 2 - W / 2, w: 0}));
+// 28/10 camera kiểu Dead Cells (chèn bởi tao-p0c.py vào BẢN CHÉP khoi-phong-b.js): camera đi liên tục A → F nên nền giữa không còn
+// "mỗi phòng một bộ, hoà theo phần màn" (camera dừng giữa 2 phòng → 2 bộ chồng nhau mờ 50 %). Thay bằng MỘT dải mảnh đặt thưa theo toạ độ
+// PARALLAX liên tục: u = x trên màn khi camera ở mép trái phòng A (gx = u − (camx − mép A) × 0,4). Khoảng hở giữa 2 mảnh ≥ 100 px (trừ cặp
+// tháp + cây của F giữ nguyên như thiết kế F). Mỗi mảnh giữ kiểu / nén sáng / độ mờ của phòng gốc; vị trí chọn để khi camera ở GIỮA phòng
+// mảnh nằm gần chỗ cũ: A tháp cửa sổ vàng như cũ; B tháp LẬT NGANG (khỏi trùng hình tháp A ngay bên trái) sau ván (màn 467–667); C cây trái; D chỉ cây ở 2 mép (giữa D tối như phản hồi 8);
+// E không còn mảnh riêng (thấy cây D bên trái, tháp F bên phải); F (cuối thế giới) đúng y như cũ. Bản ?cam=phong: bộ cũ ở trên.
+const NEN_LIEN = [[PA_SO, 0, -150], [PA_SO, 1, 470], [PB_SO, 1, 800, true], [PC_SO, 0, 1110], [PD_SO, 1, 1900], [PF_SO, 0, 2440], [PF_SO, 1, 2660]];
+if (!CAM.phong) NEN_ABC.giua = NEN_LIEN.map(([so, i, u, lat]) => Object.assign({}, so.nen.giua[i], {x: u, rc: PA.x0 * T, w: 1, lien: true}, lat ? {lat: true} : {}));
 // bước 3: phần màn chia cho min(1, rộng phòng / màn) → phòng F (16 ô) đứng yên thì nền F đủ 1; nền E mờ dần về 0 trong 256 px cuối
 // trước chỗ camera dừng ở F (camera ở F vẫn thấy 14 ô cuối E nhưng nền là của F)
 function nenTrongSo(ox) {
+  if (!CAM.phong) { for (const p of NEN_ABC.giua) p.w = 1; return; }   // camera Dead Cells: mảnh nền giữa luôn hiện đủ (đặt thưa, không chồng)
   const cF = (PF.x0 + PF.w) * T - W, kE = Math.max(0, Math.min(1, (cF - ox) / 256));
   for (const p of NEN_ABC.giua) { const r = p.phong, a = Math.max(0, Math.min(ox + W, (r.x0 + r.w) * T) - Math.max(ox, r.x0 * T)) / Math.min(W, r.w * T);
     p.w = Math.max(0, Math.min(1, (a - 0.25) / 0.5)) * (r === PE ? kE : 1); }
@@ -4460,12 +4536,12 @@ step = function () {
   const f0 = S.frame, c0 = S.camx;
   _pbStep();
   if (S.frame === f0) return;   // dừng / khựng: gốc không chạy phần camera
-  if (ROOMS[S.room] === PF) { const tx = camF(); S.camx = c0 + (tx - c0) * 0.1; if (Math.abs(tx - S.camx) < 0.02) S.camx = tx; }
+  if (CAM.phong && ROOMS[S.room] === PF) { const tx = camF(); S.camx = c0 + (tx - c0) * 0.1; if (Math.abs(tx - S.camx) < 0.02) S.camx = tx; }
   const gan = Math.abs(pl.x + pl.w / 2 - DE.x) <= PF_SO.de.gan && !pl.dead;
   DE.nong = Math.max(0, Math.min(1, DE.nong + (gan ? 0.045 : -0.02)));
 };
 const _pbPlace = placePlayer;
-placePlayer = function (x, y) { _pbPlace(x, y); if (ROOMS[S.room] === PF) S.camx = S.pcx = camF(); };
+placePlayer = function (x, y) { _pbPlace(x, y); if (CAM.phong && ROOMS[S.room] === PF) S.camx = S.pcx = camF(); };
 
 /* ---------- BƯỚC 3 (phản hồi 8 mục 3): GỢI Ý NGẮN THEO TÌNH HUỐNG thay dòng hướng dẫn dài đầu màn.
    Vào phòng: chỉ tên phòng 2,5 s. Tình huống (mỗi câu ≤ ~30 ký tự): hiện khi xảy ra, tắt khi hết (tối thiểu 1 s, tối đa 3,3 s);
@@ -4544,7 +4620,7 @@ window.TVPB = {
     de: DE.x, nong: +DE.nong.toFixed(2), camx: +S.camx.toFixed(1), goiy: hintEl.textContent,
     bo: BO.DS.map(b => ({x: +(b.x + b.w / 2).toFixed(1), st: b.st, t: b.t, hp: b.hp, mai: b.mai, face: b.face, nam: !!b.nam, vo: !!b.maiVo, chet: b.st === 'chet' || b.gone}))}; },
   /* bước 3: đặt camera thẳng (quay cuộn chậm A → F, không cần Lam đi): trục nền (rc) theo phòng ở giữa màn, như game */
-  datCam(x) { S.camx = S.pcx = x; const r = ROOMS[roomAt(x + W / 2)], rc = r.x0 * T + r.w * T / 2 - W / 2; S.rc = S.prc = rc; render(1); return {room: r.name}; },
+  datCam(x) { S.camx = S.pcx = x; const r = ROOMS[roomAt(x + W / 2)], rc = CAM.phong ? r.x0 * T + r.w * T / 2 - W / 2 : camKhuCua(x + W / 2).rc; S.rc = S.prc = rc; render(1); return {room: r.name}; },
   camF, gioi: () => ({a0: PA.x0 * T, f1: (PF.x0 + PF.w) * T, cF: camF(), W, H, phong: PHONG_SO.map(([r]) => [r.name, r.x0 * T, (r.x0 + r.w) * T]), CW: 256, CH: 128}),
   /* bước 3: SOI RANH mảng đất nướng 256×128 khi camera ở (cx, cy) với tỉ lệ K: vẽ CHỈ lớp đất (DHM.veDat, đúng hàm game) 2 lần trên nền đen
      và nền trắng → điểm nào khác nhau = chưa phủ kín (alpha < 1). Đếm các điểm như vậy NẰM TRONG ô đặc có 8 ô kề cũng đặc (phải kín 100 %).
@@ -4639,7 +4715,7 @@ window.TVPB = {
    LOG NỀN P0-C luôn thu (không cần ?debug): tinh anh (đòn, Thế, choáng, ổn định, trúng Lam), Ấn (rơi / nhặt), đe (tương tác, mở cấp),
      Dư Âm (tung, vết). ⚙ → "Xuất log P0-C". ?debug=p0c: bảng log trên màn + chữ trạng thái tinh anh. Cờ cũ (?hitbox=1, ?debug=input …) giữ. */
 
-const P0C_PHIEN = 'p0c-2810-91df6356';   // tao-p0c.py điền: ngày + mã băm nguồn
+const P0C_PHIEN = 'p0c-2810-2c7f3936';   // tao-p0c.py điền: ngày + mã băm nguồn
 const P0C_SO = {
   log: P0_Q.get('debug') === 'p0c',
   choang120: P0_Q.get('choang') === '120',      // BIẾN THỂ (PH10, TẮT mặc định): choáng lần vỡ đầu 120 tick thay 150 – chỉ so khi trận thành "đứng chém quái bất động"
