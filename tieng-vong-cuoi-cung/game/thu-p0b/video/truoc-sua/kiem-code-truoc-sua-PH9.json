@@ -1,0 +1,91 @@
+{
+ "vao_phong": {
+  "nR_sau_3": 2,
+  "phat_khi_3": null,
+  "nR_sau_30": 30,
+  "phat_khi_30": 30,
+  "nR_toi_da": 90
+ },
+ "hitstop": {
+  "buoc": 40,
+  "tick_mo_phong": 33,
+  "nR_tang": 33
+ },
+ "doi_phong": {
+  "co_bong_truoc": true,
+  "co_bong_sau": false,
+  "nR_sau": 0
+ },
+ "thong_so_B": {
+  "bm": 0.25,
+  "bt": 0.5,
+  "ch": 1,
+  "ct": 0.5,
+  "cap": 1,
+  "duAm": false,
+  "cg": 40,
+  "bo": 40,
+  "boThe": 40,
+  "echoA": 180,
+  "dem": 90
+ },
+ "loi_B": [],
+ "thong_so_A": {
+  "bm": 0.25,
+  "bt": 0.5,
+  "ch": 1,
+  "ct": 0.5,
+  "cap": 1,
+  "duAm": false,
+  "cg": 40,
+  "bo": 40,
+  "boThe": 40,
+  "echoA": 180,
+  "dem": 90
+ },
+ "A_ghi_3_tick": {
+  "echo": false,
+  "tk": 1
+ },
+ "A_tu_dung": {
+  "rec": -1,
+  "echoN": 180,
+  "tuDung": 1
+ },
+ "loi_A": [],
+ "nac": {
+  "chuoi": [
+   {
+    "nac": 1,
+    "echo": 1
+   },
+   {
+    "nac": 0,
+    "echo": 2
+   },
+   {
+    "nac": 0,
+    "echo": 2
+   },
+   {
+    "nac": 0,
+    "echo": 2
+   },
+   {
+    "nac": 1
+   }
+  ],
+  "tk": 2
+ },
+ "mac_dinh": {
+  "cau": "",
+  "log": false,
+  "p0log": false,
+  "hitbox": false,
+  "nut": [
+   "A – Ghi chủ động",
+   "B – Vọng Chiến",
+   "Bắt đầu (ẩn)"
+  ]
+ }
+}

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Tạo game/thu-p0b/index.html (trang thử P0-B: Vọng A ghi chủ động / B Vọng Chiến) từ game/thu-p0a/am-dao.html (Âm Đao, KHÔNG sửa file đó)
 + khối Bọ Vỏ Mộc game/thu-bo-vo-moc/cong-cu/khoi-bo.js (CHỈ ĐỌC, chỉnh trên bản chép: phòng thử RD → phòng D mới, bỏ phần bot/quay của trang Bọ)
-+ khối cong-cu/khoi-p0b.js (Vọng hai cấu hình + log). Mỗi chỗ thay phải khớp đúng số lần – lệch thì dừng.
++ khối cong-cu/khoi-p0b.js (Vọng A / B / B2 + log nền). Mỗi chỗ thay phải khớp đúng số lần – lệch thì dừng.
+PH9: sửa replay mẫu cuối + bóng nghỉ (chung A/B) bằng các chỗ thay updateEcho bên dưới; bỏ bản vá lỗi `sx` của Bọ (đã sửa tại nguồn).
+Khi am-dao.html đổi (vd. Âm Đao PH8 sửa hitbox) → chạy lại script này để A/B dùng chung bản mới.
 Chạy (sau khi trang Âm Đao đã sinh): python3 game/thu-p0b/cong-cu/tao-p0b.py"""
 import os, sys
 
@@ -10,6 +12,11 @@ THU = os.path.normpath(os.path.join(HERE, '..'))
 GAME = os.path.normpath(os.path.join(THU, '..'))
 src = open(os.path.join(GAME, 'thu-p0a', 'am-dao.html'), encoding='utf-8').read()
 KHOI = open(os.path.join(HERE, 'khoi-p0b.js'), encoding='utf-8').read()
+import hashlib, datetime
+def _bam(*ps): h = hashlib.sha1(); [h.update(open(x, 'rb').read()) for x in ps]; return h.hexdigest()[:8]
+PHIEN = 'p0b-' + datetime.date.today().strftime('%d%m') + '-' + _bam(os.path.join(GAME, 'thu-p0a', 'am-dao.html'), os.path.join(HERE, 'khoi-p0b.js'),
+                                                                 os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), os.path.abspath(__file__))
+KHOI = KHOI.replace("'__PHIEN__'", "'" + PHIEN + "'")
 BO = open(os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), encoding='utf-8').read()
 
 loi = []
@@ -36,11 +43,10 @@ BO = doi(BO, [
     ('datLai: không đặt Lam / chuông (P0-B vào từ phòng A)',
      "    S.cp = BELLS[2]; BELLS[0].on = false; BELLS[2].on = true;\n    placePlayer((RD.x0 + 3) * T + 6, FLOOR - pl.h); pl.drawT = 0; pl.face = 1;\n", "", 1),
     ('vị trí Bọ theo phòng D', '(RD.x0 + ', '(PD.x0 + ', 3),
-    ('SỬA LỖI bản chép (gốc khoi-bo.js dòng ~511): chú thích nuốt mất khai báo a/sx/sy → ReferenceError khi Bọ choáng + ?hitbox=1/?debug',
-     "{   // PH7: chỉ ở ?debug / ?hitbox=1 const a = S.frame * 0.1 + i * 2.094, sx = Math.cos(a) * 26, sy = Math.sin(a) * 5;",
-     "{   const a = S.frame * 0.1 + i * 2.094, sx = Math.cos(a) * 26, sy = Math.sin(a) * 5;   // PH7: chỉ ở ?debug / ?hitbox=1", 1),
     ('gợi ý phòng D', 'ROOMS[S.room] === RD', 'ROOMS[S.room] === PD', 1),
 ], 'khoi-bo.js')
+# PH9 mục 2H: lỗi `sx is not defined` (chú thích nuốt khai báo trong veThanh) ĐÃ SỬA TẠI NGUỒN khoi-bo.js (commit 0836a73) → bỏ bản vá trên bản chép.
+if 'PH7: chỉ ở ?debug / ?hitbox=1 const a' in BO: loi.append('khoi-bo.js: lỗi chú thích nuốt khai báo sx còn ở nguồn – sửa tại nguồn, không vá bản chép')
 if 'RD' in BO.replace('RDS', ''):
     import re
     con = [m.start() for m in re.finditer(r'\bRD\b', BO)]
@@ -80,6 +86,22 @@ thay('cập nhật Bọ', "  for(const q of Q) updateQuai(q);\n", "  for(const q
 thay('vẽ Bọ (xác trước, sống + dấu báo sau)', "  for(const q of Q) drawQuai(q,al);\n", "  BO.veXac(al);\n  for(const q of Q) drawQuai(q,al);\n  BO.ve(al);\n")
 thay('hitbox Bọ', "  for(const w of WAVES) if(w.on) hbRect(", "  BO.veHitbox(al);\n  for(const w of WAVES) if(w.on) hbRect(")
 thay('chém nảy trên Bọ', "  if(boss.hittable && !boss.dead && overlap(PR,boss)) return true;", "  if(boss.hittable && !boss.dead && overlap(PR,boss)) return true;\n  if(BO.pogo(PR)) return true;")
+# ---------- PH9 mục 1.3 + 1.4: SỬA REPLAY MẪU CUỐI (cả A và B dùng chung updateEcho) ----------
+# Cũ: lấy mẫu cuối và đặt echo.done CÙNG bước → `if(echo && !echo.done && echo.cur.hb)` bỏ qua hộp mẫu cuối (mất một hành động).
+# Mới: bước lấy mẫu cuối xử lý ĐỦ hình + hộp + hit của tick đó (thuThapBong → giaiQuyet); bước SAU mới kết thúc phát → tư thế NGHỈ (VB.nghi:
+# hướng cuối, không hộp, mờ) hoặc tan (?tan=1). Không phát lặp tick nào: mỗi mẫu đúng một bước có hộp.
+thay('PH9: updateEcho xử lý đủ mẫu cuối rồi mới kết thúc',
+     "  if(echo.i<echo.n){ echo.cur=REC[echo.i++]; if(echo.i>=echo.n) echo.done=true;\n",
+     "  if(echo.i<echo.n){ echo.cur=REC[echo.i++];   // P0-B (PH9): mẫu cuối CHƯA kết thúc ở bước này – hộp + hit của nó xử lý như mọi mẫu\n")
+thay('PH9: kết thúc phát ở bước sau mẫu cuối → tư thế nghỉ',
+     "  echo.warn=false;\n  if(!echo.done){\n",
+     "  else if(!echo.done){ echo.done=true; VB.nghi(); }   // P0-B (PH9): hết đoạn → nghỉ theo hướng cuối, không hộp (hoặc tan ?tan=1)\n  echo.warn=false;\n  if(!echo.done){\n")
+thay('PH9: bóng nghỉ mờ hơn, không nhịp sáng (hạ độ nổi); ?tan=1 mờ dần',
+     "      const pz=0.5+0.5*Math.sin(S.frame*0.09);\n      ctx.globalAlpha=0.16+0.16*pz; ctx.fillStyle='#CEF0D6'; ctx.beginPath(); ctx.ellipse(ex+10-ox,ey+30-oy,26,5,0,0,7); ctx.fill();\n      ctx.globalAlpha=0.36+0.14*pz; drawLam(LAM.E,c,ex,ey);\n",
+     "      const kn=VB.doNoi();   // P0-B (PH9): bóng nghỉ – không nhịp sáng, mờ hơn (trước: 0,36–0,50 nhấp nháy); ?tan=1 → mờ dần rồi mất\n      ctx.globalAlpha=0.08*kn; ctx.fillStyle='#CEF0D6'; ctx.beginPath(); ctx.ellipse(ex+10-ox,ey+30-oy,22,4,0,0,7); ctx.fill();\n      ctx.globalAlpha=0.24*kn; drawLam(LAM.E,c,ex,ey);\n")
+thay('PH9: thanh Vọng không nhấp nháy khi bóng đã nghỉ (2 HUD)',
+     "  else if(echo && echo.done){ col=(S.frame>>4)%2?'#CEF0D6':'#83CC93'; }",
+     "  else if(echo && echo.done){ col='#5f7f6a'; }   // P0-B (PH9): bóng nghỉ – không nhấp nháy như còn nhiệm vụ", 2)
 thay('khối Bọ + P0-B, rồi khởi động', "\nboot();\n</script>", "\n" + BO + "\n" + KHOI + "\nboot();\n</script>")
 
 out = doi(src, R, 'am-dao.html')

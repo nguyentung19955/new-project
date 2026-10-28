@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Quay + đo trang thử P0-B (game/thu-p0b/index.html) → game/thu-p0b/video/
+"""Quay + đo trang thử P0-B (game/thu-p0b/index.html) → game/thu-p0b/video/   (sau sửa PH9: replay xử lý đủ mẫu cuối, bóng nghỉ)
   luot1 : CÙNG một kịch bản bot cho A (ghi chủ động) và B (Vọng Chiến), CẢ HAI MIỄN PHÍ, phòng B (2 Chuông Gỗ) → C (quái gác) → D (2 Bọ Vỏ Mộc).
           4 trang chạy song song từng bước: A sạch | B sạch (video sạch) và A debug | B debug (?hitbox=1&debug=vong, video debug).
-  luot2 : cờ riêng ?nac=1 – B tốn nấc (2 nấc, hồi 1 / 150 tick), A vẫn miễn phí. Chỉ số đo (không video).
+          + trang B2 (?vong=b2, biến thể tắt mặc định) chạy cùng bot, chỉ đo số (không video).
+  luot2 : lượt TÀI NGUYÊN – so B miễn phí / B 2 nấc (?nac=1) / B 1 nấc (?nac=1&suc=1); A chỉ là tham chiếu. Chỉ số đo (không video).
+  tinh-huong : 4 tình huống NGẮN, trạng thái đầu giống nhau (hình nộm phòng A, Lam đứng 100 tick, mọi thứ đặt lại), cho A / B / B2:
+          ap-sat (vừa áp sát, chém 1 nhát rồi gọi) · tai-cho (đánh tại chỗ 5 nhát rồi gọi) · ne-lui (chém 2 nhát, lướt lùi rồi gọi) · chua-don (gọi khi chưa có đòn).
 60 hình/s, mỗi hình = 1 bước logic, H.264 -preset veryfast. Không phải bộ kiểm thử tự động: chỉ quay + ghi số / log ra file.
-Chạy: python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2]   (cần playwright, Chromium, ffmpeg, Pillow)"""
+Chạy: python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong]   (cần playwright, Chromium, ffmpeg, Pillow)"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw, ImageFont
@@ -110,7 +113,7 @@ def bot(cau):
                     phim += 'a'
         if goi:
             so['nhom'] = 0; so['goi'] += 1
-            if cau == 'b' or st['rec'] >= 0: phim += 'v'
+            if cau != 'a' or st['rec'] >= 0: phim += 'v'
         return phim
     return f, s
 
@@ -120,7 +123,7 @@ JS_ST = 'TVVB.trangThai()'
 
 def nhan_hien(c):
     _, cau, q, _ = c
-    return ('A · Ghi chủ động' if cau == 'a' else 'B · Vọng Chiến') + (' · tốn nấc' if 'nac=1' in q and cau == 'b' else ' · miễn phí') + (' · debug' if 'debug' in q else '')
+    return {'a': 'A · Ghi chủ động', 'b': 'B · Vọng Chiến', 'b2': 'B2 · từ đòn gần nhất'}[cau] + (' · tốn nấc' if 'nac=1' in q and cau != 'a' else ' · miễn phí') + (' · debug' if 'debug' in q else '') + ' · sau sửa PH9'
 
 
 async def chay(b, cong, ten, cau_hinh, video=True, toi_da=6000):
@@ -168,25 +171,94 @@ async def chay(b, cong, ten, cau_hinh, video=True, toi_da=6000):
         fn = os.path.join(OUT, '%s-log-%s.txt' % (ten, nh.replace(' ', '-').replace('·', '').replace('--', '-').lower()))
         open(fn, 'w', encoding='utf-8').write('\n'.join(['== Vọng (?debug=vong)'] + log + ['', '== P0 (trúng / Cộng hưởng)'] + logp) + '\n')
         await t.pg.close()
-    print(ten, n, 'bước', {k: (v['tick_xong'], v['tk']['phat'], v['tk']['hut'], v['tk']['chBong'], v['loi_trang']) for k, v in kq.items()})
+    print(ten, n, 'bước', {k: (v['tick_xong'], v['tk']['phat'], v['tk']['khongGayHit'], v['tk']['chBong'], v['loi_trang']) for k, v in kq.items()})
+    return kq
+
+
+TH = {   # mỗi tình huống: (khoảng cách Lam → hình nộm lúc đầu, hàm phím theo bước t → (phím, gọi?)) – chung cho A / B / B2
+    'ap-sat': -200, 'tai-cho': -60, 'ne-lui': -60, 'chua-don': -60}
+
+
+def th_phim(ten, t, st, qx):
+    """Trả (phím, gọi) cho bước t của tình huống (sau 100 tick đứng). Không phụ thuộc cấu hình – A chỉ thêm 'v' lúc bắt đầu."""
+    d = qx - st['lx']
+    if ten == 'ap-sat':   # đi tới khi trong 55 px, chém 1 nhát, 14 tick sau gọi
+        if 'mo' not in st['_']:
+            if d > 55: return 'r', False
+            st['_']['mo'] = t; return 'a', False
+        return '', t == st['_']['mo'] + 14
+    if ten == 'tai-cho':  # 5 nhát mỗi 14 tick, 14 tick sau nhát cuối gọi
+        if t < 70: return ('a' if t % 14 == 0 else ''), False
+        return '', t == 70
+    if ten == 'ne-lui':   # 2 nhát, lướt lùi + chạy lùi 20 tick rồi gọi
+        if t < 28: return ('a' if t % 14 == 0 else ''), False
+        if t == 28: return 'ls', False
+        if t < 50: return 'l', False
+        return '', t == 50
+    if ten == 'chua-don':  # đi lùi / tới, đứng – không chém, rồi gọi
+        if t < 10: return 'l', False
+        if t < 20: return 'r', False
+        return '', t == 30
+
+
+async def tinh_huong(b, cong):
+    """Tình huống ngắn, trạng thái đầu giống nhau: trang mới, hình nộm đặt lại, Lam cách nộm (khoảng cách của tình huống), mặt phải,
+    đứng 100 tick (B: vòng đệm đầy 90 tick đứng yên), không bóng. Sau khi gọi: Lam chém tại chỗ mỗi 14 tick nếu còn trong 62 px (có thể Cộng hưởng), 180 tick."""
+    kq = {}
+    for ten, kc in TH.items():
+        for cau in ['a', 'b', 'b2']:
+            t = await Trang(b, cong, '&vong=' + cau).mo()
+            qx = await t.js('TVP0.datLaiQuai(6); Q[6].x + Q[6].w / 2')
+            await t.pg.evaluate('p => { echo = null; rec = null; TVP0.datLam(p, 1); TVVB.VB.vanMoi(); }', qx + kc - 10)
+            for _ in range(100): await t.buoc('')
+            st = await t.js(JS_ST); st['_'] = {}; goi_t = None
+            for k in range(200):
+                if goi_t is None:
+                    s2 = await t.js(JS_ST); s2['_'] = st['_']
+                    ph, goi = th_phim(ten, k, s2, qx)
+                    if cau == 'a' and k == 0: ph += 'v'   # A: bấm GHI cùng lúc bắt đầu hành động của tình huống
+                    if goi: ph += 'v'; goi_t = k
+                else:
+                    s2 = await t.js(JS_ST); j = k - goi_t
+                    ph = 'a' if abs(qx - s2['lx']) <= 62 and j % 14 == 7 else ''
+                    if j > 180: break
+                await t.buoc(ph)
+            tk = await t.js('TVVB.tk()'); phat = await t.js('TVVB.phat()')
+            p = phat[-1] if phat else None
+            kq.setdefault(ten, {})[cau] = {
+                'goi_o_buoc': goi_t, 'phat': bool(p), 'bam_khong_phat': tk['bamKhongPhat'], 'b2_chua_co_don': tk['b2KhongDon'],
+                'doan': p and p['n'], 'b2_bo': p and p.get('b2') and p['b2']['bo'], 'so_nhat': p and p['soNhat'], 'hop0': p and p['hop0'], 'dung_yen_dau': p and p['yen'],
+                'bam_den_hop_tick': p and (p['fHop'] - p['fBam'] if p['tHop'] >= 0 else None), 'bam_den_hop_buoc': p and (p['tHop'] - p['tBam'] if p['tHop'] >= 0 else None),
+                'bam_den_trung_tick': p and (p['fTrung'] - p['fBam'] if p['tTrung'] >= 0 else None),
+                'bat_dau_ghi_den_hop_buoc': p and (p['tHop'] - p['tGhi'] if p['tHop'] >= 0 and p['tGhi'] >= 0 else None),
+                'trung': p and p['trung'], 'mau': p and p['mau'], 'the': p and p['the'], 'cong_huong': p and p['ch'], 'khong_hit': p and p['khongHit'],
+                'mau_cuoi_co_hop': p and p['hopCuoi'], 'trung_mau_cuoi': p and p['trungCuoi'], 'loi_trang': t.loi}
+            print(ten, cau, kq[ten][cau])
+            await t.pg.close()
     return kq
 
 
 async def main():
-    can = sys.argv[1:] or ['luot1', 'luot2']
+    can = sys.argv[1:] or ['luot1', 'luot2', 'tinh-huong']
     os.chdir(GOC)
     srv = socketserver.ThreadingTCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     kq_p = os.path.join(OUT, 'ket-qua.json'); kq = json.load(open(kq_p, encoding='utf-8')) if os.path.exists(kq_p) else {}
+    kq['nhan'] = 'SAU SỬA PH9 (replay xử lý đủ mẫu cuối, bóng nghỉ không hộp). Số TRƯỚC SỬA: video/truoc-sua/ket-qua-truoc-sua-PH9.json'
     async with async_playwright() as p:
         b = await p.chromium.launch()
         if 'luot1' in can:
             kq['luot1'] = await chay(b, cong, 'luot1', [
                 ('A sach', 'a', '&vong=a', '1-sach-A-vs-B.mp4'), ('B sach', 'b', '&vong=b', '1-sach-A-vs-B.mp4'),
-                ('A debug', 'a', '&vong=a&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4'), ('B debug', 'b', '&vong=b&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4')])
+                ('A debug', 'a', '&vong=a&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4'), ('B debug', 'b', '&vong=b&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4'),
+                ('B2 sach', 'b2', '&vong=b2', None)])
             json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         if 'luot2' in can:
-            kq['luot2'] = await chay(b, cong, 'luot2', [('A mien phi', 'a', '&vong=a&nac=1', None), ('B nac', 'b', '&vong=b&nac=1', None)], video=False)
+            kq['luot2'] = await chay(b, cong, 'luot2', [('A tham chieu', 'a', '&vong=a&nac=1', None), ('B mien phi', 'b', '&vong=b', None),
+                                                         ('B nac 2', 'b', '&vong=b&nac=1', None), ('B nac 1', 'b', '&vong=b&nac=1&suc=1', None)], video=False)
+            json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        if 'tinh-huong' in can:
+            kq['tinh_huong'] = await tinh_huong(b, cong)
             json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         await b.close()
     srv.shutdown()
