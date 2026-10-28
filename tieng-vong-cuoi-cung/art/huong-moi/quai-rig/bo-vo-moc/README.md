@@ -39,6 +39,13 @@ Trang thử + ghi chú cho chủ dự án: **`game/thu-bo-vo-moc/GHI-CHU.md`**.
   bụng xẹp, tối dần → nằm im. Game làm phần **tan vụn** (bước 150 → 210 như cũ): khoét theo mặt nạ ô 3 px + vụn vỏ cây + bụi bào tử xám ấm (không teal).
 - `kiem/tu-the-ban-4.png`: các tư thế chính của quay / vỡ / choáng / dậy / chết vẽ bằng Python (cùng ma trận runtime).
 
+**Bản 5 – phản hồi 7 mục 3 (28/10; chỉ hình, không đổi luật / số bước)** – `dung_rig.py`:
+- **Không xuyên sàn**: sau khi tính mỗi khung, `kep_dat` nâng `dau` và 3 mảng `mai_m1..3` (theo trục y của nút cha) tới khi điểm thấp nhất của đường bao mảnh
+  ≤ `DAT_CHAM` = 1 px logic dưới mặt đất (bằng mức chân chạm đất). Đo trước / sau (px logic dưới mặt đất): đầu lúc sụp choáng 7,6 → 1,0; đầu lúc chết 12,2 → 1,0;
+  mảng mai rơi lúc chết 10,0 / 5,1 / 3,0 → 1,0. Kẹp liên tục nên chuyển động vẫn liền.
+- **`sup_choang` bất động**: bỏ chân run (2,2°, 11 Hz) và mảng mai lắc; thân chỉ phập phồng 1 px nguồn; còn bụng lộ thở chậm. Game vẽ thêm **một vết nứt tĩnh**
+  trên mai thay 3 chấm quay (chấm chỉ còn ở `?debug` / `?hitbox=1`).
+
 **Cỡ**: dáng nghỉ cao **74 px logic**, dài 128 px (Lam 112). `ty_le` = 0,159 px logic / px mảnh nguồn.
 **Cây nút** (quay trái): `goc` (neo trên mặt đất, giữa thân) → `than` (giữa mai, nửa chiều cao) → `bung`, `mai` (→ `nut1`, `nut2`), `dau`,
 `chan_truoc`, `chan_sau`, `bung_lo`, `mai_m1..3` + `chan_truoc_xa`, `chan_sau_xa` (cùng ảnh, tối 45 %, lệch pha bước). Điểm neo: mai = giữa mép dưới, mảng mai vỡ = trọng tâm mảng, bụng = khớp trước,

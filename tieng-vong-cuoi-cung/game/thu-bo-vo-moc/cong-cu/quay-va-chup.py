@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Quay video 60 hình/s (mỗi hình = đúng 1 bước logic) + chụp ảnh trang thử Bọ Vỏ Mộc → game/kiem-thu-bo-vo-moc/
 Video H.264 (-preset veryfast). Ảnh 960×540 cỡ thật (không phóng).
-Cần playwright + Chromium + ffmpeg.   Chạy: python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py [video] [anh] | [video2] [so] | [pha]
+Cần playwright + Chromium + ffmpeg.   Chạy: python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py [video] [anh] | [video2] [so] | [pha] | [xac]
    pha (bản 4): ảnh TỪNG PHA quay đầu / choáng (vỡ mai → sụp → dậy) / chết (sụp → tan vụn), cắt quanh Bọ, cỡ thật, ghi số bước."""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
 from playwright.async_api import async_playwright
@@ -53,8 +53,8 @@ async def quay(p, cong, q, ten, bot=None, toi_da=1500, sau=90):
 async def chup_so(p, cong):
     # 2c) PH3/PH4: chém MAI (tia sắc trên mai, Lam dội nhẹ) và chém BỤNG (thân co + chớp ấm ngắn) – cùng một con, đứng yên, CÙNG KHUNG mọi bản
     b, pg, loi = await mo(p, cong, '&mot=1&mau=0')
-    for f, ten, mai in ((-1, 'keng-tia-tren-mai', 4), (1, 'trung-bung-co-than', 4)):
-        await pg.evaluate('''() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, %d, 'di'); b.cd = 999; b.hp = 4; b.mai = %d; b.nam = false;
+    for f, ten, mai in ((-1, 'keng-tia-tren-mai', 40), (1, 'trung-bung-co-than', 40)):
+        await pg.evaluate('''() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, %d, 'di'); b.cd = 999; b.hp = 40; b.mai = %d; b.nam = false;
           TVTHU.datLam(b.sx - 92, 1); TVTHU.khung(3); TVTHU.bo.trung({x: b.x, y: b.y + 24, w: 30, h: 20}, 'p', 7000 + %d, 1, 1); TVTHU.khung(%d); }''' % (f, mai, f, 5 if f < 0 else 6))
         await pg.screenshot(path=os.path.join(OUT, ten + '.png'))
         await pg.evaluate('TVTHU.khung(80)')
@@ -79,18 +79,54 @@ async def chup_pha(p, cong):
         tam.save(os.path.join(OUT, ten)); print('ghi', ten)
     # QUAY ĐẦU: 24 bước, lật gương ở bước 12 (khung t11 → t12)
     await mot_day("TVTHU.datBo(0, TVTHU.bo.DS[0].sx, -1, 'quay')", [1, 5, 9, 11, 12, 13, 16, 20, 24], 'pha-quay-dau.png', 'quay dau: ham -> lat guong tuc thi (t12) -> buoc tai cho')
-    # CHOÁNG: chém mai còn 1 nấc → vỡ ('lat' 30) → choáng ('choang' 120) → dậy ('day' 30) → đi tiếp, mai vẫn vỡ
-    vo = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.mai = 1; "
+    # CHOÁNG: chém mai còn 1 nấc (Thế 10) → vỡ ('lat' 30) → choáng ('choang' 120) → dậy ('day' 30) → đi tiếp, mai vẫn vỡ
+    vo = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.mai = 10; "
           "TVTHU.bo.trung({x: b.x, y: b.y + 24, w: 30, h: 20}, 'p', 9100, 1, 1); })()")
     await mot_day(vo, [1, 4, 8, 14, 30, 90, 158, 166, 175, 182, 200], 'pha-vo-mai-choang-day.png', 'vo mai -> sup choang -> day (mai van vo)')
     # CHẾT khi đang đứng (mai còn): trúng bụng lúc còn 1 máu
-    ch = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.hp = 1; "
+    ch = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.hp = 10; "
           "TVTHU.bo.trung({x: b.x + b.w - 30, y: b.y + 24, w: 30, h: 20}, 'p', 9200, -1, 1); })()")
     await mot_day(ch, [1, 6, 12, 18, 24, 30, 44, 60, 150, 165, 180, 195, 205], 'pha-chet-sup-tan-vun.png', 'chet: khung, khuyu, do sup, mai tach, tan vun')
     # CHẾT khi mai đã vỡ (đứng dậy rồi bị giết)
-    ch2 = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.hp = 1; b.mai = 0; b.maiVo = true; "
+    ch2 = ("(() => { const b = TVTHU.bo.DS[0]; TVTHU.datBo(0, b.sx, -1, 'di'); TVTHU.khung(1); b.cd = 999; b.hp = 10; b.mai = 0; b.maiVo = true; "
            "TVTHU.bo.trung({x: b.x + b.w - 30, y: b.y + 24, w: 30, h: 20}, 'p', 9300, -1, 1); })()")
     await mot_day(ch2, [1, 12, 24, 36, 60, 160, 185], 'pha-chet-mai-da-vo.png', 'chet khi mai da vo tu truoc')
+
+
+async def chup_xac(p, cong):
+    """bản 5 (PH7 mục 3): XÁC không gây hại, không chặn nhặt đồ, không che dấu báo của con khác. Ảnh + số đo vào so-lieu.json → 'xac'."""
+    kq = {}
+    dat = ("(() => { const [a, c] = TVTHU.bo.DS; TVTHU.datLam(a.sx - 330, 1); "
+           "TVTHU.datBo(1, a.sx + 26, -1, 'di'); c.cd = 9999; c.hp = 10; TVTHU.khung(1); "
+           "TVTHU.bo.trung({x: c.x + c.w - 30, y: c.y + 24, w: 30, h: 20}, 'p', 9400, -1, 1); "
+           "TVTHU.datBo(0, a.sx, -1, 'di'); a.cd = 9999; a.hp = 40; a.mai = 40; TVTHU.khung(60); TVTHU.datBo(0, a.sx, -1, 'bao'); TVTHU.khung(16); })()")
+    for q, ten in (('&mau=0', 'xac-khong-che-dau-bao.png'), ('&mau=0&hitbox=1', 'xac-hitbox.png')):
+        b, pg, loi = await mo(p, cong, q)
+        await pg.evaluate(dat)
+        st = await pg.evaluate('TVTHU.khung(0)')
+        cx = await pg.evaluate('TVTHU.bo.DS[0].x + TVTHU.bo.DS[0].w / 2 - ox'); gy = await pg.evaluate('TVTHU.bo.DS[0].y + TVTHU.bo.DS[0].h - oy')
+        im = Image.open(io.BytesIO(await pg.screenshot())).crop((int(cx) - 160, int(gy) - 170, int(cx) + 200, int(gy) + 20))
+        im.resize((im.width * 2, im.height * 2), Image.NEAREST).save(os.path.join(OUT, ten)); print('ghi', ten, st['bo'])
+        kq.setdefault('anh', []).append({'file': ten, 'bo': st['bo']}); await b.close()
+    # nhặt bình máu rơi từ xác + đứng / chém xuyên qua xác
+    b, pg, loi = await mo(p, cong, '&battu=1')
+    kq['do'] = await pg.evaluate("""() => { const [a, c] = TVTHU.bo.DS; TVTHU.datBo(0, a.sx - 200, 1, 'di'); a.cd = 9999; TVTHU.datLam(a.sx - 600, 1);
+      TVTHU.datBo(1, c.sx, -1, 'di'); c.cd = 9999; c.hp = 10; TVTHU.khung(1);
+      TVTHU.bo.trung({x: c.x + c.w - 30, y: c.y + 24, w: 30, h: 20}, 'p', 9500, -1, 1);
+      TVTHU.khung(60);
+      const pk = PICKS.filter(q => q.on).map(q => ({x: +q.x.toFixed(1), y: +q.y.toFixed(1)})), r = {binh_mau_roi: pk, xac: [c.st, c.t]};
+      pl.hp = 1; const hp0 = pl.hp; let thapNhat = pl.hp; const k = pk[0];
+      TVTHU.datLam(k.x + 5, 1);   // Lam đứng trên bình máu, chồng lên xác
+      for (let i = 0; i < 60; i++) { TVTHU.khung(1); thapNhat = Math.min(thapNhat, pl.hp); }
+      r.nhat = {mau_truoc: hp0, mau_sau: pl.hp, binh_con: PICKS.filter(q => q.on).length, xac_tai: [c.st, c.t], mau_thap_nhat_khi_dung_tren_xac: thapNhat};
+      // chém xuyên xác: hộp đòn phủ cả xác và con sống phía sau → chỉ con sống bị trúng
+      TVTHU.datBo(0, c.x + c.w / 2 + 40, -1, 'di'); a.cd = 9999; TVTHU.khung(1); const hpA = a.hp, maiA = a.mai;
+      const trung = TVTHU.bo.trung({x: c.x, y: c.y + 20, w: c.w + 120, h: 30}, 'p', 9501, -1, 1);
+      r.chem_xuyen_xac = {trung, con_song: [hpA, a.hp, maiA, a.mai], xac_hp: c.hp, xac_st: c.st};
+      r.pogo_tren_xac = TVTHU.bo.pogo({x: c.x + 10, y: c.y, w: 20, h: 20}) && a.x > c.x + c.w;
+      return r; }""")
+    print('xác:', kq['do']); await b.close()
+    return kq
 
 
 async def chup(p, cong):
@@ -143,6 +179,7 @@ async def main(lam):
             so['video'] = [next((m for m in moi if m['file'] == v['file']), v) for v in cu_] or moi
         if 'so' in lam: await chup_so(p, cong)
         if 'pha' in lam: await chup_pha(p, cong)   # PH4: chỉ 2 ảnh so mai / bụng
+        if 'xac' in lam: so['xac'] = await chup_xac(p, cong)   # bản 5 (PH7): xác không gây hại / không chặn nhặt đồ / không che dấu báo
         if 'video' in lam:
             so['video'] = [await quay(p, cong, '&mot=1', 'vong-ra-sau-danh-bung-60fps.mp4', 'vong'),
                            await quay(p, cong, '&mot=1&battu=1', 'danh-mai-vo-sup-choang-60fps.mp4', 'mai'),

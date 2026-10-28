@@ -237,12 +237,38 @@ def buoc_chan(P, t, T, A, L, nhanh=1.0):
         else: v = (u - 0.5) * 2; x = A - 2 * A * ease(v); nhac = L * math.sin(math.pi * v)
         cong(P, n, dx=x * 0.55, dy=-nhac, goc=-x / A * 6 * nhanh)
 
+#   BẢN 5 (phản hồi 7 mục 3): KHÔNG XUYÊN SÀN. Đầu (khi gục: sụp choáng, chết) và 3 mảng mai vỡ (khi trượt rơi lúc chết) từng thấp hơn
+#   mặt đất tới 7–12 px logic (đầu lún ~1–2 px dễ thấy trên lớp mép đất). Sau khi tính tư thế, nâng các nút này theo trục y của nút cha
+#   tới khi điểm thấp nhất (đường bao mảnh) ≤ DAT_CHAM px logic dưới mặt đất – bằng mức chân chạm đất (chân chống: 0–2 px).
+#   Kẹp liên tục theo tư thế → chuyển động vẫn liền, chỉ phần "chìm" bị chặn lại thành "tựa lên đất".
+DAT_CHAM = 1.0
+KEP_DAT = ['dau', 'mai_m1', 'mai_m2', 'mai_m3']
+def _ma_tran(P):
+    M = {}
+    for n in DS:
+        r = R[n]; p = P[n]; g = math.radians(r['goc_nghi'] + p[2]); c, s = math.cos(g), math.sin(g)
+        L = np.array([[c * p[3], -s * p[4], r['gan'][0] + p[0]], [s * p[3], c * p[4], r['gan'][1] + p[1]], [0, 0, 1]])
+        M[n] = L if r['cha'] is None else M[r['cha']] @ L
+    return M
+def thap_nhat(P, n, M=None):   # điểm thấp nhất của mảnh n (px logic, dương = dưới mặt đất)
+    M = M or _ma_tran(P); r = R[n]
+    return max((M[n] @ np.array([u - r['pivot'][0], v - r['pivot'][1], 1]))[1] for u, v in r['vien']) * TY
+def kep_dat(P):
+    for n in KEP_DAT:
+        if not P[n][7]: continue
+        for _ in range(4):
+            M = _ma_tran(P); du = thap_nhat(P, n, M) - DAT_CHAM
+            if du <= 0.01: break
+            ky = M[R[n]['cha']][1][1]   # dy cục bộ của cha → dy màn (thân có thể nghiêng / dẹt nhẹ)
+            P[n][1] -= du / TY / max(0.3, ky)
+    return P
+
 CLIPS = {}
 def clip(ten, ms, lap, fn, mo_ta, buoc=BUOC):
     n = int(round(ms / buoc)) if lap else int(round(ms / buoc)) + 1
     kh = []
     for i in range(n):
-        t = i * buoc / 1000.0; P = tu_the(); fn(P, t); nen(P)
+        t = i * buoc / 1000.0; P = tu_the(); fn(P, t); nen(P); kep_dat(P)
         kh.append([[round(v, 3) if j < 7 else int(v) for j, v in enumerate(P[nn])] for nn in DS])
     CLIPS[ten] = {'ten': mo_ta, 'ms': round(n * buoc if lap else (n - 1) * buoc, 3), 'buoc_ms': round(buoc, 4), 'lap': lap,
                   'giu_khung_cuoi': not lap, 'pha': None, 'khung_cham': [], 'cua_so_cham_ms': None, 'hop_don': None, 'su_kien': None, 'khung': kh}
@@ -367,14 +393,15 @@ def f_vo_mai(P, t):   # VỠ MAI (0,5 s, game 'lat' 30 bước): giật, mai v�
         p = ram(t, 0.03, 0.16); vot = 1 + 0.35 * math.sin(math.pi * ram(t, 0.03, 0.30))     # bật quá đà rồi lắng
         mai_vo(P, LECH_CHOANG, p * vot if t < 0.30 else 1 + 0.12 * lo_xo(t - 0.30, 6, 10))
     bung_lo(P, ram(t, 0.10, 0.30))
-def f_sup_choang(P, t):   # CHOÁNG (lặp 1,2 s): nằm sấp, chân run nhẹ, bụng mềm thở, mai vỡ hé
+def f_sup_choang(P, t):   # CHOÁNG (lặp 1,2 s): nằm sấp BẤT ĐỘNG, bụng mềm lộ thở chậm, mai vỡ hé
+    # BẢN 5 (phản hồi 7 mục 3, bản sạch): bỏ chân run (2,2° 11 Hz) và mảng mai lắc; thân chỉ phập phồng 1 px nguồn → đọc là "nằm im";
+    # chỉ còn bụng lộ thở (dấu hiệu còn sống). Game vẽ thêm MỘT vết nứt tĩnh trên mai (khoi-bo.js veVetNut) thay 3 chấm quay.
     w = 2 * math.pi * t / 1.2
-    sup(P, 1.0, run=2.2, t=t)
-    cong(P, 'than', dy=2.5 * math.sin(w), goc=0.4 * math.sin(w))
-    mai_vo(P, LECH_CHOANG); cong(P, 'mai_m1', goc=1.2 * math.sin(w + 0.6)); cong(P, 'mai_m3', goc=-1.0 * math.sin(w + 1.1))
+    sup(P, 1.0)
+    cong(P, 'than', dy=1.0 * math.sin(w))
+    mai_vo(P, LECH_CHOANG)
     bung_lo(P, 1.0, math.sin(w))
     cong(P, 'bung', sx=1 + 0.025 * math.sin(w - 0.5), sy=1 + 0.03 * math.sin(w - 0.5))
-    cong(P, 'dau', goc=1.5 * math.sin(w + 1.4))
 def f_day(P, t):    # ĐỨNG DẬY (0,5 s): chân chống, thân nhấc (2 nhịp), mai vỡ vẫn lệch
     k = 1 - ram(t, 0.05, 0.40) ** 0.8
     if t < 0.18: k = 1 - 0.18 * math.sin(math.pi * t / 0.18)                                 # nhấc thử một lần rồi khuỵu lại

@@ -238,17 +238,17 @@
  "anh": {
   "do_ve_600_khung": {
    "n": 600,
-   "tb": 13.929,
-   "p95": 18.7,
-   "max": 155.1,
-   "quaiTb": 0.182
+   "tb": 9.089,
+   "p95": 12.2,
+   "max": 134.4,
+   "quaiTb": 0.106
   },
   "nap": {
    "nap": {
-    "ms_json": 18.7,
-    "ms_anh_va_decode": 47,
-    "ms_cache_va_ve_thu": 7.1,
-    "ms_tong": 72.8,
+    "ms_json": 10.1,
+    "ms_anh_va_decode": 31.2,
+    "ms_cache_va_ve_thu": 5.7,
+    "ms_tong": 47,
     "so_anh_png": 10,
     "so_anh_cache": 30,
     "byte_png": 111150,
@@ -332,14 +332,98 @@
     ]
    },
    "hm": {
-    "ms": 1603,
-    "ms_grade": 944,
-    "ms_dat": 274,
+    "ms": 1256,
+    "ms_grade": 696,
+    "ms_dat": 194,
     "anh": 29,
     "mpx": 10.56,
-    "ms_doi_anh": 641
+    "ms_doi_anh": 550
    },
    "bk": 1
+  }
+ },
+ "xac": {
+  "anh": [
+   {
+    "file": "xac-khong-che-dau-bao.png",
+    "bo": [
+     [
+      "bao",
+      17,
+      40,
+      40,
+      -1,
+      4768,
+      0
+     ],
+     [
+      "chet",
+      74,
+      0,
+      0,
+      -1,
+      4782.9,
+      0
+     ]
+    ]
+   },
+   {
+    "file": "xac-hitbox.png",
+    "bo": [
+     [
+      "bao",
+      17,
+      40,
+      40,
+      -1,
+      4768,
+      0
+     ],
+     [
+      "chet",
+      74,
+      0,
+      0,
+      -1,
+      4782.9,
+      0
+     ]
+    ]
+   }
+  ],
+  "do": {
+   "binh_mau_roi": [
+    {
+     "x": 5113.3,
+     "y": 439.9
+    }
+   ],
+   "xac": [
+    "chet",
+    57
+   ],
+   "nhat": {
+    "mau_truoc": 1,
+    "mau_sau": 2,
+    "binh_con": 0,
+    "xac_tai": [
+     "chet",
+     117
+    ],
+    "mau_thap_nhat_khi_dung_tren_xac": 1
+   },
+   "chem_xuyen_xac": {
+    "trung": true,
+    "con_song": [
+     40,
+     30,
+     40,
+     40
+    ],
+    "xac_hp": 0,
+    "xac_st": "chet"
+   },
+   "pogo_tren_xac": false
   }
  }
 }

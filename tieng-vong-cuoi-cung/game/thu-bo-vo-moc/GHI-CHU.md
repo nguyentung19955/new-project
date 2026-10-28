@@ -1,4 +1,4 @@
-# Thử quái mới: Bọ Vỏ Mộc – BẢN 4 (động tác quay đầu / choáng / chết, 28/10/2026); hình/VFX bản 3; luật = bản 2 theo phản hồi 3, **mai vỡ giữ tới chết theo phản hồi 5**
+# Thử quái mới: Bọ Vỏ Mộc – BẢN 5 (thang ×10 + công thức chung, bản sạch choáng / xác, 28/10/2026); động tác bản 4; luật bản 2 + **mai vỡ giữ tới chết (PH5)**
 
 Viết cho người không rành kỹ thuật. Đây là **trang thử riêng**, sinh từ `game/demo.html` bằng script (`cong-cu/tao-tu-demo.py`), giống các
 thư mục `thu-*` khác. **KHÔNG sửa** `game/demo.html`, `build-demo.py`, `docs/gameplay/`, `game/thu-p0a/`, `game/thu-quai-huong-moi/`.
@@ -21,6 +21,65 @@ Lam là **Lam hiện có của game** (rig-v4), phím/nút y như demo. Cảnh c
 | `?battu=1` | Lam không chết |
 | `?mau=0` | ẩn chấm máu (chấm máu chỉ có ở bản thử) |
 | `?hm=0` | tắt màu/ánh sáng hướng mới (cảnh như demo hiện tại) |
+
+## Bản 5 – theo phản hồi 7 (`docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` mục 3, mục 4 dòng Bọ)
+
+**Nhịp chơi không đổi:** quay lại 3 video, trạng thái Bọ từng bước trong `so-lieu.json` → `video` **trùng khít** bản 4 (715 / 1069 / 912 khung).
+
+### 5a. Thang máu / Thế ×10 + công thức chung (mục 4: "không bê nguyên máu 4 rồi dùng sát thương bóng tối thiểu 1")
+Số / luật Bọ gom vào **một khối dữ liệu** đầu `cong-cu/khoi-bo.js`: `LOAI_QUAI.bo` (= `BO_LOAI`, Thế = `THE_BO`), cùng dạng `LOAI_QUAI` của P0-A
+(KE-HOACH-GAMEPLAY-V2 mục 6a). Trang có khối P0-A (nạp `khoi-p0a.js` **trước** khối Bọ) → Bọ dùng **`CFG` chung** và gắn `.bo` vào `LOAI_QUAI` chung;
+trang thử này không có P0-A → `BO_CFG` chép đúng các hệ số chung (`CH_MAU` 1, `CH_THE` 0,5, **`BONG_MAU` 0,25**, **`BONG_THE` 0,5**, khoá Cộng hưởng 45, hitstop 8).
+Đòn Lam lấy `goc` từ `PL_CS` của P0-A nếu có, không thì dao placeholder P0-A (nhát 1–2, 4–6 [10,10], nhát 3 [10,30]). Phiên P0-B: `LOAI_QUAI.bo` + `THE_BO` là đủ để nạp Bọ vào phòng D.
+
+| Bảng quy đổi | Bản 4 | **Bản 5** | Nhịp cảm nhận |
+|---|---|---|---|
+| Máu | 4 | **40** | |
+| Mai | 4 nấc | **Thế 40** (`mat` – chỉ che phía trước, `phaMotLan`) | thanh vẫn vẽ 4 ô (10 Thế / ô), chấm máu 4 chấm (10 máu / chấm) |
+| Lam đòn thường vào **bụng** | −1 | **−10** | **4 nhát** chết (như cũ) |
+| Lam đòn thường vào **mai** | 0 máu, mai −1 | 0 máu, **Thế −10** | **4 đòn** vỡ mai (như cũ) |
+| Lam **nhát 3** vào mai | mai −2 | **Thế −30** | nhanh hơn: **nhát 3 + 1 đòn thường** = vỡ (cũ: cần 2 nhát 3 hoặc nhát 3 + 2 đòn). Combo 1-2-3 vẫn vỡ ở nhát 3 |
+| **Bóng** vào bụng / mai đã vỡ | −1 (**bằng Lam**) | **−2** = floor(10 × 0,25), tối thiểu 1 chỉ khi gốc > 0 và không bị chặn | bóng = 1/5 Lam |
+| Bóng vào mai còn | mai −1 | **0 máu**, Thế −5 (nhát 3: −15) | |
+| Cộng hưởng | +1 máu + vỡ mai | **+10** = floor(`CH_MAU` × máu gốc nhát Lam) + vỡ mai ngay (mai đã vỡ: chỉ +10) | cùng tỉ lệ |
+| Đòn húc của Bọ | 1 máu Lam | `goc` [1, 0] (thang máu Lam như Chuông Gỗ P0-A) | như cũ |
+
+Kiểm bằng tay trên trang (không phải kiểm thử tự động): 4 đòn mai → Thế 30 / 20 / 10 / **vỡ**; nhát 3 rồi 1 đòn → 10 / **vỡ**; 4 nhát bụng → 30 / 20 / 10 / **chết**;
+bóng vào bụng 40 → **38**, vào mai 38 máu giữ, Thế 40 → 35 → 20 (nhát 3); Lam mai + bóng mai cách 5 bước → Cộng hưởng: vỡ + 40 → **30**;
+Lam bụng + bóng bụng cùng bước → 40 − 10 − 2 − 10 = **18** + vỡ mai.
+**Giữ luật cũ của Bọ (đã chốt bản 2), ghi rõ vì khác quái gác `vo`:** đòn vào **bụng không trừ Thế** (`THE_BO.truTheKhiTrungBung: false`) – mai chỉ mòn khi bị đánh vào mai.
+
+### 5b. Bản sạch lúc choáng (mục 3)
+- **Bỏ 3 chấm quay** trên đầu; chỉ còn khi thêm `?debug=…` hoặc `?hitbox=1` (để soi). Thanh thời gian choáng + chấm máu bản thử giữ.
+- **Tư thế bất động**: clip `sup_choang` bỏ chân run và mảng mai lắc, thân chỉ phập phồng ~0,2 px logic; **bụng lộ** vẫn thở chậm.
+- **Một dấu nứt**: vạch răng cưa tĩnh (tối 2 px + mép sáng 1 px) trên mảng mai giữa, hiện trong 6 bước đầu khi vỡ, đứng yên tới lúc dậy.
+- Ảnh: `pha-vo-mai-choang-day.png` (chụp lại).
+
+### 5c. Đầu lún đất khi sụp / chết (mục 3)
+Rig kẹp **đầu + 3 mảng mai** không thấp hơn mặt đất quá 1 px logic (bằng chân). Đo trước → sau (px dưới mặt đất): đầu khi sụp choáng **7,6 → 1,0**,
+đầu khi chết **12,2 → 1,0**, mảng mai rơi khi chết **10 / 5 / 3 → 1,0**. Ảnh: `pha-chet-sup-tan-vun.png`, `pha-chet-mai-da-vo.png`, `chet-sup-tan-vun.png`.
+Chi tiết: `art/huong-moi/quai-rig/bo-vo-moc/README.md` mục "Bản 5".
+
+### 5d. Xác (mục 3) – kiểm bằng ảnh + số đo (`so-lieu.json` → `xac`)
+- **Không gây hại**: chỉ cú húc (`st 'huc'`) gây sát thương; xác không ăn đòn, không nhận chém nảy. Lam đứng **chồng lên xác 60 bước**: máu 1 → không giảm.
+- **Không chặn nhặt đồ**: bình máu rơi từ xác (bước 57 của chết), Lam đứng lên → nhặt được (máu 1 → 2, bình biến mất) khi xác còn nằm (bước 117).
+  Bình máu vẽ sau mọi quái nên không bị xác che.
+- **Không chặn đòn vào con khác**: hộp chém phủ cả xác và con sống phía sau → chỉ con sống trúng (40 → 30), xác không "ăn" mất nhát.
+- **Không che dấu báo**: xác vẽ ở **lớp sau** (`BO.veXac` gọi **trước** quái sống), con sống vẽ sau; dấu "!" + thanh của mọi con vẽ **cuối cùng** (lớp phủ).
+  Xác **mờ dần** 1 → 0,7 (bước 40 → 110) rồi tan như bản 4 (150 → 210).
+  Ảnh: **`xac-khong-che-dau-bao.png`** (xác nằm đè ngay sau con đang báo húc, phóng 2×) và **`xac-hitbox.png`** (xác: khung xám đứt, không có vùng ăn đòn / vùng húc).
+- `?hitbox=1` ghi chữ "xác: không ăn đòn, không gây hại" trên xác.
+
+### 5e. Ghi lại để theo dõi (mục 3, 4) – CHƯA làm
+- **Chưa thêm chống ngắt sau mất mai** (`LOAI_QUAI.bo.khongNgatSau: Infinity` = luôn bị ngắt, như bản 4): mọi nhát gây máu (trừ lúc vỡ mai / sụp) → khựng 16 bước,
+  kể cả khi đang báo trước / húc. Theo dõi khi có người thử: nếu Bọ luôn chết trước khi kịp đánh lại thì chấp nhận được với quái thường (PH7); nếu cần,
+  thêm "đã lấy đà ≥ N bước thì không ngắt" như Chuông Gỗ.
+- Bước lật gương t11 → t12 vẫn đổi silhouette tức thì; chưa kiểm ở 120 Hz thật.
+
+**Chưa thử trên iPhone thật** (Chromium headless, máy chủ không GPU). Vẽ cả khung TB 9,1 ms, phần Bọ **0,11 ms/khung** (máy chủ).
+Video quay lại: `danh-mai-vo-sup-choang-60fps.mp4`, `vong-ra-sau-danh-bung-60fps.mp4`, `cac-clip-60fps.mp4` (H.264 60 hình/s, `-preset veryfast`); mọi ảnh trong
+`game/kiem-thu-bo-vo-moc/` chụp lại (số máu / Thế trên chấm và thanh theo thang mới; hình giống bản 4 trừ choáng / chết).
+Chạy lại phần bản 5: `python3 -B game/thu-bo-vo-moc/cong-cu/quay-va-chup.py video anh so pha xac` (sau `dung_rig.py` và `tao-tu-demo.py`).
 
 ## Bản 4 – sửa ĐỘNG TÁC quay đầu / choáng / chết (chủ dự án chê "lật trang sách" + "bọ chết hoạt hình")
 
@@ -151,11 +210,11 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
 ## 3. Luật hiện tại (tóm tắt)
 | | |
 |---|---|
-| Đánh **trước mặt** (vào mai) | Keng + tia trên mai, dội nhẹ 4 px, **0 máu**, thanh mai −1 (nhát 3: −2). Mai nứt dần |
-| Đánh **từ sau** (vào bụng) | −1 máu, thân co lại. Máu 4 |
+| Đánh **trước mặt** (vào mai) | Keng + tia trên mai, dội nhẹ 4 px, **0 máu**, Thế mai −10 (nhát 3: −30; bóng ×0,5) (bản 5; cũ: −1 / −2 nấc). Mai nứt dần |
+| Đánh **từ sau** (vào bụng) | −10 máu (bóng −2), thân co lại. Máu 40 (bản 5; cũ: −1 / 4) |
 | Chém nảy (bổ xuống) | theo chỗ chạm: phần bụng lộ phía sau = bụng; trên mai = keng, **nảy lên được** |
 | Thanh mai về 0 | **Vỡ mai** (nhát này 0 máu): (bản 4: sụp sấp, mai vỡ hé) lộ bụng, choáng **2 s**, đánh hướng nào cũng −1. **PH5: dậy lại mai vẫn vỡ tới chết**, Bọ đánh tiếp, đánh hướng nào cũng −1 |
-| Cộng hưởng | như đòn thường + **thêm** vỡ mai ngay + 1 máu (công thức chung) |
+| Cộng hưởng | như đòn thường + **thêm** vỡ mai ngay + 10 máu (công thức chung; cũ: + 1 / 4) |
 | Mai hồi | **PH5: bỏ** (trước: không bị đánh vào mai 1,5 s → hồi 1 nấc mỗi 0,5 s). Mai chỉ nứt thêm, không tự lành |
 | Tấn công | Lam **trước mặt** trong 240 px → **báo trước 0,5 s** → **húc** 0,4 s (~144 px) → **hồi 0,67 s** (húc vào tường hồi 1 s). **Chỉ cú húc** gây sát thương |
 | Quay đầu | Lam ở sau lưng 0,5 s → quay **chậm** 0,4 s |
@@ -167,7 +226,7 @@ cả khung TB 9,6 ms (phần lớn là cảnh). Gói hình vẫn 7 PNG ≈ 74 KB
 3. **Dấu "!"**: so `bao-truoc-huc.png` với bản tắt. Khi có người mới thử, hỏi họ có tự nhận ra "khép mai + cào chân = sắp húc" khi tắt "!" không.
 4. ~~Trúng bụng nháy trắng cả thân~~ → **bản 3**: chỉ bụng chớp ấm, 3 khung, giữ mảng tối + viền. Cần người thật xem có còn đủ "trúng" không.
 5. **Bụng xám đất nhạt** đã đủ tách khỏi mai trong bản xám chưa, hay cần sáng hơn nữa? (Đã giữ "một chút" theo phản hồi.)
-6. Bóng (Vọng) đánh Bọ hiện vẫn mất **1 máu đủ** như Lam (trang thử chưa có `BONG_MAU`); khi Bọ vào P0-B sẽ dùng `BONG_MAU`/`BONG_THE` chung (0,25 → tối thiểu 1, nên kết quả hiện giống nhau).
+6. ~~Bóng đánh Bọ mất 1 máu đủ như Lam~~ → **bản 5**: thang ×10, bóng −2 máu / −5 Thế (`BONG_MAU` 0,25 / `BONG_THE` 0,5 chung).
 
 ## 5. Cái chưa đẹp / cần biết
 - ~~Lúc nằm ngửa cả đầu cũng lộn ngược~~ → bản 4 bỏ lật ngửa (sụp sấp).

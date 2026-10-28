@@ -59,7 +59,8 @@ thay('ván mới: đặt lại Bọ', "  for(const q of Q) q.H=null; boss.H=null
      "  for(const q of Q) q.H=null; boss.H=null;   // tư thế rig làm lại từ đầu\n  BO.datLai();   // Bọ Vỏ Mộc (bản thử: đặt Lam vào phòng thử)\n}")
 thay('lưu vị trí trước (nội suy)', "  boss.px=boss.x; boss.py=boss.y;\n", "  boss.px=boss.x; boss.py=boss.y;\n  BO.luuTruoc();\n")
 thay('mỗi bước: cập nhật Bọ', "  for(const q of Q) updateQuai(q);\n", "  for(const q of Q) updateQuai(q);\n  BO.capNhat();   // Bọ Vỏ Mộc: AI + trạng thái → clip rig\n")
-thay('vẽ Bọ (sau quái)', "  for(const q of Q) drawQuai(q,al);\n", "  for(const q of Q) drawQuai(q,al);\n  BO.ve(al);\n")
+thay('vẽ Bọ: xác TRƯỚC quái, con sống + dấu báo SAU quái (PH7)', "  for(const q of Q) drawQuai(q,al);\n",
+     "  BO.veXac(al);   // xác Bọ (đang chết / tan) vẽ trước quái sống: không che dấu báo của con khác\n  for(const q of Q) drawQuai(q,al);\n  BO.ve(al);   // Bọ sống, rồi lớp phủ dấu \"!\" + thanh của mọi con\n")
 thay('đòn trúng Bọ (mai / bụng)', "  if(boss.hittable && !boss.dead && overlap(hb,boss)) if(strike(boss,src,sw,face,n,hb)) hit=true;\n  return hit;",
      "  if(boss.hittable && !boss.dead && overlap(hb,boss)) if(strike(boss,src,sw,face,n,hb)) hit=true;\n  if(BO.trung(hb,src,sw,face,n)) hit=true;   // Bọ: mai dội / bụng mất máu\n  return hit;")
 thay('chém nảy trên Bọ', "  if(boss.hittable && !boss.dead && overlap(PR,boss)) return true;",
