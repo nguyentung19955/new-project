@@ -1,5 +1,5 @@
 {
- "nhan": "SAU SỬA PH9 (replay xử lý đủ mẫu cuối, bóng nghỉ không hộp). Số TRƯỚC SỬA: video/truoc-sua/ket-qua-truoc-sua-PH9.json",
+ "nhan": "BẢN SINH TỪ ÂM ĐAO PH8 (đóng băng PH10) – phiên p0b-2810-cceea180. Số trước PH8 (sau sửa PH9): video/truoc-ph8/ket-qua.json; trước sửa PH9: video/truoc-sua/",
  "luot1": {
   "A sach": {
    "query": "&vong=a",
@@ -14,8 +14,8 @@
    "lam_bi_trung": 2,
    "bot_goi": 8,
    "tk": {
-    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1620,
     "nR": 0,
     "lichSu": "chua",
@@ -349,8 +349,8 @@
    "lam_bi_trung": 4,
    "bot_goi": 6,
    "tk": {
-    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1646,
     "nR": 90,
     "lichSu": "day",
@@ -667,8 +667,8 @@
    "lam_bi_trung": 2,
    "bot_goi": 8,
    "tk": {
-    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1620,
     "nR": 0,
     "lichSu": "chua",
@@ -1002,8 +1002,8 @@
    "lam_bi_trung": 4,
    "bot_goi": 6,
    "tk": {
-    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1646,
     "nR": 90,
     "lichSu": "day",
@@ -1320,8 +1320,8 @@
    "lam_bi_trung": 3,
    "bot_goi": 11,
    "tk": {
-    "cfg": "B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1594,
     "nR": 90,
     "lichSu": "day",
@@ -1842,8 +1842,8 @@
    "lam_bi_trung": 2,
    "bot_goi": 8,
    "tk": {
-    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1620,
     "nR": 0,
     "lichSu": "chua",
@@ -2177,8 +2177,8 @@
    "lam_bi_trung": 4,
    "bot_goi": 6,
    "tk": {
-    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1646,
     "nR": 90,
     "lichSu": "day",
@@ -2495,8 +2495,8 @@
    "lam_bi_trung": 4,
    "bot_goi": 6,
    "tk": {
-    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|n2|h150|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|n2|h150|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1646,
     "nR": 90,
     "lichSu": "day",
@@ -2813,8 +2813,8 @@
    "lam_bi_trung": 4,
    "bot_goi": 6,
    "tk": {
-    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|n1|h150|nghi|cap1|p0b-2810-e58986fc",
-    "phien": "p0b-2810-e58986fc",
+    "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|n1|h150|nghi|cap1|p0b-2810-cceea180",
+    "phien": "p0b-2810-cceea180",
     "dem": 1646,
     "nR": 90,
     "lichSu": "day",

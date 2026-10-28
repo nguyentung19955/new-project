@@ -7,7 +7,8 @@
   tinh-huong : 4 tình huống NGẮN, trạng thái đầu giống nhau (hình nộm phòng A, Lam đứng 100 tick, mọi thứ đặt lại), cho A / B / B2:
           ap-sat (vừa áp sát, chém 1 nhát rồi gọi) · tai-cho (đánh tại chỗ 5 nhát rồi gọi) · ne-lui (chém 2 nhát, lướt lùi rồi gọi) · chua-don (gọi khi chưa có đòn).
 60 hình/s, mỗi hình = 1 bước logic, H.264 -preset veryfast. Không phải bộ kiểm thử tự động: chỉ quay + ghi số / log ra file.
-Chạy: python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong]   (cần playwright, Chromium, ffmpeg, Pillow)"""
+Chạy: python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong] [--khong-video]   (cần playwright, Chromium, ffmpeg, Pillow)
+  --khong-video: luot1 chỉ đo số + log (không quay 2 video dài) – dùng khi kiểm lại bản sinh mới (PH10: video ngắn chỉ cho ca kiểm lại)."""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw, ImageFont
@@ -41,6 +42,9 @@ def jpg(im):
     b = io.BytesIO(); im.convert('RGB').save(b, 'JPEG', quality=88); return b.getvalue()
 
 
+PHIEN_TRANG = ['?']   # phiên bản trang (VB_PHIEN) – ghi vào ket-qua.json
+
+
 class Trang:
     def __init__(s, b, cong, q):
         s.b, s.cong, s.q = b, cong, q
@@ -52,6 +56,7 @@ class Trang:
         await s.pg.goto('http://127.0.0.1:%d/game/thu-p0b/index.html?ghi=1&battu=1%s' % (s.cong, s.q))
         await s.pg.wait_for_function('window.TVDEMO && TVDEMO.ready', timeout=120000)
         await s.pg.evaluate('TVP0.batDau()'); await s.pg.evaluate('TVP0.anUI(1)')
+        PHIEN_TRANG[0] = await s.pg.evaluate('VB_PHIEN')
         # trạng thái đầu GIỐNG NHAU ở mọi trang (đặt MỘT lần trước trận): quái ở chỗ gốc, Lam đầu Sân hai chuông, không bóng
         await s.pg.evaluate('for(const i of [3,4,5]) TVP0.datLaiQuai(i); BO.datLai(); echo=null; rec=null; TVP0.datLam((PB.x0+1)*T,1)')
         for _ in range(4): await s.buoc('')
@@ -123,7 +128,7 @@ JS_ST = 'TVVB.trangThai()'
 
 def nhan_hien(c):
     _, cau, q, _ = c
-    return {'a': 'A · Ghi chủ động', 'b': 'B · Vọng Chiến', 'b2': 'B2 · từ đòn gần nhất'}[cau] + (' · tốn nấc' if 'nac=1' in q and cau != 'a' else ' · miễn phí') + (' · debug' if 'debug' in q else '') + ' · sau sửa PH9'
+    return {'a': 'A · Ghi chủ động', 'b': 'B · Vọng Chiến', 'b2': 'B2 · từ đòn gần nhất'}[cau] + (' · tốn nấc' if 'nac=1' in q and cau != 'a' else ' · miễn phí') + (' · debug' if 'debug' in q else '') + ' · bản PH8'
 
 
 async def chay(b, cong, ten, cau_hinh, video=True, toi_da=6000):
@@ -239,19 +244,20 @@ async def tinh_huong(b, cong):
 
 
 async def main():
-    can = sys.argv[1:] or ['luot1', 'luot2', 'tinh-huong']
+    kv = '--khong-video' in sys.argv
+    can = [a for a in sys.argv[1:] if not a.startswith('--')] or ['luot1', 'luot2', 'tinh-huong']
     os.chdir(GOC)
     srv = socketserver.ThreadingTCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     kq_p = os.path.join(OUT, 'ket-qua.json'); kq = json.load(open(kq_p, encoding='utf-8')) if os.path.exists(kq_p) else {}
-    kq['nhan'] = 'SAU SỬA PH9 (replay xử lý đủ mẫu cuối, bóng nghỉ không hộp). Số TRƯỚC SỬA: video/truoc-sua/ket-qua-truoc-sua-PH9.json'
+    kq['nhan'] = 'BẢN SINH TỪ ÂM ĐAO PH8 (đóng băng PH10) – phiên ' + PHIEN_TRANG[0] + '. Số trước PH8 (sau sửa PH9): video/truoc-ph8/ket-qua.json; trước sửa PH9: video/truoc-sua/'
     async with async_playwright() as p:
         b = await p.chromium.launch()
         if 'luot1' in can:
             kq['luot1'] = await chay(b, cong, 'luot1', [
                 ('A sach', 'a', '&vong=a', '1-sach-A-vs-B.mp4'), ('B sach', 'b', '&vong=b', '1-sach-A-vs-B.mp4'),
                 ('A debug', 'a', '&vong=a&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4'), ('B debug', 'b', '&vong=b&hitbox=1&debug=vong', '2-debug-A-vs-B.mp4'),
-                ('B2 sach', 'b2', '&vong=b2', None)])
+                ('B2 sach', 'b2', '&vong=b2', None)], video=not kv)
             json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         if 'luot2' in can:
             kq['luot2'] = await chay(b, cong, 'luot2', [('A tham chieu', 'a', '&vong=a&nac=1', None), ('B mien phi', 'b', '&vong=b', None),
@@ -261,6 +267,7 @@ async def main():
             kq['tinh_huong'] = await tinh_huong(b, cong)
             json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         await b.close()
+    kq['nhan'] = kq['nhan'].replace('phiên ?', 'phiên ' + PHIEN_TRANG[0]); json.dump(kq, open(kq_p, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     srv.shutdown()
 
 

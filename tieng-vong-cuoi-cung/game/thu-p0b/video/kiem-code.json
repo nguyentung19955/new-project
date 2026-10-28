@@ -1,93 +1,91 @@
 {
+ "phien": "p0b-2810-cceea180",
+ "nhan": "KIỂM LẠI trên bản sinh từ Âm Đao PH8 (đóng băng PH10) – phiên p0b-2810-cceea180. Số trước PH8: video/truoc-ph8/kiem-code.json",
  "A": {
   "ngan_nhat": {
-   "rec_truoc_dung": 4,
-   "echo_n": 4,
-   "buoc": 4,
-   "buocKhung": 0,
-   "tickCoHopBong": 0,
-   "trungBong": 0,
-   "echo": {
-    "id": 1,
-    "i": 4,
-    "n": 4,
-    "done": true,
-    "hb": false,
-    "a2": "idle",
-    "l2": false
+   "ghi_3": {
+    "rec_truoc_dung": 3,
+    "echo": null,
+    "ghiQuaNgan": 1
    },
-   "phat": {
-    "id": 1,
-    "cau": "a",
-    "kieu": "bam",
-    "n": 4,
-    "tBam": 64,
-    "fBam": 64,
-    "msBam": null,
-    "tGhi": 60,
-    "hop0": -1,
-    "yen": 4,
-    "coDon": false,
-    "soNhat": 0,
-    "hopCuoi": false,
-    "trungCuoi": false,
-    "chCuoi": false,
-    "dichSongLucBam": true,
-    "dichSongLucHop": null,
-    "chamXac": false,
-    "tHop": -1,
-    "fHop": -1,
-    "msHop": null,
-    "tTrung": -1,
-    "fTrung": -1,
-    "msTrung": null,
-    "trung": 0,
-    "mau": 0,
-    "the": 0,
-    "ch": 0,
-    "xong": false,
-    "lyDo": "",
-    "khongHit": "",
-    "phong": 6,
-    "fXong": 69
-   }
-  },
-  "ghi_3_tick": {
-   "rec_n": 3,
-   "phat": 0,
-   "ghiQuaNgan": 1,
-   "echo": null
+   "ghi_4": {
+    "buoc": 4,
+    "buocKhung": 0,
+    "tickCoHopBong": 0,
+    "trungBong": 0,
+    "echo": {
+     "id": 1,
+     "i": 4,
+     "n": 4,
+     "done": true,
+     "hb": false,
+     "a2": "idle",
+     "l2": false
+    },
+    "phat": {
+     "id": 1,
+     "cau": "a",
+     "kieu": "bam",
+     "n": 4,
+     "tBam": 17,
+     "fBam": 17,
+     "msBam": null,
+     "tGhi": 13,
+     "hop0": -1,
+     "yen": 4,
+     "coDon": false,
+     "soNhat": 0,
+     "hopCuoi": false,
+     "trungCuoi": false,
+     "chCuoi": false,
+     "dichSongLucBam": true,
+     "dichSongLucHop": null,
+     "chamXac": false,
+     "tHop": -1,
+     "fHop": -1,
+     "msHop": null,
+     "tTrung": -1,
+     "fTrung": -1,
+     "msTrung": null,
+     "trung": 0,
+     "mau": 0,
+     "the": 0,
+     "ch": 0,
+     "xong": true,
+     "lyDo": "phát xong",
+     "khongHit": "khong-co-don",
+     "phong": 6,
+     "fXong": 22
+    },
+    "rec_truoc_dung": 4
+   },
+   "loi": []
   },
   "don_chi_o_mau_cuoi": {
-   "buoc_toi_hop": 7,
-   "n": 18,
-   "hop_trong_doan": [
-    17
-   ],
-   "buoc": 23,
-   "buocKhung": 4,
+   "buoc": 21,
+   "buocKhung": 2,
    "tickCoHopBong": 1,
    "trungBong": 1,
    "echo": {
-    "id": 2,
-    "i": 18,
-    "n": 18,
+    "id": 1,
+    "i": 19,
+    "n": 19,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": false
    },
    "phat": {
-    "id": 2,
+    "id": 1,
     "cau": "a",
     "kieu": "bam",
-    "n": 18,
-    "tBam": 291,
-    "fBam": 291,
+    "n": 19,
+    "tBam": 26,
+    "fBam": 23,
     "msBam": null,
-    "tGhi": 273,
-    "hop0": 17,
-    "yen": 11,
+    "tGhi": 4,
+    "hop0": 18,
+    "yen": 12,
     "coDon": true,
     "soNhat": 1,
     "hopCuoi": true,
@@ -96,111 +94,117 @@
     "dichSongLucBam": true,
     "dichSongLucHop": true,
     "chamXac": false,
-    "tHop": 312,
-    "fHop": 309,
+    "tHop": 45,
+    "fHop": 42,
     "msHop": null,
-    "tTrung": 312,
-    "fTrung": 309,
+    "tTrung": 45,
+    "fTrung": 42,
     "msTrung": null,
     "trung": 1,
     "mau": 2,
     "the": 5,
     "ch": 0,
-    "xong": false,
-    "lyDo": "",
+    "xong": true,
+    "lyDo": "phát xong",
     "khongHit": "",
     "phong": 6,
-    "fXong": 310
-   }
+    "fXong": 43
+   },
+   "n": 19,
+   "hop_trong_doan": [
+    18
+   ],
+   "so_ma": 1,
+   "loi": []
   },
   "nhieu_mau_cung_ma": {
-   "n": 25,
+   "buoc": 29,
+   "buocKhung": 2,
+   "tickCoHopBong": 8,
+   "trungBong": 1,
+   "echo": {
+    "id": 1,
+    "i": 27,
+    "n": 27,
+    "done": true,
+    "hb": false,
+    "a2": "idle",
+    "l2": false
+   },
+   "phat": {
+    "id": 1,
+    "cau": "a",
+    "kieu": "bam",
+    "n": 27,
+    "tBam": 34,
+    "fBam": 31,
+    "msBam": null,
+    "tGhi": 4,
+    "hop0": 18,
+    "yen": 12,
+    "coDon": true,
+    "soNhat": 1,
+    "hopCuoi": false,
+    "trungCuoi": false,
+    "chCuoi": false,
+    "dichSongLucBam": true,
+    "dichSongLucHop": true,
+    "chamXac": false,
+    "tHop": 53,
+    "fHop": 50,
+    "msHop": null,
+    "tTrung": 53,
+    "fTrung": 50,
+    "msTrung": null,
+    "trung": 1,
+    "mau": 2,
+    "the": 5,
+    "ch": 0,
+    "xong": true,
+    "lyDo": "phát xong",
+    "khongHit": "",
+    "phong": 6,
+    "fXong": 59
+   },
+   "n": 27,
    "hop_trong_doan": [
-    17,
     18,
     19,
     20,
     21,
     22,
     23,
-    24
+    24,
+    25
    ],
    "so_ma": 1,
-   "buoc": 27,
-   "buocKhung": 2,
-   "tickCoHopBong": 8,
-   "trungBong": 1,
-   "echo": {
-    "id": 3,
-    "i": 25,
-    "n": 25,
-    "done": true,
-    "hb": false,
-    "a2": "idle",
-    "l2": false
-   },
-   "phat": {
-    "id": 3,
-    "cau": "a",
-    "kieu": "bam",
-    "n": 25,
-    "tBam": 543,
-    "fBam": 535,
-    "msBam": null,
-    "tGhi": 515,
-    "hop0": 17,
-    "yen": 11,
-    "coDon": true,
-    "soNhat": 1,
-    "hopCuoi": true,
-    "trungCuoi": false,
-    "chCuoi": false,
-    "dichSongLucBam": true,
-    "dichSongLucHop": true,
-    "chamXac": false,
-    "tHop": 561,
-    "fHop": 553,
-    "msHop": null,
-    "tTrung": 561,
-    "fTrung": 553,
-    "msTrung": null,
-    "trung": 1,
-    "mau": 2,
-    "the": 5,
-    "ch": 0,
-    "xong": false,
-    "lyDo": "",
-    "khongHit": "",
-    "phong": 6,
-    "fXong": 561
-   }
+   "loi": []
   },
   "mau_cuoi_cong_huong": {
-   "n": 18,
-   "buoc": 33,
-   "buocKhung": 14,
+   "buoc": 27,
+   "buocKhung": 8,
    "tickCoHopBong": 1,
    "trungBong": 1,
    "echo": {
-    "id": 4,
-    "i": 18,
-    "n": 18,
+    "id": 1,
+    "i": 19,
+    "n": 19,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": false
    },
    "phat": {
-    "id": 4,
+    "id": 1,
     "cau": "a",
     "kieu": "bam",
-    "n": 18,
-    "tBam": 789,
-    "fBam": 779,
+    "n": 19,
+    "tBam": 26,
+    "fBam": 23,
     "msBam": null,
-    "tGhi": 771,
-    "hop0": 17,
-    "yen": 11,
+    "tGhi": 4,
+    "hop0": 18,
+    "yen": 12,
     "coDon": true,
     "soNhat": 1,
     "hopCuoi": true,
@@ -209,65 +213,142 @@
     "dichSongLucBam": true,
     "dichSongLucHop": true,
     "chamXac": false,
-    "tHop": 814,
-    "fHop": 797,
+    "tHop": 45,
+    "fHop": 42,
     "msHop": null,
-    "tTrung": 814,
-    "fTrung": 797,
+    "tTrung": 45,
+    "fTrung": 42,
     "msTrung": null,
     "trung": 1,
     "mau": 2,
     "the": 5,
     "ch": 1,
-    "xong": false,
-    "lyDo": "",
+    "xong": true,
+    "lyDo": "phát xong",
     "khongHit": "",
     "phong": 6,
-    "fXong": 798
+    "fXong": 43
    },
-   "resTong": 1
-  },
-  "het_doan_khi_hitstop": {
-   "xem": "don_chi_o_mau_cuoi.buocKhung > 0 và echo.done chỉ đặt sau khựng; tickCoHopBong = số mẫu có hộp"
+   "n": 19,
+   "lech": 0,
+   "resTong": 1,
+   "loi": [],
+   "thu_lech": [
+    {
+     "lech": 0,
+     "ch": 1,
+     "chCuoi": true
+    }
+   ]
   },
   "nghi_sau_phat": {
    "sau": {
-    "id": 5,
-    "i": 23,
-    "n": 23,
+    "id": 1,
+    "i": 27,
+    "n": 27,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": true
    },
    "sau30": {
-    "id": 5,
-    "i": 23,
-    "n": 23,
+    "id": 1,
+    "i": 27,
+    "n": 27,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": true
    },
-   "mat_lam": -1,
-   "hopBongBat": false
+   "tickCoHopBongSauXong": 0,
+   "loi": []
   },
-  "loi": []
+  "tan": {
+   "sau_xong_15": {
+    "id": 1,
+    "i": 19,
+    "n": 19,
+    "done": true,
+    "hb": false,
+    "a2": "idle",
+    "l2": false
+   },
+   "sau_them_30": null,
+   "loi": []
+  }
  },
  "B": {
   "ngan_nhat": {
-   "nR_3": 3,
-   "phat_khi_3": null,
-   "nR_4": 4,
-   "echo_n": 4,
-   "buoc": 4,
-   "buocKhung": 0,
-   "tickCoHopBong": 0,
-   "trungBong": 0,
+   "nR_3": {
+    "nR": 3,
+    "echo": null,
+    "thieuLichSu": 1
+   },
+   "nR_4": {
+    "buoc": 4,
+    "buocKhung": 0,
+    "tickCoHopBong": 0,
+    "trungBong": 0,
+    "echo": {
+     "id": 1,
+     "i": 4,
+     "n": 4,
+     "done": true,
+     "hb": false,
+     "a2": "idle",
+     "l2": false
+    },
+    "phat": {
+     "id": 1,
+     "cau": "b",
+     "kieu": "bam",
+     "n": 4,
+     "tBam": 12,
+     "fBam": 12,
+     "msBam": null,
+     "tGhi": -1,
+     "hop0": -1,
+     "yen": 4,
+     "coDon": false,
+     "soNhat": 0,
+     "hopCuoi": false,
+     "trungCuoi": false,
+     "chCuoi": false,
+     "dichSongLucBam": true,
+     "dichSongLucHop": null,
+     "chamXac": false,
+     "tHop": -1,
+     "fHop": -1,
+     "msHop": null,
+     "tTrung": -1,
+     "fTrung": -1,
+     "msTrung": null,
+     "trung": 0,
+     "mau": 0,
+     "the": 0,
+     "ch": 0,
+     "xong": true,
+     "lyDo": "phát xong",
+     "khongHit": "khong-co-don",
+     "phong": 6,
+     "b2": null,
+     "lichSu": "mot-phan",
+     "vong": 4,
+     "fXong": 17
+    },
+    "nR": 4
+   },
+   "loi": []
+  },
+  "don_chi_o_mau_cuoi": {
+   "buoc": 43,
+   "buocKhung": 2,
+   "tickCoHopBong": 1,
+   "trungBong": 1,
    "echo": {
     "id": 1,
-    "i": 4,
-    "n": 4,
+    "i": 41,
+    "n": 41,
     "done": true,
     "hb": false,
     "a2": "idle",
@@ -277,190 +358,138 @@
     "id": 1,
     "cau": "b",
     "kieu": "bam",
-    "n": 4,
-    "tBam": 68,
-    "fBam": 68,
+    "n": 41,
+    "tBam": 44,
+    "fBam": 41,
     "msBam": null,
     "tGhi": -1,
-    "hop0": -1,
-    "yen": 4,
-    "coDon": false,
-    "soNhat": 0,
+    "hop0": 40,
+    "yen": 34,
+    "coDon": true,
+    "soNhat": 1,
+    "hopCuoi": true,
+    "trungCuoi": true,
+    "chCuoi": false,
+    "dichSongLucBam": true,
+    "dichSongLucHop": true,
+    "chamXac": false,
+    "tHop": 85,
+    "fHop": 82,
+    "msHop": null,
+    "tTrung": 85,
+    "fTrung": 82,
+    "msTrung": null,
+    "trung": 1,
+    "mau": 2,
+    "the": 5,
+    "ch": 0,
+    "xong": true,
+    "lyDo": "phát xong",
+    "khongHit": "",
+    "phong": 6,
+    "b2": null,
+    "lichSu": "mot-phan",
+    "vong": 41,
+    "fXong": 83
+   },
+   "n": 41,
+   "hop_trong_doan": [
+    40
+   ],
+   "so_ma": 1,
+   "loi": []
+  },
+  "nhieu_mau_cung_ma": {
+   "buoc": 51,
+   "buocKhung": 2,
+   "tickCoHopBong": 8,
+   "trungBong": 1,
+   "echo": {
+    "id": 1,
+    "i": 49,
+    "n": 49,
+    "done": true,
+    "hb": false,
+    "a2": "idle",
+    "l2": false
+   },
+   "phat": {
+    "id": 1,
+    "cau": "b",
+    "kieu": "bam",
+    "n": 49,
+    "tBam": 52,
+    "fBam": 49,
+    "msBam": null,
+    "tGhi": -1,
+    "hop0": 40,
+    "yen": 34,
+    "coDon": true,
+    "soNhat": 1,
     "hopCuoi": false,
     "trungCuoi": false,
     "chCuoi": false,
     "dichSongLucBam": true,
-    "dichSongLucHop": null,
-    "chamXac": false,
-    "tHop": -1,
-    "fHop": -1,
-    "msHop": null,
-    "tTrung": -1,
-    "fTrung": -1,
-    "msTrung": null,
-    "trung": 0,
-    "mau": 0,
-    "the": 0,
-    "ch": 0,
-    "xong": false,
-    "lyDo": "",
-    "khongHit": "",
-    "phong": 6,
-    "b2": null,
-    "lichSu": "mot-phan",
-    "vong": 4,
-    "fXong": 73
-   }
-  },
-  "don_chi_o_mau_cuoi": {
-   "buoc_toi_hop": 7,
-   "n": 37,
-   "hop_trong_doan": [
-    36
-   ],
-   "buoc": 42,
-   "buocKhung": 4,
-   "tickCoHopBong": 1,
-   "trungBong": 1,
-   "echo": {
-    "id": 2,
-    "i": 37,
-    "n": 37,
-    "done": true,
-    "hb": false,
-    "a2": "idle",
-    "l2": false
-   },
-   "phat": {
-    "id": 2,
-    "cau": "b",
-    "kieu": "bam",
-    "n": 37,
-    "tBam": 310,
-    "fBam": 310,
-    "msBam": null,
-    "tGhi": -1,
-    "hop0": 36,
-    "yen": 30,
-    "coDon": true,
-    "soNhat": 1,
-    "hopCuoi": true,
-    "trungCuoi": true,
-    "chCuoi": false,
-    "dichSongLucBam": true,
     "dichSongLucHop": true,
     "chamXac": false,
-    "tHop": 350,
-    "fHop": 347,
+    "tHop": 93,
+    "fHop": 90,
     "msHop": null,
-    "tTrung": 350,
-    "fTrung": 347,
+    "tTrung": 93,
+    "fTrung": 90,
     "msTrung": null,
     "trung": 1,
     "mau": 2,
     "the": 5,
     "ch": 0,
-    "xong": false,
-    "lyDo": "",
+    "xong": true,
+    "lyDo": "phát xong",
     "khongHit": "",
     "phong": 6,
     "b2": null,
     "lichSu": "mot-phan",
-    "vong": 37,
-    "fXong": 348
-   }
-  },
-  "nhieu_mau_cung_ma": {
-   "n": 44,
+    "vong": 49,
+    "fXong": 99
+   },
+   "n": 49,
    "hop_trong_doan": [
-    36,
-    37,
-    38,
-    39,
     40,
     41,
     42,
-    43
+    43,
+    44,
+    45,
+    46,
+    47
    ],
    "so_ma": 1,
-   "buoc": 46,
-   "buocKhung": 2,
-   "tickCoHopBong": 8,
-   "trungBong": 1,
-   "echo": {
-    "id": 3,
-    "i": 44,
-    "n": 44,
-    "done": true,
-    "hb": false,
-    "a2": "idle",
-    "l2": false
-   },
-   "phat": {
-    "id": 3,
-    "cau": "b",
-    "kieu": "bam",
-    "n": 44,
-    "tBam": 600,
-    "fBam": 592,
-    "msBam": null,
-    "tGhi": -1,
-    "hop0": 36,
-    "yen": 30,
-    "coDon": true,
-    "soNhat": 1,
-    "hopCuoi": true,
-    "trungCuoi": false,
-    "chCuoi": false,
-    "dichSongLucBam": true,
-    "dichSongLucHop": true,
-    "chamXac": false,
-    "tHop": 637,
-    "fHop": 629,
-    "msHop": null,
-    "tTrung": 637,
-    "fTrung": 629,
-    "msTrung": null,
-    "trung": 1,
-    "mau": 2,
-    "the": 5,
-    "ch": 0,
-    "xong": false,
-    "lyDo": "",
-    "khongHit": "",
-    "phong": 6,
-    "b2": null,
-    "lichSu": "mot-phan",
-    "vong": 44,
-    "fXong": 637
-   }
+   "loi": []
   },
   "mau_cuoi_cong_huong": {
-   "n": 37,
-   "buoc": 51,
-   "buocKhung": 13,
+   "buoc": 49,
+   "buocKhung": 8,
    "tickCoHopBong": 1,
    "trungBong": 1,
    "echo": {
-    "id": 4,
-    "i": 37,
-    "n": 37,
+    "id": 1,
+    "i": 41,
+    "n": 41,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": false
    },
    "phat": {
-    "id": 4,
+    "id": 1,
     "cau": "b",
     "kieu": "bam",
-    "n": 37,
-    "tBam": 884,
-    "fBam": 874,
+    "n": 41,
+    "tBam": 44,
+    "fBam": 41,
     "msBam": null,
     "tGhi": -1,
-    "hop0": 36,
-    "yen": 30,
+    "hop0": 40,
+    "yen": 34,
     "coDon": true,
     "soNhat": 1,
     "hopCuoi": true,
@@ -469,222 +498,101 @@
     "dichSongLucBam": true,
     "dichSongLucHop": true,
     "chamXac": false,
-    "tHop": 927,
-    "fHop": 911,
+    "tHop": 85,
+    "fHop": 82,
     "msHop": null,
-    "tTrung": 927,
-    "fTrung": 911,
+    "tTrung": 85,
+    "fTrung": 82,
     "msTrung": null,
     "trung": 1,
     "mau": 2,
     "the": 5,
     "ch": 1,
-    "xong": false,
-    "lyDo": "",
+    "xong": true,
+    "lyDo": "phát xong",
     "khongHit": "",
     "phong": 6,
     "b2": null,
     "lichSu": "mot-phan",
-    "vong": 37,
-    "fXong": 912
+    "vong": 41,
+    "fXong": 83
    },
-   "resTong": 1
-  },
-  "het_doan_khi_hitstop": {
-   "xem": "don_chi_o_mau_cuoi.buocKhung > 0 và echo.done chỉ đặt sau khựng; tickCoHopBong = số mẫu có hộp"
+   "n": 41,
+   "lech": 0,
+   "resTong": 1,
+   "loi": [],
+   "thu_lech": [
+    {
+     "lech": 0,
+     "ch": 1,
+     "chCuoi": true
+    }
+   ]
   },
   "nghi_sau_phat": {
    "sau": {
-    "id": 5,
-    "i": 90,
-    "n": 90,
+    "id": 1,
+    "i": 52,
+    "n": 52,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": true
    },
    "sau30": {
-    "id": 5,
-    "i": 90,
-    "n": 90,
+    "id": 1,
+    "i": 52,
+    "n": 52,
     "done": true,
     "hb": false,
     "a2": "idle",
     "l2": true
    },
-   "mat_lam": -1,
-   "hopBongBat": false
+   "tickCoHopBongSauXong": 0,
+   "loi": []
   },
-  "loi": []
- },
- "B_nac": {
-  "chuoi": [
-   {
-    "nac": 1,
-    "echo": 1,
-    "giuBongCu": null
+  "tan": {
+   "sau_xong_15": {
+    "id": 1,
+    "i": 22,
+    "n": 22,
+    "done": true,
+    "hb": false,
+    "a2": "idle",
+    "l2": false
    },
-   {
-    "nac": 0,
-    "echo": 2,
-    "giuBongCu": null
-   },
-   {
-    "nac": 0,
-    "echo": 2,
-    "giuBongCu": true
-   }
-  ],
-  "hetNac": 1,
-  "nac_sau_300_buoc_tam_dung": 0,
-  "nac_sau_150_tick": 1
- },
- "B_nac_loi": [],
- "B_suc1": {
-  "nacToiDa": 1,
-  "sau_lan1": 0,
-  "hetNac": 1,
-  "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|n1|h150|nghi|cap1|p0b-2810-e58986fc"
- },
- "B_lich_su": {
-  "t3": [
-   3,
-   "chua",
-   "ab vb-chua"
-  ],
-  "t4": [
-   4,
-   "mot-phan",
-   "ab vb-motphan"
-  ],
-  "t90": [
-   90,
-   "day",
-   "ab"
-  ],
-  "phat_doan": 90,
-  "doi_phong": {
-   "tu": 6,
-   "sang": 7,
-   "echo": false,
-   "nR": 0
+   "sau_them_30": null,
+   "loi": []
   }
  },
- "B2": {
-  "khong_don": {
-   "phat": 0,
-   "b2KhongDon": 1,
-   "echo": null,
-   "log": [
-    "f120 b121 B2: bấm V – CHƯA CÓ ĐÒN ĐỂ VỌNG (không có đòn nào đã ra hộp trong 60 tick) → không phát, không tốn nấc, giữ bóng cũ"
-   ]
-  },
-  "giu_bong_cu_khi_khong_don": {
-   "echo_van_con": true,
-   "b2KhongDon": 2
-  },
-  "chon_don": {
-   "doan": 34,
-   "mau0": {
-    "n": 1,
-    "at": 1
+ "B_khac": {
+  "lich_su": [
+   {
+    "nR": 3,
+    "lichSu": "chua",
+    "nut": "ab vb-chua"
    },
-   "b2": {
-    "bo": 30,
-    "sw": 2,
-    "at0": 1,
-    "vong": 64
+   {
+    "nR": 4,
+    "lichSu": "mot-phan",
+    "nut": "ab vb-motphan"
    },
-   "soNhat": 1,
-   "trung": 1,
-   "tre_tick": 7
-  },
-  "don_dang_chuan_bi_bo_qua": {
-   "swDangChuanBi": 4,
-   "b2": {
-    "bo": 30,
-    "sw": 3,
-    "at0": 1,
-    "vong": 67
-   },
-   "hopCo": true
-  },
-  "chuan_bi_ngoai_vong": {
-   "chon": {
-    "ok": false,
-    "ly": "đòn gần nhất (mã 5) bắt đầu NGOÀI vòng đệm – bỏ"
-   },
-   "phat": 0
-  },
-  "loi": []
- },
- "tan_a": {
-  "sau_phat": true,
-  "sau_31": false,
-  "cfg": "A|bm0.25|bt0.5|ch1|ct0.5|mien-phi|tan|cap1|p0b-2810-e58986fc",
-  "loi": []
- },
- "tan_b": {
-  "sau_phat": true,
-  "sau_31": false,
-  "cfg": "B|bm0.25|bt0.5|ch1|ct0.5|mien-phi|tan|cap1|p0b-2810-e58986fc",
-  "loi": []
- },
- "mac_dinh": {
-  "cau": "",
-  "debugVong": false,
-  "b2": false,
-  "tan": false,
-  "nac": false,
-  "nut": [
-   "A – Ghi chủ động",
-   "B – Vọng Chiến",
-   "Bắt đầu (ẩn)"
-  ],
-  "huongDan": "A · Ghi chủ động: bấm Vọng để GHI, đánh, bấm Vọng lần nữa để PHÁT – bóng làm lại đúng đoạn bạn đã ghi (tối đa 3 giây).B · Vọng Chiến: bấm Vọng một lần để gọi lại 1,5 giây vừa qua – bóng làm lại những gì bạn vừa làm.Chọn một cách. Trong phòng nút Vọng chỉ có một nghĩa.",
-  "logNen": 1,
-  "coNutXuat": true,
-  "coNutLai": true,
-  "sau_chon_B": {
-   "cau": "b",
-   "url": "?vong=b",
-   "log": [
-    "f0 b0 SỰ KIỆN: chơi tiếp"
-   ],
-   "huong": "B · Vọng Chiến: bấm Vọng một lần để gọi lại 1,5 giây vừa qua – bóng làm lại những gì bạn vừa làm."
-  },
-  "goi_log": {
-   "phien": "p0b-2810-e58986fc",
-   "thietBi": {
-    "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
-    "ios": null,
-    "safari": false,
-    "man": [
-     960,
-     540
-    ],
-    "cuaSo": [
-     960,
-     540
-    ],
-    "dpr": 1,
-    "huong": "ngang",
-    "cam": false
-   },
-   "so_dong": 3,
-   "tomTat": 7,
-   "tk_tre": {
-    "thanhCong": 0,
-    "tong": 0,
-    "buocTB": null,
-    "buocMin": null,
-    "buocMax": null,
-    "tickTB": null,
-    "tickMin": null,
-    "tickMax": null,
-    "khungTB": null,
-    "msTB": null
+   {
+    "nR": 90,
+    "lichSu": "day",
+    "nut": "ab"
    }
+  ],
+  "doi_phong": {
+   "co_bong_truoc": true,
+   "phong": 7,
+   "echo_sau_1_buoc": null,
+   "nR_sau_1_buoc": 0,
+   "log": [
+    "f103 b103 ĐỔI PHÒNG → xoá bóng",
+    "f103 b103 HẾT bóng #1 (đổi phòng xoá bóng): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – bị huỷ khi đổi phòng · hộp bóng KHÔNG bật",
+    "f103 b103 vòng đệm xoá (đổi phòng, đang có 90 tick)"
+   ]
   },
   "loi": []
  }

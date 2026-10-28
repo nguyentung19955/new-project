@@ -3843,11 +3843,13 @@ hurt = function (dir) { if (BO_THU.batTu && pl.hp <= 1) pl.hp = 2; _boHurt(dir);
      bóng xong → tư thế NGHỈ theo hướng cuối, không hộp đòn, mờ hơn (?tan=1: tan hẳn – biến thể, tắt mặc định, áp cho cả hai).
    Tài nguyên (lượt 2, cờ riêng): ?nac=1 → B/B2 tốn 1 nấc mỗi lần (2 nấc, hồi 1 / 150 tick mô phỏng); ?nac=1&suc=1 → sức chứa 1 nấc (chuẩn bị
      thử sau, TẮT mặc định). A luôn miễn phí (chỉ tham chiếu). Bấm khi thiếu nấc / thiếu lịch sử: không trừ gì, không xoá bóng cũ.
-   LOG NỀN: luôn thu từ đầu (không cần ?debug). ⚙ → "Xuất log lượt này" (JSON + tóm tắt, không che màn chơi).
+   LOG NỀN: luôn thu từ đầu (không cần ?debug). ⚙ → "Chép log lượt này" = CHÉP JSON + tóm tắt vào bộ nhớ tạm (không tải file; không che màn chơi).
+   ĐÓNG BĂNG cho buổi thử iPhone (PH10 mục 4): mặc định A/B miễn phí, Âm Đao cấp 1, không Dư Âm, pogo cũ; B2 / nấc / tan TẮT. Link có cờ thử khác → màn đầu ghi "BIẾN THỂ".
    ?debug=vong  bảng log Vọng trên màn (chỉ để xem; log nền vẫn thu khi tắt)   ?battu=1 Lam không chết (quay video)
    Các cờ của P0-A / Âm Đao giữ nguyên (?hitbox=1, ?debug=input …). */
 
-const VB_PHIEN = 'p0b-2810-6477fef2';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
+const VB_PHIEN = 'p0b-2810-cceea180';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
+const VB_DONG_BANG = '28/10/2026';   // PH10: ngày đóng băng cấu hình mặc định cho buổi thử iPhone (chỉ là nhãn – không đổi luật / số)
 const VB_Q = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new Map(); } })();
 const VB_SO = {
   cau: (() => { const v = (VB_Q.get('vong') || '').toLowerCase(); return v === 'a' || v === 'b' || v === 'b2' ? v : ''; })(),   // '' = chưa chọn (màn bắt đầu)
@@ -4153,6 +4155,9 @@ function vbVeDebug() {
 
 /* ---- XUẤT LOG (nền, không cần ?debug): JSON + tóm tắt; lưu bản lượt trước khi đổi cấu hình / rời trang ---- */
 const VB_BAT_DAU = new Date().toISOString();
+/* cấu hình ĐÓNG BĂNG = link chỉ có ?vong=a|b (+ ?debug / ?hitbox để xem). Cờ khác (b2, nac, suc, tan, pogo, giu, cg, battu, …) → biến thể, ghi rõ trong log */
+function vbDongBang() { const co = []; try { new URLSearchParams(location.search).forEach((v, k) => { if (k === 'vong' ? !(v === 'a' || v === 'b' || v === '') : ['debug', 'hitbox'].indexOf(k) < 0) co.push(k + '=' + v); }); } catch (e) {}
+  return {ngay: VB_DONG_BANG, phien: VB_PHIEN, dung: !co.length, coThu: co}; }
 function vbThietBi() {
   const ua = navigator.userAgent || '', ios = (ua.match(/OS (\d+[_\d]*) like Mac OS X/) || [])[1];
   return {ua, ios: ios ? ios.replace(/_/g, '.') : null, safari: /Safari/.test(ua) && !/CriOS|FxiOS|Chrome/.test(ua), man: [screen.width, screen.height], cuaSo: [innerWidth, innerHeight],
@@ -4161,26 +4166,35 @@ function vbThietBi() {
 function vbGoiLog() {
   return {loai: 'tieng-vong-p0b-log', phien: VB_PHIEN, cfg: vbChuoiCfg(), url: location.href, batDau: VB_BAT_DAU, luc: new Date().toISOString(), thietBi: vbThietBi(),
     tomTat: VB.tomTat(), tk: VB.tk(), phat: VB.PHAT.map(p => Object.assign({}, p)), suKien: VB.SU.slice(), log: VB.LOG.map(r => (r.t !== null ? r.t + 'ms ' : '') + r.s),
-    p0: {tk: P0.TK, log: P0.LOG.map(r => r.s)}, chet: S.deaths, congHuong: S.resCount, thoiGianChoi: S.play};
+    p0: {tk: P0.TK, log: P0.LOG.map(r => r.s)}, chet: S.deaths, congHuong: S.resCount, thoiGianChoi: S.play, dongBang: vbDongBang()};
 }
 function vbLuuTruoc() { try { localStorage.setItem('tv-p0b-log-truoc', JSON.stringify(vbGoiLog())); } catch (e) {} }
 addEventListener('pagehide', () => { VB.suKien('pagehide (rời trang / chuyển app)'); vbLuuTruoc(); });
-async function vbXuat() {
+/* Đường lấy log DUY NHẤT: CHÉP vào bộ nhớ tạm (ngay trong lần bấm) rồi dán vào tin nhắn. KHÔNG tải file / bảng Chia sẻ (app Claude – artifact –
+   không cho tải file; bảng Chia sẻ bật lên đè chữ "đã chép" gây rối). Chép bị từ chối → hiện tóm tắt + ô chứa TOÀN BỘ log, đã chọn sẵn, giữ ngón tay → Copy. */
+function vbChepCu(txt) {   // execCommand('copy') – còn chạy được ở nơi chặn navigator.clipboard (khung nhúng, http)
+  try { const o = document.createElement('textarea'); o.value = txt; o.setAttribute('readonly', ''); o.style.cssText = 'position:fixed;left:0;top:0;opacity:0;font-size:16px';
+    document.body.appendChild(o); o.focus(); o.select(); o.setSelectionRange(0, txt.length); const ok = document.execCommand('copy'); o.remove(); return !!ok; } catch (e) { return false; }
+}
+function vbXuat(noi) {   // noi: chỗ hiện kết quả (mặc định ô ở đầu bảng ⚙; màn kết thúc truyền ô thống kê của nó)
   const g = vbGoiLog(); let truoc = null; try { truoc = JSON.parse(localStorage.getItem('tv-p0b-log-truoc') || 'null'); } catch (e) {}
   if (truoc && truoc.batDau !== g.batDau) g.luotTruoc = truoc;   // lượt trước (cấu hình cũ) – lưu tự động khi đổi cấu hình / rời trang
-  const ten = 'p0b-log-' + (VB.SO.cau || 'chua-chon') + '-' + g.luc.replace(/[:.]/g, '-').slice(0, 19) + '.json';
-  const tt = document.getElementById('vb-xuat-tt'); if (tt) { tt.hidden = false; tt.textContent = g.tomTat + (g.luotTruoc ? '\n\n(kèm lượt trước: ' + g.luotTruoc.cfg + ')\n' + g.luotTruoc.tomTat : ''); }
-  VB.ghi('XUẤT LOG ' + ten, 'xuat');
-  /* Trong app Claude (artifact) không tải file được → CHÉP log vào bộ nhớ tạm (ngay trong lần bấm) để dán gửi đi; vẫn hiện tóm tắt chọn-copy được */
-  try { const txt = g.tomTat + '\n\n' + JSON.stringify(g); navigator.clipboard.writeText(txt).then(
-    () => { if (tt) tt.textContent = '✓ ĐÃ CHÉP LOG – dán (Paste) vào tin nhắn gửi Claude.\n\n' + tt.textContent; },
-    () => { if (tt) tt.textContent = '(Không chép tự động được – giữ ngón tay để chọn và copy đoạn dưới.)\n\n' + tt.textContent; }); } catch (e) {}
-  const blob = new Blob([JSON.stringify(g, null, 1)], {type: 'application/json'});
-  try { const f = new File([blob], ten, {type: 'application/json'});
-    if (navigator.canShare && navigator.canShare({files: [f]})) { await navigator.share({files: [f], title: ten}); return; } }
-  catch (e) { if (e && e.name === 'AbortError') return; }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ten; document.body.appendChild(a); a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  const tt = noi || document.getElementById('vb-xuat-tt'), tom = g.tomTat + (g.luotTruoc ? '\n\n(kèm lượt trước: ' + g.luotTruoc.cfg + ')\n' + g.luotTruoc.tomTat : '');
+  const txt = g.tomTat + '\n\n' + JSON.stringify(g);
+  VB.ghi('CHÉP LOG (' + txt.length + ' ký tự)', 'xuat');
+  const hien = (ok, cach) => {
+    VB.ghi(ok ? 'chép log: ĐƯỢC (' + cach + ')' : 'chép log: BỊ TỪ CHỐI → hiện ô chọn-copy', 'xuat');
+    if (ok) toast('Đã chép log – dán vào tin nhắn');
+    if (!tt) return; tt.hidden = false;
+    tt.textContent = (ok ? '✓ ĐÃ CHÉP LOG (' + Math.round(txt.length / 1024) + ' KB) – dán (Paste) vào tin nhắn gửi Claude.\n\n'
+      : '✗ Không chép tự động được. Giữ ngón tay trong ô dưới → Chọn tất cả → Copy (ô chứa TOÀN BỘ log). Nếu vẫn không được: copy đoạn tóm tắt này.\n\n') + tom;
+    if (!ok) { const o = document.createElement('textarea'); o.id = 'vb-xuat-o'; o.readOnly = true; o.value = txt;
+      o.style.cssText = 'display:block;width:100%;height:9em;margin-top:6px;font:11px Menlo,monospace;user-select:text;-webkit-user-select:text';
+      tt.appendChild(o); try { o.focus(); o.select(); o.setSelectionRange(0, txt.length); } catch (e) {} }
+  };
+  let p = null; try { if (navigator.clipboard && navigator.clipboard.writeText) p = navigator.clipboard.writeText(txt); } catch (e) { p = null; }
+  if (!p) { hien(vbChepCu(txt), 'execCommand'); return; }
+  p.then(() => hien(true, 'clipboard'), () => hien(vbChepCu(txt), 'execCommand'));
 }
 
 /* ---- màn bắt đầu: chọn A / B TRƯỚC khi vào phòng; ⚙: đổi cấu hình (lưu log lượt này, tải lại trang, vào lại từ đầu), xuất log, chơi lại ---- */
@@ -4190,7 +4204,8 @@ async function vbXuat() {
     b: '<b>B · Vọng Chiến</b>: <b>bấm Vọng một lần để gọi lại 1,5 giây vừa qua</b> – bóng làm lại những gì bạn vừa làm.',
     b2: '<b>B2 · Vọng từ đòn gần nhất</b>: bấm Vọng một lần → bóng làm lại <b>từ nhát chém gần nhất</b> trong 1,5 giây vừa qua tới lúc bấm.'};
   if (p) p.textContent = 'P0-B · Âm Đao cấp 1 · ' + (VB.SO.cau ? 'cấu hình ' + VB.SO.cau.toUpperCase() : 'chọn cấu hình Vọng') +
-    (VB.SO.nac ? ' · lượt tài nguyên: Vọng Chiến tốn nấc (' + VB.SO.nacToiDa + ' nấc, hồi 1 / 150 tick)' : ' · Vọng MIỄN PHÍ') + (VB.SO.tan ? ' · bóng tan khi xong' : '') + ' · ' + VB_PHIEN;
+    (VB.SO.nac ? ' · lượt tài nguyên: Vọng Chiến tốn nấc (' + VB.SO.nacToiDa + ' nấc, hồi 1 / 150 tick)' : ' · Vọng MIỄN PHÍ') + (VB.SO.tan ? ' · bóng tan khi xong' : '') + ' · ' + VB_PHIEN +
+    (vbDongBang().dung ? ' · bản ĐÓNG BĂNG ' + VB_DONG_BANG : ' · BIẾN THỂ (không phải bản đóng băng: ' + vbDongBang().coThu.join(', ') + ')');
   if (sv) sv.innerHTML = VB.SO.cau ? moTa[VB.SO.cau] : moTa.a + '<br>' + moTa.b + '<br>Chọn một cách. Trong phòng nút Vọng chỉ có một nghĩa.';
   if (!VB.SO.cau && st) {
     st.hidden = true;
@@ -4207,15 +4222,15 @@ async function vbXuat() {
       VB.suKien('đổi cấu hình (tải lại trang)'); vbLuuTruoc(); const u = new URL(location.href); u.searchParams.set('vong', VB.SO.cau === 'a' ? 'b' : 'a'); location.href = u.toString(); });
     mk('set-lai', 'Chơi lại từ đầu (máu, quái, lịch sử, nấc như nhau)').addEventListener('click', () => {
       VB.TK.reset++; VB.suKien('CHƠI LẠI TỪ ĐẦU (reset máu, quái, lịch sử, nấc)'); newGame(); document.getElementById('btn-set-ok').click(); });
-    mk('set-xuat', 'Xuất log lượt này (JSON + tóm tắt)').addEventListener('click', () => { vbXuat(); });
+    mk('set-xuat', 'Chép log lượt này (dán vào tin nhắn)').addEventListener('click', () => { vbXuat(); });
     const tt = document.createElement('div'); tt.id = 'vb-xuat-tt'; tt.hidden = true; s.parentElement.prepend(tt);   // tóm tắt ở ĐẦU bảng ⚙ (bảng tạm dừng – không che lúc chơi)
   }
-  const ag = document.getElementById('btn-again'); if (ag) { const b = document.createElement('button'); b.type = 'button'; b.className = 'alt'; b.id = 'end-xuat'; b.textContent = 'Xuất log lượt này';
-    ag.after(b); b.addEventListener('click', () => { vbXuat(); const e = document.getElementById('end-stats'); if (e) e.style.whiteSpace = 'pre-wrap', e.textContent = VB.tomTat(); }); }
+  const ag = document.getElementById('btn-again'); if (ag) { const b = document.createElement('button'); b.type = 'button'; b.className = 'alt'; b.id = 'end-xuat'; b.textContent = 'Chép log lượt này';
+    ag.after(b); b.addEventListener('click', () => { const e = document.getElementById('end-stats'); if (e) e.style.whiteSpace = 'pre-wrap'; vbXuat(e || undefined); }); }
 })();
 function vbHint() { return '{B} chạm {A} = chém · ' + (VB_SO.cau === 'a' ? 'bấm {V} ghi, đánh, bấm {V} lần nữa = phát' : VB_SO.cau === 'b2' ? 'bấm {V} = bóng làm lại từ nhát chém gần nhất' : VB_SO.cau === 'b' ? 'bấm {V} = gọi lại 1,5 giây vừa qua' : 'chọn cách gọi bóng') + ' · đi sang phải'; }
 HINT.p0a = vbHint();
-VB.ghi('cấu hình ' + vbChuoiCfg() + (VB_SO.cau ? '' : ' (chưa chọn – màn bắt đầu)') + ' · log nền bắt đầu', 'cfg');
+VB.ghi('cấu hình ' + vbChuoiCfg() + (VB_SO.cau ? '' : ' (chưa chọn – màn bắt đầu)') + ' · ' + (vbDongBang().dung ? 'bản ĐÓNG BĂNG ' + VB_DONG_BANG : 'BIẾN THỂ: ' + vbDongBang().coThu.join(', ')) + ' · log nền bắt đầu', 'cfg');
 
 /* ---- API cho công cụ quay / đo (chỉ dùng với ?ghi=1) ---- */
 window.TVVB = {

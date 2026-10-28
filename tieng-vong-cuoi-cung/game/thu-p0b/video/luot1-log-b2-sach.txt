@@ -1,37 +1,37 @@
 == Vọng (?debug=vong)
-f0 b0 cấu hình B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc · log nền bắt đầu
+f0 b0 cấu hình B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180 · BIẾN THỂ: ghi=1, battu=1, vong=b2 · log nền bắt đầu
 f1 b1 vào phòng 7 (Sân hai chuông)
 f1 b1 vòng đệm xoá (đổi phòng, đang có 1 tick)
-f105 b118 PHÁT bóng #1 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 27 tick (B2: bỏ 63 tick đầu vòng đệm, bắt đầu từ đòn mã 2), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f105 b118 PHÁT bóng #1 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 27 tick (B2: bỏ 63 tick đầu vòng đệm, bắt đầu từ đòn mã 2), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f112 b124 hộp bóng #1 ĐẦU TIÊN bật: bấm V → hộp 7 bước logic (7 tick mô phỏng + 0 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f112 b124 bóng #1 TRÚNG ĐẦU: bấm V → trúng 7 bước (7 tick mô phỏng)
 f112 b124   bóng trúng Chuông Gỗ#3: máu 2, Thế 0
 f133 b150 bóng #1 phát XONG (đủ 27 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f146 b163 HẾT bóng #1 (phát xong): trúng 1 lần, máu 2, Thế 0, Cộng hưởng 0 · bấm V → hộp bóng đầu 7 bước (7 tick mô phỏng + 0 bước khựng) · → trúng đầu 7 bước
-f153 b171 PHÁT bóng #2 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 4), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f153 b171 PHÁT bóng #2 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 4), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f160 b180 hộp bóng #2 ĐẦU TIÊN bật: bấm V → hộp 10 bước logic (7 tick mô phỏng + 3 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f161 b181 bóng #2 phát XONG (đủ 7 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f174 b194 HẾT bóng #2 (phát xong): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – mục tiêu đã chết · bấm V → hộp bóng đầu 10 bước (7 tick mô phỏng + 3 bước khựng)
-f327 b357 PHÁT bóng #3 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 27 tick (B2: bỏ 63 tick đầu vòng đệm, bắt đầu từ đòn mã 6), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f327 b357 PHÁT bóng #3 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 27 tick (B2: bỏ 63 tick đầu vòng đệm, bắt đầu từ đòn mã 6), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f334 b363 hộp bóng #3 ĐẦU TIÊN bật: bấm V → hộp 7 bước logic (7 tick mô phỏng + 0 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f334 b363 bóng #3 TRÚNG ĐẦU: bấm V → trúng 7 bước (7 tick mô phỏng)
 f334 b363   bóng trúng Chuông Gỗ#4: máu 2, Thế 0
 f355 b389 bóng #3 phát XONG (đủ 27 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f368 b402 HẾT bóng #3 (phát xong): trúng 1 lần, máu 2, Thế 0, Cộng hưởng 0 · bấm V → hộp bóng đầu 7 bước (7 tick mô phỏng + 0 bước khựng) · → trúng đầu 7 bước
-f405 b446 PHÁT bóng #4 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 9), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt), KHÔNG còn địch sống trong phòng
+f405 b446 PHÁT bóng #4 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 9), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt), KHÔNG còn địch sống trong phòng
 f412 b455 hộp bóng #4 ĐẦU TIÊN bật: bấm V → hộp 10 bước logic (7 tick mô phỏng + 3 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f413 b456 bóng #4 phát XONG (đủ 7 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f426 b469 HẾT bóng #4 (phát xong): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – mục tiêu đã chết · bấm V → hộp bóng đầu 10 bước (7 tick mô phỏng + 3 bước khựng)
 f513 b556 vào phòng 8 (Hành lang gác)
 f513 b556 ĐỔI PHÒNG → xoá bóng
 f513 b556 vòng đệm xoá (đổi phòng, đang có 90 tick)
-f669 b717 PHÁT bóng #5 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 23 tick (B2: bỏ 67 tick đầu vòng đệm, bắt đầu từ đòn mã 11), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f669 b717 PHÁT bóng #5 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 23 tick (B2: bỏ 67 tick đầu vòng đệm, bắt đầu từ đòn mã 11), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f676 b725 hộp bóng #5 ĐẦU TIÊN bật: bấm V → hộp 9 bước logic (7 tick mô phỏng + 2 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f676 b725 bóng #5 TRÚNG ĐẦU: bấm V → trúng 9 bước (7 tick mô phỏng)
 f676 b725   bóng trúng quái gác#5: máu 0 (bị chặn), Thế 5
 f693 b750 bóng #5 phát XONG (đủ 23 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f706 b766 HẾT bóng #5 (phát xong): trúng 1 lần, máu 0, Thế 5, Cộng hưởng 1 · bấm V → hộp bóng đầu 9 bước (7 tick mô phỏng + 2 bước khựng) · → trúng đầu 9 bước
-f716 b777 PHÁT bóng #6 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 14), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt), KHÔNG còn địch sống trong phòng
+f716 b777 PHÁT bóng #6 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 7 tick (B2: bỏ 83 tick đầu vòng đệm, bắt đầu từ đòn mã 14), 1 nhát, hộp đầu ở tick 6 của đoạn, MẪU CUỐI có hộp, đứng yên đầu đoạn 0 tick (KHÔNG cắt), KHÔNG còn địch sống trong phòng
 f723 b787 hộp bóng #6 ĐẦU TIÊN bật: bấm V → hộp 11 bước logic (7 tick mô phỏng + 4 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f724 b788 bóng #6 phát XONG (đủ 7 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f737 b801 HẾT bóng #6 (phát xong): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – mục tiêu đã chết · bấm V → hộp bóng đầu 11 bước (7 tick mô phỏng + 4 bước khựng)
@@ -39,29 +39,29 @@ f821 b886 B2: bấm V – CHƯA CÓ ĐÒN ĐỂ VỌNG (đòn gần nhất (mã 
 f935 b1002 vào phòng 9 (Phòng Bọ)
 f935 b1002 ĐỔI PHÒNG → xoá bóng
 f935 b1002 vòng đệm xoá (đổi phòng, đang có 90 tick)
-f1080 b1154 PHÁT bóng #7 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 18), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f1080 b1154 PHÁT bóng #7 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 18), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f1087 b1166 bóng #7 TRÚNG ĐẦU: bấm V → trúng 13 bước (7 tick mô phỏng)
 f1087 b1166   bóng trúng Bọ#0 (thân/bụng): máu 2, Thế 0
 f1087 b1166 hộp bóng #7 ĐẦU TIÊN bật: bấm V → hộp 13 bước logic (7 tick mô phỏng + 6 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f1102 b1189 bóng #7 phát XONG (đủ 21 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f1115 b1205 HẾT bóng #7 (phát xong): trúng 1 lần, máu 2, Thế 0, Cộng hưởng 1 · bấm V → hộp bóng đầu 13 bước (7 tick mô phỏng + 6 bước khựng) · → trúng đầu 13 bước
-f1143 b1238 PHÁT bóng #8 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 21), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f1143 b1238 PHÁT bóng #8 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 21), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f1150 b1250 hộp bóng #8 ĐẦU TIÊN bật: bấm V → hộp 13 bước logic (7 tick mô phỏng + 6 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f1165 b1265 bóng #8 phát XONG (đủ 21 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f1178 b1278 HẾT bóng #8 (phát xong): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – mục tiêu đã chết · bấm V → hộp bóng đầu 13 bước (7 tick mô phỏng + 6 bước khựng)
-f1340 b1447 PHÁT bóng #9 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 24), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f1340 b1447 PHÁT bóng #9 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 24), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f1347 b1459 bóng #9 TRÚNG ĐẦU: bấm V → trúng 13 bước (7 tick mô phỏng)
 f1347 b1459   bóng trúng Bọ#1 (thân/bụng): máu 2, Thế 0
 f1347 b1459 hộp bóng #9 ĐẦU TIÊN bật: bấm V → hộp 13 bước logic (7 tick mô phỏng + 6 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f1362 b1482 bóng #9 phát XONG (đủ 21 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f1375 b1498 HẾT bóng #9 (phát xong): trúng 1 lần, máu 2, Thế 0, Cộng hưởng 1 · bấm V → hộp bóng đầu 13 bước (7 tick mô phỏng + 6 bước khựng) · → trúng đầu 13 bước
-f1403 b1531 PHÁT bóng #10 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-e58986fc] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 27), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
+f1403 b1531 PHÁT bóng #10 [B2|bm0.25|bt0.5|ch1|ct0.5|mien-phi|nghi|cap1|p0b-2810-cceea180] bấm V: đoạn 21 tick (B2: bỏ 69 tick đầu vòng đệm, bắt đầu từ đòn mã 27), 1 nhát, hộp đầu ở tick 6 của đoạn, đứng yên đầu đoạn 0 tick (KHÔNG cắt)
 f1410 b1543 hộp bóng #10 ĐẦU TIÊN bật: bấm V → hộp 13 bước logic (7 tick mô phỏng + 6 bước khựng) = đứng yên đầu đoạn 0 + phần còn lại 6 tick + khựng
 f1425 b1558 bóng #10 phát XONG (đủ 21 mẫu) → tư thế NGHỈ hướng phải, không hộp đòn, mờ
 f1438 b1571 HẾT bóng #10 (phát xong): KHÔNG GÂY HIT / ảnh hưởng chiến đấu – mục tiêu đã chết · bấm V → hộp bóng đầu 13 bước (7 tick mô phỏng + 6 bước khựng)
 
 == P0 (trúng / Cộng hưởng)
-f0 ÂM ĐAO cấp 1 (vào ván): đánh thường 10/10 (nhát 3 10/30) · chưa có Dư Âm · chí mạng 5% ×1.5 · Chuông Gỗ 40 máu (mặc định)  (đòn / vết / bóng đã tạo giữ số đã chốt)
+f0 ÂM ĐAO cấp 1 (vào ván): đánh thường 10/10 (nhát 3 10/30) · chưa có Dư Âm · hộp nảy [-26,-24,64,82] (mặc định) · chí mạng 5% ×1.5 · Chuông Gỗ 40 máu (mặc định)  (đòn / vết / bóng đã tạo giữ số đã chốt)
 f46 #1 ra-ngay → atk1  cần y=0.00
 f47 giu #1: nha-som (giữ 1 tick mô phỏng (1 bước logic + 0 bước khựng) · ms thật: – (công cụ tự bước, không có đồng hồ thật) < 20 tick; cấp 1 chưa có Dư Âm) → chỉ là đánh thường
 f52 hộp atk1 bật: chạm #1 → hộp 7 tick (tính tick bấm = 1; su 7)

@@ -1,8 +1,13 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026, sửa theo phản hồi 9)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10)
+
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-cceea180` – đóng băng ngày 28/10/2026.**
+> In trên màn bắt đầu ("… · p0b-2810-cceea180 · bản ĐÓNG BĂNG 28/10/2026") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm).
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
-`PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, và **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8).
-**Trang riêng**, chưa ghép game chính. **Không sửa** `game/thu-p0a/`, `game/thu-bo-vo-moc/`, `game/thu-phong-b/`, `game/demo.html`, `build-demo.py`, `docs/gameplay/`.
+`PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
+và **`PHAN-HOI-10-P0C-AMDAO-P0B-DEF.md`** (mục 3, 4 và "6. ĐOẠN GỬI CLAUDE" – phần P0-B).
+**Trang riêng**, chưa ghép game chính. **Không sửa** `game/thu-p0a/`, `game/thu-p0c/`, `game/thu-bo-vo-moc/`, `game/thu-phong-b/`, `game/demo.html`, `build-demo.py`, `docs/gameplay/`.
 Không publish. Không có bộ kiểm thử tự động – chỉ công cụ quay + ghi số.
 
 > **Mọi số dưới đây đo trong Chromium headless trên máy chủ, do bot bấm.** Chưa ai chơi trên iPhone. **Không kết luận điều khiển / trải nghiệm đạt từ Chromium.**
@@ -12,20 +17,91 @@ Không publish. Không có bộ kiểm thử tự động – chỉ công cụ q
 
 | Link | Dùng để |
 |---|---|
-| https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0b/index.html | **Người chơi thử trên iPhone.** Màn bắt đầu có 2 nút **A – Ghi chủ động** / **B – Vọng Chiến** và hướng dẫn riêng từng cách. Log nền LUÔN thu; hộp đòn TẮT |
-| …/index.html?vong=a · …?vong=b | Vào thẳng A / B (lượt chính: cả hai **miễn phí**, bóng xong đứng **nghỉ**) |
+| https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0b/index.html | **BẢN ĐÓNG BĂNG – người chơi thử trên iPhone.** Màn bắt đầu có 2 nút **A – Ghi chủ động** / **B – Vọng Chiến** và hướng dẫn riêng từng cách. Log nền LUÔN thu; hộp đòn TẮT |
+| …/index.html?vong=a · …?vong=b | Vào thẳng A / B – vẫn là **bản đóng băng** (cả hai **miễn phí**, bóng xong đứng **nghỉ**) |
+| *Các link dưới đây là BIẾN THỂ – không dùng trong lượt so A/B (màn bắt đầu ghi "BIẾN THỂ")* | |
 | …/index.html?vong=b2 | **B2 – biến thể, TẮT mặc định**: phát từ lúc bắt đầu nhát chém gần nhất (chỉ thử SAU A và B gốc) |
 | …/index.html?vong=b&nac=1 | **Lượt tài nguyên**: B tốn nấc – 2 nấc, hồi 1 nấc / 150 tick mô phỏng |
 | …/index.html?vong=b&nac=1&suc=1 | Lượt tài nguyên – **1 nấc** / 150 tick (chuẩn bị thử sau, TẮT mặc định; chỉ đổi sức chứa) |
 | …&tan=1 | Biến thể bóng **tan** khi phát xong (TẮT mặc định, áp cho cả A và B; thử riêng, sau khi so cách gọi) |
-| …/index.html?vong=a&debug=vong&hitbox=1 | Bảng log Vọng trên màn + lớp hộp đòn (teal = hộp bóng). **Không cần** để đọc log – log nền đã thu sẵn |
+| …/index.html?vong=a&debug=vong&hitbox=1 | Bảng log Vọng trên màn + lớp hộp đòn (teal = hộp bóng). **Không cần** để đọc log – log nền đã thu sẵn. (`debug` / `hitbox` chỉ để xem – vẫn tính là bản đóng băng) |
 
 Trong game, ⚙ (tạm dừng, không che lúc chơi):
-- **"Xuất log lượt này (JSON + tóm tắt)"** – tóm tắt hiện ở đầu bảng ⚙; file JSON tải về / chia sẻ (iPhone: bảng Chia sẻ → Lưu vào Tệp / AirDrop). Màn kết thúc cũng có nút này.
+- **"Chép log lượt này (dán vào tin nhắn)"** – **CHÉP** toàn bộ log (tóm tắt + JSON) vào bộ nhớ tạm; ô ở đầu bảng ⚙ ghi **"✓ ĐÃ CHÉP LOG (… KB)"** + tóm tắt → mở tin nhắn, **dán**.
+  Nếu Safari từ chối chép: ô ghi **"✗ Không chép tự động được"** + một ô chữ chứa TOÀN BỘ log (đã chọn sẵn) → giữ ngón tay → Chọn tất cả → Copy; tệ nhất thì copy đoạn tóm tắt.
+  **Không tải file, không bảng Chia sẻ** (app Claude / artifact không cho tải file – đã bỏ hẳn phần tải). Màn kết thúc cũng có nút **"Chép log lượt này"** (kết quả hiện ngay ở màn đó).
 - **"Chơi lại từ đầu"** – đặt lại máu, quái, lịch sử, nấc như nhau (dùng khi bắt đầu mỗi lượt).
-- **"Vọng: A/B – đổi"** – lưu log lượt này vào máy rồi tải lại trang với cấu hình kia; lần xuất log sau sẽ **kèm lượt trước** (`luotTruoc`).
+- **"Vọng: A/B – đổi"** – lưu log lượt này vào máy (bộ nhớ trình duyệt) rồi tải lại trang với cấu hình kia; lần chép log sau sẽ **kèm lượt trước** (`luotTruoc`).
+  Nếu trình duyệt chặn bộ nhớ (vd. duyệt riêng tư) thì không kèm được → **chép log TRƯỚC khi đổi** cho chắc.
 
 Đường đi: phòng A (hình nộm) → **B** (2 Chuông Gỗ) → **C** (quái gác có vỏ) → **D** (2 Bọ Vỏ Mộc). HUD dưới máu ghi cấu hình; B có thanh lịch sử + chữ trạng thái (và ô nấc ở lượt tài nguyên).
+
+## Phản hồi 10: sinh lại từ Âm Đao PH8, kiểm lại, đóng băng (28/10/2026)
+
+### 1. Phiên bản – đã sinh từ `am-dao.html` bản PH8
+- `index.html` sinh bằng `cong-cu/tao-p0b.py` từ `game/thu-p0a/am-dao.html` **sau commit `b61e392` (Âm Đao sửa theo PH8)** – lần sinh đầu từ PH8 là commit `870df34`
+  (phiên `p0b-2810-6477fef2`, chạy lại script ra đúng file đó). Commit này sửa `khoi-p0b.js` (nút chép log, nhãn đóng băng) rồi sinh lại → **phiên mới `p0b-2810-cceea180`**.
+  Mã băm gồm `am-dao.html` + `khoi-bo.js` + `khoi-p0b.js` + `tao-p0b.py`; số `2810` = ngày sinh.
+- Đọc thẳng trong trang đang chạy (Chromium, link mặc định): hộp nhát 2 **[−10, −100, 90, 48]** · hộp hất **[−9, −140, 87, 60]** (mép trước **78**) ·
+  hộp nảy **[−26, −24, 64, 82] = pogo cũ** (`?pogo=moi` không bật) · Âm Đao **cấp 1**, **không Dư Âm**, `?giu` tắt (0). Log ván ghi "hộp nảy [-26,-24,64,82] (mặc định)".
+- Phiên bản hiện ở **màn bắt đầu** và trong log (`phien`, `cfg` đuôi `…|cap1|p0b-2810-cceea180`, `dongBang`).
+- ~~"chưa nhận PH8, phiên p0b-2810-e58986fc"~~ – đã thay. Phiên `e58986fc` là bản trước PH8 (số cũ ở `video/truoc-ph8/`).
+
+### 2. Kiểm lại trên bản sinh mới (Chromium headless, bot – `video/kiem-code.json`, video ngắn `video/kiem-lai-PH8-A.mp4` · `-B.mp4`)
+Mỗi ca một trang mới: hình nộm phòng A đặt lại, Lam cách nộm 60 px, mặt phải. A: bấm V ghi → đứng 11 tick → chém → dừng ghi đúng lúc cần. B: đứng 30 tick → chém → bấm V.
+(Vị trí mẫu khác số cũ 1 tick vì script kiểm lần này bấm khác – **không** phải do PH8: hộp vẫn ra **6 tick sau lúc chém** như trước.)
+
+| Ca | A (số mới) | B (số mới) | Số cũ (trước PH8, `truoc-ph8/kiem-code.json`) |
+|---|---|---|---|
+| Đoạn hợp lệ ngắn nhất | ghi 3 → **không phát**, "ghi quá ngắn" 1 · ghi 4 → phát đủ 4 mẫu rồi nghỉ | vòng đệm 3 → **không phát**, thiếu lịch sử 1 · 4 → phát đủ 4 | như vậy |
+| **Mẫu cuối** – đòn chỉ ở mẫu cuối | đoạn 19, hộp chỉ ở mẫu **18** → hộp bóng bật **1 tick**, trúng **1**, "trúng ở mẫu cuối" | đoạn 41, hộp chỉ ở mẫu **40** → **1 tick**, trúng **1**, "trúng ở mẫu cuối" | A: 18 / mẫu 17 · B: 37 / mẫu 36 – 1 tick, trúng 1 |
+| Hết đoạn khi có hitstop | trúng mẫu cuối gây khựng **2 bước**; bóng chỉ kết thúc **sau** khựng, không thêm tick có hộp | như A (2 bước) | khựng 4 bước, cùng kết quả |
+| **Chống hit lặp** – nhiều mẫu active cùng mã | 8 mẫu hộp (18–25), **1 mã** → hộp bóng bật **8 tick**, trúng **1** lần | 8 mẫu (40–47), 1 mã → 8 tick, trúng **1** | 8 tick, trúng 1 |
+| **Cộng hưởng ở mẫu cuối** (Lam chém để trúng nộm ≤ 12 tick trước) | Cộng hưởng **1**, "Cộng hưởng ở tick mẫu cuối", bóng trúng **1** (khựng 8 bước, không trúng lặp) | như A | Cộng hưởng 1 ở mẫu cuối |
+| Bóng sau khi phát | `idle`, lật trái theo hướng cuối, không hộp; 30 tick sau vẫn thế | như A | như vậy |
+| `?tan=1` | bóng mất sau 30 tick | như A | như vậy |
+| B: lịch sử / nút | – | 3 tick "chưa" (nút `vb-chua`) · 4 "sẵn sàng" (`vb-motphan`, viền đứt) · 90 "đầy" | như vậy |
+| B: đổi phòng | – | có bóng → sang phòng khác: bóng xoá, lần phát xếp "bị huỷ khi đổi phòng", vòng đệm **0** | như vậy |
+| Lỗi trang | **0** | **0** | 0 |
+
+**Trận bot + tình huống ngắn chạy lại trên bản mới** (`quay-p0b.py luot1 luot2 tinh-huong --khong-video` → `video/ket-qua.json`, log `video/luot*-log-*.txt`):
+**mọi số trùng khít số cũ** (so từng trường của `ket-qua.json` mới với `truoc-ph8/ket-qua.json`: chỉ khác chuỗi phiên bản; log trận chỉ khác dòng phiên bản / dòng "hộp nảy … (mặc định)").
+Lý do: PH8 chỉ thu **phía sau** nhát 2 (−36 → −10) và **mép trước của hất** (88 → 78); bot chạm Chém không kèm hướng (không ra hất) và quái luôn ở phía trước Lam; pogo giữ hộp cũ.
+Vì vậy bảng mục 3 giữ nguyên số – nay đã xác nhận trên bản PH8. Hai video dài cũ (bản trước PH8, cùng đường đi) chuyển sang `video/truoc-ph8/` có đuôi `-truoc-PH8`; không quay lại video dài.
+
+### 3. Đường lấy log trên iPhone: CHÉP vào bộ nhớ tạm
+- Nút trong ⚙ = **"Chép log lượt này (dán vào tin nhắn)"**; màn kết thúc = **"Chép log lượt này"**. Bấm → chép **tóm tắt + toàn bộ JSON** (có phiên bản, cấu hình, máy, từng lần phát, sự kiện, log).
+- Thứ tự: `navigator.clipboard.writeText` (ngay trong lần chạm) → nếu bị từ chối thì `execCommand('copy')` → nếu vẫn không được: hiện ô chữ chứa **toàn bộ** log, đã chọn sẵn, để giữ ngón tay → Copy; kèm tóm tắt chọn-copy được.
+  Kết quả chép ghi vào log ("chép log: ĐƯỢC (clipboard)" / "BỊ TỪ CHỐI").
+- **Đã bỏ phần tải file / bảng Chia sẻ** (app Claude – artifact – không cho tải; bảng Chia sẻ còn đè chữ "đã chép"). Không thêm hệ thống log mới.
+- Kiểm Chromium: cho quyền chép → bộ nhớ tạm có gói `tieng-vong-p0b-log` đúng phiên `p0b-2810-cceea180`, `dongBang.dung = true`; chặn chép → hiện ô chữ ~3,5 KB đã chọn hết 0…cuối, có JSON. **Chưa kiểm trên Safari thật** (xem checklist).
+
+### 4. Cấu hình ĐÓNG BĂNG cho buổi thử – phiên `p0b-2810-cceea180`, ngày 28/10/2026
+| Mục | Mặc định (đóng băng) | Biến thể – TẮT, chỉ bật bằng cờ, không ghép vào lượt so A/B |
+|---|---|---|
+| Cách gọi bóng | **A / B** chọn ở màn bắt đầu (hoặc `?vong=a` / `?vong=b`) | B2 (`?vong=b2`) |
+| Tài nguyên | **miễn phí** (cả A và B) | `?nac=1` (2 nấc / 150), `&suc=1` (1 nấc) |
+| Âm Đao | **cấp 1, không Dư Âm** (`?cap=` bị bỏ qua), hộp PH8 | `?giu=16` (không có tác dụng ở cấp 1) |
+| Pogo | **hộp cũ** [−26, −24, 64, 82] | `?pogo=moi` |
+| Bóng phát xong | **nghỉ** (mờ 0,24, không hộp) | `?tan=1` |
+| Quái | Chuông Gỗ 40 ×2, quái gác [30, vỏ 60], Bọ [40, mai 40] ×2 | `?cg=36` |
+
+Trang tự nhận: chỉ có `vong=a|b` (+ `debug`, `hitbox` để xem) → "bản ĐÓNG BĂNG 28/10/2026"; mọi cờ khác → "BIẾN THỂ (…)" trên màn bắt đầu và trong log (`dongBang.coThu`).
+Chưa chọn B vì ít lần bấm hơn, chưa loại B vì bot phát chậm (PH10 mục 4).
+
+### 5. Checklist kiểm nhanh trên Safari THẬT (iPhone, xoay ngang) – người dùng làm trước buổi thử
+Mở link mặc định. Mỗi dòng: làm → nhìn đúng điều ghi → đánh dấu.
+1. ☐ **Phiên bản**: màn bắt đầu ghi `p0b-2810-cceea180 · bản ĐÓNG BĂNG 28/10/2026` (không có chữ "BIẾN THỂ"). Có 2 nút A / B.
+2. ☐ **Đa chạm**: chọn A. Giữ nút di chuyển (phải) + chạm **Chém** + chạm **Lướt** cùng lúc → Lam vừa chạy vừa chém / lướt, không nút nào "kẹt".
+   Giữ di chuyển + chạm **V** (bắt đầu ghi) + chém + chạm V lần nữa → bóng phát. Bấm V cùng lúc chém / lướt vài lần: có lần nào V không ăn, hoặc chạm nhầm nút bên cạnh không. Ghi lại.
+3. ☐ **Mất focus / chuyển app**: đang chơi (có bóng đang phát) → vuốt về màn chính / mở app khác 5 giây → quay lại. Game chạy tiếp **từ đúng chỗ cũ** (trình duyệt ngừng
+   khung hình khi ẩn; trang không chạy bù) – Lam không mất máu trong lúc vắng, nút không kẹt (không tự chạy / tự chém khi quay lại). Thử thêm: kéo Trung tâm điều khiển xuống rồi đóng; khoá màn rồi mở.
+   Log sẽ có "mất focus" / "trang bị ẩn" – xem ở bước 5.
+4. ☐ **Đổi A/B**: ⚙ → "Vọng: A – đổi A↔B" → trang tải lại, màn bắt đầu ghi **cấu hình B** và vẫn "bản ĐÓNG BĂNG". Vào chơi: máu, quái như lúc đầu; HUD ghi "B · Vọng Chiến".
+5. ☐ **Chép log rồi dán**: ⚙ → "Chép log lượt này" → thấy **"✓ ĐÃ CHÉP LOG (… KB)"**. Mở Ghi chú / tin nhắn → dán: phải ra đoạn bắt đầu bằng "P0-B · cấu hình B|…" rồi một khối JSON dài
+   có `"luotTruoc"` (lượt A trước đó). Nếu thấy "✗ Không chép tự động được": giữ ngón tay trong ô chữ → Chọn tất cả → Copy → dán thử; báo lại trường hợp này.
+6. ☐ (nếu dùng app Claude) mở trang trong app, chép log, dán vào ô chat – có dán được không, có bị cắt không.
+Báo kết quả từng dòng (đạt / không + mô tả). **Chưa dòng nào được đánh dấu đạt** – Chromium không thay được Safari thật.
 
 ## Sửa theo phản hồi 9
 
@@ -58,10 +134,9 @@ Trong game, ⚙ (tạm dừng, không che lúc chơi):
 8. **Lỗi `sx` của Bọ**: đã sửa tại nguồn `thu-bo-vo-moc/cong-cu/khoi-bo.js` (commit `0836a73`, phiên khác). `tao-p0b.py` **bỏ bản vá trên bản chép**, thêm kiểm: nếu nguồn còn lỗi thì
    script dừng. Kiểm: đặt Bọ vào trạng thái sụp choáng với `?hitbox=1&debug=vong` → 0 lỗi trang; trận quay debug (cả A, B) → 0 lỗi trang.
 
-**Âm Đao PH8**: phiên Âm Đao đang sửa hitbox trong `thu-p0a/`. Khi bản đó lên nhánh thì **chạy lại `tao-p0b.py`** để A/B dùng chung bản sửa (rồi quay lại số).
-Lúc commit này: chưa có bản PH8 trên nhánh – P0-B sinh từ `am-dao.html` hiện tại (phiên `p0b-2810-e58986fc`).
+**Âm Đao PH8**: ĐÃ NHẬN – sinh lại từ `am-dao.html` bản PH8 và kiểm lại (xem "Phản hồi 10" ở trên). Phiên đóng băng `p0b-2810-cceea180`.
 
-### Kiểm bằng code (Chromium headless, `video/kiem-code.json`)
+### Kiểm bằng code – SỐ CŨ, bản trước PH8 (phiên `e58986fc`, nay ở `video/truoc-ph8/kiem-code.json`; số mới trên bản PH8: mục "Phản hồi 10" ở trên)
 
 | Ca (PH9 mục 1.3) | A | B |
 |---|---|---|
@@ -83,7 +158,7 @@ Lúc commit này: chưa có bản PH8 trên nhánh – P0-B sinh từ `am-dao.ht
 | B2: có 1 nhát trong vòng | phát từ tick đầu đòn (mẫu 0: `atkN=1, atkT=1`), bỏ 30 tick đầu vòng đệm, trễ tới hộp **7 tick** (= chuẩn bị) |
 | B2: nhát mới đang chuẩn bị (chưa ra hộp) | bỏ qua, phát nhát trước |
 | B2: đầu đòn trôi khỏi vòng đệm | "đòn gần nhất bắt đầu NGOÀI vòng đệm – bỏ", không phát |
-| Link mặc định | chưa chọn → 2 nút A/B + hướng dẫn hai cách; log nền đã thu; debug / hộp đòn tắt; nút Xuất log + Chơi lại có trong ⚙ |
+| Link mặc định | chưa chọn → 2 nút A/B + hướng dẫn hai cách; log nền đã thu; debug / hộp đòn tắt; nút Xuất log (nay: **Chép log**) + Chơi lại có trong ⚙ |
 | Lỗi trang | **0** ở mọi trang kiểm / quay; "lần bấm Chém thiếu kết cục" **0** |
 
 ### Cần thử iPhone (chưa làm – KHÔNG đánh dấu đạt)
@@ -91,17 +166,17 @@ Lúc commit này: chưa có bản PH8 trên nhánh – P0-B sinh từ `am-dao.ht
 - Nút Vọng B: mờ / viền đứt / đầy có đọc được trên nút ảnh không; "hết nấc" (xám + số 0) có lẫn với "chưa sẵn sàng" không.
 - Bóng nghỉ mờ 0,24 có còn bị tưởng là đang đánh không; có cần `?tan=1` không (thử riêng, sau).
 - Độ trễ thật (ms), cảm ứng, bấm Vọng cùng lúc chém / lướt có trượt nút không, hiệu năng Safari – chỉ đo được trên máy (log có ms thật + sự kiện tạm dừng / focus).
-- Nút Xuất log trên Safari iOS: bảng Chia sẻ có hiện file JSON không (nếu không: tải về trong Tệp). Đổi cấu hình qua ⚙ có giữ log lượt trước không.
+- Nút **Chép log** trên Safari iOS: chép được không, dán ra đủ JSON không; đổi cấu hình qua ⚙ có giữ log lượt trước không (checklist mục "Phản hồi 10" → 5).
 
 ## Hướng dẫn buổi thử (theo PH9 mục 3)
 
-**Trước buổi**: đóng băng phiên bản (`p0b-ddmm-mãbăm` in trên màn bắt đầu + trong log). Nếu Âm Đao PH8 lên nhánh trước buổi → sinh lại P0-B để A và B dùng chung bản sửa,
-ghi phiên bản mới. Cấp 1, không Dư Âm, không đổi quái / tầm / VFX giữa A và B. Ghi máy, iOS, trình duyệt, hướng màn (log tự ghi), **không** bật `?battu`.
+**Trước buổi**: ĐÃ đóng băng – phiên **`p0b-2810-cceea180`** (28/10/2026, sinh từ Âm Đao PH8). Kiểm màn bắt đầu ghi đúng phiên + "bản ĐÓNG BĂNG"; làm checklist Safari thật (mục "Phản hồi 10" → 5).
+Cấp 1, không Dư Âm, pogo cũ, không đổi quái / tầm / VFX giữa A và B; **không đổi số giữa buổi, không ghép biến thể vào cùng lượt**. Ghi máy, iOS, trình duyệt, hướng màn (log tự ghi), **không** bật `?battu`.
 
 **Thứ tự**: mỗi người chơi **cả A và B**, thời gian tương đương. Chia **A→B** và **B→A** (4 người: 2 người mỗi thứ tự; 3 người: dùng để phát hiện vấn đề, không làm thống kê).
 1. Tập di chuyển / đánh / né ở phòng A (hình nộm) vài phút.
-2. Lượt 1: cấu hình đầu (link mặc định, chọn A hoặc B trên màn bắt đầu) – **miễn phí**, B+C rồi phòng Bọ, vài phút. Cuối lượt: ⚙ → **Xuất log lượt này**.
-3. Lượt 2: ⚙ → "Vọng: đổi" (log lượt 1 được lưu, vào lại từ đầu – **máu, quái, lịch sử, nấc như nhau**). Chơi tương đương, xuất log.
+2. Lượt 1: cấu hình đầu (link mặc định, chọn A hoặc B trên màn bắt đầu) – **miễn phí**, B+C rồi phòng Bọ, vài phút. Cuối lượt: ⚙ → **Chép log lượt này** → dán vào tin nhắn / Ghi chú.
+3. Lượt 2: ⚙ → "Vọng: đổi" (log lượt 1 được lưu, vào lại từ đầu – **máu, quái, lịch sử, nấc như nhau**). Chơi tương đương, chép log (gói này kèm luôn lượt 1 – `luotTruoc`).
 4. Chỉ sau đó, nếu thấy cần: thử **B2** (`?vong=b2`). Sau nữa mới tới lượt tài nguyên (`?vong=b` vs `?vong=b&nac=1`). Không bắt một người thử hết mọi biến thể.
 5. Nếu được: một lượt ngắn **không gọi bóng** để hỏi bóng có làm trận hay hơn không.
 Câu dẫn chung: "chém, lướt, nút Vọng gọi bóng" + đúng câu hướng dẫn của cấu hình đó trên màn bắt đầu. **Hỏi người chơi trước khi giải thích số.**
@@ -112,7 +187,7 @@ Câu dẫn chung: "chém, lướt, nút Vọng gọi bóng" + đúng câu hướ
 3) Bạn có chủ động phối hợp được một Cộng hưởng, hay chỉ thấy nó tự xảy ra?
 4) Bạn muốn dùng kiểu nào tiếp, và vì sao?
 
-**Số đo** (có sẵn trong log xuất ra): số lần bấm; đoạn huỷ / ghi quá ngắn / thiếu lịch sử; độ trễ bấm → hộp và → hit (thành công / tổng; tick mô phỏng, bước có khựng, ms thật);
+**Số đo** (có sẵn trong log đã chép): số lần bấm; đoạn huỷ / ghi quá ngắn / thiếu lịch sử; độ trễ bấm → hộp và → hit (thành công / tổng; tick mô phỏng, bước có khựng, ms thật);
 thay bóng; hết nấc; phát khi không có đòn; gọi sau khi mục tiêu đã chết; có đòn nhưng hụt; Cộng hưởng có bóng; tạm dừng / mất focus / tab ẩn.
 Ghi tay thêm: trúng trước / sau lúc người chơi muốn, trượt nút khi bấm cùng lúc, lỗi cảm ứng, hiệu năng (báo riêng).
 
@@ -140,9 +215,10 @@ Ghi tay thêm: trúng trước / sau lúc người chơi muốn, trượt nút k
 
 Sửa số: khối `VB_SO` đầu `cong-cu/khoi-p0b.js` rồi chạy lại `python3 game/thu-p0b/cong-cu/tao-p0b.py`.
 
-## 3. Kết quả – KIỂM BẰNG CODE (bot, mỗi hình video = 1 bước logic) – SAU SỬA PH9
+## 3. Kết quả – KIỂM BẰNG CODE (bot, mỗi hình video = 1 bước logic) – SAU SỬA PH9 · ĐÃ CHẠY LẠI TRÊN BẢN PH8: số trùng khít
 
-Kịch bản trận (`video/1-sach-A-vs-B.mp4`, `ket-qua.json → luot1`) **không đổi** so với lần trước: trạng thái đầu giống nhau, đặt một lần; bot đi tới mục tiêu gần nhất,
+Số mục 3a–3c đo lại trên bản PH8 (`video/ket-qua.json`, phiên `p0b-2810-cceea180`) – **giống hệt** số trước PH8 (`video/truoc-ph8/ket-qua.json`), xem "Phản hồi 10" → 2.
+Kịch bản trận (video cũ `video/truoc-ph8/1-sach-A-vs-B-truoc-PH8.mp4`, `ket-qua.json → luot1`) **không đổi** so với lần trước: trạng thái đầu giống nhau, đặt một lần; bot đi tới mục tiêu gần nhất,
 trong 62 px chém mỗi 14 tick, **gọi sau mỗi nhóm 3 nhát** (A bấm ghi ở nhát đầu nhóm). B2 chạy cùng bot, cùng cách bấm như B. **Nhịp gọi này thuận cho A** (PH9 2B) –
 xem thêm tình huống ngắn ở 3c. Bước = 1/60 s logic (kể cả khựng); tick = tick mô phỏng.
 
@@ -212,22 +288,24 @@ Ghi chú: "áp sát" của B phải đi lại cả cảnh đứng + đi tới (8
 
 ## 4. Câu hỏi / việc chờ chủ dự án
 1. Bot B2 hay phát lại nhát kết liễu khi gọi ngay lúc mục tiêu chết (5/10). Nếu người thử cũng gặp, có cân nhắc luật "bỏ nhát đã giết mục tiêu" không? (Hiện **không** làm – PH9 cấm tự chọn đòn từng trúng.)
-2. Khi bản Âm Đao PH8 lên nhánh: sinh lại P0-B và quay lại số (đã ghi ở "Sửa theo phản hồi 9").
+2. ~~Khi bản Âm Đao PH8 lên nhánh: sinh lại P0-B và quay lại số~~ – **xong** (PH10): sinh lại, kiểm lại, đóng băng `p0b-2810-cceea180`.
+3. Chờ kết quả checklist Safari thật ("Phản hồi 10" → 5) trước buổi thử người chơi.
 
 ## 5. Video và số (`video/`, 60 hình/s, H.264 `-preset veryfast`)
 
 | File | Nội dung |
 |---|---|
-| `1-sach-A-vs-B.mp4` | **VIDEO SẠCH** 1920×540 (sau sửa PH9): trái A, phải B, cùng bot, phòng B → C → D (không log, không hộp đòn) |
-| `2-debug-A-vs-B.mp4` | Cùng kịch bản, `?hitbox=1&debug=vong`: hộp đòn (teal = bóng) + bảng log Vọng |
-| `luot1-log-*.txt`, `luot2-log-*.txt` | Log Vọng + log trúng / Cộng hưởng P0 cho từng trang (có B2, B 1 nấc / 2 nấc) |
-| `ket-qua.json` | Số mục 3a–3c (từng lần phát: phòng, đoạn, nhát, hộp đầu, đứng yên, trễ tick / bước, trúng, máu, Thế, Cộng hưởng, lý do không gây hit, mẫu cuối) |
-| `kiem-code.json` | Số kiểm mục "Kiểm bằng code" |
+| `kiem-lai-PH8-A.mp4` · `kiem-lai-PH8-B.mp4` | **VIDEO NGẮN KIỂM LẠI trên bản PH8** (960×540, ~3,5 s / ~5,5 s, `?hitbox=1&debug=vong`): đòn chỉ ở mẫu cuối → nhiều mẫu cùng mã (chống hit lặp) → mẫu cuối trùng Cộng hưởng |
+| `luot1-log-*.txt`, `luot2-log-*.txt` | (bản PH8) Log Vọng + log trúng / Cộng hưởng P0 cho từng trang (có B2, B 1 nấc / 2 nấc) |
+| `ket-qua.json` | (bản PH8) Số mục 3a–3c (từng lần phát: phòng, đoạn, nhát, hộp đầu, đứng yên, trễ tick / bước, trúng, máu, Thế, Cộng hưởng, lý do không gây hit, mẫu cuối) |
+| `kiem-code.json` | (bản PH8) Số kiểm lại mục "Phản hồi 10" → 2 + kiểm nút chép log / nhãn đóng băng (`xuat_log_dong_bang`) |
+| `truoc-ph8/` | **TRƯỚC PH8** (sau sửa PH9, phiên `e58986fc`): `1-sach-A-vs-B-truoc-PH8.mp4` (video sạch 1920×540, trái A / phải B, phòng B → C → D), `2-debug-A-vs-B-truoc-PH8.mp4`, `ket-qua.json`, `kiem-code.json`, `log/` |
 | `truoc-sua/` | **TRƯỚC SỬA PH9**: `ket-qua-truoc-sua-PH9.json`, `kiem-code-truoc-sua-PH9.json`, `log/` |
 
-Quay lại: `python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong]` (cần playwright, Chromium, ffmpeg, Pillow; ≈ 10 phút). Chỉ quay + ghi số, không phải bộ kiểm thử.
+Quay lại: `python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong] [--khong-video]` (cần playwright, Chromium, ffmpeg, Pillow; ≈ 10 phút). Chỉ quay + ghi số, không phải bộ kiểm thử.
+`--khong-video`: chỉ đo số + log (lần này dùng cờ này – không quay lại video dài).
 
 ## 6. Chưa làm
-- Chưa thử trên iPhone. Không kết luận điều khiển / trải nghiệm đạt từ Chromium.
+- Chưa thử trên iPhone (checklist Safari thật chưa ai làm). Không kết luận điều khiển / trải nghiệm đạt từ Chromium.
 - Chưa chọn A / B / B2, chưa chốt chi phí, chưa ghép game chính, chưa đổi cách giữ công tắc trong game chính.
 - P0-C (tinh anh Chuông Gỗ, Ấn Rèn, đe mở Dư Âm) – làm riêng, không trong trang này.
