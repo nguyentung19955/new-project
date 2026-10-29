@@ -1,0 +1,276 @@
+{
+ "ten": "Lam mới bộ 8 – chem1_ghep (GHA / GHT / GHU / GHV / GHW / GHG), sprite sheet 2x",
+ "phien_ban_clip": "lam-moi-thu8",
+ "vai": "chem1_ghep",
+ "tu_the": [
+  "GHA",
+  "GHT",
+  "GHU",
+  "GHV",
+  "GHW",
+  "GHG"
+ ],
+ "anh": "lam-moi8-chem1_ghep-2x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1732,
+  213
+ ],
+ "luoi": {
+  "cot": 6,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  287,
+  213
+ ],
+ "diem_neo": {
+  "x": 121,
+  "y": 208,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 2,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 6 ô"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.276726
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Lam nhìn PHẢI. Lịch (ATK[1] su 7 / ac 8 / re 8): atkT 1–4 C1A · 5–6 C1T · 7–8 C1U · 9–11 C1V · 12–14 C1W (hộp) · 15–17 C1W · 18–22 C1G.",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu12-chem1-6o-ghep.png",
+ "thu_co": {
+  "loc": "cv2 INTER_AREA",
+  "lam_net": null
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "GHA",
+   "x": 0,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    325.5,
+    562
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 1,
+   "nhan": "GHT",
+   "x": 289,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    964.8,
+    562
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "GHU",
+   "x": 578,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    1607.5,
+    562
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 3,
+   "nhan": "GHV",
+   "x": 867,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    2247.0,
+    562
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 4,
+   "nhan": "GHW",
+   "x": 1156,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    2886.5,
+    562
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 5,
+   "nhan": "GHG",
+   "x": 1445,
+   "y": 0,
+   "w": 287,
+   "h": 213,
+   "neo_gen": [
+    3525.5,
+    562
+   ],
+   "nguon": "chinh"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "GHA",
+   "cao_logic": 96.3,
+   "dinh_tren_neo_logic": 95.7,
+   "mu_rong_hang_mat_logic": 47.0,
+   "mu_so_chot_phan_tram": 13.1,
+   "mat_logic": [
+    20.8,
+    -59.8
+   ],
+   "mu_cao_tren_mat_logic": 36.0,
+   "co_mu_so_chot_phan_tram": 1.7,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.4,
+   "mau_mu_trung_vi": [
+    43.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "GHT",
+   "cao_logic": 96.0,
+   "dinh_tren_neo_logic": 96.0,
+   "mu_rong_hang_mat_logic": 46.8,
+   "mu_so_chot_phan_tram": 12.5,
+   "mat_logic": [
+    25.4,
+    -60.9
+   ],
+   "mu_cao_tren_mat_logic": 35.1,
+   "co_mu_so_chot_phan_tram": 0.2,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 1.7,
+   "mau_mu_trung_vi": [
+    41.0,
+    48.0,
+    65.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "GHU",
+   "cao_logic": 95.5,
+   "dinh_tren_neo_logic": 94.9,
+   "mu_rong_hang_mat_logic": 45.4,
+   "mu_so_chot_phan_tram": 9.1,
+   "mat_logic": [
+    19.6,
+    -59.5
+   ],
+   "mu_cao_tren_mat_logic": 35.4,
+   "co_mu_so_chot_phan_tram": -0.9,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.0,
+   "mau_mu_trung_vi": [
+    45.0,
+    53.0,
+    71.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "GHV",
+   "cao_logic": 96.0,
+   "dinh_tren_neo_logic": 95.2,
+   "mu_rong_hang_mat_logic": 45.9,
+   "mu_so_chot_phan_tram": 10.5,
+   "mat_logic": [
+    26.1,
+    -58.9
+   ],
+   "mu_cao_tren_mat_logic": 36.3,
+   "co_mu_so_chot_phan_tram": 0.9,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.7,
+   "mau_mu_trung_vi": [
+    43.0,
+    50.0,
+    69.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 5,
+   "nhan": "GHW",
+   "cao_logic": 95.7,
+   "dinh_tren_neo_logic": 95.2,
+   "mu_rong_hang_mat_logic": 45.7,
+   "mu_so_chot_phan_tram": 9.8,
+   "mat_logic": [
+    19.9,
+    -59.7
+   ],
+   "mu_cao_tren_mat_logic": 35.4,
+   "co_mu_so_chot_phan_tram": -0.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.1,
+   "mau_mu_trung_vi": [
+    43.0,
+    50.0,
+    68.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 6,
+   "nhan": "GHG",
+   "cao_logic": 100.7,
+   "dinh_tren_neo_logic": 100.5,
+   "mu_rong_hang_mat_logic": 44.3,
+   "mu_so_chot_phan_tram": 6.5,
+   "mat_logic": [
+    15.5,
+    -63.7
+   ],
+   "mu_cao_tren_mat_logic": 36.8,
+   "co_mu_so_chot_phan_tram": -0.2,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.5,
+   "mau_mu_trung_vi": [
+    43.0,
+    51.0,
+    69.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "bo": 8
+}

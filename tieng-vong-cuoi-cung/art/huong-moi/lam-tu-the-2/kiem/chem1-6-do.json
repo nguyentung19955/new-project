@@ -1,0 +1,487 @@
+{
+ "huong_dan": [
+  {
+   "tay": [
+    -12.0,
+    -42.0
+   ],
+   "mui": [
+    -50.0,
+    -30.0
+   ]
+  },
+  {
+   "tay": [
+    8.0,
+    -48.0
+   ],
+   "mui": [
+    -30.0,
+    -36.0
+   ]
+  },
+  {
+   "tay": [
+    18.0,
+    -58.0
+   ],
+   "mui": [
+    60.0,
+    -64.0
+   ]
+  },
+  {
+   "tay": [
+    28.0,
+    -62.0
+   ],
+   "mui": [
+    74.0,
+    -64.0
+   ]
+  },
+  {
+   "tay": [
+    22.0,
+    -55.0
+   ],
+   "mui": [
+    65.0,
+    -52.0
+   ]
+  },
+  {
+   "tay": [
+    10.0,
+    -44.0
+   ],
+   "mui": [
+    52.0,
+    -34.0
+   ]
+  }
+ ],
+ "hop_chem1": [
+  4,
+  -97,
+  95,
+  -49
+ ],
+ "quy_doi": "5 px ảnh hướng dẫn = 1 px logic; chân (350, 900)",
+ "chem1_6_vet": [
+  {
+   "khung_vet": 1,
+   "ten": "nét mảnh (tick U đầu)",
+   "hinh": "C1U",
+   "tam_loi": [
+    69.7,
+    -71.9
+   ],
+   "luoi_y_tai_x": -77.0,
+   "lech_px": 5.1,
+   "mui_qua_tam_loi_px": -3.7
+  },
+  {
+   "khung_vet": 2,
+   "ten": "cung đầy (U cuối + V)",
+   "hinh": "C1V",
+   "tam_loi": [
+    73.7,
+    -67.9
+   ],
+   "luoi_y_tai_x": -69.1,
+   "lech_px": 1.2,
+   "mui_qua_tam_loi_px": 15.3
+  },
+  {
+   "khung_vet": 3,
+   "ten": "vỡ (V cuối + W đầu)",
+   "hinh": "C1V",
+   "tam_loi": [
+    75.6,
+    -61.9
+   ],
+   "luoi_y_tai_x": -69.2,
+   "lech_px": 7.3,
+   "mui_qua_tam_loi_px": 13.4
+  },
+  {
+   "khung_vet": 4,
+   "ten": "mảnh tắt (W)",
+   "hinh": "C1W",
+   "tam_loi": [
+    76.7,
+    -55.9
+   ],
+   "luoi_y_tai_x": -22.0,
+   "lech_px": 33.9,
+   "mui_qua_tam_loi_px": -2.7
+  }
+ ],
+ "chem1_6": [
+  {
+   "tay": [
+    -23,
+    -43
+   ],
+   "mui": [
+    -73,
+    -12
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -11.0,
+    -1.0
+   ],
+   "lech_tay_px": 11.0,
+   "lech_mui": [
+    -23.0,
+    18.0
+   ],
+   "lech_mui_px": 29.2,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 148.2,
+   "goc_huong_dan_do": 162.5,
+   "nhan": "C1A",
+   "y": "A lấy đà"
+  },
+  {
+   "tay": [
+    -18,
+    -48
+   ],
+   "mui": [
+    -65,
+    -16
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -26.0,
+    0.0
+   ],
+   "lech_tay_px": 26.0,
+   "lech_mui": [
+    -35.0,
+    20.0
+   ],
+   "lech_mui_px": 40.3,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 145.8,
+   "goc_huong_dan_do": 162.5,
+   "nhan": "C1T",
+   "y": "T bắt đầu vung"
+  },
+  {
+   "tay": [
+    7,
+    -60
+   ],
+   "mui": [
+    66,
+    -77
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -11.0,
+    -2.0
+   ],
+   "lech_tay_px": 11.2,
+   "lech_mui": [
+    6.0,
+    -13.0
+   ],
+   "lech_mui_px": 14.3,
+   "mui_trong_hop": true,
+   "goc_luoi_do": -16.1,
+   "goc_huong_dan_do": -8.1,
+   "nhan": "C1U",
+   "y": "U cắt sớm"
+  },
+  {
+   "tay": [
+    23,
+    -66
+   ],
+   "mui": [
+    89,
+    -70
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -5.0,
+    -4.0
+   ],
+   "lech_tay_px": 6.4,
+   "lech_mui": [
+    15.0,
+    -6.0
+   ],
+   "lech_mui_px": 16.2,
+   "mui_trong_hop": true,
+   "goc_luoi_do": -3.5,
+   "goc_huong_dan_do": -2.5,
+   "nhan": "C1V",
+   "y": "V cắt đầy"
+  },
+  {
+   "tay": [
+    12,
+    -50
+   ],
+   "mui": [
+    74,
+    -22
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -10.0,
+    5.0
+   ],
+   "lech_tay_px": 11.2,
+   "lech_mui": [
+    9.0,
+    30.0
+   ],
+   "lech_mui_px": 31.3,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 24.3,
+   "goc_huong_dan_do": 4.0,
+   "nhan": "C1W",
+   "y": "W kết thúc"
+  },
+  {
+   "tay": [
+    -14,
+    -41
+   ],
+   "mui": [
+    43,
+    -11
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -24.0,
+    3.0
+   ],
+   "lech_tay_px": 24.2,
+   "lech_mui": [
+    -9.0,
+    23.0
+   ],
+   "lech_mui_px": 24.7,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 27.8,
+   "goc_huong_dan_do": 13.4,
+   "nhan": "C1G",
+   "y": "G thủ"
+  }
+ ],
+ "chem1_ghep_vet": [
+  {
+   "khung_vet": 1,
+   "ten": "nét mảnh (tick U đầu)",
+   "hinh": "GHU",
+   "tam_loi": [
+    75.7,
+    -54.2
+   ],
+   "luoi_y_tai_x": -43.0,
+   "lech_px": 11.2,
+   "mui_qua_tam_loi_px": -1.7
+  },
+  {
+   "khung_vet": 2,
+   "ten": "cung đầy (U cuối + V)",
+   "hinh": "GHV",
+   "tam_loi": [
+    75.7,
+    -54.2
+   ],
+   "luoi_y_tai_x": -48.9,
+   "lech_px": 5.3,
+   "mui_qua_tam_loi_px": 3.3
+  },
+  {
+   "khung_vet": 3,
+   "ten": "vỡ (V cuối + W đầu)",
+   "hinh": "GHV",
+   "tam_loi": [
+    71.7,
+    -53.0
+   ],
+   "luoi_y_tai_x": -48.9,
+   "lech_px": 4.2,
+   "mui_qua_tam_loi_px": 7.3
+  },
+  {
+   "khung_vet": 4,
+   "ten": "mảnh tắt (W)",
+   "hinh": "GHW",
+   "tam_loi": [
+    69.7,
+    -51.5
+   ],
+   "luoi_y_tai_x": -21.0,
+   "lech_px": 30.5,
+   "mui_qua_tam_loi_px": -25.7
+  }
+ ],
+ "chem1_ghep": [
+  {
+   "tay": [
+    -30,
+    -42
+   ],
+   "mui": [
+    10,
+    -12
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -18.0,
+    0.0
+   ],
+   "lech_tay_px": 18.0,
+   "lech_mui": [
+    60.0,
+    18.0
+   ],
+   "lech_mui_px": 62.6,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 36.9,
+   "goc_huong_dan_do": 162.5,
+   "nhan": "GHA",
+   "y": "A lấy đà"
+  },
+  {
+   "tay": [
+    4,
+    -43
+   ],
+   "mui": [
+    -36,
+    -12
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -4.0,
+    5.0
+   ],
+   "lech_tay_px": 6.4,
+   "lech_mui": [
+    -6.0,
+    24.0
+   ],
+   "lech_mui_px": 24.7,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 142.2,
+   "goc_huong_dan_do": 162.5,
+   "nhan": "GHT",
+   "y": "T bắt đầu vung"
+  },
+  {
+   "tay": [
+    24,
+    -48
+   ],
+   "mui": [
+    74,
+    -43
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    6.0,
+    10.0
+   ],
+   "lech_tay_px": 11.7,
+   "lech_mui": [
+    14.0,
+    21.0
+   ],
+   "lech_mui_px": 25.2,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 5.7,
+   "goc_huong_dan_do": -8.1,
+   "nhan": "GHU",
+   "y": "U cắt sớm"
+  },
+  {
+   "tay": [
+    25,
+    -48
+   ],
+   "mui": [
+    79,
+    -49
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -3.0,
+    14.0
+   ],
+   "lech_tay_px": 14.3,
+   "lech_mui": [
+    5.0,
+    15.0
+   ],
+   "lech_mui_px": 15.8,
+   "mui_trong_hop": true,
+   "goc_luoi_do": -1.1,
+   "goc_huong_dan_do": -2.5,
+   "nhan": "GHV",
+   "y": "V cắt đầy"
+  },
+  {
+   "tay": [
+    -5,
+    -41
+   ],
+   "mui": [
+    44,
+    -21
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -27.0,
+    14.0
+   ],
+   "lech_tay_px": 30.4,
+   "lech_mui": [
+    -21.0,
+    31.0
+   ],
+   "lech_mui_px": 37.4,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 22.2,
+   "goc_huong_dan_do": 4.0,
+   "nhan": "GHW",
+   "y": "W kết thúc"
+  },
+  {
+   "tay": [
+    7,
+    -35
+   ],
+   "mui": [
+    43,
+    -12
+   ],
+   "cach_do": "đo tay trên lưới 1 px logic",
+   "lech_tay": [
+    -3.0,
+    9.0
+   ],
+   "lech_tay_px": 9.5,
+   "lech_mui": [
+    -9.0,
+    22.0
+   ],
+   "lech_mui_px": 23.8,
+   "mui_trong_hop": false,
+   "goc_luoi_do": 32.6,
+   "goc_huong_dan_do": 13.4,
+   "nhan": "GHG",
+   "y": "G thủ"
+  }
+ ]
+}

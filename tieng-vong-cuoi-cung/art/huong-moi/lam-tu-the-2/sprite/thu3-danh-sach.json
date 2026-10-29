@@ -190,6 +190,48 @@
     "BM2"
    ],
    "co_3x": true
+  },
+  {
+   "ten": "lam-moi8-chet",
+   "bo": 8,
+   "vai": "chet",
+   "tu_the": [
+    "CH1",
+    "CH2",
+    "CH3",
+    "CH4",
+    "CH5",
+    "CH6"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi8-chem1_6",
+   "bo": 8,
+   "vai": "chem1_6",
+   "tu_the": [
+    "C1A",
+    "C1T",
+    "C1U",
+    "C1V",
+    "C1W",
+    "C1G"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi8-chem1_ghep",
+   "bo": 8,
+   "vai": "chem1_ghep",
+   "tu_the": [
+    "GHA",
+    "GHT",
+    "GHU",
+    "GHV",
+    "GHW",
+    "GHG"
+   ],
+   "co_3x": true
   }
  ]
 }

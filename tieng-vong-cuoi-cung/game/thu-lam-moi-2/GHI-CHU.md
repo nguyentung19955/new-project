@@ -1,6 +1,7 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **MỚI NHẤT (29/10 tối, PH15): mục "PH15 bước 1" ở cuối** – người dùng thử iPhone 29/10: còn giật, móc to hơn, cổng chưa ưng, chết xấu → sửa tỉ lệ sheet móc ×0,81, bỏ bù nâng theo từng khung, chết mới (không bóp dẹt / không cắt ngang), đồng hồ khung hình (⚙ hoặc `?fps=1`, ⚙ → Chép log), chém 1 sửa 3, ảnh cặp chạy để gen hình nối. GIF trong `xem-thu/ph15-buoc1/`.
+> **MỚI NHẤT (29/10 khuya, PH15 + PH16): mục "Chết + màn rễ rủ + chém 1 sáu hình" ở cuối** – chết 6 hình (dao gen thay bằng Âm Đao), cổng thành MÀN RỄ RỦ từ trần (mọi trang), chém 1 sáu hình C1 (mặc định) / C2 (`?chem1=ghep`) so với ảnh hướng dẫn; GIF trong `xem-thu/ph15-chet-re-chem1/`.
+> Trước đó (29/10 tối, PH15): mục "PH15 bước 1" – người dùng thử iPhone 29/10: còn giật, móc to hơn, cổng chưa ưng, chết xấu → sửa tỉ lệ sheet móc ×0,81, bỏ bù nâng theo từng khung, chết mới (không bóp dẹt / không cắt ngang), đồng hồ khung hình (⚙ hoặc `?fps=1`, ⚙ → Chép log), chém 1 sửa 3, ảnh cặp chạy để gen hình nối. GIF trong `xem-thu/ph15-buoc1/`.
 > Trước đó (29/10 chiều): mục "Chạy sửa 2, Dư Âm, bật vách, tranh 29/10" – chạy lấy ô 1/4 mới (mắt dao động 9,6 → 8,1 px, CHƯA đạt 3–4),
 > tụ / chém vang hình gen TV1–TV3, bật khỏi vách BM1/BM2 (WM4 + móc rút bằng code), tranh màn bắt đầu/kết mới ở mọi trang; GIF trong `xem-thu/chay-duam-vach-2910/`.
 > Trước đó (29/10, PH14): xem mục "Sửa PH14" – chém 1 bỏ nâng vệt 19 px (+ ảnh overlay để gen lại chém 1), pogo có sóng tầm sâu, móc chạm mặt đất
@@ -29,6 +30,8 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 | `?hitbox=1` | hiện hộp đòn (khung đỏ) |
 | `?cham=4` | chậm 4 lần (cả trò chơi; 1–8) |
 | `?lam=cu` | **Lam cũ** để so, cùng màn |
+| `?chem1=ghep` · `?chem1=4` | (29/10 khuya) chém 1 sáu hình bản **C2 ghép** · bản **4 hình** cũ (mặc định = C1 sáu hình) |
+| `?cong=cu` · `?cong=ngang` | (29/10 khuya) cổng dọc cũ · cổng rễ ngang v4 (mặc định = màn rễ rủ) |
 
 Nối nhiều cờ bằng `&`, ví dụ `index.html?vfx=0&bong=1&cham=4`. **Trên iPhone khỏi gõ link**: bấm ⚙ → mục "Lam mới 2" có 5 nút bật/tắt
 (Lam mới/cũ · Vệt chém + âm nhận · Bóng đen · Tốc độ chậm ×4 · Hộp đòn).
@@ -1074,4 +1077,134 @@ python3 art/huong-moi/lam-tu-the-2/code/do_moc_ph15.py <thư mục sheet móc c�
 python3 art/huong-moi/lam-tu-the-2/code/cap_chay_noi.py                  # ảnh cặp chạy
 python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py && python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py
 CU_PH15=<thư mục sheet cũ> python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py ph15     # GIF (~6 phút; trang cũ đặt tạm ở index-truoc-ph15.html)
+```
+
+## Chết + màn rễ rủ + chém 1 sáu hình (29/10 khuya, PH15 mục 2 / 4 / 5 + PH16)
+
+Làm theo `docs/gameplay/PHAN-HOI-15-LAM-MUOT-MOC-CONG-CHET.md` mục 2 (chém 1 sáu hình), 4 (màn rễ rủ), 5 (chết) và `PHAN-HOI-16-HAI-TU-THE-CHEM1.md`, trên nền "PH15 bước 1" (giữ nguyên:
+scale móc ×0,81, bù gần sàn liên tục, đồng hồ khung hình, chém 1 sửa 3 cho bản 4 hình, bảng frameId/atkT chém 1 sáu hình).
+**Không đổi gameplay**: hộp đòn, sát thương, startup, cancel, hộp chặn cổng 183 × 159, luật mở / đi xuyên / đóng, AI – giữ nguyên. Chỉ đổi HÌNH + cách vẽ. Không gen ảnh mới (dùng 3 ảnh người dùng đã lưu).
+
+### Xem gì trước (`xem-thu/ph15-chet-re-chem1/`, Lam ~112 px, nền thật; bản thường ≈ toàn tốc, `-cham4` = chậm 4 lần)
+
+| File | Nội dung |
+|---|---|
+| **`chet-dat.gif`** (+ `-cham4`) | chết trên đất: TRÁI màu · PHẢI bóng đen |
+| **`chet-tren-khong.gif`** (+ `-cham4`) | chết khi đang nhảy: giữ CH1 (mất lực) trong lúc rơi → chạm đất mới vào chuỗi |
+| **`man-re-mo-qua.gif`** (+ `-cham4`) | màn rễ THU LÊN, Lam giữ Phải từ đầu (bị chặn tới mốc cũ) → đi qua → màn RỦ XUỐNG sau lưng. Dòng chữ: độ mở · chặn / ĐI XUYÊN ĐƯỢC |
+| `man-re-dung-duoi.gif` | lệnh đóng khi Lam đứng DƯỚI màn: game giữ mở 0,6 (không chặn xuyên người) – rễ chỉ ló dưới búi; Lam ra → rủ xuống + lắc tắt dần |
+| **`man-re-dong.png`** | ảnh tĩnh màn rễ ĐÓNG: màu · + hộp chặn (vàng) · cổng dọc cũ (`?cong=cu`) để so; `man-re-dong-112.png` = riêng màn đóng |
+| `man-re-cac-trang.png` | màn rễ trong P0-B (đóng băng lần 8), P0-C, P0-C Lam mới, thu-phong-b (cùng runtime) |
+| **`chem1-c1-c2.gif`** (+ `-cham4`) | chém 1 sáu hình vào hình nộm: **C1** màu · **C2** màu · C1 bóng đen · C2 bóng đen (cùng phím, cùng tick) |
+| `combo-c1-c2.gif` (+ `-cham4`) | combo 1 → 2 → 3: C1 · C2 |
+| `log-ph15b.json` | từng bước: tư thế, atkT, hộp, pha chết; cổng: [bước, độ mở, đặc?, Lam x so tâm cổng, chân dải cao/thấp nhất] |
+| `art/huong-moi/lam-tu-the-2/kiem/chet-sua-dao.png` | ảnh chết gốc (đỏ = vùng xoá dao gen, xanh = găng giữ) · đã thay Âm Đao |
+| `art/huong-moi/lam-tu-the-2/kiem/thu8-chet-dai.png` | sheet chết CH1–CH6 ở 2x + 112 px + bóng đen, cạnh Lam chốt |
+| **`art/huong-moi/lam-tu-the-2/kiem/chem1-6-so-huong-dan.png`** | C1 / C2 từng hình: vòng rỗng = hướng dẫn (xanh tay, đỏ mũi), chấm đặc = đo; khung đỏ = hộp chém 1 |
+| **`art/huong-moi/lam-tu-the-2/kiem/chem1-6-chuoi-112.png`** | chuỗi 1 → 2 → 3 và 5 → 6 → đứng ở ĐÚNG 112 px + chồng đường bao + phóng ×1,5, C1 / C2 |
+| `art/huong-moi/lam-tu-the-2/kiem/thu8-chem1_6-dai.png`, `thu8-chem1_ghep-dai.png` | sheet C1 / C2 cạnh Lam chốt |
+| `art/the-gioi-moi/dia-hinh-v4/xem-thu/man-re-dong-3x.png` | màn rễ đóng dựng bằng script (3x, hộp chặn vàng, đường trần xanh) |
+
+### A. Chết 6 hình (`thu8-chet-6o.png`) – thay chết tạm
+
+- **Lỗi ảnh gen sửa bằng code** (`code/sua_dao_chet.py` → `nguon/lam-tu-the/thu8-chet-6o-am-dao.png`, ảnh gốc giữ nguyên): máy gen vẽ dao thường một lưỡi → **xoá dao gen** bằng mặt nạ
+  (dải chuôi → mũi + đĩa chắn tay, chỉ xoá điểm giống dao, không xoá vải áo xanh than, **giữ găng**), **vá** chỗ gấu áo bị dao che (inpaint), **dán ảnh Âm Đao**
+  (`game/thu-p0a/am-dao/am-dao-cap1.png`) MỘT cỡ cho cả 6 ô (×0,46 px ảnh gen – dài chắn → mũi 143 px gen, dao gen 128–162), rồi vẽ lại găng đè lên chuôi.
+  D1 / D2 theo hướng dao cũ (chúc 23° / 16,5°, tay cầm); D3–D6 dao **nằm đất tựa chắn tay + mũi** (nghiêng 8,5°, đáy = đất – không lún, không làm thân nổi lên vì neo đáy).
+  Ở 112 px còn thấy khe giữa hai nhánh + chắn tay chuông (xem `thu8-chet-dai.png` hàng 112 / `chet-dat.gif`).
+- **Sheet** (`dung_thu3.py chet`, 2x + 3x, luật tỉ lệ mũ Lam chốt đo ở D1–D2 – cỡ mũ CH1 = chốt ±0 %): `lam-moi8-chet` (nhãn CH1–CH6). Vụn áo bay rời ở D4–D6 giữ lại
+  (`gop_het`: gộp mọi mảnh có tâm trong ô). Neo: D1–D3 vị trí trong ô; **D4–D6 neo khớp chắn tay Âm Đao với D3** → dao nằm YÊN trên đất suốt D3 → D6 (ảnh gen dời dao 10–60 px giữa ô).
+- **Nhịp** (game đã có từ bước 1): D1 4 · D2 6 · D3 10 · D4 10 · D5 12 · D6 6 = 48 tick sau khi chạm đất, trong cửa sổ hồi sinh CŨ (tối màn deadT 80, hồi sinh 104 – không kéo dài).
+  Đo: chết trên đất – bật lùi ~20 bước (CH1) → chạm đất → D1…D6 → hết ở bước ~70. Chết trên không – giữ CH1 (mất lực) trong lúc rơi, chạm đất bước ~32 → chuỗi → hết bước ~81.
+- **Tan**: D4 là hình áo tan vẽ sẵn (không mặt nạ). **D5 + D6**: mặt nạ nhiễu CỐ ĐỊNH (16 mức, tạo lúc nạp) khoét 0 → 30 % trong D5, 30 → 100 % trong D6 + **9 hạt bụi than thưa** (7 than, 2 đồng mờ)
+  bốc từ khối áo sát đất, chỉ từ D5. Không teal, không sáng, không crossfade, không scale. **Âm**: chuông thấp tắt dần (bước 1) giữ nguyên.
+- Code: `veChet` – 6 hình: `tan` theo D5/D6, bụi từ D5 (`khoi-lam-moi-2.js`).
+
+### B. Màn rễ rủ – THAY HẲN cổng dọc (runtime chung `game/runtime/trang-tri-dia-hinh.js`, `veManRe`)
+
+- **Bộ mảnh** `nguon/dia-hinh/man-re-ru-manh.png` → `art/huong-moi/dia-hinh/code/tao-man-re.py` → `art/the-gioi-moi/dia-hinh-v4/man-re-3x.png` + `man-re.json` (cạnh `dia-hinh-v4.json`, runtime tự nạp).
+  **Búi** rễ trần 206 × 52 logic bám ngay trên hộp chặn (đỉnh búi cao hơn đỉnh hộp 7 px, chui vào chân cột đất treo); **7 dải** (cao 172, rộng 37–50) xếp 2 lớp (lớp sau tối 18 %, nướng sẵn
+  vào ảnh – không dùng filter lúc chơi), **phủ ngang −95 … +95** (hộp −89 … +94) – không khe đọc thành lối, không "tường vô hình"; **4 đầu rễ cong** dưới 4 dải lớp trước (nửa trái lật cong vào trong).
+  **Không** khung / cột / ngưỡng / nền đen. Đốm nền trắng kẹt giữa sợi rễ đã xoá.
+- **Chuyển động** (code, dải chỉ DỊCH dọc từ sau búi + CẮT ở trần – không scaleY):
+  - **Thu lên** (mở, game +0,07/bước ≈ 15 bước): búi SIẾT nhẹ (co ngang 3 %, nâng 1,5 px) → đầu rễ nhấc khỏi sàn (−8 px, bước 2–3) → dải kéo lên lệch pha ít → **bước 9 (mở 0,63 = mốc đi xuyên CŨ):
+    mọi chân dải ≥ 121,8 px trên sàn** (cao hơn đỉnh mũ Lam ~112) – đủ lối cả bề ngang → rút hết sau búi ở bước 12 → búi nhả + nhún nhỏ tắt dần (~0,5 s) sau khi mở hẳn (lắc phụ, không chắn).
+    Đo (`log-ph15b.json`): bước 1–8 chặn (Lam giữ Phải đứng ở mép hộp x −99,6), bước 9 đi xuyên.
+  - **Rủ xuống** (đóng, −0,08/bước): búi CO nhẹ 2 bước → dải ló dưới búi (giữa trước) → rơi xuống sàn: **dải giữa trước, hai mép trễ 1–3 bước** → đóng hẳn sau 13 bước → **dải lắc nhỏ ±0,9° quanh đỉnh, tắt dần ~0,5 s**.
+  - Đổi chiều giữa chừng → mỗi dải đuổi tới vị trí mới với tốc độ giới hạn (không nhảy hình).
+- **Đóng khi có người**: KHÔNG đổi luật – game vốn giữ độ mở 0,6 khi Lam chồng hộp chặn (không đặc lại xuyên người). Màn rễ ở thế đó **chỉ ló chân dải dưới búi (120 px trên sàn)** – không vẽ rễ xuyên Lam
+  (`man-re-dung-duoi.gif`: lệnh đóng → giữ 0,6 suốt lúc Lam đứng dưới → Lam ra khỏi hộp → rủ xuống trong 8 bước). Chỗ ló này cũng là dấu báo sắp đóng.
+- **Tín hiệu**: khoá ĐỒNG nhỏ cố định trên búi, loé đồng / ngà ấm theo số điều kiện đã xong (sáng đủ khi mở) – **không teal**.
+- **Collider + mốc đi xuyên GIỮ NGUYÊN** (GATE 183 × 159, đi xuyên từ 0,6). Không làm collider động theo đầu rễ.
+- Cờ: `?cong=cu` = **cổng dọc** (kiểu ngay trước) · `?cong=ngang` = cổng rễ ngang v4 (trước đây `?cong=cu` là cổng ngang). Trang đóng gói một file (`nhung`) chưa có màn rễ → cổng rễ ngang như trước.
+- **Áp dụng ở mọi trang dùng runtime**: thu-lam-moi-2, thu-p0c-lam-moi, **P0-B (đóng băng lần 8, phiên mới `p0b-2910-234ace54`)**, P0-C, thu-phong-b (`man-re-cac-trang.png`).
+
+### C. Chém 1 sáu hình – C1 (MẶC ĐỊNH) và C2 (`?chem1=ghep`) để so; `?chem1=4` = bản 4 hình sửa 3
+
+- **C1** = `thu11-chem1-6o-toa-do.png` (lưới 3 × 2, gen theo ảnh hướng dẫn toạ độ) → sheet `lam-moi8-chem1_6` (nhãn C1A C1T C1U C1V C1W C1G). Cỡ mũ so chốt +1,9 / +0,6 / −1,2 / 0 / 0 / −0,3 %.
+- **C2** = ghép (`code/ghep_chem1.py` → `nguon/lam-tu-the/thu12-chem1-6o-ghep.png`): ô 1, 3, 4, 5 của `thu8-chem1-6o-o2-loi.png` + `thu10-chem1-o2.png` TRÁI (ô 2) + `thu9-chem1-o2-o6.png` PHẢI (ô 6),
+  hai ảnh sau thu ×0,47 / ×0,49 về cùng cỡ mũ thu8 → sheet `lam-moi8-chem1_ghep` (nhãn GHA … GHG). Cỡ mũ so chốt +1,7 / +0,2 / −0,9 / +0,9 / −0,6 / −0,2 %.
+- Cả hai: **luật tỉ lệ mũ Lam chốt** (căn(rộng hàng mắt × cao trên mắt), một số cho cả sheet), **neo chân chung** (giữa hai ủng + hằng, đáy ủng) – **không** căn theo khung bao có dao.
+- **Lịch** (bảng bước 1, đọc từ ATK[1] thật su 7 / ac 8 / re 8; hộp không đổi): atkT 1–4 A · 5–6 T · 7–8 U · 9–11 V · 12–14 W (hộp bật 7–14) · 15–17 W giữ · 18–22 G. Vệt tắt khi hộp tắt.
+
+**Tay / mũi dao đo trên sheet (px logic so với chân, nhìn phải) so với hướng dẫn** (`kiem/chem1-6-do.json`; hướng dẫn quy đổi 5 px = 1 logic, chân (350, 900)):
+
+| Hình | Hướng dẫn tay → mũi | **C1** tay → mũi | lệch C1 (tay · mũi) | **C2** tay → mũi | lệch C2 (tay · mũi) |
+|---|---|---|---|---|---|
+| A lấy đà | (−12,−42) → (−50,−30) | (−23,−43) → (−73,−12) | (−11, −1) · (−23, +18) | (−30,−42) → (10,−12) | (−18, 0) · **(+60, +18) dao chúc RA TRƯỚC** |
+| T bắt đầu vung | (8,−48) → (−30,−36) | (−18,−48) → (−65,−16) | **(−26, 0)** · (−35, +20) | (4,−43) → (−36,−12) | (−4, +5) · (−6, +24) |
+| U cắt sớm | (18,−58) → (60,−64) | (7,−60) → (66,−77) **trong hộp** | (−11, −2) · (+6, −13) | (24,−48) → (74,−43) | (+6, +10) · (+14, **+21 dưới hộp**) |
+| V cắt đầy | (28,−62) → (74,−64) | (23,−66) → (89,−70) **trong hộp** | (−5, −4) · (+15, −6) | (25,−48) → (79,−49) | (−3, +14) · (+5, +15 **sát mép dưới hộp**) |
+| W kết thúc | (22,−55) → (65,−52) | (12,−50) → (74,−22) | (−10, +5) · **(+9, +30) chúc thấp** | (−5,−41) → (44,−21) | (−27, +14) · (−21, +31) |
+| G thủ | (10,−44) → (52,−34) | (−14,−41) → (43,−11) | (−24, +3) · (−9, +23) | (7,−35) → (43,−12) | (−3, +9) · (−9, +22) |
+
+- Hộp chém 1 = x 4…95, y −97…−49 (ngang mặt / vai). **C1: lưỡi U và V đi QUA hộp** (U chếch lên tới mũi −77, V ngang −66 → −70). **C2: lưỡi U/V ở y −43 … −49 = SÁT / DƯỚI mép dưới hộp**
+  – Lam C2 thấp đậm hơn (mắt thấp hơn chốt ~10 px) nên cả tầm tay hạ thấp.
+- **Nhận xét đúng như đã báo**: C1 **ô 1–2 rất giống nhau** (tay còn ở sau −23 / −18, chỉ dao dựng lên chút) → T chưa làm việc "tay đã ra trước bụng" (lệch tay 26 px), bước T → U là cú nhảy lớn;
+  C1 **ô 5 (W) lưỡi chúc thấp hơn hướng dẫn 30 px** (mũi y −22 thay vì −52) → W → G gần nhau (G cũng chúc), W ra khỏi hộp sớm.
+  C2: A dao chúc ra TRƯỚC, T dao chúc ra SAU, U lại ra trước → **dao đảo hướng 2 lần trong 3 hình** (giật hơn C1); G (thu9 PHẢI) dáng hợp nhưng Lam C2 lùn / áo xoè khác hẳn I1 → 6 → đứng đổi dáng người.
+- **Vệt** (vệt gen, `dung_vet.py` DAT 11 = C1, 12 = C2; game chọn theo bản đang dùng): liềm dẹt đặt theo mũi dao THỰC, lõi sáng luôn trong hộp.
+
+| Lệch dao – vệt (tâm lõi so với đường lưỡi ở cùng tick, px logic) | C1 | C2 |
+|---|---|---|
+| khung 1 nét mảnh (tick U đầu) | 5,1 (lưỡi U chếch lên cao hơn lõi) | 11,2 |
+| **khung 2 cung đầy (U cuối + V)** | **1,2** | 5,3 (lõi bị kẹp lên trong hộp, lưỡi ở mép dưới) |
+| khung 3 vỡ (V cuối + W đầu) | 7,3 | 4,2 |
+| khung 4 mảnh tắt (W) | 33,9 – lưỡi W chúc ra khỏi hộp, vệt không được theo xuống | 30,5 |
+| (bản 4 hình sửa 3, để so) | 1,8 | |
+
+- **Chuỗi ở 112 px** (`chem1-6-chuoi-112.png`): C1 1 → 2 gần như đứng yên, 2 → 3 nhảy lớn (dao vung từ sau-dưới lên trước-trên trong 1 hình); 5 → 6 → đứng mượt hơn (dao hạ dần, thân thu hẹp).
+  C2 thân đồng nhất hơn giữa các ô nhưng dao đảo hướng A → T → U; 6 → đứng đổi dáng người rõ (Lam C2 thấp, áo xoè).
+- **Đề xuất**: giữ **C1 mặc định**. Muốn mượt hơn: gen lại riêng **ô 2 (T)** của C1 với tay đã ra trước bụng (prompt PH16 mục 5) và **ô 5 (W)** lưỡi gần ngang (mũi ~y −52). C2 chỉ để so.
+
+### Tự kiểm
+
+| Dòng | Kết quả |
+|---|---|
+| Âm Đao thay dao gen ở ảnh chết, nhận ra ở 112 px | **Đạt** (hai nhánh + chắn tay chuông; dao nằm yên D3 → D6) |
+| Chết 4/6/10/10/12/6 trong cửa sổ cũ, trên không giữ D1 tới đất, D5–D6 mặt nạ cố định + bụi thưa, chuông | **Đạt** (đo trong game) |
+| Màn rễ không khung / cột / ngưỡng, phủ đủ bề ngang | **Đạt** (−95 … +95 so hộp −89 … +94) |
+| Rút chính trong 15 tick, đủ lối cả bề ngang tại mốc đi xuyên cũ (tick 9) | **Đạt** (chân dải ≥ 121,8 px trên sàn ở bước 9; rút hết bước 12) |
+| Đóng không chặn xuyên người | **Đạt – hành vi cũ** (giữ 0,6 khi Lam trong hộp; rễ chỉ ló dưới búi) |
+| Tín hiệu đồng / ngà, không teal | **Đạt** |
+| Có ở thu-lam-moi-2, thu-p0c-lam-moi, P0-B (lần 8), P0-C, thu-phong-b | **Đạt** (`man-re-cac-trang.png`) |
+| Chém 1 sáu hình C1 + C2, tỉ lệ mũ, neo chân, lịch bảng bước 1, vệt theo mũi dao | **Đạt** – lệch đo trong bảng; C1 ô 1–2 giống nhau, ô 5 chúc thấp (cần gen lại nếu muốn mượt hơn) |
+| Không đổi hộp / startup / cancel / AI / collider | **Đạt** (chỉ hình) |
+| Thử iPhone thật | **Cần người thử** |
+
+### Đổi gì trong code
+- `game/runtime/trang-tri-dia-hinh.js`: nạp `man-re.json` (ưu tiên hơn cổng dọc), `veManRe` (búi + 7 dải + 4 đầu, thu lên / rủ xuống / lắc, khoá đồng), `TT.manRe`, `TT.manReDo` (số đo chân dải cho log); cờ `?cong=cu` = cổng dọc, `?cong=ngang` = cổng rễ ngang.
+- `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: `ST.chem1` (`?chem1=ghep|4`), `nhanChem1` theo tiền tố C1 / GH, `datVet1` (vệt gen chém 1 theo bản), chết 6 hình: mặt nạ D5–D6 + bụi từ D5. `quay-lam-moi-2.py`: `ph15b[:chet|re|chem]`.
+- `art/huong-moi/lam-tu-the-2/code/`: mới `sua_dao_chet.py`, `ghep_chem1.py`, `do_chem1_6.py`; `dung_thu3.py` (neo `khop`, `gop_het`), `tach.py` (`cat_o(…, gop_het)`), `bang-thu3.json` (`chet` → ảnh đã sửa dao + neo khớp, `chem1_6` → thu11 lưới 3 × 2, mới `chem1_ghep`), `dung_vet.py` (DAT 11 / 12).
+- `art/huong-moi/dia-hinh/code/tao-man-re.py` (mới). P0-B: `khoi-p0b.js` nhãn lần 8, `tao-p0b.py` băm thêm `man-re.json` / `man-re-3x.png`.
+- Sinh lại: trang này, `thu-p0c-lam-moi` (phiên `p0cLM-2910-7f4b00a8`), P0-B (`p0b-2910-234ace54` + `dong-bang/p0b-2910-234ace54.json`). P0-C / thu-phong-b: trang không đổi byte (đọc runtime chung → tự có màn rễ).
+
+### Chạy lại
+```
+python3 art/huong-moi/lam-tu-the-2/code/sua_dao_chet.py && python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py chet
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py chem1_6 && python3 art/huong-moi/lam-tu-the-2/code/ghep_chem1.py && python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py chem1_ghep
+python3 art/huong-moi/lam-tu-the-2/code/dung_vet.py && python3 art/huong-moi/lam-tu-the-2/code/do_chem1_6.py
+python3 art/huong-moi/dia-hinh/code/tao-man-re.py
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py && python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py && python3 game/thu-p0b/cong-cu/tao-p0b.py && python3 game/thu-p0b/cong-cu/ghi-dong-bang.py
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py ph15b      # GIF (~15 phút)
 ```

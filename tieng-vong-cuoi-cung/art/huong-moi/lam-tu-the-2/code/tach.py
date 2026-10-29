@@ -53,7 +53,7 @@ def tach_anh(path):
     return out
 
 
-def cat_o(rgba, cot, hang):
+def cat_o(rgba, cot, hang, gop_het=False):
     """thành phần liên thông lớn nhất (alpha > 0) có tâm trong từng ô; trả list (x0, y0, x1, y1, mặt nạ) theo thứ tự trái→phải, trên→dưới"""
     H, W = rgba.shape[:2]; a = rgba[..., 3] > 0
     lab, n = ndi.label(a, structure=np.ones((3, 3)))
@@ -71,7 +71,9 @@ def cat_o(rgba, cot, hang):
             for k in range(n):
                 if k != best and co[k] >= 12:
                     mk = lab == k + 1
-                    if (mk & gan).any(): m |= mk
+                    cy, cx = tam[k]
+                    # gop_het (PH15 chết 6 ô): gộp MỌI mảnh ≥ 12 px có tâm trong ô (vụn áo bay rời ở D4–D6 là một phần của hình)
+                    if (mk & gan).any() or (gop_het and int(cx // (W / cot)) == i and int(cy // (H / hang)) == j): m |= mk
             ys, xs = np.nonzero(m)
             ra.append((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1, m))
     return ra

@@ -26,3 +26,6 @@ Xử lý bằng `art/huong-moi/dia-hinh/code/tao-dat-bo-sung.py` (nạp nguyên 
 
 Nếu muốn gen lại để đỡ phải cắt / nén (không bắt buộc), prompt ngắn:
 > Same art style as the attached tiles. White background. One 2D side-view inner-corner tile set, 4 pieces, each EXACTLY 256×256 px with the corner point at the exact center (128,128): floor meeting a taller wall on its right / on its left, ceiling meeting a wall hanging down on its right / on its left. Thin moss only (max 12 px above the floor line), straight wall faces, roots the same size as the attached tiles, no frame, no shadow outside the shape.
+
+- `man-re-ru-manh.png` (29/10 khuya, PH15 mục 4): bộ mảnh MÀN RỄ RỦ – hàng trên 1 búi rễ trần, giữa 7 dải rễ (đầu trên phẳng), dưới 4 đầu rễ cong. Dựng bằng
+  `art/huong-moi/dia-hinh/code/tao-man-re.py` → `art/the-gioi-moi/dia-hinh-v4/man-re-3x.png` + `man-re.json`; chuyển động trong `game/runtime/trang-tri-dia-hinh.js` (`veManRe`). Thay cổng dọc ở mọi trang.

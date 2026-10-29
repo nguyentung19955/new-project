@@ -36,7 +36,7 @@ except Exception:
     FONT = ImageFont.load_default()
 
 # hộp đòn THẬT (ATK lúc chạy trang thu-lam-moi-2, đọc 29/10): [x, y, w, h] so với chân, nhìn phải. Không đổi – chỉ để kiểm lõi.
-HOP = {1: [4, -97, 86, 48], 2: [-10, -100, 90, 48], 3: [-13, -59, 99, 59], 4: [-26, -24, 64, 82], 5: [-9, -140, 87, 60], 6: [-3, -107, 95, 48]}
+HOP = {11: [4, -97, 86, 48], 12: [4, -97, 86, 48], 1: [4, -97, 86, 48], 2: [-10, -100, 90, 48], 3: [-13, -59, 99, 59], 4: [-26, -24, 64, 82], 5: [-9, -140, 87, 60], 6: [-3, -107, 95, 48]}
 # hộp mục tiêu của khung đầy = đường quét đo trên tư thế (kiem/thu3-do-dao.png, thu4-do-dao.png – như vệt mẫu code):
 DAT = {
     # PH14 mục 3B: BỎ việc nâng liềm 19 px. Liềm chém 1 được PHÂN BỐ LẠI: dẹt theo chiều đứng (sy = 0,55 · s – liềm ngang thấp, dài:cao ≈ 4:1),
@@ -47,6 +47,15 @@ DAT = {
     # Trước: muc=[6, -62, 92, -40], ky=0.55, khung_doi=[[0,0],[0,0],[2,4],[3,7]] (lưỡi B cũ y −47…−48, dưới mép hộp).
     1: dict(hang='ngang', muc=[20, -61, 96, -47], ky=0.36, khung_doi=[[0, 0], [0, 0], [2, 3], [3, 6]],
             do='chém 1 sửa 3: lưỡi B (39,−54,3)→(83,7,−51,3) TRONG hộp, C (33,−39)→(81,−32) chúc 10°; liềm dẹt, lõi nằm trên đường lưỡi B; khung 3–4 theo lưỡi C xuống (lõi kẹp trong hộp)'),
+    # PH15 (29/10 tối) CHÉM 1 SÁU HÌNH – mỗi bản một phép đặt (game chọn theo bản đang dùng: 11 = C1 mặc định, 12 = C2 ?chem1=ghep; 1 = bản 4 hình ?chem1=4).
+    # Đặt theo MŨI DAO THỰC đo tay trên sheet (kiem/chem1-6-do.json): liềm dẹt, tâm lõi trên đường lưỡi V; khung 1 (nét mảnh, tick U) theo lưỡi U, khung 3–4 (vỡ / mảnh tắt,
+    # tick V cuối + W) đi theo lưỡi W chúc xuống – lõi kẹp trong hộp.
+    # C1: U tay (7,−60) → mũi (66,−77) · V tay (23,−66) → mũi (89,−70) · W tay (12,−50) → mũi (74,−22)
+    11: dict(hang='ngang', muc=[24, -76, 98, -61], ky=0.36, khung_doi=[[-4, -4], [0, 0], [2, 6], [3, 12]],
+             do='chém 1 sáu hình C1 (thu11): lưỡi V (23,−66)→(89,−70) giữa hộp; U chếch lên tới (66,−77); W chúc tới (74,−22)'),
+    # C2: U tay (24,−48) → mũi (74,−43) · V tay (25,−48) → mũi (79,−49) · W tay (−5,−41) → mũi (44,−21) – lưỡi U/V NẰM SÁT / DƯỚI mép dưới hộp (−49)
+    12: dict(hang='ngang', muc=[26, -55, 90, -42], ky=0.36, khung_doi=[[0, 0], [0, 0], [-4, 4], [-6, 7]],
+             do='chém 1 sáu hình C2 (ghép): lưỡi V (25,−48)→(79,−49) ở MÉP DƯỚI hộp → lõi bị kẹp lên trong hộp (lệch dao–vệt lớn hơn C1)'),
     # PH14 mục 3 "Trên không": lệch 10 px sửa bằng phân bố cung (dẹt như chém 1, mép dưới trên lưỡi K2 y −60) – không neo theo sàn
     6: dict(hang='ngang', muc=[8, -74, 92, -54], ky=0.55, khung_doi=[[0, 0], [0, 0], [2, 3], [3, 5]],
             do='trên không: lưỡi K2 ngang y −60, mũi x 81; liềm dẹt như chém 1, mép dưới trên lưỡi K2'),
@@ -244,7 +253,7 @@ def main():
 def kiem(khung, dat):
     """kiem/vet-gen-dat.png: mỗi đòn – khung đầy đặt ở cỡ 3 px/px logic trên nền tối, hộp đòn (đỏ), lõi (vàng), hộp mục tiêu (xanh), chân (chấm)"""
     K = 3; cols = []
-    for n in (1, 2, 3, 5, 6, 4):
+    for n in (1, 11, 12, 2, 3, 5, 6, 4):
         v = dat[n]; ks = khung[v['hang']][2]
         W, H = 150 * K, 190 * K; c = Image.new('RGBA', (W, H), (24, 28, 36, 255)); dr = ImageDraw.Draw(c)
         X0, Y0 = 50 * K, 160 * K   # chân

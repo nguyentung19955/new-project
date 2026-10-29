@@ -13,6 +13,7 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
             ảnh + GIF mở cổng, ảnh cổng trong P0-B / P0-C / phòng B, video chơi thật không bất tử)
   10. p2910 / tranh2910 (29/10): chạy sửa 2 trước/sau (CU_CHAY=<thư mục sheet chạy cũ>), Dư Âm tụ → chém vang, nhảy tường hai phía (BM1/BM2),
             màn bắt đầu / kết trên khung iPhone ngang → xem-thu/chay-duam-vach-2910/
+  12. ph15b[:chet|re|chem] (29/10 tối, PH15): chết 6 hình (Âm Đao sửa), màn rễ rủ (mở / đi qua / đóng, đứng dưới), chém 1 sáu hình C1 / C2, combo → xem-thu/ph15-chet-re-chem1/
   11. ph15 (29/10, PH15 bước 1): idle → móc → bật vách (sau | sau + collider | trước + collider), chết mới (đất / trên không) trước-sau, chém 1 sửa 3
             trước-sau + ảnh dải móc trước/sau + log bù móc từng tick → xem-thu/ph15-buoc1/. "Trước" = trang commit trước (CU_PH15=<thư mục sheet + trang cũ>)
   9. ph14 (29/10, PH14): SỬA PH14 – chém 1 + hộp, pogo có sóng tầm sâu, móc gần sàn, nhảy tường, mép, mở cổng, ảnh dải vệt → xem-thu/sua-ph14/
@@ -960,6 +961,135 @@ async def ph15(b, cong):
     print('lỗi', [t.loi for t in TT])
 
 
+P15B = 'ph15-chet-re-chem1'
+
+
+async def ph15b(b, cong, chi=None):
+    """PH15 (29/10 tối): CHẾT 6 HÌNH (Âm Đao sửa) · MÀN RỄ RỦ · CHÉM 1 SÁU HÌNH C1 / C2 → xem-thu/ph15-chet-re-chem1/ (Lam ~112 px, 960×540 @1x, nền thật;
+    bản thường ≈ toàn tốc 20 ms/bước, -cham4 = chậm 4).
+      chet-dat            chết trên đất: TRÁI màu · PHẢI bóng đen (cùng phím)
+      chet-tren-khong     chết khi đang nhảy: giữ CH1 (mất lực) tới chạm đất rồi mới vào chuỗi
+      man-re-mo-qua       màn rễ thu lên (giữ Phải từ trước – Lam đi xuyên đúng mốc cũ o ≥ 0,6) → đi qua → rủ xuống (dòng chữ: mở / chặn / ĐI XUYÊN ĐƯỢC)
+      man-re-dung-duoi    đóng khi Lam đứng dưới màn: game giữ o = 0,6 (không chặn xuyên người) – rễ chỉ ló dưới búi; Lam ra → rủ xuống
+      man-re-dong.png     ảnh tĩnh màn đóng: màu · + hộp chặn · cổng dọc cũ (?cong=cu) để so
+      chem1-c1-c2         chém 1 sáu hình vào hình nộm: C1 màu · C2 màu · C1 bóng · C2 bóng
+      combo-c1-c2         combo 1 → 2 → 3: C1 · C2"""
+    BD = os.path.join(OUT, P15B); os.makedirs(BD, exist_ok=True); fl = os.path.join(BD, 'log-ph15b.json')
+    log = json.load(open(fl)) if (chi and os.path.exists(fl)) else {}
+    log.update({'ghi_chu': 'mỗi dòng 1 bước: ' + TRANG_THAI4_JS + ' + [LM2.chet]; cổng: [bước, o, đặc?, Lam x so tâm cổng, TT.manReDo]'})
+    JS = '[' + TRANG_THAI4_JS[1:-1] + ', LM2.chet ? JSON.stringify(LM2.chet) : ""]'
+    lam = lambda: chi is None
+
+    async def quay(TT, ten, kb, khung, w=240, h=170, duoi=22, nhan_o=None, cham=True):
+        fr = []; lg = []
+        for i, ph in enumerate(kb):
+            for t in TT: await t.buoc(ph)
+            st = await TT[0].js(JS); lg.append(st)
+            if khung == 'lam': p = await TT[0].lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await TT[0].js('([x, y]) => [x - ox, y - oy]', list(khung))
+            cs = [cat(await t.anh(), X, Y, w, h, duoi) for t in TT]
+            o = Image.new('RGB', (len(cs) * (w + 4) - 4, h), (12, 15, 20))
+            for k, c in enumerate(cs):
+                o.paste(c, (k * (w + 4), 0))
+                if nhan_o: ImageDraw.Draw(o).text((k * (w + 4) + 4, 3), nhan_o[k], font=FONT_N or FONT, fill=(243, 230, 200))
+            fr.append(nho(o, '%s · %s%s · bước %d%s%s' % (st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '',
+                                                        (' · ' + st[-1]) if st[-1] else '')))
+        luu_gif(fr, '%s/%s.gif' % (P15B, ten), ms=20, dither=False)
+        if cham: luu_gif(fr, '%s/%s-cham4.gif' % (P15B, ten), ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + str(r[0]) for j, r in enumerate(lg)))
+        return lg
+
+    async def dat(TT, x, f, cho=40):
+        for t in TT: await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', cho)
+
+    nho(Image.new('RGB', (2, 2)), '')   # nạp FONT_N
+    if chi in (None, 'chet'):
+        TT = [await Trang(b, cong, '').mo(), await Trang(b, cong, 'bong=1').mo()]
+        await dat(TT, '(PA.x0+6)*T', 1); p = await TT[0].js('[pl.x+pl.w/2, pl.y+pl.h]')
+        for t in TT: await t.js('pl.hp=1; pl.iframes=0; hurt(-1)')
+        await quay(TT, 'chet-dat', [''] * 108, (p[0], p[1]), w=240, h=170, nhan_o=['màu', 'bóng đen'])
+        TT = [await Trang(b, cong, '').mo(), await Trang(b, cong, 'bong=1').mo()]   # trang mới (màn còn tối sau lần chết trước)
+        await dat(TT, '(PA.x0+6)*T', 1); p = await TT[0].js('[pl.x+pl.w/2, pl.y+pl.h]')
+        for i in range(10):
+            for t in TT: await t.buoc('j')
+        for t in TT: await t.js('pl.hp=1; pl.iframes=0; hurt(-1)')
+        await quay(TT, 'chet-tren-khong', [''] * 108, (p[0] + 20, p[1]), w=260, h=260, duoi=24, nhan_o=['màu', 'bóng đen'])
+    if chi in (None, 're'):
+        TT = [await Trang(b, cong, '').mo(), await Trang(b, cong, 'hitbox=1').mo()]
+        i = await TT[0].js('DOORS.findIndex(d=>d.px===8848)'); G = 8848
+        sl = '+DOORS[%d].open.toFixed(2)' % i
+        CJ = '[S.frame, +DOORS[%d].open.toFixed(2), doorSolid(DOORS[%d]), +(pl.x + pl.w/2 - %d).toFixed(1), JSON.stringify(TT.manReDo[%d] || {})]' % (i, i, G, G)
+        cl = []
+        async def ghi_cong():
+            cl.append(await TT[0].js(CJ))
+        # (a) đóng: ảnh tĩnh
+        await dat(TT, G - 170, 1, 30)
+        X, Y = await TT[0].js('[DOORS[%d].px-ox, FLOOR-oy]' % i)
+        ims = [cat(await t.anh(), X, Y, 340, 280, 30) for t in TT]
+        cu = await Trang(b, cong, 'cong=cu').mo(); await cu.js('TVP0.datLam(%d, 1)' % (G - 170)); await cu.buoc('', 30)
+        ims.append(cat(await cu.anh(), X, Y, 340, 280, 30))
+        o = Image.new('RGB', (3 * 344, 280 + 24), (12, 15, 20)); d = ImageDraw.Draw(o)
+        for k, (im, t) in enumerate(zip(ims, ['MÀN RỄ RỦ – đóng', '+ hộp chặn 183 × 159 (không đổi)', 'cổng dọc cũ (?cong=cu)'])):
+            o.paste(im, (k * 344, 24)); d.text((k * 344 + 4, 4), t, font=FONT_N, fill=(243, 230, 200))
+        o.save(os.path.join(BD, 'man-re-dong.png')); ims[0].save(os.path.join(BD, 'man-re-dong-112.png'))
+        # (b) mở → đi qua → rủ xuống. Quái gác trước cổng (phòng C) cho nghỉ để Lam đi thẳng tới màn (chỉ để quay)
+        for t in TT: await t.js('Q.forEach(q=>{ if(Math.abs(q.x-%d)<500){ q.dead=true; q.gone=true; } }); DOORS[%d].force=true' % (G, i))   # giữ đóng tới lúc quay
+        await dat(TT, G - 128, 1, 30)
+        for t in TT: await t.js('DOORS[%d].force=false; DOORS[%d].cond=()=>true' % (i, i))
+        fr = []
+        async def buoc_cong(ph, n, nhan_buoc=''):
+            for _ in range(n):
+                for t in TT: await t.buoc(ph)
+                await ghi_cong(); c = cl[-1]; X, Y = await TT[0].js('[DOORS[%d].px-ox, FLOOR-oy]' % i)   # khung bám CỔNG (camera đi theo Lam)
+                o = cat(await TT[0].anh(), X, Y, 340, 280, 30)   # 1 khung màu (GIF 2 khung > 15 MB); hộp chặn: chữ "chặn / ĐI XUYÊN ĐƯỢC" + man-re-dong.png
+                fr.append(nho(o, 'mở %.2f%s · bước %d · %s%s' % (c[1], ' · ĐI XUYÊN ĐƯỢC' if not c[2] else ' · chặn', len(fr) + 1, nhan_buoc, ' · Lam x %+.0f' % c[3])))
+        await buoc_cong('r', 62, 'thu lên – giữ Phải')
+        for t in TT: await t.js('DOORS[%d].force=true; DOORS[%d].latched=false' % (i, i))
+        await buoc_cong('', 36, 'rủ xuống (đóng)')
+        luu_gif(fr, P15B + '/man-re-mo-qua.gif', ms=20, dither=False); luu_gif(fr, P15B + '/man-re-mo-qua-cham4.gif', ms=4000 / 60, dither=False)
+        log['man_re_mo_qua'] = cl[:]; print('màn rễ mở/qua/đóng', [(c[1], c[2], c[3]) for c in cl[:20]])
+        # (c) đóng khi Lam đứng dưới
+        cl.clear(); fr = []
+        for t in TT: await t.js('DOORS[%d].force=false; DOORS[%d].cond=()=>true' % (i, i))
+        for t in TT: await t.buoc('', 20)
+        await dat(TT, G + 30, -1, 10); cl.clear()   # Lam đứng giữa màn đã mở hẳn
+        await buoc_cong('', 6, 'mở – Lam đứng dưới màn')
+        for t in TT: await t.js('DOORS[%d].force=true; DOORS[%d].latched=false' % (i, i))
+        await buoc_cong('', 24, 'lệnh đóng – Lam đứng dưới: giữ 0,6')
+        await buoc_cong('l', 34, 'Lam ra → rủ xuống')
+        await buoc_cong('', 26, 'đóng – lắc tắt dần')
+        luu_gif(fr, P15B + '/man-re-dung-duoi.gif', ms=20, dither=False)
+        log['man_re_dung_duoi'] = cl[:]
+        print('lỗi trang', [t.loi for t in TT] + [cu.loi])
+        # màn rễ ở các trang dùng chung runtime (P0-B đóng băng lần 8, P0-C, P0-C Lam mới, thu-phong-b)
+        ims = []
+        for trang, ten in (('thu-p0b', 'P0-B (đóng băng lần 8)'), ('thu-p0c', 'P0-C'), ('thu-p0c-lam-moi', 'P0-C Lam mới'), ('thu-phong-b', 'thu-phong-b')):
+            ctx = await b.new_context(viewport={'width': 960, 'height': 540}); pg = await ctx.new_page(); loi = []
+            pg.on('pageerror', lambda e: loi.append(str(e))); await pg.route('https://fonts.g*/**', lambda r: r.abort())
+            await pg.goto('http://127.0.0.1:%d/game/%s/index.html?%s' % (cong, trang, 'vong=a' if 'p0b' in trang else ''))
+            await pg.wait_for_function('window.TVDEMO && TVDEMO.ready', timeout=120000)
+            try: await pg.evaluate('TVP0.batDau()')
+            except Exception: pass
+            r = await pg.evaluate('(()=>{const d=DOORS.filter(d=>d.open<0.5).slice(-1)[0]||DOORS[0]; return [d.px, !!TT.manRe, DOORS.length]})()')
+            await pg.evaluate('TVP0.datLam(%d, 1)' % (r[0] - 150)); await pg.evaluate('TVP0.khung(30,"")')
+            X, Y = await pg.evaluate('[%d-ox, FLOOR-oy]' % r[0])
+            im = cat(Image.open(io.BytesIO(await pg.screenshot())).convert('RGB'), X, Y, 360, 280, 30)
+            ImageDraw.Draw(im).text((4, 4), '%s · màn rễ %s' % (ten, 'CÓ' if r[1] else 'KHÔNG'), fill=(255, 240, 200), font=FONT_N)
+            ims.append(im); print(trang, r, loi); await ctx.close()
+        o = Image.new('RGB', (len(ims) * 364, 280))
+        for k, im in enumerate(ims): o.paste(im, (k * 364, 0))
+        o.save(os.path.join(BD, 'man-re-cac-trang.png'))
+    if chi in (None, 'chem'):
+        TT = [await Trang(b, cong, '').mo(), await Trang(b, cong, 'chem1=ghep').mo(), await Trang(b, cong, 'bong=1').mo(), await Trang(b, cong, 'chem1=ghep&bong=1').mo()]
+        await dat(TT, 'Q[6].x-80', 1); p = await TT[0].js('[pl.x+pl.w/2, pl.y+pl.h]')
+        await quay(TT, 'chem1-c1-c2', [''] * 4 + ['a'] + [''] * 30, (p[0] + 25, p[1]), w=240, h=170, nhan_o=['C1 (thu11)', 'C2 (ghép)', 'C1 bóng', 'C2 bóng'])
+        TT = TT[:2]
+        await dat(TT, 'Q[6].x-80', 1); p = await TT[0].js('[pl.x+pl.w/2, pl.y+pl.h]')
+        await quay(TT, 'combo-c1-c2', [''] * 4 + ['a'] + [''] * 15 + ['a'] + [''] * 15 + ['a'] + [''] * 45, (p[0] + 40, p[1]), w=250, h=190, nhan_o=['C1 (thu11)', 'C2 (ghép)'])
+        print('lỗi trang', [t.loi for t in TT])
+    json.dump(log, open(os.path.join(BD, 'log-ph15b.json'), 'w'), ensure_ascii=False, default=str)
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -983,6 +1113,8 @@ async def main(viec):
         if 'p2910' in viec: await p2910(b, cong)
         if 'tranh2910' in viec: await tranh2910(b, cong)
         if 'ph15' in viec: await ph15(b, cong)
+        for v in viec:
+            if v.startswith('ph15b'): await ph15b(b, cong, v.split(':')[1] if ':' in v else None)
         await b.close()
 
 

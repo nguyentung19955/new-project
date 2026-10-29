@@ -19,7 +19,7 @@ def _bam(*ps): h = hashlib.sha1(); [h.update(open(x, 'rb').read()) for x in ps];
 # Danh sách ĐẦY ĐỦ mọi file trang tải (kèm sha1) ghi bằng cong-cu/ghi-dong-bang.py → thu-p0b/dong-bang/<phiên>.json.
 import re as _re
 RUNTIME = sorted(set(os.path.normpath(os.path.join(GAME, 'thu-p0b', m)) for m in _re.findall(r'<script src="(\.\./runtime/[^"]+\.js)"', src)))
-DU_LIEU_RT = [os.path.join(GAME, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4', f) for f in ('cong-doc.json', 'cong-doc-3x.png', 'dia-hinh-v4.json')]
+DU_LIEU_RT = [os.path.join(GAME, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4', f) for f in ('cong-doc.json', 'cong-doc-3x.png', 'dia-hinh-v4.json', 'man-re.json', 'man-re-3x.png')]   # lần 8: màn rễ rủ PH15
 # 29/10 (lần 7): thêm JSON làng hoàn thiện + 2 tranh màn bắt đầu / kết mà runtime lang-hoan-thien.js nạp → đổi tranh thì phiên đổi
 import json as _js
 _LHT = os.path.join(GAME, '..', 'art', 'lang-hoan-thien'); DU_LIEU_RT += [os.path.join(_LHT, 'lang-hoan-thien.json')] + \

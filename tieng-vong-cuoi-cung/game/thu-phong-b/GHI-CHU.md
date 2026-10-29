@@ -394,3 +394,11 @@ game/thu-phong-b/index.html                trang thử (SINH RA, đừng sửa t
 
 - Trang này sinh từ **P0-A gốc** → dùng **LUẬT-RƠI v1** (pogo tự động mỗi lần, không kẹp rơi) – khác P0-C / P0-B / Lam mới (v2). Xem "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`.
 - Chạy lại `tao-tu-p0a.py`: ra đúng file cũ; mép đất gặm nông 2–4 px và cổng mở 2 trụ (PH14) có mặt vì cùng runtime dùng chung (`dia-hinh-huong-moi.js`, `trang-tri-dia-hinh.js`).
+
+## Chết + màn rễ rủ + chém 1 sáu hình (29/10 khuya, PH15)
+
+- Trang này GIỮ LAM CŨ → chỉ nhận **màn rễ rủ** (runtime chung). Trang không sinh lại (không đổi byte).
+- Màn rễ rủ: cổng không còn khung / cột / ngưỡng – búi rễ bám trần trên hộp chặn + 7 dải rễ phủ đủ bề ngang; mở = rễ thu lên sau búi (đi xuyên đúng mốc cũ 0,6, lúc đó chân rễ ≥ 121 px trên sàn),
+  đóng = rễ rủ xuống (giữa trước, hai mép trễ 1–3 bước, lắc nhỏ tắt dần); Lam đứng dưới khi đóng → game giữ mở 0,6 như cũ, rễ chỉ ló dưới búi. Tín hiệu khoá đồng nhỏ (không teal).
+  **Hộp chặn + luật mở / đóng KHÔNG đổi.** `?cong=cu` = cổng dọc cũ · `?cong=ngang` = cổng rễ ngang v4.
+- Chi tiết, số đo, GIF: `game/thu-lam-moi-2/GHI-CHU.md` mục cùng tên, `game/thu-lam-moi-2/xem-thu/ph15-chet-re-chem1/` (ảnh các trang: `man-re-cac-trang.png`).

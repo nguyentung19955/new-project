@@ -60,3 +60,11 @@ Video quay trước đợt 29/10 chiều (chưa có TV / BM / tranh mới – xe
 - **Thử Safari iPhone thật** (PH14 mục 7.5): đa chạm, nút xuống + pogo, bám / nhảy tường hai bên, vòng chết / hồi sinh, bóng Vọng, rèn và Dư Âm, khung hình / bộ nhớ sau đổi phòng
   nhiều lần, vùng bị ngón tay che. Chưa có số Safari → **không xác nhận hiệu năng** từ Chromium.
 - Chỉ khi đạt mới chọn một bản Lam mới cố định cho **cả A/B của P0-B** và bắt đầu lượt so mới (không trộn kết quả cũ / mới).
+
+## Chết + màn rễ rủ + chém 1 sáu hình (29/10 khuya, PH15)
+
+- Trang này có Lam mới → nhận CẢ BA: **chết 6 hình** (dao gen thay bằng Âm Đao, mặt nạ tan D5–D6), **màn rễ rủ**, **chém 1 sáu hình C1** (`?chem1=ghep` = C2, `?chem1=4` = bản 4 hình). Sinh lại: phiên `p0cLM-2910-7f4b00a8`.
+- Màn rễ rủ: cổng không còn khung / cột / ngưỡng – búi rễ bám trần trên hộp chặn + 7 dải rễ phủ đủ bề ngang; mở = rễ thu lên sau búi (đi xuyên đúng mốc cũ 0,6, lúc đó chân rễ ≥ 121 px trên sàn),
+  đóng = rễ rủ xuống (giữa trước, hai mép trễ 1–3 bước, lắc nhỏ tắt dần); Lam đứng dưới khi đóng → game giữ mở 0,6 như cũ, rễ chỉ ló dưới búi. Tín hiệu khoá đồng nhỏ (không teal).
+  **Hộp chặn + luật mở / đóng KHÔNG đổi.** `?cong=cu` = cổng dọc cũ · `?cong=ngang` = cổng rễ ngang v4.
+- Chi tiết, số đo, GIF: `game/thu-lam-moi-2/GHI-CHU.md` mục cùng tên, `game/thu-lam-moi-2/xem-thu/ph15-chet-re-chem1/` (ảnh các trang: `man-re-cac-trang.png`).

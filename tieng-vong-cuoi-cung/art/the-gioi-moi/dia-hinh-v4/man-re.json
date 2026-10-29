@@ -1,0 +1,207 @@
+{
+ "ten": "Màn rễ rủ (PH15 mục 4) – bộ mảnh man-re-ru-manh.png; toạ độ logic so với tâm cổng trên sàn (x giữa, y = sàn, âm = lên)",
+ "anh": "man-re-3x.png",
+ "boi": 3,
+ "co_anh": [
+  993,
+  776
+ ],
+ "bui": {
+  "khung": [
+   0,
+   0,
+   618,
+   157
+  ],
+  "w": 206.0,
+  "h": 52.33,
+  "x": -103.0,
+  "y": -166,
+  "day_dac": -131.3,
+  "y_nghia": "đỉnh búi ở y (trên đỉnh hộp BUI_NHO px – chui vào trần); day_dac = đáy phần búi đặc (dưới đó là rễ con thòng)"
+ },
+ "dai": [
+  {
+   "khung": [
+    0,
+    161,
+    149,
+    531
+   ],
+   "w": 49.67,
+   "h": 177.0,
+   "x": -70,
+   "lop": "truoc",
+   "pha": 1.0,
+   "dau": 0,
+   "dau_lat": 1
+  },
+  {
+   "khung": [
+    153,
+    161,
+    146,
+    531
+   ],
+   "w": 48.67,
+   "h": 177.0,
+   "x": -47,
+   "lop": "sau",
+   "pha": 0.67,
+   "dau": null,
+   "dau_lat": 0
+  },
+  {
+   "khung": [
+    303,
+    161,
+    111,
+    516
+   ],
+   "w": 37.0,
+   "h": 172.0,
+   "x": -23,
+   "lop": "truoc",
+   "pha": 0.33,
+   "dau": 1,
+   "dau_lat": 1
+  },
+  {
+   "khung": [
+    418,
+    161,
+    124,
+    516
+   ],
+   "w": 41.33,
+   "h": 172.0,
+   "x": 2,
+   "lop": "sau",
+   "pha": 0.0,
+   "dau": null,
+   "dau_lat": 0
+  },
+  {
+   "khung": [
+    546,
+    161,
+    151,
+    513
+   ],
+   "w": 50.33,
+   "h": 171.0,
+   "x": 25,
+   "lop": "truoc",
+   "pha": 0.33,
+   "dau": 2,
+   "dau_lat": 0
+  },
+  {
+   "khung": [
+    701,
+    161,
+    144,
+    512
+   ],
+   "w": 48.0,
+   "h": 170.67,
+   "x": 49,
+   "lop": "sau",
+   "pha": 0.67,
+   "dau": null,
+   "dau_lat": 0
+  },
+  {
+   "khung": [
+    849,
+    161,
+    140,
+    521
+   ],
+   "w": 46.67,
+   "h": 173.67,
+   "x": 72,
+   "lop": "truoc",
+   "pha": 1.0,
+   "dau": 3,
+   "dau_lat": 0
+  }
+ ],
+ "dau": [
+  {
+   "khung": [
+    0,
+    696,
+    156,
+    79
+   ],
+   "w": 52.0,
+   "h": 26.33,
+   "gan": [
+    47.3,
+    26.3
+   ]
+  },
+  {
+   "khung": [
+    160,
+    696,
+    155,
+    79
+   ],
+   "w": 51.67,
+   "h": 26.33,
+   "gan": [
+    47.7,
+    26.3
+   ]
+  },
+  {
+   "khung": [
+    319,
+    696,
+    149,
+    79
+   ],
+   "w": 49.67,
+   "h": 26.33,
+   "gan": [
+    47.0,
+    26.3
+   ]
+  },
+  {
+   "khung": [
+    472,
+    696,
+    135,
+    80
+   ],
+   "w": 45.0,
+   "h": 26.67,
+   "gan": [
+    33.0,
+    26.7
+   ]
+  }
+ ],
+ "dau_y_nghia": "đầu rễ cong: gan = [x gốc rêu, đáy mảnh] (logic, trong mảnh); x gốc đặt dưới tâm dải, đáy mảnh = chân dải (sàn khi đóng); vẽ TRƯỚC dải (nằm sau lưng dải), đi cùng dải",
+ "tran": -159,
+ "dai_y_nghia": "dải neo GIỮA ĐỈNH; đóng: chân dải ở sàn (đỉnh ở −h); kéo lên tới đỉnh ≤ đỉnh búi thì đã khuất. Cắt ở trần (y = tran)",
+ "hop_chan": {
+  "x": -89,
+  "y": -159,
+  "w": 183,
+  "h": 159,
+  "ghi_chu": "KHÔNG đổi – game giữ (GATE); chỉ ghi để kiểm hình phủ"
+ },
+ "thu": {
+  "bui_px_gen_sang_logic": 0.202,
+  "dai_px_gen_sang_logic": 0.2862,
+  "dau": 0.1717
+ },
+ "phu_ngang": [
+  -94.8,
+  95.3
+ ]
+}

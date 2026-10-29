@@ -57,7 +57,7 @@ def chot():
 
 
 def nap_nguon(path, cot, hang, cfg=None):
-    cfg = cfg or {}; rgba = tach_anh(path); tt = cat_o(rgba, cot, hang)
+    cfg = cfg or {}; rgba = tach_anh(path); tt = cat_o(rgba, cot, hang, cfg.get('gop_het', False))
     return rgba, tt, [do_tu_the(rgba, m, mat_min=cfg.get('mat_min', 15), bo_moc=cfg.get('mu_bo_moc', 0)) for *_, m in tt]
 
 
@@ -145,6 +145,9 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
         elif mx == 'moc_phai':   # bộ 5: BÁM BẰNG MÓC, vách bên PHẢI – đầu móc (điểm xa nhất bên phải trong 1/4 trên của hình = móc sắt trên đầu) = mép collider
             yy, xx = np.nonzero(m[: y0 + int(0.25 * (y1 - y0))]); j = int(np.argmax(xx)); xm, ym = float(xx[j] + 1), float(yy[j])
             xn = xm - NUA_COLLIDER / k; g['dau_moc_gen'] = [round(xm, 1), round(ym, 1)]
+        elif mx == 'khop' and str(i + 1) in cfg.get('khop_x', {}):   # PH15 chết: KHỚP một điểm cố định (dao nằm đất) với ô tham chiếu – vật nằm yên không nhảy giữa hình
+            r_, x_this, x_ref = cfg['khop_x'][str(i + 1)]; r_ -= 1
+            xn_ref = (r_ % cot) * cw + hang_so[tu[r_]]['o']; xn = x_this - (x_ref - xn_ref); g['khop'] = [r_ + 1, x_this, x_ref]
         else:
             if mx != 'o': g['neo_x_thay'] = 'o (không đo được %s)' % mx
             xn = ci * cw + hang_so[kn]['o']

@@ -213,3 +213,11 @@ Sinh lại bằng `cong-cu/tao-p0c.py` sau 2 sửa ở nguồn (khối P0-C **kh
   (`runtime/dia-hinh-huong-moi.js`) và cổng mở bỏ khung giữa, 2 trụ ngoài, đèn đồng / ngà (`runtime/trang-tri-dia-hinh.js`). Ảnh: `thu-lam-moi-2/xem-thu/sua-ph14/`.
 - **Thay đổi luật**: P0-C dùng **LUẬT-RƠI v2** (pogo tự động 1 lần mỗi lần rời đất, xuống + Chém = pogo cố ý, kẹp rơi lần chém đầu) từ 29/10 – ghi riêng ở mục
   "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`. PH14 không thêm thay đổi luật.
+
+## Chết + màn rễ rủ + chém 1 sáu hình (29/10 khuya, PH15)
+
+- P0-C GIỮ LAM CŨ → chỉ nhận **màn rễ rủ** (runtime chung, cổng tự đổi). Trang không đổi byte → phiên vẫn `p0c-2910-e9cba386` (mã P0-C không băm runtime).
+- Màn rễ rủ: cổng không còn khung / cột / ngưỡng – búi rễ bám trần trên hộp chặn + 7 dải rễ phủ đủ bề ngang; mở = rễ thu lên sau búi (đi xuyên đúng mốc cũ 0,6, lúc đó chân rễ ≥ 121 px trên sàn),
+  đóng = rễ rủ xuống (giữa trước, hai mép trễ 1–3 bước, lắc nhỏ tắt dần); Lam đứng dưới khi đóng → game giữ mở 0,6 như cũ, rễ chỉ ló dưới búi. Tín hiệu khoá đồng nhỏ (không teal).
+  **Hộp chặn + luật mở / đóng KHÔNG đổi.** `?cong=cu` = cổng dọc cũ · `?cong=ngang` = cổng rễ ngang v4.
+- Chi tiết, số đo, GIF: `game/thu-lam-moi-2/GHI-CHU.md` mục cùng tên, `game/thu-lam-moi-2/xem-thu/ph15-chet-re-chem1/` (ảnh các trang: `man-re-cac-trang.png`).

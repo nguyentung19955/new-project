@@ -406,7 +406,7 @@
  },
  "_ghi_chu_ph15": "PH15 bước 1 (29/10): chỗ chừa 2 sheet SẮP GEN – lưu ảnh vào art/huong-moi/nguon/lam-tu-the/ đúng tên rồi chạy dung_thu3.py <tên> + sinh lại trang. chet = 6 ô (D1 mất lực / D2 quỳ / D3 gục / D4 áo tan / D5 áo rỗng / D6 vụn) → nhãn CH1–CH6; chet4 = 4 ô (mất lực / quỳ / gục / áo rỗng) → CH1–CH4 (game: D4–D6 dùng CH4 + mặt nạ tan). chem1_6 = 6 ô chém 1 (A lấy đà · T chuyển tay · U cắt đầu · V cắt đầy · W kết thúc · G về thủ) → C1A C1T C1U C1V C1W C1G; game tự dùng lịch 6 hình khi đủ nhãn.",
  "chet": {
-  "file": "thu8-chet-6o.png",
+  "file": "thu8-chet-6o-am-dao.png",
   "cot": 6,
   "hang": 1,
   "vai": "chet",
@@ -418,7 +418,14 @@
    "CH5",
    "CH6"
   ],
-  "neo_x": "o",
+  "neo_x": [
+   "o",
+   "o",
+   "o",
+   "khop",
+   "khop",
+   "khop"
+  ],
   "neo_y": "day",
   "trung_tinh": 0,
   "o_do_mu": [
@@ -428,7 +435,28 @@
   "o_do_mu_ly_do": "D3 trở đi đầu cúi / áo tan → chỉ đo mũ ở D1, D2",
   "bo": 8,
   "tien_to": "lam-moi8",
-  "huong": "Lam nhìn PHẢI, chung đường đất (đáy ô = đất). Nhịp game: 4/6/10/10/12/6 tick sau khi chạm đất; trên không giữ CH1."
+  "huong": "Lam nhìn PHẢI, chung đường đất (đáy ô = đất). Nhịp game: 4/6/10/10/12/6 tick sau khi chạm đất; trên không giữ CH1. D5–D6: mặt nạ nhiễu cố định + bụi than thưa (code).",
+  "file_goc": "thu8-chet-6o.png",
+  "sua_dao": "29/10 PH15: ảnh gen vẽ lưỡi thành dao thường một lưỡi → code/sua_dao_chet.py xoá dao gen (mặt nạ dải chuôi→mũi, giữ găng), vá gấu áo bị che, dán ẢNH ÂM ĐAO (game/thu-p0a/am-dao/am-dao-cap1.png) MỘT cỡ cho cả 6 ô (×0,46 px ảnh gen), D1–D2 theo hướng dao cũ, D3–D6 nằm đất tựa chắn tay + mũi (nghiêng 8,5°, đáy = đất). Kiểm: kiem/chet-sua-dao.png",
+  "gop_het": true,
+  "khop_x": {
+   "4": [
+    3,
+    1278,
+    928
+   ],
+   "5": [
+    3,
+    1662,
+    928
+   ],
+   "6": [
+    3,
+    1964,
+    928
+   ]
+  },
+  "khop_x_ly_do": "D3–D6 Âm Đao NẰM YÊN trên đất: x chắn tay (px ảnh gen, đặt bởi sua_dao_chet.py) của D4/D5/D6 khớp D3 → dao không nhảy giữa hình; D1–D3 giữ vị trí trong ô (neo o)"
  },
  "chet4": {
   "file": "thu8-chet-4o.png",
@@ -454,9 +482,9 @@
   "huong": "Lam nhìn PHẢI, chung đường đất (đáy ô = đất). Nhịp game: 4/6/10/10/12/6 tick sau khi chạm đất; trên không giữ CH1."
  },
  "chem1_6": {
-  "file": "thu8-chem1-6o.png",
-  "cot": 6,
-  "hang": 1,
+  "file": "thu11-chem1-6o-toa-do.png",
+  "cot": 3,
+  "hang": 2,
   "vai": "chem1_6",
   "tu_the": [
    "C1A",
@@ -471,6 +499,30 @@
   "trung_tinh": 5,
   "bo": 8,
   "tien_to": "lam-moi8",
-  "huong": "Lam nhìn PHẢI. Lịch (ATK[1] su 7 / ac 8 / re 8): atkT 1–4 C1A · 5–6 C1T · 7–8 C1U · 9–11 C1V · 12–14 C1W (hộp) · 15–17 C1W · 18–22 C1G."
+  "huong": "Lam nhìn PHẢI. Lịch (ATK[1] su 7 / ac 8 / re 8): atkT 1–4 C1A · 5–6 C1T · 7–8 C1U · 9–11 C1V · 12–14 C1W (hộp) · 15–17 C1W · 18–22 C1G.",
+  "bo_cuc": "lưới 3×2 (trái→phải, trên→dưới: A lấy đà, T bắt đầu vung, U cắt sớm, V cắt đầy, W kết thúc, G thủ) – gen theo ảnh hướng dẫn kiem/huong-dan-chem1-6o.png",
+  "ban": "C1 (MẶC ĐỊNH 29/10 PH15/16): chém 1 sáu hình gen theo toạ độ tay / mũi"
+ },
+ "chem1_ghep": {
+  "file": "thu12-chem1-6o-ghep.png",
+  "cot": 6,
+  "hang": 1,
+  "vai": "chem1_ghep",
+  "tu_the": [
+   "GHA",
+   "GHT",
+   "GHU",
+   "GHV",
+   "GHW",
+   "GHG"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 5,
+  "bo": 8,
+  "tien_to": "lam-moi8",
+  "huong": "Lam nhìn PHẢI. Lịch (ATK[1] su 7 / ac 8 / re 8): atkT 1–4 C1A · 5–6 C1T · 7–8 C1U · 9–11 C1V · 12–14 C1W (hộp) · 15–17 C1W · 18–22 C1G.",
+  "bo_cuc": "6 ô một hàng – ghép bằng code/ghep_chem1.py: ô 1/3/4/5 từ thu8-chem1-6o-o2-loi.png, ô 2 = thu10-chem1-o2.png TRÁI, ô 6 = thu9-chem1-o2-o6.png PHẢI (thu cùng cỡ mũ)",
+  "ban": "C2 (SO, ?chem1=ghep): chém 1 sáu hình ghép từ 3 ảnh gen"
  }
 }
