@@ -11,8 +11,8 @@
  "anh": "lam-moi3-chem1-2x.png",
  "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
  "co_sheet": [
-  1002,
-  206
+  1258,
+  207
  ],
  "luoi": {
   "cot": 4,
@@ -20,26 +20,26 @@
   "khe_px": 2
  },
  "co_khung": [
-  249,
-  206
+  313,
+  207
  ],
  "diem_neo": {
-  "x": 123,
-  "y": 200,
+  "x": 138,
+  "y": 201,
   "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
  },
  "ty_le": {
   "px_nguon_moi_px_logic": 2,
   "cach": {
-   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô"
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (3 ô hàng mắt dính tay/áo → rộng = cao × 1.18)"
   },
   "px_gen_sang_px_logic": {
-   "chinh": 0.207965
+   "chinh": 0.234222
   },
   "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
  },
  "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh neo x.",
- "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu3-chem1-sua.png",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu7-chem1-sua3.png",
  "thu_co": {
   "loc": "cv2 INTER_AREA",
   "lam_net": null
@@ -50,50 +50,50 @@
    "nhan": "A",
    "x": 0,
    "y": 0,
-   "w": 249,
-   "h": 206,
+   "w": 313,
+   "h": 207,
    "neo_gen": [
-    287.5,
-    608
+    256.2,
+    606
    ],
    "nguon": "chinh"
   },
   {
    "i": 1,
    "nhan": "B",
-   "x": 251,
+   "x": 315,
    "y": 0,
-   "w": 249,
-   "h": 206,
+   "w": 313,
+   "h": 207,
    "neo_gen": [
-    821.8,
-    608
+    767.8,
+    606
    ],
    "nguon": "chinh"
   },
   {
    "i": 2,
    "nhan": "C",
-   "x": 502,
+   "x": 630,
    "y": 0,
-   "w": 249,
-   "h": 206,
+   "w": 313,
+   "h": 207,
    "neo_gen": [
-    1364.0,
-    608
+    1333.0,
+    606
    ],
    "nguon": "chinh"
   },
   {
    "i": 3,
    "nhan": "D",
-   "x": 753,
+   "x": 945,
    "y": 0,
-   "w": 249,
-   "h": 206,
+   "w": 313,
+   "h": 207,
    "neo_gen": [
-    1945.0,
-    608
+    1917.0,
+    606
    ],
    "nguon": "chinh"
   }
@@ -102,21 +102,22 @@
   {
    "o": 1,
    "nhan": "A",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.5,
-   "mu_rong_hang_mat_logic": 46.4,
-   "mu_so_chot_phan_tram": 11.5,
+   "cao_logic": 98.4,
+   "dinh_tren_neo_logic": 97.4,
+   "mu_rong_hang_mat_logic": 52.2,
+   "mu_so_chot_phan_tram": 25.6,
    "mat_logic": [
-    22.6,
-    -60.3
+    23.8,
+    -60.4
    ],
-   "mu_cao_tren_mat_logic": 36.2,
-   "co_mu_so_chot_phan_tram": 1.3,
-   "mat_dien_tich_logic": 6.7,
+   "mu_cao_tren_mat_logic": 37.0,
+   "co_mu_so_chot_phan_tram": -0.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.0,
    "mau_mu_trung_vi": [
-    47.0,
-    55.0,
-    75.0
+    44.0,
+    51.0,
+    72.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -125,21 +126,22 @@
   {
    "o": 2,
    "nhan": "B",
-   "cao_logic": 97.7,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 44.9,
-   "mu_so_chot_phan_tram": 8.0,
+   "cao_logic": 97.0,
+   "dinh_tren_neo_logic": 96.0,
+   "mu_rong_hang_mat_logic": 52.5,
+   "mu_so_chot_phan_tram": 26.2,
    "mat_logic": [
-    20.5,
-    -63.0
+    23.0,
+    -60.2
    ],
-   "mu_cao_tren_mat_logic": 33.7,
+   "mu_cao_tren_mat_logic": 35.8,
    "co_mu_so_chot_phan_tram": -3.8,
-   "mat_dien_tich_logic": 6.8,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.9,
    "mau_mu_trung_vi": [
-    46.0,
-    53.0,
-    74.0
+    50.0,
+    57.0,
+    78.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -148,21 +150,22 @@
   {
    "o": 3,
    "nhan": "C",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 45.1,
-   "mu_so_chot_phan_tram": 8.5,
+   "cao_logic": 96.3,
+   "dinh_tren_neo_logic": 95.3,
+   "mu_rong_hang_mat_logic": 50.6,
+   "mu_so_chot_phan_tram": 21.7,
    "mat_logic": [
-    20.0,
-    -61.4
+    23.6,
+    -57.7
    ],
-   "mu_cao_tren_mat_logic": 35.4,
-   "co_mu_so_chot_phan_tram": -1.3,
-   "mat_dien_tich_logic": 7.0,
+   "mu_cao_tren_mat_logic": 37.5,
+   "co_mu_so_chot_phan_tram": 7.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 7.5,
    "mau_mu_trung_vi": [
-    47.0,
-    54.0,
-    76.0
+    45.0,
+    53.0,
+    73.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -171,21 +174,22 @@
   {
    "o": 4,
    "nhan": "D",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 46.8,
-   "mu_so_chot_phan_tram": 12.5,
+   "cao_logic": 97.9,
+   "dinh_tren_neo_logic": 97.0,
+   "mu_rong_hang_mat_logic": 52.2,
+   "mu_so_chot_phan_tram": 25.6,
    "mat_logic": [
-    16.3,
-    -60.5
+    17.4,
+    -59.2
    ],
-   "mu_cao_tren_mat_logic": 36.2,
-   "co_mu_so_chot_phan_tram": 1.7,
-   "mat_dien_tich_logic": 7.0,
+   "mu_cao_tren_mat_logic": 37.5,
+   "co_mu_so_chot_phan_tram": 0.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.1,
    "mau_mu_trung_vi": [
     47.0,
-    55.0,
-    76.0
+    54.0,
+    74.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -193,13 +197,13 @@
   }
  ],
  "vet_chem1": {
-  "x": 6,
-  "y": -47,
-  "R": 80,
-  "h": 12,
+  "x": 22,
+  "y": -54,
+  "R": 70,
+  "h": 8,
   "T": 10,
-  "goc": 5,
+  "goc": 2,
   "tm": 1.83,
-  "_do": "đo tay (kiem/thu3-do-dao.png): B tay (10, −47) mũi (57, −48) lưỡi ngang; C tay (−2, −34) mũi (47, −20) lưỡi chúc ~16°. Liềm: hai đầu ở x 6 (giữa tay B và C), bụng x 86, tâm y −47 (đường lưỡi B), cao 24 → dài:cao ≈ 3,3:1, nghiêng xuống 5°. Hộp chém 1 (x 4…95, y −97…−49) KHÔNG đổi → lõi nằm sát mép dưới hộp"
+  "_do": "PH15 sửa 3 (đo máy): B lưỡi (39,−54,3)→(83,7,−51,3), tay ~(25,−53); C (33,−39)→(81,3,−32,3). Liềm vệt code: hai đầu x 22 (trước tay), bụng x 92, tâm y −54 (đường lưỡi B), dẹt (h 8), nghiêng 2°. Hộp chém 1 (x 4…90, y −97…−49) không đổi"
  }
 }

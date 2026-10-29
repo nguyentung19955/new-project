@@ -1,0 +1,90 @@
+{
+ "ghi_chu": "PH15 mục 2 \"CHẠY 12 HÌNH\": 4 cặp tư thế kề nhau nhảy hình lớn nhất (đo trên sheet đang dùng, cùng neo game). Hàng ảnh 1–4 = \"chon\" theo thứ tự. mat = mắt dời (px logic), dinh_mu = đỉnh mũ lên/xuống, khac_hinh = (1 − IoU bóng) × 100, diem = tổng chuẩn hoá theo trung vị.",
+ "sheet": "sprite/lam-moi3-chay-3x.png",
+ "moi_cap": [
+  {
+   "cap": "R1→R2",
+   "i": 0,
+   "j": 1,
+   "mat": 4.88,
+   "dinh_mu": 6.33,
+   "khac_hinh": 17.2,
+   "diem": 3.89
+  },
+  {
+   "cap": "R2→R3",
+   "i": 1,
+   "j": 2,
+   "mat": 2.9,
+   "dinh_mu": 4.67,
+   "khac_hinh": 19.3,
+   "diem": 2.96
+  },
+  {
+   "cap": "R3→R4",
+   "i": 2,
+   "j": 3,
+   "mat": 2.24,
+   "dinh_mu": 1.33,
+   "khac_hinh": 13.2,
+   "diem": 1.69
+  },
+  {
+   "cap": "R4→R5",
+   "i": 3,
+   "j": 4,
+   "mat": 5.95,
+   "dinh_mu": 4.33,
+   "khac_hinh": 24.4,
+   "diem": 4.16
+  },
+  {
+   "cap": "R5→R6",
+   "i": 4,
+   "j": 5,
+   "mat": 3.0,
+   "dinh_mu": 5.0,
+   "khac_hinh": 18.5,
+   "diem": 3.02
+  },
+  {
+   "cap": "R6→R7",
+   "i": 5,
+   "j": 6,
+   "mat": 4.7,
+   "dinh_mu": 6.0,
+   "khac_hinh": 22.0,
+   "diem": 3.99
+  },
+  {
+   "cap": "R7→R8",
+   "i": 6,
+   "j": 7,
+   "mat": 2.79,
+   "dinh_mu": 2.67,
+   "khac_hinh": 22.4,
+   "diem": 2.62
+  },
+  {
+   "cap": "R8→R1",
+   "i": 7,
+   "j": 0,
+   "mat": 1.75,
+   "dinh_mu": 1.0,
+   "khac_hinh": 22.9,
+   "diem": 1.92
+  }
+ ],
+ "chon": [
+  "R1→R2",
+  "R4→R5",
+  "R5→R6",
+  "R6→R7"
+ ],
+ "ph15_goi_y": [
+  "R2→R3",
+  "R4→R5",
+  "R6→R7",
+  "R8→R1"
+ ]
+}

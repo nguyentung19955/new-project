@@ -1,0 +1,124 @@
+{
+ "ghi_chu": "PH15 bước 1 mục 3 – ĐO LẠI CỠ NGƯỜI LÚC BÁM MÓC so với dáng đứng / nhảy, CÙNG THANG (px logic, Lam chốt cao 112), KHÔNG tính móc / tay giơ.",
+ "k_nhan_dang_dung": 0.81,
+ "so_tay_truoc_sua": {
+  "_cach": "đo tay trên ảnh 3× có lưới 5 px logic, dáng đứng I1 và móc WM2 TRƯỚC sửa (k cũ), cùng thang 2x, căn mắt",
+  "khe_mat_rong": [
+   17.5,
+   21.7
+  ],
+  "mat_den_day_that": [
+   12.5,
+   17.8
+  ],
+  "chuong_cao": [
+   14.2,
+   18.3
+  ],
+  "chuong_rong": [
+   10.8,
+   14.2
+  ],
+  "mat_cao": [
+   6.7,
+   7.5
+  ]
+ },
+ "tu_dong_sau_sua": {
+  "dung": {
+   "I1": {
+    "chuong_can_dien_tich": 7.0,
+    "mat_can_dien_tich": 2.74
+   },
+   "I2": {
+    "chuong_can_dien_tich": 7.21,
+    "mat_can_dien_tich": 2.74
+   },
+   "I3": {
+    "chuong_can_dien_tich": 7.12,
+    "mat_can_dien_tich": 2.74
+   }
+  },
+  "nhay": {
+   "J1": {
+    "chuong_can_dien_tich": 7.68,
+    "mat_can_dien_tich": 2.9
+   },
+   "J2": {
+    "chuong_can_dien_tich": 7.95,
+    "mat_can_dien_tich": 2.77
+   },
+   "J3": {
+    "chuong_can_dien_tich": 7.89,
+    "mat_can_dien_tich": 2.9
+   },
+   "F1": {
+    "chuong_can_dien_tich": 8.03,
+    "mat_can_dien_tich": 2.92
+   },
+   "F2": {
+    "chuong_can_dien_tich": 8.08,
+    "mat_can_dien_tich": 2.77
+   },
+   "L": {
+    "chuong_can_dien_tich": 7.98,
+    "mat_can_dien_tich": 2.9
+   }
+  },
+  "moc": {
+   "WM1": {
+    "chuong_can_dien_tich": 6.32,
+    "mat_can_dien_tich": 2.65
+   },
+   "WM2": {
+    "chuong_can_dien_tich": 7.25,
+    "mat_can_dien_tich": 2.57
+   },
+   "WM3": {
+    "chuong_can_dien_tich": 7.25,
+    "mat_can_dien_tich": 2.59
+   },
+   "WM4": {
+    "chuong_can_dien_tich": 6.91,
+    "mat_can_dien_tich": 2.53
+   }
+  }
+ },
+ "ty_so_sau_sua": {
+  "chuong_moc_tren_dung": 0.994,
+  "chuong_moc_tren_nhay": 0.891,
+  "mat_moc_tren_dung": 0.942
+ },
+ "tu_dong_truoc_sua": {
+  "moc": {
+   "WM1": {
+    "chuong_can_dien_tich": 7.89,
+    "mat_can_dien_tich": 3.27
+   },
+   "WM2": {
+    "chuong_can_dien_tich": 8.93,
+    "mat_can_dien_tich": 3.16
+   },
+   "WM3": {
+    "chuong_can_dien_tich": 8.97,
+    "mat_can_dien_tich": 3.21
+   },
+   "WM4": {
+    "chuong_can_dien_tich": 8.6,
+    "mat_can_dien_tich": 3.13
+   }
+  }
+ },
+ "ty_so_truoc_sua": {
+  "chuong_moc_tren_dung": 1.231,
+  "chuong_moc_tren_nhay": 1.103,
+  "mat_moc_tren_dung": 1.162,
+  "so_tay_moc_tren_dung": {
+   "khe_mat_rong": 1.24,
+   "mat_den_day_that": 1.424,
+   "chuong_cao": 1.289,
+   "chuong_rong": 1.315,
+   "mat_cao": 1.119
+  }
+ }
+}

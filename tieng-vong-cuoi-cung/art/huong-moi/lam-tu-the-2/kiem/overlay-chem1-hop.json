@@ -11,32 +11,32 @@
  ],
  "mui_dao_logic": {
   "A": [
-   5,
-   -14
+   14,
+   -18
   ],
   "B": [
-   57,
-   -48
+   84,
+   -51
   ],
   "C": [
-   47,
-   -20
+   81,
+   -32
   ],
   "D": [
-   6,
-   -14
+   35,
+   -17
   ]
  },
  "nguon": "sprite/lam-moi3-chem1-3x.png",
  "tay_logic": {
   "B": [
-   10,
-   -47
+   25,
+   -53
   ],
   "C": [
-   -2,
-   -34
+   23,
+   -43
   ]
  },
- "ghi_chu": "px logic so với chân, nhìn phải; mũi dao / tay đo tay trên lưới. Lưỡi B (y −47…−48) nằm DƯỚI mép dưới hộp (−49) 1–2 px; C chúc tới −20 → cần lưỡi B/C qua dải −50…−66"
+ "ghi_chu": "px logic so với chân, nhìn phải. SỬA 3 (PH15): lưỡi B y −54,3…−52,7 nằm TRONG hộp (mép dưới −49), đường cắt ngang ngực dưới; C chúc 10° tới (81, −32) – xuống dưới hộp sau khi cắt (kết thúc khuỷu gập). Trước (sửa 2): lưỡi B −47…−48 dưới mép hộp 1–2 px"
 }

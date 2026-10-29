@@ -1,6 +1,7 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **MỚI NHẤT (29/10 chiều): mục "Chạy sửa 2, Dư Âm, bật vách, tranh 29/10" ở cuối** – chạy lấy ô 1/4 mới (mắt dao động 9,6 → 8,1 px, CHƯA đạt 3–4),
+> **MỚI NHẤT (29/10 tối, PH15): mục "PH15 bước 1" ở cuối** – người dùng thử iPhone 29/10: còn giật, móc to hơn, cổng chưa ưng, chết xấu → sửa tỉ lệ sheet móc ×0,81, bỏ bù nâng theo từng khung, chết mới (không bóp dẹt / không cắt ngang), đồng hồ khung hình (⚙ hoặc `?fps=1`, ⚙ → Chép log), chém 1 sửa 3, ảnh cặp chạy để gen hình nối. GIF trong `xem-thu/ph15-buoc1/`.
+> Trước đó (29/10 chiều): mục "Chạy sửa 2, Dư Âm, bật vách, tranh 29/10" – chạy lấy ô 1/4 mới (mắt dao động 9,6 → 8,1 px, CHƯA đạt 3–4),
 > tụ / chém vang hình gen TV1–TV3, bật khỏi vách BM1/BM2 (WM4 + móc rút bằng code), tranh màn bắt đầu/kết mới ở mọi trang; GIF trong `xem-thu/chay-duam-vach-2910/`.
 > Trước đó (29/10, PH14): xem mục "Sửa PH14" – chém 1 bỏ nâng vệt 19 px (+ ảnh overlay để gen lại chém 1), pogo có sóng tầm sâu, móc chạm mặt đất
 > nhìn thấy + áo không xuyên sàn, mép đất gặm nông 2–4 px, cổng mở bỏ khung giữa, chết tạm khuỵu/tan, chỗ chừa hình bật vách / Dư Âm, **bản tích hợp riêng
@@ -16,7 +17,7 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 (mục "Gửi Claude"): **bỏ rig 13 mảnh**, dùng thẳng các tư thế đã gen (`art/huong-moi/nguon/lam-tu-the/thu2-chay-8o.png`, `thu2-chem1-4o.png`).
 **Chưa ghép vào game chính**: `am-dao.html`, P0-B, P0-C, `demo.html` không sửa – chúng vẫn dùng Lam cũ.
 **Gameplay không đổi**: startup, hộp đòn, tốc độ chạy 264 px/s, miễn sát thương, cửa sổ nối nhát 2 giữ nguyên – chỉ đổi HÌNH Lam.
-**Chưa thử trên iPhone thật** – ảnh, GIF, video, số đo lấy trong Chromium không GPU trên máy chủ.
+**Đã thử iPhone thật 29/10 (người dùng)**: còn giật, bám móc to hơn đứng, cổng chưa ưng, chết xấu – xem mục "PH15 bước 1". Ảnh, GIF, video, số đo của Claude vẫn lấy trong Chromium không GPU trên máy chủ.
 
 **Chơi thử:** https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-lam-moi-2/index.html
 (vào thẳng **phòng A nền mới**, có hình nộm; đi tiếp sang phòng B có 2 Chuông Gỗ; có nút cảm ứng như các trang thử khác)
@@ -923,4 +924,154 @@ python3 art/huong-moi/lam-tu-the-2/code/dung_bat_moc.py
 python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py && python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py
 python3 game/thu-p0b/cong-cu/tao-p0b.py && python3 game/thu-p0b/cong-cu/ghi-dong-bang.py
 CU_CHAY=<thư mục sheet chạy cũ> python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py p2910 tranh2910   # ~5 phút
+```
+
+## PH15 bước 1 (29/10 tối) – chưa gen: đo Safari, sửa cỡ móc, chết mới, chém 1 sửa 3
+
+Làm theo `docs/gameplay/PHAN-HOI-15-LAM-MUOT-MOC-CONG-CHET.md` (mục 1, 3, 5, 6 "Bước 1", "Gửi Claude"). **Không gen ảnh mới** (chỉ dùng ảnh người dùng đã lưu `thu7-chem1-sua3.png`).
+Chỉ sửa `thu-lam-moi-2`, `thu-p0c-lam-moi` và công cụ / sheet Lam mới (`art/huong-moi/lam-tu-the-2`). **P0-B, P0-C gốc, `am-dao.html`, `demo.html` KHÔNG sửa.**
+**Không đổi gameplay**: hộp đòn, sát thương, startup, tốc độ, physics, collider, AI, timestep giữ nguyên – chỉ đổi HÌNH, cách VẼ, và thêm đồng hồ đo.
+Cổng (màn rễ rủ – PH15 mục 4) **chưa làm** – thuộc bước 4 của PH15.
+
+### Kết quả người dùng thử iPhone 29/10 (Safari ngang, bản P0-C Lam mới)
+
+| Người dùng thấy | Bước này làm gì |
+|---|---|
+| **Còn giật** | Thêm **đồng hồ khung hình** để đo thật trên iPhone (mục 3 dưới) + bỏ 3 nguồn giật kỹ thuật tìm thấy trong code. Nhún chạy ~8–10 px là lỗi HÌNH (chưa sửa, chờ gen 4 hình nối – mục 5) |
+| **Bám móc to hơn hẳn lúc đứng** (ảnh `docs/gameplay/anh-nguoi-dung/2910-iphone-lam-moc-to-hon.png`) | **Đúng là sheet móc to hơn ~23 %** – đã sửa tỉ lệ cả sheet (mục 1) |
+| **Cổng chưa ưng** | Chưa làm (PH15 bước 4: màn rễ rủ từ trần, cần bộ mảnh rễ gen) |
+| **Chết xấu** | Bỏ bóp dẹt 0,6 + cắt ngang + hạt sáng dày; chết tạm mới (mục 2) |
+
+### Xem gì trước (`xem-thu/ph15-buoc1/`, Lam ~112 px, nền thật; bản thường ≈ toàn tốc, `-cham4` = chậm 4 lần – chỉ có cho chết / chém)
+
+| File | Nội dung |
+|---|---|
+| **`moc-idle-bat-vach.gif`** | đứng → chạy vào vách → bám móc → trượt → bật vách → rơi: **TRÁI sau** · GIỮA sau + collider (khung xanh) · **PHẢI trước** + collider – cùng phím cùng bước |
+| **`dai-moc-truoc-sau.png`** | cùng các bước then chốt (I1, R3, WM1–WM4, BM1, BM2, J1, J2): hàng trên SAU, hàng dưới TRƯỚC |
+| `moc-sat-san.gif` | trượt móc tới sàn: bù gần sàn liên tục (sau) · trước |
+| **`chet-moi.gif`** | chết trên đất: TRÁI mới · PHẢI cũ (khuỵu 0,6 + cắt ngang) |
+| `chet-tren-khong.gif` | chết khi đang ở trên không: giữ dáng mất lực tới chạm đất rồi mới vào chuỗi |
+| **`chem1-moi.gif`** | chém 1 sửa 3 vào hình nộm: TRÁI sau · GIỮA sau + hộp đòn · PHẢI trước (sheet sửa 2 + vệt cũ) |
+| `log-ph15.json` | từng bước: tư thế, trạng thái, atkT, …, **[dời x, dời y] của hình móc**, trạng thái chết (pha, hạ, tan), chân y |
+| `art/huong-moi/lam-tu-the-2/kiem/ph15-so-moc.png` + `.json` | đứng I1 · móc WM2 TRƯỚC · móc WM2 SAU · rơi F2 – căn mắt, cùng thang; số đo |
+| **`art/huong-moi/lam-tu-the-2/kiem/cap-chay-noi.png`** | **ẢNH ĐÍNH KÈM để gen 4 hình chạy nối** (mục 5) |
+| `art/huong-moi/lam-tu-the-2/kiem/thu3-chem1-dai.png`, `overlay-chem1-hop.png` | chém 1 sửa 3: ảnh dải + overlay hộp đòn / mũi dao |
+
+### 1. Móc to hơn – nguyên nhân + sửa
+
+Đặt dáng đứng I1 và móc WM2 cùng hướng, cùng scale vẽ (sheet 2x), **tắt bù gần sàn**, căn theo mắt; đo bộ phận cứng, **không tính móc / tay giơ**:
+
+| Đo (px logic) | Đứng I1 | Móc WM2 TRƯỚC | Tỉ số |
+|---|---|---|---|
+| rộng khe mặt (đo tay) | 17,5 | 21,7 | ×1,24 |
+| mắt → dây thắt cổ (đo tay) | 12,5 | 17,8 | ×1,42 |
+| chuông cao / rộng (đo tay) | 14,2 / 10,8 | 18,3 / 14,2 | ×1,29 / ×1,31 |
+| chuông căn(diện tích) (máy, trung vị 3 / 4 ô) | 7,1 | 8,75 | ×1,23 (so rơi/nhảy ×1,10) |
+| mắt căn(diện tích) (máy) | 2,74 | 3,18 | ×1,16 (so nhảy ×1,11) |
+| găng / vai | – | – | nhìn cùng to (ảnh `ph15-so-moc.png`) |
+
+- **Không phải lỗi metadata 2x/3x, không nhân đôi scale**: cả 2x và 3x cùng `px_gen_sang_px_logic`, game vẽ `1 / px_nguon_moi_px_logic` (½ hoặc ⅓) – một lần, nhánh vẽ tường chỉ cộng thêm DỊCH (`chinhMoc`), không có scale. Đồng hồ khung hình ghi "điểm sheet → điểm màn" của từng tư thế: đứng / chạy / móc đều 0,722 ở iPhone (BK 2,166, sheet 3x), 0,5 ở 960×540.
+- **Nguyên nhân thật**: tỉ lệ sheet móc lấy từ "cỡ mũ" = căn(rộng × cao trên mắt), với rộng = cao × 1,18 (vì tay giơ dính hàng mắt). Mũ lúc móc **nghiêng tới trước** → "cao trên mắt" ngắn → k quá lớn ~23 %. Sheet vẽ người to **đều** (chuông, khe mặt, găng cùng to) → **sửa scale MỘT lần cho cả sheet**: `bang-thu3.json` → `tuong_moc.k_nhan = 0,81` (trung vị các tỉ số ×1,23). Neo lại như cũ: mắt cao như Lam chốt, đầu móc = mép collider. Sau sửa: chuông móc / đứng = 0,99, mắt 0,94 (`ph15-so-moc.json`).
+- Bật vách BM1/BM2 dựng lại từ WM4 mới (`dung_bat_moc.py` đổi ngưỡng đo tay theo `k_nhan`).
+- **Còn lại (cần gen)**: áo lúc treo vẫn dài hơn đứng ~15 % (cổ → gấu ~66 so 57 px) – áo thòng khi treo, không sửa bằng thu cả người (đầu sẽ teo). Muốn hết hẳn: gen lại 4 hình móc với **gấu gom gần ủng** theo prompt PH15 mục 3.
+- **Bỏ bù nâng theo từng khung** (`chinhMoc` trong `cong-cu/khoi-lam-moi-2.js`): trước mỗi khung nâng theo độ thòng áo của chính khung đó (WM3 ~22 px, WM4 ít hơn → đổi khung là cả người nhảy, tới 17,7 px). Nay **một đường bù liên tục**: nâng = max(0, thòng LỚN NHẤT của sheet − khoảng cách chân → sàn) – chỉ đổi khi Lam trượt, không đổi khi đổi khung. Đo trong game (`log-ph15.json` → `moc-sat-san`): dời y −0,73 → −2,33 → −3,93 → −5,53 → −7,13 → −8,13 mỗi bước khi tới sàn, **đổi WM3 → WM4 không nhảy**. Thòng lớn nhất nay ~8 px (trước 22+) vì sheet đã thu. Đầu móc chạm mặt nhìn thấy: đo ở độ cao móc TRUNG BÌNH của sheet (không theo khung) → dời x 0–2 px, liên tục.
+  Chạm sàn → đứng (I1): hình đổi và hạ ~8 px trong 1 bước (trước 17,7) – hết hẳn khi có dáng gom gấu.
+
+### 2. Chết mới (tạm, code) – `veChet`, `chetPha` trong `khoi-lam-moi-2.js`
+
+- **Bỏ**: nén dọc 0,6 + nở ngang 1,12, cắt ngang từ trên xuống, 14 hạt ngà dày, mờ toàn hình theo `chetAlpha()`.
+- **Nhịp** (tick sau khi chạm đất): D1 mất lực 4 · D2 quỳ 6 · D3 gục 10 · D4 áo tan 10 · D5 áo rỗng 12 · D6 vụn 6 = **48 tick (0,8 s)** – trong cửa sổ hồi sinh CÓ SẴN (game tối màn từ deadT 80, hồi sinh deadT 104; **không kéo dài**). Chạm đất muộn → chia lại lịch trong phần còn lại tới deadT 80 (tối thiểu 24).
+- **Trên không**: giữ dáng mất lực (tạm = hình bị đánh BD2) trong lúc physics rơi; chuỗi bắt đầu khi chạm đất (`chet-tren-khong.gif`).
+- **Hình tạm hiện nay** (chưa có sheet chết): BD2 **hạ thấp bằng DỊCH, không scale**: D1 0 → 1,5 px, D2 → 4, D3 giữ 5 (cắt ở mặt đất – chân không xuyên sàn). D4 + D5: **tan bằng mặt nạ alpha nhiễu CỐ ĐỊNH** (16 mức tạo một lần lúc nạp; mảng bất quy tắc, mép ngoài + phía trên tan trước, lõi sát đất tan sau – không phải đường cắt, không nhiễu mới mỗi tick, không crossfade) + **9 hạt bụi thưa** (7 than tối, 2 đồng mờ; vị trí / nhịp băm cố định, bay lên chậm). D6: chỉ còn hạt. Không teal, không sáng.
+- **Chừa chỗ sheet chết sắp gen**: lưu `art/huong-moi/nguon/lam-tu-the/thu8-chet-6o.png` (6 ô: mất lực / quỳ / gục / áo tan / áo rỗng / vụn) **hoặc** `thu8-chet-4o.png` (4 ô: mất lực / quỳ / gục / áo rỗng), rồi `python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py chet` (hoặc `chet4`) + sinh lại 2 trang → nhãn CH1–CH6 / CH1–CH4. Game tự dùng: 6 hình → D1…D6 đúng hình, mặt nạ tan chỉ ở D6; 4 hình → D4–D6 dùng hình 4 + mặt nạ tan; trên không giữ CH1.
+- **Âm**: Lam mới thay `sfx.die` bằng **một tiếng chuông thấp** (146,8 Hz, phần cao tắt nhanh, nhánh lệch 0,7 % cho rung nhẹ, đuôi ~1,9 s), **chỉ khi âm thanh đã được mở** (AudioContext đang chạy). Bỏ tiếng "trượt xuống" tam giác cũ. `?lam=cu` giữ âm cũ.
+
+### 3. Đo khung hình Safari – `DO15` trong `khoi-lam-moi-2.js`
+
+**Cách người dùng đo trên iPhone**: mở trang (P0-C Lam mới hoặc Lam mới 2) → ⚙ → **"Đồng hồ khung hình: BẬT"** (hoặc thêm `?fps=1` vào link) → đóng ⚙, chơi **một tuyến ~30–60 giây** (chạy qua lại, nhảy, bám móc hai vách, combo, chết 1 lần, sang phòng) → ⚙ → **"Chép log khung hình"** → dán gửi Claude (không chép được thì bấm giữ ô chữ hiện ra → Chọn tất cả → Chép).
+Trên màn (dải nhỏ phía trên): hình/giây · khung chậm nhất · số khung > 20 ms và > 34 ms · thời gian vẽ trung bình / lớn nhất · khung 0 bước / 2+ bước logic · **canvas mới · ảnh nạp · giải nén · tô màu · đọc điểm ảnh · số lần vẽ ảnh mỗi khung**.
+Log gồm: máy (UA, DPR, BK, cỡ canvas), tóm tắt, từng giây, sự kiện (đổi phòng, đổi BK / xoay màn, nạp ảnh giữa trận, chết / hồi sinh), **15 khung chậm nhất** (phòng, tư thế Lam, có Vọng, số quái, khựng), **cỡ vẽ cuối ra màn của từng tư thế Lam**, **dời x / y của hình móc từng tick**.
+
+Kiểm trong code (tìm thấy → đã sửa):
+
+| Kiểm | Kết quả |
+|---|---|
+| Tạo canvas / tô màu mỗi khung | **Có, ở Lam mới**: bóng Vọng (E) / bóng đen (D) tạo **canvas tô CẢ SHEET** lúc dùng lần đầu – tức giữa trận, lần đầu Vọng phát một tư thế mới → khựng + ~50 MB. **Sửa**: tô đúng một khung vào canvas nháp dùng lại (như Lam cũ). Chết mới: mặt nạ + canvas nháp tạo lúc nạp, không tạo khi chết. Đo Chromium: 0 canvas mới / 0 tô / 0 đọc điểm ảnh mỗi giây khi chơi |
+| Nạp sheet giữa trận | Không (nạp hết trước màn bắt đầu). Nhưng Lam mới nạp **cả 2x lẫn 3x** mọi sheet (~73 MB ảnh giải nén) → trên iPhone Safari dễ bỏ ảnh khỏi bộ nhớ rồi giải nén lại giữa trận. **Sửa**: chỉ nạp MỘT cỡ theo BK (iPhone ngang BK 2,17 → 3x, ~50 MB); xoay màn đổi BK sang phía kia mới nạp cỡ kia ở nền (ghi vào log) |
+| Đổi DPR / cỡ canvas liên tục | Code chỉ đổi khi có sự kiện resize / xoay; đồng hồ đếm số lần đổi cỡ + ghi mỗi lần BK đổi – chờ số iPhone (thanh địa chỉ Safari ẩn/hiện có thể bắn resize) |
+| Nội suy vị trí giữa 2 bước mô phỏng | **Đã có** (60 bước/giây cố định, vẽ `lerp(px, x, al)` cho Lam, camera, quái, boss). **Sửa 2 chỗ**: khựng (hitstop) → vẽ đúng bước hiện tại (trước: bước bật khựng còn vẽ lửng giữa 2 vị trí rồi nhảy); vị trí nhảy > 48 px trong 1 bước (hồi sinh, đổi phòng, dịch chuyển) → không nội suy. Không crossfade ảnh, không đổi physics / timestep |
+| Làm tròn sprite vs camera | **Một cách**: camera làm tròn theo pixel THẬT (`snap` = 1/BK px logic); Lam = snap(vị trí thế giới đã nội suy − camera), offset trong khung cũng theo pixel thật; quái / boss cùng `snap`. Không có chỗ làm tròn theo px logic riêng |
+
+Số Chromium trên máy chủ (không GPU, buffer 2080 × 1170 như iPhone) **không dùng để kết luận** hiệu năng – chỉ để kiểm đồng hồ chạy + bộ đếm = 0. Cần log từ iPhone thật.
+
+### 4. Chém 1 sửa 3 (`thu7-chem1-sua3.png`) + bảng 6 hình
+
+- Dựng sheet (`dung_thu3.py chem1`, cùng luật mũ chốt, neo giữa hai ủng): A lấy đà thấp · B cắt ngang ngực dưới · C kết thúc khuỷu gập · D thủ. Cỡ mũ so chốt −0,6 / −3,8 / +7,6 / +0,6 %. Thay chém 1 trong game (lịch A/B/C/D như cũ theo hộp thật: A atkT 1–6, B 7–10, C 11–14, D 15–22).
+- **Lưỡi đo bằng máy** (dải thép dưới cằm, khớp thẳng): B (39, −54,3) → mũi (83,7, −51,3) – **nay NẰM TRONG hộp** (y −97…−49; trước: −47…−48, dưới mép hộp); C chúc 10° tới mũi (81,3, −32,3).
+- **Vệt đặt theo đường mũi dao thật** (`dung_vet.py` `DAT[1]`): liềm dẹt hơn (dài : cao ≈ 6 : 1), tâm lõi trên đường lưỡi B; lõi x 59–89, y −59,7…−50 (trong hộp).
+
+| Lệch dao – vệt (tâm lõi so với đường lưỡi B, px logic) | |
+|---|---|
+| Gốc PH14 (vệt nâng) | **19** |
+| Sau sửa PH14 (sheet sửa 2) | **10,5** (tâm lõi −58,0, lưỡi −47,4; lõi còn chạy quá mũi dao 29 px) |
+| **Sau PH15 (sheet sửa 3)** | **1,8** (tâm lõi −54,9, lưỡi −53,1; lõi quá mũi dao 5 px) |
+
+- **Bảng 6 hình chém 1** (PH15 mục 2, đọc từ ATK[1] THẬT: su 7, ac 8, re 8; hộp bật atkT 7–14; atkT 23 hết đòn) – code đã sẵn (`nhanChem1`), tự dùng khi có sheet `chem1_6` (`thu8-chem1-6o.png`, 6 ô → nhãn C1A C1T C1U C1V C1W C1G, `dung_thu3.py chem1_6`):
+
+| Hình | Ý | atkT | Số tick | Hộp đòn |
+|---|---|---|---|---|
+| C1A | A rút / lấy đà | 1–4 | 4 | tắt |
+| C1T | T chuyển tay | 5–6 | 2 | tắt |
+| C1U | U cắt đầu | 7–8 | 2 | **bật** |
+| C1V | V cắt đầy | 9–11 | 3 | **bật** |
+| C1W | W kết thúc | 12–14 | 3 | **bật** |
+| C1W | W giữ (đầu hồi) | 15–17 | 3 | tắt – vệt tắt theo hộp |
+| C1G | G về thủ | 18–22 | 5 | tắt |
+
+  Khựng không cộng atkT (hình + vệt đứng yên). Nối nhát 2 trong cửa sổ cũ → hình nhát 2 ngay bước đó. Không đổi hộp / startup / cancel.
+
+### 5. Ảnh cặp chạy để gen hình nối – `art/huong-moi/lam-tu-the-2/kiem/cap-chay-noi.png`
+
+`code/cap_chay_noi.py` đo từng cặp tư thế chạy kề nhau trên sheet đang dùng (cùng neo game): mắt dời, đỉnh mũ lên/xuống, khác bóng (1 − IoU). Điểm tổng (chuẩn hoá theo trung vị):
+
+| Cặp | R1→R2 | R2→R3 | R3→R4 | R4→R5 | R5→R6 | R6→R7 | R7→R8 | R8→R1 |
+|---|---|---|---|---|---|---|---|---|
+| mắt dời (px) | 4,9 | 2,9 | 2,2 | **6,0** | 3,0 | 4,7 | 2,8 | 1,8 |
+| đỉnh mũ (px) | 6,3 | 4,7 | 1,3 | 4,3 | 5,0 | 6,0 | 2,7 | 1,0 |
+| khác bóng (%) | 17,2 | 19,3 | 13,2 | 24,4 | 18,5 | 22,0 | 22,4 | 22,9 |
+| điểm | **3,89** | 2,96 | 1,69 | **4,16** | **3,02** | **3,99** | 2,62 | 1,92 |
+
+**Chọn 4 cặp nhảy lớn nhất (theo đo, khác gợi ý PH15 R2→R3 / R8→R1): R1→R2, R4→R5, R5→R6, R6→R7** – ảnh 4 hàng theo thứ tự đó, nền trắng, đúng hình sheet 3x, chỉ số 1–4 nhỏ ở mép trái. Số đo: `kiem/cap-chay-noi.json`.
+Đính kèm ảnh này + Lam chốt + Âm Đao khi gen theo prompt "PROMPT THÊM HÌNH CHẠY" của PH15 (một hình nối cho mỗi cặp, theo thứ tự hàng).
+
+### Tự kiểm
+
+| Dòng | Kết quả |
+|---|---|
+| Móc cùng cỡ người với đứng / nhảy | **Đạt** (chuông ×0,99, mắt ×0,94 so đứng) – áo treo còn dài ~15 % (cần gen gấu gom) |
+| Bỏ bù nâng theo từng khung WM3/WM4 | **Đạt** – bù liên tục theo khoảng cách sàn, log từng tick |
+| Chết: không squash, không cắt ngang, không hạt dày; 48 tick trong cửa sổ cũ; chết trên không | **Đạt (tạm)** – chờ sheet chết |
+| Âm chết chỉ khi âm đã mở | **Đạt** (kiểm `AudioContext.state === 'running'`) |
+| Đồng hồ khung hình + chép log | **Đạt** (Chromium) – **cần người dùng chạy trên iPhone rồi gửi log** |
+| Không tạo canvas / tô / nạp ảnh trong lúc chơi | **Đạt** (Chromium: 0 mỗi giây) |
+| Chém 1 sửa 3 + vệt theo mũi dao | **Đạt** – lệch 19 → 10,5 → 1,8 px |
+| Chạy nhún ~8–10 px | **Chưa sửa** – chờ gen 4 hình nối (ảnh cặp đã xuất) |
+| Cổng màn rễ rủ | **Chưa làm** (PH15 bước 4) |
+| Thử iPhone thật sau bước này | **Cần người thử** |
+
+### Đổi gì trong code
+- `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: `DO15` (đồng hồ khung hình, bộ đếm, log, 2 nút ⚙), nạp MỘT cỡ sheet (`napBo`, `canCo`), tô bóng một khung (`toKhung`, bỏ tô cả sheet), `chinhMoc` bù liên tục, chết mới (`chetPha`, `chonChet`, `veChet`, mặt nạ `datKhungChet`), `nhanChem1` (4 / 6 hình), bọc `render` (khựng / dịch chuyển không nội suy + đồng hồ), bọc `step` (sự kiện), `sfx.die` mới. `quay-lam-moi-2.py`: `ph15`, `Trang(trang=…)`.
+- `art/huong-moi/lam-tu-the-2/code/`: `dung_thu3.py` (`k_nhan`), `bang-thu3.json` (`tuong_moc.k_nhan` 0,81, `chem1` → thu7, `vet_chem1` mới, chỗ chừa `chet` / `chet4` / `chem1_6`), `dung_bat_moc.py` (ngưỡng theo `k_nhan`), `dung_vet.py` (`DAT[1]` theo lưỡi sửa 3), `overlay_chem1.py` (mũi dao sửa 3); mới `do_moc_ph15.py`, `cap_chay_noi.py`.
+- Sinh lại: trang này, `thu-p0c-lam-moi` (phiên mới, xem GHI-CHU ở đó). Sheet: `lam-moi5-tuong_moc`, `lam-moi5-bat_moc`, `lam-moi3-chem1`, `vet-gen` (2x + 3x).
+
+### Chạy lại
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py tuong_moc chem1     # sheet móc (k_nhan) + chém 1 sửa 3
+python3 art/huong-moi/lam-tu-the-2/code/dung_bat_moc.py                  # bật vách từ WM4 mới
+python3 art/huong-moi/lam-tu-the-2/code/dung_vet.py                      # vệt gen (chém 1 theo lưỡi sửa 3)
+python3 art/huong-moi/lam-tu-the-2/code/overlay_chem1.py
+python3 art/huong-moi/lam-tu-the-2/code/do_moc_ph15.py <thư mục sheet móc cũ>   # số đo móc trước/sau
+python3 art/huong-moi/lam-tu-the-2/code/cap_chay_noi.py                  # ảnh cặp chạy
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py && python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py
+CU_PH15=<thư mục sheet cũ> python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py ph15     # GIF (~6 phút; trang cũ đặt tạm ở index-truoc-ph15.html)
 ```

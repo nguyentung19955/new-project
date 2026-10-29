@@ -21,11 +21,13 @@ SP = os.path.join(GOC, 'sprite'); KIEM = os.path.join(GOC, 'kiem')
 BUOC = [('BM1', 25, 1.0, (-3, 7), 'truoc'), ('BM2', 60, 0.8, (-7, 16), 'sau')]   # nhãn, xoay (độ, ngả về sau), thu, dịch px logic, lớp
 
 
-def tach_moc(fr, boi, ax, ay):
+def tach_moc(fr, boi, ax, ay, kn=1.0):
     """mặt nạ lớp nắm tay + móc trong khung WM4 (px khung) – vùng đo tay trên lưới logic (xem dưới); giữ thành phần liên thông chứa đầu móc."""
     a = fr[..., 3] > 40; r, g, b = [fr[..., i].astype(int) for i in range(3)]
     H, W = a.shape; yy, xx = np.mgrid[0:H, 0:W]
     lx, ly = (xx - ax) / boi, (yy - ay) / boi
+    # PH15: sheet móc co lại × k_nhan quanh MẮT (y −72,6) và ĐẦU MÓC (x +10) → đổi toạ độ về thang cũ để dùng nguyên các ngưỡng đo tay
+    lx, ly = 10 + (lx - 10) / kn, -72.6 + (ly + 72.6) / kn
     xanh = (b > r + 15) & a
     vien = (g >= r - 3) & (np.maximum(np.maximum(r, g), b) > 90) & a   # viền ngà-xám của mép mũ
     # đa giác đo trên lưới 1 px logic (WM4 3x): móc + nắm tay nằm trên y −98, bên phải x −19 (phần nắm tay sát mũ y ≥ −108: bên phải x −16,
@@ -57,7 +59,7 @@ def dung(boi):
     sh = np.asarray(Image.open(os.path.join(SP, m['anh'])).convert('RGBA'))
     f = [x for x in m['frames'] if x['nhan'] == 'WM4'][0]; so = [s for s in m['so_do'] if s['nhan'] == 'WM4'][0]
     fr = sh[f['y']:f['y'] + f['h'], f['x']:f['x'] + f['w']].copy(); ax, ay = m['diem_neo']['x'], m['diem_neo']['y']
-    mk, xoa = tach_moc(fr, boi, ax, ay)
+    kn = float(m.get('k_nhan', 1.0)); mk, xoa = tach_moc(fr, boi, ax, ay, kn)
     lop = fr.copy(); lop[~mk] = 0
     goc_ = fr.copy(); goc_[xoa] = 0
     ys, xs = np.nonzero(mk)
@@ -65,7 +67,7 @@ def dung(boi):
     yc = ys.max() - 0.2 * (ys.max() - ys.min()); sel = ys >= yc; tam = (float(xs[sel].mean()), float(ys[sel].mean()))
     KH = []
     for nhan, goc, thu, dich, lopv in BUOC:
-        l2 = bien_doi(lop, tam, goc, thu, dich, boi); base = Image.fromarray(goc_)
+        l2 = bien_doi(lop, tam, goc, thu, (dich[0] * kn, dich[1] * kn), boi); base = Image.fromarray(goc_)
         o = Image.new('RGBA', base.size)
         if lopv == 'truoc': o.alpha_composite(base); o.alpha_composite(l2)
         else: o.alpha_composite(l2); o.alpha_composite(base)

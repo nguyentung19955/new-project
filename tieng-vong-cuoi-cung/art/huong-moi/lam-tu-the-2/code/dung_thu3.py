@@ -115,6 +115,11 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
         for kn in nguon: K[kn] = kk
     else:
         for kn, (rgba, tt, do) in nguon.items(): K[kn] = ty_le(do, C, cfg)
+    # PH15 bước 1 (29/10): "k_nhan" = hệ số sửa tỉ lệ MỘT LẦN cho cả sheet khi chỉ số mũ đo sai (mũ nghiêng / tay giơ dính hàng mắt) – đo lại bằng
+    # bộ phận cứng (chuông, khe mặt, cổ → dây thắt, mắt) so với dáng đứng / nhảy cùng thang; số đo + lý do ở "k_nhan_ly_do" và kiem/ph15-so-moc.json
+    if cfg.get('k_nhan'):
+        K = {kn: (v[0] * float(cfg['k_nhan']), v[1] + ' × k_nhan %.3f (PH15: đo lại bằng chuông / khe mặt / cổ → dây thắt / mắt so dáng đứng–nhảy)' % float(cfg['k_nhan']), v[2])
+             for kn, v in K.items()}
     # neo từng ô (px gen của ảnh nguồn ô đó)
     hang_so = {}
     for kn, (rgba, tt, do) in nguon.items():
@@ -210,7 +215,7 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
                 'thu_co': {'loc': {'area': 'cv2 INTER_AREA', 'lanczos': 'Lanczos (PIL)'}[loc],
                            'lam_net': {'sigma_px_nguon': net[0], 'luong': net[1]} if net else None},
                 'frames': frames, 'so_do': so}
-        for kk in ('vet_pogo', 'vet_chem1', 'nhip', 'vet', 'bo', 'o_do_mu', 'o_do_mu_ly_do', 'mu_thay_rong'):
+        for kk in ('vet_pogo', 'vet_chem1', 'nhip', 'vet', 'bo', 'o_do_mu', 'o_do_mu_ly_do', 'mu_thay_rong', 'k_nhan', 'k_nhan_ly_do', 'mui_dao'):
             if kk in cfg: meta[kk] = cfg[kk]
         json.dump(meta, open(os.path.join(dir_ra, '%s-%s-%dx.json' % (cfg.get('tien_to', 'lam-moi3'), ten, boi)), 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=_np)
         meta_ra[boi] = (meta, out)

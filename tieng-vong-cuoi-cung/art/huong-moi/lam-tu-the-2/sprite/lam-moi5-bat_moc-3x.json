@@ -9,8 +9,8 @@
  "anh": "lam-moi5-bat_moc-3x.png",
  "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
  "co_sheet": [
-  878,
-  516
+  718,
+  420
  ],
  "luoi": {
   "cot": 2,
@@ -18,21 +18,21 @@
   "khe_px": 2
  },
  "co_khung": [
-  438,
-  516
+  358,
+  420
  ],
  "diem_neo": {
-  "x": 399,
-  "y": 427,
+  "x": 319,
+  "y": 389,
   "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
  },
  "ty_le": {
   "px_nguon_moi_px_logic": 3,
   "cach": {
-   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (4 ô hàng mắt dính tay/áo → rộng = cao × 1.18)"
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (4 ô hàng mắt dính tay/áo → rộng = cao × 1.18) × k_nhan 0.810 (PH15: đo lại bằng chuông / khe mặt / cổ → dây thắt / mắt so dáng đứng–nhảy)"
   },
   "px_gen_sang_px_logic": {
-   "chinh": 0.265063
+   "chinh": 0.214701
   },
   "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
  },
@@ -51,17 +51,17 @@
    "nhan": "BM1",
    "x": 0,
    "y": 0,
-   "w": 438,
-   "h": 516,
+   "w": 358,
+   "h": 420,
    "tu": "WM4"
   },
   {
    "i": 1,
    "nhan": "BM2",
-   "x": 440,
+   "x": 360,
    "y": 0,
-   "w": 438,
-   "h": 516,
+   "w": 358,
+   "h": 420,
    "tu": "WM4"
   }
  ],
@@ -69,18 +69,18 @@
   {
    "o": 1,
    "nhan": "BM1",
-   "cao_logic": 150.0,
-   "dinh_tren_neo_logic": 137.4,
-   "mu_rong_hang_mat_logic": 53.3,
-   "mu_so_chot_phan_tram": 28.1,
+   "cao_logic": 121.5,
+   "dinh_tren_neo_logic": 125.1,
+   "mu_rong_hang_mat_logic": 43.2,
+   "mu_so_chot_phan_tram": 3.8,
    "mat_logic": [
-    -15.3,
+    -10.5,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 41.6,
-   "co_mu_so_chot_phan_tram": 11.7,
+   "mu_cao_tren_mat_logic": 33.7,
+   "co_mu_so_chot_phan_tram": -9.5,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 9.8,
+   "mat_dien_tich_logic": 6.4,
    "mau_mu_trung_vi": [
     49.0,
     55.0,
@@ -94,25 +94,25 @@
     159.0
    ],
    "dau_moc_rut_logic": [
-    -5.0,
-    -132.0
+    -1.7,
+    -120.7
    ]
   },
   {
    "o": 2,
    "nhan": "BM2",
-   "cao_logic": 150.0,
-   "dinh_tren_neo_logic": 137.4,
-   "mu_rong_hang_mat_logic": 53.3,
-   "mu_so_chot_phan_tram": 28.1,
+   "cao_logic": 121.5,
+   "dinh_tren_neo_logic": 125.1,
+   "mu_rong_hang_mat_logic": 43.2,
+   "mu_so_chot_phan_tram": 3.8,
    "mat_logic": [
-    -15.3,
+    -10.5,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 41.6,
-   "co_mu_so_chot_phan_tram": 11.7,
+   "mu_cao_tren_mat_logic": 33.7,
+   "co_mu_so_chot_phan_tram": -9.5,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 9.8,
+   "mat_dien_tich_logic": 6.4,
    "mau_mu_trung_vi": [
     49.0,
     55.0,
@@ -126,13 +126,15 @@
     159.0
    ],
    "dau_moc_rut_logic": [
-    -13.0,
-    -111.3
+    -8.7,
+    -104.0
    ]
   }
  ],
  "bo": 5,
  "o_do_mu_ly_do": "tay xa giơ móc đi lên sát mép phải mũ ngay hàng mắt → bề rộng hàng mắt dính tay; luôn dùng rộng = cao trên mắt × 1,18 (như tường lưng bộ 4)",
  "mu_thay_rong": true,
+ "k_nhan": 0.81,
+ "k_nhan_ly_do": "PH15 bước 1 (29/10): ảnh iPhone – lúc bám móc Lam to hơn hẳn lúc đứng. Đo lại cùng thang (tắt bù gần sàn): so dáng đứng I1–I3 chuông ×1,23 (diện tích, tự động) / ×1,30 (cao, đo tay), khe mặt ×1,24, cổ → dây thắt ×1,42, mắt ×1,16; so dáng nhảy/rơi chuông ×1,09, mắt ×1,11 → trung vị ×1,23 → k × 0,81. Lý do: cỡ mũ ước lượng (rộng = cao trên mắt × 1,18) sai vì mũ móc NGHIÊNG tới trước → \"cao trên mắt\" ngắn → k quá lớn ~23 %. Sheet vẽ người to ĐỀU (chuông, găng, khe mặt cùng to) → sửa scale một lần cả sheet, neo lại (mắt cao như chốt, đầu móc = mép collider). Áo móc vẫn dài hơn đứng ~15 % sau sửa (áo thòng khi treo) → cần gen lại dáng gom gấu (PH15 mục 3) nếu muốn hết hẳn. Số đo: kiem/ph15-so-moc.json",
  "dung_bang": "code/dung_bat_moc.py: tách lớp nắm tay + móc của WM4, xoay / thu / dịch (BM1 25° (−3,+7) trước mũ; BM2 60° ×0,8 (−7,+16) sau thân)"
 }

@@ -581,21 +581,22 @@
   {
    "o": 1,
    "nhan": "A",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.5,
-   "mu_rong_hang_mat_logic": 46.4,
-   "mu_so_chot_phan_tram": 11.5,
+   "cao_logic": 98.4,
+   "dinh_tren_neo_logic": 97.4,
+   "mu_rong_hang_mat_logic": 52.2,
+   "mu_so_chot_phan_tram": 25.6,
    "mat_logic": [
-    22.6,
-    -60.3
+    23.8,
+    -60.4
    ],
-   "mu_cao_tren_mat_logic": 36.2,
-   "co_mu_so_chot_phan_tram": 1.3,
-   "mat_dien_tich_logic": 6.7,
+   "mu_cao_tren_mat_logic": 37.0,
+   "co_mu_so_chot_phan_tram": -0.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.0,
    "mau_mu_trung_vi": [
-    47.0,
-    55.0,
-    75.0
+    44.0,
+    51.0,
+    72.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -604,21 +605,22 @@
   {
    "o": 2,
    "nhan": "B",
-   "cao_logic": 97.7,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 44.9,
-   "mu_so_chot_phan_tram": 8.0,
+   "cao_logic": 97.0,
+   "dinh_tren_neo_logic": 96.0,
+   "mu_rong_hang_mat_logic": 52.5,
+   "mu_so_chot_phan_tram": 26.2,
    "mat_logic": [
-    20.5,
-    -63.0
+    23.0,
+    -60.2
    ],
-   "mu_cao_tren_mat_logic": 33.7,
+   "mu_cao_tren_mat_logic": 35.8,
    "co_mu_so_chot_phan_tram": -3.8,
-   "mat_dien_tich_logic": 6.8,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.9,
    "mau_mu_trung_vi": [
-    46.0,
-    53.0,
-    74.0
+    50.0,
+    57.0,
+    78.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -627,21 +629,22 @@
   {
    "o": 3,
    "nhan": "C",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 45.1,
-   "mu_so_chot_phan_tram": 8.5,
+   "cao_logic": 96.3,
+   "dinh_tren_neo_logic": 95.3,
+   "mu_rong_hang_mat_logic": 50.6,
+   "mu_so_chot_phan_tram": 21.7,
    "mat_logic": [
-    20.0,
-    -61.4
+    23.6,
+    -57.7
    ],
-   "mu_cao_tren_mat_logic": 35.4,
-   "co_mu_so_chot_phan_tram": -1.3,
-   "mat_dien_tich_logic": 7.0,
+   "mu_cao_tren_mat_logic": 37.5,
+   "co_mu_so_chot_phan_tram": 7.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 7.5,
    "mau_mu_trung_vi": [
-    47.0,
-    54.0,
-    76.0
+    45.0,
+    53.0,
+    73.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -650,21 +653,22 @@
   {
    "o": 4,
    "nhan": "D",
-   "cao_logic": 97.5,
-   "dinh_tren_neo_logic": 96.7,
-   "mu_rong_hang_mat_logic": 46.8,
-   "mu_so_chot_phan_tram": 12.5,
+   "cao_logic": 97.9,
+   "dinh_tren_neo_logic": 97.0,
+   "mu_rong_hang_mat_logic": 52.2,
+   "mu_so_chot_phan_tram": 25.6,
    "mat_logic": [
-    16.3,
-    -60.5
+    17.4,
+    -59.2
    ],
-   "mu_cao_tren_mat_logic": 36.2,
-   "co_mu_so_chot_phan_tram": 1.7,
-   "mat_dien_tich_logic": 7.0,
+   "mu_cao_tren_mat_logic": 37.5,
+   "co_mu_so_chot_phan_tram": 0.6,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.1,
    "mau_mu_trung_vi": [
     47.0,
-    55.0,
-    76.0
+    54.0,
+    74.0
    ],
    "neo_x": "ung",
    "neo_y": "ung",
@@ -1290,18 +1294,18 @@
   {
    "o": 1,
    "nhan": "WM1",
-   "cao_logic": 156.7,
-   "dinh_tren_neo_logic": 130.8,
-   "mu_rong_hang_mat_logic": 58.6,
-   "mu_so_chot_phan_tram": 40.9,
+   "cao_logic": 126.9,
+   "dinh_tren_neo_logic": 119.7,
+   "mu_rong_hang_mat_logic": 47.4,
+   "mu_so_chot_phan_tram": 14.1,
    "mat_logic": [
-    -28.0,
+    -20.8,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 36.6,
-   "co_mu_so_chot_phan_tram": -1.8,
+   "mu_cao_tren_mat_logic": 29.6,
+   "co_mu_so_chot_phan_tram": -20.4,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 10.7,
+   "mat_dien_tich_logic": 7.0,
    "mau_mu_trung_vi": [
     45.0,
     51.0,
@@ -1316,24 +1320,24 @@
    ],
    "dau_moc_logic": [
     10.0,
-    -122.1
+    -112.7
    ]
   },
   {
    "o": 2,
    "nhan": "WM2",
-   "cao_logic": 158.0,
-   "dinh_tren_neo_logic": 130.5,
-   "mu_rong_hang_mat_logic": 84.0,
-   "mu_so_chot_phan_tram": 102.1,
+   "cao_logic": 128.0,
+   "dinh_tren_neo_logic": 119.5,
+   "mu_rong_hang_mat_logic": 68.1,
+   "mu_so_chot_phan_tram": 63.7,
    "mat_logic": [
-    -18.7,
+    -13.3,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 36.8,
-   "co_mu_so_chot_phan_tram": -1.1,
+   "mu_cao_tren_mat_logic": 29.8,
+   "co_mu_so_chot_phan_tram": -19.9,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 10.0,
+   "mat_dien_tich_logic": 6.6,
    "mau_mu_trung_vi": [
     49.0,
     56.0,
@@ -1348,24 +1352,24 @@
    ],
    "dau_moc_logic": [
     10.0,
-    -121.5
+    -112.2
    ]
   },
   {
    "o": 3,
    "nhan": "WM3",
-   "cao_logic": 160.9,
-   "dinh_tren_neo_logic": 139.1,
-   "mu_rong_hang_mat_logic": 55.4,
-   "mu_so_chot_phan_tram": 33.2,
+   "cao_logic": 130.3,
+   "dinh_tren_neo_logic": 126.5,
+   "mu_rong_hang_mat_logic": 44.9,
+   "mu_so_chot_phan_tram": 7.9,
    "mat_logic": [
-    -22.2,
+    -16.1,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 37.6,
-   "co_mu_so_chot_phan_tram": 1.1,
+   "mu_cao_tren_mat_logic": 30.5,
+   "co_mu_so_chot_phan_tram": -18.1,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 10.3,
+   "mat_dien_tich_logic": 6.7,
    "mau_mu_trung_vi": [
     45.0,
     51.0,
@@ -1380,24 +1384,24 @@
    ],
    "dau_moc_logic": [
     10.0,
-    -129.8
+    -119.0
    ]
   },
   {
    "o": 4,
    "nhan": "WM4",
-   "cao_logic": 150.0,
-   "dinh_tren_neo_logic": 137.4,
-   "mu_rong_hang_mat_logic": 53.3,
-   "mu_so_chot_phan_tram": 28.1,
+   "cao_logic": 121.5,
+   "dinh_tren_neo_logic": 125.1,
+   "mu_rong_hang_mat_logic": 43.2,
+   "mu_so_chot_phan_tram": 3.8,
    "mat_logic": [
-    -15.3,
+    -10.5,
     -72.6
    ],
-   "mu_cao_tren_mat_logic": 41.6,
-   "co_mu_so_chot_phan_tram": 11.7,
+   "mu_cao_tren_mat_logic": 33.7,
+   "co_mu_so_chot_phan_tram": -9.5,
    "mu_do_nhieu": false,
-   "mat_dien_tich_logic": 9.8,
+   "mat_dien_tich_logic": 6.4,
    "mau_mu_trung_vi": [
     49.0,
     55.0,
@@ -1412,7 +1416,7 @@
    ],
    "dau_moc_logic": [
     10.0,
-    -128.7
+    -118.0
    ]
   }
  ],

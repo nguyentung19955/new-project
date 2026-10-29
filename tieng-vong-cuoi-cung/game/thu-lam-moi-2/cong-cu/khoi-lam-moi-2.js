@@ -50,6 +50,74 @@
    KHÔNG crossfade: mỗi bước vẽ đúng MỘT hình.
    Cờ: ?tuong=lung|mat · ?vet=code · ?lam=cu Lam cũ · ?vfx=0 tắt vệt + âm nhận (duyệt tạo dáng) · ?bong=1 Lam bóng đen · ?hitbox=1 hộp đòn · ?cham=4 chậm 4 lần (1–8). ⚙ → "Lam mới 2".
 */
+/* ======================= PH15 bước 1 mục 1.5 – ĐỒNG HỒ KHUNG HÌNH (đo Safari thật) =======================
+   Ẩn mặc định. Bật: ⚙ → "Đồng hồ khung hình" hoặc ?fps=1. Hiện trên màn: hình/giây, khung chậm nhất, số khung > 20 ms / > 34 ms, thời gian vẽ,
+   bước logic mỗi khung, số canvas tạo mới / ảnh nạp / giải nén / tô màu / đọc điểm ảnh MỖI KHUNG (phải = 0 trong lúc chơi).
+   Ghi log mỗi giây + sự kiện (đổi phòng, đổi BK / xoay màn, nạp ảnh giữa trận, chết) + 15 khung chậm nhất có ngữ cảnh + cỡ vẽ cuối ra màn của từng tư thế
+   Lam + bù móc từng tick → ⚙ → "Chép log khung hình" (chép vào bộ nhớ tạm; không chép được thì hiện ô chữ để bấm giữ → Chép).
+   Chỉ ĐO + 2 sửa vẽ (không đổi physics / timestep): khựng (hitstop) vẽ đúng vị trí bước hiện tại (không nội suy giữa 2 bước); nhảy vị trí > 48 px trong
+   1 bước (hồi sinh / đổi phòng / dịch chuyển) không nội suy. */
+const DO15 = (() => {
+  const O = {on: P0_Q.get('fps') === '1', dem: {cv: 0, gid: 0, img: 0, dec: 0, to: 0, di: 0, rs: 0}, boi: 0, giay: [], su: [], cham: [], tuThe: {}, moc: [],
+    _t: -1, _b: null, _n: 0, buoc: 0, txt: '', bat: 0};
+  const D = O.dem;
+  // đếm (luôn gắn, rất rẻ): canvas tạo mới, đọc điểm ảnh, gán src ảnh, decode, đổi cỡ cửa sổ
+  try { const _ce = document.createElement; document.createElement = function (t, o) { if (String(t).toLowerCase() === 'canvas') D.cv++; return _ce.call(this, t, o); }; } catch (e) {}
+  try { const P = CanvasRenderingContext2D.prototype, _g = P.getImageData; P.getImageData = function (...a) { D.gid++; return _g.apply(this, a); }; } catch (e) {}
+  try { const P = HTMLImageElement.prototype, ds = Object.getOwnPropertyDescriptor(P, 'src');
+    if (ds && ds.set) Object.defineProperty(P, 'src', {configurable: true, enumerable: ds.enumerable, get: ds.get, set(v) { D.img++; ds.set.call(this, v); }});
+    const _d = P.decode; if (_d) P.decode = function () { D.dec++; return _d.call(this); }; } catch (e) {}
+  let _di = null;
+  function demVe(bat) { const P = CanvasRenderingContext2D.prototype;
+    if (bat && !_di) { _di = P.drawImage; P.drawImage = function (...a) { D.di++; return _di.apply(this, a); }; }
+    else if (!bat && _di) { P.drawImage = _di; _di = null; } }
+  let bkCu = 0;
+  addEventListener('resize', () => { D.rs++; });
+  const ms = v => Math.round(v * 10) / 10;
+  O.su = []; O.ghiSu = (t) => { if (O.on) O.su.push({t: ms(performance.now() / 1000), f: S.frame, su: t}); if (O.su.length > 300) O.su.shift(); };
+  const ghiSu = O.ghiSu;
+  O.batDau = () => { O.boi = O.boi || (BK > 2 ? 3 : 2); bkCu = BK; if (O.on) { demVe(true); O.bat = performance.now(); ghiSu('bật đồng hồ (?fps=1) · BK ' + BK.toFixed(3) + ' · nạp sheet ' + O.boi + 'x'); } };
+  O.doi = (bat) => { O.on = bat; demVe(bat); if (bat) { O.giay = []; O.cham = []; O.su = []; O.moc = []; O.tuThe = {}; O._b = null; O._t = -1; O.bat = performance.now();
+    ghiSu('bật đồng hồ · BK ' + BK.toFixed(3) + ' · sheet ' + O.boi + 'x'); } };
+  // gọi từ LM2.ve mỗi khung cho Lam người chơi: cỡ vẽ cuối (px logic) + scale ra màn (điểm sheet → điểm màn) + bù móc
+  O.lam = (n, w, h, sc, hc, boi, vai) => { if (!O.on) return;
+    if (!O.tuThe[n]) O.tuThe[n] = {vai, sheet: boi + 'x', rong_logic: ms(w), cao_logic: ms(h), diem_sheet_ra_diem_man: +(sc * BK).toFixed(4), BK: +BK.toFixed(3)};
+    if (/^WM/.test(n) && S.frame !== O._mf) { O._mf = S.frame; O.moc.push([S.frame, n, ms(hc[0]), ms(hc[1]), ms(pl.y + pl.h)]); if (O.moc.length > 400) O.moc.shift(); } };
+  O.buocDem = () => { O.buoc++; };
+  O.khung = (t0, t1) => {
+    if (BK !== bkCu) { ghiSu('BK đổi ' + bkCu.toFixed(3) + ' → ' + BK.toFixed(3) + ' (xoay màn / thanh địa chỉ / thu phóng) · cv ' + cv.width + '×' + cv.height); bkCu = BK; }
+    if (!O.on) { O.buoc = 0; return; }
+    const dt = O._t < 0 ? 16.7 : t0 - O._t; O._t = t0; const rv = t1 - t0, b = O.buoc; O.buoc = 0;
+    if (S.paused) { O._b = null; return; }
+    if (!O._b) O._b = {t0, n: 0, max: 0, r: 0, rmax: 0, c20: 0, c34: 0, b0: 0, b2: 0, d: Object.assign({}, D)};
+    const B = O._b; B.n++; B.max = Math.max(B.max, dt); B.r += rv; B.rmax = Math.max(B.rmax, rv); if (dt > 20) B.c20++; if (dt > 34) B.c34++; if (b === 0) B.b0++; if (b >= 2) B.b2++;
+    if (dt > 20) { O.cham.push({ms: ms(dt), ve_ms: ms(rv), buoc: b, f: S.frame, phong: S.room, lam: pl.m2n || '', a2: pl.a2 || '', vong: !!(typeof echo !== 'undefined' && echo && !echo.done),
+        quai: (typeof Q !== 'undefined') ? Q.filter(q => !q.dead && !q.gone).length : 0, khung: S.hitstop > 0 ? 'khựng' : ''});
+      O.cham.sort((a, c) => c.ms - a.ms); if (O.cham.length > 15) O.cham.length = 15; }
+    if (t0 - B.t0 >= 1000) {
+      const dd = {}; for (const k in D) dd[k] = D[k] - B.d[k];
+      O.giay.push({t: ms((t0 - O.bat) / 1000), fps: ms(B.n * 1000 / (t0 - B.t0)), cham_nhat_ms: ms(B.max), khung_tren_20ms: B.c20, khung_tren_34ms: B.c34,
+        ve_tb_ms: ms(B.r / B.n), ve_max_ms: ms(B.rmax), khung_0_buoc: B.b0, khung_2_buoc: B.b2, canvas_moi: dd.cv, doc_diem_anh: dd.gid, gan_src_anh: dd.img, giai_nen: dd.dec,
+        to_mau: dd.to, drawImage_moi_khung: ms(dd.di / B.n), doi_co: dd.rs, phong: S.room, BK: +BK.toFixed(3)});
+      if (O.giay.length > 600) O.giay.shift();
+      O.txt = (O.giay[O.giay.length - 1].fps).toFixed(0) + ' hình/s · chậm nhất ' + ms(B.max) + ' ms · >20ms ' + B.c20 + ' · >34ms ' + B.c34 + ' · vẽ ' + ms(B.r / B.n) + '/' + ms(B.rmax) + ' ms'
+        + ' · 0 bước ' + B.b0 + ' · 2+ bước ' + B.b2 + ' | canvas mới ' + dd.cv + ' · ảnh ' + dd.img + ' · giải nén ' + dd.dec + ' · tô ' + dd.to + ' · đọc ảnh ' + dd.gid + ' · vẽ ảnh/khung ' + ms(dd.di / B.n);
+      O._b = null;
+    }
+  };
+  O.ve = () => { if (!O.on) return; ctx.setTransform(BK, 0, 0, BK, 0, 0); ctx.globalAlpha = 1; ctx.font = '10px monospace';
+    const t = O.txt || 'đồng hồ khung hình: đang đo 1 giây đầu…'; const w = Math.min(940, ctx.measureText(t).width + 10);
+    ctx.fillStyle = 'rgba(10,12,16,0.78)'; ctx.fillRect((960 - w) / 2, 2, w, 15); ctx.fillStyle = '#F3E6C8'; ctx.textBaseline = 'top'; ctx.fillText(t, (960 - w) / 2 + 5, 5); };
+  O.log = () => {
+    const G = O.giay, all = G.length ? G : [], n = all.length, sum = (k) => all.reduce((a, g) => a + (g[k] || 0), 0);
+    return JSON.stringify({ten: 'Đồng hồ khung hình PH15 – Tiếng Vọng', trang: location.pathname.split('/').slice(-2).join('/'), phien: (typeof P0 !== 'undefined' && P0.PHIEN) || '',
+      luc: new Date().toISOString(), ua: navigator.userAgent, dpr: devicePixelRatio, BK: +BK.toFixed(3), canvas: [cv.width, cv.height], css: [innerWidth, innerHeight], sheet_lam: O.boi + 'x', lam_moi: LM2.ST.moi,
+      vfx: LM2.ST.vfx, tom_tat: {giay: n, fps_tb: n ? ms(sum('fps') / n) : 0, khung_tren_20ms: sum('khung_tren_20ms'), khung_tren_34ms: sum('khung_tren_34ms'),
+        cham_nhat_ms: n ? Math.max(...all.map(g => g.cham_nhat_ms)) : 0, canvas_moi: sum('canvas_moi'), gan_src_anh: sum('gan_src_anh'), giai_nen: sum('giai_nen'), to_mau: sum('to_mau'), doc_diem_anh: sum('doc_diem_anh'), doi_co: sum('doi_co')},
+      su_kien: O.su, khung_cham_nhat: O.cham, tu_the_lam_co_ve: O.tuThe, moc_bu_tung_tick: {cot: ['bước', 'tư thế', 'dời x', 'dời y (âm = nâng)', 'chân y'], dong: O.moc.slice(-200)}, moi_giay: G}, null, 0);
+  };
+  return O;
+})();
 const LM2 = (() => {
   const QS = P0_Q;
   const ST = {moi: QS.get('lam') !== 'cu', vfx: QS.get('vfx') !== '0', bong: QS.get('bong') === '1',
@@ -62,16 +130,37 @@ const LM2 = (() => {
   const SH = {}, SH3 = {};   // thử 2: chay / chem – {meta, img, E (tô ngọc cho bóng Vọng), D (bóng đen)}; SH bản 2x, SH3 bản 3x
   const TU = {};             // nhãn tư thế → [{2: sheet2x, 3: sheet3x}, chỉ số khung]
   const BO3 = [];            // tên sheet bộ 3 đã nạp
-  function to(img, mau, a) { const c = document.createElement('canvas'); c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
-    const g = c.getContext('2d'); g.drawImage(img, 0, 0); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = a; g.fillStyle = mau; g.fillRect(0, 0, c.width, c.height); return c; }
-  const goi = (img, meta) => { const o = {meta, img, _E: null, _D: null};
-    Object.defineProperty(o, 'E', {get() { return this._E || (this._E = to(img, '#CEF0D6', 0.8)); }});
-    Object.defineProperty(o, 'D', {get() { return this._D || (this._D = to(img, '#000000', 1)); }}); return o; };
+  /* PH15 bước 1 – ĐO KHUNG HÌNH SAFARI: trước đây bóng Vọng (E) / bóng đen (D) tạo MỘT CANVAS TÔ CẢ SHEET lúc dùng lần đầu – tức là giữa trận, lần đầu
+     Vọng phát một tư thế mới thì tạo canvas cỡ cả sheet (3x tới 1758 × 516) → khựng + thêm ~50 MB. Nay: tô ĐÚNG MỘT KHUNG vào canvas nháp DÙNG LẠI
+     (như tintKhung của Lam cũ) – không tạo canvas mới trong trận. */
+  let TKM = null, TKMg = null;
+  function toKhung(img, f, mau, a) {
+    if (!TKM) { TKM = document.createElement('canvas'); TKMg = TKM.getContext('2d'); }
+    if (TKM.width < f.w || TKM.height < f.h) { TKM.width = Math.max(TKM.width, f.w); TKM.height = Math.max(TKM.height, f.h); }
+    const g = TKMg; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.clearRect(0, 0, f.w, f.h); g.drawImage(img, f.x, f.y, f.w, f.h, 0, 0, f.w, f.h);
+    g.globalCompositeOperation = 'source-atop'; g.globalAlpha = a; g.fillStyle = mau; g.fillRect(0, 0, f.w, f.h); g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+    DO15.dem.to++; return TKM;
+  }
+  const goi = (img, meta) => ({meta, img});
   async function nap1(ten) {
     const meta = await (await fetch(DUONG + ten + '.json')).json();
     const img = new Image(); img.src = DUONG + meta.anh; await img.decode();
     if (img.naturalWidth !== meta.co_sheet[0] || img.naturalHeight !== meta.co_sheet[1]) throw new Error(meta.anh + ': cỡ ảnh khác co_sheet trong JSON');
     return goi(img, meta);
+  }
+  /* PH15: chỉ nạp MỘT cỡ (BK > 2 → 3x, còn lại 2x) thay vì cả 2x + 3x (~73 MB ảnh giải nén trên iPhone → Safari dễ bỏ ảnh khỏi bộ nhớ rồi giải nén lại
+     giữa trận = khựng). Đổi hướng màn làm BK sang phía kia → nạp cỡ kia NỀN (vẫn vẽ cỡ cũ tới khi xong; ghi vào đồng hồ khung hình). */
+  const BOI = () => BK > 2 ? 3 : 2;
+  const BOS = [];            // [{ten, b: {2, 3}}] mọi bộ sheet đã đăng ký (để nạp nốt cỡ còn thiếu)
+  let NAP_CO = null;
+  async function napBo(ten, boi) {
+    const b = {}; BOS.push({ten, b});
+    try { b[boi] = await nap1(ten + '-' + boi + 'x'); } catch (e) { console.warn('LM2: ' + ten + '-' + boi + 'x lỗi → cỡ kia', e); b[5 - boi] = await nap1(ten + '-' + (5 - boi) + 'x'); }
+    return b;
+  }
+  function canCo(boi) {   // gọi trong ve khi bộ chưa có cỡ boi: nạp nền MỘT lần
+    if (NAP_CO === boi) return; NAP_CO = boi; DO15.ghiSu('nạp cỡ ' + boi + 'x giữa trận (BK đổi → ' + BK.toFixed(2) + ')');
+    (async () => { for (const o of BOS) if (!o.b[boi]) try { o.b[boi] = await nap1(o.ten + '-' + boi + 'x'); } catch (e) { } })();
   }
   const VG = {};             // vệt gen: {2: sheet 2x, 3: sheet 3x}
   const ganNhan = (bo, nhan) => nhan.forEach((n, i) => { TU[n] = [bo, i]; });
@@ -79,25 +168,26 @@ const LM2 = (() => {
   // Mặc định = bản trước bộ 3; sheet pogo bộ 3 ghi lại theo mũi dao đo trên ảnh (bang-thu3.json → vet_pogo).
   let VP = {P1: {x: 8, y: 2, goc: 0}, P2: {x: 8, y: 2, goc: 0}};
   async function nap() {
+    const boi = BOI(); DO15.boi = boi;
     for (const [k, ten] of [['chay', 'lam-moi2-chay'], ['chem', 'lam-moi2-chem1']]) {
-      SH[k] = await nap1(ten + '-2x');
-      try { SH3[k] = await nap1(ten + '-3x'); } catch (e) { console.warn('LM2: không nạp được ' + ten + '-3x → dùng 2x', e); }
+      const b = await napBo(ten, boi); SH[k] = b; SH3[k] = b;   // SH / SH3 giữ tên cũ: cùng một bộ {2, 3}
     }
-    ganNhan({2: SH.chay, 3: SH3.chay}, ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8']);
-    ganNhan({2: SH.chem, 3: SH3.chem}, ['A', 'B', 'C', 'D']);
+    ganNhan(SH.chay, ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8']);
+    ganNhan(SH.chem, ['A', 'B', 'C', 'D']);
     // bộ 3 (PH13 mục 2): chỉ nạp sheet có trong danh sách – chưa có ảnh thì danh sách rỗng → hình tạm
     let ds = [];
     try { ds = (await (await fetch(DUONG + 'thu3-danh-sach.json')).json()).sheets || []; } catch (e) { console.warn('LM2: không đọc được thu3-danh-sach.json → chưa có sheet bộ 3'); }
     for (const d of ds) {
-      try { const b = {2: await nap1(d.ten + '-2x')}; if (d.co_3x) try { b[3] = await nap1(d.ten + '-3x'); } catch (e) { console.warn('LM2: ' + d.ten + '-3x lỗi → 2x'); }
-        ganNhan(b, b[2].meta.tu_the); BO3.push(d.ten); const mv = b[2].meta;
+      try { const b = await napBo(d.ten, d.co_3x ? boi : 2), mv = (b[2] || b[3]).meta;
+        ganNhan(b, mv.tu_the); BO3.push(d.ten);
         if (mv.vet_pogo && mv.vet_pogo.P1) VP = mv.vet_pogo;
         if (mv.vet_chem1) for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) if (typeof mv.vet_chem1[k] === 'number') V1[k] = mv.vet_chem1[k];
         if (mv.vet && mv.vet.n) { const v = {}; for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) v[k] = +mv.vet[k]; VT[mv.vet.n] = v; } }
       catch (e) { console.warn('LM2: không nạp được ' + d.ten, e); }
     }
     // vệt chém GEN (29/10, code/dung_vet.py): sprite/vet-gen-{2x,3x} – thiếu → vệt mẫu code
-    for (const b of [2, 3]) try { VG[b] = await nap1('vet-gen-' + b + 'x'); } catch (e) { console.warn('LM2: không nạp được vet-gen-' + b + 'x', e); }
+    try { const b = await napBo('vet-gen', boi); VG[2] = b[2]; VG[3] = b[3]; VG.b = b; } catch (e) { console.warn('LM2: không nạp được vet-gen', e); }
+    datKhungChet(); DO15.batDau();
     const a = ATK[1]; if (a.su !== 7 || a.ac !== 8 || a.re !== 8) console.warn('LM2: ATK[1] = ' + a.su + '/' + a.ac + '/' + a.re + ' – lịch A/B/C/D tính theo hộp thật, số bước mỗi hình sẽ khác 6/4/4/8');
     dungNut();
   }
@@ -129,6 +219,19 @@ const LM2 = (() => {
     if (t < A.su + A.ac) return L[2];
     const k = L[3].length; return L[3][Math.min(k - 1, Math.floor((t - A.su - A.ac) * k / A.re))];
   }
+  /* CHÉM 1: 4 hình (A/B/C/D – sheet hiện có, nay ảnh SỬA 3 thu7) hoặc 6 hình khi có sheet chem1_6 (nhãn C1A C1T C1U C1V C1W C1G – PH15 mục 2).
+     Lịch 6 hình đọc từ ATK[1] THẬT (su/ac/re), chia theo tỉ lệ PH15: startup A 4 : T 2 · active U 2 : V 3 : W 3 · recovery W 3 : G 5. Với su 7 / ac 8 / re 8
+     (engine hiện tại): atkT 1–4 A · 5–6 T · 7–8 U · 9–11 V · 12–14 W (hộp bật 7–14) · 15–17 W · 18–22 G. Không đổi hộp / startup / cancel; vệt tắt theo hộp
+     dù còn giữ W. Hitstop không cộng atkT → hình đứng yên. Nối nhát 2 sớm → hình đòn mới ngay (máy hình đọc atkN mỗi bước). */
+  const CHIA = (n, w) => { const tg = w.reduce((a, b) => a + b, 0); let c = 0; return w.map(x => (c += x, Math.round(n * c / tg))); };
+  function nhanChem1(t) {
+    const A = ATK[1];
+    if (!(TU.C1A && TU.C1U && TU.C1V && TU.C1W && TU.C1G)) return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D';
+    const su = CHIA(A.su - 1, [4, 2]), ac = CHIA(A.ac, [2, 3, 3]), re = CHIA(A.re, [3, 5]);
+    if (t < A.su) return (t - 1) < su[0] ? 'C1A' : (TU.C1T ? 'C1T' : 'C1A');
+    if (t < A.su + A.ac) { const j = t - A.su; return j < ac[0] ? 'C1U' : j < ac[1] ? 'C1V' : 'C1W'; }
+    return (t - A.su - A.ac) < re[0] ? 'C1W' : 'C1G';
+  }
   function nhanBay() {   // trên không (nhảy / rơi / sau nảy)
     if (M.dinh >= 1 && M.dinh <= 4 && pl.vy <= APEX) return 'J3';
     if (pl.vy < 0) return M.upT <= 2 ? 'J1' : 'J2';
@@ -142,7 +245,7 @@ const LM2 = (() => {
     if (a2 === 'dash') { const i = P.dashFrames - pl.dash; return i <= 2 ? 'LU1' : i >= P.dashFrames - 1 ? 'LU3' : 'LU2'; }
     if (LICH[pl.atkN] && a2 === 'atk' + pl.atkN) return nhanDon(pl.atkN, pl.atkT);
     if (a2 === 'run') return 'R' + (Math.min(7, Math.floor((pl.pha || 0) * 8)) + 1);
-    if (pl.atkN === 1 && a2 === 'atk1') { const A = ATK[1], t = pl.atkT; return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
+    if (pl.atkN === 1 && a2 === 'atk1') return nhanChem1(pl.atkT);
     if (pl.atkN === 4 && a2 === 'atk4') return M.nay >= 0 ? 'P3' : pl.atkBounced ? nhanBay() : pl.atkT <= 2 ? 'P1' : 'P2';   // sau P3: về J2/J3 theo vy
     if (M.nay >= 0 && !pl.atkN && (a2 === 'jump' || a2 === 'fall')) return 'P3';
     // 29/10 BẬT VÁCH BẰNG HÌNH CÓ SẴN (người dùng chọn, không gen): bám móc → tick nhảy BM1, tick kế BM2 (WM4 với móc rút về bằng code,
@@ -186,10 +289,10 @@ const LM2 = (() => {
     if (!n) {   // vệt lướt (TRAIL) không ghi nhãn → suy từ trạng thái đã ghi
       const la = s === pl, at = la ? pl.atkT : s.at, nn = la ? pl.atkN : s.n;
       n = a2 === 'run' ? 'R' + (Math.min(7, Math.floor(((la ? pl.pha : s.p2) || 0) * 8)) + 1)
-        : (nn === 1 && a2 === 'atk1') ? (at < ATK[1].su ? 'A' : at < ATK[1].su + 4 ? 'B' : at < ATK[1].su + ATK[1].ac ? 'C' : 'D')
+        : (nn === 1 && a2 === 'atk1') ? nhanChem1(at)
         : (LICH[nn] && a2 === 'atk' + nn) ? nhanDon(nn, at) : (a2 === 'dash' && TU.LU2) ? 'LU2' : 'tam:' + a2;
     }
-    if (n === 'CHET') { const c = TU.BD2 || TU.BD1 || TU.D; return [c[0], c[1], false, s.l2, n]; }
+    if (n === 'CHET') { const c = chonChet(); return [c[0], c[1], false, s.l2, n]; }
     const t = TU[n]; if (t) return [t[0], t[1], false, s.m2l === null || s.m2l === undefined ? s.l2 : s.m2l, n];
     const u = tam(n, a2); return [u[0], u[1], true, s.l2, n];
   }
@@ -202,7 +305,7 @@ const LM2 = (() => {
   function buiMoc() {
     for (let i = BUI.length - 1; i >= 0; i--) { const b = BUI[i]; b.t++; b.x += b.vx; b.y += b.vy; b.vy += b.tia ? 0 : 0.06; if (b.t >= b.song) BUI.splice(i, 1); }
     const n = pl.m2n; if (!ST.moi || !ST.vfx || (n !== 'WM3' && n !== 'WM4') || !TU[n]) return;
-    const so = TU[n][0][2].meta.so_do[TU[n][1]], dm = so && so.dau_moc_logic; if (!dm) return;
+    const so = (TU[n][0][2] || TU[n][0][3]).meta.so_do[TU[n][1]], dm = so && so.dau_moc_logic; if (!dm) return;
     const l = pl.m2l ? -1 : 1, x = pl.x + pl.w / 2 + dm[0] * l, y = pl.y + pl.h + dm[1], f = S.frame, r1 = bamS(f, 1), r2 = bamS(f, 2);
     if (f % 3 === 0) BUI.push({x: x - l * 1.5, y: y + r1 * 3, vx: -l * (0.25 + 0.35 * r2), vy: 0.4 + 0.6 * r1, t: 0, song: 12 + Math.floor(r2 * 5), r: 0.9 + 0.8 * r1, tia: false});
     if (f % 10 === 0) BUI.push({x: x - l, y: y + 1, vx: -l * (0.9 + 0.5 * r1), vy: -0.5 - 0.4 * r2, t: 0, song: 6, r: 0, tia: true});
@@ -219,18 +322,23 @@ const LM2 = (() => {
   const VQ = [];   // vệt chờ vẽ (sau huVe): [X, Y, f, n, at, độ đục]
   function ve(bo, s, x, y) {
     if (!ST.moi || !SH.chem || !s.a2) return false;
-    const [B, i, , lat, n] = khung(s), S2 = (BK > 2 && B[3]) ? B[3] : B[2], M2 = S2.meta, f = M2.frames[i];
-    const img = bo === LAM.E ? S2.E : ST.bong ? S2.D : S2.img, sc = 1 / M2.ty_le.px_nguon_moi_px_logic;
+    const [B, i, , lat, n] = khung(s), want = BOI(), S2 = B[want] || B[5 - want], M2 = S2.meta, f = M2.frames[i];
+    if (!B[want]) canCo(want);
+    // bóng Vọng (E) / bóng đen (D): tô MỘT khung vào canvas nháp dùng lại (PH15) → nguồn vẽ là (0, 0, f.w, f.h) của canvas nháp
+    const to = bo === LAM.E ? ['#CEF0D6', 0.8] : ST.bong ? ['#000000', 1] : null;
+    const img = to ? toKhung(S2.img, f, to[0], to[1]) : S2.img, fx = to ? 0 : f.x, fy = to ? 0 : f.y, sc = 1 / M2.ty_le.px_nguon_moi_px_logic;
+    // PH15: MỘT cách làm tròn cho mọi thứ – toạ độ thế giới (đã nội suy) − camera (đã làm tròn theo pixel thật) rồi snap() theo pixel thật; offset
+    // trong khung cũng làm tròn theo pixel thật. Không làm tròn riêng sprite theo px logic.
     const X = snap(x - ox + pl.w / 2), Y = snap(y - oy + pl.h), ax = M2.diem_neo.x, ay = M2.diem_neo.y;
     const dx = Math.round(-ax * sc * BK) / BK, dy = Math.round(-ay * sc * BK) / BK;   // 3x ở BK 3: đúng 1 điểm sheet = 1 điểm màn
-    const hc = (ST.chinhMoc && /^WM\d$/.test(n)) ? chinhMoc(s, x, y, M2.so_do[i]) : [0, 0];   // PH14 mục 2: móc chạm mặt đất nhìn thấy + áo không xuyên sàn
+    const hc = (ST.chinhMoc && /^WM\d$/.test(n)) ? chinhMoc(s, x, y, M2) : [0, 0];   // PH14/PH15: móc chạm mặt nhìn thấy + bù gần sàn LIÊN TỤC
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
     ctx.save(); ctx.translate(snap(X + hc[0]), snap(Y + hc[1])); if (lat) ctx.scale(-1, 1);
-    if (n === 'CHET') veChet(s, img, f, dx, dy, sc, lat);
-    else ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
+    if (n === 'CHET') veChet(s, img, {x: fx, y: fy, w: f.w, h: f.h}, dx, dy, sc, lat, B, i);
+    else ctx.drawImage(img, fx, fy, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
     ctx.restore();
-    if (s === pl && bo === LAM) LM2.moc = hc;
-    if (s === pl && bo === LAM) { LM2.dang = (S2 === SH.chay || S2 === SH3.chay ? 'chay' : S2 === SH.chem || S2 === SH3.chem ? 'chem' : M2.vai) + ':' + i;
+    if (s === pl && bo === LAM) { LM2.moc = hc; DO15.lam(n, f.w * sc, f.h * sc, sc, hc, S2.meta.ty_le.px_nguon_moi_px_logic, M2.vai); }
+    if (s === pl && bo === LAM) { LM2.dang = (B === SH.chay ? 'chay' : B === SH.chem ? 'chem' : M2.vai) + ':' + i;
       LM2.nhan = n; LM2.bo = M2.ty_le.px_nguon_moi_px_logic + 'x';
       if (coVet(pl.atkN)) VQ.push([X, Y, s.l2 ? -1 : 1, pl.atkN, pl.atkT, 1]); }
     else if (echo && s === echo.cur && bo === LAM.E && !echo.done && coVet(s.n)) VQ.push([X, Y, s.l2 ? -1 : 1, s.n, s.at, 0.5]);
@@ -242,38 +350,95 @@ const LM2 = (() => {
          ≤ 4,5 px từ mép vẽ): nếu mặt đất lùi sau collider → dời hình về phía vách cho đầu móc cắm ≥ 1 px vào đất nhìn thấy (tối đa 3 px).
      (b) áo thòng dưới chân (cao − đỉnh trên chân, đo trên ảnh) gần sàn: nâng CẢ HÌNH theo điểm tiếp xúc – gấu áo vừa chạm mặt sàn, không
          xuyên; không cắt cứng gấu. (Chưa có hình gấu gom → nâng hình; khi có sheet gấu gom thì đổi hình ở đây.) Đầu móc đi lên theo, vẫn trên vách. */
-  function chinhMoc(s, x, y, so) {
-    if (!so) return [0, 0];
+  /* PH15 bước 1 mục 3: BỎ bù nâng theo TỪNG KHUNG. Trước: mỗi khung nâng theo độ thòng áo CỦA KHUNG ĐÓ (WM3 ~22 px, WM4 ngắn hơn) → WM3 ↔ WM4 đổi
+     khung là cả người nhảy lên xuống tới 17,7 px dù physics trượt đều. Nay: MỘT đường bù LIÊN TỤC theo khoảng cách chân → sàn, dùng độ thòng LỚN NHẤT
+     của cả sheet (một số cho mọi khung): nâng = max(0, thòng_max − khoảng cách tới sàn) – chỉ đổi khi Lam trượt, không đổi khi đổi khung.
+     Sau khi sửa tỉ lệ sheet móc (k × 0,81) thòng_max còn ~8–9 px (trước 22+). Đầu móc chạm mặt nhìn thấy: đo ở ĐỘ CAO MÓC TRUNG BÌNH của sheet (không theo
+     khung) → cũng liên tục. Khi có hình "gấu gom" (PH15 mục 3) thì đổi hình ở đây, bỏ nâng. ?moc=cu = như trước PH14. */
+  function chinhMoc(s, x, y, M2) {
+    const c = M2._c15 || (M2._c15 = (() => { let du = 0, my = 0, k = 0;
+      for (const so of M2.so_do) { du = Math.max(du, (so.cao_logic || 0) - (so.dinh_tren_neo_logic || 0)); if (so.dau_moc_logic) { my += so.dau_moc_logic[1]; k++; } }
+      return {du, my: k ? my / k : null}; })());
     const w = s.m2l ? -1 : 1, xa = x + pl.w / 2, yc = y + pl.h; let ex = 0, ey = 0;
-    const duoi = (so.cao_logic || 0) - (so.dinh_tren_neo_logic || 0);   // áo thòng dưới chân (logic)
-    if (duoi > 0) { let san = null;
-      for (let yy = Math.floor(yc); yy <= yc + duoi + 2; yy++) if (solidPt(xa, yy) || solidPt(xa - w * 8, yy)) { san = yy; break; }
-      if (san !== null && yc + duoi > san) ey = -(yc + duoi - san); }
-    const dm = so.dau_moc_logic;
-    if (dm && typeof DHM !== 'undefined' && DHM.mepNhin) {
-      const xc = w > 0 ? x + pl.w : x, o = DHM.mepNhin(xc, yc + ey + dm[1], w > 0 ? -1 : 1);
+    if (c.du > 0) { let san = null;
+      for (let yy = Math.floor(yc); yy <= yc + c.du + 2; yy++) if (solidPt(xa, yy) || solidPt(xa - w * 8, yy)) { san = yy; break; }
+      if (san !== null && yc + c.du > san) ey = -(yc + c.du - san); }
+    if (c.my !== null && typeof DHM !== 'undefined' && DHM.mepNhin) {
+      const xc = w > 0 ? x + pl.w : x, o = DHM.mepNhin(xc, yc + ey + c.my, w > 0 ? -1 : 1);
       if (o !== null) ex = w * Math.min(3, Math.max(0, 1 - o));
     }
     return [ex, ey];
   }
-  /* ---------- PH14 mục 1D: CHẾT TẠM (code) – khuỵu rồi tan, dựng từ hình BỊ ĐÁNH (BD2) ----------
-     deadT tới lúc chạm đất: hình bị đánh nguyên; chạm đất → khuỵu 14 bước (nén dọc 1 → 0,6, nở ngang 1 → 1,12 quanh chân, nghiêng nhẹ về trước);
-     từ deadT 40: tan – hạt bụi ngà / than nhỏ bốc lên từ thân, cắt dần từ trên xuống (độ mờ chung theo chetAlpha() của game: mờ dần rồi hồi sinh). */
+  /* ---------- PH15 bước 1 mục 5: CHẾT MỚI (tạm, code) – BỎ squash 0,6 / nở ngang, BỎ cắt ngang từ trên xuống, BỎ hạt ngà dày ----------
+     Nhịp (tick sau khi CHẠM ĐẤT, pl.dD): D1 mất lực 4 · D2 quỳ 6 · D3 gục 10 · D4 áo tan 10 · D5 áo rỗng 12 · D6 vụn 6 = 48 tick (~0,8 s), nằm trong cửa sổ
+     hồi sinh CÓ SẴN (màn tối từ deadT 80, hồi sinh deadT 104 – không kéo dài). Chạm đất muộn (chết trên không, rơi lâu) → chia lại lịch trong phần còn lại
+     tới deadT 80 (tối thiểu 24 tick), không giữ xác lơ lửng: trên không = dáng MẤT LỰC (CH1 khi có, tạm = hình bị đánh BD2) theo physics rơi.
+     CHƯA có sheet chết (sắp gen: art/huong-moi/nguon/lam-tu-the/thu8-chet-6o.png → nhãn CH1–CH6, dung_thu3.py chet) → TẠM: hình bị đánh BD2, HẠ THẤP NHẸ
+     bằng DỊCH (không scale): D1 0 → 1,5 px, D2 → 4 px, D3 giữ 5 px (cắt ở mặt đất – chân không xuyên sàn); D4 + D5 TAN bằng MẶT NẠ ALPHA NHIỄU CỐ ĐỊNH
+     (tạo một lần lúc nạp, mép ngoài tan trước, thành mảng bất quy tắc – không nhiễu mới mỗi tick, không crossfade sang hình khác) + vài hạt bụi than
+     thưa (7 than + 2 đồng mờ, vị trí băm cố định); D6 chỉ còn hạt. Có sheet: 6 hình → D1…D6 đúng hình, mặt nạ tan chỉ ở D6; 4 hình (mất lực / quỳ / gục /
+     áo rỗng) → D4–D6 dùng hình 4 + mặt nạ tan. Lam mới tự tan → bỏ mờ toàn hình chetAlpha() của game. Âm: xem sfx.die (cuối khối). */
+  const NHIP_CHET = [4, 6, 10, 10, 12, 6], CHET_TOI = 80;   // CHET_TOI = deadT game bắt đầu tối màn (S.fadeDir = 1)
+  function chetPha() {
+    const t = pl.deadT, d = pl.dD;
+    if (d < 0) return {p: 0, u: 0, k: 0};
+    const con = Math.max(24, Math.min(48, CHET_TOI - d)), tt = (t - d) * 48 / con; let c = 0;
+    for (let i = 0; i < 6; i++) { if (tt < c + NHIP_CHET[i]) return {p: i + 1, u: (tt - c) / NHIP_CHET[i], k: tt}; c += NHIP_CHET[i]; }
+    return {p: 7, u: 1, k: tt};
+  }
+  const soCH = () => ['CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'CH6'].filter(k => TU[k]).length;
+  function chonChet() {
+    const so = soCH(), p = chetPha().p;
+    if (so >= 4) { const m = so >= 6 ? [1, 1, 2, 3, 4, 5, 6, 6] : [1, 1, 2, 3, 4, 4, 4, 4]; const t = TU['CH' + m[p]]; if (t) return t; }
+    return TU.BD2 || TU.BD1 || TU.D;
+  }
+  const MN = 16, MW = 48, MH = 40; const MASK15 = []; let OCH = null, OCHg = null, OCH_BK = 0;
+  function datKhungChet() {   // gọi lúc nạp (và khi BK đổi): canvas nháp tan + 16 mức mặt nạ – KHÔNG tạo trong lúc chết
+    if (!MASK15.length) {
+      const nz = (x, y, s0) => { const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, sm = t => t * t * (3 - 2 * t),
+          h = (a, b) => bamS(a * 7919 + s0, b * 104729 + s0);
+        const a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1), u = sm(fx), v = sm(fy);
+        return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; };
+      const V = new Float32Array(MW * MH);
+      for (let j = 0; j < MH; j++) for (let i = 0; i < MW; i++) {
+        const x = i / MW, y = j / MH, n = 0.65 * nz(x * 4, y * 3.5, 11) + 0.35 * nz(x * 9, y * 8, 37);
+        const r = Math.min(1, Math.hypot((x - 0.5) / 0.5, (y - 0.7) / 0.6));   // mép ngoài (vạt áo, chóp mũ) tan trước
+        // + nghiêng nhẹ theo chiều cao: phần trên tan sớm hơn phần sát đất (khối áo sụp thấp dần, không còn mảng mũ lơ lửng) – vẫn là mảng nhiễu, không phải đường cắt
+        V[j * MW + i] = 0.48 * n + 0.32 * (1 - r) + 0.2 * y; }   // giá trị THẤP = bị khoét TRƯỚC: mép ngoài + phía trên thấp, lõi sát đất cao
+      let lo = 1, hi = 0; for (const v of V) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+      for (let k = 1; k <= MN; k++) { const c = document.createElement('canvas'); c.width = MW; c.height = MH; const g = c.getContext('2d'), id = g.createImageData(MW, MH);
+        for (let q = 0; q < V.length; q++) id.data[q * 4 + 3] = (V[q] - lo) / (hi - lo + 1e-6) < k / MN ? 255 : 0;
+        g.putImageData(id, 0, 0); MASK15.push(c); }
+    }
+    if (!OCH || OCH_BK !== BK) { OCH = document.createElement('canvas'); OCH.width = Math.ceil(260 * BK); OCH.height = Math.ceil(200 * BK); OCHg = OCH.getContext('2d'); OCH_BK = BK; }
+  }
+  const VUN = Array.from({length: 9}, (_, i) => ({bd: 24 + bamS(i, 3) * 20, x: 0.28 + 0.44 * bamS(i, 5), y: 0.22 + 0.7 * bamS(i, 9), song: 14 + bamS(i, 13) * 8,
+    vx: (bamS(i, 17) - 0.5) * 0.35, r: 0.8 + 0.45 * bamS(i, 19), dong: i >= 7}));
   function veChet(s, img, f, dx, dy, sc, lat) {
-    const t = pl.deadT, td = pl.dD < 0 ? -1 : t - pl.dD, k = td < 0 ? 0 : Math.min(1, td / 14), e = k * k * (3 - 2 * k);
-    const cy = 1 - 0.4 * e, cx = 1 + 0.12 * e;
-    const tan = Math.max(0, Math.min(1, (t - 40) / 36)), A0 = ctx.globalAlpha;   // 0 → 1: phần trên tan dần; A0 = độ mờ chết của game
-    ctx.save(); ctx.rotate(0.1 * e); ctx.scale(cx, cy);
-    if (tan > 0) { const h = f.h * sc, top = dy + h * tan * 0.85; ctx.beginPath(); ctx.rect(dx - 10, top, f.w * sc + 20, h); ctx.clip(); }
-    ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
+    const P = chetPha(), so = soCH(), w = f.w * sc, h = f.h * sc;
+    ctx.globalAlpha = 1;   // tự tan bằng mặt nạ (không mờ cả hình theo chetAlpha)
+    let ha = 0, tan = 0;
+    if (!so && P.p > 0) { const e = t => t * t * (3 - 2 * t); ha = P.p === 1 ? 1.5 * e(P.u) : P.p === 2 ? 1.5 + 2.5 * e(P.u) : 5; }
+    if (so >= 6) tan = P.p === 6 ? P.u : P.p > 6 ? 1 : 0;
+    else tan = P.p === 4 ? P.u * 10 / 22 : P.p === 5 ? (10 + P.u * 12) / 22 : P.p > 5 ? 1 : 0;
+    ctx.save(); ctx.beginPath(); ctx.rect(-400, -400, 800, 400.5); ctx.clip();   // cắt ở mặt đất: dịch xuống không làm chân xuyên sàn
+    if (tan <= 0) ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy + ha, w, h);
+    else if (tan < 1 && OCH) {
+      if (OCH_BK !== BK) datKhungChet();
+      const g = OCHg, cw = Math.min(w, 260), ch = Math.min(h, 200);
+      g.setTransform(BK, 0, 0, BK, 0, 0); g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, 260, 200);
+      g.imageSmoothingEnabled = true; g.drawImage(img, f.x, f.y, f.w, f.h, 0, 0, w, h);
+      g.globalCompositeOperation = 'destination-out'; g.drawImage(MASK15[Math.min(MN - 1, Math.floor(tan * MN))], 0, 0, w, h); g.globalCompositeOperation = 'source-over';
+      ctx.drawImage(OCH, 0, 0, Math.ceil(cw * BK), Math.ceil(ch * BK), dx, dy + ha, cw, ch);
+    }
     ctx.restore();
-    if (tan > 0 && ST.vfx) {   // hạt tan (băm cố định theo bước, không ngẫu nhiên lúc chạy)
-      const h = f.h * sc * cy, y0 = (dy * cy) + h * tan * 0.85;
-      for (let i = 0; i < 14; i++) { const r1 = bamS(i, 7), r2 = bamS(i, 11), sp = (t - 40 - r1 * 30); if (sp < 0) continue;
-        const life = 26, u = (sp % life) / life, x = (r2 - 0.5) * 40, y = y0 - u * 26 - r1 * 8;
-        ctx.globalAlpha = A0 * (1 - u) * 0.7; ctx.fillStyle = i % 3 ? '#E8DCBC' : '#3a3026';
-        ctx.fillRect(x, y, 1.6, 1.6); }
-      ctx.globalAlpha = A0; }
+    if (P.p >= 4 && ST.vfx) {   // bụi than thưa từ thân (vị trí / nhịp băm cố định)
+      for (const v of VUN) { const a0 = P.k - v.bd; if (a0 < 0 || a0 > v.song) continue; const q = a0 / v.song;
+        const x = dx + w * v.x + v.vx * a0, y = dy + ha + h * v.y - 0.32 * a0;
+        ctx.globalAlpha = (v.dong ? 0.45 : 0.62) * (1 - q); ctx.fillStyle = v.dong ? '#8A6A3E' : '#2B2520';
+        ctx.fillRect(x - v.r, y - v.r, 2 * v.r, 2 * v.r * 0.8); }
+      ctx.globalAlpha = 1; }
+    LM2.chet = {p: P.p, k: +P.k.toFixed(1), ha: +ha.toFixed(2), tan: +tan.toFixed(3)};
   }
 
   /* ---------- VỆT MẪU PH13 (path Canvas) ---------- */
@@ -372,7 +537,7 @@ const LM2 = (() => {
      pogo: atkT 1–2 ô 1 (nêm, gốc P1 nghiêng theo lưỡi) · 3–5 ô 2 (cung ép, gốc P2) · 6–8 ô 3 (mảnh) · 9–10 ô 3 mờ; nảy / hết hộp → tắt.
      Phép đặt (dat[n]: co s + dời x, y – lõi sáng nằm trong hộp đòn) tính sẵn trong JSON, game chỉ vẽ. Trả false nếu chưa có → vệt mẫu code. */
   function veGen(g, n, at, al) {
-    const S2 = (BK > 2 && VG[3]) ? VG[3] : VG[2]; if (!S2) return false;
+    const VB = VG.b; if (!VB) return false; const S2 = VB[BOI()] || VB[5 - BOI()]; if (!S2) return false;
     const M2 = S2.meta, d = M2.dat[n]; if (!d) return false;
     const H = M2.hang[d.hang], k = H.px_atlas_moi_px_gen, s = d.s;
     let j, a = al;
@@ -428,8 +593,17 @@ const LM2 = (() => {
     nut('Tường', () => ST.tuong === 'moc' ? 'BÁM MÓC (mới)' : ST.tuong === 'lung' ? 'lưng áp vách (bộ 4)' : 'mặt vào vách (bộ 3)',
       () => { ST.tuong = ST.tuong === 'moc' ? 'lung' : ST.tuong === 'lung' ? 'mat' : 'moc'; });
     nut('Vệt chém', () => ST.vet === 'gen' ? 'GEN (mới)' : 'mẫu vẽ code', () => { ST.vet = ST.vet === 'gen' ? 'code' : 'gen'; });
+    // PH15 bước 1: đồng hồ khung hình + chép log (để chạy 1 tuyến trên iPhone rồi gửi)
+    nut('Đồng hồ khung hình', () => DO15.on ? 'BẬT' : 'tắt', () => DO15.doi(!DO15.on));
+    const o = document.createElement('textarea'); o.readOnly = true; o.hidden = true; o.style.cssText = 'width:100%;height:5em;font:10px monospace;margin:4px 0';
+    nut('Chép log khung hình', () => DO15.giay.length ? DO15.giay.length + ' giây đã đo' : (DO15.on ? 'đang đo…' : 'bật đồng hồ trước'), () => {
+      const t = DO15.log(); o.value = t; o.hidden = false;
+      const xong = (ok) => { try { banner(ok ? 'Đã chép log khung hình – dán gửi Claude' : 'Không chép tự động được: bấm giữ ô chữ → Chọn tất cả → Chép'); } catch (e) {} };
+      try { navigator.clipboard.writeText(t).then(() => xong(true), () => { o.focus(); o.select(); xong(false); }); } catch (e) { o.focus(); o.select(); xong(false); } });
+    box.insertBefore(o, ok);
   }
-  return {ST, M, TU, BO3, VG, BUI, nap, ve, khung, veVQ, phaChem, phaPogo, TEN_PHA, V1, VT, nhanDon, get VP() { return VP; }, SH, SH3, dang: '', nhan: '', bo: '', nay: null};
+  return {ST, M, TU, BO3, VG, BUI, nap, ve, khung, veVQ, phaChem, phaPogo, TEN_PHA, V1, VT, nhanDon, nhanChem1, chetPha, get VP() { return VP; }, SH, SH3, BOS,
+    dang: '', nhan: '', bo: '', nay: null, chet: null, moc: [0, 0]};
 })();
 // ?vfx=0: tắt vệt chém (ảnh vet-chem) + âm nhận. Lam MỚI: chém 1 + pogo dùng vệt mẫu PH13 thay vệt ảnh + âm nhận cũ (đòn khác giữ vệt cũ).
 // Hộp + sát thương KHÔNG đổi.
@@ -444,3 +618,19 @@ const LM2 = (() => {
 // PH14 (chết tạm): dao văng lúc chết (veDao) vẽ bằng sheet Lam CŨ → với Lam mới thành lưỡi dao thứ hai cạnh hình khuỵu. Lam mới: bỏ (dao vẫn trong tay hình khuỵu).
 { const _vd = veDao; veDao = function (...a) { if (LM2.ST.moi) return; return _vd(...a); }; }   // vệt mẫu vẽ SAU hiệu ứng ảnh (như âm nhận cũ)
 window.TVLM2 = LM2;
+// PH15 bước 1 – vẽ: (1) khựng (hitstop) → vẽ đúng vị trí bước hiện tại, không nội suy giữa 2 bước (trước: bước bật khựng còn vẽ lửng giữa 2 vị trí rồi
+// nhảy); (2) vị trí nhảy > 48 px trong 1 bước (hồi sinh, đổi phòng, dịch chuyển) → không nội suy. Physics / timestep KHÔNG đổi. + đồng hồ khung hình.
+{ const _r = render; render = function (al) { const t0 = performance.now();
+    if (S.hitstop > 0) al = 1;
+    if (Math.abs(pl.x - pl.px) > 48 || Math.abs(pl.y - pl.py) > 48) { pl.px = pl.x; pl.py = pl.y; }
+    _r(al); DO15.ve(); DO15.khung(t0, performance.now()); }; }
+{ const _s = step; let ph = -1, chet = false; step = function () { _s(); DO15.buocDem();
+    if (S.room !== ph) { if (ph >= 0) DO15.ghiSu('đổi phòng ' + ph + ' → ' + S.room); ph = S.room; }
+    if (pl.dead !== chet) { chet = pl.dead; DO15.ghiSu(chet ? 'chết' : 'hồi sinh'); } }; }
+// PH15 mục 5 – âm chết (Lam mới): MỘT tiếng chuông thấp ngắn, hơi lệch (2 nhánh lệch 0,7 % → rung nhẹ), phần cao tắt nhanh, đuôi nhỏ; không tiếng rơi / nổ.
+// Chỉ khi âm thanh ĐÃ được người chơi mở (AudioContext đang chạy) – không tự mở. ?lam=cu giữ âm cũ.
+{ const _die = sfx.die; sfx.die = function () {
+    if (!LM2.ST.moi) return _die();
+    if (!SND.ac || SND.ac.state !== 'running') return;
+    const P = [[1, 1, 1], [2.03, 0.28, 0.32], [2.71, 0.16, 0.2], [4.9, 0.06, 0.1], [0.5, 0.2, 1.15]];
+    bell(146.8, 1.9, 0.15, 0, P); bell(146.8 * 1.007, 1.5, 0.05, 0.012, [[1, 1, 1]]); }; }

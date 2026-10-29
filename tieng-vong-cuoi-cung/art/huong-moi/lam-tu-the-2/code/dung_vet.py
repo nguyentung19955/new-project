@@ -42,8 +42,11 @@ DAT = {
     # PH14 mục 3B: BỎ việc nâng liềm 19 px. Liềm chém 1 được PHÂN BỐ LẠI: dẹt theo chiều đứng (sy = 0,55 · s – liềm ngang thấp, dài:cao ≈ 4:1),
     # mép dưới liềm nằm trên đường lưỡi B (y −47), lõi sáng ở dải THẤP của hộp (y −50…−66). Còn dời vài px để lõi lọt hộp (mép dưới hộp −49).
     # Khung 3 / 4 (vỡ / mảnh tắt – trùng hình C, lưỡi chúc xuống) đi xuống theo lưỡi C trong giới hạn lõi vẫn trong hộp.
-    1: dict(hang='ngang', muc=[6, -62, 92, -40], ky=0.55, khung_doi=[[0, 0], [0, 0], [2, 4], [3, 7]],
-            do='chém 1: lưỡi B (10,−47)→(57,−48), C chúc tới (47,−20); liềm dẹt, mép dưới trên lưỡi B, lõi ở dải thấp của hộp; khung 3–4 theo lưỡi C xuống'),
+    # PH15 bước 1 (29/10): chém 1 SỬA 3 (thu7-chem1-sua3.png) – lưỡi B nay NẰM TRONG hộp (y −54,3 → −52,7, mũi (83,7, −51,3)), C chúc 10° tới mũi (81,3, −32,3).
+    # Liềm đặt THEO ĐƯỜNG MŨI DAO THẬT: dẹt hơn (ky 0,36, dài:cao ≈ 6:1), tâm lõi trên đường lưỡi B (lệch dao–vệt ≈ 1,6 px; trước sửa 3: ~11 px, PH14 gốc 19 px).
+    # Trước: muc=[6, -62, 92, -40], ky=0.55, khung_doi=[[0,0],[0,0],[2,4],[3,7]] (lưỡi B cũ y −47…−48, dưới mép hộp).
+    1: dict(hang='ngang', muc=[20, -61, 96, -47], ky=0.36, khung_doi=[[0, 0], [0, 0], [2, 3], [3, 6]],
+            do='chém 1 sửa 3: lưỡi B (39,−54,3)→(83,7,−51,3) TRONG hộp, C (33,−39)→(81,−32) chúc 10°; liềm dẹt, lõi nằm trên đường lưỡi B; khung 3–4 theo lưỡi C xuống (lõi kẹp trong hộp)'),
     # PH14 mục 3 "Trên không": lệch 10 px sửa bằng phân bố cung (dẹt như chém 1, mép dưới trên lưỡi K2 y −60) – không neo theo sàn
     6: dict(hang='ngang', muc=[8, -74, 92, -54], ky=0.55, khung_doi=[[0, 0], [0, 0], [2, 3], [3, 5]],
             do='trên không: lưỡi K2 ngang y −60, mũi x 81; liềm dẹt như chém 1, mép dưới trên lưỡi K2'),

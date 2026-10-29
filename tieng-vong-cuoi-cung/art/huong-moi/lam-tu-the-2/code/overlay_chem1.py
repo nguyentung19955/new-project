@@ -26,8 +26,10 @@ except Exception:
 
 
 # mũi dao đo TAY trên lưới 1 px logic (kiem/thu3-do-dao.png + lưới 3x 29/10; lưỡi bạc cùng màu gấu áo nên không đo tự động được)
-MUI = {'A': [5, -14], 'B': [57, -48], 'C': [47, -20], 'D': [6, -14]}
-TAY = {'B': [10, -47], 'C': [-2, -34]}
+# PH15 bước 1 (29/10): sheet chém 1 SỬA 3 (thu7-chem1-sua3.png) – mũi dao đo bằng máy (dải thép dưới cằm, khớp đường thẳng; /tmp script trong GHI-CHU),
+# tay đo trên lưới 1 px. Trước (sửa 2): A (5,−14) B (57,−48) C (47,−20) D (6,−14); tay B (10,−47) C (−2,−34)
+MUI = {'A': [14, -18], 'B': [84, -51], 'C': [81, -32], 'D': [35, -17]}
+TAY = {'B': [25, -53], 'C': [23, -43]}
 
 
 def main():
@@ -71,7 +73,7 @@ def main():
            font=FS, fill=(40, 40, 40))
     o.save(os.path.join(KI, 'overlay-chem1-hop.png'))
     json.dump({'hop_chem1': HOP, 'dai_cat_mong_muon_y': DAI, 'mui_dao_logic': dict(zip('ABCD', mui)), 'nguon': 'sprite/' + m['anh'],
-               'tay_logic': TAY, 'ghi_chu': 'px logic so với chân, nhìn phải; mũi dao / tay đo tay trên lưới. Lưỡi B (y −47…−48) nằm DƯỚI mép dưới hộp (−49) 1–2 px; C chúc tới −20 → cần lưỡi B/C qua dải −50…−66'},
+               'tay_logic': TAY, 'ghi_chu': 'px logic so với chân, nhìn phải. SỬA 3 (PH15): lưỡi B y −54,3…−52,7 nằm TRONG hộp (mép dưới −49), đường cắt ngang ngực dưới; C chúc 10° tới (81, −32) – xuống dưới hộp sau khi cắt (kết thúc khuỷu gập). Trước (sửa 2): lưỡi B −47…−48 dưới mép hộp 1–2 px'},
               open(os.path.join(KI, 'overlay-chem1-hop.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('mũi dao', mui, '→', os.path.join(KI, 'overlay-chem1-hop.png'), o.size)
 

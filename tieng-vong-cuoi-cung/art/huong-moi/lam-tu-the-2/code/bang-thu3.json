@@ -119,7 +119,7 @@
   "chay_sua2": "29/10 chạy sửa 2: so từng ô thu6-chay-sua2.png với bản đang dùng (cùng tỉ lệ, cùng neo). Chỉ ô 1 (mắt 68,8 → 68,3) và ô 4 (bay, mắt 69,9 → 68,5, ủng nhấc 4,3 → 0,8) làm dao động nhỏ lại → lấy từ thu6 (ảnh chính). Ô 3, 7, 8 mới thấp hơn 1,4–1,9 px nhưng không giảm dao động (đáy vẫn là ô 6) → giữ cũ."
  },
  "chem1": {
-  "file": "thu3-chem1-sua.png",
+  "file": "thu7-chem1-sua3.png",
   "cot": 4,
   "hang": 1,
   "vai": "chem1",
@@ -133,6 +133,18 @@
   "neo_y": "ung",
   "trung_tinh": 3,
   "vet_chem1": {
+   "x": 22,
+   "y": -54,
+   "R": 70,
+   "h": 8,
+   "T": 10,
+   "goc": 2,
+   "tm": 1.83,
+   "_do": "PH15 sửa 3 (đo máy): B lưỡi (39,−54,3)→(83,7,−51,3), tay ~(25,−53); C (33,−39)→(81,3,−32,3). Liềm vệt code: hai đầu x 22 (trước tay), bụng x 92, tâm y −54 (đường lưỡi B), dẹt (h 8), nghiêng 2°. Hộp chém 1 (x 4…90, y −97…−49) không đổi"
+  },
+  "file_truoc_ph15": "thu3-chem1-sua.png",
+  "sua3": "29/10 PH15 bước 1: chém 1 sửa lần 3 (thu7-chem1-sua3.png) – A lấy đà thấp, B cắt ngang ngực dưới, C kết thúc khuỷu gập, D thủ. Vệt đặt theo mũi dao đo trên ảnh mới (mui_dao).",
+  "vet_chem1_truoc_ph15": {
    "x": 6,
    "y": -47,
    "R": 80,
@@ -340,7 +352,9 @@
   "tien_to": "lam-moi5",
   "mat_min": 60,
   "mu_bo_moc": 40,
-  "_do_mat": "mat_min 60: vòng đồng trên cán móc có điểm loé nhỏ (~15 px gen) bị nhận nhầm là mắt ở ô 3; mu_bo_moc 40: đỉnh mũ chỉ tính các cột sau mắt ≥ 40 px gen (móc + tay giơ ở trên đầu phía trước mắt, không tính là mũ)"
+  "_do_mat": "mat_min 60: vòng đồng trên cán móc có điểm loé nhỏ (~15 px gen) bị nhận nhầm là mắt ở ô 3; mu_bo_moc 40: đỉnh mũ chỉ tính các cột sau mắt ≥ 40 px gen (móc + tay giơ ở trên đầu phía trước mắt, không tính là mũ)",
+  "k_nhan": 0.81,
+  "k_nhan_ly_do": "PH15 bước 1 (29/10): ảnh iPhone – lúc bám móc Lam to hơn hẳn lúc đứng. Đo lại cùng thang (tắt bù gần sàn): so dáng đứng I1–I3 chuông ×1,23 (diện tích, tự động) / ×1,30 (cao, đo tay), khe mặt ×1,24, cổ → dây thắt ×1,42, mắt ×1,16; so dáng nhảy/rơi chuông ×1,09, mắt ×1,11 → trung vị ×1,23 → k × 0,81. Lý do: cỡ mũ ước lượng (rộng = cao trên mắt × 1,18) sai vì mũ móc NGHIÊNG tới trước → \"cao trên mắt\" ngắn → k quá lớn ~23 %. Sheet vẽ người to ĐỀU (chuông, găng, khe mặt cùng to) → sửa scale một lần cả sheet, neo lại (mắt cao như chốt, đầu móc = mép collider). Áo móc vẫn dài hơn đứng ~15 % sau sửa (áo thòng khi treo) → cần gen lại dáng gom gấu (PH15 mục 3) nếu muốn hết hẳn. Số đo: kiem/ph15-so-moc.json"
  },
  "_ghi_chu_bo6": "PH14 (29/10, PH14): CHỖ CHỪA cho 2 sheet sắp gen – chưa có ảnh thì dung_thu3.py tự bỏ qua, game dùng hình cũ. bat_vach: thu6-bat-vach-2o.png (BV1 tháo móc + chân đẩy vách, hiện NGAY tick nhảy 1–2 tick; BV2 đã rời vách, áo kéo về phía vách, 2–3 tick rồi J2). Mẫu nhìn PHẢI, vách ngầm bên TRÁI (bật sang phải) – dùng chung hai vách bằng lật theo hướng nhìn. tu_vang: thu6-tu-vang-3o.png (TV1 tụ Dư Âm thấp, TV2 thả chém vang – đúng tick hộp, TV3 kết/hồi). Khi có ảnh: lưu đúng tên vào art/huong-moi/nguon/lam-tu-the/ rồi chạy  python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py bat_vach tu_vang",
  "bat_vach": {
@@ -389,5 +403,74 @@
   "bo": 5,
   "tien_to": "lam-moi5",
   "huong": "29/10: BẬT KHỎI VÁCH bằng HÌNH CÓ SẴN (không gen): ô WM4 của sheet móc + móc rút về bằng code. Dựng bằng dung_bat_moc.py (dung_thu3.py chỉ đưa vào danh sách game)."
+ },
+ "_ghi_chu_ph15": "PH15 bước 1 (29/10): chỗ chừa 2 sheet SẮP GEN – lưu ảnh vào art/huong-moi/nguon/lam-tu-the/ đúng tên rồi chạy dung_thu3.py <tên> + sinh lại trang. chet = 6 ô (D1 mất lực / D2 quỳ / D3 gục / D4 áo tan / D5 áo rỗng / D6 vụn) → nhãn CH1–CH6; chet4 = 4 ô (mất lực / quỳ / gục / áo rỗng) → CH1–CH4 (game: D4–D6 dùng CH4 + mặt nạ tan). chem1_6 = 6 ô chém 1 (A lấy đà · T chuyển tay · U cắt đầu · V cắt đầy · W kết thúc · G về thủ) → C1A C1T C1U C1V C1W C1G; game tự dùng lịch 6 hình khi đủ nhãn.",
+ "chet": {
+  "file": "thu8-chet-6o.png",
+  "cot": 6,
+  "hang": 1,
+  "vai": "chet",
+  "tu_the": [
+   "CH1",
+   "CH2",
+   "CH3",
+   "CH4",
+   "CH5",
+   "CH6"
+  ],
+  "neo_x": "o",
+  "neo_y": "day",
+  "trung_tinh": 0,
+  "o_do_mu": [
+   1,
+   2
+  ],
+  "o_do_mu_ly_do": "D3 trở đi đầu cúi / áo tan → chỉ đo mũ ở D1, D2",
+  "bo": 8,
+  "tien_to": "lam-moi8",
+  "huong": "Lam nhìn PHẢI, chung đường đất (đáy ô = đất). Nhịp game: 4/6/10/10/12/6 tick sau khi chạm đất; trên không giữ CH1."
+ },
+ "chet4": {
+  "file": "thu8-chet-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "chet",
+  "tu_the": [
+   "CH1",
+   "CH2",
+   "CH3",
+   "CH4"
+  ],
+  "neo_x": "o",
+  "neo_y": "day",
+  "trung_tinh": 0,
+  "o_do_mu": [
+   1,
+   2
+  ],
+  "o_do_mu_ly_do": "D3 trở đi đầu cúi / áo tan → chỉ đo mũ ở D1, D2",
+  "bo": 8,
+  "tien_to": "lam-moi8",
+  "huong": "Lam nhìn PHẢI, chung đường đất (đáy ô = đất). Nhịp game: 4/6/10/10/12/6 tick sau khi chạm đất; trên không giữ CH1."
+ },
+ "chem1_6": {
+  "file": "thu8-chem1-6o.png",
+  "cot": 6,
+  "hang": 1,
+  "vai": "chem1_6",
+  "tu_the": [
+   "C1A",
+   "C1T",
+   "C1U",
+   "C1V",
+   "C1W",
+   "C1G"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 5,
+  "bo": 8,
+  "tien_to": "lam-moi8",
+  "huong": "Lam nhìn PHẢI. Lịch (ATK[1] su 7 / ac 8 / re 8): atkT 1–4 C1A · 5–6 C1T · 7–8 C1U · 9–11 C1V · 12–14 C1W (hộp) · 15–17 C1W · 18–22 C1G."
  }
 }
