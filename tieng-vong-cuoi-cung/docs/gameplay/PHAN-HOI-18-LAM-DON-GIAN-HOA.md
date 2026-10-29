@@ -33,3 +33,16 @@ Simplify the attached approved Lam for consistent 2D game animation, without red
 
 ## Gửi Claude
 Anh muốn thử Lam đơn giản hoá nhưng giữ tỉ lệ, màu và tinh thần hiện tại; chưa chuyển sang pixel art, chưa đổi nền. Trước mắt gen một dáng đứng, giảm texture/nếp nhỏ/gấu vụn, giữ mũ–mặt–mắt–chuông–Âm Đao. Đặt cạnh Lam hiện tại trong cùng cảnh, cùng cỡ 112 px. Duyệt thiết kế xong mới làm chạy; chưa gen đồng thời cả sheet. Bản chạy khoá đầu hiện tại vẫn giữ làm đối chứng.
+
+## Cập nhật 30/10 – chốt đổi mạnh sang chibi nét sạch
+Ảnh đơn giản hoá đầu tiên vẫn giữ tỉ lệ + áo dài Lam cũ → chưa đúng ý người dùng. Chuyên gia đề xuất Lam mới:
+- Thân thấp gọn, đầu/mũ ≈ nửa chiều cao; bỏ dáng áo dài hình tháp.
+- Áo một khối ngắn hình chuông, che chân nhưng hé hai bàn chân nhỏ để đọc bước chạy.
+- Găng tay nhỏ, tách đường bao thân khi đánh; Âm Đao ngắn, hai nhánh rõ.
+- Mũ một nếp lớn, áo một nếp lớn; bỏ texture, tua rách, dây thừng bện.
+- Màu phẳng, bóng một mức, viền than rõ.
+- Giữ mặt đen, mắt hổ phách, mũ xanh trầm, chuông đồng.
+- Thế giới vẫn huyền bí; chưa vẽ lại nền – đặt nhân vật mới vào cảnh hiện có, nếu lệch thì giảm chi tiết/chỉnh tương phản nền.
+
+NGƯỜI DÙNG CHỌN: **nét sạch chibi** (không pixel art thật). Phiên chạy 12 hình Lam áo dài tạm dừng (ảnh giữ làm đối chứng).
+Bước kế: gen MỘT dáng đứng chibi → Claude đặt cạnh Lam hiện tại trong cảnh, cùng chiều cao hiển thị → duyệt rồi mới chạy (khoá đầu + chỉ gen thân).
