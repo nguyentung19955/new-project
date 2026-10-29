@@ -23,7 +23,10 @@ js = r"""
 const {chromium}=require('playwright');
 (async()=>{const b=await chromium.launch();const pg=await b.newPage({viewport:{width:960,height:540}});const s=new Set();
 pg.on('request',r=>{const u=r.url();if(u.startsWith('http://127.0.0.1:%d/'))s.add(decodeURIComponent(u.slice(%d).split('?')[0].split('#')[0]));});
-await pg.goto('http://127.0.0.1:%d/'+process.argv[2]);await pg.waitForTimeout(9000);
+let tLast=Date.now();pg.on('request',()=>{tLast=Date.now()});
+await pg.goto('http://127.0.0.1:%d/'+process.argv[2]);const t0=Date.now();await pg.waitForTimeout(9000);
+/* trang nạp tuần tự (vd. nhiều sheet nhân vật) có thể lâu hơn 9 s: chờ tới khi 6 s không còn yêu cầu mới (tối đa 120 s) */
+while(Date.now()-tLast<6000&&Date.now()-t0<120000)await pg.waitForTimeout(1000);
 console.log(JSON.stringify([...s]));await b.close();})();
 """ % (PORT, len('http://127.0.0.1:%d/' % PORT), PORT)
 tmp = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'dong-goi-req.js')
