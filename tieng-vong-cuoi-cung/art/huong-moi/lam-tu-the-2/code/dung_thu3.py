@@ -20,6 +20,8 @@ NEO (toạ độ chân của game: x = trục thân / giữa collider, y = mặt
            'ung'   = giữa hai ủng của từng ô + MỘT hằng số (giữa mũ − giữa ủng của ô 'trung_tinh') – như chém thử 2 (chân trụ đứng yên)
            'o'     = giữ NGUYÊN vị trí trong ô của ảnh gen (một hằng số = trung bình giữa mũ các ô) – như chạy thử 2
            'tuong' = điểm XA NHẤT bên phải (tay/ủng áp vách, mẫu vách bên phải) đặt cách trục 10 px logic (= nửa collider 20 px)
+           'moc_phai' = (bộ 5, bám bằng móc) ĐẦU MÓC = điểm xa nhất bên phải trong 1/4 trên của hình, đặt cách trục 10 px logic (mép collider
+                      phía vách phải); số đo ghi 'dau_moc_logic' (so với chân) để game rắc bụi ở đầu móc
     neo_y  'mat'   = mắt cao đúng như Lam chốt trên chân (72,6 px logic) – tư thế trên không / tường: đầu liền mạch giữa các hình ;
            'day'   = đáy hình ; 'ung' = đáy ủng (thiếu ủng → đáy hình) ; 'chay' = như chạy thử 2 (đất theo hàng, ô 4/8 giữ độ nhấc)
 Chia ô: thành phần liên thông lớn nhất trong từng ô lưới (tach.cat_o) – ảnh gen phải là lưới đều, nền trắng.
@@ -54,9 +56,9 @@ def chot():
             'anh': r, 'hop': (x0, y0, x1, y1), 'xm': (d['mu_sau'] + d['mu_truoc']) / 2}
 
 
-def nap_nguon(path, cot, hang):
-    rgba = tach_anh(path); tt = cat_o(rgba, cot, hang)
-    return rgba, tt, [do_tu_the(rgba, m) for *_, m in tt]
+def nap_nguon(path, cot, hang, cfg=None):
+    cfg = cfg or {}; rgba = tach_anh(path); tt = cat_o(rgba, cot, hang)
+    return rgba, tt, [do_tu_the(rgba, m, mat_min=cfg.get('mat_min', 15), bo_moc=cfg.get('mu_bo_moc', 0)) for *_, m in tt]
 
 
 R_MU = 1.18   # tỉ lệ rộng/cao mũ điển hình ở các ô "sạch" (chạy, đứng, nhảy, pogo P2/P3: 1,14–1,22) – dùng khi hàng mắt dính tay/áo
@@ -98,7 +100,7 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
     p = os.path.join(dir_nguon, cfg['file'])
     if not os.path.exists(p): return None
     # các nguồn: ảnh chính + (tuỳ chọn) ảnh gốc cho một số ô
-    nguon = {'chinh': nap_nguon(p, cot, hang)}
+    nguon = {'chinh': nap_nguon(p, cot, hang, cfg)}
     lay = cfg.get('lay_o_tu')
     if lay: nguon['goc'] = nap_nguon(os.path.join(dir_nguon, lay['file']), cot, hang)
     tu = ['goc' if lay and (i + 1) in lay['o'] else 'chinh' for i in range(n)]
@@ -131,6 +133,9 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
         elif mx == 'ung' and len(u) == 2 and 'ung' in hang_so[kn]: xn = (u[0][0] + u[0][1] + u[1][0] + u[1][1]) / 4 + hang_so[kn]['ung']
         elif mx == 'tuong': xn = x1 - NUA_COLLIDER / k
         elif mx == 'tuong_trai': xn = x0 + NUA_COLLIDER / k   # bộ 4: LƯNG áp vách bên TRÁI (Lam nhìn phải) – điểm xa nhất bên trái (lưng/tay) = mép collider
+        elif mx == 'moc_phai':   # bộ 5: BÁM BẰNG MÓC, vách bên PHẢI – đầu móc (điểm xa nhất bên phải trong 1/4 trên của hình = móc sắt trên đầu) = mép collider
+            yy, xx = np.nonzero(m[: y0 + int(0.25 * (y1 - y0))]); j = int(np.argmax(xx)); xm, ym = float(xx[j] + 1), float(yy[j])
+            xn = xm - NUA_COLLIDER / k; g['dau_moc_gen'] = [round(xm, 1), round(ym, 1)]
         else:
             if mx != 'o': g['neo_x_thay'] = 'o (không đo được %s)' % mx
             xn = ci * cw + hang_so[kn]['o']
@@ -186,6 +191,7 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
                        'mu_do_nhieu': bool(cfg.get('o_do_mu')) and (i + 1) not in cfg['o_do_mu'],
                        'mat_dien_tich_logic': round(d['mat_co'] * k * k, 1) if d['mat'] else None,
                        'mau_mu_trung_vi': d['mau_mu'], **ghi[i]})
+            if 'dau_moc_gen' in ghi[i]: so[-1]['dau_moc_logic'] = [round((ghi[i]['dau_moc_gen'][0] - xn) * k, 1), round((ghi[i]['dau_moc_gen'][1] - yd) * k, 1)]
         meta = {'ten': 'Lam mới bộ %d – %s (%s), sprite sheet %dx' % (cfg.get('bo', 3), ten, ' / '.join(nhan), boi), 'phien_ban_clip': 'lam-moi-thu%d' % cfg.get('bo', 3),
                 'vai': cfg.get('vai', ten), 'tu_the': nhan, 'anh': anh,
                 'dinh_dang': 'PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0',

@@ -1277,5 +1277,135 @@
    "neo_y": "ung",
    "nguon": "chinh"
   }
+ ],
+ "tuong_moc": [
+  {
+   "o": 1,
+   "nhan": "WM1",
+   "cao_logic": 156.7,
+   "dinh_tren_neo_logic": 130.8,
+   "mu_rong_hang_mat_logic": 58.6,
+   "mu_so_chot_phan_tram": 40.9,
+   "mat_logic": [
+    -28.0,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.6,
+   "co_mu_so_chot_phan_tram": -1.8,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.7,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    589.0,
+    53.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -122.1
+   ]
+  },
+  {
+   "o": 2,
+   "nhan": "WM2",
+   "cao_logic": 158.0,
+   "dinh_tren_neo_logic": 130.5,
+   "mu_rong_hang_mat_logic": 84.0,
+   "mu_so_chot_phan_tram": 102.1,
+   "mat_logic": [
+    -18.7,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.8,
+   "co_mu_so_chot_phan_tram": -1.1,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.0,
+   "mau_mu_trung_vi": [
+    49.0,
+    56.0,
+    76.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    1077.0,
+    70.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -121.5
+   ]
+  },
+  {
+   "o": 3,
+   "nhan": "WM3",
+   "cao_logic": 160.9,
+   "dinh_tren_neo_logic": 139.1,
+   "mu_rong_hang_mat_logic": 55.4,
+   "mu_so_chot_phan_tram": 33.2,
+   "mat_logic": [
+    -22.2,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 37.6,
+   "co_mu_so_chot_phan_tram": 1.1,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    1562.0,
+    100.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -129.8
+   ]
+  },
+  {
+   "o": 4,
+   "nhan": "WM4",
+   "cao_logic": 150.0,
+   "dinh_tren_neo_logic": 137.4,
+   "mu_rong_hang_mat_logic": 53.3,
+   "mu_so_chot_phan_tram": 28.1,
+   "mat_logic": [
+    -15.3,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 41.6,
+   "co_mu_so_chot_phan_tram": 11.7,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 9.8,
+   "mau_mu_trung_vi": [
+    49.0,
+    55.0,
+    75.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    2070.0,
+    159.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -128.7
+   ]
+  }
  ]
 }

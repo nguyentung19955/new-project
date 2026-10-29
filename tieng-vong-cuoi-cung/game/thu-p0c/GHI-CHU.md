@@ -195,3 +195,12 @@ Sinh lại bằng `cong-cu/tao-p0c.py` sau 2 sửa ở nguồn (khối P0-C **kh
 - **Mép đất bo mềm** (`game/runtime/dia-hinh-huong-moi.js`, dùng chung): cạnh đứng sần / rêu / rễ, góc lồi bo tròn – collider không đổi. `?mep=cu` = mép thẳng cũ.
   Ảnh + video: `game/thu-lam-moi-2/xem-thu/sua-2910/`.
 - Kiểm Chromium: 0 lỗi trang; bot chém liên tục trên hình nộm chạm đất sau 53 bước (trước: không bao giờ). Chưa thử iPhone thật.
+
+## Móc, vệt gen, cổng dọc 29/10 – trang này nhận CỔNG DỌC
+
+- **Cổng dọc** thay hình cổng rễ ngang ở mọi cổng (cổng rễ phòng C và các cổng Làng Chuông cũ) – nằm trong file dùng chung `game/runtime/trang-tri-dia-hinh.js`
+  (ảnh `art/the-gioi-moi/dia-hinh-v4/cong-doc-3x.png`), nên P0-C tự có mà `index.html` không đổi (chạy lại script sinh trang: ra đúng file cũ).
+- **Hộp chặn 183 × 159 và luật đóng/mở KHÔNG đổi**. 3 khối dọc (giữa có khoá chuông, hai bên rễ đan) phủ đủ bề ngang hộp chặn; đóng → mở ≈ 15 bước: cánh giữa tách đôi, hai khối
+  bên rút xuống đất, lối tối hiện dần; đèn báo = loé xanh ngọc ở khoá chuông. `?cong=cu` = cổng cũ để so.
+- Móc tường + vệt chém gen chỉ có ở trang Lam mới (`thu-lam-moi-2`); trang này vẫn Lam cũ. Chi tiết: `game/thu-lam-moi-2/GHI-CHU.md` mục "Móc, vệt gen, cổng dọc 29/10",
+  ảnh `game/thu-lam-moi-2/xem-thu/moc-vet-cong/cong-trong-p0c.png`. Chưa thử trên iPhone thật.

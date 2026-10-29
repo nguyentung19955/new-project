@@ -1,6 +1,8 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **Sửa iPhone 29/10 (mới nhất): xem mục "Sửa iPhone 29/10" ở cuối** – chém trên không không còn lơ lửng, mép tường bo hữu cơ, bỏ vạch trắng thừa, ghi sẵn vị trí cổng để ghép ảnh cổng dọc; video trong `xem-thu/sua-2910/`.
+> **MỚI NHẤT (29/10, khuya): xem mục "Móc, vệt gen, cổng dọc 29/10" ở cuối** – bám tường BẰNG MÓC (mặc định; `?tuong=lung` / `?tuong=mat` = kiểu cũ),
+> vệt chém ẢNH GEN cho chém 1/2/3, hất, trên không, pogo (`?vet=code` = vệt mẫu code), cổng dọc ở mọi cổng; GIF + video trong `xem-thu/moc-vet-cong/`.
+> **Sửa iPhone 29/10: xem mục "Sửa iPhone 29/10" ở cuối** – chém trên không không còn lơ lửng, mép tường bo hữu cơ, bỏ vạch trắng thừa, ghi sẵn vị trí cổng để ghép ảnh cổng dọc; video trong `xem-thu/sua-2910/`.
 > **Mới nhất (29/10, tối): xem mục "Bộ tư thế 4" ở cuối** – trượt tường LƯNG áp vách (thay kiểu cũ; `?tuong=mat` để so), chém 2, chém 3, hất, chém trên không, lướt, bị đánh đã gắn vào game + vệt mẫu chém 2/3/hất/trên không; GIF + video trong `xem-thu/bo4/`.
 > Trước đó: mục "Bộ tư thế 3" – đứng 3, chạy sửa, chém 1 sửa, nhảy/rơi/tiếp đất 6, pogo 3, tường 4 đã gắn vào game; GIF từng động tác + video chơi thật trong `xem-thu/bo3/`.
 > Trước đó (PH13): mục "Vệt mẫu PH13" – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick.
@@ -609,3 +611,96 @@ gợi ý 48 × 159 neo giữa đáy, phần hai bên khi đó là lối trống)
 - `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: tắt âm nhận + ánh lưỡi lúc tụ với Lam mới, tư thế tụ = A.
 - Sinh lại: `thu-lam-moi-2/index.html`, `thu-p0c/index.html` (phiên `p0c-2910-e9cba386`), `thu-p0b/index.html` (đóng băng lần 4 `p0b-2910-e8aa09dc`),
   `thu-phong-b/index.html` (chạy lại – ra đúng file cũ, trang này lấy từ P0-A nên **không** có sửa chém trên không; mép đất mới có vì dùng chung runtime).
+
+## Móc, vệt gen, cổng dọc 29/10
+
+Ảnh gen mới: `art/huong-moi/nguon/lam-tu-the/thu5-moc-tuong-4o.png` (móc tường), `art/huong-moi/nguon/vet-chem/*.png` (3 ảnh vệt), `art/huong-moi/nguon/dia-hinh/cong-doc-2o.png`.
+**Gameplay KHÔNG đổi**: hộp đòn, sát thương, startup, tốc độ, va chạm tường, hộp chặn cổng (183 × 159), luật đóng/mở cổng giữ nguyên – chỉ đổi HÌNH.
+**Chưa thử trên iPhone thật** – mọi ảnh / GIF / video quay trong Chromium trên máy chủ (không GPU).
+
+**Chơi thử:** cùng link đầu file. Cờ mới: `?tuong=lung` (lưng áp vách, bộ 4) · `?tuong=mat` (mặt vào vách, bộ 3) · `?vet=code` (vệt mẫu vẽ bằng code) · `?cong=cu` (cổng rễ ngang cũ).
+Trên iPhone: ⚙ → nút **"Tường: BÁM MÓC (mới) / lưng áp vách / mặt vào vách"** (bấm đổi vòng) và **"Vệt chém: GEN (mới) / mẫu vẽ code"**.
+
+### Xem gì trước (`xem-thu/moc-vet-cong/`)
+
+Mọi GIF: Lam đúng cỡ game (~112 px), **nền thật**; bản thường ≈ toàn tốc (20 ms/bước), `-cham4` = chậm 4 lần. Dưới hình: tư thế · trạng thái · atkT · bước.
+
+| File | Nội dung |
+|---|---|
+| **`choi-that-moc-vet-60fps.mp4`** | **xem đầu tiên** – chơi thật 21 s, **không bất tử**: chạy → combo 1→2→3 vào hình nộm → hất → chém trên không → pogo trúng hình nộm → bám MÓC vách trái, trượt, nhảy tường → sang phòng B đánh Chuông Gỗ, **bị đánh thật 2 lần** (5 → 3 máu). Góc trên ghi tư thế |
+| **`moc-vach-trai.gif`**, **`moc-vach-phai.gif`** (+ `-cham4`) | TRÁI màu, PHẢI bóng đen: WM1 móc bắt → WM2 treo → WM3/WM4 trượt (bụi nhỏ ở đầu móc) → nhảy tường J1 → rơi → tiếp đất. Vách phải = cả hình lật |
+| **`combo-1-2-3.gif`**, `hat.gif`, `chem-tren-khong.gif`, `pogo-trung.gif`, `pogo-truot.gif` (+ `-cham4`) | TRÁI **vệt gen**, PHẢI vệt mẫu code (`?vet=code`) – cùng phím cùng bước |
+| **`dai-vet-gen-<đòn>.png`** | chém 1/2/3, hất, trên không, pogo vào không khí: mỗi bước quanh lúc hộp bật một ô (phóng 2); hàng trên vệt gen, hàng dưới có hộp đòn (đỏ) |
+| **`cong-dong-112.png`**, **`cong-mo-112.png`**, `cong-dong-hop-chan.png` | cổng rễ phòng C (đúng cỡ game): đóng / mở / đóng + hộp chặn (vàng) |
+| **`mo-cong.gif`** (+ `-cham4`, `-2x-cham4`) | mở cổng (ép điều kiện mở): rễ tách 15 bước, ghi tiến độ mở + "đi xuyên" từ 0,6 |
+| `cong-trong-p0b.png`, `cong-trong-p0c.png`, `cong-trong-phong-b.png` | cùng cổng dọc trong P0-B / P0-C / phòng B (cùng file runtime) |
+| `log-moc-vet.json`, `log-video.json` | từng bước: [tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, bộ sheet, hộp bật, hurtT, lướt, hướng, lật] |
+| `art/huong-moi/lam-tu-the-2/kiem/thu5-tuong_moc-dai.png` | ảnh dải sheet móc: Lam chốt cùng thang + WM1–WM4 (đỏ = chân, xanh = trục, vàng = hàng mắt chốt) + 112 px + bóng đen |
+| `art/huong-moi/lam-tu-the-2/kiem/vet-gen-tach.png`, **`vet-gen-dat.png`** | vệt gen đã tách nền (nền tối) · vị trí khung "cung đầy" từng đòn: đỏ = hộp đòn, vàng = lõi sáng, xanh = đường quét đo |
+| `art/the-gioi-moi/dia-hinh-v4/xem-thu/cong-doc-{dong,mo}-3x.png` | cổng dọc ghép xong + hộp chặn (vàng) |
+
+### 1. Bám tường bằng MÓC (mặc định)
+
+- **Sheet** `sprite/lam-moi5-tuong_moc-{2x,3x}` (WM1 móc bắt · WM2 treo · WM3 / WM4 trượt), dựng bằng `code/dung_thu3.py tuong_moc` – **cùng luật tỉ lệ mũ**: k = cỡ mũ Lam chốt /
+  trung vị cỡ mũ 4 ô, cỡ mũ = căn(rộng hàng mắt × cao trên mắt). Tay giơ móc dính hàng mắt → rộng = cao × 1,18 (như tường lưng bộ 4). Sửa đo cho ảnh này (luật không đổi):
+  vòng đồng trên cán móc có điểm loé nhỏ bị nhận nhầm là mắt ở ô 3 → chỉ nhận mắt ≥ 60 px gen (`mat_min`); móc + tay ở trên đầu → đỉnh mũ chỉ tính các cột sau mắt (`mu_bo_moc`).
+  Kết quả: cỡ mũ so chốt **−1,8 / −1,1 / +1,1 / +11,7 %** (WM4 mũ ngả nên đo cao hơn – xem ảnh dải). Mắt (diện tích) 9,8–10,7 (chốt 7,3; ảnh gen vẽ mắt to hơn ~40 %).
+- **Neo**: x = **đầu móc** (điểm xa nhất bên phải trong ¼ trên của hình) đặt đúng **mép collider phía vách** (10 px từ trục) – đo được đầu móc ở (10, −122 … −130) so với chân,
+  tức cao hơn đỉnh mũ; y = mắt cao như Lam chốt (72,6 px trên chân, như mọi tư thế trên không / tường). Mẫu vách PHẢI, Lam nhìn vào vách; **vách trái lật cả hình**.
+- **Nhịp** giữ như cũ, đo trong game: WM1 2 → WM2 4 → WM3 / WM4 mỗi 6 lặp; bấm nhảy tường → J1 ngay bước đó (log `moc-vach-*`).
+- **Bụi đầu móc** (code, kín đáo, `buiMoc`): chỉ khi trượt (WM3/WM4): cứ 3 bước 1 hạt bụi đất 1–2 px rơi + dạt khỏi vách, cứ 10 bước 1 tia ngà ngắn; sống 6–16 bước; `?vfx=0` tắt.
+- Lưu ý: vạt áo thòng ~25 px dưới chân (neo theo mắt) → mấy bước cuối trượt sát đất, áo lấn vào sàn trước khi chuyển tiếp đất (như tường bộ 3). Mép đất "gặm" hữu cơ có chỗ
+  lùi vào ≤ 10 px nên có thể thấy đầu móc cách hình đất vài px ở chỗ gặm sâu (collider không đổi).
+- `?tuong=lung` = lưng áp vách (bộ 4), `?tuong=mat` = mặt vào vách (bộ 3); bóng Vọng ghi đúng hình đã hiện.
+
+### 2. Vệt chém GEN (thay vệt mẫu code; `?vet=code` để so)
+
+- **Dựng** `code/dung_vet.py` → `sprite/vet-gen-{2x,3x}.png/.json`. Tách nền: nền ảnh gen là trắng TRUNG TÍNH, lõi vệt là kem rất sáng (chỉ khác nền ở kênh xanh lam) → nền =
+  điểm sáng **và trung tính** nối với mép ảnh; mép giữ alpha mềm (khử quầng theo màu điểm trong). Chia ô đều theo hàng, mảnh vụn gán theo tâm vào ô của nó; khung giữ vị trí trong ô.
+- **Gán**: liềm ngang → chém 1 + chém trên không · chéo lên → chém 2 · cung dọc lên → hất · bổ xuống → chém 3 · nêm / cung ép / mảnh → pogo.
+- **Nhịp = tick hộp thật**: chém 8 bước active chia 1/3/2/2 → ô 1/2/3/4 (ngoài tick hộp không vẽ gì); pogo atkT 1–2 ô 1 (nêm, gốc dưới mũi dao P1, nghiêng theo lưỡi) ·
+  3–5 ô 2 (cung ép, gốc P2) · 6–8 ô 3 · 9–10 ô 3 mờ; **nảy / hết hộp → tắt ngay** (như vệt mẫu). Lật theo hướng nhìn; khựng → vệt đứng yên.
+- **Đặt**: khung "cung đầy" khớp hộp mục tiêu = đường quét đo trên tư thế (như vệt mẫu), rồi **lõi sáng** (điểm kem sáng nhất, đục) phải nằm trong hộp đòn – thò ra thì dời ít nhất
+  có thể, không đủ thì co. Mép / mảnh vụn được vượt hộp. Số đặt ghi trong JSON (`dat`), game chỉ vẽ:
+
+| Đòn | Hộp đòn (x, y, rộng × cao so với chân) | Lõi sáng (x0…x1, y0…y1) | Dời / co so với đường quét | Ghi chú |
+|---|---|---|---|---|
+| Chém 1 | 4, −97 · 86 × 48 | 55…87, −79…−50 | **lên 19 px** | lưỡi B nằm ở y −47 (dưới mép hộp −49) → lõi phải nâng lên; liềm nằm cao hơn lưỡi (như đã báo ở bộ 3 – không đổi hộp) |
+| Trên không | −3, −107 · 95 × 48 | 57…89, −89…−60 | lên 10 px | lưỡi K2 sát mép dưới hộp |
+| Chém 2 | −10, −100 · 90 × 48 | 27…68, −99…−53 | lên 9 px, co 0,95 | đuôi chéo thò dưới hộp (trang trí) |
+| Hất | −9, −140 · 87 × 60 | 46…56, −138…−81 | lên 18 px, co 0,69 | cung dọc dài hơn hộp → co |
+| Chém 3 | −13, −59 · 99 × 59 | 9…68, −58…−2 | **xuống 33 px, dời phải 12**, co 0,79 | hộp chém 3 thấp (sát đất) mà đường quét bắt đầu trên đầu → cung bổ nằm thấp; dời phải để không đè mặt Lam |
+| Pogo | −26, −24 · 64 × 82 | rộng 31, sâu 7 dưới gốc | bề ngang cung ép 46 px | như cỡ vệt mẫu (28 → 46) |
+
+- Tự đánh giá: liềm ngang / chéo / hất / bổ đọc đúng hướng ở 112 px; vệt gen mềm và "vẽ tay" hơn vệt code. Chém 1 và trên không: liềm nằm trên đường lưỡi vì hộp cao hơn lưỡi.
+  Pogo hơi nhỏ ở 112 px (giữ đúng cỡ vệt mẫu đã duyệt hướng) – muốn to hơn thì đổi `rong` trong `dung_vet.py` rồi chạy lại.
+
+### 3. Cổng dọc (mọi cổng – `game/runtime/trang-tri-dia-hinh.js`, dùng chung)
+
+- **Ảnh** `art/the-gioi-moi/dia-hinh-v4/cong-doc-3x.png` + `cong-doc.json` (dựng bằng `art/huong-moi/dia-hinh/code/tao-cong-doc.py`), nằm cạnh JSON trang trí → `TT.nap` tự nạp;
+  `TT.veCong` (hàm vẽ cổng sẵn có, mọi trang gọi) vẽ cổng dọc thay cổng rễ ngang. Có ở **mọi cổng** trong `cong-vi-tri.json` (dA, dB, dC, dE, dP) và mọi trang dùng runtime:
+  thu-lam-moi-2, P0-C, P0-B, thu-phong-b (và P0-A / `am-dao.html` vì cùng nạp file runtime – không phải sửa file trang).
+- **Collider + luật giữ nguyên**: hộp chặn 183 × 159 neo giữa đáy, đi xuyên khi mở > 60 %, game cộng 0,07/bước. Vì cổng dọc gen hẹp (rộng : cao ≈ 1 : 2,8), **một cánh không phủ
+  được 183 px** – vẽ hẹp thì hai bên thành tường vô hình. Nên ghép **3 khối dọc**: giữa = cánh gen có khoá chuông (73 × 208 – cao hơn hộp chặn, phần trên chui vào chân cột đất
+  treo), hai bên = cùng ảnh rễ đan **đã xoá khoá** (vá cv2.inpaint), cao 90 %, tối hơn 12 % → tổng bề ngang 184 px ≈ hộp chặn. Khi mở chỉ còn khung giữa (lối tối).
+  ⚠ Nếu anh muốn **một cánh dọc duy nhất**, cần đổi collider (vd. 75 × 159 – vẫn chặn kín vì cột đất phía trên) – đó là đổi luật nên chưa làm.
+- **Đóng → mở** (code, theo đúng tiến độ mở của game ≈ 15 bước): cánh giữa **tách đôi**, mỗi nửa bóp về mép ngoài + dạt ra + mờ; hai khối bên **rút xuống đất**; lối tối hiện dần;
+  xong ở mở 0,7. Đèn báo (số điều kiện đã xong) = loé xanh ngọc ở khoá chuông. `?cong=cu` = cổng rễ ngang cũ.
+- Kiểm trong game: cổng phòng C mở 0,07 → 1 trong 15 bước, "đi xuyên" từ bước 9 (0,63); Lam đi qua được (x 8953 > mép phải hộp chặn 8942).
+
+### Đổi gì trong code
+- `art/huong-moi/lam-tu-the-2/code/dung_thu3.py` (neo `moc_phai`, ghi `dau_moc_logic`), `tach.py` (`mat_min`, `bo_moc` – mặc định như cũ), `bang-thu3.json` (mục `tuong_moc`).
+- Mới: `code/dung_vet.py`, `art/huong-moi/dia-hinh/code/tao-cong-doc.py`.
+- `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: `ST.tuong` mặc định `moc`, `ST.vet`, `veGen`, `buiMoc` / `veBui`, 2 nút ⚙. `quay-lam-moi-2.py`: `mocvet`, `cong`, `videomvc`.
+- `game/runtime/trang-tri-dia-hinh.js`: nạp `cong-doc.json`, `veCongDoc`, `?cong=cu`.
+- Sinh lại: `thu-lam-moi-2/index.html`, `thu-p0b/index.html` (**đóng băng lần 5 "cổng dọc"**, phiên `p0b-2910-91572dd6`), `thu-p0c/index.html` và `thu-phong-b/index.html`
+  (chạy lại – ra đúng file cũ vì cổng nằm trong file runtime dùng chung, trang tự có cổng mới).
+
+### Chạy lại
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py tuong_moc        # sheet móc 2x + 3x + ảnh dải
+python3 art/huong-moi/lam-tu-the-2/code/dung_vet.py                   # vệt gen 2x + 3x + ảnh kiểm
+python3 art/huong-moi/dia-hinh/code/tao-cong-doc.py                   # cổng dọc
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py               # sinh lại trang
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py mocvet cong videomvc   # GIF + ảnh + video (~10 phút)
+```

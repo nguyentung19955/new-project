@@ -308,5 +308,28 @@
    2
   ],
   "o_do_mu_ly_do": "ô 1 (giật lùi) đầu ngả ra sau: mũ nghiêng nên \"cao trên mắt\" đo theo chiều đứng ngắn hẳn (−30 % so với ô 2) – không phải mũ nhỏ; dùng ô 2 (hồi, đầu thẳng)"
+ },
+ "_ghi_chu_bo5": "Bộ 5 (29/10): bám tường BẰNG MÓC (người dùng chọn thay lưng áp vách). Mẫu vách PHẢI, Lam nhìn PHẢI (vào vách), tay xa cầm móc cắm vách trên đầu. Vách trái → lật cả hình.",
+ "tuong_moc": {
+  "file": "thu5-moc-tuong-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "tuong_moc",
+  "tu_the": [
+   "WM1",
+   "WM2",
+   "WM3",
+   "WM4"
+  ],
+  "neo_x": "moc_phai",
+  "neo_y": "mat",
+  "mu_thay_rong": true,
+  "huong": "Mẫu VÁCH BÊN PHẢI, bám bằng MÓC: Lam nhìn PHẢI (vào vách), tay xa giơ cao cầm móc cắm vào vách trên đầu, tay gần cầm Âm Đao chúc xuống. Đầu móc = mép collider (10 px từ trục). Vách trái → lật cả hình quanh neo x.",
+  "o_do_mu_ly_do": "tay xa giơ móc đi lên sát mép phải mũ ngay hàng mắt → bề rộng hàng mắt dính tay; luôn dùng rộng = cao trên mắt × 1,18 (như tường lưng bộ 4)",
+  "bo": 5,
+  "tien_to": "lam-moi5",
+  "mat_min": 60,
+  "mu_bo_moc": 40,
+  "_do_mat": "mat_min 60: vòng đồng trên cán móc có điểm loé nhỏ (~15 px gen) bị nhận nhầm là mắt ở ô 3; mu_bo_moc 40: đỉnh mũ chỉ tính các cột sau mắt ≥ 40 px gen (móc + tay giơ ở trên đầu phía trước mắt, không tính là mũ)"
  }
 }

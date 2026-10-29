@@ -85,8 +85,10 @@ def _trong_toi(rgba, mk):
     return float(np.mean(rgba[..., :3][vanh].astype(np.float32).mean(-1) < 70)) >= 0.6
 
 
-def do_tu_the(rgba, m, mat_trong_mu=True):
-    """số đo một tư thế trong toạ độ ẢNH GỐC (px gen). mat_trong_mu: chỉ nhận mắt nằm trong mặt tối của mũ (loại đá chuôi dao)."""
+def do_tu_the(rgba, m, mat_trong_mu=True, mat_min=15, bo_moc=0):
+    """số đo một tư thế trong toạ độ ẢNH GỐC (px gen). mat_trong_mu: chỉ nhận mắt nằm trong mặt tối của mũ (loại đá chuôi dao).
+    (bộ 5, móc tường) mat_min: cỡ tối thiểu cụm mắt (vòng đồng trên cán móc có điểm loé nhỏ ~15 px); bo_moc > 0: đỉnh mũ chỉ tính ở các cột
+    cách mắt ≥ bo_moc px về phía SAU (bên trái) – tay giơ móc nằm trên đầu, phía trước mắt, không tính là mũ."""
     a = m & (rgba[..., 3] > 128)
     ys, xs = np.nonzero(a)
     top, bot = ys.min(), ys.max() + 1
@@ -97,10 +99,13 @@ def do_tu_the(rgba, m, mat_trong_mu=True):
     if n:
         co = ndi.sum(mat, lab, range(1, n + 1))
         # mắt = cụm hổ phách cao nhất có cỡ hợp lý (chuông / chuôi dao là đồng tối hơn, nằm dưới)
-        cand = [(ndi.center_of_mass(mat, lab, k + 1), co[k]) for k in range(n) if co[k] >= 15 and (not mat_trong_mu or _trong_toi(rgba, lab == k + 1))]
+        cand = [(ndi.center_of_mass(mat, lab, k + 1), co[k]) for k in range(n) if co[k] >= mat_min and (not mat_trong_mu or _trong_toi(rgba, lab == k + 1))]
         cand.sort(key=lambda t: t[0][0])
         if cand: mat_t = (float(cand[0][0][1]), float(cand[0][0][0])); mat_co = float(cand[0][1])
     ey = int(round(mat_t[1])) if mat_t else (top + bot) // 2
+    if bo_moc and mat_t is not None:
+        cot = a[:, :max(1, int(mat_t[0]) - bo_moc)]; yy = np.nonzero(cot.any(1))[0]
+        if len(yy): top = int(yy.min())
     hang = np.nonzero(a[ey])[0]
     # bề rộng mũ ở hàng mắt: đoạn liền chứa mắt
     rong = None

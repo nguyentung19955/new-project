@@ -9,6 +9,8 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
   6. bo3 : BỘ TƯ THẾ 3 – GIF từng động tác (màu + bóng đen, ≈toàn tốc + chậm 4) → xem-thu/bo3/ ; videobo3: video chơi thật qua đủ động tác
   7. bo4 : BỘ TƯ THẾ 4 – GIF combo 1→2→3, hất, trên không, lướt, bị đánh (thật), tường lưng áp vách trái/phải + ảnh dải vệt mẫu → xem-thu/bo4/ ;
             videobo4: video chơi thật (không bất tử) qua đủ động tác
+  8. mocvet / cong / videomvc (29/10): MÓC TƯỜNG + VỆT GEN + CỔNG DỌC → xem-thu/moc-vet-cong/ (GIF 112 px nền thật, ảnh dải vệt gen có hộp,
+            ảnh + GIF mở cổng, ảnh cổng trong P0-B / P0-C / phòng B, video chơi thật không bất tử)
   5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
 60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
@@ -481,6 +483,171 @@ async def video_bo4(b, cong):
     seen = sorted({r[0] for r in lg}); print('video bo4', i, 'bước, tư thế đã hiện:', seen, 'máu cuối', lg[-1][7], A.loi)
 
 
+# ---------------- MÓC TƯỜNG + VỆT GEN + CỔNG DỌC (29/10) → xem-thu/moc-vet-cong/ ----------------
+MVC = 'moc-vet-cong'
+
+
+async def moc_vet(b, cong):
+    """GIF ở đúng cỡ game (Lam ~112 px, 960×540 @1x), NỀN THẬT, ≈ toàn tốc (20 ms/bước) + -cham4:
+      moc-vach-trai / moc-vach-phai : TRÁI màu, PHẢI bóng đen – bám móc WM1 → WM2 → trượt WM3/WM4 (bụi đầu móc) → nhảy tường → rơi → đất
+      combo-1-2-3, hat, chem-tren-khong, pogo-trung, pogo-truot : TRÁI vệt GEN (mặc định), PHẢI vệt mẫu code (?vet=code) – cùng phím cùng bước
+      dai-vet-<đòn>.png : mỗi bước active ± 1 một ô (phóng 2): hàng trên vệt gen, hàng dưới vệt gen + hộp đòn (?hitbox=1)"""
+    BD = os.path.join(OUT, MVC); os.makedirs(BD, exist_ok=True); log = {'ghi_chu': 'mỗi dòng 1 bước: ' + TRANG_THAI4_JS}
+    the = 'pl.x+pl.w/2, pl.y+pl.h'
+
+    async def quay(A, B, ten, kb, khung, w=240, h=170, duoi=22, cat_lai=None):
+        fr = []; lg = []; st = await A.js(TRANG_THAI4_JS)
+        n = len(kb) if isinstance(kb, list) else kb('n', None)
+        for i in range(n):
+            ph = kb[i] if isinstance(kb, list) else kb(i, st)
+            await A.buoc(ph); await B.buoc(ph); st = await A.js(TRANG_THAI4_JS); lg.append(st)
+            if khung == 'lam': p = await A.lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await A.js('([x, y]) => [x - ox, y - oy]', list(khung))
+            a = cat(await A.anh(), X, Y, w, h, duoi); c = cat(await B.anh(), X, Y, w, h, duoi)
+            o = Image.new('RGB', (2 * w + 4, h), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (w + 4, 0))
+            fr.append(nho(o, '%s · %s%s · bước %d%s' % (st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '')))
+        if cat_lai: i0, i1 = cat_lai(lg); fr = fr[i0:i1]; lg = lg[i0:i1]
+        luu_gif(fr, '%s/%s.gif' % (MVC, ten), ms=20, dither=False); luu_gif(fr, '%s/%s-cham4.gif' % (MVC, ten), ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + r[0] for j, r in enumerate(lg)))
+
+    async def dat(A, B, x, f, cho=40):
+        for t in (A, B): await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', cho)
+
+    # 1. MÓC: màu | bóng đen
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'bong=1&vfx=0').mo()
+    await dat(A, B, '(PA.x0+1)*T', -1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'moc-vach-trai', [''] * 4 + ['lj'] * 20 + ['l'] * 60 + ['lj'] + ['r'] * 12 + [''] * 34, (p[0] + 50, p[1]), w=280, h=320, duoi=30)
+    await dat(A, B, '26*T', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'moc-vach-phai', [''] * 4 + ['rj'] * 20 + ['r'] * 60 + ['rj'] + ['l'] * 12 + [''] * 34, (p[0] + 10, p[1]), w=280, h=320, duoi=30)
+    # 2. VỆT: gen | code
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'vet=code').mo()
+    await dat(A, B, 'Q[6].x-70', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'combo-1-2-3', [''] * 4 + ['a'] + [''] * 15 + ['a'] + [''] * 15 + ['a'] + [''] * 45, (p[0] + 40, p[1]), w=300, h=200)
+    await dat(A, B, 'Q[6].x-70', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'hat', [''] * 4 + ['ua'] + [''] * 36, (p[0] + 40, p[1]), w=280, h=230)
+    await dat(A, B, 'Q[6].x-80', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'chem-tren-khong', [''] * 4 + ['j'] * 8 + ['ja'] + ['j'] * 10 + [''] * 50, (p[0] + 40, p[1]), w=300, h=300, duoi=30)
+    await dat(A, B, 'Q[6].x+16', 1); p = await A.js('[%s]' % the)
+
+    def pogo(i, st):
+        if i == 'n': return 150
+        if i < 12: return 'j'
+        return 'da' if (st[4] > 5 and st[2] != 4) else ''
+    await quay(A, B, 'pogo-trung', pogo, (p[0], p[1]), w=260, h=380, duoi=20)
+    await dat(A, B, 'Q[6].x+220', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'pogo-truot', [''] * 4 + ['j'] * 14 + [''] * 6 + ['da'] + [''] * 40, (p[0], p[1]), w=260, h=330, duoi=20)
+    json.dump(log, open(os.path.join(BD, 'log-moc-vet.json'), 'w'), ensure_ascii=False)
+    print('loi', A.loi, B.loi)
+    # 3. ẢNH DẢI VỆT GEN (vào không khí): hàng trên vệt, hàng dưới vệt + hộp đòn
+    C = await Trang(b, cong, 'hitbox=1').mo(); D = await Trang(b, cong, '').mo()
+    for ten, n, kb, dx, dy, lo, hi in [('chem1', 1, ['a'] + [''] * 24, 40, 0, 6, 15), ('chem2', 2, ['a'] + [''] * 14 + ['a'] + [''] * 24, 50, 0, 6, 15),
+                                       ('chem3', 3, ['a'] + [''] * 14 + ['a'] + [''] * 14 + ['a'] + [''] * 24, 40, 0, 8, 17), ('hat', 5, ['ua'] + [''] * 24, 40, -20, 10, 19),
+                                       ('chem-tren-khong', 6, ['j'] * 6 + ['ja'] + ['j'] * 20, 45, 0, 8, 17), ('pogo', 4, ['j'] * 14 + [''] * 4 + ['da'] + [''] * 14, 0, 40, 1, 11)]:
+        o = {}
+        for t in (C, D): await t.js('TVP0.datLam(Q[6].x+200, 1)'); await t.buoc('', 30)
+        for key, t in (('mau', D), ('hop', C)):
+            ds = []
+            for ph in kb:
+                await t.buoc(ph); r = await t.js('[pl.atkN,pl.atkT,pl.atkN===4?LM2.phaPogo(pl.atkT):LM2.phaChem(pl.atkT,pl.atkN),pl.m2n,!!(pl.atkN&&atkBox(pl,pl.atkN,pl.atkT,pl.face,{}))]')
+                if r[0] == n and lo <= r[1] <= hi:
+                    p = await t.lam_man(); ds.append((r, cat(await t.anh(), p['x'] + dx, p['y'] + dy, 190, 190, 24)))
+            o[key] = ds
+        m = min(len(o['mau']), len(o['hop']))
+        if not m: print('dai-vet', ten, 'không có ô'); continue
+        w, h = o['mau'][0][1].size; W2, H2 = w * 2, h * 2
+        im = Image.new('RGB', (m * (W2 + 6) + 6, 2 * (H2 + 30) + 10), (30, 33, 40)); d = ImageDraw.Draw(im)
+        TP = TEN_PHA_POGO if n == 4 else TEN_PHA_CHEM
+        for i in range(m):
+            for j, k in enumerate(('mau', 'hop')):
+                r, c = o[k][i]; x = 6 + i * (W2 + 6); y = 6 + j * (H2 + 30)
+                d.text((x, y), 'atkT %d · %s · %s%s' % (r[1], r[3], ('ô %d ' % (min(r[2], 2) + 1 if n == 4 else r[2] + 1) + TP[r[2]]) if r[2] >= 0 else '(không vệt)', ' · HỘP' if r[4] else ''), font=FONT_N or FONT, fill=(243, 230, 200))
+                im.paste(c.resize((W2, H2), Image.NEAREST), (x, y + 24))
+        im.save(os.path.join(BD, 'dai-vet-gen-%s.png' % ten)); print('dai-vet', ten, m)
+
+
+async def cong_doc(b, cong):
+    """CỔNG DỌC: ảnh đóng / mở trong game (cổng rễ phòng C, dP) ở đúng cỡ game + GIF mở cổng (ép điều kiện mở, 1 bước / hình),
+    và ảnh cổng trong P0-B / P0-C / thu-phong-b (cùng runtime)."""
+    BD = os.path.join(OUT, MVC); os.makedirs(BD, exist_ok=True)
+    t = await Trang(b, cong, '').mo()
+    i = await t.js('DOORS.findIndex(d=>d.px===8848)')
+    await t.js('TVP0.datLam(8700, 1)'); await t.buoc('', 30)
+    X, Y = await t.js('[DOORS[%d].px-ox, FLOOR-oy]' % i)
+    im = await t.anh(); im.save(os.path.join(BD, 'cong-dong-man.png'))
+    cat(im, X, Y, 300, 280, 30).save(os.path.join(BD, 'cong-dong-112.png'))
+    await t.js('TVP0.datLam(8700, 1); hbSet(true)'); await t.buoc('', 2); cat(await t.anh(), X, Y, 300, 280, 30).save(os.path.join(BD, 'cong-dong-hop-chan.png')); await t.js('hbSet(false)')
+    await t.js('DOORS[%d].cond=()=>true' % i)
+    fr = []; lg = []
+    for k in range(10): await t.buoc(''); fr.append(cat(await t.anh(), X, Y, 300, 280, 30)); lg.append(await t.js('+DOORS[%d].open.toFixed(2)' % i))
+    for k in range(30): await t.buoc(''); fr.append(cat(await t.anh(), X, Y, 300, 280, 30)); lg.append(await t.js('+DOORS[%d].open.toFixed(2)' % i))
+    fr = [nho(f, 'mở %.2f · bước %d%s' % (o, j + 1, ' · đi xuyên' if o >= 0.6 else '')) for j, (f, o) in enumerate(zip(fr, lg))]
+    luu_gif(fr, MVC + '/mo-cong.gif', ms=20, dither=False); luu_gif(fr, MVC + '/mo-cong-cham4.gif', ms=4000 / 60, dither=False)
+    luu_gif([f.resize((f.width * 2, f.height * 2), Image.LANCZOS) for f in fr], MVC + '/mo-cong-2x-cham4.gif', ms=4000 / 60, dither=False)
+    im = await t.anh(); im.save(os.path.join(BD, 'cong-mo-man.png')); cat(im, X, Y, 300, 280, 30).save(os.path.join(BD, 'cong-mo-112.png'))
+    # đi xuyên cổng đã mở
+    for k in range(60): await t.buoc('r')
+    print('cổng mở:', lg, 'Lam x sau khi đi', await t.js('pl.x'), t.loi)
+    # các trang khác dùng chung runtime
+    for trang, ten in (('thu-p0c', 'p0c'), ('thu-phong-b', 'phong-b'), ('thu-p0b', 'p0b')):
+        u = Trang(b, cong, '')
+        ctx = await b.new_context(viewport={'width': 960, 'height': 540}); pg = await ctx.new_page(); loi = []
+        pg.on('pageerror', lambda e: loi.append(str(e))); await pg.route('https://fonts.g*/**', lambda r: r.abort())
+        await pg.goto('http://127.0.0.1:%d/game/%s/index.html?%s' % (cong, trang, 'vong=a' if ten == 'p0b' else ''))
+        await pg.wait_for_function('window.TVDEMO && TVDEMO.ready', timeout=120000)
+        try: await pg.evaluate('TVP0.batDau()')
+        except Exception: pass
+        r = await pg.evaluate('(()=>{const d=DOORS.filter(d=>d.open<0.5).slice(-1)[0]||DOORS[0]; return [d.px, TT.congDoc?1:0, DOORS.length]})()')
+        try:
+            await pg.evaluate('TVP0.datLam(%d, 1)' % (r[0] - 150)); await pg.evaluate('TVP0.khung(30,"")')
+        except Exception as e: print(ten, 'không đặt được Lam', e)
+        await pg.screenshot(path=os.path.join(BD, 'cong-trong-%s.png' % ten)); print(ten, r, loi); await ctx.close()
+
+
+KICH_BAN_MVC = ([('', 30), ('r', 34), ('', 10)]                                                      # đứng → chạy tới hình nộm
+                + [('a', 1), ('', 15), ('a', 1), ('', 15), ('a', 1), ('', 45)]                        # combo 1 → 2 → 3 (vệt gen)
+                + [('ua', 1), ('', 36)]                                                               # hất
+                + [('l', 12), ('', 6), ('j', 8), ('ja', 1), ('j', 10), ('', 40)]                      # chém trên không
+                + [('POGO', 2), ('', 20)]                                                             # pogo trúng hình nộm 2 lần
+                + [('l', 120), ('lj', 20), ('l', 60), ('lj', 1), ('r', 14), ('', 40)]                 # vách trái: bám MÓC, trượt (bụi), nhảy tường
+                + [('r', 300), ('', 10), ('a', 1), ('', 16), ('a', 1), ('', 16), ('a', 1), ('', 30)]  # sang phòng B: combo vào Chuông Gỗ
+                + [('', 90), ('ua', 1), ('', 30), ('r', 20), ('rj', 14), ('r', 10), ('', 40)])        # chờ bị đánh, hất, nhảy
+
+
+async def video_mvc(b, cong):
+    """chơi thật KHÔNG bất tử, 60 hình/s: móc tường + vệt gen → xem-thu/moc-vet-cong/choi-that-moc-vet-60fps.mp4 + log"""
+    BD = os.path.join(OUT, MVC); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo()
+    await A.js('TVP0.datLam((PA.x0+5)*T, 1)'); await A.buoc('', 1)
+    ff = ffmpeg(os.path.join(BD, 'choi-that-moc-vet-60fps.mp4'), 960, 540); lg = []; i = 0
+
+    async def mot(ph):
+        nonlocal i
+        await A.buoc(ph); i += 1; s = await A.js(TRANG_THAI4_JS); lg.append(s)
+        ff.stdin.write(jpg(nhan(await A.anh(), 'Lam mới · móc tường + vệt gen · %s · %s · máu %d · bước %d' % (s[0], s[1], s[7], i))))
+    for phim, k in KICH_BAN_MVC:
+        if phim == 'POGO':
+            nay = 0; nhay = 0; f_nay = await A.js('LM2.nay ? LM2.nay.f : -1')
+            for _ in range(300):
+                dx, dat_, vy, an = await A.js('[Q[6].x+Q[6].w/2-(pl.x+pl.w/2), pl.onGround, pl.vy, pl.atkN]')
+                hg = 'r' if dx > 3 else 'l' if dx < -3 else ''
+                if nay >= k:
+                    if dat_: break
+                    ph = 'r'
+                elif dat_ and nhay == 0:
+                    ph = hg if abs(dx) > 3 else 'j'
+                    if ph == 'j': nhay = 12
+                elif nhay > 0: ph = 'j' + hg; nhay -= 1
+                else: ph = ('da' + hg) if (vy > 5 and an != 4) else hg
+                await mot(ph)
+                f = await A.js('LM2.nay ? LM2.nay.f : -1')
+                if f != f_nay: f_nay = f; nay += 1
+            continue
+        for _ in range(k): await mot(phim)
+    ff.stdin.close(); ff.wait()
+    json.dump({'ghi_chu': TRANG_THAI4_JS, 'buoc': lg}, open(os.path.join(BD, 'log-video.json'), 'w'), ensure_ascii=False)
+    seen = sorted({str(r[0]) for r in lg}); print('video mvc', i, 'bước, tư thế:', seen, 'máu cuối', lg[-1][7], 'máu thấp nhất', min(r[7] for r in lg), A.loi)
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -495,6 +662,9 @@ async def main(viec):
         if 'videobo3' in viec: await video_bo3(b, cong)
         if 'bo4' in viec: await bo4(b, cong)
         if 'videobo4' in viec: await video_bo4(b, cong)
+        if 'mocvet' in viec: await moc_vet(b, cong)
+        if 'cong' in viec: await cong_doc(b, cong)
+        if 'videomvc' in viec: await video_mvc(b, cong)
         await b.close()
 
 

@@ -35,6 +35,12 @@
      TT.veCong(px, yChan, o, lvl, ox, oy)             CỔNG RỄ CÂY (v4): px = tâm cổng, yChan = sàn, o = tiến độ mở 0..1 (0 = đóng: rễ đan
                                                       + 2 trụ; 0<o<1: rễ giữa bóp ngang về 2 trụ + mờ dần, trụ bản đóng mờ dần lộ trụ đơn;
                                                       1 = chỉ 2 trụ đơn), lvl = độ sáng mắt ngọc 0..1 (đèn báo). Trả false nếu chưa có ô
+     CỔNG DỌC (29/10): nếu cạnh JSON atlas có cong-doc.json (+ cong-doc-3x.png, art/huong-moi/dia-hinh/code/tao-cong-doc.py) thì TT.veCong
+                                                      vẽ CỔNG DỌC thay cổng rễ ngang: giữa = cánh rễ đan + khoá chuông (mở: khung rễ + lối tối), hai bên =
+                                                      khối rễ đan không khoá (phủ đủ bề ngang hộp chặn 183 – không có "tường vô hình"). Đóng → mở (o 0 → 1, game
+                                                      cộng 0,07/bước ≈ 15 bước): cánh giữa TÁCH ĐÔI, mỗi nửa bóp về mép ngoài + mờ; hai khối bên RÚT XUỐNG ĐẤT; lối
+                                                      tối hiện dần; hết ở o = 0,7 (đi xuyên từ 0,6 – luật cũ). Đèn báo lvl = loé xanh ngọc ở khoá chuông.
+                                                      Hộp chặn KHÔNG đổi (game giữ GATE). ?cong=cu = cổng rễ ngang cũ để so.
      TT.bat (true/false), TT.so (số đo nạp / bộ nhớ), TT.bam(x,y) băm 0..1 cố định theo vị trí
    ============================================================================================================ */
 'use strict';
@@ -46,6 +52,8 @@ const TT = (() => {
   let META = null;
   const SO = {ms: 0, mb_anh: 0, so_anh: 0, o: 0, tep: []};
   let bat = true;
+  let CD = null;                     // cổng dọc: {img, m (cong-doc.json)}
+  const CONG_CU = typeof location !== 'undefined' && /[?&]cong=cu(&|$)/.test(location.search);
   const CONG_O = ['cong-re-dong-trai', 'cong-re-dong-giua', 'cong-re-dong-phai', 'cong-re-tru-trai', 'cong-re-tru-phai'];
 
   function bam(x, y) { let h = (x * 374761393 + y * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) % 1000 / 1000; }
@@ -96,6 +104,11 @@ const TT = (() => {
       O[ten] = {img: A.img, sx: sx * k, sy: sy * k, sw: sw * k, sh: sh * k, w: sw / B, h: sh / B, ax: v.neo[0] / B, ay: v.neo[1] / B,
         day: v.day ? v.day.map(d => [d[0] / B, d[1] / B]) : null, mat: v.mat || null};   // mat: [x, y, r] mắt ngọc (logic, so với neo)
       const h = ten.replace(/-\d+(?=-|$)/, ''); (HO[h] = HO[h] || []).push(ten);   // 'mang-go-3' → họ 'mang-go'; 'chan-re-1-thap' → 'chan-re-thap'
+    }
+    if (!nhung && !CONG_CU && Object.values(DL).some(d => d.cong)) {   // cổng dọc 29/10 (thiếu / lỗi → cổng rễ ngang cũ)
+      try { const r = await fetch(goc + 'cong-doc.json', {cache: 'no-cache'}); if (r.ok) { const m = await r.json(); const im = await decode(goc + m.anh, m.anh);
+        if (im.naturalWidth === m.co_anh[0] && im.naturalHeight === m.co_anh[1]) { CD = {img: im, m}; px += im.naturalWidth * im.naturalHeight; tep.push(m.anh); } } }
+      catch (e) { console.warn('TT: không nạp được cổng dọc → cổng rễ cũ', e); }
     }
     Object.assign(SO, {ms: Math.round(performance.now() - t0), mb_anh: +(px * 4 / 1048576).toFixed(2), so_anh: tep.length, o: Object.keys(O).length, tep});
     return SO;
@@ -180,6 +193,7 @@ const TT = (() => {
      rễ giữa tách đôi, mỗi nửa bóp ngang về trụ của nó + mờ dần, hết hẳn ở o = 0,7 (cổng đi xuyên được từ 0,6). Mở hẳn: chỉ 2 trụ đơn.
      Mắt ngọc = đèn báo: phủ tối khi lvl < 1, loé xanh ngọc (cộng sáng) theo lvl. Hình không có va chạm (hộp chặn do game giữ). */
   function veCong(px, yChan, o, lvl, ox, oy) {
+    if (bat && CD) return veCongDoc(px, yChan, o, lvl, ox, oy);
     const L = O['cong-re-dong-trai'], R = O['cong-re-dong-phai'], G = O['cong-re-dong-giua'], TL = O['cong-re-tru-trai'], TR = O['cong-re-tru-phai'];
     if (!bat || !L || !R || !G || !TL || !TR) return false;
     const ctx = M.ctx, X = px - ox, Y = yChan - oy; if (X < -140 || X > M.W + 140) return true;
@@ -208,6 +222,39 @@ const TT = (() => {
         ctx.fillStyle = g; ctx.fillRect(ex - r * 3.6, ey - r * 3.6, r * 7.2, r * 7.2); ctx.restore();
       }
     }
+    return true;
+  }
+
+  /* CỔNG DỌC (29/10) – xem chú thích API. Neo mọi khối = giữa đáy; px, yChan, ox, oy logic. */
+  function veCongDoc(px, yChan, o, lvl, ox, oy) {
+    const ctx = M.ctx, m = CD.m, B = m.boi, G = m.o.dong, Om = m.o.mo, Be = m.o.ben, ch = m.xep.chong;
+    const X = px - ox, Y = yChan - oy; if (X < -160 || X > M.W + 160) return true;
+    o = Math.min(1, Math.max(0, o)); lvl = Math.min(1, Math.max(0, lvl || 0));
+    const s = Math.max(0, 1 - o / 0.7);                       // phần còn lại của rễ đóng (1 = đóng hẳn, 0 = đã tách / rút hết)
+    const ve = (k, sx, sw, dx, dy, dw, dh) => ctx.drawImage(CD.img, k.khung[0] + sx * B, k.khung[1], sw * B, k.khung[3], dx, dy, dw, dh);
+    ctx.save(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    if (o > 0) { ctx.globalAlpha = Math.min(1, o / 0.35); ve(Om, 0, Om.w, X - Om.w / 2, Y - Om.h, Om.w, Om.h); }   // lối tối hiện dần
+    if (s > 0) {
+      // hai khối bên: rút xuống đất (cắt ở mặt sàn) + mờ
+      const lun = (1 - s) * Be.h, xl = X - G.w / 2 + ch - Be.w, xr = X + G.w / 2 - ch;
+      ctx.save(); ctx.beginPath(); ctx.rect(X - 200, Y - 400, 400, 400); ctx.clip(); ctx.globalAlpha = Math.min(1, s * 1.3);
+      ve(Be, 0, Be.w, xl, Y - Be.h + lun, Be.w, Be.h);
+      ctx.translate(xr + Be.w, 0); ctx.scale(-1, 1); ve(Be, 0, Be.w, 0, Y - Be.h + lun, Be.w, Be.h); ctx.restore();
+      // cánh giữa: đóng hẳn → nguyên; đang mở → tách đôi, mỗi nửa bóp về mép ngoài + dạt ra + mờ
+      const hw = G.w / 2, w = hw * s, dat = (1 - s) * 5, x0 = X - hw, y0 = Y - G.h;
+      ctx.globalAlpha = o > 0 ? Math.min(1, s * 1.2) : 1;
+      if (o <= 0) ve(G, 0, G.w, x0, y0, G.w, G.h);
+      else { ve(G, 0, hw, x0 - dat, y0, w, G.h); ve(G, hw, hw, x0 + G.w - w + dat, y0, w, G.h); }
+      // đèn báo: loé xanh ngọc ở khoá chuông theo lvl (điều kiện đã xong / tổng); mờ theo cánh
+      if (lvl > 0 && m.khoa) {
+        const ex = X + m.khoa.x, ey = Y + m.khoa.y, r = Math.max(3, m.khoa.r), nh = 0.85 + 0.15 * Math.sin(performance.now() / 180);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = s;
+        const g = ctx.createRadialGradient(ex, ey, 0.5, ex, ey, r * 3.4);
+        g.addColorStop(0, 'rgba(170,255,225,' + (0.7 * lvl * nh).toFixed(3) + ')'); g.addColorStop(0.4, 'rgba(90,230,180,' + (0.3 * lvl * nh).toFixed(3) + ')'); g.addColorStop(1, 'rgba(60,200,150,0)');
+        ctx.fillStyle = g; ctx.fillRect(ex - r * 3.4, ey - r * 3.4, r * 6.8, r * 6.8); ctx.globalCompositeOperation = 'source-over';
+      }
+    }
+    ctx.restore();
     return true;
   }
 
@@ -285,5 +332,5 @@ const TT = (() => {
   }
 
   return {khoiTao, them, nap, anO, nuong, ve, veTienCanh, veCollider, veCong, bam, chon, O, DL, HO,
-    get so() { return SO; }, get meta() { return META; }, get bat() { return bat; }, set bat(v) { bat = !!v; }};
+    get so() { return SO; }, get meta() { return META; }, get bat() { return bat; }, get congDoc() { return CD ? CD.m : null; }, set bat(v) { bat = !!v; }};
 })();

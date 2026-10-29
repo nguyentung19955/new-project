@@ -379,3 +379,12 @@ game/thu-phong-b/index.html                trang thử (SINH RA, đừng sửa t
   `?mep=cu` = mép thẳng cũ để so. Ảnh trước / sau phòng A, C, E, F + video: `game/thu-lam-moi-2/xem-thu/sua-2910/`.
 - Đã chạy lại `cong-cu/tao-tu-p0a.py`: ra **đúng file cũ** (trang này sinh từ P0-A gốc `thu-p0a/index.html`, không qua Âm Đao) → **không có** sửa "chém trên không không treo"
   (pogo tự động ở đây vẫn như cũ). Muốn có thì phải đổi nguồn của trang này sang `am-dao.html` – chưa làm.
+
+## Móc, vệt gen, cổng dọc 29/10 – trang này nhận CỔNG DỌC
+
+- **Cổng dọc** thay hình cổng rễ ngang ở mọi cổng (cổng rễ phòng C và các cổng Làng Chuông cũ) – nằm trong file dùng chung `game/runtime/trang-tri-dia-hinh.js`
+  (ảnh `art/the-gioi-moi/dia-hinh-v4/cong-doc-3x.png`), nên thu-phong-b tự có mà `index.html` không đổi (chạy lại script sinh trang: ra đúng file cũ).
+- **Hộp chặn 183 × 159 và luật đóng/mở KHÔNG đổi**. 3 khối dọc (giữa có khoá chuông, hai bên rễ đan) phủ đủ bề ngang hộp chặn; đóng → mở ≈ 15 bước: cánh giữa tách đôi, hai khối
+  bên rút xuống đất, lối tối hiện dần; đèn báo = loé xanh ngọc ở khoá chuông. `?cong=cu` = cổng cũ để so.
+- Móc tường + vệt chém gen chỉ có ở trang Lam mới (`thu-lam-moi-2`); trang này vẫn Lam cũ. Chi tiết: `game/thu-lam-moi-2/GHI-CHU.md` mục "Móc, vệt gen, cổng dọc 29/10",
+  ảnh `game/thu-lam-moi-2/xem-thu/moc-vet-cong/cong-trong-phong-b.png`. Chưa thử trên iPhone thật.

@@ -1,0 +1,61 @@
+{
+ "ten": "Cổng dọc (29/10) – ảnh gen cong-doc-2o.png; neo giữa đáy = tâm cổng trên sàn",
+ "anh": "cong-doc-3x.png",
+ "boi": 3,
+ "co_anh": [
+  643,
+  624
+ ],
+ "o": {
+  "dong": {
+   "khung": [
+    0,
+    0,
+    219,
+    624
+   ],
+   "w": 73.0,
+   "h": 208.0
+  },
+  "mo": {
+   "khung": [
+    223,
+    0,
+    219,
+    624
+   ],
+   "w": 73.0,
+   "h": 208.0
+  },
+  "ben": {
+   "khung": [
+    446,
+    0,
+    197,
+    562
+   ],
+   "w": 65.67,
+   "h": 187.33
+  }
+ },
+ "khoa": {
+  "x": -0.7,
+  "y": -104.2,
+  "r": 4.2,
+  "y_nghia": "tâm khoá chuông so với giữa đáy cánh giữa (logic) – đèn báo (lvl) loé ở đây"
+ },
+ "xep": {
+  "chong": 10,
+  "k_ben": 0.9,
+  "cao_giua": 208,
+  "ghi_chu": "khối bên trái: mép phải chồng CHONG px dưới mép trái khối giữa; bên phải lật ngang, đối xứng",
+  "be_ngang_logic": 184.3
+ },
+ "hop_chan": {
+  "x": -89,
+  "y": -159,
+  "w": 183,
+  "h": 159,
+  "ghi_chu": "KHÔNG đổi – game giữ (GATE); chỉ ghi để kiểm hình phủ"
+ }
+}

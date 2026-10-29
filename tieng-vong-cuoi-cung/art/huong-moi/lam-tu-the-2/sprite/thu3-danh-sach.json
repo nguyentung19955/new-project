@@ -157,6 +157,18 @@
     "BD2"
    ],
    "co_3x": true
+  },
+  {
+   "ten": "lam-moi5-tuong_moc",
+   "bo": 5,
+   "vai": "tuong_moc",
+   "tu_the": [
+    "WM1",
+    "WM2",
+    "WM3",
+    "WM4"
+   ],
+   "co_3x": true
   }
  ]
 }

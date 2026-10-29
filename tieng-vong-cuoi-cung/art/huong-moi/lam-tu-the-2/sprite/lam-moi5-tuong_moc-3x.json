@@ -1,0 +1,237 @@
+{
+ "ten": "Lam mới bộ 5 – tuong_moc (WM1 / WM2 / WM3 / WM4), sprite sheet 3x",
+ "phien_ban_clip": "lam-moi-thu5",
+ "vai": "tuong_moc",
+ "tu_the": [
+  "WM1",
+  "WM2",
+  "WM3",
+  "WM4"
+ ],
+ "anh": "lam-moi5-tuong_moc-3x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1758,
+  516
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  438,
+  516
+ ],
+ "diem_neo": {
+  "x": 399,
+  "y": 427,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 3,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (4 ô hàng mắt dính tay/áo → rộng = cao × 1.18)"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.265063
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Mẫu VÁCH BÊN PHẢI, bám bằng MÓC: Lam nhìn PHẢI (vào vách), tay xa giơ cao cầm móc cắm vào vách trên đầu, tay gần cầm Âm Đao chúc xuống. Đầu móc = mép collider (10 px từ trục). Vách trái → lật cả hình quanh neo x.",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu5-moc-tuong-4o.png",
+ "thu_co": {
+  "loc": "Lanczos (PIL)",
+  "lam_net": {
+   "sigma_px_nguon": 0.8,
+   "luong": 0.45
+  }
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "WM1",
+   "x": 0,
+   "y": 0,
+   "w": 438,
+   "h": 516,
+   "neo_gen": [
+    551.3,
+    513
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 1,
+   "nhan": "WM2",
+   "x": 440,
+   "y": 0,
+   "w": 438,
+   "h": 516,
+   "neo_gen": [
+    1039.3,
+    528
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "WM3",
+   "x": 880,
+   "y": 0,
+   "w": 438,
+   "h": 516,
+   "neo_gen": [
+    1524.3,
+    589
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 3,
+   "nhan": "WM4",
+   "x": 1320,
+   "y": 0,
+   "w": 438,
+   "h": 516,
+   "neo_gen": [
+    2032.3,
+    644
+   ],
+   "nguon": "chinh"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "WM1",
+   "cao_logic": 156.7,
+   "dinh_tren_neo_logic": 130.8,
+   "mu_rong_hang_mat_logic": 58.6,
+   "mu_so_chot_phan_tram": 40.9,
+   "mat_logic": [
+    -28.0,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.6,
+   "co_mu_so_chot_phan_tram": -1.8,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.7,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    589.0,
+    53.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -122.1
+   ]
+  },
+  {
+   "o": 2,
+   "nhan": "WM2",
+   "cao_logic": 158.0,
+   "dinh_tren_neo_logic": 130.5,
+   "mu_rong_hang_mat_logic": 84.0,
+   "mu_so_chot_phan_tram": 102.1,
+   "mat_logic": [
+    -18.7,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 36.8,
+   "co_mu_so_chot_phan_tram": -1.1,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.0,
+   "mau_mu_trung_vi": [
+    49.0,
+    56.0,
+    76.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    1077.0,
+    70.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -121.5
+   ]
+  },
+  {
+   "o": 3,
+   "nhan": "WM3",
+   "cao_logic": 160.9,
+   "dinh_tren_neo_logic": 139.1,
+   "mu_rong_hang_mat_logic": 55.4,
+   "mu_so_chot_phan_tram": 33.2,
+   "mat_logic": [
+    -22.2,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 37.6,
+   "co_mu_so_chot_phan_tram": 1.1,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 10.3,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    70.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    1562.0,
+    100.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -129.8
+   ]
+  },
+  {
+   "o": 4,
+   "nhan": "WM4",
+   "cao_logic": 150.0,
+   "dinh_tren_neo_logic": 137.4,
+   "mu_rong_hang_mat_logic": 53.3,
+   "mu_so_chot_phan_tram": 28.1,
+   "mat_logic": [
+    -15.3,
+    -72.6
+   ],
+   "mu_cao_tren_mat_logic": 41.6,
+   "co_mu_so_chot_phan_tram": 11.7,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 9.8,
+   "mau_mu_trung_vi": [
+    49.0,
+    55.0,
+    75.0
+   ],
+   "neo_x": "moc_phai",
+   "neo_y": "mat",
+   "nguon": "chinh",
+   "dau_moc_gen": [
+    2070.0,
+    159.0
+   ],
+   "dau_moc_logic": [
+    10.0,
+    -128.7
+   ]
+  }
+ ],
+ "bo": 5,
+ "o_do_mu_ly_do": "tay xa giơ móc đi lên sát mép phải mũ ngay hàng mắt → bề rộng hàng mắt dính tay; luôn dùng rộng = cao trên mắt × 1,18 (như tường lưng bộ 4)",
+ "mu_thay_rong": true
+}

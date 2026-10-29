@@ -1,8 +1,8 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10 · đóng băng lần 5: cổng dọc 29/10)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-e8aa09dc` – đóng băng lần 4 ngày 29/10/2026 (chém trên không không treo; giữ mọi thứ của lần 3: camera kiểu Dead Cells, và lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
-> In trên màn bắt đầu ("… · p0b-2910-e8aa09dc · bản ĐÓNG BĂNG 29/10/2026 lần 4 (chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
-> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-91572dd6` – đóng băng lần 5 ngày 29/10/2026 (cổng dọc; giữ mọi thứ của lần 4: chém trên không không treo, lần 3: camera kiểu Dead Cells, lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
+> In trên màn bắt đầu ("… · p0b-2910-91572dd6 · bản ĐÓNG BĂNG 29/10/2026 lần 5 (cổng dọc; lần 4: chém trên không không treo; …)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`, `?cong=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 4 `p0b-2910-e8aa09dc`, lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
 `PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
@@ -364,3 +364,13 @@ Quay lại: `python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong
   Nhãn đóng băng vì vậy chỉ ghi "chém trên không không treo" (ghi thêm "cạnh đất bo mềm" sẽ sai với trang này).
 - Nhãn mới (khối `khoi-p0b.js`, dòng `VB_DONG_BANG`): **"29/10/2026 lần 4 (chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)"**.
   Vọng A / B, số, luật khác giữ nguyên. Kiểm Chromium: 0 lỗi trang. Chưa thử iPhone thật.
+
+## Móc, vệt gen, cổng dọc 29/10 – P0-B chỉ nhận CỔNG DỌC (đóng băng lần 5, phiên `p0b-2910-91572dd6`)
+
+- **Cổng dọc** thay hình cổng rễ ngang ở mọi cổng (cổng nằm trong file dùng chung `game/runtime/trang-tri-dia-hinh.js`, ảnh `art/the-gioi-moi/dia-hinh-v4/cong-doc-3x.png`).
+  **Hộp chặn 183 × 159 và luật đóng/mở KHÔNG đổi** (mở > 60 % là đi xuyên). Cổng dọc gen hẹp nên ghép 3 khối dọc (giữa có khoá chuông, hai bên rễ đan) phủ đủ bề ngang hộp chặn –
+  không có "tường vô hình". Đóng → mở ≈ 15 bước: cánh giữa tách đôi, hai khối bên rút xuống đất, lối tối hiện dần. Đèn báo = loé xanh ngọc ở khoá chuông.
+  Chi tiết + ảnh / GIF: `game/thu-lam-moi-2/GHI-CHU.md` mục "Móc, vệt gen, cổng dọc 29/10", ảnh `game/thu-lam-moi-2/xem-thu/moc-vet-cong/cong-trong-p0b.png`.
+- `?cong=cu` = cổng rễ ngang cũ → tính là **BIẾN THỂ** (màn bắt đầu ghi rõ).
+- **Không đổi** trong P0-B: Lam cũ, vệt chém cũ, Vọng A/B, mọi số / luật. Móc tường + vệt gen chỉ có ở trang Lam mới (`thu-lam-moi-2`).
+- Sinh lại `index.html` bằng `tao-p0b.py` (khoi-p0b.js chỉ đổi nhãn đóng băng → mã băm phiên đổi). Chưa thử trên iPhone thật.
