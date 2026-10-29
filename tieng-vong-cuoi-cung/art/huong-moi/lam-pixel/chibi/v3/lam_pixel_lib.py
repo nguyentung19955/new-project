@@ -58,3 +58,74 @@ def glove(f,hx,hy):
     pts=[(hx,hy),(hx+1,hy),(hx,hy+1),(hx+1,hy+1)]
     outline(f,pts,only_empty=False)
     put(f,hx,hy,G); put(f,hx+1,hy,G); put(f,hx,hy+1,GD); put(f,hx+1,hy+1,G)
+
+# ---------- Kiếm âm thanh: fork = chuôi/chắn tay, lưỡi sáng bung ra giữa hai chạc ----------
+BC=(120,230,230,255); BCW=(230,255,255,255); BA=(255,190,80,255)
+def weapon(f,hx,hy,ang,blade=0,pommel=1,stem=3,prong=3):
+    """Vẽ fork cầm như kiếm tại tay (hx,hy), góc ang (độ, từ tay tới mũi). blade>0: lưỡi âm thanh dài blade px."""
+    a=math.radians(ang); d=(math.cos(a),-math.sin(a)); n=(-d[1],d[0])
+    bx,by=hx-d[0]*pommel,hy-d[1]*pommel
+    jx,jy=hx+d[0]*stem,hy+d[1]*stem
+    st=line(round(bx),round(by),round(jx),round(jy))
+    pr=[];cross=line(round(jx+n[0]*1.6),round(jy+n[1]*1.6),round(jx-n[0]*1.6),round(jy-n[1]*1.6))
+    for sgn in (-1,1):
+        px,py=jx+n[0]*1.6*sgn,jy+n[1]*1.6*sgn
+        pr+=line(round(px),round(py),round(px+d[0]*prong),round(py+d[1]*prong))
+    fk=list(dict.fromkeys(st+cross+pr))
+    bl=[]
+    if blade:
+        ex,ey=jx+d[0]*blade,jy+d[1]*blade
+        core=line(round(jx+d[0]),round(jy+d[1]),round(ex),round(ey))
+        e1=line(round(jx+d[0]+n[0]),round(jy+d[1]+n[1]),round(ex-d[0]+n[0]),round(ey-d[1]+n[1]))
+        e2=line(round(jx+d[0]-n[0]),round(jy+d[1]-n[1]),round(ex-d[0]-n[0]),round(ey-d[1]-n[1]))
+        bl=(core,e1,e2)
+        outline(f,core+e1+e2+fk)
+        for p in e1+e2: put(f,p[0],p[1],BA)
+        for p in core: put(f,p[0],p[1],BC)
+        for p in core[:len(core)//2]: put(f,p[0],p[1],BCW)
+    else:
+        outline(f,fk)
+    for p in fk: put(f,p[0],p[1],S)
+    for p in [pr[len(pr)//2-1],pr[-1]]: put(f,p[0],p[1],H)
+def smear(f,cx,cy,r,a0,a1,th=3,col_in=BCW,col=BC,col_out=BA):
+    """Vệt mờ cung (pixel) tâm (cx,cy) bán kính r, từ góc a0 tới a1 (độ), dày th."""
+    lo,hi=min(a0,a1),max(a0,a1)
+    for t10 in range(int(lo*10),int(hi*10)+1,8):
+        a=math.radians(t10/10)
+        for k in range(th):
+            rr=r-k; c=col_out if k==0 else (col if k<th-1 else col_in)
+            put(f,round(cx+rr*math.cos(a)),round(cy-rr*math.sin(a)),c)
+def erase_fork(f,box=(39,40,45,51)):
+    """Xoá fork gốc (điểm bạc sáng + viền nhô ra) trong hộp, lấp bằng màu tối thân."""
+    x0,y0,x1,y1=box
+    for y in range(y0,y1+1):
+        for x in range(x0,x1+1):
+            p=f.getpixel((x,y))
+            if p[3] and min(p[:3])>90 and max(p[:3])-min(p[:3])<45: f.putpixel((x,y),SD)
+    # bỏ viền đen nhô ra ngoài thân (cột không có màu thân bên trái)
+    for y in range(y0,y1+1):
+        for x in range(x1,x0-1,-1):
+            p=f.getpixel((x,y))
+            if p[3]==0: continue
+            if p[:3]==(0,0,0) and (x+1>=64 or f.getpixel((x+1,y))[3]==0):
+                l=f.getpixel((x-1,y))
+                if l[:3] in [(0,0,0),SD[:3]] and f.getpixel((x-2,y))[:3] in [(0,0,0),SD[:3]]:
+                    f.putpixel((x,y),(0,0,0,0)); continue
+            break
+CYD=(70,150,160,255)
+def smear2(f,cx,cy,R,a_from,a_to,thmax=8,amber=True,shear=(0,0)):
+    """Vệt mờ hình lưỡi liềm: mảnh ở góc bắt đầu, dày dần tới góc kết thúc (vị trí lưỡi kiếm)."""
+    n=max(int(abs(a_to-a_from))*2,1)
+    for i in range(n+1):
+        u=i/n; t=math.radians(a_from+(a_to-a_from)*u)
+        th=1+(thmax-1)*(u**1.4)
+        for k in range(int(round(th))+1):
+            rr=R-k*0.9
+            if k==0: c=BCW
+            elif k<=max(1,th*0.35): c=BC
+            else: c=CYD
+            y=cy-rr*math.sin(t); v=(y-cy)/R; dx=shear[0]*v if v>0 else shear[1]*(-v)
+            put(f,round(cx+rr*math.cos(t)+dx),round(y),c)
+        if amber and u>0.25:
+            y=cy-(R+1)*math.sin(t); v=(y-cy)/R; dx=shear[0]*v if v>0 else shear[1]*(-v)
+            put(f,round(cx+(R+1)*math.cos(t)+dx),round(y),BA)
