@@ -1,0 +1,301 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tiếng Vọng – Thử PixelLab + combat</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+/* Trang thử: engine combat thu-lam-moi-2 + cảnh pixel thu-lam-pixel + sprite PixelLab. Logic 960×540 px; cảnh 320×180 điểm (1 điểm = 3 px logic);
+   Lam PixelLab 1 điểm = 2 px logic. Cả khung phóng SỐ NGUYÊN ×M lên màn (iPhone ngang: M = 2 → 1 điểm cảnh = 6 px màn, 1 điểm Lam = 4 px màn). */
+:root{--night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--line:#4A5A6E;--k:1;color-scheme:dark}
+html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
+#cv{display:block;image-rendering:pixelated}
+#top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6px);right:max(8px,calc(env(safe-area-inset-right,0px) + 6px));display:flex;gap:6px;z-index:3;flex-wrap:wrap;justify-content:flex-end;max-width:70vw}
+#top button{height:32px;min-width:40px;padding:0 9px;border-radius:8px;border:1px solid var(--line);background:rgba(26,33,43,.85);color:var(--ink);font-size:13px;font-weight:700}
+#top button.on{border-color:var(--bell);color:var(--bell)}
+#info{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:max(8px,calc(env(safe-area-inset-left,0px) + 8px));font-size:11px;color:#a9b3bf;
+  background:rgba(12,15,20,.6);padding:3px 8px;border-radius:6px;pointer-events:none;max-width:46vw;line-height:1.35}
+#keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#a9b3bf;white-space:nowrap;pointer-events:none}
+body.touch #keys{display:none}
+.tc{display:none} body.touch .tc{display:block}
+#dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
+  width:calc(132px*var(--k));height:calc(132px*var(--k));border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.3);opacity:.35}
+#dpad.act{opacity:.9}
+#knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:50%;
+  background:rgba(206,240,214,.28);border:2px solid rgba(206,240,214,.5);will-change:transform}
+#acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);width:calc(170px*var(--k));height:calc(150px*var(--k))}
+.ab{position:absolute;width:calc(60px*var(--k));height:calc(60px*var(--k));border-radius:50%;display:grid;place-items:center;font-size:calc(13px*var(--k));font-weight:700;
+  background:rgba(26,33,43,.5);border:2px solid rgba(243,230,200,.45);color:var(--ink);opacity:.35}
+.ab.on{background:rgba(225,184,90,.55);border-color:var(--bell);opacity:1}
+#b-a{left:calc(30px*var(--k));top:0}
+#b-s{left:0;bottom:calc(10px*var(--k))}
+#b-j{right:0;bottom:0;width:calc(74px*var(--k));height:calc(74px*var(--k))}
+#rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
+@media (orientation:portrait){ body.touch #rotate{display:grid} }
+</style>
+<div id="game">
+  <canvas id="cv" width="960" height="540"></canvas>
+  <div id="info">Đang nạp…</div>
+  <div id="top">
+    <button id="b-hb" type="button">▣ Hộp</button>
+    <button id="b-cham" type="button">Chậm ×4</button>
+    <button id="b-anim" type="button">Hình?</button>
+    <button id="b-dc" type="button">DC</button>
+  </div>
+  <div id="dpad" class="tc"><div id="knob"></div></div>
+  <div id="acts" class="tc"><div class="ab" id="b-a" data-k="a">Chém</div><div class="ab" id="b-s" data-k="s">Lướt</div><div class="ab" id="b-j" data-k="j">Nhảy</div></div>
+  <div id="keys">← → chạy · ↑/↓ + X: chém lên / pogo · Z/Space nhảy · X chém · C/Shift lướt · H hộp · T chậm · G tên hình</div>
+  <div id="rotate">Xoay ngang điện thoại để chơi</div>
+</div>
+<script src="dong-co.js"></script>
+<script src="sprite-pixellab.js"></script>
+<script src="hoat-anh.js"></script>
+<script src="vfx.js"></script>
+<script>
+'use strict';
+/* ================= TRANG: nạp cảnh + sprite, đầu vào, vòng lặp 60 Hz cố định, vẽ ================= */
+const E = DongCo;   // pl, S… của engine là biến chung (dong-co.js)
+const W = 960, H = 540, PX = 3, VW = 320, VH = 180;          // cảnh: 1 điểm = 3 px logic
+const OPT = {hb: DC_Q.get('hitbox') === '1', cham: +(DC_Q.get('cham') || 1), lien: DC_Q.get('lien') === '1',
+  anim: DC_Q.get('anim') === 'debug', tu: DC_Q.get('tu') === '1'};
+const A = '../../art/huong-moi/lam-pixel/';
+const IMG = {}; let MAN = null;
+const VACH = [[34, 2, 34, 5], [38, 1, 39, 8]];   // vách đá thêm (cột, hàng → cột, hàng) để thử móc vách / nhảy vách: vách treo + vách cao cuối cảnh
+function napAnh(k, src){ return new Promise((ok, loi) => { const i = new Image(); i.onload = () => { IMG[k] = i; ok(); }; i.onerror = () => loi(src); i.src = src; }); }
+async function nap(){
+  MAN = await fetch(A + 'canh/man.json').then(r => r.json());
+  await Promise.all([napAnh('canh', A + 'canh/canh.png'), napAnh('n1', A + 'canh/nen-xa-1.png'), napAnh('n2', A + 'canh/nen-xa-2.png'),
+    napAnh('den', A + 'canh/den-sang.png'), napAnh('nom', A + 'canh/nom.png'), SpritePL.nap(A + 'pixellab/lam-pixellab.json')]);
+}
+function batDau(){
+  E.napBanDo(MAN, VACH);
+  const T = E.BD.T, dat = 9 * T;
+  E.datLam(MAN.xuat_phat_cot * T + T / 2, dat);
+  const nx = MAN.nom_cot * T + T / 2;
+  E.MT.push(E.taoNom(nx, dat), E.taoNom(nx + 52, dat));          // 2 nộm sát nhau: thử 1 nhát trúng nhiều mục tiêu
+  E.MT.push(E.taoQuai(26 * T, dat, 21 * T, 30 * T));            // Chuông Gỗ (khối màu tạm) giữa bậc đá và gò cây
+  veVachSan();
+}
+
+/* ================= ĐẦU VÀO ================= */
+const KEYMAP = {ArrowLeft:'l', KeyA:'l', ArrowRight:'r', KeyD:'r', ArrowUp:'u', KeyW:'u', ArrowDown:'d', KeyS:'d',
+  KeyZ:'j', Space:'j', KeyK:'j', KeyX:'a', KeyJ:'a', KeyC:'s', KeyL:'s', ShiftLeft:'s', ShiftRight:'s'};
+const KEYS = ['l', 'r', 'u', 'd', 'j', 'a', 's'], kb = {}, tc = {}, I = {}, prevI = {}, latch = {}, ep = {};
+let stickY = 0;
+addEventListener('keydown', e => {
+  if (e.code === 'KeyH'){ batHop(); return; } if (e.code === 'KeyT'){ batCham(); return; } if (e.code === 'KeyG'){ batAnim(); return; }
+  const k = KEYMAP[e.code]; if (k){ if (!kb[k]) latch[k] = 1; kb[k] = 1; setMode(false); e.preventDefault(); } });
+addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k){ kb[k] = 0; e.preventDefault(); } });
+addEventListener('blur', () => { KEYS.forEach(k => { kb[k] = tc[k] = latch[k] = 0; }); stickY = 0; });   // mất focus: nhả mọi phím (không kẹt)
+document.addEventListener('visibilitychange', () => { if (document.hidden) KEYS.forEach(k => { kb[k] = tc[k] = latch[k] = 0; }); });
+function readInput(){
+  for (const k of KEYS){ prevI[k] = I[k]; I[k] = !!(kb[k] || tc[k] || latch[k] || ep[k]); latch[k] = 0; }
+  const IN = E.IN, bam = k => I[k] && !prevI[k];
+  IN.l = I.l; IN.r = I.r; IN.j = I.j; IN.a = I.a; IN.s = I.s;
+  IN.bamJ = bam('j'); IN.bamA = bam('a'); IN.bamS = bam('s');
+  IN.uPhim = !!(kb.u || ep.u); IN.dPhim = !!(kb.d || ep.d); IN.coCan = dpadId !== null; IN.stickY = stickY;
+}
+const dpad = document.getElementById('dpad'), knob = document.getElementById('knob');
+const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('[data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
+function measure(){ const rc = dpad.getBoundingClientRect(); geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; geo.R = rc.width / 2 || 66;
+  for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; } }
+let dpadId = null; const prevTc = {};
+function onTouch(e){
+  if (e.type === 'touchstart') setMode(true);
+  if (e.target.closest && e.target.closest('#top')) return;
+  e.preventDefault(); if (e.type === 'touchstart') measure();
+  for (const k of KEYS){ prevTc[k] = tc[k]; tc[k] = 0; }
+  let dT = null;
+  for (const t of e.touches){
+    if (t.identifier === dpadId){ dT = t; continue; }
+    if (dpadId === null && Math.hypot(t.clientX - geo.cx, t.clientY - geo.cy) < geo.R * 1.2 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; continue; }
+    let best = null, bd = 1e9;
+    for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 1.25 && d < bd){ bd = d; best = b; } }
+    if (best) tc[best.k] = 1;
+  }
+  let kx = 0, ky = 0; if (!dT){ dpadId = null; stickY = 0; }
+  dpad.classList.toggle('act', dpadId !== null);
+  if (dT){ const dx = dT.clientX - geo.cx, dy = dT.clientY - geo.cy, d = Math.hypot(dx, dy);
+    if (d > geo.R * 0.2){ tc.r = dx > d * 0.38 ? 1 : 0; tc.l = dx < -d * 0.38 ? 1 : 0; }
+    stickY = clampN(dy / (geo.R * 0.55), -1, 1);
+    const m = Math.min(d, geo.R * 0.55) / (d || 1); kx = dx * m; ky = dy * m; }
+  for (const k of KEYS) if (tc[k] && !prevTc[k]) latch[k] = 1;
+  knob.style.transform = 'translate3d(' + kx + 'px,' + ky + 'px,0)';
+  for (const b of geo.btn) b.el.classList.toggle('on', !!tc[b.k]);
+}
+const clampN = (v, a, b) => v < a ? a : v > b ? b : v;
+['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(t => document.addEventListener(t, onTouch, {passive:false}));
+let touchMode = null;
+function setMode(t){ if (touchMode === t) return; touchMode = t; document.body.classList.toggle('touch', t);
+  const m = Math.min(innerWidth, innerHeight); document.documentElement.style.setProperty('--k', clampN(m / 380, 0.78, 1.22).toFixed(3)); if (t) requestAnimationFrame(measure); }
+setMode(matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
+
+/* ================= CAMERA ================= */
+const CAM = {x:0};
+function camBuoc(){ const muc = clampN(pl.x + pl.w / 2 - W / 2 + pl.face * 40, 0, E.BD.COT * E.BD.T - W); CAM.x += (muc - CAM.x) * 0.12; }
+
+/* ================= VẼ ================= */
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const pc = document.createElement('canvas'); pc.width = VW; pc.height = VH; const g = pc.getContext('2d');   // cảnh 320×180 điểm
+let M = 1, DPR = 1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 3);
+  const bw = innerWidth * DPR, bh = innerHeight * DPR;
+  if (OPT.lien){ const css = Math.min(innerWidth / W, innerHeight / H); M = css * DPR; cv.width = Math.round(W * M); cv.height = Math.round(H * M);
+    cv.style.width = Math.floor(W * css) + 'px'; cv.style.height = Math.floor(H * css) + 'px'; }
+  else { M = Math.max(1, Math.floor(Math.min(bw / W, bh / H))); cv.width = W * M; cv.height = H * M;
+    const nho = bw < W || bh < H, css = nho ? Math.min(innerWidth / W, innerHeight / H) : M / DPR;   // màn nhỏ hơn 960×540 điểm màn: đành co (không đều)
+    cv.style.width = (W * css) + 'px'; cv.style.height = (H * css) + 'px'; }
+  if (touchMode) requestAnimationFrame(measure);
+}
+addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(resize, 200));
+
+// vách đá thêm: vẽ 1 lần vào ảnh 16 điểm/ô theo bảng màu cảnh (đá xám + vữa + rêu mép trên)
+const VACH_IMG = document.createElement('canvas');
+function veVachSan(){
+  const T = 16, cot = E.BD.COT, hang = E.BD.HANG; VACH_IMG.width = cot * T; VACH_IMG.height = hang * T;
+  const v = VACH_IMG.getContext('2d'), dac = (c, r) => E.tile(c, r) === '#';
+  const la = (c, r) => VACH.some(([c0, r0, c1, r1]) => c >= c0 && c <= c1 && r >= r0 && r <= r1);
+  for (let r = 0; r < hang; r++) for (let c = 0; c < cot; c++){
+    if (!la(c, r)) continue;
+    const X = c * T, Y = r * T;
+    v.fillStyle = '#5c6263'; v.fillRect(X, Y, T, T);
+    v.fillStyle = '#3b4148';   // vữa: hàng gạch so le 8 điểm
+    for (let y = 0; y < T; y += 8){ v.fillRect(X, Y + y + 7, T, 1); const o = ((r * 2 + y / 8) % 2) ? 4 : 12; v.fillRect(X + o, Y + y, 1, 7); }
+    v.fillStyle = '#8e9189'; for (let y = 0; y < T; y += 8) v.fillRect(X, Y + y, T, 1);   // mép sáng trên mỗi viên
+    v.fillStyle = '#0d0f1c';
+    if (!dac(c - 1, r)) v.fillRect(X, Y, 1, T); if (!dac(c + 1, r)) v.fillRect(X + T - 1, Y, 1, T);
+    if (!dac(c, r + 1)) v.fillRect(X, Y + T - 1, T, 1);
+    if (!dac(c, r - 1)){ v.fillRect(X, Y, T, 1); v.fillStyle = '#6f9446'; v.fillRect(X + 1, Y, T - 2, 2); v.fillStyle = '#3e6a43'; v.fillRect(X + 2, Y + 2, 3, 1); v.fillRect(X + 9, Y + 2, 4, 1); }
+  }
+}
+function veLap(img, k, camPx){ const w = img.width; let x = -(Math.round(camPx * k) % w); for (; x < VW; x += w) g.drawImage(img, x, 0); }
+
+// quái Chuông Gỗ – CHƯA có sprite: khối màu pixel (24×36 điểm) dựng bằng code, lật theo hướng
+const QUAI_IMG = {};
+function quaiHinh(kieu){
+  if (QUAI_IMG[kieu]) return QUAI_IMG[kieu];
+  const c = document.createElement('canvas'); c.width = 24; c.height = 36; const q = c.getContext('2d');
+  const hw = r => r < 8 ? 3 + r : r < 30 ? 10 + Math.min(1.5, (r - 8) * 0.07) : r < 33 ? 12 : 0;
+  const than = kieu === 'trung' ? '#eef1f0' : '#8d5c3b', sang = kieu === 'trung' ? '#ffffff' : '#c58b56';
+  for (let r = 0; r < 33; r++){ const w = Math.round(hw(r)); const x0 = 12 - w, x1 = 12 + w;
+    q.fillStyle = '#0d0f1c'; q.fillRect(x0, r, x1 - x0, 1);
+    if (r > 0 && r < 32){ q.fillStyle = r === 12 || r === 25 ? '#c48736' : r >= 30 ? '#573829' : than; q.fillRect(x0 + 1, r, x1 - x0 - 2, 1);
+      q.fillStyle = r === 12 || r === 25 ? '#f3c86a' : sang; q.fillRect(x0 + 1, r, 2, 1); } }
+  q.fillStyle = '#0d0f1c'; q.fillRect(5, 33, 5, 3); q.fillRect(14, 33, 5, 3); q.fillStyle = '#573829'; q.fillRect(6, 33, 3, 2); q.fillRect(15, 33, 3, 2);
+  q.fillStyle = '#161c33'; q.fillRect(12, 15, 7, 6);   // mặt (bên phải = hướng nhìn)
+  q.fillStyle = kieu === 'gong' ? '#ffe08a' : '#f2a33a'; q.fillRect(15, 16, 2, 3);
+  if (kieu === 'gong'){ q.fillStyle = '#ffe08a'; q.fillRect(11, 0, 2, 2); q.fillRect(4, 12, 16, 1); }   // lấy đà: chuông loé vàng
+  return QUAI_IMG[kieu] = c;
+}
+function veQuai(q, cam){
+  if (q.dead) return;
+  const kieu = q.flash > 4 ? 'trung' : (q.st === 'wind' && (q.t >> 2) % 2 === 0) ? 'gong' : 'thuong';
+  const img = quaiHinh(kieu), fx = Math.round(q.x + q.w / 2 - cam), fy = Math.round(q.y + q.h);
+  ctx.save(); if (q.st === 'die') ctx.globalAlpha = Math.max(0, 1 - q.t / 90);
+  ctx.translate(fx, fy); if (q.face < 0) ctx.scale(-1, 1);
+  if (q.st === 'die') ctx.rotate(Math.min(1, q.t / 20) * 0.5);
+  ctx.drawImage(img, -36, -108, 72, 108); ctx.restore();
+  // thanh máu nhỏ (điểm)
+  if (q.hp < q.max && q.st !== 'die'){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(fx - 24, fy - 120, 48, 6); ctx.fillStyle = '#f2a33a'; ctx.fillRect(fx - 21, fy - 117, Math.round(42 * q.hp / q.max / 3) * 3, 3); }
+}
+
+function veLam(cam){
+  const HA = HoatAnh.A, C = HA.clip;
+  if (pl.iframes > 0 && pl.dash <= 0 && !pl.dead && E.S.hitstop <= 0 && (E.S.frame >> 2) % 2 === 0) return;   // nhấp nháy bất tử như game
+  const fx = pl.x + pl.w / 2 - cam, fy = pl.y + pl.h;
+  const lat = HA.st && HA.st.ten === 'tuong' ? pl.lastWall > 0 : pl.face < 0;
+  const al = pl.dead ? Math.max(0, Math.min(1, 1 - (pl.deadT - 50) / 40)) : undefined;
+  if (C) SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al);
+  else {   // chưa có clip nào cho trạng thái này → khối màu cỡ Lam (40×100 px logic)
+    ctx.globalAlpha = al === undefined ? 1 : al;
+    ctx.fillStyle = '#0d0f1c'; ctx.fillRect(Math.round(fx) - 20, fy - 100, 40, 100);
+    ctx.fillStyle = pl.dead ? '#304a73' : '#45679a'; ctx.fillRect(Math.round(fx) - 18, fy - 98, 36, 96);
+    ctx.fillStyle = '#f2a33a'; ctx.fillRect(Math.round(fx) + (lat ? -10 : 6), fy - 76, 4, 6); ctx.globalAlpha = 1;
+  }
+}
+function ve(){
+  const camPx = Math.round(CAM.x / PX), cam = camPx * PX;
+  // 1) cảnh 320×180 điểm
+  g.imageSmoothingEnabled = false;
+  g.fillStyle = '#0c1622'; g.fillRect(0, 0, VW, VH);
+  veLap(IMG.n1, 0.15, camPx); veLap(IMG.n2, 0.45, camPx);
+  g.drawImage(IMG.canh, -camPx, 0);
+  const fl = ((E.S.frame / 11 | 0) * 7919 % 5) < 2 ? 1 : 0;
+  for (const [x, y] of MAN.den) g.drawImage(IMG.den, fl * 48, 0, 48, 48, x - 24 - camPx, y - 24, 48, 48);
+  g.drawImage(VACH_IMG, -camPx, 0);
+  // 2) phóng cảnh ×3 vào khung logic, rồi khung logic ×M lên màn (mọi hệ số nguyên)
+  const S = E.S; let ox = 0, oy = 0;
+  if (S.sht > 0){ const k = S.shm * S.sht / 8; ox = Math.round(S.shx * k * ((S.frame & 1) ? 1 : -1)); oy = Math.round(S.shy * k * ((S.frame & 1) ? -1 : 1)); }
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#05080d'; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.setTransform(M, 0, 0, M, ox * M, oy * M); ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(pc, 0, 0, VW, VH, 0, 0, W, H);
+  // 3) mục tiêu
+  for (const m of E.MT){
+    if (m.loai === 'nom'){ const nk = m.t > 8 ? (m.dir > 0 ? 1 : 2) : 0;
+      ctx.drawImage(IMG.nom, nk * 24, 0, 24, 36, Math.round((m.x + m.w / 2 - cam) / PX) * PX - 36, Math.round((m.y + m.h) / PX) * PX - 108, 72, 108); }
+    else veQuai(m, cam);
+  }
+  // 4) Lam + vệt chém
+  veLam(cam);
+  VFX.ve(ctx, cam);
+  // 5) HUD máu (chuông nhỏ)
+  for (let i = 0; i < E.P.maxHp; i++){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 21, 15, 15, 15); ctx.fillStyle = i < pl.hp ? '#f3c86a' : '#304a73'; ctx.fillRect(18 + i * 21, 18, 9, 9); }
+  // 6) lớp hộp / chữ debug (toạ độ màn)
+  ctx.setTransform(M, 0, 0, M, 0, 0);
+  if (OPT.hb){
+    ctx.lineWidth = 2 / M * Math.max(1, Math.round(M / 2));
+    const r = (o, c, d) => { ctx.setLineDash(d ? [4, 3] : []); ctx.strokeStyle = c; ctx.strokeRect(o.x - cam, o.y, o.w, o.h); };
+    r(pl, '#4af'); r(E.hurtBox(), '#78e68c', true);
+    for (const m of E.MT) if (!m.dead){ r(m, '#fc4'); if (m.loai === 'quai' && (m.st === 'wind' || m.st === 'strike')) r(E.hopQuai(m, {}), m.st === 'strike' && m.t >= 5 && m.t <= 10 ? '#f33' : '#fa4', true); }
+    const hb = E.atkBox(pl, pl.atkN, pl.atkT, pl.face, {}); if (hb) r(hb, '#f33');
+    ctx.setLineDash([]);
+  }
+  if (OPT.anim){
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    const fs = Math.round(12 * DPR); ctx.font = '700 ' + fs + 'px system-ui,sans-serif'; ctx.textAlign = 'center';
+    const s = HoatAnh.moTa(), tx = (pl.x + pl.w / 2 - cam) * M, ty = (pl.y + pl.h - 130) * M;
+    ctx.fillStyle = 'rgba(12,15,20,.75)'; const w = ctx.measureText(s).width + 12; ctx.fillRect(tx - w / 2, ty - fs, w, fs * 1.4);
+    ctx.fillStyle = '#ffe08a'; ctx.fillText(s, tx, ty); ctx.textAlign = 'left';
+  }
+}
+
+/* ================= VÒNG LẶP 60 Hz CỐ ĐỊNH ================= */
+function mot(){
+  readInput();
+  const chay = E.buoc();
+  VFX.suKien(E.SUKIEN);
+  if (chay){ HoatAnh.capNhat(); VFX.buoc(); }
+  camBuoc();
+}
+const DT = 1000 / 60; let last = 0, accT = 0, fInfo = 0;
+function loop(now){
+  requestAnimationFrame(loop);
+  if (!last) last = now; const d = Math.min(100, now - last); last = now;
+  accT += d / OPT.cham; let n = 0;
+  while (accT >= DT && n < 4){ mot(); accT -= DT; n++; }
+  if (n === 4) accT = 0;
+  ve();
+  if (++fInfo % 15 === 0) capNhatInfo();
+}
+const DS_CLIP = () => SpritePL.danhSach();
+function capNhatInfo(){
+  const ds = DS_CLIP(), that = ds.filter(c => c.ok && !c.tam).map(c => c.ten + ' (' + c.n + ')'), loi = ds.filter(c => !c.ok).map(c => c.ten);
+  document.getElementById('info').textContent = 'PixelLab: ' + (that.join(', ') || 'chưa có') + ' · còn lại hình tạm' + (loi.length ? ' · lỗi nạp: ' + loi.join(', ') : '') +
+    ' · combat kiểu Dead Cells ' + (E.DCO.bat ? 'BẬT' : 'TẮT (?dc=0)') + ' · trúng ' + E.S.nTrung + ' · ×' + (OPT.lien ? M.toFixed(2) : M);
+}
+function batHop(){ OPT.hb = !OPT.hb; document.getElementById('b-hb').classList.toggle('on', OPT.hb); }
+function batCham(){ OPT.cham = OPT.cham === 1 ? 4 : 1; document.getElementById('b-cham').classList.toggle('on', OPT.cham !== 1); }
+function batAnim(){ OPT.anim = !OPT.anim; document.getElementById('b-anim').classList.toggle('on', OPT.anim); }
+document.getElementById('b-hb').onclick = batHop; document.getElementById('b-cham').onclick = batCham; document.getElementById('b-anim').onclick = batAnim;
+document.getElementById('b-dc').onclick = () => { const q = new URLSearchParams(location.search); if (E.DCO.bat) q.set('dc', '0'); else q.delete('dc'); location.search = q.toString(); };
+document.getElementById('b-dc').textContent = E.DCO.bat ? 'DC: bật' : 'DC: tắt';
+document.getElementById('b-dc').classList.toggle('on', E.DCO.bat);
+document.getElementById('b-hb').classList.toggle('on', OPT.hb); document.getElementById('b-cham').classList.toggle('on', OPT.cham !== 1); document.getElementById('b-anim').classList.toggle('on', OPT.anim);
+
+// cổng cho công cụ quay (nếu cần sau): ?tu=1 không tự chạy; TV.buoc(n, 'rj') chạy n bước với phím giữ rồi vẽ
+window.TV = {E, OPT, ep, buoc(n, phim){ for (const k of KEYS) ep[k] = phim && phim.includes(k) ? 1 : 0; for (let i = 0; i < n; i++) mot(); ve(); }, xong:false};
+nap().then(() => { batDau(); resize(); HoatAnh.capNhat(); ve(); capNhatInfo(); TV.xong = true; if (!OPT.tu) requestAnimationFrame(loop); })
+  .catch(e => { document.getElementById('info').textContent = 'Không nạp được ' + e; TV.loi = String(e); });
+</script>
