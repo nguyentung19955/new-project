@@ -4,6 +4,11 @@
    Cung = một dải elip NẰM TRONG hộp (không vượt mép), mỗi đòn một góc quét riêng. Vẽ theo lưới điểm sprite (2 px logic) để hợp
    nét pixel của Lam; hiện suốt pha ra đòn: 2 bước đầu quét nhanh ra, sau đó mỏng dần. Hộp, sát thương, thời điểm KHÔNG đổi.
    Tắt bằng ?vfx=0. Thêm: tia trúng (điểm ảnh) + vòng nảy pogo.
+   LAM CHIBI v3 – chém 1/2/3: KHÔNG dùng cung theo hộp mà vẽ cung âm thanh đã duyệt THEO HÌNH đang hiện (vfx-lam.js, do
+   code/xuat_vfx_lam.py tính từ bản xem thử): điểm sprite 1:1 (×ti_le), pixel bậc thang, lật gương khi quay trái.
+     chém 1: hình 3 cung ")" amber + viền cyan → hình 4 cyan mờ → tắt · chém 2: cung chéo thấp → cao, như vậy
+     chém 3: hình 3–4 vòng sáng quanh chuông · hình 5 sóng âm kép + vòng đứt · hình 6 dư âm cyan mờ (vòng ngoài dịch ra 4 điểm)
+   Bị đánh: chớp trắng ấm 3 bước (50 ms) – index.html vẽ bóng trắng của hình; đẩy lùi do engine (hurt).
    ===================================================================================================================== */
 const VFX = (() => {
   const OPT = {bat: DC_Q.get('vfx') !== '0'};
@@ -19,6 +24,20 @@ const VFX = (() => {
     6: {cx:0.06, cy:0.5,  rx:0.92, ry:0.5,  a0:-85, a1:80}     // trên không: như nhát 1, quét rộng hơn
   };
   const TIA = [], VONG = [];
+  const LAM = typeof VFX_LAM !== 'undefined' ? VFX_LAM : null;
+  let chop = 0;                                     // bước chớp trắng còn lại (bị đánh)
+  // cung âm thanh Lam chibi theo hình; true = đòn này do bảng LAM lo (kể cả hình không có điểm → không vẽ cung cũ)
+  function veLamChibi(g, camX){
+    const HA = HoatAnh.A, C = HA.clip, st = HA.st, pl = DongCo.pl;
+    if (!LAM || !C || C.tam || !st || !st.n || st.n > 3 || st.ten !== C.ten || !LAM[C.ten]) return false;
+    const ds = LAM[C.ten][HA.k]; if (!ds) return true;
+    const s = C.ti_le, fx = Math.round(pl.x + pl.w / 2 - camX), fy = Math.round(pl.y + pl.h), lat = pl.face < 0;
+    for (const [x, y, m] of ds){
+      const dx = x - LAM.neo[0];
+      g.fillStyle = LAM.mau[m]; g.fillRect(lat ? fx - (dx + 1) * s : fx + dx * s, fy + (y - LAM.neo[1]) * s, s, s);
+    }
+    return true;
+  }
   function veCung(g, hb, n, face, t, ac, camX){
     const c = CUNG[n]; if (!c) return;
     const quet = Math.min(1, (t + 1) / 2);             // 2 bước đầu: quét ra
@@ -43,7 +62,9 @@ const VFX = (() => {
     }
   }
   function suKien(ds){
+    if (chop > 0) chop--;
     for (const e of ds){
+      if (e.k === 'bi-danh') chop = 3;
       if (e.k === 'trung') for (let i = 0; i < 8; i++){ const a = (i / 8) * Math.PI * 2 + 0.3;
         TIA.push({x:e.x, y:e.y, vx:Math.cos(a) * (2 + (i % 2) * 2), vy:Math.sin(a) * (2 + (i % 2) * 2) - 0.6, t:10 + (i % 3) * 2}); }
       if (e.k === 'nay') VONG.push({x:e.x, y:e.y, t:0});
@@ -55,7 +76,7 @@ const VFX = (() => {
   }
   function ve(g, camX){
     const E = DongCo, pl = E.pl;
-    if (OPT.bat && pl.atkN && !pl.dead){
+    if (OPT.bat && pl.atkN && !pl.dead && !veLamChibi(g, camX)){
       const hb = E.atkBox(pl, pl.atkN, pl.atkT, pl.face, {x:0, y:0, w:0, h:0});
       if (hb) veCung(g, hb, pl.atkN, pl.face, pl.atkT - E.ATK[pl.atkN].su, E.ATK[pl.atkN].ac, camX);
     }
@@ -65,5 +86,5 @@ const VFX = (() => {
       for (let i = 0; i < 20; i++){ const a = i / 20 * Math.PI * 2; g.fillRect(Math.round((v.x + Math.cos(a) * R - camX) / D) * D, Math.round((v.y + Math.sin(a) * R * 0.4) / D) * D, D, D); }
     }
   }
-  return {ve, suKien, buoc, OPT, CUNG};
+  return {ve, suKien, buoc, OPT, CUNG, chopTrang: () => chop > 0};
 })();

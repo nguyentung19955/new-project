@@ -59,54 +59,162 @@
   "chay": {
    "anh": "chay.png",
    "xep": "hang",
-   "o": [54, 61],
+   "o": [38, 46],
    "so_hinh": 6,
-   "chan": [21.0, 61],
+   "chan": [20.0, 46.0],
    "phat": "quang_duong",
    "quang": 132.0,
-   "mat": {
-    "diem": [
-     [[28, 20], [28, 21], [28, 22], [29, 20], [29, 21], [29, 22], [29, 23]],
-     [[28, 20], [28, 21], [28, 22], [29, 20], [29, 21], [29, 22], [29, 23]],
-     [[28, 20], [28, 21], [28, 22], [29, 20], [29, 21], [29, 22], [29, 23]],
-     [[28, 19], [28, 20], [28, 21], [29, 19], [29, 20], [29, 21]],
-     [[28, 20], [28, 21], [28, 22], [29, 20], [29, 21], [29, 22], [29, 23]],
-     [[28, 20], [28, 21], [28, 22], [29, 20], [29, 21], [29, 22], [29, 23]]
-    ],
-    "doi": {
-     "#37414b": "#7b4c22",
-     "#b8ccd3": "#f2a33a",
-     "#c4d7db": "#ffe08a",
-     "#35455a": "#7b4c22",
-     "#8c9ea9": "#a85b1f",
-     "#636b71": "#7b4c22",
-     "#546b76": "#7b4c22"
-    }
+   "nguon_goc": {
+    "o_goc": [64, 64],
+    "cat_tu": [12, 15],
+    "neo_goc": [32.0, 61.0]
+   }
+  },
+  "dung": {
+   "anh": "dung.png",
+   "xep": "hang",
+   "o": [29, 47],
+   "so_hinh": 4,
+   "chan": [15.0, 47.0],
+   "fps": 8.0,
+   "lap": true,
+   "nguon_goc": {
+    "o_goc": [64, 64],
+    "cat_tu": [17, 14],
+    "neo_goc": [32.0, 61.0]
+   }
+  },
+  "chem1": {
+   "anh": "chem1.png",
+   "xep": "hang",
+   "o": [38, 47],
+   "so_hinh": 5,
+   "chan": [14.0, 47.0],
+   "fps": 12.0,
+   "lap": false,
+   "manh": [2],
+   "pha": {
+    "layda": [0, 1],
+    "rado": [2],
+    "hoi": [3, 4]
    },
    "nguon_goc": {
-    "o_goc": [96, 96],
-    "cat_tu": [27, 17],
-    "neo_goc": [48.0, 78]
+    "o_goc": [64, 64],
+    "cat_tu": [18, 14],
+    "neo_goc": [32.0, 61.0]
    }
+  },
+  "chem2": {
+   "anh": "chem2.png",
+   "xep": "hang",
+   "o": [36, 47],
+   "so_hinh": 5,
+   "chan": [14.0, 47.0],
+   "fps": 12.0,
+   "lap": false,
+   "manh": [2],
+   "pha": {
+    "layda": [0, 1],
+    "rado": [2],
+    "hoi": [3, 4]
+   },
+   "nguon_goc": {
+    "o_goc": [64, 64],
+    "cat_tu": [18, 14],
+    "neo_goc": [32.0, 61.0]
+   }
+  },
+  "chem3": {
+   "anh": "chem3.png",
+   "xep": "hang",
+   "o": [43, 47],
+   "so_hinh": 7,
+   "chan": [14.0, 47.0],
+   "fps": 12.0,
+   "lap": false,
+   "manh": [4],
+   "pha": {
+    "layda": [1, 2, 3],
+    "rado": [4],
+    "hoi": [5, 6]
+   },
+   "nguon_goc": {
+    "o_goc": [64, 64],
+    "cat_tu": [18, 14],
+    "neo_goc": [32.0, 61.0]
+   }
+  },
+  "bi-danh": {
+   "anh": "bi-danh.png",
+   "xep": "hang",
+   "o": [35, 47],
+   "so_hinh": 3,
+   "chan": [18.0, 47.0],
+   "fps": 12.0,
+   "lap": false,
+   "nguon_goc": {
+    "o_goc": [64, 64],
+    "cat_tu": [14, 14],
+    "neo_goc": [32.0, 61.0]
+   }
+  },
+  "chet": {
+   "anh": "chet.png",
+   "xep": "hang",
+   "o": [59, 47],
+   "so_hinh": 6,
+   "chan": [33.0, 46.0],
+   "fps": 10.0,
+   "lap": false,
+   "nguon_goc": {
+    "o_goc": [80, 72],
+    "cat_tu": [7, 15],
+    "neo_goc": [40.0, 61.0]
+   }
+  },
+  "tam-v3-nhay": {
+   "tam": true,
+   "anh": "chay.png",
+   "xep": "tung_khung",
+   "khung": [[38, 0, 38, 46]],
+   "chan": [20.0, 46.0],
+   "ghi_chu": "CHỜ HÌNH: mượn hình 2 của clip chạy chibi v3 (chân dang) cho nhảy"
+  },
+  "tam-v3-roi": {
+   "tam": true,
+   "anh": "chay.png",
+   "xep": "tung_khung",
+   "khung": [[152, 0, 38, 46]],
+   "chan": [20.0, 46.0],
+   "ghi_chu": "CHỜ HÌNH: mượn hình 5 của clip chạy chibi v3 (áo choàng bay) cho rơi / pogo"
+  },
+  "tam-v3-luot": {
+   "tam": true,
+   "anh": "chay.png",
+   "xep": "tung_khung",
+   "khung": [[114, 0, 38, 46]],
+   "chan": [20.0, 46.0],
+   "ghi_chu": "CHỜ HÌNH: mượn hình 4 của clip chạy chibi v3 cho lướt"
   }
  },
  "trang_thai": {
-  "dung": ["dung", "tam-dung"],
-  "chay": ["chay", "tam-chay"],
-  "nhay": ["nhay", "tam-nhay"],
-  "roi": ["roi", "nhay", "tam-roi"],
-  "tiep-dat": ["tiep-dat", "dung", "tam-dung"],
-  "luot": ["luot", "tam-luot"],
-  "tuong": ["tuong", "tam-dung"],
-  "nhay-tuong": ["nhay-tuong", "nhay", "tam-nhay"],
-  "chem1": ["chem1", "tam-chem"],
-  "chem2": ["chem2", "chem1", "tam-chem"],
-  "chem3": ["chem3", "chem1", "tam-chem"],
-  "chem-len": ["chem-len", "chem1", "tam-chem"],
-  "chem-khong": ["chem-khong", "chem1", "tam-chem"],
-  "pogo": ["pogo", "tam-roi"],
-  "bi-danh": ["bi-danh", "tam-dung"],
+  "dung": ["dung"],
+  "chay": ["chay"],
+  "nhay": ["nhay", "tam-v3-nhay"],
+  "roi": ["roi", "tam-v3-roi"],
+  "tiep-dat": ["tiep-dat", "dung"],
+  "luot": ["luot", "tam-v3-luot"],
+  "tuong": ["tuong", "dung"],
+  "nhay-vach": ["nhay-vach", "nhay", "tam-v3-nhay"],
+  "nhay-tuong": ["nhay-tuong", "nhay", "tam-v3-nhay"],
+  "chem1": ["chem1"],
+  "chem2": ["chem2"],
+  "chem3": ["chem3"],
+  "chem-len": ["chem-len", "chem2"],
+  "chem-khong": ["chem-khong", "chem1"],
+  "pogo": ["pogo", "tam-v3-roi"],
+  "bi-danh": ["bi-danh"],
   "chet": ["chet"]
  },
- "ghi_chu_trang_thai": "Mỗi trạng thái game → danh sách clip thử theo thứ tự; clip đầu tiên nạp được sẽ dùng. Hết danh sách → khối màu (có chữ khi ?anim=debug)."
+ "ghi_chu_trang_thai": "Mỗi trạng thái game → danh sách clip thử theo thứ tự; clip đầu tiên nạp được sẽ dùng. Bộ Lam chibi v3 (khung 64×64, neo chân (32,61); chết 80×72 neo (40,61)). Clip \"tam-v3-…\" = mượn hình chạy, CHỜ HÌNH thật. Clip \"tam-…\" (Lam kiểu 4) không còn dùng."
 }

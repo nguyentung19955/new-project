@@ -50,6 +50,7 @@ body.touch #keys{display:none}
 <script src="dong-co.js"></script>
 <script src="sprite-pixellab.js"></script>
 <script src="hoat-anh.js"></script>
+<script src="vfx-lam.js"></script>
 <script src="vfx.js"></script>
 <script>
 'use strict';
@@ -206,7 +207,7 @@ function veLam(cam){
   const fx = pl.x + pl.w / 2 - cam, fy = pl.y + pl.h;
   const lat = HA.st && HA.st.ten === 'tuong' ? pl.lastWall > 0 : pl.face < 0;
   const al = pl.dead ? Math.max(0, Math.min(1, 1 - (pl.deadT - 50) / 40)) : undefined;
-  if (C) SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al);
+  if (C){ SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al); if (VFX.chopTrang()) SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al, true); }   // bị đánh: chớp trắng 3 bước (50 ms)
   else {   // chưa có clip nào cho trạng thái này → khối màu cỡ Lam (40×100 px logic)
     ctx.globalAlpha = al === undefined ? 1 : al;
     ctx.fillStyle = '#0d0f1c'; ctx.fillRect(Math.round(fx) - 20, fy - 100, 40, 100);

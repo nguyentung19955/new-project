@@ -7,6 +7,45 @@ Không xây từ demo ChatGPT (`PH20-goi-chatgpt-pixellab/`).
 **Chơi thử (iPhone xoay ngang):**
 https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-pixellab/index.html
 
+## 0. Mới nhất (29/10): đã ghép bộ Lam chibi v3 – CHỜ NGƯỜI DÙNG XEM
+
+Thay toàn bộ hình Lam bằng bộ chibi đã duyệt `art/huong-moi/lam-pixel/chibi/v3/` (bảng động tác `DONG-TAC-LAM-CHIBI.md`).
+Hình gốc South-East = quay phải; quay trái game lật gương. Dùng PNG sạch (không dùng file `*-xem-vfx`), `--khong-mat` (mắt đã hổ phách).
+Mọi clip neo chân CHUNG: điểm (32, 61) của khung 64×64; Chết khung 80×72 lệch −8 → neo (40, 61) → chân cùng mặt đất.
+
+| Động tác game | Clip | Hình | Phát | Khớp engine |
+|---|---|---|---|---|
+| đứng | `dung` ← idle-se | 4 | 8 FPS, lặp | – |
+| chạy | `chay` ← run-se | 6 | theo quãng đường 132 px/vòng (như clip chạy cũ) | – |
+| chém 1 | `chem1` ← chem1-se/hybrid | 5 | lấy đà hình 1–2 · **mạnh hình 3** · hồi 4–5 | hình 3 hiện đúng 8 bước hộp chém bật (su 7 · ac 8 · re 8 giữ nguyên) |
+| chém 2 | `chem2` ← chem2-se | 5 | lấy đà 1–2 · **mạnh 3** · hồi 4–5 | như trên |
+| chém 3 | `chem3` ← chem3-se | 7 | lấy đà 2–4 (hình 1 = đứng, bỏ để chuông tích sáng đủ lâu) · **mạnh 5** · hồi 6–7 | + **khựng 3 bước (50 ms)** đúng lúc ra hình 5, trúng hay trượt (`dong-co.js`) |
+| bị đánh | `bi-danh` ← hurt-se | 3 | theo thời gian bị đẩy (18 bước ≈ 300 ms) | chớp trắng ấm 50 ms + đẩy lùi bằng code |
+| chết | `chet` ← death-se | 6 | 10 FPS, giữ hình cuối | hồi sinh vẫn bước 104 |
+
+**VFX bằng code** (`vfx.js` + `vfx-lam.js`): cung âm thanh pixel bậc thang, không khử răng cưa, lật gương khi quay trái, vẽ THEO HÌNH đang hiện,
+đúng toạ độ + màu bản xem thử đã duyệt (amber 255,190,80 · cyan 120,230,230 · cyan mờ 70,150,160 · trắng ấm 255,244,200).
+Chém 1: hình 3 cung ")" cao 20 điểm, lõi amber viền cyan → hình 4 cyan mờ → tắt. Chém 2: cung chéo thấp → cao trước mặt → hình 4 cyan mờ.
+Chém 3: hình 3–4 vòng sáng quanh chuông (không đè nĩa) · hình 5 sóng âm kép + vòng ngoài nét đứt + vòng đứt quanh chuông · hình 6 dư âm cyan mờ, vòng ngoài dịch ra 4 điểm.
+Điểm VFX do `art/huong-moi/lam-pixel/code/xuat_vfx_lam.py` tính lại từ bản xem thử → ghi `vfx-lam.js` (đừng sửa tay). Hất / trên không / pogo vẫn dùng vệt cũ theo hộp.
+
+**CHỜ HÌNH** (đang mượn hình chibi gần nhất): nhảy + nhảy vách = hình 2 của chạy · rơi + pogo = hình 5 của chạy · lướt = hình 4 của chạy ·
+bám vách + tiếp đất = clip đứng · chém hất = clip chém 2 · chém trên không = clip chém 1. Hình tạm Lam kiểu 4 (`tam-…`) không còn dùng.
+
+Lệnh đã chạy (từ `tieng-vong-cuoi-cung/`, `V=art/huong-moi/lam-pixel/chibi/v3`):
+```
+nhap_pixellab.py dung    $V/idle-se/idle-se-?.png        --neo 32,61 --fps 8 --lap --khong-mat
+nhap_pixellab.py chay    $V/run-se/run-se-?.png          --neo 32,61 --quang 132 --khong-mat
+nhap_pixellab.py chem1   $V/chem1-se/hybrid/chem1-?.png  --neo 32,61 --fps 12 --khong-lap --manh 2 --pha 0-1:2:3-4 --khong-mat
+nhap_pixellab.py chem2   $V/chem2-se/chem2-?.png         --neo 32,61 --fps 12 --khong-lap --manh 2 --pha 0-1:2:3-4 --khong-mat
+nhap_pixellab.py chem3   $V/chem3-se/chem3-?.png         --neo 32,61 --fps 12 --khong-lap --manh 4 --pha 1-3:4:5-6 --khong-mat
+nhap_pixellab.py bi-danh $V/hurt-se/hurt-?.png           --neo 32,61 --khong-mat
+nhap_pixellab.py chet    $V/death-se/death-?.png         --neo 40,61 --fps 10 --khong-lap --khong-mat
+xuat_vfx_lam.py
+```
+(chỉ số hình trong lệnh tính từ 0: "hình 3" = 2). Cần biết: hộp chém vẫn cỡ cũ (cho Lam 108 px) nên bật ▣ Hộp sẽ thấy hộp cao hơn nĩa chibi
+một chút – trúng/trượt không đổi; nếu muốn hạ hộp cho khớp hình thì báo.
+
 > Theo yêu cầu, phiên này KHÔNG chạy thử / quay / đo trang (chỉ kiểm cú pháp code). Nếu trang báo lỗi nạp ở góc trên trái, chụp màn gửi lại.
 
 ## 1. Điều khiển + nút
@@ -36,7 +75,7 @@ Cảnh: cảnh pixel của `thu-lam-pixel` (2 nộm đứng sát nhau để th�
 | Vệt chém | `vfx.js` | cung pixel 3 màu vẽ ĐÚNG trong hộp chém, tách khỏi sprite; `?vfx=0` tắt |
 | Trang | `index.html` | cảnh 320×180 điểm (1 điểm = 3 px logic), Lam PixelLab 1 điểm = 2 px logic, cả khung 960×540 phóng **số nguyên** ×M (iPhone ngang: ×2 → điểm cảnh 6 px màn, điểm Lam 4 px màn), nearest-neighbor |
 | Script nhập | `art/huong-moi/lam-pixel/code/nhap_pixellab.py` | mục 3 |
-| Clip thật đầu tiên | `pixellab/chay.png` | từ `chay-0..5.png` (96×96, 6 hình), phát theo quãng đường **132 px/vòng**, mắt tô hổ phách |
+| Clip Lam | `pixellab/*.png` | bộ chibi v3 (mục 0); clip chạy PixelLab cũ 96×96 (`chay-0..5.png`) đã được thay |
 
 ## 3. Xuất từ PixelLab → nhập vào game (người dùng làm)
 
@@ -137,7 +176,7 @@ Ghép nhiều cờ bằng `&`, ví dụ `index.html?anim=debug&hitbox=1&cham=4`.
 
 - Lam PixelLab trong `chay` cao ≈ 58–60 điểm (gồm chóp mũ nhún) → ≈ 116–120 px logic, cao hơn mức 54 điểm / 108 px mong muốn một chút
   (PixelLab vẽ nhân vật lớn hơn trong canvas 96). Không co ảnh (co sẽ hỏng điểm); nếu muốn đúng 54 nên xuất lại ở canvas 64 hoặc giữ cỡ nhân vật như ref 64.
-- Chạy là PixelLab, các trạng thái khác là **hình tạm Lam kiểu 4** – hai bản khác nhau (PixelLab: nĩa giống cờ lê, không thấy đèn lồng ba lô;
+- (Cũ, trước 29/10) Chạy là PixelLab, các trạng thái khác là **hình tạm Lam kiểu 4** – hai bản khác nhau (PixelLab: nĩa giống cờ lê, không thấy đèn lồng ba lô;
   kiểu 4: có đèn lồng) nên đổi giữa chạy ↔ đứng sẽ thấy nhảy hình. Hết khi có đủ clip PixelLab.
 - Neo chân mặc định = giữa canvas PixelLab; nếu thấy Lam lệch so với hộp va chạm (bật ▣ Hộp) thì nhập lại với `--neo-x chan` hoặc `--neo X,Y`.
 - Quái Chuông Gỗ, vách thêm: vẽ bằng code (khối pixel tạm), chưa phải hình duyệt.

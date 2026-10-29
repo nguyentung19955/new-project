@@ -89,9 +89,18 @@ const SpritePL = (() => {
     for (const t of ds) if (CLIP[t] && CLIP[t].ok) return CLIP[t];
     return null;
   }
-  // vẽ hình k của clip C, CHÂN tại (fx, fy) px logic, lat = quay trái
-  function ve(g, C, k, fx, fy, lat, alpha){
-    const h = C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))], s = C.ti_le;
+  // bóng trắng ấm của một hình (chớp khi bị đánh) – tạo một lần rồi giữ
+  function trangHoa(h){
+    if (h.trang) return h.trang;
+    const c = document.createElement('canvas'); c.width = h.sw; c.height = h.sh;
+    const g = c.getContext('2d'); g.drawImage(h.img, h.sx, h.sy, h.sw, h.sh, 0, 0, h.sw, h.sh);
+    g.globalCompositeOperation = 'source-in'; g.fillStyle = '#fff4c8'; g.fillRect(0, 0, h.sw, h.sh);
+    return (h.trang = {img:c, sx:0, sy:0, sw:h.sw, sh:h.sh});
+  }
+  // vẽ hình k của clip C, CHÂN tại (fx, fy) px logic, lat = quay trái, trang = vẽ bóng trắng (chớp bị đánh)
+  function ve(g, C, k, fx, fy, lat, alpha, trang){
+    let h = C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))]; const s = C.ti_le;
+    if (trang) h = trangHoa(h);
     const cx = Math.round(C.chan[0] * s), cy = Math.round(C.chan[1] * s);
     fx = Math.round(fx); fy = Math.round(fy);
     if (alpha !== undefined) g.globalAlpha = alpha;

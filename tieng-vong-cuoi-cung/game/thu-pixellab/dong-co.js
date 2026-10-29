@@ -260,6 +260,7 @@ function capNhatLam(){
   chonDon(dir);
   if (pl.pogoBuf > 0) pl.pogoBuf--;
   if (pl.atkN){ pl.atkT++; const a = ATK[pl.atkN];
+    if (pl.atkN === 3 && pl.atkT === a.su) S.hitstop = Math.max(S.hitstop, 3);   // Lam chibi: chém 3 khựng 3 bước (50 ms) đúng hình mạnh (chuông cộng hưởng), trúng hay trượt
     if (pl.atkT >= a.su + a.ac + a.re){
       if (pl.onGround && pl.atkN < 3){ pl.comboHan = DC_SO.comboHan; pl.comboTiep = pl.atkN + 1; }   // chỉ dùng khi DCO.combo
       pl.atkN = 0;
