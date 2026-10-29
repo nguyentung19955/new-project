@@ -59,7 +59,7 @@
   "chay": {
    "anh": "chay.png",
    "xep": "hang",
-   "o": [38, 46],
+   "o": [43, 46],
    "so_hinh": 6,
    "chan": [20.0, 46.0],
    "phat": "quang_duong",
@@ -73,7 +73,7 @@
   "dung": {
    "anh": "dung.png",
    "xep": "hang",
-   "o": [29, 47],
+   "o": [30, 47],
    "so_hinh": 4,
    "chan": [15.0, 47.0],
    "fps": 8.0,
@@ -87,7 +87,7 @@
   "chem1": {
    "anh": "chem1.png",
    "xep": "hang",
-   "o": [38, 47],
+   "o": [55, 56],
    "so_hinh": 5,
    "chan": [14.0, 47.0],
    "fps": 12.0,
@@ -99,17 +99,17 @@
     "hoi": [3, 4]
    },
    "nguon_goc": {
-    "o_goc": [64, 64],
-    "cat_tu": [18, 14],
-    "neo_goc": [32.0, 61.0]
+    "o_goc": [96, 96],
+    "cat_tu": [34, 30],
+    "neo_goc": [48.0, 77.0]
    }
   },
   "chem2": {
    "anh": "chem2.png",
    "xep": "hang",
-   "o": [36, 47],
+   "o": [55, 65],
    "so_hinh": 5,
-   "chan": [14.0, 47.0],
+   "chan": [14.0, 49.0],
    "fps": 12.0,
    "lap": false,
    "manh": [2],
@@ -119,18 +119,18 @@
     "hoi": [3, 4]
    },
    "nguon_goc": {
-    "o_goc": [64, 64],
-    "cat_tu": [18, 14],
-    "neo_goc": [32.0, 61.0]
+    "o_goc": [96, 96],
+    "cat_tu": [34, 28],
+    "neo_goc": [48.0, 77.0]
    }
   },
   "chem3": {
    "anh": "chem3.png",
    "xep": "hang",
-   "o": [43, 47],
+   "o": [58, 70],
    "so_hinh": 7,
-   "chan": [14.0, 47.0],
-   "fps": 12.0,
+   "chan": [14.0, 53.0],
+   "fps": 10.0,
    "lap": false,
    "manh": [4],
    "pha": {
@@ -139,9 +139,9 @@
     "hoi": [5, 6]
    },
    "nguon_goc": {
-    "o_goc": [64, 64],
-    "cat_tu": [18, 14],
-    "neo_goc": [32.0, 61.0]
+    "o_goc": [96, 96],
+    "cat_tu": [34, 24],
+    "neo_goc": [48.0, 77.0]
    }
   },
   "bi-danh": {
@@ -151,7 +151,6 @@
    "so_hinh": 3,
    "chan": [18.0, 47.0],
    "fps": 12.0,
-   "lap": false,
    "nguon_goc": {
     "o_goc": [64, 64],
     "cat_tu": [14, 14],
@@ -161,14 +160,14 @@
   "chet": {
    "anh": "chet.png",
    "xep": "hang",
-   "o": [59, 47],
+   "o": [59, 48],
    "so_hinh": 6,
-   "chan": [33.0, 46.0],
+   "chan": [33.0, 47.0],
    "fps": 10.0,
    "lap": false,
    "nguon_goc": {
     "o_goc": [80, 72],
-    "cat_tu": [7, 15],
+    "cat_tu": [7, 14],
     "neo_goc": [40.0, 61.0]
    }
   },

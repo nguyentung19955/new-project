@@ -7,7 +7,30 @@ Không xây từ demo ChatGPT (`PH20-goi-chatgpt-pixellab/`).
 **Chơi thử (iPhone xoay ngang):**
 https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-pixellab/index.html
 
-## 0. Mới nhất (29/10): đã ghép bộ Lam chibi v3 – CHỜ NGƯỜI DÙNG XEM
+## 0. Mới nhất (30/10): Lam cầm KIẾM – combo 3 nhát chém – CHỜ NGƯỜI DÙNG XEM
+
+Người dùng chê đòn cũ trông như chọc đũa phép → thay bằng bộ kiếm đã duyệt `art/huong-moi/lam-pixel/chibi/v3/kiem/` (xem `kiem/DOC.md`).
+
+- **Đã thay 7 clip**: đứng (cầm nĩa chéo bên hông), chạy, chém 1 ↘, chém 2 ↗, chém 3 bổ xuống, bị đánh, chết.
+- **Neo chân chung**: khung 64×64 neo (32, 61) · đòn chém khung 96×96 (thân ở 16,16) neo (48, 77) · chết 80×72 neo (40, 61) → chân cùng một điểm, đổi clip không nhảy hình. Quay trái: lật gương cả lưỡi kiếm lẫn vệt chém (vệt nằm trong sprite).
+- **Tắt cung chém vẽ bằng code** cho chém 1/2/3 (vệt đã vẽ sẵn trong hình; hất + chém trên không đang mượn clip chém 2/1 nên cũng tắt). Bỏ luôn vòng sáng chuông chém 3 cũ (`vfx-lam.js` không còn dùng – toạ độ theo hình cũ, sẽ chồng lệch). Pogo vẫn có vệt code.
+- **Giữ**: chém 3 khựng 50 ms + rung màn ~1–2 px đúng hình bổ (hình 5) · bị đánh chớp trắng + đẩy lùi.
+- **Hộp chém khớp kiếm** (bật ▣ Hộp để xem): bật đúng hình mạnh (chém 1, 2 = hình 3; chém 3 = hình 5), với tới mũi kiếm ≈ 26 điểm trước thân (≈ 92–98 px logic tính từ chân, dài hơn trước). Chém 1: chéo vai → đất · chém 2: vùng chéo lên tới trên đầu · chém 3: vùng bổ xuống trước mặt, từ ngang đầu tới đất.
+
+Lệnh đã chạy (từ `tieng-vong-cuoi-cung/`, `K=art/huong-moi/lam-pixel/chibi/v3/kiem`):
+```
+nhap_pixellab.py dung    $K/dung/dung-?.png       --neo 32,61 --fps 8 --lap --khong-mat
+nhap_pixellab.py chay    $K/chay/chay-?.png       --neo 32,61 --quang 132 --khong-mat
+nhap_pixellab.py chem1   $K/chem1/chem1-?.png     --neo 48,77 --fps 12 --khong-lap --manh 2 --pha 0-1:2:3-4 --khong-mat
+nhap_pixellab.py chem2   $K/chem2/chem2-?.png     --neo 48,77 --fps 12 --khong-lap --manh 2 --pha 0-1:2:3-4 --khong-mat
+nhap_pixellab.py chem3   $K/chem3/chem3-?.png     --neo 48,77 --fps 10 --khong-lap --manh 4 --pha 1-3:4:5-6 --khong-mat
+nhap_pixellab.py bi-danh $K/bi-danh/bi-danh-?.png --neo 32,61 --fps 12 --khong-mat
+nhap_pixellab.py chet    $K/chet/chet-?.png       --neo 40,61 --fps 10 --khong-lap --khong-mat
+```
+
+> Phiên này KHÔNG chạy thử / đo trang (chỉ kiểm cú pháp). Nếu thấy lỗi nạp ở góc trên trái, chụp màn gửi lại.
+
+## 0b. (Cũ, 29/10 – đã thay bởi mục 0) ghép bộ Lam chibi v3
 
 Thay toàn bộ hình Lam bằng bộ chibi đã duyệt `art/huong-moi/lam-pixel/chibi/v3/` (bảng động tác `DONG-TAC-LAM-CHIBI.md`).
 Hình gốc South-East = quay phải; quay trái game lật gương. Dùng PNG sạch (không dùng file `*-xem-vfx`), `--khong-mat` (mắt đã hổ phách).

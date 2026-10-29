@@ -4,10 +4,8 @@
    Cung = một dải elip NẰM TRONG hộp (không vượt mép), mỗi đòn một góc quét riêng. Vẽ theo lưới điểm sprite (2 px logic) để hợp
    nét pixel của Lam; hiện suốt pha ra đòn: 2 bước đầu quét nhanh ra, sau đó mỏng dần. Hộp, sát thương, thời điểm KHÔNG đổi.
    Tắt bằng ?vfx=0. Thêm: tia trúng (điểm ảnh) + vòng nảy pogo.
-   LAM CHIBI v3 – chém 1/2/3: KHÔNG dùng cung theo hộp mà vẽ cung âm thanh đã duyệt THEO HÌNH đang hiện (vfx-lam.js, do
-   code/xuat_vfx_lam.py tính từ bản xem thử): điểm sprite 1:1 (×ti_le), pixel bậc thang, lật gương khi quay trái.
-     chém 1: hình 3 cung ")" amber + viền cyan → hình 4 cyan mờ → tắt · chém 2: cung chéo thấp → cao, như vậy
-     chém 3: hình 3–4 vòng sáng quanh chuông · hình 5 sóng âm kép + vòng đứt · hình 6 dư âm cyan mờ (vòng ngoài dịch ra 4 điểm)
+   LAM CHIBI bộ KIẾM (30/10): vệt chém + lưỡi sáng nằm SẴN trong sprite chém 1/2/3 → code KHÔNG vẽ cung cho các clip đó
+   (bỏ cả vòng sáng chuông chém 3 cũ của vfx-lam.js – toạ độ theo hình cũ, sẽ chồng lệch lên kiếm). Lật gương do sprite lo.
    Bị đánh: chớp trắng ấm 3 bước (50 ms) – index.html vẽ bóng trắng của hình; đẩy lùi do engine (hurt).
    ===================================================================================================================== */
 const VFX = (() => {
@@ -24,19 +22,13 @@ const VFX = (() => {
     6: {cx:0.06, cy:0.5,  rx:0.92, ry:0.5,  a0:-85, a1:80}     // trên không: như nhát 1, quét rộng hơn
   };
   const TIA = [], VONG = [];
-  const LAM = typeof VFX_LAM !== 'undefined' ? VFX_LAM : null;
   let chop = 0;                                     // bước chớp trắng còn lại (bị đánh)
-  // cung âm thanh Lam chibi theo hình; true = đòn này do bảng LAM lo (kể cả hình không có điểm → không vẽ cung cũ)
-  function veLamChibi(g, camX){
-    const HA = HoatAnh.A, C = HA.clip, st = HA.st, pl = DongCo.pl;
-    if (!LAM || !C || C.tam || !st || !st.n || st.n > 3 || st.ten !== C.ten || !LAM[C.ten]) return false;
-    const ds = LAM[C.ten][HA.k]; if (!ds) return true;
-    const s = C.ti_le, fx = Math.round(pl.x + pl.w / 2 - camX), fy = Math.round(pl.y + pl.h), lat = pl.face < 0;
-    for (const [x, y, m] of ds){
-      const dx = x - LAM.neo[0];
-      g.fillStyle = LAM.mau[m]; g.fillRect(lat ? fx - (dx + 1) * s : fx + dx * s, fy + (y - LAM.neo[1]) * s, s, s);
-    }
-    return true;
+  // Lam chibi bộ KIẾM (30/10): vệt chém đã vẽ SẴN trong sprite chem1/chem2/chem3 → không vẽ cung code chồng lên.
+  // Áp cho mọi đòn đang hiện một trong 3 clip đó (kể cả hất / chém trên không đang mượn clip chém 2 / chém 1). Pogo vẫn vẽ cung.
+  const CLIP_CO_VET = {chem1:1, chem2:1, chem3:1};
+  function spriteCoVet(){
+    const C = HoatAnh.A.clip;
+    return !!(C && !C.tam && CLIP_CO_VET[C.ten]);
   }
   function veCung(g, hb, n, face, t, ac, camX){
     const c = CUNG[n]; if (!c) return;
@@ -76,7 +68,7 @@ const VFX = (() => {
   }
   function ve(g, camX){
     const E = DongCo, pl = E.pl;
-    if (OPT.bat && pl.atkN && !pl.dead && !veLamChibi(g, camX)){
+    if (OPT.bat && pl.atkN && !pl.dead && !spriteCoVet()){
       const hb = E.atkBox(pl, pl.atkN, pl.atkT, pl.face, {x:0, y:0, w:0, h:0});
       if (hb) veCung(g, hb, pl.atkN, pl.face, pl.atkT - E.ATK[pl.atkN].su, E.ATK[pl.atkN].ac, camX);
     }

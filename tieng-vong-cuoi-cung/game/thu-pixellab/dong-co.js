@@ -38,9 +38,9 @@ const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
 // Đòn: su (lấy đà) · ac (ra đòn: hộp bật) · re (hồi) – bước 60 Hz. box [dx, dy, w, h] so với CHÂN, mặt phải. su 1–3 = P0-A (7/7/9), hộp = Âm Đao.
 // 1–3 combo đất · 4 pogo (chém nảy) · 5 chém hất (lên) · 6 chém trên không. hs = hitstop khi trúng. goc = máu (thang ×10).
 const ATK = {
-  1: {su:7,  ac:8,  re:8,  hs:3, mag:1.5, sh:[1, 0],      box:[4, -97, 86, 48],    goc:10, ten:'chem1'},
-  2: {su:7,  ac:8,  re:8,  hs:4, mag:1.8, sh:[0.6, -0.8], box:[-10, -100, 90, 48], goc:10, ten:'chem2'},
-  3: {su:9,  ac:8,  re:16, hs:6, mag:2.6, sh:[0, 1],      box:[-13, -59, 99, 59],  goc:10, ten:'chem3'},
+  1: {su:7,  ac:8,  re:8,  hs:3, mag:1.5, sh:[1, 0],      box:[2, -80, 92, 80],    goc:10, ten:'chem1'},   // kiếm chéo ↘: vai → đất, tới mũi kiếm (+46 điểm)
+  2: {su:7,  ac:8,  re:8,  hs:4, mag:1.8, sh:[0.6, -0.8], box:[-6, -104, 98, 80],  goc:10, ten:'chem2'},   // chéo LÊN ↗: hông → trên đầu
+  3: {su:9,  ac:8,  re:16, hs:6, mag:2,   sh:[0, 1],      box:[4, -76, 94, 76],    goc:10, ten:'chem3'},   // BỔ xuống trước mặt: ngang đầu → đất
   4: {su:0,  ac:11, re:4,  hs:3, mag:1,   sh:[0, 1],      box:[-26, -24, 64, 82],  goc:10, ten:'pogo'},
   5: {su:11, ac:8,  re:8,  hs:3, mag:1.5, sh:[0, -1],     box:[-9, -140, 87, 60],  goc:10, ten:'chem-len'},
   6: {su:9,  ac:8,  re:4,  hs:3, mag:1.5, sh:[1, 0.4],    box:[-3, -107, 95, 48],  goc:10, ten:'chem-khong'}
@@ -260,7 +260,7 @@ function capNhatLam(){
   chonDon(dir);
   if (pl.pogoBuf > 0) pl.pogoBuf--;
   if (pl.atkN){ pl.atkT++; const a = ATK[pl.atkN];
-    if (pl.atkN === 3 && pl.atkT === a.su) S.hitstop = Math.max(S.hitstop, 3);   // Lam chibi: chém 3 khựng 3 bước (50 ms) đúng hình mạnh (chuông cộng hưởng), trúng hay trượt
+    if (pl.atkN === 3 && pl.atkT === a.su){ S.hitstop = Math.max(S.hitstop, 3); shake(0, 1, 1.5); }   // Lam chibi: chém 3 khựng 3 bước (50 ms) + rung 1–2 px đúng hình bổ (hình 5), trúng hay trượt
     if (pl.atkT >= a.su + a.ac + a.re){
       if (pl.onGround && pl.atkN < 3){ pl.comboHan = DC_SO.comboHan; pl.comboTiep = pl.atkN + 1; }   // chỉ dùng khi DCO.combo
       pl.atkN = 0;
