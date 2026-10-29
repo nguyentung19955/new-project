@@ -1,0 +1,212 @@
+{
+ "don_vi": "1 điểm = 3 px logic; y so với mặt đất (âm = lên trên), x so với giữa collider",
+ "khung": [
+  {
+   "khung": "dung0",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    5,
+    -25
+   ],
+   "diem_khac_khung_truoc": null,
+   "so_diem": 578,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "dung1",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    5,
+    -25
+   ],
+   "diem_khac_khung_truoc": 177,
+   "so_diem": 580,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay0",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    6,
+    -25
+   ],
+   "diem_khac_khung_truoc": 365,
+   "so_diem": 590,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay1",
+   "dinh_mu_y": -34,
+   "mat_xy": [
+    6,
+    -24
+   ],
+   "diem_khac_khung_truoc": 337,
+   "so_diem": 564,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay2",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    6,
+    -25
+   ],
+   "diem_khac_khung_truoc": 343,
+   "so_diem": 567,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay3",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    6,
+    -25
+   ],
+   "diem_khac_khung_truoc": 166,
+   "so_diem": 588,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay4",
+   "dinh_mu_y": -34,
+   "mat_xy": [
+    6,
+    -24
+   ],
+   "diem_khac_khung_truoc": 337,
+   "so_diem": 568,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chay5",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    6,
+    -25
+   ],
+   "diem_khac_khung_truoc": 342,
+   "so_diem": 567,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chemA1",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    4,
+    -25
+   ],
+   "diem_khac_khung_truoc": 443,
+   "so_diem": 573,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chemA2",
+   "dinh_mu_y": -34,
+   "mat_xy": [
+    4,
+    -24
+   ],
+   "diem_khac_khung_truoc": 273,
+   "so_diem": 563,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chemS",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    7,
+    -25
+   ],
+   "diem_khac_khung_truoc": 516,
+   "so_diem": 598,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chemR1",
+   "dinh_mu_y": -34,
+   "mat_xy": [
+    7,
+    -24
+   ],
+   "diem_khac_khung_truoc": 316,
+   "so_diem": 579,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "chemR2",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    6,
+    -25
+   ],
+   "diem_khac_khung_truoc": 361,
+   "so_diem": 582,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "nhay",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    5,
+    -25
+   ],
+   "diem_khac_khung_truoc": 354,
+   "so_diem": 548,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  },
+  {
+   "khung": "roi",
+   "dinh_mu_y": -35,
+   "mat_xy": [
+    5,
+    -25
+   ],
+   "diem_khac_khung_truoc": 201,
+   "so_diem": 612,
+   "dau_lech_diem": 0,
+   "dau_tong_diem": 208
+  }
+ ],
+ "tom_tat": {
+  "dung": {
+   "dinh_mu_dao_dong_diem": 0,
+   "mat_y_dao_dong_diem": 0,
+   "mat_x_dao_dong_diem": 0
+  },
+  "chay": {
+   "dinh_mu_dao_dong_diem": 1,
+   "mat_y_dao_dong_diem": 1,
+   "mat_x_dao_dong_diem": 0,
+   "diem_khac_lien_nhau_vong": [
+    337,
+    343,
+    166,
+    337,
+    342,
+    181
+   ]
+  },
+  "chem": {
+   "dinh_mu_dao_dong_diem": 1,
+   "mat_y_dao_dong_diem": 1,
+   "mat_x_dao_dong_diem": 3
+  }
+ },
+ "trung_nom_trong_quay": 3,
+ "so_buoc_quay": 354
+}

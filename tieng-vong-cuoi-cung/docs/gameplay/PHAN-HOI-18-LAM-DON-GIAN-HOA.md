@@ -66,3 +66,4 @@ Ba bản: (1) ảnh gen gốc – lưu nguyên, không ghi đè; (2) sprite chu�
 - KHÔNG thu từng khung về cùng chiều cao / theo khung bao: một tỉ lệ chung theo dáng đứng; chạy thấp, nhảy co, chém nghiêng giữ thay đổi tự nhiên. Ô cùng cỡ, cùng neo; ô chém đủ chỗ cho vệt.
 - Xuất ảnh so gốc/chuẩn hoá ở đúng cỡ chơi TRƯỚC khi ghép animation. Chưa áp hàng loạt cho toàn bộ asset.
 - Người dùng: không kiểm thử tự động (không kiểm CSP/đo) – chỉ xuất ảnh so để người dùng tự xem.
+- 30/10: Claude dựng bản đầu `game/thu-lam-pixel/` (Lam pixel 36 điểm dựng bằng code, bảng 32 màu, cảnh nhìn ngang ~2 màn, phóng số nguyên ×6 trên iPhone, script chuyển ảnh gen → pixel) – xem `game/thu-lam-pixel/GHI-CHU.md`.

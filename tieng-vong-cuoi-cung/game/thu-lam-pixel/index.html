@@ -1,0 +1,298 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tiếng Vọng – Thử Lam PIXEL</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+/* Trang thử riêng PIXEL ART THẬT (PH18 "CHỐT PIXEL ART"). Cảnh vẽ vào khung 320×180 điểm ảnh rồi phóng SỐ NGUYÊN lên màn
+   → mọi điểm ảnh đều nhau (iPhone ngang: ×6 thay vì ×6,5). Logic game vẫn 960×540 (1 điểm = 3 px logic), cùng tốc độ/hộp với thu-lam-moi-2. */
+:root{--night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--line:#4A5A6E;--echo:#CEF0D6;--k:1;color-scheme:dark}
+html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
+#cv{display:block;image-rendering:pixelated}
+#top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 6px);right:max(8px,calc(env(safe-area-inset-right,0px) + 6px));display:flex;gap:6px;z-index:3}
+#top button{height:34px;min-width:40px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:rgba(26,33,43,.85);color:var(--ink);font-size:14px;font-weight:700}
+#top button.on{border-color:var(--bell);color:var(--bell)}
+#info{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:max(8px,calc(env(safe-area-inset-left,0px) + 8px));font-size:11px;color:#a9b3bf;
+  background:rgba(12,15,20,.6);padding:3px 8px;border-radius:6px;pointer-events:none}
+#keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#a9b3bf;white-space:nowrap;pointer-events:none}
+body.touch #keys{display:none}
+.tc{display:none} body.touch .tc{display:block}
+#dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
+  width:calc(132px*var(--k));height:calc(132px*var(--k));border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.3);opacity:.35}
+#dpad.act{opacity:.9}
+#knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:50%;
+  background:rgba(206,240,214,.28);border:2px solid rgba(206,240,214,.5);will-change:transform}
+#acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);width:calc(150px*var(--k));height:calc(140px*var(--k))}
+.ab{position:absolute;width:calc(62px*var(--k));height:calc(62px*var(--k));border-radius:50%;display:grid;place-items:center;font-size:calc(13px*var(--k));font-weight:700;
+  background:rgba(26,33,43,.5);border:2px solid rgba(243,230,200,.45);color:var(--ink);opacity:.35}
+.ab.on{background:rgba(225,184,90,.55);border-color:var(--bell);opacity:1}
+#b-a{left:0;top:0}
+#b-j{right:0;bottom:0;width:calc(74px*var(--k));height:calc(74px*var(--k))}
+#rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
+@media (orientation:portrait){ body.touch #rotate{display:grid} }
+</style>
+<div id="game">
+  <canvas id="cv" width="320" height="180"></canvas>
+  <div id="info"></div>
+  <div id="top">
+    <button id="b-hb" type="button">▣ Hộp</button>
+    <button id="b-cham" type="button">Chậm ×4</button>
+    <button id="b-lien" type="button">Phóng: nguyên</button>
+  </div>
+  <div id="dpad" class="tc"><div id="knob"></div></div>
+  <div id="acts" class="tc"><div class="ab" id="b-a" data-k="a">Chém</div><div class="ab" id="b-j" data-k="j">Nhảy</div></div>
+  <div id="keys">← → chạy · Z/Space nhảy · X chém · H hộp · T chậm ×4</div>
+  <div id="rotate">Xoay ngang điện thoại để chơi</div>
+</div>
+<script>
+'use strict';
+/* ================= THAM SỐ – chép NGUYÊN từ game/thu-lam-moi-2 (P + NHAY mới + ATK[1] sau P0/Âm Đao) ================= */
+const P = { runSpeed:4.4, jumpHeight:118, gravity:0.768, accelFrames:6, decelFrames:5, airControl:0.75, turnBoost:1.6, maxFall:10.4,
+  fallGravMul:1.12/1.2, apexGravMul:0.3, apexThreshold:4, jumpCut:0.5, coyote:6, jumpBuffer:8, corner:8, lunge:2.2 };
+const NHAY_K = 3, GOI = P.maxFall - NHAY_K;
+const tran = v => v <= GOI ? v : GOI + NHAY_K * Math.tanh((v - GOI) / NHAY_K);
+const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
+// chém 1: su 7 · ac 8 · re 8 · hộp [4,-97,86,48] so với CHÂN (giữa collider), mặt phải · khựng 3 bước
+const ATK1 = {su:7, ac:8, re:8, hs:3, box:[4,-97,86,48]};
+const W = 960, H = 540, PX = 3, VW = 320, VH = 180;          // 1 điểm ảnh = 3 px logic
+const Q = new URLSearchParams(location.search);
+const OPT = {hb: Q.get('hitbox') === '1', cham: +(Q.get('cham') || 1), lien: Q.get('lien') === '1', tu: Q.get('tu') === '1'};
+
+/* ================= TÀI NGUYÊN ================= */
+const A = '../../art/huong-moi/lam-pixel/';
+const IMG = {}, META = {};
+function napAnh(k, src){ return new Promise((ok, loi) => { const i = new Image(); i.onload = () => { IMG[k] = i; ok(); }; i.onerror = () => loi(src); i.src = src; }); }
+async function nap(){
+  const [lam, man] = await Promise.all([fetch(A + 'sprite/lam-pixel.json').then(r => r.json()), fetch(A + 'canh/man.json').then(r => r.json())]);
+  META.lam = lam; META.man = man;
+  await Promise.all([napAnh('lam', A + 'sprite/lam-pixel.png'), napAnh('canh', A + 'canh/canh.png'), napAnh('n1', A + 'canh/nen-xa-1.png'),
+    napAnh('n2', A + 'canh/nen-xa-2.png'), napAnh('den', A + 'canh/den-sang.png'), napAnh('nom', A + 'canh/nom.png')]);
+}
+
+/* ================= BẢN ĐỒ (ô 16 điểm = 48 px logic) ================= */
+let T = 48, COT = 40, HANG = 12, LUOI = [];
+function tile(tx, ty){ if (tx < 0 || tx >= COT) return '#'; if (ty < 0) return '.'; if (ty >= HANG) return '#'; return LUOI[ty][tx]; }
+function collide(x, y, w, h){
+  const x0 = Math.floor(x / T), x1 = Math.floor((x + w - 0.001) / T), y0 = Math.floor(y / T), y1 = Math.floor((y + h - 0.001) / T);
+  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) if (tile(tx, ty) === '#') return true;
+  return false;
+}
+function moveX(o, dx, cornerUp){
+  let rem = dx;
+  while (rem !== 0){
+    const s = Math.abs(rem) > 1 ? Math.sign(rem) : rem;
+    if (!collide(o.x + s, o.y, o.w, o.h)){ o.x += s; rem -= s; continue; }
+    if (cornerUp){ let ok = false; for (let k = 1; k <= P.corner; k++){ if (!collide(o.x + s, o.y - k, o.w, o.h)){ o.y -= k; o.x += s; rem -= s; ok = true; break; } } if (ok) continue; }
+    return true;
+  }
+  return false;
+}
+function moveY(o, dy){
+  let rem = dy;
+  while (rem !== 0){
+    const s = Math.abs(rem) > 1 ? Math.sign(rem) : rem;
+    if (!collide(o.x, o.y + s, o.w, o.h)){ o.y += s; rem -= s; continue; }
+    if (s < 0){ let ok = false; for (let k = 1; k <= P.corner && !ok; k++) for (const d of [k, -k]){ if (!collide(o.x + d, o.y + s, o.w, o.h)){ o.x += d; ok = true; break; } } if (ok) continue; }
+    return s > 0 ? 1 : -1;
+  }
+  return 0;
+}
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const approach = (v, t, d) => v < t ? Math.min(v + d, t) : Math.max(v - d, t);
+
+/* ================= ĐIỀU KHIỂN (bàn phím + cần/nút cảm ứng như thu-lam-moi-2) ================= */
+const KEYMAP = {ArrowLeft:'l', KeyA:'l', ArrowRight:'r', KeyD:'r', KeyZ:'j', Space:'j', KeyK:'j', ArrowUp:'j', KeyX:'a', KeyJ:'a'};
+const KEYS = ['l', 'r', 'j', 'a'], kb = {}, tc = {}, I = {}, prevI = {}, latch = {}, ep = {};   // ep: điều khiển từ script quay
+addEventListener('keydown', e => {
+  if (e.code === 'KeyH'){ batHop(); return; } if (e.code === 'KeyT'){ batCham(); return; }
+  const k = KEYMAP[e.code]; if (k){ if (!kb[k]) latch[k] = 1; kb[k] = 1; setMode(false); e.preventDefault(); } });
+addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k){ kb[k] = 0; e.preventDefault(); } });
+addEventListener('blur', () => KEYS.forEach(k => { kb[k] = tc[k] = latch[k] = 0; }));
+function readInput(){ for (const k of KEYS){ prevI[k] = I[k]; I[k] = !!(kb[k] || tc[k] || latch[k] || ep[k]); latch[k] = 0; } }
+const pressed = k => I[k] && !prevI[k];
+const dpad = document.getElementById('dpad'), knob = document.getElementById('knob');
+const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('[data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
+function measure(){ const rc = dpad.getBoundingClientRect(); geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; geo.R = rc.width / 2 || 66;
+  for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; } }
+let dpadId = null; const prevTc = {};
+function onTouch(e){
+  if (e.type === 'touchstart') setMode(true);
+  if (e.target.closest && e.target.closest('#top')) return;
+  e.preventDefault(); if (e.type === 'touchstart') measure();
+  for (const k of KEYS){ prevTc[k] = tc[k]; tc[k] = 0; }
+  let dT = null;
+  for (const t of e.touches){
+    if (t.identifier === dpadId){ dT = t; continue; }
+    if (dpadId === null && Math.hypot(t.clientX - geo.cx, t.clientY - geo.cy) < geo.R * 1.2 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; continue; }
+    let best = null, bd = 1e9;
+    for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 1.25 && d < bd){ bd = d; best = b; } }
+    if (best) tc[best.k] = 1;
+  }
+  let kx = 0, ky = 0; if (!dT) dpadId = null;
+  dpad.classList.toggle('act', dpadId !== null);
+  if (dT){ const dx = dT.clientX - geo.cx, dy = dT.clientY - geo.cy, d = Math.hypot(dx, dy);
+    if (d > geo.R * 0.2){ tc.r = dx > d * 0.38 ? 1 : 0; tc.l = dx < -d * 0.38 ? 1 : 0; }
+    const m = Math.min(d, geo.R * 0.55) / (d || 1); kx = dx * m; ky = dy * m; }
+  for (const k of KEYS) if (tc[k] && !prevTc[k]) latch[k] = 1;
+  knob.style.transform = 'translate3d(' + kx + 'px,' + ky + 'px,0)';
+  for (const b of geo.btn) b.el.classList.toggle('on', !!tc[b.k]);
+}
+['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(t => document.addEventListener(t, onTouch, {passive:false}));
+let touchMode = null;
+function setMode(t){ if (touchMode === t) return; touchMode = t; document.body.classList.toggle('touch', t);
+  const m = Math.min(innerWidth, innerHeight); document.documentElement.style.setProperty('--k', clamp(m / 380, 0.78, 1.22).toFixed(3)); if (t) requestAnimationFrame(measure); }
+setMode(matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
+
+/* ================= TRẠNG THÁI ================= */
+const pl = {x:0, y:0, w:20, h:30, vx:0, vy:0, face:1, onGround:false, coyote:0, jumpBuf:0, atkBuf:0, jumping:false, atkN:0, atkT:0, sw:0,
+  pha:0, idleT:0, dxT:0, hinh:'dung0', cung:null};
+const S = {frame:0, hitstop:0, cam:0, swing:0};
+const NOM = {x:0, y:0, w:30, h:96, t:0, dir:1, lastSw:-1, n:0};
+const TIA = [];   // tia trúng (điểm ảnh)
+function batDau(){
+  const M = META.man; T = M.o_logic; COT = M.cot; HANG = M.hang; LUOI = M.luoi;
+  pl.x = M.xuat_phat_cot * T + T / 2 - pl.w / 2; pl.y = 9 * T - pl.h; pl.vx = pl.vy = 0;
+  NOM.x = M.nom_cot * T + T / 2 - NOM.w / 2; NOM.y = 9 * T - NOM.h;
+  S.cam = 0;
+}
+
+/* ================= BƯỚC LOGIC 60 Hz (vật lý chép từ thu-lam-moi-2, bỏ lướt/tường/Vọng) ================= */
+function atkBox(){
+  if (!pl.atkN || pl.atkT < ATK1.su || pl.atkT >= ATK1.su + ATK1.ac) return null;
+  const b = ATK1.box, fx = pl.x + pl.w / 2, fy = pl.y + pl.h;
+  return {x: pl.face > 0 ? fx + b[0] : fx - b[0] - b[2], y: fy + b[1], w: b[2], h: b[3]};
+}
+function step(){
+  readInput();
+  if (pressed('j')) pl.jumpBuf = P.jumpBuffer; else if (pl.jumpBuf > 0) pl.jumpBuf--;
+  if (pressed('a')) pl.atkBuf = 6; else if (pl.atkBuf > 0) pl.atkBuf--;
+  if (S.hitstop > 0){ S.hitstop--; return; }
+  S.frame++;
+  const dir = (I.r ? 1 : 0) - (I.l ? 1 : 0);
+  const atkGround = pl.atkN && pl.onGround;
+  const target = atkGround ? 0 : dir * P.runSpeed;
+  let acc = P.runSpeed / P.accelFrames, dec = P.runSpeed / P.decelFrames;
+  if (!pl.onGround){ acc *= P.airControl; dec *= P.airControl * 0.6; }
+  if (target !== 0){ const turning = pl.vx !== 0 && Math.sign(pl.vx) !== Math.sign(target); pl.vx = approach(pl.vx, target, turning ? acc * P.turnBoost : acc); }
+  else pl.vx = approach(pl.vx, 0, atkGround ? dec * 0.5 : dec);
+  if (dir && !pl.atkN) pl.face = dir;
+  let g = P.gravity;
+  if (!pl.onGround){ const a0 = Math.min(1, Math.abs(pl.vy) / P.apexThreshold), a = a0 * a0 * (3 - 2 * a0), top = I.j ? P.apexGravMul : 0.8;
+    g *= top + (1 - top) * a; if (pl.vy > 0) g *= 1 + (P.fallGravMul - 1) * a; }
+  pl.vy = tran(pl.vy + g);
+  if (pl.jumpBuf > 0 && (pl.onGround || pl.coyote > 0)){ pl.vy = -jumpVel; pl.jumping = true; pl.coyote = 0; pl.jumpBuf = 0; pl.onGround = false; }
+  if (pl.jumping && !I.j && pl.vy < 0){ pl.vy *= P.jumpCut; pl.jumping = false; }
+  if (pl.vy >= 0) pl.jumping = false;
+  const x0 = pl.x; if (moveX(pl, pl.vx, false)) pl.vx = 0; pl.dxT = pl.x - x0;
+  const ry = moveY(pl, pl.vy); if (ry !== 0){ if (ry === -1) pl.jumping = false; pl.vy = 0; }
+  pl.onGround = collide(pl.x, pl.y + 1, pl.w, pl.h);
+  if (pl.onGround) pl.coyote = P.coyote; else if (pl.coyote > 0) pl.coyote--;
+  // chém 1 (mọi lần bấm = chém 1; dưới đất bước tới lunge như game)
+  if (pl.atkBuf > 0 && !pl.atkN){ if (dir) pl.face = dir; pl.atkN = 1; pl.atkT = 0; pl.sw = ++S.swing; pl.atkBuf = 0; if (pl.onGround) pl.vx = pl.face * P.lunge; }
+  if (pl.atkN){ pl.atkT++; if (pl.atkT >= ATK1.su + ATK1.ac + ATK1.re) pl.atkN = 0; }
+  const hb = atkBox();
+  if (hb && NOM.lastSw !== pl.sw && hb.x < NOM.x + NOM.w && hb.x + hb.w > NOM.x && hb.y < NOM.y + NOM.h && hb.y + hb.h > NOM.y){
+    NOM.lastSw = pl.sw; NOM.t = 14; NOM.dir = pl.face; NOM.n++; S.hitstop = ATK1.hs;
+    const cx = (Math.max(hb.x, NOM.x) + Math.min(hb.x + hb.w, NOM.x + NOM.w)) / 2, cy = (Math.max(hb.y, NOM.y) + Math.min(hb.y + hb.h, NOM.y + NOM.h)) / 2;
+    for (let i = 0; i < 7; i++){ const a = (i / 7) * Math.PI * 2; TIA.push({x: cx / PX, y: cy / PX, vx: Math.cos(a) * (1 + (i % 2)), vy: Math.sin(a) * (1 + (i % 2)) - 0.3, t: 10 + (i % 3) * 2}); }
+  }
+  if (NOM.t > 0) NOM.t--;
+  for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx * 0.5; p.y += p.vy * 0.5; p.vy += 0.06; if (--p.t <= 0) TIA.splice(i, 1); }
+  chonHinh();
+  // camera (px logic): bám giữa Lam, nhìn trước 40 px theo hướng mặt
+  const muc = clamp(pl.x + pl.w / 2 - W / 2 + pl.face * 40, 0, COT * T - W);
+  S.cam += (muc - S.cam) * 0.12;
+}
+
+/* chọn hình: CHỈ trong bước logic */
+const QUANG = 132;   // px logic / vòng chạy 6 hình (như clip v4: 0,5 s ở 264 px/s)
+function chonHinh(){
+  pl.cung = null;
+  if (pl.atkN){
+    const t = pl.atkT;
+    pl.hinh = t <= 3 ? 'chemA1' : t <= 6 ? 'chemA2' : t <= 11 ? 'chemS' : t <= 16 ? 'chemR1' : 'chemR2';
+    if (t >= 7 && t <= 9) pl.cung = 'day'; else if (t >= 10 && t <= 11) pl.cung = 'tan';
+    return;
+  }
+  if (!pl.onGround){ pl.hinh = pl.vy < 0 ? 'nhay' : 'roi'; return; }
+  if (Math.abs(pl.vx) > 0.6){
+    pl.pha = (pl.pha + Math.abs(pl.dxT) / QUANG) % 1; pl.hinh = 'chay' + Math.floor(pl.pha * 6); pl.idleT = 0; return;
+  }
+  pl.idleT++; pl.hinh = (Math.floor(pl.idleT / 40) % 2) ? 'dung1' : 'dung0';
+}
+
+/* ================= VẼ: khung 320×180 điểm ảnh → phóng số nguyên ================= */
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const pc = document.createElement('canvas'); pc.width = VW; pc.height = VH; const g = pc.getContext('2d');
+let N = 1, DPR = 1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 3);
+  const bw = innerWidth * DPR, bh = innerHeight * DPR;
+  if (OPT.lien){ const css = Math.min(innerWidth / VW, innerHeight / VH); N = css * DPR; cv.width = Math.round(VW * N); cv.height = Math.round(VH * N);
+    cv.style.width = Math.floor(VW * css) + 'px'; cv.style.height = Math.floor(VH * css) + 'px'; }
+  else { N = Math.max(1, Math.floor(Math.min(bw / VW, bh / VH))); cv.width = VW * N; cv.height = VH * N;
+    cv.style.width = (VW * N / DPR) + 'px'; cv.style.height = (VH * N / DPR) + 'px'; }
+  if (touchMode) requestAnimationFrame(measure);
+  document.getElementById('b-lien').textContent = OPT.lien ? 'Phóng: lấp đầy' : 'Phóng: nguyên ×' + N;
+}
+addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(resize, 200));
+function veLap(img, k, camPx){   // lớp nền lặp ngang
+  const w = img.width; let x = -(Math.round(camPx * k) % w); for (; x < VW; x += w) g.drawImage(img, x, 0);
+}
+function veKhung(ten, fx, fy, lat, cung){
+  const M = META.lam, f = cung ? M.cung[cung].o : M.khung[ten], [AX, AY] = M.neo;
+  if (!lat) g.drawImage(IMG.lam, f[0], f[1], f[2], f[3], fx - AX, fy - AY, f[2], f[3]);
+  else { g.save(); g.translate(fx + AX, fy - AY); g.scale(-1, 1); g.drawImage(IMG.lam, f[0], f[1], f[2], f[3], 0, 0, f[2], f[3]); g.restore(); }
+}
+function ve(){
+  const camPx = Math.round(S.cam / PX);
+  g.imageSmoothingEnabled = false;
+  g.fillStyle = '#0c1622'; g.fillRect(0, 0, VW, VH);
+  veLap(IMG.n1, 0.15, camPx); veLap(IMG.n2, 0.45, camPx);
+  g.drawImage(IMG.canh, -camPx, 0);
+  // quầng đèn chập chờn (2 hình, đổi mỗi 9–14 bước)
+  const fl = ((S.frame / 11 | 0) * 7919 % 5) < 2 ? 1 : 0;
+    for (const [x, y] of META.man.den) g.drawImage(IMG.den, fl * 48, 0, 48, 48, x - 24 - camPx, y - 24, 48, 48);
+  // hình nộm
+  const nk = NOM.t > 8 ? (NOM.dir > 0 ? 1 : 2) : 0;
+  g.drawImage(IMG.nom, nk * 24, 0, 24, 36, Math.round((NOM.x + NOM.w / 2) / PX) - 12 - camPx, Math.round((NOM.y + NOM.h) / PX) - 36, 24, 36);
+  // Lam: neo = giữa collider / mặt đất, làm tròn theo lưới điểm
+  const fx = Math.round((pl.x + pl.w / 2) / PX) - camPx, fy = Math.round((pl.y + pl.h) / PX);
+  veKhung(pl.hinh, fx, fy, pl.face < 0);
+  if (pl.cung) veKhung(null, fx, fy, pl.face < 0, pl.cung);
+  // tia trúng
+  for (const p of TIA){ g.fillStyle = p.t > 6 ? '#eef1f0' : '#f1e4c4'; g.fillRect(Math.round(p.x) - camPx, Math.round(p.y), 1, 1); }
+  // phóng lên màn
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(pc, 0, 0, VW, VH, 0, 0, cv.width, cv.height);
+  if (OPT.hb){
+    const k = cv.width / W, cam = camPx * PX; ctx.lineWidth = Math.max(1, Math.round(N / 3));
+    ctx.strokeStyle = '#4af'; ctx.strokeRect((pl.x - cam) * k, pl.y * k, pl.w * k, pl.h * k);
+    ctx.strokeStyle = '#fc4'; ctx.strokeRect((NOM.x - cam) * k, NOM.y * k, NOM.w * k, NOM.h * k);
+    const hb = atkBox(); if (hb){ ctx.strokeStyle = '#f33'; ctx.strokeRect((hb.x - cam) * k, hb.y * k, hb.w * k, hb.h * k); }
+  }
+}
+
+/* ================= VÒNG LẶP ================= */
+const DT = 1000 / 60; let last = 0, accT = 0;
+function loop(now){
+  requestAnimationFrame(loop);
+  if (!last) last = now; let d = Math.min(100, now - last); last = now;
+  accT += d / OPT.cham; let n = 0;
+  while (accT >= DT && n < 4){ step(); accT -= DT; n++; }
+  ve();
+  document.getElementById('info').textContent = 'Lam pixel · điểm ảnh ×' + (N / 1).toFixed(2) + ' màn (=' + (N / PX * 1).toFixed(2) + ' px/px logic) · trúng nộm ' + NOM.n;
+}
+function batHop(){ OPT.hb = !OPT.hb; document.getElementById('b-hb').classList.toggle('on', OPT.hb); }
+function batCham(){ OPT.cham = OPT.cham === 1 ? 4 : 1; document.getElementById('b-cham').classList.toggle('on', OPT.cham !== 1); }
+document.getElementById('b-hb').onclick = batHop; document.getElementById('b-cham').onclick = batCham;
+document.getElementById('b-lien').onclick = () => { OPT.lien = !OPT.lien; resize(); };
+document.getElementById('b-hb').classList.toggle('on', OPT.hb); document.getElementById('b-cham').classList.toggle('on', OPT.cham !== 1);
+
+// cổng cho script quay (cong-cu/quay.py): ?tu=1 → không tự chạy; TV.buoc(n, phím) chạy n bước rồi vẽ
+window.TV = {pl, S, NOM, ep, OPT, buoc(n, phim){ for (const k of KEYS) ep[k] = phim && phim.includes(k) ? 1 : 0; for (let i = 0; i < n; i++) step(); ve(); },
+  anh(){ return pc.toDataURL('image/png'); }, xong: false};
+nap().then(() => { batDau(); resize(); chonHinh(); ve(); TV.xong = true; if (!OPT.tu) requestAnimationFrame(loop); })
+  .catch(e => { document.getElementById('info').textContent = 'Không nạp được ' + e; TV.loi = String(e); });
+</script>

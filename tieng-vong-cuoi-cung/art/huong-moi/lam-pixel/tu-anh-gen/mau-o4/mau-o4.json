@@ -1,0 +1,35 @@
+{
+ "nguon": "art/huong-moi/lam-chibi/mau-pixel-lam-tu-bang.png",
+ "co_o_gia_px": 4,
+ "pha": [
+  1,
+  0
+ ],
+ "o": [
+  40,
+  38
+ ],
+ "neo": [
+  21,
+  37
+ ],
+ "can_ngang": "mat",
+ "hinh": [
+  {
+   "o": [
+    0,
+    0,
+    40,
+    38
+   ],
+   "co": [
+    38,
+    36
+   ],
+   "mat": [
+    21.2,
+    14.7
+   ]
+  }
+ ]
+}
