@@ -58,3 +58,11 @@ Người dùng: "clear đi, tôi muốn làm theo pixel art như ảnh" (bảng 
 - Lưới: 1 điểm ảnh sprite = 3 px logic (khung vẽ pixel 320×180), Lam ≈36 px sprite (≈108 logic). Vẽ nearest-neighbor, vị trí bám lưới.
 - Ảnh ChatGPT là "giả pixel" → script: dò cỡ ô, lấy mẫu theo ô, ép bảng màu cố định, viền 1 px; Claude sửa tay từng điểm được (lợi thế lớn nhất: khoá đầu = giữ y nguyên các điểm ảnh).
 - Trang thử riêng game/thu-lam-pixel/; giữ nguyên game hiện tại.
+
+## Cập nhật 30/10 (4) – quy tắc chuẩn hoá sheet pixel gen
+Ba bản: (1) ảnh gen gốc – lưu nguyên, không ghi đè; (2) sprite chuẩn hoá – tách khung, một lưới pixel + bảng màu nhất quán; (3) hiển thị – phóng nearest-neighbor, không làm mờ.
+- Ảnh gen là "giả pixel", điểm ảnh không đều; thu thẳng về 36 px dễ mất mắt, khe Âm Đao, viền → thử rồi sửa tay các chỗ đó.
+- Chốt thử: Lam đứng 36 px nguồn ×3 = 108 px logic (phương án phụ 28 px ×4 = 112, ít chỗ diễn tả). Chưa đổi collider/gameplay theo chiều cao ảnh.
+- KHÔNG thu từng khung về cùng chiều cao / theo khung bao: một tỉ lệ chung theo dáng đứng; chạy thấp, nhảy co, chém nghiêng giữ thay đổi tự nhiên. Ô cùng cỡ, cùng neo; ô chém đủ chỗ cho vệt.
+- Xuất ảnh so gốc/chuẩn hoá ở đúng cỡ chơi TRƯỚC khi ghép animation. Chưa áp hàng loạt cho toàn bộ asset.
+- Người dùng: không kiểm thử tự động (không kiểm CSP/đo) – chỉ xuất ảnh so để người dùng tự xem.
