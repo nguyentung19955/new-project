@@ -132,5 +132,181 @@
    "tm": 1.83,
    "_do": "đo tay (kiem/thu3-do-dao.png): B tay (10, −47) mũi (57, −48) lưỡi ngang; C tay (−2, −34) mũi (47, −20) lưỡi chúc ~16°. Liềm: hai đầu ở x 6 (giữa tay B và C), bụng x 86, tâm y −47 (đường lưỡi B), cao 24 → dài:cao ≈ 3,3:1, nghiêng xuống 5°. Hộp chém 1 (x 4…95, y −97…−49) KHÔNG đổi → lõi nằm sát mép dưới hộp"
   }
+ },
+ "_ghi_chu_bo4": "Bộ 4 (29/10, ảnh thu4-*.png): cùng luật tỉ lệ cỡ mũ chốt; \"bo\": 4 + \"tien_to\": \"lam-moi4\" → sprite/lam-moi4-<tên>-{2x,3x}, kiem/thu4-<tên>-dai.png, kiem/thu4-so-mu.png. \"o_do_mu\" = ô mũ đo sạch góp vào trung vị (ô có tay/dao đè mũ bỏ ra, lý do trong \"o_do_mu_ly_do\"). Nhãn: WL1–WL4 tường lưng, C2A–C2D chém 2, C3A–C3E chém 3, H1–H4 hất, K1–K3 trên không, LU1–LU3 lướt, BD1–BD2 bị đánh.",
+ "tuong_lung": {
+  "file": "thu4-tuong-lung-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "tuong_lung",
+  "tu_the": [
+   "WL1",
+   "WL2",
+   "WL3",
+   "WL4"
+  ],
+  "neo_x": "tuong_trai",
+  "neo_y": "mat",
+  "mu_thay_rong": true,
+  "huong": "Mẫu VÁCH BÊN TRÁI, LƯNG áp vách: Lam nhìn PHẢI (ra khỏi vách), tay xa giơ áp vách bên trái. Vách phải → lật cả hình quanh neo x.",
+  "o_do_mu_ly_do": "tay xa giơ áp vách nằm ngay hàng mắt ở cả 4 ô → bề rộng hàng mắt = mũ + tay; luôn dùng rộng = cao trên mắt × 1,18",
+  "bo": 4,
+  "tien_to": "lam-moi4"
+ },
+ "chem2": {
+  "file": "thu4-chem2-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "chem2",
+  "tu_the": [
+   "C2A",
+   "C2B",
+   "C2C",
+   "C2D"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 3,
+  "bo": 4,
+  "tien_to": "lam-moi4",
+  "vet": {
+   "n": 2,
+   "x": 0,
+   "y": -58,
+   "R": 62,
+   "h": 62,
+   "T": 11,
+   "goc": -15,
+   "tm": 0.61,
+   "_do": "đo tay trên lưới (kiem/thu4-do-dao.png): C2A tay (−38, −42) mũi (5, −12) dao chúc sau-dưới; C2B tay (12, −68) mũi (55, −97); C2C tay (10, −62) mũi (58, −85). Trục quét ≈ vai (0, −58), mũi dao quay từ dưới-trước lên trên-trước → cung tròn R 62 quanh vai, bụng hướng lên-trước 15°, nửa góc 35°. Hộp chém 2 (x −36…80, y −100…−52): lõi (±22° quanh bụng) nằm trong hộp; đầu dưới mảnh thò dưới mép hộp"
+  }
+ },
+ "chem3": {
+  "file": "thu4-chem3-5o.png",
+  "cot": 5,
+  "hang": 1,
+  "vai": "chem3",
+  "tu_the": [
+   "C3A",
+   "C3B",
+   "C3C",
+   "C3D",
+   "C3E"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 4,
+  "o_do_mu": [
+   3,
+   4,
+   5
+  ],
+  "o_do_mu_ly_do": "ô 1 (lấy lực) tay + dao giơ trên/sau đầu: hàng mắt dính cánh tay, cao trên mắt tính tới mũi dao; ô 2 (đỉnh) dao dựng trên đầu → cao trên mắt tính tới mũi dao",
+  "bo": 4,
+  "tien_to": "lam-moi4",
+  "vet": {
+   "n": 3,
+   "x": -5,
+   "y": -55,
+   "R": 62,
+   "h": 62,
+   "T": 13,
+   "goc": 25,
+   "tm": 0.75,
+   "_do": "C3B tay (−43, −98) mũi (10, −131) dao trên đầu; C3C tay (17, −38) mũi (52, −4); C3D tay (0, −25) mũi (42, −2). Bổ từ trên xuống trước: cung R 62 quanh (−5, −55), bụng hướng xuống-trước 25°, nửa góc 43°, dày hơn (T 13). Hộp chém 3 (x −13…86, y −59…0): lõi nằm trong hộp; đầu trên mảnh thò trên mép hộp"
+  }
+ },
+ "hat": {
+  "file": "thu4-hat-4o.png",
+  "cot": 4,
+  "hang": 1,
+  "vai": "hat",
+  "tu_the": [
+   "H1",
+   "H2",
+   "H3",
+   "H4"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 3,
+  "o_do_mu": [
+   1,
+   2,
+   4
+  ],
+  "o_do_mu_ly_do": "ô 3 (kết thúc cao) dao dựng thẳng trên đầu + tay ngang hàng mắt → cao trên mắt tính tới mũi dao",
+  "bo": 4,
+  "tien_to": "lam-moi4",
+  "vet": {
+   "n": 5,
+   "x": 0,
+   "y": -72,
+   "R": 62,
+   "h": 62,
+   "T": 11,
+   "goc": -40,
+   "tm": 0.87,
+   "_do": "H1 tay (5, −20) mũi (50, −8); H2 tay (25, −80) mũi (55, −110); H3 tay (10, −100) mũi (30, −145). Hất cung lên: cung R 62 quanh (0, −72), bụng hướng lên-trước 40°, nửa góc 50°. Hộp hất (x −9…88, y −140…−80): lõi trong hộp; đầu dưới mảnh thò dưới mép hộp"
+  }
+ },
+ "chem_khong": {
+  "file": "thu4-chem-khong-3o.png",
+  "cot": 3,
+  "hang": 1,
+  "vai": "chem_khong",
+  "tu_the": [
+   "K1",
+   "K2",
+   "K3"
+  ],
+  "neo_x": "mu",
+  "neo_y": "mat",
+  "bo": 4,
+  "tien_to": "lam-moi4",
+  "vet": {
+   "n": 6,
+   "x": 8,
+   "y": -66,
+   "R": 80,
+   "h": 14,
+   "T": 10,
+   "goc": 3,
+   "tm": 1.83,
+   "_do": "K1 tay (−40, −55) dao chúc sau; K2 tay (15, −60) mũi (81, −60) lưỡi NGANG; K3 mũi (63, −30). Liềm ngang kiểu chém 1: hai đầu x 8, bụng x 88, tâm y −66, cao 28. Hộp trên không (x −3…92, y −107…−59): đường lưỡi K2 (y −60) nằm sát MÉP DƯỚI hộp → đặt tâm vệt cao hơn lưỡi 6 px để lõi trong hộp"
+  }
+ },
+ "luot": {
+  "file": "thu4-luot-3o.png",
+  "cot": 3,
+  "hang": 1,
+  "vai": "luot",
+  "tu_the": [
+   "LU1",
+   "LU2",
+   "LU3"
+  ],
+  "neo_x": "mu",
+  "neo_y": "ung",
+  "bo": 4,
+  "tien_to": "lam-moi4"
+ },
+ "bi_danh": {
+  "file": "thu4-bi-danh-2o.png",
+  "cot": 2,
+  "hang": 1,
+  "vai": "bi_danh",
+  "tu_the": [
+   "BD1",
+   "BD2"
+  ],
+  "neo_x": "mu",
+  "neo_y": "ung",
+  "bo": 4,
+  "tien_to": "lam-moi4",
+  "o_do_mu": [
+   2
+  ],
+  "o_do_mu_ly_do": "ô 1 (giật lùi) đầu ngả ra sau: mũ nghiêng nên \"cao trên mắt\" đo theo chiều đứng ngắn hẳn (−30 % so với ô 2) – không phải mũ nhỏ; dùng ô 2 (hồi, đầu thẳng)"
  }
 }

@@ -77,8 +77,16 @@ def cat_o(rgba, cot, hang):
     return ra
 
 
-def do_tu_the(rgba, m):
-    """số đo một tư thế trong toạ độ ẢNH GỐC (px gen)"""
+def _trong_toi(rgba, mk):
+    """(bộ 4, 29/10) cụm hổ phách có nằm trong khoảng TỐI của mũ không: vành 4–10 px quanh cụm phần lớn tối (độ sáng < 70).
+    Mắt Lam luôn nằm trong mặt tối của mũ; viên đá đồng ở chuôi Âm Đao (giơ cao ngang/ trên đầu ở chém 2, 3, hất) nằm giữa đồng/thép sáng."""
+    vanh = ndi.binary_dilation(mk, iterations=10) & ~ndi.binary_dilation(mk, iterations=4) & (rgba[..., 3] > 128)
+    if vanh.sum() < 20: return False
+    return float(np.mean(rgba[..., :3][vanh].astype(np.float32).mean(-1) < 70)) >= 0.6
+
+
+def do_tu_the(rgba, m, mat_trong_mu=True):
+    """số đo một tư thế trong toạ độ ẢNH GỐC (px gen). mat_trong_mu: chỉ nhận mắt nằm trong mặt tối của mũ (loại đá chuôi dao)."""
     a = m & (rgba[..., 3] > 128)
     ys, xs = np.nonzero(a)
     top, bot = ys.min(), ys.max() + 1
@@ -89,7 +97,7 @@ def do_tu_the(rgba, m):
     if n:
         co = ndi.sum(mat, lab, range(1, n + 1))
         # mắt = cụm hổ phách cao nhất có cỡ hợp lý (chuông / chuôi dao là đồng tối hơn, nằm dưới)
-        cand = [(ndi.center_of_mass(mat, lab, k + 1), co[k]) for k in range(n) if co[k] >= 15]
+        cand = [(ndi.center_of_mass(mat, lab, k + 1), co[k]) for k in range(n) if co[k] >= 15 and (not mat_trong_mu or _trong_toi(rgba, lab == k + 1))]
         cand.sort(key=lambda t: t[0][0])
         if cand: mat_t = (float(cand[0][0][1]), float(cand[0][0][0])); mat_co = float(cand[0][1])
     ey = int(round(mat_t[1])) if mat_t else (top + bot) // 2

@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3)</title>
+<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3 + 4)</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&display=swap">
@@ -173,7 +173,7 @@ body.lht-nut #knob{background:var(--nut) center/100% 100% no-repeat;border:0;wid
   </div></div>
   <div id="start" class="panel ui" hidden><div class="box">
     <h1>Tiếng Vọng Cuối Cùng</h1>
-    <p class="big">Thử Lam mới · bộ tư thế 3: đứng, chạy, chém 1, nhảy/rơi/tiếp đất, pogo, bám/trượt tường. Chém 2/3, hất, lướt, bị đánh còn hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
+    <p class="big">Thử Lam mới · bộ tư thế 3 + 4: đứng, chạy, chém 1→2→3, hất, chém trên không, nhảy/rơi/tiếp đất, pogo, lướt, bị đánh, trượt tường LƯNG áp vách (?tuong=mat = kiểu cũ). Vệt chém 2/3/hất/trên không là VỆT MẪU chờ duyệt. Chém vang, chết, rút dao còn hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
     <p id="start-p0" style="color:#7FE0C8"></p>
     <button id="btn-start" type="button">Bắt đầu</button>
     <p><span id="start-v">Bấm nút <b style="color:var(--echo)">Vọng</b></span> để ghi 3 giây chuyển động. Bóng của bạn sẽ lặp lại y hệt — rồi đứng giữ nguyên chỗ cuối.</p>
@@ -4720,13 +4720,25 @@ window.TVPB = {
              8 bước active atkT 7–14 chia 1/3/2/2: nét mảnh → cung đầy → vỡ → mảnh tắt. Ngoài atkT 7–14 không vẽ gì (không còn lõi sáng).
      pogo  : nêm/cung ngắn RỘNG, THUÔN, mũi xuống dưới bàn tay + mũi dao: nêm bật (atkT 1–2) → cung ép (3–5) → mảnh tách (6–8) → dấu nhỏ (9–10);
              nảy / hết hộp → tắt ngay. Trúng → vòng va chạm nhỏ TẠI ĐIỂM TRÚNG (giữa phần giao hộp ↔ mục tiêu), 7 bước rồi tắt.
+   BỘ TƯ THẾ 4 (29/10, sheet lam-moi4-*, cùng danh sách thu3-danh-sach.json) – lịch đọc từ ATK THẬT lúc chạy (su/ac/re), không viết cứng số tick:
+     chém 2  C2A lấy đà (atkT 1 … su−1) · C2B chém (đúng các tick hộp bật su … su+ac−1) · C2C kết thúc / C2D hồi (nửa đầu / nửa sau recovery)
+     chém 3  C3A lấy lực (5/8 đầu startup) · C3B đỉnh (3/8 cuối) · C3C bổ (tick hộp) · C3D kết thúc / C3E hồi (chia đôi recovery)
+     hất     H1 nén (startup) · H2 chém lên (tick hộp) · H3 kết thúc cao / H4 hồi (chia đôi recovery)
+     trên không K1 lấy đà (startup) · K2 cắt ngang (tick hộp) · K3 kết thúc (recovery)
+     nối combo: đòn mới bắt đầu (startAtk) → hình đòn mới NGAY bước đó (máy hình đọc atkN/atkT mỗi bước), cửa sổ nối giữ nguyên luật P0.
+     lướt    LU1 vào (bước lướt 1–2) · LU2 giữ (3–6) · LU3 ra (7–8; pl.st 'dash' gồm bước pl.dash vừa về 0); đổi trạng thái → hình mới ngay
+     bị đánh BD1 ngay khi trúng (hurt() gọi lamChon → cùng bước) tới hurtT 13 (gồm 6 bước khựng) · BD2 hurtT 12 → 1 (hết đẩy lùi / khựng
+             theo luật cũ 17–13 / 12–1). Không thêm khoá điều khiển: hết hurtT 8 người chơi ra đòn được như cũ → hình đòn.
+     tường   MẶC ĐỊNH = sheet tường LƯNG áp vách (WL1–WL4, mẫu vách TRÁI, Lam nhìn PHẢI – ra khỏi vách); cùng nhịp W1 2 → W2 4 → W3/W4 6/6.
+             Vách phải → lật cả hình. ?tuong=mat → sheet bộ 3 (mặt vào vách) để so. Nhảy tường: J1 nhìn theo pl.face = hướng bật ra.
+     vệt     chém 2/3, hất, trên không: liềm/cung PH13 vẽ bằng code theo đường quét đo trên tư thế (JSON sheet → "vet") – VỆT MẪU CHỜ DUYỆT.
    KHÔNG crossfade: mỗi bước vẽ đúng MỘT hình.
    Cờ: ?lam=cu Lam cũ · ?vfx=0 tắt vệt + âm nhận (duyệt tạo dáng) · ?bong=1 Lam bóng đen · ?hitbox=1 hộp đòn · ?cham=4 chậm 4 lần (1–8). ⚙ → "Lam mới 2".
 */
 const LM2 = (() => {
   const QS = P0_Q;
   const ST = {moi: QS.get('lam') !== 'cu', vfx: QS.get('vfx') !== '0', bong: QS.get('bong') === '1',
-    cham: Math.max(1, Math.min(8, +(QS.get('cham') || 1) || 1))};
+    cham: Math.max(1, Math.min(8, +(QS.get('cham') || 1) || 1)), tuong: QS.get('tuong') === 'mat' ? 'mat' : 'lung'};
   const DUONG = '../../art/huong-moi/lam-tu-the-2/sprite/';
   const SH = {}, SH3 = {};   // thử 2: chay / chem – {meta, img, E (tô ngọc cho bóng Vọng), D (bóng đen)}; SH bản 2x, SH3 bản 3x
   const TU = {};             // nhãn tư thế → [{2: sheet2x, 3: sheet3x}, chỉ số khung]
@@ -4760,7 +4772,8 @@ const LM2 = (() => {
       try { const b = {2: await nap1(d.ten + '-2x')}; if (d.co_3x) try { b[3] = await nap1(d.ten + '-3x'); } catch (e) { console.warn('LM2: ' + d.ten + '-3x lỗi → 2x'); }
         ganNhan(b, b[2].meta.tu_the); BO3.push(d.ten); const mv = b[2].meta;
         if (mv.vet_pogo && mv.vet_pogo.P1) VP = mv.vet_pogo;
-        if (mv.vet_chem1) for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) if (typeof mv.vet_chem1[k] === 'number') V1[k] = mv.vet_chem1[k]; }
+        if (mv.vet_chem1) for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) if (typeof mv.vet_chem1[k] === 'number') V1[k] = mv.vet_chem1[k];
+        if (mv.vet && mv.vet.n) { const v = {}; for (const k of ['x', 'y', 'R', 'h', 'T', 'goc', 'tm']) v[k] = +mv.vet[k]; VT[mv.vet.n] = v; } }
       catch (e) { console.warn('LM2: không nạp được ' + d.ten, e); }
     }
     const a = ATK[1]; if (a.su !== 7 || a.ac !== 8 || a.re !== 8) console.warn('LM2: ATK[1] = ' + a.su + '/' + a.ac + '/' + a.re + ' – lịch A/B/C/D tính theo hộp thật, số bước mỗi hình sẽ khác 6/4/4/8');
@@ -4784,6 +4797,16 @@ const LM2 = (() => {
     if (M.nay >= 0) { M.nay++; if (M.nay >= 3 || pl.onGround || a2 === 'wall' || pl.dead) M.nay = -1; }
     M.idT = ((a2 === 'idle' || a2 === 'land') && M.datT === 0) ? M.idT + 1 : 0;
   }
+  // bộ 4: [hình lấy đà…], [tỉ trọng chia startup], hình đánh (đúng tick hộp), [hình kết thúc/hồi…] (chia đều recovery)
+  const LICH = {2: [['C2A'], [1], 'C2B', ['C2C', 'C2D']], 3: [['C3A', 'C3B'], [5, 3], 'C3C', ['C3D', 'C3E']],
+    5: [['H1'], [1], 'H2', ['H3', 'H4']], 6: [['K1'], [1], 'K2', ['K3']]};
+  function nhanDon(n, t) {
+    const A = ATK[n], L = LICH[n];
+    if (t < A.su) { const w = L[1], tong = w.reduce((a, b) => a + b, 0), vt = (Math.max(1, t) - 1) / Math.max(1, A.su - 1); let c = 0;
+      for (let i = 0; i < w.length; i++) { c += w[i] / tong; if (vt < c - 1e-9) return L[0][i]; } return L[0][L[0].length - 1]; }
+    if (t < A.su + A.ac) return L[2];
+    const k = L[3].length; return L[3][Math.min(k - 1, Math.floor((t - A.su - A.ac) * k / A.re))];
+  }
   function nhanBay() {   // trên không (nhảy / rơi / sau nảy)
     if (M.dinh >= 1 && M.dinh <= 4 && pl.vy <= APEX) return 'J3';
     if (pl.vy < 0) return M.upT <= 2 ? 'J1' : 'J2';
@@ -4792,6 +4815,9 @@ const LM2 = (() => {
   function chonNhan() {
     const a2 = pl.a2;
     if (pl.dead || pl.drawT > 0) return 'tam:' + a2;
+    if (a2 === 'hurt') return pl.hurtT >= 13 ? 'BD1' : 'BD2';
+    if (a2 === 'dash') { const i = P.dashFrames - pl.dash; return i <= 2 ? 'LU1' : i >= P.dashFrames - 1 ? 'LU3' : 'LU2'; }
+    if (LICH[pl.atkN] && a2 === 'atk' + pl.atkN) return nhanDon(pl.atkN, pl.atkT);
     if (a2 === 'run') return 'R' + (Math.min(7, Math.floor((pl.pha || 0) * 8)) + 1);
     if (pl.atkN === 1 && a2 === 'atk1') { const A = ATK[1], t = pl.atkT; return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
     if (pl.atkN === 4 && a2 === 'atk4') return M.nay >= 0 ? 'P3' : pl.atkBounced ? nhanBay() : pl.atkT <= 2 ? 'P1' : 'P2';   // sau P3: về J2/J3 theo vy
@@ -4803,7 +4829,11 @@ const LM2 = (() => {
     if (a2 === 'idle' || a2 === 'land') { if (M.datT > 0) return 'L'; const t = (M.idT - 1) % 120; return t < 36 ? 'I1' : t < 60 ? 'I2' : t < 84 ? 'I3' : 'I1'; }
     return 'tam:' + a2;
   }
-  function datNhan() { const n = chonNhan(); pl.m2n = n; pl.m2l = (n[0] === 'W' && TU[n]) ? pl.lastWall < 0 : null; }   // vách trái → lật (sheet mẫu vách phải)
+  function datNhan() { let n = chonNhan();
+    if (/^W\d$/.test(n) && ST.tuong === 'lung' && TU['WL' + n[1]]) n = 'WL' + n[1];   // tường LƯNG áp vách (mặc định); ?tuong=mat giữ W1–W4 bộ 3
+    pl.m2n = n;
+    // lật: W (bộ 3, mẫu vách PHẢI, nhìn vào vách) → lật khi vách trái; WL (bộ 4, mẫu vách TRÁI, lưng áp vách) → lật khi vách phải
+    pl.m2l = (n[0] === 'W' && TU[n]) ? (n[1] === 'L' ? pl.lastWall > 0 : pl.lastWall < 0) : null; }
   // hình TẠM khi chưa có nhãn trong sheet (như trước PH13): tường / pogo / đứng / tiếp đất / chém khác → D; nhảy → ô chạy 4; rơi → ô chạy 8
   function tam(n, a2) {
     if (n[0] === 'J' || a2 === 'jump' || a2 === 'walljump' || a2 === 'dash') return TU.R4;
@@ -4815,7 +4845,8 @@ const LM2 = (() => {
     if (!n) {   // vệt lướt (TRAIL) không ghi nhãn → suy từ trạng thái đã ghi
       const la = s === pl, at = la ? pl.atkT : s.at, nn = la ? pl.atkN : s.n;
       n = a2 === 'run' ? 'R' + (Math.min(7, Math.floor(((la ? pl.pha : s.p2) || 0) * 8)) + 1)
-        : (nn === 1 && a2 === 'atk1') ? (at < ATK[1].su ? 'A' : at < ATK[1].su + 4 ? 'B' : at < ATK[1].su + ATK[1].ac ? 'C' : 'D') : 'tam:' + a2;
+        : (nn === 1 && a2 === 'atk1') ? (at < ATK[1].su ? 'A' : at < ATK[1].su + 4 ? 'B' : at < ATK[1].su + ATK[1].ac ? 'C' : 'D')
+        : (LICH[nn] && a2 === 'atk' + nn) ? nhanDon(nn, at) : (a2 === 'dash' && TU.LU2) ? 'LU2' : 'tam:' + a2;
     }
     const t = TU[n]; if (t) return [t[0], t[1], false, s.m2l === null || s.m2l === undefined ? s.l2 : s.m2l, n];
     const u = tam(n, a2); return [u[0], u[1], true, s.l2, n];
@@ -4837,8 +4868,8 @@ const LM2 = (() => {
     ctx.restore();
     if (s === pl && bo === LAM) { LM2.dang = (S2 === SH.chay || S2 === SH3.chay ? 'chay' : S2 === SH.chem || S2 === SH3.chem ? 'chem' : M2.vai) + ':' + i;
       LM2.nhan = n; LM2.bo = M2.ty_le.px_nguon_moi_px_logic + 'x';
-      if (pl.atkN === 1 || pl.atkN === 4) VQ.push([X, Y, s.l2 ? -1 : 1, pl.atkN, pl.atkT, 1]); }
-    else if (echo && s === echo.cur && bo === LAM.E && !echo.done && (s.n === 1 || s.n === 4)) VQ.push([X, Y, s.l2 ? -1 : 1, s.n, s.at, 0.5]);
+      if (coVet(pl.atkN)) VQ.push([X, Y, s.l2 ? -1 : 1, pl.atkN, pl.atkT, 1]); }
+    else if (echo && s === echo.cur && bo === LAM.E && !echo.done && coVet(s.n)) VQ.push([X, Y, s.l2 ? -1 : 1, s.n, s.at, 0.5]);
     return true;
   }
 
@@ -4850,6 +4881,10 @@ const LM2 = (() => {
   //   Liềm: hai đầu ở x 14 (giữa tay B và C), bụng ở x 88; y tâm −60, nửa cao 12,5 → dài:cao = 74 : 25 ≈ 3 : 1; nghiêng xuống 4° (theo C).
   // Bộ tư thế 3 (sheet chém 1 sửa): ghi đè bằng vet_chem1 trong JSON sheet – B tay (10, −47) mũi (57, −48); C tay (−2, −34) mũi (47, −20).
   const V1 = {x: 14, y: -60, R: 74, h: 12.5, T: 10, goc: 4, tm: 1.83};   // tm = nửa góc quét của tham số (rad, > 90° → đầu cong về sau)
+  // bộ 4 – VỆT MẪU CHỜ DUYỆT: chém 2 / 3 / hất / trên không, đọc từ JSON sheet ("vet", đo trên tư thế, kiem/thu4-do-dao.png). R = h → cung tròn
+  // quanh vai (x, y) – bụng hướng goc (độ, + = xuống), nửa góc tm (rad). Chưa có sheet → không vẽ (giữ vệt ảnh cũ).
+  const VT = {1: V1};
+  const coVet = n => n === 4 || !!VT[n];
   // pogo: gốc VP (dưới bàn tay / mũi dao), mũi hướng XUỐNG. Hộp atk4 [−26, −24, 64, 82] = x −26…38, y −24…58.
   function liem(g, R, h, T, a0, a1, tm, mo) {   // đường bao lưỡi liềm (gốc = điểm hai đầu, bụng ở +x), tham số θ ∈ [a0, a1] (đơn vị tm)
     const N = 22, p = 1.7, w = u => T * Math.max(0, 1 - Math.pow(Math.abs(u), p)) * (mo ? mo(u) : 1);
@@ -4866,11 +4901,13 @@ const LM2 = (() => {
     if (loi > 0) { g.globalAlpha = al * loi; g.fillStyle = MAU.loi; liem(g, R - 2.2, h - 1.6, T * 0.34, Math.max(a0, -0.62), Math.min(a1, 0.62), tm, mo); g.fill(); }
   }
   const cua = (a0, a1) => u => { const t = (u - a0) / (a1 - a0); return Math.min(1, Math.sin(Math.PI * Math.max(0, Math.min(1, t))) * 1.6); };   // thuôn hai đầu mảnh
-  function phaChem(at) { const A = ATK[1], j = at - A.su; return j < 0 || j >= A.ac ? -1 : j === 0 ? 0 : j <= 3 ? 1 : j <= 5 ? 2 : 3; }   // 1/3/2/2
+  function phaChem(at, n) { const A = ATK[n || 1], j = at - A.su, q = A.ac / 8;   // 1/3/2/2 trong 8 bước active (ac khác 8 → co giãn)
+    return j < 0 || j >= A.ac ? -1 : j < q ? 0 : j < 4 * q ? 1 : j < 6 * q ? 2 : 3; }
   function phaPogo(at) { return at < 1 || at > 10 ? -1 : at <= 2 ? 0 : at <= 5 ? 1 : at <= 8 ? 2 : 3; }
   const TEN_PHA = {chem: ['nét mảnh', 'cung đầy', 'vỡ', 'mảnh tắt'], pogo: ['nêm bật', 'cung ép', 'mảnh tách', 'dấu nhỏ']};
-  function veChem(g, at, al) {
-    const pha = phaChem(at); if (pha < 0) return; const j = at - ATK[1].su;
+  function veChem(g, at, al, n) {
+    n = n || 1; const V1 = VT[n]; if (!V1) return;
+    const pha = phaChem(at, n); if (pha < 0) return; const j = Math.min(7, Math.floor((at - ATK[n].su) * 8 / ATK[n].ac));
     g.save(); g.translate(V1.x, V1.y); g.rotate(V1.goc * Math.PI / 180);
     if (pha === 0) lop(g, V1.R * 0.9, V1.h * 0.92, 3, -1, 1, V1.tm, al, 0);
     else if (pha === 1) { const k = [0.94, 0.98, 1][j - 1]; lop(g, V1.R * k, V1.h * (0.96 + 0.04 * (j - 1) / 2), V1.T, -1, 1, V1.tm, al, [0.9, 0.82, 0.72][j - 1]); }
@@ -4898,7 +4935,7 @@ const LM2 = (() => {
   function veVQ() {
     if (!ST.moi || !ST.vfx) { VQ.length = 0; return; }
     const g = ctx; g.save(); g.lineJoin = 'round';
-    for (const [X, Y, f, n, at, al] of VQ) { g.save(); g.translate(X, Y); g.scale(f, 1); if (n === 1) veChem(g, at, al); else vePogo(g, at, al); g.restore(); }
+    for (const [X, Y, f, n, at, al] of VQ) { g.save(); g.translate(X, Y); g.scale(f, 1); if (n === 4) vePogo(g, at, al); else veChem(g, at, al, n); g.restore(); }
     VQ.length = 0;
     for (let i = VONG.length - 1; i >= 0; i--) { const v = VONG[i], t = S.frame - v.f0; if (t >= 7) { VONG.splice(i, 1); continue; }
       const x = v.x - ox, y = v.y - oy, r = 5 + 1.6 * t, a = 1 - t / 7;
@@ -4919,7 +4956,7 @@ const LM2 = (() => {
   /* ---------- nút trong ⚙ ---------- */
   function dungNut() {
     const box = document.querySelector('#set .box'), ok = document.getElementById('btn-set-ok'); if (!box || !ok) return;
-    const h = document.createElement('p'); h.className = 'big'; h.textContent = 'Lam mới – bộ tư thế 3 (đứng, chạy, chém 1, nhảy/rơi, pogo, tường + vệt mẫu)'; box.insertBefore(h, ok);
+    const h = document.createElement('p'); h.className = 'big'; h.textContent = 'Lam mới – bộ tư thế 3 + 4 (đứng, chạy, chém 1/2/3, hất, trên không, nhảy/rơi, pogo, lướt, bị đánh, tường lưng áp vách + vệt mẫu)'; box.insertBefore(h, ok);
     const nut = (ten, lay, doi) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'alt';
       const cap = () => { b.textContent = ten + ': ' + lay(); }; cap();
       b.addEventListener('click', e => { e.preventDefault(); doi(); cap(); }); box.insertBefore(b, ok); };
@@ -4928,13 +4965,15 @@ const LM2 = (() => {
     nut('Bóng đen', () => ST.bong ? 'BẬT' : 'tắt', () => { ST.bong = !ST.bong; });
     nut('Tốc độ', () => ST.cham > 1 ? 'chậm ×' + ST.cham : 'thường', () => { ST.cham = ST.cham > 1 ? 1 : 4; });
     nut('Hộp đòn', () => HBO.on ? 'BẬT' : 'tắt', () => hbSet(!HBO.on));
+    nut('Tường', () => ST.tuong === 'lung' ? 'LƯNG áp vách (mới)' : 'mặt vào vách (bộ 3)', () => { ST.tuong = ST.tuong === 'lung' ? 'mat' : 'lung'; });
   }
-  return {ST, M, TU, BO3, nap, ve, khung, veVQ, phaChem, phaPogo, TEN_PHA, V1, get VP() { return VP; }, SH, SH3, dang: '', nhan: '', bo: '', nay: null};
+  return {ST, M, TU, BO3, nap, ve, khung, veVQ, phaChem, phaPogo, TEN_PHA, V1, VT, nhanDon, get VP() { return VP; }, SH, SH3, dang: '', nhan: '', bo: '', nay: null};
 })();
 // ?vfx=0: tắt vệt chém (ảnh vet-chem) + âm nhận. Lam MỚI: chém 1 + pogo dùng vệt mẫu PH13 thay vệt ảnh + âm nhận cũ (đòn khác giữ vệt cũ).
 // Hộp + sát thương KHÔNG đổi.
-{ const _hv = huVet; huVet = function (n, ox, oy, face, al) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (n === 1 || n === 4)) return; _hv(n, ox, oy, face, al); }; }
-{ const _an = AD.veAmNhan; AD.veAmNhan = function (...a) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (a[3] === 1 || a[3] === 4)) return; return _an(...a); }; }
+// Bộ 4: chém 2/3, hất, trên không cũng thay vệt ảnh + âm nhận cũ bằng vệt mẫu (khi đã có sheet + "vet"); chém vang (7) giữ vệt cũ.
+{ const _hv = huVet; huVet = function (n, ox, oy, face, al) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (n === 4 || LM2.VT[n])) return; _hv(n, ox, oy, face, al); }; }
+{ const _an = AD.veAmNhan; AD.veAmNhan = function (...a) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (a[3] === 4 || LM2.VT[a[3]])) return; return _an(...a); }; }
 { const _hv = huVe; huVe = function () { _hv(); LM2.veVQ(); }; }   // vệt mẫu vẽ SAU hiệu ứng ảnh (như âm nhận cũ)
 window.TVLM2 = LM2;
 

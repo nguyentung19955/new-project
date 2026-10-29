@@ -3,6 +3,7 @@
  "sheets": [
   {
    "ten": "lam-moi3-pogo",
+   "bo": 3,
    "vai": "pogo",
    "tu_the": [
     "P1",
@@ -13,6 +14,7 @@
   },
   {
    "ten": "lam-moi3-tuong",
+   "bo": 3,
    "vai": "tuong",
    "tu_the": [
     "W1",
@@ -24,6 +26,7 @@
   },
   {
    "ten": "lam-moi3-nhay",
+   "bo": 3,
    "vai": "nhay",
    "tu_the": [
     "J1",
@@ -37,6 +40,7 @@
   },
   {
    "ten": "lam-moi3-dung",
+   "bo": 3,
    "vai": "dung",
    "tu_the": [
     "I1",
@@ -47,6 +51,7 @@
   },
   {
    "ten": "lam-moi3-chay",
+   "bo": 3,
    "vai": "chay",
    "tu_the": [
     "R1",
@@ -62,12 +67,94 @@
   },
   {
    "ten": "lam-moi3-chem1",
+   "bo": 3,
    "vai": "chem1",
    "tu_the": [
     "A",
     "B",
     "C",
     "D"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-tuong_lung",
+   "bo": 4,
+   "vai": "tuong_lung",
+   "tu_the": [
+    "WL1",
+    "WL2",
+    "WL3",
+    "WL4"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-chem2",
+   "bo": 4,
+   "vai": "chem2",
+   "tu_the": [
+    "C2A",
+    "C2B",
+    "C2C",
+    "C2D"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-chem3",
+   "bo": 4,
+   "vai": "chem3",
+   "tu_the": [
+    "C3A",
+    "C3B",
+    "C3C",
+    "C3D",
+    "C3E"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-hat",
+   "bo": 4,
+   "vai": "hat",
+   "tu_the": [
+    "H1",
+    "H2",
+    "H3",
+    "H4"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-chem_khong",
+   "bo": 4,
+   "vai": "chem_khong",
+   "tu_the": [
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-luot",
+   "bo": 4,
+   "vai": "luot",
+   "tu_the": [
+    "LU1",
+    "LU2",
+    "LU3"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi4-bi_danh",
+   "bo": 4,
+   "vai": "bi_danh",
+   "tu_the": [
+    "BD1",
+    "BD2"
    ],
    "co_3x": true
   }

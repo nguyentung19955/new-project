@@ -7,6 +7,8 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
             + choi-that-vfx0-hitbox-60fps.mp4 (Lam mới, tắt VFX, hiện hộp đòn) – duyệt tạo dáng / vùng chạm
   4. anh : màn có nút cảm ứng kiểu iPhone ngang (844×390, chạm) → man-choi-co-nut.png
   6. bo3 : BỘ TƯ THẾ 3 – GIF từng động tác (màu + bóng đen, ≈toàn tốc + chậm 4) → xem-thu/bo3/ ; videobo3: video chơi thật qua đủ động tác
+  7. bo4 : BỘ TƯ THẾ 4 – GIF combo 1→2→3, hất, trên không, lướt, bị đánh (thật), tường lưng áp vách trái/phải + ảnh dải vệt mẫu → xem-thu/bo4/ ;
+            videobo4: video chơi thật (không bất tử) qua đủ động tác
   5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
 60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
@@ -366,6 +368,119 @@ async def video_bo3(b, cong):
     seen = sorted({r[0] for r in lg}); print('video bo3', i, 'bước, tư thế đã hiện:', seen, 'máu cuối', lg[-1][7], A.loi, await A.lam_man())
 
 
+# ---------------- BỘ TƯ THẾ 4 (29/10): chém 2/3, hất, trên không, lướt, bị đánh, tường LƯNG áp vách ----------------
+TRANG_THAI4_JS = ('[pl.m2n, pl.a2, pl.atkN, pl.atkT, +pl.vy.toFixed(2), pl.onGround, S.hitstop, pl.hp, LM2.bo, '
+                  '!!(pl.atkN && atkBox(pl,pl.atkN,pl.atkT,pl.face,{})), pl.hurtT, pl.dash, pl.face, pl.m2l]')
+
+
+async def bo4(b, cong):
+    """GIF ở đúng cỡ game (Lam ~112 px, 960×540 @1x), NỀN THẬT. TRÁI = màu có vệt mẫu, PHẢI = bóng đen (?bong=1&vfx=0), cùng phím cùng bước.
+    Ra xem-thu/bo4/<động-tác>.gif (≈ toàn tốc, 20 ms/bước) + -cham4.gif (67 ms/bước) + log-bo4.json
+    + dai-vet-<đòn>.png: mỗi bước active (± 1) một ô phóng 2 lần – hàng trên vệt mẫu, hàng dưới có hộp đòn (?hitbox=1)."""
+    BD = os.path.join(OUT, 'bo4'); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'bong=1&vfx=0').mo()
+    log = {'ghi_chu': 'mỗi dòng 1 bước logic 60 Hz: [tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, bộ sheet, hộp bật, hurtT, dash, hướng, lật]'}
+
+    async def dat(x, f, cho=40):
+        for t in (A, B): await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', cho)
+
+    async def quay(ten, kb, khung, w=240, h=170, duoi=22, cat_lai=None):
+        fr = []; lg = []; st = await A.js(TRANG_THAI4_JS)
+        n = len(kb) if isinstance(kb, list) else kb('n', None)
+        for i in range(n):
+            ph = kb[i] if isinstance(kb, list) else kb(i, st)
+            await A.buoc(ph); await B.buoc(ph); st = await A.js(TRANG_THAI4_JS); lg.append(st)
+            if khung == 'lam': p = await A.lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await A.js('([x, y]) => [x - ox, y - oy]', list(khung))
+            a = cat(await A.anh(), X, Y, w, h, duoi); c = cat(await B.anh(), X, Y, w, h, duoi)
+            o = Image.new('RGB', (2 * w + 4, h), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (w + 4, 0))
+            fr.append(nho(o, '%s · %s%s · bước %d%s' % (st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '')))
+        if cat_lai:
+            i0, i1 = cat_lai(lg); fr = fr[i0:i1]; lg = lg[i0:i1]
+        luu_gif(fr, 'bo4/%s.gif' % ten, ms=20, dither=False); luu_gif(fr, 'bo4/%s-cham4.gif' % ten, ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + r[0] for j, r in enumerate(lg)))
+
+    the = 'pl.x+pl.w/2, pl.y+pl.h'
+    # 1. combo 1 → 2 → 3 vào hình nộm (bấm lại trong recovery = cửa sổ nối cũ; khựng khi trúng)
+    await dat('Q[6].x-70', 1); p = await A.js('[%s]' % the)
+    await quay('combo-1-2-3', [''] * 4 + ['a'] + [''] * 15 + ['a'] + [''] * 15 + ['a'] + [''] * 45, (p[0] + 40, p[1]), w=300, h=190)
+    # 2. hất (lên + chém) vào hình nộm
+    await dat('Q[6].x-70', 1); p = await A.js('[%s]' % the)
+    await quay('hat', [''] * 4 + ['ua'] + [''] * 36, (p[0] + 40, p[1]), w=280, h=220)
+    # 3. chém trên không: nhảy cạnh hình nộm, chém khi đang lên
+    await dat('Q[6].x-80', 1); p = await A.js('[%s]' % the)
+    await quay('chem-tren-khong', [''] * 4 + ['j'] * 8 + ['ja'] + ['j'] * 10 + [''] * 50, (p[0] + 40, p[1]), w=300, h=300, duoi=30)
+    # 4. lướt: 2 lần trên đất (chờ hồi lướt), khung cố định theo thế giới
+    x0 = '(PA.x0+4)*T'
+    await dat(x0, 1); p = await A.js('[%s]' % the)
+    await quay('luot', [''] * 4 + ['s'] + [''] * 30 + ['s'] + [''] * 24, (p[0] + 110, p[1]), w=360, h=170)
+    # 5. bị đánh THẬT: đứng cạnh Chuông Gỗ phòng B (Q[3]) chờ nó đập – cắt từ 20 bước trước cú trúng tới 45 bước sau
+    await dat('Q[3].x-40', 1, 10)
+
+    def cho_danh(i, st):
+        return 150 if i == 'n' else ''
+
+    def cat_danh(lg):
+        k = next((j for j, r in enumerate(lg) if r[0] == 'BD1'), None)
+        return (0, len(lg)) if k is None else (max(0, k - 20), min(len(lg), k + 45))
+    await quay('bi-danh', cho_danh, 'lam', w=280, h=190, cat_lai=cat_danh)
+    # 6. tường LƯNG áp vách: vách TRÁI phòng A (hình gốc) rồi vách PHẢI (khối cổng làng cột 28 – hình lật), có nhảy tường
+    await dat('(PA.x0+1)*T', -1); p = await A.js('[%s]' % the)
+    await quay('tuong-lung-vach-trai', [''] * 4 + ['lj'] * 20 + ['l'] * 50 + ['lj'] + ['r'] * 12 + [''] * 30, (p[0] + 50, p[1]), w=280, h=300, duoi=30)
+    await dat('26*T', 1); p = await A.js('[%s]' % the)
+    await quay('tuong-lung-vach-phai', [''] * 4 + ['rj'] * 20 + ['r'] * 50 + ['rj'] + ['l'] * 12 + [''] * 30, (p[0] + 10, p[1]), w=280, h=300, duoi=30)
+    json.dump(log, open(os.path.join(BD, 'log-bo4.json'), 'w'), ensure_ascii=False)
+    print('loi', A.loi, B.loi)
+    # ẢNH DẢI VỆT: chém vào không khí (xa hình nộm) – mỗi bước su−1 … su+ac một ô
+    C = await Trang(b, cong, 'hitbox=1').mo(); D = await Trang(b, cong, '').mo()
+    for ten, n, kb, dx, dy in [('chem2', 2, ['a'] + [''] * 14 + ['a'] + [''] * 24, 50, 0), ('chem3', 3, ['a'] + [''] * 14 + ['a'] + [''] * 14 + ['a'] + [''] * 24, 40, 0),
+                               ('hat', 5, ['ua'] + [''] * 24, 40, 0), ('chem-tren-khong', 6, ['j'] * 6 + ['ja'] + ['j'] * 20, 45, 0)]:
+        o = {}
+        for t in (C, D): await t.js('TVP0.datLam(Q[6].x+200, 1)'); await t.buoc('', 30)
+        for key, t in (('mau', D), ('hop', C)):
+            ds = []
+            for ph in kb:
+                await t.buoc(ph); r = await t.js('[pl.atkN,pl.atkT,LM2.phaChem(pl.atkT,pl.atkN),pl.m2n,!!(pl.atkN&&atkBox(pl,pl.atkN,pl.atkT,pl.face,{}))]')
+                if r[0] == n and ATK_SU[n] - 1 <= r[1] <= ATK_SU[n] + 8:
+                    p = await t.lam_man(); ds.append((r, cat(await t.anh(), p['x'] + dx, p['y'] + dy, 190, 180, 24)))
+            o[key] = ds
+        m = min(len(o['mau']), len(o['hop'])); w, h = o['mau'][0][1].size; W2, H2 = w * 2, h * 2
+        im = Image.new('RGB', (m * (W2 + 6) + 6, 2 * (H2 + 30) + 10), (30, 33, 40)); d = ImageDraw.Draw(im)
+        for i in range(m):
+            for j, k in enumerate(('mau', 'hop')):
+                r, c = o[k][i]; x = 6 + i * (W2 + 6); y = 6 + j * (H2 + 30)
+                d.text((x, y), 'atkT %d · %s · %s%s' % (r[1], r[3], TEN_PHA_CHEM[r[2]] if r[2] >= 0 else '(không vệt)', ' · HỘP' if r[4] else ''), font=FONT_N or FONT, fill=(243, 230, 200))
+                im.paste(c.resize((W2, H2), Image.NEAREST), (x, y + 24))
+        im.save(os.path.join(BD, 'dai-vet-%s.png' % ten)); print('dai-vet', ten, m)
+
+
+ATK_SU = {2: 7, 3: 9, 5: 11, 6: 9}   # su THẬT lúc chạy (P0: 2 → 7, 3 → 9; 5, 6 giữ) – chỉ để chọn ô ảnh dải; máy hình đọc ATK trong game
+
+KICH_BAN_BO4 = ([('', 40), ('r', 34), ('', 10)]                                                     # đứng → chạy tới hình nộm
+                + [('a', 1), ('', 15), ('a', 1), ('', 15), ('a', 1), ('', 45)]                       # combo 1 → 2 → 3
+                + [('ua', 1), ('', 36)]                                                              # hất
+                + [('l', 12), ('', 6), ('j', 8), ('ja', 1), ('j', 10), ('', 40)]                     # chém trên không
+                + [('l', 40), ('', 8), ('s', 1), ('', 30)]                                           # lướt
+                + [('l', 120), ('lj', 20), ('l', 50), ('lj', 1), ('r', 14), ('', 40)]                # vách trái: bám, trượt lưng áp vách, nhảy tường
+                + [('r', 300), ('', 10), ('a', 1), ('', 16), ('a', 1), ('', 16), ('a', 1), ('', 30)]  # sang phòng B: combo vào Chuông Gỗ
+                + [('', 90), ('s', 1), ('', 20), ('ua', 1), ('', 30), ('', 60), ('r', 20), ('rj', 14), ('r', 10), ('', 40)])   # chờ bị đánh, lướt, hất
+
+
+async def video_bo4(b, cong):
+    """chơi thật KHÔNG bất tử, 60 hình/s, Lam mới bộ 3 + 4 → xem-thu/bo4/choi-that-bo4-60fps.mp4 + log-video.json"""
+    BD = os.path.join(OUT, 'bo4'); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo()
+    await A.js('TVP0.datLam((PA.x0+5)*T, 1)'); await A.buoc('', 1)
+    ff = ffmpeg(os.path.join(BD, 'choi-that-bo4-60fps.mp4'), 960, 540); lg = []; i = 0
+    for phim, k in KICH_BAN_BO4:
+        for _ in range(k):
+            await A.buoc(phim); i += 1; s = await A.js(TRANG_THAI4_JS); lg.append(s)
+            ff.stdin.write(jpg(nhan(await A.anh(), 'Lam mới bộ 3+4 · %s · %s · máu %d · bước %d' % (s[0], s[1], s[7], i))))
+    ff.stdin.close(); ff.wait()
+    json.dump({'ghi_chu': TRANG_THAI4_JS, 'buoc': lg}, open(os.path.join(BD, 'log-video.json'), 'w'), ensure_ascii=False)
+    seen = sorted({r[0] for r in lg}); print('video bo4', i, 'bước, tư thế đã hiện:', seen, 'máu cuối', lg[-1][7], A.loi)
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -378,6 +493,8 @@ async def main(viec):
         if 'vet' in viec: await vet(b, cong)
         if 'bo3' in viec: await bo3(b, cong)
         if 'videobo3' in viec: await video_bo3(b, cong)
+        if 'bo4' in viec: await bo4(b, cong)
+        if 'videobo4' in viec: await video_bo4(b, cong)
         await b.close()
 
 

@@ -16,3 +16,5 @@ Ghi chú đầy đủ, số đo, tự kiểm, đề xuất gen lại: **`game/th
 | `sprite/lam-moi3-{dung,chay,chem1,nhay,pogo,tuong}-{2x,3x}.png/.json` | **Bộ tư thế 3 (29/10)**: đứng I1–I3, chạy sửa R1–R8 (ô 2/5/6 mới + ô 1/3/4/7/8 lấy lại từ thử 2), chém 1 sửa A–D, nhảy/rơi/tiếp đất J1 J2 J3 F1 F2 L, pogo P1–P3, tường W1–W4 (vách phải). MỘT luật tỉ lệ: cỡ mũ khớp Lam chốt |
 | `kiem/thu3-so-mu.png` | đầu mọi tư thế bộ 3 cạnh Lam chốt, căn theo mắt; ⚠ = lệch rõ |
 | `kiem/thu3-*-dai.png`, `kiem/thu3-so-do.json`, `kiem/thu3-do-dao.png` | ảnh dải từng sheet, số đo mũ/mắt, lưới đo tay/mũi dao đặt vệt |
+| **Bộ 4 (29/10)** `sprite/lam-moi4-*` | tường LƯNG áp vách, chém 2, chém 3, hất, chém trên không, lướt, bị đánh – cùng `dung_thu3.py` + `bang-thu3.json` ("bo": 4), cùng luật cỡ mũ chốt |
+| `kiem/thu4-so-mu.png`, `kiem/thu4-*-dai.png`, `kiem/thu4-do-dao.png` | bộ 4: so mũ/mắt với Lam chốt (⚠ lệch rõ, "(che)" = tay/dao đè mũ, không tính), ảnh dải, lưới đo đường quét dao đặt vệt |

@@ -1,0 +1,214 @@
+{
+ "ten": "Lam mới bộ 4 – chem2 (C2A / C2B / C2C / C2D), sprite sheet 3x",
+ "phien_ban_clip": "lam-moi-thu4",
+ "vai": "chem2",
+ "tu_the": [
+  "C2A",
+  "C2B",
+  "C2C",
+  "C2D"
+ ],
+ "anh": "lam-moi4-chem2-3x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1710,
+  326
+ ],
+ "luoi": {
+  "cot": 4,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  426,
+  326
+ ],
+ "diem_neo": {
+  "x": 226,
+  "y": 317,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 3,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 4 ô (1 ô hàng mắt dính tay/áo → rộng = cao × 1.18)"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.217498
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh neo x.",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu4-chem2-4o.png",
+ "thu_co": {
+  "loc": "Lanczos (PIL)",
+  "lam_net": {
+   "sigma_px_nguon": 0.8,
+   "luong": 0.45
+  }
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "C2A",
+   "x": 0,
+   "y": 0,
+   "w": 426,
+   "h": 326,
+   "neo_gen": [
+    291.5,
+    609
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 1,
+   "nhan": "C2B",
+   "x": 428,
+   "y": 0,
+   "w": 426,
+   "h": 326,
+   "neo_gen": [
+    827.5,
+    608
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "C2C",
+   "x": 856,
+   "y": 0,
+   "w": 426,
+   "h": 326,
+   "neo_gen": [
+    1365.2,
+    609
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 3,
+   "nhan": "C2D",
+   "x": 1284,
+   "y": 0,
+   "w": 426,
+   "h": 326,
+   "neo_gen": [
+    1940.5,
+    609
+   ],
+   "nguon": "chinh"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "C2A",
+   "cao_logic": 103.7,
+   "dinh_tren_neo_logic": 102.7,
+   "mu_rong_hang_mat_logic": 47.8,
+   "mu_so_chot_phan_tram": 15.1,
+   "mat_logic": [
+    20.8,
+    -64.9
+   ],
+   "mu_cao_tren_mat_logic": 37.6,
+   "co_mu_so_chot_phan_tram": 4.9,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.6,
+   "mau_mu_trung_vi": [
+    46.0,
+    53.0,
+    75.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "C2B",
+   "cao_logic": 102.7,
+   "dinh_tren_neo_logic": 102.0,
+   "mu_rong_hang_mat_logic": 57.9,
+   "mu_so_chot_phan_tram": 39.1,
+   "mat_logic": [
+    10.6,
+    -69.8
+   ],
+   "mu_cao_tren_mat_logic": 32.0,
+   "co_mu_so_chot_phan_tram": -14.1,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.1,
+   "mau_mu_trung_vi": [
+    45.0,
+    51.0,
+    71.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "C2C",
+   "cao_logic": 101.8,
+   "dinh_tren_neo_logic": 101.6,
+   "mu_rong_hang_mat_logic": 44.8,
+   "mu_so_chot_phan_tram": 7.7,
+   "mat_logic": [
+    9.4,
+    -67.9
+   ],
+   "mu_cao_tren_mat_logic": 33.7,
+   "co_mu_so_chot_phan_tram": -3.9,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.1,
+   "mau_mu_trung_vi": [
+    47.0,
+    53.0,
+    75.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 4,
+   "nhan": "C2D",
+   "cao_logic": 103.3,
+   "dinh_tren_neo_logic": 102.4,
+   "mu_rong_hang_mat_logic": 47.0,
+   "mu_so_chot_phan_tram": 13.0,
+   "mat_logic": [
+    16.2,
+    -64.8
+   ],
+   "mu_cao_tren_mat_logic": 37.6,
+   "co_mu_so_chot_phan_tram": 3.9,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 8.9,
+   "mau_mu_trung_vi": [
+    48.0,
+    54.0,
+    77.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "vet": {
+  "n": 2,
+  "x": 0,
+  "y": -58,
+  "R": 62,
+  "h": 62,
+  "T": 11,
+  "goc": -15,
+  "tm": 0.61,
+  "_do": "đo tay trên lưới (kiem/thu4-do-dao.png): C2A tay (−38, −42) mũi (5, −12) dao chúc sau-dưới; C2B tay (12, −68) mũi (55, −97); C2C tay (10, −62) mũi (58, −85). Trục quét ≈ vai (0, −58), mũi dao quay từ dưới-trước lên trên-trước → cung tròn R 62 quanh vai, bụng hướng lên-trước 15°, nửa góc 35°. Hộp chém 2 (x −36…80, y −100…−52): lõi (±22° quanh bụng) nằm trong hộp; đầu dưới mảnh thò dưới mép hộp"
+ },
+ "bo": 4
+}

@@ -1,6 +1,7 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **Mới nhất (29/10): xem mục "Bộ tư thế 3" ở cuối** – đứng 3, chạy sửa, chém 1 sửa, nhảy/rơi/tiếp đất 6, pogo 3, tường 4 đã gắn vào game; GIF từng động tác + video chơi thật trong `xem-thu/bo3/`.
+> **Mới nhất (29/10, tối): xem mục "Bộ tư thế 4" ở cuối** – trượt tường LƯNG áp vách (thay kiểu cũ; `?tuong=mat` để so), chém 2, chém 3, hất, chém trên không, lướt, bị đánh đã gắn vào game + vệt mẫu chém 2/3/hất/trên không; GIF + video trong `xem-thu/bo4/`.
+> Trước đó: mục "Bộ tư thế 3" – đứng 3, chạy sửa, chém 1 sửa, nhảy/rơi/tiếp đất 6, pogo 3, tường 4 đã gắn vào game; GIF từng động tác + video chơi thật trong `xem-thu/bo3/`.
 > Trước đó (PH13): mục "Vệt mẫu PH13" – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick.
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-11-LAM-MOI-ANIMATION.md` và `PHAN-HOI-12-THIET-KE-CHAY-CHEM1-LAM.md`
@@ -396,4 +397,135 @@ python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py                   # 6 sheet
 python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py                 # sinh lại index.html
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py bo3 videobo3     # GIF từng động tác + video chơi thật (~12 phút)
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py vet              # ảnh dải vệt chém 1 / pogo
+```
+
+## Bộ tư thế 4 (29/10)
+
+Ảnh gen mới: `art/huong-moi/nguon/lam-tu-the/thu4-*.png` (7 ảnh, mỗi ảnh một hàng ô). **Gameplay, hộp đòn, startup, tốc độ, miễn sát thương, cửa sổ
+nối combo KHÔNG đổi** – chỉ đổi HÌNH (+ vệt mẫu vẽ bằng code). Không thêm khoá điều khiển. `am-dao.html`, P0-B, P0-C, `demo.html` không sửa.
+**Chưa thử trên iPhone thật** – mọi ảnh/GIF/video quay trong Chromium trên máy chủ.
+
+**Chơi thử:** cùng link ở đầu file. Thêm cờ mới **`?tuong=mat`** = trượt tường kiểu CŨ (mặt vào vách, bộ 3) để so; mặc định giờ là **lưng áp vách**.
+Trên iPhone: ⚙ → mục "Lam mới – bộ tư thế 3 + 4" có thêm nút **"Tường: LƯNG áp vách (mới) / mặt vào vách (bộ 3)"**.
+
+### Xem gì trước (`xem-thu/bo4/`)
+
+Mọi GIF: Lam đúng cỡ game (~112 px), **nền thật**; **trái = màu có vệt mẫu, phải = bóng đen (tắt vệt)**, cùng phím cùng bước. Dưới hình: tư thế · trạng thái
+· atkT · bước · "khựng". Bản thường ≈ toàn tốc (20 ms/bước = 0,83×, giới hạn GIF); `-cham4` = chậm 4 lần.
+
+| File | Nội dung |
+|---|---|
+| **`choi-that-bo4-60fps.mp4`** | **xem đầu tiên** – chơi thật 21 s, **không bất tử**: đứng → chạy → combo 1→2→3 vào hình nộm → hất → nhảy chém trên không → lướt → bám/trượt LƯNG áp vách trái + nhảy tường → sang phòng B: combo vào Chuông Gỗ, **bị Chuông Gỗ đánh thật 2 lần** (còn 3 máu), lướt, hất. Góc trên ghi tư thế đang hiện. Không có hình tạm nào hiện trong video |
+| `combo-1-2-3.gif` / `-cham4` | A B C D → C2A C2B C2C → C3A C3B C3C C3D C3E vào hình nộm (có khựng) |
+| `hat.gif` / `-cham4` | H1 nén → H2 chém lên → H3 kết thúc cao → H4 hồi |
+| `chem-tren-khong.gif` / `-cham4` | nhảy cạnh hình nộm: J1 J2 → K1 K2 K3 → F1 F2 → L |
+| `luot.gif` / `-cham4` | 2 lần lướt trên đất: LU1 → LU2 → LU3 → chạy/đứng |
+| `bi-danh.gif` / `-cham4` | đứng cạnh Chuông Gỗ, bị đánh THẬT: BD1 (gồm 6 bước khựng) → BD2 → đứng. Lam nhấp nháy là miễn sát thương cũ của game |
+| `tuong-lung-vach-trai.gif` / `-cham4` | vách TRÁI phòng A (hình gốc): WL1 → WL2 → WL3/WL4 trượt → nhảy tường bật sang phải → rơi → tiếp đất |
+| `tuong-lung-vach-phai.gif` / `-cham4` | vách PHẢI (khối đá Cổng làng, cột 28) – **cả hình lật**, nhảy tường bật sang trái |
+| `dai-vet-chem2.png`, `-chem3`, `-hat`, `-chem-tren-khong` | mỗi bước quanh lúc hộp bật một ô (phóng 2): hàng trên vệt mẫu, hàng dưới có hộp đòn (đỏ) |
+| `log-bo4.json`, `log-video.json` | từng bước: [tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, bộ sheet, hộp bật, hurtT, lướt, hướng, lật] |
+| **`art/huong-moi/lam-tu-the-2/kiem/thu4-so-mu.png`** | **so đầu**: mọi tư thế bộ 4 cạnh Lam chốt, căn theo mắt; khung vàng = cỡ mũ chốt; ⚠ = lệch rõ; "(che)" = tay/dao đè lên mũ nên số cỡ mũ không dùng được |
+| `art/huong-moi/lam-tu-the-2/kiem/thu4-<sheet>-dai.png` | ảnh dải từng sheet: Lam chốt cùng thang + từng tư thế (đỏ = chân, xanh = trục, vàng = hàng mắt chốt) + 112 px + bóng đen |
+| `art/huong-moi/lam-tu-the-2/kiem/thu4-do-dao.png` | lưới 10 px logic trên C2A–C2C, C3B–C3D, H1–H3, K1–K3 – chỗ đo tay / mũi dao để đặt vệt |
+
+### Đã làm
+
+**1. Dựng sheet** – cùng script `art/huong-moi/lam-tu-the-2/code/dung_thu3.py`, thêm 7 mục vào `code/bang-thu3.json` (`"bo": 4`, ra `sprite/lam-moi4-<tên>-{2x,3x}.png/.json`,
+game tự nạp qua `sprite/thu3-danh-sach.json`). **Cùng luật tỉ lệ**: k = cỡ mũ Lam chốt / trung vị cỡ mũ các ô, cỡ mũ = căn(rộng hàng mắt × cao trên mắt).
+Sửa nhỏ để đo đúng (luật không đổi):
+- **Tìm mắt** (`code/tach.py`): chỉ nhận cụm hổ phách nằm trong mặt tối của mũ. Trước đó viên đá đồng ở chuôi Âm Đao (giơ ngang/trên đầu ở chém 2, 3, hất)
+  bị nhận nhầm là mắt. Đã kiểm lại: kết quả đo mọi ảnh bộ 3 + Lam chốt **không đổi**.
+- **Ô có tay/dao đè lên mũ không góp vào trung vị** (bảng: `o_do_mu` + lý do): chém 3 ô 1–2 (dao giơ trên đầu → "cao trên mắt" tính tới mũi dao), hất ô 3 (dao dựng
+  thẳng trên đầu), bị đánh ô 1 (đầu ngả ra sau → chiều cao mũ đo theo phương đứng ngắn giả). Tường lưng: tay xa giơ áp vách nằm đúng hàng mắt ở cả 4 ô → luôn
+  dùng rộng = cao × 1,18 (`mu_thay_rong`, như cách bộ 3 xử lý tay áp vách).
+- **Neo**: chém 2 / chém 3 / hất = giữa hai ủng + hằng số theo ô hồi (chân trụ đứng yên, như chém 1); trên không = mắt cao như Lam chốt (như nhảy);
+  lướt / bị đánh = trục giữa mũ, chân = đáy ủng; **tường lưng = điểm xa nhất bên TRÁI (bàn tay / lưng áp vách) đặt đúng mép collider phía vách (10 px
+  từ trục)**, mắt cao như Lam chốt (như tường bộ 3). Vách phải → lật cả hình quanh trục.
+
+**2. Gắn vào máy hình** (`cong-cu/khoi-lam-moi-2.js`). Lịch đọc **ATK thật lúc chạy** (P0: chém 2 su 7 / ac 8 / re 8; chém 3 9/8/16; hất 11/8/8; trên không 9/8/4).
+Đo trong game (log), atkT 1 = bước bấm:
+
+| Đòn | Lấy đà (startup) | Đánh = đúng các tick hộp bật | Kết thúc / hồi (recovery) |
+|---|---|---|---|
+| Chém 2 (4 ô) | C2A atkT 1–6 | C2B 7–14 | C2C 15–18 · C2D 19–22 |
+| Chém 3 (5 ô) | C3A lấy lực 1–5 · C3B đỉnh 6–8 | C3C bổ 9–16 | C3D kết thúc 17–24 · C3E hồi 25–32 |
+| Hất (4 ô) | H1 nén 1–10 | H2 chém lên 11–18 | H3 kết thúc cao 19–22 · H4 hồi 23–26 |
+| Trên không (3 ô) | K1 lấy đà 1–8 | K2 cắt ngang 9–16 | K3 kết thúc 17–20 |
+
+- **Nối combo** giữ luật cũ (bấm trong recovery, atkT ≥ su + ac): đòn mới bắt đầu → hình đòn mới **ngay bước đó** (đo: D atkT 15 → C2A atkT 1 cùng bước; C2C atkT 15 → C3A).
+  Vì vậy khi nối liền thì không thấy C2D (chỉ hiện khi dừng sau nhát 2). Khựng (hitstop) không cộng bước → hình đứng yên.
+- **Lướt** (8 bước): LU1 bước 1–2 · LU2 3–6 · LU3 7–8 (đo đúng 2 / 4 / 2); nhảy cắt lướt / va tường / hết lướt → đổi hình ngay.
+- **Bị đánh**: BD1 **cùng bước trúng** (hurt() gọi máy hình ngay) qua 6 bước khựng tới hurtT 13 (đo: 12 bước); BD2 hurtT 12 → 1 (đo: 12 bước). Không khoá thêm:
+  hết hurtT 8 bấm đòn được như cũ → hình đòn. Chết vẫn hình tạm.
+- **Tường lưng**: cùng nhịp **W1 2 → W2 4 → W3/W4 mỗi 6 lặp** (đo: WL1 2 · WL2 4 · WL3 6 / WL4 6 ✔). Lam nhìn RA khỏi vách (= hướng game đã đặt khi bám: mặt
+  ngược vách). **Nhảy tường**: J1 ngay bước bấm, nhìn và bật ra phía mặt đang nhìn (vách trái → bật phải, vách phải → bật trái) – không còn quay đầu như kiểu cũ.
+- `?tuong=mat` / nút ⚙: dùng lại W1–W4 bộ 3 (mặt vào vách) để so; bóng Vọng ghi lại đúng hình đã hiện.
+
+**3. Vệt mẫu – VỆT MẪU CHỜ DUYỆT** (vẽ bằng code, kiểu liềm PH13, cùng màu ngà/đồng; số đặt trong `bang-thu3.json` → JSON sheet `"vet"`, game đọc – không
+viết cứng). Pha như chém 1: 8 bước active chia 1/3/2/2 (nét mảnh → cung đầy → vỡ → mảnh tắt), **ngoài tick hộp không vẽ gì**. Vệt ảnh + âm nhận cũ
+của 4 đòn này tắt khi Lam mới (`?lam=cu` giữ nguyên cũ; `?vfx=0` tắt hết). Đo trên tư thế (`kiem/thu4-do-dao.png`, px logic so với chân, nhìn phải):
+
+| Đòn | Đường quét đo | Vệt | So với hộp |
+|---|---|---|---|
+| Chém 2 – chéo lên | mũi dao C2A (5, −12) → C2B (55, −97), tay ~vai | cung tròn R 62 quanh vai (0, −58), bụng hướng lên-trước 15°, nửa góc 35° | lõi trong hộp (x −36…80, y −100…−52); đầu dưới mảnh thò dưới mép hộp |
+| Chém 3 – bổ xuống | mũi C3B (10, −131) trên đầu → C3C (52, −4) | cung R 62 quanh (−5, −55), bụng hướng xuống-trước 25°, nửa góc 43°, **dày hơn** (13) | lõi trong hộp (x −13…86, y −59…0); đầu trên thò trên mép hộp |
+| Hất – cung lên | mũi H1 (50, −8) → H2 (55, −110) → H3 (30, −145) | cung R 62 quanh (0, −72), bụng hướng lên-trước 40°, nửa góc 50° | lõi trong hộp (x −9…88, y −140…−80) |
+| Trên không – ngang | lưỡi K2 ngang ở y −60, mũi x 81 | liềm ngang như chém 1: hai đầu x 8, bụng x 88, tâm y −66, cao 28 | **lưỡi K2 nằm sát MÉP DƯỚI hộp (y −59)** → tâm vệt đặt cao hơn lưỡi 6 px; nửa dưới liềm vẫn thò dưới hộp ⚠ (giống chém 1 – không đổi hộp) |
+
+Tự đánh giá: vệt chém 2 đọc như cung đứng hơi nghiêng (không rõ "chéo" bằng ảnh tư thế); chém 3 bổ xuống và hất cung lên đọc đúng hướng; trên không ngang rõ.
+
+**4. Hình còn TẠM** (máy hình ghi `tam:<trạng thái>`):
+
+| Động tác | Đang dùng |
+|---|---|
+| chém vang (Dư Âm, đòn 7), tụ Dư Âm | D (hồi chém 1) – vệt ảnh cũ |
+| chết | D |
+| rút dao lúc vào màn | D |
+| đẩy khỏi vách (tư thế riêng) | chưa có – nhảy tường dùng J1 |
+| bóng lướt (vệt bóng mờ sau lưng khi lướt) | LU2 (bóng ghi trước không có nhãn → luôn LU2) |
+
+### Số đo mũ / mắt (px logic, cùng thang Lam chốt cao 112) – `kiem/thu3-so-do.json`, `kiem/thu4-so-mu.png`
+
+Chốt: rộng mũ hàng mắt 41,6 · cao mũ trên mắt 39,4 · mắt (diện tích) 7,3 · mắt trên chân 72,6. Đứng I1: mắt (13,5, −70,9).
+
+| Sheet | Cỡ mũ so chốt | Mắt (diện tích) | Mắt so chân (x, y) | Đỉnh trên chân |
+|---|---|---|---|---|
+| Tường lưng WL1–4 | −1,8…+2,9 % | 5,6–6,3 (nhỏ hơn chốt ~20 %) | **(52–53, −72,6)** ⚠ | 109–111 |
+| Chém 2 C2A–D | +4,9 · **C2B −14,1** ⚠ · −3,9 · +3,9 % | 5,1–8,9 | (9–21, −65…−70) | 102–103 |
+| Chém 3 C3A–E | (A, B che) · **C3C +12,0** ⚠ · 0 · −6,3 % | 5,2–6,3 | C3C (26, −55) · C3D (19, −46) | 83–132 (dao) |
+| Hất H1–H4 | +2,6 · −7,7 · (H3 che) · 0 % | 3,4–5,4 | H1 (29, −52) · H2 (13, −76) | 90–145 (dao) |
+| Trên không K1–K3 | 0 · −6,3 · +0,5 % | 6,6–7,3 | (17–19, −72,6 neo) | 107–110 |
+| Lướt LU1–LU3 | 0 · −4,0 · +4,6 % | 7,1–7,3 | (21–26, −48…−54) | 85–93 |
+| Bị đánh BD1–BD2 | (BD1 che) · 0 % | 6,2–7,0 | BD1 (25, −82) · BD2 (17, −72) | 107 |
+
+**Lệch rõ:**
+- **Tường lưng: thân Lam nằm cách vách ~50 px** (mắt ở 52 px từ trục, trục cách vách 10 px) – ảnh gen chỉ cho BÀN TAY xa chạm vách, tay duỗi dài; lưng/áo không
+  áp vách. Vì vậy hình chồi ra phòng hơn collider (hộp ăn đòn 40 px không đổi). Mắt nhỏ hơn chốt ~20 % (bộ 3 to hơn 65 %) – đỡ hơn kiểu cũ. Nếu muốn
+  "lưng áp vách" thật thì cần gen lại với lưng/vai sát vách, tay xa gập.
+- **Chém 2 C2B −14 %**: mũ bị quét về sau nên đo mỏng; nhìn ở `thu4-so-mu.png` mũ vẫn cùng cỡ khung chốt. **Chém 3 C3C +12 %**: thang chém 3 lấy từ 3 ô
+  cúi (C3C–E) vì 2 ô đầu bị dao che; C3C hơi to hơn hai ô kia – cần mắt người duyệt.
+- **Thân thấp hơn đứng** (như chém 1 bộ 3): đòn đất mắt ở −65…−70 (đứng −71); hất H1 / chém 3 C3D / lướt cúi thấp hẳn (−46…−54) – đúng dáng nén/bổ/lướt.
+- Nối combo: mắt nhảy ≤ 5 px giữa D → C2A → C3A (cùng thang + neo ủng) – không thấy đầu phình trong `combo-1-2-3`.
+
+### Tự kiểm theo PH13 mục 5
+
+| Dòng kiểm | Kết quả | Ghi chú |
+|---|---|---|
+| 112 px, màu + bóng đen, nền thật; toàn tốc rồi chậm | **Đạt** | `xem-thu/bo4/*.gif` (trái màu, phải bóng đen) + `-cham4` + video 60 hình/s |
+| Tường: tay/chân tiếp xúc hợp lý, dao không xuyên vách | **Đạt một phần** | bàn tay xa đúng mép vách cả hai bên (hình lật), dao chúc xuống-trước về phía phòng, không chạm vách ✔. Thân cách vách ~50 px (xem trên) ⚠ |
+| Nhảy: đang lên và rơi khác nhau | **Đạt** (bộ 3) | không đổi |
+| Pogo nhận ra khi tắt VFX | **Đạt** (bộ 3) | không đổi |
+| Mũ không phình khi đổi trạng thái | **Đạt một phần** | cỡ mũ ±7 % ở các ô đo sạch, trừ C2B −14 % (mũ quét), C3C +12 % ⚠; ô bị tay/dao che không đo được, xem bằng mắt ở `thu4-so-mu.png` – không thấy phình |
+| Chém đi cùng cung đúng hướng | **Đạt một phần** | chém 3 / hất / trên không đọc đúng hướng; chém 2 cung hơi đứng. Trên không: lưỡi ở mép dưới hộp → nửa dưới vệt ngoài hộp (không đổi hộp) |
+| Bóng đen vẫn đọc được động tác khi tắt VFX | **Đạt** | chém 2 dao chéo lên, chém 3 dao giơ trên đầu rồi bổ, hất dao dựng thẳng, trên không dao ngang, lướt người dài ngang |
+| Bật ngay, khựng không phát tiếp hình; không thêm startup / khoá | **Đạt** | bảng lịch ở trên; khựng giữ nguyên hình; lướt / bị đánh không khoá thêm |
+| Không làm lại gameplay; trang thử riêng; P0-A/B/C giữ Lam cũ | **Đạt** | chỉ sửa `thu-lam-moi-2/` + `art/huong-moi/lam-tu-the-2/` |
+
+### Chạy lại
+
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py tuong_lung chem2 chem3 hat chem_khong luot bi_danh   # 7 sheet bộ 4 + ảnh dải + thu4-so-mu.png
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py                                                    # sinh lại index.html
+python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py bo4 videobo4                                        # GIF + ảnh dải vệt + video (~10 phút)
 ```
