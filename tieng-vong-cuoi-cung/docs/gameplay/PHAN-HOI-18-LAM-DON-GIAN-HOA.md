@@ -46,3 +46,8 @@ Anh muốn thử Lam đơn giản hoá nhưng giữ tỉ lệ, màu và tinh th�
 
 NGƯỜI DÙNG CHỌN: **nét sạch chibi** (không pixel art thật). Phiên chạy 12 hình Lam áo dài tạm dừng (ảnh giữ làm đối chứng).
 Bước kế: gen MỘT dáng đứng chibi → Claude đặt cạnh Lam hiện tại trong cảnh, cùng chiều cao hiển thị → duyệt rồi mới chạy (khoá đầu + chỉ gen thân).
+
+## Cập nhật 30/10 (2) – bảng asset tham khảo + trang thử riêng
+- art/huong-moi/lam-chibi/gen-chay-6-thu1.png: chạy 6 hình đầu tiên. Đo: cỡ hình lệch <1%, mắt lệch ≈1 px logic → nhất quán RẤT tốt. Người dùng chê "quá tệ": dáng ra kiểu ĐI lê bước (chân bước ngắn, thân thẳng, dao kéo lê phía sau), chưa phải chạy.
+- art/huong-moi/lam-chibi/bang-asset-tham-khao.png: bảng asset phong cách (nhìn từ trên – chỉ tham khảo phong cách, chưa duyệt thay mỹ thuật).
+Chuyên gia (Gửi Claude): giữ nguyên gameplay + game hiện tại. Làm TRANG THỬ RIÊNG: Lam chibi + một đoạn địa hình nhìn ngang, vài rễ/cây, đèn lồng đơn giản; giữ thế giới chuông, xanh trầm, ánh vàng ấm; chưa pixel art. Ưu tiên kiểm chạy 6 hình + chém ngắn: đầu/mũ, mắt, chuông, vũ khí nhất quán; thân/gấu đổi vừa đủ. Không mặc định ít chi tiết sẽ hết giật; không tăng khung trước khi sửa tỉ lệ/neo. Gửi ảnh cỡ 112 px + video iPhone để duyệt trước khi làm quái/boss/nền.
