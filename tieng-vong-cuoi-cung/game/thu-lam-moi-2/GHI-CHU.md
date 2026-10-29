@@ -1,5 +1,6 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
+> **Sửa iPhone 29/10 (mới nhất): xem mục "Sửa iPhone 29/10" ở cuối** – chém trên không không còn lơ lửng, mép tường bo hữu cơ, bỏ vạch trắng thừa, ghi sẵn vị trí cổng để ghép ảnh cổng dọc; video trong `xem-thu/sua-2910/`.
 > **Mới nhất (29/10, tối): xem mục "Bộ tư thế 4" ở cuối** – trượt tường LƯNG áp vách (thay kiểu cũ; `?tuong=mat` để so), chém 2, chém 3, hất, chém trên không, lướt, bị đánh đã gắn vào game + vệt mẫu chém 2/3/hất/trên không; GIF + video trong `xem-thu/bo4/`.
 > Trước đó: mục "Bộ tư thế 3" – đứng 3, chạy sửa, chém 1 sửa, nhảy/rơi/tiếp đất 6, pogo 3, tường 4 đã gắn vào game; GIF từng động tác + video chơi thật trong `xem-thu/bo3/`.
 > Trước đó (PH13): mục "Vệt mẫu PH13" – vệt chém 1 + vệt pogo vẽ bằng code, sửa quy ước tick.
@@ -529,3 +530,82 @@ python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py tuong_lung chem2 chem3 hat 
 python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py                                                    # sinh lại index.html
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py bo4 videobo4                                        # GIF + ảnh dải vệt + video (~10 phút)
 ```
+
+## Sửa iPhone 29/10
+
+Ảnh người dùng: `docs/gameplay/anh-nguoi-dung/2910-iphone-lam-moi-vach-thua.png`. Bốn nhận xét, sửa bằng CODE (ảnh mới – móc bám tường, vệt chém gen,
+cổng dọc – người dùng đang gen, phiên này **không** làm). Mọi ảnh / video / số dưới đây đo trong Chromium trên máy chủ (không GPU), **chưa thử iPhone thật**.
+Xem nhanh trong `xem-thu/sua-2910/`:
+
+| File | Nội dung |
+|---|---|
+| **`chem-tren-khong-truoc-sau-60fps.mp4`** | trên: TRƯỚC (`?roi=cu`) – bấm Chém liên tục trên hình nộm, lơ lửng mãi; dưới: SAU – rơi xuống đất |
+| **`canh-tuong-truoc-sau-30fps.mp4`** | camera lướt qua tường trái phòng A, cột treo phòng C, tường phải phòng F: trên TRƯỚC (`?mep=cu`), dưới SAU |
+| `mep-phong-A/C/E/F-truoc-sau.png` | cả phòng, trên trước / dưới sau (phòng E **không có tường đứng** nên hai ảnh như nhau) |
+| `mep-phong-to-*.png` | phóng to chỗ mép: trái trước, phải sau |
+| `vach-thua-truoc-sau.png` | tái hiện ảnh iPhone (giữ Chém cạnh đe rèn phòng F): trái trước, phải sau |
+| `do-roi.json` | số đo rơi (bảng dưới) · `cong-vi-tri.json` – vị trí / collider / trạng thái mọi cổng (mục 4) |
+
+### 1. "Cứ bay trên không chém thì chả bao giờ xuống" – ĐÃ SỬA (nguồn `thu-p0a/cong-cu/khoi-am-dao.js` → `am-dao.html` → mọi trang)
+
+**Nguyên nhân thật (đo được):** chém trên không KHÔNG huỷ trọng lực. Cái giữ Lam lơ lửng là **pogo tự động**: bấm Chém khi đang rơi mà có quái /
+hình nộm ngay dưới chân → game tự đổi thành **chém nảy** → trúng → nảy lên như nhảy (vy −13,46) → rơi → bấm Chém → nảy… mãi mãi (ảnh iPhone: cạnh hình nộm).
+**Sửa:**
+- Pogo **tự động** (không giữ ↓) chỉ **1 lần mỗi lần rời đất / nhảy tường**. Sau đó bấm Chém trên không = chém trên không thường, rơi theo trọng lực.
+- Giữ **↓ + Chém** (phím ↓ hoặc cần gạt chúc xuống quá ~45°) = pogo **cố ý**, nảy như cũ (luật pogo không đổi). Cần gạt chỉ hơi chúc xuống KHÔNG tính là cố ý.
+- "Khựng nhẹ": **lần chém trên không đầu** mỗi lần rời đất / nảy pogo / nhảy tường: 6 bước đầu đòn, tốc độ rơi kẹp ≤ 1,2 px/bước (chỉ khi đang rơi). Lần sau rơi bình thường.
+- Khựng khi trúng (hitstop 3 bước) chỉ dừng hình như cũ – trong lúc khựng không có vật lý nên không cộng dồn thành treo.
+- `?roi=cu` = như trước để so (tính là biến thể).
+
+| Bot (giữ nhảy 14 bước rồi bấm Chém mỗi 2 bước) | Trước (`?roi=cu`) | Sau |
+|---|---|---|
+| Ngay trên hình nộm phòng A | **không bao giờ chạm đất** (thử 1200 bước = 20 s, nảy mãi) | **chạm đất sau 53 bước** (≈ 0,9 s: 1 lần nảy tự động rồi rơi) |
+| Bấm mỗi 4 bước, trên hình nộm | không bao giờ chạm đất | 53 bước |
+| Khoảng trống (không có gì dưới chân) | 23 bước | 24 bước (+1 bước do "khựng nhẹ" lần chém đầu) |
+| Không bấm gì (nhảy thường) | 23 bước | 23 bước (không đổi) |
+| Giữ ↓ + Chém trên hình nộm (pogo CỐ Ý) | nảy mãi | nảy mãi – **giữ nguyên** luật pogo kiểu Hollow Knight |
+
+### 2. "Các cạnh tường đừng làm sắc nhọn" – ĐÃ SỬA (`game/runtime/dia-hinh-huong-moi.js`, chỉ hình – collider KHÔNG đổi)
+
+Trước: dải cạnh đứng của bộ đất mới bị cắt theo khung chữ nhật → mép đứng thẳng tắp, góc vuông (cột trái, tường phải trong ảnh iPhone).
+Nay lúc dựng đất (một lần, không tốn mỗi khung): **gặm mép** theo đường sần cố định theo vị trí (sâu 0,6–10 px logic vào trong, khúc lượn ~23 px +
+sần ~7 / 2,5 px, thuôn về 0 chỗ gặp sàn / trần và dưới mặt rêu), **viền than mảnh** theo đường mới (như nét viền ảnh gen), vài **búi rêu / rễ con** bám mép
+(nằm trong phần đã gặm, không nhô quá mép cũ), **góc lồi dưới bo tròn** r ≈ 12 px, góc lồi trên r ≈ 6 px. Mặt sàn (mặt trên rêu) không đổi.
+`?mep=cu` = mép thẳng cũ để so. Áp cho mọi trang dùng bộ đất mới: Lam mới 2, P0-C, phòng B (cùng file runtime). **Collider không đổi**: chỉ hình
+lùi vào trong tối đa 10 px logic – Lam vẫn chạm tường ở đúng chỗ cũ (có thể thấy khe ≤ 10 px giữa áo Lam và đất ở chỗ gặm sâu nhất).
+
+### 3. "Vạch thừa gì ở đây" – đã tìm từng cái
+
+Tái hiện: giữ nút Chém (cấp 3, tụ Dư Âm) đứng sát đe rèn phòng F, nhìn trái – giống hệt ảnh iPhone (`vach-thua-truoc-sau.png`).
+
+| Thứ trong ảnh | Là gì | Xử lý |
+|---|---|---|
+| **Vạch trắng sáng chéo ngang ngực** | "ánh lưỡi" lúc tụ Dư Âm – vẽ theo toạ độ lưỡi của **sheet Lam CŨ** (không phải vệt mẫu PH13) → với Lam mới thành vạch lơ lửng không trùng dao. Cùng lỗi: vạch "âm nhận" của **chém vang** | **Bỏ** với Lam mới (ánh lưỡi lúc tụ + âm nhận mọi đòn). `?lam=cu` giữ như cũ |
+| **Lưỡi dao thứ hai** | (a) lưỡi chĩa xuống-trước = Âm Đao của Lam trong **hình tạm D** (lúc tụ chưa có tư thế riêng); (b) lưỡi cong tối chĩa trái ngang bụng = **mỏ đe rèn** phòng F thò ra sau lưng Lam (đồ vật, không phải dao) | Tụ Dư Âm nay dùng tư thế **A (lấy đà)** thay D; không có lật sai (Lam nhìn trái, hình lật đúng). Mỏ đe giữ nguyên – Lam đứng trước đe thì thấy mỏ đe |
+| **Vòng tròn nhỏ phía trên** | **vòng nạp Dư Âm** (giữ Chém: vòng chạy dần; đầy + nhấp nháy = đã tụ, thả ra = chém vang) – chỉ báo cố ý, không phải lỗi | **Giữ** (là chỉ báo duy nhất cho biết đã tụ xong). Muốn bỏ / đổi kiểu thì báo |
+
+### 4. Cổng sang phòng mới – CHUẨN BỊ ghép ảnh cổng dọc (chưa vẽ lại)
+
+Đường A → F của trang này **chỉ có 1 cổng**: **cổng rễ phòng C** (`dP`). Các lối A↔B↔C↔D↔E↔F là lối hở (không cổng). 4 cổng còn lại (`dA dB dC dE`) nằm ở
+các phòng Làng Chuông cũ phía trái phòng A – có trong bản đồ nhưng **không đi tới được** (phòng A có tường trái). Số đủ trong `xem-thu/sua-2910/cong-vi-tri.json`.
+
+| Cổng | Phòng | Tâm x (px logic thế giới) | Collider (x, y, rộng × cao) | Trạng thái |
+|---|---|---|---|---|
+| **dP – cổng rễ** | C Hành lang gác, cột 22 | 8848 (sàn y 448) | 8759, 289 · **183 × 159** (so tâm đáy: −89, −159) | **đóng** lúc vào; mở khi hạ quái gác (Q[5]) và **mở luôn** (khoá "now"); mở > 60 % là đi xuyên được; 1 đèn báo (mắt ngọc) |
+| dA | Cổng làng 2 (cũ) | 1808 | 1719, 289 · 183 × 159 | đóng; mở khi đứng công tắc g1 (không tới được) |
+| dB | Sân chuông (cũ) | 3248 | 3159, 289 · 183 × 159 | đóng (không tới được) |
+| dC | Câu đố chuông (cũ) | 4240 | 4151, 289 · 183 × 159 | đóng (không tới được) |
+| dE | Chuông Gác Làng (cũ) | 5360 | 5271, 289 · 183 × 159 | mở sẵn (không tới được) |
+
+Khung cổng phòng C: trên cổng là cột đất treo hàng 0–8 (ô 'S'), cổng chiếm hàng 9–13 (y 288…448, cao đúng 160 = khoảng sàn → đáy cột treo).
+Hình hiện tại: `TT.veCong` (runtime/trang-tri-dia-hinh.js) – 2 trụ rễ + lưới rễ đan giữa (đóng), mở = lưới co về 2 trụ, mắt ngọc trên trụ là đèn báo.
+**Để ghép ảnh cổng dọc:** ảnh nên phủ đúng ô 183 × 160 logic neo giữa đáy (hoặc nếu cổng dọc hẹp hơn thì phải **đổi collider** – đổi luật, cần anh duyệt:
+gợi ý 48 × 159 neo giữa đáy, phần hai bên khi đó là lối trống). Cần 2 trạng thái (đóng / mở) cùng khung, hoặc đóng + "mở dần" (rút xuống đất / tách đôi).
+**Chưa tạm vẽ cột rễ dọc**: collider rộng 183 mà cột dọc hẹp sẽ thành bức tường vô hình hai bên – vẽ tạm sẽ gây hiểu nhầm, nên chờ ảnh + quyết định cỡ collider.
+
+### Đổi gì trong code
+- `thu-p0a/cong-cu/khoi-am-dao.js`: khối `ROI` (pogo tự động 1 lần, khựng nhẹ lần chém đầu, `?roi=cu`) → sinh lại `am-dao.html` (`tao-am-dao.py`).
+- `runtime/dia-hinh-huong-moi.js`: `MEP` / `GOC` / `veMep` (mép hữu cơ, `?mep=cu`).
+- `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: tắt âm nhận + ánh lưỡi lúc tụ với Lam mới, tư thế tụ = A.
+- Sinh lại: `thu-lam-moi-2/index.html`, `thu-p0c/index.html` (phiên `p0c-2910-e9cba386`), `thu-p0b/index.html` (đóng băng lần 4 `p0b-2910-e8aa09dc`),
+  `thu-phong-b/index.html` (chạy lại – ra đúng file cũ, trang này lấy từ P0-A nên **không** có sửa chém trên không; mép đất mới có vì dùng chung runtime).

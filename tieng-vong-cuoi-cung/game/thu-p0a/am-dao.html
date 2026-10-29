@@ -3222,6 +3222,25 @@ const P0X = {tenDon: n => ({1: 'atk1', 2: 'atk2', 3: 'atk3', 4: 'nảy', 5: 'H�
 { const _tt = P0.thuThap; P0.thuThap = function (D, hb, face, n, tuX) { const co = _tt(D, hb, face, n, tuX); AD.hopLam(D, hb, co); return co; }; }
 { const _gq = P0.giaiQuyet; P0.giaiQuyet = function () { AD.capNhatVet(); const nom = Q[6], h0 = nom.hp; _gq(); if (nom.hp !== h0) noiNom10(nom, h0 - nom.hp); }; }
 { const _up = updatePlayer; updatePlayer = function () { if (!pl.dead) AD.truocCapNhat(); const D = pl.D, n0 = pl.atkN; _up(); if (n0 === 7 && pl.atkN !== 7) AD.hetChemVang(D); }; }
+// 29/10 (iPhone: "nếu cứ bay trên không chém thì chả bao giờ xuống") – CHÉM TRÊN KHÔNG KHÔNG TREO. ?roi=cu = như cũ để so.
+//   Nguyên nhân đo được: trọng lực KHÔNG bị huỷ khi chém trên không; cái giữ Lam lơ lửng là POGO TỰ ĐỘNG (P.autoPogo): bấm chém khi đang rơi
+//   mà có quái / hình nộm ngay dưới chân → game tự đổi thành chém nảy → trúng → nảy lên (vy −13,46) → rơi → bấm chém → nảy … mãi mãi.
+//   Sửa: (1) pogo TỰ ĐỘNG (không giữ xuống) chỉ MỘT lần mỗi lần rời đất / nhảy tường; sau đó bấm chém trên không = chém trên không thường,
+//        rơi theo trọng lực. Giữ XUỐNG + chém = pogo cố ý, vẫn nảy được như cũ (luật pogo không đổi).
+//   (2) "khựng nhẹ" cho LẦN CHÉM TRÊN KHÔNG ĐẦU mỗi lần rời đất / nảy pogo / nhảy tường: 6 bước đầu đòn, tốc độ rơi kẹp ≤ 1,2 px/bước
+//        (chỉ khi đang rơi; đang bay lên không đổi). Lần chém sau: rơi bình thường. Khựng khi trúng (hitstop) chỉ dừng hình 3 bước như cũ, không cộng dồn.
+const ROI = (() => { const cu = AD_Q.get('roi') === 'cu';
+  return {cu, autoDung: false, khungDung: false, khT: 0, KH_BUOC: 6, KH_VY: 1.2}; })();
+// "cố ý xuống" = đúng ngưỡng hướng lúc ra đòn của P0-A (phím ↓ hoặc cần gạt > 0,7 ≈ 45°) – cần gạt chỉ hơi chúc xuống KHÔNG tính
+const roiCoYXuong = () => !!kb.d || (dpadId !== null && stickY > P0_SO.nguongHuong);
+{ const _pt = pogoTarget; pogoTarget = function () { if (!ROI.cu && ROI.autoDung) return false; return _pt(); }; }   // chỉ dùng cho pogo TỰ ĐỘNG
+{ const _sa = startAtk; startAtk = function (n, dir) { if (!ROI.cu && n === 4 && !pl.onGround && !roiCoYXuong()) ROI.autoDung = true; _sa(n, dir); }; }
+{ const _pb = pogoBounce; pogoBounce = function (hb) { _pb(hb); ROI.khungDung = false; ROI.khT = 0; }; }
+{ const _up = updatePlayer; updatePlayer = function () { const n0 = pl.atkN, t0 = pl.atkT; _up();
+    if (ROI.cu) return;
+    if (pl.onGround || pl.wjT === 16 || pl.st === 'wall' || pl.dead) { ROI.autoDung = false; ROI.khungDung = false; ROI.khT = 0; }
+    if (pl.atkN === 6 && !pl.onGround && (n0 !== 6 || pl.atkT < t0) && !ROI.khungDung) { ROI.khungDung = true; ROI.khT = ROI.KH_BUOC; }
+    if (ROI.khT > 0) { ROI.khT--; if (pl.atkN === 6 && pl.vy > ROI.KH_VY) pl.vy = ROI.KH_VY; } }; }
 // giữ Chém đếm xuyên hitstop: bước khựng (game khựng khi trúng) vẫn cộng giuT (ghi riêng giuKhung), để "giữ 20 tick" không dài ra khi đang chém trúng.
 // PH7 mục 6: KHÔNG đếm khi tạm dừng. Đang dừng (⚙ / màn dừng) hoặc khoảng cách thật giữa hai bước > 250 ms (tab ẩn, máy khựng) → HUỶ giữ.
 { const _st = step; let msTruoc = -1;

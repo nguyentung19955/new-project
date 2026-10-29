@@ -1,0 +1,137 @@
+{
+ "ghi_chu": "Bot: đặt Lam, giữ nhảy 14 bước, rồi bấm Chém mỗi 2 (hoặc 4) bước; đếm số bước từ lúc thả nhảy tới khi chạm đất (tối đa 1200 = không bao giờ chạm). trên hình nộm = đứng ngay trên hình nộm phòng A (pogo tự động có mục tiêu); khoảng trống = không có gì dưới chân. đòn: 0 = không đòn, 4 = chém nảy (pogo), 6 = chém trên không. giữ xuống = pogo CỐ Ý (phím ↓), luật pogo giữ nguyên nên vẫn nảy mãi trên hình nộm.",
+ "ket_qua": {
+  "truoc (?roi=cu)": {
+   "tren-hinh-nom/khong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0
+    ]
+   },
+   "tren-hinh-nom/bam-chem-moi-2-buoc": {
+    "buoc": 1200,
+    "toi_dat": false,
+    "don": [
+     0,
+     4,
+     6
+    ]
+   },
+   "tren-hinh-nom/bam-chem-moi-4-buoc": {
+    "buoc": 1200,
+    "toi_dat": false,
+    "don": [
+     0,
+     4,
+     6
+    ]
+   },
+   "tren-hinh-nom/giu-xuong-chem": {
+    "buoc": 1200,
+    "toi_dat": false,
+    "don": [
+     0,
+     4
+    ]
+   },
+   "khoang-trong/khong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0
+    ]
+   },
+   "khoang-trong/bam-chem-moi-2-buoc": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0,
+     6
+    ]
+   },
+   "khoang-trong/bam-chem-moi-4-buoc": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0,
+     6
+    ]
+   },
+   "khoang-trong/giu-xuong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0,
+     4
+    ]
+   }
+  },
+  "sau": {
+   "tren-hinh-nom/khong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0
+    ]
+   },
+   "tren-hinh-nom/bam-chem-moi-2-buoc": {
+    "buoc": 53,
+    "toi_dat": true,
+    "don": [
+     0,
+     4,
+     6
+    ]
+   },
+   "tren-hinh-nom/bam-chem-moi-4-buoc": {
+    "buoc": 53,
+    "toi_dat": true,
+    "don": [
+     0,
+     4,
+     6
+    ]
+   },
+   "tren-hinh-nom/giu-xuong-chem": {
+    "buoc": 1200,
+    "toi_dat": false,
+    "don": [
+     0,
+     4
+    ]
+   },
+   "khoang-trong/khong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0
+    ]
+   },
+   "khoang-trong/bam-chem-moi-2-buoc": {
+    "buoc": 24,
+    "toi_dat": true,
+    "don": [
+     0,
+     6
+    ]
+   },
+   "khoang-trong/bam-chem-moi-4-buoc": {
+    "buoc": 24,
+    "toi_dat": true,
+    "don": [
+     0,
+     6
+    ]
+   },
+   "khoang-trong/giu-xuong-chem": {
+    "buoc": 23,
+    "toi_dat": true,
+    "don": [
+     0,
+     4
+    ]
+   }
+  }
+ }
+}

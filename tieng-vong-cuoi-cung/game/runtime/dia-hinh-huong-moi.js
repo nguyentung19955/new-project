@@ -194,6 +194,59 @@ const DHM = (() => {
      Collider KHÔNG đổi: chỉ đọc lưới ô. */
   const CW = 256, CHH = 128;
   let T3 = null, T2 = null;
+  let MEP = [], GOC = [];
+  // nhiễu 1 chiều mượt theo vị trí (giá trị 0..1), k = khoá cột/cạnh
+  function nhieu(y, buoc, k) { const i = Math.floor(y / buoc), f = y / buoc - i, a = bam(i, k), b = bam(i + 1, k), u = f * f * (3 - 2 * f); return a + (b - a) * u; }
+  function sauMep(m, y) {   // độ sâu gặm (logic) tại y
+    let d = 0.6 + 6.4 * nhieu(y, 23, m.k) + 2.6 * nhieu(y, 7, m.k + 411) + 1.1 * nhieu(y, 2.5, m.k + 911);
+    const vao = m.tren ? 12 : 8, ra = m.duoi ? 0 : 8;                        // thuôn: dưới mặt trên rêu / gặp sàn-trần
+    const t0 = Math.min(1, (y - m.y0) / vao), t1 = ra ? Math.min(1, (m.y1 - y) / ra) : 1;
+    return Math.max(0, Math.min(10, d)) * Math.max(0, Math.min(t0, t1));
+  }
+  function veMep(g, bx, by, w, h) {
+    if (!MEP.length) return;
+    g.save(); g.setTransform(2, 0, 0, 2, -bx * 2, -by * 2);
+    const vung = (x0, y0, x1, y1) => !(x1 < bx - 2 || x0 > bx + w + 2 || y1 < by - 2 || y0 > by + h + 2);
+    const ds = MEP.filter(m => vung(Math.min(m.xo, m.xo - m.s * 12), m.y0, Math.max(m.xo, m.xo - m.s * 12), m.y1));
+    const duong = (m) => { const P = []; for (let y = m.y0; y < m.y1; y += 1.5) P.push([m.xo - m.s * sauMep(m, y), y]); P.push([m.xo - m.s * sauMep(m, m.y1), m.y1]); return P; };
+    // (a) gặm
+    g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
+    for (const m of ds) { const P = duong(m); g.beginPath(); g.moveTo(m.xo + m.s * 4, m.y0); for (const [x, y] of P) g.lineTo(x, y); g.lineTo(m.xo + m.s * 4, m.y1); g.closePath(); g.fill(); }
+    // (c) góc lồi bo tròn (+ sần nhẹ)
+    for (const c of GOC) { if (!vung(c.x - 12, c.y - 12, c.x + 12, c.y + 12)) continue;
+      const r = c.r, cx = c.x + c.sx * r, cy = c.y + c.sy * r;
+      g.beginPath(); g.moveTo(c.x - c.sx * 3, c.y - c.sy * 3); g.lineTo(c.x + c.sx * (r + 0.5), c.y - c.sy * 3);
+      for (let i = 0; i <= 10; i++) { const a = i / 10 * Math.PI / 2, j = 0.6 * (bam(i, c.x * 3 + c.y) - 0.5);
+        g.lineTo(cx - c.sx * (r + j) * Math.sin(a) * 1 + 0, cy - c.sy * (r + j) * Math.cos(a)); }
+      g.lineTo(c.x - c.sx * 3, c.y + c.sy * (r + 0.5)); g.closePath(); g.fill(); }
+    // (b) viền than theo đường sần (chỉ phủ lên phần đất còn lại) + rêu / rễ con
+    g.globalCompositeOperation = 'source-atop'; g.lineJoin = 'round'; g.lineCap = 'round';
+    for (const m of ds) { const P = duong(m);
+      g.strokeStyle = 'rgba(18,12,8,0.82)'; g.lineWidth = 2.4; g.beginPath(); P.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke();
+      g.strokeStyle = 'rgba(120,84,52,0.35)'; g.lineWidth = 1; g.beginPath(); P.forEach(([x, y], i) => { x -= m.s * 2.2; i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); }
+    for (const c of GOC) { if (!vung(c.x - 12, c.y - 12, c.x + 12, c.y + 12)) continue; const r = c.r, cx = c.x + c.sx * r, cy = c.y + c.sy * r;
+      g.strokeStyle = 'rgba(18,12,8,0.82)'; g.lineWidth = 2.4; g.beginPath();
+      for (let i = 0; i <= 10; i++) { const a = i / 10 * Math.PI / 2; const x = cx - c.sx * r * Math.sin(a), y = cy - c.sy * r * Math.cos(a); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
+    g.globalCompositeOperation = 'source-over';
+    for (const m of ds) for (let y = Math.ceil(m.y0 / 10) * 10; y < m.y1 - 8; y += 10) {
+      const u = bam(Math.floor(y / 10), m.k + 77), d = sauMep(m, y); if (d < 3) continue;
+      const xe = m.xo - m.s * d;   // mép đất mới tại y
+      g.save(); g.beginPath(); g.rect(m.s < 0 ? m.xo : m.xo - 30, y - 16, 30, 40); g.clip();   // không nhô quá mép vẽ cũ (luật nhô ≤ 3)
+      if (u < 0.3) {   // búi rêu bám mép: 5 đốm chồng nhau, nửa trên đất nửa trong phần gặm
+        for (let i = 0; i < 5; i++) { const v = bam(i, y * 7 + m.k), w2 = bam(i + 9, y * 5 + m.k), rr = 1.0 + 1.0 * v;
+          const x = xe + m.s * Math.min(d - rr, 0.6 + 2 * w2) * (i % 2 ? 0.5 : 1), yy = y - 3 + i * 1.7;
+          g.fillStyle = ['rgba(40,44,22,0.92)', 'rgba(58,62,28,0.92)', 'rgba(48,54,25,0.92)', 'rgba(76,76,32,0.9)', 'rgba(98,92,40,0.85)'][i];
+          g.beginPath(); g.ellipse(x, yy, rr * 1.25, rr, 0.4 * m.s, 0, 7); g.fill(); }
+      } else if (u > 0.8) {   // rễ con: sợi mảnh mọc từ mép đất mới, cong xuống
+        const L = 8 + 7 * bam(y, m.k + 5), ra = Math.min(d - 0.5, 3.5);
+        g.strokeStyle = 'rgba(40,26,15,0.95)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(xe - m.s * 1, y);
+        g.quadraticCurveTo(xe + m.s * ra, y + L * 0.35, xe + m.s * ra * 0.5, y + L); g.stroke();
+        g.strokeStyle = 'rgba(150,108,66,0.55)'; g.lineWidth = 0.6; g.stroke();
+      }
+      g.restore();
+    }
+    g.restore();
+  }
   function dungMoi(opt) {
     const t0 = performance.now(), T = opt.T, R = opt.rows, B = M.bo_moi, KH = B.khung, IM = IMG.dat;
     const NHO = B.nho_logic, NHD = B.nho_day_logic, HS = B.mat_cao_logic, HD = B.day_cao_logic, DAU = B.dau_logic + NHO, TW = B.tuong_rong_logic,
@@ -310,6 +363,30 @@ const DHM = (() => {
     for (const it of opt.trangTri || []) { const o = M.trang_tri.o[it.o]; if (!o) continue; const [sx, sy, w, h] = o.khung;
       L.tt.push(['tt', sx, sy, w, h, it.x, it.y - h / 2 + (it.lun || 0), w / 2, h / 2]); }
 
+    // ---- Sửa iPhone 29/10 ("các cạnh tường đừng làm sắc nhọn"): MÉP HỮU CƠ cho cạnh đứng lộ + góc lồi (chỉ HÌNH, collider không đổi).
+    // Dải cạnh đứng của ảnh bị cắt theo khung chữ nhật (op.c) → mép đứng thẳng tắp, góc vuông. Nay sau khi nướng các lớp 0–3.8:
+    //   (a) gặm mép theo đường sần cố định theo vị trí (băm, không ngẫu nhiên lúc chạy): sâu 0,5–7 logic vào trong từ mép vẽ ngoài cùng,
+    //       hai tần số (khúc lượn ~11 logic + sần ~3,5 logic), thuôn về 0 ở chỗ gặp sàn / trần (góc lõm) và dưới mặt trên rêu;
+    //   (b) viền than mảnh theo đường sần mới (như nét viền của ảnh gen) + vài búi rêu / rễ con nằm TRONG phần vừa gặm (không nhô quá mép cũ);
+    //   (c) góc lồi dưới (đáy gặp cạnh đứng) bo tròn r ≈ 9 logic; góc lồi trên (mặt trên gặp cạnh đứng) bo nhẹ r ≈ 5 logic.
+    // ?mep=cu → mép thẳng như trước để so.
+    MEP = []; GOC = [];
+    if (!/[?&]mep=cu/.test(location.search)) {
+      for (const tx of cot) for (const phai of [false, true]) {
+        let ty = 0;
+        while (ty < R) {
+          const lo = (y) => laDat(tx, y) && !laBe(tx, y) && !dac(tx + (phai ? 1 : -1), y);
+          if (!lo(ty)) { ty++; continue; }
+          let t1 = ty; while (t1 + 1 < R && lo(t1 + 1)) t1++;
+          const xo = phai ? (tx + 1) * T + NHO : tx * T - NHO, s = phai ? 1 : -1;
+          const tren = !dac(tx, ty - 1), duoi = t1 + 1 < R && !dac(tx, t1 + 1);
+          MEP.push({xo, s, y0: ty * T - (tren ? NHO : 0), y1: (t1 + 1) * T + (duoi ? NHD : 0), tren, duoi, k: tx * 13 + (phai ? 7 : 3)});
+          if (tren) GOC.push({x: xo, y: ty * T - NHO, sx: -s, sy: 1, r: 6});
+          if (duoi) GOC.push({x: xo, y: (t1 + 1) * T + NHD, sx: -s, sy: -1, r: 12});
+          ty = t1 + 1;
+        }
+      }
+    }
     // ---- nướng: chia mảng theo khung bao của lệnh (sau cắt)
     const MAP = new Map();
     for (const o of ops) {
@@ -361,6 +438,7 @@ const DHM = (() => {
         g.drawImage(T3, 0, 0, w * 2, h * 2, 0, 0, w * 2, h * 2);
       }
       for (const l of [3.7, 3.75, 3.76, 3.8]) for (const o of m.ops) if (o.l === l) ve(g, o, bx, by);   // bệ mỏng, góc lõm (bo_sung)
+      veMep(g, bx, by, w, h);   // Sửa iPhone 29/10: mép đứng + góc lồi hữu cơ
       // bóng góc lõm (sàn gặp tường) – chỉ chỗ không có mảnh góc lõm
       g.save(); g.setTransform(2, 0, 0, 2, -bx * 2, -by * 2);
       for (const [x, y] of ao) { if (x < bx - 24 || x > bx + w + 24 || y < by - 24 || y > by + h + 24) continue;

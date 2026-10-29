@@ -186,3 +186,12 @@ Không còn câu hỏi mới bắt buộc. Một điểm để ý khi thử: lu�
 - `cong-cu/tao-p0c.py` – sinh trang. `cong-cu/khoi-p0c.js` – khối P0-C. `cong-cu/tao-asset-p0c.py` – cắt ảnh Ấn.
 - `cong-cu/quay-p0c.py` – quay video + ghi số. `cong-cu/do-luot-day.js` – đo lướt xuyên / đẩy chạm thân (chạy trong trang, chỉ ghi số).
 - Khi `thu-p0a/am-dao.html`, `thu-phong-b`, khối Bọ đổi: chạy lại `python3 game/thu-p0c/cong-cu/tao-p0c.py`.
+
+## Sửa iPhone 29/10
+
+Sinh lại bằng `cong-cu/tao-p0c.py` sau 2 sửa ở nguồn (khối P0-C **không đổi**) → phiên **`p0c-2910-e9cba386`**:
+- **Chém trên không không treo**: pogo tự động chỉ 1 lần mỗi lần rời đất (bấm Chém liên tục trên quái / hình nộm không còn nảy mãi); giữ ↓ + Chém vẫn pogo như cũ.
+  Chi tiết + số: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục "Sửa iPhone 29/10". `?roi=cu` = cũ.
+- **Mép đất bo mềm** (`game/runtime/dia-hinh-huong-moi.js`, dùng chung): cạnh đứng sần / rêu / rễ, góc lồi bo tròn – collider không đổi. `?mep=cu` = mép thẳng cũ.
+  Ảnh + video: `game/thu-lam-moi-2/xem-thu/sua-2910/`.
+- Kiểm Chromium: 0 lỗi trang; bot chém liên tục trên hình nộm chạm đất sau 53 bước (trước: không bao giờ). Chưa thử iPhone thật.

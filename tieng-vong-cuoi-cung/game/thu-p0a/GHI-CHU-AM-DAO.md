@@ -458,3 +458,26 @@ Quay lại: `python3 -B game/thu-p0a/cong-cu/quay-am-dao.py [sach giu vet proc c
 - Chưa có clip tụ / chém vang riêng (dùng khung nhát 1 giữ yên + tư thế nhát 3, đúng KHVK mục 10). Âm thanh là tiếng tổng hợp có sẵn (`bell`), chưa có âm "vang" riêng; video không có tiếng.
 - Đòn nảy (`ATK[4]`) **đã đo** âm nhận (PH7): 54,6–59,8 px chĩa xuống, mép trên cạnh dưới hộp 10/10 tick. Kỹ năng chỉ dùng trên đất (KHVK 2a).
 - Công cụ quay có dời vị trí quái để dựng cảnh (dời Chuông Gỗ cho cảnh bẫy và cảnh đánh; quái gác cạnh hình nộm cho ca "trúng 2 con"; đặt lại hồi chiêu giữa các lần thử) – ghi trong log mỗi cảnh, không phải luật game.
+
+## Sửa iPhone 29/10 – chém trên không không treo
+
+Nhận xét (trang Lam mới, sinh từ trang này): **"nếu cứ bay trên không chém thì chả bao giờ xuống"**. Sửa ở nguồn `cong-cu/khoi-am-dao.js` (khối `ROI`),
+sinh lại `am-dao.html` bằng `tao-am-dao.py`. Đo + video: `game/thu-lam-moi-2/xem-thu/sua-2910/` (`do-roi.json`, `chem-tren-khong-truoc-sau-60fps.mp4`).
+
+- **Nguyên nhân:** trọng lực vẫn tác dụng khi chém trên không; thứ giữ Lam trên không là **pogo tự động** (`P.autoPogo`): bấm Chém lúc rơi mà có quái /
+  hình nộm ngay dưới → thành chém nảy → trúng → nảy lên (vy −13,46) → lặp vô hạn.
+- **Sửa:** pogo tự động (không cố ý giữ ↓) chỉ **1 lần mỗi lần rời đất / nhảy tường** (nảy pogo không trả lại lượt này); sau đó Chém trên không = chém thường, rơi.
+  Giữ ↓ (phím, hoặc cần gạt quá ngưỡng hướng 0,7 ≈ 45° như lúc ra đòn) + Chém = pogo cố ý, nảy như cũ. **Khựng nhẹ** cho lần chém trên không đầu mỗi lần rời đất /
+  nảy pogo / nhảy tường: 6 bước đầu, rơi kẹp ≤ 1,2 px/bước; các lần sau rơi bình thường. Hitstop không đổi (không có vật lý trong lúc khựng → không cộng dồn).
+- `?roi=cu` = như cũ (biến thể). Mọi luật khác giữ nguyên (sát thương, hộp, ATK, pogo cố ý, nhảy mềm).
+
+| Bot (giữ nhảy 14 bước rồi bấm Chém mỗi 2 bước) | Trước (`?roi=cu`) | Sau |
+|---|---|---|
+| Ngay trên hình nộm phòng A | **không bao giờ chạm đất** (thử 1200 bước = 20 s, nảy mãi) | **chạm đất sau 53 bước** (≈ 0,9 s: 1 lần nảy tự động rồi rơi) |
+| Bấm mỗi 4 bước, trên hình nộm | không bao giờ chạm đất | 53 bước |
+| Khoảng trống (không có gì dưới chân) | 23 bước | 24 bước (+1 bước do "khựng nhẹ" lần chém đầu) |
+| Không bấm gì (nhảy thường) | 23 bước | 23 bước (không đổi) |
+| Giữ ↓ + Chém trên hình nộm (pogo CỐ Ý) | nảy mãi | nảy mãi – **giữ nguyên** luật pogo kiểu Hollow Knight |
+
+Trang sinh lại: `thu-lam-moi-2`, P0-C (`p0c-2910-e9cba386`), P0-B (đóng băng lần 4 `p0b-2910-e8aa09dc`). 0 lỗi trang ở cả 5 trang (am-dao, P0-C, P0-B, phòng B, Lam mới 2);
+bot spam chém trên hình nộm chạm đất sau 53 bước ở am-dao / P0-C / P0-B / Lam mới 2. Phòng B (`thu-phong-b`) sinh từ P0-A gốc nên **không** có sửa này.

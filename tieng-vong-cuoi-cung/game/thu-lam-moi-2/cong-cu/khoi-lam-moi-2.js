@@ -135,6 +135,8 @@ const LM2 = (() => {
     if (a2 === 'walljump') return pl.wjT >= 15 ? 'J1' : nhanBay();
     if (a2 === 'jump' || a2 === 'fall') return nhanBay();
     if (a2 === 'idle' || a2 === 'land') { if (M.datT > 0) return 'L'; const t = (M.idT - 1) % 120; return t < 36 ? 'I1' : t < 60 ? 'I2' : t < 84 ? 'I3' : 'I1'; }
+    // Sửa iPhone 29/10: giữ Chém tụ Dư Âm – trước dùng D (dao chúc xuống trước chân, đọc như "lưỡi dao thứ hai") → A (rút dao thấp sau hông = lấy đà)
+    if (a2 === 'tu' && TU.A) return 'A';
     return 'tam:' + a2;
   }
   function datNhan() { let n = chonNhan();
@@ -281,6 +283,10 @@ const LM2 = (() => {
 // Hộp + sát thương KHÔNG đổi.
 // Bộ 4: chém 2/3, hất, trên không cũng thay vệt ảnh + âm nhận cũ bằng vệt mẫu (khi đã có sheet + "vet"); chém vang (7) giữ vệt cũ.
 { const _hv = huVet; huVet = function (n, ox, oy, face, al) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (n === 4 || LM2.VT[n])) return; _hv(n, ox, oy, face, al); }; }
-{ const _an = AD.veAmNhan; AD.veAmNhan = function (...a) { if (!LM2.ST.vfx) return; if (LM2.ST.moi && (a[3] === 4 || LM2.VT[a[3]])) return; return _an(...a); }; }
+// Sửa iPhone 29/10 ("vạch thừa"): âm nhận và ánh lưỡi lúc tụ Dư Âm tính theo LƯỠI CỦA SHEET LAM CŨ (luoiKhung) → với Lam mới thành một vạch trắng
+// sáng lơ lửng ngang ngực, không trùng dao. Lam mới: tắt âm nhận MỌI đòn (kể cả chém vang 7) và bỏ ánh lưỡi lúc tụ; GIỮ vòng nạp trên đầu (báo đã tụ).
+{ const _an = AD.veAmNhan; AD.veAmNhan = function (...a) { if (!LM2.ST.vfx) return; if (LM2.ST.moi) return; return _an(...a); }; }
+{ const _vt = AD.veTu; AD.veTu = function (s, X, Y) { if (!LM2.ST.moi) return _vt(s, X, Y); const h = s.h2; s.h2 = false;   // luoiKhung → null: chỉ vẽ vòng nạp
+    try { _vt(s, X, Y); } finally { s.h2 = h; } }; }
 { const _hv = huVe; huVe = function () { _hv(); LM2.veVQ(); }; }   // vệt mẫu vẽ SAU hiệu ứng ảnh (như âm nhận cũ)
 window.TVLM2 = LM2;

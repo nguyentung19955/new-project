@@ -372,3 +372,10 @@ game/thu-phong-b/index.html                trang thử (SINH RA, đừng sửa t
   cong-cu/khoi-phong-b.js                  số đặt phòng B (PB_SO) + móc vẽ + API chụp (TVPB)
   cong-cu/chup-va-quay.py                  ảnh, video, số đo → xem-thu/
 ```
+
+## Sửa iPhone 29/10
+
+- **Mép đất bo mềm**: trang này dùng chung `game/runtime/dia-hinh-huong-moi.js` nên mép đứng + góc lồi đã hữu cơ (cạnh sần, rêu, rễ con, góc bo tròn) – **collider không đổi**.
+  `?mep=cu` = mép thẳng cũ để so. Ảnh trước / sau phòng A, C, E, F + video: `game/thu-lam-moi-2/xem-thu/sua-2910/`.
+- Đã chạy lại `cong-cu/tao-tu-p0a.py`: ra **đúng file cũ** (trang này sinh từ P0-A gốc `thu-p0a/index.html`, không qua Âm Đao) → **không có** sửa "chém trên không không treo"
+  (pogo tự động ở đây vẫn như cũ). Muốn có thì phải đổi nguồn của trang này sang `am-dao.html` – chưa làm.

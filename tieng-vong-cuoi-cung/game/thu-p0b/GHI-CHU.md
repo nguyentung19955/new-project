@@ -1,8 +1,8 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2810-d219ca3a` – đóng băng lần 3 ngày 28/10/2026 (camera kiểu Dead Cells; giữ mọi thứ của lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
-> In trên màn bắt đầu ("… · p0b-2810-d219ca3a · bản ĐÓNG BĂNG 28/10/2026 lần 3 (camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
-> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-e8aa09dc` – đóng băng lần 4 ngày 29/10/2026 (chém trên không không treo; giữ mọi thứ của lần 3: camera kiểu Dead Cells, và lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
+> In trên màn bắt đầu ("… · p0b-2910-e8aa09dc · bản ĐÓNG BĂNG 29/10/2026 lần 4 (chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
 `PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
@@ -354,3 +354,13 @@ Quay lại: `python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong
 - Chưa thử trên iPhone (checklist Safari thật chưa ai làm). Không kết luận điều khiển / trải nghiệm đạt từ Chromium.
 - Chưa chọn A / B / B2, chưa chốt chi phí, chưa ghép game chính, chưa đổi cách giữ công tắc trong game chính.
 - P0-C (tinh anh Chuông Gỗ, Ấn Rèn, đe mở Dư Âm) – làm riêng, không trong trang này.
+
+## Sửa iPhone 29/10 – đóng băng lần 4 `p0b-2910-e8aa09dc`
+
+- **Chém trên không không treo** (sửa ở nguồn Âm Đao `game/thu-p0a/cong-cu/khoi-am-dao.js`, chi tiết + số: `game/thu-p0a/GHI-CHU-AM-DAO.md` mục "Sửa iPhone 29/10"):
+  bấm Chém liên tục khi đang rơi trên quái / hình nộm trước đây biến thành pogo tự động nảy mãi; nay pogo tự động chỉ 1 lần mỗi lần rời đất / nhảy tường,
+  giữ ↓ + Chém vẫn pogo như cũ. Bot chém liên tục trên hình nộm: trước không bao giờ chạm đất → nay chạm đất sau 53 bước. `?roi=cu` = cũ (biến thể).
+- **Cạnh đất bo mềm: KHÔNG áp vào P0-B** – trang này vẫn dùng đất cũ (xem mục "Đất mới 28/10" bên dưới), không dùng bộ đất mới nên không có mép mới.
+  Nhãn đóng băng vì vậy chỉ ghi "chém trên không không treo" (ghi thêm "cạnh đất bo mềm" sẽ sai với trang này).
+- Nhãn mới (khối `khoi-p0b.js`, dòng `VB_DONG_BANG`): **"29/10/2026 lần 4 (chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)"**.
+  Vọng A / B, số, luật khác giữ nguyên. Kiểm Chromium: 0 lỗi trang. Chưa thử iPhone thật.
