@@ -14,8 +14,15 @@ src = open(os.path.join(GAME, 'thu-p0a', 'am-dao.html'), encoding='utf-8').read(
 KHOI = open(os.path.join(HERE, 'khoi-p0b.js'), encoding='utf-8').read()
 import hashlib, datetime
 def _bam(*ps): h = hashlib.sha1(); [h.update(open(x, 'rb').read()) for x in ps]; return h.hexdigest()[:8]
+# PH14 mục 7: bản đóng băng phải gồm cả RUNTIME DÙNG CHUNG + ảnh / JSON nó nạp – không chỉ index.html. Mã phiên băm thêm mọi file
+# ../runtime/*.js mà trang nạp + dữ liệu cổng / đất mà runtime đọc → runtime đổi thì phiên đổi (không còn "giữ nguyên chỉ vì index.html giống cũ").
+# Danh sách ĐẦY ĐỦ mọi file trang tải (kèm sha1) ghi bằng cong-cu/ghi-dong-bang.py → thu-p0b/dong-bang/<phiên>.json.
+import re as _re
+RUNTIME = sorted(set(os.path.normpath(os.path.join(GAME, 'thu-p0b', m)) for m in _re.findall(r'<script src="(\.\./runtime/[^"]+\.js)"', src)))
+DU_LIEU_RT = [os.path.join(GAME, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4', f) for f in ('cong-doc.json', 'cong-doc-3x.png', 'dia-hinh-v4.json')]
 PHIEN = 'p0b-' + datetime.date.today().strftime('%d%m') + '-' + _bam(os.path.join(GAME, 'thu-p0a', 'am-dao.html'), os.path.join(HERE, 'khoi-p0b.js'),
-                                                                 os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), os.path.abspath(__file__))
+                                                                 os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), os.path.abspath(__file__),
+                                                                 *RUNTIME, *[x for x in DU_LIEU_RT if os.path.exists(x)])
 KHOI = KHOI.replace("'__PHIEN__'", "'" + PHIEN + "'")
 BO = open(os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), encoding='utf-8').read()
 
@@ -109,4 +116,4 @@ if loi:
     sys.exit('LỖI – nguồn đã đổi, sửa script:\n  ' + '\n  '.join(loi))
 dst = os.path.join(THU, 'index.html')
 open(dst, 'w', encoding='utf-8').write(out)
-print('ghi', dst, len(out.encode('utf-8')), 'byte')
+print('ghi', dst, len(out.encode('utf-8')), 'byte · phiên', PHIEN, '· runtime băm kèm:', [os.path.basename(x) for x in RUNTIME])

@@ -21,7 +21,7 @@
    Các cờ của P0-A / Âm Đao giữ nguyên (?hitbox=1, ?debug=input …). */
 
 const VB_PHIEN = '__PHIEN__';   // tao-p0b.py điền: ngày + mã băm nguồn (ghi vào log để biết phiên bản game)
-const VB_DONG_BANG = '29/10/2026 lần 5 (cổng dọc; lần 4: chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)';   // PH10 đóng băng 28/10; lần 2 = sửa theo nhận xét iPhone 28/10 (chỉ hình kiếm, vệt chém, nhảy); lần 3 = camera kiểu Dead Cells (?cam=phong = camera cũ → biến thể) – cấu hình Vọng giữ nguyên
+const VB_DONG_BANG = '29/10/2026 lần 6 (PH14: cổng mở bỏ khung giữa, 2 trụ ngoài, đèn đồng – runtime + ảnh + JSON chụp kèm phiên; lần 5: cổng dọc; lần 4: chém trên không không treo; lần 3: camera kiểu Dead Cells; lần 2: kiếm to, vệt chém mềm, nhảy mềm)';   // PH10 đóng băng 28/10; lần 2 = sửa theo nhận xét iPhone 28/10 (chỉ hình kiếm, vệt chém, nhảy); lần 3 = camera kiểu Dead Cells (?cam=phong = camera cũ → biến thể) – cấu hình Vọng giữ nguyên
 const VB_Q = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new Map(); } })();
 const VB_SO = {
   cau: (() => { const v = (VB_Q.get('vong') || '').toLowerCase(); return v === 'a' || v === 'b' || v === 'b2' ? v : ''; })(),   // '' = chưa chọn (màn bắt đầu)

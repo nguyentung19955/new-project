@@ -39,11 +39,22 @@ except Exception:
 HOP = {1: [4, -97, 86, 48], 2: [-10, -100, 90, 48], 3: [-13, -59, 99, 59], 4: [-26, -24, 64, 82], 5: [-9, -140, 87, 60], 6: [-3, -107, 95, 48]}
 # hộp mục tiêu của khung đầy = đường quét đo trên tư thế (kiem/thu3-do-dao.png, thu4-do-dao.png – như vệt mẫu code):
 DAT = {
-    1: dict(hang='ngang', muc=[4, -66, 92, -28], do='chém 1: lưỡi B (10,−47)→(57,−48), C chúc tới (47,−20); liềm mẫu tâm y −47, hai đầu x 6, bụng x 86'),
-    6: dict(hang='ngang', muc=[6, -85, 94, -47], do='trên không: lưỡi K2 ngang y −60, mũi x 81; liềm mẫu tâm (8 → 88, −66)'),
-    2: dict(hang='cheo', muc=[0, -106, 66, -14], do='chém 2: mũi dao C2A (5,−12) → C2B (55,−97), tay ~ vai (0,−58)'),
-    5: dict(hang='hat', muc=[22, -150, 70, -8], do='hất: mũi H1 (50,−8) → H2 (55,−110) → H3 (30,−145)'),
-    3: dict(hang='bo', muc=[6, -134, 84, -4], do='chém 3: mũi C3B (10,−131) trên đầu → C3C (52,−4); hộp mục tiêu dời phải 12 px so với đường quét vì lõi phải hạ xuống hộp thấp (y −59…0) – ở x gốc cung đè lên mặt Lam'),
+    # PH14 mục 3B: BỎ việc nâng liềm 19 px. Liềm chém 1 được PHÂN BỐ LẠI: dẹt theo chiều đứng (sy = 0,55 · s – liềm ngang thấp, dài:cao ≈ 4:1),
+    # mép dưới liềm nằm trên đường lưỡi B (y −47), lõi sáng ở dải THẤP của hộp (y −50…−66). Còn dời vài px để lõi lọt hộp (mép dưới hộp −49).
+    # Khung 3 / 4 (vỡ / mảnh tắt – trùng hình C, lưỡi chúc xuống) đi xuống theo lưỡi C trong giới hạn lõi vẫn trong hộp.
+    1: dict(hang='ngang', muc=[6, -62, 92, -40], ky=0.55, khung_doi=[[0, 0], [0, 0], [2, 4], [3, 7]],
+            do='chém 1: lưỡi B (10,−47)→(57,−48), C chúc tới (47,−20); liềm dẹt, mép dưới trên lưỡi B, lõi ở dải thấp của hộp; khung 3–4 theo lưỡi C xuống'),
+    # PH14 mục 3 "Trên không": lệch 10 px sửa bằng phân bố cung (dẹt như chém 1, mép dưới trên lưỡi K2 y −60) – không neo theo sàn
+    6: dict(hang='ngang', muc=[8, -74, 92, -54], ky=0.55, khung_doi=[[0, 0], [0, 0], [2, 3], [3, 5]],
+            do='trên không: lưỡi K2 ngang y −60, mũi x 81; liềm dẹt như chém 1, mép dưới trên lưỡi K2'),
+    # PH14 mục 3 "Chém 2": offset RIÊNG TỪNG KHUNG – nét mảnh thấp-trái → cung đầy → vỡ / mảnh cao-phải (đọc chuyển động chéo lên theo thời gian)
+    2: dict(hang='cheo', muc=[0, -106, 66, -14], khung_doi=[[-10, 12], [-3, 4], [5, -4], [9, -8]],
+            do='chém 2: mũi dao C2A (5,−12) → C2B (55,−97), tay ~ vai (0,−58); khung 1 thấp-trái → khung 4 cao-phải'),
+    # PH14 mục 3 "Hất": nới bề NGANG trong giới hạn hộp (kx), chiều dài giữ như cũ
+    5: dict(hang='hat', muc=[22, -150, 70, -8], kx=1.75,
+            do='hất: mũi H1 (50,−8) → H2 (55,−110) → H3 (30,−145); bề ngang hình nới ×1,75 (vẫn trong hộp), chiều dài không tăng'),
+    3: dict(hang='bo', muc=[6, -134, 84, -4], do='chém 3: mũi C3B (10,−131) trên đầu → C3C (52,−4); hộp mục tiêu dời phải 12 px so với đường quét vì lõi phải hạ xuống hộp thấp (y −59…0) – ở x gốc cung đè lên mặt Lam. '
+            'PH14: phần đường dao phía trên (ngoài hộp) chỉ là DẤU ĐƯỜNG DAO mảnh / mờ vẽ bằng code trong game, không sáng'),
     4: dict(hang='pogo', rong=46, do='pogo: nêm/cung rộng ~46 px dưới mũi dao (vệt mẫu: 28 → 46 rộng, sâu 17 → 25)'),
 }
 HANG = {   # tên hàng → (file, chỉ số hàng trong ảnh, số hàng ảnh, số ô)
@@ -143,22 +154,34 @@ def dat_mot(n, d, khung, cw):
         return {'hang': 'pogo', 's': s, 'goc_gen': goc, 'loi_logic_tu_goc': [(lb[0] - goc[0]) * s, (lb[1] - goc[1]) * s, (lb[2] - goc[0]) * s, (lb[3] - goc[1]) * s],
                 'khung_logic_tu_goc': [(bb[0] - goc[0]) * s, (bb[1] - goc[1]) * s, (bb[2] - goc[0]) * s, (bb[3] - goc[1]) * s], 'do': d['do']}
     mx0, my0, mx1, my1 = d['muc']
-    s0 = np.sqrt((mx1 - mx0) * (my1 - my0) / ((bb[2] - bb[0]) * (bb[3] - bb[1])))
+    kx, ky = d.get('kx', 1.0), d.get('ky', 1.0)   # PH14: co KHÔNG đều (dẹt / nới ngang) – sx = s·kx, sy = s·ky
+    s0 = np.sqrt((mx1 - mx0) * (my1 - my0) / ((bb[2] - bb[0]) * kx * (bb[3] - bb[1]) * ky))
     best = None
     for s in np.linspace(s0, s0 * 0.4, 61):
+        sx, sy = s * kx, s * ky
         cx, cy = (mx0 + mx1) / 2, (my0 + my1) / 2
-        x = cx - s * (bb[0] + bb[2]) / 2; y = cy - s * (bb[1] + bb[3]) / 2
-        L = [x + s * lb[0], y + s * lb[1], x + s * lb[2], y + s * lb[3]]
+        x = cx - sx * (bb[0] + bb[2]) / 2; y = cy - sy * (bb[1] + bb[3]) / 2
+        L = [x + sx * lb[0], y + sy * lb[1], x + sx * lb[2], y + sy * lb[3]]
         dx = max(0, H0[0] - L[0]) - max(0, L[2] - H0[2]); dy = max(0, H0[1] - L[1]) - max(0, L[3] - H0[3])
         if L[2] - L[0] > H0[2] - H0[0] or L[3] - L[1] > H0[3] - H0[1]: continue
         cost = np.hypot(dx, dy) + 40 * (1 - s / s0)   # ưu tiên dời ít, rồi mới co
         if best is None or cost < best[0]: best = (cost, s, x + dx, y + dy, dx, dy)
         if dx == 0 and dy == 0: break
     _, s, x, y, dx, dy = best
-    return {'hang': d['hang'], 's': float(s), 'x': float(x), 'y': float(y), 'co_so_muc': round(float(s / s0), 3), 'doi': [round(float(dx), 1), round(float(dy), 1)],
-            'khung_day_logic': [round(x + s * v, 1) for v in (bb[0], bb[1], bb[2], bb[3])] if False else
-            [round(x + s * bb[0], 1), round(y + s * bb[1], 1), round(x + s * bb[2], 1), round(y + s * bb[3], 1)],
-            'loi_logic': [round(x + s * lb[0], 1), round(y + s * lb[1], 1), round(x + s * lb[2], 1), round(y + s * lb[3], 1)],
+    sx, sy = s * kx, s * ky
+    # PH14: dời RIÊNG TỪNG KHUNG (khung_doi, px logic) – kẹp để lõi sáng của khung đó vẫn trong hộp
+    kd = []
+    for j, (imj, oxj, oyj) in enumerate(khung):
+        want = (d.get('khung_doi') or [[0, 0]] * len(khung))[j]
+        mj = loi(imj)
+        if not mj.any(): kd.append([float(want[0]), float(want[1])]); continue
+        b = bbox(mj); Lj = [x + sx * (b[0] + oxj), y + sy * (b[1] + oyj), x + sx * (b[2] + oxj), y + sy * (b[3] + oyj)]
+        ddx = min(max(want[0], H0[0] - Lj[0]), H0[2] - Lj[2]); ddy = min(max(want[1], H0[1] - Lj[1]), H0[3] - Lj[3])
+        kd.append([round(float(ddx), 1), round(float(ddy), 1)])
+    return {'hang': d['hang'], 's': float(s), 'sx': float(sx), 'sy': float(sy), 'x': float(x), 'y': float(y), 'co_so_muc': round(float(s / s0), 3), 'doi': [round(float(dx), 1), round(float(dy), 1)],
+            'khung_doi': kd,
+            'khung_day_logic': [round(x + sx * bb[0], 1), round(y + sy * bb[1], 1), round(x + sx * bb[2], 1), round(y + sy * bb[3], 1)],
+            'loi_logic': [round(x + sx * lb[0], 1), round(y + sy * lb[1], 1), round(x + sx * lb[2], 1), round(y + sy * lb[3], 1)],
             'hop': HOP[n], 'muc': d['muc'], 'do': d['do']}
 
 
@@ -178,9 +201,9 @@ def main():
         khung[ten] = chia(anh[f], hi, sh, so)
     dat = {n: dat_mot(n, d, khung[d['hang']][2], khung[d['hang']][0]) for n, d in DAT.items()}
     for n, v in dat.items(): print(n, v['hang'], 's %.4f' % v['s'], {k: v[k] for k in v if k in ('doi', 'co_so_muc', 'loi_logic', 'khung_day_logic', 'loi_logic_tu_goc')})
-    # hệ số atlas mỗi hàng: px atlas / px gen = (s lớn nhất của các đòn dùng hàng) × bội
+    # hệ số atlas mỗi hàng: px atlas / px gen = (s lớn nhất của các đòn dùng hàng, theo trục lớn hơn) × bội
     smax = {}
-    for v in dat.values(): smax[v['hang']] = max(smax.get(v['hang'], 0), v['s'])
+    for v in dat.values(): smax[v['hang']] = max(smax.get(v['hang'], 0), v.get('sx', v['s']), v.get('sy', v['s']))
     for boi in (2, 3):
         o = []; x = 0; y = 0; hmax = 0; W = 2048; fr = {}
         tiles = []
@@ -206,7 +229,7 @@ def main():
                 'nguon': {k: 'art/huong-moi/nguon/vet-chem/' + v[0] + ' hàng %d/%d' % (v[1] + 1, v[2]) for k, v in HANG.items()},
                 'hang': fr,
                 'dat': {str(n): v for n, v in dat.items()},
-                'cach_ve': 'điểm logic (so với chân, nhìn phải) = (x, y) + s · (điểm trong ô, px gen); điểm trong ô = (ox, oy) + px atlas / px_atlas_moi_px_gen. '
+                'cach_ve': 'điểm logic (so với chân, nhìn phải) = (x, y) + khung_doi[j] + (sx, sy) · (điểm trong ô, px gen) (PH14: co không đều + dời riêng từng khung; thiếu sx/sy → s); điểm trong ô = (ox, oy) + px atlas / px_atlas_moi_px_gen. '
                            'Pogo: gốc goc_gen đặt tại VP (dưới mũi dao), xoay theo VP.goc, mũi xuống. Lật theo hướng nhìn (scale −1 quanh chân).',
                 'nhip': {'chem': '8 bước active (đúng các tick hộp bật) chia 1/3/2/2 → ô 1/2/3/4; ngoài tick hộp không vẽ',
                          'pogo': 'atkT 1–2 ô 1 (nêm, theo P1) · 3–5 ô 2 (cung ép, theo P2) · 6–8 ô 3 (mảnh) · 9–10 ô 3 mờ; nảy / hết hộp → tắt ngay'}}
@@ -226,9 +249,11 @@ def kiem(khung, dat):
         for j, (im, ox, oy) in enumerate(ks):
             if j != 1: continue
             s = v['s']
-            t = Image.fromarray(thu(im, s * K))
-            if n == 4: px, py = X0 + (ox - v['goc_gen'][0]) * s * K, Y0 + (oy - v['goc_gen'][1]) * s * K
-            else: px, py = X0 + (v['x'] + s * ox) * K, Y0 + (v['y'] + s * oy) * K
+            if n == 4:
+                t = Image.fromarray(thu(im, s * K)); px, py = X0 + (ox - v['goc_gen'][0]) * s * K, Y0 + (oy - v['goc_gen'][1]) * s * K
+            else:
+                t = Image.fromarray(thu(im, v['sx'] * K)).resize((max(1, round(im.shape[1] * v['sx'] * K)), max(1, round(im.shape[0] * v['sy'] * K))), Image.LANCZOS)
+                px, py = X0 + (v['x'] + v['sx'] * ox) * K, Y0 + (v['y'] + v['sy'] * oy) * K
             c.alpha_composite(t, (int(round(px)), int(round(py))))
         if n != 4:
             hx, hy, hw, hh = HOP[n]; dr.rectangle([X0 + hx * K, Y0 + hy * K, X0 + (hx + hw) * K, Y0 + (hy + hh) * K], outline=(230, 60, 60), width=2)

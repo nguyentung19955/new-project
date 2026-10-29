@@ -331,5 +331,38 @@
   "mat_min": 60,
   "mu_bo_moc": 40,
   "_do_mat": "mat_min 60: vòng đồng trên cán móc có điểm loé nhỏ (~15 px gen) bị nhận nhầm là mắt ở ô 3; mu_bo_moc 40: đỉnh mũ chỉ tính các cột sau mắt ≥ 40 px gen (móc + tay giơ ở trên đầu phía trước mắt, không tính là mũ)"
+ },
+ "_ghi_chu_bo6": "PH14 (29/10, PH14): CHỖ CHỪA cho 2 sheet sắp gen – chưa có ảnh thì dung_thu3.py tự bỏ qua, game dùng hình cũ. bat_vach: thu6-bat-vach-2o.png (BV1 tháo móc + chân đẩy vách, hiện NGAY tick nhảy 1–2 tick; BV2 đã rời vách, áo kéo về phía vách, 2–3 tick rồi J2). Mẫu nhìn PHẢI, vách ngầm bên TRÁI (bật sang phải) – dùng chung hai vách bằng lật theo hướng nhìn. tu_vang: thu6-tu-vang-3o.png (TV1 tụ Dư Âm thấp, TV2 thả chém vang – đúng tick hộp, TV3 kết/hồi). Khi có ảnh: lưu đúng tên vào art/huong-moi/nguon/lam-tu-the/ rồi chạy  python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py bat_vach tu_vang",
+ "bat_vach": {
+  "file": "thu6-bat-vach-2o.png",
+  "cot": 2,
+  "hang": 1,
+  "vai": "bat_vach",
+  "tu_the": [
+   "BV1",
+   "BV2"
+  ],
+  "neo_x": "mu",
+  "neo_y": "mat",
+  "bo": 6,
+  "tien_to": "lam-moi6",
+  "huong": "Lam nhìn PHẢI, vách ngầm bên TRÁI: BV1 tay xa thu móc, mũi ủng đẩy vách, thân nghiêng ra phòng; BV2 thân đi sang phải, áo + chóp mũ kéo về trái, tay gần giữ dao sát thân. Lật theo hướng nhìn (pl.face)."
+ },
+ "tu_vang": {
+  "file": "thu6-tu-vang-3o.png",
+  "cot": 3,
+  "hang": 1,
+  "vai": "tu_vang",
+  "tu_the": [
+   "TV1",
+   "TV2",
+   "TV3"
+  ],
+  "neo_x": "ung",
+  "neo_y": "ung",
+  "trung_tinh": 3,
+  "bo": 6,
+  "tien_to": "lam-moi6",
+  "huong": "Lam nhìn PHẢI: TV1 tụ thấp, dao sát ngực dưới; TV2 thả chém vang tới trước (tick hộp đòn 7); TV3 kết / hồi. Neo giữa hai ủng như chém."
  }
 }

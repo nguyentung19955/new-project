@@ -204,3 +204,12 @@ Sinh lại bằng `cong-cu/tao-p0c.py` sau 2 sửa ở nguồn (khối P0-C **kh
   bên rút xuống đất, lối tối hiện dần; đèn báo = loé xanh ngọc ở khoá chuông. `?cong=cu` = cổng cũ để so.
 - Móc tường + vệt chém gen chỉ có ở trang Lam mới (`thu-lam-moi-2`); trang này vẫn Lam cũ. Chi tiết: `game/thu-lam-moi-2/GHI-CHU.md` mục "Móc, vệt gen, cổng dọc 29/10",
   ảnh `game/thu-lam-moi-2/xem-thu/moc-vet-cong/cong-trong-p0c.png`. Chưa thử trên iPhone thật.
+
+
+## PH14 (29/10) – P0-C GIỮ LAM CŨ; có bản tích hợp Lam mới riêng
+
+- P0-C **không đổi Lam** (vẫn Lam cũ để so). Bản P0-C dùng Lam mới: **`game/thu-p0c-lam-moi/`** (sinh bằng script từ chính trang này, xem GHI-CHU ở đó).
+- Chạy lại `tao-p0c.py`: ra **đúng file cũ** (phiên `p0c-2910-e9cba386`). Nhưng trang nạp runtime dùng chung nên **bản nhìn thấy có đổi**: mép đất gặm nông 2–4 px
+  (`runtime/dia-hinh-huong-moi.js`) và cổng mở bỏ khung giữa, 2 trụ ngoài, đèn đồng / ngà (`runtime/trang-tri-dia-hinh.js`). Ảnh: `thu-lam-moi-2/xem-thu/sua-ph14/`.
+- **Thay đổi luật**: P0-C dùng **LUẬT-RƠI v2** (pogo tự động 1 lần mỗi lần rời đất, xuống + Chém = pogo cố ý, kẹp rơi lần chém đầu) từ 29/10 – ghi riêng ở mục
+  "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`. PH14 không thêm thay đổi luật.

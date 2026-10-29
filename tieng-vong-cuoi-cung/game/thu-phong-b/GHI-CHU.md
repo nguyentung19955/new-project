@@ -388,3 +388,9 @@ game/thu-phong-b/index.html                trang thử (SINH RA, đừng sửa t
   bên rút xuống đất, lối tối hiện dần; đèn báo = loé xanh ngọc ở khoá chuông. `?cong=cu` = cổng cũ để so.
 - Móc tường + vệt chém gen chỉ có ở trang Lam mới (`thu-lam-moi-2`); trang này vẫn Lam cũ. Chi tiết: `game/thu-lam-moi-2/GHI-CHU.md` mục "Móc, vệt gen, cổng dọc 29/10",
   ảnh `game/thu-lam-moi-2/xem-thu/moc-vet-cong/cong-trong-phong-b.png`. Chưa thử trên iPhone thật.
+
+
+## PH14 (29/10) – ghi chú luật + runtime
+
+- Trang này sinh từ **P0-A gốc** → dùng **LUẬT-RƠI v1** (pogo tự động mỗi lần, không kẹp rơi) – khác P0-C / P0-B / Lam mới (v2). Xem "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`.
+- Chạy lại `tao-tu-p0a.py`: ra đúng file cũ; mép đất gặm nông 2–4 px và cổng mở 2 trụ (PH14) có mặt vì cùng runtime dùng chung (`dia-hinh-huong-moi.js`, `trang-tri-dia-hinh.js`).

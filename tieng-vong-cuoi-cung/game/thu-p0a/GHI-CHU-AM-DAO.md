@@ -19,7 +19,33 @@ Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI
 | …/am-dao.html?cg=36 | **Chỉ là biến thể thử** (KHVK 4b): Chuông Gỗ máu 36. **Mặc định và số chính thức: 40** (PH7 chốt) – không đưa 36 vào game chính |
 | https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-p0a/index.html | Bản **P0-A gốc** (dao placeholder) – nhịp MỚI. Thêm `?p0=0` = nhịp CŨ, **cùng dao** (dùng để so độ nhạy – mục PH7-9) |
 
+> **Thay đổi luật (pogo tự động, xuống + Chém, kẹp rơi) ghi RIÊNG ở mục "Thay đổi luật" bên dưới (PH14).**
+
 Điều khiển: chạm **Chém** = đánh thường (luôn ra ngay). **Giữ Chém ≥ 20 tick (⅓ giây)** ở cấp 3–4 = **Dư Âm**. Phòng A hình nộm → B hai Chuông Gỗ → C quái gác (giống P0-A).
+
+## Thay đổi luật (ghi riêng, có phiên bản) – PH14 mục 7.1
+
+Thay HÌNH (tư thế, vệt, móc, mép, cổng) **không** đổi luật. Các dòng dưới đây là **đổi LUẬT / INPUT / VẬT LÝ** – hộp đòn giữ nguyên **không** có nghĩa gameplay giữ nguyên.
+Kết quả thử trước và sau một phiên bản luật **không gộp** như cùng một build.
+
+| Phiên bản | Từ | Nội dung | Ở đâu trong code | Cờ so |
+|---|---|---|---|---|
+| **LUẬT-RƠI v1** | trước 29/10 | Bấm Chém lúc đang rơi mà có quái / hình nộm ngay dưới chân → game TỰ đổi thành chém nảy (pogo tự động, `P.autoPogo`), **mỗi lần**; không kẹp tốc độ rơi khi chém trên không | — | `?roi=cu` |
+| **LUẬT-RƠI v2** | 29/10 (commit c730a97 "Sửa iPhone 29/10") | (1) **Pogo tự động chỉ 1 lần mỗi lần rời đất / nhảy tường** (nảy pogo không trả lại lượt); sau đó Chém trên không = chém thường, rơi theo trọng lực. (2) **Xuống + Chém** = pogo CỐ Ý, nảy như cũ, không giới hạn (phím ↓, hoặc cần gạt chúc xuống quá ~45°; chỉ hơi chúc không tính). (3) **Kẹp rơi lần chém đầu**: lần chém trên không ĐẦU mỗi lần rời đất / nảy pogo / nhảy tường – 6 bước đầu đòn, tốc độ rơi ≤ 1,2 px/bước (chỉ khi đang rơi); các lần sau rơi bình thường | `cong-cu/khoi-am-dao.js` khối `ROI` → `am-dao.html` | `?roi=cu` = v1 |
+
+**Trang nào dùng luật nào** (cập nhật PH14, 29/10):
+
+| Trang | Luật rơi | Ghi chú |
+|---|---|---|
+| `thu-p0a/am-dao.html` | v2 | nguồn của luật |
+| P0-C `thu-p0c/` (phiên `p0c-2910-e9cba386`) | v2 | Lam cũ |
+| P0-B `thu-p0b/` – đóng băng lần 4 `p0b-2910-e8aa09dc` trở đi (hiện lần 6 `p0b-2910-6941b504`) | v2 | Lam cũ; lần 1–3 (`p0b-2810-*`) là **v1** – log cũ không gộp với log mới |
+| Lam mới 2 `thu-lam-moi-2/` | v2 | |
+| **P0-C Lam mới** `thu-p0c-lam-moi/` (phiên `p0cLM-2910-*`) | v2 | bản tích hợp riêng PH14 |
+| Phòng B `thu-phong-b/`, P0-A gốc `thu-p0a/index.html` | **v1** | sinh từ P0-A gốc, không có khối ROI |
+
+Cần thử iPhone (chưa làm): nút xuống + Chém (pogo cố ý) trên cảm ứng, cần gạt chéo có bị nhận nhầm, bấm Chém liên tục trên quái có còn thấy "treo".
+Đợt PH14 (móc, vệt, mép, cổng, chết tạm, sóng pogo) **không thêm thay đổi luật nào**.
 
 ## Camera kiểu Dead Cells 28/10
 

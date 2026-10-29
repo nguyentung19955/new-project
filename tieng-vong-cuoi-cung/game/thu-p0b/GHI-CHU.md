@@ -1,8 +1,9 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10 · đóng băng lần 5: cổng dọc 29/10)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10 · đóng băng lần 5: cổng dọc 29/10 · đóng băng lần 6: PH14 cổng mở + snapshot runtime)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-91572dd6` – đóng băng lần 5 ngày 29/10/2026 (cổng dọc; giữ mọi thứ của lần 4: chém trên không không treo, lần 3: camera kiểu Dead Cells, lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên).**
-> In trên màn bắt đầu ("… · p0b-2910-91572dd6 · bản ĐÓNG BĂNG 29/10/2026 lần 5 (cổng dọc; lần 4: chém trên không không treo; …)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`, `?cong=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
-> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 4 `p0b-2910-e8aa09dc`, lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-6941b504` – đóng băng lần 6 ngày 29/10/2026 (PH14: cổng mở bỏ khung giữa; mã phiên băm cả runtime dùng chung, danh sách file + sha1 trong `dong-bang/p0b-2910-6941b504.json` – xem mục "PH14" cuối file). Lần 5 `p0b-2910-91572dd6` (cổng dọc) đã thay.**
+> (Lần 5: cổng dọc; giữ mọi thứ của lần 4: chém trên không không treo, lần 3: camera kiểu Dead Cells, lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên.)
+> In trên màn bắt đầu ("… · p0b-2910-6941b504 · bản ĐÓNG BĂNG 29/10/2026 lần 6 (PH14: cổng mở …; lần 5: cổng dọc; …)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`, `?cong=cu`, `?congmo=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
+> Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 5 `p0b-2910-91572dd6`, lần 4 `p0b-2910-e8aa09dc`, lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
 
 Viết cho người không rành kỹ thuật. Làm theo `docs/gameplay/PHAN-HOI-7-AM-DAO-BO-P0B.md` (mục 4 + "P0-B"), `KE-HOACH-GAMEPLAY-V2.md` mục 4, 4a, 6, 7,
 `PHAN-HOI-1` mục 2 (không chạm đúp), `PHAN-HOI-3` mục 5, **`PHAN-HOI-9-P0B.md`** (mục 1, 2, 3 và "5. GỬI CLAUDE" điểm 1–8)
@@ -374,3 +375,21 @@ Quay lại: `python3 -B game/thu-p0b/cong-cu/quay-p0b.py [luot1 luot2 tinh-huong
 - `?cong=cu` = cổng rễ ngang cũ → tính là **BIẾN THỂ** (màn bắt đầu ghi rõ).
 - **Không đổi** trong P0-B: Lam cũ, vệt chém cũ, Vọng A/B, mọi số / luật. Móc tường + vệt gen chỉ có ở trang Lam mới (`thu-lam-moi-2`).
 - Sinh lại `index.html` bằng `tao-p0b.py` (khoi-p0b.js chỉ đổi nhãn đóng băng → mã băm phiên đổi). Chưa thử trên iPhone thật.
+
+
+## PH14 (29/10) – ĐÓNG BĂNG LẦN 6 (`p0b-2910-6941b504`): snapshot gồm cả runtime + ảnh + JSON
+
+PH14 mục 7: *"Bản đóng băng phải gồm cả runtime, ảnh và JSON … không gọi là giữ nguyên chỉ vì index.html giống cũ."* Đúng vậy: lần 5 cổng dọc vào P0-B qua runtime dùng chung
+dù file trang không đổi. Từ lần này:
+
+- **Mã phiên băm cả runtime dùng chung**: `tao-p0b.py` băm thêm mọi `../runtime/*.js` trang nạp (`lang-hoan-thien.js`, `quai-boss-runtime.js`, `trang-tri-dia-hinh.js`,
+  `trang-tri/cong-lang.js`, `trang-tri/phong-boss.js`, `trang-tri/san-chuong.js`) + dữ liệu cổng / đất runtime đọc (`art/the-gioi-moi/dia-hinh-v4/cong-doc.json`, `cong-doc-3x.png`,
+  `dia-hinh-v4.json`) → runtime đổi thì **phiên đổi**.
+- **Danh sách đầy đủ**: `cong-cu/ghi-dong-bang.py` mở trang trong Chromium, ghi MỌI file trang tải + sha1 + cỡ, chia "riêng trang" / "dùng chung" →
+  **`dong-bang/p0b-2910-6941b504.json`** (101 file, trong đó 21 file `game/runtime/…`). Đối chiếu sau này: chạy lại script, so sha1 – khác là không còn đúng bản đóng băng.
+- **Bản giữ nguyên tuyệt đối** = bản đóng gói (`game/dong-goi-trang-thu.py game/thu-p0b/index.html`) – nhúng đúng các file trong danh sách vào một HTML. (Không đóng gói / đăng ở phiên này.)
+- Lần 6 đổi gì so với lần 5: chỉ **cổng mở** (bỏ khung hẹp giữa, 2 trụ ngoài, đèn đồng / ngà thay xanh ngọc) – qua `runtime/trang-tri-dia-hinh.js`. P0-B **không nạp**
+  `dia-hinh-huong-moi.js` nên mép đất PH14 **không** vào P0-B. Lam cũ, Vọng, luật giữ nguyên. Cờ `?congmo=cu` → BIẾN THỂ.
+- **Thay đổi luật**: lần 1–3 (`p0b-2810-*`) là **LUẬT-RƠI v1**; lần 4 trở đi **LUẬT-RƠI v2** (pogo tự động 1 lần / lần rời đất, xuống + Chém, kẹp rơi lần chém đầu) – **không gộp
+  log hai bên**. Chi tiết: mục "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`.
+- P0-B **vẫn Lam cũ** (PH14: chưa thay mặc định A/B). Khi Lam mới đạt trên iPhone sẽ dùng **cùng một bản Lam mới cho cả A và B**, bắt đầu lượt so mới.

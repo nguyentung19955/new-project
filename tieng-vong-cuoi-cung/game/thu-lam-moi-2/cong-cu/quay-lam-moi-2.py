@@ -11,6 +11,7 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
             videobo4: video chơi thật (không bất tử) qua đủ động tác
   8. mocvet / cong / videomvc (29/10): MÓC TƯỜNG + VỆT GEN + CỔNG DỌC → xem-thu/moc-vet-cong/ (GIF 112 px nền thật, ảnh dải vệt gen có hộp,
             ảnh + GIF mở cổng, ảnh cổng trong P0-B / P0-C / phòng B, video chơi thật không bất tử)
+  9. ph14 (29/10, PH14): SỬA PH14 – chém 1 + hộp, pogo có sóng tầm sâu, móc gần sàn, nhảy tường, mép, mở cổng, ảnh dải vệt → xem-thu/sua-ph14/
   5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
 60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
 import asyncio, functools, http.server, io, json, os, socketserver, subprocess, sys, threading
@@ -648,6 +649,142 @@ async def video_mvc(b, cong):
     seen = sorted({str(r[0]) for r in lg}); print('video mvc', i, 'bước, tư thế:', seen, 'máu cuối', lg[-1][7], 'máu thấp nhất', min(r[7] for r in lg), A.loi)
 
 
+PH14 = 'sua-ph14'
+
+
+async def ph14(b, cong):
+    """SỬA PH14 (29/10, PH14) → xem-thu/sua-ph14/. GIF đúng cỡ game (Lam ~112 px, 960×540 @1x), nền thật, ≈ toàn tốc (20 ms/bước) + -cham4:
+      chem1-hop      TRÁI vệt gen mới (liềm dẹt, không nâng 19 px) · PHẢI cùng cảnh + hộp đòn (?hitbox=1)
+      pogo-trung     TRÁI có sóng tầm sâu · PHẢI + hộp đòn: sóng đi xuống trong hộp, trúng → nảy, sóng tắt, vòng va chạm tại điểm trúng
+      moc-gan-san    vách trái phòng A, trượt móc tới sát sàn: TRÁI sau PH14 · PHẢI trước (?moc=cu&mep=sau: áo xuyên sàn, mép gặm sâu)
+      mo-cong        cổng rễ phòng C mở: TRÁI mới (bỏ khung giữa, 2 trụ ngoài, đèn đồng/ngà) · PHẢI cũ (?congmo=cu)
+      dai-vet-gen-<đòn>.png  ảnh dải vệt gen từng bước active (hàng dưới có hộp đòn)
+      mep-*.png      mép tường trước / sau (gặm ≤ 4,5 px), phóng 3"""
+    BD = os.path.join(OUT, PH14); os.makedirs(BD, exist_ok=True); log = {'ghi_chu': 'mỗi dòng 1 bước: ' + TRANG_THAI4_JS}
+    the = 'pl.x+pl.w/2, pl.y+pl.h'
+
+    async def quay(A, B, ten, kb, khung, w=240, h=170, duoi=22, cat_lai=None):
+        fr = []; lg = []; st = await A.js(TRANG_THAI4_JS)
+        n = len(kb) if isinstance(kb, list) else kb('n', None)
+        for i in range(n):
+            ph = kb[i] if isinstance(kb, list) else kb(i, st)
+            await A.buoc(ph); await B.buoc(ph); st = await A.js(TRANG_THAI4_JS); lg.append(st + [await A.js('LM2.moc||null')])
+            if khung == 'lam': p = await A.lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await A.js('([x, y]) => [x - ox, y - oy]', list(khung))
+            a = cat(await A.anh(), X, Y, w, h, duoi); c = cat(await B.anh(), X, Y, w, h, duoi)
+            o = Image.new('RGB', (2 * w + 4, h), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (w + 4, 0))
+            fr.append(nho(o, '%s · %s%s · bước %d%s' % (st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '')))
+        if cat_lai: i0, i1 = cat_lai(lg); fr = fr[i0:i1]; lg = lg[i0:i1]
+        luu_gif(fr, '%s/%s.gif' % (PH14, ten), ms=20, dither=False); luu_gif(fr, '%s/%s-cham4.gif' % (PH14, ten), ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + str(r[0]) for j, r in enumerate(lg)))
+
+    async def dat(A, B, x, f, cho=40):
+        for t in (A, B): await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', cho)
+
+    # 1. chém 1 + hộp
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'hitbox=1').mo()
+    await dat(A, B, 'Q[6].x-70', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'chem1-hop', [''] * 4 + ['a'] + [''] * 30, (p[0] + 40, p[1]), w=260, h=190)
+    # 2. pogo trúng hình nộm (2 lần, lần đầu bổ sớm để thấy sóng đi xuống trước khi trúng)
+    await dat(A, B, 'Q[6].x+16', 1); p = await A.js('[%s]' % the)
+
+    def pogo(i, st):
+        if i == 'n': return 140
+        if i < 12: return 'j'
+        return 'da' if (st[4] > 2 and st[2] != 4) else ''
+    await quay(A, B, 'pogo-trung', pogo, (p[0], p[1]), w=260, h=380, duoi=20)
+    await dat(A, B, 'Q[6].x+220', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'pogo-truot', [''] * 4 + ['j'] * 14 + [''] * 6 + ['da'] + [''] * 30, (p[0], p[1]), w=260, h=330, duoi=20)
+    # 3. móc gần sàn: sau | trước
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'moc=cu&mep=sau').mo()
+    await dat(A, B, '(PA.x0+1)*T', -1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'moc-gan-san', [''] * 4 + ['lj'] * 20 + ['l'] * 110 + [''] * 20, (p[0] + 40, p[1]), w=240, h=300, duoi=30,
+               cat_lai=lambda lg: (max(0, next((i for i, r in enumerate(lg) if str(r[0]).startswith('WM3')), 0) - 4), len(lg)))
+    await dat(A, B, '(PA.x0+1)*T', -1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'moc-nhay-tuong', [''] * 4 + ['lj'] * 20 + ['l'] * 40 + ['lj'] + ['r'] * 14 + [''] * 30, (p[0] + 60, p[1]), w=300, h=320, duoi=30)
+    await ph14_mep(b, cong)
+    # 5. mở cổng: mới | cũ
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'congmo=cu').mo()
+    i = await A.js('DOORS.findIndex(d=>d.px===8848)')
+    for t in (A, B): await t.js('TVP0.datLam(8700, 1)'); await t.buoc('', 30)
+    X, Y = await A.js('[DOORS[%d].px-ox, FLOOR-oy]' % i)
+    fr = []; lg = []
+    for k in range(6):
+        await A.buoc(''); await B.buoc(''); fr.append((cat(await A.anh(), X, Y, 300, 280, 30), cat(await B.anh(), X, Y, 300, 280, 30))); lg.append(0)
+    for t in (A, B): await t.js('DOORS[%d].cond=()=>true' % i)
+    for k in range(34):
+        await A.buoc(''); await B.buoc(''); fr.append((cat(await A.anh(), X, Y, 300, 280, 30), cat(await B.anh(), X, Y, 300, 280, 30))); lg.append(await A.js('+DOORS[%d].open.toFixed(2)' % i))
+    for k in range(70): await A.buoc('r'); await B.buoc('r')
+    qua = await A.js('pl.x')
+    out = []
+    for j, ((a, c), o_) in enumerate(zip(fr, lg)):
+        o = Image.new('RGB', (604, 280), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (304, 0))
+        out.append(nho(o, 'TRÁI mới · PHẢI cũ · mở %.2f · bước %d%s' % (o_, j + 1, ' · đi xuyên' if o_ >= 0.6 else '')))
+    luu_gif(out, PH14 + '/mo-cong.gif', ms=20, dither=False); luu_gif(out, PH14 + '/mo-cong-cham4.gif', ms=4000 / 60, dither=False)
+    fr[0][0].save(os.path.join(BD, 'cong-dong-112.png')); fr[-1][0].save(os.path.join(BD, 'cong-mo-112.png')); fr[-1][1].save(os.path.join(BD, 'cong-mo-cu-112.png'))
+    log['mo_cong'] = {'tien_do_mo': lg, 'lam_x_sau_khi_di_qua': qua}
+    print('cổng', lg[-1], 'Lam x', qua)
+    json.dump(log, open(os.path.join(BD, 'log-ph14.json'), 'w'), ensure_ascii=False)
+    # 6. ảnh dải vệt gen (vào không khí)
+    C = await Trang(b, cong, 'hitbox=1').mo(); D = await Trang(b, cong, '').mo()
+    for ten, n, kb, dx, dy, lo, hi in [('chem1', 1, ['a'] + [''] * 24, 40, 0, 6, 15), ('chem2', 2, ['a'] + [''] * 14 + ['a'] + [''] * 24, 50, 0, 6, 15),
+                                       ('chem3', 3, ['a'] + [''] * 14 + ['a'] + [''] * 14 + ['a'] + [''] * 24, 40, 0, 8, 17), ('hat', 5, ['ua'] + [''] * 24, 40, -20, 10, 19),
+                                       ('chem-tren-khong', 6, ['j'] * 6 + ['ja'] + ['j'] * 20, 45, 0, 8, 17), ('pogo', 4, ['j'] * 14 + [''] * 4 + ['da'] + [''] * 14, 0, 40, 1, 11)]:
+        o = {}
+        for t in (C, D): await t.js('TVP0.datLam(Q[6].x+200, 1)'); await t.buoc('', 30)
+        for key, t in (('mau', D), ('hop', C)):
+            ds = []
+            for ph in kb:
+                await t.buoc(ph); r = await t.js('[pl.atkN,pl.atkT,pl.atkN===4?LM2.phaPogo(pl.atkT):LM2.phaChem(pl.atkT,pl.atkN),pl.m2n,!!(pl.atkN&&atkBox(pl,pl.atkN,pl.atkT,pl.face,{}))]')
+                if r[0] == n and lo <= r[1] <= hi:
+                    p = await t.lam_man(); ds.append((r, cat(await t.anh(), p['x'] + dx, p['y'] + dy, 190, 190, 24)))
+            o[key] = ds
+        m = min(len(o['mau']), len(o['hop']))
+        if not m: print('dai-vet', ten, 'không có ô'); continue
+        w, h = o['mau'][0][1].size; W2, H2 = w * 2, h * 2
+        im = Image.new('RGB', (m * (W2 + 6) + 6, 2 * (H2 + 30) + 10), (30, 33, 40)); d = ImageDraw.Draw(im)
+        TP = TEN_PHA_POGO if n == 4 else TEN_PHA_CHEM
+        for i in range(m):
+            for j, k in enumerate(('mau', 'hop')):
+                r, c = o[k][i]; x = 6 + i * (W2 + 6); y = 6 + j * (H2 + 30)
+                d.text((x, y), 'atkT %d · %s · %s%s' % (r[1], r[3], ('ô %d ' % (min(r[2], 2) + 1 if n == 4 else r[2] + 1) + TP[r[2]]) if r[2] >= 0 else '(không vệt)', ' · HỘP' if r[4] else ''), font=FONT_N or FONT, fill=(243, 230, 200))
+                im.paste(c.resize((W2, H2), Image.NEAREST), (x, y + 24))
+        im.save(os.path.join(BD, 'dai-vet-gen-%s.png' % ten)); print('dai-vet', ten, m)
+    print('loi', A.loi, B.loi, C.loi, D.loi)
+
+
+async def ph14_mep(b, cong):
+    """mép tường trước / sau PH14: TRÁI sau (gặm ≤ 4,5 px từ mép vẽ), PHẢI trước (?mep=sau) – cắt sát chỗ vách gặp sàn, phóng 3"""
+    BD = os.path.join(OUT, PH14); os.makedirs(BD, exist_ok=True)
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'mep=sau').mo()
+    for ten, x, ben in (('mep-phong-A-vach-trai', '(PA.x0+1)*T', -1), ('mep-phong-F-vach-phai', '(PF.x0+PF.w-2)*T', 1)):
+        ims = []
+        for t in (A, B):
+            await t.js('TVP0.datLam(%s, %d)' % (x, -ben)); await t.buoc('', 30); q = await t.lam_man(); im = await t.anh()
+            x0 = int(q['x']) - 100 if ben < 0 else int(q['x']) - 10
+            ims.append(im.crop((x0, int(q['y']) - 200, x0 + 110, int(q['y']) + 10)).resize((330, 630), Image.LANCZOS))
+        o = Image.new('RGB', (668, 650), (12, 15, 20)); o.paste(ims[0], (0, 0)); o.paste(ims[1], (338, 0))
+        ImageDraw.Draw(o).text((6, 632), 'TRÁI sau PH14 (gặm ≤ 4,5 px) · PHẢI trước (?mep=sau, ≤ 10 px) · phóng 3', font=FONT_N or FONT, fill=(243, 230, 200))
+        o.save(os.path.join(BD, ten + '.png')); print('mép', ten)
+
+
+async def ph14_chet(b, cong):
+    """CHẾT TẠM (code, PH14 mục 1D): Lam mới khuỵu → tan → hồi sinh. TRÁI màu · PHẢI bóng đen. Ép chết: máu 1 rồi trúng đòn (hurt) – chỉ để quay."""
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'bong=1&vfx=0').mo()
+    for t in (A, B): await t.js('TVP0.datLam((PA.x0+6)*T, 1)'); await t.buoc('', 30)
+    p = await A.js('[pl.x+pl.w/2, pl.y+pl.h]')
+    for t in (A, B): await t.js('pl.hp=1; pl.iframes=0; hurt(-1)')
+    fr = []
+    for i in range(110):
+        await A.buoc(''); await B.buoc(''); st = await A.js('[LM2.nhan, pl.deadT, pl.dead]')
+        X, Y = await A.js('([x, y]) => [x - ox, y - oy]', p)
+        a = cat(await A.anh(), X, Y, 240, 180, 22); c = cat(await B.anh(), X, Y, 240, 180, 22)
+        o = Image.new('RGB', (484, 180), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (244, 0))
+        fr.append(nho(o, '%s · chết %s · deadT %s · bước %d' % (st[0], 'có' if st[2] else 'không', st[1], i + 1)))
+    luu_gif(fr, PH14 + '/chet-tam.gif', ms=20, dither=False); luu_gif(fr, PH14 + '/chet-tam-cham4.gif', ms=4000 / 60, dither=False)
+    print('chết tạm', len(fr), A.loi)
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -665,6 +802,9 @@ async def main(viec):
         if 'mocvet' in viec: await moc_vet(b, cong)
         if 'cong' in viec: await cong_doc(b, cong)
         if 'videomvc' in viec: await video_mvc(b, cong)
+        if 'ph14' in viec: await ph14(b, cong)
+        if 'mep14' in viec: await ph14_mep(b, cong)
+        if 'chet14' in viec: await ph14_chet(b, cong)
         await b.close()
 
 

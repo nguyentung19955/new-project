@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3 + 4)</title>
+<title>Tiếng Vọng – Thử Lam mới (bộ tư thế 3 + 4 + móc tường, vệt gen)</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&display=swap">
@@ -173,7 +173,7 @@ body.lht-nut #knob{background:var(--nut) center/100% 100% no-repeat;border:0;wid
   </div></div>
   <div id="start" class="panel ui" hidden><div class="box">
     <h1>Tiếng Vọng Cuối Cùng</h1>
-    <p class="big">Thử Lam mới · bộ tư thế 3 + 4: đứng, chạy, chém 1→2→3, hất, chém trên không, nhảy/rơi/tiếp đất, pogo, lướt, bị đánh, trượt tường LƯNG áp vách (?tuong=mat = kiểu cũ). Vệt chém 2/3/hất/trên không là VỆT MẪU chờ duyệt. Chém vang, chết, rút dao còn hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
+    <p class="big">Thử Lam mới · bộ tư thế 3 + 4: đứng, chạy, chém 1→2→3, hất, chém trên không, nhảy/rơi/tiếp đất, pogo, lướt, bị đánh, bám tường BẰNG MÓC (?tuong=lung / ?tuong=mat = kiểu cũ), vệt chém GEN (?vet=code = vệt mẫu code), cổng dọc. Chém vang, chết, rút dao còn hình TẠM. ⚙ để tắt vệt chém / bóng đen / chậm ×4 / Lam cũ</p>
     <p id="start-p0" style="color:#7FE0C8"></p>
     <button id="btn-start" type="button">Bắt đầu</button>
     <p><span id="start-v">Bấm nút <b style="color:var(--echo)">Vọng</b></span> để ghi 3 giây chuyển động. Bóng của bạn sẽ lặp lại y hệt — rồi đứng giữ nguyên chỗ cuối.</p>
@@ -4751,15 +4751,24 @@ window.TVPB = {
      tường   MẶC ĐỊNH = sheet tường LƯNG áp vách (WL1–WL4, mẫu vách TRÁI, Lam nhìn PHẢI – ra khỏi vách); cùng nhịp W1 2 → W2 4 → W3/W4 6/6.
              Vách phải → lật cả hình. ?tuong=mat → sheet bộ 3 (mặt vào vách) để so. Nhảy tường: J1 nhìn theo pl.face = hướng bật ra.
      vệt     chém 2/3, hất, trên không: liềm/cung PH13 vẽ bằng code theo đường quét đo trên tư thế (JSON sheet → "vet") – VỆT MẪU CHỜ DUYỆT.
+   MÓC TƯỜNG + VỆT GEN (29/10, bộ 5):
+     tường   MẶC ĐỊNH = bám BẰNG MÓC (sheet lam-moi5-tuong_moc WM1–WM4, mẫu vách PHẢI, Lam nhìn vào vách, đầu móc = mép collider); cùng nhịp
+             W1 2 → W2 4 → W3/W4 6/6; vách trái lật cả hình; nhảy tường → J1. Trượt (WM3/WM4): bụi + tia nhỏ ở đầu móc (code, buiMoc).
+             ?tuong=lung = lưng áp vách (bộ 4), ?tuong=mat = mặt vào vách (bộ 3); ⚙ "Tường" đổi vòng.
+     vệt     MẶC ĐỊNH = VỆT GEN (sprite/vet-gen-{2x,3x}, code/dung_vet.py): chém 1 + trên không = liềm ngang, chém 2 = chéo lên, hất = cung dọc lên,
+             chém 3 = bổ xuống, pogo = nêm/cung ép/mảnh. Cùng nhịp tick hộp (1/3/2/2; pogo 2/3/3+2 mờ, nảy → tắt). Phép đặt trong JSON (lõi sáng
+             trong hộp đòn). ?vet=code = vệt mẫu code để so; ⚙ "Vệt chém".
    KHÔNG crossfade: mỗi bước vẽ đúng MỘT hình.
-   Cờ: ?lam=cu Lam cũ · ?vfx=0 tắt vệt + âm nhận (duyệt tạo dáng) · ?bong=1 Lam bóng đen · ?hitbox=1 hộp đòn · ?cham=4 chậm 4 lần (1–8). ⚙ → "Lam mới 2".
+   Cờ: ?tuong=lung|mat · ?vet=code · ?lam=cu Lam cũ · ?vfx=0 tắt vệt + âm nhận (duyệt tạo dáng) · ?bong=1 Lam bóng đen · ?hitbox=1 hộp đòn · ?cham=4 chậm 4 lần (1–8). ⚙ → "Lam mới 2".
 */
 const LM2 = (() => {
   const QS = P0_Q;
   const ST = {moi: QS.get('lam') !== 'cu', vfx: QS.get('vfx') !== '0', bong: QS.get('bong') === '1',
     cham: Math.max(1, Math.min(8, +(QS.get('cham') || 1) || 1)),
     tuong: QS.get('tuong') === 'mat' ? 'mat' : QS.get('tuong') === 'lung' ? 'lung' : 'moc',   // 29/10: mặc định BÁM BẰNG MÓC; ?tuong=lung bộ 4, ?tuong=mat bộ 3
-    vet: QS.get('vet') === 'code' ? 'code' : 'gen'};                                          // 29/10: mặc định VỆT GEN; ?vet=code = vệt mẫu vẽ bằng code (PH13)
+    vet: QS.get('vet') === 'code' ? 'code' : 'gen',                                           // 29/10: mặc định VỆT GEN; ?vet=code = vệt mẫu vẽ bằng code (PH13)
+    songPogo: QS.get('song') !== '0',                                                         // PH14: sóng tầm sâu của pogo (?song=0 tắt để so)
+    chinhMoc: QS.get('moc') !== 'cu'};                                                        // PH14: móc chạm mặt nhìn thấy + áo không xuyên sàn (?moc=cu = như trước)
   const DUONG = '../../art/huong-moi/lam-tu-the-2/sprite/';
   const SH = {}, SH3 = {};   // thử 2: chay / chem – {meta, img, E (tô ngọc cho bóng Vọng), D (bóng đen)}; SH bản 2x, SH3 bản 3x
   const TU = {};             // nhãn tư thế → [{2: sheet2x, 3: sheet3x}, chỉ số khung]
@@ -4838,7 +4847,8 @@ const LM2 = (() => {
   }
   function chonNhan() {
     const a2 = pl.a2;
-    if (pl.dead || pl.drawT > 0) return 'tam:' + a2;
+    if (pl.dead) return 'CHET';   // PH14 mục 1D: chết = khuỵu / tan đơn giản dựng từ hình bị đánh (code, xem veChet) – tạm tới khi có hình gen
+    if (pl.drawT > 0) return 'tam:' + a2;
     if (a2 === 'hurt') return pl.hurtT >= 13 ? 'BD1' : 'BD2';
     if (a2 === 'dash') { const i = P.dashFrames - pl.dash; return i <= 2 ? 'LU1' : i >= P.dashFrames - 1 ? 'LU3' : 'LU2'; }
     if (LICH[pl.atkN] && a2 === 'atk' + pl.atkN) return nhanDon(pl.atkN, pl.atkT);
@@ -4846,13 +4856,20 @@ const LM2 = (() => {
     if (pl.atkN === 1 && a2 === 'atk1') { const A = ATK[1], t = pl.atkT; return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
     if (pl.atkN === 4 && a2 === 'atk4') return M.nay >= 0 ? 'P3' : pl.atkBounced ? nhanBay() : pl.atkT <= 2 ? 'P1' : 'P2';   // sau P3: về J2/J3 theo vy
     if (M.nay >= 0 && !pl.atkN && (a2 === 'jump' || a2 === 'fall')) return 'P3';
-    if (a2 === 'wall' && pl.vy < -1) return 'J1';   // bấm nhảy tường: physics đã bật lên ngay bước này → hình bật nhảy, không giữ W2
+    if (a2 === 'wall' && pl.vy < -1) return TU.BV1 ? 'BV1' : 'J1';   // PH14 mục 2: tháo móc / bật khỏi vách NGAY tick nhảy (sheet bat_vach khi có)   // bấm nhảy tường: physics đã bật lên ngay bước này → hình bật nhảy, không giữ W2
     if (a2 === 'wall') return pl.wallStickT < P.wallStick ? (M.wT <= 2 ? 'W1' : 'W2') : pl.vy > 0 ? (((M.sT - 1) % 12) < 6 ? 'W3' : 'W4') : 'W2';
-    if (a2 === 'walljump') return pl.wjT >= 15 ? 'J1' : nhanBay();
+    // PH14 mục 2 "nhảy tường": BV1 (tay xa thu móc, chân đẩy vách) 1–2 tick đầu → BV2 (đã rời vách, áo kéo về phía vách) 2–3 tick → J2 (nhanBay).
+    // Chạy SAU impulse (physics đã bật cùng bước) – không thêm thời gian chờ. Chưa có sheet → J1 như cũ.
+    if (a2 === 'walljump') return TU.BV1 ? (pl.wjT >= 15 ? 'BV1' : pl.wjT >= 12 && TU.BV2 ? 'BV2' : nhanBay()) : pl.wjT >= 15 ? 'J1' : nhanBay();
     if (a2 === 'jump' || a2 === 'fall') return nhanBay();
     if (a2 === 'idle' || a2 === 'land') { if (M.datT > 0) return 'L'; const t = (M.idT - 1) % 120; return t < 36 ? 'I1' : t < 60 ? 'I2' : t < 84 ? 'I3' : 'I1'; }
     // Sửa iPhone 29/10: giữ Chém tụ Dư Âm – trước dùng D (dao chúc xuống trước chân, đọc như "lưỡi dao thứ hai") → A (rút dao thấp sau hông = lấy đà)
-    if (a2 === 'tu' && TU.A) return 'A';
+    // PH14 mục 1D: tụ Dư Âm / chém vang. Sheet tu_vang (thu6-tu-vang-3o.png: TV1 tụ thấp · TV2 thả chém vang · TV3 kết) khi có;
+    // chưa có → TẠM: tụ = A (lấy đà), chém vang = A (lấy đà) → B (cắt, đúng tick hộp) → C → D (đọc như một nhát chém, không đứng D suốt)
+    if (a2 === 'tu') return TU.TV1 ? 'TV1' : TU.A ? 'A' : 'tam:tu';
+    if (pl.atkN === 7 && a2 === 'atk7') { const A = ATK[7], t = pl.atkT;
+      if (TU.TV1) return t < A.su ? 'TV1' : t < A.su + A.ac ? 'TV2' : 'TV3';
+      return t < A.su ? 'A' : t < A.su + Math.ceil(A.ac / 2) ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
     return 'tam:' + a2;
   }
   function datNhan() { let n = chonNhan();
@@ -4876,6 +4893,7 @@ const LM2 = (() => {
         : (nn === 1 && a2 === 'atk1') ? (at < ATK[1].su ? 'A' : at < ATK[1].su + 4 ? 'B' : at < ATK[1].su + ATK[1].ac ? 'C' : 'D')
         : (LICH[nn] && a2 === 'atk' + nn) ? nhanDon(nn, at) : (a2 === 'dash' && TU.LU2) ? 'LU2' : 'tam:' + a2;
     }
+    if (n === 'CHET') { const c = TU.BD2 || TU.BD1 || TU.D; return [c[0], c[1], false, s.l2, n]; }
     const t = TU[n]; if (t) return [t[0], t[1], false, s.m2l === null || s.m2l === undefined ? s.l2 : s.m2l, n];
     const u = tam(n, a2); return [u[0], u[1], true, s.l2, n];
   }
@@ -4909,15 +4927,57 @@ const LM2 = (() => {
     const img = bo === LAM.E ? S2.E : ST.bong ? S2.D : S2.img, sc = 1 / M2.ty_le.px_nguon_moi_px_logic;
     const X = snap(x - ox + pl.w / 2), Y = snap(y - oy + pl.h), ax = M2.diem_neo.x, ay = M2.diem_neo.y;
     const dx = Math.round(-ax * sc * BK) / BK, dy = Math.round(-ay * sc * BK) / BK;   // 3x ở BK 3: đúng 1 điểm sheet = 1 điểm màn
+    const hc = (ST.chinhMoc && /^WM\d$/.test(n)) ? chinhMoc(s, x, y, M2.so_do[i]) : [0, 0];   // PH14 mục 2: móc chạm mặt đất nhìn thấy + áo không xuyên sàn
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    ctx.save(); ctx.translate(X, Y); if (lat) ctx.scale(-1, 1);
-    ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
+    ctx.save(); ctx.translate(snap(X + hc[0]), snap(Y + hc[1])); if (lat) ctx.scale(-1, 1);
+    if (n === 'CHET') veChet(s, img, f, dx, dy, sc, lat);
+    else ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
     ctx.restore();
+    if (s === pl && bo === LAM) LM2.moc = hc;
     if (s === pl && bo === LAM) { LM2.dang = (S2 === SH.chay || S2 === SH3.chay ? 'chay' : S2 === SH.chem || S2 === SH3.chem ? 'chem' : M2.vai) + ':' + i;
       LM2.nhan = n; LM2.bo = M2.ty_le.px_nguon_moi_px_logic + 'x';
       if (coVet(pl.atkN)) VQ.push([X, Y, s.l2 ? -1 : 1, pl.atkN, pl.atkT, 1]); }
     else if (echo && s === echo.cur && bo === LAM.E && !echo.done && coVet(s.n)) VQ.push([X, Y, s.l2 ? -1 : 1, s.n, s.at, 0.5]);
     return true;
+  }
+
+  /* ---------- PH14 mục 2: MÓC CHẠM MẶT NHÌN THẤY + ÁO KHÔNG XUYÊN SÀN (chỉ hình, collider không đổi) ----------
+     (a) đầu móc (dau_moc_logic, = mép collider phía vách) so với MẶT ĐẤT NHÌN THẤY tại đúng độ cao đó (DHM.mepNhin – mép hữu cơ đã gặm nông
+         ≤ 4,5 px từ mép vẽ): nếu mặt đất lùi sau collider → dời hình về phía vách cho đầu móc cắm ≥ 1 px vào đất nhìn thấy (tối đa 3 px).
+     (b) áo thòng dưới chân (cao − đỉnh trên chân, đo trên ảnh) gần sàn: nâng CẢ HÌNH theo điểm tiếp xúc – gấu áo vừa chạm mặt sàn, không
+         xuyên; không cắt cứng gấu. (Chưa có hình gấu gom → nâng hình; khi có sheet gấu gom thì đổi hình ở đây.) Đầu móc đi lên theo, vẫn trên vách. */
+  function chinhMoc(s, x, y, so) {
+    if (!so) return [0, 0];
+    const w = s.m2l ? -1 : 1, xa = x + pl.w / 2, yc = y + pl.h; let ex = 0, ey = 0;
+    const duoi = (so.cao_logic || 0) - (so.dinh_tren_neo_logic || 0);   // áo thòng dưới chân (logic)
+    if (duoi > 0) { let san = null;
+      for (let yy = Math.floor(yc); yy <= yc + duoi + 2; yy++) if (solidPt(xa, yy) || solidPt(xa - w * 8, yy)) { san = yy; break; }
+      if (san !== null && yc + duoi > san) ey = -(yc + duoi - san); }
+    const dm = so.dau_moc_logic;
+    if (dm && typeof DHM !== 'undefined' && DHM.mepNhin) {
+      const xc = w > 0 ? x + pl.w : x, o = DHM.mepNhin(xc, yc + ey + dm[1], w > 0 ? -1 : 1);
+      if (o !== null) ex = w * Math.min(3, Math.max(0, 1 - o));
+    }
+    return [ex, ey];
+  }
+  /* ---------- PH14 mục 1D: CHẾT TẠM (code) – khuỵu rồi tan, dựng từ hình BỊ ĐÁNH (BD2) ----------
+     deadT tới lúc chạm đất: hình bị đánh nguyên; chạm đất → khuỵu 14 bước (nén dọc 1 → 0,6, nở ngang 1 → 1,12 quanh chân, nghiêng nhẹ về trước);
+     từ deadT 40: tan – hạt bụi ngà / than nhỏ bốc lên từ thân, cắt dần từ trên xuống (độ mờ chung theo chetAlpha() của game: mờ dần rồi hồi sinh). */
+  function veChet(s, img, f, dx, dy, sc, lat) {
+    const t = pl.deadT, td = pl.dD < 0 ? -1 : t - pl.dD, k = td < 0 ? 0 : Math.min(1, td / 14), e = k * k * (3 - 2 * k);
+    const cy = 1 - 0.4 * e, cx = 1 + 0.12 * e;
+    const tan = Math.max(0, Math.min(1, (t - 40) / 36)), A0 = ctx.globalAlpha;   // 0 → 1: phần trên tan dần; A0 = độ mờ chết của game
+    ctx.save(); ctx.rotate(0.1 * e); ctx.scale(cx, cy);
+    if (tan > 0) { const h = f.h * sc, top = dy + h * tan * 0.85; ctx.beginPath(); ctx.rect(dx - 10, top, f.w * sc + 20, h); ctx.clip(); }
+    ctx.drawImage(img, f.x, f.y, f.w, f.h, dx, dy, f.w * sc, f.h * sc);
+    ctx.restore();
+    if (tan > 0 && ST.vfx) {   // hạt tan (băm cố định theo bước, không ngẫu nhiên lúc chạy)
+      const h = f.h * sc * cy, y0 = (dy * cy) + h * tan * 0.85;
+      for (let i = 0; i < 14; i++) { const r1 = bamS(i, 7), r2 = bamS(i, 11), sp = (t - 40 - r1 * 30); if (sp < 0) continue;
+        const life = 26, u = (sp % life) / life, x = (r2 - 0.5) * 40, y = y0 - u * 26 - r1 * 8;
+        ctx.globalAlpha = A0 * (1 - u) * 0.7; ctx.fillStyle = i % 3 ? '#E8DCBC' : '#3a3026';
+        ctx.fillRect(x, y, 1.6, 1.6); }
+      ctx.globalAlpha = A0; }
   }
 
   /* ---------- VỆT MẪU PH13 (path Canvas) ---------- */
@@ -4969,6 +5029,7 @@ const LM2 = (() => {
   function vePogo(g, at, al) {
     const pha = phaPogo(at); if (pha < 0) return;
     const v = at <= 2 ? VP.P1 : VP.P2;   // P1 hiện atkT 1–2, P2 từ atkT 3 (cùng lịch tư thế)
+    songPogo(g, at, al, v);
     g.save(); g.translate(v.x, v.y); g.rotate(Math.PI / 2 - (v.goc || 0) * Math.PI / 180);   // +x cục bộ = hướng XUỐNG (nghiêng goc về trước); h = nửa bề ngang
     if (pha === 0) lop(g, at === 1 ? 17 : 21, at === 1 ? 12 : 14, 9, -1, 1, 1.75, al, 0.9);            // nêm bật: hẹp, sâu, đặc
     else if (pha === 1) { const q = at - 3; lop(g, 22 + q, 21 + q, 8, -1, 1, 1.7, al, 0.75 - 0.1 * q); }  // cung ép: rộng, nông
@@ -4976,6 +5037,39 @@ const LM2 = (() => {
       for (const [a0, a1] of [[-1, -0.4], [-0.25, 0.25], [0.4, 1]]) { g.save(); const m = (a0 + a1) / 2 * 1.7, d = 2 + 2.2 * q; g.translate(Math.cos(m) * d, Math.sin(m) * d * 1.2);
         lop(g, 24, 23, 6 - 1.3 * q, a0, a1, 1.7, al * (0.85 - 0.2 * q), q ? 0 : 0.3, cua(a0, a1)); g.restore(); } }
     else lop(g, 9, 8, 2.6, -1, 1, 1.6, al * 0.35, 0);                                                    // dấu nhỏ gần lưỡi
+    g.restore();
+  }
+  /* PH14 mục 3 "Pogo": BIỂU DIỄN TẦM SÂU. Hộp pogo xuống tới 58 px dưới chân (mũi dao ~11 px) – vệt nêm nhỏ sát người không giải thích tầm đó.
+     Thêm SÓNG ÂM NGẮN: 2 cung rộng, mỏng, đi XUỐNG từ mũi dao xuyên vùng đánh trong các tick active (atkT 1 → 6 đi hết, 7–10 mờ dần ở đáy hộp)
+     + đoạn nối mờ từ mũi dao. KHÔNG trì hoãn hit (hit vẫn theo hộp như cũ, hộp bật ngay atkT 1); trúng → nảy (atkT 11) → sóng tắt ngay cùng bước,
+     vòng va chạm hiện NGAY tại điểm trúng. Sóng không đi quá đáy hộp (không phải đạn bay). Không kéo dài dao, không đổi hộp. */
+  function songPogo(g, at, al, v) {
+    if (at < 1 || at > 10 || !ST.songPogo) return;
+    const day = 56;   // đáy hộp pogo (so với chân): −24 + 82 = 58 → sóng dừng ở 56
+    const y0 = v.y + 6, x0 = v.x;
+    g.save(); g.lineCap = 'round';
+    // đoạn nối mờ từ mũi dao xuống mặt sóng đầu (đọc "tầm" thay vì vệt lơ lửng)
+    const t1 = Math.min(1, at / 6), yA = y0 + (day - y0) * t1;
+    g.globalAlpha = al * 0.22 * (at <= 6 ? 1 : (11 - at) / 5); g.strokeStyle = MAU.than; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0, yA - 4); g.stroke();
+    for (const [tre, w0] of [[0, 1], [2, 0.8]]) {   // 2 mặt sóng, mặt sau trễ 2 bước
+      const t = Math.min(1, Math.max(0, (at - tre) / 6)); if (at - tre < 1) continue;
+      const y = y0 + (day - y0) * t, rong = (16 + 16 * t) * w0, cao = 4 + 2 * t;
+      const a = al * (at - tre <= 6 ? 0.75 - 0.25 * t : 0.5 * (11 - at) / 5) * w0;
+      if (a <= 0.02) continue;
+      g.globalAlpha = a; g.strokeStyle = MAU.canh; g.lineWidth = 3;
+      g.beginPath(); g.ellipse(x0, y - cao, rong, cao, 0, 0.12 * Math.PI, 0.88 * Math.PI); g.stroke();
+      g.globalAlpha = a; g.strokeStyle = MAU.than; g.lineWidth = 1.3; g.stroke();
+    }
+    g.restore();
+  }
+  // PH14 mục 3 "Chém 3": DẤU ĐƯỜNG DAO mảnh / mờ khi vung (từ mũi dao C3B trên đầu xuống tới mép trên hộp thấp) – chỉ là chuyển động trang trí,
+  // không sáng, không lõi; cung âm SÁNG có sát thương (vệt gen) nằm trong hộp thấp. Hiện atkT 9–11 (đầu active), mờ dần.
+  function dauDuongDao(g, at, al) {
+    const j = at - ATK[3].su; if (j < 0 || j > 2) return;
+    g.save(); g.lineCap = 'round'; g.globalAlpha = al * (0.32 - 0.09 * j); g.strokeStyle = MAU.than; g.lineWidth = 1.4 - 0.3 * j;
+    g.beginPath(); g.moveTo(10, -131); g.quadraticCurveTo(62, -118, 72, -62); g.stroke();
+    g.globalAlpha = al * (0.18 - 0.05 * j); g.strokeStyle = MAU.canh; g.lineWidth = 0.8; g.beginPath(); g.moveTo(4, -124); g.quadraticCurveTo(52, -112, 62, -62); g.stroke();
     g.restore();
   }
   /* VỆT GEN (29/10, sprite/vet-gen-*.json do code/dung_vet.py dựng): cùng nhịp với vệt mẫu – chém: 8 bước active 1/3/2/2 → ô 1/2/3/4;
@@ -4989,11 +5083,14 @@ const LM2 = (() => {
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
     if (n === 4) {
       const p = phaPogo(at); if (p < 0) return true; j = Math.min(2, p); if (p === 3) a *= 0.4;
-      const v = at <= 2 ? VP.P1 : VP.P2, f = H.khung[j]; g.translate(v.x, v.y); g.rotate(-(v.goc || 0) * Math.PI / 180);
+      const v = at <= 2 ? VP.P1 : VP.P2, f = H.khung[j]; songPogo(g, at, al, v); g.translate(v.x, v.y); g.rotate(-(v.goc || 0) * Math.PI / 180);
       g.globalAlpha = a; g.drawImage(S2.img, f.x, f.y, f.w, f.h, s * (f.ox - d.goc_gen[0]), s * (f.oy - d.goc_gen[1]), f.w * s / k, f.h * s / k);
     } else {
       const p = phaChem(at, n); if (p < 0) return true; j = p; const f = H.khung[j];
-      g.globalAlpha = a; g.drawImage(S2.img, f.x, f.y, f.w, f.h, d.x + s * f.ox, d.y + s * f.oy, f.w * s / k, f.h * s / k);
+      // PH14: co không đều (sx, sy) + dời riêng từng khung (khung_doi) – số tính sẵn trong JSON (code/dung_vet.py), lõi từng khung vẫn trong hộp
+      const sx = d.sx || s, sy = d.sy || s, kd = (d.khung_doi && d.khung_doi[j]) || [0, 0];
+      if (n === 3) dauDuongDao(g, at, al);   // PH14: chém 3 – dấu đường dao mảnh / mờ phía trên (không sát thương), cung sáng chỉ trong hộp thấp
+      g.globalAlpha = a; g.drawImage(S2.img, f.x, f.y, f.w, f.h, d.x + kd[0] + sx * f.ox, d.y + kd[1] + sy * f.oy, f.w * sx / k, f.h * sy / k);
     }
     g.globalAlpha = 1; return true;
   }
@@ -5047,7 +5144,9 @@ const LM2 = (() => {
 { const _an = AD.veAmNhan; AD.veAmNhan = function (...a) { if (!LM2.ST.vfx) return; if (LM2.ST.moi) return; return _an(...a); }; }
 { const _vt = AD.veTu; AD.veTu = function (s, X, Y) { if (!LM2.ST.moi) return _vt(s, X, Y); const h = s.h2; s.h2 = false;   // luoiKhung → null: chỉ vẽ vòng nạp
     try { _vt(s, X, Y); } finally { s.h2 = h; } }; }
-{ const _hv = huVe; huVe = function () { _hv(); LM2.veVQ(); }; }   // vệt mẫu vẽ SAU hiệu ứng ảnh (như âm nhận cũ)
+{ const _hv = huVe; huVe = function () { _hv(); LM2.veVQ(); }; }
+// PH14 (chết tạm): dao văng lúc chết (veDao) vẽ bằng sheet Lam CŨ → với Lam mới thành lưỡi dao thứ hai cạnh hình khuỵu. Lam mới: bỏ (dao vẫn trong tay hình khuỵu).
+{ const _vd = veDao; veDao = function (...a) { if (LM2.ST.moi) return; return _vd(...a); }; }   // vệt mẫu vẽ SAU hiệu ứng ảnh (như âm nhận cũ)
 window.TVLM2 = LM2;
 
 boot();

@@ -233,7 +233,27 @@ const TT = (() => {
     const s = Math.max(0, 1 - o / 0.7);                       // phần còn lại của rễ đóng (1 = đóng hẳn, 0 = đã tách / rút hết)
     const ve = (k, sx, sw, dx, dy, dw, dh) => ctx.drawImage(CD.img, k.khung[0] + sx * B, k.khung[1], sw * B, k.khung[3], dx, dy, dw, dh);
     ctx.save(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    if (o > 0) { ctx.globalAlpha = Math.min(1, o / 0.35); ve(Om, 0, Om.w, X - Om.w / 2, Y - Om.h, Om.w, Om.h); }   // lối tối hiện dần
+    // PH14 mục 4: cổng mở phải đọc TOÀN BỀ NGANG collider là lối trống → BỎ khung hẹp giữa ("mo": lối tối có khung) khi mở; chỉ còn HAI TRỤ NGOÀI.
+    // ?congmo=cu = như trước (khung giữa còn khi mở) để so. Collider + luật mở KHÔNG đổi.
+    const CU = /[?&]congmo=cu/.test(location.search);
+    if (CU && o > 0) { ctx.globalAlpha = Math.min(1, o / 0.35); ve(Om, 0, Om.w, X - Om.w / 2, Y - Om.h, Om.w, Om.h); }   // (cũ) lối tối hiện dần
+    if (!CU) {
+      // hai trụ ngoài: lát mép ngoài của khối bên (rễ dọc + rêu), mép trong trùng mép hộp chặn (hop_chan x −89 … +94) – luôn hiện, đóng lẫn mở
+      const hc = m.hop_chan || {x: -89, w: 183}, tw = 15, th = 172, xl = X + hc.x - tw + 4, xr = X + hc.x + hc.w - 4;
+      ctx.globalAlpha = 1;
+      ve(Be, 0, tw, xl, Y - th, tw, th);
+      ctx.save(); ctx.translate(xr + tw, 0); ctx.scale(-1, 1); ve(Be, 0, tw, 0, Y - th, tw, th); ctx.restore();
+      // đèn báo ĐỒNG / NGÀ ẤM trên hai trụ (teal dành riêng cho Vọng / ký ức): sáng theo lvl khi đóng, sáng đủ khi đã mở
+      const dl = o > 0 ? Math.max(lvl, Math.min(1, o / 0.7)) : lvl;
+      for (const ex of [xl + tw / 2, xr + tw / 2]) {
+        const ey = Y - 128; ctx.fillStyle = 'rgba(58,40,22,0.95)'; ctx.beginPath(); ctx.arc(ex, ey, 3.2, 0, 7); ctx.fill();
+        ctx.fillStyle = 'rgba(176,120,62,1)'; ctx.beginPath(); ctx.arc(ex, ey, 2.2, 0, 7); ctx.fill();
+        if (dl > 0) { const nh = 0.88 + 0.12 * Math.sin(performance.now() / 260), g = ctx.createRadialGradient(ex, ey, 0.5, ex, ey, 11);
+          ctx.globalCompositeOperation = 'lighter';
+          g.addColorStop(0, 'rgba(255,236,196,' + (0.75 * dl * nh).toFixed(3) + ')'); g.addColorStop(0.45, 'rgba(214,160,92,' + (0.32 * dl * nh).toFixed(3) + ')'); g.addColorStop(1, 'rgba(180,120,60,0)');
+          ctx.fillStyle = g; ctx.fillRect(ex - 11, ey - 11, 22, 22); ctx.globalCompositeOperation = 'source-over'; }
+      }
+    }
     if (s > 0) {
       // hai khối bên: rút xuống đất (cắt ở mặt sàn) + mờ
       const lun = (1 - s) * Be.h, xl = X - G.w / 2 + ch - Be.w, xr = X + G.w / 2 - ch;
@@ -250,7 +270,8 @@ const TT = (() => {
         const ex = X + m.khoa.x, ey = Y + m.khoa.y, r = Math.max(3, m.khoa.r), nh = 0.85 + 0.15 * Math.sin(performance.now() / 180);
         ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = s;
         const g = ctx.createRadialGradient(ex, ey, 0.5, ex, ey, r * 3.4);
-        g.addColorStop(0, 'rgba(170,255,225,' + (0.7 * lvl * nh).toFixed(3) + ')'); g.addColorStop(0.4, 'rgba(90,230,180,' + (0.3 * lvl * nh).toFixed(3) + ')'); g.addColorStop(1, 'rgba(60,200,150,0)');
+        if (CU) { g.addColorStop(0, 'rgba(170,255,225,' + (0.7 * lvl * nh).toFixed(3) + ')'); g.addColorStop(0.4, 'rgba(90,230,180,' + (0.3 * lvl * nh).toFixed(3) + ')'); g.addColorStop(1, 'rgba(60,200,150,0)'); }
+        else { g.addColorStop(0, 'rgba(255,236,196,' + (0.7 * lvl * nh).toFixed(3) + ')'); g.addColorStop(0.4, 'rgba(214,160,92,' + (0.3 * lvl * nh).toFixed(3) + ')'); g.addColorStop(1, 'rgba(180,120,60,0)'); }   // PH14: đồng / ngà ấm
         ctx.fillStyle = g; ctx.fillRect(ex - r * 3.4, ey - r * 3.4, r * 6.8, r * 6.8); ctx.globalCompositeOperation = 'source-over';
       }
     }

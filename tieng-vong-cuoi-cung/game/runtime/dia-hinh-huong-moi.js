@@ -197,11 +197,22 @@ const DHM = (() => {
   let MEP = [], GOC = [];
   // nhiễu 1 chiều mượt theo vị trí (giá trị 0..1), k = khoá cột/cạnh
   function nhieu(y, buoc, k) { const i = Math.floor(y / buoc), f = y / buoc - i, a = bam(i, k), b = bam(i + 1, k), u = f * f * (3 - 2 * f); return a + (b - a) * u; }
-  function sauMep(m, y) {   // độ sâu gặm (logic) tại y
-    let d = 0.6 + 6.4 * nhieu(y, 23, m.k) + 2.6 * nhieu(y, 7, m.k + 411) + 1.1 * nhieu(y, 2.5, m.k + 911);
+  // PH14 mục 4: gặm sâu 10 px vượt dung sai 2–4 px (game bám MÓC: móc neo collider mà hình đất lùi 10 px = bám vào không khí).
+  // Nay độ sâu tính từ mép vẽ ngoài (= collider + nho 3 px): 1,2 … ≤ 4,5 → mép NHÌN THẤY nằm trong khoảng collider +1,8 … −1,5 px
+  // (≤ 2–4 px so với collider), vẫn còn sần nhỏ (khúc lượn ~23 px biên độ ~2, sần 7 / 2,5 px biên độ ~1). ?mep=sau = gặm sâu cũ để so.
+  const MEP_SAU = /[?&]mep=sau/.test(location.search);
+  function sauMep(m, y) {   // độ sâu gặm (logic, tính từ mép vẽ ngoài) tại y
+    let d = MEP_SAU ? 0.6 + 6.4 * nhieu(y, 23, m.k) + 2.6 * nhieu(y, 7, m.k + 411) + 1.1 * nhieu(y, 2.5, m.k + 911)
+                    : 1.2 + 1.9 * nhieu(y, 23, m.k) + 0.9 * nhieu(y, 7, m.k + 411) + 0.5 * nhieu(y, 2.5, m.k + 911);
     const vao = m.tren ? 12 : 8, ra = m.duoi ? 0 : 8;                        // thuôn: dưới mặt trên rêu / gặp sàn-trần
     const t0 = Math.min(1, (y - m.y0) / vao), t1 = ra ? Math.min(1, (m.y1 - y) / ra) : 1;
-    return Math.max(0, Math.min(10, d)) * Math.max(0, Math.min(t0, t1));
+    return Math.max(0, Math.min(MEP_SAU ? 10 : 4.5, d)) * Math.max(0, Math.min(t0, t1));
+  }
+  // PH14 mục 5: mép đứng NHÌN THẤY tại (x collider, y): trả độ lệch (logic) của mặt đất nhìn thấy so với mép collider, dương = nhô RA khỏi
+  // collider về phía không khí (nho − gặm). s = +1 mép phải của khối đất (không khí bên phải), −1 mép trái. null = không có mép hữu cơ ở đó.
+  function mepNhin(xc, y, s) {
+    for (const m of MEP) if (m.s === s && Math.abs(m.xo - s * m.nho - xc) < 0.6 && y >= m.y0 && y <= m.y1) return m.nho - sauMep(m, y);
+    return null;
   }
   function veMep(g, bx, by, w, h) {
     if (!MEP.length) return;
@@ -229,7 +240,7 @@ const DHM = (() => {
       for (let i = 0; i <= 10; i++) { const a = i / 10 * Math.PI / 2; const x = cx - c.sx * r * Math.sin(a), y = cy - c.sy * r * Math.cos(a); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
     g.globalCompositeOperation = 'source-over';
     for (const m of ds) for (let y = Math.ceil(m.y0 / 10) * 10; y < m.y1 - 8; y += 10) {
-      const u = bam(Math.floor(y / 10), m.k + 77), d = sauMep(m, y); if (d < 3) continue;
+      const u = bam(Math.floor(y / 10), m.k + 77), d = sauMep(m, y); if (d < (MEP_SAU ? 3 : 2.2)) continue;   // PH14: gặm nông → ngưỡng búi rêu / rễ con 2,2
       const xe = m.xo - m.s * d;   // mép đất mới tại y
       g.save(); g.beginPath(); g.rect(m.s < 0 ? m.xo : m.xo - 30, y - 16, 30, 40); g.clip();   // không nhô quá mép vẽ cũ (luật nhô ≤ 3)
       if (u < 0.3) {   // búi rêu bám mép: 5 đốm chồng nhau, nửa trên đất nửa trong phần gặm
@@ -380,9 +391,9 @@ const DHM = (() => {
           let t1 = ty; while (t1 + 1 < R && lo(t1 + 1)) t1++;
           const xo = phai ? (tx + 1) * T + NHO : tx * T - NHO, s = phai ? 1 : -1;
           const tren = !dac(tx, ty - 1), duoi = t1 + 1 < R && !dac(tx, t1 + 1);
-          MEP.push({xo, s, y0: ty * T - (tren ? NHO : 0), y1: (t1 + 1) * T + (duoi ? NHD : 0), tren, duoi, k: tx * 13 + (phai ? 7 : 3)});
-          if (tren) GOC.push({x: xo, y: ty * T - NHO, sx: -s, sy: 1, r: 6});
-          if (duoi) GOC.push({x: xo, y: (t1 + 1) * T + NHD, sx: -s, sy: -1, r: 12});
+          MEP.push({xo, s, y0: ty * T - (tren ? NHO : 0), y1: (t1 + 1) * T + (duoi ? NHD : 0), tren, duoi, nho: NHO, k: tx * 13 + (phai ? 7 : 3)});
+          if (tren) GOC.push({x: xo, y: ty * T - NHO, sx: -s, sy: 1, r: MEP_SAU ? 6 : 4});   // PH14: bo nhỏ hơn – góc nhìn gần collider
+          if (duoi) GOC.push({x: xo, y: (t1 + 1) * T + NHD, sx: -s, sy: -1, r: MEP_SAU ? 12 : 6});
           ty = t1 + 1;
         }
       }
@@ -586,5 +597,5 @@ const DHM = (() => {
       ctx.save(); ctx.translate(x + sw, top); ctx.rotate(sw * 0.01); ctx.drawImage(DEN.c, -DEN.ax, 0, DEN.w, DEN.h); ctx.restore();
     }
   }
-  return {SO, IMG, nap, dung, coCot, veDat, veNen, taoDen, veDen, coDoVat, veDiemLuu, veNomMoi, coDeRen, veDeRen, taoGiam, get CHK() { return CHK; }, get bat() { return bat; }, get M() { return M; }, get L() { return L; }, get VIEN() { return VIEN; }};
+  return {SO, IMG, nap, dung, mepNhin, coCot, veDat, veNen, taoDen, veDen, coDoVat, veDiemLuu, veNomMoi, coDeRen, veDeRen, taoGiam, get CHK() { return CHK; }, get bat() { return bat; }, get M() { return M; }, get L() { return L; }, get VIEN() { return VIEN; }};
 })();
