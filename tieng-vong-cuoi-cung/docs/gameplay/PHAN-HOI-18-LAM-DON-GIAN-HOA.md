@@ -51,3 +51,10 @@ Bước kế: gen MỘT dáng đứng chibi → Claude đặt cạnh Lam hiện 
 - art/huong-moi/lam-chibi/gen-chay-6-thu1.png: chạy 6 hình đầu tiên. Đo: cỡ hình lệch <1%, mắt lệch ≈1 px logic → nhất quán RẤT tốt. Người dùng chê "quá tệ": dáng ra kiểu ĐI lê bước (chân bước ngắn, thân thẳng, dao kéo lê phía sau), chưa phải chạy.
 - art/huong-moi/lam-chibi/bang-asset-tham-khao.png: bảng asset phong cách (nhìn từ trên – chỉ tham khảo phong cách, chưa duyệt thay mỹ thuật).
 Chuyên gia (Gửi Claude): giữ nguyên gameplay + game hiện tại. Làm TRANG THỬ RIÊNG: Lam chibi + một đoạn địa hình nhìn ngang, vài rễ/cây, đèn lồng đơn giản; giữ thế giới chuông, xanh trầm, ánh vàng ấm; chưa pixel art. Ưu tiên kiểm chạy 6 hình + chém ngắn: đầu/mũ, mắt, chuông, vũ khí nhất quán; thân/gấu đổi vừa đủ. Không mặc định ít chi tiết sẽ hết giật; không tăng khung trước khi sửa tỉ lệ/neo. Gửi ảnh cỡ 112 px + video iPhone để duyệt trước khi làm quái/boss/nền.
+
+## Cập nhật 30/10 (3) – CHỐT PIXEL ART
+Người dùng: "clear đi, tôi muốn làm theo pixel art như ảnh" (bảng asset bang-asset-tham-khao.png). Bỏ hướng chibi nét sạch; chuyển sang PIXEL ART THẬT kiểu bảng asset / Tiny Swords.
+- Mẫu nhận dạng: art/huong-moi/lam-chibi/mau-pixel-lam-tu-bang.png (người mũ trùm xanh, mắt vàng, khăn kem, cầm nĩa hai nhánh – rất gần Lam).
+- Lưới: 1 điểm ảnh sprite = 3 px logic (khung vẽ pixel 320×180), Lam ≈36 px sprite (≈108 logic). Vẽ nearest-neighbor, vị trí bám lưới.
+- Ảnh ChatGPT là "giả pixel" → script: dò cỡ ô, lấy mẫu theo ô, ép bảng màu cố định, viền 1 px; Claude sửa tay từng điểm được (lợi thế lớn nhất: khoá đầu = giữ y nguyên các điểm ảnh).
+- Trang thử riêng game/thu-lam-pixel/; giữ nguyên game hiện tại.
