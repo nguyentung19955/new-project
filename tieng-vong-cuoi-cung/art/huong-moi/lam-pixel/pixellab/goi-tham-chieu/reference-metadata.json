@@ -1,0 +1,16 @@
+{
+  "canvas": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    59
+  ],
+  "ground_line": "pixel row 59 is first empty row below boots; lowest foot row 58",
+  "body_height_target": 54,
+  "palette_colors": 32,
+  "alpha": "binary 0 or 255",
+  "provenance": "AI-generated concept downsampled with nearest-neighbor, shared quantization; technical native grid, not manually authored pixel art",
+  "east_note": "candidate view; inspect for residual three-quarter pose and hand identity before locking character"
+}
