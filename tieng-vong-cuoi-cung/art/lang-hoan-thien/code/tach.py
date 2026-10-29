@@ -331,6 +331,10 @@ def chan_dung():
 def tranh():
     for ten in ('man-bat-dau', 'man-ket'):
         Image.open(os.path.join(NG['gd'], ten + '.png')).convert('RGB').save(os.path.join(GOC, ten + '.jpg'), quality=88, optimize=True, progressive=True)
+    # 29/10: tranh MỚI kiểu "Cổ tích chuông tàn" (Lam mũ tối) – nguồn art/lang-hoan-thien/<ten>-chuong-tan.png → JPEG q86 (~215 KB). Game dùng bản này;
+    # man-bat-dau.jpg / man-ket.jpg (Lam mũ trắng cũ) giữ để so.
+    for ten in ('man-bat-dau', 'man-ket'):
+        Image.open(os.path.join(GOC, ten + '-chuong-tan.png')).convert('RGB').save(os.path.join(GOC, ten + '-chuong-tan.jpg'), quality=86, optimize=True, progressive=True)
 
 
 # ====================================================================== xuất atlas + JSON + kiểm viền
@@ -360,7 +364,7 @@ def main():
     chan_dung(); tranh()
     out = {'phien_ban': 1, 'boi': BOI, 'ghi_chu': 'Atlas 2x (px ảnh = logic × 2). o[tên] = {anh, khung [x,y,w,h] px atlas, neo [x,y] px trong mảnh}. '
            'Họ "-kho" là mảnh để dành (demo chưa có cơ chế) – game không nạp. Sinh bởi code/tach.py', 'anh': {}, 'o': {}, 'npc_rig': rig,
-           'tranh': {'man-bat-dau': {'tep': 'man-bat-dau.jpg', 'co_anh': [1672, 941]}, 'man-ket': {'tep': 'man-ket.jpg', 'co_anh': [1672, 941]}}}
+           'tranh': {'man-bat-dau': {'tep': 'man-bat-dau-chuong-tan.jpg', 'co_anh': [1672, 941]}, 'man-ket': {'tep': 'man-ket-chuong-tan.jpg', 'co_anh': [1672, 941]}}}
     for ho, ds in HO.items():
         rong = max(1024, max(r.shape[1] for _, r in ds) + 4)
         tong = sum(r.shape[1] + 2 for _, r in ds)

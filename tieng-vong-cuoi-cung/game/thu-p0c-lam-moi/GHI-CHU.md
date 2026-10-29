@@ -27,7 +27,7 @@ python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py    # bản này
 python3 -B game/thu-p0c-lam-moi/cong-cu/quay-p0c-lam-moi.py # video chơi thật (~6 phút)
 ```
 
-Phiên hiện tại: **`p0cLM-2910-ae49b204`** (nền P0-C `p0c-2910-e9cba386`). Luật: giống P0-C – **LUẬT-RƠI v2** (xem "Thay đổi luật" trong `thu-p0a/GHI-CHU-AM-DAO.md`).
+Phiên hiện tại: **`p0cLM-2910-75d305d6`** (29/10: chạy sửa 2, Dư Âm TV1–TV3, bật vách BM1/BM2, tranh màn bắt đầu/kết mới; trước `p0cLM-2910-ae49b204`) (nền P0-C `p0c-2910-e9cba386`). Luật: giống P0-C – **LUẬT-RƠI v2** (xem "Thay đổi luật" trong `thu-p0a/GHI-CHU-AM-DAO.md`).
 
 ## Video chơi thật – `video/choi-that-p0c-lam-moi-60fps.mp4` (60 hình/s, 1773 bước ≈ 30 s)
 
@@ -36,7 +36,7 @@ xuyên) → hạ tinh anh → nhặt Ấn Rèn I → sang F, đứng cạnh đe 
 Góc dưới: máu · việc bot · nhãn tư thế Lam mới. Log từng bước: `video/log-choi-that.json`.
 
 Kết quả (Chromium, không phải cảm nhận người chơi): tinh anh hạ, Ấn nhặt, rèn 1 lần, **Dư Âm 3 lần, vết vang trúng 3**, 2 Chuông Gỗ hạ, 0 lỗi trang.
-Lần quay này bot **không bị đánh trúng** (máu 5 suốt) – nên video **không có** cảnh chết / hồi sinh; hình chết tạm xem `thu-lam-moi-2/xem-thu/sua-ph14/chet-tam.gif`.
+Video quay trước đợt 29/10 chiều (chưa có TV / BM / tranh mới – xem GIF trong `thu-lam-moi-2/xem-thu/chay-duam-vach-2910/`). Lần quay này bot **không bị đánh trúng** (máu 5 suốt) – nên video **không có** cảnh chết / hồi sinh; hình chết tạm xem `thu-lam-moi-2/xem-thu/sua-ph14/chet-tam.gif`.
 
 ## Hình Lam mới trong luồng P0-C
 
@@ -44,9 +44,10 @@ Lần quay này bot **không bị đánh trúng** (máu 5 suốt) – nên video
 |---|---|
 | đứng, chạy, combo 1→2→3, hất, trên không, nhảy / rơi, pogo, lướt, bị đánh, bám móc | tư thế gen (bộ 3–5) |
 | chết | **tạm (code)**: khuỵu / tan dựng từ hình bị đánh |
-| tụ Dư Âm | **tạm**: A (lấy đà) – chờ sheet `thu6-tu-vang-3o.png` |
-| chém vang (Dư Âm) | **tạm**: A → B → C → D (đọc như một nhát chém) – chờ sheet `thu6-tu-vang-3o.png` |
-| nhảy tường | J1 – chờ sheet `thu6-bat-vach-2o.png` |
+| tụ Dư Âm | **TV1** (ảnh gen `thu6-tu-vang-3o.png`, 29/10) – dao sát ngực dưới |
+| chém vang (Dư Âm) | **TV1** lấy đà (atkT 1–5) → **TV2** thả chém vang đúng tick hộp (atkT 6–13) → **TV3** kết (14–27); luật Dư Âm giữ nguyên |
+| nhảy tường | **BM1** (tick nhảy) → **BM2** (tick kế) = ô cuối móc tường + móc rút về bằng code → lật ra phòng, J1 2 tick → J2 (29/10, không gen) |
+| màn bắt đầu / kết | **tranh mới kiểu "Cổ tích chuông tàn"** (Lam mũ tối) – thay tranh Lam mũ trắng cũ ở mọi trang |
 | rút dao lúc vào màn | D (tạm) |
 | đe rèn / Ấn / tinh anh / Chuông Gỗ | giữ nguyên P0-C |
 

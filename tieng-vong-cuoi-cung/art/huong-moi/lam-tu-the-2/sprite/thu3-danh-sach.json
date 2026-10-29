@@ -169,6 +169,27 @@
     "WM4"
    ],
    "co_3x": true
+  },
+  {
+   "ten": "lam-moi6-tu_vang",
+   "bo": 6,
+   "vai": "tu_vang",
+   "tu_the": [
+    "TV1",
+    "TV2",
+    "TV3"
+   ],
+   "co_3x": true
+  },
+  {
+   "ten": "lam-moi5-bat_moc",
+   "bo": 5,
+   "vai": "bat_moc",
+   "tu_the": [
+    "BM1",
+    "BM2"
+   ],
+   "co_3x": true
   }
  ]
 }

@@ -11,6 +11,8 @@ Không phải bộ kiểm thử tự động: chỉ quay ảnh / GIF / video + g
             videobo4: video chơi thật (không bất tử) qua đủ động tác
   8. mocvet / cong / videomvc (29/10): MÓC TƯỜNG + VỆT GEN + CỔNG DỌC → xem-thu/moc-vet-cong/ (GIF 112 px nền thật, ảnh dải vệt gen có hộp,
             ảnh + GIF mở cổng, ảnh cổng trong P0-B / P0-C / phòng B, video chơi thật không bất tử)
+  10. p2910 / tranh2910 (29/10): chạy sửa 2 trước/sau (CU_CHAY=<thư mục sheet chạy cũ>), Dư Âm tụ → chém vang, nhảy tường hai phía (BM1/BM2),
+            màn bắt đầu / kết trên khung iPhone ngang → xem-thu/chay-duam-vach-2910/
   9. ph14 (29/10, PH14): SỬA PH14 – chém 1 + hộp, pogo có sóng tầm sâu, móc gần sàn, nhảy tường, mép, mở cổng, ảnh dải vệt → xem-thu/sua-ph14/
   5. vet : VỆT MẪU PH13 (chém 1 + pogo trượt / trúng) trên nền thật, 112 px, có / không hộp đòn, chậm ×4 + log từng bước → xem-thu/vet-ph13/
 60 hình/s, mỗi hình = 1 bước logic. Chạy: python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py [do gif video anh vet]"""
@@ -48,14 +50,15 @@ def nhan(im, chu, y=0):
 
 
 class Trang:
-    def __init__(s, b, cong, q, vp=(960, 540), cham=False):
-        s.b, s.cong, s.q, s.vp, s.cham = b, cong, q, vp, cham
+    def __init__(s, b, cong, q, vp=(960, 540), cham=False, thay=None):
+        s.b, s.cong, s.q, s.vp, s.cham, s.thay = b, cong, q, vp, cham, thay or {}   # thay: {đuôi URL: file đĩa} – chỉ để quay bản TRƯỚC
 
     async def mo(s, ghi=True):
         ctx = await s.b.new_context(viewport={'width': s.vp[0], 'height': s.vp[1]}, device_scale_factor=1, has_touch=s.cham, is_mobile=s.cham)
         s.pg = await ctx.new_page()
         s.loi = []; s.pg.on('pageerror', lambda e: s.loi.append(str(e)))
         await s.pg.route('https://fonts.g*/**', lambda r: r.abort())
+        for duoi, f in s.thay.items(): await s.pg.route('**/' + duoi, functools.partial(lambda f, r: r.fulfill(path=f), f))
         await s.pg.goto('http://127.0.0.1:%d/game/thu-lam-moi-2/index.html?%s%s' % (s.cong, 'ghi=1&' if ghi else '', s.q))
         await s.pg.wait_for_function('window.TVDEMO && TVDEMO.ready', timeout=120000)
         await s.pg.evaluate('TVP0.batDau()')
@@ -785,6 +788,95 @@ async def ph14_chet(b, cong):
     print('chết tạm', len(fr), A.loi)
 
 
+S29 = 'chay-duam-vach-2910'
+CU_CHAY = os.environ.get('CU_CHAY', '')   # thư mục chứa lam-moi3-chay-{2x,3x}.{png,json} bản TRƯỚC (git show HEAD~:… > …) để quay "trước"
+
+
+async def p2910(b, cong):
+    """CHẠY SỬA 2, DƯ ÂM, BẬT VÁCH (29/10) → xem-thu/chay-duam-vach-2910/. Lam ~112 px (960×540 @1x), nền thật, ≈ toàn tốc (20 ms/bước) + -cham4.
+      chay-truoc-sau   TRÁI sau (ô 1, 4 từ thu6-chay-sua2) · PHẢI trước (sheet cũ, nạp qua route) – cùng phím cùng bước
+      du-am            cấp 3: giữ Chém 40 bước (chém 1 → tụ TV1) rồi thả → chém vang TV1 → TV2 (tick hộp) → TV3 vào hình nộm · TRÁI màu · PHẢI + hộp đòn
+      nhay-tuong-trai / -phai   bám móc → nhảy tường: BM1 (tick nhảy) → BM2 → J1 → J2 · TRÁI màu · PHẢI bóng đen
+      dai-bat-vach.png ô quanh lúc nhảy tường, phóng 2 (cả hai vách)"""
+    BD = os.path.join(OUT, S29); os.makedirs(BD, exist_ok=True); log = {'ghi_chu': 'mỗi dòng 1 bước: ' + TRANG_THAI4_JS}
+    the = 'pl.x+pl.w/2, pl.y+pl.h'
+
+    async def quay(A, B, ten, kb, khung, w=240, h=170, duoi=22, nhan_trai='', giu=None):
+        fr = []; lg = []; st = await A.js(TRANG_THAI4_JS); n = len(kb)
+        for i in range(n):
+            ph = kb[i]; await A.buoc(ph); await B.buoc(ph); st = await A.js(TRANG_THAI4_JS); stb = await B.js('pl.m2n'); lg.append(st + [stb])
+            if khung == 'lam': p = await A.lam_man(); X, Y = p['x'], p['y']
+            else: X, Y = await A.js('([x, y]) => [x - ox, y - oy]', list(khung))
+            a = cat(await A.anh(), X, Y, w, h, duoi); c = cat(await B.anh(), X, Y, w, h, duoi)
+            o = Image.new('RGB', (2 * w + 4, h), (12, 15, 20)); o.paste(a, (0, 0)); o.paste(c, (w + 4, 0))
+            fr.append(nho(o, '%s%s · %s%s · bước %d%s' % (nhan_trai, st[0], st[1], (' atkT %d' % st[3]) if st[2] else '', i + 1, ' · khựng' if st[6] else '')))
+            if giu is not None: giu.append((st, a))
+        luu_gif(fr, '%s/%s.gif' % (S29, ten), ms=20, dither=False); luu_gif(fr, '%s/%s-cham4.gif' % (S29, ten), ms=4000 / 60, dither=False)
+        log[ten] = lg; print(ten, len(fr), 'bước', ''.join('' if j and lg[j - 1][0] == r[0] else ' ' + str(r[0]) for j, r in enumerate(lg)))
+        return lg
+
+    async def dat(A, B, x, f, cho=40):
+        for t in (A, B): await t.js('TVP0.datLam(%s, %d)' % (x, f)); await t.buoc('', cho)
+
+    # 1. CHẠY trước / sau – đi theo Lam (khung 'lam'), phòng A
+    if CU_CHAY:
+        thay = {'lam-moi3-chay-%s' % d: os.path.join(CU_CHAY, 'lam-moi3-chay-%s' % d) for d in ('2x.json', '2x.png', '3x.json', '3x.png')}
+        A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, '', thay=thay).mo()
+        await dat(A, B, '(PA.x0+3)*T', 1)
+        await quay(A, B, 'chay-truoc-sau', ['r'] * 96, 'lam', w=200, h=150, nhan_trai='TRÁI sau · PHẢI trước · ')
+    # 2. DƯ ÂM: tụ → chém vang vào hình nộm (cấp 3)
+    A = await Trang(b, cong, 'cap=3').mo(); B = await Trang(b, cong, 'cap=3&hitbox=1').mo()
+    await dat(A, B, 'Q[6].x-80', 1); p = await A.js('[%s]' % the)
+    await quay(A, B, 'du-am', [''] * 4 + ['a'] * 40 + [''] * 46, (p[0] + 40, p[1]), w=280, h=190, nhan_trai='')
+    log['du_am_ky_nang'] = await A.js('TVAD.AD.TK')
+    # 3. NHẢY TƯỜNG hai phía: màu | bóng đen
+    A = await Trang(b, cong, '').mo(); B = await Trang(b, cong, 'bong=1&vfx=0').mo()
+    dai = {}
+    for ten, x, f, vao, ra in (('nhay-tuong-trai', '(PA.x0+1)*T', -1, 'l', 'r'), ('nhay-tuong-phai', '(PF.x0+PF.w-2)*T', 1, 'r', 'l')):
+        await dat(A, B, x, f); p = await A.js('[%s]' % the); g = []
+        await quay(A, B, ten, [''] * 4 + [vao + 'j'] * 20 + [vao] * 40 + [vao + 'j'] + [ra] * 14 + [''] * 30, (p[0] - 60 * f, p[1]), w=300, h=320, duoi=30, giu=g)
+        i0 = next(i for i, (st, _) in enumerate(g) if st[0] == 'BM1')
+        dai[ten] = g[max(0, i0 - 2): i0 + 6]
+    W, H = 300, 320; o = Image.new('RGB', (8 * (W + 4) + 4, 2 * (H + 26) + 4), (30, 33, 40)); d = ImageDraw.Draw(o)
+    for j, ten in enumerate(('nhay-tuong-trai', 'nhay-tuong-phai')):
+        for i, (st, a) in enumerate(dai[ten]):
+            x, y = 4 + i * (W + 4), 4 + j * (H + 26); o.paste(a, (x, y + 22)); d.text((x + 2, y), '%s · %s · nhìn %s' % (st[0], st[1], 'phải' if st[12] > 0 else 'trái'), font=FONT_N or FONT, fill=(243, 230, 200))
+    o.save(os.path.join(BD, 'dai-bat-vach.png'))
+    json.dump(log, open(os.path.join(BD, 'log-2910.json'), 'w'), ensure_ascii=False, default=str)
+    print('loi', A.loi, B.loi)
+
+
+async def tranh2910(b, cong):
+    """Màn bắt đầu / kết trên khung iPhone ngang (844×390 CSS px, @2x như iPhone, có bo + viền máy) cho mọi trang dùng tranh → xem-thu/chay-duam-vach-2910/"""
+    BD = os.path.join(OUT, S29); os.makedirs(BD, exist_ok=True)
+    for trang in ('thu-lam-moi-2', 'thu-p0c-lam-moi', 'thu-p0c', 'thu-p0b', 'thu-phong-b'):
+        ctx = await b.new_context(viewport={'width': 844, 'height': 390}, device_scale_factor=2, has_touch=True, is_mobile=True)
+        pg = await ctx.new_page(); loi = []; pg.on('pageerror', lambda e: loi.append(str(e)))
+        await pg.route('https://fonts.g*/**', lambda r: r.abort())
+        await pg.goto('http://127.0.0.1:%d/game/%s/index.html' % (cong, trang))
+        await pg.wait_for_function('window.TVDEMO && TVDEMO.ready', timeout=180000)
+        await pg.wait_for_function("document.getElementById('start') && !document.getElementById('start').hidden", timeout=60000)
+        await asyncio.sleep(1.5)
+        cl = await pg.evaluate("[document.getElementById('start').className, getComputedStyle(document.getElementById('start')).getPropertyValue('--tranh').slice(-40)]")
+        bd = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB')
+        await pg.evaluate("document.getElementById('start').hidden = true; endScreen()"); await asyncio.sleep(1.0)
+        kt = Image.open(io.BytesIO(await pg.screenshot(type='png'))).convert('RGB')
+        for ten, im in (('bat-dau', bd), ('ket', kt)):
+            khung_iphone(im, '%s – màn %s' % (trang, 'bắt đầu' if ten == 'bat-dau' else 'kết')).save(os.path.join(BD, 'man-%s-iphone-%s.jpg' % (ten, trang)), quality=86)
+        print(trang, cl, 'lỗi', loi); await ctx.close()
+
+
+def khung_iphone(im, chu):
+    """vẽ viền máy iPhone ngang quanh ảnh chụp (bo góc màn, tai thỏ bên trái như khi xoay ngang)"""
+    w, h = im.size; v = 44; o = Image.new('RGB', (w + 2 * v, h + 2 * v + 40), (238, 238, 240)); d = ImageDraw.Draw(o)
+    d.rounded_rectangle([4, 4, w + 2 * v - 4, h + 2 * v - 4], radius=120, fill=(18, 18, 20))
+    mk = Image.new('L', (w, h), 0); ImageDraw.Draw(mk).rounded_rectangle([0, 0, w - 1, h - 1], radius=84, fill=255)
+    o.paste(im, (v, v), mk)
+    d.rounded_rectangle([v - 6, v + h // 2 - 120, v + 58, v + h // 2 + 120], radius=32, fill=(18, 18, 20))   # tai thỏ (bên trái khi xoay ngang)
+    d.text((v, h + 2 * v + 8), chu, font=FONT, fill=(40, 40, 40))
+    return o
+
+
 async def main(viec):
     srv = socketserver.TCPServer(('127.0.0.1', 0), functools.partial(Im, directory=GOC)); cong = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -805,6 +897,8 @@ async def main(viec):
         if 'ph14' in viec: await ph14(b, cong)
         if 'mep14' in viec: await ph14_mep(b, cong)
         if 'chet14' in viec: await ph14_chet(b, cong)
+        if 'p2910' in viec: await p2910(b, cong)
+        if 'tranh2910' in viec: await tranh2910(b, cong)
         await b.close()
 
 

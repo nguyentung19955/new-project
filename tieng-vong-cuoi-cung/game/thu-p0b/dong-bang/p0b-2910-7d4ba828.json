@@ -1,0 +1,638 @@
+{
+ "phien": "p0b-2910-7d4ba828",
+ "trang": "game/thu-p0b/index.html",
+ "ngay_ghi": "2026-10-29",
+ "ghi_chu": "Snapshot bản đóng băng: MỌI file trang tải khi chạy (Chromium). \"dùng chung\" = runtime / ảnh / JSON mà trang khác cũng nạp – đổi chúng là đổi bản nhìn thấy dù index.html giữ nguyên. Đối chiếu: chạy lại ghi-dong-bang.py rồi so sha1.",
+ "so_file": 101,
+ "runtime_dung_chung": [
+  "game/runtime/lang-hoan-thien.js",
+  "game/runtime/quai-boss-runtime.js",
+  "game/runtime/quai-boss/boss/tay-sau.png",
+  "game/runtime/quai-boss/boss/tay-truoc.png",
+  "game/runtime/quai-boss/boss/than-phai.png",
+  "game/runtime/quai-boss/boss/than-trai.png",
+  "game/runtime/quai-boss/boss/than.png",
+  "game/runtime/quai-boss/boss/xich.png",
+  "game/runtime/quai-boss/quai-boss-rig.json",
+  "game/runtime/quai-boss/quai/chan-gan.png",
+  "game/runtime/quai-boss/quai/chan-xa.png",
+  "game/runtime/quai-boss/quai/qua-lac.png",
+  "game/runtime/quai-boss/quai/tay-sau.png",
+  "game/runtime/quai-boss/quai/tay-truoc.png",
+  "game/runtime/quai-boss/quai/than-phai.png",
+  "game/runtime/quai-boss/quai/than-trai.png",
+  "game/runtime/quai-boss/quai/than.png",
+  "game/runtime/trang-tri-dia-hinh.js",
+  "game/runtime/trang-tri/cong-lang.js",
+  "game/runtime/trang-tri/phong-boss.js",
+  "game/runtime/trang-tri/san-chuong.js"
+ ],
+ "file": [
+  {
+   "file": "art/hieu-ung/sprite/bui-2x.json",
+   "sha1": "d10fe263d13be1ad038ec5e4e5ee9f562ea1ba28",
+   "byte": 1863,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/bui-2x.png",
+   "sha1": "f60e93ae84b9190599a73183d5503ee19a3ff389",
+   "byte": 107856,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/cong-huong-2x.json",
+   "sha1": "5238026f61df6b591f43fc7ea1e0b44fc2dfff2e",
+   "byte": 1359,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/cong-huong-2x.png",
+   "sha1": "b0275fdc5049f7def82047f38200d1d843f80f59",
+   "byte": 171308,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/dash-2x.json",
+   "sha1": "9110916aba7195223b31d2ab4272a19d98f8341a",
+   "byte": 1291,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/dash-2x.png",
+   "sha1": "8ccbfc5916e36bbee1a571fc8f0d1ae897d51152",
+   "byte": 67048,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/keng-2x.json",
+   "sha1": "13075db95c39e05bee37806b8ed477aee9ec00bf",
+   "byte": 1191,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/keng-2x.png",
+   "sha1": "0bbf183470bcd067121e3ff290a2d2bd401335cc",
+   "byte": 36052,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/lam-bi-danh-2x.json",
+   "sha1": "6682800aa772cec7632a7368e130d76c7076a567",
+   "byte": 1180,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/lam-bi-danh-2x.png",
+   "sha1": "cb03ebf3cbb8d33efc2fcd64aced1730addf4ef0",
+   "byte": 76973,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/trung-don-2x.json",
+   "sha1": "dbb1e52a6f95a57e7694e3082b57d94ae447a3c9",
+   "byte": 1307,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/trung-don-2x.png",
+   "sha1": "e67068c3674b5e5d895985019d0fd2031b3f00fe",
+   "byte": 50818,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/truot-tuong-2x.json",
+   "sha1": "b614ee00a0ee295bd5c644e36725618c5539abe9",
+   "byte": 1311,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/truot-tuong-2x.png",
+   "sha1": "5e0e1ac6ccf04864473dcea02d1d037ce728b2e2",
+   "byte": 26839,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/vet-chem-2x.json",
+   "sha1": "a9cdee7c44573b8f5c68ab8996d1ee3d6cef1e48",
+   "byte": 2235,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/vet-chem-2x.png",
+   "sha1": "79c69aeceffc52fc6f0bed51eee829780ca03877",
+   "byte": 373930,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/vong-2x.json",
+   "sha1": "2c573d4de0a2e7e1f25e27ad58e4ef17dbd9b565",
+   "byte": 1297,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/hieu-ung/sprite/vong-2x.png",
+   "sha1": "4de884a7e1bbc9f1be0fe27828f476e28c62c588",
+   "byte": 138890,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/bo-vo-moc-rig.json",
+   "sha1": "ec08aa5524f91991e1e8051744c40dd8732baf73",
+   "byte": 166170,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/bung.png",
+   "sha1": "528d58f282f250a8f6d3257f50c05fa2dfd36f21",
+   "byte": 16619,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/chan-sau.png",
+   "sha1": "f0b933c3db53c9d16fd2e9600e36eed3523c2499",
+   "byte": 6843,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/chan-truoc.png",
+   "sha1": "538992569ffbeef055d90882a474ead92e7374fb",
+   "byte": 5942,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/dau.png",
+   "sha1": "d90e43e4e49dc7e7396f2820fe74f847deb89f3e",
+   "byte": 8099,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai-manh-1.png",
+   "sha1": "ab99462da869b39d6ad47eef613570001959a6f2",
+   "byte": 11484,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai-manh-2.png",
+   "sha1": "a358503504ecda02625979d3cfb70de60f0ab8ee",
+   "byte": 12883,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai-manh-3.png",
+   "sha1": "6ac355083e8211d4558781a1183708ef21f79601",
+   "byte": 12779,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai-nut-1.png",
+   "sha1": "e34621e3f541433ebc83e421660d8297c2e2f4b3",
+   "byte": 559,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai-nut-2.png",
+   "sha1": "c6b4bb0a405a2bd68162301619231d1a90e3bf48",
+   "byte": 1033,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/huong-moi/quai-rig/bo-vo-moc/manh/mai.png",
+   "sha1": "962da482f72c2762f117f787ea0ef4339decb4fc",
+   "byte": 34909,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/chan-dung.png",
+   "sha1": "584cce6dacac4b33d61d7e351537da166df203be",
+   "byte": 233266,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/chuong-lon.png",
+   "sha1": "c566d5b16cf4196e43706178c31d4efef4b45446",
+   "byte": 796961,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/den-long.png",
+   "sha1": "ce546b82641b328948771d204ae4ef27c412843d",
+   "byte": 61453,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/diem-luu.png",
+   "sha1": "672a25c25a1208fa27b87f35255999c8ad932154",
+   "byte": 141959,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/do-lang.png",
+   "sha1": "b5d35cc35f45251336c25e9ca5bec9a5ae639846",
+   "byte": 221775,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/hud.png",
+   "sha1": "1dc4a011c561db6a0c14651d8bfd8fb32d3d9360",
+   "byte": 28541,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/lang-hoan-thien.json",
+   "sha1": "3af0711ca701cb1fcdeeb12a507df9d818376f30",
+   "byte": 11245,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/man-bat-dau-chuong-tan.jpg",
+   "sha1": "9c22a368a973de2a9fe448fd7e13e4bb4f25eee7",
+   "byte": 215515,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/man-ket-chuong-tan.jpg",
+   "sha1": "59f4c4d479a7bce319345c3417a9aaa9d190e34e",
+   "byte": 217134,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/npc.png",
+   "sha1": "dbc42666548a3fa853ebb94ac214bc77e6b11729",
+   "byte": 173599,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/nut.png",
+   "sha1": "2c694d02dce3d68cd8f2f6cd8fe939f0a34c7236",
+   "byte": 784841,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/lang-hoan-thien/re-tran.png",
+   "sha1": "f831941a8812958aecf0d1d9dc4b08ebb196dd44",
+   "byte": 347292,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/cong-lang-v3/be-neo.png",
+   "sha1": "db626375144948e220b00bb61dd3692ae07a2a67",
+   "byte": 17296,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/cong-lang-v3/chan-re-goc.png",
+   "sha1": "8961f07ca8567a428e1913f866be2461fce0ee0b",
+   "byte": 143668,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/cong-lang-v3/mep-dat-re.png",
+   "sha1": "16fdd883c33e8b69ee7b4c8e0b08f476ccffc017",
+   "byte": 162734,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/cong-lang-v3/tien-canh-re-da.png",
+   "sha1": "a391e331148da8029fb6369c5452a85f4656dd64",
+   "byte": 268520,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/cong-doc-3x.png",
+   "sha1": "07b8a5a9f8501a83cd9f021cd346d34c7c4bd8a0",
+   "byte": 446069,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/cong-doc.json",
+   "sha1": "1c156025c529452c24b77d39a162a6cd99de05d1",
+   "byte": 1027,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/cong-re.png",
+   "sha1": "af149ff3a0e01284b359f93af7ba67dfe117a7e4",
+   "byte": 372011,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/dia-hinh-v4.json",
+   "sha1": "858983b2a2136c00577071498bbb40931883c636",
+   "byte": 14549,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/mang-go-van.png",
+   "sha1": "a5ee9a9c17bfe746ac57d01e2456764b60063799",
+   "byte": 251646,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/mep-da-reu.png",
+   "sha1": "7170773f102eb25c0026493da5c1ba4cbcb6bc91",
+   "byte": 136363,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/re-treo-cot.png",
+   "sha1": "47763d6e8ce31c9bec06d9bb8d2cc78a1f35ff1e",
+   "byte": 293405,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/dia-hinh-v4/xa-moc-day.png",
+   "sha1": "974e7cc4de0db41f62434dc288367931d104697c",
+   "byte": 121558,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/binh-mau.png",
+   "sha1": "eb65000903045991917931d73ba4cb0e5c9ae730",
+   "byte": 4118,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/cong-chi-tru.png",
+   "sha1": "83d399b03acf2591628686ff244944c96cec454c",
+   "byte": 48248,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/cong-dong.png",
+   "sha1": "d5b6647695acfc47e7b9f2dd7280b86cfac44d6d",
+   "byte": 105301,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/cong-mo.png",
+   "sha1": "1b95dbcbbe402b262b1b5cdb1fb821624a93ba0c",
+   "byte": 66684,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/cong-tac-an.png",
+   "sha1": "ddc295176563a6b72ea92514eaacee3ab1c9adef",
+   "byte": 6492,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/cong-tac-len.png",
+   "sha1": "8257dbca62fcb90299014e29cadba52a53f812a6",
+   "byte": 7541,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/do-vat.json",
+   "sha1": "83fd7d20a97eeb99bbd7c1d1d18d3487cc56b0ec",
+   "byte": 1305,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/do-vat/manh-chuong.png",
+   "sha1": "b7b44f12ba9bebf013292880fed4eb47ba484c72",
+   "byte": 4230,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/gach/gach-atlas.json",
+   "sha1": "9aef1b512a8872b6590f64d3041dc677791c8837",
+   "byte": 20342,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/gach/gach-atlas.png",
+   "sha1": "01668aa5e44116157cf1d9ee214f10ebf2c66dce",
+   "byte": 212175,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/gach/rong-re.png",
+   "sha1": "e5319cbe504e5b7bbb844518975e30ced5698cf1",
+   "byte": 46721,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/nen/lang-gan.png",
+   "sha1": "7d7f7880297cb988052437728fa1aa3ea75eab2b",
+   "byte": 409351,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/nen/lang-giua.png",
+   "sha1": "a7b19feee29ed54dead4b722ca62afadec1715b7",
+   "byte": 775412,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/nen/lang-tien-canh.png",
+   "sha1": "6078b877f147b517bd09a5e724f1efaa6efd8272",
+   "byte": 179673,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/nen/lang-xa.png",
+   "sha1": "4b3d1442bfb0632d4b5921b42214ee76b5924e87",
+   "byte": 518351,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "art/the-gioi-moi/lang-chuong/nen/nen.json",
+   "sha1": "44edc0f21277c80a3ae0208b6e338a982e692dc1",
+   "byte": 2361,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/anim/lam-nghi-v4-2x.png",
+   "sha1": "3cdbd4f68a586af62d27daa14bfdc25145c7343f",
+   "byte": 43929,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/anim/lang-chuong-giu.json",
+   "sha1": "8bb21b24c342dc1ae55528c34eea8133d90d60ab",
+   "byte": 442,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/anim/lang-chuong-giu.png",
+   "sha1": "608a366d95724a7575a5015ce97f350e8a8e1ecd",
+   "byte": 104473,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/lang-hoan-thien.js",
+   "sha1": "b638ef31e96b5dd79f220dcbffeb42bef7547093",
+   "byte": 4757,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss-runtime.js",
+   "sha1": "74273ace42ac66bd78f896e7d1767d9921fe8d7e",
+   "byte": 27790,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/tay-sau.png",
+   "sha1": "eb6d63ed92ccff69d7a77d947cbd6dcb44ed22b2",
+   "byte": 36842,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/tay-truoc.png",
+   "sha1": "41bb9d38c5c3fca57be5324755a56dd7c15ce172",
+   "byte": 58085,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/than-phai.png",
+   "sha1": "e078a51027588e20c570ad68296014a80028cde3",
+   "byte": 167385,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/than-trai.png",
+   "sha1": "7cbb7a92770da76e6f50f8be3b986666c95b386c",
+   "byte": 212625,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/than.png",
+   "sha1": "a5ddeeac70be36041bd874dc9bf39007826aa34a",
+   "byte": 375077,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/boss/xich.png",
+   "sha1": "7c69aa39c8ac2d1c080776fe877063416f16935c",
+   "byte": 28028,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai-boss-rig.json",
+   "sha1": "507e3bf35c01f586c447954b1ce832d241e8bc3e",
+   "byte": 77201,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/chan-gan.png",
+   "sha1": "78ac436381a9b20f97b3854e4ac4b43ebd23d10a",
+   "byte": 3374,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/chan-xa.png",
+   "sha1": "aab14211bbbddc5ebb45dfa134ee2e76360ad286",
+   "byte": 3769,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/qua-lac.png",
+   "sha1": "a147ca7f5701f7eeb155a739f9054e8bbf86a9cf",
+   "byte": 2579,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/tay-sau.png",
+   "sha1": "8cf3e0c67ba9a3f696d2d3dc18147ac6f959a93d",
+   "byte": 4047,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/tay-truoc.png",
+   "sha1": "78e13f643c95cfa246a8452ac11befeca03b2fe3",
+   "byte": 6275,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/than-phai.png",
+   "sha1": "25509c49225214a9fc5f8a2fb999b64e7cd19b0e",
+   "byte": 15249,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/than-trai.png",
+   "sha1": "8a6cdd5879dca6b96fb556a8f32708ed11936690",
+   "byte": 28753,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/quai-boss/quai/than.png",
+   "sha1": "93912bfd02aa377fee0326e21a5d287c30581633",
+   "byte": 41235,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/trang-tri-dia-hinh.js",
+   "sha1": "fff63c9ea5b4213617d95518d2383d84e92b6d56",
+   "byte": 30041,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/trang-tri/cong-lang.js",
+   "sha1": "4d92dc5c6cf4c20473ce7fa3f8bd875827d774c9",
+   "byte": 7534,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/trang-tri/phong-boss.js",
+   "sha1": "bb7d4eb924c1aa449c57d87a3a4f83de8de68cdb",
+   "byte": 2408,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/runtime/trang-tri/san-chuong.js",
+   "sha1": "3550efd3245a0b0590ef8729266d2e1c0785addc",
+   "byte": 4047,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/am-dao-cap1.png",
+   "sha1": "c72e4ab8ef8372ba76b854a9a3c153839bfb9f09",
+   "byte": 74982,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/lam-chay-am-dao-2x.json",
+   "sha1": "e34dac90e0dd174aea81d29522a2f21a10c49a23",
+   "byte": 9805,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/lam-chay-am-dao-2x.png",
+   "sha1": "487850afe66e3f71ecf9b624678869b71a09f5e0",
+   "byte": 1294925,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/lam-hanh-dong-am-dao-2x.json",
+   "sha1": "63c0ad0ba2d609842229af17bf44dae3c715d5bf",
+   "byte": 45193,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/lam-hanh-dong-am-dao-2x.png",
+   "sha1": "957d1fbe65f144fabc0040847f52a0d03d8976ce",
+   "byte": 4124341,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/vet-du-am-2x.json",
+   "sha1": "d1df84885c7840dfba0fc440c480ab64d7cec763",
+   "byte": 809,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0a/am-dao/vet-du-am-2x.png",
+   "sha1": "fe044eae133150f457b611db5bfe28de67671898",
+   "byte": 228380,
+   "loai": "dùng chung"
+  },
+  {
+   "file": "game/thu-p0b/index.html",
+   "sha1": "950c72e29fd4a4a0f74b3bc78c231cab2ef3b86e",
+   "byte": 370388,
+   "loai": "riêng trang"
+  }
+ ]
+}

@@ -1,6 +1,6 @@
-# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10 · đóng băng lần 5: cổng dọc 29/10 · đóng băng lần 6: PH14 cổng mở + snapshot runtime)
+# Trang thử P0-B – hai cách gọi bóng: A ghi chủ động / B Vọng Chiến (28/10/2026 · sinh lại từ Âm Đao PH8 · ĐÓNG BĂNG theo phản hồi 10 · đóng băng lần 2 sau nhận xét iPhone 28/10 · đóng băng lần 3: camera kiểu Dead Cells 28/10 · đóng băng lần 4: chém trên không không treo 29/10 · đóng băng lần 5: cổng dọc 29/10 · đóng băng lần 6: PH14 cổng mở + snapshot runtime · đóng băng lần 7: tranh màn bắt đầu/kết mới)
 
-> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-6941b504` – đóng băng lần 6 ngày 29/10/2026 (PH14: cổng mở bỏ khung giữa; mã phiên băm cả runtime dùng chung, danh sách file + sha1 trong `dong-bang/p0b-2910-6941b504.json` – xem mục "PH14" cuối file). Lần 5 `p0b-2910-91572dd6` (cổng dọc) đã thay.**
+> **PHIÊN BẢN ĐÓNG BĂNG cho buổi thử iPhone: `p0b-2910-7d4ba828` – đóng băng lần 7 ngày 29/10/2026 (tranh màn bắt đầu/kết mới kiểu "Cổ tích chuông tàn"; danh sách file `dong-bang/p0b-2910-7d4ba828.json`). Lần 6 `p0b-2910-6941b504` ngày 29/10/2026 (PH14: cổng mở bỏ khung giữa; mã phiên băm cả runtime dùng chung, danh sách file + sha1 trong `dong-bang/p0b-2910-6941b504.json` – xem mục "PH14" cuối file). Lần 5 `p0b-2910-91572dd6` (cổng dọc) đã thay.**
 > (Lần 5: cổng dọc; giữ mọi thứ của lần 4: chém trên không không treo, lần 3: camera kiểu Dead Cells, lần 2: kiếm to, vệt chém mềm, nhảy mềm; Vọng giữ nguyên.)
 > In trên màn bắt đầu ("… · p0b-2910-6941b504 · bản ĐÓNG BĂNG 29/10/2026 lần 6 (PH14: cổng mở …; lần 5: cổng dọc; …)") và ở dòng đầu log (`phien`, `dongBang`). Link có cờ thử khác (kể cả `?cam=phong`, `?roi=cu`, `?cong=cu`, `?congmo=cu`) → màn bắt đầu ghi **"BIẾN THỂ (không phải bản đóng băng: …)"**.
 > Từ giờ tới hết buổi thử: **không đổi số, không đổi luật, không sinh lại** trang (sinh lại sẽ đổi mã băm). Phiên lần 5 `p0b-2910-91572dd6`, lần 4 `p0b-2910-e8aa09dc`, lần 3 `p0b-2810-d219ca3a`, lần 2 `p0b-2810-8210801c` và lần 1 `p0b-2810-cceea180` đã thay (xem mục "Sửa iPhone 29/10", "Camera kiểu Dead Cells 28/10" và "Sửa theo nhận xét iPhone 28/10").
@@ -393,3 +393,11 @@ dù file trang không đổi. Từ lần này:
 - **Thay đổi luật**: lần 1–3 (`p0b-2810-*`) là **LUẬT-RƠI v1**; lần 4 trở đi **LUẬT-RƠI v2** (pogo tự động 1 lần / lần rời đất, xuống + Chém, kẹp rơi lần chém đầu) – **không gộp
   log hai bên**. Chi tiết: mục "Thay đổi luật" trong `game/thu-p0a/GHI-CHU-AM-DAO.md`.
 - P0-B **vẫn Lam cũ** (PH14: chưa thay mặc định A/B). Khi Lam mới đạt trên iPhone sẽ dùng **cùng một bản Lam mới cho cả A và B**, bắt đầu lượt so mới.
+
+
+## Tranh màn bắt đầu / kết mới (29/10) – ĐÓNG BĂNG LẦN 7 (`p0b-2910-7d4ba828`)
+
+- Tranh màn bắt đầu / kết đổi sang bản mới kiểu **"Cổ tích chuông tàn"** (`art/lang-hoan-thien/man-bat-dau-chuong-tan.jpg`, `man-ket-chuong-tan.jpg`; JSON `lang-hoan-thien.json` trỏ file mới).
+  Tranh nạp qua runtime dùng chung `lang-hoan-thien.js` → bản nhìn thấy của P0-B đổi → **tăng nhãn**: "29/10/2026 lần 7 (tranh màn bắt đầu/kết mới kiểu Cổ tích chuông tàn; lần 6: …)".
+- `tao-p0b.py` băm thêm `lang-hoan-thien.json` + 2 tranh vào mã phiên (trước đây không băm → đổi tranh sẽ không đổi phiên). Snapshot: `dong-bang/p0b-2910-7d4ba828.json` (101 file).
+- **Không đổi**: Lam cũ, Vọng A/B, mọi số / luật (LUẬT-RƠI v2 như lần 4–6). Ảnh màn trên khung iPhone ngang: `game/thu-lam-moi-2/xem-thu/chay-duam-vach-2910/man-*-iphone-thu-p0b.jpg`. Chưa thử iPhone thật.

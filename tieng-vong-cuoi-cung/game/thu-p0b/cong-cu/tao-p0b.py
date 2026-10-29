@@ -20,6 +20,10 @@ def _bam(*ps): h = hashlib.sha1(); [h.update(open(x, 'rb').read()) for x in ps];
 import re as _re
 RUNTIME = sorted(set(os.path.normpath(os.path.join(GAME, 'thu-p0b', m)) for m in _re.findall(r'<script src="(\.\./runtime/[^"]+\.js)"', src)))
 DU_LIEU_RT = [os.path.join(GAME, '..', 'art', 'the-gioi-moi', 'dia-hinh-v4', f) for f in ('cong-doc.json', 'cong-doc-3x.png', 'dia-hinh-v4.json')]
+# 29/10 (lần 7): thêm JSON làng hoàn thiện + 2 tranh màn bắt đầu / kết mà runtime lang-hoan-thien.js nạp → đổi tranh thì phiên đổi
+import json as _js
+_LHT = os.path.join(GAME, '..', 'art', 'lang-hoan-thien'); DU_LIEU_RT += [os.path.join(_LHT, 'lang-hoan-thien.json')] + \
+    [os.path.join(_LHT, t['tep']) for t in _js.load(open(os.path.join(_LHT, 'lang-hoan-thien.json'), encoding='utf-8'))['tranh'].values()]
 PHIEN = 'p0b-' + datetime.date.today().strftime('%d%m') + '-' + _bam(os.path.join(GAME, 'thu-p0a', 'am-dao.html'), os.path.join(HERE, 'khoi-p0b.js'),
                                                                  os.path.join(GAME, 'thu-bo-vo-moc', 'cong-cu', 'khoi-bo.js'), os.path.abspath(__file__),
                                                                  *RUNTIME, *[x for x in DU_LIEU_RT if os.path.exists(x)])

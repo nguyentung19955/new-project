@@ -1,0 +1,165 @@
+{
+ "ten": "Lam mới bộ 6 – tu_vang (TV1 / TV2 / TV3), sprite sheet 3x",
+ "phien_ban_clip": "lam-moi-thu6",
+ "vai": "tu_vang",
+ "tu_the": [
+  "TV1",
+  "TV2",
+  "TV3"
+ ],
+ "anh": "lam-moi6-tu_vang-3x.png",
+ "dinh_dang": "PNG RGBA, alpha thẳng (không nhân trước); điểm trong suốt RGB = 0",
+ "co_sheet": [
+  1285,
+  347
+ ],
+ "luoi": {
+  "cot": 3,
+  "hang": 1,
+  "khe_px": 2
+ },
+ "co_khung": [
+  427,
+  347
+ ],
+ "diem_neo": {
+  "x": 198,
+  "y": 341,
+  "y_nghia": "toạ độ trong MỖI khung: x = trục thân / giữa collider, y = chân (đất hoặc đáy hình). Mọi khung cùng một điểm neo."
+ },
+ "ty_le": {
+  "px_nguon_moi_px_logic": 3,
+  "cach": {
+   "chinh": "cỡ mũ = căn(rộng hàng mắt × cao trên mắt), trung vị 3 ô"
+  },
+  "px_gen_sang_px_logic": {
+   "chinh": 0.177817
+  },
+  "ghi_chu": "MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (41.6 px logic ở hàng mắt) – không theo khung bao"
+ },
+ "huong": "Lam nhìn PHẢI: TV1 tụ thấp, dao sát ngực dưới; TV2 thả chém vang tới trước (tick hộp đòn 7); TV3 kết / hồi. Neo giữa hai ủng như chém.",
+ "nguon_anh_gen": "art/huong-moi/nguon/lam-tu-the/thu6-tu-vang-3o.png",
+ "thu_co": {
+  "loc": "Lanczos (PIL)",
+  "lam_net": {
+   "sigma_px_nguon": 0.8,
+   "luong": 0.45
+  }
+ },
+ "frames": [
+  {
+   "i": 0,
+   "nhan": "TV1",
+   "x": 0,
+   "y": 0,
+   "w": 427,
+   "h": 347,
+   "neo_gen": [
+    321.0,
+    675
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 1,
+   "nhan": "TV2",
+   "x": 429,
+   "y": 0,
+   "w": 427,
+   "h": 347,
+   "neo_gen": [
+    1030.8,
+    673
+   ],
+   "nguon": "chinh"
+  },
+  {
+   "i": 2,
+   "nhan": "TV3",
+   "x": 858,
+   "y": 0,
+   "w": 427,
+   "h": 347,
+   "neo_gen": [
+    1785.2,
+    675
+   ],
+   "nguon": "chinh"
+  }
+ ],
+ "so_do": [
+  {
+   "o": 1,
+   "nhan": "TV1",
+   "cao_logic": 110.4,
+   "dinh_tren_neo_logic": 110.4,
+   "mu_rong_hang_mat_logic": 42.1,
+   "mu_so_chot_phan_tram": 1.3,
+   "mat_logic": [
+    14.3,
+    -72.3
+   ],
+   "mu_cao_tren_mat_logic": 37.9,
+   "co_mu_so_chot_phan_tram": -1.2,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.1,
+   "mau_mu_trung_vi": [
+    54.0,
+    61.0,
+    76.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 2,
+   "nhan": "TV2",
+   "cao_logic": 109.9,
+   "dinh_tren_neo_logic": 109.9,
+   "mu_rong_hang_mat_logic": 44.1,
+   "mu_so_chot_phan_tram": 6.1,
+   "mat_logic": [
+    17.1,
+    -72.1
+   ],
+   "mu_cao_tren_mat_logic": 37.5,
+   "co_mu_so_chot_phan_tram": 0.5,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 5.9,
+   "mau_mu_trung_vi": [
+    55.0,
+    62.0,
+    76.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  },
+  {
+   "o": 3,
+   "nhan": "TV3",
+   "cao_logic": 110.4,
+   "dinh_tren_neo_logic": 110.4,
+   "mu_rong_hang_mat_logic": 43.2,
+   "mu_so_chot_phan_tram": 3.9,
+   "mat_logic": [
+    13.6,
+    -72.5
+   ],
+   "mu_cao_tren_mat_logic": 37.9,
+   "co_mu_so_chot_phan_tram": 0.0,
+   "mu_do_nhieu": false,
+   "mat_dien_tich_logic": 6.5,
+   "mau_mu_trung_vi": [
+    55.0,
+    62.0,
+    78.0
+   ],
+   "neo_x": "ung",
+   "neo_y": "ung",
+   "nguon": "chinh"
+  }
+ ],
+ "bo": 6
+}

@@ -80,7 +80,7 @@
   "trung_tinh": 0
  },
  "chay": {
-  "file": "thu3-chay-sua.png",
+  "file": "thu6-chay-sua2.png",
   "cot": 4,
   "hang": 2,
   "vai": "chay",
@@ -96,17 +96,27 @@
   ],
   "neo_x": "o",
   "neo_y": "chay",
-  "lay_o_tu": {
-   "file": "thu2-chay-8o.png",
-   "o": [
-    1,
-    3,
-    4,
-    7,
-    8
-   ],
-   "ly_do": "29/10: ô không cần sửa trong thu3-chay-sua.png bị máy gen vẽ lại (lệch trung bình 3,1–3,6/255, mềm hơn 2–4 % theo Laplacian) → lấy lại ô cũ; giữ ô sửa 2, 5, 6"
-  }
+  "lay_o_tu": [
+   {
+    "file": "thu2-chay-8o.png",
+    "o": [
+     3,
+     7,
+     8
+    ],
+    "ly_do": "29/10 bộ 3: ô không cần sửa trong thu3-chay-sua bị máy gen vẽ lại → giữ ô thử 2"
+   },
+   {
+    "file": "thu3-chay-sua.png",
+    "o": [
+     2,
+     5,
+     6
+    ],
+    "ly_do": "29/10 bộ 3: ô sửa 2, 5, 6. Chạy sửa 2 (thu6): ô 2 / 6 mới THẤP hơn (mắt 63,5 → 62,5; 60,3 → 58,6), ô 5 như cũ → giữ bản bộ 3"
+   }
+  ],
+  "chay_sua2": "29/10 chạy sửa 2: so từng ô thu6-chay-sua2.png với bản đang dùng (cùng tỉ lệ, cùng neo). Chỉ ô 1 (mắt 68,8 → 68,3) và ô 4 (bay, mắt 69,9 → 68,5, ủng nhấc 4,3 → 0,8) làm dao động nhỏ lại → lấy từ thu6 (ảnh chính). Ô 3, 7, 8 mới thấp hơn 1,4–1,9 px nhưng không giảm dao động (đáy vẫn là ô 6) → giữ cũ."
  },
  "chem1": {
   "file": "thu3-chem1-sua.png",
@@ -360,9 +370,24 @@
   ],
   "neo_x": "ung",
   "neo_y": "ung",
-  "trung_tinh": 3,
+  "trung_tinh": 0,
   "bo": 6,
   "tien_to": "lam-moi6",
-  "huong": "Lam nhìn PHẢI: TV1 tụ thấp, dao sát ngực dưới; TV2 thả chém vang tới trước (tick hộp đòn 7); TV3 kết / hồi. Neo giữa hai ủng như chém."
+  "huong": "Lam nhìn PHẢI: TV1 tụ thấp, dao sát ngực dưới; TV2 thả chém vang tới trước (tick hộp đòn 7); TV3 kết / hồi. Neo giữa hai ủng như chém.",
+  "_trung_tinh": "29/10: ảnh 3 ô → ô trung tính = TV1 (tụ, đứng thẳng, hai ủng rõ); bảng cũ ghi 3 (chép từ chém 1) là ngoài 3 ô"
+ },
+ "bat_moc": {
+  "tu_dung": "code/dung_bat_moc.py",
+  "file": "thu5-moc-tuong-4o.png",
+  "tu_the": [
+   "BM1",
+   "BM2"
+  ],
+  "cot": 2,
+  "hang": 1,
+  "vai": "bat_moc",
+  "bo": 5,
+  "tien_to": "lam-moi5",
+  "huong": "29/10: BẬT KHỎI VÁCH bằng HÌNH CÓ SẴN (không gen): ô WM4 của sheet móc + móc rút về bằng code. Dựng bằng dung_bat_moc.py (dung_thu3.py chỉ đưa vào danh sách game)."
  }
 }

@@ -25,7 +25,7 @@ NEO (toạ độ chân của game: x = trục thân / giữa collider, y = mặt
     neo_y  'mat'   = mắt cao đúng như Lam chốt trên chân (72,6 px logic) – tư thế trên không / tường: đầu liền mạch giữa các hình ;
            'day'   = đáy hình ; 'ung' = đáy ủng (thiếu ủng → đáy hình) ; 'chay' = như chạy thử 2 (đất theo hàng, ô 4/8 giữ độ nhấc)
 Chia ô: thành phần liên thông lớn nhất trong từng ô lưới (tach.cat_o) – ảnh gen phải là lưới đều, nền trắng.
-Tuỳ chọn trong bảng: "lay_o_tu": {"file": "thu2-chay-8o.png", "o": [1, 3, 4, 7, 8]} → các ô này lấy từ ảnh gốc (PH13: máy gen đổi ô "giữ
+Tuỳ chọn trong bảng: "lay_o_tu": {"file": "thu2-chay-8o.png", "o": [1, 3, 4, 7, 8]} (hoặc DANH SÁCH nhiều mục như vậy) → các ô này lấy từ ảnh gốc (PH13: máy gen đổi ô "giữ
 nguyên" thì lấy lại ô cũ); mỗi ảnh nguồn có tỉ lệ riêng theo CÙNG luật mũ chốt.
 """
 import json, os, sys
@@ -102,8 +102,12 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
     # các nguồn: ảnh chính + (tuỳ chọn) ảnh gốc cho một số ô
     nguon = {'chinh': nap_nguon(p, cot, hang, cfg)}
     lay = cfg.get('lay_o_tu')
-    if lay: nguon['goc'] = nap_nguon(os.path.join(dir_nguon, lay['file']), cot, hang)
-    tu = ['goc' if lay and (i + 1) in lay['o'] else 'chinh' for i in range(n)]
+    lays = (lay if isinstance(lay, list) else [lay]) if lay else []   # 29/10 (chạy sửa 2): có thể nhiều ảnh gốc – mỗi ảnh một danh sách ô
+    tu = ['chinh'] * n
+    for j, l in enumerate(lays):
+        kn = 'goc' if j == 0 else 'goc%d' % (j + 1)
+        nguon[kn] = nap_nguon(os.path.join(dir_nguon, l['file']), cot, hang)
+        for o in l['o']: tu[o - 1] = kn
     K = {}
     cung_co = len({v[0].shape for v in nguon.values()}) == 1
     if cung_co:   # các ảnh nguồn cùng khổ / bố cục (chạy sửa + chạy gốc) → MỘT tỉ lệ chung, đo trên đúng các ô được dùng
@@ -202,7 +206,7 @@ def dung_mot(ten, cfg, dir_nguon, dir_ra, dir_kiem, C):
                           'px_gen_sang_px_logic': {kn: round(K[kn][0], 6) for kn in K},
                           'ghi_chu': 'MỘT tỉ lệ / ảnh nguồn, khớp mũ Lam chốt (%.1f px logic ở hàng mắt) – không theo khung bao' % C['mu_rong']},
                 'huong': cfg.get('huong', 'Lam quay mặt sang PHẢI. Quay trái: lật ngang quanh neo x.'),
-                'nguon_anh_gen': 'art/huong-moi/nguon/lam-tu-the/' + cfg['file'] + (' + ' + lay['file'] + ' (ô %s)' % lay['o'] if lay else ''),
+                'nguon_anh_gen': 'art/huong-moi/nguon/lam-tu-the/' + cfg['file'] + ''.join(' + %s (ô %s)' % (l['file'], l['o']) for l in lays) + (' (ô chính %s)' % [i + 1 for i in range(n) if tu[i] == 'chinh'] if lays else ''),
                 'thu_co': {'loc': {'area': 'cv2 INTER_AREA', 'lanczos': 'Lanczos (PIL)'}[loc],
                            'lam_net': {'sigma_px_nguon': net[0], 'luong': net[1]} if net else None},
                 'frames': frames, 'so_do': so}
@@ -291,7 +295,7 @@ def main(av):
                      'neo_x': tuy[0] if tuy else 'mu', 'neo_y': tuy[1] if len(tuy) > 1 else 'day'}
         json.dump(bang, open(BANG, 'w', encoding='utf-8'), ensure_ascii=False, indent=1); print('đã thêm', ten, 'vào', BANG)
         rest = [ten]
-    chon = [k for k in bang if not k.startswith('_')] if not rest else rest
+    chon = [k for k in bang if not k.startswith('_') and not bang[k].get('tu_dung')] if not rest else rest   # 'tu_dung' = sheet dựng bằng script riêng (vd. bat_moc)
     C = chot(); print('Lam chốt: mũ ở hàng mắt %.1f px logic' % C['mu_rong'])
     so = {}
     for ten in chon:

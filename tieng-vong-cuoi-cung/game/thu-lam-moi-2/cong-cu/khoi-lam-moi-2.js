@@ -42,7 +42,7 @@
      vệt     chém 2/3, hất, trên không: liềm/cung PH13 vẽ bằng code theo đường quét đo trên tư thế (JSON sheet → "vet") – VỆT MẪU CHỜ DUYỆT.
    MÓC TƯỜNG + VỆT GEN (29/10, bộ 5):
      tường   MẶC ĐỊNH = bám BẰNG MÓC (sheet lam-moi5-tuong_moc WM1–WM4, mẫu vách PHẢI, Lam nhìn vào vách, đầu móc = mép collider); cùng nhịp
-             W1 2 → W2 4 → W3/W4 6/6; vách trái lật cả hình; nhảy tường → J1. Trượt (WM3/WM4): bụi + tia nhỏ ở đầu móc (code, buiMoc).
+             W1 2 → W2 4 → W3/W4 6/6; vách trái lật cả hình; nhảy tường → BM1 (tick nhảy) → BM2 → J1 2 tick → J2 (29/10: WM4 + móc rút bằng code). Trượt (WM3/WM4): bụi + tia nhỏ ở đầu móc (code, buiMoc).
              ?tuong=lung = lưng áp vách (bộ 4), ?tuong=mat = mặt vào vách (bộ 3); ⚙ "Tường" đổi vòng.
      vệt     MẶC ĐỊNH = VỆT GEN (sprite/vet-gen-{2x,3x}, code/dung_vet.py): chém 1 + trên không = liềm ngang, chém 2 = chéo lên, hất = cung dọc lên,
              chém 3 = bổ xuống, pogo = nêm/cung ép/mảnh. Cùng nhịp tick hộp (1/3/2/2; pogo 2/3/3+2 mờ, nảy → tắt). Phép đặt trong JSON (lõi sáng
@@ -145,12 +145,18 @@ const LM2 = (() => {
     if (pl.atkN === 1 && a2 === 'atk1') { const A = ATK[1], t = pl.atkT; return t < A.su ? 'A' : t < A.su + 4 ? 'B' : t < A.su + A.ac ? 'C' : 'D'; }
     if (pl.atkN === 4 && a2 === 'atk4') return M.nay >= 0 ? 'P3' : pl.atkBounced ? nhanBay() : pl.atkT <= 2 ? 'P1' : 'P2';   // sau P3: về J2/J3 theo vy
     if (M.nay >= 0 && !pl.atkN && (a2 === 'jump' || a2 === 'fall')) return 'P3';
-    if (a2 === 'wall' && pl.vy < -1) return TU.BV1 ? 'BV1' : 'J1';   // PH14 mục 2: tháo móc / bật khỏi vách NGAY tick nhảy (sheet bat_vach khi có)   // bấm nhảy tường: physics đã bật lên ngay bước này → hình bật nhảy, không giữ W2
+    // 29/10 BẬT VÁCH BẰNG HÌNH CÓ SẴN (người dùng chọn, không gen): bám móc → tick nhảy BM1, tick kế BM2 (WM4 với móc rút về bằng code,
+    // code/dung_bat_moc.py; vẫn nhìn vào vách như WM) → lật nhìn ra phòng: J1 2 tick (wjT 14–13) → J2/J3/F như thường. Không thêm chờ.
+    const bm = ST.tuong === 'moc' && TU.BM1 && TU.BM2;
+    if (a2 === 'wall' && pl.vy < -1) return bm ? 'BM1' : TU.BV1 ? 'BV1' : 'J1';   // PH14 mục 2: tháo móc / bật khỏi vách NGAY tick nhảy (sheet bat_vach khi có)   // bấm nhảy tường: physics đã bật lên ngay bước này → hình bật nhảy, không giữ W2
     if (a2 === 'wall') return pl.wallStickT < P.wallStick ? (M.wT <= 2 ? 'W1' : 'W2') : pl.vy > 0 ? (((M.sT - 1) % 12) < 6 ? 'W3' : 'W4') : 'W2';
     // PH14 mục 2 "nhảy tường": BV1 (tay xa thu móc, chân đẩy vách) 1–2 tick đầu → BV2 (đã rời vách, áo kéo về phía vách) 2–3 tick → J2 (nhanBay).
     // Chạy SAU impulse (physics đã bật cùng bước) – không thêm thời gian chờ. Chưa có sheet → J1 như cũ.
+    if (a2 === 'walljump' && bm) return pl.wjT >= 16 ? 'BM1' : pl.wjT === 15 ? 'BM2' : pl.wjT >= 13 ? 'J1' : nhanBay();
     if (a2 === 'walljump') return TU.BV1 ? (pl.wjT >= 15 ? 'BV1' : pl.wjT >= 12 && TU.BV2 ? 'BV2' : nhanBay()) : pl.wjT >= 15 ? 'J1' : nhanBay();
     if (a2 === 'jump' || a2 === 'fall') return nhanBay();
+    // 29/10: tick nối giữa hết chém 1 và vào thế tụ (Dư Âm đã nạp, còn giữ Chém, game chưa kịp đặt 'tu') → TV1 luôn, không nháy I1 1 tick. Chỉ hình.
+    if (a2 === 'idle' && TU.TV1 && typeof AD !== 'undefined' && AD.KN && AD.KN.nap && AD.KN.giu) return 'TV1';
     if (a2 === 'idle' || a2 === 'land') { if (M.datT > 0) return 'L'; const t = (M.idT - 1) % 120; return t < 36 ? 'I1' : t < 60 ? 'I2' : t < 84 ? 'I3' : 'I1'; }
     // Sửa iPhone 29/10: giữ Chém tụ Dư Âm – trước dùng D (dao chúc xuống trước chân, đọc như "lưỡi dao thứ hai") → A (rút dao thấp sau hông = lấy đà)
     // PH14 mục 1D: tụ Dư Âm / chém vang. Sheet tu_vang (thu6-tu-vang-3o.png: TV1 tụ thấp · TV2 thả chém vang · TV3 kết) khi có;
@@ -167,7 +173,8 @@ const LM2 = (() => {
     pl.m2n = n;
     // lật: W (bộ 3, mẫu vách PHẢI, nhìn vào vách) và WM (bộ 5 móc, mẫu vách PHẢI, nhìn vào vách) → lật khi vách trái;
     //      WL (bộ 4, mẫu vách TRÁI, lưng áp vách) → lật khi vách phải
-    pl.m2l = (n[0] === 'W' && TU[n]) ? (n[1] === 'L' ? pl.lastWall > 0 : pl.lastWall < 0) : null; }
+    pl.m2l = (n[0] === 'W' && TU[n]) ? (n[1] === 'L' ? pl.lastWall > 0 : pl.lastWall < 0)
+      : (n === 'BM1' || n === 'BM2') && TU[n] ? (pl.wjDir || pl.lastWall) < 0 : null; }   // BM: mẫu vách PHẢI như WM; vách = wjDir (hướng tường vừa bật)
   // hình TẠM khi chưa có nhãn trong sheet (như trước PH13): tường / pogo / đứng / tiếp đất / chém khác → D; nhảy → ô chạy 4; rơi → ô chạy 8
   function tam(n, a2) {
     if (n[0] === 'J' || a2 === 'jump' || a2 === 'walljump' || a2 === 'dash') return TU.R4;

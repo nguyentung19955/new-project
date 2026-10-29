@@ -1,6 +1,8 @@
 # Thử Lam mới 2: CHẠY 8 tư thế + CHÉM 1 (A/B/C/D) + VỆT MẪU PH13 – 28–29/10/2026 – BẢN CHỜ DUYỆT HÌNH
 
-> **MỚI NHẤT (29/10, PH14): xem mục "Sửa PH14" ở cuối** – chém 1 bỏ nâng vệt 19 px (+ ảnh overlay để gen lại chém 1), pogo có sóng tầm sâu, móc chạm mặt đất
+> **MỚI NHẤT (29/10 chiều): mục "Chạy sửa 2, Dư Âm, bật vách, tranh 29/10" ở cuối** – chạy lấy ô 1/4 mới (mắt dao động 9,6 → 8,1 px, CHƯA đạt 3–4),
+> tụ / chém vang hình gen TV1–TV3, bật khỏi vách BM1/BM2 (WM4 + móc rút bằng code), tranh màn bắt đầu/kết mới ở mọi trang; GIF trong `xem-thu/chay-duam-vach-2910/`.
+> Trước đó (29/10, PH14): xem mục "Sửa PH14" – chém 1 bỏ nâng vệt 19 px (+ ảnh overlay để gen lại chém 1), pogo có sóng tầm sâu, móc chạm mặt đất
 > nhìn thấy + áo không xuyên sàn, mép đất gặm nông 2–4 px, cổng mở bỏ khung giữa, chết tạm khuỵu/tan, chỗ chừa hình bật vách / Dư Âm, **bản tích hợp riêng
 > `game/thu-p0c-lam-moi/`** (P0-C + Lam mới), mục **"Thay đổi luật"** ghi riêng. GIF trong `xem-thu/sua-ph14/`.
 > Trước đó (29/10, khuya): mục "Móc, vệt gen, cổng dọc 29/10" – bám tường BẰNG MÓC (mặc định; `?tuong=lung` / `?tuong=mat` = kiểu cũ),
@@ -830,4 +832,95 @@ python3 game/thu-p0c/cong-cu/tao-p0c.py && python3 game/thu-p0c-lam-moi/cong-cu/
 python3 game/thu-p0b/cong-cu/tao-p0b.py && python3 game/thu-p0b/cong-cu/ghi-dong-bang.py
 python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py ph14 chet14        # GIF + ảnh (~8 phút)
 python3 -B game/thu-p0c-lam-moi/cong-cu/quay-p0c-lam-moi.py                # video chơi thật P0-C Lam mới (~6 phút)
+```
+
+## Chạy sửa 2, Dư Âm, bật vách, tranh 29/10
+
+Ảnh mới (nền trắng): `art/huong-moi/nguon/lam-tu-the/thu6-chay-sua2.png` (8 ô chạy), `thu6-tu-vang-3o.png` (tụ / chém vang / kết), `art/lang-hoan-thien/man-bat-dau-chuong-tan.png`,
+`man-ket-chuong-tan.png`. **Bật vách làm bằng hình CÓ SẴN** (người dùng chọn) – `thu6-bat-vach-LOI-khong-dung.png` là bản gen hỏng, **không dùng**.
+**Giữ nguyên mọi sửa PH14.** **Không đổi luật**: hộp đòn, sát thương, startup, tốc độ, physics nhảy tường, luật Dư Âm (giữ 20 tick, thả → chém vang) giữ nguyên – chỉ đổi HÌNH.
+**Chưa thử iPhone thật** – mọi GIF / ảnh quay trong Chromium trên máy chủ (không GPU).
+
+### Xem gì trước (`xem-thu/chay-duam-vach-2910/`, Lam ~112 px, nền thật; bản thường ≈ toàn tốc, `-cham4` = chậm 4 lần)
+
+| File | Nội dung |
+|---|---|
+| **`chay-truoc-sau.gif`** (+ `-cham4`) | chạy phòng A, camera theo Lam: TRÁI sau (sheet mới) · PHẢI trước (sheet cũ) – cùng phím cùng bước |
+| **`du-am.gif`** (+ `-cham4`) | cấp 3, giữ Chém 40 bước: chém 1 → **TV1 tụ** → thả → **TV1 lấy đà → TV2 chém vang (đúng tick hộp, trúng hình nộm, khựng) → TV3 kết** · TRÁI màu · PHẢI + hộp đòn |
+| **`nhay-tuong-trai.gif`**, **`nhay-tuong-phai.gif`** (+ `-cham4`) | bám móc → trượt → nhảy tường: **BM1 → BM2 → J1 → J2** · TRÁI màu · PHẢI bóng đen |
+| `dai-bat-vach.png` | 8 bước quanh lúc nhảy tường, cả hai vách (WM4 · WM4 · BM1 · BM2 · J1 · J1 · J2 · J2), ghi hướng nhìn |
+| **`man-bat-dau-iphone-<trang>.jpg`**, `man-ket-iphone-<trang>.jpg` | màn bắt đầu / kết trên khung iPhone ngang (844 × 390, @2x) cho thu-lam-moi-2, thu-p0c-lam-moi, thu-p0c, thu-p0b, thu-phong-b |
+| `art/huong-moi/lam-tu-the-2/kiem/thu6-tu_vang-dai.png`, `thu5-bat_moc-dai.png`, `thu3-chay-dai.png` | ảnh dải sheet (Lam chốt cùng thang, neo, 112 px, bóng đen) |
+| `log-2910.json` | từng bước: tư thế, trạng thái, atkN, atkT, vy, chạm đất, khựng, máu, bộ sheet, hộp bật, hurtT, lướt, hướng, lật + nhãn bản PHẢI |
+
+### 1. Chạy sửa 2 – so từng ô, chỉ lấy ô thật sự tốt hơn
+
+So `thu6-chay-sua2.png` với bản đang dùng (ô 1/3/4/7/8 từ thử 2, ô 2/5/6 từ bộ 3) **cùng một tỉ lệ, cùng neo** (đất theo hàng, ô 4/8 giữ độ nhấc). Ảnh mới cùng khổ
+(1536 × 1024, 2 × 4) nhưng **máy gen vẽ lại cả 8 ô** (lệch 3,7–6,4/255 so với bộ 3). Mắt trên chân (px logic, Lam cao 112):
+
+| Ô | 1 | 2 | 3 | 4 (bay) | 5 | 6 | 7 | 8 (bay) |
+|---|---|---|---|---|---|---|---|---|
+| Đang dùng | 68,8 | 63,5 | 66,4 | 69,9 | 63,0 | 60,3 | 65,0 | 67,7 |
+| Ảnh mới thu6 | 68,3 | **62,5** | 65,0 | 68,5 | 63,0 | **58,6** | 63,1 | 65,9 |
+| Chọn | **thu6** | cũ | cũ | **thu6** | cũ | cũ | cũ | cũ |
+
+- **Ô chịu lực 2 / 6 trong ảnh mới THẤP HƠN** (nén người mạnh hơn: mắt 63,5 → 62,5; 60,3 → 58,6) → không dùng. Ô 5 như cũ. Ô 3/7/8 mới thấp hơn 1,4–1,9 px nhưng không làm dao động nhỏ lại (đáy vẫn là ô 6) → giữ cũ.
+- **Lấy ô 1 và ô 4** từ thu6: ô 4 (bay) bớt nhấc (ủng sau nhấc 4,3 → 0,8 px, mắt 69,9 → 68,5), ô 1 hạ 0,5 → **đỉnh dao động thấp xuống**. Chân trụ ô 1 chạm đất (neo đáy ủng); ô 4 là ô bay nên vẫn hơi nhấc.
+  Đã thử mọi cách ghép 2⁸ (cũ / mới mỗi ô): 1 + 4 là cách nhỏ nhất.
+- **Kết quả: mắt dao động 9,6 → 8,1 px; đỉnh mũ 10,6 → 10,0 px** (cỡ mũ ±1,7 % chốt). **Vẫn chưa đạt mục tiêu 3–4 px** – lý do chính là ô 6 (mắt 60,3) và ô 2/5 (63). Nếu dùng toàn
+  bộ ảnh mới thì còn tệ hơn (mắt 9,9, đỉnh 11,3).
+- Số tham khảo (CHƯA áp, cần mắt người duyệt vì bộ 3 đã thay chúng có chủ ý): nếu lấy lại ô 2/5/6 **của thử 2** (mắt 65,0 / 66,4 / 62,9) + ô 1/4 thu6 → mắt dao động ~5,6 px.
+  Muốn đạt 3–4 px bằng ảnh gen: gen lại **riêng ô 6** (và 2) với thân chỉ thấp hơn ô 1 khoảng 1–2 px ở 112 px – nhấn mạnh "head height almost the same as pose 1".
+- Dựng: `bang-thu3.json` mục `chay` (ảnh chính thu6 + `lay_o_tu` NHIỀU ảnh: thu2 ô 3/7/8, thu3 ô 2/5/6); `dung_thu3.py` nhận danh sách.
+
+### 2. Dư Âm – tụ / chém vang (sheet `lam-moi6-tu_vang`, thay hình tạm A)
+
+- Dựng `dung_thu3.py tu_vang` (cùng luật tỉ lệ mũ chốt; neo giữa hai ủng như chém; ô trung tính TV1). Cỡ mũ so chốt −1,2 / +0,5 / 0 %; mắt trên chân 72,1–72,5 (≈ chốt 72,6); mắt nhỏ (6–6,5, chốt 7,3).
+- Nhịp **theo luật Dư Âm có sẵn** (đo trong game, `log-2910.json`): giữ Chém → chém 1 chạy hết → **TV1** suốt thế tụ → thả → chém vang (ATK 7: su 6, ac 8, re 14):
+  **TV1** atkT 1–5 · **TV2** atkT 6–13 (đúng tick hộp; trúng → khựng 6 bước giữ TV2) · **TV3** atkT 14–27 → đứng.
+- Sửa nhỏ (chỉ hình): tick nối giữa hết chém 1 và vào thế tụ trước đây nháy **I1 1 bước** → nay giữ TV1 (khi Dư Âm đã nạp và còn giữ Chém).
+- Vệt / vết nổ chém vang, vòng nạp trên đầu giữ như cũ.
+
+### 3. Bật khỏi vách – hình CÓ SẴN + móc rút bằng code (sheet `lam-moi5-bat_moc`)
+
+- `code/dung_bat_moc.py`: lấy **ô cuối sheet móc (WM4)**, tách lớp "nắm tay + móc" (vùng trên mép mũ, bỏ điểm xanh của mũ và viền ngà) rồi:
+  **BM1** xoay ngả về sau 25°, dịch (−3, +7) px – đầu móc rời mép collider (x 10 → −5), không còn cắm vách, vẽ trước mũ;
+  **BM2** xoay 60°, thu 0,8, dịch (−7, +16) – móc gập sau đầu, vẽ SAU thân (khuất sau mũ). Cùng cỡ khung + điểm neo với sheet móc.
+- Máy hình (chỉ khi bám bằng móc – mặc định): **tick bấm nhảy = BM1**, tick kế (wjT 15) = **BM2** (vẫn nhìn vào vách như WM, lật theo vách vừa bật) → **lật nhìn ra phòng, J1 2 tick
+  (wjT 14–13) → J2 / J3 / F như thường**. Không thêm thời gian chờ: impulse nhảy tường chạy NGAY tick bấm như cũ, Lam đã bay ra khỏi vách trong lúc BM1/BM2.
+  Đo: vách trái và vách phải đều `WM4 → BM1 → BM2 → J1 → J1 → J2` (log). `?tuong=lung|mat` giữ J1 như trước.
+- Chỗ chừa sheet gen `bat_vach` (BV1/BV2) vẫn giữ nhưng **không dùng** khi có BM.
+
+### 4. Tranh màn bắt đầu / kết mới ("Cổ tích chuông tàn")
+
+- `art/lang-hoan-thien/man-bat-dau-chuong-tan.jpg` / `man-ket-chuong-tan.jpg` (JPEG q86 từ PNG gốc, giữ 1672 × 941 = 16:9, ~215 KB mỗi ảnh, cũ 247 / 308 KB).
+  `lang-hoan-thien.json` → `tranh` trỏ file mới; `code/tach.py` sinh lại cả hai. Tranh cũ (Lam mũ trắng) `man-bat-dau.jpg` / `man-ket.jpg` giữ để so.
+- Mọi trang nạp tranh qua `game/runtime/lang-hoan-thien.js` nên **tự đổi**: thu-lam-moi-2, thu-p0c-lam-moi, P0-C, P0-B, thu-phong-b (và các trang thử cũ cùng runtime).
+  `demo.html` là bản nhúng sẵn (build-demo.py) – **chưa đóng gói lại**, vẫn tranh cũ.
+- Chữ màn bắt đầu: tranh mới vốn tối ở nửa trên → dải tối CSS sẵn có (88 % → 0) đủ đọc; **không chỉnh**. Xem ảnh khung iPhone.
+- **P0-B đóng băng lần 7** (`p0b-2910-7d4ba828`): nhãn "tranh màn bắt đầu/kết mới kiểu Cổ tích chuông tàn"; mã phiên băm thêm `lang-hoan-thien.json` + 2 tranh. P0-B / P0-C **vẫn Lam cũ**.
+
+### Tự kiểm
+
+| Dòng | Kết quả |
+|---|---|
+| Chạy: dao động thân 3–4 px, chân trụ chạm đất | **Chưa đạt** – mắt 9,6 → 8,1, đỉnh mũ 10,6 → 10,0. Ảnh gen mới không sửa ô nén (ô 2/6 còn thấp hơn) |
+| Tụ / chém vang thay hình tạm, nhịp theo luật cũ | **Đạt** (Chromium) – `du-am.gif` |
+| Bật vách: ô cuối móc 1–2 tick, móc rút, lật ra phòng, J1 → J2, không thêm chờ | **Đạt** (Chromium) cả hai vách |
+| Tranh mới ở mọi trang dùng tranh, 16:9, chữ đọc rõ | **Đạt** – 5 trang, 0 lỗi trang |
+| Thử iPhone thật | **Chưa làm** – cần người thử |
+
+### Đổi gì trong code
+- `art/huong-moi/lam-tu-the-2/code/dung_thu3.py` (`lay_o_tu` nhận danh sách, bỏ qua mục `tu_dung`), `bang-thu3.json` (`chay`, `tu_vang.trung_tinh` 0, mục `bat_moc`); mới `code/dung_bat_moc.py`.
+- `thu-lam-moi-2/cong-cu/khoi-lam-moi-2.js`: BM1/BM2 trong máy hình + lật, TV1 ở tick nối. `quay-lam-moi-2.py`: `p2910`, `tranh2910`, `Trang(thay=…)` (nạp sheet cũ để quay "trước").
+- `art/lang-hoan-thien/lang-hoan-thien.json`, `code/tach.py`; `thu-p0b/cong-cu/khoi-p0b.js` (nhãn), `tao-p0b.py` (băm thêm tranh).
+- Sinh lại: trang này, `thu-p0c-lam-moi` (`p0cLM-2910-75d305d6`), P0-B (`p0b-2910-7d4ba828` + `dong-bang/p0b-2910-7d4ba828.json`), P0-C + thu-phong-b (chạy lại – ra đúng file cũ, tranh mới đến qua runtime).
+
+### Chạy lại
+```
+python3 art/huong-moi/lam-tu-the-2/code/dung_thu3.py chay tu_vang
+python3 art/huong-moi/lam-tu-the-2/code/dung_bat_moc.py
+python3 game/thu-lam-moi-2/cong-cu/tao-thu-lam-moi-2.py && python3 game/thu-p0c-lam-moi/cong-cu/tao-p0c-lam-moi.py
+python3 game/thu-p0b/cong-cu/tao-p0b.py && python3 game/thu-p0b/cong-cu/ghi-dong-bang.py
+CU_CHAY=<thư mục sheet chạy cũ> python3 -B game/thu-lam-moi-2/cong-cu/quay-lam-moi-2.py p2910 tranh2910   # ~5 phút
 ```
