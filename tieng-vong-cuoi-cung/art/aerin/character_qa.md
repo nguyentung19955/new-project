@@ -1,6 +1,6 @@
 # AERIN – Phase 1 Character QA (SE master)
 
-**Status:** **SE Animation Master v3 (HELMET) – PASS, LOCKED** by the Art Director. The hair version is retired (`toc-cu/`) and must not be reused. Animation rule: anchor on the feet (y = 88), never on the blade tip.
+**Status:** **SE Animation Master v4 CLEAN (helmet) – PASS, LOCKED** by the Art Director. Height is **61 px** and replaces the old 52 px target. Canvas is 96×96 with the feet on y = 88. v3 (resampled) is rejected. HARD LOCK: never resize, resample, auto-quantize or auto-outline PixelLab pixels; only pixel-exact edits or moving whole pixel blocks.
 
 Source: PixelLab "Create from Reference", character `9ea1ed77-594b-46d6-af61-e9939888c251`.
 Reference: attempt 1 SOUTH view, mirrored horizontally (moves the sword to the anatomical left hand) with the hair repainted as three large spikes (`master/aerin_reference_south_64.png`, script `sua-master.py`).
@@ -65,3 +65,10 @@ The unchanged PixelLab originals stay in `attempt3/`. Landmarks are recomputed t
 - **Source:** PixelLab Create State `0a16a8c4-c33f-4c25-a929-6c686ee78abc` made on the locked character `9ea1ed77`, with "use color palette from reference" ON. The unchanged PNGs are in `helmet/`.
 - **SE master:** the same v2 transform via `python3 sua-se.py helmet/pixellab_original_se_64.png helmet/ 46` and `python3 lam-landmarks.py helmet/`, with the results promoted to the top-level files.
 - **Art Director verdict:** PASS on every criterion (helmet silhouette, identity, anatomical-left sword, SE 3/4 view, 52 px at baseline y = 88, 28 colors, animation readiness).
+
+## v4 CLEAN (current master, `sua-se-sach.py`)
+The director rejected v3. Next to the PixelLab state image, the sword looked broken and blurry, there were stray strokes, and the face was degraded. The cause was the v2/v3 pipeline: squashing the far half (×0.82), a nearest-neighbor downscale (×0.855), 28-color quantization and the automatic outline patch together resampled the pixel art and broke its clean pixel clusters.
+
+v4 takes the PixelLab helmet SE image 1:1. The only edits are: (a) the scarf tail is moved behind the body as an exact, flipped block of pixels; (b) the clipped blade tip is hand-drawn with the blade's existing colors.
+
+Art Director verdict: PASS. Height 61 px accepted, SE turn accepted, original PixelLab palette kept. If the game needs a smaller character, change the camera/render scale instead of resizing the sprite.
