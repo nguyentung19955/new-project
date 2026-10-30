@@ -11,7 +11,18 @@ for j in range(ny):
         c=reg[int(oy+j*g)+1:int(oy+(j+1)*g),int(ox+i*g)+1:int(ox+(i+1)*g)].reshape(-1,3)
         cells[j,i]=np.median(c,axis=0)
 bg=np.median(reg[:20,:20].reshape(-1,3),axis=0)
-isbg=(np.abs(cells-bg).sum(2)<45)|((cells.min(2)>205)&(np.abs(cells[:,:,0]-cells[:,:,2])<25))
+cand=(np.abs(cells-bg).sum(2)<45)|((cells.min(2)>205)&(np.abs(cells[:,:,0]-cells[:,:,2])<25))
+# background = only background-coloured cells connected to the border (white mask inside the hood is NOT background)
+from collections import deque
+isbg=np.zeros_like(cand); q=deque()
+for j in range(ny):
+    for i in range(nx):
+        if (j in (0,ny-1) or i in (0,nx-1)) and cand[j,i]: isbg[j,i]=True; q.append((j,i))
+while q:
+    j,i=q.popleft()
+    for dj,di in ((1,0),(-1,0),(0,1),(0,-1)):
+        a,b=j+dj,i+di
+        if 0<=a<ny and 0<=b<nx and cand[a,b] and not isbg[a,b]: isbg[a,b]=True; q.append((a,b))
 # palette: k-means on figure cells
 pts=cells[~isbg]
 rng=np.random.default_rng(0); K=16

@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 a=np.array(Image.open('lam_master_80x128.png'))
 H,W=a.shape[:2]
-HALO={(147,158,182),(188,221,233),(99,112,137)}
+HALO={(148,158,181),(227,236,239)}
 col=lambda y,x: tuple(int(v) for v in a[y,x,:3])
 # mask region: pale pixels connected to the eyes area (big pale blob in the upper half)
 ys,xs=np.where((a[...,3]>0)&(a[...,0]==188)); 
