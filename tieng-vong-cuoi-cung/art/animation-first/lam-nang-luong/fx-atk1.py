@@ -53,7 +53,7 @@ for yy in (int(yc)-12,int(yc),int(yc)+12):
         for dy in (0,1):
             if op[yy+dy,x]: f5[yy+dy,x]=(*RAMP[4],255)
         if op[yy,x-1]: f5[yy,x-1]=(*RAMP[4],255)
-frames={'FX1':f1,'FX2':f2,'FX3':f3,'FX4':f4,'FX5':f5}
+frames={'FX1':f1,'FX2':f2,'FX3':f3,'FX4':f4}
 for n,a in frames.items(): Image.fromarray(a).save(f'{D}/fx/{n}.png')
 json.dump({'anchor_in_fx':[int(ax),int(ay)],'note':'place fx so anchor_in_fx sits 2px right of the wrist'},open(f'{D}/fx/anchor.json','w'))
 print('anchor',ax,ay,'bbox',xs.min(),xs.max(),y0,y1)

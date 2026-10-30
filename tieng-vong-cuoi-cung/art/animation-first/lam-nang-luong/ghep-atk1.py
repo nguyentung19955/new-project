@@ -2,7 +2,7 @@
 import json,numpy as np
 from PIL import Image
 D='attack1_pl'; ms=[70,90,80,55,45,75,95,120]
-fxmap={3:'FX1',4:'FX2',5:'FX3',6:'FX4',7:'FX5'}
+fxmap={3:'FX1',4:'FX2',5:'FX3',6:'FX4'}  # FX ends at F7 (ChatGPT QA)
 ORG=(91,45)
 def org(k,fx):
     if k==3:

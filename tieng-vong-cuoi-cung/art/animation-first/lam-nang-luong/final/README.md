@@ -8,3 +8,4 @@
 Post-process: only floating pixel pieces detached from the body were deleted (`don-manh.py`); nothing was drawn.
 
 Rebuild the run package: `python3 nghieng2.py 5 run_lua run_lua/nghieng5 && python3 lam-dong-goi.py run_lua/nghieng5 final/run 80`
+| attack1 | body `attack1_pl/v2_clean` (Skeleton v3, great sword slash, every skeleton frame edited by hand, Fixed head Always) + FX layer | 8 | 70/90/80/55/45/75/95/120 | FX = one PixelLab crescent, recoloured and erased into FX1-FX4 (`fx-atk1.py`); FX on F4-F7, peak F5. Waiting for the owner's GIF review |
