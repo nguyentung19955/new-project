@@ -1,0 +1,2 @@
+Thu tu khung don 1 (sheet.png, 11 khung):
+1 f0 | 2 R0 tum chuoi | 3 R1 rut thang ra truoc | 4-7 f3-f6 + fxF3-6 | 8 T0 + fxF7 | 9 T2 tra ngang hong | 10 R1 | 11 f0
