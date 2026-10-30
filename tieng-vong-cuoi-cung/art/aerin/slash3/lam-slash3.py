@@ -71,7 +71,7 @@ out.append(A[5].copy())
 f=A[6].copy(); clear(f,(82,60,112,84))
 f=body_shift(f,74,2,2)
 paste_blade(f,82,67)
-smear(f,66,50,32,100,-45,6)
+smear(f,66,50,32,91,-45,6)
 for cx,cy in [(44,90),(86,90),(92,89)]:
     for dx,dy,c in DUST:
         if 0<=cx+dx<W and 0<=cy+dy<W: f.putpixel((cx+dx,cy+dy),c+(255,))

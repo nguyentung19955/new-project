@@ -51,8 +51,8 @@ def lay_sword(f,ox,oy,fade=0):
         q=(ox+x,oy+y)
         if not(0<=q[0]<W and 0<=q[1]<W): continue
         if is_blade(p):
-            if fade==1: p=(0x3f,0x95,0xcd,255)          # lưỡi tối dần
-            elif fade==2: p=(0x22,0x45,0x8d,255)        # lưỡi tắt hẳn (năng lượng hết), chuôi còn nguyên
+            if fade==1: p=(int(p[0]*.62),int(p[1]*.7),int(p[2]*.82),255)   # lưỡi tối dần (giữ sắc độ)
+            elif fade==2: p=(int(p[0]*.3),int(p[1]*.38),int(p[2]*.55),255)  # lưỡi tắt hẳn, chuôi còn nguyên
         f.putpixel(q,p)
 def clean_small(f,minsize=10):
     seen=set()
