@@ -6,7 +6,7 @@
    Tắt bằng ?vfx=0. Thêm: tia trúng (điểm ảnh) + vòng nảy pogo.
    LAM CHIBI bộ KIẾM (30/10): vệt chém + lưỡi sáng nằm SẴN trong sprite chém 1/2/3 → code KHÔNG vẽ cung cho các clip đó
    (bỏ cả vòng sáng chuông chém 3 cũ của vfx-lam.js – toạ độ theo hình cũ, sẽ chồng lệch lên kiếm). Lật gương do sprite lo.
-   Bị đánh: chớp trắng ấm 3 bước (50 ms) – index.html vẽ bóng trắng của hình; đẩy lùi do engine (hurt).
+   Bị đánh: chớp trắng ấm 4 bước (≈ 67 ms) ở hình 2 – index.html vẽ bóng trắng của hình; đẩy lùi nhẹ do engine (hurt).
    ===================================================================================================================== */
 const VFX = (() => {
   const OPT = {bat: DC_Q.get('vfx') !== '0'};
@@ -78,5 +78,7 @@ const VFX = (() => {
       for (let i = 0; i < 20; i++){ const a = i / 20 * Math.PI * 2; g.fillRect(Math.round((v.x + Math.cos(a) * R - camX) / D) * D, Math.round((v.y + Math.sin(a) * R * 0.4) / D) * D, D, D); }
     }
   }
-  return {ve, suKien, buoc, OPT, CUNG, chopTrang: () => chop > 0};
+  // kiem2: chớp trắng ở HÌNH 2 của clip bị đánh (bước 5–8 sau khi trúng ≈ 67 ms), không phải lúc vừa trúng
+  function chopTrang(){ const pl = DongCo.pl, t = DongCo.HURT_T - pl.hurtT; return !pl.dead && pl.hurtT > 0 && t >= 5 && t <= 8; }
+  return {ve, suKien, buoc, OPT, CUNG, chopTrang};
 })();

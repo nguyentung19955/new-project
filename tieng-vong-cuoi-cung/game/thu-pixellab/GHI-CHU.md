@@ -7,7 +7,31 @@ Không xây từ demo ChatGPT (`PH20-goi-chatgpt-pixellab/`).
 **Chơi thử (iPhone xoay ngang):**
 https://raw.githack.com/nguyentung19955/new-project/tieng-vong-cuoi-cung/tieng-vong-cuoi-cung/game/thu-pixellab/index.html
 
-## 0. Mới nhất (30/10): Lam cầm KIẾM – combo 3 nhát chém – CHỜ NGƯỜI DÙNG XEM
+## 0. Mới nhất (30/10): Lam kiếm CHUYỂN ĐỘNG TOÀN THÂN (bộ kiem2) – CHỜ NGƯỜI DÙNG XEM
+
+Người dùng chê bộ `kiem/`: khi chém người đứng yên, chỉ cây kiếm động → thay bằng bộ đã duyệt `art/huong-moi/lam-pixel/chibi/v3/kiem2/` (xem `kiem2/DOC.md`).
+
+- **Đã thay 7 clip**: đứng, chạy, chém 1 ↘, chém 2 ↗, chém 3 bổ, bị đánh, chết – cả người vặn/nhảy/lao theo đòn. Quay trái lật gương cả kiếm lẫn vệt chém (nằm trong hình).
+- **Neo**: x = giữa canvas (khung 104 = khung 112 lệch +4,+4); y = đáy ủng thật của từng clip để chân cùng mặt đất (đứng 88, chạy / bị đánh / chết 96 trong khung 112; chém 81 trong khung 104 – ứng 85 khung 112. Tâm canvas thuần sẽ làm chân lệch 3–8 điểm giữa các clip nên chỉnh y theo ủng).
+- **Thời gian từng hình đúng DOC** (chém không đều): chém 1 83·100·66·**140**·100 ms · chém 2 55·75·85·**115**·70·85 · chém 3 80·90·110·90·**160**·100·100 (**đậm** = hình trúng đòn). Đứng 125 ms lặp · chạy ≈ 90 ms/hình (143 px/vòng) · bị đánh 3×83 ms · chết 70→100 ms, giữ hình cuối.
+- **Cảm giác lực** (`dong-co.js`): hộp chém CHỈ bật đúng hình trúng đòn (chém 1, 2 = hình 4 · chém 3 = hình 5), tới mũi kiếm ≈ 26 điểm trước mặt; chém 2 vùng chéo lên tới trên đầu, chém 3 vùng bổ xuống trước mặt. Lao tới trước: chém 1 +10 điểm (20 px logic), chém 2 +6, chém 3 +14 (4 lúc nhảy + 10 lúc bổ); sát tường thì không lao. Hitstop khi trúng 33 / 33 / 67 ms, rung 0 / 1 / 2 px (chém 3 khựng + rung cả khi trượt, như trước). Bị đánh: chớp trắng ≈ 67 ms ở hình 2 + đẩy lùi nhẹ ≈ 4 điểm (trước bị hất xa).
+- **Không vẽ cung chém bằng code** cho chém 1/2/3 (giữ như bản trước). Combo giờ dài hơn chút vì theo đúng thời gian hình đã duyệt (chém 1 ≈ 0,48 s, chém 3 ≈ 0,73 s).
+
+Lệnh đã chạy (từ `tieng-vong-cuoi-cung/`, `K=art/huong-moi/lam-pixel/chibi/v3/kiem2`):
+```
+nhap_pixellab.py dung    $K/dung/out/dung-?.png       --neo 56,88 --ms 125 --lap --khong-mat
+nhap_pixellab.py chay    $K/chay/out/chay-?.png       --neo 56,96 --quang 143 --khong-mat
+nhap_pixellab.py chem1   $K/chem1/out/chem1-?.png     --neo 52,81 --ms 83,100,66,140,100 --khong-lap --manh 3 --pha 0-2:3:4 --khong-mat
+nhap_pixellab.py chem2   $K/chem2/out/chem2-?.png     --neo 52,81 --ms 55,75,85,115,70,85 --khong-lap --manh 3 --pha 0-2:3:4-5 --khong-mat
+nhap_pixellab.py chem3   $K/chem3/out/chem3-?.png     --neo 52,81 --ms 80,90,110,90,160,100,100 --khong-lap --manh 4 --pha 0-3:4:5-6 --khong-mat
+nhap_pixellab.py bi-danh $K/bi-danh/out/bi-danh-?.png --neo 56,96 --ms 83 --khong-lap --khong-mat
+nhap_pixellab.py chet    $K/chet/out/chet-?.png       --neo 56,96 --ms 70,80,90,90,100,100,100 --khong-lap --khong-mat
+```
+`hoat-anh.js`: đòn dùng clip của chính nó + có `ms` từng hình → chọn hình theo ms (engine su/ac/re suy từ cùng bảng). Hất / chém trên không mượn clip vẫn chia theo pha.
+
+> Phiên này KHÔNG chạy thử / đo trang (chỉ kiểm cú pháp). Nếu thấy lỗi nạp ở góc trên trái, chụp màn gửi lại.
+
+## 0a. (Cũ, đã thay bởi mục 0) Lam cầm KIẾM bộ kiem/ – combo 3 nhát chém
 
 Người dùng chê đòn cũ trông như chọc đũa phép → thay bằng bộ kiếm đã duyệt `art/huong-moi/lam-pixel/chibi/v3/kiem/` (xem `kiem/DOC.md`).
 

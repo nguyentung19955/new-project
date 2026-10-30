@@ -38,13 +38,19 @@ const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
 // Đòn: su (lấy đà) · ac (ra đòn: hộp bật) · re (hồi) – bước 60 Hz. box [dx, dy, w, h] so với CHÂN, mặt phải. su 1–3 = P0-A (7/7/9), hộp = Âm Đao.
 // 1–3 combo đất · 4 pogo (chém nảy) · 5 chém hất (lên) · 6 chém trên không. hs = hitstop khi trúng. goc = máu (thang ×10).
 const ATK = {
-  1: {su:7,  ac:8,  re:8,  hs:3, mag:1.5, sh:[1, 0],      box:[2, -80, 92, 80],    goc:10, ten:'chem1'},   // kiếm chéo ↘: vai → đất, tới mũi kiếm (+46 điểm)
-  2: {su:7,  ac:8,  re:8,  hs:4, mag:1.8, sh:[0.6, -0.8], box:[-6, -104, 98, 80],  goc:10, ten:'chem2'},   // chéo LÊN ↗: hông → trên đầu
-  3: {su:9,  ac:8,  re:16, hs:6, mag:2,   sh:[0, 1],      box:[4, -76, 94, 76],    goc:10, ten:'chem3'},   // BỔ xuống trước mặt: ngang đầu → đất
+  // Lam bộ kiem2 (30/10, kiem2/DOC.md): su/ac/re = bước 60 Hz suy từ thời gian TỪNG HÌNH (ms) – hình k bắt đầu ở round(tổng ms trước × 0,06):
+  //   chém 1 83,100,66,[140],100 · chém 2 55,75,85,[115],70,85 · chém 3 80,90,110,90,[160],100,100  ([ ] = hình trúng đòn = pha ra đòn, hộp bật).
+  // lao = [từ atkT, tới atkT, px logic] lao người tới trước (1 điểm sprite = 2 px logic): chém 1 +10 điểm (3 lấy đà hình 3, 7 vào hình 4) ·
+  //   chém 2 +6 (hình 3 → 4) · chém 3 +14 (4 lúc nhảy hình 2, 10 lúc bổ vào hình 5). hs = hitstop bước (2 ≈ 33 ms · 4 ≈ 67 ms), mag = rung px.
+  // box tới mũi kiếm ≈ 36 điểm từ chân (≈ 26 điểm trước mặt): chém 1 chéo vai → đất · chém 2 chéo LÊN tới trên đầu · chém 3 bổ trước mặt.
+  1: {su:15, ac:8,  re:6,  hs:2, mag:0, sh:[1, 0],      box:[0, -94, 78, 94],    goc:10, ten:'chem1', lao:[[11, 14, 6], [15, 16, 14]]},
+  2: {su:13, ac:7,  re:9,  hs:2, mag:1, sh:[0.6, -0.8], box:[-4, -114, 84, 100], goc:10, ten:'chem2', lao:[[11, 14, 12]]},
+  3: {su:22, ac:10, re:12, hs:4, mag:2, sh:[0, 1],      box:[4, -104, 74, 104],  goc:10, ten:'chem3', lao:[[5, 9, 8], [21, 23, 20]]},
   4: {su:0,  ac:11, re:4,  hs:3, mag:1,   sh:[0, 1],      box:[-26, -24, 64, 82],  goc:10, ten:'pogo'},
   5: {su:11, ac:8,  re:8,  hs:3, mag:1.5, sh:[0, -1],     box:[-9, -140, 87, 60],  goc:10, ten:'chem-len'},
   6: {su:9,  ac:8,  re:4,  hs:3, mag:1.5, sh:[1, 0.4],    box:[-3, -107, 95, 48],  goc:10, ten:'chem-khong'}
 };
+const HURT_T = 15;   // bị đánh 15 bước = 3 hình × 83 ms (kiem2)
 const CHO_THEM = 6, NGUONG_HUONG = 0.7;   // P0-A: hàng chờ 1 nhát = hết đòn đang chạy + 6 bước; ngưỡng cần gạt lúc ra đòn ≈ 45°
 
 /* ---------- BẢN ĐỒ (lưới từ canh/man.json + vách thêm của trang này) ---------- */
@@ -85,7 +91,7 @@ const S = {frame:0, hitstop:0, sht:0, shm:0, shx:0, shy:0, swing:0, nTrung:0, ch
 const pl = {x:0, y:0, w:20, h:30, vx:0, vy:0, face:1, onGround:false, coyote:0, jumpBuf:0, dashBuf:0, jumping:false,
   wallDir:0, wallLock:0, wallCoy:0, lastWall:0, wallStickT:0, wjBack:0, wjT:0, landT:0, airT:0, yTop:0,
   dash:0, dashDir:1, dashCd:0, airDash:false, airJump:false, iframes:0, hp:P.maxHp, hurtT:0, hurtK:-1, dead:false, deadT:0,
-  atkN:0, atkT:0, atkSw:0, atkBounced:false, pogoBuf:0, pogoSafe:0, st:'idle', dxT:0, sx:0, sy:0,
+  atkN:0, atkT:0, laoTat:false, atkSw:0, atkBounced:false, pogoBuf:0, pogoSafe:0, st:'idle', dxT:0, sx:0, sy:0,
   comboHan:0, comboTiep:0, luotCho:false};
 const ROI = {autoDung:false, khungDung:false, khT:0, KH_BUOC:6, KH_VY:1.2};   // thu-lam-moi-2 29/10: pogo tự động 1 lần / lần rời đất + khựng chém trên không đầu
 const CHO = {co:false, f:0, huong:'', han:0};                              // P0-A hàng chờ 1 nhát
@@ -144,7 +150,8 @@ function startAtk(n, dir){
   if (!pl.onGround && n === 4 && !IN.xuong()) ROI.autoDung = true;   // pogo TỰ ĐỘNG chỉ 1 lần mỗi lần rời đất
   if (dir && n !== 4) pl.face = dir;
   pl.atkN = n; pl.atkT = 0; pl.atkSw = ++S.swing; pl.atkBounced = false; pl.comboHan = 0;
-  if (n < 4 && pl.onGround) pl.vx = pl.face * P.lunge * (n === 3 ? 1.4 : 1);
+  // chém 1–3: lao theo bảng ATK.lao (thay đà cũ P.lunge); đứng sát tường phía trước → không lao
+  if (n < 4 && pl.onGround){ pl.vx = 0; pl.laoTat = collide(pl.x + pl.face * 2, pl.y, pl.w, pl.h); }
   SUKIEN.push({k:'ra-don', n});
 }
 function ranh(){ return (!pl.atkN || (pl.atkN === 4 && pl.atkBounced)) && pl.dash <= 0; }
@@ -260,7 +267,9 @@ function capNhatLam(){
   chonDon(dir);
   if (pl.pogoBuf > 0) pl.pogoBuf--;
   if (pl.atkN){ pl.atkT++; const a = ATK[pl.atkN];
-    if (pl.atkN === 3 && pl.atkT === a.su){ S.hitstop = Math.max(S.hitstop, 3); shake(0, 1, 1.5); }   // Lam chibi: chém 3 khựng 3 bước (50 ms) + rung 1–2 px đúng hình bổ (hình 5), trúng hay trượt
+    if (a.lao && !pl.laoTat && pl.onGround) for (const [u, v, d] of a.lao) if (pl.atkT >= u && pl.atkT <= v){
+      const x0 = pl.x; if (moveX(pl, pl.face * d / (v - u + 1), false)) pl.laoTat = true; pl.dxT += pl.x - x0; }   // chạm tường → thôi lao
+    if (pl.atkN === 3 && pl.atkT === a.su){ S.hitstop = Math.max(S.hitstop, a.hs); shake(0, 1, a.mag); }   // chém 3: khựng 60 ms + rung 2 px đúng hình bổ (hình 5), trúng hay trượt
     if (pl.atkT >= a.su + a.ac + a.re){
       if (pl.onGround && pl.atkN < 3){ pl.comboHan = DC_SO.comboHan; pl.comboTiep = pl.atkN + 1; }   // chỉ dùng khi DCO.combo
       pl.atkN = 0;
@@ -304,12 +313,12 @@ function trung(hb, n, face){   // mọi mục tiêu chồng hộp, MỖI mục t
       else if (!khongNgat){ m.kvx = face * (n === 3 ? 6 : 4.4); m.st = 'hit'; m.t = 0; }   // luật cũ Chuông Gỗ
     }
   }
-  if (co){ S.hitstop = Math.max(S.hitstop, hs); shake(a.sh[0] * face, a.sh[1], a.mag); }
+  if (co){ S.hitstop = Math.max(S.hitstop, hs); if (a.mag) shake(a.sh[0] * face, a.sh[1], a.mag); }   // chém 1: không rung
   return co;
 }
-function hurt(dir){
+function hurt(dir){   // kiem2: đẩy lùi nhẹ ≈ 8 px logic (4 điểm sprite), chớp trắng ở hình 2 (vfx.js)
   if (pl.dead || pl.iframes > 0 || pl.pogoSafe > 0) return;
-  pl.hp--; pl.iframes = P.hurtIFrames; pl.hurtT = 18; pl.vx = dir * 4.8; pl.vy = -6; pl.atkN = 0; pl.dash = 0; pl.jumping = false;
+  pl.hp--; pl.iframes = P.hurtIFrames; pl.hurtT = HURT_T; pl.vx = dir * 1; pl.vy = -2; pl.atkN = 0; pl.dash = 0; pl.jumping = false;
   CHO.co = false; pl.comboHan = 0; pl.dashBuf = 0;
   S.hitstop = 6; shake(dir || 0.01, -0.6, 2.6);
   pl.hurtK = (dir === 0 ? -1 : Math.sign(dir) * pl.face);
@@ -381,7 +390,7 @@ function buoc(){
 /* ---------- TRẠNG THÁI CHO ANIMATION (ưu tiên: chết > bị đánh > lướt > chém > vách > trên không > tiếp đất > chạy > đứng) ---------- */
 function trangThai(){
   if (pl.dead) return {ten:'chet', t:pl.deadT};
-  if (pl.hurtT > 0) return {ten:'bi-danh', tiLe:1 - pl.hurtT / 18, t:18 - pl.hurtT};
+  if (pl.hurtT > 0) return {ten:'bi-danh', tiLe:1 - pl.hurtT / HURT_T, t:HURT_T - pl.hurtT};
   if (pl.dash > 0 || pl.st === 'dash') return {ten:'luot', tiLe:(P.dashFrames - pl.dash) / P.dashFrames, t:P.dashFrames - pl.dash};
   if (pl.atkN){ const p = phaDon(pl.atkN, pl.atkT); return {ten:ATK[pl.atkN].ten, n:pl.atkN, atkT:pl.atkT, pha:p.pha, phaT:p.t, phaDai:p.dai, tiLe:p.tiLe}; }
   if (pl.st === 'wall') return {ten:'tuong', bam:pl.wallStickT < P.wallStick};
@@ -394,5 +403,5 @@ function trangThai(){
   return {ten:'dung'};
 }
 
-window.DongCo = {P, ATK, DCO, DC_SO, BD, S, pl, MT, IN, SUKIEN, CHO, ROI, napBanDo, datLam, taoNom, taoQuai, buoc, atkBox, hurtBox, hopQuai,
+window.DongCo = {P, ATK, HURT_T, DCO, DC_SO, BD, S, pl, MT, IN, SUKIEN, CHO, ROI, napBanDo, datLam, taoNom, taoQuai, buoc, atkBox, hurtBox, hopQuai,
   phaDon, trangThai, collide, tile, jumpVel};

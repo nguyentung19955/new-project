@@ -20,7 +20,12 @@ const HoatAnh = (() => {
     if (st.ten === 'chay' && !(C && C.def.phat === 'quang_duong')) A.phaChay = (A.phaChay + Math.abs(pl.dxT) / 132) % 1;
     if (!C){ A.k = 0; return; }
     const n = C.hinh.length; let k = 0;
-    if (st.n){                                   // đòn: theo pha của engine
+    if (st.n && st.ten === C.ten && Array.isArray(C.def.ms) && C.def.ms.length === n){
+      // bộ kiem2 (30/10): đòn có thời gian RIÊNG từng hình (ms trong JSON) → hình k bắt đầu ở bước round(tổng ms trước nó × 0,06).
+      // Engine lấy su/ac/re từ cùng bảng ms → hình trúng đòn hiện đúng bước hộp chém bật.
+      let cong = 0; k = 0;
+      for (let i = 0; i < n; i++){ if (st.atkT >= Math.round(cong * 0.06)) k = i; cong += C.ms[i]; }
+    } else if (st.n){                            // đòn: theo pha của engine
       const ds = C.pha[st.pha];
       if (ds.length) k = ds[Math.min(ds.length - 1, Math.floor(st.tiLe * ds.length))];
       else if (st.pha === 'layda') k = C.pha.rado[0] ?? 0;
