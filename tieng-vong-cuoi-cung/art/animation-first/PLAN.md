@@ -40,3 +40,9 @@ The character is about 20–24 px tall: a white rounded-square head with two bla
 ```
 Minimal chibi pixel-art swordsman for a side-scrolling action game, side view facing right. Large white rounded-square head with two small black vertical eyes, no mouth, no hair. Small red tunic body, short stubby white arms and legs, tiny dark feet. Holds a short simple straight grey sword with a dark hilt in the front hand, pointing down-forward. Flat colors, 1-pixel dark outline, very limited palette, clean pixel clusters, strong readable silhouette. No armor, no accessories, no background.
 ```
+
+## 5. Animation Director verdict: APPROVED WITH 3 CORRECTIONS
+1. **Scarf:** ChatGPT wants a red body plus a short dark-red scarf (5–7 px tail) for follow-through. *This conflicts with the user's brief, which says "no scarf", so the master is generated **without a scarf** first. A scarf will only be added if the user agrees.*
+2. **Idle:** use Skeleton v3 first; V3 is only needed if Skeleton fails. **Run:** compare both. **Attack 1:** A/B/C remain mandatory.
+3. **Do not ask PixelLab for both the smear and the body choreography in one pass.** Prioritize the body choreography; the smear is added pixel-exact in the hybrid step. The sword may be hidden while running, but it must never vanish for no reason.
+- Master is locked only if: the head, eyes and sword read at 1×, nothing is clipped, and there is room left for squash and stretch.
