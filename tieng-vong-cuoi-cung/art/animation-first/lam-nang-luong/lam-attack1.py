@@ -9,26 +9,35 @@ NECK=77; HEM=103; LEG=113; LEGSPLIT=47
 FL=[(7,47,111),(4,84,191),(3,114,226),(5,148,247),(6,180,251),(14,226,253),(87,224,249),(188,221,233)]
 WHITE=(240,252,255)
 def is_flame(p): return p[3] and p[0]<=8 and p[2]>=100
-def body_frame(src,dx=0,shear=0,dy=0,lf=0,lb=0,hem=0,glow=0):
+def body_frame(src,dx=0,shear=0,dy=0,lf=0,lb=0,hem=0,glow=0,hx=0,cx=0):
+    """Whole-block motion only: legs fixed to root; cloak block (+dy, +cx); head block (+dy, +hx).
+    Cloak drawn over legs, head over cloak, so a moving block never uncovers a hole. Hem tips trail by
+    being drawn again shifted (stretch), never cut out."""
     out=np.zeros((CH,CW,4),np.uint8)
     def put(x,y,p):
         if 0<=x<CW and 0<=y<CH: out[y,x]=p
-    # legs first (behind cloak)
+    def px(y,x):
+        p=src[y,x].copy()
+        if glow and is_flame(p) and x>=55 and NECK<=y<LEG:
+            c=tuple(int(v) for v in p[:3])
+            if c in FL: p[:3]=FL[max(0,min(len(FL)-1,FL.index(c)+glow))]
+        return p
     for y in range(LEG,H):
         for x in range(W):
-            p=src[y,x]
-            if p[3]: put(x+OX+(lf if x>=LEGSPLIT else lb),y,p)
-    for y in range(LEG):
-        sh=round(shear*(LEG-y)/LEG)          # lean: upper rows move more
-        yy=y+(dy if y<HEM else max(0,dy-1))
+            if src[y,x,3]: put(x+OX+dx,y,src[y,x])
+    for y in range(NECK,LEG):
         for x in range(W):
-            p=src[y,x].copy()
-            if not p[3]: continue
-            if glow and is_flame(p) and x>=55 and NECK<=y<LEG:   # front sleeve flame brightness
-                c=tuple(int(v) for v in p[:3])
-                if c in FL: p[:3]=FL[max(0,min(len(FL)-1,FL.index(c)+glow))]
-            hx=hem if (y>=HEM-6 and (x<36)) else 0
-            put(x+OX+dx+sh+hx,yy,p)
+            if src[y,x,3]: put(x+OX+dx+cx,y+dy,px(y,x))
+    if hem:
+        for y in range(HEM-6,LEG):
+            for x in range(36):
+                if src[y,x,3]:
+                    for k in range(1,abs(hem)+1): 
+                        q=(x+OX+dx+cx-k*(1 if hem<0 else -1),y+dy)
+                        if 0<=q[0]<CW and 0<=q[1]<CH and out[q[1],q[0],3]==0: out[q[1],q[0]]=src[y,x]
+    for y in range(NECK):
+        for x in range(W):
+            if src[y,x,3]: put(x+OX+dx+hx,y+dy,px(y,x))
     return out
 def fx_put(out,x,y,c):
     if 0<=x<CW and 0<=y<CH: out[y,x]=(*c,255)
@@ -57,22 +66,22 @@ frames=[]
 # F1 ready, hand flame brighter
 frames.append(body_frame(idle[0],glow=1))
 # F2 crouch 2px, head back 2px, energy gathers at the hand
-f=body_frame(idle[1],dx=-2,shear=-5,dy=4,glow=2); orb(f,HAND[0]-2,HAND[1]+2,2); frames.append(f)
+f=body_frame(idle[1],dx=-1,hx=-3,dy=3,glow=2); orb(f,HAND[0]-2,HAND[1]+2,2); frames.append(f)
 # F3 slight rotation, cloak pulled back, short energy blade forms (pointing up-back)
-f=body_frame(idle[2],dx=-1,shear=-3,dy=2,hem=-2,glow=2)
+f=body_frame(idle[2],dx=-1,hx=-2,dy=2,hem=-2,glow=2)
 for i in range(9): fx_put(f,HAND[0]-1-i//2,HAND[1]-i,WHITE if i<6 else (14,226,253)); fx_put(f,HAND[0]-i//2,HAND[1]-i,(14,226,253))
 orb(f,HAND[0]-1,HAND[1]+1,2); frames.append(f)
 # F4 IMPACT: lunge +5, lean forward, huge crescent upper-left -> lower-right in front
-f=body_frame(idle[3],dx=12,shear=7,dy=2,lf=12,lb=2,hem=-3,glow=1)
-crescent(f,OX+62,80,42,-50,75,16); frames.append(f)
+f=body_frame(idle[3],dx=12,hx=3,cx=1,dy=2,hem=-3,glow=1)
+crescent(f,OX+72,82,42,-68,65,16); frames.append(f)
 # F5 hold, crescent gone, two thin lines
-f=body_frame(idle[0],dx=12,shear=5,dy=1,lf=12,lb=2,hem=-4,glow=1)
-arcline(f,OX+62,80,42,-30,72,(87,224,249)); arcline(f,OX+62,80,36,0,62,(14,226,253)); frames.append(f)
+f=body_frame(idle[0],dx=12,hx=2,cx=1,dy=1,hem=-3,glow=1)
+arcline(f,OX+68,80,42,-45,62,(5,148,247)); arcline(f,OX+68,80,36,-15,55,(3,114,226)); frames.append(f)
 # F6 recover, cloak still flying, one faint line
-f=body_frame(idle[1],dx=7,shear=2,dy=0,lf=7,lb=1,hem=-3)
-arcline(f,OX+62,80,42,30,70,(5,148,247)); frames.append(f)
+f=body_frame(idle[1],dx=7,hx=1,dy=0,hem=-2)
+arcline(f,OX+68,80,42,25,62,(4,84,191)); frames.append(f)
 # F7 near idle, hand flame dims
-frames.append(body_frame(idle[2],dx=2,shear=0,dy=2,lf=2,hem=-1,glow=-1))
+frames.append(body_frame(idle[2],dx=2,dy=1,hem=-1,glow=-1))
 # F8 idle
 frames.append(body_frame(idle[3]))
 durs=[70,90,80,80,65,80,100,120]   # F4 45ms + 35ms hitstop
