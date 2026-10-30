@@ -18,7 +18,7 @@ plan={ # frame: (far layer, far offset, near layer, near offset)
  3:(far_full,(fx_,fy),near_full,(nx+4,ny)),
  4:(far_full,(fx_-2,4),near_rim,(nx,ny)),          # arc rises over the head (reference R2-4)
  5:(far_rim,(fx_-6,6),None,None),
- 6:(half(far_rim,'left'),(fx_-6,fy+16),None,None),
+ 6:(None,None,half(far_full,'right'),(CX-W//2-28,96)),   # descending streak from the hands, down-forward (ChatGPT round 4)
 }
 ms=[90,110,55,60,70,80,130]   # F0 = master idle-to-ready, then R2-1..R2-6
 os.makedirs(f'{D}/preview',exist_ok=True)
