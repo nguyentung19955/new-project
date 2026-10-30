@@ -1,1 +1,1 @@
-{"cell": 80, "anims": {"dung": {"row": 0, "frames": 8}, "chay": {"row": 1, "frames": 6}, "don1": {"row": 2, "frames": 6}, "don2": {"row": 3, "frames": 7}, "don3": {"row": 4, "frames": 8}}}
+{"cell": 80, "anims": {"dung": {"row": 0, "frames": 8}, "chay": {"row": 1, "frames": 6}, "don1": {"row": 2, "frames": 6}, "don2": {"row": 3, "frames": 7}, "don3": {"row": 4, "frames": 8}, "nhay": {"row": 5, "frames": 8}, "trung-don": {"row": 6, "frames": 6}, "chet": {"row": 7, "frames": 7}, "luot": {"row": 8, "frames": 5}, "bam-tuong": {"row": 9, "frames": 8}}}
