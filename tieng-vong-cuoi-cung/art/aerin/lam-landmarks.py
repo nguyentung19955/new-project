@@ -15,7 +15,7 @@ tip=max(cy,key=lambda q:q[1])
 L={'canvas':[96,96],'ground_baseline_y':88,'bbox_all':list(bb),'height_px_body':88-bb[1],
  'landmarks':{k:t(*v) for k,v in src.items()},
  'sword':{'holding_hand':'anatomical LEFT = far hand (screen-right) when facing SE','hilt_pivot':t(44,44),'blade_tip':[tip[0],tip[1]+3],'blade_dir':'diagonal down, crossing in front of the near leg'},
- 'source':'PixelLab '+('0a16a8c4 (helmet state)' if OUT else '9ea1ed77')+' rotations/south-east.png -> sua-se.py (far half squashed x%.2f, scarf tail moved behind, nearest scale x%.3f, blade tip redrawn)'%(S,s),
+ 'source':'PixelLab '+'0a16a8c4 (helmet state)'+' rotations/south-east.png -> sua-se-sach.py (no resampling: scarf tail block moved behind, blade tip hand-drawn)',
  'accuracy':'+-1 px (hand-estimated on 8x grid, then transformed)'}
 json.dump(L,open(D+OUT+'aerin_landmarks_se.json','w'),indent=1)
 cols={}

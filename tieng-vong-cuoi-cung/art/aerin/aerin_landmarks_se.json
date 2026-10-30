@@ -5,78 +5,78 @@
  ],
  "ground_baseline_y": 88,
  "bbox_all": [
-  29,
-  36,
-  65,
-  94
+  24,
+  27,
+  70,
+  95
  ],
- "height_px_body": 52,
+ "height_px_body": 61,
  "landmarks": {
   "head_center": [
-   49,
-   51
+   48,
+   44
   ],
   "neck": [
-   49,
-   60
+   48,
+   55
   ],
   "shoulder_near": [
-   41,
-   62
+   38,
+   58
   ],
   "shoulder_far": [
-   58,
-   62
+   60,
+   58
   ],
   "elbow_near": [
-   38,
-   68
+   35,
+   65
   ],
   "elbow_far": [
-   59,
-   68
+   62,
+   64
   ],
   "hand_free_near": [
-   38,
-   74
+   35,
+   71
   ],
   "hand_sword_far": [
-   58,
-   73
+   61,
+   70
   ],
   "hip": [
-   49,
-   72
+   48,
+   69
   ],
   "knee_near": [
-   43,
-   80
+   41,
+   79
   ],
   "knee_far": [
-   55,
-   80
+   56,
+   79
   ],
   "foot_near": [
-   43,
+   40,
    87
   ],
   "foot_far": [
-   56,
-   85
+   58,
+   84
   ]
  },
  "sword": {
   "holding_hand": "anatomical LEFT = far hand (screen-right) when facing SE",
   "hilt_pivot": [
-   58,
-   74
+   60,
+   71
   ],
   "blade_tip": [
-   49,
+   46,
    95
   ],
   "blade_dir": "diagonal down, crossing in front of the near leg"
  },
- "source": "PixelLab 0a16a8c4 (helmet state) rotations/south-east.png -> sua-se.py (far half squashed x0.82, scarf tail moved behind, nearest scale x0.855, blade tip redrawn)",
+ "source": "PixelLab 0a16a8c4 (helmet state) rotations/south-east.png -> sua-se-sach.py (no resampling: scarf tail block moved behind, blade tip hand-drawn)",
  "accuracy": "+-1 px (hand-estimated on 8x grid, then transformed)"
 }
