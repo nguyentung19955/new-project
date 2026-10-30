@@ -23,22 +23,39 @@ for y in range(H):
 # neck line: first row (from top) where the scarf starts = row with the widest dark body below the mask; use the mask bottom
 ys,xs=np.where(pale&~flame); ys=ys[ys<H*0.6]; neck=ys.max()+2
 print('neck',neck,'flame px',flame.sum(),'free',free.sum())
-frames=[]; bob=[0,1,1,0]
+# distance of each free flame pixel from the nearest non-free pixel (its base)
+from collections import deque
+dist=np.full((H,W),99); q=deque()
+for y in range(H):
+    for x in range(W):
+        if (a[y,x]>0) and not free[y,x]: dist[y,x]=0; q.append((y,x))
+while q:
+    y,x=q.popleft()
+    for dy,dx in ((1,0),(-1,0),(0,1),(0,-1)):
+        ny,nx=y+dy,x+dx
+        if 0<=ny<H and 0<=nx<W and free[ny,nx] and dist[ny,nx]>dist[y,x]+1: dist[ny,nx]=dist[y,x]+1; q.append((ny,nx))
+wave=[0,1,0,-1]
+hem=np.zeros_like(body)
+hem[103:113,:36]=body[103:113,:36]; hem[103:113,55:]=body[103:113,55:]
+frames=[]; bob=[0,1,1,0]; hemdy=[0,0,1,1]
 for f in range(4):
     out=np.zeros_like(m)
-    # body: upper part (y<neck) shifted down by bob
     for y in range(H):
         for x in range(W):
             if body[y,x] or (flame[y,x] and not free[y,x]):
                 ty=y+(bob[f] if y<neck else 0)
                 if ty<H: out[ty,x]=m[y,x]
-    # free flames sway horizontally; rows above neck also bob
     for y in range(H):
-        ph=2*math.pi*f/4+y*0.12
-        dx=round(math.sin(ph)*1.2)
+        for x in range(W):
+            if hem[y,x] and y+hemdy[f]<H: out[y+hemdy[f],x]=m[y,x]
+    for y in range(H):
         for x in range(W):
             if free[y,x]:
-                ty=y+(bob[f] if y<neck else 0); tx=x+dx
+                up=y<neck
+                w=wave[f] if up else wave[(f-1)%4]
+                d=dist[y,x]
+                dx=w*(1 if d>=4 else 0)*(2 if (d>=10 and up) else 1)
+                ty=y+(bob[f] if up else 0); tx=x+dx
                 if 0<=tx<W and ty<H and out[ty,tx,3]==0: out[ty,tx]=m[y,x]
     frames.append(Image.fromarray(out))
 import os; os.makedirs('idle',exist_ok=True)
