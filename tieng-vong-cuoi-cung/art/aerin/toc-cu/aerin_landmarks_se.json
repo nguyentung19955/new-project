@@ -5,7 +5,7 @@
  ],
  "ground_baseline_y": 88,
  "bbox_all": [
-  29,
+  26,
   36,
   65,
   94
@@ -77,6 +77,6 @@
   ],
   "blade_dir": "diagonal down, crossing in front of the near leg"
  },
- "source": "PixelLab 0a16a8c4 (helmet state) rotations/south-east.png -> sua-se.py (far half squashed x0.82, scarf tail moved behind, nearest scale x0.855, blade tip redrawn)",
+ "source": "PixelLab 9ea1ed77 rotations/south-east.png -> sua-se.py (far half squashed x0.82, scarf tail moved behind, nearest scale x0.855, blade tip redrawn)",
  "accuracy": "+-1 px (hand-estimated on 8x grid, then transformed)"
 }

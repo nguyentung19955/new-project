@@ -1,0 +1,126 @@
+{
+ "locked": {
+  "Navy": "#172A46",
+  "Blue": "#3479C8",
+  "Ice": "#A8D8FF",
+  "White": "#F5F8FF",
+  "Silver": "#AABCCF",
+  "Cyan": "#44E6F4"
+ },
+ "note": "Art Director: keep the 6 hue groups, allow ~24-32 shades; normalize after shape is final",
+ "unique_colors": 28,
+ "colors_by_use": [
+  {
+   "hex": "#000000",
+   "count": 282
+  },
+  {
+   "hex": "#1C1539",
+   "count": 151
+  },
+  {
+   "hex": "#383C60",
+   "count": 99
+  },
+  {
+   "hex": "#4FADEC",
+   "count": 50
+  },
+  {
+   "hex": "#F5FAFD",
+   "count": 49
+  },
+  {
+   "hex": "#020207",
+   "count": 48
+  },
+  {
+   "hex": "#F8C59F",
+   "count": 46
+  },
+  {
+   "hex": "#D9ECF8",
+   "count": 46
+  },
+  {
+   "hex": "#221E42",
+   "count": 43
+  },
+  {
+   "hex": "#464E73",
+   "count": 42
+  },
+  {
+   "hex": "#2F5FA3",
+   "count": 40
+  },
+  {
+   "hex": "#2A294F",
+   "count": 39
+  },
+  {
+   "hex": "#566287",
+   "count": 39
+  },
+  {
+   "hex": "#C5D3E8",
+   "count": 32
+  },
+  {
+   "hex": "#42E0F8",
+   "count": 32
+  },
+  {
+   "hex": "#130C24",
+   "count": 31
+  },
+  {
+   "hex": "#4498D5",
+   "count": 31
+  },
+  {
+   "hex": "#D06A56",
+   "count": 29
+  },
+  {
+   "hex": "#D0988C",
+   "count": 25
+  },
+  {
+   "hex": "#254688",
+   "count": 24
+  },
+  {
+   "hex": "#A2E0EF",
+   "count": 24
+  },
+  {
+   "hex": "#A0B3D3",
+   "count": 22
+  },
+  {
+   "hex": "#3C7FC0",
+   "count": 22
+  },
+  {
+   "hex": "#7686A8",
+   "count": 20
+  },
+  {
+   "hex": "#1C3273",
+   "count": 19
+  },
+  {
+   "hex": "#441F33",
+   "count": 10
+  },
+  {
+   "hex": "#5EBBF1",
+   "count": 10
+  },
+  {
+   "hex": "#8D4B49",
+   "count": 6
+  }
+ ]
+}

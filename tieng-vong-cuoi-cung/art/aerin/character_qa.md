@@ -1,6 +1,6 @@
 # AERIN – Phase 1 Character QA (SE master)
 
-**Status:** Identity LOCKED (attempt 3). **SE Animation Master v2 PASS — LOCKED** by the Art Director. Animation rule: anchor on the feet (y = 88), never on the blade tip (it hangs 6 px below the baseline).
+**Status:** **SE Animation Master v3 (HELMET) – PASS, LOCKED** by the Art Director. The hair version is retired (`toc-cu/`) and must not be reused. Animation rule: anchor on the feet (y = 88), never on the blade tip.
 
 Source: PixelLab "Create from Reference", character `9ea1ed77-594b-46d6-af61-e9939888c251`.
 Reference: attempt 1 SOUTH view, mirrored horizontally (moves the sword to the anatomical left hand) with the hair repainted as three large spikes (`master/aerin_reference_south_64.png`, script `sua-master.py`).
@@ -53,3 +53,15 @@ Readable at 1×: spiky head, blue body, white scarf and cyan blade all separate 
 | Outline loss from scaling | Missing outline pixels on outer edges are patched in black |
 
 The unchanged PixelLab originals stay in `attempt3/`. Landmarks are recomputed through the same transform (`lam-landmarks.py`).
+
+## v3 – Helmet (director change request)
+**Helmet lock (Character Bible):**
+- **Shape:** compact angular knight helmet with a rounded crown, a pointed brow and short side guards.
+- **Silhouette:** one low central crest; no horns, spikes, wings or plume.
+- **Colors:** navy-blue shell, ice-blue highlights and silver trim. No new colors.
+- **Face:** open face, with both ice-blue eyes, nose and mouth visible.
+- **Coverage:** no hair visible anywhere.
+- **Size:** helmet about 14–16 px tall; head width unchanged.
+- **Source:** PixelLab Create State `0a16a8c4-c33f-4c25-a929-6c686ee78abc` made on the locked character `9ea1ed77`, with "use color palette from reference" ON. The unchanged PNGs are in `helmet/`.
+- **SE master:** the same v2 transform via `python3 sua-se.py helmet/pixellab_original_se_64.png helmet/ 46` and `python3 lam-landmarks.py helmet/`, with the results promoted to the top-level files.
+- **Art Director verdict:** PASS on every criterion (helmet silhouette, identity, anatomical-left sword, SE 3/4 view, 52 px at baseline y = 88, 28 colors, animation readiness).
