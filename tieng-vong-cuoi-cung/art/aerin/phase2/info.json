@@ -1,0 +1,26 @@
+{
+ "dung": {
+  "frames": 4,
+  "ms": 150,
+  "canvas": 112,
+  "feet_y_per_frame": [
+   85,
+   85,
+   85,
+   85
+  ]
+ },
+ "chay": {
+  "frames": 6,
+  "ms": 85,
+  "canvas": 112,
+  "feet_y_per_frame": [
+   84,
+   86,
+   84,
+   84,
+   91,
+   90
+  ]
+ }
+}
