@@ -207,7 +207,9 @@ function veLam(cam){
   const fx = pl.x + pl.w / 2 - cam, fy = pl.y + pl.h;
   const lat = HA.st && HA.st.ten === 'tuong' ? pl.lastWall > 0 : pl.face < 0;
   const al = pl.dead ? Math.max(0, Math.min(1, 1 - (pl.deadT - 50) / 40)) : undefined;
-  if (C){ SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al); if (VFX.chopTrang()) SpritePL.ve(ctx, C, HA.k, fx, fy, lat, al, true); }   // bị đánh: chớp trắng ≈ 67 ms ở hình 2
+  // quay trái: dùng clip riêng "<tên>-trai" (kiếm vẫn cùng một tay → ở phía trước thân), không lật gương; chưa có thì mới lật
+  const CT = C && lat ? SpritePL.CLIP[C.ten + '-trai'] : null, CV = CT && CT.ok ? CT : C, latV = CV === C ? lat : false;
+  if (C){ SpritePL.ve(ctx, CV, HA.k, fx, fy, latV, al); if (VFX.chopTrang()) SpritePL.ve(ctx, CV, HA.k, fx, fy, latV, al, true); }   // bị đánh: chớp trắng ≈ 67 ms ở hình 2
   else {   // chưa có clip nào cho trạng thái này → khối màu cỡ Lam (40×100 px logic)
     ctx.globalAlpha = al === undefined ? 1 : al;
     ctx.fillStyle = '#0d0f1c'; ctx.fillRect(Math.round(fx) - 20, fy - 100, 40, 100);

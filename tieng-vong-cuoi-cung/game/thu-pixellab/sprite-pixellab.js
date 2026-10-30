@@ -13,15 +13,16 @@
        mat: {diem: [[[x, y]…] từng hình], doi: {"#b8ccd3": "#f2a33a", …}}  (tô mắt hổ phách: CHỈ các điểm này)
        tam: true  = hình tạm (không phải PixelLab) }
      trang_thai.<trạng thái game> = [tên clip ưu tiên, …]  → clip đầu tiên nạp được.
-   Lật trái bằng code quanh điểm chân. Vẽ nearest-neighbor, phóng số nguyên ti_le, toạ độ làm tròn px logic.
+   Quay trái: nếu có clip "<tên>-trai" (vẽ riêng hướng trái, cùng số hình) thì dùng nó, không lật; không có mới lật bằng code quanh điểm chân. Vẽ nearest-neighbor, phóng số nguyên ti_le, toạ độ làm tròn px logic.
    ===================================================================================================================== */
 const SpritePL = (() => {
+  const BUSTER = Date.now();   // chống bộ nhớ đệm (githack/điện thoại giữ ảnh cũ ≠ JSON mới → cắt sai ô)
   const CLIP = {};      // tên → {ten, def, hinh:[{img, sx, sy, sw, sh}], ok, loi}
   let J = null, GOC = '', TL = 2;
   const OPT = {mat: DC_Q.get('mat') !== 'goc'};   // ?mat=goc: không tô mắt hổ phách (xem màu PixelLab gốc)
 
   function napAnh(src){
-    return new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
+    return new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src + (src.includes('?') ? '' : '?v=' + BUSTER); });
   }
   function hex(h){ return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
   // tô mắt: CHỈ các điểm có trong danh sách của hình, đổi theo bảng màu (màu khác giữ nguyên) → canvas riêng cho hình đó
@@ -77,9 +78,9 @@ const SpritePL = (() => {
   }
   async function nap(urlJson){
     GOC = urlJson.slice(0, urlJson.lastIndexOf('/') + 1);
-    J = await fetch(urlJson).then(r => r.json());
+    J = await fetch(urlJson + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json());
     TL = J.ti_le_mac_dinh || 2;
-    const can = new Set(); for (const ds of Object.values(J.trang_thai || {})) for (const t of ds) if (J.clip[t]) can.add(t);
+    const can = new Set(); for (const ds of Object.values(J.trang_thai || {})) for (const t of ds) if (J.clip[t]){ can.add(t); if (J.clip[t + '-trai']) can.add(t + '-trai'); }
     await Promise.all([...can].map(napClip));
     return J;
   }
