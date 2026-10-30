@@ -1,5 +1,7 @@
 # AERIN – Phase 1 Character QA (SE master)
 
+**Status:** Identity LOCKED (Art Director, attempt 3). The SE Animation Master is v2 (`sua-se.py`) and is waiting for the Art Director's verdict.
+
 Source: PixelLab "Create from Reference", character `9ea1ed77-594b-46d6-af61-e9939888c251`.
 Reference: attempt 1 SOUTH view, mirrored horizontally (moves the sword to the anatomical left hand) with the hair repainted as three large spikes (`master/aerin_reference_south_64.png`, script `sua-master.py`).
 The unchanged PixelLab PNGs are in `attempt3/`. The deliverable is `aerin_master_se.png` (96×96, transparent, ground line y = 88).
@@ -39,3 +41,15 @@ Readable at 1×: spiky head, blue body, white scarf and cyan blade all separate 
 - PixelLab ignores handedness written in the prompt. The anatomical left hand was only achieved by mirroring the reference.
 - PixelLab sizes the character to fill the canvas box. Hitting exactly 52 px needs either a 56 px box from this reference, or a manual downscale and cleanup.
 - Landmarks in `aerin_landmarks_se.json` are hand-estimated on an 8× grid and accurate to about ±1 px.
+
+## v2 edits (Art Director fix list, `sua-se.py`)
+| Fix | Done |
+|---|---|
+| Height 62 px → 52–54 px | Nearest-neighbor ×0.855, giving a **52 px** body (spike tip to sole); feet on y = 88 |
+| SE turn too frontal | The far half of the body is squashed ×0.82 horizontally, so the far eye, shoulder and arm move toward the center |
+| Scarf tail points forward | The tail is moved behind the body, pointing screen-left |
+| Blade tip clipped | The tip is redrawn 3 px longer; it ends 6 px below the baseline, in front of the near leg |
+| 48 colors | Normalized to 28 colors with the 6 hue groups kept |
+| Outline loss from scaling | Missing outline pixels on outer edges are patched in black |
+
+The unchanged PixelLab originals stay in `attempt3/`. Landmarks are recomputed through the same transform (`lam-landmarks.py`).

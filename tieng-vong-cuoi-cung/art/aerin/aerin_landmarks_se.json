@@ -3,81 +3,80 @@
   96,
   96
  ],
- "source": "PixelLab character 9ea1ed77-594b-46d6-af61-e9939888c251 rotations/south-east.png (64x64, unchanged copy in attempt3/), pasted at offset [16,27]",
  "ground_baseline_y": 88,
- "bbox_body": [
-  21,
-  27,
-  74,
-  88
+ "bbox_all": [
+  26,
+  36,
+  65,
+  94
  ],
- "height_px_body": 62,
+ "height_px_body": 52,
  "landmarks": {
   "head_center": [
-   48,
-   44
+   49,
+   51
   ],
   "neck": [
-   48,
-   55
+   49,
+   60
   ],
   "shoulder_near": [
-   38,
-   58
+   41,
+   62
   ],
   "shoulder_far": [
-   60,
-   58
+   58,
+   62
   ],
   "elbow_near": [
-   35,
-   65
+   38,
+   68
   ],
   "elbow_far": [
-   62,
-   64
+   59,
+   68
   ],
   "hand_free_near": [
-   35,
-   71
+   38,
+   74
   ],
   "hand_sword_far": [
-   61,
-   70
+   58,
+   73
   ],
   "hip": [
-   48,
-   69
+   49,
+   72
   ],
   "knee_near": [
-   41,
-   79
+   43,
+   80
   ],
   "knee_far": [
-   56,
-   79
+   55,
+   80
   ],
   "foot_near": [
-   40,
+   43,
    87
   ],
   "foot_far": [
-   58,
-   84
+   56,
+   85
   ]
  },
  "sword": {
-  "holding_hand": "anatomical LEFT (far hand when facing screen-right)",
+  "holding_hand": "anatomical LEFT = far hand (screen-right) when facing SE",
   "hilt_pivot": [
-   60,
-   71
+   58,
+   74
   ],
   "blade_tip": [
-   47,
-   91
+   49,
+   95
   ],
-  "blade_tip_clipped": true,
-  "angle_deg_from_hand": -115
+  "blade_dir": "diagonal down, crossing in front of the near leg"
  },
- "method": "eyeballed on an 8x grid; +-1 px"
+ "source": "PixelLab 9ea1ed77 rotations/south-east.png -> sua-se.py (far half squashed x0.82, scarf tail moved behind, nearest scale x0.855, blade tip redrawn)",
+ "accuracy": "+-1 px (hand-estimated on 8x grid, then transformed)"
 }
