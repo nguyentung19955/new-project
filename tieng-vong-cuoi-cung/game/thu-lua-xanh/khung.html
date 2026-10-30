@@ -12,7 +12,7 @@ button,select{background:var(--btn);color:var(--fg);border:1px solid #39425c;bor
 <div class="row"><select id="sel"><option value="">— Xem riêng động tác —</option></select></div>
 <div style="opacity:.7">PC: ←→ chạy · J/Z đánh (bấm tiếp để nối đòn 2 → 3)</div>
 <script>
-const META=__META__;const img=new Image();img.src='data:image/png;base64,__PNG__';
+const META=__META__;const img=new Image();img.src='data:image/png;base64,__PNG__';const fxi=new Image();fxi.src='data:image/png;base64,__FX__';const FXROW={don1:0,don2:1,don3:2};
 const c=document.getElementById('c'),g=c.getContext('2d');g.imageSmoothingEnabled=false;
 const MS={dung:170,chay:90,don1:70,don2:70,don3:70};const GROUND=240,SC=2;
 let st={x:240,face:1,anim:'dung',f:0,t:0,atk:0,q:false,preview:''};
@@ -34,7 +34,7 @@ function loop(now){const dt=Math.min(50,now-last);last=now;
  g.clearRect(0,0,c.width,c.height);g.fillStyle='#2a3350';g.fillRect(0,GROUND,c.width,c.height-GROUND);
  const a=META.anims[st.anim],cs=META.cell;
  if(img.complete){g.save();g.translate(Math.round(st.x),GROUND);g.scale(st.face*SC,SC);
-  g.drawImage(img,st.f*cs,a.row*cs,cs,cs,-35,-68,cs,cs);g.restore()}
+  g.drawImage(img,st.f*cs,a.row*cs,cs,cs,-35,-68,cs,cs);if(st.anim in FXROW&&fxi.complete)g.drawImage(fxi,st.f*128,FXROW[st.anim]*128,128,128,-59,-92,128,128);g.restore()}
  requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
 </script></body></html>
