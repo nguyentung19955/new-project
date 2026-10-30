@@ -38,7 +38,7 @@ import os; os.makedirs(f'{D}/fx',exist_ok=True)
 for n,a in out.items(): Image.fromarray(a).save(f'{D}/fx/{n}.png')
 print('flat crescent',W,'x',H)
 # placement on a 176x128 canvas (body at x=0). (frame index -> fx, top-left offset)
-place={2:('low',(100-W,88)), 3:('low_streak',(106-W,90)), 5:('high',(94,52)), 6:('high_streak',(100,58)), 7:('push',(80,94))}
+place={2:('low',(100-W,88)), 3:('low_streak',(106-W,90)), 5:('high',(94,52)), 6:('high_streak',(100,58))}  # F8 push streak removed (ChatGPT QA)
 ms=[60,65,55,60,75,45,65,80]
 BG=(234,235,235,255); frames=[]
 for k in range(8):
