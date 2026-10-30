@@ -28,7 +28,7 @@ let last=performance.now();
 function loop(now){const dt=Math.min(50,now-last);last=now;
  if(!st.preview&&!st.atk){const l=keys.ArrowLeft,r=keys.ArrowRight;
   if(l||r){st.face=l?-1:1;st.x=Math.max(40,Math.min(440,st.x+st.face*dt*0.11));set('chay')}else set('dung')}
- else if(st.atk&&!st.preview){const l=keys.ArrowLeft,r=keys.ArrowRight;if(l||r){const dir=l?-1:1;st.x=Math.max(40,Math.min(440,st.x+dir*dt*(dir===st.face?0.08:0.04)))}}
+ else if(st.atk&&!st.preview){const l=keys.ArrowLeft,r=keys.ArrowRight;if(l||r){const dir=l?-1:1;st.face=dir;st.x=Math.max(40,Math.min(440,st.x+dir*dt*0.08))}}
  st.t+=dt;if(st.t>=MS[st.anim]){st.t=0;st.f++;const n=META.anims[st.anim].frames;
   if(st.f>=n){if(st.atk&&!st.preview){if(st.q&&st.atk<3){st.atk++;st.q=false;set('don'+st.atk)}else{st.atk=0;st.q=false;set('dung')}}else st.f=0}}
  g.clearRect(0,0,c.width,c.height);g.fillStyle='#2a3350';g.fillRect(0,GROUND,c.width,c.height-GROUND);
