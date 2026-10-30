@@ -49,6 +49,7 @@ my0,mx0,my1,mx1=mb; tmpl=M[my0:my1,mx0:mx1]
 dark=lambda b: (b[...,3]>0)&(b[...,:3].sum(2)<120)
 print(f'master: h={mi["h"]} mask={mx1-mx0}x{my1-my0} palette={len(pal)}')
 prev=None; allpass=True
+MS=len(sorted(comps(M[...,3]>0),key=len,reverse=True)[1:])
 MH=len([c for c in comps(~(M[...,3]>0),eight=False) if all(0<y<M.shape[0]-1 and 0<x<M.shape[1]-1 for y,x in c) and len(c)<60])
 for p in sys.argv[2:]:
     a=load(p); op=a[...,3]>0
@@ -67,12 +68,13 @@ for p in sys.argv[2:]:
                 bad=((dark(win)!=dark(tmpl))&inside).sum()
                 if best is None or bad<best: best=bad
         mbad=best if best is not None else 999; mres=f'{mbad}px'
-    sp=[c for c in comps(op) if len(c)<4]
+    allc=sorted(comps(op),key=len,reverse=True)
+    sp=[c for c in allc[1:]]   # every piece detached from the main body (floating streaks, specks)
     hol=[c for c in comps(~op,eight=False) if all(0<y<a.shape[0]-1 and 0<x<a.shape[1]-1 for y,x in c) and len(c)<60]
     fi=info(a)
     jump='' if prev is None else f' jump={abs(fi["cx"]-prev["cx"]):.1f},{abs(fi["cy"]-prev["cy"]):.1f}'
-    ok = newc<3 and mbad<=6 and len(sp)<=3 and len(hol)<=MH+2 and abs(fi['h']-mi['h'])<=12
+    ok = newc<3 and mbad<=6 and len(sp)<=MS and len(hol)<=MH+2 and abs(fi['h']-mi['h'])<=12
     allpass&=ok
-    print(f'{p.split("/")[-1]:>10}: {"PASS" if ok else "FAIL"} newcolor={newc:.1f}% mask_diff={mres} specks={len(sp)} holes={len(hol)} h={fi["h"]}({fi["h"]-mi["h"]:+d}) foot_y={fi["bot"]}{jump}')
+    print(f'{p.split("/")[-1]:>10}: {"PASS" if ok else "FAIL"} newcolor={newc:.1f}% mask_diff={mres} detached={len(sp)}(master {MS}, biggest {max([len(c) for c in sp],default=0)}px) holes={len(hol)} h={fi["h"]}({fi["h"]-mi["h"]:+d}) foot_y={fi["bot"]}{jump}')
     prev=fi
 print('ALL PASS' if allpass else 'SOME FAIL')
