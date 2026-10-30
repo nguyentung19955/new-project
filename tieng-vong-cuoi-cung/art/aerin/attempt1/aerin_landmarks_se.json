@@ -1,0 +1,83 @@
+{
+ "canvas": [
+  96,
+  96
+ ],
+ "source": "PixelLab v3 character f31c8447, rotations/south-east.png (64x64), pasted at offset [16, 25]",
+ "bbox": [
+  20,
+  25,
+  80,
+  88
+ ],
+ "height_px": 63,
+ "ground_baseline_y": 88,
+ "approx_landmarks": {
+  "head_center": [
+   46,
+   39
+  ],
+  "neck": [
+   46,
+   52
+  ],
+  "shoulder_near": [
+   40,
+   55
+  ],
+  "shoulder_far": [
+   53,
+   55
+  ],
+  "elbow_near": [
+   38,
+   62
+  ],
+  "elbow_far": [
+   54,
+   62
+  ],
+  "hand_sword": [
+   42,
+   70
+  ],
+  "hand_free": [
+   55,
+   67
+  ],
+  "hip": [
+   46,
+   69
+  ],
+  "knee_near": [
+   40,
+   78
+  ],
+  "knee_far": [
+   49,
+   78
+  ],
+  "foot_near": [
+   38,
+   87
+  ],
+  "foot_far": [
+   51,
+   86
+  ]
+ },
+ "sword": {
+  "holding_hand": "near hand (anatomical RIGHT) - deviation",
+  "hilt_pivot": [
+   43,
+   71
+  ],
+  "pommel": [
+   35,
+   71
+  ],
+  "blade_tip": "clipped at source x=63 -> [79, 73]",
+  "angle_deg": -4
+ },
+ "note": "Landmarks are eyeball estimates on the 8x grid; attempt 1 is pending Art Director verdict."
+}

@@ -1,0 +1,109 @@
+{
+ "locked": {
+  "Navy": "#172A46",
+  "Blue": "#3479C8",
+  "Ice": "#A8D8FF",
+  "White": "#F5F8FF",
+  "Silver": "#AABCCF",
+  "Cyan": "#44E6F4"
+ },
+ "generated_unique_colors": 48,
+ "generated_top": [
+  {
+   "hex": "#000000",
+   "count": 289
+  },
+  {
+   "hex": "#1C1539",
+   "count": 229
+  },
+  {
+   "hex": "#383C60",
+   "count": 95
+  },
+  {
+   "hex": "#020207",
+   "count": 76
+  },
+  {
+   "hex": "#F5FAFD",
+   "count": 76
+  },
+  {
+   "hex": "#2A294F",
+   "count": 59
+  },
+  {
+   "hex": "#221F44",
+   "count": 53
+  },
+  {
+   "hex": "#464E73",
+   "count": 49
+  },
+  {
+   "hex": "#F8C59F",
+   "count": 45
+  },
+  {
+   "hex": "#130C24",
+   "count": 38
+  },
+  {
+   "hex": "#566287",
+   "count": 36
+  },
+  {
+   "hex": "#3AE6FC",
+   "count": 33
+  },
+  {
+   "hex": "#D77660",
+   "count": 32
+  },
+  {
+   "hex": "#637298",
+   "count": 31
+  },
+  {
+   "hex": "#E2EDF8",
+   "count": 29
+  },
+  {
+   "hex": "#C5D4E9",
+   "count": 28
+  },
+  {
+   "hex": "#91A2C6",
+   "count": 27
+  },
+  {
+   "hex": "#234891",
+   "count": 23
+  },
+  {
+   "hex": "#7383A6",
+   "count": 22
+  },
+  {
+   "hex": "#E68C6E",
+   "count": 22
+  },
+  {
+   "hex": "#4FC8F1",
+   "count": 22
+  },
+  {
+   "hex": "#B2C4E1",
+   "count": 20
+  },
+  {
+   "hex": "#2A599F",
+   "count": 20
+  },
+  {
+   "hex": "#8192B4",
+   "count": 19
+  }
+ ]
+}
