@@ -31,7 +31,7 @@ function loop(now){const dt=Math.min(50,now-last);last=now;
  if(st.air){st.vy+=0.0016*dt;st.y-=st.vy*dt;const l=keys.ArrowLeft,r=keys.ArrowRight;if(l||r){st.face=l?-1:1;st.x=Math.max(40,Math.min(440,st.x+st.face*dt*0.11))}if(st.y<=0){st.y=0;st.air=false;st.airAtk=0;st.land=140;set('nhay');st.f=6}}
  if(st.dash>0){st.dash-=dt;st.x=Math.max(40,Math.min(440,st.x+st.face*dt*0.35));if(st.dash<=0){st.dash=0;set('dung')}}
  if(st.land>0&&!st.air){st.land-=dt;if(st.land<=0)set('dung')}
- if(st.air&&!st.preview&&!st.airAtk){st.anim='nhay';st.f=st.vy<-0.15?3:st.vy<0.15?4:5}
+ if(st.air&&!st.preview){if(!st.airAtk){st.anim='nhay';st.f=st.vy<-0.15?3:st.vy<0.15?4:5}}
  else if(st.dash>0||st.land>0){}
  else if(!st.preview&&!st.atk){const l=keys.ArrowLeft,r=keys.ArrowRight;
   if(l||r){st.face=l?-1:1;st.x=Math.max(40,Math.min(440,st.x+st.face*dt*0.11));set('chay')}else set('dung')}
