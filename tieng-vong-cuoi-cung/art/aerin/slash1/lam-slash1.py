@@ -76,12 +76,12 @@ out.append(f)
 # F4 IMPACT: thân lao tới của Run F4, bỏ lưỡi ngang, gắn khối lưỡi chéo (Idle) vào tay + vệt chém lớn
 f=run4.copy(); clear(f,(87,50,112,68))
 paste_blade(f,85,60)
-smear(f,70,52,28,70,-48,5)
+smear(f,70,52,28,60,-48,5)
 out.append(f)
 # F5 theo đà: cùng thân, lưỡi thấp hơn 2px, vệt mảnh còn lại
 f=run4.copy(); clear(f,(87,50,112,68))
 paste_blade(f,85,62)
-smear(f,70,54,27,-10,-52,3)
+# F5: không vệt (Art Director)
 out.append(f)
 # F6–F7 hồi về (PixelLab gen F7, F8), F8 thủ thế
 out+= [gen[6].copy(), gen[7].copy(), idle.copy()]
