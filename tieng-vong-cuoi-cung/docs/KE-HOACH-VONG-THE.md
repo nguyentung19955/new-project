@@ -42,3 +42,15 @@ Thanh HP + thanh Năng lượng Vọng, bản đồ nhỏ; giữ khung HUD cũ, 
 - **P4** HUD, âm thanh, lưu, tối ưu điện thoại, cân độ khó.
 
 Tài nguyên nhân vật: `art/cau-song-am/` (sprite sheet 80×80/ô, FX 240×240/ô), trang thử `game/thu-cau-song-am/`.
+
+## 7. Chốt (hỏi ChatGPT lần 2)
+- **Gameplay: THAY.** Bỏ hệ 4 vũ khí (Âm Đao/Xích Chuông/Liềm Chuông/Trượng Vọng). Chiến đấu chính = tay chân + sóng âm theo bộ animation đã làm. Giữ tỉ lệ 55/30/15.
+  - Cấp vũ khí 1–8 → **cấp Lõi Cộng Hưởng 1–8** (tăng sức mạnh, mở hiệu ứng mới cho combo).
+  - Dư Âm → kỹ năng bị động: tiếng vọng đánh thêm sau một số đòn.
+  - Giữ code hitbox, sát thương, nâng cấp, checkpoint.
+- **Mỹ thuật: (a) giữ cảnh cũ, chỉnh chọn lọc, KHÔNG gen lại toàn bộ.**
+  - Nhân vật = **Cổ Máy Cộng Hưởng** do nền văn minh chuông cổ tạo ra (không phải robot tương lai).
+  - Thêm: máy cộng hưởng hỏng, vòng đồng cổ, ký tự sóng âm, tinh thể xanh mọc trong rễ. Một số quái có bộ phận đồng / lõi / vết nứt sáng xanh.
+  - 80–90% môi trường giữ màu trầm; cyan chỉ ở nhân vật, cơ chế cộng hưởng, điểm tương tác. Không neon/cyberpunk.
+  - Chỉ vẽ lại asset nào thực sự lệch sau khi ghép thử.
+- **Làm ngay:** khoá nhân vật + animation → chuyển combat code sang combo 3 đòn → ghép vào 1 phòng Rừng Rễ Vọng + 1–2 chi tiết cộng hưởng xanh → chạy thử với Bọ Vỏ Mộc, Dơi Rễ → rồi mới chỉnh cảnh/quái.
