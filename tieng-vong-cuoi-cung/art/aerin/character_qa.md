@@ -1,6 +1,6 @@
 # AERIN – Phase 1 Character QA (SE master)
 
-**Status:** Identity LOCKED (Art Director, attempt 3). The SE Animation Master is v2 (`sua-se.py`) and is waiting for the Art Director's verdict.
+**Status:** Identity LOCKED (attempt 3). **SE Animation Master v2 PASS — LOCKED** by the Art Director. Animation rule: anchor on the feet (y = 88), never on the blade tip (it hangs 6 px below the baseline).
 
 Source: PixelLab "Create from Reference", character `9ea1ed77-594b-46d6-af61-e9939888c251`.
 Reference: attempt 1 SOUTH view, mirrored horizontally (moves the sword to the anatomical left hand) with the hair repainted as three large spikes (`master/aerin_reference_south_64.png`, script `sua-master.py`).
