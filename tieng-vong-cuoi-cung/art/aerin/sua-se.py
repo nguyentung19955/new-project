@@ -1,13 +1,16 @@
 # AERIN SE master v2: theo Art Director – xoay thân thêm (ép nửa xa), khăn ra sau (screen-left), thu về ~53 px, vẽ lại mũi kiếm
 from PIL import Image
-import os,json
+import os,json,sys
 D=os.path.dirname(os.path.abspath(__file__))+'/'
-src=Image.open(D+'attempt3/pixellab_original_se_64.png').convert('RGBA')
+SRC=sys.argv[1] if len(sys.argv)>1 else 'attempt3/pixellab_original_se_64.png'
+OUT=sys.argv[2] if len(sys.argv)>2 else ''
+SCX=int(sys.argv[3]) if len(sys.argv)>3 else 47
+src=Image.open(D+SRC).convert('RGBA')
 W=64; K=(0,0,0,255)
 # 1) tách đuôi khăn (vùng trắng bên phải đầu, ngoài thân) và xoá
 scarf=Image.new('RGBA',(W,W))
 for y in range(17,32):
-    for x in range(47,W):
+    for x in range(SCX,W):
         p=src.getpixel((x,y))
         if p[3]: scarf.putpixel((x,y),p); src.putpixel((x,y),(0,0,0,0))
 # 2) xoay thêm: ép nửa xa (x>CX) theo chiều ngang
@@ -62,15 +65,15 @@ for i in range(1,4):
     if i<3: m.putpixel((x+1,y),CY)
     for q in ((x-1,y),(x+2 if i<3 else x+1,y),(x,y+1)):
         if not m.getpixel(q)[3]: m.putpixel(q,K)
-m.save(D+'aerin_master_se.png')
-b=Image.new('RGBA',(96,96),(58,63,68,255)); b.alpha_composite(m); b.resize((576,576),Image.NEAREST).save(D+'aerin_master_se_x6.png')
+m.save(D+OUT+'aerin_master_se.png')
+b=Image.new('RGBA',(96,96),(58,63,68,255)); b.alpha_composite(m); b.resize((576,576),Image.NEAREST).save(D+OUT+'aerin_master_se_x6.png')
 bb=m.getbbox(); print('bbox',bb,'scale',round(s,3),'offset',OX,OY,'tip',tip)
-json.dump({'scale':s,'offset':[OX,OY],'feet_src':FEET,'squash_far_half':S,'cx':CX},open(D+'master/sua-se-params.json','w'))
+json.dump({'scale':s,'offset':[OX,OY],'feet_src':FEET,'squash_far_half':S,'cx':CX},open(D+OUT+'sua-se-params.json','w'))
 # 8) chuẩn hoá bảng màu: gộp về 28 sắc (giữ 6 nhóm màu), alpha giữ nguyên
 q=m.convert('RGB').quantize(28,method=Image.Quantize.MEDIANCUT).convert('RGB')
 out=Image.new('RGBA',(96,96))
 for y in range(96):
     for x in range(96):
         if m.getpixel((x,y))[3]: out.putpixel((x,y),q.getpixel((x,y))+(255,))
-out.save(D+'aerin_master_se.png')
-b=Image.new('RGBA',(96,96),(58,63,68,255)); b.alpha_composite(out); b.resize((576,576),Image.NEAREST).save(D+'aerin_master_se_x6.png')
+out.save(D+OUT+'aerin_master_se.png')
+b=Image.new('RGBA',(96,96),(58,63,68,255)); b.alpha_composite(out); b.resize((576,576),Image.NEAREST).save(D+OUT+'aerin_master_se_x6.png')
