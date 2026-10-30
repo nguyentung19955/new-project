@@ -14,7 +14,7 @@ button,select{background:var(--btn);color:var(--fg);border:1px solid #39425c;bor
 <script>
 const META=__META__;const img=new Image();img.src='data:image/png;base64,__PNG__';const fxi=new Image();fxi.src='data:image/png;base64,__FX__';const FXROW={don1:0,don2:1,don3:2};
 const c=document.getElementById('c'),g=c.getContext('2d');g.imageSmoothingEnabled=false;
-const MS={dung:120,chay:90,don1:70,don2:75,don3:80};const CANCEL={don1:3,don2:4,don3:99};const GROUND=240,SC=2;
+const MS={dung:120,chay:90,don1:70,don2:75,don3:80};const CANCEL={don1:3,don2:4,don3:99};const GROUND=238,FAR=196,SC=2;
 let st={x:240,face:1,anim:'dung',f:0,t:0,atk:0,q:false,preview:''};
 const keys={};
 function set(a){if(st.anim!==a){st.anim=a;st.f=0;st.t=0}}
@@ -32,7 +32,7 @@ function loop(now){const dt=Math.min(50,now-last);last=now;
  st.t+=dt;if(st.t>=MS[st.anim]){st.t=0;st.f++;const n=META.anims[st.anim].frames;
   if(st.atk&&!st.preview&&st.q&&st.atk<3&&st.f>=CANCEL[st.anim]){st.atk++;st.q=false;set('don'+st.atk)}else
   if(st.f>=n){if(st.atk&&!st.preview){if(st.q&&st.atk<3){st.atk++;st.q=false;set('don'+st.atk)}else{st.atk=0;st.q=false;set('dung')}}else st.f=0}}
- g.clearRect(0,0,c.width,c.height);g.fillStyle='#2a3350';g.fillRect(0,GROUND,c.width,c.height-GROUND);
+ g.clearRect(0,0,c.width,c.height);const gr=g.createLinearGradient(0,FAR,0,c.height);gr.addColorStop(0,'#1c2235');gr.addColorStop(1,'#3a4566');g.fillStyle=gr;g.fillRect(0,FAR,c.width,c.height-FAR);g.fillStyle='#4b5a85';g.fillRect(0,FAR,c.width,2);g.fillStyle='rgba(120,140,190,.18)';for(let y=FAR+8,k=0;y<c.height;y+=6+k*3,k++)g.fillRect(0,y,c.width,1);g.fillStyle='rgba(0,0,0,.45)';g.beginPath();g.ellipse(Math.round(st.x),GROUND-1,26,6,0,0,Math.PI*2);g.fill();
  const a=META.anims[st.anim],cs=META.cell;
  if(img.complete){g.save();g.translate(Math.round(st.x),GROUND);g.scale(st.face*SC,SC);
   g.drawImage(img,st.f*cs,a.row*cs,cs,cs,-43,-68,cs,cs);if(st.anim in FXROW&&fxi.complete)g.drawImage(fxi,st.f*240,FXROW[st.anim]*240,240,240,-123,-148,240,240);g.restore()}
