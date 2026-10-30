@@ -1,0 +1,76 @@
+{
+ "cell": [
+  177,
+  115
+ ],
+ "anchor": [
+  90,
+  79
+ ],
+ "anims": {
+  "dung-trai": {
+   "row": 0,
+   "frames": 4
+  },
+  "dung-trai-duoi": {
+   "row": 1,
+   "frames": 4
+  },
+  "dung-duoi": {
+   "row": 2,
+   "frames": 4
+  },
+  "dung-phai-duoi": {
+   "row": 3,
+   "frames": 4
+  },
+  "dung-phai": {
+   "row": 4,
+   "frames": 4
+  },
+  "dung-phai-tren": {
+   "row": 5,
+   "frames": 4
+  },
+  "dung-tren": {
+   "row": 6,
+   "frames": 4
+  },
+  "dung-trai-tren": {
+   "row": 7,
+   "frames": 4
+  },
+  "chay-trai": {
+   "row": 8,
+   "frames": 6
+  },
+  "chay-phai": {
+   "row": 9,
+   "frames": 6
+  },
+  "trai-don1": {
+   "row": 10,
+   "frames": 6
+  },
+  "trai-don2": {
+   "row": 11,
+   "frames": 6
+  },
+  "trai-don3": {
+   "row": 12,
+   "frames": 6
+  },
+  "phai-don1": {
+   "row": 13,
+   "frames": 6
+  },
+  "phai-don2": {
+   "row": 14,
+   "frames": 6
+  },
+  "phai-don3": {
+   "row": 15,
+   "frames": 6
+  }
+ }
+}

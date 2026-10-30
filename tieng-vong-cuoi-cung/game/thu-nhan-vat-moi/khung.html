@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Nhân vật mới</title>
+<style>
+:root{--bg:#141820;--panel:#1d2330;--text:#e8ecf3;--muted:#9aa5b8;--accent:#e1b85a}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#141820;--panel:#1d2330;--text:#e8ecf3;--muted:#9aa5b8}}
+:root[data-theme="dark"]{--bg:#141820}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,sans-serif;overflow:hidden;touch-action:none}
+#wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 16px}
+canvas{width:min(960px,100vw - 32px);aspect-ratio:16/9;background:#222a38;image-rendering:pixelated;border-radius:6px}
+.row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+button{background:var(--panel);color:var(--text);border:1px solid #344055;border-radius:6px;padding:10px 14px;font-size:15px;min-width:52px}
+button:active{background:#2b3446}
+.hint{color:var(--muted);font-size:12px;text-align:center}
+select{background:var(--panel);color:var(--text);border:1px solid #344055;border-radius:6px;padding:8px}
+</style></head><body>
+<div id="wrap">
+<canvas id="c" width="960" height="540"></canvas>
+<div class="row">
+<button id="bL">◀</button><button id="bU">▲</button><button id="bD">▼</button><button id="bR">▶</button><button id="bA">Đánh</button>
+<select id="sel"><option value="">— xem từng animation —</option></select>
+</div>
+<div class="hint">Bàn phím: ←→ chạy · ↑↓ đổi hướng đứng (8 hướng) · J/Z đánh (bấm tiếp trong lúc đánh để nối đòn 1→2→3)</div>
+</div>
+<script>
+const META=__META__;
+const img=new Image(); img.src='data:image/png;base64,__PNG__';
+const cv=document.getElementById('c'),g=cv.getContext('2d'); g.imageSmoothingEnabled=false;
+const [CW,CH]=META.cell,[AX,AY]=META.anchor; const S=2;
+const sel=document.getElementById('sel'); Object.keys(META.anims).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o)});
+const MS={dung:160,chay:90,don:70};
+let st={x:480,face:'phai',dir:'phai',anim:'dung-phai',f:0,t:0,attack:0,queued:false,preview:''};
+const keys={};
+function setAnim(a){if(st.anim!==a){st.anim=a;st.f=0;st.t=0}}
+function attack(){ if(st.attack){st.queued=true;return} st.attack=1; setAnim(st.face+'-don1') }
+addEventListener('keydown',e=>{keys[e.key]=1; if(e.key==='j'||e.key==='z'||e.key==='J'||e.key==='Z')attack(); if(e.key.startsWith('Arrow'))e.preventDefault()});
+addEventListener('keyup',e=>{keys[e.key]=0});
+const hold=(id,k)=>{const b=document.getElementById(id);b.onpointerdown=e=>{keys[k]=1;e.preventDefault()};b.onpointerup=b.onpointerleave=b.onpointercancel=()=>keys[k]=0};
+hold('bL','ArrowLeft');hold('bR','ArrowRight');hold('bU','ArrowUp');hold('bD','ArrowDown');
+document.getElementById('bA').onpointerdown=e=>{e.preventDefault();attack()};
+sel.onchange=()=>{st.preview=sel.value;st.f=0;st.t=0};
+const DIR8=['phai','phai-duoi','duoi','trai-duoi','trai','trai-tren','tren','phai-tren'];
+let last=performance.now();
+function step(now){const dt=Math.min(50,now-last);last=now;
+ const A=META.anims;
+ if(st.preview){st.anim=st.preview}
+ else if(st.attack){/* playing combo */}
+ else{
+  const l=keys.ArrowLeft,r=keys.ArrowRight,u=keys.ArrowUp,d=keys.ArrowDown;
+  if(l||r){st.face=l?'trai':'phai';st.dir=st.face;st.x+=(l?-1:1)*dt*0.22;st.x=Math.max(60,Math.min(900,st.x));setAnim('chay-'+st.face)}
+  else{ if(u||d){const v=(u?'tren':'duoi'); st.dir=v} setAnim('dung-'+st.dir)}
+ }
+ const kind=st.anim.includes('don')?'don':st.anim.startsWith('chay')?'chay':'dung';
+ st.t+=dt; if(st.t>=MS[kind]){st.t=0;st.f++;
+   const n=A[st.anim].frames;
+   if(st.f>=n){ if(st.attack&&!st.preview){ if(st.queued&&st.attack<3){st.attack++;st.queued=false;setAnim(st.face+'-don'+st.attack)} else {st.attack=0;st.queued=false;setAnim('dung-'+st.face)} } else st.f=0 }
+ }
+ draw(); requestAnimationFrame(step)}
+function draw(){
+ g.fillStyle='#222a38';g.fillRect(0,0,960,540);
+ g.fillStyle='#2d3647';g.fillRect(0,430,960,110); g.fillStyle='#3b475c';g.fillRect(0,430,960,4);
+ const a=META.anims[st.anim]; if(!a||!img.complete)return;
+ const fx=Math.min(st.f,a.frames-1);
+ g.drawImage(img,fx*CW,a.row*CH,CW,CH, Math.round(st.x-AX*S),Math.round(432-AY*S),CW*S,CH*S);
+ g.fillStyle='#9aa5b8';g.font='14px system-ui';g.fillText(st.anim+'  khung '+(fx+1)+'/'+a.frames,12,22);
+}
+img.onload=()=>requestAnimationFrame(step);
+</script></body></html>

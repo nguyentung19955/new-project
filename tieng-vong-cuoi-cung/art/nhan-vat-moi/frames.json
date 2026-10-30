@@ -1,0 +1,722 @@
+{
+"trai-0": {
+"file": "frames/trai-0.png",
+"bbox": [
+419,
+96,
+482,
+164
+]
+},
+"trai-duoi-0": {
+"file": "frames/trai-duoi-0.png",
+"bbox": [
+557,
+96,
+613,
+164
+]
+},
+"duoi-0": {
+"file": "frames/duoi-0.png",
+"bbox": [
+685,
+96,
+742,
+164
+]
+},
+"phai-duoi-0": {
+"file": "frames/phai-duoi-0.png",
+"bbox": [
+812,
+96,
+872,
+164
+]
+},
+"phai-0": {
+"file": "frames/phai-0.png",
+"bbox": [
+944,
+96,
+1006,
+164
+]
+},
+"phai-tren-0": {
+"file": "frames/phai-tren-0.png",
+"bbox": [
+1082,
+96,
+1150,
+164
+]
+},
+"tren-0": {
+"file": "frames/tren-0.png",
+"bbox": [
+1230,
+96,
+1295,
+164
+]
+},
+"trai-tren-0": {
+"file": "frames/trai-tren-0.png",
+"bbox": [
+1380,
+96,
+1451,
+164
+]
+},
+"trai-1": {
+"file": "frames/trai-1.png",
+"bbox": [
+423,
+166,
+481,
+234
+]
+},
+"trai-duoi-1": {
+"file": "frames/trai-duoi-1.png",
+"bbox": [
+560,
+166,
+610,
+234
+]
+},
+"duoi-1": {
+"file": "frames/duoi-1.png",
+"bbox": [
+691,
+166,
+737,
+234
+]
+},
+"phai-duoi-1": {
+"file": "frames/phai-duoi-1.png",
+"bbox": [
+820,
+166,
+870,
+234
+]
+},
+"phai-1": {
+"file": "frames/phai-1.png",
+"bbox": [
+945,
+166,
+1003,
+234
+]
+},
+"phai-tren-1": {
+"file": "frames/phai-tren-1.png",
+"bbox": [
+1082,
+168,
+1148,
+234
+]
+},
+"tren-1": {
+"file": "frames/tren-1.png",
+"bbox": [
+1233,
+166,
+1292,
+234
+]
+},
+"trai-tren-1": {
+"file": "frames/trai-tren-1.png",
+"bbox": [
+1383,
+166,
+1450,
+234
+]
+},
+"trai-2": {
+"file": "frames/trai-2.png",
+"bbox": [
+422,
+234,
+482,
+302
+]
+},
+"trai-duoi-2": {
+"file": "frames/trai-duoi-2.png",
+"bbox": [
+558,
+234,
+612,
+302
+]
+},
+"duoi-2": {
+"file": "frames/duoi-2.png",
+"bbox": [
+686,
+234,
+741,
+302
+]
+},
+"phai-duoi-2": {
+"file": "frames/phai-duoi-2.png",
+"bbox": [
+819,
+234,
+870,
+302
+]
+},
+"phai-2": {
+"file": "frames/phai-2.png",
+"bbox": [
+945,
+234,
+1003,
+302
+]
+},
+"phai-tren-2": {
+"file": "frames/phai-tren-2.png",
+"bbox": [
+1082,
+234,
+1148,
+302
+]
+},
+"tren-2": {
+"file": "frames/tren-2.png",
+"bbox": [
+1232,
+234,
+1290,
+302
+]
+},
+"trai-tren-2": {
+"file": "frames/trai-tren-2.png",
+"bbox": [
+1381,
+234,
+1450,
+302
+]
+},
+"trai-3": {
+"file": "frames/trai-3.png",
+"bbox": [
+421,
+299,
+482,
+367
+]
+},
+"trai-duoi-3": {
+"file": "frames/trai-duoi-3.png",
+"bbox": [
+559,
+299,
+613,
+367
+]
+},
+"duoi-3": {
+"file": "frames/duoi-3.png",
+"bbox": [
+685,
+299,
+740,
+367
+]
+},
+"phai-duoi-3": {
+"file": "frames/phai-duoi-3.png",
+"bbox": [
+812,
+299,
+870,
+367
+]
+},
+"phai-3": {
+"file": "frames/phai-3.png",
+"bbox": [
+945,
+299,
+1003,
+367
+]
+},
+"phai-tren-3": {
+"file": "frames/phai-tren-3.png",
+"bbox": [
+1082,
+299,
+1145,
+367
+]
+},
+"tren-3": {
+"file": "frames/tren-3.png",
+"bbox": [
+1230,
+299,
+1294,
+367
+]
+},
+"trai-tren-3": {
+"file": "frames/trai-tren-3.png",
+"bbox": [
+1382,
+299,
+1450,
+367
+]
+},
+"chay-trai-0": {
+"file": "frames/chay-trai-0.png",
+"bbox": [
+551,
+434,
+640,
+517
+]
+},
+"chay-trai-1": {
+"file": "frames/chay-trai-1.png",
+"bbox": [
+691,
+434,
+776,
+517
+]
+},
+"chay-trai-2": {
+"file": "frames/chay-trai-2.png",
+"bbox": [
+831,
+434,
+915,
+517
+]
+},
+"chay-trai-3": {
+"file": "frames/chay-trai-3.png",
+"bbox": [
+971,
+434,
+1053,
+517
+]
+},
+"chay-trai-4": {
+"file": "frames/chay-trai-4.png",
+"bbox": [
+1113,
+434,
+1202,
+517
+]
+},
+"chay-trai-5": {
+"file": "frames/chay-trai-5.png",
+"bbox": [
+1261,
+434,
+1344,
+517
+]
+},
+"chay-phai-0": {
+"file": "frames/chay-phai-0.png",
+"bbox": [
+540,
+533,
+630,
+614
+]
+},
+"chay-phai-1": {
+"file": "frames/chay-phai-1.png",
+"bbox": [
+688,
+533,
+770,
+614
+]
+},
+"chay-phai-2": {
+"file": "frames/chay-phai-2.png",
+"bbox": [
+828,
+533,
+914,
+614
+]
+},
+"chay-phai-3": {
+"file": "frames/chay-phai-3.png",
+"bbox": [
+976,
+533,
+1059,
+614
+]
+},
+"chay-phai-4": {
+"file": "frames/chay-phai-4.png",
+"bbox": [
+1122,
+533,
+1200,
+614
+]
+},
+"chay-phai-5": {
+"file": "frames/chay-phai-5.png",
+"bbox": [
+1263,
+533,
+1342,
+614
+]
+},
+"trai-don1-2": {
+"file": "frames/trai-don1-2.png",
+"bbox": [
+343,
+701,
+430,
+775
+]
+},
+"trai-don1-0": {
+"file": "frames/trai-don1-0.png",
+"bbox": [
+138,
+707,
+232,
+775
+]
+},
+"trai-don1-1": {
+"file": "frames/trai-don1-1.png",
+"bbox": [
+261,
+707,
+322,
+775
+]
+},
+"trai-don1-3": {
+"file": "frames/trai-don1-3.png",
+"bbox": [
+464,
+707,
+521,
+775
+]
+},
+"trai-don1-4": {
+"file": "frames/trai-don1-4.png",
+"bbox": [
+556,
+708,
+614,
+775
+]
+},
+"trai-don1-5": {
+"file": "frames/trai-don1-5.png",
+"bbox": [
+648,
+708,
+714,
+775
+]
+},
+"trai-don2-0": {
+"file": "frames/trai-don2-0.png",
+"bbox": [
+138,
+794,
+203,
+869
+]
+},
+"trai-don2-1": {
+"file": "frames/trai-don2-1.png",
+"bbox": [
+216,
+794,
+348,
+875
+]
+},
+"trai-don2-3": {
+"file": "frames/trai-don2-3.png",
+"bbox": [
+449,
+794,
+534,
+869
+]
+},
+"trai-don2-4": {
+"file": "frames/trai-don2-4.png",
+"bbox": [
+551,
+794,
+629,
+869
+]
+},
+"trai-don2-5": {
+"file": "frames/trai-don2-5.png",
+"bbox": [
+643,
+794,
+733,
+872
+]
+},
+"trai-don2-2": {
+"file": "frames/trai-don2-2.png",
+"bbox": [
+327,
+796,
+441,
+870
+]
+},
+"trai-don3-2": {
+"file": "frames/trai-don3-2.png",
+"bbox": [
+328,
+891,
+463,
+982
+]
+},
+"trai-don3-5": {
+"file": "frames/trai-don3-5.png",
+"bbox": [
+633,
+897,
+751,
+979
+]
+},
+"trai-don3-0": {
+"file": "frames/trai-don3-0.png",
+"bbox": [
+138,
+899,
+226,
+973
+]
+},
+"trai-don3-1": {
+"file": "frames/trai-don3-1.png",
+"bbox": [
+252,
+899,
+343,
+974
+]
+},
+"trai-don3-3": {
+"file": "frames/trai-don3-3.png",
+"bbox": [
+449,
+900,
+526,
+973
+]
+},
+"trai-don3-4": {
+"file": "frames/trai-don3-4.png",
+"bbox": [
+553,
+900,
+633,
+974
+]
+},
+"phai-don1-2": {
+"file": "frames/phai-don1-2.png",
+"bbox": [
+1084,
+706,
+1191,
+779
+]
+},
+"phai-don1-1": {
+"file": "frames/phai-don1-1.png",
+"bbox": [
+981,
+708,
+1038,
+776
+]
+},
+"phai-don1-3": {
+"file": "frames/phai-don1-3.png",
+"bbox": [
+1213,
+708,
+1311,
+776
+]
+},
+"phai-don1-4": {
+"file": "frames/phai-don1-4.png",
+"bbox": [
+1348,
+708,
+1404,
+776
+]
+},
+"phai-don1-5": {
+"file": "frames/phai-don1-5.png",
+"bbox": [
+1428,
+708,
+1503,
+776
+]
+},
+"phai-don1-0": {
+"file": "frames/phai-don1-0.png",
+"bbox": [
+894,
+713,
+966,
+778
+]
+},
+"phai-don2-2": {
+"file": "frames/phai-don2-2.png",
+"bbox": [
+1071,
+794,
+1211,
+873
+]
+},
+"phai-don2-0": {
+"file": "frames/phai-don2-0.png",
+"bbox": [
+896,
+798,
+977,
+869
+]
+},
+"phai-don2-1": {
+"file": "frames/phai-don2-1.png",
+"bbox": [
+1000,
+798,
+1057,
+869
+]
+},
+"phai-don2-3": {
+"file": "frames/phai-don2-3.png",
+"bbox": [
+1198,
+798,
+1322,
+872
+]
+},
+"phai-don2-4": {
+"file": "frames/phai-don2-4.png",
+"bbox": [
+1313,
+798,
+1417,
+869
+]
+},
+"phai-don2-5": {
+"file": "frames/phai-don2-5.png",
+"bbox": [
+1416,
+798,
+1502,
+871
+]
+},
+"phai-don3-2": {
+"file": "frames/phai-don3-2.png",
+"bbox": [
+1098,
+889,
+1240,
+981
+]
+},
+"phai-don3-0": {
+"file": "frames/phai-don3-0.png",
+"bbox": [
+902,
+899,
+976,
+974
+]
+},
+"phai-don3-1": {
+"file": "frames/phai-don3-1.png",
+"bbox": [
+990,
+899,
+1085,
+976
+]
+},
+"phai-don3-5": {
+"file": "frames/phai-don3-5.png",
+"bbox": [
+1417,
+899,
+1510,
+973
+]
+},
+"phai-don3-3": {
+"file": "frames/phai-don3-3.png",
+"bbox": [
+1227,
+900,
+1318,
+973
+]
+},
+"phai-don3-4": {
+"file": "frames/phai-don3-4.png",
+"bbox": [
+1338,
+900,
+1411,
+973
+]
+}
+}
