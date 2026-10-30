@@ -40,7 +40,7 @@ def lean_blade(f,box,pivot_y,step):
     return g
 out=[A[1].copy(), squash(A[2].copy(),2,74)]
 f=lean_blade(A[3].copy(),(78,10,90,40),40,3)   # lưỡi đứng ~78° -> ~65°
-smear(f,73,46,31,-55,66,5)
+smear(f,73,46,31,-46,66,5)
 out.append(f)
 out+=[A[5].copy(), A[6].copy()]
 MS=[70,70,45,90,110]
