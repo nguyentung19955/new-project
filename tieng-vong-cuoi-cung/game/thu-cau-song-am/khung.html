@@ -35,7 +35,7 @@ function loop(now){const dt=Math.min(50,now-last);last=now;
  g.clearRect(0,0,c.width,c.height);g.fillStyle='#2a3350';g.fillRect(0,GROUND,c.width,c.height-GROUND);
  const a=META.anims[st.anim],cs=META.cell;
  if(img.complete){g.save();g.translate(Math.round(st.x),GROUND);g.scale(st.face*SC,SC);
-  g.drawImage(img,st.f*cs,a.row*cs,cs,cs,-43,-68,cs,cs);if(st.anim in FXROW&&fxi.complete)g.drawImage(fxi,st.f*160,FXROW[st.anim]*160,160,160,-83,-108,160,160);g.restore()}
+  g.drawImage(img,st.f*cs,a.row*cs,cs,cs,-43,-68,cs,cs);if(st.anim in FXROW&&fxi.complete)g.drawImage(fxi,st.f*240,FXROW[st.anim]*240,240,240,-123,-148,240,240);g.restore()}
  requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
 </script></body></html>

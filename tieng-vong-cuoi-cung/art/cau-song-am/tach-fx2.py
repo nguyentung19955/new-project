@@ -4,15 +4,15 @@ import sys, numpy as np
 from PIL import Image
 from scipy import ndimage
 src,k,order=sys.argv[1],sys.argv[2],[int(v) for v in sys.argv[3].split(',')]
-COLS=int(sys.argv[4]) if len(sys.argv)>4 else 4; CW=1920/COLS
+COLS=int(sys.argv[4]) if len(sys.argv)>4 else 4; CW=1920/COLS; ROW0=int(sys.argv[5]) if len(sys.argv)>5 else 0
 G=np.array(Image.open(src).convert('RGB')).astype(int); H,W,_=G.shape
 s=W/1920.0
-PAD=40; OW=80+2*PAD
+PAD=80; OW=80+2*PAD
 PAL=np.array([[255,255,255],[150,240,255],[70,170,255],[40,90,220],[25,45,120]])
 def mag(p): return (p[...,0]>150)&(p[...,2]>150)&(p[...,1]<110)
 for i,fn in enumerate(order):
     fr=np.array(Image.open(f'frames/{k}_{fn}.png')).astype(int); a=fr[...,3]>0
-    cx,cy=(i%COLS)*CW*s,(i//COLS)*448*s; cw,ch=CW*s,448*s
+    cx,cy=(i%COLS)*CW*s,(i//COLS+ROW0)*448*s; cw,ch=CW*s,448*s
     x1,y1,x2,y2=int(cx+8),int(cy+8),int(cx+cw-8),int(min(H,cy+ch-8))
     sub=G[y1:y2,x1:x2]
     dk=(~mag(sub))&(sub.max(-1)<95)&(np.abs(sub[...,0]-sub[...,1])+np.abs(sub[...,1]-sub[...,2])>6)
