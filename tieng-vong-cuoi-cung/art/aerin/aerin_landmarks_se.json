@@ -1,0 +1,83 @@
+{
+ "canvas": [
+  96,
+  96
+ ],
+ "source": "PixelLab character 9ea1ed77-594b-46d6-af61-e9939888c251 rotations/south-east.png (64x64, unchanged copy in attempt3/), pasted at offset [16,27]",
+ "ground_baseline_y": 88,
+ "bbox_body": [
+  21,
+  27,
+  74,
+  88
+ ],
+ "height_px_body": 62,
+ "landmarks": {
+  "head_center": [
+   48,
+   44
+  ],
+  "neck": [
+   48,
+   55
+  ],
+  "shoulder_near": [
+   38,
+   58
+  ],
+  "shoulder_far": [
+   60,
+   58
+  ],
+  "elbow_near": [
+   35,
+   65
+  ],
+  "elbow_far": [
+   62,
+   64
+  ],
+  "hand_free_near": [
+   35,
+   71
+  ],
+  "hand_sword_far": [
+   61,
+   70
+  ],
+  "hip": [
+   48,
+   69
+  ],
+  "knee_near": [
+   41,
+   79
+  ],
+  "knee_far": [
+   56,
+   79
+  ],
+  "foot_near": [
+   40,
+   87
+  ],
+  "foot_far": [
+   58,
+   84
+  ]
+ },
+ "sword": {
+  "holding_hand": "anatomical LEFT (far hand when facing screen-right)",
+  "hilt_pivot": [
+   60,
+   71
+  ],
+  "blade_tip": [
+   47,
+   91
+  ],
+  "blade_tip_clipped": true,
+  "angle_deg_from_hand": -115
+ },
+ "method": "eyeballed on an 8x grid; +-1 px"
+}
