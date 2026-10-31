@@ -1,0 +1,36 @@
+ART DIRECTION – PHÒNG DEMO "HỐC CHUÔNG CÂM" (tư vấn ChatGPT, tóm tắt)
+Mục tiêu: u tối, huyền bí, ma quái; pixel kiểu Blasphemous, nhịp combat Dead Cells.
+
+0. KỸ THUẬT
+- Logic 960×540, cảnh 320×180 (×3 nearest). Tile 16. World 40×12 tile = 640×192 cảnh. cameraX [0,320], cameraY [0,12].
+- Chỉ hero dùng cyan. Môi trường: không cyan/teal, không cỏ xanh, không gạch xám generic.
+- STYLE LOCK (gắn sau mọi prompt): "Gothic dark-fantasy hand-pixel art, Blasphemous-like density, side-view 2D metroidvania, ancient hollow-tree civilization, muted umber charcoal desaturated plum, sharp pixel clusters, consistent 16px tile scale, no anti-aliasing, no blur, no cyan, no teal, no green grass, no text, no UI."
+
+1. BỐ CỤC (x tile)
+A x0–7 lối vào: sàn y10–11, trần rễ y0–2, tượng gác câm x5–6, đèn x4 y7. Quái 1 x6.
+B x8–15 cầu rễ gãy: sàn x8–9 & x13–15; vực x10–12; bệ x10–11 y7, x13–14 y8. Quái 2 bay x12 y5–6.
+C x16–27 đại sảnh chuông vỡ: sàn liên tục, chuông lớn nền x20–24 y3–9; bệ x18–20 y8, x24–25 y7. Quái 3 x18, quái 4 x25. Chuông phụ (công tắc) x26.
+D x28–39 hành lang + cổng rễ: bậc x28–31 lên y8, sàn x32–39 y9; elite x35; cổng rễ x38–39 y4–9 mở khi gõ chuông phụ.
+Điểm sáng x≈4, 21, 37. Tiền cảnh che ≤10–15% vùng combat.
+
+2. MÀU: 08090D 111017 201B24 302731 | gỗ/đất 29201E 41302A 604438 49342D 6D4538 | xương 887C70 B0A399 | đồng 544036 8C6441 | hổ phách C28A45 D6B16D | đỏ gạch 914B40 | sương 5B505E | vải tang 6B6062. Tỉ lệ 70% tối, 22% gỗ/đất, 6% trung tính, 2% đèn.
+
+3. TÀI NGUYÊN (21 file)
+BG-01 bg_far 320×180 lặp ngang – vách ruột cây xa, vòm chuông mờ.
+BG-02 bg_mid 640×192 – hầm tổ kiến, vòm rễ, đền chuông đổ nát.
+BG-03 bell_sanctum 160×128 – đại chuông đồng vỡ treo bằng rễ.
+FG-01 fg_near_roots 320×180 – rễ đen viền khung, giữa trống (magenta).
+FG-02 fg_root_arch 128×160 – vòm rễ khung hero shot.
+TILE-01 terrain (nên tách 4 sheet 128×128 8×8): đất rễ fill, mép trên, góc, vách, trần rễ, gỗ cháy, nứt.
+TILE-02 platforms 128×128: bệ rễ nổi trái/giữa/phải, đầu gãy, bậc.
+TILE-03 ruin inlays 128×128: đai đồng nứt, phiến đá nghi lễ, bảng khảm.
+PROP-01 bell relics 256×128 (4×2 ô 64): chuông vỡ, chuông nghiêng, giá gãy, bia, mặt nạ nứt…
+PROP-02 small props 256×128 (8×4 ô 32): đèn dầu, xương, sọ, nấm trắng tro, dây, móc, bình, bùa.
+PROP-03 hanging 256×192 (4×3 ô 64): vải tang, dây chuông đứt, rễ buông, xích, rễ đeo mặt nạ.
+PROP-04 ritual lamp 64×96. PROP-05 bell switch 128×64 (OFF/ON).
+GATE-01 cổng rễ đóng/mở 256×128; GATE-02 3 khung chuyển 384×128.
+FX-01 bụi tro 8 khung 32. FX-02 sương 4 khung 64. FX-03 linh hồn 4 khung 48. FX-04 lửa đèn 6 khung 16×32. FX-05 tia sáng 4×64. FX-06 vòng chấn chuông 4×64.
+
+5. ÁNH SÁNG CODE
+Thứ tự: nền 08090D → BG far (0.12×) → BG mid (0.35×) → chuông (0.55×) → prop sau → tile → hero/quái → prop trước → FX → mặt nạ tối (09080D α0.35–0.5, đục lỗ ở đèn) → FG che → vignette 15–25% → UI.
+Đèn C28A45 cường độ 0.12–0.25, nhấp nháy base*(1+0.04sin(2.7t)+0.02sin(7.3t)). Sương 2 lớp α0.05–0.12 sát sàn; bụi 8–18 hạt; linh hồn 1–2 bóng α0.08–0.18. Nền giảm bão hoà 10–20%, giữ nguyên màu hero/quái.
