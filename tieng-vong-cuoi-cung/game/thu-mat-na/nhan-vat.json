@@ -72,13 +72,19 @@
    "lap": false
   },
   "bamtuong": {
-   "thu_muc": "dung",
+   "thu_muc": "bamtuong",
    "so_hinh": 4,
    "chan": [
     128,
     172
    ],
-   "ms": 160
+   "ms": [
+    90,
+    120,
+    120,
+    120
+   ],
+   "lap": true
   },
   "dapdat": {
    "thu_muc": "don3",
