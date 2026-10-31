@@ -1,0 +1,65 @@
+THIẾT KẾ VFX ĐÒN ĐÁNH – 5 QUÁI VÙNG 1 (tư vấn ChatGPT)
+Game metroidvania pixel 2D tối, huyền bí · Quái hướng TRÁI · 60 FPS
+
+QUY ƯỚC CHUNG
+- Kích thước ghi theo pixel logic trong game. Tách telegraph, active VFX và hit spark; hitbox do code quyết định.
+- VFX sắc nét, không blur/gradient. Tránh cyan (#18BFE6 và tương tự): cyan dành riêng cho nhân vật chính.
+- Telegraph hiện trước hitbox tối thiểu 8–14 frame (133–233 ms); đòn nặng 18–24 frame (300–400 ms). Đỉnh sáng trùng/sát frame gây sát thương.
+- Mỗi quái một màu sáng nhận diện; màu tối là viền/bóng.
+
+1) KHUYẾT CẨU – chó rễ, cao 64px
+Màu: hổ phách #E5A13B, viền gỗ #56371F, sáng đỉnh #FFD17A.
+A. CẮN 3 PHÁT LIÊN TIẾP LAO TRÁI
+- Ba cung hàm răng nhọn lệch thấp + 2–3 dằm gỗ; mỗi cung 24×18px trước mõm, lao 12–18px/nhịp.
+- VFX mỗi cú 4 frame: F1 vệt ngắn, F2 đỉnh sáng + hit, F3 tách 2 mảnh, F4 tan. Cú 3 rộng 28×20px.
+- Telegraph: cúi vai, chân trước cào nền, hàm nháy hổ phách 12 frame trước cú đầu; trước cú 2/3 có 5–6 frame giật đầu.
+- Hit spark: 10×9px, 3 frame, dằm hổ phách văng trái.
+B. CÀO ĐẤT GỌI RỄ
+- Vết nứt đất chạy sang trái 64×8px; 2–3 gai rễ dựng lên trong vùng 56×30px.
+- VFX 7 frame: F1–2 nứt đất, F3 rễ nhú, F4–5 đỉnh, F6–7 rút/mảnh vụn.
+- Telegraph: vệt nứt #E5A13B chạy dưới đất 18 frame; gai chỉ gây hit khi trồi lên.
+
+2) HỒN VẢI – ma vải bay, cao 80px
+Màu: vàng vải cũ #D9B66F, viền #544A3F, sáng đỉnh #F3DBA0.
+A. QUẤT HAI DẢI VẢI SANG TRÁI
+- Hai roi vải cong hình S, mỗi dải 62×12px, tổng vùng 68×38px, đầu roi vuốt nhọn.
+- VFX 6 frame: F1 cuộn, F2 bung nửa, F3 đỉnh roi 1, F4 đỉnh roi 2, F5–6 co rút.
+- Telegraph: đầu vải co ngược về phải, nếp gấp lóe vàng 14 frame; ~4 frame giữa hai lần trúng.
+- Hit spark: 12×8px, 3 frame, sợi vải đứt li ti.
+B. CUỘN VẢI – VÙNG IM LẶNG
+- Vải xoắn sát thân, rồi viền vòng tròn đứt đoạn bán kính 38px.
+- VFX 8 frame: F1–3 vải quấn, F4 vòng mở, F5 đỉnh, F6–8 vòng rung; duy trì bằng loop riêng.
+- Telegraph: vải siết + dấu vòng trên nền 22 frame trước khi có hiệu lực.
+
+3) KÈN CÂM – người cầm kèn, cao 80px
+Màu: đồng cháy #C7833C, viền #59402B, sáng đỉnh #F0B85E.
+THỔI SÓNG ÂM SANG TRÁI
+- 3 vòng cung nén mở về trái, giãn dần từ miệng kèn; dải 84×34px.
+- VFX 7 frame: F1 chấm khí, F2 cung nhỏ, F3–4 cung lan, F5 đỉnh, F6 đứt, F7 tan.
+- Telegraph: ngả sau hít sâu, lòng kèn sáng đồng 20 frame; 3 frame đứng khựng trước khi bắn.
+- Hit spark: 14×12px, 3 frame, vòng đồng vỡ thành nét cong.
+
+4) MÀN TANG – xác treo dây, cao 80px
+Màu: cam nến tàn #D67B49, viền #4D342F, sáng đỉnh #F2B07D.
+LAO CHÚI XUỐNG CÀO HAI VUỐT
+- Hai vệt móng cong song song chéo xuống-trái, mỗi vệt 36×24px, tổng 46×36px; 3 mảnh bụi vải khi chạm nền.
+- VFX 5 frame: F1 móng sáng mờ, F2 vệt đầu, F3 đỉnh + hit, F4 vệt gãy, F5 tắt.
+- Telegraph: dây căng, thân nghiêng trái, vuốt lóe cam 16 frame; bóng điểm đáp 18×5px trước cú chúi ≥10 frame.
+- Hit spark: 12×10px, 3 frame, tia xòe xuống-trái.
+
+5) VỌNG TÀN – tinh anh, cao 96px
+Màu: đỏ gạch #B84C43, tím tro #67576D, viền #352C39, sáng đỉnh #F08B73. KHÔNG cyan.
+A. NHẤC CHUÔNG ĐẬP XUỐNG ĐẤT PHÍA TRÁI
+- Vòng xung kích dẹt dọc nền lan trái 100×18px; 4–6 đá vụn; vết nứt 70×10px.
+- VFX 9 frame: F1–3 bụi rơi, F4 chạm đất, F5 ĐỈNH, F6–7 sóng lan, F8–9 bụi tắt.
+- Telegraph: nâng chuông, điểm va chạm nhấp đỏ gạch 24 frame; hitbox chỉ mở khi chạm đất. Rung màn hình 3px trong 3–4 frame.
+- Hit spark: 22×18px, 4 frame, mảnh gạch/đồng bay thấp.
+B. GẦM CHUYỂN GIAI ĐOẠN
+- 2 vòng âm elip quanh thân, tối đa 92×72px; rạn đỏ trên chuông, bụi tím tro.
+- VFX 10 frame: F1–3 ánh đỏ dồn vào chuông, F4–6 vòng mở (F5 đỉnh), F7–10 tan thành hạt tím tro.
+- Telegraph: đứng bất động, chuông rung, nhấp đỏ 24 frame; báo chuyển phase, không gây damage.
+
+LƯU Ý SẢN XUẤT
+- Mỗi đòn một sprite sheet ô cố định, nền #FF00FF; tách alpha sạch.
+- VFX phía sau bị thân che; đầu vệt gần camera vẽ trước thân.
+- Pixel logic, scale nearest-neighbor. Test 60 FPS trước khi khóa.
