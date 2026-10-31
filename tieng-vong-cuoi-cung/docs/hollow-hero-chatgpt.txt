@@ -1,0 +1,20 @@
+HOLLOW HERO – tóm tắt tư vấn ChatGPT (31/10/2026)
+Nhân vật không cầm vũ khí; khi đánh, cánh tay (tay xa) hóa thành vũ khí: lưỡi kiếm (đòn 1, 2), búa (đòn 3), móng (chém trên không). Hiệu ứng vẽ riêng ở ChatGPT, PixelLab chỉ vẽ dáng người.
+
+3 ý tưởng (đã cho PixelLab vẽ, 64x64, Sidescroller):
+1. Vọng Tử (khuyên chọn) – PixelLab id 3b962f49-5f41-41e1-964c-462545ced341
+2. Chuông Không – id 41e2333a-5170-44d9-b514-73b107eecad4
+3. Mầm Âm – id 36c30d8c-cfac-44e2-a171-334d3a89798f
+
+Mô tả chuyển động (PixelLab custom), luôn "Side view facing right", không hiệu ứng:
+- Idle: đứng thủ thế, thở nhẹ, khăn đung đưa, tay bình thường.
+- Run: chạy nghiêng nhẹ, chân luân phiên rõ, tay đánh ngược, khăn bay sau.
+- Jump: nhún, bật, đỉnh, rơi, chuẩn bị tiếp đất.
+- Dash: nén, lao thấp về trước, chân duỗi sau, hồi về chạy.
+- Attack 1: tay xa hóa lưỡi kiếm ngắn, đâm thẳng ngang ngực, thu về tay thường.
+- Attack 2: nối từ đòn 1, lưỡi hạ thấp rồi chém chéo lên trước người, kết thúc lưỡi giơ cao.
+- Attack 3: nối từ đòn 2, lưỡi biến thành búa lớn, bổ xuống trước người, khuỵu sâu, về tay thường.
+- Air attack: trên không, co gối, tay hóa móng 3 mũi, cào chéo xuống trước, thu về trước khi đáp.
+- Hurt: giật người ra sau, đầu ngả, gối khuỵu, hồi thế.
+- Death: kiệt sức, khuỵu gối, gục thành tư thế cuộn nằm yên.
+Lưu ý: nếu PixelLab không giữ được cánh tay biến hình ổn định, vẽ chuyển động với tay thường trước rồi sửa riêng cánh tay ở các khung đánh.
