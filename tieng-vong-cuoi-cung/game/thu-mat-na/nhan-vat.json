@@ -1,24 +1,24 @@
 {
- "ghi_chu": "Kiếm khách song kiếm (PixelLab 00d70d1c). Di chuyển = mẫu Template·Skeleton v3 (giữ nguyên điểm ảnh nhân vật), 128px chan=[64,108]. Đòn + lướt/trúng đòn/nhảy đôi/tiếp đất = ảnh ghép 256px có hiệu ứng ChatGPT (lớp sau/lớp trước), chan=[128,172]. Đòn combo đã chỉnh về bảng màu gốc.",
+ "ghi_chu": "Kiếm khách — nhân vật đã chốt vòng 1 (master 96px do ChatGPT vẽ, Claude chuẩn hóa; PixelLab 8d42cf0c). Di chuyển = mẫu Skeleton v3; đòn = 5 tư thế ChatGPT + hiệu ứng ChatGPT. Mọi ảnh 256x256, chân ở [128,172].",
  "goc": "../../art/kiem-khach/",
  "ti_le": 2,
  "co": 0.75,
  "clip": {
   "dung": {
    "thu_muc": "dung",
-   "so_hinh": 8,
+   "so_hinh": 4,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 120
+   "ms": 160
   },
   "troi": {
    "thu_muc": "chay",
    "so_hinh": 8,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
    "ms": 80
   },
@@ -26,8 +26,8 @@
    "thu_muc": "nhay",
    "so_hinh": 4,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
    "ms": 70,
    "lap": false
@@ -44,21 +44,21 @@
   },
   "roi": {
    "thu_muc": "roi",
-   "so_hinh": 3,
-   "chan": [
-    64,
-    108
-   ],
-   "ms": 100
-  },
-  "tiepdat": {
-   "thu_muc": "tiepdat",
-   "so_hinh": 4,
+   "so_hinh": 2,
    "chan": [
     128,
     172
    ],
-   "ms": 45,
+   "ms": 120
+  },
+  "tiepdat": {
+   "thu_muc": "tiepdat",
+   "so_hinh": 3,
+   "chan": [
+    128,
+    172
+   ],
+   "ms": 50,
    "lap": false
   },
   "luot": {
@@ -75,13 +75,13 @@
    "thu_muc": "dung",
    "so_hinh": 4,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 150
+   "ms": 160
   },
   "dapdat": {
-   "thu_muc": "don5",
+   "thu_muc": "don3",
    "so_hinh": 9,
    "chan": [
     128,
@@ -115,12 +115,12 @@
   },
   "luon": {
    "thu_muc": "roi",
-   "so_hinh": 3,
+   "so_hinh": 2,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 110
+   "ms": 140
   },
   "trungdon": {
    "thu_muc": "trungdon",
@@ -134,18 +134,18 @@
   },
   "hoimau": {
    "thu_muc": "dung",
-   "so_hinh": 8,
+   "so_hinh": 4,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 90,
+   "ms": 180,
    "lap": false,
-   "khung_hoi": 4
+   "khung_hoi": 3
   },
   "chet": {
-   "thu_muc": "trungdon",
-   "so_hinh": 6,
+   "thu_muc": "chet",
+   "so_hinh": 7,
    "chan": [
     128,
     172
