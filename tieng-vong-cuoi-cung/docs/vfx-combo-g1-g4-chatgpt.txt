@@ -1,0 +1,20 @@
+VFX COMBO SONG KIẾM 4 NHÁT — tư vấn ChatGPT (01/11/2026), tóm lược
+Chuẩn: nhân vật cao 80px, tầm đánh ~50px, 60 FPS. Kích thước = pixel logic (trước khi phóng to nearest).
+Nguyên tắc: vệt là dải lưỡi liềm ELIP NGHIÊNG (đầu dày, đuôi thon), không vòng tròn kín.
+Màu: viền #17628A · thân #18BFE6 · lõi #8CEEFF · điểm trắng #F3FFFF. Sáng cực đại chỉ 1–2 frame. Không blur/gradient.
+Lớp: FX sau → kiếm xa → thân → kiếm gần → FX trước → tia trúng. Cung đi vòng người thì chia 2 mảnh sau/trước, không đè lên mặt.
+Rung màn hình chỉ khi TRÚNG, không rung khi hụt.
+
+G1 chém ngang (nhanh, mở combo): elip ngang nghiêng +5..+10°, khung 56×24, 4 frame (25% → 100% sáng nhất → vỡ 2–3 đoạn → 2–4 pixel tàn).
+   30% cung sau thân, 70% trước. Tia trúng 12×10, 3 frame. Bụi chân 8×4, 3 frame. Rung 1px, 1–2 frame.
+G2 chéo lên: elip +45° từ thấp-sau lên cao-trước, khung 58×48, dày 5–7px, 5 frame (mồi → 65% → 100% → vỡ → hạt bay lên).
+   Tia trúng 14×12 bay chéo lên. Bụi 10×5. Rung 1–2px, 2 frame, chéo nhẹ.
+G3 chéo xuống (nặng): elip −45° từ cao-sau xuống thấp-trước, khung 62×50, dày 6–8px, 5 frame. 40% sau / 60% trước.
+   Tia trúng 16×14, 4 frame. Bụi 12×6 ở chân trước. Rung 2px, 2 frame.
+G4 cắt chữ X (kết, mạnh nhất): hai cung +45° và −45° lệch nhau 1–2 frame, khung tổng 72×58 (mỗi cung ~58×46), 7 frame
+   (cung 1 mờ → cung 1 sáng → cung 2 bật → SÁNG NHẤT tại giao X 1 frame trắng → rạn vỡ → mảnh rơi/tan).
+   Tia trúng 20×18, 4–5 frame, bắn 4–6 mảnh theo hai đường chéo. Bụi 16×7, hai cụm lệch nhịp. Rung 3px 2–3 frame + dừng hình 2–3 frame.
+Leo thang: G1 56×24/4f → G2 58×48/5f → G3 62×50/5f → G4 72×58/7f; chỉ sáng hơn ở frame đỉnh, không kéo dài vệt.
+Nối mượt: bắt đầu lấy đà đòn sau ngay khi đòn trước qua khung chém; tư thế cuối đòn trước làm tư thế đầu đòn sau; không về đứng giữa các nhát.
+Vệt cũ được giữ thêm tối đa 1–2 frame mờ khi nối đòn. Nặng mà nhanh = hạ hông, xoay vai, 1 nhịp trắng ngắn, tia trúng đúng chỗ, rung rất ngắn; KHÔNG khựng dài.
+Vệt chém chạy cả khi hụt; tia trúng/rung/khựng chỉ khi trúng.
