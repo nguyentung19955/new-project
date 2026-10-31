@@ -1,0 +1,118 @@
+QUY TRÌNH CHỐT NHÂN VẬT PIXEL ART — TIẾNG VỌNG CUỐI CÙNG
+(Tư vấn của ChatGPT, 31/10/2026 — bản tóm lược đầy đủ ý, prompt giữ nguyên văn)
+
+KẾT LUẬN NGẮN
+Đừng bắt một ảnh concept phức tạp vừa đẹp, vừa đúng rig, vừa tự sinh combo xoay 3D.
+Khóa thiết kế bằng một sprite pixel-thật đã kiểm chứng, thử rig trên động tác đơn giản,
+rồi làm đòn kiếm bằng key pose có kiểm soát, tách kiếm/tóc/VFX khỏi thân.
+"2 vòng" là giới hạn để QUYẾT ĐỊNH hướng sản xuất, không phải mọi animation xong sau 2 lần.
+
+A. VÌ SAO ẢNH CHATGPT KHÔNG KHỚP SKELETON PIXELLAB
+1) Pixel giả: cụm pixel không đều, có pixel trung gian/khử răng cưa; thu về 96px làm vỡ chi tiết, silhouette.
+2) Khớp bị che: tóc dài che vai/lưng, áo che hông, kiếm đè cổ tay, tay chân sát nhau.
+3) Tỉ lệ chibi khác mannequin: đầu quá to, tay chân ngắn, hông lệch.
+4) Tư thế không trung tính: tay khép, chân chồng, kiếm chắn thân.
+5) Sai góc đầu vào (thiếu South chuẩn).
+6) Quá nhiều vật dính thân (tóc, áo, 2 kiếm) — rig không biết cái gì theo xương nào.
+7) Kể cả ảnh chuẩn, skeleton tự động cũng không đảm bảo xử lý tốt chibi song kiếm.
+Lưu ý: các thông số dưới là thông số THỬ NGHIỆM, không phải đặc tả chính thức của PixelLab.
+
+SPEC ẢNH THAM CHIẾU "MASTER RIG-SAFE 96"
+- 96x96 PNG RGBA, pixel thật 1:1, không resize bilinear/bicubic.
+- Nhân vật cao 76–82px, chừa đệm 7–10px trên/dưới; rộng 35–52px.
+- Tỉ lệ ~3–3,3 đầu (đầu 23–26px).
+- Đứng thẳng trung tính, chân tách 3–5px, tay rời thân 2–3px.
+- Mặt nạ trắng trơn + 2 khe mắt cyan mảnh.
+- Tóc: dải mỏng sau lưng, KHÔNG che vai/khuỷu/cổ tay/hông; bản rig-test dùng tóc gọn tới gáy, tóc dài ghép lớp riêng.
+- Áo tunic ngắn, không áo choàng.
+- Kiếm: KHÔNG đè lên tay chân; tốt nhất bản BODY_ONLY không vũ khí + 2 kiếm PNG riêng có pivot ở chuôi.
+- 12–16 màu phẳng, outline tối 1px, không noise/glow/gradient/AA.
+- Nền trong suốt; không vẽ sàn, bóng, VFX vào ảnh nhập.
+- Xuất South trung tính + East nhìn phải, cùng tỉ lệ, cùng đường chân.
+
+Claude kiểm tra bằng code: đúng 96x96 RGBA, alpha 0/255, đếm màu, không cắt mép,
+so master với frame sau rig (mặt nạ, chiều cao đầu, màu tóc, tay chân, số kiếm), xem ở 1x và trong game.
+
+B. QUY TRÌNH CHỐT TỐI ĐA 2 VÒNG
+VÒNG 1 — kiểm chứng tương thích
+ 1. ChatGPT: BODY_ONLY 96px South + East, tóc gọn, không kiếm, không VFX.
+ 2. Claude: chuẩn hóa pixel/alpha/palette/căn chân, xuất master + preview.
+ 3. PixelLab: Create from Reference; CHỈ thử Idle, Run Template, Jump Template.
+ 4. Claude + ChatGPT: xem GIF tốc độ thật, so từng khung với master.
+ PASS: giữ mặt nạ/tóc/màu; không mọc thêm tay chân; chân đổi bước rõ; đầu ổn định; không mờ.
+ FAIL: lỗi lặp ở 2/3 animation, khớp đứt, biến dạng lớn, phải sửa tay từng khung.
+ (Lệch 1–2px ở viền chấp nhận được nếu nhìn không rung.)
+VÒNG 2 — một lần sửa có mục tiêu
+ Chỉ sửa 1–3 nguyên nhân đo được (tóc che vai, kiếm dính tay, đầu quá to, chân quá sát).
+ Không đổi toàn bộ mỹ thuật. Chạy lại đúng Idle/Run/Jump.
+ PASS → khóa MASTER_BODY_V1, palette, pivot; không sửa thiết kế khi làm combo.
+ FAIL → thôi dùng PixelLab Skeleton làm giải pháp chính cho combat, chuyển sang hybrid/rig thủ công.
+ KHÔNG tạo ảnh tham chiếu mới vô hạn.
+Phân công: ChatGPT = thiết kế sprite, key pose combat, VFX, QA hình thể.
+PixelLab = các hướng/animation đã chứng minh chạy tốt; không để Custom tự thay thiết kế.
+Claude = QA pixel tự động, cắt frame, atlas, pivot, hitbox, render 2 lớp, GIF so sánh, đưa vào game.
+Người chơi (bạn) = duyệt cuối bằng GIF đúng tốc độ và cảm giác điều khiển.
+
+C. CHIẾN LƯỢC ANIMATION
+- Đứng: Template nếu qua QA.
+- Chạy: Running Template, kiểm tra 2 nhịp chạm chân.
+- Nhảy: Template làm nền, sửa tay 3–4 pose (bật/co/đỉnh); tách Lên/Đỉnh/Rơi theo vận tốc.
+- Rơi: 2–3 pose vẽ tay, loop nhẹ.
+- Nhảy đôi: dùng lại thân nhảy + VFX riêng.
+- Lướt: Template nếu silhouette ổn + VFX.
+- Trượt tường 3/4: vẽ key pose riêng (có tường tham chiếu rồi bỏ), 2–4 khung. Không giao Template.
+- Trúng đòn/Chết: Template nếu qua QA.
+- Chém X, đâm kép, xoay 360, kết liễu: KHÔNG dựa vào Custom. Dùng key pose/rig lai, nội suy có kiểm soát.
+Combo 3D giả: tách thân + tóc + kiếm gần + kiếm xa + VFX sau + VFX trước.
+ Kiếm gần trên thân, kiếm xa sau thân theo từng pose; chiều sâu bằng thứ tự lớp, độ dài kiếm theo
+ phối cảnh, vòng chém elip nghiêng. Hitbox do code. Pivot: thân ở hông/chân, kiếm ở chuôi, tóc ở gáy.
+Công cụ: PixelLab cho di chuyển đạt QA; Aseprite/LibreSprite cho key pose chiến đấu; Claude dựng
+animation từ frame + lớp trong Canvas. Không cần đổi engine.
+Thứ tự vẽ: nền sau → VFX sau → kiếm xa → thân → tóc/kiếm gần → VFX trước → tiền cảnh.
+
+D. CÓ NÊN ĐỔI THIẾT KẾ?
+Có, nhưng chỉ đơn giản hóa kỹ thuật, giữ nhận diện mặt nạ trắng + tóc trắng + song kiếm:
+1) Tóc dài thành lớp riêng gắn gáy. 2) Áo ngắn, không áo choàng. 3) Hai kiếm là asset riêng.
+4) 3–3,3 đầu, tay chân có khoảng hở. 5) Ít rune cyan, tránh đường mảnh qua khớp.
+6) Không đổi mặt nạ, bảng màu cốt lõi, silhouette tóc.
+
+E. VIỆC LÀM NGAY
+[ ] 1. Khóa 1 ảnh hero gốc làm tham chiếu nhận diện.
+[ ] 2. Tạo BODY_ONLY 96x96 South + East, tóc gọn, không kiếm.
+[ ] 3. Tạo 2 kiếm thẳng và tóc dài thành PNG riêng.
+[ ] 4. Claude kiểm tra pixel thật, alpha, palette, silhouette, pivot.
+[ ] 5. PixelLab Create from Reference, chỉ thử Idle/Run/Jump Template.
+[ ] 6. Xuất GIF tốc độ thật + bảng lỗi từng khung.
+[ ] 7. FAIL: sửa đúng nguyên nhân 1 lần, thử lại.
+[ ] 8. PASS → khóa master; FAIL lần 2 → chuyển hybrid/thủ công.
+[ ] 9. Sau khi khóa: làm 3 key pose đòn X và đâm kép trước khi làm cả combo.
+[ ] 10. VFX riêng, ghép, thử chơi.
+
+PROMPT CHATGPT — BODY MASTER
+Create a production-ready TRUE pixel-art 96x96 character reference, neutral South and East views as separate sprites. Chibi swordsman, 3–3.3 heads tall, smooth white mask with two thin cyan eye slits, charcoal short tunic, visible arms and legs, simple boots, slim white hair tied behind the head. No weapons, cloak, VFX, shadows, blur or anti-aliasing. 1px outline, 12–16 flat colors, transparent background. Separate every joint clearly. Keep a consistent ground anchor.
+
+PROMPT CHATGPT — ASSET KIẾM/TÓC
+Draw separate TRUE pixel-art assets at the same 96px character scale: two identical straight double-edged short swords with simple straight crossguards, and one thin flat white hair curtain from nape to waist. No character, no effects, no shadows, transparent background, clean 1px outline, limited palette. Leave clear attachment pivots at sword grips and hair root.
+
+PIXELLAB — CREATE FROM REFERENCE: dùng ảnh BODY_ONLY South/East; chọn Humanoid/Sidescroller.
+
+PROMPT PIXELLAB — IDLE
+Neutral side-view idle facing RIGHT. Keep exact mask, hair, colors, proportions and visible limbs. Very subtle breathing only. No weapons, new accessories, VFX, blur or added details.
+
+PROMPT PIXELLAB — RUN
+Fast side-view run facing RIGHT, 8 frames. Clear alternating foot contacts, strong knee lift and passing poses, forward lean, arms counter-swing. Keep exact pixel design, mask and proportions. No new clothing, weapons, trails or effects.
+
+PROMPT PIXELLAB — JUMP
+Side-view jump facing RIGHT. Deep knee bend, strong takeoff, both knees tuck while rising, compact airborne apex. Keep exact body, mask, proportions and colors. No added accessories, trails or effects.
+
+PROMPT CHATGPT — KEY POSE CHIẾN ĐẤU (chỉ sau khi master PASS)
+Using the locked pixel-exact body master, design 4 distinct key poses for a dual straight-sword X slash, side view facing RIGHT with a slight turn toward camera. Both swords alternate front/back depth. Strong hips and shoulders, readable feet, no VFX. Preserve exact mask, hair, palette, silhouette and sprite scale. Do not invent costume details.
+
+PROMPT PIXELLAB CUSTOM — chỉ để tham khảo, không làm master
+Fast dual sword X-slash facing RIGHT: quick windup, first diagonal cut, immediate reverse diagonal cut, strong follow-through, recover. Rotate torso slightly toward camera. Two straight swords, clear hips and feet. Preserve character identity and colors. No VFX, trails, new limbs or accessories.
+
+TIÊU CHÍ CHỐT CUỐI
+1. Pixel thật, palette không trôi. 2. Đầu/mặt nạ, tóc, 2 tay, 2 chân ổn định.
+3. Chạy có 2 nhịp chạm chân đối xứng, không trượt chân. 4. Nhảy co chân, rơi khác nhảy.
+5. Combo có nhịp và chiều sâu từ pose/lớp, không chỉ là vòng VFX. 6. Duyệt ở tốc độ chơi thật.
+7. Sau 2 vòng rig vẫn sai thì đổi quy trình, KHÔNG đổi thiết kế liên tục.
