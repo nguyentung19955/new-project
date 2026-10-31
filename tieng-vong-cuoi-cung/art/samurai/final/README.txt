@@ -6,3 +6,12 @@ Thoi gian (ms/khung), theo bao cao ChatGPT:
  dung 130,110,110,150,110,110,130,160 | vao-chay 65,55 (2 khung) | chay 65,55,55,65,65,55,55,65
  don1 55,50,45,35,35,95,45,50,55,55,120 | don2 45,40,40,35,85,50,55,55,45 | don3 55,55,85,40,40,115,65,60,135
 Combo: don1 f1-f8 -> don2 f1-f9 -> don3 f1-f9 -> tra kiem don1 f9-f11.
+
+== Cập nhật: thêm khung nối cho mượt ==
+Số khung: dung 8, vao-chay 4, chay 8, don1 13, don2 10, don3 11.
+Thời gian (ms):
+ vao-chay: 70,65,55,50   (dừng = phát ngược)
+ don1: 55,50,45,30,35,35,95,45,50,40,55,55,120
+ don2: 45,40,40,35,30,85,50,55,55,45
+ don3: 55,55,85,35,40,40,28,115,65,60,135
+Combo: don1 khung 0-8 -> don2 0-9 -> don3 0-10 -> don1 9-12 (tra kiếm).
