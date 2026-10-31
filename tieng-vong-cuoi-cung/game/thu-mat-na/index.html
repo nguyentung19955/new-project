@@ -73,7 +73,7 @@ async function nap(){
   await Promise.all([napAnh('canh', A_CANH + 'canh.png'), napAnh('n1', A_CANH + 'nen-xa-1.png'), napAnh('n2', A_CANH + 'nen-xa-2.png'), napAnh('den', A_CANH + 'den-sang.png')]);
   // nhân vật
   NVJ = await SpriteMN.napJson('nhan-vat.json');
-  const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2);
+  const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2); E.datCo(NVJ.co || 1);
   await Promise.all(Object.entries(NVJ.clip).map(async ([ten, def]) => { E.NV.clip[ten] = await SpriteMN.napClip(gNV, def, ten); }));
   for (const c of (NVJ.cap || [])){
     const o = {ten:c.ten, sat_thuong:c.sat_thuong, clip:{}};
@@ -247,7 +247,7 @@ function veNV(cam){
     const n = C.hinh.length;
     const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
     const trang = pl.hurtT > E.P.hurtT - 5;
-    SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL, al, trang);
+    SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);
   } else khoi(fx, fy, 44, 112, '#d8dde3', pl.face);
 }
 function veQuai(q, cam){

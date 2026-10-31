@@ -2,6 +2,7 @@
  "ghi_chu": "Mặt Nạ Trắng cầm liềm (PixelLab 90a022c9). Hình 112px quay PHẢI, chan=[56,84]. Combo (cNN 260x260): nhân vật đặt tại (74,110) → chan=[130,194]; hiệu ứng ChatGPT chia lớp sau (mờ, sau thân) / trước (sáng, đè thân). Đòn 3 = lốc: thân xoay 8 hướng. Xem GHI-CHU.md.",
  "goc": "../../art/mat-na-liem/",
  "ti_le": 2,
+ "co": 0.84,
  "clip": {
   "dung": {
    "thu_muc": "dung",

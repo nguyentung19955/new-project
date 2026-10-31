@@ -14,7 +14,7 @@ const DongCoMN = (() => {
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
     maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:14, choThem:8};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
-  let TL = 2;
+  let TL = 2, CO = 1;   // CO = hệ số cỡ riêng của nhân vật chính (nhan-vat.json "co")
 
   /* ---------- BẢN ĐỒ ---------- */
   const BD = {T:48, COT:80, HANG:12, L:[]};
@@ -104,8 +104,8 @@ const DongCoMN = (() => {
   // hộp đánh hiện tại của nhân vật (null = không có)
   const HB = {x:0, y:0, w:0, h:0};
   function hopTuDef(hop, fx, fy, face, out){
-    const [dx, dy, w, h] = hop;
-    out.x = face > 0 ? fx + dx * TL : fx - (dx + w) * TL; out.y = fy + dy * TL; out.w = w * TL; out.h = h * TL; return out;
+    const [dx, dy, w, h] = hop, T = TL * CO;
+    out.x = face > 0 ? fx + dx * T : fx - (dx + w) * T; out.y = fy + dy * T; out.w = w * T; out.h = h * T; return out;
   }
   function hopNV(){
     if (pl.dead) return null;
@@ -431,5 +431,5 @@ const DongCoMN = (() => {
   }
 
   return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, napBanDo, datNV, taoQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
-    datTL(v){ TL = v; }, get TL(){ return TL; }};
+    datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
 })();
