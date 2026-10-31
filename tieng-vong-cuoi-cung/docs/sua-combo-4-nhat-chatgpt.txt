@@ -1,0 +1,36 @@
+BẢN CHỈNH SỬA COMBO SONG KIẾM 4 NHÁT (tư vấn ChatGPT, tóm tắt)
+Nhân vật nhìn sang PHẢI.
+
+0. QUY ƯỚC
+- TAY TRÁI = tay GẦN camera, trước thân. TAY PHẢI = tay XA camera, sau thân.
+- Nhát 1: PHẢI/XA. Nhát 2: TRÁI/GẦN. Nhát 3: PHẢI/XA. Nhát 4: CẢ HAI.
+- Thứ tự lớp: VFX xa → kiếm/tay xa → thân/đầu → tay/kiếm gần → VFX gần. Kiếm xa vòng ra trước thì chỉ đoạn đó qua lớp trước (mask theo silhouette), không đổi cả lớp đột ngột.
+- Mũi vệt đón trước MŨI KIẾM 2–4 px theo tiếp tuyến (đỉnh 4–5 px); vệt ôm quỹ đạo đầu lưỡi, không mọc ở nắm tay.
+- 5 key pose/nhát: P1 chuẩn bị, P2 lấy đà, P3 bắt đầu chém, P4 trúng, P5 kết thúc. Tay không chém giữ guard/cân bằng.
+- Đoạn vệt SAU tối hơn 25–35% (đổi màu tối, không dùng alpha mờ).
+
+1. G1 CHÉM NGANG – TAY PHẢI (XA). Giữ động tác.
+- P2 khuỷu phải kéo về sau ngang ngực, kiếm ngang mũi chỉ trái; tay trái co sát sườn, kiếm chéo xuống-phải.
+- P4 tay phải duỗi phải, kiếm ngang; tay trái vẫn co phòng thủ.
+- VFX: elip dẹt gần ngang (+5–10°) ~56x24 px, đầu dày PHẢI, đuôi nhọn TRÁI.
+- Lớp: P3 nửa cung sau bị thân che, ra khỏi mép trước thân mới thành lớp TRƯỚC; P4 đầu cung TRƯỚC, đuôi sau vai/hông SAU. Điểm chuyển lớp quanh mép ngực.
+
+2. G2 CHÉO TỪ DƯỚI LÊN – TAY TRÁI (GẦN)
+- Tay phải (không chém) giữ thấp sau hông, khuỷu gập, không giơ ra trước.
+- P2 tay trái kéo kiếm xuống-sau gần đùi trái; P3 kéo qua đầu gối trước lên PHẢI-TRÊN 45°; P4 tay trái duỗi cao trước mặt, mũi PHẢI-TRÊN cao hơn đầu; P5 tay phải đưa lên sau vai chuẩn bị G3.
+- VFX: elip nghiêng +45°, TRÁI-DƯỚI → PHẢI-TRÊN, ~58x48 px, đầu dày PHẢI-TRÊN.
+- Lớp: vệt chính TRƯỚC thân (tay gần); chỉ đoạn đuôi vòng qua hông sau là SAU.
+
+3. G3 CHÉO TỪ TRÊN XUỐNG – TAY PHẢI (XA)
+- Lỗi: vệt cong ngược. Đúng: TRÁI-TRÊN → PHẢI-DƯỚI, đầu dày PHẢI-DƯỚI, mép ngoài lồi theo hướng lao xuống-phải, lòng cung mở về sau-trái. Có thể lấy cung G2 LẬT DỌC rồi chỉnh điểm bám. ~62x50 px.
+- P2 tay phải nâng CAO-SAU đầu, mũi chỉ trái-trên; tay trái giữ kiếm thấp trước thân. P4 mũi kiếm ở PHẢI-DƯỚI gần gối trước.
+- Lớp: đoạn đầu (trái-trên) SAU đầu/vai; vượt mép trước ngực thì ra TRƯỚC; P4 đầu dày trước đùi.
+
+4. G4 KÉO HAI KIẾM KHÉP LẠI – CẢ HAI TAY
+- KHÔNG thủ thế X trước ngực. P1 MỞ KÉO: hai mũi cùng hướng PHẢI, một lưỡi chéo phải-trên +35–50°, một lưỡi chéo phải-dưới −35–50° (chữ V nằm ngang nhìn từ hông).
+- P2 nén lực, khuỷu sát thân. P3 khép: kiếm trên bổ xuống-phải, kiếm dưới hất lên-phải, gặp nhau trước mặt 15–30 px. P4 GIAO CẮT: hai lưỡi cắt qua nhau trước mặt, kiếm gần đè kiếm xa; khung đầu tiên X sáng. P5 thoát kéo, tay đi qua nhau rồi thu thấp.
+- VFX: hai cung ngắn ngược chiều gặp trước mặt; tại P4 dấu X CAO HƠN RỘNG (rộng 24–30, cao 42–50 px), một lõi trắng duy nhất, không kéo cung ra sau lưng.
+
+5. NGHIỆM THU
+- Sửa thân trước, chạy không VFX, rồi mới tách VFX trước/sau theo đường mũi kiếm từng frame.
+- G4: X chỉ bật đúng khung giao kiếm rồi vỡ mảnh. Hitstop ngắn, không giật.
