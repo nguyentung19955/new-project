@@ -11,7 +11,7 @@ const DongCoMN = (() => {
     fallGravMul:0.93, apexGravMul:0.3, apexThreshold:4, jumpCut:0.5, coyote:6, jumpBuffer:8, corner:8,
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
     dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
-    djMul:0.88, glideFall:1.4, poundSpeed:13,
+    djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
     maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:14, choThem:8};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
   let TL = 2;
@@ -129,7 +129,7 @@ const DongCoMN = (() => {
 
   function hurt(dir, dmg){
     if (pl.dead || pl.iframes > 0) return;
-    pl.hp -= dmg || 1; pl.iframes = P.hurtIFrames; pl.hurtT = P.hurtT; pl.vx = dir * 3.2; pl.vy = -3; pl.jumping = false;
+    pl.hp -= dmg || 1; pl.iframes = P.hurtIFrames; pl.nhay = P.hurtIFrames; pl.hurtT = P.hurtT; pl.vx = dir * 3.2; pl.vy = -3; pl.jumping = false;
     pl.atk = ''; pl.pound = null; pl.hoi = -1; pl.dash = 0; CHO.co = false; pl.comboHan = 0; pl.dashBuf = 0; pl.djT = -1;
     S.hitstop = 6; shake(dir || 0.01, -0.6, 2.6);
     if (pl.hp <= 0){ pl.hp = 0; pl.dead = true; pl.deadT = 0; S.chet++; }
@@ -142,11 +142,11 @@ const DongCoMN = (() => {
     if (pl.dead){
       pl.deadT++; pl.vx *= 0.9; pl.vy = Math.min(pl.vy + P.gravity, P.maxFall);
       moveX(pl, pl.vx, false); if (moveY(pl, pl.vy)) pl.vy = 0;
-      if (pl.deadT >= clipNV('chet').tong + 50){ datNV(pl.sx, pl.sy); pl.iframes = 60; SUKIEN.push({k:'hoi-sinh'}); }
+      if (pl.deadT >= clipNV('chet').tong + 50){ datNV(pl.sx, pl.sy); pl.iframes = 60; pl.nhay = 60; SUKIEN.push({k:'hoi-sinh'}); }
       return;
     }
     const dir = (IN.r ? 1 : 0) - (IN.l ? 1 : 0);
-    if (pl.wallLock > 0) pl.wallLock--; if (pl.dashCd > 0) pl.dashCd--; if (pl.iframes > 0) pl.iframes--;
+    if (pl.wallLock > 0) pl.wallLock--; if (pl.dashCd > 0) pl.dashCd--; if (pl.iframes > 0) pl.iframes--; if (pl.nhay > 0) pl.nhay--;
     if (pl.hurtT > 0) pl.hurtT--; if (pl.landT > 0) pl.landT--; if (pl.comboHan > 0) pl.comboHan--;
     if (pl.djT >= 0){ pl.djT++; if (pl.djT >= clipNV('nhaydoi').tong) pl.djT = -1; }
 
@@ -241,7 +241,8 @@ const DongCoMN = (() => {
     if (pl.jumping && !IN.j && pl.vy < 0){ pl.vy *= P.jumpCut; pl.jumping = false; }
     if (pl.vy >= 0) pl.jumping = false;
     // Lượn: giữ Nhảy khi đang rơi
-    if (!pl.onGround && !sliding && pl.vy > 0 && IN.j && !pl.atk && pl.hurtT <= 0){ pl.vy = Math.min(pl.vy, P.glideFall); pl.luon = true; }
+    if (pl.onGround || sliding) pl.luonT = 0;
+    if (!pl.onGround && !sliding && pl.vy > 0 && IN.j && !pl.atk && pl.hurtT <= 0 && (pl.luonT || 0) < P.glideMax){ pl.vy = Math.min(pl.vy, P.glideFall); pl.luon = true; pl.luonT = (pl.luonT || 0) + 1; }
 
     const xTruoc = pl.x; if (moveX(pl, pl.vx, false)) pl.vx = 0; pl.dxT = pl.x - xTruoc;
     const vyWas = pl.vy, ry = moveY(pl, pl.vy);

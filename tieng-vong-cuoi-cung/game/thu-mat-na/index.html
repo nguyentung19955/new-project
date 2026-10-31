@@ -240,7 +240,7 @@ const HA = {ten:'', t:0};   // đồng hồ hoạt ảnh nhân vật (bước, c
 function clipNV(ten){ return E.NV.capClip[ten] || E.NV.clip[ten]; }
 function veNV(cam){
   const st = E.trangThai(), C = clipNV(st.ten);
-  if (pl.iframes > 0 && pl.hurtT <= 0 && pl.dash <= 0 && !pl.dead && (E.S.frame >> 2) % 2 === 0) return;   // nhấp nháy bất tử
+  if (pl.nhay > 0 && pl.hurtT <= 0 && pl.dash <= 0 && !pl.dead && (E.S.frame >> 2) % 2 === 0) return;   // nhấp nháy bất tử
   const fx = pl.x + pl.w / 2 - cam, fy = pl.y + pl.h;
   const al = pl.dead && C ? Math.max(0, Math.min(1, 1 - (pl.deadT - C.tong - 10) / 40)) : undefined;
   if (C && C.ok){
