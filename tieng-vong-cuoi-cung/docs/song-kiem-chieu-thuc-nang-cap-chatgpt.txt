@@ -1,0 +1,1665 @@
+TIẾNG VỌNG CUỐI CÙNG
+DUAL SWORD COMBAT SYSTEM — DESIGN V1.0
+Nhân vật: Mặt Nạ Trắng — Bạch Kiếm Khách
+Thể loại: 2D Pixel Metroidvania
+Phong cách: Fast Combat + Pseudo-3D Sword Animation
+Engine: HTML5 Canvas 2D / Fixed Step 60Hz
+Animation: PixelLab Custom Animation
+VFX: ChatGPT tạo riêng / Claude tích hợp
+Trạng thái: ĐỀ XUẤT — CHƯA LOCK
+
+============================================================
+I. TRIẾT LÝ THIẾT KẾ
+============================================================
+
+Nhân vật chính:
+- Chibi, cao khoảng 2.5–3 đầu.
+- Mặt nạ trắng, hai khe mắt cyan.
+- Tóc trắng dài, mỏng, thẳng đến thắt lưng.
+- Áo tunic tối màu, vân rune cyan.
+- Có đủ 2 tay, 2 chân và bàn chân.
+- Hai kiếm ngắn, thẳng, hai lưỡi.
+- Mỗi kiếm có chuôi và thanh chắn ngang đơn giản.
+- Không biến kiếm thành katana, liềm hoặc dao cong.
+
+PHONG CÁCH CHIẾN ĐẤU:
+
+Nhanh, linh hoạt, chính xác, có quán tính.
+
+Hai thanh kiếm đảm nhận hai chức năng:
+
+Kiếm trước (FRONT SWORD):
+- Tấn công trực diện.
+- Đâm nhanh.
+- Kết thúc combo.
+- Tạo vệt chém gần camera.
+
+Kiếm sau (BACK SWORD):
+- Tạo đòn nối.
+- Chém vòng phía sau thân.
+- Đánh đổi hướng.
+- Tạo chiều sâu cho combo.
+
+Lưu ý:
+FRONT/BACK là độ sâu hình ảnh, không phải tay
+trái/tay phải giải phẫu. Cần khóa danh tính
+từng thanh kiếm trong toàn bộ animation.
+
+MỤC TIÊU COMBAT:
+
+- Combo cơ bản 5 đòn.
+- Mỗi đòn có silhouette và nhịp khác nhau.
+- Không phải 5 lần chém ngang giống nhau.
+- Có đâm, cắt chéo, xoay, đảo thân, kết liễu.
+- Có đòn trên không, dash attack, ground slam.
+- Có kỹ năng mở khóa phục vụ khám phá bản đồ.
+- Nâng cấp kỹ năng không bắt buộc vẽ lại toàn bộ.
+
+============================================================
+II. QUY ƯỚC CHUYỂN ĐỘNG 3D GIẢ LẬP
+============================================================
+
+HƯỚNG THÂN:
+
+E = nhìn phải.
+SE = chéo phải, thấy mặt trước.
+S = nhìn về camera.
+SW = chéo trái, thấy mặt trước.
+W = nhìn trái.
+NW = chéo trái, thấy lưng.
+N = nhìn ra sau.
+NE = chéo phải, thấy lưng.
+
+Mỗi frame có thể chứa:
+- bodyDirection
+- frontSwordPose
+- backSwordPose
+- weaponDepth
+- hitbox
+- VFX front/back
+- durationMs
+
+QUY TẮC QUAN TRỌNG:
+
+Không bắt PixelLab tự xoay 360° liên tục
+nếu làm biến dạng nhân vật.
+
+Dùng sprite 8 hướng đã có để làm key pose.
+Tạo thêm các tư thế tấn công cần thiết.
+
+Khi xoay thân:
+- Hai chân phải giữ đúng cấu trúc.
+- Không đảo tay cầm kiếm.
+- Không biến mất thanh kiếm thứ hai.
+- Không thay đổi chiều dài tóc.
+- Không tạo kiếm thứ ba.
+- Không đổi mặt nạ.
+
+Độ sâu vũ khí:
+BACK = phía sau thân.
+FRONT = phía trước thân.
+CROSS = chuyển từ sau ra trước hoặc ngược lại.
+
+VFX chia thành:
+VFX_BACK
+HERO
+VFX_FRONT
+
+Tỷ lệ sáng gợi ý:
+BACK: 35–55% alpha.
+FRONT: 85–100% alpha.
+
+Scale giả lập:
+BACK: 0.85–0.95.
+FRONT: 1.05–1.15.
+
+Chỉ scale VFX hoặc vũ khí độc lập.
+Không scale toàn bộ đầu và thân tùy tiện.
+
+============================================================
+III. COMBO CƠ BẢN 5 ĐÒN
+============================================================
+
+TỔNG QUAN:
+
+A1 — CROSS FANG
+Hai kiếm chém chéo tạo chữ X.
+
+A2 — TWIN PIERCE
+Đâm kép theo hai nhịp rất nhanh.
+
+A3 — HORIZON TURN
+Xoay thân, hai kiếm quét ngang theo chiều sâu.
+
+A4 — REVERSE MOON
+Lật người, chém ngược từ thấp lên cao.
+
+A5 — ECHO EXECUTION
+Đòn kết, hai kiếm giao nhau rồi bung ra.
+
+Các đòn có thể nối liên tục bằng một nút Attack.
+
+------------------------------------------------------------
+A1. CROSS FANG — SONG NHA CHỮ X
+------------------------------------------------------------
+
+Vai trò:
+Đòn mở combo, nhanh, dễ trúng.
+
+9 FRAME:
+
+F1 — 35ms — E
+Idle, hai kiếm hướng xuống.
+
+F2 — 35ms — E
+Hai tay mở sang hai bên.
+Kiếm trước thấp, kiếm sau cao.
+
+F3 — 40ms — SE
+Xoay vai về camera, hai kiếm lấy đà.
+
+F4 — 25ms — SE
+Kiếm trước chém chéo từ dưới-trái
+lên trên-phải.
+HIT 1.
+
+F5 — 25ms — S
+Kiếm sau chém chéo ngược từ trên-trái
+xuống dưới-phải.
+HIT 2.
+Hai đường chém tạo chữ X.
+
+F6 — 30ms — SE
+Hai kiếm vượt qua nhau, không va vào nhau.
+
+F7 — 35ms — E
+Thu hai tay về.
+
+F8 — 40ms — E
+Hạ kiếm.
+
+F9 — 45ms — E
+Gần Idle.
+
+Tổng: 310ms.
+
+Damage:
+HIT 1 = 5.
+HIT 2 = 6.
+Tổng = 11.
+
+Hitbox:
+Hai hình quạt chéo phía trước.
+Range: 55px.
+Góc quét mỗi kiếm: khoảng 75°.
+Chiều cao: -35 đến +35px quanh ngực.
+
+Lunge: +7px.
+Hitstop: 15ms mỗi hit.
+Screen shake: 0.8px.
+
+VFX:
+Hai vệt chém chéo cắt nhau.
+Kiếm trước tạo vệt sáng.
+Kiếm sau tạo vệt tối rồi chuyển sáng.
+
+VFX ellipse:
+Góc nghiêng +40° và -40°.
+Tỷ lệ trục ngắn/dài 0.35.
+
+------------------------------------------------------------
+A2. TWIN PIERCE — SONG KIẾM XUYÊN TÂM
+------------------------------------------------------------
+
+Vai trò:
+Đâm thẳng, tầm xa, xuyên giáp nhẹ.
+
+9 FRAME:
+
+F1 — 30ms — E
+Hai kiếm ở tư thế thấp.
+
+F2 — 35ms — E
+Rút hai tay về sát hông.
+
+F3 — 35ms — SE
+Thân nghiêng tới trước.
+
+F4 — 20ms — E
+Kiếm trước đâm thẳng.
+HIT 1.
+
+F5 — 20ms — E
+Kiếm sau đâm vượt lên.
+HIT 2.
+
+F6 — 30ms — E
+Hai kiếm giữ thẳng về trước.
+Thân vươn tới.
+
+F7 — 35ms — E
+Rút kiếm trước.
+
+F8 — 40ms — E
+Rút kiếm sau.
+
+F9 — 45ms — E
+Trở về guard.
+
+Tổng: 290ms.
+
+Damage:
+HIT 1 = 6.
+HIT 2 = 7.
+Tổng = 13.
+
+Hitbox:
+Hai capsule hitbox nằm ngang.
+Range: 72px.
+Height: 18px.
+Không gây damage phía sau.
+
+Lunge: +16px.
+Hitstop: 20ms.
+Shake: 1px.
+
+VFX:
+Hai đường đâm hẹp, kéo dài theo phối cảnh.
+Không dùng vệt chém tròn.
+
+Kiếm trước:
+Đường sáng rộng hơn, nằm trước nhân vật.
+
+Kiếm sau:
+Đường mảnh hơn, tối hơn, nằm sau.
+
+------------------------------------------------------------
+A3. HORIZON TURN — LUÂN KIẾM
+------------------------------------------------------------
+
+Vai trò:
+Đánh rộng, kiểm soát địch hai bên.
+
+9 FRAME:
+
+F1 — 35ms — E
+Hai kiếm thấp.
+
+F2 — 40ms — SE
+Vặn vai lấy đà.
+
+F3 — 35ms — S
+Hai tay dang ngang.
+Kiếm trước bắt đầu quét.
+
+F4 — 30ms — SW
+Thân xoay sang trái.
+Kiếm trước quét phía trước camera.
+HIT 1.
+
+F5 — 30ms — W
+Kiếm sau vòng ra sau lưng.
+HIT 2.
+
+F6 — 35ms — NW
+Thân tiếp tục xoay.
+
+F7 — 35ms — N
+Hai kiếm mở ngang, kết thúc vòng quét.
+HIT 3.
+
+F8 — 40ms — NE
+Xoay về phải.
+
+F9 — 45ms — E
+Về guard.
+
+Tổng: 325ms.
+
+Chuyển động:
+Hoàn thành một vòng quay 360° qua các
+khoảng hướng, với đoạn NE → E ở cuối.
+
+Damage:
+HIT 1 = 5.
+HIT 2 = 5.
+HIT 3 = 6.
+
+Hitbox:
+Hình vành khăn quanh nhân vật.
+Outer radius: 62px.
+Inner radius: 12px.
+Chiều cao vùng đánh: 45px.
+
+Mỗi mục tiêu nhận tối đa 2 hit thường
+và 1 hit cuối.
+
+Lunge: 0px.
+Hitstop: 12ms/hit.
+Shake: 0.5px.
+
+VFX:
+Hai elip ngang xoay quanh eo.
+Một vòng cao, một vòng thấp.
+Nửa trước sáng, nửa sau tối.
+
+Elip nghiêng 10–15°.
+Tỷ lệ trục ngắn/dài: 0.35.
+
+------------------------------------------------------------
+A4. REVERSE MOON — NGHỊCH NGUYỆT
+------------------------------------------------------------
+
+Vai trò:
+Đòn đảo thân, hất tung, chống quái trên cao.
+
+9 FRAME:
+
+F1 — 35ms — E
+Hai kiếm thấp.
+
+F2 — 40ms — SE
+Hạ trọng tâm, hai đầu gối gập nhẹ.
+
+F3 — 45ms — S
+Vặn người, đưa kiếm sau xuống thấp.
+
+F4 — 25ms — SE
+Bật thân lên, kiếm sau chém từ thấp
+lên cao qua trước mặt.
+HIT 1.
+
+F5 — 30ms — E
+Kiếm trước tiếp tục chém vòng ngược
+lên phía sau đầu.
+HIT 2.
+
+F6 — 35ms — NE
+Thân xoay ngược, tóc văng theo quán tính.
+
+F7 — 40ms — E
+Hạ kiếm, hai chân trở lại vị trí.
+
+F8 — 45ms — E
+Thu vai.
+
+F9 — 45ms — E
+Guard.
+
+Tổng: 340ms.
+
+Damage:
+HIT 1 = 7.
+HIT 2 = 8.
+
+Hitbox:
+Hình quạt từ phía trước-thấp lên trên.
+Range: 65px.
+Góc: -100° đến +20°.
+
+Vertical launch: -120px/s.
+Lunge: +5px.
+Hitstop: 30ms.
+Shake: 1.5px.
+
+VFX:
+Hai vệt trăng lưỡi liềm dựng đứng,
+quấn qua trước và sau đầu.
+
+Elip nghiêng -30°.
+Nửa sau nhỏ, nửa trước lớn.
+
+------------------------------------------------------------
+A5. ECHO EXECUTION — ĐOẠN VỌNG
+------------------------------------------------------------
+
+Vai trò:
+Đòn kết combo, mạnh, có knockback.
+
+9 FRAME:
+
+F1 — 40ms — E
+Hai kiếm thấp.
+
+F2 — 50ms — SE
+Thu hai kiếm chéo trước ngực.
+
+F3 — 55ms — S
+Hai kiếm tạo chữ X trước mặt nạ.
+Giữ một nhịp lấy đà.
+
+F4 — 30ms — SE
+Hai tay mở mạnh ra hai bên.
+Kiếm trước chém ngang.
+HIT 1.
+
+F5 — 35ms — E
+Kiếm sau chém ngược theo quỹ đạo elip.
+HIT 2.
+
+F6 — 40ms — E
+Hai lưỡi kiếm hoàn thành đường cắt.
+FINISHER HIT.
+
+F7 — 50ms — E
+Giữ pose sau đòn, tóc và áo tiếp tục chuyển động.
+
+F8 — 55ms — E
+Hạ hai kiếm.
+
+F9 — 60ms — E
+Về guard.
+
+Tổng: 415ms.
+
+Damage:
+HIT 1 = 8.
+HIT 2 = 8.
+FINISHER = 12.
+Tổng tối đa = 28.
+
+Hitbox:
+Hình quạt trước mặt.
+Range: 85px.
+Góc quét: khoảng 130°.
+Finisher có knockback 85px.
+
+Lunge: +20px.
+Hitstop finisher: 55ms.
+Shake: 2.5px.
+
+VFX:
+Hai vệt kiếm tạo vòng elip giao nhau.
+F6 phát nổ thành sóng kiếm ngắn.
+
+Elip nghiêng ±25°.
+Phần trước sáng trắng.
+Phần sau xanh đậm, đứt đoạn.
+
+============================================================
+IV. CÁC ĐÒN CHUYÊN BIỆT
+============================================================
+
+------------------------------------------------------------
+B1. AIR CROSS — SONG TRẢM TRÊN KHÔNG
+------------------------------------------------------------
+
+9 FRAME:
+
+F1-F2: Thu hai kiếm khi đang rơi.
+F3: Xoay thân E → SE.
+F4: Kiếm trước chém xuống.
+F5: Kiếm sau chém ngược lên.
+F6: Hai kiếm mở ra, kết thúc chữ X.
+F7-F9: Thu kiếm, tiếp tục rơi.
+
+Timing:
+35, 35, 35, 25, 25, 35, 40, 40, 45ms.
+Tổng: 315ms.
+
+Damage: 7 + 7.
+Active: F4-F5.
+Range: 58px.
+Hitbox: hình quạt phía trước.
+Lunge: +5px theo trục X.
+
+Không reset double jump mặc định.
+Không tự động pogo.
+
+VFX:
+Chữ X nghiêng phía trước, thu nhỏ dần.
+
+------------------------------------------------------------
+B2. DASH PIERCE — ẢNH XUYÊN
+------------------------------------------------------------
+
+9 FRAME:
+
+F1-F2: Thân nghiêng thấp, hai kiếm kéo sau.
+F3: Kiếm trước đưa thẳng ra.
+F4-F5: Dash đâm xuyên về phía trước.
+F6: Kiếm sau quét ngắn theo sau.
+F7-F9: Hãm đà và về guard.
+
+Timing:
+25, 25, 20, 20, 25, 30, 35, 40, 45ms.
+Tổng: 265ms.
+
+Damage: 14.
+Active: F4-F6.
+Hitbox: capsule dài 85px, cao 20px.
+Dash distance: 95px.
+Tốc độ di chuyển do code điều khiển.
+
+Chỉ gây một hit mỗi mục tiêu.
+Không xuyên tường đặc.
+
+VFX:
+Đường đâm kéo dài, hai vệt tốc độ
+trước và sau nhân vật.
+
+------------------------------------------------------------
+B3. FALLING TWINS — SONG KIẾM ĐỊA KÍCH
+------------------------------------------------------------
+
+9 FRAME:
+
+F1-F2: Trên không, hai kiếm nâng cao.
+F3: Thân chúi xuống.
+F4-F5: Lao xuống, hai kiếm hướng đất.
+F6: Hai kiếm đâm chạm đất.
+F7: Sóng xung kích tỏa ngang.
+F8-F9: Rút kiếm, đứng lên.
+
+Timing:
+35, 40, 30, 25, 25, 45, 45, 50, 55ms.
+Tổng pose danh nghĩa: 350ms.
+
+F4-F5 thực tế có thể giữ ở pose lao xuống
+cho đến khi chạm đất. Không phát F6 trước
+khi collision xác nhận tiếp đất.
+
+Damage:
+Direct hit = 16.
+Ground shockwave = 8.
+
+Hitbox:
+Direct: 30x55px.
+Shockwave: 70px mỗi bên.
+
+Hitstop: 50ms.
+Shake: 2px.
+
+VFX:
+Hai đường kiếm cắm xuống.
+Một elip nằm ngang lan trên mặt đất.
+Đá và bụi vỡ thành mảnh.
+
+============================================================
+V. HỆ THỐNG NÂNG CẤP 3 CẤP
+============================================================
+
+NGUYÊN TẮC:
+
+Level 1:
+Kỹ năng cơ bản.
+
+Level 2:
+Thay đổi hiệu quả chiến đấu hoặc thêm thuộc tính.
+
+Level 3:
+Thêm cơ chế đặc trưng, VFX lớn hơn.
+
+Không nên chỉ tăng damage ở mọi cấp.
+
+Mỗi cấp phải tạo cảm giác chơi khác đi.
+
+------------------------------------------------------------
+A1 — CROSS FANG
+------------------------------------------------------------
+
+LV1:
+2 nhát chéo X.
+Damage 5+6.
+
+LV2:
+Tăng range 55 → 65px.
+Vệt X rộng hơn.
+Damage 6+7.
+Không cần animation mới.
+
+LV3:
+Sau nhát thứ hai, tạo một ảnh kiếm X
+bay thêm 55px phía trước.
+Damage ảnh kiếm: 5.
+Dùng lại animation gốc.
+VFX mới: Echo X Projectile 6f.
+
+------------------------------------------------------------
+A2 — TWIN PIERCE
+------------------------------------------------------------
+
+LV1:
+Hai nhát đâm.
+Damage 6+7.
+
+LV2:
+Nhát thứ hai xuyên 20% giáp.
+Range 72 → 82px.
+Không cần animation mới.
+
+LV3:
+Nhát thứ hai xuyên tối đa 2 mục tiêu
+và tạo sóng đâm dài 100px.
+Damage sóng: 6.
+VFX mới: Piercing Wave 6f.
+Không cần animation thân mới.
+
+------------------------------------------------------------
+A3 — HORIZON TURN
+------------------------------------------------------------
+
+LV1:
+Xoay đánh quanh thân.
+Tối đa 3 hit.
+
+LV2:
+Radius 62 → 75px.
+Có thể di chuyển chậm 20px trong lúc xoay.
+VFX vòng kiếm lớn hơn.
+Không cần animation mới.
+
+LV3:
+Tạo một vòng kiếm tồn tại thêm 0.5s
+sau khi xoay xong.
+Damage: 5.
+VFX mới: Lingering Ring 8f.
+Không cần animation thân mới.
+
+------------------------------------------------------------
+A4 — REVERSE MOON
+------------------------------------------------------------
+
+LV1:
+Hai nhát chém hất lên.
+Damage 7+8.
+
+LV2:
+Tăng lực hất tung 25%.
+Thêm khả năng giữ mục tiêu trên không lâu hơn.
+Không cần animation mới.
+
+LV3:
+Nhát cuối tạo sóng kiếm đi lên 90px.
+Damage sóng: 7.
+VFX mới: Rising Echo 7f.
+Không cần animation thân mới.
+
+------------------------------------------------------------
+A5 — ECHO EXECUTION
+------------------------------------------------------------
+
+LV1:
+Đòn kết 3 hit.
+Tổng damage 28.
+
+LV2:
+Finisher gây thêm 20% damage lên
+mục tiêu đang bị hất tung.
+VFX mạnh hơn.
+Không cần animation mới.
+
+LV3:
+Finisher tạo ảnh ảo chém thêm một lần
+sau 120ms.
+Damage ảnh ảo: 10.
+VFX mới: Phantom Finisher 9f.
+Có thể dùng lại sprite A5 với alpha thấp,
+không cần animation nhân vật mới.
+
+------------------------------------------------------------
+B1 — AIR CROSS
+------------------------------------------------------------
+
+LV1:
+Hai nhát chéo trên không.
+
+LV2:
+Tăng vùng đánh 20%.
+Giảm nhẹ tốc độ rơi trong active frames.
+Không cần animation mới.
+
+LV3:
+Nếu cả hai nhát trúng cùng mục tiêu,
+được bật nhẹ lên một lần.
+Không reset double jump.
+VFX mới: Air Rebound 5f.
+
+------------------------------------------------------------
+B2 — DASH PIERCE
+------------------------------------------------------------
+
+LV1:
+Đâm trong khi dash.
+
+LV2:
+Tăng dash distance 95 → 115px.
+Có thể xuyên qua một số kẻ địch nhỏ.
+Không xuyên vật cản đặc.
+
+LV3:
+Để lại một ảnh kiếm gây 6 damage
+sau 100ms tại vị trí dash kết thúc.
+VFX mới: Dash Phantom 7f.
+Dùng lại animation.
+
+------------------------------------------------------------
+B3 — FALLING TWINS
+------------------------------------------------------------
+
+LV1:
+Đâm xuống đất, tạo shockwave.
+
+LV2:
+Shockwave range 70 → 90px mỗi bên.
+Phá được vật thể nứt cấp 1.
+
+LV3:
+Tạo hai sóng xung kích liên tiếp.
+Sóng thứ hai damage 6.
+Phá vật thể nứt cấp 2.
+VFX mới: Double Ground Ring 9f.
+Không cần animation thân mới.
+
+============================================================
+VI. KỸ NĂNG MỞ KHÓA METROIDVANIA
+============================================================
+
+------------------------------------------------------------
+S1 — PHI KIẾM HỒI ÂM
+ECHO BLADE THROW
+------------------------------------------------------------
+
+Chức năng:
+Ném một kiếm về trước, sau đó kiếm quay về.
+
+LV1:
+Range 150px.
+Damage 10.
+Cooldown 4s.
+
+LV2:
+Kiếm xuyên 2 mục tiêu.
+Range 190px.
+Damage 12.
+
+LV3:
+Kiếm có thể kích hoạt công tắc âm vang
+ở xa và đổi hướng tại điểm đánh dấu.
+Range 230px.
+
+KHÁM PHÁ:
+Mở cửa có công tắc nằm sau khe hẹp.
+Kích hoạt chuông nhỏ ở xa.
+
+Animation mới:
+Throw 9f.
+Catch 5f (có thể tái sử dụng 5 frame hồi).
+
+VFX:
+Spinning Blade Trail 8f.
+Return Trail 6f.
+Switch Impact 5f.
+
+Lưu ý:
+Khi một kiếm đang bay, phải quyết định rõ
+nhân vật chỉ cầm một kiếm hay có kiếm ảo.
+Đề xuất giữ đúng một kiếm trên tay cho đến
+khi vũ khí quay lại.
+
+------------------------------------------------------------
+S2 — ẢO ẢNH SONG HÀNH
+ECHO CLONE
+------------------------------------------------------------
+
+Chức năng:
+Tạo một ảnh ảo thực hiện lại đòn gần nhất.
+
+LV1:
+Ảnh ảo lặp lại 1 nhát.
+Damage bằng 40% đòn gốc.
+Cooldown 9s.
+
+LV2:
+Ảnh ảo lặp lại 2 nhát gần nhất.
+Damage 45%.
+Cooldown 8s.
+
+LV3:
+Ảnh ảo có thể đứng trên công tắc vang âm
+trong 2s sau khi kết thúc.
+Cooldown 7s.
+
+KHÁM PHÁ:
+Giải câu đố hai công tắc cần kích hoạt
+gần như đồng thời.
+
+Animation:
+Dùng lại animation tấn công đã có.
+Không cần vẽ lại nhân vật.
+
+VFX:
+Clone Spawn 6f.
+Clone Dissolve 6f.
+Echo Connection 5f.
+
+------------------------------------------------------------
+S3 — LỐC KIẾM THĂNG THIÊN
+ASCENDING BLADE CYCLONE
+------------------------------------------------------------
+
+Chức năng:
+Xoay hai kiếm tạo lốc nâng nhân vật lên.
+
+LV1:
+Thời gian 0.6s.
+Độ cao thêm 65px.
+Damage tối đa 12.
+Cooldown 7s.
+
+LV2:
+Thời gian 0.85s.
+Độ cao thêm 95px.
+Có thể đổi hướng nhẹ.
+
+LV3:
+Độ cao thêm 125px.
+Phá được mạng rễ yếu trên trần.
+Tạo vòng chém cuối 8 damage.
+
+KHÁM PHÁ:
+Tiếp cận nhánh cây cao.
+Vượt hố đứng.
+Phá rễ chắn trên trần.
+
+Animation mới:
+Cyclone 9f loop.
+Cyclone End 5f.
+
+VFX:
+Tornado Rings 9f loop.
+Final Wind Burst 7f.
+
+Cấu trúc lốc:
+- Elip ngang.
+- Đáy nhỏ, đỉnh lớn.
+- Nửa trước sáng.
+- Nửa sau tối.
+- Các vòng chuyển động lên trên.
+
+------------------------------------------------------------
+S4 — BƯỚC GIÓ
+WIND STEP
+------------------------------------------------------------
+
+Chức năng:
+Lướt nhanh theo hướng chọn.
+
+LV1:
+Dash ngang 100px.
+Cooldown 2s.
+
+LV2:
+Có thể dash trên không.
+Một lần trước khi chạm đất.
+
+LV3:
+Có thể xuyên qua màng im lặng đặc biệt
+và khe gió ngắn trong bản đồ.
+
+KHÁM PHÁ:
+Vượt khoảng trống.
+Đi xuyên màng chắn đặc biệt.
+Tiếp cận khu vực bí mật.
+
+Animation mới:
+Wind Step Start 4f.
+Wind Step Loop 4f.
+Wind Step End 4f.
+
+VFX:
+Wind Step Trail 6f.
+Afterimage 5f.
+Barrier Pass 6f.
+
+QUY TẮC METROIDVANIA:
+
+Nâng cấp combat không nên là cách duy nhất
+để mở đường đi mới.
+
+Các cổng kỹ năng phải được thiết kế rõ:
+- Phi kiếm mở công tắc từ xa.
+- Ảo ảnh giữ công tắc.
+- Lốc kiếm lên cao.
+- Bước gió vượt chướng ngại.
+
+Không khóa tiến trình chính sau một nâng cấp
+ngẫu nhiên không được đảm bảo nhận.
+
+============================================================
+VII. PROMPT PIXELLAB CUSTOM ANIMATION
+============================================================
+
+Dùng cho nhân vật nhìn ngang hướng RIGHT.
+
+QUY TẮC CHUNG:
+
+- 9 frames nếu không ghi khác.
+- Giữ đúng mặt nạ và tóc.
+- Hai kiếm thẳng, không cong.
+- Không tự tạo VFX.
+- Không thêm vũ khí.
+- Không thay đổi trang phục.
+- Giữ cùng kích thước nhân vật.
+
+------------------------------------------------------------
+P1 — CROSS FANG
+------------------------------------------------------------
+
+"9-frame dual short sword X-slash, side view
+facing RIGHT. F1 idle, swords down. F2-3
+wind up with arms apart, torso turns slightly
+toward camera. F4 first diagonal rising cut,
+F5 second opposite diagonal cut forming X.
+F6 follow-through, F7-9 recover. Two straight
+double-edged swords, one in each hand.
+Keep white mask, thin long white hair,
+two legs and boots. No extra limbs or swords.
+NO VFX, trails, sparks or particles."
+
+------------------------------------------------------------
+P2 — TWIN PIERCE
+------------------------------------------------------------
+
+"9-frame rapid double sword thrust, facing
+RIGHT. F1 idle. F2-3 pull both swords back
+near hips. F4 thrust front sword straight
+forward. F5 thrust second sword past first.
+F6 hold extended pose. F7-9 retract to idle.
+Both blades remain straight with simple
+crossguards. Keep exact chibi anatomy,
+white mask, thin long hair and two feet.
+No extra weapons. NO VFX or particles."
+
+------------------------------------------------------------
+P3 — HORIZON TURN
+------------------------------------------------------------
+
+"9-frame dual sword horizontal spinning attack.
+Start facing RIGHT. F2 wind up. F3-7 rotate
+torso around vertical axis, passing through
+front, left and back views. Both straight
+short swords extend outward at different
+heights. F8-9 finish rotation facing RIGHT.
+Keep two arms, two legs, two swords, white
+mask and thin long white hair consistent.
+No extra limbs or weapons. NO VFX,
+slash trails, rings or particles."
+
+------------------------------------------------------------
+P4 — REVERSE MOON
+------------------------------------------------------------
+
+"9-frame dual sword rising reversal slash,
+side view facing RIGHT. F1 idle. F2-3 bend
+knees and twist torso toward camera. F4
+rear sword cuts upward from low to high.
+F5 front sword follows with a second rising
+cut overhead. F6 strong body follow-through.
+F7-9 recover to standing guard. Preserve
+straight swords, white mask, thin white hair,
+two legs and boots. NO VFX, trails or particles."
+
+------------------------------------------------------------
+P5 — ECHO EXECUTION
+------------------------------------------------------------
+
+"9-frame heavy dual sword finisher, facing
+RIGHT. F1 idle. F2-3 cross both straight
+swords before chest in an X, strong windup.
+F4-5 violently sweep both blades outward
+in opposite directions. F6 final extended
+cut. F7 hold heavy follow-through. F8-9
+recover to guard. Keep chibi proportions,
+white mask, thin long white hair, two arms,
+two legs and exactly two swords.
+NO VFX, glow, trails or particles."
+
+------------------------------------------------------------
+P6 — AIR CROSS
+------------------------------------------------------------
+
+"9-frame airborne dual sword X-slash, facing
+RIGHT. Character stays suspended in air.
+F1-2 tuck arms, F3 wind up. F4 first
+downward diagonal slash, F5 opposite upward
+slash, F6 finish X-cut. F7-9 recover while
+falling. Legs remain naturally bent, boots
+visible. Keep both straight swords, white
+mask and thin long white hair. No extra
+limbs or weapons. NO VFX or particles."
+
+------------------------------------------------------------
+P7 — DASH PIERCE
+------------------------------------------------------------
+
+"9-frame forward dash double sword thrust,
+side view facing RIGHT. F1-2 lean forward
+low with both swords behind. F3 extend front
+sword. F4-5 fast forward thrust with body
+stretched horizontally. F6 second sword
+follows. F7-9 decelerate and recover.
+Both blades straight, one per hand.
+Keep mask, thin white hair, two legs
+and boots. NO VFX, speed lines or particles."
+
+------------------------------------------------------------
+P8 — FALLING TWINS
+------------------------------------------------------------
+
+"9-frame airborne double sword ground slam,
+facing RIGHT. F1-2 raise both swords overhead.
+F3 lean downward. F4-5 dive vertically with
+both straight swords pointing down. F6 land
+with both sword tips striking ground, knees
+bent. F7 hold impact. F8-9 stand and recover.
+Keep chibi anatomy, white mask, thin white
+hair, two legs and exactly two swords.
+NO VFX, debris, shockwaves or particles."
+
+------------------------------------------------------------
+P9 — ECHO BLADE THROW
+------------------------------------------------------------
+
+"9-frame short sword throw, side view facing
+RIGHT. F1 idle holding two straight swords.
+F2-3 draw one arm back. F4 throw ONE sword
+forward. F5-6 follow-through, other sword
+remains in hand. F7-9 settle into one-sword
+guard. Keep white mask, thin long white
+hair, two legs and boots. No extra swords,
+no weapon duplication. NO VFX or particles."
+
+------------------------------------------------------------
+P10 — ASCENDING BLADE CYCLONE
+------------------------------------------------------------
+
+"9-frame rising dual sword cyclone, facing
+RIGHT initially. F1 idle. F2 lower both
+swords. F3-7 rotate body around vertical
+axis while lifting both blades from waist
+to overhead. Show changing body orientation
+and clear sword positions. F8-9 finish
+upright. Keep white mask, thin long hair,
+two arms, two legs and exactly two straight
+short swords. NO VFX, wind rings or particles."
+
+------------------------------------------------------------
+P11 — WIND STEP
+------------------------------------------------------------
+
+"9-frame fast forward evasive dash, side
+view facing RIGHT. F1 neutral guard.
+F2 crouch slightly. F3-5 lean forward
+in a compact horizontal dash pose, both
+straight swords held safely behind.
+F6-7 decelerate, F8-9 return to guard.
+Hair streams backward as one thin shape.
+Keep mask, two arms, two legs and boots.
+NO VFX, afterimages, trails or particles."
+
+============================================================
+VIII. PROMPT CHATGPT — VFX SPRITE SHEETS
+============================================================
+
+QUY TẮC CHUNG:
+
+9 frames.
+5 ô hàng trên, 4 ô hàng dưới.
+Ô vuông bằng nhau.
+Nền #FF00FF.
+Đường grid xám mảnh.
+Chỉ VFX, không nhân vật.
+Không vẽ kiếm thật.
+Không text.
+Không blur.
+Không anti-aliasing.
+Không gradient mềm.
+
+Bảng màu:
+#FFFFFF
+#C8F5FF
+#78DCFF
+#3CA0F5
+#2864DC
+
+LƯU Ý KỸ THUẬT:
+
+Prompt dưới đây mô tả cả lớp trước và sau
+để tạo hình tham khảo.
+
+Để dùng trong game, nên tạo hai sheet riêng:
+- BACK: nửa xa camera.
+- FRONT: nửa gần camera.
+
+Không nên chỉ cắt đôi hình theo tọa độ Y,
+vì một đường chém có thể đổi độ sâu giữa
+đầu và cuối quỹ đạo.
+
+------------------------------------------------------------
+VFX 1 — CROSS FANG
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta #FF00FF background, grey cell borders.
+Dual sword X-slash in perspective. F1-2 empty.
+F3 tiny glints. F4 first rising diagonal
+crescent, F5 opposite diagonal crescent forms X.
+F6 bright crossing impact. F7 broken shards,
+F8-9 fading specks. Tilted elliptical arcs,
+dim broken rear halves, bright front halves.
+White and cyan hard pixels. VFX ONLY."
+
+------------------------------------------------------------
+VFX 2 — TWIN PIERCE
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Double sword thrust
+toward RIGHT. F1-2 empty, F3 small glints,
+F4 narrow straight piercing streak,
+F5 second longer parallel streak with
+perspective depth. F6 compressed impact
+burst. F7-8 streaks break into fragments.
+F9 fading specks. Front streak brighter
+and thicker, rear streak dimmer and smaller.
+Hard white-cyan pixels. VFX ONLY."
+
+------------------------------------------------------------
+VFX 3 — HORIZON TURN
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Dual sword horizontal
+spin with TWO flat perspective elliptical
+slash rings at different heights. F1 empty,
+F2 small arcs, F3-7 rotating broken rings,
+front halves thick white-cyan, rear halves
+thin dark-blue, rings shift position to show
+rotation. F8 rings break apart, F9 specks.
+Hard pixels, no blur. VFX ONLY."
+
+------------------------------------------------------------
+VFX 4 — REVERSE MOON
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Two upward reverse
+sword slashes. F1-2 empty, F3 tiny sparks,
+F4 first rising curved slash from low-right
+to high-left, F5 second larger rising arc
+crosses behind and over the first. F6 bright
+upper impact. F7-8 fragments, F9 specks.
+Perspective tilted ellipses, bright front,
+dim rear. White-cyan hard pixels. VFX ONLY."
+
+------------------------------------------------------------
+VFX 5 — ECHO EXECUTION
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Heavy dual sword finisher.
+F1-2 empty, F3 crossed glints, F4-5 two
+large intersecting perspective crescent arcs
+burst outward, F6 short powerful horizontal
+echo shockwave toward RIGHT. F7 shattered
+arc fragments, F8-9 fading specks.
+Bright white cores, cyan edges, dim rear
+halves and thick front halves. VFX ONLY."
+
+------------------------------------------------------------
+VFX 6 — AIR CROSS
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Airborne double sword
+X-cut. F1-2 empty, F3 small glints,
+F4 descending diagonal slash, F5 opposite
+ascending slash, F6 full bright X-shaped
+impact in front of an imaginary airborne
+fighter. F7 shards, F8-9 fading specks.
+Tilted perspective arcs with dim back halves
+and bright front halves. VFX ONLY."
+
+------------------------------------------------------------
+VFX 7 — DASH PIERCE
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Fast double sword dash
+thrust to RIGHT. F1-2 empty, F3 thin tip
+glint, F4-5 long narrow piercing streak
+with two parallel speed cuts, front line
+bright white, rear line dim cyan.
+F6 compact impact flash at right tip.
+F7-8 broken streak fragments, F9 specks.
+Crisp hard pixels. VFX ONLY."
+
+------------------------------------------------------------
+VFX 8 — FALLING TWINS
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Double sword ground slam.
+F1-3 empty, F4-5 two narrow downward streaks,
+F6 bright ground impact flash, F7 flat
+horizontal elliptical shockwave expanding
+left and right with a few angular debris
+shards, F8 ring becomes thin and broken,
+F9 fading specks. Bright front half,
+dim rear half. Hard white-cyan pixels.
+VFX ONLY."
+
+------------------------------------------------------------
+VFX 9 — ECHO BLADE THROW
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Returning thrown sword
+energy trail, NO sword sprite. F1-2 empty,
+F3 small launch glint, F4-5 narrow rotating
+spiral trail traveling RIGHT, F6 distant
+impact ring, F7-8 curved return streak
+traveling LEFT, F9 tiny catch spark.
+White-cyan chunky hard pixels, perspective
+depth, no blur. VFX ONLY."
+
+------------------------------------------------------------
+VFX 10 — ASCENDING BLADE CYCLONE
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Ascending dual sword
+tornado with stacked HORIZONTAL elliptical
+wind rings, narrow bottom and wide top.
+F1 empty, F2-3 small low rings, F4-5
+rings rise and widen, F6-7 full funnel
+with 4-5 rotating rings, bright front halves,
+dim broken back halves. F8 shards, F9 specks.
+White-cyan crisp pixels. VFX ONLY."
+
+------------------------------------------------------------
+VFX 11 — WIND STEP
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+magenta background. Fast horizontal wind dash
+to RIGHT. F1 empty, F2 compressed wind ring,
+F3-5 elongated horizontal wind streaks
+and narrow perspective ellipses, F6-7
+streaks stretch and fragment, F8-9
+fading specks. Bright leading edges,
+dim broken rear edges. White-cyan
+hard pixels, no blur. VFX ONLY."
+
+============================================================
+IX. QUẢN LÝ ANIMATION VÀ NÂNG CẤP
+============================================================
+
+ASSET GROUPS:
+
+hero_idle
+hero_run
+hero_jump
+hero_fall
+hero_dash
+hero_hurt
+hero_death
+
+hero_attack_1_x
+hero_attack_2_thrust
+hero_attack_3_spin
+hero_attack_4_rising
+hero_attack_5_finisher
+
+hero_air_cross
+hero_dash_pierce
+hero_ground_slam
+
+hero_throw
+hero_throw_catch
+hero_cyclone
+hero_cyclone_end
+hero_wind_step
+
+VFX:
+
+vfx_attack_1_back
+vfx_attack_1_front
+...
+vfx_attack_5_back
+vfx_attack_5_front
+
+vfx_air_cross_back/front
+vfx_dash_pierce_back/front
+vfx_ground_slam_back/front
+
+vfx_throw
+vfx_clone
+vfx_cyclone_back/front
+vfx_wind_step
+
+NÂNG CẤP:
+
+Không tạo animation nhân vật riêng cho mỗi level.
+
+Ví dụ:
+
+attack_1_level_1:
+body = hero_attack_1_x
+vfx = x_slash_small
+damage = 11
+
+attack_1_level_2:
+body = hero_attack_1_x
+vfx = x_slash_wide
+damage = 13
+
+attack_1_level_3:
+body = hero_attack_1_x
+vfx = x_slash_echo
+damage = 13
+projectileDamage = 5
+
+Một animation thân có thể phục vụ cả 3 cấp.
+
+============================================================
+X. COMBAT TIMING VÀ CANCEL
+============================================================
+
+Đề xuất input buffer: 120ms.
+
+Combo:
+A1 → A2 → A3 → A4 → A5.
+
+Cancel window:
+
+A1:
+Buffer từ F4.
+Chuyển A2 sau F6.
+
+A2:
+Buffer từ F4.
+Chuyển A3 sau F6.
+
+A3:
+Buffer từ F5.
+Chuyển A4 sau F7.
+
+A4:
+Buffer từ F4.
+Chuyển A5 sau F7.
+
+A5:
+Không cancel sang combo mới trong F4-F6.
+Dash cancel sau F7.
+
+Các thời điểm cancel tính theo timeline animation,
+không phụ thuộc số lần render.
+
+DASH CANCEL:
+
+- Cho phép sau khi active frame kết thúc.
+- Không cho cancel ngay trong anticipation.
+- Không reset damage registry khi cancel.
+- Không cho một hitbox tồn tại sau khi đã cancel.
+
+JUMP CANCEL:
+
+- A1/A2: có thể jump cancel sau active frames.
+- A3: chỉ sau F7.
+- A4: có thể chuyển sang Air Cross nếu nhân vật
+thực sự đang trên không.
+- A5: chỉ sau F7.
+
+HITSTOP:
+
+A1: 15ms.
+A2: 20ms.
+A3: 12ms/hit.
+A4: 30ms.
+A5: 55ms ở finisher.
+
+Không cộng dồn hitstop không giới hạn.
+
+Nếu 2 hit xảy ra cùng tick:
+Chỉ dùng hitstop lớn nhất.
+
+============================================================
+XI. CẤU TRÚC DATA CHO CLAUDE
+============================================================
+
+Mỗi đòn có:
+
+id
+name
+level
+animationId
+frameCount
+frameDurationsMs
+activeFrames
+damageEvents
+hitboxes
+lungeCurve
+knockback
+launchVelocity
+hitstopMs
+cameraShake
+cancelWindows
+vfxBackId
+vfxFrontId
+projectileId
+upgradeModifiers
+
+Mỗi damage event có:
+
+eventId
+startMs
+endMs
+damage
+hitboxId
+maxHitsPerTarget
+rehitDelayMs
+knockbackX
+knockbackY
+
+Quan trọng:
+
+- Hitbox không phụ thuộc ảnh VFX.
+- Damage không phụ thuộc số frame render.
+- VFX chỉ hiển thị.
+- Animation frame không trực tiếp gây damage.
+- Code dùng timeline để kích hoạt damage event.
+- Mỗi attack instance có hit registry riêng.
+- Các đòn multi-hit cần giới hạn hit rõ ràng.
+
+Với các đòn xoay:
+
+Không dùng một hitbox tròn quá lớn nếu
+vệt kiếm chỉ đang ở một phía.
+
+Tốt hơn:
+- Hitbox hình quạt di chuyển theo hướng kiếm.
+- Hoặc chia thành các cung theo thời gian.
+- Chỉ dùng vòng tròn toàn phần khi cơ chế
+thực sự gây damage 360°.
+
+============================================================
+XII. TỐI ƯU PIXELLAB
+============================================================
+
+VẤN ĐỀ 1:
+PixelLab tạo kiếm cong.
+
+GIẢI PHÁP:
+Luôn thêm:
+
+"Both weapons are STRAIGHT double-edged short
+swords with straight crossguards, never curved."
+
+VẤN ĐỀ 2:
+PixelLab tạo thêm tay hoặc kiếm.
+
+GIẢI PHÁP:
+
+"Exactly TWO arms, TWO hands, TWO legs,
+TWO feet and TWO swords. One sword per hand."
+
+VẤN ĐỀ 3:
+PixelLab thay đổi tóc.
+
+GIẢI PHÁP:
+
+"Long white hair is a THIN FLAT curtain
+down the back, only 2-3 simple shapes."
+
+VẤN ĐỀ 4:
+PixelLab không xoay 3D đúng.
+
+GIẢI PHÁP:
+Không yêu cầu full rotation ở tất cả animation.
+
+Chỉ dùng xoay thân rõ ở:
+- A3 Horizon Turn.
+- A4 Reverse Moon.
+- S3 Blade Cyclone.
+
+Các đòn còn lại chỉ cần:
+E → SE → S → SE → E
+hoặc:
+E → NE → E.
+
+VẤN ĐỀ 5:
+PixelLab tạo vệt chém dính vào nhân vật.
+
+GIẢI PHÁP:
+Thêm:
+"NO VFX, slash trails, energy arcs,
+particles, glow or motion streaks."
+
+============================================================
+XIII. QUY TRÌNH SẢN XUẤT
+============================================================
+
+PHASE 1 — CORE COMBAT:
+
+1. Khóa Idle/Run/Jump/Dash của nhân vật mới.
+2. Khóa A1 Cross Fang.
+3. Khóa A2 Twin Pierce.
+4. Khóa A3 Horizon Turn.
+5. Khóa A4 Reverse Moon.
+6. Khóa A5 Echo Execution.
+7. Ghép combo 5 đòn bằng code.
+8. Kiểm tra tốc độ thật trước khi thêm VFX.
+
+PHASE 2 — AIR COMBAT:
+
+9. Air Cross.
+10. Dash Pierce.
+11. Falling Twins.
+12. Tích hợp air cancel và dash cancel.
+
+PHASE 3 — VFX DEPTH:
+
+13. VFX back/front cho A1-A5.
+14. VFX air/dash/ground.
+15. Hitstop và camera shake.
+16. Kiểm tra phối cảnh khi xoay thân.
+
+PHASE 4 — PROGRESSION:
+
+17. Hệ thống upgrade level 1-3.
+18. Echo Blade Throw.
+19. Echo Clone.
+20. Ascending Blade Cyclone.
+21. Wind Step.
+22. Các cổng khám phá tương ứng.
+
+============================================================
+XIV. TIÊU CHÍ NGHIỆM THU
+============================================================
+
+ANIMATION:
+
+[ ] Mặt nạ không biến dạng.
+[ ] Tóc trắng giữ đúng chiều dài.
+[ ] Hai kiếm luôn thẳng.
+[ ] Không xuất hiện kiếm thứ ba.
+[ ] Không xuất hiện tay/chân thừa.
+[ ] Hai chân chuyển động hợp lý.
+[ ] Kiếm không xuyên thân sai phối cảnh.
+[ ] Có anticipation và follow-through.
+[ ] Mỗi đòn có silhouette riêng.
+[ ] Combo nối mượt ở tốc độ thật.
+
+VFX:
+
+[ ] Không vẽ dính vào nhân vật.
+[ ] Có lớp sau và lớp trước.
+[ ] Nửa sau tối, nửa trước sáng.
+[ ] Vệt kiếm bám đúng quỹ đạo.
+[ ] Không biến mọi đòn thành vòng tròn giống nhau.
+[ ] Không vượt ranh giới sprite cell.
+[ ] Không blur hoặc anti-aliasing.
+[ ] Không làm che hoàn toàn nhân vật.
+
+GAMEPLAY:
+
+[ ] Hitbox khớp animation.
+[ ] Multi-hit không gây damage vô hạn.
+[ ] Dash không xuyên tường.
+[ ] Cancel không bỏ qua active frames trái thiết kế.
+[ ] Hitstop chỉ xảy ra khi trúng.
+[ ] Nâng cấp không làm mất animation cũ.
+[ ] Các kỹ năng khám phá có ứng dụng thực tế.
+[ ] Combat ổn định trên iPhone 60 FPS.
+
+============================================================
+XV. KHUYẾN NGHỊ CUỐI
+============================================================
+
+Không nên sản xuất toàn bộ 15-20 animation
+cùng lúc.
+
+Nên làm một vertical slice trước:
+
+A1 — Chém X.
+A2 — Đâm kép.
+A3 — Xoay ngang.
+A5 — Đòn kết.
+
+Bốn đòn này đủ để kiểm tra:
+- Tốc độ song kiếm.
+- Phối cảnh 3D giả lập.
+- Hai lớp VFX.
+- Combo cancel.
+- Cảm giác trọng lượng.
+- Hiệu suất Canvas.
+
+Sau khi đạt chất lượng mới mở rộng A4,
+air combat và kỹ năng nâng cấp.
+
+Đặc biệt:
+
+A1 phải nhanh.
+A2 phải sắc và thẳng.
+A3 phải có chiều sâu rõ.
+A4 phải tạo lực hất tung.
+A5 phải tạo cảm giác kết liễu.
+
+Nếu cả 5 đòn đều dùng vệt chém lớn và
+camera shake mạnh, người chơi sẽ không
+cảm nhận được sự khác biệt.
+
+Giữ sự tương phản:
+- Nhát nhanh: VFX mảnh.
+- Nhát đâm: VFX thẳng.
+- Nhát xoay: VFX elip ngang.
+- Nhát hất: VFX dựng đứng.
+- Nhát kết: VFX lớn, hitstop mạnh.
+
+Đây là nền tảng để nhân vật song kiếm có
+combat nhanh kiểu Dead Cells nhưng vẫn có
+bản sắc riêng của Tiếng Vọng Cuối Cùng.
+
+END — DUAL SWORD COMBAT SYSTEM V1.0
