@@ -1,0 +1,59 @@
+COMBO SONG KIẾM 360 ĐỘ — tư vấn ChatGPT (01/11/2026), bản tóm lược, prompt giữ nguyên văn
+Thân sprite 112px, 60 FPS. Nhịp ghi dạng startup/active/recovery (frame).
+
+1. NGUYÊN TẮC
+- "360 độ" = hướng ngắm trong mặt phẳng màn hình. 8 hướng: ngang 0°, chéo lên -45°, lên -90°, chéo xuống +45°, xuống +90°; bên trái = lật ngang.
+- Chốt hướng lúc bắt đầu nhát (hoặc trong 2 frame đầu). Không nhập hướng = đánh ngang. Trục dọc > 0,65 thì ưu tiên lên/xuống; trễ 10–15° chống rung.
+- 3D giả: thứ tự vẽ vệt sau → kiếm/tay xa → thân → kiếm/tay gần → vệt trước. Vệt chém là elip nghiêng.
+- KHÔNG xoay nguyên hình nhân vật 45°/90°; chỉ xoay lưỡi kiếm, vệt FX, hitbox; tay phải có tư thế đúng.
+- Mỗi đòn 5 tư thế chính: P1 thủ, P2 lấy đà, P3 bắt đầu cắt, P4 điểm lực, P5 thu đòn. Claude thêm khung trung gian.
+- Hitstop 2–4f (thường), 5–7f (đòn kết). Cho nối đòn ở nửa sau recovery.
+
+2. COMBO MẶT ĐẤT
+G1 Song Nha — chém ngang. 4/4/7. Hitbox -25°..+25°, tầm 44–58px.
+G2 Phản Nguyệt — chém chéo lên. 5/4/8. Hitbox -70°..-20°, tầm 48–62px, hất nhẹ.
+G3 Lạc Diệp — chém chéo xuống. 5/4/8. Hitbox +20°..+70°, tầm 46–60px.
+G4 Giao Ấn — cắt chữ X (kết combo). 7/6/12, hai cửa sổ 3f+3f. Hitbox lần 1 +20°..+65°, lần 2 -65°..-20°.
+G5 Trảm Hoàn (tùy chọn) — vòng elip nghiêng trước/sau. 8/7/15. Hai cung 120–160°.
+Biến thể hướng: ngang dùng G1/G4; chéo lên dùng G2; chéo xuống dùng G3.
+U1 Thiên Nha — thẳng lên. 6/4/9. Hitbox -110°..-70°.
+D1 Địa Khắc — thẳng xuống khi đứng đất (cắt trước chân). 6/4/10. Hitbox +65°..+115°, tầm 28–44px.
+Đổi hướng giữa chuỗi: chỉ đổi biến thể của nhát sau; số nhát vẫn 1→2→3→4.
+
+3. COMBO TRÊN KHÔNG
+A1 Không Liệt (ngang) 4/4/7 · A2 Phi Thiên (chéo lên) 5/4/9 · A3 Lưu Tinh (chéo xuống) 5/4/9
+A4 Trụy Song — giữ xuống + đánh: lao chúi xuống, hai kiếm chữ V. Startup 7, active 4 + tối đa 3 lúc chạm đất, recovery 12. Có thể bật lên (pogo) khi trúng, tối đa 1 lần mỗi lần rời đất.
+Trên không tối đa A1→A2→A3, A4 là nhánh kết.
+
+4. GIỮ NÚT / KẾT
+C1 Song Nguyệt Tụ — giữ đánh >~18f, tích tối đa 45f, thả ra hai nhát X lớn theo hướng ngắm. 5/3+3/16, ±45°, tầm 65–78px.
+C2 Vạn Ảnh Giao — lao ngắn 20–32px rồi cắt X. 8/6/18, ±55°, tầm 65–82px, hitstop 6f.
+
+5. CẦN VẼ BAO NHIÊU
+MVP: 7 bộ × 5 tư thế = 35 hình gốc, đều quay phải (bên trái = lật):
+(1) ngang G1/A1 (2) chéo lên G2/A2 (3) chéo xuống G3/A3 (4) thẳng lên U1 (5) thẳng xuống D1 (6) X G4/C2 (7) chúi xuống A4.
+Cộng khoảng 10–20 lần chỉnh tay/chân/tóc. G5 và C1 dùng lại bộ X + tư thế nén lực.
+
+6. HITBOX / DỮ LIỆU
+Hitbox là cung hình vành khăn (bán kính trong 14–22px) hoặc capsule quét theo mũi kiếm, kiểm tra quét giữa 2 frame. Không lấy khung hình FX làm hitbox.
+Dữ liệu mỗi đòn: id, comboIndex, aimSector, startup, activeWindows, recovery, cancelFrom, rootMotion, hitArcStart, hitArcEnd, innerRadius, outerRadius, knockback, hitstop, nearSwordSocket, farSwordSocket, fxBack, fxFront.
+QA: tay luôn nắm chuôi; kiếm xa không nhảy ra trước; mặt nạ không đổi cỡ; không thêm tay chân; chân không trượt; xem ở 1× và GIF tốc độ thật.
+
+7. NÂNG CẤP 3 CẤP
+I Song Nhận: G1→G3, A1/A3, ngang + 2 chéo, C1 cấp 1.
+II Giao Nguyệt: mở G4 X, U1, D1, A2, A4, C1 cấp 2, X gây choáng nhẹ, đủ 8 hướng.
+III Vạn Ảnh: mở C2, G5, nối G3→A4 khi bật nhảy, pogo có giới hạn, thưởng nhỏ khi 2 hit X cùng trúng. Tăng lựa chọn, không chỉ tăng sát thương.
+
+8. PROMPT VẼ TƯ THẾ (giữ nguyên văn)
+CHUNG (dán trước mọi đòn):
+Use the EXACT approved 112px-tall East-facing masked dual-sword hero master. Preserve white mask/cyan slits, tied white hair, charcoal short tunic, brown belt, wrapped arms/boots, cyan runes, proportions and palette. TRUE pixel art, 1px dark outline at native resolution, nearest-neighbor only. Five distinct key poses left-to-right, equal cells, shared foot baseline, flat #FF00FF background. Near sword and hand clearly IN FRONT of torso; far sword and hand BEHIND torso. Each hand grips one short straight sword. No FX, trails, glow, blur, text or extra limbs. Keep all body parts readable.
+G1 NGANG: Five poses: low dual guard; near arm winds backward; near sword cuts horizontally forward; far sword follows from behind the torso; both swords recover low. Strong hip rotation, planted feet, clear near/far overlap.
+G2 CHÉO LÊN: Five poses: low guard; crouched backward windup; near sword rises diagonally from low-back to high-front; far sword follows upward behind torso; high recovery. Aim 45 degrees upward.
+G3 CHÉO XUỐNG: Five poses: middle guard; near sword raised behind shoulder; near sword cuts diagonally high-back to low-front; far sword follows downward; low forward recovery. Aim 45 degrees downward.
+U1 THẲNG LÊN: Five poses: both swords low; knees compress; near sword rises vertically; far sword follows upward behind torso; both blades finish above head. Keep mask and shoulders unobstructed.
+D1 THẲNG XUỐNG: Five poses: middle guard; both hilts lift; knees bend; both swords cut downward toward ground just in front of feet; withdraw to low guard. No ground impact FX.
+G4 / C2 X: Five poses: wide dual guard; near sword high-back and far sword low-back; near sword cuts diagonally downward; far sword crosses diagonally upward to form a readable X; both arms extend forward. Different depth layers, no sword crossing through the face.
+A4 CHÚI XUỐNG: Five airborne poses: tucked midair guard; both swords raised; body pitches diagonally down; two blades strike downward in a V; crouched landing. Both feet remain anatomically readable, no effects or ground artwork.
+
+9. THỨ TỰ LÀM
+Không vẽ ngay 35 hình. Làm G1, G2, G3 trước (15 hình), kiểm tra GIF, lớp kiếm, hướng hitbox. Sau đó G4 X (đã có bản nháp 5 tư thế), U1/D1, A4. Đủ 7 bộ mới làm tích lực/kết. Mọi con số là điểm khởi đầu để chơi thử, không phải chuẩn cố định.
