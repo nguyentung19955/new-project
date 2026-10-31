@@ -29,3 +29,4 @@ Bản E dáng anh hùng toàn đen (31/10): id d7b0d393-b8b7-4a95-90ab-d43d6e2b4
 3 âm thoa 465df48a-6025-4716-9709-03ab0c875892
 4 mặt nạ 19d6c120-eb93-42c7-b8b3-f07be691a1da
 5 toàn thân sóng 1f1cae38-6f33-45db-861c-6afe69b3d7fb
+BẢN CHỐT (31/10): mặt nạ sóng âm, mặt nạ trắng, thân đen không chân – id 86d1a526-4cbb-4bb5-bb0c-f097deb04b0b
