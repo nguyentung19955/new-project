@@ -1,0 +1,10 @@
+LỚP TRƯỚC / SAU CỦA VỆT CHÉM G1–G4 — tư vấn ChatGPT (01/11/2026), tóm lược
+Thứ tự vẽ: vệt SAU → kiếm/tay xa → thân → kiếm/tay gần → vệt TRƯỚC → tia trúng. Mỗi vệt tách 2 mặt nạ trước/sau trong CHÍNH khung đó.
+Vệt bám quỹ đạo mũi kiếm; đầu vệt đi trước mũi kiếm 2–4px (đòn kết 4–5px). Không hiện vệt trước khi kiếm chuyển động.
+Vệt sau: tối hơn ~25–35%, bỏ lõi trắng, chỉ dùng #17628A + #18BFE6. Vệt trước: #18BFE6 + #8CEEFF, lõi #F3FFFF chỉ ở đỉnh lực.
+Vệt kiếm xa mặc định ở SAU, bị thân che; chỉ đoạn thật sự vòng ra trước mới là TRƯỚC; nhỏ/kém sáng hơn 20–30%.
+G1 ngang: F1 toàn bộ sau; từ F2 điểm chuyển ~40–50% chiều dài cung tính từ đuôi (gần mép trước ngực). Đầu vệt trước mũi kiếm 2–3px.
+G2 chéo lên: F1 sau thấp sau hông; điểm chuyển ~45–55% cung (ngang ngực/vai trước). Đầu vệt trước mũi kiếm 3–4px.
+G3 chéo xuống: F1 sau, cao sau vai; điểm chuyển ~35–45% cung từ đuôi cao-trái. Đầu vệt trước mũi kiếm 3–4px.
+G4 chữ X: mỗi cung chuyển lớp khi đi qua mép trước thân (~40–55% cung); điểm giao X ở TRƯỚC, chớp trắng 1 frame; cung kiếm xa ưu tiên SAU, tối hơn ~30%. Đầu vệt trước mũi kiếm 4–5px.
+Kiểm tra: vệt không xuyên mặt nạ, tay gần luôn rõ, vệt xa không bất ngờ nổi trước ngực; không đổi lớp cả vệt đột ngột giữa các khung.

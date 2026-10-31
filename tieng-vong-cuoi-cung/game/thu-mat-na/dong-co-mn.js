@@ -12,7 +12,7 @@ const DongCoMN = (() => {
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
     dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
-    maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:14, choThem:8};
+    maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
   let TL = 2, CO = 1;   // CO = hệ số cỡ riêng của nhân vật chính (nhan-vat.json "co")
 
