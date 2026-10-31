@@ -4,9 +4,9 @@ Mỗi đòn có **3 cấp**. Mới có đòn chỉ ở cấp 1: hiệu ứng nh�
 
 | Cấp | Tên | Hiệu ứng hình | Tầm | Sát thương |
 | --- | --- | --- | --- | --- |
-| 1 | Sơ Âm | 50% kích thước, chỉ xanh đậm, không lõi trắng | 50% | ×1.0 |
-| 2 | Vang Âm | 75% kích thước, xanh sáng | 75% | ×1.3 |
-| 3 | Cộng Hưởng | 100%, lõi trắng sáng, thêm hiệu ứng phụ | 100% | ×1.7 |
+| 1 | Sơ Âm | 50% kích thước, màu xanh ngọc, không lõi trắng | 50% | ×1.0 |
+| 2 | Vang Âm | 75% kích thước, xanh lơ sáng | 75% | ×1.3 |
+| 3 | Cộng Hưởng | 100%, lõi trắng viền tím, thêm hiệu ứng phụ | 100% | ×1.7 |
 
 ## Điều kiện mở từng đòn
 
@@ -22,4 +22,4 @@ Mỗi đòn có **3 cấp**. Mới có đòn chỉ ở cấp 1: hiệu ứng nh�
 - Không bỏ qua cấp: phải có cấp 2 mới lên cấp 3.
 - Cấp hiện tại hiện bằng số vạch sáng trên khe mặt nạ (1/2/3 vạch) khi đánh.
 - Hình hiệu ứng từng cấp nằm ở `art/mat-na/fx-cap/<đòn>/cap1|cap2|cap3/` (xNN = chỉ hiệu ứng, cNN = ghép với nhân vật).
-- Cấp 1 và 2 được tạo tự động từ hình cấp 3: thu nhỏ quanh điểm phát (tay, mặt đất) và hạ màu.
+- Cấp 1 và 2 được tạo tự động từ hình cấp 3: thu nhỏ quanh điểm phát (tay, mặt đất); mỗi cấp một bảng màu riêng (xanh ngọc / xanh lơ / trắng tím).
