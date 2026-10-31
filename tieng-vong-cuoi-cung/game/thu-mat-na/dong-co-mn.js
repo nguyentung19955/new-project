@@ -228,13 +228,15 @@ const DongCoMN = (() => {
     }
     // Nhảy: đất / coyote → nhảy · vách → nhảy vách · trên không còn lượt → nhảy đôi
     if (pl.jumpBuf > 0 && pl.hurtT <= 10){
+      if ((pl.onGround || pl.coyote > 0) && pl.atk){ pl.atk = ''; CHO.co = false; pl.comboHan = 0; }   // nhảy huỷ đòn đang chém -> hiện dáng nhảy
       if (pl.onGround || pl.coyote > 0){ pl.vy = -jumpVel; pl.jumping = true; pl.coyote = 0; pl.jumpBuf = 0; pl.onGround = false; pl.djCo = true; SUKIEN.push({k:'nhay'}); }
       else if (pl.wallDir || pl.wallCoy > 0){
         const wd = pl.wallDir || pl.lastWall, back = (dir === wd);
         pl.vy = -jumpVel * P.wallJumpMul; pl.vx = -wd * P.wallJumpVx * (back ? P.wallBackMul : 1); pl.face = -wd; pl.wallLock = P.wallJumpLock;
         pl.wjBack = wd; pl.wallCoy = 0; pl.wallStickT = 0; pl.jumping = true; pl.jumpBuf = 0; pl.airDash = false; pl.djCo = true;
         sliding = false; SUKIEN.push({k:'nhay-vach', wd});
-      } else if (pl.djCo && !pl.atk){
+      } else if (pl.djCo){
+        if (pl.atk){ pl.atk = ''; CHO.co = false; pl.comboHan = 0; }   // nhảy đôi cũng huỷ chém trên không
         pl.djCo = false; pl.vy = -jumpVel * P.djMul; pl.jumping = true; pl.jumpBuf = 0; pl.djT = 0; SUKIEN.push({k:'nhay-doi'});
       }
     }
