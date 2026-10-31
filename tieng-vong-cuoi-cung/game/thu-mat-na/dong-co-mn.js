@@ -244,7 +244,7 @@ const DongCoMN = (() => {
     if (pl.vy >= 0) pl.jumping = false;
     // Lượn: giữ Nhảy khi đang rơi
     if (pl.onGround || sliding) pl.luonT = 0;
-    if (!pl.onGround && !sliding && pl.vy > 0 && IN.j && !pl.atk && pl.hurtT <= 0 && (pl.luonT || 0) < P.glideMax){ pl.vy = Math.min(pl.vy, P.glideFall); pl.luon = true; pl.luonT = (pl.luonT || 0) + 1; }
+    if (P.coLuon && !pl.onGround && !sliding && pl.vy > 0 && IN.j && !pl.atk && pl.hurtT <= 0 && (pl.luonT || 0) < P.glideMax){ pl.vy = Math.min(pl.vy, P.glideFall); pl.luon = true; pl.luonT = (pl.luonT || 0) + 1; }
 
     const xTruoc = pl.x; if (moveX(pl, pl.vx, false)) pl.vx = 0; pl.dxT = pl.x - xTruoc;
     const vyWas = pl.vy, ry = moveY(pl, pl.vy);
