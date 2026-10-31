@@ -23,3 +23,9 @@ Vọng Tử đầu lâu (31/10): bản A id b316c6ff-142b-4573-89ce-5e216f37cb1b
 Bản C bóng ma không chân (31/10): id 4f98c414-27c2-40f6-a69d-877659e1b264
 Bản D bóng ma toàn đen (31/10): id c22036ae-070b-4758-8949-859ae0be962c
 Bản E dáng anh hùng toàn đen (31/10): id d7b0d393-b8b7-4a95-90ab-d43d6e2b49c2
+5 hướng năng lượng âm thanh (Custom Pro Flash, không chân, 31/10):
+1 chuông 17c01d3f-6470-48f8-b929-3835ff189b89
+2 quả cầu 767dab18-1ce5-4d74-9a57-bb58b8374bcc
+3 âm thoa 465df48a-6025-4716-9709-03ab0c875892
+4 mặt nạ 19d6c120-eb93-42c7-b8b3-f07be691a1da
+5 toàn thân sóng 1f1cae38-6f33-45db-861c-6afe69b3d7fb
