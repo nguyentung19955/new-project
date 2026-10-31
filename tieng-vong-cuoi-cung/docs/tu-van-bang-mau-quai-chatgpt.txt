@@ -1,0 +1,36 @@
+TƯ VẤN MÀU SẮC – METROIDVANIA MẶT NẠ TRẮNG (ChatGPT, 31/10/2026)
+Tham chiếu: ảnh so sánh nhân vật chính + 5 quái vùng đầu.
+
+KẾT LUẬN THIẾT KẾ
+Giữ xanh lơ/cyan làm ngôn ngữ thị giác riêng của nhân vật chính. Tách quái khỏi nhân vật bằng vật liệu gỗ–đồng–tro, điểm sáng hổ phách; tách đòn đánh địch bằng vàng hổ phách sáng. Boss/tinh anh dùng đỏ gạch/tím tro có kiểm soát. Không đổi tất cả quái thành một màu đồng nhất: cần một hệ chung và một điểm nhận dạng riêng cho từng loài.
+
+1. BẢNG MÀU (MỖI NHÓM 5 MÀU)
+A. Nhân vật chính – Mặt Nạ Trắng: #111820 thân tối, #303B48 khối thân, #F2F5F0 mặt nạ, #31D9E8 vân cyan, #C8FAFF lõi sáng đòn. Cyan chỉ ở vân và VFX.
+B. Quái thường – gỗ, đồng cũ, tro: #232126 viền, #49403B bóng thân, #77614B mặt sáng vật liệu, #B39161 mép sáng, #E6B65C mắt/khe/đèn báo. Thay phần lớn vân cyan trên quái bằng #B39161 hoặc #E6B65C; mỗi quái 1–3 cụm sáng.
+C. Tinh anh / boss – chuông tàn, lời nguyền: #211C2B, #514054, #88616A, #C46B54 vết nứt đỏ gạch, #FFD28A lõi báo nguy.
+D. Hiệu ứng tấn công quái – hổ phách nguy hiểm: #694236 viền, #B96A39 đuôi, #F0A64A dải chính, #FFD47C sát hitbox, #FFF2C5 tâm va chạm. Không dùng cyan cho đòn quái.
+
+2. VÂN / ĐIỂM SÁNG TRÊN THÂN QUÁI
+- Vân xanh → #B39161 (đồng cũ) hoặc #77614B (gỗ sáng), giảm bão hòa.
+- Mắt, lõi, khe báo đòn: #E6B65C; sắp đánh chuyển ngắn sang #FFD47C.
+- Quái siêu nhiên có thể dùng tím tro #88616A / đỏ gạch #C46B54, không mượn cyan của hero.
+
+3. LÀM QUÁI NỔI TRÊN NỀN TỐI
+- Viền đen 1px; phía chìm vào nền thêm viền phản sáng 1px #77614B/#B39161 ở vai, đầu, chân, cánh (không viền đều 360°).
+- Nền sau quái ít tương phản hơn quái; bóng tiếp xúc ngắn; quái bay có bóng mờ dưới đất.
+- Báo đòn: mắt/lõi/đèn sáng hổ phách 100–180 ms trước hitbox + 1–2 frame nén thân. Vệt đòn #F0A64A, kết thúc #FFF2C5 1–2 frame. VFX khớp hitbox thật.
+
+4. CHỈNH RIÊNG 5 QUÁI
+- Phu Đèn Lạc: áo #49403B, mép #77614B, bỏ vân cyan; lửa đèn #E6B65C, lúc vung #FFD47C; vòng quét #F0A64A, lõi #FFF2C5.
+- Bọ Vỏ Mộc: mai #49403B, phiến #77614B, mép #B39161; khe mai 1–2 vệt #E6B65C; trước húc hạ đầu, nén chân, khe mai sáng; vệt bụi nâu cam ngắn.
+- Dơi Rễ: cánh #49403B, gân #77614B, mắt #E6B65C; bỏ đường cyan; vệt tốc độ phía sau, tia cào phía trước, VFX mảnh.
+- Nấm Thở: mũ #514054/#49403B, lỗ #88616A/#77614B, thân #B39161 xám ấm; khe thở #E6B65C; bào tử #B96A39, #F0A64A, vài hạt #FFD47C, dạng cụm rời có khoảng trống.
+- Người Gác Câm: giáp #49403B/#77614B, mép #B39161, khe mặt/lõi #C46B54; mảng sáng lớn ít chi tiết; báo đòn bằng nâng tay, xoay vai, nén trọng tâm, khe mặt đỏ gạch sáng lên.
+
+5. QUY TẮC
+- Ưu tiên thị giác: mặt nạ trắng hero > đòn đang nguy hiểm > hình dáng quái > môi trường.
+- Quái thường: ~70% tối/trung gian, 25% sáng vật liệu, ≤5% phát quang.
+- Đòn người chơi lạnh, đòn địch ấm; hình dạng đòn cũng khác (hero: lưỡi/cung sóng sạch; địch: lửa, bụi, bào tử, vuốt, va chạm).
+- Kiểm tra trên 3 nền thật ở cỡ hiển thị điện thoại.
+
+KHUYẾN NGHỊ CHỐT: hero trắng–cyan lạnh, quái thường nâu/đồng–hổ phách ấm, tinh anh/boss tím tro–đỏ gạch, đòn địch vàng hổ phách.

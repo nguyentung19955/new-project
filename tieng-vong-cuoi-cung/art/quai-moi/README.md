@@ -1,6 +1,6 @@
 # Bộ quái đầu tiên (cùng phong cách Mặt Nạ Trắng)
 
-PixelLab vẽ (custom, Pro Flash, sidescroller, quay mặt sang trái). ChatGPT vẽ hiệu ứng đòn, Claude tách + đổi màu sang xanh ngọc lục (khác màu xanh lơ của nhân vật chính).
+PixelLab vẽ (custom, Pro Flash, sidescroller, quay mặt sang trái). ChatGPT vẽ hiệu ứng đòn, Claude tách. Bảng màu theo tư vấn ChatGPT (`docs/tu-van-bang-mau-quai-chatgpt.txt`): vân trên thân quái đổi từ xanh sang đồng cũ–hổ phách (#77614B/#B39161/#E6B65C), tinh anh Người Gác Câm đỏ gạch (#88616A/#C46B54/#FFD28A), đòn quái vàng hổ phách (#FFF2C5…#694236). Nhân vật chính giữ riêng xanh lơ.
 
 | Thư mục | Quái | PixelLab id | Khung |
 |---|---|---|---|
