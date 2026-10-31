@@ -1,0 +1,37 @@
+SAMURAI – BAO CAO QA ANIMATION (tom tat tu ChatGPT, 31/10/2026)
+
+KET LUAN: thiet ke va y tuong combo tot, chua nen khoa. 5 van de chinh:
+1. Thieu nhat quan hinh the: mu, dau, khan, than, chieu dai chan doi giua cac frame, nhat la don 2 va don 3.
+2. Thieu lien tuc: chuyen tu rut kiem sang chem, tu chem hat len sang nhay bo xuong qua nhanh.
+3. VFX chua thong nhat: do day/do sang/cach vo cua vet chem thay doi, doi khi lan at nhan vat.
+4. Nhip chua ro: lay da / ra don / giu don / hoi phuc chua phan biet du manh.
+5. Chua chuan hoa sprite: kich thuoc, vi tri chan, diem neo, bang mau, quy tac ve.
+
+TIMING DE XUAT (ms)
+- Idle: 130,110,110,150(giu),110,110,130,160(giu). Neu 8 hinh gan trung nhau -> chi giu 4 key, lap 1-2-3-4-3-2.
+- Dung->chay: F1 70, F2 65, F3 55; khong hold; noi vao run o pha tiep dat.
+- Run: 65,55,55,65,65,55,55,65 (~480ms/vong). Neu F8->F1 giat, sua F8/F1.
+- Don 1: 55,50,45,35,35,65(hitstop 20-35),45,50,55,55,70.
+  Them neu can: giua F3-F4 "luoi vua ra khoi vo" (30ms); giua F8-F9 "mui kiem ngam mieng vo" (40ms).
+- Don 2: 45,40,40,35,60(hitstop 20-30),50,55,55,45. Them neu can giua F4-F5 "luoi qua ngang nguc" (30ms). Co the bo F8 hoac F9 neu trung.
+- Don 3: 55,55,65(giu dinh),40,40,75(hitstop 30-45),65,60,85.
+  Them: giua F3-F4 "bat dau roi, kiem van cao" (35ms); giua F5-F6 "kiem sap cham dat, goi gap" (25-30ms).
+
+NOI CHUOI
+- Idle->run: giu toa do goc va be rong mu; khi tha phim dung 1-2 frame giam toc, khong phat nguoc ca transition.
+- Don 1->2: combo bo qua tra kiem (F9-F11), cat tu F7/F8 sang don 2 F1/F2; khop tay, mui kiem, hong.
+- Don 2->3: don 2 F8/F9 kiem cao -> don 3 F1 (bo F1 neu trung) -> F2 bat nhay. Khong de kiem quay ve vo.
+- Don 3 -> run/idle: F9 guard -> run contact hoac 1 frame dung thang roi idle.
+- Hit: don 1 F5-F6, don 2 F4-F5, don 3 F6.
+
+UU TIEN SUA
+P0 Khoa master hinh the + palette + scale; sua don 2/3 lech mu, than, chan, kiem.
+P0 Khoa diem neo/chan cham dat; sua run F8->F1, transition->run, don 2->3.
+P0 Logic kiem/vo kiem + nhanh combo 1->2 (khong tra kiem giua combo).
+P1 Key pose: don 1 F4-F7, don 2 F4-F6, don 3 F3-F7; duong kiem lien tuc.
+P1 Don pixel lac va sai mau (canh khan, mu, chuoi, mui kiem, manh cyan).
+P1 Chuan hoa VFX trang/cyan/xanh, tach lop, giam arc qua lon.
+P2 Chi them in-between that su can sau khi xem GIF; bo frame trung; chinh timing theo gameplay.
+
+TIEU CHI NGHIEM THU: khong pixel lac; khong doi kich thuoc mu/than/kiem giua frame ke; khong truot chan;
+3 don noi khong teleport, kiem khong tu ve vo; VFX khong che pose chinh; doc ro o 1x.
