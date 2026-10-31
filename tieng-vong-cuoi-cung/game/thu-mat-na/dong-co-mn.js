@@ -387,11 +387,17 @@ const DongCoMN = (() => {
       if (q.dead || q.st === 'chet' || q.lastSw === pl.atkSw || !overlap(hb, q)) continue;
       const face = (q.x + q.w / 2) >= (pl.x + pl.w / 2) ? 1 : -1;
       quaiTrung(q, satThuongNV(), face); co = true; S.nTrung++;
+      const dayK = (clipNV(pl.pound ? 'dapdat' : pl.atk).def || {}).day; if (dayK && q.kvx) q.kvx *= dayK;   // đẩy lùi mạnh hơn ở đòn nặng
       pl.vong = Math.min(P.vongMax, pl.vong + 1);
       const tx = (Math.max(hb.x, q.x) + Math.min(hb.x + hb.w, q.x + q.w)) / 2, ty = (Math.max(hb.y, q.y) + Math.min(hb.y + hb.h, q.y + q.h)) / 2;
       SUKIEN.push({k:'trung', x:tx, y:ty, q});
     }
-    if (co){ S.hitstop = Math.max(S.hitstop, pl.atk === 'don3' || pl.pound ? 4 : 2); shake(pl.face, 0.3, pl.atk === 'don3' ? 2 : 1); }
+    if (co){
+      // cảm giác "nặng": dừng hình + rung theo từng đòn (dung_hinh, rung trong nhan-vat.json)
+      const Cd = clipNV(pl.pound ? 'dapdat' : pl.atk).def || {};
+      S.hitstop = Math.max(S.hitstop, Cd.dung_hinh ?? (pl.atk === 'don3' || pl.pound ? 4 : 2));
+      shake(pl.face, 0.3, Cd.rung ?? (pl.atk === 'don3' ? 2 : 1));
+    }
   }
 
   /* ---------- MỘT BƯỚC 60 Hz ---------- */
