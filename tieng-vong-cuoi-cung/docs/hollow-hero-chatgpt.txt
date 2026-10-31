@@ -20,3 +20,4 @@ Mô tả chuyển động (PixelLab custom), luôn "Side view facing right", kh�
 Lưu ý: nếu PixelLab không giữ được cánh tay biến hình ổn định, vẽ chuyển động với tay thường trước rồi sửa riêng cánh tay ở các khung đánh.
 
 Vọng Tử đầu lâu (31/10): bản A id b316c6ff-142b-4573-89ce-5e216f37cb1b, bản B (thân năng lượng đen) id 0425af99-2ad5-4d0e-b678-7395edad053e
+Bản C bóng ma không chân (31/10): id 4f98c414-27c2-40f6-a69d-877659e1b264
