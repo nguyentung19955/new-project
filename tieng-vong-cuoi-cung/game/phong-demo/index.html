@@ -76,7 +76,7 @@ async function nap(){
   await Promise.all([['canh', 'canh'], ['truoc', 'truoc'], ['bg', 'bg_far'], ['mid', 'bg_mid'], ['chuong', 'bell_sanctum'], ['cong0', 'gate_dong'], ['cong1', 'gate_mo'], ['hon', 'fx_hon'], ['lua', 'fx_lua']].map(([k, f]) => napAnh(k, A_CANH + f + '.png')));
   // nhân vật
   NVJ = await SpriteMN.napJson('../thu-mat-na/nhan-vat.json');
-  const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2); E.datCo(NVJ.co || 1);
+  const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2); E.datCo((NVJ.co || 1) * 0.85); E.pl.h = 78;   // nhỏ hơn để chui qua khe hầm cao 2 ô
   await Promise.all(Object.entries(NVJ.clip).map(async ([ten, def]) => { E.NV.clip[ten] = await SpriteMN.napClip(gNV, def, ten); }));
   for (const c of (NVJ.cap || [])){
     const o = {ten:c.ten, sat_thuong:c.sat_thuong, clip:{}, chuoi:c.chuoi || null, bien_the:c.bien_the || null};
