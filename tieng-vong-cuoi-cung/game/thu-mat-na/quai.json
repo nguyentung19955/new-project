@@ -1,0 +1,109 @@
+{
+  "ghi_chu": "Quái thử Mặt Nạ Trắng. Hình quay TRÁI. Điểm ảnh (chan, than, hop_danh, lech) tính theo ảnh gốc; khoảng cách / tốc độ tính theo px logic (1 điểm ảnh = 2 px logic, 1 ô = 48 px logic). Khung đếm từ 0. Xem GHI-CHU.md.",
+  "goc": "../../art/quai-moi/",
+  "ti_le": 2,
+  "loai": {
+    "phu": {
+      "ten": "Phu Đèn Lạc", "mau_khoi": "#b39161",
+      "chan": [44, 74], "than": [28, 62],
+      "hinh": {
+        "dung":  {"thu_muc": "phu/dung",  "so_hinh": 9, "ms": 120},
+        "di":    {"thu_muc": "phu/di",    "so_hinh": 9, "ms": 100},
+        "danh":  {"thu_muc": "phu/danh",  "so_hinh": 9, "ms": [90, 90, 100, 70, 70, 70, 70, 80, 90], "lap": false},
+        "trung": {"thu_muc": "phu/trung", "so_hinh": 9, "ms": 45, "lap": false},
+        "chet":  {"thu_muc": "phu/chet",  "so_hinh": 9, "ms": 100, "lap": false}
+      },
+      "fx_danh": {"thu_muc": "phu/fx-danh", "tien_to": "c", "so_hinh": 9, "lech": [110, 30]},
+      "mau": 40, "sat_thuong": 1, "bay": false,
+      "toc_do": 0.8, "toc_do_duoi": 1.5,
+      "tam_phat_hien": 320, "tam_danh": 120,
+      "khung_bao_truoc": 3, "bao_truoc_them_ms": 200,
+      "khung_trung": [3, 4, 5, 6, 7], "hop_danh": [-69, -59, 75, 63],
+      "lao": null,
+      "hoi_chieu_ms": 1300, "day_lui": 4, "sieu_giap": false, "hoi_sinh_ms": 4000
+    },
+    "bo": {
+      "ten": "Bọ Vỏ Mộc", "mau_khoi": "#77614b",
+      "chan": [40, 63], "than": [56, 42],
+      "hinh": {
+        "dung":  {"thu_muc": "bo/dung",  "so_hinh": 9, "ms": 120},
+        "di":    {"thu_muc": "bo/di",    "so_hinh": 9, "ms": 90},
+        "danh":  {"thu_muc": "bo/danh",  "so_hinh": 9, "ms": [100, 110, 70, 90, 90, 70, 70, 90, 100], "lap": false},
+        "trung": {"thu_muc": "bo/trung", "so_hinh": 9, "ms": 45, "lap": false},
+        "chet":  {"thu_muc": "bo/chet",  "so_hinh": 9, "ms": 100, "lap": false}
+      },
+      "fx_danh": {"thu_muc": "bo/fx-danh", "tien_to": "c", "so_hinh": 9, "lech": [110, 30]},
+      "mau": 50, "sat_thuong": 1, "bay": false,
+      "toc_do": 0.7, "toc_do_duoi": 1.8,
+      "tam_phat_hien": 300, "tam_danh": 130,
+      "khung_bao_truoc": 2, "bao_truoc_them_ms": 250,
+      "khung_trung": [2, 5, 6], "hop_danh": [-82, -41, 110, 46],
+      "lao": null,
+      "hoi_chieu_ms": 1400, "day_lui": 3, "sieu_giap": false, "hoi_sinh_ms": 4000
+    },
+    "doi": {
+      "ten": "Dơi Rễ", "mau_khoi": "#694236",
+      "chan": [37, 59], "than": [22, 48],
+      "hinh": {
+        "dung":  {"thu_muc": "doi/dung",  "so_hinh": 9, "ms": 100},
+        "di":    {"thu_muc": "doi/di",    "so_hinh": 7, "ms": 80},
+        "danh":  {"thu_muc": "doi/danh",  "so_hinh": 9, "ms": [80, 90, 90, 60, 60, 60, 60, 80, 90], "lap": false},
+        "trung": {"thu_muc": "doi/trung", "so_hinh": 9, "ms": 45, "lap": false},
+        "chet":  {"thu_muc": "doi/chet",  "so_hinh": 9, "ms": 90, "lap": false}
+      },
+      "fx_danh": {"thu_muc": "doi/fx-danh", "tien_to": "c", "so_hinh": 9, "lech": [90, 20]},
+      "mau": 20, "sat_thuong": 1, "bay": true, "bay_cao": 40,
+      "toc_do": 0.8, "toc_do_duoi": 2.2,
+      "tam_phat_hien": 340, "tam_danh": 90,
+      "khung_bao_truoc": 3, "bao_truoc_them_ms": 200,
+      "khung_trung": [3, 4, 5, 6], "hop_danh": [-46, -47, 50, 65],
+      "lao": [3, 5, 3],
+      "hoi_chieu_ms": 1100, "day_lui": 5, "sieu_giap": false, "hoi_sinh_ms": 4000
+    },
+    "nam": {
+      "ten": "Nấm Thở", "mau_khoi": "#8a8f9c",
+      "chan": [43, 71], "than": [36, 47],
+      "hinh": {
+        "dung":  {"thu_muc": "nam/dung",  "so_hinh": 9, "ms": 130},
+        "di":    {"thu_muc": "nam/di",    "so_hinh": 9, "ms": 120},
+        "danh":  {"thu_muc": "nam/danh",  "so_hinh": 9, "ms": [100, 100, 100, 100, 100, 70, 80, 90, 100], "lap": false},
+        "trung": {"thu_muc": "nam/trung", "so_hinh": 9, "ms": 45, "lap": false},
+        "chet":  {"thu_muc": "nam/chet",  "so_hinh": 9, "ms": 100, "lap": false}
+      },
+      "fx_danh": {"thu_muc": "nam/fx-danh", "tien_to": "c", "so_hinh": 9, "lech": [140, 25]},
+      "mau": 30, "sat_thuong": 1, "bay": false,
+      "toc_do": 0.45, "toc_do_duoi": 0.7,
+      "tam_phat_hien": 300, "tam_danh": 110,
+      "khung_bao_truoc": 5, "bao_truoc_them_ms": 150,
+      "khung_trung": [5, 6, 7], "hop_danh": [-61, -51, 65, 45],
+      "lao": null,
+      "hoi_chieu_ms": 1600, "day_lui": 3, "sieu_giap": false, "hoi_sinh_ms": 4000
+    },
+    "chuong": {
+      "ten": "Chuông Kén Nứt (tinh anh)", "mau_khoi": "#c46b54",
+      "chan": [46, 84], "than": [31, 69],
+      "hinh": {
+        "dung":  {"thu_muc": "chuong/dung",  "so_hinh": 9, "ms": 130},
+        "di":    {"thu_muc": "chuong/di",    "so_hinh": 9, "ms": 120},
+        "danh":  {"thu_muc": "chuong/danh",  "so_hinh": 9, "ms": [110, 110, 110, 110, 110, 80, 90, 110, 120], "lap": false},
+        "trung": {"thu_muc": "chuong/trung", "so_hinh": 9, "ms": 45, "lap": false},
+        "chet":  {"thu_muc": "chuong/chet",  "so_hinh": 9, "ms": 110, "lap": false}
+      },
+      "fx_danh": {"thu_muc": "chuong/fx-danh", "tien_to": "c", "so_hinh": 9, "lech": [150, 25]},
+      "mau": 90, "sat_thuong": 2, "bay": true, "bay_cao": 8,
+      "toc_do": 0.4, "toc_do_duoi": 0.8,
+      "tam_phat_hien": 360, "tam_danh": 130,
+      "khung_bao_truoc": 5, "bao_truoc_them_ms": 200,
+      "khung_trung": [5, 6], "hop_danh": [-67, -83, 72, 85],
+      "lao": null,
+      "hoi_chieu_ms": 1800, "day_lui": 1.5, "sieu_giap": true, "hoi_sinh_ms": 5000
+    }
+  },
+  "dat": [
+    {"loai": "phu",    "cot": 10, "tu": 6,  "den": 12},
+    {"loai": "bo",     "cot": 25, "tu": 21, "den": 29},
+    {"loai": "doi",    "cot": 38, "tu": 35, "den": 42, "cao": 170},
+    {"loai": "nam",    "cot": 43, "tu": 41, "den": 46},
+    {"loai": "chuong", "cot": 66, "tu": 61, "den": 69, "cao": 16}
+  ]
+}
