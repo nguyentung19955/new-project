@@ -106,6 +106,7 @@ async function nap(){
 function chonCap(i){
   OPT.cap = i; const c = CAP[i];
   E.NV.capClip = c ? c.clip : {}; E.NV.cap = c || null;
+  E.NV.chuoi = (c && c.chuoi) || NVJ.chuoi || null; E.NV.bien_the = (c && c.bien_the) || NVJ.bien_the || null;
   document.getElementById('b-cap').textContent = 'Cấp ' + (i + 1) + ' · ' + (c ? c.ten : '?');
 }
 function batDau(){
@@ -138,7 +139,7 @@ function readInput(){
   const IN = E.IN, bam = k => I[k] && !prevI[k];
   IN.l = I.l; IN.r = I.r; IN.j = I.j; IN.a = I.a; IN.s = I.s; IN.h = I.h;
   IN.bamJ = bam('j'); IN.bamA = bam('a'); IN.bamS = bam('s'); IN.bamH = bam('h');
-  IN.dPhim = !!(kb.d || ep.d); IN.coCan = dpadId !== null; IN.stickY = stickY;
+  IN.dPhim = !!(kb.d || ep.d); IN.uPhim = !!(kb.u || ep.u); IN.coCan = dpadId !== null; IN.stickY = stickY;
 }
 const dpad = document.getElementById('dpad'), knob = document.getElementById('knob');
 const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('[data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};

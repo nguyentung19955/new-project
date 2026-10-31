@@ -65,7 +65,8 @@ const DongCoMN = (() => {
   const QUAI = [];
   const SUKIEN = [];
   const IN = {l:false, r:false, j:false, a:false, s:false, h:false, bamJ:false, bamA:false, bamS:false, bamH:false, dPhim:false, stickY:0, coCan:false,
-    xuong(){ return !!this.dPhim || (this.coCan && this.stickY > 0.7); }};
+    xuong(){ return !!this.dPhim || (this.coCan && this.stickY > 0.7); },
+    len(){ return !!this.uPhim || (this.coCan && this.stickY < -0.7); }};
   const clipNV = ten => NV.capClip[ten] || NV.clip[ten];
   const khung = (C, t) => SpriteMN.khungTheoBuoc(C, t);
   function shake(x, y, m){ S.shx = x; S.shy = y; S.shm = Math.max(S.shm * (S.sht > 0 ? 1 : 0), m); S.sht = 8; }
@@ -77,10 +78,26 @@ const DongCoMN = (() => {
   }
 
   /* ---------- ĐÒN NHÂN VẬT ---------- */
-  function batDauDon(ten){
+  function batDauDon(ten, idx){
+    pl.comboIdx = idx ?? 0;
     pl.atk = ten; pl.atkT = 0; pl.atkSw = ++S.swing; pl.comboHan = 0; CHO.co = false;
     if (pl.onGround){ pl.vx = 0; pl.laoTat = collide(pl.x + pl.face * 2, pl.y, pl.w, pl.h); }
     SUKIEN.push({k:'ra-don', ten});
+  }
+  // Chuỗi combo mặt đất (nhan-vat.json: chuoi). Hướng giữ khi bấm đổi nhát: lên = chéo lên, xuống = chéo xuống
+  function chuoi(){ return (NV.chuoi && NV.chuoi.length) ? NV.chuoi : ['don1', 'don2', 'don3']; }
+  const coClip = ten => !!(NV.capClip[ten] || NV.clip[ten]);
+  function viTri(ten){ return ten === pl.atk ? (pl.comboIdx ?? 0) : chuoi().indexOf(ten); }
+  function bienThe(goc){
+    const bt = NV.bien_the || {};
+    if (IN.len() && bt.len && coClip(bt.len)) return bt.len;
+    if (IN.xuong() && bt.xuong && coClip(bt.xuong)) return bt.xuong;
+    return goc;
+  }
+  function donTiep(ten){
+    const c = chuoi(), i = viTri(ten);
+    if (i < 0 || i >= c.length - 1) return '';
+    return i + 1 === c.length - 1 ? c[i + 1] : bienThe(c[i + 1]);   // nhát kết không đổi theo hướng
   }
   function khungCuoiTrung(C){ const t = C.def.trung || []; return t.length ? Math.max(...t) : -1; }
   function chonDon(dir){
@@ -89,11 +106,11 @@ const DongCoMN = (() => {
     if (!pl.atk){
       if (dir) pl.face = dir;
       if (!pl.onGround && IN.xuong()){ pl.pound = {pha:'lay', t:0}; pl.vx = 0; pl.vy = 0; CHO.co = false; SUKIEN.push({k:'ra-don', ten:'dapdat'}); return; }
-      if (!pl.onGround){ batDauDon('chemkhong'); return; }
-      batDauDon(pl.comboHan > 0 && pl.comboTiep ? pl.comboTiep : 'don1');
-    } else if (pl.onGround && (pl.atk === 'don1' || pl.atk === 'don2')){
+      if (!pl.onGround){ batDauDon('chemkhong', -1); return; }
+      if (pl.comboHan > 0 && pl.comboTiep) batDauDon(pl.comboTiep, pl.comboTiepIdx); else batDauDon(bienThe(chuoi()[0]), 0);
+    } else if (pl.onGround && donTiep(pl.atk)){
       const C = clipNV(pl.atk);
-      if (khung(C, pl.atkT) > khungCuoiTrung(C)){ if (dir) pl.face = dir; batDauDon(pl.atk === 'don1' ? 'don2' : 'don3'); }
+      if (khung(C, pl.atkT) > khungCuoiTrung(C)){ if (dir) pl.face = dir; const i = (pl.comboIdx ?? 0) + 1; batDauDon(donTiep(pl.atk), i); }
     }
   }
   function choLuot(){
@@ -265,9 +282,9 @@ const DongCoMN = (() => {
           const x0 = pl.x; if (moveX(pl, pl.face * lao[2] * TL / b, false)) pl.laoTat = true; pl.dxT += pl.x - x0;
         }
       }
-      if (pl.atk === 'don3' && Math.abs(pl.atkT - C.buoc.slice(0, (C.def.trung || [4])[0]).reduce((a, v) => a + v, 0)) < 0.5) shake(0, 1, 1.5);
+      if (pl.atk === chuoi()[chuoi().length - 1] && Math.abs(pl.atkT - C.buoc.slice(0, (C.def.trung || [4])[0]).reduce((a, v) => a + v, 0)) < 0.5) shake(0, 1, 1.5);
       if (pl.atkT >= C.tong){
-        if (pl.onGround && (pl.atk === 'don1' || pl.atk === 'don2')){ pl.comboHan = P.comboHan; pl.comboTiep = pl.atk === 'don1' ? 'don2' : 'don3'; }
+        if (pl.onGround && donTiep(pl.atk)){ pl.comboHan = P.comboHan; pl.comboTiep = donTiep(pl.atk); pl.comboTiepIdx = (pl.comboIdx ?? 0) + 1; }
         pl.atk = '';
       }
     }
