@@ -1,0 +1,1082 @@
+TIẾNG VỌNG CUỐI CÙNG
+MẶT NẠ TRẮNG — 3D SCYTHE COMBO DESIGN V2.0
+Engine: HTML5 Canvas 2D / 60 FPS
+Character: Legless Ghost Reaper
+Animation: PixelLab + 8-direction sprites
+VFX: Separate back/front layers
+Implementation: Claude
+Status: PROPOSAL — NOT LOCKED
+
+============================================================
+I. NGUYÊN TẮC CHUNG
+============================================================
+
+MỤC TIÊU:
+Tạo cảm giác lưỡi liềm chém trong không gian 3D
+dù game sử dụng sprite 2D.
+
+Combo:
+1. RISING REAP — Chém từ dưới lên, vòng theo chiều sâu.
+2. FALLING JUDGMENT — Chém từ trên xuống, bổ chéo.
+3. ASCENDING CYCLONE — Xoay lốc, vòng dưới nhỏ,
+vòng trên lớn, lưỡi liềm nâng dần từ thấp lên cao.
+
+Cả 3 đòn phải có:
+- Anticipation: lấy đà rõ.
+- Acceleration: tăng tốc khi ra đòn.
+- Impact: cảm giác va chạm nặng.
+- Follow-through: vũ khí tiếp tục chuyển động.
+- Recovery: trở về tư thế sẵn sàng.
+
+QUY ƯỚC HƯỚNG:
+
+E = nhìn phải.
+SE = nhìn chéo xuống-phải, thấy mặt trước.
+S = nhìn thẳng ra màn hình.
+SW = nhìn chéo xuống-trái.
+W = nhìn trái.
+NW = nhìn chéo lên-trái, thấy lưng.
+N = nhìn ra sau.
+NE = nhìn chéo lên-phải, thấy lưng.
+
+Đây là quy ước camera 8 hướng, không phải góc
+quay 3D thật.
+
+QUY ƯỚC ĐỘ SÂU:
+
+BACK = lưỡi liềm/vệt chém phía sau thân.
+FRONT = lưỡi liềm/vệt chém phía trước thân.
+CROSS = vũ khí đang chuyển từ sau ra trước
+hoặc từ trước ra sau.
+
+LOW = ngang đuôi khói.
+MID = ngang ngực.
+HIGH = ngang đầu.
+TOP = cao hơn đầu.
+
+QUY TẮC GIẢI PHẪU:
+
+- Không có chân.
+- Không có bàn chân.
+- Không có đầu gối.
+- Chỉ một đuôi khói nhỏ nối với thân.
+- Không thêm đuôi thứ hai.
+- Không thêm vải bay phía sau.
+- Không thay đổi mặt nạ trắng và vân cyan.
+- Không thay đổi cấu trúc lưỡi liềm.
+- Vũ khí phải được cầm liên tục, không teleport.
+
+QUAN TRỌNG:
+
+Sprite 8 hướng tĩnh không tự tạo ra chuyển động
+xoay 3D mượt.
+
+Không nên chỉ đổi E → S → W → N một cách đột ngột.
+
+Cần dùng:
+- Các key pose từ PixelLab.
+- Sprite 8 hướng để giữ đúng giải phẫu.
+- Chuyển động phụ bằng code.
+- VFX che một phần chuyển tiếp.
+- Có thể cần vẽ thêm transition pose.
+
+Các frame dưới đây là keyframe thiết kế.
+Không bắt buộc mỗi frame tương ứng đúng một ảnh
+PixelLab độc lập nếu ghép từ nhiều nguồn.
+
+============================================================
+II. COMBO 1 — RISING REAP
+CHÉM TỪ DƯỚI LÊN THEO CHIỀU SÂU
+============================================================
+
+Ý TƯỞNG:
+
+Lưỡi liềm bắt đầu thấp ở phía sau cơ thể,
+vòng ra trước người chơi rồi chém chéo lên cao.
+
+Thân xoay từ E sang SE, gần tới S rồi trở lại E.
+
+Đường chém tạo cảm giác một vòng elip nghiêng
+đi từ xa đến gần camera.
+
+Không phải một vệt chém phẳng dựng đứng.
+
+------------------------------------------------------------
+1. CHUYỂN ĐỘNG 9 FRAME
+------------------------------------------------------------
+
+F1 — 45ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Idle, liềm dựng đứng.
+Damage: OFF
+
+F2 — 50ms
+Direction: E
+Weapon: CROSS → BACK / LOW
+Pose: Hai tay kéo cán liềm xuống thấp.
+Thân vặn nhẹ ra sau.
+Damage: OFF
+
+F3 — 55ms
+Direction: SE
+Weapon: BACK / LOW
+Pose: Thân nghiêng, mặt nạ quay chéo về camera.
+Liềm ở thấp, phía sau hông.
+Damage: OFF
+
+F4 — 30ms
+Direction: S
+Weapon: CROSS / LOW → MID
+Pose: Bắt đầu quét từ phía sau ra trước.
+Lưỡi liềm tăng tốc.
+Damage: ON
+
+F5 — 35ms
+Direction: SE
+Weapon: FRONT / MID → HIGH
+Pose: Lưỡi liềm đi qua trước ngực.
+Vệt chém lớn nhất.
+Damage: ON — PRIMARY IMPACT
+
+F6 — 40ms
+Direction: E
+Weapon: FRONT / TOP
+Pose: Kết thúc chém hất lên cao.
+Thân vươn theo quán tính.
+Damage: ON
+
+F7 — 45ms
+Direction: E
+Weapon: CROSS / HIGH
+Pose: Lưỡi liềm đi qua đỉnh đầu.
+Bắt đầu hạ xuống.
+Damage: OFF
+
+F8 — 50ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Thu vũ khí về thế thủ.
+Damage: OFF
+
+F9 — 55ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Gần Idle, liềm dựng đứng.
+Damage: OFF
+
+TỔNG THỜI GIAN: 405ms
+
+------------------------------------------------------------
+2. HITBOX
+------------------------------------------------------------
+
+F4:
+- Hình quạt hướng trước, thấp.
+- Range: 45px.
+- Góc: -25° đến +35° quanh hướng phải.
+
+F5:
+- Hình quạt hướng trước, từ ngang thân lên cao.
+- Range: 75px.
+- Góc: -75° đến +15°.
+
+F6:
+- Hình quạt phía trước-trên.
+- Range: 65px.
+- Góc: -100° đến -35°.
+
+Góc âm quy ước là hướng lên trong tọa độ màn hình.
+
+Mỗi mục tiêu chỉ nhận 1 hit trong toàn bộ đòn.
+Không gây 3 lần damage chỉ vì chạm cả F4-F6.
+
+Damage gợi ý: 12.
+Knockback: 35px.
+Vertical launch: -65px/s.
+
+------------------------------------------------------------
+3. VFX CHIỀU SÂU
+------------------------------------------------------------
+
+Hình dạng:
+- Một dải lưỡi liềm cong trên quỹ đạo elip.
+- Trục elip nghiêng khoảng -35° trên màn hình.
+- Tỷ lệ trục ngắn/dài: 0.55.
+- Không vẽ vòng elip kín.
+
+F1-F2:
+Không có vệt chém.
+
+F3:
+Một vệt sáng mỏng phía sau thân.
+
+F4:
+Vệt chém từ thấp phía sau.
+70% BACK, 30% FRONT.
+
+F5:
+Vệt chém lớn nhất.
+30% BACK, 70% FRONT.
+
+F6:
+Vệt chém đi lên cao.
+10% BACK, 90% FRONT.
+
+F7:
+Vệt chém vỡ thành mảnh.
+
+F8-F9:
+Tàn sáng nhỏ rồi biến mất.
+
+Độ sáng:
+BACK: 35–50% alpha.
+FRONT: 90–100% alpha.
+
+Scale:
+BACK: 0.80–0.90.
+FRONT: 1.05–1.15.
+
+Đây là scale theo chiều sâu giả lập,
+không phải thay đổi kích thước nhân vật.
+
+------------------------------------------------------------
+4. PROMPT PIXELLAB
+------------------------------------------------------------
+
+"9-frame rising scythe slash, 112px. Side-view
+ghost facing right. F1 idle. F2-3 pull scythe
+low behind torso, turn slightly toward camera.
+F4-5 twist forward, sweep blade from low back
+to high front. F6 blade overhead. F7-9 recover
+to upright guard. Strong weight and momentum.
+Exactly ONE short curved smoke tail below waist.
+NO legs, feet, knees, second tail or trailing cloth.
+NO VFX, trails, sparks or particles."
+
+------------------------------------------------------------
+5. PROMPT CHATGPT VFX
+------------------------------------------------------------
+
+"Create a 9-frame pixel-art VFX sheet, 5 top
+and 4 bottom, flat #FF00FF background.
+Rising scythe slash with tilted perspective
+ellipse (-35 degrees). F1-2 empty, F3 faint
+back arc, F4-6 thick curved slash rising from
+lower-back to upper-front, bright front half,
+dim broken back half. F7 shards, F8-9 specks.
+White core, cyan edges, hard pixels.
+VFX ONLY, no character, no weapon, no text.
+Equal cells, no overflow."
+
+============================================================
+III. COMBO 2 — FALLING JUDGMENT
+CHÉM BỔ TỪ TRÊN XUỐNG
+============================================================
+
+Ý TƯỞNG:
+
+Khác Combo 1 ở cả hướng xoay lẫn trọng lượng.
+
+Liềm được đưa lên cao phía sau đầu.
+Thân quay lưng nhẹ về camera rồi bổ mạnh
+xuống phía trước.
+
+Lưỡi liềm đi từ xa phía sau đầu đến gần camera,
+sau đó kết thúc ở thấp phía trước.
+
+Đây là đòn nặng nhất trong hai đòn chém cơ bản.
+
+------------------------------------------------------------
+1. CHUYỂN ĐỘNG 9 FRAME
+------------------------------------------------------------
+
+F1 — 40ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Idle.
+Damage: OFF
+
+F2 — 55ms
+Direction: NE
+Weapon: BACK / HIGH
+Pose: Vặn vai, đưa liềm ra sau đầu.
+Damage: OFF
+
+F3 — 60ms
+Direction: NE
+Weapon: BACK / TOP
+Pose: Hai tay nâng liềm cao.
+Thân ngả ra sau.
+Damage: OFF
+
+F4 — 45ms
+Direction: E
+Weapon: CROSS / TOP
+Pose: Liềm bắt đầu bổ xuống.
+Thân kéo theo trọng lượng vũ khí.
+Damage: OFF
+
+F5 — 30ms
+Direction: SE
+Weapon: FRONT / HIGH → MID
+Pose: Chém xuống cực nhanh.
+Damage: ON
+
+F6 — 35ms
+Direction: S
+Weapon: FRONT / MID → LOW
+Pose: Lưỡi liềm chạm điểm thấp nhất.
+Damage: ON — PRIMARY IMPACT
+
+F7 — 55ms
+Direction: SE
+Weapon: FRONT / LOW
+Pose: Thân khựng vì lực va chạm.
+Liềm nằm thấp.
+Damage: OFF
+
+F8 — 60ms
+Direction: E
+Weapon: CROSS / LOW → HIGH
+Pose: Kéo liềm lên.
+Damage: OFF
+
+F9 — 60ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Trở về gần Idle.
+Damage: OFF
+
+TỔNG THỜI GIAN: 440ms
+
+------------------------------------------------------------
+2. HITBOX
+------------------------------------------------------------
+
+F5:
+- Hình quạt phía trước-trên.
+- Range: 70px.
+- Góc: -85° đến -20°.
+
+F6:
+- Hình quạt phía trước-thấp.
+- Range: 75px.
+- Góc: -30° đến +65°.
+
+Damage gợi ý: 16.
+Một mục tiêu nhận tối đa 1 hit.
+
+Nếu trúng địch trên không:
+- Gây lực đẩy xuống.
+- Không tự tạo pogo trừ khi gameplay cho phép.
+
+Nếu trúng mặt đất:
+- Tạo impact VFX.
+- Không tự động gây damage ngoài hitbox.
+- Không tự phá sàn, trừ tile có quy tắc breakable.
+
+------------------------------------------------------------
+3. VFX CHIỀU SÂU
+------------------------------------------------------------
+
+Hình dạng:
+- Vệt chém elip đứng nghiêng.
+- Góc trục chính: +30° so với trục dọc.
+- Tỷ lệ trục ngắn/dài: 0.45.
+- Đỉnh trên hẹp, phần dưới rộng hơn.
+
+F1-F2:
+Không VFX.
+
+F3-F4:
+Ánh sáng nhỏ trên lưỡi liềm phía sau đầu.
+
+F5:
+Vệt chém bắt đầu từ trên cao.
+60% BACK, 40% FRONT.
+
+F6:
+Vệt chém quét xuống trước mặt.
+15% BACK, 85% FRONT.
+Độ sáng cực đại.
+
+F7:
+Một impact burst ngắn sát đất.
+
+F8:
+Vệt chém vỡ thành hạt.
+
+F9:
+Hạt sáng biến mất.
+
+Scale:
+Phần sau: 0.85.
+Phần trước: 1.15.
+
+Vệt chém phải trông nặng và dày hơn Combo 1.
+
+Không vẽ vòng tròn khép kín.
+
+------------------------------------------------------------
+4. PROMPT PIXELLAB
+------------------------------------------------------------
+
+"9-frame heavy overhead scythe chop, 112px.
+Ghost facing right. F1 idle. F2-3 turn
+slightly away from camera and raise scythe
+high behind head. F4 windup ends. F5-6
+powerful downward chop, torso twisting
+toward camera. F7 heavy impact pause.
+F8-9 recover to upright guard.
+Exactly ONE short curved smoke tail below waist.
+NO legs, feet, knees, second tail or trailing cloth.
+NO VFX, slash trails, sparks or particles."
+
+------------------------------------------------------------
+5. PROMPT CHATGPT VFX
+------------------------------------------------------------
+
+"Create a 9-frame pixel-art VFX sheet,
+5 top and 4 bottom, flat #FF00FF background.
+Heavy overhead scythe chop in perspective.
+F1-2 empty, F3-4 tiny blade glint.
+F5-6 thick vertical crescent sweeping from
+above head down to lower-right, tilted
+perspective ellipse, dim rear half and
+bright enlarged front half. F7 short
+ground impact burst, F8 shards, F9 specks.
+White core, cyan edges, hard pixels.
+VFX ONLY, no character or weapon.
+Equal cells, no overflow."
+
+============================================================
+IV. COMBO 3 — ASCENDING CYCLONE
+XOAY LỐC NÂNG LIỀM TỪ THẤP LÊN CAO
+============================================================
+
+Ý TƯỞNG:
+
+Đây là đòn kết liễu đặc trưng.
+
+Mặt Nạ Trắng xoay quanh trục thẳng đứng của cơ thể.
+Lưỡi liềm chuyển động theo đường xoắn ốc đi lên.
+
+Vòng đầu tiên nhỏ, gần đuôi khói.
+Những vòng tiếp theo lớn hơn và cao hơn.
+Vòng cuối cùng rộng nhất, nằm trên đầu.
+
+Không dùng vòng xoáy phẳng dựng đứng.
+
+VFX phải giống một cơn lốc thực sự:
+- Các vòng elip NẰM NGANG.
+- Đáy hẹp.
+- Đỉnh rộng.
+- Nửa sau tối.
+- Nửa trước sáng.
+- Có cảm giác vũ khí đi vòng sau lưng và trước mặt.
+
+------------------------------------------------------------
+1. CHUYỂN ĐỘNG 9 FRAME
+------------------------------------------------------------
+
+F1 — 40ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Idle.
+Damage: OFF
+
+F2 — 50ms
+Direction: SE
+Weapon: FRONT / LOW
+Pose: Hạ liềm xuống gần đuôi khói.
+Thân bắt đầu xoắn.
+Damage: OFF
+
+F3 — 40ms
+Direction: S
+Weapon: FRONT / LOW
+Pose: Bắt đầu vòng xoay đầu tiên.
+Lưỡi liềm quét ngang thấp.
+Damage: ON
+
+F4 — 35ms
+Direction: SW
+Weapon: CROSS → BACK / LOW → MID
+Pose: Thân quay sang trái.
+Liềm vòng ra phía sau.
+Damage: ON
+
+F5 — 35ms
+Direction: W
+Weapon: BACK / MID
+Pose: Liềm tiếp tục vòng theo chiều sâu.
+Vòng lốc thứ hai rộng hơn.
+Damage: ON
+
+F6 — 35ms
+Direction: NW
+Weapon: BACK / MID → HIGH
+Pose: Thân quay ra phía sau.
+Liềm nâng lên ngang đầu.
+Damage: ON
+
+F7 — 40ms
+Direction: N
+Weapon: CROSS / HIGH → TOP
+Pose: Vòng xoáy trên cùng bùng rộng.
+Damage: ON — FINISHER IMPACT
+
+F8 — 45ms
+Direction: NE
+Weapon: FRONT / TOP → HIGH
+Pose: Thân xoay về hướng phải.
+Liềm đi qua phía trước.
+Vòng lốc bắt đầu tan.
+Damage: OFF
+
+F9 — 65ms
+Direction: E
+Weapon: FRONT / HIGH
+Pose: Trở về tư thế dựng liềm.
+Damage: OFF
+
+TỔNG THỜI GIAN: 385ms
+
+LƯU Ý QUAN TRỌNG:
+
+Dãy hướng trên chỉ đi được 270° từ E đến NE
+nếu xét theo chiều tăng góc 45°.
+
+Để tạo đủ một vòng 360°, cần nội suy thêm
+đoạn NE → E trong chuyển tiếp F8-F9.
+
+Nếu engine không nội suy hướng:
+- Dùng F8 làm tư thế NE.
+- Dùng F9 làm tư thế E.
+- Cho VFX che chuyển tiếp cuối.
+- Có thể bổ sung một in-between pose.
+
+Về mặt chuyển động, nên hiểu đây là 8 khoảng
+xoay 45° hoàn thành đủ 360°.
+
+------------------------------------------------------------
+2. HITBOX
+------------------------------------------------------------
+
+Khác Combo 1 và 2, Combo 3 dùng hitbox vòng tròn
+quanh nhân vật.
+
+F3:
+Radius: 35px.
+Vùng thấp.
+
+F4:
+Radius: 43px.
+Vùng thấp đến giữa.
+
+F5:
+Radius: 52px.
+Vùng giữa.
+
+F6:
+Radius: 62px.
+Vùng giữa đến cao.
+
+F7:
+Radius: 78px.
+Vùng cao và xung quanh.
+
+Để không đánh trúng mục tiêu ở vị trí vô lý,
+dùng các vùng hitbox theo độ cao tương ứng.
+
+Damage gợi ý:
+- F3-F6: 5 damage mỗi hit.
+- F7: 14 damage finisher.
+
+Giới hạn:
+- Tối đa 2 hit nhẹ + 1 finisher mỗi mục tiêu.
+- Hai hit nhẹ phải cách nhau ít nhất 70ms.
+- Không cho cùng mục tiêu nhận damage mỗi frame.
+
+Tổng damage tối đa: 24.
+
+Knockback:
+- F3-F6: hút nhẹ vào tâm, tối đa 15px.
+- F7: đẩy ra 65px và hất lên.
+
+Lực hút chỉ áp dụng khi mục tiêu trúng hit.
+Không hút toàn bộ quái trên màn hình.
+
+------------------------------------------------------------
+3. VFX LỐC XOÁY 3D
+------------------------------------------------------------
+
+CẤU TRÚC:
+
+Mỗi vòng là một elip nằm ngang.
+
+Không vẽ vòng tròn nhìn chính diện.
+
+Đề xuất:
+- Góc nghiêng mặt phẳng elip: 10–15°.
+- Trục ngắn/trục dài: 0.28–0.38.
+- Các vòng có thể lệch tâm 2–4px.
+- Đường vòng không khép kín hoàn toàn.
+
+Càng lên cao:
+- Vòng càng rộng.
+- Tốc độ chuyển động biểu kiến càng nhanh.
+- Vệt sáng càng mạnh.
+
+PHÂN BỐ THEO FRAME:
+
+F1:
+Không VFX.
+
+F2:
+Một vòng nhỏ tại đuôi khói.
+Width: 30px.
+
+F3:
+Một vòng thấp rõ hơn.
+Width: 45px.
+
+F4:
+Hai vòng xếp chồng.
+Widths: 40px và 60px.
+
+F5:
+Ba vòng.
+Widths: 40px, 65px, 85px.
+
+F6:
+Bốn vòng.
+Widths: 35px, 60px, 85px, 105px.
+
+F7:
+Năm vòng.
+Widths: 30px, 50px, 75px, 100px, 120px.
+
+Đây là thời điểm lốc mạnh nhất.
+
+F8:
+Các vòng bung ra thành mảnh gió.
+Không còn vòng hoàn chỉnh.
+
+F9:
+Vài hạt sáng biến mất.
+
+Các width trên là kích thước gợi ý trong
+tọa độ logic VFX, cần scale lại theo sprite
+và kích thước cell thực tế.
+
+------------------------------------------------------------
+4. PHÂN LỚP TRƯỚC / SAU
+------------------------------------------------------------
+
+Mỗi vòng lốc phải chia làm hai phần:
+
+BACK HALF:
+- Nửa elip phía xa camera.
+- Vẽ phía sau nhân vật.
+- Alpha 35–55%.
+- Màu xanh đậm.
+- Có khoảng đứt.
+- Nét mảnh hơn.
+
+FRONT HALF:
+- Nửa elip gần camera.
+- Vẽ đè lên nhân vật.
+- Alpha 90–100%.
+- Trắng ở lõi.
+- Cyan ở viền.
+- Nét dày hơn.
+
+Thứ tự render:
+
+1. Background.
+2. Back-half tornado rings.
+3. Back-side scythe portions.
+4. Hero sprite.
+5. Front-side scythe portions.
+6. Front-half tornado rings.
+7. Small sparks and wind fragments.
+8. Foreground environment.
+
+LƯU Ý:
+
+Nếu PixelLab xuất cả nhân vật và liềm thành
+một sprite duy nhất, không thể tách chính xác
+cán liềm trước/sau chỉ bằng đổi draw order.
+
+Có 2 phương án:
+
+A. Tách liềm thành sprite độc lập.
+Điều khiển pivot, góc và depth bằng code.
+
+B. Giữ liềm trong sprite PixelLab.
+Dùng frame đã vẽ đúng thứ tự che khuất,
+chỉ tách lớp VFX.
+
+Đề xuất dùng B cho prototype vì ít công hơn.
+Dùng A khi cần chất lượng animation cao hơn.
+
+------------------------------------------------------------
+5. PROMPT PIXELLAB
+------------------------------------------------------------
+
+"9-frame ascending scythe cyclone, 112px.
+Legless ghost starts facing right. F1 idle.
+F2 lower scythe near smoke tail. F3-7 rotate
+body around vertical axis, lifting scythe
+in a rising spiral from waist to overhead.
+Show front, side and back orientations.
+F8-9 finish rotation, return to right-facing
+upright guard. Keep weapon continuously held.
+Exactly ONE short curved smoke tail.
+NO legs, feet, knees, second tail or trailing cloth.
+NO VFX, wind rings, trails or particles."
+
+------------------------------------------------------------
+6. PROMPT CHATGPT VFX
+------------------------------------------------------------
+
+"Create a 9-frame pixel-art VFX sheet,
+5 top and 4 bottom, flat #FF00FF background.
+Ascending tornado made of stacked HORIZONTAL
+perspective elliptical rings, narrow at bottom,
+wide at top. F1 empty, F2-3 small low rings,
+F4-5 rings grow upward, F6-7 full funnel with
+4-5 rings, F8 wind shards, F9 fading specks.
+Bright thick front halves, dim broken back halves,
+white cores and cyan edges. Crisp hard pixels.
+VFX ONLY, no character, no weapon.
+Equal cells, no overflow."
+
+============================================================
+V. GAME FEEL — HITSTOP, SHAKE, LUNGE
+============================================================
+
+ĐỀ XUẤT BAN ĐẦU:
+
+COMBO 1:
+- Duration: 405ms.
+- Damage: 12.
+- Hitstop: 35ms.
+- Screen shake: 1.5px.
+- Shake duration: 70ms.
+- Forward lunge: 10px.
+- Lunge xảy ra F4-F5.
+
+COMBO 2:
+- Duration: 440ms.
+- Damage: 16.
+- Hitstop: 55ms.
+- Screen shake: 2.5px.
+- Shake duration: 95ms.
+- Forward lunge: 14px.
+- Lunge xảy ra F5-F6.
+
+COMBO 3:
+- Duration: 385ms.
+- Damage: tối đa 24.
+- Hitstop hit nhẹ: 10ms.
+- Hitstop finisher: 65ms.
+- Screen shake hit nhẹ: 0.5px.
+- Screen shake finisher: 3px.
+- Shake duration finisher: 120ms.
+- Forward lunge: 0px.
+- Hero giữ vị trí trong lúc xoay.
+
+Không cộng dồn rung màn hình từ mọi hit nhẹ.
+
+Hitstop chỉ kích hoạt khi đòn thực sự trúng mục tiêu.
+Nếu chém hụt, animation vẫn chạy bình thường.
+
+------------------------------------------------------------
+1. CANCEL WINDOW
+------------------------------------------------------------
+
+COMBO 1:
+- Cho phép buffer Combo 2 từ F5.
+- Chuyển sang Combo 2 sớm nhất sau F7.
+- Nếu không có input, chạy đến F9.
+
+COMBO 2:
+- Cho phép buffer Combo 3 từ F6.
+- Chuyển sang Combo 3 sớm nhất sau F7.
+- Nếu không có input, chạy đến F9.
+
+COMBO 3:
+- Không cancel sang combo khác trong F3-F7.
+- Cho phép dash cancel sau F8.
+- Sau F9 trở lại Idle.
+
+Input buffer gợi ý: 140ms.
+
+Không bỏ qua active frame chỉ vì người chơi
+nhấn nút quá nhanh.
+
+------------------------------------------------------------
+2. HITSTOP IMPLEMENTATION
+------------------------------------------------------------
+
+Trong hitstop:
+- Dừng tiến trình animation tấn công.
+- Dừng di chuyển của hero.
+- Tạm dừng chuyển động mục tiêu trúng đòn.
+- Có thể giữ hit flash và camera shake.
+- Không nhân đôi damage.
+
+Nên dùng thời gian thực cho hitstop,
+không phụ thuộc hoàn toàn vào số frame render.
+
+Nếu engine chạy fixed step 60Hz:
+- 35ms tương đương khoảng 2 tick.
+- 55ms khoảng 3 tick.
+- 65ms khoảng 4 tick.
+
+Có thể lượng tử hóa về số tick để dễ triển khai.
+
+------------------------------------------------------------
+3. CAMERA SHAKE
+------------------------------------------------------------
+
+Combo 1:
+Rung nhẹ theo hướng chéo lên.
+
+Combo 2:
+Rung mạnh theo hướng xuống.
+
+Combo 3:
+Rung nhẹ lúc xoay.
+Rung mạnh một lần khi finisher trúng.
+
+Không rung liên tục cả 9 frame Combo 3.
+
+Trên iPhone:
+- Giới hạn shake tối đa khoảng 3px logic.
+- Có tùy chọn giảm rung màn hình.
+- Không làm HUD rung theo camera.
+
+============================================================
+VI. CÁCH GHÉP PIXELLAB VÀ 8 HƯỚNG
+============================================================
+
+VẤN ĐỀ:
+
+PixelLab Custom Animation thường tạo một hướng
+duy nhất tương đối tốt.
+
+Nhưng yêu cầu quay đủ 360° có thể làm:
+- Mặt nạ biến dạng.
+- Tay đổi bên.
+- Lưỡi liềm đổi hình.
+- Đuôi khói biến thành chân.
+- Vũ khí xuyên qua thân sai phối cảnh.
+
+GIẢI PHÁP KHUYẾN NGHỊ:
+
+COMBO 1:
+Dùng PixelLab animation hướng E làm chính.
+Chỉ dùng SE/S ở những frame thân xoay rõ.
+Không cần xoay quá 90°.
+
+COMBO 2:
+Dùng PixelLab hướng E làm chính.
+Dùng NE ở pha giơ liềm sau đầu.
+Dùng SE/S ở pha bổ xuống.
+
+COMBO 3:
+Không yêu cầu PixelLab tự tưởng tượng toàn bộ
+360° trong một lần nếu kết quả không ổn.
+
+Thay bằng:
+- Dùng 8 hướng tĩnh đã có làm orientation keys.
+- PixelLab tạo 3 pose cầm liềm:
+LOW / MID / HIGH.
+- Claude ghép hướng thân và độ cao vũ khí.
+- VFX tạo cảm giác chuyển động liên tục.
+
+Đây là phương án ổn định hơn về giải phẫu.
+
+QUAN TRỌNG:
+Các sprite 8 hướng phải có cùng:
+- Tâm thân.
+- Kích thước mặt nạ.
+- Điểm nối đuôi khói.
+- Tỷ lệ cơ thể.
+- Vị trí pivot vũ khí.
+
+Không được scale riêng đầu hoặc thân để
+giả lập phối cảnh.
+
+Chỉ scale vũ khí và VFX nếu cần.
+
+============================================================
+VII. CẤU TRÚC DỮ LIỆU CHO CLAUDE
+============================================================
+
+Mỗi animation frame nên có:
+
+frameIndex
+durationMs
+bodyDirection
+weaponDepth
+weaponHeight
+weaponAngle
+weaponScale
+vfxBackFrame
+vfxFrontFrame
+hitboxId
+damageActive
+lungeX
+cameraShake
+cancelAllowed
+
+HỆ THỐNG RENDER:
+
+- Body direction lấy từ animation metadata.
+- Weapon depth quyết định thứ tự render.
+- VFX back và front dùng cùng một timeline.
+- Hitbox không phụ thuộc alpha của VFX.
+- Damage chỉ tính một lần theo hit registry.
+- VFX không quyết định collision.
+
+Đề xuất tách 3 loại asset:
+
+1. HERO_BODY
+2. SCYTHE / SCYTHE_POSE
+3. SCYTHE_VFX_BACK + SCYTHE_VFX_FRONT
+
+Nếu chưa tách được vũ khí:
+Dùng HERO_BODY_WITH_SCYTHE và hai lớp VFX.
+
+Không cần xây dựng rig phức tạp ngay từ đầu.
+
+============================================================
+VIII. QUY TẮC VẼ VFX SPRITE SHEET
+============================================================
+
+Đối với ChatGPT Image Generation:
+
+- Luôn dùng ảnh sprite sheet gốc làm tham chiếu.
+- Giữ nguyên bố cục 5 ô hàng trên, 4 ô hàng dưới.
+- Không di chuyển nhân vật.
+- Không thay đổi lưỡi liềm.
+- Không vẽ thêm chân.
+- Không thay đổi nền magenta.
+- Không vẽ hiệu ứng vượt ranh giới cell.
+- Không anti-aliasing.
+- Không blur.
+- Không gradient mềm.
+- Không thêm bóng đổ.
+
+Màu VFX:
+#FFFFFF
+#C8F5FF
+#78DCFF
+#3CA0F5
+#2864DC
+
+Để chia chiều sâu chính xác:
+
+TỐT NHẤT:
+Vẽ VFX trên sheet riêng không có nhân vật.
+
+Sau đó Claude:
+- Tách từng frame.
+- Tách back/front theo mask.
+- Render hai lớp.
+
+Không nên yêu cầu AI vẽ đè trực tiếp lên
+sprite rồi cố tách bằng màu, vì cyan đã có
+sẵn trên thân và lưỡi liềm.
+
+Cách đó có thể xóa nhầm chi tiết nhân vật.
+
+============================================================
+IX. THỨ TỰ TRIỂN KHAI
+============================================================
+
+BƯỚC 1:
+Khóa animation Combo 1, 2, 3 không có VFX.
+
+BƯỚC 2:
+Kiểm tra:
+- Không có chân.
+- Một đuôi khói.
+- Liềm không biến dạng.
+- Hướng thân đúng.
+- Combo nối mượt.
+
+BƯỚC 3:
+Làm VFX Combo 1 với hai lớp chiều sâu.
+
+BƯỚC 4:
+Làm VFX Combo 2 với hai lớp chiều sâu.
+
+BƯỚC 5:
+Làm Combo 3 bằng 8 hướng + vòng lốc elip.
+
+BƯỚC 6:
+Claude tích hợp:
+- Frame timing.
+- Hitbox.
+- Hitstop.
+- Camera shake.
+- Input buffer.
+- Cancel window.
+
+BƯỚC 7:
+Xuất GIF/gameplay clip ở tốc độ thật.
+
+BƯỚC 8:
+Kiểm tra trên iPhone xoay ngang.
+
+BƯỚC 9:
+Chỉ LOCK khi:
+- Đọc được 3 đòn khác nhau.
+- Cảm giác vũ khí có trọng lượng.
+- Có chiều sâu trước/sau rõ ràng.
+- Không có lỗi giải phẫu.
+- Không bị nhảy frame khi nối combo.
+- Hitbox và VFX khớp thời điểm gây damage.
+
+============================================================
+X. KẾT LUẬN
+============================================================
+
+COMBO 1:
+Một nhát chém hất từ thấp lên cao.
+Thân xoay nhẹ về camera.
+Lưỡi liềm đi từ sau ra trước.
+Vệt chém là elip nghiêng.
+
+COMBO 2:
+Một nhát bổ nặng từ trên xuống.
+Thân xoay từ lưng về phía camera.
+Lưỡi liềm đi từ xa đến gần.
+Vệt chém dày và có điểm va chạm mạnh.
+
+COMBO 3:
+Một vòng xoay 360° quanh trục thân.
+Lưỡi liềm đi theo đường xoắn ốc từ thấp lên cao.
+Các vòng gió là elip nằm ngang.
+Đáy nhỏ, đỉnh lớn.
+Nửa sau tối, nửa trước sáng.
+Kết thúc bằng vòng xoáy lớn nhất phía trên đầu.
+
+HƯỚNG TRIỂN KHAI ƯU TIÊN:
+
+PixelLab giữ chuyển động nhân vật.
+8-direction sprites giữ góc nhìn.
+Claude xử lý chiều sâu và gameplay timing.
+ChatGPT tạo VFX tách lớp.
+
+Không dùng VFX để che lỗi animation.
+Phải khóa chuyển động thân và lưỡi liềm trước,
+sau đó mới thêm hiệu ứng.
+
+END — 3D SCYTHE COMBO DESIGN V2.0

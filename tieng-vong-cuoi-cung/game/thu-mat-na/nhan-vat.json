@@ -1,41 +1,606 @@
 {
-  "ghi_chu": "Mặt Nạ Trắng. Hình quay PHẢI. chan = điểm neo (đáy đuôi khói) trong khung, điểm ảnh. Clip có hiệu ứng ghép (cNN): chan = vị trí nhân vật trong khung + (41,70). trung = khung có hộp đánh (đếm từ 0). hop = [dx, dy, rộng, cao] điểm ảnh so với neo, mặt phải. Xem GHI-CHU.md.",
-  "goc": "../../art/mat-na/",
-  "ti_le": 2,
-  "clip": {
-    "dung":     {"thu_muc": "dung",     "so_hinh": 9, "chan": [41, 69], "ms": 120},
-    "troi":     {"thu_muc": "troi",     "so_hinh": 9, "chan": [41, 70], "ms": 85},
-    "nhay":     {"thu_muc": "nhay",     "so_hinh": 9, "chan": [41, 70], "ms": 60, "lap": false},
-    "nhaydoi":  {"thu_muc": "fx/nhaydoi", "tien_to": "c", "so_hinh": 9, "chan": [81, 100], "ms": 45, "lap": false},
-    "roi":      {"thu_muc": "roi",      "so_hinh": 9, "chan": [41, 70], "ms": 90},
-    "tiepdat":  {"thu_muc": "tiepdat",  "so_hinh": 9, "chan": [41, 70], "ms": 30, "lap": false},
-    "luot":     {"thu_muc": "luot",     "so_hinh": 9, "chan": [41, 70], "ms": 25, "lap": false},
-    "bamtuong": {"thu_muc": "bamtuong", "so_hinh": 4, "chan": [32, 72], "ms": 150},
-    "dapdat":   {"thu_muc": "fx/dapdat", "tien_to": "c", "so_hinh": 9, "chan": [96, 100], "ms": [60, 60, 60, 60, 50, 50, 60, 70, 80], "lap": false,
-                 "khung_lao": 3, "trung": [4, 5, 6], "hop": [-52, -69, 115, 81], "sat_thuong": 14},
-    "luon":     {"thu_muc": "luon",     "so_hinh": 9, "chan": [41, 70], "ms": 100},
-    "trungdon": {"thu_muc": "fx/trungdon", "tien_to": "c", "so_hinh": 9, "chan": [101, 100], "ms": 40, "lap": false},
-    "hoimau":   {"thu_muc": "fx/hoimau", "tien_to": "c", "so_hinh": 9, "chan": [86, 115], "ms": 90, "lap": false, "khung_hoi": 5},
-    "chet":     {"thu_muc": "chet",     "so_hinh": 9, "chan": [41, 70], "ms": 110, "lap": false}
+ "ghi_chu": "Mặt Nạ Trắng cầm liềm (PixelLab 90a022c9). Hình 112px quay PHẢI, chan=[56,84]. Combo (cNN 260x260): nhân vật đặt tại (74,110) → chan=[130,194]; hiệu ứng ChatGPT chia lớp sau (mờ, sau thân) / trước (sáng, đè thân). Đòn 3 = lốc: thân xoay 8 hướng. Xem GHI-CHU.md.",
+ "goc": "../../art/mat-na-liem/",
+ "ti_le": 2,
+ "clip": {
+  "dung": {
+   "thu_muc": "dung",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 120
   },
-  "cap": [
-    {"ten": "Sơ Âm", "sat_thuong": 10, "clip": {
-      "don1":      {"thu_muc": "fx-cap/don1/cap1", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [40, 40, 40, 45, 45, 55, 60, 55, 50], "lap": false, "trung": [5, 6], "hop": [1, -50, 47, 39], "lao": [4, 5, 5]},
-      "don2":      {"thu_muc": "fx-cap/don2/cap1", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [35, 40, 40, 50, 55, 55, 55, 50, 45], "lap": false, "trung": [3, 4, 5], "hop": [-13, -53, 39, 48], "lao": [2, 3, 4]},
-      "don3":      {"thu_muc": "fx-cap/don3/cap1", "tien_to": "c", "so_hinh": 9, "chan": [61, 126], "ms": [50, 50, 55, 60, 60, 70, 70, 70, 70], "lap": false, "trung": [4, 5, 6], "hop": [-9, -37, 51, 55], "lao": [3, 4, 8], "nhan": 1.5},
-      "chemkhong": {"thu_muc": "fx-cap/chemkhong/cap1", "tien_to": "c", "so_hinh": 9, "chan": [61, 115], "ms": [35, 35, 35, 40, 45, 50, 55, 50, 45], "lap": false, "trung": [4, 5], "hop": [-6, -50, 33, 47]}
-    }},
-    {"ten": "Vang Âm", "sat_thuong": 13, "clip": {
-      "don1":      {"thu_muc": "fx-cap/don1/cap2", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [40, 40, 40, 45, 45, 55, 60, 55, 50], "lap": false, "trung": [5, 6], "hop": [3, -61, 70, 59], "lao": [4, 5, 5]},
-      "don2":      {"thu_muc": "fx-cap/don2/cap2", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [35, 40, 40, 50, 55, 55, 55, 50, 45], "lap": false, "trung": [3, 4, 5], "hop": [-19, -65, 58, 73], "lao": [2, 3, 4]},
-      "don3":      {"thu_muc": "fx-cap/don3/cap2", "tien_to": "c", "so_hinh": 9, "chan": [61, 126], "ms": [50, 50, 55, 60, 60, 70, 70, 70, 70], "lap": false, "trung": [4, 5, 6], "hop": [-22, -64, 76, 82], "lao": [3, 4, 8], "nhan": 1.5},
-      "chemkhong": {"thu_muc": "fx-cap/chemkhong/cap2", "tien_to": "c", "so_hinh": 9, "chan": [61, 115], "ms": [35, 35, 35, 40, 45, 50, 55, 50, 45], "lap": false, "trung": [4, 5], "hop": [-8, -63, 49, 73]}
-    }},
-    {"ten": "Cộng Hưởng", "sat_thuong": 16, "clip": {
-      "don1":      {"thu_muc": "fx-cap/don1/cap3", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [40, 40, 40, 45, 45, 55, 60, 55, 50], "lap": false, "trung": [5, 6], "hop": [4, -72, 94, 78], "lao": [4, 5, 5]},
-      "don2":      {"thu_muc": "fx-cap/don2/cap3", "tien_to": "c", "so_hinh": 9, "chan": [61, 100], "ms": [35, 40, 40, 50, 55, 55, 55, 50, 45], "lap": false, "trung": [3, 4, 5], "hop": [-27, -78, 78, 97], "lao": [2, 3, 4]},
-      "don3":      {"thu_muc": "fx-cap/don3/cap3", "tien_to": "c", "so_hinh": 9, "chan": [61, 126], "ms": [50, 50, 55, 60, 60, 70, 70, 70, 70], "lap": false, "trung": [4, 5, 6], "hop": [-36, -92, 101, 110], "lao": [3, 4, 8], "nhan": 1.5},
-      "chemkhong": {"thu_muc": "fx-cap/chemkhong/cap3", "tien_to": "c", "so_hinh": 9, "chan": [61, 115], "ms": [35, 35, 35, 40, 45, 50, 55, 50, 45], "lap": false, "trung": [4, 5], "hop": [-12, -75, 65, 97]}
-    }}
-  ]
+  "troi": {
+   "thu_muc": "troi",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 95
+  },
+  "nhay": {
+   "thu_muc": "nhay",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 60,
+   "lap": false
+  },
+  "nhaydoi": {
+   "thu_muc": "nhaydoi",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 45,
+   "lap": false
+  },
+  "roi": {
+   "thu_muc": "roi",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 110
+  },
+  "tiepdat": {
+   "thu_muc": "tiepdat",
+   "so_hinh": 3,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 40,
+   "lap": false
+  },
+  "luot": {
+   "thu_muc": "luot",
+   "so_hinh": 3,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 60,
+   "lap": false
+  },
+  "bamtuong": {
+   "thu_muc": "bamtuong",
+   "so_hinh": 4,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 150
+  },
+  "dapdat": {
+   "thu_muc": "don2",
+   "tien_to": "c",
+   "so_hinh": 9,
+   "chan": [
+    130,
+    194
+   ],
+   "ms": [
+    60,
+    60,
+    60,
+    60,
+    50,
+    50,
+    60,
+    70,
+    80
+   ],
+   "lap": false,
+   "khung_lao": 3,
+   "trung": [
+    4,
+    5,
+    6
+   ],
+   "hop": [
+    -60,
+    -85,
+    135,
+    100
+   ],
+   "sat_thuong": 14
+  },
+  "luon": {
+   "thu_muc": "luon",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 110
+  },
+  "trungdon": {
+   "thu_muc": "trungdon",
+   "so_hinh": 4,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 60,
+   "lap": false
+  },
+  "hoimau": {
+   "thu_muc": "hoimau",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 90,
+   "lap": false,
+   "khung_hoi": 5
+  },
+  "chet": {
+   "thu_muc": "chet",
+   "so_hinh": 9,
+   "chan": [
+    56,
+    84
+   ],
+   "ms": 110,
+   "lap": false
+  }
+ },
+ "cap": [
+  {
+   "ten": "Sơ Âm",
+   "sat_thuong": 10,
+   "clip": {
+    "don1": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      45,
+      50,
+      55,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -10,
+      -70,
+      70,
+      70
+     ],
+     "lao": [
+      3,
+      5,
+      10
+     ]
+    },
+    "don2": {
+     "thu_muc": "don2",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      55,
+      60,
+      45,
+      30,
+      35,
+      55,
+      60,
+      60
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -15,
+      -85,
+      75,
+      90
+     ],
+     "lao": [
+      4,
+      5,
+      14
+     ]
+    },
+    "don3": {
+     "thu_muc": "don3",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      50,
+      40,
+      35,
+      35,
+      35,
+      40,
+      45,
+      65
+     ],
+     "lap": false,
+     "trung": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -50,
+      -95,
+      100,
+      100
+     ],
+     "lao": [
+      0,
+      0,
+      0
+     ],
+     "nhan": 1.5
+    },
+    "chemkhong": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      35,
+      35,
+      35,
+      30,
+      35,
+      40,
+      45,
+      45,
+      45
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -10,
+      -70,
+      65,
+      70
+     ]
+    }
+   }
+  },
+  {
+   "ten": "Vang Âm",
+   "sat_thuong": 13,
+   "clip": {
+    "don1": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      45,
+      50,
+      55,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -10,
+      -80,
+      85,
+      85
+     ],
+     "lao": [
+      3,
+      5,
+      10
+     ]
+    },
+    "don2": {
+     "thu_muc": "don2",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      55,
+      60,
+      45,
+      30,
+      35,
+      55,
+      60,
+      60
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -20,
+      -95,
+      90,
+      100
+     ],
+     "lao": [
+      4,
+      5,
+      14
+     ]
+    },
+    "don3": {
+     "thu_muc": "don3",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      50,
+      40,
+      35,
+      35,
+      35,
+      40,
+      45,
+      65
+     ],
+     "lap": false,
+     "trung": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -60,
+      -110,
+      120,
+      115
+     ],
+     "lao": [
+      0,
+      0,
+      0
+     ],
+     "nhan": 1.5
+    },
+    "chemkhong": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      35,
+      35,
+      35,
+      30,
+      35,
+      40,
+      45,
+      45,
+      45
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -10,
+      -80,
+      80,
+      85
+     ]
+    }
+   }
+  },
+  {
+   "ten": "Cộng Hưởng",
+   "sat_thuong": 16,
+   "clip": {
+    "don1": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      45,
+      50,
+      55,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -12,
+      -92,
+      100,
+      100
+     ],
+     "lao": [
+      3,
+      5,
+      10
+     ]
+    },
+    "don2": {
+     "thu_muc": "don2",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      55,
+      60,
+      45,
+      30,
+      35,
+      55,
+      60,
+      60
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -25,
+      -105,
+      105,
+      110
+     ],
+     "lao": [
+      4,
+      5,
+      14
+     ]
+    },
+    "don3": {
+     "thu_muc": "don3",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      40,
+      50,
+      40,
+      35,
+      35,
+      35,
+      40,
+      45,
+      65
+     ],
+     "lap": false,
+     "trung": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "hop": [
+      -70,
+      -125,
+      140,
+      130
+     ],
+     "lao": [
+      0,
+      0,
+      0
+     ],
+     "nhan": 1.5
+    },
+    "chemkhong": {
+     "thu_muc": "don1",
+     "tien_to": "c",
+     "so_hinh": 9,
+     "chan": [
+      130,
+      194
+     ],
+     "ms": [
+      35,
+      35,
+      35,
+      30,
+      35,
+      40,
+      45,
+      45,
+      45
+     ],
+     "lap": false,
+     "trung": [
+      4,
+      5
+     ],
+     "hop": [
+      -12,
+      -90,
+      95,
+      95
+     ]
+    }
+   }
+  }
+ ]
 }

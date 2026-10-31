@@ -56,3 +56,11 @@ AI: tuần tra trong vùng (dừng nghỉ ở mép, không rơi khỏi bệ) →
 - Combo: bấm Chém lúc nào cũng được ghi nhận; đòn kế bắt đầu ngay sau khung trúng cuối của đòn trước. Lướt chỉ huỷ đòn sau khung trúng.
 
 > Đã kiểm nhanh bằng Chromium không màn hình: nạp đủ hình, không lỗi JS, 5 quái đều đánh trúng, combo / nhảy đôi / lượn / đập đất / lướt chạy, thiếu thư mục → khối màu.
+
+## Mặt Nạ Trắng cầm liềm (31/10)
+- Hình mới ở `art/mat-na-liem/` (PixelLab nhân vật 90a022c9, lấy đúng từng điểm ảnh). Khung 112px, neo chân [56,84].
+- Combo 3 đòn là ảnh ghép `cNN` 260x260 (nhân vật tại (74,110), neo [130,194]):
+  - don1 chém từ dưới lên, don2 bổ từ trên xuống: hiệu ứng ChatGPT chia lớp — phần phía sau lưng mờ nằm SAU thân, phần trước sáng ĐÈ lên thân.
+  - don3 lốc: thân xoay 8 hướng (E→SE→S→SW→W→NW→N→NE→E), vòng lốc nằm ngang nhỏ ở đuôi to dần lên đầu, nửa sau mờ sau thân, nửa trước sáng.
+- Tạm dùng hình đứng yên cho: trôi, rơi, lượn, lướt, tiếp đất, trúng đòn (PixelLab vẽ các động tác này bị mọc chân nên bỏ). Đập đất dùng tạm đòn 2, chém trên không dùng tạm đòn 1.
+- Tư vấn: docs/combo-liem-3d-chatgpt.txt, docs/prompt-combo-liem-pixellab-chatgpt.txt.

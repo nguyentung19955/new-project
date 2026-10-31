@@ -1,0 +1,20 @@
+PROMPT PIXELLAB CHO COMBO 3 ĐÒN LƯỠI LIỀM — MẶT NẠ TRẮNG (tư vấn từ ChatGPT)
+
+Đòn 1 — Rising Scythe Slash (chém từ dưới lên)
+9 frames, 112px, side view facing RIGHT. F1 idle, scythe upright, blade upper-right. F2-3 pull scythe low behind body, twist torso backward. F4-5 powerful rising diagonal slash from lower-right to upper-right. F6 blade reaches high overhead. F7-8 heavy follow-through, lower scythe. F9 near idle, scythe upright. Both hands grip shaft. One small curved smoke tail below waist ONLY. NO legs, feet, knees, second tail or trailing cloth. NO VFX, slash trails, glow effects or particles.
+Nhịp: 3 frame lấy đà -> 2 frame chém mạnh -> 3 frame theo quán tính -> 1 frame hồi thế.
+
+Đòn 2 — Overhead Scythe Chop (chém từ trên xuống)
+9 frames, 112px, side view facing RIGHT. F1 idle, scythe upright, blade upper-right. F2-3 raise scythe high behind head, torso arches backward. F4-5 heavy overhead chop, blade swings from upper-right down to lower-right. F6 blade reaches lowest point, torso compressed. F7-8 recover upward with visible weapon weight. F9 near idle, scythe upright. Both hands grip shaft. One small curved smoke tail below waist ONLY. NO legs, feet, knees, second tail or trailing cloth. NO VFX, slash trails, glow effects or particles.
+Nhịp: lấy đà cao -> bổ xuống cực nhanh -> khựng tại điểm thấp -> kéo liềm lên chậm hơn.
+
+Đòn 3 — Full 360° Scythe Spin (xoay vòng kết liễu)
+9 frames, 112px, side view facing RIGHT. F1 idle, scythe upright, blade upper-right. F2 wind up, twist torso backward. F3-6 perform ONE complete 360-degree horizontal body rotation, scythe extended outward, blade following a wide circular path. Show back view briefly at F4, return facing RIGHT at F6. F7 strong follow-through, F8-9 settle to idle, scythe upright. Both hands grip shaft. One small curved smoke tail below waist ONLY. NO legs, feet, knees, second tail or trailing cloth. NO VFX, slash trails, glow effects or particles.
+Nhịp: 1 frame lấy đà -> 4 frame xoay đủ 360° -> 1 frame giữ quán tính -> 2 frame ổn định.
+
+MẸO NGĂN PIXELLAB TỰ SINH CHÂN
+A. Thêm cùng một câu khóa vào cả 3 prompt:
+LEGLESS GHOST ANATOMY LOCK: The character has NO legs, NO feet, NO knees, NO hips-to-feet anatomy. Below the waist is exactly ONE short curved smoke tail, permanently attached to the torso. Never split, duplicate, elongate or replace the tail with legs, fabric, ribbons or extra appendages.
+B. Giữ đuôi khói gần như cố định; không dùng từ step forward, lunge, plant feet, crouch, jump.
+C. Dùng ảnh tham chiếu bản cầm liềm đã duyệt; không đổi mặt nạ, khe mắt cyan, vân cyan, hình liềm, số tay.
+D. Kiểm tra kỹ các frame nguy hiểm (thân vặn mạnh, điểm thấp nhất, lúc xoay lưng).

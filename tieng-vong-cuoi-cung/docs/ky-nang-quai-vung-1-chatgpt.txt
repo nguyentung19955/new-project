@@ -1,0 +1,28 @@
+KỸ NĂNG QUÁI VÙNG 1 – THIẾT KẾ LẠI (ChatGPT tư vấn, 31/10/2026)
+Mục tiêu: 5 quái = 5 bài toán chiến đấu khác nhau (không con nào chỉ lao tới cắn/cào/đánh tay).
+Đơn vị: HP, px logic, px/s, giây. DMG = sát thương.
+
+Khuyết Cẩu | Áp sát + đặt bẫy | HP 48 | Tốc 52 | Phát hiện 155
+  Chính "Mầm Rễ Nghe Lén": cào đất, mọc tối đa 2 bẫy rễ gần nhân vật (cách 35–110), tồn tại 5s; nhân vật chạm vào thì rễ bật lên trói 0,45s + 8 DMG. Báo 0,55s, hồi 5,5s. Bẫy phá được bằng lưỡi liềm; không đặt ngay dưới chân nhân vật.
+  Phụ "Vồ Chớp Nhoáng": lao 70px, 12 DMG, báo 0,35s, hồi 2,8s.
+  Động tác mới: Root Cast 5 khung. VFX: mọc bẫy 5f, bẫy bật 5f, bẫy vỡ 4f, bụi lao 3f.
+
+Kèn Câm | Tầm xa + đạn nảy | HP 36 | Tốc 18 | Phát hiện 260 | giữ khoảng cách 110–220
+  Chính "Tiếng Vọng Vỡ": bắn 2 viên đạn âm lệch 18°, nảy 1 lần trên địa hình, 9 DMG/viên, tốc 125, tồn tại 2,6s. Báo 0,65s, hồi 3,4s.
+  Phụ "Kèn Giật Lùi": thổi đẩy lùi 45px khi bị áp sát, 6 DMG, tầm 48, báo 0,3s, hồi 4s.
+  Khắc chế: nhảy qua đạn, lướt xuyên, áp sát từ trên/sau lưng. VFX: tụ kèn 5f, đạn 4f lặp, nảy 4f, giật lùi 4f.
+
+Hồn Vải | Kiểm soát vùng + kéo | HP 40 | Tốc 36
+  Chính "Giếng Im Lặng": tạo 1 vùng hút bán kính 65 cách 45–115, hút 55px/s, làm chậm 20%, 0 DMG, tồn tại 2s. Báo 0,75s, hồi 6,5s.
+  Phụ "Quất Vải": 7 DMG, tầm 48, đẩy 35px, báo 0,35s, hồi 3,5s.
+  Động tác mới: Silence Channel 6 khung. VFX: mở giếng 6f, giếng lặp 4f, giếng sập 5f, xung vải 4f.
+
+Màn Tang | Phục kích + tàng hình | HP 34 | Lao 190 | Phát hiện 95, kích hoạt 75
+  Chính "Rơi Chụp": ẩn trên trần (gần như vô hình), khi nhân vật đi dưới thì hiện ra và lao chéo xuống, 14 DMG, tầm tối đa 145. Báo 0,5s, hồi 7s, lộ diện 1,2s sau cú lao.
+  Phụ "Móc Ngang": 8 DMG, tầm 55, báo 0,35s, hồi 2,8s.
+  Động tác mới: Reveal 5f, Dive 4f. VFX: lấp lánh khi ẩn 3f, hiện hình 4f, vệt lao 4f, chạm đất 5f.
+
+Vọng Tàn (tinh anh) | Phá sàn + phản đòn + 2 pha | HP 240 (pha 2 khi ≤120) | Tốc 25→36 | Phát hiện 230
+  Chính "Nện Chuông": nện chuông phá 1 (pha 2: 2) đoạn sàn trong 2,2s, va chạm 18 DMG, tầm 140, báo 0,85s, hồi 6,5s.
+  Phụ "Giáp Chuông": giơ chuông chắn phía trước 1s, đánh vào thì bị phản 10 DMG (tầm 65), báo 0,45s, hồi 7s. Khắc chế: đánh từ phía sau / đập đất từ trên.
+  Động tác mới: Bell Guard 5f, Phase Transition 6f. VFX: nện 7f, nứt 5f, sập 6f, phục hồi 5f, giáp lặp 4f, phản đòn 5f, chuyển pha 8f.
