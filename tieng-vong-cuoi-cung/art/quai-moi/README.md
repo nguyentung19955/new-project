@@ -13,6 +13,6 @@ PixelLab vẽ (custom, Pro Flash, sidescroller, quay mặt sang trái). ChatGPT 
 Mỗi con: dung / di / danh / trung / chet (fNN.png). `fx-danh/`: xNN = hiệu ứng, cNN = ghép (phu: nhân vật ở (70,30); doi (50,25); nam (150,25)).
 
 Ghi chú:
-- Bọ Vỏ Mộc: tạo lại thành bọ hung thật (bản cũ giống rùa). PixelLab không cho lật ngửa nên `chet` là lật ngửa làm bằng code. fx-danh: bụi + tia húc sừng (bọ ở (50,30), khung 200x120).
+- Bọ Vỏ Mộc: tạo lại thành bọ hung thật (bản cũ giống rùa). `chet` dùng nguyên bản PixelLab (không lật ngửa). fx-danh: bụi + tia húc sừng (bọ ở (50,30), khung 200x120).
 - Người Gác Câm: đã lật gương cho quay trái. PixelLab 3 lần đều vẽ cú đập sai (ra sau lưng / quay mặt trước), nên `danh` dùng tư thế giơ găng ra trước + ChatGPT vẽ luồng sóng đấm (fx-danh, nhân vật ở (130,20), khung 250x140).
 - Dơi Rễ `di`: bỏ 2 khung chớp sáng do PixelLab tự thêm.
