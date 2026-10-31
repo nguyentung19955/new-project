@@ -1,0 +1,15 @@
+THIẾT KẾ ĐÒN QUÁI VÙNG ĐẦU & TINH ANH THAY THẾ (ChatGPT, 31/10/2026) – tóm tắt
+
+NGUYÊN TẮC: PixelLab chỉ vẽ thân quái, quay TRÁI, không đánh ra sau lưng; hiệu ứng vẽ riêng. Màu hiệu ứng quái thường: #806046 #A86A36 #E7A64D #FFE1A0.
+
+1) PHU ĐÈN LẠC – "GỌI BÓNG QUA ĐÈN": hạ đèn hướng miệng đèn xuống đất phía trước, một vệt gợn âm bò dọc mặt đất sang trái rồi nổ vòng thấp ở cuối. Báo 0,45–0,65s (đèn sáng dần). Né: nhảy qua vệt / lướt xuyên. Sau đòn loạng choạng 0,6s.
+2) BỌ VỎ MỘC – "MAI GÕ NHỊP": cắm chân, gõ mai xuống đất HAI NHỊP (nhịp 2 trễ 0,25s, gợn rộng hơn). Báo: rãnh mai sáng, co người 2 lần. Sau nhịp 2 kẹt ngắn.
+3) DƠI RỄ – "MÓC RỄ TREO NGƯỢC": hãm cánh giữa không, cong đuôi rễ rồi quật móc chéo xuống trước-trái, giữ chốc lát rồi giật lên. Vùng nguy hiểm hình nón chéo.
+4) NẤM THỞ – "HÍT VÀ GIẬT BÀO TỬ": phồng mũ, hút bào tử vào khe 0,6s rồi phụt một cụm bào tử sang trái, để lại 2–3 đám nhỏ tạm thời. Sau đó xẹp một nhịp.
+
+TINH ANH MỚI (thay Người Gác Câm) – "CHUÔNG KÉN NỨT"
+Kén chuông gỗ hoá thạch + đồng mục lơ lửng, đỉnh nhọn lệch, miệng chuông nứt chữ V hướng trái, 3 tua rễ lớn bên dưới. Không mặt, không tay chân.
+Màu: #27242F #514352 #82646B #A64F48 (nứt đỏ gạch, báo đòn) #E2A18A (lõi).
+Đòn "HỒI CHUÔNG NGHỊCH": ngả ra sau nạp, rồi giật miệng chuông về trái 2 lần → 2 xung cung (xung 1 sát thân, xung 2 xa hơn, trễ 1 nhịp). Báo 0,6–0,8s (nứt đỏ sáng). Né: áp sát phía sau hoặc nhảy/lướt qua. Sau xung 2 khựng 0,7s.
+Hiệu ứng: cung vòm chuông vỡ, đứt góc cạnh; màu #514352 #A64F48 #D57967 #E2A18A #F3C9AE.
+5 động tác: đứng (lơ lửng nhấp nhô), đi (trôi về trái, tua kéo sau), đánh, trúng đòn (giật về phải), chết (mất thăng bằng, sụp nằm nghiêng, không nổ vụn).
