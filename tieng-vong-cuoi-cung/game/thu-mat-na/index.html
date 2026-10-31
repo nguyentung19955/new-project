@@ -76,7 +76,7 @@ async function nap(){
   const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2); E.datCo(NVJ.co || 1);
   await Promise.all(Object.entries(NVJ.clip).map(async ([ten, def]) => { E.NV.clip[ten] = await SpriteMN.napClip(gNV, def, ten); }));
   for (const c of (NVJ.cap || [])){
-    const o = {ten:c.ten, sat_thuong:c.sat_thuong, clip:{}};
+    const o = {ten:c.ten, sat_thuong:c.sat_thuong, clip:{}, chuoi:c.chuoi || null, bien_the:c.bien_the || null};
     await Promise.all(Object.entries(c.clip || {}).map(async ([ten, def]) => { o.clip[ten] = await SpriteMN.napClip(gNV, def, ten); }));
     CAP.push(o);
   }
