@@ -1,6 +1,6 @@
 # Nâng cấp kỹ năng – nhân vật Mặt Nạ Trắng
 
-Mỗi đòn có **3 cấp**. Mới có đòn chỉ ở cấp 1: hiệu ứng nhỏ, màu xanh đậm, tầm ngắn. Muốn lên cấp phải **đi tới giai đoạn mới** (hạ boss vùng) rồi mang Đồng Cổ về Thợ Rèn Hòn ở Làng Chuông. Đạt cấp 3 mới có đủ tầm và hiệu ứng như ảnh gốc.
+Mỗi đòn có **3 cấp**. Mới có đòn chỉ ở cấp 1: hiệu ứng nhỏ, màu xanh ngọc, tầm ngắn. Muốn lên cấp phải **đi tới giai đoạn mới** (hạ boss vùng) rồi mang Đồng Cổ về Thợ Rèn Hòn ở Làng Chuông. Đạt cấp 3 mới có đủ tầm và hiệu ứng như ảnh gốc.
 
 | Cấp | Tên | Hiệu ứng hình | Tầm | Sát thương |
 | --- | --- | --- | --- | --- |
