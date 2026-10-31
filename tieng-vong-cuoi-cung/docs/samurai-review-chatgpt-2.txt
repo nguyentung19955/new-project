@@ -1,0 +1,32 @@
+SAMURAI – QA ANIMATION LẦN 2 (31/10/2026) – tóm tắt ý kiến ChatGPT
+
+1. VÌ SAO ĐỨNG → CHẠY → DỪNG KHÔNG TỰ NHIÊN
+- Từ đứng thẳng chân sát nhau sang dáng chạy thấp chân rộng, nếu hông và đầu cùng đổi một lúc thì hình "bật". Cần 2 giai đoạn: dồn trọng tâm rồi mới đạp chân.
+- Đầu/mũ/vai phải đi theo một đường cong liên tục; khăn đi trễ thân 1 khung.
+- Chân trụ phải có pha chịu lực -> đạp -> rời đất, không trượt.
+- Phát ngược Start để làm Stop là sai vật lý: trông như bị kéo lùi / chạy ngược.
+
+2. START MỚI – 6 KHUNG (tổng ~275ms)
+S1 45ms: idle cuối, tay bắt đầu tiến về chuôi (có thể bỏ).
+S2 55ms: dồn trọng tâm sang chân trước, gối gập nhẹ, hông hạ 1–2px, thân nghiêng 8–12°, tay gần tới chuôi.
+S3 50ms: nén lực: hai gối gập, hông thấp hơn idle 2–3px, thân nghiêng 18–22°, chân sau dịch ra sau, tay nắm chuôi.
+S4 40ms: đạp chân sau, gối chân gần nhấc lên trước, thân nghiêng 25–30° (khung quan trọng nhất để không bị bật).
+S5 40ms: bước đầu: chân gần tiến ra trước, chân xa vừa rời đất, thân nhổm lên chút, khăn duỗi về sau.
+S6 45ms: chân trước chạm đất, khớp khung chạy 1 hoặc 5 (nếu trùng thì nhảy thẳng vào chạy).
+
+3. STOP RIÊNG – 5 KHUNG (tổng ~255ms)
+T1 35ms: từ khung chạy gần nhất, chân trước vươn ra để hãm, thân nghiêng ~25°.
+T2 55ms: bàn chân trước chống chắc trước hông, gối trước gập, thân vẫn lao tới 18–20°, hông hạ 1–2px.
+T3 65ms: hãm/trượt ngắn: dồn lực vào chân trước, thân dựng dần 10–12°, chân sau bước ngắn tới, khăn còn bay.
+T4 50ms: thu chân sau về dưới hông, thân gần thẳng 3–5°, tay rời chuôi, khăn rũ.
+T5 50ms: khớp chính xác dáng đứng thở.
+
+4. ĐÒN ĐÁNH
+- Đòn 1: giữ 13 khung; nếu khung 1/2 hay 12/13 gần giống nhau thì gộp. Khi nối combo sang đòn 2 thì bỏ đoạn tra kiếm.
+- Đòn 2: tránh 2 khung vòng sáng cực đại liên tiếp; khung cuối phải cùng góc tay/kiếm/mũ với khung đầu đòn 3. Nhịp đề xuất 45,40,40,35,35,60,45,45,40,40.
+- Đòn 3: nhịp đề xuất 45,50,55,65,40,35,35,75,55,50,70; khung chạm đất giữ 60–75ms; khung cuối không bật từ ngồi lên đứng trong 1 khung.
+
+5. THỨ TỰ SỬA
+P0: Vẽ Stop riêng 5 khung; sửa Start thành 6 dáng; khóa kích thước mũ/thân và chân trụ.
+P1: Nối combo không tra kiếm giữa chừng; sửa đòn 3 đoạn đỉnh -> bổ -> chạm đất; chỉnh lại nhịp.
+P2: Dọn pixel lạc, hiệu ứng sai màu.
