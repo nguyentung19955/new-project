@@ -425,13 +425,9 @@
    "chuoi": [
     "don1",
     "don2",
-    "don3",
     "don4"
    ],
-   "bien_the": {
-    "len": "cheolen",
-    "xuong": "cheoxuong"
-   }
+   "bien_the": {}
   },
   {
    "ten": "Vang Âm",
@@ -704,13 +700,9 @@
    "chuoi": [
     "don1",
     "don2",
-    "don3",
     "don4"
    ],
-   "bien_the": {
-    "len": "cheolen",
-    "xuong": "cheoxuong"
-   }
+   "bien_the": {}
   },
   {
    "ten": "Cộng Hưởng",
@@ -983,13 +975,15 @@
    "chuoi": [
     "don1",
     "don2",
-    "don3",
     "don4"
    ],
-   "bien_the": {
-    "len": "cheolen",
-    "xuong": "cheoxuong"
-   }
+   "bien_the": {}
   }
- ]
+ ],
+ "chuoi": [
+  "don1",
+  "don2",
+  "don4"
+ ],
+ "bien_the": {}
 }

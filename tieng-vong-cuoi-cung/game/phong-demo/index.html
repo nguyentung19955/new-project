@@ -116,8 +116,8 @@ function batDau(){
   const luoi = MAN.luoi.map(r => r.repeat(SO_BAN));
   E.napBanDo(luoi, VACH);
   const T = E.BD.T, dat = 9 * T;
-  E.datNV(MAN.xuat_phat_cot * T + T / 2, dat);
-  for (const v of DAT_PHONG){
+  E.datNV(MAN.xuat_phat_cot * T + T / 2, (MAN.xuat_phat_hang ?? 9) * T);
+  for (const v of (MAN.quai || DAT_PHONG).map(v => v.hang !== undefined ? Object.assign({dat_y:v.hang * T}, v) : v)){
     const d = QJ.loai[v.loai]; if (!d){ LOI.push('dat: không có loại ' + v.loai); continue; }
     E.QUAI.push(E.taoQuai(d, v, v.dat_y ?? dat));
   }
@@ -180,8 +180,13 @@ function setMode(t){ if (touchMode === t) return; touchMode = t; document.body.c
 setMode(matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
 
 /* ================= CAMERA ================= */
-const CAM = {x:0};
-function camBuoc(){ const muc = clampN(pl.x + pl.w / 2 - W / 2 + pl.face * 40, 0, E.BD.COT * E.BD.T - W); CAM.x += (muc - CAM.x) * 0.12; }
+const CAM = {x:0, y:0, dau:true};
+function camBuoc(){
+  const mx = clampN(pl.x + pl.w / 2 - W / 2 + pl.face * 40, 0, E.BD.COT * E.BD.T - W);
+  const my = clampN(pl.y + pl.h / 2 - H * 0.55, 0, E.BD.HANG * E.BD.T - H);
+  if (CAM.dau){ CAM.x = mx; CAM.y = my; CAM.dau = false; }
+  CAM.x += (mx - CAM.x) * 0.12; CAM.y += (my - CAM.y) * 0.1;
+}
 
 /* ================= VẼ ================= */
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
@@ -285,34 +290,34 @@ function buocKhongKhi(){
   for (const q of E.QUAI) if (q.dead || q.st === 'chet') q._daHa = true;
   if (!CONG.mo && E.QUAI.length && E.QUAI.every(q => q._daHa)){ CONG.mo = true; thongBao('Chuông câm ngân khẽ… cổng rễ đã mở'); E.S.sht = 10; E.S.shm = 3; E.S.shx = 1; E.S.shy = 1; }
   for (const b of BUI){ b.x += b.vx + Math.sin(E.S.frame / 90 + b.ph) * .03; b.y += b.vy; if (b.y > 170){ b.y = 18; b.x = Math.random() * 640; } }
-  if (!HON.on){ if (--HON.cho <= 0){ HON.on = true; HON.t = 0; HON.x = CAM.x / PX + 40 + Math.random() * 240; HON.y = 50 + Math.random() * 50; HON.vx = (Math.random() < .5 ? -1 : 1) * .12; } }
+  if (!HON.on){ if (--HON.cho <= 0){ HON.on = true; HON.t = 0; HON.x = CAM.x / PX + 40 + Math.random() * 240; HON.y = CAM.y / PX + 50 + Math.random() * 50; HON.vx = (Math.random() < .5 ? -1 : 1) * .12; } }
   else { HON.t++; HON.x += HON.vx; HON.y += Math.sin(HON.t / 40) * .08; if (HON.t > 420){ HON.on = false; HON.cho = 360 + Math.random() * 480; } }
 }
-function veKhongKhi(camPx, cam){
+function veKhongKhi(camPx, cam, camPy, camY){
   const t = E.S.frame / 60;
   // 1) bóng tối 320×180, khoét lỗ ở đèn / nhân vật / quái
   lg.globalCompositeOperation = 'source-over'; lg.clearRect(0, 0, VW, VH);
   lg.fillStyle = 'rgba(6,5,10,0.64)'; lg.fillRect(0, 0, VW, VH);
   lg.globalCompositeOperation = 'destination-out';
   const lo = (x, y, r, k) => { const gr = lg.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, 'rgba(0,0,0,' + k + ')'); gr.addColorStop(1, 'rgba(0,0,0,0)'); lg.fillStyle = gr; lg.fillRect(x - r, y - r, r * 2, r * 2); };
-  MAN.den.forEach(([x, y, k], i) => lo(x - camPx, y, 58 * k * nhapNhay(t, i), 0.9 * k));
-  lo((pl.x + pl.w / 2 - cam) / PX, (pl.y + pl.h * 0.45) / PX, 46, 0.62);
-  for (const q of E.QUAI) if (!q.dead) lo((q.x + q.w / 2 - cam) / PX, (q.y + q.h / 2) / PX, 22, 0.38);
-  if (CONG.mo) lo(MAN.cong[0] - camPx, MAN.cong[1] - 40, 44, 0.5);
+  MAN.den.forEach(([x, y, k], i) => lo(x - camPx, y - camPy, 58 * k * nhapNhay(t, i), 0.9 * k));
+  lo((pl.x + pl.w / 2 - cam) / PX, (pl.y + pl.h * 0.45 - camY) / PX, 46, 0.62);
+  for (const q of E.QUAI) if (!q.dead) lo((q.x + q.w / 2 - cam) / PX, (q.y + q.h / 2 - camY) / PX, 22, 0.38);
+  if (CONG.mo) lo(MAN.cong[0] - camPx, MAN.cong[1] - 40 - camPy, 44, 0.5);
   ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(LC, 0, 0, VW, VH, 0, 0, W, H);
   // 2) ánh hổ phách ấm quanh đèn (cộng sáng nhẹ)
   ctx.globalCompositeOperation = 'lighter';
-  MAN.den.forEach(([x, y, k], i) => { const X = (x - camPx) * PX, Y = y * PX, r = 130 * k * nhapNhay(t, i);
+  MAN.den.forEach(([x, y, k], i) => { const X = (x - camPx) * PX, Y = (y - camPy) * PX, r = 130 * k * nhapNhay(t, i);
     const gr = ctx.createRadialGradient(X, Y, 0, X, Y, r); gr.addColorStop(0, 'rgba(194,138,69,' + (0.16 * k) + ')'); gr.addColorStop(1, 'rgba(194,138,69,0)'); ctx.fillStyle = gr; ctx.fillRect(X - r, Y - r, r * 2, r * 2); });
   ctx.globalCompositeOperation = 'source-over';
   // 3) tiền cảnh rễ treo (đã tối sẵn)
-  if (IMG.truoc) ctx.drawImage(IMG.truoc, camPx, 0, VW, VH, 0, 0, W, H);
+  if (IMG.truoc) ctx.drawImage(IMG.truoc, camPx, camPy, VW, VH, 0, 0, W, H);
   // 4) bụi tro
   for (const b of BUI){ const X = Math.round(b.x - camPx * 1.05), Y = Math.round(b.y); if (X < -2 || X > VW) continue;
     ctx.fillStyle = 'rgba(176,163,153,' + (0.25 + 0.2 * Math.sin(t * 1.3 + b.ph)) + ')'; ctx.fillRect(X * PX, Y * PX, PX, PX); }
   // 5) hồn lạc trôi (rất mờ)
   if (HON.on && IMG.hon){ const fw = IMG.hon.width / 3, k = ((HON.t / 14) | 0) % 3, al = Math.min(1, HON.t / 90, (420 - HON.t) / 90) * 0.2;
-    ctx.globalAlpha = al; ctx.save(); const X = (HON.x - camPx) * PX, Y = HON.y * PX;
+    ctx.globalAlpha = al; ctx.save(); const X = (HON.x - camPx) * PX, Y = (HON.y - camPy) * PX;
     if (HON.vx > 0){ ctx.translate(X, Y); ctx.scale(-1, 1); ctx.drawImage(IMG.hon, k * fw, 0, fw, IMG.hon.height, -fw * 1.5, -IMG.hon.height * 1.5, fw * 3, IMG.hon.height * 3); }
     else ctx.drawImage(IMG.hon, k * fw, 0, fw, IMG.hon.height, X - fw * 1.5, Y - IMG.hon.height * 1.5, fw * 3, IMG.hon.height * 3);
     ctx.restore(); ctx.globalAlpha = 1; }
@@ -321,16 +326,16 @@ function veKhongKhi(camPx, cam){
   ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); ctx.restore();
 }
 function ve(){
-  const camPx = Math.round(CAM.x / PX), cam = camPx * PX;
+  const camPx = Math.round(CAM.x / PX), cam = camPx * PX, camPy = Math.round(CAM.y / PX), camY = camPy * PX;
   // 1) cảnh 320×180 điểm (2 bản ghép)
   g.imageSmoothingEnabled = false;
   g.fillStyle = '#08090d'; g.fillRect(0, 0, VW, VH);
-  veLap(IMG.bg, 0.12, camPx);
-  if (IMG.mid){ const w = IMG.mid.width; let x = -(Math.round(camPx * 0.35) % w); for (; x < VW; x += w) g.drawImage(IMG.mid, x, -4); }
-  if (IMG.chuong){ const camC = MAN.chuong[0] + 8 - VW / 2; g.drawImage(IMG.chuong, Math.round(VW / 2 - 80 - (camPx - camC) * 0.85), 16); }
-  if (IMG.canh) g.drawImage(IMG.canh, -camPx, 0);
+  if (IMG.bg){ const w = IMG.bg.width; const y = -Math.round(camPy * 0.08); let x = -(Math.round(camPx * 0.12) % w); for (; x < VW; x += w) g.drawImage(IMG.bg, x, y); }
+  if (IMG.mid){ const w = IMG.mid.width; let x = -(Math.round(camPx * 0.35) % w); for (; x < VW; x += w) g.drawImage(IMG.mid, x, -4 - Math.round(camPy * 0.16)); }
+  if (IMG.chuong){ const camC = MAN.chuong[0] + 8 - VW / 2; g.drawImage(IMG.chuong, Math.round(VW / 2 - 80 - (camPx - camC) * 0.85), MAN.chuong[1] - camPy); }
+  if (IMG.canh) g.drawImage(IMG.canh, -camPx, -camPy);
   const cg = CONG.mo ? IMG.cong1 : IMG.cong0;
-  if (cg) g.drawImage(cg, MAN.cong[0] - 48 - camPx, MAN.cong[1] - 92);
+  if (cg) g.drawImage(cg, MAN.cong[0] - 48 - camPx, MAN.cong[1] - 92 - camPy);
   g.drawImage(VACH_IMG, -camPx, 0);
   // 2) phóng ×3 vào khung logic, rồi ×M lên màn
   const S = E.S; let ox = 0, oy = 0;
@@ -340,10 +345,12 @@ function ve(){
   ctx.setTransform(M, 0, 0, M, ox * M, oy * M); ctx.imageSmoothingEnabled = false;
   ctx.drawImage(pc, 0, 0, VW, VH, 0, 0, W, H);
   // 3) quái, nhân vật, tia
+  ctx.save(); ctx.translate(0, -camY);
   for (const q of E.QUAI) veQuai(q, cam);
   veNV(cam);
-  veKhongKhi(camPx, cam);
-  for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round((p.x - cam) / 2) * 2, Math.round(p.y / 2) * 2, 4, 4); }
+  ctx.restore();
+  veKhongKhi(camPx, cam, camPy, camY);
+  for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round((p.x - cam) / 2) * 2, Math.round((p.y - camY) / 2) * 2, 4, 4); }
   // 4) HUD: máu (ô) + Tiếng Vọng (thanh xanh) + cấp
   ctx.setTransform(M, 0, 0, M, 0, 0);
   for (let i = 0; i < E.P.maxHp; i++){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 24, 15, 18, 18); ctx.fillStyle = i < pl.hp ? '#eef1f0' : '#304a73'; ctx.fillRect(18 + i * 24, 18, 12, 12); }
@@ -354,7 +361,7 @@ function ve(){
   // 5) hộp (debug)
   if (OPT.hb){
     ctx.setTransform(M, 0, 0, M, 0, 0); ctx.lineWidth = 2;
-    const r = (o, c, d) => { ctx.setLineDash(d ? [4, 3] : []); ctx.strokeStyle = c; ctx.strokeRect(o.x - cam, o.y, o.w, o.h); };
+    const r = (o, c, d) => { ctx.setLineDash(d ? [4, 3] : []); ctx.strokeStyle = c; ctx.strokeRect(o.x - cam, o.y - camY, o.w, o.h); };
     r(pl, '#4af'); r(E.hurtBox(), '#78e68c', true);
     const hb = E.hopNV(); if (hb) r(hb, '#f33');
     for (const q of E.QUAI) if (!q.dead){ r(q, '#fc4');
