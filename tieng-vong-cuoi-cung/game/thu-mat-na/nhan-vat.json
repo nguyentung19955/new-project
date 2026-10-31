@@ -1,12 +1,12 @@
 {
- "ghi_chu": "Kiếm khách song kiếm (PixelLab 00d70d1c, bản bỏ bao kiếm). Hình 128px quay PHẢI, chan=[64,108]. Bản DEMO: chạy/nhảy/rơi/trượt tường còn tạm, sẽ vẽ lại.",
+ "ghi_chu": "Kiếm khách song kiếm (PixelLab 00d70d1c). Di chuyển = mẫu Template·Skeleton v3 (giữ nguyên điểm ảnh nhân vật), 128px chan=[64,108]. Đòn + lướt/trúng đòn/nhảy đôi/tiếp đất = ảnh ghép 256px có hiệu ứng ChatGPT (lớp sau/lớp trước), chan=[128,172]. Đòn combo đã chỉnh về bảng màu gốc.",
  "goc": "../../art/kiem-khach/",
  "ti_le": 2,
  "co": 0.75,
  "clip": {
   "dung": {
    "thu_muc": "dung",
-   "so_hinh": 9,
+   "so_hinh": 8,
    "chan": [
     64,
     108
@@ -15,7 +15,7 @@
   },
   "troi": {
    "thu_muc": "chay",
-   "so_hinh": 9,
+   "so_hinh": 8,
    "chan": [
     64,
     108
@@ -24,51 +24,51 @@
   },
   "nhay": {
    "thu_muc": "nhay",
-   "so_hinh": 9,
+   "so_hinh": 4,
    "chan": [
     64,
     108
    ],
-   "ms": 60,
+   "ms": 70,
    "lap": false
   },
   "nhaydoi": {
-   "thu_muc": "nhay",
-   "so_hinh": 9,
+   "thu_muc": "nhaydoi",
+   "so_hinh": 6,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 45,
+   "ms": 55,
    "lap": false
   },
   "roi": {
    "thu_muc": "roi",
-   "so_hinh": 9,
-   "chan": [
-    64,
-    108
-   ],
-   "ms": 90
-  },
-  "tiepdat": {
-   "thu_muc": "dung",
    "so_hinh": 3,
    "chan": [
     64,
     108
    ],
-   "ms": 40,
+   "ms": 100
+  },
+  "tiepdat": {
+   "thu_muc": "tiepdat",
+   "so_hinh": 4,
+   "chan": [
+    128,
+    172
+   ],
+   "ms": 45,
    "lap": false
   },
   "luot": {
    "thu_muc": "luot",
-   "so_hinh": 9,
+   "so_hinh": 6,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 30,
+   "ms": 40,
    "lap": false
   },
   "bamtuong": {
@@ -84,8 +84,8 @@
    "thu_muc": "don5",
    "so_hinh": 9,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
    "ms": [
     60,
@@ -115,7 +115,7 @@
   },
   "luon": {
    "thu_muc": "roi",
-   "so_hinh": 9,
+   "so_hinh": 3,
    "chan": [
     64,
     108
@@ -123,34 +123,34 @@
    "ms": 110
   },
   "trungdon": {
-   "thu_muc": "dung",
-   "so_hinh": 4,
+   "thu_muc": "trungdon",
+   "so_hinh": 6,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 60,
+   "ms": 55,
    "lap": false
   },
   "hoimau": {
    "thu_muc": "dung",
-   "so_hinh": 9,
+   "so_hinh": 8,
    "chan": [
     64,
     108
    ],
    "ms": 90,
    "lap": false,
-   "khung_hoi": 5
+   "khung_hoi": 4
   },
   "chet": {
-   "thu_muc": "dung",
-   "so_hinh": 9,
+   "thu_muc": "trungdon",
+   "so_hinh": 6,
    "chan": [
-    64,
-    108
+    128,
+    172
    ],
-   "ms": 110,
+   "ms": 130,
    "lap": false
   }
  },
@@ -163,8 +163,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -198,8 +198,8 @@
      "thu_muc": "don2",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,
@@ -234,8 +234,8 @@
      "thu_muc": "don3",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -273,8 +273,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,
@@ -309,8 +309,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -344,8 +344,8 @@
      "thu_muc": "don2",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,
@@ -380,8 +380,8 @@
      "thu_muc": "don3",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -419,8 +419,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,
@@ -455,8 +455,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -490,8 +490,8 @@
      "thu_muc": "don2",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,
@@ -526,8 +526,8 @@
      "thu_muc": "don3",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       35,
@@ -565,8 +565,8 @@
      "thu_muc": "don1",
      "so_hinh": 9,
      "chan": [
-      64,
-      108
+      128,
+      172
      ],
      "ms": [
       30,

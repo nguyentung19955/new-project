@@ -1,0 +1,922 @@
+TIẾNG VỌNG CUỐI CÙNG — ĐÁNH GIÁ DEMO & KẾ HOẠCH SỬA ANIMATION V2 (ChatGPT)
+(Phần I đánh giá chung: giữ thiết kế & cỡ nhân vật; vấn đề chính là pose + timing + trọng lượng + VFX. Ưu tiên P0: Jump, Fall, Run, Wall slide; P1: Attack1, Attack2; P2: Dash, Landing, Hurt; giữ Attack3.)
+
+4. WALL SLIDE
+
+ƯU TIÊN P1 — COMBAT
+
+5. ATTACK 1 — X SLASH
+6. ATTACK 2 — DOUBLE THRUST
+
+ƯU TIÊN P2
+
+7. DASH POLISH
+8. LANDING
+9. HURT REACTION
+
+GIỮ NGUYÊN TẠM THỜI:
+
+- ATTACK 3 — 360 SPIN.
+- IDLE nếu đang ổn.
+- Các animation đã được kiểm tra và không lỗi.
+
+Không tạo lại Attack 3 chỉ vì đang sửa combo.
+
+============================================================
+III. CHI TIẾT TỪNG ANIMATION
+============================================================
+
+------------------------------------------------------------
+1. JUMP — NHẢY
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P0
+
+Lỗi:
+Nhân vật đứng thẳng rồi bị nâng lên.
+Không có động tác bật chân.
+
+GIẢI PHÁP:
+
+Ưu tiên:
+ChatGPT vẽ 3 key pose rõ ràng trước.
+
+Sau đó:
+PixelLab Custom Animation tạo in-between.
+
+Không ưu tiên dùng Template Jumping ngay
+nếu template tạo tư thế đứng cứng.
+
+POSE CẦN CÓ:
+
+J1 — Anticipation:
+- Hai gối gập.
+- Thân hạ 5–7px.
+- Hai kiếm kéo nhẹ ra sau.
+- Tóc trễ theo chuyển động.
+
+J2 — Takeoff:
+- Hai chân đạp mạnh.
+- Một chân duỗi, một chân bắt đầu co.
+- Thân vươn lên.
+
+J3 — Rising:
+- Hai đầu gối co lên.
+- Bàn chân không còn chạm đất.
+- Hai kiếm giữ sát thân.
+
+J4 — Apex:
+- Hai chân co vừa phải.
+- Thân hơi nghiêng trước.
+- Tóc trôi nhẹ xuống.
+
+Đề xuất 6 frame:
+F1 crouch.
+F2 takeoff.
+F3 tuck legs.
+F4 rise.
+F5 apex.
+F6 hold.
+
+PROMPT PIXELLAB:
+
+"6-frame jump, side view RIGHT. F1 deep
+crouch, both knees bent. F2 powerful takeoff,
+one leg extends. F3-4 both knees tuck upward.
+F5-6 airborne apex with bent legs. Two
+straight swords stay near body. Thin white
+hair follows motion. Preserve mask and
+anatomy. No VFX."
+
+QUAN TRỌNG:
+
+Không dùng toàn bộ 6 frame làm một animation
+phát liên tục bất kể vận tốc.
+
+Claude cần chia:
+Jump Start → Rise → Apex.
+
+Jump Start:
+F1-F2.
+
+Rise:
+F3-F4.
+
+Apex:
+F5-F6.
+
+============================================================
+
+2. FALL — RƠI
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P0
+
+Lỗi:
+Nhân vật đứng thẳng khi rơi.
+Tóc bay nhưng chân không phản ứng.
+
+GIẢI PHÁP:
+
+ChatGPT vẽ 2-3 pose tĩnh sẽ dễ kiểm soát
+hình thể hơn việc yêu cầu PixelLab tự tạo
+một chu kỳ rơi dài.
+
+POSE:
+
+F1:
+- Hai gối co nhẹ.
+- Thân thẳng vừa phải.
+- Hai kiếm hướng xuống.
+
+F2:
+- Hai chân duỗi xuống.
+- Một chân thấp hơn chân còn lại.
+- Hai tay mở nhẹ để giữ thăng bằng.
+
+F3:
+- Thân hơi nghiêng trước.
+- Hai chân chuẩn bị tiếp đất.
+- Tóc kéo lên do chuyển động rơi.
+
+Có thể loop F2-F3 nhẹ.
+
+PROMPT PIXELLAB:
+
+"3-frame falling animation, side view RIGHT.
+Character is airborne, not standing.
+Knees slightly bent, feet hanging below,
+one leg lower than the other. Arms open
+slightly for balance, both straight swords
+point down. Thin long white hair trails
+upward. Preserve mask and proportions.
+No VFX."
+
+CÁCH LÀM BẰNG CHATGPT:
+
+- Cung cấp sprite Idle đã khóa.
+- Yêu cầu sửa chân, hông và góc thân.
+- Giữ nguyên đầu, mặt nạ, tóc và kiếm.
+- Vẽ 3 pose trên cùng baseline tham chiếu.
+- Sau đó tách sprite bằng code.
+
+============================================================
+
+3. RUN — CHẠY
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P0
+
+Lỗi:
+6 frame đầu gần như đứng.
+Các frame cuối mới bước rõ.
+
+Đây là lỗi nhịp chu kỳ.
+
+GIẢI PHÁP:
+
+PixelLab Template: RUNNING.
+
+Ưu tiên Template thay vì Custom.
+
+Yêu cầu:
+- 8 frame.
+- Hai chân đổi vị trí rõ ràng.
+- Có 2 contact pose đối xứng.
+- Có passing pose.
+- Thân nghiêng trước.
+- Hai kiếm giữ thấp.
+
+CHU KỲ 8 FRAME:
+
+F1: Right foot forward contact.
+F2: Compression.
+F3: Passing.
+F4: Lift.
+F5: Left foot forward contact.
+F6: Compression.
+F7: Passing.
+F8: Lift.
+
+F1 và F5 phải khác nhau rõ ràng.
+
+PROMPT PIXELLAB:
+
+"Fast 8-frame running cycle, side view RIGHT.
+Strong forward lean, wide alternating strides.
+F1 right foot forward contact, F5 left foot
+forward contact. Clear compression and passing
+poses. Arms counter-swing while holding two
+straight short swords low. Thin white hair
+trails backward. No standing pauses,
+no foot sliding, no VFX."
+
+TIMING:
+
+Đề xuất 65–80ms/frame để thử.
+
+8 frame:
+520–640ms/chu kỳ.
+
+Nếu cảm giác quá chậm:
+Thử 55–65ms/frame.
+
+Không tăng tốc animation chỉ để che lỗi
+các pose gần như giống nhau.
+
+QA:
+
+- Xem GIF ở tốc độ thật.
+- Kiểm tra hướng chạy.
+- Kiểm tra foot sliding.
+- Kiểm tra F1/F5.
+- Nếu chân có vẻ chạy lùi, thử kiểm tra
+thứ tự frame trước khi tạo lại.
+
+============================================================
+
+4. WALL SLIDE — TRƯỢT TƯỜNG 3/4
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P0
+
+Lỗi:
+PixelLab vẽ đứng giơ kiếm.
+Không thể hiện đang tì vào tường.
+
+GIẢI PHÁP:
+
+Ưu tiên ChatGPT vẽ key pose.
+Không dùng Template mặc định.
+
+LÝ DO:
+
+Wall slide phụ thuộc vị trí tường và
+tư thế tiếp xúc.
+
+PixelLab không biết tường nằm ở đâu
+nếu chỉ yêu cầu "wall slide".
+
+THIẾT KẾ POSE:
+
+Tường ở BÊN PHẢI.
+
+Nhân vật:
+- Thân nhìn góc SE (3/4).
+- Ngực nghiêng về phía tường.
+- Tay phải chống lên tường.
+- Khuỷu tay gập.
+- Hai gối co.
+- Hai chân đặt hơi lệch.
+- Bàn chân gần tường tì vào mặt tường.
+- Tay còn lại giữ hai kiếm không phù hợp,
+nên cần xác định cách cầm vũ khí.
+
+ĐỀ XUẤT CẦM KIẾM:
+
+Một kiếm ở tay trái.
+Kiếm tay phải được thu về vị trí đeo
+sau hông khi trượt tường.
+
+Nếu không muốn cơ chế cất kiếm:
+Cho tay phải cầm kiếm thấp và chống tường
+bằng cẳng tay, nhưng silhouette khó đọc hơn.
+
+Tốt nhất:
+Thiết kế riêng một pose Wall Slide
+với một kiếm tạm cất.
+
+ANIMATION 4 FRAME:
+
+F1: Tì tường.
+F2: Trượt xuống, gối co.
+F3: Tóc và áo kéo lên.
+F4: Giữ tư thế trượt.
+
+PROMPT PIXELLAB:
+
+"4-frame wall slide, three-quarter view
+facing RIGHT, solid wall on RIGHT.
+Character leans against wall, right palm
+pressed to it, elbow bent. Knees tucked,
+feet braced against wall. Left hand holds
+one straight sword low; other sword sheathed.
+Body slides downward slightly. Thin white
+hair trails upward. No VFX."
+
+CÁCH CHATGPT VẼ:
+
+1. Dùng sprite SE đã khóa.
+2. Đặt một hình chữ nhật tường bên phải
+làm tham chiếu tư thế.
+3. Vẽ pose chống tường.
+4. Xóa tường khỏi sprite cuối.
+5. Tạo 4 biến thể chuyển động nhỏ.
+6. Claude đặt sprite sát collider tường.
+
+Khi tường bên trái:
+Có thể mirror nếu thiết kế cho phép.
+
+Không nên để nhân vật giơ kiếm như
+đang chuẩn bị tấn công.
+
+============================================================
+
+5. ATTACK 1 — X SLASH
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P1
+
+Lỗi:
+Đòn ra hơi chậm.
+Vệt X PixelLab tự vẽ thô.
+
+GIẢI PHÁP:
+
+Không nhất thiết phải vẽ lại toàn bộ thân.
+
+Làm theo thứ tự:
+
+1. Bỏ VFX dính trong sprite nếu có.
+2. Giảm thời gian anticipation.
+3. Rút ngắn khoảng cách giữa hai hit.
+4. Tăng tốc hai frame chém chính.
+5. Tạo VFX riêng.
+
+TIMING MỚI — 9 FRAME:
+
+F1: 25ms — idle.
+F2: 25ms — windup.
+F3: 25ms — rotate SE.
+F4: 20ms — HIT 1.
+F5: 20ms — HIT 2.
+F6: 25ms — follow-through.
+F7: 30ms — recovery.
+F8: 35ms — recovery.
+F9: 35ms — guard.
+
+Tổng: 240ms.
+
+Hitstop:
+HIT 1 = 12ms.
+HIT 2 = 20ms.
+
+Lunge:
++8px.
+
+Nếu sprite gốc không có VFX sạch,
+tạo lại bằng PixelLab Custom.
+
+PROMPT:
+
+"9-frame fast dual sword X-slash, facing
+RIGHT. F1 idle, F2-3 quick windup with
+torso turning toward camera. F4 first
+diagonal slash, F5 immediate opposite
+diagonal slash. F6 strong follow-through,
+F7-9 recover. Two straight swords stay
+visible. Sharp body rotation, minimal delay.
+Preserve mask, thin white hair and legs.
+NO VFX, trails or particles."
+
+============================================================
+
+6. ATTACK 2 — DOUBLE THRUST
+------------------------------------------------------------
+
+MỨC ƯU TIÊN: P1
+
+Lỗi:
+Đâm nhẹ.
+Thiếu lực.
+
+NGUYÊN NHÂN CÓ THỂ:
+
+- Thân không nghiêng đủ.
+- Kiếm chỉ đưa tay ra, hông không di chuyển.
+- Thiếu lunge.
+- Không có hitstop rõ.
+- VFX quá nhỏ.
+- Thiếu phản ứng của quái.
+
+GIẢI PHÁP:
+
+PixelLab Custom Animation.
+
+THAY ĐỔI:
+
+F1: Idle.
+F2: Hai kiếm kéo sát hông.
+F3: Thân hạ thấp, chân sau đạp.
+F4: Kiếm trước đâm, hông lao tới.
+F5: Kiếm sau đâm vượt qua kiếm trước.
+F6: Giữ pose đâm kéo dài.
+F7: Rút kiếm.
+F8-F9: Hồi.
+
+TIMING:
+
+30, 30, 35, 18, 18, 30, 35, 40, 40ms.
+
+Tổng: 276ms.
+
+Lunge:
++18px.
+
+Hitstop:
+HIT 1 = 18ms.
+HIT 2 = 28ms.
+
+Knockback:
+30–45px tùy loại quái.
+
+PROMPT:
+
+"9-frame powerful double sword thrust,
+side view RIGHT. F1 idle, F2-3 crouch
+and pull both swords to hips. F4 explosive
+forward lunge, first sword thrusts straight.
+F5 second sword thrusts farther. F6 hold
+fully extended pose, F7-9 recover.
+Strong hip and shoulder drive, rear leg
+pushes off. Keep two straight swords,
+white mask and thin hair. NO VFX."
+
+============================================================
+
+7. ATTACK 3 — 360 SPIN
+------------------------------------------------------------
+
+TRẠNG THÁI: GIỮ.
+
+Người chơi đã xác nhận cảm giác xoay đạt.
+
+Không cần PixelLab tạo lại ngay.
+
+Chỉ cần:
+- Tối ưu VFX.
+- Kiểm tra hitbox theo hướng xoay.
+- Tạo front/back VFX.
+- Kiểm tra sprite có đổi mặt và đổi lưng
+đúng hướng hay không.
+
+Không làm mất animation đang tốt.
+
+============================================================
+
+8. DASH
+------------------------------------------------------------
+
+TRẠNG THÁI: P2 — POLISH.
+
+Giữ animation hiện tại nếu cảm giác ổn.
+
+Cần thêm:
+- VFX kéo dài phía sau.
+- Afterimage nhỏ.
+- Dust burst khi xuất phát.
+- Chuyển pose mượt sang Run/Idle.
+
+Không tạo lại bằng PixelLab trừ khi
+chân hoặc kiếm bị biến dạng.
+
+============================================================
+
+9. LANDING
+------------------------------------------------------------
+
+TRẠNG THÁI: P2.
+
+NÊN THÊM ANIMATION MỚI.
+
+ChatGPT vẽ 3 pose hoặc PixelLab Custom.
+
+F1: Hai chân chạm đất, gối gập sâu.
+F2: Thân nén xuống.
+F3: Đứng lên, tóc tiếp tục hạ.
+
+PROMPT:
+
+"3-frame landing recovery, side view RIGHT.
+Both boots touch ground, knees bend deeply,
+torso compresses, then rises into guard.
+Two straight swords stay low and clear.
+Thin white hair settles after impact.
+Keep exact mask and proportions.
+No VFX."
+
+============================================================
+
+10. HURT
+------------------------------------------------------------
+
+TRẠNG THÁI: P2.
+
+Nếu animation Hurt hiện tại đạt:
+Giữ nguyên.
+
+Nếu quá nhẹ:
+Tăng độ giật vai và thân.
+Không cần ngã quá xa.
+
+PROMPT:
+
+"4-frame hit reaction, side view RIGHT.
+F1 sudden shoulder recoil, F2 torso bends
+back with knees flexed, F3 stagger, F4
+recover guard. Both straight swords stay
+in hands. Thin white hair follows inertia.
+Keep mask and proportions. No VFX."
+
+============================================================
+IV. VFX CẦN VẼ
+============================================================
+
+QUY ƯỚC CHUNG CHO TẤT CẢ PROMPT:
+
+- 9 frame.
+- 5 ô hàng trên, 4 ô hàng dưới.
+- Nền magenta #FF00FF.
+- Grid xám mảnh.
+- Chỉ VFX.
+- Không nhân vật.
+- Không vũ khí thật.
+- Pixel sắc, không blur.
+- Không anti-aliasing.
+- Không đổ bóng mềm.
+
+PALETTE:
+
+#FFFFFF
+#C8F5FF
+#78DCFF
+#3CA0F5
+#2864DC
+
+Mỗi VFX nên xuất thành:
+BACK và FRONT.
+
+FRONT:
+Sáng, dày, rõ.
+
+BACK:
+Tối hơn, mảnh hơn, đứt đoạn.
+
+============================================================
+
+VFX 1 — X SLASH
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, flat #FF00FF background.
+Fast dual sword X-slash. F1-2 empty,
+F3 small glints, F4 rising diagonal
+white-cyan slash, F5 opposite slash
+forming a sharp X, F6 bright intersection,
+F7 broken shards, F8-9 fading specks.
+Tilted perspective ellipses, bright front
+halves and dim broken rear halves.
+VFX ONLY, crisp hard pixels, no blur."
+
+============================================================
+
+VFX 2 — DOUBLE THRUST
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Two powerful
+straight sword thrusts toward RIGHT.
+F1-2 empty, F3 compressed tip glints,
+F4 first narrow piercing streak,
+F5 second longer parallel streak,
+F6 sharp forward impact burst,
+F7-8 streaks fracture, F9 fading specks.
+Bright thick front streak, dim thin rear
+streak. White-cyan hard pixels, VFX ONLY."
+
+============================================================
+
+VFX 3 — 360 SPIN
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Dual sword
+360-degree horizontal spinning slash.
+F1-2 small rotating arcs, F3-7 two
+overlapping flat perspective elliptical
+slash rings around an imaginary body,
+front halves bright white-cyan,
+rear halves thin and dark blue.
+F5-6 strongest, F8 broken ring fragments,
+F9 fading specks. Hard pixels, VFX ONLY."
+
+============================================================
+
+VFX 4 — FINISHER
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Heavy dual
+sword finisher. F1-2 empty, F3 crossed
+glints, F4-5 two large intersecting
+crescent cuts with tilted perspective,
+F6 powerful horizontal echo shockwave
+bursting RIGHT, F7 shattered slash
+fragments, F8-9 fading specks.
+Bright front arcs, dim broken rear arcs.
+White-cyan hard pixels, VFX ONLY."
+
+============================================================
+
+VFX 5 — DASH
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Fast dash
+to RIGHT. F1 small compressed wind flash,
+F2-4 long narrow horizontal cyan speed
+streaks extending behind an imaginary
+character, F5-6 streaks stretch and thin,
+F7-8 break into small shards, F9 fading
+specks. Bright near streaks, dim far
+streaks. Crisp hard pixels, VFX ONLY."
+
+============================================================
+
+VFX 6 — DOUBLE JUMP
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Double jump
+wind burst under imaginary character feet.
+F1 small white flash, F2-4 flat horizontal
+perspective wind ring expanding outward,
+small wind shards shooting downward,
+F5-7 ring widens, thins and drifts down,
+F8-9 fading specks. Bright front half,
+dim broken rear half. White-cyan crisp
+pixels, VFX ONLY."
+
+============================================================
+
+VFX 7 — LANDING
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Ground landing
+impact. F1 empty, F2-3 compact impact flash
+at imaginary feet, F4-5 two short horizontal
+dust-wind bursts spreading left and right,
+F6-7 flat perspective ground ring widens
+and breaks, F8-9 fading tiny shards.
+Bright front half, dim rear half.
+White-cyan crisp hard pixels, VFX ONLY."
+
+============================================================
+
+VFX 8 — HURT
+------------------------------------------------------------
+
+"9-frame pixel-art VFX sheet, 5 top 4 bottom,
+grey grid, #FF00FF background. Character
+damage reaction VFX only. F1-2 sharp small
+white-cyan impact flash at imaginary torso,
+F3-4 angular hit sparks burst outward,
+F5-6 short broken energy streaks,
+F7-8 tiny fragments drift away,
+F9 fading specks. Bright front sparks,
+dim rear sparks. Crisp hard pixels,
+no blur, VFX ONLY."
+
+============================================================
+V. HƯỚNG DẪN GHÉP VFX CHO CLAUDE
+============================================================
+
+THỨ TỰ RENDER:
+
+1. Background.
+2. VFX_BACK.
+3. Hero sprite.
+4. VFX_FRONT.
+5. Foreground.
+6. HUD.
+
+Không ghép toàn bộ VFX vào sprite nhân vật.
+
+LỢI ÍCH:
+
+- Đổi VFX không phải tạo lại animation.
+- Nâng cấp kỹ năng dễ dàng.
+- Có chiều sâu 3D giả lập.
+- Có thể điều chỉnh độ sáng.
+- Dễ đồng bộ hitbox.
+- Tối ưu hiệu suất.
+
+LƯU Ý:
+
+VFX ở các prompt có mô tả cả phần trước
+và sau. Để có 2 lớp thực sự, cần vẽ/tách
+thành hai sheet riêng và căn chung pivot.
+
+Không thể chỉ đổi alpha của toàn bộ một
+sheet rồi coi đó là hai lớp chiều sâu.
+
+============================================================
+VI. GAME FEEL CẦN SỬA TRONG CODE
+============================================================
+
+1. JUMP
+
+Jump start:
+Có 1-2 frame nén chân rõ.
+
+Takeoff:
+Phát frame bật chân đúng lúc vận tốc Y
+chuyển sang hướng đi lên.
+
+Rising:
+Dùng pose co chân.
+
+Apex:
+Chuyển pose khi |velocityY| nhỏ.
+
+Falling:
+Chuyển pose khi velocityY > 0
+(nếu trục Y hướng xuống).
+
+Landing:
+Chỉ phát khi va chạm mặt đất.
+
+Không phát toàn bộ Jump animation 9 frame
+theo timer bất kể nhân vật đang lên hay xuống.
+
+2. RUN
+
+Animation speed có thể phụ thuộc tốc độ X.
+
+Nếu đang tăng tốc:
+Dùng cycle chậm hơn một chút.
+
+Khi đạt tốc độ tối đa:
+Dùng cycle nhanh.
+
+Nếu velocityX gần 0:
+Chuyển Idle.
+
+Không để chân chạy khi nhân vật đứng yên.
+
+3. ATTACK 1
+
+Giảm anticipation.
+Tăng tốc F4-F5.
+Giữ hitstop ngắn.
+VFX X rõ nhưng không che mặt nạ.
+
+4. ATTACK 2
+
+Tăng lunge.
+Thêm recoil khi đâm trúng.
+Knockback quái.
+Hitstop mạnh hơn nhát chém thường.
+
+5. ATTACK 3
+
+Giữ animation.
+Chỉ sửa VFX và hitbox nếu cần.
+
+6. WALL SLIDE
+
+Điều kiện:
+- Nhân vật đang trên không.
+- Có tiếp xúc tường.
+- Đang giữ hướng về tường hoặc thỏa
+điều kiện wall-cling đã thiết kế.
+- Không bị khóa bởi trạng thái khác.
+
+Tốc độ rơi giảm.
+Sprite bám đúng vị trí collider tường.
+
+Không dùng pose đứng thường.
+
+============================================================
+VII. QUY TRÌNH NGHIỆM THU
+============================================================
+
+BƯỚC 1 — MOVEMENT
+
+Sửa:
+- Run.
+- Jump.
+- Fall.
+- Wall Slide.
+
+Xuất GIF tốc độ thật.
+
+Kiểm tra:
+- Chân chạy đúng hướng.
+- Nhảy co chân.
+- Rơi khác nhảy.
+- Trượt tường đúng tư thế.
+- Không thay đổi tỷ lệ đầu và thân.
+
+BƯỚC 2 — COMBAT BODY
+
+Sửa:
+- Attack 1.
+- Attack 2.
+
+Giữ:
+- Attack 3.
+
+Tạm tắt VFX để đánh giá chuyển động thân.
+
+BƯỚC 3 — COMBAT VFX
+
+Vẽ:
+- X Slash.
+- Double Thrust.
+- Spin.
+- Finisher.
+
+Ghép 2 lớp front/back.
+
+BƯỚC 4 — FEEL
+
+Chỉnh:
+- Hitstop.
+- Lunge.
+- Knockback.
+- Cancel window.
+- Screen shake.
+
+BƯỚC 5 — FINAL QA
+
+Kiểm tra ở tốc độ chơi thật.
+Không chỉ xem sprite sheet tĩnh.
+
+============================================================
+VIII. KẾT LUẬN
+============================================================
+
+NHỮNG THỨ NÊN GIỮ:
+
+- Thiết kế kiếm khách tóc trắng.
+- Kích thước nhân vật hiện tại.
+- Mặt nạ trắng.
+- Song kiếm ngắn.
+- Attack 3 xoay 360.
+- Dash hiện tại nếu không lỗi hình thể.
+- Phong cách nền hang tối.
+
+NHỮNG THỨ NÊN SỬA NGAY:
+
+1. Jump: phải co chân thật.
+2. Fall: phải có tư thế rơi riêng.
+3. Run: 8 frame có nhịp chạy rõ.
+4. Wall Slide: phải tì tường thật.
+5. Attack 1: tăng tốc, bỏ VFX thô.
+6. Attack 2: tăng lực đâm, lunge và hitstop.
+
+CHIẾN LƯỢC CÔNG CỤ:
+
+PixelLab Template:
+RUN.
+
+PixelLab Custom:
+ATTACK 1, ATTACK 2.
+JUMP nếu key pose đã được kiểm soát.
+LANDING/HURT nếu cần.
+
+ChatGPT tạo key pose:
+JUMP.
+FALL.
+WALL SLIDE.
+LANDING.
+
+ChatGPT tạo VFX:
+Tất cả hiệu ứng chiến đấu và di chuyển.
+
+Claude:
+- Kiểm tra kỹ thuật sprite.
+- Đồng bộ animation.
+- Tách VFX front/back.
+- Điều khiển hitbox và timing.
+- Xuất GIF và video gameplay để nghiệm thu.
+
+MỤC TIÊU:
+
+Không phải tạo thêm thật nhiều animation.
+
+Mục tiêu trước mắt là khiến nhân vật:
+- Chạy thực sự có lực.
+- Nhảy thực sự bật khỏi đất.
+- Rơi thực sự chịu trọng lực.
+- Trượt thực sự bám tường.
+- Chém thực sự có quán tính.
+- Đâm thực sự có sức nặng.
+
+Khi các chuyển động cơ bản đạt chất lượng,
+toàn bộ game sẽ có cảm giác tốt hơn rõ rệt
+mà không cần thay nhân vật hoặc engine.
+
+END — DEMO ANIMATION REVIEW V2
