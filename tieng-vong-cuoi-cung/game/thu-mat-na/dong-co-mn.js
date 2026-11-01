@@ -512,6 +512,8 @@ const DongCoMN = (() => {
         case 'trung': if (q.t >= Math.max(15, C.trung ? C.trung.tong : 20)){ q.st = 'duoi'; q.t = 0; q.cd = Math.max(q.cd, 20); } break;
         case 'chet': {
           const tong = C.chet ? C.chet.tong : 60;
+          // quái bay có hình chết đổ xuống đất ("roi_khi_chet"): rơi theo trọng lực khi xác bắt đầu sụp
+          if (d.bay && d.roi_khi_chet && q.t > tong * 0.55){ q.vy = Math.min((q.vy || 0) + 0.6, 10); if (moveY(q, q.vy) !== 0) q.vy = 0; }
           q.alpha = q.t <= tong ? 1 : Math.max(0, 1 - (q.t - tong) / 30);   // hết hình cuối → mờ dần 0,5 s
           if (q.t >= tong + 30){ q.dead = true; q.hoiT = 0; }
           break; }

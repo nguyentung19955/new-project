@@ -669,6 +669,7 @@
    },
    "mau": 25,
    "sat_thuong": 1,
+   "roi_khi_chet": true,
    "bay": true,
    "bay_cao": 30,
    "toc_do": 0.7,
@@ -813,17 +814,7 @@
     "danh": {
      "thu_muc": "tang/danh",
      "so_hinh": 9,
-     "ms": [
-      110,
-      110,
-      110,
-      60,
-      60,
-      70,
-      90,
-      100,
-      110
-     ],
+     "ms": [100, 100, 100, 90, 90, 90, 70, 80, 110],
      "lap": false
     },
     "trung": {
@@ -848,13 +839,9 @@
    "toc_do_duoi": 0,
    "tam_phat_hien": 260,
    "tam_danh": 110,
-   "khung_bao_truoc": 3,
-   "bao_truoc_them_ms": 270,
-   "khung_trung": [
-    3,
-    4,
-    5
-   ],
+   "khung_bao_truoc": 6,
+   "bao_truoc_them_ms": 150,
+   "khung_trung": [6, 7, 8],
    "hop_danh": [
     -40,
     -40,
