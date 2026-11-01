@@ -15,7 +15,7 @@
 | 11 | Chiêu quái: Kèn Câm bắn đạn, chó tụ năng lượng rồi bắn, Hồn Vải sóng siêu âm, tinh anh đập chuông chấn động | ✅ xong, hiệu ứng ChatGPT vẽ |
 | 12 | Màn Tang (quái treo) chưa có hiệu ứng đòn | ✅ 2 vệt vuốt cam (ChatGPT vẽ) |
 | 13 | Quái tầm bắn dài hơn | ✅ xong |
-| 14 | Kèn Câm khi di chuyển không cầm kèn | ⏳ cần vẽ lại dáng đi (PixelLab) |
+| 14 | Kèn Câm khi di chuyển không cầm kèn | ✅ dáng đi mới PixelLab, hai tay cầm kèn |
 | 15 | Mép đá không thẳng/vuông, hoà vào không gian; không "bám vào không khí" | ✅ xong (mép méo, không khoét vào chỗ va chạm, viền sáng) |
 | 16 | Không có mảnh lơ lửng; đồ treo/đặt phải bám vào đá | ✅ xong |
 | 17 | Vạch ngang trong không gian (nền) | ✅ xong (nền lặp dọc) |
