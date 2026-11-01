@@ -11,7 +11,7 @@
     128,
     172
    ],
-   "ms": 180
+   "ms": 220
   },
   "troi": {
    "thu_muc": "chay",
@@ -33,13 +33,13 @@
    "lap": false
   },
   "nhaydoi": {
-   "thu_muc": "nhaydoi",
-   "so_hinh": 6,
+   "thu_muc": "nhay",
+   "so_hinh": 4,
    "chan": [
     128,
     172
    ],
-   "ms": 55,
+   "ms": 60,
    "lap": false
   },
   "roi": {
@@ -73,17 +73,12 @@
   },
   "bamtuong": {
    "thu_muc": "bamtuong",
-   "so_hinh": 4,
+   "so_hinh": 3,
    "chan": [
     128,
     172
    ],
-   "ms": [
-    90,
-    120,
-    120,
-    120
-   ],
+   "ms": 120,
    "lap": true
   },
   "dapdat": {

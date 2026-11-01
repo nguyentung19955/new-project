@@ -1,0 +1,9 @@
+HƯỚNG DẪN ANIMATION BÁM TƯỜNG (tư vấn ChatGPT, tóm tắt)
+1. Khung: 1 ENTER, 3 SLIDE lặp (A-B-C), 1 PUSH PREP, 1-2 WALL JUMP.
+2. Chỉ lặp SLIDE A→B→C ở 6–10 FPS; không đưa ENTER/PUSH/JUMP vào vòng lặp.
+3. Mọi khung cùng canvas, cùng tỉ lệ, pivot cố định (tâm hông/thân); điểm chạm tường cùng X; đầu, hông, chân, mũi kiếm gần như cùng Y. KHÔNG vẽ nhân vật thấp dần — code đã kéo trượt xuống.
+4. Trong SLIDE chỉ tóc/khăn rung 1–2 pixel game, khuỷu/gối tối đa 1 pixel; thân và đầu ổn định.
+5. Tường bên trái, mặt nạ nhìn ra ngoài; tay phía tường đưa ra sau cắm kiếm ghì người; tay kia cầm kiếm hướng thấp; hai bàn chân đạp tường, gối co.
+6. Tia lửa: 2–4 hạt 8CEEFF ở mũi kiếm, đổi vị trí giữa A–B–C, tắt nhanh; tốt nhất tách FX gắn theo điểm kiếm–tường.
+7. Bật tường: PUSH PREP 60–100 ms, WALL JUMP 1–2 khung 60–100 ms; không vẽ dịch cả người sang phải.
+8. Kiểm tra: loop ở tốc độ thực và khi vận tốc trượt = 0; nếu rung khi pivot không đổi → kiểm tra crop tự động, offset từng khung, scale không đồng nhất, làm tròn camera.
