@@ -263,8 +263,12 @@ const DongCoMN = (() => {
     }
 
     // Dây leo (ô 'H'): ↑ để bám (trên không: ↑ hoặc ↓), leo ↑↓, đứng yên là treo; Nhảy để rời (kèm hướng); hết dây / chạm đất thì thả
-    const daySo = (x, y) => tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === 'H';
-    const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
+    // dây chạm mép TRÊN phòng (lối lên phòng khác): coi như dây còn tiếp phía trên để leo lọt hẳn vào cửa trên
+    const daySo = (x, y) => { const c = Math.floor(x / BD.T), r = Math.floor(y / BD.T); return r < 0 ? tile(c, 0) === 'H' : tile(c, r) === 'H'; };
+    // dây chỉ rộng 1 ô: bắt được khi THÂN chạm dây (tâm lệch tới ±14 px), không bắt phải đứng đúng tâm ô
+    let cxDay = pl.x + pl.w / 2;
+    const cotDay = () => { for (const dx of [0, -14, 14]) if (daySo(cxDay + dx, pl.y + pl.h * 0.4) || daySo(cxDay + dx, pl.y + pl.h * 0.12)) return Math.floor((cxDay + dx) / BD.T); return -1; };
+    const trenDay = () => pl.leo ? (daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12)) : cotDay() >= 0;
     // đứng trên mép đất ngay trên đầu dây: bấm ↓ để leo xuống
     const dauDayDuoiChan = () => pl.onGround && daySo(cxDay, pl.y + pl.h + 2);
     if (pl.mantle){   // đang trèo từ đầu dây lên mép sàn: nội suy mượt, khoá điều khiển trong lúc trèo
@@ -277,7 +281,7 @@ const DongCoMN = (() => {
     if (!pl.leo && pl.leoKhoa <= 0 && (trenDay() || (IN.xuong() && dauDayDuoiChan())) && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || dauDayDuoiChan())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
       const tuCau = !trenDay() && dauDayDuoiChan();
       pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
-      pl.x = Math.floor(cxDay / BD.T) * BD.T + BD.T / 2 - pl.w / 2; SUKIEN.push({k:'bam-day'});
+      { const cd = cotDay(); pl.x = (cd >= 0 ? cd : Math.floor(cxDay / BD.T)) * BD.T + BD.T / 2 - pl.w / 2; cxDay = pl.x + pl.w / 2; } SUKIEN.push({k:'bam-day'});
       if (tuCau){ const y1 = Math.round((pl.y + pl.h) / BD.T) * BD.T - pl.h * 0.4 + 4; if (!collide(pl.x, y1, pl.w, pl.h)) pl.y = y1; else { pl.leo = false; } pl.onGround = false; }
     }
     if (pl.leo){
