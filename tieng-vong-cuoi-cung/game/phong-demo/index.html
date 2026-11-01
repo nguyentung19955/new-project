@@ -21,16 +21,17 @@ body.touch #keys{display:none}
 .tc{display:none} body.touch .tc{display:block}
 #dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
   width:calc(132px*var(--k));height:calc(132px*var(--k));border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.3);opacity:.35}
+#dpad{transition:opacity .18s}
 #dpad.act{opacity:.95;transition:none}
 #vungtrai{position:absolute;left:0;top:0;bottom:0;width:50%;z-index:1}
-#knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:50%;
+#knob{position:absolute;left:calc(39px*var(--k));top:calc(39px*var(--k));width:calc(54px*var(--k));height:calc(54px*var(--k));border-radius:50%;
   background:rgba(206,240,214,.28);border:2px solid rgba(206,240,214,.5);will-change:transform}
 #acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);width:calc(190px*var(--k));height:calc(160px*var(--k))}
 .ab{position:absolute;width:calc(58px*var(--k));height:calc(58px*var(--k));border-radius:50%;display:grid;place-items:center;font-size:calc(13px*var(--k));font-weight:700;
   background:rgba(26,33,43,.5);border:2px solid rgba(243,230,200,.45);color:var(--ink);opacity:.35}
 .ab.on{opacity:1;transform:scale(.92);filter:brightness(1.35) drop-shadow(0 0 6px rgba(120,230,230,.7))}
 .ab,#dpad,#knob{background:none!important;border:none!important}
-.ab{opacity:.62} #dpad{opacity:.45}
+.ab{opacity:.62} #dpad{opacity:0} #dpad.act{opacity:.95}
 .tc img.ic,.ab img.ic{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none;object-fit:contain}
 #b-a{left:calc(44px*var(--k));top:0}
 #b-h{left:calc(112px*var(--k));top:calc(-8px*var(--k));width:calc(46px*var(--k));height:calc(46px*var(--k));font-size:calc(12px*var(--k))}
@@ -153,7 +154,7 @@ const dpad = document.getElementById('dpad'), knob = document.getElementById('kn
 for (const el of document.querySelectorAll('[data-icon]')){ const im = new Image(); im.className = 'ic'; im.alt = ''; im.src = '../../art/giao-dien/nut/' + el.dataset.icon + '.png'; el.prepend(im); }
 const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('[data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
 function datTamCan(x, y){ const r = geo.R; dpad.style.left = (x - r) + 'px'; dpad.style.top = (y - r) + 'px'; dpad.style.bottom = 'auto'; geo.cx = x; geo.cy = y; }
-function traCan(){ dpad.style.left = ''; dpad.style.top = ''; dpad.style.bottom = ''; requestAnimationFrame(measure); }
+function traCan(){ /* cần ẩn tại chỗ (mờ dần), lần chạm sau hiện ở chỗ mới */ requestAnimationFrame(measure); }
 function measure(){ const rc = dpad.getBoundingClientRect(); if (dpadId === null){ geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; } geo.R = rc.width / 2 || 66;
   for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; } }
 let dpadId = null; const prevTc = {};

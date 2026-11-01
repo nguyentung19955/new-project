@@ -21,9 +21,9 @@ html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:s
 body.touch #keys{display:none}
 .tc{display:none} body.touch .tc{display:block}
 #dpad{position:absolute;left:calc(var(--sal) + 6px);bottom:calc(var(--sab) + 6px);
-  width:calc(132px*var(--k));height:calc(132px*var(--k));opacity:.45;pointer-events:none}
-#dpad.act{opacity:.95}
-#knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));will-change:transform}
+  width:calc(132px*var(--k));height:calc(132px*var(--k));opacity:0;pointer-events:none;transition:opacity .18s}
+#dpad.act{opacity:.95;transition:none}
+#knob{position:absolute;left:calc(39px*var(--k));top:calc(39px*var(--k));width:calc(54px*var(--k));height:calc(54px*var(--k));will-change:transform}
 #acts{position:absolute;right:calc(var(--sar) + 6px);bottom:calc(var(--sab) + 4px);width:calc(190px*var(--k));height:calc(160px*var(--k));pointer-events:none}
 .ab{position:absolute;width:calc(58px*var(--k));height:calc(58px*var(--k));opacity:.62}
 .ab.on{opacity:1;transform:scale(.92);filter:brightness(1.35) drop-shadow(0 0 6px rgba(120,230,230,.7))}

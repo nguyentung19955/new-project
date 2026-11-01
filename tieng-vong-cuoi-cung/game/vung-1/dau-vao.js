@@ -37,7 +37,7 @@
   for (const el of document.querySelectorAll('[data-icon]')){ const im = new Image(); im.className = 'ic'; im.alt = ''; im.src = '../../art/giao-dien/nut/' + el.dataset.icon + '.png'; el.prepend(im); }
   const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('#acts [data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
   function datTamCan(x, y){ const r = geo.R; dpad.style.left = (x - r) + 'px'; dpad.style.top = (y - r) + 'px'; dpad.style.bottom = 'auto'; geo.cx = x; geo.cy = y; }
-  function traCan(){ dpad.style.left = ''; dpad.style.top = ''; dpad.style.bottom = ''; requestAnimationFrame(measure); }
+  function traCan(){ /* cần ẩn tại chỗ (mờ dần), lần chạm sau hiện ở chỗ mới */ requestAnimationFrame(measure); }
   function measure(){
     const rc = dpad.getBoundingClientRect(); if (dpadId === null){ geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; } geo.R = rc.width / 2 || 66;
     for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; }
