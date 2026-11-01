@@ -524,7 +524,14 @@ const DongCoMN = (() => {
       if (!no && !pl.dead && overlap(hurtBox(), DR)){ hurt(b.vx > 0 ? 1 : -1, b.dmg); no = true; }
       if (no){ NO.push({x:b.x, y:b.y, t:0, ch:b.ch}); DAN.splice(i, 1); }
     }
-    for (let i = NO.length - 1; i >= 0; i--) if (++NO[i].t > 40) NO.splice(i, 1);
+    for (let i = NO.length - 1; i >= 0; i--){
+      const n = NO[i]; n.t++;
+      if (n.dat && n.ch && n.ch.toc_song && !n.daDanh && !pl.dead){   // sóng chấn động lan dọc mặt đất 2 phía
+        const r = n.t * n.ch.toc_song, px = pl.x + pl.w / 2, py = pl.y + pl.h, d = Math.abs(px - n.x);
+        if (r <= (n.ch.tam || 260) && pl.onGround && Math.abs(py - n.y) < 30 && d > r - 26 && d < r + 10){ n.daDanh = true; hurt(px > n.x ? 1 : -1, n.ch.sat_thuong || 1); }
+      }
+      if (n.t > (n.dat ? 44 : 24)) NO.splice(i, 1);
+    }
   }
   function buoc(){
     SUKIEN.length = 0;

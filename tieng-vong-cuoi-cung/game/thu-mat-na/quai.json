@@ -498,30 +498,38 @@
    "toc_do": 1.1,
    "toc_do_duoi": 2.6,
    "tam_phat_hien": 360,
-   "tam_danh": 130,
-   "khung_bao_truoc": 3,
-   "bao_truoc_them_ms": 200,
-   "khung_trung": [
-    3,
-    4,
-    5,
-    6
-   ],
+   "tam_danh": 250,
+   "khung_bao_truoc": 4,
+   "bao_truoc_them_ms": 520,
+   "khung_trung": [],
    "hop_danh": [
     -46,
     -42,
     40,
     36
    ],
-   "lao": [
-    3,
-    6,
-    4
-   ],
+   "lao": null,
    "hoi_chieu_ms": 1100,
    "day_lui": 4,
    "sieu_giap": false,
-   "hoi_sinh_ms": 4000
+   "hoi_sinh_ms": 4000,
+   "chieu": {
+    "kieu": "dan",
+    "khung_ban": 4,
+    "toc": 5.5,
+    "nong": [
+     -30,
+     -28
+    ],
+    "hop": [
+     14,
+     12
+    ],
+    "song": 100,
+    "ve": "nang_luong",
+    "mau": "#FFD17A",
+    "toi": "#E5A13B"
+   }
   },
   "tan": {
    "ten": "Vọng Tàn (tinh anh)",
@@ -597,7 +605,16 @@
    "hoi_chieu_ms": 2000,
    "day_lui": 1,
    "sieu_giap": true,
-   "hoi_sinh_ms": 6000
+   "hoi_sinh_ms": 6000,
+   "chieu": {
+    "chan_dong": 5,
+    "toc_song": 7,
+    "tam": 300,
+    "ve": "chan",
+    "mau": "#F08B73",
+    "toi": "#B84C43",
+    "sat_thuong": 2
+   }
   },
   "vai": {
    "ten": "Hồn Vải",
@@ -657,14 +674,10 @@
    "toc_do": 0.7,
    "toc_do_duoi": 1.6,
    "tam_phat_hien": 340,
-   "tam_danh": 120,
+   "tam_danh": 230,
    "khung_bao_truoc": 3,
-   "bao_truoc_them_ms": 230,
-   "khung_trung": [
-    3,
-    4,
-    5
-   ],
+   "bao_truoc_them_ms": 330,
+   "khung_trung": [],
    "hop_danh": [
     -58,
     -62,
@@ -675,7 +688,24 @@
    "hoi_chieu_ms": 1300,
    "day_lui": 5,
    "sieu_giap": false,
-   "hoi_sinh_ms": 4000
+   "hoi_sinh_ms": 4000,
+   "chieu": {
+    "kieu": "dan",
+    "khung_ban": 3,
+    "toc": 4.2,
+    "nong": [
+     -30,
+     -40
+    ],
+    "hop": [
+     14,
+     30
+    ],
+    "song": 95,
+    "ve": "song",
+    "mau": "#F3DBA0",
+    "toi": "#D9B66F"
+   }
   },
   "ken": {
    "ten": "Kèn Câm",
@@ -734,14 +764,10 @@
    "toc_do": 0.35,
    "toc_do_duoi": 0.6,
    "tam_phat_hien": 420,
-   "tam_danh": 230,
+   "tam_danh": 280,
    "khung_bao_truoc": 3,
-   "bao_truoc_them_ms": 330,
-   "khung_trung": [
-    3,
-    4,
-    5
-   ],
+   "bao_truoc_them_ms": 380,
+   "khung_trung": [],
    "hop_danh": [
     -112,
     -64,
@@ -752,7 +778,24 @@
    "hoi_chieu_ms": 1900,
    "day_lui": 2,
    "sieu_giap": false,
-   "hoi_sinh_ms": 4000
+   "hoi_sinh_ms": 4000,
+   "chieu": {
+    "kieu": "dan",
+    "khung_ban": 3,
+    "toc": 7,
+    "nong": [
+     -30,
+     -46
+    ],
+    "hop": [
+     10,
+     8
+    ],
+    "song": 80,
+    "ve": "dan",
+    "mau": "#F0B85E",
+    "toi": "#7a4a22"
+   }
   },
   "tang": {
    "ten": "Màn Tang",

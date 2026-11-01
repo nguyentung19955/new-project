@@ -273,6 +273,44 @@ function veQuaiNoi(q, cam){
   SpriteMN.veVien(ctx, C, k, fx, fy, q.face > 0, E.TL, q.def.mau_vien || q.def.mau_khoi || '#e5a13b', E.TL, 0.5 * al);
   SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
 }
+// ===== chiêu quái: tụ năng lượng, đạn, sóng âm, chấn động (vẽ khối pixel 4px) =====
+function chamTron(x, y, r, mau, a){
+  ctx.globalAlpha = a ?? 1; ctx.fillStyle = mau; const st = 4;
+  for (let yy = -r; yy <= r; yy += st) for (let xx = -r; xx <= r; xx += st) if (xx * xx + yy * yy <= r * r) ctx.fillRect(Math.round((x + xx) / st) * st, Math.round((y + yy) / st) * st, st, st);
+  ctx.globalAlpha = 1;
+}
+function cungSong(x, y, r, huong, mau, a, day){
+  ctx.globalAlpha = a; ctx.fillStyle = mau; const st = 4;
+  for (let g = -60; g <= 60; g += 6){ const t = g * Math.PI / 180;
+    for (let k = 0; k < (day || 1); k++){ const rr = r - k * st; ctx.fillRect(Math.round((x + Math.cos(t) * rr * huong) / st) * st, Math.round((y + Math.sin(t) * rr) / st) * st, st, st); } }
+  ctx.globalAlpha = 1;
+}
+function nongQuai(q){ const n = q.def.chieu.nong || [0, -40], fx = q.x + q.w / 2, fy = q.y + q.h; return [fx + n[0] * E.TL * -q.face, fy + n[1] * E.TL]; }
+function veChieu(cam){
+  const f = E.S.frame;
+  for (const q of E.QUAI){   // tụ / báo trước ở miệng
+    const ch = q.def.chieu; if (q.dead || !ch || q.st !== 'danh' || !ch.khung_ban || (q.kDanh ?? 0) >= ch.khung_ban) continue;
+    const [x, y] = nongQuai(q), p = Math.min(1, q.t / 40);
+    if (ch.ve === 'nang_luong'){ chamTron(x - cam, y, 8 + p * 18, ch.toi, 0.45); chamTron(x - cam, y, 4 + p * 11, ch.mau, 0.95);
+      for (let i = 0; i < 4; i++){ const g = f * 0.2 + i * 1.57, r = 30 - p * 22; chamTron(x - cam + Math.cos(g) * r, y + Math.sin(g) * r, 3, ch.mau, 0.8); } }
+    else if (ch.ve === 'song'){ cungSong(x - cam, y, 8 + (f % 12), -q.face * -1, ch.mau, 0.5); }
+    else { chamTron(x - cam, y, 3 + p * 5, ch.mau, 0.9); }
+  }
+  for (const b of E.DAN){
+    const x = b.x - cam, y = b.y, ch = b.ch, h = b.vx > 0 ? 1 : -1;
+    if (ch.ve === 'song'){ for (let k = 0; k < 3; k++) cungSong(x - h * k * 18, y, 30 + k * 4, h, k ? ch.toi : ch.mau, 0.95 - k * 0.25, 3); }
+    else if (ch.ve === 'nang_luong'){ for (let k = 1; k < 6; k++) chamTron(x - h * k * 12, y, 16 - k * 2.5, ch.toi, 0.55 - k * 0.08); chamTron(x, y, 18, ch.toi, 0.55); chamTron(x, y, 12, ch.mau, 1); chamTron(x + h * 3, y - 3, 5, '#ffffff', 0.9); }
+    else { for (let k = 1; k < 5; k++) chamTron(x - h * k * 10, y, 8 - k * 1.5, ch.toi, 0.65); chamTron(x, y, 10, ch.toi, 0.9); chamTron(x, y, 6, ch.mau, 1); chamTron(x + h * 2, y - 2, 2, '#ffffff', 1); }
+  }
+  for (const n of E.NO){
+    const ch = n.ch || {}, x = n.x - cam, y = n.y;
+    if (n.dat && ch.toc_song){   // sóng đất 2 phía + đá vụn
+      const r = n.t * ch.toc_song, a = Math.max(0, 1 - n.t / 44);
+      for (const h of [-1, 1]){ for (let k = 0; k < 3; k++){ const xx = x + h * (r - k * 10); ctx.globalAlpha = a * (1 - k * 0.3); ctx.fillStyle = k ? ch.toi : ch.mau; ctx.fillRect(Math.round(xx / 4) * 4 - 6, y - 12 - (2 - k) * 12, 12, 12 + (2 - k) * 12); } }
+      ctx.globalAlpha = 1; if (n.t < 14) chamTron(x, y - 6, 10 + n.t * 3, ch.mau, 0.35 * (1 - n.t / 14));
+    } else { const a = Math.max(0, 1 - n.t / 24); chamTron(x, y, 4 + n.t * 1.2, ch.toi || '#ffbe50', a * 0.6); chamTron(x, y, 2 + n.t * 0.6, ch.mau || '#fff2c5', a); }
+  }
+}
 function veQuai(q, cam){
   if (q.dead) return;
   const d = q.def, Cs = d._clip || {}, A = q.anim;
@@ -365,7 +403,7 @@ function ve(){
   ctx.restore();
   veKhongKhi(camPx, cam, camPy, camY);
   // quái nổi trên nền tối: viền sáng theo màu riêng + vẽ lại thân sáng hơn bóng tối
-  ctx.save(); ctx.translate(0, -camY); for (const q of E.QUAI) veQuaiNoi(q, cam); ctx.restore();
+  ctx.save(); ctx.translate(0, -camY); for (const q of E.QUAI) veQuaiNoi(q, cam); veChieu(cam); ctx.restore();
   for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round((p.x - cam) / 2) * 2, Math.round((p.y - camY) / 2) * 2, 4, 4); }
   // 4) HUD: máu (ô) + Tiếng Vọng (thanh xanh) + cấp
   ctx.setTransform(M, 0, 0, M, 0, 0);
