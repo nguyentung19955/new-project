@@ -111,8 +111,29 @@ class Phong:
                 if (r in (0, self.R - 1) or cc in (0, self.C - 1)) and (cc, r) not in mo:
                     self.g[r][cc] = '#'
 
+    def lap_hoc_coi(self):
+        """lấp các túi trống không nối với cửa nào (N, G, =, H coi như thông)"""
+        from collections import deque
+        seen = set()
+        dq = deque()
+        for c in self.cua:
+            for i in range(c['cao']):
+                o = (c['cot'], c['hang'] + i) if c['huong'] in ('trai', 'phai') else (c['cot'] + i, c['hang'])
+                seen.add(o); dq.append(o)
+        while dq:
+            cc, r = dq.popleft()
+            for dc, dr in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                n = (cc + dc, r + dr)
+                if 0 <= n[0] < self.C and 0 <= n[1] < self.R and n not in seen and self.g[n[1]][n[0]] != '#':
+                    seen.add(n); dq.append(n)
+        for r in range(self.R):
+            for cc in range(self.C):
+                if self.g[r][cc] != '#' and (cc, r) not in seen:
+                    self.g[r][cc] = '#'
+
     def json(self):
         self.bit_mep()
+        self.lap_hoc_coi()
         d = dict(id=self.id, ten=self.ten, luoi=[''.join(r) for r in self.g], cua=self.cua, quai=self.quai,
                  vat_pham=self.vp, chuong_luu=self.chuong_luu, den=self.den, tinh_anh=self.tinh_anh, trum=self.trum)
         if self.khoa:
@@ -178,6 +199,7 @@ def P01():
 # P02 NGÃ BA MỐI – 60×34 – khoang tròn lớn nhiều tầng, 3 lối: tây (P01), đông-trên (P03), đáy (lối tắt P06 sau tường nứt).
 def P02():
     p = Phong('P02', 'Ngã Ba Mối', 60, 34, 48, 0)
+    p.bat_dau = dict(cot=2, hang=24)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(30, 16, 24, 13)                       # khoang mối chính
     p.ham([(2, 23), (10, 22), (14, 20)], 2)     # hầm vào từ tây
     p.dac(0, 25, 59, 33)                        # sàn chính hàng 25 (đứng 24)
@@ -187,7 +209,7 @@ def P02():
     p.san(24, 31, 18, '=')                      # sàn mỏng giữa (đứng 17)
     p.san(34, 41, 16)                           # gờ (đứng 15)
     p.san(15, 20, 15, '=')                      # (đứng 14)
-    p.san(6, 11, 13)                            # gờ trái cao (đứng 12) – thẻ tên
+    p.san(9, 12, 13)                            # gờ trái cao (đứng 12) – thẻ tên
     p.hop(44, 18, 50, 24)
     p.san(43, 49, 21)                           # gờ (đứng 20)
     # tầng trên + lối đông
@@ -228,6 +250,7 @@ def P02():
 # P03 XƯỞNG CHUÔNG – 70×30 – xưởng đúc chuông: hành lang trên → sảnh tròn; Chuông Vỡ 1 trên giàn cao; H1 sau tường nứt.
 def P03():
     p = Phong('P03', 'Xưởng Chuông', 70, 30, 108, 0)
+    p.bat_dau = dict(cot=2, hang=9)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.hop(0, 7, 20, 10)                         # hành lang trên (đứng 10)
     p.dac(0, 11, 20, 13)
     p.ham([(4, 8), (18, 8)], 1.6)
@@ -289,19 +312,22 @@ def P03():
 # P04 HÀNH LANG TRO – 90×18 – hành lang cong dài đầy khói tro, đi về TÂY; nhánh đông cụt có giếng bật tường → Tăng Máu.
 def P04():
     p = Phong('P04', 'Hành Lang Tro', 90, 18, 108, 30)
+    p.bat_dau = dict(cot=56, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.hop(55, 0, 59, 12)                        # giếng rơi từ P03
+    # hành lang uốn lượn về tây: lên dốc tới đỉnh tro (cột 30–35) rồi xuống hõm tro, lên lại cửa tây
+    DOAN = [(50, 59, 13), (44, 49, 11), (36, 43, 9), (30, 35, 7), (24, 29, 9), (18, 23, 11), (12, 17, 14), (6, 11, 12), (0, 5, 13)]
+    for c0, c1, fl in DOAN:
+        p.hop(c0, fl - 4, c1, fl - 1)
+        p.bau((c0 + c1) / 2, fl - 4, (c1 - c0) / 2 + 1.5, 1.6)   # vòm trần cong
+        p.dac(c0, fl, c1, 17)
+    # khoang thẻ tên trên cao (leo dây cột 21)
+    p.bau(20, 4, 5, 2.6)
+    p.san(16, 20, 6, '=')
+    p.san(22, 24, 6, '=')
+    p.day(21, 2, 10)
+    p.hop(55, 0, 59, 9)
     p.day(57, 0, 12)
-    p.dac(0, 13, 89, 17)                        # nền
-    # hành lang uốn lượn về tây
-    p.ham([(56, 11), (48, 10), (40, 11), (32, 9), (24, 10), (14, 11), (4, 11)], 1.7)
-    p.hop(2, 10, 58, 12)
-    p.dac(44, 12, 47, 12)                       # bậc nhỏ
-    p.dac(28, 11, 34, 12)                       # gò tro (đứng 10)
-    p.hop(36, 13, 39, 14); p.dac(36, 15, 39, 17)  # hố tro nông
-    p.hop(19, 7, 25, 9)                         # vòm trần cao
-    p.san(20, 23, 8, '=')
-    p.hop(19, 5, 25, 7)                         # hốc thẻ tên trên vòm (đứng 7)
-    p.dac(18, 4, 26, 4)
+    p.v('P04-the-ten', 'the_ten', 18, 5)
     # nhánh đông: hành lang → giếng bật tường
     p.ham([(60, 11), (70, 10), (78, 11)], 1.6)
     p.hop(60, 10, 84, 12)
@@ -311,17 +337,17 @@ def P04():
     p.san(80, 81, 9)                            # mấu nhỏ giữa giếng
     p.them_cua('P04-tren', 'tren', 56, 'P03', 'P03-day')
     p.them_cua('P04-tay', 'trai', 10, 'P05', 'P05-dong')
-    p.q('phu', 51, 12, 48, 56)
-    p.q('cau', 16, 12, 6, 26)
+    p.q('cau', 52, 12, 50, 56)
+    p.q('phu', 40, 8, 36, 43)
+    p.q('phu', 32, 6, 30, 35)
     p.q('phu', 70, 12, 64, 78)
-    p.v('P04-the-ten', 'the_ten', 22, 7)
     p.v('P04-tang-mau', 'tang_mau', 86, 5)
-    p.v('P04-manh-1', 'manh_am', 38, 14, 10)
-    p.v('P04-manh-2', 'manh_am', 31, 10, 10)
+    p.v('P04-manh-1', 'manh_am', 14, 13, 10)
+    p.v('P04-manh-2', 'manh_am', 33, 6, 10)
     p.trang_tri('P04-khoi', 'khoi_tro', 0, 0, rong=60, ghi='khói tro mờ toàn hành lang cột 0–60 (luồng A làm lớp phủ)')
     p.trang_tri('P04-dau-lau', 'dau_lau', 66, 12)
     p.trang_tri('P04-dau-hieu', 'bui_roi', 82, 2, ghi='bụi rơi gợi ý giếng phía trên có đồ')
-    L(p, (57, 6), (40, 9), (22, 6), (8, 10), (75, 9))
+    L(p, (57, 6), (40, 5), (20, 3), (14, 10), (3, 9), (75, 9))
     p.ghi_chu = 'Rơi xuống từ P03 ở cột 57, đi TÂY tới P05. Nhánh ĐÔNG cụt: giếng hẹp cột 80–83 cần bật tường/nhảy đôi → Tăng Máu.'
     return p
 
@@ -349,6 +375,7 @@ def P05():
 # P06 HỐ VỎ – 50×36 – hố sâu, đấu trường nhỏ dưới đáy (Chuông Vỡ 2), dây leo giữa hố lên lối tắt P02.
 def P06():
     p = Phong('P06', 'Hố Vỏ', 50, 36, 26, 34)
+    p.bat_dau = dict(cot=47, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(25, 22, 22, 13)                       # lòng hố
     p.hop(36, 9, 49, 12)                        # gờ vào từ P05 (đứng 12)
     p.dac(36, 13, 49, 14)
@@ -361,20 +388,24 @@ def P06():
     p.san(32, 35, 21, '=')                      # (đứng 20)
     p.san(39, 44, 24)                           # (đứng 23)
     p.san(35, 38, 27, '=')                      # (đứng 26)
-    p.san(41, 45, 30)                           # (đứng 29)
+    p.san(39, 43, 29, '=')                      # (đứng 28)
     # phía tây: bậc leo + gờ cao
     p.san(5, 10, 29)                            # (đứng 28)
     p.san(8, 13, 25, '=')                       # (đứng 24)
-    p.san(4, 8, 21)                             # (đứng 20) – Mảnh Âm
+    p.san(5, 9, 21)                             # (đứng 20) – Mảnh Âm
     p.san(13, 19, 22, '=')
     # dây giữa hố lên lối tắt
     p.hop(29, 0, 33, 10)
     p.day(31, 0, 30)
-    p.san(26, 29, 12)                           # gờ nghỉ cạnh dây (đứng 11)
-    p.san(20, 25, 16, '=')
+    p.san(25, 29, 13)                           # gờ nghỉ cạnh dây (đứng 12)
+    p.san(19, 23, 16, '=')
     # lối ra đông dưới → P09
     p.hop(44, 29, 49, 32)
     p.dac(44, 28, 49, 28)
+    p.hop(1, 30, 2, 32)                         # hốc sau tường giả
+    p.hop(3, 30, 3, 32, 'G')
+    p.v('P06-manh-G', 'manh_am', 1, 32, 35)
+    p.trang_tri('P06-tuong-gia', 'tuong_gia', 3, 30, cao=3, ghi='tường giả: vẽ như vách, đi xuyên')
     p.them_cua('P06-dong', 'phai', 10, 'P05', 'P05-tay')
     p.them_cua('P06-tren', 'tren', 30, 'P02', 'P02-day')
     p.them_cua('P06-dong-duoi', 'phai', 30, 'P09', 'P09-tay')
@@ -383,8 +414,8 @@ def P06():
     p.q('cau', 24, 32, 10, 40)
     p.q('cau', 40, 17, 38, 42)
     p.v('P06-chuong', 'chuong_vo', 25, 32)
-    p.v('P06-manh-1', 'manh_am', 6, 20, 25)
-    p.v('P06-manh-2', 'manh_am', 27, 11, 10)
+    p.v('P06-manh-1', 'manh_am', 7, 20, 25)
+    p.v('P06-manh-2', 'manh_am', 27, 12, 10)
     p.trang_tri('P06-be-chuong', 'be_da_chuong', 25, 32, ghi='bệ đá giữa đấu trường, Chuông Vỡ 2 hiện sau khi hạ hết quái (gợi ý cho luồng A)')
     p.trang_tri('P06-vo-bo', 'vo_bo_khong_lo', 8, 32, ghi='vỏ bọ khổng lồ bỏ lại')
     p.trang_tri('P06-dau-lau', 'dau_lau', 42, 32)
@@ -397,6 +428,7 @@ def P06():
 # P09 MIỆNG KÈN – 44×44 – giếng đứng nhiều tầng: Kèn Câm thổi ngang từng tầng; đáy giếng có Chuông Vỡ 3.
 def P09():
     p = Phong('P09', 'Miệng Kèn', 44, 44, 76, 50)
+    p.bat_dau = dict(cot=2, hang=16)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(22, 9, 19, 8.5)                       # phần trên: miệng kèn loe
     p.hop(3, 5, 40, 16)
     p.dac(0, 17, 43, 18)                        # sàn tầng vào (đứng 16)
@@ -407,6 +439,7 @@ def P09():
     p.san(8, 16, 11)                            # T3 trái (đứng 10) – Kèn Câm thổi phải
     p.san(17, 21, 9, '=')                       # T4 (đứng 8)
     p.san(26, 32, 7)                            # T5 (đứng 6)
+    p.hop(4, 3, 8, 6)
     p.san(4, 8, 7)                              # hốc trái cao (đứng 6) – thẻ tên (nhảy đôi từ T3)
     p.hop(28, 1, 43, 4)
     p.dac(34, 5, 43, 6)                         # gờ ra đông (đứng 4) – Kèn Câm thổi trái
@@ -423,7 +456,7 @@ def P09():
     p.them_cua('P09-dong', 'phai', 2, 'P11', 'P11-tay')
     p.q('ken', 37, 14, 31, 38)
     p.q('ken', 9, 10, 8, 14)
-    p.q('phu', 10, 16, 2, 15)
+    p.q('phu', 13, 16, 8, 16)
     p.q('ken', 40, 4, 36, 42)
     p.q('phu', 28, 40, 12, 34)
     p.v('P09-chuong', 'chuong_vo', 31, 36)
@@ -473,6 +506,7 @@ def P11():
 # P12 ĐÀN CHUÔNG CÂM – 64×22 – phòng trùm rộng, sàn phẳng, vòm cao, 2 sàn mỏng né.
 def P12():
     p = Phong('P12', 'Đàn Chuông Câm', 64, 22, 176, 50)
+    p.bat_dau = dict(cot=3, hang=16)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(32, 9, 30, 11)
     p.hop(2, 3, 61, 16)
     p.dac(0, 17, 63, 21)                        # sàn phẳng (đứng 16)
@@ -507,8 +541,8 @@ def main():
             if k not in [x['cua'] for x in ket_noi]:
                 ket_noi.append(dict(cua=k, phong=sorted([p.id, c['toi']])))
     bd = dict(phien_ban=1, phong_dau='P01', bat_dau=dict(phong='P01', cot=4, hang=15),
-              don_vi='x,y,w,h tính bằng ô phòng (48px) trên bản đồ thế giới; bản đồ nhỏ tự thu nhỏ (vd ÷4)',
-              phong=[dict(id=p.id, ten=p.ten, x=p.wx, y=p.wy, w=p.C, h=p.R, rong=p.C, cao_bd=p.R,
+              don_vi='x,y,rong,cao_bd: đơn vị bản đồ nhỏ = 10 ô phòng; x_o,y_o,w,h: vị trí/cỡ thật trên bản đồ thế giới tính bằng ô phòng (48px)',
+              phong=[dict(id=p.id, ten=p.ten, x=p.wx / 10, y=p.wy / 10, rong=p.C / 10, cao_bd=p.R / 10, x_o=p.wx, y_o=p.wy, w=p.C, h=p.R,
                           chuong_luu=bool(p.chuong_luu), trum=p.trum, tinh_anh=p.tinh_anh) for p in phong],
               ket_noi=[dict(a=k['cua'][0], b=k['cua'][1]) for k in ket_noi],
               ghi_chu='Đợt 1. P07/P08/P10 chưa có: tạm nối P06→P09 trực tiếp, P09→P11 trực tiếp.')

@@ -79,11 +79,11 @@ def kiem_tinh(bd, ph):
             # lệch thế giới
             pa = next(p for p in bd['phong'] if p['id'] == pid); pb = next(p for p in bd['phong'] if p['id'] == c['toi'])
             if c['huong'] in ('trai', 'phai'):
-                dy = (pa['y'] + c['hang']) - (pb['y'] + x['hang'])
-                dx = (pa['x'] + c['cot'] + (1 if c['huong'] == 'phai' else -1)) - (pb['x'] + x['cot'])
+                dy = (pa['y_o'] + c['hang']) - (pb['y_o'] + x['hang'])
+                dx = (pa['x_o'] + c['cot'] + (1 if c['huong'] == 'phai' else -1)) - (pb['x_o'] + x['cot'])
             else:
-                dx = (pa['x'] + c['cot']) - (pb['x'] + x['cot'])
-                dy = (pa['y'] + c['hang'] + (1 if c['huong'] == 'duoi' else -1)) - (pb['y'] + x['hang'])
+                dx = (pa['x_o'] + c['cot']) - (pb['x_o'] + x['cot'])
+                dy = (pa['y_o'] + c['hang'] + (1 if c['huong'] == 'duoi' else -1)) - (pb['y_o'] + x['hang'])
             if dx or dy:
                 canh(f"{pid}/{c['id']}: lệch bản đồ thế giới với {x['id']} (dx={dx}, dy={dy})")
         # mép kín
@@ -498,9 +498,10 @@ def ve(ph, phu_chinh, phu_bimat, seen):
     # bản đồ tổng
     bd = json.load(open(os.path.join(GOC, 'ban-do.json'), encoding='utf-8'))
     S2 = 4
-    mx = max(p['x'] + p['w'] for p in bd['phong']); my = max(p['y'] + p['h'] for p in bd['phong'])
+    mx = max(p['x_o'] + p['w'] for p in bd['phong']); my = max(p['y_o'] + p['h'] for p in bd['phong'])
     im = Image.new('RGB', (mx * S2 + 8, my * S2 + 8), (0, 0, 0)); dr = ImageDraw.Draw(im)
     for p in bd['phong']:
+        p = dict(p, x=p['x_o'], y=p['y_o'])
         g = ph[p['id']]['luoi']
         for r, row in enumerate(g):
             for c, ch in enumerate(row):
@@ -566,6 +567,15 @@ def main():
     seen4, _, _, _ = mo_phong(bd, ph, nut_vo=True, mo_khoa=True, bat_dau=s06)
     if not any(p == 'P02' and n[0] == 'dat' and n[2] <= 24 for p, n in seen4):
         canh('Lối tắt P06 → P02 (sau tường nứt) không đi được bằng hộp')
+    # khe chui tối thiểu 3 ô: mọi chỗ đứng tới được phải có ≥3 ô trống phía trên mặt sàn
+    thap = defaultdict(list)
+    for p, n in seen2:
+        if n[0] == 'dat':
+            g = ph[p]['luoi']; c, r = n[1], n[2]
+            if r - 2 < 0 or g[r - 2][c] in '#N':
+                thap[p].append((c, r))
+    for p, ns in thap.items():
+        canh(f'{p}: {len(ns)} chỗ đứng chỉ cao 2 ô (< 3): {sorted(ns)[:8]}')
     print('Số nút đã thăm:', len(seen2))
     if '--khong-ve' not in sys.argv:
         ve(ph, phu2, phu3, seen2)

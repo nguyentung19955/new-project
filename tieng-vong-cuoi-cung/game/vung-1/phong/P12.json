@@ -38,6 +38,7 @@
  ],
  "tinh_anh": false,
  "trum": true,
+ "bat_dau": {"cot": 3, "hang": 16},
  "trang_tri": [
   {"id": "P12-tuong-me", "loai": "tuong_mau_chuong", "cot": 40, "hang": 16, "ghi": "vị trí trùm Mẫu Chuông Rỗng"},
   {"id": "P12-ong-chuong", "loai": "ong_chuong_cam", "cot": 32, "hang": 2, "ghi": "dàn ống chuông câm treo trần (nền)"}

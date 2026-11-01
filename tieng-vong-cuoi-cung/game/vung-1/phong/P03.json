@@ -59,6 +59,7 @@
  ],
  "tinh_anh": false,
  "trum": false,
+ "bat_dau": {"cot": 2, "hang": 9},
  "trang_tri": [
   {"id": "P03-tuong-nut-H1", "loai": "tuong_nut", "cot": 14, "hang": 22, "cao": 3, "ghi": "vết nứt rõ, chuông nhỏ lệch nhịp phía sau"},
   {"id": "P03-hai-cot-H1", "loai": "hai_cot", "cot": 8, "hang": 24, "ghi": "hài cốt dân làng ôm chuông (nhiệm vụ D đợt sau)"},
