@@ -1,0 +1,29 @@
+{
+ "phien_ban": 1,
+ "phong_dau": "P01",
+ "bat_dau": {"phong": "P01", "cot": 4, "hang": 15},
+ "don_vi": "x,y,w,h tính bằng ô phòng (48px) trên bản đồ thế giới; bản đồ nhỏ tự thu nhỏ (vd ÷4)",
+ "phong": [
+  {"id": "P01", "ten": "Cửa Rễ", "x": 0, "y": 10, "w": 48, "h": 20, "rong": 48, "cao_bd": 20, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P02", "ten": "Ngã Ba Mối", "x": 48, "y": 0, "w": 60, "h": 34, "rong": 60, "cao_bd": 34, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P03", "ten": "Xưởng Chuông", "x": 108, "y": 0, "w": 70, "h": 30, "rong": 70, "cao_bd": 30, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P04", "ten": "Hành Lang Tro", "x": 108, "y": 30, "w": 90, "h": 18, "rong": 90, "cao_bd": 18, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P05", "ten": "Chuông Lưu", "x": 76, "y": 34, "w": 32, "h": 16, "rong": 32, "cao_bd": 16, "chuong_luu": true, "trum": false, "tinh_anh": false},
+  {"id": "P06", "ten": "Hố Vỏ", "x": 26, "y": 34, "w": 50, "h": 36, "rong": 50, "cao_bd": 36, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P09", "ten": "Miệng Kèn", "x": 76, "y": 50, "w": 44, "h": 44, "rong": 44, "cao_bd": 44, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P11", "ten": "Sảnh Chuông Vỡ", "x": 120, "y": 48, "w": 56, "h": 24, "rong": 56, "cao_bd": 24, "chuong_luu": true, "trum": false, "tinh_anh": true},
+  {"id": "P12", "ten": "Đàn Chuông Câm", "x": 176, "y": 50, "w": 64, "h": 22, "rong": 64, "cao_bd": 22, "chuong_luu": false, "trum": true, "tinh_anh": false}
+ ],
+ "ket_noi": [
+  {"a": "P01-dong", "b": "P02-tay"},
+  {"a": "P02-dong", "b": "P03-tay"},
+  {"a": "P02-day", "b": "P06-tren"},
+  {"a": "P03-day", "b": "P04-tren"},
+  {"a": "P04-tay", "b": "P05-dong"},
+  {"a": "P05-tay", "b": "P06-dong"},
+  {"a": "P06-dong-duoi", "b": "P09-tay"},
+  {"a": "P09-dong", "b": "P11-tay"},
+  {"a": "P11-dong", "b": "P12-tay"}
+ ],
+ "ghi_chu": "Đợt 1. P07/P08/P10 chưa có: tạm nối P06→P09 trực tiếp, P09→P11 trực tiếp."
+}
