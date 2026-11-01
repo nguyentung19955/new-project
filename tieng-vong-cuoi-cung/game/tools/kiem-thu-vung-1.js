@@ -1,11 +1,13 @@
 // Kiểm thử Vùng 1 (luồng A). Chạy: (cd tieng-vong-cuoi-cung && python3 -m http.server 8765) rồi node game/tools/kiem-thu-vung-1.js
 const {chromium} = require('playwright');
 const KQ = [];
+// phép thử này viết cho phòng THỬ (T1–T3) → mặc định thêm &thu=1 (đặt TV_Q='' để bỏ)
+const THEM = process.env.TV_Q ?? '&thu=1';
 const ok = (ten, dk, ct) => { console.log((dk ? 'ĐẠT ' : 'LỖI ') + ten + (ct ? ' – ' + ct : '')); KQ.push((dk ? 'ĐẠT ' : 'LỖI ') + ten + (ct ? ' – ' + ct : '')); };
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({viewport:{width:1280,height:720}});
   const errs = []; p.on('pageerror', e => errs.push('PAGEERR ' + e.message)); p.on('console', m => { if (m.type() === 'error' && !/404/.test(m.text())) errs.push('CONSOLE ' + m.text()); });
-  await p.goto('http://localhost:8765/game/vung-1/index.html?tu=1&moi=1');
+  await p.goto('http://localhost:8765/game/vung-1/index.html?tu=1&moi=1' + THEM);
   await p.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:20000});
   await p.evaluate(() => TV.choi(true)); await p.waitForTimeout(300);
   // helper trong trang
@@ -75,7 +77,7 @@ const ok = (ten, dk, ct) => { console.log((dk ? 'ĐẠT ' : 'LỖI ') + ten + (c
   r = await ev(() => { H.dat(10, 4); H.chay(30, '', true); return [TV.G.luu.kho.chuong_vo, TV.G.cuaKhoa.length, TV.G.luu.nvA]; });
   ok('Đủ 3 Chuông Vỡ → mở khoá cửa trùm + thưởng', r[0] === 3 && r[1] === 0 && r[2], JSON.stringify(r));
   // i) lưu/tải: tải lại trang
-  await p.goto('http://localhost:8765/game/vung-1/index.html?tu=1'); await p.waitForFunction(() => window.TV && TV.xong, null, {timeout:20000});
+  await p.goto('http://localhost:8765/game/vung-1/index.html?tu=1' + THEM); await p.waitForFunction(() => window.TV && TV.xong, null, {timeout:20000});
   r = await ev(() => [document.getElementById('b-tiep').disabled, TV.V1.coLuu()]);
   ok('Tải lại trang: có bản lưu, nút Tiếp tục bật', !r[0] && r[1], JSON.stringify(r));
   await ev(() => TV.choi(false)); await p.waitForTimeout(300);

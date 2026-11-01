@@ -21,13 +21,14 @@
   /* ---------------- LƯU / TẢI (localStorage, có số phiên bản, bọc try/catch) ---------------- */
   function luuMoi(){
     return {phien_ban:PHIEN_BAN_LUU, chuong:null, phong:null, manh:0, manhGui:0, maxHp:MAU_GOC, hoiMax:HOI_GOC, nangMau:0,
-      daNhat:[], daVao:[], tuongVo:[], tinhAnhHa:[], trumHa:false, tui:null, kho:{chuong_vo:0, the_ten:0, loi_vong_tan:0}, nvA:false, chet:0, giay:0};
+      daNhat:[], daVao:[], tuongVo:[], tinhAnhHa:[], trumHa:false, hetXem:false, tui:null, kho:{chuong_vo:0, the_ten:0, loi_vong_tan:0}, nvA:false, chet:0, giay:0};
   }
   function docLuu(){
     try {
       const s = localStorage.getItem(KHOA_LUU); if (!s) return null;
       const d = JSON.parse(s);
       if (!d || d.phien_ban !== PHIEN_BAN_LUU) return null;
+      if (d.trumHa && d.hetXem === undefined) d.hetXem = true;   // bản lưu cũ (trước luồng F) đã thắng trùm: không hiện lại màn thắng
       return Object.assign(luuMoi(), d, {kho:Object.assign(luuMoi().kho, d.kho || {})});
     } catch (e){ return null; }
   }
@@ -165,6 +166,7 @@
     if (G.luu.chuong && G.luu.chuong.phong === id && !phongThu) datNV(G.luu.chuong.cot * T + T / 2 + 40, chanO(G.luu.chuong.cot, G.luu.chuong.hang));
     G.trang = 'choi';
     ghiLuu();
+    if (G.luu.trumHa && !G.luu.hetXem && V1.thangTrum) V1.thangTrum();   // (luồng F) tải lại lúc trùm đang gục: vẫn hiện màn thắng
   };
   function apDungChiSo(day){
     E.P.maxHp = G.luu.maxHp; E.P.cheDoHoi = 'luot'; E.P.hoiLuong = 2; E.P.tuHoiSinh = false; E.P.quaiHoiSinh = false;
@@ -350,6 +352,7 @@
       vaoPhong(p, c ? null : G.bd.cua_dau || null, null);
       if (c) datNV(c.cot * T + T / 2 + 40, chanO(c.cot, c.hang));
       pl.iframes = 60; pl.nhay = 60;
+      if (L.trumHa && !L.hetXem && V1.thangTrum){ V1.thangTrum(); return; }   // (luồng F) trùm gục cùng lúc người chơi ngã → vẫn tính thắng
       thongBao(mat > 0 ? 'Mất ' + mat + ' Mảnh Âm – túi nằm lại chỗ ngã' : 'Tỉnh dậy bên Chuông Lưu');
     });
   }

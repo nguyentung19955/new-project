@@ -1,0 +1,65 @@
+ĐẠT Chạy vào thân từ TRÁI: bị chặn mềm, không xuyên – {"lanMax":7.5,"nhayMax":4.2000000000000455,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":true,"cuoiDat":true,"ben":-1}
+ĐẠT   …đi ra lại được (không kẹt)
+ĐẠT Chạy vào thân từ PHẢI: bị chặn mềm, không xuyên – {"lanMax":7.5,"nhayMax":4.2000000000000455,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":true,"cuoiDat":true,"ben":1}
+ĐẠT Lướt (dash) vào thân: không lướt xuyên, không giật (≤ 14 px/khung ngoài tốc lướt) – {"lanMax":7.5,"nhayMax":10,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":40,"cuoiChong":true,"cuoiDat":true,"ben":-1}
+ĐẠT Lướt vào thân từ phải – {"lanMax":7.5,"nhayMax":10,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":40,"cuoiChong":true,"cuoiDat":true,"ben":1}
+ĐẠT Nhảy đôi qua trùm: không kẹt trong thân, đáp đất – {"lanMax":51.039999999998145,"nhayMax":9.200000000000045,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":140,"cuoiChong":false,"cuoiDat":true,"ben":1}
+ĐẠT Rơi xuống mép trái thân trùm: trượt xuống một bên, không đứng trên đầu, không lọt nền – {"lanMax":7.296800000000076,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":false,"cuoiDat":true,"ben":-1}
+ĐẠT Rơi xuống mép phải thân trùm: trượt xuống một bên, không đứng trên đầu, không lọt nền – {"lanMax":7,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":false,"cuoiDat":true,"ben":1}
+ĐẠT Rơi xuống giữa đầu thân trùm: trượt xuống một bên, không đứng trên đầu, không lọt nền – {"lanMax":59,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":false,"cuoiDat":true,"ben":1}
+ĐẠT Rơi xuống lệch trái 20 thân trùm: trượt xuống một bên, không đứng trên đầu, không lọt nền – {"lanMax":39,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":90,"cuoiChong":false,"cuoiDat":true,"ben":-1}
+ĐẠT Chạy vào trùm đang áp tường: bị chặn mềm, không kẹt trong đá, không lọt nền – [{"lanMax":7.5,"nhayMax":4.199999999999818,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":120,"cuoiChong":true,"cuoiDat":true,"ben":-1},2790]
+ĐẠT Rơi vào khe tường–trùm (giữ ← ép vào trùm): không kẹt trong đá, không lọt nền, trượt ra không giật – [{"lanMax":13.783199999999397,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":100,"cuoiChong":false,"cuoiDat":true,"ben":1},2800,0,0]
+ĐẠT   …thoát ra được (nhảy đôi qua trùm sang trái) – [true,true,false]
+ĐẠT Rơi vào sát mép thân trong khe (giữ ← ép vào trùm): không kẹt trong đá, không lọt nền, trượt ra không giật – [{"lanMax":27.376799999999548,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":100,"cuoiChong":false,"cuoiDat":true,"ben":1},2800,0,0]
+ĐẠT   …thoát ra được (nhảy đôi qua trùm sang trái) – [true,true,false]
+ĐẠT Đặt người chơi KẸP sẵn giữa tường và trùm: trùm bị đẩy lùi / cho đi xuyên, không kẹt – [{"lanMax":0,"nhayMax":0,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":60,"cuoiChong":false,"cuoiDat":true,"ben":-1},126,101,0,0]
+ĐẠT Đánh khi đang chồng thân: trúng trùm, không mất máu vì chạm thân – [30,0,7.5]
+ĐẠT Chuyển pha khi đang chồng thân: không mất máu, vẫn chặn, không lọt đá – ["chuyen_pha",2,0,7.5,0]
+ĐẠT P12 trận 1: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":6,"baoNganNhat":"24 khung"}
+ĐẠT P12 trận 1: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":1,"baoKhung":[27]}
+ĐẠT P12 trận 1: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
+ĐẠT P12 trận 1: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":73,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 1: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[469],"chieu":{"go":2,"tha":3,"quet":1}}
+ĐẠT P12 trận 1: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
+ĐẠT P12 trận 2: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":8,"baoNganNhat":"24 khung"}
+ĐẠT P12 trận 2: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":0,"baoKhung":[]}
+ĐẠT P12 trận 2: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
+ĐẠT P12 trận 2: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":82,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 2: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[476],"chieu":{"go":3,"tha":3,"quet":0}}
+ĐẠT P12 trận 2: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
+ĐẠT P12 trận 3: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":8,"baoNganNhat":"24 khung"}
+ĐẠT P12 trận 3: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":0,"baoKhung":[]}
+ĐẠT P12 trận 3: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
+ĐẠT P12 trận 3: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":88,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 3: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[476],"chieu":{"go":3,"tha":3,"quet":0}}
+ĐẠT P12 trận 3: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
+ĐẠT Phòng thử T3 trận 1: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":2,"matNa":8,"trungKhac":0,"chieu":{"go":2,"tha":2,"quet":1}}
+ĐẠT Phòng thử T3 trận 2: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":3,"matNa":14,"trungKhac":0,"chieu":{"go":2,"tha":3,"quet":0}}
+ĐẠT Phòng thử T3 trận 3: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":3,"matNa":14,"trungKhac":0,"chieu":{"go":3,"tha":3,"quet":1}}
+ĐẠT Chết cùng khung trùm chết: trùm được ghi "đã hạ" ngay vào bản lưu – [true,"chet",true]
+ĐẠT   …hồi sinh ở Chuông Lưu, vẫn hiện màn "Hết Vùng 1", trùm không sống lại – ["het","P11",false,true,true,12,true]
+ĐẠT Tải lại GIỮA trận: về Chuông Lưu P11, trùm chưa tính hạ, giữ 3 Chuông Vỡ + Mảnh Âm đã gửi – ["P11",false,3,25]
+ĐẠT   …vào lại P12: trùm đủ máu, pha 1, đang ngủ chờ – [true,300,1,"cho"]
+ĐẠT Tải lại lúc trùm đang gục: vẫn tính thắng, hiện màn "Hết Vùng 1" 1 lần – [true,"het",true]
+ĐẠT   …tải thêm lần nữa: không hiện lại màn thắng (không nhân đôi) – ["choi"]
+ĐẠT Ngã trong phòng trùm: mất 30% (15) vào túi ở P12, túi nằm trên sàn, nhặt lại đủ 50 – [35,"P12",15,true,false,50,null,376]
+ĐẠT Cửa trùm KHÔNG vượt được khi mới có 2 Chuông Vỡ (chạy/lướt/nhảy đôi/đập đất, 12 lần thử) – chạy 44 P11 false 2592 · chạy 50 P11 false 2592 · chạy 53 P11 false 2591 · lướt liên tục 44 P11 false 2592 · lướt liên tục 50 P11 false 2592 · lướt liên tục 53 P11 false 2592 · nhảy đôi + lướt 44 P11 false 2211 · nhảy đôi + lướt 50 P11 false 2592 · nhảy đôi + lướt 53 P11 false 2592 · đập đất / chém 44 P11 false 2592 · đập đất / chém 50 P11 false 2592 · đập đất / chém 53 P11 false 2592
+ĐẠT   …đủ 3 Chuông Vỡ thì qua được – [true]
+ĐẠT 844×390 p01: khung game + HUD nằm trong vùng an toàn (tai thỏ 47 px mỗi bên) – {"cv":{"l":75.328125,"t":0,"r":768.65625,"b":390},"hud":{"l":81.105859375,"t":5.777734375,"r":237.10468749999998,"b":108.33251953125}}
+ĐẠT 844×390 p01: ô máu đủ to (≥ 17 px thật/ô) – 17.3 px
+ĐẠT 844×390 p01: nút Bản đồ ≥ 44 px, trong vùng an toàn, không đè HUD / thanh trùm – {"l":684.53125,"t":8,"r":789,"b":52}
+ĐẠT 844×390 p01: HUD và thanh máu trùm không chạm nút cảm ứng (cách ≥ 40 px) – [404,474,359,478,119]
+ĐẠT 844×390 trum: khung game + HUD nằm trong vùng an toàn (tai thỏ 47 px mỗi bên) – {"cv":{"l":75.328125,"t":0,"r":768.65625,"b":390},"hud":{"l":81.105859375,"t":5.777734375,"r":237.10468749999998,"b":108.33251953125}}
+ĐẠT 844×390 trum: ô máu đủ to (≥ 17 px thật/ô) – 17.3 px
+ĐẠT 844×390 trum: nút Bản đồ ≥ 44 px, trong vùng an toàn, không đè HUD / thanh trùm – {"l":684.53125,"t":8,"r":789,"b":52}
+ĐẠT 844×390 trum: HUD và thanh máu trùm không chạm nút cảm ứng (cách ≥ 40 px) – [156,148,248,244,119]
+ĐẠT 932×430 p01: khung game + HUD nằm trong vùng an toàn (tai thỏ 47 px mỗi bên) – {"cv":{"l":83.78125,"t":0,"r":848.21875,"b":430},"hud":{"l":90.1515625,"t":6.3703125,"r":262.15,"b":119.443359375}}
+ĐẠT 932×430 p01: ô máu đủ to (≥ 17 px thật/ô) – 19.1 px
+ĐẠT 932×430 p01: nút Bản đồ ≥ 44 px, trong vùng an toàn, không đè HUD / thanh trùm – {"l":772.53125,"t":8,"r":877,"b":52}
+ĐẠT 932×430 p01: HUD và thanh máu trùm không chạm nút cảm ứng (cách ≥ 40 px) – [452,529,402,533,134]
+ĐẠT 932×430 trum: khung game + HUD nằm trong vùng an toàn (tai thỏ 47 px mỗi bên) – {"cv":{"l":83.78125,"t":0,"r":848.21875,"b":430},"hud":{"l":90.1515625,"t":6.3703125,"r":262.15,"b":119.443359375}}
+ĐẠT 932×430 trum: ô máu đủ to (≥ 17 px thật/ô) – 19.1 px
+ĐẠT 932×430 trum: nút Bản đồ ≥ 44 px, trong vùng an toàn, không đè HUD / thanh trùm – {"l":772.53125,"t":8,"r":877,"b":52}
+ĐẠT 932×430 trum: HUD và thanh máu trùm không chạm nút cảm ứng (cách ≥ 40 px) – [175,165,276,272,134]
+ĐẠT Không có lỗi JS – không

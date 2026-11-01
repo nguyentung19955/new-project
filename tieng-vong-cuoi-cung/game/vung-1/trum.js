@@ -5,10 +5,39 @@
      Chuyển pha ở 50% máu. Mọi đòn báo trước ≥ 0.45 s (27 bước 60 Hz).
    • (luồng E) Quét Chuông Ngang: khi người chơi đứng gần (≤ 4.5 ô), trùm giơ chuông báo 0.6 s rồi quét ngang sát sàn ra phía trước ~4 ô
      (cao 80 px → nhảy qua hoặc lùi ra xa). Pha 2 quét xa hơn.
+   • (luồng F) BA VÙNG TÁCH RIÊNG của trùm:
+       – THÂN CHẮN (V1.thanTrum): khối chuông/bụng 100×170 px ở giữa chân – KHÔNG gồm tay rễ, dây, gai. Người chơi không đi/lướt
+         xuyên qua được: chồng lấn thì bị đẩy NGANG MỀM vài px/khung (không dịch chuyển tức thời); nhảy lên đầu thì trượt xuống một bên;
+         bị kẹp giữa trùm và tường thì đẩy TRÙM lùi ra (phía có chỗ), kẹt hẳn thì cho đi xuyên. Chỉ đẩy ngang → không bao giờ lọt nền.
+       – VÙNG NHẬN ĐÒN (hộp q.x/y/w/h, 176×190 px ≈ khớp hình): chém trúng chỗ nào trên hình thì tính trúng.
+       – VÙNG GÂY SÁT THƯƠNG: CHỈ các đòn có báo trước (sóng Gõ Không Tiếng, vệt Quét Chuông, mặt nạ rơi). Chạm thân KHÔNG mất máu
+         (trước đây chạm thân trừ máu cả lúc gầm / chuyển pha → "trúng mà không báo trước").
+     Báo đòn: gầm = rung vỏ + nứt đỏ (không sát thương) · Gõ = giơ chuông 0,5 s + vạch đỏ hai bên chân · Quét = KÉO NGƯỢC 0,45 s,
+     vẽ sẵn vùng nguy hiểm đúng bằng tầm quét · Mưa Mặt Nạ = dấu hổ phách + bóng trên sàn 0,5 s+ · chuyển pha = rung + nứt, không sát thương.
    Hình trùm: art/vung-1/trum/nghi.png, gio-chuong.png, vo-mat-na.png (ve.js veTrumAnh); nếu trum.json có clip thật thì ưu tiên clip;  trong trum.json (dung / go / tha_mat_na / chuyen_pha / trung / chet); chưa có → ve.js vẽ hình tạm. */
 (() => {
   const V1 = window.V1, E = DongCoMN, pl = E.pl, T = 48, G = V1.G;
   const BAO = 30;   // 0.5 s báo trước (≥ 0.45 s)
+  const KEO_QUET = 27;   // Quét Chuông: kéo ngược 0,45 s (yêu cầu 0,35–0,5 s)
+  // ô trống để thả mặt nạ: cột x có ít nhất 2 ô trống liền trên mặt đất (trong khung camera); không có thì dò sang 2 bên
+  function timCotTrong(x){
+    for (const d of [0, T, -T, 2 * T, -2 * T, 3 * T, -3 * T]){
+      const xx = x + d; if (xx < T || xx > E.BD.COT * T - T) continue;
+      let y = Math.max(T, (V1.CAM ? V1.CAM.y : 0) + 8), trong = 0;
+      for (; y < E.BD.HANG * T; y += T / 2){ if (E.solidPt(xx, y)) trong = 0; else if (++trong >= 4) return xx; }
+    }
+    return null;
+  }
+  // chọn chiêu: không lặp lại chiêu vừa dùng; người chơi đứng gần thì hay Quét; Mưa Mặt Nạ chắc chắn ra ít nhất 1 lần mỗi 3 chiêu
+  function chonChieu(q, dx){
+    const ls = q.lichSu || (q.lichSu = []), cuoi = ls[ls.length - 1], gan = Math.abs(dx) < T * 4.5;
+    let chon;
+    if (ls.length >= 2 && !ls.slice(-2).includes('tha')) chon = 'tha';
+    else if (gan && cuoi !== 'quet' && Math.random() < 0.55) chon = 'quet';
+    else chon = cuoi === 'go' ? 'tha' : cuoi === 'tha' ? 'go' : (Math.random() < 0.5 ? 'go' : 'tha');
+    ls.push(chon); if (ls.length > 6) ls.shift();
+    return chon;
+  }
 
   /* ---------------- NGUY HIỂM DÙNG CHUNG ---------------- */
   function quet(x, y, dir, dai){ G.nguy.push({loai:'quet', x, y, dir, dai, h:80, t:0, gay:1}); }
@@ -79,7 +108,7 @@
   };
 
   /* ---------------- TRÙM: MẪU CHUÔNG RỖNG ---------------- */
-  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:300, than:[84, 160], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
+  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:300, than:[88, 95], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
   V1.TRUM_DEF = DEF;
   V1.taoTrum = function(p){
     const TR = V1.TRUMJ || {};
@@ -94,8 +123,7 @@
     q.t++; q.clipT++;
     q.vy = Math.min((q.vy || 0) + 0.6, 10); if (E.moveY(q, q.vy) !== 0) q.vy = 0;
     const cx = q.x + q.w / 2, dx = pl.x + pl.w / 2 - cx, pha2 = q.pha >= 2;
-    // chạm thân gây sát thương (trừ lúc chết / chờ)
-    if (q.st !== 'chet' && q.st !== 'cho' && !pl.dead && E.overlap(E.hurtBox(), {x:q.x + 8, y:q.y + 30, w:q.w - 16, h:q.h - 30})) E.hurt(dx > 0 ? 1 : -1, 1);
+    // (luồng F) chạm thân KHÔNG gây sát thương nữa – thân chỉ CHẮN (V1.buocThanTrum). Sát thương chỉ đến từ đòn có báo trước.
     let clip = 'dung';
     switch (q.st){
       case 'cho':
@@ -107,9 +135,7 @@
         if (Math.abs(dx) > 200){ const bi = E.moveX(q, q.face * (pha2 ? 0.9 : 0.6), false); q.dangDi = !bi; }
         if (--q.cd <= 0){
           q.lan++;
-          let chon = (q.lan % 2 === 1) !== (Math.random() < 0.25) ? 'go' : 'tha';
-          if (Math.abs(dx) < T * 4.5 && q._vuaQuet !== true && Math.random() < 0.6) chon = 'quet';
-          q._vuaQuet = chon === 'quet';
+          const chon = chonChieu(q, dx);
           if (chon === 'quet') q.face = dx > 0 ? 1 : -1;
           doiTrangThai(q, chon);
         }
@@ -123,13 +149,15 @@
         if (pha2 && q.t === BAO + 34){ const fy = q.y + q.h; songDat(cx - 40, fy, -1, 6.5, 44); songDat(cx + 40, fy, 1, 6.5, 44); vong(cx, fy - 40, false, '#cfd8e6'); E.shake(0, 1, 3); }
         if (q.t >= BAO + (pha2 ? 64 : 40)){ doiTrangThai(q, 'dung'); q.cd = pha2 ? 60 : 95; }
         break; }
-      case 'quet': {   // Quét Chuông Ngang
+      case 'quet': {   // Quét Chuông Ngang: KÉO NGƯỢC 0,45 s (lùi + ngả chuông ra sau, vùng nguy hiểm hiện sẵn) rồi quét
         clip = 'go';
-        const BQ = BAO + 6;
+        const BQ = KEO_QUET;
+        q.quetDai = pha2 ? 230 : 190;
         q.dangQuet = q.t >= BQ && q.t < BQ + 16;
+        if (q.t < BQ) E.moveX(q, -q.face * 0.7, false);   // kéo ngược: lùi ~19 px
         if (q.t === BQ){
           const fy = q.y + q.h;
-          quet(cx + q.face * 24, fy, q.face, pha2 ? 230 : 190); E.shake(q.face, 0.5, 3);
+          quet(cx + q.face * 24, fy, q.face, q.quetDai); E.shake(q.face, 0.5, 3);
         }
         if (q.t >= BQ && q.t < BQ + 8) E.moveX(q, q.face * 1.5, false);   // nhoài người theo cú quét
         if (q.t >= BQ + 44){ q.dangQuet = false; doiTrangThai(q, 'dung'); q.cd = pha2 ? 50 : 80; }
@@ -139,8 +167,11 @@
         if (q.t === 1){
           const Wp = E.BD.COT * T, n = pha2 ? 6 : 4, px = pl.x + pl.w / 2;
           const xs = [px];
-          for (let i = 1; i < n; i++) xs.push(Math.max(T * 1.5, Math.min(Wp - T * 1.5, px + (i % 2 ? 1 : -1) * Math.ceil(i / 2) * (T * 2.6) + (Math.random() - 0.5) * 30)));
-          xs.forEach((x, i) => matNa(x, i * 9));
+          for (let i = 1; i < n; i++) xs.push(px + (i % 2 ? 1 : -1) * Math.ceil(i / 2) * (T * 2.6) + (Math.random() - 0.5) * 30);
+          // (luồng F) chỉ thả ở cột có khoảng trống thật (không thả trong tường dày ở mép phòng → trước đây có lần "không ra")
+          let ra = 0;
+          xs.forEach(x => { const xo = timCotTrong(Math.max(T, Math.min(Wp - T, x))); if (xo !== null){ matNa(xo, ra * 9); ra++; } });
+          q.matNaRa = (q.matNaRa || 0) + ra;
         }
         if (q.t >= BAO + (pha2 ? 70 : 55)){ doiTrangThai(q, 'dung'); q.cd = pha2 ? 55 : 90; }
         break; }
@@ -152,18 +183,69 @@
       case 'chet':
         clip = 'chet'; q.batTu = true; q.alpha = Math.max(0, 1 - Math.max(0, q.t - 90) / 60);
         if (q.t % 15 === 1) E.shake(0, 1, 2);
-        if (q.t >= 150){ q.dead = true; V1.thangTrum && V1.thangTrum(); }
+        if (!pl.dead) pl.iframes = Math.max(pl.iframes, 2);   // trùm đã gục: không còn gì gây sát thương
+        if (q.t >= 150){ q.dead = true; if (!pl.dead && V1.thangTrum) V1.thangTrum(); }   // người chơi đã ngã cùng lúc → khiChet lo màn "Hết Vùng 1"
         break;
     }
     if (q.flash > 2 && clip === 'dung') clip = 'trung';
     if (clip !== q.clip){ q.clip = clip; q.clipT = 0; }
-    q.baoTruoc = ((q.st === 'go' || q.st === 'tha') && q.t < BAO) || (q.st === 'quet' && q.t < BAO + 6);
+    q.baoTruoc = ((q.st === 'go' || q.st === 'tha') && q.t < BAO) || (q.st === 'quet' && q.t < KEO_QUET) ||
+      (q.st === 'go' && pha2 && q.t >= BAO + 10 && q.t < BAO + 34);   // pha 2: nhịp gõ thứ hai cũng báo lại 0,4 s
+    q.keoQuet = q.st === 'quet' && q.t < KEO_QUET ? q.t / KEO_QUET : 0;   // 0→1 trong lúc kéo ngược (ve.js vẽ vùng nguy hiểm)
     if (q.st !== 'quet') q.dangQuet = false;
   }
+  /* ---------------- THÂN CHẮN (luồng F) ----------------
+     Khối chuông/bụng: rộng THAN_W, cao THAN_H, giữa chân trùm. Gọi V1.buocThanTrum() mỗi bước 60 Hz SAU engine (index.html).
+     • Đi/chạy/lướt vào: bị chặn như tường mềm – cho lấn tối đa MEM px, phần lấn thêm trong khung bị trả lại (≤ 14 px/khung),
+       rồi đẩy ra từ từ 2,5 px/khung → không xuyên được, không giật.
+     • Rơi/nhảy lên đầu (khung trước chân còn ở trên nóc thân): KHÔNG làm sàn – đẩy ngang 5 px/khung về phía gần → trượt xuống một bên.
+     • Bị kẹp (phía bị đẩy là tường): đẩy TRÙM lùi ra phía có chỗ; nếu trùm cũng kẹt thì cho người chơi đi xuyên (quaTrum) tới khi hết chồng.
+     • Chỉ đẩy NGANG bằng E.moveX (có va chạm ô) → không bao giờ đẩy lọt nền / vào tường.
+     • Tắt khi trùm đang chết (mờ dần) hoặc người chơi đã chết. */
+  const THAN_W = 100, THAN_H = 170, MEM = 10, CAP = 14, DAY_MEM = 2.5, DAY_TREN = 5;
+  const TH = {x:0, y:0, w:THAN_W, h:THAN_H}, PB = {x:0, y:0, w:0, h:0};
+  function thanTrum(q){ TH.x = q.x + q.w / 2 - THAN_W / 2; TH.y = q.y + q.h - THAN_H; TH.w = THAN_W; TH.h = THAN_H; return TH; }
+  V1.thanTrum = thanTrum;
+  const TT = V1.TT = {pen:0, ben:0, tren:false, day0:null, kep:0, qua:false, lanDay:0, lanKep:0, lanQua:0};
+  V1.buocThanTrum = function(){
+    const q = G.trum, day0 = TT.day0; TT.day0 = pl.y + pl.h;
+    if (!q || q.dead || q.st === 'chet' || pl.dead){ TT.pen = 0; TT.qua = false; TT.ben = 0; return; }
+    const B = thanTrum(q); PB.x = pl.x; PB.y = pl.y; PB.w = pl.w; PB.h = pl.h;
+    if (!E.overlap(PB, B)){ TT.pen = 0; TT.qua = false; TT.ben = 0; TT.tren = false; TT.kep = 0; return; }
+    if (TT.qua) return;   // đang cho đi xuyên (bị kẹt) – tới khi hết chồng
+    const pc = pl.x + pl.w / 2, bc = B.x + B.w / 2;
+    if (!TT.ben){   // vừa bắt đầu chồng: chọn phía đẩy + xem có phải từ trên rơi xuống
+      TT.ben = pc > bc + 0.5 ? 1 : pc < bc - 0.5 ? -1 : (pl.vx ? -Math.sign(pl.vx) : -q.face);
+      TT.tren = day0 !== null && day0 <= B.y + 6;
+      TT.pen = -1;   // khung đầu: không trả lại phần lấn (chồng lớn sẵn – vd rơi giữa đầu – chỉ đẩy mềm, không giật)
+    }
+    if (TT.tren && pl.y + pl.h > B.y + 40 && !E.overlap(PB, {x:B.x + 4, y:B.y, w:B.w - 8, h:B.h})) TT.tren = false;
+    const ben = TT.ben, pen = ben > 0 ? (B.x + B.w) - pl.x : (pl.x + pl.w) - B.x;   // quãng phải đi để ra khỏi thân về phía `ben`
+    const pen0 = TT.pen < 0 ? pen : TT.pen;
+    let day;
+    // trượt từ đầu xuống: đẩy 5 px/khung + trả lại phần người chơi tự ép thêm vào (giữ phím hướng vào thân)
+    if (TT.tren) day = Math.min(pen, DAY_TREN + Math.min(CAP, Math.max(0, pen - pen0)));
+    else { const cung = Math.min(CAP, Math.max(0, pen - Math.max(pen0, MEM))); day = Math.min(pen, cung + DAY_MEM); }
+    const x0 = pl.x; E.moveX(pl, ben * day, false); const di = Math.abs(pl.x - x0);
+    TT.lanDay++;
+    if (day - di > 0.01){   // bị kẹp: phía `ben` là tường → đẩy trùm lùi ra
+      TT.kep++; TT.lanKep++;
+      const q0 = q.x; E.moveX(q, -ben * (day - di), false);
+      if (Math.abs(q.x - q0) < 0.01 && TT.kep > 6){ TT.qua = true; TT.lanQua++; }   // kẹt cả hai: cho đi xuyên
+    } else TT.kep = 0;
+    PB.x = pl.x; TT.pen = ben > 0 ? (B.x + B.w) - pl.x : (pl.x + pl.w) - B.x;
+    if (TT.pen <= 0) TT.pen = 0;
+  };
+
   function trungTrum(q, dmg, face){
     if (q.st === 'chet') return;
     if (q.st === 'cho'){ doiTrangThai(q, 'gam'); }
-    if (q.hp <= 0){ q.hp = 0; doiTrangThai(q, 'chet'); G.nguy.length = 0; E.SUKIEN.push({k:'trum-chet', q}); return; }
+    if (q.hp <= 0){
+      q.hp = 0; doiTrangThai(q, 'chet'); G.nguy.length = 0; E.SUKIEN.push({k:'trum-chet', q});
+      // (luồng F) ghi nhận hạ trùm NGAY (không chờ hết 2,5 s mờ dần) → chết cùng lúc / tải lại giữa chừng không mất tiến độ
+      if (G.luu && !G.luu.trumHa){ G.luu.trumHa = true; V1.ghiLuu && V1.ghiLuu(); }
+      return;
+    }
     if (q.pha === 1 && q.hp <= q.def.mau * 0.5){ doiTrangThai(q, 'chuyen_pha'); G.nguy.length = 0; }
   }
 })();

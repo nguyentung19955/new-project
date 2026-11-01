@@ -109,6 +109,12 @@ def ve_da(solid0, seed):
 # LEN điểm phía sau (trên dòng, sau lưng nhân vật) + XUONG điểm phía trước (dưới dòng), rồi mới tới gờ sáng + bóng gờ + mặt đá.
 # Chân đứng ở dòng va chạm = giữa mặt đất → chân xa/chân gần đều như đặt trên đất. Va chạm KHÔNG đổi.
 MD_LEN, MD_XUONG = 4, 3
+# (luồng F – duyệt vòng 2) MÉP MẶT SÀN ĐI ĐƯỢC phải sáng hơn mặt đứng ngay dưới 15–25% để đọc được trên điện thoại.
+# Chỉ tăng sáng CỤC BỘ dải mặt đất + gờ (×MD_SANG); thân đá, mặt đứng, nền xa giữ nguyên độ tối.
+# Đồng thời dải mặt đất chạy sát tới mép vực (trước đây thu nhỏ từ giữa đoạn → mép vực tối, khó thấy chỗ hụt chân),
+# và góc mép vực có 1 điểm viền sáng chạy xuống 3 điểm (đánh dấu chỗ hết sàn).
+MD_SANG = 1.20
+MD_BO = 3   # số điểm cuối đoạn được bo tròn (thu nhỏ dải)
 MD_MAU = np.array([[52, 33, 32], [78, 51, 46], [104, 70, 60], [124, 86, 72]], float)   # sau (tối) → trước (sáng)
 def mat_dat(a, solid0, rng):
     H, W = solid0.shape
@@ -128,7 +134,7 @@ def mat_dat(a, solid0, rng):
             if L < 6: continue
             for x in range(x0, x1 + 1):
                 d = min(x - x0, x1 - x)                       # gần mép vực → dải thu nhỏ dần (góc bo tròn)
-                up = int(min(MD_LEN + round(gon[x] * 0.8), d // 2 + 1)); dn = int(min(MD_XUONG, d // 2))
+                up = int(min(MD_LEN + round(gon[x] * 0.8), d + 1 if d < MD_BO else 99)); dn = int(min(MD_XUONG, d + 1 if d < MD_BO else 99))
                 k = 0
                 while k < up and y - k - 1 >= 0 and not solid0[y - k - 1, x]: k += 1
                 up = k
@@ -136,12 +142,18 @@ def mat_dat(a, solid0, rng):
                 tong = up + dn
                 for j, yy in enumerate(range(y - up, y + dn)):
                     t = (j + 0.5) / tong
-                    c = MD_MAU[min(3, int(t * 4))] * (1 + 0.10 * lum[yy % 64, x % 64])
+                    c = MD_MAU[min(3, int(t * 4))] * (1 + 0.10 * lum[yy % 64, x % 64]) * MD_SANG
                     if rng.random() < 0.06: c = c * (1.3 if rng.random() < .6 else 0.7)   # sỏi lấm tấm
                     a[yy, x, :3] = np.clip(c, 0, 255); a[yy, x, 3] = 255
                 yg = y + dn                                     # gờ trước: 1 dòng sáng + 1 dòng bóng
-                a[yg, x, :3] = np.clip(np.array([150, 108, 90]) * (1 + 0.08 * lum[yg % 64, x % 64]), 0, 255)
+                a[yg, x, :3] = np.clip(np.array([150, 108, 90]) * (1 + 0.08 * lum[yg % 64, x % 64]) * MD_SANG, 0, 255)
                 a[yg + 1, x, :3] = (a[yg + 1, x, :3] * 0.45).astype(np.uint8)
+                if d == 0:   # góc mép vực: viền sáng chạy xuống mặt đứng 3 điểm (chỉ ở ô trống cạnh mép)
+                    xo = x - 1 if x == x0 else x + 1
+                    for k2 in range(0, 4):
+                        yy = y + dn + k2
+                        if 0 <= xo < W and yy < H and not solid0[yy, xo] and a[yy, xo, 3] > 0:
+                            a[yy, xo, :3] = np.clip(np.array([138, 98, 82]) * MD_SANG * (1 - 0.18 * k2), 0, 255)
                 if up > 0 and y - up - 1 >= 0 and not solid0[y - up - 1, x]:   # mép sau: viền tối + túm rễ/cỏ thưa
                     a[y - up - 1, x] = [34, 21, 22, 255]
                     if rng.random() < 0.18 and y - up - 2 >= 0: a[y - up - 2, x] = [70, 46, 40, 255]

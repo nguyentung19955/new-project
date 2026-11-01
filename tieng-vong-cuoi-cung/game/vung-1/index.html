@@ -4,22 +4,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>
 /* Vùng 1 "Ruột Cây Than Khóc" – Đợt 1 MVP. Logic 960×540, phóng số nguyên. Phòng: phong/<ID>.json (luồng B) hoặc phong-thu/ (thử). */
-:root{--night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--cyan:#78e6e6;--line:#4A5A6E;--k:1;color-scheme:dark}
+:root{--sat:env(safe-area-inset-top,0px);--sar:env(safe-area-inset-right,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);
+  --night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--cyan:#78e6e6;--line:#4A5A6E;--k:1;color-scheme:dark}
 html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 #game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
 #cv{display:block;image-rendering:pixelated}
-#top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:max(8px,calc(env(safe-area-inset-right,0px) + 8px));display:flex;gap:6px;z-index:3}
-.nut{height:34px;min-width:44px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:rgba(26,33,43,.7);color:var(--ink);font-size:13px;font-weight:700;font-family:inherit}
+#top{position:absolute;top:calc(var(--sat) + 8px);right:max(8px,calc(var(--sar) + 8px));display:flex;gap:6px;z-index:3}
+.nut{height:44px;min-width:76px;padding:0 14px;border-radius:10px;border:2px solid var(--line);background:rgba(14,18,26,.82);color:var(--ink);font-size:15px;font-weight:800;font-family:inherit;
+  display:flex;align-items:center;gap:6px;justify-content:center;touch-action:manipulation}
+.nut::before{content:"";width:16px;height:14px;border:2px solid currentColor;border-radius:2px;box-sizing:border-box;
+  background:linear-gradient(90deg,transparent 30%,currentColor 30% 38%,transparent 38% 62%,currentColor 62% 70%,transparent 70%)}
+.nut:active{transform:scale(.95);border-color:var(--bell)}
 .nut.on{border-color:var(--bell);color:var(--bell)}
 #keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#a9b3bf;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px #000}
 body.touch #keys{display:none}
 .tc{display:none} body.touch .tc{display:block}
-#dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
+#dpad{position:absolute;left:calc(var(--sal) + 6px);bottom:calc(var(--sab) + 6px);
   width:calc(132px*var(--k));height:calc(132px*var(--k));opacity:.45;pointer-events:none}
 #dpad.act{opacity:.95}
 #knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));will-change:transform}
-#acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);width:calc(190px*var(--k));height:calc(160px*var(--k));pointer-events:none}
+#acts{position:absolute;right:calc(var(--sar) + 6px);bottom:calc(var(--sab) + 4px);width:calc(190px*var(--k));height:calc(160px*var(--k));pointer-events:none}
 .ab{position:absolute;width:calc(58px*var(--k));height:calc(58px*var(--k));opacity:.62}
 .ab.on{opacity:1;transform:scale(.92);filter:brightness(1.35) drop-shadow(0 0 6px rgba(120,230,230,.7))}
 .tc img.ic,.ab img.ic{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none;object-fit:contain}
@@ -28,8 +33,8 @@ body.touch #keys{display:none}
 #b-s{left:0;bottom:calc(12px*var(--k))}
 #b-j{right:0;bottom:0;width:calc(74px*var(--k));height:calc(74px*var(--k))}
 /* màn dọc: khung game nằm trên, nút ở nửa dưới – vẫn chơi được */
-@media (orientation:portrait){ body.touch #game{place-items:start center;padding-top:calc(env(safe-area-inset-top,0px) + 48px)} }
-#b-nghi{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);transform:translateX(-50%);display:none;z-index:4;
+@media (orientation:portrait){ body.touch #game{place-items:start center;padding-top:calc(var(--sat) + 48px)} }
+#b-nghi{position:absolute;left:50%;bottom:calc(var(--sab) + 16px);transform:translateX(-50%);display:none;z-index:4;
   height:44px;padding:0 18px;border-radius:22px;border:2px solid var(--bell);background:rgba(58,48,32,.85);color:#ffe08a;font-weight:800;font-size:15px;font-family:inherit}
 .lop{position:absolute;inset:0;display:none;place-items:center;background:rgba(5,6,10,.82);z-index:6}
 .lop.mo{display:grid}
@@ -88,6 +93,9 @@ body.touch #keys{display:none}
 'use strict';
 const E = DongCoMN, pl = E.pl, G = V1.G;
 const Q = new URLSearchParams(location.search);
+// ?safe=trái,trên,phải,dưới (px) – GIẢ LẬP vùng an toàn (tai thỏ iPhone) khi kiểm thử trên máy tính; trên iPhone thật dùng env(safe-area-inset-*)
+if (Q.get('safe')){ const [l, t, r, b] = Q.get('safe').split(',').map(Number); const st = document.documentElement.style;
+  st.setProperty('--sal', (l || 0) + 'px'); st.setProperty('--sat', (t || 0) + 'px'); st.setProperty('--sar', (r || 0) + 'px'); st.setProperty('--sab', (b || 0) + 'px'); }
 const OPT = V1.OPT = {hb:Q.get('hitbox') === '1', tu:Q.get('tu') === '1', phong:Q.get('phong'), moi:Q.get('moi') === '1', thu:Q.get('thu') === '1'};
 const $ = id => document.getElementById(id);
 
@@ -114,7 +122,7 @@ function mua(){ const s = V1.muaMau(); V1.thongBao(s); $('chuong-tt').innerHTML 
 function roiChuong(){ moLop(''); G.trang = 'choi'; V1.xoaVao(); }
 $('b-mua').onclick = mua; $('b-di').onclick = roiChuong;
 V1.thangTrum = function(){
-  G.luu.trumHa = true; V1.ghiLuu();
+  G.luu.trumHa = true; G.luu.hetXem = true; V1.ghiLuu();
   const L = G.luu, ph = Math.floor(L.giay / 60), gi = Math.floor(L.giay % 60);
   setTimeout(() => {
     $('het-tt').innerHTML = 'Thời gian: ' + ph + ' phút ' + gi + ' giây · Ngã: ' + L.chet + ' lần<br>Chuông Vỡ: ' + L.kho.chuong_vo + '/3 · Mảnh Âm: ' + V1.tongManh() + (L.kho.loi_vong_tan ? ' · Có Lõi Vọng Tàn' : '') +
@@ -141,7 +149,7 @@ function mot(){
   V1.suKienVe(); V1.suKienTheGioi();
   if (chay){
     const st = E.trangThai(); if (st.ten !== V1.HA.ten){ V1.HA.ten = st.ten; V1.HA.t = 0; } else V1.HA.t++;
-    V1.buocTia(); V1.buocVongTan(); V1.buocNguy();
+    V1.buocTia(); V1.buocVongTan(); V1.buocNguy(); V1.buocThanTrum();   // thân chắn trùm: sau engine (luồng F)
   }
   if (G.trang === 'choi') V1.buocTheGioi();
   if (G.tbT > 0) G.tbT--; if (G.bannerT > 0) G.bannerT--;
