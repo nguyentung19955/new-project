@@ -299,6 +299,7 @@ function cungSong(x, y, r, huong, mau, a, day){
   ctx.globalAlpha = 1;
 }
 // sprite hiệu ứng chiêu (ChatGPT vẽ): art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
+const CANH_BAO = new Image(); CANH_BAO.src = '../../art/vung-1/dao-cu/dan-duong/canh_bao.png';   // dấu báo đòn (ChatGPT vẽ)
 const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
 function veFx(ten, o, x, y, phai, k, a){
   const im = FXQ[ten]; if (!im || !im.complete || !im.naturalWidth) return;
@@ -341,7 +342,8 @@ function veQuai(q, cam){
   } else { if (al !== undefined) ctx.globalAlpha = al; khoi(fx, fy, q.w, q.h, q.flash > 2 ? '#ffffff' : (d.mau_khoi || '#a07850'), q.face); ctx.globalAlpha = 1; }
   // báo trước: dấu "!" hổ phách nhấp nháy trên đầu
   if (q.baoTruoc && (E.S.frame >> 2) % 2 === 0){ const x = Math.round(fx), y = Math.round(q.y) - 26;
-    ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 5, y - 2, 10, 24); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 3, y, 6, 12); ctx.fillRect(x - 3, y + 15, 6, 5); }
+    if (CANH_BAO.complete && CANH_BAO.naturalWidth){ const w = Math.round(CANH_BAO.width * 2.2), h = Math.round(CANH_BAO.height * 2.2); ctx.drawImage(CANH_BAO, x - (w >> 1), y + 26 - h, w, h); }
+    else { ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 5, y - 2, 10, 24); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 3, y, 6, 12); ctx.fillRect(x - 3, y + 15, 6, 5); } }
   // thanh máu
   if (q.hp < (d.mau || 30) && q.st !== 'chet'){ const x = Math.round(fx), y = Math.round(q.y) - 12;
     ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 26, y, 52, 7); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 24, y + 2, Math.round(48 * Math.max(0, q.hp) / (d.mau || 30) / 2) * 2, 3); }
