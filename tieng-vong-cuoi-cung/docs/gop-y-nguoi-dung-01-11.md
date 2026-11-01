@@ -22,8 +22,9 @@
 | 18 | Xuống được thì phải lên lại được; chỗ kẹt dây leo | ✅ đường đi phòng demo + Vùng 1; cần ảo chếch là thoát dây; lên đỉnh dây đứng hẳn trên mép |
 | 19 | Nút bấm: nửa trái là cần di chuyển (cả khi xoay màn), nửa phải đánh/lướt/hồi/nhảy, biểu tượng u ám do ChatGPT vẽ | ✅ xong |
 | 20 | Hình vẽ tay / gen cũ → ChatGPT gen lại, duyệt tới khi đạt | ⏳ liên tục |
-| 21 | Kiểm tra mọi animation cùng cỡ, đúng thiết kế | ✅ đo xong (±5%) · ⏳ gửi ChatGPT duyệt |
+| 21 | Kiểm tra mọi animation cùng cỡ, đúng thiết kế | ✅ đo xong (±5%) · ✅ ChatGPT duyệt (docs/duyet-animation-toan-bo-chatgpt.txt): đúng thiết kế, không clip nào lệch cỡ rõ; ⏳ làm rõ quái tối, giảm FX đập đất (luồng I) |
 | 22 | Kế hoạch Vùng 1 đưa vào game | ✅ 9 phòng, phong cách đá phòng demo, quái bố trí theo tư vấn, Chuông Lưu/cửa khoá/trùm hình ChatGPT |
 | 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ✅ ChatGPT đã trả lời (TVCC_Duyet_DongTac_HieuUng.txt) – đã làm bụi bám tường, vồ Màn Tang; ✅ báo trước rõ hơn cho đập chuông + phân biệt đạn (luồng H, BAO-CAO-H.md) |
 | 24 | Trượt bám tường có khói bụi che chân và tay | ✅ khói bụi + tia lửa kiếm (ChatGPT vẽ), đã thu nhỏ ×0.7 |
 | 25 | Leo/treo dây nhỏ hơn bình thường | ✅ phóng to cho cùng cỡ (đo theo tóc+mặt nạ) |
+| 26 | Đi qua dây giữa 2 bờ không rơi; chỉ leo khi bấm ↑/↓; bấm Nhảy trên dây không kèm ↑/↓ thì buông rơi | ✅ xong (cầu dây) |

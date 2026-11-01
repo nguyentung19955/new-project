@@ -1,0 +1,29 @@
+TVCC – DUYỆT TOÀN BỘ ANIMATION (ChatGPT, 01/11/2026 – ý chính từ TVCC_Duyet_Animation_Toan_Bo.txt)
+Đầu vào: art/kiem-khach-thiet-ke/review/ani_nv1.png, ani_nv2.png, ani_quai.png (khung trích đầu/giữa/cuối, cùng tỉ lệ).
+
+KẾT LUẬN
+- Kiếm Khách: thiết kế nhất quán (tóc trắng, mặt nạ mắt cyan, giáp tối, 2 kiếm cyan) ở mọi clip; không clip nào đổi nhân vật. Cỡ các tư thế đứng gần nhau; KHÔNG xác định được clip nào chắc chắn to/nhỏ hơn (khác biệt do tư thế/tóc/FX). Đề nghị đo bbox THÂN (bỏ tóc bay/kiếm/FX), khoá chân làm gốc.
+- Quái: concept đạt, độ rõ trên nền tối chưa đạt – Khuyết Cẩu và Kèn Câm chìm nhất; Hồn Vải rõ nhất; Màn Tang thân nhỏ, tối; Vọng Tàn khối lớn nhưng nâu/tím hoà nền. Nâng tương phản cục bộ bằng ngà/đồng/đỏ gạch, không tăng sáng toàn thân, không cyan.
+- VFX: cần tiết chế, nhất là đập đất (gai cyan cao lấn cảnh) và vòng chém kín che mặt nạ.
+
+P0
+- P0-01 Khuyết Cẩu (mọi clip): tách đầu sọ, chân trước, sống lưng; mõm sáng hơn 1 bậc. Prompt: "Refine this root-hound sprite: clearer skull, front legs and back silhouette on a near-black background; muted bone highlights, same exact design and pixel scale."
+- P0-02 Kèn Câm (dung/di/danh): tách kèn–tay–thân, đòn đánh có giơ kèn báo trước. Prompt: "Keep the horn-bearer identical; separate horn, hands and torso in silhouette. Add a clear horn-raising attack wind-up, dark bronze and ivory only."
+- P0-03 chemday/chemtuong/bamtuong/treoday: kiểm 1 tay giữ cố định, chỉ tay kia chém; không vẽ dây/tường.
+- P0-04 don4/chemkhong: vệt cyan mỏng hơn, không che mặt nạ, không thừa kiếm.
+- P0-05 mọi clip: QA cỡ/gốc chân, không gen lại khi chưa đo.
+
+P1
+- dapdat: thay gai cyan cao bằng sóng thấp sát đất + 1 loé ngắn + vụn rễ tối.
+- don1–4: mỗi nhát một quỹ đạo riêng, rõ chuẩn bị–ra đòn–thu.
+- cheolen/cheoxuong: vệt bám đúng mũi kiếm.
+- nhaydoi: vòng dưới chân nhỏ, đứt nét, không giống đòn đánh.
+- luot/chay: giữ tỉ lệ khi nghiêng người.
+- Hồn Vải: đòn đánh có dáng lao riêng; chết xẹp/tan vải.
+- Màn Tang: mặt nạ ngà rõ hơn, trục treo rõ, đòn vồ khác hẳn lắc idle, chết rũ.
+- Vọng Tàn: tách chuông–tay, báo đòn thật/giả khác tư thế, trúng có giật lùi, chết sụp.
+- trungdon/chet nhân vật: giật lùi rõ, ngã nằm yên.
+
+P2: idle thở 1px; bụi tiếp đất nhỏ; tách dáng bay lên/rơi; leo dây lắc nhẹ; đồng bộ viền 1px cho quái.
+
+Quy trình nghiệm thu: chốt khung dung làm mẫu → bảng đo thân/đầu/mặt nạ/kiếm không VFX → GIF tốc độ thật (don4, chemkhong, chemday, chemtuong) → test trên iPhone nền tối thật → chỉ sửa khung FAIL.
