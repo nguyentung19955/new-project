@@ -101,7 +101,50 @@ def ve_da(solid0, seed):
     if nl:
         sz = ndimage.sum(np.ones_like(lab), lab, range(1, nl + 1))
         a[np.isin(lab, np.nonzero(sz < 60)[0] + 1), 3] = 0
+    mat_dat(a, solid0, rng)
     return a, mask
+
+# MẶT ĐẤT CÓ BỀ DÀY (luồng E, theo góp ý người dùng): trước đây sàn chỉ là 1 vạch mép phẳng đúng dòng va chạm → chân nhân vật
+# trông như chạy trên không. Nay mỗi mặt sàn có một dải "mặt trên" nhìn hơi từ trên xuống, NẰM VẮT QUA dòng va chạm:
+# LEN điểm phía sau (trên dòng, sau lưng nhân vật) + XUONG điểm phía trước (dưới dòng), rồi mới tới gờ sáng + bóng gờ + mặt đá.
+# Chân đứng ở dòng va chạm = giữa mặt đất → chân xa/chân gần đều như đặt trên đất. Va chạm KHÔNG đổi.
+MD_LEN, MD_XUONG = 4, 3
+MD_MAU = np.array([[52, 33, 32], [78, 51, 46], [104, 70, 60], [124, 86, 72]], float)   # sau (tối) → trước (sáng)
+def mat_dat(a, solid0, rng):
+    H, W = solid0.shape
+    tren = solid0 & ~np.roll(solid0, 1, 0); tren[0] = False
+    lum = FILL[..., :3].mean(-1); lum = (lum - lum.mean()) / (lum.std() + 1e-6)
+    gon = ndimage.gaussian_filter1d(rng.random(W), 6); gon = (gon - gon.mean()) / (gon.std() + 1e-6)   # mép sau gợn nhẹ
+    for y in range(1, H - MD_XUONG - 2):
+        xs = np.nonzero(tren[y])[0]
+        if not len(xs): continue
+        # tách thành đoạn sàn liền
+        dau = [xs[0]]; cuoi = []
+        for i in range(1, len(xs)):
+            if xs[i] != xs[i - 1] + 1: cuoi.append(xs[i - 1]); dau.append(xs[i])
+        cuoi.append(xs[-1])
+        for x0, x1 in zip(dau, cuoi):
+            L = x1 - x0 + 1
+            if L < 6: continue
+            for x in range(x0, x1 + 1):
+                d = min(x - x0, x1 - x)                       # gần mép vực → dải thu nhỏ dần (góc bo tròn)
+                up = int(min(MD_LEN + round(gon[x] * 0.8), d // 2 + 1)); dn = int(min(MD_XUONG, d // 2))
+                k = 0
+                while k < up and y - k - 1 >= 0 and not solid0[y - k - 1, x]: k += 1
+                up = k
+                if up + dn <= 0: continue
+                tong = up + dn
+                for j, yy in enumerate(range(y - up, y + dn)):
+                    t = (j + 0.5) / tong
+                    c = MD_MAU[min(3, int(t * 4))] * (1 + 0.10 * lum[yy % 64, x % 64])
+                    if rng.random() < 0.06: c = c * (1.3 if rng.random() < .6 else 0.7)   # sỏi lấm tấm
+                    a[yy, x, :3] = np.clip(c, 0, 255); a[yy, x, 3] = 255
+                yg = y + dn                                     # gờ trước: 1 dòng sáng + 1 dòng bóng
+                a[yg, x, :3] = np.clip(np.array([150, 108, 90]) * (1 + 0.08 * lum[yg % 64, x % 64]), 0, 255)
+                a[yg + 1, x, :3] = (a[yg + 1, x, :3] * 0.45).astype(np.uint8)
+                if up > 0 and y - up - 1 >= 0 and not solid0[y - up - 1, x]:   # mép sau: viền tối + túm rễ/cỏ thưa
+                    a[y - up - 1, x] = [34, 21, 22, 255]
+                    if rng.random() < 0.18 and y - up - 2 >= 0: a[y - up - 2, x] = [70, 46, 40, 255]
 
 
 def ve_phong(pid):

@@ -59,3 +59,23 @@ Ba hình, gốc quay TRÁI, tự lật khi trùm quay phải:
 ## Còn lại / gợi ý
 - Mỗi trạng thái trùm mới chỉ có 1 hình tĩnh, chưa có khung chuyển động. Đã thêm rung, co giãn và ánh sáng cho đỡ cứng. Khi có hình động thì điền vào `trum.json`, game sẽ ưu tiên dùng.
 - Pha 2 chưa có hình "giơ chuông" riêng có mặt nạ vỡ, nên lúc báo đòn ở pha 2 vẫn dùng `vo-mat-na` vươn lên kèm ánh sáng. Nếu muốn, có thể nhờ ChatGPT vẽ thêm hình `gio-chuong-vo.png`.
+
+## 5. (Bổ sung theo góp ý người dùng) Mặt đất có bề dày – chân không còn như chạy trên không
+- Trước đây mép sàn là một vạch phẳng nằm đúng dòng va chạm, nên chân nhân vật và quái trông như lơ lửng.
+- `tools/vung-1/ve-phong.py`, hàm mới `mat_dat`: mỗi mặt sàn có thêm một **dải mặt đất nhìn hơi từ trên xuống**, nằm vắt qua dòng va chạm.
+  - 4 điểm ảnh (12 px) phía sau, sau lưng nhân vật: tối dần về phía xa, mép sau gợn nhẹ, có túm rễ thưa.
+  - 3 điểm ảnh (9 px) phía trước.
+  - Sau đó là gờ sáng, bóng gờ, rồi mới tới mặt đá.
+- Chân đứng ở dòng va chạm, tức nằm giữa mặt đất, nên chân xa và chân gần đều như đặt trên đất. Gần mép vực, dải thu nhỏ dần cho góc bo tròn.
+- **Va chạm không đổi.** Đồ trang trí, Chuông Lưu và cửa khoá vẫn đứng đúng chỗ.
+- Đã nướng lại cả 9 phòng (`python3 tools/vung-1/ve-phong.py`). Muốn dải dày hay mỏng hơn thì sửa `MD_LEN` và `MD_XUONG` rồi nướng lại.
+- Kiểm: đã chụp nhân vật đứng và chạy ở P01, P02, P03, P05, P06 và P12, không lỗi JS.
+
+## 6. Danh sách hình còn vẽ tạm → prompt cho ChatGPT
+`docs/prompt-chatgpt-ve-them-vung-1.md` có 6 prompt dán thẳng vào ChatGPT, kèm tên file và thư mục cần lưu:
+- biểu tượng 6 vật phẩm;
+- túi Mảnh Âm;
+- mặt nạ rơi và mảnh vỡ của trùm;
+- trùm pha 2 giơ chuông;
+- hiệu ứng sóng câm, vệt quét chuông, vòng sóng;
+- HUD máu, bình hồi, chuông.
