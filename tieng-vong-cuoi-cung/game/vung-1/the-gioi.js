@@ -123,6 +123,7 @@
     G.banner = p.ten || p.id; G.bannerT = 150;
     if (V1.veNenPhong) V1.veNenPhong();
     if (V1.camDat) V1.camDat();
+    if (V1.capNhatKhungNhin) V1.capNhatKhungNhin();   // LUỒNG D: khung camera cho engine (quái không bắn ngoài màn hình)
   }
   function caoBay(d, v){
     if (!d.bay) return v.cao;
@@ -374,6 +375,7 @@
   V1.buocTheGioi = function(){
     if (!G.phong) return;
     G.luu.giay += 1 / 60;
+    if (V1.capNhatKhungNhin) V1.capNhatKhungNhin();
     kiemDongCua(); kiemCua(); if (!pl.dead) nhatVatPham(); buocManh(); kiemChuong();
     // rơi khỏi đáy phòng mà không có cửa → về chỗ an toàn
     if (pl.y > E.BD.HANG * T + 200 && !pl.dead){ E.hurt(0, 1); datNV((G.phong.bat_dau ? G.phong.bat_dau.cot : 2) * T, T * 2); }

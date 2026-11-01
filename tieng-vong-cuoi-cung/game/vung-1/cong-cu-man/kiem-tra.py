@@ -106,6 +106,15 @@ def kiem_tinh(bd, ph):
             if q['loai'] == 'tang':
                 if not (trong(c_, r_) and 0 <= r_ - 1 and g[r_ - 1][c_] == '#'):
                     loi(f"{pid}: Màn Tang ({c_},{r_}) không treo dưới trần")
+                else:
+                    # LUỒNG D: Màn Tang chỉ vồ được khi sàn cách trần đúng 3 ô (thân treo 92 px, engine cần chân→sàn 10–90 px)
+                    k = 0
+                    while trong(c_, r_ + k):
+                        k += 1
+                    if k != 3 or not san(c_, r_ + k):
+                        loi(f"{pid}: Màn Tang ({c_},{r_}) trần→sàn {k} ô (cần đúng 3 ô để vồ được người đi dưới)")
+                    elif q.get('cao') not in (None, 1):
+                        canh(f"{pid}: Màn Tang ({c_},{r_}) 'cao' nên = 1 (chân cách sàn ~52 px)")
             elif q['loai'] in QUAI_BAY:
                 if not trong(c_, r_):
                     loi(f"{pid}: quái bay {q['loai']} ({c_},{r_}) trong đá")
@@ -116,6 +125,17 @@ def kiem_tinh(bd, ph):
                     hong = [x for x in range(q['tu'], q['den'] + 1) if not (trong(x, r_) and san(x, r_ + 1))]
                     if hong:
                         canh(f"{pid}: quái {q['loai']} đi tuần {q['tu']}–{q['den']} có ô không có sàn: {hong[:6]}")
+        # LUỒNG D: không đặt quái sát cửa vào (vùng tuần tra cách ô cửa ≥ 7 ô); trùm/tinh anh tự lo
+        o_cua2 = []
+        for cu in d['cua']:
+            for i in range(cu['cao']):
+                o_cua2.append((cu['cot'], cu['hang'] + i) if cu['huong'] in ('trai', 'phai') else (cu['cot'] + i, cu['hang']))
+        for q in d['quai']:
+            for x in range(q.get('tu', q['cot']), q.get('den', q['cot']) + 1):
+                kc = min(math.hypot(x - a, q['hang'] - b) for a, b in o_cua2) if o_cua2 else 99
+                if kc < 7:
+                    loi(f"{pid}: quái {q['loai']} ({x},{q['hang']}) sát cửa ({kc:.1f} ô < 7)")
+                    break
         diem = [(v['id'], v['cot'], v['hang']) for v in d['vat_pham']]
         if d.get('chuong_luu'):
             diem.append(('chuong_luu', d['chuong_luu']['cot'], d['chuong_luu']['hang']))
@@ -554,6 +574,28 @@ def main():
             loi(f'{p}: {len(ns)} chỗ bị KẸT (không quay ra được), vd {sorted(ns)[:5]}')
     # Lượt 3: tường nứt đã vỡ → bí mật
     seen3, ke3, phu3, lm3 = mo_phong(bd, ph, nut_vo=True, mo_khoa=True)
+    # LUỒNG D: không hố một chiều – từ mọi chỗ tới được (kể cả P11/P12) phải về được P05 (Chuông Lưu đầu).
+    # Tường nứt chém vỡ được từ cả hai phía nên tính đã vỡ (lối tắt P06→P02→P01…); vẫn KHÔNG dùng bật tường / lướt.
+    nguoc3 = defaultdict(set)
+    for a_, bs in ke3.items():
+        for b_ in bs:
+            nguoc3[b_].add(a_)
+    dich5 = {s for s in seen3 if s[0] == 'P05'}
+    ve5 = set(dich5); dq = deque(dich5)
+    while dq:
+        s = dq.popleft()
+        for a_ in nguoc3[s]:
+            if a_ not in ve5:
+                ve5.add(a_); dq.append(a_)
+    ket5 = [s for s in seen3 if s not in ve5]
+    if ket5:
+        by = defaultdict(list)
+        for p, n in ket5:
+            by[p].append(n[1:])
+        for p, ns in by.items():
+            loi(f'{p}: {len(ns)} chỗ không quay về được P05, vd {sorted(ns)[:5]}')
+    else:
+        print('  ✓ Mọi chỗ tới được (cả P11, P12) đều đi về được P05 (tính tường nứt đã chém vỡ).')
     got3 = nhat_duoc(ph, phu3)
     print('=== VẬT PHẨM ===')
     for pid, d in ph.items():

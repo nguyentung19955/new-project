@@ -3,9 +3,9 @@
  "ten": "Miệng Kèn",
  "luoi": [
   "############################################",
-  "################...........................#",
-  "############................................",
-  "####........................................",
+  "################............###............#",
+  "############................###.............",
+  "####........................###.............",
   "####........................................",
   "###...............................##########",
   "###...............................##########",
@@ -48,133 +48,34 @@
   "############################################"
  ],
  "cua": [
-  {
-   "id": "P09-tay",
-   "cot": 0,
-   "hang": 14,
-   "cao": 3,
-   "huong": "trai",
-   "toi": "P06",
-   "toi_cua": "P06-dong-duoi"
-  },
-  {
-   "id": "P09-dong",
-   "cot": 43,
-   "hang": 2,
-   "cao": 3,
-   "huong": "phai",
-   "toi": "P11",
-   "toi_cua": "P11-tay"
-  }
+  {"id": "P09-tay", "cot": 0, "hang": 14, "cao": 3, "huong": "trai", "toi": "P06", "toi_cua": "P06-dong-duoi"},
+  {"id": "P09-dong", "cot": 43, "hang": 2, "cao": 3, "huong": "phai", "toi": "P11", "toi_cua": "P11-tay"}
  ],
  "quai": [
-  {
-   "loai": "ken",
-   "cot": 37,
-   "hang": 14,
-   "tu": 31,
-   "den": 38
-  },
-  {
-   "loai": "ken",
-   "cot": 9,
-   "hang": 10,
-   "tu": 8,
-   "den": 14
-  },
-  {
-   "loai": "cau",
-   "cot": 13,
-   "hang": 16,
-   "tu": 8,
-   "den": 16
-  },
-  {
-   "loai": "ken",
-   "cot": 40,
-   "hang": 4,
-   "tu": 36,
-   "den": 42
-  },
-  {
-   "loai": "cau",
-   "cot": 28,
-   "hang": 40,
-   "tu": 12,
-   "den": 34
-  }
+  {"loai": "ken", "cot": 27, "hang": 16, "tu": 24, "den": 29},
+  {"loai": "tang", "cot": 29, "hang": 4, "cao": 1}
  ],
  "vat_pham": [
-  {
-   "id": "P09-chuong",
-   "loai": "chuong_vo",
-   "cot": 31,
-   "hang": 36
-  },
-  {
-   "id": "P09-the-ten",
-   "loai": "the_ten",
-   "cot": 5,
-   "hang": 6
-  },
-  {
-   "id": "P09-manh-1",
-   "loai": "manh_am",
-   "cot": 13,
-   "hang": 36,
-   "so": 20
-  },
-  {
-   "id": "P09-manh-2",
-   "loai": "manh_am",
-   "cot": 19,
-   "hang": 8,
-   "so": 15
-  }
+  {"id": "P09-chuong", "loai": "chuong_vo", "cot": 31, "hang": 36},
+  {"id": "P09-the-ten", "loai": "the_ten", "cot": 5, "hang": 6},
+  {"id": "P09-manh-1", "loai": "manh_am", "cot": 13, "hang": 36, "so": 20},
+  {"id": "P09-manh-2", "loai": "manh_am", "cot": 19, "hang": 8, "so": 15}
  ],
  "chuong_luu": null,
  "den": [
-  {
-   "cot": 22,
-   "hang": 2
-  },
-  {
-   "cot": 6,
-   "hang": 4
-  },
-  {
-   "cot": 36,
-   "hang": 10
-  },
-  {
-   "cot": 14,
-   "hang": 13
-  },
-  {
-   "cot": 22,
-   "hang": 33
-  }
+  {"cot": 22, "hang": 2},
+  {"cot": 6, "hang": 4},
+  {"cot": 36, "hang": 10},
+  {"cot": 14, "hang": 13},
+  {"cot": 22, "hang": 33}
  ],
  "tinh_anh": false,
  "trum": false,
- "bat_dau": {
-  "cot": 2,
-  "hang": 16
- },
+ "bat_dau": {"cot": 2, "hang": 16},
  "trang_tri": [
-  {
-   "id": "P09-mieng-ken",
-   "loai": "mieng_ken_da",
-   "cot": 22,
-   "hang": 1,
-   "ghi": "miệng kèn đá khổng lồ trên trần, vân sóng âm"
-  },
-  {
-   "id": "P09-dau-lau",
-   "loai": "dau_lau",
-   "cot": 10,
-   "hang": 40
-  }
+  {"id": "P09-go-tran", "loai": "go_tran_re", "cot": 28, "hang": 3, "rong": 3, "ghi": "nanh đá trần, Màn Tang treo dưới"},
+  {"id": "P09-mieng-ken", "loai": "mieng_ken_da", "cot": 22, "hang": 1, "ghi": "miệng kèn đá khổng lồ trên trần, vân sóng âm"},
+  {"id": "P09-dau-lau", "loai": "dau_lau", "cot": 10, "hang": 40}
  ],
  "ghi_chu": "Vào tầng giữa (đứng 16). Xuống giếng dây cột 19 tới đáy lấy Chuông Vỡ 3, leo lại. Leo các tầng zig-zag (Kèn Câm thổi ngang ở T2 phải/T2 trái/gờ ra) → cửa đông trên → P11."
 }

@@ -410,6 +410,12 @@ const DongCoMN = (() => {
     if (d.sieu_giap && q.st === 'danh'){ q.kvx = face * 0.6; return; }   // tinh anh: đang ra đòn không bị ngắt
     q.st = 'trung'; q.t = 0; q.kvx = face * (d.day_lui ?? 3); q.daDanh = false; q.anim.ten = '';   // phát lại clip trúng từ đầu
   }
+  // LUỒNG D: quái chỉ ra đòn khi đã HIỆN trong khung camera (API.khungNhin = {x,y,w,h} do trang cập nhật mỗi khung; null = bỏ qua)
+  function trongKhung(q){
+    const k = API.khungNhin; if (!k) return true;
+    const m = 12;   // phải lộ vào trong khung ít nhất 12 px
+    return q.x + q.w > k.x + m && q.x < k.x + k.w - m && q.y + q.h > k.y + m && q.y < k.y + k.h - m;
+  }
   function capNhatQuai(){
     for (const q of QUAI){
       const d = q.def, C = d._clip || {};
@@ -450,7 +456,7 @@ const DongCoMN = (() => {
           if (Math.abs(dx) > 6) q.face = dx > 0 ? 1 : -1;
           const tamDanh = d.tam_danh || 100;
           const doCao = d.bay ? Math.abs(dy - (d.bay_cao ?? 40)) < 40 : Math.abs(dy) < 90;
-          if (q.cd <= 0 && Math.abs(dx) <= tamDanh && doCao){ q.st = 'danh'; q.t = 0; q.daDanh = false; q.daBan = false; q.daRung = false; break; }
+          if (q.cd <= 0 && Math.abs(dx) <= tamDanh && doCao && trongKhung(q)){ q.st = 'danh'; q.t = 0; q.daDanh = false; q.daBan = false; q.daRung = false; break; }
           if (Math.abs(dx) > tamDanh * 0.75) diToi(q.face * (d.toc_do_duoi ?? 1.5));
           bayVe(hy - (d.bay_cao ?? 40), (d.toc_do_duoi ?? 1.5) * 0.8);
           break; }
@@ -528,7 +534,8 @@ const DongCoMN = (() => {
     for (let i = DAN.length - 1; i >= 0; i--){
       const b = DAN[i]; b.x += b.vx; b.t++;
       DR.x = b.x - b.w / 2; DR.y = b.y - b.h / 2; DR.w = b.w; DR.h = b.h;
-      let no = b.t > b.song || solidPt(b.x, b.y);
+      // không xuyên tường: nổ khi tâm HOẶC mép trước chạm ô đặc ('#', 'N')
+      let no = b.t > b.song || solidPt(b.x, b.y) || solidPt(b.x + Math.sign(b.vx) * b.w / 2, b.y);
       if (!no && !pl.dead && overlap(hurtBox(), DR)){ hurt(b.vx > 0 ? 1 : -1, b.dmg); no = true; }
       if (no){ NO.push({x:b.x, y:b.y, t:0, ch:b.ch}); DAN.splice(i, 1); }
     }
@@ -579,7 +586,8 @@ const DongCoMN = (() => {
     return {ten:'dung'};
   }
 
-  return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
+  const API = {khungNhin:null, trongKhung, P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
     hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
     datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
+  return API;
 })();

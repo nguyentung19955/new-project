@@ -6,8 +6,8 @@
   "#######################################################..H..##############################",
   "#################....H..######......###################..H..####################.........#",
   "################.....H...####........##################..H..####################.........#",
-  "###############......H......................###########..H..####################.........#",
-  "################.....H.......................##########..H..####################.........#",
+  "###############......H.................###..###########..H..####################.........#",
+  "################.....H.................###...##########..H..####################.........#",
   "################=====H===.........................#####..H..####################....######",
   "######......#####....H........######...............####..H..####################....######",
   "#............#####...H........######.....................H..####################....######",
@@ -22,139 +22,36 @@
   "##########################################################################################"
  ],
  "cua": [
-  {
-   "id": "P04-tren",
-   "cot": 56,
-   "hang": 0,
-   "cao": 3,
-   "huong": "tren",
-   "toi": "P03",
-   "toi_cua": "P03-day"
-  },
-  {
-   "id": "P04-tay",
-   "cot": 0,
-   "hang": 10,
-   "cao": 3,
-   "huong": "trai",
-   "toi": "P05",
-   "toi_cua": "P05-dong"
-  }
+  {"id": "P04-tren", "cot": 56, "hang": 0, "cao": 3, "huong": "tren", "toi": "P03", "toi_cua": "P03-day"},
+  {"id": "P04-tay", "cot": 0, "hang": 10, "cao": 3, "huong": "trai", "toi": "P05", "toi_cua": "P05-dong"}
  ],
  "quai": [
-  {
-   "loai": "cau",
-   "cot": 52,
-   "hang": 12,
-   "tu": 50,
-   "den": 56
-  },
-  {
-   "loai": "cau",
-   "cot": 40,
-   "hang": 8,
-   "tu": 36,
-   "den": 43
-  },
-  {
-   "loai": "ken",
-   "cot": 32,
-   "hang": 6,
-   "tu": 30,
-   "den": 35
-  },
-  {
-   "loai": "vai",
-   "cot": 70,
-   "hang": 12,
-   "tu": 64,
-   "den": 78,
-   "cao": 90
-  }
+  {"loai": "tang", "cot": 40, "hang": 6, "cao": 1},
+  {"loai": "vai", "cot": 12, "hang": 12, "tu": 8, "den": 16, "cao": 2}
  ],
  "vat_pham": [
-  {
-   "id": "P04-the-ten",
-   "loai": "the_ten",
-   "cot": 18,
-   "hang": 5
-  },
-  {
-   "id": "P04-tang-mau",
-   "loai": "tang_mau",
-   "cot": 86,
-   "hang": 5
-  },
-  {
-   "id": "P04-manh-1",
-   "loai": "manh_am",
-   "cot": 14,
-   "hang": 13,
-   "so": 10
-  },
-  {
-   "id": "P04-manh-2",
-   "loai": "manh_am",
-   "cot": 33,
-   "hang": 6,
-   "so": 10
-  }
+  {"id": "P04-the-ten", "loai": "the_ten", "cot": 18, "hang": 5},
+  {"id": "P04-tang-mau", "loai": "tang_mau", "cot": 86, "hang": 5},
+  {"id": "P04-manh-1", "loai": "manh_am", "cot": 14, "hang": 13, "so": 10},
+  {"id": "P04-manh-2", "loai": "manh_am", "cot": 33, "hang": 6, "so": 10}
  ],
  "chuong_luu": null,
  "den": [
-  {
-   "cot": 57,
-   "hang": 6
-  },
-  {
-   "cot": 40,
-   "hang": 5
-  },
-  {
-   "cot": 20,
-   "hang": 3
-  },
-  {
-   "cot": 14,
-   "hang": 10
-  },
-  {
-   "cot": 3,
-   "hang": 9
-  },
-  {
-   "cot": 75,
-   "hang": 9
-  }
+  {"cot": 57, "hang": 6},
+  {"cot": 40, "hang": 5},
+  {"cot": 20, "hang": 3},
+  {"cot": 14, "hang": 10},
+  {"cot": 3, "hang": 9},
+  {"cot": 75, "hang": 9}
  ],
  "tinh_anh": false,
  "trum": false,
- "bat_dau": {
-  "cot": 56,
-  "hang": 12
- },
+ "bat_dau": {"cot": 56, "hang": 12},
  "trang_tri": [
-  {
-   "id": "P04-khoi",
-   "loai": "khoi_tro",
-   "cot": 0,
-   "hang": 0,
-   "rong": 60,
-   "ghi": "khói tro mờ toàn hành lang cột 0–60 (luồng A làm lớp phủ)"
-  },
-  {
-   "id": "P04-dau-lau",
-   "loai": "dau_lau",
-   "cot": 66,
-   "hang": 12
-  },
-  {
-   "id": "P04-dau-hieu",
-   "loai": "bui_roi",
-   "cot": 82,
-   "hang": 2,
-   "ghi": "bụi rơi gợi ý giếng phía trên có đồ"
-  }
+  {"id": "P04-go-tran", "loai": "go_tran_re", "cot": 39, "hang": 4, "rong": 3, "ghi": "gờ trần rễ + dây vải treo Màn Tang"},
+  {"id": "P04-khoi", "loai": "khoi_tro", "cot": 0, "hang": 0, "rong": 60, "ghi": "khói tro mờ toàn hành lang cột 0–60 (luồng A làm lớp phủ)"},
+  {"id": "P04-dau-lau", "loai": "dau_lau", "cot": 66, "hang": 12},
+  {"id": "P04-dau-hieu", "loai": "bui_roi", "cot": 82, "hang": 2, "ghi": "bụi rơi gợi ý giếng phía trên có đồ"}
  ],
  "ghi_chu": "Rơi xuống từ P03 ở cột 57, đi TÂY tới P05. Nhánh ĐÔNG cụt: giếng hẹp cột 80–83 cần bật tường/nhảy đôi → Tăng Máu."
 }

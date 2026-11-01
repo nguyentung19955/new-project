@@ -27,7 +27,7 @@
   {"id": "P01-dong", "cot": 47, "hang": 12, "cao": 3, "huong": "phai", "toi": "P02", "toi_cua": "P02-tay"}
  ],
  "quai": [
-  {"loai": "cau", "cot": 34, "hang": 14, "tu": 28, "den": 40}
+  {"loai": "cau", "cot": 33, "hang": 14, "tu": 29, "den": 37}
  ],
  "vat_pham": [
   {"id": "P01-manh-1", "loai": "manh_am", "cot": 31, "hang": 10, "so": 15},
