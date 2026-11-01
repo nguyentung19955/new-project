@@ -85,11 +85,18 @@ def ve_da(solid0, seed):
     # cỏ rễ trên mặt sàn + rủ dưới trần, đặt theo mép THẬT
     tren = mask & ~np.roll(mask, 1, 0); tren[0] = False
     duoi = ~mask & np.roll(mask, 1, 0); duoi[0] = False
+    # mảng mặt-trên (t_top) KHÔNG dán nguyên khối 34 điểm (tạo vạch ngang thẳng + đường nối dọc ở đáy mảng):
+    # chiều dài mỗi cột lượn theo nhiễu, phần dưới mờ dần hoà vào thân đá
+    dtop = ndimage.gaussian_filter1d(rng.random(W), 4); dtop = (dtop - dtop.mean()) / (dtop.std() + 1e-6)
     for y, x in zip(*np.nonzero(tren)):
         seg = TOP[30:64, x % 64]
-        for j in range(seg.shape[0]):
+        Lx = int(np.clip(22 + 6 * dtop[x], 12, 34)); mo = 12
+        for j in range(min(Lx, seg.shape[0])):
             yy = y - 2 + j
-            if 0 <= yy < H and seg[j, 3] > 0 and (mask[yy, x] or j < 6): a[yy, x] = seg[j]
+            if not (0 <= yy < H and seg[j, 3] > 0 and (mask[yy, x] or j < 6)): continue
+            f = 1.0 if j < Lx - mo else max(0.0, (Lx - j) / mo)
+            if f >= 0.999: a[yy, x] = seg[j]
+            else: a[yy, x, :3] = (seg[j, :3] * f + a[yy, x, :3] * (1 - f)).astype(np.uint8)
     for y, x in zip(*np.nonzero(duoi)):
         seg = CEIL[0:36, x % 64]
         for j in range(36):
@@ -121,6 +128,10 @@ def mat_dat(a, solid0, rng):
     tren = solid0 & ~np.roll(solid0, 1, 0); tren[0] = False
     lum = FILL[..., :3].mean(-1); lum = (lum - lum.mean()) / (lum.std() + 1e-6)
     gon = ndimage.gaussian_filter1d(rng.random(W), 6); gon = (gon - gon.mean()) / (gon.std() + 1e-6)   # mép sau gợn nhẹ
+    # (theo góp ý: "vạch ngang gắn vào vách") gờ trước KHÔNG còn là 1 vạch sáng thẳng tắp + 1 vạch bóng thẳng:
+    # mép trước gợn ±1 điểm, độ sáng gờ đổi dần, có chỗ đứt, bóng dưới gờ nhạt và loang 2 dòng → hoà vào mặt đá
+    gon2 = ndimage.gaussian_filter1d(rng.random(W), 3); gon2 = (gon2 - gon2.mean()) / (gon2.std() + 1e-6)
+    gon3 = ndimage.gaussian_filter1d(rng.random(W), 2); gon3 = (gon3 - gon3.mean()) / (gon3.std() + 1e-6)
     for y in range(1, H - MD_XUONG - 2):
         xs = np.nonzero(tren[y])[0]
         if not len(xs): continue
@@ -134,7 +145,8 @@ def mat_dat(a, solid0, rng):
             if L < 6: continue
             for x in range(x0, x1 + 1):
                 d = min(x - x0, x1 - x)                       # gần mép vực → dải thu nhỏ dần (góc bo tròn)
-                up = int(min(MD_LEN + round(gon[x] * 0.8), d + 1 if d < MD_BO else 99)); dn = int(min(MD_XUONG, d + 1 if d < MD_BO else 99))
+                lech = int(np.clip(round(gon2[x] * 0.9), -1, 1))
+                up = int(min(MD_LEN + round(gon[x] * 0.8), d + 1 if d < MD_BO else 99)); dn = int(min(MD_XUONG + lech, d + 1 if d < MD_BO else 99))
                 k = 0
                 while k < up and y - k - 1 >= 0 and not solid0[y - k - 1, x]: k += 1
                 up = k
@@ -145,9 +157,12 @@ def mat_dat(a, solid0, rng):
                     c = MD_MAU[min(3, int(t * 4))] * (1 + 0.10 * lum[yy % 64, x % 64]) * MD_SANG
                     if rng.random() < 0.06: c = c * (1.3 if rng.random() < .6 else 0.7)   # sỏi lấm tấm
                     a[yy, x, :3] = np.clip(c, 0, 255); a[yy, x, 3] = 255
-                yg = y + dn                                     # gờ trước: 1 dòng sáng + 1 dòng bóng
-                a[yg, x, :3] = np.clip(np.array([150, 108, 90]) * (1 + 0.08 * lum[yg % 64, x % 64]) * MD_SANG, 0, 255)
-                a[yg + 1, x, :3] = (a[yg + 1, x, :3] * 0.45).astype(np.uint8)
+                yg = y + dn                                     # gờ trước: dòng sáng đổi độ sáng, có chỗ đứt + bóng loang nhạt
+                kg = 0.82 + 0.16 * np.clip(gon3[x], -1.5, 1.5)
+                if gon3[x] < -1.1: kg = 0.62                     # chỗ gờ mòn/đứt
+                a[yg, x, :3] = np.clip(np.array([150, 108, 90]) * kg * (1 + 0.08 * lum[yg % 64, x % 64]) * MD_SANG, 0, 255)
+                a[yg + 1, x, :3] = (a[yg + 1, x, :3] * (0.62 + 0.08 * np.clip(gon2[x], -1, 1))).astype(np.uint8)
+                if yg + 2 < H: a[yg + 2, x, :3] = (a[yg + 2, x, :3] * 0.85).astype(np.uint8)
                 if d == 0:   # góc mép vực: viền sáng chạy xuống mặt đứng 3 điểm (chỉ ở ô trống cạnh mép)
                     xo = x - 1 if x == x0 else x + 1
                     for k2 in range(0, 4):

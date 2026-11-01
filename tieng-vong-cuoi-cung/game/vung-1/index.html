@@ -72,7 +72,7 @@ body.touch #keys{display:none}
     <h1>Chuông Lưu</h1>
     <p id="chuong-tt"></p>
     <div class="hang"><button id="b-mua" type="button">Sinh lực +1</button><button id="b-di" class="chinh" type="button">Đi tiếp</button></div>
-    <small>Phím: X mua · Z / Enter đi tiếp</small>
+    <small>Lưu game là miễn phí (đã lưu khi nghỉ chuông). Nâng cấp là TUỲ CHỌN, dùng Mảnh Âm nhặt được · Phím: X nâng cấp · Z / Enter đi tiếp</small>
   </div></div>
   <div id="l-het" class="lop ui"><div class="hop">
     <h1>Hết Vùng 1</h1><h2>Mẫu Chuông Rỗng đã im lặng</h2>
@@ -111,12 +111,12 @@ $('b-tiep').onclick = () => choi(false);
 $('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Xoá bản lưu cũ và chơi lại từ đầu?')) choi(true); };
 V1.moChuong = function(gui, ok){
   $('chuong-tt').innerHTML = 'Đã hồi đầy máu và lượt hồi. Quái trong vùng sống lại.<br>' + (gui > 0 ? 'Đã gửi ' + gui + ' Mảnh Âm vào chuông (an toàn khi ngã).<br>' : '') +
-    (ok ? 'Đã lưu.' : '<b style="color:#ffbe50">Không lưu được (trình duyệt chặn bộ nhớ).</b>') + '<br>Mảnh Âm: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
+    (ok ? '<b style="color:#9be7a0">Đã lưu game (miễn phí).</b>' : '<b style="color:#ffbe50">Không lưu được (trình duyệt chặn bộ nhớ).</b>') + '<br>Mảnh Âm: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
   capNhatNutMua(); moLop('l-chuong');
 };
 function capNhatNutMua(){
   const b = $('b-mua'), L = G.luu;
-  b.textContent = L.nangMau >= 1 ? 'Sinh lực: đã tối đa' : 'Sinh lực +1 (' + V1.giaMau + ' Mảnh Âm)';
+  b.textContent = L.nangMau >= 1 ? 'Sinh lực: đã tối đa' : 'Nâng cấp tuỳ chọn: Sinh lực +1 (' + V1.giaMau + ' Mảnh Âm)';
   b.disabled = !V1.coTheMuaMau();
 }
 function mua(){ const s = V1.muaMau(); V1.thongBao(s); $('chuong-tt').innerHTML = s + '<br>Mảnh Âm còn: <b style="color:#78e6e6">' + V1.tongManh() + '</b>'; capNhatNutMua(); }
