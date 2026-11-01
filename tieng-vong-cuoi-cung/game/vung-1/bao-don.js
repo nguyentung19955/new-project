@@ -2,7 +2,7 @@
 /* bao-don.js – LUỒNG D: BÁO ĐÒN rõ hơn cho quái Vùng 1 (vẽ chồng lên khung đã vẽ, KHÔNG sửa ve.js).
    • Vọng Tàn ('tan'): dấu ĐỎ GẠCH gạch đứt trên mặt đất, lan 2 phía tới tầm sóng, từ lúc giơ chuông tới khi đập (~0,88 s).
    • Màn Tang ('tang'): dây vải treo từ trần (luôn thấy) – lúc chuẩn bị vồ (~0,6 s) dây RUNG + BỤI rơi từ trần.
-   • Khuyết Cẩu / Kèn Câm / Hồn Vải (chiêu bắn): đốm tụ năng lượng hổ phách/đồng ở nòng, to dần trong lúc báo trước.
+   • Khuyết Cẩu / Kèn Câm / Hồn Vải: tụ năng lượng ở nòng đã do ve.js (luồng C) vẽ – ở đây không vẽ lại.
    Màu ấm (hổ phách, đồng, đỏ gạch) – không dùng cyan (cyan chỉ cho người chơi).
    Đồng thời cập nhật DongCoMN.khungNhin = khung camera để quái không bắn khi chưa hiện trên màn hình.
    Nạp SAU ve.js trong index.html. */
@@ -44,39 +44,24 @@
     ctx.globalAlpha = 1;
   }
 
-  /* --- Màn Tang: dây rung + bụi rơi --- */
+  /* --- Màn Tang: dây vải treo hai bên thân (luôn thấy) – rung + bụi rơi khi sắp vồ --- */
   function veManTang(q){
-    if (q.st === 'chet' && q.alpha < 0.5) return;
-    const fx = q.x + q.w / 2, top = q.y + 6, tran = tranTren(fx, q.y);
+    if (q.st === 'chet') return;
+    const fx = q.x + q.w / 2, tran = tranTren(fx, q.y + 4) - 12, day = q.y + q.h * 0.75;
     const bao = q.st === 'danh' && q.baoTruoc;
-    const rung = bao ? ((E.S.frame >> 1) % 2 ? 3 : -3) : 0;
-    // 2 sợi dây vải treo (đồng sẫm + viền sáng ấm)
-    for (const lx of [-9, 6]){
-      for (let y = tran; y < top; y += PX){
-        const lech = bao ? Math.round(Math.sin((y - tran) / 14 + E.S.frame * 0.9) * 3) + rung : 0;
-        o(fx + lx + lech, y, 3, 3, '#5a3622');
-        if ((y / PX) % 4 === 0) o(fx + lx + lech + 3, y, 3, 3, '#D67B49');
+    for (const lx of [-30, 24]){
+      for (let y = tran; y < day; y += PX){
+        const lech = bao ? Math.round(Math.sin((y - tran) / 10 + E.S.frame * 1.1 + lx) * 4) : Math.round(Math.sin((y - tran) / 30 + E.S.frame * 0.03) * 1);
+        o(fx + lx + lech, y, 3, 3, '#4a2c1c');
+        if (((y - tran) / PX) % 3 === 0) o(fx + lx + lech + 3, y, 3, 3, bao ? '#F0A060' : '#9a5a36');
       }
+      // núm vải cuối dây
+      o(fx + lx - 3, day, 9, 6, bao ? '#F0A060' : '#7a4630');
     }
     if (bao){
-      // bụi rơi từ trần quanh chỗ treo
-      if (E.S.frame % 3 === 0) for (let i = 0; i < 2; i++) BUI.push({x:fx + (Math.random() - 0.5) * 70, y:tran + 2, vy:1 + Math.random() * 1.5, t:40 + (Math.random() * 20 | 0)});
-      // mảng tối rung trên trần
-      o(fx - 24 + rung, tran, 48, 3, '#b39161');
+      // bụi + vụn đá rơi từ trần quanh chỗ treo
+      for (let i = 0; i < 2; i++) BUI.push({x:fx + (Math.random() - 0.5) * 96, y:tran + 3, vy:0.8 + Math.random() * 1.6, t:36 + (Math.random() * 24 | 0), to:Math.random() < 0.25});
     }
-  }
-
-  /* --- Quái bắn: tụ năng lượng ở nòng --- */
-  function veTuNong(q){
-    const d = q.def, ch = d.chieu;
-    if (!ch || ch.kieu !== 'dan' || q.st !== 'danh' || !q.baoTruoc) return;
-    const fx = q.x + q.w / 2, fy = q.y + q.h, n = ch.nong || [0, -40], TL = E.TL;
-    const x = fx + n[0] * TL * -q.face, y = fy + n[1] * TL;
-    const k = Math.min(1, (q.kDanh + 1) / ((d.khung_bao_truoc || 3) + 1));
-    const r = Math.round((4 + 8 * k) / PX) * PX, nhip = (E.S.frame >> 2) % 2;
-    ctx.globalAlpha = 0.35 + 0.25 * nhip; o(x - r - 3, y - r - 3, (r + 3) * 2, (r + 3) * 2, ch.toi || '#E5A13B');
-    ctx.globalAlpha = 0.9; o(x - r, y - r, r * 2, r * 2, ch.mau || '#FFD17A');
-    ctx.globalAlpha = 1;
   }
 
   function buocBui(){
@@ -98,10 +83,9 @@
       const id = q.def.id;
       if (id === 'tan') veVongTan(q);
       else if (id === 'tang') veManTang(q);
-      veTuNong(q);
     }
     buocBui();
-    for (const b of BUI){ ctx.globalAlpha = Math.min(1, b.t / 20); o(b.x, b.y, 3, 3, '#c9a77a'); }
+    for (const b of BUI){ ctx.globalAlpha = Math.min(1, b.t / 20); o(b.x, b.y, b.to ? 6 : 3, b.to ? 6 : 3, b.to ? '#8a6a4a' : '#d8b98a'); }
     ctx.globalAlpha = 1;
     ctx.restore();
   };

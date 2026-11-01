@@ -1,0 +1,115 @@
+{
+ "dayLeo": {
+  "goc": {
+   "lan": 20,
+   "ket": 0,
+   "thoatToiDa": 3,
+   "trongDa": 0,
+   "doi": []
+  },
+  "tran": {
+   "lan": 20,
+   "ket": 0,
+   "thoatToiDa": 15,
+   "trongDa": 0,
+   "doi": []
+  },
+  "cua": {
+   "lan": 20,
+   "ket": 0,
+   "thoatToiDa": 3,
+   "trongDa": 0,
+   "doi": []
+  },
+  "luot": {
+   "lan": 20,
+   "ket": 0,
+   "thoatToiDa": 3,
+   "trongDa": 0,
+   "doi": []
+  },
+  "doiPhong": {
+   "lan": 20,
+   "ket": 0,
+   "thoatToiDa": 8,
+   "trongDa": 0,
+   "doi": [
+    "P03>P04",
+    "P06>P02",
+    "P03>P04",
+    "P06>P02"
+   ]
+  }
+ },
+ "quai": {
+  "ngoaiKhung": 0,
+  "ban": 128,
+  "baoDon": {
+   "cau": {
+    "lan": 85,
+    "minMs": 900
+   },
+   "vai": {
+    "lan": 29,
+    "minMs": 650
+   },
+   "ken": {
+    "lan": 14,
+    "minMs": 767
+   },
+   "tang": {
+    "lan": 8,
+    "minMs": 617
+   },
+   "tan": {
+    "lan": 7,
+    "minMs": 900
+   }
+  },
+  "xuyenTuong": [],
+  "camKhongCam": {},
+  "P03be": {
+   "trung": 0,
+   "no": [
+    47
+   ]
+  }
+ },
+ "luu": {
+  "nhat": true,
+  "vaoLai": {
+   "conManh": true,
+   "quaiSong": 0
+  },
+  "tuongVo": true,
+  "chuong": {
+   "phong": "P05",
+   "cot": 15,
+   "hang": 12
+  },
+  "taiLai": {
+   "phong": "P05",
+   "chuong": 2,
+   "manh": 50,
+   "daNhat": 7,
+   "tuongVo": 3
+  },
+  "chet": {
+   "dongCuaKhiDanh": true,
+   "chetP11": {
+    "phong": "P05",
+    "dongCua": false,
+    "hp": 6
+   },
+   "chetP12": {
+    "phong": "P11",
+    "x": 51,
+    "dongCua": false,
+    "cuaKhoa": 0,
+    "tinhAnhSong": false
+   },
+   "veP05": "P11 → P09 → P06 → P05"
+  }
+ },
+ "loiJS": []
+}
