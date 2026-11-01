@@ -230,7 +230,7 @@ const DongCoMN = (() => {
     const daySo = (x, y) => tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === 'H';
     const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
     if (pl.leoKhoa > 0) pl.leoKhoa--;
-    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && (IN.len() || (!pl.onGround && pl.vy > 0 && !IN.xuong()) || (!pl.onGround && IN.xuong()))){
+    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && (IN.len() || (!pl.onGround && pl.vy > 1.5 && !dir && !IN.xuong()) || (!pl.onGround && IN.xuong() && !dir))){   // rơi trúng dây chỉ tự bám khi không bấm sang ngang
       pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
       pl.x = Math.floor(cxDay / BD.T) * BD.T + BD.T / 2 - pl.w / 2; SUKIEN.push({k:'bam-day'});
     }
@@ -241,13 +241,21 @@ const DongCoMN = (() => {
       if (pl.atk){ pl.atkT++; if (pl.atkT >= clipNV(pl.atk).tong) pl.atk = ''; }
       const dangChem = pl.atk === 'chemday';
       pl.vy = dangChem ? 0 : ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
+      // bấm SANG NGANG khi đang ở dây (không bấm lên/xuống): nhảy khỏi dây sang bên đó – thoát mọi góc kẹt
+      if (!dangChem && dir && !IN.len() && !IN.xuong() && pl.leoT > 6){
+        pl.leo = false; pl.leoKhoa = 26; pl.vx = dir * P.runSpeed; pl.vy = -jumpVel * 0.5; pl.face = dir; pl.djCo = true; SUKIEN.push({k:'nhay'});
+        moveY(pl, pl.vy); ketDat(); pl.sliding = false; return;
+      }
       if (pl.jumpBuf > 0){
-        pl.atk = ''; pl.leo = false; pl.leoKhoa = 14; pl.vy = -jumpVel * 0.85; pl.vx = dir * P.runSpeed; if (dir) pl.face = dir;
+        pl.atk = ''; pl.leo = false; pl.leoKhoa = 22; pl.vy = -jumpVel * 0.85; pl.vx = dir * P.runSpeed; if (dir) pl.face = dir;
         pl.jumping = true; pl.jumpBuf = 0; pl.djCo = true; SUKIEN.push({k:'nhay'});
       } else {
-        const ry = moveY(pl, pl.vy);
+        const y0 = pl.y, ry = moveY(pl, pl.vy);
+        if (dir && pl.vy < 0 && Math.abs(pl.y - y0) < 0.3 && !dangChem){   // kẹt trần khi leo mà đang bấm chéo: thoát sang bên
+          pl.leo = false; pl.leoKhoa = 26; pl.vx = dir * P.runSpeed; pl.vy = -jumpVel * 0.45; pl.face = dir; pl.djCo = true; ketDat(); pl.sliding = false; return;
+        }
         if (ry === 1 || (!trenDay() && pl.vy > 0)){ pl.leo = false; pl.leoKhoa = 10; }
-        else if (!trenDay() && pl.vy < 0){ pl.leo = false; pl.leoKhoa = 10; pl.vy = -jumpVel * 0.6; }
+        else if (!trenDay() && pl.vy < 0){ pl.leo = false; pl.leoKhoa = 30; pl.vy = -jumpVel * 0.8; pl.vx = dir * P.runSpeed; }   // lên tới đầu dây: bật lên mép, không tự bám lại ngay
         ketDat(); pl.sliding = false; return;
       }
     }
