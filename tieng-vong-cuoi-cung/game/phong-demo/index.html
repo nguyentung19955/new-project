@@ -21,19 +21,23 @@ body.touch #keys{display:none}
 .tc{display:none} body.touch .tc{display:block}
 #dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
   width:calc(132px*var(--k));height:calc(132px*var(--k));border-radius:50%;background:rgba(26,33,43,.42);border:2px solid rgba(206,240,214,.3);opacity:.35}
-#dpad.act{opacity:.9}
+#dpad.act{opacity:.95;transition:none}
+#vungtrai{position:absolute;left:0;top:0;bottom:0;width:50%;z-index:1}
 #knob{position:absolute;left:calc(46px*var(--k));top:calc(46px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:50%;
   background:rgba(206,240,214,.28);border:2px solid rgba(206,240,214,.5);will-change:transform}
 #acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 6px);bottom:calc(env(safe-area-inset-bottom,0px) + 4px);width:calc(190px*var(--k));height:calc(160px*var(--k))}
 .ab{position:absolute;width:calc(58px*var(--k));height:calc(58px*var(--k));border-radius:50%;display:grid;place-items:center;font-size:calc(13px*var(--k));font-weight:700;
   background:rgba(26,33,43,.5);border:2px solid rgba(243,230,200,.45);color:var(--ink);opacity:.35}
-.ab.on{background:rgba(225,184,90,.55);border-color:var(--bell);opacity:1}
+.ab.on{opacity:1;transform:scale(.92);filter:brightness(1.35) drop-shadow(0 0 6px rgba(120,230,230,.7))}
+.ab,#dpad,#knob{background:none!important;border:none!important}
+.ab{opacity:.62} #dpad{opacity:.45}
+.tc img.ic,.ab img.ic{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;pointer-events:none;object-fit:contain}
 #b-a{left:calc(44px*var(--k));top:0}
 #b-h{left:calc(112px*var(--k));top:calc(-8px*var(--k));width:calc(46px*var(--k));height:calc(46px*var(--k));font-size:calc(12px*var(--k))}
 #b-s{left:0;bottom:calc(12px*var(--k))}
 #b-j{right:0;bottom:0;width:calc(74px*var(--k));height:calc(74px*var(--k))}
 #rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
-@media (orientation:portrait){ body.touch #rotate{display:grid} }
+/* xoay dọc vẫn chơi được: nửa trái luôn là cần di chuyển */
 </style>
 <div id="game">
   <canvas id="cv" width="960" height="540"></canvas>
@@ -43,10 +47,10 @@ body.touch #keys{display:none}
     <button id="b-hb" type="button">▣ Hộp</button>
     <button id="b-cham" type="button">Chậm ×4</button>
   </div>
-  <div id="dpad" class="tc"><div id="knob"></div></div>
+  <div id="dpad" class="tc" data-icon="de_can"><div id="knob" data-icon="num_can"></div></div>
   <div id="acts" class="tc">
-    <div class="ab" id="b-a" data-k="a">Chém</div><div class="ab" id="b-h" data-k="h">Hồi</div>
-    <div class="ab" id="b-s" data-k="s">Lướt</div><div class="ab" id="b-j" data-k="j">Nhảy</div>
+    <div class="ab" id="b-a" data-k="a" data-icon="chem"></div><div class="ab" id="b-h" data-k="h" data-icon="hoi"></div>
+    <div class="ab" id="b-s" data-k="s" data-icon="luot"></div><div class="ab" id="b-j" data-k="j" data-icon="nhay"></div>
   </div>
   <div id="keys">← → trôi · Z/Space nhảy (2 lần = nhảy đôi) · X chém (trên không: chém; ↓+X: đập đất) · ↑ bám &amp; leo dây · C/Shift lướt · V hồi máu · 1/2/3 cấp · H hộp · T chậm</div>
   <div id="rotate">Xoay ngang điện thoại để chơi</div>
@@ -145,8 +149,12 @@ function readInput(){
   IN.dPhim = !!(kb.d || ep.d); IN.uPhim = !!(kb.u || ep.u); IN.coCan = dpadId !== null; IN.stickY = stickY;
 }
 const dpad = document.getElementById('dpad'), knob = document.getElementById('knob');
+// biểu tượng nút (ChatGPT vẽ): art/giao-dien/nut/<ten>.png
+for (const el of document.querySelectorAll('[data-icon]')){ const im = new Image(); im.className = 'ic'; im.alt = ''; im.src = '../../art/giao-dien/nut/' + el.dataset.icon + '.png'; el.prepend(im); }
 const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('[data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
-function measure(){ const rc = dpad.getBoundingClientRect(); geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; geo.R = rc.width / 2 || 66;
+function datTamCan(x, y){ const r = geo.R; dpad.style.left = (x - r) + 'px'; dpad.style.top = (y - r) + 'px'; dpad.style.bottom = 'auto'; geo.cx = x; geo.cy = y; }
+function traCan(){ dpad.style.left = ''; dpad.style.top = ''; dpad.style.bottom = ''; requestAnimationFrame(measure); }
+function measure(){ const rc = dpad.getBoundingClientRect(); if (dpadId === null){ geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; } geo.R = rc.width / 2 || 66;
   for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; } }
 let dpadId = null; const prevTc = {};
 function onTouch(e){
@@ -157,12 +165,15 @@ function onTouch(e){
   let dT = null;
   for (const t of e.touches){
     if (t.identifier === dpadId){ dT = t; continue; }
-    if (dpadId === null && Math.hypot(t.clientX - geo.cx, t.clientY - geo.cy) < geo.R * 1.2 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; continue; }
+    // nửa TRÁI màn hình = cần di chuyển nổi: chạm đâu thì tâm cần ở đó
+    if (dpadId === null && t.clientX < innerWidth / 2 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; datTamCan(t.clientX, t.clientY); continue; }
+    if (t.clientX < innerWidth / 2) continue;
+    // nửa PHẢI = nút: chọn nút gần nhất (vùng bấm rộng)
     let best = null, bd = 1e9;
-    for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 1.2 && d < bd){ bd = d; best = b; } }
+    for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 2.2 && d < bd){ bd = d; best = b; } }
     if (best) tc[best.k] = 1;
   }
-  let kx = 0, ky = 0; if (!dT){ dpadId = null; stickY = 0; }
+  let kx = 0, ky = 0; if (!dT){ if (dpadId !== null) traCan(); dpadId = null; stickY = 0; }
   dpad.classList.toggle('act', dpadId !== null);
   if (dT){ const dx = dT.clientX - geo.cx, dy = dT.clientY - geo.cy, d = Math.hypot(dx, dy);
     if (d > geo.R * 0.2){ tc.r = dx > d * 0.38 ? 1 : 0; tc.l = dx < -d * 0.38 ? 1 : 0; }
@@ -382,8 +393,13 @@ function ve(){
   // 1) cảnh 320×180 điểm (2 bản ghép)
   g.imageSmoothingEnabled = false;
   g.fillStyle = '#08090d'; g.fillRect(0, 0, VW, VH);
-  if (IMG.bg){ const w = IMG.bg.width; const y = -Math.round(camPy * 0.08); let x = -(Math.round(camPx * 0.12) % w); for (; x < VW; x += w) g.drawImage(IMG.bg, x, y); }
-  if (IMG.mid){ const w = IMG.mid.width; let x = -(Math.round(camPx * 0.35) % w); for (; x < VW; x += w) g.drawImage(IMG.mid, x, -4 - Math.round(camPy * 0.16)); }
+  // nền xa/giữa: lặp cả NGANG lẫn DỌC (lật gương xen kẽ) để không lộ mép ngang khi camera đi xuống
+  const lapNen = (im, kx, ky, y0) => { const w = im.width, h = im.height;
+    let y = y0 - Math.round(camPy * ky); y = ((y % (2 * h)) + 2 * h) % (2 * h) - 2 * h;
+    for (let j = 0; y < VH; y += h, j++){ let x = -(Math.round(camPx * kx) % w);
+      for (; x < VW; x += w){ if ((j & 1) === 0) g.drawImage(im, x, y); else { g.save(); g.translate(x, y + h); g.scale(1, -1); g.drawImage(im, 0, 0); g.restore(); } } } };
+  if (IMG.bg) lapNen(IMG.bg, 0.12, 0.08, 0);
+  if (IMG.mid) lapNen(IMG.mid, 0.35, 0.16, -4);
   if (IMG.chuong){ const camC = MAN.chuong[0] + 8 - VW / 2; g.drawImage(IMG.chuong, Math.round(VW / 2 - 80 - (camPx - camC) * 0.85), MAN.chuong[1] - camPy); }
   if (IMG.canh) g.drawImage(IMG.canh, -camPx, -camPy);
   const cg = CONG.mo ? IMG.cong1 : IMG.cong0;

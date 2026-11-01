@@ -497,8 +497,8 @@
    "bay": false,
    "toc_do": 1.1,
    "toc_do_duoi": 2.6,
-   "tam_phat_hien": 360,
-   "tam_danh": 250,
+   "tam_phat_hien": 520,
+   "tam_danh": 380,
    "khung_bao_truoc": 4,
    "bao_truoc_them_ms": 520,
    "khung_trung": [],
@@ -516,7 +516,7 @@
    "chieu": {
     "kieu": "dan",
     "khung_ban": 4,
-    "toc": 5.5,
+    "toc": 6,
     "nong": [
      -30,
      -28
@@ -525,7 +525,7 @@
      14,
      12
     ],
-    "song": 100,
+    "song": 150,
     "ve": "nang_luong",
     "mau": "#FFD17A",
     "toi": "#E5A13B"
@@ -587,7 +587,7 @@
    "bay": false,
    "toc_do": 0.4,
    "toc_do_duoi": 0.9,
-   "tam_phat_hien": 380,
+   "tam_phat_hien": 520,
    "tam_danh": 150,
    "khung_bao_truoc": 4,
    "bao_truoc_them_ms": 300,
@@ -609,7 +609,7 @@
    "chieu": {
     "chan_dong": 5,
     "toc_song": 7,
-    "tam": 300,
+    "tam": 420,
     "ve": "chan",
     "mau": "#F08B73",
     "toi": "#B84C43",
@@ -673,8 +673,8 @@
    "bay_cao": 30,
    "toc_do": 0.7,
    "toc_do_duoi": 1.6,
-   "tam_phat_hien": 340,
-   "tam_danh": 230,
+   "tam_phat_hien": 480,
+   "tam_danh": 340,
    "khung_bao_truoc": 3,
    "bao_truoc_them_ms": 330,
    "khung_trung": [],
@@ -701,7 +701,7 @@
      14,
      30
     ],
-    "song": 95,
+    "song": 150,
     "ve": "song",
     "mau": "#F3DBA0",
     "toi": "#D9B66F"
@@ -763,8 +763,8 @@
    "bay": false,
    "toc_do": 0.35,
    "toc_do_duoi": 0.6,
-   "tam_phat_hien": 420,
-   "tam_danh": 280,
+   "tam_phat_hien": 560,
+   "tam_danh": 420,
    "khung_bao_truoc": 3,
    "bao_truoc_them_ms": 380,
    "khung_trung": [],
@@ -782,7 +782,7 @@
    "chieu": {
     "kieu": "dan",
     "khung_ban": 3,
-    "toc": 7,
+    "toc": 7.5,
     "nong": [
      -30,
      -46
@@ -791,7 +791,7 @@
      10,
      8
     ],
-    "song": 80,
+    "song": 140,
     "ve": "dan",
     "mau": "#F0B85E",
     "toi": "#7a4a22"
