@@ -9,7 +9,9 @@ V1.napAnh = (k, src) => new Promise(ok => { const i = new Image(); i.onload = ()
 V1.nap = async function(){
   const E = DongCoMN;
   const A = '../../art/phong-demo/';
-  await Promise.all([['bg', 'bg_far'], ['mid', 'bg_mid'], ['hon', 'fx_hon']].map(([k, f]) => V1.napAnh(k, A + f + '.png')));
+  await Promise.all([['bg', 'bg_far'], ['mid', 'bg_mid'], ['hon', 'fx_hon'], ['vm1', 'v_mid1'], ['vm2', 'v_mid2']].map(([k, f]) => V1.napAnh(k, A + f + '.png')));
+  // hiệu ứng chiêu quái (ChatGPT vẽ): 6 ô 96×96, hướng TRÁI
+  await Promise.all(['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-quai/' + n + '.png')));
   // nhân vật (như phòng demo)
   const NVJ = V1.NVJ = await SpriteMN.napJson('../thu-mat-na/nhan-vat.json');
   const gNV = NVJ.goc; E.datTL(NVJ.ti_le || 2); E.datCo((NVJ.co || 1) * 0.85); E.pl.h = 78;
@@ -50,4 +52,18 @@ V1.nap = async function(){
   await Promise.all(Object.entries(V1.TRUMJ.hinh || {}).map(async ([id, def]) => {
     V1.TRUM_CLIP[id] = await SpriteMN.napClip(gT, def && def.thu_muc ? def : null, 'trum/' + id);
   }));
+};
+
+/* Ảnh phòng nướng sẵn (tools/vung-1/ve-phong.py): art/vung-1/<ID>-canh.png, -truoc.png, -manh.png, -canh.json.
+   Thiếu ảnh → V1.CANH[id] = null → ve.js vẽ ô bằng code (dự phòng). */
+V1.CANH = {};
+V1.napCanhPhong = async function(id){
+  if (id in V1.CANH) return V1.CANH[id];
+  const A = '../../art/vung-1/' + id, im = src => new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
+  let meta = null;
+  try { const r = await fetch(A + '-canh.json'); if (r.ok) meta = await r.json(); } catch (e){}
+  const [canh, truoc, manh] = await Promise.all([im(A + '-canh.png'), im(A + '-truoc.png'), meta && meta.manh && meta.manh.length ? im(A + '-manh.png') : null]);
+  V1.CANH[id] = canh && meta ? {canh, truoc, manh, meta} : null;
+  if (!V1.CANH[id]) V1.LOI.push('ảnh phòng ' + id);
+  return V1.CANH[id];
 };

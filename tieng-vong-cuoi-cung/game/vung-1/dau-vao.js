@@ -30,29 +30,35 @@
   };
   V1.xoaVao = xoa;
 
-  // ----- cảm ứng: cần trái (← → ↑ ↓) + nút phải (Chém, Nhảy, Lướt, Hồi) – nhiều ngón cùng lúc -----
+  // ----- cảm ứng (như phòng demo): nửa TRÁI màn = cần di chuyển nổi (chạm đâu tâm cần ở đó, kéo lên/xuống = ↑ ↓);
+  //       nửa PHẢI = nút Chém / Nhảy / Lướt / Hồi – chọn nút GẦN NHẤT (vùng bấm rộng). Nhiều ngón cùng lúc.
   const dpad = document.getElementById('dpad'), knob = document.getElementById('knob');
+  // biểu tượng nút (ChatGPT vẽ): art/giao-dien/nut/<ten>.png
+  for (const el of document.querySelectorAll('[data-icon]')){ const im = new Image(); im.className = 'ic'; im.alt = ''; im.src = '../../art/giao-dien/nut/' + el.dataset.icon + '.png'; el.prepend(im); }
   const geo = {cx:0, cy:0, R:66, btn:[...document.querySelectorAll('#acts [data-k]')].map(b => ({k:b.dataset.k, el:b, x:0, y:0, r:30}))};
+  function datTamCan(x, y){ const r = geo.R; dpad.style.left = (x - r) + 'px'; dpad.style.top = (y - r) + 'px'; dpad.style.bottom = 'auto'; geo.cx = x; geo.cy = y; }
+  function traCan(){ dpad.style.left = ''; dpad.style.top = ''; dpad.style.bottom = ''; requestAnimationFrame(measure); }
   function measure(){
-    const rc = dpad.getBoundingClientRect(); geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; geo.R = rc.width / 2 || 66;
+    const rc = dpad.getBoundingClientRect(); if (dpadId === null){ geo.cx = rc.left + rc.width / 2; geo.cy = rc.top + rc.height / 2; } geo.R = rc.width / 2 || 66;
     for (const b of geo.btn){ const r = b.el.getBoundingClientRect(); b.x = r.left + r.width / 2; b.y = r.top + r.height / 2; b.r = r.width / 2 || 30; }
   }
   V1.measure = measure;
-  const prevTc = {}, clampN = (v, a, b) => v < a ? a : v > b ? b : v;
+  const prevTc = {}, clampN = (v, a, b) => v < a ? a : v > b ? b : v, TK = ['l', 'r', 'u', 'd', 'j', 'a', 's', 'h'];
   function onTouch(e){
     if (e.type === 'touchstart') setMode(true);
-    if (e.target.closest && e.target.closest('.ui')) return;   // nút giao diện (bản đồ, menu…) tự xử lý bằng click
+    if (e.target.closest && e.target.closest('.ui')) return;   // nút giao diện (bản đồ, nghỉ chuông, menu…) tự xử lý bằng click
     e.preventDefault(); if (e.type === 'touchstart') measure();
-    for (const k of ['l', 'r', 'u', 'd', 'j', 'a', 's', 'h']){ prevTc[k] = tc[k]; tc[k] = 0; }
+    for (const k of TK){ prevTc[k] = tc[k]; tc[k] = 0; }
     let dT = null;
     for (const t of e.touches){
       if (t.identifier === dpadId){ dT = t; continue; }
-      if (dpadId === null && Math.hypot(t.clientX - geo.cx, t.clientY - geo.cy) < geo.R * 1.25 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; continue; }
+      if (dpadId === null && t.clientX < innerWidth / 2 && e.type === 'touchstart'){ dpadId = t.identifier; dT = t; datTamCan(t.clientX, t.clientY); continue; }
+      if (t.clientX < innerWidth / 2) continue;
       let best = null, bd = 1e9;
-      for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 1.25 && d < bd){ bd = d; best = b; } }
+      for (const b of geo.btn){ const d = Math.hypot(t.clientX - b.x, t.clientY - b.y); if (d < b.r * 2.2 && d < bd){ bd = d; best = b; } }
       if (best) tc[best.k] = 1;
     }
-    let kx = 0, ky = 0; if (!dT){ dpadId = null; stickY = 0; }
+    let kx = 0, ky = 0; if (!dT){ if (dpadId !== null) traCan(); dpadId = null; stickY = 0; }
     dpad.classList.toggle('act', dpadId !== null);
     if (dT){
       const dx = dT.clientX - geo.cx, dy = dT.clientY - geo.cy, d = Math.hypot(dx, dy);
@@ -61,7 +67,7 @@
       tc.u = stickY < -0.7 ? 1 : 0; tc.d = stickY > 0.7 ? 1 : 0;
       const m = Math.min(d, geo.R * 0.55) / (d || 1); kx = dx * m; ky = dy * m;
     }
-    for (const k of ['l', 'r', 'u', 'd', 'j', 'a', 's', 'h']) if (tc[k] && !prevTc[k]) latch[k] = 1;
+    for (const k of TK) if (tc[k] && !prevTc[k]) latch[k] = 1;
     knob.style.transform = 'translate3d(' + kx + 'px,' + ky + 'px,0)';
     for (const b of geo.btn) b.el.classList.toggle('on', !!tc[b.k]);
   }

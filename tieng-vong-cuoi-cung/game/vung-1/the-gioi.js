@@ -49,6 +49,8 @@
     if (!G.bd){ G.bd = await layJson('phong-thu/ban-do.json'); G.thuMuc = 'phong-thu/'; }
     // nạp sẵn mọi phòng (nhỏ) cho bản đồ + chuyển phòng nhanh; phòng lỗi thì bỏ qua
     await Promise.all(G.bd.phong.map(p => layPhong(p.id).catch(e => V1.LOI.push('phòng ' + p.id + ': ' + e.message))));
+    // ảnh cảnh nướng sẵn cho từng phòng (thiếu thì vẽ ô bằng code)
+    if (V1.napCanhPhong) await Promise.all(G.bd.phong.map(p => V1.napCanhPhong(p.id)));
   };
   async function layPhong(id){
     if (G.cache[id]) return G.cache[id];
