@@ -44,7 +44,7 @@
   },
   "roi": {
    "thu_muc": "roi",
-   "so_hinh": 2,
+   "so_hinh": 1,
    "chan": [
     128,
     172
@@ -125,7 +125,7 @@
   },
   "luon": {
    "thu_muc": "roi",
-   "so_hinh": 2,
+   "so_hinh": 1,
    "chan": [
     128,
     172

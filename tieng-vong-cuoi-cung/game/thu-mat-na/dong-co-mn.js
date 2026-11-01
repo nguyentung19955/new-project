@@ -84,7 +84,31 @@ const DongCoMN = (() => {
   function napBanDo(luoi, them){
     BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length; BD.nut = {};
     for (const [c0, r0, c1, r1] of (them || [])) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) BD.L[r][c] = '#';
+    dongBoBanDo();
     timCauDay();
+  }
+  // ĐỒNG BỘ VỚI HÌNH: (1) mọi phiến đá nổi DÀY 1 Ô (trên/dưới/2 đầu đều trống) = sàn mỏng nhảy xuyên từ dưới lên được,
+  // giống các phiến '=' (trên hình trông y hệt nhau → trước đây chỗ xuyên được chỗ bị chặn); (2) dây leo được kéo lên
+  // tới đúng chỗ hình vẽ dây chạm trần / chạm sàn mỏng, để chỗ nào THẤY dây là leo được.
+  function dongBoBanDo(){
+    const L = BD.L, R = BD.HANG, C = BD.COT, dac = (c, r) => r >= 0 && r < R && c >= 0 && c < C && L[r][c] === '#';
+    for (let r = 1; r < R - 1; r++){
+      let c = 0;
+      while (c < C){
+        if (L[r][c] !== '#'){ c++; continue; }
+        let e = c; while (e < C && L[r][e] === '#') e++;
+        let noi = !dac(c - 1, r) && !dac(e, r);
+        for (let k = c; k < e && noi; k++) if (dac(k, r - 1) || dac(k, r + 1)) noi = false;
+        if (noi) for (let k = c; k < e; k++) L[r][k] = '=';
+        c = e;
+      }
+    }
+    for (let c = 0; c < C; c++) for (let r = 1; r < R; r++){
+      if (L[r][c] !== 'H' || L[r - 1][c] === 'H') continue;   // đầu trên của một đoạn dây
+      let rr = r - 1; while (rr >= 0 && L[rr][c] === '.') rr--;
+      if (rr >= 0 && L[rr][c] !== '#' && L[rr][c] !== '=') continue;   // chạm thứ khác (cửa…) → giữ nguyên
+      for (let k = rr + 1; k < r; k++) L[k][c] = 'H';
+    }
   }
 
   /* ---------- TRẠNG THÁI ---------- */
@@ -283,16 +307,16 @@ const DongCoMN = (() => {
         if (ry === 1 || (!trenDay() && pl.vy > 0)){ pl.leo = false; pl.leoKhoa = 10; }
         else if (!trenDay() && pl.vy < 0){   // lên tới đầu dây: bước lên mép sàn bên cạnh (đứng hẳn), không nhảy
           const T = BD.T, c = Math.floor(cxDay / T), chan = pl.y + pl.h, ben = [dir || pl.face, -(dir || pl.face)];
-          // lên tới đầu dây: tìm chỗ đứng GẦN NHẤT (miệng khe cầu dây ngay tại chỗ, hoặc mép sàn ≤ 4 ô hai bên),
+          // lên tới đầu dây: chỗ đứng = miệng khe cầu dây ngay tại chỗ, hoặc thành đất SÁT dây (kề 1 ô),
           // rồi TRÈO LÊN MƯỢT trong vài khung (thấy rõ đường đi) – không còn dịch chuyển tức thời
           const dung = ch => ch === '#' || ch === '=';
           let best = null;
           for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) && !best; rr++){
-            if (!(BD.cau && BD.cau.has(c + ',' + rr))) continue;
+            if (!((BD.cau && BD.cau.has(c + ',' + rr)) || tile(c, rr) === '=')) continue;   // miệng khe cầu dây / sàn mỏng ngay trên đầu dây
             const ny = rr * T - pl.h - 0.01; if (!collide(pl.x, ny, pl.w, pl.h)) best = {x:pl.x, y:ny, d:0, sd:pl.face};
           }
           for (const sd of ben){
-            for (let d = 1; d <= 4; d++){
+            for (let d = 1; d <= 1; d++){   // CHỈ khi thành đất SÁT dây (kề 1 ô) mới bước lên đứng; dây cách xa thành → cứ leo dây, không đưa ra thành
               if (best && best.d < d) break;
               const cc = c + sd * d;
               for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) + 1; rr++){
