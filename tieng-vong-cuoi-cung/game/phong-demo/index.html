@@ -309,11 +309,11 @@ function veFx(ten, o, x, y, phai, k, a){
 function veBuiTuong(cam){
   const pl = E.pl, st = E.trangThai().ten;
   if ((st !== 'bamtuong' && st !== 'chemtuong') || !pl.wallDir) return;
-  const o = (E.S.frame >> 2) % 6, k = 1.9, w = 96 * k, wd = pl.wallDir;
+  const o = (E.S.frame >> 2) % 6, k = 1.05, w = 96 * k, wd = pl.wallDir;
   const tuongX = wd < 0 ? pl.x : pl.x + pl.w;            // mép tường
   const cx = tuongX - wd * (w / 2 - 14 * k);               // ô có tường ở mép trái (lật khi tường bên phải)
   const cy = pl.y + pl.h - w / 2 + 14;
-  veFx('bui_tuong', o, cx - cam, cy, wd > 0, k, 0.95);
+  veFx('bui_tuong', o, cx - cam, cy, wd > 0, k, 0.7);
 }
 function veChieu(cam){
   const f = E.S.frame;
