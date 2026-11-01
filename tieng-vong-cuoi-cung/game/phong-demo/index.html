@@ -248,6 +248,7 @@ function suKien(){
     if (e.k === 'hoi-mau') thongBao('+1 máu');
   }
 }
+const HUDI = {}; for (const n of ['mau_day', 'mau_rong']){ const im = new Image(); im.src = '../../art/giao-dien/hud/' + n + '.png'; HUDI[n] = im; }
 const FXC = {}, CHEM = []; for (const n of ['ngang', 'cung', 'cheo', 'no']){ const im = new Image(); im.src = '../../art/hieu-ung/chem-moi/' + n + '.png'; FXC[n] = im; }
 function veChem(cam, camY){
   for (const c of CHEM){ const im = FXC[c.ten], k = Math.floor(c.t / 3); if (!im || k > 5) continue; const w = 128 * (c.ten === 'no' ? 1 : 0.85);
@@ -444,7 +445,9 @@ function ve(){
   if (S.loe > 0){ ctx.setTransform(M, 0, 0, M, 0, 0); ctx.globalAlpha = 0.22 * Math.min(1, S.loe / 4); ctx.fillStyle = S.loeMau; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }   // loé nhát kết
   // 4) HUD: máu (ô) + Tiếng Vọng (thanh xanh) + cấp
   ctx.setTransform(M, 0, 0, M, 0, 0);
-  for (let i = 0; i < E.P.maxHp; i++){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 24, 15, 18, 18); ctx.fillStyle = i < pl.hp ? '#eef1f0' : '#304a73'; ctx.fillRect(18 + i * 24, 18, 12, 12); }
+  for (let i = 0; i < E.P.maxHp; i++){ const IM = HUDI[i < pl.hp ? 'mau_day' : 'mau_rong'];
+    if (IM && IM.naturalWidth){ ctx.imageSmoothingEnabled = false; ctx.drawImage(IM, 14 + i * 24, 12, 19, 24); continue; }   // ô máu mặt nạ (ChatGPT vẽ)
+    ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 24, 15, 18, 18); ctx.fillStyle = i < pl.hp ? '#eef1f0' : '#304a73'; ctx.fillRect(18 + i * 24, 18, 12, 12); }
   ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15, 39, 6 + E.P.vongMax * 12, 12);
   for (let i = 0; i < E.P.vongMax; i++){ ctx.fillStyle = i < pl.vong ? (i < E.P.vongHoi * Math.floor(pl.vong / E.P.vongHoi) ? '#78e6e6' : '#4696a0') : '#1a2b3d'; ctx.fillRect(18 + i * 12, 42, 9, 6); }
   if (tbT > 0){ ctx.font = '700 16px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(12,15,20,.7)';

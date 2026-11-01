@@ -138,7 +138,9 @@
         for (let i = 0; i < 2; i++){ const cx = (i ? 4 : -4); for (let y = -8, j = 0; y < x1 - x0; y += vm[0].height - 2, j++){ const im = vm[(i + j) & 1]; v.drawImage(im, Math.round(cx - im.width / 2), y); } } }
     }
     v.restore();
-    if (k === 'khoa'){   // dấu khoá: quả chuông đồng nhỏ buộc giữa song rễ
+    if (k === 'khoa' && I.hud_chuong_khoa){ const im = I.hud_chuong_khoa, h = 11, w = Math.round(im.width * h / im.height);   // chuông khoá (ChatGPT vẽ)
+      v.imageSmoothingEnabled = false; v.drawImage(im, Math.round((x0 + x1) / 2 - w / 2), Math.round((y0 + y1) / 2 - h / 2), w, h); }
+    else if (k === 'khoa'){   // dấu khoá: quả chuông đồng nhỏ buộc giữa song rễ
       const cx = Math.round((x0 + x1) / 2), cy = Math.round((y0 + y1) / 2), ROW = [[-1, 1], [-2, 2], [-2, 2], [-3, 3], [-3, 3], [-4, 4]];
       v.fillStyle = '#0d0809'; ROW.forEach(([a, b], i) => v.fillRect(cx + a - 1, cy - 3 + i, b - a + 2, 1)); v.fillRect(cx - 5, cy + 3, 10, 2);
       v.fillStyle = '#c28a45'; ROW.forEach(([a, b], i) => v.fillRect(cx + a, cy - 3 + i, b - a, 1));
@@ -449,7 +451,7 @@
 
   /* ---------------- VẬT PHẨM / CHUÔNG / TÚI / NGUY HIỂM ---------------- */
   function veIcon(loai, x, y, s){   // tâm (x, y), cỡ s (px logic ~ 1 = 24 px)
-    const ICON = {manh_am:'fx_i_manh_am', chuong_vo:'fx_i_chuong_vo', tang_mau:'fx_i_mat_na'}[loai], IM = ICON && V1.IMG[ICON];
+    const ICON = {manh_am:'fx_i_manh_am', chuong_vo:'fx_i_chuong_vo', tang_mau:'fx_i_mat_na', hat_vong:'hud_i_hat_vong', the_ten:'hud_i_the_ten', loi_vong_tan:'hud_i_loi_vong_tan'}[loai], IM = ICON && V1.IMG[ICON];
     if (IM){ const h = 24 * s * 1.1, w = IM.width * h / IM.height; ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(IM, Math.round(x - w / 2), Math.round(y - h / 2), Math.round(w), Math.round(h)); ctx.restore(); return; }
     ctx.save(); ctx.translate(Math.round(x), Math.round(y)); ctx.scale(s, s);
     const o = (c, a, b, w, h) => { ctx.fillStyle = c; ctx.fillRect(a, b, w, h); };
@@ -753,6 +755,9 @@
      Thanh máu trùm/tinh anh: GIỮA, TRÊN CÙNG (xa vùng nút cảm ứng ở 2 góc dưới), có tên + vạch 50%. V1.HUD_KHUNG = các ô đã vẽ (để kiểm thử). */
   const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); };
   function oMau(x, y, day, sang){   // 1 ô máu = mặt nạ trắng 24×28
+    const IM = V1.IMG[day ? 'hud_mau_day' : 'hud_mau_rong'];
+    if (IM){ const h = 30, w = Math.round(IM.width * h / IM.height); ctx.save(); ctx.imageSmoothingEnabled = false; if (sang) ctx.globalAlpha = 0.55;
+      ctx.drawImage(IM, Math.round(x + 12 - w / 2), y - 1, w, h); ctx.restore(); return; }
     ctx.fillStyle = '#05060a'; rr(x - 3, y - 3, 30, 34, 9); ctx.fill();
     ctx.fillStyle = day ? (sang ? '#ffffff' : '#eef1f0') : '#1c2a40'; rr(x, y, 24, 28, 7); ctx.fill();
     if (day){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x + 5, y + 10, 5, 4); ctx.fillRect(x + 14, y + 10, 5, 4); ctx.fillStyle = '#c9d0d8'; ctx.fillRect(x + 3, y + 22, 18, 3); }
@@ -773,7 +778,8 @@
     ctx.fillStyle = 'rgba(74,90,110,0.5)'; ctx.fillRect(16, 54, wPanel - 16, 2);
     // 2) lượt hồi: bình xanh + số
     const nHoi = L.hoiMax, con = pl.luotHoi || 0;
-    for (let i = 0; i < nHoi; i++){ const x = X0 + 11 + i * 28, y = 74;
+    for (let i = 0; i < nHoi; i++){ const x = X0 + 11 + i * 28, y = 74, BI = V1.IMG[i < con ? 'hud_binh_day' : 'hud_binh_rong'];
+      if (BI){ const h = 28, w = Math.round(BI.width * h / BI.height); ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(BI, Math.round(x - w / 2), y - 16, w, h); ctx.restore(); continue; }   // bình hồi (ChatGPT vẽ)
       ctx.fillStyle = '#05060a'; ctx.beginPath(); ctx.arc(x, y, 12, 0, 6.283); ctx.fill(); ctx.fillRect(x - 4, y - 17, 8, 7);
       ctx.fillStyle = i < con ? '#78e6e6' : '#1a2b3d'; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.283); ctx.fill();
       if (i < con){ ctx.fillStyle = '#e8ffff'; ctx.fillRect(x - 4, y - 5, 3, 4); } }
