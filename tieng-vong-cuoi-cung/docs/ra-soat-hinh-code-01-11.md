@@ -4,7 +4,13 @@
 bia chỉ đường, cọc chuông, vết nứt bí mật, dấu báo đòn, nút điều khiển, cần di chuyển, hiệu ứng trúng đòn (vừa đưa vào game).
 Vừa bỏ: dấu khối đỏ vẽ bằng code dưới chân Vọng Tàn (đè lên nứt đất ChatGPT).
 
-## Còn vẽ bằng code – cần ChatGPT vẽ
+## Đã thay tiếp (02/11)
+- Ô máu, bình hồi, biểu tượng Thẻ Tên / Lõi Vọng Tàn / Hát Vọng, chuông khoá cửa (tấm 2, art/giao-dien/hud)
+- Trùm: vùng báo Quét Chuông, báo Gõ Không Tiếng, vòng đích + mặt nạ rơi, cột sóng, vệt quét, vòng âm; dây vải Màn Tang (tấm 3, art/hieu-ung/trum)
+- Song rễ chắn cửa vốn đã dùng hình dây leo ChatGPT, chỉ thay chuông khoá
+- Còn lại: khung bảng HUD (giữ nền mờ), gạch tường phòng demo (đã có ảnh nền)
+
+## Danh sách gốc (01/11)
 
 | Nhóm | Thứ | Ở đâu |
 |---|---|---|

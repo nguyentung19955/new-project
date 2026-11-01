@@ -347,6 +347,14 @@
      • Gõ Không Tiếng: vạch đỏ + mũi tên hai bên chân (sóng chạy dọc sàn → nhảy). */
   const NUT = [[[150, 70], [140, 95], [152, 120], [138, 150], [146, 176]], [[95, 108], [110, 130], [100, 150], [118, 172]],
     [[206, 98], [195, 124], [212, 146], [200, 170]], [[60, 160], [80, 172], [72, 192]], [[232, 150], [216, 166], [226, 186]], [[140, 95], [120, 88], [104, 96]]];
+  // vẽ khung k của dải n khung ngang (ChatGPT vẽ) vào hình chữ nhật (x, y, w, h); lat = lật ngang quanh tâm
+  function oKhung(im, n, k, x, y, w, h, lat, a){
+    if (!im) return false; const cw = im.width / n; k = Math.max(0, Math.min(n - 1, k | 0));
+    ctx.save(); if (a !== undefined) ctx.globalAlpha *= a; ctx.imageSmoothingEnabled = false;
+    if (lat){ ctx.translate(Math.round(x + w / 2), 0); ctx.scale(-1, 1); x = -w / 2; }
+    ctx.drawImage(im, k * cw, 0, cw, im.height, Math.round(x), Math.round(y), Math.round(w), Math.round(h)); ctx.restore(); return true;
+  }
+  V1.oKhung = oKhung;
   function veBaoTrum(q){
     const fx = q.x + q.w / 2, fy = q.y + q.h, f = (E.S.frame >> 2) % 2;
     // nứt đỏ
@@ -369,6 +377,12 @@
     if (q.keoQuet > 0 || q.dangQuet){
       const k = q.dangQuet ? 1 : q.keoQuet, dai = q.quetDai || 190, x0 = fx + q.face * 24, x1 = x0 + q.face * dai, xa = Math.min(x0, x1), H = 80;
       ctx.save();
+      const IQ = V1.IMG.tr_bao_quet;
+      if (IQ){   // vùng báo quét (ChatGPT vẽ): sáng dần theo k, mũi tên chỉ hướng quét
+        oKhung(IQ, 4, q.dangQuet ? 3 : Math.min(3, k * 4), xa, fy - 92, dai, 96, q.face < 0, f ? 1 : 0.85);
+        ctx.fillStyle = 'rgba(255,220,120,0.9)'; const L = dai * k; ctx.fillRect(Math.round(q.face > 0 ? x0 : x0 - L), fy - 98, Math.round(L), 4);
+        ctx.restore();
+      } else {
       ctx.fillStyle = 'rgba(210,40,30,' + (0.14 + 0.26 * k) * (f ? 1 : 0.8) + ')'; ctx.fillRect(Math.round(xa), fy - H, dai, H);
       ctx.fillStyle = 'rgba(255,70,40,0.95)'; ctx.fillRect(Math.round(xa), fy - 4, dai, 4);   // mép sàn của vùng
       ctx.strokeStyle = 'rgba(255,190,80,' + (0.55 + 0.45 * f) + ')'; ctx.lineWidth = 2; ctx.setLineDash([8, 6]);
@@ -380,9 +394,13 @@
       for (let i = 0; i < 3; i++){ const ax = x0 + q.face * (dai * (0.3 + i * 0.25)), ay = fy - H / 2;
         ctx.beginPath(); ctx.moveTo(ax + q.face * 10, ay); ctx.lineTo(ax - q.face * 6, ay - 12); ctx.lineTo(ax - q.face * 6, ay + 12); ctx.closePath(); ctx.fill(); }
       ctx.restore();
+      }
     }
     // Gõ Không Tiếng: vạch đỏ hai bên chân lúc giơ chuông
-    if (q.st === 'go' && q.baoTruoc){
+    if (q.st === 'go' && q.baoTruoc && V1.IMG.tr_bao_quet){   // Gõ Không Tiếng: dải báo đỏ hai bên chân (ChatGPT vẽ)
+      for (const d of [-1, 1]) oKhung(V1.IMG.tr_bao_quet, 4, f ? 3 : 2, d > 0 ? fx + 40 : fx - 40 - 200, fy - 64, 200, 68, d < 0);
+    }
+    else if (q.st === 'go' && q.baoTruoc){
       ctx.save();
       for (const d of [-1, 1]){
         const xs = fx + d * 40;
@@ -397,6 +415,7 @@
     for (const n of G.nguy){
       if (n.loai !== 'mat_na' || n.bao <= 0) continue;
       const k = clampN(1 - n.bao / 30, 0, 1), x = n.xDich, y = n.yDat, top = Math.max(n.yTren, (V1.CAM ? V1.CAM.y : 0));
+      if (oKhung(V1.IMG.tr_dich_mat_na, 3, k * 3, x - 50, y - 40, 100, 42, false, f ? 1 : 0.8)) continue;   // vòng đích (ChatGPT vẽ)
       ctx.fillStyle = 'rgba(255,190,80,' + (0.06 + 0.12 * k) + ')'; ctx.fillRect(Math.round(x - 16), Math.round(top), 32, Math.round(y - top));
       ctx.strokeStyle = 'rgba(255,90,50,' + (0.55 + 0.45 * f) + ')'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.ellipse(x, y - 3, 26 - 8 * k, 7 - 2 * k, 0, 0, 6.283); ctx.stroke();
@@ -663,10 +682,15 @@
   }
   function veNguy(){
     for (const n of G.nguy){
-      if (n.loai === 'song'){
+      if (n.loai === 'song' && V1.IMG.tr_cot_song){   // cột sóng âm (ChatGPT vẽ)
+        const s = (n.h + 24) / 108, w = 137 * s; oKhung(V1.IMG.tr_cot_song, 4, n.t < 4 ? 0 : 1 + ((n.t >> 2) & 1), n.x - w / 2, n.y - 108 * s + 6, w, 108 * s);
+      } else if (n.loai === 'song'){
         const x = n.x, y = n.y, h = n.h;
         ctx.fillStyle = 'rgba(207,216,230,0.25)'; ctx.fillRect(x - n.w / 2 - 6, y - h - 6, n.w + 12, h + 6);
         for (let i = 0; i < 5; i++){ const hh = h * (0.4 + 0.6 * Math.abs(Math.sin((n.t + i * 3) / 3))); ctx.fillStyle = i % 2 ? '#cfd8e6' : '#947666'; ctx.fillRect(Math.round(x - n.w / 2 + i * 6), Math.round(y - hh), 5, Math.round(hh)); }
+      } else if (n.loai === 'quet' && V1.IMG.tr_vet_quet){   // vệt quét chuông (ChatGPT vẽ)
+        const a = n.t <= 12 ? 1 : Math.max(0, 1 - (n.t - 12) / 14), L = n.dai * Math.min(1, n.t / 6), kk = n.t < 4 ? 0 : n.t < 10 ? 1 : n.t < 18 ? 2 : 3;
+        oKhung(V1.IMG.tr_vet_quet, 4, kk, n.dir > 0 ? n.x : n.x - n.dai, n.y - n.h - 10, n.dai, n.h + 14, n.dir < 0, a);
       } else if (n.loai === 'quet'){   // vệt quét chuông: dải cung đồng-xám sát sàn, mờ dần
         const k = Math.min(1, n.t / 6), a = n.t <= 12 ? 0.9 : Math.max(0, 0.9 - (n.t - 12) / 14), L = n.dai * k;
         ctx.save(); ctx.translate(n.x, n.y); ctx.scale(n.dir, 1);
@@ -675,16 +699,21 @@
         ctx.strokeStyle = 'rgba(207,216,230,' + a * 0.8 + ')'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(0, -8, L * 0.8, n.h - 26, 0, -Math.PI / 2, 0); ctx.stroke();
         for (let i = 0; i < 4; i++){ ctx.fillStyle = 'rgba(148,118,102,' + a + ')'; ctx.fillRect(Math.round(L * (0.3 + i * 0.18)), -6 - ((n.t + i * 5) % 8), 4, 4); }
         ctx.restore();
+      } else if (n.loai === 'vong' && V1.IMG.tr_dich_mat_na){   // vòng âm lan trên sàn (ChatGPT vẽ); vòng giả mờ hơn
+        const w = n.r * 2 * 1.35; oKhung(V1.IMG.tr_dich_mat_na, 3, 0, n.x - w / 2, n.y - w * 0.3 + n.r * 0.2, w, w * 0.4, false, (1 - n.t / 40) * (n.gia ? 0.45 : 0.9));
       } else if (n.loai === 'vong'){
         ctx.strokeStyle = n.gia ? 'rgba(154,163,173,' + (1 - n.t / 40) + ')' : 'rgba(207,216,230,' + (1 - n.t / 40) * 0.8 + ')';
         ctx.lineWidth = n.gia ? 2 : 4; ctx.setLineDash(n.gia ? [6, 6] : []); ctx.beginPath(); ctx.ellipse(n.x, n.y, n.r, n.r * 0.45, 0, 0, 6.283); ctx.stroke(); ctx.setLineDash([]);
       } else if (n.loai === 'mat_na'){
         if (n.bao > 0){   // dấu báo trên sàn + bóng đổ lớn dần
           const k = 1 - n.bao / 30, a = (E.S.frame >> 2) % 2 ? 0.9 : 0.5;
-          ctx.fillStyle = 'rgba(255,190,80,' + a + ')'; ctx.fillRect(Math.round(n.xDich - 20), Math.round(n.yDat - 4), 40, 4);
+          if (!V1.IMG.tr_dich_mat_na){ ctx.fillStyle = 'rgba(255,190,80,' + a + ')'; ctx.fillRect(Math.round(n.xDich - 20), Math.round(n.yDat - 4), 40, 4); }
           ctx.fillStyle = 'rgba(0,0,0,' + (0.25 + 0.4 * clampN(k, 0, 1)) + ')'; ctx.beginPath(); ctx.ellipse(n.xDich, n.yDat - 2, 8 + 12 * clampN(k, 0, 1), 4, 0, 0, 6.283); ctx.fill();
           continue;
         }
+        const MR = V1.IMG.tr_mat_na_roi;
+        if (MR){ const w = 44, h = MR.height * w / MR.width; ctx.save(); ctx.imageSmoothingEnabled = false;   // mặt nạ rơi + vệt sáng (ChatGPT vẽ)
+          ctx.drawImage(MR, Math.round(n.x + n.w / 2 - w / 2), Math.round(n.y + n.h / 2 - h * 0.78), Math.round(w), Math.round(h)); ctx.restore(); continue; }
         ctx.save(); ctx.translate(n.x + n.w / 2, n.y + n.h / 2); ctx.rotate(n.xoay);
         ctx.fillStyle = '#0d0f1c'; ctx.beginPath(); ctx.ellipse(0, 0, 15, 18, 0, 0, 6.283); ctx.fill();
         ctx.fillStyle = '#e9e2d0'; ctx.beginPath(); ctx.ellipse(0, 0, 12, 15, 0, 0, 6.283); ctx.fill();

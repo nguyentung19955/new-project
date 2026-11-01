@@ -48,8 +48,12 @@
   function veManTang(q){
     if (q.st === 'chet') return;
     const fx = q.x + q.w / 2, tran = tranTren(fx, q.y + 4) - 12, day = q.y + q.h * 0.75;
-    const bao = q.st === 'danh' && q.baoTruoc;
-    for (const lx of [-30, 24]){
+    const bao = q.st === 'danh' && q.baoTruoc, DV = V1.IMG && V1.IMG.tr_day_vai;
+    if (DV){   // dây vải treo (ChatGPT vẽ): rung mạnh + rực đỏ khi sắp vồ
+      for (const lx of [-30, 24]){ const lech = bao ? Math.round(Math.sin(E.S.frame * 1.1 + lx) * 4) : Math.round(Math.sin(E.S.frame * 0.03 + lx) * 1);
+        V1.oKhung(DV, 2, bao ? 1 : 0, fx + lx + lech - 10, tran, 22, day - tran + 10); }
+    }
+    else for (const lx of [-30, 24]){
       for (let y = tran; y < day; y += PX){
         const lech = bao ? Math.round(Math.sin((y - tran) / 10 + E.S.frame * 1.1 + lx) * 4) : Math.round(Math.sin((y - tran) / 30 + E.S.frame * 0.03) * 1);
         o(fx + lx + lech, y, 3, 3, '#4a2c1c');
