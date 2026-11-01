@@ -27,15 +27,21 @@ dao(8, 13, 16, 31)                         # giếng leo C→A
 dao(64, 70, 33, 38); hang(68, 78, 23, 38, 3)  # hầm C→D + D phòng cổng
 dao(58, 68, 9, 14); hang(66, 78, 3, 14, 3)    # nhánh E
 dac(0, 79, 39, 41)
-PL = [(14, 37, 40), (11, 49, 52), (8, 40, 42), (16, 55, 56), (22, 52, 53), (26, 57, 58), (28, 12, 13), (24, 8, 9), (20, 12, 13), (32, 70, 72), (34, 44, 46)]
+PL = [(14, 37, 40), (11, 49, 52), (8, 40, 42), (16, 55, 56), (22, 53, 54), (26, 57, 58), (28, 11, 12), (24, 8, 9), (20, 11, 12), (32, 70, 72), (34, 44, 46),
+      (36, 40, 41), (36, 74, 76)]   # bậc phụ: lên bệ giữa hang C, lên bệ cao phòng cổng D
 DAY_COT = {26, 47, 64, 61, 16}
 PL = [(r, c0, c1) for r, c0, c1 in PL]
 for r, c0, c1 in PL: dac(c0, c1, r, r)
 PLAT = {(r, c) for r, c0, c1 in PL for c in range(c0, c1 + 1)}
-DAY_LEO = [(26, 4, 15), (47, 4, 17), (64, 24, 38), (61, 9, 13), (16, 30, 38)]   # (cột, hàng đầu, hàng cuối)
+DAY_LEO = [(26, 4, 15), (47, 4, 17), (64, 24, 38), (61, 9, 13), (16, 30, 38),   # (cột, hàng đầu, hàng cuối)
+           (13, 16, 38),    # rễ rủ từ miệng giếng A (sát mép phải giếng) xuống tận sàn C: leo về lối vào
+           (52, 18, 38)]    # rễ rủ từ miệng giếng B (sát mép trái giếng) xuống tận sàn C: leo về đại sảnh chuông
 for c, r0, r1 in DAY_LEO:
-    for r in range(r0, r1 + 1):
+    o = [r for r in range(r0, r1 + 1) if g[r][c] != '#']
+    for r in o:
         if g[r][c] == '.': g[r][c] = 'H'
+    # dây chỉ được là một đoạn liền (không xuyên qua bệ/đá)
+    assert all(b - a == 1 for a, b in zip(o, o[1:])), f'dây cột {c} xuyên qua đá/bệ'
 S = lambda c, r: c < 0 or c >= C or r >= R or (r >= 0 and g[r][c] == '#')
 ld = lambda f: Image.open(f).convert('RGBA')
 def dim(im, k):
