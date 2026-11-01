@@ -75,9 +75,13 @@ Ký tự lạ khác coi như `.`.
 - Đi chạm mép phòng tại cửa → màn tối chuyển cảnh → sang phòng đích.
 - Cửa đi lên (`tren`): nhân vật được đẩy nhẹ lên để không rơi lại; nên có sàn/dây ngay dưới cửa `duoi` của phòng trên.
 
+### Quy ước `hang` cho quái / vật phẩm / Chuông Lưu / `bat_dau`
+- Ghi ô **trống** nơi vật đứng → chân đặt ở **đáy** ô đó (khuyên dùng).
+- Nếu lỡ ghi ô **đặc** (`#`, `N`, `=`) – kiểu phòng demo – thì chân đặt ở **mặt trên** ô đó. Cả hai đều chạy.
+
 ### Quái `quai`
 - `loai`: khoá trong `game/thu-mat-na/quai.json` (vd `cau` Khuyết Cẩu, `vai` Hồn Vải, `man` Màn Tang, `ken` Kèn Câm, `tan` Vọng Tàn…). Luồng A sẽ in danh sách khoá đúng ở cuối file này.
-- `cot, hang`: ô quái đứng (chân ở đáy ô). `tu, den`: cột giới hạn đi tuần (tuỳ chọn). `cao`: độ cao bay (ô) cho quái bay (tuỳ chọn).
+- `cot, hang`: ô quái đứng (chân ở đáy ô). `tu, den`: cột giới hạn đi tuần (tuỳ chọn). `cao`: độ cao bay cho quái bay (tuỳ chọn; số ≤ 12 hiểu là **ô**, lớn hơn hiểu là px). Quái treo (`tang`) tự bám vào trần gần nhất phía trên.
 
 ### Vật phẩm `vat_pham`
 - `id` **duy nhất toàn vùng** (dùng để lưu "đã nhặt").
