@@ -48,7 +48,7 @@ const CAI = () => {
   await moTrang('&moi=1&hitbox=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(200);
   const datTran = async (xTrum, xNV, chanNV) => ev(async ([xT, xN, cN]) => {
     const {G, E, V1} = TV; G.luu.kho.chuong_vo = 3; G.luu.trumHa = false;
-    await H.vao('P12', xN, cN || 17 * 48); const q = G.trum; q.x = xT - q.w / 2; G.dongCua = true; q.st = 'dung'; q.cd = 9999; q.hp = 300; q.pha = 1;
+    await H.vao('P12', xN, cN || 13 * 48); const q = G.trum; q.x = xT - q.w / 2; G.dongCua = true; q.st = 'dung'; q.cd = 9999; q.hp = 300; q.pha = 1;
     E.pl.hp = E.P.maxHp; E.pl.x = xN - E.pl.w / 2; if (cN) E.pl.y = cN - E.pl.h; H.chay(2, '', () => H.yen()); return H.than();
   }, [xTrum, xNV, chanNV]);
   const MEM_MAX = 10 + 4.2 + 1;   // lấn tối đa cho phép: MEM 10 px + 1 bước chạy
@@ -71,18 +71,18 @@ const CAI = () => {
   ok('Nhảy đôi qua trùm: không kẹt trong thân, đáp đất', !s.cuoiChong && s.cuoiDat && !s.trongDa && !s.duoiSan, s);
   // d) đáp sát 2 bên (rơi từ trên xuống mép thân)
   for (const [ten, dx] of [['mép trái', -52], ['mép phải', 52], ['giữa đầu', 0], ['lệch trái 20', -20]]){
-    B = await datTran(1500, 1500 + dx, 17 * 48 - 260);
+    B = await datTran(1500, 1500 + dx, 13 * 48 - 260);
     s = await ev(() => H.kb(90, ''));
     ok('Rơi xuống ' + ten + ' thân trùm: trượt xuống một bên, không đứng trên đầu, không lọt nền', !s.cuoiChong && s.cuoiDat && !s.trongDa && !s.duoiSan && s.nhayMax <= 6.5, s);
     if (dx === 0) await chup('va-cham-roi-giua-dau');
   }
   // e) trùm áp sát tường PHẢI (hộp trùm chạm tường – vị trí sát nhất trùm có thể tới): chạy vào, rơi vào khe, thoát ra
-  const XT = 62 * 48 - 88;   // tâm trùm khi hộp 176 px chạm tường phải (cột 62) → thân chắn cách tường 38 px
+  const XT = 38 * 48 - 88;   // tâm trùm khi hộp 176 px chạm tường phải (cột 38 – phòng trùm gọn 40×16) → thân chắn cách tường 38 px
   B = await datTran(XT, XT - 260);
   r = await ev(() => { const s = H.kb(120, 'r'); return [s, TV.G.trum.x | 0]; });
   ok('Chạy vào trùm đang áp tường: bị chặn mềm, không kẹt trong đá, không lọt nền', !r[0].trongDa && !r[0].duoiSan && r[0].lanMax <= MEM_MAX, r);
   for (const [ten, dx] of [['khe tường–trùm', 69], ['sát mép thân trong khe', 56]]){
-    B = await datTran(XT, XT + dx, 17 * 48 - 220);
+    B = await datTran(XT, XT + dx, 13 * 48 - 220);
     r = await ev(() => { const s = H.kb(100, 'l'); const tt = Object.assign({}, TV.V1.TT); return [s, TV.G.trum.x | 0, tt.lanKep, tt.lanQua]; });
     // (giữ ← khi rơi thì có thể đáp lên đầu thân → trượt xuống phía tường; yêu cầu: không giật > 6,5 px/khung, kết thúc không chồng)
     ok('Rơi vào ' + ten + ' (giữ ← ép vào trùm): không kẹt trong đá, không lọt nền, trượt ra không giật', !r[0].trongDa && !r[0].duoiSan && r[0].cuoiDat && !r[0].cuoiChong && r[0].nhayMax <= 6.5, r);
@@ -90,7 +90,7 @@ const CAI = () => {
     ok('  …thoát ra được (nhảy đôi qua trùm sang trái)', r[0] && r[1] && !r[2], r);
   }
   await chup('va-cham-ap-tuong');
-  r = await ev(async () => { const {E, G} = TV; await H.vao('P12', 2 * 48 + 20, 17 * 48); const q = G.trum; G.dongCua = true; q.st = 'dung'; q.cd = 9999;
+  r = await ev(async () => { const {E, G} = TV; await H.vao('P12', 2 * 48 + 20, 13 * 48); const q = G.trum; G.dongCua = true; q.st = 'dung'; q.cd = 9999;
     q.x = 2 * 48 + 30; const s = H.kb(60, ''); return [s, (q.x | 0), E.pl.x | 0, TV.V1.TT.lanKep, TV.V1.TT.lanQua]; });
   ok('Đặt người chơi KẸP sẵn giữa tường và trùm: trùm bị đẩy lùi / cho đi xuyên, không kẹt', !r[0].trongDa && !r[0].cuoiChong && r[0].hpMat === 0, r);
   // f) đánh khi đang chồng thân
@@ -151,7 +151,7 @@ const CAI = () => {
   };
   for (let lan = 1; lan <= 3; lan++){
     await moTrang('&moi=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(150);
-    const kq = await tranDau('P12', 30 * 48, 17 * 48, 6); xetBao(kq, 'P12 trận ' + lan);
+    const kq = await tranDau('P12', 30 * 48, 13 * 48, 6); xetBao(kq, 'P12 trận ' + lan);
   }
   // phòng thử T3 (?thu=1) – nơi trước đây có lần không thấy Mưa Mặt Nạ
   for (let lan = 1; lan <= 3; lan++){
@@ -163,7 +163,7 @@ const CAI = () => {
   }
   // ảnh báo đòn
   await moTrang('&moi=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(150);
-  await ev(async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; await H.vao('P12', 33 * 48, 17 * 48); G.dongCua = true; H.chay(1, ''); H.chay(30, ''); });
+  await ev(async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; await H.vao('P12', 33 * 48, 13 * 48); G.dongCua = true; H.chay(1, ''); H.chay(30, ''); });
   await chup('bao-gam');
   for (const [st, n, ten] of [['quet', 20, 'bao-quet-keo-nguoc'], ['go', 18, 'bao-go'], ['tha', 18, 'bao-mua-mat-na']]){
     await ev(([st, n]) => { const {G, E} = TV, q = G.trum; H.chay(90, '', () => { q.cd = 999; if (q.st !== 'chuyen_pha') q.st = 'dung'; E.pl.hp = 6; }); G.nguy.length = 0;
@@ -176,7 +176,7 @@ const CAI = () => {
   // a) chết cùng khung trùm chết
   await moTrang('&moi=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(150);
   r = await ev(async () => { const {G, E, V1} = TV; G.luu.kho.chuong_vo = 3; G.luu.chuong = {phong:'P11', cot:50, hang:18}; G.luu.manh = 40; V1.ghiLuu();
-    await H.vao('P12', 33 * 48, 17 * 48); G.dongCua = true; H.chay(2, ''); const q = G.trum;
+    await H.vao('P12', 33 * 48, 13 * 48); G.dongCua = true; H.chay(2, ''); const q = G.trum;
     // CÙNG MỘT KHUNG: người chơi trúng đòn chết + trùm hết máu
     E.pl.iframes = 0; E.pl.hp = 1; E.hurt(1, 5); q.hp = 0; q.def.trung(q, 10, 1);
     const luu = JSON.parse(localStorage.getItem('tvcc-vung1')); return [E.pl.dead, q.st, luu.trumHa]; });
@@ -189,11 +189,11 @@ const CAI = () => {
   // b) lưu/tải giữa trận
   await moTrang('&moi=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(150);
   await ev(async () => { const {G, E, V1} = TV; G.luu.kho.chuong_vo = 3; G.luu.chuong = {phong:'P11', cot:50, hang:18}; G.luu.manhGui = 25; V1.ghiLuu();
-    await H.vao('P12', 33 * 48, 17 * 48); G.dongCua = true; H.chay(60, ''); const q = G.trum; q.hp = 120; q.pha = 2; G.luu.manh = 33; });
+    await H.vao('P12', 33 * 48, 13 * 48); G.dongCua = true; H.chay(60, ''); const q = G.trum; q.hp = 120; q.pha = 2; G.luu.manh = 33; });
   await moTrang(''); await ev(() => TV.choi(false)); await pg.waitForTimeout(200);
   r = await ev(() => [TV.G.id, TV.G.luu.trumHa, TV.G.luu.kho.chuong_vo, TV.G.luu.manhGui]);
   ok('Tải lại GIỮA trận: về Chuông Lưu P11, trùm chưa tính hạ, giữ 3 Chuông Vỡ + Mảnh Âm đã gửi', r[0] === 'P11' && r[1] === false && r[2] === 3 && r[3] === 25, r);
-  r = await ev(async () => { await H.vao('P12', 33 * 48, 17 * 48); const q = TV.G.trum; return [!!q, q && q.hp, q && q.pha, q && q.st, TV.V1.TRUM_DEF.mau]; });
+  r = await ev(async () => { await H.vao('P12', 33 * 48, 13 * 48); const q = TV.G.trum; return [!!q, q && q.hp, q && q.pha, q && q.st, TV.V1.TRUM_DEF.mau]; });
   ok('  …vào lại P12: trùm đủ máu (= mau trong TRUM_DEF), pha 1, đang ngủ chờ', r[0] && r[1] === r[4] && r[2] === 1 && r[3] === 'cho', r);
   // tải lại lúc trùm đang gục (trước khi hiện màn thắng)
   await ev(() => { const {G} = TV, q = G.trum; G.dongCua = true; H.chay(2, ''); q.hp = 0; q.def.trung(q, 1, 1); H.chay(30, ''); });
@@ -206,10 +206,10 @@ const CAI = () => {
   // c) túi Mảnh Âm khi ngã trong phòng trùm
   await moTrang('&moi=1'); await ev(() => TV.choi(true)); await pg.waitForTimeout(150);
   r = await ev(async () => { const {G, E, V1} = TV; G.luu.kho.chuong_vo = 3; G.luu.chuong = {phong:'P11', cot:50, hang:18}; V1.ghiLuu();
-    await H.vao('P12', 36 * 48, 17 * 48); G.dongCua = true; H.chay(2, ''); G.luu.manh = 50; E.pl.iframes = 0; E.pl.hp = 1; E.hurt(1, 1); return [G.luu.manh]; });
+    await H.vao('P12', 20 * 48, 13 * 48); G.dongCua = true; H.chay(2, ''); G.luu.manh = 50; E.pl.iframes = 0; E.pl.hp = 1; E.hurt(1, 1); return [G.luu.manh]; });
   await pg.waitForFunction(() => { H.chay(10, ''); return TV.G.id === 'P11' && !TV.G.chuyen; }, null, {timeout:20000, polling:50});
   r = await ev(async () => { const {G, E, V1} = TV, t = G.luu.tui; const o = [G.luu.manh, t && t.phong, t && t.so];
-    await H.vao('P12', 3 * 48, 17 * 48); const dat = E.datPt(t.x, t.y + 2), trongDa = E.solidPt(t.x, t.y - 10);
+    await H.vao('P12', 3 * 48, 13 * 48); const dat = E.datPt(t.x, t.y + 2), trongDa = E.solidPt(t.x, t.y - 10);
     // đi tới túi (trùm ngủ, thân chắn có thể nằm trên túi → vẫn nhặt được nhờ hộp nhặt rộng)
     const n = H.chay(900, () => (E.pl.x + E.pl.w / 2 < t.x ? 'r' : 'l'), () => { E.pl.hp = 6; return !G.luu.tui; });
     return o.concat([dat, trongDa, G.luu.manh, G.luu.tui, n]); });
@@ -233,7 +233,7 @@ const CAI = () => {
     await p2.goto(URL + '?tu=1&moi=1&safe=47,0,47,21'); await p2.waitForFunction(() => window.TV && TV.xong);
     await p2.evaluate(CAI); await p2.evaluate(() => TV.choi(true)); await p2.waitForTimeout(150);
     for (const [ten, fn] of [['p01', async () => { const {G, V1} = TV; G.luu.manh = 37; G.luu.kho.chuong_vo = 1; await H.vao('P01', 10 * 48, null); H.chay(60, ''); }],
-      ['trum', async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; await H.vao('P12', 30 * 48, 17 * 48); G.dongCua = true; H.chay(1, ''); H.chay(80, '', () => { E.pl.hp = 4; E.pl.iframes = 5; }); G.trum.hp = 190; H.chay(3, ''); }]]){
+      ['trum', async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; await H.vao('P12', 30 * 48, 13 * 48); G.dongCua = true; H.chay(1, ''); H.chay(80, '', () => { E.pl.hp = 4; E.pl.iframes = 5; }); G.trum.hp = 190; H.chay(3, ''); }]]){
       await p2.evaluate(fn); await p2.evaluate(() => TV.V1.ve(0)); await p2.waitForTimeout(80);
       await p2.screenshot({path:path.join(OUT, 'dien-thoai-' + w + 'x' + h + '-' + ten + '.png')});
       const d = await p2.evaluate(() => {

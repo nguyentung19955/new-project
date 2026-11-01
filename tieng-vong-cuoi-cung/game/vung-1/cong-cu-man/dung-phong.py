@@ -566,22 +566,22 @@ def P11():
 
 
 # =====================================================================================================
-# P12 ĐÀN CHUÔNG CÂM – 64×22 – phòng trùm rộng, sàn phẳng, vòm cao, 2 sàn mỏng né.
+# P12 ĐÀN CHUÔNG CÂM – 40×16 – phòng trùm GỌN (theo góp ý: phòng cũ 64×22 quá rộng, trống), sàn phẳng, vòm vừa đủ nhảy đôi, 2 sàn mỏng né.
 def P12():
-    p = Phong('P12', 'Đàn Chuông Câm', 64, 22, 176, 50)
-    p.bat_dau = dict(cot=3, hang=16)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
-    p.bau(32, 9, 30, 11)
-    p.hop(2, 3, 61, 16)
-    p.dac(0, 17, 63, 21)                        # sàn phẳng (đứng 16)
-    p.san(12, 17, 12, '=')
-    p.san(46, 51, 12, '=')
-    p.them_cua('P12-tay', 'trai', 14, 'P11', 'P11-dong')
+    p = Phong('P12', 'Đàn Chuông Câm', 40, 16, 176, 54)
+    p.bat_dau = dict(cot=3, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
+    p.bau(20, 6, 18, 5)
+    p.hop(2, 3, 37, 12)
+    p.dac(0, 13, 39, 15)                        # sàn phẳng (đứng 12)
+    p.san(7, 11, 8, '=')
+    p.san(28, 32, 8, '=')
+    p.them_cua('P12-tay', 'trai', 10, 'P11', 'P11-dong')
     p.trum = True
-    p.trum_o = dict(cot=40, hang=16)
-    p.trang_tri('P12-tuong-me', 'tuong_mau_chuong', 40, 16, ghi='vị trí trùm Mẫu Chuông Rỗng')
-    p.trang_tri('P12-ong-chuong', 'ong_chuong_cam', 32, 2, ghi='dàn ống chuông câm treo trần (nền)')
-    L(p, (10, 6), (32, 4), (54, 6))
-    p.ghi_chu = 'Phòng trùm: sàn phẳng cột 1–62 hàng đứng 16; trùm sinh ở (40,16).'
+    p.trum_o = dict(cot=27, hang=12)
+    p.trang_tri('P12-tuong-me', 'tuong_mau_chuong', 27, 12, ghi='vị trí trùm Mẫu Chuông Rỗng')
+    p.trang_tri('P12-ong-chuong', 'ong_chuong_cam', 20, 2, ghi='dàn ống chuông câm treo trần (nền)')
+    L(p, (6, 4), (20, 3), (34, 4))
+    p.ghi_chu = 'Phòng trùm gọn: sàn phẳng cột 1–38 hàng đứng 12; trùm sinh ở (27,12).'
     return p
 
 

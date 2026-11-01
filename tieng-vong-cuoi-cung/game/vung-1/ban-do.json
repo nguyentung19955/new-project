@@ -12,7 +12,7 @@
   {"id": "P06", "ten": "Hố Vỏ", "x": 2.6, "y": 3.4, "rong": 5.0, "cao_bd": 3.6, "x_o": 26, "y_o": 34, "w": 50, "h": 36, "chuong_luu": false, "trum": false, "tinh_anh": false},
   {"id": "P09", "ten": "Miệng Kèn", "x": 7.6, "y": 5.0, "rong": 4.4, "cao_bd": 4.4, "x_o": 76, "y_o": 50, "w": 44, "h": 44, "chuong_luu": false, "trum": false, "tinh_anh": false},
   {"id": "P11", "ten": "Sảnh Chuông Vỡ", "x": 12.0, "y": 4.8, "rong": 5.6, "cao_bd": 2.4, "x_o": 120, "y_o": 48, "w": 56, "h": 24, "chuong_luu": true, "trum": false, "tinh_anh": true},
-  {"id": "P12", "ten": "Đàn Chuông Câm", "x": 17.6, "y": 5.0, "rong": 6.4, "cao_bd": 2.2, "x_o": 176, "y_o": 50, "w": 64, "h": 22, "chuong_luu": false, "trum": true, "tinh_anh": false}
+  {"id": "P12", "ten": "Đàn Chuông Câm", "x": 17.6, "y": 5.4, "rong": 4.0, "cao_bd": 1.6, "x_o": 176, "y_o": 54, "w": 40, "h": 16, "chuong_luu": false, "trum": true, "tinh_anh": false}
  ],
  "ket_noi": [
   {"a": "P01-dong", "b": "P02-tay"},
