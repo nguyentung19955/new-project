@@ -1,0 +1,32 @@
+TVCC – DUYỆT VÙNG 1, VÒNG 2 (ChatGPT, 01/11/2026 – ý chính từ TVCC_Duyet2_Vung1.txt)
+
+KẾT LUẬN: đạt mốc chơi thử chức năng (18/18 cửa, thoát dây, nhặt đồ, lưu/hồi sinh, mất 30% Mảnh Âm, tường bí mật, Vọng Tàn, boss đủ vòng). Chưa khoá chất lượng gameplay/boss. Lỗi xuyên thân boss phải sửa trước.
+
+1. HÌNH ẢNH / PHÒNG
+- Tốt: mép đá gồ ghề, bớt ô vuông; rễ/hài cốt/đèn đúng chất; Chuông Lưu có điểm sáng; boss có thanh máu + đổi pha.
+- Yếu: nhiều sàn ngang, khoảng trống lớn, thiếu địa danh; P01/P02/P04/P09 nhịp đi ngang giống nhau. Phân vai: P01 hướng dẫn; P02 phân nhánh cao-thấp; P03 xưởng chuông; P04 hành lang áp lực; P05 nghỉ; P09 đấu tầm xa (cần vật chắn tầm bắn Kèn Câm + tuyến cao né đạn); P11 tinh anh; P12 boss.
+- Ánh sáng: tối ở chân tường, góc, mép sàn. Giữ nền xa tối; mép mặt sàn đi được sáng hơn mặt đứng 15–25%; sáng cục bộ vật tương tác; không tăng sáng toàn màn.
+- Quái: viền sáng chọn lọc quanh đầu/tay tấn công, không neon toàn thân; cyan chỉ cho nhân vật.
+- HUD: máu quá nhỏ; tách rõ HP / lượt hồi / Mảnh Âm / 3 Chuông Vỡ, to hơn; thanh máu boss có tên + vạch 50%, không sát vùng nút.
+- Dẫn hướng: 1 dấu nhất quán cho lối chính (chuông nhỏ/ánh hổ phách), dấu khác cho bí mật (nứt + âm); P05 cho thấy cửa về P11/P12 và số Chuông Vỡ còn thiếu.
+- Chống nhàm: mỗi phòng 1 biến thể địa hình có mục đích (bậc cao thấp, hốc treo, sàn mỏng, ngách tường giả, dây vượt hố).
+
+2. BOSS
+- Cỡ 2–3× nhân vật: giữ; tách rõ vùng đầu/mặt nạ, tay rễ, miệng chuông, vùng gây sát thương.
+- THÂN CHẮN: NÊN CÓ – collider ở phần chuông/bụng (không gồm tay rễ, dây, gai), đẩy ngang mềm khi chồng lấn, không teleport; không kẹt người giữa boss và tường, không đẩy lọt nền; tách collider thân / hurtbox / hitbox.
+- Đọc đòn: gầm = rung vỏ + nứt đỏ, không gây sát thương; quét chuông kéo ngược 0,35–0,5 s rồi quét, vùng nguy hiểm thể hiện rõ; chuyển pha không gây sát thương vô hình. Pha 2 tăng nhịp/biến thể quỹ đạo, không chỉ tăng damage.
+- Sau MVP: thêm 1 chiêu ("Rễ Móc Mộ" hoặc "Chuông Ngược").
+- Camera giữ boss + nhân vật cùng thấy; rung màn ngắn.
+
+3. CASE KIỂM THỬ CÒN THIẾU
+A. Va chạm boss: chạy/dash/nhảy đôi/đáp sát 2 bên; boss áp tường; nhảy lên đầu; đánh khi chồng; chuyển pha khi người trong collider; chết cùng frame; tạm dừng lúc boss ra đòn.
+B. Chiến đấu: spam combo/dash/hồi máu; huỷ động tác mọi frame; bị đánh khi hồi máu; i-frame; nhiều đạn cùng lúc.
+C–E. Lưu/tải, đổi phòng, dây leo khi dash/nhảy đôi, thoát dây khi bị đánh.
+F. Điện thoại: iPhone ngang 19.5:9 và 16:9, safe-area; giữ đồng thời di chuyển+nhảy+chém+lướt; ngón tay che HUD; FPS; đổi tab; xoay màn.
+G. 5 người chơi mới, không hướng dẫn: thời gian tìm Chuông Lưu, lạc ở P02, không hiểu báo đòn boss, chết vì không thấy mép sàn.
+
+4. ƯU TIÊN
+P0: (1) collider thân boss + đẩy mềm, chống kẹt góc tường; (2) mọi báo đòn boss rõ ở tốc độ thật; (3) test chuyển pha, chết đồng thời, lưu/tải, túi Mảnh Âm, cửa boss không bị vượt; (4) đọc được mép sàn/hố và HUD trên màn hình thật.
+P1: phân vai + nhịp phòng P01/P02/P04/P09, địa hình né đạn, địa danh; ánh sáng vật tương tác, chỉ lối chính, số Chuông Vỡ thiếu; cân TTK boss; nút cảm ứng/safe-area/hiệu năng iPhone.
+P2: 1 chiêu boss pha 2; chi tiết riêng từng phòng; polish camera, bụi bước chân, hit flash, âm thanh, bản đồ bí mật.
+Tiêu chí khoá vòng 2: 0 lỗi xuyên/kẹt boss; 0 lỗi mất/nhân đôi tiến độ; người mới hiểu báo đòn 4 chiêu sau 1–2 lần; chơi iPhone ngang không che nút/HUD; đi P01→P12 và quay lại không cần debug.
