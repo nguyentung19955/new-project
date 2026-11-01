@@ -63,11 +63,12 @@ ganGoc = ndimage.binary_dilation(solid0 & ~(np.roll(solid0, 1, 1) & np.roll(soli
 giu = dai & ~ganGoc
 mask = np.where(giu, solid0, mask)
 mask = np.where(solid0 & (ndimage.distance_transform_edt(solid0) > 12), True, mask)
-mask = np.where(~solid0 & (ndimage.distance_transform_edt(~solid0) > 12), False, mask)
+mask = np.where(~solid0 & (ndimage.distance_transform_edt(~solid0) > 5), False, mask)
+mask |= solid0   # KHÔNG BAO GIỜ khoét vào ô va chạm: mép đá nhìn thấy luôn trùm ra ngoài hộp va chạm (bám tường không bị 'bám vào không khí')
 _l, _n = ndimage.label(mask); _s = ndimage.sum(np.ones_like(_l), _l, range(1, _n + 1)); mask &= ~np.isin(_l, np.nonzero(_s < 600)[0] + 1)   # bỏ đảo đá vụn
 _l, _n = ndimage.label(~mask); _s = ndimage.sum(np.ones_like(_l), _l, range(1, _n + 1)); mask |= np.isin(_l, np.nonzero(_s < 600)[0] + 1)    # lấp lỗ nhỏ
 d = ndimage.distance_transform_edt(mask)                       # khoảng cách tới khoảng trống (px)
-toi = np.clip(1 - d / 70.0, 0.0, 1.0) ** 1.4                    # sáng ở mép, chìm dần vào đen
+toi = np.clip(1 - d / 120.0, 0.0, 1.0) ** 1.2                    # sáng ở mép, chìm dần vào đen
 toi = toi * (0.85 + 0.15 * nhieu(14)) 
 k = (0.10 + 0.70 * toi) * 0.95
 YY, XX = np.mgrid[0:H, 0:W]
@@ -76,8 +77,12 @@ tex = fa[YY % 64, XX % 64, :3]
 a[..., :3] = np.clip(tex * k[..., None], 0, 255).astype(np.uint8)
 a[..., 3] = np.where(mask, 255, 0)
 # mép: dải tối 2px + viền trên/dưới (cỏ rễ, rủ trần) đặt theo mép THẬT
+sang = mask & ~ndimage.binary_erosion(mask, iterations=7)          # dải mép sáng rõ để thấy chỗ bám
+a[sang, :3] = np.clip(a[sang, :3].astype(float) * 1.35 + 6, 0, 255).astype(np.uint8)
 vien = mask & ~ndimage.binary_erosion(mask, iterations=2)
 a[vien, :3] = (a[vien, :3] * .55).astype(np.uint8)
+e2 = ndimage.binary_erosion(mask, iterations=2); ria = e2 & ~ndimage.binary_erosion(mask, iterations=4)   # đường viền sáng ấm (mép đá bắt ánh đèn)
+a[ria, :3] = np.clip(a[ria, :3].astype(float) * 0.5 + np.array([92, 58, 50]) * 0.9, 0, 255).astype(np.uint8)
 canh = Image.fromarray(a)
 topA, ceilA = np.array(top), np.array(ceil)
 for x in range(0, W, 1):
