@@ -31,8 +31,18 @@ const DongCoMN = (() => {
   function coSanMong(o, hang){
     if (hang < 0 || hang >= BD.HANG) return false;
     const T = BD.T, x0 = Math.floor(o.x / T), x1 = Math.floor((o.x + o.w - 0.001) / T);
-    for (let tx = x0; tx <= x1; tx++) if (tile(tx, hang) === '=') return true;
+    for (let tx = x0; tx <= x1; tx++) if (tile(tx, hang) === '=' || (!o.leo && BD.cau && BD.cau.has(tx + ',' + hang))) return true;
     return false;
+  }
+  // khe CHỈ RỘNG ĐÚNG 1 Ô mà dây leo chui qua, 2 bên sát vách đất → đi ngang qua như đường liền (không rơi);
+  // muốn xuống thì đứng ở dây bấm ↓. Khe rộng hơn (dây không sát vách) → vẫn rơi như bình thường.
+  function timCauDay(){
+    BD.cau = new Set();
+    const dac = ch => ch === '#' || ch === 'N' || ch === '=';
+    for (let r = 1; r < BD.HANG; r++) for (let c = 1; c < BD.COT - 1; c++){
+      if (BD.L[r][c] !== 'H') continue;
+      if (dac(BD.L[r][c - 1]) && dac(BD.L[r][c + 1]) && !dac(BD.L[r - 1][c - 1]) && !dac(BD.L[r - 1][c + 1]) && !dac(BD.L[r - 1][c])) BD.cau.add(c + ',' + r);
+    }
   }
   function trenSanMong(o){   // chân đang đặt đúng mặt một ô '='
     if (o.roiQua > 0) return false;
@@ -74,6 +84,7 @@ const DongCoMN = (() => {
   function napBanDo(luoi, them){
     BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length; BD.nut = {};
     for (const [c0, r0, c1, r1] of (them || [])) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) BD.L[r][c] = '#';
+    timCauDay();
   }
 
   /* ---------- TRẠNG THÁI ---------- */
