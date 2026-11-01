@@ -198,7 +198,10 @@
       else if (c.huong === 'tren') cham = pl.y + pl.h * 0.5 < 2 && cx > c.cot * T && cx < (c.cot + n) * T;
       else cham = pl.y + pl.h >= H - 3 && cx > c.cot * T && cx < (c.cot + n) * T;
       if (!cham) continue;
-      if (khoa) continue;
+      if (khoa){
+        if (G.dongCua && !G.cuaKhoa.includes(c) && G.tbT <= 0){ const bb = G.tinhAnh || G.trum; thongBao('Rễ đang khép lối – hạ ' + ((bb && bb.def && bb.def.ten) || 'tinh anh') + ' để mở cửa'); }
+        continue;
+      }
       if (!c.toi) continue;
       chuyenCanh(async () => { const p2 = await layPhong(c.toi); vaoPhong(p2, c.toi_cua, null); });
       return;

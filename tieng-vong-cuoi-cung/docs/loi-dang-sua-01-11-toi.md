@@ -18,3 +18,4 @@
 | 14 | Tinh anh (Vọng Tàn): chiêu "nằm trên đất" + còn hiệu ứng vẽ tay | ⏳ ChatGPT vẽ báo nứt đất + sóng chấn động |
 | 15 | Còn hình vẽ tay khác (rễ trùm, sóng trùm, biểu tượng vật phẩm…) | ⏳ ChatGPT vẽ lại |
 | 16 | Hiệu ứng trúng đòn mới (ChatGPT đã vẽ) | ⏳ chưa đưa vào game |
+| 17 | P11: đứng ở cửa không đi tiếp được | ✅ đúng luật (cửa khép khi Vọng Tàn còn sống) nhưng trước không báo – nay báo "hạ Vọng Tàn để mở cửa" |
