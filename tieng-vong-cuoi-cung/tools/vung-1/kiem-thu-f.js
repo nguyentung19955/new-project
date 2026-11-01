@@ -193,8 +193,8 @@ const CAI = () => {
   await moTrang(''); await ev(() => TV.choi(false)); await pg.waitForTimeout(200);
   r = await ev(() => [TV.G.id, TV.G.luu.trumHa, TV.G.luu.kho.chuong_vo, TV.G.luu.manhGui]);
   ok('Tải lại GIỮA trận: về Chuông Lưu P11, trùm chưa tính hạ, giữ 3 Chuông Vỡ + Mảnh Âm đã gửi', r[0] === 'P11' && r[1] === false && r[2] === 3 && r[3] === 25, r);
-  r = await ev(async () => { await H.vao('P12', 33 * 48, 17 * 48); const q = TV.G.trum; return [!!q, q && q.hp, q && q.pha, q && q.st]; });
-  ok('  …vào lại P12: trùm đủ máu, pha 1, đang ngủ chờ', r[0] && r[1] === 300 && r[2] === 1 && r[3] === 'cho', r);
+  r = await ev(async () => { await H.vao('P12', 33 * 48, 17 * 48); const q = TV.G.trum; return [!!q, q && q.hp, q && q.pha, q && q.st, TV.V1.TRUM_DEF.mau]; });
+  ok('  …vào lại P12: trùm đủ máu (= mau trong TRUM_DEF), pha 1, đang ngủ chờ', r[0] && r[1] === r[4] && r[2] === 1 && r[3] === 'cho', r);
   // tải lại lúc trùm đang gục (trước khi hiện màn thắng)
   await ev(() => { const {G} = TV, q = G.trum; G.dongCua = true; H.chay(2, ''); q.hp = 0; q.def.trung(q, 1, 1); H.chay(30, ''); });
   await moTrang(''); await ev(() => TV.choi(false)); await pg.waitForTimeout(1300);

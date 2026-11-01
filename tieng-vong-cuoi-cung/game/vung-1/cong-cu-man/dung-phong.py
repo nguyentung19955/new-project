@@ -23,6 +23,8 @@ class Phong:
         self.khoa = None
         self.bat_dau = None
         self.ghi_chu = ''
+        self.dh = []            # (luồng G) dấu dẫn hướng: loi_chinh (chuông nhỏ hổ phách gần cửa đi tiếp) / bi_mat (vết nứt đỏ sẫm)
+        self.bang = None        # (luồng G) bia chỉ đường (P05): số Chuông Vỡ còn thiếu + hướng về P11/P12
 
     # ---- khoét / đắp ----
     def set(self, c, r, ch):
@@ -96,6 +98,10 @@ class Phong:
             d['so'] = so
         self.vp.append(d)
 
+    def dau(self, loai, c, r, **k):
+        d = dict(loai=loai, cot=c, hang=r); d.update(k)
+        self.dh.append(d)
+
     def trang_tri(self, tid, loai, c, r, **k):
         d = dict(id=tid, loai=loai, cot=c, hang=r); d.update(k)
         self.tt.append(d)
@@ -142,6 +148,10 @@ class Phong:
             d['bat_dau'] = self.bat_dau
         if self.tt:
             d['trang_tri'] = self.tt
+        if self.dh:
+            d['dau_hieu'] = self.dh
+        if self.bang:
+            d['bang_chi_duong'] = self.bang
         if self.ghi_chu:
             d['ghi_chu'] = self.ghi_chu
         return d
@@ -180,10 +190,13 @@ def P01():
     p.hop(42, 7, 47, 14)
     p.day(41, 6, 14)
     p.dac(41, 6, 41, 6); p.set(41, 6, 'H')
+    # (luồng G) BIẾN THỂ: gò rễ giữa hang (bậc 1 ô, chuông đổ làm địa danh) – chia sàn ngang dài thành vùng đấu Khuyết Cẩu
+    # (cột 27–35) và chân dây leo (cột 39–44).
+    p.dac(36, 14, 38, 14)                       # gò rễ (đứng 13) – chuông đổ nằm trên
     p.them_cua('P01-dong', 'phai', 12, 'P02', 'P02-tay')
     p.bat_dau = dict(cot=4, hang=15)
     # LUỒNG D: 1 Khuyết Cẩu sau vùng học, cách cửa đông ≥ 9 ô
-    p.q('cau', 33, 14, 29, 37)
+    p.q('cau', 32, 14, 28, 35)
     p.v('P01-manh-1', 'manh_am', 31, 10, 15)
     p.v('P01-manh-2', 'manh_am', 44, 5, 20)
     p.v('P01-manh-3', 'manh_am', 24, 17, 5)
@@ -191,8 +204,11 @@ def P01():
     p.trang_tri('P01-dau-lau-1', 'dau_lau', 8, 15)
     p.trang_tri('P01-bien-nhay', 'goi_y_phim', 11, 13, ghi='gợi ý: Nhảy')
     p.trang_tri('P01-bien-day', 'goi_y_phim', 40, 13, ghi='gợi ý: ↑ bám dây')
+    p.trang_tri('P01-chuong-do', 'chuong_vo_lon', 37, 13, ghi='ĐỊA DANH: chuông đồng đổ nghiêng trên gò rễ')
+    p.trang_tri('P01-bia', 'bia_nga_ba', 7, 15, ghi='bia đá khắc chuông ở cổng – mốc khởi đầu')
+    p.dau('loi_chinh', 45, 14)
     L(p, (5, 8), (19, 12), (34, 4), (43, 3))
-    p.ghi_chu = 'Hướng dẫn: đi → nhảy bậc → chui hầm thấp → nhảy hố → Khuyết Cẩu → (tuỳ) nhảy đôi lên gờ, leo dây lên hốc trên.'
+    p.ghi_chu = 'VAI: phòng HƯỚNG DẪN. Đi → nhảy bậc → chui hầm thấp → nhảy hố → gò chuông đổ + Khuyết Cẩu → (tuỳ) nhảy đôi lên gờ, leo dây lên hốc trên. Chuông nhỏ hổ phách = cửa đi tiếp.'
     return p
 
 
@@ -212,16 +228,19 @@ def P02():
     p.san(15, 20, 15, '=')                      # (đứng 14)
     p.san(9, 12, 13)                            # gờ trái cao (đứng 12) – thẻ tên
     p.hop(44, 18, 50, 24)
-    p.san(43, 49, 21)                           # gờ (đứng 20)
+    p.dac(44, 24, 49, 24)                       # (luồng G) bậc đá trước chân dây (đứng 23) – bớt sàn ngang dài
     # tầng trên + lối đông
     p.ham([(46, 9), (52, 8), (58, 9)], 2)
     p.hop(48, 6, 59, 10)
     p.dac(48, 11, 59, 13)
-    p.san(40, 46, 12)                           # gờ trước dây (đứng 11)
+    # (luồng G) PHÂN NHÁNH CAO–THẤP: cầu rễ cao nối đỉnh dây sang trái (đứng 10) → HỐC TREO giữa vòm (đứng 8) có thẻ tên.
+    # Từ sàn hang NHÌN THẤY hốc treo nhưng KHÔNG nhảy tới được (gờ gần nhất bên dưới thấp hơn ≥ 6 ô) – phải leo dây lên tầng trên rồi đi vòng.
+    p.san(38, 47, 11)                           # cầu rễ cao (đứng 10), nối liền sàn hầm đông
+    p.san(26, 33, 9, '=')                       # hốc treo (đứng 8) – xích treo từ vòm
     p.hop(50, 14, 52, 24)
     p.day(51, 6, 24)                            # (đỉnh dây hàng 6: không thò vào trần – sửa chống kẹt)
     p.dac(53, 11, 59, 24)
-    p.dac(45, 22, 49, 24); p.hop(45, 22, 49, 24)
+    p.dac(44, 24, 49, 24)                       # (luồng G) giữ bậc đá trước chân dây
     # lối tắt P06: hốc dưới sàn, ngăn bởi tường nứt
     p.hop(3, 27, 21, 29)                        # khoang dưới (đứng 29)
     p.dac(3, 30, 21, 33)
@@ -236,14 +255,19 @@ def P02():
     # LUỒNG D: 1 Khuyết Cẩu nhánh chính (sàn hàng 24); 1 Hồn Vải nhánh phụ trên cao (gờ trái, xa ngã ba)
     p.q('cau', 32, 24, 26, 40)
     p.q('vai', 16, 14, 12, 22, cao=2)
-    p.v('P02-the-ten', 'the_ten', 10, 12)
+    p.v('P02-the-ten', 'the_ten', 29, 8)          # (luồng G) trên hốc treo – thấy từ dưới, phải đi tuyến cao
     p.v('P02-manh-1', 'manh_am', 18, 14, 15)
     p.v('P02-manh-2', 'manh_am', 5, 29, 25)
     p.trang_tri('P02-tuong-nut', 'tuong_nut', 13, 27, cao=3, ghi='vết nứt + bụi rơi; sau là giếng dây xuống Hố Vỏ')
     p.trang_tri('P02-to-moi', 'to_moi', 30, 8, ghi='cột tổ mối treo trần')
-    p.trang_tri('P02-dau-lau', 'dau_lau', 44, 20)
+    p.trang_tri('P02-bia', 'bia_nga_ba', 34, 24, ghi='ĐỊA DANH: bia đá ngã ba khắc chuông – giữa sàn hang')
+    p.trang_tri('P02-hoc-treo', 'hoc_treo', 29, 9, rong=8, ghi='xích + vải treo hốc từ vòm')
+    p.trang_tri('P02-re-quan', 're_quan', 18, 24, ghi='rễ quấn quanh lỗ xuống = lối nguy hiểm/bí mật')
+    p.dau('loi_chinh', 48, 23)
+    p.dau('loi_chinh', 56, 10)
+    p.dau('bi_mat', 13, 28)
     L(p, (12, 19), (30, 6), (46, 10), (6, 28))
-    p.ghi_chu = 'Ngã ba: tây ← P01, đông-trên → P03 (leo dây cột 51), đáy → P06 (lối tắt, sau tường nứt cột 13).'
+    p.ghi_chu = 'VAI: PHÂN NHÁNH CAO–THẤP. Tây ← P01; tuyến cao: dây cột 51 → hầm đông → P03, cầu rễ sang trái → hốc treo (thẻ tên, thấy từ dưới); tuyến thấp: lỗ rễ quấn → hốc dưới, tường nứt cột 13 → lối tắt P06.'
     return p
 
 
@@ -294,7 +318,12 @@ def P03():
     # LUỒNG D: bệ đúc (khối 2×2 ô) che dây chuông; Kèn Câm đứng sau bệ, Khuyết Cẩu ở tầng dưới phía tây sảnh
     p.dac(45, 23, 46, 24)
     p.trang_tri('P03-be-duc', 'be_duc', 45, 23, rong=2, cao=2, ghi='bệ đúc chuông bằng đồng/đá – chỗ nấp đạn kèn')
-    p.q('cau', 27, 24, 22, 33)
+    # (luồng G) BIẾN THỂ: HỐ ĐÚC giữa sàn xưởng (sâu 2 ô, rộng 5) – lò đúc nguội; đứng trong hố thì đạn Kèn Câm (bắn ngang tầm ngực)
+    # bay qua đầu → chỗ nấp thứ hai; ra khỏi hố bằng nhảy thường (2 ô). Bàn đúc (khối 3×1) cạnh hố làm bậc.
+    p.hop(30, 25, 34, 26)                       # hố đúc (đứng 26)
+    p.dac(35, 24, 37, 24)                       # bàn đúc (đứng 23) sát mép đông hố (cột 38–41 để trống: chỗ đứng trước dây cột 42)
+    p.trang_tri('P03-ban-duc', 'ban_duc', 35, 24, rong=3, cao=1, ghi='bàn đúc đá – bậc thấp cạnh hố')
+    p.q('cau', 24, 24, 19, 28)
     p.q('ken', 48, 24, 47, 49)
     p.v('P03-chuong', 'chuong_vo', 36, 12)
     p.v('P03-the-ten-H1', 'the_ten', 6, 24)
@@ -303,11 +332,14 @@ def P03():
     p.v('P03-manh-2', 'manh_am', 66, 14, 30)
     p.trang_tri('P03-tuong-nut-H1', 'tuong_nut', 14, 22, cao=3, ghi='vết nứt rõ, chuông nhỏ lệch nhịp phía sau')
     p.trang_tri('P03-hai-cot-H1', 'hai_cot', 8, 24, ghi='hài cốt dân làng ôm chuông (nhiệm vụ D đợt sau)')
-    p.trang_tri('P03-lo-duc', 'lo_duc_chuong', 30, 24, ghi='lò đúc chuông nguội, khuôn vỡ')
+    p.trang_tri('P03-lo-duc', 'lo_duc_chuong', 32, 26, ghi='ĐỊA DANH: hố đúc chuông nguội, khuôn vỡ dưới đáy')
+    p.trang_tri('P03-khuon', 'khuon_chuong', 26, 24, ghi='khuôn chuông lớn úp ngược cạnh hố đúc')
+    p.dau('loi_chinh', 55, 24)
+    p.dau('bi_mat', 14, 23)
     p.trang_tri('P03-gian-chuong', 'gian_treo_chuong', 36, 12, ghi='giàn gỗ treo Chuông Vỡ 1, chuông đồng lớn treo trên dây cột 42')
     p.trang_tri('P03-dau-lau', 'dau_lau', 18, 13)
     L(p, (8, 8), (36, 6), (44, 8), (8, 22), (57, 21))
-    p.ghi_chu = 'Hành lang trên → sảnh chuông. Chuông Vỡ 1 trên giàn (36,12): leo dây cột 42 rồi nhảy sang. H1 sau tường nứt cột 14.'
+    p.ghi_chu = 'VAI: XƯỞNG CHUÔNG. Hành lang trên → sảnh chuông: hố đúc (nấp đạn kèn), bàn đúc, khuôn chuông, giàn treo. Chuông Vỡ 1 trên giàn (36,12): leo dây cột 42 rồi nhảy sang. H1 sau tường nứt cột 14.'
     return p
 
 
@@ -318,11 +350,16 @@ def P04():
     p.bat_dau = dict(cot=56, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.hop(55, 0, 59, 12)                        # giếng rơi từ P03
     # hành lang uốn lượn về tây: lên dốc tới đỉnh tro (cột 30–35) rồi xuống hõm tro, lên lại cửa tây
-    DOAN = [(50, 59, 13), (44, 49, 11), (36, 43, 9), (30, 35, 7), (24, 29, 9), (18, 23, 11), (12, 17, 14), (6, 11, 12), (0, 5, 13)]
+    DOAN = [(50, 59, 13), (44, 49, 11), (36, 43, 9), (30, 35, 7), (24, 29, 9), (18, 23, 11), (12, 17, 15), (6, 11, 12), (0, 5, 13)]
     for c0, c1, fl in DOAN:
         p.hop(c0, fl - 4, c1, fl - 1)
         p.bau((c0 + c1) / 2, fl - 4, (c1 - c0) / 2 + 1.5, 1.6)   # vòm trần cong
         p.dac(c0, fl, c1, 17)
+    # (luồng G) BIẾN THỂ: HÕM TRO + DÂY VƯỢT HỐ – hõm sâu 4 ô dưới mép đông, rộng 6 ô; dây rủ từ trần cột 15 giữa hõm:
+    # nhảy bám dây giữa không rồi bật sang mép tây (hoặc nhảy đôi thẳng qua). Rơi xuống hõm: leo dây / nhảy đôi ra – không kẹt.
+    # Hồn Vải tuần ngay trên hõm → áp lực trong lúc bám dây.
+    p.hop(12, 8, 17, 14)
+    p.day(15, 8, 14)
     # khoang thẻ tên trên cao (leo dây cột 21)
     p.bau(20, 4, 5, 2.6)
     p.san(16, 20, 6, '=')
@@ -346,13 +383,17 @@ def P04():
     p.q('tang', 40, 6, cao=1)
     p.q('vai', 12, 12, 8, 16, cao=2)
     p.v('P04-tang-mau', 'tang_mau', 86, 5)
-    p.v('P04-manh-1', 'manh_am', 14, 13, 10)
+    p.v('P04-manh-1', 'manh_am', 13, 14, 10)        # (luồng G) đáy hõm tro
     p.v('P04-manh-2', 'manh_am', 33, 6, 10)
     p.trang_tri('P04-khoi', 'khoi_tro', 0, 0, rong=60, ghi='khói tro mờ toàn hành lang cột 0–60 (luồng A làm lớp phủ)')
     p.trang_tri('P04-dau-lau', 'dau_lau', 66, 12)
+    p.trang_tri('P04-chuong-do', 'chuong_vo_lon', 33, 6, ghi='ĐỊA DANH: chuông đồng vùi tro trên đỉnh dốc')
+    p.trang_tri('P04-mo-tro', 'mo_tro', 16, 14, ghi='hài cốt vùi dưới hõm tro')
+    p.dau('loi_chinh', 3, 12)
+    p.dau('bi_mat', 79, 12)
     p.trang_tri('P04-dau-hieu', 'bui_roi', 82, 2, ghi='bụi rơi gợi ý giếng phía trên có đồ')
     L(p, (57, 6), (40, 5), (20, 3), (14, 10), (3, 9), (75, 9))
-    p.ghi_chu = 'Rơi xuống từ P03 ở cột 57, đi TÂY tới P05. Nhánh ĐÔNG cụt: giếng hẹp cột 80–83 cần bật tường/nhảy đôi → Tăng Máu.'
+    p.ghi_chu = 'VAI: HÀNH LANG ÁP LỰC. Rơi xuống từ P03 ở cột 57, đi TÂY tới P05: dốc lên, Màn Tang dưới gờ trần, đỉnh có chuông vùi tro, xuống hõm tro (dây vượt hố cột 15, Hồn Vải tuần trên). Nhánh ĐÔNG cụt: giếng hẹp cột 80–83 cần bật tường/nhảy đôi → Tăng Máu.'
     return p
 
 
@@ -370,7 +411,10 @@ def P05():
     p.chuong_luu = dict(cot=15, hang=12)
     p.trang_tri('P05-xac', 'xac_nguoi_ngoi', 13, 12, ghi='xác người ngồi tựa cạnh chuông')
     p.trang_tri('P05-chuong-luu', 'chuong_luu', 15, 12, ghi='Chuông Lưu: tắt / sáng')
-    L(p, (15, 4), (8, 8), (24, 7))
+    # (luồng G) bia chỉ đường: 3 ổ chuông (sáng theo số Chuông Vỡ đã có) + "còn thiếu n" + mũi tên về Sảnh Chuông Vỡ (P11) / Đàn Chuông Câm (P12)
+    p.bang = dict(cot=6, hang=12, huong='trai', toi='P11', ten='Sảnh Chuông Vỡ')
+    p.dau('loi_chinh', 2, 12)
+    L(p, (15, 4), (10, 8), (24, 7))
     p.ghi_chu = 'Checkpoint đầu tiên. Không quái.'
     return p
 
@@ -422,6 +466,8 @@ def P06():
     p.trang_tri('P06-be-chuong', 'be_da_chuong', 25, 32, ghi='bệ đá giữa đấu trường, Chuông Vỡ 2 hiện sau khi hạ hết quái (gợi ý cho luồng A)')
     p.trang_tri('P06-vo-bo', 'vo_bo_khong_lo', 8, 32, ghi='vỏ bọ khổng lồ bỏ lại')
     p.trang_tri('P06-dau-lau', 'dau_lau', 42, 32)
+    p.dau('loi_chinh', 46, 32)
+    p.dau('bi_mat', 3, 31)
     L(p, (25, 12), (10, 24), (40, 22), (31, 3))
     p.ghi_chu = 'Vào từ gờ đông (P05), bậc zig-zag xuống đáy. Đáy: đấu trường 2 Bọ Vỏ + Khuyết Cẩu, Chuông Vỡ 2 giữa. Dây cột 31 lên lối tắt P02. Ra P09 ở đông-dưới.'
     return p
@@ -438,7 +484,7 @@ def P09():
     p.hop(0, 14, 6, 16)
     # các tầng zig-zag (né sóng âm theo tầng) – mỗi bậc lên 2 ô
     p.dac(30, 15, 38, 16)                       # T1 phải (đứng 14) – Kèn Câm thổi trái dọc tầng dưới
-    p.san(22, 27, 13, '=')                      # T2 giữa (đứng 12)
+    p.san(25, 29, 13, '=')                      # T2 giữa (đứng 12) – (luồng G) dời sang đông 3 ô, chừa đầu bia chắn
     p.san(8, 16, 11)                            # T3 trái (đứng 10) – Kèn Câm thổi phải
     p.san(17, 21, 9, '=')                       # T4 (đứng 8)
     p.san(26, 32, 7)                            # T5 (đứng 6)
@@ -455,12 +501,21 @@ def P09():
     p.day(19, 17, 38)
     p.san(12, 15, 37, '=')
     p.san(29, 33, 37, '=')
+    # (luồng G) ĐẤU TẦM XA: VẬT CHẮN + TUYẾN CAO.
+    #  - Bia đá chắn (2×2 ô, cột 22–23) ở bờ đông miệng giếng, giữa giếng và Kèn Câm (tầm phát hiện 560 px ≈ 11,7 ô, tầm bắn 420 px):
+    #    đạn kèn bắn ngang tầm ngực nổ vào bia → đứng ở miệng giếng / leo dây cột 19 xuống đáy lấy Chuông Vỡ 3 mà không bị bắn.
+    #    Bia cao 2 ô = nhảy thường qua được để áp sát kèn.
+    #  - Tuyến cao né đạn: sàn mỏng thấp cột 9–12 (đứng 14) → gờ mỏng cột 3–6 (đứng 12) → T3 (đứng 10) → T4 → T5 → gờ ra đông:
+    #    đi hết phòng trên đầu tầm bắn (Màn Tang treo ở T5 – mối nguy riêng, so le với kèn). Tuyến thấp vẫn mở.
+    p.dac(22, 15, 23, 16)
+    p.san(9, 12, 15, '=')
+    p.san(3, 6, 13, '=')
     p.them_cua('P09-tay', 'trai', 14, 'P06', 'P06-dong-duoi')
     p.them_cua('P09-dong', 'phai', 2, 'P11', 'P11-tay')
     # LUỒNG D: 1 Kèn Câm ở bờ xa bên kia giếng (tầng vào), 1 Màn Tang treo dưới gờ trần ở đường trên (T5) – so le, không cùng lúc
     p.dac(28, 1, 30, 3)
     p.trang_tri('P09-go-tran', 'go_tran_re', 28, 3, rong=3, ghi='nanh đá trần, Màn Tang treo dưới')
-    p.q('ken', 27, 16, 24, 29)
+    p.q('ken', 27, 16, 25, 29)
     p.q('tang', 29, 4, cao=1)
     p.v('P09-chuong', 'chuong_vo', 31, 36)
     p.v('P09-the-ten', 'the_ten', 5, 6)
@@ -468,8 +523,12 @@ def P09():
     p.v('P09-manh-2', 'manh_am', 19, 8, 15)
     p.trang_tri('P09-mieng-ken', 'mieng_ken_da', 22, 1, ghi='miệng kèn đá khổng lồ trên trần, vân sóng âm')
     p.trang_tri('P09-dau-lau', 'dau_lau', 10, 40)
+    p.trang_tri('P09-bia-chan', 'bia_chan', 22, 15, rong=2, cao=2, ghi='bia đá chắn đạn kèn (vẽ bia đè khối 2×2)')
+    p.trang_tri('P09-loa-ken', 'khuon_chuong', 26, 40, co=1.15, ghi='ĐỊA DANH: loa kèn đồng khổng lồ úp dưới đáy giếng')
+    p.dau('loi_chinh', 38, 4)
+    p.dau('loi_chinh', 21, 16, ghi='miệng giếng: Chuông Vỡ 3 ở đáy')
     L(p, (22, 2), (6, 4), (36, 10), (14, 13), (22, 33))
-    p.ghi_chu = 'Vào tầng giữa (đứng 16). Xuống giếng dây cột 19 tới đáy lấy Chuông Vỡ 3, leo lại. Leo các tầng zig-zag (Kèn Câm thổi ngang ở T2 phải/T2 trái/gờ ra) → cửa đông trên → P11.'
+    p.ghi_chu = 'VAI: ĐẤU TẦM XA. Vào tầng giữa (đứng 16), bia đá chắn (cột 22–23) che miệng giếng khỏi đạn kèn. Tuyến cao: sàn mỏng thấp → gờ mỏng → T3 → T4 → T5 → gờ ra đông (trên tầm bắn kèn). Xuống giếng dây cột 19 tới đáy lấy Chuông Vỡ 3, leo lại → cửa đông trên → P11.'
     return p
 
 
@@ -500,6 +559,7 @@ def P11():
     p.trang_tri('P11-chuong-vo-lon', 'chuong_vo_lon', 27, 18, ghi='chuông đồng vỡ đôi làm nền đấu trường')
     p.trang_tri('P11-cua-trum', 'cua_trum_3_chuong', 55, 16, cao=3, ghi='cửa rễ có 3 hốc chuông, sáng dần theo số Chuông Vỡ')
     p.trang_tri('P11-chuong-luu', 'chuong_luu', 50, 18)
+    p.dau('loi_chinh', 47, 18)
     L(p, (27, 5), (12, 10), (42, 10), (50, 16))
     p.ghi_chu = 'Tinh anh Vọng Tàn giữa sảnh (khoá cửa khi đánh). Chuông Lưu cuối ở hốc đông. Cửa đông → P12 cần 3 Chuông Vỡ.'
     return p

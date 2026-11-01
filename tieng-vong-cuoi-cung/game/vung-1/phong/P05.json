@@ -28,7 +28,7 @@
  "chuong_luu": {"cot": 15, "hang": 12},
  "den": [
   {"cot": 15, "hang": 4},
-  {"cot": 8, "hang": 8},
+  {"cot": 10, "hang": 8},
   {"cot": 24, "hang": 7}
  ],
  "tinh_anh": false,
@@ -37,5 +37,9 @@
   {"id": "P05-xac", "loai": "xac_nguoi_ngoi", "cot": 13, "hang": 12, "ghi": "xác người ngồi tựa cạnh chuông"},
   {"id": "P05-chuong-luu", "loai": "chuong_luu", "cot": 15, "hang": 12, "ghi": "Chuông Lưu: tắt / sáng"}
  ],
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 2, "hang": 12}
+ ],
+ "bang_chi_duong": {"cot": 6, "hang": 12, "huong": "trai", "toi": "P11", "ten": "Sảnh Chuông Vỡ"},
  "ghi_chu": "Checkpoint đầu tiên. Không quái."
 }

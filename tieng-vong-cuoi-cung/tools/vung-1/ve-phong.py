@@ -159,6 +159,31 @@ def mat_dat(a, solid0, rng):
                     if rng.random() < 0.18 and y - up - 2 >= 0: a[y - up - 2, x] = [70, 46, 40, 255]
 
 
+KHOI_VAT = ('bia_chan', 'be_duc', 'ban_duc')
+def ve_khoi(loai, w, h, seed):
+    """(luồng G) hình đồ vật phủ khối va chạm w×h điểm: bia chắn (p_bia), bệ đúc (khuôn chuông úp p_chuong_up), bàn đúc (phiến đá + chân)."""
+    if loai in ('bia_chan', 'be_duc'):
+        p = ld('p_bia' if loai == 'bia_chan' else 'p_chuong_up')
+        ww = w + 8; hh = round(p.height * ww / p.width)
+        if hh < h + 4: hh = h + 4; ww = round(p.width * hh / p.height)
+        return dim(p.resize((ww, hh), Image.NEAREST), .85)
+    # bàn đúc: phiến đá dày 6 điểm trên 2 chân đá, vệt đồng chảy
+    rng = np.random.default_rng(seed + 11)
+    a = np.zeros((h + 4, w + 6, 4), np.uint8)
+    for y in range(h + 4):
+        for x in range(w + 6):
+            mat = y < 7 or (x < 7 or x >= w - 1) or (y >= h and 2 <= x < w + 4)
+            if not mat: continue
+            c = FILL[(y * 3) % 64, (x * 3) % 64, :3] * (0.95 if y < 7 else 0.6)
+            if y == 0: c = np.array([150, 108, 90]) * 1.0
+            elif y == 6: c = c * 0.5
+            if y < 7 and rng.random() < .05: c = np.array([170, 120, 60])
+            a[y, x, :3] = np.clip(c, 0, 255); a[y, x, 3] = 255
+    for x in range(10, w - 4, 9):   # vệt đồng nguội chảy xuống mép phiến
+        for y in range(6, 6 + rng.integers(2, 5)): a[y, x, :3] = (176, 122, 62); a[y, x, 3] = 255
+    return Image.fromarray(a)
+
+
 def ve_phong(pid):
     P = json.load(open(PHONG + pid + '.json', encoding='utf-8'))
     L = [list(r) for r in P['luoi']]
@@ -189,14 +214,21 @@ def ve_phong(pid):
     # mấu đá nhỏ đứng riêng (≤ 6 ô, cao ≤ 2 hàng) → vẽ bằng bệ rễ (như phòng demo), không tô thành cục đá vuông
     od = np.array([[dac(c, r) for c in range(C2)] for r in range(R2)])
     lab, nl = ndimage.label(od)
+    # (luồng G) KHỐI ĐỒ VẬT: ô va chạm '#' nhưng vẽ bằng hình đồ vật (bia chắn đạn, bệ/bàn đúc) thay vì đá / bệ rễ
+    KHOI = {}
+    for t in P.get('trang_tri', []):
+        if t.get('loai') in KHOI_VAT:
+            for dr in range(t.get('cao', 1)):
+                for dc in range(t.get('rong', 1)): KHOI[(t['hang'] + dr + PAD, t['cot'] + dc + PAD)] = t
     MAU = set()
     for i, sl in enumerate(ndimage.find_objects(lab)):
         cells = list(zip(*np.nonzero(lab[sl] == i + 1)))
         if len(cells) <= 6 and sl[0].stop - sl[0].start <= 2:
             for rr, cc in cells: MAU.add((rr + sl[0].start, cc + sl[1].start))
+    MAU -= set(KHOI)
     W, H = C2 * T, R2 * T
     def mat_na(chu):   # ô đặc → mặt nạ điểm ảnh
-        m = np.array([[(ch(c, r) in chu) and (r, c) not in MAU for c in range(C2)] for r in range(R2)])
+        m = np.array([[(ch(c, r) in chu) and (r, c) not in MAU and (r, c) not in KHOI for c in range(C2)] for r in range(R2)])
         return np.kron(m, np.ones((T, T), bool))
     co_NG = any(ch(c, r) in 'NG' for r in range(R2) for c in range(C2))
     A_day, M_day = ve_da(mat_na('#NG'), seed)                 # trạng thái đủ (N, G là đá)
@@ -253,6 +285,14 @@ def ve_phong(pid):
                     be_re(c0 * T, (c - c0) * T, (r + 1) * T, .6)
             else: c += 1
 
+    khoi_ve = []
+    # ---- (luồng G) khối đồ vật: hình phủ kín khối va chạm, chân đặt trên mặt sàn bên dưới khối
+    for t in {id(v): v for v in KHOI.values()}.values():
+        c0, r0, rw, rh = t['cot'] + PAD, t['hang'] + PAD, t.get('rong', 1), t.get('cao', 1)
+        im = ve_khoi(t['loai'], rw * T, rh * T, seed)
+        xk, yk = c0 * T + (rw * T - im.width) // 2, (r0 + rh) * T - im.height + 2
+        dan(im, (xk, yk)); khoi_ve.append((xk, yk, im.width, im.height))
+
     # ---- dây leo 'H': mỗi đoạn dọc liền – bám trần thật ở trên
     vt, vm1, vm2, vb = [ld(n) for n in ('v_top', 'v_mid1', 'v_mid2', 'v_bot')]
     def mat_tran(x, y):
@@ -286,7 +326,7 @@ def ve_phong(pid):
             dan(dim(vb, .85), (x - vb.width // 2, min(y, y1 - vb.height + 8)))
 
     # ---- đồ đặt / treo: kiểm tra bám mép đá thật, không đè dây leo, cửa, mảnh ghép
-    da_dung = []
+    da_dung = list(khoi_ve)
     def o_cua(x0, y0, w, h):
         return [(r, c) for r in range(max(0, y0 // T), min(R2, (y0 + h) // T + 1)) for c in range(max(0, x0 // T), min(C2, (x0 + w) // T + 1))]
     def trong_sach(x0, y0, w, h, cach=0, ep=False):
@@ -343,7 +383,7 @@ def ve_phong(pid):
     # trang trí theo ID của luồng B
     BAN = {'dau_lau': ['sk_3', 'sk_4', 'sk_6'], 'hai_cot': ['sk_1'], 'xac_nguoi_ngoi': ['sk_1'], 'lo_duc_chuong': ['p_manh_chuong', 'p_chuong_nghieng'],
            'gian_treo_chuong': ['p_gia_gay'], 'be_da_chuong': ['p_bia'], 'vo_bo_khong_lo': ['p_manh_chuong'], 'chuong_vo_lon': ['p_chuong_nghieng'],
-           'cong_re': ['gate_mo']}
+           'cong_re': ['gate_mo'], 'bia_nga_ba': ['p_bia'], 'khuon_chuong': ['p_chuong_up'], 'mo_tro': ['sk_1', 'sk_6']}
     for t in P.get('trang_tri', []):
         loai = t.get('loai'); c, r = t['cot'] + PAD, t['hang'] + PAD; x = c * T + 8
         if loai in BAN:
@@ -353,12 +393,26 @@ def ve_phong(pid):
                 p = p.resize((p.width * 5 // 8, p.height * 5 // 8), Image.NEAREST)
                 ys = mat_san(x, (r + 1) * T - 4); dan(p, (x - p.width // 2, ys - p.height + 3)); da_dung.append((x - p.width // 2, ys - p.height, p.width, p.height)); continue
             if loai == 'chuong_vo_lon': s = 1.25
+            if loai == 'bia_nga_ba': s = 1.15
+            if loai == 'khuon_chuong': s = 1.45
+            s = t.get('co', s)   # (luồng G) cỡ riêng từng món nếu cần
             for dx in (0, -10, 10, -20, 20, -30, 30):
                 if dat(ten, x + dx, (r + 1) * T - 4, .78, s, ep=loai in ('xac_nguoi_ngoi', 'hai_cot')): break
             if loai == 'lo_duc_chuong': dat('p_chuong_up', x + 40, (r + 1) * T - 4, .6)
             if loai == 'gian_treo_chuong':
                 for dx in (0, 16, -16, 32):
                     if treo('h_vai_chuong', x + dx, r * T, .75): break
+        elif loai == 'hoc_treo':   # (luồng G) hốc treo: 2 xích từ vòm xuống 2 đầu sàn mỏng + vải chuông giữa
+            rw = t.get('rong', 6)
+            for xx in (c * T - (rw // 2) * T + 10, c * T + (rw - rw // 2) * T - 4):
+                yt = mat_tran(xx, r * T - 8); ysan = r * T
+                n = ld('h_xich'); y = yt - 4
+                while y < ysan - 8:
+                    hh = min(n.height, ysan - y - 2); dan(dim(n.crop((0, 0, n.width, hh)), .75), (xx - n.width // 2, y)); y += n.height - 2
+            treo('h_vai_chuong', x, (r - 3) * T, .7)
+        elif loai == 're_quan':    # rễ quấn quanh lỗ xuống (lối nguy hiểm / bí mật)
+            for dx in (-30, 30, -14):
+                treo('h_re_bo', x + dx, (r - 2) * T, .62)
         elif loai in ('to_moi', 'mieng_ken_da', 'ong_chuong_cam'):
             ds = {'to_moi': ['h_re_bo', 'h_re_bo'], 'mieng_ken_da': ['h_re_mat_na', 'h_vai_dai', 'h_re_bo'], 'ong_chuong_cam': ['h_vai_chuong', 'h_xich', 'h_vai_chuong', 'h_xich', 'h_vai_chuong']}[loai]
             for i, n in enumerate(ds): treo(n, x + (i - len(ds) // 2) * 40, (r + 1) * T, .7)

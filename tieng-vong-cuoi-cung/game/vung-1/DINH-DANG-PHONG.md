@@ -110,3 +110,10 @@ Ký tự lạ khác coi như `.`.
 | `tan` | Vọng Tàn | **tinh anh P11** (đặt trong phòng `"tinh_anh": true`) |
 
 Trùm P12 không cần đặt trong `quai`: phòng có `"trum": true` thì Luồng A tự sinh "Mẫu Chuông Rỗng" ở giữa phòng (hoặc tại `"trum_o":{"cot","hang"}` nếu có).
+
+## 4. Trường thêm (luồng G)
+- `dau_hieu` (tuỳ chọn): `[{"loai":"loi_chinh"|"bi_mat","cot","hang"}]` – dấu dẫn hướng do game vẽ.
+  `loi_chinh` = cọc + chuông nhỏ hổ phách (đặt ở ô trống, chân trên sàn), gần cửa đi tiếp của tuyến chính.
+  `bi_mat` = vết nứt đỏ sẫm + bụi rơi (đặt đúng ô tường nứt / tường giả).
+- `bang_chi_duong` (tuỳ chọn, P05): `{"cot","hang","huong":"trai"|"phai","toi","ten"}` – bia 3 ổ chuông sáng theo số Chuông Vỡ, "còn thiếu n" + mũi tên.
+- `trang_tri` loại `bia_chan` / `be_duc` / `ban_duc` kèm `rong`, `cao`: khối `#` đó được ve-phong.py vẽ bằng hình đồ vật (bia, khuôn chuông, bàn đúc) thay vì đá. Thêm `co` để đổi cỡ một món trang trí.

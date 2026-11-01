@@ -26,9 +26,9 @@
   "###...........##...#.......=======........H.........#....H..==.#######",
   "####..........N...........................H..............H.....#######",
   "####..........N...........................H..##..........H.....#######",
-  "####..........N...........................H..##...##.....H.....#######",
-  "########################################################.H.###########",
-  "########################################################.H.###########",
+  "####..........N....................###....H..##...##.....H.....#######",
+  "##############################.....#####################.H.###########",
+  "##############################.....#####################.H.###########",
   "########################################################.H.###########",
   "########################################################.H.###########",
   "########################################################.H.###########"
@@ -38,7 +38,7 @@
   {"id": "P03-day", "cot": 56, "hang": 29, "cao": 3, "huong": "duoi", "toi": "P04", "toi_cua": "P04-tren"}
  ],
  "quai": [
-  {"loai": "cau", "cot": 27, "hang": 24, "tu": 22, "den": 33},
+  {"loai": "cau", "cot": 24, "hang": 24, "tu": 19, "den": 28},
   {"loai": "ken", "cot": 48, "hang": 24, "tu": 47, "den": 49}
  ],
  "vat_pham": [
@@ -61,11 +61,17 @@
  "bat_dau": {"cot": 2, "hang": 9},
  "trang_tri": [
   {"id": "P03-be-duc", "loai": "be_duc", "cot": 45, "hang": 23, "rong": 2, "cao": 2, "ghi": "bệ đúc chuông bằng đồng/đá – chỗ nấp đạn kèn"},
+  {"id": "P03-ban-duc", "loai": "ban_duc", "cot": 35, "hang": 24, "rong": 3, "cao": 1, "ghi": "bàn đúc đá – bậc thấp cạnh hố"},
   {"id": "P03-tuong-nut-H1", "loai": "tuong_nut", "cot": 14, "hang": 22, "cao": 3, "ghi": "vết nứt rõ, chuông nhỏ lệch nhịp phía sau"},
   {"id": "P03-hai-cot-H1", "loai": "hai_cot", "cot": 8, "hang": 24, "ghi": "hài cốt dân làng ôm chuông (nhiệm vụ D đợt sau)"},
-  {"id": "P03-lo-duc", "loai": "lo_duc_chuong", "cot": 30, "hang": 24, "ghi": "lò đúc chuông nguội, khuôn vỡ"},
+  {"id": "P03-lo-duc", "loai": "lo_duc_chuong", "cot": 32, "hang": 26, "ghi": "ĐỊA DANH: hố đúc chuông nguội, khuôn vỡ dưới đáy"},
+  {"id": "P03-khuon", "loai": "khuon_chuong", "cot": 26, "hang": 24, "ghi": "khuôn chuông lớn úp ngược cạnh hố đúc"},
   {"id": "P03-gian-chuong", "loai": "gian_treo_chuong", "cot": 36, "hang": 12, "ghi": "giàn gỗ treo Chuông Vỡ 1, chuông đồng lớn treo trên dây cột 42"},
   {"id": "P03-dau-lau", "loai": "dau_lau", "cot": 18, "hang": 13}
  ],
- "ghi_chu": "Hành lang trên → sảnh chuông. Chuông Vỡ 1 trên giàn (36,12): leo dây cột 42 rồi nhảy sang. H1 sau tường nứt cột 14."
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 55, "hang": 24},
+  {"loai": "bi_mat", "cot": 14, "hang": 23}
+ ],
+ "ghi_chu": "VAI: XƯỞNG CHUÔNG. Hành lang trên → sảnh chuông: hố đúc (nấp đạn kèn), bàn đúc, khuôn chuông, giàn treo. Chuông Vỡ 1 trên giàn (36,12): leo dây cột 42 rồi nhảy sang. H1 sau tường nứt cột 14."
 }

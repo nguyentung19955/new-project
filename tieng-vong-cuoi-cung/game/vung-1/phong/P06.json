@@ -70,5 +70,9 @@
   {"id": "P06-vo-bo", "loai": "vo_bo_khong_lo", "cot": 8, "hang": 32, "ghi": "vỏ bọ khổng lồ bỏ lại"},
   {"id": "P06-dau-lau", "loai": "dau_lau", "cot": 42, "hang": 32}
  ],
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 46, "hang": 32},
+  {"loai": "bi_mat", "cot": 3, "hang": 31}
+ ],
  "ghi_chu": "Vào từ gờ đông (P05), bậc zig-zag xuống đáy. Đáy: đấu trường 2 Bọ Vỏ + Khuyết Cẩu, Chuông Vỡ 2 giữa. Dây cột 31 lên lối tắt P02. Ra P09 ở đông-dưới."
 }

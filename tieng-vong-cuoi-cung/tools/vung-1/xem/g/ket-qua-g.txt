@@ -1,0 +1,5 @@
+ĐẠT P09: đứng miệng giếng sau bia chắn 12 s – không trúng đạn kèn – {"trung":0,"chet":0,"kenSong":true}
+ĐẠT P09: cùng chỗ đó khi gỡ bia (thử) – kèn bắn trúng → bia có tác dụng – {"trung":1,"chet":0,"kenSong":true}
+ĐẠT P09: tuyến cao (T4, trên đầu kèn) 12 s – không trúng đạn kèn – {"trung":0,"chet":0,"kenSong":true}
+ĐẠT Rễ Móc Mộ: không ra ở pha 1, có ra ở pha 2, mỗi rễ báo nứt ≥ 0,6 s (36 khung) – {"re1":0,"re2":18,"baoMin":36}
+Lỗi JS: không · hỏng 0

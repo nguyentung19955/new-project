@@ -1,0 +1,8 @@
+Trận 1: {"giay":73.1,"pha2Tu":39,"trung":32,"chieu":{"cho":1,"gam":1,"dung":35,"quet":11,"go":5,"tha":12,"chuyen_pha":1,"re":6,"chet":1},"reRa":18,"ha":true,"mau":0}
+Trận 2: {"giay":50.3,"pha2Tu":22.9,"trung":22,"chieu":{"cho":1,"gam":1,"dung":24,"quet":7,"tha":8,"go":3,"chuyen_pha":1,"re":4,"chet":1},"reRa":12,"ha":true,"mau":0}
+Trận 3: {"giay":61.2,"pha2Tu":28.9,"trung":26,"chieu":{"cho":1,"gam":1,"dung":29,"go":6,"tha":10,"quet":7,"chuyen_pha":1,"re":5,"chet":1},"reRa":15,"ha":true,"mau":0}
+Trận 4: {"giay":61.7,"pha2Tu":24.8,"trung":26,"chieu":{"cho":1,"gam":1,"dung":29,"go":5,"quet":7,"tha":9,"chuyen_pha":1,"re":6,"chet":1},"reRa":18,"ha":true,"mau":0}
+Trận 5: {"giay":64,"pha2Tu":32.9,"trung":27,"chieu":{"cho":1,"gam":1,"dung":30,"quet":7,"go":6,"tha":11,"chuyen_pha":1,"re":5,"chet":1},"reRa":15,"ha":true,"mau":0}
+Trận 6: {"giay":60.1,"pha2Tu":26.8,"trung":27,"chieu":{"cho":1,"gam":1,"dung":29,"go":3,"quet":9,"tha":10,"chuyen_pha":1,"re":5,"chet":1},"reRa":15,"ha":true,"mau":0}
+TTK trung bình 61.7 s · min 50.3 · max 73.1
+Lỗi JS: không

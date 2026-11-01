@@ -14,11 +14,17 @@
          (trước đây chạm thân trừ máu cả lúc gầm / chuyển pha → "trúng mà không báo trước").
      Báo đòn: gầm = rung vỏ + nứt đỏ (không sát thương) · Gõ = giơ chuông 0,5 s + vạch đỏ hai bên chân · Quét = KÉO NGƯỢC 0,45 s,
      vẽ sẵn vùng nguy hiểm đúng bằng tầm quét · Mưa Mặt Nạ = dấu hổ phách + bóng trên sàn 0,5 s+ · chuyển pha = rung + nứt, không sát thương.
+   • (luồng G) PHA 2 – RỄ MÓC MỘ: trùm giơ chuông, 3 VẾT NỨT ĐỎ lần lượt toác dưới sàn (dưới chân người chơi, rồi lùi dần ra xa
+     trùm, cách nhau ~2,2 ô, so le 0,27 s); mỗi vết nứt báo ≥ 0,6 s rồi rễ đen–đỏ gạch có móc trồi lên cao 92 px (thấp hơn tầm nhảy
+     thường) trong ~0,45 s rồi rút. Đứng yên = trúng rễ 1; chạy thẳng ra xa = gặp rễ 2/3 → phải NHẢY qua hoặc ĐỔI CHỖ vào gần trùm.
+     Pha 2 xoay vòng: Mưa Mặt Nạ → Rễ Móc Mộ → (Quét / Gõ) → … (đổi nhịp, không chỉ tăng sát thương).
    Hình trùm: art/vung-1/trum/nghi.png, gio-chuong.png, vo-mat-na.png (ve.js veTrumAnh); nếu trum.json có clip thật thì ưu tiên clip;  trong trum.json (dung / go / tha_mat_na / chuyen_pha / trung / chet); chưa có → ve.js vẽ hình tạm. */
 (() => {
   const V1 = window.V1, E = DongCoMN, pl = E.pl, T = 48, G = V1.G;
   const BAO = 30;   // 0.5 s báo trước (≥ 0.45 s)
   const KEO_QUET = 27;   // Quét Chuông: kéo ngược 0,45 s (yêu cầu 0,35–0,5 s)
+  const BAO_RE = 36, CACH_RE = 16, RE_CAO = 92, RE_RONG = 36, RE_GIU = 27;   // Rễ Móc Mộ: báo 0,6 s · so le 0,27 s · cao 92 px · gây sát thương 0,45 s
+  V1.RE = {BAO_RE, CACH_RE, RE_CAO, RE_RONG, RE_GIU};
   // ô trống để thả mặt nạ: cột x có ít nhất 2 ô trống liền trên mặt đất (trong khung camera); không có thì dò sang 2 bên
   function timCotTrong(x){
     for (const d of [0, T, -T, 2 * T, -2 * T, 3 * T, -3 * T]){
@@ -33,6 +39,7 @@
     const ls = q.lichSu || (q.lichSu = []), cuoi = ls[ls.length - 1], gan = Math.abs(dx) < T * 4.5;
     let chon;
     if (ls.length >= 2 && !ls.slice(-2).includes('tha')) chon = 'tha';
+    else if (q.pha >= 2 && !ls.slice(-2).includes('re')) chon = 're';   // (luồng G) pha 2: Rễ Móc Mộ mỗi 3 chiêu
     else if (gan && cuoi !== 'quet' && Math.random() < 0.55) chon = 'quet';
     else chon = cuoi === 'go' ? 'tha' : cuoi === 'tha' ? 'go' : (Math.random() < 0.5 ? 'go' : 'tha');
     ls.push(chon); if (ls.length > 6) ls.shift();
@@ -50,6 +57,14 @@
     let yd = r * T; while (yd < E.BD.HANG * T && !E.datPt(x, yd + 2)) yd += 8;
     G.nguy.push({loai:'mat_na', x:x - 15, y:r * T + 2, yTren:r * T + 2, yDat:yd, xDich:x, vx:0, vy:0, w:30, h:30, bao:BAO + (tre || 0), nay:0, t:0, gay:1, xoay:0});
   }
+  // (luồng G) Rễ Móc Mộ: vết nứt báo trước rồi rễ trồi tại x (trên mặt sàn dưới yTu)
+  function reMoc(x, yTu, tre){
+    let yd = yTu; while (yd < E.BD.HANG * T && !E.datPt(x, yd + 2)) yd += 4;
+    if (yd >= E.BD.HANG * T || E.solidPt(x, yd - 24)) return false;
+    yd = Math.floor((yd + 2) / T) * T;
+    G.nguy.push({loai:'re', x, y:yd, bao:BAO_RE + (tre || 0), baoTong:BAO_RE + (tre || 0), tr:0, h:0, w:RE_RONG, t:0, gay:1});
+    return true;
+  }
   V1.buocNguy = function(){
     const hb = E.hurtBox(), Wp = E.BD.COT * T;
     for (let i = G.nguy.length - 1; i >= 0; i--){
@@ -61,6 +76,14 @@
         continue;
       }
       if (n.loai === 'vong'){ n.r += n.gia ? 5 : 7; if (n.t > 40) G.nguy.splice(i, 1); continue; }
+      if (n.loai === 're'){   // báo (nứt) → trồi 5 khung → giữ → rút
+        if (n.bao > 0){ n.bao--; if (n.bao === 0) E.shake(0, 0.6, 2); continue; }
+        n.tr++;
+        n.h = n.tr <= 5 ? RE_CAO * n.tr / 5 : n.tr <= RE_GIU ? RE_CAO : Math.max(0, RE_CAO * (1 - (n.tr - RE_GIU) / 12));
+        if (n.tr > RE_GIU + 12){ G.nguy.splice(i, 1); continue; }
+        if (n.tr <= RE_GIU && n.h > 24 && !pl.dead && E.overlap(hb, {x:n.x - n.w / 2, y:n.y - n.h, w:n.w, h:n.h})) E.hurt(n.x < pl.x + pl.w / 2 ? 1 : -1, n.gay);
+        continue;
+      }
       if (n.loai === 'song'){
         n.x += n.dir * n.v;
         const truoc = n.x + n.dir * 16;
@@ -108,7 +131,7 @@
   };
 
   /* ---------------- TRÙM: MẪU CHUÔNG RỖNG ---------------- */
-  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:300, than:[88, 95], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
+  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:640, than:[88, 95], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
   V1.TRUM_DEF = DEF;
   V1.taoTrum = function(p){
     const TR = V1.TRUMJ || {};
@@ -175,6 +198,18 @@
         }
         if (q.t >= BAO + (pha2 ? 70 : 55)){ doiTrangThai(q, 'dung'); q.cd = pha2 ? 55 : 90; }
         break; }
+      case 're': {   // (luồng G) Rễ Móc Mộ – chỉ pha 2
+        clip = 'go';
+        if (q.t === 1){
+          const Wp = E.BD.COT * T, px = pl.x + pl.w / 2, buoc = T * 2.2;
+          let dir = px >= cx ? 1 : -1;                                   // lùi dần ra XA trùm
+          if (px + dir * buoc * 2 > Wp - T * 1.5 || px + dir * buoc * 2 < T * 1.5) dir = -dir;   // sát tường thì đổi phía
+          let ra = 0;
+          for (let i = 0; i < 3; i++){ const x = px + dir * buoc * i; if (x > T && x < Wp - T && reMoc(x, q.y + q.h - 60, i * CACH_RE)) ra++; }
+          q.reRa = (q.reRa || 0) + ra;
+        }
+        if (q.t >= BAO_RE + 2 * CACH_RE + RE_GIU + 14){ doiTrangThai(q, 'dung'); q.cd = 50; }
+        break; }
       case 'chuyen_pha':
         clip = 'chuyen_pha'; q.batTu = true;
         if (q.t % 20 === 1) E.shake((q.t % 40) ? 1 : -1, 0.5, 3);
@@ -189,7 +224,7 @@
     }
     if (q.flash > 2 && clip === 'dung') clip = 'trung';
     if (clip !== q.clip){ q.clip = clip; q.clipT = 0; }
-    q.baoTruoc = ((q.st === 'go' || q.st === 'tha') && q.t < BAO) || (q.st === 'quet' && q.t < KEO_QUET) ||
+    q.baoTruoc = ((q.st === 'go' || q.st === 'tha') && q.t < BAO) || (q.st === 'quet' && q.t < KEO_QUET) || (q.st === 're' && q.t < BAO_RE) ||
       (q.st === 'go' && pha2 && q.t >= BAO + 10 && q.t < BAO + 34);   // pha 2: nhịp gõ thứ hai cũng báo lại 0,4 s
     q.keoQuet = q.st === 'quet' && q.t < KEO_QUET ? q.t / KEO_QUET : 0;   // 0→1 trong lúc kéo ngược (ve.js vẽ vùng nguy hiểm)
     if (q.st !== 'quet') q.dangQuet = false;

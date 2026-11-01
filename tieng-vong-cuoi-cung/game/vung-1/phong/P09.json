@@ -15,10 +15,10 @@
   "###....................................#####",
   "###.....#########......................#####",
   "###....................................#####",
-  "###...................======...........#####",
+  "###====..................=====.........#####",
   ".......................................#####",
-  "..............................##############",
-  "..............................##############",
+  ".........====.........##......##############",
+  "......................##......##############",
   "#################..H..######################",
   "#################..H..######################",
   "#################..H..######################",
@@ -52,7 +52,7 @@
   {"id": "P09-dong", "cot": 43, "hang": 2, "cao": 3, "huong": "phai", "toi": "P11", "toi_cua": "P11-tay"}
  ],
  "quai": [
-  {"loai": "ken", "cot": 27, "hang": 16, "tu": 24, "den": 29},
+  {"loai": "ken", "cot": 27, "hang": 16, "tu": 25, "den": 29},
   {"loai": "tang", "cot": 29, "hang": 4, "cao": 1}
  ],
  "vat_pham": [
@@ -75,7 +75,13 @@
  "trang_tri": [
   {"id": "P09-go-tran", "loai": "go_tran_re", "cot": 28, "hang": 3, "rong": 3, "ghi": "nanh đá trần, Màn Tang treo dưới"},
   {"id": "P09-mieng-ken", "loai": "mieng_ken_da", "cot": 22, "hang": 1, "ghi": "miệng kèn đá khổng lồ trên trần, vân sóng âm"},
-  {"id": "P09-dau-lau", "loai": "dau_lau", "cot": 10, "hang": 40}
+  {"id": "P09-dau-lau", "loai": "dau_lau", "cot": 10, "hang": 40},
+  {"id": "P09-bia-chan", "loai": "bia_chan", "cot": 22, "hang": 15, "rong": 2, "cao": 2, "ghi": "bia đá chắn đạn kèn (vẽ bia đè khối 2×2)"},
+  {"id": "P09-loa-ken", "loai": "khuon_chuong", "cot": 26, "hang": 40, "co": 1.15, "ghi": "ĐỊA DANH: loa kèn đồng khổng lồ úp dưới đáy giếng"}
  ],
- "ghi_chu": "Vào tầng giữa (đứng 16). Xuống giếng dây cột 19 tới đáy lấy Chuông Vỡ 3, leo lại. Leo các tầng zig-zag (Kèn Câm thổi ngang ở T2 phải/T2 trái/gờ ra) → cửa đông trên → P11."
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 38, "hang": 4},
+  {"loai": "loi_chinh", "cot": 21, "hang": 16, "ghi": "miệng giếng: Chuông Vỡ 3 ở đáy"}
+ ],
+ "ghi_chu": "VAI: ĐẤU TẦM XA. Vào tầng giữa (đứng 16), bia đá chắn (cột 22–23) che miệng giếng khỏi đạn kèn. Tuyến cao: sàn mỏng thấp → gờ mỏng → T3 → T4 → T5 → gờ ra đông (trên tầm bắn kèn). Xuống giếng dây cột 19 tới đáy lấy Chuông Vỡ 3, leo lại → cửa đông trên → P11."
 }

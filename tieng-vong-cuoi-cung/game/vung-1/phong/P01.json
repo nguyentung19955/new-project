@@ -16,7 +16,7 @@
   "#...............##########...=====.......H.....#",
   "#......................###...............H......",
   "#........................................H......",
-  "#........................................H......",
+  "#...................................###..H......",
   "#.........############.....#####################",
   "######################.....#####################",
   "######################.....#####################",
@@ -27,7 +27,7 @@
   {"id": "P01-dong", "cot": 47, "hang": 12, "cao": 3, "huong": "phai", "toi": "P02", "toi_cua": "P02-tay"}
  ],
  "quai": [
-  {"loai": "cau", "cot": 33, "hang": 14, "tu": 29, "den": 37}
+  {"loai": "cau", "cot": 32, "hang": 14, "tu": 28, "den": 35}
  ],
  "vat_pham": [
   {"id": "P01-manh-1", "loai": "manh_am", "cot": 31, "hang": 10, "so": 15},
@@ -48,7 +48,12 @@
   {"id": "P01-cong-re", "loai": "cong_re", "cot": 2, "hang": 15, "ghi": "cổng rễ lớn sau lưng nhân vật lúc bắt đầu"},
   {"id": "P01-dau-lau-1", "loai": "dau_lau", "cot": 8, "hang": 15},
   {"id": "P01-bien-nhay", "loai": "goi_y_phim", "cot": 11, "hang": 13, "ghi": "gợi ý: Nhảy"},
-  {"id": "P01-bien-day", "loai": "goi_y_phim", "cot": 40, "hang": 13, "ghi": "gợi ý: ↑ bám dây"}
+  {"id": "P01-bien-day", "loai": "goi_y_phim", "cot": 40, "hang": 13, "ghi": "gợi ý: ↑ bám dây"},
+  {"id": "P01-chuong-do", "loai": "chuong_vo_lon", "cot": 37, "hang": 13, "ghi": "ĐỊA DANH: chuông đồng đổ nghiêng trên gò rễ"},
+  {"id": "P01-bia", "loai": "bia_nga_ba", "cot": 7, "hang": 15, "ghi": "bia đá khắc chuông ở cổng – mốc khởi đầu"}
  ],
- "ghi_chu": "Hướng dẫn: đi → nhảy bậc → chui hầm thấp → nhảy hố → Khuyết Cẩu → (tuỳ) nhảy đôi lên gờ, leo dây lên hốc trên."
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 45, "hang": 14}
+ ],
+ "ghi_chu": "VAI: phòng HƯỚNG DẪN. Đi → nhảy bậc → chui hầm thấp → nhảy hố → gò chuông đổ + Khuyết Cẩu → (tuỳ) nhảy đôi lên gờ, leo dây lên hốc trên. Chuông nhỏ hổ phách = cửa đi tiếp."
 }

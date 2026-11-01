@@ -3,7 +3,7 @@
   "goc": {
    "lan": 20,
    "ket": 0,
-   "thoatToiDa": 3,
+   "thoatToiDa": 5,
    "trongDa": 0,
    "doi": []
   },
@@ -31,22 +31,22 @@
   "doiPhong": {
    "lan": 20,
    "ket": 0,
-   "thoatToiDa": 8,
+   "thoatToiDa": 3,
    "trongDa": 0,
    "doi": [
-    "P03>P04",
-    "P06>P02",
-    "P03>P04",
-    "P06>P02"
+    "P04>P04",
+    "P06>P06",
+    "P04>P04",
+    "P06>P06"
    ]
   }
  },
  "quai": {
   "ngoaiKhung": 0,
-  "ban": 128,
+  "ban": 113,
   "baoDon": {
    "cau": {
-    "lan": 85,
+    "lan": 74,
     "minMs": 900
    },
    "vai": {
@@ -54,7 +54,7 @@
     "minMs": 650
    },
    "ken": {
-    "lan": 14,
+    "lan": 10,
     "minMs": 767
    },
    "tang": {
@@ -91,7 +91,7 @@
    "phong": "P05",
    "chuong": 2,
    "manh": 50,
-   "daNhat": 7,
+   "daNhat": 6,
    "tuongVo": 3
   },
   "chet": {

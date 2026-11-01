@@ -52,5 +52,8 @@
   {"id": "P11-cua-trum", "loai": "cua_trum_3_chuong", "cot": 55, "hang": 16, "cao": 3, "ghi": "cửa rễ có 3 hốc chuông, sáng dần theo số Chuông Vỡ"},
   {"id": "P11-chuong-luu", "loai": "chuong_luu", "cot": 50, "hang": 18}
  ],
+ "dau_hieu": [
+  {"loai": "loi_chinh", "cot": 47, "hang": 18}
+ ],
  "ghi_chu": "Tinh anh Vọng Tàn giữa sảnh (khoá cửa khi đánh). Chuông Lưu cuối ở hốc đông. Cửa đông → P12 cần 3 Chuông Vỡ."
 }

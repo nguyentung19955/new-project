@@ -14,33 +14,33 @@
 ĐẠT Rơi vào sát mép thân trong khe (giữ ← ép vào trùm): không kẹt trong đá, không lọt nền, trượt ra không giật – [{"lanMax":27.376799999999548,"nhayMax":5,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":100,"cuoiChong":false,"cuoiDat":true,"ben":1},2800,0,0]
 ĐẠT   …thoát ra được (nhảy đôi qua trùm sang trái) – [true,true,false]
 ĐẠT Đặt người chơi KẸP sẵn giữa tường và trùm: trùm bị đẩy lùi / cho đi xuyên, không kẹt – [{"lanMax":0,"nhayMax":0,"trongDa":0,"duoiSan":0,"hpMat":0,"khung":60,"cuoiChong":false,"cuoiDat":true,"ben":-1},126,101,0,0]
-ĐẠT Đánh khi đang chồng thân: trúng trùm, không mất máu vì chạm thân – [30,0,7.5]
+ĐẠT Đánh khi đang chồng thân: trúng trùm, không mất máu vì chạm thân – [10,0,7.5]
 ĐẠT Chuyển pha khi đang chồng thân: không mất máu, vẫn chặn, không lọt đá – ["chuyen_pha",2,0,7.5,0]
-ĐẠT P12 trận 1: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":6,"baoNganNhat":"24 khung"}
-ĐẠT P12 trận 1: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":1,"baoKhung":[27]}
+ĐẠT P12 trận 1: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":6,"baoNganNhat":"30 khung"}
+ĐẠT P12 trận 1: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":2,"baoKhung":[27,29]}
 ĐẠT P12 trận 1: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
-ĐẠT P12 trận 1: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":73,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
-ĐẠT P12 trận 1: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[469],"chieu":{"go":2,"tha":3,"quet":1}}
+ĐẠT P12 trận 1: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":155,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 1: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[776],"chieu":{"go":3,"tha":3,"quet":2}}
 ĐẠT P12 trận 1: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
 ĐẠT P12 trận 2: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":8,"baoNganNhat":"24 khung"}
-ĐẠT P12 trận 2: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":0,"baoKhung":[]}
+ĐẠT P12 trận 2: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":2,"baoKhung":[27]}
 ĐẠT P12 trận 2: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
-ĐẠT P12 trận 2: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":82,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
-ĐẠT P12 trận 2: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[476],"chieu":{"go":3,"tha":3,"quet":0}}
+ĐẠT P12 trận 2: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":191,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 2: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[797],"chieu":{"go":3,"tha":3,"quet":2}}
 ĐẠT P12 trận 2: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
-ĐẠT P12 trận 3: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":8,"baoNganNhat":"24 khung"}
-ĐẠT P12 trận 3: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":0,"baoKhung":[]}
-ĐẠT P12 trận 3: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":3,"soMatNa":14,"baoNganNhat":30}
-ĐẠT P12 trận 3: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":88,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
-ĐẠT P12 trận 3: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[476],"chieu":{"go":3,"tha":3,"quet":0}}
+ĐẠT P12 trận 3: Gõ Không Tiếng – sóng nào cũng có báo trước ≥ 0,4 s – {"soSong":4,"baoNganNhat":"30 khung"}
+ĐẠT P12 trận 3: Quét Chuông – kéo ngược 0,35–0,5 s trước mỗi cú quét – {"soQuet":2,"baoKhung":[29,27]}
+ĐẠT P12 trận 3: Mưa Mặt Nạ có xuất hiện, mỗi mặt nạ báo ≥ 0,5 s – {"lanTha":4,"soMatNa":18,"baoNganNhat":30}
+ĐẠT P12 trận 3: không có cú trúng nào ngoài đòn có báo trước (chạm thân / gầm / chuyển pha = 0) – {"trungTuDonBao":137,"trungKhac":0,"matMauLa":0,"luc_gam":0,"luc_chuyen_pha":0}
+ĐẠT P12 trận 3: chuyển pha đúng 1 lần, hạ được trùm – {"pha":[776],"chieu":{"go":3,"tha":4,"quet":2}}
 ĐẠT P12 trận 3: người chơi máy áp sát cả trận không lọt vào thân (lấn ≤ 15 px) – 7.5
-ĐẠT Phòng thử T3 trận 1: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":2,"matNa":8,"trungKhac":0,"chieu":{"go":2,"tha":2,"quet":1}}
-ĐẠT Phòng thử T3 trận 2: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":3,"matNa":14,"trungKhac":0,"chieu":{"go":2,"tha":3,"quet":0}}
-ĐẠT Phòng thử T3 trận 3: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":3,"matNa":14,"trungKhac":0,"chieu":{"go":3,"tha":3,"quet":1}}
+ĐẠT Phòng thử T3 trận 1: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":4,"matNa":20,"trungKhac":0,"chieu":{"go":4,"tha":4,"quet":1}}
+ĐẠT Phòng thử T3 trận 2: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":4,"matNa":18,"trungKhac":0,"chieu":{"go":2,"tha":4,"quet":2}}
+ĐẠT Phòng thử T3 trận 3: Mưa Mặt Nạ có ra + không trúng ngoài báo trước – {"tha":4,"matNa":20,"trungKhac":0,"chieu":{"go":3,"tha":4,"quet":3}}
 ĐẠT Chết cùng khung trùm chết: trùm được ghi "đã hạ" ngay vào bản lưu – [true,"chet",true]
 ĐẠT   …hồi sinh ở Chuông Lưu, vẫn hiện màn "Hết Vùng 1", trùm không sống lại – ["het","P11",false,true,true,12,true]
 ĐẠT Tải lại GIỮA trận: về Chuông Lưu P11, trùm chưa tính hạ, giữ 3 Chuông Vỡ + Mảnh Âm đã gửi – ["P11",false,3,25]
-ĐẠT   …vào lại P12: trùm đủ máu, pha 1, đang ngủ chờ – [true,300,1,"cho"]
+ĐẠT   …vào lại P12: trùm đủ máu (= mau trong TRUM_DEF), pha 1, đang ngủ chờ – [true,640,1,"cho",640]
 ĐẠT Tải lại lúc trùm đang gục: vẫn tính thắng, hiện màn "Hết Vùng 1" 1 lần – [true,"het",true]
 ĐẠT   …tải thêm lần nữa: không hiện lại màn thắng (không nhân đôi) – ["choi"]
 ĐẠT Ngã trong phòng trùm: mất 30% (15) vào túi ở P12, túi nằm trên sàn, nhặt lại đủ 50 – [35,"P12",15,true,false,50,null,376]
