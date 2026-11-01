@@ -442,7 +442,7 @@ const DongCoMN = (() => {
           if (Math.abs(dx) > 6) q.face = dx > 0 ? 1 : -1;
           const tamDanh = d.tam_danh || 100;
           const doCao = d.bay ? Math.abs(dy - (d.bay_cao ?? 40)) < 40 : Math.abs(dy) < 90;
-          if (q.cd <= 0 && Math.abs(dx) <= tamDanh && doCao){ q.st = 'danh'; q.t = 0; q.daDanh = false; break; }
+          if (q.cd <= 0 && Math.abs(dx) <= tamDanh && doCao){ q.st = 'danh'; q.t = 0; q.daDanh = false; q.daBan = false; q.daRung = false; break; }
           if (Math.abs(dx) > tamDanh * 0.75) diToi(q.face * (d.toc_do_duoi ?? 1.5));
           bayVe(hy - (d.bay_cao ?? 40), (d.toc_do_duoi ?? 1.5) * 0.8);
           break; }
@@ -452,6 +452,13 @@ const DongCoMN = (() => {
           if (d.lao && k >= d.lao[0] && k <= d.lao[1]){
             const b = Cd.buoc.slice(d.lao[0], d.lao[1] + 1).reduce((a, v) => a + v, 0) || 1; diToi(q.face * d.lao[2] * TL / b);
           }
+          // chiêu bắn đạn (quai.json "chieu": {kieu:'dan', khung_ban, toc, nong:[dx,dy] điểm ảnh gốc từ chân, hop:[w,h]})
+          const ch = d.chieu;
+          if (ch && ch.kieu === 'dan' && k >= ch.khung_ban && !q.daBan){
+            q.daBan = true; const fx = q.x + q.w / 2, fy = q.y + q.h, n = ch.nong || [0, -40];
+            DAN.push({x:fx + n[0] * TL * -q.face, y:fy + n[1] * TL, vx:-q.face * -1 * (ch.toc || 6), huong:q.face, t:0, song:ch.song || 140, w:(ch.hop || [10, 10])[0] * TL, h:(ch.hop || [10, 10])[1] * TL, dmg:d.sat_thuong || 1, ch});
+          }
+          if (ch && ch.chan_dong && k === ch.chan_dong && !q.daRung){ q.daRung = true; S.sht = 10; S.shm = 4; S.shx = 1; S.shy = 1; NO.push({x:q.x + q.w / 2, y:q.y + q.h, t:0, ch, dat:true}); }
           if ((d.khung_trung || []).includes(k) && !pl.dead){
             const hb = hopQuai(q, QR);
             if (hb && !q.daDanh && !q.khongGay && overlap(hurtBox(), hb)){ q.daDanh = true; hurt(q.face, d.sat_thuong || 1); }
@@ -507,6 +514,18 @@ const DongCoMN = (() => {
   }
 
   /* ---------- MỘT BƯỚC 60 Hz ---------- */
+  // đạn của quái + vụ nổ (để trang vẽ)
+  const DAN = [], NO = [], DR = {x:0, y:0, w:0, h:0};
+  function capNhatDan(){
+    for (let i = DAN.length - 1; i >= 0; i--){
+      const b = DAN[i]; b.x += b.vx; b.t++;
+      DR.x = b.x - b.w / 2; DR.y = b.y - b.h / 2; DR.w = b.w; DR.h = b.h;
+      let no = b.t > b.song || solidPt(b.x, b.y);
+      if (!no && !pl.dead && overlap(hurtBox(), DR)){ hurt(b.vx > 0 ? 1 : -1, b.dmg); no = true; }
+      if (no){ NO.push({x:b.x, y:b.y, t:0, ch:b.ch}); DAN.splice(i, 1); }
+    }
+    for (let i = NO.length - 1; i >= 0; i--) if (++NO[i].t > 40) NO.splice(i, 1);
+  }
   function buoc(){
     SUKIEN.length = 0;
     if (IN.bamJ) pl.jumpBuf = P.jumpBuffer;
@@ -518,6 +537,7 @@ const DongCoMN = (() => {
     capNhatNV();
     trungQuai();
     capNhatQuai();
+    capNhatDan();
     if (pl.jumpBuf > 0) pl.jumpBuf--;
     if (pl.dashBuf > 0) pl.dashBuf--;
     return true;
@@ -544,7 +564,7 @@ const DongCoMN = (() => {
     return {ten:'dung'};
   }
 
-  return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
+  return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
     hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
     datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
 })();
