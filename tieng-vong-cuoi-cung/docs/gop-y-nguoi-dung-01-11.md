@@ -10,7 +10,7 @@
 | 6 | Bám tường + chém: giữ nguyên thân/đầu tư thế bám, chỉ tay chém; không thừa tay | ✅ xong (ghép từ khung bám gốc) |
 | 7 | Không lướt khi đang bám tường | ✅ xong |
 | 8 | Vệt chém kéo dài trông xấu → ChatGPT vẽ lại | ⏳ ChatGPT đã vẽ vệt nhát 1, 2 – đang chờ tách |
-| 9 | Đưa 5 quái mới vào game, bỏ hết quái cũ | ✅ phòng demo · ⏳ phòng Vùng 1 còn quái cũ, sẽ đổi |
+| 9 | Đưa 5 quái mới vào game, bỏ hết quái cũ | ✅ phòng demo + 9 phòng Vùng 1 |
 | 10 | Quái hiện rõ trên nền | ✅ viền sáng màu riêng |
 | 11 | Chiêu quái: Kèn Câm bắn đạn, chó tụ năng lượng rồi bắn, Hồn Vải sóng siêu âm, tinh anh đập chuông chấn động | ✅ xong, hiệu ứng ChatGPT vẽ |
 | 12 | Màn Tang (quái treo) chưa có hiệu ứng đòn | ✅ 2 vệt vuốt cam (ChatGPT vẽ) |
@@ -23,6 +23,6 @@
 | 19 | Nút bấm: nửa trái là cần di chuyển (cả khi xoay màn), nửa phải đánh/lướt/hồi/nhảy, biểu tượng u ám do ChatGPT vẽ | ✅ xong |
 | 20 | Hình vẽ tay / gen cũ → ChatGPT gen lại, duyệt tới khi đạt | ⏳ liên tục |
 | 21 | Kiểm tra mọi animation cùng cỡ, đúng thiết kế | ✅ đo xong (±5%) · ⏳ gửi ChatGPT duyệt |
-| 22 | Kế hoạch Vùng 1 đưa vào game | ⏳ luồng A + B đã có bản đầu |
-| 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ⏳ chờ ChatGPT trả lời (TVCC_Duyet_DongTac_HieuUng.txt) |
+| 22 | Kế hoạch Vùng 1 đưa vào game | ✅ bản chơi thử Vùng 1 (9 phòng) · ⏳ luồng C đang đưa phong cách đá/hiệu ứng/nút của phòng demo sang |
+| 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ✅ ChatGPT đã trả lời (TVCC_Duyet_DongTac_HieuUng.txt) – đã làm bụi bám tường, vồ Màn Tang; còn lại: báo trước rõ hơn cho đập chuông, phân biệt đạn |
 | 24 | Trượt bám tường có khói bụi che chân và tay | ✅ khói bụi + tia lửa kiếm (ChatGPT vẽ) |
