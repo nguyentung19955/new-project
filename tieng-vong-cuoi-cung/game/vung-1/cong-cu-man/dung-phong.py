@@ -499,8 +499,8 @@ def P09():
     p.bau(22, 38, 14, 4.5)                      # khoang đáy
     p.dac(0, 41, 43, 43)                        # đáy (đứng 40)
     p.day(19, 17, 38)
-    p.san(12, 15, 37, '=')
-    p.san(29, 33, 37, '=')
+    p.san(12, 15, 38, '=')                      # (theo góp ý) hạ 1 ô: nhảy tới được từ đáy giếng
+    p.san(29, 32, 38, '=')
     # (luồng G) ĐẤU TẦM XA: VẬT CHẮN + TUYẾN CAO.
     #  - Bia đá chắn (2×2 ô, cột 22–23) ở bờ đông miệng giếng, giữa giếng và Kèn Câm (tầm phát hiện 560 px ≈ 11,7 ô, tầm bắn 420 px):
     #    đạn kèn bắn ngang tầm ngực nổ vào bia → đứng ở miệng giếng / leo dây cột 19 xuống đáy lấy Chuông Vỡ 3 mà không bị bắn.
@@ -517,9 +517,9 @@ def P09():
     p.trang_tri('P09-go-tran', 'go_tran_re', 28, 3, rong=3, ghi='nanh đá trần, Màn Tang treo dưới')
     p.q('ken', 27, 16, 25, 29)
     p.q('tang', 29, 4, cao=1)
-    p.v('P09-chuong', 'chuong_vo', 31, 36)
+    p.v('P09-chuong', 'chuong_vo', 31, 37)
     p.v('P09-the-ten', 'the_ten', 5, 6)
-    p.v('P09-manh-1', 'manh_am', 13, 36, 20)
+    p.v('P09-manh-1', 'manh_am', 13, 37, 20)
     p.v('P09-manh-2', 'manh_am', 19, 8, 15)
     p.trang_tri('P09-mieng-ken', 'mieng_ken_da', 22, 1, ghi='miệng kèn đá khổng lồ trên trần, vân sóng âm')
     p.trang_tri('P09-dau-lau', 'dau_lau', 10, 40)
@@ -573,8 +573,8 @@ def P12():
     p.bau(20, 6, 18, 5)
     p.hop(2, 3, 37, 12)
     p.dac(0, 13, 39, 15)                        # sàn phẳng (đứng 12)
-    p.san(7, 11, 8, '=')
-    p.san(28, 32, 8, '=')
+    p.san(7, 11, 10, '=')                       # sàn mỏng né: cao 3 ô so với sàn (nhảy tới được)
+    p.san(28, 32, 10, '=')
     p.them_cua('P12-tay', 'trai', 10, 'P11', 'P11-dong')
     p.trum = True
     p.trum_o = dict(cot=27, hang=12)

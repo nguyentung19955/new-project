@@ -14,8 +14,10 @@
 | 10 | Chỗ nhảy xuyên được, chỗ bị chặn | ✅ mọi phiến đá nổi dày 1 ô đều nhảy xuyên từ dưới |
 | 11 | Rơi: chân cử động | ✅ 1 hình |
 | 12 | Chạy chưa mượt | ✅ giảm nửa độ nhấp nhô · ⏳ nếu vẫn chưa mượt: vẽ lại vòng chạy |
-| 13 | Thanh máu quái vẽ tay | ⏳ ChatGPT vẽ khung thanh máu |
-| 14 | Tinh anh (Vọng Tàn): chiêu "nằm trên đất" + còn hiệu ứng vẽ tay | ⏳ ChatGPT vẽ báo nứt đất + sóng chấn động |
-| 15 | Còn hình vẽ tay khác (rễ trùm, sóng trùm, biểu tượng vật phẩm…) | ⏳ ChatGPT vẽ lại |
+| 13 | Thanh máu quái vẽ tay | ✅ khung + ruột máu ChatGPT, đặt trên đầu quái |
+| 14 | Tinh anh (Vọng Tàn): chiêu "nằm trên đất" + còn hiệu ứng vẽ tay | ✅ nứt đất + sóng chấn động ChatGPT |
+| 15 | Còn hình vẽ tay khác (rễ trùm, sóng trùm, biểu tượng vật phẩm…) | ✅ rễ trồi + 3 biểu tượng · ⏳ còn: báo đòn trùm, sóng/quét trùm, biểu tượng hát vọng/thẻ tên |
 | 16 | Hiệu ứng trúng đòn mới (ChatGPT đã vẽ) | ⏳ chưa đưa vào game |
 | 17 | P11: đứng ở cửa không đi tiếp được | ✅ đúng luật (cửa khép khi Vọng Tàn còn sống) nhưng trước không báo – nay báo "hạ Vọng Tàn để mở cửa" |
+| 18 | Phòng trùm to, không dùng hết | ✅ thu P12 còn 40×16 |
+| 19 | Không nhảy tới được vài bệ | ✅ hạ bệ P09 (đáy giếng) và P12 xuống 1–2 ô; kiểm tra tự động: 0 sàn không tới được |
