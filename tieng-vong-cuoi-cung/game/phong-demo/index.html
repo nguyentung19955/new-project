@@ -240,15 +240,14 @@ function veLap(img, k, camPx){ if (!img) return; const w = img.width; let x = -(
 const TIA = [];
 function suKien(){
   for (const e of E.SUKIEN){
-    if (e.k === 'trung') for (let i = 0; i < 8; i++){ const a = (i / 8) * Math.PI * 2 + 0.3, v = 2 + (i % 2) * 2;
-      TIA.push({x:e.x, y:e.y, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 0.6, t:10 + (i % 3) * 2, m:i % 2 ? '#78e6e6' : '#ffffff'}); }
+    if (e.k === 'trung') TIA.push(...E.tiaTrung(e));   // tia riêng từng nhát (engine trả số liệu)
     if (e.k === 'bi-danh') for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2;
       TIA.push({x:pl.x + pl.w / 2, y:pl.y + pl.h - 60, vx:Math.cos(a) * 3, vy:Math.sin(a) * 3, t:12, m:'#ffbe50'}); }
     if (e.k === 'khong-hoi') thongBao('Không hồi được: ' + e.ly);
     if (e.k === 'hoi-mau') thongBao('+1 máu');
   }
 }
-function buocTia(){ for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.18; if (--p.t <= 0) TIA.splice(i, 1); } }
+function buocTia(){ for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g ?? 0.18; if (--p.t <= 0) TIA.splice(i, 1); } }
 let tb = '', tbT = 0; function thongBao(s){ tb = s; tbT = 90; }
 
 // khối màu khi thiếu hình
@@ -268,7 +267,7 @@ function veNV(cam){
   if (C && C.ok){
     const n = C.hinh.length;
     const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
-    const trang = pl.hurtT > E.P.hurtT - 5;
+    const trang = E.trangNV();   // loé trắng 1–2 khung đầu khi trúng đòn
     SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);
   } else khoi(fx, fy, 44, 112, '#d8dde3', pl.face);
 }
@@ -427,6 +426,7 @@ function ve(){
   // quái nổi trên nền tối: viền sáng theo màu riêng + vẽ lại thân sáng hơn bóng tối
   ctx.save(); ctx.translate(0, -camY); for (const q of E.QUAI) veQuaiNoi(q, cam); veChieu(cam); ctx.restore();
   for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round((p.x - cam) / 2) * 2, Math.round((p.y - camY) / 2) * 2, 4, 4); }
+  if (S.loe > 0){ ctx.setTransform(M, 0, 0, M, 0, 0); ctx.globalAlpha = 0.22 * Math.min(1, S.loe / 4); ctx.fillStyle = S.loeMau; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }   // loé nhát kết
   // 4) HUD: máu (ô) + Tiếng Vọng (thanh xanh) + cấp
   ctx.setTransform(M, 0, 0, M, 0, 0);
   for (let i = 0; i < E.P.maxHp; i++){ ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 24, 15, 18, 18); ctx.fillStyle = i < pl.hp ? '#eef1f0' : '#304a73'; ctx.fillRect(18 + i * 24, 18, 12, 12); }

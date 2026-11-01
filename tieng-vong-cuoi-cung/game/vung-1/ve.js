@@ -234,8 +234,7 @@
   };
   V1.suKienVe = function(){
     for (const e of E.SUKIEN){
-      if (e.k === 'trung') for (let i = 0; i < 8; i++){ const a = (i / 8) * Math.PI * 2 + 0.3, v = 2 + (i % 2) * 2;
-        TIA.push({x:e.x, y:e.y, vx:Math.cos(a) * v, vy:Math.sin(a) * v - 0.6, t:10 + (i % 3) * 2, m:i % 2 ? '#78e6e6' : '#ffffff', g:0.18}); }
+      if (e.k === 'trung') TIA.push(...E.tiaTrung(e));   // tia riêng từng nhát (engine trả số liệu)
       if (e.k === 'bi-danh') for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2;
         TIA.push({x:pl.x + pl.w / 2, y:pl.y + pl.h - 60, vx:Math.cos(a) * 3, vy:Math.sin(a) * 3, t:12, m:'#ffbe50', g:0.18}); }
       if (e.k === 'nut-trung' || e.k === 'vo-tuong'){ V1.hieuUng('da', (e.cot + 0.5) * T, (e.hang + 0.5) * T); if (e.k === 'nut-trung') V1.veNenPhong(); }
@@ -260,7 +259,7 @@
     if (C && C.ok){
       const n = C.hinh.length;
       const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
-      SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, pl.hurtT > E.P.hurtT - 5);
+      SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, E.trangNV());   // loé trắng 1–2 khung đầu khi trúng đòn
     } else khoi(fx, fy, 30, 78, '#d8dde3', pl.face);
   }
   function veQuai(q){
@@ -898,6 +897,7 @@
     ctx.save(); ctx.translate(-cam, -camY); for (const q of E.QUAI) veQuaiNoi(q); veChieu(); if (G.trum && !G.trum.dead) veBaoTrum(G.trum); veRe(); ctx.restore();
     // 5) HUD
     ctx.setTransform(M, 0, 0, M, 0, 0);
+    if (S.loe > 0){ ctx.globalAlpha = 0.22 * Math.min(1, S.loe / 4); ctx.fillStyle = S.loeMau; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }   // loé nhát kết
     veHUD();
     if (G.trang === 'ban_do') veBanDo();
     if (mo > 0){ ctx.fillStyle = 'rgba(0,0,0,' + clampN(mo, 0, 1) + ')'; ctx.fillRect(0, 0, W, H); }

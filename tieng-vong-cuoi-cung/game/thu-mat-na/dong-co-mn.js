@@ -12,7 +12,7 @@ const DongCoMN = (() => {
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
     leoSpeed:2.6, tamNham:240, dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
-    maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12,
+    maxHp:6, hurtIFrames:70, hurtT:22, hurtKb:5.8, hurtNay:4.2, hurtStop:5, hurtHam:0.88, trangHurt:2, hitstopTrum:1, vongMax:9, vongHoi:3, comboHan:24, choThem:12,
     // tuỳ chọn cho game nhiều phòng (vung-1); mặc định giữ cách chạy cũ của phòng demo
     tuHoiSinh:true,      // false: chết xong KHÔNG tự đứng dậy, chỉ báo SUKIEN 'het-chet' để trang xử lý
     quaiHoiSinh:true,    // false: quái chết nằm yên (trang tự hồi sinh khi nghỉ Chuông Lưu)
@@ -77,7 +77,7 @@ const DongCoMN = (() => {
   }
 
   /* ---------- TRẠNG THÁI ---------- */
-  const S = {frame:0, hitstop:0, sht:0, shm:0, shx:0, shy:0, swing:0, nTrung:0, chet:0};
+  const S = {frame:0, hitstop:0, sht:0, shm:0, shx:0, shy:0, swing:0, nTrung:0, chet:0, loe:0, loeMau:'#ffffff'};   // loe: số bước còn loé màn (trang vẽ lớp phủ)
   const pl = {x:0, y:0, w:28, h:96, vx:0, vy:0, face:1, onGround:false, coyote:0, jumpBuf:0, dashBuf:0, jumping:false,
     wallDir:0, leo:false, leoKhoa:0, leoT:0, leoDi:false, wallLock:0, wallCoy:0, lastWall:0, wallStickT:0, wjBack:0, landT:0, yTop:0, dxT:0,
     dash:0, dashDir:1, dashCd:0, airDash:false, djCo:false, djT:-1, luon:false, sliding:false,
@@ -182,10 +182,11 @@ const DongCoMN = (() => {
 
   function hurt(dir, dmg){
     if (pl.dead || pl.iframes > 0) return;
-    pl.hp -= dmg || 1; pl.iframes = P.hurtIFrames; pl.nhay = P.hurtIFrames; pl.hurtT = P.hurtT; pl.vx = dir * 3.2; pl.vy = -3; pl.jumping = false;
+    // LUỒNG J: giật lùi rõ – đẩy ngang mạnh rồi hãm nhanh (P.hurtKb, hãm trong capNhatNV) + nảy nhẹ; dừng hình ~80 ms; rung màn ngắn ngang
+    pl.hp -= dmg || 1; pl.iframes = P.hurtIFrames; pl.nhay = P.hurtIFrames; pl.hurtT = P.hurtT; pl.vx = (dir || -pl.face) * P.hurtKb; pl.vy = -P.hurtNay; pl.jumping = false;
     pl.atk = ''; pl.pound = null; pl.hoi = -1; pl.dash = 0; CHO.co = false; pl.comboHan = 0; pl.dashBuf = 0; pl.djT = -1;
-    S.hitstop = 6; shake(dir || 0.01, -0.6, 2.6);
-    if (pl.hp <= 0){ pl.hp = 0; pl.dead = true; pl.deadT = 0; S.chet++; }
+    S.hitstop = P.hurtStop; shake(dir || 0.01, -0.35, 3); S.sht = 6;
+    if (pl.hp <= 0){ pl.hp = 0; pl.dead = true; pl.deadT = 0; pl.vx = 0; S.chet++; }   // chết: khoá trượt ngang ngay
     SUKIEN.push({k:'bi-danh', chet:pl.dead});
   }
 
@@ -193,8 +194,8 @@ const DongCoMN = (() => {
   function capNhatNV(){
     pl.dxT = 0; pl.luon = false;
     if (pl.dead){
-      pl.deadT++; pl.vx *= 0.9; pl.vy = Math.min(pl.vy + P.gravity, P.maxFall);
-      moveX(pl, pl.vx, false); if (moveY(pl, pl.vy)) pl.vy = 0;
+      pl.deadT++; pl.vx = 0; pl.dxT = 0;   // LUỒNG J: nằm yên – không trượt ngang; chỉ rơi thẳng nếu chết trên không, khung cuối giữ nguyên
+      pl.vy = Math.min(pl.vy + P.gravity, P.maxFall); if (moveY(pl, pl.vy)) pl.vy = 0;
       if (pl.deadT >= clipNV('chet').tong + 50){
         if (!P.tuHoiSinh){ if (!pl.daBaoChet){ pl.daBaoChet = true; SUKIEN.push({k:'het-chet'}); } return; }
         datNV(pl.sx, pl.sy); pl.iframes = 60; pl.nhay = 60; SUKIEN.push({k:'hoi-sinh'});
@@ -325,7 +326,7 @@ const DongCoMN = (() => {
     if (!pl.onGround){ acc *= P.airControl; dec *= P.airControl * 0.6; }
     const backToWall = pl.wallLock > 0 && dir !== 0 && dir === pl.wjBack;
     if (pl.wallLock > 0 && !backToWall) acc *= 0.25;
-    if (pl.hurtT > 10) target = pl.vx;
+    if (pl.hurtT > 10){ pl.vx *= P.hurtHam; target = pl.vx; }   // giật lùi: đà ngang hãm dần (lùi nhanh rồi khựng)
     if (backToWall) pl.vx = approach(pl.vx, target, acc * P.turnBoost * 1.5);
     else if (target !== 0){ const turning = pl.vx !== 0 && Math.sign(pl.vx) !== Math.sign(target); pl.vx = approach(pl.vx, target, turning ? acc * P.turnBoost : acc); }
     else if (pl.wallLock <= 0) pl.vx = approach(pl.vx, 0, atkGround ? dec * 0.5 : dec);
@@ -537,21 +538,27 @@ const DongCoMN = (() => {
   function trungQuai(){   // hộp đánh nhân vật → quái
     const hb = hopNV(); if (!hb) return;
     chemTuongNut(hb);
-    let co = false;
+    let co = false, trum = false;
     for (const q of QUAI){
       if (q.dead || q.st === 'chet' || q.lastSw === pl.atkSw || !overlap(hb, q)) continue;
       const face = (q.x + q.w / 2) >= (pl.x + pl.w / 2) ? 1 : -1;
-      quaiTrung(q, satThuongNV(), face); co = true; S.nTrung++;
-      const dayK = (clipNV(pl.pound ? 'dapdat' : pl.atk).def || {}).day; if (dayK && q.kvx) q.kvx *= dayK;   // đẩy lùi mạnh hơn ở đòn nặng
+      quaiTrung(q, satThuongNV(), face); co = true; S.nTrung++; if (q.def.ai) trum = true;
+      const dK = clipNV(pl.pound ? 'dapdat' : pl.atk).def || {};
+      const dayK = dK.day; if (dayK && q.kvx) q.kvx *= dayK;   // đẩy lùi mạnh hơn ở đòn nặng
+      if (dK.nang && !q.def.bay && !q.def.ai && q.st !== 'chet'){ q.vy = Math.min(q.vy || 0, -dK.nang); }   // LUỒNG J: nhát hất (don2/don4) nhấc quái lên nhẹ
       pl.vong = Math.min(P.vongMax, pl.vong + 1);
       const tx = (Math.max(hb.x, q.x) + Math.min(hb.x + hb.w, q.x + q.w)) / 2, ty = (Math.max(hb.y, q.y) + Math.min(hb.y + hb.h, q.y + q.h)) / 2;
-      SUKIEN.push({k:'trung', x:tx, y:ty, q});
+      SUKIEN.push({k:'trung', x:tx, y:ty, q, ten:pl.pound ? 'dapdat' : pl.atk, tia:dK.tia || '', face:pl.face});
     }
     if (co){
       // cảm giác "nặng": dừng hình + rung theo từng đòn (dung_hinh, rung trong nhan-vat.json)
       const Cd = clipNV(pl.pound ? 'dapdat' : pl.atk).def || {};
-      S.hitstop = Math.max(S.hitstop, Cd.dung_hinh ?? (pl.atk === 'don3' || pl.pound ? 4 : 2));
-      shake(pl.face, 0.3, Cd.rung ?? (pl.atk === 'don3' ? 2 : 1));
+      // trùm (quái tự điều khiển): dừng hình ngắn P.hitstopTrum để không kéo dài nhịp báo đòn của trùm (P0 duyệt vòng 2) – loé/rung/tia vẫn đủ
+      const dh = Cd.dung_hinh ?? (pl.atk === 'don3' || pl.pound ? 4 : 2);
+      S.hitstop = Math.max(S.hitstop, trum ? Math.min(dh, P.hitstopTrum) : dh);
+      const rh = Cd.rung_huong || [1, 0.3];   // LUỒNG J: hướng rung riêng mỗi nhát (ngang / hất lên / chém xuống / nổ)
+      shake(pl.face * rh[0], rh[1], Cd.rung ?? (pl.atk === 'don3' ? 2 : 1));
+      if (Cd.loe){ S.loe = Math.max(S.loe, Cd.loe); S.loeMau = '#dffbff'; }   // nhát kết: loé màn trắng-cyan
     }
   }
 
@@ -585,6 +592,7 @@ const DongCoMN = (() => {
     if (IN.bamA && !pl.dead && pl.hurtT <= 8){ CHO.co = true; CHO.han = S.frame + P.choThem + (pl.atk ? Math.ceil(clipNV(pl.atk).tong - pl.atkT) : 0); }
     if (IN.bamS) pl.dashBuf = 4;
     if (S.sht > 0) S.sht--;
+    if (S.loe > 0) S.loe--;
     if (S.hitstop > 0){ S.hitstop--; return false; }
     S.frame++;
     capNhatNV();
@@ -617,7 +625,27 @@ const DongCoMN = (() => {
     return {ten:'dung'};
   }
 
-  const API = {khungNhin:null, trongKhung, P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
+  /* ---------- LUỒNG J: tia trúng đòn riêng từng nhát (chỉ trả SỐ LIỆU hạt, trang tự vẽ) ----------
+     ngang: tia dẹt toả ngang theo hướng chém · cung: vòng cung hất lên · cheo: vệt chéo xuống · no: nổ tròn lớn + vòng ngoài */
+  function tiaTrung(e){
+    const f = e.face || 1, out = [], C1 = '#78e6e6', C2 = '#ffffff', C3 = '#1bd1ed';
+    const them = (vx, vy, t, m, g) => out.push({x:e.x, y:e.y, vx, vy, t, m, g:g ?? 0.18});
+    switch (e.tia){
+      case 'ngang': for (let i = 0; i < 7; i++){ const a = (i - 3) * 0.12; them(f * Math.cos(a) * (3 + i % 3), Math.sin(a) * 1.2 - 0.2, 8 + (i % 3), i % 2 ? C1 : C2, 0.05); }
+        them(-f * 1.5, 0, 6, C2, 0); break;
+      case 'cung': for (let i = 0; i < 9; i++){ const a = -Math.PI / 2 + (i - 4) * 0.28; them(Math.cos(a) * 3.2 + f * 1.2, Math.sin(a) * 3.6, 11 + (i % 3), i % 2 ? C1 : C2, 0.22); } break;
+      case 'cheo': for (let i = 0; i < 8; i++){ const k = (i - 3.5) * 0.9; them(f * (2.6 + k * 0.5), 2.2 + k * 0.5, 9 + (i % 3), i % 3 ? C1 : C2, 0.12); }
+        for (let i = 0; i < 3; i++) them(-f * (1 + i), -(1 + i * 0.6), 7, C3, 0.1); break;
+      case 'no': for (let i = 0; i < 16; i++){ const a = (i / 16) * Math.PI * 2, v = 3 + (i % 2) * 2.5; them(Math.cos(a) * v, Math.sin(a) * v - 0.8, 14 + (i % 3) * 2, i % 2 ? C1 : C2, 0.14); }
+        for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2; them(Math.cos(a) * 7, Math.sin(a) * 7, 7, C3, 0); } break;
+      default: for (let i = 0; i < 8; i++){ const a = (i / 8) * Math.PI * 2 + 0.3, v = 2 + (i % 2) * 2; them(Math.cos(a) * v, Math.sin(a) * v - 0.6, 10 + (i % 3) * 2, i % 2 ? C1 : C2); }
+    }
+    return out;
+  }
+  // khung loé trắng nhân vật khi trúng đòn (P.trangHurt bước đầu của trungdon; trong lúc dừng hình vẫn trắng)
+  const trangNV = () => !pl.dead && pl.hurtT > P.hurtT - P.trangHurt;
+
+  const API = {khungNhin:null, tiaTrung, trangNV, trongKhung, P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
     hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
     datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
   return API;

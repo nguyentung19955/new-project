@@ -273,15 +273,21 @@
       4,
       10
      ],
-     "dung_hinh": 0,
-     "rung": 1.2,
-     "day": 1.2,
+     "dung_hinh": 2,
+     "rung": 1.0,
+     "day": 0.9,
      "thu_muc": "don1",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0
+     ],
+     "nang": 0,
+     "tia": "ngang"
     },
     "don2": {
      "so_hinh": 8,
@@ -311,15 +317,21 @@
       4,
       8
      ],
-     "dung_hinh": 0,
-     "rung": 1.5,
-     "day": 1.4,
+     "dung_hinh": 3,
+     "rung": 1.6,
+     "day": 1.2,
      "thu_muc": "don2",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.4,
+      -1
+     ],
+     "nang": 3.2,
+     "tia": "cung"
     },
     "don3": {
      "so_hinh": 8,
@@ -349,8 +361,8 @@
       4,
       14
      ],
-     "dung_hinh": 0,
-     "rung": 2,
+     "dung_hinh": 4,
+     "rung": 2.2,
      "day": 1.6,
      "nhan": 1.2,
      "thu_muc": "don3",
@@ -358,7 +370,13 @@
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.8,
+      1
+     ],
+     "nang": 0,
+     "tia": "cheo"
     },
     "don4": {
      "so_hinh": 9,
@@ -389,15 +407,22 @@
       6,
       20
      ],
-     "dung_hinh": 2,
-     "rung": 3,
-     "day": 2.2,
+     "dung_hinh": 7,
+     "rung": 3.2,
+     "day": 2.4,
      "thu_muc": "don4",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0.7
+     ],
+     "nang": 2.2,
+     "tia": "no",
+     "loe": 5
     },
     "cheolen": {
      "so_hinh": 8,
@@ -604,15 +629,21 @@
       4,
       10
      ],
-     "dung_hinh": 0,
-     "rung": 1.2,
-     "day": 1.2,
+     "dung_hinh": 2,
+     "rung": 1.0,
+     "day": 0.9,
      "thu_muc": "don1",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0
+     ],
+     "nang": 0,
+     "tia": "ngang"
     },
     "don2": {
      "so_hinh": 8,
@@ -642,15 +673,21 @@
       4,
       8
      ],
-     "dung_hinh": 0,
-     "rung": 1.5,
-     "day": 1.4,
+     "dung_hinh": 3,
+     "rung": 1.6,
+     "day": 1.2,
      "thu_muc": "don2",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.4,
+      -1
+     ],
+     "nang": 3.2,
+     "tia": "cung"
     },
     "don3": {
      "so_hinh": 8,
@@ -680,8 +717,8 @@
       4,
       14
      ],
-     "dung_hinh": 0,
-     "rung": 2,
+     "dung_hinh": 4,
+     "rung": 2.2,
      "day": 1.6,
      "nhan": 1.2,
      "thu_muc": "don3",
@@ -689,7 +726,13 @@
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.8,
+      1
+     ],
+     "nang": 0,
+     "tia": "cheo"
     },
     "don4": {
      "so_hinh": 9,
@@ -720,15 +763,22 @@
       6,
       20
      ],
-     "dung_hinh": 2,
-     "rung": 3,
-     "day": 2.2,
+     "dung_hinh": 7,
+     "rung": 3.2,
+     "day": 2.4,
      "thu_muc": "don4",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0.7
+     ],
+     "nang": 2.2,
+     "tia": "no",
+     "loe": 5
     },
     "cheolen": {
      "so_hinh": 8,
@@ -935,15 +985,21 @@
       4,
       10
      ],
-     "dung_hinh": 0,
-     "rung": 1.2,
-     "day": 1.2,
+     "dung_hinh": 2,
+     "rung": 1.0,
+     "day": 0.9,
      "thu_muc": "don1",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0
+     ],
+     "nang": 0,
+     "tia": "ngang"
     },
     "don2": {
      "so_hinh": 8,
@@ -973,15 +1029,21 @@
       4,
       8
      ],
-     "dung_hinh": 0,
-     "rung": 1.5,
-     "day": 1.4,
+     "dung_hinh": 3,
+     "rung": 1.6,
+     "day": 1.2,
      "thu_muc": "don2",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.4,
+      -1
+     ],
+     "nang": 3.2,
+     "tia": "cung"
     },
     "don3": {
      "so_hinh": 8,
@@ -1011,8 +1073,8 @@
       4,
       14
      ],
-     "dung_hinh": 0,
-     "rung": 2,
+     "dung_hinh": 4,
+     "rung": 2.2,
      "day": 1.6,
      "nhan": 1.2,
      "thu_muc": "don3",
@@ -1020,7 +1082,13 @@
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      0.8,
+      1
+     ],
+     "nang": 0,
+     "tia": "cheo"
     },
     "don4": {
      "so_hinh": 9,
@@ -1051,15 +1119,22 @@
       6,
       20
      ],
-     "dung_hinh": 2,
-     "rung": 3,
-     "day": 2.2,
+     "dung_hinh": 7,
+     "rung": 3.2,
+     "day": 2.4,
      "thu_muc": "don4",
      "chan": [
       128,
       172
      ],
-     "lap": false
+     "lap": false,
+     "rung_huong": [
+      1,
+      0.7
+     ],
+     "nang": 2.2,
+     "tia": "no",
+     "loe": 5
     },
     "cheolen": {
      "so_hinh": 8,
