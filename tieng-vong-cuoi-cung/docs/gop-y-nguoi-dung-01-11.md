@@ -27,4 +27,4 @@
 | 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ✅ ChatGPT đã trả lời (TVCC_Duyet_DongTac_HieuUng.txt) – đã làm bụi bám tường, vồ Màn Tang; ✅ báo trước rõ hơn cho đập chuông + phân biệt đạn (luồng H, BAO-CAO-H.md) |
 | 24 | Trượt bám tường có khói bụi che chân và tay | ✅ khói bụi + tia lửa kiếm (ChatGPT vẽ), đã thu nhỏ ×0.7 |
 | 25 | Leo/treo dây nhỏ hơn bình thường | ✅ phóng to cho cùng cỡ (đo theo tóc+mặt nạ) |
-| 26 | Đi qua dây giữa 2 bờ không rơi; chỉ leo khi bấm ↑/↓; bấm Nhảy trên dây không kèm ↑/↓ thì buông rơi | ✅ xong (cầu dây) |
+| 26 | Khe trống có dây thì rơi (không đứng lơ lửng); chỉ leo khi bấm ↑/↓; bấm Nhảy trên dây không kèm ↑/↓ thì buông rơi | ✅ xong |
