@@ -596,7 +596,7 @@
   function veBuiTuong(){   // khói bụi + tia lửa khi trượt bám tường
     const st = E.trangThai().ten;
     if ((st !== 'bamtuong' && st !== 'chemtuong') || !pl.wallDir) return;
-    const o = (E.S.frame >> 2) % 6, k = 1.05, w = 96 * k, wd = pl.wallDir;
+    const o = (E.S.frame >> 2) % 6, k = 0.7, w = 96 * k, wd = pl.wallDir;
     const tuongX = wd < 0 ? pl.x : pl.x + pl.w, cx = tuongX - wd * (w / 2 - 14 * k), cy = pl.y + pl.h - w / 2 + 14;
     veFx('bui_tuong', o, cx, cy, wd > 0, k, 0.7);
   }

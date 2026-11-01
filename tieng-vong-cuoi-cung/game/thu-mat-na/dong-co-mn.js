@@ -255,7 +255,27 @@ const DongCoMN = (() => {
           pl.leo = false; pl.leoKhoa = 26; pl.vx = dir * P.runSpeed; pl.vy = -jumpVel * 0.45; pl.face = dir; pl.djCo = true; ketDat(); pl.sliding = false; return;
         }
         if (ry === 1 || (!trenDay() && pl.vy > 0)){ pl.leo = false; pl.leoKhoa = 10; }
-        else if (!trenDay() && pl.vy < 0){ pl.leo = false; pl.leoKhoa = 30; pl.vy = -jumpVel * 0.8; pl.vx = dir * P.runSpeed; }   // lên tới đầu dây: bật lên mép, không tự bám lại ngay
+        else if (!trenDay() && pl.vy < 0){   // lên tới đầu dây: bước lên mép sàn bên cạnh (đứng hẳn), không nhảy
+          const T = BD.T, c = Math.floor(cxDay / T), chan = pl.y + pl.h, ben = [dir || pl.face, -(dir || pl.face)];
+          let len = false;
+          const dung = ch => ch === '#' || ch === '=';
+          for (const sd of ben){
+            for (let d = 1; d <= 4 && !len; d++){
+              const cc = c + sd * d;
+              for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) + 1 && !len; rr++){
+                if (!dung(tile(cc, rr)) || tile(cc, rr - 1) === '#' || tile(cc, rr - 2) === '#') continue;
+                let thong = true; for (let k = 1; k < d; k++) if (tile(c + sd * k, rr - 1) === '#' || tile(c + sd * k, rr - 2) === '#') thong = false;
+                if (!thong) continue;
+                const nx = cc * T + (sd > 0 ? 2 : T - pl.w - 2), ny = rr * T - pl.h - 0.01;
+                if (collide(nx, ny, pl.w, pl.h)) continue;
+                pl.x = nx; pl.y = ny; pl.vy = 0; pl.vx = 0; pl.face = sd; len = true;
+              }
+            }
+            if (len) break;
+          }
+          if (len){ pl.leo = false; pl.leoKhoa = 20; pl.onGround = true; SUKIEN.push({k:'cham-dat', cao:0}); }
+          else { pl.y += P.leoSpeed; pl.vy = 0; pl.leoDi = false; }   // không có mép: dừng ở đỉnh dây
+        }
         ketDat(); pl.sliding = false; return;
       }
     }
