@@ -12,6 +12,7 @@ V1.nap = async function(){
   await Promise.all([['bg', 'bg_far'], ['mid', 'bg_mid'], ['hon', 'fx_hon'], ['vm1', 'v_mid1'], ['vm2', 'v_mid2']].map(([k, f]) => V1.napAnh(k, A + f + '.png')));
   // hiệu ứng chiêu quái (ChatGPT vẽ): 6 ô 96×96, hướng TRÁI
   await Promise.all(['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-quai/' + n + '.png')));
+  await Promise.all(['ngang', 'cung', 'cheo', 'no'].map(n => V1.napAnh('fx_c_' + n, '../../art/hieu-ung/chem-moi/' + n + '.png')));   // hiệu ứng trúng đòn (ChatGPT vẽ)
   await Promise.all(['nut_dat', 'song_dat', 're_troi', 'khung_mau', 'ruot_mau', 'i_manh_am', 'i_chuong_vo', 'i_mat_na'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-moi/' + n + '.png')));   // hình ChatGPT thay hình vẽ bằng code
   // dấu dẫn hướng + dấu báo đòn (ChatGPT vẽ): art/vung-1/dao-cu/dan-duong/
   await Promise.all(['bia', 'chuong_nho', 'coc_chuong', 'nut_bi_mat', 'canh_bao'].map(n => V1.napAnh('dd_' + n, '../../art/vung-1/dao-cu/dan-duong/' + n + '.png')));

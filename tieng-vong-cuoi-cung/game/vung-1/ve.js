@@ -234,13 +234,21 @@
   };
   V1.suKienVe = function(){
     for (const e of E.SUKIEN){
-      if (e.k === 'trung') TIA.push(...E.tiaTrung(e));   // tia riêng từng nhát (engine trả số liệu)
+      if (e.k === 'trung'){ const ten = {ngang:'ngang', cung:'cung', cheo:'cheo', no:'no'}[e.tia] || 'ngang';
+        if (V1.IMG['fx_c_' + ten]) CHEM.push({ten, x:e.x, y:e.y, f:e.face || 1, t:0}); else TIA.push(...E.tiaTrung(e)); }   // hiệu ứng trúng đòn ChatGPT vẽ (6 khung, hướng PHẢI)
       if (e.k === 'bi-danh') for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2;
         TIA.push({x:pl.x + pl.w / 2, y:pl.y + pl.h - 60, vx:Math.cos(a) * 3, vy:Math.sin(a) * 3, t:12, m:'#ffbe50', g:0.18}); }
       if (e.k === 'nut-trung' || e.k === 'vo-tuong'){ V1.hieuUng('da', (e.cot + 0.5) * T, (e.hang + 0.5) * T); if (e.k === 'nut-trung') V1.veNenPhong(); }
     }
   };
-  V1.buocTia = function(){ for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g; if (--p.t <= 0) TIA.splice(i, 1); } };
+  const CHEM = [], CHEM_NHIP = 3;   // mỗi khung 3 bước
+  function veChem(){
+    for (const c of CHEM){ const im = V1.IMG['fx_c_' + c.ten], k = Math.floor(c.t / CHEM_NHIP); if (!im || k > 5) continue;
+      const s = c.ten === 'no' ? 1.0 : 0.85, w = 128 * s;
+      ctx.save(); ctx.imageSmoothingEnabled = false; ctx.translate(Math.round(c.x), Math.round(c.y)); if (c.f < 0) ctx.scale(-1, 1);
+      ctx.drawImage(im, k * 128, 0, 128, 128, Math.round(-w / 2), Math.round(-w / 2), Math.round(w), Math.round(w)); ctx.restore(); }
+  }
+  V1.buocTia = function(){ for (let i = CHEM.length - 1; i >= 0; i--) if (++CHEM[i].t >= CHEM_NHIP * 6) CHEM.splice(i, 1); for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g; if (--p.t <= 0) TIA.splice(i, 1); } };
 
   /* ---------------- NHÂN VẬT + QUÁI (như phòng demo) ---------------- */
   function khoi(fx, fy, w, h, mau, face){
@@ -925,6 +933,7 @@
     veNguy();
     veNV(); veBuiTuong();
     for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round(p.x / 2) * 2, Math.round(p.y / 2) * 2, 4, 4); }
+    veChem();
     ctx.restore();
     // 3) tường giả: mờ đi khi nhân vật ở trong / sát
     const cx = Math.floor((pl.x + pl.w / 2) / T), cy = Math.floor((pl.y + pl.h / 2) / T);

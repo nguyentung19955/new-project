@@ -81,7 +81,7 @@
     for (const q of E.QUAI){
       if (q.dead || q.laTrum) continue;
       const id = q.def.id;
-      if (id === 'tan') veVongTan(q);
+      if (id === 'tan'){ if (!(V1.IMG && V1.IMG.fx_nut_dat)) veVongTan(q); }   // đã có nứt đất ChatGPT vẽ (ve-chieu-quai) → bỏ dấu khối đỏ vẽ bằng code
       else if (id === 'tang') veManTang(q);
     }
     buocBui();
