@@ -106,7 +106,7 @@ const DongCoMN = (() => {
   function shake(x, y, m){ S.shx = x; S.shy = y; S.shm = Math.max(S.shm * (S.sht > 0 ? 1 : 0), m); S.sht = 8; }
 
   function datNV(x, chanY){
-    Object.assign(pl, {x:x - pl.w / 2, y:chanY - pl.h, vx:0, vy:0, face:1, dash:0, atk:'', pound:null, hoi:-1, hurtT:0, iframes:0, dead:false, deadT:0,
+    Object.assign(pl, {x:x - pl.w / 2, y:chanY - pl.h, vx:0, vy:0, face:1, dash:0, atk:'', pound:null, hoi:-1, hurtT:0, iframes:0, dead:false, deadT:0, mantle:null,
       hp:P.maxHp, jumpBuf:0, dashBuf:0, airDash:false, djCo:false, djT:-1, landT:0, comboHan:0, onGround:true, wallLock:0, leo:false, leoKhoa:0, roiQua:0, sliding:false});
     pl.sx = x; pl.sy = chanY; CHO.co = false;
   }
@@ -243,6 +243,12 @@ const DongCoMN = (() => {
     const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
     // đứng trên mép đất ngay trên đầu dây: bấm ↓ để leo xuống
     const dauDayDuoiChan = () => pl.onGround && daySo(cxDay, pl.y + pl.h + 2);
+    if (pl.mantle){   // đang trèo từ đầu dây lên mép sàn: nội suy mượt, khoá điều khiển trong lúc trèo
+      const m = pl.mantle; m.t++; const k = Math.min(1, m.t / m.n), e = k * k * (3 - 2 * k);
+      pl.x = m.x0 + (m.x1 - m.x0) * e; pl.y = m.y0 + (m.y1 - m.y0) * Math.min(1, e * 1.5) - Math.sin(k * Math.PI) * 6; pl.vx = pl.vy = 0;
+      if (k >= 1){ pl.x = m.x1; pl.y = m.y1; pl.mantle = null; pl.onGround = true; pl.leoKhoa = 20; SUKIEN.push({k:'cham-dat', cao:0}); }
+      pl.sliding = false; return;
+    }
     if (pl.leoKhoa > 0) pl.leoKhoa--;
     if (!pl.leo && pl.leoKhoa <= 0 && (trenDay() || (IN.xuong() && dauDayDuoiChan())) && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || dauDayDuoiChan())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
       const tuCau = !trenDay() && dauDayDuoiChan();
@@ -277,23 +283,30 @@ const DongCoMN = (() => {
         if (ry === 1 || (!trenDay() && pl.vy > 0)){ pl.leo = false; pl.leoKhoa = 10; }
         else if (!trenDay() && pl.vy < 0){   // lên tới đầu dây: bước lên mép sàn bên cạnh (đứng hẳn), không nhảy
           const T = BD.T, c = Math.floor(cxDay / T), chan = pl.y + pl.h, ben = [dir || pl.face, -(dir || pl.face)];
-          let len = false;
+          // lên tới đầu dây: tìm chỗ đứng GẦN NHẤT (miệng khe cầu dây ngay tại chỗ, hoặc mép sàn ≤ 4 ô hai bên),
+          // rồi TRÈO LÊN MƯỢT trong vài khung (thấy rõ đường đi) – không còn dịch chuyển tức thời
           const dung = ch => ch === '#' || ch === '=';
+          let best = null;
+          for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) && !best; rr++){
+            if (!(BD.cau && BD.cau.has(c + ',' + rr))) continue;
+            const ny = rr * T - pl.h - 0.01; if (!collide(pl.x, ny, pl.w, pl.h)) best = {x:pl.x, y:ny, d:0, sd:pl.face};
+          }
           for (const sd of ben){
-            for (let d = 1; d <= 4 && !len; d++){
+            for (let d = 1; d <= 4; d++){
+              if (best && best.d < d) break;
               const cc = c + sd * d;
-              for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) + 1 && !len; rr++){
+              for (let rr = Math.floor(chan / T) - 2; rr <= Math.floor(chan / T) + 1; rr++){
                 if (!dung(tile(cc, rr)) || tile(cc, rr - 1) === '#' || tile(cc, rr - 2) === '#') continue;
                 let thong = true; for (let k = 1; k < d; k++) if (tile(c + sd * k, rr - 1) === '#' || tile(c + sd * k, rr - 2) === '#') thong = false;
                 if (!thong) continue;
                 const nx = cc * T + (sd > 0 ? 2 : T - pl.w - 2), ny = rr * T - pl.h - 0.01;
                 if (collide(nx, ny, pl.w, pl.h)) continue;
-                pl.x = nx; pl.y = ny; pl.vy = 0; pl.vx = 0; pl.face = sd; len = true;
+                if (!best || d < best.d || (d === best.d && ny > best.y)) best = {x:nx, y:ny, d, sd};   // cùng khoảng cách: chọn mép THẤP hơn (sàn chính, không leo lên đầu bia/vật)
+                break;
               }
             }
-            if (len) break;
           }
-          if (len){ pl.leo = false; pl.leoKhoa = 20; pl.onGround = true; SUKIEN.push({k:'cham-dat', cao:0}); }
+          if (best){ pl.leo = false; pl.face = best.sd; pl.vx = pl.vy = 0; pl.mantle = {x0:pl.x, y0:pl.y, x1:best.x, y1:best.y, t:0, n:Math.round(9 + 4 * best.d)}; ketDat(); pl.sliding = false; return; }
           else { pl.y += P.leoSpeed; pl.vy = 0; pl.leoDi = false; }   // không có mép: dừng ở đỉnh dây
         }
         ketDat(); pl.sliding = false; return;
