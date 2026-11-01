@@ -283,11 +283,8 @@ def ve_phong(pid):
                 if dat('p_den_tho', x + dx, (rr + 1) * T - 4, 1.0, ep=True): den_ra.append([x + dx - PAD * T, mat_san(x + dx, (rr + 1) * T - 4) - 42 - PAD * T]); ok = True; break
         if not ok: den_ra.append([x - PAD * T, r * T + 8 - PAD * T])
 
-    # Chuông Lưu: chuông đồng lớn úp trên sàn (sáng lên bằng ánh đèn lúc chơi)
-    if P.get('chuong_luu'):
-        cl = P['chuong_luu']; x = (cl['cot'] + PAD) * T + 8
-        for dx in (0, -6, 6, -12, 12):
-            if dat('p_chuong_up', x + dx, (cl['hang'] + PAD + 1) * T - 4, 1.0, .85, ep=True): break
+    # Chuông Lưu: KHÔNG vẽ vào ảnh phòng nữa – game vẽ hình ChatGPT (art/vung-1/dao-cu/chuong-luu-tat/sang.png)
+    # đè lên lúc chơi (luồng E). Vùng quanh chuông vẫn được giữ trống (mảng `cam` ở trên) để đồ trang trí không đè.
     # trang trí theo ID của luồng B
     BAN = {'dau_lau': ['sk_3', 'sk_4', 'sk_6'], 'hai_cot': ['sk_1'], 'xac_nguoi_ngoi': ['sk_1'], 'lo_duc_chuong': ['p_manh_chuong', 'p_chuong_nghieng'],
            'gian_treo_chuong': ['p_gia_gay'], 'be_da_chuong': ['p_bia'], 'vo_bo_khong_lo': ['p_manh_chuong'], 'chuong_vo_lon': ['p_chuong_nghieng'],

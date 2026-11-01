@@ -77,6 +77,14 @@
     return o;
   };
   V1.odCua = odCua;
+  // ô bịt khi cửa KHOÁ (can chuong_vo…): ô lỗ cửa + 1 cột ô trống ngay phía trong (cửa ngang trái/phải) – để người chơi dừng
+  // trước song rễ của hình cửa khoá (hình rộng ~3 ô, chân trên sàn), không đứng lọt vào trong hình.
+  const odKhoa = c => {
+    const o = odCua(c); if (c.huong !== 'trai' && c.huong !== 'phai') return o;
+    const dx = c.huong === 'phai' ? -1 : 1, L0 = G.phong ? G.phong.luoi : null;
+    return o.concat(odCua(c).map(([x, y]) => [x + dx, y]).filter(([x, y]) => L0 && L0[y] && L0[y][x] === '.'));
+  };
+  V1.odKhoa = odKhoa;
 
   function demKho(can){ return G.luu.kho[can] || 0; }
   function cuaBiKhoa(p, c){ const k = p.khoa; return !!(k && k.cua === c.id && demKho(k.can) < (k.so || 1)); }
@@ -89,7 +97,7 @@
     E.napBanDo(L.map(r => r.join('')));
     // cửa khoá: bịt bằng ô đặc
     G.cuaKhoa = p.cua.filter(c => cuaBiKhoa(p, c));
-    for (const c of G.cuaKhoa) for (const [x, y] of odCua(c)) if (E.BD.L[y]) E.BD.L[y][x] = '#';
+    for (const c of G.cuaKhoa) for (const [x, y] of odKhoa(c)) if (E.BD.L[y]) E.BD.L[y][x] = '#';
     G.dongCua = false; G.tinhAnh = null; G.trum = null; G.roi.length = 0; G.vatRoi.length = 0; G.nguy.length = 0;
     // quái
     E.QUAI.length = 0;
@@ -196,7 +204,7 @@
     // chạm cửa khoá: nhắc
     for (const c of G.cuaKhoa){
       const [x, y] = odCua(c)[0], dx = Math.abs(cx - (x + 0.5) * T), dy = Math.abs(cy - (y + 1) * T);
-      if (dx < T * 1.6 && dy < T * 2.5 && G.tbT <= 0){
+      if (dx < T * 2.4 && dy < T * 2.5 && G.tbT <= 0){
         const k = p.khoa, ten = {chuong_vo:'Chuông Vỡ', the_ten:'Thẻ Tên'}[k.can] || k.can;
         thongBao('Cửa im lặng – cần ' + k.so + ' ' + ten + ' (đang có ' + demKho(k.can) + ')');
       }
@@ -229,6 +237,7 @@
     for (const c of G.cuaKhoa.slice()) if (!cuaBiKhoa(p, c)){
       G.cuaKhoa.splice(G.cuaKhoa.indexOf(c), 1); doi = true;
       if (!G.dongCua) for (const [x, y] of odCua(c)) if (E.BD.L[y]) E.BD.L[y][x] = '.';
+      for (const [x, y] of odKhoa(c).slice(odCua(c).length)) if (E.BD.L[y]) E.BD.L[y][x] = '.';   // cột phía trong luôn mở lại
     }
     if (doi && V1.veNenPhong) V1.veNenPhong();
   }

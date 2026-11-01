@@ -3,12 +3,15 @@
    • Tinh anh Vọng Tàn ('tan'): đập chuông → SÓNG ĐẤT chạy dọc sàn 2 phía (nhảy né). Dưới 50% máu: NHỊP GIẢ (giơ chuông, vòng xám, không sóng) rồi NHỊP THẬT ngay sau.
    • Trùm "Mẫu Chuông Rỗng" (P12 / phòng "trum": true): Gõ Không Tiếng (vòng sóng câm sát sàn – nhảy né) + Mưa Mặt Nạ (mặt nạ rơi, nảy 1 lần).
      Chuyển pha ở 50% máu. Mọi đòn báo trước ≥ 0.45 s (27 bước 60 Hz).
-   Hình trùm: lấy theo ID clip trong trum.json (dung / go / tha_mat_na / chuyen_pha / trung / chet); chưa có → ve.js vẽ hình tạm. */
+   • (luồng E) Quét Chuông Ngang: khi người chơi đứng gần (≤ 4.5 ô), trùm giơ chuông báo 0.6 s rồi quét ngang sát sàn ra phía trước ~4 ô
+     (cao 80 px → nhảy qua hoặc lùi ra xa). Pha 2 quét xa hơn.
+   Hình trùm: art/vung-1/trum/nghi.png, gio-chuong.png, vo-mat-na.png (ve.js veTrumAnh); nếu trum.json có clip thật thì ưu tiên clip;  trong trum.json (dung / go / tha_mat_na / chuyen_pha / trung / chet); chưa có → ve.js vẽ hình tạm. */
 (() => {
   const V1 = window.V1, E = DongCoMN, pl = E.pl, T = 48, G = V1.G;
   const BAO = 30;   // 0.5 s báo trước (≥ 0.45 s)
 
   /* ---------------- NGUY HIỂM DÙNG CHUNG ---------------- */
+  function quet(x, y, dir, dai){ G.nguy.push({loai:'quet', x, y, dir, dai, h:80, t:0, gay:1}); }
   function songDat(x, yDat, dir, v, cao){ G.nguy.push({loai:'song', x, y:yDat, dir, v, w:30, h:cao || 40, t:0, gay:1}); }
   function vong(x, y, gia, mau){ G.nguy.push({loai:'vong', x, y, r:10, t:0, gia:!!gia, mau}); }
   function matNa(x, tre){
@@ -22,6 +25,12 @@
     const hb = E.hurtBox(), Wp = E.BD.COT * T;
     for (let i = G.nguy.length - 1; i >= 0; i--){
       const n = G.nguy[i]; n.t++;
+      if (n.loai === 'quet'){   // vệt quét chuông: gây sát thương 12 bước đầu, sau đó chỉ còn vệt mờ
+        if (n.t > 26){ G.nguy.splice(i, 1); continue; }
+        const k = Math.min(1, n.t / 6), x0 = n.dir > 0 ? n.x : n.x - n.dai * k;
+        if (n.t <= 12 && !pl.dead && E.overlap(hb, {x:x0, y:n.y - n.h, w:n.dai * k, h:n.h})) E.hurt(n.dir, n.gay);
+        continue;
+      }
       if (n.loai === 'vong'){ n.r += n.gia ? 5 : 7; if (n.t > 40) G.nguy.splice(i, 1); continue; }
       if (n.loai === 'song'){
         n.x += n.dir * n.v;
@@ -70,7 +79,7 @@
   };
 
   /* ---------------- TRÙM: MẪU CHUÔNG RỖNG ---------------- */
-  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:300, than:[45, 120], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
+  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:300, than:[84, 160], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
   V1.TRUM_DEF = DEF;
   V1.taoTrum = function(p){
     const TR = V1.TRUMJ || {};
@@ -98,7 +107,10 @@
         if (Math.abs(dx) > 200){ const bi = E.moveX(q, q.face * (pha2 ? 0.9 : 0.6), false); q.dangDi = !bi; }
         if (--q.cd <= 0){
           q.lan++;
-          const chon = (q.lan % 2 === 1) !== (Math.random() < 0.25) ? 'go' : 'tha';
+          let chon = (q.lan % 2 === 1) !== (Math.random() < 0.25) ? 'go' : 'tha';
+          if (Math.abs(dx) < T * 4.5 && q._vuaQuet !== true && Math.random() < 0.6) chon = 'quet';
+          q._vuaQuet = chon === 'quet';
+          if (chon === 'quet') q.face = dx > 0 ? 1 : -1;
           doiTrangThai(q, chon);
         }
         break; }
@@ -110,6 +122,17 @@
         }
         if (pha2 && q.t === BAO + 34){ const fy = q.y + q.h; songDat(cx - 40, fy, -1, 6.5, 44); songDat(cx + 40, fy, 1, 6.5, 44); vong(cx, fy - 40, false, '#cfd8e6'); E.shake(0, 1, 3); }
         if (q.t >= BAO + (pha2 ? 64 : 40)){ doiTrangThai(q, 'dung'); q.cd = pha2 ? 60 : 95; }
+        break; }
+      case 'quet': {   // Quét Chuông Ngang
+        clip = 'go';
+        const BQ = BAO + 6;
+        q.dangQuet = q.t >= BQ && q.t < BQ + 16;
+        if (q.t === BQ){
+          const fy = q.y + q.h;
+          quet(cx + q.face * 24, fy, q.face, pha2 ? 230 : 190); E.shake(q.face, 0.5, 3);
+        }
+        if (q.t >= BQ && q.t < BQ + 8) E.moveX(q, q.face * 1.5, false);   // nhoài người theo cú quét
+        if (q.t >= BQ + 44){ q.dangQuet = false; doiTrangThai(q, 'dung'); q.cd = pha2 ? 50 : 80; }
         break; }
       case 'tha': {   // Mưa Mặt Nạ
         clip = 'tha_mat_na';
@@ -134,7 +157,8 @@
     }
     if (q.flash > 2 && clip === 'dung') clip = 'trung';
     if (clip !== q.clip){ q.clip = clip; q.clipT = 0; }
-    q.baoTruoc = (q.st === 'go' || q.st === 'tha') && q.t < BAO;
+    q.baoTruoc = ((q.st === 'go' || q.st === 'tha') && q.t < BAO) || (q.st === 'quet' && q.t < BAO + 6);
+    if (q.st !== 'quet') q.dangQuet = false;
   }
   function trungTrum(q, dmg, face){
     if (q.st === 'chet') return;
