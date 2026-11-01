@@ -1,0 +1,181 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tiếng Vọng Cuối Cùng – Vùng 1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+/* Vùng 1 "Ruột Cây Than Khóc" – Đợt 1 MVP. Logic 960×540, phóng số nguyên. Phòng: phong/<ID>.json (luồng B) hoặc phong-thu/ (thử). */
+:root{--night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--cyan:#78e6e6;--line:#4A5A6E;--k:1;color-scheme:dark}
+html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
+#cv{display:block;image-rendering:pixelated}
+#top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:max(8px,calc(env(safe-area-inset-right,0px) + 8px));display:flex;gap:6px;z-index:3}
+.nut{height:34px;min-width:44px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:rgba(26,33,43,.7);color:var(--ink);font-size:13px;font-weight:700;font-family:inherit}
+.nut.on{border-color:var(--bell);color:var(--bell)}
+#keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#a9b3bf;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px #000}
+body.touch #keys{display:none}
+.tc{display:none} body.touch .tc{display:block}
+#dpad{position:absolute;left:calc(env(safe-area-inset-left,0px) + 10px);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);
+  width:calc(136px*var(--k));height:calc(136px*var(--k));border-radius:50%;background:rgba(26,33,43,.35);border:2px solid rgba(206,240,214,.28);opacity:.45}
+#dpad.act{opacity:.9}
+#dpad .mui{position:absolute;color:rgba(243,230,200,.6);font-size:calc(15px*var(--k));font-weight:700;pointer-events:none}
+#knob{position:absolute;left:calc(47px*var(--k));top:calc(47px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:50%;
+  background:rgba(206,240,214,.25);border:2px solid rgba(206,240,214,.5);will-change:transform}
+#acts{position:absolute;right:calc(env(safe-area-inset-right,0px) + 8px);bottom:calc(env(safe-area-inset-bottom,0px) + 6px);width:calc(200px*var(--k));height:calc(170px*var(--k))}
+.ab{position:absolute;width:calc(60px*var(--k));height:calc(60px*var(--k));border-radius:50%;display:grid;place-items:center;font-size:calc(13px*var(--k));font-weight:700;
+  background:rgba(26,33,43,.45);border:2px solid rgba(243,230,200,.4);color:var(--ink);opacity:.5}
+.ab.on{background:rgba(225,184,90,.55);border-color:var(--bell);opacity:1}
+#b-a{left:calc(50px*var(--k));top:calc(4px*var(--k))}
+#b-h{left:calc(124px*var(--k));top:calc(-14px*var(--k));width:calc(48px*var(--k));height:calc(48px*var(--k));font-size:calc(12px*var(--k))}
+#b-s{left:0;bottom:calc(14px*var(--k))}
+#b-j{right:0;bottom:0;width:calc(78px*var(--k));height:calc(78px*var(--k))}
+#b-nghi{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);transform:translateX(-50%);display:none;z-index:4;
+  height:44px;padding:0 18px;border-radius:22px;border:2px solid var(--bell);background:rgba(58,48,32,.85);color:#ffe08a;font-weight:800;font-size:15px;font-family:inherit}
+.lop{position:absolute;inset:0;display:none;place-items:center;background:rgba(5,6,10,.82);z-index:6}
+.lop.mo{display:grid}
+.hop{max-width:min(560px,92vw);padding:22px 24px;border:1px solid var(--line);border-radius:14px;background:rgba(14,18,26,.94);text-align:center;line-height:1.45}
+.hop h1{margin:0 0 4px;font-size:26px;color:var(--bell);letter-spacing:.5px}
+.hop h2{margin:0 0 10px;font-size:15px;color:#a9b3bf;font-weight:600}
+.hop p{margin:8px 0;font-size:14px;color:#c9d0d8}
+.hop .hang{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.hop button{height:46px;min-width:150px;padding:0 16px;border-radius:10px;border:2px solid var(--line);background:#1c2430;color:var(--ink);font-weight:800;font-size:15px;font-family:inherit}
+.hop button.chinh{border-color:var(--bell);color:#ffe08a;background:#3a3020}
+.hop button:disabled{opacity:.4}
+.hop small{display:block;color:#7f8a99;font-size:12px;margin-top:10px}
+#rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
+@media (orientation:portrait){ body.touch #rotate{display:grid} }
+</style>
+<div id="game">
+  <canvas id="cv" width="960" height="540"></canvas>
+  <div id="top" class="ui">
+    <button id="b-map" class="nut ui" type="button">Bản đồ</button>
+  </div>
+  <div id="dpad" class="tc"><span class="mui" style="left:44%;top:4%">↑</span><span class="mui" style="left:44%;bottom:4%">↓</span><span class="mui" style="left:6%;top:40%">←</span><span class="mui" style="right:6%;top:40%">→</span><div id="knob"></div></div>
+  <div id="acts" class="tc">
+    <div class="ab" id="b-a" data-k="a">Chém</div><div class="ab" id="b-h" data-k="h">Hồi</div>
+    <div class="ab" id="b-s" data-k="s">Lướt</div><div class="ab" id="b-j" data-k="j">Nhảy</div>
+  </div>
+  <button id="b-nghi" class="ui" type="button">Nghỉ ở Chuông</button>
+  <div id="keys">← → đi · Z/Space nhảy (2 lần = nhảy đôi) · X chém (↓+X trên không: đập đất) · ↑ bám dây / nghỉ chuông · ↓+Z xuống sàn mỏng · C lướt · V hồi máu · M bản đồ</div>
+
+  <div id="l-menu" class="lop ui mo"><div class="hop">
+    <h1>Tiếng Vọng Cuối Cùng</h1><h2>Vùng 1 · Ruột Cây Than Khóc</h2>
+    <p id="menu-tt">Đang nạp…</p>
+    <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Tiếp tục</button><button id="b-moi" type="button" disabled>Chơi mới</button></div>
+    <small>Tìm 3 Chuông Vỡ để mở cửa Đàn Chuông Câm. Nghỉ ở Chuông Lưu để lưu game, hồi máu và nâng cấp.</small>
+  </div></div>
+  <div id="l-chuong" class="lop ui"><div class="hop">
+    <h1>Chuông Lưu</h1>
+    <p id="chuong-tt"></p>
+    <div class="hang"><button id="b-mua" type="button">Sinh lực +1</button><button id="b-di" class="chinh" type="button">Đi tiếp</button></div>
+    <small>Phím: X mua · Z / Enter đi tiếp</small>
+  </div></div>
+  <div id="l-het" class="lop ui"><div class="hop">
+    <h1>Hết Vùng 1</h1><h2>Mẫu Chuông Rỗng đã im lặng</h2>
+    <p id="het-tt"></p>
+    <div class="hang"><button id="b-het-tiep" class="chinh" type="button">Về Chuông Lưu</button><button id="b-het-moi" type="button">Chơi lại từ đầu</button></div>
+  </div></div>
+  <div id="rotate">Xoay ngang điện thoại để chơi</div>
+</div>
+<script src="../thu-mat-na/sprite-mn.js"></script>
+<script src="../thu-mat-na/dong-co-mn.js"></script>
+<script src="nap.js"></script>
+<script src="dau-vao.js"></script>
+<script src="the-gioi.js"></script>
+<script src="trum.js"></script>
+<script src="ve.js"></script>
+<script>
+'use strict';
+const E = DongCoMN, pl = E.pl, G = V1.G;
+const Q = new URLSearchParams(location.search);
+const OPT = V1.OPT = {hb:Q.get('hitbox') === '1', tu:Q.get('tu') === '1', phong:Q.get('phong'), moi:Q.get('moi') === '1', thu:Q.get('thu') === '1'};
+const $ = id => document.getElementById(id);
+
+/* ---------- MENU / CHUÔNG / HẾT ---------- */
+function moLop(id){ for (const l of document.querySelectorAll('.lop')) l.classList.toggle('mo', l.id === id); }
+async function choi(moi){
+  moLop(''); $('b-tiep').disabled = $('b-moi').disabled = true;
+  await V1.batDau(moi, OPT.phong);
+  V1.xoaVao();
+}
+$('b-tiep').onclick = () => choi(false);
+$('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Xoá bản lưu cũ và chơi lại từ đầu?')) choi(true); };
+V1.moChuong = function(gui, ok){
+  $('chuong-tt').innerHTML = 'Đã hồi đầy máu và lượt hồi. Quái trong vùng sống lại.<br>' + (gui > 0 ? 'Đã gửi ' + gui + ' Mảnh Âm vào chuông (an toàn khi ngã).<br>' : '') +
+    (ok ? 'Đã lưu.' : '<b style="color:#ffbe50">Không lưu được (trình duyệt chặn bộ nhớ).</b>') + '<br>Mảnh Âm: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
+  capNhatNutMua(); moLop('l-chuong');
+};
+function capNhatNutMua(){
+  const b = $('b-mua'), L = G.luu;
+  b.textContent = L.nangMau >= 1 ? 'Sinh lực: đã tối đa' : 'Sinh lực +1 (' + V1.giaMau + ' Mảnh Âm)';
+  b.disabled = !V1.coTheMuaMau();
+}
+function mua(){ const s = V1.muaMau(); V1.thongBao(s); $('chuong-tt').innerHTML = s + '<br>Mảnh Âm còn: <b style="color:#78e6e6">' + V1.tongManh() + '</b>'; capNhatNutMua(); }
+function roiChuong(){ moLop(''); G.trang = 'choi'; V1.xoaVao(); }
+$('b-mua').onclick = mua; $('b-di').onclick = roiChuong;
+V1.thangTrum = function(){
+  G.luu.trumHa = true; V1.ghiLuu();
+  const L = G.luu, ph = Math.floor(L.giay / 60), gi = Math.floor(L.giay % 60);
+  setTimeout(() => {
+    $('het-tt').innerHTML = 'Thời gian: ' + ph + ' phút ' + gi + ' giây · Ngã: ' + L.chet + ' lần<br>Chuông Vỡ: ' + L.kho.chuong_vo + '/3 · Mảnh Âm: ' + V1.tongManh() + (L.kho.loi_vong_tan ? ' · Có Lõi Vọng Tàn' : '') +
+      '<br><i>Vùng 2 "Rừng Chuông Chết" – đợt sau.</i>';
+    G.trang = 'het'; moLop('l-het');
+  }, 900);
+};
+$('b-het-tiep').onclick = () => choi(false);
+$('b-het-moi').onclick = () => choi(true);
+$('b-map').onclick = () => { if (G.trang === 'choi') G.trang = 'ban_do'; else if (G.trang === 'ban_do') G.trang = 'choi'; };
+$('b-nghi').onclick = () => { if (G.trang === 'choi' && G.ganChuong) V1.nghiChuong(); };
+
+/* ---------- VÒNG LẶP 60 Hz CỐ ĐỊNH ---------- */
+function mot(){
+  V1.docVao();
+  if (G.trang === 'menu'){ if (V1.bam('ok') || V1.bam('j')){ if (!$('b-tiep').disabled) choi(false); else if (!$('b-moi').disabled) choi(true); } return; }
+  if (G.trang === 'chuong'){ if (V1.bam('a')) mua(); else if (V1.bam('j') || V1.bam('ok') || V1.bam('thoat')) roiChuong(); return; }
+  if (G.trang === 'het') return;
+  if (V1.bam('m') || (G.trang === 'ban_do' && V1.bam('thoat'))){ G.trang = G.trang === 'ban_do' ? 'choi' : 'ban_do'; }
+  if (G.trang === 'ban_do') return;
+  G.mo = V1.buocChuyen();
+  if (G.chuyen) return;
+  const chay = E.buoc();
+  V1.suKienVe(); V1.suKienTheGioi();
+  if (chay){
+    const st = E.trangThai(); if (st.ten !== V1.HA.ten){ V1.HA.ten = st.ten; V1.HA.t = 0; } else V1.HA.t++;
+    V1.buocTia(); V1.buocVongTan(); V1.buocNguy();
+  }
+  if (G.trang === 'choi') V1.buocTheGioi();
+  if (G.tbT > 0) G.tbT--; if (G.bannerT > 0) G.bannerT--;
+  V1.camBuoc();
+}
+const DT = 1000 / 60; let last = 0, accT = 0, nutNghi = false;
+function loop(now){
+  requestAnimationFrame(loop);
+  if (!last) last = now; const d = Math.min(100, now - last); last = now;
+  accT += d; let n = 0;
+  while (accT >= DT && n < 4){ mot(); accT -= DT; n++; }
+  if (n === 4) accT = 0;
+  V1.ve(G.mo || 0);
+  const can = G.trang === 'choi' && G.ganChuong;
+  if (can !== nutNghi){ nutNghi = can; $('b-nghi').style.display = can ? 'block' : 'none'; }
+  $('b-map').classList.toggle('on', G.trang === 'ban_do');
+}
+
+// cổng kiểm thử (Playwright): ?tu=1 không tự chạy vòng lặp
+window.TV = {E, G, V1, OPT, ep:V1.ep, choi, mot,
+  buoc(n, phim){ for (const k of V1.KEYS) V1.ep[k] = phim && phim.split(',').includes(k) ? 1 : 0; for (let i = 0; i < n; i++) mot(); V1.ve(G.mo || 0); },
+  xong:false};
+(async () => {
+  try {
+    await V1.nap();
+    await V1.napBanDo(OPT.thu ? 'thu' : '');
+    V1.resize();
+    if (OPT.moi){ try { localStorage.removeItem('tvcc-vung1'); } catch (e){} }
+    const co = V1.coLuu();
+    $('b-tiep').disabled = !co; $('b-moi').disabled = false;
+    $('menu-tt').textContent = (G.thuMuc === 'phong-thu/' ? '(Đang dùng phòng THỬ – chưa có phòng thật) ' : '') + (co ? 'Có bản lưu.' : 'Chưa có bản lưu.');
+    if (!co) $('b-moi').classList.add('chinh');
+    TV.xong = true;
+    if (!OPT.tu) requestAnimationFrame(loop);
+  } catch (e){ $('menu-tt').textContent = 'Lỗi nạp: ' + e.message; TV.loi = String(e); console.error(e); }
+})();
+</script>

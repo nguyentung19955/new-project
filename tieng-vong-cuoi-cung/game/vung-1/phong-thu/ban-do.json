@@ -1,0 +1,25 @@
+{
+ "phien_ban": 1,
+ "phong_dau": "T1",
+ "phong": [
+  {
+   "id": "T1",
+   "ten": "Phòng Thử Một",
+   "x": 0,
+   "y": 0
+  },
+  {
+   "id": "T2",
+   "ten": "Phòng Thử Hai",
+   "x": 1,
+   "y": 0
+  },
+  {
+   "id": "T3",
+   "ten": "Đàn Chuông Câm (thử)",
+   "x": 2,
+   "y": 0
+  }
+ ],
+ "ghi_chu": "Phòng THỬ của luồng A – chỉ dùng khi game/vung-1/ban-do.json chưa có."
+}

@@ -1,0 +1,14 @@
+{
+ "ghi_chu": "Trùm Vùng 1 'Mẫu Chuông Rỗng'. Khi có hình thật: đặt PNG f00.png… vào ../../art/trum-vung-1/<thu_muc>/ rồi điền thu_muc (vd \"dung\"). Hình quay TRÁI, 1 điểm ảnh = 2 px logic, chan = điểm neo chân [x,y]. Để thu_muc = null thì game vẽ hình tạm.",
+ "goc": "../../art/trum-vung-1/",
+ "ti_le": 2,
+ "than": [45, 120],
+ "hinh": {
+  "dung":       {"thu_muc": null, "so_hinh": 6,  "ms": 140},
+  "go":         {"thu_muc": null, "so_hinh": 6,  "ms": [120, 120, 160, 60, 80, 120], "lap": false, "khung_trung": 3},
+  "tha_mat_na": {"thu_muc": null, "so_hinh": 6,  "ms": 110, "lap": false, "khung_trung": 3},
+  "chuyen_pha": {"thu_muc": null, "so_hinh": 8,  "ms": 200, "lap": false},
+  "trung":      {"thu_muc": null, "so_hinh": 3,  "ms": 60,  "lap": false},
+  "chet":       {"thu_muc": null, "so_hinh": 10, "ms": 160, "lap": false}
+ }
+}

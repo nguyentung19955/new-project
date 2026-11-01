@@ -12,17 +12,36 @@ const DongCoMN = (() => {
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
     leoSpeed:2.6, tamNham:240, dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
-    maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12};
+    maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12,
+    // tuỳ chọn cho game nhiều phòng (vung-1); mặc định giữ cách chạy cũ của phòng demo
+    tuHoiSinh:true,      // false: chết xong KHÔNG tự đứng dậy, chỉ báo SUKIEN 'het-chet' để trang xử lý
+    quaiHoiSinh:true,    // false: quái chết nằm yên (trang tự hồi sinh khi nghỉ Chuông Lưu)
+    cheDoHoi:'vong',     // 'vong' = tốn Tiếng Vọng · 'luot' = tốn 1 lượt hồi (pl.luotHoi)
+    hoiLuong:1};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
   let TL = 2, CO = 1;   // CO = hệ số cỡ riêng của nhân vật chính (nhan-vat.json "co")
 
   /* ---------- BẢN ĐỒ ---------- */
   const BD = {T:48, COT:80, HANG:12, L:[]};
   function tile(tx, ty){ if (tx < 0 || tx >= BD.COT) return '#'; if (ty < 0) return '.'; if (ty >= BD.HANG) return '#'; return BD.L[ty][tx]; }
-  function solidPt(x, y){ return tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === '#'; }
+  // ô đặc: '#' và 'N' (tường nứt). 'G' (tường giả) đi xuyên. '=' sàn mỏng: chỉ đỡ từ trên xuống (moveY / ketDat)
+  const dac = ch => ch === '#' || ch === 'N';
+  function solidPt(x, y){ return dac(tile(Math.floor(x / BD.T), Math.floor(y / BD.T))); }
+  function datPt(x, y){ const ch = tile(Math.floor(x / BD.T), Math.floor(y / BD.T)); return dac(ch) || ch === '='; }   // chỗ đứng được (mép vực của quái)
+  function coSanMong(o, hang){
+    if (hang < 0 || hang >= BD.HANG) return false;
+    const T = BD.T, x0 = Math.floor(o.x / T), x1 = Math.floor((o.x + o.w - 0.001) / T);
+    for (let tx = x0; tx <= x1; tx++) if (tile(tx, hang) === '=') return true;
+    return false;
+  }
+  function trenSanMong(o){   // chân đang đặt đúng mặt một ô '='
+    if (o.roiQua > 0) return false;
+    const b = o.y + o.h, r = Math.round(b / BD.T);
+    return Math.abs(b - r * BD.T) < 0.02 && coSanMong(o, r);
+  }
   function collide(x, y, w, h){
     const T = BD.T, x0 = Math.floor(x / T), x1 = Math.floor((x + w - 0.001) / T), y0 = Math.floor(y / T), y1 = Math.floor((y + h - 0.001) / T);
-    for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) if (tile(tx, ty) === '#') return true;
+    for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) if (dac(tile(tx, ty))) return true;
     return false;
   }
   function moveX(o, dx, cornerUp){
@@ -39,6 +58,10 @@ const DongCoMN = (() => {
     let rem = dy;
     while (rem !== 0){
       const s = Math.abs(rem) > 1 ? Math.sign(rem) : rem;
+      if (s > 0 && !(o.roiQua > 0)){   // sàn mỏng '=': chặn khi mép chân vượt qua mặt trên của ô
+        const b = o.y + o.h, T = BD.T, r = Math.floor((b + s - 0.001) / T);
+        if (r * T >= b - 0.001 && r * T <= b + s && coSanMong(o, r)){ o.y = r * T - o.h; return 1; }
+      }
       if (!collide(o.x, o.y + s, o.w, o.h)){ o.y += s; rem -= s; continue; }
       if (s < 0){ let ok = false; for (let k = 1; k <= P.corner && !ok; k++) for (const d of [k, -k]){ if (!collide(o.x + d, o.y + s, o.w, o.h)){ o.x += d; ok = true; break; } } if (ok) continue; }
       return s > 0 ? 1 : -1;
@@ -49,7 +72,7 @@ const DongCoMN = (() => {
   const approach = (v, t, d) => v < t ? Math.min(v + d, t) : Math.max(v - d, t);
   const overlap = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   function napBanDo(luoi, them){
-    BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length;
+    BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length; BD.nut = {};
     for (const [c0, r0, c1, r1] of (them || [])) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) BD.L[r][c] = '#';
   }
 
@@ -73,7 +96,7 @@ const DongCoMN = (() => {
 
   function datNV(x, chanY){
     Object.assign(pl, {x:x - pl.w / 2, y:chanY - pl.h, vx:0, vy:0, face:1, dash:0, atk:'', pound:null, hoi:-1, hurtT:0, iframes:0, dead:false, deadT:0,
-      hp:P.maxHp, jumpBuf:0, dashBuf:0, airDash:false, djCo:false, djT:-1, landT:0, comboHan:0, onGround:true, wallLock:0});
+      hp:P.maxHp, jumpBuf:0, dashBuf:0, airDash:false, djCo:false, djT:-1, landT:0, comboHan:0, onGround:true, wallLock:0, leo:false, leoKhoa:0, roiQua:0, sliding:false});
     pl.sx = x; pl.sy = chanY; CHO.co = false;
   }
 
@@ -172,27 +195,35 @@ const DongCoMN = (() => {
     if (pl.dead){
       pl.deadT++; pl.vx *= 0.9; pl.vy = Math.min(pl.vy + P.gravity, P.maxFall);
       moveX(pl, pl.vx, false); if (moveY(pl, pl.vy)) pl.vy = 0;
-      if (pl.deadT >= clipNV('chet').tong + 50){ datNV(pl.sx, pl.sy); pl.iframes = 60; pl.nhay = 60; SUKIEN.push({k:'hoi-sinh'}); }
+      if (pl.deadT >= clipNV('chet').tong + 50){
+        if (!P.tuHoiSinh){ if (!pl.daBaoChet){ pl.daBaoChet = true; SUKIEN.push({k:'het-chet'}); } return; }
+        datNV(pl.sx, pl.sy); pl.iframes = 60; pl.nhay = 60; SUKIEN.push({k:'hoi-sinh'});
+      }
       return;
     }
     const dir = (IN.r ? 1 : 0) - (IN.l ? 1 : 0);
     if (pl.wallLock > 0) pl.wallLock--; if (pl.dashCd > 0) pl.dashCd--; if (pl.iframes > 0) pl.iframes--; if (pl.nhay > 0) pl.nhay--;
-    if (pl.hurtT > 0) pl.hurtT--; if (pl.landT > 0) pl.landT--; if (pl.comboHan > 0) pl.comboHan--;
+    if (pl.hurtT > 0) pl.hurtT--; if (pl.landT > 0) pl.landT--; if (pl.comboHan > 0) pl.comboHan--; if (pl.roiQua > 0) pl.roiQua--;
     if (pl.djT >= 0){ pl.djT++; if (pl.djT >= clipNV('nhaydoi').tong) pl.djT = -1; }
 
     // Hồi máu: đứng yên trên đất, tốn P.vongHoi Tiếng Vọng, +1 máu ở khung_hoi; bị đánh thì mất
     if (pl.hoi >= 0){
       pl.hoi++; const C = clipNV('hoimau');
-      if (!pl.hoiXong && khung(C, pl.hoi) >= (C.def.khung_hoi ?? 5)){ pl.hoiXong = true; pl.hp = Math.min(P.maxHp, pl.hp + 1); SUKIEN.push({k:'hoi-mau'}); }
+      if (!pl.hoiXong && khung(C, pl.hoi) >= (C.def.khung_hoi ?? 5)){ pl.hoiXong = true; pl.hp = Math.min(P.maxHp, pl.hp + (P.hoiLuong || 1)); SUKIEN.push({k:'hoi-mau'}); }
       if (pl.hoi >= C.tong) pl.hoi = -1;
       pl.vx = approach(pl.vx, 0, 1); pl.vy = Math.min(pl.vy + P.gravity, P.maxFall); if (moveY(pl, pl.vy)) pl.vy = 0; ketDat();
       return;
     }
     if (IN.bamH){
-      if (pl.onGround && !pl.atk && !pl.pound && pl.dash <= 0 && pl.hurtT <= 0 && pl.vong >= P.vongHoi && pl.hp < P.maxHp){
-        pl.hoi = 0; pl.hoiXong = false; pl.vong -= P.vongHoi; pl.vx = 0; SUKIEN.push({k:'bat-dau-hoi'}); return;
+      const luot = P.cheDoHoi === 'luot', du = luot ? (pl.luotHoi || 0) > 0 : pl.vong >= P.vongHoi;
+      if (pl.onGround && !pl.atk && !pl.pound && pl.dash <= 0 && pl.hurtT <= 0 && du && pl.hp < P.maxHp){
+        pl.hoi = 0; pl.hoiXong = false; if (luot) pl.luotHoi--; else pl.vong -= P.vongHoi; pl.vx = 0; SUKIEN.push({k:'bat-dau-hoi'}); return;
       }
-      SUKIEN.push({k:'khong-hoi', ly:pl.hp >= P.maxHp ? 'đầy máu' : pl.vong < P.vongHoi ? 'thiếu Tiếng Vọng' : 'phải đứng trên đất'});
+      SUKIEN.push({k:'khong-hoi', ly:pl.hp >= P.maxHp ? 'đầy máu' : !du ? (luot ? 'hết lượt hồi' : 'thiếu Tiếng Vọng') : 'phải đứng trên đất'});
+    }
+    // ↓ + Nhảy khi đứng trên sàn mỏng '=' → rơi xuyên xuống
+    if (pl.jumpBuf > 0 && pl.onGround && IN.xuong() && !pl.leo && trenSanMong(pl) && !collide(pl.x, pl.y + 1, pl.w, pl.h)){
+      pl.roiQua = 14; pl.jumpBuf = 0; pl.onGround = false; pl.coyote = 0; pl.y += 1; pl.vy = 1; SUKIEN.push({k:'roi-san'});
     }
 
     // Dây leo (ô 'H'): ↑ để bám (trên không: ↑ hoặc ↓), leo ↑↓, đứng yên là treo; Nhảy để rời (kèm hướng); hết dây / chạm đất thì thả
@@ -332,7 +363,7 @@ const DongCoMN = (() => {
   }
   function ketDat(){
     const was = pl.onGround;
-    pl.onGround = collide(pl.x, pl.y + 1, pl.w, pl.h);
+    pl.onGround = collide(pl.x, pl.y + 1, pl.w, pl.h) || trenSanMong(pl);
     if (pl.onGround){ pl.coyote = P.coyote; pl.airDash = false; pl.djCo = false; pl.djT = -1; if (!was) SUKIEN.push({k:'cham-dat', cao:pl.y - pl.yTop}); }
     else if (pl.coyote > 0) pl.coyote--;
     if (pl.onGround) pl.yTop = pl.y; else pl.yTop = Math.min(pl.yTop, pl.y);
@@ -364,7 +395,9 @@ const DongCoMN = (() => {
   }
   function quaiTrung(q, dmg, face){
     const d = q.def;
-    q.hp -= dmg; q.flash = 6; q.lastSw = pl.atkSw;
+    q.lastSw = pl.atkSw; if (q.batTu) return;
+    q.hp -= dmg; q.flash = 6;
+    if (d.ai){ if (d.trung) d.trung(q, dmg, face); return; }   // quái tự điều khiển (trùm): tự xử lý chết / không bị ngắt
     if (q.hp <= 0){ q.st = 'chet'; q.t = 0; q.kvx = face * 3; SUKIEN.push({k:'quai-chet', q}); return; }
     if (d.sieu_giap && q.st === 'danh'){ q.kvx = face * 0.6; return; }   // tinh anh: đang ra đòn không bị ngắt
     q.st = 'trung'; q.t = 0; q.kvx = face * (d.day_lui ?? 3); q.daDanh = false; q.anim.ten = '';   // phát lại clip trúng từ đầu
@@ -372,8 +405,9 @@ const DongCoMN = (() => {
   function capNhatQuai(){
     for (const q of QUAI){
       const d = q.def, C = d._clip || {};
-      if (q.dead){ if (++q.hoiT >= (d.hoi_sinh_ms ?? 4000) * 0.06) datLaiQuai(q); continue; }
+      if (q.dead){ if (P.quaiHoiSinh && ++q.hoiT >= (d.hoi_sinh_ms ?? 4000) * 0.06) datLaiQuai(q); continue; }
       if (q.flash > 0) q.flash--; if (q.cd > 0) q.cd--;
+      if (d.ai){ d.ai(q); continue; }
       q.t++;
       const fxq = q.x + q.w / 2, fyq = q.y + q.h, hx = pl.x + pl.w / 2, hy = pl.y + pl.h, dx = hx - fxq, dy = hy - fyq;
       const tam = d.tam_phat_hien || 300;
@@ -383,7 +417,7 @@ const DongCoMN = (() => {
       if (!d.bay){ q.vy = Math.min(q.vy + 0.6, 10); if (moveY(q, q.vy) !== 0) q.vy = 0; }
       if (Math.abs(q.kvx) > 0.1){
         if (d.bay) q.x += q.kvx;
-        else { const ax = q.kvx > 0 ? q.x + q.w + 2 : q.x - 2; if (!solidPt(ax, q.y + q.h + 4) || moveX(q, q.kvx, false)) q.kvx = 0; }
+        else { const ax = q.kvx > 0 ? q.x + q.w + 2 : q.x - 2; if (!datPt(ax, q.y + q.h + 4) || moveX(q, q.kvx, false)) q.kvx = 0; }
         q.kvx *= 0.8;
       } else q.kvx = 0;
       q.baoTruoc = false; q.dangDi = false;
@@ -392,7 +426,7 @@ const DongCoMN = (() => {
         const f = Math.sign(vx), ax = f > 0 ? q.x + q.w + 2 : q.x - 2;
         if ((f < 0 && q.x <= q.minX - (q.st === 'duoi' ? BD.T : 0)) || (f > 0 && q.x + q.w >= q.maxX + (q.st === 'duoi' ? BD.T : 0))) return true;
         if (d.bay){ q.x += vx; q.dangDi = true; return false; }
-        if (!solidPt(ax, q.y + q.h + 4)) return true;
+        if (!datPt(ax, q.y + q.h + 4)) return true;
         const bi = moveX(q, vx, false); q.dangDi = !bi; return bi;
       };
       const bayVe = (ty, sp) => { if (d.bay && !d.treo) q.y = approach(q.y + q.h, ty, sp) - q.h; };
@@ -420,7 +454,7 @@ const DongCoMN = (() => {
           }
           if ((d.khung_trung || []).includes(k) && !pl.dead){
             const hb = hopQuai(q, QR);
-            if (hb && !q.daDanh && overlap(hurtBox(), hb)){ q.daDanh = true; hurt(q.face, d.sat_thuong || 1); }
+            if (hb && !q.daDanh && !q.khongGay && overlap(hurtBox(), hb)){ q.daDanh = true; hurt(q.face, d.sat_thuong || 1); }
           }
           if (te >= Cd.tong){ q.st = 'hoi'; q.t = 0; q.cd = (d.hoi_chieu_ms ?? 1200) * 0.06; }
           break; }
@@ -439,8 +473,21 @@ const DongCoMN = (() => {
       A.k = ten === 'danh' ? q.kDanh : null;
     }
   }
+  function chemTuongNut(hb){   // tường nứt 'N': mỗi nhát (swing) trúng tính 1 lần, đủ 3 thì vỡ
+    const T = BD.T, x0 = Math.floor(hb.x / T), x1 = Math.floor((hb.x + hb.w) / T), y0 = Math.floor(hb.y / T), y1 = Math.floor((hb.y + hb.h) / T);
+    for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++){
+      if (tile(tx, ty) !== 'N') continue;
+      const k = tx + ',' + ty, n = BD.nut[k] || (BD.nut[k] = {lan:0, sw:-1});
+      if (n.sw === pl.atkSw) continue;
+      n.sw = pl.atkSw; n.lan++;
+      if (n.lan >= (P.nutBen || 3)){ BD.L[ty][tx] = '.'; SUKIEN.push({k:'vo-tuong', cot:tx, hang:ty}); shake(pl.face, 0.5, 3); }
+      else { SUKIEN.push({k:'nut-trung', cot:tx, hang:ty, lan:n.lan}); shake(pl.face, 0.2, 1.2); }
+      S.hitstop = Math.max(S.hitstop, 3);
+    }
+  }
   function trungQuai(){   // hộp đánh nhân vật → quái
     const hb = hopNV(); if (!hb) return;
+    chemTuongNut(hb);
     let co = false;
     for (const q of QUAI){
       if (q.dead || q.st === 'chet' || q.lastSw === pl.atkSw || !overlap(hb, q)) continue;
@@ -497,6 +544,7 @@ const DongCoMN = (() => {
     return {ten:'dung'};
   }
 
-  return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, napBanDo, datNV, taoQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
+  return {P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
+    hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
     datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
 })();
