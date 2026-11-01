@@ -271,7 +271,7 @@
     if (!(C && C.ok) && A.ten === 'di') C = Cs.dung;
     if (!(C && C.ok) && A.ten === 'danh') C = Cs.danh && Cs.danh.ok ? Cs.danh : Cs.dung;
     if (!(C && C.ok) && A.ten === 'trung') C = Cs.dung;
-    const fx = q.x + q.w / 2, fy = q.y + q.h, al = q.alpha < 1 ? q.alpha : undefined;
+    const fx = q.x + q.w / 2 + VCQ.rung(q), fy = q.y + q.h, al = q.alpha < 1 ? q.alpha : undefined;
     if (C && C.ok && C.chan){
       const k = A.k ?? SpriteMN.khungTheoBuoc(C, A.t);
       SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
@@ -821,18 +821,17 @@
   function veQuaiNoi(q){   // viền sáng theo màu riêng + vẽ lại thân, SAU lớp bóng tối
     if (q.dead || q.laTrum) return;
     const C = clipQuai(q); if (!C) return;
-    const k = q.anim.k ?? SpriteMN.khungTheoBuoc(C, q.anim.t), fx = q.x + q.w / 2, fy = q.y + q.h;
+    const k = q.anim.k ?? SpriteMN.khungTheoBuoc(C, q.anim.t), fx = q.x + q.w / 2 + VCQ.rung(q), fy = q.y + q.h;
     const al = q.alpha < 1 ? q.alpha : 1;
-    SpriteMN.veVien(ctx, C, k, fx, fy, q.face > 0, E.TL, q.def.mau_vien || q.def.mau_khoi || '#e5a13b', E.TL, 0.5 * al);
+    const vd = VCQ.vien(q);   // báo trước đập chuông: viền đỏ gạch đậm dần
+    SpriteMN.veVien(ctx, C, k, fx, fy, q.face > 0, E.TL, vd ? vd.mau : q.def.mau_vien || q.def.mau_khoi || '#e5a13b', vd ? E.TL * 1.5 : E.TL, (vd ? vd.a : 0.5) * al);
     SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
   }
-  const FX_CUA = {dan:'ken', nang_luong:'cau', song:'vai', chan:'tan'};
   function veFx(ten, o, x, y, phai, k, a){   // art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
     const im = V1.IMG['fx_' + ten]; if (!im) return;
     const S = 96, w = S * (k || 1); ctx.save(); ctx.globalAlpha = a ?? 1; ctx.translate(Math.round(x), Math.round(y)); if (phai) ctx.scale(-1, 1);
     ctx.imageSmoothingEnabled = false; ctx.drawImage(im, o * S, 0, S, S, -w / 2, -w / 2, w, w); ctx.restore();
   }
-  function nongQuai(q){ const n = q.def.chieu.nong || [0, -40], fx = q.x + q.w / 2, fy = q.y + q.h; return [fx + n[0] * E.TL * -q.face, fy + n[1] * E.TL]; }
   function veBuiTuong(){   // khói bụi + tia lửa khi trượt bám tường
     const st = E.trangThai().ten;
     if ((st !== 'bamtuong' && st !== 'chemtuong') || !pl.wallDir) return;
@@ -847,25 +846,10 @@
       const k = q.kDanh ?? 0; if (k < 2) continue;
       veFx('tang', Math.min(5, k - 2), q.x + q.w / 2 + q.face * 34, q.y + q.h - 30, q.face > 0, 1.15);
     }
-    for (const q of E.QUAI){   // tụ / lóe ở miệng trước khi bắn
-      const ch = q.def && q.def.chieu; if (q.dead || q.laTrum || !ch || q.st !== 'danh' || !ch.khung_ban || (q.kDanh ?? 0) >= ch.khung_ban) continue;
-      const [x, y] = nongQuai(q), ten = FX_CUA[ch.ve] || 'ken', p = Math.min(1, q.t / 40);
-      if (ten === 'vai') veFx('vai', 0, x, y, q.face > 0, 0.6 + p * 0.4, 0.5 + p * 0.5);
-      else veFx(ten, (f >> 3) & 1, x, y, q.face > 0, ten === 'cau' ? 0.7 + p * 0.6 : 0.9, 0.6 + p * 0.4);
-    }
-    for (const b of E.DAN){
-      const ten = FX_CUA[b.ch.ve] || 'ken', phai = b.vx > 0;
-      if (ten === 'vai') veFx('vai', Math.min(3, (b.t / 10) | 0), b.x, b.y, phai, 1.3);
-      else veFx(ten, 2 + ((f >> 2) & 1), b.x, b.y, phai, ten === 'cau' ? 1.25 : 1.0);
-    }
-    for (const n of E.NO){
-      const ch = n.ch || {}, ten = FX_CUA[ch.ve] || 'ken';
-      if (n.dat && ch.toc_song){   // sóng chấn động chạy 2 phía mặt đất
-        const r = n.t * ch.toc_song, o = Math.min(5, (n.t / 8) | 0), a = Math.max(0, 1 - n.t / 46);
-        veFx('tan', o, n.x - r, n.y - 34, false, 1.4, a); veFx('tan', o, n.x + r, n.y - 34, true, 1.4, a);
-      } else veFx(ten, 4 + Math.min(1, (n.t / 12) | 0), n.x, n.y, false, ten === 'cau' ? 1.2 : 1.0, Math.max(0, 1 - n.t / 26));
-    }
+    VCQ.ve(0);   // tụ năng lượng, đạn, sóng âm, báo trước + sóng chấn động (ve-chieu-quai.js, dùng chung với phòng demo)
   }
+  // đạn phân biệt từng quái + báo trước đập chuông Vọng Tàn (luồng H)
+  const VCQ = VeChieuQuai({ctx:() => ctx, E, anh:n => V1.IMG['fx_' + n] || null, boQua:q => q.laTrum});
 
   /* ---------------- VẼ MỘT KHUNG ---------------- */
   const ANH = () => V1.CANH && V1.CANH[G.id];

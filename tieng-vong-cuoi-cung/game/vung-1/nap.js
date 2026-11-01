@@ -11,7 +11,7 @@ V1.nap = async function(){
   const A = '../../art/phong-demo/';
   await Promise.all([['bg', 'bg_far'], ['mid', 'bg_mid'], ['hon', 'fx_hon'], ['vm1', 'v_mid1'], ['vm2', 'v_mid2']].map(([k, f]) => V1.napAnh(k, A + f + '.png')));
   // hiệu ứng chiêu quái (ChatGPT vẽ): 6 ô 96×96, hướng TRÁI
-  await Promise.all(['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-quai/' + n + '.png')));
+  await Promise.all(['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-quai/' + n + '.png')));
   // đạo cụ + trùm (ChatGPT vẽ, PNG trong suốt; luồng E). Thiếu ảnh → ve.js vẽ hình tạm như cũ.
   const DC = '../../art/vung-1/dao-cu/', TRM = '../../art/vung-1/trum/';
   await Promise.all([['chuong_tat', DC + 'chuong-luu-tat'], ['chuong_sang', DC + 'chuong-luu-sang'], ['cua_dong', DC + 'cua-khoa-dong'], ['cua_mo', DC + 'cua-khoa-mo'],

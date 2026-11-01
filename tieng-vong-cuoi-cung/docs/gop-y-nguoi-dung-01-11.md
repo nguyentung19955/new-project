@@ -24,6 +24,6 @@
 | 20 | Hình vẽ tay / gen cũ → ChatGPT gen lại, duyệt tới khi đạt | ⏳ liên tục |
 | 21 | Kiểm tra mọi animation cùng cỡ, đúng thiết kế | ✅ đo xong (±5%) · ⏳ gửi ChatGPT duyệt |
 | 22 | Kế hoạch Vùng 1 đưa vào game | ✅ 9 phòng, phong cách đá phòng demo, quái bố trí theo tư vấn, Chuông Lưu/cửa khoá/trùm hình ChatGPT |
-| 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ✅ ChatGPT đã trả lời (TVCC_Duyet_DongTac_HieuUng.txt) – đã làm bụi bám tường, vồ Màn Tang; còn lại: báo trước rõ hơn cho đập chuông, phân biệt đạn |
+| 23 | Chơi thử toàn bộ, gửi ChatGPT tham vấn | ✅ đã chơi thử + gửi · ✅ ChatGPT đã trả lời (TVCC_Duyet_DongTac_HieuUng.txt) – đã làm bụi bám tường, vồ Màn Tang; ✅ báo trước rõ hơn cho đập chuông + phân biệt đạn (luồng H, BAO-CAO-H.md) |
 | 24 | Trượt bám tường có khói bụi che chân và tay | ✅ khói bụi + tia lửa kiếm (ChatGPT vẽ), đã thu nhỏ ×0.7 |
 | 25 | Leo/treo dây nhỏ hơn bình thường | ✅ phóng to cho cùng cỡ (đo theo tóc+mặt nạ) |

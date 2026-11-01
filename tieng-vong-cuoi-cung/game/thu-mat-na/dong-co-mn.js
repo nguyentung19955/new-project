@@ -492,7 +492,7 @@ const DongCoMN = (() => {
             q.daBan = true; const fx = q.x + q.w / 2, fy = q.y + q.h, n = ch.nong || [0, -40];
             DAN.push({x:fx + n[0] * TL * -q.face, y:fy + n[1] * TL, vx:-q.face * -1 * (ch.toc || 6), huong:q.face, t:0, song:ch.song || 140, w:(ch.hop || [10, 10])[0] * TL, h:(ch.hop || [10, 10])[1] * TL, dmg:d.sat_thuong || 1, ch});
           }
-          if (ch && ch.chan_dong && k === ch.chan_dong && !q.daRung){ q.daRung = true; S.sht = 10; S.shm = 4; S.shx = 1; S.shy = 1; NO.push({x:q.x + q.w / 2, y:q.y + q.h, t:0, ch, dat:true}); }
+          if (ch && ch.chan_dong && k === ch.chan_dong && !q.daRung){ q.daRung = true; S.sht = 10; S.shm = 4; S.shx = 1; S.shy = 1; NO.push({x:q.x + q.w / 2, y:q.y + q.h, t:0, ch, dat:true, song:Math.ceil((ch.tam || 260) / (ch.toc_song || 7)) + 6}); }
           if ((d.khung_trung || []).includes(k) && !pl.dead){
             const hb = hopQuai(q, QR);
             if (hb && !q.daDanh && !q.khongGay && overlap(hurtBox(), hb)){ q.daDanh = true; hurt(q.face, d.sat_thuong || 1); }
@@ -555,7 +555,10 @@ const DongCoMN = (() => {
       const b = DAN[i]; b.x += b.vx; b.t++;
       DR.x = b.x - b.w / 2; DR.y = b.y - b.h / 2; DR.w = b.w; DR.h = b.h;
       // không xuyên tường: nổ khi tâm HOẶC mép trước chạm ô đặc ('#', 'N')
-      let no = b.t > b.song || solidPt(b.x, b.y) || solidPt(b.x + Math.sign(b.vx) * b.w / 2, b.y);
+      // trừ chiêu "xuyen_tuong" (sóng âm Hồn Vải): đi qua tường nhưng yếu dần – trong tường hao tuổi gấp 3
+      let no;
+      if (b.ch.xuyen_tuong){ b.trongTuong = solidPt(b.x, b.y); if (b.trongTuong) b.t += 2; no = b.t > b.song; }
+      else no = b.t > b.song || solidPt(b.x, b.y) || solidPt(b.x + Math.sign(b.vx) * b.w / 2, b.y);
       if (!no && !pl.dead && overlap(hurtBox(), DR)){ hurt(b.vx > 0 ? 1 : -1, b.dmg); no = true; }
       if (no){ NO.push({x:b.x, y:b.y, t:0, ch:b.ch}); DAN.splice(i, 1); }
     }
@@ -565,7 +568,7 @@ const DongCoMN = (() => {
         const r = n.t * n.ch.toc_song, px = pl.x + pl.w / 2, py = pl.y + pl.h, d = Math.abs(px - n.x);
         if (r <= (n.ch.tam || 260) && pl.onGround && Math.abs(py - n.y) < 30 && d > r - 26 && d < r + 10){ n.daDanh = true; hurt(px > n.x ? 1 : -1, n.ch.sat_thuong || 1); }
       }
-      if (n.t > (n.dat ? 44 : 24)) NO.splice(i, 1);
+      if (n.t > (n.dat ? (n.song || 44) : 24)) NO.splice(i, 1);   // sóng đất sống đủ để chạy tới đúng tam
     }
   }
   function buoc(){
