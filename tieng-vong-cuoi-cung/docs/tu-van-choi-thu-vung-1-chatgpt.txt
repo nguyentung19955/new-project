@@ -1,0 +1,40 @@
+TVCC — TƯ VẤN CHƠI THỬ VÙNG 1 / ĐỢT 1 (ChatGPT, 01/11/2026, chép ý chính từ TVCC_TuVan_ChoiThu_Vung1.txt)
+
+1. BỐ CỤC, NHỊP, DẪN HƯỚNG
+- Nhiều phòng sàn ngang dài, ít điểm mốc → khi thay đá phải đổi cả NHỊP (cao độ, khoang, đường vòng), không chỉ texture.
+- P01: phòng dạy di chuyển/đánh; sàn an toàn, 1 bậc thấp, chuông sáng yếu dẫn lối chính; không có đạn bắn từ ngoài màn hình; 1 vết nứt dễ thấy gợi ý quay lại.
+- P02: nút ngã ba thật: 3 nhánh phân biệt bằng hình (rễ quấn = lối nguy hiểm, đèn hổ phách = Chuông Lưu, phù điêu chuông = đường chính), bia đá khắc biểu tượng.
+- Dây leo: test chống kẹt ở góc, sát trần, sát cửa, khi dash, đổi phòng khi đang bám; nhảy khỏi dây trái/phải; đệm input 100–150 ms; khi thoát dây đẩy khỏi va chạm 2–4 px, khoá tái bám ~150 ms; không dịch chuyển xuyên tường.
+- Mỗi 2–3 phòng đổi kiểu thử thách: chiến đấu → leo/khám phá → điểm lưu → đạn tầm xa → tinh anh. Vòng đầu 12–18 phút.
+
+2. ÁNH SÁNG, ĐỘ RÕ, HUD
+- Nhiều vùng đen mất chi tiết; nền, sàn, quái sáng gần nhau → trên điện thoại quái tối và mép sàn hoà nền. HUD trên và chữ hướng dẫn dưới quá nhỏ.
+- Phân lớp: nền xa tối nhất; kiến trúc giữa sáng hơn 1 bậc; MÉP SÀN đi được sáng hơn mặt đứng; nhân vật/quái tách nền bằng rim-light chọn lọc, không phủ glow toàn màn. Cyan chỉ cho người chơi; đạn quái hổ phách/đồng; Vọng Tàn đỏ gạch.
+
+3. BỐ TRÍ 5 QUÁI THEO PHÒNG
+- P01: chỉ 1 Khuyết Cẩu đơn lẻ sau vùng học điều khiển; có tín hiệu trước khi bắn; chừa đường né.
+- P02: 1 Khuyết Cẩu nhánh chính; nhánh phụ 1 Hồn Vải trên cao (không chồng vùng im lặng lên ngã ba lần đầu).
+- P03: 1 Kèn Câm sau bệ đúc + 1 Khuyết Cẩu tầng dưới; đạn kèn không xuyên tường; tránh 2 đòn tầm xa cùng lúc khi chưa có chỗ nấp.
+- P04: 1 Màn Tang treo giữa hành lang, chỉ lao khi người chơi vào vùng kích hoạt, dây rung/bụi rơi ≥0,5 s trước đòn; nếu thêm Hồn Vải thì đặt đoạn riêng sau Màn Tang.
+- P05: không quái, không đạn xuyên phòng, không phục kích khi lưu.
+- P06: 1 Khuyết Cẩu dưới hố, 1 Hồn Vải phía trên; không khoá người chơi trong hố.
+- P09: 1 Kèn Câm ở bệ xa, 1 Màn Tang treo đường vòng phía trên; kích hoạt so le; đạn kèn có âm báo, đường bay màu đồng rõ.
+- P11: chỉ Vọng Tàn; có khe né.
+- P12: chỉ Mẫu Chuông Rỗng (3 pha, tối đa 2 mối nguy cùng lúc).
+- Quy tắc: không sinh quái sát cửa vào; không bắn khi chưa hiện trên camera; không khoá cửa/camera trước khi người chơi nhìn thấy đấu trường.
+
+4. HÌNH CẦN THÊM (prompt tiếng Anh ngắn, nền #FF00FF, không chữ, cyan chỉ cho nhân vật)
+A01 đá mép méo + mặt đứng tối · A02 Chuông Lưu tắt/bật · A03 cửa khoá chuông đóng/mở · … A14 di tích dân làng · A15 lối tắt (thang rễ/cầu xích).
+Trùm Mẫu Chuông Rỗng: thân vỏ chuông đồng nứt khổng lồ, bên trong treo bộ xương nữ tư tế bằng rễ. Pha 1 quét chuông ngang + rơi mảnh đồng; pha 2 (70%) hút tro kéo người chơi rồi nổ vòng gần; pha 3 (35%) treo ngược, 3 nhịp sóng im lặng lan sàn có khe né. Chốt concept trước khi gen animation.
+
+5. ƯU TIÊN
+P0 (trước khi mời chơi thử):
+- Chống kẹt dây leo (không kẹt >1 s trong 20 lần thử mỗi tình huống).
+- Sàn, mép hố, đạn, quái đủ tương phản ở độ sáng điện thoại thấp; không có đạn từ ngoài vùng nhìn mà không báo.
+- P05 lưu/hồi sinh đúng; vào lại phòng không mất tiến độ; từ P11/P12 có đường về P05.
+- Mọi quái có tín hiệu chuẩn bị đòn; Vọng Tàn có dấu mặt đất trước sóng; Màn Tang dây rung trước khi vồ.
+- P12 có vòng đánh–né–thắng hoàn chỉnh; thắng mở lối/kết thúc demo.
+- Kiểm kết nối đủ 9 phòng, không kẹt do khoá cửa, hố một chiều, camera, spawn.
+P1: thay đá tạm; landmark P02/P03/P05/P09/P11 + biến thiên cao độ; Chuông Lưu tắt/bật, cửa khoá đóng/mở, tên phòng, chỉ báo nhiệm vụ tối giản; chỉnh khoảng nghỉ, camera nhìn trước, độ khó.
+P2: hốc ẩn, vật phẩm, lối tắt, di tích dân làng; tro bụi, âm thanh chuông, phản hồi trúng đòn.
+Thứ tự: (1) kẹt + đường đi + lưu; (2) đọc nguy hiểm + HUD; (3) nhịp quái; (4) trùm P12; (5) tile/đạo cụ/ánh sáng; (6) hốc ẩn + polish.
