@@ -10,7 +10,7 @@ const DongCoMN = (() => {
   const P = {runSpeed:4.2, jumpHeight:118, gravity:0.768, accelFrames:6, decelFrames:5, airControl:0.8, turnBoost:1.6, maxFall:10.4,
     fallGravMul:0.93, apexGravMul:0.3, apexThreshold:4, jumpCut:0.5, coyote:6, jumpBuffer:8, corner:8,
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
-    dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
+    leoSpeed:2.6, dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
     maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
@@ -56,7 +56,7 @@ const DongCoMN = (() => {
   /* ---------- TRẠNG THÁI ---------- */
   const S = {frame:0, hitstop:0, sht:0, shm:0, shx:0, shy:0, swing:0, nTrung:0, chet:0};
   const pl = {x:0, y:0, w:28, h:96, vx:0, vy:0, face:1, onGround:false, coyote:0, jumpBuf:0, dashBuf:0, jumping:false,
-    wallDir:0, wallLock:0, wallCoy:0, lastWall:0, wallStickT:0, wjBack:0, landT:0, yTop:0, dxT:0,
+    wallDir:0, leo:false, leoKhoa:0, leoT:0, leoDi:false, wallLock:0, wallCoy:0, lastWall:0, wallStickT:0, wjBack:0, landT:0, yTop:0, dxT:0,
     dash:0, dashDir:1, dashCd:0, airDash:false, djCo:false, djT:-1, luon:false, sliding:false,
     iframes:0, hp:P.maxHp, hurtT:0, dead:false, deadT:0, vong:0,
     atk:'', atkT:0, atkSw:0, comboHan:0, comboTiep:'', laoTat:false, pound:null, hoi:-1, hoiXong:false, sx:0, sy:0};
@@ -182,7 +182,30 @@ const DongCoMN = (() => {
       SUKIEN.push({k:'khong-hoi', ly:pl.hp >= P.maxHp ? 'đầy máu' : pl.vong < P.vongHoi ? 'thiếu Tiếng Vọng' : 'phải đứng trên đất'});
     }
 
+    // Dây leo (ô 'H'): ↑ để bám (trên không: ↑ hoặc ↓), leo ↑↓, đứng yên là treo; Nhảy để rời (kèm hướng); hết dây / chạm đất thì thả
+    const daySo = (x, y) => tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === 'H';
+    const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
+    if (pl.leoKhoa > 0) pl.leoKhoa--;
+    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && (IN.len() || (!pl.onGround && IN.xuong()))){
+      pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
+      pl.x = Math.floor(cxDay / BD.T) * BD.T + BD.T / 2 - pl.w / 2; SUKIEN.push({k:'bam-day'});
+    }
+    if (pl.leo){
+      pl.leoT++; pl.dashBuf = 0;
+      pl.vy = ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
+      if (pl.jumpBuf > 0){
+        pl.leo = false; pl.leoKhoa = 14; pl.vy = -jumpVel * 0.85; pl.vx = dir * P.runSpeed; if (dir) pl.face = dir;
+        pl.jumping = true; pl.jumpBuf = 0; pl.djCo = true; SUKIEN.push({k:'nhay'});
+      } else {
+        const ry = moveY(pl, pl.vy);
+        if (ry === 1 || (!trenDay() && pl.vy > 0)){ pl.leo = false; pl.leoKhoa = 10; }
+        else if (!trenDay() && pl.vy < 0){ pl.leo = false; pl.leoKhoa = 10; pl.vy = -jumpVel * 0.6; }
+        ketDat(); pl.sliding = false; return;
+      }
+    }
+
     // Lướt
+    if (pl.dashBuf > 0 && (pl.sliding || pl.leo)) pl.dashBuf = 0;   // đang bám tường / leo dây: không lướt
     if (pl.dashBuf > 0 && pl.dashCd <= 0 && pl.dash <= 0 && (pl.onGround || !pl.airDash) && choLuot()){
       pl.dash = P.dashFrames; pl.dashDir = dir || pl.face; pl.face = pl.dashDir; pl.vy = 0;
       pl.iframes = Math.max(pl.iframes, P.dashIFrames); if (!pl.onGround) pl.airDash = true;
@@ -445,6 +468,7 @@ const DongCoMN = (() => {
     if (pl.atk) return {ten:pl.atk, t:pl.atkT};
     if (pl.hoi >= 0) return {ten:'hoimau', t:pl.hoi};
     if (pl.sliding) return {ten:'bamtuong'};
+    if (pl.leo) return pl.leoDi ? {ten:'leoday', t:pl.leoT} : {ten:'treoday', t:pl.leoT};
     if (!pl.onGround){
       if (pl.djT >= 0) return {ten:'nhaydoi', t:pl.djT};
       if (pl.luon) return {ten:'luon'};

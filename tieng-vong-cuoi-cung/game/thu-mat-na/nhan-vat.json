@@ -82,8 +82,8 @@
    "lap": true
   },
   "dapdat": {
-   "thu_muc": "don3",
-   "so_hinh": 7,
+   "thu_muc": "dapdat",
+   "so_hinh": 14,
    "chan": [
     128,
     172
@@ -93,21 +93,31 @@
     60,
     60,
     60,
+    50,
+    50,
+    50,
     55,
     60,
+    60,
+    60,
+    60,
+    70,
     80
    ],
    "lap": false,
    "khung_lao": 3,
    "trung": [
     4,
-    5
+    5,
+    6,
+    7,
+    8
    ],
    "hop": [
-    -50,
-    -80,
-    110,
-    90
+    -150,
+    -110,
+    300,
+    110
    ],
    "sat_thuong": 14,
    "dung_hinh": 2,
@@ -152,6 +162,26 @@
    ],
    "ms": 130,
    "lap": false
+  },
+  "leoday": {
+   "thu_muc": "leoday",
+   "so_hinh": 6,
+   "chan": [
+    128,
+    172
+   ],
+   "ms": 90,
+   "lap": true
+  },
+  "treoday": {
+   "thu_muc": "treoday",
+   "so_hinh": 2,
+   "chan": [
+    128,
+    172
+   ],
+   "ms": 400,
+   "lap": true
   }
  },
  "cap": [
