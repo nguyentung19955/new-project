@@ -298,15 +298,31 @@ function cungSong(x, y, r, huong, mau, a, day){
 }
 function nongQuai(q){ const n = q.def.chieu.nong || [0, -40], fx = q.x + q.w / 2, fy = q.y + q.h; return [fx + n[0] * E.TL * -q.face, fy + n[1] * E.TL]; }
 // sprite hiệu ứng chiêu (ChatGPT vẽ): art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
-const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
+const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
 const FX_CUA = {dan:'ken', nang_luong:'cau', song:'vai', chan:'tan'};
 function veFx(ten, o, x, y, phai, k, a){
   const im = FXQ[ten]; if (!im || !im.complete || !im.naturalWidth) return;
   const S = 96, w = S * (k || 1); ctx.save(); ctx.globalAlpha = a ?? 1; ctx.translate(Math.round(x), Math.round(y)); if (phai) ctx.scale(-1, 1);
   ctx.imageSmoothingEnabled = false; ctx.drawImage(im, o * S, 0, S, S, -w / 2, -w / 2, w, w); ctx.restore();
 }
+// khói bụi + tia lửa khi trượt bám tường, che chân và tay (ChatGPT vẽ, tường ở mép TRÁI ô)
+function veBuiTuong(cam){
+  const pl = E.pl, st = E.trangThai().ten;
+  if ((st !== 'bamtuong' && st !== 'chemtuong') || !pl.wallDir) return;
+  const o = (E.S.frame >> 2) % 6, k = 1.9, w = 96 * k, wd = pl.wallDir;
+  const tuongX = wd < 0 ? pl.x : pl.x + pl.w;            // mép tường
+  const cx = tuongX - wd * (w / 2 - 14 * k);               // ô có tường ở mép trái (lật khi tường bên phải)
+  const cy = pl.y + pl.h - w / 2 + 14;
+  veFx('bui_tuong', o, cx - cam, cy, wd > 0, k, 0.95);
+}
 function veChieu(cam){
   const f = E.S.frame;
+  for (const q of E.QUAI){   // Màn Tang: 2 vệt vuốt cam khi vồ
+    if (q.dead || q.def.id !== 'tang' || q.st !== 'danh') continue;
+    const k = q.kDanh ?? 0; if (k < 2) continue;
+    const o = Math.min(5, k - 2), fx = q.x + q.w / 2, fy = q.y + q.h;
+    veFx('tang', o, fx + q.face * 34 - cam, fy - 30, q.face > 0, 1.15);
+  }
   for (const q of E.QUAI){   // tụ / lóe ở miệng trước khi bắn
     const ch = q.def.chieu; if (q.dead || !ch || q.st !== 'danh' || !ch.khung_ban || (q.kDanh ?? 0) >= ch.khung_ban) continue;
     const [x, y] = nongQuai(q), ten = FX_CUA[ch.ve] || 'ken', p = Math.min(1, q.t / 40);
@@ -419,7 +435,7 @@ function ve(){
   // 3) quái, nhân vật, tia
   ctx.save(); ctx.translate(0, -camY);
   for (const q of E.QUAI) veQuai(q, cam);
-  veNV(cam);
+  veNV(cam); veBuiTuong(cam);
   ctx.restore();
   veKhongKhi(camPx, cam, camPy, camY);
   // quái nổi trên nền tối: viền sáng theo màu riêng + vẽ lại thân sáng hơn bóng tối
