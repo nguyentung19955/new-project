@@ -242,7 +242,7 @@ const DongCoMN = (() => {
       const dangChem = pl.atk === 'chemday';
       pl.vy = dangChem ? 0 : ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
       // bấm SANG NGANG khi đang ở dây (không bấm lên/xuống): nhảy khỏi dây sang bên đó – thoát mọi góc kẹt
-      if (!dangChem && dir && !IN.len() && !IN.xuong() && pl.leoT > 6){
+      if (!dangChem && dir && !IN.xuong() && !IN.uPhim && (!IN.coCan || IN.stickY > -0.92) && pl.leoT > 6){   // cần ảo: kéo chếch sang ngang là thoát
         pl.leo = false; pl.leoKhoa = 26; pl.vx = dir * P.runSpeed; pl.vy = -jumpVel * 0.5; pl.face = dir; pl.djCo = true; SUKIEN.push({k:'nhay'});
         moveY(pl, pl.vy); ketDat(); pl.sliding = false; return;
       }
