@@ -10,7 +10,7 @@ const DongCoMN = (() => {
   const P = {runSpeed:4.2, jumpHeight:118, gravity:0.768, accelFrames:6, decelFrames:5, airControl:0.8, turnBoost:1.6, maxFall:10.4,
     fallGravMul:0.93, apexGravMul:0.3, apexThreshold:4, jumpCut:0.5, coyote:6, jumpBuffer:8, corner:8,
     wallSlideMax:1.5, wallJumpVx:5.4, wallJumpMul:0.92, wallJumpLock:9, wallSense:6, wallCoyote:8, wallBackMul:0.35, wallStick:6,
-    leoSpeed:2.6, dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
+    leoSpeed:2.6, tamNham:240, dashSpeed:10, dashFrames:12, dashIFrames:14, dashCooldown:22,
     djMul:0.88, glideFall:2.6, glideMax:60, poundSpeed:13,
     maxHp:6, hurtIFrames:70, hurtT:22, vongMax:9, vongHoi:3, comboHan:24, choThem:12};
   const jumpVel = Math.sqrt(2 * P.gravity * P.jumpHeight);
@@ -100,17 +100,29 @@ const DongCoMN = (() => {
     return i + 1 === c.length - 1 ? c[i + 1] : bienThe(c[i + 1]);   // nhát kết không đổi theo hướng
   }
   function khungCuoiTrung(C){ const t = C.def.trung || []; return t.length ? Math.max(...t) : -1; }
+  // quái gần nhất trong tầm đánh (để tự quay mặt về phía nó)
+  function quaiGan(tamX, tamY){
+    const cx = pl.x + pl.w / 2, cy = pl.y + pl.h / 2; let best = null, bd = 1e9;
+    for (const q of QUAI){
+      if (q.dead || q.st === 'chet') continue;
+      const dx = q.x + q.w / 2 - cx, dy = q.y + q.h / 2 - cy;
+      if (Math.abs(dx) > tamX || Math.abs(dy) > tamY) continue;
+      const d = Math.abs(dx) + Math.abs(dy) * 0.5; if (d < bd){ bd = d; best = {q, dx}; }
+    }
+    return best;
+  }
+  function nhamQuai(){ const g = quaiGan(P.tamNham, 150); if (g && Math.abs(g.dx) > 4) pl.face = g.dx > 0 ? 1 : -1; }
   function chonDon(dir){
     if (CHO.co && S.frame > CHO.han) CHO.co = false;
     if (!CHO.co || pl.dash > 0 || pl.hurtT > 8 || pl.pound || pl.hoi >= 0) return;
     if (!pl.atk){
-      if (dir) pl.face = dir;
+      if (dir) pl.face = dir; nhamQuai();
       if (!pl.onGround && IN.xuong()){ pl.pound = {pha:'lay', t:0}; pl.vx = 0; pl.vy = 0; CHO.co = false; SUKIEN.push({k:'ra-don', ten:'dapdat'}); return; }
       if (!pl.onGround){ batDauDon('chemkhong', -1); return; }
       if (pl.comboHan > 0 && pl.comboTiep) batDauDon(pl.comboTiep, pl.comboTiepIdx); else batDauDon(bienThe(chuoi()[0]), 0);
     } else if (pl.onGround && donTiep(pl.atk)){
       const C = clipNV(pl.atk);
-      if (khung(C, pl.atkT) > khungCuoiTrung(C)){ if (dir) pl.face = dir; const i = (pl.comboIdx ?? 0) + 1; batDauDon(donTiep(pl.atk), i); }
+      if (khung(C, pl.atkT) > khungCuoiTrung(C)){ if (dir) pl.face = dir; nhamQuai(); const i = (pl.comboIdx ?? 0) + 1; batDauDon(donTiep(pl.atk), i); }
     }
   }
   function choLuot(){
@@ -186,15 +198,19 @@ const DongCoMN = (() => {
     const daySo = (x, y) => tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === 'H';
     const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
     if (pl.leoKhoa > 0) pl.leoKhoa--;
-    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && (IN.len() || (!pl.onGround && IN.xuong()))){
+    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && (IN.len() || (!pl.onGround && pl.vy > 0 && !IN.xuong()) || (!pl.onGround && IN.xuong()))){
       pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
       pl.x = Math.floor(cxDay / BD.T) * BD.T + BD.T / 2 - pl.w / 2; SUKIEN.push({k:'bam-day'});
     }
     if (pl.leo){
       pl.leoT++; pl.dashBuf = 0;
-      pl.vy = ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
+      // chém trên dây: 1 nhát thường, tự quay về phía quái gần nhất
+      if (CHO.co && !pl.atk && NV.clip.chemday){ nhamQuai(); batDauDon('chemday', -1); }
+      if (pl.atk){ pl.atkT++; if (pl.atkT >= clipNV(pl.atk).tong) pl.atk = ''; }
+      const dangChem = pl.atk === 'chemday';
+      pl.vy = dangChem ? 0 : ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
       if (pl.jumpBuf > 0){
-        pl.leo = false; pl.leoKhoa = 14; pl.vy = -jumpVel * 0.85; pl.vx = dir * P.runSpeed; if (dir) pl.face = dir;
+        pl.atk = ''; pl.leo = false; pl.leoKhoa = 14; pl.vy = -jumpVel * 0.85; pl.vx = dir * P.runSpeed; if (dir) pl.face = dir;
         pl.jumping = true; pl.jumpBuf = 0; pl.djCo = true; SUKIEN.push({k:'nhay'});
       } else {
         const ry = moveY(pl, pl.vy);
@@ -468,6 +484,7 @@ const DongCoMN = (() => {
     if (pl.atk) return {ten:pl.atk, t:pl.atkT};
     if (pl.hoi >= 0) return {ten:'hoimau', t:pl.hoi};
     if (pl.sliding) return {ten:'bamtuong'};
+    if (pl.leo && pl.atk === 'chemday') return {ten:'chemday', t:pl.atkT};
     if (pl.leo) return pl.leoDi ? {ten:'leoday', t:pl.leoT} : {ten:'treoday', t:pl.leoT};
     if (!pl.onGround){
       if (pl.djT >= 0) return {ten:'nhaydoi', t:pl.djT};
