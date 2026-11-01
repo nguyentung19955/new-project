@@ -1,0 +1,45 @@
+TIẾNG VỌNG CUỐI CÙNG — THIẾT KẾ VÙNG 1 / KẾ HOẠCH MVP (ChatGPT, 01/11/2026, chép gọn)
+
+1. VÒNG LẶP & BẢN ĐỒ
+Vào phòng → đọc dấu hiệu địch → đánh lấy Mảnh Âm → tìm đường phụ/vật phẩm → về Chuông Lưu hồi phục, nâng cấp → mở lối tắt/cổng kỹ năng → tinh anh → trùm → vùng 2.
+Chết: về Chuông Lưu gần nhất; giữ vật phẩm nhiệm vụ + nâng cấp; mất 30% Mảnh Âm chưa gửi (nhặt lại ở chỗ chết).
+Vùng 1 "Ruột Cây Than Khóc": 12 phòng + 3 hốc ẩn, 25–35 phút.
+P01 Cửa Rễ → P02 Ngã Ba Mối → P03 Xưởng Chuông → P04 Hành Lang Tro → P05 Chuông Lưu → P06 Hố Vỏ → P07 Đường Treo → P08 Điện Tang → P09 Miệng Kèn → P10 Tổ Im Lặng → P11 Sảnh Chuông Vỡ → P12 Đàn Chuông Câm (boss).
+Nhánh: P02↔P06 (mở từ phía P06); P04→P08 lối tắt sau tinh anh; P07→P10 cần Bật Tường; P09→P11 lướt xuyên khe gió.
+Hốc: H1 sau tường nứt P03; H2 trần giả P07; H3 nền rỗng P10. Dấu hiệu: vết nứt, chuông lệch nhịp, bụi rơi. Không khóa tuyến chính bằng kỹ năng chưa có.
+
+2. VẬT PHẨM & NHIỆM VỤ
+Mảnh Âm (tiền nâng cấp), Chuông Vỡ (3 mảnh mở cửa boss), Di Vật Dân Làng, Hạt Vọng (thêm lần hồi), Bản Khắc Chiêu (mở combo).
+A "Ba tiếng chuông lạc": 3 Chuông Vỡ ở P03/P08/P10 → mở P12 + 120 Mảnh Âm.
+B "Tên người đã mất": 4 thẻ tên P02/P04/H1/P09 → nhật ký + 1 ô bùa.
+C "Lửa chưa tắt": 5 tim đèn từ Phu Đèn → bùa Đốm Tro (+10% hồi Tiếng Vọng).
+D "Xương dưới rễ": 3 hài cốt ở H1/H2/H3 → Bản Khắc "Song Nguyệt".
+E "Vỏ chuông im": lõi Vọng Tàn → mở Lướt Phản Âm.
+
+3. PHÒNG / QUÁI / TINH ANH / TRÙM
+P01 hướng dẫn, 1 Khuyết Cẩu · P02 2 Khuyết Cẩu + Bọ Vỏ Mộc · P03 Chuông Gác + Dơi Rễ, tường nứt H1, mảnh chuông 1 · P04 Phu Đèn + Nấm Thở, khói mờ · P05 Chuông Lưu (xác người ngồi cạnh chuông) · P06 Bọ Vỏ Mộc + Khuyết Cẩu, đấu trường nhỏ · P07 Dơi Rễ + Màn Tang, trần giả H2 · P08 tinh anh 1 "Màn Tang — Người Gác Dây", mảnh chuông 2 · P09 Kèn Câm + Phu Đèn, né sóng âm theo tầng · P10 Hồn Vải + Nấm Thở, vùng cấm hồi máu, H3, mảnh chuông 3 · P11 tinh anh 2 "Vọng Tàn — Kẻ Đập Chuông", Chuông Lưu cuối · P12 boss.
+Tinh anh 1: Màn Tang to 1.4×; lao xuống có bóng báo, kéo dây quét, treo ngược đổi phía.
+Tinh anh 2: Vọng Tàn; đập chuông sóng đất, quét chuông hình cung, gọi 2 Chuông Gác; dưới 50% HP nhịp giả rồi nhịp thật.
+Boss "Mẫu Chuông Rỗng": tượng mẹ gỗ hoá đá, ngực là chuông đồng thủng, tay rễ, mặt nạ không mắt, cao ~2.5× nhân vật.
+ Skill (báo trước ≥0.45s): Gõ Không Tiếng (vòng sóng câm, nhảy né) · Mưa Mặt Nạ (mặt nạ rơi nảy 1 lần) · Khâu Miệng Hầm (2 dải rễ khép sàn, lướt/nhảy) · Đảo Nhịp (3 vòng sáng, vòng 2 giả, vòng 3 gây sát thương).
+ Pha 1 100–65%: skill 1,2 · Pha 2 65–30%: vỡ mặt nạ, thêm 3 · Pha 3 <30%: khe nứt đỏ gạch, thêm 4, hồi chiêu nhanh.
+ Animation: idle 6, gõ 6, thả mặt nạ 6, khâu rễ 8, đảo nhịp 8, chuyển pha 8, trúng 3, chết 10; VFX tách riêng.
+
+4. NÂNG CẤP (tại Chuông Lưu, giữ nguyên combo 3 nhát)
+Chiêu: Song Nguyệt (giữ đánh sau nhát 3 → chém chéo kép; NV D + 150) · Lướt Phản Âm (đánh trong 0.25s sau lướt → phản kích; lõi Vọng Tàn + 180) · Không Trảm (đánh sau nhảy đôi → bổ xoáy; sau boss) · Vọng Tĩnh (hồi máu tạo khiên 1 đòn 0.6s; 2 Hạt Vọng + 200).
+Chỉ số: Sinh lực +10/cấp (3 cấp 80/140/220) · Sát thương +5%/cấp (100/170/260) · +1 lần hồi (2 Hạt Vọng + 160) · Hồi lướt −8% (2 cấp 120/220).
+
+5. GIAO DIỆN
+HUD: máu, số lần hồi, hồi lướt, biểu tượng vùng im lặng, Mảnh Âm; nút ảo chỉnh cỡ/vị trí. Bản đồ nhỏ (phòng đã vào, vị trí, Chuông Lưu, cổng khoá, dấu ? bí mật đã thấy). Kho đồ 3 tab. Chuông Lưu: Lưu/Nâng cấp/Bùa/Dịch chuyển (sau boss). Menu nâng cấp 2 nhánh. Tuỳ chọn âm lượng, rung, giảm chớp, cỡ nút, FPS.
+
+6. KẾ HOẠCH THEO ĐỢT — 3 LUỒNG SONG SONG
+Đợt 1 MVP (15–20 phút): P01–P06 + P09 + P11 + P12, 1 hốc H1, 4 quái thường (Khuyết Cẩu/Phu Đèn/Kèn Câm/Bọ Vỏ Mộc), tinh anh Vọng Tàn, boss 2 skill + 1 chuyển pha, nhiệm vụ 3 mảnh chuông (P03/P06/P09), 1 nâng cấp HP, 1 Chuông Lưu. Tiêu chí: chơi từ đầu tới thắng boss, lưu/tải, chết/hồi sinh, nhặt đồ, nâng cấp, không kẹt, 60 FPS.
+Đợt 2: thêm P07/P08/P10, H2/H3, Màn Tang/Hồn Vải/Nấm Thở/Dơi Rễ/Chuông Gác, tinh anh Màn Tang, đủ 5 nhiệm vụ, 2 nhánh nâng cấp, bản đồ đầy đủ.
+Đợt 3: vùng 2 "Rừng Chuông Chết".
+A CODE GAMEPLAY: máy trạng thái, hitbox, AI quái theo JSON, save có phiên bản, nhiệm vụ/kho/mở khoá, UI, camera, nút cảm ứng, đòn boss. Dùng hình tạm, nhận asset theo ID.
+B DỰNG MÀN: phòng bằng tile ID, va chạm, điểm sinh, checkpoint, cổng, hốc, vị trí vật phẩm, thử đường đi bằng hộp tạm; xuất room JSON + bảng kết nối.
+C HÌNH/ANIMATION: ChatGPT làm BG/tile/props/FX/UI, PixelLab làm animation nhân vật/quái/boss; bàn giao PNG + atlas JSON (khung, pivot, FPS, loop, hit frame).
+Tích hợp cuối mỗi đợt; khoá ID/tỉ lệ/pivot từ đầu.
+
+7. HÌNH CẦN GEN CHO MVP (prompt đầy đủ trong phiên ChatGPT)
+BG xa, BG giữa, tile nền/vách, sàn nổi, cổng rễ + tường nứt, Chuông Lưu (tắt/sáng), icon vật phẩm, hài cốt, đồ trang trí treo, boss concept + animation (PixelLab), FX boss, FX Vọng Tàn, UI atlas.
