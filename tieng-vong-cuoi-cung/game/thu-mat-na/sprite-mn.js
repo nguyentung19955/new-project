@@ -69,6 +69,23 @@ const SpriteMN = (() => {
     else { g.save(); g.translate(fx, 0); g.scale(-1, 1); g.drawImage(img, -cx, fy - cy, img.width * s, img.height * s); g.restore(); }
     if (alpha !== undefined) g.globalAlpha = 1;
   }
+  // viền sáng quanh hình (để quái nổi trên nền tối): bóng màu `mau` lệch 4 phía d px
+  const VIEN = new Map();
+  function toMau(img, mau){
+    const key = mau; let m = VIEN.get(img); if (!m){ m = {}; VIEN.set(img, m); }
+    if (m[key]) return m[key];
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = mau; g.fillRect(0, 0, c.width, c.height);
+    return (m[key] = c);
+  }
+  function veVien(g, C, k, fx, fy, lat, s, mau, d, alpha){
+    const img = C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))]; if (!img) return;
+    const t = toMau(img, mau), cx = C.chan[0] * s, cy = C.chan[1] * s;
+    fx = Math.round(fx); fy = Math.round(fy); g.save(); g.globalAlpha = alpha ?? 1;
+    if (lat){ g.translate(fx, 0); g.scale(-1, 1); fx = 0; }
+    for (const [ox, oy] of [[-d, 0], [d, 0], [0, -d], [0, d]]) g.drawImage(t, fx - cx + ox, fy - cy + oy, img.width * s, img.height * s);
+    g.restore();
+  }
   async function napJson(url){ return fetch(url + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json()); }
-  return {napClip, napJson, khungTheoBuoc, ve, msMang};
+  return {napClip, napJson, khungTheoBuoc, ve, veVien, msMang};
 })();

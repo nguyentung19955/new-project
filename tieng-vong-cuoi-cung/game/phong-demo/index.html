@@ -259,6 +259,20 @@ function veNV(cam){
     SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);
   } else khoi(fx, fy, 44, 112, '#d8dde3', pl.face);
 }
+function clipQuai(q){
+  const d = q.def, Cs = d._clip || {}, A = q.anim;
+  let C = A.ten === 'danh' && Cs.fx && Cs.fx.ok ? Cs.fx : Cs[A.ten];
+  if (!(C && C.ok)) C = Cs.dung;
+  return C && C.ok && C.chan ? C : null;
+}
+function veQuaiNoi(q, cam){
+  if (q.dead) return;
+  const C = clipQuai(q); if (!C) return;
+  const k = q.anim.k ?? SpriteMN.khungTheoBuoc(C, q.anim.t), fx = q.x + q.w / 2 - cam, fy = q.y + q.h;
+  const al = q.alpha < 1 ? q.alpha : 1;
+  SpriteMN.veVien(ctx, C, k, fx, fy, q.face > 0, E.TL, q.def.mau_vien || q.def.mau_khoi || '#e5a13b', E.TL, 0.5 * al);
+  SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
+}
 function veQuai(q, cam){
   if (q.dead) return;
   const d = q.def, Cs = d._clip || {}, A = q.anim;
@@ -350,6 +364,8 @@ function ve(){
   veNV(cam);
   ctx.restore();
   veKhongKhi(camPx, cam, camPy, camY);
+  // quái nổi trên nền tối: viền sáng theo màu riêng + vẽ lại thân sáng hơn bóng tối
+  ctx.save(); ctx.translate(0, -camY); for (const q of E.QUAI) veQuaiNoi(q, cam); ctx.restore();
   for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round((p.x - cam) / 2) * 2, Math.round((p.y - camY) / 2) * 2, 4, 4); }
   // 4) HUD: máu (ô) + Tiếng Vọng (thanh xanh) + cấp
   ctx.setTransform(M, 0, 0, M, 0, 0);

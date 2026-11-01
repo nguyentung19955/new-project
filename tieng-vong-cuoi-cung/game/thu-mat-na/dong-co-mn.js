@@ -118,6 +118,7 @@ const DongCoMN = (() => {
     if (!pl.atk){
       if (dir) pl.face = dir; nhamQuai();
       if (!pl.onGround && IN.xuong()){ pl.pound = {pha:'lay', t:0}; pl.vx = 0; pl.vy = 0; CHO.co = false; SUKIEN.push({k:'ra-don', ten:'dapdat'}); return; }
+      if (!pl.onGround && pl.sliding && pl.wallDir && NV.clip.chemtuong){ pl.face = -pl.wallDir; batDauDon('chemtuong', -1); return; }   // đang trượt tường: chém ra ngoài, vẫn bám
       if (!pl.onGround){ batDauDon('chemkhong', -1); return; }
       if (pl.comboHan > 0 && pl.comboTiep) batDauDon(pl.comboTiep, pl.comboTiepIdx); else batDauDon(bienThe(chuoi()[0]), 0);
     } else if (pl.onGround && donTiep(pl.atk)){
@@ -205,7 +206,7 @@ const DongCoMN = (() => {
     if (pl.leo){
       pl.leoT++; pl.dashBuf = 0;
       // chém trên dây: 1 nhát thường, tự quay về phía quái gần nhất
-      if (CHO.co && !pl.atk && NV.clip.chemday){ nhamQuai(); batDauDon('chemday', -1); }
+      if (CHO.co && !pl.atk && NV.clip.chemday){ const g = quaiGan(P.tamNham * 1.6, 320); if (g && Math.abs(g.dx) > 4) pl.face = g.dx > 0 ? 1 : -1; else if (dir) pl.face = dir; batDauDon('chemday', -1); }
       if (pl.atk){ pl.atkT++; if (pl.atkT >= clipNV(pl.atk).tong) pl.atk = ''; }
       const dangChem = pl.atk === 'chemday';
       pl.vy = dangChem ? 0 : ((IN.len() ? -1 : 0) + (IN.xuong() ? 1 : 0)) * P.leoSpeed; pl.vx = 0; pl.leoDi = pl.vy !== 0;
@@ -278,7 +279,7 @@ const DongCoMN = (() => {
     if (pl.onGround){ pl.wallCoy = 0; pl.wallStickT = 0; }
     let sliding = false;
     const touching = pl.wallDir && collide(pl.x + pl.wallDir, pl.y, pl.w, pl.h);
-    if (pl.wallDir && pl.vy > 0 && !pl.atk && dir !== -pl.wallDir && (touching || dir === pl.wallDir)){
+    if (pl.wallDir && pl.vy > 0 && (!pl.atk || pl.atk === 'chemtuong') && dir !== -pl.wallDir && (touching || dir === pl.wallDir)){
       if (pl.wallStickT < P.wallStick){ pl.wallStickT++; pl.vy = 0; } else pl.vy = Math.min(pl.vy, P.wallSlideMax);
       sliding = true; pl.face = -pl.wallDir; pl.djCo = true; pl.airDash = false; pl.djT = -1;
     }

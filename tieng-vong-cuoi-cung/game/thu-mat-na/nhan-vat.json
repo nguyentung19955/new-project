@@ -210,6 +210,34 @@
     60
    ],
    "sat_thuong": 10
+  },
+  "chemtuong": {
+   "thu_muc": "chemtuong",
+   "so_hinh": 6,
+   "chan": [
+    128,
+    172
+   ],
+   "ms": [
+    60,
+    60,
+    70,
+    60,
+    70,
+    80
+   ],
+   "lap": false,
+   "trung": [
+    2,
+    3
+   ],
+   "hop": [
+    0,
+    -78,
+    82,
+    58
+   ],
+   "sat_thuong": 10
   }
  },
  "cap": [
@@ -505,6 +533,34 @@
       -80,
       70,
       60
+     ],
+     "sat_thuong": 10
+    },
+    "chemtuong": {
+     "thu_muc": "chemtuong",
+     "so_hinh": 6,
+     "chan": [
+      128,
+      172
+     ],
+     "ms": [
+      60,
+      60,
+      70,
+      60,
+      70,
+      80
+     ],
+     "lap": false,
+     "trung": [
+      2,
+      3
+     ],
+     "hop": [
+      0,
+      -78,
+      82,
+      58
      ],
      "sat_thuong": 10
     }
@@ -810,6 +866,34 @@
       60
      ],
      "sat_thuong": 10
+    },
+    "chemtuong": {
+     "thu_muc": "chemtuong",
+     "so_hinh": 6,
+     "chan": [
+      128,
+      172
+     ],
+     "ms": [
+      60,
+      60,
+      70,
+      60,
+      70,
+      80
+     ],
+     "lap": false,
+     "trung": [
+      2,
+      3
+     ],
+     "hop": [
+      0,
+      -78,
+      82,
+      58
+     ],
+     "sat_thuong": 10
     }
    },
    "chuoi": [
@@ -1111,6 +1195,34 @@
       -80,
       70,
       60
+     ],
+     "sat_thuong": 10
+    },
+    "chemtuong": {
+     "thu_muc": "chemtuong",
+     "so_hinh": 6,
+     "chan": [
+      128,
+      172
+     ],
+     "ms": [
+      60,
+      60,
+      70,
+      60,
+      70,
+      80
+     ],
+     "lap": false,
+     "trung": [
+      2,
+      3
+     ],
+     "hop": [
+      0,
+      -78,
+      82,
+      58
      ],
      "sat_thuong": 10
     }
