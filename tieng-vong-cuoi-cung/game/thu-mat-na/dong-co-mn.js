@@ -394,7 +394,7 @@ const DongCoMN = (() => {
         if (!solidPt(ax, q.y + q.h + 4)) return true;
         const bi = moveX(q, vx, false); q.dangDi = !bi; return bi;
       };
-      const bayVe = (ty, sp) => { if (d.bay) q.y = approach(q.y + q.h, ty, sp) - q.h; };
+      const bayVe = (ty, sp) => { if (d.bay && !d.treo) q.y = approach(q.y + q.h, ty, sp) - q.h; };
       switch (q.st){
         case 'tuan_tra': {
           if (q.nghi > 0){ q.nghi--; }
