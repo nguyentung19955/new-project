@@ -301,6 +301,7 @@ function cungSong(x, y, r, huong, mau, a, day){
 // sprite hiệu ứng chiêu (ChatGPT vẽ): art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
 const CANH_BAO = new Image(); CANH_BAO.src = '../../art/vung-1/dao-cu/dan-duong/canh_bao.png';   // dấu báo đòn (ChatGPT vẽ)
 const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
+for (const n of ['nut_dat', 'song_dat', 're_troi', 'khung_mau', 'ruot_mau']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-moi/' + n + '.png'; FXQ[n] = im; }
 function veFx(ten, o, x, y, phai, k, a){
   const im = FXQ[ten]; if (!im || !im.complete || !im.naturalWidth) return;
   const S = 96, w = S * (k || 1); ctx.save(); ctx.globalAlpha = a ?? 1; ctx.translate(Math.round(x), Math.round(y)); if (phai) ctx.scale(-1, 1);
@@ -345,8 +346,11 @@ function veQuai(q, cam){
     if (CANH_BAO.complete && CANH_BAO.naturalWidth){ const w = Math.round(CANH_BAO.width * 2.2), h = Math.round(CANH_BAO.height * 2.2); ctx.drawImage(CANH_BAO, x - (w >> 1), y + 26 - h, w, h); }
     else { ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 5, y - 2, 10, 24); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 3, y, 6, 12); ctx.fillRect(x - 3, y + 15, 6, 5); } }
   // thanh máu
-  if (q.hp < (d.mau || 30) && q.st !== 'chet'){ const x = Math.round(fx), y = Math.round(q.y) - 12;
-    ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 26, y, 52, 7); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 24, y + 2, Math.round(48 * Math.max(0, q.hp) / (d.mau || 30) / 2) * 2, 3); }
+  if (q.hp < (d.mau || 30) && q.st !== 'chet'){ const x = Math.round(fx), y = Math.round(q.y) - 16, tl = Math.max(0, q.hp) / (d.mau || 30), K = FXQ.khung_mau, R = FXQ.ruot_mau;
+    if (K && K.naturalWidth && R && R.naturalWidth){ const k = 0.8, w = K.width * k, x0 = Math.round(x - w / 2), rw = Math.round(64 * k * tl);   // thanh máu ChatGPT vẽ
+      ctx.drawImage(K, x0, y, Math.round(w), Math.round(K.height * k));
+      if (rw > 0) ctx.drawImage(R, 0, 0, Math.max(1, Math.round(R.width * tl)), R.height, x0 + Math.round(9 * k), y + Math.round(4 * k), rw, Math.max(2, Math.round(4 * k))); }
+    else { ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 26, y + 4, 52, 7); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 24, y + 6, Math.round(48 * tl / 2) * 2, 3); } }
 }
 
 /* ================= KHÔNG KHÍ: bóng tối + đèn, bụi tro, hồn lạc, cổng rễ, vignette ================= */

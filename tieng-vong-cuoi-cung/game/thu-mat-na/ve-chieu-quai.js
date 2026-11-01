@@ -17,6 +17,18 @@ const VeChieuQuai = function(o){
     const S = 96, w = S * (k || 1); c.save(); c.globalAlpha = Math.max(0, Math.min(1, a ?? 1)); c.translate(Math.round(x), Math.round(y)); if (phai) c.scale(-1, 1);
     c.imageSmoothingEnabled = false; c.drawImage(im, k0 * S, 0, S, S, -w / 2, -w / 2, w, w); c.restore();
   }
+  // dải 4 khung (art/hieu-ung/chieu-moi/<ten>.png, ChatGPT vẽ, nhìn NGANG): khung k, neo ĐÁY-GIỮA tại (x, y), hướng gốc = PHẢI
+  function veDai(ten, k, x, y, trai, s, a){
+    const im = anh(ten); if (!im) return false; const c = ctx(), cw = im.width / 4, ch = im.height, w = Math.round(cw * s), h = Math.round(ch * s);
+    c.save(); c.globalAlpha = Math.max(0, Math.min(1, a ?? 1)); c.imageSmoothingEnabled = false; c.translate(Math.round(x), Math.round(y)); if (trai) c.scale(-1, 1);
+    c.drawImage(im, Math.max(0, Math.min(3, k | 0)) * cw, 0, cw, ch, -w / 2, -h, w, h); c.restore(); return true;
+  }
+  // dải nứt đất (ChatGPT) trải dọc mặt sàn 2 phía tới đúng tầm (tam), dừng ở mép vực
+  function daiNut(cx, y, tam, k, a, cam){
+    const im = anh('nut_dat'); if (!im) return false; const s = 2, w = im.width / 4 * s * 0.8;
+    for (const sd of [-1, 1]) for (let d = w / 2; d <= tam; d += w){ const x = cx + sd * d; if (!coSan(x, y)) break; veDai('nut_dat', k, x - cam, y + 4, sd < 0, s, a); }
+    return true;
+  }
   function o4(x, y, mau, a, s){ const c = ctx(), st = s || 4; c.globalAlpha = a; c.fillStyle = mau; c.fillRect(Math.round(x / st) * st, Math.round(y / st) * st, st, st); }
   function nong(q){ const n = q.def.chieu.nong || [0, -40]; return [q.x + q.w / 2 + n[0] * E.TL * -q.face, q.y + q.h + n[1] * E.TL]; }
   // số khung (60 Hz) từ đầu đòn tới khung k – gồm cả phần giữ thêm của khung báo trước (bao_truoc_them_ms)
@@ -66,8 +78,10 @@ const VeChieuQuai = function(o){
   function veBaoChuong(q, cam){
     const p = tienDoChuong(q); if (p < 0) return;
     const ch = q.def.chieu, cx = q.x + q.w / 2, y = q.y + q.h, f = E.S.frame, nhay = p > 0.55 && (f >> 2) % 2 === 0;
-    // 1) dải vạch nứt đỏ gạch dọc phạm vi sóng, mờ → đậm dần
-    vachNut(cx, y, ch.tam || 260, Math.min(1, 0.2 + 0.95 * p), nhay, cam);
+    // 1) dải nứt đất đỏ gạch (ChatGPT vẽ, nhìn ngang, bốc lên từ mặt đất) dọc phạm vi sóng, lớn + đậm dần
+    if (!daiNut(cx, y, ch.tam || 260, Math.min(3, Math.floor(p * 4)), Math.min(1, 0.35 + 0.8 * p) * (nhay ? 1 : 0.85), cam))
+      vachNut(cx, y, ch.tam || 260, Math.min(1, 0.2 + 0.95 * p), nhay, cam);
+    if (anh('nut_dat')){ ctx().globalAlpha = 1; return; }   // đã có hình ChatGPT: bỏ các vòng/chấm vẽ bằng code quanh quả chuông
     // 2) quầng loé đỏ gạch quanh quả chuông (sau lưng quái, cao ~55 điểm ảnh gốc)
     const bx = cx + 19 * E.TL * -q.face - cam + rung(q), by = y - 52 * E.TL, r = 30 + 8 * p + (nhay ? 6 : 0);
     for (let yy = -r; yy <= r; yy += 6) for (let xx = -r; xx <= r; xx += 6){ const d = Math.hypot(xx, yy * 1.2) / r; if (d < 1) o4(bx + xx, by + yy, DO_GACH, (1 - d) * (0.15 + 0.35 * p) * (nhay ? 1.5 : 1), 6); }
@@ -115,13 +129,19 @@ const VeChieuQuai = function(o){
       const ch = n.ch || {}, ten = FX_CUA[ch.ve] || 'ken_tron';
       if (n.dat && ch.toc_song){   // sóng chấn động chạy 2 phía mặt đất, tới đúng tam
         const song = n.song || 46, r = Math.min(ch.tam || 260, n.t * ch.toc_song), k0 = Math.min(5, (n.t / 8) | 0), a = Math.max(0, 1 - n.t / song);
-        vachNut(n.x, n.y, ch.tam || 260, 0.5 * a, false, cam);
-        if (r < (ch.tam || 260)){ veFx('tan', k0, n.x - r - cam, n.y - 34, false, 1.4, 0.4 + 0.6 * a); veFx('tan', k0, n.x + r - cam, n.y - 34, true, 1.4, 0.4 + 0.6 * a); }
+        if (anh('song_dat')){   // sóng chấn động (ChatGPT vẽ): làn bụi đá + năng lượng đỏ gạch dựng cao, chạy 2 phía
+          daiNut(n.x, n.y, ch.tam || 260, 3, 0.45 * a, cam);
+          const kk = Math.min(3, (n.t / 6) | 0) % 4;
+          if (r < (ch.tam || 260)){ veDai('song_dat', kk, n.x - r - cam, n.y + 4, true, 1.6, 0.5 + 0.5 * a); veDai('song_dat', kk, n.x + r - cam, n.y + 4, false, 1.6, 0.5 + 0.5 * a); }
+        } else {
+          vachNut(n.x, n.y, ch.tam || 260, 0.5 * a, false, cam);
+          if (r < (ch.tam || 260)){ veFx('tan', k0, n.x - r - cam, n.y - 34, false, 1.4, 0.4 + 0.6 * a); veFx('tan', k0, n.x + r - cam, n.y - 34, true, 1.4, 0.4 + 0.6 * a); }
+        }
       } else if (ten === 'vai_nhat') veFx('vai_nhat', 4 + Math.min(1, (n.t / 12) | 0), n.x - cam, n.y, false, 1.2, Math.max(0, 0.8 - n.t / 26));
       else veFx(ten, 4 + Math.min(1, (n.t / 12) | 0), n.x - cam, n.y, false, ten === 'cau_tim' ? 1.4 : 1.0, Math.max(0, 1 - n.t / 26));
     }
     ctx().globalAlpha = 1;
   }
-  return {ve, rung, vien, veFx, tienDoChuong, FX_CUA};
+  return {ve, rung, vien, veFx, veDai, tienDoChuong, FX_CUA};
 };
 window.VeChieuQuai = VeChieuQuai;

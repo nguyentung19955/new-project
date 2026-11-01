@@ -276,9 +276,17 @@
       SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
     } else { if (al !== undefined) ctx.globalAlpha = al; khoi(fx, fy, q.w, q.h, q.flash > 2 ? '#ffffff' : (d.mau_khoi || '#a07850'), q.face); ctx.globalAlpha = 1; }
     if (q.baoTruoc && (E.S.frame >> 2) % 2 === 0) veCham(fx, q.y - 26, q._gia);
-    if (q.hp < (d.mau || 30) && q.st !== 'chet' && !q.laTinhAnh){ const x = Math.round(fx), y = Math.round(q.y) - 12;
-      ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 26, y, 52, 7); ctx.fillStyle = '#ffbe50'; ctx.fillRect(x - 24, y + 2, Math.round(48 * Math.max(0, q.hp) / (d.mau || 30) / 2) * 2, 3); }
   }
+  // thanh máu quái (ChatGPT vẽ): khung đồng 2 chuông + ruột đỏ gạch cắt theo tỉ lệ máu; tâm-trên tại (x, y), phóng k
+  function veThanhMau(x, y, tl, k){
+    const K = V1.IMG.fx_khung_mau, R = V1.IMG.fx_ruot_mau; if (!K || !R) return false;
+    const w = K.width * k, h = K.height * k, x0 = Math.round(x - w / 2), y0 = Math.round(y);
+    ctx.save(); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(K, x0, y0, Math.round(w), Math.round(h));   // khung trước (lòng khung tối, đặc) rồi ruột đỏ đè lên trong lòng
+    const rw = Math.max(0, Math.round(64 * k * tl)); if (rw > 0) ctx.drawImage(R, 0, 0, Math.max(1, Math.round(R.width * tl)), R.height, x0 + Math.round(9 * k), y0 + Math.round(4 * k), rw, Math.max(2, Math.round(4 * k)));
+    ctx.restore(); return true;
+  }
+  V1.veThanhMau = veThanhMau;
   function veCham(x, y, xam){ x = Math.round(x); y = Math.round(y);
     if (!xam && V1.IMG.dd_canh_bao){ veAnhDay(V1.IMG.dd_canh_bao, x, y + 26, 2.2, false); return; }
     ctx.fillStyle = '#0d0f1c'; ctx.fillRect(x - 5, y - 2, 10, 24); ctx.fillStyle = xam ? '#9aa3ad' : '#ffbe50'; ctx.fillRect(x - 3, y, 6, 12); ctx.fillRect(x - 3, y + 15, 6, 5); }
@@ -433,6 +441,8 @@
 
   /* ---------------- VẬT PHẨM / CHUÔNG / TÚI / NGUY HIỂM ---------------- */
   function veIcon(loai, x, y, s){   // tâm (x, y), cỡ s (px logic ~ 1 = 24 px)
+    const ICON = {manh_am:'fx_i_manh_am', chuong_vo:'fx_i_chuong_vo', tang_mau:'fx_i_mat_na'}[loai], IM = ICON && V1.IMG[ICON];
+    if (IM){ const h = 24 * s * 1.1, w = IM.width * h / IM.height; ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(IM, Math.round(x - w / 2), Math.round(y - h / 2), Math.round(w), Math.round(h)); ctx.restore(); return; }
     ctx.save(); ctx.translate(Math.round(x), Math.round(y)); ctx.scale(s, s);
     const o = (c, a, b, w, h) => { ctx.fillStyle = c; ctx.fillRect(a, b, w, h); };
     if (loai === 'manh_am'){ ctx.fillStyle = '#0d0f1c'; ctx.beginPath(); ctx.moveTo(0, -12); ctx.lineTo(9, 0); ctx.lineTo(0, 12); ctx.lineTo(-9, 0); ctx.fill();
@@ -599,6 +609,12 @@
     for (const n of G.nguy){
       if (n.loai !== 're') continue;
       const x = Math.round(n.x), y = n.y;
+      if (V1.IMG.fx_re_troi && VCQ.veDai){   // rễ trồi (ChatGPT vẽ): báo trước = khung 0 nhỏ nhấp nháy; trồi = khung 1→3 theo chiều cao
+        const s = R.RE_CAO / 80 * 1.15;
+        if (n.bao > 0){ const k = 1 - n.bao / n.baoTong, nhap = (f >> 2) % 2 ? 1 : 0.6; VCQ.veDai('re_troi', 0, x, y + 4, n.x % 2 === 0, s * (0.6 + 0.4 * k), (0.45 + 0.55 * k) * nhap); continue; }
+        if (n.h <= 0) continue;
+        const kk = 1 + Math.min(2, Math.floor(n.h / R.RE_CAO * 3)); VCQ.veDai('re_troi', kk, x, y + 4, n.x % 2 === 0, s, 1); continue;
+      }
       if (n.bao > 0){
         const k = 1 - n.bao / n.baoTong, nhap = (f >> 2) % 2 ? 1 : 0.65;
         ctx.fillStyle = 'rgba(176,40,24,' + (0.10 + 0.16 * k) + ')'; ctx.fillRect(x - R.RE_RONG / 2, y - R.RE_CAO, R.RE_RONG, R.RE_CAO);   // cột nguy hiểm mờ = chiều cao rễ
@@ -776,9 +792,10 @@
       const w = 420, x = (W - w) / 2, y = 40, m = b.def.mau || 100, hp = Math.max(0, b.hp);
       ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(x - 14, 8, w + 28, 54, 10); ctx.fill();
       chu(b.def.ten || '', W / 2, 31, 19, '#F3E6C8');
-      ctx.fillStyle = '#05060a'; ctx.fillRect(x - 3, y - 3, w + 6, 18); ctx.fillStyle = '#3a1418'; ctx.fillRect(x, y, w, 12);
-      ctx.fillStyle = b.batTu ? '#9aa3ad' : '#d0402f'; ctx.fillRect(x, y, Math.round(w * hp / m), 12);
-      ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(x, y, Math.round(w * hp / m), 3);
+      if (!veThanhMau(W / 2, y - 2, hp / m, 3.5)){
+        ctx.fillStyle = '#05060a'; ctx.fillRect(x - 3, y - 3, w + 6, 18); ctx.fillStyle = '#3a1418'; ctx.fillRect(x, y, w, 12);
+        ctx.fillStyle = b.batTu ? '#9aa3ad' : '#d0402f'; ctx.fillRect(x, y, Math.round(w * hp / m), 12);
+        ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(x, y, Math.round(w * hp / m), 3); }
       if (b.laTrum){   // vạch 50% = chỗ chuyển pha
         ctx.fillStyle = '#05060a'; ctx.fillRect(x + w / 2 - 3, y - 6, 6, 24); ctx.fillStyle = '#ffe08a'; ctx.fillRect(x + w / 2 - 1, y - 5, 2, 22);
         ctx.beginPath(); ctx.moveTo(x + w / 2 - 6, y - 8); ctx.lineTo(x + w / 2 + 6, y - 8); ctx.lineTo(x + w / 2, y - 2); ctx.closePath(); ctx.fill();
@@ -845,6 +862,8 @@
     const vd = VCQ.vien(q);   // báo trước đập chuông: viền đỏ gạch đậm dần
     SpriteMN.veVien(ctx, C, k, fx, fy, q.face > 0, E.TL, vd ? vd.mau : q.def.mau_vien || q.def.mau_khoi || '#e5a13b', vd ? E.TL * 1.5 : E.TL, (vd ? vd.a : 0.5) * al);
     SpriteMN.ve(ctx, C, k, fx, fy, q.face > 0, E.TL, al, q.flash > 2);
+    const d = q.def;   // thanh máu (ChatGPT vẽ) – vẽ sau lớp bóng tối để luôn đọc được
+    if (q.hp < (d.mau || 30) && q.st !== 'chet' && !q.laTinhAnh) veThanhMau(Math.round(fx), Math.round(Math.min(q.y - 26, fy - C.chan[1] * E.TL + 10)), Math.max(0, q.hp) / (d.mau || 30), 1.0);
   }
   function veFx(ten, o, x, y, phai, k, a){   // art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
     const im = V1.IMG['fx_' + ten]; if (!im) return;
