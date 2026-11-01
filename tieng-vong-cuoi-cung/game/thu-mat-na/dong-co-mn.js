@@ -31,25 +31,8 @@ const DongCoMN = (() => {
   function coSanMong(o, hang){
     if (hang < 0 || hang >= BD.HANG) return false;
     const T = BD.T, x0 = Math.floor(o.x / T), x1 = Math.floor((o.x + o.w - 0.001) / T);
-    for (let tx = x0; tx <= x1; tx++) if (tile(tx, hang) === '=' || (!o.leo && BD.cau && BD.cau.has(tx + ',' + hang))) return true;
+    for (let tx = x0; tx <= x1; tx++) if (tile(tx, hang) === '=') return true;
     return false;
-  }
-  // "cầu dây": khe hẹp (≤4 ô) giữa 2 bờ đất có dây leo đi qua → mặt khe đỡ chân như sàn mỏng, đi ngang không rơi;
-  // muốn leo xuống thì đứng ở dây bấm ↓ (lúc đang leo thì cầu không chặn)
-  function timCauDay(){
-    BD.cau = new Set();
-    const dung = ch => ch === '#' || ch === 'N' || ch === '=';
-    for (let r = 1; r < BD.HANG; r++){
-      let c = 0;
-      while (c < BD.COT){
-        if (dung(BD.L[r][c]) || !(c > 0 && dung(BD.L[r][c - 1]) && !dung(BD.L[r - 1][c - 1]))){ c++; continue; }
-        let e = c; while (e < BD.COT && !dung(BD.L[r][e])) e++;
-        const rong = e - c, coDay = BD.L[r].slice(c, e).includes('H') || BD.L[r - 1].slice(c, e).includes('H');
-        if (e < BD.COT && rong <= 4 && coDay && !dung(BD.L[r - 1][e]) && dung(BD.L[r][e]))
-          for (let k = c; k < e; k++) if (!dung(BD.L[r - 1][k])) BD.cau.add(k + ',' + r);
-        c = e;
-      }
-    }
   }
   function trenSanMong(o){   // chân đang đặt đúng mặt một ô '='
     if (o.roiQua > 0) return false;
@@ -91,7 +74,6 @@ const DongCoMN = (() => {
   function napBanDo(luoi, them){
     BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length; BD.nut = {};
     for (const [c0, r0, c1, r1] of (them || [])) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) BD.L[r][c] = '#';
-    timCauDay();
   }
 
   /* ---------- TRẠNG THÁI ---------- */
@@ -246,13 +228,12 @@ const DongCoMN = (() => {
 
     // Dây leo (ô 'H'): ↑ để bám (trên không: ↑ hoặc ↓), leo ↑↓, đứng yên là treo; Nhảy để rời (kèm hướng); hết dây / chạm đất thì thả
     const daySo = (x, y) => tile(Math.floor(x / BD.T), Math.floor(y / BD.T)) === 'H';
-    const cxDay = pl.x + pl.w / 2; let trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
-    // đứng trên cầu dây: dây nằm ngay dưới chân
-    const trenCau = () => pl.onGround && BD.cau && BD.cau.has(Math.floor(cxDay / BD.T) + ',' + Math.round((pl.y + pl.h) / BD.T)) && daySo(cxDay, pl.y + pl.h + 2);
-    const trenDay0 = trenDay; trenDay = () => trenDay0() || trenCau();
+    const cxDay = pl.x + pl.w / 2, trenDay = () => daySo(cxDay, pl.y + pl.h * 0.4) || daySo(cxDay, pl.y + pl.h * 0.12);
+    // đứng trên mép đất ngay trên đầu dây: bấm ↓ để leo xuống
+    const dauDayDuoiChan = () => pl.onGround && daySo(cxDay, pl.y + pl.h + 2);
     if (pl.leoKhoa > 0) pl.leoKhoa--;
-    if (!pl.leo && pl.leoKhoa <= 0 && trenDay() && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || trenCau())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
-      const tuCau = !trenDay0() && trenCau();
+    if (!pl.leo && pl.leoKhoa <= 0 && (trenDay() || (IN.xuong() && dauDayDuoiChan())) && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || dauDayDuoiChan())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
+      const tuCau = !trenDay() && dauDayDuoiChan();
       pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
       pl.x = Math.floor(cxDay / BD.T) * BD.T + BD.T / 2 - pl.w / 2; SUKIEN.push({k:'bam-day'});
       if (tuCau){ const y1 = Math.round((pl.y + pl.h) / BD.T) * BD.T - pl.h * 0.4 + 4; if (!collide(pl.x, y1, pl.w, pl.h)) pl.y = y1; else { pl.leo = false; } pl.onGround = false; }
