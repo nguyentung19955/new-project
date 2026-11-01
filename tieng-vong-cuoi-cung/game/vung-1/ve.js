@@ -5,7 +5,7 @@
   const V1 = window.V1, E = DongCoMN, pl = E.pl, G = V1.G, T = 48;
   const W = 960, H = 540, PX = 3, VW = 320, VH = 180, OD = 16;
   const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
-  const pc = document.createElement('canvas'); pc.width = VW; pc.height = VH; const g = pc.getContext('2d');
+  const pc = document.createElement('canvas'); pc.width = VW + 1; pc.height = VH + 1; const g = pc.getContext('2d');
   const NEN = document.createElement('canvas'), GIA = document.createElement('canvas');
   const LC = document.createElement('canvas'); LC.width = VW; LC.height = VH; const lg = LC.getContext('2d');
   let M = 1;
@@ -854,30 +854,31 @@
   const ANH = () => V1.CANH && V1.CANH[G.id];
   V1.ve = function(mo){
     const S = E.S;
-    const camPx = Math.round(CAM.x / PX), cam = camPx * PX, camPy = Math.round(CAM.y / PX), camY = camPy * PX;
+    // camera mượt: thế giới (nhân vật/quái) theo 1 px logic; nền thấp 320×180 dời phần lẻ (0..2 px) thay vì nhảy bậc 3 px → hết rung giật khi chạy
+    const camF = Math.round(CAM.x), camFy = Math.round(CAM.y), camPx = Math.floor(camF / PX), camPy = Math.floor(camFy / PX), cam = camF, camY = camFy, lePx = camF - camPx * PX, lePy = camFy - camPy * PX;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = '#05080d'; ctx.fillRect(0, 0, cv.width, cv.height);
     if (!G.phong){ return; }
     // 1) cảnh nền thấp 320×180
-    g.imageSmoothingEnabled = false; g.fillStyle = '#08090d'; g.fillRect(0, 0, VW, VH);
+    g.imageSmoothingEnabled = false; g.fillStyle = '#08090d'; g.fillRect(0, 0, VW + 1, VH + 1);
     const I = V1.IMG;
     // nền xa/giữa: lặp cả NGANG lẫn DỌC (lật gương xen kẽ) để không lộ vạch ngang khi camera đi xuống
     const lapNen = (im, kx, ky, y0) => { const w = im.width, h = im.height;
       let y = y0 - Math.round(camPy * ky); y = ((y % (2 * h)) + 2 * h) % (2 * h) - 2 * h;
-      for (let j = 0; y < VH; y += h, j++){ let x = -(((Math.round(camPx * kx)) % w + w) % w);
-        for (; x < VW; x += w){ if ((((j % 2) + 2) % 2) === 0) g.drawImage(im, x, y); else { g.save(); g.translate(x, y + h); g.scale(1, -1); g.drawImage(im, 0, 0); g.restore(); } } } };
+      for (let j = 0; y < VH + 1; y += h, j++){ let x = -(((Math.round(camPx * kx)) % w + w) % w);
+        for (; x < VW + 1; x += w){ if ((((j % 2) + 2) % 2) === 0) g.drawImage(im, x, y); else { g.save(); g.translate(x, y + h); g.scale(1, -1); g.drawImage(im, 0, 0); g.restore(); } } } };
     if (I.bg) lapNen(I.bg, 0.12, 0.08, 0);
     if (I.mid) lapNen(I.mid, 0.35, 0.16, -4);
-    if (!ANH()){ g.fillStyle = 'rgba(8,5,8,0.35)'; g.fillRect(0, 0, VW, VH); }
+    if (!ANH()){ g.fillStyle = 'rgba(8,5,8,0.35)'; g.fillRect(0, 0, VW + 1, VH + 1); }
     g.drawImage(NEN, -camPx, -camPy);
     // ngoài phòng: đen
     g.fillStyle = '#05080d';
-    if (camPx < 0) g.fillRect(0, 0, -camPx, VH); const rw = E.BD.COT * OD - camPx; if (rw < VW) g.fillRect(rw, 0, VW - rw, VH);
-    if (camPy < 0) g.fillRect(0, 0, VW, -camPy); const rh = E.BD.HANG * OD - camPy; if (rh < VH) g.fillRect(0, rh, VW, VH - rh);
+    if (camPx < 0) g.fillRect(0, 0, -camPx, VH + 1); const rw = E.BD.COT * OD - camPx; if (rw < VW + 1) g.fillRect(rw, 0, VW + 1 - rw, VH + 1);
+    if (camPy < 0) g.fillRect(0, 0, VW + 1, -camPy); const rh = E.BD.HANG * OD - camPy; if (rh < VH + 1) g.fillRect(0, rh, VW + 1, VH + 1 - rh);
     let ox = 0, oy = 0;
     if (S.sht > 0){ const k = S.shm * S.sht / 8; ox = Math.round(S.shx * k * ((S.frame & 1) ? 1 : -1)); oy = Math.round(S.shy * k * ((S.frame & 1) ? -1 : 1)); }
     ctx.setTransform(M, 0, 0, M, ox * M, oy * M); ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(pc, 0, 0, VW, VH, 0, 0, W, H);
+    ctx.drawImage(pc, 0, 0, VW + 1, VH + 1, -lePx, -lePy, W + PX, H + PX);
     // 2) thế giới
     ctx.save(); ctx.translate(-cam, -camY);
     veTheGioi();

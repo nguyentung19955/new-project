@@ -203,7 +203,7 @@ function camBuoc(){
 
 /* ================= VẼ ================= */
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
-const pc = document.createElement('canvas'); pc.width = VW; pc.height = VH; const g = pc.getContext('2d');
+const pc = document.createElement('canvas'); pc.width = VW + 1; pc.height = VH + 1; const g = pc.getContext('2d');
 let M = 1, DPR = 1;
 function resize(){
   DPR = Math.min(window.devicePixelRatio || 1, 3);
@@ -394,15 +394,16 @@ function veKhongKhi(camPx, cam, camPy, camY){
   ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); ctx.restore();
 }
 function ve(){
-  const camPx = Math.round(CAM.x / PX), cam = camPx * PX, camPy = Math.round(CAM.y / PX), camY = camPy * PX;
+  // camera mượt: thế giới theo 1 px logic; nền thấp 320×180 dời phần lẻ (0..2 px) thay vì nhảy bậc 3 px → hết rung giật khi chạy
+  const camF = Math.round(CAM.x), camFy = Math.round(CAM.y), camPx = Math.floor(camF / PX), camPy = Math.floor(camFy / PX), cam = camF, camY = camFy, lePx = camF - camPx * PX, lePy = camFy - camPy * PX;
   // 1) cảnh 320×180 điểm (2 bản ghép)
   g.imageSmoothingEnabled = false;
-  g.fillStyle = '#08090d'; g.fillRect(0, 0, VW, VH);
+  g.fillStyle = '#08090d'; g.fillRect(0, 0, VW + 1, VH + 1);
   // nền xa/giữa: lặp cả NGANG lẫn DỌC (lật gương xen kẽ) để không lộ mép ngang khi camera đi xuống
   const lapNen = (im, kx, ky, y0) => { const w = im.width, h = im.height;
     let y = y0 - Math.round(camPy * ky); y = ((y % (2 * h)) + 2 * h) % (2 * h) - 2 * h;
-    for (let j = 0; y < VH; y += h, j++){ let x = -(Math.round(camPx * kx) % w);
-      for (; x < VW; x += w){ if ((j & 1) === 0) g.drawImage(im, x, y); else { g.save(); g.translate(x, y + h); g.scale(1, -1); g.drawImage(im, 0, 0); g.restore(); } } } };
+    for (let j = 0; y < VH + 1; y += h, j++){ let x = -(Math.round(camPx * kx) % w);
+      for (; x < VW + 1; x += w){ if ((j & 1) === 0) g.drawImage(im, x, y); else { g.save(); g.translate(x, y + h); g.scale(1, -1); g.drawImage(im, 0, 0); g.restore(); } } } };
   if (IMG.bg) lapNen(IMG.bg, 0.12, 0.08, 0);
   if (IMG.mid) lapNen(IMG.mid, 0.35, 0.16, -4);
   if (IMG.chuong){ const camC = MAN.chuong[0] + 8 - VW / 2; g.drawImage(IMG.chuong, Math.round(VW / 2 - 80 - (camPx - camC) * 0.85), MAN.chuong[1] - camPy); }
@@ -416,7 +417,7 @@ function ve(){
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = '#05080d'; ctx.fillRect(0, 0, cv.width, cv.height);
   ctx.setTransform(M, 0, 0, M, ox * M, oy * M); ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(pc, 0, 0, VW, VH, 0, 0, W, H);
+  ctx.drawImage(pc, 0, 0, VW + 1, VH + 1, -lePx, -lePy, W + PX, H + PX);
   // 3) quái, nhân vật, tia
   ctx.save(); ctx.translate(0, -camY);
   for (const q of E.QUAI) veQuai(q, cam);
