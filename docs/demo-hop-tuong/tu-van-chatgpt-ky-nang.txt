@@ -1,0 +1,148 @@
+NEON GRID — MERGE DEFENSE
+HERO SKILLS & BOSS MECHANICS DESIGN BIBLE v1.0
+Ngày: 02/11/2026
+
+0. QUY ƯỚC CÂN BẰNG
+Giữ nguyên: bàn 5x3, đường quái vòng quanh bàn, 3 mạng, summon 10+6n Energy, pool 5/8 tướng, merge cùng loại/cùng sao ra loại ngẫu nhiên, tối đa 7 sao, sát thương x2.2 mỗi sao, nâng cấp loại 5 bậc +40% sát thương/bậc, giá 80/160/300/500/800, boss mỗi 10 wave.
+Thông số dưới đây ở 1 sao, upgrade 0, không buff, một mục tiêu, trừ khi ghi rõ. Dmg ở sao s = dmg gốc x 2.2^(s-1). Upgrade cấp k: nhân (1+0.4k), k=0..5. CD không tự giảm theo sao. Sát thương hiệu ứng và đòn đánh cùng hưởng hệ số sao/upgrade nếu ghi 'theo damage'; các khoản Energy không nhân theo sao. DPS bảng cuối là DPS trực tiếp đơn mục tiêu, không tính trạng thái, combo hay kỹ năng boss.
+Đề xuất chuẩn để dễ code: mọi hiệu ứng slow lấy mức mạnh nhất, tối đa 45%; stun boss tối đa 0.35s/lần và miễn stun 5s; sát thương DoT cùng loại chỉ refresh, không stack vô hạn; mỗi đòn AoE chỉ tính một lần trên mỗi enemy; boss miễn dịch dịch chuyển ngược và không bị giảm tốc dưới 70% tốc độ gốc. Buff tốc bắn tối đa +35%; mọi proc dùng thời gian thực, không phụ thuộc FPS.
+
+1. TÁM TƯỚNG
+
+1.1 SCORCH — Plasma #ff6a2a
+Vai trò: Quét cụm quái và tạo vùng nguy hiểm theo tuyến.
+Đánh thường — Plasma Jet: ưu tiên quái đầu đường trong tầm 155px; 24 dmg mỗi 0.80s, tia ngắn trúng mục tiêu đầu tiên. DPS trực tiếp 30.
+Nội tại — Heat Trail: mỗi lần bắn đặt vệt lửa tại vị trí mục tiêu tồn tại 2.0s, bán kính 22px; gây 5 dmg/0.5s cho tối đa 3 quái, mỗi quái tối đa một vệt gây damage tại một thời điểm. Vệt là vùng độc lập, không cộng dồn với vệt khác.
+Mốc sao: 1★ vệt 22px/2s; 3★ bán kính 27px; 5★ vệt 2.7s và chạm 4 quái; 7★ mỗi phát thứ 4 tạo vòng Plasma Burst 40px gây 35% damage đòn bắn.
+Combo: FROST — Thermal Shock: mục tiêu đang bị Chill nhận một lần nổ 40% damage SCORCH, xóa Chill; mỗi mục tiêu cooldown 2.5s.
+VFX: tia cam #ff6a2a dạng 3 đoạn rung, 6 hạt than; vệt là 2 vòng cam mờ và hạt nhỏ bốc lên; Thermal Shock là vòng trắng-cam nở 0.18s.
+EN: "Burns lanes with lingering plasma trails."
+
+1.2 FROST — Cryo #5ee7ff
+Vai trò: Điều tiết tốc độ đường đi, bảo vệ Core.
+Đánh thường — Crystal Pulse: ưu tiên quái gần Core nhất trong tầm 175px; 18 dmg/1.00s, bắn tinh thể thẳng. DPS 18.
+Nội tại — Chill Meter: mỗi hit thêm 1 Chill trong 3s, tối đa 3; mỗi stack giảm tốc 10% (boss mỗi stack 5%). Đủ 3 stack kích hoạt Shatter gây 30% damage đòn đánh trong bán kính 30px, xóa stack và khóa tái kích hoạt trên mục tiêu 1.5s.
+Mốc sao: 1★ 3 stack; 3★ stack tồn tại 4s; 5★ Shatter bán kính 42px; 7★ Shatter để lại Cold Patch 1.5s, slow 20% (boss 10%).
+Combo: SCORCH kích Thermal Shock; ARC đánh mục tiêu có Chill tạo thêm 1 tia điện sang mục tiêu gần nhất, tối đa 1 lần/1.5s trên mục tiêu.
+VFX: đạn kim cương cyan, 3 vạch băng xoay theo stack, Shatter là 8 mảnh tam giác và vòng cyan; Cold Patch là ellipse trong suốt.
+EN: "Stacks chill, then shatters clustered enemies."
+
+1.3 ARC — Voltage #ffe24a
+Vai trò: Dọn quái nhanh bằng nhịp chém điện lan truyền.
+Đánh thường — Volt Cut: ưu tiên mục tiêu nhiều quái đứng gần trong tầm 145px; 32 dmg/0.90s, vệt chém ngắn. DPS 35.56.
+Nội tại — Chain Rhythm: cứ đòn đánh thứ 3 phát sét nối 2 mục tiêu khác trong bán kính 85px, mỗi nhánh 35% damage gốc, không nảy lại mục tiêu đã trúng.
+Mốc sao: 1★ 2 nhánh; 3★ 3 nhánh; 5★ tầm nối 105px; 7★ đòn thứ 3 tạo thêm một nhịp sét trễ 0.18s gây 20% damage lên tối đa 3 mục tiêu (không lặp mục tiêu trong cùng nhịp).
+Combo: FROST tăng thêm một nhánh có điều kiện như trên; GLITCH — mục tiêu bị Breach nhận nhánh sét ưu tiên.
+VFX: katana vẽ bằng đoạn line vàng 0.12s; sét polyline gấp khúc 3–5 đoạn, flash trắng ngắn và 4 tia vụn.
+EN: "Every third slash unleashes chain lightning."
+
+1.4 LANCE — Laser #ff3c8e
+Vai trò: Săn mục tiêu trâu, dồn sát thương có nhịp chuẩn bị.
+Đánh thường — Rail Shot: ưu tiên quái có HP hiện tại cao nhất trong tầm 250px; 95 dmg/2.50s, tia xuyên thẳng qua tối đa 2 quái, quái thứ hai nhận 40% damage. DPS chính 38.
+Nội tại — Focus Lock: nếu 2 lần liên tiếp bắn cùng mục tiêu, lần thứ 2 cộng 35% damage; đổi mục tiêu reset. Không tăng thêm khi bắn liên tục; mỗi cặp đòn tính một lần.
+Mốc sao: 1★ xuyên 2; 3★ xuyên 3 (quái thứ 3 nhận 25%); 5★ Focus Lock +50% thay +35%; 7★ phát Focus Lock tạo đường cháy laser tồn tại 0.6s, gây 15% damage cho quái đi qua (mỗi quái 1 lần).
+Combo: GLITCH — Breach khiến Focus Lock kích ngay ở phát đầu nhưng chỉ +20% và tiêu thụ Breach; mỗi mục tiêu tối đa 1 lần/4s.
+VFX: đường ngắm hồng mảnh 0.28s trước phát bắn, rail dày lõi trắng 0.09s, 8 tia hồng từ điểm va chạm. Đường cháy là nét hồng trong suốt.
+EN: "Piercing rail shots punish high-HP targets."
+
+1.5 WARP — Void #a35cff
+Vai trò: Hỗ trợ vị trí, gom quái để đồng đội bắn trúng nhiều hơn.
+Đánh thường — Void Orb: ưu tiên cụm quái đông nhất trong tầm 175px; 14 dmg/1.40s, cầu tím bay chậm. DPS 10.
+Nội tại — Gravity Knot: cứ 4 phát tạo trường hút tại mục tiêu bán kính 60px trong 1.4s; quái thường trong vùng bị kéo về tâm tối đa 18px, không bị kéo ngược quá 12px dọc đường, không rời tuyến; boss chỉ chịu slow 8%. Trường không kéo quái vượt qua ô đường hợp lệ.
+Mốc sao: 1★ bán kính 60px; 3★ 75px; 5★ trường 2s; 7★ khi trường hết gây Implosion 50% damage đòn đánh lên tối đa 5 quái trong vùng.
+Combo: SCORCH — các vệt lửa trong trường tăng bán kính hiệu dụng +20% (không cộng thêm damage mỗi tick); VENOM — đạn nảy ưu tiên các quái bị gom.
+VFX: cầu tím 2 vòng tròn, trường là 3 cung ellipse xoay và 10 chấm tím hướng vào tâm, không cần méo hình ảnh.
+EN: "Groups enemies inside compact gravity fields."
+
+1.6 BROKER — Nanite #4d8dff
+Vai trò: Kinh tế có điều kiện, đổi DPS lấy khả năng summon/upgrade.
+Đánh thường — Data Ping: ưu tiên quái có HP thấp nhất trong tầm 180px; 10 dmg/1.25s. DPS 8.
+Nội tại — Bounty Contract: mỗi 5 đòn trúng gắn Bounty lên một quái chưa bị gắn trong 5s; nếu quái chết khi còn dấu, nhận +3 Energy, tối đa +18 Energy mỗi wave từ tất cả BROKER cộng lại. Không nhân thưởng theo số Broker; nếu nhiều Broker cùng đánh chỉ có 1 dấu.
+Mốc sao: 1★ +3 Energy; 3★ Bounty tồn tại 7s; 5★ +4 Energy mỗi kill (vẫn cap +18/wave); 7★ mỗi 5 đòn trúng có thể đánh dấu 2 quái khác nhau (không vượt cap).
+Combo: GLITCH — nếu Bounty chết khi có Breach, thêm +1 Energy nhưng vẫn tính vào cap 18/wave. Quy tắc payout chỉ một lần cho mỗi quái.
+VFX: đường dữ liệu xanh lam dạng chấm, biểu tượng lục giác trên quái, lúc nhận thưởng 3–5 hạt vuông bay về HUD Energy.
+EN: "Marks enemies for bonus Energy on defeat."
+
+1.7 GLITCH — Hack #00ffa3
+Vai trò: Debuff và ngắt nhịp quái nguy hiểm.
+Đánh thường — EMP Tap: ưu tiên quái gần Core nhất chưa có Breach trong tầm 180px, nếu không có thì bắn quái gần Core; 16 dmg/1.10s. DPS 14.55.
+Nội tại — Breach Protocol: cứ 3 đòn trúng gắn Breach 4s: mục tiêu nhận +15% damage từ tất cả tướng (boss chỉ +8%); quái thường bị giật đứng 0.35s ngay khi gắn, boss không bị đứng. Mỗi mục tiêu chỉ nhận giật 1 lần/5s.
+Mốc sao: 1★ Breach 4s; 3★ 5.5s; 5★ tăng debuff thành +20% (boss +10%); 7★ khi Breach hết, phóng EMP gây 30% damage đòn đánh lên tối đa 3 quái trong 45px, không tạo Breach mới.
+Combo: LANCE tiêu thụ Breach cho Focus Lock; BROKER thêm thưởng Energy theo cap; ARC ưu tiên sét.
+VFX: tia xanh lục pixel-line, glitch 3 khung hình lệch ±3px trên mục tiêu, dấu ngoặc vuông xanh, vòng EMP giãn 0.2s.
+EN: "Exposes enemy weak points with EMP breaches."
+
+1.8 VENOM — Toxin #b4ff2a
+Vai trò: Sát thương kéo dài, trừng phạt quái sống lâu.
+Đánh thường — Needle Pair: ưu tiên quái có HP% cao nhất trong tầm 165px; 2 kim x 13 dmg mỗi 1.00s (26 tổng), cùng mục tiêu; DPS 26.
+Nội tại — Toxic Bloom: mỗi cặp kim gắn 1 stack Toxin 4s, tối đa 4; mỗi stack gây 3 dmg/giây. Khi quái có 4 stack chết, phát tán 2 stack sang tối đa 2 quái trong 50px; mỗi quái chỉ nhận phát tán 1 lần/2s. Không lan từ mục tiêu chết do phát tán.
+Mốc sao: 1★ 4 stack; 3★ Toxin tồn tại 5s; 5★ lan sang 3 quái; 7★ mục tiêu đủ 4 stack nhận thêm 15% damage từ chính VENOM (không nhân damage của đồng đội).
+Combo: WARP gom quái để lan độc; FROST giữ mục tiêu lâu hơn trong vùng tấn công.
+VFX: 2 tia kim xanh chanh, giọt độc nhỏ, 4 vạch xanh quanh thanh HP; khi lan là 2–3 đường cong ngắn và hạt li ti.
+EN: "Stacks toxins that spread when targets fall."
+
+2. BA TRÙM
+Cơ chế boss có telegraph rõ, không phá luật merge/summon, không xóa tướng hoặc làm mất Energy. Boss wave 10/20/30 tương ứng FIREWALL/OVERCLOCK/CORRUPTOR rồi lặp wave 40/50/60. Kỹ năng bắt đầu sau 4s kể từ khi boss xuất hiện; mỗi boss chỉ một kỹ năng đang telegraph tại một thời điểm. Khi boss chết, hủy toàn bộ hiệu ứng tồn đọng.
+
+2.1 FIREWALL — tường lục giác đỏ, gai lửa
+Kỹ năng chính — Heat Lockdown (CD 12s; telegraph 1.4s): đánh dấu một hàng trong lưới 5x3 bằng viền đỏ nhấp nháy, sau đó 2 ô đang có tướng trong hàng bị Overheat 2.5s: tướng trong ô bắn chậm 40% (CD x1.67), không bị câm hoàn toàn. Ưu tiên ô đang gây DPS cao, nhưng không chọn cùng ô 2 lần liên tiếp nếu còn lựa chọn.
+Kỹ năng phụ — Ember Sweep (CD 18s; telegraph 1.1s): trên đoạn đường dài 100px phía trước boss xuất hiện dải đỏ, sau đó đốt 3s; quái thường đi qua nhận lá chắn bằng 12% HP tối đa, chỉ một lần/quái, không cộng dồn; không áp dụng cho boss.
+Đối phó: không dồn toàn bộ carry vào một hàng; dùng WARP/FROST giữ quái trước vùng cháy, LANCE bắn xuyên từ xa. Người chơi có thể kéo merge để đổi bố trí, nhưng không bắt buộc thao tác nhanh.
+Vui vì: buộc phân tán nguồn DPS và tạo các khoảnh khắc 'chống đỡ' dễ nhận biết.
+VFX: hàng mục tiêu đỏ #ff3355, lưới lục giác bằng line; ô nóng phủ đỏ 25% opacity, phát hạt tam giác; Ember Sweep là các vạch nóng trên đường, không che tướng.
+EN: "Overheats grid lanes and shields passing drones."
+
+2.2 OVERCLOCK — lõi hổ phách, bánh răng, piston
+Kỹ năng chính — Time Surge (CD 13s; telegraph 1.3s): boss phát xung vàng, toàn bộ quái thường đang sống tăng tốc di chuyển +35% trong 3s; boss tăng tốc +15%. Quái mới sinh trong thời gian đó không được buff; không stack.
+Kỹ năng phụ — Clock Split (CD 20s; telegraph 1.5s): tạo 2 Echo Drones từ vị trí boss, mỗi con 12% HP boss hiện tại tại thời điểm tạo (giới hạn 10% HP tối đa boss), tốc độ bằng SKITTER, không chia tiếp, không cho Energy khi chết; không tính vào giới hạn quái thường nếu hệ thống có cap nhưng tổng clone cap 4.
+Đối phó: FROST giảm đà chạy, ARC/SCORCH dọn clone, GLITCH ngắt quái thường; chọn đội hình vừa có AoE vừa có single-target.
+Vui vì: một nhịp tăng tốc đột ngột và bài toán 'diệt bản sao hay bắn boss'.
+VFX: vòng bánh răng vàng xoay 1.3s, speed lines vàng bám chân quái; clone hiện từ vòng tròn vàng thu nhỏ, phân biệt bằng viền vàng đứt nét.
+EN: "Accelerates the swarm and spawns clock echoes."
+
+2.3 CORRUPTOR — dữ liệu tím, xúc tu magenta, mắt lớn
+Kỹ năng chính — Data Infection (CD 14s; telegraph 1.6s): chọn tối đa 3 ô có tướng, đánh dấu tím; sau đó đặt Corruption trong 4s. Tướng trên ô đó vẫn bắn bình thường nhưng 25% damage gây ra chuyển thành damage trì hoãn: tích trong 2s rồi mới áp lên mục tiêu gốc nếu còn sống; nếu mục tiêu chết, damage trì hoãn mất. Không áp lên Energy hay hiệu ứng hỗ trợ.
+Kỹ năng phụ — Parasite Link (CD 19s; telegraph 1.2s): nối boss với 2 quái thường gần nhất trong 4s; 30% damage quái liên kết nhận được sẽ được chuyển thành hồi máu cho boss, tối đa hồi 6% HP tối đa boss mỗi lần dùng. Quái liên kết vẫn nhận đủ damage; link đứt khi quái chết hoặc vượt 180px.
+Đối phó: tập trung giết nhanh quái đang nối để cắt hồi máu; LANCE/GLITCH tăng damage trực tiếp vào boss; tránh phụ thuộc duy nhất vào các ô bị nhiễm.
+Vui vì: vừa tạo mục tiêu ưu tiên rõ ràng, vừa biến DPS đều thành bài toán thời điểm.
+VFX: ô nhiễm có các ký tự hình học vuông nhỏ (không chữ), mắt boss lóe tím, damage trì hoãn hiển thị chấm tím nhỏ trên HP; link là đường cong magenta đứt nét, đứt thành hạt khi quái chết.
+EN: "Corrupts attack timing and siphons linked damage."
+
+2.4 Vòng lặp boss
+Vòng r = 1 ở wave 10–30, r=2 ở wave 40–60, r=3 ở wave 70–90. HP boss = HP cơ sở theo thứ tự boss x 1.8^(r-1). Damage/speed boss và sức mạnh kỹ năng tăng có trần: mỗi vòng +8% tốc độ di chuyển boss (tối đa +24%); Heat Lockdown thêm +0.3s mỗi vòng (trần 3.1s), Time Surge thêm +0.3s (trần 3.9s), Corruption thêm +0.3s (trần 4.6s). CD không giảm để người chơi vẫn có cửa ứng phó. Các boss lặp lại có viền aura tăng 1 vòng/r, không cần sprite mới.
+
+3. BẢNG DPS VÀ MÁU BOSS
+Công thức DPS trực tiếp: (damage mỗi chu kỳ / CD) x 2.2^(s-1). 1★ / 4★ / 7★; làm tròn 1 chữ số. Không tính passive, buff, xuyên mục tiêu, upgrade hay hiệu ứng trên boss.
+SCORCH: 30.0 / 319.4 / 3401.4
+FROST: 18.0 / 191.7 / 2040.8
+ARC: 35.6 / 378.6 / 4031.3
+LANCE: 38.0 / 404.6 / 4308.4
+WARP: 10.0 / 106.5 / 1133.8
+BROKER: 8.0 / 85.2 / 907.0
+GLITCH: 14.5 / 154.9 / 1649.2
+VENOM: 26.0 / 276.8 / 2947.9
+DPS tương đối so với SCORCH=100: FROST 60, ARC 119, LANCE 127, WARP 33, BROKER 27, GLITCH 48, VENOM 87. Tỷ lệ giữ nguyên qua các sao trước passive.
+HP boss đề xuất cho demo: FIREWALL wave 10: 9,000 HP; OVERCLOCK wave 20: 40,000 HP; CORRUPTOR wave 30: 165,000 HP. Đây là điểm khởi đầu thử nghiệm, cần điều chỉnh theo tốc độ Energy, số ô lấp đầy, phân bố sao và thời gian boss đi tới Core. Wave 40/50/60: 16,200 / 72,000 / 297,000 HP theo hệ số vòng; wave 70/80/90: 29,160 / 129,600 / 534,600 HP. Nếu tiến trình người chơi tăng nhanh hơn hệ số 1.8 mỗi 30 wave, phải nâng HP tương ứng.
+Khuyến nghị mục tiêu thời gian hạ boss: 12–22s với đội hình đúng tiến độ; boss không nên tới Core trong dưới 15s khi không bị khống chế. Thử cả trường hợp người chơi không có FROST/GLITCH trong pool 5 tướng.
+
+4. CANVAS 2D — QUY TẮC TRIỂN KHAI
+- Tách combat state, rendering và UI. Mỗi entity có id, pathProgress, hp, speed, effects Map, alive. Tướng có type, star, upgrade, cdRemaining, attackCount.
+- Fixed timestep 1/60s; cập nhật status theo delta, không phụ thuộc frame rate. Tối đa 2–3 vòng particle cho mỗi skill, giới hạn 250–350 hạt đồng thời trên mobile.
+- Mỗi hiệu ứng dùng dữ liệu {type, sourceId, targetId, startTime, duration, stacks, magnitude}. Bounty, Breach, Chill, Toxin, FocusLock có cooldown theo targetId; xóa khi enemy chết.
+- Đường đi quái là polyline với pathProgress; Gravity Knot chỉ thay đổi offset hiển thị và speed tạm thời, không đổi pathProgress ngược đáng kể; bảo đảm không kéo quái ra khỏi đường.
+- Telegraph boss: viền màu sáng + thanh đếm nhỏ 1–1.6s, không dùng chỉ màu để báo nguy; thêm icon đơn giản (khóa, đồng hồ, mắt) vẽ bằng line.
+- Hiệu ứng bắn: lineWidth 2–5px, shadowBlur giới hạn 8–14px, alpha decay, 2–3 lớp lõi/sáng; hạt hình vuông/tam giác, không cần texture. Tránh shadowBlur trên hàng trăm hạt cùng lúc.
+- VFX trên grid không che vùng drag/drop; hiệu ứng dưới HUD, telegraph trên nền và dưới sprite tướng.
+- Cập nhật damage theo sự kiện hit/DoT, không tính liên tục mỗi render frame. Dùng spatial buckets hoặc lọc danh sách enemy (đủ cho demo 30–60 quái).
+- Tất cả passive scale theo sao có giới hạn mục tiêu và cooldown để tránh nổ hiệu ứng vô hạn; không có kỹ năng nào tự sinh summon hay đổi loại tướng, nên luật cốt lõi không bị thay đổi.
+
+5. COMBO VÀ ĐỘI HÌNH 5 TƯỚNG
+- Control + burn: FROST, SCORCH, WARP, ARC, LANCE. Dễ giữ cụm quái, thiếu kinh tế.
+- Economy + execute: BROKER, GLITCH, LANCE, VENOM, FROST. Dùng Bounty/Breach, mạnh boss đơn mục tiêu.
+- Crowd pressure: ARC, SCORCH, VENOM, WARP, GLITCH. Dọn quái thường tốt, cần cân nhắc boss HP cao.
+- Đội hình chỉ là gợi ý; merge vẫn cho loại ngẫu nhiên trong 5 tướng. Không khóa kỹ năng sau merge.
+
+6. NGUYÊN TẮC PLAYTEST
+Test 10 seed ngẫu nhiên cho từng pool 5 tướng. Ghi: tỷ lệ thắng wave 10/20/30, DPS thực, Energy kiếm từ Broker, thời gian tồn tại boss, số quái lọt Core, số lần telegraph bị bỏ lỡ, FPS thấp nhất. Nếu BROKER thường xuyên chạm cap 18 Energy/wave thì giảm trigger, không giảm sức mạnh các tướng chiến đấu. Nếu boss wave 30 mất quá 30s hoặc dưới 8s, điều chỉnh HP trước khi chỉnh cơ chế. Nếu nhiều người không nhận ra cảnh báo, tăng telegraph lên +0.3s trước khi giảm sức mạnh boss.
+
+HẾT TÀI LIỆU
