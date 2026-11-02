@@ -62,7 +62,8 @@
     dpad.classList.toggle('act', dpadId !== null);
     if (dT){
       const dx = dT.clientX - geo.cx, dy = dT.clientY - geo.cy, d = Math.hypot(dx, dy);
-      if (d > geo.R * 0.2){ tc.r = dx > d * 0.38 ? 1 : 0; tc.l = dx < -d * 0.38 ? 1 : 0; }
+      if (d > geo.R * 0.2){ const doc = Math.abs(dy) > Math.abs(dx) * 1.4;   // kéo gần thẳng đứng = chỉ ↑/↓ (để bám dây), không đi ngang
+        tc.r = !doc && dx > d * 0.38 ? 1 : 0; tc.l = !doc && dx < -d * 0.38 ? 1 : 0; }
       stickY = clampN(dy / (geo.R * 0.55), -1, 1);
       tc.u = stickY < -0.7 ? 1 : 0; tc.d = stickY > 0.7 ? 1 : 0;
       const m = Math.min(d, geo.R * 0.55) / (d || 1); kx = dx * m; ky = dy * m;

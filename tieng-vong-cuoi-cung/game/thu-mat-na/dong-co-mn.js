@@ -278,7 +278,7 @@ const DongCoMN = (() => {
       pl.sliding = false; return;
     }
     if (pl.leoKhoa > 0) pl.leoKhoa--;
-    if (!pl.leo && pl.leoKhoa <= 0 && (trenDay() || (IN.xuong() && dauDayDuoiChan())) && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || dauDayDuoiChan())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
+    if (!pl.leo && pl.leoKhoa <= 0 && (trenDay() || (IN.xuong() && dauDayDuoiChan())) && !pl.atk && pl.dash <= 0 && pl.hurtT <= 0 && !(pl.onGround && dir && !IN.len()) && (IN.len() || (IN.xuong() && !dir && (!pl.onGround || dauDayDuoiChan())))){   // đang đi ngang trên đất: không bám   // chỉ bám dây khi bấm ↑ hoặc ↓ (đi ngang qua dây không tự bám)
       const tuCau = !trenDay() && dauDayDuoiChan();
       pl.leo = true; pl.vx = 0; pl.vy = 0; pl.djCo = true; pl.airDash = false; pl.djT = -1; pl.jumping = false; pl.dashBuf = 0; pl.leoT = 0;
       { const cd = cotDay(); pl.x = (cd >= 0 ? cd : Math.floor(cxDay / BD.T)) * BD.T + BD.T / 2 - pl.w / 2; cxDay = pl.x + pl.w / 2; } SUKIEN.push({k:'bam-day'});
