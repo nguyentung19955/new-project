@@ -1479,7 +1479,7 @@
     if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.3)']]); c.fillRect(0, 0, W, H); c.restore(); }
     if (!S) return;
     if (S.bao && !(coop && S.bao.boss)) {   // dải thông báo round / trùm: đè lên THANH GIỮA (co-op trùm dùng màn giới thiệu)
-      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 4, (b.T - b.t) * 3)), hh = b.boss ? 46 : 30, y0 = C.GIUA_Y - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
+      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 8, (b.T - b.t) * 4)), hh = b.boss ? 46 : 30, y0 = C.GIUA_Y - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
       c.save(); c.globalAlpha = a;
       const sx = (1 - Math.min(1, b.t * 5)) * 30;
       c.fillStyle = 'rgba(3,4,14,0.9)'; c.fillRect(0, y0, W, hh);
@@ -1487,9 +1487,9 @@
       if (b.boss) { c.save(); c.beginPath(); c.rect(0, y0, W, hh); c.clip(); c.fillStyle = 'rgba(255,40,40,0.10)'; for (let x = -40 + ((t * 60) % 40); x < W; x += 40) { c.beginPath(); c.moveTo(x, y0 + hh); c.lineTo(x + 20, y0); c.lineTo(x + 34, y0); c.lineTo(x + 14, y0 + hh); c.fill(); } c.restore(); }
       c.textAlign = 'center'; c.textBaseline = 'middle';
       const chu = coop || !b.chu.startsWith('WAVE') ? b.chu : b.chu.replace(/^WAVE/, 'ROUND');
-      c.font = `900 ${b.boss ? 15 : 16}px Orbitron, "Segoe UI", sans-serif`;
+      c.font = `900 ${b.boss ? 17 : 16}px Orbitron, "Segoe UI", sans-serif`;
       veChuNhieu(c, chu, W / 2 + sx, cy - (b.phu ? 6 : 0), '#ffffff');
-      if (b.phu) { c.font = '600 9px Rajdhani, "Segoe UI", sans-serif'; c.fillStyle = '#ffd0d0'; c.fillText(b.phu.length > 70 ? b.phu.slice(0, 68) + '…' : b.phu, W / 2, cy + 12); }
+      if (b.phu) { c.font = '700 10px Rajdhani, "Segoe UI", sans-serif'; c.fillStyle = '#ffe2e2'; c.fillText(b.phu.length > 70 ? b.phu.slice(0, 68) + '…' : b.phu, W / 2, cy + 12); }
       c.restore();
     }
     veCutIn(c, t);

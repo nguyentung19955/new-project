@@ -32,7 +32,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
   background: rgba(10,14,36,0.6); border: 1px solid var(--vien); border-radius: 6px; }
 #tb-dot { font: 900 20px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 10px rgba(60,231,255,0.8), 0 0 2px #3ce7ff; }
 .tb-giua { position: absolute; left: 100px; top: 10px; width: 126px; height: 44px; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding-left: 6px; }
-#tb-boss { font: 700 11px/1 var(--body); letter-spacing: 1px; color: #ffb0b0; white-space: nowrap; }
+#tb-boss { font: 800 12px/1 var(--body); letter-spacing: 1px; color: #ff7a7a; white-space: nowrap; text-shadow: 0 0 6px rgba(255,60,60,0.55), 0 1px 0 #000; }
 /* P1.3: wave 20px, nhãn 9px, boss/hostiles 11px, số tabular; boss 2 wave cuối đổi màu + nhịp chậm, BOSS LIVE nhịp chậm (không nhấp nháy liên tục) */
 #tb-boss.gan { color: #ffd27a; animation: nhipchu 1.6s ease-in-out infinite; }
 #tb-boss.dang { color: #ff4b4b; text-shadow: 0 0 6px rgba(255,60,60,0.7); animation: nhipchu 1.2s ease-in-out infinite; }
@@ -203,7 +203,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .bang.thang .bang-ten { text-shadow: 0 0 14px rgba(60,255,176,0.9); }
 @keyframes duoi { from { transform: translateY(120px); opacity: 0; } }
 @keyframes nhay { 50% { opacity: 0.55; } }
-@keyframes nhipchu { 50% { opacity: 0.7; } }
+@keyframes nhipchu { 50% { filter: brightness(1.35); } }
 @keyframes nhipnut { 50% { box-shadow: 0 0 22px rgba(255,43,214,0.75), inset 0 0 22px rgba(255,43,214,0.4); filter: brightness(1.12); } }
 @keyframes len { 0% { box-shadow: 0 0 30px #3cffb0, inset 0 0 30px #3cffb0; } }
 @keyframes gl1 { 0%, 88%, 100% { transform: translate(-2px, 0); clip-path: inset(10% 0 55% 0); } 90% { transform: translate(-5px, -1px); clip-path: inset(30% 0 40% 0); } 94% { transform: translate(3px, 1px); clip-path: inset(70% 0 5% 0); } }
