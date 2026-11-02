@@ -1,5 +1,5 @@
 # 021 – Kiếm Khách – trúng đòn: VẼ LẠI F2 và F4 (P1)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, ms + khung trúng theo file này; lớp sức mạnh theo neo; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → clip.trungdon` – thư mục art gốc `art/kiem-khach/trungdon/` (6 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **2 khung** `thay-02`, `thay-04`, THAY F2 và F4 (đang gần trùng F1, F3).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Chưa mượt: F1≈F2 mất nhịp va chạm, F3≈F4 dừng giữa phản ứng. Vẽ lại F2 (ngực bật lùi, tóc văng) và F4 (hạ hông, đầu hồi); khoá chân F5–F6."

@@ -1,5 +1,5 @@
 # 020 – Kiếm Khách – chém xoay: khung xoay thứ 2 giữa F3–F4 (P1)
-- **Trạng thái:** XONG (02/11 – LƯU Ý: clip chemkhong đã đánh số lại sau khi lắp 003, khung trong ảnh tham chiếu "F3/F4" khớp với f04/f05 HIỆN TẠI (IoU 0.97/0.92); moi-01 nằm giữa f04 và f05 hiện tại)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, ms + khung trúng theo file này; lớp sức mạnh theo neo; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → cap[0..2].clip.chemkhong` – thư mục art gốc `art/kiem-khach/chemkhong/` (7 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F3 gốc (giữa F3 và F4). Làm SAU 003.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F2→F3→F4 xoay nhảy ảnh. Thêm 1 khung xoay giữa F2–F3 (và F3–F4 nếu cần)." (đo IoU F3→F4 = 0,39)
