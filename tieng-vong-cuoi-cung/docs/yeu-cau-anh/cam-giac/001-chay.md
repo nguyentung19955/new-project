@@ -1,11 +1,11 @@
 # 001 – Kiếm Khách – chu kỳ CHẠY nhiều khung hơn (P0, phiên CẢM GIÁC CHƠI)
-- **Trạng thái:** ĐÃ CÓ ẢNH – ĐÃ KIỂM – **CHỜ NGƯỜI DÙNG DUYỆT**. Phiên chính đã vẽ `art/kiem-khach/chay-moi/` (bản 3: 8 khung, động tác rõ hơn, chân ngắn lại) (xem `001-chay-PHIEN-CHINH.md`), nên KHÔNG cần vẽ thêm. Khi người dùng đồng ý → ghi `DUYỆT` vào đây, phiên lắp làm theo mục "Lắp" bên dưới.
+- **Trạng thái:** ĐÃ CÓ ẢNH – ĐÃ KIỂM – **CHỜ NGƯỜI DÙNG DUYỆT**. Phiên chính đang vẽ cùng người dùng `art/kiem-khach/chay-moi/` (đến 15:00 là bản 4: 8 khung, chu kỳ chân theo mô tả người dùng) (xem `001-chay-PHIEN-CHINH.md`), nên KHÔNG cần vẽ thêm. Khi người dùng đồng ý → ghi `DUYỆT` vào đây, phiên lắp làm theo mục "Lắp" bên dưới.
 - **Vì sao cần:** clip chạy cũ chỉ 8 hình × 80 ms = 12,5 hình/giây, chân trượt nhiều so với quãng đường (1 vòng 8 hình = 161 px màn, mà chân trụ chỉ lùi ~6 px/hình). Mã đã đổi sang chọn hình theo QUÃNG ĐƯỜNG (`quang_chu_ky` = 120 px/vòng → 8 hình ≈ 16,7 hình/giây khi chạy hết tốc). Bản mới vẽ rõ từng tư thế chân (chạm đất, hạ người, lướt qua, bay) → chuyển động liền hơn, ít trượt hơn.
 
-## Kết quả kiểm ảnh chay-moi (phiên cảm giác, 02/11 – bản 3, 8 khung)
-- Ô 256×256, đáy chân y=170–171 (khớp neo [128,172] của bản cũ), thân giữa x≈123–125 (lệch ≤ 2 điểm ảnh giữa các khung – không nhảy ngang). Khung bay (f03, f07) đáy 163–165 = nhún có chủ ý, giữ nguyên.
+## Kết quả kiểm ảnh chay-moi (phiên cảm giác, 02/11 – bản 4, 8 khung)
+- Ô 256×256, đáy chân y=171 mọi khung (khớp neo [128,172] của bản cũ), thân giữa x=124–125 (lệch ≤ 1 điểm ảnh – không nhảy ngang).
 - Thiết kế giữ đúng Kiếm Khách (mặt nạ, tóc đuôi ngựa, 2 kiếm băng, áo tối vạch xanh).
-- **Cần làm khi lắp:** ảnh ChatGPT có ~1.500–1.700 màu (bản cũ 20 màu) và 0–19 điểm viền hồng magenta mỗi khung → ép về bảng 20 màu của `chay/` + `dung/`, bỏ điểm hồng (như `tools/muot-2/lap-clip.py → chuan_mau`; không vẽ thêm, không nội suy). Đã thử ép bản 1: sạch, không mất chi tiết.
+- **Cần làm khi lắp:** ảnh ChatGPT có ~1.650–1.730 màu (bản cũ 20 màu) và 3–8 điểm viền hồng magenta mỗi khung → ép về bảng 20 màu của `chay/` + `dung/`, bỏ điểm hồng (như `tools/muot-2/lap-clip.py → chuan_mau`; không vẽ thêm, không nội suy). Đã thử ép bản 1: sạch, không mất chi tiết.
 - Lớp sức mạnh (vết nứt mặt nạ…) có điểm neo đo cho khung cũ → khi lắp đo lại neo `troi` bằng `tools/suc-manh/do-neo.py`.
 
 ## Xem thử trên iPhone (chưa bật mặc định)
