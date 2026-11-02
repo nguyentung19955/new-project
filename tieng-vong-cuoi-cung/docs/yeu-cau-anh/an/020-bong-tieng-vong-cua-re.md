@@ -1,5 +1,5 @@
 # 020 – Bóng Echo ở Cửa Rễ P01 (nhiệm vụ "The Mother's Last Echo")
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 8 khung 128×192 (0–3 đứng thở, 4–7 tan), quay TRÁI, chân chạm đáy ô; đã tách nền magenta theo độ trong để giữ màu xanh tiếng vọng)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Sau khi hạ Hollow Bell Mother, quay lại P01 thấy một bóng tiếng vọng mờ (dáng người phụ nữ đội mũ chuông rỗng, trong suốt xanh tiếng vọng, không gây sát thương) đứng lặng rồi tan + ánh ký ức nhẹ. Phong cách khớp trùm art/ của Hollow Bell Mother nhưng là ký ức hiền, không đáng sợ. Thoại game viết: "Even in silence, I kept their names."
 - **Số khung:** 8 khung: 4 đứng thở (lặp, ~140 ms) + 4 tan biến (~90 ms)

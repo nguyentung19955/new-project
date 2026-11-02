@@ -1,5 +1,5 @@
 # 005 – VFX "Frostline Slash" (thưởng của nút Keen Edge)
-- **Trạng thái:** CHỜ  · ƯU TIÊN 2 (1 trong 2 FX thưởng đầu ChatGPT chọn)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 6 khung 256×256, vệt ở trước mặt ngang ngực, hướng PHẢI, neo chân [128,172])
 - **Dùng vào:** sau khi học **Keen Edge** (cấp 2), mỗi nhát combo đất don1/don2/don4 phát thêm lớp vệt này. Lớp VFX RIÊNG vẽ đè lên nhân vật – KHÔNG sửa pixel Kiếm Khách. Chưa có ảnh → không phát.
 - **Mô tả:** vệt chém mảnh như sương giá: đường cong trắng-lam nhạt (#CEF0D6 → #78e6e6), viền sáng sắc, vài tinh thể băng/vụn sáng nhỏ bay ra rồi tan; nhẹ, không che nhân vật. Tham khảo dáng vệt trong art/hieu-ung/chem-moi/ và các khung art/kiem-khach/don1/, don2/, don4/ (vệt quét ngang trước mặt, ngang tầm tay kiếm).
 - **Số khung + ms:** **6 khung**, 45 ms/khung: 1 xuất hiện · 2–3 quét hết · 4–5 tan + tinh thể · 6 gần trong suốt. Không khung trùng.
