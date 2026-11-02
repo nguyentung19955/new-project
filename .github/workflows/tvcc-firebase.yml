@@ -17,9 +17,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tieng-vong-cuoi-cung
     env:
       SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
       PROJECT: ${{ vars.FIREBASE_PROJECT_ID || 'tieng-vong-cuoi-cun' }}
@@ -35,9 +32,11 @@ jobs:
         with: { node-version: 20 }
       - name: Phép thử lõi lưu mây
         if: steps.co.outputs.co == '1'
+        working-directory: tieng-vong-cuoi-cung
         run: node tools/firebase/kiem-thu-luu-may.js
       - name: Triển khai Hosting + quy tắc Firestore
         if: steps.co.outputs.co == '1'
+        working-directory: tieng-vong-cuoi-cung
         run: |
           echo "$SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
