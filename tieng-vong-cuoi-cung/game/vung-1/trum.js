@@ -279,6 +279,7 @@
       q.hp = 0; doiTrangThai(q, 'chet'); G.nguy.length = 0; E.SUKIEN.push({k:'trum-chet', q});
       // (luồng F) ghi nhận hạ trùm NGAY (không chờ hết 2,5 s mờ dần) → chết cùng lúc / tải lại giữa chừng không mất tiến độ
       if (G.luu && !G.luu.trumHa){ G.luu.trumHa = true; V1.ghiLuu && V1.ghiLuu(); }
+      if (window.LuuChung) LuuChung.datCo('ha_trum:vung-1');   // (cottruyen) lưu chung: mở khoá theo tiến độ
       return;
     }
     if (q.pha === 1 && q.hp <= q.def.mau * 0.5){ doiTrangThai(q, 'chuyen_pha'); G.nguy.length = 0; }

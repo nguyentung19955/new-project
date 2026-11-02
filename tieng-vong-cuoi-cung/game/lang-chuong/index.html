@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Làng Chuông – Tiếng Vọng Cuối Cùng</title>
+<style>
+  html, body { margin:0; height:100%; background:#0C0F14; color:#CEF0D6; font-family:serif; }
+  #cho { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; }
+  #cho p { max-width:640px; line-height:1.5; }
+</style>
+</head>
+<body>
+<!-- Làng Chuông = điểm khởi đầu + trạm teleport (phiên cottruyen).
+     LUẬT HÌNH: cảnh làng, nhân vật phụ, cổng teleport, khung hộp thoại đều phải là ảnh ChatGPT vẽ.
+     Chưa có ảnh (docs/yeu-cau-anh/cottruyen/ còn CHỜ) → trang KHÔNG dựng màn chơi, chỉ báo chữ. -->
+<div id="cho"><p>Làng Chuông chưa mở: đang chờ ảnh và kế hoạch cốt truyện.<br><small id="thieu"></small></p></div>
+<script src="../luu-chung.js"></script>
+<script src="../cot-truyen/hop-thoai.js"></script>
+<script src="../cot-truyen/tram.js"></script>
+<script>
+(async () => {
+  // Ảnh bắt buộc để bật làng (cập nhật khi phiên gen ảnh ghi XONG)
+  const CAN = ['art/lang-chuong/canh-lang.png'];
+  const co = await Promise.all(CAN.map(u => new Promise(r => { const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = '../../' + u; })));
+  const thieu = CAN.filter((u, k) => !co[k]);
+  const tram = await TramDichChuyen.nap('../../');
+  window.LANG = {sanSang: thieu.length === 0, thieu, tram};
+  if (thieu.length){ document.getElementById('thieu').textContent = 'Thiếu ảnh: ' + thieu.join(', '); return; }
+  // (bật màn làng ở đây khi đã có ảnh – chưa làm, chờ kế hoạch ChatGPT)
+})();
+</script>
+</body>
+</html>

@@ -170,6 +170,7 @@
     if (G.luu.chuong && G.luu.chuong.phong === id && !phongThu) datNV(G.luu.chuong.cot * T + T / 2 + 40, chanO(G.luu.chuong.cot, G.luu.chuong.hang));
     G.trang = 'choi';
     ghiLuu();
+    if (window.LuuChung) LuuChung.vaoVung('vung-1');   // (cottruyen) lưu chung: đánh dấu đã vào Vùng 1
     if (G.luu.trumHa && !G.luu.hetXem && V1.thangTrum) V1.thangTrum();   // (luồng F) tải lại lúc trùm đang gục: vẫn hiện màn thắng
   };
   function apDungChiSo(day){
