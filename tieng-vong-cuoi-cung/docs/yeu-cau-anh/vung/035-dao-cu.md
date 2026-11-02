@@ -1,0 +1,11 @@
+# 035 – dao-cu
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Đồ trang trí phòng (trang_tri) – nướng vào ảnh phòng. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** 16 món: nôi chuông vỡ, cọc rễ đồng, tổ nấm, mặt nạ vùi nửa, kén treo ×3, xác cầu rễ sập, vò bào tử, xích chuông cũ, đống xương, cọc rễ khắc dấu, trại rễ khô, chuông xác (bell husk), kén ươm rỗng, đèn địa y (tĩnh), bệ Lõi Tàn Tích.
+- **Số khung + ms gợi ý:** 16 tĩnh (kén treo 3 biến thể)
+- **Cỡ ô:** mỗi món ≤ 64×64 (bệ Lõi ≤ 48×48)
+- **Hướng gốc:** –
+- **Điểm neo:** đáy-giữa (đồ treo: trên-giữa)
+- **Lưu:** art/vung-2/dao-cu/<ten>.png (tên ghi trong file kèm) + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; 
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

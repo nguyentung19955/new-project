@@ -1,0 +1,11 @@
+# 022 – quai-root-siphon
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Quái thường D "Root Siphon" (khoá `root_siphon`), từ R209. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Bó rễ cao chậm chạp có hốc miệng hổ phách; báo đòn: gân rễ lan dọc sàn tới 4 ô + 2 tiếng gõ gỗ (42f), rễ trồi lên giữ chân.
+- **Số khung + ms gợi ý:** dung 5 × 180; di 6 × 130; danh 9 × 90; trung 3 × 90; chet 8 × 100
+- **Cỡ ô:** ô 48×56 (thân ~28×36)
+- **Hướng gốc:** quay TRÁI
+- **Điểm neo:** đáy-giữa
+- **Lưu:** art/quai-vung-2/root_siphon/<dung|di|danh|trung|chet>/fNN.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; **Quái:** hình quay TRÁI, 1 điểm ảnh = 2 px logic như art/quai-moi (game/thu-mat-na/quai.json `ti_le: 2`); mọi khung cùng cỡ ô, chân (đáy-giữa) cố định; nếu ChatGPT không giữ được nhất quán giữa các khung thì hỏi ChatGPT có nên dùng PixelLab (như art/quai-moi) không. Mỗi động tác 1 thư mục fNN.png (f00…).
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

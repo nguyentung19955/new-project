@@ -1,0 +1,11 @@
+# 031 – vfx-trum
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Hiệu ứng đòn Mold Mother. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Vệt xúc tu, dấu làn mưa bào tử (3 vòng hổ phách trên sàn), bào tử rơi, vòng sóng Bell Wail, nở mục (Rot Bloom), vòng đích tóm (Grab), sóng xung kích Heartbreak, tan rã khi chết. Không chớp toàn màn.
+- **Số khung + ms gợi ý:** vet 8; dau-mua 6; bao-tu-roi 6; vong-gao 8; no-muc 8; dich-vo 6; song-dap 10; tan-ra 16 (≈80 ms/khung)
+- **Cỡ ô:** vệt 128×64; dấu 48×16; bào tử 16×32; vòng 192×48; nở 144×48; đích 48×16; sóng 192×48; tan 112×112
+- **Hướng gốc:** hướng TRÁI
+- **Điểm neo:** đáy-giữa
+- **Lưu:** art/trum-vung-2/fx/<ten>/fNN.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; 
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

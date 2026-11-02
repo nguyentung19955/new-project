@@ -1,0 +1,11 @@
+# 020 – quai-spore-bell
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Quái thường B "Spore Bell" (khoá `spore_bell`), đứng yên bắn tầm xa, từ R205. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Nấm hình chuông treo/mọc tại chỗ; báo đòn: chuông phồng, 3 chấm hổ phách nháy 3 lần (36f).
+- **Số khung + ms gợi ý:** dung 5 × 160; lac (sway) 6 × 120; danh 8 × 90; trung 3 × 80; chet 7 × 100
+- **Cỡ ô:** ô 40×48 (thân ~24×32)
+- **Hướng gốc:** quay TRÁI
+- **Điểm neo:** đáy-giữa (gốc mọc)
+- **Lưu:** art/quai-vung-2/spore_bell/<dung|lac|danh|trung|chet>/fNN.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; **Quái:** hình quay TRÁI, 1 điểm ảnh = 2 px logic như art/quai-moi (game/thu-mat-na/quai.json `ti_le: 2`); mọi khung cùng cỡ ô, chân (đáy-giữa) cố định; nếu ChatGPT không giữ được nhất quán giữa các khung thì hỏi ChatGPT có nên dùng PixelLab (như art/quai-moi) không. Mỗi động tác 1 thư mục fNN.png (f00…).
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

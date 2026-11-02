@@ -1,0 +1,11 @@
+# 008 – go-muc-thuong
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Ô `R` (Gỗ Mục thường) – sập 2 s sau khi đặt chân, mọc lại sau 3 s (game/vung-2/dat-muc.js). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Tấm sàn gỗ rễ mục 1 ô (48 px logic = 16 điểm ảnh × 3) dày ~1 ô: 4 trạng thái nứt: nguyên (vết nứt mờ để người chơi nhận ra), nứt 1 (khung 0), nứt 2 (khung 40), nứt 3 + bụi hổ phách (khung 80). Có 3 biến thể: mép trái / giữa / mép phải để ghép cầu 2–4 ô.
+- **Số khung + ms gợi ý:** 4 trạng thái × 3 biến thể = 12 ô
+- **Cỡ ô:** ô 16×16 điểm ảnh (khung vẽ 16×20 cho phép rủ xuống dưới 4 điểm)
+- **Hướng gốc:** –
+- **Điểm neo:** mép trên ô = mặt sàn
+- **Lưu:** art/vung-2/dat-muc/thuong/<trai|giua|phai>-<0..3>.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; 
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

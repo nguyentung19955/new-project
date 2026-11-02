@@ -1,0 +1,11 @@
+# 032 – vfx-dat-muc
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Hiệu ứng địa hình gỗ mục (game/vung-2/dat-muc.js). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Bụi vỡ (crumble dust), mảnh rơi, rễ mọc lại (regrow tendrils), xung mục nhanh, xung bào tử. Màu ochre/olive.
+- **Số khung + ms gợi ý:** bui 8; manh 8; moc-lai 8; xung-nhanh 6; xung-bao-tu 6 (≈70 ms)
+- **Cỡ ô:** 16×24 mỗi khung (1 ô)
+- **Hướng gốc:** –
+- **Điểm neo:** mép trên ô
+- **Lưu:** art/vung-2/dat-muc/fx/<bui|manh|moc-lai|xung-nhanh|xung-bao-tu>/fNN.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; 
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

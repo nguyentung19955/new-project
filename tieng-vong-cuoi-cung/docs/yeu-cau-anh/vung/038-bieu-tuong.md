@@ -1,0 +1,11 @@
+# 038 – bieu-tuong
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Biểu tượng HUD/vật phẩm Vùng 2 (không chữ – chữ do game viết). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Root Anchor (sẵn sàng / hồi chiêu) 32; Verdant Ruin Core 48; Memory Shard 32 + 6 khung lơ lửng (nếu dùng chung art/an/manh-ky-uc thì ghi chú lại); Warden Knot 32; bùa giảm hồi Neo Rễ 32; bia lore vườn ươm 48; mảnh tăng sức chứa hồi máu 32; huy hiệu bản đồ vùng 32; dấu cảnh báo mục 24; gợi ý nút neo 24; biểu tượng teleport Làng Chuông 32.
+- **Số khung + ms gợi ý:** tĩnh (Memory Shard 6 × 110 lặp)
+- **Cỡ ô:** như mô tả
+- **Hướng gốc:** –
+- **Điểm neo:** giữa
+- **Lưu:** art/vung-2/bieu-tuong/<ten>.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; Hợp phong cách art/giao-dien/hud/ (i_the_ten.png, i_hat_vong.png).
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

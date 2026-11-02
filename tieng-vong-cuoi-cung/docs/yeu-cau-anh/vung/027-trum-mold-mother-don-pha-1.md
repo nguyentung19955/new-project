@@ -1,0 +1,11 @@
+# 027 – trum-mold-mother-don-pha-1
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Trùm "Mold Mother" R213 (game/vung-2/trum.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** Mẹ nấm khổng lồ treo, trồi ra từ rễ tách đôi, nôi chuông đồng ở ngực, nhiều xúc tu, bào tử hổ phách; KHÔNG xanh lơ. Thân trong game 192×180 px logic. Có thể giữ khung chính để đủ thời gian báo đòn.
+- **Số khung + ms gợi ý:** quet (Tendril Sweep) 10 × 85; mua (Spore Rain) 10 × 90; gao (Bell Wail) 12 × 85
+- **Cỡ ô:** ô 112×112 (thân ~96×90)
+- **Hướng gốc:** quay TRÁI
+- **Điểm neo:** đáy-giữa (gốc rễ)
+- **Lưu:** art/trum-vung-2/<ten-dong-tac>/fNN.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; **Quái:** hình quay TRÁI, 1 điểm ảnh = 2 px logic như art/quai-moi (game/thu-mat-na/quai.json `ti_le: 2`); mọi khung cùng cỡ ô, chân (đáy-giữa) cố định; nếu ChatGPT không giữ được nhất quán giữa các khung thì hỏi ChatGPT có nên dùng PixelLab (như art/quai-moi) không. Mỗi động tác 1 thư mục fNN.png (f00…). Xúc tu và lõi chuông tách lớp riêng ở yêu cầu 030.
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).

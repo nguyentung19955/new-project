@@ -1,0 +1,11 @@
+# 001 – nen-xa-hang-re
+- **Trạng thái:** CHỜ
+- **Dùng vào:** Nền xa (parallax lớp sau cùng) các phòng R201–R205, R207, R208, R210–R212. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
+- **Mô tả:** BG-R2-FAR-01 "Deep Root Cavern": hốc tim cây tối, bóng rễ 4 lớp sâu, ẩm tím-nâu; nối liền ngang (trái nối phải). Không có nhân vật/quái/bệ đứng.
+- **Số khung + ms gợi ý:** 1 ảnh tĩnh
+- **Cỡ ô:** 384×192 điểm ảnh (nối liền ngang)
+- **Hướng gốc:** –
+- **Điểm neo:** –
+- **Lưu:** art/vung-2/nen/xa-hang-re.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Ảnh tham chiếu:** ảnh chụp Vùng 1 art/vung-1/P03-canh.png, P11-canh.png; 
+- **Phong cách chung (kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7):** pixel art sắc nét, KHÔNG khử răng cưa/nhoè, KHÔNG chữ trong ảnh, nền #FF00FF đặc, khoảng hở rộng giữa các khung, không chạm mép; xuất PNG trong suốt; chân/tâm xoay thẳng hàng giữa các khung. Bảng màu Vùng 2: #0B0C11 #15121B #241B21 #34252B #48332F #67463A #80683D (ochre mục) #6B7046 (olive nấm) #B58C49 (vàng bào tử) #9C6B30 (đồng) #E1B85A #B4A69B (xương) #716A75 (sương). Quái/đạo cụ/đèn CHỈ dùng hổ phách ấm + olive bệnh; KHÔNG dùng xanh lơ (#78E6E6/#CEF0D6 chỉ dành cho nhân vật, tiếng vọng và chớp kích hoạt Neo Rễ ở tay nhân vật). Cùng thế giới với Vùng 1 – tham chiếu: tools/phong-demo/*.png (chất liệu Vùng 1), art/quai-moi/ (quái), art/hieu-ung/ (hiệu ứng).
