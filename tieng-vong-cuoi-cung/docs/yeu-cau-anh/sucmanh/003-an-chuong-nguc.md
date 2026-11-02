@@ -1,5 +1,5 @@
 # 003 – Ấn chuông cổ trên ngực (Level 2) – P2
-- **Trạng thái:** CHỜ (sau 002 mức 1)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 1 tấm nguồn art/kiem-khach-lop/mat-na-nut-1/nguon-chatgpt.png; thu nhỏ về cỡ thật, đặt theo neo-kiem-khach.json, kiem-anh-lop + kiem-thu-lop ĐẠT; co_anh=true)
 - **Dùng vào đâu:** Level 2 Bellbound Soul – lớp `an-chuong-nguc` (khe "an", vẽ TRÊN thân). (Đổi tên từ an-giap theo ChatGPT.)
 - **Mô tả (ChatGPT):** ấn hình chuông cổ ở ngực, **≥ 6×8 px**, viền đồng xỉn (#9C6B30), lõi ngà lạnh (#E9E4D9), tương phản cao; không dùng rune li ti 1–2 px. Thứ tự clip: dung → chay → nhay → các đòn.
 - **Lưu:** `art/kiem-khach-lop/an-chuong-nguc/<clip>/fNN.png` (+ `nguon-chatgpt.png`). Neo [128,172], hướng phải.

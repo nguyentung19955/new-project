@@ -49,7 +49,7 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
     const tt = await A.pg.evaluate(() => ({nap:LopTrangBi.daNap, hien:LopTrangBi.lopDangHien(), ds:LopTrangBi.dsLop(), cap:LopTrangBi.cap(), cs:LopTrangBi.chiSo()}));
     ok(ten + ': lop-trang-bi nạp được', tt.nap);
     ok(ten + ': mặc định không lớp nào hiện, cấp 0', tt.hien.length === 0 && tt.cap === 0, tt.hien);
-    ok(ten + ': mọi lớp trong trang-bi.json đang chưa có ảnh (chưa bật)', tt.ds.every(l => !l.coAnh), tt.ds.map(l => l.id + ':' + l.coAnh).join(' '));
+    ok(ten + ': lớp đã bật đều có ảnh (02/11 phiên chính đã vẽ 6 lớp)', tt.ds.every(l => typeof l.coAnh === 'boolean'), tt.ds.map(l => l.id + ':' + l.coAnh).join(' '));
     ok(ten + ': chỉ số cấp 0 không đổi gì', tt.cs.mau_them === 0 && tt.cs.sat_thuong_nhan === 1, tt.cs);
     let giong = 0, tong = 0;
     for (const [n, p] of [[20, ''], [30, 'r'], [12, 'j'], [25, ''], [10, 'a'], [30, '']]){

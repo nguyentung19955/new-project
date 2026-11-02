@@ -1,5 +1,5 @@
 # 005 – Chuông Echo Charm đeo hông – kiểu NEO, 3 tư thế – P3
-- **Trạng thái:** CHỜ (sau 002, 003)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT; chan_neo khan-ngan [26,10], chuong-hong [12,1] – 1 tấm nguồn art/kiem-khach-lop/mat-na-nut-1/nguon-chatgpt.png; thu nhỏ về cỡ thật, đặt theo neo-kiem-khach.json, kiem-anh-lop + kiem-thu-lop ĐẠT; co_anh=true)
 - **Dùng vào đâu:** lớp `chuong-hong` (khe "hong", vẽ TRÊN thân) – phụ kiện Echo Charm (mở gắn ở Bell Village, chuông ở Bronze Foundry); hiện qua `theo_am_phu` khi phiên "do" chốt mẫu Âm Phù.
 - **Mô tả (ChatGPT):** chuông đồng nhỏ **6–8 × 8–11 px** ở cỡ ảnh gốc (Ancient Bronze #9C6B30, ánh Bell Gold #D0A45B), treo dây ở hông; không đụng kiếm.
 - **3 hình** (lắc theo chạy/nhảy – game chọn theo clip, ẩn khi lướt): `neo00.png` yên (dung, tiepdat, trungdon) · `neo01.png` lắc ra sau (chạy, các đòn) · `neo02.png` hất lên (nhảy, rơi). Cùng cỡ ô, nền trong suốt; điểm treo (đầu dây) giống nhau ở cả 3 → `chan_neo: [x, y]`.

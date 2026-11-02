@@ -1,5 +1,5 @@
 # 004 – Dải vải bạc sau lưng (Level 3) – kiểu NEO, 4 tư thế – P4
-- **Trạng thái:** CHỜ (sau 002, 003, 005)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT; chan_neo khan-ngan [26,10], chuong-hong [12,1] – 1 tấm nguồn art/kiem-khach-lop/mat-na-nut-1/nguon-chatgpt.png; thu nhỏ về cỡ thật, đặt theo neo-kiem-khach.json, kiem-anh-lop + kiem-thu-lop ĐẠT; co_anh=true)
 - **Dùng vào đâu:** Level 3 The Last Reverberation – lớp `khan-ngan` (khe "khan", vẽ SAU thân).
 - **Đổi theo ChatGPT:** KHÔNG vẽ từng khung nữa. Vẽ **4 hình** dải vải bạc mảnh (rộng 3–5 px, dài 16–25 px ở cỡ ảnh gốc, Cold Silver #B7C6D2 + Ivory), rung như phản ứng âm thanh vô hình. Game chọn hình theo clip, chỉ đổi vị trí – không tự vẽ.
   - `neo00.png` nghỉ (rủ nhẹ) – dung, tiepdat

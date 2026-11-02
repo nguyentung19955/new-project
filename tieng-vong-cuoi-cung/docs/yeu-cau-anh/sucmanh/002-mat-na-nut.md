@@ -1,5 +1,5 @@
 # 002 – Vết nứt sáng trên mặt nạ (3 mức) – ƯU TIÊN P0/P1
-- **Trạng thái:** CHỜ (001 đã XONG – làm được ngay)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 1 tấm nguồn art/kiem-khach-lop/mat-na-nut-1/nguon-chatgpt.png; thu nhỏ về cỡ thật, đặt theo neo-kiem-khach.json, kiem-anh-lop + kiem-thu-lop ĐẠT; co_anh=true)
 - **Dùng vào đâu:** Level 1 First Resonance `mat-na-nut-1`, Level 2 Bellbound Soul `mat-na-nut-2`, Level 3 The Last Reverberation `mat-na-nut-3` (cùng khe "mat-na", vẽ TRÊN thân). Game tự "thở" sáng khi đứng và giảm sáng khi trúng đòn (chỉ đổi độ trong) – ảnh vẽ ở độ sáng đầy.
 - **Mô tả (ChatGPT):** mức 1: đúng **1** vết nứt mảnh ngà + xanh băng chéo trên nửa mặt nạ nhìn thấy, dài 9–15 px, nét sáng 2 px, điểm sáng tập trung; cùng hình dạng, dính mặt nạ ở mọi khung. Mức 2: vết nứt rõ hơn, dài hơn chút. Mức 3: nứt chạy ~nửa mặt nạ, mặt nạ vẫn nguyên dáng.
 - **P0 – LÀM TRƯỚC (phiên chính vẽ): `mat-na-nut-1` "First Resonance" cho Idle 4 khung + Run 8 khung = 12 ảnh.**
