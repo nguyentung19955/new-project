@@ -27,3 +27,6 @@ Chưa có ảnh nào của hệ thống này → **Charm không rơi, túi Charm
 1. Có ảnh 002 + 003 → Charm tự bật; có 005/007 → 2 hiệu ứng tự bật (không cần sửa code).
 2. Hỏi ChatGPT cau-hoi-chatgpt-2.md → sửa các mục "de_xuat" trong du-lieu.json.
 3. ChatGPT duyệt xong + chơi thử đo cấp thật 30–45 phút → đổi `bat_mac_dinh` thành true.
+
+## Lượt 2 (02/11 chiều – chạy lại theo lịch)
+Việc lượt này (sửa logic + dữ liệu đúng tư vấn ChatGPT, cập nhật phép thử, yêu cầu ảnh UI + 2 FX Resonance Halo / Frostline Slash) **đã xong từ lần chạy trước** (commit 619c8fc, 91409bf). Lần này kéo bản mới nhất về, chạy lại: logic **45/45**, Vùng 1 **23/23** – vẫn đạt. Toàn bộ chữ trong game của hệ thống là tiếng Anh; thêm **BANG-TEN-TIENG-ANH.md** (tên bản 2) vì bảng đối chiếu chung docs/tieng-anh/BANG-DOI-CHIEU.md còn ghi tên bản 1 (Tone Points, Silver Strings, Sigil…) – nhờ phiên tiếng Anh cập nhật. Yêu cầu ảnh 002, 003, 005, 007–010 vẫn CHỜ phiên chính vẽ; chưa có ảnh nên Charm và 2 FX vẫn tắt.
