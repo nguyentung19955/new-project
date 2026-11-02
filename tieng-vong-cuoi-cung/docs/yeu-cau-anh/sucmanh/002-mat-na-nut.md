@@ -1,12 +1,12 @@
-# 002 – Vết nứt sáng trên mặt nạ (3 mức)
-- **Trạng thái:** CHỜ (làm sau 001)
-- **Dùng vào đâu:** cấp sức mạnh 1/2/3 – lớp `mat-na-nut-1`, `mat-na-nut-2`, `mat-na-nut-3` (cùng khe "mat-na", vẽ TRÊN thân). Ưu tiên cao nhất: mặt nạ là điểm nhận diện chính.
-- **Mô tả:** mức 1: 1 vết nứt mảnh, khe hắt ánh bạc-xanh băng rất nhẹ (cùng tông ánh kiếm). Mức 2: 2–3 vết, ánh rõ hơn. Mức 3: nứt chạy nửa mặt nạ, khe sáng rõ. Chỉ thêm điểm ảnh trong vùng mặt nạ; không che lỗ mắt.
-- **Lưu:** `art/kiem-khach-lop/mat-na-nut-1/<clip>/fNN.png`, `…/mat-na-nut-2/…`, `…/mat-na-nut-3/…`; ảnh nguồn ChatGPT: `art/kiem-khach-lop/mat-na-nut-N/nguon-chatgpt.png`.
-- **Neo:** đáy-giữa [128,172] như khung gốc. Hướng gốc: phải.
-- **Quy cách chung (mọi lớp kiểu khung):** mỗi khung 1 PNG RGBA **256×256**, chân nhân vật ở **[128,172]**, quay **PHẢI**, CHỈ chứa phần THÊM (nền trong suốt, không chép lại thân), khớp đúng khung gốc `art/kiem-khach/<clip>/fNN.png` (gửi khung gốc làm tham chiếu). Không đổi màu/che mắt mặt nạ, tóc, kiếm gốc. Đúng số khung clip gốc, tên `fNN.png`.
-- **Clip ưu tiên (thư mục = tên thư mục ảnh gốc):** dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 (= 41 khung). Nếu còn sức: roi 1 · tiepdat 3 · luot 6 · trungdon 6 · don3 8. Clip thiếu → lớp tự ẩn ở clip đó (được phép, nhưng ưu tiên đủ 6 clip đầu).
-- **Cách vẽ:** theo tư vấn ChatGPT ở 001 (sheet / vẽ 1 lần rồi dời theo vị trí từng khung / PixelLab).
-- **Kiểm trước khi ghi XONG:** `python3 tools/suc-manh/kiem-anh-lop.py <id> <thư mục xem ngoài repo>` phải TẤT CẢ ĐẠT; nhìn ảnh ghép: không nhấp nháy, không trượt khỏi chỗ gắn.
-- **Khi XONG:** ghi kích thước/khung đã có vào file này. (Phiên LÀM – hoặc phiên gen nếu phiên LÀM đã dừng – bật lớp bằng `"co_anh": true` trong game/thu-mat-na/trang-bi.json rồi chạy `node tools/suc-manh/kiem-thu-lop.js <thư mục xem>`.)
-- Nếu chỉ kịp 1 mức: làm `mat-na-nut-1` trước.
+# 002 – Vết nứt sáng trên mặt nạ (3 mức) – ƯU TIÊN P0/P1
+- **Trạng thái:** CHỜ (001 đã XONG – làm được ngay)
+- **Dùng vào đâu:** Level 1 First Resonance `mat-na-nut-1`, Level 2 Bellbound Soul `mat-na-nut-2`, Level 3 The Last Reverberation `mat-na-nut-3` (cùng khe "mat-na", vẽ TRÊN thân). Game tự "thở" sáng khi đứng và giảm sáng khi trúng đòn (chỉ đổi độ trong) – ảnh vẽ ở độ sáng đầy.
+- **Mô tả (ChatGPT):** mức 1: đúng **1** vết nứt mảnh ngà + xanh băng chéo trên nửa mặt nạ nhìn thấy, dài 9–15 px, nét sáng 2 px, điểm sáng tập trung; cùng hình dạng, dính mặt nạ ở mọi khung. Mức 2: vết nứt rõ hơn, dài hơn chút. Mức 3: nứt chạy ~nửa mặt nạ, mặt nạ vẫn nguyên dáng.
+- **THỨ TỰ (ChatGPT):** P0 = `mat-na-nut-1` cho **dung 4 khung** (thử trong game) → chay 8 → các clip còn lại → rồi mức 2, mức 3.
+- **Prompt gợi ý (ChatGPT):** "EDIT ONLY THE ADDITIVE OVERLAY for the supplied original 256×256 pixel-art sprite sheet of The Masked Wanderer. Preserve every original character pixel, silhouette, white mask, silver hair, dark clothing, two icy-blue swords, framing and foot anchors EXACTLY. Draw only one subtle pale-ivory and icy-cyan glowing hairline crack on the visible half of the white mask. Keep the crack shape consistent and attached to the mask in every frame. Output a transparent-background overlay PNG sheet with identical frame grid, dimensions and registration. No character repaint, no armor, no text, no shadows, no background, crisp pixel clusters, no anti-aliasing." (thêm luật chung: use the image generation tool and DRAW, nền #FF00FF đặc nếu không ra nền trong suốt). AI không bảo đảm khớp từng pixel – phải tách lớp/kiểm trước khi đưa vào.
+- **Lưu:** `art/kiem-khach-lop/mat-na-nut-N/<clip>/fNN.png`; ảnh nguồn: `art/kiem-khach-lop/mat-na-nut-N/nguon-chatgpt.png`. Neo [128,172], hướng phải.
+- **Quy cách chung (lớp kiểu khung):** mỗi khung 1 PNG RGBA **256×256**, chân nhân vật ở **[128,172]**, quay **PHẢI**, CHỈ chứa phần THÊM (nền trong suốt, không chép lại thân), khớp đúng khung gốc `art/kiem-khach/<clip>/fNN.png` (gửi khung gốc làm tham chiếu). Không sửa pixel nào của thân/mặt nạ/tóc/kiếm gốc, không che mắt. Đúng số khung clip gốc, tên `fNN.png`. Khung cùng tư thế/góc mặt nạ dùng chung ảnh được nếu căn đúng (ChatGPT).
+- **Bảng màu lớp mới (ChatGPT):** Ivory #E9E4D9 · Cold Silver #B7C6D2 · Ice Cyan #85D9E8 · Deep Cyan #447E98 · Ancient Bronze #9C6B30 · Bell Gold #D0A45B. Nét pixel sắc, không khử răng cưa.
+- **Clip (ChatGPT, 57 vị trí):** dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 · roi 1 · tiepdat 3 · luot 6 · trungdon 6. Clip thiếu → lớp tự ẩn ở clip đó (được phép).
+- **Kiểm trước khi ghi XONG:** `python3 tools/suc-manh/kiem-anh-lop.py <id> <thư mục xem ngoài repo>` phải TẤT CẢ ĐẠT; nhìn ảnh ghép: không nhấp nháy, không trượt khỏi chỗ gắn, lật trái đúng.
+- **Khi XONG:** ghi kích thước/khung đã có vào file này; bật lớp bằng `"co_anh": true` trong game/thu-mat-na/trang-bi.json rồi chạy `node tools/suc-manh/kiem-thu-lop.js <thư mục xem>` (phiên LÀM, hoặc phiên gen nếu phiên LÀM đã dừng).

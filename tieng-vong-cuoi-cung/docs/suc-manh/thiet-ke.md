@@ -1,39 +1,54 @@
-# Sức mạnh hiện lên người Kiếm Khách – Thiết kế (BẢN NHÁP, chờ ChatGPT duyệt)
+# Sức mạnh hiện lên người Kiếm Khách – Thiết kế (CHỐT theo ChatGPT 02/11)
 
-> ⚠ Lần chạy 02/11 không có Chrome nên **chưa hỏi được ChatGPT**. Đây là bản nháp để dựng khung kỹ thuật. Câu hỏi soạn sẵn: `cau-hoi-chatgpt.md`; phiên gen ảnh cặp sẽ hỏi và lưu nguyên văn vào `tu-van-chatgpt.txt` (yêu cầu 001). Mọi tầng, lớp, chỉ số dưới đây **sửa theo tư vấn ChatGPT**. Hiện mọi lớp **TẮT** – nhân vật y hệt bản cũ.
+> Nguồn: tư vấn ChatGPT `docs/suc-manh/tu-van-chatgpt.txt` (phiên chính hỏi hộ, chat "Thiết kế tiến hoá hình ảnh"). Bản nháp cũ đã được thay toàn bộ theo tư vấn này. Mọi lớp vẫn **TẮT** cho tới khi có ảnh ChatGPT vẽ → nhân vật y hệt hiện tại.
 
-## 1. Nghiên cứu nhanh (game tham khảo)
-| Game | Cách cho thấy mạnh lên | Bài học |
-|---|---|---|
-| Terraria | Giáp vẽ thành lớp riêng, khớp từng khung thân (paper-doll) | Lớp phủ từng khung chính xác nhất, nhưng tốn khung |
-| Dead Cells | Trang phục = bản phối màu/biến thể cả thân | Đổi cả thân → mất nhận diện, không hợp luật "giữ 100%" |
-| Blasphemous | Hình nhân vật gần như không đổi; sức mạnh hiện ở hiệu ứng đòn | Vệt kiếm/hiệu ứng là kênh rẻ (dự án đã có 3 cấp vệt kiếm) |
-| Hollow Knight | Bùa không hiện lên người; nâng kiếm không đổi hình | Người chơi vẫn chấp nhận, nhưng thiếu "khoe" |
-| Diễn đàn gamedev (paper doll 2D) | Lớp phủ theo khung hoặc gắn theo điểm neo từng khung | Hai kiểu kỹ thuật → hệ thống hỗ trợ cả hai |
+## 1. Hướng chung
+- "Mystical Decay & Awakening": linh hồn cổ thức tỉnh dưới mặt nạ nứt – **không** thành chiến binh giáp nặng.
+- **Không sửa pixel nào của sprite gốc.** Mọi thay đổi = lớp PNG riêng (phủ từng khung) hoặc phụ kiện gắn điểm neo, hoặc độ sáng bật/tắt.
+- 4 tầng ngoại hình (Level 0–3) + 3 cấp hình thái vệt kiếm + phụ kiện Echo Charm độc lập. **Không** làm 9 bộ cho 9 vùng, **không** Level 4.
+- Khoá theo **CỜ cốt truyện**, không theo số vùng/số nút kỹ năng đã mở.
 
-Kết luận nháp: chỉ THÊM chi tiết nhỏ, cùng bảng màu, ở chỗ dễ thấy (mặt nạ – điểm nhận diện chính; ngực; sau lưng), không đổi silhouette gốc.
-
-## 2. Tầng tiến hoá (nháp)
-| Cấp | Tên | Lớp hiện | Điều kiện (nháp) |
+## 2. Các tầng (thứ tự dấu hiệu: mặt nạ → ngực → lưng)
+| Cấp | Tên | Lớp hiện | Điều kiện (cờ trong `LuuChung`) |
 |---|---|---|---|
-| 0 | Tro Lặng | (gốc) | – |
-| 1 | Tiếng Nứt | `mat-na-nut-1` | hạ trùm Vùng 1 |
-| 2 | Vang Âm | `mat-na-nut-2` + `an-giap` | trùm Vùng 1 + 3 tinh anh |
-| 3 | Cộng Hưởng | `mat-na-nut-3` + `khan-ngan` | hạ 2 trùm vùng |
+| 0 | The Veiled One | (gốc, không phát sáng) | – |
+| 1 | First Resonance | `mat-na-nut-1` – 1 vết nứt mảnh ngà/xanh băng chéo một bên mặt nạ, đứng yên thì "thở" sáng chậm | `ha_trum:vung-1` (hạ Hollow Bell Mother – cờ đã có sẵn, do trum.js ghi) |
+| 2 | Bellbound Soul | `mat-na-nut-2` + `an-chuong-nguc` (ấn chuông cổ ở ngực, viền đồng xỉn, lõi ngà lạnh) | + `tien_hoa:bellbound` (Echoing Library – hiểu nguồn gốc Broken Bell) |
+| 3 | The Last Reverberation | `mat-na-nut-3` (nứt ~nửa mặt nạ, vẫn nguyên dáng) + `khan-ngan` (dải vải bạc mảnh sau lưng) | + `tien_hoa:last-reverberation` (sau nghi thức ký ức, trước Vực Lặng) |
 
-Trang bị gắn riêng: `chuong-hong` (chuông nhỏ đeo hông, kiểu neo) – gắn theo Âm Phù qua `theo_am_phu`.
-Chỉ số: **để phiên "do" lo** (`MocHeThong.ht.chiSo()`), tránh cộng 2 lần. `chi_so` trong trang-bi.json chỉ là gợi ý, `ap_chi_so: false`.
+Phụ kiện độc lập: `chuong-hong` (Echo Charm Bell) – mở gắn ở Bell Village, chuông có ở Bronze Foundry; nối qua `theo_am_phu` khi phiên "do" chốt mẫu Âm Phù.
+Phân bổ thưởng theo khu (ChatGPT): Bell Village L0 + mở gắn Echo Charm · Weeping Heartwood L1 · Bronze Foundry chuông hông · Iron Nest kiếm Tier II · Wind Canopy hạt gió (tạm) · Thunder Crown kiếm Tier III · Echoing Library L2 · Mirror Lake nghi thức · Silent Abyss L3.
+Hai cờ `tien_hoa:*` để phiên cốt truyện ghi khi làm tới các vùng đó.
 
-## 3. Kỹ thuật (đã làm)
-- `game/thu-mat-na/lop-trang-bi.js` + dữ liệu `game/thu-mat-na/trang-bi.json`.
-- Ảnh lớp: `art/kiem-khach-lop/<id>/<thư mục clip gốc>/fNN.png` – 256×256, chân [128,172], quay phải, **đúng số khung clip gốc**, chỉ chứa phần THÊM (nền trong suốt). Clip thiếu ảnh → lớp ẩn ở clip đó.
-- Kiểu `khung` (lớp phủ từng khung) và kiểu `neo` (1 ảnh nhỏ `neo00.png` + điểm neo `[x,y]` cho từng khung trong `neo.<clip>`).
-- `z: "sau"` vẽ trước thân (sau lưng), `"truoc"` vẽ sau thân. Cùng `khe` → lớp sau thay lớp trước (vd 3 mức nứt mặt nạ).
-- Lật, loé trắng khi trúng đòn, mờ khi chết: dùng chung `SpriteMN.ve` nên khớp thân tuyệt đối.
-- **Bật một lớp**: ảnh XONG → kiểm `python3 tools/suc-manh/kiem-anh-lop.py <id>` → ghi `"co_anh": true` cho lớp đó trong trang-bi.json. Chưa ghi thì không tải gì cả (0 yêu cầu mạng).
-- Thử: `game/phong-demo/index.html?trangbi=mat-na-nut-1` hoặc `?sucmanh=2` (chỉ có tác dụng với lớp đã bật).
-- Cầu nối phiên "do": `"tu_dong_cap": true` → cấp = `MocHeThong.ht.capSucManh()`; `"theo_am_phu": {"<mẫu>": "<id lớp>"}` → Âm Phù đang cắm hiện lớp. Mặc định tắt.
+## 3. Cỡ đọc được (thân thật ~40×75 px nguồn)
+Nứt mặt nạ dài 9–15 px, nét sáng 2 px · ấn ngực ≥ 6×8 px · chuông hông 6–8 × 8–11 px · dải vải rộng 3–5, dài 16–25 px · rune 1–2 px **không** làm dấu hiệu chính · giáp vai ~7×5 px (tuỳ chọn, P6 – chưa làm).
 
-## 4. Chi phí vẽ (nháp – chờ ChatGPT tối giản)
-Clip ưu tiên: dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 = **41 khung/lớp**; thêm roi 1 · tiepdat 3 · luot 6 · trungdon 6 = 57.
-Ý tưởng giảm công (hỏi ChatGPT): ChatGPT vẽ chi tiết 1 lần trên khung đứng phóng to → công cụ dời chi tiết theo vị trí mặt nạ/ngực từng khung (dò bằng so khớp ảnh) → ChatGPT/PixelLab sửa các khung xoay mạnh. Lớp kiểu neo (chuông) chỉ cần 1 ảnh + bảng điểm neo.
+## 4. Giữ nhận diện + màu
+Khoá: tóc bạc, mặt nạ trắng, khoảng tối mắt, trang phục tối, dáng song kiếm, ánh xanh băng. Không áo choàng lớn, cánh, sừng, mũ, vũ khí thứ ba. Chỉ 1–2 điểm sáng cùng lúc; khi đánh, song kiếm phải sáng nhất.
+Bảng màu lớp mới: Ivory `#E9E4D9` · Cold Silver `#B7C6D2` · Ice Cyan `#85D9E8` · Deep Cyan `#447E98` · Ancient Bronze `#9C6B30` · Bell Gold `#D0A45B`.
+
+## 5. Kỹ thuật (đã làm – `game/thu-mat-na/lop-trang-bi.js` + `trang-bi.json`)
+| Lớp | Kiểu | Ảnh cần | Ghi chú |
+|---|---|---|---|
+| mat-na-nut-1/2/3, an-chuong-nguc | `khung` (phủ từng khung) | `art/kiem-khach-lop/<id>/<clip>/fNN.png` 256×256, chân [128,172], quay phải | `tho` (thở sáng khi đứng), `alpha_clip.trungdon = 0.5` (giảm sáng khi trúng đòn) |
+| khan-ngan | `neo`, vẽ SAU thân | `neo00..neo03.png` = 4 tư thế: nghỉ / kéo ra sau / văng lên / hồi về | `hinh_theo_clip` chọn tư thế theo clip; cần điểm neo lưng từng khung |
+| chuong-hong | `neo`, vẽ TRÊN thân | `neo00..neo02.png` = yên / lắc ra sau / hất lên | ẩn khi lướt (`an_clip`); cần điểm neo hông từng khung |
+
+- JS chỉ chọn ảnh, vị trí, độ sáng – **không tự vẽ hình**. Clip chưa có ảnh/điểm neo → lớp tự ẩn ở clip đó, không mượn toạ độ clip khác.
+- Cấp: `theo_co_truyen: true` → cấp = max(cấp tay, cấp theo cờ `LuuChung`). Chưa có ảnh nên bật cờ cũng không đổi hình.
+- Cầu nối phiên "do": `tu_dong_cap` (dùng `capSucManh()` theo số nút) **để TẮT** – ChatGPT bảo khoá theo cờ cốt truyện, không theo cây kỹ năng.
+- Chỉ số: `chi_so` các cấp để trống, `ap_chi_so: false`. ChatGPT: chỉ số chỉ gắn mốc lớn (L1 ~ năng lực cộng hưởng; L2 ~ Echo Charm/Broken Bell; L3 ~ năng lực vào Vực Lặng); đối chiếu cây Silver String của phiên "do"; đừng để vết nứt sáng bị hiểu là tăng sát thương nếu thưởng thật là phòng thủ.
+- Thử: `game/phong-demo/index.html?trangbi=mat-na-nut-1` hoặc `?sucmanh=2` (chỉ có tác dụng với lớp đã có ảnh).
+
+## 6. Số khung tối thiểu (lớp bám mặt nạ/ngực)
+dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 · roi 1 · tiepdat 3 · luot 6 (có thể ẩn phụ kiện) · trungdon 6 (giảm sáng) = **57 vị trí cần kiểm**. Khung cùng tư thế/góc mặt nạ dùng chung ảnh được nếu căn đúng. Chuông/dải vải: 1–4 hình + điểm neo.
+
+## 7. Vệt kiếm theo cấp (không đổi màu xanh băng – đổi HÌNH THÁI)
+Tier I "Frost Whisper" vệt mảnh · Tier II "Echo Severance" vệt đôi + hạt bạc ngà · Tier III "Silent Requiem" dư ảnh ngắn + sóng âm đứt đoạn. Dự án đã có vệt kiếm theo cấp đòn (`capClip`); việc gắn Tier vào mốc Iron Nest/Thunder Crown để khi làm các vùng đó. Hào quang thường trực rất yếu; hiệu ứng mạnh chỉ lúc mở khoá/cộng hưởng/kết liễu.
+
+## 8. Thứ tự vẽ (ChatGPT)
+P0 First Resonance – dung 4 + chay 8 (thử độ đọc trên iPhone) → P1 nứt L1 đủ clip → P2 ấn chuông ngực → P3 chuông hông → P4 dải vải 4 tư thế → P5 VFX tiến hoá/cộng hưởng → P6 giáp vai (tuỳ chọn).
+Nghiệm thu: sprite gốc không đổi; overlay khớp 256×256 + chân (128,172); không giật; không che mắt/kiếm; lật trái đúng; rõ trên iPhone; thiếu dữ liệu tự ẩn; không giảm FPS.
+
+## 9. Tham khảo
+Blasphemous (silhouette biểu tượng, bảng màu hạn chế) · Dead Cells (sức mạnh qua tốc độ/hiệu ứng trúng) · Hollow Knight (nhân vật cực nhất quán) · Katana ZERO (vệt chém, dư ảnh) · Prince of Persia: The Lost Crown (trình bày kỹ năng mới rõ).

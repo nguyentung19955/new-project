@@ -22,6 +22,14 @@
      LopTrangBi.deo(id) / go(id) / dangDeo() / coAnh(id) / dsLop()
      LopTrangBi.datCap(n) / cap() / capTheoTienDo({trum:[...], manh_am:n, ...}) / chiSo()
      LopTrangBi.dangKy(fn)                         báo khi đeo/gỡ/đổi cấp (fn nhận {k, ...})
+   Tuỳ chọn mỗi lớp (theo tư vấn ChatGPT 02/11 – docs/suc-manh/tu-van-chatgpt.txt):
+     "an_clip": ["luot"]                 ẩn lớp ở các clip này (vd phụ kiện khi lướt)
+     "alpha_clip": {"trungdon": 0.5}     giảm sáng lớp ở clip (vd khi trúng đòn)
+     "tho": {"clip":["dung"], "ms":2400, "min":0.6}   "thở" độ sáng chậm khi đứng yên (chỉ đổi alpha, không vẽ thêm)
+     kiểu "neo": "hinh_theo_clip": {"dung":0, "troi":1, "nhay":2}  chọn tư thế ảnh (neo00, neo01…) theo clip đang chạy
+                 thay vì lặp theo thời gian (dải vải 3–4 tư thế, chuông lắc) – JS chỉ chọn ảnh + vị trí, không tự vẽ hình.
+   Cờ cốt truyện (ChatGPT: tầng ngoại hình khoá theo CỜ cốt truyện): trang-bi.json "theo_co_truyen": true →
+     cấp = max(cấp tay, capTheoTienDo({co: các cờ đang bật trong LuuChung})); điều kiện cấp ghi {"co": ["ha_trum:vung-1"]}.
    Cầu nối hệ thống đồ (phiên "do", game/he-thong/): trang-bi.json "tu_dong_cap": true → cấp = max(cấp tay, MocHeThong.ht.capSucManh());
      "theo_am_phu": {"<mẫu Âm Phù>" hoặc "<mẫu>:<độ hiếm>": "<id lớp>"} → Âm Phù đang cắm tự hiện lớp tương ứng. Cả hai mặc định TẮT.
    Thử nhanh qua URL:  ?trangbi=id1,id2  ?sucmanh=2   (chỉ có tác dụng với lớp đã có ảnh)
@@ -91,10 +99,16 @@ const LopTrangBi = (() => {
   // lớp đang hiển thị = lớp đeo tay + lớp tự gắn theo cấp sức mạnh; cùng "khe" thì lớp sau thay lớp trước
   // cầu nối phiên "do" (game/he-thong/): chỉ ĐỌC MocHeThong.ht khi trang-bi.json bật tu_dong_cap / theo_am_phu
   function heThong(){ const M = window.MocHeThong; return M && M.bat && M.ht ? M.ht : null; }
+  function coTruyen(){
+    const LC = window.LuuChung; if (!LC || !LC.du) return [];
+    try { const co = LC.du().co || {}; return Object.keys(co).filter(k => co[k]); } catch (e){ return []; }
+  }
   function capHien(){
+    let c = st.cap;
+    if (st.json && st.json.theo_co_truyen) c = Math.max(c, capTheoTienDo({co:coTruyen()}));
     const ht = st.json && st.json.tu_dong_cap ? heThong() : null;
-    if (ht && ht.capSucManh) try { return Math.max(st.cap, ht.capSucManh() | 0); } catch (e){}
-    return st.cap;
+    if (ht && ht.capSucManh) try { c = Math.max(c, ht.capSucManh() | 0); } catch (e){}
+    return c;
   }
   function lopTheoAmPhu(){
     const map = st.json && st.json.theo_am_phu, ht = map ? heThong() : null, out = [];
@@ -151,6 +165,13 @@ const LopTrangBi = (() => {
     const tm = String(C.def.thu_muc || ten).replace(/\/$/, ''), n = C.hinh.length;
     const d = L.d;
     if (d.clip && !d.clip.includes(ten) && !d.clip.includes(tm)) return;          // lớp chỉ khai báo cho một số clip
+    if (d.an_clip && (d.an_clip.includes(ten) || d.an_clip.includes(tm))) return; // ẩn ở clip này (vd phụ kiện khi lướt)
+    const ac = d.alpha_clip && (d.alpha_clip[ten] ?? d.alpha_clip[tm]);
+    if (ac !== undefined && ac !== null) alpha = (alpha === undefined ? 1 : alpha) * ac;
+    if (d.tho && (!d.tho.clip || d.tho.clip.includes(ten) || d.tho.clip.includes(tm))){   // "thở" sáng chậm
+      const mn = d.tho.min ?? 0.6, ms = d.tho.ms || 2400;
+      alpha = (alpha === undefined ? 1 : alpha) * (mn + (1 - mn) * (0.5 + 0.5 * Math.cos(2 * Math.PI * performance.now() / ms)));
+    }
     if ((d.kieu || 'khung') === 'khung'){
       const o = L.khung[tm] || napKhung(L, tm, n);
       if (!o.ok || o.hinh.length !== n) return;
@@ -158,7 +179,9 @@ const LopTrangBi = (() => {
     } else {
       const neo = d.neo && (d.neo[tm] || d.neo[ten]); if (!neo) return;          // clip chưa đo điểm neo → ẩn
       const p = neo[Math.max(0, Math.min(neo.length - 1, k))]; if (!p) return;   // [x, y] trong ảnh gốc 256×256 (mặt PHẢI)
-      const msN = d.ms_neo || 120, i = L.anhNeo.length > 1 ? Math.floor(performance.now() / msN) % L.anhNeo.length : 0;
+      const msN = d.ms_neo || 120, htc = d.hinh_theo_clip && (d.hinh_theo_clip[ten] ?? d.hinh_theo_clip[tm]);
+      const i = htc !== undefined && htc !== null ? Math.max(0, Math.min(L.anhNeo.length - 1, htc | 0))   // tư thế theo clip
+        : L.anhNeo.length > 1 ? Math.floor(performance.now() / msN) % L.anhNeo.length : 0;
       const img = L.anhNeo[i], an = d.chan_neo || [img.width >> 1, img.height >> 1];
       // điểm neo của ảnh nhỏ đặt tại điểm p của khung gốc → chân ảo = an + (chan gốc − p)
       SpriteMN.ve(g, {hinh:[img], chan:[an[0] + C.chan[0] - p[0], an[1] + C.chan[1] - p[1]]}, 0, fx, fy, lat, s, alpha, trang);
@@ -174,7 +197,7 @@ const LopTrangBi = (() => {
     dangDeo:() => st.deo.slice(), cap:() => capHien(), coAnh:id => !!(st.lop[id] && st.lop[id].coAnh),
     dsLop:() => Object.values(st.lop).map(L => ({id:L.id, ten:L.d.ten, khe:L.d.khe || '', coAnh:L.coAnh, kieu:L.d.kieu || 'khung'})),
     dsCap:() => ((st.json && st.json.cap_suc_manh) || []).map((c, i) => ({cap:i, ten:c.ten, dieu_kien:c.dieu_kien || {}, lop:c.lop || []})),
-    lopDangHien:() => lopHien().map(L => L.id), cauHinh:() => ({ap_chi_so:!!(st.json && st.json.ap_chi_so), tu_dong_cap:!!(st.json && st.json.tu_dong_cap)}), dangKy:f => st.nghe.push(f), get daNap(){ return st.nap; }};
+    lopDangHien:() => lopHien().map(L => L.id), cauHinh:() => ({ap_chi_so:!!(st.json && st.json.ap_chi_so), tu_dong_cap:!!(st.json && st.json.tu_dong_cap), theo_co_truyen:!!(st.json && st.json.theo_co_truyen)}), dangKy:f => st.nghe.push(f), get daNap(){ return st.nap; }};
   return API;
 })();
 if (typeof window !== 'undefined') window.LopTrangBi = LopTrangBi;

@@ -1,27 +1,27 @@
-# Báo cáo – Sức mạnh hiện lên người Kiếm Khách (02/11)
+# Báo cáo – Sức mạnh hiện lên người Kiếm Khách (cập nhật 02/11, lượt 2)
 
 ## Tóm tắt dễ hiểu
-- Đã làm xong **bộ khung** để sau này đồ/sức mạnh hiện lên người nhân vật: mặt nạ nứt sáng dần, ấn trên giáp, dải vải sau lưng, chuông đeo hông… Mỗi thứ là một "lớp" ảnh vẽ chồng đúng từng khung animation.
-- **Chưa có ảnh nào** nên mọi lớp đang **tắt**: nhân vật trong phòng demo và Vùng 1 **y hệt trước** (đã so từng điểm ảnh – giống 100%, và không tải thêm file nào).
-- **Chưa hỏi được ChatGPT**: lần chạy này chạy trên mây theo lịch, không có Chrome. Câu hỏi đã soạn sẵn; phiên gen ảnh cặp (có Chrome) sẽ hỏi trước (yêu cầu 001) rồi mới vẽ. Thiết kế hiện là **bản nháp**.
+- Lượt này đã có **tư vấn ChatGPT** (phiên chính hỏi hộ) → thiết kế đã **chốt theo ChatGPT**: 4 tầng ngoại hình
+  **The Veiled One → First Resonance → Bellbound Soul → The Last Reverberation**. Thứ tự dấu hiệu: mặt nạ nứt sáng → ấn chuông ở ngực → dải vải bạc sau lưng. Thêm 1 phụ kiện riêng: **chuông Echo Charm đeo hông**.
+- Mở tầng theo **cờ cốt truyện** (ChatGPT dặn): Level 1 tự mở khi đã hạ trùm Vùng 1 (cờ có sẵn). Level 2/3 chờ 2 cờ mới để phiên cốt truyện ghi sau.
+- **Vẫn chưa có ảnh nào** → mọi lớp **tắt**, nhân vật trong phòng demo và Vùng 1 **y hệt trước** (so từng điểm ảnh: giống 100%, không tải thêm file).
+- Lượt này không có Chrome nên không tự gen ảnh/hỏi thêm ChatGPT được; yêu cầu ảnh đã viết lại theo đúng tư vấn để phiên gen ảnh cặp làm.
 
-## Đã làm
+## Đã làm lượt này
 | Việc | Ở đâu |
 |---|---|
-| Hệ thống lớp trang bị (lớp phủ từng khung + kiểu gắn điểm neo; trước/sau thân; lật, loé trắng, mờ khớp thân) | `game/thu-mat-na/lop-trang-bi.js` |
-| Dữ liệu 6 lớp + 4 cấp sức mạnh (nháp), mọi lớp `co_anh: false` | `game/thu-mat-na/trang-bi.json` |
-| Gắn vào phòng demo + Vùng 1 (mỗi nơi vài dòng, có `if`) | `game/phong-demo/index.html`, `game/vung-1/{index.html,nap.js,ve.js}` |
-| Cầu nối hệ thống đồ (phiên "do"): cấp theo `MocHeThong.ht.capSucManh()`, Âm Phù đang cắm → lớp (mặc định tắt) | trong `lop-trang-bi.js` |
-| Kiểm thử Playwright 21 mục | `tools/suc-manh/kiem-thu-lop.js` |
-| Công cụ kiểm ảnh lớp cho phiên gen ảnh | `tools/suc-manh/kiem-anh-lop.py` |
-| Thiết kế nháp + nghiên cứu + câu hỏi ChatGPT | `docs/suc-manh/thiet-ke.md`, `cau-hoi-chatgpt.md` |
-| Yêu cầu ảnh 001–005 + HET | `docs/yeu-cau-anh/sucmanh/` |
+| Thiết kế chốt theo ChatGPT (tầng, cỡ đọc được, bảng màu, số khung, thứ tự vẽ, vệt kiếm 3 tier, chỉ số) | `docs/suc-manh/thiet-ke.md` |
+| Dữ liệu: tên/điều kiện 4 tầng theo cờ, lớp `an-chuong-nguc` (thay an-giap), dải vải + chuông chuyển sang kiểu neo nhiều tư thế, bảng màu | `game/thu-mat-na/trang-bi.json` |
+| Tính năng mới trong hệ thống lớp (theo ChatGPT): mở cấp theo cờ cốt truyện (`theo_co_truyen`), "thở" sáng khi đứng (`tho`), giảm sáng khi trúng đòn (`alpha_clip`), ẩn phụ kiện khi lướt (`an_clip`), chọn tư thế ảnh theo clip (`hinh_theo_clip`) – chỉ đổi độ trong/vị trí/chọn ảnh, không vẽ gì bằng code | `game/thu-mat-na/lop-trang-bi.js` |
+| Kiểm thử thêm 7 mục cho các tính năng trên | `tools/suc-manh/kiem-thu-lop.js` |
+| Yêu cầu ảnh viết lại: 001 XONG; 002 mặt nạ nứt (P0: 4 khung đứng trước, kèm prompt ChatGPT); 003 ấn chuông ngực; 004 dải vải 4 tư thế; 005 chuông 3 tư thế; HET | `docs/yeu-cau-anh/sucmanh/` |
 
 ## Kiểm thử
-- `tools/suc-manh/kiem-thu-lop.js`: **TẤT CẢ ĐẠT** – mặc định giống hệt từng điểm ảnh (6/6 lần chụp), 0 lỗi JS, 0 yêu cầu ảnh lớp; với lớp thử (chỉ trong kiểm thử, không ghi ảnh vào repo) lớp vẽ đúng khung/neo/lật/cỡ ở dung, troi, nhay, don1, don2, don4; clip thiếu ảnh → lớp ẩn; gỡ lớp, cấp theo tiến độ, chỉ số cộng dồn, kiểu neo, lưu, cầu nối hệ thống đồ đều đúng.
-- Phép thử Vùng 1 cũ: kiem-thu-f 66/66, kiem-thu-g hỏng 0, kiem-thu-h hỏng 0, kiem-tra-vung1 đi hết P01→P12, không thiếu hình.
+- `tools/suc-manh/kiem-thu-lop.js`: **28/28 ĐẠT** (mặc định giống hệt từng điểm ảnh 6/6, 0 lỗi JS, 0 tải ảnh lớp; lớp thử khớp khung/neo/lật; cờ cốt truyện → cấp; thở sáng; giảm sáng; ẩn khi lướt; tư thế theo clip).
+- Phép thử Vùng 1: kiem-thu-f 66/66, kiem-thu-h hỏng 0, kiem-tra-vung1 đi P01→P12 không thiếu hình (chỉ báo 1 phông chữ/mạng ngoài không tải được trên máy mây – không liên quan).
+- Không sửa engine chung (dong-co-mn.js, sprite-mn.js, ve-chieu-quai.js).
 
-## Còn chờ
-1. Phiên gen ảnh hỏi ChatGPT (001) → `docs/suc-manh/tu-van-chatgpt.txt`; sửa thiet-ke.md/trang-bi.json theo đó.
-2. Ảnh lớp 002–005. Khi XONG: ghi `"co_anh": true` cho lớp đó → chạy kiểm thử → thử `phong-demo/index.html?trangbi=mat-na-nut-1`.
-3. Thống nhất với phiên "do": cấp sức mạnh lấy từ đâu (`tu_dong_cap`), Âm Phù nào hiện lớp nào (`theo_am_phu`); chỉ số để phiên "do" lo.
+## Còn chờ / gửi các phiên khác
+1. **Phiên gen ảnh sucmanh:** vẽ theo thứ tự 002 (mat-na-nut-1, 4 khung đứng trước) → 003 → 005 → 004. Ảnh XONG thì ghi `"co_anh": true` và chạy kiểm thử.
+2. **Phiên cốt truyện (cottruyen):** khi làm tới Echoing Library / nghi thức ký ức ở Mirror Lake, ghi cờ `tien_hoa:bellbound` và `tien_hoa:last-reverberation` bằng `LuuChung.datCo(...)` – nhân vật sẽ tự lên Level 2/3.
+3. **Phiên hệ thống đồ (do):** ChatGPT khuyên KHÔNG lấy tầng ngoại hình theo số nút kỹ năng → `tu_dong_cap` để tắt. Khi chốt mẫu Âm Phù "Echo Charm", ghi vào `theo_am_phu` để chuông hông hiện. Chỉ số gắn mốc lớn là việc của phiên "do".

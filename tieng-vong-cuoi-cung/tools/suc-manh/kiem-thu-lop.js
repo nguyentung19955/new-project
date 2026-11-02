@@ -140,6 +140,39 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
   ok('đeo được lưu (localStorage, bọc try/catch)', luu && luu.deo && luu.deo.includes('thu-truoc'), luu);
   ok('lớp thử: không lỗi JS', !T.loi.length, T.loi.slice(0, 3));
   await T.pg.close();
+
+  /* ---------- 3) tuỳ chọn theo tư vấn ChatGPT: cờ cốt truyện, alpha_clip, tho, an_clip, hinh_theo_clip ---------- */
+  const neoChay = Array.from({length:8}, (_, i) => [118 + i, 120]);
+  const JSON_CO = {goc:'../../art/kiem-khach-lop/', theo_co_truyen:true, lop:{
+    'co-khung':{ten:'cờ khung', khe:'a', kieu:'khung', z:'truoc', co_anh:true, alpha_clip:{dung:0.5}, tho:{clip:['troi'], ms:2000, min:0.6}},
+    'co-neo':{ten:'cờ neo', khe:'c', kieu:'neo', z:'truoc', co_anh:true, tep:'neo', so_hinh_neo:3, chan_neo:[128, 172],
+      hinh_theo_clip:{dung:2, troi:1}, an_clip:['luot'], neo:{dung:neoDung, chay:neoChay, luot:Array.from({length:6}, () => [120, 120])}}},
+    cap_suc_manh:[{ten:'0', lop:[]}, {ten:'1', lop:['co-khung'], dieu_kien:{co:['ha_trum:vung-1']}}, {ten:'2', lop:[], dieu_kien:{co:['ha_trum:vung-1', 'tien_hoa:bellbound']}}]};
+  const K = await moTrang(b, 'game/phong-demo/index.html?tu=1', {json:JSON_CO, fixture:true});
+  await K.pg.evaluate(() => { const goc = SpriteMN.ve; window.GHI = [];
+    SpriteMN.ve = function(g, C, k, fx, fy, lat, s, al, tr){ GHI.push({lop:!C.def, k, al, src:(C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))] || {}).src || ''}); return goc.apply(this, arguments); }; });
+  const co = await K.pg.evaluate(() => { const a = {cap:LopTrangBi.cap(), hien:LopTrangBi.lopDangHien()};
+    window.LuuChung = {du:() => ({co:{'ha_trum:vung-1':true}})}; const b2 = {cap:LopTrangBi.cap(), hien:LopTrangBi.lopDangHien()};
+    window.LuuChung = {du:() => ({co:{'ha_trum:vung-1':true, 'tien_hoa:bellbound':true}})}; const c = LopTrangBi.cap();
+    window.LuuChung = {du:() => ({co:{'ha_trum:vung-1':true}})}; return {a, b2, c}; });
+  ok('cờ cốt truyện: chưa cờ → cấp 0; ha_trum:vung-1 → cấp 1 hiện lớp; thêm tien_hoa:bellbound → cấp 2', co.a.cap === 0 && co.a.hien.length === 0 && co.b2.cap === 1 && co.b2.hien.includes('co-khung') && co.c === 2, co);
+  const mot = async (n, phim) => K.pg.evaluate(([n, phim]) => { TV.buoc(Math.max(0, n - 1), phim); GHI.length = 0; TV.buoc(1, phim); return {st:TV.E.trangThai().ten, ghi:GHI.slice()}; }, [n, phim]);
+  await K.pg.evaluate(() => LopTrangBi.deo('co-neo'));
+  { const r = await mot(60, ''); const th = r.ghi.find(g => !g.lop && /kiem-khach\/dung/.test(g.src)), lk = r.ghi.find(g => g.lop && /co-khung/.test(g.src)), ln = r.ghi.find(g => g.lop && /co-neo/.test(g.src));
+    const alT = th ? (th.al === undefined ? 1 : th.al) : null;
+    ok('alpha_clip: lớp ở clip dung sáng bằng 0.5 × thân', r.st === 'dung' && lk && Math.abs(lk.al - 0.5 * alT) < 1e-6, {st:r.st, lk:lk && lk.al, th:alT});
+    ok('hinh_theo_clip: clip dung dùng tư thế neo02', ln && /neo02\.png/.test(ln.src), ln && ln.src.split('/').pop()); }
+  { let r = null; for (let i = 0; i < 6 && (!r || r.st !== 'troi'); i++) r = await mot(10, 'r');
+    const th = r.ghi.find(g => !g.lop && /kiem-khach\//.test(g.src)), lk = r.ghi.find(g => g.lop && /co-khung/.test(g.src)), ln = r.ghi.find(g => g.lop && /co-neo/.test(g.src));
+    const alT = th ? (th.al === undefined ? 1 : th.al) : 1, tl = lk ? lk.al / alT : -1;
+    ok('tho: lớp ở clip troi "thở" trong khoảng 0.6–1 × thân', r.st === 'troi' && tl >= 0.6 - 1e-6 && tl <= 1 + 1e-6, {st:r.st, tl});
+    ok('hinh_theo_clip: clip troi dùng tư thế neo01', ln && /neo01\.png/.test(ln.src), ln && ln.src.split('/').pop()); }
+  { let thay = null; await mot(40, '');
+    for (let i = 0; i < 14 && !thay; i++){ const r = await mot(1, i === 0 ? 's' : ''); if (r.st === 'luot') thay = r; }
+    ok('an_clip: lớp neo ẩn khi lướt, lớp khung vẫn vẽ, thân vẫn vẽ', thay && !thay.ghi.some(g => /co-neo/.test(g.src)) && thay.ghi.some(g => /kiem-khach\/luot/.test(g.src)), thay ? thay.ghi.map(g => g.src.split('/').slice(-3).join('/')) : 'không vào được luot'); }
+  ok('tuỳ chọn ChatGPT: không lỗi JS', !K.loi.length, K.loi.slice(0, 3));
+  await K.pg.screenshot({path:path.join(OUT, 'thu-co-truyen.png')});
+  await K.pg.close();
   await b.close();
   console.log(soLoi ? 'CÓ ' + soLoi + ' LỖI' : 'TẤT CẢ ĐẠT');
   process.exit(soLoi ? 1 : 0);

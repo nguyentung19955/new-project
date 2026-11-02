@@ -1,5 +1,7 @@
 # Câu hỏi soạn sẵn cho ChatGPT – "Sức mạnh hiện lên người Kiếm Khách"
 
+> ✅ Đã được trả lời 02/11 – xem `tu-van-chatgpt.txt`; thiết kế chốt ở `thiet-ke.md`.
+
 > **ĐÃ GỬI 02/11 (phiên chính, có Chrome) – trả lời ở tu-van-chatgpt.txt cùng thư mục.**
 
 Lần chạy 02/11 của phiên LÀM **không có Chrome** (chạy trên mây theo lịch) nên chưa hỏi được ChatGPT. Phiên gen ảnh cặp (sucmanh, có Chrome) làm giúp theo yêu cầu `docs/yeu-cau-anh/sucmanh/001-tu-van-thiet-ke.md`:

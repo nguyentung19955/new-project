@@ -1,11 +1,12 @@
-# 004 – Dải vải ngân bay sau lưng
-- **Trạng thái:** CHỜ (làm sau 001)
-- **Dùng vào đâu:** cấp sức mạnh 3 – lớp `khan-ngan` (khe "khan", vẽ SAU thân – nằm sau lưng/cổ).
-- **Mô tả:** 1 dải vải mảnh màu tối viền bạc, bay theo dáng (đứng: phất nhẹ; chạy: bay ngang ra sau; nhảy: hất lên; đòn: quét theo hướng chém). Không làm to silhouette quá ~20%.
-- **Lưu:** `art/kiem-khach-lop/khan-ngan/<clip>/fNN.png` (+ `nguon-chatgpt.png`).
-- **Neo:** [128,172], hướng phải. Cần chuyển động riêng mỗi khung (không chỉ dời).
-- **Quy cách chung (mọi lớp kiểu khung):** mỗi khung 1 PNG RGBA **256×256**, chân nhân vật ở **[128,172]**, quay **PHẢI**, CHỈ chứa phần THÊM (nền trong suốt, không chép lại thân), khớp đúng khung gốc `art/kiem-khach/<clip>/fNN.png` (gửi khung gốc làm tham chiếu). Không đổi màu/che mắt mặt nạ, tóc, kiếm gốc. Đúng số khung clip gốc, tên `fNN.png`.
-- **Clip ưu tiên (thư mục = tên thư mục ảnh gốc):** dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 (= 41 khung). Nếu còn sức: roi 1 · tiepdat 3 · luot 6 · trungdon 6 · don3 8. Clip thiếu → lớp tự ẩn ở clip đó (được phép, nhưng ưu tiên đủ 6 clip đầu).
-- **Cách vẽ:** theo tư vấn ChatGPT ở 001 (sheet / vẽ 1 lần rồi dời theo vị trí từng khung / PixelLab).
-- **Kiểm trước khi ghi XONG:** `python3 tools/suc-manh/kiem-anh-lop.py <id> <thư mục xem ngoài repo>` phải TẤT CẢ ĐẠT; nhìn ảnh ghép: không nhấp nháy, không trượt khỏi chỗ gắn.
-- **Khi XONG:** ghi kích thước/khung đã có vào file này. (Phiên LÀM – hoặc phiên gen nếu phiên LÀM đã dừng – bật lớp bằng `"co_anh": true` trong game/thu-mat-na/trang-bi.json rồi chạy `node tools/suc-manh/kiem-thu-lop.js <thư mục xem>`.)
+# 004 – Dải vải bạc sau lưng (Level 3) – kiểu NEO, 4 tư thế – P4
+- **Trạng thái:** CHỜ (sau 002, 003, 005)
+- **Dùng vào đâu:** Level 3 The Last Reverberation – lớp `khan-ngan` (khe "khan", vẽ SAU thân).
+- **Đổi theo ChatGPT:** KHÔNG vẽ từng khung nữa. Vẽ **4 hình** dải vải bạc mảnh (rộng 3–5 px, dài 16–25 px ở cỡ ảnh gốc, Cold Silver #B7C6D2 + Ivory), rung như phản ứng âm thanh vô hình. Game chọn hình theo clip, chỉ đổi vị trí – không tự vẽ.
+  - `neo00.png` nghỉ (rủ nhẹ) – dung, tiepdat
+  - `neo01.png` kéo ra sau (bay ngang) – chạy, lướt, các đòn
+  - `neo02.png` văng lên – nhảy, rơi
+  - `neo03.png` hồi về – trúng đòn
+- **Ảnh:** mỗi hình PNG nền trong suốt, cùng cỡ ô (vd 48×48), dải vải hướng ra sau khi nhân vật quay PHẢI (tức bay về bên TRÁI ảnh). Ghi điểm buộc (gốc dải vải, chỗ dính lưng/cổ) trong ảnh nhỏ → `chan_neo: [x, y]` (cùng điểm cho cả 4 hình).
+- **Điểm neo từng khung:** đo điểm lưng/cổ (chỗ buộc) trong từng khung gốc 256×256 (mặt phải) cho các clip dung/chay/nhay/roi/tiepdat/don1/don2/don4/luot/trungdon → ghi vào file này dạng `chay: [[x,y],…8 điểm]`; chép vào `neo` của lớp trong trang-bi.json. Clip chưa đo → dải vải ẩn ở clip đó.
+- **Lưu:** `art/kiem-khach-lop/khan-ngan/neo00.png … neo03.png` + `nguon-chatgpt.png`.
+- **Không** làm to silhouette, không thành áo choàng.
