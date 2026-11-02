@@ -81,8 +81,9 @@
     const G = V1.G; if (TB.t > 0 && --TB.t === 0) anToast();
     if (!M.hang.length) return;
     const h = M.hang[0];
-    if (typeof h === 'object'){ if (TB.t <= 0){ M.hang.shift(); hienToast(h.tb); TB.t = 170; } }   // ~2,8 s (ChatGPT: 2,5–3 s)
-    else if (G.tbT <= 20){ V1.thongBao(M.hang.shift()); G.tbT = 170; }
+    // khung thông báo và dòng chữ Vùng 1 lần lượt (không hiện cùng lúc để khỏi đè nhau)
+    if (typeof h === 'object'){ if (TB.t <= 0 && G.tbT <= 20){ M.hang.shift(); hienToast(h.tb); TB.t = 170; } }   // ~2,8 s (ChatGPT: 2,5–3 s)
+    else if (G.tbT <= 20 && TB.t <= 0){ V1.thongBao(M.hang.shift()); G.tbT = 170; }
   }
   function hienToast(o){
     const el = $('an-toast'); if (!el) return;
@@ -102,7 +103,8 @@
       if (r.k === 'bi-mat'){
         const d = M.A.dem(VUNG), them = moTaThuong(traoHet(r.thuong));
         if (!im) bao('Secret Found · ' + r.muc.ten + ' · ' + d.timThay + ' / ' + d.tong + ' Discovered' + (them ? ' · ' + them : ''),
-          {loai:'bi-mat', tieu:'Secret Found', phu:d.timThay + ' / ' + d.tong + ' Discovered' + (them ? ' · ' + them : ''), icon:r.muc.bieu_tuong || iconThuong(r.thuong)});
+          {loai:'bi-mat', tieu:'Secret Found', phu:d.timThay + ' / ' + d.tong + ' Discovered', icon:r.muc.bieu_tuong || iconThuong(r.thuong)});
+        if (!im && them && M.coTB) bao(them);   // phần thưởng: dòng chữ riêng (khung 270 px chỉ đủ 1 dòng phụ ngắn)
       } else if (r.k === 'loi-tat'){
         traoHet(r.thuong);
         if (!im) bao('Passage Opened · ' + r.muc.ten, {loai:'loi-tat', tieu:'Passage Opened', phu:r.muc.ten, icon:BT + 'root.png'});
@@ -195,13 +197,13 @@
       const veDay = (im, x, y, k, a, lat) => { const w = Math.round(im.width * k), h = Math.round(im.height * k); ctx.save(); ctx.globalAlpha = a; ctx.translate(Math.round(x), Math.round(y)); if (lat) ctx.scale(-1, 1); ctx.drawImage(im, -w >> 1, -h, w, h); ctx.restore(); };
       if (coRu){
         const d = ru.dieu_kien.dung_im, x = d.cot * T + T / 2, day = (d.hang + 1) * T;   // chuông vùi tro (trang trí P04-chuong-do) đứng trên gờ hàng d.hang+1
-        if (M.A.daTim(ru.id)) veDay(M.anh[DH.khe], x, day - 30, 1.5, 0.75 + 0.25 * Math.sin(f / 20));          // khe nứt sáng trên mặt chuông khi xong
+        if (M.A.daTim(ru.id)) veDay(M.anh[DH.khe], x, day - 58, 1.5, 0.75 + 0.25 * Math.sin(f / 20));          // khe nứt sáng trên mặt chuông khi xong
         else {
-          veDay(M.anh[DH.rung], x, day - 96, 1.5, 0.35 + 0.45 * (0.5 + 0.5 * Math.sin(f / 18)));             // 1 vạch sóng thấp phía trên chuông, mờ dần theo nhịp
+          veDay(M.anh[DH.rung], x, day - 150, 1.5, 0.35 + 0.45 * (0.5 + 0.5 * Math.sin(f / 18)));             // 1 vạch sóng thấp phía trên chuông, mờ dần theo nhịp
           const pl = E.pl, cx = Math.floor((pl.x + pl.w / 2) / T), cy = Math.floor((pl.y + pl.h / 2) / T);
           const tien = Math.min(1, TD.imT / (d.giay * 60));
           if (tien > 0 && Math.abs(cx - d.cot) <= d.ban_kinh && Math.abs(cy - d.hang) <= d.ban_kinh){   // vòng tiến độ: cắt cung theo thời gian đứng yên
-            const im = M.anh[DH.vong], r = im.width * 1.5, cxv = x, cyv = day - 40;
+            const im = M.anh[DH.vong], r = im.width * 1.5, cxv = x, cyv = day - 70;   // chuông nằm cao ~140 px trên gờ
             ctx.save(); ctx.beginPath(); ctx.moveTo(cxv, cyv); ctx.arc(cxv, cyv, r, -Math.PI / 2, -Math.PI / 2 + tien * Math.PI * 2); ctx.closePath(); ctx.clip();
             ctx.drawImage(im, Math.round(cxv - r / 2), Math.round(cyv - r / 2), Math.round(r), Math.round(r)); ctx.restore();
           }
@@ -235,7 +237,7 @@
     const b = document.createElement('button'); b.id = 'b-an'; b.type = 'button'; b.onclick = moBang;
     const hang = $('b-mua') && $('b-mua').parentNode; if (hang) hang.insertBefore(b, $('b-di'));
     if (M.coTB){   // thông báo góc trên phải (dưới hàng nút #top), trong safe area – 010 / 011
-      st.textContent += '#an-toast{position:absolute;z-index:5;top:calc(var(--sat) + 58px);right:max(8px,calc(var(--sar) + 8px));width:270px;height:58px;box-sizing:border-box;padding:11px 14px 0 74px;' +
+      st.textContent += '#an-toast{position:absolute;z-index:5;top:calc(var(--sat) + 112px);right:max(8px,calc(var(--sar) + 8px));width:270px;height:58px;box-sizing:border-box;padding:11px 14px 0 74px;' +
         'background:center/100% 100% no-repeat;pointer-events:none;image-rendering:pixelated;font-family:inherit}#an-toast.lon{width:300px;height:66px;padding:13px 18px 0 82px}' +
         '#an-toast b{display:block;font-size:16px;line-height:18px;color:#CEF0D6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#an-toast.lon b{color:#E1B85A}' +
         '#an-toast span{display:block;font-size:12px;line-height:16px;color:#c9d0d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
@@ -267,9 +269,9 @@
       '#an-ds .muc{position:relative;width:250px;height:56px;margin:0 0 4px;box-sizing:border-box;padding:9px 30px 0 58px;background:' + u('dong-thuong') + ' center/100% 100% no-repeat;cursor:pointer}' +
       '#an-ds .muc.chon{background-image:' + u('dong-chon') + '}#an-ds .muc.xong{background-image:' + u('dong-xong') + '}#an-ds .muc.xong.chon{background-image:' + u('dong-chon') + '}' +
       '#an-ds .muc .ic{position:absolute;left:17px;top:12px;width:32px;height:32px;image-rendering:pixelated}#an-ds .muc .tt{position:absolute;right:10px;top:8px;width:20px;height:20px;image-rendering:pixelated}' +
-      '#an-ds .muc b{display:block;font-size:14px;line-height:18px;color:#F3E6C8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#an-ds .muc span{display:block;font-size:11.5px;line-height:15px;color:#a9b3bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
-      '#an-ds .muc.the{width:250px;height:58px;padding:0;background:' + u('the-ten-trong') + ' center/180px 58px no-repeat}#an-ds .muc.the.co{background-image:' + u('the-ten-co') + '}#an-ds .muc.the.chon{outline:2px solid #78e6e6;outline-offset:-3px}' +
-      '#an-ds .muc.the b{position:absolute;left:107px;top:19px;width:52px;text-align:center;font-size:10px;line-height:14px;color:#3a2410;letter-spacing:.04em}' +
+      '#an-ds .muc b{display:block;font-size:13px;line-height:18px;color:#F3E6C8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#an-ds .muc span{display:block;font-size:11.5px;line-height:15px;color:#a9b3bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+      '#an-ds .muc.the{width:250px;height:58px;padding:0;background:' + u('the-ten-trong') + ' -40px 0/180px 58px no-repeat}#an-ds .muc.the.co{background-image:' + u('the-ten-co') + '}#an-ds .muc.the.chon{outline:2px solid #78e6e6;outline-offset:-3px}' +
+      '#an-ds .muc.the b{position:absolute;left:104px;top:19px;width:140px;font-size:14px;line-height:20px;color:#F3E6C8;letter-spacing:.06em}#an-ds .muc.the.chon b{color:#78e6e6}#an-ds .muc.the.chon{outline:0}' +
       '#an-ds .trong{padding:20px 12px;font-size:13px;color:#7f8a99;text-align:center}' +
       '#an-cuon{position:absolute;left:458px;top:58px;width:16px;height:48px;image-rendering:pixelated;touch-action:none;cursor:grab}' +
       '#an-ct{position:absolute;left:476px;top:58px;width:318px;height:254px;box-sizing:border-box;padding:24px 26px 20px;background:' + u('o-chi-tiet') + ' center/100% 100% no-repeat;overflow-y:auto;font-size:13px;line-height:1.4}' +
@@ -296,7 +298,7 @@
   function moNhatKy(){
     const A = M.A, d = A.dem(VUNG), ttDa = A.thanhTuu(), tong = (A.D.thanh_tuu || []).length, lt = A.demLoiTat(VUNG), img = p => '<img alt="" src="' + GOC + p + '">';
     $('an-tt').innerHTML = img(BT + 'root.png') + ' Secrets <b>' + d.timThay + '/' + d.tong + '</b><br>' + img(BT + 'bronze.png') + ' Achievements <b>' + ttDa.length + '/' + tong + '</b>' +
-      (window.LuuChung ? '<br>' + (M.coKU ? img(KU) : '') + ' Memory Shards <b>' + LuuChung.soKyUc() + '</b>' : '') + (lt.tong ? '<br>Passages <b>' + lt.mo + '/' + lt.tong + '</b>' : '');
+      (window.LuuChung ? '<br>' + (M.coKU ? img(KU) : '') + ' Memory Shards <b>' + LuuChung.soKyUc() + '</b>' : '') + (lt.tong ? '<br><span style="margin-left:17px">Passages</span> <b>' + lt.mo + '/' + lt.tong + '</b>' : '');
     const nk = A.nhatKy(VUNG), the = A.theTen(), tr = A.truyenDaMo(), ttMuc = ttDa.map(id => (A.D.thanh_tuu || []).find(x => x.id === id)).filter(Boolean);
     const nvThe = nk.find(n => n.td && ((A.NV.find(x => x.id === n.id) || {}).tien_do || {}).dem === 'the_ten');
     // mục mỗi tab: {id, ten, phu, icon, tt (dấu trạng thái), xong, the?, ct (HTML chi tiết)}
@@ -305,7 +307,7 @@
       whispers:{ten:'Whispers', ds:nk.map(n => ({id:n.id, ten:n.ten, phu:n.xong ? 'Remembered' : n.td ? n.td.da + ' / ' + n.td.tong : 'Discovered', icon:n.bieu_tuong, tt:ttAnh(n), xong:n.xong,
         ct:'<h2>' + n.ten + '</h2><p>' + n.goi_y + '</p><small>' + (n.xong ? 'Remembered' : n.td ? 'Progress ' + n.td.da + ' / ' + n.td.tong : 'Discovered') + '</small>'}))},
       names:{ten:'Name Tags', ds:the.map(t => ({id:t.id, the:true, co:true, ten:(t.ten.split('—')[1] || t.ten).trim(), ct:'<h2>' + t.ten + '</h2><p class="doan">“' + t.chu + '”</p>'}))
-        .concat(nvThe && !nvThe.xong ? Array.from({length:Math.max(0, nvThe.td.tong - the.length)}, (_, i) => ({id:'trong-' + i, the:true, co:false, ten:'',
+        .concat(nvThe && !nvThe.xong ? Array.from({length:Math.max(0, nvThe.td.tong - the.length)}, (_, i) => ({id:'trong-' + i, the:true, co:false, ten:'—',
           ct:'<h2>An empty hook</h2><p>' + nvThe.goi_y + '</p>'})) : [])},
       remembered:{ten:'Remembered', ds:tr.map(t => ({id:t.id, ten:t.ten, phu:'Memory', icon:BT + 'memory.png', tt:'tt-remembered', xong:true, ct:'<h2>' + t.ten + '</h2><p class="doan">' + t.chu + '</p>'}))},
       achievements:{ten:'Achievements', ds:ttMuc.map(t => ({id:t.id, ten:t.ten, phu:t.mo_ta, icon:BT + 'bronze.png', tt:'tt-remembered', xong:true, ct:'<h2>' + t.ten + '</h2><p>' + t.mo_ta + '</p>'}))}

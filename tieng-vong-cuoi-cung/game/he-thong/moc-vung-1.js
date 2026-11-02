@@ -161,22 +161,25 @@
     st.textContent =
       '#l-hethong .hop,#l-charm .hop{width:min(820px,calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));max-width:none;max-height:94vh;overflow:auto;-webkit-overflow-scrolling:touch;text-align:left;box-sizing:border-box}' +
       '.ht-tab{display:flex;gap:8px;margin:6px 0}.ht-tab button{min-width:96px;min-height:44px;margin:0}.ht-tab button.chon{border-color:var(--bell);color:#ffe08a}' +
-      '#ht-cay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}' +
+      '#ht-cay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:10px}' +
       '#ht-ds button,#ch-ds button{display:block;width:100%;height:auto;min-height:48px;margin:0 0 6px;padding:6px 10px;text-align:left;font-size:14px;line-height:1.25}' +
       '#ht-ds button small,#ch-ds button small{display:block;font-size:12px;color:#a9b3bf;font-weight:600}' +
       '#ht-ds button.da{border-color:#9be7a0;color:#9be7a0}#ht-ds button.duoc{border-color:var(--bell);color:#ffe08a}#ht-ds button.chon,#ch-ds button.chon{outline:2px solid #78e6e6}' +
       '#ht-ct,#ch-ct{font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;min-width:0}#ht-ct button,#ch-ct button,#ch-lo button{min-height:48px;min-width:120px;margin:6px 6px 0 0}' +
-      '#ch-bo{display:grid;grid-template-columns:minmax(0,280fr) minmax(0,300fr) minmax(0,180fr);gap:10px}' +
+      '#ch-bo{display:grid;grid-template-columns:minmax(0,240fr) minmax(0,300fr) minmax(0,160fr);gap:8px}' +
       '#ch-ds button{display:flex;align-items:center;gap:8px}.ch-o{position:relative;width:56px;height:56px;flex:none}.ch-o img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}' +
-      '#l-chondau .hang button{min-height:120px;min-width:180px;display:inline-flex;flex-direction:column;align-items:center;gap:6px}#l-chondau img{width:72px;height:72px;image-rendering:pixelated}' +
+      '#l-chondau .hang button{height:auto;min-height:120px;width:220px;min-width:0;padding:10px 12px;display:inline-flex;flex-direction:column;align-items:center;gap:4px;white-space:normal}' +
+      '#l-chondau .ch-o{width:72px;height:72px}#l-chondau small{display:block;margin:0;font-size:11.5px;line-height:1.3;color:#d8cfbd;font-weight:600}#l-chondau p{margin:4px 0}' +
       '@media (max-width:640px){#ht-cay,#ch-bo{grid-template-columns:1fr}}' +
       // khung-chinh.png 844×390, viền ~30 px + mặt nạ ở 4 góc → lề trong 30/52 px; bỏ khung 9 mảnh của Chuông Lưu (border-image) để không vẽ chồng
-      (co(gd.khung_chinh) ? '#l-hethong .hop,#l-charm .hop{border:0;border-image:none;padding:30px 52px 26px;background:url(' + src(gd.khung_chinh) + ') center/100% 100% no-repeat}#l-hethong .hop::before,#l-charm .hop::before{display:none}' : '') +
+      (co(gd.khung_chinh) ? '#l-hethong .hop,#l-charm .hop{border:0;border-image:none;padding:34px 92px 30px;background:url(' + src(gd.khung_chinh) + ') center/100% 100% no-repeat}#l-hethong .hop::before,#l-charm .hop::before{display:none}' : '') +
       // tooltip.png 320×170, viền ~22 px, 2 chuông treo trong 2 góc trên → lề trong 24/46 px
-      (co(gd.tooltip) ? '#ht-ct,#ch-ct{padding:24px 46px 22px;background:url(' + src(gd.tooltip) + ') center/100% 100% no-repeat;min-height:170px;box-sizing:border-box}' : '') +
+      // tooltip 320×170 cắt 9 mảnh (mặt nạ + chuông 2 góc trên ≈ 62×78, viền dưới ≈ 30) thu ×0,6 → góc giữ nguyên hình khi ô cao/thấp khác nhau
+      (co(gd.tooltip) ? '#ht-ct,#ch-ct{padding:0 4px;border:solid transparent;border-width:47px 37px 18px 37px;border-image:url(' + src(gd.tooltip) + ') 78 62 30 62 fill / 47px 37px 18px 37px stretch;min-height:102px;box-sizing:border-box}' : '') +
+      (co(gd.khung_chinh) ? '#l-hethong h1,#l-charm h1{text-align:center}' : '') +
       // tab 96×40 giữ đúng cỡ ảnh (nút cao 44 để dễ bấm)
       (co(gd.tab) && co(gd.tab_chon) ? '.ht-tab button{width:96px;min-width:96px;height:44px;padding:0;border:0;border-image:none;background:url(' + src(gd.tab) + ') center/96px 40px no-repeat}.ht-tab button.chon{background-image:url(' + src(gd.tab_chon) + ')}' : '') +
-      (co(gd.nut) ? '#ht-ct button,#ch-ct button{height:48px;padding:0 18px;border:0;border-image:none;background:url(' + src(gd.nut) + ') center/100% 100% no-repeat}' : '') +
+      (co(gd.nut) ? '#ht-ct button,#ch-ct button{height:48px;padding:0 16px;white-space:nowrap;font-size:14px;border:0;border-image:none;background:url(' + src(gd.nut) + ') center/100% 100% no-repeat}' : '') +
       (co(gd.nut_khoa) ? '#ht-ct button.khoa{border:0;border-image:none;background:url(' + src(gd.nut_khoa) + ') center/100% 100% no-repeat;color:#8b8f96;opacity:1}' : '') +
       '#ch-lo button{height:auto;min-width:0;padding:2px;border:0;border-image:none;background:none}.ch-cam{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}.ch-cam img{width:40px;height:40px;image-rendering:pixelated}' +
       '.ch-hiem{width:24px;height:24px;vertical-align:-6px;margin-right:4px;image-rendering:pixelated}';
@@ -274,7 +277,8 @@
     hang.innerHTML = '';
     for (const id of ht.S.choChon){
       const g = ht.MAU[id], b = document.createElement('button'); b.type = 'button';
-      b.innerHTML = '<img src="' + src(g.anh) + '" alt=""><b>' + g.ten + '</b><small>' + g.mo_ta + '</small>';
+      const h = ht.D.charm_dau.do_hiem;   // Charm đầu là Faded → hiện trong ô Charm Faded 72×72 (003) như trong túi
+      b.innerHTML = (co(ht.HIEM[h] && ht.HIEM[h].khung) ? oCharm({mau:id, hiem:h}) : '<img src="' + src(g.anh) + '" alt="" style="width:72px;height:72px;image-rendering:pixelated">') + '<b>' + g.ten + '</b><small>' + g.mo_ta + '</small>';
       b.onclick = () => { ht.chonCharmDau(id); ghi(); $('l-chondau').classList.remove('mo'); V1.thongBao('Charm gained: ' + g.ten + ' – equip it under Charms'); capNhatNut(); };
       hang.appendChild(b);
     }

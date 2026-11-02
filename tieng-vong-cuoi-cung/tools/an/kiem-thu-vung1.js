@@ -46,7 +46,7 @@ const ANH = process.env.ANH_DIR || '/tmp';
   r = await pg.evaluate(() => { TV.buoc(100, ''); const vong = TV.V1.G.id === 'P04'; TV.buoc(100, ''); return {vong, tim:MocAn.A.daTim('v1-ru-tro'), x:TV.E.pl.x / 48}; });
   ok('P04: đứng yên 3 giây cạnh chuông vùi tro → "Ashen Lullaby"', r.tim, r);
   await pg.screenshot({path:path.join(ANH, 'an-ru-tro.png')});
-  r = await pg.evaluate(() => { TV.buoc(5, ''); const t = document.getElementById('an-toast'); return {hien:!!t && !t.hidden, nen:t && t.style.backgroundImage, chu:t && t.textContent}; });
+  r = await pg.evaluate(() => { const t = document.getElementById('an-toast'); let hien = false; for (let i = 0; i < 600 && !(hien = !!t && !t.hidden && /Secret Found/.test(t.textContent)); i++) TV.buoc(1, ''); return {hien, nen:t && t.style.backgroundImage, chu:t && t.textContent}; });
   ok('Thông báo dùng khung ChatGPT "Secret Found" góc trên phải', r.hien && /toast-(bi-mat|thanh-tuu)\.png/.test(r.nen), r);
   const truocManh = await pg.evaluate(() => TV.V1.G.luu.manh);
   ok('P02: nhặt Thẻ Tên hốc treo', await nhat('P02-the-ten'));
