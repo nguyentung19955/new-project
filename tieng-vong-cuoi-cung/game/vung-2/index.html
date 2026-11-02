@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="../giao-dien-chung.css" data-kd="1">
 <style>
 /* Vùng 2 "Rotting Roots" (chép khung Vùng 1). Logic 960×540, phóng số nguyên. Phòng: phong/<ID>.json (luồng B) hoặc phong-thu/ (thử). */
 :root{--sat:env(safe-area-inset-top,0px);--sar:env(safe-area-inset-right,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);
@@ -13,7 +14,7 @@ html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:"
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 #game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
 #cv{display:block;image-rendering:pixelated}
-#top{position:absolute;top:calc(var(--sat) + 8px);right:max(8px,calc(var(--sar) + 8px));display:flex;gap:6px;z-index:3}
+#top{position:absolute;top:calc(var(--sat) + 4px);right:max(104px,calc(var(--sar) + 104px));display:flex;gap:6px;z-index:3}
 .nut{width:72px;height:52px;padding:0;border:0;background:url(../../art/giao-dien/hud/nut_ban_do.png) center/contain no-repeat;color:transparent;font-size:0;touch-action:manipulation;cursor:pointer}
 .nut:active{transform:scale(.92)}
 .nut.on{filter:brightness(1.25) drop-shadow(0 0 6px rgba(225,184,90,.8))}
@@ -35,8 +36,10 @@ body.touch #keys{display:none}
 #b-j{right:0;bottom:0;width:calc(74px*var(--k));height:calc(74px*var(--k))}
 /* màn dọc: khung game nằm trên, nút ở nửa dưới – vẫn chơi được */
 @media (orientation:portrait){ body.touch #game{place-items:start center;padding-top:calc(var(--sat) + 48px)} }
-#b-nghi{position:absolute;left:50%;bottom:calc(var(--sab) + 16px);transform:translateX(-50%);display:none;z-index:4;
-  height:44px;padding:0 18px;border-radius:22px;border:2px solid var(--bell);background:rgba(58,48,32,.85);color:#ffe08a;font-weight:800;font-size:15px;font-family:inherit}
+#b-nghi{position:absolute;left:50%;bottom:calc(var(--sab) + 16px);transform:translateX(-50%);display:none;z-index:4;box-sizing:border-box;height:44px;padding:0 4px;   /* (khoidau) nút = ảnh ChatGPT */
+  border-style:solid;border-color:transparent;border-width:0 28px;border-radius:0;background:none;border-image:url(../../art/khoi-dau/nut-phu-thuong.png) 0 60 fill / 0 28px stretch;
+  color:#ffe08a;font-weight:800;font-size:18px;font-family:inherit;text-shadow:0 1px 2px #000;white-space:nowrap}
+#b-nghi:active{border-image-source:url(../../art/khoi-dau/nut-phu-nhan.png)}
 .lop{position:absolute;inset:0;display:none;place-items:center;background:rgba(5,6,10,.82);z-index:6}
 .lop.mo{display:grid}
 /* khung bảng ChatGPT vẽ (art/giao-dien/khung): 9 mảnh + mặt nạ nứt giữa cạnh trên */
@@ -59,6 +62,14 @@ body.touch #keys{display:none}
 .hop small{display:block;color:#7f8a99;font-size:12px;margin-top:10px}
 #rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
 </style>
+<div id="kd-tai" class="ui"><div class="kd-chuong"></div><div class="kd-chu-tai">Loading…</div></div>
+<script>/* (khoidau) vào thẳng gameplay: từ tiêu đề / làng / cổng (?tiep=1 ?moi=1 ?tu_lang=1 ?tu_vung=…) → màn tải rồi chơi, KHÔNG qua menu vùng.
+   Mở trang vùng trơn (không tham số) → về màn tiêu đề. Menu cũ chỉ còn cho phép thử / debug (?tu=1, ?debug=1, ?thu=1, ?phong=…). */
+(function(){ var q = new URLSearchParams(location.search), thu = q.get('tu') === '1' || q.get('debug') === '1' || q.get('thu') === '1' || q.has('phong');
+  var vao = q.has('tiep') || q.has('moi') || q.has('tu_lang') || q.has('tu_vung');
+  window.KD_CHE_THU = thu;
+  if (!thu && !vao){ location.replace('../index.html'); return; }
+  if (!thu) document.getElementById('kd-tai').className = 'ui mo'; })();</script>
 <div id="game">
   <canvas id="cv" width="960" height="540"></canvas>
   <div id="top" class="ui">
@@ -72,7 +83,7 @@ body.touch #keys{display:none}
   <button id="b-nghi" class="ui" type="button">Rest at Bell</button>
   <div id="keys">← → move · Z jump (×2 double) · X slash (air ↓+X: slam) · ↑ rope / rest · ↓+Z drop · C dash · V heal · Q root anchor · M map</div>
 
-  <div id="l-menu" class="lop ui mo"><div class="hop">
+  <div id="l-menu" class="lop ui"><div class="hop">
     <h1>The Last Echo</h1><h2>Region 2 · Rotting Roots</h2>
     <p id="menu-tt">Loading…</p>
     <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Continue</button><button id="b-moi" type="button" disabled>New Game</button></div>
@@ -86,12 +97,12 @@ body.touch #keys{display:none}
     <h1>Rest Bell</h1>
     <p id="chuong-tt"></p>
     <div class="hang"><button id="b-mua" type="button">Vitality +1</button><button id="b-di" class="chinh" type="button">Move on</button></div>
-    <small>Saving is free (saved when you rest). Upgrades are OPTIONAL and cost Echo Shards · Keys: X upgrade · Z / Enter move on</small>
+    <small>Saving is free (saved when you rest). Upgrades are OPTIONAL and cost Echo Shards<span class="kd-phim"> · Keys: X upgrade · Z / Enter move on</span></small>
   </div></div>
   <div id="l-het" class="lop ui"><div class="hop">
     <h1>Region 2 Complete</h1><h2>The Mold Mother withers</h2>
     <p id="het-tt"></p>
-    <div class="hang"><button id="b-het-tiep" class="chinh" type="button">Back to Rest Bell</button><button id="b-het-moi" type="button">Restart from scratch</button></div>
+    <div class="hang"><button id="b-het-tiep" class="chinh" type="button">Back to Rest Bell</button><button id="b-het-moi" type="button" hidden>Restart from scratch</button></div>
   </div></div>
   <div id="rotate">Rotate your phone to landscape to play</div>
 </div>
@@ -102,6 +113,8 @@ body.touch #keys{display:none}
 <script src="../luu-may.js"></script>
 <script src="../dang-nhap.js"></script>
 <script src="../luu-chung.js"></script>
+<script src="../hanh-trinh.js"></script>
+<script src="../giao-dien-chung.js"></script>
 <script src="../thu-mat-na/lop-trang-bi.js"></script>
 <script src="nap.js"></script>
 <script src="dau-vao.js"></script>
@@ -148,6 +161,7 @@ if (window.LuuMay && LuuMay.xuat){
 } else $('luu-tep').hidden = true;
 $('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Delete your old save and start over?')) choi(true); };
 V1.moChuong = function(gui, ok){
+  try { if (window.LuuChung) LuuChung.datNoiCuoi('vung-2', G.id); } catch (e){}   // (khoidau) CONTINUE về Chuông Lưu này
   $('chuong-tt').innerHTML = 'Health and heals fully restored. Enemies in the region have returned.<br>' + (gui > 0 ? 'Stored ' + gui + ' Echo Shards in the bell (safe if you fall).<br>' : '') +
     (ok ? '<b style="color:#9be7a0">Game saved (free).</b>' : '<b style="color:#ffbe50">Could not save (browser blocked storage).</b>') + '<br>Echo Shards: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
   capNhatNutMua(); moLop('l-chuong');
@@ -179,7 +193,8 @@ function mot(){
   V1.docVao(); if (V1.sauDocVao) V1.sauDocVao();   // Vùng 2: Root Snare giữ chân
   if (G.trang === 'menu'){ if (V1.bam('ok') || V1.bam('j')){ if (!$('b-tiep').disabled) choi(false); else if (!$('b-moi').disabled) choi(true); } return; }
   if (G.trang === 'chuong'){ if (V1.bam('a')) mua(); else if (V1.bam('j') || V1.bam('ok') || V1.bam('thoat')) roiChuong(); return; }
-  if (G.trang === 'het') return;
+  if (G.trang === 'het' || G.trang === 'tam_dung') return;
+  if (G.trang === 'choi' && V1.bam('thoat') && window.KhoiDau){ KhoiDau.tamDung.mo(); return; }   // (khoidau) Esc = tạm dừng
   if (V1.bam('m') || (G.trang === 'ban_do' && V1.bam('thoat'))){ G.trang = G.trang === 'ban_do' ? 'choi' : 'ban_do'; }
   if (G.trang === 'ban_do') return;
   G.mo = V1.buocChuyen();
@@ -211,6 +226,30 @@ function loop(now){
 window.TV = {E, G, V1, OPT, ep:V1.ep, choi, mot,
   buoc(n, phim){ for (const k of V1.KEYS) V1.ep[k] = phim && phim.split(',').includes(k) ? 1 : 0; for (let i = 0; i < n; i++) mot(); V1.ve(G.mo || 0); },
   xong:false};
+/* ---------- (khoidau) VÀO THẲNG + MENU TẠM DỪNG CHUNG ---------- */
+async function vaoThang(){
+  const KD = window.KhoiDau, LV = window.LienVung;
+  if (Q.has('tu_vung') && LV && LV.toi()){        // đi cổng tới: noi-vung-*.js tự vào đúng phòng/cửa – chờ nó xong
+    for (let i = 0; i < 160 && G.trang !== 'choi'; i++) await new Promise(r => setTimeout(r, 50));
+  }
+  if (G.trang !== 'choi') await choi(false);       // Continue = Chuông Lưu cuối (hoặc phòng đầu nếu chưa nghỉ)
+  try { if (window.LuuChung) LuuChung.datNoiCuoi('vung-2', G.luu && G.luu.chuong ? G.luu.chuong.phong : G.id); } catch (e){}
+  try { const u = new URL(location.href); for (const k of ['tiep', 'moi', 'tu_lang']) u.searchParams.delete(k); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e){}   // tải lại = Continue
+  if (KD){ KD.tai.dong(); KD.tenVung('Rotting Roots', 'Region 2'); }
+}
+if (window.KhoiDau){
+  const moPhu = id => { const b = $(id); if (!b) return; b.click(); const t = setInterval(() => { if (!document.querySelector('.lop.mo')){ clearInterval(t); if (G.trang === 'tam_dung') G.trang = 'choi'; } }, 200); };
+  KhoiDau.tamDung.gan({
+    coThe: () => (G.trang === 'choi' || G.trang === 'ban_do') && !pl.dead && !document.querySelector('.lop.mo'),
+    hienNut: () => G.trang === 'choi' || G.trang === 'ban_do' || G.trang === 'tam_dung',
+    dung: () => { G.trang = 'tam_dung'; V1.xoaVao(); },
+    tiep: () => { if (G.trang === 'tam_dung') G.trang = 'choi'; V1.xoaVao(); },
+    ban_do: () => { G.trang = 'ban_do'; },
+    nhat_ky: () => moPhu('b-an'), coNhatKy: () => !!$('b-an'),
+    lattice: () => moPhu('b-hethong'), coLattice: () => !!$('b-hethong'),
+    truocVe: () => { if (G.luu) V1.ghiLuu(); if (window.LienVung) LienVung.ghi(); }
+  });
+}
 (async () => {
   try {
     await V1.nap();
@@ -223,8 +262,10 @@ window.TV = {E, G, V1, OPT, ep:V1.ep, choi, mot,
     $('menu-tt').textContent = (G.thuMuc === 'phong-thu/' ? '(Using TEST rooms – real rooms missing) ' : '') + (co ? 'Save found.' : 'No save yet.');
     if (!co) $('b-moi').classList.add('chinh');
     TV.xong = true;
+    if (window.KD_CHE_THU){ moLop('l-menu'); $('b-het-moi').hidden = false; }
+    else await vaoThang();
     if (!OPT.tu) requestAnimationFrame(loop);
-  } catch (e){ $('menu-tt').textContent = 'Load error: ' + e.message; TV.loi = String(e); console.error(e); }
+  } catch (e){ $('menu-tt').textContent = 'Load error: ' + e.message; TV.loi = String(e); console.error(e); if (!window.KD_CHE_THU && window.KhoiDau) KhoiDau.tai.loi(); }
 })();
 </script>
 <!-- Vùng 2: các móc riêng Vùng 1 (he-thong/moc-vung-1, an/moc-vung-1, cot-truyen/moc-vung-1) KHÔNG nạp ở đây. -->

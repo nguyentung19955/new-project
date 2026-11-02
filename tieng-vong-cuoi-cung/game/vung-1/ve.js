@@ -517,7 +517,7 @@
       ctx.fillStyle = '#5a4020'; ctx.fillRect(-13, 32, 26, 4); ctx.fillStyle = '#ffe08a'; ctx.fillRect(-7, 10, 3, 18);
       ctx.restore();
       }
-      if (G.ganChuong && !pl.dead){ chu('↑ Rest at the Rest Bell', x, y - CHUONG.cao - 14, 13, '#ffe08a'); }
+      if (G.ganChuong && !pl.dead){ chu((V1.camUng && V1.camUng() ? '' : '↑ ') + 'Rest at the Rest Bell', x, y - CHUONG.cao - 14, 13, '#ffe08a'); }
     }
     veCuaKhoa();
     veDauHieu(); veBiaChiDuong();
@@ -978,7 +978,7 @@
       }
     }
     chu((G.bd.phong.find(p => p.id === G.id) || {}).ten || G.id, W / 2, H - 66, 15, '#E1B85A');
-    chu('M / Map button: close', W / 2, H - 46, 12, '#d9c7a4');
+    chu(V1.camUng && V1.camUng() ? 'Tap Map to close' : 'M / Map button: close', W / 2, H - 46, 12, '#d9c7a4');
   }
 
   /* ---------------- QUÁI NỔI TRÊN BÓNG TỐI + CHIÊU QUÁI (như phòng demo) ---------------- */
