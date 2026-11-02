@@ -18,7 +18,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TIENG_VONG || secrets.FIREBASE_SERVICE_ACCOUNT }}
       PROJECT: ${{ vars.FIREBASE_PROJECT_ID || 'tieng-vong-cuoi-cun' }}
     steps:
       - name: Kiểm có bí mật chưa

@@ -41,7 +41,7 @@
 1. Gửi `docs/firebase/cau-hoi-chatgpt.md` cho ChatGPT, lưu `tu-van-chatgpt.txt`, chỉnh mã theo tư vấn.
 2. Tạo dự án Firebase MỚI "tieng-vong-cuoi-cung" (không đụng dự án cũ), web app, bật Authentication (Anonymous + Google), Firestore (production) + dán `firestore.rules`, Hosting.
 3. Dán cấu hình web app vào `game/firebase/cau-hinh.js`.
-4. Tạo khoá service account → thêm bí mật GitHub `FIREBASE_SERVICE_ACCOUNT` (và biến `FIREBASE_PROJECT_ID` nếu mã dự án khác `tieng-vong-cuoi-cung`) → GitHub Actions tự đưa game lên; link chơi sẽ là `https://<mã-dự-án>.web.app/`.
+4. Tạo khoá service account → thêm bí mật GitHub `FIREBASE_SERVICE_ACCOUNT_TIENG_VONG` (đã thêm 02/11) (và biến `FIREBASE_PROJECT_ID` nếu mã dự án khác `tieng-vong-cuoi-cung`) → GitHub Actions tự đưa game lên; link chơi sẽ là `https://<mã-dự-án>.web.app/`.
 
 ### Nếu bạn muốn tự làm ngay (không bắt buộc)
 1. Vào https://console.firebase.google.com → **Thêm dự án** → tên `tieng-vong-cuoi-cung` → tắt Google Analytics → Tạo.
