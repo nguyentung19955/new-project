@@ -22,6 +22,8 @@
       manhKyUc: [],           // id Mảnh Ký Ức đã nhặt (dùng chung mọi vùng)
       nhanVat: null,          // (vung) chỉ số nhân vật mang qua vùng: {vung, t, maxHp, hoiMax, manh, manhGui, hp, luotHoi} – game/lien-vung.js
       chuyenVung: null,       // (vung) đang đi cổng sang vùng khác: {tu, den, phong, cua, t}
+      noiCuoi: null,          // (khoidau) nơi an toàn cuối cho CONTINUE: {noi:'lang'|'vung-1'|'vung-2', phong, t}
+      capNhat: 0,             // (khoidau) lúc ghi gần nhất (ms) – dòng trạng thái tiêu đề + so sánh bản mây
       giay: 0
     };
   }
@@ -39,7 +41,7 @@
       } catch (e){ return moi(); }
     }
     const L = () => d || (d = doc());
-    function ghi(){ try { kho && kho.setItem(KHOA, JSON.stringify(L())); return true; } catch (e){ return false; } }
+    function ghi(){ try { L().capNhat = Date.now(); kho && kho.setItem(KHOA, JSON.stringify(L())); return true; } catch (e){ return false; } }
     const themMot = (mang, v) => { if (!mang.includes(v)) { mang.push(v); return true; } return false; };
 
     const api = {
@@ -76,7 +78,10 @@
       nhanVat: () => L().nhanVat ? Object.assign({}, L().nhanVat) : null,
       datNhanVat(o){ L().nhanVat = o ? Object.assign({}, o) : null; ghi(); return api; },
       chuyenVung: () => L().chuyenVung ? Object.assign({}, L().chuyenVung) : null,
-      datChuyenVung(o){ L().chuyenVung = o ? Object.assign({}, o) : null; ghi(); return api; }
+      datChuyenVung(o){ L().chuyenVung = o ? Object.assign({}, o) : null; ghi(); return api; },
+      /* (khoidau) một hành trình: nơi an toàn cuối – CONTINUE trên màn tiêu đề vào đúng nơi này (game/hanh-trinh.js) */
+      noiCuoi: () => L().noiCuoi ? Object.assign({}, L().noiCuoi) : null,
+      datNoiCuoi(noi, phong){ L().noiCuoi = noi ? {noi, phong: phong || null, t: Date.now()} : null; ghi(); return api; }
     };
     return api;
   }
