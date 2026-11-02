@@ -1,5 +1,5 @@
 # 007 – Nhân vật phụ đứng trong cảnh làng (animation đứng/thở)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG một phần (02/11, phiên chính vẽ bằng ChatGPT từ chân dung: vesper.png 512×160, tock.png 384×96, morrow.png 512×128, nhìn TRÁI, chân chạm đáy ô; Kaelith chờ 008)
 - **Ưu tiên:** P0 (Vesper, Tock, Morrow) · P1 (Kaelith). Thiếu ảnh của ai thì người đó không hiện, không nói chuyện được.
 - **Dùng vào:** game/lang-chuong/ – nhân vật đứng tại chỗ trong cảnh 006, người chơi lại gần bấm Talk thì mở hộp thoại (chân dung đã có ở art/cot-truyen/chan-dung/).
 - **Thiết kế:** GIỐNG chân dung đã vẽ (art/cot-truyen/chan-dung/ba-ngan-yen.png, tock-yen.png, morrow-yen.png; Kaelith xem 008) – gửi chân dung làm tham chiếu. Cỡ so với nhân vật chính: Kiếm Khách cao ≈ 120 px trên màn 540.
