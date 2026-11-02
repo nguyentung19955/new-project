@@ -47,8 +47,11 @@ body.touch #keys{display:none}
 .hop h2{margin:0 0 10px;font-size:15px;color:#a9b3bf;font-weight:600}
 .hop p{margin:8px 0;font-size:14px;color:#c9d0d8}
 .hop .hang{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.hop button{height:46px;min-width:150px;padding:0 16px;border-radius:10px;border:2px solid var(--line);background:#1c2430;color:var(--ink);font-weight:800;font-size:15px;font-family:inherit}
-.hop button.chinh{border-color:var(--bell);color:#ffe08a;background:#3a3020}
+.hop button{height:46px;min-width:150px;padding:0 22px;border:0;border-radius:0;background:none;color:var(--ink);font-weight:800;font-size:15px;font-family:inherit;
+  border-style:solid;border-image:url(../../art/giao-dien/dang-nhap/nut_dang_xuat.png) 22 46 22 46 fill / 12px 25px 12px 25px stretch}   /* nút = tấm gỗ-đồng ChatGPT vẽ */
+.hop button:active{border-image-source:url(../../art/giao-dien/dang-nhap/nut_dang_xuat_an.png)}
+.hop button.chinh{color:#ffe08a;border-image-source:url(../../art/giao-dien/dang-nhap/nut_dang_nhap.png)}
+.hop button.chinh:active{border-image-source:url(../../art/giao-dien/dang-nhap/nut_dang_nhap_an.png)}
 .hop .hang.nho{margin-top:6px;gap:8px}.hop .hang.nho button{height:32px;min-width:0;font-size:13px;padding:0 12px}#may-tt{margin:6px 0 0;font-size:13px}   /* (firebase) dòng lưu mây + xuất/nhập gọn cho màn ngang iPhone */
 .hop button:disabled{opacity:.4}
 .hop [hidden]{display:none!important}   /* (dangnhap) thuộc tính hidden phải thắng display:flex của .hang (trước đây 2 nút chọn bản luôn hiện) */

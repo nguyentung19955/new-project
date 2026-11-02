@@ -1,5 +1,5 @@
 # 001 – Nút "Sign in with Google" + "Sign out" (tấm đồng/gỗ, co giãn 9 mảnh)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 4 tấm 240×66; lề cắt 9 mảnh 22 46 22 46 (đã sửa ANH.CAT trong game/dang-nhap.js); cũng dùng cho mọi nút menu Vùng 1)
 - **Dùng vào:** game/dang-nhap.js – ô tài khoản ở trang chọn (game/index.html), menu Vùng 1, màn chờ Làng Chuông. Chưa có ảnh → game tạm dùng khung_bang.png (art/giao-dien/khung) co giãn + chữ thường. Có ảnh là game tự dùng, không cần sửa mã (chỉ chỉnh lề cắt `ANH.CAT` trong game/dang-nhap.js nếu khác 20/24 px).
 - **Mô tả:** 2 tấm nút nằm ngang, hợp phong cách khung_bang.png (gỗ vỏ cây tối + viền đồng cổ, góc có rễ nhỏ/chuông nhỏ):
   1. **nut_dang_nhap.png** – nút chính (đăng nhập): mặt gỗ tối hơi ấm, viền đồng sáng hơn một chút, điểm vàng đồng #E1B85A nhẹ ở 4 góc.

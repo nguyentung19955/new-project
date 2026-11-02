@@ -11,7 +11,7 @@
   const goc = (() => { try { return new URL('../', document.currentScript.src).href; } catch (e){ return '../'; } })();   // .../tieng-vong-cuoi-cung/
   const KHUNG = goc + 'art/giao-dien/khung/khung_bang.png';
   // ảnh nút riêng (chờ phiên chính vẽ): tấm đồng/gỗ 9 mảnh, lề góc CAT px (đo lại khi cắt ảnh)
-  const ANH = {vao:goc + 'art/giao-dien/dang-nhap/nut_dang_nhap.png', ra:goc + 'art/giao-dien/dang-nhap/nut_dang_xuat.png', CAT:'20 24 20 24'};
+  const ANH = {vao:goc + 'art/giao-dien/dang-nhap/nut_dang_nhap.png', ra:goc + 'art/giao-dien/dang-nhap/nut_dang_xuat.png', CAT:'22 46 22 46'};
   const CSS = `
 .dn{margin:6px auto 0;max-width:100%}
 .dn [hidden]{display:none!important}
@@ -40,7 +40,7 @@
     for (const [k, lop] of [['vao', 'vao'], ['ra', 'ra']]){
       const i = new Image();
       i.onload = () => { const s2 = document.createElement('style');
-        s2.textContent = `.dn button.dn-nut.${lop}{border-image:url(${ANH[k]}) ${ANH.CAT} fill / 9px 12px 9px 12px stretch}`; document.head.appendChild(s2); };
+        s2.textContent = `.dn button.dn-nut.${lop}{border-image:url(${ANH[k]}) ${ANH.CAT} fill / 12px 25px 12px 25px stretch}`; document.head.appendChild(s2); };
       i.src = ANH[k];
     }
   }
