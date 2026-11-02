@@ -822,6 +822,7 @@
     if (coHinhCua()){ const c = p.cua.find(x => x.id === p.khoa.cua); if (c){ const RW = E.BD.COT * T, w = CUA.cao * 0.88;   // cửa khoá: đủ sáng để nhìn rõ hình
       lo(clampN((c.cot + 0.5) * T, w / 2, RW - w / 2), (c.hang + (c.cao || 3)) * T - CUA.cao * 0.55, 44, G.cuaKhoa.includes(c) ? 0.55 : 0.75); } }
     if (p.bang_chi_duong){ const bb = p.bang_chi_duong; lo(bb.cot * T + T / 2 + 10, V1.chanO(bb.cot, bb.hang) - 170, 95, 0.85); }   // khung chữ trên bia luôn đọc rõ
+    if (V1.denThem) for (const [x, y, r, k] of V1.denThem()) lo(x, y, r, k);   // (vung) đèn thêm của móc nối vùng (cổng rễ sang Vùng 2)
     lo(pl.x + pl.w / 2, pl.y + pl.h * 0.45, 46, 0.62);
     for (const q of E.QUAI) if (!q.dead) lo(q.x + q.w / 2, q.y + q.h / 2, q.laTrum ? 70 : 22, q.laTrum ? 0.62 : 0.38);
     for (const v of p.vat_pham) if (!G.luu.daNhat.includes(v.id)){ const o = V1.viTriVP(v); lo(o.x, o.y - 22, 30, 0.7); }   // (luồng G) vật tương tác sáng cục bộ rõ hơn
@@ -1054,11 +1055,13 @@
     // 2) thế giới
     ctx.save(); ctx.translate(-cam, -camY);
     veTheGioi();
+    if (V1.veMocSau) V1.veMocSau(ctx);   // (vung) lớp sau cổng rễ sang Vùng 2 – noi-vung-2.js
     for (const q of E.QUAI) veQuai(q);
     veNguy();
     veNV(); veBuiTuong();
     for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round(p.x / 2) * 2, Math.round(p.y / 2) * 2, 4, 4); }
     veChem(); veHoi();
+    if (V1.veMocTruoc) V1.veMocTruoc(ctx);   // (vung) lớp trước cổng rễ sang Vùng 2
     ctx.restore();
     // 3) tường giả: mờ đi khi nhân vật ở trong / sát
     const cx = Math.floor((pl.x + pl.w / 2) / T), cy = Math.floor((pl.y + pl.h / 2) / T);

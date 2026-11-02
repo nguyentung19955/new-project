@@ -20,6 +20,8 @@
       diemVe: null,           // {vung, phong, cot, hang} – chỗ quay lại vùng khi đi từ làng
       kho: {},                // kho chung {loai: số}
       manhKyUc: [],           // id Mảnh Ký Ức đã nhặt (dùng chung mọi vùng)
+      nhanVat: null,          // (vung) chỉ số nhân vật mang qua vùng: {vung, t, maxHp, hoiMax, manh, manhGui, hp, luotHoi} – game/lien-vung.js
+      chuyenVung: null,       // (vung) đang đi cổng sang vùng khác: {tu, den, phong, cua, t}
       giay: 0
     };
   }
@@ -69,7 +71,12 @@
       /* Mảnh Ký Ức (gdd: 48 mảnh → kết thật) */
       nhatKyUc(id){ if (themMot(L().manhKyUc, id)) ghi(); return api; },
       soKyUc: () => L().manhKyUc.length,
-      congGiay(s){ L().giay += s; return api; }
+      congGiay(s){ L().giay += s; return api; },
+      /* (vung) mang nhân vật qua vùng – chỉ THÊM, không đổi hành vi cũ */
+      nhanVat: () => L().nhanVat ? Object.assign({}, L().nhanVat) : null,
+      datNhanVat(o){ L().nhanVat = o ? Object.assign({}, o) : null; ghi(); return api; },
+      chuyenVung: () => L().chuyenVung ? Object.assign({}, L().chuyenVung) : null,
+      datChuyenVung(o){ L().chuyenVung = o ? Object.assign({}, o) : null; ghi(); return api; }
     };
     return api;
   }

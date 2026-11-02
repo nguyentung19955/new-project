@@ -86,8 +86,18 @@
    "ghi_chu": "Hạ Hollow Bell Mother (Âm Gốc 1)"
   },
   {
-   "id": "vung-1",
+   "id": "vung-2",
    "ten": "Rotting Roots",
+   "tang": "Roots",
+   "duong_dan": "game/vung-2/index.html",
+   "mo": {
+    "vung_ha_trum": "vung-1"
+   },
+   "ghi_chu": "(vung) Vùng 2 đã dựng – mở khi hạ trùm Vùng 1 (Hollow Bell Mother); cổng rễ P12 ↔ R201 nối trực tiếp"
+  },
+  {
+   "id": "vung-1",
+   "ten": "Weeping Heartwood",
    "tang": "Roots",
    "duong_dan": "game/vung-1/index.html",
    "mo": true,

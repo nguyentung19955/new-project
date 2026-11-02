@@ -167,10 +167,42 @@ def ve(ph, seen, phu):
         im.save(os.path.join(XEM, pid + '.png'))
 
 
+LIEN = []
+_nap0 = KT.nap
+
+
+def _nap_bo_lien():
+    """cửa liên vùng (toi = None, có 'lien_vung'): tách khỏi phòng – không khớp 2 chiều trong Vùng 2; đi ra mép ở đó là hợp lệ"""
+    bd, ph = _nap0()
+    LIEN.clear()
+    for pid, d in ph.items():
+        for c in [c for c in d['cua'] if c.get('lien_vung')]:
+            d['cua'].remove(c); LIEN.append((pid, c))
+    return bd, ph
+
+
+KT.nap = _nap_bo_lien
+
+
+def la_lien(pid, n2):
+    """chỗ đi ra mép nằm ở cửa liên vùng?"""
+    for p, c in LIEN:
+        if p != pid:
+            continue
+        o = [(c['cot'], c['hang'] + i) for i in range(c.get('cao', 3))] if c['huong'] in ('trai', 'phai') else [(c['cot'] + i, c['hang']) for i in range(c.get('cao', 3))]
+        if any(abs(n2[1] - x) <= 1 and abs(n2[2] - y) <= 3 for x, y in o):
+            return True
+    return False
+
+
 def main():
     bd, ph = KT.nap()
+    for pid, c in LIEN:
+        print(f"  · cửa liên vùng {c['id']} → {c['lien_vung']['vung']}/{c['lien_vung']['phong']}")
     KT.kiem_tinh(bd, ph)
     KT.LOI[:] = [s for s in KT.LOI if not s.startswith('Số Chuông Vỡ')]
+    mep_lien = {f"{p}: mép hở tại ({c['cot']},{c['hang'] + i}) không phải cửa" for p, c in LIEN for i in range(c.get('cao', 3))}
+    KT.LOI[:] = [s for s in KT.LOI if s not in mep_lien]   # ô mép của cửa liên vùng
     kiem_them(ph)
     b = bd['bat_dau']
     goc = [(b['phong'], ('dat', b['cot'], b['hang']))]
@@ -207,6 +239,8 @@ def main():
     # Lượt C – mọi thứ mở
     sC, kC, pC, mC = chay(goc, True, True, True)
     for pid, nut, n2 in mA + mB + mC:
+        if la_lien(pid, n2):
+            continue
         KT.loi(f'{pid}: hộp đi ra khỏi mép không có cửa tại {n2[1:]} (từ {nut})')
     toiC = {p for p, n in sC}
     for p in ph:
@@ -231,6 +265,14 @@ def main():
         moi = them
     print('  Lượt D (mục sập/mọc):', len(tap), 'chỗ,', len(tap - set(sC)), 'chỗ chỉ tới được khi mục đã sập')
     bao_ket('quay về được R204 sau khi rơi qua gỗ mục (bị nhốt)', ve_duoc(tap, keU, {s for s in tap if s[0] == 'R204'}))
+    for pid, c in LIEN:
+        o = [(c['cot'] + (1 if c['huong'] == 'trai' else -1), c['hang'] + c.get('cao', 3) - 1)]
+        cham = [s for s in sC if s[0] == pid and s[1][0] == 'dat' and abs(s[1][1] - o[0][0]) <= 2 and s[1][2] == o[0][1]]
+        if not cham:
+            KT.loi(f"{pid}/{c['id']}: không tới được cửa liên vùng")
+        else:
+            print(f"  ✓ {c['id']}: tới được cửa liên vùng ({len(cham)} chỗ đứng sát cửa)")
+            bao_ket(f"đi từ cửa liên vùng {c['id']} về được R204", ve_duoc(set(cham), kC, {s for s in sC if s[0] == 'R204'}))
     bao_ket('quay về được R204 (S1)', ve_duoc(sC, kC, {s for s in sC if s[0] == 'R204'}))
     bao_ket('tới được R213', ve_duoc(sC, kC, {s for s in sC if s[0] == 'R213'}))
     print('=== VẬT PHẨM ===')

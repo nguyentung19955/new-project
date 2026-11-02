@@ -1,5 +1,8 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt 02/11 tối – NỐI Vùng 1 ↔ Vùng 2 (vẫn dừng trước Vùng 3)
+- Hạ trùm Vùng 1 → cổng rễ ở tường phải phòng trùm P12 mở → sang Vùng 2 (R201), đi ngược về được; máu / Mảnh Âm / lượt hồi đi theo; trang chính có "Continue" + "Region 2"; trạm teleport Làng Chuông mở Vùng 2. Chi tiết: docs/vung-2/BAO-CAO.md (Lượt 7).
+
 ## Lượt hẹn giờ 02/11 (trưa) – vẫn DỪNG, không làm Vùng 3
 - `docs/DUNG-CHO-DUYET-VUNG-2.md` vẫn còn → người dùng chưa duyệt Vùng 2, nên KHÔNG bắt đầu Vùng 3.
 - Lượt này chạy trên đám mây, không có Claude in Chrome → không hỏi được ChatGPT (dù có được phép cũng chưa làm được Vùng 3).

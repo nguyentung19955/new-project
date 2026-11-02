@@ -17,18 +17,32 @@
 <main>
   <h1>The Last Echo</h1>
   <div id="tai-khoan"></div>
+  <a id="tiep" href="#" hidden>Continue</a>
   <a href="lang-chuong/">Bell Village <small>(starting point – art pending)</small></a>
-  <a href="vung-1/">Region 1 – Rotting Roots</a>
+  <a href="vung-1/">Region 1 – Weeping Heartwood</a>
+  <a id="v2" href="vung-2/">Region 2 – Rotting Roots</a>
   <a href="phong-demo/">Demo Room</a>
   <p><small id="tt">Rotate your phone to landscape to play.</small></p>
 </main>
 <script src="firebase/cau-hinh.js"></script>
 <script src="luu-may.js"></script>
 <script src="dang-nhap.js"></script>
+<script src="luu-chung.js"></script>
 <script>
   if (window.LuuMay && LuuMay.coMay()) LuuMay.nghe(m => { document.getElementById('tt').textContent = m.moTa() + ' · Rotate your phone to landscape to play.'; });
   // (dangnhap) ô tài khoản + chọn bản khi tài khoản Google đã có bản lưu khác
   if (window.DangNhap) DangNhap.gan(document.getElementById('tai-khoan'), {khung:true, xungDot:true});
+  // (vung) "Continue" → vùng chơi gần nhất (LuuChung.vungCuoi, đường dẫn theo the-gioi.json); Vùng 2 mở sau khi hạ trùm Vùng 1
+  (async () => {
+    const LC = window.LuuChung; if (!LC) return;
+    if (window.LuuMay && LuuMay.coMay()){ try { await LuuMay.cho(2500); LC.napLai(); } catch (e){} }
+    let tg = null; try { const r = await fetch('the-gioi.json', {cache:'no-store'}); if (r.ok) tg = await r.json(); } catch (e){}
+    const ds = (tg && tg.vung) || [], cuoi = LC.vungCuoi(), v = ds.find(x => x.id === cuoi);
+    const ten = {'vung-1':'Region 1 – Weeping Heartwood', 'vung-2':'Region 2 – Rotting Roots'};
+    if (v && v.trang){ const a = document.getElementById('tiep'); a.href = v.trang; a.innerHTML = 'Continue <small>(' + (ten[v.id] || v.ten || v.id) + ')</small>'; a.hidden = false; }
+    const v2 = document.getElementById('v2');
+    if (!(LC.vungMo('vung-2') || LC.co('ha_trum:vung-1'))){ v2.removeAttribute('href'); v2.style.opacity = '0.45'; v2.innerHTML = 'Region 2 – Rotting Roots <small>(defeat the Hollow Bell Mother to open)</small>'; }
+  })();
 </script>
 </body>
 </html>

@@ -75,6 +75,10 @@ def R201():
     p.san(21, 24, 12, '=')                      # gờ phụ (nhảy đôi) → gờ cao có Mảnh Âm
     p.dac(26, 9, 30, 9)
     p.them_cua('R201-dong', 'phai', 14, 'R202', 'R202-tay')
+    # lối về Vùng 1 (kế hoạch ChatGPT: "entry from R1's root gate") – cổng rễ đan ở mép trái, sang P12 Mute Bell Choir.
+    # toi = None: không phải phòng Vùng 2; game/vung-2/noi-vung-1.js lo chuyển trang (cửa liên vùng, kiem-tra.py bỏ qua khớp 2 chiều)
+    p.them_cua('R201-tay', 'trai', 14, None, None)
+    p.cua[-1]['lien_vung'] = dict(vung='vung-1', trang='../vung-1/index.html', phong='P12', cua='P12-dong-v2')
     p.bat_dau = dict(cot=4, hang=16)
     p.v('R201-manh-1', 'manh_am', 28, 8, 10)
     p.trang_tri('R201-vo-muc', 'vo_muc_trang_tri', 16, 14, ghi='vỏ gỗ mục nứt – CHỈ trang trí, không sập (dạy nhìn)')
@@ -418,6 +422,8 @@ def main():
     ket_noi = []
     for p in phong:
         for c in p.cua:
+            if c.get('lien_vung'):
+                continue
             k = sorted([c['id'], c['toi_cua']])
             if k not in ket_noi:
                 ket_noi.append(k)

@@ -69,3 +69,25 @@ Chỗ còn đơn giản / mình tự chọn (không hỏi được ChatGPT vì l
 
 ## Lượt 6 (02/11) – kiểm ảnh vẽ lại
 - 014 nút Neo Rễ đã có bản vẽ lại (nền trong suốt 48×48, cùng tên file) → game dùng luôn, hết mục "cần VẼ LẠI". Vẫn DỪNG, chưa làm Vùng 3.
+
+## Lượt 7 (02/11 tối) – NỐI Vùng 1 ↔ Vùng 2
+**Cách đi từ Vùng 1 sang Vùng 2 (dễ hiểu):**
+1. Đánh bại trùm Vùng 1 (Hollow Bell Mother) ở phòng **Mute Bell Choir (P12)**.
+2. Màn "Region 1 Complete" có thêm nút **Follow the roots** → ở lại phòng trùm, cổng rễ đan ở **tường bên phải** tháo xoắn mở ra (hoạt cảnh rễ ChatGPT, không phải cửa phẳng). Nếu bấm "Back to Rest Bell" thì lúc nào quay lại P12 và đi về phía tường phải, rễ cũng tự mở.
+3. Đi qua cổng (sát mép phải) → màn tối → sang **Vùng 2, phòng Root Descent (R201)**, đứng ngay trong cổng rễ ở mép trái.
+4. Muốn về: ở R201 đi sát **mép trái** → về lại phòng trùm Vùng 1, đứng trong cổng phía phải. Đi lại hai chiều bao nhiêu lần cũng được.
+- **Mang theo nhân vật:** máu tối đa, số lượt hồi, Mảnh Âm (đang mang + đã gửi chuông) và máu hiện tại đi theo khi qua cổng. Bấm "Continue" ở vùng nào thì vùng đó nhận chỉ số mới nhất từ vùng chơi sau cùng. Nâng cấp Vitality ở Chuông Lưu vẫn mỗi vùng 1 lần (con số máu tối đa thì đi theo). Kỹ năng của từng vùng (Neo Rễ) vẫn lưu trong vùng đó.
+- **Trang chính** (`game/index.html`): thêm nút **Continue** → vào vùng chơi gần nhất (chỗ Chuông Lưu cuối cùng của vùng đó); thêm **Region 2** (mờ + ghi "defeat the Hollow Bell Mother to open" cho tới khi hạ trùm Vùng 1).
+- **Làng Chuông / teleport:** `game/cot-truyen/tram-dich-chuyen.json` thêm Vùng 2 (mở khi hạ trùm Vùng 1). Hạ trùm Vùng 1 hoặc đi qua cổng cũng ghi "đã mở Vùng 2" vào lưu chung. Chuông Lưu Vùng 2 (R204…) có nút **Return to Bell Village** – chỉ hiện khi Làng Chuông đã mở (giống Vùng 1). Sửa nhỏ: tên Vùng 1 trong trạm là "Weeping Heartwood" (trước ghi nhầm "Rotting Roots" = tên Vùng 2).
+- Từ R201 đi ngược khi CHƯA hạ trùm Vùng 1 (vào Vùng 2 bằng link riêng): rễ đan kín, có dòng nhắc.
+
+**Kỹ thuật (để phiên sau biết):**
+- `game/lien-vung.js` (mới, dùng chung): mang chỉ số qua vùng (`LuuChung.nhanVat`), đi cổng (`LuuChung.chuyenVung` + `?tu_vung=`).
+- `game/vung-1/noi-vung-2.js` (mới): cổng P12. Vùng 1 chỉ sửa tối thiểu: `index.html` thêm 2 dòng nạp script; `ve.js` thêm 3 dòng móc có điều kiện (vẽ lớp sau/trước cổng + đèn). Không đổi `P12.json`.
+- Ảnh phòng P12 có hầm thông: `art/vung-1/P12-mo-*.png` nướng bằng `tools/noi-vung/ve-p12-mo.py` (dùng lại bộ nướng Vùng 1, chỉ thay góc phải-dưới; cổng đóng che kín hầm).
+- `game/vung-2/noi-vung-1.js` (mới): cổng R201 + nút về làng. R201 thêm cửa liên vùng `R201-tay` (dung-phong.py, toi = null + `lien_vung`), nướng lại ảnh R201; `kiem-tra.py` hiểu cửa liên vùng.
+- `game/luu-chung.js`: chỉ THÊM 2 trường + 4 hàm (nhanVat, chuyenVung).
+
+**Kiểm tra:** Vùng 1 – kiem-thu-f 66/66, kiem-thu-g / kiem-thu-h không hỏng, kiem-tra-vung1 đi P01→P12 đủ, `kiem-tra.py` 0 lỗi. Vùng 2 – `kiem-tra.py` 0 lỗi (thêm: tới được cửa liên vùng R201 và từ đó về được R204), `kiem-thu-dat-muc.js` 33/33. Playwright: P12 → cổng mở (đóng → đang mở → mở) → R201 (máu 7, Mảnh Âm 33+5, lượt hồi 3 giữ nguyên) → đi trái về P12 đúng chỗ; nút "Follow the roots"; trạm teleport mở Vùng 2 sau khi hạ trùm; trang chính "Continue" vào Vùng 2. Không lỗi JS.
+**Còn lưu ý:** lưu mây (Firebase) hiện chỉ đồng bộ bản lưu Vùng 1 + lưu chung, CHƯA có `tvcc-vung2` (danh sách khoá do phiên Firebase quản) → chơi Vùng 2 trên máy khác chưa mang theo được. Lượt này không có Chrome nên không hỏi thêm ChatGPT; vị trí cổng theo kế hoạch ChatGPT Vùng 2 có sẵn ("R201 entry from R1's root gate"), hình cổng là ảnh ChatGPT 016 có sẵn.
+- Vẫn DỪNG: chưa làm Vùng 3.

@@ -25,7 +25,10 @@
     "hang": 16
    },
    "trang_thai": "choi_duoc",
-   "ghi_chu": "02/11 – bật lần đầu, chờ người dùng duyệt"
+   "ghi_chu": "02/11 – chơi được; nối với Vùng 1: cổng rễ P12 (sau trùm) ↔ R201 mép trái",
+   "mo": {
+    "vung_ha_trum": "vung-1"
+   }
   }
  ]
 }
