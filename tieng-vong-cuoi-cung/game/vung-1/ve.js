@@ -858,7 +858,7 @@
     ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(8, 8, wPanel, 142, 12); ctx.fill();
     ctx.strokeStyle = 'rgba(74,90,110,0.55)'; ctx.lineWidth = 1.5; rr(8, 8, wPanel, 142, 12); ctx.stroke();
     // 1) máu
-    const nhay = pl.iframes > 0 && (E.S.frame >> 2) % 2;
+    const nhay = pl.nhay > 0 && (E.S.frame >> 2) % 2;   // chỉ nhấp nháy khi vừa trúng đòn (pl.nhay), không nháy lúc lướt (lướt cũng có khung bất tử)
     for (let i = 0; i < nMau; i++) oMau(X0 + i * 32, 16, i < pl.hp, nhay);
     K.mau = {x:X0 - 3, y:13, w:nMau * 32, h:34};
     // vạch ngăn
