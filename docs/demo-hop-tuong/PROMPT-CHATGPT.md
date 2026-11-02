@@ -10,11 +10,11 @@
 
 > Ảnh phải là **PNG nền trong suốt thật** (trừ nền thành phố). Nếu ChatGPT trả nền caro giả / nền đen, nói:
 > "Re-export as PNG with a real transparent alpha background, no checkerboard, no black backdrop."
-> Ảnh vẽ nhân vật nên **nhìn sang PHẢI**, đứng chính giữa, chân chạm mép dưới (game căn theo đáy ảnh).
+> Tướng là **người** (chibi cyberpunk), quái/boss là máy. Ảnh nhân vật nên **nhìn sang PHẢI**, đứng chính giữa, chân chạm mép dưới (game căn theo đáy ảnh).
 
 | Thư mục | Tên file game đọc |
 |---|---|
-| `demo/assets/units/` | `scorch.png` `frost.png` `arc.png` `lance.png` `warp.png` `miner.png` `glitch.png` `venom.png` |
+| `demo/assets/units/` (8 tướng) | `scorch.png` `frost.png` `arc.png` `lance.png` `warp.png` `miner.png` (BROKER) `glitch.png` `venom.png` |
 | `demo/assets/enemies/` | `thuong.png` (Drone) `nhanh.png` (Skitter) `trau.png` (Bulwark) |
 | `demo/assets/bosses/` | `firewall.png` `overclock.png` `corruptor.png` |
 | `demo/assets/bg/` | `city.png` `cell.png` `core.png` `portal.png` |
@@ -25,83 +25,88 @@
 ## LÔ 0 — Style reference (làm TRƯỚC, 1 ảnh)
 
 ```text
-STYLE GUIDE — "NEON GRID" (keep identical across every image)
-- Genre: premium mobile merge tower-defense, cyberpunk megacity at night in the rain.
-- Rendering: stylized 3D render, chunky chibi-mech proportions (big head/body block, short legs), clean hard-surface
-  shapes, soft global illumination, crisp silhouettes readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
-- Materials: dark gunmetal and graphite plates (#1d2336, #3c4762, #6b7a99 highlights), glossy black glass visors,
-  emissive neon parts that glow (bloom).
-- Lighting: dark scene, strong neon RIM LIGHT from back-left in cyan #3ce7ff and back-right in magenta #ff2bd6,
-  the unit's own faction color as emissive light on its core/visor/weapon.
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
+  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
+  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
+  trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
+- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
+- 3/4 front view from slightly above, facing RIGHT, full body, centered, feet on bottom edge, small glowing hover
+  pad under the feet in the faction color.
+- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One hero per image.
 - Faction colors: PLASMA #ff6a2a · CRYO #5ee7ff · VOLTAGE #ffe24a · LASER #ff3c8e · VOID #a35cff ·
-  NANITE #4d8dff · HACK #00ffa3 · TOXIN #b4ff2a. Enemies use red #ff3355 / magenta #ff2bd6 / orange #ff8a1a.
-- Camera: 3/4 front view, slightly from above, character facing RIGHT, centered, feet touching the bottom edge, small
-  circular hover pad under the feet in the faction color.
-- Output: 1024x1024 PNG, fully TRANSPARENT background, no text, no logo, no frame, no ground shadow outside the pad.
+  NANITE #4d8dff · HACK #00ffa3 · TOXIN #b4ff2a. Enemies are machines: red #ff3355 / magenta #ff2bd6 / orange #ff8a1a.
 
-Image: style-reference.png — a lineup sheet on a DARK background (this one only, not transparent) showing 3 small
-cyberpunk chibi combat robots side by side (one orange plasma flamethrower bot, one cyan crystal drone, one pink
-sniper turret) in exactly the style above, plus a sample neon UI button. This image is the visual reference
-for all next images.
+Image: style-reference.png — a lineup sheet on a DARK background (this one only, not transparent) showing 3 chibi
+cyberpunk heroes side by side in exactly the style above (an orange pyro mercenary with a flamethrower gauntlet,
+a cyan ice mage girl with a crystal staff, a pink rail-sniper with a visor), plus one small red enemy drone and a
+sample glass neon UI button. This image is the visual reference for all next images.
 ```
 
 ---
 
-## LÔ 1 — Units 1–4 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
+## LÔ 1 — Tướng 1–4 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
 
 ```text
 STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
-- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, chunky chibi-mech proportions,
-  clean hard-surface shapes, crisp silhouette readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
-- Dark gunmetal/graphite plates (#1d2336 #3c4762, highlights #6b7a99), black glass visors, glowing emissive parts.
-- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; the unit's faction color glows on core/visor/weapon.
-- 3/4 front view from slightly above, facing RIGHT, centered, feet on bottom edge, small glowing hover pad in faction color.
-- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One character per image.
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
+  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
+  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
+  trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
+- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
+- 3/4 front view from slightly above, facing RIGHT, full body, centered, feet on bottom edge, small glowing hover
+  pad under the feet in the faction color.
+- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One hero per image.
 
 Make these 4 images, one at a time (wait for "next"):
 
-1) scorch.png — SCORCH, PLASMA faction (#ff6a2a). Squat heavy flamethrower mech: rounded armored torso with a glowing
-   orange reactor core in the chest, small dome head with a narrow orange visor slit, two fuel tanks on its back with
-   orange light strips, a thick arm-cannon nozzle pointing right with a hot orange glow and tiny heat sparks.
+1) scorch.png — SCORCH, PLASMA (#ff6a2a). Pyro mercenary man, tan skin, orange glowing mohawk, goggles on forehead,
+   red-brown armored leather jacket, fuel tank on his back, a heavy plasma flamethrower gauntlet on his right arm
+   pointing right with a hot orange nozzle glow and sparks.
 
-2) frost.png — FROST, CRYO faction (#5ee7ff). Floating drone built around a large faceted ice-blue energy crystal
-   (diamond shape, glowing from inside), a thin metal halo ring around its middle, small orbiting ice shards,
-   cyan thruster glow underneath. Elegant and cold.
+2) frost.png — FROST, CRYO (#5ee7ff). Cryomancer young woman, pale skin, long white-blue hair, long dark navy coat
+   with cyan trims, holding a tall staff topped by a glowing ice crystal, small ice shards floating around.
 
-3) arc.png — ARC, VOLTAGE faction (#ffe24a). Compact tesla-coil turret: trapezoid armored base, a pillar wrapped with
-   three glowing yellow coil rings, a bright crackling energy sphere on top throwing small lightning arcs.
+3) arc.png — ARC, VOLTAGE (#ffe24a). Electro swordsman, spiky black hair with a yellow streak, dark grey techwear
+   with yellow trims, holding a glowing yellow energy katana raised forward-right, crackling lightning on the blade.
 
-4) lance.png — LANCE, LASER faction (#ff3c8e). Precision sniper turret on a sleek tripod: compact body, a very long
-   railgun barrel pointing right with a pink-red emissive line along it, scope with a glowing pink lens.
+4) lance.png — LANCE, LASER (#ff3c8e). Rail sniper, dark skin, short hair, glowing pink visor across the eyes,
+   dark burgundy tactical jacket, aiming a very long railgun rifle to the right with a pink emissive line and scope.
 ```
 
 ---
 
-## LÔ 2 — Units 5–8 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
+## LÔ 2 — Tướng 5–8 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
 
 ```text
 STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
-- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, chunky chibi-mech proportions,
-  clean hard-surface shapes, crisp silhouette readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
-- Dark gunmetal/graphite plates (#1d2336 #3c4762, highlights #6b7a99), black glass visors, glowing emissive parts.
-- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; the unit's faction color glows on core/visor/weapon.
-- 3/4 front view from slightly above, facing RIGHT, centered, feet on bottom edge, small glowing hover pad in faction color.
-- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One character per image.
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
+  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
+  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
+  trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
+- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
+- 3/4 front view from slightly above, facing RIGHT, full body, centered, feet on bottom edge, small glowing hover
+  pad under the feet in the faction color.
+- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One hero per image.
 
 Make these 4 images, one at a time (wait for "next"):
 
-5) warp.png — WARP, VOID faction (#a35cff). Floating beacon: a thick dark metal ring with four small purple nodes,
-   inside it a swirling black-violet singularity with spiral light, standing on a short pylon. Feels like bending time.
+5) warp.png — WARP, VOID (#a35cff). Void witch, long dark-violet hair, flowing dark purple robe, a glowing purple
+   halo ring with four light nodes behind her head, a small swirling singularity orb floating above her right hand.
 
-6) miner.png — MINER, NANITE faction (#4d8dff). Boxy little crypto-mining robot on tank treads: chest screen showing
-   blue bar graphs, two blue LED eyes, a drill arm pointing right, a floating blue hexagon data-coin hologram above it.
+6) miner.png — BROKER, NANITE (#4d8dff). Data broker woman, brown skin, hair in a bun, blue glowing visor, sharp dark
+   navy suit with blue trims, holding a holographic blue chart screen, a golden hexagon credit-coin hologram floating
+   above her hand.
 
-7) glitch.png — GLITCH, HACK faction (#00ffa3). Hooded hacker android: dark cloak-like armored hood, inside only a
-   glowing mint-green visor bar, a triangle emblem on the chest, a compact EMP blaster pointing right, small floating
-   mint code fragments (abstract blocks, no readable text) around it.
+7) glitch.png — GLITCH, HACK (#00ffa3). Netrunner in a deep dark hood, face hidden in shadow except a glowing
+   mint-green visor bar, dark green techwear, a compact EMP pistol pointing right, small floating mint code blocks
+   (abstract, no readable text).
 
-8) venom.png — VENOM, TOXIN faction (#b4ff2a). Six-legged spider bot: round armored abdomen with glowing lime stripes,
-   small head with three lime eyes, a triple needle launcher on its back pointing right, tiny toxic droplets glowing.
+8) venom.png — VENOM, TOXIN (#b4ff2a). Toxin assassin, dark skin, spiky hair with a lime tip, metal gas mask with two
+   glowing lime filters, dark olive tactical gear, twin needle guns pointing right with lime glowing tips.
 ```
 
 ---
@@ -178,6 +183,6 @@ Make these 3 images, one at a time (wait for "next"):
 ---
 
 ### Kiểm tra sau khi thả ảnh
-- Mở `demo/index.html` (bấm đúp được) hoặc bản web `/demo/`. Màn chọn đội hiện ảnh unit mới → đã nhận.
-- Ảnh unit/quái chỉ cần **1 tư thế** — game tự thêm nhún, quầng sáng, giật bắn, vạch hạng.
+- Mở `demo/index.html` (bấm đúp được) hoặc bản web `/demo/`. Màn chọn tướng hiện ảnh mới → đã nhận.
+- Ảnh tướng/quái chỉ cần **1 tư thế** — game tự thêm nhún, quầng sáng, giật bắn, vạch hạng.
 - Tên file viết thường đúng như bảng. Ảnh quá to vẫn chạy nhưng nên giữ cỡ ghi trong prompt cho nhẹ.

@@ -11,16 +11,16 @@ const HANH = {
   Hack:    { mau: '#00ffa3', toi: '#003a26', sang: '#c8ffe8', ten: 'HACK' },
   Toxin:   { mau: '#b4ff2a', toi: '#2a3a06', sang: '#ecffc8', ten: 'TOXIN' },
 };
-// ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
+// tướng (hero) cyberpunk hình người; ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
 const TUONG = {
-  scorch: { tip: [60, 36], ten: 'SCORCH', hanh: 'Plasma', kieu: 'Burn', mo: 'Plasma jets set targets ablaze — damage over time.', dmg: 9, cd: 0.9 },
-  frost:  { tip: [44, 26], ten: 'FROST', hanh: 'Cryo', kieu: 'Slow', mo: 'Cryo bursts hit an area and slow everything inside.', dmg: 6, cd: 1.0 },
-  arc:    { tip: [32, 12], ten: 'ARC', hanh: 'Voltage', kieu: 'Chain', mo: 'Lightning jumps between nearby enemies.', dmg: 8, cd: 1.1 },
-  lance:  { tip: [63, 34], ten: 'LANCE', hanh: 'Laser', kieu: 'Sniper', mo: 'Locks on the toughest target. x2.5 damage to bosses.', dmg: 20, cd: 1.6 },
-  warp:   { tip: [32, 26], ten: 'WARP', hanh: 'Void', kieu: 'Boost', mo: 'Time-dilation field: adjacent units attack faster.', dmg: 4, cd: 1.0 },
-  miner:  { tip: [60, 35], ten: 'MINER', hanh: 'Nanite', kieu: 'Credits', mo: 'Mines Energy over time, bonus Energy on kills.', dmg: 5, cd: 1.0 },
-  glitch: { tip: [56, 37], ten: 'GLITCH', hanh: 'Hack', kieu: 'EMP', mo: 'EMP shots can stun and mark targets to take more damage.', dmg: 12, cd: 1.2 },
-  venom:  { tip: [52, 23], ten: 'VENOM', hanh: 'Toxin', kieu: 'Multi', mo: 'Fires toxic needles at several enemies at once.', dmg: 7, cd: 0.8 },
+  scorch: { tip: [60, 34], ten: 'SCORCH', hanh: 'Plasma', kieu: 'Burn', mo: 'Pyro merc. Plasma gauntlet sets targets ablaze over time.', dmg: 9, cd: 0.9 },
+  frost:  { tip: [48, 9], ten: 'FROST', hanh: 'Cryo', kieu: 'Slow', mo: 'Cryomancer. Ice bursts hit an area and slow enemies.', dmg: 6, cd: 1.0 },
+  arc:    { tip: [61, 7], ten: 'ARC', hanh: 'Voltage', kieu: 'Chain', mo: 'Volt blade. Lightning slashes jump between enemies.', dmg: 8, cd: 1.1 },
+  lance:  { tip: [64, 31], ten: 'LANCE', hanh: 'Laser', kieu: 'Sniper', mo: 'Rail sniper. Hunts the toughest target, x2.5 vs bosses.', dmg: 20, cd: 1.6 },
+  warp:   { tip: [49, 31], ten: 'WARP', hanh: 'Void', kieu: 'Boost', mo: 'Void witch. Bends time: adjacent heroes attack faster.', dmg: 4, cd: 1.0 },
+  miner:  { tip: [52, 13], ten: 'BROKER', hanh: 'Nanite', kieu: 'Credits', mo: 'Data broker: earns Energy over time, bonus Energy on kills.', dmg: 5, cd: 1.0 },
+  glitch: { tip: [56, 34], ten: 'GLITCH', hanh: 'Hack', kieu: 'EMP', mo: 'Netrunner. EMP shots stun and mark targets (+20% dmg).', dmg: 12, cd: 1.2 },
+  venom:  { tip: [57, 33], ten: 'VENOM', hanh: 'Toxin', kieu: 'Multi', mo: 'Toxin assassin. Twin needlers hit several enemies.', dmg: 7, cd: 0.8 },
 };
 const TUONG_IDS = Object.keys(TUONG);
 const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
