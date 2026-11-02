@@ -159,13 +159,13 @@
   function taoGiaoDien(){
     const gd = M.ht.D.giao_dien || {}, st = document.createElement('style');
     st.textContent =
-      '#l-hethong .hop,#l-charm .hop{width:min(820px,calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));max-width:none;max-height:94vh;overflow:auto;-webkit-overflow-scrolling:touch;text-align:left}' +
+      '#l-hethong .hop,#l-charm .hop{width:min(820px,calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));max-width:none;max-height:94vh;overflow:auto;-webkit-overflow-scrolling:touch;text-align:left;box-sizing:border-box}' +
       '.ht-tab{display:flex;gap:8px;margin:6px 0}.ht-tab button{min-width:96px;min-height:44px;margin:0}.ht-tab button.chon{border-color:var(--bell);color:#ffe08a}' +
       '#ht-cay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}' +
       '#ht-ds button,#ch-ds button{display:block;width:100%;height:auto;min-height:48px;margin:0 0 6px;padding:6px 10px;text-align:left;font-size:14px;line-height:1.25}' +
       '#ht-ds button small,#ch-ds button small{display:block;font-size:12px;color:#a9b3bf;font-weight:600}' +
       '#ht-ds button.da{border-color:#9be7a0;color:#9be7a0}#ht-ds button.duoc{border-color:var(--bell);color:#ffe08a}#ht-ds button.chon,#ch-ds button.chon{outline:2px solid #78e6e6}' +
-      '#ht-ct,#ch-ct{font-size:14px;line-height:1.35}#ht-ct button,#ch-ct button,#ch-lo button{min-height:48px;min-width:120px;margin:6px 6px 0 0}' +
+      '#ht-ct,#ch-ct{font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;min-width:0}#ht-ct button,#ch-ct button,#ch-lo button{min-height:48px;min-width:120px;margin:6px 6px 0 0}' +
       '#ch-bo{display:grid;grid-template-columns:minmax(0,280fr) minmax(0,300fr) minmax(0,180fr);gap:10px}' +
       '#ch-ds button{display:flex;align-items:center;gap:8px}.ch-o{position:relative;width:56px;height:56px;flex:none}.ch-o img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}' +
       '#l-chondau .hang button{min-height:120px;min-width:180px;display:inline-flex;flex-direction:column;align-items:center;gap:6px}#l-chondau img{width:72px;height:72px;image-rendering:pixelated}' +
@@ -196,11 +196,13 @@
   const CHU = {da_mo:'Learned', mo_duoc:'Learn', thieu_not:'Need Echo Notes', thieu_cap:'Requires level ', thieu_nut_truoc:'Learn the previous node first',
     thieu_dieu_kien:'Requires the Region 1 guardian to fall', thieu_thu_thach:'Requires a trial', chua_co_che:'Later region', cho_anh:'Art pending'};
   const chuTT = (n, t) => CHU[t] + (t === 'thieu_cap' ? n.cap : '');
+  const gdA = () => M.ht.D.giao_dien || {};
+  const icon = k => { const p = (gdA().tien_te || {})[k]; return co(p) ? '<img src="' + src(p) + '" alt="" style="width:20px;height:20px;vertical-align:-4px;margin-right:3px;image-rendering:pixelated">' : ''; };
   let tabChon = null, nutChon = null;
   function moBang(){
     const ht = M.ht, D = ht.D, sau = ht.diemCapSau();
-    $('ht-tt').innerHTML = 'Level <b style="color:#78e6e6">' + ht.cap() + '</b> · ' + D.diem.ten + ' ' + ht.S.diem + (sau ? ' / ' + sau : ' (max)') +
-      ' · Notes: <b style="color:#ffe08a">' + ht.notCon() + '</b>';
+    $('ht-tt').innerHTML = 'Level <b style="color:#78e6e6">' + ht.cap() + '</b> · ' + icon('xp') + D.diem.ten + ' ' + ht.S.diem + (sau ? ' / ' + sau : ' (max)') +
+      ' · ' + icon('note') + 'Notes: <b style="color:#ffe08a">' + ht.notCon() + '</b>';
     tabChon = tabChon || D.nhanh[0].id;
     const tab = $('ht-tab'); tab.innerHTML = '';
     for (const nh of D.nhanh){ const b = document.createElement('button'); b.type = 'button'; b.textContent = nh.tab; b.title = nh.ten;
@@ -211,7 +213,9 @@
     for (const n of nut){
       const t = ht.trangThaiNut(n.id), b = document.createElement('button'); b.type = 'button';
       b.className = (t === 'da_mo' ? 'da' : t === 'mo_duoc' ? 'duoc' : '') + (n.id === nutChon ? ' chon' : '');
-      b.innerHTML = n.ten + '<small>Lv ' + n.cap + ' · ' + chuTT(n, t) + '</small>';
+      const anhNut = (gdA().nut_ky_nang || {})[t === 'da_mo' ? 'da_hoc' : t === 'mo_duoc' ? 'mo_duoc' : 'khoa'];
+      b.innerHTML = (co(anhNut) ? '<img src="' + src(anhNut) + '" alt="" style="float:left;width:40px;height:40px;margin-right:8px;image-rendering:pixelated">' : '') +
+        n.ten + '<small>Lv ' + n.cap + ' · ' + chuTT(n, t) + '</small>';
       b.onclick = () => { nutChon = n.id; moBang(); };
       ds.appendChild(b);
     }
@@ -231,7 +235,7 @@
   function moCharm(){
     if (!M.coDo) return;
     const ht = M.ht, S = ht.S;
-    $('ch-tt').innerHTML = 'Slots: <b>' + ht.oDaDung() + ' / ' + ht.oToiDa() + '</b> · ' + ht.D.echo_dust.ten + ': <b>' + S.dust + '</b>';
+    $('ch-tt').innerHTML = 'Slots: <b>' + ht.oDaDung() + ' / ' + ht.oToiDa() + '</b> · ' + icon('dust') + ht.D.echo_dust.ten + ': <b>' + S.dust + '</b>';
     const ds = $('ch-ds'); ds.innerHTML = '';
     if (!S.tui.some(m => m.uid === charmChon)) charmChon = S.tui[0] && S.tui[0].uid;
     for (const m of S.tui){

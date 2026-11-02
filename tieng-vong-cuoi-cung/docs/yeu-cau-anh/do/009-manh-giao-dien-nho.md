@@ -1,0 +1,11 @@
+# 009 – Mảnh giao diện nhỏ: tab, nút, nút kỹ năng, ô cắm
+- **Trạng thái:** CHỜ  · ƯU TIÊN 3
+- **Dùng vào:** bảng The Resonance Lattice / Charms (ChatGPT mục 6 – kích thước theo đúng danh sách ChatGPT). Không chữ trong ảnh (chữ là HTML đè lên).
+- **Mô tả + cỡ (PNG trong suốt, mỗi trạng thái 1 ảnh riêng):**
+  - **Tab** 96×40: thường (tab.png) + đang chọn sáng viền vàng đồng (tab-chon.png).
+  - **Action Button** 120×48: thường (nut.png) + bị khoá tối, xỉn (nut-khoa.png).
+  - **Skill Node** 48×48: khoá (nut-ky-nang/khoa.png – xám, ổ khoá rễ) · mở được (mo-duoc.png – viền vàng đồng sáng) · đã học (da-hoc.png – lõi xanh tiếng vọng sáng).
+  - **Charm Socket** 40×40: trống (o-cam/trong.png) · đã cắm (o-cam/day.png).
+- **Số khung:** 1 tĩnh mỗi trạng thái; vẽ chung 1–2 ảnh, khoảng hở rộng.
+- **Lưu:** art/giao-dien/he-thong/<tên như trên> + manh-nho-nguon-chatgpt.png
+- **Phong cách chung (ChatGPT, tu-van-chatgpt.txt mục 4–6):** pixel art u tối hợp art/giao-dien/hud/ (đồng cổ, chuông, rễ, mặt nạ; xanh tiếng vọng #78e6e6 / #CEF0D6, vàng đồng #E1B85A ít). KHÔNG vẽ chữ vào ảnh. Nền #FF00FF đặc, khoảng hở rộng giữa các mảnh, không chạm mép. Sắc nét, không nhoè. Prompt mở đầu: "use the image generation tool and DRAW …".
