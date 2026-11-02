@@ -12,15 +12,16 @@ const HANH = {
   Toxin:   { mau: '#b4ff2a', toi: '#2a3a06', sang: '#ecffc8', ten: 'TOXIN' },
 };
 // tướng (hero) cyberpunk hình người; ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
+// kỹ năng theo docs/demo-hop-tuong/tu-van-chatgpt-ky-nang.txt (ChatGPT thiết kế, 02/11/2026): kieu = tên nội tại, dmg/cd ở 1 sao
 const TUONG = {
-  scorch: { tip: [57, 38], ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Burn', mo: 'Plasma gauntlet. Burns targets over time.', dmg: 9, cd: 0.9 },
-  frost:  { tip: [48, 12], ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Slow', mo: 'Ice bursts hit an area and slow foes.', dmg: 6, cd: 1.0 },
-  arc:    { tip: [60, 13], ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain', mo: 'Lightning slashes chain between foes.', dmg: 8, cd: 1.1 },
-  lance:  { tip: [64, 37], ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Sniper', mo: 'Hunts the toughest foe. x2.5 vs bosses.', dmg: 20, cd: 1.6 },
-  warp:   { tip: [48, 37], ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Boost', mo: 'Bends time: adjacent heroes fire faster.', dmg: 4, cd: 1.0 },
-  miner:  { tip: [52, 20], ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Credits', mo: 'Earns Energy over time and on kills.', dmg: 5, cd: 1.0 },
-  glitch: { tip: [55, 39], ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'EMP', mo: 'EMP shots stun and mark foes (+20% dmg).', dmg: 12, cd: 1.2 },
-  venom:  { tip: [56, 38], ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Multi', mo: 'Twin needlers hit several foes at once.', dmg: 7, cd: 0.8 },
+  scorch: { tip: [57, 38], ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Burns lanes with lingering plasma trails.', dmg: 24, cd: 0.8 },
+  frost:  { tip: [48, 12], ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill Meter', mo: 'Stacks chill, then shatters clustered enemies.', dmg: 18, cd: 1.0 },
+  arc:    { tip: [60, 13], ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Rhythm', mo: 'Every third slash unleashes chain lightning.', dmg: 32, cd: 0.9 },
+  lance:  { tip: [64, 37], ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Focus Lock', mo: 'Piercing rail shots punish high-HP targets.', dmg: 95, cd: 2.5 },
+  warp:   { tip: [48, 37], ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Gravity Knot', mo: 'Groups enemies inside compact gravity fields.', dmg: 14, cd: 1.4 },
+  miner:  { tip: [52, 20], ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Bounty', mo: 'Marks enemies for bonus Energy on defeat.', dmg: 10, cd: 1.25 },
+  glitch: { tip: [55, 39], ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'Breach', mo: 'Exposes enemy weak points with EMP breaches.', dmg: 16, cd: 1.1 },
+  venom:  { tip: [56, 38], ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Toxic Bloom', mo: 'Stacks toxins that spread when targets fall.', dmg: 13, cd: 1.0 },
 };
 const TUONG_IDS = Object.keys(TUONG);
 const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
@@ -30,11 +31,14 @@ const QUAI = {
   nhanh:  { ten: 'SKITTER', hp: 0.6, spd: 92, thuong: 3, co: 31 },
   trau:   { ten: 'BULWARK', hp: 3.2, spd: 34, thuong: 7, co: 40 },
 };
-// mỗi 10 đợt một boss, xoay vòng; kỹ năng: hoada (khoá unit), doicho (xáo lưới), hoimau (hồi giáp)
+// mỗi 10 đợt một boss, xoay vòng; mỗi boss 2 kỹ năng (chính + phụ) có cảnh báo trước (tele giây); hp = máu ở vòng 1
 const BOSS = [
-  { id: 'firewall', ten: 'FIREWALL', kn: 'hoada', knTen: 'LOCKDOWN', mo: 'Locks heroes — they cannot fire for a while', cd: 6, mau: '#ff3b3b' },
-  { id: 'overclock', ten: 'OVERCLOCK', kn: 'doicho', knTen: 'SCRAMBLE', mo: 'Scrambles the grid, swapping hero positions', cd: 5, mau: '#ffb31a' },
-  { id: 'corruptor', ten: 'CORRUPTOR', kn: 'hoimau', knTen: 'REPAIR', mo: 'Restores its armor and patches nearby enemies', cd: 4, mau: '#c04dff' },
+  { id: 'firewall', ten: 'FIREWALL', knTen: 'HEAT LOCKDOWN', mo: 'Overheats grid lanes and shields passing drones.', mau: '#ff3b3b', hp: 9000,
+    kn: [{ k: 'lockdown', ten: 'HEAT LOCKDOWN', cd: 12, tele: 1.4 }, { k: 'ember', ten: 'EMBER SWEEP', cd: 18, tele: 1.1 }] },
+  { id: 'overclock', ten: 'OVERCLOCK', knTen: 'TIME SURGE', mo: 'Accelerates the swarm and spawns clock echoes.', mau: '#ffb31a', hp: 40000,
+    kn: [{ k: 'surge', ten: 'TIME SURGE', cd: 13, tele: 1.3 }, { k: 'split', ten: 'CLOCK SPLIT', cd: 20, tele: 1.5 }] },
+  { id: 'corruptor', ten: 'CORRUPTOR', knTen: 'DATA INFECTION', mo: 'Corrupts attack timing and siphons linked damage.', mau: '#c04dff', hp: 165000,
+    kn: [{ k: 'infect', ten: 'DATA INFECTION', cd: 14, tele: 1.6 }, { k: 'link', ten: 'PARASITE LINK', cd: 19, tele: 1.2 }] },
 ];
 const CAU_HINH = {
   W: 844, H: 390, COT: 5, HANG: 3, O: 64, KHE: 6,
