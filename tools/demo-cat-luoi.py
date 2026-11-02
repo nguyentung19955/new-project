@@ -3,6 +3,18 @@ import sys
 from PIL import Image
 src,uid,act,dirs,cols=sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4].split(','),int(sys.argv[5])
 O='demo/assets/v3/'; C=160; FOOT=150
+import numpy as np
+from scipy import ndimage
+def clean(p):
+    a=np.array(p); m=a[:,:,3]>24
+    lab,n=ndimage.label(m)
+    if n<=1: return p
+    sizes=ndimage.sum(m,lab,range(1,n+1)); big=sizes.max()
+    keep=np.zeros_like(m)
+    for i,sz in enumerate(sizes,1):
+        if sz>=big*0.08: keep|=lab==i
+    a[:,:,3]=np.where(ndimage.binary_dilation(keep,iterations=2),a[:,:,3],0)
+    return Image.fromarray(a)
 im=Image.open(src).convert('RGBA'); W,H=im.size; rows=len(dirs)
 cw,ch=W/cols,H/rows
 ref=Image.open(O+f'{uid}_s.png').convert('RGBA'); refh=ref.getchannel('A').getbbox(); refh=refh[3]-refh[1]
@@ -10,7 +22,7 @@ for r,d in enumerate(dirs):
     cells=[]
     for c in range(cols):
         p=im.crop((round(c*cw),round(r*ch),round((c+1)*cw),round((r+1)*ch)))
-        cells.append(p)
+        cells.append(clean(p))
     # common bbox across row to keep anchor stable
     boxes=[p.getchannel('A').point(lambda v:255 if v>24 else 0).getbbox() for p in cells]
     boxes=[b for b in boxes if b]
