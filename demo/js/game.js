@@ -170,7 +170,7 @@
     else if (v.id === 'venom') { for (const o of DS) if (!q || o.hp / o.max > q.hp / q.max) q = o; }
     else if (v.id === 'glitch') { for (const o of DS) if (!(o.breachT > 0) && (!q || o.d > q.d)) q = o; if (!q) for (const o of DS) if (!q || o.d > q.d) q = o; }
     if (!q) return false;
-    v.dem = (v.dem || 0) + 1;
+    v.dem = (v.dem || 0) + 1; v.huong = q.x < cx - 4 ? -1 : 1;
     if (v.id === 'scorch') bayDan(S, x, y, q, dmg, v, h.mau, 900, { burst: v.sao >= 7 && v.dem % 4 === 0 });
     else if (v.id === 'frost') bayDan(S, x, y, q, dmg, v, h.mau, 640);
     else if (v.id === 'warp') bayDan(S, x, y, q, dmg, v, h.mau, 300, { hut: v.dem % 4 === 0 });
