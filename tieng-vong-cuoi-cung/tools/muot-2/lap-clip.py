@@ -183,9 +183,18 @@ def lop_kk(clip, thu_tu, moi_im, goc_im, thu):
         for j, t in enumerate(thu_tu):
             if isinstance(t, int): moi.append(lopg[t]); continue
             # khung gốc gần nhất (đứng trước, nếu không có thì sau)
-            k = next((thu_tu[i] for i in range(j - 1, -1, -1) if isinstance(thu_tu[i], int)), None)
-            if k is None: k = next(thu_tu[i] for i in range(j + 1, len(thu_tu)) if isinstance(thu_tu[i], int))
-            pa = ns['do_khung'](goc_im[k]).get(diem); pb = ns['do_khung'](moi_im[t]).get(diem)
+            # khung gốc kề (trước/sau) giống dáng nhất (IoU cao nhất)
+            kt = next((thu_tu[i] for i in range(j - 1, -1, -1) if isinstance(thu_tu[i], int)), None)
+            ks = next((thu_tu[i] for i in range(j + 1, len(thu_tu)) if isinstance(thu_tu[i], int)), None)
+            def iou(x, y):
+                A = np.array(x)[..., 3] > 128; B = np.array(y)[..., 3] > 128; return (A & B).sum() / max(1, (A | B).sum())
+            ung = [k_ for k_ in (kt, ks) if k_ is not None]
+            ung.sort(key=lambda k_: -iou(goc_im[k_], moi_im[t]))
+            pb = ns['do_khung'](moi_im[t]).get(diem)
+            k = ung[0]
+            for k_ in ung:
+                if ns['do_khung'](goc_im[k_]).get(diem) and lopg[k_].getbbox(): k = k_; break
+            pa = ns['do_khung'](goc_im[k]).get(diem)
             if not pa or not pb or lopg[k].getbbox() is None:
                 moi.append(Image.new('RGBA', (256, 256), (0, 0, 0, 0))); bao.append('%s %s: ẩn lớp (không đo được neo)' % (lid, t)); continue
             moi.append(doi(lopg[k], pb[0] - pa[0], pb[1] - pa[1])); bao.append('%s %s: lớp từ F%d dời (%d,%d)' % (lid, t, k, pb[0] - pa[0], pb[1] - pa[1]))

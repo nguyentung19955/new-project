@@ -1,5 +1,5 @@
 # 004 – Kiếm Khách – chết: sửa F3 + 1 khung khuỵu giữa F3–F4 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT 1780×883, đã đặt vào ô 256×256)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, đáy khớp khung kề, ms mới; lớp sức mạnh theo neo; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → clip.chet` – thư mục art gốc `art/kiem-khach/chet/` (7 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **2 ảnh**: `thay-03` THAY khung F3 (F3 hiện gần trùng F2), và `moi-01` chèn SAU F3 (giữa F3 mới và F4).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F1→F2 đổi dáng lớn mà giữ 130ms; F2≈F3 khựng giữa lúc ngã; F3→F4 bị kéo xuống; F5≈F6 kéo dài. Thành 8 khung: thêm 1 khung khuỵu gối/hạ hông giữa F3–F4; sửa F3 cho khác F2; căn theo điểm chạm đất."

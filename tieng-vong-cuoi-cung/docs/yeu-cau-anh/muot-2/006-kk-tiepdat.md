@@ -1,5 +1,5 @@
 # 006 – Kiếm Khách – tiếp đất: 1 khung đứng dậy giữa F1–F2 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT 1780×883, đã đặt vào ô 256×256)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, đáy khớp khung kề, ms mới; lớp sức mạnh theo neo; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → clip.tiepdat` – thư mục art gốc `art/kiem-khach/tiepdat/` (3 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F1 (giữa F1 ngồi thụp và F2 đứng).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Snap khi đứng dậy (y 3,9%, cao 19%), 2 khung đầu trùng. Căn điểm chạm chân; thêm khung đứng dậy."

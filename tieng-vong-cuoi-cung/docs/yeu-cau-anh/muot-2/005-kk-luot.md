@@ -1,5 +1,5 @@
 # 005 – Kiếm Khách – lướt: 2 khung đứng dậy giữa F4–F5 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT 1780×883, đã đặt vào ô 256×256)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, đáy khớp khung kề, ms mới; lớp sức mạnh theo neo; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → clip.luot` – thư mục art gốc `art/kiem-khach/luot/` (6 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **2 khung mới** `moi-01`, `moi-02`, chèn SAU F4 (giữa F4 thấp người và F5 đứng thẳng).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Dễ giật ở đoạn ra: từ thấp bật đứng trong 1 khung. Thêm 1–2 khung đứng dậy trung gian; giữ 2–3 khung lao (hold có chủ ý)."
