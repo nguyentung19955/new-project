@@ -90,7 +90,7 @@
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
     const ai = $('#tb-ai'); ai.innerHTML = '';
-    for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauHanh(o, HANH[TUONG[id].hanh]); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 26); ai.appendChild(o); }
+    for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauHanh(o, HANH[TUONG[id].hanh]); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 22); ai.appendChild(o); }   // icon đội AI 22px (P1.3: 20–24)
     { const o = document.createElement('div'); o.className = 'ai-o ld'; o.textContent = 'LEAD'; ai.appendChild(o); }
     const bo = $('#bo-bac'); bo.innerHTML = '';
     deck.forEach((id, n) => {
@@ -100,7 +100,7 @@
       mauHanh(b, h);
       b.style.left = (8 + n * 60) + 'px';
       b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
-      R.veThe(b.querySelector('canvas'), id, 49, 60);
+      R.veThe(b.querySelector('canvas'), id, 53, 66);   // P0.2: chân dung lớn hơn (53×66)
       bo.appendChild(b);
     });
     capNhat(true);
@@ -111,7 +111,7 @@
     const set = (k, v, f) => { if (ep || cu[k] !== v) { cu[k] = v; f(v); } };
     set('dot', S.dot, (v) => ($('#tb-dot').textContent = Math.max(1, v)));
     const den = Math.ceil(Math.max(1, S.dot + (S.dot % 10 === 0 && S.boss ? 0 : 0.0001)) / 10) * 10;
-    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS LIVE' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); });
+    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS LIVE' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); e.classList.toggle('gan', v !== 'dang' && v <= 2); });   // 2 wave cuối: đổi màu + nhịp chậm
     set('quai', S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
@@ -156,6 +156,11 @@
     else if (a === 'choilai') batDau(boCu);
     else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
   });
+
+  // nút SUMMON: trạng thái nhấn (lún) — :active không chắc chạy trên mobile nên thêm lớp .ep
+  const nutTrieu = $('#nut-trieu');
+  nutTrieu.addEventListener('pointerdown', () => nutTrieu.classList.add('ep'));
+  for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) nutTrieu.addEventListener(ev, () => nutTrieu.classList.remove('ep'));
 
   // ---- kéo tướng để gộp ----
   // hitbox ô theo toạ độ logic của bàn người chơi (ô 46×45, nới 1px vào khe)

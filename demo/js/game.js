@@ -51,7 +51,7 @@
     S.lk -= g; S.triệu++;
     const i = pick(tr);
     S.o[i] = { id: pick(S.deck), sao: 1, cd: rnd() * 0.5, da: 0, danh: 0, moi: 0.35, uid: S.nid++, sinhT: S.t };
-    S.fx.push({ k: 'trieu', i, t: 0, T: 0.45 });
+    S.fx.push({ k: 'trieu', i, t: 0, T: 0.18 });   // phản hồi summon 120–180ms
     return i;
   }
   const gopDuoc = (S, a, b) => { const A = S.o[a], Bb = S.o[b]; return a !== b && A && Bb && A.id === Bb.id && A.sao === Bb.sao && A.sao < C.SAO_MAX && !A.da && !Bb.da; };
@@ -60,10 +60,11 @@
     if (S.het || a === b || !S.o[a] || S.o[a].da) return false;
     if (!S.o[b]) { S.o[b] = S.o[a]; S.o[a] = null; return 'chuyen'; }
     if (!gopDuoc(S, a, b)) return false;
-    const sao = S.o[b].sao + 1;
+    const sao = S.o[b].sao + 1, cu = [S.o[a], S.o[b]];
     S.o[a] = null;
-    S.o[b] = { id: pick(S.deck), sao, cd: 0.3, da: 0, danh: 0, moi: 0.5, uid: S.nid++, sinhT: S.t };
-    S.fx.push({ k: 'gop', i: b, t: 0, T: 0.6, sao });
+    S.o[b] = { id: pick(S.deck), sao, cd: 0.3, da: 0, danh: 0, moi: 0.5, uid: S.nid++, sinhT: S.t, kieuSinh: 'gop' };
+    // tu/cu: để render vẽ 2 tướng cũ thu vào tâm ô b rồi tướng mới bật ra (merge 180–260ms)
+    S.fx.push({ k: 'gop', i: b, tu: a, cu: cu.map((v) => ({ id: v.id, sao: v.sao, hg: v.hg, goc: v.goc, uid: v.uid })), t: 0, T: 0.6, sao });
     return 'gop';
   }
   function lenBac(S, id) {
@@ -137,9 +138,13 @@
       let n = 0, cu = -1;
       for (let j = 0; j < S.so.length; j++) if (S.so[j].q === q.uid) { if (cu < 0) cu = j; n++; }
       if (n >= 3) S.so.splice(cu, 1);
-      S.so.push({ q: q.uid, x: q.x + 8 + (rnd() - 0.5) * 8, y: q.y - q.co * 0.8, v: Math.round(dmg), t: 0, mau, to: chiSo });
+      S.so.push({ q: q.uid, x: q.x + 8 + (rnd() - 0.5) * 8, y: q.y - q.co * 0.8, v: Math.round(dmg), t: 0, mau, to: chiSo, T: 0.55 });   // sống 0.55s, bay lên 12px
     }
-    if (!an) { q.flash = 0.1; if (S.fx.length < 120) S.fx.push({ k: 'hit', x: q.x + (rnd() - 0.5) * 8, y: q.y - q.co / 2 + (rnd() - 0.5) * 8, t: 0, T: 0.14, mau: mau || '#ffffff', to: !!chiSo }); }
+    if (!an) {   // chỉ khi trúng thật: quái chớp trắng 60ms + tia trúng đòn 120ms (tối đa FX_NHO_MAX cùng lúc)
+      q.flash = 0.06;
+      let n = 0; for (const f of S.fx) if (f.k === 'hit') n++;
+      if (n < C.FX_NHO_MAX) S.fx.push({ k: 'hit', x: q.x + (rnd() - 0.5) * 6, y: q.y - q.co / 2 + (rnd() - 0.5) * 6, t: 0, T: 0.12, mau: mau || '#ffffff', to: !!chiSo, id: v ? v.id : null });
+    }
     if (q.hp <= 0) chet(S, q, v);
   }
   function chet(S, q, v) {
@@ -169,8 +174,8 @@
   }
   function bayDan(S, x, y, q, dmg, v, mau, spd, them) { S.dan.push(Object.assign({ x, y, q, dmg, v, mau, id: v.id, spd, x0: x, y0: y }, them || {})); }
   // điểm phát đạn (muzzle) theo ô: chân ở đáy-giữa ô, tip [x,y] cũ (khung 64, chân y≈57) quy đổi sang hình ~52px
-  // v3 top-down: tướng cao 29px, chân cách đáy ô 10px → nòng ở giữa thân, lệch ngang nhẹ theo tip cũ
-  const nong = (S, i, v) => { const [ox, oy] = oXY(S, i), tp = T[v.id].tip || [32, 32]; return [ox + C.O / 2 + (tp[0] - 32) * 0.3, oy + C.OH - 10 - 14 + (tp[1] - 38) * 0.15]; };
+  // v3 top-down: tướng cao 32px, chân cách đáy ô 8px → nòng ở giữa thân, lệch ngang nhẹ theo tip cũ
+  const nong = (S, i, v) => { const [ox, oy] = oXY(S, i), tp = T[v.id].tip || [32, 32]; return [ox + C.O / 2 + (tp[0] - 32) * 0.3, oy + C.OH - 8 - 16 + (tp[1] - 38) * 0.15]; };
   // như Defense War: mọi tướng trên bàn bắn được mọi quái trên làn của CHÍNH bàn đó (S.quai chỉ chứa quái làn này) — không giới hạn tầm;
   // vẫn chọn mục tiêu theo kiểu từng tướng (bên dưới). Không có quái thì chờ.
   function chonMuc(S, i, v) {
@@ -205,7 +210,7 @@
     v.nhin = (v.nhin || 0) - dt;
     if (v.nhin <= 0) { v.nhin = HG.NHIN; v.mucNhin = chonMuc(S, i, v); }   // dò mục tiêu thưa (20 lần/giây)
     const q = v.mucNhin && sống(v.mucNhin) ? v.mucNhin : null;
-    const khoa = v.atkT != null && S.t - v.atkT < C.TAC_DONG + 0.1;   // khoá hướng trong pha ra đòn của attack
+    const khoa = v.atkT != null && S.t - v.atkT < C.TAC_DONG + C.GIU_KHUNG + 0.1;   // khoá hướng trong pha ra đòn của attack
     let dich = null;
     if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); }
     else { v.khongMuc = (v.khongMuc || 0) + dt; if (v.khongMuc > HG.VE_S) dich = Math.PI / 2; }   // không có mục tiêu > 0.8s → về S
@@ -232,6 +237,7 @@
       trung(S, q, dmg, v, h.mau);
       S.fx.push({ k: 'chem', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.14, mau: h.mau });
       if (v.dem % 3 === 0) {
+        S.hitStop = Math.max(S.hitStop || 0, C.HIT_STOP.arc);
         let nhanh = v.sao >= 3 ? 3 : 2; const r = (v.sao >= 5 ? 105 : 85) * K;
         if (q.chill > 0 && q.arcCD <= 0) { nhanh++; q.arcCD = 1.5; }
         const pts = [[q.x, q.y - q.co / 2]], da = new Set([q]); let cur = q;
@@ -254,6 +260,7 @@
       const xuyen = (v.sao >= 3 ? 3 : 2) - 1, sau = [];
       for (const o of S.quai) { if (o === q || !nham(o)) continue; const px = o.x - x, py = o.y - o.co / 2 - y, p = px * ux + py * uy; if (p > L0 && Math.abs(px * uy - py * ux) < 16 * K) sau.push([p, o]); }
       sau.sort((a, b) => a[0] - b[0]);
+      S.hitStop = Math.max(S.hitStop || 0, C.HIT_STOP.lance); S.rung = Math.max(S.rung || 0, 0.05);   // hit-stop + giật màn ≤2px
       trung(S, q, dmg * (1 + bonus), v, h.mau, true);
       sau.slice(0, xuyen).forEach(([, o], n) => trung(S, o, dmg * (n === 0 ? 0.4 : 0.25), v, h.mau));
       S.fx.push({ k: 'rail', x0: x, y0: y, x1: ex, y1: ey, t: 0, T: 0.2, mau: h.mau, focus: bonus > 0 });
@@ -305,6 +312,7 @@
 
   function buoc(S, dt) {
     if (S.het) return;
+    if (S.hitStop > 0) { S.hitStop -= dt; return; }   // hit-stop: đứng hình cả bàn 20–35ms sau đòn mạnh
     S.t += dt;
     // đợt (bàn AI: nhận cùng đợt với người chơi — khi người chơi sang đợt mới thì AI cũng sang)
     if (S.theo && S.theo.dot > S.dot) batDauDot(S);
@@ -333,7 +341,7 @@
       if (v.corrT > 0) v.corrT = Math.max(0, v.corrT - dt);
       capNhatHuong(S, i, v, dt);
       v.cd -= dt / (v.nong > 0 ? 1.67 : 1);   // FIREWALL Heat Lockdown: bắn chậm 40%
-      // đòn đánh theo hoạt ảnh: bắt đầu attack (12 khung @14fps), đạn/đòn phát ra ở khung tác động (~khung 6)
+      // đòn đánh theo hoạt ảnh: bắt đầu attack (14fps), đạn/đòn phát ra đúng lúc vào khung ra đòn (khung 3, TAC_DONG)
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
       else if (v.cd <= 0) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; chonHuong(v, gocTo(S, i, q), true); } else v.cd = 0.05; }
     });
@@ -434,7 +442,7 @@
     for (const f of S.fx) f.t += dt;
     S.fx = S.fx.filter((f) => f.t < f.T);
     for (const s of S.so) s.t += dt;
-    S.so = S.so.filter((s) => s.t < 0.7);
+    S.so = S.so.filter((s) => s.t < (s.T || 0.8));
   }
   // ---- boss: 2 kỹ năng, có cảnh báo (tele) trước khi tung; mỗi lúc chỉ 1 cảnh báo ----
   const dpsO = (S, v) => satThuong(S, v) / T[v.id].cd;

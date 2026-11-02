@@ -30,9 +30,10 @@ const BO_AI = ['scorch', 'frost', 'lance', 'warp', 'arc'];   // đội hình d�
 const TEN_FILE = (id) => (id === 'miner' ? 'broker' : id);
 
 const QUAI = {
-  thuong: { ten: 'DRONE', hp: 1, spd: 52, thuong: 3, co: 34 },
-  nhanh:  { ten: 'SKITTER', hp: 0.6, spd: 92, thuong: 3, co: 31 },
-  trau:   { ten: 'BULWARK', hp: 3.2, spd: 34, thuong: 7, co: 40 },
+  // co × TL (48/70) = chiều cao hiển thị theo tu-van-chatgpt-cham-ban-choi-8huong.txt P0.3: thường ~22px, nhanh ~20px, trâu ~28px (boss 58 → ~40px)
+  thuong: { ten: 'DRONE', hp: 1, spd: 52, thuong: 3, co: 32 },
+  nhanh:  { ten: 'SKITTER', hp: 0.6, spd: 92, thuong: 3, co: 29 },
+  trau:   { ten: 'BULWARK', hp: 3.2, spd: 34, thuong: 7, co: 41 },
 };
 // mỗi 10 đợt một boss, xoay vòng; mỗi boss 2 kỹ năng (chính + phụ) có cảnh báo trước (tele giây); hp = máu ở vòng 1
 const BOSS = [
@@ -51,7 +52,11 @@ const CAU_HINH = {
   LAN_AI: [[67, 92], [67, 273]], LAN_NG: [[67, 374], [67, 562]], LAN_X0: 42, LAN_X1: 92,
   TL_TAM: 48 / 70,      // (không còn giới hạn chọn mục tiêu: tướng bắn được cả làn của bàn mình — xem chonMuc trong game.js)
   TL: 48 / 70,          // tỉ lệ thu nhỏ không gian: bước ô 48 (mới) / 70 (bản ngang cũ) — nhân tầm bắn + bán kính vùng hiệu ứng
-  TAC_DONG: 6 / 14,     // giây từ đầu hoạt ảnh attack (12 khung @14fps) tới khung tác động ~6: lúc đạn/đòn phát ra
+  // attack đọc rõ 3 pha (P2.2): chuẩn bị khung 0..2 → khung ra đòn 3 (giữ thêm GIU_KHUNG) → thu đòn. Đạn/đòn phát đúng lúc vào khung ra đòn.
+  TAC_DONG: 3 / 14,     // giây từ đầu attack (14fps) tới khung ra đòn (khung 3)
+  GIU_KHUNG: 0.075,     // giữ khung ra đòn thêm 75ms (60–90ms)
+  HIT_STOP: { lance: 0.03, arc: 0.025 },   // hit-stop 20–35ms chỉ cho đòn mạnh: LANCE, ARC nhịp chuỗi thứ 3
+  FX_NHO_MAX: 16,       // tối đa 16 hiệu ứng trúng đòn nhỏ cùng lúc
   DAI_CU: 1272,         // chiều dài đường quái bản ngang cũ (px) — tốc độ quái nhân (dài làn mới / DAI_CU) để thời gian đi hết làn như cũ
   SAO_MAX: 7, BAC_MAX: 5, MANG: 3, LK_DAU: 100,
   giaTrieu: (n) => 10 + 6 * n,                         // giá Summon lần thứ n (n = số lần đã triệu)
