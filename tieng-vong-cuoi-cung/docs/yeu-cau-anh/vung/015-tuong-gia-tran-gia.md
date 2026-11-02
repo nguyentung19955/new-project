@@ -1,5 +1,5 @@
 # 015 – tuong-gia-tran-gia
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – tuong-nguyen/nut/mo 32×48, tran-nguyen/mo 32×16; gốc: bi-mat/nguon-chatgpt.png)
 - **Dùng vào:** Ô `N` (tường nứt vỏ cây – chém 3 phát vỡ) và `G`/`T` (tường giả / trần giả) ở RS201, RS202, RS203. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Vết nứt vỏ cây rộng 2 ô: nguyên / nứt / vỡ mở; trần giả: nguyên / mở (có dòng bào tử rơi nhỏ làm gợi ý). Mép rễ phải mọc vào tường bên cạnh, không biến mất.
 - **Số khung + ms gợi ý:** tường: 3 trạng thái; trần: 2 trạng thái

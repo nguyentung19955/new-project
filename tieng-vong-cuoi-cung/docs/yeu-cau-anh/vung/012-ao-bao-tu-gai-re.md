@@ -1,5 +1,5 @@
 # 012 – ao-bao-tu-gai-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – gai-1..3 16×16 (đáy ô), ao-f0..f3 16×16 lặp; gốc: nguy-hiem/nguon-chatgpt.png)
 - **Dùng vào:** Ô `X` (gai rễ) và `B` (ao bào tử) – chạm mất 1 mặt nạ, đưa về gờ chắc gần nhất. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Gai rễ nhọn mọc từ đất (3 biến thể ghép liền); mặt ao bào tử độc (lỏng sệt olive-hổ phách, bong bóng) 4 khung lặp.
 - **Số khung + ms gợi ý:** gai: 3 tĩnh; ao: 4 khung × 120 ms lặp

@@ -1,5 +1,5 @@
 # 011 – tran-tuong-nam
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – re-treo-1..3 (39×29, 40×45, 33×62, neo trên-giữa), nam-tuong-1..3 (31×40, 39×48, 48×61, mép tường bên trái); gốc: chat-lieu/re-treo-nam-tuong-nguon-chatgpt.png)
 - **Dùng vào:** Trang trí mép đá trong ảnh phòng nướng. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Rễ treo trên trần (hanging root ceiling, 3 biến thể dài/ngắn), tường nấm ướt (wet fungus wall, 3 biến thể dán lên mép tường).
 - **Số khung + ms gợi ý:** 6 mẩu rời
