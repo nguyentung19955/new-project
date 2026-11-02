@@ -7,6 +7,6 @@
   - `neo02.png` văng lên – nhảy, rơi
   - `neo03.png` hồi về – trúng đòn
 - **Ảnh:** mỗi hình PNG nền trong suốt, cùng cỡ ô (vd 48×48), dải vải hướng ra sau khi nhân vật quay PHẢI (tức bay về bên TRÁI ảnh). Ghi điểm buộc (gốc dải vải, chỗ dính lưng/cổ) trong ảnh nhỏ → `chan_neo: [x, y]` (cùng điểm cho cả 4 hình).
-- **Điểm neo từng khung:** đo điểm lưng/cổ (chỗ buộc) trong từng khung gốc 256×256 (mặt phải) cho các clip dung/chay/nhay/roi/tiepdat/don1/don2/don4/luot/trungdon → ghi vào file này dạng `chay: [[x,y],…8 điểm]`; chép vào `neo` của lớp trong trang-bi.json. Clip chưa đo → dải vải ẩn ở clip đó.
+- **Điểm neo từng khung: ĐÃ ĐO SẴN** (phiên LÀM, 02/11) – điểm `lung` trong `game/thu-mat-na/neo-kiem-khach.json` cho mọi clip (dung/chay/nhay/roi/tiepdat/don1/don2/don4/luot/trungdon); lớp đã ghi `"diem": "lung"`. Phiên gen ảnh KHÔNG cần đo, chỉ cần ghi `chan_neo` (điểm buộc trong ảnh nhỏ). Nếu thấy lệch khi thử: sửa tay trong `SUA_TAY` của `tools/suc-manh/do-neo.py` rồi chạy lại.
 - **Lưu:** `art/kiem-khach-lop/khan-ngan/neo00.png … neo03.png` + `nguon-chatgpt.png`.
 - **Không** làm to silhouette, không thành áo choàng.

@@ -28,6 +28,10 @@
      "tho": {"clip":["dung"], "ms":2400, "min":0.6}   "thở" độ sáng chậm khi đứng yên (chỉ đổi alpha, không vẽ thêm)
      kiểu "neo": "hinh_theo_clip": {"dung":0, "troi":1, "nhay":2}  chọn tư thế ảnh (neo00, neo01…) theo clip đang chạy
                  thay vì lặp theo thời gian (dải vải 3–4 tư thế, chuông lắc) – JS chỉ chọn ảnh + vị trí, không tự vẽ hình.
+   Điểm neo đo sẵn: trang-bi.json "tep_neo": "neo-kiem-khach.json" (do tools/suc-manh/do-neo.py đo: mat_na/nguc/hong/lung từng khung).
+     lớp "neo" ghi "diem": "hong" → lấy điểm neo từ tệp đó (lớp tự ghi "neo" thì ưu tiên); điểm null = bị che → ẩn ở khung đó.
+     lớp "khung" ghi "an_khi_che": "mat_na" → ẩn ở khung mà điểm đó null (mặt nạ bị tay/kiếm che).
+     Tệp neo chỉ được tải khi có lớp đã bật (co_anh) cần tới nó.
    Cờ cốt truyện (ChatGPT: tầng ngoại hình khoá theo CỜ cốt truyện): trang-bi.json "theo_co_truyen": true →
      cấp = max(cấp tay, capTheoTienDo({co: các cờ đang bật trong LuuChung})); điều kiện cấp ghi {"co": ["ha_trum:vung-1"]}.
    Cầu nối hệ thống đồ (phiên "do", game/he-thong/): trang-bi.json "tu_dong_cap": true → cấp = max(cấp tay, MocHeThong.ht.capSucManh());
@@ -67,6 +71,11 @@ const LopTrangBi = (() => {
     try { st.json = await fetch(url + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json()); }
     catch (e){ st.json = {lop:{}, cap_suc_manh:[]}; }
     st.goc = new URL(st.json.goc || '../../art/kiem-khach-lop/', new URL(url, location.href)).href;
+    st.neo = null;
+    const canNeo = Object.values(st.json.lop || {}).some(d => !d.tat && d.co_anh === true && (d.diem || d.an_khi_che));
+    if (canNeo && st.json.tep_neo) try {
+      st.neo = await fetch(new URL(st.json.tep_neo, new URL(url, location.href)).href + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json());
+    } catch (e){ st.neo = null; }
     const ds = Object.entries(st.json.lop || {});
     await Promise.all(ds.map(async ([id, d]) => {
       const L = st.lop[id] = {id, d, dir:st.goc + id + '/', coAnh:false, khung:{}, anhNeo:[]};
@@ -172,12 +181,14 @@ const LopTrangBi = (() => {
       const mn = d.tho.min ?? 0.6, ms = d.tho.ms || 2400;
       alpha = (alpha === undefined ? 1 : alpha) * (mn + (1 - mn) * (0.5 + 0.5 * Math.cos(2 * Math.PI * performance.now() / ms)));
     }
+    const bang = st.neo && (st.neo[tm] || st.neo[ten]);
+    if (d.an_khi_che){ const dd = bang && bang[d.an_khi_che]; if (!dd || !dd[k]) return; }   // điểm bị che (null) / chưa đo → ẩn
     if ((d.kieu || 'khung') === 'khung'){
       const o = L.khung[tm] || napKhung(L, tm, n);
       if (!o.ok || o.hinh.length !== n) return;
       SpriteMN.ve(g, {hinh:o.hinh, chan:C.chan}, k, fx, fy, lat, s, alpha, trang);
     } else {
-      const neo = d.neo && (d.neo[tm] || d.neo[ten]); if (!neo) return;          // clip chưa đo điểm neo → ẩn
+      const neo = (d.neo && (d.neo[tm] || d.neo[ten])) || (d.diem && bang && bang[d.diem]); if (!neo) return;   // clip chưa đo điểm neo → ẩn
       const p = neo[Math.max(0, Math.min(neo.length - 1, k))]; if (!p) return;   // [x, y] trong ảnh gốc 256×256 (mặt PHẢI)
       const msN = d.ms_neo || 120, htc = d.hinh_theo_clip && (d.hinh_theo_clip[ten] ?? d.hinh_theo_clip[tm]);
       const i = htc !== undefined && htc !== null ? Math.max(0, Math.min(L.anhNeo.length - 1, htc | 0))   // tư thế theo clip

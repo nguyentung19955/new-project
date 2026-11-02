@@ -3,5 +3,5 @@
 - **Dùng vào đâu:** lớp `chuong-hong` (khe "hong", vẽ TRÊN thân) – phụ kiện Echo Charm (mở gắn ở Bell Village, chuông ở Bronze Foundry); hiện qua `theo_am_phu` khi phiên "do" chốt mẫu Âm Phù.
 - **Mô tả (ChatGPT):** chuông đồng nhỏ **6–8 × 8–11 px** ở cỡ ảnh gốc (Ancient Bronze #9C6B30, ánh Bell Gold #D0A45B), treo dây ở hông; không đụng kiếm.
 - **3 hình** (lắc theo chạy/nhảy – game chọn theo clip, ẩn khi lướt): `neo00.png` yên (dung, tiepdat, trungdon) · `neo01.png` lắc ra sau (chạy, các đòn) · `neo02.png` hất lên (nhảy, rơi). Cùng cỡ ô, nền trong suốt; điểm treo (đầu dây) giống nhau ở cả 3 → `chan_neo: [x, y]`.
-- **Điểm neo từng khung:** đo vị trí hông (mặt phải) trong từng khung gốc 256×256 cho dung/chay/nhay/roi/tiepdat/don1/don2/don4/trungdon → ghi vào file này dạng `chay: [[x,y],…8 điểm]`; chép vào `neo` của lớp trong trang-bi.json. Clip chưa đo → chuông ẩn ở clip đó.
+- **Điểm neo từng khung: ĐÃ ĐO SẴN** (phiên LÀM, 02/11) – điểm `hong` trong `game/thu-mat-na/neo-kiem-khach.json` cho mọi clip (dung/chay/nhay/roi/tiepdat/don1/don2/don4/trungdon); lớp đã ghi `"diem": "hong"`. Phiên gen ảnh KHÔNG cần đo, chỉ cần ghi `chan_neo` (điểm buộc trong ảnh nhỏ). Nếu thấy lệch khi thử: sửa tay trong `SUA_TAY` của `tools/suc-manh/do-neo.py` rồi chạy lại.
 - **Lưu:** `art/kiem-khach-lop/chuong-hong/neo00.png … neo02.png` + `nguon-chatgpt.png`.

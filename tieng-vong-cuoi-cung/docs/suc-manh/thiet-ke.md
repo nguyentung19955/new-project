@@ -34,6 +34,7 @@ Bảng màu lớp mới: Ivory `#E9E4D9` · Cold Silver `#B7C6D2` · Ice Cyan `#
 | khan-ngan | `neo`, vẽ SAU thân | `neo00..neo03.png` = 4 tư thế: nghỉ / kéo ra sau / văng lên / hồi về | `hinh_theo_clip` chọn tư thế theo clip; cần điểm neo lưng từng khung |
 | chuong-hong | `neo`, vẽ TRÊN thân | `neo00..neo02.png` = yên / lắc ra sau / hất lên | ẩn khi lướt (`an_clip`); cần điểm neo hông từng khung |
 
+- **Điểm neo đo sẵn** (ChatGPT mục 6 "đo neo mặt nạ/ngực/hông/lưng từng khung"): `game/thu-mat-na/neo-kiem-khach.json`, đo bằng `tools/suc-manh/do-neo.py` cho 11 clip (dung, chay, nhay, roi, tiepdat, luot, trungdon, don1–don4). mat_na = tâm vệt mắt xanh; nguc = khối vải dưới cổ; hong = mép trước thắt lưng; lung = mép sau thân ngang vai. Đã xem ảnh kiểm từng khung; khung mặt nạ bị tay/kiếm che ghi null (don4 f02–f04) → lớp mặt nạ tự ẩn (`an_khi_che`). Lớp neo dùng `"diem": "lung"/"hong"`. Tệp chỉ tải khi có lớp đã bật cần nó.
 - JS chỉ chọn ảnh, vị trí, độ sáng – **không tự vẽ hình**. Clip chưa có ảnh/điểm neo → lớp tự ẩn ở clip đó, không mượn toạ độ clip khác.
 - Cấp: `theo_co_truyen: true` → cấp = max(cấp tay, cấp theo cờ `LuuChung`). Chưa có ảnh nên bật cờ cũng không đổi hình.
 - Cầu nối phiên "do": `tu_dong_cap` (dùng `capSucManh()` theo số nút) **để TẮT** – ChatGPT bảo khoá theo cờ cốt truyện, không theo cây kỹ năng.

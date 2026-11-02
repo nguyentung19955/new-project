@@ -15,12 +15,13 @@ const ok = (ten, dk, ct) => { console.log((dk ? 'ĐẠT ' : 'LỖI ') + ten + (c
 // Math.random cố định để 2 lần chạy vẽ giống nhau
 const SEED = () => { let s = 12345; Math.random = () => ((s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff); };
 
-async function moTrang(b, url, {chan = false, json = null, fixture = false, khongClip = []} = {}){
+async function moTrang(b, url, {chan = false, json = null, fixture = false, khongClip = [], neo = null} = {}){
   const pg = await b.newPage({viewport:{width:960, height:540}});
   const loi = []; pg.on('pageerror', e => loi.push(String(e)));
   await pg.addInitScript(SEED);
   await pg.addInitScript(() => { try { localStorage.clear(); } catch (e){} });
   if (chan) await pg.route('**/lop-trang-bi.js*', r => r.fulfill({status:200, contentType:'text/javascript', body:'/* chặn trong kiểm thử */'}));
+  if (neo) await pg.route('**/neo-kiem-khach.json*', r => r.fulfill({status:200, contentType:'application/json', body:JSON.stringify(neo)}));
   if (json) await pg.route('**/trang-bi.json*', r => r.fulfill({status:200, contentType:'application/json', body:JSON.stringify(json)}));
   if (fixture) await pg.route('**/art/kiem-khach-lop/**', r => {
     // art/kiem-khach-lop/<id>/<clip>/fNN.png  → trả chính ảnh gốc art/kiem-khach/<clip>/fNN.png (chỉ để đo vị trí)
@@ -59,6 +60,8 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
     ok(ten + ': có/không nạp lop-trang-bi.js → ảnh màn giống hệt từng điểm ảnh', giong === tong, giong + '/' + tong);
     ok(ten + ': không lỗi JS', !A.loi.length && !B.loi.length, A.loi.concat(B.loi).slice(0, 3));
     ok(ten + ': mặc định không tải ảnh lớp nào (0 yêu cầu 404)', !(A.pg._404 || []).length, A.pg._404);
+    const taiNeo = await A.pg.evaluate(() => performance.getEntriesByType('resource').some(r => /kiem-khach-lop|neo-kiem-khach/.test(r.name)));
+    ok(ten + ': mặc định không tải ảnh lớp / tệp điểm neo', !taiNeo);
     await A.pg.close(); await B.pg.close();
   }
   // Vùng 1: nạp được, không lỗi, mặc định không lớp
@@ -173,6 +176,43 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
   ok('tuỳ chọn ChatGPT: không lỗi JS', !K.loi.length, K.loi.slice(0, 3));
   await K.pg.screenshot({path:path.join(OUT, 'thu-co-truyen.png')});
   await K.pg.close();
+
+  /* ---------- 4) tệp điểm neo đo sẵn (tep_neo): lớp neo theo "diem", lớp khung "an_khi_che" ---------- */
+  const NEO_THU = {dung:{mat_na:[[130, 115], null, [130, 115], null], hong:[[100, 140], [101, 141], [102, 142], [103, 143]]}};
+  const JSON_NEO = {goc:'../../art/kiem-khach-lop/', tep_neo:'neo-kiem-khach.json', lop:{
+    'n-che':{ten:'che', khe:'a', kieu:'khung', z:'truoc', co_anh:true, an_khi_che:'mat_na'},
+    'n-diem':{ten:'điểm', khe:'c', kieu:'neo', z:'truoc', co_anh:true, tep:'neo', so_hinh_neo:1, chan_neo:[128, 172], diem:'hong'}}, cap_suc_manh:[{ten:'0', lop:[]}]};
+  const N = await moTrang(b, 'game/phong-demo/index.html?tu=1&trangbi=n-che,n-diem', {json:JSON_NEO, fixture:true, neo:NEO_THU});
+  await N.pg.evaluate(() => { const goc = SpriteMN.ve; window.GHI = [];
+    SpriteMN.ve = function(g, C, k, fx, fy, lat, s, al, tr){ GHI.push({lop:!C.def, k, cx:C.chan[0], cy:C.chan[1], src:(C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))] || {}).src || ''}); return goc.apply(this, arguments); }; });
+  await N.pg.evaluate(() => TV.buoc(60, ''));
+  let dungChe = true, dungDiem = true, soK = new Set(), ct = [];
+  for (let i = 0; i < 40; i++){
+    const r = await N.pg.evaluate(() => { GHI.length = 0; TV.buoc(1, ''); return {st:TV.E.trangThai().ten, ghi:GHI.slice()}; });
+    const th = r.ghi.find(g => !g.lop && /kiem-khach\/dung/.test(g.src)); if (r.st !== 'dung' || !th) continue;
+    soK.add(th.k);
+    const che = r.ghi.some(g => /n-che/.test(g.src)), di = r.ghi.find(g => /n-diem/.test(g.src)), p = NEO_THU.dung.hong[th.k];
+    if (che !== (th.k % 2 === 0)){ dungChe = false; ct.push('k' + th.k + ' che=' + che); }
+    if (!di || di.cx !== 128 + 128 - p[0] || di.cy !== 172 + 172 - p[1]){ dungDiem = false; ct.push('k' + th.k + ' diem'); }
+  }
+  ok('tep_neo: lớp khung "an_khi_che" ẩn đúng ở khung có điểm mặt nạ null, hiện ở khung còn lại', dungChe && soK.size >= 3, {k:[...soK], ct:ct.slice(0, 4)});
+  ok('tep_neo: lớp neo "diem": "hong" đặt đúng điểm hông đo sẵn của từng khung', dungDiem && soK.size >= 3, ct.slice(0, 4));
+  ok('tep_neo: không lỗi JS', !N.loi.length, N.loi.slice(0, 3));
+  await N.pg.close();
+
+  /* ---------- 5) tệp điểm neo thật: đủ clip, đúng số khung, trong khung ảnh ---------- */
+  {
+    const NEO = JSON.parse(fs.readFileSync(path.join(REPO, 'game/thu-mat-na/neo-kiem-khach.json'), 'utf8'));
+    let dung = true; const ctN = [];
+    for (const c of ['dung', 'chay', 'nhay', 'roi', 'tiepdat', 'luot', 'trungdon', 'don1', 'don2', 'don4']){
+      const n = fs.readdirSync(path.join(REPO, 'art/kiem-khach', c)).filter(f => /^f\d\d\.png$/.test(f)).length;
+      for (const d of ['mat_na', 'nguc', 'hong', 'lung']){
+        const a = NEO[c] && NEO[c][d];
+        if (!a || a.length !== n || !a.every(p => p === null || (p[0] >= 0 && p[0] < 256 && p[1] >= 0 && p[1] <= 172))){ dung = false; ctN.push(c + '.' + d); }
+      }
+    }
+    ok('neo-kiem-khach.json: đủ 10 clip × 4 điểm, đúng số khung, toạ độ trong khung', dung, ctN.slice(0, 5));
+  }
   await b.close();
   console.log(soLoi ? 'CÓ ' + soLoi + ' LỖI' : 'TẤT CẢ ĐẠT');
   process.exit(soLoi ? 1 : 0);

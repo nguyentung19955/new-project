@@ -1,4 +1,14 @@
-# Báo cáo – Sức mạnh hiện lên người Kiếm Khách (cập nhật 02/11, lượt 2)
+# Báo cáo – Sức mạnh hiện lên người Kiếm Khách (cập nhật 02/11, lượt 3)
+
+## Lượt 3 (02/11 chiều)
+- **Đã đo điểm neo** mặt nạ / ngực / hông / lưng cho TỪNG KHUNG của 11 clip (Idle, Run, Jump, Fall, Land, Dash, Hurt, don1–don4) → `game/thu-mat-na/neo-kiem-khach.json`, công cụ đo `tools/suc-manh/do-neo.py` (tự dò vệt mắt xanh trên mặt nạ, đã xem ảnh kiểm từng khung, sửa tay 1 khung; khung don4 mặt nạ bị tay/kiếm che (f02–f04) ghi null → lớp mặt nạ tự ẩn ở đó).
+- Hệ thống lớp đọc được tệp neo: chuông hông lấy điểm `hong`, dải vải lấy điểm `lung` – phiên gen ảnh không phải đo nữa; lớp mặt nạ tự ẩn ở khung mặt nạ bị che. Tệp chỉ tải khi có lớp đã bật (mặc định không tải gì).
+- **Yêu cầu ảnh 002 viết lại cho phiên chính vẽ:** P0 "First Resonance" = vết nứt mặt nạ cho **Idle 4 + Run 8 = 12 ảnh** 256×256 nền trong suốt, kèm toạ độ mặt nạ từng khung, cỡ vết nứt, màu, đường dẫn lưu. 004/005 ghi rõ điểm neo đã đo sẵn.
+- Chữ trong game đều tiếng Anh (tên tầng/lớp trong trang-bi.json đã là tiếng Anh).
+- Kiểm thử `tools/suc-manh/kiem-thu-lop.js`: **33/33 ĐẠT** (thêm: mặc định không tải tệp neo; ẩn khi bị che; điểm hông đặt đúng; tệp neo đủ 10 clip × 4 điểm). Phép thử Vùng 1 kiem-thu-f vẫn đạt. Mọi lớp vẫn TẮT – nhân vật y hệt.
+
+---
+(Lượt 2 bên dưới)
 
 ## Tóm tắt dễ hiểu
 - Lượt này đã có **tư vấn ChatGPT** (phiên chính hỏi hộ) → thiết kế đã **chốt theo ChatGPT**: 4 tầng ngoại hình
