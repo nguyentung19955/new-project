@@ -82,7 +82,8 @@ html:not(.kd-cam-ung) .kd-chi-cham{display:none!important}
 #kd-xd .kd-the{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0}
 #kd-xd .kd-the>div{background:rgba(0,0,0,.28);padding:6px 8px;text-align:left;font-size:14px;line-height:1.35}
 #kd-xd .kd-the b{display:block;font-size:13px;letter-spacing:2px;color:var(--kd-vang)}
-#kd-xd .kd-hang .kd-nut{min-width:140px}
+#kd-xd .kd-hang{gap:8px;flex-wrap:nowrap}
+#kd-xd .kd-hang .kd-nut{min-width:0;padding:0 2px}
 
 /* ---------- XOAY DỌC ---------- */
 #kd-xoay{position:fixed;inset:0;z-index:99;display:none;place-items:center;text-align:center;padding:24px;
