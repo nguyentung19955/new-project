@@ -1,5 +1,5 @@
 # 006 – dai-suong
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – suong-1.png, suong-2.png 384×96 RGBA, nối liền ngang, màu đưa về #716A75 + chút vàng bào tử; game tự đặt độ trong thấp; gốc: suong-nguon-chatgpt.png)
 - **Dùng vào:** Lớp sương parallax mờ (độ trong thấp) phủ trước nền. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Hai dải sương bào tử mỏng màu #716A75 pha vàng bào tử rất nhạt, nối liền ngang, mép trên/dưới tan dần.
 - **Số khung + ms gợi ý:** 2 ảnh (dải 1, dải 2)

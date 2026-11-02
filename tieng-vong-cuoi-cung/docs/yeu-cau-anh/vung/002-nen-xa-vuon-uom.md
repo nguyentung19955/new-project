@@ -1,5 +1,5 @@
 # 002 – nen-xa-vuon-uom
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 384×192, nối liền ngang; gốc: xa-vuon-uom-nguon-chatgpt.png)
 - **Dùng vào:** Nền xa phòng R206, R209, RS202 (vườn ươm bị vùi). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** BG-R2-FAR-02 "Buried Nursery": kén treo lủng lẳng, nôi rễ cũ, không chữ đọc được; nối liền ngang.
 - **Số khung + ms gợi ý:** 1 ảnh tĩnh
