@@ -1,5 +1,5 @@
 # 023 – Khuyết Cẩu – chết: 1 khung gục giữa F5–F6 (P1)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng màu gốc, ms + khung sự kiện dời theo file này; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `quai.json → loai.cau.hinh.chet` – thư mục art gốc `art/quai-moi/cau/chet/` (9 khung `fNN.png`, ô 88×88, quay TRÁI, neo chân [44, 69])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F5.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F1–F4 đứng chờ lâu, F5→F6 gục nhanh; khuỵu sớm hơn; thêm 1 khung nếu F5→F6 giật."

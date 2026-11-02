@@ -1,5 +1,5 @@
 # 018 – Màn Tang – chết: 2 khung đang rơi giữa F3–F4 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng màu gốc, ms + khung sự kiện dời theo file này; kiểm thử ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `quai.json → loai.tang.hinh.chet` – thư mục art gốc `art/quai-moi/tang/chet/` (9 khung `fNN.png`, ô 104×104, quay TRÁI, neo chân [50, 87])
 - **Việc cần vẽ:** Vẽ **2 khung mới** `moi-01`, `moi-02`, chèn SAU F3.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Lỗi nặng: F3→F4 IoU 0,15 – từ treo nhảy thẳng xuống nằm bẹp. Thêm tư thế đang rơi giữa không trung; tốt nhất tách tuột → rơi → chạm đất."

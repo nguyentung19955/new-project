@@ -1,5 +1,5 @@
 # 019 – Màn Tang – vồ: 1 khung lao nửa đường giữa F6–F7 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: 9→10 khung, khung_trung [6,7,8,9]; khung mới hơi lấm tấm nhưng chỉ hiện 33 ms – chấp nhận) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `quai.json → loai.tang.hinh.danh` – thư mục art gốc `art/quai-moi/tang/danh/` (9 khung `fNN.png`, ô 104×104, quay TRÁI, neo chân [50, 87])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F6.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Giật F6→F7 (IoU 0,36). Thêm 1 khung lao nửa đường giữa F6–F7." Treo trần: khoá điểm treo.
