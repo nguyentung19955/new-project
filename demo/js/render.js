@@ -271,7 +271,7 @@
     const WW = W * 2;
     const tinh = mk(W + 16, H + 16, (c) => {
       c.translate(8, 8);
-      if (ANH.city.ok) { c.drawImage(ANH.city.img, -8, -8, W + 16, H + 16); return; }
+      if (ANH.city.ok) { c.save(); c.filter = 'saturate(0.8)'; c.drawImage(ANH.city.img, -8, -8, W + 16, H + 16); c.restore(); c.fillStyle = 'rgba(4,5,14,0.22)'; c.fillRect(-8, -8, W + 16, H + 16); return; }
       c.fillStyle = lg(c, 0, 0, 0, H, [[0, '#03010a'], [0.3, '#0c0422'], [0.46, '#2a0a48'], [0.5, '#3a0c4a'], [0.52, '#0c0620'], [1, '#030108']]); c.fillRect(-8, -8, W + 16, H + 16);
       c.fillStyle = rg(c, W / 2, 200, 10, 380, [[0, 'rgba(255,40,170,0.38)'], [0.4, 'rgba(120,30,200,0.16)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(-8, -8, W + 16, H + 16);
       for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(200,220,255,${0.2 + r() * 0.5})`; c.fillRect(r() * W, r() * 110, 1, 1); }
@@ -329,7 +329,7 @@
     for (let i = 0; i < C.COT * C.HANG; i++) {
       const [x, y] = G.oXY(i);
       rr(c, x + 1, y + 1, C.O - 2, C.O - 2, 7); c.fillStyle = '#111729'; c.fill(); c.lineWidth = 1; c.strokeStyle = 'rgba(51,65,90,0.4)'; c.stroke();
-      if (ANH.cell.ok) { c.save(); c.globalAlpha = 0.22; c.drawImage(ANH.cell.img, x, y, C.O, C.O); c.restore(); continue; }
+      if (ANH.cell.ok) { c.save(); c.globalAlpha = 0.1; c.drawImage(ANH.cell.img, x, y, C.O, C.O); c.restore(); continue; }
       rr(c, x + 1, y + 1, C.O - 2, C.O - 2, 7); c.fillStyle = lg(c, x, y, x + C.O, y + C.O, [[0, 'rgba(130,180,255,0.10)'], [1, 'rgba(40,60,140,0.04)']]); c.fill();
       c.lineWidth = 1; c.strokeStyle = 'rgba(120,180,255,0.22)'; c.stroke();
       c.strokeStyle = 'rgba(60,231,255,0.55)'; c.lineWidth = 1.4; c.beginPath();
@@ -384,6 +384,23 @@
     for (let i = 0; i < n; i++) { const px = x0 + i * w; c.beginPath(); for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 1.5 : 3.4; c.lineTo(px + Math.cos(g) * r, y + Math.sin(g) * r); } c.closePath(); c.fillStyle = m; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(0,0,0,0.7)'; c.stroke(); }
     c.restore();
   }
+  // "Live2D giả": uốn 1 ảnh nguyên khối theo lát ngang — chân cố định, thân thở, đầu/tóc lắc trễ nhịp như sóng,
+  // khi đánh ngả người tới rồi giật lùi. Mượt liên tục 60 hình/giây, không cắt mảnh nên không lộ khớp.
+  const LAT = 30;
+  function veUon(c, im, w, h, t, ph, nga, nen) {   // vẽ quanh gốc (0,0) = giữa chân; nga: độ ngả (px ở đỉnh), nen: nén dọc (0..1)
+    const iw = im.width, ih = im.height, kh = Math.min(w / iw, h / ih), dw = iw * kh, dh = ih * kh;
+    const tho = Math.sin(t * 2 * Math.PI / 1.3 + ph);                 // nhịp thở 1.3s
+    const H = dh * (1 + 0.012 * tho - 0.06 * nen);                     // cao (chân giữ nguyên)
+    for (let i = 0; i < LAT; i++) {
+      const k0 = i / LAT, k1 = (i + 1) / LAT, km = (k0 + k1) / 2, cao = 1 - km;   // cao: 1 = đỉnh đầu, 0 = chân
+      const song = Math.sin(t * 2 * Math.PI / 1.6 + ph - km * 2.2) * 0.9 * cao * cao;   // tóc/áo lắc trễ dần lên trên
+      const lech = song + nga * Math.pow(cao, 1.4);
+      const phong = 1 + 0.018 * tho * Math.max(0, 1 - Math.abs(km - 0.55) / 0.25);   // ngực phồng khi hít vào
+      const sy = ih * k0, sh = Math.max(1, ih * (k1 - k0)), y0 = -H + H * k0, y1 = -H + H * k1;
+      const ww = dw * phong;
+      c.drawImage(im, 0, sy, iw, sh + 0.6, -ww / 2 + lech, y0, ww, (y1 - y0) + 0.6);
+    }
+  }
   function veUnit(c, v, x, y, t, chon) {
     const td = TUONG[v.id], h = HANH[td.hanh];
     const cx = x + C.O / 2, chan = y + C.O / 2 + 24;                 // chân ở tâm ô + 24px
@@ -405,17 +422,19 @@
     const bob = danh ? 0 : Math.sin(t * 2.4 + v.uid) * 1.2;
     const aI = ANH['ui:' + v.id], aA = ANH['ua:' + v.id], aU = ANH['u:' + v.id];
     c.save(); c.translate(cx + dx * huong, chan); c.scale(s * huong, s * sy);
-    if (danh && aA && aA.ok) { const fH = aA.img.height, f = khungSheet(aA, ATK_MS, tDanh, false), S = 89; c.drawImage(aA.img, f * fH, 0, fH, fH, -S / 2, -S * 0.89, S, S); }
-    else if (aI && aI.ok) { const fH = aI.img.height, f = khungSheet(aI, IDLE_MS, t + v.uid * 0.13, true), S = 89; c.drawImage(aI.img, f * fH, 0, fH, fH, -S / 2, -S * 0.89 + bob * 0.3, S, S); }
-    else if (aU && aU.ok) { const S = 54; c.drawImage(aU.img, -S / 2, -S + bob, S, S); }
-    else c.drawImage(sprUnit(v.id), -27, -54 + bob, 54, 54);
+    if (aU && aU.ok) {
+      let nga = 0, nen = 0;
+      if (danh) { const k = tDanh / 0.38; nga = k < 0.24 ? -2.2 * (k / 0.24) : k < 0.42 ? -2.2 + 6.2 * ((k - 0.24) / 0.18) : 4 * (1 - (k - 0.42) / 0.58) * (1 - (k - 0.42) / 0.58); nen = k > 0.24 && k < 0.5 ? 0.5 * Math.sin((k - 0.24) / 0.26 * Math.PI) : 0; }
+      veUon(c, aU.img, 62, 62, t, v.uid * 1.7, nga, nen);
+    } else if (aI && aI.ok) { const fH = aI.img.height, f = khungSheet(aI, IDLE_MS, t + v.uid * 0.13, true), S = 100; c.drawImage(aI.img, f * fH, 0, fH, fH, -S / 2, -S * 0.89 + bob * 0.3, S, S); }
+    else c.drawImage(sprUnit(v.id), -30, -60 + bob, 60, 60);
     c.restore();
     if (danh && v.danh > 0.15) { const tp = td.tip; veGlow(c, h.mau, cx + (tp[0] * 0.84 - 27) * huong, chan - 54 + tp[1] * 0.84, 10, (v.danh - 0.15) / 0.15); }
     // trạng thái từ boss
     c.font = '700 8px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)';
     if (v.nong > 0) { c.strokeText('HOT ' + Math.ceil(v.nong), cx, y + 8); c.fillStyle = '#ffb0b0'; c.fillText('HOT ' + Math.ceil(v.nong), cx, y + 8); }
     else if (v.corrT > 0) { c.strokeText('BUG', cx, y + 8); c.fillStyle = '#e8b6ff'; c.fillText('BUG', cx, y + 8); }
-    veSao(c, cx, chan - 60, v.sao);
+    veSao(c, cx, chan - 66, v.sao);
   }
   // ---------- quái ----------
   const MAU_QUAI = { thuong: '#ff3355', nhanh: '#ff2bd6', trau: '#ff8a1a' };
