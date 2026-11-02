@@ -208,7 +208,31 @@
     };
   }
 
-  const XUAT = {taoDongBo, taoCongFirestore, bam, KHOA_CHO_PHEP, KHOA_META, KHOA_SAO, BO_SUU_TAP, CON, PHIEN_BAN};
+  /* ---------- PHIÊN ĐĂNG NHẬP GOOGLE: GIỮ ĐÚNG SO_NGAY_PHIEN NGÀY (phiên "dangnhap", docs/dang-nhap/nghien-cuu.md) ----------
+     Mốc = claim auth_time trong ID token (giờ máy chủ Google lúc ĐĂNG NHẬP, không đổi khi token tự làm mới mỗi giờ).
+     "Bây giờ" = max(đồng hồ máy, iat của token mới nhất đã thấy) → vặn lùi đồng hồ máy không kéo dài được phiên.
+     Phiên khách (ẩn danh) không hết hạn. Đổi số ngày: sửa đúng 1 chỗ này. */
+  const SO_NGAY_PHIEN = 7, NGAY_MS = 86400000, KHOA_PHIEN = 'tvcc-may-phien';
+  function docToken(jwt){   // giải phần payload JWT (không kiểm chữ ký – chỉ đọc giờ; máy chủ Firebase mới là nơi kiểm)
+    try {
+      let s = String(jwt).split('.')[1].replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+      const txt = typeof atob === 'function' ? atob(s) : Buffer.from(s, 'base64').toString('binary');
+      const p = JSON.parse(decodeURIComponent(txt.split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+      return {authTime:+p.auth_time || 0, iat:+p.iat || 0, nhaCungCap:(p.firebase && p.firebase.sign_in_provider) || ''};
+    } catch (e){ return null; }
+  }
+  /* t: {authTime (giây), iat (giây)}; o: {bayGio (ms máy), daThay (ms máy chủ lớn nhất đã thấy), mocDuPhong (ms), soNgay} */
+  function kiemPhien(t, o){
+    o = o || {};
+    const soNgay = o.soNgay || SO_NGAY_PHIEN;
+    const moc = Math.max((t && t.authTime || 0) * 1000, o.mocDuPhong || 0);
+    const bayGio = Math.max(o.bayGio || 0, (t && t.iat || 0) * 1000, o.daThay || 0);
+    if (!moc) return {hetHan:false, moc:0, conLai:soNgay * NGAY_MS, bayGio};   // không đọc được mốc: không tự đăng xuất
+    const conLai = moc + soNgay * NGAY_MS - bayGio;
+    return {hetHan:conLai <= 0, moc, conLai, bayGio};
+  }
+
+  const XUAT = {taoDongBo, taoCongFirestore, bam, docToken, kiemPhien, SO_NGAY_PHIEN, KHOA_PHIEN, KHOA_CHO_PHEP, KHOA_META, KHOA_SAO, BO_SUU_TAP, CON, PHIEN_BAN};
   if (typeof module !== 'undefined' && module.exports){ module.exports = XUAT; return; }
 
   /* ---------- PHẦN TRÌNH DUYỆT ---------- */
@@ -221,6 +245,16 @@
     trangThai: 'tat',        // tat | dang-ket-noi | an-danh | google | ngoai-tuyen | loi
     dongBo: '',              // '' | dang-gui | xong | cho | xung-dot | moi-hon
     loi: '', ten: '', email: '',
+    thongBao: '',            // thông báo ngắn (vd hết phiên 7 ngày) – trang hiện rồi gọi boThongBao()
+    soNgayPhien: SO_NGAY_PHIEN,
+    laGoogle: () => LM.trangThai === 'google' || LM._tt === 'google',
+    boThongBao(){ LM.thongBao = ''; bao(); },
+    tenNgan(){   // "Tung · ly23…@gmail.com" – gọn cho màn ngang iPhone
+      const ten = String(LM.ten || '').trim().split(/\s+/)[0].slice(0, 14);
+      const e = String(LM.email || ''), at = e.indexOf('@');
+      const em = at > 4 ? e.slice(0, 4) + '…' + e.slice(at) : e;
+      return [ten, em].filter(Boolean).join(' · ') || 'Google account';
+    },
     nghe(f){ nghe.add(f); try { f(LM); } catch (e){} return () => nghe.delete(f); },
     cho: () => Promise.resolve(false),
     daGhi(){}, guiNgay: () => Promise.resolve(false),
@@ -286,8 +320,8 @@
   if (tatHan) return;
   LM.coMay = () => true;
   LM.xungDot = () => DB.xungDot();
-  LM.chon = (k, ben) => { const ok = DB.chon(k, ben); capNhatDongBo(); if (ok) DB.gui().then(capNhatDongBo); return ok; };
-  LM.chonTatCa = ben => { for (const k of DB.xungDot()) DB.chon(k, ben); capNhatDongBo(); return DB.gui().then(() => { capNhatDongBo(); return true; }); };
+  LM.chon = (k, ben) => { const ok = DB.chon(k, ben); capNhatDongBo(); if (ok) guiKiem().then(capNhatDongBo); return ok; };
+  LM.chonTatCa = ben => { for (const k of DB.xungDot()) DB.chon(k, ben); capNhatDongBo(); return guiKiem().then(() => { capNhatDongBo(); return true; }); };
 
   const SDK = (CH.sdk || 'https://www.gstatic.com/firebasejs/10.14.1/').replace(/\/?$/, '/');
   const henGio = (p, ms, ten) => Promise.race([p, new Promise((_, b) => setTimeout(() => b(new Error('timed out: ' + ten)), ms))]);
@@ -298,13 +332,22 @@
   async function napSdk(){
     const [mA, mAuth, mS] = await henGio(Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]), 10000, 'loading Firebase');
     const app = mA.initializeApp({apiKey:CH.apiKey, authDomain:cungMien ? location.hostname : CH.authDomain, projectId:CH.projectId, appId:CH.appId, storageBucket:CH.storageBucket, messagingSenderId:CH.messagingSenderId});
-    const auth = mAuth.getAuth(app);
+    // (dangnhap) phiên đăng nhập LÂU DÀI: IndexedDB → localStorage → sessionStorage → bộ nhớ. Safari chặn loại nào thì SDK tự lùi sang loại sau.
+    let auth = null;
+    try {
+      if (mAuth.initializeAuth){
+        const ds = [mAuth.indexedDBLocalPersistence, mAuth.browserLocalPersistence, mAuth.browserSessionPersistence, mAuth.inMemoryPersistence].filter(Boolean);
+        auth = mAuth.initializeAuth(app, {persistence:ds, popupRedirectResolver:mAuth.browserPopupRedirectResolver});
+      }
+    } catch (e){ auth = null; }
+    if (!auth) auth = mAuth.getAuth(app);
     const db = mS.getFirestore(app);
     if (CH.emulator){ mAuth.connectAuthEmulator(auth, 'http://' + CH.emulator.auth, {disableWarnings:true}); mS.connectFirestoreEmulator(db, CH.emulator.firestore.split(':')[0], +CH.emulator.firestore.split(':')[1]); }
     F = {app, auth, db, A:mAuth, S:mS};
     DB.datCong(taoCongFirestore(mS, db, henGio));
     return F;
   }
+  const laGoogleU = u => !!(u && (u.providerData || []).some(p => p && p.providerId === 'google.com'));
   function capNhatNguoi(u){
     if (!u){ LM.ten = LM.email = ''; return; }
     const g = (u.providerData || []).find(p => p.providerId === 'google.com');
@@ -313,15 +356,80 @@
   async function vaoUid(u){
     capNhatNguoi(u); DB.datUid(u.uid);
     await DB.keo(); bao(LM._tt, '');
-    await DB.gui(); capNhatDongBo();
+    await guiKiem(); capNhatDongBo();
   }
+
+  /* ---------- (dangnhap) PHIÊN GOOGLE 7 NGÀY ---------- */
+  const docPhien = () => { try { return JSON.parse(ls.getItem(KHOA_PHIEN) || 'null') || {}; } catch (e){ return {}; } };
+  const ghiPhien = p => { try { if (p) ls.setItem(KHOA_PHIEN, JSON.stringify(p)); else ls.removeItem(KHOA_PHIEN); } catch (e){} };
+  async function layToken(u, ep){
+    let jwt = '';
+    try { jwt = await henGio(F.A.getIdToken ? F.A.getIdToken(u, !!ep) : u.getIdToken(!!ep), 8000, 'token'); }
+    catch (e){ jwt = u.accessToken || (u.stsTokenManager && u.stsTokenManager.accessToken) || ''; }   // không mạng: đọc token đã lưu
+    return jwt ? docToken(jwt) : null;
+  }
+  // Vừa đăng nhập Google xong: ghi giờ máy chủ đã thấy. Nếu máy chủ không làm mới auth_time (gắn Google vào tài khoản khách)
+  // thì xác thực lại bằng chính thông tin Google vừa nhận để có auth_time mới; không được thì lấy iat (giờ máy chủ) làm mốc dự phòng.
+  async function sauDangNhapGoogle(kq){
+    const u = kq && kq.user; if (!laGoogleU(u)) return;
+    LM.thongBao = '';
+    const p = {uid:u.uid};
+    let t = await layToken(u, true);
+    if (t && t.authTime && t.iat - t.authTime > 300){
+      try {
+        const c = F.A.GoogleAuthProvider.credentialFromResult && F.A.GoogleAuthProvider.credentialFromResult(kq);
+        if (c && F.A.reauthenticateWithCredential){ await henGio(F.A.reauthenticateWithCredential(u, c), 8000, 'reauth'); t = await layToken(u, true) || t; }
+      } catch (e){}
+      if (t.iat - t.authTime > 300) p.mocDuPhong = t.iat * 1000;
+    }
+    if (t) p.daThay = t.iat * 1000;
+    ghiPhien(p);
+  }
+  let dangKiem = null;
+  /* Kiểm phiên Google: quá SO_NGAY_PHIEN ngày kể từ auth_time → tự đăng xuất về khách (giữ bản lưu trên máy). Trả về true nếu vừa hết hạn. */
+  function kiemPhienGoogle(){
+    if (dangKiem) return dangKiem;
+    const lan = (async () => {
+      const u = F && F.auth.currentUser;
+      if (!laGoogleU(u)){ LM.phien = null; return false; }   // khách: không hết hạn
+      const t = await layToken(u, false);
+      if (!t) return false;
+      let p = docPhien(); if (p.uid !== u.uid) p = {uid:u.uid};
+      p.daThay = Math.max(p.daThay || 0, t.iat * 1000); ghiPhien(p);
+      const kq = kiemPhien(t, {bayGio:Date.now(), daThay:p.daThay, mocDuPhong:p.mocDuPhong});
+      LM.phien = {moc:kq.moc, conLai:kq.conLai};
+      return kq.hetHan;
+    })().catch(() => false);
+    // hết hạn → về khách SAU khi nhả khoá (về khách lại gọi gửi/kiểm – tránh tự chờ chính mình)
+    dangKiem = lan.then(het => { dangKiem = null; return het ? hetPhien().then(() => true, () => true) : false; });
+    return dangKiem;
+  }
+  let dangHet = null;
+  function hetPhien(){ if (!dangHet) dangHet = hetPhienThat().finally(() => { dangHet = null; }); return dangHet; }
+  async function hetPhienThat(){
+    // localStorage là nơi lưu chính → tiến độ trên máy giữ nguyên; không gửi gì lên mây bằng phiên đã hết hạn
+    ghiPhien(null); DB.datUid(null); LM.phien = null;
+    LM.thongBao = 'Your sign-in expired after ' + SO_NGAY_PHIEN + ' days. Sign in again to sync your progress.';
+    try { await F.A.signOut(F.auth); } catch (e){}
+    capNhatNguoi(null); LM._tt = 'an-danh'; bao('an-danh', '');
+    await vaoKhach();
+  }
+  async function vaoKhach(){
+    try { const r = await henGio(F.A.signInAnonymously(F.auth), 8000, 'guest sign-in'); await vaoUid(r.user); return true; }
+    catch (e){ bao(navigator.onLine === false ? 'ngoai-tuyen' : 'loi', e && e.message || e); return false; }
+  }
+  // mọi lần gửi lên mây đều kiểm phiên trước
+  async function guiKiem(){ if (F && await kiemPhienGoogle()) return false; return DB.gui(); }
+
   // tài khoản Google đã có bản lưu ở máy khác: KHÔNG đẩy tiến độ ẩn danh lên; chuyển sang tài khoản đó, kéo bản mây, xung đột thì cho chọn
   async function doiSangGoogle(e){
     const cred = F.A.GoogleAuthProvider.credentialFromError(e);
     if (!cred) return false;
     await DB.gui().catch(() => {});        // bản máy vẫn nằm trong localStorage; cố gửi nốt lên tài khoản khách cũ
-    const kq = await F.A.signInWithCredential(F.auth, cred); await vaoUid(kq.user); return true;
+    const kq = await F.A.signInWithCredential(F.auth, cred);
+    await sauDangNhapGoogle(kq); await vaoUid(kq.user); return true;
   }
+  const laTrungTk = e => e && (e.code === 'auth/credential-already-in-use' || e.code === 'auth/email-already-in-use');
 
   let xongKeo; const henKeo = new Promise(r => { xongKeo = r; });
   async function batDau(){
@@ -329,10 +437,11 @@
     try {
       await napSdk();
       if (F.A.getRedirectResult){   // quay lại sau đăng nhập Google kiểu chuyển trang
-        try { await henGio(F.A.getRedirectResult(F.auth), 8000, 'google redirect'); }
-        catch (e){ if (e && (e.code === 'auth/credential-already-in-use' || e.code === 'auth/email-already-in-use')){ await doiSangGoogle(e); xongKeo(true); return; } }
+        try { const r = await henGio(F.A.getRedirectResult(F.auth), 8000, 'google redirect'); if (r && r.user) await sauDangNhapGoogle(r); }
+        catch (e){ if (laTrungTk(e)){ await doiSangGoogle(e); xongKeo(true); return; } }
       }
       const u = await henGio(new Promise(r => { const bo = F.A.onAuthStateChanged(F.auth, x => { bo(); r(x); }); }), 8000, 'sign-in');
+      if (u && laGoogleU(u)){ capNhatNguoi(u); if (await kiemPhienGoogle()){ xongKeo(true); return; } }   // mở game: kiểm phiên 7 ngày trước khi đồng bộ
       const nguoi = u || (await henGio(F.A.signInAnonymously(F.auth), 8000, 'guest sign-in')).user;
       await vaoUid(nguoi);
       xongKeo(true);
@@ -345,36 +454,54 @@
   // gửi gom (debounce 10 giây) – tiết kiệm hạn mức miễn phí
   const NHIP = Math.max(3000, +(CH.nhipGui || 10000));
   let henGui = null;
-  function hen(ms){ if (henGui) return; henGui = setTimeout(() => { henGui = null; if (DB.daKeo()) DB.gui().then(capNhatDongBo); }, ms); }
+  function hen(ms){ if (henGui) return; henGui = setTimeout(() => { henGui = null; if (DB.daKeo()) guiKiem().then(capNhatDongBo); }, ms); }
   setInterval(() => { if (DB.quet() || DB.canGui().length){ capNhatDongBo(); hen(0); } }, NHIP);
+  // game mở lâu (iPhone để nguyên trang nhiều ngày): kiểm phiên mỗi 10 phút và mỗi lần quay lại trang
+  setInterval(() => { if (F) kiemPhienGoogle(); }, Math.max(1000, +(CH.nhipKiemPhien || 600000)));
   LM.daGhi = () => { DB.quet(); capNhatDongBo(); hen(NHIP); };
-  LM.guiNgay = () => DB.gui().then(v => { capNhatDongBo(); return v; });
-  const xa = () => { try { if (DB.quet() || DB.canGui().length) DB.gui(); } catch (e){} };   // cố gắng cuối; cờ "chưa gửi" vẫn còn cho lần mở sau
+  LM.guiNgay = () => guiKiem().then(v => { capNhatDongBo(); return v; });
+  LM.kiemPhien = () => F ? kiemPhienGoogle() : Promise.resolve(false);
+  const xa = () => { try { if (DB.quet() || DB.canGui().length) guiKiem(); } catch (e){} };   // cố gắng cuối; cờ "chưa gửi" vẫn còn cho lần mở sau
   W.addEventListener('pagehide', xa);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') xa(); });
-  W.addEventListener('online', () => { if (!F) { batDau(); return; } if (!DB.daKeo() && F.auth.currentUser) vaoUid(F.auth.currentUser).catch(() => {}); else LM.guiNgay(); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') xa(); else if (F) kiemPhienGoogle(); });
+  W.addEventListener('online', () => {
+    if (!F){ batDau(); return; }
+    if (!F.auth.currentUser){ vaoKhach(); return; }
+    if (!DB.daKeo() || !DB.uid()) vaoUid(F.auth.currentUser).catch(() => {}); else LM.guiNgay();
+  });
   W.addEventListener('offline', () => bao('ngoai-tuyen'));
 
   /* Chờ bản mây (tối đa ms, chỉ cho giao diện – không huỷ việc kéo) trước khi game đọc bản lưu. */
   LM.cho = ms => henGio(henKeo, ms || 2500, 'waiting for cloud').catch(() => false).then(v => { DB.khoaDoc(); return v; });
 
-  /* Gắn Google: gọi TRỰC TIẾP trong sự kiện chạm nút (không await gì trước popup). Popup bị chặn → chuyển trang. */
+  /* Đăng nhập Google: gọi TRỰC TIẾP trong sự kiện chạm nút (không await gì trước popup). Đang là khách → GẮN (link) Google vào
+     tài khoản khách, giữ nguyên tiến độ. Popup bị chặn → chuyển trang (authDomain cùng tên miền). */
   LM.dangNhapGoogle = () => {
-    if (!F) return Promise.resolve(false);
+    if (!F){ bao(null, navigator.onLine === false ? 'offline' : 'cloud not ready'); return Promise.resolve(false); }
     const P = new F.A.GoogleAuthProvider(), cu = F.auth.currentUser;
+    try { P.setCustomParameters && P.setCustomParameters({prompt:'select_account'}); } catch (e){}
     const p = cu ? F.A.linkWithPopup(cu, P) : F.A.signInWithPopup(F.auth, P);
-    return p.then(async kq => { await vaoUid(kq.user); return true; }).catch(async e => {
+    return p.then(async kq => { await sauDangNhapGoogle(kq); await vaoUid(kq.user); return true; }).catch(async e => {
       const ma = e && e.code || '';
       try {
-        if (ma === 'auth/credential-already-in-use' || ma === 'auth/email-already-in-use') return await doiSangGoogle(e);
+        if (laTrungTk(e)) return await doiSangGoogle(e);
         if ((ma === 'auth/popup-blocked' || ma === 'auth/operation-not-supported-in-this-environment') && cungMien){
           await (cu ? F.A.linkWithRedirect(cu, P) : F.A.signInWithRedirect(F.auth, P)); return false;
         }
       } catch (e2){ bao(null, e2 && (e2.code || e2.message)); return false; }
+      if (ma === 'auth/popup-closed-by-user' || ma === 'auth/cancelled-popup-request'){ bao(null, ''); return false; }
       bao(null, ma || (e && e.message)); return false;
     });
   };
-  LM.dangXuat = async () => { if (!F) return false; await DB.gui(); await F.A.signOut(F.auth); const r = await F.A.signInAnonymously(F.auth); await vaoUid(r.user); return true; };
+  /* Đăng xuất: gửi nốt bản lưu lên mây (nếu được), rồi về chế độ khách. Bản lưu trên máy KHÔNG bị xoá. */
+  LM.dangXuat = async () => {
+    if (!F) return false;
+    try { await henGio(DB.gui(), 8000, 'saving before sign-out'); } catch (e){}
+    ghiPhien(null); LM.thongBao = ''; LM.phien = null;
+    try { await F.A.signOut(F.auth); } catch (e){}
+    DB.datUid(null); capNhatNguoi(null); LM._tt = 'an-danh'; bao('an-danh', '');
+    await vaoKhach(); return true;
+  };
 
   batDau();
 })(typeof window !== 'undefined' ? window : globalThis);

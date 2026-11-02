@@ -89,5 +89,21 @@ const M = (may, k = 'tvcc-vung1', u = 'u1') => { const d = may.docs[u + '/' + k]
   const kHong = {getItem(){ throw new Error('chặn'); }, setItem(){ throw new Error('chặn'); }, removeItem(){}, key(){ throw new Error('chặn'); }, length:0};
   let sap = false; try { const H = taoDongBo({kho:kHong, cong:may}); H.datUid('u2'); await H.keo(); await H.gui(); H.xuat(); } catch (e){ sap = e; }
   ok(!sap, 'localStorage bị chặn: không sập', sap && sap.message);
+  // 12. (dangnhap) phiên Google 7 ngày theo auth_time
+  const {kiemPhien, docToken, SO_NGAY_PHIEN} = require('../../game/luu-may.js');
+  const NGAY = 86400, bay = Math.floor(Date.now() / 1000);
+  const jwt = p => 'x.' + Buffer.from(JSON.stringify(p)).toString('base64url') + '.y';
+  const tk = docToken(jwt({auth_time:bay - 3 * NGAY, iat:bay, firebase:{sign_in_provider:'google.com'}}));
+  ok(SO_NGAY_PHIEN === 7 && tk && tk.authTime === bay - 3 * NGAY && tk.iat === bay && tk.nhaCungCap === 'google.com', 'đọc auth_time / iat trong ID token; SO_NGAY_PHIEN = 7');
+  ok(docToken('rác') === null, 'token hỏng → null (không sập)');
+  ok(!kiemPhien({authTime:bay - 6 * NGAY, iat:bay}, {bayGio:Date.now()}).hetHan, 'auth_time 6 ngày trước → vẫn đăng nhập');
+  ok(kiemPhien({authTime:bay - 8 * NGAY, iat:bay}, {bayGio:Date.now()}).hetHan, 'auth_time 8 ngày trước → hết hạn');
+  ok(kiemPhien({authTime:bay - 8 * NGAY, iat:bay - 8 * NGAY + 60}, {bayGio:Date.now() - 5 * NGAY * 1000, daThay:Date.now()}).hetHan,
+    'vặn lùi đồng hồ máy không kéo dài phiên (dùng giờ máy chủ lớn nhất đã thấy)');
+  ok(kiemPhien({authTime:bay - 8 * NGAY, iat:bay - 8 * NGAY + 60}, {bayGio:Date.now() - 2 * NGAY * 1000, daThay:0}).hetHan === false &&
+     kiemPhien({authTime:bay - 8 * NGAY, iat:bay}, {bayGio:Date.now() - 2 * NGAY * 1000}).hetHan, '…token mới (iat máy chủ) vượt đồng hồ máy bị lùi → vẫn hết hạn');
+  ok(!kiemPhien({authTime:bay - 30 * NGAY, iat:bay}, {bayGio:Date.now(), mocDuPhong:Date.now() - 1000}).hetHan, 'gắn Google vào tài khoản khách cũ: tính từ lúc gắn (mốc dự phòng giờ máy chủ)');
+  ok(kiemPhien({authTime:bay - 7 * NGAY + 30, iat:bay}, {bayGio:Date.now()}).conLai > 0 && kiemPhien({authTime:bay - 7 * NGAY - 1, iat:bay}, {bayGio:Date.now()}).hetHan, 'đúng mốc 7 ngày');
+  ok(!kiemPhien(null, {bayGio:Date.now()}).hetHan, 'không đọc được token → không tự đăng xuất');
   console.log(`\n${dat}/${dat + hong} đạt`); process.exit(hong ? 1 : 0);
 })();

@@ -3,74 +3,13 @@
 // Chạy: (cd tieng-vong-cuoi-cung && python3 -m http.server 8765 &) ; node tools/firebase/kiem-tra-trinh-duyet.js
 const {chromium} = require('playwright');
 const GOC = 'http://localhost:8765/game/';
-const SDK = 'https://gia-firebase.test/sdk/';
-const CH = {apiKey:'gia', authDomain:'gia', projectId:'gia', appId:'gia', sdk:SDK, nhipGui:3000, choLocalhost:true};
-
-// ---- "máy chủ" giả ----
-const MC = {docs:{}, google:{}, so:0, ghi:0, doc:0};
-const P = a => a.join('/');
-function xuLy(op, a){
-  if (op === 'anon'){ return {uid:'u' + (++MC.so), providerData:[]}; }
-  if (op === 'get'){ MC.doc++; const d = MC.docs[P(a.p)]; return d ? JSON.parse(JSON.stringify(d)) : null; }
-  if (op === 'tx'){ // a.w: [{p, d}] – kiểm như firestore.rules (revision tăng đúng 1, đúng chủ)
-    for (const w of a.w){ const cu = MC.docs[P(w.p)]; if (w.p[1] !== a.uid) return {loi:'permission-denied'};
-      if (w.p.length === 4 && w.d.revision !== (cu ? cu.revision : 0) + 1) return {loi:'permission-denied'};
-      if (w.p.length === 2 && cu) return {loi:'permission-denied'}; }
-    for (const w of a.w){ MC.ghi++; MC.docs[P(w.p)] = w.d; } return {};
-  }
-  if (op === 'link'){ const cu = MC.google[a.gid]; if (cu && cu !== a.uid) return {loi:'auth/credential-already-in-use'}; MC.google[a.gid] = a.uid; return {uid:a.uid, providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
-  if (op === 'cred'){ return {uid:MC.google[a.gid], providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
-}
-const APP = `export function initializeApp(c){ return {c}; }`;
-// phiên đăng nhập giữ trong sessionStorage (giống Firebase giữ trong IndexedDB: xoá localStorage không mất đăng nhập)
-const AUTH = `
-const may = (op, a) => window.__mayGia(op, a || {});
-const giu = u => { try { sessionStorage.setItem('gia-user', JSON.stringify(u)); } catch (e){} };
-export function getAuth(){ const a = {currentUser:null}; try { a.currentUser = JSON.parse(sessionStorage.getItem('gia-user')); } catch (e){} return a; }
-export function connectAuthEmulator(){}
-export function onAuthStateChanged(auth, f){ setTimeout(() => f(auth.currentUser), 0); return () => {}; }
-export async function signInAnonymously(auth){ const u = await may('anon'); auth.currentUser = u; giu(u); return {user:u}; }
-export class GoogleAuthProvider { static credentialFromError(e){ return e.customData; } }
-const gid = () => window.__googleGia || 'nguoichoi';
-export async function linkWithPopup(u, p){ const r = await may('link', {uid:u.uid, gid:gid()}); if (r.loi){ const e = new Error(r.loi); e.code = r.loi; e.customData = {gid:gid()}; throw e; } window.__authGia.currentUser = r; giu(r); return {user:r}; }
-export async function signInWithPopup(auth, p){ return linkWithPopup(await signInAnonymously(auth).then(x => x.user), p); }
-export async function signInWithCredential(auth, c){ const u = await may('cred', c); auth.currentUser = u; window.__authGia = auth; giu(u); return {user:u}; }
-export async function getRedirectResult(){ return null; }
-export async function signOut(auth){ auth.currentUser = null; sessionStorage.removeItem('gia-user'); }
-const _g = getAuth; export { _g as _getAuth };
-`.replace('export function getAuth(){', 'export function getAuth(){ window.__authGia = window.__authGia || null; const a0 = window.__authGia; if (a0) return a0;').replace('return a; }', 'window.__authGia = a; return a; }');
-const FS = `
-const may = (op, a) => window.__mayGia(op, a || {});
-export function getFirestore(){ return {}; }
-export function connectFirestoreEmulator(){}
-export function doc(db, ...p){ return {p}; }
-const chua = () => { if (window.__matMang) throw new Error('mất mạng'); };
-export async function getDocFromServer(r){ chua(); const d = await may('get', {p:r.p}); return {exists:() => !!d, data:() => d}; }
-export async function runTransaction(db, f){ chua(); const w = [];
-  const tx = {get:async r => { const d = await may('get', {p:r.p}); return {exists:() => !!d, data:() => d}; }, set:(r, d) => { w.push({p:r.p, d:JSON.parse(JSON.stringify(d))}); }};
-  const kq = await f(tx); chua();
-  const uid = window.__authGia && window.__authGia.currentUser && window.__authGia.currentUser.uid;
-  const r = await may('tx', {uid, w}); if (r.loi){ const e = new Error(r.loi); e.code = r.loi; throw e; } return kq; }
-export function serverTimestamp(){ return {sv:'thoi-gian'}; }
-`;
+const {MC, mayMoi:mayGia} = require('./firebase-gia.js');   // máy chủ + SDK Firebase giả (dùng chung)
 let hong = 0, dat = 0;
 const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT ' : 'HỎNG ') + t + (x !== undefined ? ' – ' + JSON.stringify(x) : '')); };
 
 (async () => {
   const b = await chromium.launch(), loi = [];
-  async function mayMoi(o){
-    o = o || {};
-    const ctx = await b.newContext({viewport:{width:960, height:540}});
-    await ctx.exposeFunction('__mayGia', (op, a) => xuLy(op, a));
-    await ctx.addInitScript(c => { window.TVCC_FIREBASE = c; }, o.ch === null ? {tat:true} : Object.assign({}, CH, o.ch || {}));
-    await ctx.route(SDK + '**', r => {
-      if (o.chan) return r.abort();
-      const u = r.request().url(), body = u.endsWith('firebase-app.js') ? APP : u.endsWith('firebase-auth.js') ? AUTH : FS;
-      r.fulfill({status:200, contentType:'text/javascript', body, headers:{'access-control-allow-origin':'*'}});
-    });
-    const pg = await ctx.newPage(); pg.on('pageerror', e => loi.push(e.message));
-    return {ctx, pg};
-  }
+  const mayMoi = o => mayGia(b, loi, o);
   const vao = async (pg, q) => { await pg.goto(GOC + 'vung-1/index.html?tu=1' + (q || '')); await pg.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:30000}); };
   const manhMay = uid => { const d = MC.docs[['nguoi_choi', uid, 'ban_luu', 'tvcc-vung1'].join('/')]; return d && d.du ? JSON.parse(d.du).manh : null; };
   const tl = (uid, k) => MC.docs[['nguoi_choi', uid, 'ban_luu', k].join('/')];

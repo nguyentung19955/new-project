@@ -11,7 +11,7 @@
     touch-action:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
   #game { position:fixed; inset:0; display:grid; place-items:center; }
   #cv { display:none; image-rendering:pixelated; }
-  #cho { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; }
+  #cho { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; }
   #cho p { max-width:640px; line-height:1.5; }
   .vien { position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 16px); height:44px; padding:0 20px; border-radius:22px; border:2px solid #E1B85A;
     background:rgba(58,48,32,.85); color:#ffe08a; font:800 16px "Alegreya Sans",system-ui,sans-serif; visibility:hidden; display:none; }
@@ -26,17 +26,19 @@
 <!-- Làng Chuông (Bell Village) = điểm khởi đầu + trạm teleport (phiên cottruyen). Logic ở lang.js, bố cục lang.json.
      LUẬT HÌNH: mọi hình là ảnh ChatGPT vẽ. Thiếu ảnh bắt buộc (docs/yeu-cau-anh/cottruyen/006…) → không dựng màn, chỉ báo chữ. -->
 <div id="game"><canvas id="cv" width="960" height="540"></canvas></div>
-<div id="cho"><p>Bell Village is not open yet: waiting for art.<br><small id="thieu"></small><br><a href="../vung-1/" style="color:#E1B85A">Go to Region 1 – Rotting Roots</a></p></div>
+<div id="cho"><p>Bell Village is not open yet: waiting for art.<br><small id="thieu"></small><br><a href="../vung-1/" style="color:#E1B85A">Go to Region 1 – Rotting Roots</a></p><div id="tai-khoan"></div></div>
 <button id="b-bo" class="vien" type="button">Skip</button>
 <button id="b-noi" class="vien" type="button">Talk</button>
 <div id="keys">← → walk · ↑ / E talk, ring the bell · Z / Enter next · ↑ ↓ choose · Esc skip</div>
 <script src="../firebase/cau-hinh.js"></script>
 <script src="../luu-may.js"></script>
+<script src="../dang-nhap.js"></script>
 <script src="../luu-chung.js"></script>
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../cot-truyen/hop-thoai.js"></script>
 <script src="../cot-truyen/canh.js"></script>
 <script src="../cot-truyen/tram.js"></script>
+<script>if (window.DangNhap){ DangNhap.gan(document.getElementById('tai-khoan'), {khung:true, xungDot:true, sauChon:() => location.reload()}); DangNhap.chiThongBao(); }   // (dangnhap) ô tài khoản ở màn chờ + thông báo hết phiên cả khi đang chơi</script>
 <script src="lang.js"></script>
 </body>
 </html>

@@ -51,6 +51,7 @@ body.touch #keys{display:none}
 .hop button.chinh{border-color:var(--bell);color:#ffe08a;background:#3a3020}
 .hop .hang.nho{margin-top:6px;gap:8px}.hop .hang.nho button{height:32px;min-width:0;font-size:13px;padding:0 12px}#may-tt{margin:6px 0 0;font-size:13px}   /* (firebase) dòng lưu mây + xuất/nhập gọn cho màn ngang iPhone */
 .hop button:disabled{opacity:.4}
+.hop [hidden]{display:none!important}   /* (dangnhap) thuộc tính hidden phải thắng display:flex của .hang (trước đây 2 nút chọn bản luôn hiện) */
 .hop small{display:block;color:#7f8a99;font-size:12px;margin-top:10px}
 #rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
 </style>
@@ -71,9 +72,10 @@ body.touch #keys{display:none}
     <h1>The Last Echo</h1><h2>Region 1 · Weeping Heartwood</h2>
     <p id="menu-tt">Loading…</p>
     <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Continue</button><button id="b-moi" type="button" disabled>New Game</button></div>
+    <div id="tai-khoan"></div>
     <p id="may-tt" hidden></p>
     <div class="hang nho" id="may-xd" hidden><button id="b-xd-may" type="button">Use cloud save</button><button id="b-xd-tb" type="button">Keep this device's save</button></div>
-    <div class="hang nho" id="luu-tep"><button id="b-google" type="button" hidden>Keep progress with Google</button><button id="b-xuat" type="button">Export save</button><button id="b-nhap" type="button">Import save</button></div>
+    <div class="hang nho" id="luu-tep"><button id="b-xuat" type="button">Export save</button><button id="b-nhap" type="button">Import save</button></div>
     <small>Find 3 Broken Bells to open the Mute Bell Choir. Rest at a Rest Bell to save, heal and upgrade.</small>
   </div></div>
   <div id="l-chuong" class="lop ui"><div class="hop">
@@ -94,6 +96,7 @@ body.touch #keys{display:none}
 <script src="../thu-mat-na/ve-chieu-quai.js"></script>
 <script src="../firebase/cau-hinh.js"></script>
 <script src="../luu-may.js"></script>
+<script src="../dang-nhap.js"></script>
 <script src="../luu-chung.js"></script>
 <script src="../thu-mat-na/lop-trang-bi.js"></script>
 <script src="nap.js"></script>
@@ -122,8 +125,9 @@ async function choi(moi){
 $('b-tiep').onclick = () => choi(false);
 if (window.LuuMay && LuuMay.coMay()){   // (firebase) dòng trạng thái lưu mây trong menu – chỉ hiện khi đã cấu hình Firebase
   $('may-tt').hidden = false;
-  LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('b-google').hidden = m.trangThai !== 'an-danh'; $('may-xd').hidden = m.dongBo !== 'xung-dot'; });
-  $('b-google').onclick = () => LuuMay.dangNhapGoogle().then(ok => { if (ok){ const co = V1.coLuu(); $('b-tiep').disabled = !co; } });
+  LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('may-xd').hidden = m.dongBo !== 'xung-dot'; });
+  // (dangnhap) ô tài khoản: "Sign in with Google" / "Sign out" (game/dang-nhap.js). Đăng nhập xong mà mây có bản mới hơn → tải lại để game đọc đúng bản
+  if (window.DangNhap) DangNhap.gan($('tai-khoan'), {sauDangNhap:() => { if (LuuMay.dongBo === 'moi-hon' && $('l-menu').classList.contains('mo')) location.reload(); else $('b-tiep').disabled = !V1.coLuu(); }});
   // (firebase) xung đột 2 máy: người chơi chọn bản nào, rồi tải lại trang để game đọc đúng bản
   $('b-xd-may').onclick = () => { LuuMay.chonTatCa('may-chu').then(() => location.reload()); };
   $('b-xd-tb').onclick = () => { if (confirm('Replace the cloud save with this device\'s save? (The cloud copy is kept as a backup.)')) LuuMay.chonTatCa('thiet-bi').then(() => location.reload()); };
