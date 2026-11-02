@@ -1,0 +1,81 @@
+THIẾT KẾ HỆ THỐNG BÍ MẬT – THE LAST ECHO (ChatGPT, 02/11/2026, chat "Thiết kế bí mật Metroidvania") – chép đầy đủ nội dung chính
+Nguyên tắc: "A secret should feel remembered, not randomly hidden." Tách rõ: lối tắt / bí mật có thưởng / nhiệm vụ ẩn / thử thách kỹ năng – không cộng chung 1 bộ đếm.
+
+1. TRIẾT LÝ + PHÂN BỔ
+Học: Hollow Knight (bí mật liên kết không gian, quay lại – tránh giấu thông tin thiết yếu) · Blasphemous (vật phẩm kể chuyện, nghi lễ – tránh câu đố thiếu dấu hiệu) · Ori (thử thách di chuyển có thưởng rõ – tránh quá phụ thuộc phản xạ)
+· Ender Lilies (nhật ký, di vật, bi thương – tránh thưởng trùng) · Celeste (khó nhưng thử lại nhanh – tránh đặt thử thách xa checkpoint).
+Độ khó toàn game: dễ 40% / vừa 40% / khó 20%; vùng đầu 50/35/15.
+Phân bổ (bí mật thưởng / nhiệm vụ ẩn / lối tắt): V1 Weeping Heartwood 6/4/≥6 · V2 Bronze Foundry 7/4 · V3 Iron Nest 7/4 · V4 Wind Canopy 8/4 · V5 Thunder Crown 8/5 · V6 Echo Library 9/5 · V7 Mirror Lake 9/5 · V8 Silent Abyss 10/6 · Bell Village (hub) 6/6/≥6 kết nối → tổng 70 / 43 / ≥54.
+Mỗi vùng: 3 phòng bí mật sau tường giả, 1 thử thách platforming lấy Memory Shard, 1 NPC có nhiệm vụ riêng. Vùng 1 hiện chưa đủ: thiếu 2 phòng tường giả thật, các lối tắt, NPC.
+48 Memory Shard KHÔNG đòi xong 70 bí mật + 43 nhiệm vụ. Phân bổ khả thi: V1 = 4, V2–V5 = 5 mỗi vùng, V6–V8 = 6 mỗi vùng, hub = 6 → 48.
+
+2. VÙNG 1 – 7 điểm khám phá (6 tính vào "Secret Found")
+S1 Rootscar Passage (P02): chém tường nứt 3 lần; dấu hiệu: vết nứt xoắn lạ, bụi rơi theo nhịp; mở P02 ↔ P06; khó 1/5; là LỐI TẮT, không đếm; thông báo "Passage Opened".
+S2 The Bellmaker's Hollow (P03): tường nứt → hốc; dấu hiệu: vết đục đồng trên tường + rung có ký hiệu hình; thưởng 80 Echo Shards + 1 Name Tag; 2/5; nâng thành phòng nhỏ, camera trượt nhẹ cho thấy di vật + thẻ; Name Tag không đếm riêng.
+S3 Beneath the Husk (P06): đi xuyên tường giả; dấu hiệu: cụm rễ màu tro khác, bụi bay xuyên tường; 120 Echo Shards; 2/5; = phòng tường giả thứ nhất.
+S4 The High Mourning (P04): vượt giếng hẹp bằng bật tường / nhảy đôi; dấu hiệu: vệt móng tay cũ trên vách hướng lên khoảng tối; +1 máu tối đa; 3/5.
+S5 Ashen Lullaby (P04): đứng yên cạnh chuông vùi tro 3 giây; dấu hiệu: bụi tro thành vòng rung (thấy được khi tắt tiếng); 1 Memory Shard + đoạn truyện ngắn; 2/5.
+   Kỹ thuật: chỗ an toàn không bị quái đánh; đứng gần → 3 nhịp rung hình lần lượt; vòng tiến độ 3 giây; rời vùng thì reset rõ; không cần âm thanh.
+S6 The Unanswered Bell (P09) [MỚI]: tường giả hông giếng → phòng nhỏ; dùng Echo replay 3 giây để bóng giữ công tắc trong khi nhân vật chạm chuông; dấu hiệu: bóng chuông thiếu quả lắc, 2 điểm tương tác cách nhau; 1 Memory Shard + 60 Ancient Bronze; 4/5; chỉ làm khi Echo replay + công tắc ổn định.
+S7 The Rootbound Witness (P02): lên hốc treo nhìn thấy từ dưới; 1 Name Tag + 40 Echo Shards; 2/5; hốc không trùng đường bắt buộc.
+Đếm "Secret Found": S2–S7 (S1 không). Thông báo: "Secret Found" / "3 / 6 Discovered".
+3 phòng tường giả: P06 (có), P09 (mới), phòng 3 ở P03 sau hốc hoặc P11 sau tuyến quay lại; có thể thêm kho phụ P11 "The Quiet Reliquary" (Ancient Bronze, không đếm). Không tính tường nứt và tường giả là cùng loại.
+4 NHIỆM VỤ ẨN:
+Q1 Names Beneath the Bark (P02, P03, P04, P09): đủ 4 Name Tag → 1 Memory Shard + đoạn truyện; 2/5; thẻ không mất khi đọc; nhiệm vụ hiện từ thẻ đầu, chỉ lộ thông tin đã khám phá.
+Q2 A Blade Without Blood (P12): hạ Hollow Bell Mother không trúng đòn trong 1 lần → thành tựu "Untouched by Silence" + Echo Charm biến thể hình/hiệu ứng rất nhẹ; 5/5; KHÔNG thưởng Memory Shard; tính no-hit từ lúc trận bắt đầu; không là điều kiện kết thật.
+Q3 The Mother's Last Echo (P01): sau khi hạ trùm quay lại P01 → bóng Echo xuất hiện + ánh ký ức nhẹ; thoại: "Even in silence, I kept their names."; thưởng đoạn truyện + 30 Ancient Bronze; 2/5; bóng không gây sát thương.
+Q4 Three Notes for the Lost (P03): đánh 3 chuông thấp → trung → cao; dấu hiệu 1/2/3 vạch sáng; 100 Ancient Bronze + bản khắc ngắn; 3/5; sai thì reset nhẹ, không phạt.
+NPC Vùng 1: "Iria, the Ash Listener" – bóng người đeo mặt nạ sứ gần P05; nhiệm vụ "What the Ash Remembers": tìm 3 dấu tích ở P03, P06, P09 rồi quay lại → 1 Memory Shard; không chắn đường.
+6 LỐI TẮT: P02↔P06 (có) · P03↔P05 · P04↔P06 · P05↔P09 · P06↔P11 · P09↔P12 (sau trùm) – 5 cái đề xuất, phải kiểm không phá thứ tự 3 Broken Bell / cổng tinh anh (dùng khoá một chiều hoặc mở sau điều kiện).
+
+3. CÂU ĐỐ ÂM THANH TRÊN iPhone: luôn ≥ 2 kênh (âm + hình). Ba cao độ: LOW 1 vạch sóng · MID 2 vạch · HIGH 3 vạch (+ chiều cao tia rung, chuyển động bụi khác nhau).
+Chuông vùi tro: bụi nhấp nháy 3 lần, vòng tiến độ, khe nứt sáng. Không dùng màu làm dấu hiệu duy nhất; tránh flash mạnh / rung màn liên tục; rung máy chỉ bổ sung;
+tuỳ chọn "Visual Sound Cues: On" (mặc định bật); tắt tiếng vẫn giải được hết; không phụ thuộc autoplay âm thanh Safari.
+
+4. 12 NHIỆM VỤ ẨN HÀNH ĐỘNG LẠ (toàn game)
+1 The Patient Root – Heartwood: đứng yên dưới rễ biết thở 5 s → 40 Ancient Bronze
+2 A Bell Without a Tongue – Foundry: đánh chuông bằng Echo thay vì kiếm → Echo Charm trang trí
+3 The Unhatched Choir – Iron Nest: đi qua 3 tổ không đánh vỡ → 100 Echo Shards
+4 The Wind That Waited – Wind Canopy: đứng yên trên cầu gió qua 3 cơn gió → 1 Memory Shard
+5 Borrowed Thunder – Thunder Crown: lướt qua 3 luồng sét theo thứ tự ký hiệu → 120 Ancient Bronze
+6 The Page That Listened – Echo Library: đứng trước kệ, dùng Echo tái diễn động tác → truyện + 1 Memory Shard
+7 Face Beneath the Water – Mirror Lake: đứng im khi bóng phản chiếu cử động → 1 Memory Shard
+8 The Last Unspoken Word – Silent Abyss: bỏ qua 1 kẻ địch không thù địch rồi quay lại → truyện + thành tựu
+9 No Bell Rings Alone – Bell Village: chạm 3 chuông nhỏ trong cùng 1 chu kỳ Echo → 80 Ancient Bronze
+10 A Name Returned – Bell Village: mang 4 Name Tag về bia tưởng niệm → truyện + VFX chuông lưu
+11 The Third Footstep – Iron Nest: Echo tái diễn đường chạy để 2 bóng chạm 2 dấu chân → 150 Echo Shards
+12 The Hollow Benediction – Silent Abyss: đứng trong vùng không tiếng, không tấn công 8 s → Echo Charm phụ trợ nhẹ
+Mọi nhiệm vụ có dấu hiệu môi trường; Memory Shard cần cho kết thật không đặt sau hành động không manh mối.
+
+5. THƯỞNG + KINH TẾ
+Giữ nguyên 100% nhân vật (silhouette, sprite, hitbox, khung). Chỉ thêm overlay/VFX theo neo: Bronze Afterimage (vệt lướt đồng cổ – Dash) · Mourning Edge (vệt kiếm ngà – Slash) · Hollow Impact (vòng tro – Ground Slam)
+· Echo Halo (vòng năng lượng – Echo) · Bellwake Landing (bụi hổ phách – tiếp đất) · Mask Glint (đốm sáng mặt nạ – đầu).
+Echo Charm cơ học nhẹ: Ashbound Thread (giảm ~5% hồi Echo) · Bronze Mercy (+ chút Echo Shard) · Stillwater Step (hiệu ứng lướt rõ hơn, không tăng tầm). Không khoá kỹ năng thiết yếu sau bí mật tuỳ chọn.
+Mức thưởng mẫu (Echo Shards | Ancient Bronze, chọn một loại): dễ 40–80 | 20–40 · vừa 100–180 | 50–100 · khó 180–300 | 100–160. Bí mật tiền thường ≈ 2–5 phút kiếm; khó ≈ 5–8 phút; Charm hiếm thưởng 1 lần, không thêm nhiều tiền.
+
+6. UI iPhone 844×390: dùng env(safe-area-inset-*); vùng nội dung tham chiếu 760×330 co giãn; chữ body 14–16, phụ 12–13, tiêu đề 18–22; nút ≥ 44×44.
+Secret toast: góc trên phải trong safe area, 270×58, icon 28, tiêu đề 16, dòng phụ 12, 2,5–3 s, không che thanh máu trùm. Nội dung: "Secret Found" / "3 / 6 Discovered".
+Journal: 760×320; cột tab 148, danh sách 250, chi tiết 340; đệm 12; hàng 52–58 (4–5 mục), cuộn độc lập; nút đóng 44×44. Trạng thái: Whispers / Discovered / Unfinished / Remembered. Không tự hiện "???" cho mọi nhiệm vụ chưa biết (lộ số lượng).
+Achievement toast: 300×66, icon 36, 2 dòng, không che nút cảm ứng.
+13 nhóm ảnh cần vẽ (ChatGPT; không vẽ chữ vào ảnh; nền trong suốt hoặc magenta; đệm 2–4px; sắc nét):
+A Journal Frame 760×320 ×1 · B Journal Tab 148×44 ×2 (active/inactive) · C Quest Row 250×56 ×3 (normal/selected/completed) · D Detail Parchment Inset 340×272 ×1 · E Secret Toast Frame 270×58 ×1
+· F Achievement Toast Frame 300×66 ×1 · G Secret Icons 32×32 ×6 (Root/Bell/Mask/Memory/Bronze/Echo) · H Status Markers 20×20 ×4 (Unknown/Discovered/Unfinished/Remembered) · I Close Button 44×44 ×3 (normal/pressed/disabled)
+· J Scroll Handle 16×48 ×2 · K Echo Cue Rings 48×48 ×3 (Low/Mid/High) · L Quest Discovered Flourish 64×32 ×6 (60–80 ms/khung) · M Name Tag Card/Slot 180×58 ×2 (empty/filled).
+
+7. 4 NAME TAG (chữ trong game)
+P02 "NAME TAG — ELDEN": "ELDEN — I held the gate until the bells fell silent."
+P03 "NAME TAG — MARA": "MARA — I cast the last bell for those without names."
+P04 "NAME TAG — SERA": "SERA — The ash remembers what the living forget."
+P09 "NAME TAG — ORIN": "ORIN — Do not let the Mother ring alone."
+Đủ 4: "NAMES BENEATH THE BARK" – "They were not lost in the roots. They stayed when the Silence came, binding their names to bronze so the tree might remember. / Beneath the hollow bell, a mother kept watch over four voices that would never answer. / And still, somewhere in the Heartwood, their final note waits to be heard."
+Thông báo: "Four names remembered." / "Memory Shard acquired."
+Liên hệ: Sự Lặng xoá ký ức trước khi huỷ thân xác; Name Tag là neo ký ức của người dân bảo vệ Cây; Hollow Bell Mother đang giữ ký ức cuối của người đã mất (không khẳng định là mẹ ruột – để Echo Library giải thích sau).
+
+8. CHỐNG KẸT: (1) không khoá tuyến chính bằng tường giả thiếu dấu hiệu (3 Broken Bell phải tìm được); (2) thử mọi lối tắt trước/sau trùm, không vượt cổng 3 Broken Bell / tinh anh sớm; (3) phòng bí mật luôn có đường thoát;
+(4) Name Tag không mất, không nhận trùng, không khoá vì trùm đã chết; (5) không câu đố chỉ bằng âm thanh/rung/màu; (6) không bắt đứng yên ở chỗ nguy hiểm; (7) không khoá kết thật bằng no-hit;
+(8) Echo replay đúng phạm vi + trạng thái khi tải lại/chết/đổi phòng; (9) UI không che gameplay; (10) lưu/tải không thưởng 2 lần (ID ổn định, tách "đã mở" và "đã nhận thưởng"); (11) tường giả không vô hình hoàn toàn, quay lại lâu thì gợi ý nhẹ;
+(12) mở lối tắt không tăng Secret Found; (13) thiếu Memory Shard thì nhật ký/bản đồ cho biết vùng nào còn.
+GHI CHÚ RÀ SOÁT: Vùng 1 mới có 4 nguồn Memory Shard (Ashen Lullaby, The Unanswered Bell, Names Beneath the Bark, Iria) – thiếu thử thách platforming thưởng Memory Shard (The High Mourning đang thưởng máu) → đổi 1 nguồn thành thử thách platforming hoặc phân bổ lại (không quá 4).
+Phòng tường giả thứ 3 còn chọn giữa P03 và P11 – chốt vị trí, lối vào, đường thoát trước khi vẽ.
+5 VIỆC ĐẦU: (1) chốt 6 ID bí mật, 4 nhiệm vụ ẩn, bộ đếm lối tắt riêng; (2) thêm 2 phòng tường giả + thử 6 lối tắt, không phá điều kiện 3 Broken Bell; (3) hoàn thiện 4 Name Tag (nhiệm vụ, truyện, thưởng, lưu không trùng);
+(4) 2 câu đố mẫu Ashen Lullaby + Three Notes for the Lost (thử cả khi tắt tiếng); (5) UI tối thiểu: secret toast, nhật ký, Name Tag, dấu hiệu âm thanh bằng hình; thử iPhone 844×390, offline, sau tải lại.

@@ -1,5 +1,7 @@
 # Câu hỏi gửi ChatGPT – Vật phẩm ẩn + Nhiệm vụ ẩn (phiên "an")
 
+> **ĐÃ GỬI 02/11 (phiên chính, có Chrome) – trả lời ở tu-van-chatgpt.txt cùng thư mục.**
+
 > Lần chạy 02/11 KHÔNG có Chrome (phiên chạy trên mây theo lịch, không nối máy người dùng) nên CHƯA hỏi được ChatGPT.
 > Phiên sau có Chrome (hoặc phiên gen ảnh cặp "an" – xem docs/yeu-cau-anh/an/001-tu-van-thiet-ke.md): dán NGUYÊN VĂN khung dưới vào 1 cuộc trò chuyện ChatGPT mới,
 > lưu câu trả lời nguyên văn vào **docs/an/tu-van-chatgpt.txt**, rồi sửa game/an/du-lieu.json + docs/an/thiet-ke.md theo đúng tư vấn.
