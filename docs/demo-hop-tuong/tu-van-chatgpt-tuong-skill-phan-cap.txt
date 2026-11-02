@@ -1,0 +1,144 @@
+NGHIÊN CỨU DESTINY CHILD: DEFENSE WAR (DCDW) VÀ THIẾT KẾ SKILL NEON GRID
+Ngày: 02/11/2026 | Tài liệu thiết kế, không phải dữ liệu cân bằng chính thức.
+
+QUY ƯỚC ĐỘ TIN CẬY
+[X] Có tài liệu thứ cấp cụ thể xác nhận; không đồng nghĩa đã kiểm chứng từ mã game hay bản cập nhật cuối.
+[Q] Nguồn cộng đồng/wiki ghi nhận, có thể thay đổi theo phiên bản.
+[S] Suy luận hoặc đề xuất thiết kế mới, KHÔNG phải cơ chế DCDW được xác nhận.
+Các con số DCDW dưới đây là snapshot của nguồn lịch sử, không nên coi là thông số hiện hành.
+
+I. DCDW: CƠ CHẾ CƠ BẢN
+[X] Đội gồm 5 Child và 1 Archfiend Candidate; hai bàn đấu đối đầu. Triệu hồi bằng mana chọn ngẫu nhiên Child trong bộ 5. Ghép hai Child cùng loại, cùng số sao: ra 1 Child có số sao cao hơn nhưng loại có thể đổi ngẫu nhiên. Mana còn dùng tăng cấp Child trong trận và kích hoạt kỹ năng Archfiend. Child có độ hiếm, nâng level ngoài trận bằng bản sao thẻ. Nguồn [1][2][3].
+[X] Trong trận, nâng cấp bằng mana là nâng toàn bộ Child thuộc loại đó, không phải riêng một bản sao trên ô. Hướng dẫn BlueStacks mô tả sát thương tăng theo sao và các mốc +0,+1,+2,+3,MAX; ví dụ đơn giản 50 -> 100 -> 150 -> 200 -> 250 ở một sao. Đây là minh họa, không chứng minh mọi skill đều tăng tuyến tính. [4]
+[Q] Wiki ghi 5 độ hiếm: Common, Rare, Epic, Legendary, Ancient; các nhóm vai trò Attack, Sub-Attack, Support, Control, Special. Cấp sao trong trận lên tới 7. Level thẻ ngoài trận độc lập với sao trong trận; mức level đầu theo rarity wiki ghi 1/3/6/9/11. Không xác nhận giới hạn level tối đa cuối cùng từ nguồn đủ mạnh. [5]
+[Q] Chọn mục tiêu khác nhau theo Child: quái đi đầu (frontmost), ngẫu nhiên, HP cao, v.v.; không phải toàn bộ tướng cùng một AI. Tốc độ dưới đây là chu kỳ mỗi lần tấn công (giây), không phải FPS hoạt ảnh. [5]
+
+II. VÍ DỤ CHILD VÀ SKILL CÓ TÀI LIỆU
+[Q] Jeanne d'Arc: bazooka AoE, mục tiêu đi đầu; sát thương AoE cơ bản 42, chu kỳ 1.5s; mô tả cho biết diện tích ảnh hưởng tăng theo sao. Hiệu ứng cụ thể của viên đạn không được xác minh. [5]
+[Q] Fenrir: tấn công mục tiêu đi đầu, sát thương ngẫu nhiên 3–300, chu kỳ 1.0s; đòn chí mạng gây mức sát thương tối đa. [5]
+[Q] Eshu: bắn nhanh mục tiêu đi đầu, sát thương cơ bản 30, chu kỳ 0.6s; sao cao làm tăng tốc đánh. [5]
+[Q] Furball: mục tiêu ngẫu nhiên, sát thương 42, chu kỳ 0.33s; nhiều đòn nhưng thiếu tập trung hỏa lực. [5]
+[Q] Girl Detective: đòn súng đơn mục tiêu đi đầu, sát thương 100, chu kỳ 1.1s. [5]
+[Q] Liza: bắn băng làm chậm mục tiêu đi đầu; 25 damage, chu kỳ 1.4s, slow 35% trong 4s theo bảng lịch sử. [5]
+[Q] Unknown: đòn độc DoT, mục tiêu đi đầu, chu kỳ 1.3s, độc 4s theo bảng lịch sử. [5]
+[Q] Syrinx: không đánh; tạo 6 mana mỗi 7s ở thông số bảng lịch sử. Sao và tăng cấp giúp tăng mana. [5]
+[Q] Artemis: chọn quái HP cao; ưu tiên địch lớn với bonus damage 100% theo bảng lịch sử; chu kỳ 1.2s. [5]
+[Q] Daron: không đánh, sau 47s biến thành Child ngẫu nhiên với 1–7 sao (cơ chế rất biến động). [5]
+[Q] Brownie: ghép bản thân không nâng sao chính nó mà nâng sao một đồng minh trên bàn. [5]
+[X/Q] Moa: sau một khoảng thời gian biến thành Child ngẫu nhiên có thêm sao; Shamash: sao chép Child cùng số sao; Aurora King: liên quan tạo sao khi hợp nhất; Berit: ghép tạo thêm Child ngẫu nhiên cùng sao. Đây là tóm lược nguồn hướng dẫn cộng đồng, không khẳng định trigger/định lượng từng bản vá. [6]
+[Q] Các Child khác trong danh mục gồm Aten, Jacheongbi, Gegute, Jupiter, Cleopatra, Mafdet... nhưng không nên gán công thức/đồ họa riêng khi chưa xác minh. [5][6]
+
+III. DCDW: HÌNH ẢNH THỂ HIỆN SKILL VÀ CẤP SAO
+[X] Từ gameplay người dùng đã cung cấp: Child là sprite nhỏ trong bàn 5×3; nhiều Child có ký hiệu sao phía trên, quay theo mục tiêu; quái chạy ở làn riêng, số damage xuất hiện ở khu vực làn. Đây là quan sát ảnh tĩnh, không xác nhận loại projectile hay thời lượng animation.
+[Q] Sao làm tăng chỉ số; một số Child tăng tốc, phạm vi AoE, hiệu ứng hoặc mana tùy skill. Không có cơ sở đủ chắc rằng mọi Child đều mở skill mới đúng ở sao 3/5/7.
+[S] Không tìm được nguồn đáng tin xác nhận DCDW thay model/outfit hoàn chỉnh ở từng sao. Vì vậy không nên khẳng định có đổi trang phục, màu áo hay chiều cao theo cấp sao. Nên phân biệt sao UI, buff aura, hiệu ứng tấn công và ngoại hình sprite.
+[S] Phân loại biểu hiện hình ảnh có thể áp dụng: đạn bay cho súng, tia tức thời cho laser, vệt chém cho cận chiến, vòng AoE tại quái, status icon cho slow/poison, aura ở ô cho buff, biểu tượng biến đổi cho merge. Đây là ngôn ngữ VFX đề xuất dựa trên thể loại, không phải bảng đối chiếu xác thực từng Child DCDW.
+
+IV. ARCHFIEND / LEADER
+[X] Archfiend là nhân vật hỗ trợ có kỹ năng riêng, không hoạt động như Child bắn thường. Mana có thể dùng kích hoạt skill. [1][6]
+[X/Q] Master: gọi thêm Child, cơ bản 2 Child 1 sao, có cơ hội thêm; Dalia: buff damage toàn đội tạm thời; Eve: xóa debuff và bảo vệ bằng khiên; Frej: biến Child chỉ định thành loại ngẫu nhiên, có thể dùng xử lý đội hình/debuff. Hướng dẫn Kosh ghi chi phí lần dùng tiếp theo có thể tăng gấp đôi; cooldown/chi phí cụ thể phụ thuộc level và phiên bản. [7]
+[Q] Một số Archfiend có rarity và cấp ngoài trận; nguồn wiki còn liệt kê nhân vật khác. Không được nhầm Archfiend trong DCDW với leader buff của game Destiny Child gốc. [5][7]
+
+V. THIẾT KẾ NEON GRID — QUY TẮC CHUNG (TOÀN BỘ LÀ ĐỀ XUẤT [S])
+- Mỗi tướng giữ model và 8 hướng hiện có; KHÔNG cần vẽ lại 7 bộ trang phục. Dùng overlay có thể tái sử dụng: sao, viền ô, halo dưới chân, vệt năng lượng, cường độ projectile.
+- Kích thước ô 46px, tướng khoảng 29–32px. Giới hạn projectile chính 3–7px bề ngang, impact 10–22px, AoE đường kính 24–42px. Không che đường đi quái bằng bloom liên tục.
+- Sao trong trận 1–7; merge cùng loại + cùng sao -> 1 đơn vị sao +1, kết quả loại ngẫu nhiên (hoặc giữ loại trong mode dễ). Không merge sao 7.
+- Nâng level loại tướng trong trận 1–5 (bằng energy), độc lập sao; level ngoài trận 1–15 (đề xuất) cho chỉ số nền; rarity chỉ điều chỉnh độ khó thu thập và identity, không tự động thắng.
+- Công thức khởi điểm để cân bằng thử: damageMultiplier = (1+0.55*(star-1))*(1+0.18*(battleLevel-1))*(1+0.025*(metaLevel-1)); riêng DPS và proc phải có trần, không nhân tất cả bonus liên hoàn.
+- Skill 3/5/7 là hệ riêng NEON GRID, KHÔNG phải xác nhận về DCDW. Sao 3 mở biến thể nhỏ, sao 5 nâng chiến thuật, sao 7 signature mạnh có cooldown.
+- Phân lớp VFX: projectile đi trên nền dưới damage numbers; impact tại quái; debuff icon cạnh thanh HP; halo dưới chân tướng; sao luôn nằm trên cùng. Dùng alpha và tắt hiệu ứng không thiết yếu ở chế độ tiết kiệm.
+
+VI. BẢNG NGOẠI HÌNH THEO SAO CHUNG (KHÔNG ĐỔI SILHOUETTE)
+1★: 1 chấm sao, không halo, đạn cơ bản, scale 1.00.
+2★: 2 chấm sao, vòng mờ 15% opacity, scale 1.00.
+3★: 3 sao, vòng đơn mảnh màu hệ, 1 hạt năng lượng, skill A, scale 1.02.
+4★: 4 sao, viền ô phát sáng nhẹ, trail đạn dài hơn 15%, scale 1.02.
+5★: 5 sao, vòng kép quay chậm, 2 hạt, skill B, scale 1.04.
+6★: 6 sao, xung nhịp vòng 2s, projectile thêm nét phụ, scale 1.04.
+7★: 7 sao hoặc icon VII gọn, vòng lục giác độc đáo, hiệu ứng đòn mạnh có kiểm soát, skill C, scale 1.06 tối đa (không vượt ô).
+Đừng tăng kích thước hitbox gameplay theo scale hiển thị; không vẽ bloom che sprite.
+
+VII. TÁM TƯỚNG NEON GRID — KIT CHI TIẾT [S]
+
+SCORCH | FIRE DPS / DoT
+Đạn: hạt plasma cam hình giọt dài 6x3px, trail đỏ ngắn; tốc độ bay 280px/s; bắn mỗi 0.85s; chọn quái đi đầu. Hit: impact lửa cam đỏ 6 frame. Quái bị cháy: 2–3 tàn lửa bám thân, icon ngọn lửa; burn 12% ATK/s trong 3s, không cộng dồn vô hạn (refresh).
+3★: mỗi đòn thứ 4 bắn tia lửa lan 1 quái sát bên, 45% damage.
+5★: mục tiêu đang cháy nhận +20% damage từ SCORCH; flame splash bán kính 18px.
+7★: OVERHEAT mỗi 8s, 3 phát nhanh trong 0.8s, đốt 2 mục tiêu; cooldown rõ.
+Sao: 1–2 nòng cam; 3–4 vòng lửa đỏ; 5–6 lõi trắng cam và 2 ember; 7 vòng plasma đa giác, KHÔNG đổi áo/súng.
+
+FROST | SLOW / CONTROL
+Đạn: tinh thể băng xanh lam nhạt 5x5px, tốc độ 220px/s; 1.2s/đòn; ưu tiên quái đi đầu chưa bị slow. Hit: burst mảnh băng 6 frame. Quái: tint xanh rất nhẹ, icon bông tuyết, slow 28% trong 2.5s (cap tổng slow 50%).
+3★: 3 hit trên cùng mục tiêu -> freeze 0.5s, miễn nhiễm freeze lại 3s.
+5★: hit tạo vòng lạnh bán kính 16px gây slow 15% cho quái kế bên.
+7★: CRYO FIELD mỗi 10s, vùng lạnh 26px tồn tại 2.2s; boss chỉ nhận slow một nửa.
+Sao: thêm cánh tinh thể dưới chân từ 3; hai cung băng ở 5; lục giác băng mảnh ở 7.
+
+ARC | MELEE CHAIN / ELECTRIC
+Đòn: vệt chém cyan vàng theo hướng, không projectile; tầm đánh logic toàn lane nếu gameplay kiểu DCDW (tia điện từ kiếm đến mục tiêu) hoặc 70px nếu dùng tầm cận chiến thực; 0.95s/đòn; chọn quái đi đầu. Impact: electric crackle 6 frame. Quái: tia điện mảnh 0.12s, icon shock.
+3★: mỗi hit nảy sang 1 mục tiêu gần nhất trong 24px, 45% damage.
+5★: nảy 2 lần, 40% mỗi lần; ưu tiên chưa bị chain.
+7★: THUNDER CUT mỗi 7s, một đường chém điện nối tối đa 4 quái, damage giảm dần 100/65/45/30%.
+Sao: vòng điện cyan 3; đường mạch sáng quanh giáp 5; 7 thêm hai cung sét ngắn, không che lưỡi kiếm.
+
+LANCE | SINGLE-TARGET / EXECUTE
+Đạn: viên rail mảnh trắng-cyan 7x2px + đường ngắm rất mờ; đạn bay 650px/s hoặc hitscan 0.07s; 1.65s/đòn; chọn quái HP cao nhất, ưu tiên boss. Hit: kinetic spark. Quái: điểm khóa mục tiêu đỏ nhỏ, tồn tại 0.5s.
+3★: bắn trúng cùng mục tiêu 2 lần -> MARK, hit tiếp theo +35% damage.
+5★: xuyên 1 quái sau mục tiêu, mục tiêu thứ hai nhận 50%.
+7★: DEADLINE mỗi 9s, bắn charged shot 250% damage vào boss/HP cao nhất; không instant-kill boss.
+Sao: laser sight 3; ống ngắm sáng 5; halo tam giác sniper 7; giữ silhouette súng.
+
+WARP | VOID / POSITIONAL
+Đạn: đĩa năng lượng tím xanh 5px, đường bay cong nhẹ chỉ là VFX; 1.3s/đòn; chọn quái ở xa đích nhất trong nhóm đang tụ, hoặc frontmost để đơn giản. Hit: vòng không gian thu vào. Quái: icon xoắn tím, distortion tối đa 2px (không méo hitbox).
+3★: 20% cơ hội đẩy lùi quái thường 8px, cooldown per-target 2s.
+5★: mỗi 4 hit mở mini-rift 16px gây 40% AoE damage.
+7★: EVENT HORIZON mỗi 11s, kéo tối đa 3 quái thường vào vùng 20px trong 0.8s; boss chỉ slow 15%.
+Sao: vòng quỹ đạo đơn 3; vòng đôi 5; cổng lục giác 7; drone được phép xoay bằng code như hiện tại.
+
+BROKER | ECONOMY / SUPPORT
+Đạn: đồng xu hologram vàng 5px, 1.5s/đòn, damage thấp, ưu tiên quái đi đầu. Hit: tia lấp lánh vàng; quái: icon đồng xu khi bị gắn BOUNTY.
+Nội tại: mỗi 7s tạo +4 energy, tối đa 1 lần/chu kỳ/tướng; cap thu nhập toàn bàn 24 energy/7s.
+3★: hit gắn BOUNTY 3s; nếu quái chết trong thời gian này, +1 energy (cap 8/10s toàn bàn).
+5★: mỗi 12s buff 1 tướng cạnh bên +12% tốc đánh trong 4s; icon đồng xu dưới ô.
+7★: MARKET SURGE mỗi 16s: 5s tiếp theo energy kiếm từ BROKER +50%, nhưng không nhân chồng.
+Sao: viền vàng mờ 3; holo bảng giá 5; halo đồng xu lục giác 7; không vẽ chữ số nhỏ không đọc được.
+
+GLITCH | HACK / DISRUPT
+Đạn: pixel packet hình vuông mint 4px (vẽ cel-shaded, KHÔNG pixel-art sprite), tia đứt đoạn 0.1s; 1.25s/đòn; ưu tiên quái đi đầu chưa bị hack. Hit: hình thoi cyan vỡ; quái: icon lỗi CRT và nhiễu 2 frame, tránh rung mạnh.
+3★: hit thứ 3 gắn JAM 2s làm quái thường giảm 20% tốc chạy (boss 8%).
+5★: mỗi 6s phát xung hack 18px gây 50% ATK và refresh JAM, không khóa hoàn toàn boss.
+7★: SYSTEM OVERRIDE mỗi 12s, gây 1.8x damage lên tối đa 3 quái đã JAM và làm chậm 35% trong 1s.
+Sao: màn CRT biểu cảm đổi ở 3; đường mạch ở headphone sáng ở 5; 7 có vòng quét code hình lục giác, không thay đầu/antenna/keyboard. Dùng sprite attack v2 hiện có, thêm VFX bằng sheet riêng.
+
+VENOM | POISON / RAMP
+Đạn: giọt độc xanh lục có lõi tím 5px, 1.1s/đòn; ưu tiên quái nhiều HP chưa bị độc. Hit: giọt nọc vỡ 6 frame; quái: 1–3 bong bóng xanh, icon độc; mỗi stack độc gây 4% ATK/s trong 4s, tối đa 5 stack, refresh.
+3★: 3 stack trở lên -> giảm giáp 8% (boss 4%).
+5★: quái chết khi có >=3 stack -> phát tán 2 stack sang 2 quái gần nhất trong 18px.
+7★: TOXIC BLOOM mỗi 10s, quái có 5 stack nổ AoE 24px gây 120% ATK, tiêu thụ 3 stack, không kích nổ dây chuyền.
+Sao: rãnh tank sáng 3; 2 ống độc phát quang 5; 7 vòng bào tử xanh tím mảnh, không đổi chân hoặc hình dáng thú.
+
+VIII. LEADER NEON GRID [S]
+Đề xuất LEADER là slot riêng, không chiếm ô 5x3, kích hoạt nút bằng energy + cooldown; không cho spam.
+- OVERCLOCK: +25% tốc đánh toàn bàn 5s, 30s cooldown, 35 energy.
+- FIREWALL: xóa 1 debuff trên mọi tướng và chặn debuff mới 4s, 35s cooldown, 30 energy.
+- RECOMPILE: đổi 1 tướng chọn thành loại ngẫu nhiên cùng sao, 40s cooldown, 45 energy.
+- ECONOMY BURST: nhận ngay 20 energy nhưng summon tiếp theo tăng giá +10, 35s cooldown.
+Ở bản đầu chỉ nên ra OVERCLOCK và FIREWALL, thêm các leader còn lại sau khi cân bằng.
+
+IX. ƯU TIÊN SẢN XUẤT VÀ TEST
+P0: hiện rõ target, projectile 8 loại, hit 4 hệ, icon burn/freeze/poison/hack, sao 1–7. Test ở 390x844; không tạo quá 20 impact đồng thời.
+P1: triển khai kit cơ bản cho 8 tướng, kiểm tra DPS ở sao 1/3/5/7, không buff dây chuyền vô hạn. Cố định RNG seed cho test.
+P2: halo 3/5/7, active skill VFX và leader. Tách logic damage và VFX, tránh animation frame ảnh hưởng hit timing.
+P3: cân bằng economy, PvP/AI mirror, chống snowball sao 7 và hiệu ứng dày trên 2 bàn.
+Chỉ số trên là điểm khởi đầu playtest, KHÔNG lấy từ DCDW.
+
+X. NGUỒN THAM KHẢO
+[1] MobyGames overview: https://www.mobygames.com/game/176430/destiny-child-defense-war/
+[2] BlueStacks Beginner Guide: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+[3] AppGet JP: https://appget.com/appli/view/75142/
+[4] BlueStacks Upgrade or Combine: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-tips-tricks-en.html
+[5] Namu community card catalog (Korean, historic): https://namu.moe/w/데스티니%20차일드:디펜스%20워/카드
+[6] MrGuider examples: https://www.mrguider.org/articles/destiny-child-defense-war-tier-list-best-deck-guide-tips-strategies/
+[7] Kosh Gaming Archfiend guide: https://thesovietgaming.com/destiny-child-defense-war/destiny-child-defense-war-beginners-guide/
+
+LƯU Ý NGHIÊN CỨU: Wiki cộng đồng có thể thiếu bản vá và không phải nguồn chính thức. Mô tả projectile/đổi model theo sao không được chứng minh bởi các nguồn đã đọc. Không nhập nhằng giữa Destiny Child gốc và Defense War.
