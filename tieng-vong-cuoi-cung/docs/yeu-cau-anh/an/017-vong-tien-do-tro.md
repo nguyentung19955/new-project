@@ -1,0 +1,10 @@
+# 017 – Vòng tiến độ "Ashen Lullaby" (ChatGPT mục 2-S5)
+- **Trạng thái:** CHỜ
+- **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
+- **Mô tả:** Vòng tiến độ 3 giây quanh chuông vùi tro khi đứng yên: vòng bụi tro xám ánh hổ phách, vẽ 1 vòng ĐẦY (game cắt cung theo tiến độ bằng mặt nạ – không vẽ thêm gì). Thêm 1 ảnh "khe nứt sáng" trên mặt chuông vùi khi xong.
+- **Số khung:** 2 ảnh tĩnh
+- **Cỡ ô:** vòng 64×64; khe nứt 48×24
+- **Hướng / neo:** giữa / đáy-giữa
+- **Lưu:** art/an/dau-hieu/vong-tien-do.png, art/an/dau-hieu/khe-nut-sang.png + ảnh gốc ChatGPT cùng thư mục (…-nguon-chatgpt.png)
+- **Phong cách chung (ChatGPT):** pixel art u tối, đồng cổ + xanh tiếng vọng (#CEF0D6), điểm vàng đồng (#E1B85A) ít; KHÔNG vẽ chữ vào ảnh; nền #FF00FF đặc (sẽ tách trong suốt); đệm 2–4 px; sắc nét, không nhoè; hợp art/giao-dien/hud/ (i_the_ten.png, i_hat_vong.png). Nguồn tư vấn: docs/an/tu-van-chatgpt.txt mục 6.
+- **Prompt mở đầu:** "use the image generation tool and DRAW … dark fantasy pixel art UI, aged bronze with pale mint echo glow, solid #FF00FF background, no text, wide gaps between pieces, nothing touching the edges."

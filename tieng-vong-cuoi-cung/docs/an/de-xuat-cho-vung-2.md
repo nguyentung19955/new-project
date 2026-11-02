@@ -1,20 +1,24 @@
-# Đề xuất bí mật / nhiệm vụ ẩn cho Vùng 2 (và mẫu cho mọi vùng mới) – phiên "an"
+# Đề xuất bí mật / nhiệm vụ ẩn cho Vùng 2 – Bronze Foundry (phiên "an", theo ChatGPT 02/11)
 
-> Gửi phiên Vùng mới. Phiên "an" KHÔNG sửa thư mục game/vung-N. Vùng 2 chưa có kế hoạch ChatGPT (docs/vung-2/yeu-cau-ke-hoach-gui-chatgpt.md),
-> và phiên "an" cũng chưa hỏi được ChatGPT → đây là danh sách CHỖ CẦN CHỪA khi dựng phòng; nội dung cụ thể chốt theo tư vấn ChatGPT.
+> Gửi phiên Vùng mới. Phiên "an" KHÔNG sửa thư mục game/vung-2. Số lượng + ý tưởng theo docs/an/tu-van-chatgpt.txt; vị trí cụ thể do phiên Vùng 2 chốt khi dựng phòng (theo kế hoạch ChatGPT của họ).
 
-## Khi dựng phòng Vùng N, xin chừa sẵn
-1. **3 phòng/hốc bí mật**: tường nứt `N` hoặc tường giả `G` (định dạng DINH-DANG-PHONG.md của Vùng 1), mỗi chỗ có `dau_hieu` loại `bi_mat` gần đó và 1 vật phẩm có `id` cố định trong hốc.
-2. **1 thử thách platforming khó** cuối có vật phẩm id `<Pxx>-ky-uc` (Mảnh Ký Ức – chờ ảnh docs/yeu-cau-anh/an/005).
-3. **1 chỗ "lắng nghe"**: một đạo cụ chuông/mặt nạ đặc biệt có toạ độ (cột, hàng) ghi trong `ghi_chu` – dùng cho bí mật "đứng im 3 giây".
-4. **1 lối quay lại cần kỹ năng mới** (vd bật tường, lướt trên không) dẫn vào ô cũ đã thấy từ trước → nhiệm vụ ẩn "quay lại phòng cũ".
-5. **Bộ sưu tập rải rác** (như 4 Thẻ Tên Vùng 1): 3–5 vật cùng `loai`, mỗi cái 1 phòng khác nhau.
-6. Phòng trùm khai báo được (để có "hạ trùm không trúng đòn").
+## Số lượng (ChatGPT)
+7 bí mật có thưởng · 4 nhiệm vụ ẩn · 5 Mảnh Ký Ức · ≥ 6 lối tắt (đếm riêng). Độ khó ~ dễ 40% / vừa 40% / khó 20%.
+
+## Khi dựng phòng Vùng 2, xin chừa sẵn
+1. **3 phòng sau tường giả** (`G`) – có dấu hiệu nhìn thấy (vật liệu khác màu, bụi bay xuyên tường), luôn có đường thoát. Tường nứt (`N`) là loại khác, có thể thêm nhưng không thay 3 phòng này.
+2. **1 thử thách platforming** gần chuông lưu (thử lại nhanh) – cuối có vật phẩm id `<Pxx>-ky-uc` (Mảnh Ký Ức).
+3. **1 NPC** có nhiệm vụ riêng (phối hợp phiên Cốt truyện), không chắn đường chính.
+4. **"A Bell Without a Tongue"** (ChatGPT, nhiệm vụ hành động lạ của Foundry): 1 quả chuông đặc biệt chỉ ngân khi đánh bằng Echo thay vì kiếm → thưởng Echo Charm trang trí. Cần dấu hiệu môi trường (chuông không có lưỡi).
+5. **Bộ sưu tập rải rác** 3–5 vật cùng `loai` (như 4 Thẻ Tên Vùng 1), mỗi cái 1 phòng – phiên "an" sẽ viết chữ khắc theo ChatGPT.
+6. **Quay lại phòng cũ khi có kỹ năng mới**: 1 ô đã nhìn thấy nhưng chưa tới được ở Vùng 1 hoặc Vùng 2.
+7. Phòng trùm khai báo được (no-hit → thành tựu, không thưởng Mảnh Ký Ức).
+8. Bí mật cần âm thanh → luôn có dấu hiệu hình (1/2/3 vạch – ảnh chung art/an/dau-hieu/, yêu cầu 016).
+
+## Mức thưởng (ChatGPT)
+Echo Shards | Ancient Bronze (chọn một): dễ 40–80 | 20–40 · vừa 100–180 | 50–100 · khó 180–300 | 100–160. Charm hiếm thưởng 1 lần.
 
 ## Cách nối (không cần sửa engine)
-- Thêm mục vào game/an/du-lieu.json với `"vung":"vung-N"` (phiên "an" làm khi có id phòng/vật phẩm thật) và `"phong_trum":{"vung-N":"Pxx"}`.
-- Trang vùng nạp `../an/an.js` + một móc nhỏ giống game/an/moc-vung-1.js (đổi `VUNG`), hoặc báo phiên "an" làm móc.
-- Sự kiện cần: vào phòng, nhặt vật phẩm (id), tường vỡ (phòng:cột:hàng), đứng trong ô `G`, trúng đòn, hạ trùm.
-
-## Ý tưởng nhiệm vụ ẩn chờ ChatGPT duyệt (đã hỏi ở câu 4)
-đánh chuông theo thứ tự · quay lại phòng cũ khi có kỹ năng mới · nói chuyện nhiều lần với nhân vật phụ · mang vật A tới chỗ B · thắng trùm không trúng đòn · dùng Tiếng Vọng ở chỗ đặc biệt.
+- Phiên "an" thêm mục vào game/an/du-lieu.json với `"vung":"vung-2"` khi có id phòng/vật phẩm thật, và `"phong_trum":{"vung-2":"Pxx"}`.
+- Trang vùng nạp `../an/an.js` + một móc nhỏ giống game/an/moc-vung-1.js (đổi `VUNG`) – hoặc báo phiên "an" làm móc.
+- Sự kiện cần: vào phòng, nhặt vật phẩm (id), tường vỡ (phòng:cột:hàng), đứng trong ô `G`, trúng đòn, hạ trùm, đứng im (giây).

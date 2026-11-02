@@ -1,5 +1,5 @@
 # 005 – Vật phẩm "Mảnh Ký Ức" (nằm trong phòng + biểu tượng)
-- **Trạng thái:** CHỜ (nên làm sau 001)
+- **Trạng thái:** CHỜ (vẫn cần – ChatGPT giữ Mảnh Ký Ức "Memory Shard" làm phần thưởng chính)
 - **Dùng vào:** phần thưởng bí mật/nhiệm vụ ẩn ở mọi vùng (48 mảnh → kết thật, gdd). Chưa có ảnh → Mảnh Ký Ức chỉ được ghi vào lưu chung (game/luu-chung.js) + báo chữ, KHÔNG đặt vật thể trong phòng.
 - **Mô tả:** mảnh chuông đồng vỡ nhỏ có khe sáng xanh tiếng vọng bên trong, lơ lửng nhẹ. Hợp art/giao-dien/hud/i_the_ten.png, i_hat_vong.png.
 - **Số khung:** 6 khung lơ lửng/nhấp nháy nhẹ, ~110 ms/khung, lặp mượt (khung 6 nối khung 1) + 1 biểu tượng tĩnh.

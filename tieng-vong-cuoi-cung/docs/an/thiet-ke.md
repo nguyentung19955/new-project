@@ -1,39 +1,69 @@
-# Thiết kế Vật phẩm ẩn + Nhiệm vụ ẩn – BẢN NHÁP (phiên "an", 02/11)
+# Thiết kế Vật phẩm ẩn + Nhiệm vụ ẩn – BẢN CHỐT theo ChatGPT (phiên "an", 02/11)
 
-> Chưa hỏi được ChatGPT (không có Chrome). Mọi thứ dưới đây là **nháp** để ChatGPT sửa (docs/an/cau-hoi-chatgpt.md → docs/an/tu-van-chatgpt.txt).
-> Đang chạy được (khi bật `?an=1`) chỉ những mục dùng **cơ chế + hình đã có sẵn** ở Vùng 1. Mục mới cần hình/ý tưởng mới để TẮT.
+> Nguồn: **docs/an/tu-van-chatgpt.txt** (ChatGPT trả lời 5/5 câu hỏi trong docs/an/cau-hoi-chatgpt.md). Dữ liệu chạy: game/an/du-lieu.json.
+> Nguyên tắc ChatGPT: *"A secret should feel remembered, not randomly hidden."* Tách riêng: **lối tắt** / **bí mật có thưởng** / **nhiệm vụ ẩn** / **thử thách kỹ năng** – không cộng chung 1 bộ đếm.
 
-## Nguyên tắc (nháp, theo gdd mục "Nhịp khám phá")
-- Mỗi vùng: ~3 phòng bí mật (tường giả / tường nứt), 1 thử thách platforming lấy Mảnh Ký Ức, 1 nhân vật phụ có nhiệm vụ riêng, 3–5 nhiệm vụ ẩn.
-- Dấu hiệu tinh tế, không chỉ thẳng: dấu bí mật vẽ sẵn trong phòng (`dau_hieu` loại `bi_mat`), vật phẩm nhìn thấy mà chưa với tới, vết nứt.
-- Nhật ký nhiệm vụ ẩn chỉ hiện dòng khi người chơi đã chạm vào manh mối (chưa lộ thì không có gì, kể cả "???").
-- Không bao giờ lỡ vĩnh viễn: nhiệm vụ "không trúng đòn" làm lại được mỗi lần vào phòng trùm; phần thưởng chưa trao được thì giữ chờ; bản lưu cũ được tính bù.
+## Tổng toàn game (ChatGPT)
+| Vùng | Bí mật thưởng | Nhiệm vụ ẩn | Mảnh Ký Ức |
+|---|---|---|---|
+| V1 Weeping Heartwood | 6 | 4 | 4 |
+| V2 Bronze Foundry | 7 | 4 | 5 |
+| V3 Iron Nest | 7 | 4 | 5 |
+| V4 Wind Canopy | 8 | 4 | 5 |
+| V5 Thunder Crown | 8 | 5 | 5 |
+| V6 Echo Library | 9 | 5 | 6 |
+| V7 Mirror Lake | 9 | 5 | 6 |
+| V8 Silent Abyss | 10 | 6 | 6 |
+| Bell Village (hub) | 6 | 6 | 6 |
+| **Tổng** | **70** | **43** | **48** |
 
-## Vùng 1 – bí mật (5 đang bật + 1 chờ)
-| id | Phòng / vị trí | Điều kiện | Dấu hiệu | Thưởng | Khó | Trạng thái |
-|---|---|---|---|---|---|---|
-| v1-tuong-nut-p02 | P02 tầng thấp, cột 13 | chém vỡ tường nứt | dấu bí mật vẽ sẵn | hốc + lối tắt P06, Âm Điểm | 1 | BẬT |
-| v1-hoc-h1-p03 | P03 cột 14 | chém vỡ tường nứt | dấu bí mật vẽ sẵn | Thẻ Tên + Mảnh Âm trong hốc, Âm Điểm | 2 | BẬT |
-| v1-tuong-gia-p06 | P06 góc tây-dưới, cột 3 | đi xuyên tường giả | dấu bí mật vẽ sẵn | Mảnh Âm, Âm Điểm | 2 | BẬT |
-| v1-gieng-p04 | P04 giếng hẹp cột 80–83 | bật tường/nhảy đôi tới đáy, nhặt Mặt Nạ Sinh Lực | nhánh đông cụt | +1 máu, Âm Điểm | 3 | BẬT |
-| v1-hoc-treo-p02 | P02 hốc treo trên cầu rễ | nhặt Thẻ Tên | thấy thẻ từ dưới | Thẻ Tên, Âm Điểm | 2 | BẬT |
-| v1-chuong-duoi-tro | P04 chuông vùi tro (33,6) | đứng im 3 giây cạnh chuông | (chờ ChatGPT + ảnh 002, 005) | Mảnh Ký Ức | 3 | TẮT |
+Độ khó: dễ 40% / vừa 40% / khó 20% (vùng đầu 50/35/15). Mỗi vùng: 3 phòng sau tường giả, 1 thử thách platforming lấy Mảnh Ký Ức, 1 NPC có nhiệm vụ riêng, ≥6 lối tắt (hub ≥6 kết nối).
+48 Mảnh Ký Ức (kết thật) KHÔNG đòi làm xong hết 70 bí mật + 43 nhiệm vụ; không khoá kết thật bằng no-hit.
 
-(Âm Điểm chỉ trao khi Hệ thống đồ bật; nếu tắt thì giữ chờ, bật lên sẽ nhận.)
+## Vùng 1 – bí mật (đếm "Secret Found" = S2–S7; S1 là lối tắt)
+| id | Tên | Phòng | Điều kiện | Dấu hiệu | Thưởng | Khó | Trạng thái |
+|---|---|---|---|---|---|---|---|
+| v1-tuong-nut-p02 | S1 Rootscar Passage | P02 | chém tường nứt (cột 13) | vết nứt xoắn, bụi rơi | mở lối P02 ↔ P06 – "Passage Opened", **không đếm** | 1 | BẬT |
+| v1-hoc-h1-p03 | S2 The Bellmaker's Hollow | P03 | chém tường nứt (cột 14) → hốc | dấu bí mật vẽ sẵn (+ vết đục đồng: chờ ảnh) | 80 Mảnh Âm (40 trong hốc + 40) + Name Tag MARA | 2 | BẬT |
+| v1-tuong-gia-p06 | S3 Beneath the Husk | P06 | đi xuyên tường giả | dấu bí mật vẽ sẵn (+ rễ màu tro: chờ ảnh) | 120 Mảnh Âm (35 + 85) | 2 | BẬT |
+| v1-gieng-p04 | S4 The High Mourning | P04 | vượt giếng hẹp, nhặt Mặt Nạ Sinh Lực | nhánh cụt (+ vệt móng tay: chờ ảnh) | +1 máu tối đa | 3 | BẬT |
+| v1-ru-tro | S5 Ashen Lullaby | P04 (33,6) | đứng yên cạnh chuông vùi tro 3 giây | 3 nhịp rung hình + vòng tiến độ | 1 Mảnh Ký Ức + đoạn truyện | 2 | TẮT – chờ ảnh 016/017, chữ truyện chờ ChatGPT |
+| v1-chuong-chua-dap | S6 The Unanswered Bell | P09 (phòng mới) | Echo replay giữ công tắc + chạm chuông | chuông thiếu quả lắc, 2 điểm tương tác | 1 Mảnh Ký Ức + 60 Ancient Bronze | 4 | TẮT – chờ kỹ năng Echo replay + phòng mới |
+| v1-hoc-treo-p02 | S7 The Rootbound Witness | P02 | lên hốc treo | thấy thẻ từ dưới | Name Tag ELDEN + 40 Mảnh Âm | 2 | BẬT |
+
+Thông báo: `Secret Found · <tên> · 3 / 4 Discovered` (mẫu số = bí mật đang bật; đủ 6 khi S5, S6 bật). Bí mật đều có thêm Âm Điểm (nguồn `bi_mat` của Hệ thống đồ – chỉ trao khi hệ thống đó bật, không thì giữ chờ).
 
 ## Vùng 1 – nhiệm vụ ẩn
-| id | Tên | Lộ khi | Xong khi | Thưởng | Trạng thái |
+| id | Tên | Lộ / xong | Thưởng | Khó | Trạng thái |
 |---|---|---|---|---|---|
-| nv-v1-nhung-cai-ten | Những Cái Tên Bị Quên | nhặt Thẻ Tên đầu tiên | đủ 4 Thẻ Tên (P02, P03-H1, P04, P09) | +60 Mảnh Âm, Mảnh Ký Ức, thành tựu; đoạn truyện (chờ ChatGPT) | BẬT |
-| nv-v1-lang-nhu-tro | Lặng Như Tro | hạ trùm không trúng đòn | như trên | +150 Mảnh Âm, thành tựu; Âm Phù hiếm (chờ hệ thống đồ) | BẬT |
-| nv-v1-ve-cua-re | Về Cửa Rễ | vào P01 sau khi hạ trùm | như trên | +40 Mảnh Âm, thành tựu; câu thoại bóng trùm (chờ ChatGPT) | BẬT |
-| nv-v1-tho-san | Kẻ Nghe Tiếng Rễ | tìm bí mật đầu tiên | tìm hết bí mật đang bật | +80 Mảnh Âm, thành tựu | BẬT |
-| nv-v1-ba-tieng-ngan | Ba Tiếng Ngân | (chờ) | đánh 3 chuông P03 theo thứ tự | Đồng Cổ | TẮT – chờ ChatGPT + cách đánh dấu chuông |
+| nv-v1-nhung-cai-ten | Q1 Names Beneath the Bark | lộ ở Thẻ Tên đầu; xong khi đủ 4 (P02, P03, P04, P09) | 1 Mảnh Ký Ức + đoạn truyện (chữ ChatGPT) | 2 | BẬT |
+| nv-v1-lang-nhu-tro | Q2 A Blade Without Blood | hạ Hollow Bell Mother không trúng đòn (tính từ lúc vào phòng trùm, làm lại được) | thành tựu **Untouched by Silence** + Echo Charm biến thể (chờ Hệ thống đồ + ảnh); KHÔNG Mảnh Ký Ức | 5 | BẬT |
+| nv-v1-ve-cua-re | Q3 The Mother's Last Echo | quay lại P01 sau khi hạ trùm | câu "Even in silence, I kept their names." + 30 Ancient Bronze (giữ chờ) | 2 | BẬT (bóng Echo hiện khi có ảnh 020) |
+| nv-v1-ba-tieng-ngan | Q4 Three Notes for the Lost | đánh 3 chuông P03 thấp → trung → cao; sai reset nhẹ | 100 Ancient Bronze + bản khắc | 3 | TẮT – chờ chuông đánh được + ảnh 016 |
+| nv-v1-iria | What the Ash Remembers (NPC Iria, the Ash Listener, gần P05) | tìm 3 dấu tích ở P03, P06, P09 | 1 Mảnh Ký Ức | 2 | TẮT – chờ nhân vật (phiên Cốt truyện) |
 
-## Giao diện
-- Thông báo: dòng chữ có sẵn của Vùng 1, xếp hàng (không đè chữ nhặt đồ): "Đã tìm thấy bí mật · … (x/5)", "Nhật Ký Tiếng Vọng: “…”", "Hoàn thành ẩn: …".
-- Nút "Nhật Ký · Bí mật x/5" trong bảng Chuông Lưu → bảng "Nhật Ký Tiếng Vọng" (bí mật, thành tựu, Mảnh Ký Ức, các dòng nhiệm vụ đã lộ). Nút/dòng cao ≥ 44 px.
-- Chờ ảnh: hiệu ứng phát hiện (002), khung nhật ký (003), biểu tượng thành tựu (004), Mảnh Ký Ức (005) – có ảnh thì dùng, không vẽ bằng code.
+Thành tựu: **Untouched by Silence** (Q2), **Root Listener** (tìm hết bí mật đang bật của Vùng 1).
+Mảnh Ký Ức Vùng 1 (4): Ashen Lullaby, The Unanswered Bell, Names Beneath the Bark, Iria. *ChatGPT ghi chú: còn thiếu thử thách platforming thưởng Mảnh Ký Ức (The High Mourning đang thưởng máu) – khi dựng thêm phòng thì đổi 1 nguồn sang platforming, tổng không quá 4.*
 
-## Các vùng sau
-Xem docs/an/de-xuat-cho-vung-2.md (mẫu dùng cho mọi vùng mới).
+### 4 Thẻ Tên (chữ trong game)
+- P02 **ELDEN** – "I held the gate until the bells fell silent."
+- P03 **MARA** – "I cast the last bell for those without names."
+- P04 **SERA** – "The ash remembers what the living forget."
+- P09 **ORIN** – "Do not let the Mother ring alone."
+Đủ 4 → "Four names remembered." + "Memory Shard acquired." + đoạn truyện *Names Beneath the Bark* (đọc lại trong nhật ký).
+
+## Lối tắt Vùng 1 (đếm riêng, không vào Secret Found)
+P02↔P06 (có, BẬT) · đề xuất: P03↔P05 · P04↔P06 · P05↔P09 · P06↔P11 · P09↔P12 (sau trùm). Chưa dựng: phải kiểm không phá thứ tự 3 Broken Bell / cổng tinh anh (khoá một chiều hoặc mở sau điều kiện) và cần ảnh phòng nướng lại.
+
+## Câu đố âm thanh trên iPhone (ChatGPT)
+Luôn ≥ 2 kênh (âm + hình): LOW 1 vạch · MID 2 vạch · HIGH 3 vạch. Tắt tiếng vẫn giải được; không dùng màu làm dấu hiệu duy nhất; không flash mạnh; tuỳ chọn "Visual Sound Cues" mặc định bật; không bắt đứng yên ở chỗ nguy hiểm.
+
+## Giao diện (ChatGPT, iPhone 844×390)
+- Secret toast 270×58 góc trên phải (trong safe area), 2,5–3 s; Achievement toast 300×66; nhật ký 760×320 (tab 148 / danh sách 250 / chi tiết 340), dòng 52–58, nút ≥ 44.
+- Trạng thái dòng: Whispers / Discovered / Unfinished / Remembered. Không hiện "???" cho mục chưa biết.
+- **Hiện tại** (chưa có ảnh): thông báo dùng dòng chữ có sẵn của Vùng 1; nhật ký là bảng chữ HTML (mục Whispers, Name Tags, Remembered, Achievements). Khi ảnh 006–019 XONG sẽ thay khung/biểu tượng.
+
+## Chống kẹt (ChatGPT, đã làm trong code)
+ID ổn định; tách "đã mở" và "đã nhận thưởng" (thưởng chưa trao được giữ chờ); bản lưu cũ tính bù, tường nứt P02 đã đếm cũ tự chuyển sang lối tắt; mở lối tắt không tăng Secret Found; Thẻ Tên không mất/không nhận trùng; no-hit làm lại được, không khoá kết thật.
+
+## 12 nhiệm vụ "hành động lạ" toàn game → docs/an/de-xuat-cac-vung-sau.md

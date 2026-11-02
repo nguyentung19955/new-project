@@ -1,5 +1,5 @@
 # 002 – Hiệu ứng "phát hiện bí mật"
-- **Trạng thái:** CHỜ (nên làm sau 001)
+- **Trạng thái:** BỎ – ChatGPT thay bằng 010 (khung toast "Secret Found") + 018 (hiệu ứng "Quest Discovered"). Đừng vẽ.
 - **Dùng vào:** game/an/ – bật lên đúng chỗ bí mật khi người chơi tìm ra (vỡ tường nứt, đi xuyên tường giả, nhặt vật phẩm ẩn). Chưa có ảnh → chỉ hiện chữ thông báo (đã có sẵn), không vẽ gì thêm.
 - **Mô tả:** luồng tiếng vọng xanh nhạt (#CEF0D6) xoáy lên thành vòng sóng âm hình chuông nhỏ rồi tan thành bụi sáng; điểm nhấn vàng đồng (#E1B85A) rất ít. Phong cách pixel art giống art/hieu-ung/chieu-moi/ và art/vung-1/dao-cu/.
 - **Số khung:** 8 khung, ~70 ms/khung (không lặp). Khung cuối gần như trong suốt.

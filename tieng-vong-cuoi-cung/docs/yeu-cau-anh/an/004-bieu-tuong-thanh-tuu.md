@@ -1,5 +1,5 @@
 # 004 – Biểu tượng thành tựu / nhiệm vụ ẩn Vùng 1
-- **Trạng thái:** CHỜ (nên làm sau 001 – danh sách có thể đổi theo tư vấn)
+- **Trạng thái:** BỎ – ChatGPT thay bằng 012 (6 biểu tượng 32×32) + 011 (khung toast thành tựu). Đừng vẽ.
 - **Dùng vào:** nhật ký nhiệm vụ ẩn + thông báo hoàn thành (game/an/du-lieu.json trường `bieu_tuong`). Thiếu biểu tượng → chỉ hiện chữ.
 - **Mô tả (mỗi cái 1 hình, đọc rõ ở 48 px, đồng cũ + xanh tiếng vọng):**
   1. **nhung-cai-ten** – 4 thẻ tên gỗ/đồng xếp chồng buộc dây (nhiệm vụ "Những Cái Tên Bị Quên").

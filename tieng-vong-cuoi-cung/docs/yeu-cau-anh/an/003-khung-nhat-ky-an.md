@@ -1,5 +1,5 @@
 # 003 – Khung "Nhật Ký Tiếng Vọng" (nhật ký nhiệm vụ ẩn + bí mật)
-- **Trạng thái:** CHỜ (nên làm sau 001 – ChatGPT có thể đổi bố cục)
+- **Trạng thái:** BỎ – ChatGPT đổi bố cục nhật ký: thay bằng 006–009, 013–015. Đừng vẽ.
 - **Dùng vào:** bảng nhật ký mở từ Chuông Lưu (game/an/). Hiện tạm là bảng chữ HTML giống bảng Dây Ngân; có khung này thì thay nền bảng.
 - **Mô tả:** cuốn sổ/tấm bia đồng cũ mở ra, viền rễ cây quấn, góc có chuông nhỏ, giấy/đá tối (#1A212B–#212835) để chữ sáng đọc rõ; giữa trống hoàn toàn (để chữ HTML lên trên). Pixel art, u tối.
 - **Số khung:** 1 tĩnh. Thêm 1 dải "dòng mục" (thanh ngang mỏng 640×56) để làm nền mỗi dòng nhiệm vụ.
