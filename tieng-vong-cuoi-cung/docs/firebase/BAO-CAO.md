@@ -1,4 +1,4 @@
-# Báo cáo phiên Lưu game bằng Firebase (firebase) – 02/11/2026 (lượt 2)
+# Báo cáo phiên Lưu game bằng Firebase (firebase) – 02/11/2026 (lượt 2, cập nhật chiều)
 
 ## Tóm tắt dễ hiểu
 - **Link chơi (iPhone/máy tính): https://tieng-vong-cuoi-cun.web.app/** – đã cập nhật bản mới. Mỗi khi nhánh có thay đổi trong `game/`, GitHub Actions tự đưa lên lại.
@@ -16,7 +16,7 @@ Kiểm lại: vào GitHub ▸ Actions ▸ `tvcc-firebase` ▸ "Run workflow" –
 (Không bắt buộc – để lần sau máy tự cập nhật quy tắc: Google Cloud Console ▸ IAM ▸ tài khoản dịch vụ bạn đã tạo khoá cho GitHub ▸ thêm vai trò **Firebase Rules Admin**. Không tốn tiền.)
 
 Tình trạng dự án thật (kiểm tự động trên GitHub Actions lúc 05:21 UTC):
-- ĐẠT Hosting: game đã lên (1122 tệp).
+- ĐẠT Hosting: game đã lên.
 - ĐẠT Authentication: đăng nhập khách (Anonymous) hoạt động.
 - CHƯA Firestore: quy tắc trên dự án vẫn là bản cũ → máy chủ từ chối ghi theo cấu trúc mới (cần bước dán ở trên).
 
@@ -48,12 +48,13 @@ Tình trạng dự án thật (kiểm tự động trên GitHub Actions lúc 05:
 
 ## Giới hạn gói miễn phí Spark (theo ChatGPT)
 - Firestore: 50.000 đọc + 20.000 ghi mỗi ngày, 1 GiB. Mỗi lần mở game đọc 5 tài liệu; ghi gom 10 giây/lần → thừa cho vài chục người chơi/ngày.
-- Hosting: 10 GB lưu trữ, **360 MB tải/ngày** – đây là chỗ dễ chạm nhất (ảnh game nặng). Service worker giúp không tải lại ảnh đã có. Nên vào Hosting ▸ "Release storage settings" đặt giữ **2–3 bản** cũ.
+- Hosting: 10 GB lưu trữ, **360 MB tải/ngày**. Dung lượng thật đưa lên: **~20 MB / 828 tệp** (`art/` trong repo ~60 MB, nhưng ~17 MB ảnh nguồn `*-nguon-chatgpt.png`, thư mục `art/kiem-khach-thiet-ke/`, `docs/`, `tools/`, *.md/*.py/*.txt đều bị `firebase.json` loại – con số "~700 MB" ở báo cáo trước là sai). Một người tải TRỌN game ~20 MB → tối đa ~18 lượt tải trọn/ngày; thực tế người chơi chỉ tải phần đang chơi và service worker giữ lại ảnh đã có, nên lần mở sau gần như không tốn. Mỗi lần triển khai chỉ tải lên tệp đổi; nên vào Hosting ▸ "Release storage settings" đặt giữ **2–3 bản** cũ.
 - Hết hạn mức thì chỉ **tạm ngừng** đến hôm sau, **không tự tính tiền**. Tuyệt đối không bấm "Upgrade/Blaze", không thêm thẻ.
 
 ## Chưa làm (theo thứ tự ưu tiên của ChatGPT – để sau)
 - Tự hợp nhất tiến độ không đảo ngược (trùm đã hạ, kỹ năng đã mở) khi xung đột – hiện cho người chơi chọn.
 - App Check – ChatGPT khuyên bản đầu chưa cần.
+- Màn "Pause → Settings → Save & Cloud" như ChatGPT gợi ý: Vùng 1 hiện chưa có màn tạm dừng/cài đặt, nên các nút lưu mây + Export/Import tạm đặt ở menu chính (chữ đúng như ChatGPT gợi ý). Khi có màn Pause thì chuyển sang đó.
 - Thử thật trên iPhone Safari (đăng nhập Google, khôi phục tiến độ) – cần bạn mở link trên iPhone sau khi dán quy tắc.
 - Lượt này chạy trên máy chủ đám mây theo lịch, không có Chrome nên không hỏi thêm ChatGPT được; mọi thay đổi đều làm theo bản tư vấn đã lưu.
 

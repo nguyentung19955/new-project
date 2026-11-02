@@ -24,7 +24,7 @@ Bản nháp hiện tại (đã viết, có phép thử):
 4. Gửi lên gom lại tối đa 10 s/lần + khi ẩn trang (pagehide/visibilitychange); trước khi ghi đọc lại tài liệu 1 lần.
 5. SDK Firebase 10.14.1 nạp động từ gstatic khi có cấu hình; lỗi/quá giờ → chỉ lưu máy.
 6. Quy tắc: chỉ uid đó đọc/ghi `nguoi_choi/{uid}`, chỉ cho các trường khoa/saoLuu/phienBan/capNhat, tối đa 50 khoá.
-7. Hosting: Firebase Hosting gói Spark, triển khai bằng GitHub Actions (service account), ảnh game ~700 MB.
+7. Hosting: Firebase Hosting gói Spark, triển khai bằng GitHub Actions (service account), ảnh game ~20 MB thực tải (ghi chú sửa 02/11: con số ~700 MB lúc soạn câu hỏi là SAI; art/ chỉ ~60 MB, trong đó ảnh nguồn *-nguon-chatgpt.png và art/kiem-khach-thiet-ke không đưa lên Hosting).
 
 Hãy tư vấn:
 a) Firestore hay Realtime Database cho trường hợp này? Cấu trúc dữ liệu trên có ổn không?
@@ -32,7 +32,7 @@ b) "Sửa sau cùng thắng" theo đồng hồ máy có rủi ro gì (đồng h�
 c) Có nên bật bộ nhớ đệm offline của Firestore (persistentLocalCache) không, hay để localStorage lo là đủ?
 d) Đăng nhập Google trên iPhone Safari: linkWithPopup hay linkWithRedirect? Cần cấu hình authDomain gì khi dùng Hosting?
 e) Quy tắc bảo mật: viết lại bản tốt nhất (giới hạn kích thước, kiểu dữ liệu).
-f) Giới hạn gói Spark (Firestore đọc/ghi/ngày, Hosting dung lượng + băng thông/ngày, số phiên bản Hosting lưu giữ) – với ~700 MB ảnh,
+f) Giới hạn gói Spark (Firestore đọc/ghi/ngày, Hosting dung lượng + băng thông/ngày, số phiên bản Hosting lưu giữ) – với ~20 MB ảnh thực tải,
    có cần giảm/nén ảnh hay giới hạn số phiên bản giữ lại không? Cách chắc chắn không bao giờ bị tính tiền?
 g) Có cần App Check / chống lạm dụng ở gói miễn phí không?
 h) Giao diện: hiện trạng thái lưu mây ở đâu trong menu cho người chơi dễ hiểu (chỉ chữ, hay cần biểu tượng)?

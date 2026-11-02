@@ -5,7 +5,7 @@
       "firebase.json", "firestore.rules", ".firebaserc", "**/.*",
       "docs/**", "tools/**", "**/node_modules/**",
       "**/*.py", "**/*.md", "**/*.txt", "**/*.psd", "**/*.zip",
-      "**/nguon/**", "**/*nguon*"
+      "**/nguon/**", "**/*nguon*", "art/kiem-khach-thiet-ke/**"
     ],
     "redirects": [ { "source": "/", "destination": "/game/", "type": 302 } ],
     "headers": [
