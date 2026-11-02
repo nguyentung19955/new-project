@@ -387,7 +387,8 @@
   function veUnit(c, v, x, y, t, chon) {
     const td = TUONG[v.id], h = HANH[td.hanh];
     const cx = x + C.O / 2, chan = y + C.O / 2 + 24;                 // chân ở tâm ô + 24px
-    const s = v.moi > 0 ? 1 + Math.sin((v.moi / 0.5) * Math.PI) * 0.2 : 1;
+    let s = 1;   // xuất hiện (triệu hồi / ghép): 0.75 → 1.10 → 1
+    if (v.moi > 0) { const p = 1 - v.moi / (v.sao > 1 ? 0.5 : 0.35); s = p < 0.6 ? 0.75 + 0.35 * (p / 0.6) : 1.10 - 0.10 * ((p - 0.6) / 0.4); }
     // bóng + vòng đế màu phe
     c.save(); c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(cx, chan + 1, 14, 3.5, 0, 0, 7); c.fill();
     c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.35 + 0.08 * Math.sin(t * 3 + v.uid); c.strokeStyle = h.mau; c.lineWidth = 1.6; c.beginPath(); c.ellipse(cx, chan, 14, 4, 0, 0, 7); c.stroke();
@@ -422,6 +423,7 @@
     const w = q.co, hv = q.kind === 'thuong' || q.boss ? Math.sin(t * 4 + q.uid) * 2 : 0;
     const x = q.x - w / 2, yChan = q.y + 10, vao = Math.min(1, q.d / 26);
     c.save(); c.globalAlpha = vao;
+    if (q.flash > 0.055) { const k = 1.06; c.translate(q.x, yChan); c.scale(k, k); c.translate(-q.x, -yChan); }
     c.save(); c.globalAlpha = 0.5 * vao; c.fillStyle = '#000'; c.beginPath(); c.ellipse(q.x, q.y + 9, w * 0.36, 3.5, 0, 0, 7); c.fill(); c.restore();
     const m = q.boss ? q.boss.mau : MAU_QUAI[q.kind];
     if (Q.cao) veGlow(c, m, q.x, yChan - w / 2 + hv, w * 0.8, 0.28);
@@ -434,6 +436,12 @@
         c.save(); c.globalAlpha = 0.6; c.globalCompositeOperation = 'lighter'; c.drawImage(sp, x + 3, yChan - w, w, w); c.restore();
       }
       veHinh(c, a, sp, x, yChan - w + hv, w, w);
+    }
+    if (q.flash > 0.045 && Q.cao) {   // chớp sáng khi trúng đòn
+      c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7);
+      if (q.boss) veHinh(c, ANH['b:' + q.boss.id], sprBoss(q.boss), x - 4, yChan - w - 8 + hv, w + 8, w + 8);
+      else veHinh(c, ANH['e:' + q.kind], sprQuai(q.kind), x, yChan - w + hv, w, w);
+      c.restore();
     }
     if (q.cham > 0) { c.save(); c.globalAlpha = 0.55; c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(q.x, q.y + 6, w * 0.45, 5, 0, 0, 7); c.stroke(); c.restore(); veGlow(c, '#5ee7ff', q.x, yChan - w / 2, w * 0.6, 0.3); }
     if (q.chill > 0) { c.save(); c.strokeStyle = '#bff6ff'; c.lineWidth = 1.6; for (let k = 0; k < q.chill; k++) { const g = t * 2 + k * 2.09, r = w * 0.42; c.beginPath(); c.moveTo(q.x + Math.cos(g) * r, yChan - w / 2 + Math.sin(g) * r * 0.5); c.lineTo(q.x + Math.cos(g) * (r + 6), yChan - w / 2 + Math.sin(g) * (r + 6) * 0.5); c.stroke(); } c.restore(); }
@@ -474,6 +482,7 @@
       else if (f.k === 'hoada') no(o[0], o[1], '#ff3b3b', 10, 90, 2.4, 0.5);
       else if (f.k === 'kn') no(o[0], o[1], f.mau, 20, 200, 3, 0.7);
       else if (f.k === 'thanh') no(W - 30, G.BOT - 18, '#ff3b3b', 20, 160, 3, 0.6);
+      else if (f.k === 'hit') no(o[0], o[1], f.mau, f.to ? 7 : 3, 110, 2.2, 0.25);
       else if (f.k === 'vo') no(o[0], o[1], '#bff6ff', 10, 120, 3, 0.45);
       else if (f.k === 'plasma' || f.k === 'nhiet') no(o[0], o[1], '#ff9a50', 10, 110, 2.6, 0.4);
       else if (f.k === 'emp') no(o[0], o[1], '#00ffa3', 6, 80, 2, 0.35);
@@ -513,6 +522,10 @@
       veGlow(c, '#5ee7ff', o[0], o[1], 30, a * 0.7);
     } else if (f.k === 'hoada') {
       c.strokeStyle = f.mau || '#ff3b3b'; c.lineWidth = 2; hexP(c, o[0], o[1], 20 + 20 * k); c.stroke();
+    } else if (f.k === 'hit') {
+      const r0 = (f.to ? 14 : 9) * (0.4 + k); c.strokeStyle = '#ffffff'; c.lineWidth = 1.6;
+      for (let n = 0; n < 4; n++) { const g = n * 1.571 + 0.4; c.beginPath(); c.moveTo(o[0] + Math.cos(g) * r0 * 0.4, o[1] + Math.sin(g) * r0 * 0.4); c.lineTo(o[0] + Math.cos(g) * r0, o[1] + Math.sin(g) * r0); c.stroke(); }
+      veGlow(c, f.mau, o[0], o[1], r0, a);
     } else if (f.k === 'chem') {
       c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = 4 * a + 1; c.beginPath(); c.arc(o[0] - 6, o[1] + 4, 16, -1.2 + k, 0.4 + k); c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.stroke();
     } else if (f.k === 'rail') {
