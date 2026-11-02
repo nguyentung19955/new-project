@@ -8,7 +8,8 @@
     for (const v of tg){
       if (!v || !v.id) continue;
       const cu = ds.find(x => x.id === v.id);
-      const moi = {ten: v.ten, duong_dan: v.duong_dan || v.trang || v.url};
+      // the-gioi.json: 'trang' tính từ thư mục game/ → đổi sang đường dẫn từ gốc dự án; tên trong trạm (tên vùng theo gdd) được ưu tiên
+      const moi = {ten: cu && cu.ten ? undefined : v.ten, duong_dan: v.duong_dan || (v.trang ? 'game/' + v.trang : v.url), diem_vao: v.diem_vao};
       for (const k of Object.keys(moi)) if (moi[k] === undefined) delete moi[k];
       if (cu) Object.assign(cu, moi); else ds.push(Object.assign({id: v.id, mo: null}, moi));
     }

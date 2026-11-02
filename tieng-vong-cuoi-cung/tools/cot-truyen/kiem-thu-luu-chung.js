@@ -5,7 +5,7 @@ const {tao, datDieuKien} = require(path.join(G, 'luu-chung.js'));
 const HT = require(path.join(G, 'cot-truyen/hop-thoai.js'));
 const Tram = require(path.join(G, 'cot-truyen/tram.js'));
 let dat = 0, hong = 0;
-const ok = (dk, ten) => { if (dk) dat++; else { hong++; console.log('HỎNG:', ten); } };
+const ok = (dk, ten, x) => { if (dk) dat++; else { hong++; console.log('HỎNG:', ten, x === undefined ? '' : JSON.stringify(x)); } };
 function khoGia(){ const m = {}; return {getItem:k => k in m ? m[k] : null, setItem:(k, v) => { m[k] = String(v); }, removeItem:k => { delete m[k]; }, m}; }
 
 // 1. lưu chung
@@ -40,6 +40,8 @@ ds = Tram.gop(tram, {vung:[{id:'xuong-dong', duong_dan:'game/vung-2/index.html'}
 const L3 = tao(khoGia()); L3.moVung('xuong-dong');
 const st = Tram.trangThai(ds, L3, datDieuKien);
 ok(st.find(v => v.id === 'xuong-dong').di_duoc && !st.find(v => v.id === 'vung-moi').di_duoc, 'gộp the-gioi.json + mở theo lưu chung');
+const tg = require(path.join(G, 'the-gioi.json')), v1 = Tram.gop(tram, tg).find(v => v.id === 'vung-1');
+ok(v1.duong_dan === 'game/vung-1/index.html' && v1.ten === 'Rễ Mục', 'đọc đúng game/the-gioi.json thật', v1);
 
 // 4. hộp thoại: chưa có ảnh → tắt
 (async () => {
