@@ -1,0 +1,140 @@
+(Nguyên văn trả lời ChatGPT, 02/11/2026 – chat "Region 2 Design Bible". Phần 1/2 + phần 2/2 bên dưới.)
+
+THE LAST ECHO — WORLD PROGRESSION & REGION 2 DESIGN BIBLE
+Version 1.0 | 2 November 2026 | Design target: iPhone landscape, 60 FPS
+All numbers below are proposed tuning targets, not existing implemented facts.
+
+1. WORLD ORDER AND PROGRESSION
+
+R1 Weeping Heartwood — existing tutorial / 9 rooms / Hollow Bell Mother. Baseline run, jump, dash, echo and combat. Exit unlock: 3 Broken Bells + Ruin Core.
+R2 Rotting Roots — decaying ground, timed collapse, Root Anchor ability. Target difficulty 2/9; 13 main rooms + 3 secrets; 35–50 minutes first clear.
+R3 Abandoned Bronze Foundry — conveyors, pistons, crushing floors; Root Anchor allows bracing against forced motion. Difficulty 3/9; 45–60 minutes.
+R4 Iron Nest — hanging ladders, hooks, swinging pulleys, vertical traversal. Difficulty 4/9; 50–65 minutes.
+R5 Wind Canopy — reversible wind, leaf platforms, Cicada Mother. Difficulty 5/9; 50–70 minutes.
+R6 Thunder Peak — bell-rhythm lightning, Thunder Bird. Difficulty 6/9; 55–75 minutes.
+R7 Echo Library — book platforms, spoken words become solid walls, Headless Librarian. Difficulty 7/9; 60–80 minutes.
+R8 Mirror Lake — reflections, mirrored traversal and Kaelith final duel. Difficulty 8/9; 60–80 minutes.
+R9 Silent Abyss — echo is the only light, Silent Warden finale. Difficulty 9/9; 70–95 minutes.
+
+Geography is not linear: Bell Village remains central; elevators, root arteries, and teleport bells connect geographically separated regions. After R2, allow optional return to R1 for an Anchor-gated Memory Shard; do not require it for R3. R3 and R4 may be revisited in either direction after their main unlocks. Target R2 boss encounter at 70–85 minutes after first entering R1's boss if player is experienced; tune against playtests rather than enforce elapsed time.
+
+2. REGION 2 — ROTTING ROOTS
+
+Narrative: The Bell Tree's living tissue has become spongy and unstable. Old bells are trapped in fungal growth; each impact accelerates decay. A forgotten root guardian tries to preserve a dying nursery by absorbing every vibration. Contrast with R1: less masonry, more living, breathing surfaces; damp violet-brown, muted fungal gold, sparse sickly olive. Echo-cyan stays reserved for player abilities and associated feedback.
+
+Implementation: 48 px collision tile grid; world dimensions below are width x height in tiles. R2 IDs R201–R213; secret rooms RS201–RS203. Each room is generated as tile occupancy and collision metadata, then baked into authored-art tile layers. All inter-room exits have reciprocal connections. Connections are bidirectional unless a shortcut explicitly opens later; even before opening, alternate routes remain available. Main route: R201→R202→R203→R204→R205→R206→R207→R208→R209→R210→R211→R212→R213. Branches and shortcuts below add loops.
+
+R201, Root Descent, 48x20: entry from R1's root gate / Bell Village return artery; connects R202. Safe firm soil, rotten-looking but noncollapsing decoration; teaches visual language without damage. No save.
+R202, Softwood Passage, 56x22: R201/R203; one isolated 2-tile rot bridge over harmless 1-tile recess; 2.0 s collapse after first landing, 3.0 s regrow. Safe tutorial. No save.
+R203, Spore Lantern Grotto, 60x26: R202/R204; branch to RS201 behind left fake wall. First real pit beneath 3-tile rotten walkway; stable bypass. No save.
+R204, Rootwatch Rest, 36x18: R203/R205; save bell S1, teleport to Bell Village; heal station and enemy-free breathing space.
+R205, Weeping Slope, 72x30: R204/R206; 2–3 rotten segments alternating with firm landings, first enemy paired with a crumbling bridge. Optional return ledge opens shortcut to R203 after crossing. No save.
+R206, Hollow Nursery, 64x32: R205/R207; branches RS202 (fake ceiling) and R209 (locked natural root weave shortcut). First encounter with living rot pulses and Root Anchor shrine; ability acquired at room's end. No save.
+R207, Anchored Chasm, 64x36: R206/R208; mandatory Root Anchor tutorial across a 4-tile unstable bridge with anchor nodes; safe catch shelf beneath first attempt. No save.
+R208, Buried Bell Crossing, 76x24: R207/R209; alternate connection to R205 opens after Anchor puzzle; vertical anchor shafts, one elite foreshadow. No save.
+R209, Fungus Reservoir, 64x38: R208/R210; shortcut back to R206 unlocks from this side via woven-root latch. Optional RS203 fake wall behind fungal curtain. Save bell S2 at firm central island.
+R210, Sporespine Ascent, 52x44: R209/R211; hardest mandatory traversal, rot bridge plus wall jump and anchor. Optional hard Memory Shard challenge in an alcove of this room, separated from main path. No save.
+R211, Guardian's Cradle, 56x24: R210/R212; elite encounter, opens a permanent natural root bridge after victory. Shortcut to R208 opens from arena exit. No save.
+R212, Last Dry Root, 34x18: R211/R213; save bell S3, boss briefing, no enemies; direct safe boss retry. No save inside boss.
+R213, Moldheart Chamber, 72x26: R212; boss Mold Mother; post-boss permanent root tunnel to Bell Village and R3 route; optional return R212. Boss room exits are disabled only while combat is active, with death restoring at S3.
+
+RS201, Root Epitaph, 22x14: fake wall in R203, 2-tile-wide destructible bark seam, reward lore tablet + 20 echo fragments; exit back to R203.
+RS202, Forgotten Incubator, 26x18: fake ceiling in R206, revealed by a subtle falling spore stream; reward heal-resource capacity fragment (1 of 3); exit back to R206.
+RS203, Amber Husk, 24x16: fake wall in R209, behind darker fungal curtain; reward Root Anchor cooldown charm (optional -10% cooldown, capped); exit back to R209.
+
+Hard optional challenge: R210 upper-left alcove, 12-tile run across three 2-tile decaying platforms with staggered 20-frame activation offsets, one anchor node, wall-jump shaft, no enemies. Reward exactly one Memory Shard. On failure fall to a firm catch floor, 8 seconds to retry. No health loss from the challenge itself; no mandatory reward for progression. Challenge can be retried after clearing boss.
+
+Pacing beats: 0–6 min visual introduction R201–R202; 6–12 min first risk and first rest R203–R204; 12–22 min enemy+terrain mastery R205–R206 and ability; 22–32 min ability practice R207–R209 and second save; 32–42 min traversal climax + elite R210–R211; 42–50 min boss R212–R213. Target 2–4 meaningful encounters between saves, never put an unseen collapsing platform directly after a blind camera transition.
+
+3. TERRAIN MECHANIC — EXACT RULES
+
+Simulation fixed step 60 Hz (1 frame = 16.667 ms). All logic uses integer frames; milliseconds are display equivalents. Use per-tile states SOLID, WARNING, FALLING, GONE, REFORMING. Only a character's feet touching top surface triggers warning, not side contact, attacks or ghost visuals. Ghost can trigger explicitly tagged echo-sensitive platforms, but not normal rotten tiles, avoiding accidental path breakage.
+
+Ordinary Rotwood: on first foot contact WARNING for 120 frames (2000 ms); visual cracks at frames 0, 40, 80; audio creaks at frames 0 and 80; amber dust at frame 105. FALLING lasts 12 frames (200 ms), collision remains for first 4 frames then turns off at frame 5; GONE 180 frames (3000 ms); REFORMING 18 frames (300 ms), collision returns at final frame only. If player is standing in respawn volume, defer reform until clear; maximum defer 180 frames, then spawn nonblocking and wait until clear. Leaving a tile does not reset its timer. Linked 2–3-tile bridge clusters share first-contact timer.
+
+Rapid Rotwood (introduced R208): WARNING 72 frames (1200 ms), FALLING 12 frames, GONE 210 frames, REFORMING 18 frames. Mark with brighter ochre spore veins and a quicker two-click creak. Never mix ordinary and rapid textures without a visible edge marker.
+
+Pulse Rotwood (introduced R206): hazard cycles every 240 frames (4000 ms): DORMANT 150f, SPORE PULSE 30f, RECOVERY 60f. Pulse only accelerates already-triggered Rotwood by 30 frames once per cycle, with a 30f amber flicker beforehand. No instant collapse and no hidden RNG.
+
+Damage: falling through a hazardless bridge is not damage; spikes / toxic pools deal 1 mask HP on contact, grant 60f invulnerability, and return player to nearest firm checkpoint ledge after 18f hit pause/knockback recovery. Never stack repeated pool damage during invulnerability. Boss arena uses its own 90f invulnerability rule after major slam, not this terrain rule.
+
+Root Anchor: see section 6. Anchor freezes WARNING countdown on linked rot tiles, not GONE or FALLING tiles; freeze is visually communicated by warm bronze root bands, not hero cyan. Anchor expiration resumes the exact remaining countdown. Enemy projectiles do not reset countdowns. A save-bell respawn resets all terrain to initial state; room re-entry resets local rot unless a scripted persistent shortcut is flagged opened.
+
+Teach: R201 show cracked bark safely; R202 step on single bridge, wait and watch regrow; R203 cross over a pit with bypass; R205 combine one enemy with rot but offer firm retreat; R206 pulse demonstration plus ability pickup; R207 anchor one platform in isolation then cross linked bridge; R208 rapid variant; R209 vertical route; R210 full synthesis. Each new hazard receives a safe first exposure and distinct visual+audio telegraph.
+
+4. REGULAR ENEMIES — 4 TYPES
+
+HP assumes one basic sword strike = 1 damage, combo finisher = 2, resonance bonus handled separately; player starts R2 with 6 mask HP. Contact damage is 1 HP unless stated. Enemy attacks should never use hero-only cyan.
+
+A. Rot Gnawer — 52x36 px, HP 4, fast low ground crawler, bone-white mandibles, umber fungal back. Patrol 1.5 tiles/s; lunge 3 tiles/s for 18f. Bite: telegraph 24f (400ms), jaw opens + two ochre spores, dry double click; active 10f (167ms), recovery 28f (467ms), cooldown 90f. Idle 4f@180ms, crawl 6f@100ms, attack 6f@80ms (split across phases), hurt 2f@90ms, death 6f@100ms. First seen R203 without pit.
+B. Spore Bell — 48x64 px, HP 6, rooted hanging bell fungus; stationary ranged. Spore Volley: telegraph 36f (600ms), bell inflates and amber dots pulse 3 times, low hollow ding; fire 3 slow projectiles at 12f intervals, each 2 tiles/s, lifetime 120f, recovery 42f, cooldown 150f. Idle 5f@160ms, sway 6f@120ms, attack 8f@90ms, hurt 3f@80ms, death 7f@100ms. First seen R205 on firm platform.
+C. Husk Leaper — 44x58 px, HP 5, slender fungal grasshopper with bronze shin splints. Leap Slash: 30f telegraph (500ms), rear legs compress and orange floor target flashes, rasping scrape; airborne 28f (467ms), slash active final 9f, landing recovery 32f, cooldown 120f. Never leap beyond visible camera edge. Idle 4f@160ms, hop 6f@85ms, attack 8f@75ms, hurt 2f@100ms, death 6f@110ms. First seen R207 after Anchor tutorial.
+D. Root Siphon — 56x72 px, HP 8, slow tall root-bundle with amber mouth cavity. Root Snare: 42f telegraph (700ms), root veins spread along floor up to 4 tiles and 2 heavy wooden knocks; eruption active 12f (200ms), root trap persists 36f (600ms), recovery 42f, cooldown 180f. Trap immobilizes 24f, does not damage until a separate hit; player can dash out if timed before eruption. Idle 5f@180ms, creep 6f@130ms, attack 9f@90ms, hurt 3f@90ms, death 8f@100ms. First seen R209 on firm ground.
+
+Enemy mixing: max 3 concurrent normal enemies in a typical 960x540 logical viewport; max one Root Siphon plus one projectile enemy; no unavoidable spore volleys over single-width rot bridges. Spawn or wake enemies only after a safe landing area. Sound telegraphs must be distinguishable from environmental creaks.
+
+5. ELITE AND BOSS
+
+Elite: The Nursery Warden — R211, 92x108 px, HP 22, bronze-root knight with a cracked bell torso, amber core and heavy bark arms. Arena 56x24 tiles, 24-tile-wide firm center, rot strips 3 tiles at each flank, two firm elevated ledges; entrance and exit both reopen after win. Attacks:
+- Root Cleave: 30f telegraph (500ms), raises bark cleaver + bronze flash + bass wood knock; 12f active, 36f recovery, 100f cooldown, 1 HP.
+- Bell Stomp: 42f telegraph (700ms), knee lift + 3 amber ground rings + deep bell note; 12f impact, 2-tile ground shockwave for 24f, 48f recovery, 150f cooldown, 1 HP.
+- Rot Command: 54f telegraph (900ms), points to flank and rot seams glow ochre + 3 rattles; accelerates exactly one 3-tile flank bridge to 72f warning, 60f recovery, 180f cooldown, no direct damage.
+At HP <= 11: phase 2, 90f transition, moves 15% faster; never combines Bell Stomp with Rot Command during same 60f interval. Stagger after 4 consecutive sword hits; 48f vulnerable window. Sheets: idle 6f@150ms, walk 8f@100ms, cleave 9f@80ms, stomp 9f@90ms, command 8f@100ms, hurt 3f@80ms, stagger 5f@100ms, death 10f@100ms. Drops Warden Knot (lore) and opens permanent braided root bridge.
+
+Boss: Mold Mother — R213, 192x180 px, HP 72, three phases. Silhouette: massive hanging fungal matriarch emerging from split roots, bronze bell cradle in chest, multiple tendrils, amber spores; no cyan. Arena: 72x26 tiles, playable central 28 tiles wide; 2 permanent 6-tile firm islands left/right, 3 central 3-tile rot clusters, 2 elevated firm ledges; camera lock on entering, entrance sealed by braided living roots. Keep minimum 5 tiles safe lateral space for every attack and never simultaneously erase both permanent islands. Save S3 directly before boss. A defeated boss stays defeated after reload.
+
+Phase 1 HP 72–49: teaches large tells, one attack at a time.
+- Tendril Sweep: 36f telegraph (600ms), left/right arm curls + orange sweep line + woody hiss; active 14f, recovery 40f, cooldown 110f, 1 HP; jumpable.
+- Spore Rain: 48f telegraph (800ms), chest bell rattles and three amber circles mark fixed landing lanes; spores fall over 48f, recovery 42f, cooldown 150f, 1 HP per volley maximum; at least one safe firm lane.
+- Bell Wail: 54f telegraph (900ms), bell core swells gold, 3 descending hollow notes; expanding floor ring 24f, recovery 54f, cooldown 180f, 1 HP; jump or dash through.
+Phase 2 HP 48–25: 120f transition, boss uproots central stalk; add Rot Bloom and shortened recoveries (not tells).
+- Rot Bloom: 60f telegraph (1000ms), three selected central rot clusters glow amber with outward spore wave + three creaks; activates WARNING on these clusters simultaneously, 36f recovery, cooldown 210f; never targets both firm islands.
+- Tendril Grab: 42f telegraph (700ms), one tendril tracks player position until 12f before release, floor circle freezes at lock; grab active 12f, 48f recovery, cooldown 160f, 1 HP on slam. Clear sound: two short bell taps.
+Phase 3 HP 24–0: 150f transition; 10% speed increase, attack choice weighted toward sweep and wail; never overlap damage-active windows, and minimum 50f between attack starts. Add:
+- Heartbreak Slam: 72f telegraph (1200ms), boss rises, entire body darkens then amber core flashes 4 beats, huge descending bell chord; active 12f, two shockwaves separated by 24f, recovery 72f, cooldown 240f; 2 HP only if directly under core, shockwaves 1 HP. Guaranteed 6-tile firm safe zone at edge, clearly signposted.
+
+Boss animation production: idle 8f@140ms, breathing 6f@160ms, sweep 10f@85ms, rain 10f@90ms, wail 12f@85ms, bloom 10f@100ms, grab 10f@85ms, slam 14f@85ms, phase change 12f@100ms each variant, hurt 3f@80ms, stagger 6f@90ms, death 16f@110ms. Separate sprites for tentacles and bell core where layering demands; boss telegraph can hold a key frame to achieve exact simulation duration. Boss drops Verdant Ruin Core, unlocks R3 route and a Bell Village NPC dialogue. Boss should not demand optional Memory Shard.
+
+6. REGION 2 ABILITY — ROOT ANCHOR
+
+Unlocked at the Root Anchor Shrine at end of R206. Input: dedicated context ability button on iPhone landscape; tap to place anchor on nearest eligible marked root node within 3 tiles (144 px) in facing direction, line of sight required; if none eligible, button greys out and no cooldown is consumed. Existing echo button remains independent. Anchor duration 180f (3000ms), cooldown 360f (6000ms) starting at placement, one active anchor max. Freeze countdown of linked WARNING Rotwood tiles within node-defined cluster (max 4 tiles); does not resurrect GONE tiles. Anchor can also hold a living root latch open for 180f, making short gates traversable. Visual: bronze/amber root wraps; small hero-cyan activation flash only at player's hand, never on enemies or props. Audio: soft low bell click followed by woody tension hum.
+
+R206 pickup teaches place on a 2-tile bridge, then cross and release. R207 requires anchoring a 4-tile span; fail-safe catch shelf. R208 requires anchor + dash to reach shortcut lever. R209 uses node to keep a vertical root ladder extended. R210 requires anchor + wall jump; optional shard challenge demands tight execution but is never mandatory. R211 elite temporarily disrupts one node for 60f after Rot Command (clearly signaled); never disables player's ability globally. R213 has two anchor nodes allowing stabilization of a central rot cluster but can be won without anchoring by using permanent islands. After R2, return to R1 for one optional anchored-root collectible and use ability in R3 Foundry to brace a pulley stop.
+
+Accessibility: optional extended warning assist increases ordinary/rapid WARNING to 180f/108f; preserve all puzzle solvability. Buttons must have at least 44x44 pt touch target with spacing, repositionable HUD, and simultaneous jump+attack+anchor touch support. Haptic: 1 short pulse on anchor place, 2 on expiry; respect system haptic settings.
+
+7. COMPLETE ENGLISH ART REQUEST MANIFEST
+
+Style contract: crisp authored pixel art, no anti-aliasing or blur, no baked UI text, magenta #FF00FF asset-sheet background for chroma-key extraction, generous gaps, no objects touching edges. Final exported runtime sprites should have transparent alpha. Align animation feet and pivots across frames. Render each item as its own sprite or consistent cell; preserve 48 px tile grid. Background art must have no baked player, enemy or interactive platform. All enemies, world props and lights use warm amber / sickly olive only; cyan reserved for Wanderer, echo, and Root Anchor activation feedback.
+
+Palette: near-black #0B0C11, deepest purple #15121B, dark bark #241B21, root shadow #34252B, wet wood #48332F, exposed wood #67463A, rot ochre #80683D, fungal olive #6B7046, spore gold #B58C49, bronze #9C6B30, highlight bronze #E1B85A, bone #B4A69B, mist #716A75. Hero-only cyan #78E6E6, #CEF0D6. Keep brightest noninteractive backgrounds below foreground luminance.
+
+Background layers:
+BG-R2-FAR-01 Deep Root Cavern (seamless horizontal 384x192 logical px; dark tree-heart cavities, 4-depth silhouette); BG-R2-FAR-02 Buried Nursery (384x192; hanging cocoons, no readable writing); BG-R2-MID-01 Tangled Root Arches (384x192; roots and hollow bells, transparent gaps); BG-R2-MID-02 Spore Reservoir (384x192; fungal fans and soft mist); BG-R2-BOSS-01 Moldheart Sanctuary (480x270; giant circular hollow, boss-safe central negative space). Two additional low-opacity parallax mist strips 384x96.
+
+Tiles: 48x48 seamless tiles, 3x3 neighborhood variants where applicable: firm root soil top/middle/bottom/left/right/corners; cracked Rotwood ordinary 3 warning states; rapid Rotwood with distinct ochre veins; pulse Rotwood dormant/charged; mossy stone footing; hanging root ceiling; wet fungus wall; spore pool surface; spike roots; thin root ledge; climbable root ladder top/middle/bottom; root anchor node dormant/active; destructible fake wall intact/cracked/open; fake ceiling intact/open. Provide clean collision masks separately as tile metadata; do not infer collision from painted pixels.
+
+Props: broken cradle bell, bronze root stake, fungal nest, half-buried mask, hanging cocoon x3, collapsed root bridge remains, spore urn, old bell chain, bone pile, carved root marker, dry-root camp, ancient root shrine, bell husk, empty incubation pod, lichen lantern, Ruin Core pedestal. Foreground silhouettes: hanging roots x4, grass and fungus tufts x4, spore wisps x3. Lights: amber lantern 4f, fungus glow 6f, bell ember 5f, shrine activation 8f; separate light masks for engine blending.
+
+Natural gates (NOT flat doors): Gate A Braided Root Weave CLOSED (roots interlock diagonally around tunnel) 1f; OPENING 8f@100ms (roots uncoil, retract into sidewalls); OPEN 1f; CLOSING 8f@100ms. Gate B Fungal Membrane CLOSED 1f, split/retract 10f@90ms, OPEN 1f. Gate C Boss Root Seal CLOSED 1f, wrap-in 12f@85ms, unwrap 12f@85ms, OPEN 1f. Each needs separate foreground/back layers, collision silhouette and anchor points; root ends must grow into adjacent wall tiles rather than vanish.
+
+Character sprite sheets: Rot Gnawer idle/crawl/bite/hurt/death; Spore Bell idle/sway/volley/hurt/death; Husk Leaper idle/hop/leap slash/hurt/death; Root Siphon idle/creep/snare/hurt/death; Nursery Warden all 8 animation sets listed above; Mold Mother all 12 sets above plus separate tentacle and core overlays. Use exact counts and timing in sections 4–5. Add root shrine 8f and ability pickup 8f; Root Anchor player casting 6f@80ms (overlay only, no body redesign).
+
+VFX sprite sheets: ordinary rot crack stages x3, crumble dust 8f, falling fragments 8f, regrow tendrils 8f, rapid rot pulse 6f, spore pulse 6f, Root Anchor place 6f, anchored root binding 6f loop, anchor expire 6f, spore projectile 4f loop, spore hit 5f, bite impact 4f, leap slash 6f, snare roots erupt 8f, elite cleave arc 6f, stomp wave 8f, elite command rot marks 6f, boss tendril trail 8f, spore rain telegraph markers 6f, falling spores 6f, bell wail ring 8f, Rot Bloom 8f, grab floor target 6f, Heartbreak shockwave 10f, boss death dissolve 16f. VFX must be layerable behind and in front of actors as appropriate, with no full-screen opaque flash.
+
+Item/UI icons: Root Anchor ability 32x32, active/cooldown states 32x32; Verdant Ruin Core 48x48; Memory Shard 32x32 with 6f hover animation; Warden Knot 32x32; Root Anchor cooldown charm 32x32; nursery lore tablet 48x48; heal capacity fragment 32x32; region map badge 32x32; rot-warning symbol 24x24; anchor node hint 24x24; Bell Village teleport icon 32x32. Text localized in engine, never baked into art.
+
+Suggested batch order: (1) palette, backgrounds and 48px terrain; (2) warning states and anchor node/gate; (3) 4 enemy sheets and telegraph VFX; (4) elite and boss silhouettes/attacks; (5) props, lights and foreground; (6) UI icons and polish. Approve silhouette and gameplay readability at actual 960x540 screen before commissioning every animation frame.
+
+8. ENGINE AND QA ACCEPTANCE CHECKLIST
+
+- Fixed 60Hz simulation; all collision and attack timing authored as integer frames. Frame art durations can differ from telegraph duration via held poses.
+- Room graph validator visits all 16 rooms, confirms reciprocal exits, main-path progression, 3 secrets, S1/S2/S3 and no permanent softlocks. Include pre-ability and post-ability states.
+- Path checker accounts for 48px tiles, actual character collision box, jump/dash/wall jump reach, Root Anchor duration, 72f rapid rot and 120f normal rot; no mandatory jump exceeds tested movement envelope.
+- Camera reveals hazard landing and safe platform at least 0.5 seconds before commitment; never spawn directly on WARNING tile.
+- Every optional fake wall has at least two visual hints and a reachable return path. Save bells restore HP/resources and reset local terrain; boss retry never forces repeat elite fight.
+- All boss attacks retain minimum 36f telegraph except clearly learned follow-ups; minimum one safe counterplay route per attack, no unavoidable overlaps.
+- Test at 30fps rendering with 60Hz logic, iPhone aspect ratios, touch input latency, color-blind readability (shapes/sounds), mute mode with visible telegraph, and accessibility extended warnings.
+- Automated tests: graph reachability, cooldown gating, anchor expiry, death respawn, boss arena seal reopen, post-boss return, secret exit reciprocity, tile respawn player-overlap safety, and no ability softlocks.
+
+FINAL DESIGN LOCK: Build Region 2 Rotting Roots next. Make collapse predictable rather than random, use Root Anchor to convert a temporary hazard into a deliberate traversal tool, and reserve the highest execution challenge for the optional Memory Shard rather than the mandatory route.

@@ -1,5 +1,7 @@
 # Câu hỏi soạn sẵn để gửi ChatGPT – kế hoạch Vùng 2 (chưa gửi)
 
+> **ĐÃ GỬI 02/11 (phiên chính) – trả lời nguyên văn ở docs/vung-2/ke-hoach-chatgpt.txt.**
+
 Lượt chạy 02/11 không có Claude in Chrome nên CHƯA hỏi được ChatGPT. Lượt sau có Chrome: mở cuộc trò chuyện mới, đính kèm ảnh chụp Vùng 1 (chụp bằng Playwright các phòng P01, P03, P11, P12 + trận trùm, đẩy lên repo rồi gửi theo CHUNG.md) và dán nguyên văn phần dưới. Lưu câu trả lời vào docs/vung-2/ke-hoach-chatgpt.txt.
 
 ---
