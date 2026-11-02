@@ -1,0 +1,62 @@
+{
+ "ghi_chu": "Quái Vùng 2 'Rotting Roots' – số liệu theo kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 4–5 (khung = 1/60 s). 'mau' = số đòn chém thường × 10 (kiếm thường 10 sát thương, như Vùng 1). CHƯA BẬT trong game: 'bat' = false cho tới khi phiên gen ảnh báo XONG các yêu cầu docs/yeu-cau-anh/vung/019–031 và 'hinh.*.thu_muc' được điền (KHÔNG vẽ tạm bằng code). Hình quay TRÁI, 1 điểm ảnh = 2 px logic.",
+ "goc": "../../art/quai-vung-2/",
+ "ti_le": 2,
+ "loai": {
+  "gnawer": {
+   "ten": "Rot Gnawer", "bat": false, "yeu_cau_anh": ["019", "023"],
+   "co_px": [52, 36], "mau": 40, "sat_thuong": 1, "bay": false,
+   "tuan_tra_o_s": 1.5, "lao": {"o_s": 3.0, "khung": 18},
+   "don": {"ten": "Bite", "bao_truoc": 24, "trung": 10, "hoi": 28, "hoi_chieu": 90, "dau_hieu": "há hàm + 2 hạt bào tử ochre, tiếng lách cách đôi"},
+   "hinh": {"dung": {"thu_muc": null, "so_hinh": 4, "ms": 180}, "di": {"thu_muc": null, "so_hinh": 6, "ms": 100},
+            "danh": {"thu_muc": null, "so_hinh": 6, "ms": 80, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 2, "ms": 90, "lap": false},
+            "chet": {"thu_muc": null, "so_hinh": 6, "ms": 100, "lap": false}},
+   "gap_dau": "R203"
+  },
+  "spore_bell": {
+   "ten": "Spore Bell", "bat": false, "yeu_cau_anh": ["020", "023"],
+   "co_px": [48, 64], "mau": 60, "sat_thuong": 1, "bay": false, "dung_yen": true,
+   "don": {"ten": "Spore Volley", "bao_truoc": 36, "so_dan": 3, "cach_dan": 12, "dan_o_s": 2.0, "dan_song": 120, "hoi": 42, "hoi_chieu": 150, "dau_hieu": "chuông phồng, 3 chấm hổ phách nháy 3 lần, tiếng ding trầm rỗng"},
+   "hinh": {"dung": {"thu_muc": null, "so_hinh": 5, "ms": 160}, "lac": {"thu_muc": null, "so_hinh": 6, "ms": 120},
+            "danh": {"thu_muc": null, "so_hinh": 8, "ms": 90, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 80, "lap": false},
+            "chet": {"thu_muc": null, "so_hinh": 7, "ms": 100, "lap": false}},
+   "gap_dau": "R205"
+  },
+  "husk_leaper": {
+   "ten": "Husk Leaper", "bat": false, "yeu_cau_anh": ["021", "023"],
+   "co_px": [44, 58], "mau": 50, "sat_thuong": 1, "bay": false,
+   "don": {"ten": "Leap Slash", "bao_truoc": 30, "tren_khong": 28, "chem_cuoi": 9, "hoi": 32, "hoi_chieu": 120, "khong_nhay_ra_ngoai_camera": true, "dau_hieu": "chân sau nén + dấu đích cam nháy trên sàn, tiếng cào rít"},
+   "hinh": {"dung": {"thu_muc": null, "so_hinh": 4, "ms": 160}, "nhay": {"thu_muc": null, "so_hinh": 6, "ms": 85},
+            "danh": {"thu_muc": null, "so_hinh": 8, "ms": 75, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 2, "ms": 100, "lap": false},
+            "chet": {"thu_muc": null, "so_hinh": 6, "ms": 110, "lap": false}},
+   "gap_dau": "R207"
+  },
+  "root_siphon": {
+   "ten": "Root Siphon", "bat": false, "yeu_cau_anh": ["022", "023"],
+   "co_px": [56, 72], "mau": 80, "sat_thuong": 1, "bay": false,
+   "don": {"ten": "Root Snare", "bao_truoc": 42, "lan_o": 4, "trung": 12, "bay_ton_tai": 36, "giu_chan": 24, "hoi": 42, "hoi_chieu": 180, "sat_thuong_bay": 0, "luot_thoat": "lướt ra trước khi rễ trồi", "dau_hieu": "gân rễ lan dọc sàn tới 4 ô + 2 tiếng gõ gỗ nặng"},
+   "hinh": {"dung": {"thu_muc": null, "so_hinh": 5, "ms": 180}, "di": {"thu_muc": null, "so_hinh": 6, "ms": 130},
+            "danh": {"thu_muc": null, "so_hinh": 9, "ms": 90, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 90, "lap": false},
+            "chet": {"thu_muc": null, "so_hinh": 8, "ms": 100, "lap": false}},
+   "gap_dau": "R209"
+  },
+  "warden": {
+   "ten": "The Nursery Warden", "tinh_anh": true, "bat": false, "yeu_cau_anh": ["024", "025"],
+   "co_px": [92, 108], "mau": 220, "sat_thuong": 1, "bay": false,
+   "pha_2": {"mau_duoi": 110, "chuyen": 90, "nhanh_hon": 0.15, "khong_ghep": ["dam", "ra_lenh"], "cach_toi_thieu": 60},
+   "choang": {"so_don_lien": 4, "ho": 48},
+   "don": [
+    {"id": "chem", "ten": "Root Cleave", "bao_truoc": 30, "trung": 12, "hoi": 36, "hoi_chieu": 100, "sat_thuong": 1, "dau_hieu": "giơ dao vỏ cây + loé đồng, tiếng gõ gỗ trầm"},
+    {"id": "dam", "ten": "Bell Stomp", "bao_truoc": 42, "trung": 12, "song_o": 2, "song_khung": 24, "hoi": 48, "hoi_chieu": 150, "sat_thuong": 1, "dau_hieu": "nhấc gối + 3 vòng đất hổ phách, nốt chuông trầm"},
+    {"id": "ra_lenh", "ten": "Rot Command", "bao_truoc": 54, "tang_toc_canh": 72, "hoi": 60, "hoi_chieu": 180, "sat_thuong": 0, "nhieu_nut_neo": 60, "dau_hieu": "chỉ tay về 1 cánh, mạch mục sáng ochre + 3 tiếng lạch cạch"}
+   ],
+   "hinh": {"dung": {"thu_muc": null, "so_hinh": 6, "ms": 150}, "di": {"thu_muc": null, "so_hinh": 8, "ms": 100},
+            "chem": {"thu_muc": null, "so_hinh": 9, "ms": 80, "lap": false}, "dam": {"thu_muc": null, "so_hinh": 9, "ms": 90, "lap": false},
+            "ra_lenh": {"thu_muc": null, "so_hinh": 8, "ms": 100, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 80, "lap": false},
+            "choang": {"thu_muc": null, "so_hinh": 5, "ms": 100, "lap": false}, "chet": {"thu_muc": null, "so_hinh": 10, "ms": 100, "lap": false}},
+   "roi": ["nut_warden"], "mo_sau_khi_thang": "cầu rễ bện vĩnh viễn + lối tắt R211→R208",
+   "phong": "R211"
+  }
+ },
+ "tron_quai": {"toi_da_cung_luc": 3, "toi_da_root_siphon": 1, "toi_da_ban_xa": 1, "khong_ban_tren_cau_muc_1_o": true, "chi_danh_thuc_sau_cho_dap_an_toan": true}
+}

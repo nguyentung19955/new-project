@@ -1,5 +1,15 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt 02/11 (lượt 2) – Vùng 2 dựng xong phần không cần ảnh
+| Vùng | Trạng thái |
+|---|---|
+| 1 Weeping Heartwood | chơi được (có sẵn) |
+| 2 Rotting Roots | **dở** – có kế hoạch ChatGPT, 16 phòng + kiểm tra đường đi 0 lỗi, logic Gỗ Mục/Neo Rễ (33/33 phép thử), số liệu quái/trùm, 38 yêu cầu ảnh CHỜ. Chưa bật vì chưa có ảnh. Chi tiết: docs/vung-2/BAO-CAO.md |
+| 3–9 | chưa làm – chưa có kế hoạch ChatGPT (lượt này không có Chrome) |
+
+Để đi tiếp: cần lượt có Claude in Chrome (bật "Require this computer" cho tác vụ hẹn giờ) để phiên gen ảnh vẽ 38 ảnh Vùng 2 và phiên này hỏi ChatGPT kế hoạch Vùng 3.
+
+
 ## Lượt 02/11 – phải dừng sớm
 - **Lý do:** lượt chạy tự động này chạy trên máy chủ đám mây, KHÔNG có Claude in Chrome (không nối được Chrome trên máy bạn) → không hỏi được ChatGPT. Luật dự án bắt buộc lên kế hoạch vùng 100% theo ChatGPT và mọi hình do ChatGPT vẽ, nên mình không tự bịa kế hoạch hay vẽ tạm.
 - **Đã làm (không cần ChatGPT):**

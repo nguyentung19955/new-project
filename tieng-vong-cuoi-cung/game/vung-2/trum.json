@@ -1,0 +1,35 @@
+{
+ "ghi_chu": "Trùm Vùng 2 'Mold Mother' (R213) – theo kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 5 (khung = 1/60 s). mau = 72 đòn × 10. CHƯA BẬT: chờ ảnh yêu cầu docs/yeu-cau-anh/vung/026–031 (+018 cổng niêm trùm). Khi có ảnh: điền thu_muc (art/trum-vung-2/<thu_muc>/fNN.png). KHÔNG vẽ tạm bằng code.",
+ "goc": "../../art/trum-vung-2/",
+ "ti_le": 2,
+ "ten": "Mold Mother",
+ "bat": false,
+ "co_px": [192, 180],
+ "mau": 720,
+ "bat_tu_sau_dap": 90,
+ "pha": [
+  {"so": 1, "mau_tu": 720, "mau_den": 490, "don": ["quet", "mua", "gao"]},
+  {"so": 2, "mau_tu": 480, "mau_den": 250, "chuyen": 120, "them": ["no_muc", "vo"], "rut_hoi": true},
+  {"so": 3, "mau_tu": 240, "mau_den": 0, "chuyen": 150, "nhanh_hon": 0.10, "uu_tien": ["quet", "gao"], "them": ["dap"], "cach_bat_dau_toi_thieu": 50}
+ ],
+ "don": {
+  "quet": {"ten": "Tendril Sweep", "bao_truoc": 36, "trung": 14, "hoi": 40, "hoi_chieu": 110, "sat_thuong": 1, "ne": "nhảy qua", "dau_hieu": "tay trái/phải cuộn + vạch quét cam + tiếng rít gỗ"},
+  "mua": {"ten": "Spore Rain", "bao_truoc": 48, "roi": 48, "hoi": 42, "hoi_chieu": 150, "sat_thuong": 1, "lan": 3, "luon_co_lan_an_toan": true, "dau_hieu": "chuông ngực lắc + 3 vòng hổ phách đánh dấu làn"},
+  "gao": {"ten": "Bell Wail", "bao_truoc": 54, "vong": 24, "hoi": 54, "hoi_chieu": 180, "sat_thuong": 1, "ne": "nhảy hoặc lướt xuyên", "dau_hieu": "lõi chuông phồng vàng + 3 nốt rỗng đi xuống"},
+  "no_muc": {"ten": "Rot Bloom", "bao_truoc": 60, "hoi": 36, "hoi_chieu": 210, "sat_thuong": 0, "kich_hoat_cum_muc": 3, "khong_dong_ca_2_dao": true, "dau_hieu": "3 cụm mục giữa sáng hổ phách + sóng bào tử + 3 tiếng cọt kẹt"},
+  "vo": {"ten": "Tendril Grab", "bao_truoc": 42, "khoa_vi_tri_truoc": 12, "trung": 12, "hoi": 48, "hoi_chieu": 160, "sat_thuong": 1, "dau_hieu": "1 xúc tu bám theo người chơi, vòng đích trên sàn đứng lại khi khoá + 2 tiếng gõ chuông ngắn"},
+  "dap": {"ten": "Heartbreak Slam", "bao_truoc": 72, "trung": 12, "song": 2, "cach_song": 24, "hoi": 72, "hoi_chieu": 240, "sat_thuong_duoi_loi": 2, "sat_thuong_song": 1, "vung_an_toan_o": 6, "dau_hieu": "trùm vươn lên, thân tối lại, lõi hổ phách chớp 4 nhịp + hợp âm chuông lớn đi xuống"}
+ },
+ "luat": {"khong_chong_khung_gay_sat_thuong": true, "bao_truoc_toi_thieu": 36, "khoang_trong_ngang_toi_thieu_o": 5, "khong_xoa_ca_2_dao": true, "thang_roi_giu_nguyen_khi_tai": true, "chet_hoi_sinh_o": "R212 (S3)"},
+ "hinh": {
+  "dung": {"thu_muc": null, "so_hinh": 8, "ms": 140}, "tho": {"thu_muc": null, "so_hinh": 6, "ms": 160},
+  "quet": {"thu_muc": null, "so_hinh": 10, "ms": 85, "lap": false}, "mua": {"thu_muc": null, "so_hinh": 10, "ms": 90, "lap": false},
+  "gao": {"thu_muc": null, "so_hinh": 12, "ms": 85, "lap": false}, "no_muc": {"thu_muc": null, "so_hinh": 10, "ms": 100, "lap": false},
+  "vo": {"thu_muc": null, "so_hinh": 10, "ms": 85, "lap": false}, "dap": {"thu_muc": null, "so_hinh": 14, "ms": 85, "lap": false},
+  "chuyen_pha_2": {"thu_muc": null, "so_hinh": 12, "ms": 100, "lap": false}, "chuyen_pha_3": {"thu_muc": null, "so_hinh": 12, "ms": 100, "lap": false},
+  "trung": {"thu_muc": null, "so_hinh": 3, "ms": 80, "lap": false}, "choang": {"thu_muc": null, "so_hinh": 6, "ms": 90, "lap": false},
+  "chet": {"thu_muc": null, "so_hinh": 16, "ms": 110, "lap": false}
+ },
+ "roi": ["verdant_ruin_core"],
+ "mo_sau_khi_thang": ["R213-ham-sau-trum", "hội thoại NPC Làng Chuông", "lối sang Vùng 3"]
+}
