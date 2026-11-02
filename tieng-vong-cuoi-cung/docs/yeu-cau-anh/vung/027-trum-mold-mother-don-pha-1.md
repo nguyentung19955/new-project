@@ -1,5 +1,5 @@
 # 027 – trum-mold-mother-don-pha-1
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 112×112: quet 10, mua 10, gao 12; vẽ theo tấm chuẩn 026; gốc: trum-vung-2/nguon-chatgpt-A.png)
 - **Dùng vào:** Trùm "Mold Mother" R213 (game/vung-2/trum.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Mẹ nấm khổng lồ treo, trồi ra từ rễ tách đôi, nôi chuông đồng ở ngực, nhiều xúc tu, bào tử hổ phách; KHÔNG xanh lơ. Thân trong game 192×180 px logic. Có thể giữ khung chính để đủ thời gian báo đòn.
 - **Số khung + ms gợi ý:** quet (Tendril Sweep) 10 × 85; mua (Spore Rain) 10 × 90; gao (Bell Wail) 12 × 85

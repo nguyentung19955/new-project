@@ -1,5 +1,5 @@
 # 029 – trum-mold-mother-chuyen-pha-chet
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – chuyen_pha_2 12, chuyen_pha_3 12, chet 16 (ChatGPT vẽ 15 khung – khung 7 giữ lại khung 6); gốc: trum-vung-2/nguon-chatgpt-C.png)
 - **Dùng vào:** Trùm "Mold Mother" R213 (game/vung-2/trum.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Mẹ nấm khổng lồ treo, trồi ra từ rễ tách đôi, nôi chuông đồng ở ngực, nhiều xúc tu, bào tử hổ phách; KHÔNG xanh lơ. Thân trong game 192×180 px logic. Có thể giữ khung chính để đủ thời gian báo đòn.
 - **Số khung + ms gợi ý:** chuyen_pha_2 12 × 100; chuyen_pha_3 12 × 100; chet 16 × 110

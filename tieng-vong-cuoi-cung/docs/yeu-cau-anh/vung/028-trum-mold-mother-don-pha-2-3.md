@@ -1,5 +1,5 @@
 # 028 – trum-mold-mother-don-pha-2-3
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – no_muc 10, vo 10, dap 14 (ChatGPT vẽ 13 khung – khung 9 giữ lại khung 8); gốc: trum-vung-2/nguon-chatgpt-B.png)
 - **Dùng vào:** Trùm "Mold Mother" R213 (game/vung-2/trum.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Mẹ nấm khổng lồ treo, trồi ra từ rễ tách đôi, nôi chuông đồng ở ngực, nhiều xúc tu, bào tử hổ phách; KHÔNG xanh lơ. Thân trong game 192×180 px logic. Có thể giữ khung chính để đủ thời gian báo đòn.
 - **Số khung + ms gợi ý:** no_muc (Rot Bloom) 10 × 100; vo (Tendril Grab) 10 × 85; dap (Heartbreak Slam) 14 × 85
