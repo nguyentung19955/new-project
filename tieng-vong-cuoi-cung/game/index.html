@@ -6,43 +6,57 @@
 <meta name="theme-color" content="#130E19">
 <title>The Last Echo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="giao-dien/chu.css">
 <link rel="stylesheet" href="giao-dien-chung.css" data-kd="1">
 <style>
 /* MÀN TIÊU ĐỀ (phiên "Khởi đầu – đợt 1") theo docs/khoi-dau/tu-van-chatgpt.txt mục 3: khung logic 844×390, toạ độ theo tư vấn,
    cộng thêm vùng an toàn env(safe-area-inset-*). Nền / logo / nút / bảng = ảnh ChatGPT (art/khoi-dau/), chữ do game viết. */
-html,body{height:100%;margin:0;background:#130E19;color:#F3E6C8;overflow:hidden;font-family:"Alegreya Sans",system-ui,sans-serif;
+html,body{height:100%;margin:0;background:#130E19;color:#F3E6C8;overflow:hidden;font-family:var(--ui-utility);
   touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
-#nen{position:fixed;inset:0;background:#130E19 url(../art/khoi-dau/tieu-de-nen.png) left center/cover no-repeat;image-rendering:pixelated}
+/* NỀN phủ kín MỌI khung hình (sửa lỗi 02/11: màn rộng/cao chỉ phủ một dải trên): ảnh thật + object-fit:cover, toạ độ tường minh
+   (không dựa inset/background trên trình duyệt cũ), giữ quả chuông trong khung (tâm ngang 60 %), cột nút rơi vào phần sương bên phải */
+#nen{position:fixed;left:0;top:0;width:100%;height:100%;width:100vw;height:100vh;height:100dvh;margin:0;display:block;
+  object-fit:cover;object-position:60% 50%;background:#130E19;image-rendering:pixelated;z-index:0}
+#san{z-index:1}
 /* sân khấu 844×390 phóng theo màn (k = min(rộng/844, cao/390)), canh giữa */
 #san{position:fixed;left:50%;top:50%;width:844px;height:390px;transform:translate(-50%,-50%) scale(var(--k,1));transform-origin:50% 50%}
 #logo{position:absolute;left:calc(74px + var(--sl,0px));top:50px;width:370px;height:102px;image-rendering:pixelated}
 #logo-chu{position:absolute;left:calc(74px + var(--sl,0px));top:56px;width:370px;margin:0;text-align:center;
-  font:700 54px/1 "Cormorant Garamond",Georgia,serif;color:#E1B85A;letter-spacing:2px;text-shadow:0 2px 6px #000}
+  font:750 54px/1 var(--ui-pixel);color:var(--ui-gold);letter-spacing:.04em;text-shadow:var(--ui-shadow-header)}
 #cot{position:absolute;right:calc(66px + var(--sr,0px));top:122px;width:242px}
 #cot .kd-nut{width:242px;position:absolute;left:0}
 #b-tiep{top:0}
 #b-moi{top:66px}
 #b-tc{top:122px;width:116px!important}
 #b-tk{top:122px;left:126px!important;width:116px!important}
-#tt{position:absolute;top:172px;left:0;width:242px;margin:0;font:600 15px/1.3 "Alegreya Sans",sans-serif;color:#F3E6C8;text-align:center;text-shadow:0 1px 3px #000,0 0 8px #000}
-#tt b{color:#ffe08a;font-weight:700}
-#b-xd{position:absolute;top:-56px;left:0;width:242px!important;font-size:16px;border-width:0 24px}
+/* nhãn nút tiêu đề: căn giữa VÙNG TRONG của khung ảnh (viền 9-slice đã chừa góc chuông/rễ), nhích lên 1px theo tấm phẳng của ảnh */
+#cot .kd-nut{padding-bottom:2px}
+#b-tiep{font:750 23px/1 var(--ui-pixel);letter-spacing:.035em}                         /* A1 */
+#b-moi,#b-tc,#b-tk{font:700 21px/1 var(--ui-pixel);letter-spacing:.025em}             /* A2 */
+#tt{position:absolute;top:172px;left:0;width:242px;margin:0;font:600 14px/1.2 var(--ui-utility);letter-spacing:.01em;color:var(--ui-muted);text-align:center;text-shadow:var(--ui-shadow-soft)}   /* A8 */
+#tt b{color:var(--ui-bone);font-weight:600}
+/* huy hiệu xung đột lưu = CẢNH BÁO riêng (không phải nút menu): chữ, không khung, nằm trên cột – không lấn Continue */
+#b-xd{position:absolute;top:-54px;left:0;width:242px;height:44px;margin:0;padding:0;border:0;background:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#b-xd[hidden]{display:none}
+#b-xd .xd-1{font:600 13px/1 var(--ui-utility);color:var(--ui-muted);text-shadow:var(--ui-shadow-soft)}
+#b-xd .xd-2{font:700 19px/1 var(--ui-pixel);letter-spacing:.07em;color:var(--ui-danger);text-shadow:var(--ui-shadow-outline);text-decoration:underline;text-underline-offset:3px}
+#b-xd:active .xd-2{color:var(--ui-gold)}
 /* chưa có bản lưu: chỉ NEW GAME (y = 144), Options + Account bên dưới */
 body.trong #b-tiep,body.trong #tt,body.trong #b-xd{display:none}
-body.trong #b-moi{top:22px;height:54px;border-width:0 42px;border-image:url(../art/khoi-dau/nut-chinh-thuong.png) 0 90 fill / 0 42px stretch;font-size:20px;color:#ffe08a}
+body.trong #b-moi{top:22px;height:54px;border-width:0 42px;border-image:url(../art/khoi-dau/nut-chinh-thuong.png) 0 90 fill / 0 42px stretch;font-weight:750;font-size:23px;letter-spacing:.035em}
 body.trong #b-moi:active{border-image-source:url(../art/khoi-dau/nut-chinh-nhan.png)}
 body.trong #b-tc,body.trong #b-tk{top:88px}
-#ban{position:absolute;left:calc(54px + var(--sl,0px));top:351px;width:300px;font:500 12px "Alegreya Sans",sans-serif;color:#b9a98f;opacity:.75;text-shadow:0 1px 2px #000}
+#ban{position:absolute;left:calc(54px + var(--sl,0px));top:348px;width:300px;font:600 14px/1.2 var(--ui-utility);letter-spacing:.01em;color:var(--ui-muted);text-shadow:var(--ui-shadow-soft)}   /* A8 */
 #debug{position:absolute;left:calc(54px + var(--sl,0px));top:300px;display:none;gap:8px}
 body.debug #debug{display:flex}
-#debug a{color:#E1B85A;font-size:13px}
-#cho{position:fixed;inset:0;display:grid;place-items:center;background:#130E19;z-index:70;font:600 18px "Alegreya Sans",sans-serif;color:#b9a98f}
+#debug a{color:var(--ui-ash);font:600 12px var(--ui-utility)}
+#cho{position:fixed;inset:0;display:grid;place-items:center;background:#130E19;z-index:70;font:700 19px var(--ui-pixel);letter-spacing:.04em;color:var(--ui-muted)}
 #cho.an{display:none}
 </style>
 </head>
 <body class="trong">
-<div id="nen"></div>
+<img id="nen" src="../art/khoi-dau/tieu-de-nen.png" alt="" draggable="false">
 <div id="san">
   <img id="logo" alt="The Last Echo" src="../art/khoi-dau/logo.png" hidden>
   <h1 id="logo-chu" hidden>The Last Echo</h1>
@@ -52,13 +66,14 @@ body.debug #debug{display:flex}
     <button id="b-tc" class="kd-nut phu" type="button">Options</button>
     <button id="b-tk" class="kd-nut phu" type="button">Account</button>
     <p id="tt"></p>
-    <button id="b-xd" class="kd-nut phu" type="button" hidden>Two saves found — Review</button>
+    <button id="b-xd" type="button" hidden aria-label="Two saves found — Review saves"><span class="xd-1">Two saves found</span><span class="xd-2">REVIEW SAVES</span></button>
   </div>
   <div id="debug"><a href="phong-demo/">Demo Room</a><a href="vung-1/index.html?debug=1">Region 1 (debug)</a><a href="vung-2/index.html?debug=1">Region 2 (debug)</a></div>
   <div id="ban">Early build</div>
 </div>
 <div id="cho">Loading…</div>
 <div id="kd-xoay" class="ui"><div><h1>Rotate to Play</h1>For the best experience, rotate your phone.<br><br><button class="kd-nut phu" type="button" id="b-xoay-bo">Play anyway</button></div></div>
+<script src="giao-dien/chu.js"></script>
 <script src="firebase/cau-hinh.js"></script>
 <script src="luu-may.js"></script>
 <script src="dang-nhap.js"></script>
