@@ -1,0 +1,78 @@
+NEON GRID — KẾ HOẠCH NÂNG CẤP ANIMATION MƯỢT 60 FPS
+Bản thiết kế dựa trên ảnh neon-grid-sau-buoc-1.png và ảnh DCDW tham chiếu. Thông số là mục tiêu thử nghiệm, không phải dữ liệu nội bộ của DCDW.
+
+1. XẾP HẠNG KHÁC BIỆT
+P0 — Animation: hiện idle 4 frame x 180ms = 720ms/loop, tương đương chỉ 5,56 lần thay hình/giây; attack 90/70/90/130ms = 380ms với 4 pose. Render 60 FPS không làm các khớp chuyển động liên tục. Cần rig, nội suy góc và vị trí mỗi frame.
+P0 — Attack: lao toàn thân 3px và recoil 2px chưa đủ. Cần phối hợp vai, thân, đầu, cánh tay, vũ khí, tóc và áo lệch pha; thời điểm ra đòn phải trùng projectile và impact.
+P1 — Tỉ lệ: trong ảnh mới nhân vật vẫn có khoảng trống đáng kể trong ô; thử tăng chiều cao 10–15% (đích 52–60px, tùy silhouette), không cho vũ khí đè UI hoặc ô bên cạnh quá mức.
+P1 — Ô bàn: viền cyan và họa tiết góc vẫn rõ; giảm opacity viền 40–60%, nền ô giữ độ sáng thấp, không viền riêng theo hệ tướng.
+P1 — Đường quái: vị trí quái hiện nhỏ và ở mép ngoài, cần chỉ hướng di chuyển và đòn trúng rõ hơn; tăng silhouette quái 10–20% nếu còn đọc được ở mật độ cao.
+P2 — Nền: cityscape đẹp nhưng sáng và chi tiết; giảm saturation 15–25%, thêm overlay tối 15–25% ngoài vùng UI.
+P2 — HUD: Summon quá lớn so với diện tích chơi; giảm chiều rộng khoảng 10–15% nếu touch target vẫn >=44 CSS px. Thẻ nâng cấp cần phân cấp thông tin.
+P2 — Màu: cyan/magenta phát sáng nhiều; dành độ sáng lớn nhất cho attack, hit và boss telegraph.
+P2 — VFX: hit flash hiện có nhưng thiếu hit-stop, spark, phản lực, rung nhỏ và âm thanh đúng nhịp.
+
+2. LỰA CHỌN KỸ THUẬT
+Chọn CUT-OUT RIG 2D + PROCEDURAL SECONDARY MOTION + EASING; cho phép vài ảnh thay thế ở các góc khó. Không chọn mesh deform toàn thân: dễ méo hình và khó debug. Không chọn crossfade toàn thân: tạo bóng đôi. Không chọn tăng hàng chục frame cho cả 8 tướng: chi phí sản xuất quá lớn. Mỗi khớp nội suy liên tục tại 60 FPS, với dt tính bằng ms; giảm dt spike khi tab bị treo. Có thể dùng interpolation alpha giữa fixed update và render nếu simulation chạy fixed timestep.
+
+3. QUY CHUẨN ASSET CHO SCORCH — BẢN THỬ NGHIỆM
+Nguồn rig master: nhân vật đứng cao khoảng 192px (tính cả tóc), sau đó render xuống 52–60px trong ô; ảnh phải là PNG alpha thật, không bóng/đế/VFX. Giữ nguyên mặt, tóc, trang phục, găng phun lửa và bình nhiên liệu của ảnh gốc.
+Chọn 16 mảnh, mỗi mảnh 1 cell 256x256 RGBA, atlas 4 cột x 4 hàng = 1024x1024. Mỗi cell có vùng an toàn 12px; mảnh nằm trọn trong cell, không chạm biên. Các mảnh theo thứ tự row-major:
+00 hair_back — tóc phía sau, pivot gốc tóc (128,95)
+01 back_tank — bình nhiên liệu, pivot điểm gắn lưng (128,100)
+02 back_upper_arm — bắp tay xa, pivot vai (128,80)
+03 back_forearm — cẳng tay xa, pivot khuỷu (128,78)
+04 back_hand — bàn tay xa, pivot cổ tay (128,78)
+05 back_thigh — đùi xa, pivot hông (128,65)
+06 back_shin_foot — cẳng chân + giày xa, pivot gối (128,65)
+07 torso_hips — thân + hông, pivot hông (128,135)
+08 front_thigh — đùi gần, pivot hông (128,65)
+09 front_shin_foot — cẳng chân + giày gần, pivot gối (128,65)
+10 head_face — đầu + mặt, pivot cổ (128,160)
+11 hair_front — tóc trước/mohawk, pivot gốc tóc (128,140)
+12 front_upper_arm — bắp tay gần, pivot vai (128,80)
+13 front_forearm — cẳng tay gần, pivot khuỷu (128,78)
+14 gauntlet_hand — găng phun lửa + tay gần, pivot cổ tay (128,105)
+15 coat_flap — vạt áo/dây mềm, pivot điểm gắn hông (128,70)
+Các pivot trên là tọa độ HƯỚNG DẪN trong từng cell, KHÔNG phải tọa độ giải phẫu chuẩn. Sau khi vẽ phải đo và ghi lại pivot thực tế theo pixel; không thể dùng một bộ pivot cứng cho mọi nhân vật. Nếu mảnh không vừa 256x256, tách sang atlas bổ sung hoặc tăng cell, không thu nhỏ riêng mảnh.
+
+QUAN TRỌNG VỀ CẮT TỰ ĐỘNG: Chỉ có PNG không đủ xác định vị trí khớp và độ phủ khi ráp. Dùng atlas grid cố định, thêm JSON metadata cho mỗi mảnh: id, cellIndex, pivotLocal [x,y], parent, attachLocal [x,y], zIndex, restAngleDeg, restOffset. attachLocal là điểm gắn trong hệ tọa độ của parent. JSON viết tay/đo từ ảnh, không yêu cầu ImageGen sinh JSON chính xác. Tất cả mảnh có hình dư dưới chỗ nối để che lỗ khi xoay (overlap 8–14px ở master). Dùng thứ tự vẽ: tóc sau, bình, tay/chân xa, thân, chân gần, đầu, tóc trước, tay gần, găng, vạt trước; điều chỉnh theo ảnh thực.
+
+Định nghĩa tọa độ: worldY tăng xuống; góc dương quay theo chiều kim đồng hồ; góc dưới đây là độ lệch so với rest pose, không phải góc tuyệt đối. Scale master -> game khoảng 0.28–0.31; các biên độ px phía dưới đều tính bằng PIXEL HIỂN THỊ trong game, không phải master.
+
+4. THÔNG SỐ ANIMATION — SCORCH MẪU
+IDLE: chu kỳ 1200ms; root y = -0.7*sin(2πt/T) px, ngực scaleY = 1+0.012*sin(2πt/T), torso ±1.5°, head ngược pha torso ±1.0°, vai ±1.5°, cẳng tay ±1°, bình nhiên liệu ±1.3° trễ 90ms, mohawk ±2.5° trễ 120ms, vạt áo ±2° trễ 160ms. Chân giữ tiếp xúc nền, không dịch gót; có thể bù chân bằng IK đơn giản.
+ATTACK 440ms, key normalized time: 0.00 ready, 0.24 windup, 0.40 fire, 0.57 recoil, 1.00 settle. Root x: [0,-1.5,+2.5,-1.0,0]px. Torso angle [0,-7,+9,-4,0]°. Front upper arm [0,-16,+25,+8,0]°, forearm [0,-12,+20,+6,0]°, gauntlet [0,-8,+14,+5,0]°. Head counter-rotate 30–45% torso. Hair lag 45–75ms, tank lag 65–95ms, coat lag 90–130ms. Spawn flame/projectile đúng tại t=0.40, không chờ cuối animation. Với SCORCH flamethrower có thể giữ pose firing bằng state loop khi phun liên tục.
+HIT REACTION 190ms: torso lùi 4°, root x -1.5px, head lag 25ms, hair lag 60ms; dùng easeOutCubic 0–80ms rồi damped spring trở về. Không áp dụng hit reaction của TƯỚNG khi quái bị trúng; đây là animation cho đơn vị chịu sát thương. Quái chịu hit: flash 45–65ms, knockback 1–3px (nếu không ảnh hưởng đường đi), hit-stop thị giác 25–40ms chỉ cho mục tiêu/impact, không dừng logic toàn game.
+SUMMON 420ms: scale 0.70 -> 1.08 -> 0.98 -> 1.00, alpha 0 -> 1 trong 100ms, y +12 -> -2 -> 0px, rotation -4 -> +2 -> 0°. Các mảnh tóc/áo trễ 60–100ms; spawn ring/particles vẽ bằng Canvas. Không làm root nhảy xuyên ô.
+EASING: chuyển key bằng cubic Hermite hoặc cubic Bezier có kiểm soát tangent, dùng easeInOutCubic cho anticipation, easeOutBack (overshoot nhỏ 0.05–0.10) cho impact/summon, spring tắt dần cho tóc/áo. Không dùng easing khác nhau ngẫu nhiên giữa các bộ phận. Khi attack chen vào idle, blend trọng số từ idle sang attack trong 50–80ms, rồi về idle 90–130ms; không reset phase idle.
+
+5. CÔNG THỨC TRIỂN KHAI CANVAS
+Tạo skeleton cây parent-child. Tại mỗi frame: sample state idle/attack, blend transform, tính transform world từ parent, rồi ctx.save(); translate(worldX,worldY); rotate(angle); scale(scaleX,scaleY); drawImage(atlas,cellX,cellY,256,256,-pivotX,-pivotY,256,256); ctx.restore(). Tránh làm tròn vị trí khớp quá sớm; render ở tọa độ float. Dùng dt thời gian thực, không cộng góc cố định mỗi frame. Thứ tự z theo metadata, tránh tay xa đè thân. Giữ frame idle/attack cũ làm fallback khi rig chưa đạt.
+
+6. PROMPT NGẮN CHO SCORCH
+"Dùng ảnh SCORCH gốc đính kèm làm tham chiếu tuyệt đối. Vẽ bộ CUT-OUT RIG 2D của đúng SCORCH, giữ 100% mặt, mohawk, trang phục, màu, găng phun lửa và bình nhiên liệu. PNG alpha thật 1024x1024, grid 4x4, mỗi cell 256x256; 16 mảnh theo thứ tự: hair_back, back_tank, back_upper_arm, back_forearm, back_hand, back_thigh, back_shin_foot, torso_hips, front_thigh, front_shin_foot, head_face, hair_front, front_upper_arm, front_forearm, gauntlet_hand, coat_flap. Mỗi mảnh tách rời, đúng góc nhìn 3/4 hướng phải, đầy đủ phần bị che ở khớp để xoay, mép sắc, không text/label/grid vẽ lên ảnh, không bóng/đế/VFX, chừa 12px quanh mỗi cell. KHÔNG thiết kế lại nhân vật." 
+GHI CHÚ: ImageGen có thể sai thứ tự ô, thiếu mảnh, thay chi tiết hoặc tạo khớp không khít. Phải nghiệm thu từng mảnh, kiểm tra alpha, atlas, ráp rest pose và hiệu chỉnh pivot thủ công trước khi triển khai cho 8 tướng.
+
+7. SỬA NHANH KHÔNG CẦN VẼ
+- Tăng tướng 10–15% nhưng khóa chân ở cùng baseline, thử trên 5 cột và mọi cấp sao.
+- Giảm độ sáng viền ô 40–60%, giữ viền sáng chỉ khi chọn/merge/target.
+- Sao: hiển thị cụm sao nhỏ gọn trên đầu, không để quá sát viền trên; nếu 4+ sao, cân nhắc badge số sao thay vì kéo dài hàng.
+- Giảm saturation nền 15–25%, overlay tối 15–25%; đừng làm mờ toàn canvas hoặc HUD.
+- Quái: flash màu 45–65ms, spark 80–130ms, thanh HP giảm có easing 100–160ms, projectile phải đến đích mới phát hit.
+- Attack anticipation 70–110ms, fire impact 30–50ms, recovery 160–230ms; đồng bộ sound, flash, projectile, damage.
+- Summon: scale pop 420ms, merge: hai tướng hút về tâm 180ms + flash 70ms + tướng mới pop 220ms; vẫn tuân thủ luật merge random sao+1.
+- Boss warning: tối nền 15% trong 500ms, chữ cảnh báo 600–900ms, silhouette/portal 400–700ms, telegraph vùng nguy hiểm trước đòn; không che HUD thao tác.
+- Giảm kích thước nút Summon 10–15% nếu vẫn dễ chạm, giữ vùng chạm tối thiểu 44 CSS px.
+- Thêm tùy chọn giảm chuyển động và giới hạn số hạt theo thiết bị.
+
+8. LỘ TRÌNH NGHIỆM THU
+B1 (1 buổi): chỉnh scale/ô/nền, đo FPS và ghi video 60 FPS.
+B2 (1–2 buổi): vẽ atlas SCORCH, kiểm tra đủ 16 mảnh, không lỗi alpha, ráp đúng rest pose.
+B3 (2–3 buổi): viết loader atlas+JSON, parent-child transform, easing, idle 1200ms. Nghiệm thu: không hở khớp, chân không trượt, tóc/bình trễ pha.
+B4 (1–2 buổi): attack 440ms, sync fire/impact, blend idle↔attack. Nghiệm thu: 10 lần đánh liên tiếp không snap tư thế, không vũ khí xuyên thân.
+B5 (1 buổi): summon/hit/merge VFX bằng code, kiểm tra 15 tướng cùng lúc trên iPhone mục tiêu, hướng đến 60 FPS; nếu máy yếu chấp nhận 30 FPS ổn định và giảm particles.
+B6: nhân rộng sang FROST và LANCE để thử nhân vật cầm staff và rifle; điều chỉnh bone rig riêng, sau đó mới làm 5 tướng còn lại.
+B7: bổ sung skill cast, boss telegraph, polish HUD và âm thanh.
+
+KẾT LUẬN: Đừng vẽ lại 8 bộ idle/attack nhiều frame ngay. Dùng SCORCH làm mẫu cut-out rig, xác nhận hoạt động mượt và không lộ khớp trước khi nhân rộng. Đây là phương án khả thi nhất với PNG + Canvas 2D, nhưng không bảo đảm giống hệt Spine/Live2D.
