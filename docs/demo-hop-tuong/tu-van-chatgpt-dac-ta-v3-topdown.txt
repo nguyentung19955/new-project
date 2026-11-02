@@ -1,0 +1,126 @@
+NEON GRID — ĐẶC TẢ V3: CAMERA HIGH TOP-DOWN VÀ SPRITE
+Ngày: 02/11/2026 | Nguồn tham chiếu: ảnh gameplay DCDW người dùng cung cấp
+Phạm vi: thay thế TOÀN BỘ quy tắc camera, góc vẽ, nhân vật, bàn/lane và animation của bản v2.
+
+0. KẾT LUẬN / ĐỘ TIN CẬY
+Ảnh tham chiếu là ảnh chụp một video YouTube, gameplay thực nằm ở dải hẹp giữa màn hình; nhân vật chỉ chiếm vài chục pixel trong ảnh. Không thể suy ra một góc camera 3D chính xác từ một screenshot 2D. Quan sát chắc chắn: bàn là lưới nhìn gần từ trên xuống, tướng rất nhỏ, thấy nhiều đỉnh đầu/vai, không phải nhân vật đứng trình diễn theo góc 3/4 thấp. Quy chuẩn NEON GRID đề xuất: camera trực giao HIGH TOP-DOWN, trục nhìn nghiêng 10–20° so với phương thẳng đứng (tương đương góc nâng 70–80° so với mặt phẳng sàn), khóa mặc định 75° so với mặt sàn / 15° so với phương thẳng đứng. Đây là góc THIẾT KẾ để tái tạo cảm giác, không phải số đo xác nhận của DCDW. Tránh ghi “30° từ trên xuống”: góc đó quá thấp.
+
+1. CAMERA, TRỤC VÀ HƯỚNG
+- Hệ tọa độ: màn hình x sang phải, y xuống dưới. Sàn nằm trên mặt phẳng XY gameplay. Camera nhìn gần vuông góc xuống sàn; dùng orthographic, không phối cảnh tụ điểm.
+- Độ nghiêng đề xuất: 15° lệch khỏi phương thẳng đứng, có thể thử 10° và 20° bằng mockup A/B. Không dùng góc 30° so với mặt phẳng sàn.
+- Bàn vẫn là hình chữ nhật gần như nhìn thẳng; cạnh trên/dưới song song mép màn hình, cạnh trái/phải thẳng đứng. Không dựng bàn thành hình thoi isometric; không vẽ các ô thành hình bình hành.
+- Hướng tướng mặc định: quay về PHÍA DƯỚI MÀN HÌNH (screen-down), có thể xoay đầu/torso rất nhẹ 0–10° sang trái để đọc được mặt; KHÔNG quay nghiêng hẳn sang phải hay tạo góc 3/4 chân dung. Phần thấy nhiều nhất: đỉnh đầu, tóc/mũ, hai vai, lưng trên hoặc mặt trên vũ khí; mặt chỉ hiện một phần nhỏ ở mép dưới đầu.
+- Vẽ tướng như “nhìn từ trên xuống người đứng trên sàn”, không như “người đứng thẳng nhìn ngang”. Với nhân vật bắn sang mục tiêu bên trái, thay đổi hướng súng/cánh tay trong animation nhưng không xoay cả thân thành side-view.
+- Không dùng biến đổi shear/warp để giả camera. Mọi sprite được vẽ trực tiếp đúng góc nhìn.
+
+2. TỶ LỆ NHÂN VẬT VÀ KÍCH THƯỚC
+- Chibi humanoid: đầu chiếm 45–55% chiều cao hình chiếu sprite, rộng khoảng 55–70% bề rộng nhân vật; vai 70–90% bề rộng đầu; thân + chân gộp 45–55% chiều cao nhìn thấy. Vì nhìn từ cao, chân thường bị che một phần bởi đầu/thân, không cố kéo dài chân để đủ tỷ lệ 3 đầu kiểu ảnh minh họa.
+- Tỷ lệ kiểm tra: đầu lớn, hai vai rõ, chân rất ngắn; đường viền ngoài đậm nhưng không quá dày khi thu nhỏ.
+- Grid logic 390×844: ô đề xuất 46–48 px ngang, 44–48 px dọc, khoảng cách/gutter 1–3 px. Bàn 5 cột × 3 hàng rộng khoảng 240–252 px, cao 138–150 px, tùy khung.
+- Nhân vật humanoid HIỂN THỊ: cao 27–34 px (khoảng 58–72% chiều cao ô), rộng 23–32 px; boss/elite có thể vượt ô theo thiết kế riêng nhưng tướng không vượt ô bình thường. Đầu thường cao 14–18 px trong hình hiển thị. Mốc ưu tiên: 30 px cao trong ô 46 px. Không dùng sprite cao 40+ px khiến nhân vật lấn nhãn sao.
+- Robot/drone: WARP 24–30 px cao/rộng; GLITCH 27–32 px; VENOM dài 28–34 px theo phương ngang, cao 20–26 px. Cần kiểm tra ở 100% kích thước trên điện thoại, không chỉ zoom ảnh nguồn.
+- Nguồn: master 256×256 RGBA hoặc 192×192 RGBA để giữ chi tiết; sprite animation mỗi frame 128×128 hoặc 160×160 RGBA, nhưng render xuống kích thước trên. Chọn DUY NHẤT một canvas frame 128×128 cho toàn bộ 8 tướng nếu có thể. Vẽ đủ độ phân giải, không phóng ảnh thumbnail rồi coi là master.
+- Đặt anchor mỗi frame tại điểm tiếp xúc sàn: (64, 108) trong frame 128×128, cố định. Nhân vật nằm quanh x=64, không tự dịch vị trí do crop. Nếu drone bay, anchor là điểm chiếu xuống sàn; thân drone bob quanh anchor, không thay anchor.
+- Bóng: ellipse nhỏ mềm, tối xanh-tím, đặt NGAY dưới chân/thân (khoảng 16–24×5–8 px khi hiển thị); drone bóng nhỏ hơn, mờ hơn. Tốt nhất code vẽ bóng ellipse riêng dưới sprite để bóng không nhảy theo idle; nếu cần vẽ ảnh, xuất shadow riêng. KHÔNG vẽ vòng neon lớn dưới mọi tướng, không đổ bóng dài 3/4 theo chiều ngang.
+- Nhãn sao: overlay UI riêng, đặt ngay trên đỉnh sprite, không gộp vào frame nhân vật. Mỗi ô có một anchor nhãn; sao và số cấp luôn đứng yên khi nhân vật bob.
+
+3. BÀN CỜ / LANE / NỀN — ĐỒ HỌA TOP-DOWN
+- Bàn 5×3: nhìn gần như phẳng từ trên cao, ô hình chữ nhật/vuông; mặt kim loại than đen #1A2030 / #252B3C, viền graphite #3B4356, cyan/magenta rất tiết chế ở góc. Ô có đường seam, ốc vít nhỏ, xước nhẹ; mặt trên đọc rõ, KHÔNG vẽ cạnh dày kiểu hộp 3D.
+- tile_normal.png: tile vuông gần chính diện từ trên xuống, chỉ vát mép 1–2 px và cạnh trước rất mỏng; không làm tấm bảng 3D có gờ trước cao. Xuất RGBA thật, không caro; center đủ tối để tướng nổi.
+- board_frame_player.png và board_frame_top.png: khung phẳng ôm lưới 5×3, cạnh mỏng 3–6 px logic; player magenta, top cyan; KHÔNG vẽ sẵn tile vào khung nếu code còn ghép tile. Phần rỗng giữa khung alpha=0.
+- Lane: dải đường quái riêng dọc bên TRÁI bàn, nhìn gần top-down, có mũi tên/đèn dẫn hướng rất nhỏ. Có thể nối bằng đoạn ngang dưới/giữa theo đường đi do game thiết kế. Ảnh chụp xác nhận có quái chạy ở mép trái, nhưng KHÔNG đủ thông tin để khẳng định toàn bộ tuyến spawn-to-exit hoặc đường chạy quanh cả bàn; phải định nghĩa waypoint trong code, không suy diễn đường từ screenshot.
+- lane_straight, lane_spawn, lane_exit: đều là lớp overlay top-down có alpha; hình và hướng mũi tên theo waypoint thực tế. Không dựng thành đường có thành chắn cao che tướng.
+- bg_arena_portrait.png: tỷ lệ 9:19.5, chỉ sàn tối và máy móc ở mép, trung tâm rất ít chi tiết, không bàn, không tile bàn, không lane, không HUD, không chữ. Camera cùng góc 75° so với mặt sàn; ánh sáng cyan/magenta tập trung ở rìa.
+- Render order: background → lane → shadow quái → quái → board frame/tile (theo mặt sàn) → bóng tướng → tướng → đạn/VFX → sao/số damage → HUD. Nếu lane và board giao nhau, phân lớp theo tọa độ y và occlusion hợp lý.
+
+4. HIỆU ỨNG TẤN CÔNG TOP-DOWN
+- Đạn/beam di chuyển trong mặt phẳng sàn: hướng vector (target.x - source.x, target.y - source.y), không dùng đường đạn theo phối cảnh side-view.
+- SCORCH: nón lửa ngắn, loe theo hướng mục tiêu, đọc rõ khi nhìn từ trên; không tạo ngọn lửa thẳng đứng che nhân vật.
+- FROST: vòng băng phẳng trên sàn, tinh thể thấp và hạt sáng; không tạo bức tường băng 3D cao.
+- ARC: cung kiếm điện dạng quạt/arc nằm trên mặt phẳng XY, vệt slash quét quanh tướng; tia chớp ngắn theo hướng đánh.
+- LANCE: đường laser/đạn mảnh nối nòng súng đến mục tiêu; flash ngắn tại nòng; không vẽ đạn bay ngang như game side-view.
+- WARP: vòng portal ellipse nhìn từ trên, tâm tối, viền tím; co giãn trên mặt sàn.
+- BROKER: pulse đồng xu/chip hologram nhỏ lan trên mặt sàn, số tiền do code hiển thị.
+- GLITCH: pixel glitch hình vuông/scanline ngắn trên ô hoặc trên quái; không phủ toàn màn.
+- VENOM: vũng độc phẳng có rìa loang, bọt nhỏ; đặt dưới mục tiêu.
+- Giới hạn VFX: bán kính thường 10–28 px logic, alpha khoảng 0.5–0.85, không che quá 2–3 ô liên tục; damage numbers nổi lên 10–18 px rồi mờ trong 0.35–0.6 giây, kích thước chữ 9–12 px.
+
+5. ANIMATION FULL-FRAME (KHÔNG RIG)
+- Mục tiêu là độ mượt CẢM NHẬN khi render 60 FPS, không phải bắt buộc 60 tranh/giây. Mỗi animation vẽ nguyên nhân vật, một frame là một hình hoàn chỉnh.
+- Idle: 8 frame, playback 8–12 FPS, loop 0.8–1.0 s; đầu/torso nhún 1–2 px tại kích thước hiển thị, tóc/vũ khí thay đổi nhẹ, không dịch chân.
+- Attack thường: 12 frame, playback 16–24 FPS, thời lượng khoảng 0.5–0.75 s; frame 1–3 chuẩn bị, 4–6 ra đòn, 7–12 hồi phục. Với tướng tấn công nhanh có thể dùng 8 frame; với đòn nặng 14–16 frame. Không vẽ 24 frame chỉ để tăng số lượng nếu các hình lệch nhau.
+- Hurt: 3–4 frame, 12–16 FPS; summon/appear: 6–8 frame; merge: VFX riêng 8–12 frame, không cần vẽ lại từng tướng cho mọi cấp sao.
+- Mỗi clip: frame đầu/cuối của idle giống hoặc chuyển động nối mượt; attack frame cuối trở về cùng pose idle frame 1; giữ đầu, trang phục, vũ khí, màu, góc camera nhất quán 100%.
+- Đặt tất cả frame trong ô canvas 128×128; cùng ground anchor (64,108), cùng hướng screen-down; không crop từng frame tự do; không shadow/VFX/nhãn sao/text trong sheet nhân vật.
+- Nên tạo master front-topdown và master silhouette trước; duyệt ở 30 px rồi mới tạo idle, duyệt idle rồi tạo attack. Sheet 8 frame 1 hàng và 12 frame 1 hàng; yêu cầu khoảng trống alpha đủ rộng, không để vũ khí đè sang cell khác. Nếu AI vẽ sheet lệch, chuyển sang tạo key pose 3–5 frame rồi vẽ các in-between, kiểm tra thủ công.
+- Dùng Canvas drawImage theo ô sprite sheet; tắt smoothing chỉ nếu art pixel-art. Với art chibi anime cel-shaded của NEON GRID, bật smoothing phù hợp khi downscale, dùng atlas nguồn 2–4× kích thước render. Animation loop dùng timestamp, không buộc 1 frame ảnh = 1 frame render.
+
+6. PROMPT MẪU — MASTER VÀ SHEET CHO 8 TƯỚNG
+QUY TẮC CHUNG (thêm vào ĐẦU MỌI prompt bên dưới):
+“NEON GRID chibi anime cyberpunk cel-shaded, thick clean dark outline. HIGH TOP-DOWN orthographic camera 75 degrees above floor (15 degrees from vertical), nearly overhead. Character faces screen-bottom, only a small part of face visible below oversized head; clearly see crown of head, shoulders and top surfaces of gear. Compact game-board unit, full body but feet mostly foreshortened. Centered in a 128x128 frame, fixed floor anchor x64 y108, transparent PNG alpha, no shadow, no UI, no text, no VFX, no checkerboard. Exact same camera and scale across all assets.”
+
+SCORCH
+MASTER: “SCORCH, white spiky hair seen from above, orange goggles on crown, charcoal armor, large orange flamethrower gauntlet, orange fuel canisters on back; tiny sturdy chibi silhouette, screen-down.”
+IDLE 8F: “Eight equal 128x128 cells in one horizontal row; SCORCH breathes subtly, fuel tanks bob 1 px, goggles glint once; fixed feet/anchor, seamless loop, no flame.”
+ATTACK 12F: “Twelve equal cells in one row; 1–3 pull gauntlet back, 4–6 point nozzle toward lower-left target with recoil, 7–12 settle to idle; no flame projectile.”
+
+FROST
+MASTER: “FROST, pale icy-blue hair bun viewed mostly from crown, white fur-trim coat, compact crystal staff and cyan snowflake ornament; shoulders visible, face small.”
+IDLE 8F: “Eight equal cells; tiny breathing, hair and fur sway 1 px, staff crystal pulses subtly, same fixed anchor.”
+ATTACK 12F: “Twelve equal cells; raise staff, sweep staff toward lower-left ground target, recover; no ice projectile.”
+
+ARC — ROBOT KIẾM
+MASTER: “ARC, compact angular sword robot, dark graphite shell, electric yellow-cyan visor on top-front of head, short energized blade in right hand, broad readable shoulders; no human face.”
+IDLE 8F: “Eight equal cells; micro servo bob, shoulder plates shift 1 px, visor pulse, feet planted.”
+ATTACK 12F: “Twelve equal cells; wind up sword, slash in a short top-down semicircle toward lower-left, recoil and recover; no detached slash VFX.”
+
+LANCE
+MASTER: “LANCE, magenta ponytail seen as large top hair mass, black tactical coat, pink goggles, long black-magenta sniper railgun visible diagonally across body, tiny boots.”
+IDLE 8F: “Eight equal cells; subtle breathing, ponytail sway, railgun bob, same anchor.”
+ATTACK 12F: “Twelve equal cells; shoulder railgun, aim toward lower-left ground target, sharp recoil, settle; no muzzle flash or bullets.”
+
+WARP — DRONE
+MASTER: “WARP, small floating dark-metal spherical portal drone, violet ring and central lens, 3–4 symmetric mechanical nodes, top surfaces clearly visible, no legs.”
+IDLE 8F: “Eight equal cells; hover 1–2 px above fixed shadow anchor, violet ring rotates a few degrees, central lens pulses, seamless loop.”
+ATTACK 12F: “Twelve equal cells; ring contracts then widens concentrically on the overhead plane, lens brightens, drone jolts, returns; no external beam.”
+
+BROKER
+MASTER: “BROKER, tiny cyberpunk merchant in dark suit with gold-trim collar, large neat hairstyle seen from top, compact gold data briefcase, readable shoulders and hands, screen-down.”
+IDLE 8F: “Eight equal cells; gentle breathing, briefcase bob, small gold indicator blink; fixed feet.”
+ATTACK 12F: “Twelve equal cells; raise briefcase, tap holographic controls close to torso, short golden activation gesture, recover; no coins/VFX.”
+
+GLITCH — BOT
+MASTER: “GLITCH, squat hacker robot with chunky CRT-monitor head tilted toward screen-bottom, green-magenta glitch pixels on upper screen face, small arms and backpack antenna, top-down silhouette.”
+IDLE 8F: “Eight equal cells; screen flickers lightly, antenna wobbles, small servo bob; fixed anchor.”
+ATTACK 12F: “Twelve equal cells; head screen brightens, arms tap controls, brief forward jolt, settle; no detached glitch effect.”
+
+VENOM — THÚ MÁY 4 CHÂN
+MASTER: “VENOM, compact quadruped mechanical toxic beast, exactly four short legs, dark armor, lime-green poison canisters along back, wedge snout pointing screen-bottom, top of back dominant.”
+IDLE 8F: “Eight equal cells; torso breathes, tail twitches, four paws stay grounded, poison canisters pulse gently.”
+ATTACK 12F: “Twelve equal cells; crouch on four legs, lower head toward lower-left target, short spit recoil, recover; no venom projectile.”
+
+MẪU KHÓA NHẤT QUÁN CHO SHEET (thêm cuối prompt):
+“Use the approved MASTER as an exact identity reference: same head shape, colors, outfit, weapon, camera, scale and proportions in EVERY frame. Equal 128x128 frame cells, one row, alpha-transparent gaps, no crop, no overlapping adjacent cells, fixed ground anchor (64,108). Draw complete character per frame, NOT cut-out rig, NOT side view, NOT low-angle 3/4.”
+
+7. DANH SÁCH PHẢI BỎ / SỬA SO VỚI V2
+[THAY] “camera 3/4 nhìn từ trên xuống ~30°” → “HIGH TOP-DOWN, 75° so với mặt sàn (15° lệch phương thẳng đứng), orthographic”.
+[THAY] “mặt quay xuống-trái 10–20°” → “thân screen-down, đầu nhìn chủ yếu từ trên, chỉ xoay nhẹ 0–10° nếu cần; không thấy mặt chính diện lớn”.
+[THAY] “nhân vật đứng cao 30–39 px” → “humanoid 27–34 px trên ô 44–48 px; ưu tiên 30 px, kiểm tra không lấn sao”.
+[THAY] “3 đầu chibi” → “đầu chiếm 45–55% chiều cao hình chiếu; chân ngắn do foreshortening; không ép tỷ lệ đứng ngang”.
+[THAY] “ô kim loại có gờ 3D nổi dày” → “tile phẳng top-down, vát rất mỏng, không hình thoi”.
+[THAY] “bóng dưới chân” → “ellipse nhỏ gần ngay dưới chân, tốt nhất do code vẽ riêng; drone bóng ở điểm chiếu”.
+[THAY] “slash/VFX góc nghiêng” → “arc, beam, portal, poison pool theo mặt phẳng XY nhìn từ trên”.
+[GIỮ] Màn dọc 390×844; 2 bàn 5×3; lane bên trái; HUD dưới; 8 idle + 12 attack là mốc khởi đầu; PNG RGBA; Canvas 2D; full-frame animation; giữ nhận diện NEON GRID.
+[BỎ] Bất kỳ sprite đã vẽ theo camera 30° thấp nếu khi thu nhỏ còn lộ mặt/ngực/chân theo hướng nhìn ngang; KHÔNG sửa bằng rotate/skew/shear Canvas. Vẽ lại master đúng top-down rồi vẽ lại sheet.
+[BỎ] Bất kỳ board/tile nền có cạnh trước dày, phối cảnh isometric/hình thoi; chỉ giữ nếu có thể dùng làm props ngoài vùng bàn.
+[BỎ] Việc tuyên bố DCDW có góc camera chính xác bằng một số độ duy nhất hoặc suy ra chính xác tuyến đường quái từ ảnh tĩnh.
+
+8. QUY TRÌNH KIỂM TRA NGHIỆM THU V3
+A. Vẽ một tile 48×48 + master SCORCH 128×128, render SCORCH cao 30 px trong ô, nhãn sao nằm riêng phía trên.
+B. Thu nhỏ ảnh về kích thước thật 390×844. Người xem phải nhận ra đầu/vai trước, không thấy nhân vật như đang đứng chụp chân dung.
+C. Đặt 15 tướng giả vào bàn 5×3; đường viền, bóng, sao không đè nhau; 5 cột vẫn đọc được.
+D. Kiểm tra SCORCH idle 8f, attack 12f với fixed anchor; đo độ lệch tâm và chân: mục tiêu ≤1 px logic ở trạng thái đứng.
+E. Dùng đúng camera cho cả 8 master và 3 quái; kiểm tra VFX đi theo tọa độ sàn.
+F. Chỉ sau khi master + tile + một sheet được duyệt mới sản xuất hàng loạt.
+
+LƯU Ý PHẠM VI: đặc tả này nhằm tái tạo tính dễ đọc của góc high top-down từ ảnh tham chiếu, không sao chép artwork, HUD icon, model, UI frame hoặc hiệu ứng độc quyền của DCDW.
