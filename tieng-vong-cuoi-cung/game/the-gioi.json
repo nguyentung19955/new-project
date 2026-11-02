@@ -1,0 +1,7 @@
+{
+ "phien_ban": 1,
+ "ghi_chu": "Danh sách vùng chơi được – phiên Vùng mới cập nhật khi xong mỗi vùng; phiên cốt truyện đọc file này để làm teleport. Đường dẫn 'trang' tính từ thư mục game/. Chỉ ghi vùng ĐÃ chơi được.",
+ "vung": [
+  {"id": "vung-1", "so": 1, "ten": "Vùng 1", "trang": "vung-1/index.html", "diem_vao": {"phong": "P01", "cot": 4, "hang": 15}, "trang_thai": "choi_duoc"}
+ ]
+}
