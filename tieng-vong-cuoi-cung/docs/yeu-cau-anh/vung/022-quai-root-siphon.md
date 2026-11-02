@@ -1,5 +1,5 @@
 # 022 – quai-root-siphon
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 48×56: dung 5, di 6, danh 9 (0–3 cắm rễ + miệng hổ phách sáng dần, 4–6 kéo), trung 3, chet 8; gân rễ trên sàn là hiệu ứng riêng (023); gốc: root_siphon/nguon-chatgpt.png)
 - **Dùng vào:** Quái thường D "Root Siphon" (khoá `root_siphon`), từ R209. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Bó rễ cao chậm chạp có hốc miệng hổ phách; báo đòn: gân rễ lan dọc sàn tới 4 ô + 2 tiếng gõ gỗ (42f), rễ trồi lên giữ chân.
 - **Số khung + ms gợi ý:** dung 5 × 180; di 6 × 130; danh 9 × 90; trung 3 × 90; chet 8 × 100

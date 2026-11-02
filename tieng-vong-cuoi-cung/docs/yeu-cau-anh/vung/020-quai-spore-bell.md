@@ -1,5 +1,5 @@
 # 020 – quai-spore-bell
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 40×48: dung 5, lac 6, danh 8 (0–3 phồng + 3 chấm hổ phách nháy, 4–5 phun), trung 3, chet 7; gốc: spore_bell/nguon-chatgpt.png)
 - **Dùng vào:** Quái thường B "Spore Bell" (khoá `spore_bell`), đứng yên bắn tầm xa, từ R205. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Nấm hình chuông treo/mọc tại chỗ; báo đòn: chuông phồng, 3 chấm hổ phách nháy 3 lần (36f).
 - **Số khung + ms gợi ý:** dung 5 × 160; lac (sway) 6 × 120; danh 8 × 90; trung 3 × 80; chet 7 × 100

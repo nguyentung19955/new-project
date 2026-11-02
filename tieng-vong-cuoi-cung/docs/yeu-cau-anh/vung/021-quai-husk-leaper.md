@@ -1,5 +1,5 @@
 # 021 – quai-husk-leaper
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 48×48: dung 4, nhay 6, danh 8 (0–2 nén chân sau, 3–5 nhảy chém), trung 2, chet 6; dấu đích trên sàn là hiệu ứng riêng; gốc: husk_leaper/nguon-chatgpt.png)
 - **Dùng vào:** Quái thường C "Husk Leaper" (khoá `husk_leaper`), từ R207. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Châu chấu nấm mảnh, ống chân nẹp đồng. Báo đòn: chân sau nén + dấu đích cam nháy trên sàn (30f), nhảy chém.
 - **Số khung + ms gợi ý:** dung 4 × 160; nhay (hop) 6 × 85; danh 8 × 75; trung 2 × 100; chet 6 × 110

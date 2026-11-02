@@ -1,5 +1,5 @@
 # 019 – quai-rot-gnawer
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 48×32 quay TRÁI, đáy-giữa: dung 4, di 6, danh 6 (0–1 báo đòn há hàm + 2 hạt bào tử), trung 2, chet 6; gốc: gnawer/nguon-chatgpt.png)
 - **Dùng vào:** Quái thường A "Rot Gnawer" (khoá `gnawer` trong game/vung-2/quai.json), gặp từ R203. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Bò sát đất nhanh, thấp; hàm trắng xương, lưng nấm nâu sẫm. Thân trong game 52×36 px logic. Báo đòn cắn: há hàm + 2 hạt bào tử ochre (24f).
 - **Số khung + ms gợi ý:** dung 4 × 180 ms; di 6 × 100 ms; danh 6 × 80 ms (khung 0–1 báo đòn, 2–3 cắn, 4–5 hồi); trung 2 × 90 ms; chet 6 × 100 ms
