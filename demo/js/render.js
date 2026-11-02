@@ -41,6 +41,13 @@
     for (const a of ['idle', 'attack']) nap(`v3:${id}:${a}:${d}`, `${V3}${TEN_FILE(id)}_${a}_${d}.png`);
   }
   nap('v3:tile', `${V3}tile.png`);
+  // chân dung thẻ v3 (portrait_<id>.png; id 'miner' thử cả portrait_broker.png); quái/trùm đi bộ (1 hàng khung vuông, nhìn xuống = hướng đi);
+  // hiệu ứng trúng đòn 4 loại + summon/merge (1 hàng 6 khung). Thiếu file nào thì giữ cách cũ.
+  for (const id of TUONG_IDS) { nap('v3p:' + id, `${V3}portrait_${id}.png`); if (TEN_FILE(id) !== id) nap('v3p2:' + id, `${V3}portrait_${TEN_FILE(id)}.png`); }
+  for (const k in QUAI) nap('v3q:' + k, `${V3}enemy_${k}_walk.png`);
+  for (const b of BOSS) nap('v3b:' + b.id, `${V3}boss_${b.id}_walk.png`);
+  for (const l of ['kinetic', 'frost', 'flame', 'electric']) nap('v3fx:' + l, `${V3}vfx_hit_${l}.png`);
+  for (const k of ['vfx_summon', 'vfx_merge']) nap('v3:' + k, `${V3}${k}.png`);
   const SHEET_QUAI = { thuong: 'enemy_drone_sheet', nhanh: 'enemy_skitter_sheet', trau: 'enemy_bulwark_sheet' };
   for (const k in SHEET_QUAI) nap('v2q:' + k, `${V2}${SHEET_QUAI[k]}.png`);
   BOSS.forEach((b, n) => nap('v2b:' + b.id, `${V2}boss_0${n + 1}_sheet.png`));
@@ -417,11 +424,33 @@
     c.fillStyle = m;
     for (let i = 0; i < n; i++) { const px = cx - tong / 2 + w / 2 + i * w; c.beginPath(); for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 0.95 : 2.2; c.lineTo(px + Math.cos(g) * r, cy + Math.sin(g) * r); } c.closePath(); c.fill(); }
   }
-  // ---- v3 HIGH TOP-DOWN: cao 29px (rộng ≤ 40px), chân tại (cx, chan); không uốn / xoay / biến dạng ảnh ----
-  const V3_CAO = 29, V3_RONG = 40, V3_ANIM = { idle: { fps: 9, lap: true }, attack: { fps: 14, lap: false } };
+  // ---- v3 HIGH TOP-DOWN: cao 32px (rộng ≤ 40px → chừa ≥3px mỗi bên ô 46, không đè ô bên), chân tại (cx, chan); không uốn / xoay / biến dạng ảnh ----
+  // P0.1 (tu-van-chatgpt-cham-ban-choi-8huong.txt): 29px → 32px (~70% cạnh ô), neo chân giữ nguyên giữa mọi hướng/khung; hitbox ô không đổi.
+  const V3_CAO = 32, V3_RONG = 40, CHAN_V3 = 8;   // CHAN_V3: chân cách đáy ô (px)
+  // P2.2: idle 8fps lặp, lệch pha mỗi tướng; attack 14fps, giữ khung ra đòn thêm C.GIU_KHUNG (đạn phát đúng khung đó, game.js TAC_DONG)
+  const V3_ANIM = { idle: { fps: 8, lap: true }, attack: { fps: 14, lap: false } };
+  const KHUNG_RA = Math.round(C.TAC_DONG * V3_ANIM.attack.fps);   // = 3
+  const tgAtk = (n) => n / V3_ANIM.attack.fps + C.GIU_KHUNG;      // tổng thời gian attack (sheet 8 hay 12 khung đều tự tính: số khung = rộng/cao)
+  function khungAtk(n, el) {   // chuẩn bị (0..2) → ra đòn (3, giữ thêm) → thu đòn; -1 = hết
+    const fps = V3_ANIM.attack.fps, ra = Math.min(KHUNG_RA, n - 1), t1 = ra / fps, t2 = (ra + 1) / fps + C.GIU_KHUNG;
+    if (el < 0) return -1;
+    if (el < t1) return Math.floor(el * fps);
+    if (el < t2) return ra;
+    const f = ra + 1 + Math.floor((el - t2) * fps); return f < n ? f : -1;
+  }
+  const phaIdle = (v) => (((v.uid || 0) * 0.618034) % 1);         // lệch pha idle theo từng tướng (không đồng bộ cả bàn)
+  const khungIdle = (n, tg, v) => Math.floor(tg * V3_ANIM.idle.fps + phaIdle(v) * n) % n;
+  function giatLui(v, tg) {   // 0..1: giật lùi lúc ra đòn — giữ trong lúc giữ khung, rồi về trong 90ms
+    if (v.atkT == null) return 0;
+    const e = tg - v.atkT - C.TAC_DONG;
+    if (e < 0) return 0; if (e < C.GIU_KHUNG) return 1;
+    const r = (e - C.GIU_KHUNG) / 0.09; return r < 1 ? 1 - r : 0;
+  }
+  const GIAT_PX = 2;   // giật lùi 2px ngược hướng nhìn
   const DO_V3 = new Map();
-  function doSheet(im) {   // đo khung 0 của sheet: tỉ lệ để phần hình cao 29px + đáy phần hình (neo chân); khung vuông, số khung = rộng / cao
-    let d = DO_V3.get(im); if (d) return d;
+  const DO_SHEET = new Map();
+  function doSheet(im) {   // đo khung 0 của sheet: tỉ lệ để phần hình cao V3_CAO + đáy phần hình (neo chân); khung vuông, số khung = rộng / cao
+    let d = DO_SHEET.get(im); if (d) return d;
     const fh = im.height; d = { s: V3_CAO / fh, day: fh };
     try {
       const cv = document.createElement('canvas'); cv.width = fh; cv.height = fh; const g = cv.getContext('2d'); g.drawImage(im, 0, 0, fh, fh, 0, 0, fh, fh);
@@ -429,7 +458,7 @@
       for (let y = 0; y < fh; y++) for (let x = 0; x < fh; x++) if (px[(y * fh + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
       if (x1 >= 0) d = { s: Math.min(V3_CAO / (y1 - y0 + 1), V3_RONG / (x1 - x0 + 1)), day: y1 + 1 };
     } catch (e) { /* ảnh khác nguồn: dùng ước lượng */ }
-    DO_V3.set(im, d); return d;
+    DO_SHEET.set(im, d); return d;
   }
   // ---- 8 hướng ----
   // hg (game.js): 0=E 1=SE 2=S 3=SW 4=W 5=NW 6=N 7=NE → [hướng ảnh nguồn, lật gương]
@@ -448,83 +477,112 @@
     } catch (e) { /* ảnh khác nguồn: dùng cả khung */ }
     DO_V3.set(im, d); return d;
   }
-  function tiLeS(id) {   // tỉ lệ chung theo hướng S: phần hình cao 29px (rộng ≤ 40px), quy theo cạnh khung để mọi hướng cùng cỡ
+  function tiLeS(id) {   // tỉ lệ chung theo hướng S: phần hình cao V3_CAO (rộng ≤ 40px), quy theo cạnh khung để mọi hướng cùng cỡ
     const im = co(`v3:${id}:idle:s`) || co(`v3:${id}:s`); if (!im) return null;
     const d = doKhung(im);
     return Math.min(V3_CAO / (d.y1 - d.y0 + 1), V3_RONG / (d.x1 - d.x0 + 1)) * d.fh;   // = số px hiển thị cho 1 cạnh khung
   }
-  function veHuong(c, v, cx, chan, tg, i, nhun, giat) {   // ảnh theo hướng (sheet idle/attack hoặc ảnh tĩnh hướng đó); false nếu không có
-    const [goc, lat] = HG_ANH[v.hg == null ? 2 : v.hg];
+  // quay > 90° (lệch > 2 sector): chen 1 khung hướng trung gian ~70ms (vẫn là ảnh hướng đó / lật gương, không xoay ảnh)
+  function hgHien(v, tg) {
+    const hg = v.hg == null ? 2 : v.hg;
+    if (v._hgVe == null) v._hgVe = hg;
+    if (hg !== v._hgVe) {
+      let d = (((hg - v._hgVe) % 8) + 8) % 8; if (d > 4) d -= 8;
+      if (Math.abs(d) > 2) { v._giua = (((v._hgVe + Math.sign(d) * Math.ceil(Math.abs(d) / 2)) % 8) + 8) % 8; v._giuaT = tg + 0.07; }
+      v._hgVe = hg;
+    }
+    return v._giuaT != null && tg < v._giuaT && tg >= v._giuaT - 0.2 ? v._giua : hg;
+  }
+  function veHuong(c, v, cx, chan, tg, i, nhun) {   // ảnh theo hướng (sheet idle/attack hoặc ảnh tĩnh hướng đó); false nếu không có
+    const hg = hgHien(v, tg), [goc, lat] = HG_ANH[hg];
     const d = LUI[goc].find((h) => coHuong(v.id, h)); if (!d) return false;
     const canh = tiLeS(v.id) || (() => { const k = doKhung(coHuong(v.id, d)); return Math.min(V3_CAO / (k.y1 - k.y0 + 1), V3_RONG / (k.x1 - k.x0 + 1)) * k.fh; })();
     const idle = co(`v3:${v.id}:idle:${d}`), atk = co(`v3:${v.id}:attack:${d}`), tinh = co(`v3:${v.id}:${d}`);
-    const dAtk = v.atkT != null ? tg - v.atkT : -1, dangDanh = atk && dAtk >= 0 && dAtk < soKhung(atk) / V3_ANIM.attack.fps;
+    const fA = atk && v.atkT != null ? khungAtk(soKhung(atk), tg - v.atkT) : -1;
     let im, f = 0, laSheet = false;
-    if (dangDanh) { im = atk; f = Math.min(soKhung(atk) - 1, Math.floor(dAtk * V3_ANIM.attack.fps)); laSheet = true; }
-    else if (idle) { im = idle; f = Math.floor((tg + (i || 0) * 0.173) * V3_ANIM.idle.fps) % soKhung(idle); laSheet = true; }
+    if (fA >= 0) { im = atk; f = fA; laSheet = true; }
+    else if (idle) { im = idle; f = khungIdle(soKhung(idle), tg, v); laSheet = true; }
     else im = tinh;
     if (!im) return false;
     const k = doKhung(idle || tinh || im), fh = im.height, w = Math.min(canh, V3_RONG * k.fh / (k.x1 - k.x0 + 1));   // cạnh khung hiển thị; rộng phần hình hướng này vẫn ≤ 40px
     const day = (k.y1 + 1) * (w / k.fh);   // đáy phần hình khung đầu = chân → cùng 1 điểm mọi hướng
+    const g = hg * Math.PI / 4, gl = giatLui(v, tg) * GIAT_PX;   // giật lùi ngược hướng nhìn (toạ độ màn hình, trước khi lật)
     let x = cx - w / 2, y = chan - day;
-    if (!laSheet) {   // ảnh tĩnh: nhún + giật lùi ngược hướng nhìn như cũ
-      const g = (v.hg == null ? 2 : v.hg) * Math.PI / 4;
-      x -= Math.cos(g) * 1.5 * giat; y += nhun - Math.sin(g) * 1.5 * giat;
-    }
+    if (!laSheet) y += nhun;   // ảnh tĩnh: thêm nhún bằng code (sheet idle đã tự chuyển động)
     c.save();
+    c.translate(-Math.cos(g) * gl, -Math.sin(g) * gl);
     if (lat) { c.translate(cx * 2, 0); c.scale(-1, 1); }   // lật gương ngang quanh tâm ô
-    c.drawImage(im, f * fh, 0, fh, fh, x, y, w, w);
-    if (!laSheet && giat > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * giat; c.drawImage(im, f * fh, 0, fh, fh, x, y, w, w); }   // chớp sáng nhẹ
+    if (im === atk && atk !== idle) {   // sheet attack vẽ ở tỉ lệ nguồn nhỏ hơn idle (~0.72): quy về cùng cỡ theo chiều cao khung đầu, đáy khung đầu = chân
+      const kA = doKhung(atk), r = Math.max(0.8, Math.min(1.6, (k.y1 - k.y0 + 1) / (kA.y1 - kA.y0 + 1))), wA = w * r;
+      x = cx - wA / 2; y = chan - (kA.y1 + 1) * (wA / kA.fh);
+      c.drawImage(im, f * fh, 0, fh, fh, x, y, wA, wA);
+    } else c.drawImage(im, f * fh, 0, fh, fh, x, y, w, w);
+    if (!laSheet && gl > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * gl / GIAT_PX; c.drawImage(im, f * fh, 0, fh, fh, x, y, w, w); }   // chớp sáng nhẹ
     c.restore();
     return true;
   }
-  function veXoay(c, v, cx, chan, tg, i, nhun, giat) {   // WARP drone: sheet idle_s/attack_s (hoặc ảnh tĩnh) xoay quanh tâm phần hình theo v.goc mượt; ảnh gốc nhìn S = 90°
+  function veXoay(c, v, cx, chan, tg, i, nhun) {   // WARP drone: sheet idle_s/attack_s (hoặc ảnh tĩnh) xoay quanh tâm phần hình theo v.goc mượt; ảnh gốc nhìn S = 90°
     const idle = co(`v3:${v.id}:idle:s`), atk = co(`v3:${v.id}:attack:s`); if (!idle && !atk) return false;
-    const dAtk = v.atkT != null ? tg - v.atkT : -1, dangDanh = atk && dAtk >= 0 && dAtk < soKhung(atk) / V3_ANIM.attack.fps;
+    const fA = atk && v.atkT != null ? khungAtk(soKhung(atk), tg - v.atkT) : -1;
     let im = idle, f = 0;
-    if (dangDanh || !idle) { im = atk; f = dangDanh ? Math.min(soKhung(atk) - 1, Math.floor(dAtk * V3_ANIM.attack.fps)) : 0; }
-    else f = Math.floor((tg + (i || 0) * 0.173) * V3_ANIM.idle.fps) % soKhung(idle);
+    if (fA >= 0 || !idle) { im = atk; f = Math.max(0, fA); }
+    else f = khungIdle(soKhung(idle), tg, v);
     const k = doKhung(idle || atk), fh = im.height;
     const w = Math.min(V3_CAO / (k.y1 - k.y0 + 1), V3_RONG / (k.x1 - k.x0 + 1)) * k.fh, sc = w / k.fh;   // cạnh khung hiển thị
     const tx = (k.x0 + k.x1 + 1) / 2 * sc, ty = (k.y0 + k.y1 + 1) / 2 * sc, day = (k.y1 + 1) * sc;   // tâm phần hình trong khung (đã thu)
-    const g = v.goc == null ? Math.PI / 2 : v.goc, tamY = chan - day + ty + (idle ? 0 : nhun);
-    c.save(); c.translate(cx - Math.cos(g) * 1.5 * giat, tamY - Math.sin(g) * 1.5 * giat); c.rotate(g - Math.PI / 2);
+    const g = v.goc == null ? Math.PI / 2 : v.goc, gl = giatLui(v, tg) * GIAT_PX, tamY = chan - day + ty + (idle ? 0 : nhun);
+    c.save(); c.translate(cx - Math.cos(g) * gl, tamY - Math.sin(g) * gl); c.rotate(g - Math.PI / 2);
     c.drawImage(im, f * fh, 0, fh, fh, -tx, -ty, w, w);
     c.restore(); return true;
   }
   function veV3(c, v, cx, chan, tg, i) {
-    const nhun = i == null ? 0 : -1.5 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (tg / 0.9 + i * 0.173)));   // nhún 0..1.5px, chu kỳ 0.9s, lệch pha theo ô
-    const ban = v.atkT != null ? tg - v.atkT - C.TAC_DONG : -1, giat = ban >= 0 && ban < 0.16 ? 1 - ban / 0.16 : 0;   // lúc đạn phát
-    if (XOAY_CODE.has(v.id) && veXoay(c, v, cx, chan, tg, i, nhun, giat)) return true;   // WARP: sheet S xoay theo góc
-    if (!XOAY_CODE.has(v.id) && veHuong(c, v, cx, chan, tg, i, nhun, giat)) return true;   // 8 hướng (ưu tiên)
+    const nhun = i == null ? 0 : -1.5 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (tg / 0.9 + phaIdle(v))));   // nhún 0..1.5px cho ảnh tĩnh, lệch pha theo tướng
+    const gl = giatLui(v, tg) * GIAT_PX;
+    if (XOAY_CODE.has(v.id) && veXoay(c, v, cx, chan, tg, i, nhun)) return true;   // WARP: sheet S xoay theo góc
+    if (!XOAY_CODE.has(v.id) && veHuong(c, v, cx, chan, tg, i, nhun)) return true;   // 8 hướng (ưu tiên)
     const idle = co(`v3:${v.id}:idle`), atk = co(`v3:${v.id}:attack`);
-    const dAtk = v.atkT != null ? tg - v.atkT : -1, dangDanh = atk && dAtk >= 0 && dAtk < soKhung(atk) / V3_ANIM.attack.fps;
-    if (idle || dangDanh) {   // sheet v3 chung (không theo hướng): chỉ đổi khung — attack 14fps, idle 9fps lặp
-      let im = idle, a = 'idle', el = tg + (i || 0) * 0.173;
-      if (dangDanh) { im = atk; a = 'attack'; el = dAtk; }
-      const n = soKhung(im), fh = im.height, fr = Math.floor(el * V3_ANIM[a].fps), f = V3_ANIM[a].lap ? fr % n : Math.min(n - 1, fr);
+    const fA = atk && v.atkT != null ? khungAtk(soKhung(atk), tg - v.atkT) : -1;
+    if (idle || fA >= 0) {   // sheet v3 chung (không theo hướng): chỉ đổi khung
+      const im = fA >= 0 ? atk : idle, f = fA >= 0 ? fA : khungIdle(soKhung(idle), tg, v), fh = im.height;
       const d = doSheet(idle || im), w = fh * d.s;
-      c.drawImage(im, f * fh, 0, fh, fh, cx - w / 2, chan - d.day * d.s, w, w);
+      c.drawImage(im, f * fh, 0, fh, fh, cx - w / 2 - (v.huong || -1) * gl, chan - d.day * d.s, w, w);
       return true;
     }
     const im = co('v3:' + v.id); if (!im) return false;
     const s = Math.min(V3_CAO / im.height, V3_RONG / im.width), w = im.width * s, h = im.height * s;
     if (XOAY_CODE.has(v.id)) {   // WARP drone: xoay cả ảnh quanh tâm hình theo góc mượt v.goc (ảnh gốc nhìn xuống = S = 90°)
       const tam = chan - h / 2 + nhun, g = v.goc == null ? Math.PI / 2 : v.goc;
-      c.save(); c.translate(cx - Math.cos(g) * 1.5 * giat, tam - Math.sin(g) * 1.5 * giat); c.rotate(g - Math.PI / 2);
+      c.save(); c.translate(cx - Math.cos(g) * gl, tam - Math.sin(g) * gl); c.rotate(g - Math.PI / 2);
       c.drawImage(im, -w / 2, -h / 2, w, h);
-      if (giat > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * giat; c.drawImage(im, -w / 2, -h / 2, w, h); }
+      if (gl > 0) { c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * gl / GIAT_PX; c.drawImage(im, -w / 2, -h / 2, w, h); }
       c.restore(); return true;
     }
-    const x = cx - w / 2 - (v.huong || -1) * 1.5 * giat, y = chan - h + nhun;   // giật lùi 1.5px ngược hướng bắn
+    const x = cx - w / 2 - (v.huong || -1) * gl, y = chan - h + nhun;   // giật lùi ngược hướng bắn
     c.drawImage(im, x, y, w, h);
-    if (giat > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * giat; c.drawImage(im, x, y, w, h); c.restore(); }   // chớp sáng nhẹ
+    if (gl > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha *= 0.35 * gl / GIAT_PX; c.drawImage(im, x, y, w, h); c.restore(); }   // chớp sáng nhẹ
     return true;
+  }
+  // xuất hiện: summon = hiện từ cổng sáng + phóng đều 0.85→1.0 trong 150ms; merge = ẩn lúc 2 tướng cũ thu vào tâm (110ms) rồi bật ra 0.85→1.08→1.0 (130ms)
+  const SINH_T = 0.15, GOP_THU = 0.11, GOP_BAT = 0.13;
+  function heSoXuatHien(v, tg) {   // [tỉ lệ, alpha]
+    if (v.sinhT == null) return [1, 1];
+    const e = tg - v.sinhT;
+    if (v.kieuSinh === 'gop') {
+      if (e < GOP_THU) return [0, 0];
+      const k = (e - GOP_THU) / GOP_BAT; if (k >= 1) return [1, 1];
+      return [k < 0.6 ? 0.85 + 0.23 * (k / 0.6) : 1.08 - 0.08 * ((k - 0.6) / 0.4), Math.min(1, k * 3)];
+    }
+    if (e >= SINH_T || e < 0) return [1, 1];
+    const k = e / SINH_T, ra = 1 - (1 - k) * (1 - k);
+    return [0.85 + 0.15 * ra, Math.min(1, k * 1.8)];
   }
   function veHinhTuong(c, v, cx, chan, tg, i) {   // chỉ sprite (không bóng/sao) — dùng cả khi kéo
     if (coV3(v.id)) {
-      const hien = v.sinhT != null ? Math.min(1, (tg - v.sinhT) / 0.3) : 1;
-      c.save(); c.globalAlpha *= Math.max(0, hien); const ok = veV3(c, v, cx, chan, tg, i); c.restore();
+      const [sc, al] = heSoXuatHien(v, tg);
+      if (al <= 0) return;
+      c.save(); c.globalAlpha *= al;
+      if (sc !== 1) { c.translate(cx, chan); c.scale(sc, sc); c.translate(-cx, -chan); }   // phóng đều quanh chân, không méo
+      const ok = veV3(c, v, cx, chan, tg, i); c.restore();
       if (ok) return;
     }
     const [a, el] = chonAnim(v, tg), im = sheet(v.id, a);
@@ -537,21 +595,43 @@
     else c.drawImage(sprUnit(v.id), cx - 24, chan - 48 * 57 / 64, 48, 48);
     c.restore();
   }
+  function veCong(c, cx, chan, e) {   // cổng triệu hồi dưới chân: sheet vfx_summon (6 khung) chạy trong SINH_T+30ms; không có thì vòng sáng vẽ code
+    const T = SINH_T + 0.03; if (e < 0 || e >= T) return;
+    const k = e / T, im = co('v3:vfx_summon');
+    c.save(); c.globalCompositeOperation = 'lighter';
+    if (im) { const fh = im.height, n = soKhung(im), f = Math.min(n - 1, Math.floor(k * n)), sz = 46; c.drawImage(im, f * fh, 0, fh, fh, cx - sz / 2, chan - sz * 0.72, sz, sz); }
+    else { c.globalAlpha = 1 - k; c.strokeStyle = '#3ce7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(cx, chan, 6 + 10 * k, 2 + 3 * k, 0, 0, 7); c.stroke(); veGlow(c, '#3ce7ff', cx, chan - 8, 14 * (1 - k) + 4, 0.8 * (1 - k)); }
+    c.restore();
+  }
   function veUnit(c, S, v, i, tg, t, hop) {
     const v3 = !!coV3(v.id);
-    const [x, y] = G.oXY(S, i), cx = x + C.O / 2, chan = y + C.OH - (v3 ? 10 : 5), h = HANH[TUONG[v.id].hanh];
-    veBong(c, cx, chan, v3 ? 16 : 20);
+    const [x, y] = G.oXY(S, i), cx = x + C.O / 2, chan = y + C.OH - (v3 ? CHAN_V3 : 5), h = HANH[TUONG[v.id].hanh];
+    const moiGop = v.kieuSinh === 'gop' && v.sinhT != null && tg - v.sinhT < GOP_THU;
+    if (!moiGop) veBong(c, cx, chan, v3 ? 16 : 20);
+    if (v.sinhT != null && v.kieuSinh !== 'gop') veCong(c, cx, chan, tg - v.sinhT);
     if (hop) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(cx, chan, 15, 4.5, 0, 0, 7); c.stroke(); c.restore(); }
-    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 14, 22, 0.45 + 0.15 * Math.sin(t * 12));
-    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 14, 22, 0.4);
+    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 16, 22, 0.45 + 0.15 * Math.sin(t * 12));
+    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 16, 22, 0.4);
     veHinhTuong(c, v, cx, chan, tg, i);
     if (!sheet(v.id, 'attack') && !co(`v3:${v.id}:attack`) && !HUONG5.some((d) => co(`v3:${v.id}:attack:${d}`)) && v.atkT != null && tg - v.atkT > C.TAC_DONG - 0.05 && tg - v.atkT < C.TAC_DONG + 0.12) {   // chưa có sheet attack: chớp ở nòng lúc phát đạn
       const [mx, my] = G.nong(S, i, v); veGlow(c, h.mau, mx, my, 8, 0.9);
     }
   }
+  function veGopCu(c, S, f, tg) {   // merge: 2 tướng cũ (ô kéo + ô đích) thu nhỏ đều và trượt vào tâm ô đích trong GOP_THU giây
+    if (!f.cu || f.t >= GOP_THU) return;
+    const p = f.t / GOP_THU, e = p * p, [xi, yi] = G.oXY(S, f.i), tx = xi + C.O / 2, ty = yi + C.OH - CHAN_V3 - 10;
+    [f.tu, f.i].forEach((o, n) => {
+      const v = f.cu[n]; if (!v || o == null) return;
+      const [x, y] = G.oXY(S, o), sx = x + C.O / 2, sy = y + C.OH - CHAN_V3;
+      const px = sx + (tx - sx) * e, py = sy + (ty - sy) * e, sc = 1 - 0.75 * e;
+      c.save(); c.globalAlpha *= 1 - 0.7 * e; c.translate(px, py); c.scale(sc, sc);
+      veHinhTuong(c, v, 0, 0, tg);
+      c.restore();
+    });
+  }
   function veNhanO(c, S, v, i) {   // sao + trạng thái boss (lớp trên cùng của bàn)
     const [x, y] = G.oXY(S, i), cx = x + C.O / 2;
-    veSao(c, cx, coV3(v.id) ? y + 2 : y - 3, v.sao);   // v3: tướng cao 29px, đỉnh đầu ~ đỉnh ô + 6 → nhãn (cao 7px) ở đỉnh ô + 2 không che mặt
+    veSao(c, cx, coV3(v.id) ? y + 1 : y - 3, v.sao);   // v3: tướng cao 32px, chân cách đáy 8 → đỉnh đầu ~ đỉnh ô + 5 → nhãn (cao 7px) tâm ở đỉnh ô + 1 không che mặt
     if (v.nong > 0 || v.corrT > 0) {
       const tx = v.nong > 0 ? 'HOT ' + Math.ceil(v.nong) : 'BUG';
       c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)';
@@ -559,6 +639,14 @@
     }
   }
   // ---------- quái ----------
+  const TRANG = new Map();   // bóng trắng của 1 khung (chớp trắng 45–75ms khi trúng đòn) — chỉ tô lại alpha của ảnh, không vẽ hình mới
+  function khungTrang(im, f) {
+    let m = TRANG.get(im); if (!m) { m = []; TRANG.set(im, m); }
+    if (m[f]) return m[f];
+    const fh = im.height, cv = document.createElement('canvas'); cv.width = fh; cv.height = fh;
+    const g = cv.getContext('2d'); g.drawImage(im, f * fh, 0, fh, fh, 0, 0, fh, fh); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#ffffff'; g.fillRect(0, 0, fh, fh);
+    return (m[f] = cv);
+  }
   const MAU_QUAI = { thuong: '#ff3355', nhanh: '#ff2bd6', trau: '#ff8a1a' };
   function veQuai(c, q, t, tg) {
     const w = q.co, yChan = q.y + 2, vao = q.daRa ? 1 : Math.min(1, (tg - (q.sinhT || 0)) / 0.5);
@@ -566,8 +654,14 @@
     veBong(c, q.x, yChan, w * 0.8);
     const m = q.boss ? q.boss.mau : MAU_QUAI[q.kind];
     if (Q.cao) veGlow(c, m, q.x, yChan - w / 2, w * 0.7, 0.22);
-    const sh = co(q.boss ? 'v2b:' + q.boss.id : 'v2q:' + q.kind);
-    if (sh) {   // sheet nhiều hàng: quái 3 hàng idle/move/hurt ×8; boss 4 hàng idle/move/attack/hurt ×16
+    const sh3 = co(q.boss ? 'v3b:' + q.boss.id : 'v3q:' + q.kind), sh = sh3 ? null : co(q.boss ? 'v2b:' + q.boss.id : 'v2q:' + q.kind);
+    if (sh3) {   // v3 đi bộ: 10fps, cao phần hình = w (thường ~22, nhanh ~20, trâu ~28, boss ~40), đáy phần hình = chân; chớp trắng khi trúng đòn
+      const k = doKhung(sh3), fh = sh3.height, n = soKhung(sh3), s = w / (k.y1 - k.y0 + 1), dw = fh * s;
+      const f = q.choang > 0 ? 0 : Math.floor((tg + q.uid * 0.137) * 10) % n;
+      const x = q.x - (k.x0 + k.x1 + 1) / 2 * s, y = yChan - (k.y1 + 1) * s;
+      c.drawImage(sh3, f * fh, 0, fh, fh, x, y, dw, dw);
+      if (q.flash > 0) { c.globalAlpha = 0.8 * vao; c.drawImage(khungTrang(sh3, f), x, y, dw, dw); c.globalAlpha = vao; }
+    } else if (sh) {   // sheet nhiều hàng: quái 3 hàng idle/move/hurt ×8; boss 4 hàng idle/move/attack/hurt ×16
       const soHang = q.boss ? 4 : 3, hang = q.flash > 0 ? soHang - 1 : q.boss && q.tele ? 2 : q.choang > 0 ? 0 : 1;
       const n = soKhung(sh, soHang), f = Math.floor((tg + q.uid * 0.21) * (q.boss ? 12 : 10)) % n;
       veKhung(c, sh, f, q.x, yChan, w * 1.9 / 128, hang, soHang);
@@ -576,7 +670,7 @@
       if (q.boss && q.boss.id === 'overclock') { c.save(); c.translate(q.x, yChan - w / 2 - 2 + hv); c.rotate(t * 2.5); c.drawImage(sprBanh(), -s / 2 - 3, -s / 2 - 3, s + 6, s + 6); c.restore(); }
       const a = q.boss ? ANH['b:' + q.boss.id] : ANH['e:' + q.kind], sp = q.boss ? sprBoss(q.boss) : sprQuai(q.kind);
       veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s);
-      if (q.flash > 0.045 && Q.cao) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7) * vao; veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s); c.globalCompositeOperation = 'source-over'; c.globalAlpha = vao; }
+      if (q.flash > 0 && Q.cao) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7) * vao; veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s); c.globalCompositeOperation = 'source-over'; c.globalAlpha = vao; }
     }
     const cy = yChan - w / 2;
     if (q.cham > 0) { c.save(); c.globalAlpha = 0.55 * vao; c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(q.x, yChan, w * 0.42, 3.5, 0, 0, 7); c.stroke(); c.restore(); }
@@ -588,14 +682,15 @@
     if (q.nhanhT > 0) { c.save(); c.strokeStyle = 'rgba(255,200,60,0.8)'; c.lineWidth = 1; for (let k = 0; k < 3; k++) { const xx = q.x - 6 + k * 6, l = 5 + ((t * 30 + k * 13) % 5); c.beginPath(); c.moveTo(xx, cy - w * 0.4 - l); c.lineTo(xx, cy - w * 0.4); c.stroke(); } c.restore(); }
     if (q.echo) { c.save(); c.strokeStyle = '#ffb31a'; c.lineWidth = 1.2; c.setLineDash([3, 2]); c.lineDashOffset = -t * 20; c.beginPath(); c.arc(q.x, cy, w * 0.5, 0, 7); c.stroke(); c.restore(); }
     if (q.choang > 0) { c.save(); c.strokeStyle = '#c8ffe8'; c.lineWidth = 1; c.beginPath(); let px = q.x - 7, py = yChan - w - 3; c.moveTo(px, py); for (let k = 0; k < 5; k++) { px += 3; py += (k % 2 ? -3 : 3) * Math.sin(t * 30 + k); c.lineTo(px, py); } c.stroke(); c.restore(); }
-    if (!q.boss) {
-      const bw = 16, by = yChan - w - 5, k = Math.max(0, q.hp / q.max);
-      c.fillStyle = 'rgba(2,4,12,0.85)'; c.fillRect(q.x - bw / 2 - 0.5, by - 0.5, bw + 1, 3);
-      c.fillStyle = k > 0.4 ? '#3cffb0' : '#ff3c6e'; c.fillRect(q.x - bw / 2, by, bw * k, 2);
-    } else {
-      const bw = 34, by = yChan - w - 9, k = Math.max(0, q.hp / q.max);
-      c.fillStyle = 'rgba(2,4,12,0.9)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 5);
-      c.fillStyle = q.boss.mau; c.fillRect(q.x - bw / 2, by, bw * k, 3);
+    if (!q.boss) {   // thanh máu quái thường 20×3 (P0.3: 18–24 × 3)
+      const bw = 20, by = yChan - w - 6, k = Math.max(0, q.hp / q.max);
+      c.fillStyle = 'rgba(2,4,12,0.88)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 5);
+      c.fillStyle = k > 0.4 ? '#3cffb0' : '#ff3c6e'; c.fillRect(q.x - bw / 2, by, bw * k, 3);
+    } else {         // boss 48×5 (42–56 × 5)
+      const bw = 48, by = yChan - w - 9, k = Math.max(0, q.hp / q.max);
+      c.fillStyle = 'rgba(2,4,12,0.9)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 7);
+      c.fillStyle = q.boss.mau; c.fillRect(q.x - bw / 2, by, bw * k, 5);
+      c.fillStyle = 'rgba(255,255,255,0.35)'; c.fillRect(q.x - bw / 2, by, bw * k, 1);
     }
     c.restore();
   }
@@ -633,19 +728,23 @@
       else if (f.k === 'rail') no(f.x0, f.y0, '#ff8cc0', 4, 50, 1.6, 0.25);
     }
   }
+  // loại hiệu ứng trúng đòn theo tướng (P0.4)
+  const LOAI_HIT = { lance: 'kinetic', miner: 'kinetic', glitch: 'kinetic', warp: 'kinetic', venom: 'kinetic', frost: 'frost', scorch: 'flame', arc: 'electric' };
   function veSheetFx(c, im, k, x, y, sz) { const fh = im.height, n = soKhung(im), f = Math.min(n - 1, Math.floor(k * n)); c.drawImage(im, f * fh, 0, fh, fh, x - sz / 2, y - sz / 2, sz, sz); }
   function veFx(c, S, f) {
     const k = f.t / f.T, o = f.i != null ? G.oTam(S, f.i) : [f.x, f.y], a = Math.max(0, 1 - k);
     c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = a;
     if (f.k === 'trieu') {
       const im = co('v2:vfx_summon');
-      if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1] + 6, 56); }
+      if (co('v3:vfx_summon')) { /* cổng sáng v3 vẽ dưới chân tướng trong veUnit (veCong) */ }
+      else if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1] + 6, 56); }
       else { c.fillStyle = lg(c, 0, o[1] - 50, 0, o[1] + 20, [[0, 'rgba(60,231,255,0)'], [0.7, 'rgba(60,231,255,0.6)'], [1, 'rgba(255,255,255,0.85)']]);
         const w = 28 * (1 - k * 0.7); c.fillRect(o[0] - w / 2, o[1] - 50, w, 70);
         c.strokeStyle = '#3ce7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(o[0], o[1] + 17, 7 + 16 * k, 2.5 + 5 * k, 0, 0, 7); c.stroke(); }
     } else if (f.k === 'gop') {
-      const im = co('v2:vfx_merge');
-      if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1], 64); }
+      const im3 = co('v3:vfx_merge'), im = co('v2:vfx_merge'), kg = f.t / 0.24;   // phản hồi merge 240ms (180–260ms)
+      if (im3) { if (kg < 1) { c.globalAlpha = 1; veSheetFx(c, im3, kg, o[0], o[1] - 2, 54); } }
+      else if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1], 64); }
       else { c.strokeStyle = '#ffffff'; c.lineWidth = 2 * a + 1; c.beginPath(); c.arc(o[0], o[1], 5 + 30 * k, 0, 7); c.stroke();
         c.strokeStyle = HANG_MAU[f.sao - 1]; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], 3 + 20 * k, 0, 7); c.stroke();
         veGlow(c, '#ffffff', o[0], o[1], 26 * (1 - k) + 4, a); }
@@ -665,6 +764,10 @@
       for (const q of p.slice(1)) veGlow(c, f.mau, q[0], q[1], 9, a);
     } else if (f.k === 'hoada') {
       c.strokeStyle = f.mau || '#ff3b3b'; c.lineWidth = 1.5; hexP(c, o[0], o[1], 14 + 12 * k); c.stroke();
+    } else if (f.k === 'hit' && co('v3fx:' + (LOAI_HIT[f.id] || 'kinetic'))) {   // tia trúng đòn v3 theo loại sát thương, 120ms
+      const im = co('v3fx:' + (LOAI_HIT[f.id] || 'kinetic'));
+      c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1], f.to ? 30 : 22);
+      if (f.id === 'venom') veGlow(c, '#b4ff2a', o[0], o[1], 9, a * 0.8);   // VENOM: tia kinetic phủ ánh xanh độc
     } else if (f.k === 'hit') {
       const r0 = (f.to ? 9 : 6) * (0.4 + k); c.strokeStyle = f.to ? '#ffb31a' : '#ffffff'; c.lineWidth = 1.2;
       for (let n = 0; n < 4; n++) { const g = n * 1.571 + 0.4; c.beginPath(); c.moveTo(o[0] + Math.cos(g) * r0 * 0.4, o[1] + Math.sin(g) * r0 * 0.4); c.lineTo(o[0] + Math.cos(g) * r0, o[1] + Math.sin(g) * r0); c.stroke(); }
@@ -733,10 +836,10 @@
     c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)';
     c.strokeText('⚠ ' + te.ten, bx, by - 3); c.fillStyle = '#ffffff'; c.fillText('⚠ ' + te.ten, bx, by - 3);
   }
-  // số sát thương nổi: sinh tại quái, trôi lên 12→22px trong 0.5s, chí mạng màu hổ phách
+  // số sát thương nổi: sống 0.55s (0.45–0.65), bay lên 12px (8–14) chậm dần, mờ ở 35% cuối; chí mạng màu hổ phách
   function veSo(c, s) {
-    const k = Math.min(1, s.t / 0.5), y = s.y - 12 - 10 * k;
-    c.save(); c.globalAlpha = Math.min(1, 3.5 * (0.7 - s.t));
+    const T = s.T || 0.8, k = Math.min(1, s.t / T), y = s.y - 6 - 12 * (1 - (1 - k) * (1 - k));
+    c.save(); c.globalAlpha = Math.max(0, Math.min(1, (T - s.t) / (T * 0.35)));
     c.font = `700 ${s.to ? 10 : 8.5}px Rajdhani, "Segoe UI", sans-serif`; c.textAlign = 'center';
     c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(s.v, s.x, y);
     c.fillStyle = s.lk ? '#fff4b0' : s.to ? '#ffb31a' : '#ffffff'; c.fillText(s.v, s.x, y);
@@ -780,6 +883,7 @@
       veUnit(c, S, v, i, tg, t, hop);
       if (goi && !hop) { const [x, y] = G.oXY(S, i); rr(c, x, y, C.O, C.OH, 3); c.fillStyle = 'rgba(0,0,8,0.55)'; c.fill(); }
     }
+    for (const f of S.fx) if (f.k === 'gop') veGopCu(c, S, f, tg);
     const qs = S.quai.slice().sort((a, b) => a.y - b.y);
     for (const q of qs) veQuai(c, q, t, tg);
     for (const d of S.dan) veDan(c, d, tg);
@@ -842,6 +946,8 @@
   const THU_TU_PORT = ['scorch', 'frost', 'arc', 'lance', 'warp', 'miner', 'glitch', 'venom'];
   const THE_VE = [];
   function veChanDungVao(c, id, w, h, cat) {   // cat: cắt bán thân (ảnh cũ toàn thân)
+    const p3 = co('v3p:' + id) || co('v3p2:' + id);
+    if (p3) { const s = Math.max(w / p3.width, h / p3.height); c.drawImage(p3, (w - p3.width * s) / 2, 0, p3.width * s, p3.height * s); return; }   // chân dung v3 bán thân: phủ kín, canh đỉnh
     const pt = co('v2:portraits_8');
     if (pt) { const fh = pt.height, f = THU_TU_PORT.indexOf(id), s = Math.max(w, h) / fh; c.drawImage(pt, f * fh, 0, fh, fh, (w - fh * s) / 2, (h - fh * s) / 2, fh * s, fh * s); return; }
     const a = ANH['u:' + id];
@@ -853,7 +959,7 @@
     cvs.width = Math.round(px * k); cvs.height = Math.round(px * k);
     const c = cvs.getContext('2d'); c.scale(k, k);
     const h = HANH[TUONG[id].hanh];
-    const ve1 = () => { c.clearRect(0, 0, px, px); veGlow(c, h.mau, px / 2, px * 0.6, px * 0.6, 0.5); veChanDungVao(c, id, px, px, true); };
+    const ve1 = () => { c.clearRect(0, 0, px, px); c.fillStyle = hexA(h.mau, 0.28); c.fillRect(0, 0, px, px); veChanDungVao(c, id, px, px, true); };
     ve1(); THE_VE.push({ cvs, f: ve1 });
   }
   // ẢNH THẺ TƯỚNG: nền màu hệ + chân dung (thẻ chọn tướng / thẻ nâng cấp)
@@ -864,10 +970,11 @@
     const hh = HANH[TUONG[id].hanh];
     const ve1 = () => {
       c.clearRect(0, 0, w, h);
-      c.fillStyle = lg(c, 0, 0, 0, h, [[0, '#05030e'], [0.55, hexA(hh.toi, 1)], [1, '#030208']]); c.fillRect(0, 0, w, h);
-      veGlow(c, hh.mau, w / 2, h * 0.42, w * 0.95, 0.5);
+      // P0.2: nền sáng hơn theo màu hệ, chân dung rõ; chỉ tối nhẹ mép dưới để chữ đọc được
+      c.fillStyle = lg(c, 0, 0, 0, h, [[0, hexA(hh.mau, 0.55)], [0.5, hexA(hh.mau, 0.22)], [1, '#0b0f22']]); c.fillRect(0, 0, w, h);
+      veGlow(c, hh.mau, w / 2, h * 0.4, w * 0.9, 0.35);
       veChanDungVao(c, id, w, h, true);
-      c.fillStyle = lg(c, 0, h * 0.62, 0, h, [[0, 'rgba(3,2,10,0)'], [1, 'rgba(3,2,10,0.92)']]); c.fillRect(0, h * 0.62, w, h * 0.38);
+      c.fillStyle = lg(c, 0, h * 0.78, 0, h, [[0, 'rgba(6,8,20,0)'], [1, 'rgba(6,8,20,0.55)']]); c.fillRect(0, h * 0.78, w, h * 0.22);
     };
     ve1(); THE_VE.push({ cvs, f: ve1 });
   }
