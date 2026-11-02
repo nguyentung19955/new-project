@@ -42,6 +42,8 @@ Bot chạy, nhảy, nhảy đôi, lướt, đập đất, leo dây, đánh quái
 
 ## 4. Chạy nhiều khung hơn – chờ bạn duyệt
 Phiên chính đang cùng bạn vẽ chu kỳ chạy mới (`art/kiem-khach/chay-moi/`). Phiên này đã kiểm (đáy chân, thân không nhảy, giữ thiết kế) – ghi ở `docs/yeu-cau-anh/cam-giac/001-chay.md`. **Xem thử trên iPhone:** mở `https://tieng-vong-cuoi-cun.web.app/game/lang-chuong/?chay=moi` một lần (máy nhớ; `?chay=cu` để về bản cũ). Khi bạn DUYỆT: ép về bảng màu 20 màu gốc rồi thay clip chạy (các bước ghi trong file yêu cầu).
+- Đã chờ 3 giờ (14:40 → 17:40, xem lại mỗi ~5 phút): phiên chính vẽ tới bản 8.2, chưa có chữ DUYỆT nên **chưa lắp** – game vẫn dùng 8 khung cũ (nay đổi theo quãng đường).
+- **Lưu ý bản 8.2:** chân thấp nhất ở y=159–166 thay vì 171 → nếu lắp nguyên sẽ **lơ lửng 8–17 px** trên mặt đất; phải căn đáy khi lắp (ghi trong file yêu cầu). Bản xem thử `?chay=moi` hiện đúng như ảnh (nên sẽ thấy lơ lửng).
 
 ## 5. Kiểm thử
 - Mới: `node tools/cam-giac/kiem-thu.js` – 26/26 đạt (60 Hz 2 pha + 120 Hz ở Vùng 1 và Làng: 1 bước/khung, nền trôi đều, nhân vật không rung so với camera; hộp trúng ≤ hình; đập đất trúng gần/không trúng xa).

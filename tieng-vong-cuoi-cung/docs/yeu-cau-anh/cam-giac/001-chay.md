@@ -1,18 +1,19 @@
 # 001 – Kiếm Khách – chu kỳ CHẠY nhiều khung hơn (P0, phiên CẢM GIÁC CHƠI)
-- **Trạng thái:** ĐÃ CÓ ẢNH – ĐÃ KIỂM – **CHỜ NGƯỜI DÙNG DUYỆT**. Phiên chính đang vẽ cùng người dùng `art/kiem-khach/chay-moi/` (đến 15:00 là bản 4: 8 khung, chu kỳ chân theo mô tả người dùng) (xem `001-chay-PHIEN-CHINH.md`), nên KHÔNG cần vẽ thêm. Khi người dùng đồng ý → ghi `DUYỆT` vào đây, phiên lắp làm theo mục "Lắp" bên dưới.
+- **Trạng thái:** ĐÃ CÓ ẢNH – ĐÃ KIỂM – **CHỜ NGƯỜI DÙNG DUYỆT**. Phiên chính đang vẽ cùng người dùng `art/kiem-khach/chay-moi/` (đến 17:40 là bản 8.2: 8 khung, chân/màu bản 7 + tóc bay) (xem `001-chay-PHIEN-CHINH.md`), nên KHÔNG cần vẽ thêm. Khi người dùng đồng ý → ghi `DUYỆT` vào đây, phiên lắp làm theo mục "Lắp" bên dưới.
 - **Vì sao cần:** clip chạy cũ chỉ 8 hình × 80 ms = 12,5 hình/giây, chân trượt nhiều so với quãng đường (1 vòng 8 hình = 161 px màn, mà chân trụ chỉ lùi ~6 px/hình). Mã đã đổi sang chọn hình theo QUÃNG ĐƯỜNG (`quang_chu_ky` = 120 px/vòng → 8 hình ≈ 16,7 hình/giây khi chạy hết tốc). Bản mới vẽ rõ từng tư thế chân (chạm đất, hạ người, lướt qua, bay) → chuyển động liền hơn, ít trượt hơn.
 
-## Kết quả kiểm ảnh chay-moi (phiên cảm giác, 02/11 – bản 4, 8 khung)
-- Ô 256×256, đáy chân y=171 mọi khung (khớp neo [128,172] của bản cũ), thân giữa x=124–125 (lệch ≤ 1 điểm ảnh – không nhảy ngang).
-- Thiết kế giữ đúng Kiếm Khách (mặt nạ, tóc đuôi ngựa, 2 kiếm băng, áo tối vạch xanh).
-- **Cần làm khi lắp:** ảnh ChatGPT có ~1.650–1.730 màu (bản cũ 20 màu) và 3–8 điểm viền hồng magenta mỗi khung → ép về bảng 20 màu của `chay/` + `dung/`, bỏ điểm hồng (như `tools/muot-2/lap-clip.py → chuan_mau`; không vẽ thêm, không nội suy). Đã thử ép bản 1: sạch, không mất chi tiết.
+## Kết quả kiểm ảnh chay-moi (phiên cảm giác – lần kiểm cuối 17:40, bản 8.2, 8 khung)
+- Thân giữa x=124–125 mọi khung (không nhảy ngang), giữ đúng thiết kế Kiếm Khách, gần như không còn điểm hồng (0–1/khung).
+- **⚠ CHÂN LƠ LỬNG:** đáy chân thấp nhất mỗi khung ở y=159–166, trong khi neo đất của game là 172 (bản cũ và bản 4 đều 171). Lắp nguyên như vậy thì nhân vật chạy **cách mặt đất 6–13 điểm ảnh (≈ 8–17 px trên màn)**. Khi lắp phải dời mỗi khung xuống cho khung chạm đất có đáy = 171 (khung bay giữ độ nhún tương đối), hoặc xin phiên chính căn lại.
+- ~1.350–1.430 màu (bản cũ 20 màu) → nên ép về bảng màu gốc khi lắp (như `tools/muot-2/lap-clip.py → chuan_mau`).
+- Phiên chính gợi ý 110 ms/khung. Game nay đổi khung theo QUÃNG ĐƯỜNG: muốn ≈110 ms/khung khi chạy hết tốc (4,2 px/bước) thì đặt `quang_chu_ky` ≈ 220 (8 khung × 27,7 px); hiện để 120 (≈ 60 ms/khung, chân ít trượt hơn). Nên cho người dùng xem thử cả hai.
 - Lớp sức mạnh (vết nứt mặt nạ…) có điểm neo đo cho khung cũ → khi lắp đo lại neo `troi` bằng `tools/suc-manh/do-neo.py`.
 
 ## Xem thử trên iPhone (chưa bật mặc định)
 Mở `https://tieng-vong-cuoi-cun.web.app/game/lang-chuong/?chay=moi` một lần (máy nhớ lựa chọn; Vùng 1/2 cũng dùng). Bản xem thử đọc thẳng `art/kiem-khach/chay-moi/` (tự đếm số khung, nên luôn là bản mới nhất phiên chính vẽ; chưa ép màu). `?chay=cu` = quay lại bản cũ.
 
 ## Lắp (khi trạng thái ghi DUYỆT)
-1. Ép màu `chay-moi/fNN.png` (như trên) rồi chép vào `art/kiem-khach/chay/` (giữ bản cũ ở `chay-cu/`).
+1. Căn đáy chân về 171 + ép màu `chay-moi/fNN.png` (như trên) rồi chép vào `art/kiem-khach/chay/` (giữ bản cũ ở `chay-cu/`).
 2. `game/thu-mat-na/nhan-vat.json → clip.troi`: `so_hinh` = số khung mới, giữ `quang_chu_ky: 120`, xoá `ban_thu`.
 3. Đo lại neo lớp sức mạnh cho `troi`; chạy `node tools/cam-giac/kiem-thu.js`, `tools/suc-manh/kiem-thu-lop.js`.
 
