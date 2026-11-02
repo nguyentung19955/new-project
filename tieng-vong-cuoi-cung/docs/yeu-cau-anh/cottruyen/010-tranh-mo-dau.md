@@ -1,5 +1,5 @@
 # 010 – 7 tranh mở đầu "The First Silence"
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 7 tranh 960×540, dải dưới tối để in phụ đề; tranh 06 vẽ theo ảnh thiết kế gốc Kiếm Khách)
 - **Ưu tiên:** P1. Thiếu bất kỳ tranh nào → không chiếu mở đầu (vào thẳng làng). Chữ phụ đề do game in, KHÔNG vẽ chữ vào tranh (trừ tranh 07 cũng không vẽ tên game – game tự in).
 - **Dùng vào:** game/cot-truyen/canh/mo-dau.json – lần đầu vào Làng Chuông; có nút Skip, chiếu ~33 s. Kế hoạch ChatGPT mục 2.
 - **Cỡ:** mỗi tranh 960×540, đục (không trong suốt), cùng phong cách pixel u tối của game, cùng bảng màu. Dải dưới cùng (y 430–540) nên tối, ít chi tiết (để in phụ đề).
