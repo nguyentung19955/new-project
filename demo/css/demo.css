@@ -15,7 +15,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 #do-safe { position: fixed; left: 0; top: 0; width: 0; height: 0; visibility: hidden; padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 
 /* khung logic rộng 390, cao co giãn (ui.js đặt chiều cao + scale = rộng màn / 390) */
-#wrap { position: fixed; left: 0; top: 0; width: 390px; height: 844px; overflow: hidden; background: #04020c; touch-action: none; transform-origin: 0 0; }
+#wrap { position: fixed; left: 0; top: 0; width: 390px; height: 844px; overflow: hidden; background: #141b22; touch-action: none; transform-origin: 0 0; }
 #cv { position: absolute; left: 0; top: 0; width: 390px; height: 844px; touch-action: none; }
 
 .kinh { background: var(--kinh); border: 1px solid var(--vien); border-radius: 8px;
@@ -26,7 +26,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 
 /* TOP HUD y 0..64 (ảnh v2 hud_top_panel.png nếu có) */
 #top { position: absolute; left: 0; top: 0; width: 390px; height: 64px; pointer-events: none; animation: tren .45s ease-out;
-  background: url(../assets/v2/hud_top_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(6,8,22,0.95), rgba(6,8,22,0.75));
+  background: url(../assets/v2/hud_top_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(14,19,25,0.96), rgba(14,19,25,0.8));
   border-bottom: 1px solid rgba(120,180,255,0.25); }
 .tb-wave { position: absolute; left: 12px; top: 10px; width: 76px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
   background: rgba(10,14,36,0.6); border: 1px solid var(--vien); border-radius: 6px; }
@@ -47,7 +47,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 
 /* ACTION HUD y 597..676 + CARD HUD y 676..816 (ảnh v2 hud_bottom_panel.png nếu có) */
 #duoi { position: absolute; left: 0; top: 654px; width: 390px; height: 186px; animation: duoi .45s ease-out;
-  background: url(../assets/v2/hud_bottom_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(4,2,12,0.55), rgba(6,6,20,0.96) 20%);
+  background: url(../assets/v2/hud_bottom_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(14,19,25,0.6), rgba(14,19,25,0.97) 20%);
   border-top: 1px solid rgba(120,180,255,0.22); }
 #lk-hop { position: absolute; left: 12px; top: 8px; width: 92px; height: 59px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
   background: rgba(30,10,60,0.6); border: 1px solid rgba(163,92,255,0.55); border-radius: 8px; box-shadow: inset 0 0 14px rgba(163,92,255,0.25); }
@@ -65,7 +65,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
   background: url(../assets/v2/summon_button_states.png) 0 0/200% 100% no-repeat padding-box, linear-gradient(180deg, rgba(120,20,140,0.9), rgba(40,6,60,0.95)) padding-box,
     linear-gradient(90deg, #ff2bd6, #3ce7ff, #ff2bd6, #3ce7ff) border-box;
   background-size: 200% 100%, 100% 100%, 300% 100%; animation: vienchay 3s linear infinite;
-  box-shadow: 0 0 16px rgba(255,43,214,0.5), inset 0 0 18px rgba(255,43,214,0.3); transition: transform .08s; }
+  box-shadow: 0 0 8px rgba(255,43,214,0.28), inset 0 0 12px rgba(255,43,214,0.18); transition: transform .08s; }
 /* SUMMON 3 trạng thái: đủ tiền = sáng + nhịp phát sáng nhẹ; thiếu = tối hẳn (giá vẫn đọc được); nhấn = lún xuống */
 #nut-trieu:not(.thieu) { animation: vienchay 3s linear infinite, nhipnut 1.4s ease-in-out infinite; }
 #nut-trieu:not(.thieu):active, #nut-trieu.ep:not(.thieu) { animation: none; background-position: 100% 0, 0 0, 0 0; transform: translateY(2px) scale(0.97); filter: brightness(1.15);
@@ -122,14 +122,22 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .afc em { font: 600 10px/1.1 var(--body); font-style: normal; }
 .afc.bat { border-color: var(--h); box-shadow: 0 0 12px var(--h), inset 0 0 10px rgba(255,255,255,0.06); color: #dfe6f2; }
 .afc.bat b { text-shadow: 0 0 6px var(--h); }
+/* màn chọn: SKIN BÀN (4 ảnh thu nhỏ, giữ tỉ lệ) */
+.chon-skin { display: flex; gap: 6px; }
+.skc { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 3px 3px 4px; border-radius: 8px;
+  background: rgba(16,22,30,0.7); border: 1px solid var(--vien); color: var(--mo); transition: transform .08s, box-shadow .2s; }
+.skc img { width: 100%; height: 34px; object-fit: contain; display: block; pointer-events: none; }
+.skc b { font: 900 8px/1 var(--tit); letter-spacing: 1px; }
+.skc.bat { border-color: var(--cyan); box-shadow: 0 0 8px rgba(60,231,255,0.6); color: #fff; }
+.skc:active { transform: scale(0.96); }
 .ct-hanh { margin-left: auto; font: 700 7px/1 var(--tit); letter-spacing: 1px; opacity: .9; }
 
 /* màn chọn đội + bảng phụ */
-.man { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 14px 12px 22px; background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,0.72), rgba(4,2,14,0.93) 75%); animation: hien .35s ease-out; }
-.man.phu { align-items: center; justify-content: center; background: rgba(4,2,14,0.6); }
+.man { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 14px 12px 22px; background: radial-gradient(ellipse at 50% 40%, rgba(24,34,44,0.80), rgba(10,14,19,0.95) 75%); animation: hien .35s ease-out; }
+.man.phu { align-items: center; justify-content: center; background: rgba(8,12,16,0.6); }
 .chon-dau { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 10px; }
 .logo { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.logo b { position: relative; font: 900 27px/1 var(--tit); letter-spacing: 3px; color: #fff; text-shadow: 0 0 12px rgba(60,231,255,0.9), 0 0 28px rgba(255,43,214,0.5); }
+.logo b { position: relative; font: 900 27px/1 var(--tit); letter-spacing: 3px; color: #fff; text-shadow: 0 0 12px rgba(60,231,255,0.8), 0 0 22px rgba(60,231,255,0.25); }
 .logo b::before, .logo b::after, .bang-ten[data-t]::before, .bang-ten[data-t]::after { content: attr(data-t); position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; pointer-events: none; }
 .logo b::before, .bang-ten[data-t]::before { color: var(--mag); transform: translate(-1.5px, 0); opacity: .5; clip-path: inset(10% 0 55% 0); animation: gl1 2.8s steps(1) infinite; }
 .logo b::after, .bang-ten[data-t]::after { color: var(--cyan); transform: translate(1.5px, 0); opacity: .5; clip-path: inset(60% 0 10% 0); animation: gl2 3.3s steps(1) infinite; }
@@ -204,7 +212,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 @keyframes duoi { from { transform: translateY(120px); opacity: 0; } }
 @keyframes nhay { 50% { opacity: 0.55; } }
 @keyframes nhipchu { 50% { filter: brightness(1.35); } }
-@keyframes nhipnut { 50% { box-shadow: 0 0 22px rgba(255,43,214,0.75), inset 0 0 22px rgba(255,43,214,0.4); filter: brightness(1.12); } }
+@keyframes nhipnut { 50% { box-shadow: 0 0 12px rgba(255,43,214,0.45), inset 0 0 14px rgba(255,43,214,0.25); filter: brightness(1.08); } }
 @keyframes len { 0% { box-shadow: 0 0 30px #3cffb0, inset 0 0 30px #3cffb0; } }
 @keyframes gl1 { 0%, 88%, 100% { transform: translate(-2px, 0); clip-path: inset(10% 0 55% 0); } 90% { transform: translate(-5px, -1px); clip-path: inset(30% 0 40% 0); } 94% { transform: translate(3px, 1px); clip-path: inset(70% 0 5% 0); } }
 @keyframes gl2 { 0%, 85%, 100% { transform: translate(2px, 0); clip-path: inset(60% 0 10% 0); } 87% { transform: translate(5px, 1px); clip-path: inset(5% 0 75% 0); } 92% { transform: translate(-3px, 0); clip-path: inset(45% 0 30% 0); } }

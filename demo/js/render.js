@@ -373,10 +373,52 @@
     c.restore();
     void V;
   }
+  // ================= SKIN BÀN (ảnh ChatGPT skin_<id>.png, data.js SKIN) + NỀN NEON FRACTURE =================
+  // Mỗi bàn vẽ NGUYÊN ẢNH skin, thu nhỏ đều (game.js hinhSkin: lưới ảnh trùng ô logic, hành lang ảnh trùng đường quái). Ảnh chưa tải → vẽ khay/ô/hành lang code cũ (dự phòng).
+  for (const k of SKIN_IDS) nap('v3skin:' + k, `${V3}skin_${k}.png`);
+  const anhSkin = (B) => B && B.SKIN ? co('v3skin:' + B.SKIN.id) : null;
+  function veSkin(c, B) { const im = anhSkin(B), k = B.SKIN; if (!im) return false; c.drawImage(im, k.x, k.y, k.w, k.h); return true; }
+  // CO-OP: "cầu" nối hành lang trái bàn trên xuống bàn dưới = mảnh hành lang dọc CẮT từ ảnh skin bàn trên (gồm 2 vách), lặp theo chiều dọc
+  function veCau(c, B) {
+    const im = anhSkin(B), k = B.SKIN, cau = B.CAU; if (!im || !cau) return;
+    const s = SKIN[k.id], g = s.grid, L = s.lane;
+    const sx = (L.x - L.w / 2) * s.w - 12, sw = L.w * s.w + 24, sy = g[1] * s.h + 6, sh = (g[3] - g[1]) * s.h * 0.9;
+    const dw = sw * k.tl, dh = sh * k.tl, x = cau.x - dw / 2;
+    c.save(); c.beginPath(); c.rect(x - 2, cau.y0, dw + 4, cau.y1 - cau.y0); c.clip();
+    for (let y = cau.y0; y < cau.y1; y += dh - 1) c.drawImage(im, sx, sy, sw, sh, x, y, dw, dh);
+    c.restore();
+    // mép trên/dưới hoà vào sàn: bóng mềm (không vẽ hình)
+    c.fillStyle = lg(c, 0, cau.y1 - 10, 0, cau.y1, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.25)']]); c.fillRect(x, cau.y1 - 10, dw, 10);
+  }
+  // NỀN: xám xanh than trung tính (không còn nền tím neon) + vài VẾT NỨT cyan rất mờ (thế giới NEON FRACTURE: neon chỉ là điểm nhấn)
+  function veNen(c, r) {
+    c.fillStyle = lg(c, 0, 0, 0, H, [[0, '#1b232c'], [0.5, '#151c24'], [1, '#10151b']]); c.fillRect(0, 0, W, H);
+    c.fillStyle = rg(c, W / 2, H * 0.45, 40, H * 0.7, [[0, 'rgba(70,90,105,0.18)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(0, 0, W, H);
+    c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
+    for (let n = 0; n < 7; n++) {
+      let x = r() * W, y = C.TOP_H + r() * (H - C.TOP_H - 40), g = r() * Math.PI * 2;
+      const pts = [[x, y]];
+      for (let j = 0; j < 6 + r() * 6; j++) { g += (r() - 0.5) * 1.3; const l = 8 + r() * 18; x += Math.cos(g) * l; y += Math.sin(g) * l; pts.push([x, y]); }
+      for (const [w2, a] of [[4, 0.035], [1, 0.16]]) {
+        c.strokeStyle = `rgba(80,225,255,${a})`; c.lineWidth = w2; c.beginPath(); pts.forEach(([px, py], i) => (i ? c.lineTo(px, py) : c.moveTo(px, py))); c.stroke();
+      }
+    }
+    c.restore();
+  }
   function taoLop(k0, coop) {
     const k = Math.min(k0, 3);
     let sd = 5; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
     const tinh = mk(W, H, (c) => {
+      const coSkin = anhSkin(G.BAN_NG) && anhSkin(G.BAN_AI);
+      if (coSkin) {
+        veNen(c, r);
+        // bàn dưới trước, bàn trên sau (trang trí đáy bàn trên đè lên trang trí đỉnh bàn dưới; hành lang không bị che)
+        veSkin(c, coop ? G.BAN_NG_CO : G.BAN_NG); veSkin(c, coop ? G.BAN_AI_CO : G.BAN_AI);
+        if (coop) veCau(c, G.BAN_AI_CO);
+        for (const B of coop ? [G.BAN_AI_CO, G.BAN_NG_CO] : BANS) veMieng(c, B, coop && !B.ai);
+        return;
+      }
+      // DỰ PHÒNG (ảnh skin chưa tải): sàn + hành lang + khay/ô vẽ code như cũ
       const bg = co('v2:bg_arena_portrait');
       if (bg) c.drawImage(bg, 0, 0, W, H);
       else { veSan(c, 0, 0, W, C.GIUA_Y, 1); veSan(c, 0, C.GIUA_Y, W, H - C.GIUA_Y, 0); veViMach(c, 0, C.TOP_H, W, C.DUOI_Y - C.TOP_H, r); }
@@ -386,8 +428,14 @@
       for (const B of ds) veHanhLang(c, B);
       veBanTinh(c, G.BAN_AI, 1); veBanTinh(c, G.BAN_NG, 0);
     }, k);
-    L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 300, 640, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.35)']]); c.fillRect(0, 0, W, H); }, 1) };
-    LK = k0; L.coop = coop;
+    L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 300, 640, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.30)']]); c.fillRect(0, 0, W, H); }, 1) };
+    LK = k0; L.coop = coop; L.skin = C.SKIN_NG + '|' + C.SKIN_AI;
+  }
+  // cổng sinh quái trên ảnh skin: vết nứt cyan nhỏ phát sáng ở đầu hành lang (hạt sáng, không vẽ hình) + đế cổng mờ ở cuối hành lang
+  function veMieng(c, B, noi) {
+    if (!noi) { const [x, y] = B.SINH; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#3ce7ff', x, y + 2, 16, 0.35); c.restore();
+      c.fillStyle = 'rgba(4,8,14,0.55)'; c.beginPath(); c.ellipse(x, y + 2, 11, 4, 0, 0, 7); c.fill(); }
+    if (B.CONG) { const [x, y] = B.CONG; c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(x, y + 6, 16, 6, 0, 0, 7); c.fill(); }
   }
   // mưa
   const MUA = [];
@@ -1455,7 +1503,7 @@
     const dt = Math.min(0.05, Math.max(0, t - tTruoc)); tTruoc = t;
     if (H !== C.H) { H = C.H; batLai = true; }   // đổi chiều cao màn → dựng lại lớp tĩnh (bàn dưới đã dời)
     const coop = !!(S && S.coop);
-    if (!L || LK !== k || batLai || L.coop !== coop) { taoLop(k, coop); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
+    if (!L || LK !== k || batLai || L.coop !== coop || L.skin !== C.SKIN_NG + '|' + C.SKIN_AI) { taoLop(k, coop); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
     c.save();
     // rung màn ≤ 2px logic (chỉ sân, không rung HUD)
     if (S && S.rung > 0 && Q.cao) c.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);

@@ -110,9 +110,24 @@
       l.appendChild(b);
     }
   }
+  // ---- SKIN BÀN (kiểu DCDW: mỗi người chơi một skin bàn riêng): chọn 1 trong SKIN, nhớ lựa chọn cuối; bàn trên lấy ngẫu nhiên skin khác ----
+  const KY_SKIN = 'neon-grid.skin';
+  let skinChon = 'da';
+  try { const v = localStorage.getItem(KY_SKIN); if (SKIN[v]) skinChon = v; } catch (e) { /* không đọc được */ }
+  G.datSkin(skinChon, SKIN_IDS.find((k) => k !== skinChon));
+  function dungSkin() {
+    const l = $('#chon-skin'); l.innerHTML = '';
+    for (const k of SKIN_IDS) {
+      const b = document.createElement('button');
+      b.className = 'skc'; b.dataset.act = 'skin'; b.dataset.skin = k;
+      b.innerHTML = `<img src="assets/v3/skin_${k}.png" alt=""><b>${SKIN[k].ten}</b>`;
+      l.appendChild(b);
+    }
+  }
   function capChe() {
     document.querySelectorAll('.afc').forEach((b) => b.classList.toggle('bat', b.dataset.af === afChon));
     document.querySelectorAll('.che').forEach((b) => b.classList.toggle('bat', b.dataset.che === che));
+    document.querySelectorAll('.skc').forEach((b) => b.classList.toggle('bat', b.dataset.skin === skinChon));
     $('#chon-meo').innerHTML = MEO[che];
   }
   function capChon() {
@@ -125,6 +140,7 @@
   // ---- trận ----
   function batDau(deck) {
     boCu = deck.slice(); cheTran = che;
+    { const khac = SKIN_IDS.filter((k) => k !== skinChon); G.datSkin(skinChon, khac[Math.floor(Math.random() * khac.length)] || skinChon); $('#duoi').style.top = C.DUOI_Y + 'px'; $('#nut-co').style.top = (C.THANH_Y + C.THANH_H / 2 - 18) + 'px'; }
     if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
     else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
     dung = false; keo = null; thang = false; UI.menu = null; UI.chon = null;
@@ -238,6 +254,7 @@
     else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
     else if (a === 'trieu' && S && !dung && !S.het) { if (G.trieuHoi(S) < 0) R.baoThieu(G.trong(S).length ? 'Not enough mana.' : 'Board is full.'); capNhat(); }
+    else if (a === 'skin') { skinChon = SKIN[b.dataset.skin] ? b.dataset.skin : 'da'; try { localStorage.setItem(KY_SKIN, skinChon); } catch (er) { /* không lưu được */ } G.datSkin(skinChon, SKIN_IDS.find((k) => k !== skinChon)); capChe(); }
     else if (a === 'afchon') { afChon = b.dataset.af; try { localStorage.setItem(KY_AF, afChon); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'af' && S && !dung && !S.het) { if (!G.dungAF(S) && S.af) R.baoThieu(S.af.cdT > 0 ? 'Archfiend is recharging.' : 'Not enough mana.'); capNhat(); }
     else if (a === 'bac' && S && !dung && !S.het) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } else if (S.bac[b.dataset.id] < C.BAC_MAX) R.baoThieu(); capNhat(); }
@@ -309,7 +326,7 @@
     ctx.imageSmoothingEnabled = false;
     R.ve(ctx, S, now / 1000, K, keo, A, UI);
   }
-  dungAF(); dungChon();
+  dungAF(); dungSkin(); dungChon();
   requestAnimationFrame(loop);
 
   // móc cho test

@@ -152,8 +152,9 @@ const CAU_HINH = {
   // CỠ TƯỚNG (thử 36–40 → chọn 44 trên ô ~64×70, xem TIEN-DO-V3.md): cao = clamp(TL_CAO × chiều cao ô, CAO_MIN, CAO_MAX) × hệ số riêng (TUONG[id].co)
   // rộng ≤ ô. CHÂN tướng đặt ở TL_CHAN × chiều cao ô tính từ mép trên (0.75 = gần đáy ô như DCDW; khoảng nên dùng 0.72–0.78) → CHAN = khoảng cách chân–đáy ô (game.js boCuc tính lại)
   // BONG: bóng đổ mềm sát chân (elip tối, rộng BONG_W × rộng ô, dẹt BONG_DET, độ đậm BONG_A) để tướng "chạm sàn". KHÔNG còn đế màu bậc trên bàn (bậc chỉ hiện ở thẻ + màn chọn tướng).
-  TL_CHAN: 0.75, BONG_W: 0.45, BONG_DET: 0.24, BONG_A: 0.35,
-  TL_CAO: 0.63, CAO_MIN: 36, CAO_MAX: 46, CHAN: 17, TUONG_CAO: 44, TUONG_RONG: 64,
+  // 02/11 skin bàn: ô theo ảnh skin (~57×47, rộng hơn cao) → chân ở 80%, cao 82% ô để tướng đầy ô như DCDW
+  TL_CHAN: 0.80, BONG_W: 0.45, BONG_DET: 0.24, BONG_A: 0.35,
+  TL_CAO: 0.82, CAO_MIN: 36, CAO_MAX: 46, CHAN: 17, TUONG_CAO: 44, TUONG_RONG: 64,
   TL: 58 / 70,          // tỉ lệ không gian so với bản ngang cũ — nhân bán kính vùng hiệu ứng
   // ANIMATION (tư vấn ChatGPT bước 3–4): SHEET_TUONG = false → tướng luôn là ẢNH TĨNH theo hướng (<anh>_<dir>.png), dịch NGUYÊN KHỐI bằng code:
   //   idle: nhún ±NHUN px, chu kỳ NHUN_T giây · attack 240ms: lùi LUI px (LUI_T) → lao tới LAO px (LAO_T, đạn phát ĐÚNG lúc này từ đầu nòng) → về (VE_T)
@@ -178,6 +179,23 @@ const CAU_HINH = {
   mauDot: (w) => 18 * Math.pow(1.21, w - 1) * (1 + 0.03 * w),
 };
 if (CAU_HINH.SHEET_TUONG) CAU_HINH.TAC_DONG = 3 / 14;
+
+// ===== SKIN BÀN kiểu DCDW (mỗi người chơi một skin bàn riêng) — thế giới NEON FRACTURE =====
+// Ảnh ChatGPT vẽ: demo/assets/v3/skin_<id>.png = CẢ KHU BÀN nhìn 82° (khay lõm 5×3 ô + hành lang chữ L dọc mép TRÁI và mép DƯỚI + trang trí viền), nền trong suốt.
+// Code chỉ thu nhỏ ĐỀU ảnh (không méo) sao cho LƯỚI 5×3 trong ảnh trùng ô logic; quái đi đúng hành lang trong ảnh (trái → dưới → cổng phải).
+// Toạ độ ĐO BẰNG SCRIPT (khe tối giữa các ô / mép khay / sàn hành lang), theo TỈ LỆ 0–1 của ảnh (w × h px):
+//   grid: [x0, y0, x1, y1] mép ngoài lưới 5×3
+//   lane: x = tâm hành lang TRÁI, y = tâm hành lang DƯỚI, top = đầu hành lang trái (chỗ quái sinh), end = cuối hành lang dưới (cổng),
+//         w = bề rộng hành lang trái (tỉ lệ bề ngang ảnh), h = bề cao hành lang dưới (tỉ lệ bề cao ảnh)
+// Thêm skin mới = thêm ảnh + 1 mục ở đây (đo lại bằng script). Người chơi chọn ở màn chọn tướng (mặc định 'da'); bàn trên lấy ngẫu nhiên skin khác.
+const SKIN = {
+  da:    { ten: 'STONE', w: 729, h: 506, grid: [0.2455, 0.2510, 0.8642, 0.6957], lane: { x: 0.1523, y: 0.8281, top: 0.1976, end: 0.83, w: 0.1125, h: 0.154 } },
+  bang:  { ten: 'ICE',   w: 728, h: 507, grid: [0.2459, 0.2525, 0.8640, 0.6963], lane: { x: 0.1525, y: 0.8245, top: 0.1972, end: 0.85, w: 0.1126, h: 0.158 } },
+  samac: { ten: 'SAND',  w: 729, h: 489, grid: [0.2455, 0.2720, 0.8628, 0.7321], lane: { x: 0.1523, y: 0.8671, top: 0.2168, end: 0.80, w: 0.1125, h: 0.1616 } },
+  rung:  { ten: 'FOREST', w: 746, h: 489, grid: [0.2547, 0.2720, 0.8552, 0.7321], lane: { x: 0.1635, y: 0.8671, top: 0.2168, end: 0.82, w: 0.1086, h: 0.1677 } },
+};
+const SKIN_IDS = Object.keys(SKIN);
+CAU_HINH.SKIN_NG = 'da'; CAU_HINH.SKIN_AI = 'bang';   // skin bàn dưới (người chơi) / bàn trên (AI, đồng đội) — ui.js đặt khi vào trận (game.js datSkin)
 
 // ===== CHẾ ĐỘ CO-OP (kiểu Defense War co-op): 2 bàn (trên = ĐỒNG ĐỘI AI, dưới = người chơi), quái đi MỘT đường chung =====
 // Đường: sinh ở đầu làn trên → hết làn trên → đường nối → hết làn dưới → trừ mạng chung. Mọi con số dưới đây là núm chỉnh cân bằng (thử nghiệm).
