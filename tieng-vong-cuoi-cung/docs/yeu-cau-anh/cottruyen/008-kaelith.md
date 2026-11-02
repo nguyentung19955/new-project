@@ -1,5 +1,5 @@
 # 008 – Kaelith: chân dung hội thoại 3 biểu cảm
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – kaelith-yen/thach/kinh.png 256×256 + dải kaelith-noi.png 768×256; thiết kế ghi ở tu-van/kaelith-chatgpt.txt)
 - **Ưu tiên:** P1 (kế hoạch ChatGPT mục 3, 6). Thiếu ảnh → Kaelith không nói chuyện (hội thoại có sẵn ở game/cot-truyen/hoi-thoai/kaelith-*.json).
 - **Mô tả:** đối thủ đua, cũng đeo mặt nạ như Kiếm Khách nhưng KHÁC thiết kế (không được giống nhân vật chính): nhanh nhẹn, khăn/áo choàng dài, mặt nạ nứt một nửa. Hỏi ChatGPT thiết kế trước, lưu tư vấn vào docs/yeu-cau-anh/cottruyen/tu-van/kaelith-chatgpt.txt.
 - **Khung:** 3 – bình thản (yên), thách thức, kinh ngạc. ~140 ms khi nói.
