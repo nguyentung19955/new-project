@@ -232,9 +232,9 @@
 ---
 
 ## 8. XUẤT BẢN
-- Gói thành **một file HTML tự chứa** (ảnh nhúng base64) và đăng thành trang riêng để người dùng mở trên iPhone. Mỗi lần cập nhật thì đăng lại **cùng địa chỉ**.
-- Có 2 bản: bản vùng chơi đầy đủ và phòng demo. Sửa chung thì dựng lại cả hai.
-- Thứ tự mỗi đợt việc: sửa → kiểm thử 100% → commit + đẩy lên nhánh làm việc → dựng bản gói → đăng → đóng tab ChatGPT → báo người dùng bằng tiếng Việt (đã làm gì, % từng việc, còn lại gì).
+- **Chỉ dùng link web thật** (Firebase Hosting, vd https://tieng-vong-cuoi-cun.web.app/). Mỗi lần đẩy lên nhánh, GitHub Actions tự kiểm thử và đưa bản mới lên. Không làm bản gói một file trên claude.ai nữa (bản đó giới hạn 16 MB, dễ buộc phải thu nhỏ ảnh).
+- **Không thu nhỏ ảnh gốc** chỉ để vừa giới hạn nào đó. Game tải từng ảnh riêng; gói Firebase miễn phí chỉ giới hạn ~360 MB tải/ngày, và service worker giữ lại ảnh đã tải.
+- Thứ tự mỗi đợt việc: sửa → kiểm thử → commit + đẩy lên nhánh làm việc (web tự cập nhật) → đóng tab ChatGPT → báo người dùng bằng tiếng Việt (đã làm gì, % từng việc, còn lại gì).
 
 ---
 
