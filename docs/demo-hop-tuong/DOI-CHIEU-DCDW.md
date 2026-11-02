@@ -12,7 +12,7 @@ Ký hiệu: **CÓ** = đã có trước phiên này · **THIẾU → ĐÃ LÀM**
 | A1 Bàn | Khung dọc, 2 bàn 5×3, bàn đối phương trên, mình dưới | Có 2 bàn 5×3 nhưng nhỏ (ô 46px, ~64% bề ngang), màn thấp có dải đen 2 bên | **SAI → ĐÃ SỬA**: lấp đầy bề ngang, ô 56×54, bàn 302px (~77%), chiều cao co giãn |
 | A2 Tướng + sao | Chibi nhỏ nhưng rõ, dấu sao (pip) trên đầu | Tướng cao 32px, sao trong hộp tối | **SAI → ĐÃ SỬA**: tướng cao ~39px, pip ngôi 1–7 trên đầu, vòng chân màu bậc |
 | A3 Màu ô | Không đủ chứng cứ là hệ | Ô trung tính | **CÓ** (giữ, không gán ý nghĩa) |
-| A4 Làn quái | Làn bên trái mỗi bàn, thanh máu nhỏ, số sát thương | Có | **CÓ**; thanh máu to theo cỡ mới (24×3, trùm 56×5) |
+| A4 Đường quái | Hành lang sàn ôm mép trái + mép dưới bàn, tới cổng/Archfiend góc phải (QUAN-SAT mục B) | Làn dọc riêng bên trái | **SAI → ĐÃ SỬA** (phiên đường vòng bàn): hành lang trái → dưới → cổng; co-op 1 hành lang trái chung |
 | A5 Biểu tượng mép phải | Archfiend / kỹ năng | Ô "LEADER LOCKED" | **THIẾU → ĐÃ LÀM**: thẻ Archfiend thật (ô thứ 6) |
 | B6 HUD trên | Wave, chỉ báo | Có WAVE, BOSS IN, HOSTILES, CORE (co-op), icon đội bên kia | **CÓ**; ô thứ 6 của đội AI giờ là Archfiend |
 | B7 Mana + thẻ | Mana, giá summon tăng, 5 thẻ LV/giá/MAX, thẻ Archfiend | 5 thẻ LV/giá/MAX có; thiếu Archfiend | **THIẾU → ĐÃ LÀM** thẻ Archfiend (giá, vòng hồi chiêu) |
