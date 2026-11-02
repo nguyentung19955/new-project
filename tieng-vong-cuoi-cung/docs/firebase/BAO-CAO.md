@@ -1,5 +1,11 @@
 # Báo cáo phiên Lưu game bằng Firebase (firebase) – 02/11/2026
 
+## CẬP NHẬT 02/11 (cùng ngày, có người dùng)
+- Người dùng đã tạo dự án **tieng-vong-cuoi-cun**, cấu hình đã dán vào `game/firebase/cau-hinh.js`, bí mật GitHub `FIREBASE_SERVICE_ACCOUNT_TIENG_VONG`.
+- GitHub Actions đã đưa game lên: **https://tieng-vong-cuoi-cun.web.app/** (1107 tệp). Mỗi lần nhánh đổi `game/` là tự cập nhật.
+- Quy tắc Firestore: Actions bị lỗi quyền 403 khi cập nhật → người dùng dán tay `firestore.rules` vào Firestore ▸ Rules.
+- Chạy thử trên localhost không đụng dự án thật (trừ `?may=1`).
+
 ## Tóm tắt dễ hiểu
 - **Phần mã lưu mây đã xong và đã kiểm thử**, nhưng **chưa bật**: chưa có dự án Firebase nên game vẫn lưu trên máy như cũ (không lỗi gì).
 - **Chưa có link chơi trên iPhone.** Lần chạy này chạy trên máy chủ đám mây theo lịch, **không có Claude in Chrome**, nên:
