@@ -3,7 +3,7 @@
 'use strict';
 (function () {
   const C = CAU_HINH, G = GAME;
-  const W = C.W, H = C.H;
+  const W = C.W; let H = C.H;   // H (chiều cao logic) đổi theo màn — ve() dựng lại lớp tĩnh khi đổi
   const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
@@ -34,7 +34,7 @@
   for (const id of TUONG_IDS) { nap(`v3:${id}`, `${V3}${TEN_FILE(id)}.png`); for (const a of ['idle', 'attack']) nap(`v3:${id}:${a}`, `${V3}${TEN_FILE(id)}_${a}.png`); }
   // 8 hướng: ảnh vẽ 5 hướng s, sw, w, nw, n (<id>_<dir>.png, sheet <id>_idle_<dir>.png / <id>_attack_<dir>.png); SE/E/NE = lật gương SW/W/NW.
   // WARP (drone) không có ảnh hướng: xoay ảnh bằng code theo góc tới mục tiêu.
-  const HUONG5 = ['s', 'sw', 'w', 'nw', 'n'], XOAY_CODE = new Set(['warp']);
+  const HUONG5 = ['s', 'sw', 'w', 'nw', 'n'], XOAY_CODE = new Set(TUONG_IDS.filter((id) => TUONG[id].xoay));   // tướng xoay ảnh bằng code (dữ liệu: xoay: true)
   for (const id of TUONG_IDS) if (XOAY_CODE.has(id)) { for (const a of ['idle', 'attack']) nap(`v3:${id}:${a}:s`, `${V3}${TEN_FILE(id)}_${a}_s.png`); }   // WARP: chỉ sheet hướng S, xoay bằng code
   else for (const d of HUONG5) {
     nap(`v3:${id}:${d}`, `${V3}${TEN_FILE(id)}_${d}.png`);
@@ -47,11 +47,13 @@
   for (const k in QUAI) nap('v3q:' + k, `${V3}enemy_${k}_walk.png`);
   for (const b of BOSS) nap('v3b:' + b.id, `${V3}boss_${b.id}_walk.png`);
   for (const l of ['kinetic', 'frost', 'flame', 'electric']) nap('v3fx:' + l, `${V3}vfx_hit_${l}.png`);
+  // ĐẠN: proj_<proj|anh>.png — 1 hàng 4 khung, cao 48, khung = rộng/4, đầu đạn hướng PHẢI; chỉ dùng khung 1–2 (nhỏ, gọn)
+  for (const id of TUONG_IDS) nap('v3proj:' + id, `${V3}proj_${TUONG[id].proj || TEN_FILE(id)}.png`);
+  for (const id in ARCHFIEND) nap('v3af:' + id, `${V3}archfiend_${id}.png`);   // chân dung Archfiend riêng (nếu sau này có); chưa có thì dùng portrait tạm
   for (const k of ['vfx_summon', 'vfx_merge']) nap('v3:' + k, `${V3}${k}.png`);
   const SHEET_QUAI = { thuong: 'enemy_drone_sheet', nhanh: 'enemy_skitter_sheet', trau: 'enemy_bulwark_sheet' };
   for (const k in SHEET_QUAI) nap('v2q:' + k, `${V2}${SHEET_QUAI[k]}.png`);
   BOSS.forEach((b, n) => nap('v2b:' + b.id, `${V2}boss_0${n + 1}_sheet.png`));
-  const VFX_TUONG = { scorch: 'vfx_fire', frost: 'vfx_ice', arc: 'vfx_chain', lance: 'vfx_sniper', warp: 'vfx_void', miner: 'vfx_bounty', glitch: 'vfx_hack', venom: 'vfx_poison' };
   const co = (k) => ANH[k] && ANH[k].ok ? ANH[k].img : null;
 
   // ---------- tiện ích vẽ ----------
@@ -281,7 +283,7 @@
     },
   };
   function spr(key, w, h, f) { let s = SPR_CACHE.get(key); if (!s) { s = mk(w, h, f); SPR_CACHE.set(key, s); } return s; }
-  const sprUnit = (id) => spr('u' + id, 64, 64, (c) => VE_UNIT[id](c, HANH[TUONG[id].hanh]));
+  const sprUnit = (id) => spr('u' + id, 64, 64, (c) => { if (VE_UNIT[id]) VE_UNIT[id](c, HANH[TUONG[id].hanh]); else de(c, HANH[TUONG[id].hanh]); });   // tướng mới chưa có ảnh: chỉ bệ đứng
   const sprQuai = (k) => spr('q' + k, 40, 40, (c) => VE_QUAI[k](c));
   const sprBoss = (b) => spr('b' + b.id, 80, 80, (c) => VE_BOSS[b.id](c, b.mau));
   const sprBanh = () => spr('gear', 80, 80, (c) => {   // bánh răng xoay quanh OVERCLOCK
@@ -339,9 +341,9 @@
     const [[x, y0], [, y1]] = B.DUONG;
     veThanLan(c, y0, y1);
     const sp = co('v2:lane_spawn'), ex = co('v2:lane_exit');
-    if (sp) c.drawImage(sp, x - 22, y0 - 22, 44, 44);
+    if (sp) c.drawImage(sp, x - 24, y0 - 24, 48, 48);
     else { c.save(); neon(c, '#ff2b4d', 10); c.strokeStyle = '#ff2b4d'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(x, y0, 17, 6, 0, 0, 7); c.stroke(); c.restore(); c.fillStyle = '#05000a'; c.beginPath(); c.ellipse(x, y0, 15, 5, 0, 0, 7); c.fill(); }
-    if (ex) c.drawImage(ex, x - 22, y1 - 22, 44, 44);
+    if (ex) c.drawImage(ex, x - 24, y1 - 24, 48, 48);
     else { rr(c, x - 17, y1 - 6, 34, 12, 3); c.fillStyle = '#0a0d18'; c.fill(); c.save(); neon(c, '#ff3b3b', 8); c.strokeStyle = '#ff3b3b'; c.lineWidth = 1.4; c.stroke(); c.restore();
       c.fillStyle = '#ff3b3b'; for (let n = 0; n < 4; n++) c.fillRect(x - 12 + n * 7, y1 - 1, 4, 2); }
   }
@@ -363,9 +365,10 @@
         for (let y = 0; y < H; y += 24) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
         for (let x = 6; x < W; x += 24) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
       }
-      // dải giữa (y 300..353): vệt nối thị giác giữa 2 bàn
-      c.fillStyle = lg(c, 0, 300, 0, 353, [[0, 'rgba(0,0,0,0)'], [0.5, 'rgba(0,0,0,0.35)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(0, 300, W, 53);
-      c.fillStyle = 'rgba(255,60,90,0.25)'; c.fillRect(C.LAN_X0 + 23, 273, 4, 101);
+      // dải giữa (khoảng trống co giãn giữa 2 bàn): vệt nối thị giác
+      const g0 = C.GIUA_Y - 27, g1 = C.GIUA_Y + 27;
+      c.fillStyle = lg(c, 0, g0, 0, g1, [[0, 'rgba(0,0,0,0)'], [0.5, 'rgba(0,0,0,0.35)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(0, g0, W, g1 - g0);
+      const lx = (C.LAN_X0 + C.LAN_X1) / 2; c.fillStyle = 'rgba(255,60,90,0.25)'; c.fillRect(lx - 2, C.LAN_AI[1][1], 4, C.LAN_NG[0][1] - C.LAN_AI[1][1]);
       for (const B of BANS) { veLanTinh(c, B); veBanTinh(c, B); }
     }, k);
     L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.55)']]); c.fillRect(0, 0, W, H); }, 1) };
@@ -413,22 +416,35 @@
   }
   const soKhung = (im, soHang = 1) => Math.max(1, Math.round(im.width / (im.height / soHang)));
   function veBong(c, x, y, w) {
-    if (w === 16) { c.save(); c.globalAlpha = 0.2; c.fillStyle = '#07090F'; c.beginPath(); c.ellipse(x, y, 8, 2.5, 0, 0, 7); c.fill(); c.restore(); return; }   // bóng v3: ellipse 16×5
+    if (w === 16) { c.save(); c.globalAlpha = 0.24; c.fillStyle = '#07090F'; c.beginPath(); c.ellipse(x, y, 10, 3, 0, 0, 7); c.fill(); c.restore(); return; }   // bóng v3: ellipse 20×6
     const b = co('v2:unit_shadow');
     if (b) { c.drawImage(b, x - w / 2, y - w * 0.17, w, w * 0.34); return; }
     c.save(); c.fillStyle = 'rgba(0,0,0,0.42)'; c.beginPath(); c.ellipse(x, y, w / 2, w * 0.15, 0, 0, 7); c.fill(); c.restore();
   }
-  function veSao(c, cx, cy, n) {   // nhãn sao: nền tối, sao vàng; đặt cố định (tâm ô, đỉnh ô + 2), không nhún theo người
-    const bd = co('v2:star_badges');
-    if (bd) { const nf = soKhung(bd), f = Math.min(n, nf) - 1, fh = bd.height, sz = 15; c.drawImage(bd, f * fh, 0, fh, fh, cx - sz / 2, cy - sz / 2, sz, sz); if (n > nf) { c.fillStyle = HANG_MAU[n - 1]; c.font = '900 6px Orbitron, sans-serif'; c.textAlign = 'center'; c.fillText('+', cx + sz / 2, cy - 2); } return; }
-    const w = 5, tong = n * w, m = HANG_MAU[n - 1];
-    rr(c, cx - tong / 2 - 2.5, cy - 3.5, tong + 5, 7, 2.5); c.fillStyle = 'rgba(2,4,12,0.85)'; c.fill(); c.lineWidth = 0.6; c.strokeStyle = hexA(m, 0.5); c.stroke();
-    c.fillStyle = m;
-    for (let i = 0; i < n; i++) { const px = cx - tong / 2 + w / 2 + i * w; c.beginPath(); for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 0.95 : 2.2; c.lineTo(px + Math.cos(g) * r, cy + Math.sin(g) * r); } c.closePath(); c.fill(); }
+  // SAO 1–7: pip ngôi nhỏ trên đầu tướng (như DCDW), không nền hộp; 7★ đổi màu đỏ cam. Đặt cố định theo ô, không nhún theo người.
+  function veSao(c, cx, cy, n) {
+    const w = 5.2, tong = n * w, m = n >= 7 ? '#ff7a3a' : '#ffd84a';
+    c.save(); c.lineJoin = 'round'; c.lineWidth = 1.6; c.strokeStyle = 'rgba(4,4,10,0.9)'; c.fillStyle = m;
+    for (let i = 0; i < n; i++) {
+      const px = cx - tong / 2 + w / 2 + i * w; c.beginPath();
+      for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 1.05 : 2.5; c.lineTo(px + Math.cos(g) * r, cy + Math.sin(g) * r); }
+      c.closePath(); c.stroke(); c.fill();
+    }
+    c.restore();
+  }
+  // vòng dưới chân màu BẬC, đậm dần theo sao (tiết chế): 1★ mờ 0.22 → 7★ 0.6 + vòng kép từ 5★
+  function veVongBac(c, v, cx, chan, t, afMau) {
+    const b = BAC[TUONG[v.id].bac] || BAC.trang, k = (v.sao - 1) / 6, rx = 15 + v.sao * 0.5;
+    c.save();
+    c.globalAlpha = 0.22 + 0.38 * k; c.strokeStyle = b.mau; c.lineWidth = 1 + 0.6 * k;
+    c.beginPath(); c.ellipse(cx, chan, rx, rx * 0.3, 0, 0, 7); c.stroke();
+    if (v.sao >= 5) { c.globalAlpha = 0.18 + 0.1 * (v.sao - 5); c.beginPath(); c.ellipse(cx, chan, rx + 3, (rx + 3) * 0.3, 0, 0, 7); c.stroke(); }
+    if (afMau) { c.globalAlpha = 0.35 + 0.25 * Math.sin(t * 10); c.strokeStyle = afMau; c.lineWidth = 1.2; c.beginPath(); c.ellipse(cx, chan, rx - 3, (rx - 3) * 0.3, 0, 0, 7); c.stroke(); }
+    c.restore();
   }
   // ---- v3 HIGH TOP-DOWN: cao 32px (rộng ≤ 40px → chừa ≥3px mỗi bên ô 46, không đè ô bên), chân tại (cx, chan); không uốn / xoay / biến dạng ảnh ----
   // P0.1 (tu-van-chatgpt-cham-ban-choi-8huong.txt): 29px → 32px (~70% cạnh ô), neo chân giữ nguyên giữa mọi hướng/khung; hitbox ô không đổi.
-  const V3_CAO = 32, V3_RONG = 40, CHAN_V3 = 8;   // CHAN_V3: chân cách đáy ô (px)
+  const V3_CAO = C.TUONG_CAO, V3_RONG = C.TUONG_RONG, CHAN_V3 = C.CHAN;   // tướng cao ~39px, rộng ≤ 50 (ô 56), chân cách đáy ô 9px (data.js)
   // P2.2: idle 8fps lặp, lệch pha mỗi tướng; attack 14fps, giữ khung ra đòn thêm C.GIU_KHUNG (đạn phát đúng khung đó, game.js TAC_DONG)
   const V3_ANIM = { idle: { fps: 8, lap: true }, attack: { fps: 14, lap: false } };
   const KHUNG_RA = Math.round(C.TAC_DONG * V3_ANIM.attack.fps);   // = 3
@@ -580,7 +596,8 @@
   }
   function veHinhTuong(c, v, cx, chan, tg, i) {   // chỉ sprite (không bóng/sao) — dùng cả khi kéo
     if (coV3(v.id)) {
-      const [sc, al] = heSoXuatHien(v, tg);
+      let [sc, al] = heSoXuatHien(v, tg);
+      sc *= 1 + 0.01 * ((v.sao || 1) - 1);   // sao cao: to hơn chút (1.00 → 1.06), quanh chân, không vượt ô
       if (al <= 0) return;
       c.save(); c.globalAlpha *= al;
       if (sc !== 1) { c.translate(cx, chan); c.scale(sc, sc); c.translate(-cx, -chan); }   // phóng đều quanh chân, không méo
@@ -609,11 +626,11 @@
     const v3 = !!coV3(v.id);
     const [x, y] = G.oXY(S, i), cx = x + C.O / 2, chan = y + C.OH - (v3 ? CHAN_V3 : 5), h = HANH[TUONG[v.id].hanh];
     const moiGop = v.kieuSinh === 'gop' && v.sinhT != null && tg - v.sinhT < GOP_THU;
-    if (!moiGop) veBong(c, cx, chan, v3 ? 16 : 20);
+    if (!moiGop) { veBong(c, cx, chan, v3 ? 16 : 20); veVongBac(c, v, cx, chan, t, G.afBat(S, 'tocDanh') ? ARCHFIEND[S.af.id].mau : null); }
     if (v.sinhT != null && v.kieuSinh !== 'gop') veCong(c, cx, chan, tg - v.sinhT);
     if (hop) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(cx, chan, 15, 4.5, 0, 0, 7); c.stroke(); c.restore(); }
-    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 16, 22, 0.45 + 0.15 * Math.sin(t * 12));
-    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 16, 22, 0.4);
+    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 18, 24, 0.45 + 0.15 * Math.sin(t * 12));
+    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 18, 24, 0.4);
     veHinhTuong(c, v, cx, chan, tg, i);
     if (!sheet(v.id, 'attack') && !co(`v3:${v.id}:attack`) && !HUONG5.some((d) => co(`v3:${v.id}:attack:${d}`)) && v.atkT != null && tg - v.atkT > C.TAC_DONG - 0.05 && tg - v.atkT < C.TAC_DONG + 0.12) {   // chưa có sheet attack: chớp ở nòng lúc phát đạn
       const [mx, my] = G.nong(S, i, v); veGlow(c, h.mau, mx, my, 8, 0.9);
@@ -633,7 +650,7 @@
   }
   function veNhanO(c, S, v, i) {   // sao + trạng thái boss (lớp trên cùng của bàn)
     const [x, y] = G.oXY(S, i), cx = x + C.O / 2;
-    veSao(c, cx, coV3(v.id) ? y + 1 : y - 3, v.sao);   // v3: tướng cao 32px, chân cách đáy 8 → đỉnh đầu ~ đỉnh ô + 5 → nhãn (cao 7px) tâm ở đỉnh ô + 1 không che mặt
+    veSao(c, cx, y + 2, v.sao);   // pip sao trên đầu: tướng cao 39, chân cách đáy 9 → đỉnh đầu ~ đỉnh ô + 6 → pip (cao 5px) tâm ở đỉnh ô + 2
     if (v.nong > 0 || v.corrT > 0) {
       const tx = v.nong > 0 ? 'HOT ' + Math.ceil(v.nong) : 'BUG';
       c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)';
@@ -675,38 +692,70 @@
       if (q.flash > 0 && Q.cao) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7) * vao; veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s); c.globalCompositeOperation = 'source-over'; c.globalAlpha = vao; }
     }
     const cy = yChan - w / 2;
-    if (q.cham > 0) { c.save(); c.globalAlpha = 0.55 * vao; c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(q.x, yChan, w * 0.42, 3.5, 0, 0, 7); c.stroke(); c.restore(); }
-    if (q.chill > 0) { c.save(); c.strokeStyle = '#bff6ff'; c.lineWidth = 1.2; for (let k = 0; k < q.chill; k++) { const g = t * 2 + k * 2.09, r = w * 0.42; c.beginPath(); c.moveTo(q.x + Math.cos(g) * r, cy + Math.sin(g) * r * 0.5); c.lineTo(q.x + Math.cos(g) * (r + 4), cy + Math.sin(g) * (r + 4) * 0.5); c.stroke(); } c.restore(); }
-    if (q.tox > 0) { c.fillStyle = '#b4ff2a'; for (let k = 0; k < q.tox; k++) c.fillRect(q.x - 8 + k * 4, yChan - w - 9, 3, 2); }
-    if (q.breachT > 0) { c.save(); c.strokeStyle = '#00ffa3'; c.lineWidth = 1.1; const r = w * 0.5, j = Math.sin(t * 40 + q.uid) > 0.6 ? 2 : 0; c.beginPath(); c.moveTo(q.x - r + 4 + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy + r * 0.6); c.lineTo(q.x - r + 4 + j, cy + r * 0.6); c.moveTo(q.x + r - 4 - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy + r * 0.6); c.lineTo(q.x + r - 4 - j, cy + r * 0.6); c.stroke(); c.restore(); }
-    if (q.bounty > 0) { c.save(); c.strokeStyle = '#4d8dff'; c.fillStyle = 'rgba(77,141,255,0.35)'; c.lineWidth = 1; hexP(c, q.x + w * 0.5, yChan - w - 4, 3.5, t); c.fill(); c.stroke(); c.restore(); }
+    // hiệu ứng TRÙM trên quái (khiên, tăng tốc, bản sao) giữ hình nhỏ quanh thân; hiệu ứng TƯỚNG gây ra → biểu tượng nhỏ cạnh thanh máu
     if (q.khien > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = 'rgba(255,120,120,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.arc(q.x, cy, w * 0.55, 0, 7); c.stroke(); c.restore(); }
     if (q.nhanhT > 0) { c.save(); c.strokeStyle = 'rgba(255,200,60,0.8)'; c.lineWidth = 1; for (let k = 0; k < 3; k++) { const xx = q.x - 6 + k * 6, l = 5 + ((t * 30 + k * 13) % 5); c.beginPath(); c.moveTo(xx, cy - w * 0.4 - l); c.lineTo(xx, cy - w * 0.4); c.stroke(); } c.restore(); }
     if (q.echo) { c.save(); c.strokeStyle = '#ffb31a'; c.lineWidth = 1.2; c.setLineDash([3, 2]); c.lineDashOffset = -t * 20; c.beginPath(); c.arc(q.x, cy, w * 0.5, 0, 7); c.stroke(); c.restore(); }
-    if (q.choang > 0) { c.save(); c.strokeStyle = '#c8ffe8'; c.lineWidth = 1; c.beginPath(); let px = q.x - 7, py = yChan - w - 3; c.moveTo(px, py); for (let k = 0; k < 5; k++) { px += 3; py += (k % 2 ? -3 : 3) * Math.sin(t * 30 + k); c.lineTo(px, py); } c.stroke(); c.restore(); }
-    if (!q.boss) {   // thanh máu quái thường 20×3 (P0.3: 18–24 × 3)
-      const bw = 20, by = yChan - w - 6, k = Math.max(0, q.hp / q.max);
-      c.fillStyle = 'rgba(2,4,12,0.88)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 5);
-      c.fillStyle = k > 0.4 ? '#3cffb0' : '#ff3c6e'; c.fillRect(q.x - bw / 2, by, bw * k, 3);
-    } else {         // boss 48×5 (42–56 × 5)
-      const bw = 48, by = yChan - w - 9, k = Math.max(0, q.hp / q.max);
-      c.fillStyle = 'rgba(2,4,12,0.9)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 7);
-      c.fillStyle = q.boss.mau; c.fillRect(q.x - bw / 2, by, bw * k, 5);
-      c.fillStyle = 'rgba(255,255,255,0.35)'; c.fillRect(q.x - bw / 2, by, bw * k, 1);
+    const bw = q.boss ? 56 : 24, bh = q.boss ? 5 : 3, by = yChan - w - (q.boss ? 9 : 6), kHp = Math.max(0, q.hp / q.max);
+    if (!q.boss) {   // thanh máu quái thường 24×3
+      c.fillStyle = 'rgba(2,4,12,0.88)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, bh + 2);
+      c.fillStyle = kHp > 0.4 ? '#3cffb0' : '#ff3c6e'; c.fillRect(q.x - bw / 2, by, bw * kHp, bh);
+    } else {         // boss 56×5
+      c.fillStyle = 'rgba(2,4,12,0.9)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, bh + 2);
+      c.fillStyle = q.boss.mau; c.fillRect(q.x - bw / 2, by, bw * kHp, bh);
+      c.fillStyle = 'rgba(255,255,255,0.35)'; c.fillRect(q.x - bw / 2, by, bw * kHp, 1);
     }
+    let ix = q.x + bw / 2 + 4;
+    const icon = (k, n) => { veIcon(c, k, ix, by + bh / 2, n); ix += 6; };
+    if (q.chayT > 0) icon('chay');
+    if (q.chill > 0) icon('bang', q.chill);
+    if (q.tox > 0) icon('doc', q.tox);
+    if (q.breachT > 0) icon('hack');
+    if (q.bounty > 0) icon('na');
+    if (q.choang > 0) icon('choang');
+    c.restore();
+  }
+  // BIỂU TƯỢNG TRẠNG THÁI nhỏ (5px) cạnh thanh máu quái: lửa / băng / độc (số tầng) / hack / truy nã / choáng
+  const ICON_MAU = { chay: '#ff8a3a', bang: '#7fe9ff', doc: '#b4ff2a', hack: '#00ffa3', na: '#ffd84a', choang: '#fff2a0' };
+  function veIcon(c, k, x, y, n) {
+    c.save(); c.fillStyle = ICON_MAU[k]; c.strokeStyle = 'rgba(2,4,12,0.9)'; c.lineWidth = 1.2; c.beginPath();
+    if (k === 'chay') { c.moveTo(x, y - 3); c.quadraticCurveTo(x + 3, y, x + 1.8, y + 2.5); c.lineTo(x - 1.8, y + 2.5); c.quadraticCurveTo(x - 3, y, x, y - 3); }
+    else if (k === 'bang') { c.moveTo(x, y - 3); c.lineTo(x + 2.5, y); c.lineTo(x, y + 3); c.lineTo(x - 2.5, y); c.closePath(); }
+    else if (k === 'doc') { c.moveTo(x, y - 3); c.quadraticCurveTo(x + 3, y + 0.5, x, y + 2.8); c.quadraticCurveTo(x - 3, y + 0.5, x, y - 3); }
+    else if (k === 'hack') { c.rect(x - 2.4, y - 2.4, 4.8, 4.8); }
+    else if (k === 'na') { c.arc(x, y, 2.6, 0, 7); }
+    else { for (let i = 0; i < 8; i++) { const g = i * Math.PI / 4, r = i % 2 ? 1 : 2.8; c.lineTo(x + Math.cos(g) * r, y + Math.sin(g) * r); } c.closePath(); }
+    c.stroke(); c.fill();
+    if (n > 1) { c.font = '700 5px Orbitron, sans-serif'; c.textAlign = 'center'; c.lineWidth = 1.6; c.strokeText(n, x + 2.5, y + 5.5); c.fillStyle = '#fff'; c.fillText(n, x + 2.5, y + 5.5); }
     c.restore();
   }
   // ---------- đạn ----------
+  // ĐẠN GỌN như DCDW: ảnh proj_<id>.png khung 1–2 (nhỏ nhất), dài ~12px (10–14), xoay theo hướng bay, không trail / hạt.
+  // Không có ảnh: vạch ngắn màu hệ (đạn mặc định theo hệ).
+  const DO_PROJ = new Map();
+  function doProj(im, f) {   // hộp phần hình (alpha > 8) của khung f (khung rộng = rộng/4, cao = cao ảnh)
+    const key = im.src + '#' + f; let d = DO_PROJ.get(key); if (d) return d;
+    const fw = Math.floor(im.width / 4), fh = im.height; d = { fw, fh, x0: 0, x1: fw - 1, y0: 0, y1: fh - 1 };
+    try {
+      const cv = document.createElement('canvas'); cv.width = fw; cv.height = fh; const g = cv.getContext('2d'); g.drawImage(im, f * fw, 0, fw, fh, 0, 0, fw, fh);
+      const px = g.getImageData(0, 0, fw, fh).data; let x0 = fw, x1 = -1, y0 = fh, y1 = -1;
+      for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) if (px[(y * fw + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 >= 0) d = { fw, fh, x0, x1, y0, y1 };
+    } catch (e) { /* ảnh khác nguồn: dùng cả khung */ }
+    DO_PROJ.set(key, d); return d;
+  }
   function veDan(c, d, tg) {
-    const h = d.mau, g = d.goc != null ? d.goc : Math.atan2(d.q.y - d.y, d.q.x - d.x), dai = d.id === 'lance' ? 28 : d.id === 'venom' ? 8 : 10;
-    const x1 = d.x - Math.cos(g) * dai, y1 = d.y - Math.sin(g) * dai;
-    c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
-    c.strokeStyle = lg(c, x1, y1, d.x, d.y, [[0, hexA(h, 0)], [1, hexA(h, 0.95)]]); c.lineWidth = d.id === 'lance' ? 2.4 : d.id === 'venom' ? 1.2 : 2.6; c.beginPath(); c.moveTo(x1, y1); c.lineTo(d.x, d.y); c.stroke();
-    c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = d.id === 'venom' ? 0.6 : 1; c.beginPath(); c.moveTo((x1 + d.x) / 2, (y1 + d.y) / 2); c.lineTo(d.x, d.y); c.stroke();
-    const vf = co('v2:' + VFX_TUONG[d.id]);
-    if (vf) { const fh = vf.height, n = soKhung(vf), f = Math.floor(tg * 16) % n; c.drawImage(vf, f * fh, 0, fh, fh, d.x - 8, d.y - 8, 16, 16); }
-    c.restore();
-    if (!vf) veGlow(c, h, d.x, d.y, d.id === 'scorch' ? 8 : d.id === 'frost' ? 7 : 5, 0.95);
+    const g = d.goc != null ? d.goc : Math.atan2(d.q.y - d.y, d.q.x - d.x), im = co('v3proj:' + d.id), dai = 12;
+    if (im) {
+      const f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % 2, k = doProj(im, f);   // khung 1 ↔ 2
+      const s = dai / (k.x1 - k.x0 + 1), cyK = (k.y0 + k.y1 + 1) / 2;
+      c.save(); c.translate(d.x, d.y); c.rotate(g);
+      c.drawImage(im, f * k.fw + k.x0, 0, k.x1 - k.x0 + 1, k.fh, -dai, -cyK * s, dai, k.fh * s);   // đầu đạn tại (d.x, d.y)
+      c.restore(); return;
+    }
+    const x1 = d.x - Math.cos(g) * 9, y1 = d.y - Math.sin(g) * 9;
+    c.save(); c.lineCap = 'round'; c.strokeStyle = d.mau; c.lineWidth = 2.4; c.beginPath(); c.moveTo(x1, y1); c.lineTo(d.x, d.y); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = 1; c.beginPath(); c.moveTo((x1 + d.x) / 2, (y1 + d.y) / 2); c.lineTo(d.x, d.y); c.stroke(); c.restore();
   }
   // ---------- hiệu ứng ----------
   const DA_THAY = new WeakSet();
@@ -715,7 +764,7 @@
       if (DA_THAY.has(f)) continue; DA_THAY.add(f);
       const o = f.i != null ? G.oTam(S, f.i) : [f.x, f.y];
       if (f.k === 'no') no(o[0], o[1], '#ffc890', 8, 100, 2, 0.45);
-      else if (f.k === 'gop') { no(o[0], o[1], '#ffffff', 12, 120, 1.8, 0.5); no(o[0], o[1], HANG_MAU[f.sao - 1], 10, 90, 2, 0.6); }
+      else if (f.k === 'gop' && !f.an) { no(o[0], o[1], '#ffffff', 12, 120, 1.8, 0.5); no(o[0], o[1], HANG_MAU[f.sao - 1], 10, 90, 2, 0.6); }
       else if (f.k === 'trieu') no(o[0], o[1] + 8, '#3ce7ff', 7, 50, 1.6, 0.45);
       else if (f.k === 'hoada') no(o[0], o[1], '#ff3b3b', 7, 70, 1.8, 0.45);
       else if (f.k === 'kn') no(o[0], o[1], f.mau, 12, 140, 2.2, 0.6);
@@ -727,11 +776,10 @@
       else if (f.k === 'tien') { for (let n = 0; n < 3; n++) HAT.push({ x: o[0], y: o[1], vx: (Math.random() - 0.5) * 40, vy: -80 - Math.random() * 40, t: 0, T: 0.5, m: '#4d8dff', s: 2.5 }); }
       else if (f.k === 'boom') no(o[0], o[1], '#c79bff', 9, 100, 2, 0.45);
       else if (f.k === 'xung') no(o[0], o[1], '#ffd34a', 9, 110, 2, 0.45);
-      else if (f.k === 'rail') no(f.x0, f.y0, '#ff8cc0', 4, 50, 1.6, 0.25);
     }
   }
   // loại hiệu ứng trúng đòn theo tướng (P0.4)
-  const LOAI_HIT = { lance: 'kinetic', miner: 'kinetic', glitch: 'kinetic', warp: 'kinetic', venom: 'kinetic', frost: 'frost', scorch: 'flame', arc: 'electric' };
+  const LOAI_HIT = {}; for (const id of TUONG_IDS) LOAI_HIT[id] = TUONG[id].hit || 'kinetic';   // dữ liệu: TUONG[id].hit
   function veSheetFx(c, im, k, x, y, sz) { const fh = im.height, n = soKhung(im), f = Math.min(n - 1, Math.floor(k * n)); c.drawImage(im, f * fh, 0, fh, fh, x - sz / 2, y - sz / 2, sz, sz); }
   function veFx(c, S, f) {
     const k = f.t / f.T, o = f.i != null ? G.oTam(S, f.i) : [f.x, f.y], a = Math.max(0, 1 - k);
@@ -743,6 +791,7 @@
       else { c.fillStyle = lg(c, 0, o[1] - 50, 0, o[1] + 20, [[0, 'rgba(60,231,255,0)'], [0.7, 'rgba(60,231,255,0.6)'], [1, 'rgba(255,255,255,0.85)']]);
         const w = 28 * (1 - k * 0.7); c.fillRect(o[0] - w / 2, o[1] - 50, w, 70);
         c.strokeStyle = '#3ce7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(o[0], o[1] + 17, 7 + 16 * k, 2.5 + 5 * k, 0, 0, 7); c.stroke(); }
+    } else if (f.k === 'gop' && f.an) { /* WARP GATE: 2 tướng cũ chỉ thu vào rồi biến mất */
     } else if (f.k === 'gop') {
       const im3 = co('v3:vfx_merge'), im = co('v2:vfx_merge'), kg = f.t / 0.24;   // phản hồi merge 240ms (180–260ms)
       if (im3) { if (kg < 1) { c.globalAlpha = 1; veSheetFx(c, im3, kg, o[0], o[1] - 2, 54); } }
@@ -769,16 +818,17 @@
     } else if (f.k === 'hit' && co('v3fx:' + (LOAI_HIT[f.id] || 'kinetic'))) {   // tia trúng đòn v3 theo loại sát thương, 120ms
       const im = co('v3fx:' + (LOAI_HIT[f.id] || 'kinetic'));
       c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1], f.to ? 30 : 22);
-      if (f.id === 'venom') veGlow(c, '#b4ff2a', o[0], o[1], 9, a * 0.8);   // VENOM: tia kinetic phủ ánh xanh độc
+      if (TUONG[f.id] && TUONG[f.id].hit === 'kinetic' && f.mau) veGlow(c, f.mau, o[0], o[1], 8, a * 0.5);   // tia kinetic phủ nhẹ màu hệ
     } else if (f.k === 'hit') {
       const r0 = (f.to ? 9 : 6) * (0.4 + k); c.strokeStyle = f.to ? '#ffb31a' : '#ffffff'; c.lineWidth = 1.2;
       for (let n = 0; n < 4; n++) { const g = n * 1.571 + 0.4; c.beginPath(); c.moveTo(o[0] + Math.cos(g) * r0 * 0.4, o[1] + Math.sin(g) * r0 * 0.4); c.lineTo(o[0] + Math.cos(g) * r0, o[1] + Math.sin(g) * r0); c.stroke(); }
       veGlow(c, f.mau, o[0], o[1], r0, a);
     } else if (f.k === 'chem') {
       c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = 3 * a + 1; c.beginPath(); c.arc(o[0] - 4, o[1] + 3, 11, -1.2 + k, 0.4 + k); c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1; c.stroke();
-    } else if (f.k === 'rail') {
-      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = (f.focus ? 4.5 : 3.2) * a; c.beginPath(); c.moveTo(f.x0, f.y0); c.lineTo(f.x1, f.y1); c.stroke();
-      c.strokeStyle = '#ffffff'; c.lineWidth = 1.1 * a; c.stroke(); veGlow(c, f.mau, f.x0, f.y0, 10, a);
+    } else if (f.k === 'rail') {   // tia tức thời: từ nòng DỪNG Ở MỤC TIÊU (không bay khỏi màn); quái bị xuyên chỉ chớp nhỏ
+      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = (f.focus ? 3.2 : 2) * a; c.beginPath(); c.moveTo(f.x0, f.y0); c.lineTo(f.x1, f.y1); c.stroke();
+      c.strokeStyle = '#ffffff'; c.lineWidth = 0.9 * a; c.stroke();
+      for (const [px, py] of f.sau || []) veGlow(c, f.mau, px, py, 6, a);
     } else if (f.k === 'vo') {
       c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], f.r * (0.4 + k), 0, 7); c.stroke();
       c.fillStyle = '#dffaff'; for (let n = 0; n < 8; n++) { const g = n * 0.785, rr2 = f.r * (0.3 + k * 0.9), px = o[0] + Math.cos(g) * rr2, py = o[1] + Math.sin(g) * rr2; c.beginPath(); c.moveTo(px, py - 2); c.lineTo(px + 2, py + 1.5); c.lineTo(px - 2, py + 1.5); c.fill(); }
@@ -792,6 +842,17 @@
       c.strokeStyle = '#a35cff'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], f.r * (1 - k), 0, 7); c.stroke(); veGlow(c, '#a35cff', o[0], o[1], f.r * 0.6, a);
     } else if (f.k === 'xung') {
       c.strokeStyle = '#ffb31a'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 8 + 60 * k, 0, 7); c.stroke();
+    } else if (f.k === 'ky') {   // skill VÀNG/ĐỎ kích hoạt: chớp vòng ngắn màu bậc + chữ tên skill 0.6s (tiết chế)
+      const v = S.o[f.i], b = BAC[(v && TUONG[v.id].bac) || 'vang'], [x, y] = G.oXY(S, f.i), cx = x + C.O / 2, chan = y + C.OH - CHAN_V3;
+      if (k < 0.4) { c.globalAlpha = 1 - k / 0.4; c.strokeStyle = b.mau; c.lineWidth = 1.6; c.beginPath(); c.ellipse(cx, chan, 12 + 14 * k, (12 + 14 * k) * 0.32, 0, 0, 7); c.stroke(); }
+      c.globalCompositeOperation = 'source-over'; c.globalAlpha = Math.min(1, (1 - k) * 3); c.font = '900 7px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center';
+      const ty = y - 4 - 6 * k; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(f.ten, cx, ty); c.fillStyle = b.mau; c.fillText(f.ten, cx, ty);
+    } else if (f.k === 'af' || f.k === 'chan') {   // Archfiend kích hoạt / FIREWALL chặn chiêu trùm: viền bàn chớp + tên 0.6s
+      const B = S.B, m = f.k === 'af' ? f.mau : '#3ce7ff';
+      c.strokeStyle = m; c.lineWidth = 2; rr(c, B.BX - 2 * k, B.BY - 2 * k, C.BAN_W + 4 * k, C.BAN_H + 4 * k, 6); c.stroke();
+      c.globalCompositeOperation = 'source-over'; c.globalAlpha = Math.min(1, (1 - k) * 3); c.font = '900 11px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center';
+      const tx = f.k === 'af' ? f.ten : 'BLOCKED', cx = B.BX + C.BAN_W / 2, cy = B.BY + C.BAN_H / 2 - 6 * k;
+      c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(tx, cx, cy); c.fillStyle = m; c.fillText(tx, cx, cy);
     } else if (f.k === 'kn') {
       c.strokeStyle = f.mau; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 7 + 40 * k, 0, 7); c.stroke();
     }
@@ -855,11 +916,12 @@
   // nhãn bàn: AI MIRROR (x112,y76) / PLAYER (x112,y363) + mạng + thanh máu boss bên phải
   function veNhanBan(c, S, ten, y) {
     c.font = '900 9px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left';
-    const m = S.ai ? '#3ce7ff' : '#ff2bd6', w = c.measureText(ten).width;
-    c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText(ten, 112, y + 9); c.fillStyle = m; c.fillText(ten, 112, y + 9);
-    if (!S.coop) for (let i = 0; i < C.MANG; i++) { c.fillStyle = i < S.mang ? m : 'rgba(255,60,60,0.35)'; c.beginPath(); const x = 118 + w + i * 12; c.moveTo(x + 2, y + 2); c.lineTo(x + 11, y + 2); c.lineTo(x + 9, y + 9); c.lineTo(x, y + 9); c.closePath(); c.fill(); }
+    const m = S.ai ? '#3ce7ff' : '#ff2bd6', w = c.measureText(ten).width, x0 = C.BAN_X + 2;
+    c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText(ten, x0, y + 9); c.fillStyle = m; c.fillText(ten, x0, y + 9);
+    if (S.af && S.af.T > 0) { const a = ARCHFIEND[S.af.id]; c.font = '700 7px Orbitron, "Segoe UI", sans-serif'; const tx = a.ten + ' ' + Math.ceil(S.af.T); c.strokeText(tx, x0 + w + (S.coop ? 8 : 48), y + 9); c.fillStyle = a.mau; c.fillText(tx, x0 + w + (S.coop ? 8 : 48), y + 9); }
+    if (!S.coop) for (let i = 0; i < C.MANG; i++) { c.fillStyle = i < S.mang ? m : 'rgba(255,60,60,0.35)'; c.beginPath(); const x = x0 + 6 + w + i * 12; c.moveTo(x + 2, y + 2); c.lineTo(x + 11, y + 2); c.lineTo(x + 9, y + 9); c.lineTo(x, y + 9); c.closePath(); c.fill(); }
     if (S.boss) {
-      const b = S.boss, bw = 110, bx = 361 - bw, kk = Math.max(0, b.hp / b.max);
+      const b = S.boss, bw = 110, bx = C.BAN_X + C.BAN_W - bw, kk = Math.max(0, b.hp / b.max);
       c.fillStyle = 'rgba(4,4,14,0.85)'; c.fillRect(bx - 1, y + 3, bw + 2, 6); c.fillStyle = b.boss.mau; c.fillRect(bx, y + 4, bw * kk, 4);
       c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'right'; c.fillStyle = '#ffffff'; c.strokeText(b.boss.ten, bx - 4, y + 9); c.fillText(b.boss.ten, bx - 4, y + 9);
     }
@@ -891,6 +953,7 @@
     for (const d of S.dan) veDan(c, d, tg);
     for (const f of S.fx) veFx(c, S, f);
     veCanhBao(c, S, t);
+    if (G.afBat(S, 'tuongLua')) { const a = ARCHFIEND[S.af.id]; c.save(); c.globalAlpha = 0.5 + 0.2 * Math.sin(t * 6); c.strokeStyle = a.mau; c.lineWidth = 1.5; rr(c, S.B.BX + 1, S.B.BY + 1, C.BAN_W - 2, C.BAN_H - 2, 5); c.stroke(); c.restore(); }   // FIREWALL đang bật
     for (let i = 0; i < S.o.length; i++) if (S.o[i] && !(keo && keo.i === i)) veNhanO(c, S, S.o[i], i);
   }
   function veSoBan(c, S) { for (const s of S.so) veSo(c, s); }
@@ -899,6 +962,7 @@
   let tTruoc = 0;
   function ve(c, S, t, k, keo, A) {
     const dt = Math.min(0.05, Math.max(0, t - tTruoc)); tTruoc = t;
+    if (H !== C.H) { H = C.H; batLai = true; }   // đổi chiều cao màn → dựng lại lớp tĩnh (bàn dưới đã dời)
     if (!L || LK !== k || batLai) { taoLop(k); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
     c.save();
     // rung màn ≤ 2px logic (chỉ sân, không rung HUD)
@@ -910,14 +974,14 @@
     if (S && S.coop) {   // co-op: đường nối làn trên → làn dưới (ảnh làn v2 kéo dài; không có ảnh thì dải tối như làn vẽ sẵn)
       // phủ luôn cửa thoát làn trên + cổng sinh làn dưới (±24px) để thành 1 đường liền
       c.restore(); c.save();
-      veThanLan(c, C.LAN_AI[1][1] - 24, C.LAN_NG[0][1] + 24);
+      veThanLan(c, C.LAN_AI[1][1] - 26, C.LAN_NG[0][1] + 26);
       c.restore(); c.save(); c.globalCompositeOperation = 'lighter'; c.lineWidth = 2;
     }
     for (const B of (S && S.coop ? [A.B, S.B] : BANS)) { const [[x, y0], [, y1]] = B.DUONG; c.beginPath(); c.moveTo(x, y0 + 8); c.lineTo(x, y1 - 8); c.setLineDash([3, 14]); c.lineDashOffset = -t * 30; c.strokeStyle = 'rgba(255,60,90,0.5)'; c.stroke(); }
     c.restore();
     if (S) {
-      veNhanBan(c, A || { ai: true, mang: C.MANG }, S.coop ? 'ALLY' : 'AI MIRROR', 76);   // co-op: bàn trên là đồng đội AI
-      veNhanBan(c, S, 'PLAYER', 363);
+      veNhanBan(c, A || { ai: true, mang: C.MANG }, S.coop ? 'ALLY' : 'AI MIRROR', C.BAN_AI_Y - 15);   // co-op: bàn trên là đồng đội AI
+      veNhanBan(c, S, 'PLAYER', C.BAN_NG_Y - 15);
       if (A) veBan(c, A, t, null);
       veBan(c, S, t, keo);
       veHat(c, dt);
@@ -926,7 +990,7 @@
         // mọi tướng trên bàn bắn được toàn bộ làn của bàn mình → tô sáng làn thay cho vòng tầm bắn
         const m = HANH[TUONG[goi.id].hanh].mau, [[, ly0], [, ly1]] = S.B.DUONG;
         c.save(); c.fillStyle = hexA(m, 0.08); c.fillRect(C.LAN_X0, ly0, C.LAN_X1 - C.LAN_X0, ly1 - ly0); c.lineWidth = 1; c.strokeStyle = hexA(m, 0.4); c.strokeRect(C.LAN_X0 + 0.5, ly0 + 0.5, C.LAN_X1 - C.LAN_X0 - 1, ly1 - ly0 - 1); c.restore();
-        c.save(); c.globalAlpha = 0.95; veHinhTuong(c, goi, keo.x, keo.y + 16, S.t); c.restore();
+        c.save(); c.globalAlpha = 0.95; veHinhTuong(c, goi, keo.x, keo.y + 20, S.t); c.restore();
       }
       if (A) veSoBan(c, A);
       veSoBan(c, S);
@@ -936,7 +1000,7 @@
     if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.3)']]); c.fillRect(0, 0, W, H); c.restore(); }
     if (!S) return;
     if (S.bao) {   // dải thông báo đợt / boss: vùng giữa y 300..353 (không có nút chạm)
-      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 4, (b.T - b.t) * 3)), y0 = 300, hh = 53, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
+      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 4, (b.T - b.t) * 3)), y0 = C.GIUA_Y - 26, hh = 53, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
       c.save(); c.globalAlpha = a;
       const sx = (1 - Math.min(1, b.t * 5)) * 30;
       c.fillStyle = 'rgba(3,4,14,0.84)'; c.fillRect(0, y0, W, hh);
@@ -966,7 +1030,7 @@
     const k = Math.min(3, (window.devicePixelRatio || 1) * 2);
     cvs.width = Math.round(px * k); cvs.height = Math.round(px * k);
     const c = cvs.getContext('2d'); c.scale(k, k);
-    const h = HANH[TUONG[id].hanh];
+    const h = BAC[TUONG[id].bac] || BAC.trang;
     const ve1 = () => { c.clearRect(0, 0, px, px); c.fillStyle = hexA(h.mau, 0.28); c.fillRect(0, 0, px, px); veChanDungVao(c, id, px, px, true); };
     ve1(); THE_VE.push({ cvs, f: ve1 });
   }
@@ -975,7 +1039,7 @@
     const k = Math.min(3, (window.devicePixelRatio || 1) * 2);
     cvs.width = Math.round(w * k); cvs.height = Math.round(h * k);
     const c = cvs.getContext('2d'); c.scale(k, k);
-    const hh = HANH[TUONG[id].hanh];
+    const hh = BAC[TUONG[id].bac] || BAC.trang;   // nền thẻ theo màu BẬC
     const ve1 = () => {
       c.clearRect(0, 0, w, h);
       // P0.2: nền sáng hơn theo màu hệ, chân dung rõ; chỉ tối nhẹ mép dưới để chữ đọc được
@@ -986,8 +1050,22 @@
     };
     ve1(); THE_VE.push({ cvs, f: ve1 });
   }
+  // CHÂN DUNG ARCHFIEND: archfiend_<id>.png nếu có, không thì portrait tạm của tướng `anh` (data.js), nền màu Archfiend
+  function veAF(cvs, id, px) {
+    const k = Math.min(3, (window.devicePixelRatio || 1) * 2), a = ARCHFIEND[id];
+    cvs.width = Math.round(px * k); cvs.height = Math.round(px * k);
+    const c = cvs.getContext('2d'); c.scale(k, k);
+    const ve1 = () => {
+      c.clearRect(0, 0, px, px);
+      c.fillStyle = lg(c, 0, 0, 0, px, [[0, hexA(a.mau, 0.6)], [1, '#0b0f22']]); c.fillRect(0, 0, px, px);
+      const im = co('v3af:' + id);
+      if (im) { const s = Math.max(px / im.width, px / im.height); c.drawImage(im, (px - im.width * s) / 2, 0, im.width * s, im.height * s); }
+      else veChanDungVao(c, a.anh, px, px, true);
+    };
+    ve1(); THE_VE.push({ cvs, f: ve1 });
+  }
   // FPS thấp liên tục → hạ chất lượng (ít mưa, ít hạt, tắt bóng phát sáng)
   let dem = 0, tong = 0;
   function doFps(dtMs) { tong += dtMs; if (++dem >= 90) { const tb = tong / dem; if (tb > 24 && Q.cao) { Q.cao = false; Q.hat = 90; } else if (tb < 15 && !Q.cao) { Q.cao = true; Q.hat = 200; } dem = 0; tong = 0; } }
-  window.RENDER = { ve, veChanDung, veThe, ANH, Q, doFps, HAT };
+  window.RENDER = { ve, veChanDung, veThe, veAF, ANH, Q, doFps, HAT };
 })();

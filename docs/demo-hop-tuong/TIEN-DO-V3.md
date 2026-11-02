@@ -72,3 +72,59 @@ Theo tu-van-chatgpt-phan-tich-dcdw.txt (mục co-op 12, wave pacing: trùm mỗi
 - Đầu game (wave 1–7) đồng đội AI vẫn dọn gần hết quái; muốn người chơi bắn nhiều hơn thì giảm `aiOToiDa` hoặc `AI_SAT_THUONG`.
 - Trùm cuối wave 70 rất trâu (giả lập 2 bàn full 7 sao vẫn để lọt 1 lần) — chỉnh `CUOI` nếu quá khó.
 - Chưa có assist/ping giữa 2 bàn, chưa có mốc thưởng 10/20/30/50/70.
+
+## Bám sát DCDW: tràn màn, tướng to, 5 bậc màu, Archfiend, đạn gọn (02/11/2026, phiên tự động)
+Không chạy test. Đã chụp màn (390×844, 360×640, 430×932, màn chọn tướng, phóng to làn) xem bằng mắt qua http (file:// làm canvas không đo được ảnh) — không lỗi JS; chạy thử 2 bot tự chơi bằng node (co-op tới wave 32, PVP tới wave 15) không lỗi.
+
+### Tóm tắt đối chiếu DCDW (chi tiết: `DOI-CHIEU-DCDW.md`)
+- Đã đúng từ trước: 2 bàn 5×3, triệu hồi ngẫu nhiên đều trong bộ 5 (giá tăng dần), ghép cùng loại cùng sao → sao+1 loại ngẫu nhiên, tối đa 7 sao, đầy bàn phải ghép, nâng cấp cả LOẠI bằng mana, mana từ giết quái + thưởng wave, PvP 3 mạng, co-op 70 wave có trùm.
+- Đã thêm: **Archfiend** (ô thẻ thứ 6), **5 bậc màu**, skill **VÀNG/ĐỎ** độc đáo, chọn mục tiêu + skill thành **dữ liệu**.
+- Đã sửa: bố cục tràn bề ngang, tướng/bàn to, sao dạng pip, đạn gọn, tia LANCE dừng ở mục tiêu, hiển thị skill tiết chế.
+
+### Đã làm
+1. **Tràn màn** (ui.js `resize`, game.js `boCuc`): scale = rộng/390, chiều cao logic H = cao/scale (744–960). Bàn trên neo trên (y 92), bàn người chơi + Energy/SUMMON + thẻ neo đáy, khoảng giữa co giãn (dải thông báo wave nằm giữa khoảng này). Màn thấp hơn 744 logic mới giảm scale. Trừ safe-area 4 phía. Đổi cỡ giữa trận: bàn dưới dời theo, quái tính lại vị trí.
+2. **Tướng + bàn to**: ô 56×54 (bước 58×56), bàn 302×180 (~77% bề ngang), làn x 12..60. Tướng cao 39px (rộng ≤ 50, chân cách đáy ô 9). Quái/trùm ×58/48 (thường ~27px, trùm ~48px). Thanh máu 24×3 / trùm 56×5.
+3. **Đạn gọn**: `assets/v3/proj_<id>.png` (1 hàng 4 khung), chỉ khung 1↔2, dài 12px, xoay theo hướng bay, đầu đạn ở điểm bay; không trail/hạt. Tướng không có ảnh đạn → vạch ngắn màu hệ. Đạn phát đúng khung ra đòn (như cũ). Tia LANCE vẽ từ nòng **dừng ở mục tiêu**; quái bị xuyên chỉ chớp nhỏ.
+4. **Sao 1–7**: pip ngôi vàng trên đầu (7★ đỏ cam), không hộp nền. Vòng dưới chân màu BẬC, đậm dần theo sao, vòng kép từ 5★. Tướng to dần 1.00 → 1.06.
+5. **Hiển thị skill tiết chế**: biểu tượng 5px cạnh thanh máu quái (lửa, băng + số tầng, độc + số tầng, hack, truy nã, choáng) thay các hình vẽ quanh thân. Skill VÀNG/ĐỎ kích hoạt: chớp vòng màu bậc dưới chân + tên skill 0.6s.
+6. **5 bậc màu** (`BAC` trong data.js): TRẮNG → LAM → TÍM → VÀNG → ĐỎ (Common/Rare/Epic/Legendary/Ancient). Màu khung + nền thẻ, tên trên thẻ, viền chân dung đội AI, vòng chân trên bàn; màn chọn tướng ghi tên bậc. Bậc KHÔNG ảnh hưởng tỉ lệ triệu hồi.
+7. **Archfiend** (`ARCHFIEND` trong data.js): chọn 1 trong 2 ở màn chọn tướng (nhớ lựa chọn: localStorage `neon-grid.af`). Thẻ thứ 6 bên phải: chân dung tạm (portrait tướng có sẵn; có `assets/v3/archfiend_<id>.png` thì tự dùng), vòng hồi chiêu + số giây, giá Energy (tăng ×1.6 sau mỗi lần dùng).
+   - OVERCLOCK: cả bàn +35% tốc đánh 6s, hồi 30s, giá 40 → 64 → 102...
+   - FIREWALL: xoá hiệu ứng trùm trên tướng (HOT/BUG) + chặn chiêu trùm lên tướng 6s ("BLOCKED"), hồi 35s, giá 30 → 48 → 77...
+   - Bot AI (PVP) và đồng đội (co-op) cũng dùng (`botAF`): FIREWALL khi ≥2 tướng dính chiêu trùm hoặc trùm sắp tung chiêu lên tướng; OVERCLOCK khi có trùm hoặc ≥8 quái. Ô thứ 6 trên HUD đội AI = Archfiend của AI (OVERCLOCK).
+8. **Skill data-driven** (game.js): `MUC` (chọn mục tiêu), `DON` (kiểu ra đòn), `HIEU` (hiệu ứng khi trúng), `DAC_BIET` (skill riêng VÀNG/ĐỎ). Logic không còn nhắc tên tướng nào.
+
+### Bảng 8 tướng (TẠM, sẽ đổi khi có bể tướng mới)
+| Bậc | Tướng | Mục tiêu | Đòn | Skill |
+|---|---|---|---|---|
+| TRẮNG | SCORCH | đi đầu | đạn | `chay`: vệt cháy trên làn, đốt 3–4 quái / 0.5s |
+| TRẮNG | FROST | đi đầu chưa lạnh | đạn | `bang`: tầng lạnh làm chậm, đủ 3 tầng vỡ băng gây sát thương vùng |
+| LAM | VENOM | còn nhiều % máu nhất | 2 đạn | `doc`: tầng độc (tối đa 4), quái chết khi ≥3 tầng lan 2–3 quái |
+| LAM | GLITCH | đi đầu chưa hack | đạn | `hack`: mỗi 3 đòn lộ điểm yếu +15–20% sát thương nhận, choáng 0.35s |
+| TÍM | ARC | giữa đám đông | chém ngay | `chuoi`: mỗi 3 đòn sét nảy 2–3 quái |
+| VÀNG | WARP | giữa đám đông | đạn | `hut` (trường hút gom quái) + **WARP GATE** (kiểu Brownie): ghép 2 WARP cùng sao → cả 2 biến mất, 1 đồng minh khác loại cùng sao được +1 sao **giữ nguyên loại** (không có thì ghép thường) |
+| VÀNG | BROKER | đi đầu | đạn yếu | **MANA FEED** (kiểu Syrinx): mỗi 7s +4/7/11/16/22/29/38 Energy theo sao, +25% mỗi cấp nâng |
+| ĐỎ | LANCE | máu cao nhất | tia dừng ở mục tiêu, xuyên 1–2 quái sau | **DEADLINE**: mỗi đòn thứ 4 ×3 (5★ ×3.5, 7★ ×4) xuyên 4 quái, kết liễu quái thường dưới 15–20% máu |
+
+### Cách thêm tướng mới (chỉ thêm dữ liệu + ảnh, không sửa logic)
+1. Ảnh vào `demo/assets/v3/`: `<anh>.png` (ảnh tĩnh) hoặc sheet `<anh>_idle_<dir>.png` / `<anh>_attack_<dir>.png` (dir = s, sw, w, nw, n), `portrait_<anh>.png` (chân dung thẻ), `proj_<anh>.png` (đạn, 1 hàng 4 khung, đầu đạn hướng phải). Thiếu ảnh nào thì code tự dùng dự phòng.
+2. Thêm 1 mục vào `TUONG` trong `demo/js/data.js`, ví dụ:
+   ```js
+   spark: { bac: 'lam', ten: 'SPARK', chuc: 'ARC GUNNER', hanh: 'Voltage', kieu: 'Static', mo: 'Every 3rd shot chains.',
+     dmg: 20, cd: 0.9, muc: 'ngauNhien', hit: 'electric',
+     don: { k: 'dan', toc: 900 },
+     hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 4: 2 }, r: 80, he: 0.4 }] },
+   ```
+   - `bac`: trang | lam | tim | vang | do · `hanh`: màu VFX (HANH) · `anh`: tên file ảnh nếu khác id · `xoay: true` nếu là drone xoay bằng code.
+   - `muc`: dau | dongQuai | mauCao | mauThap | mauDay | chuaHieu (+ `mucHieu`: chill/hack/doc/chay) | ngauNhien.
+   - `don`: `{ k: 'dan', toc, so }` · `{ k: 'chem' }` · `{ k: 'tia', xuyen }`.
+   - `hieu`: danh sách `chay` | `bang` | `doc` | `hack` | `chuoi` | `hut` | `truyNa` kèm tham số.
+   - `dac` (VÀNG/ĐỎ): `taoMana` | `cayGhep` | `phatNap` kèm `ten` (tên hiện khi kích hoạt).
+   - Tham số theo sao: số, hoặc `{ 1: a, 3: b, 5: c }` (lấy mốc sao cao nhất ≤ sao hiện tại).
+3. Muốn có cơ chế mới hoàn toàn (vd. biến hình kiểu Daron/Moa, sao chép kiểu Shamash): thêm 1 loại vào `DAC_BIET` trong game.js (`moiDon` / `capNhat` / `khiGop`) một lần, sau đó mọi tướng dùng lại bằng dữ liệu.
+4. Archfiend mới: thêm 1 mục vào `ARCHFIEND` (k = tocDanh | tuongLua, hoặc thêm loại mới trong `dungAF`).
+
+### Còn lại / ghi chú
+- Chân dung Archfiend đang mượn portrait WARP/GLITCH — cần ChatGPT vẽ `archfiend_overclock.png`, `archfiend_firewall.png`.
+- Cân bằng skill mới (MANA FEED, DEADLINE, WARP GATE) là số thử nghiệm.
+- Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.

@@ -14,7 +14,8 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 [hidden] { display: none !important; }
 #do-safe { position: fixed; left: 0; top: 0; width: 0; height: 0; visibility: hidden; padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 
-#wrap { position: fixed; left: 0; top: 0; width: 390px; height: 844px; overflow: hidden; background: #04020c; touch-action: none; transform-origin: 50% 50%; }
+/* khung logic rộng 390, cao co giãn (ui.js đặt chiều cao + scale = rộng màn / 390) */
+#wrap { position: fixed; left: 0; top: 0; width: 390px; height: 844px; overflow: hidden; background: #04020c; touch-action: none; transform-origin: 0 0; }
 #cv { position: absolute; left: 0; top: 0; width: 390px; height: 844px; touch-action: none; }
 
 .kinh { background: var(--kinh); border: 1px solid var(--vien); border-radius: 8px;
@@ -40,7 +41,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 #tb-ai { position: absolute; left: 232px; top: 21px; width: 148px; height: 22px; display: flex; gap: 3px; }
 .ai-o { position: relative; width: 22px; height: 22px; border-radius: 3px; overflow: hidden; border: 1px solid var(--h, #3ce7ff); background: #0d1226; }
 .ai-o canvas { width: 100%; height: 100%; display: block; }
-.ai-o.ld { border-color: #ff2bd6; background: linear-gradient(160deg, #1a0a2a, #05030e); font: 900 6px/20px var(--tit); text-align: center; color: #ff8be8; letter-spacing: .3px; }
+.ai-o.ld { border-radius: 50%; }
 .nho { font: 700 9px/1 var(--tit); letter-spacing: 1.2px; color: #a9b8da; }
 #lk { font-variant-numeric: tabular-nums; }
 
@@ -80,11 +81,11 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
    P0.2: nền sáng hơn, chân dung 53×66, LV 10px, tên 9.5px, giá 11px; đủ tiền = viền sáng + giá vàng ▲; thiếu = chân dung tối, giá đỏ nhạt (chữ vẫn đọc được) */
 #bo-bac { position: absolute; left: 0; top: 87px; width: 300px; height: 108px; }
 .the { position: absolute; top: 0; width: 55px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h);
-  background: linear-gradient(175deg, #2a3462, #141a36 70%, #0e1228);
+  background: linear-gradient(175deg, color-mix(in srgb, var(--h) 34%, #141a36), #141a36 70%, #0e1228);
   box-shadow: inset 0 0 8px var(--hg), 0 0 8px var(--hg); transition: transform .08s, filter .2s, box-shadow .2s; }
 .the canvas { position: absolute; left: 0; top: 0; width: 53px; height: 66px; pointer-events: none; transition: filter .2s; }
 .the .bac { position: absolute; left: 0; right: 0; top: 68px; font: 900 10px/1 var(--tit); color: #fff; text-shadow: 0 0 4px var(--h), 0 1px 0 #000; text-align: center; }
-.the .ten { position: absolute; left: 0; right: 0; top: 79px; font: 700 9.5px/1 var(--body); letter-spacing: .4px; color: #fff; text-shadow: 0 0 5px var(--h), 0 1px 0 #000; text-align: center; white-space: nowrap; overflow: hidden; }
+.the .ten { position: absolute; left: 0; right: 0; top: 79px; font: 700 9.5px/1 var(--body); letter-spacing: .4px; color: var(--h); text-shadow: 0 0 5px var(--h), 0 1px 0 #000; text-align: center; white-space: nowrap; overflow: hidden; }
 .the .gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 0 4px; font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff4b0; background: rgba(0,0,0,0.55); border-top: 1px solid var(--h); text-align: center; }
 .the .gia::before { content: '▲'; font-size: 8px; color: #3cffb0; margin-right: 2px; vertical-align: 1px; }
 .the:not(.thieu):not(.max) { box-shadow: inset 0 0 10px var(--hg), 0 0 10px var(--h); }
@@ -96,12 +97,32 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .the.max .gia::before { content: ''; }
 .the:active { transform: scale(0.95); }
 .the.len { animation: len .5s ease-out; background-position: 100% 0, 0 0; }
-#the-leader { position: absolute; left: 314px; top: 87px; width: 68px; height: 108px; border-radius: 4px; border: 1px solid rgba(255,43,214,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-  background: url(../assets/v2/leader_card_frame.png) center/100% 100% no-repeat, linear-gradient(170deg, #1a0a2a, #05030e); filter: saturate(0.6) brightness(0.8); }
-.ld-ten { font: 900 9px/1 var(--tit); letter-spacing: 1px; color: #ff8be8; }
-.ld-mo { font: 700 7px/1 var(--tit); letter-spacing: 1px; color: var(--mo); }
-.ld-khoa { width: 16px; height: 13px; border: 2px solid #ff8be8; border-radius: 2px; position: relative; margin-top: 6px; }
-.ld-khoa::before { content: ''; position: absolute; left: 1px; top: -10px; width: 8px; height: 8px; border: 2px solid #ff8be8; border-bottom: 0; border-radius: 6px 6px 0 0; }
+/* THẺ ARCHFIEND (ô thứ 6): chân dung + vòng hồi chiêu + giá Energy (tăng sau mỗi lần dùng) */
+#the-af { position: absolute; left: 314px; top: 87px; width: 68px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h, #ff2bd6);
+  background: linear-gradient(175deg, #2a1e46, #120a24 70%, #0a0618); box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 10px var(--h); transition: transform .08s, filter .2s; }
+#the-af canvas { position: absolute; left: 1px; top: 1px; width: 66px; height: 66px; pointer-events: none; }
+#the-af .af-cd { position: absolute; left: 9px; top: 9px; width: 50px; height: 50px; border-radius: 50%; pointer-events: none; display: flex; align-items: center; justify-content: center;
+  font: 900 15px/1 var(--tit); font-style: normal; color: #fff; text-shadow: 0 0 4px #000, 0 1px 0 #000;
+  background: conic-gradient(rgba(4,4,14,0.72) calc(var(--p, 0) * 360deg), transparent 0); }
+#the-af .af-ten { position: absolute; left: 0; right: 0; top: 70px; font: 900 8.5px/1 var(--tit); letter-spacing: .3px; color: #fff; text-shadow: 0 0 5px var(--h), 0 1px 0 #000; text-align: center; white-space: nowrap; }
+#the-af .af-gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 0 5px; font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff4b0; background: rgba(0,0,0,0.55); border-top: 1px solid var(--h); text-align: center; }
+#the-af.thieu .af-gia, #the-af.cho .af-gia { color: #ff9a9a; }
+#the-af.cho canvas, #the-af.thieu canvas { filter: saturate(0.4) brightness(0.65); }
+#the-af.cho, #the-af.thieu { box-shadow: none; }
+#the-af.dang { animation: nhipaf 0.8s ease-in-out infinite; }
+#the-af:active { transform: scale(0.95); }
+@keyframes nhipaf { 50% { box-shadow: 0 0 18px var(--h), inset 0 0 14px var(--h); } }
+/* màn chọn: 2 Archfiend */
+.chon-af { display: flex; gap: 8px; }
+.afc { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; padding: 5px 6px; border-radius: 8px; text-align: left;
+  background: rgba(14,20,48,0.6); border: 1px solid var(--vien); color: var(--mo); transition: transform .08s, box-shadow .2s; }
+.afc canvas { width: 30px; height: 30px; flex: none; border-radius: 4px; border: 1px solid var(--h); }
+.afc span { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.afc b { font: 900 10px/1 var(--tit); letter-spacing: 1px; color: #fff; }
+.afc em { font: 600 10px/1.1 var(--body); font-style: normal; }
+.afc.bat { border-color: var(--h); box-shadow: 0 0 12px var(--h), inset 0 0 10px rgba(255,255,255,0.06); color: #dfe6f2; }
+.afc.bat b { text-shadow: 0 0 6px var(--h); }
+.ct-hanh { margin-left: auto; font: 700 7px/1 var(--tit); letter-spacing: 1px; opacity: .9; }
 
 /* màn chọn đội + bảng phụ */
 .man { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 14px 12px 22px; background: radial-gradient(ellipse at 50% 40%, rgba(30,10,60,0.72), rgba(4,2,14,0.93) 75%); animation: hien .35s ease-out; }
@@ -115,7 +136,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .logo span { font: 700 11px var(--tit); letter-spacing: 2px; color: var(--mag); text-shadow: 0 0 8px rgba(255,43,214,0.7); }
 .chon-goi { font: 700 12px var(--tit); letter-spacing: 1.5px; color: var(--mo); }
 #chon-dem { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); margin-left: 6px; font-size: 15px; }
-#chon-luoi { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px 6px; margin: 14px 0 10px; min-height: 0; perspective: 600px; }
+#chon-luoi { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px 6px; margin: 12px 0 8px; min-height: 0; perspective: 600px; }
 /* THẺ TƯỚNG: khung vát góc viền gradient theo hệ, ảnh bán thân, ánh kim lướt */
 .ct { position: relative; display: block; min-width: 0; text-align: left; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)) drop-shadow(0 0 5px var(--hg)); transition: transform .18s cubic-bezier(.2,1.4,.4,1), filter .2s; }
 .ct-khung { position: absolute; inset: 0; padding: 1.5px; --cat: 12px;
@@ -129,7 +150,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
   background-size: 300% 100%; background-position: 100% 0; animation: holo 4.5s ease-in-out infinite; }
 .ct:nth-child(2n) .ct-trong::after { animation-delay: -1.5s; } .ct:nth-child(3n) .ct-trong::after { animation-delay: -3s; }
 .ct-anh { display: block; width: 100%; height: 132px; flex: none; }
-.ct-dau { position: absolute; left: 0; right: 0; top: 0; height: 18px; display: flex; align-items: center; padding: 0 6px 0 13px; background: linear-gradient(90deg, rgba(0,0,0,0.75), rgba(0,0,0,0)); }
+.ct-dau { position: absolute; left: 0; right: 0; top: 0; height: 18px; display: flex; align-items: center; padding: 0 26px 0 13px; background: linear-gradient(90deg, rgba(0,0,0,0.75), rgba(0,0,0,0)); }
 .ct-he { font: 700 8px/1 var(--tit); letter-spacing: 1.2px; color: var(--h); text-shadow: 0 0 6px var(--h); white-space: nowrap; }
 .ct-he i { display: inline-block; width: 6px; height: 6px; margin-right: 4px; transform: rotate(45deg); background: var(--h); box-shadow: 0 0 6px var(--h); vertical-align: 0; }
 .ct-than { position: relative; flex: 1; margin-top: -26px; padding: 0 7px 8px; display: flex; flex-direction: column; gap: 3px; }
@@ -150,7 +171,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .ct.chon .ct-trong::after { animation-duration: 2.2s; }
 .ct:not(.chon) .ct-anh { filter: saturate(0.85) brightness(0.9); }
 .ct:active { transform: translateY(-2px) scale(0.97); }
-.chon-cuoi { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.chon-cuoi { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
 .chon-nut { display: flex; gap: 10px; justify-content: center; }
 .chon-nut .nut { flex: 1; }
 .chon-meo { font: 500 13px/1.25 var(--body); color: var(--mo); text-align: center; }
