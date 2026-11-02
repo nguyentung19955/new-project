@@ -12,6 +12,7 @@
   if (window.LuuMay && LuuMay.coMay()){ await LuuMay.cho(2500); if (LC) LC.napLai(); }   // (firebase) lấy bản lưu mây trước khi đọc
   const napAnh = u => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = GOC + u; });
 
+  try { if (window.CHU) await CHU.cho(2500); } catch (e){}   // phông hệ A trước khi vẽ chữ canvas
   let L; try { L = await (await fetch('lang.json', {cache:'no-store'})).json(); } catch (e){ LANG.thieu = ['lang.json']; return xongNap(); }
   const nen = await Promise.all(L.nen.map(napAnh)), truoc = await Promise.all(L.truoc.map(napAnh));
   const anhChuong = await napAnh(L.chuong.anh), anhDC = await napAnh(L.dich_chuyen.anh), anhChon = await napAnh(L.khung_chon.anh);
@@ -213,15 +214,15 @@
     // gợi ý tương tác (chữ)
     if (S.che === 'choi' && S.gan){
       const t = S.gan.id === 'chuong' ? 'Ring the bell' : S.gan.vat ? 'Examine' : 'Talk', x = S.gan.x - cx, y = MD - (S.gan.id === 'chuong' ? 330 : (S.gan.o[1] + 24));
-      g.font = '700 18px "Alegreya Sans",system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.shadowColor = '#000'; g.shadowBlur = 5; g.fillStyle = '#ffe08a'; g.fillText((document.body.classList.contains('touch') ? '' : '▲ ') + t, x, y); g.shadowBlur = 0; g.textAlign = 'left';
+      g.font = CHU.f(700, 23); g.textAlign = 'center'; g.textBaseline = 'middle';   // A7 gợi ý (Handjet, bóng S1)
+      CHU.vien(g, (document.body.classList.contains('touch') ? '' : '▲ ') + t, x, y, CHU.GOLD, '#160D19', 1.5); g.textAlign = 'left';
     }
     // (khoidau) hướng dẫn một dòng: "Drag to move" tới khi đi được, rồi "Find the Rootbound Bell" (tới khi rung chuông lần đầu)
     if (S.che === 'choi'){
       const cham = document.body.classList.contains('touch'), daRung = LC && LC.co('lang_da_dich_chuyen');
       const goiY = !S.daDi ? (cham ? 'Drag to move' : 'Move with ← →') : (!daRung && !(S.gan && S.gan.id === 'chuong') && S.goiYT < 12 ? 'Find the Rootbound Bell' : '');
-      if (goiY){ g.font = '700 30px "Alegreya Sans",system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.shadowColor = '#000'; g.shadowBlur = 6;
-        g.fillStyle = 'rgba(255,233,176,' + (0.75 + 0.25 * Math.sin(S.tg * 3)) + ')'; g.fillText(goiY, W / 2, 92); g.shadowBlur = 0; g.textAlign = 'left'; }
+      if (goiY){ g.font = CHU.f(700, 27); g.textAlign = 'center'; g.textBaseline = 'middle';   // A7 gợi ý: Handjet 700 19px CSS ≈ 27px canvas
+        g.globalAlpha = 0.8 + 0.2 * Math.sin(S.tg * 3); CHU.vien(g, goiY, W / 2, 92, CHU.BONE, '#160D19', 1.5); g.globalAlpha = 1; g.textAlign = 'left'; }
     }
     if (S.che === 'thoai') HT.ve(g, W, H);
     if (S.che === 'menu') veMenu();
@@ -232,9 +233,9 @@
     g.imageSmoothingEnabled = true; g.drawImage(im, x, y, w, h);
     const [qx, qy, qw] = L.khung_chon.chu, tx = x + qx * w, fs = 22;
     g.textBaseline = 'top'; g.textAlign = 'left';
-    g.fillStyle = '#E1B85A'; g.font = '700 26px "Cormorant Garamond",serif'; g.textAlign = 'center'; g.fillText('The Rootbound Bell', tx + qw * w / 2, y + qy * h); g.textAlign = 'left';   // giữa vùng chữ: tránh 2 chuông treo ở góc trên
-    S.menu.chon.forEach((c, k) => { g.fillStyle = c.khoa ? 'rgba(201,180,138,.45)' : k === S.menu.i ? '#ffe08a' : '#c9b48a'; g.font = '500 ' + fs + 'px "Alegreya Sans",sans-serif';
-      g.fillText((k === S.menu.i ? '› ' : '  ') + c.chu, tx, y + qy * h + 44 + k * fs * 1.45, qw * w); });
+    g.font = CHU.f(750, 30); g.textAlign = 'center'; CHU.vien(g, 'The Rootbound Bell', tx + qw * w / 2, y + qy * h, CHU.GOLD, '#120B16', 1.5); g.textAlign = 'left';   // A3 tiêu đề   // giữa vùng chữ: tránh 2 chuông treo ở góc trên
+    S.menu.chon.forEach((c, k) => { g.font = CHU.f(700, fs + 3);   // A3 mục (Handjet)
+      CHU.vien(g, (k === S.menu.i ? '› ' : '  ') + c.chu, tx, y + qy * h + 44 + k * fs * 1.45, c.khoa ? '#9D8991' : k === S.menu.i ? CHU.GOLD : CHU.BONE, '#160D19', 1, qw * w); });
   }
 
   /* ---------------- khung hình + nút ---------------- */

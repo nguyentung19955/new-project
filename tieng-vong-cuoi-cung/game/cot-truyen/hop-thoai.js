@@ -89,14 +89,19 @@
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(cd, k * cw, 0, cw, cd.height, Math.round(px + (pw - cw * s) / 2), Math.round(py + ph - cd.height * s), Math.round(cw * s), Math.round(cd.height * s));
       }   // không chân dung (vd menu chuông): ô chân dung của khung để trống, chữ vẫn ở vùng chữ (không đè hoạ tiết khung)
-      const fs = Math.max(13, Math.round(H * 0.036)), PH = '"Alegreya Sans",system-ui,sans-serif';
-      ctx.textBaseline = 'top'; ctx.fillStyle = '#E1B85A'; ctx.font = '700 ' + Math.round(fs * 1.15) + 'px "Cormorant Garamond",' + PH;
-      if (nv.ten) ctx.fillText(nv.ten, tx, ty);
-      ctx.fillStyle = '#F3E6C8'; ctx.font = '500 ' + fs + 'px ' + PH;
-      let dongY = ty + fs * 1.6;
-      for (const ln of boDong(ctx, dg.chu.slice(0, mo.n), tw)){ ctx.fillText(ln, tx, dongY); dongY += fs * 1.3; }
+      // hệ font A (docs/khoi-dau/font-chatgpt.txt): hội thoại Spectral 500 (A5, 17px CSS ≈ H×0.042 canvas), lh 1.28, không bóng trên hộp tối;
+      // tên người nói Handjet 750 #E8BB68 + bóng S1; lựa chọn Handjet 700
+      const CH = goc.CHU || {PIXEL:"Handjet,'Arial Narrow',sans-serif", STORY:'Spectral,Georgia,serif'};
+      const fs = Math.max(13, Math.round(H * 0.042)), d1 = Math.max(1, Math.round(H / 400));
+      const vien = (t, x0, y0, mau) => { ctx.fillStyle = '#160D19'; ctx.fillText(t, x0, y0 + d1); ctx.fillText(t, x0 + d1, y0); ctx.fillText(t, x0 - d1, y0); ctx.fillText(t, x0, y0 - d1); ctx.fillStyle = mau; ctx.fillText(t, x0, y0); };
+      ctx.textBaseline = 'top'; ctx.font = '750 ' + Math.round(fs * 1.18) + 'px ' + CH.PIXEL;
+      if (nv.ten) vien(nv.ten, tx, ty, '#E8BB68');
+      ctx.fillStyle = '#F5E8D0'; ctx.font = '500 ' + fs + 'px ' + CH.STORY;
+      let dongY = ty + fs * 1.5;
+      for (const ln of boDong(ctx, dg.chu.slice(0, mo.n), tw)){ ctx.fillText(ln, tx, dongY); dongY += fs * 1.28; }
       if (dg.chon && mo.n >= dg.chu.length){
-        dg.chon.forEach((c, k) => { ctx.fillStyle = k === mo.chon ? '#ffe08a' : '#c9b48a'; ctx.fillText((k === mo.chon ? '› ' : '  ') + c.chu, tx, dongY); dongY += fs * 1.3; });
+        ctx.font = '700 ' + Math.round(fs * 1.12) + 'px ' + CH.PIXEL;
+        dg.chon.forEach((c, k) => { vien((k === mo.chon ? '› ' : '  ') + c.chu, tx, dongY, k === mo.chon ? '#E8BB68' : '#F5E8D0'); dongY += fs * 1.28; });
       }
       ctx.restore();
     },

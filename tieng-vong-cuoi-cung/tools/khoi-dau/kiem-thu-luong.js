@@ -23,7 +23,7 @@ const ANH = process.argv[2] || null;
   const chuTD = await pg.evaluate(() => document.body.innerText);
   ok(!/Region 1|Region 2|Demo Room|Sign in|Export|Import/.test(chuTD), 'A: tiêu đề không có link vùng / Demo / đăng nhập / xuất-nhập', chuTD);
   const nutTD = await pg.evaluate(() => [...document.querySelectorAll('#cot .kd-nut')].filter(e => e.offsetParent).map(e => { const r = e.getBoundingClientRect(), fs = parseFloat(getComputedStyle(e).fontSize); return {id:e.id, h:r.height, x:r.left, r:r.right, y:r.top, b:r.bottom, fs}; }));
-  ok(nutTD.every(n => n.h >= 44 && n.fs >= 18 && n.fs <= 20 && n.x >= 0 && n.r <= 844 - 24 && n.y >= 24 && n.b <= 390 - 24), 'A: nút ≥ 44 px, chữ 18–20 px, trong vùng an toàn', nutTD);
+  ok(nutTD.every(n => n.h >= 44 && n.fs >= 19 && n.fs <= 23 && n.x >= 0 && n.r <= 844 - 24 && n.y >= 24 && n.b <= 390 - 24), 'A: nút ≥ 44 px, chữ 19–23 px (hệ font A: 23 nút chính, 21 nút phụ), trong vùng an toàn', nutTD);
   ok(await pg.evaluate(() => { const i = document.getElementById('logo'); return !i.hidden && i.naturalWidth === 800; }), 'A: logo ảnh ChatGPT đã lắp');
   await chup('01-tieu-de-khach');
   /* Options + Account (bảng phủ) */

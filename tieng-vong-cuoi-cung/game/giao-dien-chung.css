@@ -1,4 +1,5 @@
-/* giao-dien-chung.css – GIAO DIỆN CHUNG (phiên "Khởi đầu – đợt 1"): nút, bảng, màn tải, tên vùng, menu tạm dừng, tuỳ chọn, tài khoản.
+/* (phông + màu chữ: game/giao-dien/chu.css – nạp TRƯỚC file này)
+   giao-dien-chung.css – GIAO DIỆN CHUNG (phiên "Khởi đầu – đợt 1"): nút, bảng, màn tải, tên vùng, menu tạm dừng, tuỳ chọn, tài khoản.
    LUẬT HÌNH: mọi khung/nút là ẢNH ChatGPT (art/khoi-dau/, 9-slice bằng border-image, hiển thị 50%, nearest-neighbor).
    Code chỉ làm: chữ, độ tối, độ mờ, vị trí. Không viền/khung/bo góc tự vẽ. */
 :root{--kd-sat:env(safe-area-inset-top,0px);--kd-sar:env(safe-area-inset-right,0px);--kd-sab:env(safe-area-inset-bottom,0px);--kd-sal:env(safe-area-inset-left,0px);
@@ -8,37 +9,37 @@ html.kd-cam-ung #keys, html.kd-cam-ung .kd-phim{display:none!important}
 html:not(.kd-cam-ung) .kd-chi-cham{display:none!important}
 
 /* ---------- NÚT (A06 chính 520×116, A07 phụ 520×96; góc chuông ~90 / ~60 px ảnh gốc) ---------- */
-.kd-nut{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:54px;min-width:116px;margin:0;padding:0;
+.kd-nut{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:54px;min-width:116px;margin:0;padding:0 0 2px;   /* nhãn căn giữa tấm phẳng trong khung ảnh (tấm lệch lên ~1px) */
   border-style:solid;border-color:transparent;border-width:0 42px;border-radius:0;background:none;
   border-image:url(../art/khoi-dau/nut-chinh-thuong.png) 0 90 fill / 0 42px stretch;image-rendering:pixelated;
-  color:var(--kd-chu);font:700 20px/1 "Alegreya Sans",system-ui,-apple-system,sans-serif;letter-spacing:.6px;white-space:nowrap;
-  text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.7);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-.kd-nut:active{border-image-source:url(../art/khoi-dau/nut-chinh-nhan.png);color:#ffe9b0}
-.kd-nut:disabled{border-image-source:url(../art/khoi-dau/nut-chinh-tat.png);color:#9b8f86;cursor:default}
-.kd-nut.phu{height:44px;border-width:0 28px;border-image:url(../art/khoi-dau/nut-phu-thuong.png) 0 60 fill / 0 28px stretch;font-size:18px}
+  color:var(--ui-bone);font:750 23px/1 var(--ui-pixel);letter-spacing:.035em;white-space:nowrap;   /* A1 (chu.css) */
+  text-shadow:var(--ui-shadow-outline);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.kd-nut:active{border-image-source:url(../art/khoi-dau/nut-chinh-nhan.png);color:var(--ui-gold)}
+.kd-nut:disabled{border-image-source:url(../art/khoi-dau/nut-chinh-tat.png);color:var(--ui-disabled);cursor:default}
+.kd-nut.phu{height:44px;border-width:0 28px;border-image:url(../art/khoi-dau/nut-phu-thuong.png) 0 60 fill / 0 28px stretch;font-weight:700;font-size:21px;letter-spacing:.025em}   /* A2 */
 .kd-nut.phu:active{border-image-source:url(../art/khoi-dau/nut-phu-nhan.png)}
 .kd-nut.phu:disabled{border-image-source:url(../art/khoi-dau/nut-phu-tat.png)}
-.kd-nut.chinh{color:#ffe08a}
+.kd-nut.chinh{color:var(--ui-bone)}
 .kd-nut[hidden]{display:none!important}
-.kd-nut small{font-size:13px;font-weight:600;opacity:.8;margin-left:6px}
+.kd-nut small{font:600 13px var(--ui-utility);color:var(--ui-muted);margin-left:6px;text-shadow:var(--ui-shadow-soft)}
 
 /* ---------- LỚP PHỦ + BẢNG (A14 bảng lớn 1120×660 → 560×330; A15 bảng vừa 840×540 → 420×270) ---------- */
 .kd-lop{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(8,5,12,.74)}
 .kd-lop.mo{display:grid}
 .kd-bang{box-sizing:border-box;position:relative;width:560px;height:330px;padding:56px 42px 30px;transform:scale(var(--kd-k));
   background:url(../art/khoi-dau/bang-lon.png) 0 0/100% 100% no-repeat;image-rendering:pixelated;
-  color:var(--kd-chu);font:500 16px/1.35 "Alegreya Sans",system-ui,sans-serif;text-align:center;text-shadow:0 1px 2px #000}
+  color:var(--ui-bone);font:500 15px/1.3 var(--ui-utility);text-align:center;text-shadow:none}   /* A9 thân */
 .kd-bang.vua{width:420px;height:270px;padding:46px 34px 26px;background-image:url(../art/khoi-dau/bang-vua.png)}
-.kd-bang h1{margin:0 0 6px;font:700 26px/1.1 "Cormorant Garamond",Georgia,serif;color:var(--kd-vang);letter-spacing:1px}
+.kd-bang h1{margin:0 0 6px;font:750 24px/1.05 var(--ui-pixel);color:var(--ui-gold);letter-spacing:.04em;text-shadow:var(--ui-shadow-outline)}   /* A9 tiêu đề */
 .kd-bang p{margin:6px 0}
 .kd-bang .kd-hang{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.kd-bang .kd-hang .kd-nut{min-width:150px}
-.kd-bang .kd-ghi{font-size:14px;color:var(--kd-mo)}
+.kd-bang .kd-hang .kd-nut{min-width:150px;font-size:22px}   /* A9 nút */
+.kd-bang .kd-ghi{font:600 14px/1.2 var(--ui-utility);color:var(--ui-muted)}
 .kd-bang [hidden]{display:none!important}
 
 /* ---------- MÀN TẢI (A12 nền + A13 chuông 8 khung 160×160 → 80×80) ---------- */
 #kd-tai{position:fixed;inset:0;z-index:80;display:none;background:#0b0810 url(../art/khoi-dau/tai-nen.png) center/cover no-repeat;image-rendering:pixelated;
-  color:var(--kd-chu);font:600 18px "Alegreya Sans",system-ui,sans-serif;text-shadow:0 1px 3px #000}
+  color:var(--ui-bone);font:700 19px/1.1 var(--ui-pixel);letter-spacing:.015em;text-shadow:var(--ui-shadow-outline)}
 #kd-tai.mo{display:block}
 #kd-tai .kd-chuong{position:absolute;right:calc(var(--kd-sar) + 60px);bottom:calc(var(--kd-sab) + 52px);width:80px;height:80px;
   background:url(../art/khoi-dau/tai-chuong.png) 0 0/640px 80px no-repeat;image-rendering:pixelated;animation:kd-lac .8s steps(8) infinite}
@@ -51,8 +52,8 @@ html:not(.kd-cam-ung) .kd-chi-cham{display:none!important}
 #kd-toi{position:fixed;inset:0;z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .25s linear}
 #kd-toi.mo{opacity:1;pointer-events:auto}
 #kd-ten{position:fixed;left:0;right:0;top:24%;z-index:55;text-align:center;pointer-events:none;opacity:0;
-  font:700 40px/1.1 "Cormorant Garamond",Georgia,serif;color:var(--kd-vang);letter-spacing:2px;text-shadow:0 2px 6px #000,0 0 18px rgba(0,0,0,.8)}
-#kd-ten small{display:block;font:600 16px "Alegreya Sans",system-ui,sans-serif;color:var(--kd-chu);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+  font:700 27px/1.06 var(--ui-story);color:var(--ui-gold);letter-spacing:.045em;text-shadow:var(--ui-shadow-header)}   /* A6 thẻ tên vùng */
+#kd-ten small{display:block;font:650 18px/1 var(--ui-pixel);color:var(--ui-parchment);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;text-shadow:var(--ui-shadow-outline)}
 #kd-ten.chay{animation:kd-ten 2.4s ease forwards}
 @keyframes kd-ten{0%{opacity:0}20%{opacity:1}60%{opacity:1}100%{opacity:0}}
 
@@ -64,29 +65,31 @@ html:not(.kd-cam-ung) .kd-chi-cham{display:none!important}
 
 /* ---------- MENU TẠM DỪNG ---------- */
 #kd-dung .kd-cot{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:8px}
+#kd-dung h1{font-size:23px;letter-spacing:.04em;text-shadow:var(--ui-shadow-header)}   /* A3 tiêu đề */
+#kd-dung .kd-nut{font-size:20px;letter-spacing:.04em}   /* A3 mục */
 #kd-dung .kd-cot .kd-nut{width:100%}
 #kd-dung .kd-tach{margin-top:8px}
 
 /* ---------- TUỲ CHỌN ---------- */
 #kd-tc .kd-hai{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;text-align:left;margin-top:4px}
-#kd-tc h2{margin:0 0 4px;font:700 14px "Alegreya Sans",sans-serif;letter-spacing:2px;color:var(--kd-vang)}
-#kd-tc label{display:flex;align-items:center;gap:8px;height:33px;font-size:16px}
-#kd-tc label span{width:54px}
+#kd-tc h2{margin:0 0 4px;font:750 20px/1.05 var(--ui-pixel);letter-spacing:.04em;color:var(--ui-gold);text-shadow:var(--ui-shadow-outline)}
+#kd-tc label{display:flex;align-items:center;gap:8px;height:33px;font:750 20px/1.05 var(--ui-pixel);letter-spacing:.04em;text-shadow:var(--ui-shadow-outline)}   /* A3 mục */
+#kd-tc label span{min-width:60px}
 #kd-tc input[type=range]{flex:1;min-width:0;height:36px;accent-color:#c99a4a}
 #kd-tc input[type=checkbox]{width:24px;height:24px;accent-color:#c99a4a}
 #kd-tc .kd-cot1 .kd-nut{width:100%;margin-bottom:8px}
 
 /* ---------- TÀI KHOẢN + XUNG ĐỘT ---------- */
-#kd-tk .kd-tt{font-size:18px;color:#ffe08a;margin:4px 0 8px}
+#kd-tk .kd-tt{font:600 15px/1.25 var(--ui-utility);color:var(--ui-muted);margin:4px 0 8px}
 #kd-tk .dn{margin-top:4px}
 #kd-xd .kd-the{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0}
-#kd-xd .kd-the>div{background:rgba(0,0,0,.28);padding:6px 8px;text-align:left;font-size:14px;line-height:1.35}
-#kd-xd .kd-the b{display:block;font-size:13px;letter-spacing:2px;color:var(--kd-vang)}
+#kd-xd .kd-the>div{background:rgba(0,0,0,.28);padding:6px 8px;text-align:left;font:500 13px/1.3 var(--ui-utility);color:var(--ui-muted)}   /* A9 ngày giờ */
+#kd-xd .kd-the b{display:block;font:750 18px/1.1 var(--ui-pixel);letter-spacing:.05em;color:var(--ui-gold);text-shadow:var(--ui-shadow-outline)}
 #kd-xd .kd-hang{gap:8px;flex-wrap:nowrap}
 #kd-xd .kd-hang .kd-nut{min-width:0;padding:0 2px}
 
 /* ---------- XOAY DỌC ---------- */
 #kd-xoay{position:fixed;inset:0;z-index:99;display:none;place-items:center;text-align:center;padding:24px;
-  background:#0b0810 url(../art/khoi-dau/tai-nen.png) center/cover no-repeat;color:var(--kd-chu);font:600 18px/1.4 "Alegreya Sans",sans-serif;text-shadow:0 1px 3px #000}
-#kd-xoay h1{font:700 30px "Cormorant Garamond",Georgia,serif;color:var(--kd-vang);margin:0 0 8px}
+  background:#0b0810 url(../art/khoi-dau/tai-nen.png) center/cover no-repeat;color:var(--ui-bone);font:600 15px/1.25 var(--ui-utility);text-shadow:var(--ui-shadow-soft)}
+#kd-xoay h1{font:750 24px/1.05 var(--ui-pixel);letter-spacing:.04em;color:var(--ui-gold);margin:0 0 8px;text-shadow:var(--ui-shadow-header)}
 @media (orientation:portrait){ html.kd-cam-ung #kd-xoay:not(.bo){display:grid} }

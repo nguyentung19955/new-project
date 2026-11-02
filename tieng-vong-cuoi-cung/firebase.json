@@ -9,7 +9,7 @@
     ],
     "redirects": [ { "source": "/", "destination": "/game/", "type": 302 } ],
     "headers": [
-      { "source": "**/*.@(js|json|html)", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] },
+      { "source": "**/*.@(js|json|html|css)", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] },
       { "source": "**/*.@(png|webp|jpg|ogg|mp3|wav)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=3600" } ] }
     ]
   },

@@ -51,8 +51,9 @@
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.globalAlpha = Math.max(0, Math.min(1, (c.t - 0.4) / 0.6)) * a;
       ctx.shadowColor = '#000'; ctx.shadowBlur = 6;
-      if (tr.tieu_de){ ctx.fillStyle = '#E1B85A'; ctx.font = '700 ' + Math.round(fs * 2.2) + 'px "Cormorant Garamond",serif'; ctx.fillText(tr.tieu_de, W / 2, y + h * 0.42); }
-      ctx.fillStyle = '#F3E6C8'; ctx.font = 'italic 500 ' + fs + 'px "Cormorant Garamond","Alegreya Sans",serif';
+      const CH = goc.CHU || {STORY:'Spectral,Georgia,serif'};   // hệ font A: phim mở đầu = chữ kể chuyện Spectral
+      if (tr.tieu_de){ ctx.fillStyle = '#E8BB68'; ctx.font = '700 ' + Math.round(fs * 2) + 'px ' + CH.STORY; ctx.fillText(tr.tieu_de, W / 2, y + h * 0.42); }
+      ctx.fillStyle = '#F5E8D0'; ctx.font = '500 ' + fs + 'px ' + CH.STORY;
       ctx.fillText(tr.chu, W / 2, y + h * 0.9);
       ctx.restore();
     },

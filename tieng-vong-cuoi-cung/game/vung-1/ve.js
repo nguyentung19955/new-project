@@ -603,7 +603,7 @@
         for (let i = 0; i < 3; i++){ if (i >= co) continue; const [hx, hy] = HOC[lat ? 2 - i : i]; const cx = lat ? x0 + w - hx * k : x0 + hx * k;
           veAnhDay(IC, cx, y0 + hy * k + IC.height * k * 0.5, k * 0.95, false); }
         const d2 = thieu ? thieu + ' missing' + (dir0 < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir0 < 0 ? '← ' : '→ ') + 'All 3 · Mute Bell Choir gate';
-        if (V1.IMG.khung_bang){ ctx.font = '700 14px ' + PHONG; const hK = Math.round(17 * 1.3) + Math.round(14 * 1.3) + (KB.dinh + KB.day) * 0.4 + 6;
+        if (V1.IMG.khung_bang){ ctx.font = F(14); const hK = Math.round(17 * 1.3) + Math.round(14 * 1.3) + (KB.dinh + KB.day) * 0.4 + 6;
           chuKhung([{s:'Broken Bells ' + co + '/3', co:17, mau:'#ffe08a'}, {s:d2, co:14, mau:thieu ? '#F3E6C8' : '#ffd98a'}], x + 10, y0 - hK + 4, 0.4, 400); }
         else { chu('Broken Bells ' + co + '/3', x + 10, y0 - 26, 17, '#ffe08a'); chu(d2, x + 10, y0 - 6, 14, thieu ? '#F3E6C8' : '#ffd98a'); }
         return;
@@ -752,11 +752,22 @@
       }
     }
   }
-  // Phông chữ (ChatGPT chọn 02/11): Alegreya Sans cho mọi chữ, Cormorant Garamond cho tiêu đề lớn (tên phòng, tên trùm)
-  const PHONG = '"Alegreya Sans",system-ui,-apple-system,sans-serif', PHONG_TD = '"Cormorant Garamond","Alegreya Sans",serif';
+  // Phông chữ – hệ A (ChatGPT 02/11, docs/khoi-dau/font-chatgpt.txt; game/giao-dien/chu.js): Handjet cho HUD/bia/thông báo/bản đồ,
+  // Spectral cho tiêu đề kể chuyện (tên phòng, tên trùm, băng rôn vào phòng). Handjet hẹp + thấp → cỡ ×1,2 để cao chữ như cũ.
+  const PHONG = (window.CHU && CHU.PIXEL) || "Handjet,'Arial Narrow',sans-serif", PHONG_TD = (window.CHU && CHU.STORY) || 'Spectral,Georgia,serif';
+  const F = co => '700 ' + Math.round(co * 1.2) + 'px ' + PHONG;
   function chu(s, x, y, co, mau, canh, td){
-    ctx.font = (td ? '700 ' + Math.round(co * 1.15) + 'px ' + PHONG_TD : '700 ' + co + 'px ' + PHONG); ctx.textAlign = canh || 'center';
-    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(8,6,10,0.85)'; ctx.strokeText(s, x, y); ctx.fillStyle = mau || '#F3E6C8'; ctx.fillText(s, x, y); ctx.textAlign = 'left';
+    ctx.font = td ? '700 ' + Math.round(co * 1.15) + 'px ' + PHONG_TD : F(co); ctx.textAlign = canh || 'center';
+    // bóng S1 (viền cứng 1px 4 phía, không làm đậm giả bằng nét viền dày) – canvas 960×540 ≈ 1,4 lần px CSS trên iPhone ngang
+    const d = co >= 18 ? 2 : 1.5;
+    if (window.CHU) CHU.vien(ctx, s, x, y, mau || '#F5E8D0', 'rgba(22,13,25,0.95)', d);
+    else { ctx.fillStyle = 'rgba(22,13,25,0.95)'; ctx.fillText(s, x, y + d); ctx.fillStyle = mau || '#F5E8D0'; ctx.fillText(s, x, y); }
+    ctx.textAlign = 'left';
+  }
+  // chữ vừa khít bề rộng (vd tên phòng trên ô bản đồ): giảm cỡ tới tối thiểu `min`
+  function chuVua(s, x, y, co, mau, rong, min){
+    let c = co; ctx.font = F(c); while (c > (min || 8) && ctx.measureText(s).width > rong){ c -= 0.5; ctx.font = F(c); }
+    chu(s, x, y, c, mau);
   }
   V1.chu = chu;
   // Khung bảng (ChatGPT vẽ): 9 mảnh co giãn + mặt nạ nứt giữa cạnh trên. Số đo theo điểm ảnh của khung_bang.png
@@ -797,10 +808,10 @@
   function chuKhung(dong, cx, y, k, rongMax){
     k = k || 0.5; rongMax = rongMax || 620;
     const ra = [];
-    for (const d of dong){ ctx.font = '700 ' + d.co + 'px ' + PHONG; let hang = '';
+    for (const d of dong){ ctx.font = F(d.co); let hang = '';
       for (const t of String(d.s).split(' ')){ const thu = hang ? hang + ' ' + t : t; if (hang && ctx.measureText(thu).width > rongMax){ ra.push({s:hang, co:d.co, mau:d.mau}); hang = t; } else hang = thu; }
       if (hang) ra.push({s:hang, co:d.co, mau:d.mau}); }
-    let rong = 0; for (const d of ra){ ctx.font = '700 ' + d.co + 'px ' + PHONG; rong = Math.max(rong, ctx.measureText(d.s).width); }
+    let rong = 0; for (const d of ra){ ctx.font = F(d.co); rong = Math.max(rong, ctx.measureText(d.s).width); }
     const cao = ra.reduce((a, d) => a + Math.round(d.co * 1.3), 0);
     const w = Math.max((KB.L + KB.R + 60) * k, rong + 2 * KB.ben * k + 16), h = cao + (KB.dinh + KB.day) * k + 6;
     if (!veKhung(cx - w / 2, y, w, h, k)){ ctx.fillStyle = 'rgba(12,8,16,0.86)'; rr(cx - w / 2, y, w, h, 10); ctx.fill(); }
@@ -969,7 +980,7 @@
         ve9(I.bd_o_chua, 30, 30, 30, 30, r.x, r.y, r.w, r.h, ko, 0.8); chu('?', r.x + r.w / 2, r.y + r.h / 2 + 5, 14, '#3a2a1c'); continue;
       }
       ve9(p.id === G.id ? I.bd_o_hien : I.bd_o_da, 34, 34, 34, 34, r.x, r.y, r.w, r.h, ko);
-      chu(p.id, r.x + r.w / 2, r.y + 15, 11, p.id === G.id ? '#fff2cf' : '#d9c7a4');
+      chuVua(p.ten || p.id, r.x + r.w / 2, r.y + 15, 11, p.id === G.id ? '#fff2cf' : '#d9c7a4', r.w - 8, 7);   // tên phòng (không hiện mã nội bộ P01…)
       if (P && P.chuong_luu) anh(I.bd_chuong_luu, r.x + 12, r.y + r.h - 13, s * 0.45);
       if (P && P.khoa && G.luu.kho[P.khoa.can] < P.khoa.so) anh(I.hud_chuong_khoa, r.x + r.w - 12, r.y + r.h - 13, s * 0.42);
       if (P && P.trum && !G.luu.trumHa) anh(I.bd_trum, r.x + r.w - 14, r.y + 14, s * 0.5);

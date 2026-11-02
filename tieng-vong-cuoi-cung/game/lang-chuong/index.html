@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bell Village – The Last Echo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../giao-dien/chu.css">
 <link rel="stylesheet" href="../giao-dien-chung.css" data-kd="1">
 <style>
-  html, body { margin:0; height:100%; background:#05080d; color:#F3E6C8; font-family:"Alegreya Sans",system-ui,sans-serif; overflow:hidden;
+  html, body { margin:0; height:100%; background:#05080d; color:var(--ui-bone); font-family:var(--ui-utility); overflow:hidden;
     touch-action:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
   #game { position:fixed; inset:0; display:grid; place-items:center; }
   #cv { display:none; image-rendering:pixelated; }
@@ -18,12 +18,12 @@
   .vien { position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 14px); box-sizing:border-box; height:44px; min-width:112px; padding:0 4px;
     border-style:solid; border-color:transparent; border-width:0 28px; border-radius:0; background:none;
     border-image:url(../../art/khoi-dau/nut-phu-thuong.png) 0 60 fill / 0 28px stretch; image-rendering:pixelated;
-    color:#ffe08a; font:700 18px "Alegreya Sans",system-ui,sans-serif; text-shadow:0 1px 2px #000; visibility:hidden; display:none; }
+    padding-bottom:2px; color:var(--ui-bone); font:700 21px/1 var(--ui-pixel); letter-spacing:.025em; text-shadow:var(--ui-shadow-outline); visibility:hidden; display:none; }
   .vien:active { border-image-source:url(../../art/khoi-dau/nut-phu-nhan.png); }
   body.touch .vien { display:block; }
   #b-noi { right:calc(env(safe-area-inset-right,0px) + 16px); }
   #b-bo { right:calc(env(safe-area-inset-right,0px) + 136px); display:block; z-index:5; }
-  #keys { position:fixed; bottom:6px; left:50%; transform:translateX(-50%); font-size:13px; color:#d8cdb4; white-space:nowrap; pointer-events:none; text-shadow:0 1px 2px #000; }
+  #keys { position:fixed; bottom:6px; left:50%; transform:translateX(-50%); font:600 13px/1.2 var(--ui-utility); color:var(--ui-ash); white-space:nowrap; pointer-events:none; text-shadow:0 1px 2px #000; }
   body.touch #keys { display:none; }
 </style>
 </head>
@@ -37,6 +37,7 @@
 <button id="b-bo" class="vien" type="button">Skip</button>
 <button id="b-noi" class="vien" type="button">Talk</button>
 <div id="keys">← → walk · ↑ / E talk, ring the bell · Z / Enter next · ↑ ↓ choose · Esc skip</div>
+<script src="../giao-dien/chu.js"></script>
 <script src="../firebase/cau-hinh.js"></script>
 <script src="../luu-may.js"></script>
 <script src="../dang-nhap.js"></script>

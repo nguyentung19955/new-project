@@ -19,7 +19,7 @@ V1.nap = async function(){
   await Promise.all(['mau_day', 'mau_rong', 'binh_day', 'binh_rong', 'i_hat_vong', 'i_the_ten', 'i_loi_vong_tan', 'chuong_khoa', 'khung_hud', 'vach', 'nut_ban_do'].map(n => V1.napAnh('hud_' + n, '../../art/giao-dien/hud/' + n + '.png')));   // giao diện (ChatGPT vẽ)
   await Promise.all(['bao_quet', 'vet_quet', 'dich_mat_na', 'cot_song', 'mat_na_roi', 'day_vai'].map(n => V1.napAnh('tr_' + n, '../../art/hieu-ung/trum/' + n + '.png')));   // hiệu ứng trùm + dây Màn Tang (ChatGPT vẽ)
   await Promise.all([['khung_bang', 'khung_bang'], ['khung_mat', 'khung_mat']].map(([k, n]) => V1.napAnh(k, '../../art/giao-dien/khung/' + n + '.png')));   // khung bảng thông báo (ChatGPT vẽ)
-  try { await Promise.race([Promise.all(['700 16px "Alegreya Sans"', '700 20px "Cormorant Garamond"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}   // phông chữ (ChatGPT chọn)
+  try { if (window.CHU) await CHU.cho(2500); } catch (e) {}   // phông hệ A (Handjet / Spectral / IBM Plex Sans – game/giao-dien/chu.js) trước khi vẽ chữ canvas
   await Promise.all(['nen', 'o_da', 'o_hien', 'o_chua', 'chuong_luu', 'mat_na', 'trum', 'chuong_vo', 'noi_ngang', 'noi_doc'].map(n => V1.napAnh('bd_' + n, '../../art/giao-dien/ban-do/' + n + '.png')));   // bản đồ (ChatGPT vẽ)
   await V1.napAnh('fx_hoi_mau', '../../art/hieu-ung/hoi-mau/hoi_mau.png');   // hiệu ứng hồi máu (ChatGPT vẽ)
   await Promise.all(['ngang', 'cung', 'cheo', 'no'].map(n => V1.napAnh('fx_c_' + n, '../../art/hieu-ung/chem-moi/' + n + '.png')));   // hiệu ứng trúng đòn (ChatGPT vẽ)

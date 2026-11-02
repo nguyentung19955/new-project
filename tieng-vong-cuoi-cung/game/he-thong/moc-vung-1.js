@@ -162,10 +162,10 @@
       '#l-hethong .hop,#l-charm .hop{width:min(820px,calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));max-width:none;max-height:94vh;overflow:auto;-webkit-overflow-scrolling:touch;text-align:left;box-sizing:border-box}' +
       '.ht-tab{display:flex;gap:8px;margin:6px 0}.ht-tab button{min-width:96px;min-height:44px;margin:0}.ht-tab button.chon{border-color:var(--bell);color:#ffe08a}' +
       '#ht-cay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:10px}' +
-      '#ht-ds button,#ch-ds button{display:block;width:100%;height:auto;min-height:48px;margin:0 0 6px;padding:6px 10px;text-align:left;font-size:14px;line-height:1.25}' +
-      '#ht-ds button small,#ch-ds button small{display:block;font-size:12px;color:#a9b3bf;font-weight:600}' +
+      '#ht-ds button,#ch-ds button{display:block;width:100%;height:auto;min-height:48px;margin:0 0 6px;padding:6px 10px;text-align:left;font-size:18px;line-height:1.1}' +
+      '#ht-ds button small,#ch-ds button small{display:block;font:600 13px/1.25 var(--ui-utility);color:var(--ui-muted);text-shadow:none;letter-spacing:0}' +
       '#ht-ds button.da{border-color:#9be7a0;color:#9be7a0}#ht-ds button.duoc{border-color:var(--bell);color:#ffe08a}#ht-ds button.chon,#ch-ds button.chon{outline:2px solid #78e6e6}' +
-      '#ht-ct,#ch-ct{font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:anywhere;min-width:0}#ht-ct button,#ch-ct button,#ch-lo button{min-height:48px;min-width:120px;margin:6px 6px 0 0}' +
+      '#ht-ct,#ch-ct{font:500 15px/1.3 var(--ui-utility);white-space:normal;overflow-wrap:anywhere;min-width:0}#ht-ct button,#ch-ct button,#ch-lo button{min-height:48px;min-width:120px;margin:6px 6px 0 0}' +
       '#ch-bo{display:grid;grid-template-columns:minmax(0,240fr) minmax(0,300fr) minmax(0,160fr);gap:8px}' +
       '#ch-ds button{display:flex;align-items:center;gap:8px}.ch-o{position:relative;width:56px;height:56px;flex:none}.ch-o img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}' +
       '#l-chondau .hang button{height:auto;min-height:120px;width:220px;min-width:0;padding:10px 12px;display:inline-flex;flex-direction:column;align-items:center;gap:4px;white-space:normal}' +
@@ -179,7 +179,7 @@
       (co(gd.khung_chinh) ? '#l-hethong h1,#l-charm h1{text-align:center}' : '') +
       // tab 96×40 giữ đúng cỡ ảnh (nút cao 44 để dễ bấm)
       (co(gd.tab) && co(gd.tab_chon) ? '.ht-tab button{width:96px;min-width:96px;height:44px;padding:0;border:0;border-image:none;background:url(' + src(gd.tab) + ') center/96px 40px no-repeat}.ht-tab button.chon{background-image:url(' + src(gd.tab_chon) + ')}' : '') +
-      (co(gd.nut) ? '#ht-ct button,#ch-ct button{height:48px;padding:0 16px;white-space:nowrap;font-size:14px;border:0;border-image:none;background:url(' + src(gd.nut) + ') center/100% 100% no-repeat}' : '') +
+      (co(gd.nut) ? '#ht-ct button,#ch-ct button{height:48px;padding:0 16px;white-space:nowrap;font-size:19px;border:0;border-image:none;background:url(' + src(gd.nut) + ') center/100% 100% no-repeat}' : '') +
       (co(gd.nut_khoa) ? '#ht-ct button.khoa{border:0;border-image:none;background:url(' + src(gd.nut_khoa) + ') center/100% 100% no-repeat;color:#8b8f96;opacity:1}' : '') +
       '#ch-lo button{height:auto;min-width:0;padding:2px;border:0;border-image:none;background:none}.ch-cam{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}.ch-cam img{width:40px;height:40px;image-rendering:pixelated}' +
       '.ch-hiem{width:24px;height:24px;vertical-align:-6px;margin-right:4px;image-rendering:pixelated}';
@@ -233,7 +233,7 @@
     const n = D.cay.find(x => x.id === nutChon), ct = $('ht-ct');
     if (n){
       const t = ht.trangThaiNut(n.id);
-      ct.innerHTML = '<b style="font-size:16px">' + n.ten + '</b><br>' + n.mo_ta + '<br>Cost: ' + n.gia + ' ' + (n.gia === 1 ? D.diem.ten_not : D.diem.ten_not_nhieu) +
+      ct.innerHTML = '<b style="font:750 20px/1.1 var(--ui-pixel);letter-spacing:.03em;color:var(--ui-gold)">' + n.ten + '</b><br>' + n.mo_ta + '<br>Cost: ' + n.gia + ' ' + (n.gia === 1 ? D.diem.ten_not : D.diem.ten_not_nhieu) +
         ' · Level ' + n.cap + '<br><span style="color:#a9b3bf">' + chuTT(n, t) + '</span><br>';
       if (t === 'mo_duoc'){ const b = document.createElement('button'); b.type = 'button'; b.className = 'chinh'; b.textContent = 'Learn';
         b.onclick = async () => { if (ht.moNut(n.id).ok){ ghi(); await apDung(); phatFx('halo'); V1.thongBao('Learned: ' + n.ten); } moBang(); }; ct.appendChild(b); }
@@ -259,7 +259,7 @@
     const m = ht.tim(charmChon), ct = $('ch-ct'); ct.innerHTML = '';
     if (m){
       const g = ht.MAU[m.mau], h = ht.HIEM[m.hiem], lap = S.lap.includes(m.uid);
-      ct.innerHTML = '<b style="font-size:16px">' + g.ten + '</b> <span style="color:' + h.mau_chu + '">' + hiemIcon(h) + h.ten + '</span><br>' + g.loai + ' · ' + g.o + (g.o === 1 ? ' slot' : ' slots') +
+      ct.innerHTML = '<b style="font:750 20px/1.1 var(--ui-pixel);letter-spacing:.03em;color:var(--ui-gold)">' + g.ten + '</b> <span style="color:' + h.mau_chu + '">' + hiemIcon(h) + h.ten + '</span><br>' + g.loai + ' · ' + g.o + (g.o === 1 ? ' slot' : ' slots') +
         '<br>' + g.mo_ta + (m.dong.length ? '<br>' + m.dong.map(ht.moTaDong).join('<br>') : '') + '<br>';
       const nut = (chu, fn, chinh) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = chu; if (chinh) b.className = 'chinh'; b.onclick = fn; ct.appendChild(b); };
       if (lap) nut('Unequip', async () => { ht.go(m.uid); ghi(); await apDung(); moCharm(); capNhatNut(); });

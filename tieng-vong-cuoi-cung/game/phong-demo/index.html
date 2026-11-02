@@ -4,12 +4,12 @@
 <title>Mute Bell Hollow – The Last Echo</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap&subset=vietnamese" rel="stylesheet">
+<link rel="stylesheet" href="../giao-dien/chu.css">
 <style>
 /* Trang thử Mặt Nạ Trắng đánh 5 loại quái. Logic 960×540 px; cảnh 320×180 điểm (1 điểm = 3 px logic); sprite 1 điểm = 2 px logic.
    Cả khung phóng SỐ NGUYÊN ×M lên màn (như thu-pixellab). Nhân vật: nhan-vat.json · quái: quai.json (sửa JSON, không cần sửa code). */
 :root{--night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--cyan:#78e6e6;--line:#4A5A6E;--k:1;color-scheme:dark}
-html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font-family:"Alegreya Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+html,body{height:100%;margin:0;background:var(--night);color:var(--ink);font-family:var(--ui-pixel);overflow:hidden;
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 #game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
 #cv{display:block;image-rendering:pixelated}
@@ -59,6 +59,7 @@ body.touch #keys{display:none}
   <div id="keys">← → move · Z jump (×2 double) · X slash (↓+X: slam) · ↑ climb rope · C dash · V heal · 1/2/3 level · H boxes · T slow</div>
   <div id="rotate">Rotate your phone to landscape to play</div>
 </div>
+<script src="../giao-dien/chu.js"></script>
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
 <script src="../thu-mat-na/ve-chieu-quai.js"></script>
@@ -472,7 +473,7 @@ function ve(){
     ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15 + i * 24, 15, 18, 18); ctx.fillStyle = i < pl.hp ? '#eef1f0' : '#304a73'; ctx.fillRect(18 + i * 24, 18, 12, 12); }
   ctx.fillStyle = '#0d0f1c'; ctx.fillRect(15, 39, 6 + E.P.vongMax * 12, 12);
   for (let i = 0; i < E.P.vongMax; i++){ ctx.fillStyle = i < pl.vong ? (i < E.P.vongHoi * Math.floor(pl.vong / E.P.vongHoi) ? '#78e6e6' : '#4696a0') : '#1a2b3d'; ctx.fillRect(18 + i * 12, 42, 9, 6); }
-  if (tbT > 0){ ctx.font = '700 16px "Alegreya Sans",system-ui,sans-serif'; ctx.textAlign = 'center';
+  if (tbT > 0){ ctx.font = CHU.f(700, 19); ctx.textAlign = 'center';
     const w = ctx.measureText(tb).width + 16;
     if (KHUNG.b.naturalWidth){ const k = 0.4, ww = Math.max((123 + 118 + 60) * k, w + 2 * 62 * k), hh = 22 + (76 + 28) * k + 6, x = W / 2 - ww / 2, y = 52; veKhung9(x, y, ww, hh, k); ctx.fillStyle = '#ffe08a'; ctx.fillText(tb, W / 2, y + 76 * k + 20); }   // khung bảng ChatGPT vẽ
     else { ctx.fillStyle = 'rgba(12,15,20,.7)'; ctx.fillRect(W / 2 - w / 2, 70, w, 24); ctx.fillStyle = '#ffe08a'; ctx.fillText(tb, W / 2, 88); }

@@ -18,18 +18,18 @@
 .dn.khung{display:inline-block;border:solid transparent;border-width:24px 30px 22px 31px;padding:0 4px;
   border-image:url(${KHUNG}) 96 118 88 123 fill / 24px 30px 22px 31px stretch}
 .dn-dong{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-.dn-ai{margin:0;font-size:13px;color:#c9d0d8;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dn-loi{margin:2px 0 0;font-size:12px;color:#ffbe50}
+.dn-ai{margin:0;font:500 13px 'IBM Plex Sans',Arial,sans-serif;color:var(--ui-muted,#C5A477);max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dn-loi{margin:2px 0 0;font:600 13px 'IBM Plex Sans',Arial,sans-serif;color:var(--ui-danger,#F0AA83)}
 .dn button.dn-nut{box-sizing:border-box;height:44px;min-height:44px;min-width:120px;padding:0 8px;margin:0;border-radius:0;
   border:solid transparent;border-width:9px 12px 8px 12px;border-image:url(${KHUNG}) 96 118 88 123 fill / 9px 12px 8px 12px stretch;background:none;
-  color:#ffe08a;font:800 14px "Alegreya Sans",system-ui,-apple-system,sans-serif;line-height:1;text-shadow:0 1px 2px #000;cursor:pointer;touch-action:manipulation}
+  color:var(--ui-bone,#F5E8D0);font:700 18px/1 Handjet,'Arial Narrow',sans-serif;letter-spacing:.025em;text-shadow:0 1px 0 #160D19,1px 0 0 #160D19,-1px 0 0 #160D19,0 -1px 0 #160D19;cursor:pointer;touch-action:manipulation}
 .dn button.dn-nut.phu{color:#F3E6C8}
 .dn button.dn-nut:active{transform:scale(.95)}
 .dn button.dn-nut:disabled{opacity:.5}
 #dn-bao{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:60;box-sizing:border-box;
   width:max-content;max-width:min(560px,calc(100vw - 32px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)));
   border:solid transparent;border-width:24px 30px 22px 31px;border-image:url(${KHUNG}) 96 118 88 123 fill / 24px 30px 22px 31px stretch;
-  color:#F3E6C8;font:600 14px/1.35 "Alegreya Sans",system-ui,sans-serif;text-align:center;text-shadow:0 1px 2px #000;cursor:pointer;display:none}
+  color:var(--ui-bone,#F5E8D0);font:600 14px/1.3 'IBM Plex Sans',Arial,sans-serif;text-align:center;text-shadow:0 1px 0 #130C16;cursor:pointer;display:none}
 #dn-bao.mo{display:block}
 #dn-bao small{display:block;opacity:.6;font-size:11px}`;
   let daCss = false;
