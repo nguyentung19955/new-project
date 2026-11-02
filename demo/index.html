@@ -18,7 +18,7 @@
     <!-- TOP HUD y 0..64: wave (x12..88) · boss/timer (x104..226) · 6 ô đội AI (x230..378) -->
     <div id="top" hidden>
       <div class="tb-wave"><span class="nho">WAVE</span><b id="tb-dot">1</b></div>
-      <div class="tb-giua"><div id="tb-boss">BOSS IN 9</div><div id="tb-quai"><span class="nho">HOSTILES</span> <b>0</b></div></div>
+      <div class="tb-giua"><div id="tb-boss">BOSS IN 9</div><div id="tb-quai"><span class="nho">HOSTILES</span> <b>0</b></div><div id="tb-mang" hidden><span class="nho">CORE</span> <b>10/10</b></div></div>
       <div id="tb-ai"></div>
     </div>
 
@@ -39,7 +39,11 @@
       </div>
       <div id="chon-luoi"></div>
       <div class="chon-cuoi">
-        <div class="chon-meo">Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.</div>
+        <div class="chon-che" id="chon-che">
+          <button class="che" data-act="che" data-che="coop"><b>CO-OP</b><span>ALLY AI · 70 WAVES</span></button>
+          <button class="che" data-act="che" data-che="pvp"><b>PVP</b><span>VS AI MIRROR</span></button>
+        </div>
+        <div class="chon-meo" id="chon-meo">Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.</div>
         <div class="chon-nut">
           <button class="nut" data-act="ngaunhien">RANDOM</button>
           <button class="nut chinh" data-act="vao" id="nut-vao" disabled>DEPLOY</button>
@@ -63,6 +67,7 @@
         <div class="bang-ten" id="kq-ten" data-t="CORE DESTROYED">CORE DESTROYED</div>
         <div class="kq-so">You survived to <b id="kq-dot">WAVE 0</b></div>
         <div class="kq-phu" id="kq-phu"></div>
+        <div class="kq-sat" id="kq-sat" hidden></div>
         <div class="bang-nut">
           <button class="nut" data-act="doibo">CHANGE SQUAD</button>
           <button class="nut chinh" data-act="choilai">RETRY</button>

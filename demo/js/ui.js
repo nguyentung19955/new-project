@@ -5,7 +5,11 @@
   const $ = (s) => document.querySelector(s);
   const wrap = $('#wrap'), cv = $('#cv'), ctx = cv.getContext('2d');
   let S = null, A = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, thang = false;
-  const KY_LUC = 'neon-grid.best';
+  const KY_LUC = 'neon-grid.best', KY_CHE = 'neon-grid.mode';
+  // chế độ chơi: 'coop' (mặc định, đồng đội AI, 70 wave) hoặc 'pvp' (AI MIRROR như cũ); nhớ lựa chọn cuối
+  let che = 'coop';
+  try { const v = localStorage.getItem(KY_CHE); if (v === 'pvp' || v === 'coop') che = v; } catch (e) { /* không đọc được */ }
+  let cheTran = che;   // chế độ của trận đang chơi
 
   // ---- khung cố định 390×844 (dọc): scale = min(rộng/390, cao/844), hộp đen hai bên, trừ vùng an toàn (tai thỏ) ----
   const doSafe = document.createElement('div'); doSafe.id = 'do-safe'; document.body.appendChild(doSafe);
@@ -76,7 +80,16 @@
     }
     capChon();
   }
+  const MEO = {
+    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles walk the top lane, then <b>your</b> lane below — hold out with your <b>ALLY</b> for <b>70 waves</b>.',
+    pvp: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.',
+  };
+  function capChe() {
+    document.querySelectorAll('.che').forEach((b) => b.classList.toggle('bat', b.dataset.che === che));
+    $('#chon-meo').innerHTML = MEO[che];
+  }
   function capChon() {
+    capChe();
     document.querySelectorAll('.ct').forEach((b) => { const k = chon.indexOf(b.dataset.id); b.classList.toggle('chon', k >= 0); b.querySelector('.ct-so b').textContent = k >= 0 ? k + 1 : ''; });
     $('#chon-dem').textContent = chon.length + '/5';
     $('#nut-vao').disabled = chon.length !== 5;
@@ -84,8 +97,11 @@
 
   // ---- trận ----
   function batDau(deck) {
-    boCu = deck.slice();
-    S = G.moi(deck); A = G.moi(BO_AI, true, S); dung = false; keo = null; thang = false;
+    boCu = deck.slice(); cheTran = che;
+    if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI));
+    else { S = G.moi(deck); A = G.moi(BO_AI, true, S); }
+    dung = false; keo = null; thang = false;
+    $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop');
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
@@ -109,10 +125,18 @@
   function capNhat(ep) {
     if (!S) return;
     const set = (k, v, f) => { if (ep || cu[k] !== v) { cu[k] = v; f(v); } };
-    set('dot', S.dot, (v) => ($('#tb-dot').textContent = Math.max(1, v)));
-    const den = Math.ceil(Math.max(1, S.dot + (S.dot % 10 === 0 && S.boss ? 0 : 0.0001)) / 10) * 10;
-    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS LIVE' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); e.classList.toggle('gan', v !== 'dang' && v <= 2); });   // 2 wave cuối: đổi màu + nhịp chậm
-    set('quai', S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
+    const coop = !!S.coop;
+    set('dot', S.dot + '|' + coop, () => ($('#tb-dot').innerHTML = Math.max(1, S.dot) + (coop ? `<small>/${COOP.DOT_MAX}</small>` : '')));
+    const bossDang = S.boss || (coop && A && A.boss);
+    const den = Math.ceil(Math.max(1, S.dot + (S.dot % 10 === 0 && bossDang ? 0 : 0.0001)) / 10) * 10;
+    const cuoi = coop && den >= COOP.DOT_MAX;   // co-op: trùm cuối ở wave 70
+    set('boss', (bossDang ? 'dang' : den - S.dot) + '|' + cuoi, () => {
+      const v = bossDang ? 'dang' : den - S.dot, e = $('#tb-boss'), ten = cuoi ? 'FINAL BOSS' : 'BOSS';
+      e.textContent = v === 'dang' ? `⚠ ${ten} LIVE` : v <= 0 ? `${ten} THIS WAVE` : `${ten} IN ${v} WAVE${v > 1 ? 'S' : ''}`;
+      e.classList.toggle('dang', v === 'dang'); e.classList.toggle('gan', v !== 'dang' && v <= 2);   // 2 wave cuối: đổi màu + nhịp chậm
+    });
+    set('quai', coop ? S.quai.length + A.quai.length + A.conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
+    if (coop) set('mang', S.coop.mang, (v) => { const b = $('#tb-mang b'); b.textContent = `${v}/${S.coop.max}`; b.classList.toggle('thap', v <= 3); });
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
     const g = G.giaTrieu(S), full = !G.trong(S).length;
@@ -127,6 +151,8 @@
     });
   }
   function ketThuc() {
+    if (S.coop) return ketThucCoop();
+    $('#kq-sat').hidden = true;
     const dot = S.dot;
     const ten = $('#kq-ten'), bang = $('#ketqua .bang');
     ten.textContent = thang ? 'VICTORY' : 'CORE DESTROYED'; ten.dataset.t = ten.textContent;
@@ -134,6 +160,25 @@
     let kl = 0; try { kl = +localStorage.getItem(KY_LUC) || 0; if (dot > kl) localStorage.setItem(KY_LUC, dot); } catch (e) { /* không lưu được */ }
     $('#kq-dot').textContent = 'WAVE ' + dot;
     $('#kq-phu').textContent = `${thang ? 'AI MIRROR core destroyed first · ' : ''}${S.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
+    $('#ketqua').hidden = false;
+  }
+  function ketThucCoop() {
+    const co = S.coop, dot = co.thang ? COOP.DOT_MAX : S.dot, kt = KY_LUC + '.coop';
+    thang = co.thang;
+    const ten = $('#kq-ten'), bang = $('#ketqua .bang');
+    ten.textContent = thang ? 'VICTORY' : 'CORE DESTROYED'; ten.dataset.t = ten.textContent;
+    bang.classList.toggle('do', !thang); bang.classList.toggle('thang', thang);
+    let kl = 0; try { kl = +localStorage.getItem(kt) || 0; if (dot > kl) localStorage.setItem(kt, dot); } catch (e) { /* không lưu được */ }
+    $('#kq-dot').textContent = `WAVE ${dot}/${COOP.DOT_MAX}`;
+    $('#kq-phu').textContent = `${thang ? `Cleared all ${COOP.DOT_MAX} waves · ` : ''}${S.giet + A.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
+    // sát thương từng tướng của người chơi (theo loại tướng trong bộ) + tổng của đồng đội
+    const tong = (tk) => Object.values(tk).reduce((a, b) => a + b, 0);
+    const ds = S.deck.map((id) => [id, S.tk[id] || 0]).sort((a, b) => b[1] - a[1]), mx = Math.max(1, ds[0][1]);
+    const so = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e4 ? Math.round(n / 1e3) + 'K' : Math.round(n) + '');
+    const ks = $('#kq-sat');
+    ks.innerHTML = '<div class="ks-ten">YOUR DAMAGE</div>' + ds.map(([id, n]) => `<div class="ks" style="--h:${HANH[TUONG[id].hanh].mau}"><span>${TUONG[id].ten}</span><i><u style="width:${Math.round(n / mx * 100)}%"></u></i><em>${so(n)}</em></div>`).join('')
+      + `<div class="ks-ten" style="margin-top:4px">YOU ${so(tong(S.tk))} · ALLY ${so(tong(A.tk))}</div>`;
+    ks.hidden = false;
     $('#ketqua').hidden = false;
   }
   function datDung(v) {
@@ -146,10 +191,11 @@
     const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
     const a = b.dataset.act;
     if (a === 'vao') batDau(chon);
+    else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
     else if (a === 'trieu' && S && !dung) { G.trieuHoi(S); capNhat(); }
     else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } capNhat(); }
-    else if (a === 'tocdo') { tocDo = tocDo === 1 ? 2 : 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo === 2); }
+    else if (a === 'tocdo') { tocDo = tocDo >= 3 ? 1 : tocDo + 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo > 1); }   // 1x → 2x → 3x (3x để test nhanh)
     else if (a === 'dung' && S && !S.het) datDung(true);
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
@@ -190,8 +236,9 @@
     if (S && !S.het && !dung) {
       let t = dt * tocDo * tua;
       while (t > 0) {
-        const b = Math.min(1 / 60, t); G.buoc(S, b); G.buoc(A, b); G.botAI(A, b); t -= b;
-        if (A.het && !S.het) { thang = true; S.het = true; }   // AI hết mạng trước → thắng
+        const b = Math.min(1 / 60, t); G.buoc(S, b); G.buoc(A, b); t -= b;
+        if (S.coop) G.botCoop(A, b);   // co-op: đồng đội AI; không có thắng do AI chết — thua khi hết mạng chung, thắng khi qua wave 70
+        else { G.botAI(A, b); if (A.het && !S.het) { thang = true; S.het = true; } }   // PVP: AI hết mạng trước → thắng
         if (S.het) break;
       }
       if (keo && !S.o[keo.i]) keo = null;   // tướng bị boss cuốn đi khi đang kéo

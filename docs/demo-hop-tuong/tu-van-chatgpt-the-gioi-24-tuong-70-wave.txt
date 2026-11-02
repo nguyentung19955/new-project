@@ -1,0 +1,209 @@
+NEON GRID — GAME DESIGN BLUEPRINT v1.0 | 02/11/2026
+Tài liệu thiết kế ĐỀ XUẤT, không phải mô tả cơ chế chính thức của Destiny Child: Defense War. Chỉ số là giá trị khởi điểm cần playtest.
+
+I. HƯỚNG THẾ GIỚI
+A. NEON FRACTURE — thành phố mô phỏng bị nứt, kéo nhân vật từ nhiều dòng thời gian: kiếm sĩ thần thoại, nhà thám hiểm, quái thú, đồ chơi sống, hacker. Giữ 8 tướng cũ như cư dân lõi mạng. Điểm mạnh: tự do sáng tạo nhưng vẫn thống nhất nhờ vòng neo neon trên mọi nhân vật.
+B. BLACK MARKET MULTIVERSE — đấu trường giao dịch các sinh vật, robot, pháp sư và thợ săn xuyên chiều; Broker là nhân vật cốt truyện. Mạnh về tính phá cách, yếu hơn ở tính liên kết trùm.
+C. DREAMWARE ARCADE — máy game lỗi biến truyện cổ, đồ gia dụng và dữ liệu thành chiến binh. Dễ làm tướng hài, nhưng có nguy cơ lệch chất chiến đấu hiện tại.
+CHỐT: A — NEON FRACTURE. 70% silhouette nhân vật tự do, 30% ngôn ngữ thị giác chung: viền đậm, cel shading, nguồn sáng cyan/magenta tiết chế, ký hiệu chip/neo dữ liệu nhỏ. Không ép mọi tướng mặc giáp cyber. Giữ nguyên 8 tướng đã vẽ. Cốt truyện: các thực thể từ thế giới đứt gãy được triệu hồi vào lưới phòng thủ, Archfiend là người điều khiển cổng.
+
+II. LUẬT CHƠI VÀ KHUNG CÂN BẰNG
+Bàn mỗi bên 5 cột x 3 hàng = 15 ô, quái đi làn trái. Bộ mang trận 5 Child + 1 Archfiend. Summon rút đều 20% mỗi loại trong 5 loại đã chọn, không phụ thuộc độ hiếm; độ hiếm quyết định độ khó sưu tập, không quyết định xác suất summon trong trận. Merge hai tướng CÙNG LOẠI, CÙNG SAO -> một tướng sao+1 loại ngẫu nhiên từ 5 loại; vị trí kết quả là ô thả. Sao tối đa 7. Nâng cấp theo loại bằng mana, áp dụng toàn bộ bản sao của loại trong trận.
+Để tránh hệ thống 15 ô quá may rủi: luôn cho xem trước chi phí summon; có khóa merge 0.4 giây chống thao tác nhầm; 7 sao không ghép tiếp; có mô tả rõ xác suất 1/5 khi merge; không tự ý thêm cơ chế đổi loại miễn phí. Chỉ số tham chiếu: DPS chuẩn sao 1 = 100, tầm 1-5 làn/ô tùy tướng, nhịp đánh 0.5-2.5 giây. DPS theo sao gợi ý nhân 1.65^(sao-1) thay vì nhân đôi cứng; giới hạn buff tốc đánh và hiệu ứng khống chế.
+Quy ước mục tiêu: ĐẦU = quái gần đích; CUỐI = xa đích; MẠNH = HP hiện tại cao nhất; YẾU = HP thấp nhất; NGẪU NHIÊN; GẦN = gần tướng nhất; ĐÁM = cụm đông nhất. Nếu quái ngoài tầm, tướng đứng chờ. Tướng hỗ trợ chọn ô đồng minh hoặc trạng thái bàn theo quy tắc riêng.
+Chỉ số tương đối: DMG 1-5 / SPD 1-5 / CTRL 0-5 / ECON 0-5. Không so trực tiếp damage giữa buff và DPS. Sao tăng damage/hiệu lực cơ bản theo hệ số chung; các mốc đặc biệt được nêu riêng.
+
+III. BỂ 24 TƯỚNG — TRẮNG 7, LAM 6, TÍM 5, VÀNG 4, ĐỎ 2
+01 SCORCH | TRẮNG | LỬA | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 4/2/1/0
+  Ngoại hình: lính mũ lò nung, súng phun nòng cam.
+  Cơ bản: bắn hạt lửa; cháy 2 giây.
+  Tiến triển: sao 3 tăng thời gian cháy; 5 cháy lan nhẹ 1 mục tiêu; 7 mỗi phát thứ tư gây nổ nhỏ.
+02 FROST | TRẮNG | BĂNG | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 2/2/4/0
+  Ngoại hình: pháp sư áo choàng băng, gậy pha lê lớn.
+  Cơ bản: đạn băng làm chậm 20% trong 1.5 giây.
+  Tiến triển: sao 3 chậm 25%; 5 đòn thứ năm đóng băng ngắn; 7 mảnh băng bật sang mục tiêu kế.
+03 ARC | TRẮNG | SÉT | mục tiêu: GẦN | DMG/SPD/CTRL/ECON 4/4/1/0
+  Ngoại hình: robot kiếm samurai với lưỡi sét vàng.
+  Cơ bản: chém cận chiến, tia điện nảy ngắn.
+  Tiến triển: sao 3 tăng 1 mục tiêu nảy; 5 tích điện mỗi 4 nhát; 7 nhát chém gây giật ngắt nhịp ngắn.
+04 VENOM | TRẮNG | ĐỘC | mục tiêu: MẠNH | DMG/SPD/CTRL/ECON 3/3/2/0
+  Ngoại hình: thú máy bốn chân, bồn độc trên lưng.
+  Cơ bản: phun nọc cộng dồn tối đa 5 lớp.
+  Tiến triển: sao 3 +1 lớp tối đa; 5 nọc giảm giáp ít; 7 mục tiêu chết phát tán 2 lớp.
+05 EMBERBUG | TRẮNG | LỬA | mục tiêu: CUỐI | DMG/SPD/CTRL/ECON 2/4/0/0
+  Ngoại hình: bọ đèn lồng đỏ bụng sáng to.
+  Cơ bản: bắn tàn lửa liên tục.
+  Tiến triển: sao tăng nhịp và sát thương; sao 5 viên thứ sáu xuyên 1 mục tiêu.
+06 TIDAL | TRẮNG | NƯỚC | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 2/3/2/0
+  Ngoại hình: ốc sên thủy tinh đội mũ nước xanh.
+  Cơ bản: giọt nước làm ướt, tăng sát thương sét nhận vào.
+  Tiến triển: sao 3 ướt lâu hơn; 5 lan ướt; 7 giọt thứ ba bắn đôi.
+07 NEEDLE | TRẮNG | XUYÊN | mục tiêu: YẾU | DMG/SPD/CTRL/ECON 4/3/0/0
+  Ngoại hình: búp bê thợ săn nhỏ, nỏ dài hình kim.
+  Cơ bản: phi kim nhắm quái yếu.
+  Tiến triển: sao 3 tăng chí mạng; 5 kim xuyên; 7 hạ mục tiêu hoàn lại nhịp đánh.
+08 LANCE | LAM | ĐIỆN TỪ | mục tiêu: MẠNH | DMG/SPD/CTRL/ECON 5/1/0/0
+  Ngoại hình: xạ thủ áo choàng trắng, railgun dài quá thân.
+  Cơ bản: bắn đường thẳng xuyên quái.
+  Tiến triển: sao 3 xuyên thêm; 5 xuyên giáp; 7 phát thứ ba có đường ngắm mạnh.
+09 BRAMBLE | LAM | THỰC VẬT | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 2/2/3/0
+  Ngoại hình: hiệp sĩ cây gai, khiên tam giác rễ.
+  Cơ bản: phóng gai gây trói cực ngắn.
+  Tiến triển: sao 3 thêm gai; 5 trói lâu hơn; 7 trói mục tiêu thứ hai.
+10 ECHO | LAM | ÂM | mục tiêu: ĐÁM | DMG/SPD/CTRL/ECON 3/2/2/0
+  Ngoại hình: ca sĩ mặt nạ chuông, áo tròn màu tím.
+  Cơ bản: sóng âm hình cung đánh cụm.
+  Tiến triển: sao 3 rộng hơn; 5 cộng hưởng mục tiêu gần; 7 sóng thứ tư đẩy lùi rất nhẹ.
+11 QUILL | LAM | VẬT LÝ | mục tiêu: GẦN | DMG/SPD/CTRL/ECON 4/3/0/0
+  Ngoại hình: nhím máy khối tròn, chùm gai dài.
+  Cơ bản: bắn gai tỏa góc hẹp.
+  Tiến triển: sao 3 thêm gai; 5 tăng xuyên; 7 bắn chùm sau mỗi 5 phát.
+12 MOTH | LAM | ẢO ẢNH | mục tiêu: NGẪU NHIÊN | DMG/SPD/CTRL/ECON 2/4/2/0
+  Ngoại hình: bướm đêm áo choàng, cánh mắt tím.
+  Cơ bản: bụi phấn làm quái giảm tốc đánh kỹ năng.
+  Tiến triển: sao 3 kéo dài; 5 gây mù mục tiêu đơn; 7 bụi phấn trúng thêm 1 quái.
+13 BASTION | LAM | ĐẤT | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 3/1/3/0
+  Ngoại hình: rùa pháo đài với mai vuông có tháp.
+  Cơ bản: đạn nặng làm chậm ngắn.
+  Tiến triển: sao 3 tăng lực; 5 tạo chấn động nhỏ; 7 đòn trúng tinh anh thêm sát thương.
+14 WARP | TÍM | HƯ KHÔNG | mục tiêu: CUỐI | DMG/SPD/CTRL/ECON 3/3/3/0
+  Ngoại hình: drone tròn xoáy tím, vành không gian.
+  Cơ bản: cầu hư không làm lệch vị trí quái lùi chút.
+  Tiến triển: sao 3 thêm phạm vi; 5 đánh dấu cổng, phát sau kéo nhẹ; 7 lùi mạnh hơn nhưng boss kháng.
+15 SPECTER | TÍM | LINH THỂ | mục tiêu: MẠNH | DMG/SPD/CTRL/ECON 4/2/2/0
+  Ngoại hình: bóng ma thám tử, kính lúp phát sáng.
+  Cơ bản: đánh dấu mục tiêu nhận thêm sát thương đơn.
+  Tiến triển: sao 3 tăng thời gian; 5 chuyển dấu khi quái chết; 7 dấu áp lên 2 quái.
+16 TESLA | TÍM | SÉT | mục tiêu: ĐÁM | DMG/SPD/CTRL/ECON 3/4/2/0
+  Ngoại hình: cột coil sống chân ngắn, vòng sét.
+  Cơ bản: tia xích 3 mục tiêu.
+  Tiến triển: sao 3 thêm 1 mắt xích; 5 tăng sát thương quái ướt; 7 phát thứ năm quá tải.
+17 ALCHEM | TÍM | HÓA HỌC | mục tiêu: ĐẦU | DMG/SPD/CTRL/ECON 3/2/3/0
+  Ngoại hình: nhà giả kim mặt nạ chim, bình hai màu.
+  Cơ bản: luân phiên acid giảm giáp và dung môi tăng sát thương cháy.
+  Tiến triển: sao 3 hiệu ứng lâu; 5 đạn tạo vũng nhỏ; 7 hai trạng thái cùng tồn tại.
+18 HUSH | TÍM | BÓNG TỐI | mục tiêu: YẾU | DMG/SPD/CTRL/ECON 4/3/3/0
+  Ngoại hình: ninja chuông câm, khăn dài đen trắng.
+  Cơ bản: phi tiêu ngắt cast quái thường/tinh anh có hồi chiêu.
+  Tiến triển: sao 3 tăng tỉ lệ ngắt; 5 đánh dấu cast; 7 ngắt 2 mục tiêu nếu gần nhau.
+19 BROKER | VÀNG | KINH TẾ | mục tiêu: BÀN | DMG/SPD/CTRL/ECON 0/1/0/5
+  Ngoại hình: thương nhân mặt nạ vàng, cặp tiền dữ liệu.
+  Cơ bản: định kỳ tạo mana khi quái chết trong vùng 2 ô quanh Broker.
+  Tiến triển: sao 3 mở GIAO DỊCH: chọn 1 ô kề, quái chết cho thêm mana trong 8 giây; sao 5 HOÁN ĐỔI: 1 lần/20 giây đổi chỗ với tướng cùng sao, không đổi loại; sao 7 CHỐT LỜI: merge ở ô kề hoàn 30% mana summon gần nhất (giới hạn).
+20 GLITCH | VÀNG | HACK | mục tiêu: BÀN/ĐẦU | DMG/SPD/CTRL/ECON 2/2/4/1
+  Ngoại hình: robot CRT đầu to, mặt pixel mint, tay dây cắm.
+  Cơ bản: đánh dấu quái; mỗi 6 đòn tạm khóa một thuộc tính không phải boss.
+  Tiến triển: sao 3 COPY BUFFER: chọn ô kề để nhân bản 1 buff đang có trong 5 giây, không nhân bản cấp sao; sao 5 PACKET SWAP: khi merge cạnh GLITCH, cho chọn giữa 2 kết quả loại ngẫu nhiên (vẫn 1/5 mỗi lượt rút); sao 7 ROLLBACK: 1 lần/trận hoàn lại một merge vừa thực hiện trong 3 giây, khôi phục 2 tướng gốc nếu đủ ô trống.
+21 PATCHWORK | VÀNG | BIẾN HÌNH | mục tiêu: Ô KỀ | DMG/SPD/CTRL/ECON 1/2/3/2
+  Ngoại hình: gấu bông khâu chỉ, hai nửa xanh đỏ.
+  Cơ bản: mỗi 12 giây chuyển chế độ hồi mana hoặc buff sát thương cho hàng.
+  Tiến triển: sao 3 may lại: chuyển dạng thủ công với hồi chiêu 18 giây; sao 5 khi ghép ở cùng hàng, giữ lại một buff 8 giây; sao 7 đổi dạng có thể cứu 1 tướng kề khỏi debuff boss, hồi 30 giây.
+22 MIRROR | VÀNG | SAO CHÉP | mục tiêu: Ô KỀ | DMG/SPD/CTRL/ECON 2/2/2/1
+  Ngoại hình: ảo thuật gia gương vuông, áo hai mặt.
+  Cơ bản: bắn tia phản chiếu yếu, ưu tiên hỗ trợ tướng kề.
+  Tiến triển: sao 3 phản chiếu 35% đòn cơ bản của 1 tướng kề đã chọn; sao 5 cho đổi tướng được sao chép sau 15 giây; sao 7 phản chiếu 2 láng giềng nhưng mỗi bên 25%, không sao chép skill merge/kinh tế.
+23 CROWN ZERO | ĐỎ | THỜI GIAN | mục tiêu: ĐẦU/BÀN | DMG/SPD/CTRL/ECON 4/2/5/0
+  Ngoại hình: vua lỗi đội vương miện vỡ, áo choàng lưới.
+  Cơ bản: đánh quái và tích ấn thời gian theo số phát trúng.
+  Tiến triển: sao 3 TIME LOCK: đặt 1 dấu lên ô, quái ngang làn bị chậm trong 3 giây, hồi 20 giây; sao 5 TIME DEBT: tướng trên ô dấu đánh nhanh 5 giây rồi chậm 2 giây; sao 7 REWRITE: 1 lần mỗi 50 giây tái chọn vị trí dấu và hoàn lại một phần hồi chiêu, boss chỉ nhận 35% hiệu lực.
+24 ORACLE | ĐỎ | VẬN MỆNH | mục tiêu: BÀN/ĐÁM | DMG/SPD/CTRL/ECON 3/2/4/2
+  Ngoại hình: nữ tiên tri thiên văn, vòng sao và mắt đơn lớn.
+  Cơ bản: đánh dấu cụm và dự báo quái ưu tiên.
+  Tiến triển: sao 3 PROPHECY: hiển thị trước 2 loại kết quả merge tiềm năng, người chơi chọn 1 (hai lượt rút độc lập); sao 5 FATE BIND: chọn 2 ô cùng hàng, buff tướng yếu sao hơn khi cả hai tồn tại; sao 7 ECLIPSE: mỗi 60 giây khóa chọn mục tiêu một boss trong 2 giây và tạo một lần reroll kết quả merge, không tăng sao miễn phí.
+
+LƯU Ý CÂN BẰNG VÀNG/ĐỎ: các thao tác chọn ô/đổi chỗ/rollback cần UI rõ, cooldown riêng, chống sao chép vòng lặp. GLITCH rollback là tính năng khó code, nên tạm thay bằng 1 reroll kết quả merge ở bản MVP. Oracle tiên đoán không được tiết lộ RNG cố định nếu tạo lợi thế quá mức; tạo hai kết quả có kiểm chứng seed phía server cho PvP. Không để buff kinh tế nhân lẫn nhau.
+
+IV. ARCHFIEND — 6 CHỈ HUY, CHỦ ĐỘNG (ngoài 5 Child)
+- NOVA — Nữ chỉ huy cổng: giá 80 mana, 35 giây; chọn 1 ô trống, summon giảm 30% chi phí hiện tại; vẫn rút đều 5 loại. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+- HEX — Kẻ bẻ mã: giá 110 mana, 45 giây; chọn một tướng sao 1-4; reroll LOẠI cùng sao, không đổi vị trí. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+- VANTA — Pháp sư trọng lực: giá 95 mana, 40 giây; làm chậm quái trên làn 25% trong 5 giây; boss nhận 10%. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+- SOLACE — Thầy chữa lưới: giá 70 mana, 35 giây; xóa một debuff trên 3 ô cùng hàng và miễn nhiễm 3 giây. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+- GAMBIT — Tay chơi xúc xắc: giá 120 mana, 55 giây; chọn 2 ô tướng cùng sao và hoán vị vị trí; cộng 10% tốc đánh 6 giây. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+- REGENT — Vua tàn dư: giá 150 mana, 60 giây; tạo 1 dấu lĩnh vực lên ô, tướng trên ô tăng 25% sát thương 10 giây; chỉ 1 dấu hoạt động. Giá dùng là mana, không phải tiền ngoài trận; tăng chi phí +10% sau mỗi 3 lần dùng (trần +50%), hồi chiêu tính từ lúc kích hoạt. Không thể dùng nếu thiếu mana.
+Archfiend có thẻ riêng, không summon, không merge, không chiếm ô. Nâng cấp ngoài trận tăng ít chỉ số hoặc giảm hồi chiêu nhỏ, tránh pay-to-win. Trong co-op chỉ huy hai bên không tác động trực tiếp lên bàn đồng đội trừ kỹ năng ghi rõ.
+
+V. QUÁI THƯỜNG — CHỈ BỌ ĐƠN GIẢN
+- SCUTTLE: bọ cánh cứng nâu tròn 6 chân; HP 1.0, tốc 1.0, xuất hiện nền.
+- DART: bọ kiến đỏ thân dài, chân sau nhọn; HP 0.65, tốc 1.6, ra từng đợt.
+- SHELL: bọ mai đen dày, lưng gồ; HP 2.8, tốc 0.65, chống đẩy lùi nhẹ.
+- GNAT: muỗi máy nhỏ cánh tam giác sáng; HP 0.5, tốc 1.3, bay nhưng vẫn theo cùng làn và vẫn bị nhắm trừ khi skill nói khác.
+Không dùng hàng chục mẫu quái thường. Màu silhouette ưu tiên nâu/xám/đỏ tối để hiệu ứng đạn nổi. HP/tốc chuẩn hóa theo wave, số quái theo ngân sách sức mạnh; quái bay KHÔNG được bỏ qua đường đi.
+
+VI. TINH ANH — 4 LOẠI
+- PRISM MANTIS: ngoại hình bọ ngựa tay lưỡi kính hình tam giác; cơ chế phản xạ 1 đòn bắn trực tiếp mỗi 6 giây, không phản sát thương ngược tướng; đọc bằng mắt tay kính dựng cao + vòng phản quang trước 0.7 giây; khắc chế đòn DoT/AoE, dồn nhịp sau phản.
+- JAMMER BEETLE: ngoại hình bọ cánh cứng lưng anten kép; cơ chế khóa kỹ năng một tướng ngẫu nhiên 3 giây mỗi 12 giây; đọc bằng mắt anten đỏ chớp 1 giây, đường đứt nét nối ô bị chọn; khắc chế dùng Archfiend giải hiệu ứng hoặc diệt sớm.
+- BROOD CARRIER: ngoại hình bọ mẹ bụng tổ lớn, 4 túi trứng; cơ chế khi chết tách 3 bọ Dart HP thấp; đọc bằng mắt bụng sáng và túi trứng rung khi gần chết; khắc chế AoE hoặc đòn xuyên.
+- PHASE CICADA: ngoại hình ve sầu có cánh kính lệch pha; cơ chế mỗi 9 giây né đạn trong 1.2 giây, vẫn nhận DoT; đọc bằng mắt cánh biến tím trong suốt, vòng pha trước 0.8 giây; khắc chế đặt DoT trước khi chuyển pha.
+
+VII. 7 TRÙM — CO-OP 70 WAVE, MỖI 10 WAVE
+- WAVE 10 FIREWALL: bọ khổng lồ khoác tấm khiên tường lửa chia ô.
+  Hai chiêu: A: dựng lá chắn trước thân 4 giây, báo trước khiên sáng 1.2 giây; B: phun vệt lửa đánh dấu 1 hàng, báo viền đỏ 1.5 giây.
+  Khắc chế: đòn xuyên/độc vượt giảm hiệu lực khiên; đổi vị trí hàng bị đốt.
+- WAVE 20 OVERCLOCK: bọ máy đồng hồ bánh răng lớn, chân piston.
+  Hai chiêu: A: tăng tốc chạy 50% trong 4 giây, báo kim đồng hồ quay 1 giây; B: xung nhịp tăng tốc bọ con 5 giây, báo vòng răng cưa 1.3 giây.
+  Khắc chế: đóng băng/chậm, dồn burst đúng lúc tăng tốc.
+- WAVE 30 CORRUPTOR: bọ sâu nhiều đốt với lõi virus tím nứt.
+  Hai chiêu: A: làm nhiễm 2 ô khiến giảm tốc đánh 5 giây, báo ô tím 1.5 giây; B: mọc kén hồi 8% HP nếu không bị phá trong 4 giây, báo lõi phát sáng 1 giây.
+  Khắc chế: giải debuff, focus phá kén.
+- WAVE 40 TWINMAW: bọ hai đầu đối xứng, hai hàm đỏ xanh.
+  Hai chiêu: A: đổi miễn kháng vật lý/phép mỗi 8 giây, báo đầu tương ứng sáng 1.2 giây; B: gầm tạo 2 phân thân ảo HP thấp, báo mắt đôi nháy 1.3 giây.
+  Khắc chế: bộ bài đa hệ, quét AoE phân thân.
+- WAVE 50 GRAVEMOTHER: nhện mẹ chân vòng khổng lồ, bụng trứng như mặt trăng.
+  Hai chiêu: A: thả ổ trứng sinh 4 bọ sau 5 giây, báo ổ phồng 1.5 giây; B: kéo quái thường quanh nó tiến nhanh 2 ô, báo mạng nhện co 1 giây.
+  Khắc chế: AoE xử lý trứng, giữ CC cho lúc kéo.
+- WAVE 60 NULL SERAPH: bướm máy thiên thần 6 cánh có vòng trống rỗng.
+  Hai chiêu: A: câm kỹ năng tướng trong 1 cột 4 giây, báo tia dọc 1.8 giây; B: tạm vô hiệu buff hàng 5 giây, báo lông cánh rơi 1.3 giây.
+  Khắc chế: dàn tướng khác cột, dùng đòn cơ bản và kỹ năng giải.
+- WAVE 70 THE FRACTURE: bọ vua khổng lồ đội vương miện vỡ, lõi hai màu.
+  Hai chiêu: A: luân phiên 3 pha giáp/nhanh/tách đàn mỗi 12 giây, báo đổi màu lõi 2 giây; B: đánh dấu 3 ô rồi đảo vị trí các tướng trong 3 ô theo vòng, báo đường nối 2 giây.
+  Khắc chế: giữ đội hình đa dạng, chuẩn bị CC cho pha nhanh, phản ứng trước đảo ô.
+Quy tắc boss: telegraph có cả hình dạng + màu (không chỉ màu), tối thiểu 1.0-2.0 giây; boss có miễn/giảm hiệu ứng khống chế để không bị khóa vô hạn. Không dùng skill xóa sao hay xóa tướng vĩnh viễn; với PvP cần kiểm soát snowball. Boss wave 70 có checkpoint UI và thời gian chuẩn bị trước khi vào.
+
+VIII. ART PIPELINE / PROMPT NGẮN
+Quy chuẩn CHUNG cho mọi prompt: “NEON GRID, high top-down 82-degree camera, chibi readable at 40px in 55px tile, anime cel-shaded, thick clean dark outline, strong silhouette, not pixel art, true transparent background, no shadow, no text, no grid. Three-view model sheet S/W/N, equal cells, wide gaps, identical scale and foot anchor.” Với quái/elite/boss dùng 3 hướng S/W/N trước; nếu cần hướng chéo mới vẽ 5 hướng S/SW/W/NW/N và lật gương. Không xoay sprite người bằng code. Boss lớn nên dùng 64-96px render, không cố nhét vào ô 55px.
+PROMPT MODEL SHEET NGẮN: Ghép nguyên văn câu “Draw [subject], [silhouette detail], [palette].” với quy chuẩn CHUNG trên. Mỗi dòng dưới đây là phần [subject, detail, palette], có thể copy ngay.
+CHILD 09 BRAMBLE: Draw BRAMBLE, hiệp sĩ cây gai, khiên tam giác rễ, dominant thực vật accent; keep body parts readable from rear.
+CHILD 10 ECHO: Draw ECHO, ca sĩ mặt nạ chuông, áo tròn màu tím, dominant âm accent; keep body parts readable from rear.
+CHILD 11 QUILL: Draw QUILL, nhím máy khối tròn, chùm gai dài, dominant vật lý accent; keep body parts readable from rear.
+CHILD 12 MOTH: Draw MOTH, bướm đêm áo choàng, cánh mắt tím, dominant ảo ảnh accent; keep body parts readable from rear.
+CHILD 13 BASTION: Draw BASTION, rùa pháo đài với mai vuông có tháp, dominant đất accent; keep body parts readable from rear.
+CHILD 15 SPECTER: Draw SPECTER, bóng ma thám tử, kính lúp phát sáng, dominant linh thể accent; keep body parts readable from rear.
+CHILD 16 TESLA: Draw TESLA, cột coil sống chân ngắn, vòng sét, dominant sét accent; keep body parts readable from rear.
+CHILD 17 ALCHEM: Draw ALCHEM, nhà giả kim mặt nạ chim, bình hai màu, dominant hóa học accent; keep body parts readable from rear.
+CHILD 18 HUSH: Draw HUSH, ninja chuông câm, khăn dài đen trắng, dominant bóng tối accent; keep body parts readable from rear.
+CHILD 21 PATCHWORK: Draw PATCHWORK, gấu bông khâu chỉ, hai nửa xanh đỏ, dominant biến hình accent; keep body parts readable from rear.
+CHILD 22 MIRROR: Draw MIRROR, ảo thuật gia gương vuông, áo hai mặt, dominant sao chép accent; keep body parts readable from rear.
+CHILD 23 CROWN ZERO: Draw CROWN ZERO, vua lỗi đội vương miện vỡ, áo choàng lưới, dominant thời gian accent; keep body parts readable from rear.
+CHILD 24 ORACLE: Draw ORACLE, nữ tiên tri thiên văn, vòng sao và mắt đơn lớn, dominant vận mệnh accent; keep body parts readable from rear.
+BUG SCUTTLE: Draw SCUTTLE, bọ cánh cứng nâu tròn 6 chân; simple low-detail brown-gray shell, six visible legs, readable at 20px.
+BUG DART: Draw DART, bọ kiến đỏ thân dài, chân sau nhọn; simple low-detail brown-gray shell, six visible legs, readable at 20px.
+BUG SHELL: Draw SHELL, bọ mai đen dày, lưng gồ; simple low-detail brown-gray shell, six visible legs, readable at 20px.
+BUG GNAT: Draw GNAT, muỗi máy nhỏ cánh tam giác sáng; simple low-detail brown-gray shell, six visible legs, readable at 20px.
+ELITE PRISM MANTIS: Draw PRISM MANTIS, bọ ngựa tay lưỡi kính hình tam giác; one oversized mechanic-defining feature, restrained neon accents, readable at 28px.
+ELITE JAMMER BEETLE: Draw JAMMER BEETLE, bọ cánh cứng lưng anten kép; one oversized mechanic-defining feature, restrained neon accents, readable at 28px.
+ELITE BROOD CARRIER: Draw BROOD CARRIER, bọ mẹ bụng tổ lớn, 4 túi trứng; one oversized mechanic-defining feature, restrained neon accents, readable at 28px.
+ELITE PHASE CICADA: Draw PHASE CICADA, ve sầu có cánh kính lệch pha; one oversized mechanic-defining feature, restrained neon accents, readable at 28px.
+BOSS FIREWALL: Draw FIREWALL, bọ khổng lồ khoác tấm khiên tường lửa chia ô; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS OVERCLOCK: Draw OVERCLOCK, bọ máy đồng hồ bánh răng lớn, chân piston; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS CORRUPTOR: Draw CORRUPTOR, bọ sâu nhiều đốt với lõi virus tím nứt; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS TWINMAW: Draw TWINMAW, bọ hai đầu đối xứng, hai hàm đỏ xanh; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS GRAVEMOTHER: Draw GRAVEMOTHER, nhện mẹ chân vòng khổng lồ, bụng trứng như mặt trăng; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS NULL SERAPH: Draw NULL SERAPH, bướm máy thiên thần 6 cánh có vòng trống rỗng; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+BOSS THE FRACTURE: Draw THE FRACTURE, bọ vua khổng lồ đội vương miện vỡ, lõi hai màu; oversized signature anatomy clearly tied to its abilities, 80px combat readability.
+
+IX. THỨ TỰ SẢN XUẤT — CHƠI THỬ SỚM, KHÔNG VẼ 24 TƯỚNG NGAY
+- P0 — 1 tuần: Giữ 8 tướng cũ, code bộ luật summon/merge/sao/mana ổn định; vẽ 4 bọ thường, 1 boss FIREWALL, telegraph; chạy thử 10 wave, kiểm tra FPS và đọc hình trên điện thoại.
+- P1 — 1-2 tuần: Thêm 4 tướng mới có vai trò khác nhau: NEEDLE, ECHO, BRAMBLE, PATCHWORK; vẽ 3 hướng model + idle/attack tối giản; thêm 2 elite, boss OVERCLOCK, ARCHFIEND NOVA/HEX; playtest quyết định merge và bố cục.
+- P2 — 2-3 tuần: Thêm BROKER/GLITCH skill theo ô và UI chọn ô; 2 Archfiend nữa; boss CORRUPTOR/TWINMAW; mở 30-40 wave; audit kinh tế mana và tỷ lệ thắng.
+- P3 — tiếp: Hoàn thiện 24 Child, 6 Archfiend, 4 elite, 7 boss; VFX giới hạn; thử 70 wave co-op và PvP; tối ưu atlas/texture memory.
+Ưu tiên tạo một model sheet 3 hướng/nhân vật, duyệt silhouette ở 40px trước khi tạo idle 8 khung + attack 8 khung; skill VÀNG/ĐỎ nên dùng hiệu ứng icon/ô riêng, tránh cần 7 phiên bản model. Với quái thường có thể 4-6 khung đi và 2 khung chết; boss cần idle, walk, telegraph, cast, hit, death. Kiểm tra alpha thực, kích thước ô, không tràn sprite sang ô khác.
+
+X. CHECKLIST PLAYTEST / RỦI RO
+1. Đội 5 tướng ngẫu nhiên có thể thắng wave 10 không? Mục tiêu thử nghiệm: >75% đội hợp lý, nhưng không bảo đảm mọi đội đều thắng.
+2. Tướng vàng/đỏ tạo quyết định thực sự hay chỉ tăng DPS? Mỗi trận phải có ít nhất 2 thời điểm người chơi lựa chọn ô/thời gian.
+3. Boss có cảnh báo đọc được trong 0.5 giây nhìn trên 390x844 không? Không được che quái và nút summon.
+4. PvP: RNG summon/merge do server authoritative hoặc deterministic seed được xác thực; chống rollback và gian lận. Co-op cần đồng bộ event skill, wave và boss.
+5. Tính tải: 15 tướng x 2 bàn, nhiều quái; atlas chia theo trận; giới hạn VFX đồng thời; kiểm tra 60 FPS thiết bị mục tiêu.
+6. Không sao chép thiết kế cụ thể, tên, hình ảnh hay kỹ năng độc quyền của DCDW; chỉ tham khảo cấu trúc thể loại và tạo bản sắc riêng.
+
+KẾT LUẬN: NEON FRACTURE + 24 tướng 7/6/5/4/2, 6 Archfiend, 4 bọ thường, 4 elite, 7 boss. Tập trung 8 tướng cũ + bọ + boss wave 10 trước. Giữ gameplay dễ hiểu như DCDW nhưng cho tướng VÀNG/ĐỎ quyết định vị trí và thời điểm, không chỉ tăng số.
