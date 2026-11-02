@@ -16,7 +16,15 @@ const SpriteMN = (() => {
     while (a.length < n) a.push(a[a.length - 1] || 100);
     return a;
   }
+  // (camgiac) XEM THỬ chu kỳ chạy mới 10 khung (chờ người dùng duyệt): mở trang bất kỳ có ?chay=moi (nhớ trên máy), ?chay=cu = về bản cũ.
+  // Clip có "ban_thu" (vd troi) sẽ dùng bản thử đó thay bản chính. Chưa bật = y như cũ.
+  function chayMoi(){
+    try { const q = new URLSearchParams(location.search).get('chay');
+      if (q === 'moi') localStorage.setItem('tvcc-chay-moi', '1'); else if (q === 'cu') localStorage.removeItem('tvcc-chay-moi');
+      return localStorage.getItem('tvcc-chay-moi') === '1'; } catch (e){ return false; }
+  }
   async function napClip(goc, def, ten){
+    if (def && def.ban_thu && chayMoi()) def = Object.assign({}, def, def.ban_thu, {ban_thu:null});
     const C = {ten, def:def || {}, hinh:[], ok:false, chan:null, ms:[], buoc:[], tong:0, lap:!def || def.lap !== false, loi:''};
     if (!def || !def.thu_muc){ C.loi = 'not declared'; C.ms = msMang(def && def.ms, 9); C.buoc = C.ms.map(m => m * 0.06); C.tong = C.buoc.reduce((a, b) => a + b, 0); return C; }
     const tt = def.tien_to ?? 'f', bd = def.bat_dau || 0, dir = goc + String(def.thu_muc).replace(/\/$/, '') + '/';
@@ -99,5 +107,5 @@ const SpriteMN = (() => {
     g.restore();
   }
   async function napJson(url){ return fetch(url + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json()); }
-  return {napClip, napJson, khungTheoBuoc, khungTheoQuang, ve, veVien, msMang};
+  return {napClip, napJson, khungTheoBuoc, khungTheoQuang, chayMoi, ve, veVien, msMang};
 })();
