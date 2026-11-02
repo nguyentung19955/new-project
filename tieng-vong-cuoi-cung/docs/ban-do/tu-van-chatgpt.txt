@@ -1,0 +1,58 @@
+THE LAST ECHO — THIẾT KẾ LẠI MÀN BẢN ĐỒ (ChatGPT tư vấn 02/11/2026, chat 6ae893fc; người dùng chê bản đồ cũ "xấu")
+"Root-and-Bell Atlas": phòng là khoang tối khắc trên giấy da tối; lối đi như mực đồng; vị trí người chơi là kim chuông vàng nhấp nháy nhẹ. Bản đồ là CÔNG CỤ ĐI ĐƯỜNG trước, trang trí sau.
+Ưu tiên: 1 thấy ngay mình ở đâu + cửa kế tiếp; 2 đọc được cấu trúc đã khám phá; 3 phân biệt đã đi / đã biết chưa đi / bí mật / chưa vào được; 4 Chuông Lưu + vật sưu tầm; 5 mang chất The Last Echo.
+
+LỖI BẢN CŨ: ô cam sáng "P01" lấn át; ô viền đứt như công cụ dev; đường hồng mảnh như dây đứt; cả vùng dồn góc trái trên, giấy trống; "M / Map button: close" trên điện thoại; không có dấu người chơi, chú giải, phóng to; chữ "Root Gate" lơ lửng; khung dày ăn chỗ.
+
+BỐ CỤC 844×390 (CSS px, tôn trọng safe-area):
+Nền mờ 0,0,844,390 | khung trang trí mảnh 0,0,844,390 | tiêu đề 44,15,620,29 ("WEEPING HEARTWOOD", không "Map –") | tiến độ tuỳ chọn 575,18,132,20 ("7 / 12 CHARTED" chỉ nếu có ý nghĩa)
+Nút đóng 778,8,54,54 | khung nhìn bản đồ 44,57,754,271 | dải điều khiển dưới 44,331,754,47
+Legend 50,333,76,44 | Về giữa 625,333,47,44 | Thu nhỏ 678,333,47,44 | Phóng to 730,333,47,44. Mọi nút ≥44×44.
+Giữa dải dưới: gợi ý "Drag to move · Pinch to zoom" chỉ vài lần đầu. Màn hẹp: ẩn tiến độ, rồi gợi ý, trước khi thu bản đồ.
+
+CAMERA: toạ độ bản đồ (MU) độc lập pixel. Mở ra = vừa khít mọi phòng ĐÃ HIỆN (không tính bí mật chưa tìm) + lề 1–1.5 MU hoặc 10%; chiếm 70–85% bề ngang hoặc dọc; lệch về phòng hiện tại tối đa 8%; chỉ 1 phòng thì dùng tỉ lệ đọc được cố định, không phóng to quá.
+Zoom từ fit×0.9 tới fit×2.5 (3.0 nếu cần tên phòng); pinch giữ điểm dưới ngón tay; +/- ×1.25 mượt 120–160 ms; giữ zoom cũ nếu mở lại < 30 s cùng vùng. Kéo 1 ngón (ngưỡng 5–7 px, kéo thì không chọn phòng), vượt biên tối đa ~36 px rồi bật lại, quán tính ít ≤150 ms. Nút Về giữa: đưa phòng hiện tại vào giữa, zoom ≥1.1×fit.
+
+TRẠNG THÁI PHÒNG:
+A Đã đi: hình chữ nhật hơi gồ ghề (9-slice viền ảnh), nền tím khói #2B2029/#35272A ~96%, vân rễ mờ; viền đồng #8C6847 2px + gờ trong #140F18; cửa mở đồng sáng #BB9156. Tối hơn giấy, KHÔNG cam rực.
+B Đã biết chưa đi: nền #262028 70–80%, viền #67545A 1px, liền (không đứt), không chi tiết; không lộ trùm/kho báu.
+C Phòng hiện tại: như A + viền vàng kép #D1A66A 2px + viền đen ngoài; dấu người chơi là chính, nhấp nháy 1.2 s ở dấu (không ở cả phòng). Dòng "You are here · <tên phòng>".
+D Phòng chưa biết cạnh cửa đã thấy: chỉ một đoạn cụt 10–18 px kết thúc bằng 3 chấm mực/khói – KHÔNG vẽ cả ô đứt nét.
+E Bí mật: chưa tìm thì KHÔNG vẽ gì (không ô, không đường, không làm lệch khung vừa, không đếm). Tìm rồi: như A/B + biểu tượng nút rễ nhỏ. Thấy tường nứt chưa mở: biểu tượng tường nứt ở mép phòng.
+F Trùm: chưa nhận ra = phòng thường; nhận ra: viền đỏ đồng đậm #985D51 + huy hiệu; hạ rồi: huy hiệu rỗng mờ.
+G Cổng khoá: thuộc CỬA, không tô cả phòng; biểu tượng chốt đồng đặt đúng ngay cửa; chạm vào hiện tên/điều kiện.
+Chật chỗ ưu tiên: người chơi > tường + khe cửa > Chuông Lưu > cổng khoá/lối ra > Chuông Vỡ > trùm > tên phòng.
+
+CỬA / NỐI: mỗi cửa là cạnh đồ thị {roomA, sideA, offsetA, roomB, sideB, offsetB, type, known, locked}. Phòng sát nhau: khe 7–11 px trên viền mỗi phòng + cầu đồng mờ 2–3 px nếu có khe hở. KHÔNG kẻ đường hồng qua giữa phòng. Giếng/thang: dải hành lang ảnh lặp. Một chiều: mũi tên giữa lối. Màu: thường #9D7857, đoạn cụt #685054 mờ dần, khoá #C08B59 + chốt tối, một chiều #A98A67. Không hồng/tím rực (#58405C chỉ cho bóng). Cắt khe cửa bằng cách chia đoạn viền, không tô đè.
+
+BIỂU TƯỢNG (ảnh pixel, viền mực #110E15, hiển thị 13–19 px, vùng chạm 44 px):
+Người chơi: kim chuông (clapper) trắng ngà #EEE0C5 + vòng vàng #E1B85A, chỉ hướng mặt (hoặc luôn lên), ~18×20 px, luôn trên cùng.
+Chuông Lưu: chuông nguyên + đốm lửa vàng; đã đến = vàng, biết chưa đến = bóng mờ.
+Chuông Vỡ: nửa chuông nứt; đã biết chưa lấy = đồng nhạt; đã lấy = khắc rỗng hoặc ẩn. Chưa biết thì không hiện.
+Trùm: vương miện chuông bị rễ đỏ tím xẻ (không đầu lâu); hạ = vương miện rỗng.
+Cổng khoá: hai hàm rễ đồng kẹp chốt dọc, đặt ở mép cửa.
+Bí mật: vết nứt + mắt rễ nhỏ. Lối ra vùng: vòm có 2 chuông nhỏ ("To Bell Village"/"To Rotting Roots" khi đã biết). Ghim người chơi: tuỳ chọn, tối đa 1.
+
+TÊN PHÒNG: không bao giờ hiện mã (P01…). Tên thật lấy từ dữ liệu phòng (trường "ten" tiếng Anh, docs/tieng-anh/BANG-DOI-CHIEU.md). Ở mức vừa khít KHÔNG in tên 12 phòng; dải thông tin dưới khung nhìn hiện tên phòng đang chọn (mặc định phòng hiện tại). Chạm phòng = viền sáng + "Bell-Moss Grotto · Rest Bell". Zoom >1.7×fit mới in tên 9–11 px trong phòng đủ rộng; ẩn khi đang pinch. Phòng chưa biết: "Uncharted chamber" hoặc không tên.
+Chữ: tiêu đề vùng serif 20–22px #E8D8BC bóng 1px; nhãn 11–12px (theo hệ font docs/khoi-dau/font-chatgpt.txt: Spectral tiêu đề, Handjet/IBM Plex nhãn). Không < 10–11px.
+
+CHÚ GIẢI: nút "LEGEND" dưới trái → bảng ~240×230 gần góc dưới trái: YOU ARE HERE, REST BELL, BROKEN BELL, SEALED PATH, REGION PASSAGE, BOSS, CRACKED WALL (dùng đúng ảnh biểu tượng) + "Only discovered locations appear." Tuỳ chọn "Show collected bells". Không đếm bí mật.
+Dải chọn phòng: cao ~25px, tự ẩn sau 3.5s hoặc khi kéo.
+
+CẢM ỨNG / TRUY CẬP: mở từ nút bản đồ HUD (hình cuộn atlas, không chữ M) hoặc menu tạm dừng; game dừng khi mở. Mở 180–240ms (mờ nền, atlas 1.02→1.0). Đóng bằng X góc phải trên (vùng chạm 44); không đóng khi chạm ra ngoài. Phím M/Esc chỉ cho máy tính, KHÔNG hiện chữ phím trên điện thoại. touch-action:none chỉ trên khung bản đồ; setPointerCapture; huỷ kéo khi có ngón thứ 2. aria-label cho nút. prefers-reduced-motion: tắt nhấp nháy.
+
+MÀU: viền tối #17111D, giấy #4E3831, phòng đi rồi #2C2029, phòng đã biết #29242B, vân #3B2B31, nét đậm #120E17, viền đồng #8E6B4A, lối mở #B39062, chọn #D7AE70, chữ ngà #E8D9BE, chữ mờ #BDAA9B, trùm #995D57, bí mật #9C775E. TRÁNH #FF8800, #FF00FF, ô đứt nét, viền trắng sáng.
+Pixel: ảnh trang trí phóng nearest; biểu tượng giữ cỡ màn hình cố định khi zoom, imageSmoothingEnabled=false, toạ độ nguyên; nét 1–2px (kẹp 1–3px).
+
+ẢNH (phiên chính nhờ ChatGPT vẽ → art/ban-do-moi/):
+Tối thiểu: A01 khung mảnh 1688×780 RGBA (giữa trong suốt, góc chuông, cạnh 8–12px) · A02 giấy da tối 1688×780 đục · A03 viền phòng 9-slice 192×192 RGBA (góc 24px, giữa trong suốt) · A04 viền phòng đã biết 192×192 · A08 bộ 12 biểu tượng 64×64 (4×3: kim người chơi, Chuông Lưu, Chuông Vỡ, trùm / cổng khoá, tường nứt, lối ra vùng, mũi tên một chiều / đoạn cụt, trùm đã hạ, Chuông Vỡ đã lấy, ghim) · A11 6 biểu tượng nút 64×64 (X, legend, về giữa, −, +, vừa khít) · A12 nền nút nhỏ 64×64 ×4 trạng thái.
+Sau: A05 viền phòng hiện tại/chọn 192×192 ×2 · A07 dải hành lang 128×32 lặp ngang · A09 kim người chơi nhấp nháy 8 khung 32×32 · A10 cổng 3 trạng thái 64×64 · A13 bảng chú giải 640×480 · A14 dải tên phòng 768×80. Tuỳ chọn: A06 vân phòng 128×128, A15 huy hiệu tiêu đề 160×64.
+KHÔNG vẽ cả bản đồ thành 1 ảnh; không chữ trong ảnh.
+
+MÃ ĐƯỢC VẼ: biến đổi camera, cắt khung, chạm; nền phẳng tối trong phòng; đặt viền ảnh 9-slice; khe cửa; nét nối thẳng 1–3px màu đồng có viền tối; đoạn cụt; đặt biểu tượng ảnh; nhấp nháy bằng độ mờ; chữ/nhãn. MÃ KHÔNG VẼ: chuông, rễ, vân giấy, tường nứt, cổng, khung trang trí, góc viền cầu kỳ, quầng sáng mờ, vân giả.
+Thứ tự vẽ: nền giấy → cắt khung → hành lang → nền phòng (+vân) → viền phòng → khe cửa/cổng/lối ra → viền hiện tại/chọn → biểu tượng → kim người chơi → dải tên → khung, tiêu đề, nút, chú giải.
+
+DỮ LIỆU: lưu visited / charted / cửa đã biết / mốc đã biết-kích hoạt-đã lấy / trùm đã hạ; phiên: pan, zoom, phòng chọn, legend mở. Phòng bí mật có trong dữ liệu nhưng KHÔNG ảnh hưởng khung vừa/chọn cho tới khi tìm thấy.
+
+LỘ TRÌNH: Pass 1 (chưa cần ảnh mới): bỏ P01 → tên thật; vừa khít + căn giữa; nền tối + viền đồng thay ô cam; bỏ đứt nét + đường hồng; dấu người chơi rõ; Chuông Lưu, cổng/lối ra; nút X; bỏ chữ phím; kéo, pinch, +/-, về giữa. Pass 2: lắp ảnh A01–A04, A08, A11, A12; khe cửa + khoá đúng chỗ; chú giải + dải tên. Pass 3: quy tắc visited/charted/bí mật, trạng thái sưu tầm/trùm/khoá. Pass 4: safe-area, xoay, DPR, kim nhấp nháy, reduced motion.
+KIỂM: thấy vị trí mình ≤1s; không mã P01; 12 phòng đưa vào khung được; kéo + pinch không cuộn trang; về giữa đúng; bí mật không lộ; cổng đúng mép cửa; không chữ phím; nút ≥44; phòng chiếm phần lớn khung (không dồn góc); không đường hồng; trạng thái: lần đầu (1 phòng + 1 đoạn cụt), giữa game, cuối game (12 phòng).
