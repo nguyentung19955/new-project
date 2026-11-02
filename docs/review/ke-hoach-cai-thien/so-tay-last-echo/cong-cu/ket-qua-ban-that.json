@@ -1,0 +1,3916 @@
+{
+ "scene": "ai-ket-qua",
+ "t0": 103361.29999999981,
+ "on": true,
+ "sites": {
+  "village_scene.js:16": {
+   "k": "village_scene.js:16",
+   "t": {
+    "boot": [
+     2101.1999999999534,
+     4299
+    ],
+    "man-chao": [
+     2533.899999999907,
+     2693.1999999999534
+    ],
+    "lang": [
+     0.6999999999534339,
+     594
+    ],
+    "lang-forge": [
+     6.800000000046566,
+     938.9000000001397
+    ],
+    "lang-gear": [
+     0.9000000001396984,
+     925.1000000000931
+    ],
+    "lang-outfit": [
+     4.199999999953434,
+     945.5
+    ],
+    "lang-hero": [
+     0.9000000001396984,
+     918.1999999999534
+    ],
+    "lang-skill": [
+     0.8000000000465661,
+     921.9000000001397
+    ],
+    "lang-chuong": [
+     0.5999999998603016,
+     942.5999999998603
+    ],
+    "lang-help": [
+     0.8000000000465661,
+     910.8000000000466
+    ],
+    "lang-settings": [
+     0.5,
+     915.8000000000466
+    ],
+    "lang-so": [
+     0.6999999999534339,
+     930.3000000000466
+    ],
+    "lang-thanhTuu": [
+     0.6999999999534339,
+     935.5
+    ],
+    "lang-viecNgay": [
+     0.7000000001862645,
+     907.2000000001863
+    ],
+    "lang-ren-luyen": [
+     0.6999999999534339,
+     725.8000000000466
+    ],
+    "lang-ren-sharpen": [
+     0.5,
+     709.6000000000931
+    ],
+    "lang-ren-vk": [
+     0.8000000000465661,
+     705.5
+    ],
+    "lang-ren-ep": [
+     69,
+     668.3000000000466
+    ],
+    "lang-ren-up": [
+     56.9000000001397,
+     790.9000000001397
+    ],
+    "hanh-trang-hero": [
+     0.8999999999068677,
+     843.6000000000931
+    ],
+    "hanh-trang-weapon": [
+     0.6999999999534339,
+     799.5999999998603
+    ],
+    "hanh-trang-skill": [
+     65.79999999981374,
+     766.6999999999534
+    ],
+    "hanh-trang-res": [
+     57,
+     815.8999999999069
+    ]
+   },
+   "ops": {
+    "fillRect": 30201
+   },
+   "scenes": {
+    "boot": 9742,
+    "man-chao": 19,
+    "lang": 7981,
+    "lang-forge": 790,
+    "lang-gear": 851,
+    "lang-outfit": 1072,
+    "lang-hero": 729,
+    "lang-skill": 809,
+    "lang-chuong": 458,
+    "lang-help": 980,
+    "lang-settings": 1064,
+    "lang-so": 941,
+    "lang-thanhTuu": 708,
+    "lang-viecNgay": 1064,
+    "lang-ren-luyen": 600,
+    "lang-ren-sharpen": 551,
+    "lang-ren-vk": 167,
+    "lang-ren-ep": 140,
+    "lang-ren-up": 185,
+    "hanh-trang-hero": 513,
+    "hanh-trang-weapon": 514,
+    "hanh-trang-skill": 157,
+    "hanh-trang-res": 166
+   },
+   "callers": {
+    "village_scene.js:329 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1,
+    "village_scene.js:331 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1699,
+    "village_scene.js:338 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1,
+    "village_scene.js:339 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 241,
+    "village_scene.js:341 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 360,
+    "village_scene.js:342 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 2,
+    "village_scene.js:345 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 810,
+    "village_scene.js:346 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 40,
+    "village_scene.js:335 < village_scene.js:457 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 79,
+    "village_scene.js:335 < village_scene.js:458 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 12,
+    "village_scene.js:335 < village_scene.js:459 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 12,
+    "village_scene.js:335 < village_scene.js:460 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 2,
+    "village_scene.js:462 < village_scene.js:451 < village_scene.js:736 < village.js:1012 < engine.js:854": 77,
+    "village_scene.js:295 < village_scene.js:463 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 44,
+    "village_scene.js:296 < village_scene.js:463 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 4,
+    "village_scene.js:312 < village_scene.js:464 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 11,
+    "village_scene.js:317 < village_scene.js:465 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 8,
+    "village_scene.js:299 < village_scene.js:487 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:300 < village_scene.js:487 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 48,
+    "village_scene.js:301 < village_scene.js:487 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:302 < village_scene.js:487 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 8,
+    "village_scene.js:225 < village_scene.js:303 < village_scene.js:487 < village_scene.js:364 < village_scene.js:469": 24,
+    "village_scene.js:228 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 8,
+    "village_scene.js:229 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 14,
+    "village_scene.js:230 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 10,
+    "village_scene.js:231 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 16,
+    "village_scene.js:232 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 666,
+    "village_scene.js:233 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:234 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:235 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 2,
+    "village_scene.js:225 < village_scene.js:235 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469": 24,
+    "village_scene.js:239 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 10,
+    "village_scene.js:240 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:245 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 80,
+    "village_scene.js:246 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 4,
+    "village_scene.js:225 < village_scene.js:247 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469": 36,
+    "village_scene.js:250 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 4,
+    "village_scene.js:251 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 62,
+    "village_scene.js:252 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:253 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 2,
+    "village_scene.js:254 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 4,
+    "village_scene.js:255 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 10,
+    "village_scene.js:219 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469": 40,
+    "village_scene.js:220 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469": 56,
+    "village_scene.js:221 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469": 4,
+    "village_scene.js:225 < village_scene.js:257 < village_scene.js:490 < village_scene.js:364 < village_scene.js:469": 12,
+    "village_scene.js:259 < village_scene.js:491 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 4,
+    "village_scene.js:22 < village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469": 194,
+    "village_scene.js:262 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:264 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:265 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:22 < village_scene.js:266 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469": 122,
+    "village_scene.js:267 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:270 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 10,
+    "village_scene.js:271 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:219 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469": 48,
+    "village_scene.js:220 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469": 52,
+    "village_scene.js:221 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469": 4,
+    "village_scene.js:225 < village_scene.js:273 < village_scene.js:493 < village_scene.js:364 < village_scene.js:469": 12,
+    "village_scene.js:276 < village_scene.js:494 < village_scene.js:364 < village_scene.js:494 < village_scene.js:494": 24,
+    "village_scene.js:277 < village_scene.js:494 < village_scene.js:364 < village_scene.js:494 < village_scene.js:494": 48,
+    "village_scene.js:278 < village_scene.js:494 < village_scene.js:364 < village_scene.js:494 < village_scene.js:494": 24,
+    "village_scene.js:279 < village_scene.js:494 < village_scene.js:364 < village_scene.js:494 < village_scene.js:494": 12,
+    "village_scene.js:282 < village_scene.js:497 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:289 < village_scene.js:498 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 6,
+    "village_scene.js:306 < village_scene.js:499 < village_scene.js:364 < village_scene.js:500 < village_scene.js:451": 4,
+    "village_scene.js:307 < village_scene.js:499 < village_scene.js:364 < village_scene.js:500 < village_scene.js:451": 16,
+    "village_scene.js:309 < village_scene.js:499 < village_scene.js:364 < village_scene.js:500 < village_scene.js:451": 2,
+    "village_scene.js:225 < village_scene.js:309 < village_scene.js:499 < village_scene.js:364 < village_scene.js:500": 12,
+    "village_scene.js:313 < village_scene.js:502 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 16,
+    "village_scene.js:22 < village_scene.js:313 < village_scene.js:502 < village_scene.js:364 < village_scene.js:469": 34,
+    "village_scene.js:314 < village_scene.js:503 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 42,
+    "village_scene.js:315 < village_scene.js:505 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 2,
+    "village_scene.js:315 < village_scene.js:506 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 2,
+    "village_scene.js:226 < village_scene.js:507 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 12,
+    "village_scene.js:225 < village_scene.js:226 < village_scene.js:507 < village_scene.js:364 < village_scene.js:469": 36,
+    "village_scene.js:918 < village_scene.js:1065 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028": 24,
+    "village_scene.js:922 < village_scene.js:926 < village_scene.js:1065 < village_scene.js:1133 < thanh_tuu.js:498": 8,
+    "village_scene.js:1067 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028 < truyen.js:520": 4,
+    "village_scene.js:208 < village_scene.js:1086 < village_scene.js:1107 < village_scene.js:1133 < thanh_tuu.js:498": 6,
+    "village_scene.js:957 < village_scene.js:1118 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028": 2,
+    "village_scene.js:942 < village_scene.js:1119 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028": 8,
+    "village_scene.js:1127 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028 < truyen.js:520": 22,
+    "village_scene.js:329 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1,
+    "village_scene.js:331 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1699,
+    "village_scene.js:338 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1,
+    "village_scene.js:339 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 241,
+    "village_scene.js:341 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 360,
+    "village_scene.js:342 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 2,
+    "village_scene.js:345 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 810,
+    "village_scene.js:346 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 40,
+    "village_scene.js:335 < village_scene.js:457 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 79,
+    "village_scene.js:335 < village_scene.js:458 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 12,
+    "village_scene.js:335 < village_scene.js:459 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 12,
+    "village_scene.js:335 < village_scene.js:460 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 2,
+    "village_scene.js:462 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133 < thanh_tuu.js:498": 77,
+    "village_scene.js:295 < village_scene.js:463 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 44,
+    "village_scene.js:296 < village_scene.js:463 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 4,
+    "village_scene.js:312 < village_scene.js:464 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 11,
+    "village_scene.js:317 < village_scene.js:465 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 8,
+    "village_scene.js:299 < village_scene.js:487 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:300 < village_scene.js:487 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 24,
+    "village_scene.js:301 < village_scene.js:487 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:302 < village_scene.js:487 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 4,
+    "village_scene.js:228 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 4,
+    "village_scene.js:229 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 7,
+    "village_scene.js:230 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 5,
+    "village_scene.js:231 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 8,
+    "village_scene.js:232 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 333,
+    "village_scene.js:233 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:234 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:235 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 1,
+    "village_scene.js:239 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 5,
+    "village_scene.js:240 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:245 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 40,
+    "village_scene.js:246 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 2,
+    "village_scene.js:250 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 2,
+    "village_scene.js:251 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 31,
+    "village_scene.js:252 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:253 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 1,
+    "village_scene.js:254 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 2,
+    "village_scene.js:255 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 5,
+    "village_scene.js:219 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481": 20,
+    "village_scene.js:220 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481": 28,
+    "village_scene.js:221 < village_scene.js:256 < village_scene.js:490 < village_scene.js:364 < village_scene.js:481": 2,
+    "village_scene.js:259 < village_scene.js:491 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 2,
+    "village_scene.js:22 < village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481": 97,
+    "village_scene.js:262 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:264 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:265 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:22 < village_scene.js:266 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481": 61,
+    "village_scene.js:267 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:270 < village_scene.js:493 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 5,
+    "village_scene.js:271 < village_scene.js:493 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:219 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:481": 24,
+    "village_scene.js:220 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:481": 26,
+    "village_scene.js:221 < village_scene.js:272 < village_scene.js:493 < village_scene.js:364 < village_scene.js:481": 2,
+    "village_scene.js:282 < village_scene.js:497 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:289 < village_scene.js:498 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 3,
+    "village_scene.js:306 < village_scene.js:499 < village_scene.js:364 < village_scene.js:481 < village_scene.js:501": 2,
+    "village_scene.js:307 < village_scene.js:499 < village_scene.js:364 < village_scene.js:481 < village_scene.js:501": 8,
+    "village_scene.js:309 < village_scene.js:499 < village_scene.js:364 < village_scene.js:481 < village_scene.js:501": 1,
+    "village_scene.js:313 < village_scene.js:502 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 8,
+    "village_scene.js:22 < village_scene.js:313 < village_scene.js:502 < village_scene.js:364 < village_scene.js:481": 17,
+    "village_scene.js:314 < village_scene.js:503 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 21,
+    "village_scene.js:315 < village_scene.js:505 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 1,
+    "village_scene.js:315 < village_scene.js:506 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 1,
+    "village_scene.js:226 < village_scene.js:507 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 6,
+    "village_scene.js:918 < village_scene.js:1065 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:854": 12312,
+    "village_scene.js:1067 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:854 < village.js:846": 4042,
+    "village_scene.js:942 < village_scene.js:1119 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:854": 4104,
+    "village_scene.js:1288 < village.js:194 < village.js:852 < village.js:846 < hinh_thai.js:312": 1
+   },
+   "main": 20532,
+   "off": 9669,
+   "grad": 0,
+   "lighter": 4112,
+   "alpha": 0,
+   "styles": {
+    "#3a5a40": 1,
+    "#f4eee0": 1,
+    "#4f7a52": 1,
+    "#ffd23f": 1,
+    "#2e4a36": 1,
+    "#16261e": 1
+   },
+   "area": 871880.919728355
+  },
+  "village_scene.js:19": {
+   "k": "village_scene.js:19",
+   "t": {
+    "boot": [
+     2102.5,
+     4203.09999999986
+    ]
+   },
+   "ops": {
+    "fillRect": 25144
+   },
+   "scenes": {
+    "boot": 25144
+   },
+   "callers": {
+    "village_scene.js:330 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 2771,
+    "village_scene.js:340 < village_scene.js:455 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1866,
+    "village_scene.js:335 < village_scene.js:457 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 4368,
+    "village_scene.js:335 < village_scene.js:458 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 464,
+    "village_scene.js:335 < village_scene.js:459 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 520,
+    "village_scene.js:335 < village_scene.js:460 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 160,
+    "village_scene.js:293 < village_scene.js:463 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 141,
+    "village_scene.js:295 < village_scene.js:463 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 51,
+    "village_scene.js:234 < village_scene.js:488 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 28,
+    "village_scene.js:242 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 360,
+    "village_scene.js:243 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 360,
+    "village_scene.js:244 < village_scene.js:489 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 232,
+    "village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 56,
+    "village_scene.js:265 < village_scene.js:492 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 32,
+    "village_scene.js:288 < village_scene.js:498 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 110,
+    "village_scene.js:306 < village_scene.js:499 < village_scene.js:364 < village_scene.js:500 < village_scene.js:451": 58,
+    "village_scene.js:314 < village_scene.js:503 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 28,
+    "village_scene.js:315 < village_scene.js:505 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 36,
+    "village_scene.js:315 < village_scene.js:506 < village_scene.js:364 < village_scene.js:469 < village_scene.js:486": 36,
+    "village_scene.js:318 < village_scene.js:510 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 556,
+    "village_scene.js:318 < village_scene.js:511 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 356,
+    "village_scene.js:318 < village_scene.js:512 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 255,
+    "village_scene.js:969 < village_scene.js:1074 < village_scene.js:1107 < village_scene.js:1133 < thanh_tuu.js:498": 17,
+    "village_scene.js:938 < village_scene.js:1119 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028": 82,
+    "village_scene.js:947 < village_scene.js:1119 < village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028": 25,
+    "village_scene.js:330 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 2771,
+    "village_scene.js:340 < village_scene.js:455 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1866,
+    "village_scene.js:335 < village_scene.js:457 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 4368,
+    "village_scene.js:335 < village_scene.js:458 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 464,
+    "village_scene.js:335 < village_scene.js:459 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 520,
+    "village_scene.js:335 < village_scene.js:460 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 160,
+    "village_scene.js:293 < village_scene.js:463 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 141,
+    "village_scene.js:295 < village_scene.js:463 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 51,
+    "village_scene.js:234 < village_scene.js:488 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 14,
+    "village_scene.js:242 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 180,
+    "village_scene.js:243 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 180,
+    "village_scene.js:244 < village_scene.js:489 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 116,
+    "village_scene.js:261 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 28,
+    "village_scene.js:265 < village_scene.js:492 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 16,
+    "village_scene.js:288 < village_scene.js:498 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 55,
+    "village_scene.js:306 < village_scene.js:499 < village_scene.js:364 < village_scene.js:481 < village_scene.js:501": 29,
+    "village_scene.js:314 < village_scene.js:503 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 14,
+    "village_scene.js:315 < village_scene.js:505 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 18,
+    "village_scene.js:315 < village_scene.js:506 < village_scene.js:364 < village_scene.js:481 < village_scene.js:486": 18,
+    "village_scene.js:318 < village_scene.js:510 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 556,
+    "village_scene.js:318 < village_scene.js:511 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 356,
+    "village_scene.js:318 < village_scene.js:512 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 255
+   },
+   "main": 124,
+   "off": 25020,
+   "grad": 0,
+   "lighter": 107,
+   "alpha": 17,
+   "styles": {
+    "#345238": 1,
+    "#40624a": 1,
+    "#2e5a3c": 1,
+    "#244a34": 1,
+    "#5a4a3c": 1,
+    "#8a705a": 1
+   },
+   "area": 553158
+  },
+  "village_scene.js:354": {
+   "k": "village_scene.js:354",
+   "t": {
+    "boot": [
+     2564.5999999998603,
+     4296.09999999986
+    ],
+    "lang": [
+     662.1999999999534,
+     317
+    ]
+   },
+   "ops": {
+    "fillRect": 83
+   },
+   "scenes": {
+    "boot": 81,
+    "lang": 2
+   },
+   "callers": {
+    "village_scene.js:466 < village_scene.js:451 < village_scene.js:736 < village.js:1012 < engine.js:854": 1,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:487 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:488 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:489 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:490 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:491 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:492 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:493 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:494 < village_scene.js:494 < village_scene.js:451 < village_scene.js:736": 3,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:497 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:498 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:500 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:502 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:503 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:505 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:506 < village_scene.js:451": 2,
+    "village_scene.js:382 < village_scene.js:469 < village_scene.js:486 < village_scene.js:507 < village_scene.js:451": 6,
+    "village_scene.js:466 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133 < thanh_tuu.js:498": 1,
+    "village_scene.js:473 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133 < thanh_tuu.js:498": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:487 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:488 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:489 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:490 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:491 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:492 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:493 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:494 < village_scene.js:494 < village_scene.js:451 < village_scene.js:1059": 3,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:497 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:498 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:500 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:501 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:502 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:503 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:505 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:506 < village_scene.js:451": 1,
+    "village_scene.js:382 < village_scene.js:481 < village_scene.js:486 < village_scene.js:507 < village_scene.js:451": 3,
+    "village_scene.js:436 < village_scene.js:416 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1,
+    "village_scene.js:421 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133 < thanh_tuu.js:498": 17,
+    "village_scene.js:403 < village_scene.js:977 < village_scene.js:1107 < village_scene.js:1133 < thanh_tuu.js:498": 1,
+    "village_scene.js:403 < village_scene.js:412 < village_scene.js:992 < village_scene.js:1107 < village_scene.js:1133": 4
+   },
+   "main": 0,
+   "off": 83,
+   "grad": 0,
+   "lighter": 83,
+   "alpha": 0,
+   "styles": {
+    "#b6b0dc": 1,
+    "#c87050": 1,
+    "#ffd23f": 1
+   },
+   "area": 874904
+  },
+  "village_scene.js:364": {
+   "k": "village_scene.js:364",
+   "t": {
+    "boot": [
+     2565.2999999998137,
+     4167.399999999907
+    ]
+   },
+   "ops": {
+    "clearRect": 57
+   },
+   "scenes": {
+    "boot": 57
+   },
+   "callers": {
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:487 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:488 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:489 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:490 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:491 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:492 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:493 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:494 < village_scene.js:494 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 3,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:497 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:498 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:500 < village_scene.js:451 < village_scene.js:736 < village.js:1012 < engine.js:854": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:502 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:503 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:505 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:506 < village_scene.js:451 < village_scene.js:736": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:507 < village_scene.js:451 < village_scene.js:736": 3,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:487 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:487 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:488 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:488 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:489 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:489 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:490 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:490 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:491 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:491 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:492 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:492 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:493 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:493 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:494 < village_scene.js:494 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 3,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:497 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:497 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:498 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:498 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:500 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133 < thanh_tuu.js:498": 1,
+    "village_scene.js:481 < village_scene.js:501 < village_scene.js:451 < village_scene.js:1059 < village_scene.js:1133": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:502 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:502 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:503 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:503 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:505 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:505 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:506 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:506 < village_scene.js:451 < village_scene.js:1059": 1,
+    "village_scene.js:469 < village_scene.js:486 < village_scene.js:507 < village_scene.js:451 < village_scene.js:1059": 3,
+    "village_scene.js:481 < village_scene.js:486 < village_scene.js:507 < village_scene.js:451 < village_scene.js:1059": 3
+   },
+   "main": 0,
+   "off": 57,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1,
+    "#ffd23f": 1,
+    "#ffb040": 1,
+    "#c9a24f": 1,
+    "#f4eee0": 1,
+    "#d9cdb8": 1
+   },
+   "area": 0
+  },
+  "village_scene.js:440": {
+   "k": "village_scene.js:440",
+   "t": {
+    "boot": [
+     3129,
+     3129
+    ]
+   },
+   "ops": {
+    "fillRect": 1
+   },
+   "scenes": {
+    "boot": 1
+   },
+   "callers": {
+    "village_scene.js:434 < village_scene.js:416 < village_scene.js:451 < village_scene.js:736 < village.js:1012": 1
+   },
+   "main": 0,
+   "off": 1,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#2c4a3e": 1
+   },
+   "area": 194400
+  },
+  "engine.js:629": {
+   "k": "engine.js:629",
+   "t": {
+    "boot": [
+     3147.6999999999534,
+     4468.59999999986
+    ],
+    "man-chao": [
+     0.5,
+     2533.1999999999534
+    ],
+    "lang": [
+     0.5,
+     929.0999999998603
+    ],
+    "lang-map": [
+     0.5,
+     905.2999999998137
+    ],
+    "lang-forge": [
+     6.199999999953434,
+     936.6999999999534
+    ],
+    "lang-gear": [
+     0.6000000000931323,
+     922.8000000000466
+    ],
+    "lang-outfit": [
+     0.39999999990686774,
+     923.8999999999069
+    ],
+    "lang-hero": [
+     0.5,
+     916
+    ],
+    "lang-skill": [
+     0.5,
+     920.4000000001397
+    ],
+    "lang-chuong": [
+     0.39999999990686774,
+     940.8000000000466
+    ],
+    "lang-help": [
+     0.5,
+     909.6000000000931
+    ],
+    "lang-settings": [
+     0.30000000004656613,
+     914.3999999999069
+    ],
+    "lang-so": [
+     0.39999999990686774,
+     929.1000000000931
+    ],
+    "lang-thanhTuu": [
+     0.2999999998137355,
+     933.5999999998603
+    ],
+    "lang-viecNgay": [
+     0.20000000018626451,
+     906
+    ],
+    "lang-ren-luyen": [
+     0.39999999990686774,
+     724.1999999999534
+    ],
+    "lang-ren-sharpen": [
+     0.4000000001396984,
+     707.6999999999534
+    ],
+    "lang-ren-vk": [
+     0.4000000001396984,
+     703.4000000001397
+    ],
+    "lang-ren-ep": [
+     68.69999999995343,
+     667.0999999998603
+    ],
+    "lang-ren-up": [
+     56.60000000009313,
+     788.1000000000931
+    ],
+    "hanh-trang-hero": [
+     0.5,
+     841.5
+    ],
+    "hanh-trang-weapon": [
+     0.39999999990686774,
+     797.8999999999069
+    ],
+    "hanh-trang-skill": [
+     65.39999999990687,
+     765.3999999999069
+    ],
+    "hanh-trang-res": [
+     56.800000000046566,
+     813
+    ],
+    "ai-danh": [
+     1.5,
+     25015.59999999986
+    ],
+    "ai-phong-elite": [
+     3.300000000046566,
+     4029.8000000000466
+    ],
+    "ai-phong-chest": [
+     1.1999999999534339,
+     4014.5
+    ],
+    "ai-phong-fountain": [
+     0.9000000001396984,
+     4024.8000000000466
+    ],
+    "ai-phong-merchant": [
+     1.1000000000931323,
+     4027.7000000001863
+    ],
+    "ai-phong-altar": [
+     0.8000000000465661,
+     4003.1999999999534
+    ],
+    "ai-trum": [
+     4,
+     19951.700000000186
+    ],
+    "ai-paused": [
+     8.300000000046566,
+     1491.1999999999534
+    ],
+    "ai-map": [
+     1.1999999999534339,
+     1511.3999999999069
+    ],
+    "ai-bag": [
+     0.4000000001396984,
+     1436.8000000000466
+    ],
+    "ai-ket-qua": [
+     10.5,
+     1487.4000000001397
+    ]
+   },
+   "ops": {
+    "clearRect": 5122
+   },
+   "scenes": {
+    "boot": 8,
+    "man-chao": 147,
+    "lang": 402,
+    "lang-map": 56,
+    "lang-forge": 38,
+    "lang-gear": 44,
+    "lang-outfit": 55,
+    "lang-hero": 35,
+    "lang-skill": 40,
+    "lang-chuong": 23,
+    "lang-help": 49,
+    "lang-settings": 56,
+    "lang-so": 45,
+    "lang-thanhTuu": 34,
+    "lang-viecNgay": 56,
+    "lang-ren-luyen": 30,
+    "lang-ren-sharpen": 29,
+    "lang-ren-vk": 8,
+    "lang-ren-ep": 7,
+    "lang-ren-up": 9,
+    "hanh-trang-hero": 27,
+    "hanh-trang-weapon": 25,
+    "hanh-trang-skill": 8,
+    "hanh-trang-res": 8,
+    "ai-danh": 1466,
+    "ai-phong-elite": 238,
+    "ai-phong-chest": 237,
+    "ai-phong-fountain": 234,
+    "ai-phong-merchant": 240,
+    "ai-phong-altar": 242,
+    "ai-trum": 931,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "engine.js:935": 5122
+   },
+   "main": 5122,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1,
+    "rgba(232, 222, 196, 0.85)": 1,
+    "#f6dc92": 1,
+    "#a9c2b4": 1,
+    "#2a1a14": 1,
+    "#fff0c4": 1
+   },
+   "area": 0
+  },
+  "village_scene.js:1061": {
+   "k": "village_scene.js:1061",
+   "t": {
+    "boot": [
+     3149.399999999907,
+     4211.799999999814
+    ],
+    "man-chao": [
+     2533.899999999907,
+     2533.899999999907
+    ],
+    "lang": [
+     0.5999999998603016,
+     592.1999999999534
+    ],
+    "lang-forge": [
+     6.699999999953434,
+     936.8000000000466
+    ],
+    "lang-gear": [
+     0.8000000000465661,
+     923
+    ],
+    "lang-outfit": [
+     0.5,
+     924.1999999999534
+    ],
+    "lang-hero": [
+     0.6999999999534339,
+     916.1999999999534
+    ],
+    "lang-skill": [
+     0.7000000001862645,
+     920.5
+    ],
+    "lang-chuong": [
+     0.5,
+     940.8999999999069
+    ],
+    "lang-help": [
+     0.6000000000931323,
+     909.8000000000466
+    ],
+    "lang-settings": [
+     0.5,
+     914.5
+    ],
+    "lang-so": [
+     0.6999999999534339,
+     929.1999999999534
+    ],
+    "lang-thanhTuu": [
+     0.5999999998603016,
+     933.6999999999534
+    ],
+    "lang-viecNgay": [
+     0.4000000001396984,
+     906.2000000001863
+    ],
+    "lang-ren-luyen": [
+     0.5999999998603016,
+     724.3000000000466
+    ],
+    "lang-ren-sharpen": [
+     0.5,
+     707.9000000001397
+    ],
+    "lang-ren-vk": [
+     0.6000000000931323,
+     703.6000000000931
+    ],
+    "lang-ren-ep": [
+     68.89999999990687,
+     667.3000000000466
+    ],
+    "lang-ren-up": [
+     56.800000000046566,
+     788.4000000001397
+    ],
+    "hanh-trang-hero": [
+     0.6999999999534339,
+     841.6999999999534
+    ],
+    "hanh-trang-weapon": [
+     0.5999999998603016,
+     798
+    ],
+    "hanh-trang-skill": [
+     65.69999999995343,
+     765.5
+    ],
+    "hanh-trang-res": [
+     56.89999999990687,
+     813.0999999998603
+    ]
+   },
+   "ops": {
+    "fillRect": 1028
+   },
+   "scenes": {
+    "boot": 2,
+    "man-chao": 1,
+    "lang": 399,
+    "lang-forge": 38,
+    "lang-gear": 44,
+    "lang-outfit": 55,
+    "lang-hero": 35,
+    "lang-skill": 40,
+    "lang-chuong": 23,
+    "lang-help": 49,
+    "lang-settings": 56,
+    "lang-so": 45,
+    "lang-thanhTuu": 34,
+    "lang-viecNgay": 56,
+    "lang-ren-luyen": 30,
+    "lang-ren-sharpen": 29,
+    "lang-ren-vk": 8,
+    "lang-ren-ep": 7,
+    "lang-ren-up": 9,
+    "hanh-trang-hero": 27,
+    "hanh-trang-weapon": 25,
+    "hanh-trang-skill": 8,
+    "hanh-trang-res": 8
+   },
+   "callers": {
+    "village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028 < truyen.js:520 < engine.js:939": 2,
+    "village_scene.js:1133 < thanh_tuu.js:498 < village.js:854 < village.js:846 < hinh_thai.js:312": 1026
+   },
+   "main": 1028,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#101a1a": 1
+   },
+   "area": 6908160
+  },
+  "village_scene.js:1127": {
+   "k": "village_scene.js:1127",
+   "t": {
+    "boot": [
+     3158.6999999999534,
+     3161.399999999907
+    ]
+   },
+   "ops": {
+    "fillRect": 22
+   },
+   "scenes": {
+    "boot": 22
+   },
+   "callers": {
+    "village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028 < truyen.js:520 < engine.js:939": 22
+   },
+   "main": 22,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(210, 255, 120, 0.15)": 1,
+    "rgba(210, 255, 120, 0.21)": 1,
+    "rgba(210, 255, 120, 0.11)": 1,
+    "rgba(210, 255, 120, 0.2)": 1,
+    "rgba(210, 255, 120, 0.19)": 1,
+    "rgba(210, 255, 120, 0.18)": 1
+   },
+   "area": 198
+  },
+  "village_scene.js:1130": {
+   "k": "village_scene.js:1130",
+   "t": {
+    "boot": [
+     3161.5999999998603,
+     4299.899999999907
+    ],
+    "lang-forge": [
+     8.100000000093132,
+     939.1000000000931
+    ],
+    "lang-gear": [
+     3.1000000000931323,
+     925.3000000000466
+    ],
+    "lang-outfit": [
+     5.399999999906868,
+     945.6999999999534
+    ],
+    "lang-hero": [
+     7.400000000139698,
+     918.4000000001397
+    ],
+    "lang-skill": [
+     3,
+     922.1000000000931
+    ],
+    "lang-chuong": [
+     1.8999999999068677,
+     942.8999999999069
+    ],
+    "lang-help": [
+     2.6000000000931323,
+     910.8999999999069
+    ],
+    "lang-settings": [
+     1.6999999999534339,
+     915.8999999999069
+    ],
+    "lang-so": [
+     3.1000000000931323,
+     930.3999999999069
+    ],
+    "lang-thanhTuu": [
+     1.7999999998137355,
+     935.7999999998137
+    ],
+    "lang-viecNgay": [
+     2.5,
+     907.4000000001397
+    ],
+    "lang-ren-luyen": [
+     2,
+     726
+    ],
+    "lang-ren-sharpen": [
+     1.6999999999534339,
+     709.6999999999534
+    ],
+    "lang-ren-vk": [
+     2.6000000000931323,
+     705.8000000000466
+    ],
+    "lang-ren-ep": [
+     70.5,
+     668.5
+    ],
+    "lang-ren-up": [
+     58.199999999953434,
+     791.1999999999534
+    ],
+    "hanh-trang-hero": [
+     3.3999999999068677,
+     843.8999999999069
+    ],
+    "hanh-trang-weapon": [
+     2.7999999998137355,
+     799.8999999999069
+    ],
+    "hanh-trang-skill": [
+     67.79999999981374,
+     766.8999999999069
+    ],
+    "hanh-trang-res": [
+     59.800000000046566,
+     774.8999999999069
+    ]
+   },
+   "ops": {
+    "fillRect": 627
+   },
+   "scenes": {
+    "boot": 2,
+    "lang-forge": 38,
+    "lang-gear": 44,
+    "lang-outfit": 55,
+    "lang-hero": 35,
+    "lang-skill": 40,
+    "lang-chuong": 23,
+    "lang-help": 49,
+    "lang-settings": 56,
+    "lang-so": 45,
+    "lang-thanhTuu": 34,
+    "lang-viecNgay": 56,
+    "lang-ren-luyen": 30,
+    "lang-ren-sharpen": 29,
+    "lang-ren-vk": 8,
+    "lang-ren-ep": 7,
+    "lang-ren-up": 9,
+    "hanh-trang-hero": 27,
+    "hanh-trang-weapon": 25,
+    "hanh-trang-skill": 8,
+    "hanh-trang-res": 7
+   },
+   "callers": {
+    "village_scene.js:1133 < thanh_tuu.js:498 < village.js:1028 < truyen.js:520 < engine.js:939": 2,
+    "village_scene.js:1133 < thanh_tuu.js:498 < village.js:854 < village.js:846 < hinh_thai.js:312": 625
+   },
+   "main": 627,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(10, 8, 16, 0.42)": 1,
+    "rgba(10, 8, 16, 0.62)": 1
+   },
+   "area": 81259200
+  },
+  "bia.js:144": {
+   "k": "bia.js:144",
+   "t": {
+    "boot": [
+     3162,
+     4471
+    ],
+    "man-chao": [
+     1.6999999999534339,
+     2511.399999999907
+    ]
+   },
+   "ops": {
+    "fillRect": 154
+   },
+   "scenes": {
+    "boot": 8,
+    "man-chao": 146
+   },
+   "callers": {
+    "village.js:1031 < truyen.js:520 < engine.js:939": 154
+   },
+   "main": 154,
+   "off": 0,
+   "grad": 154,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {},
+   "area": 15769600
+  },
+  "bia.js:150": {
+   "k": "bia.js:150",
+   "t": {
+    "boot": [
+     3162,
+     4471
+    ],
+    "man-chao": [
+     1.6999999999534339,
+     2511.5
+    ]
+   },
+   "ops": {
+    "fillRect": 154
+   },
+   "scenes": {
+    "boot": 8,
+    "man-chao": 146
+   },
+   "callers": {
+    "village.js:1031 < truyen.js:520 < engine.js:939": 154
+   },
+   "main": 154,
+   "off": 0,
+   "grad": 154,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {},
+   "area": 22237600
+  },
+  "bia.js:154": {
+   "k": "bia.js:154",
+   "t": {
+    "boot": [
+     3162,
+     4471
+    ],
+    "man-chao": [
+     1.6999999999534339,
+     2511.5
+    ]
+   },
+   "ops": {
+    "fillRect": 154
+   },
+   "scenes": {
+    "boot": 8,
+    "man-chao": 146
+   },
+   "callers": {
+    "village.js:1031 < truyen.js:520 < engine.js:939": 154
+   },
+   "main": 154,
+   "off": 0,
+   "grad": 154,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {},
+   "area": 3838090.6666666586
+  },
+  "bia.js:157": {
+   "k": "bia.js:157",
+   "t": {
+    "boot": [
+     3162,
+     4471
+    ],
+    "man-chao": [
+     1.6999999999534339,
+     2511.5
+    ]
+   },
+   "ops": {
+    "fillRect": 154
+   },
+   "scenes": {
+    "boot": 8,
+    "man-chao": 146
+   },
+   "callers": {
+    "village.js:1031 < truyen.js:520 < engine.js:939": 154
+   },
+   "main": 154,
+   "off": 0,
+   "grad": 154,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {},
+   "area": 9071850.666666651
+  },
+  "ui_theme.js:80": {
+   "k": "ui_theme.js:80",
+   "t": {
+    "boot": [
+     3162.899999999907,
+     4314.799999999814
+    ],
+    "man-chao": [
+     2696.2999999998137,
+     2745.7999999998137
+    ],
+    "lang": [
+     1248.6000000000931,
+     812.1999999999534
+    ],
+    "lang-forge": [
+     16.699999999953434,
+     963.5
+    ],
+    "lang-gear": [
+     927.8000000000466,
+     940.9000000001397
+    ],
+    "lang-outfit": [
+     954.8999999999069,
+     973.6000000000931
+    ],
+    "lang-hero": [
+     927.1999999999534,
+     943
+    ],
+    "lang-skill": [
+     944.3000000000466,
+     951.2000000001863
+    ],
+    "lang-chuong": [
+     959.6999999999534,
+     960.6999999999534
+    ],
+    "lang-help": [
+     913.1999999999534,
+     931.6000000000931
+    ],
+    "lang-ren-up": [
+     721.6000000000931,
+     749
+    ],
+    "hanh-trang-hero": [
+     851.1999999999534,
+     857.1000000000931
+    ],
+    "hanh-trang-skill": [
+     70.19999999995343,
+     83.0999999998603
+    ],
+    "hanh-trang-res": [
+     67.30000000004657,
+     69
+    ],
+    "ai-danh": [
+     5974.899999999907,
+     16840
+    ],
+    "ai-phong-elite": [
+     1579.1000000000931,
+     1579.1000000000931
+    ],
+    "ai-phong-chest": [
+     7.5,
+     4064.3000000000466
+    ],
+    "ai-trum": [
+     99.5,
+     14394.5
+    ],
+    "ai-paused": [
+     16.899999999906868,
+     41.699999999953434
+    ]
+   },
+   "ops": {
+    "fillRect": 3116
+   },
+   "scenes": {
+    "boot": 1126,
+    "man-chao": 4,
+    "lang": 83,
+    "lang-forge": 339,
+    "lang-gear": 172,
+    "lang-outfit": 123,
+    "lang-hero": 129,
+    "lang-skill": 33,
+    "lang-chuong": 18,
+    "lang-help": 266,
+    "lang-ren-up": 84,
+    "hanh-trang-hero": 36,
+    "hanh-trang-skill": 63,
+    "hanh-trang-res": 30,
+    "ai-danh": 4,
+    "ai-phong-elite": 1,
+    "ai-phong-chest": 105,
+    "ai-trum": 90,
+    "ai-paused": 410
+   },
+   "callers": {
+    "ui_theme.js:85 < ui_theme.js:86 < ui_theme.js:120 < ui_theme.js:131 < ui_theme.js:35": 52,
+    "ui_theme.js:81 < ui_theme.js:87 < ui_theme.js:120 < ui_theme.js:131 < ui_theme.js:35": 84,
+    "ui_theme.js:85 < ui_theme.js:86 < ui_theme.js:121 < ui_theme.js:131 < ui_theme.js:35": 40,
+    "ui_theme.js:81 < ui_theme.js:94 < ui_theme.js:123 < ui_theme.js:131 < ui_theme.js:35": 105,
+    "ui_theme.js:85 < ui_theme.js:86 < ui_theme.js:124 < ui_theme.js:131 < ui_theme.js:35": 9,
+    "ui_theme.js:81 < ui_theme.js:87 < ui_theme.js:131 < ui_theme.js:35 < ui_theme.js:131": 64,
+    "ui_theme.js:85 < ui_theme.js:86 < ui_theme.js:131 < ui_theme.js:35 < ui_theme.js:131": 72,
+    "ui_theme.js:1364 < ui_theme.js:35 < ui_theme.js:1363 < ui_theme.js:1357 < ui_theme.js:1379": 18,
+    "ui_theme.js:1365 < ui_theme.js:35 < ui_theme.js:1363 < ui_theme.js:1357 < ui_theme.js:1379": 36,
+    "ui_theme.js:1366 < ui_theme.js:35 < ui_theme.js:1363 < ui_theme.js:1357 < ui_theme.js:1379": 1,
+    "ui_theme.js:1367 < ui_theme.js:35 < ui_theme.js:1363 < ui_theme.js:1357 < ui_theme.js:1379": 1,
+    "ui_theme.js:83 < ui_theme.js:1367 < ui_theme.js:35 < ui_theme.js:1363 < ui_theme.js:1357": 4,
+    "ui_theme.js:81 < ui_theme.js:87 < ui_theme.js:1368 < ui_theme.js:35 < ui_theme.js:1363": 32,
+    "ui_theme.js:84 < ui_theme.js:260 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072": 22,
+    "ui_theme.js:84 < ui_theme.js:261 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072": 22,
+    "ui_theme.js:84 < ui_theme.js:262 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072": 20,
+    "ui_theme.js:264 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072 < truyen.js:520": 1,
+    "ui_theme.js:112 < ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072": 100,
+    "ui_theme.js:81 < ui_theme.js:112 < ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258": 172,
+    "ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < village.js:1072 < truyen.js:520": 1,
+    "ui_theme.js:81 < ui_theme.js:87 < ui_theme.js:270 < ui_theme.js:35 < ui_theme.js:258": 96,
+    "ui_theme.js:84 < ui_theme.js:260 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073": 22,
+    "ui_theme.js:84 < ui_theme.js:261 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073": 22,
+    "ui_theme.js:84 < ui_theme.js:262 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073": 20,
+    "ui_theme.js:263 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073 < truyen.js:520": 1,
+    "ui_theme.js:264 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073 < truyen.js:520": 1,
+    "ui_theme.js:112 < ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073": 100,
+    "ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < village.js:1073 < truyen.js:520": 1,
+    "ui_theme.js:84 < ui_theme.js:300 < ui_theme.js:35 < ui_theme.js:298 < village.js:1088": 16,
+    "ui_theme.js:84 < ui_theme.js:301 < ui_theme.js:35 < ui_theme.js:298 < village.js:1088": 30,
+    "ui_theme.js:302 < ui_theme.js:35 < ui_theme.js:298 < village.js:1088 < truyen.js:520": 1,
+    "ui_theme.js:304 < ui_theme.js:35 < ui_theme.js:298 < village.js:1088 < truyen.js:520": 1,
+    "ui_theme.js:305 < ui_theme.js:35 < ui_theme.js:298 < village.js:1088 < truyen.js:520": 2,
+    "ui_theme.js:1362 < ui_theme.js:451 < ui_theme.js:1362 < ui_theme.js:1357 < ui_theme.js:1379": 2,
+    "ui_theme.js:84 < ui_theme.js:492 < ui_theme.js:451 < ui_theme.js:492 < ui_theme.js:273": 510,
+    "ui_theme.js:84 < ui_theme.js:492 < ui_theme.js:451 < ui_theme.js:492 < ui_theme.js:308": 401,
+    "ui_theme.js:1390 < ui_theme.js:451 < ui_theme.js:1390 < village_scene.js:1209 < village_scene.js:1217": 1,
+    "ui_theme.js:1362 < ui_theme.js:451 < ui_theme.js:1362 < ui_theme.js:1357 < village_scene.js:1241": 1,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < hanh_trang.js:344": 1,
+    "ui_theme.js:363 < ui_theme.js:451 < ui_theme.js:359 < village.js:135 < village.js:372": 1,
+    "ui_theme.js:1189 < ui_theme.js:35 < ui_theme.js:1189 < ui_theme.js:1637 < luyen_ui.js:222": 4,
+    "ui_theme.js:84 < ui_theme.js:1428 < ui_theme.js:451 < ui_theme.js:1426 < village.js:156": 299,
+    "ui_theme.js:84 < ui_theme.js:1430 < ui_theme.js:451 < ui_theme.js:1426 < village.js:156": 156,
+    "ui_theme.js:1430 < ui_theme.js:451 < ui_theme.js:1426 < village.js:156 < village.js:875": 12,
+    "ui_theme.js:1431 < ui_theme.js:451 < ui_theme.js:1426 < village.js:156 < village.js:875": 54,
+    "ui_theme.js:84 < ui_theme.js:1202 < ui_theme.js:451 < ui_theme.js:1202 < village.js:539": 7,
+    "ui_theme.js:1203 < ui_theme.js:35 < ui_theme.js:1203 < village.js:539 < village.js:873": 1,
+    "ui_theme.js:81 < ui_theme.js:1186 < ui_theme.js:35 < ui_theme.js:1186 < ui_theme.js:1203": 72,
+    "ui_theme.js:1186 < ui_theme.js:35 < ui_theme.js:1186 < ui_theme.js:1203 < village.js:539": 1,
+    "ui_theme.js:363 < ui_theme.js:451 < ui_theme.js:359 < hanh_trang.js:300 < hanh_trang.js:318": 1,
+    "ui_theme.js:84 < ui_theme.js:1202 < ui_theme.js:451 < ui_theme.js:1202 < hanh_trang.js:121": 7,
+    "ui_theme.js:1203 < ui_theme.js:35 < ui_theme.js:1203 < hanh_trang.js:121 < hanh_trang.js:310": 1,
+    "ui_theme.js:1186 < ui_theme.js:35 < ui_theme.js:1186 < ui_theme.js:1203 < hanh_trang.js:121": 1,
+    "ui_theme.js:1189 < ui_theme.js:35 < ui_theme.js:1189 < ui_theme.js:1637 < luyen_ui.js:328": 4,
+    "ui_theme.js:88 < ui_theme.js:1513 < ui_theme.js:35 < ui_theme.js:1513 < luyen_ui.js:561": 30,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < stage.js:1379": 4,
+    "ui_theme.js:84 < ui_theme.js:1202 < ui_theme.js:451 < ui_theme.js:1202 < stage.js:1470": 11,
+    "ui_theme.js:1203 < ui_theme.js:35 < ui_theme.js:1203 < stage.js:1470 < stage.js:1133": 1,
+    "ui_theme.js:1186 < ui_theme.js:35 < ui_theme.js:1186 < ui_theme.js:1203 < stage.js:1470": 1,
+    "ui_theme.js:84 < ui_theme.js:1202 < ui_theme.js:451 < ui_theme.js:1202 < stage.js:1471": 8,
+    "ui_theme.js:1203 < ui_theme.js:35 < ui_theme.js:1203 < stage.js:1471 < stage.js:1133": 1,
+    "ui_theme.js:1186 < ui_theme.js:35 < ui_theme.js:1186 < ui_theme.js:1203 < stage.js:1471": 1,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < stage.js:1424": 1,
+    "ui_theme.js:1189 < ui_theme.js:35 < ui_theme.js:1189 < ui_theme.js:1637 < stage.js:1522": 4,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < stage.js:1289": 5,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < vk_moi.js:744": 1,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < stage.js:1304": 2,
+    "ui_theme.js:363 < ui_theme.js:451 < ui_theme.js:359 < ui_theme.js:1636 < stage.js:1784": 1,
+    "ui_theme.js:84 < ui_theme.js:1465 < ui_theme.js:451 < ui_theme.js:1463 < ui_theme.js:1624": 100,
+    "ui_theme.js:1466 < ui_theme.js:451 < ui_theme.js:1463 < ui_theme.js:1624 < stage.js:1787": 2,
+    "ui_theme.js:954 < ui_theme.js:451 < ui_theme.js:953 < ui_theme.js:415 < stage.js:1597": 1,
+    "ui_theme.js:1084 < ui_theme.js:451 < ui_theme.js:1084 < stage.js:1558 < stage.js:1308": 1,
+    "ui_theme.js:84 < ui_theme.js:1202 < ui_theme.js:451 < ui_theme.js:1202 < ui_theme.js:1109": 9,
+    "ui_theme.js:1203 < ui_theme.js:35 < ui_theme.js:1203 < ui_theme.js:1109 < stage.js:1558": 1,
+    "ui_theme.js:363 < ui_theme.js:451 < ui_theme.js:359 < ui_theme.js:1636 < stage.js:1917": 1,
+    "ui_theme.js:363 < ui_theme.js:451 < ui_theme.js:359 < ui_theme.js:1636 < stage.js:1877": 1,
+    "ui_theme.js:84 < ui_theme.js:260 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634": 26,
+    "ui_theme.js:84 < ui_theme.js:261 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634": 26,
+    "ui_theme.js:84 < ui_theme.js:262 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634": 24,
+    "ui_theme.js:263 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634 < stage.js:1886": 1,
+    "ui_theme.js:264 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634 < stage.js:1886": 1,
+    "ui_theme.js:112 < ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634": 144,
+    "ui_theme.js:267 < ui_theme.js:35 < ui_theme.js:258 < ui_theme.js:1634 < stage.js:1886": 1
+   },
+   "main": 0,
+   "off": 3116,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#1a120a": 1,
+    "#a8752f": 1,
+    "#d9a441": 1,
+    "#1f4f4a": 1,
+    "rgba(0, 0, 0, 0.4)": 1,
+    "#f6dc92": 1
+   },
+   "area": 298641
+  },
+  "village.js:994": {
+   "k": "village.js:994",
+   "t": {
+    "boot": [
+     3189.399999999907,
+     3189.399999999907
+    ]
+   },
+   "ops": {
+    "rect": 1
+   },
+   "scenes": {
+    "boot": 1
+   },
+   "callers": {
+    "village.js:1035 < truyen.js:520 < engine.js:939": 1
+   },
+   "main": 1,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#f6dc92": 1
+   },
+   "area": 0
+  },
+  "village.js:1005": {
+   "k": "village.js:1005",
+   "t": {
+    "boot": [
+     3192.6999999999534,
+     3192.7999999998137
+    ]
+   },
+   "ops": {
+    "fillRect": 2
+   },
+   "scenes": {
+    "boot": 2
+   },
+   "callers": {
+    "village.js:1035 < truyen.js:520 < engine.js:939": 2
+   },
+   "main": 2,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#a8752f": 1
+   },
+   "area": 36
+  },
+  "ui_theme.js:641": {
+   "k": "ui_theme.js:641",
+   "t": {
+    "boot": [
+     3197.2999999998137,
+     3214.399999999907
+    ]
+   },
+   "ops": {
+    "clearRect": 4
+   },
+   "scenes": {
+    "boot": 4
+   },
+   "callers": {
+    "ui_theme.js:655 < ui_theme.js:669 < ui_theme.js:704 < ui_theme.js:772 < ui_theme.js:772": 4
+   },
+   "main": 0,
+   "off": 4,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "hero_tinhlinh.js:158": {
+   "k": "hero_tinhlinh.js:158",
+   "t": {
+    "boot": [
+     4228.299999999814,
+     4292.399999999907
+    ],
+    "man-chao": [
+     2535.399999999907,
+     2581.5999999998603
+    ],
+    "lang": [
+     2.2999999998137355,
+     521.8000000000466
+    ],
+    "lang-skill": [
+     632.9000000001397,
+     679.4000000001397
+    ]
+   },
+   "ops": {
+    "fillRect": 8604
+   },
+   "scenes": {
+    "boot": 870,
+    "man-chao": 846,
+    "lang": 6018,
+    "lang-skill": 870
+   },
+   "callers": {
+    "hero_tinhlinh.js:906 < hero_tinhlinh.js:970 < sprite_custom.js:1159 < zed_moi.js:1514 < village_scene.js:895": 8604
+   },
+   "main": 0,
+   "off": 8604,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#1b1118": 1,
+    "#e8e3ef": 1,
+    "#c7c0d9": 1,
+    "#e2def4": 1,
+    "#e5e0f2": 1,
+    "#b7b1d8": 1
+   },
+   "area": 8604
+  },
+  "bia.js:119": {
+   "k": "bia.js:119",
+   "t": {
+    "boot": [
+     4300.399999999907,
+     4470.799999999814
+    ],
+    "man-chao": [
+     0.8999999999068677,
+     2511
+    ]
+   },
+   "ops": {
+    "fillRect": 1275
+   },
+   "scenes": {
+    "boot": 56,
+    "man-chao": 1219
+   },
+   "callers": {
+    "village.js:1030 < truyen.js:520 < engine.js:939": 1275
+   },
+   "main": 1275,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 8,
+   "styles": {
+    "rgba(255, 160, 130, 0.62)": 1,
+    "rgba(255, 226, 150, 0.016)": 1,
+    "rgba(255, 160, 130, 0.604)": 1,
+    "rgba(255, 226, 150, 0.333)": 1,
+    "rgba(255, 160, 130, 0.592)": 1,
+    "rgba(255, 160, 130, 0.553)": 1
+   },
+   "area": 2652.599999999992
+  },
+  "engine.js:820": {
+   "k": "engine.js:820",
+   "t": {
+    "man-chao": [
+     2533.0999999998603,
+     2533.0999999998603
+    ],
+    "lang": [
+     623.7999999998137,
+     623.7999999998137
+    ]
+   },
+   "ops": {
+    "fillRect": 2
+   },
+   "scenes": {
+    "man-chao": 1,
+    "lang": 1
+   },
+   "callers": {
+    "engine.js:932": 2
+   },
+   "main": 0,
+   "off": 2,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 2533440
+  },
+  "village_scene.js:1188": {
+   "k": "village_scene.js:1188",
+   "t": {
+    "man-chao": [
+     2699.1999999999534,
+     2706.6999999999534
+    ],
+    "lang": [
+     63.89999999990687,
+     594.6999999999534
+    ],
+    "lang-forge": [
+     8.900000000139698,
+     940
+    ],
+    "lang-gear": [
+     3.4000000001396984,
+     926.1000000000931
+    ],
+    "lang-outfit": [
+     5.699999999953434,
+     946.3000000000466
+    ],
+    "lang-hero": [
+     7.800000000046566,
+     919.3000000000466
+    ],
+    "lang-skill": [
+     3.4000000001396984,
+     922.7000000001863
+    ],
+    "lang-chuong": [
+     2.199999999953434,
+     943.6999999999534
+    ],
+    "lang-help": [
+     3.1000000000931323,
+     911.6000000000931
+    ],
+    "lang-settings": [
+     2,
+     916.3999999999069
+    ],
+    "lang-so": [
+     3.3999999999068677,
+     931
+    ],
+    "lang-thanhTuu": [
+     2.0999999998603016,
+     936.5999999998603
+    ],
+    "lang-viecNgay": [
+     2.9000000001396984,
+     908
+    ],
+    "lang-ren-luyen": [
+     2.300000000046566,
+     726.5999999998603
+    ],
+    "lang-ren-sharpen": [
+     2,
+     710.5
+    ],
+    "lang-ren-vk": [
+     2.9000000001396984,
+     706.5
+    ],
+    "lang-ren-ep": [
+     70.89999999990687,
+     669
+    ],
+    "lang-ren-up": [
+     58.4000000001397,
+     792.4000000001397
+    ],
+    "hanh-trang-hero": [
+     3.800000000046566,
+     845
+    ],
+    "hanh-trang-weapon": [
+     3.199999999953434,
+     800.6999999999534
+    ],
+    "hanh-trang-skill": [
+     68.39999999990687,
+     767.2999999998137
+    ],
+    "hanh-trang-res": [
+     60.300000000046566,
+     817.3000000000466
+    ]
+   },
+   "ops": {
+    "arc": 7182
+   },
+   "scenes": {
+    "man-chao": 7,
+    "lang": 2793,
+    "lang-forge": 266,
+    "lang-gear": 308,
+    "lang-outfit": 385,
+    "lang-hero": 245,
+    "lang-skill": 280,
+    "lang-chuong": 161,
+    "lang-help": 343,
+    "lang-settings": 392,
+    "lang-so": 315,
+    "lang-thanhTuu": 238,
+    "lang-viecNgay": 392,
+    "lang-ren-luyen": 210,
+    "lang-ren-sharpen": 203,
+    "lang-ren-vk": 56,
+    "lang-ren-ep": 49,
+    "lang-ren-up": 63,
+    "hanh-trang-hero": 189,
+    "hanh-trang-weapon": 175,
+    "hanh-trang-skill": 56,
+    "hanh-trang-res": 56
+   },
+   "callers": {
+    "village_scene.js:1181 < village_scene.js:1221 < village.js:856 < village.js:846 < hinh_thai.js:312": 2807,
+    "village_scene.js:1181 < village.js:866 < village.js:846 < hinh_thai.js:312 < luyen_ui.js:488": 4375
+   },
+   "main": 7182,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 1338,
+   "styles": {
+    "#f6dc92": 1,
+    "#e8dcc0": 1
+   },
+   "area": 0
+  },
+  "engine.js:838": {
+   "k": "engine.js:838",
+   "t": {
+    "man-chao": [
+     2751.899999999907,
+     2751.899999999907
+    ],
+    "lang": [
+     912.3999999999069,
+     912.3999999999069
+    ]
+   },
+   "ops": {
+    "fillRect": 2
+   },
+   "scenes": {
+    "man-chao": 1,
+    "lang": 1
+   },
+   "callers": {
+    "engine.js:942": 2
+   },
+   "main": 2,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 2,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 2161120.5
+  },
+  "engine.js:839": {
+   "k": "engine.js:839",
+   "t": {
+    "lang": [
+     65.5999999998603,
+     65.5999999998603
+    ]
+   },
+   "ops": {
+    "fillRect": 1
+   },
+   "scenes": {
+    "lang": 1
+   },
+   "callers": {
+    "engine.js:942": 1
+   },
+   "main": 1,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 1,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 1080560.25
+  },
+  "village_scene.js:1295": {
+   "k": "village_scene.js:1295",
+   "t": {
+    "lang": [
+     1228.5,
+     1228.8000000000466
+    ]
+   },
+   "ops": {
+    "strokeRect": 3
+   },
+   "scenes": {
+    "lang": 3
+   },
+   "callers": {
+    "village_scene.js:1290 < village.js:194 < village.js:852 < village.js:846 < hinh_thai.js:312": 3
+   },
+   "main": 0,
+   "off": 3,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#6a4a30": 1,
+    "#a88a58": 1
+   },
+   "area": 377657
+  },
+  "ui_theme.js:980": {
+   "k": "ui_theme.js:980",
+   "t": {
+    "lang-forge": [
+     26.5,
+     960.1000000000931
+    ],
+    "lang-gear": [
+     4.5,
+     899
+    ],
+    "lang-outfit": [
+     948.6000000000931,
+     966.3000000000466
+    ],
+    "lang-hero": [
+     8.400000000139698,
+     931.4000000001397
+    ],
+    "lang-skill": [
+     4.5,
+     948.6000000000931
+    ],
+    "lang-chuong": [
+     2.8999999999068677,
+     905.6999999999534
+    ],
+    "lang-settings": [
+     917,
+     923.3000000000466
+    ],
+    "lang-so": [
+     4.199999999953434,
+     937.6000000000931
+    ],
+    "lang-thanhTuu": [
+     2.3999999999068677,
+     914.5
+    ],
+    "lang-ren-luyen": [
+     3.199999999953434,
+     727.5
+    ],
+    "lang-ren-sharpen": [
+     2.6000000000931323,
+     711.8000000000466
+    ],
+    "lang-ren-vk": [
+     3.800000000046566,
+     708.1000000000931
+    ],
+    "lang-ren-ep": [
+     71.5,
+     669.8999999999069
+    ],
+    "lang-ren-up": [
+     59.10000000009313,
+     807.1999999999534
+    ],
+    "hanh-trang-hero": [
+     5.399999999906868,
+     854.3000000000466
+    ],
+    "hanh-trang-weapon": [
+     4.5,
+     802.5
+    ],
+    "hanh-trang-skill": [
+     75.5,
+     768.2999999998137
+    ],
+    "hanh-trang-res": [
+     62.199999999953434,
+     778.1999999999534
+    ],
+    "ai-map": [
+     1518.3999999999069,
+     1522.5
+    ],
+    "ai-bag": [
+     5.800000000046566,
+     1446
+    ]
+   },
+   "ops": {
+    "fillRect": 2602
+   },
+   "scenes": {
+    "lang-forge": 114,
+    "lang-gear": 129,
+    "lang-outfit": 4,
+    "lang-hero": 139,
+    "lang-skill": 140,
+    "lang-chuong": 506,
+    "lang-settings": 4,
+    "lang-so": 180,
+    "lang-thanhTuu": 132,
+    "lang-ren-luyen": 90,
+    "lang-ren-sharpen": 87,
+    "lang-ren-vk": 24,
+    "lang-ren-ep": 21,
+    "lang-ren-up": 43,
+    "hanh-trang-hero": 288,
+    "hanh-trang-weapon": 50,
+    "hanh-trang-skill": 24,
+    "hanh-trang-res": 77,
+    "ai-map": 11,
+    "ai-bag": 539
+   },
+   "callers": {
+    "ui_theme.js:401 < luyen_ui.js:190 < luyen_ui.js:187 < luyen_ui.js:355 < village.js:396": 236,
+    "ui_theme.js:401 < luyen_ui.js:201 < luyen_ui.js:355 < village.js:396 < village.js:873": 118,
+    "ui_theme.js:401 < village.js:507 < village.js:464 < village.js:873 < village.js:846": 132,
+    "ui_theme.js:401 < village.js:532 < village.js:873 < village.js:846 < hinh_thai.js:312": 114,
+    "ui_theme.js:401 < village.js:555 < village.js:552 < village.js:873 < village.js:846": 342,
+    "ui_theme.js:401 < village.js:588 < village.js:586 < village.js:873 < village.js:846": 120,
+    "ui_theme.js:401 < chuong_ui.js:81 < chuong_ui.js:79 < village.js:614 < village.js:873": 69,
+    "ui_theme.js:401 < chuong_ui.js:99 < chuong_ui.js:95 < chuong_ui.js:87 < chuong_ui.js:79": 414,
+    "ui_theme.js:401 < chuong_ui.js:137 < chuong_ui.js:79 < village.js:614 < village.js:873": 23,
+    "ui_theme.js:401 < chuong_ui.js:158 < village.js:614 < village.js:873 < village.js:846": 23,
+    "ui_theme.js:401 < hanh_trang.js:72 < hanh_trang.js:115 < hanh_trang.js:310 < hanh_trang.js:318": 28,
+    "ui_theme.js:401 < hanh_trang.js:154 < hanh_trang.js:152 < hanh_trang.js:59 < hanh_trang.js:126": 280,
+    "ui_theme.js:401 < luyen_ui.js:323 < luyen_ui.js:320 < luyen_ui.js:355 < hanh_trang.js:185": 52,
+    "ui_theme.js:401 < hanh_trang.js:218 < hanh_trang.js:215 < hanh_trang.js:59 < hanh_trang.js:209": 24,
+    "ui_theme.js:401 < hanh_trang.js:265 < hanh_trang.js:59 < hanh_trang.js:263 < hanh_trang.js:310": 513,
+    "ui_theme.js:401 < hanh_trang.js:278 < hanh_trang.js:59 < hanh_trang.js:263 < hanh_trang.js:310": 114
+   },
+   "main": 2602,
+   "off": 0,
+   "grad": 2602,
+   "lighter": 0,
+   "alpha": 3,
+   "styles": {},
+   "area": 19885988
+  },
+  "ui_theme.js:985": {
+   "k": "ui_theme.js:985",
+   "t": {
+    "lang-forge": [
+     29.800000000046566,
+     909.4000000001397
+    ],
+    "lang-ren-luyen": [
+     3.3999999999068677,
+     727.0999999998603
+    ],
+    "lang-ren-sharpen": [
+     2.6000000000931323,
+     711.1999999999534
+    ],
+    "lang-ren-vk": [
+     3.9000000001396984,
+     707.3000000000466
+    ],
+    "lang-ren-ep": [
+     71.5999999998603,
+     669.3999999999069
+    ],
+    "lang-ren-up": [
+     59.10000000009313,
+     659.3000000000466
+    ]
+   },
+   "ops": {
+    "fillRect": 472
+   },
+   "scenes": {
+    "lang-forge": 148,
+    "lang-ren-luyen": 120,
+    "lang-ren-sharpen": 116,
+    "lang-ren-vk": 32,
+    "lang-ren-ep": 28,
+    "lang-ren-up": 28
+   },
+   "callers": {
+    "ui_theme.js:401 < luyen_ui.js:190 < luyen_ui.js:187 < luyen_ui.js:355 < village.js:396": 472
+   },
+   "main": 472,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 4,
+   "styles": {
+    "#f6dc92": 1
+   },
+   "area": 30444
+  },
+  "ep_do.js:305": {
+   "k": "ep_do.js:305",
+   "t": {
+    "lang-forge": [
+     31.5,
+     910.8000000000466
+    ],
+    "lang-ren-luyen": [
+     3.800000000046566,
+     727.8000000000466
+    ],
+    "lang-ren-sharpen": [
+     2.800000000046566,
+     712.1000000000931
+    ],
+    "lang-ren-vk": [
+     4.199999999953434,
+     708.5
+    ],
+    "lang-ren-ep": [
+     71.89999999990687,
+     670
+    ],
+    "lang-ren-up": [
+     59.4000000001397,
+     659.8000000000466
+    ],
+    "hanh-trang-hero": [
+     850.3000000000466,
+     854.5
+    ],
+    "hanh-trang-weapon": [
+     4.699999999953434,
+     802.6999999999534
+    ],
+    "lang": [
+     811.6999999999534,
+     936.5999999998603
+    ],
+    "ai-danh": [
+     9.5,
+     25021
+    ],
+    "ai-phong-elite": [
+     56.199999999953434,
+     4082
+    ],
+    "ai-phong-chest": [
+     8.5,
+     4066.5999999998603
+    ],
+    "ai-phong-fountain": [
+     4.2000000001862645,
+     4073.7000000001863
+    ],
+    "ai-phong-merchant": [
+     3.4000000001396984,
+     4059.7000000001863
+    ],
+    "ai-phong-altar": [
+     3.800000000046566,
+     4008.5
+    ],
+    "ai-trum": [
+     107.30000000004657,
+     19956.700000000186
+    ],
+    "ai-paused": [
+     12.699999999953434,
+     1494.6000000000931
+    ],
+    "ai-map": [
+     6.199999999953434,
+     1515.8000000000466
+    ],
+    "ai-bag": [
+     4.900000000139698,
+     1441.4000000001397
+    ],
+    "ai-ket-qua": [
+     15.100000000093132,
+     1491.8000000000466
+    ]
+   },
+   "ops": {
+    "fillRect": 4409
+   },
+   "scenes": {
+    "lang-forge": 148,
+    "lang-ren-luyen": 120,
+    "lang-ren-sharpen": 116,
+    "lang-ren-vk": 32,
+    "lang-ren-ep": 28,
+    "lang-ren-up": 28,
+    "hanh-trang-hero": 2,
+    "hanh-trang-weapon": 50,
+    "lang": 2,
+    "ai-danh": 1466,
+    "ai-phong-elite": 238,
+    "ai-phong-chest": 237,
+    "ai-phong-fountain": 234,
+    "ai-phong-merchant": 240,
+    "ai-phong-altar": 242,
+    "ai-trum": 931,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "vk_moi.js:671 < vk_moi.js:689 < luyen_ui.js:167 < luyen_ui.js:191 < luyen_ui.js:187": 236,
+    "vk_moi.js:671 < vk_moi.js:689 < luyen_ui.js:167 < luyen_ui.js:210 < luyen_ui.js:355": 118,
+    "luyen_ui.js:142 < luyen_ui.js:154 < luyen_ui.js:214 < luyen_ui.js:355 < village.js:396": 118,
+    "vk_moi.js:671 < vk_moi.js:689 < luyen_ui.js:167 < luyen_ui.js:324 < luyen_ui.js:320": 52,
+    "vk_moi.js:671 < vk_moi.js:689 < stage.js:1520 < stage.js:1509 < stage.js:1133": 3885
+   },
+   "main": 4409,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 4,
+   "styles": {
+    "rgba(12, 10, 16, 0.9)": 1
+   },
+   "area": 282058
+  },
+  "hinh_thai.js:87": {
+   "k": "hinh_thai.js:87",
+   "t": {
+    "lang-forge": [
+     37.9000000001397,
+     37.9000000001397
+    ]
+   },
+   "ops": {
+    "fillRect": 1
+   },
+   "scenes": {
+    "lang-forge": 1
+   },
+   "callers": {
+    "hinh_thai.js:99 < luyen_ui.js:152 < luyen_ui.js:214 < luyen_ui.js:355 < village.js:396": 1
+   },
+   "main": 0,
+   "off": 1,
+   "grad": 0,
+   "lighter": 1,
+   "alpha": 0,
+   "styles": {
+    "#0c1a1c": 1
+   },
+   "area": 13527
+  },
+  "ui_theme.js:1185": {
+   "k": "ui_theme.js:1185",
+   "t": {
+    "lang-forge": [
+     47.4000000001397,
+     911.1000000000931
+    ],
+    "lang-ren-luyen": [
+     4.899999999906868,
+     727.8999999999069
+    ],
+    "lang-ren-sharpen": [
+     3.4000000001396984,
+     712.5
+    ],
+    "lang-ren-vk": [
+     5.300000000046566,
+     708.8000000000466
+    ],
+    "lang-ren-ep": [
+     72.5999999998603,
+     670.1999999999534
+    ],
+    "lang-ren-up": [
+     60,
+     660
+    ],
+    "hanh-trang-hero": [
+     851.6000000000931,
+     855.1000000000931
+    ],
+    "hanh-trang-weapon": [
+     5,
+     803.0999999998603
+    ],
+    "lang": [
+     812.1999999999534,
+     936.7999999998137
+    ],
+    "ai-danh": [
+     9.699999999953434,
+     25021.199999999953
+    ],
+    "ai-phong-elite": [
+     56.300000000046566,
+     4082.100000000093
+    ],
+    "ai-phong-chest": [
+     8.699999999953434,
+     4066.8000000000466
+    ],
+    "ai-phong-fountain": [
+     4.400000000139698,
+     4073.7000000001863
+    ],
+    "ai-phong-merchant": [
+     3.800000000046566,
+     4060
+    ],
+    "ai-phong-altar": [
+     4,
+     4008.5999999998603
+    ],
+    "ai-trum": [
+     107.5,
+     19956.800000000047
+    ],
+    "ai-paused": [
+     12.800000000046566,
+     1494.6999999999534
+    ],
+    "ai-map": [
+     6.300000000046566,
+     1516
+    ],
+    "ai-bag": [
+     5.100000000093132,
+     1441.4000000001397
+    ],
+    "ai-ket-qua": [
+     16.4000000001397,
+     1492
+    ]
+   },
+   "ops": {
+    "fillRect": 4225
+   },
+   "scenes": {
+    "lang-forge": 74,
+    "lang-ren-luyen": 60,
+    "lang-ren-sharpen": 58,
+    "lang-ren-vk": 16,
+    "lang-ren-ep": 14,
+    "lang-ren-up": 14,
+    "hanh-trang-hero": 4,
+    "hanh-trang-weapon": 100,
+    "lang": 2,
+    "ai-danh": 1466,
+    "ai-phong-elite": 238,
+    "ai-phong-chest": 237,
+    "ai-phong-fountain": 234,
+    "ai-phong-merchant": 240,
+    "ai-phong-altar": 242,
+    "ai-trum": 931,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "ui_theme.js:1190 < ui_theme.js:1637 < luyen_ui.js:222 < luyen_ui.js:355 < village.js:396": 236,
+    "ui_theme.js:1190 < ui_theme.js:1637 < luyen_ui.js:328 < luyen_ui.js:320 < luyen_ui.js:355": 104,
+    "ui_theme.js:1190 < ui_theme.js:1637 < stage.js:1522 < stage.js:1509 < stage.js:1133": 3885
+   },
+   "main": 4225,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 2,
+   "styles": {
+    "#c9a24a": 1,
+    "#dcc389": 1,
+    "#ff7a2a": 1
+   },
+   "area": 57141
+  },
+  "ui_theme.js:981": {
+   "k": "ui_theme.js:981",
+   "t": {
+    "lang-outfit": [
+     948.6999999999534,
+     948.6999999999534
+    ],
+    "lang-hero": [
+     8.5,
+     886.5
+    ],
+    "lang-skill": [
+     930.2000000001863,
+     948.7000000001863
+    ],
+    "lang-chuong": [
+     3.199999999953434,
+     905.6999999999534
+    ],
+    "lang-settings": [
+     917.0999999998603,
+     917.0999999998603
+    ],
+    "lang-so": [
+     4.300000000046566,
+     931.1999999999534
+    ],
+    "lang-thanhTuu": [
+     2.5,
+     907.1999999999534
+    ],
+    "lang-ren-up": [
+     731.5,
+     793.3000000000466
+    ],
+    "hanh-trang-hero": [
+     5.600000000093132,
+     802.8999999999069
+    ]
+   },
+   "ops": {
+    "fillRect": 648
+   },
+   "scenes": {
+    "lang-outfit": 1,
+    "lang-hero": 34,
+    "lang-skill": 22,
+    "lang-chuong": 484,
+    "lang-settings": 1,
+    "lang-so": 45,
+    "lang-thanhTuu": 33,
+    "lang-ren-up": 2,
+    "hanh-trang-hero": 26
+   },
+   "callers": {
+    "ui_theme.js:401 < village.js:532 < village.js:873 < village.js:846 < hinh_thai.js:312": 114,
+    "ui_theme.js:401 < chuong_ui.js:99 < chuong_ui.js:95 < chuong_ui.js:87 < chuong_ui.js:79": 414,
+    "ui_theme.js:401 < chuong_ui.js:137 < chuong_ui.js:79 < village.js:614 < village.js:873": 23,
+    "ui_theme.js:401 < chuong_ui.js:81 < chuong_ui.js:79 < village.js:614 < village.js:873": 46,
+    "ui_theme.js:401 < chuong_ui.js:158 < village.js:614 < village.js:873 < village.js:846": 23,
+    "ui_theme.js:401 < hanh_trang.js:72 < hanh_trang.js:115 < hanh_trang.js:310 < hanh_trang.js:318": 28
+   },
+   "main": 648,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#173030": 1,
+    "#1f3f3e": 1,
+    "#152524": 1,
+    "#2a2410": 1,
+    "#16302f": 1,
+    "#10201f": 1
+   },
+   "area": 1917306
+  },
+  "village.js:533": {
+   "k": "village.js:533",
+   "t": {
+    "lang-outfit": [
+     949.3999999999069,
+     949.3999999999069
+    ],
+    "lang-hero": [
+     8.600000000093132,
+     886.6999999999534
+    ],
+    "lang-settings": [
+     917.0999999998603,
+     917.0999999998603
+    ],
+    "lang-so": [
+     4.399999999906868,
+     931.3000000000466
+    ],
+    "lang-thanhTuu": [
+     2.5999999998603016,
+     907.1999999999534
+    ]
+   },
+   "ops": {
+    "rect": 114
+   },
+   "scenes": {
+    "lang-outfit": 1,
+    "lang-hero": 34,
+    "lang-settings": 1,
+    "lang-so": 45,
+    "lang-thanhTuu": 33
+   },
+   "callers": {
+    "village.js:873 < village.js:846 < hinh_thai.js:312 < luyen_ui.js:488 < luu_luot.js:123": 114
+   },
+   "main": 114,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#173030": 1
+   },
+   "area": 0
+  },
+  "village.js:556": {
+   "k": "village.js:556",
+   "t": {
+    "lang-outfit": [
+     963.3000000000466,
+     966.3000000000466
+    ],
+    "lang-hero": [
+     16.4000000001397,
+     893.8000000000466
+    ],
+    "lang-settings": [
+     922.1999999999534,
+     923.3000000000466
+    ],
+    "lang-so": [
+     10.300000000046566,
+     937.6999999999534
+    ],
+    "lang-thanhTuu": [
+     7,
+     914.5
+    ]
+   },
+   "ops": {
+    "rect": 342
+   },
+   "scenes": {
+    "lang-outfit": 3,
+    "lang-hero": 102,
+    "lang-settings": 3,
+    "lang-so": 135,
+    "lang-thanhTuu": 99
+   },
+   "callers": {
+    "village.js:552 < village.js:873 < village.js:846 < hinh_thai.js:312 < luyen_ui.js:488": 342
+   },
+   "main": 342,
+   "off": 0,
+   "grad": 342,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {},
+   "area": 0
+  },
+  "ui_theme.js:989": {
+   "k": "ui_theme.js:989",
+   "t": {
+    "lang-skill": [
+     928.6000000000931,
+     948.1000000000931
+    ],
+    "lang-chuong": [
+     3,
+     905.3999999999069
+    ]
+   },
+   "ops": {
+    "fillRect": 1840
+   },
+   "scenes": {
+    "lang-skill": 80,
+    "lang-chuong": 1760
+   },
+   "callers": {
+    "ui_theme.js:401 < chuong_ui.js:81 < chuong_ui.js:79 < village.js:614 < village.js:873": 92,
+    "ui_theme.js:401 < chuong_ui.js:99 < chuong_ui.js:95 < chuong_ui.js:87 < chuong_ui.js:79": 1656,
+    "ui_theme.js:401 < chuong_ui.js:137 < chuong_ui.js:79 < village.js:614 < village.js:873": 92
+   },
+   "main": 1840,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#ff7a2a": 1,
+    "#9be07a": 1,
+    "#22302f": 1
+   },
+   "area": 73738
+  },
+  "chuong_ui.js:82": {
+   "k": "chuong_ui.js:82",
+   "t": {
+    "lang-skill": [
+     928.9000000001397,
+     928.9000000001397
+    ],
+    "lang-chuong": [
+     3.0999999998603016,
+     898.0999999998603
+    ]
+   },
+   "ops": {
+    "fillRect": 23
+   },
+   "scenes": {
+    "lang-skill": 1,
+    "lang-chuong": 22
+   },
+   "callers": {
+    "chuong_ui.js:79 < village.js:614 < village.js:873 < village.js:846 < hinh_thai.js:312": 23
+   },
+   "main": 23,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 23,
+   "styles": {
+    "#ff7a2a": 1
+   },
+   "area": 250792
+  },
+  "hanh_trang.js:74": {
+   "k": "hanh_trang.js:74",
+   "t": {
+    "lang-ren-up": [
+     732.9000000001397,
+     793.4000000001397
+    ],
+    "hanh-trang-hero": [
+     5.600000000093132,
+     803
+    ]
+   },
+   "ops": {
+    "fillRect": 28
+   },
+   "scenes": {
+    "lang-ren-up": 2,
+    "hanh-trang-hero": 26
+   },
+   "callers": {
+    "hanh_trang.js:115 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873 < village.js:846": 28
+   },
+   "main": 28,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(0, 0, 0, 0.25)": 1
+   },
+   "area": 33880
+  },
+  "hanh_trang.js:75": {
+   "k": "hanh_trang.js:75",
+   "t": {
+    "lang-ren-up": [
+     733,
+     793.6000000000931
+    ],
+    "hanh-trang-hero": [
+     5.800000000046566,
+     803
+    ]
+   },
+   "ops": {
+    "rect": 28
+   },
+   "scenes": {
+    "lang-ren-up": 2,
+    "hanh-trang-hero": 26
+   },
+   "callers": {
+    "hanh_trang.js:115 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873 < village.js:846": 28
+   },
+   "main": 28,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(0, 0, 0, 0.25)": 1
+   },
+   "area": 0
+  },
+  "hanh_trang.js:57": {
+   "k": "hanh_trang.js:57",
+   "t": {
+    "lang-ren-up": [
+     750.9000000001397,
+     805
+    ],
+    "hanh-trang-hero": [
+     15.699999999953434,
+     845.8999999999069
+    ],
+    "hanh-trang-weapon": [
+     4.099999999860302,
+     801.1999999999534
+    ],
+    "hanh-trang-skill": [
+     74.39999999990687,
+     767.6999999999534
+    ],
+    "hanh-trang-res": [
+     61.5999999998603,
+     776.3999999999069
+    ],
+    "ai-map": [
+     1518.1999999999534,
+     1518.1999999999534
+    ],
+    "ai-bag": [
+     5.5,
+     1444.5
+    ]
+   },
+   "ops": {
+    "rect": 119
+   },
+   "scenes": {
+    "lang-ren-up": 2,
+    "hanh-trang-hero": 27,
+    "hanh-trang-weapon": 25,
+    "hanh-trang-skill": 8,
+    "hanh-trang-res": 7,
+    "ai-map": 1,
+    "ai-bag": 49
+   },
+   "callers": {
+    "hanh_trang.js:126 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873 < village.js:846": 28,
+    "hanh_trang.js:182 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873 < village.js:846": 26,
+    "hanh_trang.js:209 < hanh_trang.js:204 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873": 8,
+    "hanh_trang.js:263 < hanh_trang.js:310 < hanh_trang.js:318 < village.js:873 < village.js:846": 7,
+    "hanh_trang.js:263 < hanh_trang.js:310 < stage.js:1146 < viec_ngay.js:533 < phuc_lanh.js:227": 50
+   },
+   "main": 119,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#fff0c4": 1
+   },
+   "area": 0
+  },
+  "engine.js:766": {
+   "k": "engine.js:766",
+   "t": {
+    "hanh-trang-res": [
+     812.8000000000466,
+     812.8000000000466
+    ],
+    "ai-phong-chest": [
+     4014.3000000000466,
+     4014.3000000000466
+    ]
+   },
+   "ops": {
+    "clearRect": 2
+   },
+   "scenes": {
+    "hanh-trang-res": 1,
+    "ai-phong-chest": 1
+   },
+   "callers": {
+    "engine.js:933": 2
+   },
+   "main": 0,
+   "off": 2,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "room_art.js:56": {
+   "k": "room_art.js:56",
+   "t": {
+    "lang": [
+     627.5,
+     672.2999999998137
+    ],
+    "ai-danh": [
+     5951.09999999986,
+     9426.59999999986
+    ],
+    "ai-phong-elite": [
+     3.800000000046566,
+     4077
+    ],
+    "ai-phong-chest": [
+     4015.1999999999534,
+     4060.399999999907
+    ],
+    "ai-phong-fountain": [
+     4025.5,
+     4069.7000000001863
+    ],
+    "ai-phong-merchant": [
+     2189.2000000001863,
+     4029.2000000001863
+    ],
+    "ai-trum": [
+     4.7000000001862645,
+     14049.40000000014
+    ]
+   },
+   "ops": {
+    "fillRect": 623
+   },
+   "scenes": {
+    "lang": 134,
+    "ai-danh": 48,
+    "ai-phong-elite": 121,
+    "ai-phong-chest": 93,
+    "ai-phong-fountain": 38,
+    "ai-phong-merchant": 4,
+    "ai-trum": 185
+   },
+   "callers": {
+    "room_art.js:934 < room_art.js:1684 < room_art.js:2045 < room_art.js:2384 < vung4.js:116": 9,
+    "room_art.js:1301 < room_art.js:1307 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686": 128,
+    "room_art.js:1308 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686 < room_art.js:2045": 4,
+    "room_art.js:1396 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 5,
+    "room_art.js:1398 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 2,
+    "room_art.js:1399 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 12,
+    "room_art.js:190 < room_art.js:1400 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711": 74,
+    "room_art.js:1407 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 8,
+    "room_art.js:1301 < room_art.js:1310 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686": 64,
+    "room_art.js:1311 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686 < room_art.js:2045": 6,
+    "room_art.js:1409 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 3,
+    "room_art.js:1410 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711 < room_art.js:2049": 24,
+    "room_art.js:192 < room_art.js:1411 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711": 74,
+    "room_art.js:189 < room_art.js:1391 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711": 37,
+    "room_art.js:1301 < room_art.js:1318 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686": 128,
+    "room_art.js:1319 < room_art.js:1686 < room_art.js:1670 < room_art.js:1686 < room_art.js:2045": 8,
+    "room_art.js:191 < room_art.js:1411 < room_art.js:1711 < room_art.js:1670 < room_art.js:1711": 37
+   },
+   "main": 0,
+   "off": 623,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#0b1610": 1,
+    "rgba(143, 224, 106, 0.5)": 1,
+    "rgba(143, 224, 106, 0.3)": 1,
+    "rgba(224, 255, 200, 0.7)": 1,
+    "#4f4a34": 1,
+    "rgba(228, 240, 160, 0.7)": 1
+   },
+   "area": 1185672
+  },
+  "room_art.js:70": {
+   "k": "room_art.js:70",
+   "t": {
+    "lang": [
+     629.6999999999534,
+     674.1999999999534
+    ],
+    "ai-danh": [
+     5953.300000000047,
+     9427.5
+    ],
+    "ai-phong-elite": [
+     6.699999999953434,
+     4077.9000000001397
+    ],
+    "ai-phong-chest": [
+     4022.1999999999534,
+     4061.0999999998603
+    ],
+    "ai-phong-fountain": [
+     4026.600000000093,
+     4070.600000000093
+    ],
+    "ai-phong-merchant": [
+     2192.8000000000466,
+     4056.600000000093
+    ],
+    "ai-trum": [
+     5.400000000139698,
+     14050.200000000186
+    ]
+   },
+   "ops": {
+    "rect": 77
+   },
+   "scenes": {
+    "lang": 9,
+    "ai-danh": 13,
+    "ai-phong-elite": 14,
+    "ai-phong-chest": 9,
+    "ai-phong-fountain": 7,
+    "ai-phong-merchant": 16,
+    "ai-trum": 9
+   },
+   "callers": {
+    "room_art.js:908 < room_art.js:1274 < room_art.js:1685 < room_art.js:2045 < room_art.js:2384": 9,
+    "room_art.js:837 < room_art.js:984 < room_art.js:1688 < room_art.js:2045 < room_art.js:2384": 9,
+    "room_art.js:837 < room_art.js:1043 < room_art.js:1690 < room_art.js:2045 < room_art.js:2384": 9,
+    "room_art.js:837 < room_art.js:1044 < room_art.js:1690 < room_art.js:2045 < room_art.js:2384": 9,
+    "room_art.js:837 < room_art.js:1061 < room_art.js:1691 < room_art.js:2045 < room_art.js:2384": 9,
+    "room_art.js:1076 < room_art.js:1718 < room_art.js:2049 < room_art.js:2384 < vung4.js:116": 16,
+    "room_art.js:837 < room_art.js:1076 < room_art.js:70 < room_art.js:1076 < room_art.js:1718": 16
+   },
+   "main": 0,
+   "off": 77,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#0b1610": 1,
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "art.js:23": {
+   "k": "art.js:23",
+   "t": {
+    "lang": [
+     647.5999999998603,
+     670.5999999998603
+    ],
+    "ai-danh": [
+     9424.699999999953,
+     9425.09999999986
+    ],
+    "ai-phong-elite": [
+     20.199999999953434,
+     4050
+    ],
+    "ai-phong-fountain": [
+     4044.600000000093,
+     4067.4000000001397
+    ],
+    "ai-phong-merchant": [
+     2236.9000000001397,
+     4054.600000000093
+    ],
+    "ai-trum": [
+     23.200000000186265,
+     42.800000000046566
+    ]
+   },
+   "ops": {
+    "fillRect": 77
+   },
+   "scenes": {
+    "lang": 12,
+    "ai-danh": 7,
+    "ai-phong-elite": 10,
+    "ai-phong-fountain": 12,
+    "ai-phong-merchant": 19,
+    "ai-trum": 17
+   },
+   "callers": {
+    "room_art.js:65 < room_art.js:1347 < room_art.js:1363 < room_art.js:1687 < room_art.js:1670": 25,
+    "room_art.js:65 < room_art.js:1800 < room_art.js:1670 < room_art.js:1696 < room_art.js:2045": 42,
+    "room_art.js:65 < room_art.js:1344 < room_art.js:1363 < room_art.js:1687 < room_art.js:1670": 10
+   },
+   "main": 0,
+   "off": 77,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(0, 0, 0, 0.3)": 1,
+    "rgba(0, 0, 0, 0.35)": 1
+   },
+   "area": 1672
+  },
+  "zed_moi.js:1402": {
+   "k": "zed_moi.js:1402",
+   "t": {
+    "lang": [
+     687.5999999998603,
+     931.5999999998603
+    ],
+    "ai-danh": [
+     5.800000000046566,
+     25016.699999999953
+    ],
+    "ai-phong-elite": [
+     54.60000000009313,
+     4080.100000000093
+    ],
+    "ai-phong-chest": [
+     5.099999999860302,
+     4062.8000000000466
+    ],
+    "ai-phong-fountain": [
+     2.2000000001862645,
+     4072
+    ],
+    "ai-phong-merchant": [
+     2.1000000000931323,
+     4058
+    ],
+    "ai-phong-altar": [
+     1.8999999999068677,
+     4003.899999999907
+    ],
+    "ai-trum": [
+     97,
+     19954.600000000093
+    ],
+    "ai-paused": [
+     10.800000000046566,
+     1493
+    ],
+    "ai-map": [
+     3.6000000000931323,
+     1513.8999999999069
+    ],
+    "ai-bag": [
+     2.800000000046566,
+     1439.3000000000466
+    ],
+    "ai-ket-qua": [
+     12.800000000046566,
+     1489.7000000001863
+    ]
+   },
+   "ops": {
+    "clearRect": 4199
+   },
+   "scenes": {
+    "lang": 2,
+    "ai-danh": 1518,
+    "ai-phong-elite": 244,
+    "ai-phong-chest": 237,
+    "ai-phong-fountain": 360,
+    "ai-phong-merchant": 307,
+    "ai-phong-altar": 242,
+    "ai-trum": 994,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "zed_moi.js:1353 < zed_moi.js:1511 < combat.js:1299 < combat.js:1304 < combat.js:1248": 3759,
+    "zed_moi.js:1268 < zed_moi.js:1511 < combat.js:1299 < combat.js:1304 < combat.js:1248": 126,
+    "zed_moi.js:1353 < zed_moi.js:1511 < fx.js:2919 < combat.js:1304 < combat.js:1248": 298,
+    "zed_moi.js:1353 < zed_moi.js:1511 < mobs.js:1081 < combat.js:1305 < combat.js:1248": 16
+   },
+   "main": 0,
+   "off": 4199,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "zed_moi.js:1410": {
+   "k": "zed_moi.js:1410",
+   "t": {
+    "lang": [
+     694.8999999999069,
+     931.8999999999069
+    ],
+    "ai-danh": [
+     6.199999999953434,
+     25016.899999999907
+    ],
+    "ai-phong-elite": [
+     125.69999999995343,
+     4012.4000000001397
+    ],
+    "ai-phong-chest": [
+     50,
+     4062.899999999907
+    ],
+    "ai-phong-fountain": [
+     2.5,
+     4072.2000000001863
+    ],
+    "ai-phong-merchant": [
+     2.300000000046566,
+     4006.8000000000466
+    ],
+    "ai-phong-altar": [
+     79.80000000004657,
+     4004.0999999998603
+    ],
+    "ai-trum": [
+     154.60000000009313,
+     19954.800000000047
+    ],
+    "ai-paused": [
+     10.899999999906868,
+     1493.1000000000931
+    ],
+    "ai-map": [
+     3.800000000046566,
+     1514.1000000000931
+    ],
+    "ai-bag": [
+     3.1000000000931323,
+     1439.4000000001397
+    ],
+    "ai-ket-qua": [
+     13,
+     1490
+    ]
+   },
+   "ops": {
+    "clearRect": 3753
+   },
+   "scenes": {
+    "lang": 2,
+    "ai-danh": 1379,
+    "ai-phong-elite": 225,
+    "ai-phong-chest": 234,
+    "ai-phong-fountain": 236,
+    "ai-phong-merchant": 231,
+    "ai-phong-altar": 237,
+    "ai-trum": 914,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "zed_moi.js:1353 < zed_moi.js:1511 < combat.js:1299 < combat.js:1304 < combat.js:1248": 3611,
+    "zed_moi.js:1268 < zed_moi.js:1511 < combat.js:1299 < combat.js:1304 < combat.js:1248": 126,
+    "zed_moi.js:1353 < zed_moi.js:1511 < mobs.js:1081 < combat.js:1305 < combat.js:1248": 16
+   },
+   "main": 0,
+   "off": 3753,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "sprite_custom.js:359": {
+   "k": "sprite_custom.js:359",
+   "t": {
+    "ai-danh": [
+     1745.1999999999534,
+     20949.399999999907
+    ],
+    "ai-phong-elite": [
+     3204,
+     3204.8000000000466
+    ],
+    "ai-trum": [
+     1707.9000000001397,
+     13506.700000000186
+    ]
+   },
+   "ops": {
+    "fillRect": 89
+   },
+   "scenes": {
+    "ai-danh": 26,
+    "ai-phong-elite": 2,
+    "ai-trum": 61
+   },
+   "callers": {
+    "sprite_custom.js:364 < sprite_custom.js:540 < sprite_custom.js:718 < sprite_custom.js:816 < monster_art.js:1574": 44,
+    "sprite_custom.js:364 < sprite_custom.js:556 < sprite_custom.js:718 < sprite_custom.js:816 < monster_art.js:1574": 44,
+    "sprite_custom.js:364 < sprite_custom.js:554 < sprite_custom.js:718 < sprite_custom.js:816 < monster_art.js:1574": 1
+   },
+   "main": 0,
+   "off": 89,
+   "grad": 0,
+   "lighter": 89,
+   "alpha": 0,
+   "styles": {
+    "#fff6e0": 1,
+    "#ff4a3a": 1,
+    "#ffffff": 1
+   },
+   "area": 2372528
+  },
+  "weapon_art.js:266": {
+   "k": "weapon_art.js:266",
+   "t": {
+    "ai-danh": [
+     2363.5,
+     2392.5
+    ]
+   },
+   "ops": {
+    "fillRect": 567
+   },
+   "scenes": {
+    "ai-danh": 567
+   },
+   "callers": {
+    "weapon_art.js:945 < weapon_art.js:1009 < hero_tinhlinh.js:1468 < zed_moi.js:1533 < fx.js:1237": 567
+   },
+   "main": 0,
+   "off": 567,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#1b1118": 1,
+    "#ffb347": 1,
+    "#ffd27a": 1,
+    "#8a1c12": 1,
+    "#e8492a": 1,
+    "#fff0b0": 1
+   },
+   "area": 567
+  },
+  "fx_he.js:474": {
+   "k": "fx_he.js:474",
+   "t": {
+    "ai-danh": [
+     2687.1999999999534,
+     21523.399999999907
+    ]
+   },
+   "ops": {
+    "fillRect": 60
+   },
+   "scenes": {
+    "ai-danh": 60
+   },
+   "callers": {
+    "fx_he.js:490 < fx_he.js:515 < fx_ky_nang.js:216 < combat.js:1241 < combat.js:1221": 60
+   },
+   "main": 0,
+   "off": 60,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(110, 34, 10, 0.62)": 1
+   },
+   "area": 1550
+  },
+  "fx_he.js:477": {
+   "k": "fx_he.js:477",
+   "t": {
+    "ai-danh": [
+     2687.399999999907,
+     21523.399999999907
+    ]
+   },
+   "ops": {
+    "fillRect": 8
+   },
+   "scenes": {
+    "ai-danh": 8
+   },
+   "callers": {
+    "fx_he.js:490 < fx_he.js:515 < fx_ky_nang.js:216 < combat.js:1241 < combat.js:1221": 8
+   },
+   "main": 0,
+   "off": 8,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(255, 196, 63, 0.75)": 1
+   },
+   "area": 52
+  },
+  "fx_he.js:478": {
+   "k": "fx_he.js:478",
+   "t": {
+    "ai-danh": [
+     2687.5999999998603,
+     21523.300000000047
+    ]
+   },
+   "ops": {
+    "fillRect": 104
+   },
+   "scenes": {
+    "ai-danh": 104
+   },
+   "callers": {
+    "fx_he.js:490 < fx_he.js:515 < fx_ky_nang.js:216 < combat.js:1241 < combat.js:1221": 104
+   },
+   "main": 0,
+   "off": 104,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(255, 196, 63, 0.75)": 1
+   },
+   "area": 208
+  },
+  "fx_he.js:475": {
+   "k": "fx_he.js:475",
+   "t": {
+    "ai-danh": [
+     2687.6999999999534,
+     21523.199999999953
+    ]
+   },
+   "ops": {
+    "fillRect": 48
+   },
+   "scenes": {
+    "ai-danh": 48
+   },
+   "callers": {
+    "fx_he.js:490 < fx_he.js:515 < fx_ky_nang.js:216 < combat.js:1241 < combat.js:1221": 48
+   },
+   "main": 0,
+   "off": 48,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(255, 122, 42, 0.4)": 1
+   },
+   "area": 1048
+  },
+  "fx_anh.js:98": {
+   "k": "fx_anh.js:98",
+   "t": {
+    "ai-danh": [
+     3954.5,
+     14517.5
+    ],
+    "ai-phong-fountain": [
+     1141.5,
+     1482.7000000001863
+    ],
+    "ai-phong-merchant": [
+     2061.9000000001397,
+     2390.2000000001863
+    ]
+   },
+   "ops": {
+    "fillRect": 357
+   },
+   "scenes": {
+    "ai-danh": 318,
+    "ai-phong-fountain": 20,
+    "ai-phong-merchant": 19
+   },
+   "callers": {
+    "mobs.js:602 < mobs.js:707 < bao_truoc.js:941 < ky_nang_quai.js:1256 < chieu_trum.js:1000": 300,
+    "stage.js:1168 < stage.js:1130 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 57
+   },
+   "main": 357,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(0, 0, 0, 0.3)": 1,
+    "rgba(0, 0, 0, 0)": 1,
+    "rgba(0, 0, 0, 0.14)": 1,
+    "rgba(0, 0, 0, 0.282)": 1,
+    "rgba(0, 0, 0, 0.424)": 1,
+    "rgba(0, 0, 0, 0.565)": 1
+   },
+   "area": 7390800
+  },
+  "fx_he_moi.js:110": {
+   "k": "fx_he_moi.js:110",
+   "t": {
+    "ai-danh": [
+     4672.59999999986,
+     21422.199999999953
+    ]
+   },
+   "ops": {
+    "clearRect": 24
+   },
+   "scenes": {
+    "ai-danh": 24
+   },
+   "callers": {
+    "fx_he_moi.js:123 < fx_he_moi.js:250 < fx_he_moi.js:197 < fx_he_moi.js:275 < combat.js:1136": 24
+   },
+   "main": 0,
+   "off": 24,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "fx.js:1972": {
+   "k": "fx.js:1972",
+   "t": {
+    "ai-danh": [
+     4710.699999999953,
+     4719.199999999953
+    ]
+   },
+   "ops": {
+    "clearRect": 6
+   },
+   "scenes": {
+    "ai-danh": 6
+   },
+   "callers": {
+    "fx.js:2028 < fx.js:2126 < fx_he.js:517 < fx_ky_nang.js:216 < combat.js:1241": 6
+   },
+   "main": 0,
+   "off": 6,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "ui_theme.js:1002": {
+   "k": "ui_theme.js:1002",
+   "t": {
+    "ai-danh": [
+     4844.899999999907,
+     4844.899999999907
+    ]
+   },
+   "ops": {
+    "fillRect": 1
+   },
+   "scenes": {
+    "ai-danh": 1
+   },
+   "callers": {
+    "ui_theme.js:1028 < ui_theme.js:451 < ui_theme.js:1028 < stage.js:1208 < stage.js:1463": 1
+   },
+   "main": 0,
+   "off": 1,
+   "grad": 0,
+   "lighter": 1,
+   "alpha": 0,
+   "styles": {
+    "#fe7d04": 1
+   },
+   "area": 80
+  },
+  "engine.js:677": {
+   "k": "engine.js:677",
+   "t": {
+    "ai-danh": [
+     6076.399999999907,
+     22470.800000000047
+    ],
+    "ai-phong-chest": [
+     65.80000000004657,
+     3993.3000000000466
+    ],
+    "ai-trum": [
+     105.80000000004657,
+     19957.40000000014
+    ],
+    "ai-paused": [
+     13.399999999906868,
+     1494.6999999999534
+    ],
+    "ai-map": [
+     7,
+     1516
+    ],
+    "ai-bag": [
+     5.2000000001862645,
+     1441.6000000000931
+    ],
+    "ai-ket-qua": [
+     16.4000000001397,
+     1493
+    ]
+   },
+   "ops": {
+    "fillRect": 3725
+   },
+   "scenes": {
+    "ai-danh": 98,
+    "ai-phong-chest": 232,
+    "ai-trum": 2557,
+    "ai-paused": 89,
+    "ai-map": 325,
+    "ai-bag": 49,
+    "ai-ket-qua": 375
+   },
+   "callers": {
+    "vk_moi.js:749 < luyen.js:241 < linhkhi.js:201 < stage.js:1537 < stage.js:1133": 141,
+    "stage.js:1783 < stage.js:1142 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 232,
+    "ui_theme.js:1112 < stage.js:1558 < stage.js:1308 < fx.js:2964 < fx.js:2791": 1356,
+    "linhkhi.js:266 < linhkhi.js:281 < linhkhi.js:197 < stage.js:1537 < stage.js:1133": 583,
+    "stage.js:1907 < stage.js:1147 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 190,
+    "luyen_ui.js:525 < linhkhi.js:308 < stage.js:1974 < stage.js:1147 < viec_ngay.js:533": 190,
+    "luyen_ui.js:548 < luyen_ui.js:528 < linhkhi.js:308 < stage.js:1974 < stage.js:1147": 380,
+    "goi_y_1.js:65 < stage.js:1975 < stage.js:1147 < viec_ngay.js:533 < phuc_lanh.js:227": 190,
+    "stage.js:1876 < stage.js:1145 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 89,
+    "minimap.js:189 < stage.js:1141 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 81,
+    "minimap.js:195 < stage.js:1141 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 81,
+    "minimap.js:199 < stage.js:1141 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 81,
+    "minimap.js:216 < stage.js:1141 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 81,
+    "stage.js:1146 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520 < truyen.js:601": 50
+   },
+   "main": 3725,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 147,
+   "styles": {
+    "#fff3b0": 1,
+    "rgba(0, 0, 0, 0.55)": 1,
+    "#fff0c4": 1,
+    "rgba(0, 0, 0, 0.5)": 1,
+    "rgba(12, 10, 10, 0.82)": 1,
+    "rgba(0, 0, 0, 0.65)": 1
+   },
+   "area": 96306471
+  },
+  "stage.js:1217": {
+   "k": "stage.js:1217",
+   "t": {
+    "ai-danh": [
+     18514.59999999986,
+     24669.5
+    ]
+   },
+   "ops": {
+    "fillRect": 42
+   },
+   "scenes": {
+    "ai-danh": 42
+   },
+   "callers": {
+    "stage.js:1463 < stage.js:1308 < fx.js:2964 < fx.js:2791 < noi_gian.js:96": 42
+   },
+   "main": 42,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#e8483a": 1
+   },
+   "area": 0
+  },
+  "stage.js:1218": {
+   "k": "stage.js:1218",
+   "t": {
+    "ai-danh": [
+     18514.59999999986,
+     24669.699999999953
+    ]
+   },
+   "ops": {
+    "fillRect": 42
+   },
+   "scenes": {
+    "ai-danh": 42
+   },
+   "callers": {
+    "stage.js:1463 < stage.js:1308 < fx.js:2964 < fx.js:2791 < noi_gian.js:96": 42
+   },
+   "main": 42,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#ff9a8a": 1
+   },
+   "area": 0
+  },
+  "bao_truoc.js:671": {
+   "k": "bao_truoc.js:671",
+   "t": {
+    "ai-phong-elite": [
+     3108.4000000001397,
+     3108.4000000001397
+    ],
+    "ai-trum": [
+     6839.300000000047,
+     6839.300000000047
+    ]
+   },
+   "ops": {
+    "fillRect": 2
+   },
+   "scenes": {
+    "ai-phong-elite": 1,
+    "ai-trum": 1
+   },
+   "callers": {
+    "bao_truoc.js:736 < bao_truoc.js:854 < combat.js:1302 < fx_anh.js:108 < combat.js:1223": 2
+   },
+   "main": 0,
+   "off": 2,
+   "grad": 0,
+   "lighter": 2,
+   "alpha": 0,
+   "styles": {
+    "rgba(120, 220, 40, 0.13)": 1
+   },
+   "area": 360272
+  },
+  "ui_theme.js:1236": {
+   "k": "ui_theme.js:1236",
+   "t": {
+    "ai-trum": [
+     1711.9000000001397,
+     12024.100000000093
+    ]
+   },
+   "ops": {
+    "fillRect": 583
+   },
+   "scenes": {
+    "ai-trum": 583
+   },
+   "callers": {
+    "ui_theme.js:1109 < stage.js:1558 < stage.js:1308 < fx.js:2964 < fx.js:2791": 583
+   },
+   "main": 583,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#fff6e0": 1,
+    "#ffd98a": 1
+   },
+   "area": 215855
+  },
+  "ui_theme.js:1237": {
+   "k": "ui_theme.js:1237",
+   "t": {
+    "ai-trum": [
+     1712,
+     12024.300000000047
+    ]
+   },
+   "ops": {
+    "fillRect": 583
+   },
+   "scenes": {
+    "ai-trum": 583
+   },
+   "callers": {
+    "ui_theme.js:1109 < stage.js:1558 < stage.js:1308 < fx.js:2964 < fx.js:2791": 583
+   },
+   "main": 583,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 583,
+   "styles": {
+    "#ffffff": 1
+   },
+   "area": 43171
+  },
+  "ui_theme.js:1248": {
+   "k": "ui_theme.js:1248",
+   "t": {
+    "ai-trum": [
+     1712.1000000000931,
+     11745.90000000014
+    ]
+   },
+   "ops": {
+    "fillRect": 276
+   },
+   "scenes": {
+    "ai-trum": 276
+   },
+   "callers": {
+    "ui_theme.js:1109 < stage.js:1558 < stage.js:1308 < fx.js:2964 < fx.js:2791": 276
+   },
+   "main": 276,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 276,
+   "styles": {
+    "#ffffff": 1
+   },
+   "area": 118500
+  },
+  "engine.js:678": {
+   "k": "engine.js:678",
+   "t": {
+    "ai-trum": [
+     1713.3000000000466,
+     19957.5
+    ],
+    "ai-map": [
+     15.5,
+     1497.8000000000466
+    ],
+    "ai-ket-qua": [
+     17.700000000186265,
+     1493.1000000000931
+    ]
+   },
+   "ops": {
+    "strokeRect": 1044
+   },
+   "scenes": {
+    "ai-trum": 813,
+    "ai-map": 81,
+    "ai-ket-qua": 150
+   },
+   "callers": {
+    "linhkhi.js:266 < linhkhi.js:281 < linhkhi.js:197 < stage.js:1537 < stage.js:1133": 583,
+    "luyen_ui.js:525 < linhkhi.js:308 < stage.js:1974 < stage.js:1147 < viec_ngay.js:533": 190,
+    "goi_y_1.js:65 < stage.js:1975 < stage.js:1147 < viec_ngay.js:533 < phuc_lanh.js:227": 190,
+    "minimap.js:199 < stage.js:1141 < viec_ngay.js:533 < phuc_lanh.js:227 < truyen.js:520": 81
+   },
+   "main": 1044,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 2,
+   "styles": {
+    "#ff7a2a": 1,
+    "rgba(255, 220, 160, 0.14)": 1,
+    "rgba(143, 208, 122, 0.6)": 1,
+    "#5a3d1a": 1
+   },
+   "area": 5168433
+  },
+  "bao_truoc.js:767": {
+   "k": "bao_truoc.js:767",
+   "t": {
+    "ai-trum": [
+     6841.100000000093,
+     7553.5
+    ]
+   },
+   "ops": {
+    "arc": 80
+   },
+   "scenes": {
+    "ai-trum": 80
+   },
+   "callers": {
+    "bao_truoc.js:802 < bao_truoc.js:742 < bao_truoc.js:854 < combat.js:1302 < fx_anh.js:108": 10,
+    "bao_truoc.js:802 < bao_truoc.js:743 < bao_truoc.js:854 < combat.js:1302 < fx_anh.js:108": 60,
+    "bao_truoc.js:802 < bao_truoc.js:742 < bao_truoc.js:856 < combat.js:1302 < fx_anh.js:108": 10
+   },
+   "main": 0,
+   "off": 80,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "#000000": 1
+   },
+   "area": 0
+  },
+  "fx.js:2955": {
+   "k": "fx.js:2955",
+   "t": {
+    "ai-trum": [
+     12044.700000000186,
+     19955.90000000014
+    ],
+    "ai-paused": [
+     11.899999999906868,
+     1493.8000000000466
+    ],
+    "ai-map": [
+     4.800000000046566,
+     1515
+    ],
+    "ai-bag": [
+     4.100000000093132,
+     1440.5
+    ],
+    "ai-ket-qua": [
+     14.200000000186265,
+     1491
+    ]
+   },
+   "ops": {
+    "fillRect": 474
+   },
+   "scenes": {
+    "ai-trum": 179,
+    "ai-paused": 89,
+    "ai-map": 82,
+    "ai-bag": 49,
+    "ai-ket-qua": 75
+   },
+   "callers": {
+    "fx.js:2791 < noi_gian.js:96 < fx_he_moi.js:375 < combat.js:1323 < combat.js:1248": 474
+   },
+   "main": 474,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(255, 255, 255, 0.38)": 1,
+    "rgba(255, 255, 255, 0.365)": 1,
+    "rgba(255, 255, 255, 0.353)": 1,
+    "rgba(255, 255, 255, 0.337)": 1,
+    "rgba(255, 255, 255, 0.325)": 1,
+    "rgba(255, 255, 255, 0.31)": 1
+   },
+   "area": 61430400
+  },
+  "do_roi.js:122": {
+   "k": "do_roi.js:122",
+   "t": {
+    "ai-trum": [
+     14052.5,
+     19954.100000000093
+    ],
+    "ai-paused": [
+     9.399999999906868,
+     1492.6999999999534
+    ],
+    "ai-map": [
+     2.3999999999068677,
+     1513.3999999999069
+    ],
+    "ai-bag": [
+     1.5,
+     1438.8000000000466
+    ],
+    "ai-ket-qua": [
+     11.700000000186265,
+     1489.3000000000466
+    ]
+   },
+   "ops": {
+    "ellipse": 2910
+   },
+   "scenes": {
+    "ai-trum": 845,
+    "ai-paused": 623,
+    "ai-map": 574,
+    "ai-bag": 343,
+    "ai-ket-qua": 525
+   },
+   "callers": {
+    "portal.js:97 < song_luat.js:374 < thuong_luong.js:959 < combat.js:1301 < combat.js:1248": 2910
+   },
+   "main": 2910,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 0,
+   "styles": {
+    "rgba(0, 0, 0, 0.38)": 1
+   },
+   "area": 0
+  },
+  "do_roi.js:126": {
+   "k": "do_roi.js:126",
+   "t": {
+    "ai-trum": [
+     14052.600000000093,
+     19954.100000000093
+    ],
+    "ai-paused": [
+     9.5,
+     1492.8000000000466
+    ],
+    "ai-map": [
+     2.5,
+     1513.5
+    ],
+    "ai-bag": [
+     1.7000000001862645,
+     1438.8000000000466
+    ],
+    "ai-ket-qua": [
+     11.800000000046566,
+     1489.3000000000466
+    ]
+   },
+   "ops": {
+    "ellipse": 2910
+   },
+   "scenes": {
+    "ai-trum": 845,
+    "ai-paused": 623,
+    "ai-map": 574,
+    "ai-bag": 343,
+    "ai-ket-qua": 525
+   },
+   "callers": {
+    "portal.js:97 < song_luat.js:374 < thuong_luong.js:959 < combat.js:1301 < combat.js:1248": 2910
+   },
+   "main": 2910,
+   "off": 0,
+   "grad": 0,
+   "lighter": 0,
+   "alpha": 2910,
+   "styles": {
+    "#d6d2c8": 1
+   },
+   "area": 0
+  },
+  "do_roi.js:22": {
+   "k": "do_roi.js:22",
+   "t": {
+    "ai-trum": [
+     14053.800000000047,
+     14205.200000000186
+    ]
+   },
+   "ops": {
+    "fillRect": 3
+   },
+   "scenes": {
+    "ai-trum": 3
+   },
+   "callers": {
+    "do_roi.js:46 < do_roi.js:149 < portal.js:97 < song_luat.js:374 < thuong_luong.js:959": 3
+   },
+   "main": 0,
+   "off": 3,
+   "grad": 0,
+   "lighter": 3,
+   "alpha": 0,
+   "styles": {
+    "#120c08": 1
+   },
+   "area": 6912
+  }
+ },
+ "img": {
+  "boot": 526,
+  "man-chao": 3513,
+  "lang": 53783,
+  "lang-map": 9072,
+  "lang-forge": 5947,
+  "lang-gear": 6126,
+  "lang-outfit": 7318,
+  "lang-hero": 5079,
+  "lang-skill": 5963,
+  "lang-chuong": 4081,
+  "lang-help": 6866,
+  "lang-settings": 7418,
+  "lang-so": 6225,
+  "lang-thanhTuu": 4740,
+  "lang-viecNgay": 7460,
+  "lang-ren-luyen": 4709,
+  "lang-ren-sharpen": 4439,
+  "lang-ren-vk": 1215,
+  "lang-ren-ep": 1065,
+  "lang-ren-up": 1497,
+  "hanh-trang-hero": 4067,
+  "hanh-trang-weapon": 3911,
+  "hanh-trang-skill": 1177,
+  "hanh-trang-res": 1223,
+  "ai-danh": 181605,
+  "ai-phong-elite": 29838,
+  "ai-phong-chest": 26020,
+  "ai-phong-fountain": 30600,
+  "ai-phong-merchant": 26577,
+  "ai-phong-altar": 24595,
+  "ai-trum": 129278,
+  "ai-paused": 11676,
+  "ai-map": 13322,
+  "ai-bag": 7508,
+  "ai-ket-qua": 10457
+ },
+ "nimg": 648896,
+ "ma": {
+  "cua": "ready",
+  "caCon": "ready",
+  "oc": "ready",
+  "haiQuy": "ready",
+  "caChuon": "ready",
+  "caNoc": "ready",
+  "sua": "ready",
+  "nhim": "ready",
+  "cuaTuong": "ready",
+  "caNocChua": "ready",
+  "heoCon": "ready",
+  "ongVo": "ready",
+  "boHung": "ready",
+  "hoaBaoTu": "ready",
+  "chonBong": "ready",
+  "namPhong": "ready",
+  "socNo": "ready",
+  "nhimDoc": "ready",
+  "heoNanh": "ready",
+  "namPhongChua": "ready",
+  "linhMa": "ready",
+  "doiThan": "ready",
+  "tuongDa": "ready",
+  "denLong": "ready",
+  "meoDen": "ready",
+  "huLua": "ready",
+  "tieuYeu": "ready",
+  "nhimThan": "ready",
+  "tuongMa": "ready",
+  "huChua": "ready",
+  "cuaDa": "ready",
+  "namChua": "ready",
+  "hoLua": "ready",
+  "nguTinh": "ready",
+  "mocTinh": "ready",
+  "hoTinh": "ready",
+  "raiCa": "ready",
+  "diaTrau": "ready",
+  "baBa": "ready",
+  "cocTia": "ready",
+  "ranNuoc": "khong",
+  "echPhinh": "khong",
+  "maDa": "khong",
+  "traiGai": "khong",
+  "raiCaChua": "khong",
+  "cocChua": "khong",
+  "caTre": "khong"
+ },
+ "errs": [],
+ "state": {
+  "mode": "result",
+  "idx": 7,
+  "boss": {
+   "hp": -5.05147646924998,
+   "dead": true
+  }
+ }
+}
