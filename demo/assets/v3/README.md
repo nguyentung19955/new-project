@@ -12,3 +12,5 @@ Chờ thêm (thả vào đây là tự dùng, ưu tiên hơn ảnh tĩnh):
 - `<id>_idle.png` — sheet 1 hàng, khung vuông (số khung = rộng / cao), phát 9fps lặp.
 - `<id>_attack.png` — sheet 1 hàng, khung vuông, phát 14fps (đạn phát ở ~khung 6).
 Neo khung: điểm giữa-đáy phần hình của khung đầu idle (code tự đo), nên giữ chân cố định ở (64,108)/128 mọi khung.
+
+8 hướng (theo quái): `<id>_<dir>.png` (ảnh tĩnh) + `<id>_idle_<dir>.png` (8 khung) / `<id>_attack_<dir>.png` (12 khung), dir ∈ s, sw, w, nw, n; SE/E/NE do code lật gương SW/W/NW. Thiếu hướng → hướng gần nhất; WARP xoay ảnh bằng code. Chi tiết: docs/demo-hop-tuong/TIEN-DO-V3.md.
