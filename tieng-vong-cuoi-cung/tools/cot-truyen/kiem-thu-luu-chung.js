@@ -41,7 +41,7 @@ const L3 = tao(khoGia()); L3.moVung('xuong-dong');
 const st = Tram.trangThai(ds, L3, datDieuKien);
 ok(st.find(v => v.id === 'xuong-dong').di_duoc && !st.find(v => v.id === 'vung-moi').di_duoc, 'gộp the-gioi.json + mở theo lưu chung');
 const tg = require(path.join(G, 'the-gioi.json')), v1 = Tram.gop(tram, tg).find(v => v.id === 'vung-1');
-ok(v1.duong_dan === 'game/vung-1/index.html' && v1.ten === 'Rễ Mục', 'đọc đúng game/the-gioi.json thật', v1);
+ok(v1.duong_dan === 'game/vung-1/index.html' && v1.ten === 'Rotting Roots', 'đọc đúng game/the-gioi.json thật', v1);
 
 // 4. hộp thoại: chưa có ảnh → tắt
 (async () => {
