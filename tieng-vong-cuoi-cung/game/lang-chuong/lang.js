@@ -89,19 +89,24 @@
 
   /* ---------------- teleport ---------------- */
   function moMenu(){
+    // (khoidau) bảng đích: vùng mở "— Enter"; vùng đã dựng nhưng còn khoá thì hiện mờ kèm điều kiện; làng không nằm trong danh sách
     const di = LANG.tram.filter(v => v.di_duoc);
-    const chon = di.map(v => ({chu: v.ten, gt: 'vung:' + v.id}));
-    if (CT.sanSang('mo-dau')) chon.push({chu: 'Watch The First Silence', gt: 'mo-dau'});
+    const chon = [];
+    for (const v of LANG.tram.filter(v => v.duong_dan).reverse()){
+      if (v.di_duoc) chon.push({chu: v.ten + ' — Enter', gt: 'vung:' + v.id});
+      else chon.push({chu: v.ten + ' — ' + (v.id === 'vung-2' ? 'Defeat the Hollow Bell Mother' : 'Sealed'), gt: 'khoa', khoa: true});
+    }
     chon.push({chu: 'Stay', gt: 'o-lai'});
     const khoa = LANG.tram.length - di.length;
     const d = {id: 'tram-menu', khung: KHUNG_HT, nguoi: {}, dong: [{ai: '', chu: 'The Rootbound Bell hums.' + (khoa ? ' ' + khoa + ' paths still sleep.' : ''), chon}]};
     HT._DS['tram-menu'] = Object.assign(d, {_goc: GOC});
-    S.menu = {chon, i: 0};
+    S.menu = {chon, i: Math.max(0, chon.findIndex(c => !c.khoa))};
     if (anhChon){ S.che = 'menu'; return; }               // khung chọn riêng (yêu cầu ảnh 009)
     HT.bat('tram-menu', ketQuaMenu); S.che = 'thoai';      // chưa có → dùng khung hộp thoại (ảnh ChatGPT 001)
   }
   function ketQuaMenu(gt){
     S.menu = null; S.che = 'choi';
+    if (gt === 'khoa'){ return; }
     if (typeof gt === 'string' && gt.startsWith('vung:')){
       const v = LANG.tram.find(x => 'vung:' + x.id === gt); if (!v || !v.di_duoc) return;
       S.dich = v; S.dc = {t: 0, nguoc: false}; S.che = 'dich';
@@ -112,7 +117,8 @@
     LANG.diToi = v.id;
     if (LC){ LC.datCo('lang_da_dich_chuyen'); }
     if (THU) return;                                      // kiểm thử: không rời trang
-    location.href = GOC + v.duong_dan + '?tu_lang=1';
+    const url = GOC + v.duong_dan + '?tu_lang=1';
+    if (window.KhoiDau) KhoiDau.diToi(url); else location.href = url;   // (khoidau) tối dần ~250 ms → màn tải của vùng
   }
 
   /* ---------------- bước 60 Hz ---------------- */
@@ -123,9 +129,10 @@
     if (S.che === 'thoai'){ HT.capNhat(DT, {xac_nhan: I.b_ok, len: I.b_u, xuong: I.b_d}); return; }
     if (S.che === 'menu'){
       const m = S.menu, n = m.chon.length;
-      if (I.b_u) m.i = (m.i + n - 1) % n; if (I.b_d) m.i = (m.i + 1) % n;
+      const buocChon = d => { for (let k = 0; k < n; k++){ m.i = (m.i + d + n) % n; if (!m.chon[m.i].khoa) break; } };
+      if (I.b_u) buocChon(-1); if (I.b_d) buocChon(1);
       if (I.b_bo) return ketQuaMenu('o-lai');
-      if (I.b_ok) return ketQuaMenu(m.chon[m.i].gt);
+      if (I.b_ok) return m.chon[m.i].khoa ? undefined : ketQuaMenu(m.chon[m.i].gt);
       return;
     }
     if (S.che === 'kich'){            // chuông kích hoạt: khung 2→9, 90 ms/khung, rồi mở menu
@@ -141,9 +148,12 @@
       return;
     }
     if (S.che !== 'choi') return;
+    if (I.b_bo && window.KhoiDau){ KhoiDau.tamDung.mo(); return; }   // (khoidau) Esc = tạm dừng
     // đi trái/phải
     const v = (I.r ? 1 : 0) - (I.l ? 1 : 0);
     P.chay = v !== 0; if (v) P.mat = v;
+    if (v && !S.daDi){ S.daDi = true; S.goiYT = 0; }                  // (khoidau) gợi ý "Drag to move" tắt khi đã đi được
+    if (S.daDi) S.goiYT += DT;
     P.x = Math.max(L.bien[0], Math.min(L.bien[1], P.x + v * L.toc_do));
     P.t = P.chay ? (S.chayCu ? P.t + 1 : 0) : (S.chayCu ? 0 : P.t + 1); S.chayCu = P.chay;
     // vật gần nhất để tương tác
@@ -204,6 +214,13 @@
       g.font = '700 18px "Alegreya Sans",system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
       g.shadowColor = '#000'; g.shadowBlur = 5; g.fillStyle = '#ffe08a'; g.fillText((document.body.classList.contains('touch') ? '' : '▲ ') + t, x, y); g.shadowBlur = 0; g.textAlign = 'left';
     }
+    // (khoidau) hướng dẫn một dòng: "Drag to move" tới khi đi được, rồi "Find the Rootbound Bell" (tới khi rung chuông lần đầu)
+    if (S.che === 'choi'){
+      const cham = document.body.classList.contains('touch'), daRung = LC && LC.co('lang_da_dich_chuyen');
+      const goiY = !S.daDi ? (cham ? 'Drag to move' : 'Move with ← →') : (!daRung && !(S.gan && S.gan.id === 'chuong') && S.goiYT < 12 ? 'Find the Rootbound Bell' : '');
+      if (goiY){ g.font = '700 30px "Alegreya Sans",system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.shadowColor = '#000'; g.shadowBlur = 6;
+        g.fillStyle = 'rgba(255,233,176,' + (0.75 + 0.25 * Math.sin(S.tg * 3)) + ')'; g.fillText(goiY, W / 2, 92); g.shadowBlur = 0; g.textAlign = 'left'; }
+    }
     if (S.che === 'thoai') HT.ve(g, W, H);
     if (S.che === 'menu') veMenu();
   }
@@ -214,7 +231,7 @@
     const [qx, qy, qw] = L.khung_chon.chu, tx = x + qx * w, fs = 22;
     g.textBaseline = 'top'; g.textAlign = 'left';
     g.fillStyle = '#E1B85A'; g.font = '700 26px "Cormorant Garamond",serif'; g.textAlign = 'center'; g.fillText('The Rootbound Bell', tx + qw * w / 2, y + qy * h); g.textAlign = 'left';   // giữa vùng chữ: tránh 2 chuông treo ở góc trên
-    S.menu.chon.forEach((c, k) => { g.fillStyle = k === S.menu.i ? '#ffe08a' : '#c9b48a'; g.font = '500 ' + fs + 'px "Alegreya Sans",sans-serif';
+    S.menu.chon.forEach((c, k) => { g.fillStyle = c.khoa ? 'rgba(201,180,138,.45)' : k === S.menu.i ? '#ffe08a' : '#c9b48a'; g.font = '500 ' + fs + 'px "Alegreya Sans",sans-serif';
       g.fillText((k === S.menu.i ? '› ' : '  ') + c.chu, tx, y + qy * h + 44 + k * fs * 1.45, qw * w); });
   }
 
@@ -225,12 +242,15 @@
     cv.width = Math.round(W * k * dpr); cv.height = Math.round(H * k * dpr);
   }
   addEventListener('resize', vua); vua();
-  $('cho').style.display = 'none'; cv.style.display = 'block';
+  cv.style.display = 'block';
+  if (LC) LC.datNoiCuoi('lang');                                  // (khoidau) CONTINUE trên tiêu đề → làng
+  try { const u = new URL(location.href); if (u.searchParams.has('moi') || u.searchParams.has('tiep')){ u.searchParams.delete('moi'); u.searchParams.delete('tiep'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (e){}
+  if (window.KhoiDau){ KhoiDau.tai.dong(); if (S.che !== 'canh') KhoiDau.tenVung('Bell Village'); }
   function capNhatNut(){
     const nut = $('b-noi'), bo = $('b-bo');
     const txt = S.che === 'canh' ? 'Next' : S.che === 'thoai' || S.che === 'menu' ? 'OK' : S.che === 'choi' && S.gan ? (S.gan.id === 'chuong' ? 'Ring' : S.gan.vat ? 'Examine' : 'Talk') : '';
     nut.textContent = txt; nut.style.visibility = txt ? 'visible' : 'hidden';
-    bo.style.visibility = S.che === 'canh' || S.che === 'menu' ? 'visible' : 'hidden';
+    bo.style.visibility = S.che === 'canh' ? 'visible' : 'hidden';   // (khoidau) Skip chỉ khi chiếu mở đầu (bảng teleport có 'Stay')
   }
   function mot(I){ buoc(I || docPhim()); }
   Object.assign(LANG, {
@@ -248,10 +268,17 @@
     ve(); capNhatNut();
   }
   if (!THU) requestAnimationFrame(vong); else { ve(); capNhatNut(); }
+  // (khoidau) menu tạm dừng chung (Map / Journal / Lattice chưa có ở làng → mờ)
+  if (window.KhoiDau) KhoiDau.tamDung.gan({
+    coThe: () => S.che === 'choi', hienNut: () => S.che === 'choi' || S.che === 'tam_dung',
+    dung: () => { S.che = 'tam_dung'; P.chay = false; cham = null; }, tiep: () => { if (S.che === 'tam_dung') S.che = 'choi'; },
+    ban_do: null, nhat_ky: null, lattice: null
+  });
 
   function xongNap(){
     LANG.xong = true;
     $('thieu').textContent = 'Missing art: ' + LANG.thieu.join(', ');
     $('keys').style.display = 'none';
+    if (window.KhoiDau) KhoiDau.tai.loi();   // (khoidau) không bao giờ hiện chữ "waiting for art" cho người chơi
   }
 })();
