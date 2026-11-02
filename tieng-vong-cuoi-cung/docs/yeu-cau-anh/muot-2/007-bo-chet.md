@@ -1,0 +1,18 @@
+# 007 – Bọ Vỏ Mộc – chết: VẼ LẠI 9 khung (P0)
+- **Trạng thái:** CHỜ
+- **Clip:** `quai.json → loai.bo.hinh.chet` – thư mục art gốc `art/quai-moi/bo/chet/` (9 khung `fNN.png`, ô 80×80, quay TRÁI, neo chân [40, 63])
+- **Việc cần vẽ:** Vẽ **9 khung mới** `thay-00` … `thay-08`, THAY toàn bộ clip chết (ảnh chết hiện là bản sao y hệt ảnh `danh` – đã xác nhận trùng file). 2 ô đầu ảnh tham chiếu là khung đứng (dung F0) và trúng đòn (trung F3) để giữ đúng thiết kế.
+- **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "HỎNG: ảnh chết đang là bản sao y hệt đòn đánh – bọ không hề ngã. Vẽ lại 9 khung: giật mạnh → chân trước khuỵu → vỏ nghiêng → đổ nghiêng → chạm đất bụi → chân co giật → nằm yên; giữ khung cuối."
+  - thay-00 giật mạnh · thay-01 chân trước khuỵu · thay-02 vỏ nghiêng · thay-03 đổ nghiêng · thay-04 chạm đất (bụi nhỏ cùng màu đất) · thay-05/06 chân co giật · thay-07 lịm dần · thay-08 nằm yên (khung giữ).
+  - Đáy chạm vạch đất (dấu +), không trôi ngang.
+- **Ảnh tham chiếu:** `007-bo-chet-thamchieu.png` (2784×264) = ghép ngang dung/f00 | trung/f03 | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG] | [Ô TRỐNG], cắt cửa sổ (x0=0, y0=0, rộng 80, cao 80) của ô 80×80 rồi phóng ×3 nearest, nền #FF00FF. Ô viền đứt = khung cần vẽ; dấu "+" trong ô trống = vị trí neo chân.
+- **Prompt gửi ChatGPT (kèm ảnh tham chiếu, mỗi ảnh 1 cuộc trò chuyện mới):**
+  ```
+  This strip shows consecutive frames of a 2D side-view pixel-art animation of the Rotbark Beetle (dark bark-shelled six-legged horned beetle with old-bronze/amber markings). The creature faces LEFT. The first 2 cells are the beetle idle and hurt frames for reference. Draw ONLY the 9 empty dashed cells as its DEATH animation, left to right: 1 violent jolt; 2 front legs buckle; 3 shell tilts; 4 tipping over sideways; 5 hits the ground with a small dust puff; 6 legs twitching; 7 legs twitching less; 8 going limp; 9 lying still (final held frame). Same scale and ground line as marked by "+". Use the image generation tool and DRAW. Keep EXACTLY the same character design, proportions, scale, palette, outline and pixel size as the neighbouring frames; do not redesign, do not add details, effects, text, shadow or ground. Same foot position as marked by the small "+" (feet on the same ground line). Output the frame(s) as crisp pixel art on flat #FF00FF, laid out in the same order as the empty cells.
+  ```
+- **Lưu ảnh ra:** `art/muot-2/bo-chet/thay-00.png`, `art/muot-2/bo-chet/thay-01.png`, `art/muot-2/bo-chet/thay-02.png`, `art/muot-2/bo-chet/thay-03.png`, `art/muot-2/bo-chet/thay-04.png`, `art/muot-2/bo-chet/thay-05.png`, `art/muot-2/bo-chet/thay-06.png`, `art/muot-2/bo-chet/thay-07.png`, `art/muot-2/bo-chet/thay-08.png` – mỗi tệp PNG RGBA đúng **80×80** (cỡ ô gốc), nền trong suốt, chân ở **[40, 63]** như khung gốc, quay TRÁI. Cách đặt: thu ảnh ChatGPT về cỡ thật (÷3, nearest) theo cửa sổ rộng 80 × cao 80, dán vào ô 80×80 trong suốt tại (0,0). Lưu kèm ảnh nguồn `art/muot-2/bo-chet/nguon-chatgpt.png`.
+- **Thứ tự mới của clip sau khi lắp:** thay-00 … thay-08 (9 khung; ảnh cũ chuyển sang `art/muot-2/bo-chet/cu-fNN.png`)
+- **ms mới cho cả clip:** 60, 65, 70, 80, 90, 90, 100, 120, 180 (855 ms, đúng bộ ChatGPT; giữ khung cuối)
+- **Sự kiện dời chỉ số (phiên lắp tự làm):** quai.json bo.hinh.chet: ms mảng mới, lap false.
+- **Luật:** giữ nguyên 100% thiết kế (màu, cỡ, chi tiết); không sửa khung gốc; không vẽ bằng code/nội suy. Ảnh lệch dáng/sai cỡ → phiên lắp đổi trạng thái thành "VẼ LẠI" kèm lý do.
+- **Khi xong:** phiên chính đổi Trạng thái thành `XONG` (ghi cỡ ảnh, số tệp) rồi push; phiên MƯỢT-2 sẽ lắp vào game.
