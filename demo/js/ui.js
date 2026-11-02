@@ -58,8 +58,21 @@
       const b = document.createElement('button');
       b.className = 'ct'; b.dataset.id = id;
       mauHanh(b, h);
-      b.innerHTML = `<canvas></canvas><div class="ct-tt"><div class="ct-ten">${t.ten}</div><div class="ct-k"><span>${h.ten}</span><span class="chip">${t.kieu.toUpperCase()}</span></div><div class="ct-mo">${t.mo}</div></div><span class="ct-so"><b></b></span>`;
-      veChanDung(b.querySelector('canvas'), id, 62);
+      const dmg = Math.min(1, t.dmg / 20), toc = Math.min(1, (1 / t.cd) / 1.25);
+      b.innerHTML = `<div class="ct-khung"><div class="ct-trong">
+          <canvas class="ct-anh"></canvas>
+          <div class="ct-dau"><span class="ct-he"><i></i>${h.ten}</span></div>
+          <span class="ct-so"><b></b></span>
+          <div class="ct-than">
+            <div class="ct-ten">${t.ten}</div>
+            <div class="ct-chuc">${t.chuc}</div>
+            <div class="ct-cs"><span>DMG</span><i><u style="width:${Math.round(dmg * 100)}%"></u></i></div>
+            <div class="ct-cs"><span>RATE</span><i><u style="width:${Math.round(toc * 100)}%"></u></i></div>
+            <div class="ct-k"><span class="chip">${t.kieu.toUpperCase()}</span></div>
+            <div class="ct-mo">${t.mo}</div>
+          </div>
+        </div></div>`;
+      R.veThe(b.querySelector('canvas'), id, 92, 138);
       b.onclick = () => { const k = chon.indexOf(id); if (k >= 0) chon.splice(k, 1); else if (chon.length < 5) chon.push(id); capChon(); };
       l.appendChild(b);
     }
@@ -84,7 +97,7 @@
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
       mauHanh(b, h);
       b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
-      veChanDung(b.querySelector('canvas'), id, 44);
+      R.veThe(b.querySelector('canvas'), id, 44, 44, true);
       bo.appendChild(b);
     }
     capNhat(true);

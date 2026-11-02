@@ -45,112 +45,142 @@
     c.save(); c.beginPath(); c.ellipse(32, 57, 20, 5.5, 0, 0, 7); c.fillStyle = '#05070e'; c.fill();
     neon(c, h.mau, 8); c.lineWidth = 1.2; c.strokeStyle = hexA(h.mau, 0.8); c.stroke(); c.restore();
   }
-  // TƯỚNG cyberpunk hình người (chibi, đầu to), quay phải. o = { da, da2 (da tối), ao, aoT (áo sáng→tối), tay, toc(c), sau(c), truoc(c), mat }
-  function mat2(c, h, kieu) {
-    if (kieu === 'visor') { c.save(); neon(c, h.mau, 10); rr(c, 31, 13.5, 13, 4.5, 2); c.fillStyle = h.mau; c.fill(); c.fillStyle = 'rgba(255,255,255,0.85)'; c.fillRect(36, 14.5, 5, 1.2); c.restore(); return; }
-    c.fillStyle = '#ffffff'; c.fillRect(35, 15, 3, 2.6); c.fillRect(40.5, 15, 2.6, 2.6);
-    c.fillStyle = '#0b0d15'; c.fillRect(36.4, 15.2, 1.6, 2.4); c.fillRect(41.6, 15.2, 1.5, 2.4);
-    c.fillStyle = 'rgba(20,10,10,0.8)'; c.fillRect(34.5, 13.2, 4, 1); c.fillRect(40, 13.2, 3.4, 1);
-    c.fillStyle = 'rgba(60,20,20,0.5)'; c.fillRect(38.5, 21.5, 3, 0.9);
+  // TƯỚNG chibi ANIME cyberpunk (đầu to ~1:1, mắt anime to), quay phải. Khung 64×64, chân ở y≈57.
+  const HX = 32, HY = 19, HR = 13;
+  function mat(c, x, y, w, h, iris, sang) {   // mắt anime: tròng trắng, mống màu nguyên tố, 2 đốm sáng, mi trên đậm
+    c.beginPath(); c.ellipse(x, y, w / 2, h / 2, 0, 0, 7); c.fillStyle = '#ffffff'; c.fill();
+    c.save(); c.beginPath(); c.ellipse(x, y, w / 2, h / 2, 0, 0, 7); c.clip();
+    c.beginPath(); c.ellipse(x + w * 0.08, y + h * 0.06, w * 0.42, h * 0.46, 0, 0, 7); c.fillStyle = lg(c, 0, y - h / 2, 0, y + h / 2, [[0, '#0b0d15'], [0.45, iris], [1, sang]]); c.fill();
+    c.beginPath(); c.ellipse(x + w * 0.1, y + h * 0.05, w * 0.18, h * 0.22, 0, 0, 7); c.fillStyle = '#05060c'; c.fill();
+    c.restore();
+    c.fillStyle = '#ffffff'; c.beginPath(); c.arc(x - w * 0.12, y - h * 0.18, w * 0.17, 0, 7); c.fill(); c.beginPath(); c.arc(x + w * 0.22, y + h * 0.22, w * 0.08, 0, 7); c.fill();
+    c.strokeStyle = '#0b0710'; c.lineWidth = 1.5; c.lineCap = 'round'; c.beginPath(); c.ellipse(x, y + 0.3, w / 2 + 0.3, h / 2 + 0.2, 0, Math.PI * 1.08, Math.PI * 1.95); c.stroke();
+    c.lineWidth = 1; c.beginPath(); c.moveTo(x + w / 2, y - h * 0.25); c.lineTo(x + w / 2 + 1.4, y - h * 0.42); c.stroke(); c.lineCap = 'butt';
+  }
+  function mat2(c, h, o) {
+    if (o.mat === 'visor') { c.save(); neon(c, h.mau, 10); rr(c, 24, 17, 20, 6.5, 3); c.fillStyle = hexA(h.mau, 0.82); c.fill(); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(33, 18.3, 8, 1.3); c.restore(); }
+    else if (o.mat !== 'khong') {
+      mat(c, 29.3, 21.6, 6.4, 7.8, h.mau, h.sang); mat(c, 39, 21.6, 5.2, 7.6, h.mau, h.sang);
+      c.strokeStyle = 'rgba(20,8,12,0.75)'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(27, 16.2); c.lineTo(31.5, 15.6); c.moveTo(37.3, 15.6); c.lineTo(41.4, 16.2); c.stroke();
+    }
+    if (!o.matNa) { c.strokeStyle = 'rgba(90,30,30,0.8)'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(34, 27.8); c.quadraticCurveTo(35.5, o.cuoi ? 29.2 : 28.3, 37, 27.7); c.stroke(); }
+    if (o.ma) { c.fillStyle = 'rgba(255,110,140,0.28)'; c.beginPath(); c.ellipse(27.5, 25, 2.2, 1.1, 0, 0, 7); c.ellipse(41, 25, 1.6, 1, 0, 0, 7); c.fill(); }
+  }
+  // tóc: phần mũ tóc + mái nhọn (kieu: 'mai' | 'nhon' | 'bob'); toc = [sáng, tối]
+  function mai(c, toc, kieu, m) {
+    c.beginPath();
+    c.moveTo(18, 22); c.arc(HX, HY - 1, HR + 1.6, Math.PI * 0.94, Math.PI * 2.06);
+    const tips = kieu === 'bob' ? [[47, 27], [44, 16], [42, 19.5], [39, 13], [36, 17.5], [33, 12.5], [30, 17], [27, 12.5], [24, 17.5], [21, 15], [18, 27]]
+      : [[46, 23], [43, 14], [41.5, 17.5], [38.5, 12.5], [36, 16.5], [33, 12], [30, 16.5], [26.5, 12.5], [24, 17], [20.5, 14], [18, 23]];
+    for (const [x, y] of tips) c.lineTo(x, y);
+    c.closePath(); fillO(c, lg(c, 0, 3, 0, 26, [[0, toc[0]], [1, toc[1]]]));
+    if (kieu === 'nhon') { c.beginPath(); for (const [x0, y0, x1, y1, x2, y2] of [[22, 9, 15, 3, 25, 6], [27, 5, 26, -3, 32, 4], [33, 4, 39, -3, 37, 5], [39, 6, 48, 2, 42, 10]]) { c.moveTo(x0, y0); c.lineTo(x1, y1); c.lineTo(x2, y2); } c.closePath(); fillO(c, toc[0]); }
+    c.save(); c.globalAlpha = 0.45; c.strokeStyle = '#ffffff'; c.lineWidth = 1.6; c.beginPath(); c.arc(HX - 1, HY - 3, HR - 3, Math.PI * 1.15, Math.PI * 1.55); c.stroke(); c.restore();
+    if (m) { c.save(); neon(c, m, 6); c.globalAlpha = 0.8; c.strokeStyle = m; c.lineWidth = 1; c.beginPath(); c.arc(HX, HY - 1, HR + 1, Math.PI * 1.25, Math.PI * 1.6); c.stroke(); c.restore(); }
   }
   function nguoi(c, h, o) {
     de(c, h);
     if (o.sau) o.sau(c);
-    for (const x of [25, 33]) { rr(c, x, 41, 7, 12, 2); fillO(c, lg(c, x, 41, x + 7, 53, [[0, '#2a3044'], [1, '#10131e']])); rr(c, x - 0.5, 50.5, 8.5, 5.5, 2); fillO(c, '#0b0d15'); }
-    c.save(); neon(c, h.mau, 6); c.fillStyle = h.mau; c.fillRect(26, 46, 5, 1.2); c.fillRect(34, 46, 5, 1.2); c.restore();
-    rr(c, 18.5, 27, 6.5, 13, 3); fillO(c, o.tay || '#1d2336');
-    c.beginPath(); c.moveTo(21, 25); c.lineTo(44, 25); c.lineTo(42, 43); c.lineTo(23, 43); c.closePath(); fillO(c, lg(c, 21, 25, 44, 43, [[0, o.ao], [1, o.aoT]])); vien(c, h.mau, 0.5);
-    c.save(); neon(c, h.mau, 8); c.strokeStyle = h.mau; c.lineWidth = 1.2; c.beginPath(); c.moveTo(33, 26); c.lineTo(32, 39); c.moveTo(22, 26.5); c.lineTo(28, 26.5); c.stroke(); c.restore();
-    c.fillStyle = '#0b0d15'; c.fillRect(23, 39.5, 19, 3); c.save(); neon(c, h.mau, 6); c.fillStyle = h.mau; c.fillRect(31.5, 40, 3, 2); c.restore();
-    c.fillStyle = o.da2; c.fillRect(30, 23, 6, 3);
-    c.beginPath(); c.arc(33, 15.5, 10.5, 0, 7); fillO(c, rg(c, 31, 12, 2, 12, [[0, o.da], [1, o.da2]]));
-    c.save(); c.globalAlpha = 0.6; c.strokeStyle = '#3ce7ff'; c.lineWidth = 1; c.beginPath(); c.arc(33, 15.5, 10, Math.PI * 0.75, Math.PI * 1.25); c.stroke(); c.strokeStyle = '#ff2bd6'; c.beginPath(); c.arc(33, 15.5, 10, -0.3, 0.4); c.stroke(); c.restore();
-    if (o.toc) o.toc(c);
-    if (o.mat !== 'khong') mat2(c, h, o.mat);
+    if (o.tocSau) { c.beginPath(); c.moveTo(19, 16); c.quadraticCurveTo(14, 34, 19, o.tocDai || 42); c.lineTo(45, o.tocDai || 42); c.quadraticCurveTo(50, 32, 45, 16); c.closePath(); fillO(c, lg(c, 0, 10, 0, 44, [[0, o.toc[0]], [1, o.toc[1]]])); }
+    for (const x of [26, 33]) { rr(c, x, 44, 6, 8, 2); fillO(c, lg(c, x, 44, x + 6, 52, [[0, '#2a3044'], [1, '#10131e']])); rr(c, x - 0.8, 50, 8, 7, 2.5); fillO(c, lg(c, x, 50, x, 57, [[0, '#3c4762'], [1, '#0b0d15']])); }
+    c.save(); neon(c, h.mau, 6); c.fillStyle = h.mau; c.fillRect(26, 52.5, 6, 1.2); c.fillRect(33, 52.5, 6, 1.2); c.restore();
+    rr(c, 19.5, 32, 5.5, 10, 2.5); fillO(c, o.tay || '#1d2336');
+    c.beginPath(); c.moveTo(22.5, 31); c.lineTo(42.5, 31); c.lineTo(41.5, 46); c.lineTo(23.5, 46); c.closePath(); fillO(c, lg(c, 22, 31, 43, 46, [[0, o.ao], [1, o.aoT]])); vien(c, h.mau, 0.55);
+    c.save(); neon(c, h.mau, 8); c.strokeStyle = h.mau; c.lineWidth = 1.1; c.beginPath(); c.moveTo(33, 32); c.lineTo(32.5, 45); c.moveTo(23.5, 43.5); c.lineTo(41.5, 43.5); c.stroke(); c.restore();
+    c.beginPath(); c.moveTo(26, 30); c.lineTo(32.5, 34); c.lineTo(39.5, 30); c.lineTo(38, 32.5); c.lineTo(32.5, 36); c.lineTo(27.5, 32.5); c.closePath(); fillO(c, o.co || '#0e1220');
+    c.fillStyle = o.da2; c.fillRect(30, 29, 5.5, 3);
+    c.beginPath(); c.ellipse(HX + 0.5, HY + 1, HR - 0.5, HR - 1, 0, 0, 7); fillO(c, rg(c, HX - 2, HY - 2, 2, HR + 2, [[0, o.da], [1, o.da2]]));
+    c.save(); c.globalAlpha = 0.55; c.strokeStyle = '#3ce7ff'; c.lineWidth = 1; c.beginPath(); c.ellipse(HX + 0.5, HY + 1, HR - 1, HR - 1.5, 0, Math.PI * 0.7, Math.PI * 1.05); c.stroke(); c.strokeStyle = '#ff2bd6'; c.beginPath(); c.ellipse(HX + 0.5, HY + 1, HR - 1, HR - 1.5, 0, -0.2, 0.5); c.stroke(); c.restore();
+    mat2(c, h, o);
+    if (o.truocToc) o.truocToc(c);
+    if (o.toc) mai(c, o.toc, o.kieu || 'mai', o.vienToc ? h.mau : null);
     if (o.truoc) o.truoc(c);
   }
-  const TOC = {
-    mohawk: (m) => (c) => { c.beginPath(); c.arc(33, 15.5, 10.5, Math.PI * 1.02, Math.PI * 1.75); c.lineTo(33, 13); c.closePath(); fillO(c, '#15101a');
-      c.save(); neon(c, m, 8); c.fillStyle = m; c.beginPath(); c.moveTo(24, 9); for (let k = 0; k < 5; k++) { c.lineTo(26 + k * 3.4, 1 + (k % 2) * 3); c.lineTo(28 + k * 3.4, 7); } c.lineTo(41, 8); c.closePath(); c.fill(); c.restore(); },
-    dai: (m, mau) => (c) => { c.beginPath(); c.arc(33, 15, 11.5, Math.PI * 0.95, Math.PI * 2.05); c.quadraticCurveTo(44, 8, 37, 9); c.quadraticCurveTo(31, 12, 25, 11); c.closePath(); fillO(c, mau);
-      c.save(); neon(c, m, 6); c.strokeStyle = m; c.lineWidth = 0.9; c.beginPath(); c.moveTo(26, 7); c.quadraticCurveTo(33, 3, 40, 6); c.stroke(); c.restore(); },
-    nhon: (m, mau) => (c) => { c.beginPath(); c.moveTo(22, 15); for (let k = 0; k < 6; k++) { c.lineTo(23 + k * 3.8, k % 2 ? 1 : 4.5); c.lineTo(25 + k * 3.8, 8); } c.lineTo(44, 12); c.quadraticCurveTo(36, 9, 30, 11); c.lineTo(23, 18); c.closePath(); fillO(c, mau);
-      c.save(); neon(c, m, 8); c.fillStyle = m; c.beginPath(); c.moveTo(33, 3); c.lineTo(36, 8); c.lineTo(32, 8); c.closePath(); c.fill(); c.restore(); },
-    ngan: (mau) => (c) => { c.beginPath(); c.arc(33, 15.5, 10.8, Math.PI * 0.98, Math.PI * 2.02); c.quadraticCurveTo(40, 9, 33, 10); c.quadraticCurveTo(27, 10.5, 23, 14); c.closePath(); fillO(c, mau); },
-    bui: (mau) => (c) => { c.beginPath(); c.arc(22.5, 10, 4.5, 0, 7); fillO(c, mau); TOC.ngan(mau)(c); },
-    mu: (m) => (c) => { c.beginPath(); c.moveTo(20, 30); c.quadraticCurveTo(17, 10, 33, 2.5); c.quadraticCurveTo(48, 8, 46, 26); c.lineTo(41, 25); c.quadraticCurveTo(42, 12, 33, 9); c.quadraticCurveTo(26, 12, 26, 28); c.closePath();
-      fillO(c, lg(c, 18, 2, 46, 30, [[0, '#3a4560'], [0.5, '#1a2032'], [1, '#080a12']])); vien(c, m, 0.4);
-      c.beginPath(); c.moveTo(26, 24); c.quadraticCurveTo(26, 11, 34, 10); c.quadraticCurveTo(42, 12, 41.5, 24); c.closePath(); c.fillStyle = '#04060c'; c.fill(); },
-  };
   const VE_UNIT = {
     scorch(c, h) {
-      nguoi(c, h, { da: '#d9a07a', da2: '#9a6142', ao: '#6a3018', aoT: '#24100a', tay: '#2a1a14', mat: 'mat', toc: TOC.mohawk(h.mau),
-        sau: (c) => { rr(c, 13, 24, 9, 19, 3); fillO(c, METAL(c, 13, 24, 22, 43)); c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.fillRect(15, 29, 5, 1.6); c.fillRect(15, 34, 5, 1.6); c.restore(); },
+      nguoi(c, h, { da: '#ffd9bd', da2: '#d79a78', ao: '#7a3418', aoT: '#2a100a', tay: '#3a1a10', toc: ['#ff8a3a', '#b0300c'], kieu: 'nhon', cuoi: 1, vienToc: 1,
+        sau: (c) => { rr(c, 13, 30, 9, 16, 3); fillO(c, METAL(c, 13, 30, 22, 46)); c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.fillRect(15, 34, 5, 1.5); c.fillRect(15, 39, 5, 1.5); c.restore(); },
         truoc: (c) => {
-          c.fillStyle = '#0b0d15'; c.fillRect(33, 12.5, 12, 2); c.save(); neon(c, h.mau, 6); c.fillStyle = hexA(h.mau, 0.9); c.fillRect(35, 11.5, 3.5, 2.6); c.fillRect(40.5, 11.5, 3.5, 2.6); c.restore();
-          rr(c, 36, 28, 8, 11, 3); fillO(c, '#2a1a14');
-          rr(c, 39, 29.5, 19, 9, 3); fillO(c, METAL(c, 39, 29.5, 58, 38.5)); c.fillStyle = '#05070e'; c.fillRect(56, 30.5, 4, 7);
-          c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(57, 32, 3, 4); c.fillRect(42, 33.3, 11, 1.5); c.restore(); } });
+          rr(c, 21, 8.5, 22, 4, 2); fillO(c, '#1d2336'); c.save(); neon(c, h.mau, 8); for (const x of [25.5, 35]) { c.beginPath(); c.arc(x, 10.5, 3.2, 0, 7); c.fillStyle = '#0b0d15'; c.fill(); c.beginPath(); c.arc(x, 10.5, 2.2, 0, 7); c.fillStyle = hexA(h.mau, 0.9); c.fill(); } c.restore();
+          rr(c, 37, 33, 7, 9, 3); fillO(c, '#3a1a10');
+          rr(c, 40, 33.5, 16, 8, 3); fillO(c, METAL(c, 40, 33.5, 56, 41.5)); c.fillStyle = '#05070e'; c.fillRect(54.5, 34.5, 3.5, 6);
+          c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(55.3, 35.8, 2.8, 3.6); c.fillRect(43, 37, 9, 1.4); c.restore(); } });
     },
     frost(c, h) {
-      nguoi(c, h, { da: '#f4d4bd', da2: '#c99a80', ao: '#22577a', aoT: '#0a1828', tay: '#163a54', mat: 'mat', toc: TOC.dai(h.mau, '#d8f4ff'),
-        sau: (c) => { c.beginPath(); c.moveTo(22, 12); c.quadraticCurveTo(18, 26, 22, 36); c.lineTo(30, 30); c.lineTo(28, 14); c.closePath(); fillO(c, '#c4e6f4'); },
+      nguoi(c, h, { da: '#fff0e6', da2: '#e0b8a6', ao: '#2a6a94', aoT: '#0c1e32', tay: '#1c4a6a', toc: ['#f4fcff', '#8ec8e4'], tocSau: 1, tocDai: 46, ma: 1, vienToc: 1,
+        truocToc: () => {},
         truoc: (c) => {
-          c.strokeStyle = '#2a3348'; c.lineWidth = 2.4; c.beginPath(); c.moveTo(48, 56); c.lineTo(48, 14); c.stroke(); c.strokeStyle = '#6b7a99'; c.lineWidth = 0.8; c.stroke();
-          rr(c, 42, 28, 7.5, 7, 3); fillO(c, '#f4d4bd');
-          c.save(); neon(c, h.mau, 16); c.beginPath(); c.moveTo(48, 1); c.lineTo(53, 9); c.lineTo(48, 17); c.lineTo(43, 9); c.closePath(); c.fillStyle = lg(c, 43, 1, 53, 17, [[0, '#ffffff'], [0.5, h.mau], [1, h.toi]]); c.fill(); c.restore();
-          for (const [x, y] of [[56, 5], [41, 2], [57, 16]]) { c.save(); neon(c, h.mau, 8); c.fillStyle = h.sang; c.beginPath(); c.moveTo(x, y - 3); c.lineTo(x + 1.8, y); c.lineTo(x, y + 3); c.lineTo(x - 1.8, y); c.closePath(); c.fill(); c.restore(); } } });
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.sang; c.beginPath(); c.moveTo(22, 8); c.lineTo(24.5, 4); c.lineTo(26, 9); c.closePath(); c.fill(); c.restore();
+          c.strokeStyle = '#2a3348'; c.lineWidth = 2.2; c.beginPath(); c.moveTo(48, 57); c.lineTo(48, 18); c.stroke(); c.strokeStyle = '#8a9ab8'; c.lineWidth = 0.7; c.stroke();
+          rr(c, 42.5, 34, 7, 6.5, 3); fillO(c, '#fff0e6');
+          c.save(); neon(c, h.mau, 16); c.beginPath(); c.moveTo(48, 5); c.lineTo(53, 12.5); c.lineTo(48, 20); c.lineTo(43, 12.5); c.closePath(); c.fillStyle = lg(c, 43, 5, 53, 20, [[0, '#ffffff'], [0.5, h.mau], [1, h.toi]]); c.fill(); c.restore();
+          for (const [x, y] of [[56, 8], [41, 4], [57, 20]]) { c.save(); neon(c, h.mau, 8); c.fillStyle = h.sang; c.beginPath(); c.moveTo(x, y - 3); c.lineTo(x + 1.8, y); c.lineTo(x, y + 3); c.lineTo(x - 1.8, y); c.closePath(); c.fill(); c.restore(); } } });
     },
     arc(c, h) {
-      nguoi(c, h, { da: '#e8b896', da2: '#a8764f', ao: '#3a3a44', aoT: '#101016', tay: '#22222c', mat: 'mat', toc: TOC.nhon(h.mau, '#12121a'),
+      nguoi(c, h, { da: '#ffe0c4', da2: '#d0a07c', ao: '#3a3a48', aoT: '#101016', tay: '#22222c', toc: ['#2a2a3a', '#0a0a12'], kieu: 'nhon', vienToc: 1,
         truoc: (c) => {
-          c.save(); neon(c, h.mau, 14); c.strokeStyle = h.sang; c.lineWidth = 2.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(45, 31); c.lineTo(61, 6); c.stroke(); c.restore();
-          c.strokeStyle = '#1a1a22'; c.lineWidth = 3; c.beginPath(); c.moveTo(41, 37); c.lineTo(45, 31); c.stroke(); c.fillStyle = '#c9a64a'; c.fillRect(43.5, 31, 4, 1.6);
-          rr(c, 38, 30, 8, 8, 3); fillO(c, '#e8b896');
-          c.save(); neon(c, h.mau, 8); c.strokeStyle = h.mau; c.lineWidth = 1; c.beginPath(); c.moveTo(54, 10); c.lineTo(58, 13); c.lineTo(55, 15); c.lineTo(60, 19); c.moveTo(50, 20); c.lineTo(54, 22); c.stroke(); c.restore(); } });
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.beginPath(); c.moveTo(19, 13.5); c.lineTo(46, 12); c.lineTo(46, 14.6); c.lineTo(19, 16.2); c.closePath(); c.fill(); c.restore();
+          c.fillStyle = h.mau; c.beginPath(); c.moveTo(19, 14); c.lineTo(13, 19); c.lineTo(16, 20); c.lineTo(20, 16); c.closePath(); c.fill();
+          c.save(); neon(c, h.mau, 14); c.strokeStyle = h.sang; c.lineWidth = 2.4; c.lineCap = 'round'; c.beginPath(); c.moveTo(45, 35); c.lineTo(60, 13); c.stroke(); c.restore();
+          c.strokeStyle = '#1a1a22'; c.lineWidth = 2.8; c.beginPath(); c.moveTo(41.5, 40); c.lineTo(45, 35); c.stroke(); c.fillStyle = '#c9a64a'; c.fillRect(43.5, 34.5, 4, 1.5);
+          rr(c, 38.5, 34, 7, 7, 3); fillO(c, '#ffe0c4');
+          c.save(); neon(c, h.mau, 8); c.strokeStyle = h.mau; c.lineWidth = 1; c.beginPath(); c.moveTo(54, 16); c.lineTo(58, 19); c.lineTo(55, 21); c.lineTo(60, 25); c.stroke(); c.restore(); } });
     },
     lance(c, h) {
-      nguoi(c, h, { da: '#9a6442', da2: '#5e3a24', ao: '#4a1830', aoT: '#140810', tay: '#2a1020', mat: 'visor', toc: TOC.ngan('#0e0a10'),
+      nguoi(c, h, { da: '#c88a64', da2: '#8a5a3c', ao: '#5a1c38', aoT: '#160810', tay: '#2a1020', toc: ['#3a1a2e', '#0e0610'], kieu: 'bob', vienToc: 1,
         truoc: (c) => {
-          rr(c, 26, 29, 37, 5.5, 2); fillO(c, METAL(c, 26, 29, 63, 34.5));
-          c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(34, 31, 26, 1.4); c.restore();
-          rr(c, 33, 24.5, 12, 4.5, 2); fillO(c, METAL(c, 33, 24.5, 45, 29)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.beginPath(); c.arc(44.5, 26.7, 1.8, 0, 7); c.fill(); c.restore();
-          rr(c, 61, 28, 3, 7.5, 1); fillO(c, '#2a3348');
-          rr(c, 37, 33, 7, 7, 3); fillO(c, '#9a6442'); } });
+          c.save(); for (const x of [17.5, 46.5]) { rr(c, x - 3, 15, 6, 10, 3); fillO(c, '#1d2336'); neon(c, h.mau, 8); c.fillStyle = h.mau; c.fillRect(x - 1, 17, 2, 6); } c.restore();
+          c.strokeStyle = '#1d2336'; c.lineWidth = 2; c.beginPath(); c.arc(32, 15, 15, Math.PI * 1.05, Math.PI * 1.95); c.stroke();
+          c.save(); neon(c, h.mau, 10); c.beginPath(); c.moveTo(16, 3); c.lineTo(19, 10); c.lineTo(13.5, 9); c.closePath(); c.moveTo(48, 3); c.lineTo(50.5, 9); c.lineTo(45, 10); c.closePath(); c.fillStyle = h.mau; c.fill(); c.restore();
+          rr(c, 26, 35, 37, 5, 2); fillO(c, METAL(c, 26, 35, 63, 40));
+          c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(34, 36.8, 26, 1.3); c.restore();
+          rr(c, 33, 31, 11, 4, 2); fillO(c, METAL(c, 33, 31, 44, 35)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.beginPath(); c.arc(43.5, 33, 1.6, 0, 7); c.fill(); c.restore();
+          rr(c, 61, 34, 3, 7, 1); fillO(c, '#2a3348');
+          rr(c, 37.5, 38, 6.5, 6.5, 3); fillO(c, '#c88a64'); } });
     },
     warp(c, h) {
-      nguoi(c, h, { da: '#f1c7a5', da2: '#b98e70', ao: '#3a1a5e', aoT: '#0e0618', tay: '#261040', mat: 'mat', toc: TOC.dai(h.mau, '#2a1446'),
+      nguoi(c, h, { da: '#ffe6da', da2: '#d6a896', ao: '#4a2278', aoT: '#12061e', tay: '#2e1450', toc: ['#c79bff', '#4a1c86'], tocSau: 1, tocDai: 50, ma: 1, vienToc: 1,
         sau: (c) => {
-          c.save(); neon(c, h.mau, 14); c.strokeStyle = h.mau; c.lineWidth = 1.8; c.beginPath(); c.arc(31, 14, 16, 0, 7); c.stroke(); c.restore();
-          for (let k = 0; k < 4; k++) { const g = k * Math.PI / 2 + 0.6; c.save(); neon(c, h.mau, 8); c.fillStyle = h.sang; c.fillRect(31 + Math.cos(g) * 16 - 1.5, 14 + Math.sin(g) * 16 - 1.5, 3, 3); c.restore(); }
-          c.beginPath(); c.moveTo(21, 26); c.quadraticCurveTo(16, 44, 20, 55); c.lineTo(44, 55); c.quadraticCurveTo(46, 44, 43, 26); c.closePath(); fillO(c, lg(c, 16, 26, 46, 55, [[0, '#2a1446'], [1, '#08040e']])); },
+          c.save(); neon(c, h.mau, 14); c.strokeStyle = h.mau; c.lineWidth = 1.8; c.beginPath(); c.arc(31, 16, 19, 0, 7); c.stroke(); c.restore();
+          for (let k = 0; k < 4; k++) { const g = k * Math.PI / 2 + 0.6; c.save(); neon(c, h.mau, 8); c.fillStyle = h.sang; c.fillRect(31 + Math.cos(g) * 19 - 1.5, 16 + Math.sin(g) * 19 - 1.5, 3, 3); c.restore(); } },
         truoc: (c) => {
-          rr(c, 39, 29, 7, 8, 3); fillO(c, '#f1c7a5');
-          c.save(); neon(c, h.mau, 16); c.fillStyle = rg(c, 49, 31, 0, 6, [[0, '#ffffff'], [0.4, h.sang], [1, h.mau]]); c.beginPath(); c.arc(49, 31, 5, 0, 7); c.fill(); c.restore();
-          c.save(); neon(c, h.mau, 6); c.strokeStyle = h.sang; c.lineWidth = 0.8; c.beginPath(); c.ellipse(49, 31, 8, 3, -0.4, 0, 7); c.stroke(); c.restore(); } });
+          c.beginPath(); c.moveTo(16, 9); c.lineTo(48, 9); c.lineTo(41, 7); c.lineTo(36, -4); c.lineTo(28, 6); c.closePath(); fillO(c, lg(c, 16, -4, 48, 9, [[0, '#3a1a5e'], [1, '#0e0618']]));
+          c.save(); neon(c, h.mau, 8); c.strokeStyle = h.mau; c.lineWidth = 1.2; c.beginPath(); c.moveTo(18, 8.6); c.lineTo(46, 8.6); c.stroke(); c.restore();
+          rr(c, 39.5, 35, 6.5, 6.5, 3); fillO(c, '#ffe6da');
+          c.save(); neon(c, h.mau, 16); c.fillStyle = rg(c, 48.5, 37, 0, 5.5, [[0, '#ffffff'], [0.4, h.sang], [1, h.mau]]); c.beginPath(); c.arc(48.5, 37, 4.6, 0, 7); c.fill(); c.restore();
+          c.save(); neon(c, h.mau, 6); c.strokeStyle = h.sang; c.lineWidth = 0.8; c.beginPath(); c.ellipse(48.5, 37, 7.5, 2.8, -0.4, 0, 7); c.stroke(); c.restore(); } });
     },
     miner(c, h) {
-      nguoi(c, h, { da: '#c98d63', da2: '#8a5a3b', ao: '#1e3a6a', aoT: '#08101e', tay: '#142a4a', mat: 'visor', toc: TOC.bui('#1a0f0a'),
+      nguoi(c, h, { da: '#e8b48e', da2: '#b07c5a', ao: '#1e3e72', aoT: '#08101e', tay: '#142a4a', toc: ['#5a3020', '#1a0c08'], kieu: 'bob', cuoi: 1, ma: 1,
+        sau: (c) => { c.beginPath(); c.arc(20, 9, 5.5, 0, 7); fillO(c, lg(c, 0, 4, 0, 15, [[0, '#5a3020'], [1, '#1a0c08']])); c.save(); neon(c, h.mau, 6); c.fillStyle = h.mau; c.fillRect(17, 8, 6, 1.3); c.restore(); },
         truoc: (c) => {
-          rr(c, 39, 29, 7, 8, 3); fillO(c, '#c98d63');
-          c.save(); neon(c, h.mau, 10); c.fillStyle = hexA(h.mau, 0.3); c.strokeStyle = h.mau; c.lineWidth = 1; c.beginPath(); c.moveTo(42, 30); c.lineTo(58, 26); c.lineTo(58, 36); c.lineTo(42, 37); c.closePath(); c.fill(); c.stroke();
-          c.fillStyle = h.mau; [3, 6, 4, 8].forEach((b, k) => c.fillRect(46 + k * 3, 35 - b, 1.8, b)); c.restore();
-          c.save(); neon(c, '#ffe24a', 12); hexP(c, 52, 13, 6, Math.PI / 6); c.lineWidth = 1.5; c.strokeStyle = '#ffe24a'; c.stroke(); c.fillStyle = 'rgba(255,226,74,0.3)'; c.fill(); c.fillStyle = '#fff6c0'; c.fillRect(51, 9.5, 2, 7); c.restore(); } });
+          c.save(); c.strokeStyle = h.mau; c.lineWidth = 1.1; neon(c, h.mau, 8); c.beginPath(); c.arc(29.5, 21, 4.4, 0, 7); c.stroke(); c.beginPath(); c.arc(38.8, 21, 3.9, 0, 7); c.stroke(); c.beginPath(); c.moveTo(33.9, 21); c.lineTo(34.9, 21); c.stroke(); c.restore();
+          rr(c, 39.5, 34, 6.5, 7, 3); fillO(c, '#e8b48e');
+          c.save(); neon(c, h.mau, 10); c.fillStyle = hexA(h.mau, 0.3); c.strokeStyle = h.mau; c.lineWidth = 1; c.beginPath(); c.moveTo(43, 35); c.lineTo(58, 31); c.lineTo(58, 41); c.lineTo(43, 42); c.closePath(); c.fill(); c.stroke();
+          c.fillStyle = h.mau; [3, 6, 4, 8].forEach((b, k) => c.fillRect(46.5 + k * 2.8, 40 - b, 1.7, b)); c.restore();
+          c.save(); neon(c, '#ffe24a', 12); hexP(c, 52, 20, 5.5, Math.PI / 6); c.lineWidth = 1.5; c.strokeStyle = '#ffe24a'; c.stroke(); c.fillStyle = 'rgba(255,226,74,0.3)'; c.fill(); c.fillStyle = '#fff6c0'; c.fillRect(51.1, 16.8, 1.8, 6.4); c.restore(); } });
     },
     glitch(c, h) {
-      nguoi(c, h, { da: '#d2a080', da2: '#8a6448', ao: '#0e2e24', aoT: '#04100c', tay: '#0a2018', mat: 'khong', toc: TOC.mu(h.mau),
+      nguoi(c, h, { da: '#f4d2bc', da2: '#c49a84', ao: '#0e3a2e', aoT: '#04100c', tay: '#0a2018', mat: 'khong', matNa: 1,
+        sau: (c) => { c.beginPath(); c.moveTo(16, 34); c.quadraticCurveTo(12, 10, 32, 2); c.quadraticCurveTo(52, 10, 49, 34); c.closePath(); fillO(c, lg(c, 12, 2, 52, 34, [[0, '#2e4a42'], [0.5, '#12241e'], [1, '#050a08']]));
+          c.beginPath(); c.moveTo(18, 8); c.lineTo(17, -2); c.lineTo(25, 4); c.closePath(); c.moveTo(46, 8); c.lineTo(48, -2); c.lineTo(40, 4); c.closePath(); fillO(c, '#1a2e28');
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.beginPath(); c.moveTo(19, 6); c.lineTo(18.5, 1.5); c.lineTo(22, 4.5); c.closePath(); c.moveTo(45, 6); c.lineTo(46, 1.5); c.lineTo(42.5, 4.5); c.closePath(); c.fill(); c.restore(); },
         truoc: (c) => {
-          c.save(); neon(c, h.mau, 14); rr(c, 29, 15, 13, 4, 2); c.fillStyle = h.mau; c.fill(); c.fillStyle = '#04120c'; c.fillRect(33, 16, 1.3, 2); c.fillRect(36, 16, 3, 0.9); c.restore();
-          rr(c, 38, 31, 7, 7, 3); fillO(c, '#0a2018');
-          rr(c, 42, 31.5, 13, 5, 1.5); fillO(c, METAL(c, 42, 31.5, 55, 36.5)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(53, 32.5, 3, 3); c.restore();
-          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.globalAlpha = 0.85; for (const [x, y, w] of [[6, 14, 5], [7, 18, 3], [52, 8, 6], [55, 12, 3], [6, 40, 4]]) c.fillRect(x, y, w, 1.8); c.restore(); } });
+          c.beginPath(); c.moveTo(17, 30); c.quadraticCurveTo(15, 9, 32, 5); c.quadraticCurveTo(49, 9, 47.5, 30); c.lineTo(44, 24); c.quadraticCurveTo(44, 12, 32, 11); c.quadraticCurveTo(21, 12, 21, 26); c.closePath();
+          fillO(c, lg(c, 15, 5, 49, 30, [[0, '#2e4a42'], [0.5, '#12241e'], [1, '#050a08']])); vien(c, h.mau, 0.5);
+          mat(c, 29.5, 20, 5.4, 6.2, h.mau, '#ffffff'); mat(c, 38.8, 20, 4.4, 6, h.mau, '#ffffff');
+          c.beginPath(); c.moveTo(23, 23.5); c.lineTo(44, 23.5); c.lineTo(43, 30); c.quadraticCurveTo(33, 33, 24, 30); c.closePath(); fillO(c, '#0a1612');
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; for (let k = 0; k < 4; k++) c.fillRect(27 + k * 4, 26.5, 2.4, 1.2); c.restore();
+          rr(c, 38.5, 36, 6.5, 6.5, 3); fillO(c, '#0a2018');
+          rr(c, 42, 36.5, 12, 4.5, 1.5); fillO(c, METAL(c, 42, 36.5, 54, 41)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(52.5, 37.3, 3, 3); c.restore();
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.globalAlpha = 0.85; for (const [x, y, w] of [[5, 16, 5], [6, 20, 3], [52, 10, 6], [55, 14, 3], [5, 42, 4]]) c.fillRect(x, y, w, 1.8); c.restore(); } });
     },
     venom(c, h) {
-      nguoi(c, h, { da: '#9a6442', da2: '#5e3a24', ao: '#2e4010', aoT: '#0c1206', tay: '#1e2a0a', mat: 'mat', toc: TOC.nhon(h.mau, '#101408'),
+      nguoi(c, h, { da: '#d8a07a', da2: '#9a6442', ao: '#344a12', aoT: '#0c1206', tay: '#1e2a0a', toc: ['#2a3a1a', '#0a1006'], kieu: 'nhon', matNa: 1, vienToc: 1,
         truoc: (c) => {
-          rr(c, 31, 18.5, 13, 7, 3); fillO(c, METAL(c, 31, 18.5, 44, 25.5));
-          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.beginPath(); c.arc(35, 22.5, 1.6, 0, 7); c.arc(40.5, 22.5, 1.6, 0, 7); c.fill(); c.restore();
-          for (const y of [29.5, 35]) { rr(c, 38, y, 7, 6, 3); fillO(c, '#1e2a0a'); rr(c, 42, y + 0.8, 13, 4, 1.5); fillO(c, METAL(c, 42, y, 55, y + 4)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(54, y + 1.5, 3, 2); c.restore(); } } });
+          c.beginPath(); c.moveTo(25, 24); c.lineTo(43, 23.5); c.lineTo(42, 30.5); c.quadraticCurveTo(34, 33, 26, 30.5); c.closePath(); fillO(c, METAL(c, 25, 23.5, 43, 32));
+          c.save(); neon(c, h.mau, 8); c.fillStyle = h.mau; c.beginPath(); c.arc(29.5, 28, 2, 0, 7); c.arc(39, 28, 1.7, 0, 7); c.fill(); c.restore();
+          for (const y of [34.5, 40]) { rr(c, 38.5, y, 6.5, 5.5, 2.5); fillO(c, '#1e2a0a'); rr(c, 42, y + 0.6, 12, 4, 1.5); fillO(c, METAL(c, 42, y, 54, y + 4)); c.save(); neon(c, h.mau, 10); c.fillStyle = h.mau; c.fillRect(53, y + 1.4, 3, 2); c.restore(); } } });
     },
   };
 
@@ -580,8 +610,34 @@
     const ve1 = () => { c.clearRect(0, 0, px, px); veGlow(c, h.mau, px / 2, px * 0.6, px * 0.6, 0.55); veHinh(c, ANH['u:' + id], sprUnit(id), 0, 0, px, px); };
     ve1(); setTimeout(ve1, 500);
   }
+  // ẢNH THẺ TƯỚNG: nền thành phố theo màu hệ + chân dung bán thân lớn (thẻ chọn tướng / thẻ nâng cấp)
+  function veThe(cvs, id, w, h, nho) {
+    const k = Math.min(3, (window.devicePixelRatio || 1) * 1.6);
+    cvs.width = Math.round(w * k); cvs.height = Math.round(h * k);
+    const c = cvs.getContext('2d'); c.scale(k, k);
+    const td = TUONG[id], hh = HANH[td.hanh];
+    const ve1 = () => {
+      c.clearRect(0, 0, w, h);
+      c.fillStyle = lg(c, 0, 0, 0, h, [[0, '#05030e'], [0.55, hexA(hh.toi, 1)], [1, '#030208']]); c.fillRect(0, 0, w, h);
+      veGlow(c, hh.mau, w / 2, h * 0.42, w * 0.95, 0.55);
+      if (!nho) {   // thành phố nhỏ phía sau + sàn lưới
+        let sd = id.length * 97 + 3; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+        for (let x = -4; x < w; x += 6 + r() * 9) { const bh = h * (0.2 + r() * 0.35), bw = 5 + r() * 8; c.fillStyle = 'rgba(4,3,14,0.85)'; c.fillRect(x, h * 0.72 - bh, bw, bh + h); c.fillStyle = hexA(hh.mau, 0.55); for (let y = h * 0.72 - bh + 3; y < h * 0.7; y += 5) if (r() < 0.25) c.fillRect(x + 1.5 + ((r() * (bw - 3)) | 0), y, 1.2, 1.2); }
+        c.strokeStyle = hexA(hh.mau, 0.35); c.lineWidth = 0.6;
+        for (let i = 0; i < 6; i++) { const y = h * 0.72 + Math.pow(i / 5, 1.8) * h * 0.3; c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+        for (let i = -6; i <= 6; i++) { c.beginPath(); c.moveTo(w / 2 + i * 3, h * 0.72); c.lineTo(w / 2 + i * 18, h); c.stroke(); }
+        veGlow(c, hh.mau, w / 2, h * 0.72, w * 0.6, 0.35);
+      }
+      const a = ANH['u:' + id];
+      if (a && a.ok) { const im = a.img, kk = Math.max(w / im.width, (h * 1.25) / im.height); c.drawImage(im, (w - im.width * kk) / 2, 0, im.width * kk, im.height * kk); }
+      else { const sp = sprUnit(id); const sx = 8, sy = nho ? 0 : -3, sw = 48, sh = sw * h / w; c.drawImage(sp, sx * SS, Math.max(0, sy) * SS, sw * SS, Math.min(64 - Math.max(0, sy), sh) * SS, 0, sy < 0 ? -sy * w / sw : 0, w, Math.min(64 - Math.max(0, sy), sh) * w / sw); }
+      c.fillStyle = lg(c, 0, h * 0.62, 0, h, [[0, 'rgba(3,2,10,0)'], [1, 'rgba(3,2,10,0.92)']]); c.fillRect(0, h * 0.62, w, h * 0.38);
+      c.fillStyle = 'rgba(255,255,255,0.04)'; for (let y = 0; y < h; y += 3) c.fillRect(0, y, w, 1);
+    };
+    ve1(); setTimeout(ve1, 500); setTimeout(ve1, 1500);
+  }
   // FPS thấp liên tục → hạ chất lượng (ít mưa, ít hạt, tắt bóng phát sáng)
   let dem = 0, tong = 0;
   function doFps(dtMs) { tong += dtMs; if (++dem >= 90) { const tb = tong / dem; if (tb > 24 && Q.cao) { Q.cao = false; Q.hat = 90; } else if (tb < 15 && !Q.cao) { Q.cao = true; Q.hat = 260; } dem = 0; tong = 0; } }
-  window.RENDER = { ve, veChanDung, ANH, Q, doFps, HAT };
+  window.RENDER = { ve, veChanDung, veThe, ANH, Q, doFps, HAT };
 })();

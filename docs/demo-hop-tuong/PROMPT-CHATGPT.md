@@ -26,9 +26,10 @@
 
 ```text
 STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
-- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
-  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
-  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Premium mobile merge tower-defense, cyberpunk night city. CHIBI ANIME style: clean cel-shaded 2D anime
+  illustration with glossy highlights, big head (about 1:1 with the body), big expressive anime eyes with two
+  white highlights and irises in the faction color, spiky/stylized anime hair with a shine band, short legs.
+  Cool and confident, crisp thick dark outline, silhouette readable at 64 px. NOT pixel art, NOT photoreal, NOT 3D.
 - Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
   trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
 - Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
@@ -39,7 +40,7 @@ STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attach
   NANITE #4d8dff · HACK #00ffa3 · TOXIN #b4ff2a. Enemies are machines: red #ff3355 / magenta #ff2bd6 / orange #ff8a1a.
 
 Image: style-reference.png — a lineup sheet on a DARK background (this one only, not transparent) showing 3 chibi
-cyberpunk heroes side by side in exactly the style above (an orange pyro mercenary with a flamethrower gauntlet,
+chibi anime cyberpunk heroes side by side in exactly the style above (an orange pyro mercenary with a flamethrower gauntlet,
 a cyan ice mage girl with a crystal staff, a pink rail-sniper with a visor), plus one small red enemy drone and a
 sample glass neon UI button. This image is the visual reference for all next images.
 ```
@@ -50,9 +51,10 @@ sample glass neon UI button. This image is the visual reference for all next ima
 
 ```text
 STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
-- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
-  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
-  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Premium mobile merge tower-defense, cyberpunk night city. CHIBI ANIME style: clean cel-shaded 2D anime
+  illustration with glossy highlights, big head (about 1:1 with the body), big expressive anime eyes with two
+  white highlights and irises in the faction color, spiky/stylized anime hair with a shine band, short legs.
+  Cool and confident, crisp thick dark outline, silhouette readable at 64 px. NOT pixel art, NOT photoreal, NOT 3D.
 - Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
   trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
 - Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
@@ -82,9 +84,10 @@ Make these 4 images, one at a time (wait for "next"):
 
 ```text
 STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
-- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, CHIBI HUMAN HEROES (big head about
-  1:1.6 of the body, short legs), cool and heroic (not cute, not kawaii), crisp silhouette readable at 64 px.
-  NOT pixel art, NOT anime cel-shading, NOT photoreal.
+- Premium mobile merge tower-defense, cyberpunk night city. CHIBI ANIME style: clean cel-shaded 2D anime
+  illustration with glossy highlights, big head (about 1:1 with the body), big expressive anime eyes with two
+  white highlights and irises in the faction color, spiky/stylized anime hair with a shine band, short legs.
+  Cool and confident, crisp thick dark outline, silhouette readable at 64 px. NOT pixel art, NOT photoreal, NOT 3D.
 - Techwear outfits: dark jackets/armor (#1d2336 #3c4762, highlights #6b7a99), glossy black visors, glowing emissive
   trims and weapons in the hero's faction color. Diverse skin tones and hairstyles.
 - Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; faction color glows on trims/eyes/weapon.
@@ -184,5 +187,6 @@ Make these 3 images, one at a time (wait for "next"):
 
 ### Kiểm tra sau khi thả ảnh
 - Mở `demo/index.html` (bấm đúp được) hoặc bản web `/demo/`. Màn chọn tướng hiện ảnh mới → đã nhận.
+- Ảnh tướng dùng cho cả nhân vật trên sân lẫn **thẻ bài** (game tự cắt bán thân, đầu nên ở 1/3 trên ảnh).
 - Ảnh tướng/quái chỉ cần **1 tư thế** — game tự thêm nhún, quầng sáng, giật bắn, vạch hạng.
 - Tên file viết thường đúng như bảng. Ảnh quá to vẫn chạy nhưng nên giữ cỡ ghi trong prompt cho nhẹ.

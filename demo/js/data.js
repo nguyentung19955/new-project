@@ -13,14 +13,14 @@ const HANH = {
 };
 // tướng (hero) cyberpunk hình người; ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
 const TUONG = {
-  scorch: { tip: [60, 34], ten: 'SCORCH', hanh: 'Plasma', kieu: 'Burn', mo: 'Pyro merc. Plasma gauntlet sets targets ablaze over time.', dmg: 9, cd: 0.9 },
-  frost:  { tip: [48, 9], ten: 'FROST', hanh: 'Cryo', kieu: 'Slow', mo: 'Cryomancer. Ice bursts hit an area and slow enemies.', dmg: 6, cd: 1.0 },
-  arc:    { tip: [61, 7], ten: 'ARC', hanh: 'Voltage', kieu: 'Chain', mo: 'Volt blade. Lightning slashes jump between enemies.', dmg: 8, cd: 1.1 },
-  lance:  { tip: [64, 31], ten: 'LANCE', hanh: 'Laser', kieu: 'Sniper', mo: 'Rail sniper. Hunts the toughest target, x2.5 vs bosses.', dmg: 20, cd: 1.6 },
-  warp:   { tip: [49, 31], ten: 'WARP', hanh: 'Void', kieu: 'Boost', mo: 'Void witch. Bends time: adjacent heroes attack faster.', dmg: 4, cd: 1.0 },
-  miner:  { tip: [52, 13], ten: 'BROKER', hanh: 'Nanite', kieu: 'Credits', mo: 'Data broker: earns Energy over time, bonus Energy on kills.', dmg: 5, cd: 1.0 },
-  glitch: { tip: [56, 34], ten: 'GLITCH', hanh: 'Hack', kieu: 'EMP', mo: 'Netrunner. EMP shots stun and mark targets (+20% dmg).', dmg: 12, cd: 1.2 },
-  venom:  { tip: [57, 33], ten: 'VENOM', hanh: 'Toxin', kieu: 'Multi', mo: 'Toxin assassin. Twin needlers hit several enemies.', dmg: 7, cd: 0.8 },
+  scorch: { tip: [57, 38], ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Burn', mo: 'Plasma gauntlet. Burns targets over time.', dmg: 9, cd: 0.9 },
+  frost:  { tip: [48, 12], ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Slow', mo: 'Ice bursts hit an area and slow foes.', dmg: 6, cd: 1.0 },
+  arc:    { tip: [60, 13], ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain', mo: 'Lightning slashes chain between foes.', dmg: 8, cd: 1.1 },
+  lance:  { tip: [64, 37], ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Sniper', mo: 'Hunts the toughest foe. x2.5 vs bosses.', dmg: 20, cd: 1.6 },
+  warp:   { tip: [48, 37], ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Boost', mo: 'Bends time: adjacent heroes fire faster.', dmg: 4, cd: 1.0 },
+  miner:  { tip: [52, 20], ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Credits', mo: 'Earns Energy over time and on kills.', dmg: 5, cd: 1.0 },
+  glitch: { tip: [55, 39], ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'EMP', mo: 'EMP shots stun and mark foes (+20% dmg).', dmg: 12, cd: 1.2 },
+  venom:  { tip: [56, 38], ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Multi', mo: 'Twin needlers hit several foes at once.', dmg: 7, cd: 0.8 },
 };
 const TUONG_IDS = Object.keys(TUONG);
 const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
@@ -32,8 +32,8 @@ const QUAI = {
 };
 // mỗi 10 đợt một boss, xoay vòng; kỹ năng: hoada (khoá unit), doicho (xáo lưới), hoimau (hồi giáp)
 const BOSS = [
-  { id: 'firewall', ten: 'FIREWALL', kn: 'hoada', knTen: 'LOCKDOWN', mo: 'Locks units — they cannot fire for a while', cd: 6, mau: '#ff3b3b' },
-  { id: 'overclock', ten: 'OVERCLOCK', kn: 'doicho', knTen: 'SCRAMBLE', mo: 'Scrambles the grid, swapping unit positions', cd: 5, mau: '#ffb31a' },
+  { id: 'firewall', ten: 'FIREWALL', kn: 'hoada', knTen: 'LOCKDOWN', mo: 'Locks heroes — they cannot fire for a while', cd: 6, mau: '#ff3b3b' },
+  { id: 'overclock', ten: 'OVERCLOCK', kn: 'doicho', knTen: 'SCRAMBLE', mo: 'Scrambles the grid, swapping hero positions', cd: 5, mau: '#ffb31a' },
   { id: 'corruptor', ten: 'CORRUPTOR', kn: 'hoimau', knTen: 'REPAIR', mo: 'Restores its armor and patches nearby enemies', cd: 4, mau: '#c04dff' },
 ];
 const CAU_HINH = {
