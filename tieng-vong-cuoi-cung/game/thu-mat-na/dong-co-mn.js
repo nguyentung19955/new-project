@@ -105,8 +105,10 @@ const DongCoMN = (() => {
     }
     for (let c = 0; c < C; c++) for (let r = 1; r < R; r++){
       if (L[r][c] !== 'H' || L[r - 1][c] === 'H') continue;   // đầu trên của một đoạn dây
-      let rr = r - 1; while (rr >= 0 && L[rr][c] === '.') rr--;
-      if (rr >= 0 && L[rr][c] !== '#' && L[rr][c] !== '=') continue;   // chạm thứ khác (cửa…) → giữ nguyên
+      // hình vẽ dây đi XUYÊN sàn mỏng '=' lên tới trần đá thật → dây leo được cũng phải lên tới đó; ô '=' bị dây xuyên
+      // thành 'H' (timCauDay biến nó thành cầu: đi ngang không rơi, đứng đó bấm ↑/↓ là bám dây leo tiếp)
+      let rr = r - 1; while (rr >= 0 && (L[rr][c] === '.' || L[rr][c] === '=')) rr--;
+      if (rr >= 0 && L[rr][c] !== '#' && L[rr][c] !== 'N') continue;   // chạm thứ khác (cửa…) → giữ nguyên
       for (let k = rr + 1; k < r; k++) L[k][c] = 'H';
     }
   }
