@@ -29,7 +29,7 @@ const ANH = process.env.ANH_DIR || '/tmp';
   const tim = id => pg.evaluate(id => MocAn.A.daTim(id), id);
 
   r = await den('P02', 14, 30); await chem('l', 8);
-  ok('P02: chém vỡ tường nứt cột 13 → bí mật', await tim('v1-tuong-nut-p02'), r);
+  ok('P02: chém vỡ tường nứt cột 13 → lối tắt "Rootscar Passage" (không tính Secret Found)', await tim('v1-tuong-nut-p02') && (await pg.evaluate(() => MocAn.A.dem('vung-1').timThay)) === 0, r);
   r = await den('P03', 15, 25); await chem('l', 8);
   ok('P03: chém vỡ tường nứt cột 14 → hốc H1', await tim('v1-hoc-h1-p03'), r);
   r = await den('P06', 5, 33); await pg.evaluate(() => TV.buoc(60, 'l'));
@@ -43,14 +43,16 @@ const ANH = process.env.ANH_DIR || '/tmp';
   ok('…→ bí mật giếng P04', await tim('v1-gieng-p04'));
   const truocManh = await pg.evaluate(() => TV.V1.G.luu.manh);
   ok('P02: nhặt Thẻ Tên hốc treo', await nhat('P02-the-ten'));
-  r = await pg.evaluate(() => ({tim:MocAn.A.daTim('v1-hoc-treo-p02'), dem:MocAn.A.dem('vung-1'), tho:MocAn.A.daXong('nv-v1-tho-san'), lo:MocAn.A.S.nvLo.slice()}));
-  ok('…→ đủ 5/5 bí mật, xong "Kẻ Nghe Tiếng Rễ", lộ "Những Cái Tên Bị Quên"', r.tim && r.dem.timThay === 5 && r.tho && r.lo.includes('nv-v1-nhung-cai-ten'), r);
+  r = await pg.evaluate(() => ({tim:MocAn.A.daTim('v1-hoc-treo-p02'), dem:MocAn.A.dem('vung-1'), tho:MocAn.A.thanhTuu().includes('tt-tho-san-v1'), lo:MocAn.A.S.nvLo.slice(), hang:MocAn.hang.join(' | ')}));
+  ok('…→ đủ 4/4 bí mật, thành tựu "Root Listener", lộ "Names Beneath the Bark"', r.tim && r.dem.timThay === 4 && r.tho && r.lo.includes('nv-v1-nhung-cai-ten'), r);
+  ok('…thông báo có chữ khắc Thẻ Tên ELDEN + "Secret Found … Discovered"', /ELDEN/.test(r.hang) && /Secret Found .* Discovered/.test(r.hang), r.hang);
   for (const id of ['P03-the-ten-H1', 'P04-the-ten', 'P09-the-ten']) await nhat(id);
   r = await pg.evaluate(() => ({xong:MocAn.A.daXong('nv-v1-nhung-cai-ten'), the:TV.V1.G.luu.kho.the_ten, manh:TV.V1.G.luu.manh, ky:window.LuuChung ? LuuChung.soKyUc() : -1, tt:MocAn.A.thanhTuu(), cho:MocAn.A.thuongCho()}));
-  ok('Đủ 4 Thẻ Tên → xong "Những Cái Tên Bị Quên"', r.xong && r.the === 4, r);
-  ok('…thưởng ≥ +60+80 Mảnh Âm (kể cả Mảnh Âm trong hốc)', r.manh - truocManh >= 140, r.manh - truocManh);
+  ok('Đủ 4 Thẻ Tên → xong "Names Beneath the Bark"', r.xong && r.the === 4, r);
+  ok('…Mảnh Âm +40 của "The Rootbound Witness" (Hollow/Husk đã cộng trước đó)', r.manh - truocManh >= 40, r.manh - truocManh);
   ok('…Mảnh Ký Ức ghi vào lưu chung', r.ky === 1, r.ky);
-  ok('Thưởng chưa trao được (Âm Điểm khi Hệ thống đồ tắt, truyện chờ ChatGPT) được GIỮ, không mất', r.cho.some(t => t.loai === 'am_diem') && r.cho.some(t => t.loai === 'truyen'), r.cho.map(t => t.loai));
+  ok('…mở đoạn truyện "Names Beneath the Bark"', await pg.evaluate(() => MocAn.A.truyenDaMo().some(t => t.id === 'truyen-v1-the-ten')));
+  ok('Thưởng chưa trao được (Âm Điểm khi Hệ thống đồ tắt) được GIỮ, không mất', r.cho.some(t => t.loai === 'am_diem'), r.cho.map(t => t.loai));
   // thông báo hiện lần lượt
   await pg.evaluate(() => TV.buoc(240, ''));
   r = await pg.evaluate(() => ({tb:TV.V1.G.tb, con:MocAn.hang.length}));
@@ -63,9 +65,9 @@ const ANH = process.env.ANH_DIR || '/tmp';
     V1.G.luu.trumHa = true; TV.buoc(5, '');
     return {xong:MocAn.A.daXong('nv-v1-lang-nhu-tro'), co:MocAn.A.S.co};
   });
-  ok('Hạ trùm không trúng đòn → "Lặng Như Tro"', r.xong, r);
+  ok('Hạ trùm không trúng đòn → "A Blade Without Blood"', r.xong, r);
   r = await pg.evaluate(async () => { const {V1} = TV, p = await V1.layPhong('P01'); V1.vaoPhong(p, null, null); TV.buoc(10, ''); return MocAn.A.daXong('nv-v1-ve-cua-re'); });
-  ok('Sau trùm quay lại Cửa Rễ → "Về Cửa Rễ"', r);
+  ok('Sau trùm quay lại Cửa Rễ → "The Mother\'s Last Echo"', r);
 
   // Chuông Lưu: nút + bảng nhật ký
   r = await pg.evaluate(async () => {
@@ -76,15 +78,15 @@ const ANH = process.env.ANH_DIR || '/tmp';
     return {chu, hien, mo:document.getElementById('l-an').classList.contains('mo'), so:muc.length, cao:Math.min(...muc.map(m => m.getBoundingClientRect().height)),
       nutCao:nut.getBoundingClientRect().height, tt:document.getElementById('an-tt').textContent};
   });
-  ok('Bảng Chuông Lưu có nút "Nhật Ký · Bí mật 5/5"', r.hien && /5\/5/.test(r.chu), r.chu);
-  ok('Mở Nhật Ký Tiếng Vọng: 4 dòng, cao ≥ 44px', r.mo && r.so === 4 && r.cao >= 44 && r.nutCao >= 44, r);
+  ok('Bảng Chuông Lưu có nút "Journal · Secrets 4/4"', r.hien && /4\/4/.test(r.chu), r.chu);
+  ok('Mở Echo Journal: 3 nhiệm vụ + 4 Thẻ Tên + 2 truyện + 2 thành tựu, dòng cao ≥ 44px', r.mo && r.so === 11 && r.cao >= 44 && r.nutCao >= 44, r);
   await pg.screenshot({path:path.join(ANH, 'an-nhat-ky.png')});
   ok('Bật thử: không lỗi JS', !pg.loi.length, pg.loi);
 
   // tải lại: giữ tiến độ, không báo lại
   await pg.goto('http://localhost:8765/game/vung-1/index.html?tu=1&an=1'); await pg.waitForFunction(() => window.MocAn && MocAn.bat && window.TV && TV.xong);
   r = await pg.evaluate(async () => { await TV.choi(false); TV.buoc(30, ''); return {dem:MocAn.A.dem('vung-1'), xong:MocAn.A.S.nvXong.length}; });
-  ok('Tải lại trang giữ 5/5 bí mật + 4 nhiệm vụ xong', r.dem.timThay === 5 && r.xong === 4, r);
+  ok('Tải lại trang giữ 4/4 bí mật + 3 nhiệm vụ xong', r.dem.timThay === 4 && r.xong === 3, r);
   await pg.close();
 
   // 3) bản lưu Vùng 1 cũ (đã phá tường, nhặt đồ trước khi bật) → tính bù
@@ -96,7 +98,7 @@ const ANH = process.env.ANH_DIR || '/tmp';
     localStorage.removeItem('tvcc-an'); L.tuongVo = ['P02:13:27']; L.daNhat = ['P04-tang-mau']; localStorage.setItem('tvcc-vung1', JSON.stringify(L));
     await TV.choi(false); TV.buoc(10, ''); return MocAn.A.dem('vung-1');
   });
-  ok('Bản lưu cũ: tính bù bí mật đã làm trước khi bật (2/5)', r.timThay === 2, r);
+  ok('Bản lưu cũ: tính bù (giếng P04 = 1/4; tường nứt P02 vào lối tắt)', r.timThay === 1, r);
   ok('Không lỗi JS', !pg.loi.length, pg.loi);
   console.log('Hỏng', hong); await b.close(); process.exit(hong ? 1 : 0);
 })();

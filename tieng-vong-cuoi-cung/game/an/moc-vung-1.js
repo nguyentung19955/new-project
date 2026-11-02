@@ -39,15 +39,20 @@
   /* ---- trao thưởng (thiếu hệ thống/hình → giữ lại, trao sau, không mất) ---- */
   function trao(t){
     const G = V1.G;
-    if (t.cho_chatgpt) return false;
+    if (t.cho_chatgpt || t.cho_tinh_nang) return false;
     if (t.loai === 'thanh_tuu') return true;
+    if (t.loai === 'truyen'){
+      if (!M.A.moTruyen(t.id)) return false;
+      const tr = (M.A.D.truyen || {})[t.id]; if (tr && tr.bao) bao(tr.bao);
+      return true;
+    }
     if (t.loai === 'manh_am'){ if (!G.luu) return false; G.luu.manh += t.so || 0; V1.ghiLuu(); return true; }
     if (t.loai === 'ky_uc'){ if (!window.LuuChung) return false; LuuChung.nhatKyUc(t.id); return true; }
     if (t.loai === 'am_diem'){
       const H = window.MocHeThong; if (!H || !H.bat || !H.ht) return false;
       H.ht.congDiem(t.nguon || 'bi_mat'); H.ghi && H.ghi(); return true;
     }
-    return false;   // truyện, Âm Phù, Đồng Cổ… chờ hệ thống / ChatGPT
+    return false;   // Âm Phù, Đồng Cổ (Ancient Bronze)… chờ hệ thống / ChatGPT
   }
   function traoHet(ds){ const xong = []; for (const t of ds || []){ if (trao(t)) xong.push(t); else M.A.giuCho(t); } return xong; }
   function thuTraoCho(){
@@ -55,7 +60,7 @@
     for (let i = ds.length - 1; i >= 0; i--) if (trao(ds[i])) M.A.daTraThuong(i);
   }
   const moTaThuong = ds => ds.filter(t => t.loai === 'manh_am').map(t => '+' + t.so + ' Echo Shards')
-    .concat(ds.filter(t => t.loai === 'ky_uc').length ? ['Memory Fragment'] : []).join(' · ');
+    .concat(ds.filter(t => t.loai === 'ky_uc').length ? ['Memory Shard acquired'] : []).join(' · ');
 
   /* ---- hàng thông báo: không đè chữ nhặt đồ của Vùng 1 ---- */
   function bao(s){ M.hang.push(s); }
@@ -66,9 +71,13 @@
     for (const r of ra){
       doi = true;
       if (r.k === 'bi-mat'){
+        const d = M.A.dem(VUNG), them = moTaThuong(traoHet(r.thuong));
+        if (!im) bao('Secret Found · ' + r.muc.ten + ' · ' + d.timThay + ' / ' + d.tong + ' Discovered' + (them ? ' · ' + them : ''));
+      } else if (r.k === 'loi-tat'){
         traoHet(r.thuong);
-        const d = M.A.dem(VUNG);
-        if (!im) bao('Secret found · ' + r.muc.ten + ' (' + d.timThay + '/' + d.tong + ')');
+        if (!im) bao('Passage Opened · ' + r.muc.ten);
+      } else if (r.k === 'thanh-tuu'){
+        if (!im) bao('Achievement · ' + r.muc.ten);
       } else if (r.k === 'nv-lo'){
         if (!im) bao('Echo Journal: “' + r.muc.ten + '”');
       } else if (r.k === 'tien-do'){
@@ -76,7 +85,8 @@
       } else if (r.k === 'nv-xong'){
         const xong = traoHet(r.thuong), them = moTaThuong(xong);
         const tt = r.thuong.filter(t => t.loai === 'thanh_tuu').map(t => (M.A.D.thanh_tuu || []).find(x => x.id === t.id)).filter(Boolean);
-        if (!im) bao('Hidden quest done: ' + r.muc.ten + (them ? ' · ' + them : '') + (tt.length ? ' · New achievement' : ''));
+        if (!im) bao('Remembered · ' + r.muc.ten + (them ? ' · ' + them : ''));
+        if (!im) for (const x of tt) bao('Achievement · ' + x.ten);
       }
     }
     if (doi){ ghi(); capNhatNut(); }
@@ -100,7 +110,13 @@
   function theoDoi(){
     const G = V1.G, L = G.luu; if (!L || !G.phong) return;
     if (G.id !== TD.id){ TD.id = G.id; TD.imT = 0; gui({k:'vao-phong'}); }
-    if (L.daNhat.length > TD.nhat){ for (const id of L.daNhat.slice(TD.nhat)) gui({k:'nhat', id}); TD.nhat = L.daNhat.length; }
+    if (L.daNhat.length > TD.nhat){
+      for (const id of L.daNhat.slice(TD.nhat)){
+        const tt = (M.A.D.the_ten || {})[id]; if (tt) bao(tt.ten + ' · “' + tt.chu + '”');   // chữ khắc Thẻ Tên (ChatGPT)
+        gui({k:'nhat', id});
+      }
+      TD.nhat = L.daNhat.length;
+    }
     if (L.tuongVo.length > TD.vo){ for (const s of L.tuongVo.slice(TD.vo)){ const [p, c, h] = s.split(':'); gui({k:'vo-tuong', phong:p, cot:+c, hang:+h}); } TD.vo = L.tuongVo.length; }
     if (L.trumHa && !TD.trum){ TD.trum = true; gui({k:'ha-trum'}); }
     const pl = E.pl, cx = Math.floor((pl.x + pl.w / 2) / T), cy = Math.floor((pl.y + pl.h / 2) / T);
@@ -140,7 +156,10 @@
       '#an-ds .muc img{width:44px;height:44px;image-rendering:pixelated;flex:none}' +
       '#an-ds .muc b{display:block;font-size:15px;color:var(--ink)}#an-ds .muc.xong b{color:#9be7a0}' +
       '#an-ds .muc span{display:block;font-size:12.5px;color:#a9b3bf;line-height:1.35}' +
-      '#an-ds .trong{color:#7f8a99;font-size:13px;text-align:center}';
+      '#an-ds .trong{color:#7f8a99;font-size:13px;text-align:center}' +
+      '#an-ds h2{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#CEF0D6;margin:12px 0 6px}' +
+      '#an-ds .tt{font-size:11.5px;color:#E1B85A;margin-left:6px;font-weight:normal}' +
+      '#an-ds .doan{white-space:pre-line;font-style:italic}';
     document.head.appendChild(st);
     const b = document.createElement('button'); b.id = 'b-an'; b.type = 'button'; b.onclick = moBang;
     const hang = $('b-mua') && $('b-mua').parentNode; if (hang) hang.insertBefore(b, $('b-di'));
@@ -158,15 +177,21 @@
   function moBang(){
     const A = M.A, d = A.dem(VUNG), tt = A.thanhTuu().length, tong = (A.D.thanh_tuu || []).length;
     $('an-tt').innerHTML = 'Region 1 secrets: <b style="color:#78e6e6">' + d.timThay + '/' + d.tong + '</b> · Achievements: <b style="color:#ffe08a">' + tt + '/' + tong + '</b>' +
-      (window.LuuChung ? ' · Memory Fragments: <b style="color:#CEF0D6">' + LuuChung.soKyUc() + '</b>' : '');
-    const ds = $('an-ds'), nk = A.nhatKy(VUNG); ds.innerHTML = '';
-    if (!nk.length) ds.innerHTML = '<p class="trong">No entries yet. The Heartwood still keeps many untold things…</p>';
-    for (const n of nk){
-      const el = document.createElement('div'); el.className = 'muc' + (n.xong ? ' xong' : '');
-      const anh = n.bieu_tuong && M.anh[n.bieu_tuong];
-      el.innerHTML = (anh ? '<img alt="" src="' + anh.src + '">' : '') + '<div><b>' + n.ten + (n.xong ? ' – done' : n.td ? ' – ' + n.td.da + '/' + n.td.tong : '') + '</b><span>' + n.goi_y + '</span></div>';
-      ds.appendChild(el);
-    }
+      (window.LuuChung ? ' · Memory Shards: <b style="color:#CEF0D6">' + LuuChung.soKyUc() + '</b>' : '');
+    const lt = A.demLoiTat(VUNG); if (lt.tong) $('an-tt').innerHTML += ' · Passages: <b>' + lt.mo + '/' + lt.tong + '</b>';
+    const ds = $('an-ds'), nk = A.nhatKy(VUNG), the = A.theTen(), tr = A.truyenDaMo(); ds.innerHTML = '';
+    const muc = (ten, phu, o) => { const el = document.createElement('div'); el.className = 'muc' + (o && o.xong ? ' xong' : '');
+      const anh = o && o.anh && M.anh[o.anh];
+      el.innerHTML = (anh ? '<img alt="" src="' + anh.src + '">' : '') + '<div><b>' + ten + (o && o.tt ? '<i class="tt">' + o.tt + '</i>' : '') + '</b><span' + (o && o.doan ? ' class="doan"' : '') + '>' + phu + '</span></div>';
+      ds.appendChild(el); };
+    const muc2 = s => { const h = document.createElement('h2'); h.textContent = s; ds.appendChild(h); };
+    if (!nk.length && !the.length) ds.innerHTML = '<p class="trong">No entries yet. The Heartwood still keeps many untold things…</p>';
+    // chỉ hiện những gì người chơi đã chạm tới (không "???" cho mục chưa biết – ChatGPT)
+    if (nk.length){ muc2('Whispers'); for (const n of nk) muc(n.ten + (n.td && !n.xong ? ' – ' + n.td.da + '/' + n.td.tong : ''), n.goi_y, {xong:n.xong, tt:n.trang_thai, anh:n.bieu_tuong}); }
+    if (the.length){ muc2('Name Tags'); for (const t of the) muc(t.ten, '“' + t.chu + '”'); }
+    if (tr.length){ muc2('Remembered'); for (const t of tr) muc(t.ten, t.chu, {doan:true, xong:true}); }
+    const ttDa = A.thanhTuu().map(id => (A.D.thanh_tuu || []).find(x => x.id === id)).filter(Boolean);
+    if (ttDa.length){ muc2('Achievements'); for (const t of ttDa) muc(t.ten, t.mo_ta, {xong:true}); }
     $('l-an').classList.add('mo');
   }
   M.moBang = moBang; M.ghi = ghi; M.gui = gui;

@@ -12,18 +12,24 @@
    A.dem(vung)        → {timThay, tong} bí mật đang bật của vùng
    A.thuongCho()/A.daTraThuong(i) – phần thưởng chưa trao được (thiếu hình/hệ thống) giữ lại, trao sau, không mất
    A.luu()            → trạng thái để JSON hoá
-   Mục có "cho_chatgpt": true hoặc thiếu ảnh trong "can_anh" → TẮT (không đếm, không kích hoạt). */
+   A.moTruyen(id)     → mở đoạn truyện bí mật (false nếu truyện còn chờ ChatGPT → giữ chờ)
+   A.theTen(the)      → Thẻ Tên đã nhặt kèm chữ khắc ; A.truyenDaMo() ; A.demLoiTat(vung)
+   Mục có "cho_chatgpt"/"cho_tinh_nang" hoặc thiếu ảnh trong "can_anh" → TẮT (không đếm, không kích hoạt).
+   Bí mật loai:"loi_tat" (lối tắt) đếm riêng, KHÔNG vào "Secret Found" (ChatGPT 02/11). Kết quả có thêm k:'loi-tat' | 'thanh-tuu'. */
 (function(goc){
   const KHOA_LUU = 'tvcc-an', PHIEN_BAN = 1;
 
-  function moi(){ return {phien_ban:PHIEN_BAN, bm:[], nvLo:[], nvXong:[], tt:[], co:{}, dem:{}, cho:[]}; }
+  function moi(){ return {phien_ban:PHIEN_BAN, bm:[], lt:[], nvLo:[], nvXong:[], tt:[], truyen:[], co:{}, dem:{}, cho:[]}; }
 
   function tao(D, cu, tuyChon){
     const o = tuyChon || {}, coAnh = o.coAnh || (() => false);
     const S = Object.assign(moi(), cu && cu.phien_ban === PHIEN_BAN ? JSON.parse(JSON.stringify(cu)) : {});
-    const bat = m => !m.cho_chatgpt && (m.can_anh || []).every(coAnh);
+    const bat = m => !m.cho_chatgpt && !m.cho_tinh_nang && (m.can_anh || []).every(coAnh);
     const BM = (D.bi_mat || []).filter(bat), NV = (D.nhiem_vu || []).filter(bat);
+    const laLT = b => b.loai === 'loi_tat', daCo = b => (laLT(b) ? S.lt : S.bm).includes(b.id);
     const them = (mang, v) => { if (mang.includes(v)) return false; mang.push(v); return true; };
+    // bản lưu cũ: lối tắt từng bị đếm như bí mật → chuyển sang bộ đếm lối tắt
+    for (const b of (D.bi_mat || []).filter(laLT)){ const i = S.bm.indexOf(b.id); if (i >= 0){ S.bm.splice(i, 1); them(S.lt, b.id); } }
     let ctx = {ev:{}, the:{}};
 
     /* Điều kiện (JSON). Đánh giá theo sự kiện vừa xảy ra + trạng thái đã lưu + thế giới hiện tại. */
@@ -65,9 +71,11 @@
       ctx = {ev:ev || {}, the:the || {}};
       demTrum(ctx.ev);
       const ra = [];
+      const timRa = b => { if (laLT(b)){ S.lt.push(b.id); ra.push({k:'loi-tat', muc:b, thuong:traThuong(b.thuong)}); }
+                           else { S.bm.push(b.id); ra.push({k:'bi-mat', muc:b, thuong:traThuong(b.thuong)}); } };
       for (const b of BM){
-        if (S.bm.includes(b.id) || (b.vung && ctx.ev.vung && b.vung !== ctx.ev.vung && !b.moi_vung)) continue;
-        if (dk(b.dieu_kien)){ S.bm.push(b.id); ra.push({k:'bi-mat', muc:b, thuong:traThuong(b.thuong)}); }
+        if (daCo(b) || (b.vung && ctx.ev.vung && b.vung !== ctx.ev.vung && !b.moi_vung)) continue;
+        if (dk(b.dieu_kien)) timRa(b);
       }
       // xét nhiệm vụ nhiều lượt: hoàn thành một cái có thể làm lộ / xong cái khác (vd "tìm hết bí mật")
       for (let lap = 0, doi = true; doi && lap < 4; lap++){
@@ -81,9 +89,12 @@
           }
         }
         // bí mật có thể phụ thuộc nhiệm vụ (và ngược lại)
-        for (const b of BM) if (!S.bm.includes(b.id) && (b.dieu_kien && (b.dieu_kien.nv_xong || b.dieu_kien.tat_ca)) && dk(b.dieu_kien)){
-          S.bm.push(b.id); ra.push({k:'bi-mat', muc:b, thuong:traThuong(b.thuong)}); doi = true;
-        }
+        for (const b of BM) if (!daCo(b) && (b.dieu_kien && (b.dieu_kien.nv_xong || b.dieu_kien.tat_ca)) && dk(b.dieu_kien)){ timRa(b); doi = true; }
+      }
+      // thành tựu tự động: tìm hết bí mật (đang bật) của một vùng
+      for (const t of D.thanh_tuu || []){
+        if (!t.dieu_kien_vung || S.tt.includes(t.id)) continue;
+        const d = dem(t.dieu_kien_vung); if (d.tong && d.timThay === d.tong){ S.tt.push(t.id); ra.push({k:'thanh-tuu', muc:t}); }
       }
       return ra;
     }
@@ -105,20 +116,32 @@
     }
 
     function dem(vung){
-      const ds = BM.filter(b => !vung || b.vung === vung);
+      const ds = BM.filter(b => !laLT(b) && (!vung || b.vung === vung));
       return {timThay:ds.filter(b => S.bm.includes(b.id)).length, tong:ds.length};
     }
     function nhatKy(vung){
       return NV.filter(n => S.nvLo.includes(n.id) && (!vung || n.vung === vung)).map(n => {
         ctx = {ev:{}, the:o.the ? o.the() : ctx.the};
-        return {id:n.id, ten:n.ten, goi_y:n.goi_y || '', xong:S.nvXong.includes(n.id), td:tienDo(n), bieu_tuong:n.bieu_tuong || null, vung:n.vung};
+        const xong = S.nvXong.includes(n.id), td = tienDo(n);
+        return {id:n.id, ten:n.ten, goi_y:n.goi_y || '', xong, td, bieu_tuong:n.bieu_tuong || null, vung:n.vung,
+          trang_thai:xong ? 'Remembered' : td && td.da > 0 ? 'Unfinished' : 'Discovered'};
       });
+    }
+    function moTruyen(id){
+      const t = (D.truyen || {})[id]; if (!t || t.cho_chatgpt || !t.chu) return false;
+      them(S.truyen, id); return true;
+    }
+    function theTen(the){
+      const da = (the || (o.the ? o.the() : {})).daNhat || [];
+      return Object.keys(D.the_ten || {}).filter(id => da.includes(id)).map(id => Object.assign({id}, D.the_ten[id]));
     }
 
     return {
       S, D, BM, NV, KHOA_LUU, suKien, dem, nhatKy, dk:c => dk(c),
-      daTim: id => S.bm.includes(id), daXong: id => S.nvXong.includes(id), thanhTuu: () => S.tt.slice(),
+      daTim: id => S.bm.includes(id) || S.lt.includes(id), daXong: id => S.nvXong.includes(id), thanhTuu: () => S.tt.slice(),
       giuCho(t){ S.cho.push(t); }, thuongCho: () => S.cho.slice(), daTraThuong(i){ S.cho.splice(i, 1); },
+      moTruyen, theTen, truyenDaMo: () => S.truyen.map(id => Object.assign({id}, D.truyen[id])),
+      demLoiTat: vung => { const ds = BM.filter(b => laLT(b) && (!vung || b.vung === vung)); return {mo:ds.filter(b => S.lt.includes(b.id)).length, tong:ds.length}; },
       luu: () => JSON.parse(JSON.stringify(S))
     };
   }
