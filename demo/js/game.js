@@ -184,6 +184,37 @@
     else if (v.id === 'glitch') { for (const o of DS) if (!(o.breachT > 0) && (!q || o.d > q.d)) q = o; if (!q) for (const o of DS) if (!q || o.d > q.d) q = o; }
     return q;
   }
+  // ---- HƯỚNG QUAY 8 hướng theo quái (kiểu Destiny Child: Defense War) ----
+  // hg: 0=E 1=SE 2=S 3=SW 4=W 5=NW 6=N 7=NE (toạ độ màn hình, y xuống dưới); goc: góc liên tục (rad) cho WARP xoay bằng code
+  const HG = { TRE: 0.12, HYS: 10, VE_S: 0.8, LERP: 10, NHIN: 0.05 };
+  const gocTo = (S, i, q) => { const [ox, oy] = oXY(S, i); return Math.atan2(q.y - (oy + C.OH - 24), q.x - (ox + C.O / 2)); };   // từ giữa thân tướng tới quái
+  function chonHuong(v, a, ep) {   // a: rad; ep = true: đổi ngay (đầu đòn), bỏ hysteresis + cooldown
+    const deg = a * 180 / Math.PI, moi = ((Math.round(deg / 45) % 8) + 8) % 8;
+    if (v.hg == null) { v.hg = moi; v.hgT = v.tg || 0; return; }
+    if (moi === v.hg) return;
+    if (!ep) {
+      let lech = Math.abs(deg - v.hg * 45) % 360; if (lech > 180) lech = 360 - lech;
+      if (lech <= 22.5 + HG.HYS) return;                 // hysteresis ~10° quanh biên sector
+      if ((v.tg || 0) - (v.hgT || 0) < HG.TRE) return;   // cooldown đổi hướng ~120ms
+    }
+    v.hg = moi; v.hgT = v.tg || 0;
+  }
+  function capNhatHuong(S, i, v, dt) {
+    v.tg = S.t;
+    if (v.hg == null) { v.hg = 2; v.hgT = S.t; v.goc = Math.PI / 2; v.khongMuc = 0; }
+    v.nhin = (v.nhin || 0) - dt;
+    if (v.nhin <= 0) { v.nhin = HG.NHIN; v.mucNhin = chonMuc(S, i, v); }   // dò mục tiêu thưa (20 lần/giây)
+    const q = v.mucNhin && sống(v.mucNhin) ? v.mucNhin : null;
+    const khoa = v.atkT != null && S.t - v.atkT < C.TAC_DONG + 0.1;   // khoá hướng trong pha ra đòn của attack
+    let dich = null;
+    if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); }
+    else { v.khongMuc = (v.khongMuc || 0) + dt; if (v.khongMuc > HG.VE_S) dich = Math.PI / 2; }   // không có mục tiêu > 0.8s → về S
+    if (dich != null && !khoa) chonHuong(v, dich, false);
+    if (dich != null) {   // WARP: góc mượt (lerp ~10/s), vẫn quay khi đang đánh
+      let d = dich - v.goc; d = Math.atan2(Math.sin(d), Math.cos(d));
+      v.goc += d * (1 - Math.exp(-HG.LERP * dt));
+    }
+  }
   function ban(S, i, v) {
     const td = T[v.id], h = HANH[td.hanh];
     const dmg = satThuong(S, v);
@@ -300,10 +331,11 @@
       if (v.danh > 0) v.danh -= dt;
       if (v.nong > 0) v.nong = Math.max(0, v.nong - dt);
       if (v.corrT > 0) v.corrT = Math.max(0, v.corrT - dt);
+      capNhatHuong(S, i, v, dt);
       v.cd -= dt / (v.nong > 0 ? 1.67 : 1);   // FIREWALL Heat Lockdown: bắn chậm 40%
       // đòn đánh theo hoạt ảnh: bắt đầu attack (12 khung @14fps), đạn/đòn phát ra ở khung tác động (~khung 6)
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
-      else if (v.cd <= 0) { if (chonMuc(S, i, v)) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; } else v.cd = 0.05; }
+      else if (v.cd <= 0) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; chonHuong(v, gocTo(S, i, q), true); } else v.cd = 0.05; }
     });
     // sát thương trễ (CORRUPTOR) + nhịp sét trễ (ARC 7★)
     for (const p of S.treo) { p.t -= dt; if (p.t <= 0) { p.xong = true; trung(S, p.q, p.dmg, p.v, p.mau, false, false, true); } }
