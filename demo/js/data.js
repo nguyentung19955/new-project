@@ -12,16 +12,16 @@ const HANH = {
   Toxin:   { mau: '#b4ff2a', toi: '#2a3a06', sang: '#ecffc8', ten: 'TOXIN' },
 };
 // tướng (hero) cyberpunk hình người; ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
-// kỹ năng theo docs/demo-hop-tuong/tu-van-chatgpt-ky-nang.txt (ChatGPT thiết kế, 02/11/2026): kieu = tên nội tại, dmg/cd ở 1 sao
+// kỹ năng theo docs/demo-hop-tuong/tu-van-chatgpt-ky-nang.txt (ChatGPT thiết kế, 02/11/2026): kieu = tên nội tại, dmg/cd ở 1 sao; tam = tầm bắn (px, từ tâm ô) theo docs/demo-hop-tuong/tu-van-chatgpt-tam-ban.txt
 const TUONG = {
-  scorch: { tip: [57, 38], ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Burns lanes with lingering plasma trails.', dmg: 24, cd: 0.8 },
-  frost:  { tip: [48, 12], ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill Meter', mo: 'Stacks chill, then shatters clustered enemies.', dmg: 18, cd: 1.0 },
-  arc:    { tip: [60, 13], ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Rhythm', mo: 'Every third slash unleashes chain lightning.', dmg: 32, cd: 0.9 },
-  lance:  { tip: [64, 37], ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Focus Lock', mo: 'Piercing rail shots punish high-HP targets.', dmg: 95, cd: 2.5 },
-  warp:   { tip: [48, 37], ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Gravity Knot', mo: 'Groups enemies inside compact gravity fields.', dmg: 14, cd: 1.4 },
-  miner:  { tip: [52, 20], ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Bounty', mo: 'Marks enemies for bonus Energy on defeat.', dmg: 10, cd: 1.25 },
-  glitch: { tip: [55, 39], ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'Breach', mo: 'Exposes enemy weak points with EMP breaches.', dmg: 16, cd: 1.1 },
-  venom:  { tip: [56, 38], ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Toxic Bloom', mo: 'Stacks toxins that spread when targets fall.', dmg: 13, cd: 1.0 },
+  scorch: { tip: [57, 38], tam: 255, ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Burns lanes with lingering plasma trails.', dmg: 24, cd: 0.8 },
+  frost:  { tip: [48, 12], tam: 290, ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill Meter', mo: 'Stacks chill, then shatters clustered enemies.', dmg: 18, cd: 1.0 },
+  arc:    { tip: [60, 13], tam: 245, ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Rhythm', mo: 'Every third slash unleashes chain lightning.', dmg: 32, cd: 0.9 },
+  lance:  { tip: [64, 37], tam: 360, ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Focus Lock', mo: 'Piercing rail shots punish high-HP targets.', dmg: 95, cd: 2.5 },
+  warp:   { tip: [48, 37], tam: 300, ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Gravity Knot', mo: 'Groups enemies inside compact gravity fields.', dmg: 14, cd: 1.4 },
+  miner:  { tip: [52, 20], tam: 340, ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Bounty', mo: 'Marks enemies for bonus Energy on defeat.', dmg: 10, cd: 1.25 },
+  glitch: { tip: [55, 39], tam: 320, ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'Breach', mo: 'Exposes enemy weak points with EMP breaches.', dmg: 16, cd: 1.1 },
+  venom:  { tip: [56, 38], tam: 275, ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Toxic Bloom', mo: 'Stacks toxins that spread when targets fall.', dmg: 13, cd: 1.0 },
 };
 const TUONG_IDS = Object.keys(TUONG);
 const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];

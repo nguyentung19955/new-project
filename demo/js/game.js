@@ -114,7 +114,6 @@
   const kc = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const heSo = (S, v) => C.heSoSao(v.sao) * C.heSoBac(S.bac[v.id] || 0);
   const ganNhau = (S, q, r) => { let n = 0; for (const o of S.quai) if (o !== q && nham(o) && kc(o, q) < r) n++; return n; };
-  const dongNhat = (S) => { let b = null, bn = -1; for (const q of S.quai) if (nham(q)) { const n = ganNhau(S, q, 60); if (n > bn || (n === bn && q.d > b.d)) { b = q; bn = n; } } return b; };
   const trongHut = (S, q) => S.vung.some((z) => z.k === 'hut' && kc(z, q) < z.r);
   function trung(S, q, dmg, v, mau, chiSo, an, treo) {
     if (!sống(q) || !(dmg > 0)) return;
@@ -160,13 +159,16 @@
     const dmg = satThuong(S, v);
     const [ox, oy] = oXY(i), tp = td.tip || [32, 32];
     const x = ox + 4 + tp[0] * 0.875, y = oy + 2 + tp[1] * 0.875;
+    // chỉ chọn mục tiêu trong tầm bắn (đo từ tâm ô tới tâm quái); không có ai trong tầm thì chờ
+    const [cx, cy] = oTam(i), tam = td.tam || 9999;
+    const DS = S.quai.filter((o) => nham(o) && Math.hypot(o.x - cx, o.y - o.co / 2 - cy) <= tam);
     let q = null;
-    if (v.id === 'scorch' || v.id === 'frost') q = dauTien(S);
-    else if (v.id === 'arc' || v.id === 'warp') q = dongNhat(S);
-    else if (v.id === 'lance') { for (const o of S.quai) if (nham(o) && (!q || o.hp > q.hp)) q = o; }
-    else if (v.id === 'miner') { for (const o of S.quai) if (nham(o) && (!q || o.hp < q.hp)) q = o; }
-    else if (v.id === 'venom') { for (const o of S.quai) if (nham(o) && (!q || o.hp / o.max > q.hp / q.max)) q = o; }
-    else if (v.id === 'glitch') { for (const o of S.quai) if (nham(o) && !(o.breachT > 0) && (!q || o.d > q.d)) q = o; if (!q) q = dauTien(S); }
+    if (v.id === 'scorch' || v.id === 'frost') { for (const o of DS) if (!q || o.d > q.d) q = o; }
+    else if (v.id === 'arc' || v.id === 'warp') { let bn = -1; for (const o of DS) { const n = ganNhau(S, o, 60); if (n > bn || (n === bn && o.d > q.d)) { q = o; bn = n; } } }
+    else if (v.id === 'lance') { for (const o of DS) if (!q || o.hp > q.hp) q = o; }
+    else if (v.id === 'miner') { for (const o of DS) if (!q || o.hp < q.hp) q = o; }
+    else if (v.id === 'venom') { for (const o of DS) if (!q || o.hp / o.max > q.hp / q.max) q = o; }
+    else if (v.id === 'glitch') { for (const o of DS) if (!(o.breachT > 0) && (!q || o.d > q.d)) q = o; if (!q) for (const o of DS) if (!q || o.d > q.d) q = o; }
     if (!q) return false;
     v.dem = (v.dem || 0) + 1;
     if (v.id === 'scorch') bayDan(S, x, y, q, dmg, v, h.mau, 900, { burst: v.sao >= 7 && v.dem % 4 === 0 });

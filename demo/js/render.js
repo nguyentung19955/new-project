@@ -648,7 +648,13 @@
       for (const f of S.fx) veFx(c, f);
       veCanhBao(c, S, t);
       veHat(c, dt);
-      if (goi) { c.save(); c.globalAlpha = 0.95; veUnit(c, goi, keo.x - C.O / 2, keo.y - C.O / 2 - 6, t, true); c.restore(); }
+      if (goi) {   // vòng tầm bắn: tâm ô đang trỏ tới (ô trống / ô gộp được), không thì ô gốc
+        let ti = keo.i;
+        for (let j = 0; j < S.o.length; j++) { const [ox, oy] = G.oXY(j); if (keo.x >= ox && keo.x < ox + C.O && keo.y >= oy && keo.y < oy + C.O && (!S.o[j] || G.gopDuoc(S, keo.i, j))) ti = j; }
+        const [tx, ty] = G.oTam(ti), m = HANH[TUONG[goi.id].hanh].mau, r0 = TUONG[goi.id].tam || 0;
+        c.save(); c.beginPath(); c.arc(tx, ty, r0, 0, 7); c.fillStyle = hexA(m, 0.06); c.fill(); c.lineWidth = 1.5; c.strokeStyle = hexA(m, 0.45); c.stroke(); c.restore();
+        c.save(); c.globalAlpha = 0.95; veUnit(c, goi, keo.x - C.O / 2, keo.y - C.O / 2 - 6, t, true); c.restore();
+      }
       for (const s of S.so) veSo(c, s);
     } else veHat(c, dt);
     c.restore();
