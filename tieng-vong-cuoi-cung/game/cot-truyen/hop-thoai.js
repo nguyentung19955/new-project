@@ -18,6 +18,8 @@
 (function(goc){
   const DS = {}, ANH = {}, TOC_CHU = 40;   // ký tự / giây (gõ dần)
   let mo = null;                            // {d, i, n, t, chon, xong}
+  // Bố cục khung.png (ChatGPT vẽ 02/11), tính theo tỉ lệ ảnh [x, y, rộng, cao]: ô chân dung trái + vùng chữ phải
+  const O_KHUNG = {chan_dung:[0.037, 0.155, 0.152, 0.645], chu:[0.228, 0.12, 0.74, 0.74]};
 
   function napAnh(url){
     if (ANH[url] !== undefined) return Promise.resolve(ANH[url]);
@@ -71,19 +73,26 @@
       if (!mo) return;
       const d = mo.d, dg = d.dong[mo.i], nv = (d.nguoi || {})[dg.ai] || {}, kh = ANH[d._goc + d.khung];
       const w = Math.round(W * 0.9), h = Math.round(w * kh.height / kh.width), x = (W - w) >> 1, y = H - h - Math.round(H * 0.03);
-      ctx.save(); ctx.imageSmoothingEnabled = false;
+      const O = d.o_khung || O_KHUNG, r = q => [x + q[0] * w, y + q[1] * h, q[2] * w, q[3] * h];
+      ctx.save(); ctx.imageSmoothingEnabled = true;
       ctx.drawImage(kh, x, y, w, h);
       const cd = nv.chan_dung && ANH[d._goc + nv.chan_dung];
-      const pad = Math.round(h * 0.14); let tx = x + pad * 1.6;
-      if (cd){ const ch = h - pad * 2, cw = Math.round(ch * cd.width / cd.height); ctx.drawImage(cd, x + pad, y + pad, cw, ch); tx = x + pad * 2 + cw; }
-      const fs = Math.max(12, Math.round(H * 0.035));
-      ctx.textBaseline = 'top'; ctx.fillStyle = '#E1B85A'; ctx.font = 'bold ' + fs + 'px serif';
-      if (nv.ten) ctx.fillText(nv.ten, tx, y + pad);
-      ctx.fillStyle = '#F3E6C8'; ctx.font = fs + 'px serif';
-      const maxW = x + w - pad * 1.6 - tx; let dongY = y + pad + fs * 1.5;
-      for (const ln of boDong(ctx, dg.chu.slice(0, mo.n), maxW)){ ctx.fillText(ln, tx, dongY); dongY += fs * 1.3; }
+      let [tx, ty, tw] = r(O.chu);
+      if (cd){   // chân dung: dải nv.so_khung ô vuông (0 = yên, 1.. = nói, đổi ~160 ms khi chữ đang chạy)
+        const n = nv.so_khung || 1, cw = cd.width / n, dangNoi = mo.n < dg.chu.length;
+        const k = n > 1 && dangNoi ? 1 + (Math.floor(mo.t / 0.16) % (n - 1)) : 0;
+        const [px, py, pw, ph] = r(O.chan_dung), s = Math.min(pw / cw, ph / cd.height);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(cd, k * cw, 0, cw, cd.height, Math.round(px + (pw - cw * s) / 2), Math.round(py + ph - cd.height * s), Math.round(cw * s), Math.round(cd.height * s));
+      } else { const [px, , pw] = r(O.chan_dung); tw += tx - px; tx = px; }
+      const fs = Math.max(13, Math.round(H * 0.036)), PH = '"Alegreya Sans",system-ui,sans-serif';
+      ctx.textBaseline = 'top'; ctx.fillStyle = '#E1B85A'; ctx.font = '700 ' + Math.round(fs * 1.15) + 'px "Cormorant Garamond",' + PH;
+      if (nv.ten) ctx.fillText(nv.ten, tx, ty);
+      ctx.fillStyle = '#F3E6C8'; ctx.font = '500 ' + fs + 'px ' + PH;
+      let dongY = ty + fs * 1.6;
+      for (const ln of boDong(ctx, dg.chu.slice(0, mo.n), tw)){ ctx.fillText(ln, tx, dongY); dongY += fs * 1.3; }
       if (dg.chon && mo.n >= dg.chu.length){
-        dg.chon.forEach((c, k) => { ctx.fillStyle = k === mo.chon ? '#CEF0D6' : '#83CC93'; ctx.fillText((k === mo.chon ? '› ' : '  ') + c.chu, tx, dongY); dongY += fs * 1.3; });
+        dg.chon.forEach((c, k) => { ctx.fillStyle = k === mo.chon ? '#ffe08a' : '#c9b48a'; ctx.fillText((k === mo.chon ? '› ' : '  ') + c.chu, tx, dongY); dongY += fs * 1.3; });
       }
       ctx.restore();
     },

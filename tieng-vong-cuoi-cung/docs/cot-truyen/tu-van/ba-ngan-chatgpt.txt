@@ -1,0 +1,15 @@
+THIẾT KẾ NPC – BÀ NGÂN (ChatGPT, 02/11) – Làng Chuông, NPC đối thoại
+Vai trò: người giữ chuông già cuối cùng của Làng Chuông, giữ ký ức về làng và một khúc hát ru chưa bao giờ hát trọn.
+
+1. Ngoại hình: khoảng 70–80 tuổi, dáng nhỏ, hơi khom, mặt hiền mà buồn. Tóc trắng bạc búi thấp, vài lọn buông hai má, quấn khăn vải cũ.
+   Mắt mệt mỏi, nhìn dịu, hay hướng về xa. Áo vải than đen, khăn choàng tro xám sờn rách nhiều đường vá.
+   Nhận diện: chuông đồng nhỏ đeo trước ngực – kỷ vật duy nhất từ thời làng chưa bị nguyền. Silhouette: búi tròn, khăn choàng rộng, chuông giữa ngực.
+2. Bảng màu: viền #171519 · áo #302B2C · khăn #6B6062 · vải lanh #B0A399 · tóc #DDD5CB · da #C6AFA0 · chuông sáng #E1B85A · chuông tối #9C6B30.
+   Chuông là điểm nhấn ấm duy nhất; không cyan/xanh lá/ánh phép trên nhân vật.
+3. Tính cách: hiền hậu, kiên nhẫn, thương người lạ như con cháu; hay ngân khúc ru dang dở, tới câu cuối thì im – như quên điều rất quan trọng.
+   Không kể hết bi kịch; ký ức hé dần qua lời nói, tiếng chuông, các lần người chơi quay lại.
+4. Cách nói: giọng nhỏ, chậm, ấm hơi khàn; xưng "ta", gọi Kiếm Khách là "cháu"; câu ngắn, có khoảng lặng, lẫn tiếng ngân nga; không từ hiện đại, không giải thích cốt truyện trực tiếp.
+5. Thoại gặp Kiếm Khách lần đầu:
+   01 "Ồ... một người còn nghe được tiếng chuông sao? Lại đây, cháu. Đường vào làng lạnh lắm."
+   02 "À ơi... chuông ngủ dưới rễ sâu... Rồi sao nữa nhỉ? Ta lại quên mất câu cuối rồi."
+   03 "Nếu cháu nghe tiếng chuông từ ngôi nhà không có người... đừng vội trả lời. Có những tiếng gọi không dành cho người sống."
