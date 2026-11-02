@@ -1,5 +1,5 @@
 # 006 – Cảnh Làng Chuông (Bell Village): 5 nền + 5 tiền cảnh
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 5 nền nen-1..5.png 960×540 + 5 tiền cảnh truoc-1..5.png (che ~6%, ghép từ tấm truoc-nguon-chatgpt.png). Mặt đất gốc của ChatGPT ở y 453/457/466/455/458 đã được kéo về ĐÚNG y = 468 cả 5 màn; mép màn là cột rễ)
 - **Ưu tiên:** P0 (thiếu ảnh này thì cả trang Làng Chuông tắt).
 - **Dùng vào:** game/lang-chuong/ – màn làng đi ngang 5 màn liền nhau (theo docs/cot-truyen/ke-hoach-chatgpt.txt mục 5–6). Nhân vật chỉ đi trái/phải trên một mặt đất.
 - **Phong cách:** pixel u tối như Vùng 1 (art/vung-1/P02-canh.png, P03-canh.png), làng nằm trong lòng Cây Chuông: nhà gỗ/rễ, mái treo nhiều chuông đồng im lặng, đèn lồng ấm, sương xám. Điểm sáng ấm duy nhất là đồng #E1B85A/#9C6B30 và đèn.
