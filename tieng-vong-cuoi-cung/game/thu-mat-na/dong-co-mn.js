@@ -445,7 +445,9 @@ const DongCoMN = (() => {
 
     const xTruoc = pl.x; if (moveX(pl, pl.vx, false)) pl.vx = 0; pl.dxT = pl.x - xTruoc;
     // (camgiac) quãng đường chạy trên đất: khung chạy đổi theo QUÃNG ĐƯỜNG (chân khớp mặt đất), không theo thời gian
-    if (pl.onGround && !pl.atk && Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6) pl.quang = (pl.quang || 0) + Math.abs(pl.dxT); else pl.quang = 0;
+    if (pl.onGround && !pl.atk && Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6){ pl.quang = (pl.quang || 0) + Math.abs(pl.dxT); pl.troiGiu = 3; }
+    else if (pl.onGround && !pl.atk && Math.abs(pl.vx) > 0.6 && pl.troiGiu > 0) pl.troiGiu--;   // vấp 1–2 bước (gờ ô) vẫn giữ dáng chạy, không chen 1 khung đứng
+    else { pl.quang = 0; pl.troiGiu = 0; }
     const vyWas = pl.vy, ry = moveY(pl, pl.vy);
     if (ry !== 0){ if (ry === 1 && vyWas > 5) pl.landT = 10; if (ry === -1) pl.jumping = false; pl.vy = 0; }
     const daTrenKhong = !pl.onGround;
@@ -468,6 +470,7 @@ const DongCoMN = (() => {
       if (pl.atkT >= C.tong){
         if (pl.onGround && donTiep(pl.atk)){ pl.comboHan = P.comboHan; pl.comboTiep = donTiep(pl.atk); pl.comboTiepIdx = (pl.comboIdx ?? 0) + 1; }
         pl.atk = '';
+        if (CHO.co) chonDon(dir);   // (camgiac) đã bấm chém sẵn → nối đòn ngay bước này (trước đây chen 1 khung 'rơi'/'bám tường' giữa 2 nhát chém trên không)
       }
     }
     pl.sliding = sliding;
@@ -697,7 +700,7 @@ const DongCoMN = (() => {
       return pl.vy < 0 ? {ten:'nhay', tiLe:clamp(1 + pl.vy / jumpVel, 0, 1)} : {ten:'roi'};
     }
     if (pl.landT > 0) return {ten:'tiepdat', tiLe:(10 - pl.landT) / 10};
-    if (Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6) return {ten:'troi', quang:pl.quang || 0};
+    if ((Math.abs(pl.dxT) > 0.001 || pl.troiGiu > 0) && Math.abs(pl.vx) > 0.6) return {ten:'troi', quang:pl.quang || 0};
     return {ten:'dung'};
   }
 

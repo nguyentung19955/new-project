@@ -71,12 +71,22 @@
   const CAM = V1.CAM = {x:0, y:0};
   function camDich(){
     const RW = E.BD.COT * T, RH = E.BD.HANG * T;
-    const mx = RW <= W ? (RW - W) / 2 : clampN(pl.x + pl.w / 2 - W / 2 + pl.face * 40, 0, RW - W);
+    const mx = RW <= W ? (RW - W) / 2 : clampN(pl.x + pl.w / 2 - W / 2 + CV.la, 0, RW - W);
     const my = RH <= H ? (RH - H) / 2 : clampN(pl.y + pl.h / 2 - H * 0.55, 0, RH - H);
     return [mx, my];
   }
-  V1.camDat = () => { const [x, y] = camDich(); CAM.x = x; CAM.y = y; };
-  V1.camBuoc = () => { const [x, y] = camDich(); CAM.x += (x - CAM.x) * 0.12; CAM.y += (y - CAM.y) * 0.1; };
+  // (camgiac) camera êm khi quay đầu: điểm nhìn trước (±40 px theo hướng mặt) đổi dần 1,6 px/bước thay vì lật 80 px tức thì,
+  // và tốc độ camera chỉ đổi tối đa 0,7 px/bước² (trước: đang trôi +4,2 px/bước lật ngay −5,5 → cả màn giật ngược)
+  const CV = {vx:0, la:0};
+  V1.camDat = () => { CV.la = pl.face * 40; CV.vx = 0; const [x, y] = camDich(); CAM.x = x; CAM.y = y; };
+  V1.camBuoc = () => {
+    CV.la += clampN(pl.face * 40 - CV.la, -1.6, 1.6);
+    const [x, y] = camDich(), RW = E.BD.COT * T;
+    CV.vx += clampN((x - CAM.x) * 0.12 - CV.vx, -0.7, 0.7); CAM.x += CV.vx;
+    if (RW > W && (CAM.x < 0 || CAM.x > RW - W)){ CAM.x = clampN(CAM.x, 0, RW - W); CV.vx = 0; }
+    if (Math.abs(x - CAM.x) > W){ CAM.x = x; CV.vx = 0; }   // xa quá (đổi phòng/hồi sinh) → đặt thẳng
+    CAM.y += (y - CAM.y) * 0.1;
+  };
 
   /* ---------------- Ô TẠM: đá + rễ (tông phòng demo) ---------------- */
   const PAL = {sau:'#120a0b', mat:'#3a2523', da:'#51302c', da2:'#6d483f', vien:'#947666', sang:'#bc9892', toi:'#0d0809', re:'#5c3c37', re2:'#7a463c', la:'#3e5a3a'};
