@@ -22,7 +22,7 @@ Tham số URL: `?hitbox=1` bật hộp · `?cap=2` cấp đầu · `?cham=4` ch�
 ```
 "goc": "../../art/quai-moi/",  "ti_le": 2,
 "loai": { "<id>": {
-  "ten": "Phu Đèn Lạc", "mau_khoi": "#b39161",      // tên + màu khối khi thiếu hình
+  "ten": "Lost Lampbearer (đã xoá)", "mau_khoi": "#b39161",      // tên + màu khối khi thiếu hình
   "chan": [44, 74],          // điểm neo (chân; quái bay: đáy hình) trong khung ảnh, quay TRÁI. Mặc định cho mọi trạng thái (clip nào khác thì ghi "chan" riêng trong clip đó)
   "than": [28, 62],          // thân (hộp ăn đòn) rộng × cao, điểm ảnh, đáy giữa = neo
   "hinh": { "dung": clip, "di": clip, "danh": clip, "trung": clip, "chet": clip },

@@ -85,12 +85,6 @@ CFG = {
  'kk-luot':      dict(kk('luot'), so_goc=6, thu_tu=[0, 1, 2, 3, 4, 'moi-01', 'moi-02', 5], sua=s_luot, day=True),
  'kk-tiepdat':   dict(kk('tiepdat'), so_goc=3, thu_tu=[0, 1, 'moi-01', 2], sua=s_tiepdat, day=True),
  'kk-trungdon':  dict(kk('trungdon'), so_goc=6, thu_tu=[0, 1, 'thay-02', 3, 'thay-04', 5], sua=s_trungdon, day=True),
- 'bo-chet':      dict(q('bo', 'chet'), so_goc=9, thu_tu=['thay-%02d' % i for i in range(9)], sua=s_bo_chet, day=True, ke=('art/quai-moi/bo/trung', 0)),
- 'doi-chet':     dict(q('doi', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 6, 'moi-01', 'moi-02', 7, 8], sua=s_doi_chet, day=False),
- 'nam-chet':     dict(q('nam', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 'moi-01', 6, 7, 8], sua=s_nam_chet, day=True),
- 'nam-danh':     dict(q('nam', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 'thay-03', 'thay-04', 'thay-05', 'thay-06', 'thay-07', 8], sua=s_nam_danh, day=True),
- 'chuong-di':    dict(q('chuong', 'di'), so_goc=9, thu_tu=list(range(9)) + ['moi-01'], sua=s_chuong_di, day=False),
- 'chuong-danh':  dict(q('chuong', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 'moi-01', 6, 7, 8], sua=s_chuong_danh, day=False),
  'cau-danh':     dict(q('cau', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 'thay-03', 4, 5, 6, 'thay-07', 8], sua=s_cau_danh, day=True),
  'tan-di':       dict(q('tan', 'di'), so_goc=9, thu_tu=['thay-00'] + list(range(1, 9)), sua=s_tan_di, day=True),
  'tan-danh':     dict(q('tan', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 'moi-01', 5, 6, 7, 8], sua=s_tan_danh, day=True),
@@ -98,10 +92,8 @@ CFG = {
  'ken-danh':     dict(q('ken', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 'moi-01', 6, 7, 8], sua=s_ken_danh, day=True),
  'tang-chet':    dict(q('tang', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 'moi-01', 'moi-02', 4, 5, 6, 7, 8], sua=s_tang_chet, day=False),
  'tang-danh':    dict(q('tang', 'danh'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 6, 'moi-01', 7, 8], sua=s_tang_danh, day=False),
- 'chuong-chet':  dict(q('chuong', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 6, 'moi-01', 7, 8], sua=s_chuong_chet, day=False),
  'cau-chet':     dict(q('cau', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 'moi-01', 6, 7, 8], sua=s_cau_chet, day=True),
  'ken-chet':     dict(q('ken', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 'moi-01', 6, 7, 8], sua=s_ken_chet, day=True),
- 'phu-chet':     dict(q('phu', 'chet'), so_goc=9, thu_tu=[0, 1, 2, 3, 4, 5, 6, 'thay-07', 8], sua=s_phu_chet, day=True),
 }
 
 def P(*a): return os.path.join(GOC, *a)

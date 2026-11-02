@@ -77,8 +77,8 @@ const VACH = [];   // vách treo (bám vách) · cột đá (nhảy đôi / bám
 const LOI = [];                                              // lỗi nạp (hiện ở ô info) – không làm hỏng trang
 const CAP = [];
 // quái trong phòng (cột ô 48 px logic; dat_y = mặt sàn px logic)
-const DAT_PHONG = [{loai:'phu', cot:7, tu:4, den:9, dat_y:432}, {loai:'doi', cot:12, tu:9, den:16, cao:170, dat_y:432},
-  {loai:'bo', cot:19, tu:15, den:22, dat_y:432}, {loai:'nam', cot:25, tu:23, den:27, dat_y:432}, {loai:'chuong', cot:34, tu:32, den:36, dat_y:336}];                                              // [{ten, sat_thuong, clip:{don1…}}]
+const DAT_PHONG = [{loai:'cau', cot:7, tu:4, den:9, dat_y:432}, {loai:'vai', cot:12, tu:9, den:16, cao:170, dat_y:432},
+  {loai:'ken', cot:19, tu:15, den:22, dat_y:432}, {loai:'tang', cot:25, tu:23, den:27, dat_y:432}, {loai:'tan', cot:34, tu:32, den:36, dat_y:336}];                                              // [{ten, sat_thuong, clip:{don1…}}]
 
 function napAnh(k, src){ return new Promise(ok => { const i = new Image(); i.onload = () => { IMG[k] = i; ok(); }; i.onerror = () => { LOI.push(src); ok(); }; i.src = src; }); }
 async function nap(){

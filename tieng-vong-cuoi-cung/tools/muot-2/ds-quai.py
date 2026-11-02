@@ -10,52 +10,6 @@ VAI='the Cloth Wraith (floating ragged cloth ghost with a mask)'
 KEN='the Mute Horn (thin root-wood figure holding a long brass horn with a hanging banner)'
 TANG='the Mourning Veil (bird-skull veil creature hanging from a ceiling branch)'
 
-item(so='007', ten='bo-chet', tieu_de='Bọ Vỏ Mộc – chết: VẼ LẠI 9 khung', uu_tien='P0', loai='q', q='bo', st='chet',
-  cells=[('art/quai-moi/bo/dung',0), ('art/quai-moi/bo/trung',3)] + [None]*9,
-  viec='Vẽ **9 khung mới** `thay-00` … `thay-08`, THAY toàn bộ clip chết (ảnh chết hiện là bản sao y hệt ảnh `danh` – đã xác nhận trùng file). 2 ô đầu ảnh tham chiếu là khung đứng (dung F0) và trúng đòn (trung F3) để giữ đúng thiết kế.',
-  dang='"HỎNG: ảnh chết đang là bản sao y hệt đòn đánh – bọ không hề ngã. Vẽ lại 9 khung: giật mạnh → chân trước khuỵu → vỏ nghiêng → đổ nghiêng → chạm đất bụi → chân co giật → nằm yên; giữ khung cuối."',
-  chi_tiet=['thay-00 giật mạnh · thay-01 chân trước khuỵu · thay-02 vỏ nghiêng · thay-03 đổ nghiêng · thay-04 chạm đất (bụi nhỏ cùng màu đất) · thay-05/06 chân co giật · thay-07 lịm dần · thay-08 nằm yên (khung giữ).',
-            'Đáy chạm vạch đất (dấu +), không trôi ngang.'],
-  prompt=P(BO, 'The first 2 cells are the beetle idle and hurt frames for reference. Draw ONLY the 9 empty dashed cells as its DEATH animation, left to right: 1 violent jolt; 2 front legs buckle; 3 shell tilts; 4 tipping over sideways; 5 hits the ground with a small dust puff; 6 legs twitching; 7 legs twitching less; 8 going limp; 9 lying still (final held frame). Same scale and ground line as marked by "+".'),
-  ra=['thay-%02d.png' % i for i in range(9)],
-  thu_tu='thay-00 … thay-08 (9 khung; ảnh cũ chuyển sang `art/muot-2/bo-chet/cu-fNN.png`)',
-  ms='60, 65, 70, 80, 90, 90, 100, 120, 180 (855 ms, đúng bộ ChatGPT; giữ khung cuối)',
-  su_kien='quai.json bo.hinh.chet: ms mảng mới, lap false.')
-item(so='008', ten='doi-chet', tieu_de='Dơi Rễ – chết: 2 khung rơi giữa F6–F7', uu_tien='P0', loai='q', q='doi', st='chet',
-  cells=[6, None, None, 7],
-  viec='Vẽ **2 khung mới** `moi-01`, `moi-02`, chèn SAU F6.',
-  dang='"Giật nặng F6→F7: đang rơi giữa không trung → nằm sát đất trong 1 bước. Thêm 2 khung rơi giữa F6–F7 (thân hạ dần, cánh gập; gần chạm đất, cánh chạm trước); giữ khung cuối."',
-  chi_tiet=['moi-01: thân hạ dần (khoảng 1/3 quãng còn lại), cánh gập lại.', 'moi-02: gần chạm đất, cánh chạm đất trước.'],
-  prompt=P(DOI, 'Left = falling in mid-air after death, right = lying on the ground. Draw ONLY the 2 missing in-between frames for the 2 empty dashed cells: cell 2 = body lower (one third of the way down), wings folding; cell 3 = almost on the ground, wing tips touching the ground first.'),
-  ra=['moi-01.png', 'moi-02.png'], thu_tu='F0 … F6 **moi-01** **moi-02** F7 F8 (11 khung)',
-  ms='67, 67, 67, 67, 67, 50, 50, 50, 67, 83, 150 (785 ms, đúng bộ 11 khung ChatGPT)', su_kien='doi.hinh.chet: so_hinh 9→11, ms mảng.')
-item(so='009', ten='nam-chet', tieu_de='Nấm Thở – chết: 1 khung gập thân giữa F5–F6', uu_tien='P0', loai='q', q='nam', st='chet',
-  cells=[5, None, 6], viec='Vẽ **1 khung mới** `moi-01`, chèn SAU F5.',
-  dang='"F1–F4 gần đứng yên rồi F5→F6 nằm ngang đột ngột. Thêm dáng gập thân/khuỵu giữa F5–F6; giữ xác."',
-  chi_tiet=['Thân gập/khuỵu, mũ đổ nghiêng ~45°, nửa đường giữa F5 và F6; chân ở vạch đất.'],
-  prompt=P(NAM, 'Draw ONLY the missing in-between frame for the middle empty dashed cell: the mushroom collapsing - stem buckling, cap tipping about 45 degrees, halfway between the left frame and the lying frame on the right.'),
-  ra=['moi-01.png'], thu_tu='F0 … F5 **moi-01** F6 F7 F8 (10 khung)',
-  ms='83, 83, 83, 100, 100, 117, 100, 117, 117, 100 (1000 ms; bộ ChatGPT 9 khung + 100 ms khung gập)', su_kien='nam.hinh.chet: so_hinh 9→10.')
-item(so='010', ten='nam-danh', tieu_de='Nấm Thở – đánh: VẼ LẠI F3–F7', uu_tien='P0', loai='q', q='nam', st='danh',
-  cells=[2, None, None, None, None, None, 8], viec='Vẽ **5 khung** `thay-03` … `thay-07`, THAY F3–F7 (giữ F0–F2, F8).',
-  dang='"Mượt nhưng KHÔNG đọc được là đang đánh (chỉ nghiêng đầu nhẹ, cao đổi 4%). Vẽ lại F3–F7: mũ co tích lực → nghiêng tới → F5 phun bào tử mạnh → giật lùi."',
-  chi_tiet=['thay-03 mũ co lại tích lực · thay-04 nghiêng tới · thay-05 PHUN (mũ bật mở, dáng mạnh nhất – không vẽ đám bào tử, hiệu ứng đã có riêng) · thay-06 giật lùi · thay-07 hồi về gần F8.', 'Chân giữ đúng chỗ (dấu +).'],
-  prompt=P(NAM, 'Left = wind-up frame, right = recovery frame. Draw ONLY the 5 empty dashed cells as a clear spore attack: 1 cap squeezes down gathering force; 2 leaning forward; 3 strongest pose - cap bursting open forward (do NOT draw the spore cloud, it is a separate effect); 4 recoil backward; 5 settling back toward the right frame. Feet stay planted at "+".'),
-  ra=['thay-%02d.png' % i for i in range(3, 8)], thu_tu='F0 F1 F2 **thay-03 … thay-07** F8 (9 khung)',
-  ms='120, 100, 100, 67, 50, 67, 83, 100, 100 (787 ms, bộ ChatGPT)', su_kien='số khung giữ 9; khung_trung [5,6,7] giữ (F5 = phun).')
-item(so='011', ten='chuong-di', tieu_de='Chuông Kén Nứt – di: 1 khung nối F8→F0', uu_tien='P0', loai='q', q='chuong', st='di',
-  cells=[8, None, 0], viec='Vẽ **1 khung mới** `moi-01`, chèn SAU F8 (khung cuối, nối vòng về F0).',
-  dang='"Vòng lặp giật ở F8→F0 (thân + tua khác hẳn). Vẽ lại F8 gần F0 hơn hoặc thêm 1 khung nối."',
-  chi_tiet=['Thân và tua ở giữa F8 và F0 để vòng lặp liền.'],
-  prompt=P(CHUONG, 'This is a looping move cycle: left = last frame, right = first frame of the loop. Draw ONLY the missing bridge frame for the middle empty dashed cell, with body and tendrils halfway between the two, so the loop is seamless. Same floating height.'),
-  ra=['moi-01.png'], thu_tu='F0 … F8 **moi-01** (10 khung, lặp)', ms='10 × 110 ms (bộ ChatGPT 9×110)', su_kien='chuong.hinh.di: so_hinh 9→10, ms 110.')
-item(so='012', ten='chuong-danh', tieu_de='Chuông Kén Nứt – đánh: 1 khung giữa F5–F6', uu_tien='P0', loai='q', q='chuong', st='danh',
-  cells=[5, None, 6], viec='Vẽ **1 khung mới** `moi-01`, chèn SAU F5.',
-  dang='"F4≈F5 giữ rồi F5→F6 bùng mạnh (tâm nhảy 11,5%). Thêm 1 khung giữa F5–F6 (vỏ mở nửa, tua hất, điểm phát sáng)."',
-  prompt=P(CHUONG, 'Draw ONLY the missing in-between frame for the middle empty dashed cell: shell half-open, tendrils flinging outward, a small glowing point starting at the crack - halfway between the held pose on the left and the burst on the right.'),
-  ra=['moi-01.png'], thu_tu='F0 … F5 **moi-01** F6 F7 F8 (10 khung)',
-  ms='100, 100, 100, 90, 80, 60, 50, 80, 100, 120 (880 ms; bộ ChatGPT + 50 ms khung mở nửa)',
-  su_kien='so_hinh 9→10; khung_trung [5,6]→[5,6,7]; fx_danh (9 khung) giữ nhịp cũ bằng ms riêng 100,100,100,90,80,110,80,100,120 để sóng âm vẫn bùng đúng lúc khung F6 cũ.')
 item(so='013', ten='cau-danh', tieu_de='Khuyết Cẩu – đánh: VẼ LẠI F3 và F7', uu_tien='P0', loai='q', q='cau', st='danh',
   cells=[2, None, 4, 6, None, 8], viec='Vẽ **2 khung** `thay-03` (thay F3) và `thay-07` (thay F7). Giữ F4–F6 (há mõm/nhả cầu).',
   dang='"Chưa đạt: chân trượt 15,4% – trông như bước tới cắn chứ không phải đứng há mõm bắn. Khoá chân trụ; F3 hạ cổ tích năng lượng, F4–F5 há mõm, F6 nhả cầu, F7 giật lùi, F8–F9 hồi."',

@@ -1,3 +1,5 @@
+> **02/11 – NGƯỜI DÙNG YÊU CẦU XOÁ HẾT QUÁI CŨ** (Phu Đèn Lạc `phu`, Bọ Vỏ Mộc `bo`, Dơi Rễ `doi`, Nấm Thở `nam`, Chuông Kén Nứt `chuong`): đã xoá ảnh `art/quai-moi/{phu,bo,doi,nam,chuong}`, mục trong `quai.json`, yêu cầu 007–012, 022, 025 và mục lắp tương ứng. Game chỉ còn 5 quái mới: `cau`, `vai`, `tang`, `ken`, `tan`. KHÔNG tạo lại yêu cầu cho quái cũ.
+
 # Yêu cầu ảnh – MƯỢT MỨC 2 (thêm khung chuyển tiếp)
 Nguồn: `docs/duyet-anim-02-11/tu-van-chatgpt.md` (ChatGPT duyệt 17 nhóm). Người dùng đã đồng ý làm mức 2 (02/11).
 
