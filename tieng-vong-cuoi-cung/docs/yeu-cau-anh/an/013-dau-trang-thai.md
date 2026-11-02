@@ -1,5 +1,5 @@
 # 013 – Status Markers ×4 (H)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Dấu trạng thái dòng nhiệm vụ: unknown (vòng tối rỗng), discovered (vòng có đốm xanh), unfinished (vòng nửa sáng), remembered (vòng đầy vàng đồng). Không dùng màu làm khác biệt duy nhất – hình phải khác nhau.
 - **Số khung:** 4 ảnh tĩnh

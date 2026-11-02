@@ -1,5 +1,5 @@
 # 012 – Secret Icons ×6 (G)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** 6 biểu tượng loại bí mật/nhiệm vụ, đọc rõ ở 32 px: **root** (rễ cuộn), **bell** (chuông nhỏ có sóng), **mask** (mặt nạ trắng nguyên vẹn), **memory** (mảnh chuông vỡ có khe sáng – hợp 005), **bronze** (thỏi/đồng xu đồng cổ – Ancient Bronze), **echo** (bóng người mờ xanh tiếng vọng).
 - **Số khung:** 6 ảnh tĩnh (vẽ chung 1 ảnh, hở rộng)

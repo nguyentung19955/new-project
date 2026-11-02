@@ -1,5 +1,5 @@
 # 011 – Achievement Toast Frame (F)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Khung thông báo thành tựu: rộng hơn, viền đồng dày hơn, ánh vàng đồng nhẹ; ô biểu tượng 36×36 bên trái, 2 dòng chữ.
 - **Số khung:** 1 ảnh tĩnh

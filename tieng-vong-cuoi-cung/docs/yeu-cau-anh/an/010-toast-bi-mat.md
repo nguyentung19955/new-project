@@ -1,5 +1,5 @@
 # 010 – Secret Toast Frame (E)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Khung thông báo "Secret Found / 3 / 6 Discovered" góc trên phải: thanh đồng mảnh, chừa ô biểu tượng 28×28 bên trái, 2 dòng chữ bên phải (chữ do game viết).
 - **Số khung:** 1 ảnh tĩnh

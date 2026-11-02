@@ -1,5 +1,5 @@
 # 014 – Close Button ×3 (I)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Nút đóng nhật ký (dấu X bằng 2 nhánh rễ chéo, không phải chữ) trong khung tròn đồng: normal / pressed (lún, tối hơn) / disabled (xám mờ).
 - **Số khung:** 3 ảnh tĩnh

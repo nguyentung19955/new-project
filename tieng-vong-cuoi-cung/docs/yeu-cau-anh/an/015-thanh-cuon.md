@@ -1,5 +1,5 @@
 # 015 – Scroll Handle ×2 (J)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/thong-bao-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Tay nắm thanh cuộn danh sách: thường / đang kéo (sáng hơn). Thân đồng dọc có khía.
 - **Số khung:** 2 ảnh tĩnh
