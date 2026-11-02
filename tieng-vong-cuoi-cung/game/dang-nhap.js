@@ -97,7 +97,7 @@
       ban = true; vao.textContent = 'Signing in…'; ve(L);
       p.then(ok => {
         ban = false; ve(L);
-        if (!ok && L.loi){ loi.textContent = L.loi === 'offline' ? 'No internet · Sign in later. Your game still saves on this device.' : 'Sign-in did not finish. Please try again.'; loi.hidden = false; }
+        if (!ok && L.loi){ loi.textContent = L.loi === 'offline' ? 'No internet · Sign in later. Your game still saves on this device.' : (/^This Google account/.test(L.loi) ? L.loi : 'Sign-in did not finish. Please try again.'); loi.hidden = false; }
         if (ok && o.sauDangNhap) o.sauDangNhap();
       });
     };

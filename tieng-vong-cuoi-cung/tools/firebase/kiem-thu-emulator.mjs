@@ -71,8 +71,10 @@ try {
   ok(tRefresh.authTime === tLink.authTime && tRefresh.iat > tLink.iat, 'token tự làm mới KHÔNG đổi auth_time (mốc 7 ngày không bị kéo dài)', {tRefresh, tLink});
   await signOut(authZ); await signInAnonymously(authZ);
   let tr = null; try { await linkWithCredential(authZ.currentUser, gg()); } catch (e){ tr = e; }
-  ok(tr && tr.code === 'auth/credential-already-in-use' && GoogleAuthProvider.credentialFromError(tr), 'khách khác gắn Google đã dùng → credential-already-in-use, có credential để chuyển', tr && tr.code);
-  const lai = await signInWithCredential(authZ, GoogleAuthProvider.credentialFromError(tr));
+  ok(tr && tr.code === 'auth/credential-already-in-use', 'khách khác gắn Google đã dùng → credential-already-in-use (game không đè, chuyển tài khoản)', tr && tr.code);
+  const cTr = GoogleAuthProvider.credentialFromError(tr);
+  console.log('  ghi chú: credentialFromError ' + (cTr ? 'có credential' : 'KHÔNG có (Emulator) → game dùng đường dự phòng: bấm lại = signInWithPopup'));
+  const lai = await signInWithCredential(authZ, cTr || gg());
   const tLai = docToken(await getIdToken(lai.user, true));
   ok(lai.user.uid === Z.uid && tLai.authTime > tLink.authTime, 'đăng xuất rồi đăng nhập lại: cùng tài khoản, auth_time mới (tính lại 7 ngày)', {tLai, tLink});
   await deleteApp(Z.app);

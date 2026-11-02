@@ -20,6 +20,7 @@ function xuLy(op, a){
   }
   if (op === 'link'){ const cu = MC.google[a.gid]; if (cu && cu !== a.uid) return {loi:'auth/credential-already-in-use'}; MC.google[a.gid] = a.uid; MC.authTime[a.uid] = giay();
     return {uid:a.uid, providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
+  if (op === 'coGoogle') return !!MC.google[a.gid];
   if (op === 'cred'){ const uid = MC.google[a.gid]; MC.authTime[uid] = giay(); return {uid, providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
   if (op === 'token'){ if (!(a.uid in MC.authTime)) return {loi:'auth/user-token-expired'};
     return {jwt:b64({alg:'none'}) + '.' + b64({auth_time:MC.authTime[a.uid], iat:giay(), exp:giay() + 3600, user_id:a.uid,
@@ -37,11 +38,11 @@ export function initializeAuth(app, o){ window.__phienGia = (o && o.persistence)
 export function connectAuthEmulator(){}
 export function onAuthStateChanged(auth, f){ setTimeout(() => f(auth.currentUser), 0); return () => {}; }
 export async function signInAnonymously(auth){ if (window.__matMang) throw new Error('mất mạng'); const u = await may('anon'); auth.currentUser = u; giu(u); return {user:u}; }
-export class GoogleAuthProvider { setCustomParameters(){} static credentialFromError(e){ return e.customData; } static credentialFromResult(){ return null; } }
+export class GoogleAuthProvider { setCustomParameters(){} static credentialFromError(e){ return window.__khongCred ? null : e.customData; } static credentialFromResult(){ return null; } }
 const gid = () => window.__googleGia || 'nguoichoi';
 export async function linkWithPopup(u, p){ if (window.__matMang) { const e = new Error('mạng'); e.code = 'auth/network-request-failed'; throw e; }
   const r = await may('link', {uid:u.uid, gid:gid()}); if (r.loi){ const e = new Error(r.loi); e.code = r.loi; e.customData = {gid:gid()}; throw e; } window.__authGia.currentUser = r; giu(r); return {user:r}; }
-export async function signInWithPopup(auth, p){ return linkWithPopup(await signInAnonymously(auth).then(x => x.user), p); }
+export async function signInWithPopup(auth, p){ if (await may('coGoogle', {gid:gid()})) return signInWithCredential(auth, {gid:gid()}); return linkWithPopup(await signInAnonymously(auth).then(x => x.user), p); }
 export async function signInWithCredential(auth, c){ const u = await may('cred', c); auth.currentUser = u; window.__authGia = auth; giu(u); return {user:u}; }
 export async function reauthenticateWithCredential(){ throw new Error('không dùng'); }
 export async function getRedirectResult(){ return null; }

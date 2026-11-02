@@ -424,11 +424,13 @@
   // tài khoản Google đã có bản lưu ở máy khác: KHÔNG đẩy tiến độ ẩn danh lên; chuyển sang tài khoản đó, kéo bản mây, xung đột thì cho chọn
   async function doiSangGoogle(e){
     const cred = F.A.GoogleAuthProvider.credentialFromError(e);
-    if (!cred) return false;
+    // không lấy được credential từ lỗi → lần bấm sau đăng nhập thẳng (signInWithPopup) vào tài khoản Google đó
+    if (!cred){ dangNhapThang = true; bao(null, 'This Google account already has a save. Tap "Sign in with Google" again to switch.'); return false; }
     await DB.gui().catch(() => {});        // bản máy vẫn nằm trong localStorage; cố gửi nốt lên tài khoản khách cũ
     const kq = await F.A.signInWithCredential(F.auth, cred);
     await sauDangNhapGoogle(kq); await vaoUid(kq.user); return true;
   }
+  let dangNhapThang = false;
   const laTrungTk = e => e && (e.code === 'auth/credential-already-in-use' || e.code === 'auth/email-already-in-use');
 
   let xongKeo; const henKeo = new Promise(r => { xongKeo = r; });
@@ -478,7 +480,8 @@
      tài khoản khách, giữ nguyên tiến độ. Popup bị chặn → chuyển trang (authDomain cùng tên miền). */
   LM.dangNhapGoogle = () => {
     if (!F){ bao(null, navigator.onLine === false ? 'offline' : 'cloud not ready'); return Promise.resolve(false); }
-    const P = new F.A.GoogleAuthProvider(), cu = F.auth.currentUser;
+    const P = new F.A.GoogleAuthProvider(), cu = dangNhapThang ? null : F.auth.currentUser;
+    dangNhapThang = false;
     try { P.setCustomParameters && P.setCustomParameters({prompt:'select_account'}); } catch (e){}
     const p = cu ? F.A.linkWithPopup(cu, P) : F.A.signInWithPopup(F.auth, P);
     return p.then(async kq => { await sauDangNhapGoogle(kq); await vaoUid(kq.user); return true; }).catch(async e => {

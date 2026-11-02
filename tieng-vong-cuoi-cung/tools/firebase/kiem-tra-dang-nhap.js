@@ -92,6 +92,16 @@ const HET = 'Your sign-in expired after 7 days. Sign in again to sync your progr
   await Promise.all([B.pg.waitForEvent('load'), B.pg.click('#b-xd-may')]);
   await B.pg.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:30000});
   ok(await B.pg.evaluate(() => JSON.parse(localStorage.getItem('tvcc-vung1')).manh) === 55, 'chọn "Use cloud save": nhận 55');
+  // 9b. trình duyệt không trả credential trong lỗi → báo bấm lại, lần bấm sau đăng nhập thẳng, vẫn cho chọn bản
+  const D = await may(); await D.ctx.addInitScript(() => { window.__googleGia = 'tung'; window.__khongCred = true; }); await vao(D.pg);
+  await choiLuu(D.pg, 3); await vao(D.pg);
+  await D.pg.click('#b-dn-vao'); await D.pg.waitForTimeout(500);
+  const d1 = await D.pg.evaluate(() => ({tt:LuuMay.trangThai, loi:document.getElementById('dn-loi').textContent}));
+  ok(d1.tt === 'an-danh' && /already has a save/.test(d1.loi), 'không lấy được credential: vẫn là khách, báo "bấm lại để chuyển"', d1);
+  await D.pg.click('#b-dn-vao'); await D.pg.waitForFunction(() => LuuMay.trangThai === 'google', null, {timeout:10000}); await D.pg.waitForTimeout(400);
+  const d2 = await D.pg.evaluate(() => ({uid:LuuMay._dongBo.uid(), nut:document.getElementById('may-xd').offsetParent !== null, m:JSON.parse(localStorage.getItem('tvcc-vung1')).manh}));
+  ok(d2.uid === uidKhach && d2.nut && d2.m === 3 && manhMay(uidKhach) === 55, '…bấm lần 2: vào tài khoản Google, không đè (mây 55, máy 3), cho chọn', d2);
+  await D.ctx.close();
   // 10. trang chọn game/ cũng có ô tài khoản + chọn bản
   await B.pg.goto(GOC); await B.pg.waitForFunction(() => LuuMay.trangThai !== 'dang-ket-noi', null, {timeout:15000}); await B.pg.waitForTimeout(300);
   const ic = await B.pg.evaluate(() => ({ai:document.getElementById('dn-ai').textContent, ra:!document.getElementById('b-dn-ra').hidden, xd:!!document.getElementById('dn-xd')}));
