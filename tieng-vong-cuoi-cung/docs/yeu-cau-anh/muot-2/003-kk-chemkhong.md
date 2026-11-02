@@ -1,5 +1,5 @@
 # 003 – Kiếm Khách – chém xoay trên không: 1 khung xoay giữa F2–F3 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT; đã căn theo khung hàng xóm – IoU hàng xóm ≥ 0.87; ảnh 256×256 neo [128,172])
 - **Clip:** `nhan-vat.json → cap[0..2].clip.chemkhong` – thư mục art gốc `art/kiem-khach/chemkhong/` (7 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F2 (giữa F2 và F3).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F2→F3→F4 xoay 'nhảy ảnh'. Thêm 1 khung xoay giữa F2–F3 (và F3–F4 nếu cần)." (khung F3–F4 để ở yêu cầu P1 020)

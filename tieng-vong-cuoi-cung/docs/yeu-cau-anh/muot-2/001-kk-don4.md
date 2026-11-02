@@ -1,5 +1,5 @@
 # 001 – Kiếm Khách – đòn 4 (nhát kết): 2 khung giữa F4→F5→F6 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT; đã căn theo khung hàng xóm – IoU hàng xóm ≥ 0.87; ảnh 256×256 neo [128,172])
 - **Clip:** `nhan-vat.json → cap[0..2].clip.don4 (cả 3 cấp dùng chung thư mục don4)` – thư mục art gốc `art/kiem-khach/don4/` (9 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **2 khung mới**: `moi-01` chèn SAU F4 (giữa F4 và F5), `moi-02` chèn SAU F5 (giữa F5 và F6).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F4→F5→F6 đổi hình mạnh; chân trượt 10%; F6≈F7≈F8 vệt đứng hình. Khoá chân F0–F4; thêm 1–2 khung giữa (kiếm 1/3 và 2/3 quỹ đạo); F7–F8 vệt mảnh dần."
