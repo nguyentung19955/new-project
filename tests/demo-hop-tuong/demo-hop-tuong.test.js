@@ -1,4 +1,4 @@
-// claude/demo-hop-tuong: DEMO "Thủ thành ghép tướng" (demo/index.html, chạy độc lập).
+// claude/demo-hop-tuong: DEMO "NEON GRID — Merge Defense" (cyberpunk, demo/index.html, chạy độc lập).
 // Chọn bộ 5 tướng → triệu hồi đủ sân → kéo gộp 2 tướng cùng loại cùng sao ra sao+1 → nâng bậc → x2 chạy tới đợt 10 có boss →
 // tạm dừng → bỏ trận / kết quả → chơi lại; không lỗi JS; mọi nút nằm trong khung ở 844×390 + 667×375; cầm dọc → màn che.
 // Chạy: node tests/demo-hop-tuong/demo-hop-tuong.test.js
@@ -50,11 +50,11 @@ const trongKhung = (page) => page.evaluate(() => {
       ok(k.inV && !k.bad.length && !k.scroll, `${tag} màn chọn bộ: khung vừa màn (tỉ lệ ${k.s.toFixed(2)}), nút trong khung ${k.bad}`);
       await page.screenshot({ path: path.join(SHOT, `${tag}-1-chon.png`) });
       ok(await page.isDisabled('#nut-vao'), `${tag} chưa đủ 5 tướng thì chưa vào trận được`);
-      for (const id of ['giong', 'sontinh', 'thuytinh', 'auco', 'mychau']) await page.click(`.ct[data-id=${id}]`);
+      for (const id of ['scorch', 'frost', 'arc', 'warp', 'venom']) await page.click(`.ct[data-id=${id}]`);
       ok((await page.textContent('#chon-dem')) === '5/5' && !(await page.isDisabled('#nut-vao')), `${tag} chọn đủ 5 tướng`);
       await page.click('#nut-vao');
       await page.waitForTimeout(300);
-      ok(await page.evaluate(() => DEMO.S && DEMO.S.deck.join() === 'giong,sontinh,thuytinh,auco,mychau'), `${tag} vào trận với đúng bộ đã chọn`);
+      ok(await page.evaluate(() => DEMO.S && DEMO.S.deck.join() === 'scorch,frost,arc,warp,venom'), `${tag} vào trận với đúng bộ đã chọn`);
       // triệu hồi bằng Linh khí đầu trận: giá tăng dần
       const lk0 = await page.evaluate(() => DEMO.S.lk);
       await page.click('#nut-trieu'); await page.click('#nut-trieu');
@@ -65,7 +65,7 @@ const trongKhung = (page) => page.evaluate(() => {
       await page.evaluate(() => { DEMO.S.lk = 99999; });
       for (let i = 0; i < 16; i++) await page.click('#nut-trieu');
       st = await page.evaluate(() => ({ n: DEMO.S.o.filter(Boolean).length, ids: DEMO.S.o.every((v) => v && DEMO.S.deck.includes(v.id)), txt: document.querySelector('#gia-trieu').textContent }));
-      ok(st.n === 15 && st.ids && /đầy/.test(st.txt), `${tag} triệu hồi đủ 15 ô, toàn tướng trong bộ, nút báo "${st.txt}"`);
+      ok(st.n === 15 && st.ids && /GRID FULL/.test(st.txt), `${tag} triệu hồi đủ 15 ô, toàn tướng trong bộ, nút báo "${st.txt}"`);
       await page.waitForTimeout(1500);
       await page.screenshot({ path: path.join(SHOT, `${tag}-2-tran.png`) });
       // gộp: kéo tướng a thả lên tướng b cùng loại cùng sao
@@ -88,25 +88,25 @@ const trongKhung = (page) => page.evaluate(() => {
       st = await page.evaluate((s) => [DEMO.S.o[s[0]] && DEMO.S.o[s[0]].sao, DEMO.S.o[s[1]] && DEMO.S.o[s[1]].sao], sai);
       ok(st[0] === sai[2] && st[1] === sai[3], `${tag} thả lên tướng khác loại/sao: không gộp, tướng về chỗ cũ`);
       // nâng bậc
-      const b0 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.giong, dmg: DEMO.G.satThuong(DEMO.S, { id: 'giong', sao: 1 }) }));
-      await page.click('.the[data-id=giong]');
-      const b1 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.giong, dmg: DEMO.G.satThuong(DEMO.S, { id: 'giong', sao: 1 }), txt: document.querySelector('.the[data-id=giong] .bac').textContent }));
-      ok(b1.bac === b0.bac + 1 && b1.lk === b0.lk - 80 && b1.dmg > b0.dmg && b1.txt === 'Bậc 2', `${tag} nâng bậc Thánh Gióng: tốn 80, sát thương ${b0.dmg} → ${b1.dmg.toFixed(1)}, nút ghi "${b1.txt}"`);
+      const b0 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.scorch, dmg: DEMO.G.satThuong(DEMO.S, { id: 'scorch', sao: 1 }) }));
+      await page.click('.the[data-id=scorch]');
+      const b1 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.scorch, dmg: DEMO.G.satThuong(DEMO.S, { id: 'scorch', sao: 1 }), txt: document.querySelector('.the[data-id=scorch] .bac').textContent }));
+      ok(b1.bac === b0.bac + 1 && b1.lk === b0.lk - 80 && b1.dmg > b0.dmg && b1.txt === 'LV 2', `${tag} nâng cấp SCORCH: tốn 80, sát thương ${b0.dmg} → ${b1.dmg.toFixed(1)}, nút ghi "${b1.txt}"`);
       // x2 + tua nhanh tới đợt 10 có boss
       await page.click('#nut-tocdo');
-      ok((await page.textContent('#nut-tocdo')) === 'x2', `${tag} nút tốc độ chuyển x2`);
+      ok((await page.textContent('#nut-tocdo')) === '2x', `${tag} nút tốc độ chuyển 2x`);
       await page.evaluate(() => { DEMO.S.mang = 99; DEMO.tua(10); });
       await page.waitForFunction(() => DEMO.S.dot >= 10 && DEMO.S.boss, null, { timeout: 120000 });
       await page.evaluate(() => DEMO.tua(1));
       st = await page.evaluate(() => ({ dot: DEMO.S.dot, boss: DEMO.S.boss && DEMO.S.boss.boss.ten, kn: DEMO.S.boss && DEMO.S.boss.boss.kn, txt: document.querySelector('#tb-boss').textContent, giet: DEMO.S.giet }));
-      ok(st.dot === 10 && st.boss === 'Chằn Tinh' && /Boss/.test(st.txt), `${tag} tới đợt 10: boss ${st.boss} xuất hiện (đã hạ ${st.giet} quái)`);
+      ok(st.dot === 10 && st.boss === 'FIREWALL' && /BOSS/.test(st.txt), `${tag} tới đợt 10: boss ${st.boss} xuất hiện (đã hạ ${st.giet} quái)`);
       await page.waitForTimeout(1200);
       await page.screenshot({ path: path.join(SHOT, `${tag}-5-boss.png`) });
       // kỹ năng boss hoá đá tướng
       await page.evaluate(() => DEMO.tua(4));
       await page.waitForFunction(() => DEMO.S.o.some((v) => v && v.da > 0), null, { timeout: 30000 });
       await page.evaluate(() => DEMO.tua(1));
-      ok(true, `${tag} Chằn Tinh hoá đá tướng`);
+      ok(true, `${tag} FIREWALL khoá unit (LOCKDOWN)`);
       await page.screenshot({ path: path.join(SHOT, `${tag}-6-hoada.png`) });
       k = await trongKhung(page);
       ok(k.inV && !k.bad.length && !k.scroll, `${tag} trong trận: mọi nút trong khung, không chồng nhau ${k.bad}`);
@@ -123,7 +123,7 @@ const trongKhung = (page) => page.evaluate(() => {
       await page.waitForSelector('#ketqua:not([hidden])', { timeout: 120000 });
       await page.evaluate(() => DEMO.tua(1));
       const kq = await page.textContent('#kq-dot');
-      ok(/Đợt \d+/.test(kq), `${tag} thua: bảng kết quả "${kq}"`);
+      ok(/WAVE \d+/.test(kq), `${tag} thua: bảng kết quả "${kq}"`);
       await page.screenshot({ path: path.join(SHOT, `${tag}-7-ketqua.png`) });
       k = await trongKhung(page);
       ok(!k.bad.length, `${tag} bảng kết quả trong khung ${k.bad}`);
@@ -137,20 +137,21 @@ const trongKhung = (page) => page.evaluate(() => {
     {
       const ctx = await browser.newContext({ viewport: { width: 844, height: 390 } });
       const page = await ctx.newPage();
-      const png = fs.readFileSync(path.join(ROOT, 'assets/pixel-muot/tuong/giong-chan-dung.png'));
-      await page.route(/demo\/assets\/tuong\/giong\.png$/, (r) => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+      const png = fs.readFileSync(path.join(ROOT, 'assets/pixel-muot/tuong/giong.png'));
+      await page.route(/demo\/assets\/units\/scorch\.png$/, (r) => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
       await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
       await page.goto(URL);
-      await page.waitForFunction(() => RENDER.ANH['t:giong'].ok && RENDER.ANH['t:sontinh'].ok);
-      const a = await page.evaluate(() => [RENDER.ANH['t:giong'].moi, RENDER.ANH['t:sontinh'].moi, RENDER.ANH['t:sontinh'].n]);
-      ok(a[0] === true && a[1] === false && a[2] > 1, `ảnh mới demo/assets/tuong/giong.png được dùng; Sơn Tinh chưa có → ảnh tạm (${a[2]} khung)`);
+      await page.waitForFunction(() => RENDER.ANH['u:scorch'].ok);
+      await page.waitForTimeout(300);
+      const a = await page.evaluate(() => [RENDER.ANH['u:scorch'].moi, RENDER.ANH['u:frost'].ok]);
+      ok(a[0] === true && a[1] === false, 'ảnh mới demo/assets/units/scorch.png được dùng; FROST chưa có ảnh → vẽ procedural');
       await ctx.close();
     }
     // cầm dọc → màn che, trận dừng
     {
       const { ctx, page, errors } = await open(browser, 390, 844);
-      ok(await page.isVisible('#xoay'), 'dọc 390×844: hiện màn che "Xoay ngang"');
-      await page.evaluate(() => DEMO.batDau(['giong', 'sontinh', 'thuytinh', 'llq', 'mychau']));
+      ok(await page.isVisible('#xoay'), 'dọc 390×844: hiện màn che "ROTATE YOUR DEVICE"');
+      await page.evaluate(() => DEMO.batDau(['scorch', 'frost', 'arc', 'lance', 'glitch']));
       await page.waitForTimeout(600);
       ok((await page.evaluate(() => DEMO.S.t)) === 0, 'dọc: trận không chạy khi đang cầm dọc');
       await page.screenshot({ path: path.join(SHOT, '390x844-xoay.png') });

@@ -1602,7 +1602,7 @@ Mục để các session sau ghi **hình mới** phát sinh ngoài danh sách tr
 
 | nhánh | mã dự kiến | cỡ | mô tả | ghi chú |
 |---|---|---|---|---|
-| claude/demo-hop-tuong | `demo/thanh`, `demo/hang-quai`, `demo/o-dat`, `demo/be-san` | 48×56 / 32×32 / 32×32 | DEMO Thủ thành ghép tướng (`demo/`): cổng Thành, hang quái, ô đặt tướng, bệ sân — hiện vẽ khối pixel bằng canvas trong `demo/js/render.js` (veNen); người dùng có thể thay bằng ảnh `demo/assets/nen/*` theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md` | tướng/quái dùng lại pixel-muot có sẵn |
+| claude/demo-hop-tuong | (không áp dụng pixel) | — | DEMO riêng `demo/` đổi sang bối cảnh cyberpunk theo người dùng: hình vẽ procedural bằng canvas (glow) trong `demo/js/render.js`, ảnh thay thế gen ChatGPT theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md`; không dùng/không sửa pixel game chính | |
 | claude/duong-di-moi | `nen/cau-tre`, `nen/cau-da` | 16×16 / 32×32 | cầu tre / cầu đá chỗ đường cắt nhau | 9 dạng đường mới |
 | claude/duong-di-moi | `nen/mieng-hang-ngam` | 32×32 | miệng hang ngầm (quái chui xuống / trồi lên) |  |
 | claude/duong-di-moi | `nen/thanh-xoan-oc` | 48×48 | thành giữa xoắn ốc Cổ Loa |  |

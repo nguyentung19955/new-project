@@ -5,7 +5,7 @@
   const $ = (s) => document.querySelector(s);
   const wrap = $('#wrap'), cv = $('#cv'), ctx = cv.getContext('2d');
   let S = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, doc = false;
-  const KY_LUC = 'demo-hop-tuong.kyluc';
+  const KY_LUC = 'neon-grid.best';
 
   // ---- khung cố định 844×390 thu / phóng vừa vùng an toàn (học từ js/main.js khung-co-dinh) ----
   const doSafe = document.createElement('div'); doSafe.id = 'do-safe'; document.body.appendChild(doSafe);
@@ -47,13 +47,8 @@
   resize();
 
   // ---- ảnh nhỏ (chân dung) cho thẻ ----
-  function veChanDung(cvs, id, px) {
-    cvs.width = px; cvs.height = px;
-    const c = cvs.getContext('2d');
-    const a = R.ANH['t:' + id];
-    const ve = () => { c.clearRect(0, 0, px, px); R.veAnh(c, a, 0, px * 0.04, px, px * 0.96, 0); };
-    if (a.ok) ve(); else { let n = 0; const t = setInterval(() => { if (a.ok || ++n > 40) { clearInterval(t); ve(); } }, 100); }
-  }
+  const veChanDung = R.veChanDung;
+  const mauHanh = (el, h) => { el.style.setProperty('--h', h.mau); el.style.setProperty('--hg', h.mau + '55'); };
 
   // ---- màn chọn bộ ----
   function dungChon() {
@@ -62,16 +57,16 @@
       const t = TUONG[id], h = HANH[t.hanh];
       const b = document.createElement('button');
       b.className = 'ct'; b.dataset.id = id;
-      b.style.setProperty('--h', h.mau); b.style.setProperty('--ht', h.toi);
-      b.innerHTML = `<canvas></canvas><div class="ct-tt"><div class="ct-ten">${t.ten}</div><div class="ct-k">${t.hanh} · ${t.kieu}</div><div class="ct-mo">${t.mo}</div></div><span class="ct-so"></span>`;
-      veChanDung(b.querySelector('canvas'), id, 60);
+      mauHanh(b, h);
+      b.innerHTML = `<canvas></canvas><div class="ct-tt"><div class="ct-ten">${t.ten}</div><div class="ct-k"><span>${h.ten}</span><span class="chip">${t.kieu.toUpperCase()}</span></div><div class="ct-mo">${t.mo}</div></div><span class="ct-so"><b></b></span>`;
+      veChanDung(b.querySelector('canvas'), id, 62);
       b.onclick = () => { const k = chon.indexOf(id); if (k >= 0) chon.splice(k, 1); else if (chon.length < 5) chon.push(id); capChon(); };
       l.appendChild(b);
     }
     capChon();
   }
   function capChon() {
-    document.querySelectorAll('.ct').forEach((b) => { const k = chon.indexOf(b.dataset.id); b.classList.toggle('chon', k >= 0); b.querySelector('.ct-so').textContent = k >= 0 ? k + 1 : ''; });
+    document.querySelectorAll('.ct').forEach((b) => { const k = chon.indexOf(b.dataset.id); b.classList.toggle('chon', k >= 0); b.querySelector('.ct-so b').textContent = k >= 0 ? k + 1 : ''; });
     $('#chon-dem').textContent = chon.length + '/5';
     $('#nut-vao').disabled = chon.length !== 5;
   }
@@ -86,10 +81,10 @@
     for (const id of deck) {
       const t = TUONG[id], h = HANH[t.hanh];
       const b = document.createElement('button');
-      b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — nâng bậc`;
-      b.style.setProperty('--h', h.mau);
-      b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="gia"></span>`;
-      veChanDung(b.querySelector('canvas'), id, 42);
+      b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
+      mauHanh(b, h);
+      b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
+      veChanDung(b.querySelector('canvas'), id, 44);
       bo.appendChild(b);
     }
     capNhat(true);
@@ -98,20 +93,20 @@
   function capNhat(ep) {
     if (!S) return;
     const set = (k, v, f) => { if (ep || cu[k] !== v) { cu[k] = v; f(v); } };
-    set('dot', S.dot, (v) => ($('#tb-dot').textContent = 'Đợt ' + Math.max(1, v)));
+    set('dot', S.dot, (v) => ($('#tb-dot').textContent = Math.max(1, v)));
     const den = Math.ceil(Math.max(1, S.dot + (S.dot % 10 === 0 && S.boss ? 0 : 0.0001)) / 10) * 10;
-    set('boss', S.boss ? 'dang' : den - S.dot, (v) => ($('#tb-boss').textContent = v === 'dang' ? '⚠ Boss đang tới!' : v <= 0 ? 'Boss ở đợt này' : `Boss sau ${v} đợt (đợt ${den})`));
+    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS ON THE GRID' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); });
     set('mang', S.mang, (v) => { $('#tb-mang').innerHTML = Array.from({ length: C.MANG }, (_, i) => `<i class="tim${i < v ? '' : ' mat'}"></i>`).join(''); });
-    set('quai', S.quai.length + S.conSinh, (v) => ($('#tb-quai').textContent = 'Quái ' + v));
+    set('quai', S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     const lk = Math.floor(S.lk);
-    set('lk', lk, (v) => { const e = $('#lk'); e.textContent = v; e.classList.toggle('dai', v >= 10000); });
+    set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
     const g = G.giaTrieu(S), full = !G.trong(S).length;
-    set('trieu', g + '|' + (lk >= g) + full, () => { $('#gia-trieu').textContent = full ? 'Sân đầy' : g + ' ✦'; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
+    set('trieu', g + '|' + (lk >= g) + full, () => { $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
     document.querySelectorAll('.the').forEach((b) => {
       const id = b.dataset.id, bac = S.bac[id], gb = G.giaBac(S, id), mx = bac >= C.BAC_MAX;
       set('b' + id, bac + '|' + (lk >= gb), () => {
-        b.querySelector('.bac').textContent = 'Bậc ' + (bac + 1);
-        b.querySelector('.gia').textContent = mx ? 'Tối đa' : gb;
+        b.querySelector('.bac').textContent = 'LV ' + (bac + 1);
+        b.querySelector('.gia').textContent = mx ? 'MAX' : gb;
         b.classList.toggle('thieu', !mx && lk < gb); b.classList.toggle('max', mx);
       });
     });
@@ -119,13 +114,13 @@
   function ketThuc() {
     const dot = S.dot;
     let kl = 0; try { kl = +localStorage.getItem(KY_LUC) || 0; if (dot > kl) localStorage.setItem(KY_LUC, dot); } catch (e) { /* không lưu được */ }
-    $('#kq-dot').textContent = 'Đợt ' + dot;
-    $('#kq-phu').textContent = `Hạ ${S.giet} quái · Kỷ lục: đợt ${Math.max(kl, dot)}${dot > kl && kl ? ' (mới!)' : ''}`;
+    $('#kq-dot').textContent = 'WAVE ' + dot;
+    $('#kq-phu').textContent = `${S.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
     $('#ketqua').hidden = false;
   }
   function datDung(v) {
     dung = v; $('#dung').hidden = !v;
-    if (v && S) $('#dung-bo').innerHTML = S.deck.map((id) => `${TUONG[id].ten} <b>Bậc ${S.bac[id] + 1}</b>`).join(' · ');
+    if (v && S) $('#dung-bo').innerHTML = S.deck.map((id) => `${TUONG[id].ten} <b>LV ${S.bac[id] + 1}</b>`).join(' · ');
   }
 
   // ---- nút ----
@@ -135,8 +130,8 @@
     if (a === 'vao') batDau(chon);
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
     else if (a === 'trieu' && S && !dung) { G.trieuHoi(S); capNhat(); }
-    else if (a === 'bac' && S && !dung) { G.lenBac(S, b.dataset.id); capNhat(); }
-    else if (a === 'tocdo') { tocDo = tocDo === 1 ? 2 : 1; b.textContent = 'x' + tocDo; b.classList.toggle('bat', tocDo === 2); }
+    else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } capNhat(); }
+    else if (a === 'tocdo') { tocDo = tocDo === 1 ? 2 : 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo === 2); }
     else if (a === 'dung' && S && !S.het) datDung(true);
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
@@ -166,6 +161,7 @@
   let last = performance.now(), dem = 0;
   function loop(now) {
     requestAnimationFrame(loop);
+    R.doFps(now - last);
     let dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S && !S.het && !dung && !doc) {
       let t = dt * tocDo * tua;

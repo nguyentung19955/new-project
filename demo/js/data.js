@@ -1,42 +1,46 @@
-// DEMO "Thủ thành ghép tướng" — dữ liệu tướng, quái, boss (game nguyên bản, thần thoại Việt)
+// DEMO "NEON GRID — Merge Defense" (cyberpunk) — dữ liệu unit, quái, boss. Game nguyên bản theo thể loại merge defense.
 'use strict';
+// phe / nguyên tố cyber: màu neon chính (mau), màu tối (toi), màu sáng (sang)
 const HANH = {
-  Kim:  { mau: '#e9cf6a', toi: '#7a6420', ten: 'Kim' },
-  'Mộc': { mau: '#6cc24a', toi: '#2f5e1f', ten: 'Mộc' },
-  'Thủy': { mau: '#4fb0ea', toi: '#1d4f7a', ten: 'Thủy' },
-  'Hỏa': { mau: '#f0653a', toi: '#7a2414', ten: 'Hỏa' },
-  'Thổ': { mau: '#c99355', toi: '#5e3e1c', ten: 'Thổ' },
+  Plasma:  { mau: '#ff6a2a', toi: '#3a1206', sang: '#ffd2a8', ten: 'PLASMA' },
+  Cryo:    { mau: '#5ee7ff', toi: '#06303a', sang: '#dffaff', ten: 'CRYO' },
+  Voltage: { mau: '#ffe24a', toi: '#3a3006', sang: '#fff8c8', ten: 'VOLTAGE' },
+  Laser:   { mau: '#ff3c8e', toi: '#3a0620', sang: '#ffc8de', ten: 'LASER' },
+  Void:    { mau: '#a35cff', toi: '#1e0a3a', sang: '#e2ccff', ten: 'VOID' },
+  Nanite:  { mau: '#4d8dff', toi: '#081a3a', sang: '#cfe0ff', ten: 'NANITE' },
+  Hack:    { mau: '#00ffa3', toi: '#003a26', sang: '#c8ffe8', ten: 'HACK' },
+  Toxin:   { mau: '#b4ff2a', toi: '#2a3a06', sang: '#ecffc8', ten: 'TOXIN' },
 };
-// anh: ảnh tạm trong repo (dải khung pixel, khung vuông, khung 0 = đứng); moi: ảnh người dùng gen thả vào demo/assets/ (ưu tiên nếu có)
+// ảnh mới (nếu người dùng thả vào demo/assets/units/<id>.png) được ưu tiên; không có thì vẽ procedural bằng canvas
 const TUONG = {
-  giong:     { ten: 'Thánh Gióng', hanh: 'Hỏa', kieu: 'Đốt', mo: 'Ngựa sắt phun lửa: trúng là cháy liên tục.', dmg: 9, cd: 0.9, anh: 'tuong/giong.png' },
-  sontinh:   { ten: 'Sơn Tinh', hanh: 'Thổ', kieu: 'Choáng', mo: 'Nện đá núi: có tỉ lệ làm quái choáng đứng yên.', dmg: 13, cd: 1.2, anh: 'tuong/tanvien.png' },
-  thuytinh:  { ten: 'Thủy Tinh', hanh: 'Thủy', kieu: 'Làm chậm', mo: 'Sóng dữ: đánh lan quanh mục tiêu, làm chậm quái.', dmg: 6, cd: 1.0, anh: 'boss/thuytinh.png' },
-  llq:       { ten: 'Lạc Long Quân', hanh: 'Thủy', kieu: 'Lan', mo: 'Sấm rồng: đòn đánh nảy sang các quái gần nhau.', dmg: 8, cd: 1.1, anh: 'tuong/llq.png' },
-  auco:      { ten: 'Âu Cơ', hanh: 'Mộc', kieu: 'Cổ vũ', mo: 'Tiên Âu Cơ: tướng đứng cạnh (trên, dưới, trái, phải) đánh nhanh hơn.', dmg: 4, cd: 1.0, anh: 'tuong/auco.png' },
-  cdt:       { ten: 'Chử Đồng Tử', hanh: 'Kim', kieu: 'Tài lộc', mo: 'Gậy nón thần: sinh Linh khí theo thời gian, hạ quái được thêm.', dmg: 5, cd: 1.0, anh: 'tuong/cdt.png' },
-  mychau:    { ten: 'Mỵ Châu', hanh: 'Kim', kieu: 'Nỏ thần', mo: 'Nỏ thần An Dương Vương: bắn cùng lúc nhiều quái (thêm tên theo sao).', dmg: 7, cd: 0.8, anh: 'tuong/mychau.png' },
-  thachsanh: { ten: 'Thạch Sanh', hanh: 'Thổ', kieu: 'Diệt boss', mo: 'Rìu thần: nhắm quái nhiều máu nhất, gây gấp bội lên boss.', dmg: 20, cd: 1.6, anh: 'tuong/thachsanh.png' },
+  scorch: { tip: [60, 36], ten: 'SCORCH', hanh: 'Plasma', kieu: 'Burn', mo: 'Plasma jets set targets ablaze — damage over time.', dmg: 9, cd: 0.9 },
+  frost:  { tip: [44, 26], ten: 'FROST', hanh: 'Cryo', kieu: 'Slow', mo: 'Cryo bursts hit an area and slow everything inside.', dmg: 6, cd: 1.0 },
+  arc:    { tip: [32, 12], ten: 'ARC', hanh: 'Voltage', kieu: 'Chain', mo: 'Lightning jumps between nearby enemies.', dmg: 8, cd: 1.1 },
+  lance:  { tip: [63, 34], ten: 'LANCE', hanh: 'Laser', kieu: 'Sniper', mo: 'Locks on the toughest target. x2.5 damage to bosses.', dmg: 20, cd: 1.6 },
+  warp:   { tip: [32, 26], ten: 'WARP', hanh: 'Void', kieu: 'Boost', mo: 'Time-dilation field: adjacent units attack faster.', dmg: 4, cd: 1.0 },
+  miner:  { tip: [60, 35], ten: 'MINER', hanh: 'Nanite', kieu: 'Credits', mo: 'Mines Energy over time, bonus Energy on kills.', dmg: 5, cd: 1.0 },
+  glitch: { tip: [56, 37], ten: 'GLITCH', hanh: 'Hack', kieu: 'EMP', mo: 'EMP shots can stun and mark targets to take more damage.', dmg: 12, cd: 1.2 },
+  venom:  { tip: [52, 23], ten: 'VENOM', hanh: 'Toxin', kieu: 'Multi', mo: 'Fires toxic needles at several enemies at once.', dmg: 7, cd: 0.8 },
 };
 const TUONG_IDS = Object.keys(TUONG);
-const BO_MAC_DINH = ['giong', 'sontinh', 'thuytinh', 'llq', 'mychau'];
+const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
 
 const QUAI = {
-  thuong: { ten: 'Lính Tôm', anh: 'quai/tom.png', hp: 1, spd: 52, thuong: 3, co: 34 },
-  nhanh:  { ten: 'Cáo Lửa', anh: 'quai/cao.png', hp: 0.6, spd: 92, thuong: 3, co: 32 },
-  trau:   { ten: 'Rùa Đá', anh: 'quai/rua.png', hp: 3.2, spd: 34, thuong: 7, co: 38 },
+  thuong: { ten: 'DRONE', hp: 1, spd: 52, thuong: 3, co: 34 },
+  nhanh:  { ten: 'SKITTER', hp: 0.6, spd: 92, thuong: 3, co: 31 },
+  trau:   { ten: 'BULWARK', hp: 3.2, spd: 34, thuong: 7, co: 40 },
 };
-// mỗi 10 đợt một boss, xoay vòng; kỹ năng: hoada (hoá đá tướng), doicho (đổi chỗ tướng), hoimau (hồi máu)
+// mỗi 10 đợt một boss, xoay vòng; kỹ năng: hoada (khoá unit), doicho (xáo lưới), hoimau (hồi giáp)
 const BOSS = [
-  { id: 'chantinh', ten: 'Chằn Tinh', anh: 'boss/chantinh.png', kn: 'hoada', knTen: 'Hoá đá', mo: 'Biến tướng thành đá, không đánh được một lúc', cd: 6 },
-  { id: 'haba', ten: 'Hà Bá', anh: 'boss/haba.png', kn: 'doicho', knTen: 'Nước cuốn', mo: 'Cuốn tướng đổi chỗ lung tung', cd: 5 },
-  { id: 'hotinh', ten: 'Hồ Tinh', anh: 'boss/hotinh.png', kn: 'hoimau', knTen: 'Hồi máu', mo: 'Hồi máu cho mình và quái quanh', cd: 4 },
+  { id: 'firewall', ten: 'FIREWALL', kn: 'hoada', knTen: 'LOCKDOWN', mo: 'Locks units — they cannot fire for a while', cd: 6, mau: '#ff3b3b' },
+  { id: 'overclock', ten: 'OVERCLOCK', kn: 'doicho', knTen: 'SCRAMBLE', mo: 'Scrambles the grid, swapping unit positions', cd: 5, mau: '#ffb31a' },
+  { id: 'corruptor', ten: 'CORRUPTOR', kn: 'hoimau', knTen: 'REPAIR', mo: 'Restores its armor and patches nearby enemies', cd: 4, mau: '#c04dff' },
 ];
 const CAU_HINH = {
   W: 844, H: 390, COT: 5, HANG: 3, O: 64, KHE: 6,
   SAO_MAX: 7, BAC_MAX: 5, MANG: 3, LK_DAU: 100,
-  giaTrieu: (n) => 10 + 6 * n,                       // giá Triệu hồi lần thứ n (n = số lần đã triệu)
-  giaBac: (b) => [80, 160, 300, 500, 800][b],          // giá lên bậc b → b+1
+  giaTrieu: (n) => 10 + 6 * n,                         // giá Summon lần thứ n (n = số lần đã triệu)
+  giaBac: (b) => [80, 160, 300, 500, 800][b],          // giá nâng cấp b → b+1
   heSoSao: (s) => Math.pow(2.2, s - 1),
   heSoBac: (b) => 1 + 0.4 * b,
   mauDot: (w) => 18 * Math.pow(1.21, w - 1) * (1 + 0.03 * w),

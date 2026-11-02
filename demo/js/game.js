@@ -4,7 +4,7 @@
   const C = CAU_HINH, T = TUONG, Q = QUAI, B = BOSS;
   const OX = C.W / 2 - (C.COT * C.O + (C.COT - 1) * C.KHE) / 2;   // góc trái trên sân
   const OY = 66;
-  const LE = 22;                                                  // đường quái cách mép sân
+  const LE = 25;                                                  // đường quái cách mép sân
   const SW = C.COT * C.O + (C.COT - 1) * C.KHE, SH = C.HANG * C.O + (C.HANG - 1) * C.KHE;
   // đường đi: vào từ hang bên trái (dưới) → vòng lên quanh sân → xuống phải → Thành bên phải
   const L = OX - LE, R = OX + SW + LE, TOP = OY - LE, BOT = OY + SH + LE;
@@ -80,11 +80,12 @@
     if (laBoss) {
       const b = B[(w / 10 - 1) % B.length], vong = Math.floor((w / 10 - 1) / B.length);
       const hp = C.mauDot(w) * 42;
-      const q = themQuai(S, 'boss', hp, 26, b.anh, 60);
+      const q = themQuai(S, 'boss', hp, 26, null, 58);
       q.boss = b; q.knT = 3; q.vong = vong; q.thuong = 60 + 6 * w;
       S.boss = q;
-      S.bao = { chu: `Đợt ${w} · Boss ${b.ten}`, phu: `${b.knTen}: ${b.mo}`, t: 0, T: 3.2 };
-    } else S.bao = { chu: `Đợt ${w}`, phu: '', t: 0, T: 1.4 };
+      S.bao = { chu: `WAVE ${w} · ${b.ten}`, phu: `${b.knTen} — ${b.mo}`, t: 0, T: 3.2, boss: 1 };
+      S.rung = 0.6;
+    } else S.bao = { chu: `WAVE ${w}`, phu: '', t: 0, T: 1.4 };
   }
   function themQuai(S, kind, hp, spd, anh, co) {
     const q = { uid: S.nid++, kind, hp, max: hp, spd, d: 0, x: 30, y: 0, cham: 0, chamT: 0, choang: 0, chay: 0, chayT: 0, anh, co, thuong: 0, khung: rnd() * 4 };
@@ -99,15 +100,17 @@
     if (w >= 3 && r < 0.28) k = 'nhanh';
     else if (w >= 5 && r > 0.82) k = 'trau';
     const d = Q[k];
-    const q = themQuai(S, k, C.mauDot(w) * d.hp, d.spd * (1 + Math.min(0.35, w * 0.006)), d.anh, d.co);
+    const q = themQuai(S, k, C.mauDot(w) * d.hp, d.spd * (1 + Math.min(0.35, w * 0.006)), null, d.co);
     q.thuong = d.thuong + Math.floor(w / 6);
   }
 
   // ---- đánh ----
   const sống = (q) => q.hp > 0 && !q.ra;
-  const dauTien = (S) => { let b = null; for (const q of S.quai) if (sống(q) && (!b || q.d > b.d)) b = q; return b; };
+  const nham = (q) => sống(q) && q.d >= 26;   // vừa ra khỏi cổng (đang hiện hình) thì chưa bắn được
+  const dauTien = (S) => { let b = null; for (const q of S.quai) if (nham(q) && (!b || q.d > b.d)) b = q; return b; };
   function trung(S, q, dmg, v, mau, chiSo) {
     if (!sống(q)) return;
+    if (q.dau > 0) dmg *= 1.2;
     q.hp -= dmg;
     S.so.push({ x: q.x + (rnd() - 0.5) * 10, y: q.y - q.co * 0.8, v: Math.round(dmg), t: 0, mau, to: chiSo });
     if (q.hp <= 0) chet(S, q, v);
@@ -115,36 +118,37 @@
   function chet(S, q, v) {
     q.hp = 0;
     let lk = q.thuong;
-    if (v && v.id === 'cdt') lk += v.sao;
+    if (v && v.id === 'miner') lk += v.sao;
     S.lk += lk; S.giet++;
-    S.so.push({ x: q.x, y: q.y - q.co, v: '+' + lk + '✦', t: 0, mau: '#ffe27a', lk: 1 });
+    S.so.push({ x: q.x, y: q.y - q.co, v: '+' + lk, t: 0, mau: '#ffe27a', lk: 1 });
     S.fx.push({ k: 'no', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.4, r: q.co * 0.6 });
     if (q === S.boss) S.boss = null;
   }
   function ban(S, i, v) {
     const td = T[v.id], h = HANH[td.hanh];
     const dmg = satThuong(S, v);
-    const [x, y] = oTam(i);
+    const [ox, oy] = oXY(i), tp = td.tip || [32, 32];
+    const x = ox + 4 + tp[0] * 0.875, y = oy + 2 + tp[1] * 0.875;
     let mt = [];
-    if (v.id === 'thachsanh') { let b = null; for (const q of S.quai) if (sống(q) && (!b || q.hp > b.hp)) b = q; if (b) mt = [b]; }
-    else if (v.id === 'mychau') {
+    if (v.id === 'lance') { let b = null; for (const q of S.quai) if (nham(q) && (!b || q.hp > b.hp)) b = q; if (b) mt = [b]; }
+    else if (v.id === 'venom') {
       const n = 1 + Math.floor(v.sao / 2);
-      mt = S.quai.filter(sống).sort((a, b) => b.d - a.d).slice(0, n);
+      mt = S.quai.filter(nham).sort((a, b) => b.d - a.d).slice(0, n);
     } else { const q = dauTien(S); if (q) mt = [q]; }
     if (!mt.length) return false;
     for (const q of mt) {
-      if (v.id === 'llq') {   // sấm lan: đánh ngay, nảy sang quái gần
-        let cur = q, dd = dmg; const da = new Set(), pts = [[x, y - 8]];
+      if (v.id === 'arc') {   // sấm lan: đánh ngay, nảy sang quái gần
+        let cur = q, dd = dmg; const da = new Set(), pts = [[x, y]];
         for (let n = 0; n <= 1 + Math.ceil(v.sao / 2) && cur; n++) {
           da.add(cur); pts.push([cur.x, cur.y - cur.co / 2]);
           trung(S, cur, dd, v, h.mau);
           dd *= 0.75;
           let nx = null, nd = 120;
-          for (const o of S.quai) if (sống(o) && !da.has(o)) { const k = Math.hypot(o.x - cur.x, o.y - cur.y); if (k < nd) { nd = k; nx = o; } }
+          for (const o of S.quai) if (nham(o) && !da.has(o)) { const k = Math.hypot(o.x - cur.x, o.y - cur.y); if (k < nd) { nd = k; nx = o; } }
           cur = nx;
         }
         S.fx.push({ k: 'set', pts, t: 0, T: 0.22, mau: h.mau });
-      } else S.dan.push({ x, y: y - 10, q, dmg, v, mau: h.mau, id: v.id, spd: 620 });
+      } else S.dan.push({ x, y, q, dmg, v, mau: h.mau, id: v.id, spd: v.id === 'lance' ? 1600 : 640, x0: x, y0: y });
     }
     return true;
   }
@@ -152,11 +156,12 @@
     const q = d.q, v = d.v;
     if (!sống(q)) return;
     let dmg = d.dmg;
-    if (v.id === 'thachsanh' && q.boss) dmg *= 2.5;
-    trung(S, q, dmg, v, d.mau, v.id === 'thachsanh');
-    if (v.id === 'giong') { const dps = d.dmg * 0.55; if (dps >= q.chay || q.chayT < 1) { q.chay = Math.max(dps, q.chay); } q.chayT = 3; q.chayV = v; }
-    if (v.id === 'sontinh' && rnd() < 0.12 + 0.04 * v.sao) q.choang = Math.max(q.choang, (0.6 + 0.06 * v.sao) * (q.boss ? 0.4 : 1));
-    if (v.id === 'thuytinh') {
+    if (v.id === 'lance' && q.boss) dmg *= 2.5;
+    trung(S, q, dmg, v, d.mau, v.id === 'lance');
+    if (v.id === 'scorch') { const dps = d.dmg * 0.55; if (dps >= q.chay || q.chayT < 1) { q.chay = Math.max(dps, q.chay); } q.chayT = 3; q.chayV = v; }
+    if (v.id === 'glitch') q.dau = 3;
+    if (v.id === 'glitch' && rnd() < 0.12 + 0.04 * v.sao) q.choang = Math.max(q.choang, (0.6 + 0.06 * v.sao) * (q.boss ? 0.4 : 1));
+    if (v.id === 'frost') {
       const f = Math.min(0.6, 0.3 + 0.03 * v.sao);
       for (const o of S.quai) if (sống(o) && Math.hypot(o.x - q.x, o.y - q.y) < 46) {
         if (o !== q) trung(S, o, d.dmg * 0.6, v, d.mau);
@@ -179,21 +184,22 @@
       if (S.dot === 0 || (!S.boss && (!con || (S.sauSinh > 14 && !S.laBoss)))) {
         S.choT -= dt;
         if (S.choT <= 0) {
-          if (S.dot > 0) { const th = 15 + 5 * S.dot; S.lk += th; S.so.push({ x: C.W / 2, y: OY + SH / 2, v: `Qua đợt +${th}✦`, t: 0, mau: '#ffe27a', lk: 1, to: 1 }); }
+          if (S.dot > 0) { const th = 15 + 5 * S.dot; S.lk += th; S.so.push({ x: C.W / 2, y: OY + SH / 2, v: `WAVE CLEAR +${th}`, t: 0, mau: '#ffe27a', lk: 1, to: 1 }); }
           batDauDot(S); S.choT = 1.2;
         }
       }
     }
     if (S.bao) { S.bao.t += dt; if (S.bao.t > S.bao.T) S.bao = null; }
+    if (S.rung > 0) S.rung = Math.max(0, S.rung - dt);
     // Chử Đồng Tử sinh Linh khí
     S.tienT += dt;
     if (S.tienT >= 8) {
       S.tienT = 0;
       S.o.forEach((v, i) => {
-        if (!v || v.id !== 'cdt' || v.da) return;
-        const n = Math.round(2 * v.sao * C.heSoBac(S.bac.cdt));
+        if (!v || v.id !== 'miner' || v.da) return;
+        const n = Math.round(2 * v.sao * C.heSoBac(S.bac.miner));
         S.lk += n; const [x, y] = oTam(i);
-        S.so.push({ x, y: y - 20, v: '+' + n + '✦', t: 0, mau: '#ffe27a', lk: 1 });
+        S.so.push({ x, y: y - 20, v: '+' + n, t: 0, mau: '#ffe27a', lk: 1 });
       });
     }
     // tướng
@@ -203,7 +209,7 @@
       if (v.danh > 0) v.danh -= dt;
       if (v.da > 0) { v.da = Math.max(0, v.da - dt); return; }
       let tang = 0;
-      for (const k of ke(i)) { const n = S.o[k]; if (n && n.id === 'auco' && !n.da) tang = Math.max(tang, 0.12 + 0.06 * n.sao + 0.04 * S.bac.auco); }
+      for (const k of ke(i)) { const n = S.o[k]; if (n && n.id === 'warp' && !n.da) tang = Math.max(tang, 0.12 + 0.06 * n.sao + 0.04 * S.bac.warp); }
       v.cd -= dt * (1 + tang);
       if (v.cd <= 0) { if (ban(S, i, v)) { v.cd = T[v.id].cd; v.danh = 0.3; } else v.cd = 0.05; }
     });
@@ -223,6 +229,7 @@
       if (q.chayT > 0) { q.chayT -= dt; q.chayDem = (q.chayDem || 0) + q.chay * dt; if (q.chayDem >= 1 || q.hp <= q.chayDem) { const n = q.chayDem; q.chayDem = 0; q.hp -= n; if (q.hp <= 0) chet(S, q, q.chayV); } if (q.chayT <= 0) q.chay = 0; }
       if (!sống(q)) continue;
       if (q.chamT > 0) { q.chamT -= dt; if (q.chamT <= 0) q.cham = 0; }
+      if (q.dau > 0) q.dau -= dt;
       if (q.choang > 0) { q.choang -= dt; continue; }
       q.d += q.spd * (1 - q.cham) * dt;
       [q.x, q.y] = viTri(q.d);
@@ -231,8 +238,8 @@
         q.ra = true;
         const mat = q.boss ? 2 : 1;
         S.mang -= mat;
-        S.fx.push({ k: 'thanh', t: 0, T: 0.6 });
-        S.so.push({ x: C.W - 40, y: BOT - 50, v: `-${mat}♥`, t: 0, mau: '#ff5a5a', to: 1 });
+        S.fx.push({ k: 'thanh', t: 0, T: 0.6 }); S.rung = Math.max(S.rung || 0, 0.35);
+        S.so.push({ x: C.W - 40, y: BOT - 50, v: `CORE -${mat}`, t: 0, mau: '#ff5a5a', to: 1 });
         if (q === S.boss) S.boss = null;
         if (S.mang <= 0) { S.mang = 0; S.het = true; }
       }
@@ -247,6 +254,8 @@
     q.knT -= dt;
     if (q.knT > 0) return;
     q.knT = q.boss.cd;
+    S.rung = Math.max(S.rung || 0, 0.25);
+    S.fx.push({ k: 'kn', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.7, mau: q.boss.mau });
     const co = S.o.map((v, i) => (v && !v.da ? i : -1)).filter((i) => i >= 0);
     if (q.boss.kn === 'hoada') {
       const n = Math.min(co.length, 2 + q.vong);

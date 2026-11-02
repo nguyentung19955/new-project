@@ -3129,15 +3129,15 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Ấn Phù: khung chi tiết = phần cuộn (thông tin + 5 cấp gọn 2 cột, cấp kế nổi một dòng) + nút Khắc / Nâng ghim đáy khung; 3 cột ấn kéo cao bằng khung chi tiết (hết khoảng trống dưới). Kết quả: dòng "Mở <tướng> · Ngân khố" lên trên bảng số liệu (trước nằm cuối bảng cuộn). Góp ý: hộp co theo khung — ô viết co lại (≥ 56px) thay vì đẩy Gửi / Huỷ xuống vùng cuộn.
 - Test mới `tests/gon-khung`: 17 màn (menu, đăng nhập, Anh Hùng + tướng khoá, Thần Khí, Ấn Phù, Kho Báu, Bách khoa, Cài đặt, Góp ý, Cây kỹ năng, Túi đồ, Tiến hoá, Lò đúc, Hợp thể, Sính lễ, Kết quả) ở 844×390 + 667×375: mọi nút hành động (trừ mục trong danh sách cuộn) nằm trọn khung, không nằm ở nửa dưới một khung cuộn gần đầy (máy thật chữ to hơn sẽ bị đẩy khuất).
 
-## claude/demo-hop-tuong — DEMO game mới "Thủ Thành Ghép Tướng" (thư mục `demo/`, không đụng game chính)
+## claude/demo-hop-tuong — DEMO game mới "NEON GRID — Merge Defense" (cyberpunk, thư mục `demo/`, không đụng game chính)
 
-- Thể loại thủ thành ghép tướng (merge tower defense), 1 người, 1 màn vô tận + boss mỗi 10 đợt. Mở `demo/index.html` (file:// được) hoặc bản web `/demo/` (GitHub Pages phục vụ thẳng thư mục; Firebase: `tools/build-web.js --hosting` chép thêm `demo/`).
-- Khung cố định 844×390 thu/phóng vừa vùng an toàn + hộp đen; chỉ màn ngang, cầm dọc → màn che "Xoay ngang" + trận dừng; chặn phóng to/cuộn.
-- Sân 3×5 giữa màn; quái ra từ hang trái dưới, vòng quanh sân, về Thành phải dưới; lọt thành −1 mạng (boss −2), 3 mạng.
-- Đầu trận chọn bộ 5/8 tướng: Thánh Gióng (Hỏa·đốt), Sơn Tinh (Thổ·choáng), Thủy Tinh (Thủy·làm chậm lan), Lạc Long Quân (Thủy·sấm nảy), Âu Cơ (Mộc·tăng tốc đánh tướng kề), Chử Đồng Tử (Kim·sinh Linh khí), Mỵ Châu (Kim·nỏ thần nhiều tên), Thạch Sanh (Thổ·nhắm quái máu nhiều, ×2,5 lên boss).
-- Triệu hồi: tốn Linh khí (10 + 6×số lần đã triệu), đặt tướng 1 sao ngẫu nhiên trong bộ vào ô trống ngẫu nhiên. Kéo tướng thả lên tướng cùng loại cùng sao → 1 tướng sao+1 loại ngẫu nhiên (tối đa 7 sao, sát thương ×2,2 mỗi sao); thả vào ô trống = chuyển chỗ.
-- Hàng dưới: 5 thẻ nâng Bậc từng loại (80/160/300/500/800 Linh khí, +40% sát thương mỗi bậc, tối đa Bậc 6).
-- Quái: Lính Tôm (thường), Cáo Lửa (nhanh), Rùa Đá (trâu); máu ×1,21 mỗi đợt. Boss: Chằn Tinh (đợt 10 — hoá đá tướng 4 giây), Hà Bá (đợt 20 — cuốn tướng đổi chỗ), Hồ Tinh (đợt 30 — hồi máu mình + quái quanh), xoay vòng mạnh dần.
-- Hạ quái + qua đợt được Linh khí; số sát thương bay, đạn theo từng tướng, hiệu ứng triệu hồi/gộp/lên bậc; x1/x2, tạm dừng, thua → bảng kết quả (đợt đạt được, kỷ lục) → Chơi lại / Đổi bộ.
-- Ảnh: tạm dùng pixel `assets/pixel-muot/` của game chính; ảnh mới thả vào `demo/assets/` (tên theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md`) được ưu tiên tự động.
-- Test: `node tests/demo-hop-tuong/demo-hop-tuong.test.js` (chọn bộ, triệu hồi đủ, gộp, nâng bậc, x2 tới boss đợt 10, hoá đá, tạm dừng, thua/chơi lại, nút trong khung 844×390 + 667×375, dọc → màn che, ảnh mới được ưu tiên).
+- Người dùng đổi hướng: bỏ bối cảnh Thần Thoại Việt → **cyberpunk** (thành phố neon, đêm mưa), toàn bộ chữ **tiếng Anh**, đồ hoạ là ưu tiên số 1. Lối chơi giữ nguyên.
+- Mở `demo/index.html` (file:// được) hoặc web `/demo/` (GitHub Pages phục vụ thẳng; Firebase: `tools/build-web.js --hosting` chép thêm `demo/`).
+- Khung cố định 844×390 thu/phóng vừa vùng an toàn + hộp đen; chỉ ngang, dọc → màn che "ROTATE YOUR DEVICE" + dừng trận; chặn phóng to/cuộn.
+- Lưới 3×5 giữa màn; quái ra từ cổng rift trái dưới, chạy theo đường dẫn dữ liệu vòng quanh lưới tới **CORE** phải dưới; lọt CORE −1 (boss −2), 3 mạng. Quái vừa ra khỏi cổng (26 px đầu) chưa bị nhắm.
+- Chọn đội 5/8 unit: SCORCH (Plasma·đốt), FROST (Cryo·làm chậm lan), ARC (Voltage·sét nảy), LANCE (Laser·nhắm máu nhiều, ×2,5 boss), WARP (Void·unit kề đánh nhanh), MINER (Nanite·sinh Energy), GLITCH (Hack·EMP choáng + đánh dấu +20% sát thương), VENOM (Toxin·nhiều mục tiêu).
+- SUMMON tốn Energy (10 + 6×số lần), unit hạng 1 ngẫu nhiên trong đội vào ô trống ngẫu nhiên. Kéo thả lên unit cùng loại cùng hạng → hạng+1 loại ngẫu nhiên (tối đa 7, ×2,2 mỗi hạng; hạng = vạch neon). Ô trống = chuyển chỗ. Thẻ dưới nâng LV theo loại (80/160/300/500/800, +40%/LV, tối đa LV 6).
+- Quái DRONE / SKITTER (nhanh) / BULWARK (trâu), máu ×1,21 mỗi đợt. Boss mỗi 10 đợt: FIREWALL (LOCKDOWN khoá unit 4 giây), OVERCLOCK (SCRAMBLE xáo lưới), CORRUPTOR (REPAIR hồi giáp mình + quái quanh).
+- Đồ hoạ procedural (canvas): trời + 2 lớp thành phố parallax, mưa, sương phát sáng, sàn lưới phối cảnh, đường dữ liệu có gói tin chạy, viền neon chạy quanh lưới, unit/quái/boss vẽ code có glow (sprite vẽ sẵn 3×), tia laser/sét có vệt, nổ hạt, rung màn khi boss, số sát thương bay, băng thông báo đợt chữ tách màu. Giao diện kính mờ, font Orbitron/Rajdhani (có dự phòng). Tự hạ chất lượng khi FPS thấp.
+- Ảnh: người dùng gen theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md` (6 lô song song, cùng STYLE GUIDE + ảnh style-reference), thả vào `demo/assets/` là tự dùng.
+- Test: `node tests/demo-hop-tuong/demo-hop-tuong.test.js`.

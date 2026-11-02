@@ -1,235 +1,183 @@
-# Prompt ChatGPT — ảnh cho DEMO "Thủ Thành Ghép Tướng" (`demo/`)
+# Prompt ChatGPT — ảnh cho DEMO "NEON GRID — Merge Defense" (`demo/`, cyberpunk)
 
-Dán từng prompt dưới đây vào ChatGPT (tạo ảnh). Mỗi lần **một ảnh**. Luôn dán kèm đoạn **PHONG CÁCH CHUNG** ở đầu
-(hoặc dán một lần đầu cuộc trò chuyện rồi nói "giữ đúng phong cách trên").
+**Cách dùng (mở nhiều cuộc trò chuyện ChatGPT song song):**
 
-Tải ảnh về, **đổi tên đúng như cột "Lưu thành"**, thả vào thư mục ghi bên cạnh trong `demo/assets/`.
-Demo tự dùng ảnh mới nếu có; chưa có thì dùng ảnh pixel tạm của game chính — không cần sửa code.
-Tải lại trang (Ctrl+F5) là thấy.
+1. Làm **LÔ 0** trước trong 1 cuộc trò chuyện → được ảnh `style-reference.png`. Lưu lại (không cần thả vào game).
+2. Mở các cuộc trò chuyện khác, mỗi cuộc **1 lô** (LÔ 1 … LÔ 5). Trong mỗi cuộc: **đính kèm `style-reference.png`**, rồi
+   dán **nguyên khối của lô đó** (đã có sẵn STYLE GUIDE ở đầu). Gõ "next" để ChatGPT làm ảnh tiếp theo trong lô.
+3. Tải từng ảnh, **đổi tên đúng tên file ghi trong prompt**, thả vào đúng thư mục `demo/assets/...`.
+   Demo tự dùng ảnh mới; chưa có ảnh thì vẽ bằng code như hiện tại. Tải lại trang (Ctrl+F5) để thấy.
 
-> Ảnh phải **PNG nền trong suốt** (trừ ảnh nền sân). Nếu ChatGPT trả nền trắng/caro giả, nói thêm:
-> "make the background truly transparent (alpha), no checkerboard, no white".
+> Ảnh phải là **PNG nền trong suốt thật** (trừ nền thành phố). Nếu ChatGPT trả nền caro giả / nền đen, nói:
+> "Re-export as PNG with a real transparent alpha background, no checkerboard, no black backdrop."
+> Ảnh vẽ nhân vật nên **nhìn sang PHẢI**, đứng chính giữa, chân chạm mép dưới (game căn theo đáy ảnh).
 
----
-
-## PHONG CÁCH CHUNG (dán trước mọi prompt)
-
-```
-Style: high-quality 2D pixel art for a mobile merge tower-defense game based on Vietnamese mythology.
-Crisp pixel edges, 1px dark outline, limited ancient palette (bronze, deep vermilion red, old turmeric gold,
-indigo, moss green, earth brown, smoky black), 3-tone shading, strong light from top-left.
-Semi-chibi but epic and dignified (head:body about 1:1.7), small intense eyes, serious/heroic faces,
-NOT cute, NOT kawaii, no pink cheeks. Authentic Vietnamese motifs: Dong Son bronze drum patterns
-(concentric circles, sawtooth, Lac birds), loincloths, cross-collar tunics, feathered headdresses,
-bronze axes and spears, Ly–Tran dragons. No Japanese/Chinese/Korean/Western elements (no kimono, no knight armor).
-Single character, full body, centered, feet touching the bottom edge, facing RIGHT, 3/4 view,
-transparent background (PNG alpha), no text, no frame, no shadow on the ground, no extra objects.
-```
+| Thư mục | Tên file game đọc |
+|---|---|
+| `demo/assets/units/` | `scorch.png` `frost.png` `arc.png` `lance.png` `warp.png` `miner.png` `glitch.png` `venom.png` |
+| `demo/assets/enemies/` | `thuong.png` (Drone) `nhanh.png` (Skitter) `trau.png` (Bulwark) |
+| `demo/assets/bosses/` | `firewall.png` `overclock.png` `corruptor.png` |
+| `demo/assets/bg/` | `city.png` `cell.png` `core.png` `portal.png` |
+| `demo/assets/ui/` | `summon.png` `card.png` `button.png` |
 
 ---
 
-## 1. Tướng (8 ảnh) — **256×256 px**, nền trong suốt, nhìn sang PHẢI, đứng thế sẵn sàng
+## LÔ 0 — Style reference (làm TRƯỚC, 1 ảnh)
 
-Thả vào `demo/assets/tuong/`
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image)
+- Genre: premium mobile merge tower-defense, cyberpunk megacity at night in the rain.
+- Rendering: stylized 3D render, chunky chibi-mech proportions (big head/body block, short legs), clean hard-surface
+  shapes, soft global illumination, crisp silhouettes readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
+- Materials: dark gunmetal and graphite plates (#1d2336, #3c4762, #6b7a99 highlights), glossy black glass visors,
+  emissive neon parts that glow (bloom).
+- Lighting: dark scene, strong neon RIM LIGHT from back-left in cyan #3ce7ff and back-right in magenta #ff2bd6,
+  the unit's own faction color as emissive light on its core/visor/weapon.
+- Faction colors: PLASMA #ff6a2a · CRYO #5ee7ff · VOLTAGE #ffe24a · LASER #ff3c8e · VOID #a35cff ·
+  NANITE #4d8dff · HACK #00ffa3 · TOXIN #b4ff2a. Enemies use red #ff3355 / magenta #ff2bd6 / orange #ff8a1a.
+- Camera: 3/4 front view, slightly from above, character facing RIGHT, centered, feet touching the bottom edge, small
+  circular hover pad under the feet in the faction color.
+- Output: 1024x1024 PNG, fully TRANSPARENT background, no text, no logo, no frame, no ground shadow outside the pad.
 
-| Lưu thành | Tướng | Hành / kiểu đánh |
-|---|---|---|
-| `giong.png` | Thánh Gióng | Hỏa · Đốt |
-| `sontinh.png` | Sơn Tinh | Thổ · Choáng |
-| `thuytinh.png` | Thủy Tinh | Thủy · Làm chậm |
-| `llq.png` | Lạc Long Quân | Thủy · Lan |
-| `auco.png` | Âu Cơ | Mộc · Cổ vũ |
-| `cdt.png` | Chử Đồng Tử | Kim · Tài lộc |
-| `mychau.png` | Mỵ Châu (nỏ thần) | Kim · Nỏ thần (nhiều tên) |
-| `thachsanh.png` | Thạch Sanh | Thổ · Diệt boss |
-
-**giong.png**
-```
-Thanh Giong, legendary Vietnamese boy-giant hero, iron armor glowing red-hot at the seams, yellow head scarf,
-flowing dark red cape, holding a long iron staff (or a burning bamboo stalk), small flames licking around his feet
-and shoulders. Main color: fiery orange-red (Fire element). 256x256 px, transparent background.
-```
-
-**sontinh.png**
-```
-Son Tinh, Mountain God of Tan Vien, broad-shouldered mature man with a stern face, green-brown robe with
-mountain-ridge patterns, golden crown with peaks, holding a magic staff/book that raises rocks, a few floating
-stone fragments around his hands. Main color: earth brown and moss green (Earth element). 256x256 px, transparent background.
-```
-
-**thuytinh.png**
-```
-Thuy Tinh, Water God, fierce sea-lord with dragon-scale armor in deep indigo and teal, horned dragon helmet,
-long trident, swirling water waves wrapping his lower body, droplets in the air. Menacing but heroic.
-Main color: deep blue (Water element). 256x256 px, transparent background.
-```
-
-**llq.png**
-```
-Lac Long Quan, Dragon Lord ancestor of the Vietnamese, regal bearded man in dark blue royal robe with
-golden Ly-dynasty dragon embroidery, golden crown, a small serpentine water-dragon coiling around him,
-crackling blue-white lightning in one hand. Main color: blue and gold (Water element). 256x256 px, transparent background.
-```
-
-**auco.png**
-```
-Au Co, fairy mother of the Vietnamese, graceful dignified woman in white and leaf-green dress with Dong Son
-patterns, large white crane/Lac-bird feather wings, feathered headdress, holding a glowing green feather fan
-that spreads healing leaves. Main color: leaf green and white (Wood element). 256x256 px, transparent background.
-```
-
-**cdt.png**
-```
-Chu Dong Tu, humble fisherman-turned-saint, bare-chested young man with a loincloth, holding the magic staff
-and the magic conical hat (non la), golden coins and gold sparkles falling from the hat.
-Main color: gold and white-silver (Metal element). 256x256 px, transparent background.
-```
-
-**mychau.png**
-```
-My Chau, princess of Au Lac, young woman with long black hair, purple-violet silk dress, goose-feather cloak
-(white feathers), aiming the golden magic crossbow of An Duong Vuong (crossbow trigger shaped like a golden
-turtle claw), several glowing golden arrows. Main color: gold and violet (Metal element). 256x256 px, transparent background.
-```
-
-**thachsanh.png**
-```
-Thach Sanh, woodcutter hero, muscular young man in a simple brown loincloth, carrying a large bronze axe,
-a bow on his back and a magic lute (dan than) hanging at his side, determined face.
-Main color: earth brown and bronze (Earth element). 256x256 px, transparent background.
+Image: style-reference.png — a lineup sheet on a DARK background (this one only, not transparent) showing 3 small
+cyberpunk chibi combat robots side by side (one orange plasma flamethrower bot, one cyan crystal drone, one pink
+sniper turret) in exactly the style above, plus a sample neon UI button. This image is the visual reference
+for all next images.
 ```
 
 ---
 
-## 2. Quái (3 ảnh) + Boss (3 ảnh) — nền trong suốt, nhìn sang PHẢI (đang bước đi)
+## LÔ 1 — Units 1–4 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
 
-Thả vào `demo/assets/quai/`
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, chunky chibi-mech proportions,
+  clean hard-surface shapes, crisp silhouette readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
+- Dark gunmetal/graphite plates (#1d2336 #3c4762, highlights #6b7a99), black glass visors, glowing emissive parts.
+- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; the unit's faction color glows on core/visor/weapon.
+- 3/4 front view from slightly above, facing RIGHT, centered, feet on bottom edge, small glowing hover pad in faction color.
+- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One character per image.
 
-| Lưu thành | Quái | Cỡ |
-|---|---|---|
-| `thuong.png` | Lính Tôm (quái thường) | 192×192 |
-| `nhanh.png` | Cáo Lửa (quái nhanh) | 192×192 |
-| `trau.png` | Rùa Đá (quái trâu, máu dày) | 192×192 |
-| `boss-chantinh.png` | Boss Chằn Tinh (đợt 10, 40…) — hoá đá tướng | 384×384 |
-| `boss-haba.png` | Boss Hà Bá (đợt 20, 50…) — cuốn tướng đổi chỗ | 384×384 |
-| `boss-hotinh.png` | Boss Hồ Tinh (đợt 30, 60…) — hồi máu | 384×384 |
+Make these 4 images, one at a time (wait for "next"):
 
-**thuong.png**
-```
-Shrimp soldier monster of the Water God's army, orange armored shrimp walking upright on legs, holding a small
-spear and round bronze shield, angry eyes. Walking pose to the right. 192x192 px, transparent background.
-```
+1) scorch.png — SCORCH, PLASMA faction (#ff6a2a). Squat heavy flamethrower mech: rounded armored torso with a glowing
+   orange reactor core in the chest, small dome head with a narrow orange visor slit, two fuel tanks on its back with
+   orange light strips, a thick arm-cannon nozzle pointing right with a hot orange glow and tiny heat sparks.
 
-**nhanh.png**
-```
-Fire fox spirit monster, lean orange fox running fast to the right, tail made of blue-green ghost fire,
-sharp teeth, wild eyes. Dynamic running pose. 192x192 px, transparent background.
-```
+2) frost.png — FROST, CRYO faction (#5ee7ff). Floating drone built around a large faceted ice-blue energy crystal
+   (diamond shape, glowing from inside), a thin metal halo ring around its middle, small orbiting ice shards,
+   cyan thruster glow underneath. Elegant and cold.
 
-**trau.png**
-```
-Stone turtle monster, huge tortoise with a cracked mossy stone shell carved with an ancient stele, slow heavy
-walk to the right, glowing angry eyes. Looks very tanky. 192x192 px, transparent background.
-```
+3) arc.png — ARC, VOLTAGE faction (#ffe24a). Compact tesla-coil turret: trapezoid armored base, a pillar wrapped with
+   three glowing yellow coil rings, a bright crackling energy sphere on top throwing small lightning arcs.
 
-**boss-chantinh.png**
-```
-Chan Tinh, giant python-ogre demon from the Thach Sanh legend: huge green-skinned ogre with snake features,
-horns, tusks, holding a stone-spiked club, grey petrifying mist swirling from its hand. Very intimidating boss,
-walking to the right. 384x384 px, transparent background.
-```
-
-**boss-haba.png**
-```
-Ha Ba, river lord demon: massive blue-scaled sea-serpent man with coral horns, seashell crown, green seaweed
-robe, trident, whirlpools of water spinning around him. Boss, walking to the right. 384x384 px, transparent background.
-```
-
-**boss-hotinh.png**
-```
-Ho Tinh, nine-tailed fox demon: tall white fox spirit with purple-violet flame tails (many tails fanned out),
-red markings on its face, holding a glowing green healing orb. Elegant but evil boss, walking to the right.
-384x384 px, transparent background.
+4) lance.png — LANCE, LASER faction (#ff3c8e). Precision sniper turret on a sleek tripod: compact body, a very long
+   railgun barrel pointing right with a pink-red emissive line along it, scope with a glowing pink lens.
 ```
 
 ---
 
-## 3. Nền sân, ô đặt tướng, Thành, hang quái
+## LÔ 2 — Units 5–8 (4 ảnh, 1024×1024, nền trong suốt) → `demo/assets/units/`
 
-Thả vào `demo/assets/nen/`
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, chunky chibi-mech proportions,
+  clean hard-surface shapes, crisp silhouette readable at 64 px. NOT pixel art, NOT anime, NOT photoreal.
+- Dark gunmetal/graphite plates (#1d2336 #3c4762, highlights #6b7a99), black glass visors, glowing emissive parts.
+- Neon rim light: cyan #3ce7ff back-left, magenta #ff2bd6 back-right; the unit's faction color glows on core/visor/weapon.
+- 3/4 front view from slightly above, facing RIGHT, centered, feet on bottom edge, small glowing hover pad in faction color.
+- 1024x1024 PNG, TRANSPARENT background, no text, no logo, no frame. One character per image.
 
-| Lưu thành | Nội dung | Cỡ | Nền |
-|---|---|---|---|
-| `san.png` | Nền toàn màn (cỏ, đất) — KHÔNG vẽ đường, KHÔNG vẽ ô | **1688×780** (ngang) | đặc (không trong suốt) |
-| `o-dat.png` | Một ô đặt tướng (phiến đá vuông) | 128×128 | đặc hoặc trong suốt |
-| `thanh.png` | Cổng Thành cần bảo vệ (góc phải dưới) | 148×180 | trong suốt |
-| `hang-quai.png` | Hang quái tràn ra (góc trái dưới) | 128×128 | trong suốt |
+Make these 4 images, one at a time (wait for "next"):
 
-> Đường đất quái đi và bệ đá của sân 3×5 do code vẽ chồng lên nền (để khớp toạ độ), nên ảnh nền chỉ cần
-> mặt đất trống, phần giữa nên **tối và ít chi tiết** cho tướng nổi bật.
+5) warp.png — WARP, VOID faction (#a35cff). Floating beacon: a thick dark metal ring with four small purple nodes,
+   inside it a swirling black-violet singularity with spiral light, standing on a short pylon. Feels like bending time.
 
-**san.png**
-```
-Top-down pixel art game background, wide landscape 1688x780, dark ancient Vietnamese countryside at dusk:
-dark green grass field with tiny pixel flowers, a few rice paddy edges, banana trees and bamboo clumps only
-near the far left and far right edges, small stones. The center area is plain dark grass with low detail.
-NO road, NO path, NO grid, NO buildings, NO characters, no text. Muted dark palette.
-```
+6) miner.png — MINER, NANITE faction (#4d8dff). Boxy little crypto-mining robot on tank treads: chest screen showing
+   blue bar graphs, two blue LED eyes, a drill arm pointing right, a floating blue hexagon data-coin hologram above it.
 
-**o-dat.png**
-```
-Single square stone floor tile for placing heroes, 128x128 pixel art, top-down, dark weathered stone slab
-with a thin carved Dong Son bronze-drum border pattern (sawtooth + small circles), subtle cracks,
-slightly darker center. Seamless square, no text.
-```
+7) glitch.png — GLITCH, HACK faction (#00ffa3). Hooded hacker android: dark cloak-like armored hood, inside only a
+   glowing mint-green visor bar, a triangle emblem on the chest, a compact EMP blaster pointing right, small floating
+   mint code fragments (abstract blocks, no readable text) around it.
 
-**thanh.png**
-```
-Pixel art ancient Vietnamese citadel gate (Co Loa style), front view, brick and rammed-earth wall with a
-wooden two-tier roof with curved eaves, red-lacquered wooden gate, a red flag with a golden Lac bird on top.
-148x180 px, transparent background, no text.
-```
-
-**hang-quai.png**
-```
-Pixel art dark monster cave entrance in a rocky cliff, front view, black inside with two small red glowing eyes,
-moss and roots on the rocks. 128x128 px, transparent background, no text.
+8) venom.png — VENOM, TOXIN faction (#b4ff2a). Six-legged spider bot: round armored abdomen with glowing lime stripes,
+   small head with three lime eyes, a triple needle launcher on its back pointing right, tiny toxic droplets glowing.
 ```
 
 ---
 
-## 4. Nút (3 ảnh) — khung trống, KHÔNG có chữ (chữ do game ghi)
+## LÔ 3 — Quái + boss (6 ảnh, nền trong suốt) → `demo/assets/enemies/`, `demo/assets/bosses/`
 
-Thả vào `demo/assets/nut/`
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Premium mobile merge tower-defense, cyberpunk night city. Stylized 3D render, chunky proportions, hard-surface,
+  crisp silhouette readable at 32–64 px. NOT pixel art, NOT anime, NOT photoreal.
+- Hostile machines: dark plates with HOSTILE glow colors (red #ff3355, magenta #ff2bd6, orange #ff8a1a), menacing but not gory.
+- Neon rim light cyan #3ce7ff back-left, magenta #ff2bd6 back-right. 3/4 view, moving to the RIGHT, centered,
+  bottom of the body on the bottom edge. TRANSPARENT background PNG, no text, no logo, no frame. One per image.
 
-| Lưu thành | Nút | Cỡ |
-|---|---|---|
-| `trieu-hoi.png` | Nút lớn "Triệu hồi" (góc phải dưới) | 392×152 |
-| `the-bac.png` | Thẻ nâng bậc của từng tướng (5 cái hàng dưới) | 200×144 |
-| `nho.png` | Nút nhỏ (x1/x2, tạm dừng) | 96×72 |
+Make these 6 images, one at a time (wait for "next"):
 
-**trieu-hoi.png**
-```
-Pixel art game UI button, wide rectangle 392x152, ornate bronze frame with Dong Son drum sawtooth border,
-inside glowing golden-orange lacquer with subtle sun-ray pattern from the bronze drum center, slight bevel,
-corners decorated with small Lac birds. Completely EMPTY in the middle (no text, no icons). Transparent outside the button.
-```
-
-**the-bac.png**
-```
-Pixel art game UI card frame 200x144, dark red-brown lacquered wood with a thin bronze border and small corner
-rivets, darker inner panel. Empty, no text, no icons. Transparent outside the card.
+1) thuong.png (512x512) — DRONE: hovering disc drone, dark red-metal body, one big glowing red eye, two small rotors on top.
+2) nhanh.png (512x512) — SKITTER: low fast glitch-virus crawler, angular dark-violet shell with magenta glitch stripes,
+   four thin legs, white-hot arrow-shaped eye, slight digital-glitch offset effect on its edges.
+3) trau.png (512x512) — BULWARK: heavy tank mech on treads, boxy armor, a big front shield plate with orange emissive
+   stripes, narrow orange visor slit. Clearly slow and very tough.
+4) firewall.png (1024x1024) — BOSS FIREWALL: giant hexagonal armored wall-creature covered in a glowing red grid of
+   cells, a row of red flame-like spikes on top, one wide angry red visor slit, two stubby legs. It locks down the player's turrets.
+5) overclock.png (1024x1024) — BOSS OVERCLOCK: round heavy core machine with a blazing golden-amber reactor orb in the
+   center, a huge spinning gear ring around it, three piston legs, heat haze. Color amber #ffb31a.
+6) corruptor.png (1024x1024) — BOSS CORRUPTOR: a mass of corrupted purple data cubes clumped into a creature, several
+   glowing magenta tendrils, one big white-magenta eye in the middle, digital glitch fragments. Color #c04dff.
 ```
 
-**nho.png**
+---
+
+## LÔ 4 — Nền, ô, Core, cổng quái (4 ảnh) → `demo/assets/bg/`
+
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Cyberpunk megacity at night in heavy rain, neon cyan #3ce7ff and magenta #ff2bd6 dominant, deep violet sky #0c0422,
+  stylized 3D render, soft volumetric glowing fog, wet reflective surfaces. NOT pixel art, NOT photoreal.
+- No text, no logos, no readable signs, no characters.
+
+Make these 4 images, one at a time (wait for "next"):
+
+1) city.png (1688x780, landscape, NOT transparent) — wide game background: distant neon skyscrapers silhouetted along
+   the upper half (a glowing magenta horizon haze, rain streaks, floating holographic billboards without text), the
+   lower half is a dark wet ground plane with a faint perspective neon grid. The CENTER of the image must stay dark
+   and low-detail (the game board and road are drawn on top). Dark overall, so neon UI stays readable.
+2) cell.png (256x256, transparent) — one square glass floor tile for placing units, top-down: dark translucent glass
+   with a thin cyan edge, small cyan corner brackets, subtle inner grid, slightly rounded corners. Seamless square.
+3) core.png (512x512, transparent) — the MAINFRAME CORE the player defends: hexagonal metal pedestal with a bright
+   cyan energy orb floating above it, two thin glowing orbit rings around the orb. 3/4 view.
+4) portal.png (512x512, transparent) — enemy spawn portal: a tall oval rift with a magenta glowing dashed rim,
+   pitch-black inside with faint glitch static, sparks. Front view.
 ```
-Pixel art small square-ish game UI button 96x72, dark wood with bronze border, slight bevel, empty center,
-no text, no icons. Transparent outside the button.
+
+---
+
+## LÔ 5 — Nút giao diện (3 ảnh, nền trong suốt) → `demo/assets/ui/`
+
+```text
+STYLE GUIDE — "NEON GRID" (keep identical across every image; match the attached style-reference.png)
+- Cyberpunk game UI, glassmorphism: dark translucent smoky glass (#0a0e24 at ~60% opacity look), thin neon edges in
+  cyan #3ce7ff and magenta #ff2bd6, subtle inner glow, tiny tech corner details. Flat front view.
+- EMPTY CENTER — absolutely NO text, NO icons, NO numbers (the game writes text on top).
+- TRANSPARENT background outside the button shape. PNG.
+
+Make these 3 images, one at a time (wait for "next"):
+
+1) summon.png (800x352) — the big main action button: wide rounded rectangle, gradient neon border cyan→magenta,
+   slightly brighter glass inside with faint diagonal light streak. Very premium.
+2) card.png (400x344) — upgrade card frame: dark glass panel with a thin neutral light-blue border, a darker strip
+   along the bottom (for the price), small corner notches.
+3) button.png (192x152) — small square-ish icon button: dark glass, thin cyan border, slight bevel, empty center.
 ```
 
 ---
 
 ### Kiểm tra sau khi thả ảnh
-- Mở `demo/index.html` (bấm đúp được, hoặc bản web `/demo/`). Màn chọn bộ hiện chân dung mới → ảnh tướng đã nhận.
-- Ảnh tướng/quái mới chỉ cần **1 tư thế** (game tự nhún nhẹ khi đi). Ảnh dải khung pixel cũ vẫn là ảnh dự phòng.
-- Tên file phải viết thường, không dấu, đúng như bảng.
+- Mở `demo/index.html` (bấm đúp được) hoặc bản web `/demo/`. Màn chọn đội hiện ảnh unit mới → đã nhận.
+- Ảnh unit/quái chỉ cần **1 tư thế** — game tự thêm nhún, quầng sáng, giật bắn, vạch hạng.
+- Tên file viết thường đúng như bảng. Ảnh quá to vẫn chạy nhưng nên giữ cỡ ghi trong prompt cho nhẹ.
