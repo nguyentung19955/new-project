@@ -36,11 +36,11 @@
   "cay": [
     {"id": "luoi_1", "nhanh": "Lưỡi", "ten": "Rèn Vang Âm", "mo_ta": "Kiếm lên cấp Vang Âm: sát thương 10 → 13", "gia": 1, "can": [], "hieu_ung": {"cap_kiem": 1}},
     {"id": "luoi_2", "nhanh": "Lưỡi", "ten": "Rèn Cộng Hưởng", "mo_ta": "Kiếm lên cấp Cộng Hưởng: sát thương 13 → 16", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"cap_kiem": 2}},
-    {"id": "luoi_3", "nhanh": "Lưỡi", "ten": "Nhát Thứ Năm", "mo_ta": "Thêm nhát kết thứ 5 vào combo đất (hoạt cảnh riêng)", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"them_nhat": "don5"}, "can_anh": ["art/kiem-khach/don5/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/004-nhat-thu-nam.md"},
+    {"id": "luoi_3", "nhanh": "Lưỡi", "ten": "Nhát Thứ Năm", "mo_ta": "Thêm nhát kết thứ 5 vào combo đất (hoạt cảnh riêng)", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"them_nhat": "don5"}, "can_anh": ["art/kiem-khach/don5/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/004-nhat-thu-nam.md", "clip": {"thu_muc": "don5", "chan": [128, 172], "lap": false, "ms": [70, 70, 45, 45, 45, 55, 55, 80, 80, 80], "trung": [5, 6], "hop": [-60, -95, 140, 90], "ghi_chu": "tạm – sửa theo ảnh thật"}},
     {"id": "luoi_4", "nhanh": "Lưỡi", "ten": "Vệt Ngân Sáng", "mo_ta": "Vệt kiếm đổi sang vệt ngân sáng hơn", "gia": 1, "can": ["luoi_2"], "hieu_ung": {"vet_kiem": "ngan"}, "can_anh": ["art/hieu-ung/vet-kiem-ngan/don1/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/005-vet-kiem-ngan.md"},
     {"id": "vong_1", "nhanh": "Vọng", "ten": "Tai Nghe Chuông", "mo_ta": "Mảnh Âm rơi thêm 15%", "gia": 1, "can": [], "hieu_ung": {"manh_am": 15}},
     {"id": "vong_2", "nhanh": "Vọng", "ten": "Học Từ Tiếng Vọng", "mo_ta": "Âm Điểm nhận thêm 20%", "gia": 1, "can": ["vong_1"], "hieu_ung": {"am_diem": 20}},
     {"id": "than_1", "nhanh": "Thân", "ten": "Da Rễ", "mo_ta": "Bất tử sau khi trúng đòn +8 khung", "gia": 1, "can": [], "hieu_ung": {"khang": 8}},
-    {"id": "than_2", "nhanh": "Thân", "ten": "Dáng Kiếm Khách Thức Tỉnh", "mo_ta": "Dáng đứng chờ mới (chỉ đổi hình)", "gia": 1, "can": ["than_1"], "hieu_ung": {"clip_dung": "dung-thuc-tinh"}, "can_anh": ["art/kiem-khach/dung-thuc-tinh/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/006-dang-dung-moi.md"}
+    {"id": "than_2", "nhanh": "Thân", "ten": "Dáng Kiếm Khách Thức Tỉnh", "mo_ta": "Dáng đứng chờ mới (chỉ đổi hình)", "gia": 1, "can": ["than_1"], "hieu_ung": {"clip_dung": "dung-thuc-tinh"}, "can_anh": ["art/kiem-khach/dung-thuc-tinh/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/006-dang-dung-moi.md", "clip": {"thu_muc": "dung-thuc-tinh", "chan": [128, 172], "ms": 200}}
   ]
 }
