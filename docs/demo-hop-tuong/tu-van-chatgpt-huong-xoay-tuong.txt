@@ -1,0 +1,68 @@
+NEON GRID — TƯ VẤN HƯỚNG QUAY SPRITE THEO QUÁI
+Tham chiếu: ảnh chụp Destiny Child: Defense War, wave 41.
+
+1. DCDW THỰC SỰ CÓ BAO NHIÊU HƯỚNG?
+Ảnh tĩnh cho thấy các đơn vị cùng loại có dáng/hướng nhìn khác nhau, phù hợp với cơ chế quay theo mục tiêu. Tuy nhiên mỗi nhân vật trên ảnh chỉ cao vài chục pixel và ảnh không có chuỗi thời gian, nên KHÔNG THỂ xác nhận DCDW có đúng 8 bộ sprite, 4 hướng cộng lật gương, hay xoay sprite bằng engine. Mức chắc chắn: cao rằng game tạo cảm giác nhiều hướng; thấp về số hướng và kỹ thuật thực hiện. Để kiểm chứng, cần xem video ở tốc độ 0,25×, chụp cùng một loại tướng khi mục tiêu ở tám góc và so sánh bóng lưng, mặt, vũ khí, các chi tiết bất đối xứng.
+
+2. SO SÁNH PHƯƠNG ÁN
+Giả định 8 tướng; idle 8 frame + attack 12 frame = 20 frame/hướng. Đếm dưới đây là frame nguồn phải tạo, chưa tính sửa lỗi và hiệu ứng độc lập.
+
+A. Vẽ 5 hướng S, SW, W, NW, N; lật gương để có SE, E, NE.
+- 5 × 20 = 100 frame/tướng; 800 frame/8 tướng.
+- Cảm giác 8 hướng tốt nhất trong các phương án thuần sprite; mặt/lưng rõ ràng.
+- Rủi ro lệch thiết kế qua góc: CAO với ChatGPT (vũ khí, tóc, phụ kiện, tỷ lệ). Lật gương còn đảo tay cầm súng, logo, chi tiết bất đối xứng. Cần quy định hướng gốc và cho phép đảo bất đối xứng hoặc vẽ bù riêng.
+- Hợp: người SCORCH, FROST, LANCE, BROKER; robot kiếm ARC; thú VENOM nếu ưu tiên chất lượng.
+
+B. Vẽ 3 hướng S, W, N rồi lật gương ra E; dùng hướng gần nhất cho đường chéo.
+- 3 × 20 = 60 frame/tướng; 480 frame/8 tướng.
+- Chỉ có 4 hình hướng thực, nên khi quái ở góc chéo, tướng quay nấc lớn; cảm giác kém mượt hơn A. Nếu 3 hướng chọn S, SW, N thì thiếu hướng ngang/NW và không phủ góc tốt: không khuyến nghị.
+- Rủi ro lệch thiết kế TRUNG BÌNH; dễ triển khai bản thử.
+- Hợp: nhân vật ít chuyển động/nhỏ hoặc nguyên mẫu; không lý tưởng cho tướng người cầm vũ khí dài.
+
+C. Xoay toàn bộ sprite bằng code quanh trục Z trong mặt phẳng màn hình.
+- 1 × 20 = 20 frame/tướng; 160 frame/8 tướng.
+- Góc camera cao 82° KHÔNG đồng nghĩa có thể xoay một ảnh nhân vật 2D để tạo các hướng nhìn 3D: quay ảnh làm cả đầu, chân, vũ khí nghiêng/ngã; không lộ lưng, không đổi phối cảnh. Nhân vật sẽ trông như bị xoay trên mặt giấy.
+- Hợp: WARP drone tròn gần đối xứng; hiệu ứng/đĩa quay. Có thể hợp một phần với GLITCH nếu thiết kế màn hình/khối robot gần đối xứng, nhưng không nên xoay toàn thân có chân. Không hợp người, ARC cầm kiếm, VENOM bốn chân.
+- Dùng nội suy góc bằng code chỉ cho lớp vũ khí/đầu độc lập nếu có asset riêng; không xoay toàn sprite nhân hình.
+
+D. Phương án lai: sprite 5 hướng cho thân, vũ khí/đầu/hiệu ứng nhắm mục tiêu riêng; hoặc idle 5 hướng nhưng attack ít hướng và đạn bay độc lập.
+- Nếu idle 5 hướng ×8 + attack 3 hướng ×12 = 76 frame/tướng (608 cho 8); giảm 24% so với A, nhưng cần xử lý chuyển hướng khi attack và có thể bị giật.
+- Nếu chỉ 4 hướng S,W,N,E qua 3 ảnh gốc và lật, cộng sprite muzzle flash/đạn độc lập: 60 frame/tướng, tiết kiệm nhưng chéo kém.
+- Cách tối ưu là phân cấp theo loại tướng và độ quan trọng, không ép mọi loại chung một bộ hướng.
+
+THEO TỪNG LOẠI
+- SCORCH, FROST, LANCE, BROKER (4 người): A cho bản cuối; B cho prototype. Đặc biệt LANCE phải giữ trục súng hướng mục tiêu; BROKER nếu đòn đánh ít phụ thuộc hướng có thể ưu tiên idle đa hướng, attack giản lược.
+- ARC (robot kiếm): A, vì hướng lưng/mặt và cung vung kiếm quan trọng; hiệu ứng chém tách khỏi thân.
+- WARP (drone tròn): C hoặc 1 sprite thân + lớp chi tiết quay/đổi hướng; 20 frame cơ sở hoặc ít hơn nếu idle/attack dùng chung. Nếu có mặt/ống phóng bất đối xứng thì vẽ thêm 2–4 hướng.
+- GLITCH (robot CRT): B trước; A nếu màn hình cần thể hiện mặt trước/lưng thật rõ. Không xoay toàn thân bằng code; có thể xoay riêng anten hoặc hiệu ứng.
+- VENOM (thú máy 4 chân): A; cần silhouette chân và đầu hợp lý khi nhìn ngang, chéo, từ sau. B chỉ cho bản thử.
+
+ƯỚC TÍNH KHUYẾN NGHỊ
+- 6 tướng dùng A (4 người + ARC + VENOM): 6 × 100 = 600 frame.
+- GLITCH dùng B: 60 frame.
+- WARP dùng C: 20 frame.
+=> Tổng 680 frame nguồn (34 sheet nếu mỗi sheet 20 frame; thực tế nên chia theo animation/hướng để kiểm soát). So với tất cả A: giảm 120 frame (15%). Đây là ước lượng khối lượng, không phải số ảnh ChatGPT sẽ tạo thành công trong một lượt.
+
+3. CHỐT CÁCH TRIỂN KHAI
+Chọn phương án LAI A+B+C như trên. Làm pilot 1 tướng LANCE: trước tiên tạo 5 pose tĩnh chuẩn ở 5 hướng, so kích thước 29 px, tâm chân, silhouette, súng và bảng màu; sau khi khóa model sheet mới làm idle 8 frame/hướng, rồi attack 12 frame/hướng. Không yêu cầu AI tạo 100 frame một lúc. Tạo từng hướng/từng animation với ảnh gốc + bảng 5 hướng làm tham chiếu, kiểm tra trước khi nhân rộng.
+
+QUY TẮC CHỌN HƯỚNG
+- Trong hệ tọa độ màn hình x tăng sang phải, y tăng xuống dưới: d = (quái.x - tướng.x, quái.y - tướng.y).
+- Góc a = atan2(d.y, d.x) tính theo độ; E=0°, SE=45°, S=90°, SW=135°, W=180°/-180°, NW=-135°, N=-90°, NE=-45°.
+- Chọn sector 45° gần nhất: index = round(a/45°) modulo 8; quy ước mapping thống nhất với atlas. Lật ảnh nguồn W thành E, SW thành SE, NW thành NE. S và N không lật.
+- Nhắm vào vị trí hiện tại hoặc vị trí dự đoán quái tại thời điểm đạn chạm (nếu có đạn chậm); khi không có mục tiêu giữ hướng cuối hoặc về S sau khoảng 0,5–1 giây.
+- Để tránh rung giữa hai sector: dùng hysteresis khoảng 8–12° quanh biên; chỉ đổi sector khi vượt ngưỡng; có thể thêm cooldown 80–150 ms. Đừng quay qua từng sector trung gian khi đổi mục tiêu đột ngột, vì sẽ gây xoay vòng giả.
+- Hướng sprite chuyển ngay tại thời điểm phù hợp giữa các frame animation; tạo cảm giác mượt bằng hiệu ứng nòng súng, đầu/ánh mắt và muzzle flash theo góc liên tục, không xoay cả thân. Khi đang ở frame chém/bắn quan trọng, có thể khóa hướng tới cuối pha ra đòn để tránh pop.
+- Khi đổi hướng trong attack, giữ normalized animation time (t/12) nếu các hướng có pose tương ứng; nếu không tương ứng, chỉ đổi ở nhịp idle/recovery. Cố định anchor chân và bounding box để tránh nhảy vị trí.
+- Lưu ý 82° là góc camera dựng hình: góc sector dùng tọa độ màn hình cho game 2D, hoặc chuyển vector world-space qua phép chiếu camera trước khi tính nếu logic/world coordinate khác màn hình.
+
+4. PROMPT NGẮN MẪU
+“Dựa ĐÚNG nhân vật LANCE trong ảnh tham chiếu, tạo MODEL SHEET pixel-art 5 hướng: S, SW, W, NW, N, mỗi hướng một ô theo hàng ngang. Camera high top-down 82°, nhân vật chibi cao 29px trong ô 46×46px; giữ nguyên tóc, mặt, áo, màu, súng, tỷ lệ và chi tiết nhận diện. Cùng tâm chân, cùng kích thước; mỗi góc thể hiện đúng mặt/cạnh/lưng, KHÔNG chỉ xoay ảnh phẳng. Pixel sắc nét, nền trong suốt, không bóng, không chữ, không viền ô. Chưa làm animation.”
+
+Sau khi duyệt model sheet:
+“Dùng model sheet 5 hướng và ảnh LANCE gốc làm chuẩn. Chỉ vẽ hướng NW, idle 8 frame một hàng, mỗi frame 46×46px, high top-down 82°, cao ~29px; chân cố định, thở 1–2px, tóc/súng nhúc nhích nhẹ, loop liền mạch. Giữ đúng thiết kế và pixel sắc nét; nền trong suốt, không bóng/chữ/lưới.”
+
+GHI CHÚ THỰC TẾ
+- 29px là kích thước nhân vật hiển thị, không đảm bảo AI xuất đúng lưới pixel; kiểm tra bằng editor và chuẩn hóa kích thước/căn chân sau khi xuất.
+- Với các chi tiết bất đối xứng (tay cầm vũ khí, chữ trên CRT, biểu tượng), mirror có thể sai logic; hoặc chấp nhận như phong cách game, hoặc vẽ hướng đối diện riêng ở những tướng quan trọng.
+- Ảnh DCDW chỉ dùng làm tham khảo hành vi, không phải bằng chứng chắc chắn về cách game lưu sprite.
