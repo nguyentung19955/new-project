@@ -1,5 +1,10 @@
-# Trạng thái phiên LÀM "vung" – 02/11 (lượt 2)
-- Đã ghi 38 yêu cầu ảnh VÙNG 2 "Rotting Roots" (001–038, trạng thái CHỜ) theo danh sách ảnh trong kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 7.
-- Thứ tự nên vẽ (theo ChatGPT): 001–007 nền + chất liệu → 008–018 địa hình, nút neo, cổng → 019–023 quái + hiệu ứng → 024–031 tinh anh + trùm → 032–037 hiệu ứng, đạo cụ, đèn → 038 biểu tượng.
-- Lượt này phiên LÀM vẫn KHÔNG có Claude in Chrome nên không hỏi ChatGPT thêm được; đã dựng sẵn phòng + logic Vùng 2 (chưa bật trong game vì chưa có ảnh).
-- HET.md: đã ghi lại (phiên LÀM dừng lượt này) = KHÔNG có yêu cầu MỚI thêm; các yêu cầu CHỜ ở trên VẪN cần vẽ.
+# Trạng thái phiên LÀM "vung" – 02/11 chiều (lượt 3)
+- HET.md ĐÃ XOÁ: phiên chính (có ChatGPT) vẽ các yêu cầu Vùng 2 dưới đây.
+- 38 yêu cầu (001–038, trạng thái CHỜ) theo đúng "Suggested batch order" của ChatGPT (docs/vung-2/ke-hoach-chatgpt.txt mục 7):
+  - Đợt 1 – bảng màu, nền, ô đất 48 px: 001–007 (007 = chất liệu đất rễ: phòng nướng cần cái này TRƯỚC NHẤT)
+  - Đợt 2 – trạng thái gỗ mục, nút neo, cổng: 008–018
+  - Đợt 3 – 4 quái + hiệu ứng báo đòn: 019–023
+  - Đợt 4 – tinh anh + trùm: 024–031
+  - Đợt 5 – đạo cụ, đèn, tiền cảnh: 035–037 (+ 032–034 hiệu ứng địa hình / Neo Rễ / đền)
+  - Đợt 6 – biểu tượng: 038
+- Phiên LÀM đã sẵn: phòng (game/vung-2/phong), logic gỗ mục + Neo Rễ (game/vung-2/dat-muc.js), số liệu quái/trùm, công cụ nướng ảnh phòng tools/vung-2/ve-phong.py (chạy ngay khi có 007).

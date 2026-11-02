@@ -154,3 +154,14 @@ dùng đúng tên trong bảng này; tên mới chưa có thì đặt theo cùng
 | Xoay ngang điện thoại để chơi | Rotate your phone to landscape to play |
 | Giữ tiến độ bằng Google | Keep progress with Google |
 | Phòng demo | Demo Room |
+
+## Vùng 2 – Rotting Roots (phiên Vùng mới; tên theo kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt)
+| Tiếng Việt | Tiếng Anh |
+|---|---|
+| Phòng R201…R213 | Root Descent · Softwood Passage · Spore Lantern Grotto · Rootwatch Rest · Weeping Slope · Hollow Nursery · Anchored Chasm · Buried Bell Crossing · Fungus Reservoir · Sporespine Ascent · Guardian's Cradle · Last Dry Root · Moldheart Chamber |
+| Phòng bí mật RS201–RS203 | Root Epitaph · Forgotten Incubator · Amber Husk |
+| Gỗ Mục (thường / nhanh / xung) | Rotwood (ordinary / rapid / pulse) |
+| Neo Rễ (kỹ năng) / Đền Neo Rễ | Root Anchor / Root Anchor Shrine |
+| Quái: Gặm Mục · Chuông Bào Tử · Vỏ Nhảy · Rễ Hút | Rot Gnawer · Spore Bell · Husk Leaper · Root Siphon |
+| Tinh anh / Trùm | The Nursery Warden / Mold Mother |
+| Vật phẩm: Lõi Tàn Tích Xanh · Nút Người Gác · Bùa Neo Rễ · Mảnh Sức Chứa Hồi Máu | Verdant Ruin Core · Warden Knot · Root Anchor cooldown charm · Heal capacity fragment |
