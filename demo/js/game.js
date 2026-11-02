@@ -32,6 +32,7 @@
     const by = Math.max(C.OH_MIN + C.KHE, Math.min(C.OH_MAX + C.KHE, Math.floor((conLai / 2 - 2 * C.VIEN) / C.HANG)));
     C.BUOC_Y = by; C.OH = by - C.KHE; C.O = C.BUOC_X - C.KHE; C.BAN_H = 2 * C.VIEN + C.HANG * by;
     C.TUONG_CAO = Math.round(Math.max(C.CAO_MIN, Math.min(C.CAO_MAX, C.OH * C.TL_CAO))); C.TUONG_RONG = C.O;
+    C.CHAN = Math.round(C.OH * (1 - C.TL_CHAN));   // chân tướng ở TL_CHAN (~75%) chiều cao ô, gần đáy ô như DCDW
     let du = Math.max(0, conLai - 2 * C.BAN_H);
     C.HL_DAY = C.HL_DAY_MIN + Math.min(C.HL_DAY_MAX - C.HL_DAY_MIN, Math.floor(du / 4)); du -= 2 * (C.HL_DAY - C.HL_DAY_MIN);
     const khe = du / 3;
@@ -427,33 +428,45 @@
   }
   // ---- HƯỚNG QUAY 8 hướng theo quái (kiểu Destiny Child: Defense War) ----
   // hg: 0=E 1=SE 2=S 3=SW 4=W 5=NW 6=N 7=NE (toạ độ màn hình, y xuống dưới); goc: góc liên tục (rad) cho tướng xoay bằng code
-  const HG = { TRE: 0.12, HYS: 10, VE_S: 0.8, LERP: 10, NHIN: 0.05 };
+  // Thông số ở data.js CAU_HINH.HUONG (DOI_MIN, LECH, BUOC, BUOC_VE, VE_S, MAC_DINH, LERP, NHIN).
+  // v.hgDich = hướng muốn tới; v.hg = hướng đang vẽ, bước dần 1 nấc (45°) mỗi BUOC giây → cảm giác xoay người, không giật.
+  const HG = C.HUONG;
   const gocTo = (S, i, q) => { const [ox, oy] = oXY(S, i); return Math.atan2(q.y - thanY(oy), q.x - (ox + C.O / 2)); };   // từ giữa thân tướng tới quái
-  function chonHuong(v, a, ep) {   // a: rad; ep = true: đổi ngay (đầu đòn), bỏ hysteresis + cooldown
-    const deg = a * 180 / Math.PI, moi = ((Math.round(deg / 45) % 8) + 8) % 8;
-    if (v.hg == null) { v.hg = moi; v.hgT = v.tg || 0; return; }
-    if (moi === v.hg) return;
-    if (!ep) {
-      let lech = Math.abs(deg - v.hg * 45) % 360; if (lech > 180) lech = 360 - lech;
-      if (lech <= 22.5 + HG.HYS) return;                 // hysteresis ~10° quanh biên sector
-      if ((v.tg || 0) - (v.hgT || 0) < HG.TRE) return;   // cooldown đổi hướng ~120ms
-    }
-    v.hg = moi; v.hgT = v.tg || 0;
+  const lechDo = (a, b) => { let d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; };
+  // a: rad · moiMuc: true = vừa CHỌN MỤC TIÊU MỚI. Chỉ đổi hướng đích khi (mục tiêu mới hoặc lệch > LECH°) và đã qua DOI_MIN giây từ lần đổi trước.
+  function chonHuong(v, a, moiMuc) {
+    const deg = a * 180 / Math.PI, moi = ((Math.round(deg / 45) % 8) + 8) % 8, tg = v.tg || 0;
+    if (v.hgDich == null) { v.hgDich = v.hg = moi; v.hgT = tg; return; }
+    if (moi === v.hgDich) return;
+    if (!moiMuc && lechDo(deg, v.hgDich * 45) <= HG.LECH) return;   // giữ hướng ổn định giữa các phát bắn
+    if (tg - (v.hgT || -9) < HG.DOI_MIN) return;                   // tối thiểu DOI_MIN giây giữa 2 lần đổi
+    v.hgDich = moi; v.hgT = tg;
+  }
+  function buocHuong(v, dt, cham) {   // v.hg tiến từng nấc về v.hgDich (đường ngắn nhất), mỗi nấc BUOC (hoặc BUOC_VE khi đang quay về mặc định)
+    if (v.hg === v.hgDich) { v.buoc = 0; return; }
+    v.buoc = (v.buoc || 0) + dt; const b = cham ? HG.BUOC_VE : HG.BUOC;
+    if (v.buoc < b) return; v.buoc -= b;
+    const d = ((v.hgDich - v.hg) % 8 + 8) % 8;
+    let cung = d < 4 || (d === 4 && [1, 2, 3].some((k) => (v.hg + k) % 8 === 2));   // quay 180°: đi vòng qua hướng S (mặt nhìn ra), không quay lưng
+    v.hg = (v.hg + (cung ? 1 : 7)) % 8;
   }
   function capNhatHuong(S, i, v, dt) {
     v.tg = S.t;
-    if (v.hg == null) { v.hg = 2; v.hgT = S.t; v.goc = Math.PI / 2; v.khongMuc = 0; }
+    if (v.hg == null) { v.hg = HG.MAC_DINH; v.goc = v.hg * Math.PI / 4; v.khongMuc = 0; }
+    if (v.hgDich == null) { v.hgDich = v.hg; v.hgT = -9; }
     v.nhin = (v.nhin || 0) - dt;
     if (v.nhin <= 0) { v.nhin = HG.NHIN; v.mucNhin = chonMuc(S, i, v); }   // dò mục tiêu thưa (20 lần/giây)
     const q = v.mucNhin && sống(v.mucNhin) && v.mucNhin.ban === S ? v.mucNhin : null;
-    const khoa = v.atkT != null && S.t - v.atkT < C.TAC_DONG + C.GIU_KHUNG + 0.1;   // khoá hướng trong pha ra đòn của attack
-    let dich = null;
-    if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); }
-    else { v.khongMuc = (v.khongMuc || 0) + dt; if (v.khongMuc > HG.VE_S) dich = Math.PI / 2; }   // không có mục tiêu > 0.8s → về S
-    if (dich != null && !khoa) chonHuong(v, dich, false);
-    if (dich != null) {   // tướng xoay bằng code: góc mượt (lerp ~10/s), vẫn quay khi đang đánh
+    let dich = null, ve = false;
+    if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); const moiMuc = q.uid !== v.mucUid; if (moiMuc) v.mucUid = q.uid; chonHuong(v, dich, moiMuc); }
+    else {   // không có quái > VE_S giây → từ từ quay về hướng mặc định (nhìn về phía đường quái)
+      v.khongMuc = (v.khongMuc || 0) + dt; v.mucUid = null;
+      if (v.khongMuc > HG.VE_S) { ve = true; dich = HG.MAC_DINH * Math.PI / 4; if (v.hgDich !== HG.MAC_DINH && S.t - (v.hgT || -9) >= HG.DOI_MIN) { v.hgDich = HG.MAC_DINH; v.hgT = S.t; } }
+    }
+    buocHuong(v, dt, ve);
+    if (dich != null) {   // WARP xoay bằng code: nội suy góc mượt (LERP /giây), vẫn quay khi đang đánh
       let d = dich - v.goc; d = Math.atan2(Math.sin(d), Math.cos(d));
-      v.goc += d * (1 - Math.exp(-HG.LERP * dt));
+      v.goc += d * (1 - Math.exp(-(ve ? HG.LERP * 0.4 : HG.LERP) * dt));
     }
   }
   // tên skill VÀNG/ĐỎ khi kích hoạt: chớp vòng ngắn + chữ tên 0.6s (render 'ky')
@@ -685,7 +698,7 @@
       v.cd -= dt * tocAF * (v.bufT > 0 ? 1 + v.bufHe : 1) / cham;
       // đòn đánh theo hoạt ảnh: bắt đầu attack (14fps), đạn/đòn phát ra đúng lúc vào khung ra đòn (khung 3, TAC_DONG)
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
-      else if (v.cd <= 0) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; chonHuong(v, gocTo(S, i, q), true); } else v.cd = 0.05; }
+      else if (v.cd <= 0) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; chonHuong(v, gocTo(S, i, q), mm); } else v.cd = 0.05; }
     });
     // sát thương trễ (CORRUPTOR) + nhịp sét trễ (ARC 7★)
     for (const p of S.treo) { p.t -= dt; if (p.t <= 0) { p.xong = true; trung(S, p.q, p.dmg, p.v, p.mau, false, false, true); } }
