@@ -1,5 +1,5 @@
 # 002 – Kiếm Khách – đập đất: 1 khung chuyển giữa F3–F4 (P0)
-- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT; đã căn theo khung hàng xóm – IoU hàng xóm ≥ 0.87; ảnh 256×256 neo [128,172])
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: màu đưa về bảng 20 màu gốc, đáy khớp khung kề, ms + khung trúng đã dời; kiểm thử f/g/h/vùng 1/lớp sức mạnh ĐẠT) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `nhan-vat.json → clip.dapdat` – thư mục art gốc `art/kiem-khach/dapdat/` (14 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F3 (giữa F3 lao xuống và F4 chạm đất).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Khựng rõ F3→F4 (đảo người → chạm đất 1 bước). Thêm 1 khung chuyển giữa F3–F4 (thân gần ngang, chân hướng đất); gai đỉnh F5–F7 rồi thu."

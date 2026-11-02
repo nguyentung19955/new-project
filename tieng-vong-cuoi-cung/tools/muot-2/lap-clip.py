@@ -111,6 +111,25 @@ def day(im, kkm=False):
     if kkm: a = a & ~((A[..., 2] > A[..., 0] + 40) & (A[..., 1] > A[..., 0] + 20))   # bỏ vệt chém cyan
     ys = np.nonzero(a.any(1))[0]; return int(ys.max()) if len(ys) else None
 
+def bang_mau(dir_cha):
+    """bảng màu gốc = mọi màu đặc trong các khung fNN.png của nhân vật/quái (thư mục cha của clip)"""
+    import glob
+    S = set()
+    for f in glob.glob(os.path.join(dir_cha, '*', 'f*.png')):
+        a = np.array(Image.open(f).convert('RGBA')); S |= set(map(tuple, a[a[..., 3] > 0][:, :3]))
+    return np.array(sorted(S), dtype=int)
+
+def chuan_mau(im, pal):
+    """đưa ảnh ChatGPT về đúng bảng màu gốc (mỗi điểm lấy màu gốc gần nhất), bỏ viền hồng magenta còn sót, alpha 0/255.
+    Không vẽ thêm, không nội suy – chỉ chọn lại màu trong bảng có sẵn."""
+    a = np.array(im).astype(int); op = a[..., 3] >= 128
+    hong = op & (a[..., 0] > a[..., 1] + 50) & (a[..., 2] > a[..., 1] + 50) & (a[..., 0] > 120)
+    op &= ~hong
+    px = a[op][:, :3]
+    d = ((px[:, None, :] - pal[None, :, :]) ** 2).sum(-1)
+    o = np.zeros_like(a); o[op, :3] = pal[d.argmin(1)]; o[op, 3] = 255
+    return Image.fromarray(o.astype(np.uint8), 'RGBA'), int(hong.sum()), len(np.unique(px, axis=0))
+
 def tam_than(im, kkm):
     a = np.array(im).astype(int); op = a[..., 3] > 128
     if kkm:
@@ -159,6 +178,7 @@ def lop_kk(clip, thu_tu, moi_im, goc_im, thu):
         if not os.path.isdir(d): continue
         diem = 'nguc' if L.get('khe') == 'an' else 'mat_na'
         lopg = [nap(os.path.join(d, 'f%02d.png' % i)) for i in range(len(goc_im))]
+        lopb = [open(os.path.join(d, 'f%02d.png' % i), 'rb').read() for i in range(len(goc_im))]
         moi = []
         for j, t in enumerate(thu_tu):
             if isinstance(t, int): moi.append(lopg[t]); continue
@@ -170,7 +190,9 @@ def lop_kk(clip, thu_tu, moi_im, goc_im, thu):
                 moi.append(Image.new('RGBA', (256, 256), (0, 0, 0, 0))); bao.append('%s %s: ẩn lớp (không đo được neo)' % (lid, t)); continue
             moi.append(doi(lopg[k], pb[0] - pa[0], pb[1] - pa[1])); bao.append('%s %s: lớp từ F%d dời (%d,%d)' % (lid, t, k, pb[0] - pa[0], pb[1] - pa[1]))
         if not thu:
-            for j, im in enumerate(moi): im.save(os.path.join(d, 'f%02d.png' % j))
+            for j, im in enumerate(moi):
+                if isinstance(thu_tu[j], int): open(os.path.join(d, 'f%02d.png' % j), 'wb').write(lopb[thu_tu[j]])
+                else: im.save(os.path.join(d, 'f%02d.png' % j), optimize=True)
     return bao
 
 def main():
@@ -182,6 +204,7 @@ def main():
         if len(goc_f) == len(c['thu_tu']) and os.path.exists(os.path.join(dmoi, 'DA-LAP.txt')): sys.exit('ĐÃ LẮP rồi (%s) – bỏ qua' % ten)
         sys.exit('LỖI: thư mục clip có %d khung, cần %d (đúng trạng thái trước khi lắp)' % (len(goc_f), c['so_goc']))
     goc = [nap(os.path.join(dclip, f)) for f in goc_f]; W, H = goc[0].size
+    goc_bytes = [open(os.path.join(dclip, f), 'rb').read() for f in goc_f]
     moi = {}; loi = []
     for t in c['thu_tu']:
         if isinstance(t, int): continue
@@ -196,8 +219,13 @@ def main():
             loi.append(t + ' chạm mép ô (bị cắt?)')
         moi[t] = im
     if loi: print('KHÔNG LẮP ĐƯỢC:', '; '.join(loi)); sys.exit(2)
-    # căn đáy + đo lệch thân
+    # đưa về bảng màu gốc
     bao = []
+    pal = bang_mau(os.path.dirname(dclip))
+    for t in list(moi):
+        moi[t], nh_, nm_ = chuan_mau(moi[t], pal)
+        bao.append('%s: %d màu → bảng màu gốc %d màu; bỏ %d điểm viền hồng' % (t, nm_, len(pal), nh_))
+    # căn đáy + đo lệch thân
     kkm = bool(c.get('kk'))
     for j, t in enumerate(c['thu_tu']):
         if isinstance(t, int): continue
@@ -245,7 +273,9 @@ def main():
             k = int(t[5:]); shutil.copy(os.path.join(dclip, 'f%02d.png' % k), os.path.join(dmoi, 'cu-f%02d.png' % k))
     if c.get('kk'):
         for b in lop_kk(c['dir'].split('/')[-1], c['thu_tu'], moi, goc, thu): print('  lớp: ' + b)
-    for j, im in enumerate(seq): im.save(os.path.join(dclip, 'f%02d.png' % j), optimize=True)
+    for j, t in enumerate(c['thu_tu']):
+        if isinstance(t, int): open(os.path.join(dclip, 'f%02d.png' % j), 'wb').write(goc_bytes[t])   # khung gốc: chép nguyên byte
+        else: moi[t].save(os.path.join(dclip, 'f%02d.png' % j), optimize=True)
     open(jp, 'w').write(dump(s, d))
     open(os.path.join(dmoi, 'DA-LAP.txt'), 'w').write('Đã lắp vào %s: %s\n' % (c['dir'], ' '.join(nh)))
     if c.get('kk'):
