@@ -20,44 +20,69 @@
       RA: DUONG[DUONG.length - 1], HL: hl || [], CONG: cong || null, SINH: DUONG[0] });
   }
   const BAN_NG = {}, BAN_AI = {}, BAN_AI_CO = {}, BAN_NG_CO = {};
-  // BỐ CỤC theo chiều cao logic H (kiểu DCDW, không để khoảng trống lớn):
-  //   HUD trên | cổng sinh | BÀN TRÊN | hành lang dưới bàn trên | THANH GIỮA mỏng | cổng sinh | BÀN DƯỚI | hành lang dưới bàn dưới | HUD dưới
-  // Chiều cao dư → ô cao hơn (kẹp OH_MIN..OH_MAX, gần vuông) → hành lang dưới rộng hơn (≤ HL_DAY_MAX) → chia đều 3 khe nhỏ.
+  // ẢNH SKIN BÀN (data.js SKIN): thu nhỏ ĐỀU ảnh skin k sao cho lưới 5×3 trong ảnh trùng lưới logic (góc trên trái gx, gy; rộng C.BAN_W).
+  // Trả về vị trí ảnh + hành lang trong ảnh đổi sang toạ độ logic (lx = tâm hành lang trái, ly = tâm hành lang dưới, top/end, lw/lh = bề rộng).
+  function hinhSkin(k, gx, gy) {
+    const s = SKIN[k] || SKIN.da, g = s.grid, L = s.lane, tl = C.BAN_W / ((g[2] - g[0]) * s.w);
+    const x = gx - g[0] * s.w * tl, y = gy - g[1] * s.h * tl;
+    return { id: SKIN[k] ? k : 'da', tl, x, y, w: s.w * tl, h: s.h * tl, lx: x + L.x * s.w * tl, ly: y + L.y * s.h * tl,
+      top: y + L.top * s.h * tl, end: x + L.end * s.w * tl, lw: L.w * s.w * tl, lh: L.h * s.h * tl };
+  }
+  // tỉ lệ bố cục theo bề rộng lưới (lấy lớn nhất trong các skin để skin nào cũng vừa): TRAI = hành lang trái + tường ngoài; TREN = đầu hành lang trên lưới;
+  // DUOI = hành lang dưới (tới mép ngoài) dưới lưới; CAO = cao lưới / rộng lưới
+  const TL_SKIN = (() => {
+    const r = { TRAI: 0, TREN: 0, DUOI: 0, CAO: 0 };
+    for (const k of SKIN_IDS) {
+      const s = SKIN[k], g = s.grid, L = s.lane, gw = (g[2] - g[0]) * s.w;
+      r.TRAI = Math.max(r.TRAI, (g[0] - L.x + L.w / 2) * s.w / gw + 0.02);
+      r.TREN = Math.max(r.TREN, (g[1] - L.top) * s.h / gw + 0.03);
+      r.DUOI = Math.max(r.DUOI, (L.y + L.h / 2 - g[3]) * s.h / gw + 0.01);
+      r.CAO = Math.max(r.CAO, (g[3] - g[1]) * s.h / gw);
+    }
+    return r;
+  })();
+  // BỐ CỤC theo chiều cao logic H (kiểu DCDW, mỗi bàn = 1 ẢNH SKIN): HUD trên | BÀN TRÊN (ảnh skin) | THANH GIỮA mỏng | BÀN DƯỚI (ảnh skin) | HUD dưới
+  // Bề rộng lưới GW lớn nhất sao cho hành lang trái + lưới + mép phải vừa bề ngang (390) và 2 bàn vừa bề cao; chiều cao dư chia đều 3 khe.
+  // Ô logic = đúng ô trong ảnh (thu nhỏ đều, không méo). Phần trang trí ngoài cùng của ảnh có thể tràn ra mép màn / dưới HUD.
   function boCuc(H) {
     H = Math.max(C.H_MIN, Math.round(H));
     C.H = H;
     C.DUOI_Y = H - C.DUOI_DAY - C.DUOI_H;                  // đỉnh HUD dưới (Mana/SUMMON + thẻ)
-    const dinh = C.TOP_H + C.DAU_SINH, day = C.DUOI_Y - 2;
-    const conLai = day - dinh - C.THANH_H - C.DAU_SINH - 2 * (2 + C.HL_DAY_MIN);
-    const by = Math.max(C.OH_MIN + C.KHE, Math.min(C.OH_MAX + C.KHE, Math.floor((conLai / 2 - 2 * C.VIEN) / C.HANG)));
-    C.BUOC_Y = by; C.OH = by - C.KHE; C.O = C.BUOC_X - C.KHE; C.BAN_H = 2 * C.VIEN + C.HANG * by;
+    const dinh = C.TOP_H, day = C.DUOI_Y - 2, cao = day - dinh, R = TL_SKIN, PHAI = 0.03;
+    const GW = Math.min((C.W - 4) / (1 + R.TRAI + PHAI), (cao - C.THANH_H - 6) / 2 / (R.CAO + R.TREN + R.DUOI));
+    const GH = GW * R.CAO, ESS = GW * (R.CAO + R.TREN + R.DUOI);
+    C.BAN_W = GW; C.BAN_H = GH; C.VIEN = 0;
+    C.BAN_X = (C.W - GW * (1 + R.TRAI + PHAI)) / 2 + GW * R.TRAI;
+    C.BUOC_X = GW / C.COT; C.BUOC_Y = GH / C.HANG; C.O = C.BUOC_X - C.KHE; C.OH = C.BUOC_Y - C.KHE;
     C.TUONG_CAO = Math.round(Math.max(C.CAO_MIN, Math.min(C.CAO_MAX, C.OH * C.TL_CAO))); C.TUONG_RONG = C.O;
-    C.CHAN = Math.round(C.OH * (1 - C.TL_CHAN));   // chân tướng ở TL_CHAN (~75%) chiều cao ô, gần đáy ô như DCDW
-    let du = Math.max(0, conLai - 2 * C.BAN_H);
-    C.HL_DAY = C.HL_DAY_MIN + Math.min(C.HL_DAY_MAX - C.HL_DAY_MIN, Math.floor(du / 4)); du -= 2 * (C.HL_DAY - C.HL_DAY_MIN);
-    const khe = du / 3;
-    C.BAN_AI_Y = Math.round(dinh + khe);
-    const hlAI = C.BAN_AI_Y + C.BAN_H + 2;                   // đỉnh hành lang dưới bàn trên
-    C.THANH_Y = Math.round(hlAI + C.HL_DAY + khe);
-    C.BAN_NG_Y = C.THANH_Y + C.THANH_H + C.DAU_SINH;
-    const hlNG = C.BAN_NG_Y + C.BAN_H + 2;
+    C.CHAN = Math.round(C.OH * (1 - C.TL_CHAN));   // chân tướng ở TL_CHAN chiều cao ô, gần đáy ô như DCDW
+    const khe = Math.max(0, (cao - C.THANH_H - 2 * ESS) / 3);
+    C.BAN_AI_Y = dinh + khe + GW * R.TREN;
+    C.THANH_Y = Math.round(C.BAN_AI_Y + GH + GW * R.DUOI + khe);
+    C.BAN_NG_Y = C.THANH_Y + C.THANH_H + khe + GW * R.TREN;
     C.GIUA_Y = C.THANH_Y + C.THANH_H / 2;
-    // đường đi ("chân" quái): giữa hành lang trái; đoạn ngang đặt chân thấp hơn tâm hành lang ~12px để THÂN quái (cao ~co) nằm giữa hành lang
-    const lx = C.HL_X0 + C.HL_W / 2, xCong = C.BAN_X + C.BAN_W - 30, dx = C.BAN_X + C.BAN_W;
-    const duong = (bY, hl) => { const hy = hl + C.HL_DAY / 2 + 11; return [[lx, bY - C.DAU_SINH + 2], [lx, hy], [xCong, hy]]; };
-    const hanhLang = (bY, hl) => [{ x: C.HL_X0, y: bY - C.DAU_SINH, w: C.HL_W, h: hl + C.HL_DAY - (bY - C.DAU_SINH) }, { x: C.HL_X0, y: hl, w: dx - C.HL_X0, h: C.HL_DAY }];
-    const cong = (hl) => [dx - 14, hl + C.HL_DAY / 2];
-    C.DUONG_AI = duong(C.BAN_AI_Y, hlAI); C.DUONG_NG = duong(C.BAN_NG_Y, hlNG);
-    dungBan(BAN_NG, false, C.DUONG_NG, hanhLang(C.BAN_NG_Y, hlNG), cong(hlNG));
-    dungBan(BAN_AI, true, C.DUONG_AI, hanhLang(C.BAN_AI_Y, hlAI), cong(hlAI));
-    // CO-OP: MỘT hành lang trái chung xuyên qua cả 2 bàn → chạy dưới bàn dưới → cổng. Đoạn dọc cạnh bàn trên thuộc bàn đồng đội (A);
-    // tới ngang đỉnh bàn dưới thì quái chuyển sang bàn người chơi (S) — S đi tiếp xuống, rẽ dưới bàn dưới tới cổng.
-    const noi = [lx, C.BAN_NG_Y - C.DAU_SINH + 2];
-    dungBan(BAN_AI_CO, true, [C.DUONG_AI[0], noi], [{ x: C.HL_X0, y: C.BAN_AI_Y - C.DAU_SINH, w: C.HL_W, h: noi[1] - (C.BAN_AI_Y - C.DAU_SINH) }], null);
-    dungBan(BAN_NG_CO, false, C.DUONG_NG, hanhLang(C.BAN_NG_Y, hlNG), cong(hlNG));
+    const kAI = hinhSkin(C.SKIN_AI, C.BAN_X, C.BAN_AI_Y), kNG = hinhSkin(C.SKIN_NG, C.BAN_X, C.BAN_NG_Y);
+    C.HL_DAY = kNG.lh; C.HL_W = kNG.lw; C.HL_X0 = kNG.lx - kNG.lw / 2;
+    // đường đi ("chân" quái): sinh ở đầu hành lang trái → xuống giữa hành lang trái → rẽ chạy giữa hành lang dưới → cổng.
+    // Đoạn ngang đặt chân thấp hơn tâm hành lang ~9px để THÂN quái nằm giữa hành lang.
+    const CH = 9;
+    const duong = (k) => [[k.lx, k.top + 6], [k.lx, k.ly + CH], [k.end - 18, k.ly + CH]];
+    const hanhLang = (k) => [{ x: k.lx - k.lw / 2, y: k.top, w: k.lw, h: k.ly + k.lh / 2 - k.top }, { x: k.lx - k.lw / 2, y: k.ly - k.lh / 2, w: k.end - k.lx + k.lw / 2, h: k.lh }];
+    const cong = (k) => [k.end - 4, k.ly];
+    C.DUONG_AI = duong(kAI); C.DUONG_NG = duong(kNG);
+    Object.assign(dungBan(BAN_NG, false, C.DUONG_NG, hanhLang(kNG), cong(kNG)), { SKIN: kNG });
+    Object.assign(dungBan(BAN_AI, true, C.DUONG_AI, hanhLang(kAI), cong(kAI)), { SKIN: kAI });
+    // CO-OP: hành lang trái của bàn trên đi THẲNG xuống nối vào hành lang trái bàn dưới (render vẽ "cầu" = mảnh hành lang cắt từ ảnh skin bàn trên).
+    // Đoạn dọc cạnh bàn trên thuộc bàn đồng đội (A); tới đầu hành lang bàn dưới thì quái chuyển sang bàn người chơi (S) → xuống, rẽ dưới bàn dưới tới cổng.
+    const noi = [kNG.lx, kNG.top + 6];
+    Object.assign(dungBan(BAN_AI_CO, true, [[kNG.lx, kAI.top + 6], noi], [{ x: kAI.lx - kAI.lw / 2, y: kAI.top, w: kAI.lw, h: noi[1] - kAI.top }], null),
+      { SKIN: kAI, CAU: { x: kNG.lx, y0: kAI.ly + kAI.lh / 2 - 3, y1: kNG.top + kNG.lw * 0.6 } });
+    Object.assign(dungBan(BAN_NG_CO, false, C.DUONG_NG, hanhLang(kNG), cong(kNG)), { SKIN: kNG });
     const P = (BAN_AI_CO.DAI + BAN_NG_CO.DAI) / (COOP.THOI_GIAN_DUONG * C.DAI_CU); BAN_AI_CO.P = P; BAN_NG_CO.P = P;   // cùng tốc độ px/giây trên cả đường
     return H;
   }
+  // đổi skin 2 bàn (ng = người chơi, ai = bàn trên) rồi dựng lại bố cục
+  function datSkin(ng, ai) { C.SKIN_NG = SKIN[ng] ? ng : 'da'; C.SKIN_AI = SKIN[ai] ? ai : C.SKIN_NG; boCuc(C.H); }
   boCuc(C.H);
   const doanTai = (S, s) => { for (const g of S.B.DOAN) if (s <= g.tu + g.d) return g; return S.B.DOAN[S.B.DOAN.length - 1]; };
   const viTri = (S, s) => { const g = doanTai(S, s), k = Math.max(0, Math.min(1, (s - g.tu) / g.d)); return [g.x0 + (g.x1 - g.x0) * k, g.y0 + (g.y1 - g.y0) * k]; };
@@ -944,7 +969,7 @@
   }
 
   const API = { moi, moiCoop, botCoop, buoc, botAI, trieuHoi, tha, lenBac, gopDuoc, giaTrieu, giaBac, satThuong, oXY, oTam, ke, viTri, trong, nong,
-    giaAF, dungAF, afBat, coHieu, theoSao, boCuc, MUC, DON, HIEU, DAC_BIET, CHU_DONG, chuDong, oHopLe, dungChuDong, chonKetQua, HG_DIR,
+    giaAF, dungAF, afBat, coHieu, theoSao, boCuc, datSkin, hinhSkin, MUC, DON, HIEU, DAC_BIET, CHU_DONG, chuDong, oHopLe, dungChuDong, chonKetQua, HG_DIR,
     nongHook: null,
     BAN_NG, BAN_AI, BAN_AI_CO, BAN_NG_CO, K, setRnd: (f) => (rnd = f) };
   root.GAME = API;

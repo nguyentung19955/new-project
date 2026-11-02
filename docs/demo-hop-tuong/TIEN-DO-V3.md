@@ -210,3 +210,23 @@ Không chạy test. Đã chụp màn 390×844 (PVP, bàn đầy tướng) tự x
 ### Ghi chú
 - Hàm vẽ đế cũ `veVongBac` vẫn giữ trong render.js (không gọi nữa) phòng khi cần dùng lại.
 - Có thể chỉnh nhanh trong data.js: `TL_CHAN` (vị trí chân), `BONG_*` (bóng), `HUONG.*` (độ "lì" khi quay), `cd`/`dmg` từng tướng.
+
+## Phong cách NEON FRACTURE: skin bàn bằng ảnh, nền trung tính, cut-in tướng VÀNG (02/11/2026, phiên tự động)
+Người dùng: "chưa đổi phong cách game, toàn bộ vẫn là cyber". Làm theo thế giới đã duyệt NEON FRACTURE (thành phố mô phỏng nứt vỡ trộn nhiều thế giới, neon chỉ là vết nứt cyan điểm nhấn). Không chạy test. Đã chụp 390×844 (PVP + CO-OP, có/không triệu hồi để xem quái đi hết đường), 390×720, màn chọn tướng — tự xem, không lỗi JS.
+
+1. **SKIN BÀN kiểu DCDW** — mỗi bàn vẽ nguyên ảnh `demo/assets/v3/skin_<da|bang|samac|rung>.png` (ChatGPT vẽ: khay 5×3 + hành lang chữ L + trang trí), **thu nhỏ đều, không méo**.
+   - Toạ độ lưới + hành lang **đo bằng script Python** (khe tối giữa ô, mép khay, sàn hành lang), kiểm lại bằng ảnh vẽ đè khung đỏ/xanh — lưu tỉ lệ 0–1 trong `data.js` `SKIN[k] = { grid: [x0,y0,x1,y1], lane: { x, y, top, end, w, h } }`.
+   - `game.js boCuc`: bố cục theo ảnh — bề rộng lưới lớn nhất sao cho hành lang trái + lưới vừa 390 và 2 bàn vừa bề cao; **ô logic = đúng ô trong ảnh** (~57×47 ở màn 844, rộng hơn cao như ảnh). Trang trí ngoài cùng của ảnh có thể tràn ra mép màn / dưới HUD. `hinhSkin(k, gx, gy)` đổi toạ độ ảnh → toạ độ màn.
+   - **Đường quái = hành lang trong ảnh**: sinh ở đầu hành lang trái → xuống → rẽ chạy hành lang dưới → cổng (avatar Archfiend + tim) ở cuối hành lang dưới.
+   - CO-OP: hành lang trái bàn trên đi thẳng xuống bàn dưới; đoạn nối giữa 2 bàn là **mảnh hành lang cắt từ chính ảnh skin bàn trên** (không vẽ bằng code).
+   - Người chơi mặc định skin **STONE (da)**; bàn trên (AI / đồng đội) lấy **ngẫu nhiên skin khác**. Màn chọn tướng có hàng **chọn skin** (4 ảnh thu nhỏ: STONE / ICE / SAND / FOREST), nhớ trong localStorage (`neon-grid.skin`, có try/catch).
+   - Khi có ảnh skin: **bỏ** khay/ô/hành lang/mũi tên vẽ bằng code; chỉ còn chút sáng cyan ở cổng sinh + bóng mờ dưới đế cổng. Ảnh chưa tải → vẽ kiểu cũ (dự phòng).
+   - Cỡ tướng theo ô mới: `TL_CAO 0.82`, `TL_CHAN 0.80` (tướng ~36–39px, chân gần đáy ô).
+2. **NỀN MÀN**: bỏ nền tím neon — nền **xám xanh than** (#1b232c → #10151b) + 7 **vết nứt cyan rất mờ**. Màn chọn tướng / bảng phụ / HUD trên-dưới đổi sang tông than; giảm glow tím của nút SUMMON, logo bớt tím. Thanh Round giữa giữ gọn.
+3. **CUT-IN tướng VÀNG**: `cutin_broker.png`, `cutin_glitch.png` cắt từ `nguon-chatgpt/v3/cutin_vang.png` (tách theo khe trong suốt x 883–926, crop bbox, cao 512, giữ alpha); `cutin_miner.png` = bản sao broker. Code cut-in tự dùng.
+
+### Ghi chú
+- Thêm skin mới: thả `skin_<id>.png` + thêm 1 dòng `SKIN` trong data.js (đo lại lưới/hành lang bằng script; ảnh nên cùng bố cục: lưới ~62% bề ngang, hành lang trái ~11%).
+- Màn thấp (720): bàn thu nhỏ theo bề cao nên hai bên lộ nền than nhiều hơn.
+- Ảnh skin ICE khá tím-lam (đúng ảnh ChatGPT, không chỉnh màu).
+- Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.
