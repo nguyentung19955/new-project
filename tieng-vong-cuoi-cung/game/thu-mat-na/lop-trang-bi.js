@@ -22,6 +22,8 @@
      LopTrangBi.deo(id) / go(id) / dangDeo() / coAnh(id) / dsLop()
      LopTrangBi.datCap(n) / cap() / capTheoTienDo({trum:[...], manh_am:n, ...}) / chiSo()
      LopTrangBi.dangKy(fn)                         báo khi đeo/gỡ/đổi cấp (fn nhận {k, ...})
+   Cầu nối hệ thống đồ (phiên "do", game/he-thong/): trang-bi.json "tu_dong_cap": true → cấp = max(cấp tay, MocHeThong.ht.capSucManh());
+     "theo_am_phu": {"<mẫu Âm Phù>" hoặc "<mẫu>:<độ hiếm>": "<id lớp>"} → Âm Phù đang cắm tự hiện lớp tương ứng. Cả hai mặc định TẮT.
    Thử nhanh qua URL:  ?trangbi=id1,id2  ?sucmanh=2   (chỉ có tác dụng với lớp đã có ảnh)
    ===================================================================================================================== */
 const LopTrangBi = (() => {
@@ -87,11 +89,23 @@ const LopTrangBi = (() => {
 
   /* ---------- đeo / gỡ / cấp ---------- */
   // lớp đang hiển thị = lớp đeo tay + lớp tự gắn theo cấp sức mạnh; cùng "khe" thì lớp sau thay lớp trước
+  // cầu nối phiên "do" (game/he-thong/): chỉ ĐỌC MocHeThong.ht khi trang-bi.json bật tu_dong_cap / theo_am_phu
+  function heThong(){ const M = window.MocHeThong; return M && M.bat && M.ht ? M.ht : null; }
+  function capHien(){
+    const ht = st.json && st.json.tu_dong_cap ? heThong() : null;
+    if (ht && ht.capSucManh) try { return Math.max(st.cap, ht.capSucManh() | 0); } catch (e){}
+    return st.cap;
+  }
+  function lopTheoAmPhu(){
+    const map = st.json && st.json.theo_am_phu, ht = map ? heThong() : null, out = [];
+    if (ht && ht.trangBiDangDung) try { for (const m of ht.trangBiDangDung()){ const id = map[m.mau + ':' + m.hiem] || map[m.mau]; if (id) out.push(id); } } catch (e){}
+    return out;
+  }
   function lopHien(){
     const caps = st.json ? (st.json.cap_suc_manh || []) : [];
-    const ids = [];
-    for (let i = 0; i <= Math.min(st.cap, caps.length - 1); i++) ids.push(...(caps[i].lop || []));
-    ids.push(...st.deo);
+    const ids = [], cap = capHien();
+    for (let i = 0; i <= Math.min(cap, caps.length - 1); i++) ids.push(...(caps[i].lop || []));
+    ids.push(...lopTheoAmPhu(), ...st.deo);
     const theoKhe = new Map();
     for (const id of ids){ const L = st.lop[id]; if (!L || !L.coAnh) continue; theoKhe.set(L.d.khe || id, L); }
     return [...theoKhe.values()].sort((a, b) => (a.d.thu_tu || 0) - (b.d.thu_tu || 0));
@@ -157,7 +171,7 @@ const LopTrangBi = (() => {
 
   const API = {nap, deo, go, datCap, capTheoTienDo, chiSo,
     veSau:(...a) => ve('sau', ...a), veTruoc:(...a) => ve('truoc', ...a),
-    dangDeo:() => st.deo.slice(), cap:() => st.cap, coAnh:id => !!(st.lop[id] && st.lop[id].coAnh),
+    dangDeo:() => st.deo.slice(), cap:() => capHien(), coAnh:id => !!(st.lop[id] && st.lop[id].coAnh),
     dsLop:() => Object.values(st.lop).map(L => ({id:L.id, ten:L.d.ten, khe:L.d.khe || '', coAnh:L.coAnh, kieu:L.d.kieu || 'khung'})),
     dsCap:() => ((st.json && st.json.cap_suc_manh) || []).map((c, i) => ({cap:i, ten:c.ten, dieu_kien:c.dieu_kien || {}, lop:c.lop || []})),
     lopDangHien:() => lopHien().map(L => L.id), cauHinh:() => ({ap_chi_so:!!(st.json && st.json.ap_chi_so), tu_dong_cap:!!(st.json && st.json.tu_dong_cap)}), dangKy:f => st.nghe.push(f), get daNap(){ return st.nap; }};

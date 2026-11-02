@@ -1,0 +1,11 @@
+# 003 – Ấn chuông khắc trên giáp ngực
+- **Trạng thái:** CHỜ (làm sau 001; có thể bị ChatGPT bỏ nếu quá nhỏ để đọc được)
+- **Dùng vào đâu:** cấp sức mạnh 2 – lớp `an-giap` (khe "an", vẽ TRÊN thân).
+- **Mô tả:** ấn hình chuông nhỏ (khoảng 5–7 điểm ảnh) trên ngực hoặc vai, sáng nhẹ ánh đồng/xanh băng.
+- **Lưu:** `art/kiem-khach-lop/an-giap/<clip>/fNN.png` (+ `nguon-chatgpt.png`).
+- **Neo:** [128,172], hướng phải.
+- **Quy cách chung (mọi lớp kiểu khung):** mỗi khung 1 PNG RGBA **256×256**, chân nhân vật ở **[128,172]**, quay **PHẢI**, CHỈ chứa phần THÊM (nền trong suốt, không chép lại thân), khớp đúng khung gốc `art/kiem-khach/<clip>/fNN.png` (gửi khung gốc làm tham chiếu). Không đổi màu/che mắt mặt nạ, tóc, kiếm gốc. Đúng số khung clip gốc, tên `fNN.png`.
+- **Clip ưu tiên (thư mục = tên thư mục ảnh gốc):** dung 4 · chay 8 · nhay 4 · don1 8 · don2 8 · don4 9 (= 41 khung). Nếu còn sức: roi 1 · tiepdat 3 · luot 6 · trungdon 6 · don3 8. Clip thiếu → lớp tự ẩn ở clip đó (được phép, nhưng ưu tiên đủ 6 clip đầu).
+- **Cách vẽ:** theo tư vấn ChatGPT ở 001 (sheet / vẽ 1 lần rồi dời theo vị trí từng khung / PixelLab).
+- **Kiểm trước khi ghi XONG:** `python3 tools/suc-manh/kiem-anh-lop.py <id> <thư mục xem ngoài repo>` phải TẤT CẢ ĐẠT; nhìn ảnh ghép: không nhấp nháy, không trượt khỏi chỗ gắn.
+- **Khi XONG:** ghi kích thước/khung đã có vào file này. (Phiên LÀM – hoặc phiên gen nếu phiên LÀM đã dừng – bật lớp bằng `"co_anh": true` trong game/thu-mat-na/trang-bi.json rồi chạy `node tools/suc-manh/kiem-thu-lop.js <thư mục xem>`.)

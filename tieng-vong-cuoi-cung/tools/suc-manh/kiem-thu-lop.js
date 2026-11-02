@@ -73,7 +73,7 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
 
   /* ---------- 2) lớp thử (ảnh thử = ảnh gốc, chặn mạng – không nằm trong repo) ---------- */
   const neoDung = [[120, 120], [121, 121], [122, 122], [123, 123]];
-  const JSON_THU = {goc:'../../art/kiem-khach-lop/', lop:{
+  const JSON_THU = {goc:'../../art/kiem-khach-lop/', tu_dong_cap:true, theo_am_phu:{'phu-x':'thu-neo'}, lop:{
     'thu-truoc':{ten:'thử trước', khe:'a', kieu:'khung', z:'truoc', co_anh:true},
     'thu-sau':{ten:'thử sau', khe:'b', kieu:'khung', z:'sau', co_anh:true},
     'thu-neo':{ten:'thử neo', khe:'c', kieu:'neo', z:'truoc', co_anh:true, tep:'neo', so_hinh_neo:1, chan_neo:[128, 172], neo:{dung:neoDung}}},
@@ -130,6 +130,11 @@ const hash = async pg => crypto.createHash('md5').update(await pg.screenshot()).
     const th = GHI.find(g => !g.lop && /kiem-khach\/dung/.test(g.src)), n = GHI.find(g => g.lop); LopTrangBi.go('thu-neo'); return {th, n}; });
   const kn = neo.th ? neoDung[neo.th.k] : null;
   ok('lớp kiểu neo: ảnh nhỏ đặt đúng điểm neo của khung đang vẽ', neo.n && kn && neo.n.cx === 128 + 128 - kn[0] && neo.n.cy === 172 + 172 - kn[1] && neo.n.fx === neo.th.fx && neo.n.lat === neo.th.lat, {neo:neo.n && [neo.n.cx, neo.n.cy], k:neo.th && neo.th.k});
+  // cầu nối hệ thống đồ (giả lập MocHeThong): cấp tự theo capSucManh, Âm Phù đang cắm hiện lớp theo theo_am_phu
+  const cau = await T.pg.evaluate(() => { const a = LopTrangBi.lopDangHien();
+    window.MocHeThong = {bat:true, ht:{capSucManh:() => 1, trangBiDangDung:() => [{uid:1, mau:'phu-x', hiem:'hiem'}]}};
+    const b2 = LopTrangBi.lopDangHien(), c = LopTrangBi.cap(); window.MocHeThong.bat = false; const d = LopTrangBi.lopDangHien(); delete window.MocHeThong; return {a, b2, c, d}; });
+  ok('cầu nối hệ thống đồ: cấp 1 + Âm Phù → hiện lớp cấp 1 và lớp Âm Phù; tắt hệ thống → hết', cau.a.length === 0 && cau.c === 1 && cau.b2.includes('thu-truoc') && cau.b2.includes('thu-neo') && cau.d.length === 0, cau);
   // lưu: đeo → tải lại trang (không URL) vẫn còn
   const luu = await T.pg.evaluate(() => { LopTrangBi.deo('thu-truoc'); try { return JSON.parse(localStorage.getItem('tvcc-trang-bi-v1')); } catch (e){ return 'x'; } });
   ok('đeo được lưu (localStorage, bọc try/catch)', luu && luu.deo && luu.deo.includes('thu-truoc'), luu);
