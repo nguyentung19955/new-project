@@ -256,7 +256,7 @@
   function veHoi(){
     const im = V1.IMG.fx_hoi_mau; if (!im) return; let k = -1;
     if (HOI.t >= 0) k = 4 + Math.floor(HOI.t / HOI_NHIP);
-    else if (pl.hoi >= 0 && !pl.hoiXong){ const C = clipNV('hoimau'), mH = C.tong * (C.def.khung_hoi ?? 3) / (C.def.so_hinh || 4); k = Math.min(3, Math.floor(pl.hoi / mH * 4)); }
+    else if (pl.hoi >= 0 && !pl.hoiXong){ const C = clipNV('hoimau'), mH = C.buoc.slice(0, C.def.khung_hoi ?? 3).reduce((a, b) => a + b, 0) || 1; k = Math.min(3, Math.floor(pl.hoi / mH * 4)); }
     if (k < 0 || k > 7) return;
     ctx.save(); ctx.imageSmoothingEnabled = false;
     ctx.drawImage(im, k * 136, 0, 136, 172, Math.round(pl.x + pl.w / 2 - 68), Math.round(pl.y + pl.h / 2 - 86), 136, 172); ctx.restore();
@@ -279,7 +279,7 @@
     const al = pl.dead && C ? Math.max(0, Math.min(1, 1 - (pl.deadT - C.tong - 10) / 40)) : undefined;
     if (C && C.ok){
       const n = C.hinh.length;
-      const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
+      const k = st.k ?? (st.tiLe !== undefined ? SpriteMN.khungTheoBuoc(C, clampN(st.tiLe, 0, 0.999) * C.tong) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
       const tr = E.trangNV();
       if (window.LopTrangBi) LopTrangBi.veSau(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // lớp trang bị sau lưng (chưa đeo/chưa có ảnh = không vẽ gì)
       SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // loé trắng 1–2 khung đầu khi trúng đòn
