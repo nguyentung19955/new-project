@@ -769,6 +769,28 @@
     if (M) ctx.drawImage(M, Math.round(x + w / 2 - M.width * k / 2), Math.round(y), Math.round(M.width * k), Math.round(M.height * k));
     ctx.restore(); return true;
   }
+  // 9 mảnh co giãn tổng quát cho ảnh ChatGPT vẽ (L/R/T/B = lề theo điểm ảnh gốc, k = tỉ lệ vẽ lề)
+  function ve9(P, L, R, T, B, x, y, w, h, k, mo){
+    if (!P) return false;
+    const sx = [0, L, P.width - R, P.width], sy = [0, T, P.height - B, P.height];
+    const dx = [x, x + L * k, x + w - R * k, x + w], dy = [y, y + T * k, y + h - B * k, y + h];
+    ctx.save(); ctx.imageSmoothingEnabled = true; if (mo != null) ctx.globalAlpha *= mo;
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++){ const ww = dx[i + 1] - dx[i], hh = dy[j + 1] - dy[j]; if (ww <= 0 || hh <= 0) continue;
+      ctx.drawImage(P, sx[i], sy[j], sx[i + 1] - sx[i], sy[j + 1] - sy[j], Math.round(dx[i]), Math.round(dy[j]), Math.ceil(ww), Math.ceil(hh)); }
+    ctx.restore(); return true;
+  }
+  // Khung HUD (ChatGPT vẽ): (x, y, w, h) = mặt gỗ; rễ + chuông nhỏ thò ra ngoài ở góc trên-trái và dưới-phải
+  function veKhungHUD(x, y, w, h, k){ const P = V1.IMG.hud_khung_hud; if (!P) return false; k = k || 1;
+    return ve9(P, 82, 60, 56, 52, x - 9 * k, y - 19 * k, w + 18 * k, h + 42 * k, k); }
+  // Vạch ngăn (ChatGPT vẽ): đầu trái · dây · chuông giữa · dây · đầu phải
+  function veVach(x, y, w, k){
+    const P = V1.IMG.hud_vach; if (!P) return false;
+    const h = P.height * k, c0 = 296, c1 = 586, cw = (c1 - c0) * k, a = 80 * k, b = (P.width - 782) * k, m = Math.max(0, (w - a - b - cw) / 2);
+    ctx.save(); ctx.imageSmoothingEnabled = true;
+    const d = (sx, sw, dx, dw) => { if (dw > 0) ctx.drawImage(P, sx, 0, sw, P.height, Math.round(dx), Math.round(y - h / 2), Math.ceil(dw), Math.round(h)); };
+    d(0, 80, x, a); d(80, 216, x + a, m); d(c0, c1 - c0, x + a + m, cw); d(c1, 196, x + a + m + cw, m); d(782, P.width - 782, x + w - b, b);
+    ctx.restore(); return true;
+  }
   // Chữ dài trong khung: tự xuống dòng. dong = [{s, co, mau}], cx = tâm ngang, y = mép trên khung
   function chuKhung(dong, cx, y, k, rongMax){
     k = k || 0.5; rongMax = rongMax || 620;
@@ -855,14 +877,13 @@
     const K = V1.HUD_KHUNG = {};
     const nMau = E.P.maxHp, X0 = 18, wMau = nMau * 32 + 6;
     const wPanel = Math.max(wMau, 200) + 16;
-    ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(8, 8, wPanel, 142, 12); ctx.fill();
-    ctx.strokeStyle = 'rgba(74,90,110,0.55)'; ctx.lineWidth = 1.5; rr(8, 8, wPanel, 142, 12); ctx.stroke();
+    if (!veKhungHUD(8, 8, wPanel, 142)){ ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(8, 8, wPanel, 142, 12); ctx.fill(); }   // khung HUD (ChatGPT vẽ)
     // 1) máu
     const nhay = pl.nhay > 0 && (E.S.frame >> 2) % 2;   // chỉ nhấp nháy khi vừa trúng đòn (pl.nhay), không nháy lúc lướt (lướt cũng có khung bất tử)
     for (let i = 0; i < nMau; i++) oMau(X0 + i * 32, 16, i < pl.hp, nhay);
     K.mau = {x:X0 - 3, y:13, w:nMau * 32, h:34};
     // vạch ngăn
-    ctx.fillStyle = 'rgba(74,90,110,0.5)'; ctx.fillRect(16, 54, wPanel - 16, 2);
+    if (!veVach(16, 55, wPanel - 8, 0.32)){ ctx.fillStyle = 'rgba(74,90,110,0.5)'; ctx.fillRect(16, 54, wPanel - 16, 2); }   // vạch ngăn (ChatGPT vẽ)
     // 2) lượt hồi: bình xanh + số
     const nHoi = L.hoiMax, con = pl.luotHoi || 0;
     for (let i = 0; i < nHoi; i++){ const x = X0 + 11 + i * 28, y = 74, BI = V1.IMG[i < con ? 'hud_binh_day' : 'hud_binh_rong'];
@@ -891,7 +912,7 @@
     let yTB = 96, yBN = 58;
     if (b){
       const w = 420, x = (W - w) / 2, y = 40, m = b.def.mau || 100, hp = Math.max(0, b.hp);
-      ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(x - 14, 8, w + 28, 54, 10); ctx.fill();
+      if (!veKhungHUD(x - 14, 8, w + 28, 54, 0.8)){ ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(x - 14, 8, w + 28, 54, 10); ctx.fill(); }
       chu(b.def.ten || '', W / 2, 31, 19, '#F3E6C8', null, true);
       if (!veThanhMau(W / 2, y - 2, hp / m, 3.5)){
         ctx.fillStyle = '#05060a'; ctx.fillRect(x - 3, y - 3, w + 6, 18); ctx.fillStyle = '#3a1418'; ctx.fillRect(x, y, w, 12);
@@ -915,40 +936,48 @@
 
   /* ---------------- BẢN ĐỒ NHỎ ---------------- */
   function veBanDo(){
+    const I = V1.IMG;   // mọi thứ trên bản đồ là ảnh ChatGPT vẽ (art/giao-dien/ban-do)
     ctx.fillStyle = 'rgba(5,6,10,0.88)'; ctx.fillRect(0, 0, W, H);
-    chu('Map – Weeping Heartwood', W / 2, 44, 20, '#F3E6C8', null, true);
+    ve9(I.bd_nen, 150, 150, 115, 115, 6, 6, W - 12, H - 12, 0.62);
+    chu('Map – Weeping Heartwood', W / 2, 52, 20, '#F3E6C8', null, true);
     const ds = G.bd.phong, cw = 76, chh = 40, gap = 14;
     const xs = ds.map(p => p.x), ys = ds.map(p => p.y);
     const x0 = Math.min(...xs), x1 = Math.max(...ds.map(p => p.x + (p.rong || 1) - 1)), y0 = Math.min(...ys), y1 = Math.max(...ds.map(p => p.y + (p.cao_bd || 1) - 1));
-    const tw = (x1 - x0 + 1) * (cw + gap), th = (y1 - y0 + 1) * (chh + gap), k = Math.min(1, (W - 60) / tw, (H - 150) / th);
-    const ox = (W - tw * k) / 2, oy = 80 + (H - 150 - th * k) / 2;
+    const tw = (x1 - x0 + 1) * (cw + gap), th = (y1 - y0 + 1) * (chh + gap), k = Math.min(1, (W - 150) / tw, (H - 170) / th);
+    const ox = (W - tw * k) / 2, oy = 80 + (H - 170 - th * k) / 2;
     const o = p => ({x:ox + (p.x - x0) * (cw + gap) * k, y:oy + (p.y - y0) * (chh + gap) * k, w:((p.rong || 1) * (cw + gap) - gap) * k, h:((p.cao_bd || 1) * (chh + gap) - gap) * k});
     const vao = G.luu.daVao, byId = {}; ds.forEach(p => byId[p.id] = p);
     // nối cửa
-    ctx.strokeStyle = '#4A5A6E'; ctx.lineWidth = 3;
+    const anh = (im, cx, cy, h, a) => { if (!im) return; const w = im.width * h / im.height; ctx.save(); ctx.imageSmoothingEnabled = true; if (a != null) ctx.globalAlpha *= a; ctx.drawImage(im, Math.round(cx - w / 2), Math.round(cy - h / 2), Math.round(w), Math.round(h)); ctx.restore(); };
+    // nối cửa: dây rễ (ChatGPT vẽ) xoay theo hướng nối
+    const NG = I.bd_noi_ngang, daNoi = {};
     for (const p of ds){ if (!vao.includes(p.id)) continue; const P = G.cache[p.id]; if (!P) continue;
-      for (const c of P.cua){ const q = byId[c.toi]; if (!q) continue; const a = o(p), b = o(q); ctx.beginPath(); ctx.moveTo(a.x + a.w / 2, a.y + a.h / 2); ctx.lineTo(b.x + b.w / 2, b.y + b.h / 2); ctx.stroke(); } }
+      for (const c of P.cua){ const q = byId[c.toi]; if (!q || daNoi[q.id + '|' + p.id]) continue; daNoi[p.id + '|' + q.id] = 1;
+        const a = o(p), b = o(q), x1 = a.x + a.w / 2, y1 = a.y + a.h / 2, x2 = b.x + b.w / 2, y2 = b.y + b.h / 2, L = Math.hypot(x2 - x1, y2 - y1);
+        if (!NG || L < 1) continue; const hN = Math.max(8, 16 * k);
+        ctx.save(); ctx.translate((x1 + x2) / 2, (y1 + y2) / 2); ctx.rotate(Math.atan2(y2 - y1, x2 - x1)); ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(NG, -L / 2, -hN / 2, L, hN); ctx.restore(); } }
+    const ko = Math.max(0.12, 0.2 * k);   // tỉ lệ lề ô phòng
     for (const p of ds){
-      const r = o(p), da = vao.includes(p.id), P = G.cache[p.id];
-      if (!da){ // phòng kề phòng đã vào: chỉ hiện khung mờ
+      const r = o(p), da = vao.includes(p.id), P = G.cache[p.id], s = Math.min(r.h, 40 * k + 6);
+      if (!da){ // phòng kề phòng đã vào: chỉ hiện ô mờ (nét đứt mực – ChatGPT vẽ)
         const ke = vao.some(id => G.cache[id] && G.cache[id].cua.some(c => c.toi === p.id));
         if (!ke) continue;
-        ctx.strokeStyle = 'rgba(120,130,150,0.5)'; ctx.setLineDash([4, 4]); ctx.strokeRect(r.x, r.y, r.w, r.h); ctx.setLineDash([]); chu('?', r.x + r.w / 2, r.y + r.h / 2 + 5, 14, '#7f8a99'); continue;
+        ve9(I.bd_o_chua, 30, 30, 30, 30, r.x, r.y, r.w, r.h, ko, 0.8); chu('?', r.x + r.w / 2, r.y + r.h / 2 + 5, 14, '#3a2a1c'); continue;
       }
-      ctx.fillStyle = p.id === G.id ? '#3a3020' : '#1c2430'; ctx.fillRect(r.x, r.y, r.w, r.h);
-      ctx.strokeStyle = p.id === G.id ? '#E1B85A' : '#4A5A6E'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
-      chu(p.id, r.x + r.w / 2, r.y + 15, 11, '#a9b3bf');
-      if (P && P.chuong_luu) veIcon('chuong_vo', r.x + 12, r.y + r.h - 12, 0.5);
-      if (P && P.khoa && G.luu.kho[P.khoa.can] < P.khoa.so){ ctx.fillStyle = '#c28a45'; ctx.fillRect(r.x + r.w - 14, r.y + r.h - 16, 8, 8); }
-      if (P && P.trum && !G.luu.trumHa) chu('☠', r.x + r.w - 12, r.y + 15, 12, '#c0392b');
-      if (G.luu.tui && G.luu.tui.phong === p.id) chu('◆', r.x + r.w / 2 + 16, r.y + r.h - 6, 12, '#78e6e6');
+      ve9(p.id === G.id ? I.bd_o_hien : I.bd_o_da, 34, 34, 34, 34, r.x, r.y, r.w, r.h, ko);
+      chu(p.id, r.x + r.w / 2, r.y + 15, 11, p.id === G.id ? '#fff2cf' : '#d9c7a4');
+      if (P && P.chuong_luu) anh(I.bd_chuong_luu, r.x + 12, r.y + r.h - 13, s * 0.45);
+      if (P && P.khoa && G.luu.kho[P.khoa.can] < P.khoa.so) anh(I.hud_chuong_khoa, r.x + r.w - 12, r.y + r.h - 13, s * 0.42);
+      if (P && P.trum && !G.luu.trumHa) anh(I.bd_trum, r.x + r.w - 14, r.y + 14, s * 0.5);
+      if (G.luu.tui && G.luu.tui.phong === p.id) anh(I.fx_i_manh_am, r.x + r.w / 2 + 16, r.y + r.h - 11, s * 0.4);
       if (p.id === G.id && (E.S.frame >> 4) % 2 === 0){
         const fx = (pl.x + pl.w / 2) / (E.BD.COT * T), fy = (pl.y + pl.h / 2) / (E.BD.HANG * T);
-        ctx.fillStyle = '#F3E6C8'; ctx.fillRect(r.x + fx * r.w - 3, r.y + fy * r.h - 3, 6, 6);
+        anh(I.bd_mat_na, r.x + fx * r.w, r.y + fy * r.h, Math.max(12, s * 0.5));   // vị trí người chơi: mặt nạ (ChatGPT vẽ)
       }
     }
-    chu((G.bd.phong.find(p => p.id === G.id) || {}).ten || G.id, W / 2, H - 46, 15, '#E1B85A');
-    chu('M / Map button: close', W / 2, H - 22, 12, '#a9b3bf');
+    chu((G.bd.phong.find(p => p.id === G.id) || {}).ten || G.id, W / 2, H - 66, 15, '#E1B85A');
+    chu('M / Map button: close', W / 2, H - 46, 12, '#d9c7a4');
   }
 
   /* ---------------- QUÁI NỔI TRÊN BÓNG TỐI + CHIÊU QUÁI (như phòng demo) ---------------- */
