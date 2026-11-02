@@ -156,6 +156,7 @@
     if (S.daDi) S.goiYT += DT;
     P.x = Math.max(L.bien[0], Math.min(L.bien[1], P.x + v * L.toc_do));
     P.t = P.chay ? (S.chayCu ? P.t + 1 : 0) : (S.chayCu ? 0 : P.t + 1); S.chayCu = P.chay;
+    P.quang = P.chay ? (P.quang || 0) + Math.abs(v * L.toc_do) : 0;   // (camgiac) khung chạy theo quãng đường
     // vật gần nhất để tương tác
     S.gan = null; let best = 1e9;
     const xet = (o, r) => { const d = Math.abs(o.x - P.x); if (d < r && d < best){ best = d; S.gan = o; } };
@@ -186,7 +187,7 @@
     g.imageSmoothingEnabled = false;
     g.fillStyle = '#05080d'; g.fillRect(0, 0, W, H);
     if (S.che === 'canh'){ CT.ve(g, W, H); return; }
-    const cx = Math.round(S.cam);
+    const kx = cv.width / W, cx = Math.round(S.cam * kx) / kx;   // (camgiac) làm tròn theo điểm ảnh thật (trước: 1 px logic = 2,17 điểm iPhone)
     const ve5 = ds => ds.forEach((im, k) => { const x = k * L.rong_man - cx; if (im && x < W && x + L.rong_man > 0) g.drawImage(im, x, 0, L.rong_man, H); });
     ve5(nen);
     // chuông teleport (dải ô ngang, neo đáy-giữa)
@@ -202,7 +203,8 @@
     // Kiếm Khách
     if (!P.an){
       const C = P.chay ? clip.troi : clip.dung, s = (NV.ti_le || 1) * (NV.co || 1) * 0.85;
-      SpriteMN.ve(g, C, SpriteMN.khungTheoBuoc(C, P.t), P.x - cx, MD, P.mat < 0, s);
+      const k = P.chay && C.def.quang_chu_ky ? SpriteMN.khungTheoQuang(C, P.quang || 0) : SpriteMN.khungTheoBuoc(C, P.t);
+      SpriteMN.ve(g, C, k, P.x - S.cam, MD, P.mat < 0, s);   // (camgiac) theo camera chưa làm tròn → nhân vật không rung 1 điểm so với nền
     }
     // hiệu ứng dịch chuyển (đáy ở chân)
     if (S.dc && anhDC){ const D = L.dich_chuyen, [ow, oh] = D.o, k = Math.max(0, Math.min(D.khung - 1, S.dcK || 0));
@@ -260,9 +262,12 @@
     tt: () => ({che: S.che, x: Math.round(P.x), gan: S.gan && S.gan.id, chuongK: S.chuongK, thoai: HT.dangMo() && HT.dongHienTai() && HT.dongHienTai().chu,
       canh: CT.tranhHienTai(), diToi: LANG.diToi || null, an: P.an})
   });
+  // (camgiac) bắt nhịp màn hình + nội suy vị trí nhân vật/camera khi vẽ (game/muot-khung.js)
+  const dongHo = window.MuotKhung ? MuotKhung.taoDongHo() : null, CAMO = {get x(){ return S.cam; }, set x(v){ S.cam = v; }}, DSN = [P, CAMO], dsn = () => DSN;
   let cu = 0, du = 0;
   function vong(t){
     requestAnimationFrame(vong);
+    if (dongHo){ const r = dongHo(t, mot, dsn); MuotKhung.noiSuy(DSN, r.a, ve); capNhatNut(); return; }
     du += Math.min(100, t - (cu || t)); cu = t;
     let n = 0; while (du >= 1000 / 60 && n < 4){ mot(); du -= 1000 / 60; n++; } if (n === 4) du = 0;
     ve(); capNhatNut();

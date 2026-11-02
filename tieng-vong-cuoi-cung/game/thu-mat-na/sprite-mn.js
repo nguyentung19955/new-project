@@ -49,6 +49,11 @@ const SpriteMN = (() => {
     while (k < n - 1 && m >= C.buoc[k]){ m -= C.buoc[k]; k++; }
     return k;
   }
+  // (camgiac) khung theo QUÃNG ĐƯỜNG (px logic) cho clip có "quang_chu_ky" (vd chạy): 1 vòng hoạt ảnh = quang_chu_ky px; khung bắt đầu = "khung_dau"
+  function khungTheoQuang(C, q){
+    const n = C && C.hinh.length || (C && C.buoc.length) || 1, L = C && C.def && C.def.quang_chu_ky; if (!L) return 0;
+    return (Math.floor(q / L * n) + (C.def.khung_dau || 0)) % n;
+  }
   // bóng trắng của một ảnh (chớp khi trúng đòn) – tạo 1 lần rồi giữ
   const TRANG = new WeakMap();
   function trangHoa(img){
@@ -58,12 +63,19 @@ const SpriteMN = (() => {
     g.globalCompositeOperation = 'source-in'; g.fillStyle = '#ffffff'; g.fillRect(0, 0, c.width, c.height);
     TRANG.set(img, c); return c;
   }
+  // (camgiac) làm tròn điểm neo theo ĐIỂM ẢNH THẬT của canvas (không theo px logic): canvas iPhone 2,17 điểm/px logic → làm tròn px logic làm hình nhích bậc 2 điểm
+  function tron(g, v, truc){
+    const m = g.getTransform ? g.getTransform() : null;
+    if (!m || m.b !== 0 || m.c !== 0) return Math.round(v);
+    const k = truc ? m.d : m.a, e = truc ? m.f : m.e; if (!(k > 0)) return Math.round(v);
+    return (Math.round(e + k * v) - e) / k;
+  }
   // vẽ hình k của clip C, ĐIỂM NEO (chân) tại (fx, fy) px logic; lat = lật gương quanh điểm neo; s = px logic / điểm ảnh
   function ve(g, C, k, fx, fy, lat, s, alpha, trang){
     let img = C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))];
     if (trang) img = trangHoa(img);
     const cx = C.chan[0] * s, cy = C.chan[1] * s;
-    fx = Math.round(fx); fy = Math.round(fy);
+    fx = tron(g, fx, 0); fy = tron(g, fy, 1);
     if (alpha !== undefined) g.globalAlpha = alpha;
     if (!lat) g.drawImage(img, fx - cx, fy - cy, img.width * s, img.height * s);
     else { g.save(); g.translate(fx, 0); g.scale(-1, 1); g.drawImage(img, -cx, fy - cy, img.width * s, img.height * s); g.restore(); }
@@ -81,11 +93,11 @@ const SpriteMN = (() => {
   function veVien(g, C, k, fx, fy, lat, s, mau, d, alpha){
     const img = C.hinh[Math.max(0, Math.min(C.hinh.length - 1, k))]; if (!img) return;
     const t = toMau(img, mau), cx = C.chan[0] * s, cy = C.chan[1] * s;
-    fx = Math.round(fx); fy = Math.round(fy); g.save(); g.globalAlpha = alpha ?? 1;
+    fx = tron(g, fx, 0); fy = tron(g, fy, 1); g.save(); g.globalAlpha = alpha ?? 1;
     if (lat){ g.translate(fx, 0); g.scale(-1, 1); fx = 0; }
     for (const [ox, oy] of [[-d, 0], [d, 0], [0, -d], [0, d]]) g.drawImage(t, fx - cx + ox, fy - cy + oy, img.width * s, img.height * s);
     g.restore();
   }
   async function napJson(url){ return fetch(url + '?v=' + BUSTER, {cache:'no-store'}).then(r => r.json()); }
-  return {napClip, napJson, khungTheoBuoc, ve, veVien, msMang};
+  return {napClip, napJson, khungTheoBuoc, khungTheoQuang, ve, veVien, msMang};
 })();

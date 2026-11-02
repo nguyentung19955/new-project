@@ -106,6 +106,7 @@ body.touch #keys{display:none}
   </div></div>
   <div id="rotate">Rotate your phone to landscape to play</div>
 </div>
+<script src="../muot-khung.js"></script>
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
 <script src="../thu-mat-na/ve-chieu-quai.js"></script>
@@ -209,14 +210,14 @@ function mot(){
   if (G.tbT > 0) G.tbT--; if (G.bannerT > 0) G.bannerT--;
   V1.camBuoc();
 }
-const DT = 1000 / 60; let last = 0, accT = 0, nutNghi = false;
+// (camgiac) bắt nhịp màn hình + nội suy vị trí khi vẽ (game/muot-khung.js) – hết cảnh 0/1/2 bước mỗi khung trên iPhone
+const dongHo = MuotKhung.taoDongHo(); let nutNghi = false;
+const DSN = [], vatNoiSuy = () => { DSN.length = 0; DSN.push(pl, V1.CAM); for (const q of E.QUAI) DSN.push(q); for (const b of E.DAN) DSN.push(b); return DSN; };
 function loop(now){
   requestAnimationFrame(loop);
-  if (!last) last = now; const d = Math.min(100, now - last); last = now;
-  accT += d; let n = 0;
-  while (accT >= DT && n < 4){ mot(); accT -= DT; n++; }
-  if (n === 4) accT = 0;
-  V1.ve(G.mo || 0);
+  const r = dongHo(now, mot, vatNoiSuy);
+  V1.noiSuyA = r.a;
+  MuotKhung.noiSuy(vatNoiSuy(), r.a, () => V1.ve(G.mo || 0));
   const can = G.trang === 'choi' && G.ganChuong;
   if (can !== nutNghi){ nutNghi = can; $('b-nghi').style.display = can ? 'block' : 'none'; }
   $('b-map').classList.toggle('on', G.trang === 'ban_do');

@@ -426,6 +426,8 @@ const DongCoMN = (() => {
     if (P.coLuon && !pl.onGround && !sliding && pl.vy > 0 && IN.j && !pl.atk && pl.hurtT <= 0 && (pl.luonT || 0) < P.glideMax){ pl.vy = Math.min(pl.vy, P.glideFall); pl.luon = true; pl.luonT = (pl.luonT || 0) + 1; }
 
     const xTruoc = pl.x; if (moveX(pl, pl.vx, false)) pl.vx = 0; pl.dxT = pl.x - xTruoc;
+    // (camgiac) quãng đường chạy trên đất: khung chạy đổi theo QUÃNG ĐƯỜNG (chân khớp mặt đất), không theo thời gian
+    if (pl.onGround && !pl.atk && Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6) pl.quang = (pl.quang || 0) + Math.abs(pl.dxT); else pl.quang = 0;
     const vyWas = pl.vy, ry = moveY(pl, pl.vy);
     if (ry !== 0){ if (ry === 1 && vyWas > 5) pl.landT = 10; if (ry === -1) pl.jumping = false; pl.vy = 0; }
     const daTrenKhong = !pl.onGround;
@@ -677,7 +679,7 @@ const DongCoMN = (() => {
       return pl.vy < 0 ? {ten:'nhay', tiLe:clamp(1 + pl.vy / jumpVel, 0, 1)} : {ten:'roi'};
     }
     if (pl.landT > 0) return {ten:'tiepdat', tiLe:(10 - pl.landT) / 10};
-    if (Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6) return {ten:'troi'};
+    if (Math.abs(pl.dxT) > 0.001 && Math.abs(pl.vx) > 0.6) return {ten:'troi', quang:pl.quang || 0};
     return {ten:'dung'};
   }
 

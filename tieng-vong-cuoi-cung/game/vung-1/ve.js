@@ -21,8 +21,9 @@
     const iw = Math.max(200, innerWidth - 2 * Math.max(sa.l, sa.r)), ih = innerHeight;
     const bw = iw * DPR, bh = ih * DPR;
     let css;
-    if (DPR >= 2){   // (luồng F) màn nét cao (iPhone): lấp đầy khung cho to/dễ đọc (tỉ lệ lẻ không thấy răng cưa ở 2–3× DPR)
-      css = Math.min(iw / W, ih / H); M = Math.max(1, Math.min(3, Math.ceil(css * DPR)));
+    if (DPR >= 2){   // (luồng F) màn nét cao (iPhone): lấp đầy khung cho to/dễ đọc
+      // (camgiac) canvas = ĐÚNG số điểm ảnh thật của màn (trước đây 2880 điểm rồi trình duyệt co về ~2080 → điểm ảnh rơi rụng, nhân vật/nền nhích 1 điểm lúc chạy)
+      css = Math.min(iw / W, ih / H); M = Math.max(1, Math.round(W * css * DPR) / W); css = M / DPR;
     } else {         // màn thường: phóng số nguyên cho điểm ảnh đều
       M = Math.max(1, Math.floor(Math.min(bw / W, bh / H)));
       css = (bw < W || bh < H) ? Math.min(iw / W, ih / H) : M / DPR;
@@ -275,11 +276,12 @@
   function veNV(){
     const st = E.trangThai(), C = clipNV(st.ten);
     if (pl.nhay > 0 && pl.hurtT <= 0 && pl.dash <= 0 && !pl.dead && (E.S.frame >> 2) % 2 === 0) return;
-    const fx = pl.x + pl.w / 2, fy = pl.y + pl.h;
+    // (camgiac) trừ phần lẻ của camera → vị trí nhân vật trên màn chỉ phụ thuộc (nhân vật − camera), không rung 1 điểm so với nền
+    const le = V1.camLe || [0, 0], fx = pl.x + pl.w / 2 - le[0], fy = pl.y + pl.h - le[1];
     const al = pl.dead && C ? Math.max(0, Math.min(1, 1 - (pl.deadT - C.tong - 10) / 40)) : undefined;
     if (C && C.ok){
       const n = C.hinh.length;
-      const k = st.k ?? (st.tiLe !== undefined ? SpriteMN.khungTheoBuoc(C, clampN(st.tiLe, 0, 0.999) * C.tong) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
+      const k = st.k ?? (st.quang !== undefined && C.def.quang_chu_ky ? SpriteMN.khungTheoQuang(C, st.quang) : st.tiLe !== undefined ? SpriteMN.khungTheoBuoc(C, clampN(st.tiLe, 0, 0.999) * C.tong) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
       const tr = E.trangNV();
       if (window.LopTrangBi) LopTrangBi.veSau(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // lớp trang bị sau lưng (chưa đeo/chưa có ảnh = không vẽ gì)
       SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // loé trắng 1–2 khung đầu khi trúng đòn
@@ -1028,7 +1030,9 @@
   V1.ve = function(mo){
     const S = E.S;
     // camera mượt: thế giới (nhân vật/quái) theo 1 px logic; nền thấp 320×180 dời phần lẻ (0..2 px) thay vì nhảy bậc 3 px → hết rung giật khi chạy
-    const camF = Math.round(CAM.x), camFy = Math.round(CAM.y), camPx = Math.floor(camF / PX), camPy = Math.floor(camFy / PX), cam = camF, camY = camFy, lePx = camF - camPx * PX, lePy = camFy - camPy * PX;
+    // (camgiac) camera làm tròn theo ĐIỂM ẢNH THẬT (1/M px logic) thay vì 1 px logic (= 2,17 điểm ảnh iPhone) → nền trôi đều; phần lẻ camLe dùng để khoá nhân vật theo camera
+    const camF = Math.round(CAM.x * M) / M, camFy = Math.round(CAM.y * M) / M; V1.camLe = [CAM.x - camF, CAM.y - camFy];
+    const camPx = Math.floor(camF / PX), camPy = Math.floor(camFy / PX), cam = camF, camY = camFy, lePx = camF - camPx * PX, lePy = camFy - camPy * PX;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = '#05080d'; ctx.fillRect(0, 0, cv.width, cv.height);
     if (!G.phong){ return; }
