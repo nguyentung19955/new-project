@@ -1,5 +1,5 @@
 # 017 – Kèn Câm – đánh: 1 khung nâng kèn giữa F5–F6 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
 - **Clip:** `quai.json → loai.ken.hinh.danh` – thư mục art gốc `art/quai-moi/ken/danh/` (9 khung `fNN.png`, ô 112×112, quay TRÁI, neo chân [50, 92])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F5.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Chuẩn bị quá lâu, lúc bắn chỉ 70ms; đường nâng kèn F4→F6 chưa liền. Khoá chân; nếu F4→F5/F5→F6 giật thì thêm 1 khung nâng kèn." (đo IoU F4→F5 = 0,93, F5→F6 = 0,59 → chèn giữa F5–F6)
