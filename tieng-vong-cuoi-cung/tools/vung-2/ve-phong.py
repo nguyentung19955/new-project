@@ -64,6 +64,9 @@ def main():
         demo = os.path.join(tam, 'demo'); os.makedirs(demo)
         for f in glob.glob(DEMO1 + '*.png'):           # đồ trang trí chung thế giới (fallback)
             shutil.copy(f, demo)
+        # đồ treo đặc trưng Vùng 1 (mặt nạ, vải chuông) không hợp Rễ Mục → bỏ cho tới khi có đạo cụ Vùng 2 (yêu cầu 035/036)
+        for n in ('h_re_mat_na', 'h_vai_chuong', 'h_vai_dai'):
+            Image.new('RGBA', Image.open(DEMO1 + n + '.png').size).save(os.path.join(demo, n + '.png'))
         for n in BAT_BUOC:
             shutil.copy(CL + n + '.png', os.path.join(demo, n + '.png'))
         if not ghep_be(demo):
