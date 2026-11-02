@@ -81,8 +81,9 @@ const KHUNG_CHON = taoAnh('khung-chon.png', 640, 420, '#3a3020');
   // đã có ảnh khung chọn (yêu cầu 009 XONG) → menu riêng; chưa có thì dùng khung hộp thoại
   const coKhungChonThat = fs.existsSync(path.join(__dirname, '../../art/cot-truyen/teleport/khung-chon.png'));
   ok(coKhungChonThat ? t.che === 'menu' && t.chuongK === 9 : t.che === 'thoai' && /Rootbound/.test(t.thoai), 'mở menu chọn vùng (' + (coKhungChonThat ? 'khung chọn riêng, chuông giữ khung 9' : 'khung hộp thoại') + ')', t);
-  const chon = await p.evaluate(() => (LANG.S.menu && LANG.S.menu.chon || HopThoai.dongHienTai().chon).map(c => c.chu));
-  ok(chon[0] === 'Rotting Roots' && chon.includes('Stay') && chon.length === 3, 'menu: chỉ Vùng 1 + xem lại mở đầu + Stay', chon);
+  const chon = await p.evaluate(() => (LANG.S.menu && LANG.S.menu.chon || HopThoai.dongHienTai().chon).map(c => c.chu + (c.khoa ? ' [khoa]' : '')));
+  // (khoidau) bảng đích theo tư vấn: "Weeping Heartwood — Enter", Vùng 2 khoá hiện mờ kèm điều kiện, Stay; không còn "xem lại mở đầu" (mở đầu không chiếu lại)
+  ok(chon[0] === 'Weeping Heartwood — Enter' && chon[1] === 'Rotting Roots — Defeat the Hollow Bell Mother [khoa]' && chon.includes('Stay') && chon.length === 3, 'menu: Vùng 1 (Enter) + Vùng 2 khoá mờ + Stay', chon);
   await p.evaluate(() => LANG.buoc(60)); await p.screenshot({path: path.join(RA, 'menu-teleport.png')});
   await p.evaluate(() => LANG.buoc(1, 'ok')); await p.evaluate(() => LANG.buoc(25));
   t = await p.evaluate(() => LANG.tt()); ok(t.an, 'dịch chuyển: nhân vật tan vào ánh sáng', t);

@@ -102,15 +102,16 @@ const HET = 'Your sign-in expired after 7 days. Sign in again to sync your progr
   const d2 = await D.pg.evaluate(() => ({uid:LuuMay._dongBo.uid(), nut:document.getElementById('may-xd').offsetParent !== null, m:JSON.parse(localStorage.getItem('tvcc-vung1')).manh}));
   ok(d2.uid === uidKhach && d2.nut && d2.m === 3 && manhMay(uidKhach) === 55, '…bấm lần 2: vào tài khoản Google, không đè (mây 55, máy 3), cho chọn', d2);
   await D.ctx.close();
-  // 10. trang chọn game/ cũng có ô tài khoản + chọn bản
-  await B.pg.goto(GOC); await B.pg.waitForFunction(() => LuuMay.trangThai !== 'dang-ket-noi', null, {timeout:15000}); await B.pg.waitForTimeout(300);
-  const ic = await B.pg.evaluate(() => ({ai:document.getElementById('dn-ai').textContent, ra:!document.getElementById('b-dn-ra').hidden, xd:!!document.getElementById('dn-xd')}));
-  ok(/^Signed in: tung/.test(ic.ai) && ic.ra && ic.xd, 'trang chọn game có ô tài khoản (Signed in + Sign out)', ic);
+  // 10. màn tiêu đề game/: ô tài khoản nằm trong bảng Account (khoidau) + nút chọn bản khi xung đột
+  await B.pg.goto(GOC); await B.pg.waitForFunction(() => LuuMay.trangThai !== 'dang-ket-noi' && window.TIEU_DE && TIEU_DE.xong, null, {timeout:15000}); await B.pg.waitForTimeout(300);
+  await B.pg.click('#b-tk'); await B.pg.waitForTimeout(200);
+  const ic = await B.pg.evaluate(() => ({ai:document.getElementById('dn-ai').textContent, ra:!document.getElementById('b-dn-ra').hidden, xd:!!document.getElementById('kd-b-tk-xd'), tt:document.getElementById('kd-tk-tt').textContent}));
+  ok(/^Signed in: tung/.test(ic.ai) && ic.ra && ic.xd && /^(Signed in · Synced|Syncing…|Action needed · Choose a save)$/.test(ic.tt), 'màn tiêu đề: Account có ô tài khoản (Signed in + Sign out) + trạng thái chữ rõ', ic);
   await chup(B.pg, '6-trang-chon');
-  // 11. Làng Chuông có ô tài khoản ở màn chờ / thông báo khi đang chơi
+  // 11. Làng Chuông: thông báo khi đang chơi (ô tài khoản đã chuyển vào Account trên màn tiêu đề – khoidau)
   await B.pg.goto(GOC + 'lang-chuong/?thu=1'); await B.pg.waitForTimeout(2500);
   const lc = await B.pg.evaluate(() => ({o:!!document.getElementById('dn-ai'), bao:!!document.getElementById('dn-bao')}));
-  ok(lc.o && lc.bao, 'Làng Chuông nạp ô tài khoản + thông báo', lc);
+  ok(!lc.o && lc.bao, 'Làng Chuông nạp thông báo, không còn ô đăng nhập giữa màn', lc);
   await chup(B.pg, '7-lang');
   // 12. không có mạng (chặn tải Firebase): vẫn chơi, nút đăng nhập báo nhẹ nhàng, không lỗi
   const C = await may({chan:true}); await vao(C.pg, '&moi=1');
