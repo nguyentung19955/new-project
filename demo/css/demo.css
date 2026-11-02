@@ -46,7 +46,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 #lk { font-variant-numeric: tabular-nums; }
 
 /* ACTION HUD y 597..676 + CARD HUD y 676..816 (ảnh v2 hud_bottom_panel.png nếu có) */
-#duoi { position: absolute; left: 0; top: 597px; width: 390px; height: 219px; animation: duoi .45s ease-out;
+#duoi { position: absolute; left: 0; top: 654px; width: 390px; height: 186px; animation: duoi .45s ease-out;
   background: url(../assets/v2/hud_bottom_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(4,2,12,0.55), rgba(6,6,20,0.96) 20%);
   border-top: 1px solid rgba(120,180,255,0.22); }
 #lk-hop { position: absolute; left: 12px; top: 8px; width: 92px; height: 59px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
@@ -79,7 +79,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .ic-e { display: inline-block; width: 8px; height: 12px; background: var(--vang); clip-path: polygon(60% 0, 0 58%, 42% 58%, 30% 100%, 100% 38%, 56% 38%); filter: drop-shadow(0 0 4px rgba(255,226,74,0.9)); vertical-align: -1px; margin-right: 3px; }
 /* thẻ tướng 55×108 tại x 8/68/128/188/248, y 684 (trong dải 676..816); thẻ leader 68×108 tại x 314
    P0.2: nền sáng hơn, chân dung 53×66, LV 10px, tên 9.5px, giá 11px; đủ tiền = viền sáng + giá vàng ▲; thiếu = chân dung tối, giá đỏ nhạt (chữ vẫn đọc được) */
-#bo-bac { position: absolute; left: 0; top: 87px; width: 300px; height: 108px; }
+#bo-bac { position: absolute; left: 0; top: 72px; width: 300px; height: 108px; }
 .the { position: absolute; top: 0; width: 55px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h);
   background: linear-gradient(175deg, color-mix(in srgb, var(--h) 34%, #141a36), #141a36 70%, #0e1228);
   box-shadow: inset 0 0 8px var(--hg), 0 0 8px var(--hg); transition: transform .08s, filter .2s, box-shadow .2s; }
@@ -98,7 +98,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .the:active { transform: scale(0.95); }
 .the.len { animation: len .5s ease-out; background-position: 100% 0, 0 0; }
 /* THẺ ARCHFIEND (ô thứ 6): chân dung + vòng hồi chiêu + giá Energy (tăng sau mỗi lần dùng) */
-#the-af { position: absolute; left: 314px; top: 87px; width: 68px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h, #ff2bd6);
+#the-af { position: absolute; left: 314px; top: 72px; width: 68px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h, #ff2bd6);
   background: linear-gradient(175deg, #2a1e46, #120a24 70%, #0a0618); box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 10px var(--h); transition: transform .08s, filter .2s; }
 #the-af canvas { position: absolute; left: 1px; top: 1px; width: 66px; height: 66px; pointer-events: none; }
 #the-af .af-cd { position: absolute; left: 9px; top: 9px; width: 50px; height: 50px; border-radius: 50%; pointer-events: none; display: flex; align-items: center; justify-content: center;
