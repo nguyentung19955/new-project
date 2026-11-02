@@ -1,5 +1,5 @@
 # 002 – Biểu tượng 3 Charm đầu (Vùng 1)
-- **Trạng thái:** CHỜ  · ƯU TIÊN 1 (cùng 003 – thiếu thì Charm KHÔNG rơi trong game)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/giao-dien/he-thong/charm-nguon-chatgpt.png; 3 biểu tượng 64×64, nội dung ~56 px)
 - **Dùng vào:** túi Charm + màn chọn Charm đầu (game/he-thong/moc-vung-1.js). Hiện trong ô Charm 72×72 (003), chiếm ~76% ô; màn chọn hiện 72×72.
 - **Mô tả (3 Charm ChatGPT chọn định hình build ở Vùng 1):**
   1. **Bell's Return** (bells-return) – loại Echo: quả chuông đồng nhỏ có vòng sóng âm quay ngược về nó (mũi sóng cong vào trong), ánh xanh tiếng vọng.

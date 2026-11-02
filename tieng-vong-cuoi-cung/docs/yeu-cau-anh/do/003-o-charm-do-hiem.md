@@ -1,5 +1,5 @@
 # 003 – Ô Charm theo 4 độ hiếm + biểu tượng độ hiếm
-- **Trạng thái:** CHỜ  · ƯU TIÊN 1 (cùng 002)
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/giao-dien/he-thong/o-charm-nguon-chatgpt.png; ô 72×72, lòng trong tối ≈ x 8–64, y 8–64 (lề 8 px); biểu tượng độ hiếm 24×24)
 - **Dùng vào:** ô chứa biểu tượng Charm trong túi/loadout (Charm Cell 72×72 – ChatGPT mục 6) + biểu tượng độ hiếm nhỏ cạnh tên.
 - **Mô tả:** 4 ô vuông CÙNG hình dáng, khác chất liệu/màu viền, lòng ô tối đặc (#141a22) để đặt biểu tượng 002 lên:
   - **Faded** (faded) – đồng xỉn xám tro, sứt mẻ.
