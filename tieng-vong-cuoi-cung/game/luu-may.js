@@ -176,7 +176,9 @@
   W.LuuMay = LM;
   function bao(tt, loi){ if (tt) LM.trangThai = tt; if (loi !== undefined) LM.loi = String(loi || ''); for (const f of nghe){ try { f(LM); } catch (e){} } }
 
-  const tatHan = !ls || !CH || !CH.apiKey || Q.get('may') === '0' || !/^https?:$/.test(location.protocol);
+  // chạy thử trên máy (localhost – phép thử) thì không đụng dự án thật, trừ khi ?may=1 hoặc cấu hình cho phép
+  const laMayNha = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !(CH && (CH.choLocalhost || CH.emulator)) && Q.get('may') !== '1';
+  const tatHan = !ls || !CH || !CH.apiKey || Q.get('may') === '0' || laMayNha || !/^https?:$/.test(location.protocol);
   if (tatHan) return;
 
   const DB = taoDongBo({kho: ls, suKien(loai, x){ if (loai === 'loi') bao(navigator.onLine === false ? 'ngoai-tuyen' : 'loi', x && x.message || x); else if (LM.trangThai === 'ngoai-tuyen' || LM.trangThai === 'loi') bao(LM._tt || 'an-danh', ''); if (loai === 'keo' && x.giu.length) bao(null, 'Có bản lưu mới hơn trên mây – tải lại trang để dùng'); }});

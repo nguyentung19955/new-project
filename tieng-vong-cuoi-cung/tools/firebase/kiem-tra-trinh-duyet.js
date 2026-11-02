@@ -4,7 +4,7 @@
 const {chromium} = require('playwright');
 const GOC = 'http://localhost:8765/game/';
 const SDK = 'https://gia-firebase.test/sdk/';
-const CH = {apiKey:'gia', authDomain:'gia', projectId:'gia', appId:'gia', sdk:SDK, nhipGui:3000};
+const CH = {apiKey:'gia', authDomain:'gia', projectId:'gia', appId:'gia', sdk:SDK, nhipGui:3000, choLocalhost:true};
 
 // ---- "máy chủ" giả ----
 const MC = {docs:{}, google:{}, so:0, ghi:0, doc:0};
@@ -50,7 +50,7 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
     o = o || {};
     const ctx = await b.newContext({viewport:{width:960, height:540}});
     await ctx.exposeFunction('__mayGia', (op, a) => xuLy(op, a));
-    if (o.ch !== null) await ctx.addInitScript(c => { window.TVCC_FIREBASE = c; }, Object.assign({}, CH, o.ch || {}));
+    await ctx.addInitScript(c => { window.TVCC_FIREBASE = c; }, o.ch === null ? {tat:true} : Object.assign({}, CH, o.ch || {}));
     await ctx.route(SDK + '**', r => {
       if (o.chan) return r.abort();
       const u = r.request().url(), body = u.endsWith('firebase-app.js') ? APP : u.endsWith('firebase-auth.js') ? AUTH : FS;
@@ -112,7 +112,7 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
   await C.pg.evaluate(() => TV.choi(true)); await C.pg.waitForTimeout(300);
   const cc = await C.pg.evaluate(() => ({tt:LuuMay.trangThai, g:G.trang, co:V1.coLuu()}));
   ok(cc.g === 'choi' && cc.co && (cc.tt === 'loi' || cc.tt === 'ngoai-tuyen'), 'chặn mạng hẳn: vẫn chơi + lưu máy', cc);
-  // 8. chưa cấu hình Firebase (như hiện giờ): lưu mây tắt, menu không hiện dòng lưu mây
+  // 8. không có cấu hình Firebase: lưu mây tắt, menu không hiện dòng lưu mây
   const D = await mayMoi({ch:null}); await vao(D.pg, '&moi=1');
   const dd = await D.pg.evaluate(() => ({tt:LuuMay.trangThai, an:document.getElementById('may-tt').hidden}));
   ok(dd.tt === 'tat' && dd.an, 'chưa có cấu hình: lưu mây tắt, chỉ lưu máy', dd);

@@ -22,7 +22,7 @@ jobs:
         working-directory: tieng-vong-cuoi-cung
     env:
       SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-      PROJECT: ${{ vars.FIREBASE_PROJECT_ID || 'tieng-vong-cuoi-cung' }}
+      PROJECT: ${{ vars.FIREBASE_PROJECT_ID || 'tieng-vong-cuoi-cun' }}
     steps:
       - name: Kiểm có bí mật chưa
         id: co
