@@ -1,5 +1,5 @@
 # 004 – nen-giua-ho-bao-tu
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 384×192 RGBA, khe trong suốt, nối liền ngang; gốc: giua-ho-bao-tu-nguon-chatgpt.png)
 - **Dùng vào:** Nền giữa R209 Fungus Reservoir, R210. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** BG-R2-MID-02 "Spore Reservoir": quạt nấm, sương mỏng, hồ bào tử xa; nối liền ngang, khe trong suốt.
 - **Số khung + ms gợi ý:** 1 ảnh tĩnh
