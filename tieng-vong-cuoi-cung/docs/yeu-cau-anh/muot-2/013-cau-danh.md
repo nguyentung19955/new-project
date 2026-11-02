@@ -1,5 +1,5 @@
 # 013 – Khuyết Cẩu – đánh: VẼ LẠI F3 và F7 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
 - **Clip:** `quai.json → loai.cau.hinh.danh` – thư mục art gốc `art/quai-moi/cau/danh/` (9 khung `fNN.png`, ô 88×88, quay TRÁI, neo chân [44, 69])
 - **Việc cần vẽ:** Vẽ **2 khung** `thay-03` (thay F3) và `thay-07` (thay F7). Giữ F4–F6 (há mõm/nhả cầu).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Chưa đạt: chân trượt 15,4% – trông như bước tới cắn chứ không phải đứng há mõm bắn. Khoá chân trụ; F3 hạ cổ tích năng lượng, F4–F5 há mõm, F6 nhả cầu, F7 giật lùi, F8–F9 hồi."

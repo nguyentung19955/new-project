@@ -1,5 +1,5 @@
 # 016 – Hồn Vải – chết: 1 khung giữa F6–F7 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
 - **Clip:** `quai.json → loai.vai.hinh.chet` – thư mục art gốc `art/quai-moi/vai/chet/` (9 khung `fNN.png`, ô 96×96, quay TRÁI, neo chân [48, 82])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F6.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Rơi đột ngột F6→F7 (IoU 0,24, cao giảm 73%) – teleport 1 khung. Thêm 1 khung giữa F6→F7 (thân lưng chừng, mặt nạ nghiêng, vải gập)."
