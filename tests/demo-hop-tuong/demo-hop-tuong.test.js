@@ -106,11 +106,11 @@ const trongKhung = (page) => page.evaluate(() => {
       ok(st.dot === 10 && st.boss === 'FIREWALL' && /BOSS/.test(st.txt), `${tag} tới đợt 10: boss ${st.boss} xuất hiện (đã hạ ${st.giet} quái)`);
       await page.waitForTimeout(1200);
       await page.screenshot({ path: path.join(SHOT, `${tag}-5-boss.png`) });
-      // kỹ năng boss hoá đá tướng
+      // kỹ năng boss: Heat Lockdown làm tướng quá nhiệt (bắn chậm)
       await page.evaluate(() => DEMO.tua(4));
-      await page.waitForFunction(() => DEMO.S.o.some((v) => v && v.da > 0), null, { timeout: 30000 });
+      await page.waitForFunction(() => DEMO.S.o.some((v) => v && v.nong > 0), null, { timeout: 30000 });
       await page.evaluate(() => DEMO.tua(1));
-      ok(true, `${tag} FIREWALL khoá unit (LOCKDOWN)`);
+      ok(true, `${tag} FIREWALL làm tướng quá nhiệt (HEAT LOCKDOWN)`);
       await page.screenshot({ path: path.join(SHOT, `${tag}-6-hoada.png`) });
       k = await trongKhung(page);
       ok(k.inV && !k.bad.length && !k.scroll, `${tag} trong trận: mọi nút trong khung, không chồng nhau ${k.bad}`);
