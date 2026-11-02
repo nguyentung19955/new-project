@@ -1,5 +1,5 @@
 # 014 – Vọng Tàn – di: VẼ LẠI F0 (khung chuyển trọng lượng sai) (P0)
-- **Trạng thái:** VẼ LẠI (02/11, phiên MƯỢT-2 kiểm: thay-00 LỆCH – nhòe, lấm tấm, thân nhỏ và co cụm như F0 cũ, chuông thiếu chi tiết, chân không giống dáng bước của F1/F8. Cần: dáng bước nằm giữa F8 và F1, cùng cỡ thân/chuông với F1–F8, viền tối 1 px, nét sắc, đáy chân đúng vạch đất. Prompt thêm: 'same size as the side frames, keep the bell and beak skull identical, crisp 1-pixel dark outline, flat pixel shading, no noise, no blur'.)
+- **Trạng thái:** XONG (02/11, vẽ lại lần 2 – cùng cỡ thân/chuông với F1/F8, lấy mẫu giữa điểm ảnh + đúng bảng màu)
 - **Clip:** `quai.json → loai.tan.hinh.di` – thư mục art gốc `art/quai-moi/tan/di/` (9 khung `fNN.png`, ô 112×112, quay TRÁI, neo chân [56, 91])
 - **Việc cần vẽ:** Vẽ **1 khung** `thay-00`, THAY F0 (F0 hiện co cụm khác hẳn F1–F8 nên vòng lặp F8→F0→F1 nhảy).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Lỗi nặng nhất nhóm: trôi chân 22,4%, đáy nhấp nhô 18,8% – như vừa bước vừa nhảy. Căn lại từng khung theo chân/rễ chạm đất; 2 pha chống chân rõ, chuông đung đưa nặng; sửa/vẽ lại khung chuyển trọng lượng sai."

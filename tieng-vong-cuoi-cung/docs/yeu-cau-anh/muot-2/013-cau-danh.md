@@ -1,5 +1,5 @@
 # 013 – Khuyết Cẩu – đánh: VẼ LẠI F3 và F7 (P0)
-- **Trạng thái:** VẼ LẠI (02/11, phiên MƯỢT-2 kiểm: thay-03 và thay-07 LỆCH PHONG CÁCH – hình nhòe, lấm tấm hạt rời, mất viền tối 1 px và mảng màu phẳng như F2/F4/F8; thay-07 đầu hất thẳng đứng quá xa, thân mất khối, trông như con khác. Cần: giữ đúng khối thân/chân/cành như F6–F8, chỉ đổi đầu-cổ (thay-03: cúi cổ thấp mõm khép; thay-07: đầu hất lên-ra sau ~30°), viền tối 1 px, nét sắc, không hạt rời. Prompt thêm: 'keep the body, legs and branches pixel-identical to the side frames, change ONLY head and neck; same 1-pixel dark outline, flat crisp shading, no noise, no blur'.)
+- **Trạng thái:** XONG (02/11, vẽ lại lần 2 – ChatGPT giữ nguyên thân/chân/cành, chỉ đổi đầu-cổ; lấy mẫu giữa điểm ảnh + đúng bảng màu, giữ viền tối)
 - **Clip:** `quai.json → loai.cau.hinh.danh` – thư mục art gốc `art/quai-moi/cau/danh/` (9 khung `fNN.png`, ô 88×88, quay TRÁI, neo chân [44, 69])
 - **Việc cần vẽ:** Vẽ **2 khung** `thay-03` (thay F3) và `thay-07` (thay F7). Giữ F4–F6 (há mõm/nhả cầu).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Chưa đạt: chân trượt 15,4% – trông như bước tới cắn chứ không phải đứng há mõm bắn. Khoá chân trụ; F3 hạ cổ tích năng lượng, F4–F5 há mõm, F6 nhả cầu, F7 giật lùi, F8–F9 hồi."
