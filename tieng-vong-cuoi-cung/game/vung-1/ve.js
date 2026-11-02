@@ -240,6 +240,7 @@
         if (V1.IMG['fx_c_' + ten]) CHEM.push({ten, x:e.x, y:e.y, f:e.face || 1, t:0}); else TIA.push(...E.tiaTrung(e)); }   // hiệu ứng trúng đòn ChatGPT vẽ (6 khung, hướng PHẢI)
       if (e.k === 'bi-danh') for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2;
         TIA.push({x:pl.x + pl.w / 2, y:pl.y + pl.h - 60, vx:Math.cos(a) * 3, vy:Math.sin(a) * 3, t:12, m:'#ffbe50', g:0.18}); }
+      if (e.k === 'hoi-mau') HOI.t = 0;   // khung loé + vòng chuông khi cộng máu
       if (e.k === 'nut-trung' || e.k === 'vo-tuong'){ V1.hieuUng('da', (e.cot + 0.5) * T, (e.hang + 0.5) * T); if (e.k === 'nut-trung') V1.veNenPhong(); }
     }
   };
@@ -250,7 +251,17 @@
       ctx.save(); ctx.imageSmoothingEnabled = false; ctx.translate(Math.round(c.x), Math.round(c.y)); if (c.f < 0) ctx.scale(-1, 1);
       ctx.drawImage(im, k * 128, 0, 128, 128, Math.round(-w / 2), Math.round(-w / 2), Math.round(w), Math.round(w)); ctx.restore(); }
   }
-  V1.buocTia = function(){ for (let i = CHEM.length - 1; i >= 0; i--) if (++CHEM[i].t >= CHEM_NHIP * 6) CHEM.splice(i, 1); for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g; if (--p.t <= 0) TIA.splice(i, 1); } };
+  // Hiệu ứng hồi máu (ChatGPT vẽ, 8 khung 136x172): khung 0-3 chạy theo clip 'hoimau' tới lúc cộng máu, khung 4-7 sau khi cộng
+  const HOI = {t:-1}, HOI_NHIP = 7;
+  function veHoi(){
+    const im = V1.IMG.fx_hoi_mau; if (!im) return; let k = -1;
+    if (HOI.t >= 0) k = 4 + Math.floor(HOI.t / HOI_NHIP);
+    else if (pl.hoi >= 0 && !pl.hoiXong){ const C = clipNV('hoimau'), mH = C.tong * (C.def.khung_hoi ?? 3) / (C.def.so_hinh || 4); k = Math.min(3, Math.floor(pl.hoi / mH * 4)); }
+    if (k < 0 || k > 7) return;
+    ctx.save(); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(im, k * 136, 0, 136, 172, Math.round(pl.x + pl.w / 2 - 68), Math.round(pl.y + pl.h / 2 - 86), 136, 172); ctx.restore();
+  }
+  V1.buocTia = function(){ if (HOI.t >= 0 && ++HOI.t >= HOI_NHIP * 4) HOI.t = -1; for (let i = CHEM.length - 1; i >= 0; i--) if (++CHEM[i].t >= CHEM_NHIP * 6) CHEM.splice(i, 1); for (let i = TIA.length - 1; i >= 0; i--){ const p = TIA[i]; p.x += p.vx; p.y += p.vy; p.vy += p.g; if (--p.t <= 0) TIA.splice(i, 1); } };
 
   /* ---------------- NHÂN VẬT + QUÁI (như phòng demo) ---------------- */
   function khoi(fx, fy, w, h, mau, face){
@@ -983,7 +994,7 @@
     veNguy();
     veNV(); veBuiTuong();
     for (const p of TIA){ ctx.fillStyle = p.m; ctx.fillRect(Math.round(p.x / 2) * 2, Math.round(p.y / 2) * 2, 4, 4); }
-    veChem();
+    veChem(); veHoi();
     ctx.restore();
     // 3) tường giả: mờ đi khi nhân vật ở trong / sát
     const cx = Math.floor((pl.x + pl.w / 2) / T), cy = Math.floor((pl.y + pl.h / 2) / T);

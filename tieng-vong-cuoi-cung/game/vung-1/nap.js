@@ -14,6 +14,7 @@ V1.nap = async function(){
   await Promise.all(['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat', 'ken_tu'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-quai/' + n + '.png')));
   await Promise.all(['mau_day', 'mau_rong', 'binh_day', 'binh_rong', 'i_hat_vong', 'i_the_ten', 'i_loi_vong_tan', 'chuong_khoa'].map(n => V1.napAnh('hud_' + n, '../../art/giao-dien/hud/' + n + '.png')));   // giao diện (ChatGPT vẽ)
   await Promise.all(['bao_quet', 'vet_quet', 'dich_mat_na', 'cot_song', 'mat_na_roi', 'day_vai'].map(n => V1.napAnh('tr_' + n, '../../art/hieu-ung/trum/' + n + '.png')));   // hiệu ứng trùm + dây Màn Tang (ChatGPT vẽ)
+  await V1.napAnh('fx_hoi_mau', '../../art/hieu-ung/hoi-mau/hoi_mau.png');   // hiệu ứng hồi máu (ChatGPT vẽ)
   await Promise.all(['ngang', 'cung', 'cheo', 'no'].map(n => V1.napAnh('fx_c_' + n, '../../art/hieu-ung/chem-moi/' + n + '.png')));   // hiệu ứng trúng đòn (ChatGPT vẽ)
   await Promise.all(['nut_dat', 'song_dat', 're_troi', 'khung_mau', 'ruot_mau', 'i_manh_am', 'i_chuong_vo', 'i_mat_na'].map(n => V1.napAnh('fx_' + n, '../../art/hieu-ung/chieu-moi/' + n + '.png')));   // hình ChatGPT thay hình vẽ bằng code
   // dấu dẫn hướng + dấu báo đòn (ChatGPT vẽ): art/vung-1/dao-cu/dan-duong/
