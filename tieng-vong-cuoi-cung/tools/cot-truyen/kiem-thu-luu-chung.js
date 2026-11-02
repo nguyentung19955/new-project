@@ -60,6 +60,38 @@ ok(v1.duong_dan === 'game/vung-1/index.html' && v1.ten === 'Rotting Roots', 'đ�
   ok(HT.dongHienTai().chu === 'X', 'lựa chọn nhảy dòng');
   HT.capNhat(5, {}); HT.capNhat(0, {xac_nhan:true});
   ok(!HT.dangMo() && xong && LuuChung.co('chon_x') && LuuChung.daXem('thu2'), 'kết thúc: gọi xong, đặt cờ, đánh dấu đã xem');
+  // 5. lựa chọn đặt cờ riêng + không 'toi' = kết thúc, xong(gt)
+  let gtNhan = null;
+  await HT.them({id:'thu3', khung:'K', nguoi:{}, dong:[{ai:'', chu:'Hỏi', chon:[{chu:'a', dat_co:'co_a', gt:'A'}, {chu:'b'}]}]});
+  HT.bat('thu3', g => { gtNhan = g; }); HT.capNhat(5, {}); HT.capNhat(0, {xac_nhan:true});
+  ok(!HT.dangMo() && gtNhan === 'A' && LuuChung.co('co_a'), 'lựa chọn đặt cờ + trả gt', gtNhan);
+  // 6. dữ liệu hội thoại thật: đúng định dạng, ≤ 90 ký tự, chân dung đúng tên file
+  const fs = require('fs'), TM = path.join(G, 'cot-truyen/hoi-thoai');
+  for (const f of fs.readdirSync(TM)){
+    const d = JSON.parse(fs.readFileSync(path.join(TM, f)));
+    ok(d.id + '.json' === f && d.khung && d.dong.length && d.dong.every(x => x.chu.length <= 90 && d.nguoi[x.ai]), 'hội thoại ' + f);
+    for (const n of Object.values(d.nguoi)) if (n.chan_dung && !/kaelith/.test(n.chan_dung)) ok(fs.existsSync(path.join(G, '..', n.chan_dung)), 'có ảnh ' + n.chan_dung);
+  }
+  // 7. cảnh mở đầu: logic chiếu (giả lập đủ ảnh)
+  const CT = require(path.join(G, 'cot-truyen/canh.js'));
+  const md = JSON.parse(fs.readFileSync(path.join(G, 'cot-truyen/canh/mo-dau.json')));
+  ok(md.tranh.length === 7 && Math.abs(md.tranh.reduce((a, x) => a + x.giay, 0) - 33) < 0.01, 'mở đầu 7 tranh, 33 giây');
+  await CT.them(md); ok(!CT.sanSang('mo-dau') && !CT.bat('mo-dau'), 'thiếu tranh → không chiếu');
+  const gs = CT.sanSang; CT.sanSang = () => true; let ctXong = false;
+  CT.bat('mo-dau', () => { ctXong = true; });
+  for (let i = 0; i < 60 * 4.1; i++) CT.capNhat(1 / 60, {});
+  ok(CT.tranhHienTai() === 1, 'tự sang tranh 2 sau 4 s');
+  CT.capNhat(0.01, {bo_qua:true}); ok(!CT.dangChieu() && ctXong && LuuChung.daXem('mo-dau'), 'Skip: kết thúc + đánh dấu đã xem');
+  CT.sanSang = gs;
+  // 8. điều kiện mở vùng theo kế hoạch ChatGPT
+  const L8 = tao(khoGia()), T8 = require(path.join(G, 'cot-truyen/tram-dich-chuyen.json'));
+  const mo = id => datDieuKien(L8, T8.vung.find(v => v.id === id).mo);
+  ok(mo('vung-1') && !mo('xuong-dong'), 'đầu game: chỉ Vùng 1');
+  L8.datCo('ha_trum:vung-1'); ok(mo('xuong-dong') && !mo('to-sat'), 'hạ trùm Vùng 1 → mở Xưởng Đồng');
+  L8.datCo('lo_ren_morrow').datCo('ky_nang:bam_tuong'); ok(mo('to-sat') && !mo('thu-vien-vang'), 'lò rèn + bám tường → Tổ Sắt');
+  L8.datCo('ha_trum:xuong-dong').datCo('ha_trum:to-sat'); ok(!mo('tan-gio'), 'Tán Gió cần Hồi II');
+  L8.datHoi(2); ok(mo('tan-gio') && !mo('dinh-sam') && !mo('vuc-lang'), 'Hồi II + 3 Âm Gốc → Tán Gió');
+  ok(T8.vung.filter(v => v.id !== 'vung-1').every(v => v.duong_dan === null), 'vùng chưa dựng: không đường dẫn (luôn khoá)');
   HT.sanSang = goc;
   console.log(`Đạt ${dat}/${dat + hong}`); process.exit(hong ? 1 : 0);
 })();

@@ -1,0 +1,35 @@
+{
+ "id": "vesper-lan-dau",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). Lựa chọn = hành động của Wanderer. Chọn 'Not yet.' thì lần sau Vesper hỏi lại.",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "vesper": {
+   "ten": "Vesper",
+   "chan_dung": "art/cot-truyen/chan-dung/ba-ngan-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "vesper",
+   "chu": "Ah... a face the bells have not forgotten."
+  },
+  {
+   "ai": "vesper",
+   "chu": "The roots are weeping. Our bell will not last."
+  },
+  {
+   "ai": "vesper",
+   "chu": "Will you carry its song into the dark?",
+   "chon": [
+    {
+     "chu": "I will listen.",
+     "dat_co": "vesper_nghe"
+    },
+    {
+     "chu": "Not yet."
+    }
+   ]
+  }
+ ]
+}

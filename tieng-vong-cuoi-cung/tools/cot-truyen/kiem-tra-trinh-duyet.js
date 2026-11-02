@@ -15,7 +15,7 @@ const {chromium} = require('playwright');
   const p2 = await b.newPage({viewport:{width:960, height:540}});
   p2.on('pageerror', e => loi.push(e.message));
   await p2.goto('http://localhost:8765/game/lang-chuong/index.html');
-  await p2.waitForFunction(() => window.LANG, null, {timeout:15000});
+  await p2.waitForFunction(() => window.LANG && LANG.xong, null, {timeout:15000});
   const L = await p2.evaluate(() => ({s:LANG.sanSang, t:LANG.thieu, di:LANG.tram.filter(v => v.di_duoc).map(v => v.id), n:LANG.tram.length}));
   ok(!L.s && L.t.length > 0, 'Làng Chuông tắt khi thiếu ảnh', L.t);
   ok(L.di.length === 1 && L.di[0] === 'vung-1' && L.n >= 8, 'trạm teleport: chỉ Vùng 1 đi được', L);

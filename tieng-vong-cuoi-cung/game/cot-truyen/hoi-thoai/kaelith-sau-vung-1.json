@@ -1,0 +1,22 @@
+{
+ "id": "kaelith-sau-vung-1",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). Chân dung chờ yêu cầu ảnh 008.",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "kaelith": {
+   "ten": "Kaelith",
+   "chan_dung": "art/cot-truyen/chan-dung/kaelith-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "kaelith",
+   "chu": "You beat the Mother. Not the clock."
+  },
+  {
+   "ai": "kaelith",
+   "chu": "Three more races. Then we shall see who is real."
+  }
+ ]
+}

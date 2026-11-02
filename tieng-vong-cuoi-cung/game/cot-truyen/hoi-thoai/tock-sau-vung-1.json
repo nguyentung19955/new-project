@@ -1,0 +1,22 @@
+{
+ "id": "tock-sau-vung-1",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). ",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "tock": {
+   "ten": "Tock",
+   "chan_dung": "art/cot-truyen/chan-dung/tock-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "tock",
+   "chu": "Oh! You survived the Mother's cradle."
+  },
+  {
+   "ai": "tock",
+   "chu": "New tunnels, new prices. Don't glare at me."
+  }
+ ]
+}

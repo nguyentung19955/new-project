@@ -4,31 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bell Village – The Last Echo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; height:100%; background:#0C0F14; color:#CEF0D6; font-family:serif; }
+  html, body { margin:0; height:100%; background:#05080d; color:#F3E6C8; font-family:"Alegreya Sans",system-ui,sans-serif; overflow:hidden;
+    touch-action:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
+  #game { position:fixed; inset:0; display:grid; place-items:center; }
+  #cv { display:none; image-rendering:pixelated; }
   #cho { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; }
   #cho p { max-width:640px; line-height:1.5; }
+  .vien { position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 16px); height:44px; padding:0 20px; border-radius:22px; border:2px solid #E1B85A;
+    background:rgba(58,48,32,.85); color:#ffe08a; font:800 16px "Alegreya Sans",system-ui,sans-serif; visibility:hidden; display:none; }
+  body.touch .vien { display:block; }
+  #b-noi { right:calc(env(safe-area-inset-right,0px) + 16px); }
+  #b-bo { right:calc(env(safe-area-inset-right,0px) + 120px); display:block; }
+  #keys { position:fixed; bottom:6px; left:50%; transform:translateX(-50%); font-size:13px; color:#d8cdb4; white-space:nowrap; pointer-events:none; text-shadow:0 1px 2px #000; }
+  body.touch #keys { display:none; }
 </style>
 </head>
 <body>
-<!-- Làng Chuông = điểm khởi đầu + trạm teleport (phiên cottruyen).
-     LUẬT HÌNH: cảnh làng, nhân vật phụ, cổng teleport, khung hộp thoại đều phải là ảnh ChatGPT vẽ.
-     Chưa có ảnh (docs/yeu-cau-anh/cottruyen/ còn CHỜ) → trang KHÔNG dựng màn chơi, chỉ báo chữ. -->
-<div id="cho"><p>Bell Village is not open yet: waiting for art and the story plan.<br><small id="thieu"></small></p></div>
+<!-- Làng Chuông (Bell Village) = điểm khởi đầu + trạm teleport (phiên cottruyen). Logic ở lang.js, bố cục lang.json.
+     LUẬT HÌNH: mọi hình là ảnh ChatGPT vẽ. Thiếu ảnh bắt buộc (docs/yeu-cau-anh/cottruyen/006…) → không dựng màn, chỉ báo chữ. -->
+<div id="game"><canvas id="cv" width="960" height="540"></canvas></div>
+<div id="cho"><p>Bell Village is not open yet: waiting for art.<br><small id="thieu"></small><br><a href="../vung-1/" style="color:#E1B85A">Go to Region 1 – Rotting Roots</a></p></div>
+<button id="b-bo" class="vien" type="button">Skip</button>
+<button id="b-noi" class="vien" type="button">Talk</button>
+<div id="keys">← → walk · ↑ / E talk, ring the bell · Z / Enter next · ↑ ↓ choose · Esc skip</div>
 <script src="../luu-chung.js"></script>
+<script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../cot-truyen/hop-thoai.js"></script>
+<script src="../cot-truyen/canh.js"></script>
 <script src="../cot-truyen/tram.js"></script>
-<script>
-(async () => {
-  // Ảnh bắt buộc để bật làng (cập nhật khi phiên gen ảnh ghi XONG)
-  const CAN = ['art/lang-chuong/canh-lang.png'];
-  const co = await Promise.all(CAN.map(u => new Promise(r => { const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = '../../' + u; })));
-  const thieu = CAN.filter((u, k) => !co[k]);
-  const tram = await TramDichChuyen.nap('../../');
-  window.LANG = {sanSang: thieu.length === 0, thieu, tram};
-  if (thieu.length){ document.getElementById('thieu').textContent = 'Missing art: ' + thieu.join(', '); return; }
-  // (bật màn làng ở đây khi đã có ảnh – chưa làm, chờ kế hoạch ChatGPT)
-})();
-</script>
+<script src="lang.js"></script>
 </body>
 </html>

@@ -1,0 +1,22 @@
+{
+ "id": "kaelith-lan-dau",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). Chân dung kaelith-noi.png chờ yêu cầu ảnh 008 – thiếu ảnh thì đoạn này tự tắt.",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "kaelith": {
+   "ten": "Kaelith",
+   "chan_dung": "art/cot-truyen/chan-dung/kaelith-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "kaelith",
+   "chu": "Another mask. Another thief of echoes."
+  },
+  {
+   "ai": "kaelith",
+   "chu": "Race me to the old root. If you dare."
+  }
+ ]
+}

@@ -1,13 +1,134 @@
 {
-  "ghi_chu": "Danh sách đích teleport từ Làng Chuông (thứ tự theo docs/gdd.md mục 8, từ ngọn xuống đáy). 'mo' = điều kiện mở (xem datDieuKien trong game/luu-chung.js). Điều kiện các vùng 2–9 CHƯA CHỐT: chờ kế hoạch ChatGPT (docs/cot-truyen/cau-hoi-chatgpt.md) – để null = khoá. Nếu game/the-gioi.json (phiên Vùng mới) có mục cùng id thì đường dẫn/tên lấy theo file đó.",
-  "vung": [
-    {"id": "dinh-sam",      "ten": "Thunder Peak",         "tang": "Crown",     "duong_dan": null, "mo": null},
-    {"id": "tan-gio",       "ten": "Wind Canopy",          "tang": "Canopy",    "duong_dan": null, "mo": null},
-    {"id": "to-sat",        "ten": "Iron Nest",            "tang": "Branches",  "duong_dan": null, "mo": null},
-    {"id": "thu-vien-vang", "ten": "Echoing Library",      "tang": "Upper Trunk", "duong_dan": null, "mo": null},
-    {"id": "xuong-dong",    "ten": "Abandoned Bronzeworks", "tang": "Lower Trunk", "duong_dan": null, "mo": null},
-    {"id": "vung-1",        "ten": "Rotting Roots",        "tang": "Roots",     "duong_dan": "game/vung-1/index.html", "mo": true},
-    {"id": "ho-ngam",       "ten": "Mirror Underlake",     "tang": "Deep Roots", "duong_dan": null, "mo": null},
-    {"id": "vuc-lang",      "ten": "Silent Abyss",         "tang": "Depths",    "duong_dan": null, "mo": null}
-  ]
+ "ghi_chu": "Đích teleport từ Làng Chuông (thứ tự từ ngọn xuống đáy). Tên theo docs/tieng-anh/BANG-DOI-CHIEU.md. 'mo' = điều kiện mở theo kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 1), cú pháp xem datDieuKien trong game/luu-chung.js. Cờ 'ha_trum:<id>' do vùng ghi khi hạ trùm; cờ kỹ năng 'ky_nang:<ten>' và cờ truyện do vùng/làng ghi. duong_dan null = vùng chưa dựng (luôn khoá); nếu game/the-gioi.json có mục cùng id thì đường dẫn lấy theo file đó.",
+ "vung": [
+  {
+   "id": "dinh-sam",
+   "ten": "Thunder Peak",
+   "tang": "Crown",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "vung_ha_trum": "tan-gio"
+     },
+     {
+      "vung_ha_trum": "ho-ngam"
+     }
+    ]
+   },
+   "ghi_chu": "Hạ trùm Tán Gió + Hồ Ngầm (đối đầu Kaelith lần cuối)"
+  },
+  {
+   "id": "tan-gio",
+   "ten": "Wind Canopy",
+   "tang": "Canopy",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "hoi": 2
+     },
+     {
+      "vung_ha_trum": "vung-1"
+     },
+     {
+      "vung_ha_trum": "xuong-dong"
+     },
+     {
+      "vung_ha_trum": "to-sat"
+     }
+    ]
+   },
+   "ghi_chu": "Hồi II, đủ 3 Âm Gốc (trùm Vùng 1, Xưởng Đồng, Tổ Sắt)"
+  },
+  {
+   "id": "to-sat",
+   "ten": "Iron Nest",
+   "tang": "Branches",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "co": "lo_ren_morrow"
+     },
+     {
+      "co": "ky_nang:bam_tuong"
+     }
+    ]
+   },
+   "ghi_chu": "Kích hoạt lò rèn Morrow + kỹ năng bám tường"
+  },
+  {
+   "id": "thu-vien-vang",
+   "ten": "Echoing Library",
+   "tang": "Upper Trunk",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "vung_ha_trum": "to-sat"
+     },
+     {
+      "co": "ky_nang:echo_sight"
+     }
+    ]
+   },
+   "ghi_chu": "Hạ trùm Tổ Sắt + Echo Sight"
+  },
+  {
+   "id": "xuong-dong",
+   "ten": "Abandoned Bronzeworks",
+   "tang": "Lower Trunk",
+   "duong_dan": null,
+   "mo": {
+    "vung_ha_trum": "vung-1"
+   },
+   "ghi_chu": "Hạ Hollow Bell Mother (Âm Gốc 1)"
+  },
+  {
+   "id": "vung-1",
+   "ten": "Rotting Roots",
+   "tang": "Roots",
+   "duong_dan": "game/vung-1/index.html",
+   "mo": true,
+   "ghi_chu": "Mở sẵn (Hồi I, sau mở đầu)"
+  },
+  {
+   "id": "ho-ngam",
+   "ten": "Mirror Underlake",
+   "tang": "Deep Roots",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "hoi": 2
+     },
+     {
+      "co": "gap_ban_sao"
+     },
+     {
+      "co": "ky_nang:luot_nuoc"
+     }
+    ]
+   },
+   "ghi_chu": "Hồi II, gặp bản sao lần đầu + lướt qua màn nước"
+  },
+  {
+   "id": "vuc-lang",
+   "ten": "Silent Abyss",
+   "tang": "Depths",
+   "duong_dan": null,
+   "mo": {
+    "tat_ca": [
+     {
+      "hoi": 3
+     },
+     {
+      "vung_ha_trum": "dinh-sam"
+     }
+    ]
+   },
+   "ghi_chu": "Hồi III, hạ trùm Đỉnh Sấm"
+  }
+ ]
 }

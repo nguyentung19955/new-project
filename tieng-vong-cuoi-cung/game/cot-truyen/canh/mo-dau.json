@@ -1,0 +1,14 @@
+{
+ "id": "mo-dau",
+ "ten": "The First Silence",
+ "ghi_chu": "Mở đầu theo kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 2): 7 tranh 960x540, tổng 33 s, có Skip, xem lại ở làng. Tranh chờ yêu cầu ảnh docs/yeu-cau-anh/cottruyen/010 – thiếu tranh nào thì cả cảnh tắt.",
+ "tranh": [
+  {"anh": "art/cot-truyen/mo-dau/01.png", "giay": 4, "chu": "Once, the tree remembered every name."},
+  {"anh": "art/cot-truyen/mo-dau/02.png", "giay": 4, "chu": "Each bell held a voice. Each voice, a life."},
+  {"anh": "art/cot-truyen/mo-dau/03.png", "giay": 5, "chu": "Then the Silence rose from below."},
+  {"anh": "art/cot-truyen/mo-dau/04.png", "giay": 4, "chu": "And the names began to fade."},
+  {"anh": "art/cot-truyen/mo-dau/05.png", "giay": 5, "chu": "Our last bell is breaking."},
+  {"anh": "art/cot-truyen/mo-dau/06.png", "giay": 5, "chu": "Little wanderer... can you still hear me?"},
+  {"anh": "art/cot-truyen/mo-dau/07.png", "giay": 6, "chu": "Bring back the three Root Tones. Before all is still.", "tieu_de": "The Last Echo"}
+ ]
+}

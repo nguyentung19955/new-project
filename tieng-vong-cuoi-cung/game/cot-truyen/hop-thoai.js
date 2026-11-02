@@ -8,7 +8,8 @@
    { "id": "...", "khung": "art/cot-truyen/hop-thoai/khung.png",
      "nguoi": { "ba_ngan": {"ten": "Vesper", "chan_dung": "art/cot-truyen/chan-dung/ba-ngan-noi.png"} },
      "dong": [ {"ai": "ba_ngan", "chu": "…", "dat_co": "ten_co"?, "chon": [{"chu": "…", "toi": 5}]?, "toi": 3?, "het": true?} ] }
-   - "toi": nhảy tới chỉ số dòng; "het": kết thúc; "chon": lựa chọn (bấm lên/xuống + xác nhận).
+   - "toi": nhảy tới chỉ số dòng; "het": kết thúc; "chon": lựa chọn (bấm lên/xuống + xác nhận), mỗi lựa chọn {chu, toi?, dat_co?, gt?};
+     lựa chọn không có "toi" = kết thúc; hàm xong(gt) nhận gt (hoặc chỉ số) của lựa chọn cuối.
 
    Dùng trong vòng lặp game:
      await HopThoai.nap('../cot-truyen/hoi-thoai/', 'mo-dau-ba-ngan', '../../');
@@ -60,11 +61,14 @@
       if (!phim.xac_nhan) return;
       if (mo.n < cu){ mo.n = cu; mo.t = cu / TOC_CHU; return; }   // bấm lần đầu: hiện hết chữ
       if (dg.dat_co && goc.LuuChung) goc.LuuChung.datCo(dg.dat_co);
-      let toi = dg.het ? -1 : (dg.chon ? dg.chon[mo.chon].toi : (dg.toi !== undefined ? dg.toi : mo.i + 1));
+      const ch = dg.chon ? dg.chon[mo.chon] : null;   // lựa chọn: có thể đặt cờ riêng; không ghi 'toi' = kết thúc
+      if (ch && ch.dat_co && goc.LuuChung) goc.LuuChung.datCo(ch.dat_co);
+      if (ch) mo.daChon = ch.gt !== undefined ? ch.gt : mo.chon;
+      let toi = dg.het ? -1 : (ch ? (ch.toi !== undefined ? ch.toi : -1) : (dg.toi !== undefined ? dg.toi : mo.i + 1));
       if (toi < 0 || toi >= mo.d.dong.length){
         const x = mo; mo = null;
         if (goc.LuuChung) goc.LuuChung.xemXong(x.d.id);
-        if (x.xong) x.xong(); return;
+        if (x.xong) x.xong(x.daChon); return;
       }
       mo.i = toi; mo.n = 0; mo.t = 0; mo.chon = 0;
     },
@@ -84,7 +88,7 @@
         const [px, py, pw, ph] = r(O.chan_dung), s = Math.min(pw / cw, ph / cd.height);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(cd, k * cw, 0, cw, cd.height, Math.round(px + (pw - cw * s) / 2), Math.round(py + ph - cd.height * s), Math.round(cw * s), Math.round(cd.height * s));
-      } else { const [px, , pw] = r(O.chan_dung); tw += tx - px; tx = px; }
+      }   // không chân dung (vd menu chuông): ô chân dung của khung để trống, chữ vẫn ở vùng chữ (không đè hoạ tiết khung)
       const fs = Math.max(13, Math.round(H * 0.036)), PH = '"Alegreya Sans",system-ui,sans-serif';
       ctx.textBaseline = 'top'; ctx.fillStyle = '#E1B85A'; ctx.font = '700 ' + Math.round(fs * 1.15) + 'px "Cormorant Garamond",' + PH;
       if (nv.ten) ctx.fillText(nv.ten, tx, ty);

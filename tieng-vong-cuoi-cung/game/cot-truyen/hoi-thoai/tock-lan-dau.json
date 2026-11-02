@@ -1,0 +1,26 @@
+{
+ "id": "tock-lan-dau",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). Lựa chọn [View wares / Leave] của ChatGPT chưa bật vì cửa hàng bản đồ chưa có (bật khi có hệ thống mua bản đồ).",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "tock": {
+   "ten": "Tock",
+   "chan_dung": "art/cot-truyen/chan-dung/tock-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "tock",
+   "chu": "Maps! Paths! Secrets with very reasonable prices!"
+  },
+  {
+   "ai": "tock",
+   "chu": "I am Tock. I know where the roots forget to turn."
+  },
+  {
+   "ai": "tock",
+   "chu": "Buy a map?"
+  }
+ ]
+}

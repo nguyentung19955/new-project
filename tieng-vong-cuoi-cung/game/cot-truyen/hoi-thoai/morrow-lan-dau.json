@@ -1,0 +1,22 @@
+{
+ "id": "morrow-lan-dau",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). Morrow câm: chữ là phụ đề diễn giải tiếng búa.",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "morrow": {
+   "ten": "Morrow",
+   "chan_dung": "art/cot-truyen/chan-dung/morrow-noi.png",
+   "so_khung": 2
+  }
+ },
+ "dong": [
+  {
+   "ai": "morrow",
+   "chu": "One strike: welcome. Two strikes: a warning."
+  },
+  {
+   "ai": "morrow",
+   "chu": "Bring me bell-bronze. I will make it sing again."
+  }
+ ]
+}

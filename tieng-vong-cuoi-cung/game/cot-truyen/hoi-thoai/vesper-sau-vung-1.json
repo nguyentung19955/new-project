@@ -1,0 +1,26 @@
+{
+ "id": "vesper-sau-vung-1",
+ "ghi_chu": "Lời thoại nguyên văn kế hoạch ChatGPT (docs/cot-truyen/ke-hoach-chatgpt.txt mục 3). ",
+ "khung": "art/cot-truyen/hop-thoai/khung.png",
+ "nguoi": {
+  "vesper": {
+   "ten": "Vesper",
+   "chan_dung": "art/cot-truyen/chan-dung/ba-ngan-noi.png",
+   "so_khung": 3
+  }
+ },
+ "dong": [
+  {
+   "ai": "vesper",
+   "chu": "The Mother has fallen... yet I hear her mourning."
+  },
+  {
+   "ai": "vesper",
+   "chu": "You brought back more than silence, little one."
+  },
+  {
+   "ai": "vesper",
+   "chu": "I almost remember the next verse. Almost."
+  }
+ ]
+}
