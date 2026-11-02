@@ -23,8 +23,8 @@
    "ms": 80,
    "quang_chu_ky": 120,
    "ban_thu": {
-    "thu_muc": "chay-moi-thu",
-    "so_hinh": 10,
+    "thu_muc": "chay-moi",
+    "so_hinh": 0,
     "quang_chu_ky": 120
    }
   },
