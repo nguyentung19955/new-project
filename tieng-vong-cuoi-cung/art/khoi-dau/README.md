@@ -9,3 +9,4 @@
 | *-nguon-chatgpt.png | | ảnh gốc ChatGPT để cắt lại. |
 | bang-lon.png | 1120×660 RGBA | A14 bảng lớn (hiển thị 560×330), chuông nứt giữa cạnh trên, 9-slice: góc ~150 px. |
 | bang-vua.png | 840×540 RGBA | A15 bảng vừa (hiển thị 420×270) cho hộp xác nhận / xung đột / chọn vùng. |
+| tai-chuong.png | 1280×160 RGBA | A13 chuông tải: 8 khung 160×160 (hiển thị 80×80), lắc qua lại, khung 4–5 vết nứt sáng; ~100 ms/khung lặp. |
