@@ -1,5 +1,10 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt chạy tay 02/11 (yêu cầu "nối Vùng 1 ↔ Vùng 2") – đã có sẵn, kiểm lại ĐẠT
+- Việc nối đã nằm trên nhánh (commit 79642f61). Kiểm lại bằng Playwright, vòng lặp game chạy thật: hạ trùm P12 → giữ → tự chuyển trang sang Vùng 2 R201 (mép trái, Mảnh Âm 41 đi theo, Vùng 2 đã mở trong lưu chung) → giữ ← → về P12 cạnh cổng (trùm không hiện lại). Không lỗi JS.
+- Phép thử Vùng 1: F 66/66 (1 lần chạy song song lỡ 1 phép đo trùm vì máy bận, chạy riêng lại 66/66), G/H 0 hỏng; kiem-tra.py Vùng 1 0 lỗi. Trạm teleport có vung-2 (mo = vung_ha_trum vung-1); Chuông Lưu Vùng 2 có nút về Làng; trang chính có Continue.
+- Không sửa game; Vùng 3 vẫn dừng.
+
 ## Lượt hẹn giờ 02/11 (tối muộn) – không có việc mới
 - Việc nối Vùng 1 ↔ Vùng 2 đã được lượt trước làm xong (commit 79642f61). Lượt này đã lỡ làm song song một bản trùng → **bỏ bản của mình, giữ nguyên bản đã có** (không đẩy lên, để khỏi 2 cách nối chồng nhau).
 - Kiểm nhanh bản đang có: mở Vùng 1, Vùng 2 và trang chính bằng Playwright – nạp xong, không lỗi JS.
