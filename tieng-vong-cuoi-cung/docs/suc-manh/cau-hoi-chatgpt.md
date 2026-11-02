@@ -1,5 +1,7 @@
 # Câu hỏi soạn sẵn cho ChatGPT – "Sức mạnh hiện lên người Kiếm Khách"
 
+> **ĐÃ GỬI 02/11 (phiên chính, có Chrome) – trả lời ở tu-van-chatgpt.txt cùng thư mục.**
+
 Lần chạy 02/11 của phiên LÀM **không có Chrome** (chạy trên mây theo lịch) nên chưa hỏi được ChatGPT. Phiên gen ảnh cặp (sucmanh, có Chrome) làm giúp theo yêu cầu `docs/yeu-cau-anh/sucmanh/001-tu-van-thiet-ke.md`:
 mở 1 chat ChatGPT mới, gửi kèm ảnh tham chiếu (chụp scale 1): `art/kiem-khach/dung/f00.png`, `art/kiem-khach/chay/f03.png`, `art/kiem-khach/don1/f04.png`, `art/kiem-khach/don4/f05.png`, rồi dán NGUYÊN VĂN khung dưới.
 Lưu câu trả lời nguyên văn vào **docs/suc-manh/tu-van-chatgpt.txt**.

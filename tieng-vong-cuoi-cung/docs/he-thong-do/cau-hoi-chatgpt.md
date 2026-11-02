@@ -1,5 +1,7 @@
 # Câu hỏi gửi ChatGPT – Hệ thống đồ / animation mở khoá / vòng lặp cày (phiên "do")
 
+> **ĐÃ GỬI 02/11 (phiên chính, có Chrome) – trả lời ở tu-van-chatgpt.txt cùng thư mục.**
+
 > Lần chạy 02/11 KHÔNG có Chrome (phiên chạy trên mây theo lịch, không nối máy người dùng) nên CHƯA hỏi được ChatGPT.
 > Phiên sau có Chrome (hoặc phiên gen ảnh cặp "do" – xem docs/yeu-cau-anh/do/000-tu-van-thiet-ke.md): dán nguyên văn khung dưới vào ChatGPT,
 > lưu câu trả lời nguyên văn vào docs/he-thong-do/tu-van-chatgpt.txt, rồi sửa game/he-thong/du-lieu.json + thiet-ke.md theo đúng tư vấn.

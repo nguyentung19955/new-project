@@ -1,0 +1,52 @@
+ART DIRECTION – TIẾN HOÁ NGOẠI HÌNH THE MASKED WANDERER (ChatGPT, 02/11/2026, chat "Thiết kế tiến hoá hình ảnh") – chép đầy đủ nội dung chính
+
+CHỐT: 4 tầng ngoại hình (Level 0–3) mở theo cốt truyện + 3 cấp hiệu ứng song kiếm + phụ kiện Echo Charm độc lập. Không làm 9 bộ cho 9 vùng.
+Hướng: "Mystical Decay & Awakening" – linh hồn cổ thức tỉnh dưới mặt nạ nứt, không thành chiến binh giáp nặng.
+Không sửa pixel nào của nhân vật gốc; mọi thay đổi là lớp PNG riêng, phụ kiện gắn neo hoặc ánh sáng bật/tắt.
+
+1. CÁC TẦNG (dấu hiệu theo thứ tự mặt nạ → ngực → lưng)
+- Level 0 "The Veiled One": nguyên bản (tóc bạc, mặt nạ trắng, áo tối, song kiếm xanh băng), không phát sáng. Mốc: đầu game.
+- Level 1 "First Resonance": 1 vết nứt xanh bạc chéo một bên mặt nạ, điểm sáng tập trung; đứng yên thì "thở" sáng rất chậm. Mốc: hạ Hollow Bell Mother (Vùng 1).
+- Level 2 "Bellbound Soul": nứt rõ hơn + ấn chuông cổ ở ngực (viền đồng xỉn, lõi ngà lạnh). Mốc: giữa game, khi hiểu nguồn gốc Broken Bell.
+- Level 3 "The Last Reverberation": nứt ~nửa mặt nạ (vẫn nguyên dáng) + dải vải bạc mảnh sau lưng rung như phản ứng âm thanh vô hình. Mốc: trước khi vào Vực Lặng, sau nghi thức ký ức.
+Phân bổ thưởng theo khu: Bell Village – Level 0 + mở gắn Echo Charm · Weeping Heartwood – Level 1 · Bronze Foundry – chuông hông · Iron Nest – nâng hiệu ứng kiếm
+· Wind Canopy – dải hạt gió nhẹ (không vĩnh viễn) · Thunder Crown – cấp kiếm tiếp · Echoing Library – Level 2 · Mirror Lake – mở nghi thức tiến hoá cuối · Silent Abyss – Level 3 trước khi vào vùng.
+Khoá theo CỜ cốt truyện, không theo số vùng đã đi. Không có Level 4; thưởng hoàn thành = biến thể ánh sáng nhẹ / New Game+.
+
+2. KÍCH THƯỚC ĐỌC ĐƯỢC (thân thật ~40×75 px nguồn)
+Vết nứt mặt nạ: dài 9–15 px, nét sáng 2 px – tốt · Ấn chuông ngực ≥ 6×8 px – tốt nếu tương phản cao · Chuông hông 6–8 × 8–11 px – tốt
+· Dải vải bạc rộng 3–5, dài 16–25 px – rất tốt khi chuyển động · Giáp vai ~7×5 px – đọc được nhưng dễ rối · Rune 1–2 px – KHÔNG dùng làm dấu hiệu chính · Hạt sáng 1–2 px – chỉ phụ.
+Ưu tiên dải vải bạc hơn vết khắc li ti (chuyển động giúp nhận ra khi chạy).
+
+3. CÁCH LÀM TỪNG LỚP
+Nứt mặt nạ: PNG từng khung, nhấp nháy độ sáng · Ấn chuông ngực: PNG từng khung, nhịp sáng nhẹ · Chuông hông: ảnh gắn neo, lắc theo chạy/nhảy
+· Dải vải bạc: ảnh gắn neo nhiều tư thế (3–4 hình AI vẽ: nghỉ, kéo ra sau, văng lên, hồi về), bay theo vận tốc – JS chỉ đổi vị trí/góc, không tự vẽ hình
+· Giáp vai: PNG từng khung · Hào quang: VFX PNG + alpha theo sự kiện · Vệt kiếm: sheet VFX riêng đã có, đồng bộ khung trúng.
+KHÔNG vẽ lại toàn thân.
+
+4. GIỮ NHẬN DIỆN: khoá tóc bạc, mặt nạ trắng, khoảng tối mắt, trang phục tối, dáng song kiếm, ánh xanh băng. Không thêm áo choàng lớn, cánh, sừng, mũ, vũ khí thứ ba.
+Bảng màu riêng cho lớp mới: Ivory #E9E4D9 · Cold Silver #B7C6D2 · Ice Cyan #85D9E8 · Deep Cyan #447E98 · Ancient Bronze #9C6B30 · Bell Gold #D0A45B.
+Chỉ 1–2 điểm sáng nổi bật cùng lúc; khi đánh, song kiếm phải là nguồn sáng dễ thấy nhất.
+
+5. SỐ KHUNG TỐI THIỂU (lớp bám mặt nạ/ngực: 1 vị trí overlay mỗi khung nguồn)
+Idle 4 · Run 8 · Jump 4 · don1 8 · don2 8 · don4 9 · Fall 1 · Land 3 · Dash 6 (có thể ẩn phụ kiện) · Hurt 6 (có thể giảm sáng) = 57 vị trí cần kiểm.
+Khung cùng tư thế/góc mặt nạ dùng chung ảnh được nếu căn đúng. Chuông hông/dải vải: 1–4 hình nguồn + điểm neo. Clip chưa có dữ liệu thì lớp tự ẩn, không mượn toạ độ clip khác.
+
+6. QUY TRÌNH: chốt sprite gốc → đo neo mặt nạ/ngực/hông/lưng từng khung → vẽ lớp đầu trên Idle 4 khung → thử trên iPhone → mở rộng Run/Jump/Attack/Dash/Hurt → so từng khung, sửa lệch trước khi nghiệm thu.
+Prompt ưu tiên "First Resonance":
+EDIT ONLY THE ADDITIVE OVERLAY for the supplied original 256×256 pixel-art sprite sheet of The Masked Wanderer. Preserve every original character pixel, silhouette, white mask, silver hair, dark clothing, two icy-blue swords, framing and foot anchors EXACTLY. Draw only one subtle pale-ivory and icy-cyan glowing hairline crack on the visible half of the white mask. Keep the crack shape consistent and attached to the mask in every frame. Output a transparent-background overlay PNG sheet with identical frame grid, dimensions and registration. No character repaint, no armor, no text, no shadows, no background, crisp pixel clusters, no anti-aliasing.
+(AI không bảo đảm pixel-perfect / alpha – phải kiểm ảnh trước khi đưa vào.)
+
+7. KHÔNG đổi màu chủ đạo song kiếm (xanh băng là nhận diện). Nâng HÌNH THÁI vệt kiếm theo 3 cấp:
+Tier I "Frost Whisper" – vệt mảnh, ít dư âm · Tier II "Echo Severance" – vệt đôi + hạt bạc ngà · Tier III "Silent Requiem" – dư ảnh ngắn + sóng âm đứt đoạn sau nhát chém.
+Hào quang thường trực rất yếu; hiệu ứng mạnh chỉ lúc mở khoá / cộng hưởng / kết liễu / kỹ năng đặc biệt. Vệt kiếm chính là ảnh AI vẽ; canvas chỉ lo alpha, độ sáng, vị trí, nhịp, hạt nhỏ.
+
+8. Chỉ số: chỉ gắn với mốc lớn. Level 1 ~ mở năng lực cộng hưởng; Level 2 ~ Echo Charm / Broken Bell; Level 3 ~ năng lực cần để vào Silent Abyss. Đối chiếu với cây Silver String; đừng để vết nứt sáng bị hiểu là tăng sát thương nếu thưởng thật là phòng thủ.
+
+9. Học: Blasphemous (silhouette biểu tượng, bảng màu hạn chế, chất liệu cổ, VFX có trọng lượng – đừng chép mật độ chi tiết); Dead Cells (sức mạnh qua tốc độ, hiệu ứng trúng, tương phản, chuyển động);
+Hollow Knight (nhân vật cực nhất quán, sức mạnh qua khả năng/hiệu ứng); Katana ZERO (vệt chém, dư ảnh, nhịp ngắt); Prince of Persia: The Lost Crown (trình bày kỹ năng/chuyển động mới rõ ràng).
+
+10. THỨ TỰ VẼ: P0 First Resonance – Idle 4 + Run 8 (thử độ đọc trên iPhone) · P1 phủ vết nứt Level 1 đủ clip (thử lật trái, chớp trúng đòn) · P2 Bellbound Soul ấn chuông ngực (Idle, Run, Jump → Attack)
+· P3 chuông hông Echo Charm (neo, không đụng kiếm) · P4 dải vải bạc 3–4 tư thế (Run/Dash/Attack) · P5 VFX tiến hoá/cộng hưởng · P6 giáp vai (tuỳ chọn).
+Nghiệm thu: sprite gốc không đổi; overlay khớp 256×256 và chân (128,172); không giật; không che mắt/kiếm; lật trái đúng; rõ trên iPhone; thiếu dữ liệu tự ẩn; không giảm FPS đáng kể.
+VIỆC ĐẦU TIÊN: vẽ đúng 1 vết nứt mặt nạ cho 4 khung Idle, thử trong game.

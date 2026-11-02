@@ -1,6 +1,6 @@
 # Câu hỏi lên kế hoạch gửi ChatGPT (phiên cottruyen)
 
-> **Trạng thái: CHƯA GỬI.** Lần chạy 02/11 chạy trên máy chủ đám mây, không có Claude in Chrome nên không mở được ChatGPT.
+> **Trạng thái: ĐÃ GỬI 02/11 (phiên chính) – trả lời ở ke-hoach-chatgpt.txt.** Lần chạy 02/11 chạy trên máy chủ đám mây, không có Claude in Chrome nên không mở được ChatGPT.
 > Lần chạy sau (có Chrome) dán nguyên khối dưới vào ChatGPT, lưu NGUYÊN VĂN trả lời vào `docs/cot-truyen/ke-hoach-chatgpt.txt`,
 > rồi làm theo: viết hội thoại vào `game/cot-truyen/hoi-thoai/*.json`, điều kiện mở vùng vào `game/cot-truyen/tram-dich-chuyen.json`,
 > thêm yêu cầu ảnh (cảnh làng, nhân vật phụ, cổng teleport, ảnh cutscene) vào `docs/yeu-cau-anh/cottruyen/`.

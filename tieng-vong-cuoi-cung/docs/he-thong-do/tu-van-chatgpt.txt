@@ -1,0 +1,48 @@
+THE LAST ECHO — HỆ THỐNG TIẾN TRIỂN, CÀY ĐỒ, CÂY KỸ NĂNG (ChatGPT, 02/11/2026, chat "Tư vấn thiết kế game") – chép đầy đủ nội dung chính
+Định hướng: khám phá là nền, loot tạo động lực chơi lại, kỹ năng/hoạt ảnh mới là thưởng đáng nhớ nhất. KHÔNG bắt cày cấp để qua cửa/đánh trùm.
+
+1. VÒNG LẶP 3 TẦNG
+Ngắn (30s–2ph): đánh nhóm quái, thử combo, phối hợp Echo → Echo Shard, Resonance XP, nguyên liệu nhỏ; cảm giác đánh đã tay.
+Trung (30–90ph): đường tắt, bí mật, tinh anh, trùm, nhiệm vụ → Charm mới, Memory Shard, kỹ năng di chuyển, mở đường; khám phá + trưởng thành.
+Dài (nhiều tuần): xong 9 chặng, săn Charm biến thể, tối ưu build, thử thách → build riêng, ngoại hình, thành tựu; làm chủ.
+Chống phá nhịp: không đòi cấp để vào vùng; không tỉ lệ rơi cực thấp cho đồ bắt buộc; không bắt đánh lại trùm cốt truyện; thưởng khám phá lần đầu luôn hơn đứng giết quái; đường tắt/kỹ năng mới phải mở thêm lựa chọn chiến đấu.
+Cơ chế "Echo Mastery": đánh phối hợp với bóng Echo trong cửa sổ cộng hưởng → thêm chút Resonance XP (có trần để khỏi khai thác).
+
+2. ĐỔI TÊN + SỐ LIỆU
+Âm Điểm → Resonance XP · Nốt → Echo Note · Cây → The Resonance Lattice · nhánh Lưỡi → Edge of Remembrance · Vọng → Whispers Beyond · Thân → Vessel of Ash.
+XP: quái thường 3–5 · quái mạnh 8–12 · tinh anh lần đầu 45 (tái đấu 15) · trùm lần đầu 160 · bí mật lần đầu 30 · Memory Trial lần đầu 60.
+Mốc cấp (XP tích luỹ, mỗi cấp +1 Echo Note): 1:0 · 2:60 · 3:150 · 4:270 · 5:420 · 6:600 · 7:810 · 8:1050 · 9:1320 · 10:1620 · 11:1950 · 12:2310; từ cấp 12: XP(L+1)−XP(L) = 360 + 45(L−12); cấp tối đa bản đầu 30.
+Vùng 1 nhắm cấp 3–5 (cần đo thật). KHÔNG giới hạn cấp cứng theo vùng; giới hạn bằng mốc mở kỹ năng, số ô Charm, vật liệu, hiệu quả giảm dần khi cày quái yếu.
+Mục tiêu cấp 9 chặng: Heartwood 3–5 (học Echo, Charm định hình build) · Foundry 6–8 (rèn kiếm) · Iron Nest 9–11 (đánh trên không) · Canopy 12–14 (di chuyển, nhảy đôi) · Thunder Crown 15–17 (Echo nâng cao)
+· Archive 18–20 (ký ức, phép thử) · Mirrorwater 21–23 (phản đòn, vị trí) · Bell Village trở lại 23–25 (nhiệm vụ, rèn, hoàn thiện build) · Silent Abyss 26–30.
+
+3. MỐC MỞ KHOÁ (kỹ năng di chuyển bắt buộc đến từ trùm/nhiệm vụ cố định; Echo Note chỉ mua lựa chọn chiến đấu)
+Bắt đầu: Threefold Slash, Echo Recall · Cấp 2: Keen Edge (1 Note) · Cấp 3: Lingering Echo (1) · Cấp 4: Ashen Resolve (1) · sau trùm Vùng 1 + cấp 5: Resonant Cut (2)
+· Cấp 7: Phantom Pursuit (2) · Cấp 10: Fifth Toll (3 Note + thử thách) – nhát combo thứ 5 có animation riêng, KHÔNG mở ở Vùng 1 · Cấp 14: Echo Reversal (3 + nhiệm vụ) · Cấp 20: Last Chime (3 + thử thách).
+Double Jump, Rope Mastery, Ground Break = thưởng cốt truyện, không nằm trong cây. Kiếm giữ 10/13/16, hình gốc; nâng ở Morrow bằng Ancient Bronze + Echo Shard, không tốn Echo Note.
+
+4. 10 NÂNG CẤP HÌNH ẢNH NHỎ (lớp VFX riêng, không sửa pixel nhân vật; ChatGPT vẽ; neo theo tay/kiếm/mặt nạ/chân; sheet riêng)
+Pale Sword Gleam 4 khung · Frostline Slash 6 · Broken Bell Sparks 5 · Echo Footprints 4 · Resonance Halo 6 · Mask Glint 3 · Twin Blade Afterimage 6 · Dash Ash Trail 6 · Ancient Bronze Wake 7 · Last Toll Sigil 8 = 55 khung.
+PixelLab chỉ hỗ trợ kiểm/animation mới; không vẽ lại cả nhân vật để đổi hiệu ứng. Fifth Toll cần quy trình duyệt animation riêng.
+
+5. ĐỘ HIẾM + DÒNG PHỤ
+Faded 0 dòng (65% endgame) · Whispered 1 dòng (27%) · Haunted 2 dòng (7%) · Eternal 3 dòng (1%). Vùng 1: 75/23/2/0 (chưa có Eternal).
+Dòng phụ: Blade's Hunger +2–5% sát thương cận chiến · Shard Whisper +4–10% Echo Shard · Deep Remembrance +3–8% Resonance XP · Gentle Reprieve +4–8% hồi máu nhận · Ashen Guard +1–2 khung bất tử · Swift Echo −3–7% hồi Echo · Bellward +3–7% kháng sát thương bẫy.
+Trần cộng dồn: +20% sát thương từ Charm, −15% hồi Echo, tối đa +3 khung bất tử từ trang bị.
+Charm định hình build ngay Vùng 1: "Bell's Return" (Echo, 2 ô: bóng Echo đánh trúng kẻ vừa bị người chơi đánh → hoàn một phần năng lượng Echo, có hồi nội bộ)
+· "Ashen Mercy" (sống sót, 2 ô: kết liễu bằng cộng hưởng hồi chút máu, có hồi) · "Rootbound Oath" (di chuyển, 1 ô: bám dây ổn định hơn, giảm nhẹ sát thương trên không).
+Sửa lỗi số ô: 3 ô đầu + thêm 7 ô ở mốc 6/12/18/24/30/36/42 Memory Shard = 10; mốc 48 thưởng ngoại hình/thành tựu.
+Tái rèn ở Morrow: chọn 1 dòng để rèn, các dòng khác giữ; được giữ kết quả cũ nếu mới kém. Giá: lần 1: 40 Echo Dust + 100 Echo Shard · lần 2: 80 + 200 · từ lần 3: 160 + 400.
+Charm trùng phân rã thành Echo Dust (dùng rèn/đổi Charm) → không có đồ rác.
+
+6. GIAO DIỆN iPhone ngang 844×390
+Túi đồ 3 vùng: danh sách Charm trái ~280px · thông tin giữa ~300px · loadout phải ~180px (trừ safe area + đệm). Nút chạm ≥ 44×44 CSS px; không chỉ kéo thả – chọn Charm rồi bấm Equip.
+Màn cây: "THE RESONANCE LATTICE", "Notes: 3", tab EDGE / ECHO / VESSEL, chi tiết nút ("Lingering Echo – Cost: 1 Echo Note – Learn").
+Ảnh UI cần vẽ (nhiều trạng thái, KHÔNG vẽ chữ vào PNG): Main Panel Frame 844×390 · Tab 96×40 · Action Button 120×48 · Charm Cell 72×72 · Charm Socket 40×40 · Skill Node 48×48 · Tooltip Frame 320×170 · Currency Icon 32×32 · Rarity Icon 24×24.
+
+7. HỌC: Hollow Knight (giá Charm, lựa chọn build – tránh Charm chỉ tăng sát thương) · Dead Cells (cảm giác đánh, phản hồi trúng – tránh loot quá dày) · Blasphemous (u tối, bí mật – tránh animation quá dài)
+· Ender Lilies (kỹ năng gắn trùm – tránh quá nhiều nút) · Diablo IV (cảm giác nhận đồ – tránh đồ rác tràn túi) · Path of Exile (build sâu – tránh cây quá phức tạp).
+
+8. 5 VIỆC ĐẦU: (1) Charm đầu có lựa chọn: sau tinh anh đầu cho chọn Bell's Return hoặc Ashen Mercy (không RNG); (2) thanh Resonance XP nhỏ + 3 nút cấp đầu, đo cấp thật sau 30–45 phút;
+(3) loadout 3 ô, 3 Charm mẫu, chạm nhanh; (4) 2 FX thưởng: Resonance Halo + Frostline Slash (không sửa sprite); (5) 1 bí mật cần kỹ năng mở sau, thưởng Memory Shard hoặc Charm mới.
+Nghiệm thu: thử ≥ 2 hướng build trước trùm Vùng 1; không phải farm > 5 phút để đủ sức đánh trùm; trang bị Charm < 15 giây khi đã quen; mô phỏng loot/XP nhiều lượt trước khi chốt số.

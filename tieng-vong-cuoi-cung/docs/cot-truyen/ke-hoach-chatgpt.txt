@@ -1,0 +1,70 @@
+THE LAST ECHO — Kế hoạch cốt truyện, vùng, làng và ảnh (ChatGPT, 02/11/2026, chat "Lập kế hoạch game chi tiết")
+(Chép lại đầy đủ nội dung chính từ câu trả lời; chữ trong game bằng tiếng Anh.)
+
+1. THẾ GIỚI + 3 HỒI
+Tầng (cao → thấp): Stormcrown Summit (Đỉnh Sấm) · Galeshroud Canopy (Tán Gió) · Ironnest Warrens (Tổ Sắt) / Echoing Archive (Thư Viện Vang)
+· Bellhollow Village (Làng Chuông, hub an toàn) · Forsaken Foundry (Xưởng Đồng) / Weeping Heartwood (Rễ Mục = Vùng 1) · Mirrorwater Depths (Hồ Ngầm) · The Hushed Abyss (Vực Lặng).
+Điều kiện mở vùng:
+- Weeping Heartwood: Hồi I, sau mở đầu (trùm Hollow Bell Mother)
+- Forsaken Foundry: hạ Hollow Bell Mother (Âm Gốc 1)
+- Ironnest Warrens: kích hoạt lò rèn Morrow + có kỹ năng bám tường (Âm Gốc 2)
+- Echoing Archive: hạ trùm Ironnest + có Echo Sight (Âm Gốc 3)
+- Galeshroud Canopy: Hồi II, đủ 3 Âm Gốc (vùng đổi theo gió)
+- Mirrorwater Depths: Hồi II, gặp bản sao lần đầu + lướt qua màn nước (tiết lộ nguồn gốc)
+- Stormcrown Summit: hạ trùm Galeshroud và Mirrorwater (đối đầu Kaelith lần cuối)
+- The Hushed Abyss: Hồi III, hạ trùm Stormcrown (chung cuộc, 3 kết)
+Kỹ năng bắt buộc luôn nằm trên tuyến chính; nhánh bí mật chỉ chứa nâng cấp / Mảnh Ký Ức.
+Hồi I "The Cracked Bell": chuông làng nứt; Vesper kể 3 Âm Gốc giữ cho Cây nhớ tên người sống trong nó. Khám phá Heartwood, Foundry, Ironnest, Archive. Mang đủ 3 Âm Gốc về, đánh chuông nhưng không có tiếng; bóng người xám nhìn rồi biến mất.
+Hồi II "The Borrowed Voices": bản sao Wanderer xuất hiện ở phòng cũ; đường cũ đổi (cầu rễ rút, chuông kêu ngược, NPC nhớ chuyện chưa xảy ra). Tock trộm bản đồ tới lõi cây vì tin Warden trả lại ký ức; sau đó chuộc lỗi: mở lại định vị + 1 tuyến bí mật.
+Hồi III "The Last Echo": ở Stormcrown, Kaelith nhận ra nhân vật chính là tiếng vọng cuối của người giữ chuông thật. Warden muốn chấm dứt mọi tiếng vọng để chặn vòng lặp đau khổ. Ở Vực Lặng: người giữ chuông thật đã tự tách ký ức và ý chí để trì hoãn Sự Lặng; Wanderer là phần ý chí còn lại.
+3 kết: The Final Toll (hạ Warden, đánh chuông → cây sống, Wanderer tan); A World Unheard (hạ Warden, dập chuông → Sự Lặng phủ, linh hồn được nghỉ); The Unfinished Lullaby (đủ 48 Mảnh Ký Ức + hoàn thành lời ru Vesper, chọn hát → phá vòng lặp, không cần hy sinh). Kết thật chỉ hiện khi đủ 2 điều kiện, báo bằng chuông phát sáng.
+
+2. MỞ ĐẦU "The First Silence" – 7 tranh 960×540, tổng 33 s, có Skip, xem lại ở làng
+01 The Eternal Tree (4s) cây + nghìn chuông – "Once, the tree remembered every name."
+02 The First Bell (4s) chuông cổ trong lõi, bóng người đeo mặt nạ – "Each bell held a voice. Each voice, a life."
+03 The Silence Rises (5s) khói xám từ đáy vực – "Then the Silence rose from below."
+04 Forgotten Names (4s) mặt nạ và tên người phai – "And the names began to fade."
+05 The Broken Toll (5s) chuông làng nứt – "Our last bell is breaking."
+06 The Wanderer (5s) nhân vật tỉnh giữa rễ – "Little wanderer... can you still hear me?"
+07 Into the Roots (6s) lối vào Weeping Heartwood + tên game – "Bring back the three Root Tones. Before all is still."
+
+3. HỘI THOẠI LÀNG (≤ 90 ký tự/câu; lựa chọn = hành động của Wanderer)
+Vesper (dùng 3 khung chân dung đã có) – lần đầu: "Ah... a face the bells have not forgotten." / "The roots are weeping. Our bell will not last." / "Will you carry its song into the dark?" [I will listen. / Not yet.]
+  Sau Hollow Bell Mother: "The Mother has fallen... yet I hear her mourning." / "You brought back more than silence, little one." / "I almost remember the next verse. Almost."
+Tock (3 biểu cảm: bình thường, rao hàng, lo lắng) – lần đầu: "Maps! Paths! Secrets with very reasonable prices!" / "I am Tock. I know where the roots forget to turn." / "Buy a map?" [View wares / Leave]
+  Sau Vùng 1: "Oh! You survived the Mother's cradle." / "New tunnels, new prices. Don't glare at me."
+Morrow (câm, phụ đề diễn giải tiếng búa; 2 biểu cảm: đứng yên, gõ búa) – lần đầu: "One strike: welcome. Two strikes: a warning." / "Bring me bell-bronze. I will make it sing again."
+  Sau Vùng 1: "The Mother is quiet. The iron still trembles." / "Your blade remembers what your mouth cannot say."
+Kaelith (3 biểu cảm: bình thản, thách thức, kinh ngạc; 4 cuộc đua: Heartwood, Ironnest, Canopy, Stormcrown) – lần đầu: "Another mask. Another thief of echoes." / "Race me to the old root. If you dare."
+  Sau Vùng 1: "You beat the Mother. Not the clock." / "Three more races. Then we shall see who is real."
+The Hushed Warden không hội thoại ở làng; chỉ bóng xám thoáng qua ở Hồi II.
+
+4. NHỊP KỂ CHUYỆN + 48 MẢNH KÝ ỨC
+Heartwood 6 · Foundry 6 · Ironnest 6 · Archive 7 · Canopy 6 · Mirrorwater 7 · Summit 5 · Abyss 5 = 48.
+Mỗi vùng: 2 bia đá, 1 ký ức bắt buộc, Mảnh Ký Ức tuỳ chọn, 1 dư âm sau trùm; 5–8 phút chơi giữa các điểm kể chuyện; không khoá điều khiển lâu.
+Weeping Heartwood: Bia 1 "Let no bell be rung without a name." · Bia 2 "The Mother kept the voices of the lost."
+  Shard 1 "A cradle carved into the roots." · 2 "Someone sang here, long after the bells died." · 3 "A name scratched out by trembling hands."
+  · 4 "The roots once carried voices, not water." · 5 "Mother, forgive the sound I stole." · 6 "Even hollow bells remember love."
+  Ký ức sau trùm: "She was not guarding the path. She was guarding a song."
+Giữ nguyên phòng/đường đi/nhịp chiến đấu Vùng 1; chỉ gắn điểm tương tác ở chỗ an toàn.
+
+5. LÀNG CHUÔNG + TELEPORT
+Làng: 5 màn ngang × 3 tầng (mỗi màn 960×540).
+Cổng "The Rootbound Bell": chuông đồng nứt treo giữa vòng rễ xoắn (KHÔNG cửa phẳng); kích hoạt: vết nứt sáng hổ phách, chuông rung, vòng rễ hé mở.
+Ô sprite 192×256, neo đáy-giữa. Kích hoạt lần đầu 8 khung × 90 ms; dịch chuyển 10 khung tổng ~815 ms (hạt sáng tụ vào ngực rồi toả vòng đồng).
+Menu: danh sách cuộn, chỉ vùng đã kích hoạt chuông neo. Về làng: tương tác chuông neo ở mỗi vùng → "Return to Bellhollow". Cấm dịch chuyển khi đánh nhau / đang rơi / cutscene.
+
+6. ẢNH CẦN VẼ (ưu tiên; neo dạng (x,y) chuẩn hoá)
+P0: nền làng 5 màn 960×540 (0,1) · tiền cảnh làng 5 ảnh 960×540 · tile địa hình làng 16×16 · chuông teleport tắt/sáng 2f 150ms 192×256 (0.5,1)
+    · teleport kích hoạt 8f 90ms 192×256 · VFX dịch chuyển 10f 65–100ms 256×256 (0.5,0.5) · chuông neo vùng 2f 150ms 128×192 (0.5,1)
+    · khung chọn teleport 640×420 · chân dung Tock 3f 140ms 192×192 nhìn phải · chân dung Morrow 2f 180ms 192×192 · Tock/Morrow trong cảnh 4f (96×96 / 128×128) quay trái neo đáy
+P1: 7 tranh mở đầu 960×540 · chuông làng nứt 3f 180ms 192×256 · VFX Mảnh Ký Ức 6f 80ms 64×64 · bia đá 128×128 · chân dung Kaelith 3f 140ms · Kaelith đứng 4f 120ms 96×128
+P2: bóng Warden 3f 220ms 128×192 · VFX bản sao 8f 90ms 128×160 · biểu tượng lời ru 6f 100ms 96×96 · 3 tranh kết 960×540
+
+7. THỨ TỰ LÀM
+Sprint A: dựng 5 màn làng, đặt Vesper, Chuông Lưu, khoá vùng + trạng thái nhiệm vụ (chỉ bật chức năng đủ hình).
+Sprint B: vẽ + gắn chuông teleport, chân dung Tock/Morrow; thử đi lại làng ↔ Weeping Heartwood.
+Sprint C: 7 tranh mở đầu, 2 bia đá, 6 Mảnh Ký Ức, ký ức sau trùm cho Vùng 1.
+Sprint D: mở Forsaken Foundry rồi lần lượt các vùng. Không dùng hình code thay thế.
+Nghiệm thu: 60 FPS iPhone, không cắt sheet, không lệch neo, không nhân đôi vật phẩm sau hồi sinh, lưu/khôi phục đúng cờ truyện, thoại ≤ 90 ký tự, thiếu ảnh thì tắt.
+Bước đầu tiên nên làm: khoá thiết kế Làng Chuông + cổng The Rootbound Bell.

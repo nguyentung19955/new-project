@@ -1,0 +1,72 @@
+TƯ VẤN FIREBASE (ChatGPT, 02/11/2026, chat "Tư vấn kiến trúc Firebase") – chép đầy đủ nội dung chính
+
+KẾT LUẬN: dùng Cloud Firestore Standard trên gói Spark; localStorage là nơi lưu CHÍNH, Firebase là bản sao lưu tuỳ chọn ("Local-first + Cloud backup + Conflict-safe"). Không dùng Cloud Functions / Cloud Storage / App Hosting / dịch vụ cần Blaze.
+5 vấn đề của bản nháp cần sửa: (1) đồng hồ máy không đáng tin để chọn bản mới; (2) đọc rồi ghi vẫn mất tiến độ khi 2 máy ghi cùng lúc; (3) ẩn danh → liên kết Google có thể mất quyền bản lưu nếu chuyển tài khoản sai; (4) 1 tài liệu chứa mọi khoá dễ xung đột, tốn dung lượng; (5) pagehide không bảo đảm ghi mạng xong (nhất là iPhone Safari).
+
+A. Firestore (chọn) thay Realtime Database. Cấu trúc mới:
+  nguoi_choi/{uid}: phienBan: 2, taoLuc: timestamp
+  nguoi_choi/{uid}/ban_luu/{keyId}: tenKhoa, du ("{...JSON...}"), revision (int), capNhat: serverTimestamp(), thietBi ("random-device-id"), saoLuuTruoc (JSON bản trước)
+  Mỗi khoá game = 1 tài liệu (tvcc-vung1, tvcc-chung, tvcc-he-thong… làm ID, kiểm bằng danh sách cho phép). Chỉ giữ bản hiện hành + 1 dự phòng (+1 dự phòng trên máy).
+B. Xung đột: KHÔNG dùng Date.now() để quyết định. Date.now() chỉ để hiển thị; serverTimestamp ghi lúc server nhận; revision để phát hiện máy khác đã sửa.
+  Dùng revision + Firestore transaction: A và B cùng tải rev 12; A ghi rev 13; B ghi thì transaction thấy server rev 13 → KHÔNG đè, giữ cả 2 bản, cho người chơi chọn.
+  Có thể tự hợp nhất tiến độ không đảo ngược (trùm đã hạ, kỹ năng đã mở, đồ sưu tầm vĩnh viễn); không tự hợp nhất HP, tiền, đồ tiêu hao, vị trí, lựa chọn cốt truyện.
+  Nếu tvcc-chung phụ thuộc dữ liệu vùng: ghi chung 1 transaction, dùng saveEpoch chung.
+C. Không cần persistentLocalCache cho V1. localStorage giữ bản lưu, dự phòng, cờ dirty, baseRevision. Xác nhận mây bằng getDocFromServer(); lỗi thì không coi cache là bản server.
+  Muốn mở game khi offline cần service worker cache HTML/JS/CSS/ảnh. Nên thêm Export Save / Import Save (Safari Private / xoá dữ liệu web có thể mất bản lưu).
+D. Google trên iPhone Safari: thử linkWithPopup() trước, gọi TRỰC TIẾP trong sự kiện chạm nút (không sau await/timer). Nếu dùng linkWithRedirect(): authDomain phải cùng origin với trang game, vd game ở https://PROJECT_ID.web.app → authDomain: "PROJECT_ID.web.app"; tên miền riêng → đặt làm authDomain, thêm vào Authorized domains, đăng ký redirect https://YOUR_DOMAIN/__/auth/handler.
+  Gặp auth/credential-already-in-use: KHÔNG tự đẩy tiến độ ẩn danh lên tài khoản Google; lưu bản local trước, lấy credential từ lỗi, đăng nhập tài khoản Google đó, tải bản mây rồi xử lý xung đột. Liên kết thành công thì UID ẩn danh được giữ.
+E. Rules đề xuất (mỗi khoá 1 tài liệu):
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function allowedKey(k) { return k in ['tvcc-vung1', 'tvcc-chung', 'tvcc-he-thong']; }
+    function validSave(k) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['tenKhoa','du','revision','capNhat','thietBi','saoLuuTruoc'])
+        && d.keys().hasAll(['tenKhoa','du','revision','capNhat','thietBi','saoLuuTruoc'])
+        && d.tenKhoa is string && d.tenKhoa == k
+        && d.du is string && d.du.size() <= 16000
+        && d.saoLuuTruoc is string && d.saoLuuTruoc.size() <= 16000
+        && d.revision is int && d.revision >= 1 && d.revision <= 1000000000
+        && d.capNhat == request.time
+        && d.thietBi is string && d.thietBi.size() <= 80;
+    }
+    match /nguoi_choi/{uid} {
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasOnly(['phienBan','taoLuc'])
+        && request.resource.data.keys().hasAll(['phienBan','taoLuc'])
+        && request.resource.data.phienBan is int && request.resource.data.phienBan == 2
+        && request.resource.data.taoLuc == request.time;
+      allow update, delete: if false;
+      match /ban_luu/{keyId} {
+        allow read: if owner(uid) && allowedKey(keyId);
+        allow create: if owner(uid) && allowedKey(keyId) && validSave(keyId) && request.resource.data.revision == 1;
+        allow update: if owner(uid) && allowedKey(keyId) && validSave(keyId)
+          && request.resource.data.revision == resource.data.revision + 1
+          && request.resource.data.tenKhoa == resource.data.tenKhoa;
+        allow delete: if false;
+      }
+    }
+  }
+}
+  Lưu ý: kiểm thử bằng Emulator trước; .size() không đúng bằng byte UTF-8; rules không kiểm được cấu trúc JSON; thêm vùng mới phải cập nhật danh sách khoá; rules revision+1 không thay transaction ở máy khách.
+F. Hạn mức Spark: Firestore đọc 50.000/ngày, ghi 20.000/ngày, xoá 20.000/ngày, lưu 1 GiB, dữ liệu ra 10 GiB/tháng; Hosting lưu 10 GB, truyền 360 MB/ngày; RTDB 100 kết nối.
+  Nút thắt là băng thông Hosting: tải trọn 50 MB/lượt → ~7 lượt/ngày. Nên tải ảnh theo vùng (lazy-load), cache file có tên phiên bản, nén ảnh/âm thanh, service worker; không tải cả 8 vùng khi vào game.
+  Bản phát hành Hosting cũ chiếm dung lượng: giữ 2–3 bản production gần nhất, dọn preview.
+  Không bị tính tiền: giữ Spark, không liên kết tài khoản thanh toán, không nâng Blaze, không nhập thẻ; Spark không tự lên Blaze khi vượt hạn mức (chỉ bị giới hạn).
+  GitHub Actions deploy được, giữ bí mật service account, quyền tối thiểu (hoặc Workload Identity Federation).
+G. App Check: V1 chưa cần. Thứ tự: hoàn thiện Rules → thử Auth → theo dõi Usage → App Check chế độ monitor → mới cân nhắc bắt buộc.
+H. Giao diện: Pause → Settings → "Save & Cloud", chữ tiếng Anh ngắn + biểu tượng nhỏ:
+  "Cloud save up to date" / "Google connected · Progress backed up" / "Saved on this device" / "Your game works without internet";
+  nút: Sync now · Export save · Import save; trạng thái khác: "Saving to cloud…", "Offline · Saved on this device", "Cloud save needs attention", "Newer cloud save found · Reload to apply".
+  KHÔNG hiện "Cloud save up to date" khi bản lưu mới chỉ nằm trong hàng đợi.
+I. Tạo dự án Firebase miễn phí: (1) Firebase Console → Create a project (vd the-last-echo-game), có thể tắt Analytics; (2) Project Overview → biểu tượng Web </> → nickname "The Last Echo Web" → Register app → lưu firebaseConfig;
+  (3) Authentication → Get started → Sign-in method: bật Anonymous + Google; (4) Authentication → Settings → Authorized domains: kiểm tên miền game; (5) Firestore Database → Create database: Standard, mặc định, vị trí gần, Production mode;
+  (6) tab Rules: dán rules phần E → Publish; (7) Hosting → Get started (Hosting truyền thống, không App Hosting); trên máy có Node: npm install -g firebase-tools; firebase login; firebase init hosting; firebase deploy --only hosting;
+  (8) mở https://PROJECT_ID.web.app thử trên iPhone Safari thật (Google + khôi phục tiến độ); (9) ổn rồi mới bật GitHub Actions; (10) theo dõi Usage; thử 2 máy, offline, xung đột, hạn mức, export/import, đóng tab trước khi đồng bộ.
+QUY TRÌNH ĐỒNG BỘ: lưu localStorage ngay ở checkpoint; mở game chạy local ngay, Firebase khởi tạo nền, timeout 2,5 s chỉ cho giao diện (không huỷ request). Chỉ upload sau khi xác nhận bản server + revision; mỗi lần ghi dùng transaction; server đổi → giữ 2 bản, cho giải quyết xung đột.
+  Debounce 10 s hợp lý + đồng bộ khi pause/checkpoint; visibilitychange/pagehide chỉ là cố gắng cuối, cờ dirty phải còn cho lần mở sau. Chỉ khi server xác nhận mới cập nhật revision + "Cloud save up to date"; đang upload mà chơi tiếp thì không xoá cờ dirty của thay đổi mới.
+THỨ TỰ: Export/Import Save → Firestore/Auth/Rules → Transaction + giao diện xung đột → Google trên Safari → Service Worker offline → Hosting + GitHub Actions.
+Ưu tiên số 1: không để máy có bản lưu cũ âm thầm đè tiến độ của máy khác.

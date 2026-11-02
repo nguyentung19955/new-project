@@ -1,5 +1,7 @@
 # Câu hỏi soạn sẵn cho ChatGPT – Lưu game bằng Firebase (phiên firebase)
 
+> **ĐÃ GỬI 02/11 (phiên chính, có Chrome) – trả lời ở tu-van-chatgpt.txt cùng thư mục.**
+
 Lần chạy 02/11/2026 KHÔNG có Claude in Chrome nên chưa hỏi được ChatGPT. Lần chạy có Chrome: mở cuộc trò chuyện ChatGPT mới,
 dán nguyên khối dưới, lưu câu trả lời nguyên văn vào `docs/firebase/tu-van-chatgpt.txt`, rồi sửa `game/luu-may.js` /
 `firestore.rules` theo tư vấn (phép thử: `node tools/firebase/kiem-thu-luu-may.js`, `node tools/firebase/kiem-tra-trinh-duyet.js`).
