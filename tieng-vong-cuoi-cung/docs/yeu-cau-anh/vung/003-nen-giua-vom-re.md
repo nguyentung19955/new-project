@@ -1,5 +1,5 @@
 # 003 – nen-giua-vom-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 384×192 RGBA, khe hở trong suốt, nối liền ngang; gốc: giua-vom-re-nguon-chatgpt.png)
 - **Dùng vào:** Nền giữa (parallax) mọi phòng thường. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** BG-R2-MID-01 "Tangled Root Arches": vòm rễ đan, chuông rỗng mắc trong rễ, có khe hở trong suốt để thấy nền xa; nối liền ngang.
 - **Số khung + ms gợi ý:** 1 ảnh tĩnh

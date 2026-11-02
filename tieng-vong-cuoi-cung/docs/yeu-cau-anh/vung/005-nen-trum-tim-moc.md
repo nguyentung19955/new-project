@@ -1,5 +1,5 @@
 # 005 – nen-trum-tim-moc
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 480×270, giữa để tối trống cho trùm; gốc: trum-tim-moc-nguon-chatgpt.png)
 - **Dùng vào:** Nền phòng trùm R213 Moldheart Chamber. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** BG-R2-BOSS-01 "Moldheart Sanctuary": hốc tròn khổng lồ trong lõi cây, giữa để TRỐNG tối (chỗ trùm Mold Mother hiện ra), rễ tách đôi phía trên.
 - **Số khung + ms gợi ý:** 1 ảnh tĩnh

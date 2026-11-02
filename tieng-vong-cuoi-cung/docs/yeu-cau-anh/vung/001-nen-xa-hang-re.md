@@ -1,5 +1,5 @@
 # 001 – nen-xa-hang-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 384×192, nối liền ngang (trộn hạt 16 px), lấy mẫu giữa điểm ảnh; gốc: xa-hang-re-nguon-chatgpt.png)
 - **Dùng vào:** Nền xa (parallax lớp sau cùng) các phòng R201–R205, R207, R208, R210–R212. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** BG-R2-FAR-01 "Deep Root Cavern": hốc tim cây tối, bóng rễ 4 lớp sâu, ẩm tím-nâu; nối liền ngang (trái nối phải). Không có nhân vật/quái/bệ đứng.
 - **Số khung + ms gợi ý:** 1 ảnh tĩnh

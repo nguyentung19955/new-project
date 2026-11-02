@@ -1,5 +1,5 @@
 # 007 – chat-lieu-dat-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 5 ô 64×64: t_fill, t_wall, t_reu nối liền 4 phía; t_top, t_ceil nối liền trái-phải, phần trên/dưới trong suốt; gốc: chat-lieu/nguon-chatgpt.png)
 - **Dùng vào:** Ảnh phòng nướng (tools/vung-2/ve-phong.py – sẽ viết theo tools/vung-1/ve-phong.py): đá/đất cho ô `#`. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Đất rễ chắc (firm root soil) Vùng 2 – thay cho t_fill/t_top/t_ceil/t_wall của Vùng 1: lòng đất nâu tím ẩm có sợi rễ; mặt trên có rêu/nấm nhỏ; trần có rễ con thõng; tường bên vỏ cây ẩm. Thêm "mossy stone footing" (đá rêu) cho mặt sàn chắc chỗ an toàn.
 - **Số khung + ms gợi ý:** 5 mẫu: lòng, mặt trên, trần, tường, đá rêu
