@@ -1,5 +1,5 @@
 # 024 – Kèn Câm – chết: 1 khung khuỵu gối giữa F5–F6 (P1)
-- **Trạng thái:** VẼ LẠI (02/11, phiên MƯỢT-2 kiểm: moi-01 thân + đầu THẤP HƠN cả F5 lẫn F6 (đầu ~5–10 px dưới F5, F6) → khi chạy thấy lún xuống rồi nảy lên; hình hơi lấm tấm, kèn nhạt màu. Cần: dáng nằm giữa F5 và F6 – đầu cao ngang khoảng giữa F5 và F6, kèn trượt dần ra trước chạm đất, cờ rủ; viền tối 1 px, mảng màu phẳng sắc như F5/F6. Prompt thêm: 'head height exactly halfway between the left and right frames, never lower than both; same 1-pixel dark outline, flat crisp shading, no noise'.)
+- **Trạng thái:** XONG (02/11, vẽ lại lần 2 – đỉnh đầu y=48 nằm giữa F5 (47) và F6 (47), không còn thấp hơn cả hai; đáy 94 như F5/F6)
 - **Clip:** `quai.json → loai.ken.hinh.chet` – thư mục art gốc `art/quai-moi/ken/chet/` (9 khung `fNN.png`, ô 112×112, quay TRÁI, neo chân [50, 92])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F5.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Đầu clip giữ lâu, ngã F5→F6 quá nhanh; trượt chân 9%; giữ khung cuối; cần thì thêm khung khuỵu gối giữa F5–F6."
