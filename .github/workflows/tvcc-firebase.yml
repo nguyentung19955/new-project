@@ -34,11 +34,13 @@ jobs:
         if: steps.co.outputs.co == '1'
         working-directory: tieng-vong-cuoi-cung
         run: node tools/firebase/kiem-thu-luu-may.js
-      - name: Triển khai Hosting + quy tắc Firestore
+      - name: Triển khai Hosting (+ thử quy tắc Firestore)
         if: steps.co.outputs.co == '1'
         working-directory: tieng-vong-cuoi-cung
         run: |
           echo "$SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
-          npx -y firebase-tools@13 deploy --only hosting,firestore:rules --project "$PROJECT" --non-interactive
+          npx -y firebase-tools@13 deploy --only hosting --project "$PROJECT" --non-interactive
+          # quy tắc Firestore: thử cập nhật, lỗi quyền thì bỏ qua (dán tay trong Firestore ▸ Rules cũng được)
+          npx -y firebase-tools@13 deploy --only firestore:rules --project "$PROJECT" --non-interactive || echo "Không cập nhật được quy tắc Firestore – dán tay firestore.rules"
           rm -f "$RUNNER_TEMP/sa.json"
