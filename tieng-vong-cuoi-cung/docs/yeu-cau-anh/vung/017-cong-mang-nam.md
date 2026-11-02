@@ -1,5 +1,5 @@
 # 017 – cong-mang-nam
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 32×48, lớp truoc/sau: dong, f0..f9, mo; màng xé đôi co về 2 bên, phần mở trong suốt; gốc: cong/mang-nam/nguon-chatgpt.png)
 - **Dùng vào:** Cổng B "Fungal Membrane" – lối ra phòng bí mật RS203 và cửa R209 → R210. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Màng nấm mỏng căng ngang hầm; khi mở xé đôi và co về hai bên.
 - **Số khung + ms gợi ý:** ĐÓNG 1, MỞ 10 × 90 ms, MỞ 1

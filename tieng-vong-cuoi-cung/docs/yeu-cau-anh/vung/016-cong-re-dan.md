@@ -1,5 +1,5 @@
 # 016 – cong-re-dan
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 32×48, lớp truoc/sau: dong, mo-ra-f0..f7, mo; dong-lai-f0..f7 = mo-ra đảo ngược; lỗ hầm đã mở để trong suốt; gốc: cong/re-dan/nguon-chatgpt.png)
 - **Dùng vào:** Cổng A "Braided Root Weave" – lối tắt R206↔R209, R205↔R203, R208↔R211 (mở 1 lần rồi giữ mở) và chốt rễ `L` giữ mở bằng Neo Rễ. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Rễ đan chéo bịt kín đường hầm (KHÔNG phải cửa phẳng); khi mở rễ tháo xoắn rút vào hai bên tường. Lớp trước + lớp sau riêng.
 - **Số khung + ms gợi ý:** ĐÓNG 1, MỞ RA 8 × 100 ms, MỞ 1, ĐÓNG LẠI 8 × 100 ms

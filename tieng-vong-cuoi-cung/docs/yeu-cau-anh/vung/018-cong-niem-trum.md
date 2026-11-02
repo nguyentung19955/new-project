@@ -1,5 +1,5 @@
 # 018 – cong-niem-trum
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 32×48, lớp truoc/sau: mo, quan-f00..f11, dong; thao-f00..f11 = quan đảo ngược; gốc: cong/niem-trum/nguon-chatgpt.png)
 - **Dùng vào:** Cổng C "Boss Root Seal" – đóng lối vào R213 khi đánh trùm, mở khi thắng/chết. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Rễ sống bện quấn kín cửa trùm; quấn vào 12 khung, tháo ra 12 khung.
 - **Số khung + ms gợi ý:** ĐÓNG 1, QUẤN 12 × 85 ms, THÁO 12 × 85 ms, MỞ 1
