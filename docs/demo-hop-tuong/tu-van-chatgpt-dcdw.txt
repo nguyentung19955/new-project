@@ -1,0 +1,157 @@
+NEON GRID — MERGE DEFENSE
+KẾ HOẠCH NÂNG CẤP HÌNH ẢNH VÀ GAMEPLAY (BẢN DEMO 844×390)
+Ngày: 02/11/2026
+
+QUYẾT ĐỊNH CHÍNH
+Giữ landscape 844×390, lưới 5×3, 8 nhân vật đã chốt và toàn bộ kỹ năng riêng. Chuyển cách trình bày từ “thẻ nhân vật trong ô neon” thành “chibi đứng trên bệ nhỏ, tự đánh”. Học nhịp thị giác và UX của Destiny Child: Defense War, không sao chép nhân vật, UI hay asset.
+
+A. SO SÁNH BA ẢNH
+1. DCDW: tướng nhỏ nhưng đứng trực tiếp trong từng ô, phần đầu/thân rõ, nền ô tối giản; màn đấu và khu vực điều khiển phân tầng rõ. Trận đấu có cảm giác các đơn vị đang hoạt động.
+2. NEON GRID hiện tại: lưới 5×3 chiếm vùng trung tâm; mỗi ô là thẻ vuông viền neon dày, nhân vật nằm trong khung; nhân vật trông như ảnh minh họa thu nhỏ. Nền phố neon nhiều chi tiết, nhiều cạnh sáng cạnh tranh với đạn và nhân vật. HUD nhiều mảng to, mana 99321 và chữ GRID FULL làm giảm cảm giác cân bằng kinh tế.
+3. Style-reference: nhân vật chibi anime cyberpunk với đầu lớn, chân tay ngắn, vũ khí và màu hệ rõ; phù hợp làm sprite riêng. Nhưng đây là tranh minh họa, chưa phải animation sheet; phải chuẩn hóa dáng, chân chạm đất, kích thước và hướng nhìn.
+4. Khác biệt cốt lõi: DCDW ưu tiên “đọc trận”, NEON GRID đang ưu tiên “đọc thẻ”. Không cần làm 3D thật: PNG chibi + 3–6 key pose + biến dạng canvas + VFX có thể tạo cảm giác nhân vật sống.
+5. Giữ đường quái bao quanh lưới là bản sắc riêng. Đừng sao chép cách chia màn hai người của DCDW nếu demo hiện tại chỉ là một người chơi.
+
+B. QUY CHUẨN TƯỚNG TRÊN BÀN
+- Logic viewport 844×390; ô lưới bước 70px (64px ô + 6px khe), tổng 344×204; giữ gốc (250,66) ở giai đoạn đầu để không phá gameplay. Tâm ô: x=282+70c, y=98+70r, c=0..4, r=0..2.
+- Sprite nhìn được: cao 48–56px (75–88% chiều cao ô), ngang 32–48px, tùy vũ khí; chân ở y=tâm ô+24px. Chibi đầu khoảng 35–42% tổng chiều cao; không kéo méo tỷ lệ.
+- Bỏ khung vuông màu dày. Thay bằng mặt ô tối #111729, đường viền 1px #33415A ở alpha 0.4; highlight 1–2px chỉ khi chọn/ghép. Màu hệ nằm ở vòng đế 24×6px, điểm sáng góc hoặc đường viền mảnh, không bọc cả nhân vật.
+- Nhân vật hướng 3/4 về phía quái ưu tiên; với asset một hướng, dùng mặc định 3/4 phải, flip ngang khi cần. KHÔNG flip chữ, logo, vũ khí bất đối xứng hoặc sprite có chi tiết một bên không đối xứng; các trường hợp đó vẽ riêng.
+- Bóng ellipse 26×6px, alpha 0.20; vòng đế phát sáng 26×7px alpha 0.25–0.40. Bóng giữ tại chân khi nhân vật nhún; không đặt bóng đậm dưới toàn ô.
+- Sao: 1–5 dấu sao nhỏ phía trên đầu, hoặc số sao ×N nếu quá 3; hiển thị một nhóm tại y chân-62, không che tóc. Cấp nâng theo loại chỉ ở thẻ nâng cấp dưới HUD (LV1..LV5), không chồng số LV lên mọi ô. Khi chọn tướng, tooltip nhỏ hiện tên/hệ/sao/cấp.
+- Ưu tiên đọc được trên iPhone: nhân vật phải nhận ra bằng silhouette, màu tóc/vũ khí; kiểm tra ở kích thước màn thật, không chỉ ảnh phóng to.
+
+C. HỆ THỐNG ANIMATION KHÔNG CẦN SPINE/LIVE2D
+Quy ước: mọi frame là PNG nền trong suốt, cùng kích thước 128×128px nguồn, vẽ nhân vật cao khoảng 100–112px nguồn, chân tại (64,114). Khi hiển thị, scale khoảng 0.48–0.50 để đạt cao 48–56px. Frame đứng cùng baseline; vũ khí không bị cắt. Sprite sheet bố trí 4 cột; idle 4×1=512×128, attack 4×1=512×128, skill 4×2=512×256 (6 frame + 2 ô trống trong suốt), hit 2×1=256×128 (nếu dùng), victory 4×1=512×128 (không cần ở demo). Nếu chiêu có vũ khí dài, dùng frame 160×160 nhất quán CHỈ cho tướng đó, sheet tương ứng; không tự động co giãn từng frame.
+- Idle: 4 key pose, 180/180/180/180ms, loop 720ms; thở, tóc/áo rung nhẹ, giữ chân; code có thể thêm bob ±1.5px theo sin và scaleY 0.985–1.015. Nếu muốn tiết kiệm, vẽ 2 key pose đầu tiên, code nội suy 4 pha.
+- Attack: 4 frame [chuẩn bị 90, ra đòn 70, follow-through 90, hồi 130] = 380ms. Điểm spawn projectile chính xác ở cuối frame 2; đòn melee hit ở frame 2/3 tùy tướng. Code: lùi 2px trước, lao 3px khi ra đòn, recoil 2px và trở về; không biến dạng đầu/vũ khí quá 5%.
+- Skill cast: 6 frame [120,110,90,120,140,160] = 740ms; frame 3 hoặc 4 kích hoạt gameplay/VFX; không chờ hết animation mới áp hiệu ứng. Code: nâng sáng/viền, rung nhẹ, vòng năng lượng và hạt tách layer.
+- Hit reaction (chỉ nếu tướng có thể bị tấn công): 2 frame [70,100]ms; code flash 70ms và lệch 2px. Nếu tướng không nhận damage, KHÔNG cần sheet này.
+- Animation cần gắn với cooldown: nếu attack cooldown 0.6s, 380ms hoạt họa + 220ms idle; nếu 0.25s, rút animation bằng playbackRate, không chồng nhiều bộ xương. Animation là trạng thái (idle/attack/skill), không phải một chuỗi frame tự phát liên tục.
+- Layer canvas: ground/grid → shadow/base → back-VFX → sprite → muzzle/weapon VFX → projectile → hit-VFX → numbers/UI. Tách sprite và VFX để tiết kiệm số ảnh.
+
+BỘ ĐỘNG TÁC RIÊNG CHO 8 TƯỚNG (không đổi thiết kế gốc)
+SCORCH (Heat Trail): idle bình nhiên liệu rung; attack hạ trọng tâm rồi phun lửa; skill xoay vòi/ép bình trước khi vẽ vệt nhiệt. 4/4/6 frame.
+FROST (Chill Meter): idle tóc/áo bồng, trượng nhẹ rung; attack chĩa trượng phóng tinh thể; skill giơ trượng tạo bùng tuyết; meter hiển thị trên quái. 4/4/6.
+ARC (Chain Rhythm): idle lưỡi điện giật nhẹ; attack vung lưỡi/phóng tia; skill nâng vũ khí tích điện, chuỗi điện nhảy giữa mục tiêu. 4/4/6.
+LANCE (Focus Lock): idle ngắm và chỉnh nòng; attack lấy đà–giật súng–hồi; skill đứng vững, khóa mục tiêu rồi bắn phát mạnh. 4/4/6.
+GLITCH (Gravity Knot): idle tư thế bí ẩn/thiết bị rung; attack đưa tay phóng xung; skill hai tay kéo tâm lực hút, tạo nút hấp dẫn. 4/4/6.
+TƯỚNG 06 (Bounty): dùng đúng nhân vật thứ sáu đã chốt, không tự tạo ngoại hình; idle/attack/skill theo vũ khí gốc, skill đánh dấu mục tiêu tiền thưởng. 4/4/6.
+TƯỚNG 07 (Breach): dùng đúng nhân vật thứ bảy đã chốt; attack bắn/đập xuyên giáp theo vũ khí gốc, skill tư thế phá giáp. 4/4/6.
+TƯỚNG 08 (Toxic Bloom): dùng đúng nhân vật thứ tám đã chốt; attack tung mầm/đạn độc, skill nở vùng độc. 4/4/6.
+Lưu ý: ảnh gameplay chỉ thể hiện rõ 5 thẻ SCORCH/FROST/ARC/LANCE/GLITCH; ảnh style-reference cho thấy ba nhân vật minh họa, không đủ để gán chính xác ngoại hình 3 tướng còn lại. Khi sản xuất phải dùng file gốc của đủ 8 tướng làm tham chiếu riêng; không tự sáng tác lại.
+
+D. VFX VÀ PHẢN HỒI
+- Projectile: sprite/code riêng; đầu đạn 4–9px, trail 8–22px; thời gian bay tùy khoảng cách, tốc độ đề xuất 260–450 logic px/s. Dùng object pooling; không tạo ảnh PNG mỗi frame cho đạn cơ bản.
+- Hit: frame va chạm 60–90ms, flash quái 55ms, scale quái 1.06 trong 45ms rồi trở về trong 100ms; damage number nổi 18px trong 450ms; âm thanh hit đồng bộ. Hit stop 25–40ms chỉ với boss/đòn lớn, tránh đóng băng toàn game trên mobile.
+- Heat Trail: vệt nóng còn lại 0.8–1.5s; Chill Meter: vòng băng 4–6 vạch, không dùng chữ dài; Chain Rhythm: tia nối mục tiêu 90–140ms; Focus Lock: reticle co 180–250ms; Gravity Knot: vòng hút 0.5–0.9s; Bounty: icon mục tiêu + xu; Breach: mảnh giáp vỡ; Toxic Bloom: vùng độc rõ ranh giới. Đây là biểu đạt hình ảnh, không tự ý đổi thông số gameplay đã chốt.
+- Summon: ô lóe 80ms → tia tụ 100ms → nhân vật rơi/scale 0.75→1.10→1 trong 220ms; tổng 300–400ms, không khóa thao tác quá lâu.
+- Merge: hai ô chớp 100ms, sprite bay về tâm 140ms, nổ ánh sáng 90ms, hiện tướng mới 180ms; tổng 400–550ms. Logic phải chốt kết quả trước khi phát animation; sao+1 hiển thị 350ms; tướng mới ngẫu nhiên theo luật hiện tại.
+- Upgrade theo loại: thẻ sáng 180ms, xung chạy qua các tướng cùng loại trong 300ms; nâng cấp không biến thành thêm sao.
+- Boss warning: 600ms báo hiệu ở mép đường, 400ms cổng mở, 400ms boss xuất hiện; 1.4s tổng; không che HUD/nút. Boss có silhouette lớn hơn quái thường 1.5–1.8 lần, thanh HP riêng và telegraph dễ đọc. Firewall: quét lửa/vùng cấm; Overclock: nhịp tăng tốc; Corruptor: ô/đường bị nhiễm; các cơ chế cụ thể giữ theo bản thiết kế đã chốt.
+- Giới hạn flash: không nhấp nháy toàn màn liên tục, tránh che tướng bằng bloom. Ưu tiên 60fps, cho phép giảm particle 50% ở chế độ Low FX.
+
+E. BỐ CỤC MÀN NGANG 844×390
+Chọn NGANG. Lý do: 5×3 ô + đường chạy bao quanh + 5 thẻ nâng cấp + leader đã phù hợp landscape; đổi dọc sẽ buộc viết lại điều khiển/camera, co nhỏ bàn và không cần thiết để học cảm giác DCDW. DCDW dùng dọc không có nghĩa demo phải dùng dọc.
+- Safe area: 12px trái/phải, 8px trên, 8px dưới; bổ sung CSS env(safe-area-inset-*) cho máy có notch. Dùng scale=min(W/844,H/390), letterbox nếu tỷ lệ khác, pointer mapping qua transform nghịch.
+- Bàn giữ x=250..594, y=66..270 (lưới 5×3); đường quái giữ theo hình học đã nêu: cạnh trái x=225, phải x=619, trên y=41, dưới y=295; cổng vào (30,295), Core (794,295). Đường rộng hiển thị 16–20px, tâm đường không đổi. Không đặt HUD lên đường quái.
+- Top-left x=16..205,y=10..58: wave/boss countdown/core HP thành 2 dòng gọn. Top-right x=650..830,y=10..52: hostile count, speed, pause.
+- Lưới trung tâm x=250..594,y=66..270; chỉ thêm viền ngoài tối mảnh; tăng contrast sprite bằng giảm nền khu vực bàn 35–50%.
+- Bottom-left x=14..190,y=326..380: mana hiện tại + mana/s; số mana có định dạng 99.3K, tránh số 99321 dài.
+- 5 thẻ upgrade x=205,280,355,430,505; mỗi thẻ 68×52 tại y=328; có chân dung/biểu tượng, LV, giá mana, trạng thái đủ tiền; cuộn/đổi nhóm nếu thật sự có 8 loại cùng lúc. KHÔNG cố nhét 8 thẻ 68px trong 300px.
+- Leader: nút tròn x=612..660,y=329..377 (48×48), cooldown/mana cost overlay. Chỉ bật nếu đã làm kỹ năng chủ động; không thêm UI rỗng.
+- Summon x=676..828,y=326..380 (152×54), giá mana lớn, trạng thái FULL rõ, nhấn giữ không tự triệu hồi liên tục trừ khi thiết kế cho phép.
+- Tránh chồng lấn: HUD trên và dưới không đè đường xung quanh lưới. Chuyển các mảng neon quá lớn thành panel tối mờ và đường sáng 1–2px. Hình nền phố giảm saturation 20–30%, blur 2–4px ở khu vực cạnh bàn (chỉ render nền tĩnh một lần).
+- Gameplay: random summon tiêu mana, merge đúng 2 tướng cùng loại cùng sao → ngẫu nhiên sao+1, nâng cấp loại bằng mana, wave/boss. Khi ô đầy, nút summon disabled, nhưng merge vẫn hoạt động. Cho phép kéo-thả với preview ô hợp lệ, highlight mục tiêu và thao tác hủy khi thả sai. Không thay đổi cơ chế đã thiết kế.
+- Tầm bắn: giữ hệ thống range theo bản gameplay đã chốt, không biến toàn bản đồ thành tầm vô hạn chỉ vì thêm animation. Nếu đang thử range 145–250px, hiển thị vòng tầm khi chọn tướng, kiểm tra khoảng cách từ tâm ô đến tâm quái, không tính tới Core.
+
+F. DANH MỤC ẢNH CẦN SẢN XUẤT — ƯU TIÊN VÀ PROMPT
+QUY ƯỚC PROMPT CHUNG (gắn trước mỗi prompt bên dưới):
+“Dùng ĐÚNG ảnh nhân vật gốc được đính kèm, giữ nguyên 100% khuôn mặt, tóc, trang phục, màu, vũ khí, silhouette; anime SD/chibi cyberpunk như style-reference, không redesign. PNG RGBA nền trong suốt, không chữ, không UI, không đế, không bóng, không VFX trừ khi yêu cầu; góc nhìn 3/4, full body, crisp clean 2D, mỗi frame cùng tỷ lệ, cùng baseline chân (64,114) trên canvas 128×128, không cắt vũ khí.”
+Tên file / kích thước / nội dung / prompt NGẮN (mỗi file là một lần tạo ảnh):
+
+P0 — làm ngay để thay thẻ bằng tướng sống:
+01. units/scorch_idle.png | 512×128 | 4 frame | “SCORCH thở, bình nhiên liệu và tóc rung nhẹ, chân đứng yên, 4 pose idle tuần hoàn.”
+02. units/frost_idle.png | 512×128 | 4 frame | “FROST thở, áo tóc đung đưa, trượng nhích nhẹ, 4 pose idle.”
+03. units/arc_idle.png | 512×128 | 4 frame | “ARC đứng canh, vũ khí điện chuyển động rất nhẹ, 4 pose idle.”
+04. units/lance_idle.png | 512×128 | 4 frame | “LANCE giữ súng ngắm, vai và tóc chuyển động nhẹ, 4 pose idle.”
+05. units/glitch_idle.png | 512×128 | 4 frame | “GLITCH đứng chờ, tay/thiết bị rung nhẹ, 4 pose idle.”
+06. units/bounty_idle.png | 512×128 | 4 frame | “Nhân vật BOUNTY đúng ảnh gốc, idle 4 pose nhẹ, giữ vũ khí nguyên bản.”
+07. units/breach_idle.png | 512×128 | 4 frame | “Nhân vật BREACH đúng ảnh gốc, idle 4 pose nhẹ, giữ vũ khí nguyên bản.”
+08. units/toxic_bloom_idle.png | 512×128 | 4 frame | “Nhân vật TOXIC BLOOM đúng ảnh gốc, idle 4 pose nhẹ, giữ vũ khí nguyên bản.”
+
+P1 — attack rõ ràng, đạn có lực:
+09. units/scorch_attack.png | 512×128 | 4 frame | “SCORCH chuẩn bị, hạ súng phun, giật khi bắn, hồi vị trí; không vẽ lửa.”
+10. units/frost_attack.png | 512×128 | 4 frame | “FROST đưa trượng ra trước, phóng phép, thu trượng; không vẽ băng.”
+11. units/arc_attack.png | 512×128 | 4 frame | “ARC kéo vũ khí, chém/phóng điện, follow-through, hồi; không vẽ tia.”
+12. units/lance_attack.png | 512×128 | 4 frame | “LANCE ngắm, bóp cò, súng giật mạnh, hạ súng; không vẽ đạn.”
+13. units/glitch_attack.png | 512×128 | 4 frame | “GLITCH tích lực ở tay, phóng xung, tay giật về, hồi; không VFX.”
+14. units/bounty_attack.png | 512×128 | 4 frame | “BOUNTY đúng thiết kế/vũ khí gốc, chuẩn bị, đánh/bắn, recoil, hồi.”
+15. units/breach_attack.png | 512×128 | 4 frame | “BREACH đúng thiết kế/vũ khí gốc, chuẩn bị, đánh xuyên giáp, recoil, hồi.”
+16. units/toxic_bloom_attack.png | 512×128 | 4 frame | “TOXIC BLOOM đúng thiết kế gốc, tung đòn độc, follow-through, hồi.”
+
+P2 — skill cast đặc trưng:
+17. units/scorch_skill.png | 512×256 | 6 frame | “SCORCH nâng bình/vòi, dồn áp lực, phun chiêu mạnh, hồi; 6 pose, không VFX.”
+18. units/frost_skill.png | 512×256 | 6 frame | “FROST giơ trượng, tập trung, giải phóng băng, hạ trượng; 6 pose, không VFX.”
+19. units/arc_skill.png | 512×256 | 6 frame | “ARC tích điện vào vũ khí, vung chiêu chuỗi, hồi; 6 pose, không VFX.”
+20. units/lance_skill.png | 512×256 | 6 frame | “LANCE khóa mục tiêu, ghì súng, bắn phát mạnh, hồi; 6 pose, không VFX.”
+21. units/glitch_skill.png | 512×256 | 6 frame | “GLITCH kéo hai tay tạo tâm trọng lực, phát chiêu, hồi; 6 pose, không VFX.”
+22. units/bounty_skill.png | 512×256 | 6 frame | “BOUNTY đúng ảnh gốc thực hiện kỹ năng đánh dấu thưởng, 6 pose, không VFX.”
+23. units/breach_skill.png | 512×256 | 6 frame | “BREACH đúng ảnh gốc thực hiện đòn phá giáp, 6 pose, không VFX.”
+24. units/toxic_bloom_skill.png | 512×256 | 6 frame | “TOXIC BLOOM đúng ảnh gốc kích hoạt nở độc, 6 pose, không VFX.”
+
+P2 — VFX sheet, không gộp vào tướng:
+25. fx/hit_sparks.png | 512×128 | 8 frame 64×128 (hoặc 4×2 ô 128×128) | “8 frame tia va chạm neon trắng/cyan, bùng rồi tan, alpha trong suốt.”
+26. fx/heat_trail.png | 512×128 | 4 frame 128×128 | “4 frame vệt nhiệt cam bám mặt đường, bùng rồi tàn, transparent.”
+27. fx/chill_meter.png | 256×128 | 4 frame 64×128 | “4 trạng thái vòng băng tích lạnh, rõ ở kích thước nhỏ, transparent.”
+28. fx/chain_lightning.png | 512×128 | 4 frame 128×128 | “4 tia sét vàng nối hai điểm, hình zigzag đổi nhịp, transparent.”
+29. fx/focus_lock.png | 512×128 | 4 frame 128×128 | “4 frame vòng ngắm hồng co dần, khóa tâm, transparent.”
+30. fx/gravity_knot.png | 512×128 | 4 frame 128×128 | “4 frame nút lực hút xanh-lục/tím xoáy vào tâm, transparent.”
+31. fx/bounty_mark.png | 256×128 | 4 frame 64×128 | “4 frame dấu mục tiêu tiền thưởng + biểu tượng xu, không chữ, transparent.”
+32. fx/breach_armor.png | 512×128 | 4 frame 128×128 | “4 frame mảnh giáp nứt và bắn ra, neon đỏ/cam, transparent.”
+33. fx/toxic_bloom.png | 512×128 | 4 frame 128×128 | “4 frame hoa khí độc neon mọc rồi lan, ranh giới dễ đọc, transparent.”
+34. fx/summon_portal.png | 512×128 | 4 frame 128×128 | “Cổng triệu hồi neon 4 giai đoạn mở/tụ/tỏa/tắt, nhìn từ góc 3/4, transparent.”
+35. fx/merge_burst.png | 512×128 | 4 frame 128×128 | “Hai luồng sáng nhập làm một, nổ sao nhỏ, rồi tắt, transparent.”
+36. fx/upgrade_pulse.png | 512×128 | 4 frame 128×128 | “Xung năng lượng nâng cấp dạng vòng mảnh, tỏa ra rồi tan, transparent.”
+37. fx/boss_portal.png | 768×192 | 4 frame 192×192 | “Cổng boss cyberpunk méo không gian, mở dần và rạn sáng, transparent.”
+
+P3 — boss (chỉ sau khi có ảnh thiết kế boss đã chốt):
+38. bosses/firewall_idle.png | 512×128 | 4 frame | “Boss FIREWALL đúng concept gốc, 4 pose idle uy hiếp, transparent.”
+39. bosses/firewall_attack.png | 512×256 | 6 frame | “FIREWALL báo đòn, quét, hồi, 6 pose, không vẽ VFX.”
+40. bosses/overclock_idle.png | 512×128 | 4 frame | “Boss OVERCLOCK đúng concept gốc, 4 pose idle cơ khí căng thẳng.”
+41. bosses/overclock_attack.png | 512×256 | 6 frame | “OVERCLOCK lấy đà, tăng tốc tấn công, hồi, 6 pose, không VFX.”
+42. bosses/corruptor_idle.png | 512×128 | 4 frame | “Boss CORRUPTOR đúng concept gốc, 4 pose idle biến dạng dữ liệu.”
+43. bosses/corruptor_attack.png | 512×256 | 6 frame | “CORRUPTOR tích nhiễm, tung chiêu, hồi, 6 pose, không VFX.”
+44. fx/boss_warning.png | 512×128 | 4 frame | “4 frame dấu cảnh báo nguy hiểm đỏ, không chữ, nền trong suốt.”
+45. fx/firewall_telegraph.png | 512×128 | 4 frame | “4 frame vùng quét lửa đỏ/cam với mép cảnh báo rõ, transparent.”
+46. fx/overclock_telegraph.png | 512×128 | 4 frame | “4 frame xung nhịp tăng tốc vàng/hồng, transparent.”
+47. fx/corruptor_telegraph.png | 512×128 | 4 frame | “4 frame ô nhiễm glitch tím/lục, ranh giới rõ, transparent.”
+
+P4 — hình nền/UI chỉ khi thật cần (ưu tiên vẽ bằng canvas):
+48. bg/city_dim.png | 844×390 | 1 ảnh | “Phố cyberpunk đêm mưa neon cyan-magenta, trung tâm tối, ít chi tiết, không nhân vật, không UI.”
+49. ui/leader_portrait.png | 128×128 | 1 ảnh | “Cận mặt tướng chỉ huy ĐÚNG concept được duyệt, cyberpunk chibi, nền trong suốt.”
+50. ui/core_icon.png | 128×128 | 1 ảnh | “Biểu tượng Core NEON GRID nguyên bản, khối năng lượng sci-fi, transparent.”
+51. ui/energy_icon.png | 64×64 | 1 ảnh | “Biểu tượng mana điện neon tối giản, đọc được ở 18px, transparent.”
+52. ui/rarity_symbols.png | 256×64 | 4 biểu tượng 64×64 | “Bốn biểu tượng cấp hiếm nguyên bản, hình học neon, không chữ, transparent.”
+53. ui/upgrade_icons.png | 512×128 | 8 icon 64×128 | “8 icon silhouette vũ khí/kỹ năng riêng của 8 tướng đã duyệt, không chữ, transparent.”
+54. ui/boss_hp_frame.png | 512×64 | 1 ảnh | “Khung thanh HP boss cyberpunk tối giản, không chữ, không nền, transparent.”
+55. ui/leader_skill_ring.png | 128×128 | 1 ảnh | “Vòng cooldown leader neon mảnh, không chữ, transparent.”
+Lưu ý: với sprite sheet VFX, định dạng khung ghi rõ trong tên/spec, không trộn kích thước frame. Tốt nhất vẽ một sheet mỗi lần, kiểm tra alpha/biên và xuất PNG; khi prompt dài hơn phải ghi rõ lưới, số frame, frame trống và cấm chữ.
+
+KHÔNG CẦN VẼ PNG: ô bàn, viền chọn, bóng ellipse, số sao, thanh máu, thanh mana, nút HUD cơ bản, damage number, đường quái, reticle cơ bản, đường đạn, hạt, rung camera, tia laser, xung tròn. Canvas code sắc nét hơn, nhẹ hơn và linh hoạt hơn.
+
+G. LỘ TRÌNH TỐI ƯU ĐỂ DEMO ĐẸP NHANH
+Bước 1 (0.5–1 ngày): bỏ khung thẻ neon; dùng PNG nhân vật hiện tại tách nền nếu đủ chất lượng; đặt 48–56px cao, bóng/đế; làm tối nền; giữ logic nguyên trạng. Tiêu chí: ở 100% zoom, phân biệt được 5 tướng trong 1 giây.
+Bước 2 (1–2 ngày): tạo 5 idle sheet tướng đang thấy trong ảnh, làm bob/nhún bằng code; cố định anchor. Tiêu chí: 15 ô có chuyển động không bị giật/nhảy chân.
+Bước 3 (1–2 ngày): làm attack cho SCORCH/FROST/LANCE trước, thêm projectile, muzzle flash, hit spark và damage number. Tiêu chí: người chơi nhìn biết ai bắn, bắn trúng ai.
+Bước 4 (1 ngày): summon/merge/upgrade bằng code + 2–3 FX sheet; kéo thả, merge preview và sao+1. Tiêu chí: hành động ghép rõ ràng trong dưới 0.6s, không mất input.
+Bước 5 (1–2 ngày): hoàn thiện attack ARC/GLITCH và 3 tướng còn lại; skill cast theo 8 cơ chế riêng. Tiêu chí: nhìn VFX phân biệt được tám kỹ năng mà không cần đọc chữ.
+Bước 6 (1–2 ngày): HUD mới theo tọa độ, leader có skill nếu sẵn gameplay, thanh HP boss và boss warning. Tiêu chí: không che đường quái, nút bấm dễ chạm (tối thiểu khoảng 44 CSS px ở thiết bị thực).
+Bước 7 (2–3 ngày): boss riêng + telegraph + hiệu ứng tấn công; âm thanh/nhạc và hit feedback. Tiêu chí: nhận ra boss trước khi đọc tên; có tín hiệu báo đòn đủ thời gian phản ứng.
+Bước 8 (0.5–1 ngày): tối ưu mobile: sprite atlas, cache nền tĩnh, object pool, DPR clamp 1–2, cull VFX ngoài màn, thử iPhone Safari/Android Chrome 30 phút. Mục tiêu 60fps, chấp nhận 30fps ổn định trên máy yếu; không để drop frame khi merge và boss cùng xuất hiện.
+
+QUY TẮC NGHIỆM THU VÀ PHẠM VI
+- Chưa vẽ lại toàn bộ 55 asset ngay: chỉ làm bước 1 + 3 sheet idle/attack mẫu (SCORCH, FROST, LANCE), test trong game trước khi nhân rộng.
+- 8 tướng có thiết kế riêng: tuyệt đối không dùng style-reference 3 người làm thay thế cho 8 file gốc; cần gửi ảnh từng tướng khi vẽ để đảm bảo đồng nhất.
+- Không tự đổi thông số Heat Trail/Chill Meter/Chain Rhythm/Focus Lock/Gravity Knot/Bounty/Breach/Toxic Bloom hoặc ba boss; tài liệu này chỉ định nghĩa phần trình bày và đề xuất timing hình ảnh.
+- Mốc chất lượng: tướng cao 48–56px, chân ổn định, 4 frame idle + 4 attack + 6 skill, phản hồi hit dưới 100ms, merge dưới 550ms, đường quái và HUD không bị che, ưu tiên dễ đọc hơn nhiều neon.
