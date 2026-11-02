@@ -1,0 +1,162 @@
+NEON GRID — ĐÁNH GIÁ BẢN CHƠI THỰC TẾ VÀ LỘ TRÌNH NÂNG CẤP
+Ngày đánh giá: 02/11/2026
+Nguồn đối chiếu: 2 ảnh NEON GRID (wave 1 và combat), ảnh Destiny Child: Defense War (DCDW) wave 41 đã gửi trước.
+Thiết kế mục tiêu: màn 390×844; 2 bàn 5×3; tướng top-down ~82°; ô 46px theo thông tin dự án.
+
+LƯU Ý VỀ ĐỘ TIN CẬY
+- Đây là đánh giá VISUAL từ ảnh tĩnh, KHÔNG phải kiểm thử trực tiếp URL hoặc kiểm tra mã nguồn. Không thể kết luận chắc về FPS, độ trễ, hitbox, hiệu ứng khi chuyển động, cân bằng game hoặc âm thanh.
+- DCDW trong ảnh tham chiếu là cảnh co-op wave 41, mật độ quân rất cao; NEON GRID là wave 1, ít quân. Không lấy khác biệt mật độ quân ở hai thời điểm làm lỗi đồ họa.
+- Các thông số dưới đây là giá trị ĐỀ XUẤT để thử nghiệm trên canvas logic 390×844, không phải số đo đã xác minh từ source code.
+
+I. CHẤM ĐIỂM SO VỚI DCDW
+Tổng quan: 6.8/10 về mức độ hoàn thiện khung gameplay/UX theo thể loại; 5.5/10 về cảm giác hình ảnh sống động, dày dặn như DCDW. Đây là điểm định tính, không phải phép đo khách quan.
+
+Hạng mục                                      Điểm /10    Nhận xét
+- Nhận diện thể loại merge tower defense         8.5       Hai bàn, lane, summon, thẻ và wave dễ nhận ra.
+- Bố cục chính                                   8.0       Phân tầng AI / PLAYER rõ; bàn đặt đúng ý đồ.
+- Hệ tướng và hướng nhìn                         8.0*      Có hệ thống nhiều hướng và animation theo mô tả; ảnh tĩnh không kiểm chứng số frame.
+- HUD / khả năng hiểu trạng thái                 6.5       Có wave, hostiles, boss, đội AI; chữ nhỏ và thiếu nhấn cấp bậc.
+- Kích thước/độ đọc tướng                        6.0       Tướng đang khá nhỏ khi nhìn toàn màn; dễ lẫn chi tiết.
+- Thẻ tướng và khu thao tác                      6.0       Có đủ chức năng nhưng card tối, chân dung và giá khó nhìn.
+- Nền / độ sâu / ánh sáng                        5.0       Nền tím neon hợp chủ đề nhưng hơi phẳng và trống.
+- Lane / quái / combat feedback                  4.5       Lane và quái cũ ít tương phản; đạn/va chạm còn nhẹ.
+- Độ thống nhất mỹ thuật                         5.5       Tướng mới cel-shaded có nguy cơ lệch với quái/VFX cũ.
+* Điểm dựa một phần trên mô tả hệ thống do bạn cung cấp, không xác nhận từ hai ảnh.
+
+II. ĐÃ GIỐNG / ĐÃ ĐẠT
+1. Cấu trúc hai phía rõ ràng: AI MIRROR trên, PLAYER dưới, mỗi bên một bàn và một lane bên trái; tương tự logic quan sát hai người chơi ở DCDW.
+2. Bàn dạng ô đều, nhân vật đặt trong ô và không phá bố cục; khung board neon có nhận diện NEON GRID riêng.
+3. HUD có WAVE, đếm HOSTILES, BOSS IN N WAVES, biểu tượng đội AI; luồng trận đấu có thông tin thiết yếu.
+4. Khu vực dưới có ENERGY, SUMMON, điều khiển tốc độ/tạm dừng, 5 thẻ và Leader; cơ chế điều khiển có thể hiểu ngay.
+5. Hai màu nhận diện xanh cyan cho AI và hồng magenta cho PLAYER tạo khác biệt tốt, không cần sao chép bảng màu DCDW.
+6. Việc đã triển khai nhiều hướng, idle và attack cho 8 tướng là bước tiến lớn so với sprite chỉ nhìn một hướng. Cần kiểm tra thực tế ở tốc độ game để đánh giá chuyển hướng.
+7. Trên màn dọc, các thành phần chính đều nằm trong vùng nhìn; không thấy hiện tượng UI tràn khung rõ rệt trong hai ảnh.
+
+III. ĐIỂM CÒN KHÁC / CẦN CẢI THIỆN
+A. BỐ CỤC VÀ TỶ LỆ
+- Hai board nằm cách nhau bằng một vùng nền lớn. Vùng giữa tạo khoảng thở nhưng cảm giác combat hai bên bị tách rời, không dồn nhịp như DCDW.
+- Dải điều khiển dưới và hàng thẻ chiếm nhiều chú ý, trong khi khu đánh nhau nhỏ; cân bằng thị giác chưa tốt.
+- Với ô 46px, board 5 cột sẽ rộng 230px (chưa tính viền); nên đo lại từ code vì ảnh cho cảm giác kích thước hiển thị có thể khác số logic. Tránh phóng tướng quá lớn làm chạm viền ô.
+
+B. TƯỚNG / Ô
+- Các tướng nhìn hơi bé ở kích thước xem thực tế, nhất là những tướng màu tối và có vũ khí nhỏ.
+- Một số nhân vật khó phân biệt ngay từ silhouette ở ảnh chụp toàn màn. DCDW đạt độ đọc cao nhờ silhouette, màu sáng và chuyển động rõ.
+- Không nên tăng tướng đồng loạt lên 40px trong ô 46px: dễ đè lên hàng xóm khi quay/đánh. Ưu tiên làm rõ hình ở 29–33px, kiểm tra vũ khí tràn ô riêng.
+
+C. LANE / QUÁI
+- Lane đen hẹp, viền đỏ mảnh, quái ở đầu lane nhỏ và tối. Điểm va chạm/tiến trình quái chưa nổi bật.
+- Quái cũ có phong cách khác tướng mới. Đặc biệt quái đi dọc lane phải nhìn được hướng đi, cấp nguy hiểm và trạng thái chịu đòn.
+- DCDW có các quái/đòn tấn công nổi bật ngay trong vùng chiến đấu; NEON GRID cần tăng tính nhận diện chứ không nhất thiết tăng kích thước lane quá nhiều.
+
+D. NỀN / BOARD
+- Nền tím dạng grid hiện hơi đơn điệu, khoảng trống giữa board thiếu chiều sâu.
+- Board tối với các đường chia ô mảnh; tướng tối có thể chìm vào nền. Cần nâng tương phản nội ô và tạo khung nổi tinh tế.
+- Phong cách hiện tại thiên neon sci-fi, không cần làm giống fantasy DCDW; mục tiêu là đạt cùng mức rõ ràng và phản hồi thị giác.
+
+E. HUD / CHỮ
+- WAVE 1 tương đối rõ nhưng HOSTILES và BOSS IN 9 WAVES nhỏ, thông tin trên cùng dày.
+- Các biểu tượng đội AI rất bé, khó đọc nhân vật/level. Cần phân cấp thông tin: wave lớn nhất; boss là cảnh báo thứ hai; hostiles vừa đủ.
+- Có thể làm rõ tương phản chữ trắng/xanh với nền, giảm viền mờ/ánh sáng loang quanh chữ nhỏ.
+
+F. THẺ / SUMMON
+- Thẻ tướng quá tối và chân dung chìm; tên, LV, giá nâng cấp khó nhìn ở màn 390px.
+- Nút SUMMON chưa đủ mạnh ở trạng thái có thể bấm; cần 3 trạng thái rõ: đủ tiền, thiếu tiền, đang nhấn.
+- Leader đang khóa hợp lý nhưng nên có trạng thái khoá dễ hiểu, không tranh tương phản với thẻ đang dùng.
+
+G. HIỆU ỨNG / COMBAT
+- Ảnh combat có vài vệt đạn cyan nhỏ, nhưng chưa cho cảm giác cú đánh trúng mục tiêu mạnh.
+- Cần phân biệt: đạn đang bay, trúng quái, quái mất máu, quái chết, summon, merge, lên cấp. DCDW tạo cảm giác nhộn nhịp bằng nhiều lớp phản hồi; tránh sao chép hiệu ứng quá rực làm rối màn.
+- Chỉ từ hai ảnh không thể chấm độ mượt animation, nhịp tấn công hoặc âm thanh.
+
+IV. VIỆC NÊN LÀM — XẾP THEO ƯU TIÊN
+Mỗi mục ghi rõ [CODE], [VẼ ẢNH] hoặc [CẢ HAI]. Ưu tiên P0 = cần trước; P1 = quan trọng; P2 = đánh bóng.
+
+P0.1 — CHỐT SCALE VÀ KIỂM TRA ĐỘ ĐỌC [CODE]
+- Giữ canvas logic 390×844; hiển thị CSS scale đồng nhất, không bóp tỷ lệ; dùng devicePixelRatio phù hợp và tránh nội suy quá mềm.
+- Với ô 46px: thử chiều cao nhân vật 31–33px (từ ~29px), tức ~67–72% cạnh ô; giữ tâm chân (anchor) nhất quán giữa hướng và animation.
+- Chừa vùng an toàn tối thiểu 3–4px quanh phần thân, cho phép vũ khí tràn có kiểm soát; không thay đổi hitbox khi sprite bob.
+- Tạo ảnh kiểm thử có 15 ô đầy quân, đủ 8 loại, đủ 8 hướng, xem ở 390px thực. Nếu vẫn khó phân biệt, chỉnh silhouette/contrast trước khi tăng kích thước tiếp.
+- Chỉ nâng scale nếu kiểm thử không gây chồng lấn. Không dùng zoom CSS cho từng frame để chữa sprite thiếu nhất quán.
+
+P0.2 — TĂNG ĐỘ ĐỌC THẺ TƯỚNG [CẢ HAI]
+[CODE] Đề xuất 5 thẻ ngang: mỗi thẻ rộng 49–53px, cao 86–94px; gap 4–5px; ô Leader rộng 56–60px nếu vừa vùng chứa. Kiểm tra tổng bề rộng thực, đừng cố áp dụng số nếu vượt 390px.
+[CODE] Tên tối thiểu 9–10px; LV và giá 10–11px; trạng thái nâng cấp có đủ tiền viền sáng, thiếu tiền giảm sáng nhưng chữ vẫn đọc được.
+[VẼ ẢNH] Vẽ lại 5 chân dung thẻ rõ silhouette, tương phản cao, không thêm chữ vào ảnh.
+Prompt: "Five separate hero card portraits for NEON GRID: SCORCH, FROST, LANCE, BROKER, ARC; faithful existing designs, expressive upper-body busts, distinct silhouettes, bold anime cel shading, thick clean outlines, crisp neon sci-fi palette, transparent background, no text, no UI frame, NOT pixel art."
+Ghi chú: Prompt này chỉ dùng nếu 5 thẻ thực sự là 5 tướng đó; nếu lineup khác, thay đúng tên/ảnh tham chiếu trước khi vẽ.
+
+P0.3 — LÀM LẠI QUÁI THƯỜNG [VẼ ẢNH + CODE]
+[VẼ ẢNH] Thiết kế 2–3 loại quái đầu game theo cùng độ dày viền/cel shading của tướng. Đọc rõ khi render cao 19–25px, nhìn từ high top-down 82°; nên có silhouette khác nhau.
+Prompt: "NEON GRID enemy model sheet, 3 distinct small cyber monsters, high top-down 82-degree camera, readable silhouettes at 22px, dark metal with bright red/orange weak-point accents, anime cel-shaded, thick clean outline, NOT pixel art, transparent background, no shadow, no text."
+[CODE] Thử quái thường cao 20–24px, elite 26–30px, boss 34–42px; lane phải đủ rộng để không cắt boss. Dùng HP bar tối thiểu 18–24px ngang, cao 3px cho quái thường, hiển thị khi chịu sát thương hoặc theo thiết kế.
+[CODE] Tránh scale quái bằng cách đổi hitbox tùy animation; đồng bộ vị trí tâm, đường đi, thanh máu.
+
+P0.4 — HIT FEEDBACK VÀ ĐỘ RÕ ĐÒN ĐÁNH [CẢ HAI]
+[VẼ ẢNH] Một atlas hiệu ứng va chạm nhỏ, 6–8 frame; chia theo loại sát thương (đạn thường, băng, lửa, điện), không dùng bóng dưới chân.
+Prompt: "Four compact cyber combat hit-effect sprite strips, 6 frames each: kinetic spark, frost burst, flame impact, electric crackle; top-down 82-degree game view, bold clean cel-shaded shapes, controlled bright colors, transparent background, no text, NOT pixel art."
+[CODE] Hit spark 80–140ms; quái nháy sáng 45–75ms; damage number tồn tại 0.45–0.65s, bay lên 8–14px; hit-stop 20–35ms chỉ cho đòn mạnh, không áp cho mọi đạn.
+[CODE] Giới hạn VFX cùng lúc (ví dụ 12–20 hiệu ứng nhỏ), tránh che tướng khi wave đông. Chỉ spawn hit VFX khi xác nhận va chạm, không tạo ảo giác trúng đích.
+
+P1.1 — BOARD VÀ LANE [CẢ HAI]
+[VẼ ẢNH] Một bộ tile/overlay board gồm nền ô, viền ngoài, góc sáng; một lane dọc riêng với vạch chuyển động tinh tế. Không gắn nhân vật vào ảnh nền.
+Prompt: "Modular NEON GRID sci-fi arena UI tiles: dark graphite 5x3 board cell surface, cyan and magenta edge trims, subtle metal seams, separate vertical enemy lane texture, restrained neon highlights, orthographic UI asset, clean cel-shaded finish, no characters, no text, NOT pixel art."
+[CODE] Board 5×3 ô 46px = 230×138px trước viền/gap; không được nhầm thành 230×?; cố định logic tọa độ theo tâm ô.
+[CODE] Thử nền ô #151A29 đến #222838, đường lưới alpha 0.18–0.30; viền board 1–2px, sáng ở góc; làm nổi tướng mà không lóa.
+[CODE] Lane rộng thử 31–36px; khoảng cách lane-board 8–12px; kiểm tra toàn bộ chiều ngang trên 390px trước khi tăng. Làm rõ điểm spawn, hướng di chuyển và vùng nguy hiểm cuối lane.
+
+P1.2 — GIẢM CẢM GIÁC TRỐNG Ở GIỮA [CODE]
+- Thử giảm khoảng cách giữa hai board 12–24px, hoặc giữ khoảng cách nhưng đặt dải nhịp trận đấu cực nhẹ (đường tín hiệu, divider) ở giữa.
+- KHÔNG thu hẹp vùng nhấn/tap hoặc để các nhãn AI/PLAYER đè board.
+- Kiểm tra trên máy màn ngắn: vùng HUD trên, board, nút và thẻ vẫn nằm trong safe area.
+
+P1.3 — PHÂN CẤP HUD [CODE]
+- Wave: số 18–20px, nhãn 9–10px; boss countdown 10–11px, hostiles 10–11px; các con số dùng tabular numerals.
+- Dùng 1 hàng thông tin chính và 1 hàng phụ hoặc cụm gọn; không tăng tất cả font cùng lúc.
+- AI loadout icon khoảng 20–24px nếu không vỡ bố cục; có viền level/tình trạng theo màu, nhưng đừng dùng quá nhiều glow.
+- Cảnh báo boss 2 wave cuối: chuyển màu/nhịp pulse chậm, không nhấp nháy liên tục.
+
+P1.4 — NÚT SUMMON VÀ PHẢN HỒI MERGE [CẢ HAI]
+[VẼ ẢNH] 6-frame summon pulse và 6-frame merge confirmation, nhỏ gọn, không chữ.
+Prompt: "NEON GRID UI animation sprites: 6-frame summon energy pulse and 6-frame merge confirmation, compact cyan-magenta geometric rings and sparks, clean anime cel shading, transparent background, no text, no characters, NOT pixel art."
+[CODE] Nút Summon rộng thử 90–104px, cao 48–54px; vùng bấm tối thiểu 44×44px. Trạng thái enabled/disabled/pressed rõ, giá luôn đọc được.
+[CODE] Sau summon: phản hồi 120–180ms; sau merge: 180–260ms; giữ hiệu ứng không che mục tiêu thao tác.
+
+P1.5 — BOSS / ELITE CÓ NHẬN DIỆN [VẼ ẢNH + CODE]
+[VẼ ẢNH] Boss riêng, không chỉ phóng to quái thường; có silhouette và điểm yếu rõ từ góc 82°.
+Prompt: "NEON GRID cyber boss character model sheet, heavy armored quadruped with glowing reactor core, high top-down 82-degree camera, strong silhouette readable at 40px, anime cel-shaded, thick clean outlines, consistent neon sci-fi colors, transparent background, no shadow, no text, NOT pixel art."
+[CODE] Boss HP bar rộng 42–56px, cao 4–5px; cảnh báo spawn 0.5–0.8s; kiểm tra lane không cắt sprite/hitbox.
+
+P2.1 — NỀN KHÔNG GIAN VÀ ÁNH SÁNG [VẼ ẢNH + CODE]
+[VẼ ẢNH] Nền dọc không chữ, không UI, tương phản thấp để gameplay nổi hơn.
+Prompt: "Vertical 390x844 seamless cyber arena background for NEON GRID, deep indigo and graphite, subtle circuitry and distant city-light traces, restrained cyan-magenta accents near edges, low-contrast empty center for gameplay, no board, no characters, no text, clean anime game art, NOT pixel art."
+[CODE] Dùng overlay tối alpha 0.25–0.45 nếu nền cạnh tranh với quân; tránh các đường sáng đi qua lane hoặc thẻ.
+
+P2.2 — ĐỒNG NHẤT 8 TƯỚNG VÀ FRAME [CODE + CHỈ VẼ BỔ SUNG NẾU CẦN]
+- Kiểm tra sprite S, SW, W, NW, N và lật gương cho hướng còn lại; kiểm tra GLITCH 3 hướng, WARP xoay code.
+- Kiểm tra anchor chân sai lệch tối đa 1px giữa frame; chiều cao thân sai lệch lý tưởng <=2px trừ động tác có chủ đích.
+- Kiểm tra mỗi attack: wind-up rõ, impact rõ, recovery rõ; nếu khác biệt frame quá nhỏ, chỉnh animation hoặc vẽ lại frame chính.
+- Đổi hướng bằng hysteresis khoảng 8–12° quanh ranh giới sector và cooldown 70–120ms; không đổi hướng khi mục tiêu dao động rất nhỏ.
+- Mỗi frame chỉ lấy một mục tiêu ưu tiên: mục tiêu đang bắn còn sống > mục tiêu gần đích > mục tiêu gần nhất (điều chỉnh theo gameplay). Không giật hướng theo mỗi viên đạn.
+
+P2.3 — CHUYỂN ĐỘNG NHỎ / ÂM THANH / POLISH [CODE]
+- Lane flow tốc độ nhẹ 8–16px/s, alpha thấp; HP giảm có tween 80–120ms.
+- Âm thanh riêng cho summon, merge, hit, boss; giới hạn âm lượng/voice concurrency.
+- Kiểm tra ở 30/60 FPS, máy Android trung bình, wave đông, thao tác kéo thả; đo frame time thay vì chỉ nhìn ảnh.
+
+V. THỨ TỰ TRIỂN KHAI ĐỀ XUẤT (KHÔNG LÀM LẠI TOÀN BỘ CÙNG LÚC)
+Sprint 1 — 1) Scale/độ đọc tướng; 2) Thẻ; 3) Quái thường; 4) hit feedback.
+Sprint 2 — 5) Board/lane; 6) bố cục khoảng giữa; 7) HUD; 8) Summon/merge.
+Sprint 3 — 9) Boss/elite; 10) nền; 11) kiểm tra tất cả animation và tối ưu hiệu năng.
+
+VI. TIÊU CHÍ NGHIỆM THU TRÊN 390×844
+[ ] Nhìn toàn màn 1 giây nhận ra board AI, board người chơi, lane quái và nút Summon.
+[ ] Phân biệt ít nhất 6/8 tướng chỉ qua silhouette/màu ở kích thước thật, không cần zoom.
+[ ] Tên/LV/giá của 5 thẻ đọc được trên điện thoại; trạng thái đủ/thiếu tiền rõ.
+[ ] Quái thường, elite, boss khác nhau về silhouette và mức nguy hiểm.
+[ ] Đòn trúng tạo phản hồi trong 1–2 frame render và không che quân.
+[ ] Các frame quay hướng không làm nhảy chân; không lật sai chi tiết bất đối xứng quan trọng.
+[ ] Không cắt hình boss, không che HP, không tràn UI tại safe area.
+[ ] Thử cảnh đầu game, giữa game và wave đông trước khi kết luận giống DCDW.
+
+KẾT LUẬN
+NEON GRID đã có khung gameplay tương đối rõ và hệ tướng là lợi thế. Khoảng cách lớn nhất với cảm giác DCDW hiện không phải thiếu thêm hướng quay, mà là ĐỘ ĐỌC Ở KÍCH THƯỚC THẬT, SỰ THỐNG NHẤT QUÁI/TƯỚNG, và PHẢN HỒI KHI ĐÁNH TRÚNG. Nên ưu tiên 4 mục P0 trước khi vẽ lại toàn bộ nền hoặc thay đổi bố cục lớn. Giữ nhận diện cyber neon riêng, không sao chép trực tiếp tài sản DCDW.
