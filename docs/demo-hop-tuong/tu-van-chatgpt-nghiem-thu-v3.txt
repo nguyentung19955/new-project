@@ -1,0 +1,66 @@
+NEON GRID — BIÊN BẢN NGHIỆM THU MOCKUP V3 (BƯỚC A–C)
+So sánh với ảnh gameplay Destiny Child: Defense War (DCDW)
+Ngày: 02/11/2026
+
+KẾT LUẬN: CHƯA ĐẠT ĐỂ SẢN XUẤT HÀNG LOẠT 8 TƯỚNG.
+Đạt định hướng bố cục và phép chiếu high top-down của bàn; chưa khóa được master nhân vật và ngôn ngữ đồ họa tile. Phải sửa rồi thử lại với 1 tướng trước.
+
+0. PHẠM VI VÀ ĐỘ TIN CẬY
+- Mockup người dùng: 1568×778; hình bàn được phóng lên để kiểm tra, không phải kích thước hiển thị cuối trên điện thoại.
+- Ảnh DCDW: ảnh chụp video YouTube 1568×733, gameplay dọc nằm giữa; video bị thu nhỏ, khó đo chính xác pixel và góc camera.
+- Các góc, tỷ lệ DCDW bên dưới là ƯỚC LƯỢNG THỊ GIÁC, không phải dữ liệu engine hay đo phối cảnh từ mesh 3D.
+- Không thể khẳng định góc chính xác 75° từ một screenshot 2D. Chọn 78–85° tính từ mặt sàn làm góc thiết kế thử nghiệm (90° = thẳng xuống), ưu tiên hình chiếu thực tế hơn con số góc.
+
+1. ĐỐI CHIẾU GÓC NHÌN
+DCDW: mặt bàn phẳng, các cạnh ô gần ngang/dọc theo màn; tướng SD chibi chủ yếu đọc qua mảng tóc/đỉnh đầu, vai, vũ khí và hiệu ứng. Khuôn mặt nhỏ, chân bị che hoặc thu ngắn đáng kể. Các nhân vật không nhất thiết đều có cùng hướng đầu chính xác, nhưng nhìn chung không trình bày như nhân vật đứng thẳng để khoe mặt.
+Mockup: tile phẳng là đúng; SCORCH vẫn lộ khá rõ kính, mắt, mặt, áo ngực, hai chân và phần súng; dáng có cảm giác chibi nhìn từ trên cao nhưng còn giống hình nhân vật trưng bày thu nhỏ. Đây không phải lỗi nghiêng ô 30° như V2, mà là lỗi góc cơ thể/độ rút ngắn phối cảnh của nhân vật.
+SỬA: dựng lại master với camera orthographic 80° so với mặt sàn (cho phép thử 78°, 82°, 85°), hướng trục thân về mép dưới màn; mặt cúi xuống, đỉnh tóc và vai chiếm phần lớn silhouette. Giảm vùng mặt nhìn thấy còn khoảng 10–18% tổng diện tích hình chiếu nhân vật; giảm phần chân còn 8–14% chiều cao sprite hiển thị. Đừng xoay hoặc bóp méo ảnh master cũ bằng Canvas.
+
+2. KÍCH THƯỚC VÀ TỶ LỆ
+Hiện tại: 30 px cao trong ô 46 px = 65,2% chiều cao ô. Đây là tỷ lệ KHÔNG SAI nghiêm trọng; không cần tăng kích thước hàng loạt. Tuy nhiên tóc trắng và khối cam khá nhiều chi tiết, dễ làm ô chật khi thêm sao, projectile và VFX.
+Đề xuất kiểm tra ở 3 mức: 27 px (58,7%), 29 px (63,0%), 30 px (65,2%) trong ô 46 px. Chốt mặc định 29 px; riêng drone có thể 24–29 px tùy silhouette. Giữ độ rộng bóng/nhân vật khoảng 55–72% cạnh ô; súng có thể vượt silhouette thân nhưng không đè sang tâm ô kế bên ở idle.
+Với tướng người, đỉnh tóc/đầu nhìn từ trên nên chiếm khoảng 48–58% chiều cao hình chiếu; vai và tay 25–35%; chân/giày còn 8–14% (các vùng có thể chồng lấn, không cộng thành 100% diện tích). Đầu không nhất thiết chiếm 50% chiều cao cơ thể trong không gian 3D; đây là tỷ lệ hình chiếu 2D dùng để kiểm soát độ đọc ở cỡ nhỏ.
+
+3. TILE VÀ MÀU SẮC
+Mockup: 15 tile trông như 15 thẻ trang trí riêng, mỗi tile có 4 góc vát, viền cyan/magenta, ốc vít và nhiều đường nét. Khi xếp lại, mép tile tạo thành lưới viền đôi sáng và làm nền cạnh tranh với tướng.
+DCDW: vùng bàn tối, ô phân chia tương đối kín đáo; tướng, nhãn sao và VFX là điểm nhấn. Không thấy từng ô như một card neon độc lập.
+SỬA: tile top-down phẳng 100%, không thành 3D, không bevel dày. Bề mặt graphite #20232C–#292D37; tâm #20232C; đường chia #383D48 hoặc tương đương, alpha 0,35–0,55. Chỉ 1 đường chia 1 px logic giữa hai ô; tránh vẽ 2 viền đối nhau. Ốc vít 1–2 px tại góc, tương phản thấp; cyan nhấn rất ít (alpha 0,08–0,18), không magenta ở mọi góc. Tile thường không cần cả 4 góc đều phát sáng. Nếu giữ 46 px/ô, dùng một ảnh tile nền 46×46 hoặc 92×92 nguồn @2x; có thể để code vẽ grid line để bảo đảm liền mạch.
+
+4. KHOẢNG CÁCH Ô VÀ KHUNG BÀN
+Mockup: có khoảng đen nhìn rõ giữa tile, mỗi ô như tấm rời; khung ngoài magenta dày, sáng và cách các ô khá xa. Ảnh DCDW trông là một mặt bàn thống nhất với đường ranh ô kín đáo.
+SỬA: khoảng cách ô mục tiêu 0–2 px logic, ưu tiên 1 px. Với 5×3 ô 46 px: chiều ngang nội dung 5×46 + 4×1 = 234 px; chiều cao 3×46 + 2×1 = 140 px. Khung ngoài có padding 5–7 px mỗi bên -> kích thước xấp xỉ 246–248 × 152–154 px. Không dùng đường viền neon magenta dày quanh toàn bộ bảng; đường viền graphite 2–3 px, nhấn magenta cục bộ ở góc, độ sáng giảm khoảng 40–60% so với mockup.
+Ghi chú: các số trên là kích thước triển khai NEON GRID đề xuất, không phải phép đo chính xác từ DCDW.
+
+5. BÓNG ĐỔ
+Mockup có bóng ellipse do code: đúng hướng, không cần vẽ bóng trong PNG nhân vật. Đề xuất ellipse 14–18 px rộng × 4–6 px cao khi ô 46 px, màu #07090F alpha 0,22–0,35; tâm bóng nằm ở vị trí tiếp xúc sàn, lệch xuống 1–2 px so với pivot. Drone: bóng mờ hơn alpha 0,12–0,22 và hơi lớn hơn tùy độ cao hover. Không dùng bóng đen tròn sắc cạnh hoặc đổ dài như ánh sáng xiên.
+
+6. NHÃN SAO / CẤP VÀ HIỆU ỨNG
+Ảnh DCDW có nhãn sao nhỏ ngay phía trên mỗi tướng, dễ đọc nhưng không lấn chiếm hình nhân vật. Mockup chưa có nhãn này nên chưa đủ để nghiệm thu khả năng đọc khi đông tướng.
+Thử nhãn sao cao 7–10 px logic, cách phần cao nhất của sprite 1–3 px, nền tối alpha 0,65–0,8, sao vàng nhỏ; đảm bảo không che hàng trên. Ở 46 px/ô, có thể dùng 1–3 sao hoặc số cấp rút gọn thay vì biểu tượng lớn. Kiểm tra với 15 ô đầy tướng.
+VFX tấn công nhìn từ trên: vòng tròn/ellipse phẳng trên mặt sàn, đốm lửa, xung điện lan trên ô, đường đạn chạy theo tọa độ X-Y, bóng contact; không vẽ cung chém như mặt phẳng đứng hoặc đường đạn bay theo phối cảnh ngang. Tách VFX khỏi sprite để giữ độ đọc.
+
+7. PROMPT VẼ LẠI MASTER SCORCH (ƯU TIÊN 1)
+"NEON GRID SCORCH, preserve exact identity: white spiky hair, orange goggles on crown, charcoal armor, oversized orange flamethrower gauntlet, orange fuel canisters. Tiny chibi battle-board unit, STRICT HIGH TOP-DOWN orthographic camera 82 degrees above floor, nearly overhead, body facing screen-bottom. Dominant crown of hair and shoulders; only a small sliver of face visible; torso and boots strongly foreshortened. Compact readable silhouette at 29 px, thick clean dark outline, cyberpunk anime cel shading, one centered full character, true transparent square PNG, no ground, no shadow, no VFX, no text. NOT front view, NOT 30-degree 3/4 view."
+Nên thử riêng 82° và 85°; chọn theo cách hình hiển thị trên bàn, không chọn theo ảnh master phóng lớn.
+
+8. PROMPT VẼ LẠI TILE_NORMAL (ƯU TIÊN 2)
+"Single seamless dark metal battle-board tile, STRICT FLAT ORTHOGRAPHIC TOP-DOWN, square 1:1. Matte graphite center #222630, subtle worn seams, very thin low-contrast graphite border, tiny dim screws, barely visible cyan accent at one corner only. Designed to repeat tightly in a 5x3 grid with 1 px gap, no thick bevel, no raised 3D sides, no neon card frame, no magenta rim, no characters, no text, true transparent PNG outside tile silhouette."
+Nếu tile cũ đã dùng được sau khi code giảm sáng/viền, có thể thử chỉnh trực tiếp asset; nhưng không nên chỉ đổi opacity toàn ảnh vì sẽ làm cả mặt ô quá trong.
+
+9. BÀI KIỂM TRA NGHIỆM THU LẠI
+A. Hiển thị ở kích thước thật 390×844 trên điện thoại, không chỉ ảnh phóng 3 lần.
+B. Tạo 3 biến thể SCORCH 78°/82°/85°; đặt xen kẽ trong 15 ô, với kích thước 27/29/30 px.
+C. So sánh hai tile: tile cũ và tile giảm viền, khoảng cách 1 px, khung tối.
+D. Bật nhãn sao, 5–10 quái ngoài lane, số sát thương và VFX nhẹ; kiểm tra độ đọc khi chuyển động.
+E. Thử nền arena tối phía dưới, xem tile có hòa vào nền mà không biến mất hay không.
+F. Kiểm tra silhouette ở 100% zoom và chụp màn hình trên điện thoại thật.
+
+10. NGƯỠNG CHỐT P0
+- Camera bàn: flat top-down, không có cạnh dày hay méo phối cảnh: ĐẠT.
+- Camera nhân vật: đỉnh đầu và vai là tín hiệu thị giác chính, mặt chỉ là vùng nhỏ: CHƯA ĐẠT hoàn toàn.
+- Tỷ lệ kích thước: 30/46 dùng được nhưng cần test 29/46: ĐẠT CÓ ĐIỀU KIỆN.
+- Tile, viền, khoảng cách, khung: CHƯA ĐẠT.
+- Bóng: ĐẠT VỀ PHƯƠNG PHÁP, cần chỉnh độ mờ.
+- Nhãn sao và gameplay đầy đủ: CHƯA ĐƯỢC KIỂM TRA.
+
+QUYẾT ĐỊNH: KHÔNG sản xuất 8 tướng ngay. Vẽ/chỉnh lại 1 master SCORCH + tile; dựng một mockup 5×3 có sao và VFX; nghiệm thu xong mới nhân rộng sang 7 tướng còn lại và các sprite sheet idle/attack. Mục tiêu là giống DCDW ở tính đọc và tổ chức không gian, không sao chép trực tiếp tài sản nghệ thuật.

@@ -1,0 +1,68 @@
+NEON GRID — BIÊN BẢN NGHIỆM THU V3B
+Ngày: 02/11/2026
+Đối tượng: mockup_v3b.png, bàn 5×3 và master SCORCH high top-down.
+
+KẾT LUẬN: ĐẠT ĐIỀU KIỆN BẮT ĐẦU SẢN XUẤT 8 TƯỚNG.
+Đây là nghiệm thu hình ảnh tĩnh / quy chuẩn master, KHÔNG phải nghiệm thu animation hay khẳng định camera gốc DCDW chính xác 82°. Góc 82° là thông số hướng dẫn mỹ thuật.
+
+1. SO SÁNH VỚI DCDW
+- Bố cục 5 cột × 3 hàng: ĐẠT. Tướng đứng nhỏ trong ô, nhìn gần thẳng từ trên xuống, đỉnh đầu/vai nổi bật.
+- SCORCH cao 29 px trong ô 46 px: tỷ lệ 63,0% chiều cao ô, hợp lý. Khóa dải thông thường 27–32 px/46 px; đơn vị đặc biệt có thể rộng hơn nhưng không vượt biên ô.
+- Tile mới: tối, phẳng, không còn viền magenta dày từng ô. Khoảng cách 1 px tạo bàn liền mạch: ĐẠT.
+- Khung graphite: ĐẠT, không tranh sự chú ý với tướng.
+- Bóng ellipse 16×5 px alpha thấp: ĐẠT. Dùng đen alpha 0,15–0,22, tâm dưới chân khoảng 0–2 px, không đổ bóng dài.
+- Nhãn sao tối với sao vàng: ĐẠT về cách đọc. Dùng nhãn khoảng 18–24×10–12 px cho 1–2 sao, neo ở đỉnh ô; không để nhãn che tóc hoặc chồng hàng phía trên.
+- Khác biệt còn lại với DCDW: mockup hiện chỉ có SCORCH, thiếu sự đa dạng silhouette, animation, lane quái, số sát thương, HUD, VFX. Đây không phải lỗi cản trở nghiệm thu master/tile.
+
+2. QUY CHUẨN KHÓA CHO TOÀN BỘ TƯỚNG
+Camera: STRICT HIGH TOP-DOWN ORTHOGRAPHIC, khoảng 82° ABOVE FLOOR (8° lệch khỏi phương thẳng đứng), nhìn gần như thẳng xuống. Hướng cơ thể về screen-bottom. Ưu tiên thấy crown/top of head, vai, vật gắn lưng; mặt chỉ một dải nhỏ, chân rút ngắn rõ. Không dùng front view, camera 30° hoặc 3/4 nhìn ngang.
+Sprite: master vuông RGBA trong suốt thật; một nhân vật đầy đủ, không bóng, không nền, không text, không VFX. Cùng hệ nét viền đậm và cel shading. Khóa tâm hình, trục dọc, độ lớn hiển thị, hướng mặt.
+Hiển thị: ô 46×46 logic px, tướng chuẩn cao 29 px, dải 27–32 px. Vũ khí có thể tăng chiều rộng silhouette nhưng nên nằm trong 40 px. Đặt điểm neo theo vị trí chân / tâm bóng, không theo mép bounding box.
+Tương phản: ô tối và trầm; màu riêng từng tướng rõ ở cỡ 29 px. Đọc được bằng silhouette và một điểm nhấn màu chính.
+
+3. NHỮNG CHỈNH SỬA NHỎ KHÔNG BẮT BUỘC
+- Kiểm tra ở kích thước 390×844 trên điện thoại thật, không chỉ xem ảnh phóng 3×.
+- Nhãn 2 sao phải đủ rõ; khi 3 sao trở lên dùng dải hoặc biểu tượng sao + số để tránh chiếm chiều ngang ô.
+- Không để VFX sáng che nhân vật hoặc khiến nền tối thành một khối sáng liên tục.
+- Chạy thử các sprite mới ở 29 px để so sánh trực tiếp với SCORCH trước khi duyệt.
+
+4. PROMPT MASTER CHO 7 TƯỚNG CÒN LẠI
+Dùng tiền tố chung cho tất cả:
+“NEON GRID cyberpunk anime chibi battle-board unit, STRICT HIGH TOP-DOWN ORTHOGRAPHIC camera 82 degrees above floor, nearly overhead, facing screen-bottom; dominant top surfaces/head/shoulders, face barely visible, torso and feet strongly foreshortened, compact readable silhouette at 29px tall, thick clean dark outline, crisp cel shading, one centered complete unit, square true transparent PNG, no ground, no shadow, no base, no VFX, no text; NOT front view, NOT low-angle 3/4.”
+
+FROST MASTER:
+“FROST, pale icy-blue hair tied back, dark winter-tech coat with white fur trim, cyan-blue snowflake ornaments, glowing crystalline ice staff. Preserve the established character identity and colors; staff seen foreshortened from overhead, head crown and shoulders dominant.”
+
+ARC MASTER:
+“ARC, compact sword robot with rounded charcoal armor, yellow #FFE24A glowing trim, horizontal yellow visor, sturdy short legs and a large electric katana. Overhead view emphasizes helmet, shoulder plates and katana silhouette, not front chest.”
+
+LANCE MASTER:
+“LANCE, magenta-accented cyberpunk sniper with long pink hair, dark tactical coat, visor/goggles and oversized magenta-lit railgun. Railgun points diagonally toward screen-bottom-left, strong top-of-head and top-of-weapon readability.”
+
+WARP MASTER:
+“WARP, hovering dark-metal void portal drone, circular violet energy ring with small rotating nodes, bright violet central eye-lens, compact mechanical arms/fins. Seen nearly straight from above; ring and lens form a clear readable top silhouette, no legs.”
+
+BROKER MASTER:
+“BROKER, elegant cyberpunk trader with neat hair bun, visor, navy suit and compact glowing holographic market tablet. Overhead view shows hair bun, shoulders and tablet top surface, face barely visible; businesslike small chibi silhouette.”
+
+GLITCH MASTER:
+“GLITCH, cute hacker bot with boxy retro CRT monitor head showing simple mint-green #00FFA3 pixel face, dark green small robot body, flexible cable arms with plug hands, tiny keyboard strapped to chest. Top of CRT and shoulders dominant, monitor face visible only as narrow tilted front sliver.”
+
+VENOM MASTER:
+“VENOM, four-legged poison cyber-beast, small robotic lizard-hound with dark olive armor plates, glowing lime #B4FF2A toxin tank on back, nozzle snout, luminous lime eyes and short tail. Nearly overhead, top of back and toxin tank dominant, four legs readable around body.”
+
+5. QUY TRÌNH SẢN XUẤT
+A. Khóa SCORCH hiện tại làm mốc kích thước/góc/outline.
+B. Vẽ từng master 7 tướng, thử ở 29 px trên cùng tile 46 px. Chỉ duyệt khi không có tướng nhìn ngang hoặc thấy quá nhiều mặt.
+C. Với từng master đã duyệt: idle 8 frames, full-body redraw, nhịp 8–10 FPS; biến đổi nhỏ 1–2 px, không trôi điểm neo.
+D. Attack 12 frames, 12–16 FPS: 1–3 chuẩn bị, 4–6 ra đòn, 7–12 hồi phục. Drone/bot/thú máy dùng hành động riêng theo hình thể; không ép thành động tác người.
+E. Các sheet dùng khung bằng nhau, tách frame dễ dàng, PNG RGBA thật, không cắt cụt tóc/vũ khí, không đổ bóng/VFX trong sprite nhân vật.
+F. Kiểm tra nhấp nháy hình, trôi chân, đổi tỷ lệ đầu, đổi vũ khí và biến dạng danh tính giữa các frame. Nếu lỗi, sửa trước khi làm tướng tiếp theo.
+
+6. CỔNG NGHIỆM THU ANIMATION
+- Idle: frame đầu và cuối nối mượt, không giật; giữ anchor trong ±1 px.
+- Attack: đọc được ba pha chuẩn bị/đòn/hồi; vũ khí nhất quán, không mọc/mất chi tiết.
+- Chạy thật ở 60 Hz, phát sheet theo thời gian, không gắn mỗi frame animation vào mỗi tick logic.
+- Kiểm tra cả khi 15 ô đầy tướng, có quái và số sát thương; nếu rối, giảm VFX chứ không tăng độ sáng tile.
+
+QUYẾT ĐỊNH CUỐI: ĐẠT để sản xuất master 7 tướng còn lại và tiếp tục idle/attack theo từng tướng. Chưa xác nhận các sheet động cho đến khi playtest.

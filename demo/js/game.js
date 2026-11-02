@@ -169,12 +169,12 @@
   }
   function bayDan(S, x, y, q, dmg, v, mau, spd, them) { S.dan.push(Object.assign({ x, y, q, dmg, v, mau, id: v.id, spd, x0: x, y0: y }, them || {})); }
   // điểm phát đạn (muzzle) theo ô: chân ở đáy-giữa ô, tip [x,y] cũ (khung 64, chân y≈57) quy đổi sang hình ~52px
-  const nong = (S, i, v) => { const [ox, oy] = oXY(S, i), tp = T[v.id].tip || [32, 32]; return [ox + C.O / 2 + (tp[0] - 32) * 0.45, oy + C.OH - 4 + (tp[1] - 57) * 0.55]; };
-  // chỉ chọn mục tiêu trong tầm bắn (đo từ tâm ô tới tâm quái, tầm × K); không có ai trong tầm thì chờ
+  // v3 top-down: tướng cao 29px, chân cách đáy ô 10px → nòng ở giữa thân, lệch ngang nhẹ theo tip cũ
+  const nong = (S, i, v) => { const [ox, oy] = oXY(S, i), tp = T[v.id].tip || [32, 32]; return [ox + C.O / 2 + (tp[0] - 32) * 0.3, oy + C.OH - 10 - 14 + (tp[1] - 38) * 0.15]; };
+  // như Defense War: mọi tướng trên bàn bắn được mọi quái trên làn của CHÍNH bàn đó (S.quai chỉ chứa quái làn này) — không giới hạn tầm;
+  // vẫn chọn mục tiêu theo kiểu từng tướng (bên dưới). Không có quái thì chờ.
   function chonMuc(S, i, v) {
-    const td = T[v.id];
-    const [cx, cy] = oTam(S, i), tam = (td.tam || 9999) * C.TL_TAM;
-    const DS = S.quai.filter((o) => nham(o) && Math.hypot(o.x - cx, o.y - o.co / 2 - cy) <= tam);
+    const DS = S.quai.filter(nham);
     let q = null;
     if (v.id === 'scorch' || v.id === 'frost') { for (const o of DS) if (!q || o.d > q.d) q = o; }
     else if (v.id === 'arc' || v.id === 'warp') { let bn = -1; for (const o of DS) { const n = ganNhau(S, o, 60 * K); if (n > bn || (n === bn && o.d > q.d)) { q = o; bn = n; } } }

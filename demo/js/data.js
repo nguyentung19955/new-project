@@ -49,7 +49,7 @@ const CAU_HINH = {
   W: 390, H: 844, COT: 5, HANG: 3, O: 46, OH: 45, KHE: 2, BUOC_X: 48, BUOC_Y: 143 / 3,
   BAN_X: 111, BAN_W: 250, BAN_H: 153, VIEN: 5, BAN_AI_Y: 105, BAN_NG_Y: 390,
   LAN_AI: [[67, 92], [67, 273]], LAN_NG: [[67, 374], [67, 562]], LAN_X0: 42, LAN_X1: 92,
-  TL_TAM: 48 / 70,      // hệ số tầm bắn (đổi 1 dòng này nếu muốn tướng cột phải với tới làn trái)
+  TL_TAM: 48 / 70,      // (không còn giới hạn chọn mục tiêu: tướng bắn được cả làn của bàn mình — xem chonMuc trong game.js)
   TL: 48 / 70,          // tỉ lệ thu nhỏ không gian: bước ô 48 (mới) / 70 (bản ngang cũ) — nhân tầm bắn + bán kính vùng hiệu ứng
   TAC_DONG: 6 / 14,     // giây từ đầu hoạt ảnh attack (12 khung @14fps) tới khung tác động ~6: lúc đạn/đòn phát ra
   DAI_CU: 1272,         // chiều dài đường quái bản ngang cũ (px) — tốc độ quái nhân (dài làn mới / DAI_CU) để thời gian đi hết làn như cũ
