@@ -8,10 +8,16 @@ const CH = {apiKey:'gia', authDomain:'gia', projectId:'gia', appId:'gia', sdk:SD
 
 // ---- "máy chủ" giả ----
 const MC = {docs:{}, google:{}, so:0, ghi:0, doc:0};
+const P = a => a.join('/');
 function xuLy(op, a){
   if (op === 'anon'){ return {uid:'u' + (++MC.so), providerData:[]}; }
-  if (op === 'get'){ MC.doc++; const d = MC.docs[a.uid]; return d ? JSON.parse(JSON.stringify(d)) : null; }
-  if (op === 'set'){ MC.ghi++; const d = MC.docs[a.uid] || (MC.docs[a.uid] = {}); for (const [k, v] of Object.entries(a.d)){ if (v && typeof v === 'object' && !Array.isArray(v) && (k === 'khoa' || k === 'saoLuu')) d[k] = Object.assign(d[k] || {}, v); else d[k] = v; } return true; }
+  if (op === 'get'){ MC.doc++; const d = MC.docs[P(a.p)]; return d ? JSON.parse(JSON.stringify(d)) : null; }
+  if (op === 'tx'){ // a.w: [{p, d}] – kiểm như firestore.rules (revision tăng đúng 1, đúng chủ)
+    for (const w of a.w){ const cu = MC.docs[P(w.p)]; if (w.p[1] !== a.uid) return {loi:'permission-denied'};
+      if (w.p.length === 4 && w.d.revision !== (cu ? cu.revision : 0) + 1) return {loi:'permission-denied'};
+      if (w.p.length === 2 && cu) return {loi:'permission-denied'}; }
+    for (const w of a.w){ MC.ghi++; MC.docs[P(w.p)] = w.d; } return {};
+  }
   if (op === 'link'){ const cu = MC.google[a.gid]; if (cu && cu !== a.uid) return {loi:'auth/credential-already-in-use'}; MC.google[a.gid] = a.uid; return {uid:a.uid, providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
   if (op === 'cred'){ return {uid:MC.google[a.gid], providerData:[{providerId:'google.com', email:a.gid + '@gmail.com', displayName:a.gid}]}; }
 }
@@ -29,6 +35,7 @@ const gid = () => window.__googleGia || 'nguoichoi';
 export async function linkWithPopup(u, p){ const r = await may('link', {uid:u.uid, gid:gid()}); if (r.loi){ const e = new Error(r.loi); e.code = r.loi; e.customData = {gid:gid()}; throw e; } window.__authGia.currentUser = r; giu(r); return {user:r}; }
 export async function signInWithPopup(auth, p){ return linkWithPopup(await signInAnonymously(auth).then(x => x.user), p); }
 export async function signInWithCredential(auth, c){ const u = await may('cred', c); auth.currentUser = u; window.__authGia = auth; giu(u); return {user:u}; }
+export async function getRedirectResult(){ return null; }
 export async function signOut(auth){ auth.currentUser = null; sessionStorage.removeItem('gia-user'); }
 const _g = getAuth; export { _g as _getAuth };
 `.replace('export function getAuth(){', 'export function getAuth(){ window.__authGia = window.__authGia || null; const a0 = window.__authGia; if (a0) return a0;').replace('return a; }', 'window.__authGia = a; return a; }');
@@ -36,9 +43,14 @@ const FS = `
 const may = (op, a) => window.__mayGia(op, a || {});
 export function getFirestore(){ return {}; }
 export function connectFirestoreEmulator(){}
-export function doc(db, c, id){ return {c, id}; }
-export async function getDoc(r){ if (window.__matMang) throw new Error('mất mạng'); const d = await may('get', {uid:r.id}); return {exists:() => !!d, data:() => d}; }
-export async function setDoc(r, d, o){ if (window.__matMang) throw new Error('mất mạng'); d = JSON.parse(JSON.stringify(d)); return may('set', {uid:r.id, d}); }
+export function doc(db, ...p){ return {p}; }
+const chua = () => { if (window.__matMang) throw new Error('mất mạng'); };
+export async function getDocFromServer(r){ chua(); const d = await may('get', {p:r.p}); return {exists:() => !!d, data:() => d}; }
+export async function runTransaction(db, f){ chua(); const w = [];
+  const tx = {get:async r => { const d = await may('get', {p:r.p}); return {exists:() => !!d, data:() => d}; }, set:(r, d) => { w.push({p:r.p, d:JSON.parse(JSON.stringify(d))}); }};
+  const kq = await f(tx); chua();
+  const uid = window.__authGia && window.__authGia.currentUser && window.__authGia.currentUser.uid;
+  const r = await may('tx', {uid, w}); if (r.loi){ const e = new Error(r.loi); e.code = r.loi; throw e; } return kq; }
 export function serverTimestamp(){ return {sv:'thoi-gian'}; }
 `;
 let hong = 0, dat = 0;
@@ -60,8 +72,8 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
     return {ctx, pg};
   }
   const vao = async (pg, q) => { await pg.goto(GOC + 'vung-1/index.html?tu=1' + (q || '')); await pg.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:30000}); };
-  const luuMay = () => { for (const d of Object.values(MC.docs)) if (d.khoa && d.khoa['tvcc-vung1']) return d; return null; };
-  const manhMay = uid => { const d = MC.docs[uid]; return d && d.khoa['tvcc-vung1'] ? JSON.parse(d.khoa['tvcc-vung1'].du).manh : null; };
+  const manhMay = uid => { const d = MC.docs[['nguoi_choi', uid, 'ban_luu', 'tvcc-vung1'].join('/')]; return d && d.du ? JSON.parse(d.du).manh : null; };
+  const tl = (uid, k) => MC.docs[['nguoi_choi', uid, 'ban_luu', k].join('/')];
 
   // 1. máy A: chơi mới, nhặt Mảnh Âm, lưu → lên mây
   const A = await mayMoi(); await vao(A.pg);
@@ -69,8 +81,9 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
   await A.pg.evaluate(() => TV.choi(true)); await A.pg.waitForTimeout(300);
   await A.pg.evaluate(() => { G.luu.manh = 77; V1.ghiLuu(); return LuuMay.guiNgay(); });
   const uidA = await A.pg.evaluate(() => LuuMay._dongBo.uid());
-  ok(manhMay(uidA) === 77, 'lưu Vùng 1 lên mây (Mảnh Âm = 77)', manhMay(uidA));
-  ok(MC.docs[uidA].khoa['tvcc-chung'], 'lưu chung (tvcc-chung) cũng lên mây');
+  ok(manhMay(uidA) === 77 && tl(uidA, 'tvcc-vung1').revision >= 1, 'lưu Vùng 1 lên mây (Mảnh Âm = 77, mỗi khoá 1 tài liệu có revision)', manhMay(uidA));
+  ok(tl(uidA, 'tvcc-chung') && MC.docs['nguoi_choi/' + uidA] && MC.docs['nguoi_choi/' + uidA].phienBan === 2, 'lưu chung (tvcc-chung) cũng lên mây; tài liệu người chơi phienBan 2');
+  const chu = await A.pg.evaluate(() => LuuMay.moTa()); ok(chu === 'Cloud save up to date', 'chữ trạng thái khi đã gửi xong', chu);
   // 2. xoá localStorage, tải lại → tiến độ về
   await A.pg.evaluate(() => localStorage.clear());
   await vao(A.pg);
@@ -79,12 +92,13 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
   // 3. tự gửi định kỳ (không gọi guiNgay)
   await A.pg.evaluate(() => TV.choi(false)); await A.pg.waitForTimeout(300);
   await A.pg.evaluate(() => { G.luu.manh = 88; V1.ghiLuu(); });
+  const dangCho = await A.pg.evaluate(() => LuuMay.moTa()); ok(dangCho === 'Saving to cloud…', 'chưa gửi xong thì KHÔNG báo "up to date"', dangCho);
   await A.pg.waitForTimeout(4500);
   ok(manhMay(uidA) === 88, 'tự gửi lên sau vài giây khi game ghi lưu', manhMay(uidA));
   // 4. gắn Google ở máy A, rồi máy B (máy khác) đăng nhập cùng Google → nhận tiến độ
   await vao(A.pg);
   const gA = await A.pg.evaluate(() => LuuMay.dangNhapGoogle().then(ok => ({ok, tt:LuuMay.trangThai, mo:LuuMay.moTa()})));
-  ok(gA.ok && gA.tt === 'google', 'máy A gắn tài khoản Google (giữ nguyên tiến độ)', gA);
+  ok(gA.ok && gA.tt === 'google' && gA.mo === 'Google connected · Progress backed up', 'máy A gắn tài khoản Google (giữ nguyên tiến độ)', gA);
   const B = await mayMoi(); await vao(B.pg);
   ok(await B.pg.evaluate(() => !V1.coLuu()), 'máy B mới: chưa có bản lưu');
   const gB = await B.pg.evaluate(() => LuuMay.dangNhapGoogle().then(ok => ({ok, uid:LuuMay._dongBo.uid(), loi:LuuMay.loi})));
@@ -92,12 +106,33 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
   await vao(B.pg);
   const mB = await B.pg.evaluate(() => JSON.parse(localStorage.getItem('tvcc-vung1') || '{}').manh);
   ok(mB === 88, 'máy B tải lại: có tiến độ của máy A (Mảnh Âm 88)', mB);
-  // 5. xung đột: B chơi tiếp (99) sau A → A mở lại nhận 99, bản cũ giữ dự phòng
+  // 5. B chơi tiếp (99) → A mở lại (không có thay đổi) nhận 99; bản cũ giữ ở saoLuuTruoc
   await B.pg.evaluate(() => TV.choi(false)); await B.pg.waitForTimeout(300);
   await B.pg.evaluate(() => { G.luu.manh = 99; V1.ghiLuu(); return LuuMay.guiNgay(); });
   await vao(A.pg);
   const mA = await A.pg.evaluate(() => JSON.parse(localStorage.getItem('tvcc-vung1')).manh);
-  ok(mA === 99 && MC.docs[uidA].saoLuu && MC.docs[uidA].saoLuu['tvcc-vung1'], 'hai máy: bản chơi sau cùng thắng, bản cũ giữ dự phòng', {mA});
+  ok(mA === 99 && JSON.parse(tl(uidA, 'tvcc-vung1').saoLuuTruoc).manh === 88, 'hai máy lần lượt: máy kia nhận bản mới, bản trước giữ dự phòng trên mây', {mA});
+  // 5b. XUNG ĐỘT: A và B cùng chơi từ cùng 1 bản; A gửi trước; B gửi sau → B không đè, menu hiện 2 nút chọn
+  await vao(B.pg);
+  await A.pg.evaluate(() => TV.choi(false)); await B.pg.evaluate(() => TV.choi(false)); await A.pg.waitForTimeout(300);
+  await A.pg.evaluate(() => { G.luu.manh = 120; V1.ghiLuu(); return LuuMay.guiNgay(); });
+  await B.pg.evaluate(() => { G.luu.manh = 130; V1.ghiLuu(); return LuuMay.guiNgay(); });
+  ok(manhMay(uidA) === 120, 'xung đột: máy ghi sau KHÔNG đè tiến độ máy ghi trước', manhMay(uidA));
+  await vao(B.pg);
+  const xd = await B.pg.evaluate(() => ({mo:LuuMay.moTa(), nut:!document.getElementById('may-xd').hidden, m:JSON.parse(localStorage.getItem('tvcc-vung1')).manh}));
+  ok(xd.mo === 'Cloud save needs attention' && xd.nut && xd.m === 130, 'máy B: báo "Cloud save needs attention", hiện nút chọn, vẫn giữ bản máy (130)', xd);
+  await Promise.all([B.pg.waitForEvent('load'), B.pg.click('#b-xd-may')]);
+  await B.pg.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:30000});
+  const sauChon = await B.pg.evaluate(() => ({m:JSON.parse(localStorage.getItem('tvcc-vung1')).manh, mo:LuuMay.moTa(), sao:JSON.parse(localStorage.getItem('tvcc-may-sao-luu'))['tvcc-vung1']}));
+  ok(sauChon.m === 120 && sauChon.mo !== 'Cloud save needs attention' && JSON.parse(sauChon.sao.du).manh === 130, 'bấm "Use cloud save": nhận 120, bản 130 giữ dự phòng trên máy', sauChon);
+  // 5c. xuất / nhập bản lưu
+  const [tai] = await Promise.all([B.pg.waitForEvent('download'), B.pg.click('#b-xuat')]);
+  const tep = require('fs').readFileSync(await tai.path(), 'utf8');
+  ok(JSON.parse(JSON.parse(tep).khoa['tvcc-vung1']).manh === 120, 'nút "Export save" tải về file bản lưu');
+  const Dn = await mayMoi({ch:null}); await vao(Dn.pg, '&moi=1');
+  const nh = await Dn.pg.evaluate(s => { const r = LuuMay.nhap(s); return {ok:r.ok, m:JSON.parse(localStorage.getItem('tvcc-vung1')).manh}; }, tep);
+  ok(nh.ok && nh.m === 120, 'nhập file bản lưu ở máy không có mạng/lưu mây', nh);
+  await Dn.ctx.close();
   // 6. đang chơi thì rớt mạng: vẫn chơi + lưu máy; có mạng lại thì gửi lên
   await A.pg.evaluate(() => TV.choi(false)); await A.pg.waitForTimeout(300);
   await A.ctx.setOffline(true); await A.pg.evaluate(() => { window.__matMang = true; window.dispatchEvent(new Event('offline')); });
@@ -114,12 +149,13 @@ const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT
   ok(cc.g === 'choi' && cc.co && (cc.tt === 'loi' || cc.tt === 'ngoai-tuyen'), 'chặn mạng hẳn: vẫn chơi + lưu máy', cc);
   // 8. không có cấu hình Firebase: lưu mây tắt, menu không hiện dòng lưu mây
   const D = await mayMoi({ch:null}); await vao(D.pg, '&moi=1');
-  const dd = await D.pg.evaluate(() => ({tt:LuuMay.trangThai, an:document.getElementById('may-tt').hidden}));
-  ok(dd.tt === 'tat' && dd.an, 'chưa có cấu hình: lưu mây tắt, chỉ lưu máy', dd);
+  const dd = await D.pg.evaluate(() => ({tt:LuuMay.trangThai, an:document.getElementById('may-tt').hidden, tep:!document.getElementById('luu-tep').hidden}));
+  ok(dd.tt === 'tat' && dd.an && dd.tep, 'chưa có cấu hình: lưu mây tắt, chỉ lưu máy', dd);
   await D.pg.evaluate(() => TV.choi(true)); await D.pg.waitForTimeout(300);
   ok(await D.pg.evaluate(() => V1.coLuu()), '…và vẫn lưu máy bình thường');
   // 9. trang chọn mở được
   await D.pg.goto(GOC); ok((await D.pg.locator('a').count()) >= 3, 'trang chọn game/ có liên kết Làng, Vùng 1, Phòng demo');
+  await A.pg.evaluate(() => TV.choi(false)).catch(() => {});
   ok(loi.length === 0, 'không lỗi JS', loi);
   console.log(`\n${dat}/${dat + hong} đạt · máy chủ giả: ${MC.ghi} lần ghi, ${MC.doc} lần đọc`);
   await b.close(); process.exit(hong ? 1 : 0);

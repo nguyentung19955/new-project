@@ -52,6 +52,7 @@ body.touch #keys{display:none}
 .hop .hang{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .hop button{height:46px;min-width:150px;padding:0 16px;border-radius:10px;border:2px solid var(--line);background:#1c2430;color:var(--ink);font-weight:800;font-size:15px;font-family:inherit}
 .hop button.chinh{border-color:var(--bell);color:#ffe08a;background:#3a3020}
+.hop .hang.nho{margin-top:6px;gap:8px}.hop .hang.nho button{height:32px;min-width:0;font-size:13px;padding:0 12px}#may-tt{margin:6px 0 0;font-size:13px}   /* (firebase) dòng lưu mây + xuất/nhập gọn cho màn ngang iPhone */
 .hop button:disabled{opacity:.4}
 .hop small{display:block;color:#7f8a99;font-size:12px;margin-top:10px}
 #rotate{position:absolute;inset:0;display:none;place-items:center;background:var(--night);font-size:18px;z-index:9}
@@ -73,7 +74,9 @@ body.touch #keys{display:none}
     <h1>The Last Echo</h1><h2>Region 1 · Weeping Heartwood</h2>
     <p id="menu-tt">Loading…</p>
     <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Continue</button><button id="b-moi" type="button" disabled>New Game</button></div>
-    <p id="may-tt" hidden></p><div class="hang" id="may-hang" hidden><button id="b-google" type="button">Keep progress with Google</button></div>
+    <p id="may-tt" hidden></p>
+    <div class="hang nho" id="may-xd" hidden><button id="b-xd-may" type="button">Use cloud save</button><button id="b-xd-tb" type="button">Keep this device's save</button></div>
+    <div class="hang nho" id="luu-tep"><button id="b-google" type="button" hidden>Keep progress with Google</button><button id="b-xuat" type="button">Export save</button><button id="b-nhap" type="button">Import save</button></div>
     <small>Find 3 Broken Bells to open the Mute Bell Choir. Rest at a Rest Bell to save, heal and upgrade.</small>
   </div></div>
   <div id="l-chuong" class="lop ui"><div class="hop">
@@ -121,10 +124,18 @@ async function choi(moi){
 }
 $('b-tiep').onclick = () => choi(false);
 if (window.LuuMay && LuuMay.coMay()){   // (firebase) dòng trạng thái lưu mây trong menu – chỉ hiện khi đã cấu hình Firebase
-  $('may-tt').hidden = false; $('may-hang').hidden = false;
-  LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('may-hang').hidden = m.trangThai === 'google' || !(m.trangThai === 'an-danh'); });
+  $('may-tt').hidden = false;
+  LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('b-google').hidden = m.trangThai !== 'an-danh'; $('may-xd').hidden = m.dongBo !== 'xung-dot'; });
   $('b-google').onclick = () => LuuMay.dangNhapGoogle().then(ok => { if (ok){ const co = V1.coLuu(); $('b-tiep').disabled = !co; } });
+  // (firebase) xung đột 2 máy: người chơi chọn bản nào, rồi tải lại trang để game đọc đúng bản
+  $('b-xd-may').onclick = () => { LuuMay.chonTatCa('may-chu').then(() => location.reload()); };
+  $('b-xd-tb').onclick = () => { if (confirm('Replace the cloud save with this device\'s save? (The cloud copy is kept as a backup.)')) LuuMay.chonTatCa('thiet-bi').then(() => location.reload()); };
 }
+// (firebase) xuất / nhập bản lưu ra file – dùng được cả khi không có mạng
+if (window.LuuMay && LuuMay.xuat){
+  $('b-xuat').onclick = () => { if (!LuuMay.taiXuat()) alert('Could not export (browser blocked storage).'); };
+  $('b-nhap').onclick = () => { if (V1.coLuu() && !confirm('Replace your current save with the imported file?')) return; LuuMay.chonNhap().then(r => { if (r.ok) location.reload(); else if (r.loi) alert('Import failed: ' + r.loi); }); };
+} else $('luu-tep').hidden = true;
 $('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Delete your old save and start over?')) choi(true); };
 V1.moChuong = function(gui, ok){
   $('chuong-tt').innerHTML = 'Health and heals fully restored. Enemies in the region have returned.<br>' + (gui > 0 ? 'Stored ' + gui + ' Echo Shards in the bell (safe if you fall).<br>' : '') +

@@ -1,6 +1,6 @@
-# Đưa game "Tiếng Vọng Cuối Cùng" lên Firebase Hosting (gói MIỄN PHÍ Spark) + cập nhật quy tắc Firestore.
-# Chỉ chạy khi đã có bí mật FIREBASE_SERVICE_ACCOUNT (xem tieng-vong-cuoi-cung/docs/firebase/BAO-CAO.md).
-# Chưa có bí mật → bước triển khai tự bỏ qua, không báo lỗi.
+# Đưa game "Tiếng Vọng Cuối Cùng" lên Firebase Hosting (gói MIỄN PHÍ Spark) + cập nhật quy tắc Firestore + kiểm lưu mây.
+# Phép thử (lõi + Firebase Emulator) luôn chạy. Triển khai chỉ chạy khi có bí mật service account (chưa có thì tự bỏ qua).
+# Xem tieng-vong-cuoi-cung/docs/firebase/BAO-CAO.md
 name: tvcc-firebase
 on:
   workflow_dispatch:
@@ -10,6 +10,7 @@ on:
       - 'tieng-vong-cuoi-cung/game/**'
       - 'tieng-vong-cuoi-cung/firebase.json'
       - 'tieng-vong-cuoi-cung/firestore.rules'
+      - 'tieng-vong-cuoi-cung/tools/firebase/**'
       - '.github/workflows/tvcc-firebase.yml'
 concurrency:
   group: tvcc-firebase
@@ -20,27 +21,34 @@ jobs:
     env:
       SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TIENG_VONG || secrets.FIREBASE_SERVICE_ACCOUNT }}
       PROJECT: ${{ vars.FIREBASE_PROJECT_ID || 'tieng-vong-cuoi-cun' }}
+    defaults:
+      run:
+        working-directory: tieng-vong-cuoi-cung
     steps:
-      - name: Kiểm có bí mật chưa
-        id: co
-        run: if [ -n "$SA" ]; then echo "co=1" >> "$GITHUB_OUTPUT"; else echo "Chưa có FIREBASE_SERVICE_ACCOUNT – bỏ qua triển khai."; fi
       - uses: actions/checkout@v4
-        if: steps.co.outputs.co == '1'
-        with: { lfs: false }
+        with: { lfs: false, sparse-checkout: "tieng-vong-cuoi-cung/game\ntieng-vong-cuoi-cung/art\ntieng-vong-cuoi-cung/tools/firebase\ntieng-vong-cuoi-cung/firebase.json\ntieng-vong-cuoi-cung/firestore.rules\ntieng-vong-cuoi-cung/.firebaserc", sparse-checkout-cone-mode: false }
       - uses: actions/setup-node@v4
-        if: steps.co.outputs.co == '1'
         with: { node-version: 20 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
       - name: Phép thử lõi lưu mây
-        if: steps.co.outputs.co == '1'
-        working-directory: tieng-vong-cuoi-cung
         run: node tools/firebase/kiem-thu-luu-may.js
-      - name: Triển khai Hosting (+ thử quy tắc Firestore)
-        if: steps.co.outputs.co == '1'
-        working-directory: tieng-vong-cuoi-cung
+      - name: Cài Firebase JS SDK (chỉ để kiểm)
+        run: npm i --no-save --no-audit --no-fund firebase@10.14.1
+      - name: Phép thử với Firebase Emulator (Auth + Firestore + firestore.rules)
+        run: npx -y firebase-tools@13 emulators:exec --only auth,firestore --project demo-tvcc "node tools/firebase/kiem-thu-emulator.mjs"
+      - name: Triển khai Hosting + quy tắc Firestore
+        if: env.SA != ''
         run: |
           echo "$SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           npx -y firebase-tools@13 deploy --only hosting --project "$PROJECT" --non-interactive
-          # quy tắc Firestore: thử cập nhật, lỗi quyền thì bỏ qua (dán tay trong Firestore ▸ Rules cũng được)
-          npx -y firebase-tools@13 deploy --only firestore:rules --project "$PROJECT" --non-interactive || echo "Không cập nhật được quy tắc Firestore – dán tay firestore.rules"
+          # quy tắc Firestore: service account cần quyền "Firebase Rules Admin"; không có thì bỏ qua (dán tay trong Firestore ▸ Rules)
+          npx -y firebase-tools@13 deploy --only firestore:rules --project "$PROJECT" --non-interactive || echo "::warning::Không cập nhật được quy tắc Firestore – dán tay firestore.rules"
           rm -f "$RUNNER_TEMP/sa.json"
+      - name: Kiểm dự án Firebase thật (đăng nhập khách + ghi/đọc bản lưu thử)
+        if: env.SA != ''
+        continue-on-error: true
+        run: |
+          node tools/firebase/kiem-tra-du-an-that.mjs
+          { echo "## Kiểm lưu mây trên dự án thật"; echo '```'; cat ket-qua-kiem-tra-that.txt; echo '```'; echo "Link chơi: https://$PROJECT.web.app/"; } >> "$GITHUB_STEP_SUMMARY"

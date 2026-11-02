@@ -1,14 +1,38 @@
 rules_version = '2';
-// Lưu mây "Tiếng Vọng Cuối Cùng": mỗi người chơi chỉ đọc/ghi đúng 1 tài liệu của chính mình: nguoi_choi/{uid}.
-// Mọi đường khác đều bị từ chối.
+// Lưu mây "Tiếng Vọng Cuối Cùng" – theo tư vấn ChatGPT (docs/firebase/tu-van-chatgpt.txt mục E).
+// Mỗi người chơi chỉ đọc/ghi bản lưu của chính mình; mỗi khoá game 1 tài liệu; revision phải tăng đúng 1; không xoá.
+// Danh sách khoá phải trùng KHOA_CHO_PHEP trong game/luu-may.js (phép thử tools/firebase/kiem-thu-luu-may.js kiểm việc này).
 service cloud.firestore {
   match /databases/{database}/documents {
+    function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function allowedKey(k) { return k in ['tvcc-vung1', 'tvcc-chung', 'tvcc-he-thong', 'tvcc-an', 'tvcc-trang-bi-v1']; }
+    function validSave(k) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['tenKhoa','du','revision','capNhat','thietBi','saoLuuTruoc'])
+        && d.keys().hasAll(['tenKhoa','du','revision','capNhat','thietBi','saoLuuTruoc'])
+        && d.tenKhoa is string && d.tenKhoa == k
+        && d.du is string && d.du.size() <= 16000
+        && d.saoLuuTruoc is string && d.saoLuuTruoc.size() <= 16000
+        && d.revision is int && d.revision >= 1 && d.revision <= 1000000000
+        && d.capNhat == request.time
+        && d.thietBi is string && d.thietBi.size() <= 80;
+    }
     match /nguoi_choi/{uid} {
-      allow read, delete: if request.auth != null && request.auth.uid == uid;
-      allow create, update: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['khoa', 'saoLuu', 'phienBan', 'capNhat'])
-        && request.resource.data.khoa is map
-        && request.resource.data.khoa.size() <= 50;
+      allow read: if owner(uid);
+      allow create: if owner(uid)
+        && request.resource.data.keys().hasOnly(['phienBan','taoLuc'])
+        && request.resource.data.keys().hasAll(['phienBan','taoLuc'])
+        && request.resource.data.phienBan is int && request.resource.data.phienBan == 2
+        && request.resource.data.taoLuc == request.time;
+      allow update, delete: if false;
+      match /ban_luu/{keyId} {
+        allow read: if owner(uid) && allowedKey(keyId);
+        allow create: if owner(uid) && allowedKey(keyId) && validSave(keyId) && request.resource.data.revision == 1;
+        allow update: if owner(uid) && allowedKey(keyId) && validSave(keyId)
+          && request.resource.data.revision == resource.data.revision + 1
+          && request.resource.data.tenKhoa == resource.data.tenKhoa;
+        allow delete: if false;
+      }
     }
     match /{document=**} {
       allow read, write: if false;
