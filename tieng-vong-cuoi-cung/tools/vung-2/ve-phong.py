@@ -33,22 +33,19 @@ def thieu():
 
 
 def ghep_be(tam):
-    """bệ sàn mỏng kiểu plat_4 (đầu 22 | giữa 108 | đuôi) từ go-trai / go-giua / go-phai"""
+    """dải bệ sàn mỏng đúng khuôn plat_4 của bộ nướng Vùng 1 (đầu 0–22 | giữa 22–130 lặp | đuôi 130–hết), giữ NGUYÊN cỡ điểm ảnh ChatGPT"""
     p = [CL + n + '.png' for n in ('go-trai', 'go-giua', 'go-phai')]
     if not all(os.path.exists(x) for x in p):
         return False
-    goc = Image.open(DEMO1 + 'plat_4.png')
-    h = goc.height
     tr, gi, ph = [Image.open(x).convert('RGBA') for x in p]
-    sc = lambda im, w: im.resize((w, h), Image.NEAREST)
-    duoi_w = goc.width - 130
-    im = Image.new('RGBA', goc.size)
-    im.alpha_composite(sc(tr, 22), (0, 0))
-    x = 22
+    h = max(tr.height, gi.height, ph.height)
+    im = Image.new('RGBA', (130 + ph.width, h))
+    x = 0
+    im.alpha_composite(tr, (0, 0)); x = tr.width
     while x < 130:
-        w = min(gi.width * h // max(1, gi.height), 130 - x) or 1
-        im.alpha_composite(sc(gi, w), (x, 0)); x += w
-    im.alpha_composite(sc(ph, duoi_w), (130, 0))
+        w = min(gi.width, 130 - x)
+        im.alpha_composite(gi.crop((0, 0, w, gi.height)), (x, 0)); x += w
+    im.alpha_composite(ph, (130, 0))
     im.save(os.path.join(tam, 'plat_4.png'))
     return True
 

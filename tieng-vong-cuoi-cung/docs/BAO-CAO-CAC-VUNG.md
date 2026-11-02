@@ -4,7 +4,7 @@
 | Vùng | Trạng thái |
 |---|---|
 | 1 Weeping Heartwood | chơi được (có sẵn) |
-| 2 Rotting Roots | **dở** – có kế hoạch ChatGPT, 16 phòng + kiểm tra đường đi 0 lỗi, logic Gỗ Mục/Neo Rễ (33/33 phép thử), số liệu quái/trùm, 38 yêu cầu ảnh CHỜ. Chưa bật vì chưa có ảnh. Chi tiết: docs/vung-2/BAO-CAO.md |
+| 2 Rotting Roots | **dở** – kế hoạch ChatGPT, 16 phòng + kiểm tra đường đi 0 lỗi, logic Gỗ Mục/Neo Rễ (33/33), số liệu quái/trùm; ảnh đợt 1 + một phần đợt 2 đã về → đã nướng ảnh 16 phòng (art/vung-2). Chưa bật trong game: còn chờ ảnh nút neo, cổng, gai/ao, quái, trùm. Chi tiết: docs/vung-2/BAO-CAO.md |
 | 3–9 | chưa làm – chưa có kế hoạch ChatGPT (lượt này không có Chrome) |
 
 Để đi tiếp: cần lượt có Claude in Chrome (bật "Require this computer" cho tác vụ hẹn giờ) để phiên gen ảnh vẽ 38 ảnh Vùng 2 và phiên này hỏi ChatGPT kế hoạch Vùng 3.

@@ -31,8 +31,11 @@
 
 - Đợt ảnh 1 về (phiên chính, ChatGPT: chất liệu đất rễ 007, nền xa 001, nền giữa 003, nền trùm 005) → đã nướng ảnh 16 phòng `art/vung-2/<ID>-canh.png / -truoc.png / -manh.png / -canh.json`; ghép thử với nền xa + nền giữa: đúng phong cách tím-nâu ẩm, đọc rõ mặt sàn. Đã bỏ đồ treo đặc trưng Vùng 1 (mặt nạ, vải chuông); đèn lồng + sàn mỏng tạm dùng hình ChatGPT Vùng 1 tới khi có 013/035/037.
 
+- Đợt ảnh 2 về một phần (gỗ mục 008–010, gờ rễ mỏng + thang rễ 013) → nướng lại 16 phòng: gờ mỏng ghép từ go-trai/giua/phai đúng cỡ điểm ảnh ChatGPT, thang rễ thay dây leo Vùng 1. Gỗ mục KHÔNG nướng (game vẽ theo trạng thái từ dat-muc.js).
+  Cần xem lại khi lắp vào game: gờ mỏng 8 điểm ảnh khá mảnh trên nền giữa sáng – nền phải tối bớt (ChatGPT: nền không sáng hơn tiền cảnh).
+
 ## Còn lại để bật Vùng 2 (khi phiên gen ảnh báo XONG)
-1. Nướng lại `python3 tools/vung-2/ve-phong.py` khi có 013 (gờ/thang) và 035–037 (đạo cụ, tiền cảnh, đèn).
-2. `game/vung-2/index.html` + nối `dat-muc.js` vào engine (ô R/Q/P/L/C, nút kỹ năng Neo Rễ 44×44 pt), quái/tinh anh/trùm theo `quai.json`/`trum.json`.
+1. Nướng lại `python3 tools/vung-2/ve-phong.py` khi có 035–037 (đạo cụ, tiền cảnh, đèn).
+2. `game/vung-2/index.html` (bắt đầu khi có thêm 012 gai/ao, 014 nút neo, 016 cổng – để địa hình đủ ảnh) + nối `dat-muc.js` vào engine (ô R/Q/P/L/C, nút kỹ năng Neo Rễ 44×44 pt), quái/tinh anh/trùm theo `quai.json`/`trum.json`.
 3. Chụp Playwright đi hết vùng, đánh trùm; đăng ký `game/the-gioi.json`.
 4. Vùng 3–9: chưa có kế hoạch ChatGPT (cần Chrome) – kế hoạch tổng 9 vùng đã có ở mục 1 file kế hoạch.
