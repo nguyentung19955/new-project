@@ -1,5 +1,5 @@
 # 036 – tien-canh
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – re-1..4 (≤41×75, neo trên), co-1..4 (≤48×24, neo đáy), soi-1..3 (≤37×27); gần như bóng tối để đặt trước nhân vật; gốc: tien-canh/nguon-chatgpt.png)
 - **Dùng vào:** Tiền cảnh (lớp trước nhân vật, gần như đen – giống art/vung-1/*-truoc.png). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Rễ treo ×4, cỏ + nấm ×4, sợi bào tử bay ×3.
 - **Số khung + ms gợi ý:** 11 tĩnh

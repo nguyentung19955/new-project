@@ -1,5 +1,5 @@
 # 038 – bieu-tuong
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 12 biểu tượng (root-anchor-san-sang/hoi-chieu, verdant-ruin-core 48, memory-shard + memory-shard-f00..f05 lơ lửng, warden-knot, bua-giam-hoi-neo, bia-lore-vuon-uom 48, manh-tang-hoi-mau, huy-hieu-ban-do, dau-canh-bao-muc 24, goi-y-nut-neo 24, teleport-lang-chuong); gốc: bieu-tuong/nguon-chatgpt.png)
 - **Dùng vào:** Biểu tượng HUD/vật phẩm Vùng 2 (không chữ – chữ do game viết). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Root Anchor (sẵn sàng / hồi chiêu) 32; Verdant Ruin Core 48; Memory Shard 32 + 6 khung lơ lửng (nếu dùng chung art/an/manh-ky-uc thì ghi chú lại); Warden Knot 32; bùa giảm hồi Neo Rễ 32; bia lore vườn ươm 48; mảnh tăng sức chứa hồi máu 32; huy hiệu bản đồ vùng 32; dấu cảnh báo mục 24; gợi ý nút neo 24; biểu tượng teleport Làng Chuông 32.
 - **Số khung + ms gợi ý:** tĩnh (Memory Shard 6 × 110 lặp)

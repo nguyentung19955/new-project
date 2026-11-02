@@ -1,5 +1,5 @@
 # 034 – den-tho-neo-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – den-tho/den 8×96² (ngủ → kích hoạt), den-tho/vat 8×32² lơ lửng lặp; gốc: den-tho/nguon-chatgpt.png)
 - **Dùng vào:** Đền Neo Rễ cuối R206 (nơi nhận kỹ năng) + vật phẩm kỹ năng. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Đền rễ cổ (ancient root shrine) có hốc đặt chuông; hoạt cảnh kích hoạt 8 khung; vật phẩm kỹ năng lơ lửng 8 khung.
 - **Số khung + ms gợi ý:** den 8 × 100; vat 8 × 110 lặp

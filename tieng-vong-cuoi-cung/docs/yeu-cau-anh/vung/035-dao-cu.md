@@ -1,5 +1,5 @@
 # 035 – dao-cu
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 16 món ≤64×64: noi-chuong-vo, coc-re-dong, to-nam, mat-na-vui, ken-treo-1..3, xac-cau-re, vo-bao-tu, xich-chuong, dong-xuong, coc-re-khac, trai-re-kho, chuong-xac, ken-uom-rong, den-dia-y. Bệ Lõi Tàn Tích: dùng bieu-tuong/verdant-ruin-core hoặc yêu cầu thêm nếu cần; gốc: dao-cu/nguon-chatgpt.png)
 - **Dùng vào:** Đồ trang trí phòng (trang_tri) – nướng vào ảnh phòng. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** 16 món: nôi chuông vỡ, cọc rễ đồng, tổ nấm, mặt nạ vùi nửa, kén treo ×3, xác cầu rễ sập, vò bào tử, xích chuông cũ, đống xương, cọc rễ khắc dấu, trại rễ khô, chuông xác (bell husk), kén ươm rỗng, đèn địa y (tĩnh), bệ Lõi Tàn Tích.
 - **Số khung + ms gợi ý:** 16 tĩnh (kén treo 3 biến thể)
