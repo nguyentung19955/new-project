@@ -1,5 +1,5 @@
 # 025 – vfx-tinh-anh
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – cung 6×96×80, song 8×96×32 (đáy), dau-muc 6×144×24 (chỉ vân mục sáng, phủ lên cầu gỗ có sẵn); gốc: fx-warden/nguon-chatgpt.png)
 - **Dùng vào:** Hiệu ứng đòn Nursery Warden. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Vòng cung chém (cleave arc), sóng dậm 2 ô lan dọc đất (stomp wave), dấu mục ra lệnh trên cầu cánh (command rot marks).
 - **Số khung + ms gợi ý:** cung 6 × 60; song 8 × 60; dau-muc 6 × 90

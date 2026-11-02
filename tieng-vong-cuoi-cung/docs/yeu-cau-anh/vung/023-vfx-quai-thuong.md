@@ -1,5 +1,5 @@
 # 023 – vfx-quai-thuong
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – dan 4×16², dan-trung 5×32², can 4×32², chem 6×64×48, re-troi 8×96×48 (đáy); hổ phách/olive, không xanh lơ; gốc: fx/nguon-chatgpt.png)
 - **Dùng vào:** Hiệu ứng đòn 4 quái thường. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Đạn bào tử (lặp), bào tử trúng, cắn trúng, vệt nhảy chém, rễ trồi (snare). Màu hổ phách/olive, không xanh lơ, không chớp toàn màn.
 - **Số khung + ms gợi ý:** dan 4 lặp × 90; trung 5 × 70; can 4 × 60; chem 6 × 60; re-troi 8 × 75
