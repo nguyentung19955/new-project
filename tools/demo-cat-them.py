@@ -47,3 +47,9 @@ if what=='enemies':
 if what=='bosses':
     g=cells('bosses_walk_grid.png',3,8)
     for r,n in enumerate(['firewall','overclock','corruptor']): save(strip(g[r],160,150),f'boss_{n}_walk.png')
+if what=='bugs':
+    g=cells('bugs_walk_grid.png',4,6)
+    for r,n in enumerate(['scuttle','dart','shell','gnat']): save(strip(g[r],112,104),f'bug_{n}_walk.png')
+if what=='elites':
+    g=cells('elites_walk_grid.png',4,6)
+    for r,n in enumerate(['mantis','jammer','brood','cicada']): save(strip(g[r],128,120),f'elite_{n}_walk.png')
