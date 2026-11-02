@@ -109,7 +109,7 @@
   }
   function theoDoi(){
     const G = V1.G, L = G.luu; if (!L || !G.phong) return;
-    if (G.id !== TD.id){ TD.id = G.id; TD.imT = 0; gui({k:'vao-phong'}); }
+    if (G.id !== TD.id){ const tu = TD.id; TD.id = G.id; TD.imT = 0; gui({k:'vao-phong', tu}); }
     if (L.daNhat.length > TD.nhat){
       for (const id of L.daNhat.slice(TD.nhat)){
         const tt = (M.A.D.the_ten || {})[id]; if (tt) bao(tt.ten + ' · “' + tt.chu + '”');   // chữ khắc Thẻ Tên (ChatGPT)

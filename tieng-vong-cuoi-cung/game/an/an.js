@@ -47,6 +47,7 @@
       if (c.nv_xong) return S.nvXong.includes(c.nv_xong);
       if (c.dang_o) return ev.phong === c.dang_o;
       if (c.vao_phong) return ev.k === 'vao-phong' && ev.phong === c.vao_phong;
+      if (c.qua) return ev.k === 'vao-phong' && ev.phong === c.qua.den && ev.tu === c.qua.tu;   // đi qua cửa nối 2 phòng (lối tắt)
       if (c.vo_tuong) return ev.k === 'vo-tuong' && ev.phong === c.vo_tuong.phong &&
         (c.vo_tuong.cot === undefined || Math.abs(ev.cot - c.vo_tuong.cot) <= (c.vo_tuong.lech || 0)) &&
         (c.vo_tuong.hang === undefined || Math.abs(ev.hang - c.vo_tuong.hang) <= (c.vo_tuong.lech || 0));

@@ -12,7 +12,7 @@ Sự kiện: `vao-phong`, `nhat` (id vật phẩm), `vo-tuong` (phòng, cột, h
 
 Điều kiện (`dieu_kien` của bí mật, `lo`/`xong` của nhiệm vụ):
 `{"nhat":"P04-tang-mau"}` · `{"dem":{"loai":"the_ten","so":4}}` · `{"co":"ha_trum:vung-1"}` (cờ lưu chung) · `{"bi_mat":"id"}` · `{"nv_xong":"id"}` ·
-`{"vao_phong":"P01"}` · `{"vo_tuong":{"phong":"P02","cot":13,"lech":0}}` · `{"cham_o":{"phong":"P06","o":"G"}}` · `{"dung_im":{"phong","cot","hang","ban_kinh","giay"}}` ·
+`{"vao_phong":"P01"}` · `{"qua":{"tu":"P09","den":"P05"}}` (đi từ phòng này sang phòng kia – lối tắt) · `{"vo_tuong":{"phong":"P02","cot":13,"lech":0}}` · `{"cham_o":{"phong":"P06","o":"G"}}` · `{"dung_im":{"phong","cot","hang","ban_kinh","giay"}}` ·
 `{"trum_sach":"vung-1"}` (hạ trùm không trúng đòn – phòng trùm khai ở `phong_trum`) · ghép `tat_ca` / `mot_trong` / `khong`.
 
 Phần thưởng (`thuong`): `manh_am` (so), `ky_uc` (id → game/luu-chung.js), `am_diem` (nguon → Hệ thống đồ, chỉ khi `?hethong=1`/bật), `thanh_tuu` (id),

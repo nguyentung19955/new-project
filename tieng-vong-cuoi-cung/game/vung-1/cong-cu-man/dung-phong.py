@@ -408,6 +408,12 @@ def P05():
     p.dac(22, 11, 25, 12)                       # bậc trung gian (đứng 10)
     p.them_cua('P05-dong', 'phai', 6, 'P04', 'P04-tay')
     p.them_cua('P05-tay', 'trai', 10, 'P06', 'P06-dong')
+    # (phiên "an", ChatGPT 02/11: lối tắt P05↔P09) lỗ sàn cột 9–11 thông xuống trần P09; mặt lỗ là sàn mỏng '='
+    # → đi ngang bình thường, không rơi; leo dây từ P09 lên xuyên qua; ↓+Nhảy thì rơi xuống P09 (đi tắt, cổng P11 vẫn cần đủ 3 Chuông Vỡ).
+    p.them_cua('P05-day', 'duoi', 9, 'P09', 'P09-tren')
+    p.san(9, 11, 13, '=')
+    p.day(10, 14, 15)                           # dây trong lỗ: từ P09 lên bám được (engine kéo dây xuyên '=' lên trần như hình)
+    p.dau('bi_mat', 8, 12)
     p.chuong_luu = dict(cot=15, hang=12)
     p.trang_tri('P05-xac', 'xac_nguoi_ngoi', 13, 12, ghi='xác người ngồi tựa cạnh chuông')
     p.trang_tri('P05-chuong-luu', 'chuong_luu', 15, 12, ghi='Chuông Lưu: tắt / sáng')
@@ -512,6 +518,9 @@ def P09():
     p.san(3, 6, 13, '=')
     p.them_cua('P09-tay', 'trai', 14, 'P06', 'P06-dong-duoi')
     p.them_cua('P09-dong', 'phai', 2, 'P11', 'P11-tay')
+    # (phiên "an", ChatGPT 02/11: lối tắt P05↔P09) dây leo cột 10 từ T3 (đứng 10) lên trần → Chuông Lưu P05
+    p.them_cua('P09-tren', 'tren', 9, 'P05', 'P05-day')
+    p.day(10, 0, 10)
     # LUỒNG D: 1 Kèn Câm ở bờ xa bên kia giếng (tầng vào), 1 Màn Tang treo dưới gờ trần ở đường trên (T5) – so le, không cùng lúc
     p.dac(28, 1, 30, 3)
     p.trang_tri('P09-go-tran', 'go_tran_re', 28, 3, rong=3, ghi='nanh đá trần, Màn Tang treo dưới')

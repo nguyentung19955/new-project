@@ -53,7 +53,9 @@ Mảnh Ký Ức Vùng 1 (4): Ashen Lullaby, The Unanswered Bell, Names Beneath t
 Đủ 4 → "Four names remembered." + "Memory Shard acquired." + đoạn truyện *Names Beneath the Bark* (đọc lại trong nhật ký).
 
 ## Lối tắt Vùng 1 (đếm riêng, không vào Secret Found)
-P02↔P06 (có, BẬT) · đề xuất: P03↔P05 · P04↔P06 · P05↔P09 · P06↔P11 · P09↔P12 (sau trùm). Chưa dựng: phải kiểm không phá thứ tự 3 Broken Bell / cổng tinh anh (khoá một chiều hoặc mở sau điều kiện) và cần ảnh phòng nướng lại.
+- P02↔P06 **Rootscar Passage** (có sẵn, chém tường nứt) – BẬT.
+- P05↔P09 **The Rest Bell Root** – ĐÃ DỰNG (lượt 2): lỗ sàn mỏng cột 9–11 ở Chuông Lưu P05, dây rễ thòng từ vòm xuống lỗ; P09 có dây cột 10 từ T3 lên trần. Đi ngang P05 không rơi (đường chính như cũ); leo dây từ P09 lên về Chuông Lưu; ở P05 bám dây (↓) leo xuống P09. Cổng P11 vẫn cần đủ 3 Chuông Vỡ (kiem-tra.py xác nhận).
+- Còn đề xuất (chưa dựng – các phòng không kề nhau trên bản đồ, cần mở rộng phòng): P03↔P05 · P04↔P06 · P06↔P11 · P09↔P12 (sau trùm).
 
 ## Câu đố âm thanh trên iPhone (ChatGPT)
 Luôn ≥ 2 kênh (âm + hình): LOW 1 vạch · MID 2 vạch · HIGH 3 vạch. Tắt tiếng vẫn giải được; không dùng màu làm dấu hiệu duy nhất; không flash mạnh; tuỳ chọn "Visual Sound Cues" mặc định bật; không bắt đứng yên ở chỗ nguy hiểm.

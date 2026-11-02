@@ -11,8 +11,8 @@ const ev = (k, phong, x) => Object.assign({k, vung:V, phong}, x);
 // 1) bật/tắt theo cho_chatgpt + can_anh
 let A = BiMat.tao(D, null, {});
 ok('Mục thiếu ảnh / chờ tính năng bị tắt (Ashen Lullaby, Unanswered Bell, Three Notes, Iria)', !A.BM.find(b => b.id === 'v1-ru-tro') && !A.BM.find(b => b.id === 'v1-chuong-chua-dap') && !A.NV.find(n => n.id === 'nv-v1-ba-tieng-ngan') && !A.NV.find(n => n.id === 'nv-v1-iria'));
-ok('Vùng 1 đang bật 4 bí mật tính "Secret Found" + 1 lối tắt (đếm riêng)', A.dem(V).tong === 4 && A.demLoiTat(V).tong === 1, [A.dem(V), A.demLoiTat(V)]);
-ok('ChatGPT: đủ 6 bí mật + 1 lối tắt trong dữ liệu Vùng 1', D.bi_mat.filter(b => b.vung === V && b.loai !== 'loi_tat').length === 6 && D.bi_mat.filter(b => b.loai === 'loi_tat').length === 1);
+ok('Vùng 1 đang bật 4 bí mật tính "Secret Found" + 1 lối tắt (đếm riêng)', A.dem(V).tong === 4 && A.demLoiTat(V).tong === 2, [A.dem(V), A.demLoiTat(V)]);
+ok('ChatGPT: đủ 6 bí mật + 2 lối tắt trong dữ liệu Vùng 1', D.bi_mat.filter(b => b.vung === V && b.loai !== 'loi_tat').length === 6 && D.bi_mat.filter(b => b.loai === 'loi_tat').length === 2);
 ok('Nhật ký trống lúc đầu (chưa lộ gì)', A.nhatKy(V).length === 0);
 
 // 2) từng bí mật lấy được
@@ -28,6 +28,10 @@ r = A.suKien(ev('cham-o', 'P06', {o:'G', cot:3, hang:31}), the());
 ok('Đi vào tường giả P06 → bí mật', r.some(x => x.muc.id === 'v1-tuong-gia-p06'));
 r = A.suKien(ev('cham-o', 'P02', {o:'G'}), the());
 ok('Ô G phòng khác không tính', !r.length);
+r = A.suKien(ev('vao-phong', 'P05', {tu:'P04'}), the());
+ok('Vào P05 từ P04 (đường chính) không phải lối tắt', !r.length);
+r = A.suKien(ev('vao-phong', 'P05', {tu:'P09'}), the());
+ok('Leo dây từ P09 lên P05 → "Passage Opened" (lối tắt P05↔P09), không tăng Secret Found', r.some(x => x.k === 'loi-tat' && x.muc.id === 'v1-loi-tat-p05-p09') && A.demLoiTat(V).mo === 2);
 r = A.suKien(ev('nhat', 'P04', {id:'P04-tang-mau'}), the({daNhat:['P04-tang-mau']}));
 ok('Nhặt Mặt Nạ Sinh Lực ở giếng P04 → bí mật', r.some(x => x.muc.id === 'v1-gieng-p04'));
 ok('Có thưởng Âm Điểm (bi_mat)', r.find(x => x.k === 'bi-mat').thuong.some(t => t.loai === 'am_diem'));
@@ -75,7 +79,7 @@ ok('Sau khi hạ trùm vào P01 → "The Mother\'s Last Echo" xong', r.some(x =>
 A.giuCho({loai:'am_diem', nguon:'bi_mat'});
 const L = JSON.parse(JSON.stringify(A.luu()));
 const A2 = BiMat.tao(D, L, {});
-ok('Tải lại giữ bí mật + nhiệm vụ + thành tựu + truyện + thưởng chờ', A2.dem(V).timThay === 4 && A2.demLoiTat(V).mo === 1 && A2.truyenDaMo().length === 1 && A2.daXong('nv-v1-nhung-cai-ten') && A2.thanhTuu().length === A.thanhTuu().length && A2.thuongCho().length === 1);
+ok('Tải lại giữ bí mật + nhiệm vụ + thành tựu + truyện + thưởng chờ', A2.dem(V).timThay === 4 && A2.demLoiTat(V).mo === 2 && A2.truyenDaMo().length === 1 && A2.daXong('nv-v1-nhung-cai-ten') && A2.thanhTuu().length === A.thanhTuu().length && A2.thuongCho().length === 1);
 A2.daTraThuong(0); ok('Trao xong thưởng chờ thì xoá', A2.thuongCho().length === 0);
 ok('Bản lưu hỏng/khác phiên bản → bắt đầu sạch', BiMat.tao(D, {phien_ban:99, bm:['x']}, {}).dem(V).timThay === 0);
 

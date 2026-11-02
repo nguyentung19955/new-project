@@ -14,6 +14,13 @@ Hệ thống vẫn **tắt mặc định** (chơi thử: `game/vung-1/index.html
 - **Tài liệu:** docs/an/thiet-ke.md (bản chốt), docs/an/de-xuat-cho-vung-2.md (Bronze Foundry 7/4/5), docs/an/de-xuat-cac-vung-sau.md (V3–V8 + Làng Chuông, 12 nhiệm vụ hành động lạ).
 - **Yêu cầu ảnh** docs/yeu-cau-anh/an/: 15 yêu cầu theo 13 nhóm ảnh ChatGPT (006–019) + bóng Echo Cửa Rễ (020) + Mảnh Ký Ức (005). 002–004 cũ đã BỎ. Đã ghi HET.md.
 
+## Lượt 2b (cùng ngày, chạy theo lịch) – dựng lối tắt P05 ↔ P09
+- ChatGPT đề xuất 6 lối tắt; mình dựng cái khả thi nhất mà không phá đường chính: **The Rest Bell Root** nối Chuông Lưu P05 với trần phòng P09 (hai phòng nằm sát nhau trên bản đồ).
+  P05: lỗ sàn mỏng có dây rễ thòng từ vòm (dấu hiệu nhìn thấy) – đi ngang không rơi; bấm ↓ bám dây leo xuống P09. P09: dây leo từ tầng T3 lên trần → về Chuông Lưu. Đi qua lần đầu báo **"Passage Opened · The Rest Bell Root"** (đếm riêng, không vào Secret Found).
+- Sửa qua game/vung-1/cong-cu-man/dung-phong.py → kiem-tra.py **0 lỗi** (P01→P12 đi được, đủ 3 Chuông Vỡ, cổng P11 vẫn khoá, không kẹt); nướng lại ảnh P05, P09 bằng tools/vung-1/ve-phong.py (cùng bộ đá/dây đã duyệt, không vẽ thêm gì mới).
+- Phép thử Vùng 1: kiem-tra-vung1 đi đủ P01→P12 · kiem-thu-f 66/66 · g hỏng 0 · h hỏng 0 · kiem-thu-day-xuyen-san đạt. Phép thử mới tools/an/kiem-thu-loi-tat.js 8/8 (chơi thật: leo lên, đi ngang, leo xuống, Chuông Lưu không đổi chỗ).
+- Chưa dựng phòng tường giả mới P09 ("The Unanswered Bell") vì bí mật đó cần kỹ năng Echo replay chưa có – dựng phòng mà không dùng được thì vô ích; 4 lối tắt còn lại cần mở rộng phòng (không kề nhau).
+
 ## Kiểm thử
 - `node tools/an/kiem-thu-logic.js` – 41/41 đạt.
 - `node tools/an/kiem-thu-vung1.js` (Playwright, chơi thật, màn 844×390) – 24/24 đạt, không lỗi JS; đã tự xem ảnh chụp nhật ký.
