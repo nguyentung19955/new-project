@@ -105,6 +105,7 @@ const VeChieuQuai = function(o){
       const rv = 52 - 34 * p; for (let g = 0; g < 360; g += 20){ const t = g * Math.PI / 180; o4(x + Math.cos(t) * rv, y + Math.sin(t) * rv, '#D9705C', 0.3 + 0.5 * p); }
       veFx('cau_tim', (f >> 3) & 1, x, y, q.face > 0, 0.6 + p * 0.9, 0.6 + p * 0.4);
     } else if (ten === 'vai_nhat') veFx('vai_nhat', 0, x, y, q.face > 0, 0.6 + p * 0.5, 0.4 + p * 0.5);
+    else if (anh('ken_tu')) veFx('ken_tu', Math.min(4, Math.floor(p * 5)), x, y, q.face < 0, 0.75 + p * 0.35, 0.75 + p * 0.25);   // tụ lực (ChatGPT vẽ, hướng PHẢI, đủ khung không bị cắt)
     else veFx('ken_tron', (f >> 3) & 1, x, y, q.face > 0, 0.8 + p * 0.3, 0.6 + p * 0.4);
     ctx().globalAlpha = 1;
   }

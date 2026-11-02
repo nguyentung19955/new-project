@@ -308,7 +308,7 @@ function cungSong(x, y, r, huong, mau, a, day){
 }
 // sprite hiệu ứng chiêu (ChatGPT vẽ): art/hieu-ung/chieu-quai/<ten>.png – 6 ô 96×96, hướng TRÁI
 const CANH_BAO = new Image(); CANH_BAO.src = '../../art/vung-1/dao-cu/dan-duong/canh_bao.png';   // dấu báo đòn (ChatGPT vẽ)
-const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
+const FXQ = {}; for (const n of ['ken', 'cau', 'vai', 'tan', 'bui_tuong', 'tang', 'ken_tron', 'cau_tim', 'vai_nhat', 'ken_tu']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-quai/' + n + '.png'; FXQ[n] = im; }
 for (const n of ['nut_dat', 'song_dat', 're_troi', 'khung_mau', 'ruot_mau']){ const im = new Image(); im.src = '../../art/hieu-ung/chieu-moi/' + n + '.png'; FXQ[n] = im; }
 function veFx(ten, o, x, y, phai, k, a){
   const im = FXQ[ten]; if (!im || !im.complete || !im.naturalWidth) return;
