@@ -81,16 +81,17 @@ const DongCoMN = (() => {
   const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
   const approach = (v, t, d) => v < t ? Math.min(v + d, t) : Math.max(v - d, t);
   const overlap = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-  function napBanDo(luoi, them){
+  // coHinhDay(c, r) (tuỳ chọn, trang cung cấp từ ảnh phòng vẽ sẵn): false = ô đó KHÔNG có hình dây → không kéo dây leo lên ô đó
+  function napBanDo(luoi, them, coHinhDay){
     BD.L = luoi.map(r => r.split('')); BD.HANG = BD.L.length; BD.COT = BD.L[0].length; BD.nut = {};
     for (const [c0, r0, c1, r1] of (them || [])) for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) BD.L[r][c] = '#';
-    dongBoBanDo();
+    dongBoBanDo(coHinhDay);
     timCauDay();
   }
   // ĐỒNG BỘ VỚI HÌNH: (1) mọi phiến đá nổi DÀY 1 Ô (trên/dưới/2 đầu đều trống) = sàn mỏng nhảy xuyên từ dưới lên được,
   // giống các phiến '=' (trên hình trông y hệt nhau → trước đây chỗ xuyên được chỗ bị chặn); (2) dây leo được kéo lên
   // tới đúng chỗ hình vẽ dây chạm trần / chạm sàn mỏng, để chỗ nào THẤY dây là leo được.
-  function dongBoBanDo(){
+  function dongBoBanDo(coHinhDay){
     const L = BD.L, R = BD.HANG, C = BD.COT, dac = (c, r) => r >= 0 && r < R && c >= 0 && c < C && L[r][c] === '#';
     for (let r = 1; r < R - 1; r++){
       let c = 0;
@@ -109,8 +110,25 @@ const DongCoMN = (() => {
       // thành 'H' (timCauDay biến nó thành cầu: đi ngang không rơi, đứng đó bấm ↑/↓ là bám dây leo tiếp)
       let rr = r - 1; while (rr >= 0 && (L[rr][c] === '.' || L[rr][c] === '=')) rr--;
       if (rr >= 0 && L[rr][c] !== '#' && L[rr][c] !== 'N') continue;   // chạm thứ khác (cửa…) → giữ nguyên
-      for (let k = rr + 1; k < r; k++) L[k][c] = 'H';
+      // SỬA LỖI "nhân vật quay lưng treo lơ lửng" (02/11): chỉ kéo dây lên những ô ẢNH PHÒNG thật sự có hình dây.
+      // Trước đây dây luôn được kéo tới trần → ở phòng có ảnh vẽ sẵn (vd Hollow Stair P02) có cả cột DÂY TÀNG HÌNH:
+      // bấm ↑ giữa không trung là bám vào khoảng không (tư thế leo dây = quay lưng). Đi từ đầu dây lên, gặp ô không có hình thì dừng.
+      for (let k = r - 1; k > rr; k--){ if (coHinhDay && coHinhDay(c, k) === false) break; L[k][c] = 'H'; }
     }
+  }
+
+  // Hàm "ô (c, r) có hình dây không" đọc từ ảnh phòng vẽ sẵn (nền trong suốt ở chỗ trống): dải giữa ô phải đủ điểm ảnh đặc.
+  // Ảnh không khớp lưới / lỗi đọc → undefined (giữ cách cũ). Dùng cho napBanDo(luoi, them, coHinhDay).
+  function coDayTuAnh(img, cot, hang){
+    if (!img || !cot || !hang) return undefined;
+    const OD = img.width / cot; if (!(OD >= 4) || Math.abs(img.height / hang - OD) > 0.01) return undefined;
+    let d; try { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const g = c.getContext('2d'); g.drawImage(img, 0, 0); d = g.getImageData(0, 0, c.width, c.height); } catch (e){ return undefined; }
+    return (cc, rr) => {
+      const x0 = Math.round(cc * OD + OD * 0.3), x1 = Math.round(cc * OD + OD * 0.7), y0 = Math.round(rr * OD), y1 = Math.round((rr + 1) * OD);
+      let dac = 0, n = 0;
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++){ n++; if (d.data[(y * d.width + x) * 4 + 3] > 100) dac++; }
+      return n > 0 && dac / n >= 0.3;
+    };
   }
 
   /* ---------- TRẠNG THÁI ---------- */
@@ -704,7 +722,7 @@ const DongCoMN = (() => {
   const trangNV = () => !pl.dead && pl.hurtT > P.hurtT - P.trangHurt;
 
   const API = {khungNhin:null, tiaTrung, trangNV, trongKhung, P, BD, S, pl, IN, NV, QUAI, SUKIEN, CHO, DAN, NO, napBanDo, datNV, taoQuai, datLaiQuai, buoc, hopNV, hopQuai, hurtBox, trangThai, collide, tile,
-    hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
+    coDayTuAnh, hurt, moveX, moveY, solidPt, datPt, overlap, trenSanMong, shake, get jumpVel(){ return jumpVel; },
     datTL(v){ TL = v; }, get TL(){ return TL; }, datCo(v){ CO = v || 1; }, get CO(){ return CO; }};
   return API;
 })();

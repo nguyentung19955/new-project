@@ -59,9 +59,14 @@ const LopTrangBi = (() => {
   // nạp 1 clip lớp "khung" cho thư mục clip gốc `tm` (đúng số khung với clip gốc) – lười, nạp lần đầu cần
   function napKhung(L, tm, n){
     const o = L.khung[tm] = {ok:false, hinh:[], dang:true};
-    Promise.all(Array.from({length:n}, (_, i) => anh(L.dir + tm + '/f' + pad(i) + '.png'))).then(ds => {
-      o.dang = false;
-      if (ds.every(Boolean)){ o.hinh = ds; o.ok = true; }   // thiếu 1 khung → bỏ cả clip (tránh nhấp nháy)
+    // dò khung đầu trước: clip lớp chưa có ảnh (vd mat-na-nut-1 chưa vẽ bamtuong/dapdat) → BỎ QUA lớp ở clip đó,
+    // không gửi thêm hàng loạt yêu cầu 404 và tuyệt đối không vẽ gì thay (thân nhân vật vẫn vẽ đủ màu như thường)
+    anh(L.dir + tm + '/f00.png').then(f0 => {
+      if (!f0){ o.dang = false; o.thieu = true; return; }
+      Promise.all(Array.from({length:n - 1}, (_, i) => anh(L.dir + tm + '/f' + pad(i + 1) + '.png'))).then(ds => {
+        o.dang = false; ds.unshift(f0);
+        if (ds.every(Boolean)){ o.hinh = ds; o.ok = true; } else o.thieu = true;   // thiếu 1 khung → bỏ cả clip (tránh nhấp nháy)
+      });
     });
     return o;
   }
@@ -203,7 +208,7 @@ const LopTrangBi = (() => {
     for (const L of lopHien()) if ((L.d.z || 'truoc') === lop) veMot(g, L, ten, k, fx, fy, lat, s, alpha, trang);
   }
 
-  const API = {nap, deo, go, datCap, capTheoTienDo, chiSo,
+  const API = {nap, deo, go, clipThieu:id => { const L = st.lop[id]; return L ? Object.keys(L.khung).filter(k => L.khung[k].thieu) : []; }, datCap, capTheoTienDo, chiSo,
     veSau:(...a) => ve('sau', ...a), veTruoc:(...a) => ve('truoc', ...a),
     dangDeo:() => st.deo.slice(), cap:() => capHien(), coAnh:id => !!(st.lop[id] && st.lop[id].coAnh),
     dsLop:() => Object.values(st.lop).map(L => ({id:L.id, ten:L.d.ten, khe:L.d.khe || '', coAnh:L.coAnh, kieu:L.d.kieu || 'khung'})),

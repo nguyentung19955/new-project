@@ -99,7 +99,9 @@
     G.phong = p; G.id = p.id;
     const L = p.luoi.map(r => r.split(''));
     for (const k of G.luu.tuongVo){ const [id, c, r] = k.split(':'); if (id === p.id && L[+r]) L[+r][+c] = '.'; }
-    E.napBanDo(L.map(r => r.join('')));
+    const A = V1.CANH && V1.CANH[p.id];   // ảnh phòng vẽ sẵn: dây leo chỉ kéo lên chỗ ảnh có vẽ dây (hết "dây tàng hình")
+    if (A && !A._coDay && A.meta && A.meta.cot === L[0].length && A.meta.hang === L.length) A._coDay = E.coDayTuAnh(A.canh, A.meta.cot, A.meta.hang) || null;
+    E.napBanDo(L.map(r => r.join('')), null, A && A._coDay || undefined);
     // cửa khoá: bịt bằng ô đặc
     G.cuaKhoa = p.cua.filter(c => cuaBiKhoa(p, c));
     for (const c of G.cuaKhoa) for (const [x, y] of odKhoa(c)) if (E.BD.L[y]) E.BD.L[y][x] = '#';
