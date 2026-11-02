@@ -23,6 +23,15 @@ CL = os.path.join(DU_AN, 'art/vung-2/chat-lieu/')
 PHONG = os.path.join(DU_AN, 'game/vung-2/phong/')
 OUT = os.path.join(DU_AN, 'art/vung-2/')
 BAT_BUOC = ['t_fill', 't_top', 't_ceil']
+# tên đồ của bộ nướng Vùng 1 → ảnh ChatGPT Vùng 2 (đường dẫn trong art/vung-2/, không đuôi)
+DOI_DO = {
+    'h_long_den': 'dao-cu/ken-treo-2', 'h_vai_chuong': 'dao-cu/ken-treo-1', 'h_vai_dai': 'dao-cu/ken-treo-3', 'h_re_mat_na': 'chat-lieu/re-treo-2',
+    'h_re_bo': 'chat-lieu/re-treo-3', 'h_day_leo': 'tien-canh/re-3', 'h_xich': 'chat-lieu/re-treo-1',
+    'p_den_tho': 'dao-cu/den-dia-y', 'p_bia': 'dao-cu/coc-re-khac', 'p_chuong_up': 'dao-cu/noi-chuong-vo', 'p_chuong_nghieng': 'dao-cu/chuong-xac',
+    'p_manh_chuong': 'dao-cu/xich-chuong', 'p_gia_gay': 'dao-cu/xac-cau-re', 'p_mat_na': 'dao-cu/mat-na-vui', 'p_chuong_nho': 'chat-lieu/nam-tuong-1',
+    'sk_1': 'dao-cu/dong-xuong', 'sk_2': 'dao-cu/vo-bao-tu', 'sk_3': 'dao-cu/to-nam', 'sk_4': 'tien-canh/soi-2', 'sk_5': 'chat-lieu/nam-tuong-2',
+    'sk_6': 'dao-cu/trai-re-kho', 'sk_7': 'tien-canh/co-4',
+}
 DONG = set('RQPXBLC')
 # màu mặt đất theo bảng màu ChatGPT Vùng 2 (root shadow → wet wood → exposed wood → rot ochre), sau → trước
 MD_MAU_V2 = '[[52, 37, 43], [72, 51, 47], [103, 70, 58], [128, 104, 61]]'
@@ -61,9 +70,12 @@ def main():
         demo = os.path.join(tam, 'demo'); os.makedirs(demo)
         for f in glob.glob(DEMO1 + '*.png'):           # đồ trang trí chung thế giới (fallback)
             shutil.copy(f, demo)
-        # đồ treo đặc trưng Vùng 1 (mặt nạ, vải chuông) không hợp Rễ Mục → bỏ cho tới khi có đạo cụ Vùng 2 (yêu cầu 035/036)
-        for n in ('h_re_mat_na', 'h_vai_chuong', 'h_vai_dai'):
-            Image.new('RGBA', Image.open(DEMO1 + n + '.png').size).save(os.path.join(demo, n + '.png'))
+        # đồ trang trí Vùng 1 → đạo cụ / rễ treo / tiền cảnh ChatGPT Vùng 2 (yêu cầu 011, 035, 036) – cùng tên file để bộ nướng Vùng 1 dùng y nguyên
+        for v1, v2 in DOI_DO.items():
+            f = os.path.join(DU_AN, 'art/vung-2/' + v2 + '.png')
+            if os.path.exists(f): shutil.copy(f, os.path.join(demo, v1 + '.png'))
+            elif v1 in ('h_re_mat_na', 'h_vai_chuong', 'h_vai_dai'):   # chưa có ảnh: bỏ đồ đặc trưng Vùng 1
+                Image.new('RGBA', Image.open(DEMO1 + v1 + '.png').size).save(os.path.join(demo, v1 + '.png'))
         for n in BAT_BUOC:
             shutil.copy(CL + n + '.png', os.path.join(demo, n + '.png'))
         if not ghep_be(demo):
