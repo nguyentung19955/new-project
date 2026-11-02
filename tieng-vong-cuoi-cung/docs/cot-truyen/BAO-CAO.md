@@ -1,5 +1,12 @@
 # Báo cáo phiên Cốt truyện + Điểm khởi đầu (cottruyen)
 
+## Lượt 2 (02/11 chiều) – kiểm lại theo lời nhắn
+Mọi việc lời nhắn lượt 2 giao (hội thoại tiếng Anh Vesper/Tock/Morrow/Kaelith lần đầu + sau trùm Vùng 1, điều kiện mở vùng, gắn cổng teleport + hiệu ứng, bật thứ đủ ảnh, ghi yêu cầu ảnh còn thiếu) **đã xong ở lần chạy 2 bên dưới**.
+Thêm lượt này: **bia tưởng niệm** trong làng cho nhiệm vụ ẩn "A Name Returned" của phiên "an" (docs/an/de-xuat-cac-vung-sau.md): đứng cạnh chuông teleport, bấm "Examine" → ghi cờ `cham:bia-tuong-niem`
+và phát sự kiện `lang-tuong-tac` để phiên "an" nghe. Ảnh: yêu cầu mới **012** (CHỜ) – thiếu ảnh thì bia không có.
+Phép thử: kiem-thu-luu-chung 48/48 · kiem-tra-lang 27/27 · kiem-tra-trinh-duyet 4/4. Không sửa Vùng 1 lượt này.
+Ảnh 006–012 vẫn CHỜ phiên chính vẽ → trang làng vẫn tắt (chỉ báo chữ), đúng luật.
+
 ## Lần chạy 2 (02/11/2026, theo lịch, trên máy chủ đám mây – không có Chrome)
 Kế hoạch ChatGPT đã có (`docs/cot-truyen/ke-hoach-chatgpt.txt`, phiên chính hỏi hộ) → lần này **làm theo đúng kế hoạch đó**, không tự nghĩ thêm truyện.
 Lời thoại, tên cảnh, phụ đề mở đầu, điều kiện mở vùng đều chép nguyên văn từ kế hoạch ChatGPT. Tên vùng/nhân vật theo `docs/tieng-anh/BANG-DOI-CHIEU.md`.
@@ -15,7 +22,7 @@ Lời thoại, tên cảnh, phụ đề mở đầu, điều kiện mở vùng �
 - **Điều kiện mở 8 vùng** theo kế hoạch ChatGPT – `game/cot-truyen/tram-dich-chuyen.json` (vd: hạ Hollow Bell Mother → mở Abandoned Bronzeworks). Vùng chưa dựng thì luôn khoá.
 - **Vùng 1 ↔ Làng**: `game/cot-truyen/moc-vung-1.js` (1 dòng script trong vung-1/index.html): bảng Rest Bell có thêm nút **"Return to Bell Village"** – chỉ hiện khi làng đã thật sự mở (đủ ảnh). Chưa có làng → Vùng 1 y hệt cũ.
 - Hộp thoại: lựa chọn đặt được cờ riêng; khi không có chân dung thì chữ không đè lên hoạ tiết khung.
-- **Yêu cầu ảnh mới (CHỜ) cho phiên gen ảnh**: 006 cảnh làng 5 nền + 5 tiền cảnh · 007 nhân vật phụ đứng trong cảnh · 008 chân dung Kaelith · 009 khung menu teleport · 010 bảy tranh mở đầu · 011 chuông neo cho vùng mới.
+- **Yêu cầu ảnh mới (CHỜ) cho phiên gen ảnh**: 006 cảnh làng 5 nền + 5 tiền cảnh · 007 nhân vật phụ đứng trong cảnh · 008 chân dung Kaelith · 009 khung menu teleport · 010 bảy tranh mở đầu · 011 chuông neo cho vùng mới · 012 bia tưởng niệm (lượt 2).
 
 ### Luật hình được giữ thế nào
 Không vẽ gì bằng code. Thiếu ảnh nền làng → trang làng **chỉ báo chữ** "not open yet" (như hiện tại). Thiếu dáng đứng/chân dung của ai → riêng người đó ẩn.

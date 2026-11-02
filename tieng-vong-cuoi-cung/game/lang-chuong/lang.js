@@ -43,6 +43,10 @@
     else LANG.anTam = (LANG.anTam || []).concat(n.id + (im ? ' (portrait/dialogue art missing)' : ' (sprite missing)'));
   }
   LANG.npc = NPC.map(n => n.id);
+  // vật tương tác trong làng (vd bia tưởng niệm cho nhiệm vụ ẩn "A Name Returned" của phiên "an") – thiếu ảnh thì không có
+  const VAT = [];
+  for (const v of L.vat || []){ const im = await napAnh(v.anh); if (im) VAT.push(Object.assign({im, vat: true}, v)); }
+  LANG.vat = VAT.map(v => v.id);
   LANG.sanSang = true;
   if (LC) LC.datCo('lang_mo');   // Vùng 1 chỉ hiện nút "Return to Bell Village" khi cờ này có
 
@@ -145,6 +149,7 @@
     S.gan = null; let best = 1e9;
     const xet = (o, r) => { const d = Math.abs(o.x - P.x); if (d < r && d < best){ best = d; S.gan = o; } };
     for (const n of NPC) xet(n, 80);
+    for (const v of VAT) xet(v, 70);
     xet({id: 'chuong', x: L.chuong.x}, 100);
     // chuông sáng nhẹ khi lại gần (khung 0↔1)
     S.chuongK = S.gan && S.gan.id === 'chuong' ? L.chuong.khung_sang : L.chuong.khung_ngu;
@@ -153,6 +158,10 @@
   }
   function tuongTac(o){
     if (o.id === 'chuong'){ S.che = 'kich'; S.chuongT = 0; P.chay = false; return; }
+    if (o.vat){   // báo cho hệ thống khác (phiên "an" nghe sự kiện này), ghi cờ 'cham:<id>'
+      if (LC) LC.datCo('cham:' + o.id);
+      LANG.chamCuoi = o.id; document.dispatchEvent(new CustomEvent('lang-tuong-tac', {detail: {id: o.id}})); return;
+    }
     const sau = LC && LC.co('ha_trum:vung-1') && o.hoi_thoai[1];
     const id = sau ? o.hoi_thoai[1] : o.hoi_thoai[0];
     P.mat = o.x >= P.x ? 1 : -1; P.chay = false;
@@ -171,6 +180,7 @@
     ve5(nen);
     // chuông teleport (dải ô ngang, neo đáy-giữa)
     { const C = L.chuong, [ow, oh] = C.o, s = C.ti_le; g.drawImage(anhChuong, S.chuongK * ow, 0, ow, oh, Math.round(C.x - cx - C.tam * s), MD - oh * s, ow * s, oh * s); }
+    for (const v of VAT){ const [ow, oh] = v.o; g.drawImage(v.im, 0, 0, ow, oh, Math.round(v.x - cx - ow / 2), MD - oh, ow, oh); }
     // nhân vật phụ (nhìn trái gốc; lật khi Kiếm Khách ở bên phải)
     for (const n of NPC){
       const [ow, oh] = n.o, k = Math.floor(S.tg * 1000 / n.ms) % n.khung, x = Math.round(n.x - cx);
@@ -189,7 +199,7 @@
     ve5(truoc);
     // gợi ý tương tác (chữ)
     if (S.che === 'choi' && S.gan){
-      const t = S.gan.id === 'chuong' ? 'Ring the bell' : 'Talk', x = S.gan.x - cx, y = MD - (S.gan.id === 'chuong' ? 330 : (S.gan.o[1] + 24));
+      const t = S.gan.id === 'chuong' ? 'Ring the bell' : S.gan.vat ? 'Examine' : 'Talk', x = S.gan.x - cx, y = MD - (S.gan.id === 'chuong' ? 330 : (S.gan.o[1] + 24));
       g.font = '700 18px "Alegreya Sans",system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
       g.shadowColor = '#000'; g.shadowBlur = 5; g.fillStyle = '#ffe08a'; g.fillText((document.body.classList.contains('touch') ? '' : '▲ ') + t, x, y); g.shadowBlur = 0; g.textAlign = 'left';
     }
@@ -217,7 +227,7 @@
   $('cho').style.display = 'none'; cv.style.display = 'block';
   function capNhatNut(){
     const nut = $('b-noi'), bo = $('b-bo');
-    const txt = S.che === 'canh' ? 'Next' : S.che === 'thoai' || S.che === 'menu' ? 'OK' : S.che === 'choi' && S.gan ? (S.gan.id === 'chuong' ? 'Ring' : 'Talk') : '';
+    const txt = S.che === 'canh' ? 'Next' : S.che === 'thoai' || S.che === 'menu' ? 'OK' : S.che === 'choi' && S.gan ? (S.gan.id === 'chuong' ? 'Ring' : S.gan.vat ? 'Examine' : 'Talk') : '';
     nut.textContent = txt; nut.style.visibility = txt ? 'visible' : 'hidden';
     bo.style.visibility = S.che === 'canh' || S.che === 'menu' ? 'visible' : 'hidden';
   }

@@ -10,7 +10,7 @@
 - **Nội dung từng màn (trái → phải):**
   1. Lò rèn của Morrow, the Stone Smith: đe đá, lò than hồng, búa treo. Chừa trống khoảng x 300–460 trên mặt đất để đặt Morrow.
   2. Nhà Vesper, the Bellkeeper + quả **chuông làng lớn bị nứt** treo trên giàn rễ (vẽ trong nền). Chừa trống x 560–700 cho Vesper.
-  3. Quảng trường giữa làng: rễ toả tròn, **chừa trống x 380–580** (giữa màn) cho cổng teleport The Rootbound Bell (sprite riêng cao ~372 px, đáy chạm y 468).
+  3. Quảng trường giữa làng: rễ toả tròn, **chừa trống x 380–580** (giữa màn) cho cổng teleport, và x 90–170 cho bia tưởng niệm (012) The Rootbound Bell (sprite riêng cao ~372 px, đáy chạm y 468).
   4. Sạp bản đồ của Tock, the Clockwork Owl: kệ giấy cuộn, sào đậu cho cú. Chừa trống x 420–560.
   5. Rìa làng, chòi gác nhìn xuống lối rễ đi vào Rotting Roots, có cây sào/đá cao cho Kaelith đứng (x 600–720).
 - **Tiền cảnh (truoc-N.png):** cùng cỡ 960×540, nền TRONG SUỐT, chỉ vài rễ/cỏ/chuông treo ở mép dưới và mép trên (che ≤ 15% ảnh, không che giữa màn), đặt trước nhân vật.

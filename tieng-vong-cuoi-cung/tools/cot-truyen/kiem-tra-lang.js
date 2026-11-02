@@ -12,6 +12,7 @@ for (let i = 1; i <= 5; i++){ GIA_ANH['art/lang-chuong/nen-' + i + '.png'] = tao
   GIA_ANH['art/lang-chuong/truoc-' + i + '.png'] = taoAnh('truoc' + i + '.png', 960, 540, '#0a0d10', true); }
 for (const [id, w, h, n] of [['vesper', 128, 160, 4], ['tock', 96, 96, 4], ['morrow', 128, 128, 4], ['kaelith', 96, 128, 4]])
   GIA_ANH['art/lang-chuong/npc/' + id + '.png'] = taoAnh('npc-' + id + '.png', w * n, h, '#8a6a9a', true);
+GIA_ANH['art/lang-chuong/bia-tuong-niem.png'] = taoAnh('bia.png', 128, 160, '#5a5a5a', true);
 GIA_ANH['art/cot-truyen/chan-dung/kaelith-noi.png'] = taoAnh('kaelith-noi.png', 768, 256, '#6a8a9a', true);
 for (let i = 1; i <= 7; i++) GIA_ANH['art/cot-truyen/mo-dau/0' + i + '.png'] = taoAnh('md' + i + '.png', 960, 540, '#3a2a1a');
 const KHUNG_CHON = taoAnh('khung-chon.png', 640, 420, '#3a3020');
@@ -63,8 +64,14 @@ const KHUNG_CHON = taoAnh('khung-chon.png', 640, 420, '#3a3020');
   await p.evaluate(() => LANG.buoc(200)); await p.screenshot({path: path.join(RA, 'hop-thoai-chon.png')});
   await p.evaluate(() => LANG.buoc(1, 'ok')); t = await p.evaluate(() => LANG.tt());
   ok(t.che === 'choi' && (await p.evaluate(() => LuuChung.co('vesper_nghe') && LuuChung.co('gap:vesper'))), 'chọn "I will listen." → cờ vesper_nghe', t);
+  // bia tưởng niệm (vật tương tác cho phiên "an")
+  await p.evaluate(() => LANG.buoc(105, 'r')); t = await p.evaluate(() => LANG.tt());
+  ok(t.gan === 'bia-tuong-niem', 'tới bia tưởng niệm', t);
+  await p.evaluate(() => { window._ev = null; document.addEventListener('lang-tuong-tac', e => { window._ev = e.detail.id; }); LANG.buoc(1, 'u'); });
+  ok(await p.evaluate(() => window._ev === 'bia-tuong-niem' && LuuChung.co('cham:bia-tuong-niem')), 'Examine bia → sự kiện + cờ');
+  await p.evaluate(() => LANG.buoc(77, 'r'));
   // tới chuông teleport
-  await p.evaluate(() => LANG.buoc(182, 'r')); t = await p.evaluate(() => LANG.tt());
+  t = await p.evaluate(() => LANG.tt());
   ok(t.gan === 'chuong' && t.chuongK === 1, 'tới chuông: chuông sáng nhẹ', t);
   await p.screenshot({path: path.join(RA, 'lang-chuong-teleport.png')});
   await p.evaluate(() => LANG.buoc(1, 'u')); await p.evaluate(() => LANG.buoc(30));

@@ -1,17 +1,137 @@
 {
  "ghi_chu": "Bố cục Làng Chuông (Bell Village) theo kế hoạch ChatGPT docs/cot-truyen/ke-hoach-chatgpt.txt mục 5: 5 màn ngang 960x540 nối liền, 1 mặt đất. Toạ độ x tính từ mép trái màn 1 (px logic). Ảnh: docs/yeu-cau-anh/cottruyen/006 (nền/tiền cảnh), 007 (nhân vật trong cảnh), 003 (chuông teleport), 004 (hiệu ứng). 'bat_buoc' = thiếu là cả làng tắt; NPC thiếu ảnh/chân dung thì riêng NPC đó ẩn.",
- "rong_man": 960, "cao": 540, "mat_dat": 468,
- "nen":   ["art/lang-chuong/nen-1.png", "art/lang-chuong/nen-2.png", "art/lang-chuong/nen-3.png", "art/lang-chuong/nen-4.png", "art/lang-chuong/nen-5.png"],
- "truoc": ["art/lang-chuong/truoc-1.png", "art/lang-chuong/truoc-2.png", "art/lang-chuong/truoc-3.png", "art/lang-chuong/truoc-4.png", "art/lang-chuong/truoc-5.png"],
- "bat_dau_x": 1500, "ve_tu_vung_x": 2300, "bien": [60, 4740],
+ "rong_man": 960,
+ "cao": 540,
+ "mat_dat": 468,
+ "nen": [
+  "art/lang-chuong/nen-1.png",
+  "art/lang-chuong/nen-2.png",
+  "art/lang-chuong/nen-3.png",
+  "art/lang-chuong/nen-4.png",
+  "art/lang-chuong/nen-5.png"
+ ],
+ "truoc": [
+  "art/lang-chuong/truoc-1.png",
+  "art/lang-chuong/truoc-2.png",
+  "art/lang-chuong/truoc-3.png",
+  "art/lang-chuong/truoc-4.png",
+  "art/lang-chuong/truoc-5.png"
+ ],
+ "bat_dau_x": 1500,
+ "ve_tu_vung_x": 2300,
+ "bien": [
+  60,
+  4740
+ ],
  "toc_do": 4.4,
- "chuong": {"x": 2400, "anh": "art/cot-truyen/teleport/chuong-re.png", "o": [190, 372], "ti_le": 0.8, "khung_ngu": 0, "khung_sang": 1, "kich_hoat": [2, 9], "ms": 90, "tam": 95},
- "dich_chuyen": {"anh": "art/cot-truyen/teleport/dich-chuyen.png", "o": [211, 221], "khung": 10, "ms": 82, "an_tu": 5},
- "khung_chon": {"anh": "art/cot-truyen/teleport/khung-chon.png", "chu": [0.14, 0.16, 0.72, 0.68]},
+ "chuong": {
+  "x": 2400,
+  "anh": "art/cot-truyen/teleport/chuong-re.png",
+  "o": [
+   190,
+   372
+  ],
+  "ti_le": 0.8,
+  "khung_ngu": 0,
+  "khung_sang": 1,
+  "kich_hoat": [
+   2,
+   9
+  ],
+  "ms": 90,
+  "tam": 95
+ },
+ "dich_chuyen": {
+  "anh": "art/cot-truyen/teleport/dich-chuyen.png",
+  "o": [
+   211,
+   221
+  ],
+  "khung": 10,
+  "ms": 82,
+  "an_tu": 5
+ },
+ "khung_chon": {
+  "anh": "art/cot-truyen/teleport/khung-chon.png",
+  "chu": [
+   0.14,
+   0.16,
+   0.72,
+   0.68
+  ]
+ },
  "npc": [
-  {"id": "morrow",  "x": 380,  "anh": "art/lang-chuong/npc/morrow.png",  "o": [128, 128], "khung": 4, "ms": 180, "hoi_thoai": ["morrow-lan-dau", "morrow-sau-vung-1"]},
-  {"id": "vesper",  "x": 1590, "anh": "art/lang-chuong/npc/vesper.png",  "o": [128, 160], "khung": 4, "ms": 220, "hoi_thoai": ["vesper-lan-dau", "vesper-sau-vung-1"]},
-  {"id": "tock",    "x": 3370, "anh": "art/lang-chuong/npc/tock.png",    "o": [96, 96],   "khung": 4, "ms": 180, "hoi_thoai": ["tock-lan-dau", "tock-sau-vung-1"]},
-  {"id": "kaelith", "x": 4500, "anh": "art/lang-chuong/npc/kaelith.png", "o": [96, 128],  "khung": 4, "ms": 120, "hoi_thoai": ["kaelith-lan-dau", "kaelith-sau-vung-1"]}
+  {
+   "id": "morrow",
+   "x": 380,
+   "anh": "art/lang-chuong/npc/morrow.png",
+   "o": [
+    128,
+    128
+   ],
+   "khung": 4,
+   "ms": 180,
+   "hoi_thoai": [
+    "morrow-lan-dau",
+    "morrow-sau-vung-1"
+   ]
+  },
+  {
+   "id": "vesper",
+   "x": 1590,
+   "anh": "art/lang-chuong/npc/vesper.png",
+   "o": [
+    128,
+    160
+   ],
+   "khung": 4,
+   "ms": 220,
+   "hoi_thoai": [
+    "vesper-lan-dau",
+    "vesper-sau-vung-1"
+   ]
+  },
+  {
+   "id": "tock",
+   "x": 3370,
+   "anh": "art/lang-chuong/npc/tock.png",
+   "o": [
+    96,
+    96
+   ],
+   "khung": 4,
+   "ms": 180,
+   "hoi_thoai": [
+    "tock-lan-dau",
+    "tock-sau-vung-1"
+   ]
+  },
+  {
+   "id": "kaelith",
+   "x": 4500,
+   "anh": "art/lang-chuong/npc/kaelith.png",
+   "o": [
+    96,
+    128
+   ],
+   "khung": 4,
+   "ms": 120,
+   "hoi_thoai": [
+    "kaelith-lan-dau",
+    "kaelith-sau-vung-1"
+   ]
+  }
+ ],
+ "vat": [
+  {
+   "id": "bia-tuong-niem",
+   "x": 2050,
+   "anh": "art/lang-chuong/bia-tuong-niem.png",
+   "o": [
+    128,
+    160
+   ],
+   "ghi_chu": "Bia tưởng niệm cho nhiệm vụ ẩn 'A Name Returned' (docs/an/de-xuat-cac-vung-sau.md). Bấm Examine → cờ 'cham:bia-tuong-niem' + sự kiện 'lang-tuong-tac'. Ảnh: yêu cầu 012."
+  }
  ]
 }
