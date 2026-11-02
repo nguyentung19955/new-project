@@ -1,5 +1,5 @@
 # 015 – Vọng Tàn – đánh: 1 khung chuông giữa đường F4–F5 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: 9→10 khung, ms mới, khung_trung [6,7], chan_dong 6; khung mới hơi lấm tấm nhưng chỉ hiện 33 ms – chấp nhận) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `quai.json → loai.tan.hinh.danh` – thư mục art gốc `art/quai-moi/tan/danh/` (9 khung `fNN.png`, ô 112×112, quay TRÁI, neo chân [56, 91])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F4.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Đọc được ý nhưng thiếu lực, không có khung va chạm sắc. Chọn đúng khung chuông chạm đất làm impact; khoá chân; thêm khung chuông giữa đường nếu F4→F5 gắt." (đo IoU F4→F5 = 0,59, thấp nhất clip)

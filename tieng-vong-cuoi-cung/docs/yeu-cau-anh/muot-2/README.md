@@ -40,3 +40,8 @@ Nguồn: `docs/duyet-anim-02-11/tu-van-chatgpt.md` (ChatGPT duyệt 17 nhóm). N
 | 025 | Phu Đèn Lạc – chết: VẼ LẠI F7 (chống tay) | P1 |
 
 Thứ tự vẽ: 001→019 (P0) rồi 020→025 (P1). File HET.md = không còn yêu cầu mới.
+
+## Ghi chú cho phiên chính (phiên MƯỢT-2 rút ra khi lắp, 02/11)
+- Phiên lắp tự đưa màu về đúng bảng màu gốc của nhân vật/quái, nên ảnh **nhòe/tô mịn** sau khi ép bảng màu sẽ thành **lấm tấm hạt** → bị trả "VẼ LẠI". Nguyên nhân hay gặp: thu nhỏ ảnh ChatGPT bằng nội suy hoặc sai bội số điểm ảnh.
+- Cách tránh: (1) prompt luôn thêm "same 1-pixel near-black outline, flat crisp pixel shading, no blur, no noise"; (2) đo cỡ "điểm ảnh thật" của ảnh ChatGPT (thường 3–4 px/điểm) rồi thu bằng NEAREST đúng bội số đó; (3) so cạnh khung gốc trên nền tối trước khi ghi XONG.
+- Kiếm Khách (001–006) đạt tốt; quái nhỏ (76–112 px) dễ nhòe nhất.

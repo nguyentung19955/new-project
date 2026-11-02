@@ -101,6 +101,8 @@ def nap(p): return Image.open(p).convert('RGBA')
 def day(im, kkm=False):
     A = np.array(im).astype(int); a = A[..., 3] > 128
     if kkm: a = a & ~((A[..., 2] > A[..., 0] + 40) & (A[..., 1] > A[..., 0] + 20))   # bỏ vệt chém cyan
+    from scipy import ndimage   # bỏ hạt rời < 8 điểm (rác sót) khi đo đáy
+    lb, n = ndimage.label(a); cnt = np.bincount(lb.ravel()); a = a & (cnt[lb] >= 8)
     ys = np.nonzero(a.any(1))[0]; return int(ys.max()) if len(ys) else None
 
 def bang_mau(dir_cha):
