@@ -66,3 +66,6 @@ Chỗ còn đơn giản / mình tự chọn (không hỏi được ChatGPT vì l
 - **Ảnh cần VẼ LẠI:** 014 nút Neo Rễ (ô đất vuông đặc, không trong suốt – đã ghi lý do trong file yêu cầu).
 - **Lối đi từ Vùng 1:** chưa nối cửa trực tiếp vì luật không sửa `game/vung-1/*`; hiện vào Vùng 2 bằng teleport (Làng Chuông) hoặc mở thẳng link trên.
 - Vẫn DỪNG: chưa làm Vùng 3.
+
+## Lượt 6 (02/11) – kiểm ảnh vẽ lại
+- 014 nút Neo Rễ đã có bản vẽ lại (nền trong suốt 48×48, cùng tên file) → game dùng luôn, hết mục "cần VẼ LẠI". Vẫn DỪNG, chưa làm Vùng 3.

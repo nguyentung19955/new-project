@@ -1,5 +1,11 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt hẹn giờ 02/11 (trưa) – vẫn DỪNG, không làm Vùng 3
+- `docs/DUNG-CHO-DUYET-VUNG-2.md` vẫn còn → người dùng chưa duyệt Vùng 2, nên KHÔNG bắt đầu Vùng 3.
+- Lượt này chạy trên đám mây, không có Claude in Chrome → không hỏi được ChatGPT (dù có được phép cũng chưa làm được Vùng 3).
+- Kiểm Vùng 2: ảnh nút Neo Rễ vẽ lại (014, vòng đồng + rễ, nền trong suốt 48×48) đã nằm đúng đường dẫn game đang dùng → **tự lên trong game, không cần sửa code**. Mở `game/vung-2/index.html` bằng Playwright: vào màn hình chính bình thường, không lỗi JS (chỉ có các lớp sức mạnh tuỳ chọn `art/kiem-khach-lop/…` chưa có ảnh – thuộc phiên khác, game tự bỏ qua).
+- Không còn yêu cầu ảnh nào CHỜ / CẦN SỬA. Để làm tiếp Vùng 3: người dùng xoá `docs/DUNG-CHO-DUYET-VUNG-2.md` (hoặc dặn cho phép) và bật "Require this computer" cho tác vụ hẹn giờ.
+
 ## Lượt 02/11 tối – Vùng 2 CHƠI ĐƯỢC (chờ người dùng duyệt)
 | Vùng | Trạng thái |
 |---|---|
