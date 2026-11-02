@@ -56,11 +56,13 @@ const trongKhung = (page) => page.evaluate(() => {
       await page.waitForTimeout(300);
       ok(await page.evaluate(() => DEMO.S && DEMO.S.deck.join() === 'scorch,frost,arc,warp,venom'), `${tag} vào trận với đúng bộ đã chọn`);
       // triệu hồi bằng Linh khí đầu trận: giá tăng dần
+      await page.evaluate(() => DEMO.tua(0));
       const lk0 = await page.evaluate(() => DEMO.S.lk);
       await page.click('#nut-trieu'); await page.click('#nut-trieu');
       let st = await page.evaluate(() => ({ lk: DEMO.S.lk, n: DEMO.S.o.filter(Boolean).length, sao: DEMO.S.o.filter(Boolean).every((v) => v.sao === 1), gia: DEMO.G.giaTrieu(DEMO.S) }));
       const g = await page.evaluate(() => [0, 1, 2].map((n) => CAU_HINH.giaTrieu(n)));
       ok(st.n === 2 && st.sao && st.lk === lk0 - g[0] - g[1] && st.gia === g[2] && g[2] > g[1] && g[1] > g[0], `${tag} triệu hồi 2 lần: 2 tướng 1 sao, tốn ${g[0]} + ${g[1]} Linh khí, giá tăng dần (lần sau ${st.gia})`);
+      await page.evaluate(() => DEMO.tua(1));
       // triệu hồi đủ sân (cho thêm Linh khí)
       await page.evaluate(() => { DEMO.S.lk = 99999; });
       for (let i = 0; i < 16; i++) await page.click('#nut-trieu');
@@ -88,10 +90,12 @@ const trongKhung = (page) => page.evaluate(() => {
       st = await page.evaluate((s) => [DEMO.S.o[s[0]] && DEMO.S.o[s[0]].sao, DEMO.S.o[s[1]] && DEMO.S.o[s[1]].sao], sai);
       ok(st[0] === sai[2] && st[1] === sai[3], `${tag} thả lên tướng khác loại/sao: không gộp, tướng về chỗ cũ`);
       // nâng bậc
+      await page.evaluate(() => DEMO.tua(0));   // đứng trận khi đo Energy (quái chết giữa chừng cũng cộng Energy)
       const b0 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.scorch, dmg: DEMO.G.satThuong(DEMO.S, { id: 'scorch', sao: 1 }) }));
       await page.click('.the[data-id=scorch]');
       const b1 = await page.evaluate(() => ({ lk: DEMO.S.lk, bac: DEMO.S.bac.scorch, dmg: DEMO.G.satThuong(DEMO.S, { id: 'scorch', sao: 1 }), txt: document.querySelector('.the[data-id=scorch] .bac').textContent }));
       ok(b1.bac === b0.bac + 1 && b1.lk === b0.lk - 80 && b1.dmg > b0.dmg && b1.txt === 'LV 2', `${tag} nâng cấp SCORCH: tốn 80, sát thương ${b0.dmg} → ${b1.dmg.toFixed(1)}, nút ghi "${b1.txt}"`);
+      await page.evaluate(() => DEMO.tua(1));
       // x2 + tua nhanh tới đợt 10 có boss
       await page.click('#nut-tocdo');
       ok((await page.textContent('#nut-tocdo')) === '2x', `${tag} nút tốc độ chuyển 2x`);
