@@ -1,5 +1,5 @@
 # 008 – Khung bảng chính + khung chú thích
-- **Trạng thái:** CHỜ  · ƯU TIÊN 3
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 1 tấm nguồn art/giao-dien/he-thong/khung-bang-nguon-chatgpt.png; đúng cỡ yêu cầu; khung chính 844×390 viền ~30 px, tooltip 320×170 viền ~22 px)
 - **Dùng vào:** nền bảng THE RESONANCE LATTICE và bảng CHARMS (iPhone ngang 844×390 – ChatGPT mục 6). Chưa có ảnh → bảng giữ kiểu chữ HTML có sẵn của Chuông Lưu.
 - **Mô tả:** (1) **Main Panel Frame** – khung đồng cổ viền rễ, góc có chuông/mặt nạ nhỏ, lòng tối (#141a22–#1A212B) TRỐNG HOÀN TOÀN để đặt chữ/nút HTML; viền mỏng (≤ 18 px) để không ăn chỗ. (2) **Tooltip Frame** – khung nhỏ cùng phong cách cho ô thông tin.
 - **Số khung:** 1 tĩnh mỗi mảnh.

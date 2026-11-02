@@ -1,5 +1,5 @@
 # 009 – Mảnh giao diện nhỏ: tab, nút, nút kỹ năng, ô cắm
-- **Trạng thái:** CHỜ  · ƯU TIÊN 3
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 1 tấm nguồn art/giao-dien/he-thong/khung-bang-nguon-chatgpt.png; đúng cỡ yêu cầu; khung chính 844×390 viền ~30 px, tooltip 320×170 viền ~22 px)
 - **Dùng vào:** bảng The Resonance Lattice / Charms (ChatGPT mục 6 – kích thước theo đúng danh sách ChatGPT). Không chữ trong ảnh (chữ là HTML đè lên).
 - **Mô tả + cỡ (PNG trong suốt, mỗi trạng thái 1 ảnh riêng):**
   - **Tab** 96×40: thường (tab.png) + đang chọn sáng viền vàng đồng (tab-chon.png).

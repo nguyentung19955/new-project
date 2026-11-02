@@ -1,5 +1,5 @@
 # 010 – Biểu tượng tiền tệ / điểm
-- **Trạng thái:** CHỜ  · ƯU TIÊN 4
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – 1 tấm nguồn art/giao-dien/he-thong/khung-bang-nguon-chatgpt.png; đúng cỡ yêu cầu; khung chính 844×390 viền ~30 px, tooltip 320×170 viền ~22 px)
 - **Dùng vào:** dòng trạng thái bảng (Currency Icon 32×32 – ChatGPT mục 6), cạnh số XP / Note / Dust / Đồng Cổ.
 - **Mô tả:** 4 biểu tượng cùng bộ với art/hieu-ung/chieu-moi/i_manh_am.png (Echo Shard đã có):
   1. **Resonance XP** (resonance-xp) – vòng sóng âm nhỏ quanh một chấm sáng xanh.
