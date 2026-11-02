@@ -453,13 +453,18 @@
   // ĐẾ TRÒN DƯỚI CHÂN tô màu BẬC ĐẬM (trắng bạc / lam / tím / vàng kim / đỏ) — nhìn là biết bậc. 5★+ thêm vòng ngoài; VÀNG/ĐỎ lấp lánh nhẹ.
   const SANG_BAC = { trang: '#ffffff', lam: '#bfe2ff', tim: '#ead6ff', vang: '#fff2b8', do: '#ffc4c4' };
   // ĐĨA AURA tròn màu dưới chân khi tướng đang được BUFF (Archfiend OVERCLOCK, COPY BUFFER...) — như DCDW
+  // (aura chỉ khi có buff THẬT: vòng mảnh, mờ, sát chân — không phải đế)
   function veAura(c, cx, chan, mau, t, uid) {
-    const rx = C.O * 0.46, ry = rx * 0.36, nh = 0.5 + 0.5 * Math.sin(t * 5 + (uid || 0));
-    c.save(); c.globalCompositeOperation = 'lighter';
-    c.fillStyle = rg(c, cx, chan, 1, rx, [[0, hexA(mau, 0.55)], [0.7, hexA(mau, 0.28)], [1, hexA(mau, 0)]]);
-    c.beginPath(); c.ellipse(cx, chan, rx, ry, 0, 0, 7); c.fill();
-    c.globalAlpha = 0.5 + 0.4 * nh; c.strokeStyle = mau; c.lineWidth = 1.3; c.beginPath(); c.ellipse(cx, chan, rx * (0.85 + 0.1 * nh), ry * (0.85 + 0.1 * nh), 0, 0, 7); c.stroke();
-    c.restore();
+    const rx = C.O * 0.36, ry = rx * 0.3, nh = 0.5 + 0.5 * Math.sin(t * 4 + (uid || 0));
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.25 + 0.15 * nh; c.strokeStyle = mau; c.lineWidth = 1;
+    c.beginPath(); c.ellipse(cx, chan, rx, ry, 0, 0, 7); c.stroke(); c.restore();
+  }
+  // BÓNG ĐỔ mềm sát chân (C.BONG_*): elip tối, tâm đậm → mép mờ, để tướng trông đứng trên sàn ô
+  function veBongChan(c, cx, chan) {
+    const rx = C.O * C.BONG_W / 2, ry = rx * C.BONG_DET;
+    c.save(); c.translate(cx, chan); c.scale(1, ry / rx);
+    c.fillStyle = rg(c, 0, 0, 0, rx, [[0, `rgba(0,0,0,${C.BONG_A})`], [0.6, `rgba(0,0,0,${C.BONG_A * 0.75})`], [1, 'rgba(0,0,0,0)']]);
+    c.beginPath(); c.arc(0, 0, rx, 0, 7); c.fill(); c.restore();
   }
   // MŨI TÊN nhỏ cạnh tướng: XANH ▲ = đang được buff (tốc đánh), ĐỎ ▼ = đang bị debuff (trùm / tinh anh)
   function veMuiTen(c, x, y, len, t) {
@@ -467,6 +472,7 @@
     c.save(); c.translate(x, y + nh * d); c.beginPath(); c.moveTo(0, 4 * d); c.lineTo(-3.6, 0); c.lineTo(-1.3, 0); c.lineTo(-1.3, -3.5 * d); c.lineTo(1.3, -3.5 * d); c.lineTo(1.3, 0); c.lineTo(3.6, 0); c.closePath();
     c.scale(1, 1); c.fillStyle = m; c.fill(); c.lineWidth = 1; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.stroke(); c.restore();
   }
+  // (02/11: KHÔNG còn vẽ trên bàn theo yêu cầu người dùng — giữ hàm để dùng lại nếu cần)
   function veVongBac(c, v, cx, chan, t, afMau) {
     const id = TUONG[v.id].bac, b = BAC[id] || BAC.trang, rx = C.O * 0.36, ry = rx * 0.34;
     c.save();
@@ -646,7 +652,7 @@
     let wMax = dS.x1 - dS.x0 + 1;
     if (!xoay) for (const d of HUONG5) { const im = sach(co(`v3:${id}:${d}`)); if (im) { const k = doChac(im); wMax = Math.max(wMax, k.x1 - k.x0 + 1); } }
     const cao = C.TUONG_CAO * (TUONG[id].co || 1);
-    s = Math.min(cao / hS, (xoay ? C.O : C.TUONG_RONG) / wMax, (C.OH - C.CHAN - 2) / hS);
+    s = Math.min(cao / hS, (xoay ? C.O : C.TUONG_RONG) / wMax, (C.OH - C.CHAN + 3) / hS);   // cho vượt mép trên ô tối đa ~3px
     TL_TINH.set(key, s);
     return s;
   }
@@ -790,8 +796,8 @@
     const v3 = !!coV3(v.id);
     const [x, y] = G.oXY(S, i), cx = x + C.O / 2, chan = y + C.OH - (v3 ? C.CHAN : 5), h = HANH[TUONG[v.id].hanh];
     const moiGop = v.kieuSinh === 'gop' && v.sinhT != null && tg - v.sinhT < GOP_THU;
-    const buff = G.afBat(S, 'tocDanh') ? ARCHFIEND[S.af.id].mau : v.bufT > 0 ? '#00ffa3' : null;   // đang được buff → đĩa aura màu dưới chân
-    if (!moiGop) { if (!v3) veBong(c, cx, chan, 20); if (buff) veAura(c, cx, chan, buff, t, v.uid); veVongBac(c, v, cx, chan, t, null); }
+    const buff = G.afBat(S, 'tocDanh') ? ARCHFIEND[S.af.id].mau : v.bufT > 0 ? '#00ffa3' : null;   // đang được buff thật → vòng aura mảnh mờ dưới chân
+    if (!moiGop) { veBongChan(c, cx, chan); if (buff) veAura(c, cx, chan, buff, t, v.uid); }   // KHÔNG còn đế màu bậc — chỉ bóng đổ (+ vòng aura mảnh khi có buff)
     if (v.sinhT != null && v.kieuSinh !== 'gop') veCong(c, cx, chan, tg - v.sinhT);
     if (hop) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ffffff'; c.lineWidth = 1.4; c.beginPath(); c.ellipse(cx, chan, C.O * 0.42, C.O * 0.15, 0, 0, 7); c.stroke(); c.restore(); }
     if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 18, 24, 0.45 + 0.15 * Math.sin(t * 12));

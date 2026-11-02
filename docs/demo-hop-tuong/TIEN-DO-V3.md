@@ -194,3 +194,19 @@ Làm theo mục G của `QUAN-SAT-10-VIDEO-DCDW.md` + P0/P1 của `tu-van-chatgp
 - Màn rất cao (960) còn khe trống nhỏ trên/giữa/dưới (~30px mỗi khe) vì ô bị kẹp tối đa 70px để giữ gần vuông.
 - Co-op: phần sàn dưới bàn trên không có đường (quái đi thẳng xuống bàn dưới).
 - Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.
+
+## Sửa 4 lỗi người dùng báo trên iPhone: bỏ đế màu, đứng trong ô, quay hướng mượt, bắn chậm (02/11/2026, phiên tự động)
+Không chạy test. Đã chụp màn 390×844 (PVP, bàn đầy tướng) tự xem: tướng đứng trên sàn ô, không lỗi JS. Ghi lại hướng quay 10 giây của 10 tướng: mỗi tướng chỉ đổi 4–6 nấc, đi tuần tự qua hướng trung gian (vd. S → SW → W → SW → S), không còn nhảy qua lại.
+
+1. **Bỏ đế màu dưới chân** (đĩa trắng/lam/tím/vàng/đỏ) trên bàn. Bậc chỉ còn thể hiện ở **thẻ** (viền/nền thẻ, màu tên) và **màn chọn tướng**. Vòng aura buff (OVERCLOCK / COPY BUFFER) chỉ hiện khi có buff thật, giờ là **vòng mảnh, mờ** sát chân (không phải đĩa).
+2. **Đứng trong ô, không lơ lửng**: chân tướng đặt ở **75% chiều cao ô** (`CAU_HINH.TL_CHAN`, nên dùng 0.72–0.78; trước là ~87% và đứng trên đế màu nên trông nổi), thêm **bóng đổ mềm** sát chân: elip tối alpha **0.35**, rộng **45% ô**, dẹt (`BONG_A`, `BONG_W`, `BONG_DET`). Tướng chỉ được vượt mép trên ô tối đa ~3px; sao pip ngay trên đầu.
+3. **Quay theo hướng quái mượt như DCDW** (thông số `CAU_HINH.HUONG` trong data.js):
+   - chỉ đổi hướng khi **chọn mục tiêu mới** hoặc quái lệch **> 30°** so với hướng đang nhìn; tối thiểu **0.4s** giữa 2 lần đổi (`DOI_MIN`, `LECH`);
+   - đổi xa (> 45°) thì **đi qua các hướng trung gian**, mỗi nấc **60ms** (`BUOC`); quay 180° thì đi vòng qua hướng nhìn xuống (không quay lưng);
+   - không có quái **> 1.2s** → từ từ quay về hướng mặc định **nhìn xuống (phía hành lang quái)**, mỗi nấc 120ms (`VE_S`, `BUOC_VE`, `MAC_DINH`);
+   - WARP (xoay bằng code) vẫn nội suy góc mượt (`LERP`).
+4. **Bắn chậm lại cho giống DCDW**: chu kỳ đòn = cd cũ **×1.7** (SCORCH 1.36s, FROST 1.7, ARC 1.53, VENOM 1.7, **LANCE 2.5**, WARP 2.04, BROKER 2.38, GLITCH 1.87), sát thương mỗi đòn **×1.5** để DPS không tụt quá. OVERCLOCK vẫn +35%. Nhịp mỗi đòn giữ nguyên: lùi → lao tới (đạn phát lúc này từ đầu nòng) → về.
+
+### Ghi chú
+- Hàm vẽ đế cũ `veVongBac` vẫn giữ trong render.js (không gọi nữa) phòng khi cần dùng lại.
+- Có thể chỉnh nhanh trong data.js: `TL_CHAN` (vị trí chân), `BONG_*` (bóng), `HUONG.*` (độ "lì" khi quay), `cd`/`dmg` từng tướng.
