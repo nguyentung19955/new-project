@@ -1,6 +1,6 @@
 // Kiểm móc Hệ thống tiến triển / Charm vào Vùng 1 (Playwright) – phiên bản 2.
 // Chạy: (cd tieng-vong-cuoi-cung && python3 -m http.server 8765 &) ; node tools/he-thong/kiem-thu-vung1.js
-// Phần 4 GIẢ LẬP "đã có ảnh" bằng cách chặn đường dẫn ảnh trong trình duyệt kiểm thử (ảnh 1×1 trong bộ nhớ, không ghi vào repo, không hiện trong game thật).
+// Từ 02/11 ảnh ChatGPT đã có thật → phần 2 và 4 chạy trên ảnh thật (hàm mo(q, true) vẫn giữ để giả lập khi cần).
 const {chromium} = require('playwright');
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 (async () => {
@@ -20,7 +20,7 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
   ok('Mặc định tắt: không có nút Lattice, kiếm vẫn 10', !r.bat && !r.nut && r.st === 10, r);
   ok('Mặc định tắt: không lỗi JS', !pg.loi.length, pg.loi); await pg.close();
 
-  // 2) bật thử ?hethong=1 (chưa có ảnh)
+  // 2) bật thử ?hethong=1 (ảnh ChatGPT đã có từ 02/11 → Charm + 2 VFX tự bật)
   pg = await mo('&hethong=1&hethong_moi=1');
   await pg.waitForFunction(() => window.MocHeThong && MocHeThong.bat);
   r = await pg.evaluate(async (gietS) => {
@@ -43,13 +43,13 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
   ok('Hạ tinh anh lần đầu → +45 Resonance XP (cấp 1)', r.sau1.cap === 1 && r.sau1.xp === 45, r.sau1);
   ok('Tái đấu tinh anh → +15 → cấp 2, 1 Echo Note', r.sau2.cap === 2 && r.sau2.xp === 60 && r.sau2.not === 1, r.sau2);
   ok('Bảng Chuông Lưu có nút "Lattice · 1 Note"', /Lattice · 1 Note$/.test(r.chu), r.chu);
-  ok('Chưa có ảnh Charm → KHÔNG hiện chọn Charm đầu, KHÔNG có nút Charms', !r.chonDau && !r.charm && r.coDo === false);
+  ok('Đã có ảnh Charm → hiện chọn Charm đầu + có nút Charms', r.chonDau && r.charm && r.coDo === true);
   ok('Bảng THE RESONANCE LATTICE có 3 tab EDGE/ECHO/VESSEL', r.bang && r.tabs.join() === 'EDGE,ECHO,VESSEL', r.tabs);
   ok('Nút cao ≥ 44px (dễ bấm iPhone)', r.cao >= 44, r.cao);
   ok('Học Keen Edge (cấp 2) → kiếm 10 → 11 (+10%)', r.coHoc && /Learned/.test(r.daHoc) && r.st === 11, {st:r.st, daHoc:r.daHoc});
   ok('Lingering Echo ghi "Requires level 3"', /Requires level 3/.test(r.echo), r.echo);
   ok('Fifth Toll chưa có ảnh → "Art pending"', r.edge.some(x => x.startsWith('Fifth Toll') && x.includes('Art pending')), r.edge);
-  ok('Chưa có ảnh VFX → không bật Frostline/Halo', r.vfx.length === 0);
+  ok('Đã có ảnh VFX → bật Frostline/Halo', r.vfx.sort().join() === 'frostline,halo', r.vfx);
   ok('Lưu riêng khoá tvcc-he-thong', r.luu);
   await pg.screenshot({path:process.env.ANH || '/tmp/he-thong-bang.png'});
   ok('Bật thử: không lỗi JS', !pg.loi.length, pg.loi);
@@ -60,8 +60,8 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
   ok('Tải lại trang giữ cấp 2 và Keen Edge (kiếm 11)', r.st === 11 && r.cap === 2, r);
   await pg.close();
 
-  // 4) GIẢ LẬP đã có ảnh (chỉ trong trình duyệt kiểm thử) – kiểm luồng Charm + VFX
-  pg = await mo('&hethong=1&hethong_moi=1', true);
+  // 4) ảnh THẬT (trước 02/11 là giả lập) – kiểm luồng Charm + VFX
+  pg = await mo('&hethong=1&hethong_moi=1');
   await pg.waitForFunction(() => window.MocHeThong && MocHeThong.bat);
   r = await pg.evaluate(async (gietS) => {
     const giet = eval(gietS), {E, V1} = TV; await TV.choi(true); TV.buoc(10, '');
@@ -88,7 +88,7 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
     out.frost = MocHeThong.fx.some(f => f.id === 'frostline');
     return out;
   }, giet.toString());
-  ok('Giả lập có ảnh: bật rơi Charm + 2 VFX', r.coDo && r.vfx.join() === 'frostline,halo', r);
+  ok('Có ảnh: bật rơi Charm + 2 VFX', r.coDo && r.vfx.join() === 'frostline,halo', r);
   ok('Sau tinh anh đầu: Rest Bell hiện CHỌN Bell\'s Return / Ashen Mercy (không RNG)', r.chonDau && r.luaChon.join() === "Bell's Return,Ashen Mercy" && r.caoLC >= 44, r.luaChon);
   ok('Chọn Ashen Mercy → vào túi (Faded)', r.tui[0] === 'ashen_mercy:faded', r.tui);
   ok('Túi Charm: chọn rồi bấm Equip → cắm vào loadout (2/3 ô)', r.bangCharm && r.lap.join() === 'ashen_mercy' && /2\/3/.test(r.nutCharm), r.nutCharm);
@@ -97,6 +97,6 @@ const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR
   ok('Trùm rơi Charm; trùng Faded tự thành Echo Dust (túi không đầy rác)', r.dust > 0 && r.tuiSau < 15, {dust:r.dust, tui:r.tuiSau});
   ok('Học Keen Edge → đòn combo phát Frostline Slash', r.frost);
   await pg.waitForTimeout(200);
-  ok('Giả lập có ảnh: không lỗi JS', !pg.loi.length, pg.loi);
+  ok('Có ảnh: không lỗi JS', !pg.loi.length, pg.loi);
   console.log('Hỏng', hong); await b.close(); process.exit(hong ? 1 : 0);
 })();

@@ -170,9 +170,16 @@
       '#ch-ds button{display:flex;align-items:center;gap:8px}.ch-o{position:relative;width:56px;height:56px;flex:none}.ch-o img{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}' +
       '#l-chondau .hang button{min-height:120px;min-width:180px;display:inline-flex;flex-direction:column;align-items:center;gap:6px}#l-chondau img{width:72px;height:72px;image-rendering:pixelated}' +
       '@media (max-width:640px){#ht-cay,#ch-bo{grid-template-columns:1fr}}' +
-      (co(gd.khung_chinh) ? '#l-hethong .hop,#l-charm .hop{background:url(' + src(gd.khung_chinh) + ') center/100% 100% no-repeat}' : '') +
-      (co(gd.tab) && co(gd.tab_chon) ? '.ht-tab button{background:url(' + src(gd.tab) + ') center/100% 100%;border:0}.ht-tab button.chon{background-image:url(' + src(gd.tab_chon) + ')}' : '') +
-      (co(gd.nut) ? '#ht-ct button,#ch-ct button,#ch-lo button{background:url(' + src(gd.nut) + ') center/100% 100%;border:0}' : '');
+      // khung-chinh.png 844×390, viền ~30 px + mặt nạ ở 4 góc → lề trong 30/52 px; bỏ khung 9 mảnh của Chuông Lưu (border-image) để không vẽ chồng
+      (co(gd.khung_chinh) ? '#l-hethong .hop,#l-charm .hop{border:0;border-image:none;padding:30px 52px 26px;background:url(' + src(gd.khung_chinh) + ') center/100% 100% no-repeat}#l-hethong .hop::before,#l-charm .hop::before{display:none}' : '') +
+      // tooltip.png 320×170, viền ~22 px, 2 chuông treo trong 2 góc trên → lề trong 24/46 px
+      (co(gd.tooltip) ? '#ht-ct,#ch-ct{padding:24px 46px 22px;background:url(' + src(gd.tooltip) + ') center/100% 100% no-repeat;min-height:170px;box-sizing:border-box}' : '') +
+      // tab 96×40 giữ đúng cỡ ảnh (nút cao 44 để dễ bấm)
+      (co(gd.tab) && co(gd.tab_chon) ? '.ht-tab button{width:96px;min-width:96px;height:44px;padding:0;border:0;border-image:none;background:url(' + src(gd.tab) + ') center/96px 40px no-repeat}.ht-tab button.chon{background-image:url(' + src(gd.tab_chon) + ')}' : '') +
+      (co(gd.nut) ? '#ht-ct button,#ch-ct button{height:48px;padding:0 18px;border:0;border-image:none;background:url(' + src(gd.nut) + ') center/100% 100% no-repeat}' : '') +
+      (co(gd.nut_khoa) ? '#ht-ct button.khoa{border:0;border-image:none;background:url(' + src(gd.nut_khoa) + ') center/100% 100% no-repeat;color:#8b8f96;opacity:1}' : '') +
+      '#ch-lo button{height:auto;min-width:0;padding:2px;border:0;border-image:none;background:none}.ch-cam{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}.ch-cam img{width:40px;height:40px;image-rendering:pixelated}' +
+      '.ch-hiem{width:24px;height:24px;vertical-align:-6px;margin-right:4px;image-rendering:pixelated}';
     document.head.appendChild(st);
     const hang = $('b-mua') && $('b-mua').parentNode;
     const b = document.createElement('button'); b.id = 'b-hethong'; b.type = 'button'; b.onclick = () => moBang();
@@ -195,9 +202,10 @@
   }
   const CHU = {da_mo:'Learned', mo_duoc:'Learn', thieu_not:'Need Echo Notes', thieu_cap:'Requires level ', thieu_nut_truoc:'Learn the previous node first',
     thieu_dieu_kien:'Requires the Region 1 guardian to fall', thieu_thu_thach:'Requires a trial', chua_co_che:'Later region', cho_anh:'Art pending'};
+  const hiemIcon = h => co(h.bieu_tuong) ? '<img class="ch-hiem" src="' + src(h.bieu_tuong) + '" alt="">' : '';   // biểu tượng độ hiếm 24×24
   const chuTT = (n, t) => CHU[t] + (t === 'thieu_cap' ? n.cap : '');
   const gdA = () => M.ht.D.giao_dien || {};
-  const icon = k => { const p = (gdA().tien_te || {})[k]; return co(p) ? '<img src="' + src(p) + '" alt="" style="width:20px;height:20px;vertical-align:-4px;margin-right:3px;image-rendering:pixelated">' : ''; };
+  const icon = k => { const p = (gdA().tien_te || {})[k]; return co(p) ? '<img src="' + src(p) + '" alt="" style="width:24px;height:24px;vertical-align:-6px;margin-right:3px;image-rendering:pixelated">' : ''; };
   let tabChon = null, nutChon = null;
   function moBang(){
     const ht = M.ht, D = ht.D, sau = ht.diemCapSau();
@@ -214,7 +222,7 @@
       const t = ht.trangThaiNut(n.id), b = document.createElement('button'); b.type = 'button';
       b.className = (t === 'da_mo' ? 'da' : t === 'mo_duoc' ? 'duoc' : '') + (n.id === nutChon ? ' chon' : '');
       const anhNut = (gdA().nut_ky_nang || {})[t === 'da_mo' ? 'da_hoc' : t === 'mo_duoc' ? 'mo_duoc' : 'khoa'];
-      b.innerHTML = (co(anhNut) ? '<img src="' + src(anhNut) + '" alt="" style="float:left;width:40px;height:40px;margin-right:8px;image-rendering:pixelated">' : '') +
+      b.innerHTML = (co(anhNut) ? '<img src="' + src(anhNut) + '" alt="" style="float:left;width:48px;height:48px;margin:-4px 8px 0 -4px;image-rendering:pixelated">' : '') +
         n.ten + '<small>Lv ' + n.cap + ' · ' + chuTT(n, t) + '</small>';
       b.onclick = () => { nutChon = n.id; moBang(); };
       ds.appendChild(b);
@@ -226,12 +234,13 @@
         ' · Level ' + n.cap + '<br><span style="color:#a9b3bf">' + chuTT(n, t) + '</span><br>';
       if (t === 'mo_duoc'){ const b = document.createElement('button'); b.type = 'button'; b.className = 'chinh'; b.textContent = 'Learn';
         b.onclick = async () => { if (ht.moNut(n.id).ok){ ghi(); await apDung(); phatFx('halo'); V1.thongBao('Learned: ' + n.ten); } moBang(); }; ct.appendChild(b); }
+      else if (t !== 'da_mo' && co(gdA().nut_khoa)){ const b = document.createElement('button'); b.type = 'button'; b.className = 'khoa'; b.disabled = true; b.textContent = 'Locked'; ct.appendChild(b); }
     } else ct.innerHTML = '';
     $('l-hethong').classList.add('mo');
   }
   /* túi Charm 3 vùng: danh sách trái · thông tin giữa · loadout phải; chọn rồi bấm Equip (không chỉ kéo thả) */
   let charmChon = null;
-  const oCharm = m => '<span class="ch-o"><img src="' + src(M.ht.HIEM[m.hiem].khung) + '" alt=""><img src="' + src(M.ht.MAU[m.mau].anh) + '" alt="" style="inset:12%;width:76%;height:76%"></span>';
+  const oCharm = m => '<span class="ch-o"><img src="' + src(M.ht.HIEM[m.hiem].khung) + '" alt=""><img src="' + src(M.ht.MAU[m.mau].anh) + '" alt="" style="inset:11.11%;width:77.78%;height:77.78%"></span>';   // ô 72×72, lòng lề 8 px
   function moCharm(){
     if (!M.coDo) return;
     const ht = M.ht, S = ht.S;
@@ -240,21 +249,22 @@
     if (!S.tui.some(m => m.uid === charmChon)) charmChon = S.tui[0] && S.tui[0].uid;
     for (const m of S.tui){
       const h = ht.HIEM[m.hiem], b = document.createElement('button'); b.type = 'button'; if (m.uid === charmChon) b.className = 'chon';
-      b.innerHTML = oCharm(m) + '<span>' + ht.MAU[m.mau].ten + '<small style="color:' + h.mau_chu + '">' + h.ten + (S.lap.includes(m.uid) ? ' · equipped' : '') + '</small></span>';
+      b.innerHTML = oCharm(m) + '<span>' + ht.MAU[m.mau].ten + '<small style="color:' + h.mau_chu + '">' + hiemIcon(h) + h.ten + (S.lap.includes(m.uid) ? ' · equipped' : '') + '</small></span>';
       b.onclick = () => { charmChon = m.uid; moCharm(); }; ds.appendChild(b);
     }
     if (!S.tui.length) ds.innerHTML = '<small>No Charms yet. Elites and guardians carry them.</small>';
     const m = ht.tim(charmChon), ct = $('ch-ct'); ct.innerHTML = '';
     if (m){
       const g = ht.MAU[m.mau], h = ht.HIEM[m.hiem], lap = S.lap.includes(m.uid);
-      ct.innerHTML = '<b style="font-size:16px">' + g.ten + '</b> <span style="color:' + h.mau_chu + '">' + h.ten + '</span><br>' + g.loai + ' · ' + g.o + (g.o === 1 ? ' slot' : ' slots') +
+      ct.innerHTML = '<b style="font-size:16px">' + g.ten + '</b> <span style="color:' + h.mau_chu + '">' + hiemIcon(h) + h.ten + '</span><br>' + g.loai + ' · ' + g.o + (g.o === 1 ? ' slot' : ' slots') +
         '<br>' + g.mo_ta + (m.dong.length ? '<br>' + m.dong.map(ht.moTaDong).join('<br>') : '') + '<br>';
       const nut = (chu, fn, chinh) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = chu; if (chinh) b.className = 'chinh'; b.onclick = fn; ct.appendChild(b); };
       if (lap) nut('Unequip', async () => { ht.go(m.uid); ghi(); await apDung(); moCharm(); capNhatNut(); });
       else nut('Equip', async () => { const r = ht.lap(m.uid); if (!r.ok) V1.thongBao(r.ly === 'het_o' ? 'Not enough slots' : r.ly === 'trung_mau' ? 'That Charm is already equipped' : 'Cannot equip'); ghi(); await apDung(); moCharm(); capNhatNut(); }, true);
       nut('Dismantle (+' + ((ht.D.echo_dust.phan_ra || {})[m.hiem] || 0) + ' Dust)', async () => { ht.phanRa(m.uid); ghi(); await apDung(); moCharm(); capNhatNut(); });
     }
-    const lo = $('ch-lo'); lo.innerHTML = '<b>Loadout</b><br>';
+    const lo = $('ch-lo'), oc = gdA().o_cam || {};   // ô cắm 40×40: trống / đã cắm theo số ô đang dùng
+    lo.innerHTML = '<b>Loadout</b>' + (co(oc.trong) && co(oc.day) ? '<div class="ch-cam">' + Array.from({length:ht.oToiDa()}, (_, i) => '<img src="' + src(i < ht.oDaDung() ? oc.day : oc.trong) + '" alt="">').join('') + '</div>' : '<br>');
     for (const u of S.lap){ const x = ht.tim(u); if (!x) continue; const b = document.createElement('button'); b.type = 'button'; b.innerHTML = oCharm(x);
       b.title = ht.MAU[x.mau].ten; b.onclick = () => { charmChon = u; moCharm(); }; lo.appendChild(b); }
     $('l-charm').classList.add('mo');
