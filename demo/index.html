@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b0805">
+  <title>Thủ Thành Ghép Tướng — bản thử</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@500;700;800&display=swap">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="cv"></canvas>
+
+    <div id="top" hidden>
+      <div class="tb-trai">
+        <div id="tb-dot">Đợt 0</div>
+        <div id="tb-boss">Boss ở đợt 10</div>
+        <div id="tb-mang"></div>
+      </div>
+      <div class="tb-phai">
+        <div id="tb-quai">Quái 0</div>
+        <button id="nut-tocdo" class="nut-nho" data-act="tocdo">x1</button>
+        <button id="nut-dung" class="nut-nho" data-act="dung" aria-label="Tạm dừng">❚❚</button>
+      </div>
+    </div>
+
+    <div id="duoi" hidden>
+      <div id="lk-hop"><span>Linh khí</span><b id="lk">0</b></div>
+      <div id="bo-bac"></div>
+      <button id="nut-trieu" data-act="trieu"><b>Triệu hồi</b><span id="gia-trieu">10 ✦</span></button>
+    </div>
+
+    <div id="chon" class="man">
+      <div class="chon-dau">
+        <div class="ten-game">Thủ Thành Ghép Tướng <small>bản thử</small></div>
+        <div class="chon-goi">Chọn <b>5 tướng</b> ra trận · <span id="chon-dem">0/5</span></div>
+      </div>
+      <div id="chon-luoi"></div>
+      <div class="chon-cuoi">
+        <div class="chon-meo">Triệu hồi tướng ngẫu nhiên · kéo 2 tướng <b>cùng loại cùng sao</b> chồng lên nhau để gộp lên sao (ra loại ngẫu nhiên)</div>
+        <button class="nut" data-act="ngaunhien">Ngẫu nhiên</button>
+        <button class="nut chinh" data-act="vao" id="nut-vao" disabled>Vào trận</button>
+      </div>
+    </div>
+
+    <div id="dung" class="man phu" hidden>
+      <div class="bang">
+        <div class="bang-ten">Tạm dừng</div>
+        <div id="dung-bo" class="dung-bo"></div>
+        <div class="bang-nut">
+          <button class="nut" data-act="bo">Bỏ trận</button>
+          <button class="nut chinh" data-act="tiep">Tiếp tục</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ketqua" class="man phu" hidden>
+      <div class="bang">
+        <div class="bang-ten">Thành thất thủ!</div>
+        <div class="kq-so">Trụ được tới <b id="kq-dot">Đợt 0</b></div>
+        <div class="kq-phu" id="kq-phu"></div>
+        <div class="bang-nut">
+          <button class="nut" data-act="doibo">Đổi bộ tướng</button>
+          <button class="nut chinh" data-act="choilai">Chơi lại</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="xoay" hidden>
+    <div class="xoay-dt"></div>
+    <b>Xoay ngang điện thoại để chơi</b>
+    <span>Trận đang tạm dừng</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

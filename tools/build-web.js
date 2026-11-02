@@ -6,6 +6,8 @@ const hosting = process.argv.includes('--hosting');
 const root = path.join(__dirname, '..'), out = path.join(root, hosting ? 'dist-web' : 'www');
 const files = ['index.html', 'css', 'js', 'assets', 'icons', 'manifest.webmanifest'];
 if (hosting) files.push('sw.js');
+// claude/demo-hop-tuong: bản thử "Thủ thành ghép tướng" chạy độc lập ở /demo/ (dùng chung ảnh ../assets/)
+if (hosting && fs.existsSync(path.join(root, 'demo'))) files.push('demo');
 // v189: cập nhật danh sách ảnh có thật (js/asset-list.js) trước khi gom
 { const al = require('./build-asset-list.js'); fs.writeFileSync(al.out, al.render(al.list())); }
 fs.rmSync(out, { recursive: true, force: true });

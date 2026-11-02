@@ -3128,3 +3128,16 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 ## claude/gon-khung — mọi thứ gọn trong khung, nút hành động không phải cuộn mới thấy
 - Ấn Phù: khung chi tiết = phần cuộn (thông tin + 5 cấp gọn 2 cột, cấp kế nổi một dòng) + nút Khắc / Nâng ghim đáy khung; 3 cột ấn kéo cao bằng khung chi tiết (hết khoảng trống dưới). Kết quả: dòng "Mở <tướng> · Ngân khố" lên trên bảng số liệu (trước nằm cuối bảng cuộn). Góp ý: hộp co theo khung — ô viết co lại (≥ 56px) thay vì đẩy Gửi / Huỷ xuống vùng cuộn.
 - Test mới `tests/gon-khung`: 17 màn (menu, đăng nhập, Anh Hùng + tướng khoá, Thần Khí, Ấn Phù, Kho Báu, Bách khoa, Cài đặt, Góp ý, Cây kỹ năng, Túi đồ, Tiến hoá, Lò đúc, Hợp thể, Sính lễ, Kết quả) ở 844×390 + 667×375: mọi nút hành động (trừ mục trong danh sách cuộn) nằm trọn khung, không nằm ở nửa dưới một khung cuộn gần đầy (máy thật chữ to hơn sẽ bị đẩy khuất).
+
+## claude/demo-hop-tuong — DEMO game mới "Thủ Thành Ghép Tướng" (thư mục `demo/`, không đụng game chính)
+
+- Thể loại thủ thành ghép tướng (merge tower defense), 1 người, 1 màn vô tận + boss mỗi 10 đợt. Mở `demo/index.html` (file:// được) hoặc bản web `/demo/` (GitHub Pages phục vụ thẳng thư mục; Firebase: `tools/build-web.js --hosting` chép thêm `demo/`).
+- Khung cố định 844×390 thu/phóng vừa vùng an toàn + hộp đen; chỉ màn ngang, cầm dọc → màn che "Xoay ngang" + trận dừng; chặn phóng to/cuộn.
+- Sân 3×5 giữa màn; quái ra từ hang trái dưới, vòng quanh sân, về Thành phải dưới; lọt thành −1 mạng (boss −2), 3 mạng.
+- Đầu trận chọn bộ 5/8 tướng: Thánh Gióng (Hỏa·đốt), Sơn Tinh (Thổ·choáng), Thủy Tinh (Thủy·làm chậm lan), Lạc Long Quân (Thủy·sấm nảy), Âu Cơ (Mộc·tăng tốc đánh tướng kề), Chử Đồng Tử (Kim·sinh Linh khí), Mỵ Châu (Kim·nỏ thần nhiều tên), Thạch Sanh (Thổ·nhắm quái máu nhiều, ×2,5 lên boss).
+- Triệu hồi: tốn Linh khí (10 + 6×số lần đã triệu), đặt tướng 1 sao ngẫu nhiên trong bộ vào ô trống ngẫu nhiên. Kéo tướng thả lên tướng cùng loại cùng sao → 1 tướng sao+1 loại ngẫu nhiên (tối đa 7 sao, sát thương ×2,2 mỗi sao); thả vào ô trống = chuyển chỗ.
+- Hàng dưới: 5 thẻ nâng Bậc từng loại (80/160/300/500/800 Linh khí, +40% sát thương mỗi bậc, tối đa Bậc 6).
+- Quái: Lính Tôm (thường), Cáo Lửa (nhanh), Rùa Đá (trâu); máu ×1,21 mỗi đợt. Boss: Chằn Tinh (đợt 10 — hoá đá tướng 4 giây), Hà Bá (đợt 20 — cuốn tướng đổi chỗ), Hồ Tinh (đợt 30 — hồi máu mình + quái quanh), xoay vòng mạnh dần.
+- Hạ quái + qua đợt được Linh khí; số sát thương bay, đạn theo từng tướng, hiệu ứng triệu hồi/gộp/lên bậc; x1/x2, tạm dừng, thua → bảng kết quả (đợt đạt được, kỷ lục) → Chơi lại / Đổi bộ.
+- Ảnh: tạm dùng pixel `assets/pixel-muot/` của game chính; ảnh mới thả vào `demo/assets/` (tên theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md`) được ưu tiên tự động.
+- Test: `node tests/demo-hop-tuong/demo-hop-tuong.test.js` (chọn bộ, triệu hồi đủ, gộp, nâng bậc, x2 tới boss đợt 10, hoá đá, tạm dừng, thua/chơi lại, nút trong khung 844×390 + 667×375, dọc → màn che, ảnh mới được ưu tiên).
