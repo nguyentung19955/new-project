@@ -1,0 +1,148 @@
+NEON GRID — ĐẶC TẢ CHUYỂN ĐỔI SANG THỦ THÀNH GHÉP TƯỚNG MÀN DỌC
+Phiên bản 1.0 — 02/11/2026
+
+PHẠM VI
+Tái tạo nguyên lý trình bày dễ đọc của DCDW (hai bàn 5x3, camera 3/4 cao, nhân vật nhỏ, HUD dọc, đường quái bên cạnh) bằng thiết kế NEON GRID hoàn toàn mới. Không chép texture, UI, hình nhân vật hay hiệu ứng gốc. Các số đo DCDW là ước lượng từ ảnh YouTube, không phải thông số game chính thức.
+
+1. PHÂN TÍCH HAI ẢNH THAM CHIẾU
+- Ảnh nguồn 1568x733; video gameplay trung tâm khoảng x=590..966, y=46..642, tương đương 376x596 hiển thị. Phần ngoài video là hình minh họa và UI YouTube, tuyệt đối không tính vào layout gameplay.
+- HUD trên: wave góc trên trái (WAVE 26 và 6), hàng 6 icon tướng/leader dọc cạnh trên, số tài nguyên nhỏ; phần này chiếm khoảng 12-17% chiều cao video.
+- Bàn trên: gần x=685..925, y=145..285 (ảnh wave 26), 5 cột x 3 hàng. Bàn dưới: gần x=686..925, y=374..500. Khoảng trống giữa hai bàn xấp xỉ 70-90 px trên ảnh video. Vị trí thay đổi nhẹ giữa hai ảnh do trạng thái trận và khung hiển thị.
+- Ô hình chữ nhật gần vuông, khoảng 43-48 px ngang và 39-44 px cao trên khung video; bàn có viền kim loại xám đen, bản lề/đinh tán, nền ô than chì, viền phân cách tối, các ô có lớp sáng xanh lục/đỏ/tím do hiệu ứng. Bàn chiếm ~62-65% chiều rộng video.
+- Đường quái: làn dọc tối sát bên TRÁI hai bàn, quái nhỏ chạy theo tuyến, số sát thương nổi bên cạnh. Ảnh tĩnh không xác nhận chính xác toàn bộ đường đi, điểm spawn, đích hoặc có vòng quanh bàn hay không. Không khẳng định quái chạy quanh cả bốn cạnh.
+- Camera: gần orthographic, từ trên xuống chéo khoảng 25-35 độ so với mặt phẳng ngang (ước lượng mỹ thuật, không đo camera thật). Có thể thấy mặt trước, đỉnh đầu, vai, phần trên vũ khí và chút mặt trên nền; KHÔNG phải profile ngang và KHÔNG phải top-down 90 độ.
+- Tướng SD/chibi cao nhìn thấy khoảng 20-34 px trên ảnh video, chiếm ~50-80% chiều cao ô tùy tư thế/VFX; chân chạm nền gần tâm dưới ô. Đầu lớn, chân ngắn, vũ khí và silhouette rõ. Phần lớn hướng mặt xuống/phía người xem, lệch nhẹ trái hoặc phải; ảnh nhỏ không cho phép khẳng định tất cả đều cùng một hướng tuyệt đối.
+- Cấp sao: cụm sao vàng/trắng rất nhỏ trên đầu, có nền tối để tách khỏi sàn; số sao phản ánh cấp hợp nhất, không nên nhầm với LV thẻ ở HUD. Có hiệu ứng vòng dưới chân, tia đạn, aura, số sát thương và ánh sáng cục bộ, nhưng không che toàn bộ ô.
+- HUD dưới: tài nguyên tím bên trái, nút summon tím ở giữa với giá (ảnh lần lượt 370 và 150), biểu tượng hội thoại, 6 thẻ ở đáy (5 slot thường và 1 slot đặc biệt bên phải), mỗi thẻ có portrait, LV, giá; thẻ chưa đủ tài nguyên bị làm tối. Giá và số lượng là trạng thái động, không hardcode từ ảnh.
+- Chuyển động: hai ảnh tĩnh không đủ xác định số frame idle/attack hoặc FPS gốc. Số frame phía dưới là tiêu chuẩn sản xuất NEON GRID, không phải khẳng định kỹ thuật của DCDW.
+
+2. LAYOUT NEON GRID 390x844 (TỌA ĐỘ LOGIC)
+- Canvas nội bộ 390x844, DPR thực tế xử lý riêng, aspect 390/844=0.462. Căn giữa gameplay trong vùng safe area; không kéo dãn méo nếu điện thoại có tỷ lệ khác.
+- TOP HUD: y=0..64 (7.6%); nền cyberpunk tối, wave tại x=12..88, timer/boss x=104..226, 6 biểu tượng đội AI x=230..378. Tránh notch bằng safe inset.
+- KHU TRÊN: y=64..300 (28.0%); bàn AI đặt x=111,y=105,w=250,h=153. Làn quái AI x=42..92. Nhãn AI x=112,y=76. Khoảng thở cho hiệu ứng ở y=260..300.
+- KHU GIỮA: y=300..353 (6.3%); dải thông báo wave, kết quả, boss warning và vệt đường nối thị giác, không đặt nút chạm quan trọng.
+- KHU DƯỚI: y=353..597 (28.9%); bàn người chơi x=111,y=390,w=250,h=153. Làn quái người chơi x=42..92. Nhãn PLAYER x=112,y=363. Khoảng đệm dưới bàn đến y=597.
+- ACTION HUD: y=597..676 (9.4%); mana tại x=12..104; summon tại x=144..245, y=605..664; chat/menu x=338..378.
+- CARD HUD: y=676..816 (16.6%); 5 thẻ tướng x=8,68,128,188,248, mỗi thẻ w=55,h=108; thẻ leader x=314,w=68,h=108; icon, LV, giá nâng cấp, trạng thái đủ/thiếu mana.
+- SAFE BOTTOM: y=816..844 (3.3%). Tổng cộng 844 px.
+- Bàn 250x153: viền 5 px, grid nội bộ x=116..356, y=395..538; pitch mỗi cột 48 px, mỗi hàng 47.7 px. Để ô có khoảng cách 2 px, dùng cell render 46x45 và gutter 2 px. Bàn trên dùng cùng thông số tại y=105.
+- Lưu ý: tỷ lệ ảnh tham chiếu video rộng hơn 390x844; layout đề xuất có nhiều khoảng dọc hơn và ô nhỏ hơn để đủ HUD và safe area.
+- Chế độ một người: mặc định bàn trên là AI MIRROR DEFENSE, một đối thủ AI có đội hình, wave và HP riêng; hai bên nhận cùng wave nhưng không cần đồng bộ vị trí quái. Tùy chọn solo campaign: bàn trên là BOSS PRESSURE BOARD có 15 ô mô tả đợt xâm nhập, không phải bảng trống. Không tạo AI phức tạp trong demo đầu: dùng đội hình AI dựng sẵn và spawn theo timeline.
+- Đường quái: tạo một lane dọc riêng cho mỗi bàn, waypoint từ (67,92)->(67,273) với AI và (67,374)->(67,562) với player; spawn đầu trên, thoát cuối dưới, quái di chuyển dọc lane. Đường chạy không chồng lên ô. Nếu muốn quái đi vòng quanh bàn, làm sau bản demo vì ảnh tĩnh không xác nhận route vòng.
+- Responsive: scale = min(viewportWidth/390, viewportHeight/844) cho gameplay; phủ nền ngoài viewport, cộng safe inset, hitbox theo tọa độ logic. Không crop thẻ, không scale X/Y độc lập.
+
+3. GÓC NHÌN VÀ NHÂN VẬT
+- Góc chuẩn tất cả sprite: camera 3/4 cao, nhìn xuống khoảng 30 độ so với đường ngang, hình chiếu orthographic giả 2D; nhân vật quay mặt về phía camera và lệch TRÁI 10-20 độ (mặt hướng xuống-trái trên màn), nhìn thấy cả hai mắt, ngực và phần đỉnh tóc/mũ. Không dùng ảnh side-view nhìn phải làm sprite trên bàn.
+- Chibi 2.3-2.6 đầu: đầu 40-44% tổng chiều cao; torso 30-33%, chân 23-27%. Tất cả neo tại tâm hai bàn chân, bóng đổ nhỏ dưới chân; vũ khí không được che mắt.
+- Nguồn mỗi frame 128x128 RGBA; hình nhân vật trong khung cao 78-100 px tùy vũ khí, vùng chân cố định tại (64,110). Render trên bàn ở scale 0.38-0.43, tương đương canvas frame 49-55 px, body cao 30-39 px; giới hạn visual rộng <=46 px trong một ô, riêng VFX có thể vượt ô và bị cắt bởi mask bàn khi cần.
+- Tách SHADOW khỏi sprite nhân vật (bóng ellipse 30x10 nguồn, render 14x5). Vẽ frame hoàn chỉnh, không ráp tay/chân/bình/vũ khí theo code, không dùng mesh warp. Canvas chỉ translate, uniform scale, opacity, flash shader đơn giản, không biến dạng.
+- Sprite animation baseline: idle 8 frame @8-10 fps (sway 1-2 px, blink); attack 8-12 frame @12-16 fps (anticipation 2-3, release 2-3, recovery 3-5); hurt 4 frame @12 fps; summon 8 frame @12 fps; merge 8 frame VFX; death 6 frame @10-12 fps nếu có. Boss 12-16 frame/đòn. Logic game 60 Hz, render sprite bằng index=floor(elapsed*fps)%N, có interpolation chuyển vị trí nhưng KHÔNG tween hình thể.
+- Mỗi đơn vị cần sheet riêng, hàng frame cùng một động tác, frame size cố định, transparent alpha thật, không bóng nền, không text, không frame rỗng. Vẽ frame số 1 và key poses trước; giữ mẫu gốc cạnh từng frame; kiểm silhouette ở 40 px; kiểm foot anchor, head size, màu, vũ khí bằng overlay onion skin. Không dùng AI sinh 8 frame trong một prompt mà chưa kiểm nhất quán; ưu tiên keyframe 1-3-5-8, rồi vẽ inbetween riêng.
+- Đổi hình dạng để đọc tốt ở ô nhỏ: SCORCH giữ người (găng lửa + bình); FROST giữ người (trượng băng); LANCE giữ người (súng sniper); BROKER giữ người (áo khoác thương nhân); ARC đổi thành robot kiếm điện (đầu visor, kiếm lớn); WARP đổi thành drone vòng cổng hư không (khối trung tâm + vòng); GLITCH đổi thành bot hacker màn hình CRT (đầu vuông + tay dây); VENOM đổi thành thú máy phun độc bốn chân (bình độc lưng). Mỗi silhouette có hướng trước rõ, không xoay tự động theo mục tiêu; đạn xuất phát từ muzzle anchor vẽ sẵn trong metadata.
+- Nếu cần rig tối giản để tham chiếu animation: robot ARC gồm thân, đầu, tay kiếm, chân; WARP gồm core và 2 vòng; GLITCH gồm thân màn hình, hai tay dây, chân; VENOM gồm đầu, thân, 4 chân, vòi. Nhưng sản phẩm cuối vẫn là full-frame, không chạy rig trong game.
+
+4. ASSET MANIFEST + PROMPT NGẮN (THEO ƯU TIÊN)
+Quy ước: PNG RGBA thật, kích thước dưới đây tính pixel nguồn, không có chữ/nhãn trừ asset UI có chữ được chỉ định; xuất 1x/2x nếu cần. Sprite sheet W = 128*N, H=128 với mỗi hàng động tác; ảnh sheet nhiều hàng ghi rõ. Tất cả art theo style-reference: chibi anime cyberpunk, outline rõ, cel shading, màu cam/cyan/magenta, độ đọc ở 40 px.
+
+P0 — NỀN VÀ GIAO DIỆN (bắt buộc)
+01 bg_arena_portrait.png 780x1688: hậu cảnh hẻm cyberpunk tối, không nhân vật; PROMPT: 'Vertical dark cyberpunk arena, subdued neon city machinery, clean center, readable gameplay, no UI, transparent-safe composition.'
+02 board_frame_top.png 500x306: khung bàn AI kim loại sci-fi, 5x3, viền và đinh tán; PROMPT: 'Top-down angled sci-fi metal 5x3 board frame, dark graphite, subtle cyan edge, transparent center, no units.'
+03 board_frame_player.png 500x306: khung bàn player có viền magenta; PROMPT: 'Dark 5x3 sci-fi board frame, distinct magenta accent, metallic corners, transparent cell openings.'
+04 tile_normal.png 96x96: ô sàn kim loại lặp được; PROMPT: 'Single square graphite cyberpunk floor tile, panel seams, restrained wear, subtle top lighting, seamless edges.'
+05 tile_active.png 96x96: ô đang chọn; PROMPT: 'Single sci-fi floor tile selected, restrained cyan border, center stays dark, transparent outside.'
+06 tile_merge.png 96x96: ô hợp nhất; PROMPT: 'Single sci-fi metal tile, small magenta merge runes at corners, dark center, no text.'
+07 lane_straight.png 128x512: đoạn đường quái dọc; PROMPT: 'Narrow vertical enemy conveyor lane, dark metal, directional subtle red LEDs, repeatable ends, no enemies.'
+08 lane_spawn.png 128x128: cổng spawn; PROMPT: 'Small dark sci-fi spawn portal viewed from elevated 3/4, warning red, transparent background.'
+09 lane_exit.png 128x128: cửa thoát; PROMPT: 'Compact cyberpunk exit hatch with red warning rim, elevated 3/4, transparent background.'
+10 hud_top_panel.png 780x128: nền HUD trên; PROMPT: 'Wide compact dark cyberpunk HUD strip, left wave plaque, six empty icon sockets, no text.'
+11 hud_bottom_panel.png 780x438: nền HUD dưới; PROMPT: 'Vertical mobile bottom control HUD, dark metal, five empty card slots plus one leader slot, summon recess, no text.'
+12 summon_button_states.png 256x128: 2 frame 128x128 normal/pressed; PROMPT: 'Two states of futuristic magenta summon button, glowing plasma core, transparent, no numbers.'
+13 card_frame_states.png 384x128: 3 frame 128x128 normal/disabled/upgrade; PROMPT: 'Three matching chibi hero card frames, graphite neon UI, normal disabled upgrade, no text or portraits.'
+14 leader_card_frame.png 128x192: thẻ leader; PROMPT: 'Distinct tall leader card frame, black chrome magenta highlights, empty portrait window, transparent.'
+15 ui_icon_atlas.png 512x256: 8x4 icon 64x64 mana, wave, star, coin, hp, boss, chat, pause, merge, upgrade...; PROMPT: '32 clean compact cyberpunk HUD pictograms, uniform 64px cells, cyan magenta amber, transparent.'
+16 star_badges.png 384x64: 6 frame 64x64 nhãn 1-6 sao; PROMPT: 'Six tiny readable star-rank badges on dark plaques, 1 through 6 gold stars, transparent.'
+17 hp_bar_atlas.png 384x64: 6 thanh HP theo trạng thái; PROMPT: 'Six minimal enemy HP bar states, dark metal and red fill, no text, transparent.'
+18 unit_shadow.png 64x32: bóng ellipse; PROMPT: 'Soft compact dark ellipse contact shadow, transparent background, no glow.'
+19 board_overlay_fx.png 256x256: góc sáng/đèn; PROMPT: 'Sparse small cyberpunk metal board corner lights and screws, separate transparent decorative elements.'
+
+P1 — TƯỚNG (mỗi tướng 4 file bắt buộc: idle, attack, hurt, summon; một prompt riêng theo mẫu từng dòng)
+Quy cách idle 1024x128 (8f), attack 1536x128 (12f), hurt 512x128 (4f), summon 1024x128 (8f). Tất cả 128x128/frame; nếu tướng không cần 12 attack frame, vẫn xuất 12 để pipeline thống nhất. 8 tướng x4 = 32 PNG.
+20 scorch_idle.png 1024x128: SCORCH idle; PROMPT: 'SCORCH original orange fire-gauntlet chibi, 3/4 high front-left view, 8 subtle breathing frames, transparent, fixed feet.'
+21 scorch_attack.png 1536x128: bắn lửa; PROMPT: 'Same SCORCH, 12 full-body frames windup then fire gauntlet recoil, 3/4 front-left, fixed feet, transparent.'
+22 scorch_hurt.png 512x128: trúng đòn; PROMPT: 'Same SCORCH, four small hurt recoil frames, no redesign, transparent.'
+23 scorch_summon.png 1024x128: xuất hiện; PROMPT: 'Same SCORCH, eight arrival poses rising into ready stance, transparent, fixed anchor.'
+24 frost_idle.png 1024x128: FROST idle; PROMPT: 'Original ice-mage FROST, silver hair cyan staff, 8 breathing frames, high 3/4 front-left, transparent.'
+25 frost_attack.png 1536x128: niệm băng; PROMPT: 'Same FROST, 12 frames lift staff, cast frost bolt, recover, fixed feet, transparent.'
+26 frost_hurt.png 512x128: hurt; PROMPT: 'Same FROST, 4 subtle hurt recoil frames, transparent.'
+27 frost_summon.png 1024x128: summon; PROMPT: 'Same FROST, 8 arrival-to-idle poses, transparent.'
+28 arc_idle.png 1024x128: robot kiếm điện; PROMPT: 'ARC compact cyberpunk sword robot, bright electric blade and visor, 8 idle frames, high 3/4 front-left, transparent.'
+29 arc_attack.png 1536x128: chém điện; PROMPT: 'Same ARC robot, 12 sword-charge and diagonal slash poses, feet anchored, transparent.'
+30 arc_hurt.png 512x128: hurt; PROMPT: 'Same ARC robot, 4 stagger frames, transparent.'
+31 arc_summon.png 1024x128: summon; PROMPT: 'Same ARC robot, 8 power-on arrival poses, transparent.'
+32 lance_idle.png 1024x128: sniper; PROMPT: 'Original magenta-haired LANCE sniper chibi, high 3/4 front-left, 8 idle aiming frames, transparent.'
+33 lance_attack.png 1536x128: ngắm/bắn; PROMPT: 'Same LANCE, 12 aim-charge-fire-recoil poses, full body, transparent.'
+34 lance_hurt.png 512x128: hurt; PROMPT: 'Same LANCE, 4 hurt recoil frames, transparent.'
+35 lance_summon.png 1024x128: summon; PROMPT: 'Same LANCE, 8 arrival-to-aim poses, transparent.'
+36 warp_idle.png 1024x128: drone cổng; PROMPT: 'WARP floating void portal drone with dark core and violet ring, 8 hover frames, 3/4 high, transparent.'
+37 warp_attack.png 1536x128: xoáy không gian; PROMPT: 'Same WARP drone, 12 frames ring expands, void pulse, recovers, transparent.'
+38 warp_hurt.png 512x128: hurt; PROMPT: 'Same WARP drone, 4 brief wobble frames, transparent.'
+39 warp_summon.png 1024x128: summon; PROMPT: 'Same WARP drone, 8 frames portal opens then drone emerges, transparent.'
+40 broker_idle.png 1024x128: thương nhân; PROMPT: 'BROKER cyberpunk chibi trader with gold hologram briefcase, 8 idle frames, 3/4 high front-left, transparent.'
+41 broker_attack.png 1536x128: kích hoạt bounty; PROMPT: 'Same BROKER, 12 frames open case, mark bounty target, recover, transparent.'
+42 broker_hurt.png 512x128: hurt; PROMPT: 'Same BROKER, 4 hurt recoil frames, transparent.'
+43 broker_summon.png 1024x128: summon; PROMPT: 'Same BROKER, 8 entrance poses, transparent.'
+44 glitch_idle.png 1024x128: bot hacker; PROMPT: 'GLITCH CRT-headed hacker bot with cable arms and pixel face, 8 idle flicker poses, 3/4 high, transparent.'
+45 glitch_attack.png 1536x128: hack; PROMPT: 'Same GLITCH bot, 12 keyboard-hack signal burst poses, transparent.'
+46 glitch_hurt.png 512x128: hurt; PROMPT: 'Same GLITCH bot, 4 signal-glitch stagger poses, transparent.'
+47 glitch_summon.png 1024x128: summon; PROMPT: 'Same GLITCH bot, 8 digital materialization poses, transparent.'
+48 venom_idle.png 1024x128: thú máy độc; PROMPT: 'VENOM four-legged poison cyber-beast, green tank on back and nozzle muzzle, 8 idle frames, 3/4 high front-left, transparent.'
+49 venom_attack.png 1536x128: phun độc; PROMPT: 'Same VENOM cyber-beast, 12 crouch-spit-recoil poses, transparent.'
+50 venom_hurt.png 512x128: hurt; PROMPT: 'Same VENOM beast, 4 hurt recoil poses, transparent.'
+51 venom_summon.png 1024x128: summon; PROMPT: 'Same VENOM beast, 8 landing arrival poses, transparent.'
+
+P2 — QUÁI, BOSS, VFX
+52 enemy_drone_sheet.png 1024x384: 3 hàng idle 8 / move 8 / hurt 8; PROMPT: 'Small hostile red drone, 3 rows of 8 full-frame animation poses, high 3/4 view, transparent.'
+53 enemy_skitter_sheet.png 1024x384: 3x8; PROMPT: 'Low fast cybernetic skitter, 3 rows idle scuttle hurt, eight poses each, high 3/4, transparent.'
+54 enemy_bulwark_sheet.png 1024x384: 3x8; PROMPT: 'Heavy armored cyber bulwark with red core, 3 rows idle march hurt, eight poses each, transparent.'
+55 boss_01_sheet.png 2048x512: 4x16; PROMPT: 'Giant cyberpunk siege boss one, four rows idle move attack hurt, 16 poses each, 3/4 high, transparent.'
+56 boss_02_sheet.png 2048x512: 4x16; PROMPT: 'Giant cyberpunk signal-corruptor boss two, four rows idle move attack hurt, 16 poses each, transparent.'
+57 boss_03_sheet.png 2048x512: 4x16; PROMPT: 'Giant cyberpunk reactor-overlord boss three, four rows idle move attack hurt, 16 poses each, transparent.'
+58 vfx_fire.png 512x64: 8x64 projectile/hit lửa; PROMPT: 'Eight-frame orange flame projectile burst, compact readable VFX, transparent.'
+59 vfx_ice.png 512x64: băng; PROMPT: 'Eight-frame cyan frost bolt and ice impact, compact transparent.'
+60 vfx_chain.png 512x64: điện; PROMPT: 'Eight-frame electric chain arc, sharp neon cyan, transparent.'
+61 vfx_sniper.png 512x64: đạn súng; PROMPT: 'Eight-frame magenta sniper muzzle flash and hit spark, transparent.'
+62 vfx_void.png 512x64: hư không; PROMPT: 'Eight-frame purple gravity knot pulse, compact transparent.'
+63 vfx_bounty.png 512x64: dấu bounty; PROMPT: 'Eight-frame gold bounty mark activation and fade, transparent.'
+64 vfx_hack.png 512x64: hack; PROMPT: 'Eight-frame pixel glitch digital breach, magenta cyan, transparent.'
+65 vfx_poison.png 512x64: độc; PROMPT: 'Eight-frame toxic green spit splash, compact transparent.'
+66 vfx_merge.png 1024x128: 8x128 hợp nhất; PROMPT: 'Eight-frame compact neon merge spiral, cyan magenta energy, transparent.'
+67 vfx_summon.png 1024x128: 8x128 triệu hồi; PROMPT: 'Eight-frame cyberpunk teleport arrival ring, compact, transparent.'
+68 vfx_damage_numbers.png 512x128: atlas chữ số 0-9 và crit, cần thiết kế font riêng hoặc vẽ bằng Canvas text; PROMPT: 'Crisp cyberpunk combat digit atlas 0 to 9, white amber and red, transparent.'
+69 vfx_boss_warning.png 1024x128: 8 frame warning; PROMPT: 'Eight-frame restrained red boss warning pulse, no full-screen flash, transparent.'
+70 portraits_8.png 1024x128: 8 icon 128x128; PROMPT: 'Eight distinct NEON GRID hero portraits, SCORCH FROST ARC LANCE WARP BROKER GLITCH VENOM, matching approved concepts, transparent.'
+71 portraits_boss_3.png 384x128: 3 icon; PROMPT: 'Three original cyberpunk boss portraits, consistent chibi UI style, transparent.'
+72 leader_portrait.png 128x128: leader độc lập; PROMPT: 'NEON GRID leader bust portrait, neon cyberpunk commander, high contrast, transparent.'
+
+TỔNG: 72 TÊN FILE ĐƯỢC LIỆT KÊ; trong đó 32 sheet tướng, 6 sheet quái/boss, 12 VFX, 19 nền/UI, 3 portrait. Lưu ý sheet 4x16 boss ở 128 px/frame là 2048x512; mỗi sheet nhiều hàng cần kiểm định frame theo lưới, không cho phép frame dính nhau. Nếu kích thước output giới hạn, chia thành các strip 4-8 frame rồi ghép bằng script, không thu nhỏ pixel nguồn.
+
+5. THỨ TỰ THỰC HIỆN DEMO
+Giai đoạn A (1-2 ngày): đổi viewport dọc 390x844, vẽ layout tạm bằng hình khối, hai bàn 5x3, lane dọc bên trái, hitbox ô, HUD wave/mana/summon/cards. Test trên 9:19.5, 9:20 và notch.
+Giai đoạn B (2-3 ngày): tạo 19 asset P0, ưu tiên board_frame, tile_normal, lane, hud panels, card frames; dùng placeholders để không chặn code. Kiểm tra 40 px và tương phản.
+Giai đoạn C (2-4 ngày): chốt master 3/4 front-left cho SCORCH, FROST, LANCE, WARP; vẽ idle 8f và attack 12f của 4 tướng, dùng atlas 128 px; làm summon/merge VFX. AI dùng bốn tướng mẫu.
+Giai đoạn D (1-2 ngày): thêm 3 quái, wave 1-10, đạn, HP, damage text, ghép 2 tướng cùng cấp, nâng cấp bằng mana; render hai lane, boss placeholder.
+Giai đoạn E (3-5 ngày): hoàn thiện 4 tướng còn lại, 3 boss, hiệu ứng kỹ năng, hurt/summon; tối ưu atlas, texture cache, object pooling, preloading, draw-call batching theo sheet.
+Giai đoạn F (1-2 ngày): QA: neo chân sai lệch <=1 pixel logic, đầu các frame sai tỷ lệ <=5%, UI không đè ô, tướng nhìn được ở 35 px, 60 FPS mục tiêu trên máy tầm trung, màn 390x844 không crop, thao tác summon/merge một tay, wave 1-10 không kẹt.
+
+MỐC DEMO NHANH NHẤT
+- Chỉ cần 2 bàn, 4 tướng (SCORCH FROST LANCE WARP), 2 quái (drone/skitter), 1 boss placeholder, 5 thẻ (4 tướng + một slot locked), 1 leader placeholder, 10 wave, mana/summon/merge/upgrade. Không đợi đủ 72 asset mới chạy thử.
+- Chỉ số kiểm chứng: mọi tướng ở góc 3/4 front-left; không còn ảnh side-profile; 5x3 ô rõ; lane không che bàn; frame chân không nhảy; mỗi đòn có anticipation, impact, recovery; số sát thương không che sao; portrait và sprite cùng nhận diện; không tái sử dụng UI/asset DCDW.
+
+6. HỢP ĐỒNG DỮ LIỆU CANVAS
+- frameRect = {w:128,h:128}; anchor={x:64,y:110}; world position=bottom-center cell; drawX=cellCenterX-anchor.x*scale; drawY=cellFootY-anchor.y*scale.
+- frame index theo elapsed và fps; attack event projectile spawn ở impactFrame xác định theo unit, không theo frame render ngẫu nhiên. Muzzle offsets định nghĩa riêng theo frame nếu cần, tránh vũ khí phát đạn lệch.
+- Depth order: arena background -> lane -> board back -> tile -> shadow -> unit -> projectile -> foreground board trim -> badge/star -> damage text -> HUD. Sort unit theo footY nếu có chồng lớp.
+- Star badge đặt (unit centerX, cellTopY+2), không dính vào đầu đang nhún; LV trong card HUD, merge star trên board. Damage popup spawn tại quái, drift y=-12..-22 px/0.5s, giới hạn 3 popup/mục tiêu, crit dùng amber.
+- Render VFX trong giới hạn sáng: mỗi skill tối đa 1 impact nổi bật + vài hạt phụ; không flash trắng toàn màn. Camera shake boss <=2 px logic/120ms, không làm rung HUD.
+
+KẾT LUẬN
+Ưu tiên đúng 5 điều: màn dọc, hai bàn 5x3, lane trái, sprite chibi 3/4 nhìn về camera, HUD compact dưới cùng. Đó là các khác biệt có tác động lớn nhất so với bản màn ngang hiện tại. Đổi nhân vật sang robot/drone ở ARC/WARP/GLITCH/VENOM giúp silhouette khác nhau và giảm lỗi nhất quán animation. Không cố sao chép từng pixel DCDW; tái tạo hệ phân cấp thị giác và thao tác, giữ nghệ thuật NEON GRID độc lập.

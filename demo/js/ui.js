@@ -4,10 +4,10 @@
   const C = CAU_HINH, G = GAME, R = RENDER;
   const $ = (s) => document.querySelector(s);
   const wrap = $('#wrap'), cv = $('#cv'), ctx = cv.getContext('2d');
-  let S = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, doc = false;
+  let S = null, A = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, thang = false;
   const KY_LUC = 'neon-grid.best';
 
-  // ---- khung cố định 844×390 thu / phóng vừa vùng an toàn (học từ js/main.js khung-co-dinh) ----
+  // ---- khung cố định 390×844 (dọc): scale = min(rộng/390, cao/844), hộp đen hai bên, trừ vùng an toàn (tai thỏ) ----
   const doSafe = document.createElement('div'); doSafe.id = 'do-safe'; document.body.appendChild(doSafe);
   let FR = { cx: C.W / 2, cy: C.H / 2, s: 1 }, K = 1;
   const toFrame = (x, y) => [(x - FR.cx) / FR.s + C.W / 2, (y - FR.cy) / FR.s + C.H / 2];
@@ -18,8 +18,6 @@
     const cs = getComputedStyle(doSafe);
     const st = parseFloat(cs.paddingTop) || 0, sr = parseFloat(cs.paddingRight) || 0, sb = parseFloat(cs.paddingBottom) || 0, sl = parseFloat(cs.paddingLeft) || 0;
     const aw = vw - sl - sr, ah = vh - st - sb;
-    const laDoc = vh > vw;
-    if (laDoc !== doc) { doc = laDoc; $('#xoay').hidden = !doc; }
     const s = Math.max(0.2, Math.min(aw / C.W, ah / C.H));
     const cx = sl + aw / 2, cy = st + ah / 2;
     wrap.style.left = Math.round(cx - C.W / 2) + 'px';
@@ -72,7 +70,7 @@
             <div class="ct-mo">${t.mo}</div>
           </div>
         </div></div>`;
-      R.veThe(b.querySelector('canvas'), id, 92, 138);
+      R.veThe(b.querySelector('canvas'), id, 88, 132);
       b.onclick = () => { const k = chon.indexOf(id); if (k >= 0) chon.splice(k, 1); else if (chon.length < 5) chon.push(id); capChon(); };
       l.appendChild(b);
     }
@@ -87,19 +85,24 @@
   // ---- trận ----
   function batDau(deck) {
     boCu = deck.slice();
-    S = G.moi(deck); dung = false; keo = null;
+    S = G.moi(deck); A = G.moi(BO_AI, true, S); dung = false; keo = null; thang = false;
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
+    // 6 ô đội AI trên TOP HUD (5 tướng + leader)
+    const ai = $('#tb-ai'); ai.innerHTML = '';
+    for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauHanh(o, HANH[TUONG[id].hanh]); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 26); ai.appendChild(o); }
+    { const o = document.createElement('div'); o.className = 'ai-o ld'; o.textContent = 'LEAD'; ai.appendChild(o); }
     const bo = $('#bo-bac'); bo.innerHTML = '';
-    for (const id of deck) {
+    deck.forEach((id, n) => {
       const t = TUONG[id], h = HANH[t.hanh];
       const b = document.createElement('button');
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
       mauHanh(b, h);
+      b.style.left = (8 + n * 60) + 'px';
       b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
-      R.veThe(b.querySelector('canvas'), id, 44, 44, true);
+      R.veThe(b.querySelector('canvas'), id, 49, 60);
       bo.appendChild(b);
-    }
+    });
     capNhat(true);
   }
   let cu = {};
@@ -108,8 +111,7 @@
     const set = (k, v, f) => { if (ep || cu[k] !== v) { cu[k] = v; f(v); } };
     set('dot', S.dot, (v) => ($('#tb-dot').textContent = Math.max(1, v)));
     const den = Math.ceil(Math.max(1, S.dot + (S.dot % 10 === 0 && S.boss ? 0 : 0.0001)) / 10) * 10;
-    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS ON THE GRID' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); });
-    set('mang', S.mang, (v) => { $('#tb-mang').innerHTML = Array.from({ length: C.MANG }, (_, i) => `<i class="tim${i < v ? '' : ' mat'}"></i>`).join(''); });
+    set('boss', S.boss ? 'dang' : den - S.dot, (v) => { const e = $('#tb-boss'); e.textContent = v === 'dang' ? '⚠ BOSS LIVE' : v <= 0 ? 'BOSS THIS WAVE' : `BOSS IN ${v} WAVE${v > 1 ? 'S' : ''}`; e.classList.toggle('dang', v === 'dang'); });
     set('quai', S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
@@ -126,9 +128,12 @@
   }
   function ketThuc() {
     const dot = S.dot;
+    const ten = $('#kq-ten'), bang = $('#ketqua .bang');
+    ten.textContent = thang ? 'VICTORY' : 'CORE DESTROYED'; ten.dataset.t = ten.textContent;
+    bang.classList.toggle('do', !thang); bang.classList.toggle('thang', thang);
     let kl = 0; try { kl = +localStorage.getItem(KY_LUC) || 0; if (dot > kl) localStorage.setItem(KY_LUC, dot); } catch (e) { /* không lưu được */ }
     $('#kq-dot').textContent = 'WAVE ' + dot;
-    $('#kq-phu').textContent = `${S.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
+    $('#kq-phu').textContent = `${thang ? 'AI MIRROR core destroyed first · ' : ''}${S.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
     $('#ketqua').hidden = false;
   }
   function datDung(v) {
@@ -149,11 +154,12 @@
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
     else if (a === 'choilai') batDau(boCu);
-    else if (a === 'doibo') { S = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
+    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
   });
 
   // ---- kéo tướng để gộp ----
-  const oTai = (x, y) => { for (let i = 0; i < C.COT * C.HANG; i++) { const [ox, oy] = G.oXY(i); if (x >= ox - 3 && x < ox + C.O + 3 && y >= oy - 3 && y < oy + C.O + 3) return i; } return -1; };
+  // hitbox ô theo toạ độ logic của bàn người chơi (ô 46×45, nới 1px vào khe)
+  const oTai = (x, y) => { for (let i = 0; i < C.COT * C.HANG; i++) { const [ox, oy] = G.oXY(S, i); if (x >= ox - 1 && x < ox + C.O + 1 && y >= oy - 1.5 && y < oy + C.OH + 1.5) return i; } return -1; };
   cv.addEventListener('pointerdown', (e) => {
     if (!S || S.het || dung) return;
     const [x, y] = toFrame(e.clientX, e.clientY), i = oTai(x, y);
@@ -176,24 +182,28 @@
     requestAnimationFrame(loop);
     R.doFps(now - last);
     let dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S && !S.het && !dung && !doc) {
+    if (S && !S.het && !dung) {
       let t = dt * tocDo * tua;
-      while (t > 0) { const b = Math.min(1 / 60, t); G.buoc(S, b); t -= b; if (S.het) break; }
+      while (t > 0) {
+        const b = Math.min(1 / 60, t); G.buoc(S, b); G.buoc(A, b); G.botAI(A, b); t -= b;
+        if (A.het && !S.het) { thang = true; S.het = true; }   // AI hết mạng trước → thắng
+        if (S.het) break;
+      }
       if (keo && !S.o[keo.i]) keo = null;   // tướng bị boss cuốn đi khi đang kéo
       if (S.het) ketThuc();
     }
     if (++dem % 3 === 0 || !S) capNhat();
     ctx.setTransform(K, 0, 0, K, 0, 0);
     ctx.imageSmoothingEnabled = false;
-    R.ve(ctx, S, now / 1000, K, keo);
+    R.ve(ctx, S, now / 1000, K, keo, A);
   }
   dungChon();
   requestAnimationFrame(loop);
 
   // móc cho test
   window.DEMO = {
-    get S() { return S; }, G, batDau, fromFrame, toFrame,
-    oClient: (i) => { const [x, y] = G.oTam(i); return fromFrame(x, y); },
-    tua: (n) => (tua = n), get dung() { return dung; }, get doc() { return doc; },
+    get S() { return S; }, get A() { return A; }, G, batDau, fromFrame, toFrame,
+    oClient: (i) => { const [x, y] = G.oTam(S, i); return fromFrame(x, y); },
+    tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; },
   };
 })();
