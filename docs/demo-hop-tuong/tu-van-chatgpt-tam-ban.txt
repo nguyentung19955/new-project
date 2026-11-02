@@ -1,0 +1,28 @@
+NEON GRID — QUYẾT ĐỊNH TẦM BẮN
+
+1. QUYẾT ĐỊNH
+NÊN thêm tầm bắn rộng, không dùng tầm 145–250px của bản đầu. Với bản đồ logic 844x390, lưới 5x3 và vị trí summon ngẫu nhiên, chọn 240–360px để vị trí có ý nghĩa mà không trừng phạt RNG quá nặng.
+Ưu: tạo chiến thuật di chuyển ô, phân vai sniper/AoE, tăng giá trị bố trí.
+Nhược: khó đọc hơn trên điện thoại, đôi khi tướng đứng chờ vì không có quái trong tầm.
+
+2. TẦM ĐỀ XUẤT (đo từ tâm ô đến tâm quái)
+SCORCH 255px
+FROST 290px
+ARC 245px
+LANCE 360px
+WARP 300px
+BROKER 340px
+GLITCH 320px
+VENOM 275px
+
+Hiển thị: chạm hoặc giữ/kéo tướng thì hiện vòng tròn bán kính tầm, viền màu phe alpha 0.45, nền alpha 0.06. Khi kéo, preview từ tâm ô đích; đánh dấu ô trống hợp lệ. Ẩn khi bỏ chọn/thả.
+
+3. CÂN BẰNG
+Chưa sửa damage, cooldown hay HP boss ngay. Giữ HP đợt 10/20/30 lần lượt 9.000 / 40.000 / 165.000 để có baseline. Đo thời gian giết boss (mục tiêu 12–22s) và tỷ lệ tướng không có mục tiêu. Nếu DPS hụt nhiều do thiếu tầm, thử tăng toàn bộ tầm 10–15% trước khi hạ HP boss. Test nhiều seed summon và bố trí khác nhau.
+
+4. TARGETING VÀ NGOẠI LỆ
+Giữ ưu tiên mục tiêu riêng của từng tướng, nhưng chỉ lọc trong phạm vi bắn. Không có mục tiêu trong tầm thì chờ; không bắn xuyên bản đồ.
+Đạn đã phóng tiếp tục trúng; Burn/Toxin/Chill/Breach và các hiệu ứng đã áp dụng tiếp tục hết thời lượng kể cả khi quái rời tầm. AoE phát sinh từ đòn trúng có thể tác động quái ngoài vòng bắn theo bán kính kỹ năng.
+
+5. NẾU KHÔNG THÊM TẦM
+Vẫn giữ ưu tiên mục tiêu, nhưng cần giảm lợi thế của LANCE/BROKER/GLITCH bắn toàn bản đồ; các tướng hỗ trợ có thể tác động quái ở mọi nơi khiến vị trí gần như vô nghĩa. Phương án này đơn giản hơn nhưng ít chiều sâu bố trí. Không khuyến nghị cho bản demo đã có kéo thả đổi ô.
