@@ -1,0 +1,111 @@
+NEON GRID — KIỂM TOÁN THAM CHIẾU DESTINY CHILD: DEFENSE WAR
+Ngày: 02/11/2026 | Phạm vi: 4 ảnh wave 25/42/57/69 và nguồn hướng dẫn/lưu trữ DCDW.
+
+QUY ƯỚC ĐỘ TIN CẬY
+[ẢNH] Quan sát trực tiếp từ 4 ảnh; [NGUỒN] Có tài liệu độc lập; [SUY ĐOÁN] Chưa xác minh; [THIẾT KẾ] Đề xuất riêng cho NEON GRID. ĐÚNG MỘT PHẦN nghĩa là cần sửa một chi tiết. Không coi thông số trong một bản game cũ là bất biến qua mọi phiên bản.
+
+I. KIỂM TRA TỪNG MỤC A–F
+
+A1 — ĐÚNG MỘT PHẦN [ẢNH][NGUỒN]. Gameplay là khung dọc, hai bảng mỗi bảng 5 cột × 3 hàng (15 ô), phía trên là người còn lại, dưới là mình. PvP hai bên độc lập; co-op hỗ trợ phòng thủ chung. Sàn cơ khí đen có đinh tán. Không thể suy ra góc camera chính xác 82° từ ảnh; unit nhỏ trông gần top-down nhưng thấy mặt trước, không phải orthographic tuyệt đối. NEON GRID: giữ 2 bảng 5×3 nhưng góc 82° là lựa chọn phong cách riêng; thử độ rõ ở kích thước 29 px.
+A2 — ĐÚNG MỘT PHẦN [ẢNH]. Chibi nhỏ, phần đỉnh đầu và vai nổi bật; trên đầu có các dấu cấp hợp nhất (pip/star). Con số 60% chiều cao ô là ước lượng, không phải quy cách DCDW. Các chấm không nhất thiết là cấp thẻ ngoài trận. NEON GRID: unit 29 px/ô 46 px ≈63%; pip 1–7, tách khỏi level thẻ.
+A3 — THIẾU CHỨNG CỨ [ẢNH][SUY ĐOÁN]. Có vùng nền xanh lá/xanh dương nhưng không đủ bằng chứng gọi là hệ nguyên tố. Có thể là vùng buff, hiệu ứng tướng, highlight hoặc VFX. NEON GRID: màu ô có chú giải trạng thái (boost/slow/lock) và hình ký hiệu, không phụ thuộc màu duy nhất.
+A4 — ĐÚNG MỘT PHẦN [ẢNH]. Quái đi trong dải bên trái của từng bảng; số bay lên cạnh quái có thể là sát thương, không nên khẳng định tất cả số là HP. Thanh xanh trên quái xuất hiện trong một số ảnh. NEON GRID: đường chạy bên trái rõ ràng, HP thanh nhỏ và damage popup khác kiểu chữ.
+A5 — THIẾU CHỨNG CỨ [ẢNH]. Có hình biểu tượng ở mép phải mỗi bàn; không đủ căn cứ khẳng định đỏ/xanh là mã đội leader. Có thể là biểu tượng kỹ năng/Archfiend. NEON GRID: avatar Commander với viền team và cooldown minh bạch.
+
+B6 — ĐÚNG MỘT PHẦN [ẢNH]. WAVE 25/42/57/69 rõ; các icon bên wave khác nhau. Bộ đếm tím tăng 2→4→5→6 nên KHÔNG nên gọi là mạng mất; PvP gốc có Archfiend 3 HP [NGUỒN], và ảnh là co-op 70 wave. Số vàng 350→800→1100→1400 có thể là chỉ số/mốc thưởng/chi phí theo tiến độ, chưa xác minh ý nghĩa. Hàng trên có 6 icon với LV nhưng không đủ bằng chứng đó là 6 thẻ Child: bộ đội hình chuẩn là 5 Child + 1 Archfiend [NGUỒN]. NEON GRID: tách wave, boss type, energy, commander, deck và chỉ báo mục tiêu, tooltip từng icon.
+B7 — ĐÚNG MỘT PHẦN [ẢNH][NGUỒN]. Giọt tím là mana; summon cost thấy 370/580/790 (ảnh wave25/42/57), ảnh không xác nhận 150; 5 thẻ Child dưới cùng có level/giá nâng cấp/MAX; thẻ bên phải là Archfiend. Giá 0/100/400 trên ảnh không chứng minh tất cả leader đều tiêu mana; tài liệu cho biết kỹ năng Archfiend có thể có cooldown và/hoặc chi phí, tùy loại/phiên bản. NEON GRID: 5 Unit cards + 1 Commander, hiển thị chi phí hoặc cooldown đúng cơ chế.
+B8 — CHƯA XÁC ĐỊNH [ẢNH]. Wave69 xuất hiện panel 7 chân dung; chưa đủ dữ kiện để gọi đó là thưởng, hồi sinh hay chọn leader. Nó trông như bảng emote/quick communication mở từ nút chat, nhưng đây chỉ là [SUY ĐOÁN]. Cần khung hình ngay trước/sau khi bấm và video gốc. NEON GRID: bảng quick emote riêng, không tự gán đây là hệ thống chọn kỹ năng.
+
+C9 — ĐÚNG [NGUỒN], bổ sung mana nhận sau khi hoàn tất wave; việc spawn chọn ngẫu nhiên một trong 5 Child, ô trống cũng ngẫu nhiên theo mô tả phổ biến. Giá summon tăng theo lượt, chưa chứng minh quy luật chính xác từ 4 ảnh. NEON GRID: summon RNG với preview odds, escalating cost và pity nhẹ tùy cân bằng.
+C10 — ĐÚNG [NGUỒN]. Ghép hai Child cùng loại và cùng cấp sao thành một Child cấp sao cao hơn; danh tính kết quả ngẫu nhiên trong deck. Ghép giảm số đơn vị trên sân từ 2 xuống 1, nên có tradeoff DPS. NEON GRID: merge cùng unit/cùng rank, kết quả random có kiểm soát; hiệu ứng combine và bảng xác suất.
+C11 — ĐÚNG [NGUỒN]. Mana nâng sức mạnh tạm thời của loại Child trong trận, không phải tăng cấp vĩnh viễn thẻ. NEON GRID: Battle Upgrade áp dụng cho tất cả bản sao cùng Unit, reset sau trận.
+C12 — ĐÚNG MỘT PHẦN [NGUỒN]. Archfiend có năng lực khác nhau: buff sát thương, xóa debuff/bảo hộ, đổi Child, triệu hồi… Không phải mọi leader đều chỉ tiêu mana; nhiều kỹ năng dùng cooldown. NEON GRID: Commander ability với resource/cooldown ghi riêng cho từng Commander.
+C13 — SAI MỘT PHẦN [NGUỒN]. PvP: không đơn giản là “mỗi kill gửi đúng một quái sang đối thủ”; quái sinh theo wave và áp lực tăng, cơ chế chuyển quái cần xác minh từng mode. PvP Archfiend có 3 HP theo mô tả cơ bản; co-op hai người hỗ trợ một đường phòng thủ chung, có boss định kỳ và tiến trình wave. NEON GRID: PvP hai tuyến với pressure meter rõ ràng; co-op đường chung có assist/relay, boss mỗi 10 wave do ta tự thiết kế.
+
+D14 — ĐÚNG NHƯNG THIẾU [NGUỒN]. Deck gồm 5 Child + 1 Archfiend; rarity; bản sao thẻ và vàng dùng nâng cấp ngoài trận; briefcase/shop, tiến trình arena, nhiệm vụ, reward. Có mastery tree theo level tài khoản. Không được chuyển hệ nguyên tố, tap/slide/drive của game Destiny Child gốc sang DCDW khi chưa xác minh: đây là hai game khác nhau. Không có bảng level cap, rarity đầy đủ, drop rate theo từng bản cập nhật đáng tin từ 4 ảnh. NEON GRID: rarity Common/Rare/Epic/Legendary, Unit Level, Commander, 3 nhánh Tech Mastery; công bố rate và cap trong dữ liệu game.
+E15 — ĐÚNG Ở MỨC PHÂN LOẠI CHUNG [ẢNH][NGUỒN]. DCDW có tướng damage, support, slow, buff, debuff, tấn công nhiều mục tiêu; không thể xác nhận tất cả loại độc/chain lightning/mana generator chỉ từ 4 ảnh. Màu VFX không phải bằng chứng hệ nguyên tố. NEON GRID: ballistic/laser/arc/thermal/cryo/toxin/void như tag combat, không mặc định tương khắc nguyên tố.
+F16 — ĐÚNG Ở MỨC KHÁI QUÁT [NGUỒN]. Minion và boss mạnh dần; boss có thể gây biến đổi/debuff Child (ảnh lưu trữ ghi rõ boss biến đổi Child). Chưa xác minh toàn bộ danh sách “khóa ô/hồi máu/triệu hồi lính” là DCDW. NEON GRID: thiết kế riêng quái Runner, Bulwark, Splitter, Jammer, Healer và boss có telegraph/counterplay.
+
+II. CÁC HỆ THỐNG DCDW CẦN BỔ SUNG — VÀ BẢN NEON GRID
+
+01. Vòng lặp trận [NGUỒN]: spawn→đánh tự động→thu mana→summon/upgrade/merge→sống sót wave/boss. NEON GRID: giữ vòng quyết định, thêm threat preview 5 giây.
+02. Bố trí 15 ô [ẢNH]: board full ngăn summon; ghép để giải phóng chỗ. NEON GRID: grid 5×3, ô bị khóa/boost có icon riêng.
+03. RNG triệu hồi [NGUỒN]: không chọn trực tiếp đơn vị/ô. NEON GRID: hiển thị tỷ lệ và chống chuỗi kết quả xấu nhẹ.
+04. Merge rank [NGUỒN]: same unit + same rank, kết quả random, tradeoff số lượng/sức mạnh. NEON GRID: rank 1–7, preview rank mới, hiệu ứng pixel-dissolve.
+05. Nâng cấp battle [NGUỒN]: nâng theo loại, tạm thời. NEON GRID: 4 bậc trong trận, mức giá tăng theo bậc.
+06. Unit class [NGUỒN]: attacker/support/debuff và mục tiêu tấn công khác nhau. NEON GRID: Striker, Control, Support, Economy, Disruptor.
+07. Targeting [NGUỒN]: ví dụ ưu tiên quái đầu tuyến, random target. NEON GRID: First/Strongest/Nearest/Random/AoE có biểu tượng.
+08. Unit abilities [NGUỒN]: các passive/trigger đặc thù. NEON GRID: attack trigger, on-merge, on-summon, adjacency, on-kill, timed pulse; tránh sao chép tên/chiêu cụ thể.
+09. Commander/Archfiend [NGUỒN]: 1 slot riêng, kỹ năng chủ động, có cooldown/điều kiện riêng. NEON GRID: Commander Overclock, Firewall, Reboot, Signal Burst, Supply Drop.
+10. Buff/debuff [NGUỒN]: tăng ATK/ASPD, slow, shield, cleanse, transform, interference. NEON GRID: 8 status có icon, stacking rule và thời lượng rõ.
+11. PvP real-time [NGUỒN]: hai board, sức ép wave, 3 HP cơ bản. NEON GRID: 3 Integrity, có đồng hồ tăng threat; tránh sao chép icon/nhạc/nhân vật.
+12. Co-op [NGUỒN]: hai board và đường hỗ trợ chung, wave kéo dài, thưởng theo thành tích. NEON GRID: Relay Defense 70 wave, điểm hỗ trợ và thưởng theo mốc.
+13. Boss wave [NGUỒN]: boss xen giữa wave; một số biến đổi Child. NEON GRID: boss mỗi 10 wave, telegraph 3 pha, counterplay bằng Commander.
+14. Các mode phụ [NGUỒN]: score attack, training/practice, challenge giới hạn, event và chiến dịch boss từng xuất hiện theo nguồn lịch sử; không khẳng định tất cả luôn hoạt động đồng thời. NEON GRID: Practice, PvP Ranked, Duo Survival, Weekly Modifier, Boss Trial.
+15. Arena/ladder [NGUỒN]: cúp/crown, unlock Child ở arena cao hơn, leaderboard/league. NEON GRID: Circuit Rank với reward cosmetics và soft matchmaking.
+16. Sưu tập/rarity [NGUỒN]: mở Child theo arena, rarity, card copies. NEON GRID: 24 Unit khởi điểm, 4 rarity, codex rõ ràng.
+17. Upgrade ngoài trận [NGUỒN]: copies + currency, tăng card level, nhận account XP. NEON GRID: module shards + credits; cân bằng PvP bằng normalized stats ở rank thấp.
+18. Mastery [NGUỒN]: điểm từ level tài khoản, cây buff passive, đổi phân bổ. NEON GRID: 3 nhánh Offense/Utility/Co-op; giới hạn power creep.
+19. Economy/meta [NGUỒN]: vàng, gems, briefcases, shop daily, quest, rewards. NEON GRID: Credits/Cores/Blueprints, nhiệm vụ và shop cosmetic; hiển thị odds.
+20. Clan/social [NGUỒN]: clan, friendly match, card requests, chat/emote. NEON GRID: Squad, scrimmage, ping/emote, hỗ trợ blueprint có hạn.
+21. Battle pass/events [NGUỒN]: ảnh lưu trữ có pass, login rewards, missions, challenges. NEON GRID: season track không pay-to-win, weekly objectives.
+22. Matchmaking/network [NGUỒN]: online real-time, đối thủ gần rank. NEON GRID: authoritative server, reconnect, desync indicator, anti-cheat.
+23. Onboarding [NGUỒN]: tutorial, practice. NEON GRID: tutorial summon→merge→upgrade→Commander→boss, 3 trận bot.
+24. UI feedback [ẢNH]: damage numbers, mana, cost, level/MAX, rank pips, HP bars, wave icon, emote. NEON GRID: visual hierarchy, colorblind symbols, hit readability.
+25. Reward progression [NGUỒN]: PvP rank rewards, co-op wave rewards, cases, missions. NEON GRID: milestone 10/20/30/50/70, first-clear reward, cosmetic badge.
+26. Bản sắc/element [CHƯA XÁC MINH]: KHÔNG có chứng cứ đủ mạnh để coi DCDW có hệ khắc chế nguyên tố giống Destiny Child gốc. NEON GRID: damage tags là tính năng mới tùy chọn; đừng đưa vào MVP nếu tăng complexity.
+27. Core/equipment [NGUỒN HẠN CHẾ]: thư viện ảnh DCDW có mục 'Cores', nhưng cơ chế/slot/stat chưa xác minh. NEON GRID: hoãn gear/core tới sau khi cân bằng core loop.
+28. Enemy taxonomy [SUY ĐOÁN]: phân loại chi tiết quái thường/elite/fast/tank tùy phiên bản chưa được kiểm chứng. NEON GRID: xây taxonomy riêng theo speed/armor/ability và icon dự báo.
+29. Battle results [NGUỒN]: win/loss, rank/reward và thống kê tiến trình. NEON GRID: DPS by unit, mana efficiency, merge history, co-op contribution.
+30. Live balancing [THIẾT KẾ]: patch data, telemetry, replay và combat log. NEON GRID: lưu seed RNG, wave timings, balance knobs để kiểm thử 70 wave.
+
+III. BẢNG THIẾT KẾ ĐỀ XUẤT NEON GRID (KHÔNG PHẢI THÔNG SỐ DCDW)
+
+MVP: 5×3 mỗi người; 5 Unit + 1 Commander; summon random; same-unit same-rank merge; 4 battle upgrade levels; 1 đường quái/bảng; 3 Integrity PvP; co-op 70 wave; 4 enemy archetypes + 2 boss; 2 Commander; 12 Unit; battle results. Tránh làm đồng thời mastery, gear, guild, pass.
+Wave pacing gợi ý: 1–9 học thao tác; 10 boss; 11–29 bổ sung armored/sprinter; 30 boss; 31–49 jammer/splitter; 50 boss; 51–69 áp lực phối hợp; 70 final boss. Đây là thiết kế mới, KHÔNG phải lịch boss DCDW.
+Công thức cân bằng cần thử nghiệm: cost summon = base + n*step (có cap tùy mode); HP enemy = baseHP*growth(wave)*typeMultiplier; boss có telegraph 1–2s; nâng cấp type-level cộng hiệu quả theo bậc. Không áp số từ ảnh DCDW làm mặc định.
+Hệ damage: Kinetic (đơn), Thermal (DoT), Cryo (slow), Arc (chain), Toxin (stack), Void (control); chỉ thêm tương khắc nếu telemetry chứng minh có chiều sâu.
+Commander mẫu: OVERCLOCK +35% tốc đánh 6s/CD35s; FIREWALL chặn một hiệu ứng boss/CD45s; REBOOT reroll một unit giữ rank/CD50s; SUPPLY DROP triệu hồi 2 unit vào ô trống/CD60s. TẤT CẢ LÀ SỐ THỬ NGHIỆM.
+
+IV. DANH SÁCH ART/VFX/ANIMATION CẦN VẼ
+
+P0 — PHẢI CÓ CHO PLAYABLE:
+- 12 master unit overhead 82° (29px trong tile46), silhouette đọc được, PNG alpha thật; idle 8f, attack 12f, merge spawn 5f, hurt/disabled 3f, death/despawn 5f mỗi unit (ưu tiên idle+attack trước).
+- 5×3 tile set: normal, hover, valid drop, invalid drop, boosted, jammed, locked, spawn-highlight, merge source/target; mép bảng, đinh tán, panel dark graphite, hai làn chạy.
+- Pip/rank 1–7, Unit level badge, rarity frames, class icons, 5 deck cards, Commander portrait + cooldown ring, summon button 4 trạng thái, mana icon + count, cost change popup, wave counter, boss warning, integrity 3 pip.
+- Enemy sprites: Runner, Tank, Splitter, Jammer (idle/move/hit/death), HP bar, shield/armor indicator, damage popup; 2 boss (idle/telegraph/attack/hit/death).
+- Combat VFX: projectile kinetic 4f, beam/laser, impact 4f, slash arc, chain lightning, fire burst, ice slow, poison cloud, void pulse; spawn portal 6f, merge flash 8f, rank-up burst 8f, upgrade pulse 6f, tile buff aura 6f, commander activation 10f.
+- HUD/feedback: wave incoming, boss HP, win/lose, reward summary, quick emote panel, partner ping, targeting icons, error/full-board, insufficient mana.
+
+P1 — SAU MVP:
+- 12 unit bổ sung; attack variants/critical/skill proc; aura adjacency, heal, shield, cleanse, silence, transform, reroll; elite warning and status icons; 3 boss mới; 5 Commander portraits and abilities.
+- Menus: collection grid, rarity badges, card detail, level-up, deck builder, mastery tree, PvP rank, co-op lobby, matchmaking, daily/weekly quests, reward case opening, currency, shop, emote wheel.
+- Co-op assist effects: shared buff beam, rescue/partner support ping, contribution overlay, milestone 10/20/30/50/70.
+
+P2 — LIVE OPS:
+- Seasonal skin sheets, arena backgrounds, boss variants, season badge, pass rewards, clan icon/emblem, event modifier icons, replays/spectator UI, cosmetic finishers.
+
+QUY CHUẨN SẢN XUẤT ART:
+- Master sprite trên alpha thật, không checkerboard/ground/shadow/VFX dính sprite; VFX tách layer.
+- 82° high top-down nhất quán, thấy đỉnh đầu/vai, mặt chỉ là lát mỏng; chân bị foreshorten; cùng kích thước và hướng nhìn.
+- 1 pixel-outline tối, cel shading rõ, không blur; palette theo unit; trạng thái phải có hình dạng/icon ngoài màu.
+- Mỗi frame cùng canvas, anchor thống nhất (ground/center), padding chống cắt vũ khí; export atlas + metadata JSON; kiểm tra thumbnail ở 29px thực tế.
+- Hiệu ứng chiếm tối đa khoảng 1–2 ô với đòn thường; tránh VFX che pip, HP, ô bên cạnh; boss telegraph rõ nhưng không flash toàn màn.
+- Phân biệt tài sản mới: không dùng tên Child/Archfiend, chân dung, icon, bố cục mỹ thuật hay hoạt ảnh được sao chép trực tiếp. Tham khảo vòng lặp quyết định, không sao chép asset.
+
+V. NHỮNG ĐIỀU CHƯA THỂ KẾT LUẬN TỪ 4 ẢNH
+- Chính xác ý nghĩa bộ đếm tím 2/4/5/6, vàng 350/800/1100/1400, icon wave, ô xanh lá/xanh dương, icon góc phải, bảng 7 chân dung wave69.
+- Công thức summon cost, cap star, level cap ngoài trận, odds thẻ, toàn bộ roster/rarity, kỹ năng từng boss, lịch boss, cách tính điểm/thưởng co-op và số lần revive.
+- Có hay không nguyên tố khắc chế trong DCDW; không nhập nhằng với game Destiny Child gốc.
+Để xác minh cần video gốc có timestamp thao tác, ảnh menu chi tiết từng Child/Archfiend, hướng dẫn in-game và patch notes đúng phiên bản.
+
+VI. NGUỒN KIỂM CHỨNG (TÀI LIỆU LỊCH SỬ, KHÔNG PHẢI XÁC NHẬN SERVER HIỆN TẠI)
+[1] MobyGames — overview, PvP/co-op, 5 Child + Archfiend, merge, summon, upgrades, loot: https://www.mobygames.com/game/176430/destiny-child-defense-war/
+[2] BlueStacks beginner guide — mana từ kill/wave, summon random, merge random: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+[3] BlueStacks tips — full board, merge tradeoff: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-tips-tricks-en.html
+[4] MrGuider — arena, mastery, clan, shop, quests: https://www.mrguider.org/articles/destiny-child-defense-war-tier-list-best-deck-guide-tips-strategies/
+[5] MobyGames screenshot archive — boss transform, cores, training, emotes, pass: https://www.mobygames.com/game/176430/destiny-child-defense-war/screenshots/android/
+[6] Community historical modes overview (Chinese): https://skrcat.com/defense-war-destiny-child/
+[7] DCDW card archive (Korean, historical): https://m.namu.moe/w/%EB%8D%B0%EC%8A%A4%ED%8B%B0%EB%8B%88%20%EC%B0%A8%EC%9D%BC%EB%93%9C%3A%EB%94%94%ED%8E%9C%EC%8A%A4%20%EC%9B%8C/%EC%B9%B4%EB%93%9C
+
+KẾT LUẬN: DCDW là tài liệu tham khảo tốt cho 5×3 + RNG summon + merge + battle upgrade + Commander + PvP/co-op, nhưng ảnh tĩnh không đủ xác nhận những số HUD, trạng thái ô, panel wave69 và bảng kỹ năng/boss chi tiết. NEON GRID nên khóa core loop và readability trước khi mở rộng meta.
