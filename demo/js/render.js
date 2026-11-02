@@ -4,7 +4,7 @@
 (function () {
   const C = CAU_HINH, G = GAME;
   const W = C.W, H = C.H;
-  const Q = { cao: true, hat: 260 };   // chất lượng: tự hạ khi FPS thấp
+  const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
   const ANH = {};
@@ -18,10 +18,22 @@
     im.onerror = () => {};
     im.src = src;
   }
-  for (const id of TUONG_IDS) { nap('u:' + id, `assets/units/${id}.png`); nap('ui:' + id, `assets/units/${id}_idle.png`); nap('ua:' + id, `assets/units/${id}_attack.png`); nap('us:' + id, `assets/units/${id}_skill.png`); }
+  // ảnh cũ (dự phòng khi chưa có ảnh v2)
+  for (const id of TUONG_IDS) nap('u:' + id, `assets/units/${id}.png`);
   for (const k in QUAI) nap('e:' + k, `assets/enemies/${k}.png`);
   for (const b of BOSS) nap('b:' + b.id, `assets/bosses/${b.id}.png`);
-  for (const k of ['city', 'cell', 'core', 'portal']) nap(k, `assets/bg/${k}.png`);
+  // ảnh v2 theo đặc tả mục 4 (demo/assets/v2/): có file là tự dùng, chưa có thì dùng ảnh cũ / hình vẽ code
+  const V2 = 'assets/v2/';
+  for (const id of TUONG_IDS) for (const a of ['idle', 'attack', 'hurt', 'summon']) nap(`v2:${id}:${a}`, `${V2}${TEN_FILE(id)}_${a}.png`);
+  for (const k of ['bg_arena_portrait', 'board_frame_top', 'board_frame_player', 'tile_normal', 'tile_active', 'tile_merge',
+    'lane_straight', 'lane_spawn', 'lane_exit', 'star_badges', 'unit_shadow', 'portraits_8', 'portraits_boss_3', 'leader_portrait',
+    'vfx_fire', 'vfx_ice', 'vfx_chain', 'vfx_sniper', 'vfx_void', 'vfx_bounty', 'vfx_hack', 'vfx_poison', 'vfx_merge', 'vfx_summon',
+    'board_overlay_fx']) nap('v2:' + k, `${V2}${k}.png`);
+  const SHEET_QUAI = { thuong: 'enemy_drone_sheet', nhanh: 'enemy_skitter_sheet', trau: 'enemy_bulwark_sheet' };
+  for (const k in SHEET_QUAI) nap('v2q:' + k, `${V2}${SHEET_QUAI[k]}.png`);
+  BOSS.forEach((b, n) => nap('v2b:' + b.id, `${V2}boss_0${n + 1}_sheet.png`));
+  const VFX_TUONG = { scorch: 'vfx_fire', frost: 'vfx_ice', arc: 'vfx_chain', lance: 'vfx_sniper', warp: 'vfx_void', miner: 'vfx_bounty', glitch: 'vfx_hack', venom: 'vfx_poison' };
+  const co = (k) => ANH[k] && ANH[k].ok ? ANH[k].img : null;
 
   // ---------- tiện ích vẽ ----------
   const SS = 3;   // sprite vẽ sẵn ở 3× cho nét
@@ -263,516 +275,476 @@
     else c.drawImage(cv, x, y, w, h);
   }
 
-  // ---------- NỀN: trời + thành phố 2 lớp parallax + sàn lưới phối cảnh ----------
+  // ================= MÀN DỌC 390×844: nền + 2 làn + 2 bàn (lớp tĩnh vẽ sẵn) =================
+  const BANS = [G.BAN_AI, G.BAN_NG];
   let L = null, LK = 0;
-  function taoLop(k0) {
-    const k = Math.min(k0, 2), ks = Math.min(k0, 3);   // giới hạn bộ nhớ lớp nền trên máy dpr cao
-    let sd = 5; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
-    const WW = W * 2;
-    const tinh = mk(W + 16, H + 16, (c) => {
-      c.translate(8, 8);
-      if (ANH.city.ok) { c.save(); c.filter = 'saturate(0.8)'; c.drawImage(ANH.city.img, -8, -8, W + 16, H + 16); c.restore(); c.fillStyle = 'rgba(4,5,14,0.22)'; c.fillRect(-8, -8, W + 16, H + 16); return; }
-      c.fillStyle = lg(c, 0, 0, 0, H, [[0, '#03010a'], [0.3, '#0c0422'], [0.46, '#2a0a48'], [0.5, '#3a0c4a'], [0.52, '#0c0620'], [1, '#030108']]); c.fillRect(-8, -8, W + 16, H + 16);
-      c.fillStyle = rg(c, W / 2, 200, 10, 380, [[0, 'rgba(255,40,170,0.38)'], [0.4, 'rgba(120,30,200,0.16)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(-8, -8, W + 16, H + 16);
-      for (let i = 0; i < 70; i++) { c.fillStyle = `rgba(200,220,255,${0.2 + r() * 0.5})`; c.fillRect(r() * W, r() * 110, 1, 1); }
-      const hy = 202, vx = W / 2;
-      c.strokeStyle = 'rgba(255,60,200,0.22)'; c.lineWidth = 1;
-      for (let k2 = 0; k2 < 14; k2++) { const y = hy + Math.pow(k2 / 13, 2.1) * (H - hy + 20); c.globalAlpha = 0.3 + 0.7 * k2 / 13; c.beginPath(); c.moveTo(-8, y); c.lineTo(W + 8, y); c.stroke(); }
-      c.globalAlpha = 1; c.strokeStyle = 'rgba(80,200,255,0.16)';
-      for (let k2 = -16; k2 <= 16; k2++) { c.beginPath(); c.moveTo(vx + k2 * 8, hy); c.lineTo(vx + k2 * 110, H + 8); c.stroke(); }
-      c.fillStyle = lg(c, 0, hy - 4, 0, hy + 30, [[0, 'rgba(255,80,210,0.5)'], [1, 'rgba(255,80,210,0)']]); c.fillRect(-8, hy - 2, W + 16, 32);
-    }, k);
-    const thanhPho = (base, hMin, hMax, mau, cuaSo, bien, n, dai) => mk(WW, H, (c) => {
-      const toaNha = [];
-      let x = 0; while (x < WW - 10) { const w = 18 + r() * dai; toaNha.push([x, Math.min(w, WW - x), hMin + r() * (hMax - hMin), r() < 0.35]); x += w + r() * 6; }
-      for (const [x0, w, hh, ang] of toaNha) {
-        c.fillStyle = mau; c.fillRect(x0, base - hh, w, H - base + hh);
-        if (ang) c.fillRect(x0 + w * 0.4, base - hh - 10, 2, 10);
-      }
-      sd = n;
-      for (const [x0, w, hh] of toaNha) {
-        for (let yy = base - hh + 5; yy < base - 4; yy += 6) for (let xx = x0 + 3; xx < x0 + w - 3; xx += 5) {
-          const q = r(); if (q < cuaSo) { c.fillStyle = q < cuaSo * 0.15 ? 'rgba(255,90,220,0.8)' : q < cuaSo * 0.35 ? 'rgba(90,220,255,0.75)' : 'rgba(255,210,150,0.35)'; c.fillRect(xx, yy, 2, 2); }
-        }
-        if (bien && r() < 0.3 && w > 22) {   // biển hiệu neon dọc
-          const m = ['#ff3cac', '#3ce7ff', '#ffe24a', '#a35cff'][(r() * 4) | 0], sy = base - hh + 10 + r() * 30, sh = 22 + r() * 18;
-          c.save(); neon(c, m, 10); c.fillStyle = m; c.fillRect(x0 + w - 7, sy, 4, sh); c.restore();
-          c.fillStyle = 'rgba(0,0,0,0.55)'; for (let yy = sy + 3; yy < sy + sh; yy += 6) c.fillRect(x0 + w - 7, yy, 4, 1.2);
-        }
-        if (bien && r() < 0.2) { const m = ['#ff3cac', '#3ce7ff'][(r() * 2) | 0]; c.save(); neon(c, m, 8); c.fillStyle = m; c.fillRect(x0 + 2, base - hh, w - 4, 1.5); c.restore(); }
-      }
-    }, k);
-    L = {
-      tinh, xa: thanhPho(196, 40, 120, '#120a2c', 0.18, false, 3, 34), gan: thanhPho(214, 70, 170, '#07041a', 0.1, true, 9, 46), WW,
-      mu: [0, 1, 2].map((i) => mk(256, 256, (c) => { const m = ['rgba(60,200,255,', 'rgba(255,50,190,', 'rgba(150,80,255,'][i]; c.fillStyle = rg(c, 128, 128, 0, 128, [[0, m + '0.5)'], [1, m + '0)']]); c.fillRect(0, 0, 256, 256); }, 1)),
-      san: mk(W, H, (c) => veSanTinh(c), ks),
-      toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 160, 520, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.7)']]); c.fillRect(0, 0, W, H); }, 1),
-    };
-    LK = k0;
-  }
-  // đường dẫn dữ liệu + tấm sân kính (tĩnh)
-  function duongPath(c) { const P = G.DUONG; c.beginPath(); c.moveTo(P[0][0], P[0][1]); for (let i = 1; i < P.length; i++) c.lineTo(P[i][0], P[i][1]); }
-  function veSanTinh(c) {
-    c.lineJoin = 'miter';
-    duongPath(c); c.lineWidth = 36; c.strokeStyle = 'rgba(2,2,10,0.85)'; c.stroke();
-    c.save(); neon(c, '#3ce7ff', 14); duongPath(c); c.lineWidth = 30; c.strokeStyle = '#3ce7ff'; c.stroke(); c.restore();
-    duongPath(c); c.lineWidth = 27; c.strokeStyle = '#060818'; c.stroke();
-    duongPath(c); c.lineWidth = 19; c.strokeStyle = '#0b1030'; c.stroke();
-    c.save(); duongPath(c); c.setLineDash([2, 10]); c.lineWidth = 19; c.strokeStyle = 'rgba(60,231,255,0.10)'; c.stroke(); c.restore();
-    const bx = G.OX - 6, by = G.OY - 6, bw = G.SW + 12, bh = G.SH + 12;
-    c.save(); neon(c, 'rgba(0,0,0,0.9)', 20); rr(c, bx, by, bw, bh, 10); c.fillStyle = 'rgba(6,9,24,0.9)'; c.fill(); c.restore();
-    rr(c, bx, by, bw, bh, 10); c.fillStyle = lg(c, bx, by, bx, by + bh, [[0, 'rgba(120,160,255,0.10)'], [0.5, 'rgba(60,80,160,0.03)'], [1, 'rgba(255,60,200,0.06)']]); c.fill();
-    c.lineWidth = 1.5; c.strokeStyle = 'rgba(140,170,255,0.35)'; c.stroke();
-    
-    c.fillStyle = 'rgba(60,231,255,0.7)'; for (const [x, y] of [[bx + 3, by + 3], [bx + bw - 3, by + 3], [bx + 3, by + bh - 3], [bx + bw - 3, by + bh - 3]]) { c.beginPath(); c.arc(x, y, 1.6, 0, 7); c.fill(); }
-    c.fillStyle = 'rgba(140,170,255,0.4)'; for (let k = 0; k < 10; k++) c.fillRect(bx + bw / 2 - 45 + k * 10, by + 1.5, 6, 1.2);
+  function veBanTinh(c, B) {   // khung bàn 250×153 + 15 ô 46×45 (ảnh v2 nếu có)
+    const { BX: bx, BY: by } = B, bw = C.BAN_W, bh = C.BAN_H, m = B.ai ? '#3ce7ff' : '#ff2bd6';
+    c.save(); neon(c, 'rgba(0,0,0,0.9)', 18); rr(c, bx, by, bw, bh, 6); c.fillStyle = '#0a0d18'; c.fill(); c.restore();
+    const tile = co('v2:tile_normal');
     for (let i = 0; i < C.COT * C.HANG; i++) {
-      const [x, y] = G.oXY(i);
-      rr(c, x + 1, y + 1, C.O - 2, C.O - 2, 7); c.fillStyle = '#111729'; c.fill(); c.lineWidth = 1; c.strokeStyle = 'rgba(51,65,90,0.4)'; c.stroke();
-      if (ANH.cell.ok) { c.save(); c.globalAlpha = 0.1; c.drawImage(ANH.cell.img, x, y, C.O, C.O); c.restore(); continue; }
-      rr(c, x + 1, y + 1, C.O - 2, C.O - 2, 7); c.fillStyle = lg(c, x, y, x + C.O, y + C.O, [[0, 'rgba(130,180,255,0.10)'], [1, 'rgba(40,60,140,0.04)']]); c.fill();
-      c.lineWidth = 1; c.strokeStyle = 'rgba(120,180,255,0.22)'; c.stroke();
-      c.strokeStyle = 'rgba(60,231,255,0.55)'; c.lineWidth = 1.4; c.beginPath();
-      const a = 8, e = 3;
-      c.moveTo(x + e, y + e + a); c.lineTo(x + e, y + e); c.lineTo(x + e + a, y + e);
-      c.moveTo(x + C.O - e - a, y + C.O - e); c.lineTo(x + C.O - e, y + C.O - e); c.lineTo(x + C.O - e, y + C.O - e - a); c.stroke();
-      c.fillStyle = 'rgba(120,180,255,0.18)'; c.fillRect(x + C.O / 2 - 4, y + C.O / 2 - 0.5, 8, 1); c.fillRect(x + C.O / 2 - 0.5, y + C.O / 2 - 4, 1, 8);
+      const [x, y] = G.oXY({ B }, i);
+      if (tile) { c.drawImage(tile, x, y, C.O, C.OH); continue; }
+      rr(c, x, y, C.O, C.OH, 3); c.fillStyle = lg(c, x, y, x, y + C.OH, [[0, '#2a3142'], [0.5, '#1a1f2c'], [1, '#121621']]); c.fill();
+      c.lineWidth = 1; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.stroke();
+      c.fillStyle = 'rgba(255,255,255,0.07)'; c.fillRect(x + 2, y + 1, C.O - 4, 1);
+      c.fillStyle = 'rgba(0,0,0,0.35)'; c.fillRect(x + C.O / 2 - 0.5, y + 4, 1, C.OH - 8); c.fillRect(x + 4, y + C.OH / 2 - 0.5, C.O - 8, 1);
+      c.fillStyle = 'rgba(140,160,200,0.25)'; for (const [px, py] of [[x + 3, y + 3], [x + C.O - 4, y + 3], [x + 3, y + C.OH - 4], [x + C.O - 4, y + C.OH - 4]]) c.fillRect(px, py, 1.2, 1.2);
     }
+    const fr = co(B.ai ? 'v2:board_frame_top' : 'v2:board_frame_player');
+    if (fr) { c.drawImage(fr, bx, by, bw, bh); return; }
+    // khung kim loại vẽ code: viền 5px, đinh tán góc, vạch màu nhấn (AI cyan / người chơi magenta)
+    const V = C.VIEN; c.fillStyle = METAL(c, bx, by, bx + bw * 0.3, by + bh);
+    c.fillRect(bx, by, bw, V); c.fillRect(bx, by + bh - V, bw, V); c.fillRect(bx, by + V, V, bh - 2 * V); c.fillRect(bx + bw - V, by + V, V, bh - 2 * V);
+    rr(c, bx + 0.5, by + 0.5, bw - 1, bh - 1, 6); c.lineWidth = 1; c.strokeStyle = '#05070d'; c.stroke();
+    c.save(); neon(c, m, 6); c.strokeStyle = hexA(m, 0.75); c.lineWidth = 1; rr(c, bx + C.VIEN - 1, by + C.VIEN - 1, bw - 2 * C.VIEN + 2, bh - 2 * C.VIEN + 2, 3); c.stroke(); c.restore();
+    c.fillStyle = '#9aa6c4'; for (const [px, py] of [[bx + 3, by + 3], [bx + bw - 3, by + 3], [bx + 3, by + bh - 3], [bx + bw - 3, by + bh - 3]]) { c.beginPath(); c.arc(px, py, 1.4, 0, 7); c.fill(); }
+    c.fillStyle = hexA(m, 0.8); c.fillRect(bx + bw / 2 - 20, by + 1.5, 40, 1.5); c.fillRect(bx + bw / 2 - 20, by + bh - 3, 40, 1.5);
+  }
+  function veLanTinh(c, B) {   // làn quái dọc bên trái (x 42..92): đầu trên = cổng sinh, cuối dưới = cửa thoát
+    const [[x, y0], [, y1]] = B.DUONG, w = C.LAN_X1 - C.LAN_X0, x0 = C.LAN_X0;
+    const ln = co('v2:lane_straight');
+    if (ln) c.drawImage(ln, x0, y0, w, y1 - y0);
+    else {
+      c.fillStyle = 'rgba(3,4,10,0.88)'; c.fillRect(x0, y0, w, y1 - y0);
+      c.fillStyle = lg(c, x0, 0, x0 + w, 0, [[0, '#1c2130'], [0.12, '#0b0e18'], [0.88, '#0b0e18'], [1, '#1c2130']]); c.fillRect(x0 + 3, y0, w - 6, y1 - y0);
+      c.fillStyle = '#2c3346'; c.fillRect(x0 + 3, y0, 1.5, y1 - y0); c.fillRect(x0 + w - 4.5, y0, 1.5, y1 - y0);
+      c.fillStyle = 'rgba(255,50,70,0.55)'; for (let y = y0 + 14; y < y1 - 10; y += 16) { c.fillRect(x0 + 5, y, 2, 2); c.fillRect(x0 + w - 7, y, 2, 2); }
+    }
+    const sp = co('v2:lane_spawn'), ex = co('v2:lane_exit');
+    if (sp) c.drawImage(sp, x - 22, y0 - 22, 44, 44);
+    else { c.save(); neon(c, '#ff2b4d', 10); c.strokeStyle = '#ff2b4d'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(x, y0, 17, 6, 0, 0, 7); c.stroke(); c.restore(); c.fillStyle = '#05000a'; c.beginPath(); c.ellipse(x, y0, 15, 5, 0, 0, 7); c.fill(); }
+    if (ex) c.drawImage(ex, x - 22, y1 - 22, 44, 44);
+    else { rr(c, x - 17, y1 - 6, 34, 12, 3); c.fillStyle = '#0a0d18'; c.fill(); c.save(); neon(c, '#ff3b3b', 8); c.strokeStyle = '#ff3b3b'; c.lineWidth = 1.4; c.stroke(); c.restore();
+      c.fillStyle = '#ff3b3b'; for (let n = 0; n < 4; n++) c.fillRect(x - 12 + n * 7, y1 - 1, 4, 2); }
+  }
+  function taoLop(k0) {
+    const k = Math.min(k0, 3);
+    let sd = 5; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    const tinh = mk(W, H, (c) => {
+      const bg = co('v2:bg_arena_portrait');
+      if (bg) c.drawImage(bg, 0, 0, W, H);
+      else {   // hẻm cyberpunk tối (vẽ code): trời tím, 2 dải nhà xa, sàn lưới mờ
+        c.fillStyle = lg(c, 0, 0, 0, H, [[0, '#04020c'], [0.3, '#0b0620'], [0.55, '#140832'], [0.8, '#090418'], [1, '#030108']]); c.fillRect(0, 0, W, H);
+        c.fillStyle = rg(c, W / 2, H * 0.4, 10, 420, [[0, 'rgba(255,40,170,0.20)'], [0.5, 'rgba(90,30,200,0.08)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(0, 0, W, H);
+        for (const [base, hMin, hMax, mau] of [[300, 40, 140, '#0e0824'], [600, 50, 170, '#0a061c']]) {
+          let x = 0; while (x < W) { const w = 16 + r() * 34, hh = hMin + r() * (hMax - hMin); c.fillStyle = mau; c.fillRect(x, base - hh, w, hh);
+            for (let yy = base - hh + 5; yy < base - 4; yy += 7) for (let xx = x + 3; xx < x + w - 3; xx += 6) if (r() < 0.12) { c.fillStyle = r() < 0.3 ? 'rgba(255,90,220,0.55)' : 'rgba(90,220,255,0.45)'; c.fillRect(xx, yy, 1.5, 1.5); }
+            x += w + r() * 5; }
+        }
+        c.strokeStyle = 'rgba(80,200,255,0.06)'; c.lineWidth = 1;
+        for (let y = 0; y < H; y += 24) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+        for (let x = 6; x < W; x += 24) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+      }
+      // dải giữa (y 300..353): vệt nối thị giác giữa 2 bàn
+      c.fillStyle = lg(c, 0, 300, 0, 353, [[0, 'rgba(0,0,0,0)'], [0.5, 'rgba(0,0,0,0.35)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(0, 300, W, 53);
+      c.fillStyle = 'rgba(255,60,90,0.25)'; c.fillRect(C.LAN_X0 + 23, 273, 4, 101);
+      for (const B of BANS) { veLanTinh(c, B); veBanTinh(c, B); }
+    }, k);
+    L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.55)']]); c.fillRect(0, 0, W, H); }, 1) };
+    LK = k0;
   }
   // mưa
   const MUA = [];
-  for (let i = 0; i < 130; i++) MUA.push({ x: Math.random() * (W + 80), y: Math.random() * H, v: 520 + Math.random() * 260, l: 8 + Math.random() * 12 });
+  for (let i = 0; i < 110; i++) MUA.push({ x: Math.random() * (W + 80), y: Math.random() * H, v: 520 + Math.random() * 260, l: 8 + Math.random() * 12 });
   function veMua(c, dt) {
-    const n = Q.cao ? MUA.length : 50;
-    c.save(); c.lineWidth = 1; c.strokeStyle = 'rgba(170,210,255,0.28)'; c.beginPath();
+    const n = Q.cao ? MUA.length : 40;
+    c.save(); c.lineWidth = 1; c.strokeStyle = 'rgba(170,210,255,0.16)'; c.beginPath();
     for (let i = 0; i < n; i++) { const m = MUA[i]; m.y += m.v * dt; m.x -= m.v * dt * 0.18; if (m.y > H) { m.y = -20; m.x = Math.random() * (W + 80); } if (m.x < -20) m.x += W + 80; c.moveTo(m.x, m.y); c.lineTo(m.x + m.l * 0.18, m.y - m.l); }
     c.stroke(); c.restore();
   }
 
   // ---------- hạt ----------
   const HAT = [];
-  function no(x, y, m, n, v = 120, s = 2.4, song = 0.5) {
+  function no(x, y, m, n, v = 90, s = 1.8, song = 0.45) {
     if (!Q.cao) n = Math.ceil(n / 2);
     n = Math.min(n, Math.max(0, Q.hat - HAT.length));
-    for (let i = 0; i < n; i++) { const g = Math.random() * 7, sp = v * (0.3 + Math.random()); HAT.push({ x, y, vx: Math.cos(g) * sp, vy: Math.sin(g) * sp - 20, t: 0, T: song * (0.6 + Math.random() * 0.8), m, s: s * (0.6 + Math.random() * 0.8) }); }
+    for (let i = 0; i < n; i++) { const g = Math.random() * 7, sp = v * (0.3 + Math.random()); HAT.push({ x, y, vx: Math.cos(g) * sp, vy: Math.sin(g) * sp - 15, t: 0, T: song * (0.6 + Math.random() * 0.8), m, s: s * (0.6 + Math.random() * 0.8) }); }
   }
   function veHat(c, dt) {
     c.save(); c.globalCompositeOperation = 'lighter';
-    for (let i = HAT.length - 1; i >= 0; i--) { const p = HAT[i]; p.t += dt; if (p.t >= p.T) { HAT.splice(i, 1); continue; } p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.94; p.vy = p.vy * 0.94 + 60 * dt; c.globalAlpha = 1 - p.t / p.T; c.fillStyle = p.m; c.fillRect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s); }
+    for (let i = HAT.length - 1; i >= 0; i--) { const p = HAT[i]; p.t += dt; if (p.t >= p.T) { HAT.splice(i, 1); continue; } p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.94; p.vy = p.vy * 0.94 + 50 * dt; c.globalAlpha = 1 - p.t / p.T; c.fillStyle = p.m; c.fillRect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s); }
     c.restore();
   }
 
-  // ---------- vẽ unit trong ô ----------
+  // ================= TƯỚNG: sprite sheet khung vuông, neo chân (64,110)/128, scale 0.41 — chỉ đổi khung, không uốn/không ráp =================
   const HANG_MAU = ['#bff6ff', '#bff6ff', '#bff6ff', '#ffd84a', '#ffd84a', '#ff4fd8', '#b37bff'];
-  function veVach(c, x, y, n) {   // vạch hạng neon (1–7)
-    const w = 5, k = 2, tong = n * w + (n - 1) * k, x0 = x + C.O / 2 - tong / 2, m = HANG_MAU[n - 1];
-    rr(c, x0 - 4, y + C.O - 13, tong + 8, 10, 3); c.fillStyle = 'rgba(2,4,12,0.88)'; c.fill(); c.lineWidth = 1; c.strokeStyle = hexA(m, 0.5); c.stroke();
-    c.save(); if (Q.cao) neon(c, m, 6); c.fillStyle = m; for (let i = 0; i < n; i++) c.fillRect(x0 + i * (w + k), y + C.O - 10.5, w, 5); c.restore();
+  const ANIM = { idle: { fps: 9, lap: true, n: 8 }, attack: { fps: 14, lap: false, n: 12 }, hurt: { fps: 12, lap: false, n: 4 }, summon: { fps: 12, lap: false, n: 8 } };
+  const SC = 0.41, NEO_X = 64 / 128, NEO_Y = 110 / 128;
+  const sheet = (id, a) => co(`v2:${id}:${a}`);
+  function chonAnim(v, tg) {   // trạng thái hoạt ảnh theo thời gian trận (dừng trận = đứng hình)
+    const dang = (a, t0) => t0 != null && tg - t0 >= 0 && tg - t0 < ANIM[a].n / ANIM[a].fps;
+    if (dang('summon', v.sinhT) && sheet(v.id, 'summon')) return ['summon', tg - v.sinhT];
+    if (dang('hurt', v.dauT) && sheet(v.id, 'hurt')) return ['hurt', tg - v.dauT];
+    if (dang('attack', v.atkT) && sheet(v.id, 'attack')) return ['attack', tg - v.atkT];
+    return ['idle', tg + v.uid * 0.37];
   }
-  // Tướng kiểu Defense War: chibi đứng thẳng trên ô (không khung thẻ), bóng + vòng đế màu phe, sao trên đầu.
-  // Sprite sheet (nếu có): assets/units/<id>_idle.png (4 khung) / _attack.png (4 khung) — khung vuông 256, chân ở 89% khung, nhân vật cao 58.6% khung.
-  const IDLE_MS = [180, 180, 180, 180], ATK_MS = [90, 70, 90, 130];
-  function khungSheet(a, ms, tg, lap) {   // chọn khung theo thời gian (ms riêng từng khung)
-    const n = Math.max(1, Math.round(a.img.width / a.img.height)), tong = ms.slice(0, n).reduce((p, q) => p + q, 0);
-    let m = lap ? (tg * 1000) % tong : Math.min(tong - 1, tg * 1000);
-    for (let i = 0; i < n; i++) { if (m < ms[i]) return i; m -= ms[i]; }
-    return n - 1;
+  // vẽ 1 khung của sheet 1 hàng (frame vuông = chiều cao ảnh, số khung = rộng / cao), chân tại (x, chan)
+  function veKhung(c, im, f, x, chan, sc, hang = 0, soHang = 1) {
+    const fh = im.height / soHang, s = sc * 128 / fh;
+    c.drawImage(im, f * fh, hang * fh, fh, fh, x - fh * NEO_X * s, chan - fh * NEO_Y * s, fh * s, fh * s);
   }
-  function veSao(c, cx, y, n) {   // sao nhỏ trên đầu (1–7)
-    const m = HANG_MAU[n - 1], w = 7, x0 = cx - (n * w) / 2 + w / 2;
-    c.save(); if (Q.cao) neon(c, m, 5);
-    for (let i = 0; i < n; i++) { const px = x0 + i * w; c.beginPath(); for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 1.5 : 3.4; c.lineTo(px + Math.cos(g) * r, y + Math.sin(g) * r); } c.closePath(); c.fillStyle = m; c.fill(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(0,0,0,0.7)'; c.stroke(); }
+  const soKhung = (im, soHang = 1) => Math.max(1, Math.round(im.width / (im.height / soHang)));
+  function veBong(c, x, y, w) {
+    const b = co('v2:unit_shadow');
+    if (b) { c.drawImage(b, x - w / 2, y - w * 0.17, w, w * 0.34); return; }
+    c.save(); c.fillStyle = 'rgba(0,0,0,0.42)'; c.beginPath(); c.ellipse(x, y, w / 2, w * 0.15, 0, 0, 7); c.fill(); c.restore();
+  }
+  function veSao(c, cx, cy, n) {   // nhãn sao: nền tối, sao vàng; đặt cố định (tâm ô, đỉnh ô + 2), không nhún theo người
+    const bd = co('v2:star_badges');
+    if (bd) { const nf = soKhung(bd), f = Math.min(n, nf) - 1, fh = bd.height, sz = 15; c.drawImage(bd, f * fh, 0, fh, fh, cx - sz / 2, cy - sz / 2, sz, sz); if (n > nf) { c.fillStyle = HANG_MAU[n - 1]; c.font = '900 6px Orbitron, sans-serif'; c.textAlign = 'center'; c.fillText('+', cx + sz / 2, cy - 2); } return; }
+    const w = 5, tong = n * w, m = HANG_MAU[n - 1];
+    rr(c, cx - tong / 2 - 2.5, cy - 3.5, tong + 5, 7, 2.5); c.fillStyle = 'rgba(2,4,12,0.85)'; c.fill(); c.lineWidth = 0.6; c.strokeStyle = hexA(m, 0.5); c.stroke();
+    c.fillStyle = m;
+    for (let i = 0; i < n; i++) { const px = cx - tong / 2 + w / 2 + i * w; c.beginPath(); for (let k = 0; k < 10; k++) { const g = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 0.95 : 2.2; c.lineTo(px + Math.cos(g) * r, cy + Math.sin(g) * r); } c.closePath(); c.fill(); }
+  }
+  function veHinhTuong(c, v, cx, chan, tg) {   // chỉ sprite (không bóng/sao) — dùng cả khi kéo
+    const [a, el] = chonAnim(v, tg), im = sheet(v.id, a);
+    if (im) { const A = ANIM[a], n = soKhung(im), fr = Math.floor(el * A.fps); veKhung(c, im, A.lap ? fr % n : Math.min(n - 1, fr), cx, chan, SC); return; }
+    // chưa có ảnh v2: ảnh cũ nguyên khối (đứng yên) hoặc hình vẽ code; xuất hiện thì chỉ hiện dần (opacity)
+    const hien = v.sinhT != null ? Math.min(1, (tg - v.sinhT) / 0.3) : 1;
+    c.save(); c.globalAlpha *= Math.max(0, hien);
+    const u = ANH['u:' + v.id];
+    if (u && u.ok) veHinh(c, u, null, cx - 25, chan - 50, 50, 50);
+    else c.drawImage(sprUnit(v.id), cx - 24, chan - 48 * 57 / 64, 48, 48);
     c.restore();
   }
-  // "Live2D giả": uốn 1 ảnh nguyên khối theo lát ngang — chân cố định, thân thở, đầu/tóc lắc trễ nhịp như sóng,
-  // khi đánh ngả người tới rồi giật lùi. Mượt liên tục 60 hình/giây, không cắt mảnh nên không lộ khớp.
-  const LAT = 30;
-  function veUon(c, im, w, h, t, ph, nga, nen) {   // vẽ quanh gốc (0,0) = giữa chân; nga: độ ngả (px ở đỉnh), nen: nén dọc (0..1)
-    const iw = im.width, ih = im.height, kh = Math.min(w / iw, h / ih), dw = iw * kh, dh = ih * kh;
-    const tho = Math.sin(t * 2 * Math.PI / 1.3 + ph);                 // nhịp thở 1.3s
-    const H = dh * (1 + 0.012 * tho - 0.06 * nen);                     // cao (chân giữ nguyên)
-    for (let i = 0; i < LAT; i++) {
-      const k0 = i / LAT, k1 = (i + 1) / LAT, km = (k0 + k1) / 2, cao = 1 - km;   // cao: 1 = đỉnh đầu, 0 = chân
-      const song = Math.sin(t * 2 * Math.PI / 1.6 + ph - km * 2.2) * 0.9 * cao * cao;   // tóc/áo lắc trễ dần lên trên
-      const lech = song + nga * Math.pow(cao, 1.4);
-      const phong = 1 + 0.018 * tho * Math.max(0, 1 - Math.abs(km - 0.55) / 0.25);   // ngực phồng khi hít vào
-      const sy = ih * k0, sh = Math.max(1, ih * (k1 - k0)), y0 = -H + H * k0, y1 = -H + H * k1;
-      const ww = dw * phong;
-      c.drawImage(im, 0, sy, iw, sh + 0.6, -ww / 2 + lech, y0, ww, (y1 - y0) + 0.6);
+  function veUnit(c, S, v, i, tg, t, hop) {
+    const [x, y] = G.oXY(S, i), cx = x + C.O / 2, chan = y + C.OH - 5, h = HANH[TUONG[v.id].hanh];
+    veBong(c, cx, chan, 20);
+    if (hop) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(cx, chan, 15, 4.5, 0, 0, 7); c.stroke(); c.restore(); }
+    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 14, 22, 0.45 + 0.15 * Math.sin(t * 12));
+    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 14, 22, 0.4);
+    veHinhTuong(c, v, cx, chan, tg);
+    if (!sheet(v.id, 'attack') && v.atkT != null && tg - v.atkT > C.TAC_DONG - 0.05 && tg - v.atkT < C.TAC_DONG + 0.12) {   // chưa có sheet attack: chớp ở nòng lúc phát đạn
+      const [mx, my] = G.nong(S, i, v); veGlow(c, h.mau, mx, my, 8, 0.9);
     }
   }
-  function veUnit(c, v, x, y, t, chon) {
-    const td = TUONG[v.id], h = HANH[td.hanh];
-    const cx = x + C.O / 2, chan = y + C.O / 2 + 24;                 // chân ở tâm ô + 24px
-    let s = 1;   // xuất hiện (triệu hồi / ghép): 0.75 → 1.10 → 1
-    if (v.moi > 0) { const p = 1 - v.moi / (v.sao > 1 ? 0.5 : 0.35); s = p < 0.6 ? 0.75 + 0.35 * (p / 0.6) : 1.10 - 0.10 * ((p - 0.6) / 0.4); }
-    // bóng + vòng đế màu phe
-    c.save(); c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(cx, chan + 1, 14, 3.5, 0, 0, 7); c.fill();
-    c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.35 + 0.08 * Math.sin(t * 3 + v.uid); c.strokeStyle = h.mau; c.lineWidth = 1.6; c.beginPath(); c.ellipse(cx, chan, 14, 4, 0, 0, 7); c.stroke();
-    veGlow(c, h.mau, cx, chan, 18, 0.25); c.restore();
-    if (chon) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ffffff'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(cx, chan, 20, 6, 0, 0, 7); c.stroke(); c.restore(); }
-    if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 18, 30, 0.45 + 0.15 * Math.sin(t * 12));
-    if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 18, 30, 0.4);
-    // tư thế: đánh (0.38s sau phát bắn) hoặc đứng thở
-    const tDanh = 0.38 - Math.max(0, v.danh * 0.38 / 0.3);           // v.danh: 0.3 → 0 sau mỗi phát
-    const danh = v.danh > 0, huong = v.huong || 1;
-    let dx = 0, sy = 1;
-    if (danh) { const k = tDanh / 0.38; dx = k < 0.24 ? -2 * (k / 0.24) : k < 0.42 ? 3 : k < 0.66 ? -2 : -2 * (1 - (k - 0.66) / 0.34); }
-    else sy = 1 + 0.012 * Math.sin(t * 4.4 + v.uid);
-    const bob = danh ? 0 : Math.sin(t * 2.4 + v.uid) * 1.2;
-    const aI = ANH['ui:' + v.id], aA = ANH['ua:' + v.id], aU = ANH['u:' + v.id];
-    c.save(); c.translate(cx + dx * huong, chan); c.scale(s * huong, s * sy);
-    if (aU && aU.ok) {
-      let nga = 0, nen = 0;
-      if (danh) { const k = tDanh / 0.38; nga = k < 0.24 ? -2.2 * (k / 0.24) : k < 0.42 ? -2.2 + 6.2 * ((k - 0.24) / 0.18) : 4 * (1 - (k - 0.42) / 0.58) * (1 - (k - 0.42) / 0.58); nen = k > 0.24 && k < 0.5 ? 0.5 * Math.sin((k - 0.24) / 0.26 * Math.PI) : 0; }
-      veUon(c, aU.img, 62, 62, t, v.uid * 1.7, nga, nen);
-    } else if (aI && aI.ok) { const fH = aI.img.height, f = khungSheet(aI, IDLE_MS, t + v.uid * 0.13, true), S = 100; c.drawImage(aI.img, f * fH, 0, fH, fH, -S / 2, -S * 0.89 + bob * 0.3, S, S); }
-    else c.drawImage(sprUnit(v.id), -30, -60 + bob, 60, 60);
-    c.restore();
-    if (danh && v.danh > 0.15) { const tp = td.tip; veGlow(c, h.mau, cx + (tp[0] * 0.84 - 27) * huong, chan - 54 + tp[1] * 0.84, 10, (v.danh - 0.15) / 0.15); }
-    // trạng thái từ boss
-    c.font = '700 8px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)';
-    if (v.nong > 0) { c.strokeText('HOT ' + Math.ceil(v.nong), cx, y + 8); c.fillStyle = '#ffb0b0'; c.fillText('HOT ' + Math.ceil(v.nong), cx, y + 8); }
-    else if (v.corrT > 0) { c.strokeText('BUG', cx, y + 8); c.fillStyle = '#e8b6ff'; c.fillText('BUG', cx, y + 8); }
-    veSao(c, cx, chan - 66, v.sao);
+  function veNhanO(c, S, v, i) {   // sao + trạng thái boss (lớp trên cùng của bàn)
+    const [x, y] = G.oXY(S, i), cx = x + C.O / 2;
+    veSao(c, cx, y - 3, v.sao);   // đặc tả: đỉnh ô + 2; nâng 5px để nhãn không che mặt sprite cao ~40px
+    if (v.nong > 0 || v.corrT > 0) {
+      const tx = v.nong > 0 ? 'HOT ' + Math.ceil(v.nong) : 'BUG';
+      c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)';
+      c.strokeText(tx, cx, y + C.OH - 1); c.fillStyle = v.nong > 0 ? '#ffb0b0' : '#e8b6ff'; c.fillText(tx, cx, y + C.OH - 1);
+    }
   }
   // ---------- quái ----------
   const MAU_QUAI = { thuong: '#ff3355', nhanh: '#ff2bd6', trau: '#ff8a1a' };
-  function veQuai(c, q, t) {
-    const w = q.co, hv = q.kind === 'thuong' || q.boss ? Math.sin(t * 4 + q.uid) * 2 : 0;
-    const x = q.x - w / 2, yChan = q.y + 10, vao = Math.min(1, q.d / 26);
+  function veQuai(c, q, t, tg) {
+    const w = q.co, yChan = q.y + 2, vao = q.daRa ? 1 : Math.min(1, (tg - (q.sinhT || 0)) / 0.5);
     c.save(); c.globalAlpha = vao;
-    if (q.flash > 0.055) { const k = 1.06; c.translate(q.x, yChan); c.scale(k, k); c.translate(-q.x, -yChan); }
-    c.save(); c.globalAlpha = 0.5 * vao; c.fillStyle = '#000'; c.beginPath(); c.ellipse(q.x, q.y + 9, w * 0.36, 3.5, 0, 0, 7); c.fill(); c.restore();
+    veBong(c, q.x, yChan, w * 0.8);
     const m = q.boss ? q.boss.mau : MAU_QUAI[q.kind];
-    if (Q.cao) veGlow(c, m, q.x, yChan - w / 2 + hv, w * 0.8, 0.28);
-    if (q.boss) {
-      if (q.boss.id === 'overclock') { c.save(); c.translate(q.x, yChan - w / 2 - 3 + hv); c.rotate(t * 2.5); c.drawImage(sprBanh(), -w / 2 - 4, -w / 2 - 4, w + 8, w + 8); c.restore(); }
-      veHinh(c, ANH['b:' + q.boss.id], sprBoss(q.boss), x - 4, yChan - w - 8 + hv, w + 8, w + 8);
+    if (Q.cao) veGlow(c, m, q.x, yChan - w / 2, w * 0.7, 0.22);
+    const sh = co(q.boss ? 'v2b:' + q.boss.id : 'v2q:' + q.kind);
+    if (sh) {   // sheet nhiều hàng: quái 3 hàng idle/move/hurt ×8; boss 4 hàng idle/move/attack/hurt ×16
+      const soHang = q.boss ? 4 : 3, hang = q.flash > 0 ? soHang - 1 : q.boss && q.tele ? 2 : q.choang > 0 ? 0 : 1;
+      const n = soKhung(sh, soHang), f = Math.floor((tg + q.uid * 0.21) * (q.boss ? 12 : 10)) % n;
+      veKhung(c, sh, f, q.x, yChan, w * 1.9 / 128, hang, soHang);
     } else {
-      const sp = sprQuai(q.kind), a = ANH['e:' + q.kind];
-      if (q.kind === 'nhanh' && Q.cao && Math.sin(t * 13 + q.uid) > 0.85 && !(a && a.ok)) {   // nhiễu glitch
-        c.save(); c.globalAlpha = 0.6; c.globalCompositeOperation = 'lighter'; c.drawImage(sp, x + 3, yChan - w, w, w); c.restore();
-      }
-      veHinh(c, a, sp, x, yChan - w + hv, w, w);
+      const hv = q.kind === 'thuong' || q.boss ? Math.sin(t * 4 + q.uid) * 1.2 : 0, s = q.boss ? w + 6 : w;
+      if (q.boss && q.boss.id === 'overclock') { c.save(); c.translate(q.x, yChan - w / 2 - 2 + hv); c.rotate(t * 2.5); c.drawImage(sprBanh(), -s / 2 - 3, -s / 2 - 3, s + 6, s + 6); c.restore(); }
+      const a = q.boss ? ANH['b:' + q.boss.id] : ANH['e:' + q.kind], sp = q.boss ? sprBoss(q.boss) : sprQuai(q.kind);
+      veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s);
+      if (q.flash > 0.045 && Q.cao) { c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7) * vao; veHinh(c, a, sp, q.x - s / 2, yChan - s + hv, s, s); c.globalCompositeOperation = 'source-over'; c.globalAlpha = vao; }
     }
-    if (q.flash > 0.045 && Q.cao) {   // chớp sáng khi trúng đòn
-      c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(0.7, q.flash * 7);
-      if (q.boss) veHinh(c, ANH['b:' + q.boss.id], sprBoss(q.boss), x - 4, yChan - w - 8 + hv, w + 8, w + 8);
-      else veHinh(c, ANH['e:' + q.kind], sprQuai(q.kind), x, yChan - w + hv, w, w);
-      c.restore();
-    }
-    if (q.cham > 0) { c.save(); c.globalAlpha = 0.55; c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(q.x, q.y + 6, w * 0.45, 5, 0, 0, 7); c.stroke(); c.restore(); veGlow(c, '#5ee7ff', q.x, yChan - w / 2, w * 0.6, 0.3); }
-    if (q.chill > 0) { c.save(); c.strokeStyle = '#bff6ff'; c.lineWidth = 1.6; for (let k = 0; k < q.chill; k++) { const g = t * 2 + k * 2.09, r = w * 0.42; c.beginPath(); c.moveTo(q.x + Math.cos(g) * r, yChan - w / 2 + Math.sin(g) * r * 0.5); c.lineTo(q.x + Math.cos(g) * (r + 6), yChan - w / 2 + Math.sin(g) * (r + 6) * 0.5); c.stroke(); } c.restore(); }
-    if (q.tox > 0) { c.fillStyle = '#b4ff2a'; const bw2 = Math.max(22, w * 0.75); for (let k = 0; k < q.tox; k++) c.fillRect(q.x - bw2 / 2 + k * 5, yChan - w - 12, 3.5, 3); for (let k = 0; k < 2; k++) { const p = (t * 1.8 + k / 2 + q.uid * 0.37) % 1; veGlow(c, '#b4ff2a', q.x - 6 + k * 12, yChan - w * 0.5 + p * 14, 4 * (1 - p) + 1.5, 0.8); } }
-    if (q.breachT > 0) { c.save(); c.strokeStyle = '#00ffa3'; c.lineWidth = 1.4; c.globalAlpha = 0.9; const cy = yChan - w / 2, r = w * 0.5, j = Math.sin(t * 40 + q.uid) > 0.6 ? 3 : 0; c.beginPath(); c.moveTo(q.x - r + 5 + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy + r * 0.6); c.lineTo(q.x - r + 5 + j, cy + r * 0.6); c.moveTo(q.x + r - 5 - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy + r * 0.6); c.lineTo(q.x + r - 5 - j, cy + r * 0.6); c.stroke(); c.restore(); }
-    if (q.bounty > 0) { c.save(); c.strokeStyle = '#4d8dff'; c.fillStyle = 'rgba(77,141,255,0.35)'; c.lineWidth = 1.4; hexP(c, q.x, yChan - w - 18, 5, t); c.fill(); c.stroke(); c.restore(); }
-    if (q.khien > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = 'rgba(255,120,120,0.85)'; c.lineWidth = 2; c.beginPath(); c.arc(q.x, yChan - w / 2, w * 0.55, 0, 7); c.stroke(); c.restore(); }
-    if (q.nhanhT > 0) { c.save(); c.strokeStyle = 'rgba(255,200,60,0.8)'; c.lineWidth = 1.3; for (let k = 0; k < 3; k++) { const yy = yChan - 6 - k * 7, l = 8 + ((t * 40 + k * 13) % 8); c.beginPath(); c.moveTo(q.x - w * 0.4 - l, yy); c.lineTo(q.x - w * 0.4, yy); c.stroke(); } c.restore(); }
-    if (q.echo) { c.save(); c.strokeStyle = '#ffb31a'; c.lineWidth = 1.5; c.setLineDash([4, 3]); c.lineDashOffset = -t * 20; c.beginPath(); c.arc(q.x, yChan - w / 2, w * 0.5, 0, 7); c.stroke(); c.restore(); }
-    if (q.choang > 0) { c.save(); c.strokeStyle = '#c8ffe8'; c.lineWidth = 1.2; c.globalAlpha = 0.9; c.beginPath(); let px = q.x - 10, py = yChan - w - 4; c.moveTo(px, py); for (let k = 0; k < 5; k++) { px += 4; py += (k % 2 ? -4 : 4) * Math.sin(t * 30 + k); c.lineTo(px, py); } c.stroke(); c.restore(); }
+    const cy = yChan - w / 2;
+    if (q.cham > 0) { c.save(); c.globalAlpha = 0.55 * vao; c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(q.x, yChan, w * 0.42, 3.5, 0, 0, 7); c.stroke(); c.restore(); }
+    if (q.chill > 0) { c.save(); c.strokeStyle = '#bff6ff'; c.lineWidth = 1.2; for (let k = 0; k < q.chill; k++) { const g = t * 2 + k * 2.09, r = w * 0.42; c.beginPath(); c.moveTo(q.x + Math.cos(g) * r, cy + Math.sin(g) * r * 0.5); c.lineTo(q.x + Math.cos(g) * (r + 4), cy + Math.sin(g) * (r + 4) * 0.5); c.stroke(); } c.restore(); }
+    if (q.tox > 0) { c.fillStyle = '#b4ff2a'; for (let k = 0; k < q.tox; k++) c.fillRect(q.x - 8 + k * 4, yChan - w - 9, 3, 2); }
+    if (q.breachT > 0) { c.save(); c.strokeStyle = '#00ffa3'; c.lineWidth = 1.1; const r = w * 0.5, j = Math.sin(t * 40 + q.uid) > 0.6 ? 2 : 0; c.beginPath(); c.moveTo(q.x - r + 4 + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy - r * 0.6); c.lineTo(q.x - r + j, cy + r * 0.6); c.lineTo(q.x - r + 4 + j, cy + r * 0.6); c.moveTo(q.x + r - 4 - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy - r * 0.6); c.lineTo(q.x + r - j, cy + r * 0.6); c.lineTo(q.x + r - 4 - j, cy + r * 0.6); c.stroke(); c.restore(); }
+    if (q.bounty > 0) { c.save(); c.strokeStyle = '#4d8dff'; c.fillStyle = 'rgba(77,141,255,0.35)'; c.lineWidth = 1; hexP(c, q.x + w * 0.5, yChan - w - 4, 3.5, t); c.fill(); c.stroke(); c.restore(); }
+    if (q.khien > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = 'rgba(255,120,120,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.arc(q.x, cy, w * 0.55, 0, 7); c.stroke(); c.restore(); }
+    if (q.nhanhT > 0) { c.save(); c.strokeStyle = 'rgba(255,200,60,0.8)'; c.lineWidth = 1; for (let k = 0; k < 3; k++) { const xx = q.x - 6 + k * 6, l = 5 + ((t * 30 + k * 13) % 5); c.beginPath(); c.moveTo(xx, cy - w * 0.4 - l); c.lineTo(xx, cy - w * 0.4); c.stroke(); } c.restore(); }
+    if (q.echo) { c.save(); c.strokeStyle = '#ffb31a'; c.lineWidth = 1.2; c.setLineDash([3, 2]); c.lineDashOffset = -t * 20; c.beginPath(); c.arc(q.x, cy, w * 0.5, 0, 7); c.stroke(); c.restore(); }
+    if (q.choang > 0) { c.save(); c.strokeStyle = '#c8ffe8'; c.lineWidth = 1; c.beginPath(); let px = q.x - 7, py = yChan - w - 3; c.moveTo(px, py); for (let k = 0; k < 5; k++) { px += 3; py += (k % 2 ? -3 : 3) * Math.sin(t * 30 + k); c.lineTo(px, py); } c.stroke(); c.restore(); }
     if (!q.boss) {
-      const bw = Math.max(22, w * 0.75), by = yChan - w - 6, k = Math.max(0, q.hp / q.max);
-      c.fillStyle = 'rgba(2,4,12,0.85)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 4);
+      const bw = 16, by = yChan - w - 5, k = Math.max(0, q.hp / q.max);
+      c.fillStyle = 'rgba(2,4,12,0.85)'; c.fillRect(q.x - bw / 2 - 0.5, by - 0.5, bw + 1, 3);
       c.fillStyle = k > 0.4 ? '#3cffb0' : '#ff3c6e'; c.fillRect(q.x - bw / 2, by, bw * k, 2);
+    } else {
+      const bw = 34, by = yChan - w - 9, k = Math.max(0, q.hp / q.max);
+      c.fillStyle = 'rgba(2,4,12,0.9)'; c.fillRect(q.x - bw / 2 - 1, by - 1, bw + 2, 5);
+      c.fillStyle = q.boss.mau; c.fillRect(q.x - bw / 2, by, bw * k, 3);
     }
     c.restore();
   }
   // ---------- đạn ----------
-  function veDan(c, d) {
-    const h = d.mau, g = d.goc != null ? d.goc : Math.atan2(d.q.y - d.y, d.q.x - d.x), dai = d.id === 'lance' ? 46 : d.id === 'venom' ? 12 : 16;
+  function veDan(c, d, tg) {
+    const h = d.mau, g = d.goc != null ? d.goc : Math.atan2(d.q.y - d.y, d.q.x - d.x), dai = d.id === 'lance' ? 28 : d.id === 'venom' ? 8 : 10;
     const x1 = d.x - Math.cos(g) * dai, y1 = d.y - Math.sin(g) * dai;
     c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
-    c.strokeStyle = lg(c, x1, y1, d.x, d.y, [[0, hexA(h, 0)], [1, hexA(h, 0.95)]]); c.lineWidth = d.id === 'lance' ? 3.4 : d.id === 'venom' ? 1.6 : 4; c.beginPath(); c.moveTo(x1, y1); c.lineTo(d.x, d.y); c.stroke();
-    c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = d.id === 'venom' ? 0.8 : 1.4; c.beginPath(); c.moveTo((x1 + d.x) / 2, (y1 + d.y) / 2); c.lineTo(d.x, d.y); c.stroke();
+    c.strokeStyle = lg(c, x1, y1, d.x, d.y, [[0, hexA(h, 0)], [1, hexA(h, 0.95)]]); c.lineWidth = d.id === 'lance' ? 2.4 : d.id === 'venom' ? 1.2 : 2.6; c.beginPath(); c.moveTo(x1, y1); c.lineTo(d.x, d.y); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = d.id === 'venom' ? 0.6 : 1; c.beginPath(); c.moveTo((x1 + d.x) / 2, (y1 + d.y) / 2); c.lineTo(d.x, d.y); c.stroke();
+    const vf = co('v2:' + VFX_TUONG[d.id]);
+    if (vf) { const fh = vf.height, n = soKhung(vf), f = Math.floor(tg * 16) % n; c.drawImage(vf, f * fh, 0, fh, fh, d.x - 8, d.y - 8, 16, 16); }
     c.restore();
-    veGlow(c, h, d.x, d.y, d.id === 'scorch' ? 13 : d.id === 'frost' ? 11 : 8, 0.95);
+    if (!vf) veGlow(c, h, d.x, d.y, d.id === 'scorch' ? 8 : d.id === 'frost' ? 7 : 5, 0.95);
   }
   // ---------- hiệu ứng ----------
   const DA_THAY = new WeakSet();
   function sinhHat(S) {
     for (const f of S.fx) {
       if (DA_THAY.has(f)) continue; DA_THAY.add(f);
-      const o = f.i != null ? G.oTam(f.i) : [f.x, f.y];
-      if (f.k === 'no') no(o[0], o[1], '#ffc890', 12, 140, 2.6, 0.5);
-      else if (f.k === 'gop') { no(o[0], o[1], '#ffffff', 18, 170, 2.4, 0.6); no(o[0], o[1], HANG_MAU[f.sao - 1], 16, 120, 2.8, 0.7); }
-      else if (f.k === 'trieu') no(o[0], o[1] + 10, '#3ce7ff', 10, 70, 2, 0.5);
-      else if (f.k === 'song') no(o[0], o[1], '#bff6ff', 8, 90, 2, 0.4);
-      else if (f.k === 'hoada') no(o[0], o[1], '#ff3b3b', 10, 90, 2.4, 0.5);
-      else if (f.k === 'kn') no(o[0], o[1], f.mau, 20, 200, 3, 0.7);
-      else if (f.k === 'thanh') no(W - 30, G.BOT - 18, '#ff3b3b', 20, 160, 3, 0.6);
-      else if (f.k === 'hit') no(o[0], o[1], f.mau, f.to ? 7 : 3, 110, 2.2, 0.25);
-      else if (f.k === 'vo') no(o[0], o[1], '#bff6ff', 10, 120, 3, 0.45);
-      else if (f.k === 'plasma' || f.k === 'nhiet') no(o[0], o[1], '#ff9a50', 10, 110, 2.6, 0.4);
-      else if (f.k === 'emp') no(o[0], o[1], '#00ffa3', 6, 80, 2, 0.35);
-      else if (f.k === 'tien') { for (let n = 0; n < 4; n++) HAT.push({ x: o[0], y: o[1], vx: (Math.random() - 0.5) * 60, vy: -120 - Math.random() * 60, t: 0, T: 0.6, m: '#4d8dff', s: 3.5 }); }
-      else if (f.k === 'boom') no(o[0], o[1], '#c79bff', 14, 140, 2.6, 0.5);
-      else if (f.k === 'xung') no(o[0], o[1], '#ffd34a', 14, 160, 2.6, 0.5);
-      else if (f.k === 'rail') no(f.x0, f.y0, '#ff8cc0', 5, 70, 2, 0.3);
+      const o = f.i != null ? G.oTam(S, f.i) : [f.x, f.y];
+      if (f.k === 'no') no(o[0], o[1], '#ffc890', 8, 100, 2, 0.45);
+      else if (f.k === 'gop') { no(o[0], o[1], '#ffffff', 12, 120, 1.8, 0.5); no(o[0], o[1], HANG_MAU[f.sao - 1], 10, 90, 2, 0.6); }
+      else if (f.k === 'trieu') no(o[0], o[1] + 8, '#3ce7ff', 7, 50, 1.6, 0.45);
+      else if (f.k === 'hoada') no(o[0], o[1], '#ff3b3b', 7, 70, 1.8, 0.45);
+      else if (f.k === 'kn') no(o[0], o[1], f.mau, 12, 140, 2.2, 0.6);
+      else if (f.k === 'thanh') no(S.B.RA[0], S.B.RA[1], '#ff3b3b', 14, 110, 2.2, 0.5);
+      else if (f.k === 'hit') no(o[0], o[1], f.mau, f.to ? 4 : 2, 80, 1.6, 0.22);
+      else if (f.k === 'vo') no(o[0], o[1], '#bff6ff', 7, 90, 2, 0.4);
+      else if (f.k === 'plasma' || f.k === 'nhiet') no(o[0], o[1], '#ff9a50', 7, 80, 2, 0.35);
+      else if (f.k === 'emp') no(o[0], o[1], '#00ffa3', 4, 60, 1.6, 0.3);
+      else if (f.k === 'tien') { for (let n = 0; n < 3; n++) HAT.push({ x: o[0], y: o[1], vx: (Math.random() - 0.5) * 40, vy: -80 - Math.random() * 40, t: 0, T: 0.5, m: '#4d8dff', s: 2.5 }); }
+      else if (f.k === 'boom') no(o[0], o[1], '#c79bff', 9, 100, 2, 0.45);
+      else if (f.k === 'xung') no(o[0], o[1], '#ffd34a', 9, 110, 2, 0.45);
+      else if (f.k === 'rail') no(f.x0, f.y0, '#ff8cc0', 4, 50, 1.6, 0.25);
     }
   }
-  function veFx(c, f) {
-    const k = f.t / f.T, o = f.i != null ? G.oTam(f.i) : [f.x, f.y], a = Math.max(0, 1 - k);
+  function veSheetFx(c, im, k, x, y, sz) { const fh = im.height, n = soKhung(im), f = Math.min(n - 1, Math.floor(k * n)); c.drawImage(im, f * fh, 0, fh, fh, x - sz / 2, y - sz / 2, sz, sz); }
+  function veFx(c, S, f) {
+    const k = f.t / f.T, o = f.i != null ? G.oTam(S, f.i) : [f.x, f.y], a = Math.max(0, 1 - k);
     c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = a;
     if (f.k === 'trieu') {
-      c.fillStyle = lg(c, 0, o[1] - 90, 0, o[1] + 30, [[0, 'rgba(60,231,255,0)'], [0.7, 'rgba(60,231,255,0.7)'], [1, 'rgba(255,255,255,0.9)']]);
-      const w = 44 * (1 - k * 0.7); c.fillRect(o[0] - w / 2, o[1] - 90, w, 120);
-      c.strokeStyle = '#3ce7ff'; c.lineWidth = 2; c.beginPath(); c.ellipse(o[0], o[1] + 22, 10 + 26 * k, 4 + 8 * k, 0, 0, 7); c.stroke();
+      const im = co('v2:vfx_summon');
+      if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1] + 6, 56); }
+      else { c.fillStyle = lg(c, 0, o[1] - 50, 0, o[1] + 20, [[0, 'rgba(60,231,255,0)'], [0.7, 'rgba(60,231,255,0.6)'], [1, 'rgba(255,255,255,0.85)']]);
+        const w = 28 * (1 - k * 0.7); c.fillRect(o[0] - w / 2, o[1] - 50, w, 70);
+        c.strokeStyle = '#3ce7ff'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(o[0], o[1] + 17, 7 + 16 * k, 2.5 + 5 * k, 0, 0, 7); c.stroke(); }
     } else if (f.k === 'gop') {
-      c.strokeStyle = '#ffffff'; c.lineWidth = 3 * a + 1; c.beginPath(); c.arc(o[0], o[1], 8 + 46 * k, 0, 7); c.stroke();
-      c.strokeStyle = HANG_MAU[f.sao - 1]; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 4 + 30 * k, 0, 7); c.stroke();
-      veGlow(c, '#ffffff', o[0], o[1], 40 * (1 - k) + 6, a);
-      c.globalCompositeOperation = 'source-over'; c.font = '900 13px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center';
-      c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText('RANK ' + f.sao, o[0], o[1] - 34 - k * 10); c.fillStyle = '#ffffff'; c.fillText('RANK ' + f.sao, o[0], o[1] - 34 - k * 10);
+      const im = co('v2:vfx_merge');
+      if (im) { c.globalAlpha = 1; veSheetFx(c, im, k, o[0], o[1], 64); }
+      else { c.strokeStyle = '#ffffff'; c.lineWidth = 2 * a + 1; c.beginPath(); c.arc(o[0], o[1], 5 + 30 * k, 0, 7); c.stroke();
+        c.strokeStyle = HANG_MAU[f.sao - 1]; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], 3 + 20 * k, 0, 7); c.stroke();
+        veGlow(c, '#ffffff', o[0], o[1], 26 * (1 - k) + 4, a); }
+      c.globalCompositeOperation = 'source-over'; c.globalAlpha = a; c.font = '900 9px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center';
+      c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText('RANK ' + f.sao, o[0], o[1] - 26 - k * 8); c.fillStyle = '#ffffff'; c.fillText('RANK ' + f.sao, o[0], o[1] - 26 - k * 8);
     } else if (f.k === 'bac') {
-      c.strokeStyle = '#3cffb0'; c.lineWidth = 2;
-      for (let n = 0; n < 2; n++) { const yy = o[1] + 12 - k * 34 - n * 9; c.beginPath(); c.moveTo(o[0] - 9, yy + 5); c.lineTo(o[0], yy - 2); c.lineTo(o[0] + 9, yy + 5); c.stroke(); }
+      c.strokeStyle = '#3cffb0'; c.lineWidth = 1.5;
+      for (let n = 0; n < 2; n++) { const yy = o[1] + 8 - k * 24 - n * 6; c.beginPath(); c.moveTo(o[0] - 6, yy + 4); c.lineTo(o[0], yy - 1); c.lineTo(o[0] + 6, yy + 4); c.stroke(); }
     } else if (f.k === 'no') {
-      c.strokeStyle = '#ffd0a0'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 4 + f.r * 1.3 * k, 0, 7); c.stroke();
-      veGlow(c, '#ff9a50', o[0], o[1], f.r * (1 - k) + 4, a);
+      c.strokeStyle = '#ffd0a0'; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], 3 + f.r * 1.2 * k, 0, 7); c.stroke();
+      veGlow(c, '#ff9a50', o[0], o[1], f.r * (1 - k) + 3, a);
     } else if (f.k === 'set') {
       c.lineJoin = 'round';
       const p = f.pts; c.beginPath(); c.moveTo(p[0][0], p[0][1]);
-      for (let n = 1; n < p.length; n++) { const [x0, y0] = p[n - 1], [x1, y1] = p[n]; for (let s = 1; s <= 4; s++) { const kk = s / 4, j = s < 4 ? (Math.random() - 0.5) * 12 : 0; c.lineTo(x0 + (x1 - x0) * kk + j, y0 + (y1 - y0) * kk + j); } }
-      c.strokeStyle = f.mau; c.lineWidth = 4; c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1.5; c.stroke();
-      for (const q of p.slice(1)) veGlow(c, f.mau, q[0], q[1], 14, a);
-    } else if (f.k === 'song') {
-      c.strokeStyle = '#5ee7ff'; c.lineWidth = 2.5; c.beginPath(); c.ellipse(o[0], o[1], 46 * k + 6, (46 * k + 6) * 0.55, 0, 0, 7); c.stroke();
-      veGlow(c, '#5ee7ff', o[0], o[1], 30, a * 0.7);
+      for (let n = 1; n < p.length; n++) { const [x0, y0] = p[n - 1], [x1, y1] = p[n]; for (let s = 1; s <= 4; s++) { const kk = s / 4, j = s < 4 ? (Math.random() - 0.5) * 7 : 0; c.lineTo(x0 + (x1 - x0) * kk + j, y0 + (y1 - y0) * kk + j); } }
+      c.strokeStyle = f.mau; c.lineWidth = 2.6; c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1; c.stroke();
+      for (const q of p.slice(1)) veGlow(c, f.mau, q[0], q[1], 9, a);
     } else if (f.k === 'hoada') {
-      c.strokeStyle = f.mau || '#ff3b3b'; c.lineWidth = 2; hexP(c, o[0], o[1], 20 + 20 * k); c.stroke();
+      c.strokeStyle = f.mau || '#ff3b3b'; c.lineWidth = 1.5; hexP(c, o[0], o[1], 14 + 12 * k); c.stroke();
     } else if (f.k === 'hit') {
-      const r0 = (f.to ? 14 : 9) * (0.4 + k); c.strokeStyle = '#ffffff'; c.lineWidth = 1.6;
+      const r0 = (f.to ? 9 : 6) * (0.4 + k); c.strokeStyle = f.to ? '#ffb31a' : '#ffffff'; c.lineWidth = 1.2;
       for (let n = 0; n < 4; n++) { const g = n * 1.571 + 0.4; c.beginPath(); c.moveTo(o[0] + Math.cos(g) * r0 * 0.4, o[1] + Math.sin(g) * r0 * 0.4); c.lineTo(o[0] + Math.cos(g) * r0, o[1] + Math.sin(g) * r0); c.stroke(); }
       veGlow(c, f.mau, o[0], o[1], r0, a);
     } else if (f.k === 'chem') {
-      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = 4 * a + 1; c.beginPath(); c.arc(o[0] - 6, o[1] + 4, 16, -1.2 + k, 0.4 + k); c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; c.stroke();
+      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = 3 * a + 1; c.beginPath(); c.arc(o[0] - 4, o[1] + 3, 11, -1.2 + k, 0.4 + k); c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1; c.stroke();
     } else if (f.k === 'rail') {
-      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = (f.focus ? 7 : 5) * a; c.beginPath(); c.moveTo(f.x0, f.y0); c.lineTo(f.x1, f.y1); c.stroke();
-      c.strokeStyle = '#ffffff'; c.lineWidth = 1.6 * a; c.stroke(); veGlow(c, f.mau, f.x0, f.y0, 16, a);
+      c.lineCap = 'round'; c.strokeStyle = f.mau; c.lineWidth = (f.focus ? 4.5 : 3.2) * a; c.beginPath(); c.moveTo(f.x0, f.y0); c.lineTo(f.x1, f.y1); c.stroke();
+      c.strokeStyle = '#ffffff'; c.lineWidth = 1.1 * a; c.stroke(); veGlow(c, f.mau, f.x0, f.y0, 10, a);
     } else if (f.k === 'vo') {
-      c.strokeStyle = '#5ee7ff'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], f.r * (0.4 + k), 0, 7); c.stroke();
-      c.fillStyle = '#dffaff'; for (let n = 0; n < 8; n++) { const g = n * 0.785, rr2 = f.r * (0.3 + k * 0.9), px = o[0] + Math.cos(g) * rr2, py = o[1] + Math.sin(g) * rr2; c.beginPath(); c.moveTo(px, py - 3); c.lineTo(px + 3, py + 2); c.lineTo(px - 3, py + 2); c.fill(); }
+      c.strokeStyle = '#5ee7ff'; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], f.r * (0.4 + k), 0, 7); c.stroke();
+      c.fillStyle = '#dffaff'; for (let n = 0; n < 8; n++) { const g = n * 0.785, rr2 = f.r * (0.3 + k * 0.9), px = o[0] + Math.cos(g) * rr2, py = o[1] + Math.sin(g) * rr2; c.beginPath(); c.moveTo(px, py - 2); c.lineTo(px + 2, py + 1.5); c.lineTo(px - 2, py + 1.5); c.fill(); }
     } else if (f.k === 'plasma' || f.k === 'nhiet') {
-      c.strokeStyle = f.k === 'nhiet' ? '#fff0d0' : '#ff6a2a'; c.lineWidth = 3; c.beginPath(); c.arc(o[0], o[1], (f.r || 22) * (0.3 + k), 0, 7); c.stroke(); veGlow(c, '#ff6a2a', o[0], o[1], (f.r || 22) * (1 - k * 0.5), a);
+      c.strokeStyle = f.k === 'nhiet' ? '#fff0d0' : '#ff6a2a'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], (f.r || 15) * (0.3 + k), 0, 7); c.stroke(); veGlow(c, '#ff6a2a', o[0], o[1], (f.r || 15) * (1 - k * 0.5), a);
     } else if (f.k === 'emp') {
-      c.strokeStyle = '#00ffa3'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], f.r * (0.3 + k), 0, 7); c.stroke();
+      c.strokeStyle = '#00ffa3'; c.lineWidth = 1.5; c.beginPath(); c.arc(o[0], o[1], f.r * (0.3 + k), 0, 7); c.stroke();
     } else if (f.k === 'lan') {
-      c.strokeStyle = '#b4ff2a'; c.lineWidth = 1.6; for (const [px, py] of f.pts) { c.beginPath(); c.moveTo(o[0], o[1]); c.quadraticCurveTo((o[0] + px) / 2, Math.min(o[1], py) - 18, o[0] + (px - o[0]) * Math.min(1, k * 1.6), o[1] + (py - o[1]) * Math.min(1, k * 1.6)); c.stroke(); }
+      c.strokeStyle = '#b4ff2a'; c.lineWidth = 1.2; for (const [px, py] of f.pts) { c.beginPath(); c.moveTo(o[0], o[1]); c.quadraticCurveTo((o[0] + px) / 2 + 12, (o[1] + py) / 2, o[0] + (px - o[0]) * Math.min(1, k * 1.6), o[1] + (py - o[1]) * Math.min(1, k * 1.6)); c.stroke(); }
     } else if (f.k === 'boom') {
-      c.strokeStyle = '#a35cff'; c.lineWidth = 3; c.beginPath(); c.arc(o[0], o[1], f.r * (1 - k), 0, 7); c.stroke(); veGlow(c, '#a35cff', o[0], o[1], f.r * 0.6, a);
+      c.strokeStyle = '#a35cff'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], f.r * (1 - k), 0, 7); c.stroke(); veGlow(c, '#a35cff', o[0], o[1], f.r * 0.6, a);
     } else if (f.k === 'xung') {
-      c.strokeStyle = '#ffb31a'; c.lineWidth = 3; c.beginPath(); c.arc(o[0], o[1], 12 + 120 * k, 0, 7); c.stroke();
-    } else if (f.k === 'xoay') {
-      c.strokeStyle = '#ffb31a'; c.lineWidth = 2.5; c.beginPath(); c.arc(o[0], o[1], 26, k * 9, k * 9 + 3.5); c.stroke();
-    } else if (f.k === 'hoi') {
-      c.strokeStyle = '#c04dff'; c.lineWidth = 3; c.beginPath(); c.arc(o[0], o[1], 20 + 150 * k, 0, 7); c.stroke();
+      c.strokeStyle = '#ffb31a'; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 8 + 60 * k, 0, 7); c.stroke();
     } else if (f.k === 'kn') {
-      c.strokeStyle = f.mau; c.lineWidth = 3; c.beginPath(); c.arc(o[0], o[1], 10 + 70 * k, 0, 7); c.stroke();
+      c.strokeStyle = f.mau; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 7 + 40 * k, 0, 7); c.stroke();
     }
     c.restore();
   }
-  // ---------- vùng hiệu ứng trên đường ----------
-  function veVung(c, z, t) {
+  // ---------- vùng hiệu ứng trên làn ----------
+  function veVung(c, S, z, t) {
     const k = z.t / z.T, a = Math.max(0, Math.min(1, (1 - k) * 3, z.t * 8));
     c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = a;
     if (z.k === 'lua') {
-      c.strokeStyle = 'rgba(255,106,42,0.55)'; c.lineWidth = 2; c.beginPath(); c.ellipse(z.x, z.y + 6, z.r, z.r * 0.45, 0, 0, 7); c.stroke();
-      c.beginPath(); c.ellipse(z.x, z.y + 6, z.r * 0.6, z.r * 0.27, 0, 0, 7); c.stroke(); veGlow(c, '#ff6a2a', z.x, z.y + 4, z.r * 0.9, 0.35);
-      for (let n = 0; n < 3; n++) { const p = (t * 1.5 + n / 3) % 1; veGlow(c, '#ffb070', z.x - z.r * 0.5 + n * z.r * 0.5, z.y + 4 - p * 16, 3 * (1 - p) + 1, 0.8); }
+      c.strokeStyle = 'rgba(255,106,42,0.55)'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(z.x, z.y + 2, z.r, z.r * 0.45, 0, 0, 7); c.stroke();
+      c.beginPath(); c.ellipse(z.x, z.y + 2, z.r * 0.6, z.r * 0.27, 0, 0, 7); c.stroke(); veGlow(c, '#ff6a2a', z.x, z.y, z.r * 0.9, 0.35);
+      for (let n = 0; n < 3; n++) { const p = (t * 1.5 + n / 3) % 1; veGlow(c, '#ffb070', z.x - z.r * 0.5 + n * z.r * 0.5, z.y - p * 10, 2 * (1 - p) + 1, 0.8); }
     } else if (z.k === 'hut') {
-      c.strokeStyle = '#a35cff'; c.lineWidth = 1.6;
-      for (let n = 0; n < 3; n++) { const r = z.r * (0.45 + n * 0.25); c.beginPath(); c.ellipse(z.x, z.y - 4, r, r * 0.5, 0, t * 2.4 + n * 2, t * 2.4 + n * 2 + 2.2); c.stroke(); }
-      c.fillStyle = '#e2ccff'; for (let n = 0; n < 10; n++) { const g = n * 0.628 + t, p = 1 - ((t * 1.3 + n * 0.1) % 1), r = z.r * p; c.fillRect(z.x + Math.cos(g) * r - 1, z.y - 4 + Math.sin(g) * r * 0.5 - 1, 2.5, 2.5); }
+      c.strokeStyle = '#a35cff'; c.lineWidth = 1.2;
+      for (let n = 0; n < 3; n++) { const r = z.r * (0.45 + n * 0.25); c.beginPath(); c.ellipse(z.x, z.y - 3, r * 0.6, r, 0, t * 2.4 + n * 2, t * 2.4 + n * 2 + 2.2); c.stroke(); }
+      c.fillStyle = '#e2ccff'; for (let n = 0; n < 8; n++) { const g = n * 0.785 + t, p = 1 - ((t * 1.3 + n * 0.1) % 1), r = z.r * p; c.fillRect(z.x + Math.cos(g) * r * 0.6 - 1, z.y - 3 + Math.sin(g) * r - 1, 2, 2); }
     } else if (z.k === 'bang') {
-      c.fillStyle = 'rgba(94,231,255,0.18)'; c.strokeStyle = 'rgba(191,246,255,0.6)'; c.lineWidth = 1.2; c.beginPath(); c.ellipse(z.x, z.y + 6, z.r, z.r * 0.45, 0, 0, 7); c.fill(); c.stroke();
+      c.fillStyle = 'rgba(94,231,255,0.18)'; c.strokeStyle = 'rgba(191,246,255,0.6)'; c.lineWidth = 1; c.beginPath(); c.ellipse(z.x, z.y + 2, z.r, z.r * 0.45, 0, 0, 7); c.fill(); c.stroke();
     } else if (z.k === 'tia') {
-      c.strokeStyle = 'rgba(255,60,142,0.55)'; c.lineWidth = 3; c.beginPath(); c.moveTo(z.x0, z.y0); c.lineTo(z.x1, z.y1); c.stroke();
+      c.strokeStyle = 'rgba(255,60,142,0.55)'; c.lineWidth = 2; c.beginPath(); c.moveTo(z.x0, z.y0); c.lineTo(z.x1, z.y1); c.stroke();
     } else if (z.k === 'ember') {
-      c.lineCap = 'round'; c.strokeStyle = 'rgba(255,51,85,0.75)'; c.lineWidth = 3;
-      for (let d = z.d0; d < z.d1; d += 10) { const [px, py] = G.viTri(d); const j = Math.sin(t * 12 + d) * 3; c.beginPath(); c.moveTo(px - 4, py + 6); c.lineTo(px + 4, py - 6 + j); c.stroke(); }
+      c.lineCap = 'round'; c.strokeStyle = 'rgba(255,51,85,0.75)'; c.lineWidth = 2;
+      const buoc = Math.max(2, 10 * S.B.P * 3);
+      for (let d = z.d0; d < z.d1; d += buoc) { const [px, py] = G.viTri(S, d); const j = Math.sin(t * 12 + d) * 2; c.beginPath(); c.moveTo(px - 8, py + 2); c.lineTo(px + 8 + j, py - 2); c.stroke(); }
     }
     c.restore();
   }
   function veCanhBao(c, S, t) {   // cảnh báo kỹ năng boss + dây ký sinh
     const b = S.boss; if (!b) return;
     const m = b.boss.mau, nh = 0.55 + 0.45 * Math.sin(t * 18);
-    for (const q of S.quai) if (q.linkT > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ff2bd6'; c.lineWidth = 1.6; c.setLineDash([5, 4]); c.lineDashOffset = -t * 30; c.beginPath(); c.moveTo(b.x, b.y - b.co / 2); c.quadraticCurveTo((b.x + q.x) / 2, Math.min(b.y, q.y) - 40, q.x, q.y - q.co / 2); c.stroke(); c.restore(); }
+    for (const q of S.quai) if (q.linkT > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.strokeStyle = '#ff2bd6'; c.lineWidth = 1.2; c.setLineDash([4, 3]); c.lineDashOffset = -t * 30; c.beginPath(); c.moveTo(b.x, b.y - b.co / 2); c.quadraticCurveTo(Math.max(b.x, q.x) + 20, (b.y + q.y) / 2, q.x, q.y - q.co / 2); c.stroke(); c.restore(); }
     const te = b.tele; if (!te) return;
     c.save(); c.globalAlpha = nh;
-    if (te.k === 'lockdown') { const [x, y] = G.oXY(te.hang * C.COT); c.save(); neon(c, '#ff3355', 12); c.strokeStyle = '#ff3355'; c.lineWidth = 2.5; rr(c, x - 3, y - 3, G.SW + 6, C.O + 6, 9); c.stroke(); c.restore(); c.fillStyle = 'rgba(255,51,85,0.12)'; rr(c, x - 3, y - 3, G.SW + 6, C.O + 6, 9); c.fill(); }
-    else if (te.k === 'infect') for (const i of te.o) { const [x, y] = G.oXY(i); c.save(); neon(c, '#c04dff', 12); c.strokeStyle = '#c04dff'; c.lineWidth = 2.5; rr(c, x, y, C.O, C.O, 8); c.stroke(); c.restore(); }
-    else if (te.k === 'ember') { c.strokeStyle = '#ff3355'; c.lineWidth = 5; c.setLineDash([6, 6]); c.beginPath(); for (let d = b.d; d <= b.d + 100; d += 5) { const [px, py] = G.viTri(d); d === b.d ? c.moveTo(px, py) : c.lineTo(px, py); } c.stroke(); }
-    else if (te.k === 'surge' || te.k === 'split') { c.strokeStyle = '#ffb31a'; c.lineWidth = 2.5; c.beginPath(); c.arc(b.x, b.y - b.co / 2, b.co * 0.7 + 14 * (te.t / te.T), 0, 7); c.stroke(); }
-    else if (te.k === 'link') { c.strokeStyle = '#ff2bd6'; c.lineWidth = 1.5; for (const q of te.ds) { c.beginPath(); c.moveTo(b.x, b.y - b.co / 2); c.lineTo(q.x, q.y - q.co / 2); c.stroke(); } }
+    if (te.k === 'lockdown') { const [x, y] = G.oXY(S, te.hang * C.COT); c.save(); neon(c, '#ff3355', 10); c.strokeStyle = '#ff3355'; c.lineWidth = 2; rr(c, x - 2, y - 2, S.B.SW, C.OH + 4, 6); c.stroke(); c.restore(); c.fillStyle = 'rgba(255,51,85,0.12)'; rr(c, x - 2, y - 2, S.B.SW, C.OH + 4, 6); c.fill(); }
+    else if (te.k === 'infect') for (const i of te.o) { const [x, y] = G.oXY(S, i); c.save(); neon(c, '#c04dff', 10); c.strokeStyle = '#c04dff'; c.lineWidth = 2; rr(c, x, y, C.O, C.OH, 5); c.stroke(); c.restore(); }
+    else if (te.k === 'ember') { c.strokeStyle = '#ff3355'; c.lineWidth = 4; c.setLineDash([5, 5]); c.beginPath(); for (let d = b.d; d <= b.d + 100 * S.B.P; d += 2) { const [px, py] = G.viTri(S, d); d === b.d ? c.moveTo(px, py) : c.lineTo(px, py); } c.stroke(); }
+    else if (te.k === 'surge' || te.k === 'split') { c.strokeStyle = '#ffb31a'; c.lineWidth = 2; c.beginPath(); c.arc(b.x, b.y - b.co / 2, b.co * 0.7 + 10 * (te.t / te.T), 0, 7); c.stroke(); }
+    else if (te.k === 'link') { c.strokeStyle = '#ff2bd6'; c.lineWidth = 1.2; for (const q of te.ds) { c.beginPath(); c.moveTo(b.x, b.y - b.co / 2); c.lineTo(q.x, q.y - q.co / 2); c.stroke(); } }
     c.restore();
-    // thanh đếm ngược + tên chiêu trên đầu boss
-    const bw = 50, bx = b.x - bw / 2, by = b.y - b.co - 22, kk = te.t / te.T;
-    c.fillStyle = 'rgba(4,4,14,0.85)'; c.fillRect(bx - 1, by - 1, bw + 2, 5); c.fillStyle = m; c.fillRect(bx, by, bw * (1 - kk), 3);
-    c.font = '700 8px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)';
-    c.strokeText('⚠ ' + te.ten, b.x, by - 4); c.fillStyle = '#ffffff'; c.fillText('⚠ ' + te.ten, b.x, by - 4);
+    // thanh đếm ngược + tên chiêu cạnh boss (bên phải làn, không đè ô)
+    const bw = 40, bx = C.LAN_X1 + 2, by = b.y - b.co - 4, kk = te.t / te.T;
+    c.fillStyle = 'rgba(4,4,14,0.85)'; c.fillRect(bx - 1, by - 1, bw + 2, 4); c.fillStyle = m; c.fillRect(bx, by, bw * (1 - kk), 2);
+    c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)';
+    c.strokeText('⚠ ' + te.ten, bx, by - 3); c.fillStyle = '#ffffff'; c.fillText('⚠ ' + te.ten, bx, by - 3);
   }
+  // số sát thương nổi: sinh tại quái, trôi lên 12→22px trong 0.5s, chí mạng màu hổ phách
   function veSo(c, s) {
-    const k = s.t / 0.9, y = s.y - k * 24 - (s.to ? 4 : 0);
-    c.save(); c.globalAlpha = Math.min(1, 2.4 * (1 - k));
-    c.font = `700 ${s.to ? 16 : 13}px Rajdhani, "Segoe UI", sans-serif`; c.textAlign = 'center';
-    c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(s.v, s.x, y);
-    if (Q.cao) neon(c, s.lk ? '#ffe24a' : s.mau || '#ffffff', 6);
-    c.fillStyle = s.lk ? '#fff4b0' : '#ffffff'; c.fillText(s.v, s.x, y);
-    c.restore();
-  }
-  // cổng quái (trái) + lõi CORE (phải)
-  function veCong(c, t) {
-    const x = 22, y = G.BOT - 6;
-    if (ANH.portal.ok) { c.drawImage(ANH.portal.img, x - 30, y - 34, 60, 60); return; }
-    veGlow(c, '#ff2bd6', x, y, 34, 0.55 + 0.15 * Math.sin(t * 5));
-    c.save(); c.translate(x, y);
-    c.beginPath(); c.ellipse(0, 0, 13, 19, 0, 0, 7); c.fillStyle = '#05000a'; c.fill();
-    c.save(); neon(c, '#ff2bd6', 12); c.strokeStyle = '#ff2bd6'; c.lineWidth = 2; c.setLineDash([6, 5]); c.lineDashOffset = -t * 30; c.beginPath(); c.ellipse(0, 0, 15, 21, 0, 0, 7); c.stroke(); c.restore();
-    c.strokeStyle = 'rgba(255,255,255,0.6)'; c.lineWidth = 1; c.beginPath(); c.ellipse(0, 0, 9, 14, t, 0.5, 2.5); c.stroke();
-    c.restore();
-  }
-  function veCore(c, t, dau) {
-    const x = W - 32, y = G.BOT - 16, m = dau ? '#ff3b3b' : '#3ce7ff';
-    if (ANH.core.ok) { c.drawImage(ANH.core.img, x - 36, y - 50, 72, 72); if (dau) veGlow(c, '#ff3b3b', x, y - 14, 50, 0.6); return; }
-    veGlow(c, m, x, y - 12, 54, 0.45 + 0.12 * Math.sin(t * 3));
-    c.save(); c.translate(x, y);
-    hexP(c, 0, 4, 26, Math.PI / 6); c.fillStyle = '#060a18'; c.fill(); c.lineWidth = 1.2; c.strokeStyle = hexA(m, 0.6); c.stroke();
-    hexP(c, 0, -10, 18, 0); c.fillStyle = METAL(c, -18, -28, 18, 8); c.fill(); c.strokeStyle = '#03050a'; c.stroke();
-    c.save(); neon(c, m, 16); c.fillStyle = rg(c, 0, -10, 1, 11, [[0, '#ffffff'], [0.4, m], [1, hexA(m, 0)]]); c.beginPath(); c.arc(0, -10, 10 + Math.sin(t * 4) * 1.2, 0, 7); c.fill(); c.restore();
-    c.save(); neon(c, m, 8); c.strokeStyle = m; c.lineWidth = 1.3; c.beginPath(); c.ellipse(0, -10, 24, 7, t * 0.8, 0, 7); c.stroke(); c.beginPath(); c.ellipse(0, -10, 24, 7, -t * 0.8 + 1, 0, 7); c.stroke(); c.restore();
-    c.fillStyle = hexA(m, 0.9); c.font = '700 8px Orbitron, sans-serif'; c.textAlign = 'center'; c.fillText('CORE', 0, 22);
+    const k = Math.min(1, s.t / 0.5), y = s.y - 12 - 10 * k;
+    c.save(); c.globalAlpha = Math.min(1, 3.5 * (0.7 - s.t));
+    c.font = `700 ${s.to ? 10 : 8.5}px Rajdhani, "Segoe UI", sans-serif`; c.textAlign = 'center';
+    c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)'; c.strokeText(s.v, s.x, y);
+    c.fillStyle = s.lk ? '#fff4b0' : s.to ? '#ffb31a' : '#ffffff'; c.fillText(s.v, s.x, y);
     c.restore();
   }
   function veChuNhieu(c, txt, x, y, mau) {   // chữ tách màu (chromatic aberration)
-    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.75;
-    c.fillStyle = '#ff2bd6'; c.fillText(txt, x - 1.5, y); c.fillStyle = '#3ce7ff'; c.fillText(txt, x + 1.5, y); c.restore();
+    c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.7;
+    c.fillStyle = '#ff2bd6'; c.fillText(txt, x - 1, y); c.fillStyle = '#3ce7ff'; c.fillText(txt, x + 1, y); c.restore();
     c.fillStyle = mau; c.fillText(txt, x, y);
   }
+  // nhãn bàn: AI MIRROR (x112,y76) / PLAYER (x112,y363) + mạng + thanh máu boss bên phải
+  function veNhanBan(c, S, ten, y) {
+    c.font = '900 9px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left';
+    const m = S.ai ? '#3ce7ff' : '#ff2bd6', w = c.measureText(ten).width;
+    c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText(ten, 112, y + 9); c.fillStyle = m; c.fillText(ten, 112, y + 9);
+    for (let i = 0; i < C.MANG; i++) { c.fillStyle = i < S.mang ? m : 'rgba(255,60,60,0.35)'; c.beginPath(); const x = 118 + w + i * 12; c.moveTo(x + 2, y + 2); c.lineTo(x + 11, y + 2); c.lineTo(x + 9, y + 9); c.lineTo(x, y + 9); c.closePath(); c.fill(); }
+    if (S.boss) {
+      const b = S.boss, bw = 110, bx = 361 - bw, kk = Math.max(0, b.hp / b.max);
+      c.fillStyle = 'rgba(4,4,14,0.85)'; c.fillRect(bx - 1, y + 3, bw + 2, 6); c.fillStyle = b.boss.mau; c.fillRect(bx, y + 4, bw * kk, 4);
+      c.font = '700 6.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'right'; c.fillStyle = '#ffffff'; c.strokeText(b.boss.ten, bx - 4, y + 9); c.fillText(b.boss.ten, bx - 4, y + 9);
+    }
+  }
+  function veBan(c, S, t, keo) {   // 1 bàn: vùng → tướng → quái → đạn → fx → nhãn sao → số
+    const tg = S.t;
+    sinhHat(S);
+    for (const z of S.vung) veVung(c, S, z, t);
+    const goi = keo ? S.o[keo.i] : null;
+    if (goi) {   // ô đích khi kéo: tile_active (ô trống) / tile_merge (ghép được)
+      const ta = co('v2:tile_active'), tm = co('v2:tile_merge');
+      for (let j = 0; j < S.o.length; j++) {
+        if (j === keo.i) continue;
+        const [x, y] = G.oXY(S, j), hop = G.gopDuoc(S, keo.i, j);
+        if (hop) { if (tm) c.drawImage(tm, x, y, C.O, C.OH); else { c.save(); c.globalCompositeOperation = 'lighter'; rr(c, x, y, C.O, C.OH, 4); c.lineWidth = 1.5; c.strokeStyle = `rgba(255,43,214,${0.6 + 0.4 * Math.sin(t * 10)})`; c.stroke(); c.restore(); } }
+        else if (!S.o[j] && keo.x >= x && keo.x < x + C.O && keo.y >= y && keo.y < y + C.OH) { if (ta) c.drawImage(ta, x, y, C.O, C.OH); else { rr(c, x, y, C.O, C.OH, 4); c.lineWidth = 1.5; c.strokeStyle = '#3ce7ff'; c.stroke(); } }
+      }
+    }
+    for (let i = 0; i < S.o.length; i++) {
+      const v = S.o[i]; if (!v) continue;
+      if (keo && keo.i === i) { c.save(); c.globalAlpha = 0.25; veUnit(c, S, v, i, tg, t); c.restore(); continue; }
+      const hop = goi && G.gopDuoc(S, keo.i, i);
+      veUnit(c, S, v, i, tg, t, hop);
+      if (goi && !hop) { const [x, y] = G.oXY(S, i); rr(c, x, y, C.O, C.OH, 3); c.fillStyle = 'rgba(0,0,8,0.55)'; c.fill(); }
+    }
+    const qs = S.quai.slice().sort((a, b) => a.y - b.y);
+    for (const q of qs) veQuai(c, q, t, tg);
+    for (const d of S.dan) veDan(c, d, tg);
+    for (const f of S.fx) veFx(c, S, f);
+    veCanhBao(c, S, t);
+    for (let i = 0; i < S.o.length; i++) if (S.o[i] && !(keo && keo.i === i)) veNhanO(c, S, S.o[i], i);
+  }
+  function veSoBan(c, S) { for (const s of S.so) veSo(c, s); }
 
   // ---------- vẽ cả khung ----------
   let tTruoc = 0;
-  function ve(c, S, t, k, keo) {
+  function ve(c, S, t, k, keo, A) {
     const dt = Math.min(0.05, Math.max(0, t - tTruoc)); tTruoc = t;
-    if (!L || LK !== k || batLai) { taoLop(k); batLai = false; }
+    if (!L || LK !== k || batLai) { taoLop(k); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
     c.save();
-    if (S && S.rung > 0 && Q.cao) { const r = S.rung * 7; c.translate((Math.random() - 0.5) * r, (Math.random() - 0.5) * r); }
-    c.drawImage(L.tinh, -8, -8, W + 16, H + 16);
-    if (!ANH.city.ok) {
-      const ox = (t * 4) % L.WW, ox2 = (t * 11) % L.WW;
-      c.drawImage(L.xa, -ox, 0, L.WW, H); c.drawImage(L.xa, L.WW - ox, 0, L.WW, H);
-      c.drawImage(L.gan, -ox2, 0, L.WW, H); c.drawImage(L.gan, L.WW - ox2, 0, L.WW, H);
-    }
-    c.save(); c.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { const x = (W * (0.2 + 0.32 * i) + Math.sin(t * 0.13 + i * 2) * 120), y = 150 + Math.sin(t * 0.2 + i) * 50; c.globalAlpha = Q.cao ? 0.35 : 0.2; c.drawImage(L.mu[i], x - 260, y - 160, 520, 320); }
-    c.restore();
+    // rung màn ≤ 2px logic (chỉ sân, không rung HUD)
+    if (S && S.rung > 0 && Q.cao) c.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
+    c.drawImage(L.tinh, 0, 0, W, H);
     veMua(c, dt);
-    c.drawImage(L.san, 0, 0, W, H);
-    // dòng dữ liệu chảy trên đường
-    c.save(); c.globalCompositeOperation = 'lighter'; duongPath(c); c.lineJoin = 'miter';
-    c.setLineDash([5, 23]); c.lineDashOffset = -t * 70; c.lineWidth = 3; c.strokeStyle = 'rgba(60,231,255,0.9)'; if (Q.cao) neon(c, '#3ce7ff', 8); c.stroke();
-    c.setLineDash([2, 41]); c.lineDashOffset = -t * 120; c.lineWidth = 2; c.strokeStyle = 'rgba(255,80,220,0.9)'; c.stroke(); c.restore();
-    // viền neon chạy quanh sân
-    { const bx = G.OX - 6, by = G.OY - 6, bw = G.SW + 12, bh = G.SH + 12;
-      c.save(); c.globalCompositeOperation = 'lighter'; rr(c, bx, by, bw, bh, 10); c.lineWidth = 2;
-      if (Q.cao) neon(c, '#3ce7ff', 10);
-      c.setLineDash([70, 330]); c.lineDashOffset = -t * 110; c.strokeStyle = '#3ce7ff'; c.stroke();
-      c.lineDashOffset = -t * 110 - 200; c.strokeStyle = '#ff2bd6'; c.shadowColor = '#ff2bd6'; c.stroke(); c.restore(); }
-    veCong(c, t);
-    veCore(c, t, S && S.fx.some((f) => f.k === 'thanh'));
+    // dòng chảy trên 2 làn
+    c.save(); c.globalCompositeOperation = 'lighter'; c.lineWidth = 2;
+    for (const B of BANS) { const [[x, y0], [, y1]] = B.DUONG; c.beginPath(); c.moveTo(x, y0 + 8); c.lineTo(x, y1 - 8); c.setLineDash([3, 14]); c.lineDashOffset = -t * 30; c.strokeStyle = 'rgba(255,60,90,0.5)'; c.stroke(); }
+    c.restore();
     if (S) {
-      sinhHat(S);
-      const goi = keo ? S.o[keo.i] : null;
-      for (let i = 0; i < S.o.length; i++) {
-        const v = S.o[i], [x, y] = G.oXY(i);
-        if (!v) continue;
-        if (keo && keo.i === i) { c.globalAlpha = 0.25; veUnit(c, v, x, y, t); c.globalAlpha = 1; continue; }
-        const hop = goi && G.gopDuoc(S, keo.i, i);
-        veUnit(c, v, x, y, t, hop);
-        if (goi && !hop) { rr(c, x + 2, y + 2, C.O - 4, C.O - 4, 7); c.fillStyle = 'rgba(0,0,8,0.6)'; c.fill(); }
-        if (hop) { c.save(); c.globalCompositeOperation = 'lighter'; rr(c, x - 2, y - 2, C.O + 4, C.O + 4, 9); c.lineWidth = 2; c.strokeStyle = `rgba(255,255,255,${0.5 + 0.5 * Math.sin(t * 10)})`; c.stroke(); c.restore(); }
-      }
-      for (const z of S.vung) veVung(c, z, t);
-      const qs = S.quai.slice().sort((a, b) => a.y - b.y);
-      for (const q of qs) veQuai(c, q, t);
-      for (const d of S.dan) veDan(c, d);
-      for (const f of S.fx) veFx(c, f);
-      veCanhBao(c, S, t);
+      veNhanBan(c, A || { ai: true, mang: C.MANG }, 'AI MIRROR', 76);
+      veNhanBan(c, S, 'PLAYER', 363);
+      if (A) veBan(c, A, t, null);
+      veBan(c, S, t, keo);
       veHat(c, dt);
+      const goi = keo ? S.o[keo.i] : null;
       if (goi) {   // vòng tầm bắn: tâm ô đang trỏ tới (ô trống / ô gộp được), không thì ô gốc
         let ti = keo.i;
-        for (let j = 0; j < S.o.length; j++) { const [ox, oy] = G.oXY(j); if (keo.x >= ox && keo.x < ox + C.O && keo.y >= oy && keo.y < oy + C.O && (!S.o[j] || G.gopDuoc(S, keo.i, j))) ti = j; }
-        const [tx, ty] = G.oTam(ti), m = HANH[TUONG[goi.id].hanh].mau, r0 = TUONG[goi.id].tam || 0;
-        c.save(); c.beginPath(); c.arc(tx, ty, r0, 0, 7); c.fillStyle = hexA(m, 0.06); c.fill(); c.lineWidth = 1.5; c.strokeStyle = hexA(m, 0.45); c.stroke(); c.restore();
-        c.save(); c.globalAlpha = 0.95; veUnit(c, goi, keo.x - C.O / 2, keo.y - C.O / 2 - 6, t, true); c.restore();
+        for (let j = 0; j < S.o.length; j++) { const [ox, oy] = G.oXY(S, j); if (keo.x >= ox && keo.x < ox + C.O && keo.y >= oy && keo.y < oy + C.OH && (!S.o[j] || G.gopDuoc(S, keo.i, j))) ti = j; }
+        const [tx, ty] = G.oTam(S, ti), m = HANH[TUONG[goi.id].hanh].mau, r0 = (TUONG[goi.id].tam || 0) * C.TL_TAM;
+        c.save(); c.beginPath(); c.arc(tx, ty, r0, 0, 7); c.fillStyle = hexA(m, 0.06); c.fill(); c.lineWidth = 1.2; c.strokeStyle = hexA(m, 0.45); c.stroke(); c.restore();
+        c.save(); c.globalAlpha = 0.95; veHinhTuong(c, goi, keo.x, keo.y + 16, S.t); c.restore();
       }
-      for (const s of S.so) veSo(c, s);
+      if (A) veSoBan(c, A);
+      veSoBan(c, S);
     } else veHat(c, dt);
     c.restore();
     c.drawImage(L.toi, 0, 0, W, H);
-    if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 200, 520, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.35)']]); c.fillRect(0, 0, W, H); c.restore(); }
+    if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.3)']]); c.fillRect(0, 0, W, H); c.restore(); }
     if (!S) return;
-    if (S.boss) {   // thanh giáp boss
-      const b = S.boss, w = 270, x = W / 2 - w / 2, y = 8, kk = Math.max(0, b.hp / b.max), m = b.boss.mau;
-      rr(c, x - 3, y - 3, w + 6, 12, 4); c.fillStyle = 'rgba(4,4,14,0.85)'; c.fill(); c.lineWidth = 1; c.strokeStyle = hexA(m, 0.7); c.stroke();
-      c.save(); neon(c, m, 10); c.fillStyle = lg(c, x, 0, x + w, 0, [[0, m], [1, '#ffffff']]); c.fillRect(x, y, w * kk, 6); c.restore();
-      c.fillStyle = 'rgba(0,0,0,0.35)'; for (let n = 1; n < 20; n++) c.fillRect(x + n * w / 20, y, 1, 6);
-      c.font = '700 10px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center';
-      c.lineWidth = 3; c.strokeStyle = 'rgba(0,0,0,0.85)'; const tx = `${b.boss.ten}  ·  ${b.tele ? '⚠ ' + b.tele.ten : b.boss.kn.map((x) => x.ten).join(' / ')}  ·  ${Math.ceil(b.hp)}`;
-      c.strokeText(tx, W / 2, y + 22); c.fillStyle = '#ffffff'; c.fillText(tx, W / 2, y + 22);
-    }
-    if (S.bao) {   // băng thông báo đợt
-      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 4, (b.T - b.t) * 3)), cy = G.OY + G.SH / 2, hh = b.phu ? 62 : 40, m = b.boss ? '#ff3b3b' : '#3ce7ff';
+    if (S.bao) {   // dải thông báo đợt / boss: vùng giữa y 300..353 (không có nút chạm)
+      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 4, (b.T - b.t) * 3)), y0 = 300, hh = 53, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
       c.save(); c.globalAlpha = a;
-      const sx = (1 - Math.min(1, b.t * 5)) * 40;
-      c.fillStyle = 'rgba(3,4,14,0.84)'; c.fillRect(0, cy - hh / 2, W, hh);
-      c.save(); neon(c, m, 12); c.fillStyle = m; c.fillRect(0, cy - hh / 2, W, 1.5); c.fillRect(0, cy + hh / 2 - 1.5, W, 1.5); c.restore();
-      if (b.boss) { c.save(); c.beginPath(); c.rect(0, cy - hh / 2, W, hh); c.clip(); c.fillStyle = 'rgba(255,40,40,0.10)'; for (let x = -40 + ((t * 60) % 40); x < W; x += 40) { c.beginPath(); c.moveTo(x, cy + hh / 2); c.lineTo(x + 20, cy - hh / 2); c.lineTo(x + 34, cy - hh / 2); c.lineTo(x + 14, cy + hh / 2); c.fill(); } c.restore(); }
+      const sx = (1 - Math.min(1, b.t * 5)) * 30;
+      c.fillStyle = 'rgba(3,4,14,0.84)'; c.fillRect(0, y0, W, hh);
+      c.save(); neon(c, m, 10); c.fillStyle = m; c.fillRect(0, y0, W, 1.2); c.fillRect(0, y0 + hh - 1.2, W, 1.2); c.restore();
+      if (b.boss) { c.save(); c.beginPath(); c.rect(0, y0, W, hh); c.clip(); c.fillStyle = 'rgba(255,40,40,0.10)'; for (let x = -40 + ((t * 60) % 40); x < W; x += 40) { c.beginPath(); c.moveTo(x, y0 + hh); c.lineTo(x + 20, y0); c.lineTo(x + 34, y0); c.lineTo(x + 14, y0 + hh); c.fill(); } c.restore(); }
       c.textAlign = 'center';
-      if (b.boss) { c.font = '700 10px Orbitron, "Segoe UI", sans-serif'; c.fillStyle = '#ff6b6b'; c.fillText('WARNING · BOSS INCOMING', W / 2, cy - hh / 2 + 14); }
-      c.font = `900 ${b.boss ? 22 : 24}px Orbitron, "Segoe UI", sans-serif`;
-      veChuNhieu(c, b.chu, W / 2 + sx, cy + (b.phu ? 7 : 9), '#ffffff');
-      if (b.phu) { c.font = '600 13px Rajdhani, "Segoe UI", sans-serif'; c.fillStyle = '#ffd0d0'; c.fillText(b.phu, W / 2, cy + 24); }
+      if (b.boss) { c.font = '700 7px Orbitron, "Segoe UI", sans-serif'; c.fillStyle = '#ff6b6b'; c.fillText('WARNING · BOSS INCOMING', W / 2, y0 + 10); }
+      c.font = `900 ${b.boss ? 15 : 18}px Orbitron, "Segoe UI", sans-serif`;
+      veChuNhieu(c, b.chu, W / 2 + sx, cy + (b.phu ? 4 : 6), '#ffffff');
+      if (b.phu) { c.font = '600 9px Rajdhani, "Segoe UI", sans-serif'; c.fillStyle = '#ffd0d0'; c.fillText(b.phu.length > 70 ? b.phu.slice(0, 68) + '…' : b.phu, W / 2, cy + 17); }
       c.restore();
     }
   }
-  // chân dung cho thẻ UI (sprite + quầng màu)
+  // ---------- chân dung (thẻ UI): portraits_8.png nếu có, không thì ảnh cũ / hình vẽ code ----------
+  const THU_TU_PORT = ['scorch', 'frost', 'arc', 'lance', 'warp', 'miner', 'glitch', 'venom'];
+  const THE_VE = [];
+  function veChanDungVao(c, id, w, h, cat) {   // cat: cắt bán thân (ảnh cũ toàn thân)
+    const pt = co('v2:portraits_8');
+    if (pt) { const fh = pt.height, f = THU_TU_PORT.indexOf(id), s = Math.max(w, h) / fh; c.drawImage(pt, f * fh, 0, fh, fh, (w - fh * s) / 2, (h - fh * s) / 2, fh * s, fh * s); return; }
+    const a = ANH['u:' + id];
+    if (a && a.ok) { const im = a.img, kk = Math.max(w / im.width, (h * (cat ? 1.25 : 1)) / im.height); c.drawImage(im, (w - im.width * kk) / 2, 0, im.width * kk, im.height * kk); }
+    else { const sp = sprUnit(id); c.drawImage(sp, 8 * SS, 0, 48 * SS, 48 * SS * h / w, 0, 0, w, h); }
+  }
   function veChanDung(cvs, id, px) {
-    const k = Math.min(3, (window.devicePixelRatio || 1) * 1.5);
+    const k = Math.min(3, (window.devicePixelRatio || 1) * 2);
     cvs.width = Math.round(px * k); cvs.height = Math.round(px * k);
     const c = cvs.getContext('2d'); c.scale(k, k);
     const h = HANH[TUONG[id].hanh];
-    const ve1 = () => { c.clearRect(0, 0, px, px); veGlow(c, h.mau, px / 2, px * 0.6, px * 0.6, 0.55); veHinh(c, ANH['u:' + id], sprUnit(id), 0, 0, px, px); };
-    ve1(); setTimeout(ve1, 500);
+    const ve1 = () => { c.clearRect(0, 0, px, px); veGlow(c, h.mau, px / 2, px * 0.6, px * 0.6, 0.5); veChanDungVao(c, id, px, px, true); };
+    ve1(); THE_VE.push({ cvs, f: ve1 });
   }
-  // ẢNH THẺ TƯỚNG: nền thành phố theo màu hệ + chân dung bán thân lớn (thẻ chọn tướng / thẻ nâng cấp)
-  function veThe(cvs, id, w, h, nho) {
-    const k = Math.min(3, (window.devicePixelRatio || 1) * 1.6);
+  // ẢNH THẺ TƯỚNG: nền màu hệ + chân dung (thẻ chọn tướng / thẻ nâng cấp)
+  function veThe(cvs, id, w, h) {
+    const k = Math.min(3, (window.devicePixelRatio || 1) * 2);
     cvs.width = Math.round(w * k); cvs.height = Math.round(h * k);
     const c = cvs.getContext('2d'); c.scale(k, k);
-    const td = TUONG[id], hh = HANH[td.hanh];
+    const hh = HANH[TUONG[id].hanh];
     const ve1 = () => {
       c.clearRect(0, 0, w, h);
       c.fillStyle = lg(c, 0, 0, 0, h, [[0, '#05030e'], [0.55, hexA(hh.toi, 1)], [1, '#030208']]); c.fillRect(0, 0, w, h);
-      veGlow(c, hh.mau, w / 2, h * 0.42, w * 0.95, 0.55);
-      if (!nho) {   // thành phố nhỏ phía sau + sàn lưới
-        let sd = id.length * 97 + 3; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
-        for (let x = -4; x < w; x += 6 + r() * 9) { const bh = h * (0.2 + r() * 0.35), bw = 5 + r() * 8; c.fillStyle = 'rgba(4,3,14,0.85)'; c.fillRect(x, h * 0.72 - bh, bw, bh + h); c.fillStyle = hexA(hh.mau, 0.55); for (let y = h * 0.72 - bh + 3; y < h * 0.7; y += 5) if (r() < 0.25) c.fillRect(x + 1.5 + ((r() * (bw - 3)) | 0), y, 1.2, 1.2); }
-        c.strokeStyle = hexA(hh.mau, 0.35); c.lineWidth = 0.6;
-        for (let i = 0; i < 6; i++) { const y = h * 0.72 + Math.pow(i / 5, 1.8) * h * 0.3; c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
-        for (let i = -6; i <= 6; i++) { c.beginPath(); c.moveTo(w / 2 + i * 3, h * 0.72); c.lineTo(w / 2 + i * 18, h); c.stroke(); }
-        veGlow(c, hh.mau, w / 2, h * 0.72, w * 0.6, 0.35);
-      }
-      const a = ANH['u:' + id];
-      if (a && a.ok) { const im = a.img, kk = Math.max(w / im.width, (h * 1.25) / im.height); c.drawImage(im, (w - im.width * kk) / 2, 0, im.width * kk, im.height * kk); }
-      else { const sp = sprUnit(id); const sx = 8, sy = nho ? 0 : -3, sw = 48, sh = sw * h / w; c.drawImage(sp, sx * SS, Math.max(0, sy) * SS, sw * SS, Math.min(64 - Math.max(0, sy), sh) * SS, 0, sy < 0 ? -sy * w / sw : 0, w, Math.min(64 - Math.max(0, sy), sh) * w / sw); }
+      veGlow(c, hh.mau, w / 2, h * 0.42, w * 0.95, 0.5);
+      veChanDungVao(c, id, w, h, true);
       c.fillStyle = lg(c, 0, h * 0.62, 0, h, [[0, 'rgba(3,2,10,0)'], [1, 'rgba(3,2,10,0.92)']]); c.fillRect(0, h * 0.62, w, h * 0.38);
-      c.fillStyle = 'rgba(255,255,255,0.04)'; for (let y = 0; y < h; y += 3) c.fillRect(0, y, w, 1);
     };
-    ve1(); setTimeout(ve1, 500); setTimeout(ve1, 1500);
+    ve1(); THE_VE.push({ cvs, f: ve1 });
   }
   // FPS thấp liên tục → hạ chất lượng (ít mưa, ít hạt, tắt bóng phát sáng)
   let dem = 0, tong = 0;
-  function doFps(dtMs) { tong += dtMs; if (++dem >= 90) { const tb = tong / dem; if (tb > 24 && Q.cao) { Q.cao = false; Q.hat = 90; } else if (tb < 15 && !Q.cao) { Q.cao = true; Q.hat = 260; } dem = 0; tong = 0; } }
+  function doFps(dtMs) { tong += dtMs; if (++dem >= 90) { const tb = tong / dem; if (tb > 24 && Q.cao) { Q.cao = false; Q.hat = 90; } else if (tb < 15 && !Q.cao) { Q.cao = true; Q.hat = 200; } dem = 0; tong = 0; } }
   window.RENDER = { ve, veChanDung, veThe, ANH, Q, doFps, HAT };
 })();

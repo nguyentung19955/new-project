@@ -15,23 +15,21 @@
   <div id="wrap">
     <canvas id="cv"></canvas>
 
+    <!-- TOP HUD y 0..64: wave (x12..88) · boss/timer (x104..226) · 6 ô đội AI (x230..378) -->
     <div id="top" hidden>
-      <div class="tb-trai kinh">
-        <div class="tb-hang"><span class="nho">WAVE</span><b id="tb-dot">1</b></div>
-        <div id="tb-boss">BOSS IN 9</div>
-        <div class="tb-core"><span class="nho">CORE</span><span id="tb-mang"></span></div>
-      </div>
-      <div class="tb-phai">
-        <div id="tb-quai" class="kinh"><span class="nho">HOSTILES</span><b>0</b></div>
-        <button id="nut-tocdo" class="nut-nho kinh" data-act="tocdo">1x</button>
-        <button id="nut-dung" class="nut-nho kinh" data-act="dung" aria-label="Pause"><i class="ic-dung"></i></button>
-      </div>
+      <div class="tb-wave"><span class="nho">WAVE</span><b id="tb-dot">1</b></div>
+      <div class="tb-giua"><div id="tb-boss">BOSS IN 9</div><div id="tb-quai"><span class="nho">HOSTILES</span> <b>0</b></div></div>
+      <div id="tb-ai"></div>
     </div>
 
+    <!-- ACTION HUD y 597..676 (mana · SUMMON · menu) + CARD HUD y 676..816 (5 thẻ + leader) -->
     <div id="duoi" hidden>
-      <div id="lk-hop" class="kinh"><span class="nho">ENERGY</span><b><i class="ic-e"></i><span id="lk">0</span></b></div>
-      <div id="bo-bac"></div>
+      <div id="lk-hop"><span class="nho">ENERGY</span><b><i class="ic-e"></i><span id="lk">0</span></b></div>
       <button id="nut-trieu" data-act="trieu"><span class="tr-ten">SUMMON</span><span class="tr-gia"><i class="ic-e"></i><span id="gia-trieu">10</span></span></button>
+      <button id="nut-tocdo" class="nut-nho" data-act="tocdo">1x</button>
+      <button id="nut-dung" class="nut-nho" data-act="dung" aria-label="Menu"><i class="ic-dung"></i></button>
+      <div id="bo-bac"></div>
+      <div id="the-leader"><span class="ld-ten">LEADER</span><i class="ld-khoa"></i><span class="ld-mo">LOCKED</span></div>
     </div>
 
     <div id="chon" class="man">
@@ -41,9 +39,11 @@
       </div>
       <div id="chon-luoi"></div>
       <div class="chon-cuoi">
-        <div class="chon-meo">Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank (random hero)</div>
-        <button class="nut" data-act="ngaunhien">RANDOM</button>
-        <button class="nut chinh" data-act="vao" id="nut-vao" disabled>DEPLOY</button>
+        <div class="chon-meo">Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.</div>
+        <div class="chon-nut">
+          <button class="nut" data-act="ngaunhien">RANDOM</button>
+          <button class="nut chinh" data-act="vao" id="nut-vao" disabled>DEPLOY</button>
+        </div>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div id="ketqua" class="man phu" hidden>
       <div class="bang kinh do">
-        <div class="bang-ten" data-t="CORE DESTROYED">CORE DESTROYED</div>
+        <div class="bang-ten" id="kq-ten" data-t="CORE DESTROYED">CORE DESTROYED</div>
         <div class="kq-so">You survived to <b id="kq-dot">WAVE 0</b></div>
         <div class="kq-phu" id="kq-phu"></div>
         <div class="bang-nut">
@@ -71,11 +71,6 @@
     </div>
   </div>
 
-  <div id="xoay" hidden>
-    <div class="xoay-dt"></div>
-    <b>ROTATE YOUR DEVICE</b>
-    <span>Landscape only · game paused</span>
-  </div>
 
   <script src="js/data.js"></script>
   <script src="js/game.js"></script>
