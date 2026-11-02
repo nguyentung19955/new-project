@@ -4,9 +4,9 @@
   const C = CAU_HINH, T = TUONG, Q = QUAI, B = BOSS;
   const K = C.TL;   // thu nhỏ không gian (bước ô 48/70): tầm bắn + bán kính vùng hiệu ứng
   // hình học 1 bàn (người chơi dưới / AI trên): lưới 5×3 + làn quái dọc riêng bên trái (đầu trên → cuối dưới)
-  function taoBan(ai) {
+  function taoBan(ai, duong) {
     const by = ai ? C.BAN_AI_Y : C.BAN_NG_Y, OX = C.BAN_X + C.VIEN, OY = by + C.VIEN;
-    const DUONG = ai ? C.LAN_AI : C.LAN_NG, DOAN = [];
+    const DUONG = duong || (ai ? C.LAN_AI : C.LAN_NG), DOAN = [];
     let DAI = 0;
     for (let i = 1; i < DUONG.length; i++) {
       const [x0, y0] = DUONG[i - 1], [x1, y1] = DUONG[i];
@@ -18,6 +18,9 @@
       RA: DUONG[DUONG.length - 1] };
   }
   const BAN_NG = taoBan(false), BAN_AI = taoBan(true);
+  // CO-OP: đường chung — làn trên (bàn đồng đội) nối thẳng xuống làn dưới (bàn người chơi): làn dưới bắt đầu từ cuối làn trên (qua đường nối)
+  const BAN_AI_CO = taoBan(true, C.LAN_AI), BAN_NG_CO = taoBan(false, [C.LAN_AI[C.LAN_AI.length - 1], C.LAN_NG[C.LAN_NG.length - 1]]);
+  { const P = (BAN_AI_CO.DAI + BAN_NG_CO.DAI) / (COOP.THOI_GIAN_DUONG * C.DAI_CU); BAN_AI_CO.P = P; BAN_NG_CO.P = P; }   // cùng tốc độ px/giây trên cả đường
   const viTri = (S, s) => {
     for (const g of S.B.DOAN) if (s <= g.tu + g.d) { const k = Math.max(0, (s - g.tu) / g.d); return [g.x0 + (g.x1 - g.x0) * k, g.y0 + (g.y1 - g.y0) * k]; }
     const g = S.B.DOAN[S.B.DOAN.length - 1]; return [g.x1, g.y1];
@@ -39,7 +42,17 @@
       deck: deck.slice(), bac, o: new Array(C.COT * C.HANG).fill(null),
       quai: [], dan: [], fx: [], so: [], vung: [], treo: [], hen: [], bountyDot: 0, lk: C.LK_DAU, mang: C.MANG, dot: 0, triệu: 0,
       conSinh: 0, sinhT: 0, choT: 1.5, sauSinh: 0, giet: 0, t: 0, het: false, boss: null, bao: null, nid: 1, tienT: 0,
+      tk: {},   // thống kê sát thương theo loại tướng của bàn này (màn kết quả)
     };
+  }
+  // CO-OP: S = bàn người chơi (dưới), A = bàn đồng đội AI (trên); dùng chung 1 đối tượng coop (mạng, wave, thắng)
+  function moiCoop(deck, boAI) {
+    const co = { mang: COOP.MANG, max: COOP.MANG, dot: 0, thang: false, choT: COOP.CHO_DAU };
+    const S = moi(deck, false), A = moi(boAI, true);
+    S.B = BAN_NG_CO; A.B = BAN_AI_CO;
+    S.coop = A.coop = co; S.ban = A; A.ban = S; S.mang = A.mang = co.mang;
+    A.nid = 100000;   // uid quái 2 bàn không trùng (quái chuyển từ bàn trên xuống bàn dưới)
+    return { S, A };
   }
   const giaTrieu = (S) => C.giaTrieu(S.triệu);
   const giaBac = (S, id) => (S.bac[id] >= C.BAC_MAX ? Infinity : C.giaBac(S.bac[id]));
@@ -50,7 +63,7 @@
     if (!tr.length || S.lk < g || S.het) return -1;
     S.lk -= g; S.triệu++;
     const i = pick(tr);
-    S.o[i] = { id: pick(S.deck), sao: 1, cd: rnd() * 0.5, da: 0, danh: 0, moi: 0.35, uid: S.nid++, sinhT: S.t };
+    S.o[i] = { id: pick(S.deck), sao: 1, cd: rnd() * 0.5, da: 0, danh: 0, moi: 0.35, uid: S.nid++, sinhT: S.t, tk: S.tk, hs: heAI(S) };
     S.fx.push({ k: 'trieu', i, t: 0, T: 0.18 });   // phản hồi summon 120–180ms
     return i;
   }
@@ -62,7 +75,7 @@
     if (!gopDuoc(S, a, b)) return false;
     const sao = S.o[b].sao + 1, cu = [S.o[a], S.o[b]];
     S.o[a] = null;
-    S.o[b] = { id: pick(S.deck), sao, cd: 0.3, da: 0, danh: 0, moi: 0.5, uid: S.nid++, sinhT: S.t, kieuSinh: 'gop' };
+    S.o[b] = { id: pick(S.deck), sao, cd: 0.3, da: 0, danh: 0, moi: 0.5, uid: S.nid++, sinhT: S.t, kieuSinh: 'gop', tk: S.tk, hs: heAI(S) };
     // tu/cu: để render vẽ 2 tướng cũ thu vào tâm ô b rồi tướng mới bật ra (merge 180–260ms)
     S.fx.push({ k: 'gop', i: b, tu: a, cu: cu.map((v) => ({ id: v.id, sao: v.sao, hg: v.hg, goc: v.goc, uid: v.uid })), t: 0, T: 0.6, sao });
     return 'gop';
@@ -74,7 +87,8 @@
     S.o.forEach((v, i) => { if (v && v.id === id) S.fx.push({ k: 'bac', i, t: 0, T: 0.5 }); });
     return true;
   }
-  const satThuong = (S, v) => T[v.id].dmg * C.heSoSao(v.sao) * C.heSoBac(S.bac[v.id]);
+  const heAI = (S) => (S.coop && S.ai ? COOP.AI_SAT_THUONG : 1);   // co-op: tướng đồng đội AI mang hệ số giảm sát thương (v.hs)
+  const satThuong = (S, v) => T[v.id].dmg * C.heSoSao(v.sao) * C.heSoBac(S.bac[v.id]) * (v.hs || 1);
 
   function batDauDot(S) {
     S.dot++;
@@ -94,13 +108,68 @@
       S.rung = 0.6;
     } else S.bao = { chu: `WAVE ${w}`, phu: '', t: 0, T: 1.4 };
   }
+  // ---- CO-OP: wave do bàn đồng đội (trên, nơi quái sinh) điều phối; bàn người chơi chỉ hiện cùng số wave ----
+  function batDauDotCoop(A) {
+    const co = A.coop, S = A.ban;
+    co.dot++; A.dot = S.dot = co.dot;
+    const w = co.dot, laBoss = w % 10 === 0, cuoi = w >= COOP.DOT_MAX;
+    A.conSinh = laBoss ? COOP.soQuaiBoss(w) : COOP.soQuai(w);
+    A.sinhT = laBoss ? 2.2 : 0.6; A.khoangSinh = COOP.khoangSinh(w); A.laBoss = laBoss; A.sauSinh = 0;
+    A.bountyDot = 0; S.bountyDot = 0;
+    let bao;
+    if (laBoss) {
+      const n = w / 10 - 1, idx = cuoi ? B.length - 1 : n % B.length, vong = Math.floor(n / B.length), b = B[idx];
+      const q = themQuai(A, 'boss', COOP.mauBoss(w, idx, vong, cuoi), 26 * (1 + Math.min(0.24, 0.08 * vong)), null, cuoi ? 66 : 58);
+      q.lech = 0; datViTri(A, q);
+      q.boss = b; q.vong = vong; q.cuoi = cuoi; q.thuong = 60 + 6 * w; q.songT = 0; q.knCD = b.kn.map(() => 0); q.tele = null; q.linkCap = 0;
+      A.boss = q;
+      bao = { chu: cuoi ? `WAVE ${w} · FINAL BOSS` : `WAVE ${w} · ${b.ten}`, phu: `${cuoi ? b.ten + ' — ' : ''}${b.knTen} — ${b.mo}`, t: 0, T: 3.2, boss: 1 };
+      A.rung = S.rung = 0.6;
+    } else bao = { chu: `WAVE ${w}/${COOP.DOT_MAX}`, phu: '', t: 0, T: 1.4 };
+    A.bao = bao; S.bao = Object.assign({}, bao);
+  }
+  function sinhCoop(S) {
+    const w = S.dot, tl = COOP.tiLe(w), r = rnd();
+    const k = r < tl.nhanh ? 'nhanh' : r < tl.nhanh + tl.trau ? 'trau' : 'thuong', d = Q[k];
+    const q = themQuai(S, k, COOP.mauQuai(w) * d.hp, d.spd * COOP.tocQuai(w), null, d.co);
+    q.thuong = d.thuong + Math.floor(w / 6);
+  }
+  function dieuPhoiCoop(A, dt) {   // chạy trên bàn đồng đội (A): sinh quái, chuyển wave, nghỉ, thắng
+    const co = A.coop, S = A.ban;
+    if (A.conSinh > 0) {
+      A.sinhT -= dt;
+      if (A.sinhT <= 0) { sinhCoop(A); A.conSinh--; A.sinhT = A.khoangSinh; A.sauSinh = 0; }
+      return;
+    }
+    A.sauSinh += dt;
+    const con = A.quai.some(sống) || S.quai.some(sống), boss = A.boss || S.boss;
+    if (co.dot >= COOP.DOT_MAX) { if (!con && !boss) { co.thang = true; A.het = S.het = true; } return; }   // dọn sạch wave 70 → thắng
+    if (co.dot === 0 || (!boss && (!con || (A.sauSinh > COOP.CHO_TOI_DA && !A.laBoss)))) {
+      co.choT -= dt;
+      if (co.choT <= 0) {
+        if (co.dot > 0) {
+          const th = COOP.thuongDot(co.dot);
+          for (const X of [A, S]) { X.lk += th; X.so.push({ x: X.B.OX + X.B.SW / 2, y: X.B.OY + X.B.SH / 2, v: `WAVE CLEAR +${th}`, t: 0, mau: '#ffe27a', lk: 1, to: 1 }); }
+        }
+        batDauDotCoop(A); co.choT = COOP.NGHI;
+      }
+    }
+  }
+  // quái đi hết làn trên (bàn đồng đội) → sang đầu làn dưới (bàn người chơi), giữ máu + hiệu ứng trên người
+  function chuyenXuong(A, q) {
+    const S = A.ban;
+    if (q === A.boss) { xongBoss(A); S.boss = q; q.tele = null; }
+    q.ra = false; q.d = 0; q.daRa = true; q.linkT = 0; q.ban = S;
+    datViTri(S, q);
+    S.quai.push(q);
+  }
   // spd theo đơn vị cũ (px/giây trên đường ngang dài DAI_CU) → nhân P để thời gian đi hết làn như cũ; co (cỡ hình) nhân K
   function themQuai(S, kind, hp, spd, anh, co) {
     const q = { uid: S.nid++, kind, hp, max: hp, spd: spd * S.B.P, d: 0, x: 30, y: 0, cham: 0, choang: 0, anh, co: co * K, thuong: 0, khung: rnd() * 4,
       lech: (rnd() - 0.5) * 22, sinhT: S.t,
       chill: 0, chillT: 0, voLock: 0, nhietCD: 0, arcCD: 0, focusCD: 0, breachT: 0, breachK: false, breachEmp: 0, giatCD: 0,
       tox: 0, toxT: 0, toxDem: 0, toxLan: 0, toxNhan: 0, bounty: 0, bountyGT: 3, khien: 0, daKhien: 0, nhanhT: 0, nhanhK: 0, linkT: 0,
-      luaT: 0, slowBang: 0, slowHut: 0, echo: false };
+      luaT: 0, slowBang: 0, slowHut: 0, echo: false, ban: S };
     datViTri(S, q);
     S.quai.push(q);
     return q;
@@ -121,7 +190,7 @@
   const nham = (q) => sống(q) && q.daRa;   // vừa ra khỏi cổng (đang hiện hình) thì chưa bắn được   // vừa ra khỏi cổng (đang hiện hình) thì chưa bắn được
   const dauTien = (S) => { let b = null; for (const q of S.quai) if (nham(q) && (!b || q.d > b.d)) b = q; return b; };
   const kc = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
-  const heSo = (S, v) => C.heSoSao(v.sao) * C.heSoBac(S.bac[v.id] || 0);
+  const heSo = (S, v) => C.heSoSao(v.sao) * C.heSoBac(S.bac[v.id] || 0) * (v.hs || 1);
   const ganNhau = (S, q, r) => { let n = 0; for (const o of S.quai) if (o !== q && nham(o) && kc(o, q) < r) n++; return n; };
   const trongHut = (S, q) => S.vung.some((z) => z.k === 'hut' && kc(z, q) < z.r);
   function trung(S, q, dmg, v, mau, chiSo, an, treo) {
@@ -132,6 +201,7 @@
     dmg *= k;
     if (v && v.corrT > 0 && !treo) { const p = dmg * 0.25; dmg -= p; S.treo.push({ q, dmg: p, t: 2, v, mau: '#c04dff' }); }
     if (q.khien > 0) { const a = Math.min(q.khien, dmg); q.khien -= a; dmg -= a; }
+    if (v && v.tk) v.tk[v.id] = (v.tk[v.id] || 0) + Math.min(dmg, q.hp);   // thống kê sát thương thật (không tính phần tràn)
     q.hp -= dmg;
     if (q.linkT > 0 && S.boss && S.boss.linkCap > 0) { const b = S.boss, h = Math.min(dmg * 0.3, b.linkCap); b.linkCap -= h; b.hp = Math.min(b.max, b.hp + h); }
     if (!an) {   // số sát thương nổi: tối đa 3 số / mục tiêu (bỏ số cũ nhất), đòn chí mạng màu hổ phách
@@ -209,7 +279,7 @@
     if (v.hg == null) { v.hg = 2; v.hgT = S.t; v.goc = Math.PI / 2; v.khongMuc = 0; }
     v.nhin = (v.nhin || 0) - dt;
     if (v.nhin <= 0) { v.nhin = HG.NHIN; v.mucNhin = chonMuc(S, i, v); }   // dò mục tiêu thưa (20 lần/giây)
-    const q = v.mucNhin && sống(v.mucNhin) ? v.mucNhin : null;
+    const q = v.mucNhin && sống(v.mucNhin) && v.mucNhin.ban === S ? v.mucNhin : null;
     const khoa = v.atkT != null && S.t - v.atkT < C.TAC_DONG + C.GIU_KHUNG + 0.1;   // khoá hướng trong pha ra đòn của attack
     let dich = null;
     if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); }
@@ -315,8 +385,10 @@
     if (S.hitStop > 0) { S.hitStop -= dt; return; }   // hit-stop: đứng hình cả bàn 20–35ms sau đòn mạnh
     S.t += dt;
     // đợt (bàn AI: nhận cùng đợt với người chơi — khi người chơi sang đợt mới thì AI cũng sang)
-    if (S.theo && S.theo.dot > S.dot) batDauDot(S);
-    if (S.conSinh > 0) {
+    if (S.coop) { if (S.ai) dieuPhoiCoop(S, dt); else S.dot = S.coop.dot; if (S.het) return; }
+    else if (S.theo && S.theo.dot > S.dot) batDauDot(S);
+    if (S.coop) { /* co-op: wave do dieuPhoiCoop lo */ }
+    else if (S.conSinh > 0) {
       S.sinhT -= dt;
       if (S.sinhT <= 0) { sinh(S); S.conSinh--; S.sinhT = S.khoangSinh; S.sauSinh = 0; }
     } else {
@@ -358,7 +430,7 @@
     // đạn
     for (const d of S.dan) {
       const q = d.q;
-      if (!sống(q)) { d.xong = true; continue; }
+      if (!sống(q) || q.ban !== S) { d.xong = true; continue; }
       const tx = q.x, ty = q.y - q.co / 2, dx = tx - d.x, dy = ty - d.y, k = Math.hypot(dx, dy), b = d.spd * dt;
       if (k <= b + 6) { d.xong = true; trungDan(S, d); }
       else { d.x += dx / k * b; d.y += dy / k * b; d.goc = Math.atan2(dy, dx); }
@@ -428,17 +500,20 @@
       datViTri(S, q);
       if (!q.daRa && q.d >= 26 * S.B.P) q.daRa = true;
       if (q.boss) kyNangBoss(S, q, dt);
+      if (q.d >= S.B.DAI && S.coop && S.ai) { q.ra = true; (S.chuyen || (S.chuyen = [])).push(q); continue; }   // co-op: hết làn trên → xuống làn dưới
       if (q.d >= S.B.DAI) {
         q.ra = true;
-        const mat = q.boss ? 2 : 1;
-        S.mang -= mat;
+        const mat = S.coop ? (q.boss ? COOP.MAT_BOSS : COOP.MAT_QUAI) : q.boss ? 2 : 1;
+        if (S.coop) { const co = S.coop; co.mang = Math.max(0, co.mang - mat); S.mang = S.ban.mang = co.mang; }
+        else S.mang -= mat;
         S.fx.push({ k: 'thanh', t: 0, T: 0.6 }); S.rung = Math.max(S.rung || 0, 0.35);
         S.so.push({ x: S.B.RA[0] + 30, y: S.B.RA[1] - 14, v: `CORE -${mat}`, t: 0, mau: '#ff5a5a', to: 1 });
         if (q === S.boss) xongBoss(S);
-        if (S.mang <= 0) { S.mang = 0; S.het = true; }
+        if (S.mang <= 0) { S.mang = 0; S.het = true; if (S.coop) S.ban.het = true; }
       }
     }
     S.quai = S.quai.filter((q) => sống(q));
+    if (S.chuyen) { for (const q of S.chuyen) chuyenXuong(S, q); S.chuyen = null; }
     for (const f of S.fx) f.t += dt;
     S.fx = S.fx.filter((f) => f.t < f.T);
     for (const s of S.so) s.t += dt;
@@ -521,7 +596,26 @@
     if (!trong(S).length) { let re = null; for (const id of S.deck) if (S.bac[id] < C.BAC_MAX && (!re || giaBac(S, id) < giaBac(S, re))) re = id; if (re && S.lk >= giaBac(S, re) + 40) lenBac(S, re); }
   }
 
-  const API = { moi, buoc, botAI, trieuHoi, tha, lenBac, gopDuoc, giaTrieu, giaBac, satThuong, oXY, oTam, ke, viTri, trong, nong,
+  // ---- đồng đội AI (co-op): hợp lý hơn bot PVP — mỗi COOP.AI_NHIP giây làm 1 việc:
+  // 1) ghép cặp sao thấp nhất nếu có; 2) bàn còn ô (dưới trần COOP.aiOToiDa theo wave) → triệu hồi khi đủ Energy (giữ Energy cho triệu hồi, không nâng cấp);
+  // 3) bàn đầy, không ghép được → nâng cấp loại tướng có tổng sao trên bàn cao nhất mà đủ Energy
+  function botCoop(S, dt) {
+    if (S.het) return;
+    S.botT = (S.botT == null ? 1 : S.botT) - dt;
+    if (S.botT > 0) return;
+    S.botT = COOP.AI_NHIP[0] + rnd() * COOP.AI_NHIP[1];
+    let ga = -1, gb = -1;
+    for (let a = 0; a < S.o.length; a++) for (let b = a + 1; b < S.o.length; b++) if (gopDuoc(S, a, b) && (ga < 0 || S.o[a].sao < S.o[ga].sao)) { ga = a; gb = b; }
+    if (ga >= 0) { tha(S, ga, gb); return; }
+    const dang = S.o.filter(Boolean).length;
+    if (trong(S).length) { if (dang < COOP.aiOToiDa(Math.max(1, S.dot)) && S.lk >= giaTrieu(S)) trieuHoi(S); return; }   // còn ô: chỉ triệu hồi, không nâng cấp
+    const tong = {}; for (const v of S.o) if (v) tong[v.id] = (tong[v.id] || 0) + Math.pow(2, v.sao - 1);
+    let re = null;
+    for (const id of S.deck) if (S.bac[id] < C.BAC_MAX && S.lk >= giaBac(S, id) && (!re || (tong[id] || 0) > (tong[re] || 0))) re = id;
+    if (re) lenBac(S, re);
+  }
+
+  const API = { moi, moiCoop, botCoop, buoc, botAI, trieuHoi, tha, lenBac, gopDuoc, giaTrieu, giaBac, satThuong, oXY, oTam, ke, viTri, trong, nong,
     BAN_NG, BAN_AI, K, setRnd: (f) => (rnd = f) };
   root.GAME = API;
   if (typeof module !== 'undefined') module.exports = API;

@@ -326,16 +326,18 @@
     }
     c.restore();
   }
-  function veLanTinh(c, B) {   // làn quái dọc bên trái (x 42..92): đầu trên = cổng sinh, cuối dưới = cửa thoát
-    const [[x, y0], [, y1]] = B.DUONG, w = C.LAN_X1 - C.LAN_X0, x0 = C.LAN_X0;
+  function veThanLan(c, y0, y1) {   // thân làn (x 42..92) từ y0 tới y1: ảnh làn v2 nếu có, không thì kiểu làn vẽ sẵn
+    const w = C.LAN_X1 - C.LAN_X0, x0 = C.LAN_X0;
     const ln = co('v2:lane_straight');
-    if (ln) c.drawImage(ln, x0, y0, w, y1 - y0);
-    else {
-      c.fillStyle = 'rgba(3,4,10,0.88)'; c.fillRect(x0, y0, w, y1 - y0);
-      c.fillStyle = lg(c, x0, 0, x0 + w, 0, [[0, '#1c2130'], [0.12, '#0b0e18'], [0.88, '#0b0e18'], [1, '#1c2130']]); c.fillRect(x0 + 3, y0, w - 6, y1 - y0);
-      c.fillStyle = '#2c3346'; c.fillRect(x0 + 3, y0, 1.5, y1 - y0); c.fillRect(x0 + w - 4.5, y0, 1.5, y1 - y0);
-      c.fillStyle = 'rgba(255,50,70,0.55)'; for (let y = y0 + 14; y < y1 - 10; y += 16) { c.fillRect(x0 + 5, y, 2, 2); c.fillRect(x0 + w - 7, y, 2, 2); }
-    }
+    if (ln) { c.drawImage(ln, x0, y0, w, y1 - y0); return; }
+    c.fillStyle = 'rgba(3,4,10,0.88)'; c.fillRect(x0, y0, w, y1 - y0);
+    c.fillStyle = lg(c, x0, 0, x0 + w, 0, [[0, '#1c2130'], [0.12, '#0b0e18'], [0.88, '#0b0e18'], [1, '#1c2130']]); c.fillRect(x0 + 3, y0, w - 6, y1 - y0);
+    c.fillStyle = '#2c3346'; c.fillRect(x0 + 3, y0, 1.5, y1 - y0); c.fillRect(x0 + w - 4.5, y0, 1.5, y1 - y0);
+    c.fillStyle = 'rgba(255,50,70,0.55)'; for (let y = y0 + 14; y < y1 - 10; y += 16) { c.fillRect(x0 + 5, y, 2, 2); c.fillRect(x0 + w - 7, y, 2, 2); }
+  }
+  function veLanTinh(c, B) {   // làn quái dọc bên trái (x 42..92): đầu trên = cổng sinh, cuối dưới = cửa thoát
+    const [[x, y0], [, y1]] = B.DUONG;
+    veThanLan(c, y0, y1);
     const sp = co('v2:lane_spawn'), ex = co('v2:lane_exit');
     if (sp) c.drawImage(sp, x - 22, y0 - 22, 44, 44);
     else { c.save(); neon(c, '#ff2b4d', 10); c.strokeStyle = '#ff2b4d'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(x, y0, 17, 6, 0, 0, 7); c.stroke(); c.restore(); c.fillStyle = '#05000a'; c.beginPath(); c.ellipse(x, y0, 15, 5, 0, 0, 7); c.fill(); }
@@ -855,7 +857,7 @@
     c.font = '900 9px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left';
     const m = S.ai ? '#3ce7ff' : '#ff2bd6', w = c.measureText(ten).width;
     c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.8)'; c.strokeText(ten, 112, y + 9); c.fillStyle = m; c.fillText(ten, 112, y + 9);
-    for (let i = 0; i < C.MANG; i++) { c.fillStyle = i < S.mang ? m : 'rgba(255,60,60,0.35)'; c.beginPath(); const x = 118 + w + i * 12; c.moveTo(x + 2, y + 2); c.lineTo(x + 11, y + 2); c.lineTo(x + 9, y + 9); c.lineTo(x, y + 9); c.closePath(); c.fill(); }
+    if (!S.coop) for (let i = 0; i < C.MANG; i++) { c.fillStyle = i < S.mang ? m : 'rgba(255,60,60,0.35)'; c.beginPath(); const x = 118 + w + i * 12; c.moveTo(x + 2, y + 2); c.lineTo(x + 11, y + 2); c.lineTo(x + 9, y + 9); c.lineTo(x, y + 9); c.closePath(); c.fill(); }
     if (S.boss) {
       const b = S.boss, bw = 110, bx = 361 - bw, kk = Math.max(0, b.hp / b.max);
       c.fillStyle = 'rgba(4,4,14,0.85)'; c.fillRect(bx - 1, y + 3, bw + 2, 6); c.fillStyle = b.boss.mau; c.fillRect(bx, y + 4, bw * kk, 4);
@@ -905,10 +907,16 @@
     veMua(c, dt);
     // dòng chảy trên 2 làn
     c.save(); c.globalCompositeOperation = 'lighter'; c.lineWidth = 2;
-    for (const B of BANS) { const [[x, y0], [, y1]] = B.DUONG; c.beginPath(); c.moveTo(x, y0 + 8); c.lineTo(x, y1 - 8); c.setLineDash([3, 14]); c.lineDashOffset = -t * 30; c.strokeStyle = 'rgba(255,60,90,0.5)'; c.stroke(); }
+    if (S && S.coop) {   // co-op: đường nối làn trên → làn dưới (ảnh làn v2 kéo dài; không có ảnh thì dải tối như làn vẽ sẵn)
+      // phủ luôn cửa thoát làn trên + cổng sinh làn dưới (±24px) để thành 1 đường liền
+      c.restore(); c.save();
+      veThanLan(c, C.LAN_AI[1][1] - 24, C.LAN_NG[0][1] + 24);
+      c.restore(); c.save(); c.globalCompositeOperation = 'lighter'; c.lineWidth = 2;
+    }
+    for (const B of (S && S.coop ? [A.B, S.B] : BANS)) { const [[x, y0], [, y1]] = B.DUONG; c.beginPath(); c.moveTo(x, y0 + 8); c.lineTo(x, y1 - 8); c.setLineDash([3, 14]); c.lineDashOffset = -t * 30; c.strokeStyle = 'rgba(255,60,90,0.5)'; c.stroke(); }
     c.restore();
     if (S) {
-      veNhanBan(c, A || { ai: true, mang: C.MANG }, 'AI MIRROR', 76);
+      veNhanBan(c, A || { ai: true, mang: C.MANG }, S.coop ? 'ALLY' : 'AI MIRROR', 76);   // co-op: bàn trên là đồng đội AI
       veNhanBan(c, S, 'PLAYER', 363);
       if (A) veBan(c, A, t, null);
       veBan(c, S, t, keo);

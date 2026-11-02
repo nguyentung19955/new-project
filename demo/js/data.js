@@ -65,3 +65,41 @@ const CAU_HINH = {
   heSoBac: (b) => 1 + 0.4 * b,
   mauDot: (w) => 18 * Math.pow(1.21, w - 1) * (1 + 0.03 * w),
 };
+
+// ===== CHẾ ĐỘ CO-OP (kiểu Defense War co-op): 2 bàn (trên = ĐỒNG ĐỘI AI, dưới = người chơi), quái đi MỘT đường chung =====
+// Đường: sinh ở đầu làn trên → hết làn trên → đường nối → hết làn dưới → trừ mạng chung. Mọi con số dưới đây là núm chỉnh cân bằng (thử nghiệm).
+// w = số wave (1..70)
+const COOP = {
+  DOT_MAX: 70,          // qua (dọn sạch) wave 70 = thắng
+  MANG: 10,             // mạng dùng chung
+  MAT_QUAI: 1,          // mạng mất khi 1 quái thường lọt
+  MAT_BOSS: 3,          // mạng mất khi trùm lọt
+  NGHI: 2.5,            // nghỉ giữa 2 wave (giây), sau khi dọn sạch
+  AI_NHIP: [1.2, 0.8],  // đồng đội AI làm 1 việc mỗi 1.2–2.0 giây (nhỏ hơn = AI nhanh tay hơn)
+  AI_SAT_THUONG: 0.35,  // sát thương đồng đội AI × 0.35 — quái đi qua bàn trên trước, AI mạnh quá thì người chơi không còn gì để bắn
+  // số tướng tối đa đồng đội AI đặt trên bàn theo wave (để quái còn xuống tới bàn người chơi): 2 ở wave 1 → đủ 15 ô từ wave 39
+  aiOToiDa: (w) => Math.min(15, 2 + Math.floor(w / 3)),
+  CHO_TOI_DA: 22,       // quái còn sót quá lâu (giây sau con cuối) thì wave sau vẫn tới (trừ wave trùm)
+  CHO_DAU: 2,           // chờ trước wave 1 (giây)
+  THOI_GIAN_DUONG: 1.4, // thời gian đi hết cả đường chung = 1.4 × thời gian đi 1 làn bản PVP (quái thường ~34 giây)
+  // số quái mỗi wave thường: 6 ở wave 1 → ~41 ở wave 70
+  soQuai: (w) => Math.round(6 + 0.5 * w),
+  // số quái đi kèm trùm
+  soQuaiBoss: (w) => 3 + Math.floor(w / 10),
+  // khoảng cách sinh (giây) giữa 2 quái
+  khoangSinh: (w) => Math.max(0.45, 1.1 - 0.01 * w),
+  // máu quái thường (nhân thêm QUAI[loại].hp): ~41 ở wave 1, ~96 ở 10, ~600 ở 30, ~3.4k ở 50, ~19k ở 70
+  mauQuai: (w) => 40 * Math.pow(1.08, w - 1) * (1 + 0.02 * w),
+  // tốc độ quái tăng nhẹ theo wave (tối đa +30%)
+  tocQuai: (w) => 1 + Math.min(0.3, 0.005 * w),
+  // tỉ lệ quái nhanh (SKITTER) / trâu (BULWARK) xuất hiện dần: nhanh từ wave 4, trâu từ wave 8
+  tiLe: (w) => ({ nhanh: w < 4 ? 0 : Math.min(0.3, 0.08 + 0.008 * (w - 4)), trau: w < 8 ? 0 : Math.min(0.25, 0.05 + 0.006 * (w - 8)) }),
+  // Energy thưởng khi xong wave (cả 2 bàn đều nhận)
+  thuongDot: (w) => 15 + 5 * w,
+  // TRÙM mỗi 10 wave: 3 trùm (BOSS) lần lượt FIREWALL → OVERCLOCK → CORRUPTOR → lặp lại (vòng 2); wave 70 = TRÙM CUỐI (CORRUPTOR)
+  // máu trùm = máu quái thường wave đó × BOI_BOSS[trùm] × NHAN_VONG^vòng (× CUOI ở wave 70)
+  BOI_BOSS: [45, 55, 65],
+  NHAN_VONG: 1.3,
+  CUOI: 2,
+  mauBoss: (w, idx, vong, cuoi) => COOP.mauQuai(w) * COOP.BOI_BOSS[idx] * Math.pow(COOP.NHAN_VONG, vong) * (cuoi ? COOP.CUOI : 1),
+};

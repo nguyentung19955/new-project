@@ -54,3 +54,21 @@ Theo docs/demo-hop-tuong/tu-van-chatgpt-cham-ban-choi-8huong.txt — các mục 
 - Hit-stop chỉ đứng bàn có đòn mạnh (bàn kia vẫn chạy) — 25–30ms nên khó thấy lệch.
 - Chữ "RANK n" khi merge vẫn hiện 0.6s, đè nhẹ nhãn sao ô trên.
 - Chưa làm P1.1/P1.2/P1.5/P2.1/P2.3.
+
+## Chế độ CO-OP kiểu Defense War (02/11/2026, phiên tự động)
+Theo tu-van-chatgpt-phan-tich-dcdw.txt (mục co-op 12, wave pacing: trùm mỗi 10 wave, 70 wave). Không chạy test; đã chụp màn 390×844 xem bằng mắt (cả CO-OP lẫn PVP), không lỗi JS; có chạy thử giả lập cân bằng bằng node (2 bot tự chơi).
+
+1. Màn chọn tướng: thêm 2 nút chế độ **CO-OP** (mặc định) và **PVP** (AI MIRROR như cũ). Nhớ lựa chọn cuối (localStorage `neon-grid.mode`, bọc try/catch). Dòng hướng dẫn đổi theo chế độ.
+2. CO-OP: bàn trên là **ALLY** (đồng đội AI, màu cyan giữ nguyên), bàn dưới là người chơi. Quái đi **một đường chung**: sinh ở đầu làn trên → hết làn trên → đường nối → hết làn dưới → mới trừ mạng. Mỗi bàn bắn quái đang ở làn của mình (quái chuyển xuống giữ nguyên máu + hiệu ứng; đạn đang bay theo nó thì huỷ). Mạng **dùng chung 10** (quái thường lọt −1, trùm lọt −3). Không thắng do AI chết; hết mạng = thua; dọn sạch wave 70 = thắng.
+   - Đường nối giữa 2 làn vẽ bằng cùng thân làn đã có (ảnh `v2/lane_straight.png` nếu có), phủ cửa thoát làn trên + cổng làn dưới để thành 1 đường liền.
+3. Nhịp wave (tất cả núm chỉnh ở `COOP` cuối data.js, có chú thích): số quái 6 → ~41; máu quái ~41 (wave 1) → ~96 (10) → ~600 (30) → ~3.4k (50) → ~19k (70); SKITTER từ wave 4, BULWARK từ wave 8, tỉ lệ tăng dần; tốc độ +0.5%/wave (tối đa +30%). Trùm mỗi 10 wave: FIREWALL → OVERCLOCK → CORRUPTOR → lặp vòng 2 (máu × 1.3 mỗi vòng); **wave 70 = FINAL BOSS** (CORRUPTOR, máu ×2, to hơn). Nghỉ 2.5s giữa các wave; thưởng Energy hết wave cho cả 2 bàn. Cả đường ~34 giây cho quái thường (`THOI_GIAN_DUONG`).
+4. Nút tốc độ: 1x → 2x → 3x (cả 2 chế độ).
+5. Đồng đội AI (`botCoop` trong game.js): mỗi 1.2–2s làm 1 việc — ưu tiên ghép cặp sao thấp nhất; còn ô thì chỉ triệu hồi (giữ Energy, không nâng cấp); bàn đầy mới nâng cấp loại tướng mạnh nhất trên bàn. Có Energy riêng (giết quái + thưởng wave). Để người chơi còn quái mà bắn: AI chỉ đặt tối đa `aiOToiDa(w)` tướng (2 ở wave 1 → đủ 15 ô từ wave 39) và sát thương AI × 0.35 (`AI_SAT_THUONG`).
+   - Giả lập 2 bot: đi tới wave ~45–59 trong ~25 phút; phần sát thương của bàn dưới tăng dần (~0% đầu game → ~50–65% từ wave 45). Người chơi thật ghép khéo hơn bot nên có thể qua 70.
+6. HUD co-op: `WAVE x/70`, `CORE x/10` (đỏ khi ≤3), `BOSS IN n WAVES` / `FINAL BOSS IN n WAVES`, HOSTILES = quái cả 2 làn + chưa sinh. Nhãn bàn trên "ALLY", bỏ 3 vạch mạng riêng. Màn kết quả: wave đạt được /70, số quái diệt, kỷ lục riêng co-op (`neon-grid.best.coop`), **sát thương từng tướng của người chơi** (thanh màu hệ) + tổng YOU/ALLY, nút RETRY / CHANGE SQUAD.
+7. PVP giữ nguyên như cũ (bot cũ, 3 mạng, thắng khi AI MIRROR hết mạng).
+
+### Ghi chú / còn lại
+- Đầu game (wave 1–7) đồng đội AI vẫn dọn gần hết quái; muốn người chơi bắn nhiều hơn thì giảm `aiOToiDa` hoặc `AI_SAT_THUONG`.
+- Trùm cuối wave 70 rất trâu (giả lập 2 bàn full 7 sao vẫn để lọt 1 lần) — chỉnh `CUOI` nếu quá khó.
+- Chưa có assist/ping giữa 2 bàn, chưa có mốc thưởng 10/20/30/50/70.

@@ -188,3 +188,24 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 @keyframes gl1 { 0%, 88%, 100% { transform: translate(-2px, 0); clip-path: inset(10% 0 55% 0); } 90% { transform: translate(-5px, -1px); clip-path: inset(30% 0 40% 0); } 94% { transform: translate(3px, 1px); clip-path: inset(70% 0 5% 0); } }
 @keyframes gl2 { 0%, 85%, 100% { transform: translate(2px, 0); clip-path: inset(60% 0 10% 0); } 87% { transform: translate(5px, 1px); clip-path: inset(5% 0 75% 0); } 92% { transform: translate(-3px, 0); clip-path: inset(45% 0 30% 0); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } }
+
+/* ===== CO-OP: chọn chế độ, mạng chung trên TOP HUD, sát thương từng tướng ở màn kết quả ===== */
+.chon-che { display: flex; gap: 10px; }
+.che { flex: 1; height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 8px;
+  background: rgba(14,20,48,0.6); border: 1px solid var(--vien); color: var(--mo); transition: transform .08s, box-shadow .2s; }
+.che b { font: 900 14px/1 var(--tit); letter-spacing: 2px; }
+.che span { font: 700 8px/1 var(--tit); letter-spacing: 1px; opacity: .85; }
+.che.bat { color: #fff; border-color: var(--cyan); background: linear-gradient(180deg, rgba(40,120,200,0.45), rgba(20,20,80,0.7)); box-shadow: 0 0 14px rgba(60,231,255,0.45), inset 0 0 12px rgba(60,231,255,0.2); }
+.che.bat b { text-shadow: 0 0 8px var(--cyan); }
+.che:active { transform: scale(0.96); }
+.tb-giua.coop { gap: 3px; }
+#tb-mang .nho { font-size: 10px; }
+#tb-mang b { font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #7dffb0; }
+#tb-mang b.thap { color: #ff5a5a; }
+#tb-dot small { font-size: 10px; color: var(--mo); text-shadow: none; }
+.kq-sat { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.kq-sat .ks { display: grid; grid-template-columns: 58px 1fr 52px; align-items: center; gap: 6px; font: 700 10px/1 var(--tit); letter-spacing: .5px; color: var(--h, #fff); }
+.kq-sat .ks i { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.kq-sat .ks u { display: block; height: 100%; background: var(--h, #3ce7ff); box-shadow: 0 0 6px var(--h, #3ce7ff); }
+.kq-sat .ks em { font-style: normal; text-align: right; color: #e8f1ff; font-variant-numeric: tabular-nums; }
+.kq-sat .ks-ten { font: 700 9px/1 var(--tit); letter-spacing: 1.5px; color: var(--mo); margin-bottom: 2px; }
