@@ -1,5 +1,5 @@
 # 010 – Nấm Thở – đánh: VẼ LẠI F3–F7 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
 - **Clip:** `quai.json → loai.nam.hinh.danh` – thư mục art gốc `art/quai-moi/nam/danh/` (9 khung `fNN.png`, ô 84×84, quay TRÁI, neo chân [43, 71])
 - **Việc cần vẽ:** Vẽ **5 khung** `thay-03` … `thay-07`, THAY F3–F7 (giữ F0–F2, F8).
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Mượt nhưng KHÔNG đọc được là đang đánh (chỉ nghiêng đầu nhẹ, cao đổi 4%). Vẽ lại F3–F7: mũ co tích lực → nghiêng tới → F5 phun bào tử mạnh → giật lùi."

@@ -1,5 +1,5 @@
 # 008 – Dơi Rễ – chết: 2 khung rơi giữa F6–F7 (P0)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
 - **Clip:** `quai.json → loai.doi.hinh.chet` – thư mục art gốc `art/quai-moi/doi/chet/` (9 khung `fNN.png`, ô 76×76, quay TRÁI, neo chân [37, 59])
 - **Việc cần vẽ:** Vẽ **2 khung mới** `moi-01`, `moi-02`, chèn SAU F6.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Giật nặng F6→F7: đang rơi giữa không trung → nằm sát đất trong 1 bước. Thêm 2 khung rơi giữa F6–F7 (thân hạ dần, cánh gập; gần chạm đất, cánh chạm trước); giữ khung cuối."
