@@ -2,10 +2,10 @@
 //   npm i --no-save firebase@10.14.1 && npx firebase-tools@13 emulators:exec --only auth,firestore --project demo-tvcc "node tools/firebase/kiem-thu-emulator.mjs"
 import {createRequire} from 'module';
 import {initializeApp, deleteApp} from 'firebase/app';
-import {getAuth, connectAuthEmulator, signInAnonymously} from 'firebase/auth';
+import {getAuth, connectAuthEmulator, signInAnonymously, GoogleAuthProvider, linkWithCredential, signInWithCredential, reauthenticateWithCredential, signOut, getIdToken} from 'firebase/auth';
 import * as S from 'firebase/firestore';
 const require = createRequire(import.meta.url);
-const {taoDongBo, taoCongFirestore} = require('../../game/luu-may.js');
+const {taoDongBo, taoCongFirestore, docToken, kiemPhien} = require('../../game/luu-may.js');
 let hong = 0, dat = 0;
 const ok = (dk, t, x) => { if (dk) dat++; else hong++; console.log((dk ? 'ĐẠT ' : 'HỎNG ') + t + (!dk && x !== undefined ? ' – ' + JSON.stringify(x) : '')); };
 const khoGia = () => { const m = new Map(); return {getItem:k => m.has(k) ? m.get(k) : null, setItem:(k, v) => m.set(k, String(v)), removeItem:k => m.delete(k), key:i => [...m.keys()][i] ?? null, get length(){ return m.size; }, clear:() => m.clear()}; };
@@ -54,6 +54,28 @@ try {
   ok(await bi(() => S.setDoc(tl(Y.db, Y.uid, 'tvcc-an'), Object.assign(hop('tvcc-an', 2), {la:1}))), 'trường lạ bị từ chối');
   ok(await bi(() => S.deleteDoc(tl(Y.db, Y.uid, 'tvcc-an'))), 'không xoá được tài liệu');
   ok(await bi(() => S.setDoc(S.doc(Y.db, 'khac', 'x'), {a:1})), 'đường khác bị chặn');
+  // (dangnhap) đăng nhập Google + auth_time (Auth Emulator nhận "id token Google" giả dạng JSON)
+  const ngu = ms => new Promise(r => setTimeout(r, ms));
+  const Z = await moApp(); const authZ = getAuth(Z.app);
+  const tGuest = docToken(await getIdToken(authZ.currentUser, true));
+  await ngu(2100);
+  const gg = () => GoogleAuthProvider.credential(JSON.stringify({sub:'gg-tung-1', email:'tung@example.com', email_verified:true, name:'Tung'}));
+  const lk = await linkWithCredential(authZ.currentUser, gg());
+  let tLink = docToken(await getIdToken(lk.user, true));
+  ok(lk.user.uid === Z.uid && lk.user.providerData.some(p => p.providerId === 'google.com'), 'gắn Google vào tài khoản khách: giữ nguyên UID (giữ tiến độ)');
+  console.log('  ghi chú: auth_time khách ' + tGuest.authTime + ' → sau khi gắn Google ' + tLink.authTime + (tLink.authTime > tGuest.authTime ? ' (máy chủ làm mới auth_time)' : ' (KHÔNG làm mới → game xác thực lại)'));
+  if (tLink.authTime <= tGuest.authTime){ await reauthenticateWithCredential(lk.user, gg()); tLink = docToken(await getIdToken(lk.user, true)); }
+  ok(tLink.authTime > tGuest.authTime && tLink.nhaCungCap === 'google.com' && !kiemPhien(tLink, {bayGio:Date.now()}).hetHan, 'sau khi đăng nhập Google: auth_time mới, phiên còn hạn', tLink);
+  await ngu(2100);
+  const tRefresh = docToken(await getIdToken(lk.user, true));
+  ok(tRefresh.authTime === tLink.authTime && tRefresh.iat > tLink.iat, 'token tự làm mới KHÔNG đổi auth_time (mốc 7 ngày không bị kéo dài)', {tRefresh, tLink});
+  await signOut(authZ); await signInAnonymously(authZ);
+  let tr = null; try { await linkWithCredential(authZ.currentUser, gg()); } catch (e){ tr = e; }
+  ok(tr && tr.code === 'auth/credential-already-in-use' && GoogleAuthProvider.credentialFromError(tr), 'khách khác gắn Google đã dùng → credential-already-in-use, có credential để chuyển', tr && tr.code);
+  const lai = await signInWithCredential(authZ, GoogleAuthProvider.credentialFromError(tr));
+  const tLai = docToken(await getIdToken(lai.user, true));
+  ok(lai.user.uid === Z.uid && tLai.authTime > tLink.authTime, 'đăng xuất rồi đăng nhập lại: cùng tài khoản, auth_time mới (tính lại 7 ngày)', {tLai, tLink});
+  await deleteApp(Z.app);
   await deleteApp(X.app); await deleteApp(Y.app);
 } catch (e){ hong++; console.log('HỎNG lỗi bất ngờ: ' + (e && (e.stack || e))); }
 console.log(`\n${dat}/${dat + hong} đạt`); process.exit(hong ? 1 : 0);

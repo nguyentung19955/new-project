@@ -52,3 +52,12 @@ jobs:
         run: |
           node tools/firebase/kiem-tra-du-an-that.mjs
           { echo "## Kiểm lưu mây trên dự án thật"; echo '```'; cat ket-qua-kiem-tra-that.txt; echo '```'; echo "Link chơi: https://$PROJECT.web.app/"; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Kiểm đăng nhập Google trên dự án thật (Google provider, Authorized domains) + bản đã lên Hosting
+        if: env.SA != ''
+        continue-on-error: true
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" PROJECT="$PROJECT" node tools/firebase/kiem-nha-cung-cap-google.mjs
+          rm -f "$RUNNER_TEMP/sa.json"
+          if curl -fsS "https://$PROJECT.web.app/game/dang-nhap.js" | grep -q "Sign in with Google"; then echo "ĐẠT Hosting: đã có ô đăng nhập Google (game/dang-nhap.js)" >> ket-qua-google.txt; else echo "CHƯA Hosting: chưa thấy game/dang-nhap.js" >> ket-qua-google.txt; fi
+          { echo "## Đăng nhập Google trên dự án thật"; echo '```'; cat ket-qua-google.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
