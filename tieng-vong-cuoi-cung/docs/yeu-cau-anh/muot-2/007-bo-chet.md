@@ -1,5 +1,5 @@
 # 007 – Bọ Vỏ Mộc – chết: VẼ LẠI 9 khung (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** ĐÃ LẮP (02/11, phiên MƯỢT-2: 9 khung chết mới thay bản sao ảnh đánh; màu đưa về bảng gốc 75 màu; ảnh cũ lưu art/muot-2/bo-chet/cu-fNN.png) – trước đó: XONG (phiên chính vẽ bằng ChatGPT)
 - **Clip:** `quai.json → loai.bo.hinh.chet` – thư mục art gốc `art/quai-moi/bo/chet/` (9 khung `fNN.png`, ô 80×80, quay TRÁI, neo chân [40, 63])
 - **Việc cần vẽ:** Vẽ **9 khung mới** `thay-00` … `thay-08`, THAY toàn bộ clip chết (ảnh chết hiện là bản sao y hệt ảnh `danh` – đã xác nhận trùng file). 2 ô đầu ảnh tham chiếu là khung đứng (dung F0) và trúng đòn (trung F3) để giữ đúng thiết kế.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "HỎNG: ảnh chết đang là bản sao y hệt đòn đánh – bọ không hề ngã. Vẽ lại 9 khung: giật mạnh → chân trước khuỵu → vỏ nghiêng → đổ nghiêng → chạm đất bụi → chân co giật → nằm yên; giữ khung cuối."

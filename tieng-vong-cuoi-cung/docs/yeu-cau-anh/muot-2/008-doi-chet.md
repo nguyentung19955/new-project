@@ -1,5 +1,5 @@
 # 008 – Dơi Rễ – chết: 2 khung rơi giữa F6–F7 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** VẼ LẠI (02/11, phiên MƯỢT-2 kiểm: moi-01, moi-02 LỆCH THIẾT KẾ – thân dơi mất khối đen đặc, không thấy đầu tai nhọn + 2 mắt vàng như F6/F7, cả hình bạc màu, nhòe, không có viền tối 1 px; trông như vật khác. Cần: giữ đúng thân đen đặc, đầu + mắt vàng, cánh rễ nâu có viền tối như F6/F7, nét pixel sắc. Gợi ý thêm vào prompt: 'keep the solid black body, pointed ears and the two amber eyes exactly as in the neighbouring frames, same 1-pixel dark outline, no blur, no soft shading'. Thu nhỏ đúng bội số điểm ảnh ChatGPT (nearest) để khỏi nhòe.)
 - **Clip:** `quai.json → loai.doi.hinh.chet` – thư mục art gốc `art/quai-moi/doi/chet/` (9 khung `fNN.png`, ô 76×76, quay TRÁI, neo chân [37, 59])
 - **Việc cần vẽ:** Vẽ **2 khung mới** `moi-01`, `moi-02`, chèn SAU F6.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "Giật nặng F6→F7: đang rơi giữa không trung → nằm sát đất trong 1 bước. Thêm 2 khung rơi giữa F6–F7 (thân hạ dần, cánh gập; gần chạm đất, cánh chạm trước); giữ khung cuối."

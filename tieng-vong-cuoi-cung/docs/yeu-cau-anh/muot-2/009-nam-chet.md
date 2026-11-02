@@ -1,5 +1,5 @@
 # 009 – Nấm Thở – chết: 1 khung gập thân giữa F5–F6 (P0)
-- **Trạng thái:** XONG (02/11 – ảnh ChatGPT, đã đặt vào ô gốc)
+- **Trạng thái:** VẼ LẠI (02/11, phiên MƯỢT-2 kiểm: dáng moi-01 đúng ý nhưng KHÔNG CÓ VIỀN ĐEN 1 px như mọi khung gốc, mũ tô mịn/nhòe, chân nhạt – nhìn lệch phong cách khi chạy. Cần: viền tối 1 px quanh mũ và thân, mảng màu phẳng sắc như F5/F6, giữ cỡ mũ. Prompt thêm: 'same 1-pixel near-black outline around every shape, flat crisp pixel shading, no blur, no soft gradients'.)
 - **Clip:** `quai.json → loai.nam.hinh.chet` – thư mục art gốc `art/quai-moi/nam/chet/` (9 khung `fNN.png`, ô 84×84, quay TRÁI, neo chân [43, 71])
 - **Việc cần vẽ:** Vẽ **1 khung mới** `moi-01`, chèn SAU F5.
 - **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F1–F4 gần đứng yên rồi F5→F6 nằm ngang đột ngột. Thêm dáng gập thân/khuỵu giữa F5–F6; giữ xác."
