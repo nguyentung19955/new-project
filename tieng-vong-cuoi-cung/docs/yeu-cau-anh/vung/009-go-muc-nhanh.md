@@ -1,5 +1,5 @@
 # 009 – go-muc-nhanh
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 12 ô 16×20 + moc-mep.png; vân bào tử vàng sáng, khác hẳn gỗ thường; gốc: nhanh/nguon-chatgpt.png)
 - **Dùng vào:** Ô `Q` (Gỗ Mục nhanh, có từ R208) – sập sau 1,2 s. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Như 008 nhưng vân bào tử ochre sáng hơn (#B58C49/#80683D) – phải nhìn khác hẳn gỗ mục thường; có "mép đánh dấu" khi nằm cạnh ô thường.
 - **Số khung + ms gợi ý:** 4 trạng thái × 3 biến thể + 1 ô mép đánh dấu

@@ -1,5 +1,5 @@
 # 008 – go-muc-thuong
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 12 ô 16×20 (trai/giua/phai × 0..3), thu nhỏ trung bình + ép bảng màu Vùng 2 cho sắc; gốc: thuong/nguon-chatgpt.png)
 - **Dùng vào:** Ô `R` (Gỗ Mục thường) – sập 2 s sau khi đặt chân, mọc lại sau 3 s (game/vung-2/dat-muc.js). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Tấm sàn gỗ rễ mục 1 ô (48 px logic = 16 điểm ảnh × 3) dày ~1 ô: 4 trạng thái nứt: nguyên (vết nứt mờ để người chơi nhận ra), nứt 1 (khung 0), nứt 2 (khung 40), nứt 3 + bụi hổ phách (khung 80). Có 3 biến thể: mép trái / giữa / mép phải để ghép cầu 2–4 ô.
 - **Số khung + ms gợi ý:** 4 trạng thái × 3 biến thể = 12 ô

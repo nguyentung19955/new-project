@@ -1,5 +1,5 @@
 # 013 – go-re-mong-thang-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – go-trai/giua/phai 16×8, thang-dinh/than/day 16×16 (thân lặp dọc); gốc: chat-lieu/go-thang-nguon-chatgpt.png)
 - **Dùng vào:** Ô `=` (gờ rễ mỏng, đứng từ trên) và `H` (thang rễ leo được). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Gờ rễ mỏng (thin root ledge) trái/giữa/phải; thang rễ leo (climbable root ladder) đỉnh/thân/đáy – thay dây leo Vùng 1 (tham chiếu tools/phong-demo/h_day_leo.png).
 - **Số khung + ms gợi ý:** 6 mẩu

@@ -1,5 +1,5 @@
 # 010 – go-muc-xung
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 6 ô 16×20: <trai|giua|phai>-<ngu|nap>; túi bào tử xỉn khi ngủ, sáng hổ phách khi nạp; gốc: xung/nguon-chatgpt.png)
 - **Dùng vào:** Ô `P` (Gỗ Mục xung, có từ R206) – chu kỳ 4 s: nghỉ 150f, xung bào tử 30f, hồi 60f. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Gỗ mục có túi bào tử: trạng thái NGỦ (túi xỉn) và NẠP (túi sáng hổ phách, chớp 30f trước xung).
 - **Số khung + ms gợi ý:** 2 trạng thái × 3 biến thể
