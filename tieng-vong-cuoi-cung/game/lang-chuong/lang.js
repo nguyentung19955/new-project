@@ -9,6 +9,7 @@
   const GOC = '../../', Q = new URLSearchParams(location.search), LC = window.LuuChung;
   const $ = id => document.getElementById(id);
   const LANG = window.LANG = {sanSang:false, thieu:[], tram:[], xong:false};
+  if (window.LuuMay && LuuMay.coMay()){ await LuuMay.cho(2500); if (LC) LC.napLai(); }   // (firebase) lấy bản lưu mây trước khi đọc
   const napAnh = u => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = GOC + u; });
 
   let L; try { L = await (await fetch('lang.json', {cache:'no-store'})).json(); } catch (e){ LANG.thieu = ['lang.json']; return xongNap(); }
