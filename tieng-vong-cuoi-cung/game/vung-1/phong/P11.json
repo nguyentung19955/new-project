@@ -42,11 +42,11 @@
   {"cot": 27, "hang": 5},
   {"cot": 12, "hang": 10},
   {"cot": 42, "hang": 10},
-  {"cot": 50, "hang": 16}
+  {"cot": 46, "hang": 15}
  ],
  "tinh_anh": true,
  "trum": false,
- "khoa": {"cua": "P11-dong", "can": "chuong_vo", "so": 3},
+ "khoa": {"cua": "P11-dong", "can": "chuong_vo", "so": 3, "loi": "loi_vong_tan"},
  "trang_tri": [
   {"id": "P11-chuong-vo-lon", "loai": "chuong_vo_lon", "cot": 27, "hang": 18, "ghi": "chuông đồng vỡ đôi làm nền đấu trường"},
   {"id": "P11-cua-trum", "loai": "cua_trum_3_chuong", "cot": 55, "hang": 16, "cao": 3, "ghi": "cửa rễ có 3 hốc chuông, sáng dần theo số Chuông Vỡ"},

@@ -20,7 +20,7 @@ V1.nap = async function(){
   await Promise.all(['bia', 'chuong_nho', 'coc_chuong', 'nut_bi_mat', 'canh_bao'].map(n => V1.napAnh('dd_' + n, '../../art/vung-1/dao-cu/dan-duong/' + n + '.png')));
   // đạo cụ + trùm (ChatGPT vẽ, PNG trong suốt; luồng E). Thiếu ảnh → ve.js vẽ hình tạm như cũ.
   const DC = '../../art/vung-1/dao-cu/', TRM = '../../art/vung-1/trum/';
-  await Promise.all([['chuong_tat', DC + 'chuong-luu-tat'], ['chuong_sang', DC + 'chuong-luu-sang'], ['cua_dong', DC + 'cua-khoa-dong'], ['cua_mo', DC + 'cua-khoa-mo'],
+  await Promise.all([['chuong_tat', DC + 'chuong-luu-gon-tat'], ['chuong_sang', DC + 'chuong-luu-gon-sang'], ['cong_re', DC + 'cong-re'],
     ['trum_nghi', TRM + 'nghi'], ['trum_gio', TRM + 'gio-chuong'], ['trum_vo', TRM + 'vo-mat-na']].map(([k, f]) => V1.napAnh(k, f + '.png')));
   // nhân vật (như phòng demo)
   const NVJ = V1.NVJ = await SpriteMN.napJson('../thu-mat-na/nhan-vat.json');

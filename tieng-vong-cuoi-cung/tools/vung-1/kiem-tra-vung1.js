@@ -31,7 +31,7 @@ const URL = 'http://localhost:8765/game/vung-1/index.html?tu=1&moi=1';
     const ok = await pg.evaluate(async (toi) => {
       const {G, E, V1} = TV, T = 48, p = G.phong, c = p.cua.find(c => c.toi === toi);
       if (!c) return 'không có cửa tới ' + toi;
-      G.luu.kho.chuong_vo = 3; G.luu.nvA = true;     // mở cửa trùm
+      G.luu.kho.chuong_vo = 3; G.luu.kho.loi_vong_tan = 1; G.luu.congMo = ['P11-dong']; G.luu.nvA = true;     // mở cửa trùm (cổng rễ đã mở)
       if (G.cuaKhoa.length){ G.cuaKhoa.length = 0; V1.vaoPhong(p, null, {x:E.pl.x, y:E.pl.y + E.pl.h}); }
       G.khoaCuaT = 0;
       const o = V1.odCua(c), n = o.length, pl = E.pl;

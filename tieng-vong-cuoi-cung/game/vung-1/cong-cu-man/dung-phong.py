@@ -552,7 +552,7 @@ def P11():
     p.them_cua('P11-tay', 'trai', 4, 'P09', 'P09-dong')
     p.them_cua('P11-dong', 'phai', 16, 'P12', 'P12-tay')
     p.tinh_anh = True
-    p.khoa = dict(cua='P11-dong', can='chuong_vo', so=3)
+    p.khoa = dict(cua='P11-dong', can='chuong_vo', so=3, loi='loi_vong_tan')
     p.q('tan', 30, 18, 20, 44)
     p.chuong_luu = dict(cot=50, hang=18)
     p.v('P11-manh-1', 'manh_am', 35, 12, 30)
@@ -560,7 +560,7 @@ def P11():
     p.trang_tri('P11-cua-trum', 'cua_trum_3_chuong', 55, 16, cao=3, ghi='cửa rễ có 3 hốc chuông, sáng dần theo số Chuông Vỡ')
     p.trang_tri('P11-chuong-luu', 'chuong_luu', 50, 18)
     p.dau('loi_chinh', 47, 18)
-    L(p, (27, 5), (12, 10), (42, 10), (50, 16))
+    L(p, (27, 5), (12, 10), (42, 10), (46, 15))
     p.ghi_chu = 'Tinh anh Vọng Tàn giữa sảnh (khoá cửa khi đánh). Chuông Lưu cuối ở hốc đông. Cửa đông → P12 cần 3 Chuông Vỡ.'
     return p
 

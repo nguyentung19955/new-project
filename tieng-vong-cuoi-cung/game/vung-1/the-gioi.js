@@ -14,14 +14,14 @@
     roi:[],                     // Mảnh Âm rơi ra (bay về nhân vật)
     vatRoi:[],                  // vật phẩm rơi từ tinh anh (lõi…)
     nguy:[],                    // sóng đất, mặt nạ rơi, vòng sóng (trum.js)
-    cuaKhoa:[], dongCua:false, tinhAnh:null, trum:null, khoaCuaT:0,
+    cuaKhoa:[], moCong:null, dongCua:false, tinhAnh:null, trum:null, khoaCuaT:0,
     ganChuong:false, tb:'', tbT:0, banner:'', bannerT:0, coThoat:0
   };
 
   /* ---------------- LƯU / TẢI (localStorage, có số phiên bản, bọc try/catch) ---------------- */
   function luuMoi(){
     return {phien_ban:PHIEN_BAN_LUU, chuong:null, phong:null, manh:0, manhGui:0, maxHp:MAU_GOC, hoiMax:HOI_GOC, nangMau:0,
-      daNhat:[], daVao:[], tuongVo:[], tinhAnhHa:[], trumHa:false, hetXem:false, tui:null, kho:{chuong_vo:0, the_ten:0, loi_vong_tan:0}, nvA:false, chet:0, giay:0};
+      daNhat:[], daVao:[], tuongVo:[], tinhAnhHa:[], trumHa:false, hetXem:false, tui:null, kho:{chuong_vo:0, the_ten:0, loi_vong_tan:0}, congMo:[], nvA:false, chet:0, giay:0};
   }
   function docLuu(){
     try {
@@ -88,7 +88,11 @@
   V1.odKhoa = odKhoa;
 
   function demKho(can){ return G.luu.kho[can] || 0; }
-  function cuaBiKhoa(p, c){ const k = p.khoa; return !!(k && k.cua === c.id && demKho(k.can) < (k.so || 1)); }
+  // cổng rễ: khoá tới khi đã MỞ (gắn lõi + rễ co lên xong); đủ điều kiện = đủ k.so vật k.can (+ lõi k.loi nếu có)
+  function cuaBiKhoa(p, c){ const k = p.khoa; return !!(k && k.cua === c.id && !(G.luu.congMo || []).includes(c.id) && (k.loi || demKho(k.can) < (k.so || 1))); }
+  function duMoCong(k){ return demKho(k.can) >= (k.so || 1) && (!k.loi || demKho(k.loi) >= 1); }
+  const MO_CONG_T = 160;   // ~2,7 s: gắn lõi → rễ rung → co lên nóc
+  V1.MO_CONG_T = MO_CONG_T;
 
   /* ---------------- VÀO PHÒNG ---------------- */
   function vaoPhong(p, cuaId, viTri){
@@ -99,7 +103,7 @@
     // cửa khoá: bịt bằng ô đặc
     G.cuaKhoa = p.cua.filter(c => cuaBiKhoa(p, c));
     for (const c of G.cuaKhoa) for (const [x, y] of odKhoa(c)) if (E.BD.L[y]) E.BD.L[y][x] = '#';
-    G.dongCua = false; G.tinhAnh = null; G.trum = null; G.roi.length = 0; G.vatRoi.length = 0; G.nguy.length = 0;
+    G.moCong = null; G.dongCua = false; G.tinhAnh = null; G.trum = null; G.roi.length = 0; G.vatRoi.length = 0; G.nguy.length = 0;
     // quái
     E.QUAI.length = 0;
     const ha = G.daHa[p.id] || {};
@@ -206,12 +210,14 @@
       chuyenCanh(async () => { const p2 = await layPhong(c.toi); vaoPhong(p2, c.toi_cua, null); });
       return;
     }
-    // chạm cửa khoá: nhắc
+    // tới gần cổng rễ: đủ điều kiện → gắn lõi, rễ từ từ mở; chưa đủ → nhắc
     for (const c of G.cuaKhoa){
       const [x, y] = odCua(c)[0], dx = Math.abs(cx - (x + 0.5) * T), dy = Math.abs(cy - (y + 1) * T);
-      if (dx < T * 2.4 && dy < T * 2.5 && G.tbT <= 0){
+      if (dx < T * 2.6 && dy < T * 2.5){
         const k = p.khoa, ten = {chuong_vo:'Chuông Vỡ', the_ten:'Thẻ Tên'}[k.can] || k.can;
-        thongBao('Cửa im lặng – cần ' + k.so + ' ' + ten + ' (đang có ' + demKho(k.can) + ')');
+        if (k.loi && duMoCong(k)){ if (!G.moCong){ G.moCong = {id:c.id, t:0}; thongBao('Lõi Vọng Tàn khớp vào hốc ngọc – rễ đang mở lối…'); } }
+        else if (G.tbT <= 0) thongBao(k.loi ? 'Cổng rễ – cần ' + k.so + ' ' + ten + ' (có ' + Math.min(k.so, demKho(k.can)) + ') và Lõi Vọng Tàn (' + (demKho(k.loi) ? 'đã có' : 'chưa có') + ')'
+          : 'Cửa im lặng – cần ' + k.so + ' ' + ten + ' (đang có ' + demKho(k.can) + ')');
       }
     }
   }
@@ -237,6 +243,13 @@
     for (const c of G.phong.cua) if (!G.cuaKhoa.includes(c)) for (const [x, y] of odCua(c)) if (E.BD.L[y]) E.BD.L[y][x] = '.';
     if (V1.veNenPhong) V1.veNenPhong();
   }
+  function buocMoCong(){
+    const m = G.moCong; if (!m) return;
+    m.t++;
+    if (m.t === 40 || m.t === 75 || m.t === 110){ E.S.sht = 12; E.S.shm = 2.2; E.S.shx = 1; E.S.shy = 0.6; }   // rễ giằng co
+    if (m.t >= MO_CONG_T){ (G.luu.congMo || (G.luu.congMo = [])).push(m.id); G.moCong = null; moKhoaNeuDu(); ghiLuu(); thongBao('Cổng rễ đã mở'); }
+  }
+  V1.buocMoCong = buocMoCong;
   function moKhoaNeuDu(){
     const p = G.phong; let doi = false;
     for (const c of G.cuaKhoa.slice()) if (!cuaBiKhoa(p, c)){
@@ -285,7 +298,7 @@
       else thongBao('Chuông Vỡ ' + n + '/3 – "Ba tiếng chuông lạc"');
       moKhoaNeuDu(); return;
     }
-    if (loai === 'loi_vong_tan'){ thongBao('Lõi Vọng Tàn – vỏ chuông im (mở Lướt Phản Âm ở đợt sau)'); return; }
+    if (loai === 'loi_vong_tan'){ thongBao('Lõi Vọng Tàn – gắn vào hốc ngọc giữa cổng rễ để mở lối'); return; }
     thongBao('Nhặt: ' + (TEN_VP[loai] || loai));
   }
   V1.nhan = nhan;
@@ -391,7 +404,7 @@
     if (!G.phong) return;
     G.luu.giay += 1 / 60;
     if (V1.capNhatKhungNhin) V1.capNhatKhungNhin();
-    kiemDongCua(); kiemCua(); if (!pl.dead) nhatVatPham(); buocManh(); kiemChuong();
+    kiemDongCua(); buocMoCong(); kiemCua(); if (!pl.dead) nhatVatPham(); buocManh(); kiemChuong();
     // rơi khỏi đáy phòng mà không có cửa → về chỗ an toàn
     if (pl.y > E.BD.HANG * T + 200 && !pl.dead){ E.hurt(0, 1); datNV((G.phong.bat_dau ? G.phong.bat_dau.cot : 2) * T, T * 2); }
   };

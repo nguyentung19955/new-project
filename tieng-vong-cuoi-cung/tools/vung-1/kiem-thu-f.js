@@ -223,8 +223,11 @@ const CAI = () => {
       kq.push([ten, x0, G.id, !!G.chuyen, Math.round(xMax)]); } }
     return kq; });
   ok('Cửa trùm KHÔNG vượt được khi mới có 2 Chuông Vỡ (chạy/lướt/nhảy đôi/đập đất, 12 lần thử)', r.every(k => k[2] === 'P11' && !k[3] && k[4] <= 54 * 48 + 1), r.map(k => k.join(' ')).join(' · '));
-  r = await ev(async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; await H.vao('P11', 50 * 48, 19 * 48); H.chay(200, 'r', () => G.chuyen); return [!!G.chuyen]; });
-  ok('  …đủ 3 Chuông Vỡ thì qua được', r[0], r);
+  r = await ev(async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; G.luu.kho.loi_vong_tan = 0; G.luu.congMo = []; await H.vao('P11', 50 * 48, 19 * 48); H.chay(260, 'r', () => G.chuyen); return [!!G.chuyen, !!G.moCong]; });
+  ok('  …3 Chuông Vỡ mà chưa có Lõi Vọng Tàn thì cổng rễ chưa mở', !r[0] && !r[1], r);
+  r = await ev(async () => { const {G, E} = TV; G.luu.kho.chuong_vo = 3; G.luu.kho.loi_vong_tan = 1; G.luu.congMo = []; await H.vao('P11', 50 * 48, 19 * 48);
+    let thayMo = false; H.chay(420, 'r', () => { if (G.moCong) thayMo = true; return G.chuyen; }); return [!!G.chuyen, thayMo, (G.luu.congMo || []).includes('P11-dong')]; });
+  ok('  …đủ 3 Chuông Vỡ + Lõi Vọng Tàn: gắn lõi, rễ từ từ mở (có hoạt cảnh), rồi qua được', r[0] && r[1] && r[2], r);
 
   /* ================= 4. ĐIỆN THOẠI NGANG (844×390, 932×430, có vùng an toàn) ================= */
   for (const [w, h] of [[844, 390], [932, 430]]){

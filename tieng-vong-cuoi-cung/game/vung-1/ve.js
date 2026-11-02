@@ -64,7 +64,7 @@
   }
   V1.veAnh = veAnh;
   // cửa khoá có hình chưa (chỉ cửa của p.khoa)
-  const coHinhCua = cua => { const p = G.phong, I = V1.IMG; return !!(p && p.khoa && I.cua_dong && I.cua_mo && (!cua || cua.id === p.khoa.cua)); };
+  const coHinhCua = cua => { const p = G.phong, I = V1.IMG; return !!(p && p.khoa && I.cong_re && (!cua || cua.id === p.khoa.cua)); };
 
   /* ---------------- CAMERA ---------------- */
   const CAM = V1.CAM = {x:0, y:0};
@@ -608,26 +608,38 @@
     }
   }
   // Cỡ hình đạo cụ (px logic). Chỉnh ở đây nếu cần to/nhỏ hơn.
-  const CHUONG = {cao:138, lun:6};            // Chuông Lưu: cao ~2.9 ô, lún 4 px vào mép sàn (mặt đá méo) để không lơ lửng
+  const CHUONG = {cao:112, lun:6};            // Chuông Lưu: cao ~2.9 ô, lún 4 px vào mép sàn (mặt đá méo) để không lơ lửng
   const CUA = {cao:174, lun:3};               // cửa khoá: cao ~3.6 ô
   // Cửa khoá 3 Chuông Vỡ: hình đóng (song rễ, ổ chuông tối) / mở (3 ổ chuông sáng). Chân trên sàn ngay dưới lỗ cửa,
   // cửa sát mép phòng thì đẩy vào trong để cả khung cửa nằm trong phòng.
+  // CỔNG RỄ (ChatGPT vẽ, 6 khung): rễ rủ từ nóc xuống chắn lối, giữa có hốc ngọc. 0 = hốc trống; khi đủ điều kiện và tới gần:
+  // 1 lõi gắn vào sáng lên → 2 rễ rung, gân đỏ lan → 3–4 rễ co lên → 5 mở hẳn (còn tua rễ + lõi treo trên nóc).
+  const CONG = {cao:214, lun:4};
+  function khungCong(c){
+    if ((G.luu.congMo || []).includes(c.id)) return 5;
+    const m = G.moCong; if (!m || m.id !== c.id) return 0;
+    const t = m.t, M = V1.MO_CONG_T || 160;
+    return t < M * 0.22 ? 1 : t < M * 0.42 ? 2 : t < M * 0.62 ? 3 : t < M * 0.82 ? 4 : 5;
+  }
   function veCuaKhoa(){
     const p = G.phong; if (!coHinhCua()) return;
     const c = p.cua.find(x => x.id === p.khoa.cua); if (!c) return;
-    const khoa = G.cuaKhoa.includes(c), im = khoa ? V1.IMG.cua_dong : V1.IMG.cua_mo, n = c.cao || 3, RW = E.BD.COT * T;
-    const w = Math.round(CUA.cao / PX * im.width / im.height) * PX;
+    const im = V1.IMG.cong_re, n = c.cao || 3, RW = E.BD.COT * T, cw = im.width / 6;
+    const h = CONG.cao, w = Math.round(h * cw / im.height);
     let x, y;
-    if (c.huong === 'trai' || c.huong === 'phai'){ x = (c.cot + 0.5) * T; y = (c.hang + n) * T; }
-    else { x = (c.cot + n / 2) * T; y = c.huong === 'duoi' ? c.hang * T : (c.hang + 1) * T + CUA.cao; }
+    if (c.huong === 'trai' || c.huong === 'phai'){ x = (c.cot + 0.5) * T + (c.huong === 'phai' ? -T * 0.6 : T * 0.6); y = (c.hang + n) * T; }
+    else { x = (c.cot + n / 2) * T; y = c.huong === 'duoi' ? c.hang * T : (c.hang + 1) * T + h; }
     x = clampN(x, w / 2, RW - w / 2);
-    veAnh(im, x, y + CUA.lun, CUA.cao, PX, 0.5, 1, false);
-    if (!khoa){   // 3 ổ chuông sáng: ánh ấm nhẹ trên vòm
-      const X = x, Y = y - CUA.cao * 0.86, r = 46 + Math.sin(E.S.frame / 25) * 3;
-      ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      const gr = ctx.createRadialGradient(X, Y, 0, X, Y, r); gr.addColorStop(0, 'rgba(255,190,80,0.28)'); gr.addColorStop(1, 'rgba(255,190,80,0)');
-      ctx.fillStyle = gr; ctx.fillRect(X - r, Y - r, r * 2, r * 2); ctx.restore();
+    const k = khungCong(c), m = G.moCong, rung = m && m.id === c.id && k >= 1 && k <= 3 ? Math.round(Math.sin(E.S.frame * 1.7) * (k === 2 ? 3 : 1.5)) : 0;
+    ctx.save(); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(im, k * cw, 0, cw, im.height, Math.round(x - w / 2 + rung), Math.round(y + CONG.lun - h), w, h);
+    if (k >= 1){   // lõi rực: ánh đỏ cam toả quanh hốc ngọc
+      const X = x, Y = y - h * (k >= 4 ? 0.86 : 0.62), r = 40 + Math.sin(E.S.frame / 9) * 4 + (k === 2 ? 14 : 0);
+      ctx.globalCompositeOperation = 'lighter';
+      const gr = ctx.createRadialGradient(X, Y, 0, X, Y, r); gr.addColorStop(0, 'rgba(255,120,50,0.32)'); gr.addColorStop(1, 'rgba(255,120,50,0)');
+      ctx.fillStyle = gr; ctx.fillRect(X - r, Y - r, r * 2, r * 2);
     }
+    ctx.restore();
   }
   /* (luồng G) RỄ MÓC MỘ – vẽ SAU lớp bóng tối (luôn đọc được). Màu: đen + đỏ gạch (KHÔNG cyan).
      Báo trước: vết nứt đỏ toác dần trên mặt sàn + sỏi bật + cột đỏ mờ cao đúng bằng rễ (biết phải nhảy qua). Rễ: khối điểm ảnh 6 px,
