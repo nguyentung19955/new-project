@@ -321,6 +321,7 @@
     if (C && C.ok){ SpriteMN.ve(ctx, C, q.clipK ?? SpriteMN.khungTheoBuoc(C, q.clipT), fx, fy, q.face > 0, (V1.TRUMJ && V1.TRUMJ.ti_le) || 2, al, q.flash > 2); }
     else if (V1.IMG.trum_nghi && V1.IMG.trum_gio && V1.IMG.trum_vo) veTrumAnh(q, fx, fy);
     else veTrumTam(q, fx, fy);
+    if (V1.veTrumLop) V1.veTrumLop(ctx, q, fx, fy);   // Vùng 2: lõi chuông + xúc tu (lớp ChatGPT tách riêng)
     if (q.baoTruoc && (E.S.frame >> 2) % 2 === 0) veCham(fx, q.y - 30);
   }
   /* Trùm bằng 3 hình ChatGPT (quay TRÁI, lật khi quay phải):

@@ -59,3 +59,10 @@ Chỗ còn đơn giản / mình tự chọn (không hỏi được ChatGPT vì l
 - Warden Rot Command chưa làm nhiễu nút neo 60 khung; Husk Leaper nhảy cung chỉ là lệch hình (hộp va chạm vẫn trên sàn).
 - Báo đòn chung dùng dấu "!" hổ phách của Vùng 1 (ảnh ChatGPT) như Vùng 1.
 - Chưa có màn chuyển sang Vùng 3 (người dùng dặn dừng sau Vùng 2).
+
+## Lượt 5 (02/11) – bổ sung theo yêu cầu "lắp ảnh và bật Vùng 2"
+- **Link chơi:** https://tieng-vong-cuoi-cun.web.app/game/vung-2/index.html (hoặc teleport từ Làng Chuông – trạm đọc `game/the-gioi.json`, Vùng 2 đã ghi `choi_duoc`).
+- Trùm Mold Mother dùng thêm **lớp tách riêng** ChatGPT: lõi chuông sáng dần lúc báo Bell Wail / Heartbreak Slam / chuyển pha; xúc tu vươn ra lúc Tendril Grab và Tendril Sweep.
+- **Ảnh cần VẼ LẠI:** 014 nút Neo Rễ (ô đất vuông đặc, không trong suốt – đã ghi lý do trong file yêu cầu).
+- **Lối đi từ Vùng 1:** chưa nối cửa trực tiếp vì luật không sửa `game/vung-1/*`; hiện vào Vùng 2 bằng teleport (Làng Chuông) hoặc mở thẳng link trên.
+- Vẫn DỪNG: chưa làm Vùng 3.

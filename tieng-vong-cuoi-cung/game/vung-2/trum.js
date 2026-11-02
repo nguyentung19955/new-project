@@ -178,5 +178,16 @@
       ve:(c, n) => veFx(c, 'song_dap', n.t, n.x, fy + 4, dir < 0, 1),
       den:n => [[n.x, fy - 20, 48, 0.6]]};
   }
+  /* LỚP TÁCH RIÊNG (ChatGPT, art/trum-vung-2/lop): lõi chuông sáng dần lúc báo Bell Wail / Heartbreak Slam / chuyển pha;
+     xúc tu vươn ra lúc Tendril Grab (gốc phía trùm, ngọn về vòng đích) và Tendril Sweep. ve.js veTrum gọi sau khi vẽ thân. */
+  V1.veTrumLop = function(c, q, fx, fy){
+    if (q.dead || q.st === 'chet') return;
+    const sang = (q.st === 'gao' && q.t < 54) || (q.st === 'dap' && q.t < 72) || q.st.startsWith('chuyen_pha');
+    if (sang){ const C = FT('loi'), n = C && C.ok ? C.hinh.length : 7, tl = q.st === 'gao' ? q.t / 54 : q.st === 'dap' ? q.t / 72 : (E.S.frame % 60) / 60;
+      veK(c, 'loi', Math.min(n - 1, Math.floor(tl * n)), fx + (q.face > 0 ? 2 : -2), fy - 66 + 32, q.face > 0, 1.5, q.st === 'dap' ? 0.7 + 0.3 * ((E.S.frame >> 3) & 1) : 0.9); }
+    if (q.st === 'vo' && q.t >= 30 && q.t < 66){ const phai = q.dichX > fx, k = Math.min(7, Math.floor((q.t - 30) / 4));
+      const x = (fx + q.dichX) / 2; veK(c, 'xuc_tu', k, x, fy + 6, phai, Math.max(1, Math.abs(q.dichX - fx) / 192), 1); }
+    if (q.st === 'quet' && q.t >= 30 && q.t < 60){ const k = Math.min(7, Math.floor((q.t - 30) / 4)); veK(c, 'xuc_tu', k, fx + q.face * 150, fy + 6, q.face > 0, 2, 1); }
+  };
   // bước + vẽ: dùng chung danh sách V1.NG2 (quai-v2.js) – mục loai 'trum_fx' tự có buoc/ve/den
 })();
