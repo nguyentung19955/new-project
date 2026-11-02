@@ -1,5 +1,5 @@
 # 024 – tinh-anh-nursery-warden
-- **Trạng thái:** CHỜ
+- **Trạng thái:** ĐANG LÀM (02/11 – xong tấm 1: dung 6, di 8, chem 9, dam 9 (ô 80×80, quay TRÁI, đáy-giữa; gốc warden/nguon-chatgpt-1.png). CÒN: ra_lenh 8, trung 3, choang 5, chet 10 – vẽ tấm 2 dùng tấm 1 làm tham chiếu)
 - **Dùng vào:** Tinh anh "The Nursery Warden" ở R211 (khoá `warden` trong game/vung-2/quai.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Hiệp sĩ rễ đồng, thân là chuông nứt, lõi hổ phách, cánh tay vỏ cây nặng; thân trong game 92×108 px logic. Đòn: Root Cleave (giơ dao vỏ cây + loé đồng 30f), Bell Stomp (nhấc gối + 3 vòng đất hổ phách 42f), Rot Command (chỉ tay về cánh, mạch mục sáng ochre 54f).
 - **Số khung + ms gợi ý:** dung 6 × 150; di 8 × 100; chem 9 × 80; dam 9 × 90; ra_lenh 8 × 100; trung 3 × 80; choang 5 × 100; chet 10 × 100

@@ -1,5 +1,5 @@
 # 026 – trum-mold-mother-than-1
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – ô 112×112, đáy-giữa: dung 8, tho 6, trung 3, choang 6; đây là tấm CHUẨN thiết kế trùm, các tấm đòn 027–029 vẽ theo nó; gốc: trum-vung-2/nguon-chatgpt-1.png)
 - **Dùng vào:** Trùm "Mold Mother" R213 (game/vung-2/trum.json). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Mẹ nấm khổng lồ treo, trồi ra từ rễ tách đôi, nôi chuông đồng ở ngực, nhiều xúc tu, bào tử hổ phách; KHÔNG xanh lơ. Thân trong game 192×180 px logic. Có thể giữ khung chính để đủ thời gian báo đòn.
 - **Số khung + ms gợi ý:** dung 8 × 140; tho 6 × 160; trung 3 × 80; choang 6 × 90
