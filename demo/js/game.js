@@ -126,6 +126,7 @@
     q.hp -= dmg;
     if (q.linkT > 0 && S.boss && S.boss.linkCap > 0) { const b = S.boss, h = Math.min(dmg * 0.3, b.linkCap); b.linkCap -= h; b.hp = Math.min(b.max, b.hp + h); }
     if (!an) S.so.push({ x: q.x + (rnd() - 0.5) * 10, y: q.y - q.co * 0.8, v: Math.round(dmg), t: 0, mau, to: chiSo });
+    if (!an) { q.flash = 0.1; if (S.fx.length < 120) S.fx.push({ k: 'hit', x: q.x + (rnd() - 0.5) * 8, y: q.y - q.co / 2 + (rnd() - 0.5) * 8, t: 0, T: 0.14, mau: mau || '#ffffff', to: !!chiSo }); }
     if (q.hp <= 0) chet(S, q, v);
   }
   function chet(S, q, v) {
@@ -341,6 +342,7 @@
     for (const q of S.quai) {
       if (!sống(q)) continue;
       q.khung += dt * 7;
+      if (q.flash > 0) q.flash = Math.max(0, q.flash - dt);
       for (const f of ['chillT', 'voLock', 'nhietCD', 'arcCD', 'focusCD', 'giatCD', 'toxNhan', 'bounty', 'nhanhT', 'linkT']) if (q[f] > 0) q[f] = Math.max(0, q[f] - dt);
       if (q.chillT <= 0) q.chill = 0;
       if (q.breachT > 0) {
