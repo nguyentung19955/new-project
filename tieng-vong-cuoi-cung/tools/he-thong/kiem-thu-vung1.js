@@ -31,7 +31,7 @@ const {chromium} = require('playwright');
     return {sau, coNut, chu, bang, cao, st:E.NV.cap.sat_thuong, choAnh, luu:localStorage.getItem('tvcc-he-thong') !== null, coDo:MocHeThong.coDo};
   });
   ok('Hạ tinh anh → +40 Âm Điểm, lên cấp 1, 1 Nốt', r.sau.cap === 1 && r.sau.not === 1, r.sau);
-  ok('Bảng Chuông Lưu có nút "Dây Ngân · 1 Nốt"', r.coNut && /1 Nốt/.test(r.chu), r.chu);
+  ok('Bảng Chuông Lưu có nút "Silver Strings · 1 Note"', r.coNut && /1 Note\b/.test(r.chu), r.chu);
   ok('Mở được bảng cây kỹ năng, nút cao ≥ 44px (dễ bấm iPhone)', r.bang && r.cao >= 44, r.cao);
   ok('Mở Rèn Vang Âm → sát thương kiếm 13', r.st === 13, r.st);
   ok('Nút cần hình mới hiện "Chờ hình" (chưa có ảnh)', r.choAnh >= 2, r.choAnh);

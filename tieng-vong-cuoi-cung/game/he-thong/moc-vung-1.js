@@ -113,7 +113,7 @@
     $('b-ht-dong').onclick = () => { lop.classList.remove('mo'); capNhatNut(); };
     capNhatNut();
   }
-  function capNhatNut(){ const b = $('b-hethong'); if (b && M.ht) b.textContent = 'Silver Strings · ' + M.ht.notCon() + ' Notes'; }
+  function capNhatNut(){ const b = $('b-hethong'); if (b && M.ht) b.textContent = 'Silver Strings · ' + M.ht.notCon() + (M.ht.notCon() === 1 ? ' Note' : ' Notes'); }
   const CHU = {da_mo:'Unlocked', mo_duoc:'Available', thieu_not:'Need Notes', thieu_nut_truoc:'Unlock previous first', cho_anh:'Art pending'};
   function moBang(){
     const ht = M.ht, sau = ht.diemCapSau();
@@ -127,7 +127,7 @@
         const t = ht.trangThaiNut(n.id), b = document.createElement('button'); b.type = 'button';
         b.className = t === 'da_mo' ? 'da' : t === 'mo_duoc' ? 'duoc' : '';
         b.disabled = t !== 'mo_duoc';
-        b.innerHTML = n.ten + ' · ' + n.gia + ' Notes<small>' + n.mo_ta + ' – ' + CHU[t] + '</small>';
+        b.innerHTML = n.ten + ' · ' + n.gia + (n.gia === 1 ? ' Note' : ' Notes') + '<small>' + n.mo_ta + ' – ' + CHU[t] + '</small>';
         b.onclick = async () => { const r = ht.moNut(n.id); if (r.ok){ ghi(); await apDung(); V1.thongBao('Unlocked: ' + n.ten); } moBang(); };
         cot.appendChild(b);
       }

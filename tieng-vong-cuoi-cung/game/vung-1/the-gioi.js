@@ -215,7 +215,7 @@
     for (const c of G.cuaKhoa){
       const [x, y] = odCua(c)[0], dx = Math.abs(cx - (x + 0.5) * T), dy = Math.abs(cy - (y + 1) * T);
       if (dx < T * 2.6 && dy < T * 2.5){
-        const k = p.khoa, ten = {chuong_vo:'Broken Bell', the_ten:'Name Tag'}[k.can] || k.can;
+        const k = p.khoa, ten = {chuong_vo:'Broken Bells', the_ten:'Name Tags'}[k.can] || k.can;
         if (k.loi && duMoCong(k)){ if (!G.moCong){ G.moCong = {id:c.id, t:0}; thongBao('The Ruin Core fits the gem socket – the roots part…'); } }
         else if (G.tbT <= 0) thongBao(k.loi ? 'Root gate – needs ' + k.so + ' ' + ten + ' (have ' + Math.min(k.so, demKho(k.can)) + ') and the Ruin Core (' + (demKho(k.loi) ? 'found' : 'missing') + ')'
           : 'The gate is silent – needs ' + k.so + ' ' + ten + ' (have ' + demKho(k.can) + ')');
