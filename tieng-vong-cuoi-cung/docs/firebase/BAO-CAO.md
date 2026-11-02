@@ -1,5 +1,8 @@
 # Báo cáo phiên Lưu game bằng Firebase (firebase) – 02/11/2026 (lượt 2, cập nhật chiều)
 
+## ✅ CẬP NHẬT 02/11 05:59 UTC: người dùng đã dán quy tắc Firestore – LƯU MÂY ĐÃ CHẠY
+Kiểm tự động trên dự án thật: ĐẠT đăng nhập khách · ĐẠT đọc bản lưu · ĐẠT ghi bản lưu theo quy tắc mới. Phần "Việc bạn cần làm" bên dưới đã xong.
+
 ## Tóm tắt dễ hiểu
 - **Link chơi (iPhone/máy tính): https://tieng-vong-cuoi-cun.web.app/** – đã cập nhật bản mới. Mỗi khi nhánh có thay đổi trong `game/`, GitHub Actions tự đưa lên lại.
 - **Lưu mây đã làm lại 100% theo tư vấn ChatGPT** (`docs/firebase/tu-van-chatgpt.txt`): máy cũ **không bao giờ âm thầm đè** tiến độ của máy khác.
