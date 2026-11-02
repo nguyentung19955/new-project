@@ -149,6 +149,7 @@
 4. Sửa theo 2 mức:
    - **Mức 1** (không đụng hình): áp ms mới, căn lại, khoá chân, giữ khung cuối, sửa code chọn khung. Làm ngay.
    - **Mức 2** (cần vẽ thêm khung chuyển tiếp): **hỏi người dùng trước**, rồi nhờ ChatGPT hoặc PixelLab vẽ.
+   - **Mức 2 đã làm 02/11** (docs/muot-2/BAO-CAO.md): ảnh tham chiếu [khung trước | ô trống | khung sau] ×3 nền #FF00FF; lắp bằng `tools/muot-2/lap-clip.py` (ép bảng màu gốc, căn đáy, dời khung sự kiện, lớp sức mạnh theo neo). Ảnh nhòe → lấm tấm sau ép màu → trả VẼ LẠI; khung giữa không được thấp hơn cả hai khung kề.
 5. Lỗi hay gặp: chết "rơi từ trên xuống nằm bẹp trong 1 khung" (cần thêm khung đang rơi), đòn "xoay nhảy ảnh", vòng lặp F cuối → F0 giật, ảnh chết là bản sao ảnh đánh. Nhớ kiểm cả trùng file.
 6. Lưu ý đo đạc: khung trùng **không mặc nhiên là lỗi** (giữ dáng tạo lực); IoU thấp ở VFX hay vải bay không mặc nhiên là giật; khung cuối gần trống là kết thúc hợp lệ của VFX.
 
