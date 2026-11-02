@@ -1,5 +1,10 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt hẹn giờ 02/11 (tối muộn) – không có việc mới
+- Việc nối Vùng 1 ↔ Vùng 2 đã được lượt trước làm xong (commit 79642f61). Lượt này đã lỡ làm song song một bản trùng → **bỏ bản của mình, giữ nguyên bản đã có** (không đẩy lên, để khỏi 2 cách nối chồng nhau).
+- Kiểm nhanh bản đang có: mở Vùng 1, Vùng 2 và trang chính bằng Playwright – nạp xong, không lỗi JS.
+- Vùng 3 vẫn DỪNG theo `docs/DUNG-CHO-DUYET-VUNG-2.md`. Lượt này không có Claude in Chrome (không hỏi được ChatGPT).
+
 ## Lượt 02/11 tối – NỐI Vùng 1 ↔ Vùng 2 (vẫn dừng trước Vùng 3)
 - Hạ trùm Vùng 1 → cổng rễ ở tường phải phòng trùm P12 mở → sang Vùng 2 (R201), đi ngược về được; máu / Mảnh Âm / lượt hồi đi theo; trang chính có "Continue" + "Region 2"; trạm teleport Làng Chuông mở Vùng 2. Chi tiết: docs/vung-2/BAO-CAO.md (Lượt 7).
 
