@@ -121,7 +121,7 @@
 
   // ---- trận ----
   function batDau(deck) {
-    boCu = deck.slice(); cheTran = che;
+    boCu = deck.slice(); cheTran = che; dongChon();
     if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
     else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
     dung = false; keo = null; thang = false;
@@ -237,7 +237,7 @@
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
     else if (a === 'choilai') batDau(boCu);
-    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
+    else if (a === 'doibo') { dongChon(); S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
   });
 
   // nút SUMMON: trạng thái nhấn (lún) — :active không chắc chạy trên mobile nên thêm lớp .ep
@@ -245,21 +245,81 @@
   nutTrieu.addEventListener('pointerdown', () => nutTrieu.classList.add('ep'));
   for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) nutTrieu.addEventListener(ev, () => nutTrieu.classList.remove('ep'));
 
-  // ---- kéo tướng để gộp ----
+  // ---- KỸ NĂNG THEO Ô (VÀNG): chạm tướng → menu kỹ năng (tên + hồi chiêu) → chọn ô sáng → dùng ----
+  const menu = document.createElement('div'); menu.id = 'ky-menu'; menu.hidden = true; wrap.appendChild(menu);
+  function dongChon() { R.UI.chon = null; menu.hidden = true; }
+  function moMenu(i) {
+    const ds = G.kyCo(S, i); if (!ds.length) return false;
+    R.UI.chon = { i, n: null, o: [] };
+    veMenu(); return true;
+  }
+  function veMenu() {
+    const ch = R.UI.chon; if (!ch || !S || !S.o[ch.i]) { dongChon(); return; }
+    const v = S.o[ch.i], [ox, oy] = G.oXY(S, ch.i), ds = G.kyCo(S, ch.i);
+    if (ch.n == null) {
+      menu.innerHTML = ds.map((k) => `<button data-act="ky" data-n="${k.n}" ${k.cd > 0 || v.khoaT > 0 ? 'class="cho"' : ''}><b>${k.cf.ten}</b><em>${k.cd > 0 ? Math.ceil(k.cd) + 's' : v.khoaT > 0 ? 'JAM' : 'READY'}</em><i>${k.cf.mo}</i></button>`).join('')
+        + '<button data-act="kyhuy" class="huy">✕</button>';
+    } else {
+      const cf = ds.find((k) => k.n === ch.n).cf;
+      menu.innerHTML = `<div class="goi"><b>${cf.ten}</b> · ${ch.o.length ? 'tap a glowing tile' : 'no valid tile'}</div><button data-act="kyhuy" class="huy">✕</button>`;
+    }
+    menu.hidden = false;
+    const w = 236, x = Math.max(4, Math.min(C.W - w - 4, ox + C.O / 2 - w / 2));
+    menu.style.left = x + 'px'; menu.style.width = w + 'px';
+    const h = menu.offsetHeight || 60;
+    menu.style.top = (oy - h - 6 < C.TOP_H ? oy + C.OH + 6 : oy - h - 6) + 'px';
+  }
+  wrap.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    if (b.dataset.act === 'kyhuy') dongChon();
+    else if (b.dataset.act === 'ky' && R.UI.chon && !b.classList.contains('cho')) {
+      const n = +b.dataset.n; R.UI.chon.n = n; R.UI.chon.o = G.oHopLe(S, R.UI.chon.i, n); veMenu();
+    }
+  });
+  setInterval(() => { if (R.UI.chon && R.UI.chon.n == null && !menu.hidden) veMenu(); }, 500);   // cập nhật giây hồi chiêu
+
+  // ---- PACKET SWAP (GLITCH ★5 kề ô ghép): chọn 1 trong 2 kết quả; REROLL (★7, 1 lần) — trận tạm dừng khi đang chọn ----
+  const goiGop = document.createElement('div'); goiGop.id = 'goi-gop'; goiGop.className = 'man phu'; goiGop.hidden = true; wrap.appendChild(goiGop);
+  let gopVe = '';
+  function capGop() {
+    const c = S && S.choGop && S.t - S.choGop.t0 > 0.3 ? S.choGop : null;
+    if (!c) { if (!goiGop.hidden) { goiGop.hidden = true; gopVe = ''; } return; }
+    const key = c.lua.join('|') + c.reroll; if (key === gopVe) return; gopVe = key;
+    goiGop.innerHTML = `<div class="bang kinh"><div class="bang-ten">PACKET SWAP</div><div class="gg-mo">GLITCH intercepted the merge — pick the result</div>
+      <div class="gg-lua">${c.lua.map((id, n) => `<button class="gg" data-act="gopchon" data-n="${n}" data-bac="${TUONG[id].bac}" style="--h:${(BAC[TUONG[id].bac] || BAC.trang).mau}"><canvas></canvas><b>${TUONG[id].ten}</b><em>${(BAC[TUONG[id].bac] || BAC.trang).ten}</em></button>`).join('')}</div>
+      ${c.reroll ? '<button class="nut" data-act="goprr">REROLL (1×)</button>' : ''}</div>`;
+    goiGop.querySelectorAll('.gg').forEach((b, n) => R.veThe(b.querySelector('canvas'), c.lua[n], 70, 86));
+    goiGop.hidden = false;
+  }
+  wrap.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b || !S) return;
+    if (b.dataset.act === 'gopchon') { G.chonGop(S, +b.dataset.n); capGop(); }
+    else if (b.dataset.act === 'goprr') { G.rerollGop(S); capGop(); }
+  });
+
+  // ---- kéo tướng để gộp (chạm nhẹ không kéo = mở kỹ năng VÀNG) ----
   // hitbox ô theo toạ độ logic của bàn người chơi (ô 46×45, nới 1px vào khe)
   const oTai = (x, y) => { for (let i = 0; i < C.COT * C.HANG; i++) { const [ox, oy] = G.oXY(S, i); if (x >= ox - 1 && x < ox + C.O + 1 && y >= oy - 1.5 && y < oy + C.OH + 1.5) return i; } return -1; };
   cv.addEventListener('pointerdown', (e) => {
-    if (!S || S.het || dung) return;
+    if (!S || S.het || dung || S.choGop) return;
     const [x, y] = toFrame(e.clientX, e.clientY), i = oTai(x, y);
+    const ch = R.UI.chon;
+    if (ch && ch.n != null) {   // đang chọn ô cho kỹ năng
+      if (i >= 0 && ch.o.includes(i)) { G.dungKy(S, ch.i, ch.n, i); }
+      dongChon(); capNhat(); return;
+    }
+    if (ch && i !== ch.i) dongChon();
     if (i < 0 || !S.o[i] || S.o[i].da) return;
-    keo = { i, x, y, id: e.pointerId };
+    keo = { i, x, y, x0: x, y0: y, id: e.pointerId };
     try { cv.setPointerCapture(e.pointerId); } catch (er) { /* bỏ qua */ }
   });
   cv.addEventListener('pointermove', (e) => { if (!keo || e.pointerId !== keo.id) return; [keo.x, keo.y] = toFrame(e.clientX, e.clientY); });
   const tha = (e) => {
     if (!keo || e.pointerId !== keo.id) return;
     const [x, y] = toFrame(e.clientX, e.clientY), j = oTai(x, y);
-    if (S && j >= 0 && S.o[keo.i] === S.o[keo.i]) G.tha(S, keo.i, j);
+    const cham = Math.hypot(x - keo.x0, y - keo.y0) < 8 && j === keo.i;
+    if (cham) { if (R.UI.chon && R.UI.chon.i === j) dongChon(); else if (!moMenu(j)) dongChon(); }
+    else { dongChon(); if (S && j >= 0) G.tha(S, keo.i, j); }
     keo = null; capNhat();
   };
   cv.addEventListener('pointerup', tha); cv.addEventListener('pointercancel', () => (keo = null));
@@ -270,7 +330,10 @@
     requestAnimationFrame(loop);
     R.doFps(now - last);
     let dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S && !S.het && !dung) {
+    capGop();
+    if (R.UI.chon && (!S || !S.o[R.UI.chon.i])) dongChon();
+    const choGop = S && S.choGop && S.t - S.choGop.t0 > 0.3;   // để hoạt ảnh ghép chạy xong rồi mới dừng chờ chọn
+    if (S && !S.het && !dung && !choGop) {
       let t = dt * tocDo * tua;
       while (t > 0) {
         const b = Math.min(1 / 60, t); G.buoc(S, b); G.buoc(A, b); t -= b;

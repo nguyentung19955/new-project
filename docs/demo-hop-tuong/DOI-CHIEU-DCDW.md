@@ -58,3 +58,13 @@ Ký hiệu: **CÓ** = đã có trước phiên này · **THIẾU → ĐÃ LÀM**
 - Bảng emote / ping đồng đội (B8, chưa rõ cơ chế).
 - Meta ngoài trận (shop, clan, pass, arena, mastery, level thẻ).
 - Tinh anh (elite) có đặc tính theo ngoại hình — chờ bể quái mới từ ChatGPT.
+
+## V. Cập nhật 02/11 chiều (người dùng báo "chưa giống DCDW")
+| Mục | Trước | Sau |
+|---|---|---|
+| A1 Bàn | Giữa 2 bàn trống ~1/4 màn, ô tối | 2 bàn sát nhau, ô cao hơn (61×60…76), ô sáng xám-xanh, viền rõ |
+| A2 Tướng | ~40% ô, sheet giật | ~82% chiều cao ô, ảnh tĩnh theo hướng, giật lùi 2px + chớp nòng |
+| A4 Đạn | Ra giữa thân | Ra từ đầu nòng theo bảng `nong` 5 hướng |
+| D14 Độ hiếm | Vòng mảnh khó thấy | Đế tô đậm màu bậc + viền hình 1px + lấp lánh VÀNG/ĐỎ |
+| F16 Quái | 3 quái cũ, chưa có tinh anh | 4 bọ + 4 tinh anh có cơ chế (từ wave 5) |
+| 08 Skill VÀNG | Skill tự động | Skill theo Ô: chạm tướng → chọn kỹ năng → chọn ô, có hồi chiêu (BROKER, GLITCH) |

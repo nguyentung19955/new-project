@@ -46,7 +46,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 #lk { font-variant-numeric: tabular-nums; }
 
 /* ACTION HUD y 597..676 + CARD HUD y 676..816 (ảnh v2 hud_bottom_panel.png nếu có) */
-#duoi { position: absolute; left: 0; top: 597px; width: 390px; height: 219px; animation: duoi .45s ease-out;
+#duoi { position: absolute; left: 0; top: 638px; width: 390px; height: 200px; animation: duoi .45s ease-out;
   background: url(../assets/v2/hud_bottom_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(4,2,12,0.55), rgba(6,6,20,0.96) 20%);
   border-top: 1px solid rgba(120,180,255,0.22); }
 #lk-hop { position: absolute; left: 12px; top: 8px; width: 92px; height: 59px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
@@ -230,3 +230,36 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .kq-sat .ks u { display: block; height: 100%; background: var(--h, #3ce7ff); box-shadow: 0 0 6px var(--h, #3ce7ff); }
 .kq-sat .ks em { font-style: normal; text-align: right; color: #e8f1ff; font-variant-numeric: tabular-nums; }
 .kq-sat .ks-ten { font: 700 9px/1 var(--tit); letter-spacing: 1.5px; color: var(--mo); margin-bottom: 2px; }
+
+/* ===== bám DCDW (02/11): bậc màu nhìn ra ngay trên thẻ — viền 2px màu bậc kể cả khi thiếu Energy; VÀNG/ĐỎ lấp lánh ===== */
+.the { border-width: 2px; }
+.the.thieu { border-color: var(--h); }
+.the.thieu .ten { color: var(--h); }
+.the[data-bac="vang"], .the[data-bac="do"], #tb-ai .ai-o[data-bac="vang"], #tb-ai .ai-o[data-bac="do"] { animation: lapLanh 2.4s ease-in-out infinite; }
+.the[data-bac="vang"]::after, .the[data-bac="do"]::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.35) 48%, transparent 60%) -120% 0/250% 100% no-repeat; animation: vetSang 3.2s linear infinite; }
+@keyframes vetSang { to { background-position: 140% 0; } }
+@keyframes lapLanh { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
+.ai-o { border-width: 2px; }
+
+/* menu kỹ năng VÀNG (chạm tướng) — toạ độ logic trong #wrap */
+#ky-menu { position: absolute; z-index: 6; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; border-radius: 8px;
+  background: rgba(8,10,24,0.94); border: 1px solid #ffc93a; box-shadow: 0 0 14px rgba(255,201,58,0.35); }
+#ky-menu button { flex: 1 1 90px; text-align: left; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(255,201,58,0.7); background: rgba(255,201,58,0.12); }
+#ky-menu button b { font: 900 10px/1.1 var(--tit); color: #ffe27a; letter-spacing: .5px; }
+#ky-menu button em { float: right; font: 700 9px/1.2 var(--tit); color: #7dffcf; font-style: normal; }
+#ky-menu button.cho { opacity: 0.55; } #ky-menu button.cho em { color: #ff9a9a; }
+#ky-menu button i { display: block; font: 600 9.5px/1.15 var(--body); color: #d8def0; font-style: normal; margin-top: 2px; }
+#ky-menu button.huy { flex: 0 0 26px; text-align: center; font: 900 12px var(--tit); color: #ff9a9a; border-color: rgba(255,120,120,0.6); background: none; }
+#ky-menu .goi { flex: 1; font: 600 11px/26px var(--body); color: #d8def0; padding-left: 4px; } #ky-menu .goi b { color: #ffe27a; font-family: var(--tit); font-size: 10px; }
+
+/* PACKET SWAP: chọn 1 trong 2 kết quả ghép */
+#goi-gop { z-index: 8; }
+#goi-gop .bang { width: 270px; padding: 14px; text-align: center; border-color: #00ffa3; }
+#goi-gop .gg-mo { font: 600 12px var(--body); color: #c8ffe8; margin: 4px 0 10px; }
+#goi-gop .gg-lua { display: flex; gap: 12px; justify-content: center; margin-bottom: 10px; }
+#goi-gop .gg { position: relative; width: 74px; padding: 0 0 4px; border: 2px solid var(--h); border-radius: 6px; overflow: hidden; background: #10152c; box-shadow: 0 0 10px var(--h); }
+#goi-gop .gg canvas { display: block; width: 70px; height: 86px; }
+#goi-gop .gg b { display: block; font: 900 10px var(--tit); color: var(--h); margin-top: 3px; }
+#goi-gop .gg em { display: block; font: 700 8px var(--tit); color: #fff; font-style: normal; opacity: .8; }
+.the .bac { top: 66px; } .the .ten { top: 77px; }

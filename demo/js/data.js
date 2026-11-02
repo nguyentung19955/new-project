@@ -25,53 +25,81 @@ const BAC = {
 // Tham số theo sao: số (cố định) hoặc { 1: a, 3: b, 5: c } = giá trị của mốc sao cao nhất ≤ sao hiện tại (game.js: theoSao).
 // Mỗi tướng:
 //   bac   : khoá trong BAC          hanh : khoá trong HANH (màu VFX)       anh : tên file ảnh trong demo/assets/v3 (mặc định = id)
-//   dmg   : sát thương 1★ LV1       cd   : giây / đòn                        muc  : cách chọn mục tiêu (game.js MUC): dau | dongQuai | mauCao | mauThap | mauDay | chuaHieu | ngauNhien
+//   dmg   : sát thương 1★ LV1       cd   : giây / đòn                        muc  : cách chọn mục tiêu (game.js MUC): dau | cuoi | gan | dongQuai | mauCao | mauThap | mauDay | chuaHieu | ngauNhien
 //   don   : kiểu ra đòn (game.js DON): { k: 'dan', toc, so } đạn bay · { k: 'chem' } đánh ngay · { k: 'tia', xuyen } tia tức thời dừng ở mục tiêu
-//   hieu  : danh sách hiệu ứng khi trúng (game.js HIEU): chay | bang | doc | hack | chuoi | hut | truyNa ...
-//   dac   : skill riêng (VÀNG/ĐỎ, game.js DAC_BIET): taoMana | cayGhep | phatNap ...
+//   hieu  : danh sách hiệu ứng khi trúng (game.js HIEU): chay | bang | doc | hack | khoa | chuoi | hut | truyNa ...
+//   dac   : skill riêng (VÀNG/ĐỎ, game.js DAC_BIET): taoMana | cayGhep | phatNap (tuSao) | moiGioi (BROKER) | hacker (GLITCH) ...
+//   dac.ky: kỹ năng CHỦ ĐỘNG theo ô (chạm tướng trên bàn → chọn kỹ năng → chọn ô): k, tuSao, cd, chon: 'ke' (ô kề) | 'cungSao' (tướng cùng sao)
 //   hit   : loại tia trúng đòn (vfx_hit_<hit>.png: kinetic | frost | flame | electric)    proj : ảnh đạn proj_<proj>.png (mặc định = anh)
 //   xoay  : true = ảnh xoay bằng code theo mục tiêu (drone)                                 tip  : điểm nòng cũ (khung 64) — lệch nhẹ điểm phát đạn
+// HIỂN THỊ TƯỚNG (bản "ổn định"):
+//   co    : hệ số cỡ riêng (tướng cầm súng trông nhỏ hơn → phóng to hơn), giữ neo chân
+//   nong  : ĐIỂM ĐẦU NÒNG trong ảnh tĩnh 112×112 theo hướng vẽ (s, sw, w, nw, n) — hướng lật gương (se, e, ne) tự đối xứng x.
+//           Đo bằng script Python (điểm xa nhất của vũ khí theo hướng nhìn) rồi chỉnh tay. ARC = mũi kiếm. Đạn / tia / chớp nòng xuất phát ở đây.
+//   khung : hộp phần hình của ảnh hướng S [x0, y0, x1, y1] (để tính tỉ lệ hiển thị giống nhau ở game.js và render.js)
+//   xoay  : true = drone xoay ảnh bằng code (WARP) — nong = { r } (đầu nòng cách tâm r × cạnh ảnh theo hướng bắn)
 const TUONG = {
-  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Leaves burning plasma on the lane.',
-    dmg: 24, cd: 0.8, tip: [57, 38], muc: 'dau', hit: 'flame',
+  // ---- TRẮNG: đòn hệ đơn giản ----
+  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Fire bolts leave a burning trail.',
+    dmg: 24, cd: 0.8, muc: 'dau', hit: 'flame', co: 1.08, khung: [26, 22, 85, 104],
+    nong: { s: [32, 96], sw: [28, 97], w: [22, 84], nw: [28, 82], n: [56, 34] },
     don: { k: 'dan', toc: 900 },
-    hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 5: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }] },
-  frost:  { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill Meter', mo: 'Slows; 3 chills shatter the pack.',
-    dmg: 18, cd: 1.0, tip: [48, 12], muc: 'chuaHieu', mucHieu: 'chill', hit: 'frost',
+    hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 3: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }] },
+  frost:  { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill', mo: 'Slows; 3 chills shatter the pack.',
+    dmg: 18, cd: 1.0, muc: 'chuaHieu', mucHieu: 'chill', hit: 'frost', co: 0.95, khung: [19, 22, 92, 104],
+    nong: { s: [29, 58], sw: [23, 56], w: [14, 55], nw: [24, 44], n: [86, 44] },
     don: { k: 'dan', toc: 800 },
-    hieu: [{ k: 'bang', cham: 0.10, max: 3, T: { 1: 3, 3: 4 }, voR: { 1: 30, 5: 42 }, voDmg: 0.3 }] },
-  venom:  { bac: 'lam', ten: 'VENOM', chuc: 'TOX ASSASSIN', hanh: 'Toxin', kieu: 'Toxin Stack', mo: 'Stacking poison that spreads.',
-    dmg: 13, cd: 1.0, tip: [56, 38], muc: 'mauDay', hit: 'kinetic',
-    don: { k: 'dan', toc: 820, so: 2 },
-    hieu: [{ k: 'doc', moi: 1, max: 4, T: { 1: 4, 3: 5 }, dps: 3, lan: { 1: 2, 5: 3 } }] },
-  glitch: { bac: 'lam', ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'Breach', mo: 'Every 3rd hit: +damage taken, stun.',
-    dmg: 16, cd: 1.1, tip: [55, 39], muc: 'chuaHieu', mucHieu: 'hack', hit: 'kinetic',
-    don: { k: 'dan', toc: 900 },
-    hieu: [{ k: 'hack', moi: 3, T: { 1: 4, 3: 5.5 }, them: { 1: 0.15, 5: 0.2 }, choang: 0.35 }] },
-  arc:    { bac: 'tim', ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Rhythm', mo: 'Every 3rd slash chains lightning.',
-    dmg: 32, cd: 0.9, tip: [60, 13], muc: 'dongQuai', hit: 'electric',
+    hieu: [{ k: 'bang', cham: { 1: 0.08, 3: 0.10 }, max: 3, T: { 1: 1.5, 3: 2 }, voR: { 1: 30, 5: 42 }, voDmg: 0.3 }] },
+  arc:    { bac: 'trang', ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Slash', mo: 'Melee slash; every 3rd chains lightning.',
+    dmg: 30, cd: 0.9, muc: 'gan', hit: 'electric', co: 0.90, khung: [9, 22, 101, 104],
+    nong: { s: [11, 78], sw: [17, 46], w: [11, 59], nw: [15, 56], n: [95, 62] },
     don: { k: 'chem' },
-    hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 2, 3: 3 }, r: { 1: 85, 5: 105 }, he: 0.35 }] },
-  // ---- VÀNG: cơ chế khác hẳn ----
-  warp:   { bac: 'vang', ten: 'WARP', chuc: 'VOID WITCH', hanh: 'Void', kieu: 'Warp Gate', mo: 'Merge 2 WARPs → +1 rank to an ally (keeps its type).',
-    dmg: 14, cd: 1.3, tip: [48, 37], muc: 'dongQuai', hit: 'kinetic', xoay: true,
+    hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 105 }, he: 0.35 }] },
+  venom:  { bac: 'trang', ten: 'VENOM', chuc: 'TOX BEAST', hanh: 'Toxin', kieu: 'Toxin Stack', mo: 'Stacking poison (5, ★3: 6) that spreads.',
+    dmg: 13, cd: 1.0, muc: 'mauCao', hit: 'kinetic', co: 1.14, khung: [28, 22, 83, 104],
+    nong: { s: [56, 102], sw: [26, 100], w: [17, 75], nw: [27, 39], n: [55, 23] },
+    don: { k: 'dan', toc: 820, so: 2 },
+    hieu: [{ k: 'doc', moi: 1, max: { 1: 5, 3: 6 }, T: { 1: 4, 3: 5 }, dps: 3, lan: { 1: 0, 7: 2 } }] },
+  // ---- LAM ----
+  lance:  { bac: 'lam', ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Pierce', mo: 'Rail pierces the line; ★7 every 3rd shot is a focus rail.',
+    dmg: 80, cd: 2.0, muc: 'mauCao', hit: 'kinetic', co: 1.12, khung: [27, 22, 84, 104],
+    nong: { s: [33, 104], sw: [23, 103], w: [22, 93], nw: [29, 76], n: [57, 40] },
+    don: { k: 'tia', xuyen: { 1: 1, 3: 2, 5: 3 } },
+    hieu: [],
+    dac: { k: 'phatNap', ten: 'FOCUS RAIL', tuSao: 7, moi: 3, he: 2.5, xuyen: 4 } },
+  // ---- TÍM ----
+  warp:   { bac: 'tim', ten: 'WARP', chuc: 'VOID DRONE', hanh: 'Void', kieu: 'Void Pull', mo: 'Hits the last foe; void field drags foes back.',
+    dmg: 16, cd: 1.2, muc: 'cuoi', hit: 'kinetic', xoay: true, co: 0.92,
+    nong: { r: 0.42 },
     don: { k: 'dan', toc: 760 },
-    hieu: [{ k: 'hut', moi: 4, r: { 1: 60, 3: 75 }, T: { 1: 1.4, 5: 2 } }],
-    dac: { k: 'cayGhep', ten: 'WARP GATE' } },
-  miner:  { bac: 'vang', anh: 'broker', ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Mana Feed', mo: 'Makes Energy every 7s. Weak shots.',
-    dmg: 8, cd: 1.4, tip: [52, 20], muc: 'dau', hit: 'kinetic',
+    hieu: [{ k: 'hut', moi: { 1: 4, 5: 3 }, r: { 1: 60, 3: 75 }, T: { 1: 1.4, 5: 2 } }] },
+  // ---- VÀNG: cơ chế theo Ô (chạm tướng → chọn kỹ năng → chọn ô) ----
+  miner:  { bac: 'vang', anh: 'broker', ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Market', mo: 'Energy when foes die near her (2 tiles). ★3 TRADE · ★5 SWAP · ★7 TAKE PROFIT.',
+    dmg: 8, cd: 1.4, muc: 'dau', hit: 'kinetic', co: 1.08, khung: [26, 22, 85, 104],
+    nong: { s: [30, 82], sw: [34, 82], w: [28, 73], nw: [35, 80], n: [36, 76] },
     don: { k: 'dan', toc: 820 },
     hieu: [],
-    dac: { k: 'taoMana', ten: 'MANA FEED', chuKy: 7, luong: { 1: 4, 2: 7, 3: 11, 4: 16, 5: 22, 6: 29, 7: 38 }, theoLv: 0.25 } },
-  // ---- ĐỎ: skill mạnh nhất ----
-  lance:  { bac: 'do', ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Deadline', mo: 'Every 4th rail: DEADLINE ×3, executes weak foes.',
-    dmg: 95, cd: 2.2, tip: [64, 37], muc: 'mauCao', hit: 'kinetic',
-    don: { k: 'tia', xuyen: { 1: 1, 3: 2 } },
-    hieu: [],
-    dac: { k: 'phatNap', ten: 'DEADLINE', moi: 4, he: { 1: 3, 5: 3.5, 7: 4 }, xuyen: 4, ketLieu: { 1: 0.15, 5: 0.2 } } },
+    dac: { k: 'moiGioi', ten: 'MARKET', vung: 2.6, luong: { 1: 1, 3: 2, 5: 3, 7: 4 }, nghi: 0.5,
+      ky: [
+        { k: 'giaoDich', tuSao: 3, ten: 'TRADE', mo: 'Pick an adjacent hero: its kills give +Energy for 8s', cd: 20, T: 8, them: { 3: 2, 5: 3, 7: 4 }, chon: 'ke' },
+        { k: 'hoanDoi', tuSao: 5, ten: 'SWAP', mo: 'Swap places with a hero of the same rank', cd: 20, chon: 'cungSao' },
+      ],
+      chotLoi: { tuSao: 7, ten: 'TAKE PROFIT', hoan: 0.3, nghi: 10 } } },
+  glitch: { bac: 'vang', ten: 'GLITCH', chuc: 'NETRUNNER', hanh: 'Hack', kieu: 'Mark & Lock', mo: 'Marks foes; every 6th hit locks one. ★3 COPY · ★5 PACKET SWAP · ★7 REROLL.',
+    dmg: 16, cd: 1.0, muc: 'dau', hit: 'kinetic', co: 0.96, khung: [17, 22, 94, 104],
+    nong: { s: [56, 70], w: [28, 53], n: [37, 23] },
+    don: { k: 'dan', toc: 900 },
+    hieu: [{ k: 'khoa', danhDau: 0.12, T: 3, moi: 6, choang: { 1: 0.6, 5: 0.9 }, tatElite: 3 }],
+    dac: { k: 'hacker', ten: 'BREACH',
+      ky: [{ k: 'copyBuffer', tuSao: 3, ten: 'COPY', mo: 'Copy a buffer onto an adjacent hero: +30% attack speed 5s', cd: 15, T: 5, he: 0.3, chon: 'ke' }],
+      packetSwap: { tuSao: 5, ten: 'PACKET SWAP' }, reroll: { tuSao: 7, ten: 'REROLL', lan: 1 } } },
 };
 const TUONG_IDS = Object.keys(TUONG);
+// CỜ HIỂN THỊ: sheet idle/attack của ChatGPT không nhất quán giữa các khung (thừa tay/gậy, đầu-thân đổi) → TẮT mặc định, tướng vẽ bằng ẢNH TĨNH.
+// Có file <anh>_atk_<dir>.png thì đổi sang ảnh đó ~DOI_ATK giây lúc ra đòn (không có thì bỏ qua).
+const HIEN = { SHEET_IDLE: false, SHEET_ATTACK: false, ANH_ATK: true, NHUN: 0.8, VIEN_BAC: true };
 const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
+const DS_BAC = ['trang', 'lam', 'tim', 'vang', 'do'];
 const BO_AI = ['scorch', 'frost', 'lance', 'warp', 'arc'];   // đội hình dựng sẵn của bàn AI (PVP: AI MIRROR · CO-OP: đồng đội)
 const AF_AI = 'overclock';                                    // Archfiend của bàn AI
 // tên file ảnh của tướng (demo/assets/v3/<anh>.png ...)
@@ -88,39 +116,51 @@ const ARCHFIEND = {
 };
 const AF_IDS = Object.keys(ARCHFIEND);
 
-// QUÁI THƯỜNG chỉ là bọ đơn giản (không kỹ năng); tinh anh / TRÙM mới thiết kế đặc biệt.
+// QUÁI THƯỜNG = 4 BỌ đơn giản (không kỹ năng) — ảnh demo/assets/v3/bug_<anh>_walk.png (1 hàng 6 khung vuông 112px, đầu hướng xuống = hướng đi, 10fps).
+// TINH ANH (elite) = 4 loại có cơ chế riêng (từ wave 5, cả PvP và co-op) — elite_<anh>_walk.png (6 khung vuông 128px).
+//   hp: hệ số máu so với quái chuẩn của wave · spd: px/giây (đường ngang cũ) · co: chiều cao hiển thị (px) · thuong: Energy khi giết
+//   tu: wave bắt đầu xuất hiện · nang: trọng số xuất hiện
 const QUAI = {
-  // co × TL = chiều cao hiển thị: thường ~27px, nhanh ~24px, trâu ~34px (boss 58 → ~48px)
-  thuong: { ten: 'DRONE', hp: 1, spd: 52, thuong: 3, co: 32 },
-  nhanh:  { ten: 'SKITTER', hp: 0.6, spd: 92, thuong: 3, co: 29 },
-  trau:   { ten: 'BULWARK', hp: 3.2, spd: 34, thuong: 7, co: 41 },
+  scuttle: { ten: 'SCUTTLE', anh: 'bug_scuttle', hp: 1.0, spd: 52, thuong: 3, co: 27, tu: 1, nang: 6 },
+  dart:    { ten: 'DART', anh: 'bug_dart', hp: 0.65, spd: 83, thuong: 3, co: 26, tu: 3, nang: 3 },
+  shell:   { ten: 'SHELL', anh: 'bug_shell', hp: 2.8, spd: 34, thuong: 6, co: 30, tu: 5, nang: 2, chongDay: 0.5 },
+  gnat:    { ten: 'GNAT', anh: 'bug_gnat', hp: 0.5, spd: 68, thuong: 2, co: 26, tu: 2, nang: 2 },
+  // ---- TINH ANH: tinhAnh = loại cơ chế (game.js TINH_ANH) ----
+  mantis:  { ten: 'PRISM MANTIS', anh: 'elite_mantis', hp: 6, spd: 40, thuong: 10, co: 38, tinhAnh: 'phanXa', chuKy: 6, bao: 0.7 },
+  jammer:  { ten: 'JAMMER BEETLE', anh: 'elite_jammer', hp: 6, spd: 38, thuong: 10, co: 38, tinhAnh: 'gayNhieu', chuKy: 12, bao: 1.0, T: 3 },
+  brood:   { ten: 'BROOD CARRIER', anh: 'elite_brood', hp: 7, spd: 34, thuong: 10, co: 40, tinhAnh: 'apTrung', con: 3, conHp: 0.35 },
+  cicada:  { ten: 'PHASE CICADA', anh: 'elite_cicada', hp: 5, spd: 48, thuong: 10, co: 36, tinhAnh: 'lechPha', chuKy: 9, bao: 0.8, T: 1.2 },
 };
+const BO_IDS = ['scuttle', 'dart', 'shell', 'gnat'];
+const ELITE_IDS = ['mantis', 'jammer', 'brood', 'cicada'];
+const ELITE = { TU: 5, so: (w) => (w < 5 ? 0 : Math.min(3, 1 + Math.floor((w - 5) / 15))) };   // số tinh anh mỗi wave thường
 // mỗi 10 đợt một boss, xoay vòng; mỗi boss 2 kỹ năng (chính + phụ) có cảnh báo trước (tele giây); hp = máu ở vòng 1
 const BOSS = [
-  { id: 'firewall', ten: 'FIREWALL', knTen: 'HEAT LOCKDOWN', mo: 'Overheats grid lanes and shields passing drones.', mau: '#ff3b3b', hp: 9000,
-    kn: [{ k: 'lockdown', ten: 'HEAT LOCKDOWN', cd: 12, tele: 1.4 }, { k: 'ember', ten: 'EMBER SWEEP', cd: 18, tele: 1.1 }] },
-  { id: 'overclock', ten: 'OVERCLOCK', knTen: 'TIME SURGE', mo: 'Accelerates the swarm and spawns clock echoes.', mau: '#ffb31a', hp: 40000,
-    kn: [{ k: 'surge', ten: 'TIME SURGE', cd: 13, tele: 1.3 }, { k: 'split', ten: 'CLOCK SPLIT', cd: 20, tele: 1.5 }] },
-  { id: 'corruptor', ten: 'CORRUPTOR', knTen: 'DATA INFECTION', mo: 'Corrupts attack timing and siphons linked damage.', mau: '#c04dff', hp: 165000,
-    kn: [{ k: 'infect', ten: 'DATA INFECTION', cd: 14, tele: 1.6 }, { k: 'link', ten: 'PARASITE LINK', cd: 19, tele: 1.2 }] },
+  { id: 'firewall', ten: 'FIREWALL', knTen: 'SHIELD WALL', mo: 'Raises a firewall shield and burns a hero row.', mau: '#ff3b3b', hp: 9000,
+    kn: [{ k: 'khien', ten: 'SHIELD WALL', cd: 11, tele: 1.2, T: 4, luong: 0.12 }, { k: 'lockdown', ten: 'FIRE ROW', cd: 16, tele: 1.5 }] },
+  { id: 'overclock', ten: 'OVERCLOCK', knTen: 'OVERDRIVE', mo: 'Speeds itself up, then overclocks the swarm.', mau: '#ffb31a', hp: 40000,
+    kn: [{ k: 'tangToc', ten: 'OVERDRIVE', cd: 12, tele: 1.0, T: 4, he: 0.5 }, { k: 'surge', ten: 'CLOCK PULSE', cd: 17, tele: 1.3, T: 5 }] },
+  { id: 'corruptor', ten: 'CORRUPTOR', knTen: 'DATA INFECTION', mo: 'Infects 2 heroes (slow attacks) and grows a healing cocoon.', mau: '#c04dff', hp: 165000,
+    kn: [{ k: 'infect', ten: 'DATA INFECTION', cd: 13, tele: 1.5, T: 5, so: 2 }, { k: 'ken', ten: 'COCOON', cd: 18, tele: 1.0, T: 4, hp: 0.05, hoi: 0.08 }] },
 ];
-// BỐ CỤC MÀN DỌC (toạ độ logic): rộng luôn 390 (lấp đầy bề ngang), CAO co giãn theo màn (ui.js tính H = cao màn / scale).
-// Bàn trên neo TRÊN, bàn người chơi + thẻ + SUMMON neo DƯỚI, khoảng giữa co giãn (game.js boCuc(H) tính lại các toạ độ phụ thuộc H).
-// Bàn 5×3 như DCDW: ô 56×54 (khe 2, bước 58×56), viền 6 → bàn 302×180 (~77% bề ngang), làn quái dọc bên trái x 12..60.
+// BỐ CỤC MÀN DỌC kiểu DCDW (toạ độ logic): rộng luôn 390, CAO co giãn theo màn (ui.js tính H = cao màn / scale).
+// 2 bàn sát nhau (khe GAP + nhãn), phần cao dư dùng làm BÀN TO HƠN (ô cao hơn, tối đa ô cao = 1.25 × ô rộng) — game.js boCuc(H) tính lại.
+// Làn quái dọc bên trái x 8..54, bàn x 61..384: ô rộng 61 (bước 63), ô cao co giãn 52..74.
 const CAU_HINH = {
-  W: 390, H: 844, H_MIN: 744, H_MAX: 960,
-  COT: 5, HANG: 3, O: 56, OH: 54, KHE: 2, BUOC_X: 58, BUOC_Y: 56,
-  BAN_X: 70, BAN_W: 302, BAN_H: 180, VIEN: 6, BAN_AI_Y: 92, BAN_NG_Y: 423,
-  LAN_X0: 12, LAN_X1: 60, LAN_THUA: 14,      // làn dài hơn bàn 14px mỗi đầu
-  TOP_H: 64, DUOI_H: 219, DUOI_DAY: 6,       // HUD trên cao 64; HUD dưới (Energy/SUMMON + thẻ) cao 219, cách đáy 6
+  W: 390, H: 844, H_MIN: 660, H_MAX: 960,
+  COT: 5, HANG: 3, O: 61, OH: 66, KHE: 2, BUOC_X: 63, BUOC_Y: 68,
+  BAN_X: 61, BAN_W: 323, BAN_H: 212, VIEN: 4, BAN_AI_Y: 80, BAN_NG_Y: 420,
+  LAN_X0: 8, LAN_X1: 54, LAN_THUA: 8, LAN_GIUA: 4,   // làn dài hơn bàn 8px ở 2 đầu ngoài, 4px ở giữa 2 bàn
+  TOP_H: 64, DUOI_H: 200, DUOI_DAY: 6, NHAN: 14, GAP: 6, OH_MAX_TL: 1.25,
   LAN_AI: null, LAN_NG: null, DUOI_Y: 0, GIUA_Y: 0,   // tính trong game.js boCuc(H)
-  TUONG_CAO: 39, TUONG_RONG: 50, CHAN: 9,    // tướng cao 39px, rộng ≤ 50 (không đè ô bên), chân cách đáy ô 9px
-  TL: 58 / 70,          // tỉ lệ không gian so với bản ngang cũ (bước ô 58 / 70) — nhân cỡ quái + bán kính vùng hiệu ứng
-  // attack đọc rõ 3 pha: chuẩn bị khung 0..2 → khung ra đòn 3 (giữ thêm GIU_KHUNG) → thu đòn. Đạn/đòn phát đúng lúc vào khung ra đòn.
-  TAC_DONG: 3 / 14, GIU_KHUNG: 0.075,
-  HIT_STOP: { tia: 0.03, chuoi: 0.025 },   // hit-stop ngắn cho đòn mạnh (tia LANCE, nhịp sét chuỗi)
-  FX_NHO_MAX: 16,       // tối đa 16 hiệu ứng trúng đòn nhỏ cùng lúc
-  DAI_CU: 1272,         // chiều dài đường quái bản ngang cũ (px) — tốc độ quái nhân (dài làn / DAI_CU) để thời gian đi hết làn như cũ
+  TUONG_TL: 0.82,       // tướng (hệ số 1.0) cao 82% chiều cao ô, neo chân gần đáy ô; rộng ≤ ô + 8 (không đè ô bên quá 4px)
+  TUONG_CAO: 54, TUONG_RONG: 69, CHAN: 5,
+  TL: 63 / 70,          // tỉ lệ không gian so với bản ngang cũ — nhân bán kính vùng hiệu ứng
+  // ra đòn: ảnh tĩnh, đạn phát gần như ngay (TAC_DONG), giật lùi 2px ~90ms, chớp nòng 70ms
+  TAC_DONG: 0.03, GIU_KHUNG: 0, GIAT_T: 0.09, CHOP_T: 0.07, DOI_ATK: 0.12,
+  HIT_STOP: { tia: 0.03, chuoi: 0.025 },
+  FX_NHO_MAX: 16,
+  DAI_CU: 1272,
   SAO_MAX: 7, BAC_MAX: 5, MANG: 3, LK_DAU: 100,
   giaTrieu: (n) => 10 + 6 * n,                         // giá Summon lần thứ n (n = số lần đã triệu) — tăng dần như DCDW
   giaBac: (b) => [80, 160, 300, 500, 800][b],          // giá nâng cấp LOẠI tướng b → b+1 (áp dụng cho mọi bản sao loại đó)
@@ -155,8 +195,7 @@ const COOP = {
   mauQuai: (w) => 40 * Math.pow(1.08, w - 1) * (1 + 0.02 * w),
   // tốc độ quái tăng nhẹ theo wave (tối đa +30%)
   tocQuai: (w) => 1 + Math.min(0.3, 0.005 * w),
-  // tỉ lệ quái nhanh (SKITTER) / trâu (BULWARK) xuất hiện dần: nhanh từ wave 4, trâu từ wave 8
-  tiLe: (w) => ({ nhanh: w < 4 ? 0 : Math.min(0.3, 0.08 + 0.008 * (w - 4)), trau: w < 8 ? 0 : Math.min(0.25, 0.05 + 0.006 * (w - 8)) }),
+  // loại bọ: chọn theo trọng số QUAI[k].nang trong các bọ đã mở (QUAI[k].tu ≤ wave); tinh anh theo ELITE.so(w)
   // Energy thưởng khi xong wave (cả 2 bàn đều nhận)
   thuongDot: (w) => 15 + 5 * w,
   // TRÙM mỗi 10 wave: 3 trùm (BOSS) lần lượt FIREWALL → OVERCLOCK → CORRUPTOR → lặp lại (vòng 2); wave 70 = TRÙM CUỐI (CORRUPTOR)
