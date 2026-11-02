@@ -1,62 +1,548 @@
 {
- "ghi_chu": "Quái Vùng 2 'Rotting Roots' – số liệu theo kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 4–5 (khung = 1/60 s). 'mau' = số đòn chém thường × 10 (kiếm thường 10 sát thương, như Vùng 1). CHƯA BẬT trong game: 'bat' = false cho tới khi phiên gen ảnh báo XONG các yêu cầu docs/yeu-cau-anh/vung/019–031 và 'hinh.*.thu_muc' được điền (KHÔNG vẽ tạm bằng code). Hình quay TRÁI, 1 điểm ảnh = 2 px logic.",
+ "ghi_chu": "Quái Vùng 2 'Rotting Roots' – số liệu theo kế hoạch ChatGPT docs/vung-2/ke-hoach-chatgpt.txt mục 4–5 (khung = 1/60 s). 'mau' = số đòn chém thường × 10. ĐÃ BẬT (02/11): ảnh ChatGPT art/quai-vung-2/ (yêu cầu 019–025 XONG). Trường cho engine (dong-co-mn.js, giống game/thu-mat-na/quai.json): than/chan/hop_danh theo ĐIỂM ẢNH GỐC (1 điểm ảnh = 2 px logic), khung_bao_truoc + bao_truoc_them_ms = đúng số khung báo đòn ChatGPT; tốc độ px logic/khung. Hình quay TRÁI.",
  "goc": "../../art/quai-vung-2/",
  "ti_le": 2,
  "loai": {
   "gnawer": {
-   "ten": "Rot Gnawer", "bat": false, "yeu_cau_anh": ["019", "023"],
-   "co_px": [52, 36], "mau": 40, "sat_thuong": 1, "bay": false,
-   "tuan_tra_o_s": 1.5, "lao": {"o_s": 3.0, "khung": 18},
-   "don": {"ten": "Bite", "bao_truoc": 24, "trung": 10, "hoi": 28, "hoi_chieu": 90, "dau_hieu": "há hàm + 2 hạt bào tử ochre, tiếng lách cách đôi"},
-   "hinh": {"dung": {"thu_muc": null, "so_hinh": 4, "ms": 180}, "di": {"thu_muc": null, "so_hinh": 6, "ms": 100},
-            "danh": {"thu_muc": null, "so_hinh": 6, "ms": 80, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 2, "ms": 90, "lap": false},
-            "chet": {"thu_muc": null, "so_hinh": 6, "ms": 100, "lap": false}},
-   "gap_dau": "R203"
+   "ten": "Rot Gnawer",
+   "bat": true,
+   "yeu_cau_anh": [
+    "019",
+    "023"
+   ],
+   "co_px": [
+    52,
+    36
+   ],
+   "mau": 40,
+   "sat_thuong": 1,
+   "bay": false,
+   "tuan_tra_o_s": 1.5,
+   "lao": [
+    2,
+    3,
+    22
+   ],
+   "don": {
+    "ten": "Bite",
+    "bao_truoc": 24,
+    "trung": 10,
+    "hoi": 28,
+    "hoi_chieu": 90,
+    "dau_hieu": "há hàm + 2 hạt bào tử ochre, tiếng lách cách đôi"
+   },
+   "hinh": {
+    "dung": {
+     "thu_muc": "gnawer/dung",
+     "so_hinh": 4,
+     "ms": 180
+    },
+    "di": {
+     "thu_muc": "gnawer/di",
+     "so_hinh": 6,
+     "ms": 100
+    },
+    "danh": {
+     "thu_muc": "gnawer/danh",
+     "so_hinh": 6,
+     "ms": 80,
+     "lap": false
+    },
+    "trung": {
+     "thu_muc": "gnawer/trung",
+     "so_hinh": 2,
+     "ms": 90,
+     "lap": false
+    },
+    "chet": {
+     "thu_muc": "gnawer/chet",
+     "so_hinh": 6,
+     "ms": 100,
+     "lap": false
+    }
+   },
+   "gap_dau": "R203",
+   "than": [
+    26,
+    18
+   ],
+   "chan": [
+    24,
+    31
+   ],
+   "mau_khoi": "#80683D",
+   "mau_vien": "#B58C49",
+   "toc_do": 1.2,
+   "toc_do_duoi": 1.6,
+   "tam_phat_hien": 420,
+   "tam_danh": 110,
+   "khung_bao_truoc": 2,
+   "bao_truoc_them_ms": 240,
+   "khung_trung": [
+    2,
+    3
+   ],
+   "hop_danh": [
+    -30,
+    -16,
+    24,
+    14
+   ],
+   "hoi_chieu_ms": 1500,
+   "day_lui": 4,
+   "sieu_giap": false
   },
   "spore_bell": {
-   "ten": "Spore Bell", "bat": false, "yeu_cau_anh": ["020", "023"],
-   "co_px": [48, 64], "mau": 60, "sat_thuong": 1, "bay": false, "dung_yen": true,
-   "don": {"ten": "Spore Volley", "bao_truoc": 36, "so_dan": 3, "cach_dan": 12, "dan_o_s": 2.0, "dan_song": 120, "hoi": 42, "hoi_chieu": 150, "dau_hieu": "chuông phồng, 3 chấm hổ phách nháy 3 lần, tiếng ding trầm rỗng"},
-   "hinh": {"dung": {"thu_muc": null, "so_hinh": 5, "ms": 160}, "lac": {"thu_muc": null, "so_hinh": 6, "ms": 120},
-            "danh": {"thu_muc": null, "so_hinh": 8, "ms": 90, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 80, "lap": false},
-            "chet": {"thu_muc": null, "so_hinh": 7, "ms": 100, "lap": false}},
-   "gap_dau": "R205"
+   "ten": "Spore Bell",
+   "bat": true,
+   "yeu_cau_anh": [
+    "020",
+    "023"
+   ],
+   "co_px": [
+    48,
+    64
+   ],
+   "mau": 60,
+   "sat_thuong": 1,
+   "bay": false,
+   "dung_yen": true,
+   "don": {
+    "ten": "Spore Volley",
+    "bao_truoc": 36,
+    "so_dan": 3,
+    "cach_dan": 12,
+    "dan_o_s": 2.0,
+    "dan_song": 120,
+    "hoi": 42,
+    "hoi_chieu": 150,
+    "dau_hieu": "chuông phồng, 3 chấm hổ phách nháy 3 lần, tiếng ding trầm rỗng"
+   },
+   "hinh": {
+    "dung": {
+     "thu_muc": "spore_bell/dung",
+     "so_hinh": 5,
+     "ms": 160
+    },
+    "lac": {
+     "thu_muc": "spore_bell/lac",
+     "so_hinh": 6,
+     "ms": 120
+    },
+    "danh": {
+     "thu_muc": "spore_bell/danh",
+     "so_hinh": 8,
+     "ms": 90,
+     "lap": false
+    },
+    "trung": {
+     "thu_muc": "spore_bell/trung",
+     "so_hinh": 3,
+     "ms": 80,
+     "lap": false
+    },
+    "chet": {
+     "thu_muc": "spore_bell/chet",
+     "so_hinh": 7,
+     "ms": 100,
+     "lap": false
+    }
+   },
+   "gap_dau": "R205",
+   "than": [
+    24,
+    32
+   ],
+   "chan": [
+    20,
+    47
+   ],
+   "mau_khoi": "#6B7046",
+   "mau_vien": "#B58C49",
+   "toc_do": 0,
+   "toc_do_duoi": 0,
+   "tam_phat_hien": 520,
+   "tam_danh": 460,
+   "khung_bao_truoc": 3,
+   "bao_truoc_them_ms": 333,
+   "khung_trung": [],
+   "hop_danh": null,
+   "lao": null,
+   "hoi_chieu_ms": 2500,
+   "day_lui": 0,
+   "sieu_giap": false
   },
   "husk_leaper": {
-   "ten": "Husk Leaper", "bat": false, "yeu_cau_anh": ["021", "023"],
-   "co_px": [44, 58], "mau": 50, "sat_thuong": 1, "bay": false,
-   "don": {"ten": "Leap Slash", "bao_truoc": 30, "tren_khong": 28, "chem_cuoi": 9, "hoi": 32, "hoi_chieu": 120, "khong_nhay_ra_ngoai_camera": true, "dau_hieu": "chân sau nén + dấu đích cam nháy trên sàn, tiếng cào rít"},
-   "hinh": {"dung": {"thu_muc": null, "so_hinh": 4, "ms": 160}, "nhay": {"thu_muc": null, "so_hinh": 6, "ms": 85},
-            "danh": {"thu_muc": null, "so_hinh": 8, "ms": 75, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 2, "ms": 100, "lap": false},
-            "chet": {"thu_muc": null, "so_hinh": 6, "ms": 110, "lap": false}},
-   "gap_dau": "R207"
+   "ten": "Husk Leaper",
+   "bat": true,
+   "yeu_cau_anh": [
+    "021",
+    "023"
+   ],
+   "co_px": [
+    44,
+    58
+   ],
+   "mau": 50,
+   "sat_thuong": 1,
+   "bay": false,
+   "don": {
+    "ten": "Leap Slash",
+    "bao_truoc": 30,
+    "tren_khong": 28,
+    "chem_cuoi": 9,
+    "hoi": 32,
+    "hoi_chieu": 120,
+    "khong_nhay_ra_ngoai_camera": true,
+    "dau_hieu": "chân sau nén + dấu đích cam nháy trên sàn, tiếng cào rít"
+   },
+   "hinh": {
+    "dung": {
+     "thu_muc": "husk_leaper/dung",
+     "so_hinh": 4,
+     "ms": 160
+    },
+    "nhay": {
+     "thu_muc": "husk_leaper/nhay",
+     "so_hinh": 6,
+     "ms": 85
+    },
+    "danh": {
+     "thu_muc": "husk_leaper/danh",
+     "so_hinh": 8,
+     "ms": 75,
+     "lap": false
+    },
+    "trung": {
+     "thu_muc": "husk_leaper/trung",
+     "so_hinh": 2,
+     "ms": 100,
+     "lap": false
+    },
+    "chet": {
+     "thu_muc": "husk_leaper/chet",
+     "so_hinh": 6,
+     "ms": 110,
+     "lap": false
+    },
+    "di": {
+     "thu_muc": "husk_leaper/nhay",
+     "so_hinh": 6,
+     "ms": 85
+    }
+   },
+   "gap_dau": "R207",
+   "than": [
+    22,
+    29
+   ],
+   "chan": [
+    24,
+    47
+   ],
+   "mau_khoi": "#67463A",
+   "mau_vien": "#B58C49",
+   "toc_do": 0.7,
+   "toc_do_duoi": 1.1,
+   "tam_phat_hien": 440,
+   "tam_danh": 210,
+   "khung_bao_truoc": 2,
+   "bao_truoc_them_ms": 350,
+   "khung_trung": [
+    6,
+    7
+   ],
+   "hop_danh": [
+    -30,
+    -40,
+    40,
+    40
+   ],
+   "lao": [
+    2,
+    7,
+    96
+   ],
+   "hoi_chieu_ms": 2000,
+   "day_lui": 3,
+   "sieu_giap": false
   },
   "root_siphon": {
-   "ten": "Root Siphon", "bat": false, "yeu_cau_anh": ["022", "023"],
-   "co_px": [56, 72], "mau": 80, "sat_thuong": 1, "bay": false,
-   "don": {"ten": "Root Snare", "bao_truoc": 42, "lan_o": 4, "trung": 12, "bay_ton_tai": 36, "giu_chan": 24, "hoi": 42, "hoi_chieu": 180, "sat_thuong_bay": 0, "luot_thoat": "lướt ra trước khi rễ trồi", "dau_hieu": "gân rễ lan dọc sàn tới 4 ô + 2 tiếng gõ gỗ nặng"},
-   "hinh": {"dung": {"thu_muc": null, "so_hinh": 5, "ms": 180}, "di": {"thu_muc": null, "so_hinh": 6, "ms": 130},
-            "danh": {"thu_muc": null, "so_hinh": 9, "ms": 90, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 90, "lap": false},
-            "chet": {"thu_muc": null, "so_hinh": 8, "ms": 100, "lap": false}},
-   "gap_dau": "R209"
+   "ten": "Root Siphon",
+   "bat": true,
+   "yeu_cau_anh": [
+    "022",
+    "023"
+   ],
+   "co_px": [
+    56,
+    72
+   ],
+   "mau": 80,
+   "sat_thuong": 1,
+   "bay": false,
+   "don": {
+    "ten": "Root Snare",
+    "bao_truoc": 42,
+    "lan_o": 4,
+    "trung": 12,
+    "bay_ton_tai": 36,
+    "giu_chan": 24,
+    "hoi": 42,
+    "hoi_chieu": 180,
+    "sat_thuong_bay": 0,
+    "luot_thoat": "lướt ra trước khi rễ trồi",
+    "dau_hieu": "gân rễ lan dọc sàn tới 4 ô + 2 tiếng gõ gỗ nặng"
+   },
+   "hinh": {
+    "dung": {
+     "thu_muc": "root_siphon/dung",
+     "so_hinh": 5,
+     "ms": 180
+    },
+    "di": {
+     "thu_muc": "root_siphon/di",
+     "so_hinh": 6,
+     "ms": 130
+    },
+    "danh": {
+     "thu_muc": "root_siphon/danh",
+     "so_hinh": 9,
+     "ms": 90,
+     "lap": false
+    },
+    "trung": {
+     "thu_muc": "root_siphon/trung",
+     "so_hinh": 3,
+     "ms": 90,
+     "lap": false
+    },
+    "chet": {
+     "thu_muc": "root_siphon/chet",
+     "so_hinh": 8,
+     "ms": 100,
+     "lap": false
+    }
+   },
+   "gap_dau": "R209",
+   "than": [
+    28,
+    36
+   ],
+   "chan": [
+    24,
+    55
+   ],
+   "mau_khoi": "#48332F",
+   "mau_vien": "#B58C49",
+   "toc_do": 0.45,
+   "toc_do_duoi": 0.6,
+   "tam_phat_hien": 460,
+   "tam_danh": 200,
+   "khung_bao_truoc": 4,
+   "bao_truoc_them_ms": 340,
+   "khung_trung": [],
+   "hop_danh": null,
+   "lao": null,
+   "hoi_chieu_ms": 3000,
+   "day_lui": 1,
+   "sieu_giap": true
   },
   "warden": {
-   "ten": "The Nursery Warden", "tinh_anh": true, "bat": false, "yeu_cau_anh": ["024", "025"],
-   "co_px": [92, 108], "mau": 220, "sat_thuong": 1, "bay": false,
-   "pha_2": {"mau_duoi": 110, "chuyen": 90, "nhanh_hon": 0.15, "khong_ghep": ["dam", "ra_lenh"], "cach_toi_thieu": 60},
-   "choang": {"so_don_lien": 4, "ho": 48},
-   "don": [
-    {"id": "chem", "ten": "Root Cleave", "bao_truoc": 30, "trung": 12, "hoi": 36, "hoi_chieu": 100, "sat_thuong": 1, "dau_hieu": "giơ dao vỏ cây + loé đồng, tiếng gõ gỗ trầm"},
-    {"id": "dam", "ten": "Bell Stomp", "bao_truoc": 42, "trung": 12, "song_o": 2, "song_khung": 24, "hoi": 48, "hoi_chieu": 150, "sat_thuong": 1, "dau_hieu": "nhấc gối + 3 vòng đất hổ phách, nốt chuông trầm"},
-    {"id": "ra_lenh", "ten": "Rot Command", "bao_truoc": 54, "tang_toc_canh": 72, "hoi": 60, "hoi_chieu": 180, "sat_thuong": 0, "nhieu_nut_neo": 60, "dau_hieu": "chỉ tay về 1 cánh, mạch mục sáng ochre + 3 tiếng lạch cạch"}
+   "ten": "The Nursery Warden",
+   "tinh_anh": true,
+   "bat": true,
+   "yeu_cau_anh": [
+    "024",
+    "025"
    ],
-   "hinh": {"dung": {"thu_muc": null, "so_hinh": 6, "ms": 150}, "di": {"thu_muc": null, "so_hinh": 8, "ms": 100},
-            "chem": {"thu_muc": null, "so_hinh": 9, "ms": 80, "lap": false}, "dam": {"thu_muc": null, "so_hinh": 9, "ms": 90, "lap": false},
-            "ra_lenh": {"thu_muc": null, "so_hinh": 8, "ms": 100, "lap": false}, "trung": {"thu_muc": null, "so_hinh": 3, "ms": 80, "lap": false},
-            "choang": {"thu_muc": null, "so_hinh": 5, "ms": 100, "lap": false}, "chet": {"thu_muc": null, "so_hinh": 10, "ms": 100, "lap": false}},
-   "roi": ["nut_warden"], "mo_sau_khi_thang": "cầu rễ bện vĩnh viễn + lối tắt R211→R208",
-   "phong": "R211"
+   "co_px": [
+    92,
+    108
+   ],
+   "mau": 220,
+   "sat_thuong": 1,
+   "bay": false,
+   "pha_2": {
+    "mau_duoi": 110,
+    "chuyen": 90,
+    "nhanh_hon": 0.15,
+    "khong_ghep": [
+     "dam",
+     "ra_lenh"
+    ],
+    "cach_toi_thieu": 60
+   },
+   "choang": {
+    "so_don_lien": 4,
+    "ho": 48
+   },
+   "don": [
+    {
+     "id": "chem",
+     "ten": "Root Cleave",
+     "bao_truoc": 30,
+     "trung": 12,
+     "hoi": 36,
+     "hoi_chieu": 100,
+     "sat_thuong": 1,
+     "dau_hieu": "giơ dao vỏ cây + loé đồng, tiếng gõ gỗ trầm"
+    },
+    {
+     "id": "dam",
+     "ten": "Bell Stomp",
+     "bao_truoc": 42,
+     "trung": 12,
+     "song_o": 2,
+     "song_khung": 24,
+     "hoi": 48,
+     "hoi_chieu": 150,
+     "sat_thuong": 1,
+     "dau_hieu": "nhấc gối + 3 vòng đất hổ phách, nốt chuông trầm"
+    },
+    {
+     "id": "ra_lenh",
+     "ten": "Rot Command",
+     "bao_truoc": 54,
+     "tang_toc_canh": 72,
+     "hoi": 60,
+     "hoi_chieu": 180,
+     "sat_thuong": 0,
+     "nhieu_nut_neo": 60,
+     "dau_hieu": "chỉ tay về 1 cánh, mạch mục sáng ochre + 3 tiếng lạch cạch"
+    }
+   ],
+   "hinh": {
+    "dung": {
+     "thu_muc": "warden/dung",
+     "so_hinh": 6,
+     "ms": 150
+    },
+    "di": {
+     "thu_muc": "warden/di",
+     "so_hinh": 8,
+     "ms": 100
+    },
+    "chem": {
+     "thu_muc": "warden/chem",
+     "so_hinh": 9,
+     "ms": 80,
+     "lap": false
+    },
+    "dam": {
+     "thu_muc": "warden/dam",
+     "so_hinh": 9,
+     "ms": 90,
+     "lap": false
+    },
+    "ra_lenh": {
+     "thu_muc": "warden/ra_lenh",
+     "so_hinh": 8,
+     "ms": 100,
+     "lap": false
+    },
+    "trung": {
+     "thu_muc": "warden/trung",
+     "so_hinh": 3,
+     "ms": 80,
+     "lap": false
+    },
+    "choang": {
+     "thu_muc": "warden/choang",
+     "so_hinh": 5,
+     "ms": 100,
+     "lap": false
+    },
+    "chet": {
+     "thu_muc": "warden/chet",
+     "so_hinh": 10,
+     "ms": 100,
+     "lap": false
+    }
+   },
+   "roi": [
+    "nut_warden"
+   ],
+   "mo_sau_khi_thang": "cầu rễ bện vĩnh viễn + lối tắt R211→R208",
+   "phong": "R211",
+   "than": [
+    46,
+    54
+   ],
+   "chan": [
+    40,
+    79
+   ],
+   "mau_khoi": "#9C6B30",
+   "mau_vien": "#E1B85A",
+   "toc_do": 0.9,
+   "toc_do_duoi": 1.3,
+   "tam_phat_hien": 560,
+   "tam_danh": 150,
+   "khung_bao_truoc": 0,
+   "khung_trung": [],
+   "hop_danh": null,
+   "lao": null,
+   "hoi_chieu_ms": 1600,
+   "day_lui": 0,
+   "sieu_giap": true,
+   "ti_le_ve": 2.6
   }
  },
- "tron_quai": {"toi_da_cung_luc": 3, "toi_da_root_siphon": 1, "toi_da_ban_xa": 1, "khong_ban_tren_cau_muc_1_o": true, "chi_danh_thuc_sau_cho_dap_an_toan": true}
+ "tron_quai": {
+  "toi_da_cung_luc": 3,
+  "toi_da_root_siphon": 1,
+  "toi_da_ban_xa": 1,
+  "khong_ban_tren_cau_muc_1_o": true,
+  "chi_danh_thuc_sau_cho_dap_an_toan": true
+ },
+ "fx": {
+  "goc": "../../art/quai-vung-2/",
+  "dan": {
+   "thu_muc": "fx/dan",
+   "so_hinh": 4,
+   "ms": 100
+  },
+  "dan_trung": {
+   "thu_muc": "fx/dan-trung",
+   "so_hinh": 5,
+   "ms": 60,
+   "lap": false
+  },
+  "can": {
+   "thu_muc": "fx/can",
+   "so_hinh": 4,
+   "ms": 70,
+   "lap": false
+  },
+  "chem": {
+   "thu_muc": "fx/chem",
+   "so_hinh": 6,
+   "ms": 60,
+   "lap": false
+  },
+  "re_troi": {
+   "thu_muc": "fx/re-troi",
+   "so_hinh": 8,
+   "ms": 90,
+   "lap": false
+  },
+  "w_cung": {
+   "thu_muc": "fx-warden/cung",
+   "so_hinh": 6,
+   "ms": 60,
+   "lap": false
+  },
+  "w_song": {
+   "thu_muc": "fx-warden/song",
+   "so_hinh": 8,
+   "ms": 50,
+   "lap": false
+  },
+  "w_dau_muc": {
+   "thu_muc": "fx-warden/dau-muc",
+   "so_hinh": 6,
+   "ms": 100
+  }
+ }
 }

@@ -39,3 +39,23 @@
 2. `game/vung-2/index.html` (bắt đầu khi có thêm 012 gai/ao, 014 nút neo, 016 cổng – để địa hình đủ ảnh) + nối `dat-muc.js` vào engine (ô R/Q/P/L/C, nút kỹ năng Neo Rễ 44×44 pt), quái/tinh anh/trùm theo `quai.json`/`trum.json`.
 3. Chụp Playwright đi hết vùng, đánh trùm; đăng ký `game/the-gioi.json`.
 4. Vùng 3–9: chưa có kế hoạch ChatGPT (cần Chrome) – kế hoạch tổng 9 vùng đã có ở mục 1 file kế hoạch.
+
+## Lượt 4 (02/11 tối) – BẬT Vùng 2 trong game (đủ 38/38 ảnh ChatGPT)
+**Chơi thử:** `game/vung-2/index.html` (đã ghi vào `game/the-gioi.json` cho teleport). Bàn phím như Vùng 1 + **Q = Neo Rễ**; cảm ứng có thêm nút ⚓ (hiện sau khi học kỹ năng, mờ khi không có nút neo trong tầm).
+
+Đã làm:
+1. **Nướng lại 16 phòng** với đạo cụ / rễ treo / tiền cảnh ChatGPT Vùng 2 (thay đèn lồng, mặt nạ, chuông của Vùng 1) – `tools/vung-2/ve-phong.py` (bảng DOI_DO).
+2. **Trang chơi Vùng 2** chép khung Vùng 1 (không sửa file nào của Vùng 1 hay engine dùng chung): `index.html, nap.js, dau-vao.js, the-gioi.js, ve.js` + mới `dia-hinh.js, quai-v2.js, trum.js`. Bản lưu riêng `tvcc-vung2`.
+3. **Địa hình** (`dia-hinh.js` nối `dat-muc.js` vào engine): gỗ mục thường/nhanh/xung vẽ 4 mức nứt, rơi, bụi, mọc lại bằng ảnh ChatGPT; gai rễ + ao bào tử (mất 1 mặt nạ, về gờ chắc); chốt rễ và 3 cổng lối tắt có hoạt cảnh mở (rễ tháo xoắn), lưu vĩnh viễn; cổng niêm trùm (rễ quấn kín cửa khi đánh, tháo khi thắng); nền xa/giữa/sương theo phòng.
+4. **Neo Rễ**: nhận ở Đền Neo Rễ cuối R206 (đền ChatGPT có hoạt cảnh), nút neo + gợi ý khi trong tầm, dải rễ đồng giữ cụm gỗ, đếm giây trên HUD, Bùa Neo giảm 10% hồi chiêu.
+5. **Quái**: 4 quái thường bằng ảnh ChatGPT, báo đòn đúng số khung kế hoạch: Rot Gnawer (cắn + lao), Spore Bell (3 đạn bào tử), Husk Leaper (nhảy cung + chém khi đáp), Root Siphon (gân rễ báo 42 khung → rễ trồi 1 mặt nạ → giữ chân 24 khung, lướt ra trước được).
+6. **Tinh anh The Nursery Warden** (R211): Root Cleave / Bell Stomp (sóng 2 phía) / Rot Command (làm 1 cụm gỗ cánh thành loại nhanh), pha 2 ≤ 50% máu, choáng sau 4 đòn liền; hạ xong hiện Warden Knot.
+7. **Trùm Mold Mother** (R213): 3 pha, 6 đòn đúng kế hoạch (Sweep, Spore Rain 3 làn, Bell Wail, Rot Bloom kích hoạt 3 cụm gỗ giữa, Tendril Grab vòng đích bám rồi khoá, Heartbreak Slam 2 sóng – 6 ô sát mép an toàn), hiệu ứng ChatGPT; thắng → Verdant Ruin Core, cổng sau trùm mở, màn "Region 2 Complete".
+8. Kiểm bằng Playwright (ảnh chụp ngoài repo): đi phòng, gỗ sập + gai + về gờ, học Neo Rễ ở R206, neo cầu R207, Chuông Lưu R204 + chết hồi sinh, đánh Warden tới pha 2 + choáng, trùm đủ 3 pha và đủ đòn. `node tools/vung-2/kiem-thu-dat-muc.js`: 33/33. Không sửa Vùng 1 / engine chung nên không cần chạy lại phép thử Vùng 1.
+
+Chỗ còn đơn giản / mình tự chọn (không hỏi được ChatGPT vì lượt này không có Chrome):
+- Ảnh nút neo ChatGPT là ô đất vuông có vòng đồng; bản 32×32 bị mất vòng → cắt lại 48×48 từ ảnh gốc. Nút treo giữa khoảng trống trông như tấm đất vuông – nên nhờ ChatGPT vẽ bản nút trong suốt nền.
+- Trùm đứng cố định ở giữa đấu trường (mọc từ rễ), thân không chắn người chơi; chưa dùng lớp xúc tu/lõi chuông tách riêng (art/trum-vung-2/lop).
+- Warden Rot Command chưa làm nhiễu nút neo 60 khung; Husk Leaper nhảy cung chỉ là lệch hình (hộp va chạm vẫn trên sàn).
+- Báo đòn chung dùng dấu "!" hổ phách của Vùng 1 (ảnh ChatGPT) như Vùng 1.
+- Chưa có màn chuyển sang Vùng 3 (người dùng dặn dừng sau Vùng 2).

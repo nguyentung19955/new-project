@@ -1,5 +1,5 @@
 # 014 – nut-neo-re
-- **Trạng thái:** XONG (02/11 – nut-ngu, chuyen-f0..f3, nut-hoat 32×32; chỉ màu đồng/hổ phách ấm, không xanh lơ; gốc: neo-re/nguon-chatgpt.png)
+- **Trạng thái:** XONG (02/11 – phiên LÀM cắt lại từ ảnh gốc ChatGPT ở 48×48 vì bản 32×32 mất vòng đồng (game vẽ ×2 = 2 ô); nut-ngu, chuyen-f0..f3, nut-hoat; chỉ màu đồng/hổ phách ấm, không xanh lơ; gốc: neo-re/nguon-chatgpt.png)
 - **Dùng vào:** Nút Neo Rễ (game/vung-2 – danh sách `neo` trong phòng): kỹ năng Root Anchor nhắm vào nút này. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Nút rễ có vòng đồng cổ cắm vào đất/tường: NGỦ (xỉn, có gợi ý nhỏ) và HOẠT (dải rễ đồng ấm siết chặt – KHÔNG xanh lơ).
 - **Số khung + ms gợi ý:** 2 trạng thái + 4 khung chuyển ngủ→hoạt (80 ms)

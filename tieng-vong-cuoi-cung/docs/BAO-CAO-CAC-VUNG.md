@@ -1,5 +1,12 @@
 # Báo cáo các vùng (phiên Vùng mới)
 
+## Lượt 02/11 tối – Vùng 2 CHƠI ĐƯỢC (chờ người dùng duyệt)
+| Vùng | Trạng thái |
+|---|---|
+| 1 Weeping Heartwood | chơi được |
+| 2 Rotting Roots | **chơi được** – `game/vung-2/index.html`: 16 phòng, gỗ mục/gai/ao/chốt/cổng, kỹ năng Neo Rễ, 4 quái, tinh anh Nursery Warden, trùm Mold Mother 3 pha – toàn bộ hình ChatGPT. Chi tiết + chỗ còn đơn giản: docs/vung-2/BAO-CAO.md |
+| 3–9 | chưa làm – đang DỪNG theo lời dặn (docs/DUNG-CHO-DUYET-VUNG-2.md) |
+
 ## Lượt 02/11 (lượt 2) – Vùng 2 dựng xong phần không cần ảnh
 | Vùng | Trạng thái |
 |---|---|
