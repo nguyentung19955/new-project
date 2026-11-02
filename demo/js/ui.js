@@ -11,25 +11,32 @@
   try { const v = localStorage.getItem(KY_CHE); if (v === 'pvp' || v === 'coop') che = v; } catch (e) { /* không đọc được */ }
   let cheTran = che;   // chế độ của trận đang chơi
 
-  // ---- khung cố định 390×844 (dọc): scale = min(rộng/390, cao/844), hộp đen hai bên, trừ vùng an toàn (tai thỏ) ----
+  // ---- KHUNG: luôn LẤP ĐẦY CHIỀU RỘNG (scale = rộng/390), chiều cao logic co giãn (H = cao/scale), trừ vùng an toàn (tai thỏ / thanh home) ----
+  // bàn trên neo trên, bàn người chơi + thẻ + SUMMON neo dưới, khoảng giữa co giãn (GAME.boCuc). Màn quá thấp (H < H_MIN): khoảng giữa đã thu hết
+  // → mới giảm scale (hai bên có dải nền mỏng). Màn quá cao (H > H_MAX): giữ H_MAX, căn giữa dọc.
   const doSafe = document.createElement('div'); doSafe.id = 'do-safe'; document.body.appendChild(doSafe);
-  let FR = { cx: C.W / 2, cy: C.H / 2, s: 1 }, K = 1;
-  const toFrame = (x, y) => [(x - FR.cx) / FR.s + C.W / 2, (y - FR.cy) / FR.s + C.H / 2];
-  const fromFrame = (x, y) => [FR.cx + (x - C.W / 2) * FR.s, FR.cy + (y - C.H / 2) * FR.s];
+  let FR = { x0: 0, y0: 0, s: 1 }, K = 1;
+  const toFrame = (x, y) => [(x - FR.x0) / FR.s, (y - FR.y0) / FR.s];
+  const fromFrame = (x, y) => [FR.x0 + x * FR.s, FR.y0 + y * FR.s];
   function resize() {
     const vv = window.visualViewport;
     const vw = innerWidth, vh = innerHeight;
     const cs = getComputedStyle(doSafe);
     const st = parseFloat(cs.paddingTop) || 0, sr = parseFloat(cs.paddingRight) || 0, sb = parseFloat(cs.paddingBottom) || 0, sl = parseFloat(cs.paddingLeft) || 0;
-    const aw = vw - sl - sr, ah = vh - st - sb;
-    const s = Math.max(0.2, Math.min(aw / C.W, ah / C.H));
-    const cx = sl + aw / 2, cy = st + ah / 2;
-    wrap.style.left = Math.round(cx - C.W / 2) + 'px';
-    wrap.style.top = Math.round(cy - C.H / 2) + 'px';
+    const aw = Math.max(100, vw - sl - sr), ah = Math.max(100, vh - st - sb);
+    let s = aw / C.W, Hl = ah / s;
+    if (Hl < C.H_MIN) { s = ah / C.H_MIN; Hl = C.H_MIN; }
+    Hl = Math.round(Math.min(C.H_MAX, Hl));
+    if (Hl !== C.H) G.boCuc(Hl);
+    const x0 = sl + (aw - C.W * s) / 2, y0 = st + (ah - Hl * s) / 2;
+    wrap.style.left = x0 + 'px'; wrap.style.top = y0 + 'px';
+    wrap.style.width = C.W + 'px'; wrap.style.height = Hl + 'px';
     wrap.style.transform = `scale(${s})`;
-    FR = { cx, cy, s };
+    cv.style.height = Hl + 'px';
+    $('#duoi').style.top = C.DUOI_Y + 'px';
+    FR = { x0, y0, s };
     K = Math.min(4, (window.devicePixelRatio || 1) * s);
-    cv.width = Math.round(C.W * K); cv.height = Math.round(C.H * K);
+    cv.width = Math.round(C.W * K); cv.height = Math.round(Hl * K);
     if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
     if (vv && Math.abs((vv.scale || 1) - 1) > 0.02) return;
   }
@@ -51,19 +58,21 @@
   // ---- ảnh nhỏ (chân dung) cho thẻ ----
   const veChanDung = R.veChanDung;
   const mauHanh = (el, h) => { el.style.setProperty('--h', h.mau); el.style.setProperty('--hg', h.mau + '55'); };
+  // màu theo BẬC tướng (khung thẻ, viền chân dung, tên) — 5 bậc TRẮNG/LAM/TÍM/VÀNG/ĐỎ
+  const mauBac = (el, id) => { const b = BAC[TUONG[id].bac] || BAC.trang; mauHanh(el, b); el.dataset.bac = TUONG[id].bac; };
 
   // ---- màn chọn bộ ----
   function dungChon() {
     const l = $('#chon-luoi'); l.innerHTML = '';
     for (const id of TUONG_IDS) {
-      const t = TUONG[id], h = HANH[t.hanh];
+      const t = TUONG[id], h = HANH[t.hanh], bc = BAC[t.bac] || BAC.trang;
       const b = document.createElement('button');
       b.className = 'ct'; b.dataset.id = id;
-      mauHanh(b, h);
+      mauBac(b, id);
       const dmg = Math.min(1, t.dmg / 20), toc = Math.min(1, (1 / t.cd) / 1.25);
       b.innerHTML = `<div class="ct-khung"><div class="ct-trong">
           <canvas class="ct-anh"></canvas>
-          <div class="ct-dau"><span class="ct-he"><i></i>${h.ten}</span></div>
+          <div class="ct-dau"><span class="ct-he"><i></i>${bc.ten}</span></div>
           <span class="ct-so"><b></b></span>
           <div class="ct-than">
             <div class="ct-ten">${t.ten}</div>
@@ -84,7 +93,22 @@
     coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles walk the top lane, then <b>your</b> lane below — hold out with your <b>ALLY</b> for <b>70 waves</b>.',
     pvp: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.',
   };
+  // ---- Archfiend (ô thứ 6): chọn 1 trong ARCHFIEND, nhớ lựa chọn cuối ----
+  const KY_AF = 'neon-grid.af';
+  let afChon = AF_IDS[0];
+  try { const v = localStorage.getItem(KY_AF); if (ARCHFIEND[v]) afChon = v; } catch (e) { /* không đọc được */ }
+  function dungAF() {
+    const l = $('#chon-af'); l.innerHTML = '';
+    for (const id of AF_IDS) {
+      const a = ARCHFIEND[id], b = document.createElement('button');
+      b.className = 'afc'; b.dataset.act = 'afchon'; b.dataset.af = id; b.style.setProperty('--h', a.mau);
+      b.innerHTML = `<canvas></canvas><span><b>${a.ten}</b><em>${a.mo}</em></span>`;
+      R.veAF(b.querySelector('canvas'), id, 30);
+      l.appendChild(b);
+    }
+  }
   function capChe() {
+    document.querySelectorAll('.afc').forEach((b) => b.classList.toggle('bat', b.dataset.af === afChon));
     document.querySelectorAll('.che').forEach((b) => b.classList.toggle('bat', b.dataset.che === che));
     $('#chon-meo').innerHTML = MEO[che];
   }
@@ -98,22 +122,23 @@
   // ---- trận ----
   function batDau(deck) {
     boCu = deck.slice(); cheTran = che;
-    if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI));
-    else { S = G.moi(deck); A = G.moi(BO_AI, true, S); }
+    if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
+    else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
     dung = false; keo = null; thang = false;
     $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop');
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
     const ai = $('#tb-ai'); ai.innerHTML = '';
-    for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauHanh(o, HANH[TUONG[id].hanh]); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 22); ai.appendChild(o); }   // icon đội AI 22px (P1.3: 20–24)
-    { const o = document.createElement('div'); o.className = 'ai-o ld'; o.textContent = 'LEAD'; ai.appendChild(o); }
+    for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauBac(o, id); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 22); ai.appendChild(o); }   // icon đội AI 22px (P1.3: 20–24)
+    { const o = document.createElement('div'); o.className = 'ai-o ld'; o.style.setProperty('--h', ARCHFIEND[AF_AI].mau); o.title = ARCHFIEND[AF_AI].ten; o.innerHTML = '<canvas></canvas>'; R.veAF(o.querySelector('canvas'), AF_AI, 22); ai.appendChild(o); }   // ô 6: Archfiend của AI
+    { const b = $('#the-af'), a = ARCHFIEND[afChon]; b.style.setProperty('--h', a.mau); b.querySelector('.af-ten').textContent = a.ten; b.title = a.mo; R.veAF(b.querySelector('canvas'), afChon, 66); }
     const bo = $('#bo-bac'); bo.innerHTML = '';
     deck.forEach((id, n) => {
       const t = TUONG[id], h = HANH[t.hanh];
       const b = document.createElement('button');
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
-      mauHanh(b, h);
+      mauBac(b, id);
       b.style.left = (8 + n * 60) + 'px';
       b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
       R.veThe(b.querySelector('canvas'), id, 53, 66);   // P0.2: chân dung lớn hơn (53×66)
@@ -149,6 +174,16 @@
         b.classList.toggle('thieu', !mx && lk < gb); b.classList.toggle('max', mx);
       });
     });
+    if (S.af) {   // thẻ Archfiend: giá (tăng sau mỗi lần dùng) + vòng hồi chiêu
+      const a = S.af, cfg = ARCHFIEND[a.id], ga = G.giaAF(S), p = a.cdT > 0 ? a.cdT / cfg.cd : 0;
+      set('af', ga + '|' + (lk >= ga) + '|' + Math.ceil(a.cdT) + '|' + (a.T > 0) + '|' + Math.round(p * 60), () => {
+        const b = $('#the-af');
+        b.querySelector('.af-gia b').textContent = ga;
+        b.querySelector('.af-cd').textContent = a.cdT > 0 ? Math.ceil(a.cdT) : '';
+        b.style.setProperty('--p', p);
+        b.classList.toggle('cho', a.cdT > 0); b.classList.toggle('thieu', lk < ga); b.classList.toggle('dang', a.T > 0);
+      });
+    }
   }
   function ketThuc() {
     if (S.coop) return ketThucCoop();
@@ -183,7 +218,7 @@
   }
   function datDung(v) {
     dung = v; $('#dung').hidden = !v;
-    if (v && S) $('#dung-bo').innerHTML = S.deck.map((id) => `${TUONG[id].ten} <b>LV ${S.bac[id] + 1}</b>`).join(' · ');
+    if (v && S) $('#dung-bo').innerHTML = S.deck.map((id) => `${TUONG[id].ten} <b>LV ${S.bac[id] + 1}</b>`).join(' · ') + (S.af ? ` · <b>${ARCHFIEND[S.af.id].ten}</b>` : '');
   }
 
   // ---- nút ----
@@ -194,6 +229,8 @@
     else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
     else if (a === 'trieu' && S && !dung) { G.trieuHoi(S); capNhat(); }
+    else if (a === 'afchon') { afChon = b.dataset.af; try { localStorage.setItem(KY_AF, afChon); } catch (er) { /* không lưu được */ } capChe(); }
+    else if (a === 'af' && S && !dung) { G.dungAF(S); capNhat(); }
     else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } capNhat(); }
     else if (a === 'tocdo') { tocDo = tocDo >= 3 ? 1 : tocDo + 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo > 1); }   // 1x → 2x → 3x (3x để test nhanh)
     else if (a === 'dung' && S && !S.het) datDung(true);
@@ -249,7 +286,7 @@
     ctx.imageSmoothingEnabled = false;
     R.ve(ctx, S, now / 1000, K, keo, A);
   }
-  dungChon();
+  dungAF(); dungChon();
   requestAnimationFrame(loop);
 
   // móc cho test
