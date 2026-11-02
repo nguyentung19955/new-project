@@ -1,0 +1,148 @@
+THE LAST ECHO — MOBILE START / FIRST-TIME USER FLOW (ChatGPT tư vấn 02/11/2026)
+Nguồn: chatgpt.com/c/6ae885d3-f38c-83ec-969b-e7218b29fd64 (file gốc The_Last_Echo_Mobile_Start_Flow_UX_Spec.txt, 43 KB).
+Bản dưới đây chép đủ các quyết định, toạ độ, cỡ ảnh; lược bớt câu giải thích.
+
+0. QUYẾT ĐỊNH CHÍNH
+- ONE title screen, ONE global save, ONE unified pause menu, ZERO region-specific start menus.
+- First play: open link -> (rotate/audio gate if needed) -> illustrated title -> NEW GAME -> short skippable opening
+  -> Bell Village -> first touch movement in a safe space -> talk to one NPC / inspect Rootbound Bell -> Region 1 directly
+  -> learn attack + jump in first Region 1 rooms.
+- Return: title -> CONTINUE -> exact last safe spawn/checkpoint (not just "last region").
+- Bell Village = narrative + spatial hub. Region 1/2 are destinations inside one game. Keep boss-room gate R1->R2 and Rootbound Bell fast travel.
+- Do not make account, cloud merge, multi-step setup or long cutscene a prerequisite to swinging the sword.
+- If only 3 changes ship this week: (1) real New Game / Continue title replaces launcher, (2) remove region page menus,
+  (3) sign-in / cloud-conflict prompts never block guest first play.
+
+1. ĐỌC ẢNH CHỤP
+- Main page: developer-launcher look, first-timer can't find the canonical start; Region 2 locked = premature info; Demo Room visible.
+- Region menu panel (purple + antique gold + skull) = good UI material; reuse as pause/settings/save panel, NOT a second launch gate.
+- Bell Village = strongest visual identity (giant cracked bell, hanging bells, warm windows) -> base title art on it.
+
+2. P0 — FIRST LAUNCH, TỪNG BƯỚC
+State machine: BOOT -> DEVICE CHECK -> TITLE -> NEW GAME/CONTINUE -> OPENING -> VILLAGE (or saved world).
+Village: Rootbound Bell -> destination -> transition -> region gameplay. R1 boss gate -> transition -> R2. Any gameplay: PAUSE -> Return to Title.
+No scene transition passes through another menu. All scenes use one save manager + shared global UI.
+00 Show local loading splash immediately (not raw HTML text); preload title art, font, primary controls.
+01 Portrait -> minimal "Rotate to Play" screen (recommendation, not dead end; Safari can't lock orientation).
+02 Title with main CTA NEW GAME. No modal sign-in. First tap unlocks audio; never autoplay music before a gesture.
+   No "Press to start" in v1.
+03 NEW GAME: no save -> start immediately, no slot chooser. Save exists -> confirm "Start a new journey? Your current journey will be replaced on this device." CANCEL / START NEW (+ optional back up).
+04 Opening "The First Silence": ideally 2–3 essential panels (<20 s), tap to advance, SKIP visible from panel 1. 7-panel version OK if skippable; never replay; set introSeen on skip.
+05 Spawn Bell Village screen 1, safe spot near Vesper / clear route to Rootbound Bell. Movement control visible; one hint "Drag to move" (tiny thumb animation) until first move.
+06 First control here, before any dialogue. Guide by light / NPC head-turn / bell shimmer, not a quest panel.
+07 TALK icon appears only near NPC; optional. One-line objective after first move: "Find the Rootbound Bell."
+08 Rootbound Bell destination sheet: "Weeping Heartwood — Enter", locked "Rotting Roots — Defeat the Hollow Bell Mother". Village itself not listed. One tap -> transition -> Region 1 room 1. No second menu.
+09 Region 1 room 1: teach jump + attack via geometry and an easy enemy; dash only after acquired; heal at first damage when a charge exists. Early first Rest Bell.
+10 After first Rest Bell: tiny "Progress saved". Never force account linking.
+Target: NEW GAME -> first movement ~10–25 s (few seconds if intro skipped). If players can't find the bell in ~1 min, shorten route.
+Return cases: A local save -> CONTINUE primary + status "Weeping Heartwood · Rest Bell 03" + save age. C cleared storage -> NEW GAME primary, discreet ACCOUNT / RECOVER SAVE.
+D cloud vs local differ -> title loads first, small "Two saves found — Review" badge; resolve before Continue commits; never delete the other without backup.
+E auth expired -> keep playing locally, small sync status.
+
+3. P0 — TITLE SCREEN 844x390 (logical px, respect env(safe-area-inset-*))
+Safe content ~ (52,24,740,342): 24 px top/bottom, 52 px left/right baseline + real insets.
+Full frame (0,0,844,390) art | Logo (74,50,370,102) | Subtitle (94,152,320,24) optional
+Main button (536,122,242,54) CONTINUE or NEW GAME | Secondary (536,188,242,44) NEW GAME
+OPTIONS (536,244,116,42) | ACCOUNT (662,244,116,42) | Status line (536,292,242,26) | Version (54,351,300,15)
+No save: single NEW GAME at y=144, OPTIONS+ACCOUNT below, no disabled CONTINUE.
+Art: left = village rooftops / giant cracked bell / tiny Wanderer; right third quiet for buttons. Purple-black ~#130E19, bronze ~#B58C49, bone text.
+Buttons >=44x44, primary ~242x54, >=10 px apart, text 18–20 px rendered by game (not baked in art).
+Animation (restrained): mist 6–8 frames 2–4 s loop; bell glint 4 frames every 6–10 s; Wanderer idle 6 frames optional; button gleam.
+Audio: one soft distant bell strike on first interaction, ambient fades in after gesture.
+NOT on title: sign-in box, cloud conflict buttons, export/import, controls legend, region links, rotate footer.
+
+4. P0 — SAVE / ACCOUNT / CLOUD
+- One versioned global save: saveId, schemaVersion, playerId, lastSafeSceneId, lastSafeSpawnId, current scene/transition checkpoint, introSeen + quest flags,
+  region 1/2 bosses + doors + pickups, HP/maxHP, Echo Shards, Lattice/charms, abilities (Root Anchor), map reveal, playtime, updatedAt, cloudRevision, localRevision.
+- Migrate old per-region saves once, keep backup until verified.
+- P0 one "Journey" only; P1 maybe 2–3 slots later.
+- Commit points: Rest Bell (atomic), village entry/exit, boss clear (immediately), R1->R2 gate (boss defeated + gate open + destination spawn as one checkpoint), Return to Title. Never say "Saved" before write succeeds.
+- Cloud: guest first. Account lives in OPTIONS > ACCOUNT / CLOUD SAVE + small title icon. States: Guest · On-device save / Signed in · Synced / Syncing… / Offline · Saved on device / Action needed · Choose a save / Sync failed · Retry.
+- Conflict modal: "Two journeys were found"; cards THIS DEVICE vs CLOUD (timestamp, location, playtime, bosses); "Use this device" / "Use cloud" / "Not now"; note "Your other save will be kept as a recovery copy first." Backup before replace; don't rely on timestamps alone.
+- Export/Import: P1 under OPTIONS > SAVE DATA only.
+
+5. P0 — REGION TRANSITIONS
+- Remove Region 1 / Region 2 / Demo Room from public title (Demo -> debug only).
+- Region pages show NO Continue/New Game/Sign-in/Import panel. Read global save + transition intent, preload, then gameplay.
+  P0 OK to keep separate HTML pages but share one global state; suppress the extra menu; survive reload/back.
+- Teleport: bell -> destination panel -> bell ring + dim ~250 ms -> loading screen while loading -> spawn at Rest Bell/portal -> area title card fade ~1–1.5 s.
+- Gate: root gate opens -> walk through -> fade/load -> Region 2 boundary spawn -> "Rotting Roots" card.
+- Loading: local art + destination + indeterminate indicator; never "Bell Village is not open yet: waiting for art"; on failure "Couldn't load this area. Retry / Return to Title". No fake 5 s wait.
+
+6. P0 — PAUSE MENU (same everywhere)
+Pause icon top-right safe edge (44x44). Order: 1 RESUME (default) 2 MAP 3 JOURNAL 4 LATTICE 5 OPTIONS 6 RETURN TO TITLE (separated, confirm).
+In cutscene/dialogue: Resume / Skip Scene / Settings / Return to Title. Game really pauses. Rest Bell menu (Rest / Upgrade / Return to Village) stays separate. In-panel Back, not browser Back.
+
+7. TOUCH ONBOARDING
+P0 Village: movement zone visible at once, animated thumb until first move ("Drag to move"); TALK button only near interactables. Never keyboard hints on touch.
+P0 Region 1 room 1: low ledge -> JUMP appears + "Jump"; harmless target -> ATTACK pulses + "Attack"; not both at once.
+P1: Dash at first gap after acquired; Heal when HP < max + charge available + safe ("Hold to heal" only if hold); Map pulse after first fork/Rest Bell; Lattice at first charm; Root Anchor in Region 2 first safe use.
+Keep middle ~40% of screen clear; stable button positions.
+Starting layout (844x390): move zone x 52..255, y 208..365 (floating thumb); Attack center (744,290) d62 hit72; Jump (666,323) d58 hit68;
+Dash (772,214) d52 hit62; Heal (596,335) d46 hit54; Pause top-right 44x44. >=8 px between hit circles; shift up by safe insets.
+P1 OPTIONS > CONTROLS: size 80–130%, opacity 35–100% (default 65–75%), left-handed preset, drag-to-edit layout + test pad + reset, fixed/floating joystick. Haptics optional only.
+
+8. OPTIONS (tabs AUDIO | CONTROLS | DISPLAY | ACCOUNT)
+AUDIO P0: Master/Music/SFX 0–100, Mute. CONTROLS: legend matching touch layout (P0), customisation (P1).
+DISPLAY P0: Fit / Pixel Perfect, screen shake, reduce flashes, fullscreen only where supported. Portrait: "For the best experience, rotate your phone."
+Add to Home Screen: optional one-time tip on 2nd–3rd title visit (Share -> Add to Home Screen), hidden when installed.
+ACCOUNT P1: guest/Google, sync status, review conflict, sync now, export/import, sign out (warn if unsynced). 7-day session end never invalidates device save.
+LANGUAGE P2.
+
+9. ẢNH CẦN VẼ (PNG cỡ thật; UI vẽ 2x, hiển thị 50%; RGBA = nền trong suốt thật; chữ do game viết, không in vào ảnh)
+P0 Title/startup:
+A01 TITLE_BACKGROUND 1688x780 opaque — bell village, giant cracked bell, roots, mist, small Wanderer left/center; right 35% quiet. No words.
+A02 TITLE_LOGO 800x220 RGBA — "THE LAST ECHO" wordmark antique gold/bone (only art allowed to have the name).
+A03 TITLE_MIST_LOOP 1688x780 RGBA x6 frames (separate files) — P1 if costly.
+A04 CRACKED_BELL_GLINT 192x192 RGBA x4 — optional P1.
+A05 WANDERER_TITLE_IDLE 128x192 x6 (sheet 768x192) — optional P1.
+A06 BUTTON_FRAME primary 520x116 RGBA x3 states normal/pressed/disabled, 9-slice, corners 24 px, no text.
+A07 BUTTON_FRAME secondary 520x96 RGBA x3 states.
+A08 ICON_SETTINGS 88x88 RGBA x2 (normal/pressed).
+A09 ICON_ACCOUNT_CLOUD 88x88 x3 (guest/synced/attention) strip 264x88.
+A10 BACKPLATE_SMALL 520x68 RGBA (status line).
+A11 PORTRAIT_ROTATE_PHONE 320x240 x4 (sheet 1280x240).
+A12 LOADING_BACKGROUND 1688x780 opaque (may reuse A01 darkened).
+A13 LOADING_BELL_ANIMATION 160x160 x8 (sheet 1280x160).
+P0 Panels/transition/HUD:
+A14 LARGE_ORNATE_PANEL 1120x660 RGBA (style of region menu frame, blank center, 9-slice).
+A15 MEDIUM_ORNATE_PANEL 840x540 RGBA.
+A16 PANEL_CORNERS_EDGES 8 pieces (4 corners + 4 edges).
+A17 REGION_TITLE_ORNAMENT 720x144 RGBA, no words.
+A18 TRANSITION_WIPE_ROOTS 1688x780 x6 — P1 (black fade OK for P0).
+A19–A23 HUD icons PAUSE / MAP / JOURNAL / LATTICE / BACK, each 88x88 x2 states (strip 176x88).
+A24 UI_FOCUS_GLOW 520x116 x6 — P2.
+P0 Touch HUD:
+A25 MOVE_ZONE_RING 256x256 x2; A26 MOVE_THUMB 112x112 x2;
+A27 BUTTON_ATTACK 144x144 x3 (idle/pressed/disabled); A28 BUTTON_JUMP 136x136 x3; A29 BUTTON_DASH 124x124 x3;
+A30 BUTTON_HEAL 108x108 x3; A31 BUTTON_TALK_INTERACT 120x120 x3;
+A32 TOUCH_TUTORIAL_FINGER 96x128 x6 (vertical sheet 96x768); A33 TUTORIAL_HINT_PLAQUE 640x88; A34 INTERACT_PROMPT_PIP 72x72 x4 (288x72).
+P1 Options/cloud/saves:
+A35 TAB_FRAME 280x96 x2; A36 SLIDER_TRACK 360x28; A37 SLIDER_KNOB 64x64 x2; A38 TOGGLE 128x64 x2;
+A39 SAVE_CARD_FRAME 760x180 x2; A40 CLOUD_STATUS_ICONS 80x80 x5 (400x80); A41 SAFE_RECOVERY_ICON 88x88; A42 ADD_TO_HOME_PICTOGRAM 480x240.
+P2: A43 TITLE_SKULL_ORNAMENT 192x96; A44 BELL_DUST 64x64 x8; A45 PAUSE_PANEL_IDLE 1120x660 x4.
+Commission order: Batch 1 A01 A02 A06 A07 A14 A15 A12 A13 | Batch 2 A19–A23 A25–A33 A17 | Batch 3 A09 A10 A11 A35–A42 | Batch 4 optional.
+(Text, hitboxes, fades, slider values, layout may be rendered by code; only the visual art must be drawn.)
+
+10. THỨ TỰ LÀM
+Sprint 1 (P0 clean funnel): one title entry (New Game if empty, Continue if saved); remove region links + Demo Room; move sign-in/conflict/import-export off title;
+  bypass region menus for teleports + gate; fix village loading text; no keyboard hints on touch; one global save manager + safe-scene resume.
+Sprint 2 (P0 first play): title art + safe areas; skippable intro + introSeen; safe village spawn + one move prompt; obvious route to bell;
+  Region 1 jump/attack/Rest Bell teaching; unified pause + Return to Title; offline guest save + write-failure feedback.
+Sprint 3 (P1): sign-in + non-destructive conflict resolver; touch settings; audio/display options; A2HS tip; export/import in settings.
+Sprint 4 (P2): title ambient animation, wipe transition, accessibility, extra slots, localisation.
+
+11. LỖI CẦN TRÁNH (rút gọn)
+Double-starting (title -> bell -> region page -> Continue); listing all places on title; Google sign-in blocking first play; silent last-write-wins cloud;
+New Game resetting one region but keeping gear; Continue opening last region instead of checkpoint; replaying intro; long cinematic before input;
+all controls taught on one screen; tiny gold text; designing only for one screenshot; text baked into PNG; huge full-screen frame atlases for small effects;
+touch buttons over the combat area / edge gestures; vibration as only feedback; forcing fullscreen/orientation; placeholder dev strings shown to players;
+not surviving refresh/back/suspend; visible debug paths; overbuilding slots/menus before one complete new-player journey works.
+
+12. PHÉP THỬ CHẤP NHẬN
+A fresh guest landscape: title shows NEW GAME (no dead Continue), no login, moves in village, enters Region 1 with no extra menu.
+B portrait: rotate cue, no reload loop. C intro skipped: valid spawn, intro never replays.
+D returning: CONTINUE restores checkpoint with HP/inventory/boss flags/map/region. E R1 boss: two-way gate, R2 unlocked, bell teleports, reload keeps gate open.
+F offline playable, badge says local-only. G cloud/local conflict: two cards, backup kept. H slow/missing asset: coherent loading + Retry.
+I reload/back after gate: no duplicate boss / loss / wrong destination. J notch on either edge + home-screen mode: all CTAs tappable.
+K touch-only: no keyboard copy. L New Game with save asks to confirm. M options persist. N pause really pauses.
