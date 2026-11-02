@@ -269,7 +269,10 @@
     if (C && C.ok){
       const n = C.hinh.length;
       const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
-      SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, E.trangNV());   // loé trắng 1–2 khung đầu khi trúng đòn
+      const tr = E.trangNV();
+      if (window.LopTrangBi) LopTrangBi.veSau(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // lớp trang bị sau lưng (chưa đeo/chưa có ảnh = không vẽ gì)
+      SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);   // loé trắng 1–2 khung đầu khi trúng đòn
+      if (window.LopTrangBi) LopTrangBi.veTruoc(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, tr);
     } else khoi(fx, fy, 30, 78, '#d8dde3', pl.face);
   }
   function veQuai(q){

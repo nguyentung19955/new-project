@@ -36,6 +36,7 @@ V1.nap = async function(){
   const c = V1.CAP[0];
   E.NV.capClip = c ? c.clip : {}; E.NV.cap = c || null;
   E.NV.chuoi = (c && c.chuoi) || NVJ.chuoi || null; E.NV.bien_the = (c && c.bien_the) || NVJ.bien_the || null;
+  if (window.LopTrangBi) await LopTrangBi.nap('../thu-mat-na/trang-bi.json', V1.CAP.flatMap(c => Object.values(c.clip)));   // lớp trang bị/sức mạnh trên người (chưa có ảnh → không đổi gì)
   // quái
   try { V1.QJ = await SpriteMN.napJson('../thu-mat-na/quai.json'); }
   catch (e){ V1.LOI.push('quai.json: ' + e); V1.QJ = {loai:{}}; }

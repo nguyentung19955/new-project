@@ -59,6 +59,7 @@ body.touch #keys{display:none}
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
 <script src="../thu-mat-na/ve-chieu-quai.js"></script>
+<script src="../thu-mat-na/lop-trang-bi.js"></script>
 <script>
 'use strict';
 /* ================= TRANG: nạp cảnh + manifest + sprite, đầu vào, vòng lặp 60 Hz cố định, vẽ ================= */
@@ -111,6 +112,7 @@ async function nap(){
       if (!d._clip.fx.ok) LOI.push(id + '/fx-danh');
     }
   }));
+  if (window.LopTrangBi) await LopTrangBi.nap('../thu-mat-na/trang-bi.json', CAP.flatMap(c => Object.values(c.clip)));   // lớp trang bị/sức mạnh trên người (chưa có ảnh → không đổi gì)
 }
 function chonCap(i){
   OPT.cap = i; const c = CAP[i];
@@ -276,7 +278,9 @@ function veNV(cam){
     const n = C.hinh.length;
     const k = st.k ?? (st.tiLe !== undefined ? Math.floor(clampN(st.tiLe, 0, 0.999) * n) : SpriteMN.khungTheoBuoc(C, st.t ?? HA.t));
     const trang = E.trangNV();   // loé trắng 1–2 khung đầu khi trúng đòn
+    if (window.LopTrangBi) LopTrangBi.veSau(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);   // lớp trang bị sau lưng (chưa đeo/chưa có ảnh = không vẽ gì)
     SpriteMN.ve(ctx, C, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);
+    if (window.LopTrangBi) LopTrangBi.veTruoc(ctx, st.ten, k, fx, fy, pl.face < 0, E.TL * E.CO, al, trang);
   } else khoi(fx, fy, 44, 112, '#d8dde3', pl.face);
 }
 function clipQuai(q){

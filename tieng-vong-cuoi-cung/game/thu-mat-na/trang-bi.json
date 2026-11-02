@@ -1,0 +1,30 @@
+{
+ "ghi_chu": "Lớp trang bị / sức mạnh HIỆN LÊN NGƯỜI Kiếm Khách (lop-trang-bi.js). BẢN NHÁP 02/11 – chờ ChatGPT duyệt (docs/suc-manh/thiet-ke.md). Mọi lớp chỉ hiện khi co_anh=true (ghi khi yêu cầu ảnh XONG) VÀ ẢNH THẬT có ở <goc><id>/dung/f00.png; chưa có ảnh = nhân vật y hệt gốc. ap_chi_so=false: chỉ số chưa áp vào gameplay. tu_dong_cap=false: cấp chưa tự tăng theo tiến độ.",
+ "goc": "../../art/kiem-khach-lop/",
+ "ap_chi_so": false,
+ "tu_dong_cap": false,
+ "lop": {
+  "mat-na-nut-1": {"ten": "Mặt Nạ – Vết Nứt Đầu", "khe": "mat-na", "co_anh": false, "kieu": "khung", "z": "truoc", "thu_tu": 30,
+   "mo_ta": "1 vết nứt mảnh trên mặt nạ, khe nứt hắt ánh bạc-xanh rất nhẹ. Chỉ thêm điểm ảnh trong vùng mặt nạ, không đổi màu mặt nạ gốc.",
+   "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/002-mat-na-nut.md"},
+  "mat-na-nut-2": {"ten": "Mặt Nạ – Nứt Vang", "khe": "mat-na", "co_anh": false, "kieu": "khung", "z": "truoc", "thu_tu": 30,
+   "mo_ta": "2–3 vết nứt, ánh trong khe rõ hơn.", "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/002-mat-na-nut.md"},
+  "mat-na-nut-3": {"ten": "Mặt Nạ – Cộng Hưởng", "khe": "mat-na", "co_anh": false, "kieu": "khung", "z": "truoc", "thu_tu": 30,
+   "mo_ta": "Vết nứt chạy hết nửa mặt nạ, khe sáng rõ (vẫn không che mắt/đường nét gốc).", "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/002-mat-na-nut.md"},
+  "an-giap": {"ten": "Ấn Chuông Trên Giáp", "khe": "an", "co_anh": false, "kieu": "khung", "z": "truoc", "thu_tu": 20,
+   "mo_ta": "Ấn hình chuông nhỏ (vài điểm ảnh) khắc trên ngực/vai, sáng nhẹ.", "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/003-an-giap.md"},
+  "khan-ngan": {"ten": "Dải Vải Ngân", "khe": "khan", "co_anh": false, "kieu": "khung", "z": "sau", "thu_tu": 10,
+   "mo_ta": "Dải vải mảnh bay sau lưng/cổ, chuyển động theo dáng.", "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/004-khan-ngan.md"},
+  "chuong-hong": {"ten": "Chuông Nhỏ Đeo Hông", "khe": "hong", "co_anh": false, "kieu": "neo", "z": "truoc", "thu_tu": 25,
+   "tep": "neo", "so_hinh_neo": 1, "chan_neo": null,
+   "neo": {},
+   "mo_ta": "Chuông đồng nhỏ treo hông. Kiểu 'neo': 1 ảnh nhỏ + điểm neo đo cho từng khung clip (neo.<thư mục clip> = [[x,y] mỗi khung], toạ độ trong ảnh gốc 256×256 mặt phải). Clip chưa đo neo → ẩn.",
+   "yeu_cau_anh": "docs/yeu-cau-anh/sucmanh/005-chuong-hong.md"}
+ },
+ "cap_suc_manh": [
+  {"ten": "Tro Lặng", "mo_ta": "Gốc – y hệt hiện tại.", "lop": [], "dieu_kien": {}, "chi_so": {}},
+  {"ten": "Tiếng Nứt", "mo_ta": "Sau khi hạ trùm Vùng 1.", "lop": ["mat-na-nut-1"], "dieu_kien": {"trum": ["trum-vung-1"]}, "chi_so": {"mau_them": 1}},
+  {"ten": "Vang Âm", "mo_ta": "Hạ trùm Vùng 1 + 3 tinh anh.", "lop": ["mat-na-nut-2", "an-giap"], "dieu_kien": {"trum": ["trum-vung-1"], "tinh_anh": 3}, "chi_so": {"sat_thuong_nhan": 1.1}},
+  {"ten": "Cộng Hưởng", "mo_ta": "Hạ 2 trùm vùng (Vùng 2 trở đi).", "lop": ["mat-na-nut-3", "khan-ngan"], "dieu_kien": {"so_trum": 2}, "chi_so": {"mau_them": 1, "sat_thuong_nhan": 1.1}}
+ ]
+}
