@@ -5,6 +5,8 @@
   const $ = (s) => document.querySelector(s);
   const wrap = $('#wrap'), cv = $('#cv'), ctx = cv.getContext('2d');
   let S = null, A = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, thang = false;
+  // giao diện kỹ năng chủ động (VÀNG): menu = ô đang mở hàng nút kỹ năng; chon = { i, k, ten, ds } đang chọn ô cho kỹ năng k
+  const UI = { menu: null, chon: null };
   const KY_LUC = 'neon-grid.best', KY_CHE = 'neon-grid.mode';
   // chế độ chơi: 'coop' (mặc định, đồng đội AI, 70 wave) hoặc 'pvp' (AI MIRROR như cũ); nhớ lựa chọn cuối
   let che = 'coop';
@@ -124,7 +126,7 @@
     boCu = deck.slice(); cheTran = che;
     if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
     else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
-    dung = false; keo = null; thang = false;
+    dung = false; keo = null; thang = false; UI.menu = null; UI.chon = null;
     $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop');
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
@@ -248,18 +250,30 @@
   // ---- kéo tướng để gộp ----
   // hitbox ô theo toạ độ logic của bàn người chơi (ô 46×45, nới 1px vào khe)
   const oTai = (x, y) => { for (let i = 0; i < C.COT * C.HANG; i++) { const [ox, oy] = G.oXY(S, i); if (x >= ox - 1 && x < ox + C.O + 1 && y >= oy - 1.5 && y < oy + C.OH + 1.5) return i; } return -1; };
+  const trongHop = (r, x, y) => x >= r.x - 2 && x < r.x + r.w + 2 && y >= r.y - 2 && y < r.y + r.h + 2;
   cv.addEventListener('pointerdown', (e) => {
     if (!S || S.het || dung) return;
     const [x, y] = toFrame(e.clientX, e.clientY), i = oTai(x, y);
+    // 1) PACKET SWAP: chạm chân dung / REROLL
+    for (const r of R.hopChonGop(S)) if (trongHop(r, x, y)) { G.chonKetQua(S, r.n); return; }
+    // 2) hàng nút kỹ năng đang mở: chạm nút sẵn sàng → chế độ chọn ô
+    if (UI.menu != null) {
+      const r = R.hopChu(S, UI.menu).find((h) => trongHop(h, x, y)), i0 = UI.menu; UI.menu = null;
+      if (r) { if (r.san) { const m = G.chuDong(S, i0).find((d) => d.cf.k === r.k); UI.chon = { i: i0, k: r.k, ten: r.ten, ds: G.oHopLe(S, i0, m.cf), uid: S.o[i0].uid }; } return; }
+    }
+    // 3) đang chọn ô: chạm ô hợp lệ → dùng kỹ năng; chạm chỗ khác → huỷ
+    if (UI.chon) { const ch = UI.chon; UI.chon = null; if (i >= 0 && ch.ds.includes(i)) { G.dungChuDong(S, ch.i, ch.k, i); capNhat(); } return; }
     if (i < 0 || !S.o[i] || S.o[i].da) return;
-    keo = { i, x, y, id: e.pointerId };
+    keo = { i, x, y, x0: x, y0: y, id: e.pointerId };
     try { cv.setPointerCapture(e.pointerId); } catch (er) { /* bỏ qua */ }
   });
   cv.addEventListener('pointermove', (e) => { if (!keo || e.pointerId !== keo.id) return; [keo.x, keo.y] = toFrame(e.clientX, e.clientY); });
   const tha = (e) => {
     if (!keo || e.pointerId !== keo.id) return;
     const [x, y] = toFrame(e.clientX, e.clientY), j = oTai(x, y);
-    if (S && j >= 0 && S.o[keo.i] === S.o[keo.i]) G.tha(S, keo.i, j);
+    const cham = j === keo.i && Math.hypot(x - keo.x0, y - keo.y0) < 8;   // CHẠM (không kéo) tướng có kỹ năng chủ động → mở hàng nút
+    if (cham && S && G.chuDong(S, j).length) UI.menu = j;
+    else if (S && j >= 0 && S.o[keo.i] === S.o[keo.i]) G.tha(S, keo.i, j);
     keo = null; capNhat();
   };
   cv.addEventListener('pointerup', tha); cv.addEventListener('pointercancel', () => (keo = null));
@@ -279,12 +293,14 @@
         if (S.het) break;
       }
       if (keo && !S.o[keo.i]) keo = null;   // tướng bị boss cuốn đi khi đang kéo
+      if (UI.chon && (!S.o[UI.chon.i] || S.o[UI.chon.i].uid !== UI.chon.uid)) UI.chon = null;   // tướng đã bị ghép / dời
+      if (UI.menu != null && !S.o[UI.menu]) UI.menu = null;
       if (S.het) ketThuc();
     }
     if (++dem % 3 === 0 || !S) capNhat();
     ctx.setTransform(K, 0, 0, K, 0, 0);
     ctx.imageSmoothingEnabled = false;
-    R.ve(ctx, S, now / 1000, K, keo, A);
+    R.ve(ctx, S, now / 1000, K, keo, A, UI);
   }
   dungAF(); dungChon();
   requestAnimationFrame(loop);
@@ -293,6 +309,6 @@
   window.DEMO = {
     get S() { return S; }, get A() { return A; }, G, batDau, fromFrame, toFrame,
     oClient: (i) => { const [x, y] = G.oTam(S, i); return fromFrame(x, y); },
-    tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; },
+    tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; }, UI,
   };
 })();

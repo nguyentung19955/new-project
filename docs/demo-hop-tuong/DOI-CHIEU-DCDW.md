@@ -57,4 +57,10 @@ Ký hiệu: **CÓ** = đã có trước phiên này · **THIẾU → ĐÃ LÀM**
 ## IV. Hoãn / ngoài phạm vi
 - Bảng emote / ping đồng đội (B8, chưa rõ cơ chế).
 - Meta ngoài trận (shop, clan, pass, arena, mastery, level thẻ).
-- Tinh anh (elite) có đặc tính theo ngoại hình — chờ bể quái mới từ ChatGPT.
+- ~~Tinh anh (elite)~~ → ĐÃ LÀM (phiên sau): 4 bọ thường + 4 tinh anh, xem TIEN-DO-V3.md mục "Bố cục DCDW...".
+
+## V. Cập nhật phiên "bố cục DCDW" (02/11/2026)
+- A1/A2: bàn to kiểu DCDW (không còn khoảng trống giữa 2 bàn, ô cao 58–78 theo màn), tướng cao ~80% ô, ảnh tĩnh ổn định, đạn ra từ đầu nòng.
+- D14/06: 5 bậc thể hiện bằng đế màu đặc dưới chân + viền 1px; 8 tướng xếp lại TRẮNG ×4, LAM ×1, TÍM ×1, VÀNG ×2 (người dùng chốt).
+- 08: VÀNG có kỹ năng chủ động CHỌN Ô (BROKER TRADE/SWAP/TAKE PROFIT, GLITCH COPY BUFFER/PACKET SWAP/REROLL) — quyết định vị trí + thời điểm.
+- F16: 4 bọ + 4 tinh anh có cơ chế đọc được bằng mắt; 3 trùm chỉnh 2 chiêu theo bản thiết kế mục VII.

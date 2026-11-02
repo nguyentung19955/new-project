@@ -128,3 +128,37 @@ Không chạy test. Đã chụp màn (390×844, 360×640, 430×932, màn chọn 
 - Chân dung Archfiend đang mượn portrait WARP/GLITCH — cần ChatGPT vẽ `archfiend_overclock.png`, `archfiend_firewall.png`.
 - Cân bằng skill mới (MANA FEED, DEADLINE, WARP GATE) là số thử nghiệm.
 - Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.
+
+## Bố cục DCDW, tướng đầy ô, animation ổn định, đạn từ nòng, bậc rõ, bọ + tinh anh (02/11/2026, phiên tự động)
+Làm theo phản hồi người dùng: "chưa giống Defense War", animation giật, đạn không ra từ nòng, không nhìn ra bậc. Không chạy test. Đã chụp màn 390×844, 390×700, màn chọn tướng, phóng to bàn (điểm nòng 8 hướng) và tự xem; chạy thử bot tự chơi bằng node (co-op tới wave 30–39, PVP tới wave 17–21) không lỗi.
+
+### Đã làm
+1. **Bố cục DCDW** (data.js `CAU_HINH`, game.js `boCuc`): bỏ khoảng trống tím giữa 2 bàn — chiều cao dư dùng làm **ô cao hơn** (ô rộng 62, cao 58–78 tuỳ màn: 844 → 62×78, 700 → 62×58). Bàn 332px (~85% bề ngang), làn quái hẹp lại x 8..48. Khoảng giữa 2 bàn còn ~44px (cửa làn + nhãn PLAYER). HUD dưới gọn lại (cao 186). Màn 700 vẫn vừa không thu nhỏ.
+2. **Tướng đầy ô**: cao = min(0.8 × chiều cao ô, 58) × hệ số riêng, neo chân cách đáy ô 7px, rộng ≤ ô + 8. Hệ số (`TUONG[id].co`): scorch 1.08, lance 1.12, broker 1.08, venom 1.14, arc 0.90, warp 0.92, frost 0.95, glitch 0.96. Mọi hướng dùng chung 1 tỉ lệ → không đổi cỡ khi quay.
+3. **Ô/bàn sáng hơn**: tile.png phủ lớp xám-xanh (screen) + viền ô sáng, nền bàn sáng hơn; vẫn tông neon.
+4. **Animation ổn định**: `CAU_HINH.SHEET_TUONG = false` → TẮT sheet idle/attack (không nạp luôn). Tướng luôn là **ảnh tĩnh theo hướng** (5 hướng + lật gương, WARP xoay). Đánh = giật lùi 2px ngược hướng bắn trong 90ms (dịch nguyên khối) + chớp đầu nòng 70ms + đạn bay. Nhún 0.8px khi đứng. Đạn ra 50ms sau khi quay mặt.
+   - **Chờ ảnh đánh**: có file `demo/assets/v3/<anh>_atk_<dir>.png` (dir = s, sw, w, nw, n; cùng khung 112 như ảnh tĩnh) thì tự đổi sang ảnh đó ~120ms lúc ra đòn; chưa có thì bỏ qua.
+   - Ảnh ChatGPT có vài mảnh vụn rời (lance_nw, venom_sw): code chỉ xoá mảng rời < 2% hình khi nạp, không sửa hình chính.
+5. **Đạn từ đầu nòng**: bảng `TUONG[id].nong` (toạ độ trong ảnh 112, 5 hướng; lật gương đối xứng x; ARC = mũi kiếm; WARP = lõi, xoay theo góc). Đo bằng script (điểm xa nhất của vũ khí theo hướng nhìn trong vùng ước lượng tay), rồi chụp đánh dấu chấm đỏ trên cả 8 hướng để kiểm tra. Đạn, tia LANCE, chớp nòng đều xuất phát từ điểm này (render.js `diemNong` → `GAME.nongHook`).
+6. **Bậc nhìn ra ngay**: đế tròn dưới chân tô đặc màu bậc (trắng bạc / lam / tím / vàng kim / đỏ) có viền tối; 5★+ thêm vòng ngoài; VÀNG/ĐỎ lấp lánh nhẹ trên đế; viền sáng 1px màu bậc quanh hình tướng. Thẻ, nền chân dung, tên vẫn theo màu bậc.
+7. **Xếp bậc 8 tướng (người dùng chốt)** + skill theo mục III bản thiết kế:
+   | Bậc | Tướng | Mục tiêu | Skill |
+   |---|---|---|---|
+   | TRẮNG | SCORCH | đi đầu | vệt cháy trên làn |
+   | TRẮNG | FROST | đi đầu | làm chậm (10% → 12.5%/tầng từ ★3), 3 tầng vỡ băng |
+   | TRẮNG | ARC | gần tướng nhất | chém, mỗi 3 nhát sét nảy 1 (★3: 2) |
+   | TRẮNG | VENOM | máu cao nhất | độc cộng dồn tối đa 5 (★3: 6), ★7 chết lan 2 |
+   | LAM | LANCE | máu cao nhất | tia xuyên 1 (★3: 2); ★7 mỗi phát 3 = FOCUS ×2.5 |
+   | TÍM | WARP | đi cuối | cầu hư không đẩy lùi (★3 đẩy cả quái quanh, ★5 thêm trường hút, ★7 đẩy mạnh; trùm kháng, SHELL kháng 60%) |
+   | VÀNG | BROKER | đi đầu | quái chết gần HÀNG của Broker → Energy (trần mỗi wave); ★3 **TRADE** (chọn ô kề: tướng đó hạ quái +2 Energy trong 8s, hồi 20s); ★5 **SWAP** (đổi chỗ với tướng cùng sao, hồi 20s); ★7 **TAKE PROFIT** (ghép ở ô kề hoàn 30% giá summon gần nhất, hồi 10s) |
+   | VÀNG | GLITCH | đi đầu chưa đánh dấu | đánh dấu (+10–15% sát thương nhận), mỗi 6 đòn khoá (choáng 0.6s, không lên trùm); ★3 **COPY BUFFER** (chọn ô kề: +35% tốc đánh 5s, hồi 15s); ★5 **PACKET SWAP** (ghép cạnh GLITCH → chọn 1 trong 2 loại, 4s); ★7 **REROLL** (1 lần / GLITCH: rút lại 2 lựa chọn) |
+   - **UI chọn ô**: tướng VÀNG có huy hiệu tia sét góc phải trên ô (vàng nhịp sáng = sẵn sàng, vòng xám = đang hồi). **Chạm** (không kéo) tướng → hàng nút kỹ năng (tên + READY / số giây). Chạm nút → các ô hợp lệ viền vàng, ô khác tối; chạm ô để dùng, chạm chỗ khác để huỷ. PACKET SWAP: 2 chân dung + REROLL hiện trên ô ghép, thanh đếm giờ; hết giờ giữ kết quả đang hiện.
+   - WARP GATE / MANA FEED / DEADLINE cũ bỏ (không còn tướng ĐỎ trong 8 tướng).
+8. **Quái mới**: 4 BỌ thay 3 quái cũ (`QUAI`: scuttle, dart (ra đợt 3 con), gnat, shell; ảnh `bug_<id>_walk.png`, 10fps, cao 26–30px). 4 TINH ANH từ wave 5 cả PVP và co-op (`TINH_ANH`, `soTinhAnh`): PRISM MANTIS (phản 1 đòn trực tiếp mỗi 6s, báo lục giác co 0.7s, hiện "REFLECT"), JAMMER BEETLE (mỗi 12s khoá kỹ năng 1 tướng 3s, báo anten đỏ + đường đứt nét nối ô 1s, tướng hiện "LOCK"), BROOD CARRIER (chết tách 3 DART, gần chết rung nhẹ), PHASE CICADA (mỗi 9s né đạn 1.2s, vẫn dính DoT, báo vòng đứt nét 0.8s, mờ tím khi né, hiện "MISS"). Cao 38–40px. Archfiend FIREWALL giải + chặn khoá của JAMMER.
+9. **3 trùm chỉnh theo mục VII**: FIREWALL = FIRE SHIELD (khiên trước thân 4s giảm 60% đòn thường, tia + DoT xuyên qua; báo 1.2s) + HEAT LOCKDOWN (báo 1.5s). OVERCLOCK = OVERDRIVE (tự +50% tốc chạy 4s, báo 1s) + CLOCK PULSE (bọ +35% tốc 5s, báo 1.3s). CORRUPTOR = DATA INFECTION (2 ô, đánh chậm 33% 5s, báo 1.5s) + COCOON (kén 4s: không gây đủ 5% máu tối đa thì trùm hồi 8%, vòng hiện tiến độ phá).
+
+### Còn lại / ghi chú
+- Cần ChatGPT vẽ ảnh ra đòn `<anh>_atk_<dir>.png` (5 hướng/tướng, cùng khung + tỉ lệ + neo chân với ảnh tĩnh) — code đã sẵn. GLITCH còn thiếu 2 hướng sw, nw (đang dùng hướng gần nhất).
+- Muốn bật lại sheet cũ: `SHEET_TUONG: true` trong data.js (không khuyến nghị).
+- Cân bằng (máu tinh anh, Energy Broker, giá trị kỹ năng) là số thử nghiệm. Bot AI chưa dùng kỹ năng chủ động VÀNG.
+- Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.

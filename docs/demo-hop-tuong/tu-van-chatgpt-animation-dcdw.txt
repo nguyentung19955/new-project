@@ -1,0 +1,91 @@
+NEON GRID — CÓ THỂ LÀM ANIMATION MƯỢT NHƯ DESTINY CHILD: DEFENSE WAR KHÔNG?
+Bản tư vấn kỹ thuật và art, 02/11/2026
+
+KẾT LUẬN NGẮN
+Có thể làm NEON GRID trông mượt, nhất quán và có cảm giác chiến đấu gần DCDW ở kích thước tướng ~40 px. Nhưng không nên hứa 'y hệt' DCDW nếu chỉ dùng ảnh AI tạo độc lập từng frame và Canvas. Hướng khả thi nhất với sở thích KHÔNG cắt rig, KHÔNG uốn ảnh: giữ một ảnh gốc chuẩn cho mỗi hướng + chuyển động vị trí rất nhỏ bằng code + đạn/hit VFX riêng + chỉ vẽ thêm 2–4 key pose tấn công thật sự khi cần. Độ mượt cảm nhận chủ yếu đến từ nhịp, phản hồi đúng thời điểm và sự ổn định hình dáng, không phải cứ nhiều frame là tốt.
+
+1. DCDW DÙNG CÔNG NGHỆ GÌ? MỨC CHẮC CHẮN
+[CHẮC CHẮN, nguồn] DCDW được liệt kê là game dùng Unity. MobyGames ghi engine Unity và mô tả gameplay 5 Child + Archfiend, summon/merge. https://www.mobygames.com/game/176430/destiny-child-defense-war/releases/
+[CHẮC CHẮN về quảng bá] Mô tả giới thiệu DCDW có câu 'Silky-smooth Live 2D character animations'; một số trang đánh giá nhắc đến Live2D ở chân dung/nhân vật. https://www.youtube.com/watch?v=v3t3_VN6AYM ; https://appget.com/appli/view/75142/
+[CHẮC CHẮN về game gốc Destiny Child, KHÔNG tự động áp cho toàn bộ DCDW] Live2D Creative Studio mô tả kỹ thuật chia bộ phận, deform, tham số khớp, chuyển động trước/sau, idle và attack cho nhân vật Destiny Child: https://www.live2dcs.jp/works/destinychild/
+[CHƯA XÁC MINH] Không có bằng chứng công khai đủ mạnh để kết luận mọi mô hình Child bé xíu đang đứng trên bàn DCDW đều được rig bằng Spine hay Live2D; không biết chính xác tỷ lệ skeletal/mesh deformation, sprite atlas, frame-by-frame và procedural motion trong trận. Unity không đồng nghĩa với Spine. Có thể pipeline khác nhau giữa portrait, quân trên bàn, quái, VFX và UI.
+[SUY LUẬN HỢP LÝ] Mượt nhờ asset nhất quán, rig hoặc frame do họa sĩ kiểm soát, tween nội suy đúng nhịp, định hướng tấn công, đồng bộ đạn–va chạm–âm thanh, VFX ngắn và frame pacing ổn định. Ảnh chụp tĩnh không chứng minh được loại rig hay số frame.
+
+2. SO SÁNH 4 CÁCH CHO NEON GRID
+A. Rig xương/mesh kiểu Spine/Live2D từ các lớp ảnh:
+Ưu: nội suy liên tục, tái sử dụng idle/attack, dễ đổi nhịp, ít sprite sheet; ổn định nếu rig làm tốt.
+Nhược: phải tách và vẽ phần bị che, setup pivot, z-order, mesh; dễ thấy khớp giả/biến dạng ở 40 px; trái với sở thích không cắt mảnh/uốn ảnh. ChatGPT không tự xuất rig production-ready. Mức phù hợp: thấp trong hiện trạng; cân nhắc riêng cho boss lớn sau này.
+B. Frame-by-frame bằng EDIT từ ảnh/key pose gốc:
+Ưu: mỗi silhouette được vẽ thật, giữ phong cách cel-shaded; tạo được tư thế vung/đâm đặc sắc.
+Nhược: edit AI vẫn có thể đổi số tay, ăng-ten, màn hình, vũ khí; càng nhiều hướng × khung càng khó QC; sửa thủ công tốn công. Mức phù hợp: trung bình cho 2–4 key pose đặc biệt, không phù hợp 8–12 frame AI tự do mỗi hướng.
+C. Một ảnh tĩnh/hướng + code transform nguyên sprite:
+Ưu: ổn định tuyệt đối số bộ phận, chi phí rẻ, dễ chạy 60 fps, không méo khớp nếu chỉ translate/rotate ít.
+Nhược: không tạo chuyển động tay/chân thực sự; nhìn 'búp bê' nếu lắc nhiều. Mức phù hợp: CAO nhất cho phần lớn tướng 40 px.
+D. HYBRID — KHUYẾN NGHỊ:
+Mỗi hướng có idle chuẩn + 1 pose anticipation + 1 pose impact + 1 pose recover (có thể bỏ recover, dùng idle), code nội suy dịch chuyển NGUYÊN ảnh và phát VFX độc lập. Tướng hỗ trợ/đánh tầm xa có thể dùng idle duy nhất + đạn; cận chiến ARC ưu tiên key pose rõ. Không cần biến dạng ảnh, không cần rig cắt mảnh.
+
+MỨC KHẢ THI
+(a) 'Y hệt DCDW' 1:1: KHÔNG thực tế với pipeline hiện tại, và không nên sao chép nguyên art/nhận diện.
+(b) 'Gần giống về cảm giác mượt và rõ': CÓ THỂ, nếu đạt 60 fps ổn định, silhouette không nhảy, chuyển động hợp nhịp, VFX/âm thanh phản hồi đúng lúc. Không cam kết tỷ lệ % vì cần thử trực tiếp trên điện thoại.
+(c) 'Ổn định nhất': hybrid thiên về ảnh chuẩn + tween code; tránh sinh 8 frame ngẫu nhiên cho mỗi hướng.
+
+3. PIPELINE ĐỀ XUẤT TỪNG BƯỚC
+Bước 0 — Khóa tiêu chuẩn: canvas logic 390×844; ô ~55 px, tướng cao ~40 px; top-down 82°, anime cel-shaded, outline dày; hướng S, SW, W, NW, N rồi mirror (ngoại lệ WARP xoay nguyên sprite, GLITCH 3 hướng); cùng ground anchor ở tâm hai bàn chân.
+Bước 1 — Master model: một model sheet cho mỗi tướng, ảnh tách nền alpha sạch; khóa tỷ lệ đầu/thân, số chi, phụ kiện, màu và vị trí antenna/vũ khí. Tạo bảng checklist riêng cho từng tướng.
+Bước 2 — Export ảnh idle DUY NHẤT mỗi hướng, thay vì 8 ảnh idle do AI vẽ. Căn tất cả vào cùng khung vuông có padding đủ cho pose impact; anchor chân bằng tọa độ nhất quán. Không crop từng frame theo bounding box riêng.
+Bước 3 — Idle bằng code: 1 chu kỳ 1.4–2.2 s, vertical bob tối đa 0.5–1.0 px ở độ phân giải logic; dao động nghiêng nguyên sprite <=1°; foot anchor cố định về mặt thị giác (bù y hoặc chỉ nhún thân cực nhẹ). Với 40 px, ưu tiên 0.5 px và test trên thiết bị. Không dùng squash nếu người dùng không thích méo hình.
+Bước 4 — Attack timing: ví dụ 240 ms gồm anticipate 70 ms, impact 45 ms, recover 125 ms. Dịch NGUYÊN sprite ngược hướng đánh 1–2 px ở anticipate, tới trước 2–3 px ở impact, về 0 trong recover. Đặt projectile spawn tại muzzle/đầu vũ khí, không tại tâm ô. Với GLITCH, nếu chỉ một ảnh tĩnh, nhấn nhá bằng CRT mặt giận là một overlay nhỏ do vẽ riêng, không phải kéo méo đầu.
+Bước 5 — Nếu cần pose đặc trưng: vẽ CHỈ 2 key pose/hướng (anticipation + impact) bằng chỉnh sửa từ model gốc; frame idle dùng lại; 3 ảnh/hướng đủ tạo cảm giác rõ hơn 8 ảnh bị sai. Với 5 hướng = 15 ảnh gốc/tướng, mirror ra 8 hướng; có thể bắt đầu 1 hướng và kiểm tra trước.
+Bước 6 — Kiểm tra frame: ghép ảnh thành contact sheet, overlay 50% giữa các pose để so head box/feet/antenna; đếm chi và phụ kiện; chấm mức lệch. Nếu lỗi thì sửa riêng pose hoặc quay lại idle + code, KHÔNG cố dùng frame hỏng.
+Bước 7 — VFX: đạn nhỏ rõ màu (2–6 px đường kính tùy loại), hit effect 6 frame phát trong ~100–160 ms, số hiệu ứng cùng lúc giới hạn; màn summon/merge chỉ 150–300 ms; không để bloom che tướng hoặc sao.
+Bước 8 — Canvas: fixed timestep gameplay (ví dụ 60 Hz), render requestAnimationFrame, tween dựa trên elapsed time chứ không đếm frame; devicePixelRatio giới hạn 2; atlas/cache ImageBitmap khi phù hợp; không cấp phát đối tượng mới liên tục mỗi frame; kiểm tra trên iPhone thật.
+Bước 9 — Test A/B: bản A = idle + code, bản B = 2 key pose + code; ghi hình slow motion 0.25×; chấm 4 tiêu chí: ổn định silhouette, nhận biết impact trong 100 ms, fps, độ rối màn khi đủ 15 quân. Chọn bản B chỉ khi cải thiện rõ.
+
+QUY TẮC CĂN KHUNG VÀ CHỐNG NHẢY
+- Cùng chiều cao head/torso giữa các pose trừ khi cúi người có chủ ý; chân và bóng (nếu có) không dịch lung tung.
+- Tất cả ảnh cùng kích thước ô xuất, ví dụ 96×96 hoặc 128×128 nguồn rồi scale xuống 40 px; chân neo cùng (x,y) pixel trong atlas.
+- Không để bàn tay mới xuất hiện, không thêm súng/gậy thứ hai, không đổi vị trí anten trái/phải do AI tự tưởng tượng.
+- Mirror chỉ khi không gây lỗi chữ, logo, vũ khí bất đối xứng; cần kiểm tra riêng SCORCH/LANCE/GLITCH.
+- Không dùng tween rotation 30–90° để thay đổi hướng nhìn của người; chuyển giữa sprite hướng đã vẽ, có hysteresis 8–12° để tránh rung tại ranh giới hướng.
+
+PROMPT NGẮN MẪU
+MODEL: 'Use EXACT attached [NAME] master. True redraw, high top-down 82°, S/SW/W/NW/N, identical silhouette, palette, accessories and limb count. Equal square cells, same foot anchor. Clean anime cel shading, thick outline, transparent, no text, not pixel art.'
+ATTACK KEY POSES: 'EDIT the attached [NAME] [direction] idle reference. Produce 3 cells: idle / strong anticipation / unmistakable impact. Keep head shape, body size, limb count, equipment, colors, ground anchor identical. Only arms/weapon and deliberate torso lean change. Top-down 82°, thick cel-shaded outlines, transparent, no VFX.'
+HIT VFX: '6 frames in one row, tiny [element] hit effect, compact silhouette: small contact -> sharp peak frame 3 -> fade frame 6; top-down 82°, cel shaded, transparent, no text, no character.'
+Yêu cầu edit giúp giảm lệch nhưng KHÔNG bảo đảm AI giữ tuyệt đối; phải kiểm duyệt từng ảnh.
+
+4. SO SÁNH ẢNH DCDW ĐÍNH KÈM VỚI ẢNH NEON GRID ĐÃ CUNG CẤP TRƯỚC
+Phạm vi: dựa trên screenshot DCDW mới (một khung hình) và hai ảnh NEON GRID trong hội thoại; KHÔNG khẳng định đã xem từng frame video hoặc đã kiểm thử bản live hiện tại. Kích thước hiển thị của screenshot có thể bị scale nên số pixel dưới đây là mục tiêu đề xuất, không phải đo chính xác từ DCDW.
+
+A. BỐ CỤC: DCDW có hai bàn đặt trên/dưới, sát nhau hơn về nhịp thị giác, mỗi bàn gồm ô đá sẫm, khoảng giữa có thanh Round và đếm giây. NEON GRID đã có 2 bàn 5×3, nhưng khoảng trống/tầng HUD và nền neon khiến sân giống dashboard hơn chiến trường. Giữ cấu trúc 2 bàn, giảm vùng chết, thêm dải thông tin round dễ nhìn ngay giữa.
+B. ĐƯỜNG QUÁI: DCDW ở ảnh mới có đường đá chạy quanh cạnh bàn, thấy rõ đoạn ôm góc dưới/phải/trái và cổng. NEON GRID hiện lane thẳng bên trái, tách thành cột mỏng. Đề xuất lane chữ U hoặc C chạy ôm viền bàn (không xuyên 15 ô); tối thiểu thêm góc cua và cổng ra để quái thực sự đi vòng. Đây là thay đổi gameplay/pathfinding và hit range, không chỉ trang trí. Tránh copy nguyên đường DCDW.
+C. TỶ LỆ TƯỚNG/Ô: DCDW quân chiếm phần nhỏ-vừa của ô, chừa khoảng trống để thấy gạch, sao và đạn. NEON GRID ~40/55 = 73% chiều cao ô, khá lớn; nên thử 32–38 px trên ô 55 px (58–69%) ở thiết bị thật, đặc biệt khi đủ 15 quân; giữ đầu/vũ khí rõ hơn thay vì tăng toàn thân.
+D. SAO: DCDW hiện ký hiệu sao/điểm nhỏ nổi ngay trên đầu mỗi Child. NEON GRID cần star pip cố định tại top-center của ô, không đi theo bob đầu; 1–7 sao có bố cục gọn, sáng vừa phải; không che mặt. Thử chấm sáng/biểu tượng nhóm sao thay vì 7 ngôi sao lớn.
+E. SÀN: DCDW có gạch đá xám đậm, viền khe, độ sần/đổ bóng rất nhẹ, tạo chiều sâu. NEON GRID dùng bảng ô vuông khá phẳng và nền tím cyber. Nên làm tile stone-tech: đá graphite + vi mạch cyan rất mờ, khe sáng thấp, mỗi ô có 2–3 biến thể; viền neon chỉ nhấn bàn.
+F. THẺ TƯỚNG: DCDW thẻ dưới có portrait, LV và giá mana đọc được, 5 thẻ + Archfiend; NEON GRID đã có cấu trúc nhưng portrait/tên/chữ khá tối và nhỏ. Tăng contrast chữ, vùng hình; trạng thái affordance khi đủ mana; dùng màu bậc ở viền mảnh, không phủ cả thẻ. Kích thước vùng bấm ít nhất khoảng 40–44 CSS px nếu bố cục cho phép.
+G. SUMMON: DCDW dùng nút tím sáng gần trung tâm đáy với chi phí rõ, nhìn như hành động chính. NEON GRID có nút Summon nhưng đang cạnh energy và điều khiển tốc độ; ưu tiên thứ bậc bằng kích thước/độ sáng, animation press 90–120 ms, portal 180–260 ms.
+H. HIGHLIGHT KÉO-THẢ: Trong screenshot DCDW không thấy trực tiếp drag state nên KHÔNG thể xác nhận màu highlight của DCDW. NEON GRID nên có ghost quân dưới ngón, ô hợp lệ viền cyan, ô merge cùng loại+cùng sao viền vàng/tím, ô không hợp lệ đỏ mờ; highlight ngay trong 1 frame; tránh che quân.
+I. ĐẠN/HIT: DCDW ảnh tĩnh có đốm sáng nhỏ, không phủ màn; nhiều trận trông mượt nhờ phản hồi liên tục chứ không phải vụ nổ lớn. NEON GRID đã vẽ VFX hit 4 hệ và summon/merge: giảm scale để peak hit khoảng 8–16 px, 90–150 ms; mỗi hệ có màu riêng; đạn 2–5 px, trail ngắn; layer sau sao/UI và trên nền/quái.
+J. QUÁI: DCDW quái nhỏ, hình dễ nhận, chạy thành dòng quanh bàn. NEON GRID dùng bọ đơn giản là hợp, nhưng cần đồng nhất góc nhìn, outline, animation đi 4–6 pose hoặc bob + leg flicker; khác biệt tốc độ/giáp/bay rõ bằng silhouette, không dùng quá nhiều chi tiết neon.
+K. HUD: DCDW trong ảnh có 6 thẻ đối thủ trên cùng, tim/cổng, nhãn Round và đồng hồ giữa; NEON GRID HUD trên đã có wave, boss countdown, AI deck, nhưng thiếu cảm giác hai phe đang đối đầu qua một trục chiến đấu; gom thông tin cốt lõi vào cụm tương phản cao, hạn chế chữ li ti.
+L. MÀU: DCDW lấy đá xám làm nền trung tính, Child và hiệu ứng nổi lên; NEON GRID tím/cyan đẹp theo chủ đề nhưng quá nhiều vùng phát sáng sẽ làm yếu độ nổi của unit. Quy tắc đề xuất: 75–85% vùng chơi trung tính tối, 10–20% accent phe/UI, dưới 5% peak glow.
+M. ANIMATION: DCDW chuyển động liên tục nhưng quân không tự biến hình từng frame. NEON GRID cần ưu tiên sự nhất quán trước số khung, attack silhouette rõ và projectile/hit sync. Cảm giác 'mượt' không thể suy ra chỉ từ screenshot; cần quan sát video theo thời gian và so sánh clip gameplay trên thiết bị.
+
+5. KẾ HOẠCH TRIỂN KHAI THỰC TẾ, ƯU TIÊN
+P0 — trong prototype đầu: (1) chuẩn hóa anchor/scale mọi quân; (2) bỏ sheet AI lỗi; (3) idle tween nhẹ + attack lunge + muzzle/hit sync; (4) VFX tối giản; (5) UI sao rõ. Chỉ sửa code + chỉnh atlas, ít art mới.
+P1 — cải thiện giống nhịp DCDW: (6) đường quái vòng quanh bàn và hit range; (7) sàn đá-tech; (8) dải round/timer giữa; (9) contrast thẻ và nút summon; (10) highlight merge. Cần 1–2 sheet sàn/lane, còn lại code.
+P2 — tăng chất lượng: (11) 2 key pose attack cho ARC/SCORCH/GLITCH trước; (12) boss có anticipation/telegraph; (13) âm thanh impact/merge ngắn; (14) kiểm thử stress 15 quân × 2 bàn + nhiều quái, tối ưu.
+
+ĐỊNH LƯỢNG GỢI Ý ĐỂ CLAUDE CODE (KHÔNG PHẢI THÔNG SỐ DCDW)
+Canvas logic 390×844; grid cell 55 px; unit display 34–38 px (A/B với 40 px hiện tại); idle cycle 1.7 s, bob ±0.5 px; attack total 240 ms, recoil -1.5 px, lunge +2.5 px; hit VFX 120 ms, peak 12 px; summon VFX 220 ms; merge VFX 180 ms; hover/drop highlight alpha 0.18–0.28; animation clock dùng milliseconds; transition facing hysteresis 10°; FPS mục tiêu 60, giảm VFX density trước khi giảm readability.
+
+NGUYÊN TẮC CUỐI
+Làm 'giống DCDW về sự rõ ràng, nhịp và chất lượng hoàn thiện', không cần bê nguyên hình ảnh hay pipeline. Nếu người chơi nhìn rõ quân nào bắn, quái nào trúng, ghép nào thành công và không thấy tay/chân tự mọc thêm, game sẽ tiến bộ nhiều hơn so với việc tăng từ 3 lên 12 frame không nhất quán.
+
+NGUỒN THAM KHẢO
+1. https://www.mobygames.com/game/176430/destiny-child-defense-war/releases/ (Unity, thông tin game)
+2. https://www.mobygames.com/game/176430/destiny-child-defense-war/ (cơ chế tổng quan)
+3. https://www.youtube.com/watch?v=v3t3_VN6AYM (mô tả giới thiệu: Live2D)
+4. https://www.live2dcs.jp/works/destinychild/ (pipeline Live2D của Destiny Child gốc; không chứng minh quân nhỏ DCDW dùng cùng kỹ thuật)
+5. https://appget.com/appli/view/75142/ (đánh giá và Live2D portrait)
+6. https://www.youtube.com/watch?v=mGhOqdBdxoY (video do người dùng cung cấp, dùng làm tham chiếu, không xác nhận đã phân tích từng frame)
