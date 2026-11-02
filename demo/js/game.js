@@ -3,51 +3,59 @@
 (function (root) {
   const C = CAU_HINH, T = TUONG, Q = QUAI, B = BOSS;
   const K = C.TL;   // thu nhỏ không gian (bước ô 48/70): tầm bắn + bán kính vùng hiệu ứng
-  // hình học 1 bàn (người chơi dưới / AI trên): lưới 5×3 + làn quái dọc riêng bên trái (đầu trên → cuối dưới)
+  // hình học 1 bàn (người chơi dưới / AI trên): lưới 5×3 + ĐƯỜNG QUÁI VÒNG QUANH BÀN (polyline: trái ↓ rồi dưới →, kết thúc ở cổng góc phải)
   // Các đối tượng bàn được SỬA TẠI CHỖ khi đổi chiều cao màn (boCuc) nên state trận (S.B) luôn trỏ đúng.
-  function dungBan(B, ai, duong) {
+  function dungBan(B, ai, duong, tron) {
     const by = ai ? C.BAN_AI_Y : C.BAN_NG_Y, OX = C.BAN_X + C.VIEN, OY = by + C.VIEN;
     const DUONG = duong || (ai ? C.LAN_AI : C.LAN_NG), DOAN = [];
     let DAI = 0;
     for (let i = 1; i < DUONG.length; i++) {
       const [x0, y0] = DUONG[i - 1], [x1, y1] = DUONG[i];
       const d = Math.hypot(x1 - x0, y1 - y0);
-      DOAN.push({ x0, y0, x1, y1, d, tu: DAI });
+      DOAN.push({ x0, y0, x1, y1, d, tu: DAI, ux: (x1 - x0) / d, uy: (y1 - y0) / d });
       DAI += d;
     }
     return Object.assign(B, { ai, BX: C.BAN_X, BY: by, OX, OY, SW: C.COT * C.BUOC_X, SH: C.HANG * C.BUOC_Y, DUONG, DOAN, DAI, P: DAI / C.DAI_CU,
-      RA: DUONG[DUONG.length - 1] });
+      RA: DUONG[DUONG.length - 1], VE: tron || DUONG });   // VE: các đoạn hành lang cần VẼ (co-op: cả đường chung)
   }
   const BAN_NG = {}, BAN_AI = {}, BAN_AI_CO = {}, BAN_NG_CO = {};
-  // BỐ CỤC theo chiều cao logic H: bàn trên neo trên (BAN_AI_Y cố định), bàn người chơi + HUD dưới neo đáy, khoảng giữa co giãn.
+  // đường vòng quanh 1 bàn (đỉnh by): cổng sinh trên trái → xuống mép trái → rẽ phải dưới bàn → cổng (trước Archfiend)
+  const lx = () => (C.LAN_X0 + C.LAN_X1) / 2;
+  // y của ĐƯỜNG = chân quái → nằm dưới tâm hành lang LAN_CHAN px để THÂN bọ (cao ~26–30) nằm giữa hành lang (render vẽ hành lang lệch lên LAN_CHAN)
+  const dayLan = (by) => by + C.BAN_H + 2 + C.LAN_W / 2 + C.LAN_CHAN;
+  const cuoiLan = () => C.BAN_X + C.BAN_W - C.CONG_W;       // x cổng
+  function duongVong(by, tuY) { const yd = dayLan(by); return [[lx(), tuY], [lx(), yd], [cuoiLan(), yd]]; }
+  // BỐ CỤC theo chiều cao logic H (kiểu DCDW): HUD trên · [cổng sinh] bàn AI · hành lang dưới AI · THANH GIỮA · [cổng sinh] bàn người chơi · hành lang dưới · HUD dưới
   function boCuc(H) {
     H = Math.max(C.H_MIN, Math.round(H));
     C.H = H;
-    C.DUOI_Y = H - C.DUOI_DAY - C.DUOI_H;                  // đỉnh HUD dưới (Energy/SUMMON + thẻ)
-    // KIỂU DCDW: không bỏ trống giữa 2 bàn — chiều cao còn lại chia cho 2 bàn → ô cao hơn (kẹp OH_MIN..OH_MAX: gần vuông → hơi cao)
-    const dinh = C.TOP_H + 16, day = C.DUOI_Y - 12, conLai = day - dinh - C.KHE_BAN;
+    C.DUOI_Y = H - C.DUOI_DAY - C.DUOI_H;                  // đỉnh HUD dưới (Mana/SUMMON + thẻ)
+    const L2 = C.LAN_W + 2, dinh = C.TOP_H + C.LAN_DAU + 1, day = C.DUOI_Y - 3;
+    const conLai = day - dinh - 2 * L2 - C.GIUA_H - C.LAN_DAU - 2;
     const by = Math.max(C.OH_MIN + C.KHE, Math.min(C.OH_MAX + C.KHE, Math.floor((conLai / 2 - 2 * C.VIEN) / C.HANG)));
     C.BUOC_Y = by; C.OH = by - C.KHE; C.BAN_H = 2 * C.VIEN + C.HANG * by;
-    C.TUONG_CAO = Math.min(C.CAO_MAX, Math.round(C.OH * C.TL_CAO)); C.TUONG_RONG = C.O + 8;
-    const du = Math.max(0, conLai - 2 * C.BAN_H);           // màn rất cao: phần dư chia nhỏ (1/4 trên, 1/2 giữa, 1/4 dưới), không dồn thành 1 khoảng trống
+    C.TUONG_CAO = Math.min(C.CAO_MAX, Math.round(C.OH * C.TL_CAO)); C.TUONG_RONG = C.O - 4;
+    const du = Math.max(0, conLai - 2 * C.BAN_H);           // màn rất cao: phần dư chia đều 4 khe, không dồn thành 1 khoảng trống
     C.BAN_AI_Y = Math.round(dinh + du / 4);
-    C.BAN_NG_Y = Math.round(day - du / 4 - C.BAN_H);
-    const lx = (C.LAN_X0 + C.LAN_X1) / 2, T = C.LAN_THUA;
-    C.LAN_AI = [[lx, C.BAN_AI_Y - T], [lx, C.BAN_AI_Y + C.BAN_H + T]];
-    C.LAN_NG = [[lx, C.BAN_NG_Y - T], [lx, C.BAN_NG_Y + C.BAN_H + T]];
-    C.GIUA_Y = (C.BAN_AI_Y + C.BAN_H + C.BAN_NG_Y) / 2;     // giữa 2 bàn (dải thông báo wave đè tạm lên, tự tắt)
+    C.BAN_NG_Y = Math.round(day - du / 4 - L2 - C.BAN_H);
+    const giua0 = C.BAN_AI_Y + C.BAN_H + L2, giua1 = C.BAN_NG_Y - C.LAN_DAU;
+    C.GIUA_Y = Math.round((giua0 + giua1) / 2);              // tâm thanh giữa
+    C.LAN_AI = duongVong(C.BAN_AI_Y, C.BAN_AI_Y - C.LAN_DAU + C.LAN_CHAN);
+    C.LAN_NG = duongVong(C.BAN_NG_Y, C.BAN_NG_Y - C.LAN_DAU + C.LAN_CHAN);
     dungBan(BAN_NG, false); dungBan(BAN_AI, true);
-    // CO-OP: đường chung — làn trên (bàn đồng đội) nối thẳng xuống làn dưới (bàn người chơi): làn dưới bắt đầu từ cuối làn trên (qua đường nối)
-    dungBan(BAN_AI_CO, true, C.LAN_AI); dungBan(BAN_NG_CO, false, [C.LAN_AI[C.LAN_AI.length - 1], C.LAN_NG[C.LAN_NG.length - 1]]);
+    // CO-OP: một hành lang TRÁI chung xuyên qua cả 2 bàn rồi chạy dưới bàn dưới: đoạn trên (bàn đồng đội) = trái từ cổng sinh tới giữa 2 bàn;
+    // đoạn dưới (bàn người chơi) = tiếp tục xuống mép trái bàn dưới → rẽ dưới bàn → cổng
+    const noi = C.GIUA_Y, dau = C.BAN_AI_Y - C.LAN_DAU + C.LAN_CHAN, chung = [[lx(), dau], ...duongVong(C.BAN_NG_Y, noi)];
+    dungBan(BAN_AI_CO, true, [[lx(), dau], [lx(), noi]], chung);
+    dungBan(BAN_NG_CO, false, duongVong(C.BAN_NG_Y, noi), chung);
     const P = (BAN_AI_CO.DAI + BAN_NG_CO.DAI) / (COOP.THOI_GIAN_DUONG * C.DAI_CU); BAN_AI_CO.P = P; BAN_NG_CO.P = P;   // cùng tốc độ px/giây trên cả đường
     return H;
   }
   boCuc(C.H);
-  const viTri = (S, s) => {
-    for (const g of S.B.DOAN) if (s <= g.tu + g.d) { const k = Math.max(0, (s - g.tu) / g.d); return [g.x0 + (g.x1 - g.x0) * k, g.y0 + (g.y1 - g.y0) * k]; }
-    const g = S.B.DOAN[S.B.DOAN.length - 1]; return [g.x1, g.y1];
-  };
-  const datViTri = (S, q) => { [q.x, q.y] = viTri(S, q.d); q.x += q.lech || 0; };
+  const doanTai = (S, s) => { for (const g of S.B.DOAN) if (s <= g.tu + g.d) return g; return S.B.DOAN[S.B.DOAN.length - 1]; };
+  const viTri = (S, s) => { const g = doanTai(S, s), k = Math.max(0, Math.min(1, (s - g.tu) / g.d)); return [g.x0 + (g.x1 - g.x0) * k, g.y0 + (g.y1 - g.y0) * k]; };
+  // lệch ngang (lech) VUÔNG GÓC hướng đi (đoạn dọc → lệch x, đoạn ngang → lệch y); q.di = góc hướng đi (render xoay bọ theo hướng)
+  const datViTri = (S, q) => { const g = doanTai(S, q.d); [q.x, q.y] = viTri(S, q.d); const l = q.lech || 0; q.x -= g.uy * l; q.y += g.ux * l; q.di = Math.atan2(g.uy, g.ux); };
   // ô i: góc trái trên của ô 46×45 (khe 2) — tâm ô cách nhau 48 ngang, 47.7 dọc
   const oXY = (S, i) => { const c = i % C.COT, r = (i / C.COT) | 0; return [S.B.OX + c * C.BUOC_X + C.KHE / 2, S.B.OY + r * C.BUOC_Y + (C.BUOC_Y - C.OH) / 2]; };
   const oTam = (S, i) => { const [x, y] = oXY(S, i); return [x + C.O / 2, y + C.OH / 2]; };
@@ -95,7 +103,7 @@
     S.lk -= g; S.triệu++;
     const i = pick(tr);
     S.o[i] = taoTuong(S, pick(S.deck), 1);
-    S.fx.push({ k: 'trieu', i, t: 0, T: 0.18 });   // phản hồi summon 120–180ms
+    S.fx.push({ k: 'trieu', i, t: 0, T: C.SINH_T });   // phản hồi summon 220ms
     return i;
   }
   const gopDuoc = (S, a, b) => { const A = S.o[a], Bb = S.o[b]; return a !== b && A && Bb && A.id === Bb.id && A.sao === Bb.sao && A.sao < C.SAO_MAX && !A.da && !Bb.da; };
@@ -179,7 +187,7 @@
     S.conSinh = (S.theo ? S.conSinh : 0) + (laBoss ? 5 : 8 + Math.floor(w * 0.7));
     S.sinhT = laBoss ? 2.2 : 0.6;
     S.khoangSinh = Math.max(0.42, 1.0 - w * 0.015);
-    S.laBoss = laBoss; S.bountyDot = 0; S.manaDot = 0;
+    S.laBoss = laBoss; S.bountyDot = 0; S.manaDot = 0; S.dotT = S.t;
     chuanBiTinhAnh(S, w, laBoss);
     if (laBoss) {
       const b = B[(w / 10 - 1) % B.length], vong = Math.floor((w / 10 - 1) / B.length);
@@ -200,7 +208,7 @@
     A.conSinh = laBoss ? COOP.soQuaiBoss(w) : COOP.soQuai(w);
     A.sinhT = laBoss ? 2.2 : 0.6; A.khoangSinh = COOP.khoangSinh(w); A.laBoss = laBoss; A.sauSinh = 0;
     chuanBiTinhAnh(A, w, laBoss);
-    A.bountyDot = 0; S.bountyDot = 0; A.manaDot = 0; S.manaDot = 0;
+    A.bountyDot = 0; S.bountyDot = 0; A.manaDot = 0; S.manaDot = 0; A.dotT = A.t; S.dotT = S.t;
     let bao;
     if (laBoss) {
       const n = w / 10 - 1, idx = cuoi ? B.length - 1 : n % B.length, vong = Math.floor(n / B.length), b = B[idx];
@@ -244,7 +252,7 @@
     for (let j = 0; j < n; j++) {   // DART ra từng đợt: n con nối đuôi nhau
       const q = themQuai(S, k, mau * d.hp, d.spd * toc, null, d.co);
       q.thuong = d.thuong + Math.floor(w / 6);
-      if (j) { q.d = -j * 9 * S.B.P; q.lech = (rnd() - 0.5) * 16; datViTri(S, q); }
+      if (j) { q.d = -j * 9 * S.B.P; q.lech = (rnd() - 0.5) * 12; datViTri(S, q); }
     }
   }
   function dieuPhoiCoop(A, dt) {   // chạy trên bàn đồng đội (A): sinh quái, chuyển wave, nghỉ, thắng
@@ -279,7 +287,7 @@
   // spd theo đơn vị cũ (px/giây trên đường ngang dài DAI_CU) → nhân P để thời gian đi hết làn như cũ; co (cỡ hình) nhân K
   function themQuai(S, kind, hp, spd, anh, co) {
     const q = { uid: S.nid++, kind, hp, max: hp, spd: spd * S.B.P, d: 0, x: 30, y: 0, cham: 0, choang: 0, anh, co, thuong: 0, khung: rnd() * 4,
-      lech: (rnd() - 0.5) * 20, sinhT: S.t,
+      lech: (rnd() - 0.5) * 14, sinhT: S.t,
       chill: 0, chillT: 0, voLock: 0, nhietCD: 0, arcCD: 0, focusCD: 0, breachT: 0, breachK: false, breachEmp: 0, giatCD: 0,
       tox: 0, toxT: 0, toxDem: 0, toxLan: 0, toxNhan: 0, bounty: 0, bountyGT: 3, khien: 0, daKhien: 0, nhanhT: 0, nhanhK: 0, linkT: 0,
       luaT: 0, slowBang: 0, slowHut: 0, echo: false, ban: S };
@@ -350,7 +358,7 @@
     if (!an) {   // chỉ khi trúng thật: quái chớp trắng 60ms + tia trúng đòn 120ms (tối đa FX_NHO_MAX cùng lúc)
       q.flash = 0.06;
       let n = 0; for (const f of S.fx) if (f.k === 'hit') n++;
-      if (n < C.FX_NHO_MAX) S.fx.push({ k: 'hit', x: q.x + (rnd() - 0.5) * 6, y: q.y - q.co / 2 + (rnd() - 0.5) * 6, t: 0, T: 0.12, mau: mau || '#ffffff', to: !!chiSo, id: v ? v.id : null });
+      if (n < C.FX_NHO_MAX) S.fx.push({ k: 'hit', x: q.x + (rnd() - 0.5) * 6, y: q.y - q.co / 2 + (rnd() - 0.5) * 6, t: 0, T: C.HIT_T, mau: mau || '#ffffff', to: !!chiSo, id: v ? v.id : null });
     }
     if (q.hp <= 0) chet(S, q, v);
     return true;
@@ -369,7 +377,7 @@
       const d = Q[q.ta.con];
       for (let j = 0; j < q.ta.so; j++) {
         const e = themQuai(S, q.ta.con, q.max * q.ta.hpCon, d.spd * (q.spd / S.B.P / q.ta.spd), null, d.co);
-        e.thuong = 1; e.daRa = true; e.d = Math.max(0, q.d - j * 8 * S.B.P); e.lech = (j - 1) * 10; datViTri(S, e);
+        e.thuong = 1; e.daRa = true; e.d = Math.max(0, q.d - j * 8 * S.B.P); e.lech = (j - 1) * 8; datViTri(S, e);
       }
       S.fx.push({ k: 'xung', x: q.x, y: q.y - 10, t: 0, T: 0.4 });
     }
@@ -758,7 +766,7 @@
         if (S.coop) { const co = S.coop; co.mang = Math.max(0, co.mang - mat); S.mang = S.ban.mang = co.mang; }
         else S.mang -= mat;
         S.fx.push({ k: 'thanh', t: 0, T: 0.6 }); S.rung = Math.max(S.rung || 0, 0.35);
-        S.so.push({ x: S.B.RA[0] + 30, y: S.B.RA[1] - 14, v: `CORE -${mat}`, t: 0, mau: '#ff5a5a', to: 1 });
+        S.so.push({ x: S.B.RA[0] - 6, y: S.B.RA[1] - 16, v: `CORE -${mat}`, t: 0, mau: '#ff5a5a', to: 1 });
         if (q === S.boss) xongBoss(S);
         if (S.mang <= 0) { S.mang = 0; S.het = true; if (S.coop) S.ban.het = true; }
       }
@@ -828,7 +836,7 @@
       te.ds = S.quai.filter((o) => sống(o) && !o.boss).sort((a, b) => kc(a, q) - kc(b, q)).slice(0, 2);
     }
     q.tele = te;
-    S.fx.push({ k: 'kn', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.7, mau: q.boss.mau });
+    S.fx.push({ k: 'kn', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.7, mau: q.boss.mau, bat: 1, ten: kn.ten, boss: q.boss.id });   // bat: bắt đầu báo chiêu → render cut-in mặt trùm
   }
   function tungChieu(S, q, te) {
     const vg = q.vong;
@@ -918,7 +926,7 @@
   const API = { moi, moiCoop, botCoop, buoc, botAI, trieuHoi, tha, lenBac, gopDuoc, giaTrieu, giaBac, satThuong, oXY, oTam, ke, viTri, trong, nong,
     giaAF, dungAF, afBat, coHieu, theoSao, boCuc, MUC, DON, HIEU, DAC_BIET, CHU_DONG, chuDong, oHopLe, dungChuDong, chonKetQua, HG_DIR,
     nongHook: null,
-    BAN_NG, BAN_AI, K, setRnd: (f) => (rnd = f) };
+    BAN_NG, BAN_AI, BAN_NG_CO, BAN_AI_CO, K, setRnd: (f) => (rnd = f) };
   root.GAME = API;
   if (typeof module !== 'undefined') module.exports = API;
 })(typeof window !== 'undefined' ? window : globalThis);

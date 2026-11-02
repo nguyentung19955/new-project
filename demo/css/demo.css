@@ -22,7 +22,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
   -webkit-backdrop-filter: blur(8px) saturate(140%); backdrop-filter: blur(8px) saturate(140%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 18px rgba(60,231,255,0.06), 0 4px 18px rgba(0,0,0,0.45); }
 .nho { font: 700 9px/1 var(--tit); letter-spacing: 1.5px; color: var(--mo); }
-.ic-e { display: inline-block; width: 10px; height: 14px; background: var(--vang); clip-path: polygon(60% 0, 0 58%, 42% 58%, 30% 100%, 100% 38%, 56% 38%); filter: drop-shadow(0 0 4px rgba(255,226,74,0.9)); vertical-align: -1px; margin-right: 3px; }
+.ic-e { display: inline-block; width: 8px; height: 8px; border-radius: 0 50% 50% 50%; transform: rotate(45deg); background: radial-gradient(circle at 60% 60%, #f2e2ff, #b36bff 45%, #6a22d0); vertical-align: 0; margin: 0 4px 0 2px; }
 
 /* TOP HUD y 0..64 (ảnh v2 hud_top_panel.png nếu có) */
 #top { position: absolute; left: 0; top: 0; width: 390px; height: 64px; pointer-events: none; animation: tren .45s ease-out;
@@ -49,68 +49,74 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 #duoi { position: absolute; left: 0; top: 654px; width: 390px; height: 186px; animation: duoi .45s ease-out;
   background: url(../assets/v2/hud_bottom_panel.png) center/100% 100% no-repeat, linear-gradient(180deg, rgba(4,2,12,0.55), rgba(6,6,20,0.96) 20%);
   border-top: 1px solid rgba(120,180,255,0.22); }
-#lk-hop { position: absolute; left: 12px; top: 8px; width: 92px; height: 59px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-  background: rgba(30,10,60,0.6); border: 1px solid rgba(163,92,255,0.55); border-radius: 8px; box-shadow: inset 0 0 14px rgba(163,92,255,0.25); }
-#lk-hop b { font: 900 19px/1 var(--tit); color: #fff4b0; text-shadow: 0 0 10px rgba(255,226,74,0.75); white-space: nowrap; }
-#lk-hop b.dai { font-size: 14px; }
-.nut-nho { position: absolute; top: 18px; width: 40px; height: 40px; font: 900 13px var(--tit); color: var(--cyan); text-shadow: 0 0 8px rgba(60,231,255,0.8);
+#lk-hop { position: absolute; left: 10px; top: 8px; width: 84px; height: 59px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  background: linear-gradient(180deg, rgba(40,16,70,0.92), rgba(16,8,32,0.95)); border: 1.5px solid #9a5cff; border-radius: 9px; box-shadow: inset 0 0 12px rgba(163,92,255,0.3); }
+#lk-hop b { font: 900 20px/1 var(--tit); color: #ffffff; text-shadow: 0 1px 0 #000, 0 0 8px rgba(190,140,255,0.7); white-space: nowrap; }
+#lk-hop b.dai { font-size: 15px; }
+#lk-hop .nho { font-size: 9px; color: #d8c4ff; letter-spacing: 2px; }
+/* giọt mana tím (thay tia Energy) */
+.ic-mana { display: inline-block; width: 13px; height: 13px; border-radius: 0 50% 50% 50%; transform: rotate(45deg); background: radial-gradient(circle at 60% 60%, #f2e2ff, #b36bff 45%, #6a22d0); box-shadow: 0 0 6px rgba(180,110,255,0.9); }
+.nut-nho { position: absolute; top: 15px; width: 44px; height: 44px; font: 900 13px var(--tit); color: var(--cyan); text-shadow: 0 0 8px rgba(60,231,255,0.8);
   background: rgba(10,14,36,0.75); border: 1px solid var(--vien); border-radius: 8px; transition: transform .08s, box-shadow .2s; }
-#nut-tocdo { left: 290px; }
+#nut-tocdo { left: 288px; }
 #nut-dung { left: 338px; }
 .nut-nho.bat { color: #fff; border-color: var(--mag); box-shadow: 0 0 14px rgba(255,43,214,0.55), inset 0 0 14px rgba(255,43,214,0.25); text-shadow: 0 0 8px var(--mag); }
 .nut-nho:active { transform: scale(0.92); }
 .ic-dung { display: inline-block; width: 12px; height: 14px; border-left: 4px solid var(--cyan); border-right: 4px solid var(--cyan); filter: drop-shadow(0 0 4px var(--cyan)); vertical-align: -2px; }
-#nut-trieu { position: absolute; left: 144px; top: 8px; width: 101px; height: 59px; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  border: 2px solid transparent;
-  background: url(../assets/v2/summon_button_states.png) 0 0/200% 100% no-repeat padding-box, linear-gradient(180deg, rgba(120,20,140,0.9), rgba(40,6,60,0.95)) padding-box,
-    linear-gradient(90deg, #ff2bd6, #3ce7ff, #ff2bd6, #3ce7ff) border-box;
-  background-size: 200% 100%, 100% 100%, 300% 100%; animation: vienchay 3s linear infinite;
-  box-shadow: 0 0 16px rgba(255,43,214,0.5), inset 0 0 18px rgba(255,43,214,0.3); transition: transform .08s; }
-/* SUMMON 3 trạng thái: đủ tiền = sáng + nhịp phát sáng nhẹ; thiếu = tối hẳn (giá vẫn đọc được); nhấn = lún xuống */
-#nut-trieu:not(.thieu) { animation: vienchay 3s linear infinite, nhipnut 1.4s ease-in-out infinite; }
-#nut-trieu:not(.thieu):active, #nut-trieu.ep:not(.thieu) { animation: none; background-position: 100% 0, 0 0, 0 0; transform: translateY(2px) scale(0.97); filter: brightness(1.15);
-  box-shadow: 0 0 8px rgba(255,43,214,0.45), inset 0 3px 10px rgba(0,0,0,0.6); }
-#nut-trieu .tr-ten { font: 900 14px/1 var(--tit); letter-spacing: 1.5px; color: #fff; text-shadow: 0 0 10px #ff2bd6, 0 0 18px rgba(60,231,255,0.6); }
-#nut-trieu .tr-gia { font: 700 12px/1 var(--tit); color: #fff4b0; padding: 3px 8px; border-radius: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,226,74,0.4); white-space: nowrap; }
-#nut-trieu.thieu { animation: none; background: linear-gradient(180deg, #1c1f2e, #0c0e18); border-color: #3a4058; box-shadow: none; }
-#nut-trieu.thieu .tr-ten { color: #8e97b0; text-shadow: none; }
+#nut-trieu { position: absolute; left: 102px; top: 6px; width: 178px; height: 62px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  border: 2px solid #e6c4ff; background: linear-gradient(180deg, #c06bff 0%, #8a2be2 48%, #5a12a8 100%);
+  box-shadow: 0 0 16px rgba(190,100,255,0.6), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -4px 10px rgba(30,0,60,0.45); transition: transform .1s, filter .1s; }
+/* SUMMON 3 trạng thái: đủ mana = tím sáng + nhịp nhẹ; thiếu = xám tối (giá vẫn đọc được); nhấn = lún 100ms */
+#nut-trieu:not(.thieu) { animation: nhipnut 1.4s ease-in-out infinite; }
+#nut-trieu:not(.thieu):active, #nut-trieu.ep:not(.thieu) { animation: none; transform: translateY(2px) scale(0.97); filter: brightness(1.15); box-shadow: 0 0 8px rgba(190,100,255,0.5), inset 0 3px 10px rgba(0,0,0,0.5); }
+#nut-trieu .tr-ten { font: 900 17px/1 var(--tit); letter-spacing: 2px; color: #fff; text-shadow: 0 2px 0 #3a0a6e, 0 0 10px rgba(255,255,255,0.4); }
+#nut-trieu .tr-gia { font: 900 13px/1 var(--tit); color: #ffffff; padding: 3px 10px; border-radius: 10px; background: rgba(20,4,40,0.6); border: 1px solid rgba(255,255,255,0.35); white-space: nowrap; }
+#nut-trieu.thieu { animation: none; background: linear-gradient(180deg, #3a3550, #1c1a2a); border-color: #5a5470; box-shadow: none; }
+#nut-trieu.thieu .tr-ten { color: #a9a3c0; text-shadow: none; }
 #nut-trieu.thieu .tr-gia { color: #ff9a9a; border-color: rgba(255,120,120,0.35); }
-#nut-trieu.thieu .ic-e { filter: none; opacity: .6; }
-.ic-e { display: inline-block; width: 8px; height: 12px; background: var(--vang); clip-path: polygon(60% 0, 0 58%, 42% 58%, 30% 100%, 100% 38%, 56% 38%); filter: drop-shadow(0 0 4px rgba(255,226,74,0.9)); vertical-align: -1px; margin-right: 3px; }
+#nut-trieu.thieu .ic-e { opacity: .6; }
+.ic-e { display: inline-block; width: 8px; height: 8px; border-radius: 0 50% 50% 50%; transform: rotate(45deg); background: radial-gradient(circle at 60% 60%, #f2e2ff, #b36bff 45%, #6a22d0); vertical-align: 0; margin: 0 4px 0 2px; }
 /* thẻ tướng 55×108 tại x 8/68/128/188/248, y 684 (trong dải 676..816); thẻ leader 68×108 tại x 314
    P0.2: nền sáng hơn, chân dung 53×66, LV 10px, tên 9.5px, giá 11px; đủ tiền = viền sáng + giá vàng ▲; thiếu = chân dung tối, giá đỏ nhạt (chữ vẫn đọc được) */
-#bo-bac { position: absolute; left: 0; top: 72px; width: 300px; height: 108px; }
-.the { position: absolute; top: 0; width: 55px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h);
-  background: linear-gradient(175deg, color-mix(in srgb, var(--h) 34%, #141a36), #141a36 70%, #0e1228);
-  box-shadow: inset 0 0 8px var(--hg), 0 0 8px var(--hg); transition: transform .08s, filter .2s, box-shadow .2s; }
+/* THẺ TƯỚNG kiểu DCDW 55×108: viền MẢNH màu bậc, chân dung 53×66, LV, tên, giá nâng cấp (giọt mana); huy hiệu "+N" (đủ mana nâng N cấp) / "+MAX";
+   số bản đang có trên bàn ở góc trên trái. Chữ trắng viền đen tương phản cao. */
+#bo-bac { position: absolute; left: 0; top: 72px; width: 306px; height: 108px; }
+.the { position: absolute; top: 0; width: 55px; height: 108px; overflow: hidden; border-radius: 5px; border: 1.5px solid var(--h);
+  background: linear-gradient(180deg, #1b2134, #0e1222); box-shadow: 0 2px 6px rgba(0,0,0,0.6); transition: transform .08s, filter .2s; }
 .the canvas { position: absolute; left: 0; top: 0; width: 53px; height: 66px; pointer-events: none; transition: filter .2s; }
-.the .bac { position: absolute; left: 0; right: 0; top: 68px; font: 900 10px/1 var(--tit); color: #fff; text-shadow: 0 0 4px var(--h), 0 1px 0 #000; text-align: center; }
-.the .ten { position: absolute; left: 0; right: 0; top: 79px; font: 700 9.5px/1 var(--body); letter-spacing: .4px; color: var(--h); text-shadow: 0 0 5px var(--h), 0 1px 0 #000; text-align: center; white-space: nowrap; overflow: hidden; }
-.the .gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 0 4px; font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff4b0; background: rgba(0,0,0,0.55); border-top: 1px solid var(--h); text-align: center; }
-.the .gia::before { content: '▲'; font-size: 8px; color: #3cffb0; margin-right: 2px; vertical-align: 1px; }
-.the:not(.thieu):not(.max) { box-shadow: inset 0 0 10px var(--hg), 0 0 10px var(--h); }
-.the.thieu { border-color: rgba(120,130,160,0.55); box-shadow: none; }
-.the.thieu canvas { filter: saturate(0.35) brightness(0.6); }
-.the.thieu .ten, .the.thieu .bac { color: #c3cbe0; text-shadow: 0 1px 0 #000; }
-.the.thieu .gia { color: #ff9a9a; border-top-color: rgba(120,130,160,0.45); }
-.the.thieu .gia::before { color: #7c869e; }
-.the.max .gia::before { content: ''; }
+.the .bac { position: absolute; left: 0; right: 0; top: 67px; font: 900 10px/1 var(--tit); color: #fff; text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000, 0 -1px 0 #000; text-align: center; }
+.the .ten { position: absolute; left: 0; right: 0; top: 79px; font: 700 10px/1 var(--body); letter-spacing: .3px; color: var(--h); text-shadow: 0 1px 0 #000, 1px 0 0 #000, -1px 0 0 #000; text-align: center; white-space: nowrap; overflow: hidden; }
+.the .gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 0 4px; font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff; background: rgba(0,0,0,0.6); border-top: 1px solid var(--h); text-align: center; }
+.the .so { position: absolute; left: 2px; top: 2px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; font: 900 9px/15px var(--tit); color: #fff; text-align: center; background: rgba(4,6,14,0.85); border: 1px solid rgba(255,255,255,0.5); }
+.the .so:empty { display: none; }
+.the .cong { position: absolute; right: 2px; top: 2px; height: 15px; padding: 0 4px; border-radius: 4px; font: 900 9px/15px var(--tit); color: #062a10; background: #5dff8a; box-shadow: 0 0 6px rgba(93,255,138,0.8); }
+.the .cong:empty { display: none; }
+.the.max .cong { color: #2a1c00; background: #ffd23a; box-shadow: 0 0 6px rgba(255,210,58,0.8); }
+.the.thieu canvas { filter: saturate(0.5) brightness(0.7); }
+.the.thieu .gia { color: #ff9a9a; }
 .the:active { transform: scale(0.95); }
-.the.len { animation: len .5s ease-out; background-position: 100% 0, 0 0; }
+.the.len { animation: len .5s ease-out; }
 /* THẺ ARCHFIEND (ô thứ 6): chân dung + vòng hồi chiêu + giá Energy (tăng sau mỗi lần dùng) */
-#the-af { position: absolute; left: 314px; top: 72px; width: 68px; height: 108px; overflow: hidden; border-radius: 4px; border: 1px solid var(--h, #ff2bd6);
-  background: linear-gradient(175deg, #2a1e46, #120a24 70%, #0a0618); box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 10px var(--h); transition: transform .08s, filter .2s; }
-#the-af canvas { position: absolute; left: 1px; top: 1px; width: 66px; height: 66px; pointer-events: none; }
-#the-af .af-cd { position: absolute; left: 9px; top: 9px; width: 50px; height: 50px; border-radius: 50%; pointer-events: none; display: flex; align-items: center; justify-content: center;
+/* THẺ ARCHFIEND (ô thứ 6) TO HƠN, VIỀN TÍM SÁNG: mặt (cắt từ cut-in) + vòng hồi chiêu + LV (số lần dùng) + giá mana (tăng sau mỗi lần dùng) */
+#the-af { position: absolute; left: 310px; top: 66px; width: 74px; height: 116px; overflow: hidden; border-radius: 7px; border: 2px solid #c77dff;
+  background: linear-gradient(180deg, #3a1a66, #160a2c 70%, #0a0618); box-shadow: 0 0 12px rgba(199,125,255,0.75), inset 0 0 10px rgba(199,125,255,0.25); transition: transform .08s, filter .2s; }
+#the-af canvas { position: absolute; left: 1px; top: 1px; width: 68px; height: 68px; pointer-events: none; }
+#the-af .af-cd { position: absolute; left: 9px; top: 9px; width: 52px; height: 52px; border-radius: 50%; pointer-events: none; display: flex; align-items: center; justify-content: center;
   font: 900 15px/1 var(--tit); font-style: normal; color: #fff; text-shadow: 0 0 4px #000, 0 1px 0 #000;
   background: conic-gradient(rgba(4,4,14,0.72) calc(var(--p, 0) * 360deg), transparent 0); }
-#the-af .af-ten { position: absolute; left: 0; right: 0; top: 70px; font: 900 8.5px/1 var(--tit); letter-spacing: .3px; color: #fff; text-shadow: 0 0 5px var(--h), 0 1px 0 #000; text-align: center; white-space: nowrap; }
-#the-af .af-gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 0 5px; font: 700 11px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff4b0; background: rgba(0,0,0,0.55); border-top: 1px solid var(--h); text-align: center; }
+#the-af .af-lv { position: absolute; left: 3px; top: 3px; padding: 1px 4px; border-radius: 4px; font: 900 8px/1.3 var(--tit); color: #fff; background: rgba(60,10,100,0.9); border: 1px solid #c77dff; }
+#the-af .af-ten { position: absolute; left: 0; right: 0; top: 73px; font: 900 8.5px/1 var(--tit); letter-spacing: .3px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 5px var(--h); text-align: center; white-space: nowrap; }
+#the-af .af-gia { position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 0 6px; font: 900 12px/1 var(--tit); font-variant-numeric: tabular-nums; color: #fff; background: rgba(0,0,0,0.55); border-top: 1px solid #c77dff; text-align: center; }
 #the-af.thieu .af-gia, #the-af.cho .af-gia { color: #ff9a9a; }
 #the-af.cho canvas, #the-af.thieu canvas { filter: saturate(0.4) brightness(0.65); }
-#the-af.cho, #the-af.thieu { box-shadow: none; }
+#the-af.cho, #the-af.thieu { box-shadow: 0 0 4px rgba(199,125,255,0.4); }
 #the-af.dang { animation: nhipaf 0.8s ease-in-out infinite; }
 #the-af:active { transform: scale(0.95); }
+/* cờ đầu hàng đỏ ở thanh giữa (vùng chạm 40×40) */
+#nut-co { position: absolute; left: 346px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+.ic-co { position: relative; display: block; width: 16px; height: 16px; }
+.ic-co::before { content: ''; position: absolute; left: 1px; top: 0; width: 2px; height: 16px; background: #e8e8f0; border-radius: 1px; }
+.ic-co::after { content: ''; position: absolute; left: 3px; top: 1px; width: 12px; height: 8px; background: #ff3040; clip-path: polygon(0 0, 100% 15%, 80% 50%, 100% 85%, 0 100%); filter: drop-shadow(0 0 3px rgba(255,48,64,0.8)); }
 @keyframes nhipaf { 50% { box-shadow: 0 0 18px var(--h), inset 0 0 14px var(--h); } }
 /* màn chọn: 2 Archfiend */
 .chon-af { display: flex; gap: 8px; }
@@ -204,7 +210,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 @keyframes duoi { from { transform: translateY(120px); opacity: 0; } }
 @keyframes nhay { 50% { opacity: 0.55; } }
 @keyframes nhipchu { 50% { opacity: 0.7; } }
-@keyframes nhipnut { 50% { box-shadow: 0 0 22px rgba(255,43,214,0.75), inset 0 0 22px rgba(255,43,214,0.4); filter: brightness(1.12); } }
+@keyframes nhipnut { 50% { box-shadow: 0 0 24px rgba(200,120,255,0.85), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -4px 10px rgba(30,0,60,0.45); filter: brightness(1.1); } }
 @keyframes len { 0% { box-shadow: 0 0 30px #3cffb0, inset 0 0 30px #3cffb0; } }
 @keyframes gl1 { 0%, 88%, 100% { transform: translate(-2px, 0); clip-path: inset(10% 0 55% 0); } 90% { transform: translate(-5px, -1px); clip-path: inset(30% 0 40% 0); } 94% { transform: translate(3px, 1px); clip-path: inset(70% 0 5% 0); } }
 @keyframes gl2 { 0%, 85%, 100% { transform: translate(2px, 0); clip-path: inset(60% 0 10% 0); } 87% { transform: translate(5px, 1px); clip-path: inset(5% 0 75% 0); } 92% { transform: translate(-3px, 0); clip-path: inset(45% 0 30% 0); } }

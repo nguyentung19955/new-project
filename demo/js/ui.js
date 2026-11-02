@@ -36,6 +36,7 @@
     wrap.style.transform = `scale(${s})`;
     cv.style.height = Hl + 'px';
     $('#duoi').style.top = C.DUOI_Y + 'px';
+    $('#nut-co').style.top = (C.GIUA_Y - 20) + 'px';
     FR = { x0, y0, s };
     K = Math.min(4, (window.devicePixelRatio || 1) * s);
     cv.width = Math.round(C.W * K); cv.height = Math.round(Hl * K);
@@ -129,12 +130,13 @@
     dung = false; keo = null; thang = false; UI.menu = null; UI.chon = null;
     $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop');
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
-    $('#top').hidden = false; $('#duoi').hidden = false;
+    $('#top').hidden = false; $('#duoi').hidden = false; $('#nut-co').hidden = cheTran === 'coop';
+    $('.tb-wave .nho').textContent = cheTran === 'coop' ? 'WAVE' : 'ROUND';
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
     const ai = $('#tb-ai'); ai.innerHTML = '';
     for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauBac(o, id); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 22); ai.appendChild(o); }   // icon đội AI 22px (P1.3: 20–24)
     { const o = document.createElement('div'); o.className = 'ai-o ld'; o.style.setProperty('--h', ARCHFIEND[AF_AI].mau); o.title = ARCHFIEND[AF_AI].ten; o.innerHTML = '<canvas></canvas>'; R.veAF(o.querySelector('canvas'), AF_AI, 22); ai.appendChild(o); }   // ô 6: Archfiend của AI
-    { const b = $('#the-af'), a = ARCHFIEND[afChon]; b.style.setProperty('--h', a.mau); b.querySelector('.af-ten').textContent = a.ten; b.title = a.mo; R.veAF(b.querySelector('canvas'), afChon, 66); }
+    { const b = $('#the-af'), a = ARCHFIEND[afChon]; b.style.setProperty('--h', a.mau); b.querySelector('.af-ten').textContent = a.ten; b.title = a.mo; R.veAF(b.querySelector('canvas'), afChon, 68); }
     const bo = $('#bo-bac'); bo.innerHTML = '';
     deck.forEach((id, n) => {
       const t = TUONG[id], h = HANH[t.hanh];
@@ -142,7 +144,7 @@
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
       mauBac(b, id);
       b.style.left = (8 + n * 60) + 'px';
-      b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
+      b.innerHTML = `<canvas></canvas><span class="so"></span><span class="cong"></span><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
       R.veThe(b.querySelector('canvas'), id, 53, 66);   // P0.2: chân dung lớn hơn (53×66)
       bo.appendChild(b);
     });
@@ -170,9 +172,13 @@
     set('trieu', g + '|' + (lk >= g) + full, () => { $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
     document.querySelectorAll('.the').forEach((b) => {
       const id = b.dataset.id, bac = S.bac[id], gb = G.giaBac(S, id), mx = bac >= C.BAC_MAX;
-      set('b' + id, bac + '|' + (lk >= gb), () => {
+      let n = 0, con = lk; for (let k = bac; k < C.BAC_MAX && con >= C.giaBac(k); k++) { con -= C.giaBac(k); n++; }   // "+N": đủ mana nâng N cấp liền
+      const so = S.o.filter((v) => v && v.id === id).length;                                                          // số bản đang có trên bàn
+      set('b' + id, bac + '|' + n + '|' + so, () => {
         b.querySelector('.bac').textContent = 'LV ' + (bac + 1);
-        b.querySelector('.gia').textContent = mx ? 'MAX' : gb;
+        b.querySelector('.gia').innerHTML = mx ? 'MAX' : `<i class="ic-e"></i>${gb}`;
+        b.querySelector('.cong').textContent = mx ? '+MAX' : n > 0 ? '+' + n : '';
+        b.querySelector('.so').textContent = so ? so : '';
         b.classList.toggle('thieu', !mx && lk < gb); b.classList.toggle('max', mx);
       });
     });
@@ -181,6 +187,7 @@
       set('af', ga + '|' + (lk >= ga) + '|' + Math.ceil(a.cdT) + '|' + (a.T > 0) + '|' + Math.round(p * 60), () => {
         const b = $('#the-af');
         b.querySelector('.af-gia b').textContent = ga;
+        b.querySelector('.af-lv').textContent = 'LV ' + (a.n + 1);
         b.querySelector('.af-cd').textContent = a.cdT > 0 ? Math.ceil(a.cdT) : '';
         b.style.setProperty('--p', p);
         b.classList.toggle('cho', a.cdT > 0); b.classList.toggle('thieu', lk < ga); b.classList.toggle('dang', a.T > 0);
@@ -230,18 +237,24 @@
     if (a === 'vao') batDau(chon);
     else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
-    else if (a === 'trieu' && S && !dung) { G.trieuHoi(S); capNhat(); }
+    else if (a === 'trieu' && S && !dung) { if (G.trieuHoi(S) < 0 && !S.het) baoChu(G.trong(S).length ? 'Not enough mana.' : 'Grid is full.'); capNhat(); }
     else if (a === 'afchon') { afChon = b.dataset.af; try { localStorage.setItem(KY_AF, afChon); } catch (er) { /* không lưu được */ } capChe(); }
-    else if (a === 'af' && S && !dung) { G.dungAF(S); capNhat(); }
-    else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } capNhat(); }
+    else if (a === 'af' && S && !dung) { if (!G.dungAF(S) && S.af && S.af.cdT <= 0 && S.lk < G.giaAF(S)) baoChu('Not enough mana.'); capNhat(); }
+    else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } else if (S.bac[b.dataset.id] < C.BAC_MAX) baoChu('Not enough mana.'); capNhat(); }
     else if (a === 'tocdo') { tocDo = tocDo >= 3 ? 1 : tocDo + 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo > 1); }   // 1x → 2x → 3x (3x để test nhanh)
     else if (a === 'dung' && S && !S.het) datDung(true);
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
     else if (a === 'choilai') batDau(boCu);
-    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
+    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#nut-co').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
   });
 
+  // chữ báo nổi GIỮA BÀN người chơi, xếp chồng (tối đa 4) — "Not enough mana." như DCDW (render.js veSo: s.tb)
+  function baoChu(txt) {
+    const ds = S.so.filter((s) => s.tb); if (ds.length >= 4) S.so.splice(S.so.indexOf(ds[0]), 1);
+    const n = S.so.filter((s) => s.tb).length;
+    S.so.push({ tb: 1, v: txt, x: S.B.OX + S.B.SW / 2, y: S.B.OY + S.B.SH / 2 + 8 - n * 19, t: 0, T: 1.1, mau: '#ffffff' });
+  }
   // nút SUMMON: trạng thái nhấn (lún) — :active không chắc chạy trên mobile nên thêm lớp .ep
   const nutTrieu = $('#nut-trieu');
   nutTrieu.addEventListener('pointerdown', () => nutTrieu.classList.add('ep'));
@@ -264,10 +277,10 @@
     // 3) đang chọn ô: chạm ô hợp lệ → dùng kỹ năng; chạm chỗ khác → huỷ
     if (UI.chon) { const ch = UI.chon; UI.chon = null; if (i >= 0 && ch.ds.includes(i)) { G.dungChuDong(S, ch.i, ch.k, i); capNhat(); } return; }
     if (i < 0 || !S.o[i] || S.o[i].da) return;
-    keo = { i, x, y, x0: x, y0: y, id: e.pointerId };
+    keo = { i, x, y, x0: x, y0: y, id: e.pointerId, toi: i };
     try { cv.setPointerCapture(e.pointerId); } catch (er) { /* bỏ qua */ }
   });
-  cv.addEventListener('pointermove', (e) => { if (!keo || e.pointerId !== keo.id) return; [keo.x, keo.y] = toFrame(e.clientX, e.clientY); });
+  cv.addEventListener('pointermove', (e) => { if (!keo || e.pointerId !== keo.id) return; [keo.x, keo.y] = toFrame(e.clientX, e.clientY); keo.toi = oTai(keo.x, keo.y); });
   const tha = (e) => {
     if (!keo || e.pointerId !== keo.id) return;
     const [x, y] = toFrame(e.clientX, e.clientY), j = oTai(x, y);
@@ -307,7 +320,7 @@
 
   // móc cho test
   window.DEMO = {
-    get S() { return S; }, get A() { return A; }, G, batDau, fromFrame, toFrame,
+    get S() { return S; }, get A() { return A; }, G, batDau, baoChu, get keo() { return keo; }, set keo(v) { keo = v; }, fromFrame, toFrame,
     oClient: (i) => { const [x, y] = G.oTam(S, i); return fromFrame(x, y); },
     tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; }, UI,
   };

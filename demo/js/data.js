@@ -98,10 +98,11 @@ const TEN_FILE = (id) => (TUONG[id] && TUONG[id].anh) || id;
 // ARCHFIEND (ô thẻ thứ 6): kỹ năng chủ động dùng Energy, giá tăng sau mỗi lần dùng, có hồi chiêu. Chọn ở màn chọn tướng; bot AI cũng dùng.
 //   k: 'tocDanh' = cả bàn đánh nhanh hơn (he) trong T giây · 'tuongLua' = xoá hiệu ứng trùm/tinh anh trên tướng + chặn hiệu ứng mới trong T giây
 //   gia(n): giá lần dùng thứ n (n = số lần đã dùng) · cd: hồi chiêu (giây) · anh: chân dung tạm (portrait_<anh>.png)
+//   mat: [x, y, r] = vùng MẶT trên ảnh cut-in cutin_<id>.png (cắt ra làm avatar nhỏ ở cổng + thẻ), knTen: tên kỹ năng hiện trên băng cut-in
 const ARCHFIEND = {
-  overclock: { ten: 'OVERCLOCK', mo: 'All heroes +35% attack speed, 6s', mau: '#ffb31a', anh: 'warp', k: 'tocDanh', he: 0.35, T: 6, cd: 30,
+  overclock: { ten: 'OVERCLOCK', knTen: 'OVERCLOCK DRIVE', mat: [268, 205, 118], mo: 'All heroes +35% attack speed, 6s', mau: '#ffb31a', anh: 'warp', k: 'tocDanh', he: 0.35, T: 6, cd: 30,
     gia: (n) => Math.round(40 * Math.pow(1.6, n)) },
-  firewall:  { ten: 'FIREWALL', mo: 'Cleanse + block boss/elite effects, 6s', mau: '#3ce7ff', anh: 'glitch', k: 'tuongLua', T: 6, cd: 35,
+  firewall:  { ten: 'FIREWALL', knTen: 'FIREWALL SHIELD', mat: [232, 150, 118], mo: 'Cleanse + block boss/elite effects, 6s', mau: '#3ce7ff', anh: 'glitch', k: 'tuongLua', T: 6, cd: 35,
     gia: (n) => Math.round(30 * Math.pow(1.6, n)) },
 };
 const AF_IDS = Object.keys(ARCHFIEND);
@@ -135,23 +136,30 @@ const BOSS = [
     kn: [{ k: 'infect', ten: 'DATA INFECTION', cd: 13, tele: 1.5, so: 2, T: 5 }, { k: 'ken', ten: 'COCOON', cd: 18, tele: 1.0, T: 4, hoi: 0.08, pha: 0.05 }] },
 ];
 // BỐ CỤC MÀN DỌC kiểu DCDW (toạ độ logic): rộng luôn 390, CAO co giãn theo màn (ui.js tính H = cao màn / scale).
-// KHÔNG để khoảng trống giữa 2 bàn: chiều cao dư được dùng làm Ô CAO HƠN (game.js boCuc tính BUOC_Y theo H, kẹp OH_MIN..OH_MAX).
-// Bàn 5×3: ô rộng 62 (bước 64), viền 6 → bàn 332px (~85% bề ngang), làn quái dọc bên trái x 8..48.
+// ĐƯỜNG QUÁI VÒNG QUANH BÀN như DCDW: hành lang sàn rộng LAN_W — quái sinh góc trên trái, đi xuống dọc mép TRÁI bàn, rẽ chạy dọc
+// mép DƯỚI bàn, tới CỔNG (Archfiend + tim) ở góc phải. Co-op: hành lang trái chung xuyên qua 2 bàn rồi chạy dưới bàn dưới.
+// Giữa 2 bàn chỉ còn THANH GIỮA mỏng (GIUA_H): Round + giờ / tên trùm + cờ đầu hàng. Chiều cao dư → ô cao hơn (kẹp OH_MIN..OH_MAX).
+// Bàn 5×3: ô rộng 65 (bước 67), viền 6 → bàn 347px; hành lang trái x 4..34.
 const CAU_HINH = {
-  W: 390, H: 844, H_MIN: 700, H_MAX: 960,
-  COT: 5, HANG: 3, O: 62, OH: 76, KHE: 2, BUOC_X: 64, BUOC_Y: 78, OH_MIN: 58, OH_MAX: 78,
-  BAN_X: 54, BAN_W: 332, BAN_H: 246, VIEN: 6, BAN_AI_Y: 80, BAN_NG_Y: 400,
-  LAN_X0: 8, LAN_X1: 48, LAN_THUA: 12,       // làn dài hơn bàn 12px mỗi đầu
-  TOP_H: 64, DUOI_H: 186, DUOI_DAY: 4,       // HUD trên cao 64; HUD dưới (Energy/SUMMON + thẻ) cao 186, cách đáy 4
-  KHE_BAN: 30,                               // khoảng tối thiểu giữa 2 bàn (cửa ra làn trên + cổng làn dưới + nhãn PLAYER)
+  W: 390, H: 844, H_MIN: 720, H_MAX: 960,
+  COT: 5, HANG: 3, O: 65, OH: 70, KHE: 2, BUOC_X: 67, BUOC_Y: 72, OH_MIN: 50, OH_MAX: 72,
+  BAN_X: 38, BAN_W: 347, BAN_H: 228, VIEN: 6, BAN_AI_Y: 80, BAN_NG_Y: 400,
+  LAN_X0: 4, LAN_X1: 34, LAN_W: 30,          // hành lang trái (x 4..34); hành lang dưới cao LAN_W ngay dưới bàn
+  LAN_DAU: 13,                               // cổng sinh: hành lang bắt đầu cao hơn mép trên bàn 13px
+  LAN_CHAN: 13,                              // đường (chân quái) nằm dưới tâm hành lang 13px → thân bọ ở giữa hành lang
+  CONG_W: 40,                                // cổng/Archfiend ở cuối hành lang dưới (40px cuối bên phải)
+  TOP_H: 64, DUOI_H: 186, DUOI_DAY: 4,       // HUD trên cao 64; HUD dưới (Mana/SUMMON + thẻ) cao 186, cách đáy 4
+  GIUA_H: 22,                                // thanh giữa mỏng
   LAN_AI: null, LAN_NG: null, DUOI_Y: 0, GIUA_Y: 0,   // tính trong game.js boCuc(H)
-  // tướng ĐẦY Ô như DCDW: cao = min(TL_CAO × chiều cao ô, CAO_MAX) × hệ số riêng (TUONG[id].co); rộng ≤ ô + 8 (đè ô bên ≤ 4px); chân cách đáy ô CHAN
-  TL_CAO: 0.8, CAO_MAX: 58, CHAN: 7, TUONG_CAO: 58, TUONG_RONG: 70,
+  // CỠ TƯỚNG (thử A/B 02/11): cao = min(TL_CAO × chiều cao ô, CAO_MAX) × hệ số riêng (TUONG[id].co); chân cách đáy ô CHAN
+  TL_CAO: 0.66, CAO_MAX: 48, CHAN: 8, TUONG_CAO: 46, TUONG_RONG: 60,
   TL: 58 / 70,          // tỉ lệ không gian so với bản ngang cũ — nhân bán kính vùng hiệu ứng
-  // ANIMATION: SHEET_TUONG = false → TẮT sheet idle/attack (khung ChatGPT không nhất quán). Tướng luôn vẽ bằng ẢNH TĨNH theo hướng
-  // (<anh>_<dir>.png), đánh = giật lùi 2px + chớp nòng + đạn. Có ảnh <anh>_atk_<dir>.png thì đổi sang ảnh đó ~ATK_ANH giây lúc ra đòn.
-  SHEET_TUONG: false, ATK_ANH: 0.12, GIAT: 2, GIAT_T: 0.09, NHUN: 0.8, CHOP_NONG: 0.07,
-  TAC_DONG: 0.05, GIU_KHUNG: 0.075,          // trễ từ lúc quay mặt → đạn ra (ảnh tĩnh: 50ms; bật sheet thì 3/14 giây cho khớp khung ra đòn)
+  // ANIMATION (tư vấn ChatGPT bước 3–4): SHEET_TUONG = false → ảnh tĩnh theo hướng (<anh>_<dir>.png), dịch NGUYÊN KHỐI bằng code:
+  //   đứng: nhún ±NHUN px, chu kỳ NHUN_T giây · đánh ATK_T giây: lùi GIAT px (ATK_LUI giây) → lao tới LAO px (ATK_LAO giây, ĐẠN RA đầu pha này) → về
+  //   Có ảnh <anh>_atk_<dir>.png thì đổi sang ảnh đó ATK_ANH giây lúc ra đòn.
+  SHEET_TUONG: false, ATK_ANH: 0.12, GIAT: 1.5, LAO: 2.5, ATK_T: 0.24, ATK_LUI: 0.07, ATK_LAO: 0.045, NHUN: 0.5, NHUN_T: 1.7, CHOP_NONG: 0.07,
+  TAC_DONG: 0.07, GIU_KHUNG: 0.075,          // trễ từ lúc bắt đầu đánh → đạn ra (= pha lùi 70ms)
+  SINH_T: 0.22, GOP_T: 0.18, HIT_T: 0.12,    // summon 220ms · merge 180ms · hit 120ms (peak ~12px)
   HIT_STOP: { tia: 0.03, chuoi: 0.025 },   // hit-stop ngắn cho đòn mạnh (tia LANCE, nhịp sét chuỗi)
   FX_NHO_MAX: 16,       // tối đa 16 hiệu ứng trúng đòn nhỏ cùng lúc
   DAI_CU: 1272,         // chiều dài đường quái bản ngang cũ (px) — tốc độ quái nhân (dài làn / DAI_CU) để thời gian đi hết làn như cũ
