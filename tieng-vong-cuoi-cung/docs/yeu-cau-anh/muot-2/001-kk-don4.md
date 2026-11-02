@@ -1,0 +1,19 @@
+# 001 – Kiếm Khách – đòn 4 (nhát kết): 2 khung giữa F4→F5→F6 (P0)
+- **Trạng thái:** CHỜ
+- **Clip:** `nhan-vat.json → cap[0..2].clip.don4 (cả 3 cấp dùng chung thư mục don4)` – thư mục art gốc `art/kiem-khach/don4/` (9 khung `fNN.png`, ô 256×256, quay PHẢI, neo chân [128, 172])
+- **Việc cần vẽ:** Vẽ **2 khung mới**: `moi-01` chèn SAU F4 (giữa F4 và F5), `moi-02` chèn SAU F5 (giữa F5 và F6).
+- **Dáng khung mới (lời ChatGPT, duyệt 02/11):** "F4→F5→F6 đổi hình mạnh; chân trượt 10%; F6≈F7≈F8 vệt đứng hình. Khoá chân F0–F4; thêm 1–2 khung giữa (kiếm 1/3 và 2/3 quỹ đạo); F7–F8 vệt mảnh dần."
+  - moi-01 (giữa F4–F5): kiếm ở ~1/3 quỹ đạo chém bổ – từ trên đầu vung ra trước, lưỡi chéo lên phía trước ~45°; thân bắt đầu gập tới; chân giữ nguyên chỗ như F4 (khoá chân); vệt chém mới chớm, mảnh.
+  - moi-02 (giữa F5–F6): kiếm ở ~2/3 quỹ đạo – lưỡi gần ngang chĩa trước-xuống; thân hạ thấp gần như F6; vệt cung cyan dài hơn F5 nhưng chưa chạm đất như F6.
+  - Chân trụ đúng chỗ khung trước/sau, không trượt.
+- **Ảnh tham chiếu:** `001-kk-don4-thamchieu.png` (1767×423) = ghép ngang F4 | [Ô TRỐNG] | F5 | [Ô TRỐNG] | F6, cắt cửa sổ (x0=77, y0=49, rộng 113, cao 133) của ô 256×256 rồi phóng ×3 nearest, nền #FF00FF. Ô viền đứt = khung cần vẽ; dấu "+" trong ô trống = vị trí neo chân.
+- **Prompt gửi ChatGPT (kèm ảnh tham chiếu, mỗi ảnh 1 cuộc trò chuyện mới):**
+  ```
+  This strip shows consecutive frames of a 2D side-view pixel-art sword finisher of Kiếm Khách (The Masked Wanderer): white mask with icy-blue eye slit, long silver-cream ponytail, dark layered clothing with cyan rune marks, two icy-blue swords. Draw ONLY the 2 missing in-between frames for the 2 empty dashed cells: cell 2 = sword at 1/3 of the overhead slash arc (blade swinging forward, ~45 degrees up-front, body starting to lean in, faint thin cyan trail); cell 4 = sword at 2/3 of the arc (blade almost horizontal pointing forward-down, body low like the next frame, cyan arc trail longer than frame 3 but not touching the ground). Feet stay planted exactly where they are in the neighbouring frames. Use the image generation tool and DRAW. Keep EXACTLY the same character design, proportions, scale, palette, outline and pixel size as the neighbouring frames; do not redesign, do not add details, effects, text, shadow or ground. Same foot position as marked by the small "+" (feet on the same ground line). Output the frame(s) as crisp pixel art on flat #FF00FF, laid out in the same order as the empty cells.
+  ```
+- **Lưu ảnh ra:** `art/muot-2/kk-don4/moi-01.png`, `art/muot-2/kk-don4/moi-02.png` – mỗi tệp PNG RGBA đúng **256×256** (cỡ ô gốc), nền trong suốt, chân ở **[128, 172]** như khung gốc, quay PHẢI. Cách đặt: thu ảnh ChatGPT về cỡ thật (÷3, nearest) theo cửa sổ rộng 113 × cao 133, dán vào ô 256×256 trong suốt tại (77,49). Lưu kèm ảnh nguồn `art/muot-2/kk-don4/nguon-chatgpt.png`.
+- **Thứ tự mới của clip sau khi lắp:** F0 F1 F2 F3 F4 **moi-01** F5 **moi-02** F6 F7 F8 (11 khung)
+- **ms mới cho cả clip:** 60, 65, 50, 40, 33, 33, 50, 33, 55, 60, 80 (559 ms; Claude chia từ bộ ChatGPT 60,65,50,40,35,65,55,60,80 – phiên chính có thể hỏi ChatGPT xác nhận khi vẽ)
+- **Sự kiện dời chỉ số (phiên lắp tự làm):** cả 3 cấp: so_hinh 9→11; trung [5,6,7]→[6,7,8,9]; lao [2,6,20]→[2,8,20]. Lớp sức mạnh (mat-na-nut-1/2/3, an-chuong-nguc) có thư mục don4 → phiên lắp tự đặt lớp cho 2 khung mới bằng điểm neo đo (do-neo.py), không cần phiên chính vẽ lớp.
+- **Luật:** giữ nguyên 100% thiết kế (màu, cỡ, chi tiết); không sửa khung gốc; không vẽ bằng code/nội suy. Ảnh lệch dáng/sai cỡ → phiên lắp đổi trạng thái thành "VẼ LẠI" kèm lý do.
+- **Khi xong:** phiên chính đổi Trạng thái thành `XONG` (ghi cỡ ảnh, số tệp) rồi push; phiên MƯỢT-2 sẽ lắp vào game.
