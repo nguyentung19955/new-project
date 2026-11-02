@@ -1,5 +1,5 @@
 # 032 – vfx-dat-muc
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – 16×24: bui 8, manh 8, moc-lai 8, xung-nhanh 6, xung-bao-tu 6. LƯU Ý: khung có vẽ kèm khối gỗ → dùng THAY ô gỗ trong lúc chạy hiệu ứng, không chồng lên ô; gốc: dat-muc/fx/nguon-chatgpt.png)
 - **Dùng vào:** Hiệu ứng địa hình gỗ mục (game/vung-2/dat-muc.js). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Bụi vỡ (crumble dust), mảnh rơi, rễ mọc lại (regrow tendrils), xung mục nhanh, xung bào tử. Màu ochre/olive.
 - **Số khung + ms gợi ý:** bui 8; manh 8; moc-lai 8; xung-nhanh 6; xung-bao-tu 6 (≈70 ms)

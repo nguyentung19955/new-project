@@ -1,5 +1,5 @@
 # 033 – vfx-neo-re
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – dat 6×48², giu 6×64×24 (lặp ngang), het 6×48², tay 6×32² (chỉ tia xanh lơ nhỏ, không vẽ tay); gốc: neo-re/fx/nguon-chatgpt.png)
 - **Dùng vào:** Kỹ năng Root Anchor (mở ở R206). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Đặt neo (6), rễ đồng siết lặp (6), neo hết hạn (6); lớp chồng tay nhân vật khi niệm (6 × 80 ms, CHỈ lớp chồng, không vẽ lại thân Kiếm Khách – chớp xanh lơ nhỏ chỉ ở bàn tay).
 - **Số khung + ms gợi ý:** dat 6; giu 6 lặp; het 6; tay 6 × 80

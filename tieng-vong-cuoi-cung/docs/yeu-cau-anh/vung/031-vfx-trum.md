@@ -1,5 +1,5 @@
 # 031 – vfx-trum
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – vet 8, dau-mua 6, bao-tu-roi 6, vong-gao 8, no-muc 8, dich-vo 6, song-dap 10, tan-ra 8 (ChatGPT vẽ 8 thay vì 16 – kéo dài ms mỗi khung); gốc: fx/nguon-chatgpt.png)
 - **Dùng vào:** Hiệu ứng đòn Mold Mother. Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Vệt xúc tu, dấu làn mưa bào tử (3 vòng hổ phách trên sàn), bào tử rơi, vòng sóng Bell Wail, nở mục (Rot Bloom), vòng đích tóm (Grab), sóng xung kích Heartbreak, tan rã khi chết. Không chớp toàn màn.
 - **Số khung + ms gợi ý:** vet 8; dau-mua 6; bao-tu-roi 6; vong-gao 8; no-muc 8; dich-vo 6; song-dap 10; tan-ra 16 (≈80 ms/khung)

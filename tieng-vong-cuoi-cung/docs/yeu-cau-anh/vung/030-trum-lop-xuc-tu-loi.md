@@ -1,5 +1,5 @@
 # 030 – trum-lop-xuc-tu-loi
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11 – lop/xuc_tu 8×96×48 (gốc rễ mép PHẢI, quất sang TRÁI), lop/loi 7×32×32: f00 tắt, f01 sáng, f02 nứt, f03–f06 chớp 4 nhịp; gốc: lop/nguon-chatgpt.png)
 - **Dùng vào:** Lớp chồng của Mold Mother (xúc tu trước thân, lõi chuông sáng theo pha). Chưa có ảnh → phần này để TẮT trong game, không vẽ tạm.
 - **Mô tả:** Xúc tu rời (cuộn – vung – rút) và lõi chuông ở ngực (tắt / sáng vàng / chớp 4 nhịp cho Heartbreak Slam).
 - **Số khung + ms gợi ý:** xuc_tu 8 × 85; loi 3 trạng thái + chop 4 × 150
