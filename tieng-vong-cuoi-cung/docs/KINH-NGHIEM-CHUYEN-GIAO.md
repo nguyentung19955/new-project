@@ -176,7 +176,7 @@
 ---
 
 ## 5. GIAO DIỆN, CHỮ, BẢN ĐỒ
-- **Phông chữ** (ChatGPT chọn): thân chữ **Alegreya Sans** (đậm, rõ), tiêu đề **Cormorant Garamond** (huyền bí). Nạp trước khi vẽ canvas (`document.fonts.load`, tối đa 2,5 s).
+- **Phông chữ** (ChatGPT chọn lại 02/11, phương án A – docs/khoi-dau/font-chatgpt.txt): **Handjet** (nút, menu, HUD, gợi ý), **Spectral** (hội thoại, tên vùng), **IBM Plex Sans** (chữ nhỏ trạng thái). Gom ở MỘT file `game/giao-dien/chu.css` + `chu.js` (canvas chờ `CHU.cho()`, tối đa 2,5 s).
 - **Hướng dẫn dài** (trên ~22 ký tự) đặt trong **khung bảng ChatGPT vẽ** (co giãn 9 mảnh và mặt nạ trang trí giữa cạnh trên), tự xuống dòng. Hướng dẫn ngắn thì để chữ trơn có viền tối.
 - **Co giãn 9 mảnh** cho mọi khung: đo lề (L/R/T/B) theo điểm ảnh gốc của ảnh, vẽ 4 góc giữ nguyên tỉ lệ k, cạnh và giữa thì kéo giãn. Một hàm dùng chung cho HUD, thanh máu trùm, ô phòng bản đồ, nền bản đồ.
 - **HUD**:
@@ -209,6 +209,7 @@
 | Bản gói > 16 MB | Ảnh PNG lớn | Thu nhỏ theo điểm ảnh thật, lượng tử 256 màu |
 | Kiểm thử báo lỗi vì phông Google không tải khi offline | Lỗi mạng `net::ERR_` bị tính là lỗi JS | Lọc `net::ERR_` |
 | Ảnh chụp lấy về bị thu nhỏ (591 px) | Canvas phủ khác cỡ vùng chụp | Cỡ CSS canvas = cỡ phần cắt, chụp đúng `[0,0,w,h]` |
+| Nhân vật treo dây lơ lửng giữa không trung (quay lưng) | Engine kéo dây lên tới trần nhưng ảnh phòng chỉ vẽ một đoạn → dây tàng hình | Chỉ kéo dây tới ô ảnh có vẽ dây (đọc điểm ảnh); phép thử tools/vung-1/kiem-thu-nv-treo.js |
 | Câu trả lời ChatGPT bị cụt | Đọc khi còn đang viết | Chờ nút dừng biến mất, tải lại cuộc chat rồi đọc |
 
 ---
