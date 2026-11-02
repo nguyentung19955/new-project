@@ -162,3 +162,35 @@ Làm theo phản hồi người dùng: "chưa giống Defense War", animation gi
 - Muốn bật lại sheet cũ: `SHEET_TUONG: true` trong data.js (không khuyến nghị).
 - Cân bằng (máu tinh anh, Energy Broker, giá trị kỹ năng) là số thử nghiệm. Bot AI chưa dùng kỹ năng chủ động VÀNG.
 - Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.
+
+## Đường quái vòng bàn, thanh Round, khay lõm, hàng dưới DCDW, kéo thả, nhịp đánh, cut-in (02/11/2026, phiên tự động)
+Làm theo mục G của `QUAN-SAT-10-VIDEO-DCDW.md` + P0/P1 của `tu-van-chatgpt-animation-dcdw.txt`. Không chạy test. Đã chụp màn 390×844 (PVP + CO-OP), 390×700, 390×960, màn chọn tướng, kéo thả, cut-in Archfiend / tướng VÀNG / trùm, màn giới thiệu trùm co-op — tự xem, không lỗi JS; chạy thử bot tự chơi bằng node (co-op tới wave 46, PVP tới wave 16) không lỗi.
+
+### Đã làm
+1. **Đường quái vòng quanh bàn như DCDW** (game.js `boCuc`, `dungBan`): mỗi bàn có hành lang sàn ôm mép TRÁI (x 4..38) và mép DƯỚI bàn. Quái sinh ở góc trên trái → đi xuống dọc mép trái → rẽ chạy dọc mép dưới → tới **cổng ở góc phải** (mất mạng khi tới cổng). Bỏ làn dọc riêng.
+   - CO-OP: **một hành lang trái chung** xuyên qua cả 2 bàn (đoạn cạnh bàn trên thuộc đồng đội, tới ngang đỉnh bàn dưới thì quái chuyển sang bàn mình), rồi chạy dưới bàn dưới tới cổng.
+   - Lệch ngang của quái vuông góc với hướng đi (đi thành dòng cả đoạn dọc lẫn ngang). Ảnh bọ/tinh anh/trùm **xoay nguyên ảnh** theo hướng đi, góc mượt ở chỗ rẽ (không méo hình).
+   - Tầm bắn: mọi tướng bắn mọi quái trên đường của bàn mình; "đi đầu" = gần cổng nhất **theo quãng đường** (giữ `q.d`). Thời gian đi hết đường giữ như cũ (tốc độ nhân theo độ dài đường).
+   - **Cổng**: avatar Archfiend nhỏ (tròn, viền màu Archfiend; vòng trắng = thời gian hiệu lực khi đang bật) + **3 trái tim** (PVP) / 1 tim + số mạng chung (CO-OP); chớp đỏ khi mất mạng. Avatar cắt vùng mặt từ `cutin_<af>.png` (toạ độ `ARCHFIEND[id].mat`), có `archfiend_<id>.png` thì dùng ảnh đó.
+2. **Thanh giữa mỏng** (cao 24) giữa 2 bàn: PVP = "ROUND N" + đồng hồ giây của round (hoặc **tên trùm** khi round trùm) + **cờ đầu hàng đỏ** bên phải (nút 44×36, mở bảng tạm dừng có QUIT). CO-OP = dải đèn đỏ chạy + "BOSS IN n WAVES" / tên trùm; **WAVE x/70 lớn** ở góc trên trái. Dải báo round/trùm đè tạm lên thanh này rồi tắt.
+3. **Bàn trong khay lõm**: vành vát (tối trên, sáng dưới), lòng khay tối, ô gần vuông **64×70** (khe 3px rõ), tile.png phủ nhẹ (tối hơn sàn). **Sàn sáng hơn ô**: graphite từ vân tile.png phủ sáng + vi mạch cyan rất mờ (< 5% phát sáng); hành lang = tấm lát hơi tối hơn sàn + vạch nối tấm + mũi tên đỏ rất mờ chỉ hướng. Bỏ mưa + nền hẻm tím.
+   - Có `demo/assets/v3/san_<x>.png` (vân sàn, lặp ô 96px) / `khay_<x>.png` (kéo vừa bàn) thì tự dùng — x theo thứ tự `1, 2, neon, graphite, circuit, steel, tech, ice, sand, a, b`; ảnh thứ 1 tìm được = bàn mình, thứ 2 = bàn trên.
+4. **Hàng dưới như DCDW**: ô **MANA** (giọt tím + số) bên trái; nút **SUMMON** tím sáng to ở giữa (160×62, giá có giọt mana); nút tốc độ / tạm dừng gọn 44×44 bên phải. 5 thẻ 57×106: viền màu bậc mảnh, chân dung rõ, **LV**, tên chữ trắng, giá nâng cấp; **số bản trên bàn** (góc trên trái), huy hiệu xanh **"+N"** = số cấp nâng được ngay với mana hiện có, **"+MAX"** khi tối đa. Thẻ **Archfiend** to hơn (71×110) viền tím sáng bên phải. Biểu tượng tia sét Energy đổi thành **giọt mana tím** ở mọi nơi.
+5. **Kéo thả**: ghost tướng dưới ngón; ô nguồn viền **CAM**; ô ghép được (cùng loại cùng sao) viền **xanh-vàng sáng** nhịp; ô trống viền **cyan nhạt** (sáng hơn khi ngón ở trên); ô không hợp lệ **đỏ mờ**; đường quái của bàn mình tô sáng màu hệ. Bấm SUMMON / thẻ nâng cấp / Archfiend khi thiếu → chữ **"Not enough mana."** nổi giữa bàn, xếp chồng (đầy bàn: "Board is full.", Archfiend đang hồi: "Archfiend is recharging.").
+6. **Sao**: pip trên đầu, **cố định theo ô** (tính theo cỡ chuẩn, không theo nhún); 1–3 sao 1 hàng, 4–7 sao **2 hàng** (2+2, 3+2, 3+3, 4+3). **Đĩa aura** tròn màu dưới chân khi tướng đang được buff (OVERCLOCK màu cam, COPY BUFFER xanh ngọc). **Mũi tên** nhỏ xanh ▲ (buff, bên phải) / đỏ ▼ (debuff HOT / BUG / LOCK, bên trái) cạnh tướng.
+7. **Nhịp đánh** (data.js, tư vấn bước 3–4, 7): idle nhún **±0.5px chu kỳ 1.7s** nguyên khối; attack **240ms**: lùi 1.5px (70ms) → lao tới +2.5px (45ms — **đạn phát đúng lúc này từ đầu nòng**) → về (125ms), dịch theo hướng bắn; trúng đòn 120ms cỡ ~16px (đỉnh ~12px); summon **220ms**, merge **180ms**; hysteresis đổi hướng 10° (giữ).
+   - **Cỡ tướng**: đã thử 38px và 44px trên ô 64×70 (chụp so sánh) → **chọn 44px** (≈63% chiều cao ô, trong khoảng 60–75% của DCDW): 38px mặt + vũ khí quá nhỏ, khó nhận ra loại để ghép. Chỉnh ở `CAU_HINH.TL_CAO / CAO_MIN / CAO_MAX`.
+8. **CUT-IN như DCDW** (render.js, game không dừng):
+   - (a) **Archfiend** (của mình) kích hoạt: băng chéo giữa màn, tranh `cutin_<af>.png` trượt vào từ trái + chữ **"POWER UP!"** + băng tên kỹ năng + vệt sét/halftone/vệt tốc độ, **0.9s**.
+   - (b) Tướng **VÀNG/ĐỎ** xuất hiện lần đầu trong trận (triệu hồi/ghép) hoặc tung kỹ năng chủ động: tranh `cutin_<id>.png` (chưa có → `portrait_<anh>.png`) trượt vào từ phải + băng tên + tên bậc, **0.8s**, tối đa **1 lần / 8s**.
+   - (c) **Trùm tung chiêu** (bàn mình; co-op cả bàn đồng đội): mặt trùm trượt ngang trên nền halftone đỏ + tên chiêu, **0.8s** (tối đa 1 lần / 5s). Ảnh `cutin_boss_<id>.png`, chưa có → khung đầu ảnh đi bộ trùm phóng to.
+9. **Màn giới thiệu trùm co-op**: khi trùm xuất hiện — tối màn, trùm phóng to giữa màn + băng đỏ "WAVE N / FINAL BOSS" + tên trùm, **1.2s** (thay cho dải báo trùm ở co-op).
+
+### Ảnh chờ ChatGPT vẽ (thả vào `demo/assets/v3/` là tự dùng)
+- `cutin_<id>.png` cho tướng VÀNG/ĐỎ (glitch, broker → tên file `cutin_broker.png` hoặc `cutin_miner.png`), `cutin_boss_<id>.png` (firewall, overclock, corruptor). Đã có: `cutin_overclock.png`, `cutin_firewall.png` (Archfiend).
+- `san_<x>.png` / `khay_<x>.png` (skin sàn / khay bàn), `archfiend_<id>.png` (avatar vuông).
+
+### Còn lại / ghi chú
+- Màn rất cao (960) còn khe trống nhỏ trên/giữa/dưới (~30px mỗi khe) vì ô bị kẹp tối đa 70px để giữ gần vuông.
+- Co-op: phần sàn dưới bàn trên không có đường (quái đi thẳng xuống bàn dưới).
+- Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.

@@ -22,15 +22,18 @@
       <div id="tb-ai"></div>
     </div>
 
-    <!-- ACTION HUD y 597..676 (mana · SUMMON · menu) + CARD HUD y 676..816 (5 thẻ + leader) -->
+    <!-- HÀNG DƯỚI kiểu DCDW: ô MANA (giọt + số) trái · nút SUMMON tím to ở giữa (giá) · tốc độ / tạm dừng gọn bên phải;
+         hàng thẻ: 5 thẻ tướng (LV, giá nâng cấp, +N, MAX, số bản trên bàn) + thẻ ARCHFIEND to hơn viền tím bên phải -->
     <div id="duoi" hidden>
-      <div id="lk-hop"><span class="nho">ENERGY</span><b><i class="ic-e"></i><span id="lk">0</span></b></div>
+      <div id="lk-hop"><span class="nho">MANA</span><b><i class="ic-e"></i><span id="lk">0</span></b></div>
       <button id="nut-trieu" data-act="trieu"><span class="tr-ten">SUMMON</span><span class="tr-gia"><i class="ic-e"></i><span id="gia-trieu">10</span></span></button>
       <button id="nut-tocdo" class="nut-nho" data-act="tocdo">1x</button>
       <button id="nut-dung" class="nut-nho" data-act="dung" aria-label="Menu"><i class="ic-dung"></i></button>
       <div id="bo-bac"></div>
       <button id="the-af" data-act="af" aria-label="Archfiend"><canvas></canvas><i class="af-cd"></i><span class="af-ten">ARCHFIEND</span><span class="af-gia"><i class="ic-e"></i><b>0</b></span></button>
     </div>
+    <!-- cờ đầu hàng đỏ ở bên phải THANH GIỮA (PVP) — mở bảng tạm dừng (QUIT) -->
+    <button id="nut-co" data-act="dung" aria-label="Surrender" hidden><i></i></button>
 
     <div id="chon" class="man">
       <div class="chon-dau">

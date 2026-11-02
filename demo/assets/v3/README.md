@@ -14,3 +14,8 @@ Chờ thêm (thả vào đây là tự dùng, ưu tiên hơn ảnh tĩnh):
 Neo khung: điểm giữa-đáy phần hình của khung đầu idle (code tự đo), nên giữ chân cố định ở (64,108)/128 mọi khung.
 
 8 hướng (theo quái): `<id>_<dir>.png` (ảnh tĩnh) + `<id>_idle_<dir>.png` (8 khung) / `<id>_attack_<dir>.png` (12 khung), dir ∈ s, sw, w, nw, n; SE/E/NE do code lật gương SW/W/NW. Thiếu hướng → hướng gần nhất; WARP xoay ảnh bằng code. Chi tiết: docs/demo-hop-tuong/TIEN-DO-V3.md.
+
+## Cut-in, sàn, khay (phiên "đường quái vòng bàn")
+- `cutin_<archfiend>.png` — tranh cut-in khi Archfiend kích hoạt (đã có overclock, firewall). Avatar ở cổng + chân dung thẻ cắt vùng mặt theo `ARCHFIEND[id].mat`.
+- `cutin_<tướng>.png` — cut-in tướng VÀNG/ĐỎ (chưa có → dùng `portrait_<anh>.png`). `cutin_boss_<id>.png` — cut-in trùm (chưa có → khung đầu ảnh đi bộ).
+- `san_<x>.png` (vân sàn, lặp) / `khay_<x>.png` (khay bàn, kéo vừa bàn); x ∈ 1, 2, neon, graphite, circuit, steel, tech, ice, sand, a, b — ảnh thứ 1 = bàn mình, thứ 2 = bàn trên.

@@ -36,6 +36,7 @@
     wrap.style.transform = `scale(${s})`;
     cv.style.height = Hl + 'px';
     $('#duoi').style.top = C.DUOI_Y + 'px';
+    $('#nut-co').style.top = (C.THANH_Y + C.THANH_H / 2 - 18) + 'px';   // cờ đầu hàng: giữa thanh giữa
     FR = { x0, y0, s };
     K = Math.min(4, (window.devicePixelRatio || 1) * s);
     cv.width = Math.round(C.W * K); cv.height = Math.round(Hl * K);
@@ -127,7 +128,8 @@
     if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
     else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
     dung = false; keo = null; thang = false; UI.menu = null; UI.chon = null;
-    $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop');
+    $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop'); $('.tb-wave').classList.toggle('coop', cheTran === 'coop');
+    $('#nut-co').hidden = cheTran === 'coop';   // PVP: cờ đầu hàng đỏ bên phải thanh giữa
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
@@ -141,9 +143,9 @@
       const b = document.createElement('button');
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
       mauBac(b, id);
-      b.style.left = (8 + n * 60) + 'px';
-      b.innerHTML = `<canvas></canvas><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
-      R.veThe(b.querySelector('canvas'), id, 53, 66);   // P0.2: chân dung lớn hơn (53×66)
+      b.style.left = (6 + n * 61) + 'px';
+      b.innerHTML = `<canvas></canvas><span class="so-ban" hidden></span><span class="them" hidden></span><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
+      R.veThe(b.querySelector('canvas'), id, 54, 62);
       bo.appendChild(b);
     });
     capNhat(true);
@@ -170,9 +172,14 @@
     set('trieu', g + '|' + (lk >= g) + full, () => { $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
     document.querySelectorAll('.the').forEach((b) => {
       const id = b.dataset.id, bac = S.bac[id], gb = G.giaBac(S, id), mx = bac >= C.BAC_MAX;
-      set('b' + id, bac + '|' + (lk >= gb), () => {
+      // số bản đang có trên bàn (góc trên trái) + "+N" = số cấp nâng được ngay với mana hiện có; MAX khi đã tối đa
+      const soBan = S.o.reduce((n, v) => n + (v && v.id === id ? 1 : 0), 0);
+      let nN = 0; for (let tong = 0; bac + nN < C.BAC_MAX && (tong += C.giaBac(bac + nN)) <= lk;) nN++;
+      set('b' + id, bac + '|' + (lk >= gb) + '|' + soBan + '|' + nN, () => {
         b.querySelector('.bac').textContent = 'LV ' + (bac + 1);
-        b.querySelector('.gia').textContent = mx ? 'MAX' : gb;
+        b.querySelector('.gia').innerHTML = mx ? 'MAX' : `<i class="ic-e"></i>${gb}`;
+        const sb = b.querySelector('.so-ban'); sb.hidden = !soBan; sb.textContent = soBan;
+        const th = b.querySelector('.them'); th.hidden = !mx && !nN; th.textContent = mx ? '+MAX' : '+' + nN; th.classList.toggle('max', mx);
         b.classList.toggle('thieu', !mx && lk < gb); b.classList.toggle('max', mx);
       });
     });
@@ -230,16 +237,16 @@
     if (a === 'vao') batDau(chon);
     else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
-    else if (a === 'trieu' && S && !dung) { G.trieuHoi(S); capNhat(); }
+    else if (a === 'trieu' && S && !dung && !S.het) { if (G.trieuHoi(S) < 0) R.baoThieu(G.trong(S).length ? 'Not enough mana.' : 'Board is full.'); capNhat(); }
     else if (a === 'afchon') { afChon = b.dataset.af; try { localStorage.setItem(KY_AF, afChon); } catch (er) { /* không lưu được */ } capChe(); }
-    else if (a === 'af' && S && !dung) { G.dungAF(S); capNhat(); }
-    else if (a === 'bac' && S && !dung) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } capNhat(); }
+    else if (a === 'af' && S && !dung && !S.het) { if (!G.dungAF(S) && S.af) R.baoThieu(S.af.cdT > 0 ? 'Archfiend is recharging.' : 'Not enough mana.'); capNhat(); }
+    else if (a === 'bac' && S && !dung && !S.het) { if (G.lenBac(S, b.dataset.id)) { b.classList.remove('len'); void b.offsetWidth; b.classList.add('len'); } else if (S.bac[b.dataset.id] < C.BAC_MAX) R.baoThieu(); capNhat(); }
     else if (a === 'tocdo') { tocDo = tocDo >= 3 ? 1 : tocDo + 1; b.textContent = tocDo + 'x'; b.classList.toggle('bat', tocDo > 1); }   // 1x → 2x → 3x (3x để test nhanh)
     else if (a === 'dung' && S && !S.het) datDung(true);
     else if (a === 'tiep') datDung(false);
     else if (a === 'bo') { datDung(false); S.het = true; ketThuc(); }
     else if (a === 'choilai') batDau(boCu);
-    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
+    else if (a === 'doibo') { S = null; A = null; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#nut-co').hidden = true; $('#chon').hidden = false; chon = boCu.slice(); capChon(); }
   });
 
   // nút SUMMON: trạng thái nhấn (lún) — :active không chắc chạy trên mobile nên thêm lớp .ep
