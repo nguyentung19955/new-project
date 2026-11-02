@@ -1,5 +1,5 @@
 # 006 – Journal Frame (A)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/nhat-ky-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Khung nền nhật ký "Echo Journal" mở từ Chuông Lưu: đồng cũ viền rễ quấn, góc có chuông nhỏ; trong tối (#1A212B–#212835) để chữ HTML sáng đọc rõ; giữa trống hoàn toàn.
 - **Số khung:** 1 ảnh tĩnh

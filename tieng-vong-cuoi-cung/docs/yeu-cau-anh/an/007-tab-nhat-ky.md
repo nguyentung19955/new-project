@@ -1,5 +1,5 @@
 # 007 – Journal Tab ×2 (B)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/nhat-ky-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Nút tab cột trái nhật ký: 2 trạng thái active (sáng viền đồng, ánh xanh nhẹ) / inactive (tối, mờ). Trống ở giữa cho chữ.
 - **Số khung:** 2 ảnh tĩnh

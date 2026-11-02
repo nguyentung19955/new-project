@@ -1,5 +1,5 @@
 # 009 – Detail Parchment Inset (D)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/nhat-ky-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Ô chi tiết bên phải nhật ký (đọc Thẻ Tên / đoạn truyện): mặt giấy/đá tối lõm vào khung đồng mảnh; giữa trống.
 - **Số khung:** 1 ảnh tĩnh

@@ -1,5 +1,5 @@
 # 008 – Quest Row ×3 (C)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/giao-dien/nhat-ky-nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Thanh nền 1 dòng nhiệm vụ trong danh sách: normal / selected (viền sáng xanh tiếng vọng) / completed (dấu rễ vàng đồng nhỏ ở mép phải). Trống giữa cho chữ + chừa ô 32×32 bên trái cho biểu tượng.
 - **Số khung:** 3 ảnh tĩnh
