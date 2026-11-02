@@ -1,0 +1,29 @@
+THE LAST ECHO — FONT SYSTEM (ChatGPT tư vấn 02/11/2026, chat 6ae89312). CHỌN PHƯƠNG ÁN A.
+Handjet (pixel) cho nút / menu / HUD / gợi ý; Spectral cho hội thoại + thẻ tên vùng; IBM Plex Sans cho chữ nhỏ (trạng thái, nội dung hộp thoại hệ thống). Logo giữ là ẢNH.
+Mọi cỡ là CSS px tại 844×390. Chữ HTML không scale() (tránh mờ); image-rendering: pixelated chỉ cho ảnh/canvas, không cho chữ.
+
+MÀU: --ink #140F1B · --bone #F5E8D0 (chữ chính) · --parchment #E8D6BA · --warm-gold #E8BB68 (tiêu đề/nhấn) · --muted-gold #C5A477 (trạng thái) · --muted-ash #AFA3AE · --danger #F0AA83 · --disabled #9D8991
+BÓNG: S1 = 0 1px 0 #160D19, 1px 0 0 #160D19, -1px 0 0 #160D19, 0 -1px 0 #160D19 (viền cứng 1px, nhãn trên nút)
+      S2 = 0 2px 0 #120B16, 1px 0 0 #120B16, -1px 0 0 #120B16 (tiêu đề lớn)
+      S3 = 0 1px 0 #130C16 · S4 = 0 1px 0 #170F1B, 0 0 5px rgba(232,187,104,.30) (chỉ trạng thái phép thuật). Không quầng sáng 2–4px cho chữ nhỏ.
+
+VAI TRÒ (A):
+A1 Nút chính tiêu đề (Continue/New Game): Handjet 750, 23px, lh 1.0, ls .035em, #F5E8D0, S1. Căn giữa theo vùng TRONG của khung nút (bỏ góc chuông/rễ), căn theo mắt.
+A2 Nút phụ (Options/Account): Handjet 700, 21px, ls .025em, #F5E8D0, S1.
+A3 Tạm dừng / tab / tiêu đề cài đặt: Handjet 750 23px tiêu đề (#E8BB68, S2), 20px mục (#F5E8D0, S1), ls .04em, lh 1.05.
+A4 Số HUD: Handjet 750 21px (phụ 18px), ls .015em, #F5E8D0 (tiền #E8BB68), S1, font-variant-numeric: tabular-nums (nếu Handjet không có số đều thì dùng IBM Plex Sans 700).
+A5 Hội thoại: Spectral 500 17px lh 1.28, #F5E8D0, không bóng trên hộp tối (S3 nếu nền rối); 32–40 ký tự/dòng, 2–3 dòng. Tên người nói: Handjet 750 20px .03em #E8BB68 S1.
+A6 Thẻ tên vùng: Spectral 700 27px lh 1.06 ls .045em #E8BB68 S2; dòng phụ (ENTRANCE…) Handjet 650 18px ls .07em #E8D6BA S1.
+A7 Gợi ý hướng dẫn: Handjet 700 19px lh 1.1 ls .015em #F5E8D0 S1, câu ngắn. Giải thích > ~55 ký tự: IBM Plex Sans 600 15px lh 1.25 trên nền tối.
+A8 Dòng trạng thái / lưu / toast / "Early build": IBM Plex Sans 600 14px lh 1.2 ls .01em #C5A477 (nhãn dev #AFA3AE 11–12px). Không < 13px cho chữ người chơi đọc.
+A9 Hộp xung đột lưu / xác nhận: tiêu đề Handjet 750 24px #E8BB68 S1; thân IBM Plex Sans 500 15px lh 1.3 #F5E8D0; nút Handjet 750 22px S1; ngày giờ IBM Plex Sans 500 13px #C5A477.
+Huy hiệu "Two saves found — Review": làm như cảnh báo riêng (vd chữ "REVIEW SAVES"), không giống nút menu thường; không lấn Continue.
+
+CSS mẫu:
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@650;700;750&family=Spectral:wght@500;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap&subset=vietnamese" rel="stylesheet">
+:root{--ui-pixel:'Handjet',sans-serif;--ui-story:'Spectral',Georgia,serif;--ui-utility:'IBM Plex Sans',Arial,sans-serif;--ui-bone:#F5E8D0;--ui-gold:#E8BB68;--ui-muted:#C5A477;
+ --ui-shadow-outline:0 1px 0 #160D19,1px 0 0 #160D19,-1px 0 0 #160D19,0 -1px 0 #160D19;--ui-shadow-header:0 2px 0 #120B16,1px 0 0 #120B16,-1px 0 0 #120B16}
+Canvas: await document.fonts.ready trước khi đo/vẽ; ctx.font='750 21px Handjet'.
+
+LỖI CẦN TRÁNH: font pixel cho đoạn văn dài; Press Start 2P (quá rộng); bold giả bằng viền chữ; quầng sáng khắp nơi; chữ xám mờ trên nền tím; scale chữ theo camera; căn chữ theo hộp font thay vì mắt trong khung trang trí; tải quá nhiều độ đậm; viết hoa + giãn chữ mọi nơi.
+KIỂM: iPhone ngang thật; số 0/1/8, dấu — · …; chữ không bị cắt; nút vẫn ≥44px.
