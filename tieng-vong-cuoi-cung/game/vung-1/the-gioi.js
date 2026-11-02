@@ -33,7 +33,7 @@
     } catch (e){ return null; }
   }
   function ghiLuu(){
-    try { localStorage.setItem(KHOA_LUU, JSON.stringify(G.luu)); return true; } catch (e){ return false; }
+    try { localStorage.setItem(KHOA_LUU, JSON.stringify(G.luu)); if (window.LuuMay) LuuMay.daGhi(KHOA_LUU); return true; } catch (e){ return false; }   // (firebase) báo lưu mây gửi sớm
   }
   function xoaLuu(){ try { localStorage.removeItem(KHOA_LUU); } catch (e){} }
   V1.coLuu = () => !!docLuu();

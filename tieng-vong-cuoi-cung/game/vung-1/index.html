@@ -66,6 +66,7 @@ body.touch #keys{display:none}
     <h1>Tiếng Vọng Cuối Cùng</h1><h2>Vùng 1 · Ruột Cây Than Khóc</h2>
     <p id="menu-tt">Đang nạp…</p>
     <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Tiếp tục</button><button id="b-moi" type="button" disabled>Chơi mới</button></div>
+    <p id="may-tt" hidden></p><div class="hang" id="may-hang" hidden><button id="b-google" type="button">Giữ tiến độ bằng Google</button></div>
     <small>Tìm 3 Chuông Vỡ để mở cửa Đàn Chuông Câm. Nghỉ ở Chuông Lưu để lưu game, hồi máu và nâng cấp.</small>
   </div></div>
   <div id="l-chuong" class="lop ui"><div class="hop">
@@ -84,6 +85,8 @@ body.touch #keys{display:none}
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
 <script src="../thu-mat-na/ve-chieu-quai.js"></script>
+<script src="../firebase/cau-hinh.js"></script>
+<script src="../luu-may.js"></script>
 <script src="../luu-chung.js"></script>
 <script src="../thu-mat-na/lop-trang-bi.js"></script>
 <script src="nap.js"></script>
@@ -110,6 +113,11 @@ async function choi(moi){
   V1.xoaVao();
 }
 $('b-tiep').onclick = () => choi(false);
+if (window.LuuMay && LuuMay.coMay()){   // (firebase) dòng trạng thái lưu mây trong menu – chỉ hiện khi đã cấu hình Firebase
+  $('may-tt').hidden = false; $('may-hang').hidden = false;
+  LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('may-hang').hidden = m.trangThai === 'google' || !(m.trangThai === 'an-danh'); });
+  $('b-google').onclick = () => LuuMay.dangNhapGoogle().then(ok => { if (ok){ const co = V1.coLuu(); $('b-tiep').disabled = !co; } });
+}
 $('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Xoá bản lưu cũ và chơi lại từ đầu?')) choi(true); };
 V1.moChuong = function(gui, ok){
   $('chuong-tt').innerHTML = 'Đã hồi đầy máu và lượt hồi. Quái trong vùng sống lại.<br>' + (gui > 0 ? 'Đã gửi ' + gui + ' Mảnh Âm vào chuông (an toàn khi ngã).<br>' : '') +
@@ -181,6 +189,7 @@ window.TV = {E, G, V1, OPT, ep:V1.ep, choi, mot,
     await V1.napBanDo(OPT.thu ? 'thu' : '');
     V1.resize();
     if (OPT.moi){ try { localStorage.removeItem('tvcc-vung1'); } catch (e){} }
+    if (window.LuuMay && LuuMay.coMay()){ await LuuMay.cho(2500); if (window.LuuChung) LuuChung.napLai(); }   // (firebase) lấy bản lưu mây trước khi đọc
     const co = V1.coLuu();
     $('b-tiep').disabled = !co; $('b-moi').disabled = false;
     $('menu-tt').textContent = (G.thuMuc === 'phong-thu/' ? '(Đang dùng phòng THỬ – chưa có phòng thật) ' : '') + (co ? 'Có bản lưu.' : 'Chưa có bản lưu.');

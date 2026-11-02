@@ -1,0 +1,17 @@
+rules_version = '2';
+// Lưu mây "Tiếng Vọng Cuối Cùng": mỗi người chơi chỉ đọc/ghi đúng 1 tài liệu của chính mình: nguoi_choi/{uid}.
+// Mọi đường khác đều bị từ chối.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /nguoi_choi/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['khoa', 'saoLuu', 'phienBan', 'capNhat'])
+        && request.resource.data.khoa is map
+        && request.resource.data.khoa.size() <= 50;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
