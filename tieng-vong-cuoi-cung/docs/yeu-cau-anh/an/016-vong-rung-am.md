@@ -1,5 +1,5 @@
 # 016 – Echo Cue Rings ×3 (K)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/manh-ky-uc/nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Dấu hiệu âm thanh BẰNG HÌNH cho câu đố chuông (Three Notes for the Lost, Ashen Lullaby): LOW = 1 vạch sóng thấp, MID = 2 vạch, HIGH = 3 vạch + tia rung cao dần. Mỗi cái là vòng sóng mờ xanh tiếng vọng quanh tâm trống, hiện phía trên chuông.
 - **Số khung:** 3 ảnh tĩnh (game cho mờ dần)

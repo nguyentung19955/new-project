@@ -1,5 +1,5 @@
 # 018 – Quest Discovered Flourish (L)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/manh-ky-uc/nguon-chatgpt.png; LƯU Ý: ChatGPT vẽ hiệu ứng dạng ĐỨNG nên mỗi khung là 64×64 (không phải 64×32), neo giữa)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Hiệu ứng nhỏ khi một dòng nhiệm vụ ẩn mới lộ: sợi tiếng vọng xanh nhạt vẽ nét hoa văn rễ/chuông rồi tan thành bụi sáng. Khung cuối gần trong suốt.
 - **Số khung:** 6 khung, 60–80 ms/khung, không lặp

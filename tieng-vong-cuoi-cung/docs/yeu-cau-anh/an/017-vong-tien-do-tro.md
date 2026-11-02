@@ -1,5 +1,5 @@
 # 017 – Vòng tiến độ "Ashen Lullaby" (ChatGPT mục 2-S5)
-- **Trạng thái:** CHỜ
+- **Trạng thái:** XONG (02/11, phiên chính vẽ bằng ChatGPT – nguồn art/an/manh-ky-uc/nguon-chatgpt.png; đúng cỡ ô yêu cầu)
 - **Dùng vào:** game/an/ – hệ thống bí mật + nhiệm vụ ẩn (bố cục ChatGPT, docs/an/thiet-ke.md mục Giao diện). Chưa có ảnh → game dùng chữ HTML / dòng thông báo sẵn có, KHÔNG vẽ tạm.
 - **Mô tả:** Vòng tiến độ 3 giây quanh chuông vùi tro khi đứng yên: vòng bụi tro xám ánh hổ phách, vẽ 1 vòng ĐẦY (game cắt cung theo tiến độ bằng mặt nạ – không vẽ thêm gì). Thêm 1 ảnh "khe nứt sáng" trên mặt chuông vùi khi xong.
 - **Số khung:** 2 ảnh tĩnh
