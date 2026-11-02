@@ -1,0 +1,17 @@
+Tư vấn ChatGPT 02/11 (chat "Recommend Fonts and Draw Frame")
+
+1. Chữ giao diện / thân bài — Alegreya Sans
+   Google Fonts: Alegreya Sans – 400, 500, 700 – có bộ chữ tiếng Việt
+   Cỡ 14–17px cho chữ thường; 12–13px cho nhãn phụ.
+   Lý do: dáng chữ nhân văn, hơi cổ kính, rất dễ đọc trên màn hình điện thoại nhỏ.
+
+2. Tiêu đề lớn — Cormorant Garamond
+   Google Fonts: Cormorant Garamond – 600, 700 – có bộ chữ tiếng Việt
+   Cỡ 26–40px cho tiêu đề lớn.
+   Lý do: chữ có chân kiểu cổ, gợi bản thảo xưa, đền cũ, gothic huyền bí.
+
+Ghép: Alegreya Sans cho toàn bộ chữ trong game (gợi ý, thông báo, menu);
+Cormorant Garamond chỉ cho tiêu đề lớn, tên trùm, tên phòng/chương.
+
+Khung bảng thông báo: ChatGPT vẽ (art/giao-dien/khung/khung_nguon-chatgpt.png),
+cắt thành khung_bang.png (9 mảnh, co giãn) + khung_mat.png (mặt nạ nứt ở giữa cạnh trên).

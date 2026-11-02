@@ -600,8 +600,10 @@
         const HOC = [[17.8, 23.7], [32.5, 23.7], [46.6, 23.7]];   // tâm 3 ổ chuông trong ảnh bia (điểm ảnh gốc)
         for (let i = 0; i < 3; i++){ if (i >= co) continue; const [hx, hy] = HOC[lat ? 2 - i : i]; const cx = lat ? x0 + w - hx * k : x0 + hx * k;
           veAnhDay(IC, cx, y0 + hy * k + IC.height * k * 0.5, k * 0.95, false); }
-        chu('Chuông Vỡ ' + co + '/3', x + 10, y0 - 26, 17, '#ffe08a');
-        chu(thieu ? 'Còn thiếu ' + thieu + (dir0 < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir0 < 0 ? '← ' : '→ ') + 'Đủ 3 · Cửa Đàn Chuông Câm', x + 10, y0 - 6, 14, thieu ? '#F3E6C8' : '#ffd98a');
+        const d2 = thieu ? 'Còn thiếu ' + thieu + (dir0 < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir0 < 0 ? '← ' : '→ ') + 'Đủ 3 · Cửa Đàn Chuông Câm';
+        if (V1.IMG.khung_bang){ ctx.font = '700 14px ' + PHONG; const hK = Math.round(17 * 1.3) + Math.round(14 * 1.3) + (KB.dinh + KB.day) * 0.4 + 6;
+          chuKhung([{s:'Chuông Vỡ ' + co + '/3', co:17, mau:'#ffe08a'}, {s:d2, co:14, mau:thieu ? '#F3E6C8' : '#ffd98a'}], x + 10, y0 - hK + 4, 0.4, 400); }
+        else { chu('Chuông Vỡ ' + co + '/3', x + 10, y0 - 26, 17, '#ffe08a'); chu(d2, x + 10, y0 - 6, 14, thieu ? '#F3E6C8' : '#ffd98a'); }
         return;
       }
       const bia = (dx, top, w, mau) => { ctx.fillStyle = mau; ctx.beginPath(); ctx.moveTo(x - w, y - 6); ctx.lineTo(x - w, y - top + w * 0.55); ctx.quadraticCurveTo(x - w, y - top, x, y - top); ctx.quadraticCurveTo(x + w, y - top, x + w, y - top + w * 0.55); ctx.lineTo(x + w, y - 6); ctx.closePath(); ctx.fill(); };
@@ -748,11 +750,40 @@
       }
     }
   }
-  function chu(s, x, y, co, mau, canh){
-    ctx.font = '700 ' + co + 'px system-ui,-apple-system,sans-serif'; ctx.textAlign = canh || 'center';
+  // Phông chữ (ChatGPT chọn 02/11): Alegreya Sans cho mọi chữ, Cormorant Garamond cho tiêu đề lớn (tên phòng, tên trùm)
+  const PHONG = '"Alegreya Sans",system-ui,-apple-system,sans-serif', PHONG_TD = '"Cormorant Garamond","Alegreya Sans",serif';
+  function chu(s, x, y, co, mau, canh, td){
+    ctx.font = (td ? '700 ' + Math.round(co * 1.15) + 'px ' + PHONG_TD : '700 ' + co + 'px ' + PHONG); ctx.textAlign = canh || 'center';
     ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(8,6,10,0.85)'; ctx.strokeText(s, x, y); ctx.fillStyle = mau || '#F3E6C8'; ctx.fillText(s, x, y); ctx.textAlign = 'left';
   }
   V1.chu = chu;
+  // Khung bảng (ChatGPT vẽ): 9 mảnh co giãn + mặt nạ nứt giữa cạnh trên. Số đo theo điểm ảnh của khung_bang.png
+  const KB = {L:123, R:118, T:96, B:88, dinh:76, day:28, ben:62};
+  function veKhung(x, y, w, h, k){
+    const P = V1.IMG.khung_bang, M = V1.IMG.khung_mat; if (!P) return false;
+    const sx = [0, KB.L, P.width - KB.R, P.width], sy = [0, KB.T, P.height - KB.B, P.height];
+    const dx = [x, x + KB.L * k, x + w - KB.R * k, x + w], dy = [y, y + KB.T * k, y + h - KB.B * k, y + h];
+    ctx.save(); ctx.imageSmoothingEnabled = true;
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++){ const ww = dx[i + 1] - dx[i], hh = dy[j + 1] - dy[j]; if (ww <= 0 || hh <= 0) continue;
+      ctx.drawImage(P, sx[i], sy[j], sx[i + 1] - sx[i], sy[j + 1] - sy[j], Math.round(dx[i]), Math.round(dy[j]), Math.ceil(ww), Math.ceil(hh)); }
+    if (M) ctx.drawImage(M, Math.round(x + w / 2 - M.width * k / 2), Math.round(y), Math.round(M.width * k), Math.round(M.height * k));
+    ctx.restore(); return true;
+  }
+  // Chữ dài trong khung: tự xuống dòng. dong = [{s, co, mau}], cx = tâm ngang, y = mép trên khung
+  function chuKhung(dong, cx, y, k, rongMax){
+    k = k || 0.5; rongMax = rongMax || 620;
+    const ra = [];
+    for (const d of dong){ ctx.font = '700 ' + d.co + 'px ' + PHONG; let hang = '';
+      for (const t of String(d.s).split(' ')){ const thu = hang ? hang + ' ' + t : t; if (hang && ctx.measureText(thu).width > rongMax){ ra.push({s:hang, co:d.co, mau:d.mau}); hang = t; } else hang = thu; }
+      if (hang) ra.push({s:hang, co:d.co, mau:d.mau}); }
+    let rong = 0; for (const d of ra){ ctx.font = '700 ' + d.co + 'px ' + PHONG; rong = Math.max(rong, ctx.measureText(d.s).width); }
+    const cao = ra.reduce((a, d) => a + Math.round(d.co * 1.3), 0);
+    const w = Math.max((KB.L + KB.R + 60) * k, rong + 2 * KB.ben * k + 16), h = cao + (KB.dinh + KB.day) * k + 6;
+    if (!veKhung(cx - w / 2, y, w, h, k)){ ctx.fillStyle = 'rgba(12,8,16,0.86)'; rr(cx - w / 2, y, w, h, 10); ctx.fill(); }
+    let yy = y + KB.dinh * k + 3; for (const d of ra){ yy += Math.round(d.co * 1.3); chu(d.s, cx, yy - Math.round(d.co * 0.3), d.co, d.mau); }
+    return h;
+  }
+  V1.chuKhung = chuKhung; V1.veKhung = veKhung;
 
   /* ---------------- BÓNG TỐI + ĐÈN ---------------- */
   const BUI = Array.from({length:18}, () => ({x:Math.random() * 640, y:20 + Math.random() * 150, vx:(Math.random() - .5) * .06, vy:.02 + Math.random() * .05, ph:Math.random() * 6.28}));
@@ -768,6 +799,7 @@
     if (p.chuong_luu) lo(p.chuong_luu.cot * T + T / 2, V1.chanO(p.chuong_luu.cot, p.chuong_luu.hang) - 70, 50, 0.8);
     if (coHinhCua()){ const c = p.cua.find(x => x.id === p.khoa.cua); if (c){ const RW = E.BD.COT * T, w = CUA.cao * 0.88;   // cửa khoá: đủ sáng để nhìn rõ hình
       lo(clampN((c.cot + 0.5) * T, w / 2, RW - w / 2), (c.hang + (c.cao || 3)) * T - CUA.cao * 0.55, 44, G.cuaKhoa.includes(c) ? 0.55 : 0.75); } }
+    if (p.bang_chi_duong){ const bb = p.bang_chi_duong; lo(bb.cot * T + T / 2 + 10, V1.chanO(bb.cot, bb.hang) - 170, 95, 0.85); }   // khung chữ trên bia luôn đọc rõ
     lo(pl.x + pl.w / 2, pl.y + pl.h * 0.45, 46, 0.62);
     for (const q of E.QUAI) if (!q.dead) lo(q.x + q.w / 2, q.y + q.h / 2, q.laTrum ? 70 : 22, q.laTrum ? 0.62 : 0.38);
     for (const v of p.vat_pham) if (!G.luu.daNhat.includes(v.id)){ const o = V1.viTriVP(v); lo(o.x, o.y - 22, 30, 0.7); }   // (luồng G) vật tương tác sáng cục bộ rõ hơn
@@ -860,7 +892,7 @@
     if (b){
       const w = 420, x = (W - w) / 2, y = 40, m = b.def.mau || 100, hp = Math.max(0, b.hp);
       ctx.fillStyle = 'rgba(5,6,10,0.62)'; rr(x - 14, 8, w + 28, 54, 10); ctx.fill();
-      chu(b.def.ten || '', W / 2, 31, 19, '#F3E6C8');
+      chu(b.def.ten || '', W / 2, 31, 19, '#F3E6C8', null, true);
       if (!veThanhMau(W / 2, y - 2, hp / m, 3.5)){
         ctx.fillStyle = '#05060a'; ctx.fillRect(x - 3, y - 3, w + 6, 18); ctx.fillStyle = '#3a1418'; ctx.fillRect(x, y, w, 12);
         ctx.fillStyle = b.batTu ? '#9aa3ad' : '#d0402f'; ctx.fillRect(x, y, Math.round(w * hp / m), 12);
@@ -873,15 +905,18 @@
       yTB = 92; yBN = 92;
     }
     // tên phòng
-    if (G.bannerT > 0){ ctx.globalAlpha = Math.min(1, G.bannerT / 40); chu(G.banner, W / 2, b ? 98 : yBN, 22, '#F3E6C8'); ctx.globalAlpha = 1; }
+    if (G.bannerT > 0){ ctx.globalAlpha = Math.min(1, G.bannerT / 40); chu(G.banner, W / 2, b ? 98 : yBN, 22, '#F3E6C8', null, true); ctx.globalAlpha = 1; }
     // thông báo
-    if (G.tbT > 0){ ctx.globalAlpha = Math.min(1, G.tbT / 30); chu(G.tb, W / 2, b && G.bannerT > 0 ? 128 : (b ? 98 : yTB), 17, '#ffe08a'); ctx.globalAlpha = 1; }
+    if (G.tbT > 0){ ctx.globalAlpha = Math.min(1, G.tbT / 30); const yT = b && G.bannerT > 0 ? 128 : (b ? 98 : yTB);
+      if (String(G.tb).length > 22) chuKhung([{s:G.tb, co:17, mau:'#ffe08a'}], W / 2, yT - 34, 0.5, 600);   // hướng dẫn dài: đặt trong khung
+      else chu(G.tb, W / 2, yT, 17, '#ffe08a');
+      ctx.globalAlpha = 1; }
   }
 
   /* ---------------- BẢN ĐỒ NHỎ ---------------- */
   function veBanDo(){
     ctx.fillStyle = 'rgba(5,6,10,0.88)'; ctx.fillRect(0, 0, W, H);
-    chu('Bản đồ – Ruột Cây Than Khóc', W / 2, 44, 20, '#F3E6C8');
+    chu('Bản đồ – Ruột Cây Than Khóc', W / 2, 44, 20, '#F3E6C8', null, true);
     const ds = G.bd.phong, cw = 76, chh = 40, gap = 14;
     const xs = ds.map(p => p.x), ys = ds.map(p => p.y);
     const x0 = Math.min(...xs), x1 = Math.max(...ds.map(p => p.x + (p.rong || 1) - 1)), y0 = Math.min(...ys), y1 = Math.max(...ds.map(p => p.y + (p.cao_bd || 1) - 1));

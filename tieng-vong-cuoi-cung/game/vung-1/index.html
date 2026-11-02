@@ -2,11 +2,13 @@
 <meta charset="utf-8">
 <title>Tiếng Vọng Cuối Cùng – Vùng 1</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap&subset=vietnamese" rel="stylesheet">
 <style>
 /* Vùng 1 "Ruột Cây Than Khóc" – Đợt 1 MVP. Logic 960×540, phóng số nguyên. Phòng: phong/<ID>.json (luồng B) hoặc phong-thu/ (thử). */
 :root{--sat:env(safe-area-inset-top,0px);--sar:env(safe-area-inset-right,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);
   --night:#0c1622;--ink:#F3E6C8;--bell:#E1B85A;--cyan:#78e6e6;--line:#4A5A6E;--k:1;color-scheme:dark}
-html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
+html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:"Alegreya Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 #game{position:fixed;inset:0;display:grid;place-items:center;background:#05080d}
 #cv{display:block;image-rendering:pixelated}
@@ -17,7 +19,7 @@ html,body{height:100%;margin:0;background:#05080d;color:var(--ink);font-family:s
   background:linear-gradient(90deg,transparent 30%,currentColor 30% 38%,transparent 38% 62%,currentColor 62% 70%,transparent 70%)}
 .nut:active{transform:scale(.95);border-color:var(--bell)}
 .nut.on{border-color:var(--bell);color:var(--bell)}
-#keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#a9b3bf;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px #000}
+#keys{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:13px;color:#d8cdb4;white-space:nowrap;pointer-events:none;text-shadow:0 1px 2px #000}
 body.touch #keys{display:none}
 .tc{display:none} body.touch .tc{display:block}
 #dpad{position:absolute;left:calc(var(--sal) + 6px);bottom:calc(var(--sab) + 6px);
@@ -38,8 +40,12 @@ body.touch #keys{display:none}
   height:44px;padding:0 18px;border-radius:22px;border:2px solid var(--bell);background:rgba(58,48,32,.85);color:#ffe08a;font-weight:800;font-size:15px;font-family:inherit}
 .lop{position:absolute;inset:0;display:none;place-items:center;background:rgba(5,6,10,.82);z-index:6}
 .lop.mo{display:grid}
-.hop{max-width:min(560px,92vw);padding:22px 24px;border:1px solid var(--line);border-radius:14px;background:rgba(14,18,26,.94);text-align:center;line-height:1.45}
-.hop h1{margin:0 0 4px;font-size:26px;color:var(--bell);letter-spacing:.5px}
+/* khung bảng ChatGPT vẽ (art/giao-dien/khung): 9 mảnh + mặt nạ nứt giữa cạnh trên */
+.hop{position:relative;max-width:min(560px,92vw);padding:4px 8px 0;border:solid transparent;border-width:48px 59px 44px 62px;
+  border-image:url(../../art/giao-dien/khung/khung_bang.png) 96 118 88 123 fill / 48px 59px 44px 62px stretch;background:none;text-align:center;line-height:1.45}
+.hop::before{content:"";position:absolute;left:50%;top:-48px;width:135px;height:36px;transform:translateX(-50%);background:url(../../art/giao-dien/khung/khung_mat.png) center/contain no-repeat;pointer-events:none}
+.hop>*{position:relative}
+.hop h1{margin:0 0 4px;font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:700;color:var(--bell);letter-spacing:.5px}
 .hop h2{margin:0 0 10px;font-size:15px;color:#a9b3bf;font-weight:600}
 .hop p{margin:8px 0;font-size:14px;color:#c9d0d8}
 .hop .hang{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}

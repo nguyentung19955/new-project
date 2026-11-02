@@ -39,7 +39,7 @@ const CAI = () => {
 (async () => {
   const b = await chromium.launch();
   const pg = await b.newPage({viewport:{width:960, height:540}}); const loiJS = [];
-  pg.on('pageerror', e => loiJS.push(e.message)); pg.on('console', m => { if (m.type() === 'error' && !/404/.test(m.text())) loiJS.push(m.text()); });
+  pg.on('pageerror', e => loiJS.push(e.message)); pg.on('console', m => { if (m.type() === 'error' && !/404|net::ERR_/.test(m.text())) loiJS.push(m.text()); });
   const moTrang = async q => { await pg.goto(URL + '?tu=1' + (q || '')); await pg.waitForFunction(() => window.TV && (TV.xong || TV.loi), null, {timeout:20000}); await pg.evaluate(CAI); };
   const ev = (f, a) => pg.evaluate(f, a);
   const chup = async ten => { await ev(() => TV.V1.ve(TV.G.mo || 0)); await pg.screenshot({path:path.join(OUT, ten + '.png')}); };
