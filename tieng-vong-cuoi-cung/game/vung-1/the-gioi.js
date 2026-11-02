@@ -49,7 +49,7 @@
     }
     if (!G.bd){ G.bd = await layJson('phong-thu/ban-do.json'); G.thuMuc = 'phong-thu/'; }
     // nạp sẵn mọi phòng (nhỏ) cho bản đồ + chuyển phòng nhanh; phòng lỗi thì bỏ qua
-    await Promise.all(G.bd.phong.map(p => layPhong(p.id).catch(e => V1.LOI.push('phòng ' + p.id + ': ' + e.message))));
+    await Promise.all(G.bd.phong.map(p => layPhong(p.id).catch(e => V1.LOI.push('room ' + p.id + ': ' + e.message))));
     // ảnh cảnh nướng sẵn cho từng phòng (thiếu thì vẽ ô bằng code)
     if (V1.napCanhPhong) await Promise.all(G.bd.phong.map(p => V1.napCanhPhong(p.id)));
   };
@@ -108,7 +108,7 @@
     E.QUAI.length = 0;
     const ha = G.daHa[p.id] || {};
     p.quai.forEach((v, i) => {
-      const d = V1.QJ.loai[v.loai]; if (!d){ V1.LOI.push(p.id + ': không có quái ' + v.loai); return; }
+      const d = V1.QJ.loai[v.loai]; if (!d){ V1.LOI.push(p.id + ': no enemy type ' + v.loai); return; }
       const laTA = p.tinh_anh && (v.loai === 'tan' || v.tinh_anh);
       if (laTA && G.luu.tinhAnhHa.includes(p.id)) return;
       if (ha[i] && !laTA) return;
@@ -184,7 +184,7 @@
   V1.buocChuyen = function(){
     const c = G.chuyen; if (!c) return 0;
     c.t++;
-    if (c.pha === 'toi' && c.t >= 14){ c.pha = 'cho'; c.t = 0; Promise.resolve(c.sau()).then(() => { c.pha = 'sang'; c.t = 0; }).catch(e => { console.error(e); thongBao('Lỗi nạp phòng: ' + e.message); c.pha = 'sang'; c.t = 0; }); }
+    if (c.pha === 'toi' && c.t >= 14){ c.pha = 'cho'; c.t = 0; Promise.resolve(c.sau()).then(() => { c.pha = 'sang'; c.t = 0; }).catch(e => { console.error(e); thongBao('Room load error: ' + e.message); c.pha = 'sang'; c.t = 0; }); }
     if (c.pha === 'sang' && c.t >= 16){ G.chuyen = null; return 0; }
     return c.pha === 'toi' ? c.t / 14 : c.pha === 'cho' ? 1 : 1 - c.t / 16;
   };
@@ -204,7 +204,7 @@
       else cham = pl.y + pl.h >= H - 3 && cx > c.cot * T && cx < (c.cot + n) * T;
       if (!cham) continue;
       if (khoa){
-        if (G.dongCua && !G.cuaKhoa.includes(c) && G.tbT <= 0){ const bb = G.tinhAnh || G.trum; thongBao('Rễ đang khép lối – hạ ' + ((bb && bb.def && bb.def.ten) || 'tinh anh') + ' để mở cửa'); }
+        if (G.dongCua && !G.cuaKhoa.includes(c) && G.tbT <= 0){ const bb = G.tinhAnh || G.trum; thongBao('Roots seal the way – defeat ' + ((bb && bb.def && bb.def.ten) || 'the elite') + ' to open it'); }
         continue;
       }
       if (!c.toi) continue;
@@ -215,10 +215,10 @@
     for (const c of G.cuaKhoa){
       const [x, y] = odCua(c)[0], dx = Math.abs(cx - (x + 0.5) * T), dy = Math.abs(cy - (y + 1) * T);
       if (dx < T * 2.6 && dy < T * 2.5){
-        const k = p.khoa, ten = {chuong_vo:'Chuông Vỡ', the_ten:'Thẻ Tên'}[k.can] || k.can;
-        if (k.loi && duMoCong(k)){ if (!G.moCong){ G.moCong = {id:c.id, t:0}; thongBao('Lõi Vọng Tàn khớp vào hốc ngọc – rễ đang mở lối…'); } }
-        else if (G.tbT <= 0) thongBao(k.loi ? 'Cổng rễ – cần ' + k.so + ' ' + ten + ' (có ' + Math.min(k.so, demKho(k.can)) + ') và Lõi Vọng Tàn (' + (demKho(k.loi) ? 'đã có' : 'chưa có') + ')'
-          : 'Cửa im lặng – cần ' + k.so + ' ' + ten + ' (đang có ' + demKho(k.can) + ')');
+        const k = p.khoa, ten = {chuong_vo:'Broken Bell', the_ten:'Name Tag'}[k.can] || k.can;
+        if (k.loi && duMoCong(k)){ if (!G.moCong){ G.moCong = {id:c.id, t:0}; thongBao('The Ruin Core fits the gem socket – the roots part…'); } }
+        else if (G.tbT <= 0) thongBao(k.loi ? 'Root gate – needs ' + k.so + ' ' + ten + ' (have ' + Math.min(k.so, demKho(k.can)) + ') and the Ruin Core (' + (demKho(k.loi) ? 'found' : 'missing') + ')'
+          : 'The gate is silent – needs ' + k.so + ' ' + ten + ' (have ' + demKho(k.can) + ')');
       }
     }
   }
@@ -232,7 +232,7 @@
       if (trong && gan){
         G.dongCua = true;
         for (const c of p.cua) if (!G.cuaKhoa.includes(c)) for (const [x, y] of odCua(c)) if (E.BD.L[y]) E.BD.L[y][x] = '#';
-        thongBao(boss === G.trum ? 'Mẫu Chuông Rỗng thức giấc…' : 'Rễ khép lối – ' + (boss.def.ten || 'tinh anh'));
+        thongBao(boss === G.trum ? 'The Hollow Bell Mother awakens…' : 'Roots seal the way – ' + (boss.def.ten || 'elite'));
         E.S.sht = 10; E.S.shm = 3; E.S.shx = 1; E.S.shy = 1;
         if (V1.veNenPhong) V1.veNenPhong();
       }
@@ -248,7 +248,7 @@
     const m = G.moCong; if (!m) return;
     m.t++;
     if (m.t === 40 || m.t === 75 || m.t === 110){ E.S.sht = 12; E.S.shm = 2.2; E.S.shx = 1; E.S.shy = 0.6; }   // rễ giằng co
-    if (m.t >= MO_CONG_T){ (G.luu.congMo || (G.luu.congMo = [])).push(m.id); G.moCong = null; moKhoaNeuDu(); ghiLuu(); thongBao('Cổng rễ đã mở'); }
+    if (m.t >= MO_CONG_T){ (G.luu.congMo || (G.luu.congMo = [])).push(m.id); G.moCong = null; moKhoaNeuDu(); ghiLuu(); thongBao('The root gate is open'); }
   }
   V1.buocMoCong = buocMoCong;
   function moKhoaNeuDu(){
@@ -262,7 +262,7 @@
   }
 
   /* ---------------- VẬT PHẨM ---------------- */
-  const TEN_VP = {manh_am:'Mảnh Âm', chuong_vo:'Chuông Vỡ', hat_vong:'Hạt Vọng', tang_mau:'Mặt Nạ Sinh Lực', the_ten:'Thẻ Tên', loi_vong_tan:'Lõi Vọng Tàn'};
+  const TEN_VP = {manh_am:'Echo Shard', chuong_vo:'Broken Bell', hat_vong:'Echo Seed', tang_mau:'Vital Mask', the_ten:'Name Tag', loi_vong_tan:'Ruin Core'};
   V1.TEN_VP = TEN_VP;
   V1.viTriVP = v => ({x:v.cot * T + T / 2, y:chanO(v.cot, v.hang)});
   function nhatVatPham(){
@@ -283,24 +283,24 @@
     // túi Mảnh Âm rơi khi chết
     const tui = G.luu.tui;
     if (tui && tui.phong === G.id && E.overlap(hb, {x:tui.x - 22, y:tui.y - 40, w:44, h:40})){
-      G.luu.manh += tui.so; thongBao('Nhặt lại túi: +' + tui.so + ' Mảnh Âm'); G.luu.tui = null; ghiLuu();
+      G.luu.manh += tui.so; thongBao('Pouch recovered: +' + tui.so + ' Echo Shards'); G.luu.tui = null; ghiLuu();
       V1.hieuUng && V1.hieuUng('nhat', tui.x, tui.y - 20);
     }
   }
   function nhan(loai, so){
     const L = G.luu;
-    if (loai === 'manh_am'){ L.manh += so || 10; thongBao('+' + (so || 10) + ' Mảnh Âm'); return; }
-    if (loai === 'hat_vong'){ L.hoiMax++; pl.luotHoi = (pl.luotHoi || 0) + 1; thongBao('Hạt Vọng: +1 lượt hồi máu (' + L.hoiMax + ')'); return; }
-    if (loai === 'tang_mau'){ L.maxHp++; E.P.maxHp = L.maxHp; pl.hp = Math.min(L.maxHp, pl.hp + 1); thongBao('+1 máu tối đa'); return; }
+    if (loai === 'manh_am'){ L.manh += so || 10; thongBao('+' + (so || 10) + ' Echo Shards'); return; }
+    if (loai === 'hat_vong'){ L.hoiMax++; pl.luotHoi = (pl.luotHoi || 0) + 1; thongBao('Echo Seed: +1 heal charge (' + L.hoiMax + ')'); return; }
+    if (loai === 'tang_mau'){ L.maxHp++; E.P.maxHp = L.maxHp; pl.hp = Math.min(L.maxHp, pl.hp + 1); thongBao('+1 max health'); return; }
     L.kho[loai] = (L.kho[loai] || 0) + 1;
     if (loai === 'chuong_vo'){
       const n = L.kho.chuong_vo;
-      if (n >= 3 && !L.nvA){ L.nvA = true; L.manh += 120; thongBao('Ba tiếng chuông lạc đã đủ! Cửa Đàn Chuông Câm mở · +120 Mảnh Âm'); G.tbT = 240; }
-      else thongBao('Chuông Vỡ ' + n + '/3 – "Ba tiếng chuông lạc"');
+      if (n >= 3 && !L.nvA){ L.nvA = true; L.manh += 120; thongBao('All three lost chimes found! The Mute Bell Choir opens · +120 Echo Shards'); G.tbT = 240; }
+      else thongBao('Broken Bell ' + n + '/3 – "Three Lost Chimes"');
       moKhoaNeuDu(); return;
     }
-    if (loai === 'loi_vong_tan'){ thongBao('Lõi Vọng Tàn – gắn vào hốc ngọc giữa cổng rễ để mở lối'); return; }
-    thongBao('Nhặt: ' + (TEN_VP[loai] || loai));
+    if (loai === 'loi_vong_tan'){ thongBao('Ruin Core – set it in the gem socket of the root gate to open the way'); return; }
+    thongBao('Picked up: ' + (TEN_VP[loai] || loai));
   }
   V1.nhan = nhan;
 
@@ -348,11 +348,11 @@
   V1.coTheMuaMau = () => G.luu.nangMau < 1 && V1.tongManh() >= GIA_MAU;
   V1.muaMau = function(){
     const L = G.luu;
-    if (L.nangMau >= 1) return 'Đã nâng cấp hết (đợt 1 có 1 cấp)';
-    if (V1.tongManh() < GIA_MAU) return 'Thiếu Mảnh Âm (cần ' + GIA_MAU + ')';
+    if (L.nangMau >= 1) return 'Fully upgraded (1 level for now)';
+    if (V1.tongManh() < GIA_MAU) return 'Not enough Echo Shards (need ' + GIA_MAU + ')';
     let can = GIA_MAU; const a = Math.min(L.manhGui, can); L.manhGui -= a; can -= a; L.manh -= can;
     L.nangMau++; L.maxHp++; E.P.maxHp = L.maxHp; pl.hp = L.maxHp; ghiLuu();
-    return 'Sinh lực +1 – máu tối đa ' + L.maxHp;
+    return 'Vitality +1 – max health ' + L.maxHp;
   };
 
   /* ---------------- CHẾT ---------------- */
@@ -370,7 +370,7 @@
       if (c) datNV(c.cot * T + T / 2 + 40, chanO(c.cot, c.hang));
       pl.iframes = 60; pl.nhay = 60;
       if (L.trumHa && !L.hetXem && V1.thangTrum){ V1.thangTrum(); return; }   // (luồng F) trùm gục cùng lúc người chơi ngã → vẫn tính thắng
-      thongBao(mat > 0 ? 'Mất ' + mat + ' Mảnh Âm – túi nằm lại chỗ ngã' : 'Tỉnh dậy bên Chuông Lưu');
+      thongBao(mat > 0 ? 'Lost ' + mat + ' Echo Shards – your pouch lies where you fell' : 'You wake beside the Rest Bell');
     });
   }
   function timDatDuoi(x, y){
@@ -389,13 +389,13 @@
         if (q.laTinhAnh){
           if (!G.luu.tinhAnhHa.includes(G.id)) G.luu.tinhAnhHa.push(G.id);
           if (d.id === 'tan' && !G.luu.kho.loi_vong_tan) G.vatRoi.push({loai:'loi_vong_tan', x:q.x + q.w / 2, y:chanDat(q), so:1, t:0});
-          thongBao('Đã hạ ' + (d.ten || 'tinh anh')); ghiLuu();
+          thongBao('Defeated ' + (d.ten || 'the elite')); ghiLuu();
         }
       }
-      if (e.k === 'vo-tuong'){ G.luu.tuongVo.push(G.id + ':' + e.cot + ':' + e.hang); ghiLuu(); if (V1.veNenPhong) V1.veNenPhong(); thongBao('Tường nứt vỡ – lộ hốc!'); }
+      if (e.k === 'vo-tuong'){ G.luu.tuongVo.push(G.id + ':' + e.cot + ':' + e.hang); ghiLuu(); if (V1.veNenPhong) V1.veNenPhong(); thongBao('The cracked wall breaks – a hidden nook!'); }
       if (e.k === 'het-chet') khiChet();
-      if (e.k === 'khong-hoi') thongBao('Không hồi được: ' + e.ly);
-      if (e.k === 'hoi-mau') thongBao('+' + E.P.hoiLuong + ' máu');
+      if (e.k === 'khong-hoi') thongBao('Cannot heal: ' + e.ly);
+      if (e.k === 'hoi-mau') thongBao('+' + E.P.hoiLuong + ' health');
     }
   };
   function chanDat(q){ return timDatDuoi(q.x + q.w / 2, q.y + q.h); }

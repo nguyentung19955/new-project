@@ -165,7 +165,7 @@ def L(p, *cr):
 # =====================================================================================================
 # P01 CỬA RỄ – 48×20 – phòng hướng dẫn: đi, nhảy bậc, chui hầm thấp, nhảy qua hố, (tuỳ) nhảy đôi, dây leo.
 def P01():
-    p = Phong('P01', 'Cửa Rễ', 48, 20, 0, 10)
+    p = Phong('P01', 'Root Gate', 48, 20, 0, 10)
     p.bau(6, 11, 6, 6)                          # khoang cổng rễ
     p.hop(1, 9, 9, 15)
     p.san(0, 10, 16)                            # sàn xuất phát (đứng hàng 15)
@@ -215,7 +215,7 @@ def P01():
 # =====================================================================================================
 # P02 NGÃ BA MỐI – 60×34 – khoang tròn lớn nhiều tầng, 3 lối: tây (P01), đông-trên (P03), đáy (lối tắt P06 sau tường nứt).
 def P02():
-    p = Phong('P02', 'Ngã Ba Mối', 60, 34, 48, 0)
+    p = Phong('P02', 'Termite Fork', 60, 34, 48, 0)
     p.bat_dau = dict(cot=2, hang=24)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(30, 16, 24, 13)                       # khoang mối chính
     p.ham([(2, 23), (10, 22), (14, 20)], 2)     # hầm vào từ tây
@@ -274,7 +274,7 @@ def P02():
 # =====================================================================================================
 # P03 XƯỞNG CHUÔNG – 70×30 – xưởng đúc chuông: hành lang trên → sảnh tròn; Chuông Vỡ 1 trên giàn cao; H1 sau tường nứt.
 def P03():
-    p = Phong('P03', 'Xưởng Chuông', 70, 30, 108, 0)
+    p = Phong('P03', 'Bell Foundry', 70, 30, 108, 0)
     p.bat_dau = dict(cot=2, hang=9)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.hop(0, 7, 20, 10)                         # hành lang trên (đứng 10)
     p.dac(0, 11, 20, 13)
@@ -346,7 +346,7 @@ def P03():
 # =====================================================================================================
 # P04 HÀNH LANG TRO – 90×18 – hành lang cong dài đầy khói tro, đi về TÂY; nhánh đông cụt có giếng bật tường → Tăng Máu.
 def P04():
-    p = Phong('P04', 'Hành Lang Tro', 90, 18, 108, 30)
+    p = Phong('P04', 'Ash Corridor', 90, 18, 108, 30)
     p.bat_dau = dict(cot=56, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.hop(55, 0, 59, 12)                        # giếng rơi từ P03
     # hành lang uốn lượn về tây: lên dốc tới đỉnh tro (cột 30–35) rồi xuống hõm tro, lên lại cửa tây
@@ -400,7 +400,7 @@ def P04():
 # =====================================================================================================
 # P05 CHUÔNG LƯU – 32×16 – khoang tròn nhỏ yên tĩnh, Chuông Lưu + xác người ngồi.
 def P05():
-    p = Phong('P05', 'Chuông Lưu', 32, 16, 76, 34)
+    p = Phong('P05', 'Rest Bell', 32, 16, 76, 34)
     p.bau(16, 8, 13, 6.5)
     p.dac(0, 13, 31, 15)
     p.hop(4, 10, 27, 12)
@@ -412,7 +412,7 @@ def P05():
     p.trang_tri('P05-xac', 'xac_nguoi_ngoi', 13, 12, ghi='xác người ngồi tựa cạnh chuông')
     p.trang_tri('P05-chuong-luu', 'chuong_luu', 15, 12, ghi='Chuông Lưu: tắt / sáng')
     # (luồng G) bia chỉ đường: 3 ổ chuông (sáng theo số Chuông Vỡ đã có) + "còn thiếu n" + mũi tên về Sảnh Chuông Vỡ (P11) / Đàn Chuông Câm (P12)
-    p.bang = dict(cot=6, hang=12, huong='trai', toi='P11', ten='Sảnh Chuông Vỡ')
+    p.bang = dict(cot=6, hang=12, huong='trai', toi='P11', ten='Broken Bell Hall')
     p.dau('loi_chinh', 2, 12)
     L(p, (15, 4), (10, 8), (24, 7))
     p.ghi_chu = 'Checkpoint đầu tiên. Không quái.'
@@ -422,7 +422,7 @@ def P05():
 # =====================================================================================================
 # P06 HỐ VỎ – 50×36 – hố sâu, đấu trường nhỏ dưới đáy (Chuông Vỡ 2), dây leo giữa hố lên lối tắt P02.
 def P06():
-    p = Phong('P06', 'Hố Vỏ', 50, 36, 26, 34)
+    p = Phong('P06', 'Husk Pit', 50, 36, 26, 34)
     p.bat_dau = dict(cot=47, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(25, 22, 22, 13)                       # lòng hố
     p.hop(36, 9, 49, 12)                        # gờ vào từ P05 (đứng 12)
@@ -476,7 +476,7 @@ def P06():
 # =====================================================================================================
 # P09 MIỆNG KÈN – 44×44 – giếng đứng nhiều tầng: Kèn Câm thổi ngang từng tầng; đáy giếng có Chuông Vỡ 3.
 def P09():
-    p = Phong('P09', 'Miệng Kèn', 44, 44, 76, 50)
+    p = Phong('P09', "Horn's Maw", 44, 44, 76, 50)
     p.bat_dau = dict(cot=2, hang=16)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(22, 9, 19, 8.5)                       # phần trên: miệng kèn loe
     p.hop(3, 5, 40, 16)
@@ -535,7 +535,7 @@ def P09():
 # =====================================================================================================
 # P11 SẢNH CHUÔNG VỠ – 56×24 – sảnh tinh anh Vọng Tàn; hốc đông có Chuông Lưu cuối + cửa trùm (khoá 3 Chuông Vỡ).
 def P11():
-    p = Phong('P11', 'Sảnh Chuông Vỡ', 56, 24, 120, 48)
+    p = Phong('P11', 'Broken Bell Hall', 56, 24, 120, 48)
     p.bau(27, 13, 21, 9.5)                      # sảnh
     p.dac(0, 19, 55, 23)                        # nền (đứng 18)
     p.hop(5, 8, 47, 18)
@@ -568,7 +568,7 @@ def P11():
 # =====================================================================================================
 # P12 ĐÀN CHUÔNG CÂM – 40×16 – phòng trùm GỌN (theo góp ý: phòng cũ 64×22 quá rộng, trống), sàn phẳng, vòm vừa đủ nhảy đôi, 2 sàn mỏng né.
 def P12():
-    p = Phong('P12', 'Đàn Chuông Câm', 40, 16, 176, 54)
+    p = Phong('P12', 'Mute Bell Choir', 40, 16, 176, 54)
     p.bat_dau = dict(cot=3, hang=12)              # chỗ đứng khi vào thẳng phòng (?phong=) / rơi khỏi phòng
     p.bau(20, 6, 18, 5)
     p.hop(2, 3, 37, 12)

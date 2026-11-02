@@ -4,7 +4,7 @@
  "ti_le": 2,
  "loai": {
   "phu": {
-   "ten": "Phu Đèn Lạc",
+   "ten": "Lost Lampbearer",
    "mau_khoi": "#b39161",
    "chan": [
     44,
@@ -92,7 +92,7 @@
    "hoi_sinh_ms": 4000
   },
   "bo": {
-   "ten": "Bọ Vỏ Mộc",
+   "ten": "Rotbark Beetle",
    "mau_khoi": "#77614b",
    "chan": [
     40,
@@ -178,7 +178,7 @@
    "hoi_sinh_ms": 4000
   },
   "doi": {
-   "ten": "Dơi Rễ",
+   "ten": "Root Bat",
    "mau_khoi": "#694236",
    "chan": [
     37,
@@ -270,7 +270,7 @@
    "hoi_sinh_ms": 4000
   },
   "nam": {
-   "ten": "Nấm Thở",
+   "ten": "Breathing Shroom",
    "mau_khoi": "#8a8f9c",
    "chan": [
     43,
@@ -356,7 +356,7 @@
    "hoi_sinh_ms": 4000
   },
   "chuong": {
-   "ten": "Chuông Kén Nứt (tinh anh)",
+   "ten": "Cracked Cocoon Bell (Elite)",
    "mau_khoi": "#c46b54",
    "chan": [
     46,
@@ -442,7 +442,7 @@
    "hoi_sinh_ms": 5000
   },
   "cau": {
-   "ten": "Khuyết Cẩu",
+   "ten": "Hollow Hound",
    "mau_khoi": "#E5A13B",
    "chan": [
     44,
@@ -532,7 +532,7 @@
    }
   },
   "tan": {
-   "ten": "Vọng Tàn (tinh anh)",
+   "ten": "Ruin Echo (Elite)",
    "mau_khoi": "#B84C43",
    "chan": [
     56,
@@ -617,7 +617,7 @@
    }
   },
   "vai": {
-   "ten": "Hồn Vải",
+   "ten": "Cloth Wraith",
    "mau_khoi": "#D9B66F",
    "chan": [
     48,
@@ -700,7 +700,7 @@
    }
   },
   "ken": {
-   "ten": "Kèn Câm",
+   "ten": "Mute Horn",
    "mau_khoi": "#C7833C",
    "chan": [
     50,
@@ -780,7 +780,7 @@
    }
   },
   "tang": {
-   "ten": "Màn Tang",
+   "ten": "Mourning Veil",
    "mau_khoi": "#D67B49",
    "chan": [
     50,

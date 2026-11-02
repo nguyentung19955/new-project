@@ -4,15 +4,15 @@
  "bat_dau": {"phong": "P01", "cot": 4, "hang": 15},
  "don_vi": "x,y,rong,cao_bd: đơn vị bản đồ nhỏ = 10 ô phòng; x_o,y_o,w,h: vị trí/cỡ thật trên bản đồ thế giới tính bằng ô phòng (48px)",
  "phong": [
-  {"id": "P01", "ten": "Cửa Rễ", "x": 0.0, "y": 1.0, "rong": 4.8, "cao_bd": 2.0, "x_o": 0, "y_o": 10, "w": 48, "h": 20, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P02", "ten": "Ngã Ba Mối", "x": 4.8, "y": 0.0, "rong": 6.0, "cao_bd": 3.4, "x_o": 48, "y_o": 0, "w": 60, "h": 34, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P03", "ten": "Xưởng Chuông", "x": 10.8, "y": 0.0, "rong": 7.0, "cao_bd": 3.0, "x_o": 108, "y_o": 0, "w": 70, "h": 30, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P04", "ten": "Hành Lang Tro", "x": 10.8, "y": 3.0, "rong": 9.0, "cao_bd": 1.8, "x_o": 108, "y_o": 30, "w": 90, "h": 18, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P05", "ten": "Chuông Lưu", "x": 7.6, "y": 3.4, "rong": 3.2, "cao_bd": 1.6, "x_o": 76, "y_o": 34, "w": 32, "h": 16, "chuong_luu": true, "trum": false, "tinh_anh": false},
-  {"id": "P06", "ten": "Hố Vỏ", "x": 2.6, "y": 3.4, "rong": 5.0, "cao_bd": 3.6, "x_o": 26, "y_o": 34, "w": 50, "h": 36, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P09", "ten": "Miệng Kèn", "x": 7.6, "y": 5.0, "rong": 4.4, "cao_bd": 4.4, "x_o": 76, "y_o": 50, "w": 44, "h": 44, "chuong_luu": false, "trum": false, "tinh_anh": false},
-  {"id": "P11", "ten": "Sảnh Chuông Vỡ", "x": 12.0, "y": 4.8, "rong": 5.6, "cao_bd": 2.4, "x_o": 120, "y_o": 48, "w": 56, "h": 24, "chuong_luu": true, "trum": false, "tinh_anh": true},
-  {"id": "P12", "ten": "Đàn Chuông Câm", "x": 17.6, "y": 5.4, "rong": 4.0, "cao_bd": 1.6, "x_o": 176, "y_o": 54, "w": 40, "h": 16, "chuong_luu": false, "trum": true, "tinh_anh": false}
+  {"id": "P01", "ten": "Root Gate", "x": 0.0, "y": 1.0, "rong": 4.8, "cao_bd": 2.0, "x_o": 0, "y_o": 10, "w": 48, "h": 20, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P02", "ten": "Termite Fork", "x": 4.8, "y": 0.0, "rong": 6.0, "cao_bd": 3.4, "x_o": 48, "y_o": 0, "w": 60, "h": 34, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P03", "ten": "Bell Foundry", "x": 10.8, "y": 0.0, "rong": 7.0, "cao_bd": 3.0, "x_o": 108, "y_o": 0, "w": 70, "h": 30, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P04", "ten": "Ash Corridor", "x": 10.8, "y": 3.0, "rong": 9.0, "cao_bd": 1.8, "x_o": 108, "y_o": 30, "w": 90, "h": 18, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P05", "ten": "Rest Bell", "x": 7.6, "y": 3.4, "rong": 3.2, "cao_bd": 1.6, "x_o": 76, "y_o": 34, "w": 32, "h": 16, "chuong_luu": true, "trum": false, "tinh_anh": false},
+  {"id": "P06", "ten": "Husk Pit", "x": 2.6, "y": 3.4, "rong": 5.0, "cao_bd": 3.6, "x_o": 26, "y_o": 34, "w": 50, "h": 36, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P09", "ten": "Horn's Maw", "x": 7.6, "y": 5.0, "rong": 4.4, "cao_bd": 4.4, "x_o": 76, "y_o": 50, "w": 44, "h": 44, "chuong_luu": false, "trum": false, "tinh_anh": false},
+  {"id": "P11", "ten": "Broken Bell Hall", "x": 12.0, "y": 4.8, "rong": 5.6, "cao_bd": 2.4, "x_o": 120, "y_o": 48, "w": 56, "h": 24, "chuong_luu": true, "trum": false, "tinh_anh": true},
+  {"id": "P12", "ten": "Mute Bell Choir", "x": 17.6, "y": 5.4, "rong": 4.0, "cao_bd": 1.6, "x_o": 176, "y_o": 54, "w": 40, "h": 16, "chuong_luu": false, "trum": true, "tinh_anh": false}
  ],
  "ket_noi": [
   {"a": "P01-dong", "b": "P02-tay"},

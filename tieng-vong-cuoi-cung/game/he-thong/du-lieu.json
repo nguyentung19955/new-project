@@ -3,8 +3,8 @@
   "phien_ban": 1,
   "bat_mac_dinh": false,
   "diem": {
-    "ten": "Âm Điểm",
-    "ten_not": "Nốt Ngân",
+    "ten": "Tone Points",
+    "ten_not": "Silver Notes",
     "quai_thuong": 4,
     "tinh_anh": 40,
     "trum": 150,
@@ -12,35 +12,35 @@
     "moc_cap": [0, 40, 100, 180, 280, 400, 540, 700, 880, 1080, 1300, 1550]
   },
   "do_hiem": [
-    {"id": "thuong", "ten": "Thường", "dong_phu": 1, "trong_so": 70, "mau_chu": "#c9d0d8", "khung": "art/giao-dien/he-thong/khung-thuong.png"},
-    {"id": "hiem", "ten": "Hiếm", "dong_phu": 2, "trong_so": 24, "mau_chu": "#78e6e6", "khung": "art/giao-dien/he-thong/khung-hiem.png"},
-    {"id": "huyen_thoai", "ten": "Huyền Thoại", "dong_phu": 3, "trong_so": 5, "mau_chu": "#E1B85A", "khung": "art/giao-dien/he-thong/khung-huyen-thoai.png"},
-    {"id": "vong_co", "ten": "Vọng Cổ", "dong_phu": 3, "trong_so": 1, "mau_chu": "#e889ff", "khung": "art/giao-dien/he-thong/khung-vong-co.png", "chi_sau_trum": true}
+    {"id": "thuong", "ten": "Common", "dong_phu": 1, "trong_so": 70, "mau_chu": "#c9d0d8", "khung": "art/giao-dien/he-thong/khung-thuong.png"},
+    {"id": "hiem", "ten": "Rare", "dong_phu": 2, "trong_so": 24, "mau_chu": "#78e6e6", "khung": "art/giao-dien/he-thong/khung-hiem.png"},
+    {"id": "huyen_thoai", "ten": "Legendary", "dong_phu": 3, "trong_so": 5, "mau_chu": "#E1B85A", "khung": "art/giao-dien/he-thong/khung-huyen-thoai.png"},
+    {"id": "vong_co", "ten": "Ancient Echo", "dong_phu": 3, "trong_so": 1, "mau_chu": "#e889ff", "khung": "art/giao-dien/he-thong/khung-vong-co.png", "chi_sau_trum": true}
   ],
   "dong_phu": [
-    {"id": "sat_thuong", "ten": "Sát thương +{v}%", "min": 3, "max": 8},
-    {"id": "manh_am", "ten": "Mảnh Âm rơi thêm +{v}%", "min": 5, "max": 15},
-    {"id": "am_diem", "ten": "Âm Điểm nhận thêm +{v}%", "min": 5, "max": 12},
-    {"id": "hoi_mau", "ten": "Hồi máu nhanh hơn {v}%", "min": 5, "max": 12},
-    {"id": "khang", "ten": "Bất tử sau trúng đòn +{v} khung", "min": 4, "max": 10}
+    {"id": "sat_thuong", "ten": "Damage +{v}%", "min": 3, "max": 8},
+    {"id": "manh_am", "ten": "Echo Shard drops +{v}%", "min": 5, "max": 15},
+    {"id": "am_diem", "ten": "Tone Points gained +{v}%", "min": 5, "max": 12},
+    {"id": "hoi_mau", "ten": "Heal {v}% faster", "min": 5, "max": 12},
+    {"id": "khang", "ten": "Invulnerability after a hit +{v} frames", "min": 4, "max": 10}
   ],
   "am_phu": [
-    {"id": "buoc_lang", "ten": "Bước Lặng", "o": 1, "chinh": {"manh_am": 10}, "anh": "art/giao-dien/he-thong/am-phu/buoc-lang.png"},
-    {"id": "luoi_ngan", "ten": "Lưỡi Ngân", "o": 2, "chinh": {"sat_thuong": 10}, "anh": "art/giao-dien/he-thong/am-phu/luoi-ngan.png"},
-    {"id": "tim_chuong", "ten": "Tim Chuông", "o": 2, "chinh": {"hoi_mau": 15}, "anh": "art/giao-dien/he-thong/am-phu/tim-chuong.png"},
-    {"id": "vong_cu", "ten": "Vọng Cũ", "o": 1, "chinh": {"am_diem": 15}, "anh": "art/giao-dien/he-thong/am-phu/vong-cu.png"},
-    {"id": "mat_na_nut", "ten": "Mặt Nạ Nứt", "o": 3, "chinh": {"sat_thuong": 20, "khang": -10}, "anh": "art/giao-dien/he-thong/am-phu/mat-na-nut.png"}
+    {"id": "buoc_lang", "ten": "Silent Step", "o": 1, "chinh": {"manh_am": 10}, "anh": "art/giao-dien/he-thong/am-phu/buoc-lang.png"},
+    {"id": "luoi_ngan", "ten": "Silver Edge", "o": 2, "chinh": {"sat_thuong": 10}, "anh": "art/giao-dien/he-thong/am-phu/luoi-ngan.png"},
+    {"id": "tim_chuong", "ten": "Bell Heart", "o": 2, "chinh": {"hoi_mau": 15}, "anh": "art/giao-dien/he-thong/am-phu/tim-chuong.png"},
+    {"id": "vong_cu", "ten": "Old Echo", "o": 1, "chinh": {"am_diem": 15}, "anh": "art/giao-dien/he-thong/am-phu/vong-cu.png"},
+    {"id": "mat_na_nut", "ten": "Cracked Mask", "o": 3, "chinh": {"sat_thuong": 20, "khang": -10}, "anh": "art/giao-dien/he-thong/am-phu/mat-na-nut.png"}
   ],
   "roi_do": {"quai_thuong": 0.0, "tinh_anh": 1.0, "trum": 1.0, "ruong": 1.0, "ghi_chu": "Quái thường KHÔNG rơi Âm Phù (giữ nhịp metroidvania, tránh rác) – chờ ChatGPT chốt"},
   "day_ngan": {"o_dau": 3, "o_toi_da": 10},
   "cay": [
-    {"id": "luoi_1", "nhanh": "Lưỡi", "ten": "Rèn Vang Âm", "mo_ta": "Kiếm lên cấp Vang Âm: sát thương 10 → 13", "gia": 1, "can": [], "hieu_ung": {"cap_kiem": 1}},
-    {"id": "luoi_2", "nhanh": "Lưỡi", "ten": "Rèn Cộng Hưởng", "mo_ta": "Kiếm lên cấp Cộng Hưởng: sát thương 13 → 16", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"cap_kiem": 2}},
-    {"id": "luoi_3", "nhanh": "Lưỡi", "ten": "Nhát Thứ Năm", "mo_ta": "Thêm nhát kết thứ 5 vào combo đất (hoạt cảnh riêng)", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"them_nhat": "don5"}, "can_anh": ["art/kiem-khach/don5/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/004-nhat-thu-nam.md", "clip": {"thu_muc": "don5", "chan": [128, 172], "lap": false, "ms": [70, 70, 45, 45, 45, 55, 55, 80, 80, 80], "trung": [5, 6], "hop": [-60, -95, 140, 90], "ghi_chu": "tạm – sửa theo ảnh thật"}},
-    {"id": "luoi_4", "nhanh": "Lưỡi", "ten": "Vệt Ngân Sáng", "mo_ta": "Vệt kiếm đổi sang vệt ngân sáng hơn", "gia": 1, "can": ["luoi_2"], "hieu_ung": {"vet_kiem": "ngan"}, "can_anh": ["art/hieu-ung/vet-kiem-ngan/don1/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/005-vet-kiem-ngan.md"},
-    {"id": "vong_1", "nhanh": "Vọng", "ten": "Tai Nghe Chuông", "mo_ta": "Mảnh Âm rơi thêm 15%", "gia": 1, "can": [], "hieu_ung": {"manh_am": 15}},
-    {"id": "vong_2", "nhanh": "Vọng", "ten": "Học Từ Tiếng Vọng", "mo_ta": "Âm Điểm nhận thêm 20%", "gia": 1, "can": ["vong_1"], "hieu_ung": {"am_diem": 20}},
-    {"id": "than_1", "nhanh": "Thân", "ten": "Da Rễ", "mo_ta": "Bất tử sau khi trúng đòn +8 khung", "gia": 1, "can": [], "hieu_ung": {"khang": 8}},
-    {"id": "than_2", "nhanh": "Thân", "ten": "Dáng Kiếm Khách Thức Tỉnh", "mo_ta": "Dáng đứng chờ mới (chỉ đổi hình)", "gia": 1, "can": ["than_1"], "hieu_ung": {"clip_dung": "dung-thuc-tinh"}, "can_anh": ["art/kiem-khach/dung-thuc-tinh/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/006-dang-dung-moi.md", "clip": {"thu_muc": "dung-thuc-tinh", "chan": [128, 172], "ms": 200}}
+    {"id": "luoi_1", "nhanh": "Blade", "ten": "Forge Ringing Tone", "mo_ta": "Sword rises to Ringing Tone: damage 10 → 13", "gia": 1, "can": [], "hieu_ung": {"cap_kiem": 1}},
+    {"id": "luoi_2", "nhanh": "Blade", "ten": "Forge Resonance", "mo_ta": "Sword rises to Resonance: damage 13 → 16", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"cap_kiem": 2}},
+    {"id": "luoi_3", "nhanh": "Blade", "ten": "Fifth Strike", "mo_ta": "Adds a 5th finishing strike to the ground combo", "gia": 2, "can": ["luoi_1"], "hieu_ung": {"them_nhat": "don5"}, "can_anh": ["art/kiem-khach/don5/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/004-nhat-thu-nam.md", "clip": {"thu_muc": "don5", "chan": [128, 172], "lap": false, "ms": [70, 70, 45, 45, 45, 55, 55, 80, 80, 80], "trung": [5, 6], "hop": [-60, -95, 140, 90], "ghi_chu": "tạm – sửa theo ảnh thật"}},
+    {"id": "luoi_4", "nhanh": "Blade", "ten": "Bright Silver Trail", "mo_ta": "Your sword leaves a brighter silver trail", "gia": 1, "can": ["luoi_2"], "hieu_ung": {"vet_kiem": "ngan"}, "can_anh": ["art/hieu-ung/vet-kiem-ngan/don1/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/005-vet-kiem-ngan.md"},
+    {"id": "vong_1", "nhanh": "Echo", "ten": "Bell Ear", "mo_ta": "+15% Echo Shard drops", "gia": 1, "can": [], "hieu_ung": {"manh_am": 15}},
+    {"id": "vong_2", "nhanh": "Echo", "ten": "Learn from Echoes", "mo_ta": "+20% Tone Points gained", "gia": 1, "can": ["vong_1"], "hieu_ung": {"am_diem": 20}},
+    {"id": "than_1", "nhanh": "Body", "ten": "Rootskin", "mo_ta": "+8 frames of invulnerability after a hit", "gia": 1, "can": [], "hieu_ung": {"khang": 8}},
+    {"id": "than_2", "nhanh": "Body", "ten": "Awakened Wanderer Stance", "mo_ta": "New idle pose (visual only)", "gia": 1, "can": ["than_1"], "hieu_ung": {"clip_dung": "dung-thuc-tinh"}, "can_anh": ["art/kiem-khach/dung-thuc-tinh/f00.png"], "yeu_cau": "docs/yeu-cau-anh/do/006-dang-dung-moi.md", "clip": {"thu_muc": "dung-thuc-tinh", "chan": [128, 172], "ms": 200}}
   ]
 }

@@ -131,7 +131,7 @@
   };
 
   /* ---------------- TRÙM: MẪU CHUÔNG RỖNG ---------------- */
-  const DEF = {id:'trum', ten:'Mẫu Chuông Rỗng', mau:640, than:[88, 95], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
+  const DEF = {id:'trum', ten:'Hollow Bell Mother', mau:640, than:[88, 95], sat_thuong:1, bay:false, mau_khoi:'#6f5a4a', ai:aiTrum, trung:trungTrum, _clip:{}};
   V1.TRUM_DEF = DEF;
   V1.taoTrum = function(p){
     const TR = V1.TRUMJ || {};
@@ -150,7 +150,7 @@
     let clip = 'dung';
     switch (q.st){
       case 'cho':
-        if (G.dongCua){ doiTrangThai(q, 'gam'); E.shake(0, 1, 4); V1.thongBao('Mẫu Chuông Rỗng'); }
+        if (G.dongCua){ doiTrangThai(q, 'gam'); E.shake(0, 1, 4); V1.thongBao('Hollow Bell Mother'); }
         break;
       case 'gam': clip = 'go'; if (q.t >= 70){ doiTrangThai(q, 'dung'); q.cd = 40; } break;
       case 'dung': {
@@ -213,7 +213,7 @@
       case 'chuyen_pha':
         clip = 'chuyen_pha'; q.batTu = true;
         if (q.t % 20 === 1) E.shake((q.t % 40) ? 1 : -1, 0.5, 3);
-        if (q.t >= 100){ q.batTu = false; q.pha = 2; doiTrangThai(q, 'dung'); q.cd = 30; V1.thongBao('Mặt nạ vỡ – Mẫu Chuông Rỗng nổi giận'); }
+        if (q.t >= 100){ q.batTu = false; q.pha = 2; doiTrangThai(q, 'dung'); q.cd = 30; V1.thongBao('Her mask shatters – the Hollow Bell Mother rages'); }
         break;
       case 'chet':
         clip = 'chet'; q.batTu = true; q.alpha = Math.max(0, 1 - Math.max(0, q.t - 90) / 60);

@@ -1,6 +1,7 @@
 <!doctype html>
+<html lang="en">
 <meta charset="utf-8">
-<title>Hốc Chuông Câm</title>
+<title>Mute Bell Hollow – The Last Echo</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap&subset=vietnamese" rel="stylesheet">
@@ -44,19 +45,19 @@ body.touch #keys{display:none}
 </style>
 <div id="game">
   <canvas id="cv" width="960" height="540"></canvas>
-  <div id="info">Đang nạp…</div>
+  <div id="info">Loading…</div>
   <div id="top">
-    <button id="b-cap" type="button">Cấp 1 · Sơ Âm</button>
-    <button id="b-hb" type="button">▣ Hộp</button>
-    <button id="b-cham" type="button">Chậm ×4</button>
+    <button id="b-cap" type="button">Level 1 · First Tone</button>
+    <button id="b-hb" type="button">▣ Boxes</button>
+    <button id="b-cham" type="button">Slow ×4</button>
   </div>
   <div id="dpad" class="tc" data-icon="de_can"><div id="knob" data-icon="num_can"></div></div>
   <div id="acts" class="tc">
     <div class="ab" id="b-a" data-k="a" data-icon="chem"></div><div class="ab" id="b-h" data-k="h" data-icon="hoi"></div>
     <div class="ab" id="b-s" data-k="s" data-icon="luot"></div><div class="ab" id="b-j" data-k="j" data-icon="nhay"></div>
   </div>
-  <div id="keys">← → trôi · Z/Space nhảy (2 lần = nhảy đôi) · X chém (trên không: chém; ↓+X: đập đất) · ↑ bám &amp; leo dây · C/Shift lướt · V hồi máu · 1/2/3 cấp · H hộp · T chậm</div>
-  <div id="rotate">Xoay ngang điện thoại để chơi</div>
+  <div id="keys">← → move · Z/Space jump (twice = double jump) · X slash (midair: slash; ↓+X: slam) · ↑ grab &amp; climb rope · C/Shift dash · V heal · 1/2/3 level · H boxes · T slow-mo</div>
+  <div id="rotate">Rotate your phone to landscape to play</div>
 </div>
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
@@ -120,7 +121,7 @@ function chonCap(i){
   OPT.cap = i; const c = CAP[i];
   E.NV.capClip = c ? c.clip : {}; E.NV.cap = c || null;
   E.NV.chuoi = (c && c.chuoi) || NVJ.chuoi || null; E.NV.bien_the = (c && c.bien_the) || NVJ.bien_the || null;
-  document.getElementById('b-cap').textContent = 'Cấp ' + (i + 1) + ' · ' + (c ? c.ten : '?');
+  document.getElementById('b-cap').textContent = 'Level ' + (i + 1) + ' · ' + (c ? c.ten : '?');
 }
 function batDau(){
   const luoi = MAN.luoi.map(r => r.repeat(SO_BAN));
@@ -128,7 +129,7 @@ function batDau(){
   const T = E.BD.T, dat = 9 * T;
   E.datNV(MAN.xuat_phat_cot * T + T / 2, (MAN.xuat_phat_hang ?? 9) * T);
   for (const v of (MAN.quai || DAT_PHONG).map(v => v.hang !== undefined ? Object.assign({dat_y:v.hang * T}, v) : v)){
-    const d = QJ.loai[v.loai]; if (!d){ LOI.push('dat: không có loại ' + v.loai); continue; }
+    const d = QJ.loai[v.loai]; if (!d){ LOI.push('spawn: no enemy type ' + v.loai); continue; }
     E.QUAI.push(E.taoQuai(d, v, v.dat_y ?? dat));
   }
   chonCap(OPT.cap);
@@ -248,8 +249,8 @@ function suKien(){
       if (im && im.naturalWidth) CHEM.push({ten, x:e.x, y:e.y, f:e.face || 1, t:0}); else TIA.push(...E.tiaTrung(e)); }   // hiệu ứng trúng đòn ChatGPT vẽ
     if (e.k === 'bi-danh') for (let i = 0; i < 10; i++){ const a = (i / 10) * Math.PI * 2;
       TIA.push({x:pl.x + pl.w / 2, y:pl.y + pl.h - 60, vx:Math.cos(a) * 3, vy:Math.sin(a) * 3, t:12, m:'#ffbe50'}); }
-    if (e.k === 'khong-hoi') thongBao('Không hồi được: ' + e.ly);
-    if (e.k === 'hoi-mau'){ thongBao('+1 máu'); HOI.t = 0; }
+    if (e.k === 'khong-hoi') thongBao('Cannot heal: ' + e.ly);
+    if (e.k === 'hoi-mau'){ thongBao('+1 health'); HOI.t = 0; }
   }
 }
 const HUDI = {}; for (const n of ['mau_day', 'mau_rong']){ const im = new Image(); im.src = '../../art/giao-dien/hud/' + n + '.png'; HUDI[n] = im; }
@@ -391,7 +392,7 @@ function nhapNhay(t, i){ return 1 + 0.04 * Math.sin(t * 2.7 + i * 1.7) + 0.02 * 
 function buocKhongKhi(){
   // cổng rễ mở khi mọi quái trong phòng đã bị hạ ít nhất 1 lần
   for (const q of E.QUAI) if (q.dead || q.st === 'chet') q._daHa = true;
-  if (!CONG.mo && E.QUAI.length && E.QUAI.every(q => q._daHa)){ CONG.mo = true; thongBao('Chuông câm ngân khẽ… cổng rễ đã mở'); E.S.sht = 10; E.S.shm = 3; E.S.shx = 1; E.S.shy = 1; }
+  if (!CONG.mo && E.QUAI.length && E.QUAI.every(q => q._daHa)){ CONG.mo = true; thongBao('The mute bell hums softly… the root gate opens'); E.S.sht = 10; E.S.shm = 3; E.S.shx = 1; E.S.shy = 1; }
   for (const b of BUI){ b.x += b.vx + Math.sin(E.S.frame / 90 + b.ph) * .03; b.y += b.vy; if (b.y > 170){ b.y = 18; b.x = Math.random() * 640; } }
   if (!HON.on){ if (--HON.cho <= 0){ HON.on = true; HON.t = 0; HON.x = CAM.x / PX + 40 + Math.random() * 240; HON.y = CAM.y / PX + 50 + Math.random() * 50; HON.vx = (Math.random() < .5 ? -1 : 1) * .12; } }
   else { HON.t++; HON.x += HON.vx; HON.y += Math.sin(HON.t / 40) * .08; if (HON.t > 420){ HON.on = false; HON.cho = 360 + Math.random() * 480; } }
@@ -509,8 +510,8 @@ function loop(now){
 }
 function capNhatInfo(){
   const song = E.QUAI.filter(q => !q.dead && q.st !== 'chet').length;
-  document.getElementById('info').textContent = 'Quái còn ' + song + '/' + E.QUAI.length + ' · trúng ' + E.S.nTrung + ' · chết ' + E.S.chet +
-    ' · Tiếng Vọng ' + pl.vong + ' (hồi máu tốn ' + E.P.vongHoi + ') · ×' + M + (LOI.length ? ' · THIẾU HÌNH: ' + LOI.slice(0, 6).join(', ') + (LOI.length > 6 ? '…' : '') : '');
+  document.getElementById('info').textContent = 'Enemies left ' + song + '/' + E.QUAI.length + ' · hits ' + E.S.nTrung + ' · deaths ' + E.S.chet +
+    ' · Echo ' + pl.vong + ' (heal costs ' + E.P.vongHoi + ') · ×' + M + (LOI.length ? ' · MISSING ART: ' + LOI.slice(0, 6).join(', ') + (LOI.length > 6 ? '…' : '') : '');
 }
 function batHop(){ OPT.hb = !OPT.hb; document.getElementById('b-hb').classList.toggle('on', OPT.hb); }
 function batCham(){ OPT.cham = OPT.cham === 1 ? 4 : 1; document.getElementById('b-cham').classList.toggle('on', OPT.cham !== 1); }
@@ -521,5 +522,5 @@ document.getElementById('b-hb').classList.toggle('on', OPT.hb); document.getElem
 // cổng kiểm thử: ?tu=1 không tự chạy; TV.buoc(n, 'ra') chạy n bước với phím giữ rồi vẽ
 window.TV = {E, OPT, ep, CAP, LOI, buoc(n, phim){ for (const k of KEYS) ep[k] = phim && phim.includes(k) ? 1 : 0; for (let i = 0; i < n; i++) mot(); ve(); }, xong:false};
 nap().then(() => { batDau(); resize(); ve(); capNhatInfo(); TV.xong = true; if (!OPT.tu) requestAnimationFrame(loop); })
-  .catch(e => { document.getElementById('info').textContent = 'Không nạp được ' + e; TV.loi = String(e); console.error(e); });
+  .catch(e => { document.getElementById('info').textContent = 'Could not load ' + e; TV.loi = String(e); console.error(e); });
 </script>

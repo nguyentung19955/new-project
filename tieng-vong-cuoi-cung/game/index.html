@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tiếng Vọng Cuối Cùng</title>
+<title>The Last Echo</title>
 <style>
   html, body { margin:0; min-height:100%; background:#0C0F14; color:#CEF0D6; font-family:serif; }
   main { max-width:560px; margin:0 auto; padding:24px 16px; text-align:center; line-height:1.5; }
@@ -14,16 +14,16 @@
 <body>
 <!-- Trang chọn (phiên firebase) – chỉ chữ + liên kết, chờ màn tiêu đề do ChatGPT thiết kế. -->
 <main>
-  <h1>Tiếng Vọng Cuối Cùng</h1>
-  <a href="lang-chuong/">Làng Chuông <small>(điểm khởi đầu – đang chờ ảnh)</small></a>
-  <a href="vung-1/">Vùng 1 – Rễ Mục</a>
-  <a href="phong-demo/">Phòng demo</a>
-  <p><small id="tt">Xoay ngang điện thoại để chơi.</small></p>
+  <h1>The Last Echo</h1>
+  <a href="lang-chuong/">Bell Village <small>(starting point – art pending)</small></a>
+  <a href="vung-1/">Region 1 – Rotting Roots</a>
+  <a href="phong-demo/">Demo Room</a>
+  <p><small id="tt">Rotate your phone to landscape to play.</small></p>
 </main>
 <script src="firebase/cau-hinh.js"></script>
 <script src="luu-may.js"></script>
 <script>
-  if (window.LuuMay && LuuMay.coMay()) LuuMay.nghe(m => { document.getElementById('tt').textContent = m.moTa() + ' · Xoay ngang điện thoại để chơi.'; });
+  if (window.LuuMay && LuuMay.coMay()) LuuMay.nghe(m => { document.getElementById('tt').textContent = m.moTa() + ' · Rotate your phone to landscape to play.'; });
 </script>
 </body>
 </html>

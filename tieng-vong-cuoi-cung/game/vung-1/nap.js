@@ -78,6 +78,6 @@ V1.napCanhPhong = async function(id){
   try { const r = await fetch(A + '-canh.json'); if (r.ok) meta = await r.json(); } catch (e){}
   const [canh, truoc, manh] = await Promise.all([im(A + '-canh.png'), im(A + '-truoc.png'), meta && meta.manh && meta.manh.length ? im(A + '-manh.png') : null]);
   V1.CANH[id] = canh && meta ? {canh, truoc, manh, meta} : null;
-  if (!V1.CANH[id]) V1.LOI.push('ảnh phòng ' + id);
+  if (!V1.CANH[id]) V1.LOI.push('room image ' + id);
   return V1.CANH[id];
 };

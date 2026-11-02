@@ -517,7 +517,7 @@
       ctx.fillStyle = '#5a4020'; ctx.fillRect(-13, 32, 26, 4); ctx.fillStyle = '#ffe08a'; ctx.fillRect(-7, 10, 3, 18);
       ctx.restore();
       }
-      if (G.ganChuong && !pl.dead){ chu('↑ Nghỉ ở Chuông Lưu', x, y - CHUONG.cao - 14, 13, '#ffe08a'); }
+      if (G.ganChuong && !pl.dead){ chu('↑ Rest at the Rest Bell', x, y - CHUONG.cao - 14, 13, '#ffe08a'); }
     }
     veCuaKhoa();
     veDauHieu(); veBiaChiDuong();
@@ -600,10 +600,10 @@
         const HOC = [[17.8, 23.7], [32.5, 23.7], [46.6, 23.7]];   // tâm 3 ổ chuông trong ảnh bia (điểm ảnh gốc)
         for (let i = 0; i < 3; i++){ if (i >= co) continue; const [hx, hy] = HOC[lat ? 2 - i : i]; const cx = lat ? x0 + w - hx * k : x0 + hx * k;
           veAnhDay(IC, cx, y0 + hy * k + IC.height * k * 0.5, k * 0.95, false); }
-        const d2 = thieu ? 'Còn thiếu ' + thieu + (dir0 < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir0 < 0 ? '← ' : '→ ') + 'Đủ 3 · Cửa Đàn Chuông Câm';
+        const d2 = thieu ? thieu + ' missing' + (dir0 < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir0 < 0 ? '← ' : '→ ') + 'All 3 · Mute Bell Choir gate';
         if (V1.IMG.khung_bang){ ctx.font = '700 14px ' + PHONG; const hK = Math.round(17 * 1.3) + Math.round(14 * 1.3) + (KB.dinh + KB.day) * 0.4 + 6;
-          chuKhung([{s:'Chuông Vỡ ' + co + '/3', co:17, mau:'#ffe08a'}, {s:d2, co:14, mau:thieu ? '#F3E6C8' : '#ffd98a'}], x + 10, y0 - hK + 4, 0.4, 400); }
-        else { chu('Chuông Vỡ ' + co + '/3', x + 10, y0 - 26, 17, '#ffe08a'); chu(d2, x + 10, y0 - 6, 14, thieu ? '#F3E6C8' : '#ffd98a'); }
+          chuKhung([{s:'Broken Bells ' + co + '/3', co:17, mau:'#ffe08a'}, {s:d2, co:14, mau:thieu ? '#F3E6C8' : '#ffd98a'}], x + 10, y0 - hK + 4, 0.4, 400); }
+        else { chu('Broken Bells ' + co + '/3', x + 10, y0 - 26, 17, '#ffe08a'); chu(d2, x + 10, y0 - 6, 14, thieu ? '#F3E6C8' : '#ffd98a'); }
         return;
       }
       const bia = (dx, top, w, mau) => { ctx.fillStyle = mau; ctx.beginPath(); ctx.moveTo(x - w, y - 6); ctx.lineTo(x - w, y - top + w * 0.55); ctx.quadraticCurveTo(x - w, y - top, x, y - top); ctx.quadraticCurveTo(x + w, y - top, x + w, y - top + w * 0.55); ctx.lineTo(x + w, y - 6); ctx.closePath(); ctx.fill(); };
@@ -619,8 +619,8 @@
       const dir = b.huong === 'trai' ? -1 : 1, ax = x + dir * 2, ay = y - 30;   // mũi tên khắc
       ctx.fillStyle = thieu ? '#c9b48a' : '#ffd98a'; ctx.fillRect(ax - 16, ay - 3, 32, 6);
       ctx.beginPath(); ctx.moveTo(ax + dir * 26, ay); ctx.lineTo(ax + dir * 12, ay - 11); ctx.lineTo(ax + dir * 12, ay + 11); ctx.closePath(); ctx.fill();
-      chu('Chuông Vỡ ' + co + '/3', x + 10, y - 128, 17, '#ffe08a');
-      chu(thieu ? 'Còn thiếu ' + thieu + (dir < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir < 0 ? '← ' : '→ ') + 'Đủ 3 · Cửa Đàn Chuông Câm', x + 10, y - 108, 14, thieu ? '#F3E6C8' : '#ffd98a');
+      chu('Broken Bells ' + co + '/3', x + 10, y - 128, 17, '#ffe08a');
+      chu(thieu ? thieu + ' missing' + (dir < 0 ? ' · ← ' : ' · → ') + (b.ten || '') : (dir < 0 ? '← ' : '→ ') + 'All 3 · Mute Bell Choir gate', x + 10, y - 108, 14, thieu ? '#F3E6C8' : '#ffd98a');
     }
   }
   // Cỡ hình đạo cụ (px logic). Chỉnh ở đây nếu cần to/nhỏ hơn.
@@ -876,7 +876,7 @@
     veIcon('manh_am', X0 + 11, 106, 1.05);
     chu(String(V1.tongManh()), X0 + 28, 114, 22, '#78e6e6', 'left');
     const wSo = ctx.measureText(String(V1.tongManh())).width;
-    if (L.manh > 0 && L.manhGui > 0) chu('(' + L.manh + ' chưa gửi)', X0 + 34 + wSo, 113, 13, '#9fb6c2', 'left');
+    if (L.manh > 0 && L.manhGui > 0) chu('(' + L.manh + ' unstored)', X0 + 34 + wSo, 113, 13, '#9fb6c2', 'left');
     K.manh = {x:X0 - 2, y:92, w:wSo + 40, h:28};
     // 4) 3 Chuông Vỡ + số
     const cv3 = L.kho.chuong_vo || 0;
@@ -916,7 +916,7 @@
   /* ---------------- BẢN ĐỒ NHỎ ---------------- */
   function veBanDo(){
     ctx.fillStyle = 'rgba(5,6,10,0.88)'; ctx.fillRect(0, 0, W, H);
-    chu('Bản đồ – Ruột Cây Than Khóc', W / 2, 44, 20, '#F3E6C8', null, true);
+    chu('Map – Weeping Heartwood', W / 2, 44, 20, '#F3E6C8', null, true);
     const ds = G.bd.phong, cw = 76, chh = 40, gap = 14;
     const xs = ds.map(p => p.x), ys = ds.map(p => p.y);
     const x0 = Math.min(...xs), x1 = Math.max(...ds.map(p => p.x + (p.rong || 1) - 1)), y0 = Math.min(...ys), y1 = Math.max(...ds.map(p => p.y + (p.cao_bd || 1) - 1));
@@ -948,7 +948,7 @@
       }
     }
     chu((G.bd.phong.find(p => p.id === G.id) || {}).ten || G.id, W / 2, H - 46, 15, '#E1B85A');
-    chu('M / nút Bản đồ: đóng', W / 2, H - 22, 12, '#a9b3bf');
+    chu('M / Map button: close', W / 2, H - 22, 12, '#a9b3bf');
   }
 
   /* ---------------- QUÁI NỔI TRÊN BÓNG TỐI + CHIÊU QUÁI (như phòng demo) ---------------- */

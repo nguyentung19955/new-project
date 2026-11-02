@@ -1,13 +1,13 @@
 {
   "ghi_chu": "Danh sách đích teleport từ Làng Chuông (thứ tự theo docs/gdd.md mục 8, từ ngọn xuống đáy). 'mo' = điều kiện mở (xem datDieuKien trong game/luu-chung.js). Điều kiện các vùng 2–9 CHƯA CHỐT: chờ kế hoạch ChatGPT (docs/cot-truyen/cau-hoi-chatgpt.md) – để null = khoá. Nếu game/the-gioi.json (phiên Vùng mới) có mục cùng id thì đường dẫn/tên lấy theo file đó.",
   "vung": [
-    {"id": "dinh-sam",      "ten": "Đỉnh Sấm",            "tang": "Ngọn",      "duong_dan": null, "mo": null},
-    {"id": "tan-gio",       "ten": "Tán Gió",             "tang": "Tán",       "duong_dan": null, "mo": null},
-    {"id": "to-sat",        "ten": "Tổ Sắt",              "tang": "Cành",      "duong_dan": null, "mo": null},
-    {"id": "thu-vien-vang", "ten": "Thư Viện Vang",       "tang": "Thân trên", "duong_dan": null, "mo": null},
-    {"id": "xuong-dong",    "ten": "Xưởng Đồng Bỏ Hoang", "tang": "Thân dưới", "duong_dan": null, "mo": null},
-    {"id": "vung-1",        "ten": "Rễ Mục",              "tang": "Rễ",        "duong_dan": "game/vung-1/index.html", "mo": true},
-    {"id": "ho-ngam",       "ten": "Hồ Ngầm Phản Chiếu",  "tang": "Rễ sâu",    "duong_dan": null, "mo": null},
-    {"id": "vuc-lang",      "ten": "Vực Lặng",            "tang": "Đáy",       "duong_dan": null, "mo": null}
+    {"id": "dinh-sam",      "ten": "Thunder Peak",         "tang": "Crown",     "duong_dan": null, "mo": null},
+    {"id": "tan-gio",       "ten": "Wind Canopy",          "tang": "Canopy",    "duong_dan": null, "mo": null},
+    {"id": "to-sat",        "ten": "Iron Nest",            "tang": "Branches",  "duong_dan": null, "mo": null},
+    {"id": "thu-vien-vang", "ten": "Echoing Library",      "tang": "Upper Trunk", "duong_dan": null, "mo": null},
+    {"id": "xuong-dong",    "ten": "Abandoned Bronzeworks", "tang": "Lower Trunk", "duong_dan": null, "mo": null},
+    {"id": "vung-1",        "ten": "Rotting Roots",        "tang": "Roots",     "duong_dan": "game/vung-1/index.html", "mo": true},
+    {"id": "ho-ngam",       "ten": "Mirror Underlake",     "tang": "Deep Roots", "duong_dan": null, "mo": null},
+    {"id": "vuc-lang",      "ten": "Silent Abyss",         "tang": "Depths",    "duong_dan": null, "mo": null}
   ]
 }

@@ -18,12 +18,12 @@ const SpriteMN = (() => {
   }
   async function napClip(goc, def, ten){
     const C = {ten, def:def || {}, hinh:[], ok:false, chan:null, ms:[], buoc:[], tong:0, lap:!def || def.lap !== false, loi:''};
-    if (!def || !def.thu_muc){ C.loi = 'chưa khai báo'; C.ms = msMang(def && def.ms, 9); C.buoc = C.ms.map(m => m * 0.06); C.tong = C.buoc.reduce((a, b) => a + b, 0); return C; }
+    if (!def || !def.thu_muc){ C.loi = 'not declared'; C.ms = msMang(def && def.ms, 9); C.buoc = C.ms.map(m => m * 0.06); C.tong = C.buoc.reduce((a, b) => a + b, 0); return C; }
     const tt = def.tien_to ?? 'f', bd = def.bat_dau || 0, dir = goc + String(def.thu_muc).replace(/\/$/, '') + '/';
     if (def.so_hinh){
       const ds = await Promise.all(Array.from({length:def.so_hinh}, (_, i) => napAnh(dir + tt + pad(bd + i) + '.png')));
       C.hinh = ds.filter(Boolean);
-      if (C.hinh.length < ds.length) C.loi = 'thiếu ' + (ds.length - C.hinh.length) + '/' + ds.length + ' hình';
+      if (C.hinh.length < ds.length) C.loi = 'missing ' + (ds.length - C.hinh.length) + '/' + ds.length + ' frames';
     } else {   // không ghi so_hinh: dò f00, f01… tới khi hết (từng lô 8 ảnh)
       for (let i = 0; i < 64; i += 8){
         const ds = await Promise.all(Array.from({length:8}, (_, j) => napAnh(dir + tt + pad(bd + i + j) + '.png')));
@@ -31,7 +31,7 @@ const SpriteMN = (() => {
         C.hinh.push(...(het < 0 ? ds : ds.slice(0, het)));
         if (het >= 0) break;
       }
-      if (!C.hinh.length) C.loi = 'không thấy ' + dir + tt + pad(bd) + '.png';
+      if (!C.hinh.length) C.loi = 'not found ' + dir + tt + pad(bd) + '.png';
     }
     C.ok = C.hinh.length > 0;
     // thiếu ảnh vẫn tính thời gian theo so_hinh / ms (gameplay không đổi, chỉ vẽ khối màu)

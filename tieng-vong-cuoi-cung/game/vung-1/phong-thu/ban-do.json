@@ -4,19 +4,19 @@
  "phong": [
   {
    "id": "T1",
-   "ten": "Phòng Thử Một",
+   "ten": "Test Room One",
    "x": 0,
    "y": 0
   },
   {
    "id": "T2",
-   "ten": "Phòng Thử Hai",
+   "ten": "Test Room Two",
    "x": 1,
    "y": 0
   },
   {
    "id": "T3",
-   "ten": "Đàn Chuông Câm (thử)",
+   "ten": "Mute Bell Choir (test)",
    "x": 2,
    "y": 0
   }

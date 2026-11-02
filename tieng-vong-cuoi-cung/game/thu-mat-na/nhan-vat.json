@@ -283,7 +283,7 @@
  },
  "cap": [
   {
-   "ten": "Sơ Âm",
+   "ten": "First Tone",
    "sat_thuong": 10,
    "clip": {
     "don1": {
@@ -639,7 +639,7 @@
    "bien_the": {}
   },
   {
-   "ten": "Vang Âm",
+   "ten": "Ringing Tone",
    "sat_thuong": 13,
    "clip": {
     "don1": {
@@ -995,7 +995,7 @@
    "bien_the": {}
   },
   {
-   "ten": "Cộng Hưởng",
+   "ten": "Resonance",
    "sat_thuong": 16,
    "clip": {
     "don1": {

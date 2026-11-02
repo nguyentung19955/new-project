@@ -54,8 +54,8 @@
     const ds = M.A.thuongCho();
     for (let i = ds.length - 1; i >= 0; i--) if (trao(ds[i])) M.A.daTraThuong(i);
   }
-  const moTaThuong = ds => ds.filter(t => t.loai === 'manh_am').map(t => '+' + t.so + ' Mảnh Âm')
-    .concat(ds.filter(t => t.loai === 'ky_uc').length ? ['Mảnh Ký Ức'] : []).join(' · ');
+  const moTaThuong = ds => ds.filter(t => t.loai === 'manh_am').map(t => '+' + t.so + ' Echo Shards')
+    .concat(ds.filter(t => t.loai === 'ky_uc').length ? ['Memory Fragment'] : []).join(' · ');
 
   /* ---- hàng thông báo: không đè chữ nhặt đồ của Vùng 1 ---- */
   function bao(s){ M.hang.push(s); }
@@ -68,15 +68,15 @@
       if (r.k === 'bi-mat'){
         traoHet(r.thuong);
         const d = M.A.dem(VUNG);
-        if (!im) bao('Đã tìm thấy bí mật · ' + r.muc.ten + ' (' + d.timThay + '/' + d.tong + ')');
+        if (!im) bao('Secret found · ' + r.muc.ten + ' (' + d.timThay + '/' + d.tong + ')');
       } else if (r.k === 'nv-lo'){
-        if (!im) bao('Nhật Ký Tiếng Vọng: “' + r.muc.ten + '”');
+        if (!im) bao('Echo Journal: “' + r.muc.ten + '”');
       } else if (r.k === 'tien-do'){
         if (!im) bao(r.muc.ten + ' ' + r.td.da + '/' + r.td.tong);
       } else if (r.k === 'nv-xong'){
         const xong = traoHet(r.thuong), them = moTaThuong(xong);
         const tt = r.thuong.filter(t => t.loai === 'thanh_tuu').map(t => (M.A.D.thanh_tuu || []).find(x => x.id === t.id)).filter(Boolean);
-        if (!im) bao('Hoàn thành ẩn: ' + r.muc.ten + (them ? ' · ' + them : '') + (tt.length ? ' · Thành tựu mới' : ''));
+        if (!im) bao('Hidden quest done: ' + r.muc.ten + (them ? ' · ' + them : '') + (tt.length ? ' · New achievement' : ''));
       }
     }
     if (doi){ ghi(); capNhatNut(); }
@@ -95,7 +95,7 @@
     for (const id of (L.daNhat || [])) gui({k:'nhat', id, phong:id.split('-')[0]}, true);
     gui({k:'kiem'}, true);
     thuTraoCho(); ghi();
-    const d = M.A.dem(VUNG); if (d.timThay) bao('Bí mật Vùng 1 đã tìm: ' + d.timThay + '/' + d.tong);
+    const d = M.A.dem(VUNG); if (d.timThay) bao('Region 1 secrets found: ' + d.timThay + '/' + d.tong);
   }
   function theoDoi(){
     const G = V1.G, L = G.luu; if (!L || !G.phong) return;
@@ -145,26 +145,26 @@
     const b = document.createElement('button'); b.id = 'b-an'; b.type = 'button'; b.onclick = moBang;
     const hang = $('b-mua') && $('b-mua').parentNode; if (hang) hang.insertBefore(b, $('b-di'));
     const lop = document.createElement('div'); lop.id = 'l-an'; lop.className = 'lop ui';
-    lop.innerHTML = '<div class="hop"><h1>Nhật Ký Tiếng Vọng</h1><p id="an-tt" style="text-align:center"></p><div id="an-ds"></div>' +
-      '<div class="hang"><button id="b-an-dong" class="chinh" type="button">Quay lại Chuông Lưu</button></div></div>';
+    lop.innerHTML = '<div class="hop"><h1>Echo Journal</h1><p id="an-tt" style="text-align:center"></p><div id="an-ds"></div>' +
+      '<div class="hang"><button id="b-an-dong" class="chinh" type="button">Back to Rest Bell</button></div></div>';
     $('game').appendChild(lop);
     $('b-an-dong').onclick = () => { lop.classList.remove('mo'); capNhatNut(); };
     capNhatNut();
   }
   function capNhatNut(){
     const b = $('b-an'); if (!b || !M.A) return;
-    const d = M.A.dem(VUNG); b.textContent = 'Nhật Ký · Bí mật ' + d.timThay + '/' + d.tong;
+    const d = M.A.dem(VUNG); b.textContent = 'Journal · Secrets ' + d.timThay + '/' + d.tong;
   }
   function moBang(){
     const A = M.A, d = A.dem(VUNG), tt = A.thanhTuu().length, tong = (A.D.thanh_tuu || []).length;
-    $('an-tt').innerHTML = 'Bí mật Vùng 1: <b style="color:#78e6e6">' + d.timThay + '/' + d.tong + '</b> · Thành tựu: <b style="color:#ffe08a">' + tt + '/' + tong + '</b>' +
-      (window.LuuChung ? ' · Mảnh Ký Ức: <b style="color:#CEF0D6">' + LuuChung.soKyUc() + '</b>' : '');
+    $('an-tt').innerHTML = 'Region 1 secrets: <b style="color:#78e6e6">' + d.timThay + '/' + d.tong + '</b> · Achievements: <b style="color:#ffe08a">' + tt + '/' + tong + '</b>' +
+      (window.LuuChung ? ' · Memory Fragments: <b style="color:#CEF0D6">' + LuuChung.soKyUc() + '</b>' : '');
     const ds = $('an-ds'), nk = A.nhatKy(VUNG); ds.innerHTML = '';
-    if (!nk.length) ds.innerHTML = '<p class="trong">Chưa có dòng nào. Ruột Cây còn nhiều điều chưa kể…</p>';
+    if (!nk.length) ds.innerHTML = '<p class="trong">No entries yet. The Heartwood still keeps many untold things…</p>';
     for (const n of nk){
       const el = document.createElement('div'); el.className = 'muc' + (n.xong ? ' xong' : '');
       const anh = n.bieu_tuong && M.anh[n.bieu_tuong];
-      el.innerHTML = (anh ? '<img alt="" src="' + anh.src + '">' : '') + '<div><b>' + n.ten + (n.xong ? ' – đã xong' : n.td ? ' – ' + n.td.da + '/' + n.td.tong : '') + '</b><span>' + n.goi_y + '</span></div>';
+      el.innerHTML = (anh ? '<img alt="" src="' + anh.src + '">' : '') + '<div><b>' + n.ten + (n.xong ? ' – done' : n.td ? ' – ' + n.td.da + '/' + n.td.tong : '') + '</b><span>' + n.goi_y + '</span></div>';
       ds.appendChild(el);
     }
     $('l-an').classList.add('mo');

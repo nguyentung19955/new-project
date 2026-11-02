@@ -6,7 +6,7 @@
 
    Dữ liệu một đoạn thoại (game/cot-truyen/hoi-thoai/<id>.json):
    { "id": "...", "khung": "art/cot-truyen/hop-thoai/khung.png",
-     "nguoi": { "ba_ngan": {"ten": "Bà Ngân", "chan_dung": "art/cot-truyen/chan-dung/ba-ngan-noi.png"} },
+     "nguoi": { "ba_ngan": {"ten": "Vesper", "chan_dung": "art/cot-truyen/chan-dung/ba-ngan-noi.png"} },
      "dong": [ {"ai": "ba_ngan", "chu": "…", "dat_co": "ten_co"?, "chon": [{"chu": "…", "toi": 5}]?, "toi": 3?, "het": true?} ] }
    - "toi": nhảy tới chỉ số dòng; "het": kết thúc; "chon": lựa chọn (bấm lên/xuống + xác nhận).
 
@@ -41,7 +41,7 @@
     them(d, gocArt){ d._goc = gocArt || ''; DS[d.id] = d; return Promise.all(dsAnh(d).map(u => napAnh(d._goc + u))); },
     /* đủ ảnh (khung + mọi chân dung) mới coi là sẵn sàng */
     sanSang(id){ const d = DS[id]; return !!d && !!d.khung && dsAnh(d).every(u => ANH[d._goc + u]); },
-    thieuAnh(id){ const d = DS[id]; return d ? dsAnh(d).filter(u => !ANH[d._goc + u]) : ['(chưa nạp ' + id + ')']; },
+    thieuAnh(id){ const d = DS[id]; return d ? dsAnh(d).filter(u => !ANH[d._goc + u]) : ['(not loaded ' + id + ')']; },
     bat(id, xong){
       if (!HT.sanSang(id)) return false;           // chưa có ảnh → tắt
       mo = {d: DS[id], i: 0, n: 0, t: 0, chon: 0, xong}; return true;

@@ -75,14 +75,14 @@
       for (const q of giet){
         const loai = (q === V1.G.trum || (q.def && q.def.ai)) ? 'trum' : q.laTinhAnh ? 'tinh_anh' : 'quai_thuong';
         const r = M.ht.congDiem(loai);
-        if (r.lenCap > 0) V1.thongBao('Lên cấp ' + M.ht.cap() + ' · +' + r.lenCap + ' ' + M.ht.D.diem.ten_not + ' (mở ở Chuông Lưu)');
+        if (r.lenCap > 0) V1.thongBao('Level ' + M.ht.cap() + ' · +' + r.lenCap + ' ' + M.ht.D.diem.ten_not + ' (spend at a Rest Bell)');
         if (M.chiSo.manh_am > 0){
           const so = q.laTinhAnh ? 60 : Math.round(((q.def && q.def.mau) || 30) / 6) + 3, them = Math.round(so * M.chiSo.manh_am / 100);
           if (them > 0) V1.roiManh(q.x + q.w / 2, q.y + q.h / 2, them);
         }
         if (M.coDo){
           const mon = M.ht.roiDo(loai, {sauTrum:!!V1.G.luu.trumHa});
-          if (mon) V1.thongBao('Nhặt Âm Phù ' + (M.ht.D.do_hiem.find(h => h.id === mon.hiem) || {}).ten + ': ' + (M.ht.D.am_phu.find(m => m.id === mon.mau) || {}).ten);
+          if (mon) V1.thongBao('Sigil found: ' + (M.ht.D.do_hiem.find(h => h.id === mon.hiem) || {}).ten + ': ' + (M.ht.D.am_phu.find(m => m.id === mon.mau) || {}).ten);
         }
         ghi();
       }
@@ -106,19 +106,19 @@
     const b = document.createElement('button'); b.id = 'b-hethong'; b.type = 'button'; b.onclick = moBang;
     const hang = $('b-mua') && $('b-mua').parentNode; if (hang) hang.insertBefore(b, $('b-di'));
     const lop = document.createElement('div'); lop.id = 'l-hethong'; lop.className = 'lop ui';
-    lop.innerHTML = '<div class="hop"><h1>Dây Ngân</h1><p id="ht-tt"></p><div id="ht-cay"></div>' +
-      '<div class="hang"><button id="b-ht-dong" class="chinh" type="button">Quay lại Chuông Lưu</button></div>' +
-      '<small>Hạ quái nhận Âm Điểm → lên cấp được Nốt Ngân → mở nút. Nút ghi "chờ hình" sẽ mở được khi hình mới vẽ xong.</small></div>';
+    lop.innerHTML = '<div class="hop"><h1>Silver Strings</h1><p id="ht-tt"></p><div id="ht-cay"></div>' +
+      '<div class="hang"><button id="b-ht-dong" class="chinh" type="button">Back to Rest Bell</button></div>' +
+      '<small>Defeat enemies for Tone Points → level up for Silver Notes → unlock nodes. Nodes marked "Art pending" unlock once their new art is done.</small></div>';
     $('game').appendChild(lop);
     $('b-ht-dong').onclick = () => { lop.classList.remove('mo'); capNhatNut(); };
     capNhatNut();
   }
-  function capNhatNut(){ const b = $('b-hethong'); if (b && M.ht) b.textContent = 'Dây Ngân · ' + M.ht.notCon() + ' Nốt'; }
-  const CHU = {da_mo:'Đã mở', mo_duoc:'Mở được', thieu_not:'Thiếu Nốt', thieu_nut_truoc:'Cần mở nút trước', cho_anh:'Chờ hình'};
+  function capNhatNut(){ const b = $('b-hethong'); if (b && M.ht) b.textContent = 'Silver Strings · ' + M.ht.notCon() + ' Notes'; }
+  const CHU = {da_mo:'Unlocked', mo_duoc:'Available', thieu_not:'Need Notes', thieu_nut_truoc:'Unlock previous first', cho_anh:'Art pending'};
   function moBang(){
     const ht = M.ht, sau = ht.diemCapSau();
-    $('ht-tt').innerHTML = 'Cấp <b style="color:#78e6e6">' + ht.cap() + '</b> · Âm Điểm ' + ht.S.diem + (sau ? ' / ' + sau : ' (tối đa)') +
-      ' · Nốt Ngân còn: <b style="color:#ffe08a">' + ht.notCon() + '</b>';
+    $('ht-tt').innerHTML = 'Level <b style="color:#78e6e6">' + ht.cap() + '</b> · Tone Points ' + ht.S.diem + (sau ? ' / ' + sau : ' (max)') +
+      ' · Silver Notes left: <b style="color:#ffe08a">' + ht.notCon() + '</b>';
     const nhanh = {}; for (const n of ht.D.cay) (nhanh[n.nhanh] || (nhanh[n.nhanh] = [])).push(n);
     const cay = $('ht-cay'); cay.innerHTML = '';
     for (const [ten, ds] of Object.entries(nhanh)){
@@ -127,8 +127,8 @@
         const t = ht.trangThaiNut(n.id), b = document.createElement('button'); b.type = 'button';
         b.className = t === 'da_mo' ? 'da' : t === 'mo_duoc' ? 'duoc' : '';
         b.disabled = t !== 'mo_duoc';
-        b.innerHTML = n.ten + ' · ' + n.gia + ' Nốt<small>' + n.mo_ta + ' – ' + CHU[t] + '</small>';
-        b.onclick = async () => { const r = ht.moNut(n.id); if (r.ok){ ghi(); await apDung(); V1.thongBao('Đã mở: ' + n.ten); } moBang(); };
+        b.innerHTML = n.ten + ' · ' + n.gia + ' Notes<small>' + n.mo_ta + ' – ' + CHU[t] + '</small>';
+        b.onclick = async () => { const r = ht.moNut(n.id); if (r.ok){ ghi(); await apDung(); V1.thongBao('Unlocked: ' + n.ten); } moBang(); };
         cot.appendChild(b);
       }
       cay.appendChild(cot);

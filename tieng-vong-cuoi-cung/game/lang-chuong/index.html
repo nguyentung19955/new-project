@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Làng Chuông – Tiếng Vọng Cuối Cùng</title>
+<title>Bell Village – The Last Echo</title>
 <style>
   html, body { margin:0; height:100%; background:#0C0F14; color:#CEF0D6; font-family:serif; }
   #cho { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; }
@@ -14,7 +14,7 @@
 <!-- Làng Chuông = điểm khởi đầu + trạm teleport (phiên cottruyen).
      LUẬT HÌNH: cảnh làng, nhân vật phụ, cổng teleport, khung hộp thoại đều phải là ảnh ChatGPT vẽ.
      Chưa có ảnh (docs/yeu-cau-anh/cottruyen/ còn CHỜ) → trang KHÔNG dựng màn chơi, chỉ báo chữ. -->
-<div id="cho"><p>Làng Chuông chưa mở: đang chờ ảnh và kế hoạch cốt truyện.<br><small id="thieu"></small></p></div>
+<div id="cho"><p>Bell Village is not open yet: waiting for art and the story plan.<br><small id="thieu"></small></p></div>
 <script src="../luu-chung.js"></script>
 <script src="../cot-truyen/hop-thoai.js"></script>
 <script src="../cot-truyen/tram.js"></script>
@@ -26,7 +26,7 @@
   const thieu = CAN.filter((u, k) => !co[k]);
   const tram = await TramDichChuyen.nap('../../');
   window.LANG = {sanSang: thieu.length === 0, thieu, tram};
-  if (thieu.length){ document.getElementById('thieu').textContent = 'Thiếu ảnh: ' + thieu.join(', '); return; }
+  if (thieu.length){ document.getElementById('thieu').textContent = 'Missing art: ' + thieu.join(', '); return; }
   // (bật màn làng ở đây khi đã có ảnh – chưa làm, chờ kế hoạch ChatGPT)
 })();
 </script>

@@ -1,6 +1,7 @@
 <!doctype html>
+<html lang="en">
 <meta charset="utf-8">
-<title>Tiếng Vọng Cuối Cùng – Vùng 1</title>
+<title>The Last Echo – Region 1</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap&subset=vietnamese" rel="stylesheet">
@@ -58,35 +59,35 @@ body.touch #keys{display:none}
 <div id="game">
   <canvas id="cv" width="960" height="540"></canvas>
   <div id="top" class="ui">
-    <button id="b-map" class="nut ui" type="button">Bản đồ</button>
+    <button id="b-map" class="nut ui" type="button">Map</button>
   </div>
   <div id="dpad" class="tc" data-icon="de_can"><div id="knob" data-icon="num_can"></div></div>
   <div id="acts" class="tc">
     <div class="ab" id="b-a" data-k="a" data-icon="chem"></div><div class="ab" id="b-h" data-k="h" data-icon="hoi"></div>
     <div class="ab" id="b-s" data-k="s" data-icon="luot"></div><div class="ab" id="b-j" data-k="j" data-icon="nhay"></div>
   </div>
-  <button id="b-nghi" class="ui" type="button">Nghỉ ở Chuông</button>
-  <div id="keys">← → đi · Z/Space nhảy (2 lần = nhảy đôi) · X chém (↓+X trên không: đập đất) · ↑ bám dây / nghỉ chuông · ↓+Z xuống sàn mỏng · C lướt · V hồi máu · M bản đồ</div>
+  <button id="b-nghi" class="ui" type="button">Rest at Bell</button>
+  <div id="keys">← → move · Z/Space jump (twice = double jump) · X slash (↓+X midair: slam) · ↑ grab rope / rest at bell · ↓+Z drop through ledge · C dash · V heal · M map</div>
 
   <div id="l-menu" class="lop ui mo"><div class="hop">
-    <h1>Tiếng Vọng Cuối Cùng</h1><h2>Vùng 1 · Ruột Cây Than Khóc</h2>
-    <p id="menu-tt">Đang nạp…</p>
-    <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Tiếp tục</button><button id="b-moi" type="button" disabled>Chơi mới</button></div>
-    <p id="may-tt" hidden></p><div class="hang" id="may-hang" hidden><button id="b-google" type="button">Giữ tiến độ bằng Google</button></div>
-    <small>Tìm 3 Chuông Vỡ để mở cửa Đàn Chuông Câm. Nghỉ ở Chuông Lưu để lưu game, hồi máu và nâng cấp.</small>
+    <h1>The Last Echo</h1><h2>Region 1 · Weeping Heartwood</h2>
+    <p id="menu-tt">Loading…</p>
+    <div class="hang"><button id="b-tiep" class="chinh" type="button" disabled>Continue</button><button id="b-moi" type="button" disabled>New Game</button></div>
+    <p id="may-tt" hidden></p><div class="hang" id="may-hang" hidden><button id="b-google" type="button">Keep progress with Google</button></div>
+    <small>Find 3 Broken Bells to open the Mute Bell Choir. Rest at a Rest Bell to save, heal and upgrade.</small>
   </div></div>
   <div id="l-chuong" class="lop ui"><div class="hop">
-    <h1>Chuông Lưu</h1>
+    <h1>Rest Bell</h1>
     <p id="chuong-tt"></p>
-    <div class="hang"><button id="b-mua" type="button">Sinh lực +1</button><button id="b-di" class="chinh" type="button">Đi tiếp</button></div>
-    <small>Lưu game là miễn phí (đã lưu khi nghỉ chuông). Nâng cấp là TUỲ CHỌN, dùng Mảnh Âm nhặt được · Phím: X nâng cấp · Z / Enter đi tiếp</small>
+    <div class="hang"><button id="b-mua" type="button">Vitality +1</button><button id="b-di" class="chinh" type="button">Move on</button></div>
+    <small>Saving is free (saved when you rest). Upgrades are OPTIONAL and cost Echo Shards · Keys: X upgrade · Z / Enter move on</small>
   </div></div>
   <div id="l-het" class="lop ui"><div class="hop">
-    <h1>Hết Vùng 1</h1><h2>Mẫu Chuông Rỗng đã im lặng</h2>
+    <h1>Region 1 Complete</h1><h2>The Hollow Bell Mother falls silent</h2>
     <p id="het-tt"></p>
-    <div class="hang"><button id="b-het-tiep" class="chinh" type="button">Về Chuông Lưu</button><button id="b-het-moi" type="button">Chơi lại từ đầu</button></div>
+    <div class="hang"><button id="b-het-tiep" class="chinh" type="button">Back to Rest Bell</button><button id="b-het-moi" type="button">Restart from scratch</button></div>
   </div></div>
-  <div id="rotate">Xoay ngang điện thoại để chơi</div>
+  <div id="rotate">Rotate your phone to landscape to play</div>
 </div>
 <script src="../thu-mat-na/sprite-mn.js"></script>
 <script src="../thu-mat-na/dong-co-mn.js"></script>
@@ -124,26 +125,26 @@ if (window.LuuMay && LuuMay.coMay()){   // (firebase) dòng trạng thái lưu m
   LuuMay.nghe(m => { $('may-tt').textContent = m.moTa() + (m.loi ? ' (' + m.loi + ')' : ''); $('may-hang').hidden = m.trangThai === 'google' || !(m.trangThai === 'an-danh'); });
   $('b-google').onclick = () => LuuMay.dangNhapGoogle().then(ok => { if (ok){ const co = V1.coLuu(); $('b-tiep').disabled = !co; } });
 }
-$('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Xoá bản lưu cũ và chơi lại từ đầu?')) choi(true); };
+$('b-moi').onclick = () => { if (!V1.coLuu() || confirm('Delete your old save and start over?')) choi(true); };
 V1.moChuong = function(gui, ok){
-  $('chuong-tt').innerHTML = 'Đã hồi đầy máu và lượt hồi. Quái trong vùng sống lại.<br>' + (gui > 0 ? 'Đã gửi ' + gui + ' Mảnh Âm vào chuông (an toàn khi ngã).<br>' : '') +
-    (ok ? '<b style="color:#9be7a0">Đã lưu game (miễn phí).</b>' : '<b style="color:#ffbe50">Không lưu được (trình duyệt chặn bộ nhớ).</b>') + '<br>Mảnh Âm: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
+  $('chuong-tt').innerHTML = 'Health and heals fully restored. Enemies in the region have returned.<br>' + (gui > 0 ? 'Stored ' + gui + ' Echo Shards in the bell (safe if you fall).<br>' : '') +
+    (ok ? '<b style="color:#9be7a0">Game saved (free).</b>' : '<b style="color:#ffbe50">Could not save (browser blocked storage).</b>') + '<br>Echo Shards: <b style="color:#78e6e6">' + V1.tongManh() + '</b>';
   capNhatNutMua(); moLop('l-chuong');
 };
 function capNhatNutMua(){
   const b = $('b-mua'), L = G.luu;
-  b.textContent = L.nangMau >= 1 ? 'Sinh lực: đã tối đa' : 'Nâng cấp tuỳ chọn: Sinh lực +1 (' + V1.giaMau + ' Mảnh Âm)';
+  b.textContent = L.nangMau >= 1 ? 'Vitality: maxed out' : 'Optional upgrade: Vitality +1 (' + V1.giaMau + ' Echo Shards)';
   b.disabled = !V1.coTheMuaMau();
 }
-function mua(){ const s = V1.muaMau(); V1.thongBao(s); $('chuong-tt').innerHTML = s + '<br>Mảnh Âm còn: <b style="color:#78e6e6">' + V1.tongManh() + '</b>'; capNhatNutMua(); }
+function mua(){ const s = V1.muaMau(); V1.thongBao(s); $('chuong-tt').innerHTML = s + '<br>Echo Shards left: <b style="color:#78e6e6">' + V1.tongManh() + '</b>'; capNhatNutMua(); }
 function roiChuong(){ moLop(''); G.trang = 'choi'; V1.xoaVao(); }
 $('b-mua').onclick = mua; $('b-di').onclick = roiChuong;
 V1.thangTrum = function(){
   G.luu.trumHa = true; G.luu.hetXem = true; V1.ghiLuu();
   const L = G.luu, ph = Math.floor(L.giay / 60), gi = Math.floor(L.giay % 60);
   setTimeout(() => {
-    $('het-tt').innerHTML = 'Thời gian: ' + ph + ' phút ' + gi + ' giây · Ngã: ' + L.chet + ' lần<br>Chuông Vỡ: ' + L.kho.chuong_vo + '/3 · Mảnh Âm: ' + V1.tongManh() + (L.kho.loi_vong_tan ? ' · Có Lõi Vọng Tàn' : '') +
-      '<br><i>Vùng 2 "Rừng Chuông Chết" – đợt sau.</i>';
+    $('het-tt').innerHTML = 'Time: ' + ph + ' min ' + gi + ' s · Falls: ' + L.chet + '<br>Broken Bells: ' + L.kho.chuong_vo + '/3 · Echo Shards: ' + V1.tongManh() + (L.kho.loi_vong_tan ? ' · Ruin Core found' : '') +
+      '<br><i>Region 2 "Dead Bell Forest" – coming later.</i>';
     G.trang = 'het'; moLop('l-het');
   }, 900);
 };
@@ -198,11 +199,11 @@ window.TV = {E, G, V1, OPT, ep:V1.ep, choi, mot,
     if (window.LuuMay && LuuMay.coMay()){ await LuuMay.cho(2500); if (window.LuuChung) LuuChung.napLai(); }   // (firebase) lấy bản lưu mây trước khi đọc
     const co = V1.coLuu();
     $('b-tiep').disabled = !co; $('b-moi').disabled = false;
-    $('menu-tt').textContent = (G.thuMuc === 'phong-thu/' ? '(Đang dùng phòng THỬ – chưa có phòng thật) ' : '') + (co ? 'Có bản lưu.' : 'Chưa có bản lưu.');
+    $('menu-tt').textContent = (G.thuMuc === 'phong-thu/' ? '(Using TEST rooms – real rooms missing) ' : '') + (co ? 'Save found.' : 'No save yet.');
     if (!co) $('b-moi').classList.add('chinh');
     TV.xong = true;
     if (!OPT.tu) requestAnimationFrame(loop);
-  } catch (e){ $('menu-tt').textContent = 'Lỗi nạp: ' + e.message; TV.loi = String(e); console.error(e); }
+  } catch (e){ $('menu-tt').textContent = 'Load error: ' + e.message; TV.loi = String(e); console.error(e); }
 })();
 </script>
 <!-- Hệ thống đồ/điểm/mở khoá (phiên "do"): mặc định TẮT, bật thử bằng ?hethong=1 – xem game/he-thong/README.md -->

@@ -257,7 +257,7 @@ const DongCoMN = (() => {
       if (pl.onGround && !pl.atk && !pl.pound && pl.dash <= 0 && pl.hurtT <= 0 && du && pl.hp < P.maxHp){
         pl.hoi = 0; pl.hoiXong = false; if (luot) pl.luotHoi--; else pl.vong -= P.vongHoi; pl.vx = 0; SUKIEN.push({k:'bat-dau-hoi'}); return;
       }
-      SUKIEN.push({k:'khong-hoi', ly:pl.hp >= P.maxHp ? 'đầy máu' : !du ? (luot ? 'hết lượt hồi' : 'thiếu Tiếng Vọng') : 'phải đứng trên đất'});
+      SUKIEN.push({k:'khong-hoi', ly:pl.hp >= P.maxHp ? 'health is full' : !du ? (luot ? 'no heal charges left' : 'not enough Echo') : 'must stand on the ground'});
     }
     // ↓ + Nhảy khi đứng trên sàn mỏng '=' → rơi xuyên xuống
     if (pl.jumpBuf > 0 && pl.onGround && IN.xuong() && !pl.leo && trenSanMong(pl) && !collide(pl.x, pl.y + 1, pl.w, pl.h)){

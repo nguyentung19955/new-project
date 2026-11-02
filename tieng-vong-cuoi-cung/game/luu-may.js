@@ -168,9 +168,9 @@
     dangXuat: () => Promise.resolve(false),
     coMay: () => false,
     moTa(){
-      return {tat:'Lưu trên máy này', 'dang-ket-noi':'Đang kết nối lưu mây…', 'an-danh':'Đã lưu mây (khách)',
-        google:'Đã lưu mây: ' + (LM.email || LM.ten || 'Google'), 'ngoai-tuyen':'Không có mạng – lưu trên máy, sẽ gửi lên sau',
-        loi:'Lưu mây lỗi – vẫn lưu trên máy'}[LM.trangThai] || '';
+      return {tat:'Saved on this device', 'dang-ket-noi':'Connecting cloud save…', 'an-danh':'Cloud saved (guest)',
+        google:'Cloud saved: ' + (LM.email || LM.ten || 'Google'), 'ngoai-tuyen':'Offline – saved on device, will upload later',
+        loi:'Cloud save error – still saved on device'}[LM.trangThai] || '';
     }
   };
   W.LuuMay = LM;
@@ -181,26 +181,26 @@
   const tatHan = !ls || !CH || !CH.apiKey || Q.get('may') === '0' || laMayNha || !/^https?:$/.test(location.protocol);
   if (tatHan) return;
 
-  const DB = taoDongBo({kho: ls, suKien(loai, x){ if (loai === 'loi') bao(navigator.onLine === false ? 'ngoai-tuyen' : 'loi', x && x.message || x); else if (LM.trangThai === 'ngoai-tuyen' || LM.trangThai === 'loi') bao(LM._tt || 'an-danh', ''); if (loai === 'keo' && x.giu.length) bao(null, 'Có bản lưu mới hơn trên mây – tải lại trang để dùng'); }});
+  const DB = taoDongBo({kho: ls, suKien(loai, x){ if (loai === 'loi') bao(navigator.onLine === false ? 'ngoai-tuyen' : 'loi', x && x.message || x); else if (LM.trangThai === 'ngoai-tuyen' || LM.trangThai === 'loi') bao(LM._tt || 'an-danh', ''); if (loai === 'keo' && x.giu.length) bao(null, 'A newer save is in the cloud – reload the page to use it'); }});
   LM._dongBo = DB;
   LM.coMay = () => true;
 
   const SDK = (CH.sdk || 'https://www.gstatic.com/firebasejs/10.14.1/').replace(/\/?$/, '/');
-  const henGio = (p, ms, ten) => Promise.race([p, new Promise((_, b) => setTimeout(() => b(new Error('quá giờ: ' + ten)), ms))]);
+  const henGio = (p, ms, ten) => Promise.race([p, new Promise((_, b) => setTimeout(() => b(new Error('timed out: ' + ten)), ms))]);
   let F = null;   // {app, auth, db, A (module auth), S (module firestore)}
 
   async function napSdk(){
-    const [mA, mAuth, mS] = await henGio(Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]), 10000, 'tải Firebase');
+    const [mA, mAuth, mS] = await henGio(Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]), 10000, 'loading Firebase');
     const app = mA.initializeApp({apiKey:CH.apiKey, authDomain:CH.authDomain, projectId:CH.projectId, appId:CH.appId, storageBucket:CH.storageBucket, messagingSenderId:CH.messagingSenderId});
     const auth = mAuth.getAuth(app);
     const db = mS.getFirestore(app);
     if (CH.emulator){ mAuth.connectAuthEmulator(auth, 'http://' + CH.emulator.auth, {disableWarnings:true}); mS.connectFirestoreEmulator(db, CH.emulator.firestore.split(':')[0], +CH.emulator.firestore.split(':')[1]); }
     F = {app, auth, db, A:mAuth, S:mS};
     DB.datCong({
-      async layVe(u){ const s = await henGio(mS.getDoc(mS.doc(db, BO_SUU_TAP, u)), 8000, 'đọc mây'); return s.exists() ? s.data() : null; },
+      async layVe(u){ const s = await henGio(mS.getDoc(mS.doc(db, BO_SUU_TAP, u)), 8000, 'reading cloud'); return s.exists() ? s.data() : null; },
       async guiLen(u, vaQua){
         const d = Object.assign({phienBan:PHIEN_BAN, capNhat:mS.serverTimestamp()}, vaQua);
-        await henGio(mS.setDoc(mS.doc(db, BO_SUU_TAP, u), d, {merge:true}), 10000, 'ghi mây');
+        await henGio(mS.setDoc(mS.doc(db, BO_SUU_TAP, u), d, {merge:true}), 10000, 'writing cloud');
       }
     });
     return F;
@@ -223,8 +223,8 @@
     bao('dang-ket-noi');
     try {
       await napSdk();
-      const u = await henGio(new Promise(r => { const bo = F.A.onAuthStateChanged(F.auth, x => { bo(); r(x); }); }), 8000, 'đăng nhập');
-      const nguoi = u || (await henGio(F.A.signInAnonymously(F.auth), 8000, 'đăng nhập ẩn danh')).user;
+      const u = await henGio(new Promise(r => { const bo = F.A.onAuthStateChanged(F.auth, x => { bo(); r(x); }); }), 8000, 'sign-in');
+      const nguoi = u || (await henGio(F.A.signInAnonymously(F.auth), 8000, 'guest sign-in')).user;
       await vaoUid(nguoi);
       xongKeo(true);
     } catch (e){
@@ -248,7 +248,7 @@
   W.addEventListener('offline', () => bao('ngoai-tuyen'));
 
   /* Chờ bản mây (tối đa ms) trước khi game đọc bản lưu. Hết giờ thì chơi bằng bản máy. */
-  LM.cho = (ms) => henGio(henKeo, ms || 2500, 'chờ mây').catch(() => false).then(v => { DB.khoaDoc(); return v; });
+  LM.cho = (ms) => henGio(henKeo, ms || 2500, 'waiting for cloud').catch(() => false).then(v => { DB.khoaDoc(); return v; });
 
   LM.dangNhapGoogle = async () => {
     if (!F) return false;

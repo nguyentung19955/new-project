@@ -1,6 +1,6 @@
 {
  "id": "P05",
- "ten": "Chuông Lưu",
+ "ten": "Rest Bell",
  "luoi": [
   "################################",
   "################################",
@@ -40,6 +40,6 @@
  "dau_hieu": [
   {"loai": "loi_chinh", "cot": 2, "hang": 12}
  ],
- "bang_chi_duong": {"cot": 6, "hang": 12, "huong": "trai", "toi": "P11", "ten": "Sảnh Chuông Vỡ"},
+ "bang_chi_duong": {"cot": 6, "hang": 12, "huong": "trai", "toi": "P11", "ten": "Broken Bell Hall"},
  "ghi_chu": "Checkpoint đầu tiên. Không quái."
 }
