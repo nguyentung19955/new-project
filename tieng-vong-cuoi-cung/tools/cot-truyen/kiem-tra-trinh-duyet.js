@@ -1,4 +1,4 @@
-// Kiểm trình duyệt: Vùng 1 ghi lưu chung khi vào; trang Làng Chuông tắt khi thiếu ảnh, đọc được trạm teleport.
+// Kiểm trình duyệt: Vùng 1 ghi lưu chung khi vào; trang Làng Chuông mở khi đủ ảnh, đọc được trạm teleport.
 // Chạy: (python3 -m http.server 8765 &) ; node tools/cot-truyen/kiem-tra-trinh-duyet.js [thư-mục-ảnh-ngoài-repo]
 const {chromium} = require('playwright');
 (async () => {
@@ -17,7 +17,7 @@ const {chromium} = require('playwright');
   await p2.goto('http://localhost:8765/game/lang-chuong/index.html');
   await p2.waitForFunction(() => window.LANG && LANG.xong, null, {timeout:15000});
   const L = await p2.evaluate(() => ({s:LANG.sanSang, t:LANG.thieu, di:LANG.tram.filter(v => v.di_duoc).map(v => v.id), n:LANG.tram.length}));
-  ok(!L.s && L.t.length > 0, 'Làng Chuông tắt khi thiếu ảnh', L.t);
+  ok(L.s && L.t.length === 0, 'Làng Chuông mở (đã đủ ảnh ChatGPT 02/11)', L.t);
   ok(L.di.length === 1 && L.di[0] === 'vung-1' && L.n >= 8, 'trạm teleport: chỉ Vùng 1 đi được', L);
   if (process.argv[2]) await p2.screenshot({path:process.argv[2] + '/lang-chuong.png'});
   ok(loi.length === 0, 'không lỗi JS', loi);

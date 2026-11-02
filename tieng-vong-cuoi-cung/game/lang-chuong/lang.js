@@ -213,7 +213,7 @@
     g.imageSmoothingEnabled = true; g.drawImage(im, x, y, w, h);
     const [qx, qy, qw] = L.khung_chon.chu, tx = x + qx * w, fs = 22;
     g.textBaseline = 'top'; g.textAlign = 'left';
-    g.fillStyle = '#E1B85A'; g.font = '700 26px "Cormorant Garamond",serif'; g.fillText('The Rootbound Bell', tx, y + qy * h);
+    g.fillStyle = '#E1B85A'; g.font = '700 26px "Cormorant Garamond",serif'; g.textAlign = 'center'; g.fillText('The Rootbound Bell', tx + qw * w / 2, y + qy * h); g.textAlign = 'left';   // giữa vùng chữ: tránh 2 chuông treo ở góc trên
     S.menu.chon.forEach((c, k) => { g.fillStyle = k === S.menu.i ? '#ffe08a' : '#c9b48a'; g.font = '500 ' + fs + 'px "Alegreya Sans",sans-serif';
       g.fillText((k === S.menu.i ? '› ' : '  ') + c.chu, tx, y + qy * h + 44 + k * fs * 1.45, qw * w); });
   }
