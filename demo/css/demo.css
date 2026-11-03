@@ -292,3 +292,5 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 /* CO-OP: WAVE x/70 LỚN ở góc trên trái */
 .tb-wave.coop #tb-dot { font-size: 26px; }
 .tb-wave.coop #tb-dot small { font-size: 12px; }
+/* tên tướng dài (PATCHWORK...) trên thẻ dưới: thu chữ cho vừa thẻ 54px */
+.the .ten.dai { font-size: 8.6px; letter-spacing: 0; }

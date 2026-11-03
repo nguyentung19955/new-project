@@ -522,6 +522,28 @@
       apHieu(S, q, dmg, v);
     },
   };
+  // PATCHWORK: đập búa xuống quái q (cfg = TUONG[id].don): q nhận đủ, quái trong bán kính r quanh q nhận van × sát thương; tất cả bị chậm `cham` trong T giây.
+  // Dạng BIẾN HÌNH (v.toT > 0, DAC_BIET.bienHinh): × he sát thương, × rHe bán kính. Rung nhẹ + vòng sóng ở chỗ đập và dưới chân tướng.
+  DON.dap = function (S, i, v, q, dmg, cfg) {
+    const td = T[v.id], mau = HANH[td.hanh].mau, bh = td.dac && td.dac.k === 'bienHinh' ? td.dac : null, to = bh && v.toT > 0;
+    const r = theoSao(cfg.r, v.sao) * K * (to ? bh.rHe : 1), d = dmg * (to ? bh.he : 1), cham = theoSao(cfg.cham, v.sao);
+    const lam = (o) => { if (!sống(o)) return; o.dapCham = Math.max(o.dapT > 0 ? o.dapCham || 0 : 0, cham); o.dapT = Math.max(o.dapT || 0, cfg.T || 1); };
+    const ok = trung(S, q, d, v, mau, to, false, false, 'chem');
+    if (ok !== false) { lam(q); apHieu(S, q, d, v); }
+    for (const o of S.quai) if (o !== q && nham(o) && kc(o, q) < r) { trung(S, o, d * (cfg.van || 0.5), v, mau); lam(o); }
+    const [ox, oy] = oXY(S, i);
+    S.fx.push({ k: 'dap', x: q.x, y: q.y, r, t: 0, T: 0.32, mau }, { k: 'dap', x: ox + C.O / 2, y: oy + C.OH - C.CHAN, r: C.O * (to ? 0.42 : 0.32), t: 0, T: 0.26, mau: '#ffe2b0', nho: 1 });
+    S.rung = Math.max(S.rung || 0, to ? 0.08 : 0.04);
+    if (bh && !(v.khoaT > 0) && !to) {   // đếm đòn → BIẾN HÌNH
+      v.dapDem = (v.dapDem || 0) + 1;
+      if (v.dapDem >= theoSao(bh.moi, v.sao)) {
+        v.dapDem = 0; v.toT = theoSao(bh.T, v.sao);
+        const he = theoSao(bh.ke, v.sao);
+        for (const j of ke(i)) { const o = S.o[j]; if (!o) continue; o.bufHe = Math.max(o.bufT > 0 ? o.bufHe || 0 : 0, he); o.bufT = Math.max(o.bufT || 0, v.toT); S.fx.push({ k: 'chonO', i: j, t: 0, T: 0.5, mau: BAC.vang.mau }); }
+        baoSkill(S, i, bh.ten);
+      }
+    }
+  };
   // chớp sáng nhỏ ở đầu nòng 60–80ms (render 'nong'), hướng về mục tiêu
   const chopNong = (S, x, y, mau, q) => S.fx.push({ k: 'nong', x, y, t: 0, T: C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x) });
   // HIEU — hiệu ứng khi trúng (TRẮNG/LAM/TÍM dùng lại được). (S, q, dmg, v, cfg, hs) — cfg = 1 mục trong TUONG[id].hieu
@@ -589,6 +611,9 @@
   }
   // DAC_BIET — skill riêng VÀNG/ĐỎ. Mỗi loại có thể có: moiDon (thay đòn thường khi tới lượt, trả true), capNhat (mỗi khung), khiGop (khi ghép 2 tướng loại này)
   const DAC_BIET = {
+    bienHinh: {   // PATCHWORK: dạng to đếm ngược (đòn đếm trong DON.dap)
+      capNhat(S, i, v, dt) { if (v.toT > 0) v.toT = Math.max(0, v.toT - dt); },
+    },
     taoMana: {   // (Syrinx DCDW) tạo Energy mỗi chuKy giây: luong theo sao × (1 + theoLv × cấp nâng)
       capNhat(S, i, v, dt, cf) {
         v.manaT = (v.manaT || 0) + dt;
@@ -661,6 +686,9 @@
     baoSkill(S, k === 'hoanDoi' ? j : i, m.cf.ten);
     return true;
   }
+  // TƯỚNG PIXEL (TUONG[id].px.atk): đòn ra ĐÚNG đầu khung `trung` của chuỗi nhịp; không bắt đầu đòn mới khi chuỗi cũ chưa xong
+  const tacDong = (id) => { const a = T[id].px && T[id].px.atk; if (!a) return C.TAC_DONG; let n = 0; for (let k = 0; k < a.trung; k++) n += a.nhip[k]; return n / 1000; };
+  const chuoiDon = (id) => { const a = T[id].px && T[id].px.atk; return a ? a.nhip.reduce((x, y) => x + y, 0) / 1000 : 0; };
   function ban(S, i, v) {
     const td = T[v.id], dmg = satThuong(S, v);
     const q = chonMuc(S, i, v);
@@ -723,7 +751,7 @@
       v.cd -= dt * tocAF * (v.bufT > 0 ? 1 + v.bufHe : 1) / cham;
       // đòn đánh theo hoạt ảnh: bắt đầu attack (14fps), đạn/đòn phát ra đúng lúc vào khung ra đòn (khung 3, TAC_DONG)
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
-      else if (v.cd <= 0) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = C.TAC_DONG; v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; chonHuong(v, gocTo(S, i, q), mm); } else v.cd = 0.05; }
+      else if (v.cd <= 0 && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = tacDong(v.id); v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; chonHuong(v, gocTo(S, i, q), mm); } else v.cd = 0.05; }
     });
     // sát thương trễ (CORRUPTOR) + nhịp sét trễ (ARC 7★)
     for (const p of S.treo) { p.t -= dt; if (p.t <= 0) { p.xong = true; trung(S, p.q, p.dmg, p.v, p.mau, false, false, true); } }
@@ -785,7 +813,7 @@
       if (!sống(q)) continue;
       q.khung += dt * 7;
       if (q.flash > 0) q.flash = Math.max(0, q.flash - dt);
-      for (const f of ['chayT', 'chillT', 'voLock', 'nhietCD', 'arcCD', 'focusCD', 'giatCD', 'toxNhan', 'bounty', 'nhanhT', 'linkT', 'neT', 'khienT']) if (q[f] > 0) q[f] = Math.max(0, q[f] - dt);
+      for (const f of ['chayT', 'chillT', 'voLock', 'nhietCD', 'arcCD', 'focusCD', 'giatCD', 'toxNhan', 'bounty', 'nhanhT', 'linkT', 'neT', 'khienT', 'dapT']) if (q[f] > 0) q[f] = Math.max(0, q[f] - dt);
       if (q.kenT > 0) { q.kenT -= dt; if (q.kenT <= 0) { q.kenT = 0; const h = q.max * q.kenHoi; q.hp = Math.min(q.max, q.hp + h); S.so.push({ x: q.x, y: q.y - q.co - 6, v: '+' + Math.round(h), t: 0, mau: '#3cffb0', to: 1 }); } }   // kén không bị phá → hồi máu
       if (q.ta && q.daRa) capNhatTinhAnh(S, q, dt);
       if (q.chillT <= 0) q.chill = 0;
@@ -797,7 +825,7 @@
       }
       if (!sống(q)) continue;
       if (q.linkT > 0 && (!S.boss || kc(q, S.boss) > 180 * K)) q.linkT = 0;
-      const sl = Math.max(q.chill * (q.chillK || 0.10) * (q.boss ? 0.5 : 1), q.slowBang, q.slowHut);
+      const sl = Math.max(q.chill * (q.chillK || 0.10) * (q.boss ? 0.5 : 1), q.slowBang, q.slowHut, q.dapT > 0 ? (q.dapCham || 0) * (q.boss ? 0.5 : 1) : 0);   // + PATCHWORK đập chậm
       q.cham = Math.min(q.boss ? 0.30 : 0.45, sl); q.slowBang = 0; q.slowHut = 0;
       if (q.choang > 0) { q.choang -= dt; continue; }
       q.d += q.spd * (1 - q.cham) * (q.nhanhT > 0 ? 1 + q.nhanhK : 1) * dt;

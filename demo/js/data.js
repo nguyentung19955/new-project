@@ -12,6 +12,7 @@ const HANH = {
   Nanite:  { mau: '#4d8dff', toi: '#081a3a', sang: '#cfe0ff', ten: 'NANITE' },
   Hack:    { mau: '#00ffa3', toi: '#003a26', sang: '#c8ffe8', ten: 'HACK' },
   Toxin:   { mau: '#b4ff2a', toi: '#2a3a06', sang: '#ecffc8', ten: 'TOXIN' },
+  Stitch:  { mau: '#ff6f91', toi: '#3a0a18', sang: '#ffd0dc', ten: 'STITCH' },   // PATCHWORK (BIẾN HÌNH)
 };
 // 5 BẬC TƯỚNG theo MÀU (= độ hiếm DCDW Common/Rare/Epic/Legendary/Ancient). Bậc KHÔNG ảnh hưởng tỉ lệ triệu hồi (triệu hồi đều nhau trong bộ 5).
 // TRẮNG/LAM/TÍM: đòn hệ lặp lại được (lửa, băng, độc, sét, hack...). VÀNG: cơ chế khác hẳn (tạo mana, ghép đặc biệt...). ĐỎ: skill mạnh nhất.
@@ -35,6 +36,13 @@ const BAC = {
 //   nong  : ĐIỂM ĐẦU NÒNG theo hướng ảnh vẽ { s, sw, w, nw, n: [x, y] } — toạ độ px trong ảnh tĩnh <anh>_<dir>.png (khung 112).
 //           Hướng lật gương (se, e, ne) tự đối xứng x. Đo bằng script (điểm xa nhất của vũ khí theo hướng nhìn) rồi xem bằng mắt.
 //           ARC = mũi kiếm. WARP (xoay): chỉ cần `s` (toạ độ trong warp.png), xoay theo góc.
+//   px    : TƯỚNG PIXEL ART (03/11, PATCHWORK là tướng đầu tiên) — ảnh trong demo/assets/v3/pixel/, render.js vePixel (không smoothing, scale nguyên):
+//           dir8 : { file, o: cạnh ô, thuTu: [hướng của từng ô theo thứ tự trong ảnh] }      ảnh đứng yên 8 hướng (1 hàng)
+//           idle : { <hướng>: { file, o, ms } }   sheet thở (ô vuông o, ms/khung) — chỉ hướng có sheet, hướng khác đứng ảnh tĩnh dir8
+//           atk  : { file: { <d>: tên }, w, h, nhip: [ms từng khung], trung: chỉ số khung gây sát thương,
+//                    huong: { s|se|e|ne|n|nw|w|sw: [d, lật gương 0/1] } }   — sát thương ra ĐÚNG đầu khung `trung` (game.js), không đánh nhanh hơn cả chuỗi
+//           to   : hệ số cỡ khi ở dạng BIẾN HÌNH (v.toT > 0)
+//           Neo chân: đáy phần hình + tâm chân (đo hàng đáy khung 0 mỗi ảnh) đặt đúng chỗ chân các tướng khác.
 const TUONG = {
   // ---- TRẮNG: đòn hệ đơn giản ----
   scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Burns the lane under the front foe.',
@@ -87,9 +95,23 @@ const TUONG = {
     hieu: [{ k: 'hack', moi: 1, T: { 1: 3, 3: 4 }, them: { 1: 0.10, 5: 0.15 }, khoaMoi: 6, choang: 0.6 }],
     dac: { k: 'packet', ten: 'PACKET SWAP', swapTu: 5, rerollTu: 7, choT: 4,
       chu: [{ k: 'copyBuffer', tu: 3, ten: 'COPY BUFFER', cd: 15, T: 5, he: 0.35, chon: 'ke' }] } },
+  // PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ) — tướng PIXEL ART đầu tiên. Đập búa: quái gần nhất + văng quanh đó, làm chậm.
+  // Mỗi `moi` đòn → BIẾN HÌNH (to hơn) T giây: sát thương ×he, vùng văng ×rHe, tướng ở Ô KỀ được +ke tốc đánh trong lúc đó.
+  patchwork: { bac: 'vang', ten: 'PATCHWORK', chuc: 'STITCH BRAWLER', hanh: 'Stitch', kieu: 'Stitch Slam', mo: 'Hammer slam: splash + slow. Every 5th: BIG form, buffs adjacent.',
+    dmg: 30, cd: 1.7, muc: 'gan', hit: 'kinetic', co: 1.0,
+    don: { k: 'dap', r: { 1: 26, 5: 32 }, van: 0.5, cham: { 1: 0.18, 5: 0.24 }, T: 1.2 },
+    hieu: [],
+    dac: { k: 'bienHinh', ten: 'STITCH UP', moi: { 1: 5, 5: 4 }, T: { 1: 4, 3: 5 }, he: 1.5, rHe: 1.4, ke: { 1: 0.15, 5: 0.25 } },
+    px: {
+      dir8: { file: 'patchwork_8dir', o: 128, thuTu: ['s', 'sw', 'w', 'nw', 'n', 'ne', 'e', 'se'] },
+      idle: { s: { file: 'patchwork_idle_s', o: 176, ms: 180 } },
+      atk: { file: { s: 'patchwork_atk_s', w: 'patchwork_atk_w', n: 'patchwork_atk_n' }, w: 224, h: 176,
+        nhip: [300, 140, 180, 60, 260, 200], trung: 4,
+        huong: { s: ['s', 0], se: ['s', 0], sw: ['s', 0], w: ['w', 0], e: ['w', 1], n: ['n', 0], ne: ['n', 0], nw: ['n', 0] } },
+      to: 1.25 } },
 };
 const TUONG_IDS = Object.keys(TUONG);
-const BO_MAC_DINH = ['scorch', 'frost', 'arc', 'lance', 'glitch'];
+const BO_MAC_DINH = ['patchwork', 'scorch', 'frost', 'lance', 'glitch'];   // bộ chọn sẵn ở màn chọn tướng (người chơi đổi được)
 const BO_AI = ['scorch', 'frost', 'lance', 'warp', 'arc'];   // đội hình dựng sẵn của bàn AI (PVP: AI MIRROR · CO-OP: đồng đội)
 const AF_AI = 'overclock';                                    // Archfiend của bàn AI
 // tên file ảnh của tướng (demo/assets/v3/<anh>.png ...)
