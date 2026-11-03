@@ -49,7 +49,7 @@ for j in range(1,n):
             e=np.mean((P-T)**2)
             if e<best[0]: best=(e,dx,dy)
     shifts.append((best[1],best[2]))
-sc=116/H0
+sc=int(os.environ.get("HT",116))/H0
 SACH=os.environ.get('SACH')=='1'
 VIEN=os.environ.get('SACH')=='vien'   # chỉ dọn viền: giữ nguyên cách thu nhỏ/màu bên trong
 def khuNhieu(q,al):
@@ -66,7 +66,7 @@ def khuNhieu(q,al):
             if len(ks)>=5 and key[y,x] not in ks:
                 k=max(set(ks),key=ks.count); out[y,x]=[(k>>16)&255,(k>>8)&255,k&255]
     return out,al
-FW,FH=224,int(os.environ.get("FH",176))
+FW,FH=int(os.environ.get("FW",224)),int(os.environ.get("FH",176))
 frames=[]
 for j in range(n):
     dx,dy=shifts[j]; bj=body(masks[j]); ay=(b0+dy) if os.environ.get("NEO")=="dy" else np.nonzero(bj.any(1))[0][-1]; ax=cx0+dx
@@ -83,6 +83,7 @@ for j in range(n):
     a2=np.array(c2); al=a2[:,:,3]>(140 if SACH else 110)
     q=Image.fromarray(a2[:,:,:3]).quantize(colors=(28 if SACH else 40),method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGB')
     q=np.array(q)
+    if os.environ.get('MIN')=='1': q=a2[:,:,:3].copy()   # bản KHÔNG pixel: giữ màu mịn gốc, chỉ thu nhỏ
     if VIEN:
         for _ in range(2):
             nb=sum(np.roll(np.roll(al,a,0),b,1) for a in(-1,0,1) for b in(-1,0,1) if (a,b)!=(0,0)); al=al&(nb>=3)
@@ -94,7 +95,7 @@ for j in range(n):
         vien=al&~ndimage.binary_erosion(al)   # viền ngoài 1px tô màu tối nhất -> nét viền kín như pixel art
         lum=q.sum(2); dk=q[al][np.argmin(lum[al])] if al.any() else [20,15,20]
         q[vien]=(np.array(dk)*0.6+np.array([25,18,24])*0.4).astype(np.uint8)
-    p=Image.fromarray(np.dstack([q,(al*255).astype('uint8')]),'RGBA')
+    p=Image.fromarray(np.dstack([q,(a2[:,:,3]*(al|(a2[:,:,3]>20))).astype('uint8') if os.environ.get('MIN')=='1' else (al*255).astype('uint8')]),'RGBA')
     px=round(FW/2-(ax-X0)*scj); py=round(FH-int(os.environ.get("PADB",8))-(ay-Y0)*scj)
     assert px>=0 and px+p.width<=FW and py>=0 and py+p.height<=FH+8,(j,px,py,p.size)
     F=Image.new('RGBA',(FW,FH),(0,0,0,0)); F.paste(p,(px,py),p); frames.append(F)
@@ -102,10 +103,10 @@ sheet=Image.new('RGBA',(FW*n,FH),(0,0,0,0))
 for i,f in enumerate(frames): sheet.paste(f,(i*FW,0),f)
 sheet.save(V+name+'.png')
 s=Image.new('RGBA',sheet.size,(96,100,108,255)); s.alpha_composite(sheet); s.resize((sheet.width,sheet.height),Image.NEAREST).convert('RGB').save(S+name+'_view.png')
-durs=durs or [100]*n; Z=3; out=[]
+durs=durs or [100]*n; Z=int(os.environ.get("Z",3)); out=[]
 for r in range(2):
     for f in frames:
         b=Image.new('RGBA',f.size,(96,100,108,255)); b.alpha_composite(f)
-        g=b.resize((FW*Z,FH*Z),Image.NEAREST).convert('RGB'); out.append(g)
+        g=b.resize((FW*Z,FH*Z),Image.LANCZOS if os.environ.get("MIN")=="1" else Image.NEAREST).convert('RGB'); out.append(g)
 out[0].save(S+name+'.gif',save_all=True,append_images=out[1:],duration=durs*2,loop=0)
 print('ok',shifts)
