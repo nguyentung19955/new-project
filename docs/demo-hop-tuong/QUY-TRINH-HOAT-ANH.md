@@ -13,3 +13,9 @@
 5. **Tự kiểm hết sổ** — đặt khung 1 cạnh ảnh PixelLab của hướng đó + các hướng đã duyệt; đo đỉnh/đáy; xem GIF như người chơi. Không đạt → vẽ lại, không gửi, không tự bào chữa.
 6. **Gửi người dùng** GIF (3× NEAREST) khi đạt hết; gộp các hướng đã duyệt vào 1 GIF.
 7. Hiệu ứng (lửa, tia…) vẽ riêng sau cùng; code gắn vào nòng theo hướng.
+
+## Nhân vật PixelLab bản 2 (Skeleton, 04/11/2026)
+- SENTINEL: 7adaadc3-d190-4f2f-ad28-a95aedfd37b2
+- PULSE: 381466c9-218e-486b-bad5-38c58f34ccce
+- ANCHOR: 1d4fe8b4-1ab6-421e-a63f-34ee7c5e60c5
+Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
