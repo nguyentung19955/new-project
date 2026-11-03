@@ -1,4 +1,5 @@
 // DEMO "NEON GRID — Merge Defense" (cyberpunk) — DỮ LIỆU: tướng, bậc, Archfiend, quái, trùm, bố cục.
+// TƯỚNG: đang làm lại từ đầu (03/11/2026) — xem mẫu 1 tướng mới trong khối TUONG bên dưới.
 // NGUYÊN TẮC: bám Destiny Child: Defense War (DCDW). Thêm tướng mới = thêm 1 mục trong TUONG (+ ảnh trong demo/assets/v3/), KHÔNG sửa logic.
 // Kỹ năng ghép từ các "loại hành vi" có tham số (game.js: MUC, DON, HIEU, DAC_BIET). Cách viết: docs/demo-hop-tuong/TIEN-DO-V3.md.
 'use strict';
@@ -47,78 +48,27 @@ const BAC = {
 //           to   : hệ số cỡ khi ở dạng BIẾN HÌNH (v.toT > 0)
 //           Neo chân: đáy phần hình + tâm chân (đo hàng đáy khung 0 mỗi ảnh) đặt đúng chỗ chân các tướng khác.
 const TUONG = {
-  // ---- TRẮNG: đòn hệ đơn giản ----
-  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'PYRO MERC', hanh: 'Plasma', kieu: 'Heat Trail', mo: 'Burns the lane under the front foe.',
-    dmg: 36, cd: 1.36, muc: 'dau', hit: 'flame', co: 1.08,
-    nong: { s: [32, 104], sw: [27, 96], w: [22, 81], nw: [27, 75], n: [78, 74] },
-    don: { k: 'dan', toc: 900 },
-    hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 3: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }] },
-  frost:  { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Chill', mo: 'Slows; 3 chills shatter.',
-    dmg: 27, cd: 1.7, muc: 'dau', hit: 'frost', co: 0.95,
-    nong: { s: [29, 60], sw: [20, 57], w: [15, 58], nw: [24, 49], n: [83, 38] },
-    don: { k: 'dan', toc: 800 },
-    hieu: [{ k: 'bang', cham: { 1: 0.10, 3: 0.125 }, max: 3, T: { 1: 1.5, 3: 2 }, voR: { 1: 30, 5: 40 }, voDmg: 0.3 }] },
-  arc:    { bac: 'trang', ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Slash', mo: '3rd slash chains lightning.',
-    dmg: 45, cd: 1.53, muc: 'gan', tam: 1.6, hit: 'electric', co: 0.90,   // CẬN CHIẾN: chỉ đánh khi đứng ô sát đường (≤ TAM_CAN_CHIEN) và quái trong 1.6 ô
-    nong: { s: [13, 84], sw: [16, 64], w: [11, 60], nw: [15, 56], n: [95, 59] },
-    don: { k: 'chem' },
-    hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }] },
-  venom:  { bac: 'trang', ten: 'VENOM', chuc: 'TOX BEAST', hanh: 'Toxin', kieu: 'Toxin Stack', mo: 'Stacking poison on the toughest.',
-    dmg: 19.5, cd: 1.7, muc: 'mauCao', hit: 'kinetic', co: 1.14,
-    nong: { s: [53, 104], sw: [21, 95], w: [17, 80], nw: [29, 38], n: [53, 24] },
-    don: { k: 'dan', toc: 820 },
-    hieu: [{ k: 'doc', moi: 1, max: { 1: 5, 3: 6 }, T: { 1: 4, 3: 5 }, dps: 3, lan: { 1: 0, 7: 2 } }] },
-  // ---- LAM ----
-  lance:  { bac: 'lam', ten: 'LANCE', chuc: 'RAIL SNIPER', hanh: 'Laser', kieu: 'Pierce', mo: 'Rail pierces the line.',
-    dmg: 105, cd: 2.5, muc: 'mauCao', hit: 'kinetic', co: 1.12,
-    nong: { s: [31, 104], sw: [22, 101], w: [22, 88], nw: [29, 73], n: [59, 31] },
-    don: { k: 'tia', xuyen: { 1: 1, 3: 2 } },
-    hieu: [],
-    dac: { k: 'phatNap', ten: 'FOCUS', tu: 7, moi: 3, he: 2.5, xuyen: 3, ketLieu: 0 } },
-  // ---- TÍM ----
-  warp:   { bac: 'tim', ten: 'WARP', chuc: 'VOID DRONE', hanh: 'Void', kieu: 'Void Push', mo: 'Void orbs push foes back.',
-    dmg: 24, cd: 2.04, muc: 'cuoi', hit: 'kinetic', xoay: true, co: 0.92,
-    nong: { s: [65, 100] },
-    don: { k: 'dan', toc: 760 },
-    hieu: [{ k: 'day', lui: { 1: 6, 7: 12 }, r: { 1: 0, 3: 22 } }, { k: 'hut', tu: 5, moi: 5, r: 60, T: 1.2 }] },
-  // ---- VÀNG: cơ chế khác hẳn + kỹ năng chủ động chọn ô ----
-  miner:  { bac: 'vang', anh: 'broker', ten: 'BROKER', chuc: 'DATA BROKER', hanh: 'Nanite', kieu: 'Mana Broker', mo: 'Kills near its row → Energy. Tap: TRADE.',
-    dmg: 12, cd: 2.38, muc: 'dau', hit: 'kinetic', co: 1.08,
-    nong: { s: [77, 86], sw: [55, 86], w: [34, 85], nw: [34, 75], n: [35, 72] },
-    don: { k: 'dan', toc: 820 },
-    hieu: [],
-    dac: { k: 'moiGioi', ten: 'MANA', hang: 1.5, luong: { 1: 1, 3: 2, 5: 3, 7: 4 }, tranDot: { 1: 12, 3: 18, 5: 26, 7: 36 },
-      chotLoi: { tu: 7, ten: 'TAKE PROFIT', hoan: 0.3, cd: 10 },
-      chu: [{ k: 'giaoDich', tu: 3, ten: 'TRADE', cd: 20, T: 8, them: 2, chon: 'ke' },
-        { k: 'hoanDoi', tu: 5, ten: 'SWAP', cd: 20, chon: 'cungSao' }] } },
-  glitch: { bac: 'vang', ten: 'GLITCH', chuc: 'CRT HACKER', hanh: 'Hack', kieu: 'Packet Swap', mo: 'Marks + locks. Merge beside: pick 1 of 2.',
-    dmg: 24, cd: 1.87, muc: 'chuaHieu', mucHieu: 'hack', hit: 'kinetic', co: 0.96,
-    nong: { s: [57, 70], w: [28, 54], n: [39, 23] },
-    don: { k: 'dan', toc: 900 },
-    hieu: [{ k: 'hack', moi: 1, T: { 1: 3, 3: 4 }, them: { 1: 0.10, 5: 0.15 }, khoaMoi: 6, choang: 0.6 }],
-    dac: { k: 'packet', ten: 'PACKET SWAP', swapTu: 5, rerollTu: 7, choT: 4,
-      chu: [{ k: 'copyBuffer', tu: 3, ten: 'COPY BUFFER', cd: 15, T: 5, he: 0.35, chon: 'ke' }] } },
-  // PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ) — tướng PIXEL ART đầu tiên. Đập búa: quái gần nhất + văng quanh đó, làm chậm.
-  // Mỗi `moi` đòn → BIẾN HÌNH (to hơn) T giây: sát thương ×he, vùng văng ×rHe, tướng ở Ô KỀ được +ke tốc đánh trong lúc đó.
-  patchwork: { bac: 'vang', ten: 'PATCHWORK', chuc: 'STITCH BRAWLER', hanh: 'Stitch', kieu: 'Stitch Slam', mo: 'Hammer slam: splash + slow. Every 5th: BIG form, buffs adjacent.',
-    dmg: 30, cd: 1.7, muc: 'gan', tam: 1.6, hit: 'kinetic', co: 1.0,   // CẬN CHIẾN: chỉ đánh khi đứng ô sát đường (≤ TAM_CAN_CHIEN) và quái trong 1.6 ô
-    don: { k: 'dap', r: { 1: 26, 5: 32 }, van: 0.5, cham: { 1: 0.18, 5: 0.24 }, T: 1.2 },
-    hieu: [],
-    dac: { k: 'bienHinh', ten: 'STITCH UP', moi: { 1: 5, 5: 4 }, T: { 1: 4, 3: 5 }, he: 1.5, rHe: 1.4, ke: { 1: 0.15, 5: 0.25 } },
-    px: {
-      dir8: { file: 'patchwork_8dir', o: 128, thuTu: ['s', 'sw', 'w', 'nw', 'n', 'ne', 'e', 'se'] },
-      // đứng chờ = thế cầm búa hai tay (khung 1 của đòn) + thở nhẹ phần thân trên → chuyển sang đánh không đổi tư thế
-      idle: { s: { file: 'patchwork_idle_s', o: 224, ms: 260 }, se: { file: 'patchwork_idle_se', o: 224, ms: 260 }, sw: { file: 'patchwork_idle_sw', o: 224, ms: 260 },
-        w: { file: 'patchwork_idle_w', o: 224, ms: 260 }, e: { file: 'patchwork_idle_e', o: 224, ms: 260 },
-        n: { file: 'patchwork_idle_n', o: 224, ms: 260 }, ne: { file: 'patchwork_idle_ne', o: 224, ms: 260 }, nw: { file: 'patchwork_idle_nw', o: 224, ms: 260 } },
-      atk: { file: { s: 'patchwork_atk_s', se: 'patchwork_atk_se', sw: 'patchwork_atk_sw', w: 'patchwork_atk_w', e: 'patchwork_atk_e', n: 'patchwork_atk_n', ne: 'patchwork_atk_ne', nw: 'patchwork_atk_nw' }, w: 224, h: 176,
-        nhip: [200, 70, 70, 70, 70, 120, 60, 40, 160, 120, 80, 80], trung: 8,   // 12 khung ChatGPT; búa chạm đất ở khung 9
-        huong: { s: ['s', 0], se: ['se', 0], sw: ['sw', 0], w: ['w', 0], e: ['e', 0], n: ['n', 0], ne: ['ne', 0], nw: ['nw', 0] } },
-      to: 1.25 } },
+  // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
+  // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".
+  //
+  // MẪU 1 TƯỚNG MỚI (dán vào đây, ảnh pixel đặt trong demo/assets/v3/pixel/<file>.png; KHÔNG sửa game.js/render.js):
+  // tenId: { bac: 'trang', ten: 'TEN', chuc: 'CHỨC DANH', hanh: 'Plasma', kieu: 'Tên kiểu đánh', mo: 'Mô tả ngắn (tiếng Anh, hiện trên thẻ).',
+  //   dmg: 30, cd: 1.7, muc: 'dau', hit: 'kinetic', co: 1.0,          // tam: 1.6 → CẬN CHIẾN (chỉ đánh khi đứng ô sát đường)
+  //   don: { k: 'dan', toc: 900 },                                     // hoặc { k: 'chem' } · { k: 'tia', xuyen } · { k: 'dap', r, van, cham, T }
+  //   hieu: [],                                                        // hiệu ứng khi trúng (game.js HIEU)
+  //   // dac: { k: ..., chu: [...] }                                   // chỉ VÀNG/ĐỎ (game.js DAC_BIET / CHU_DONG)
+  //   px: {
+  //     dir8: { file: 'tenId_8dir', o: 128, thuTu: ['s', 'sw', 'w', 'nw', 'n', 'ne', 'e', 'se'] },             // đứng yên 8 hướng, 1 hàng ô vuông o
+  //     idle: { s: { file: 'tenId_idle_s', o: 224, ms: 260 } /* , sw: {...}, ... từng hướng có sheet thở */ },
+  //     atk: { file: { s: 'tenId_atk_s' /* , se, e, ne, n, nw, w, sw */ }, w: 224, h: 176,
+  //       nhip: [200, 70, 70, 70, 120, 160, 120], trung: 4,          // ms từng khung; sát thương ra ĐÚNG đầu khung `trung`
+  //       huong: { s: ['s', 0] /* , e: ['w', 1] = dùng sheet w lật gương */ } },
+  //     to: 1.25 } },                                                  // cỡ khi BIẾN HÌNH (nếu có)
+  // BO_MAC_DINH / BO_AI tạm lấy 5 tướng đầu; đổi thành danh sách id cụ thể khi đủ tướng.
 };
 const TUONG_IDS = Object.keys(TUONG);
-const BO_MAC_DINH = ['patchwork', 'scorch', 'frost', 'lance', 'glitch'];   // bộ chọn sẵn ở màn chọn tướng (người chơi đổi được)
-const BO_AI = ['scorch', 'frost', 'lance', 'warp', 'arc'];   // đội hình dựng sẵn của bàn AI (PVP: AI MIRROR · CO-OP: đồng đội)
+const BO_MAC_DINH = TUONG_IDS.slice(0, 5);   // (tạm: 5 tướng đầu) bộ chọn sẵn ở màn chọn tướng (người chơi đổi được)
+const BO_AI = TUONG_IDS.slice(0, 5);   // (tạm: 5 tướng đầu) đội hình dựng sẵn của bàn AI (PVP: AI MIRROR · CO-OP: đồng đội)
 const AF_AI = 'overclock';                                    // Archfiend của bàn AI
 // tên file ảnh của tướng (demo/assets/v3/<anh>.png ...)
 const TEN_FILE = (id) => (TUONG[id] && TUONG[id].anh) || id;
@@ -131,9 +81,9 @@ const AF_GIA_TRAN = 1280;
 const giaAFx2 = (goc, n) => Math.min(AF_GIA_TRAN, Math.round(goc * Math.pow(2, n)));
 const ARCHFIEND = {
   // mat: [x, y, cỡ] (tỉ lệ 0..1 theo ảnh cutin_<id>.png) — vùng MẶT để cắt avatar nhỏ ở cổng + chân dung thẻ khi chưa có archfiend_<id>.png
-  overclock: { ten: 'OVERCLOCK', mat: [0.40, 0.30, 0.42], mo: 'All heroes +35% attack speed, 6s', mau: '#ffb31a', anh: 'warp', k: 'tocDanh', he: 0.35, T: 6, cd: 30,
+  overclock: { ten: 'OVERCLOCK', mat: [0.40, 0.30, 0.42], mo: 'All heroes +35% attack speed, 6s', mau: '#ffb31a', anh: null, k: 'tocDanh', he: 0.35, T: 6, cd: 30,
     gia: (n) => giaAFx2(40, n) },
-  firewall:  { ten: 'FIREWALL', mat: [0.48, 0.25, 0.42], mo: 'Cleanse + block boss/elite effects, 6s', mau: '#3ce7ff', anh: 'glitch', k: 'tuongLua', T: 6, cd: 35,
+  firewall:  { ten: 'FIREWALL', mat: [0.48, 0.25, 0.42], mo: 'Cleanse + block boss/elite effects, 6s', mau: '#3ce7ff', anh: null, k: 'tuongLua', T: 6, cd: 35,
     gia: (n) => giaAFx2(30, n) },
 };
 const AF_IDS = Object.keys(ARCHFIEND);

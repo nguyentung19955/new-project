@@ -144,6 +144,7 @@
   // TRIỆU HỒI như DCDW: ngẫu nhiên ĐỀU nhau trong 5 tướng của bộ (bậc không ảnh hưởng), vào ô trống ngẫu nhiên; giá tăng mỗi lần
   function trieuHoi(S) {
     const tr = trong(S), g = giaTrieu(S);
+    if (!S.deck.length) return -1;   // chưa có tướng (danh sách TUONG rỗng — đang làm lại): không làm gì
     if (!tr.length || S.lk < g || S.het) return -1;
     S.lk -= g; S.triệu++;
     const i = pick(tr);

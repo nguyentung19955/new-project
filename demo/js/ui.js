@@ -67,6 +67,7 @@
   // ---- màn chọn bộ ----
   function dungChon() {
     const l = $('#chon-luoi'); l.innerHTML = '';
+    if (!TUONG_IDS.length) l.innerHTML = '<div class="ct-trong-ds" style="grid-column:1/-1;padding:24px 8px;text-align:center;opacity:.8">CHƯA CÓ TƯỚNG — ĐANG LÀM LẠI</div>';
     for (const id of TUONG_IDS) {
       const t = TUONG[id], h = HANH[t.hanh], bc = BAC[t.bac] || BAC.trang;
       const b = document.createElement('button');
@@ -134,7 +135,7 @@
     capChe();
     document.querySelectorAll('.ct').forEach((b) => { const k = chon.indexOf(b.dataset.id); b.classList.toggle('chon', k >= 0); b.querySelector('.ct-so b').textContent = k >= 0 ? k + 1 : ''; });
     $('#chon-dem').textContent = chon.length + '/5';
-    $('#nut-vao').disabled = chon.length !== 5;
+    $('#nut-vao').disabled = TUONG_IDS.length ? chon.length !== Math.min(5, TUONG_IDS.length) : false;   // chưa có tướng: vẫn vào trận được (bàn trống)
   }
 
   // ---- trận ----
@@ -185,7 +186,8 @@
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
     const g = G.giaTrieu(S), full = !G.trong(S).length;
-    set('trieu', g + '|' + (lk >= g) + full, () => { $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
+    const rong = !S.deck.length;   // chưa có tướng (đang làm lại)
+    set('trieu', g + '|' + (lk >= g) + full + rong, () => { $('#nut-trieu .tr-ten').textContent = rong ? 'CHƯA CÓ TƯỚNG' : 'SUMMON'; $('#nut-trieu').classList.toggle('rong', rong); if (rong) { $('#gia-trieu').textContent = 'đang làm lại'; $('#nut-trieu .tr-gia .ic-e').hidden = true; $('#nut-trieu').classList.add('thieu'); return; } $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
     document.querySelectorAll('.the').forEach((b) => {
       const id = b.dataset.id, bac = S.bac[id], gb = G.giaBac(S, id), mx = bac >= C.BAC_MAX;
       // số bản đang có trên bàn (góc trên trái) + "+N" = số cấp nâng được ngay với mana hiện có; MAX khi đã tối đa
@@ -233,7 +235,7 @@
     $('#kq-phu').textContent = `${thang ? `Cleared all ${COOP.DOT_MAX} waves · ` : ''}${S.giet + A.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
     // sát thương từng tướng của người chơi (theo loại tướng trong bộ) + tổng của đồng đội
     const tong = (tk) => Object.values(tk).reduce((a, b) => a + b, 0);
-    const ds = S.deck.map((id) => [id, S.tk[id] || 0]).sort((a, b) => b[1] - a[1]), mx = Math.max(1, ds[0][1]);
+    const ds = S.deck.map((id) => [id, S.tk[id] || 0]).sort((a, b) => b[1] - a[1]), mx = Math.max(1, ds.length ? ds[0][1] : 0);
     const so = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e4 ? Math.round(n / 1e3) + 'K' : Math.round(n) + '');
     const ks = $('#kq-sat');
     ks.innerHTML = '<div class="ks-ten">YOUR DAMAGE</div>' + ds.map(([id, n]) => `<div class="ks" style="--h:${HANH[TUONG[id].hanh].mau}"><span>${TUONG[id].ten}</span><i><u style="width:${Math.round(n / mx * 100)}%"></u></i><em>${so(n)}</em></div>`).join('')
@@ -253,6 +255,7 @@
     if (a === 'vao') batDau(chon);
     else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
+    else if (a === 'trieu' && S && !S.deck.length) { /* chưa có tướng — đang làm lại: không làm gì */ }
     else if (a === 'trieu' && S && !dung && !S.het) { if (G.trieuHoi(S) < 0) R.baoThieu(G.trong(S).length ? 'Not enough mana.' : 'Board is full.'); capNhat(); }
     else if (a === 'skin') { skinChon = SKIN[b.dataset.skin] ? b.dataset.skin : 'da'; try { localStorage.setItem(KY_SKIN, skinChon); } catch (er) { /* không lưu được */ } G.datSkin(skinChon, SKIN_IDS.find((k) => k !== skinChon)); capChe(); }
     else if (a === 'afchon') { afChon = b.dataset.af; try { localStorage.setItem(KY_AF, afChon); } catch (er) { /* không lưu được */ } capChe(); }
