@@ -357,8 +357,11 @@
     ngauNhien: (S, DS, v) => (v.mucNN && DS.includes(v.mucNN) ? v.mucNN : (v.mucNN = pick(DS))),   // ngẫu nhiên (giữ tới khi mục tiêu chết)
   };
   // như Defense War: mọi tướng trên bàn bắn được mọi quái trên làn của CHÍNH bàn đó (S.quai chỉ chứa quái làn này) — không giới hạn tầm
+  // TƯỚNG ĐÁNH GẦN (td.tam = tầm tính bằng số ô, đo từ tâm ô tướng): chỉ đánh quái trong phạm vi; tướng đánh xa không giới hạn
+  const trongTam = (S, i, td, o) => { if (!td.tam) return true; const [x, y] = oTam(S, i); return Math.hypot(o.x - x, o.y - y) <= td.tam * C.BUOC_X; };
   function chonMuc(S, i, v) {
-    const DS = S.quai.filter(nham); if (!DS.length) return null;
+    const td0 = T[v.id];
+    const DS = S.quai.filter((o) => nham(o) && trongTam(S, i, td0, o)); if (!DS.length) return null;
     const td = T[v.id], f = MUC[td.muc] || MUC.dau;
     return f(S, DS, v, td, i);
   }
