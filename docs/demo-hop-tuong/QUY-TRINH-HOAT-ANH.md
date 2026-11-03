@@ -2,6 +2,7 @@
 
 Đọc trước: TIEU-CHI-NGHIEM-THU-HOAT-ANH.md và BAI-HOC-LOI-SAI.md.
 
+0. **Hồ sơ nhân vật** (ho-so-tuong/<so>-<TEN>.md) — viết TRƯỚC, người dùng duyệt: vai trò/chiêu, hình dáng, màu, DANH SÁCH CHI TIẾT bắt buộc, LOẠI VŨ KHÍ và cách mang (gắn tay / cầm 1 tay / cầm 2 tay / vác vai…, tay nào), bảng vị trí vũ khí 8 hướng, động tác đánh, hiệu ứng. MỌI prompt (ảnh gốc, 8 hướng, sửa, hoạt ảnh) đều dán kèm phần mô tả ngắn của hồ sơ. Không dựa vào nhân vật cũ.
 1. **Ảnh gốc** — ChatGPT vẽ model sheet / ảnh hướng S (camera top-down cao như Defense War). Người dùng duyệt.
 2. **8 hướng bằng PixelLab** — PixelLab › Create Character › Create from Reference, Camera **High Top-Down**, 8 dir.
    - Đưa ảnh S (bản pixel sạch, ≤256px, ví dụ khung 1 đã cắt pixel) vào ô South; hướng nào đã có bản duyệt thì đưa vào đúng ô của nó.
