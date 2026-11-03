@@ -76,7 +76,10 @@ for j in range(n):
         ca=np.array(c); ca[:,:,3]=np.where(ndimage.binary_erosion(ca[:,:,3]>110,iterations=2),ca[:,:,3],0); c=Image.fromarray(ca,'RGBA')
     if SACH:   # gọt viền 2px nguồn (bỏ quầng nền trắng) trước khi thu nhỏ
         ca=np.array(c); ca[:,:,3]=np.where(ndimage.binary_erosion(ca[:,:,3]>110,iterations=1),ca[:,:,3],0); c=Image.fromarray(ca,'RGBA')
-    c2=c.resize((max(1,round(c.width*sc)),max(1,round(c.height*sc))),Image.BOX if SACH else Image.LANCZOS)
+    scj=sc
+    if os.environ.get('NORM')=='1':   # chuẩn hoá cỡ: ChatGPT vẽ khung to/nhỏ lệch nhau -> co giãn đều cả khung cho thân cao bằng khung 1
+        yb=np.nonzero(bj.any(1))[0]; scj=sc*H0/max(1,(yb[-1]-yb[0]))
+    c2=c.resize((max(1,round(c.width*scj)),max(1,round(c.height*scj))),Image.BOX if SACH else Image.LANCZOS)
     a2=np.array(c2); al=a2[:,:,3]>(140 if SACH else 110)
     q=Image.fromarray(a2[:,:,:3]).quantize(colors=(28 if SACH else 40),method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGB')
     q=np.array(q)
@@ -92,7 +95,7 @@ for j in range(n):
         lum=q.sum(2); dk=q[al][np.argmin(lum[al])] if al.any() else [20,15,20]
         q[vien]=(np.array(dk)*0.6+np.array([25,18,24])*0.4).astype(np.uint8)
     p=Image.fromarray(np.dstack([q,(al*255).astype('uint8')]),'RGBA')
-    px=round(FW/2-(ax-X0)*sc); py=round(FH-int(os.environ.get("PADB",8))-(ay-Y0)*sc)
+    px=round(FW/2-(ax-X0)*scj); py=round(FH-int(os.environ.get("PADB",8))-(ay-Y0)*scj)
     assert px>=0 and px+p.width<=FW and py>=0 and py+p.height<=FH+8,(j,px,py,p.size)
     F=Image.new('RGBA',(FW,FH),(0,0,0,0)); F.paste(p,(px,py),p); frames.append(F)
 sheet=Image.new('RGBA',(FW*n,FH),(0,0,0,0))
