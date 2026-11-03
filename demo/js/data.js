@@ -56,7 +56,7 @@ const TUONG = {
     don: { k: 'dan', toc: 800 },
     hieu: [{ k: 'bang', cham: { 1: 0.10, 3: 0.125 }, max: 3, T: { 1: 1.5, 3: 2 }, voR: { 1: 30, 5: 40 }, voDmg: 0.3 }] },
   arc:    { bac: 'trang', ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Slash', mo: '3rd slash chains lightning.',
-    dmg: 45, cd: 1.53, muc: 'gan', hit: 'electric', co: 0.90,
+    dmg: 45, cd: 1.53, muc: 'gan', tam: 1.6, hit: 'electric', co: 0.90,   // đánh gần: chỉ chém quái trong 1.6 ô
     nong: { s: [13, 84], sw: [16, 64], w: [11, 60], nw: [15, 56], n: [95, 59] },
     don: { k: 'chem' },
     hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }] },
@@ -98,7 +98,7 @@ const TUONG = {
   // PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ) — tướng PIXEL ART đầu tiên. Đập búa: quái gần nhất + văng quanh đó, làm chậm.
   // Mỗi `moi` đòn → BIẾN HÌNH (to hơn) T giây: sát thương ×he, vùng văng ×rHe, tướng ở Ô KỀ được +ke tốc đánh trong lúc đó.
   patchwork: { bac: 'vang', ten: 'PATCHWORK', chuc: 'STITCH BRAWLER', hanh: 'Stitch', kieu: 'Stitch Slam', mo: 'Hammer slam: splash + slow. Every 5th: BIG form, buffs adjacent.',
-    dmg: 30, cd: 1.7, muc: 'gan', hit: 'kinetic', co: 1.0,
+    dmg: 30, cd: 1.7, muc: 'gan', tam: 1.6, hit: 'kinetic', co: 1.0,   // đánh gần: chỉ đập quái trong 1.6 ô
     don: { k: 'dap', r: { 1: 26, 5: 32 }, van: 0.5, cham: { 1: 0.18, 5: 0.24 }, T: 1.2 },
     hieu: [],
     dac: { k: 'bienHinh', ten: 'STITCH UP', moi: { 1: 5, 5: 4 }, T: { 1: 4, 3: 5 }, he: 1.5, rHe: 1.4, ke: { 1: 0.15, 5: 0.25 } },
