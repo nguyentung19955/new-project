@@ -27,6 +27,9 @@ const BAC = {
 // Mỗi tướng:
 //   bac   : khoá trong BAC          hanh : khoá trong HANH (màu VFX)       anh : tên file ảnh trong demo/assets/v3 (mặc định = id)
 //   dmg   : sát thương 1★ LV1       cd   : giây / đòn (02/11: nhịp chậm như DCDW — cd cũ ×1.7, LANCE 2.5s; dmg cũ ×1.5 để DPS không tụt quá; OVERCLOCK vẫn +35%)                        muc  : cách chọn mục tiêu (game.js MUC): dau | cuoi | gan | dongQuai | mauCao | mauThap | mauDay | chuaHieu | ngauNhien
+//   keBuff: HỖ TRỢ 4 Ô KỀ (trên/dưới/trái/phải, không chéo): { k: 'tocDanh'|'chiMang'|'satThuong'|'lamCham', gt: số hoặc theo sao (0.2 = +20%) }
+//           cộng dồn từ nhiều tướng hỗ trợ, trần CAU_HINH.KE_TRAN. chiMang = tỉ lệ đòn ×CHI_MANG_HE; lamCham = đòn của ô được buff làm chậm quái.
+//   tam   : CẬN CHIẾN — tầm (ô) tới quái; ngoài ra ô phải sát hành lang (CAU_HINH.TAM_CAN_CHIEN)
 //   don   : kiểu ra đòn (game.js DON): { k: 'dan', toc, so } đạn bay · { k: 'chem' } đánh ngay · { k: 'tia', xuyen } tia tức thời dừng ở mục tiêu
 //   hieu  : danh sách hiệu ứng khi trúng (game.js HIEU): chay | bang | doc | hack | chuoi | hut | day | truyNa ...
 //   dac   : skill riêng VÀNG/ĐỎ (game.js DAC_BIET): moiGioi | packet | phatNap ...; `chu` = kỹ năng CHỦ ĐỘNG chọn ô (game.js CHU_DONG), mở theo sao (tu)
@@ -56,7 +59,7 @@ const TUONG = {
     don: { k: 'dan', toc: 800 },
     hieu: [{ k: 'bang', cham: { 1: 0.10, 3: 0.125 }, max: 3, T: { 1: 1.5, 3: 2 }, voR: { 1: 30, 5: 40 }, voDmg: 0.3 }] },
   arc:    { bac: 'trang', ten: 'ARC', chuc: 'VOLT BLADE', hanh: 'Voltage', kieu: 'Chain Slash', mo: '3rd slash chains lightning.',
-    dmg: 45, cd: 1.53, muc: 'gan', tam: 1.6, hit: 'electric', co: 0.90,   // đánh gần: chỉ chém quái trong 1.6 ô
+    dmg: 45, cd: 1.53, muc: 'gan', tam: 1.6, hit: 'electric', co: 0.90,   // CẬN CHIẾN: chỉ đánh khi đứng ô sát đường (≤ TAM_CAN_CHIEN) và quái trong 1.6 ô
     nong: { s: [13, 84], sw: [16, 64], w: [11, 60], nw: [15, 56], n: [95, 59] },
     don: { k: 'chem' },
     hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }] },
@@ -98,7 +101,7 @@ const TUONG = {
   // PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ) — tướng PIXEL ART đầu tiên. Đập búa: quái gần nhất + văng quanh đó, làm chậm.
   // Mỗi `moi` đòn → BIẾN HÌNH (to hơn) T giây: sát thương ×he, vùng văng ×rHe, tướng ở Ô KỀ được +ke tốc đánh trong lúc đó.
   patchwork: { bac: 'vang', ten: 'PATCHWORK', chuc: 'STITCH BRAWLER', hanh: 'Stitch', kieu: 'Stitch Slam', mo: 'Hammer slam: splash + slow. Every 5th: BIG form, buffs adjacent.',
-    dmg: 30, cd: 1.7, muc: 'gan', tam: 1.6, hit: 'kinetic', co: 1.0,   // đánh gần: chỉ đập quái trong 1.6 ô
+    dmg: 30, cd: 1.7, muc: 'gan', tam: 1.6, hit: 'kinetic', co: 1.0,   // CẬN CHIẾN: chỉ đánh khi đứng ô sát đường (≤ TAM_CAN_CHIEN) và quái trong 1.6 ô
     don: { k: 'dap', r: { 1: 26, 5: 32 }, van: 0.5, cham: { 1: 0.18, 5: 0.24 }, T: 1.2 },
     hieu: [],
     dac: { k: 'bienHinh', ten: 'STITCH UP', moi: { 1: 5, 5: 4 }, T: { 1: 4, 3: 5 }, he: 1.5, rHe: 1.4, ke: { 1: 0.15, 5: 0.25 } },
@@ -123,12 +126,15 @@ const TEN_FILE = (id) => (TUONG[id] && TUONG[id].anh) || id;
 // ARCHFIEND (ô thẻ thứ 6): kỹ năng chủ động dùng Energy, giá tăng sau mỗi lần dùng, có hồi chiêu. Chọn ở màn chọn tướng; bot AI cũng dùng.
 //   k: 'tocDanh' = cả bàn đánh nhanh hơn (he) trong T giây · 'tuongLua' = xoá hiệu ứng trùm/tinh anh trên tướng + chặn hiệu ứng mới trong T giây
 //   gia(n): giá lần dùng thứ n (n = số lần đã dùng) · cd: hồi chiêu (giây) · anh: chân dung tạm (portrait_<anh>.png)
+// LUẬT NỀN DCDW: mỗi lần dùng Archfiend giá ×2 (giá gốc → ×2 → ×4 ...), trần AF_GIA_TRAN mana
+const AF_GIA_TRAN = 1280;
+const giaAFx2 = (goc, n) => Math.min(AF_GIA_TRAN, Math.round(goc * Math.pow(2, n)));
 const ARCHFIEND = {
   // mat: [x, y, cỡ] (tỉ lệ 0..1 theo ảnh cutin_<id>.png) — vùng MẶT để cắt avatar nhỏ ở cổng + chân dung thẻ khi chưa có archfiend_<id>.png
   overclock: { ten: 'OVERCLOCK', mat: [0.40, 0.30, 0.42], mo: 'All heroes +35% attack speed, 6s', mau: '#ffb31a', anh: 'warp', k: 'tocDanh', he: 0.35, T: 6, cd: 30,
-    gia: (n) => Math.round(40 * Math.pow(1.6, n)) },
+    gia: (n) => giaAFx2(40, n) },
   firewall:  { ten: 'FIREWALL', mat: [0.48, 0.25, 0.42], mo: 'Cleanse + block boss/elite effects, 6s', mau: '#3ce7ff', anh: 'glitch', k: 'tuongLua', T: 6, cd: 35,
-    gia: (n) => Math.round(30 * Math.pow(1.6, n)) },
+    gia: (n) => giaAFx2(30, n) },
 };
 const AF_IDS = Object.keys(ARCHFIEND);
 
@@ -197,7 +203,11 @@ const CAU_HINH = {
   FX_NHO_MAX: 16,       // tối đa 16 hiệu ứng trúng đòn nhỏ cùng lúc
   DAI_CU: 1272,         // chiều dài đường quái bản ngang cũ (px) — tốc độ quái nhân (dài làn / DAI_CU) để thời gian đi hết làn như cũ
   SAO_MAX: 7, BAC_MAX: 5, MANG: 3, LK_DAU: 100,
-  giaTrieu: (n) => 10 + 6 * n,                         // giá Summon lần thứ n (n = số lần đã triệu) — tăng dần như DCDW
+  giaTrieu: (n) => 10 * (n + 1),                       // LUẬT NỀN DCDW: lần triệu hồi thứ n giá 10n (10, 20, 30...) — n ở đây = số lần ĐÃ triệu, reset đầu trận
+  // CẬN CHIẾN (TUONG[id].tam): chỉ ra đòn nếu tâm ô cách TÂM HÀNH LANG ≤ TAM_CAN_CHIEN × cạnh ô (BUOC_X); quái phải trong td.tam ô
+  TAM_CAN_CHIEN: 1.25,
+  // HỖ TRỢ 4 Ô KỀ (TUONG[id].keBuff): trần tổng buff một ô nhận được (GDD mục 1.4): tốc đánh +150%, sát thương +200%, làm chậm 60%, chí mạng 100%
+  KE_TRAN: { tocDanh: 1.5, satThuong: 2.0, lamCham: 0.6, chiMang: 1 }, CHI_MANG_HE: 2,
   giaBac: (b) => [80, 160, 300, 500, 800][b],          // giá nâng cấp LOẠI tướng b → b+1 (áp dụng cho mọi bản sao loại đó)
   heSoSao: (s) => Math.pow(2.2, s - 1),
   heSoBac: (b) => 1 + 0.4 * b,
@@ -227,9 +237,9 @@ CAU_HINH.SKIN_NG = 'da'; CAU_HINH.SKIN_AI = 'bang';   // skin bàn dưới (ngư
 // w = số wave (1..70)
 const COOP = {
   DOT_MAX: 70,          // qua (dọn sạch) wave 70 = thắng
-  MANG: 10,             // mạng dùng chung
+  MANG: 1,              // LUẬT NỀN DCDW (Infinite Defense): CHỈ 1 QUÁI LỌT TỚI CỔNG LÀ THUA (trước: 10 mạng)
   MAT_QUAI: 1,          // mạng mất khi 1 quái thường lọt
-  MAT_BOSS: 3,          // mạng mất khi trùm lọt
+  MAT_BOSS: 1,          // mạng mất khi trùm lọt
   NGHI: 2.5,            // nghỉ giữa 2 wave (giây), sau khi dọn sạch
   AI_NHIP: [1.2, 0.8],  // đồng đội AI làm 1 việc mỗi 1.2–2.0 giây (nhỏ hơn = AI nhanh tay hơn)
   AI_SAT_THUONG: 0.35,  // sát thương đồng đội AI × 0.35 — quái đi qua bàn trên trước, AI mạnh quá thì người chơi không còn gì để bắn

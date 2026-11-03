@@ -1,0 +1,208 @@
+Neon Grid Gdd Dcdw Free Style Vi
+NEON GRID — GAME DESIGN DOCUMENT v0.1
+Nền tảng DCDW / Random Dice + kỹ năng FREE STYLE
+Ngày: 03/11/2026 | Tiếng Việt | Tài liệu thiết kế phục vụ prototype và cân bằng
+
+QUY ƯỚC ĐỌC
+[XÁC NHẬN DCDW] = có nguồn tham chiếu hỗ trợ trực tiếp.
+[THEO BRIEF] = dữ kiện DCDW/ý định do đội game cung cấp, chưa xác minh độc lập từng con số.
+[ĐỀ XUẤT NG] = số liệu hoặc quy tắc thiết kế mới của NEON GRID, KHÔNG phải số liệu DCDW.
+[KHÔNG CHẮC] = chưa có đủ nguồn để khẳng định chi tiết bản gốc.
+Các chỉ số là baseline thử nghiệm, không phải tuyên bố đã cân bằng. “Sao” là chỉ số 1–7 trong trận; “bậc màu” là độ hiếm sưu tập, KHÔNG tăng khi ghép.
+
+0. KẾT LUẬN THIẾT KẾ
+Giữ sự thú vị cốt lõi: triệu hồi ngẫu nhiên → nhận diện thế trận → ghép đánh đổi số lượng lấy chất lượng → tối ưu vị trí → dùng mana có cơ hội phí → đối phó boss phá bàn. Không làm hệ class MMO hay đặt quân tự do vì sẽ phá trải nghiệm Random Dice. Sự độc đáo nằm ở “luật dị thường” VÀNG/ĐỎ, có câu đố đội hình rõ và phản tác dụng có thể đoán trước, không phải tăng damage khổng lồ. Thiết kế cho thao tác một ngón trên màn hình dọc, 5 cột x 3 hàng, nhịp trận nhanh. Giữ 9 nhân vật sẵn có và bổ sung 15 nhân vật mới = 24.
+
+1. LUẬT GỐC VÀ BỘ THÔNG SỐ NEON GRID
+1.1. Xác thực tham chiếu DCDW
+- [XÁC NHẬN DCDW] Mỗi bên mang 5 Child + 1 Archfiend, quân triệu hồi ngẫu nhiên từ 5 Child, một bàn tối đa 15 quân. Đầu trận quân mới là 1 sao; ghép 2 quân CÙNG LOẠI và CÙNG SAO, cho 1 quân +1 sao (tối đa 7), loại kết quả ngẫu nhiên từ bộ 5, không bảo đảm giữ loại cũ. Vị trí ghép ảnh hưởng tới bố cục. Nguồn: NamuWiki + BlueStacks + MobyGames.
+- [XÁC NHẬN DCDW] Giá triệu hồi đầu tiên = 10 mana, sau mỗi lần triệu hồi cộng 10 mana; lần n giá 10n. Quân tối đa 15. Dùng mana còn để nâng cấp sức mạnh một loại tướng trong trận và kích hoạt Archfiend. Nguồn: NamuWiki + BlueStacks.
+- [XÁC NHẬN DCDW] PvP: giết quái bên mình tạo quái cho bên đối thủ; 3 tim, hết tim trước thua. Có quái lớn gây mất 2 tim khi lọt. Co-op Infinite Defense: 2 người chống wave; theo mô tả nguồn DCDW, 1 quái tới cửa ra là kết thúc. Nguồn: NamuWiki.
+- [THEO BRIEF; KHÔNG CHẮC về công thức bản gốc] Mỗi lần dùng Archfiend tăng giá x2; lấy làm luật NG ở prototype, KHÔNG khẳng định mọi phiên bản DCDW đều như thế.
+- [XÁC NHẬN DCDW] Boss có thể đảo loại quân, đóng băng, hóa đá, ép ghép, giảm sao/hủy quân và gọi quái. Chi tiết phụ thuộc từng boss, không sao chép trực tiếp tên hay cơ chế nguyên xi vào NEON GRID.
+- [THEO BRIEF] Mô hình hỗ trợ buff 4 ô kề trên/dưới/trái/phải; một số melee phải nằm sát đường để đánh. Áp dụng thành luật NG bên dưới; KHÔNG mặc định tầm đánh DCDW dùng số ô cố định cho mọi melee.
+
+1.2. Luật đề xuất NG v0.1 — mã hóa được ngay
+- Bàn 5 cột x 3 hàng = 15 ô. Mỗi người deck đúng 5 tướng khác nhau + 1 Archfiend; có thể chứa 0–15 quân. Triệu hồi sinh vào 1 ô rỗng ngẫu nhiên; chọn quân ngẫu nhiên đều 20% trong 5 loại (có seed cho replay).
+- Mana mở trận: 100 mỗi bên; mana giới hạn tích trữ: 5.000; mỗi quái thường hạ: +10 mana, quái nhanh +8, quái giáp +15, elite +25, boss +100 (trong PvP số được điều chỉnh theo wave). Không cộng mana thụ động giai đoạn prototype. Những con số này HOÀN TOÀN là đề xuất NG.
+- Chi phí triệu hồi thứ n = 10n (10, 20, 30...); bộ đếm không reset giữa wave, chỉ reset đầu trận. Giá nâng cấp loại tướng: cấp trận 0→1 = 100 mana; 1→2 = 200; 2→3 = 400; 3→4 = 700; tối đa cấp 4. Nâng cấp áp dụng cho mọi bản sao cùng loại trong trận, không thay sao.
+- Kéo thả A vào B nếu cùng loại/cùng sao và sao < 7: tiêu thụ cả 2, sinh quân mới tại ô B sao +1 và loại ngẫu nhiên trong deck; ô A rỗng. Nếu A/B khác loại hoặc khác sao, không ghép (trừ kỹ năng ngoại lệ định nghĩa rõ). 7 sao không ghép bình thường; nếu bàn 15 ô đầy và không có cặp hợp lệ, có nút cứu “Tái biên dịch” 1 lần/trận: mất 250 mana, thay ngẫu nhiên một quân 1–3 sao thành quân cùng sao từ deck, đảm bảo không làm kẹt mềm; phiên bản rank có thể tắt sau playtest.
+- Tăng sao có ích nhưng không bảo đảm tăng DPS: Số đạn/số tia cơ bản theo sao = 1,2,3,4,5,6,7; để tránh nổ hình ảnh, gom nhiều tia thành một animation kèm nhãn xN. Đánh vật lý/hỏa/băng/độc/điện dùng damage theo đơn vị D, baseline mỗi đòn sao 1 = 40D. Tính DPS gần đúng = damage/đòn * tốc độ * số tia * modifier; mỗi quân có base riêng bên dưới.
+- Quy ước stat rõ: dmg ghi dưới đây = sát thương của mỗi viên/tia ở sao 1, tốc = đòn/giây trước buff; sao s tạo tối đa min(s,7) tia vào mục tiêu theo luật từng unit. Để giảm outlier, từ sao 4 trở lên số tia vào CÙNG 1 mục tiêu có hiệu quả 80% từ tia thứ 4. Cấp nâng trận cộng 20% damage mỗi cấp (cấp 4 = 1,8x). Buff cùng loại có trần chung theo mục 1.4.
+- Nâng sao không tăng trực tiếp tầm tấn công mặc định; chỉ skill riêng tăng. Chiếm chỗ là tài nguyên: một quân 6 sao vẫn chỉ giữ 1 ô. Quân bị khống chế vẫn chiếm chỗ.
+- Mỗi wave PvP dài 30 giây, 5 giây chuẩn bị giữa wave, boss xuất hiện ở wave 5,10,15... (đề xuất NG, KHÔNG phải lịch DCDW). PvP tối đa 12 phút, sau 12 phút quái tăng tốc/HP khiến trận kết thúc. Quái thường rò = -1 tim, elite/boss rò = -2 tim, bắt đầu 3 tim. Lượng quái gửi đối thủ: mỗi 3 kill thường tạo 1 quái thường thêm ở đối thủ sau 1,5 giây; quái elite hạ gửi 1 quái nhanh. Có giới hạn 8 quái gửi/s để không tạo vòng phản hồi vô hạn.
+- Quái HP mẫu: wave w, quái thường = 90 * 1,18^(w-1), nhanh = 0,65 lần HP và tốc 1,6 lần, giáp = 2,4 lần HP và tốc 0,75 lần. Boss PvP = 20 lần HP quái thường, cap tăng lực sau wave 10. Các hệ số PHẢI tuning qua mô phỏng, không phải số DCDW.
+
+1.3. Mục tiêu, đường đi và melee
+- Đường quái là một polyline liên tục vòng quanh bàn, không đi vào ô đặt quân. Mỗi quái có progress p theo chiều dài đường từ 0 tới 1. “Đầu đường” = quái có progress p CAO NHẤT (gần thoát nhất), không phải quái ở gần điểm xuất phát.
+- Toàn đường = được chọn bất kỳ quái đang đi trên polyline, không bị cản địa hình; không có tầm bán kính. Các target rule: FIRST (progress cao nhất), LAST (thấp nhất), STRONG (HP tối đa cao nhất), LOW (HP hiện tại thấp nhất), RANDOM (seed).
+- Cận chiến ở mép = quân chỉ tấn công nếu ô đặt nằm sát đường và khoảng cách từ tâm ô tới điểm gần nhất trên path ≤ 1,25 cạnh ô. Quân cận chiến đặt sâu vào giữa vẫn đứng được nhưng KHÔNG ra đòn; UI tô ô hợp lệ khi người chơi kéo quân; vì triệu hồi ngẫu nhiên, melee được thêm “đổi chỗ” đặc quyền NG: mỗi trận 2 lượt đổi vị trí 2 quân cùng sao bất kỳ với giá 40/80 mana, CD 8s, không kích hoạt on-merge. Không nên bắt người chơi chịu một quân cận chiến bất lực do RNG đầu trận.
+- Định nghĩa “4 kề” = Manhattan distance = 1 trên 5x3, tối đa 4 ô; chéo không tính. Các ô ngoài mép không tồn tại. Ô đường đi không được tính là ô bàn.
+- AoE bán kính dùng đơn vị cạnh ô, nổ 0,8 ô; sát thương hiệu ứng thứ cấp có tối đa 6 mục tiêu trừ khi ghi khác.
+
+1.4. Khung chống mất cân bằng
+- Tốc đánh buff cộng gộp theo dạng (1 + tổng bonus), trần +150%; damage buff trần +200%; giảm tốc quái tối đa 60%; DOT độc/cháy của cùng tướng refresh thời lượng, các tướng khác có thể cộng nhưng tổng DOT tối đa 25% HP boss/10 giây.
+- “Giảm sao” từ boss không đưa 1 sao thành 0 trừ skill có chữ HỦY; bảo vệ tướng 7 sao: mỗi boss chỉ có thể hạ tối đa 1 sao một mục tiêu mỗi 15 giây. Không bao giờ ép hành động UI không thể hoàn tác tức thì mà không báo trước.
+- Proc tính mỗi “chu kỳ bắn” thay vì mỗi tia; tránh tăng xác suất theo sao vô hạn. Tướng VÀNG/ĐỎ không mặc định có chỉ số cao hơn 5 lần; mạnh nhờ điều kiện bàn/cơ chế và có downside.
+- Trạng thái đóng băng/đá/niêm phong dùng registry; purge chỉ gỡ tag có thể xóa. Sát thương gắn sourceId, effectId, cooldown và event seed để replay.
+
+2. DANH SÁCH ĐÚNG 24 TƯỚNG / 5 BẬC
+Phân bổ: TRẮNG 5; LAM 5; TÍM 5; VÀNG 5; ĐỎ 4 = 24. 9 nhân vật có sẵn: SCORCH, FROST, ARC, LANCE, WARP, BROKER, GLITCH, VENOM, PATCHWORK. Bậc màu là độ hiếm, độc lập 1–7 sao. Tất cả con số dưới đây đều [ĐỀ XUẤT NG]. Tất cả tướng chưa ghi ngoại lệ: số tia bắn theo sao; skill “mỗi X sao” tính trên sao hiện tại và nâng cấp tức thì. Nếu skill không nói tăng khả năng theo sao, chỉ damage/tia tăng theo quy tắc chung.
+
+BẬC TRẮNG — 5 quân dễ hiểu, dạy nền
+01 SCORCH [CŨ] — TRẮNG — công kích/cháy. Target FIRST; tầm toàn đường; cơ bản 32 dmg, 1,0 đòn/s. Mỗi đòn gây Cháy 8 dmg/s trong 3 giây; từ 3★ cháy có 20% lan sang 1 quái trong 0,8 ô; từ 5★ lan tối đa 2. Vai trò: dọn quái đầu game, dạy DOT. Điểm yếu: kém trước quái miễn cháy.
+02 ARC [CŨ] — TRẮNG — cận chiến sét. Target FIRST trong tầm; tầm melee 1,25 ô, chỉ ô sát đường; 55 dmg, 1,2 đòn/s. 2★ đánh lan sang 1 quái liền kề ở 50% dmg; 4★ lan 2; 6★ lan 3. Nếu không tiếp cận đường, UI cảnh báo đỏ. Vai trò: học đặt vị trí.
+03 SENTINEL [MỚI] — TRẮNG — sát thương ổn định. FIRST, toàn đường, 45 dmg, 0,9/s. Mỗi 3★ thêm một lần “đánh dấu” 10% dmg lên FIRST trong cùng chu kỳ (không nhân proc). Tướng baseline làm mốc DPS.
+04 PULSE [MỚI] — TRẮNG — tấn công phụ/lan. FIRST, toàn đường, 24 dmg, 0,85/s; nổ trong 0,65 ô, từ 3★ bán kính +0,1 ô, từ 5★ nổ thêm lần thứ hai ở 35% dmg, giới hạn 5 mục tiêu. Giải quyết bầy đàn.
+05 ANCHOR [MỚI] — TRẮNG — hỗ trợ thủ thành. Không bắn; buff 4 kề: +8% tốc đánh mỗi 2★ (1–2★ +8%, 3–4★ +16%, 5–6★ +24%, 7★ +32%); trần riêng 1 ANCHOR nhận trên một ô. Dạy hình học bàn.
+
+BẬC LAM — 5 quân chuyên trị tình huống
+06 FROST [CŨ] — LAM — làm chậm. FIRST, toàn đường, 20 dmg, 0,9/s; làm chậm 18% trong 2 giây; tại 3★ lên 25%, 5★ lên 32%, 7★ 38%; không cộng dồn nhiều FROST, lấy hiệu ứng mạnh nhất.
+07 VENOM [CŨ] — LAM — độc & combo. STRONG, toàn đường, 18 dmg, 0,8/s; độc 10 dmg/s trong 4 giây; 3★ độc giảm giáp mục tiêu 8%, 5★ tăng 14%, 7★ 20%; boss chỉ nhận 50% hiệu lực phá giáp. Synergy với LANCE.
+08 BROKER [CŨ] — LAM — kinh tế. Không bắn, không chọn mục tiêu; cuối mỗi wave nhận 6 mana mỗi sao, cap tổng 100 mana/wave từ mọi BROKER; 3★ tạo 1 cashback 25 mana khi người chơi dùng ≥200 mana nâng cấp (CD 20s); 6★ cashback 45. Không tăng mana theo mỗi tia. Downside: mất DPS trực tiếp.
+09 MARKSMAN [MỚI] — LAM — diệt giáp. STRONG, toàn đường, 80 dmg, 0,55/s; đạn xuyên giáp 20%; mỗi 2★ +5% xuyên giáp, max 35%. Có giới hạn 3 mục tiêu mỗi chu kỳ khi bắn nhiều tia. Khắc chế elite.
+10 SPARK [MỚI] — LAM — hỗ trợ sét. Không bắn; buff 4 kề: +10% chí mạng (sát thương crit = 1,5x) cho 1–2★, +15% tại 3–4★, +20% tại 5–6★, +25% 7★; nhiều SPARK chỉ lấy nguồn mạnh nhất. Synergy ARC/LANCE, cạnh tranh ô.
+
+BẬC TÍM — 5 quân vận hành combo
+11 LANCE [CŨ] — TÍM — bắn xuyên mục tiêu chủ lực. Target STRONG, toàn đường; 110 dmg, 0,45/s; mỗi viên xuyên dọc đường tối đa 3 mục tiêu, giảm 20% dmg sau mỗi mục tiêu; từ 3★ xuyên 4, 5★ xuyên 5, 7★ xuyên 6; tấn công kẻ có Độc +20% (không copy Aten +300%). Đòi hỏi đủ tốc đánh.
+12 WARP [CŨ] — TÍM — drone kéo đội hình quái. Target FIRST, toàn đường, 16 dmg, 0,65/s; mỗi 5 giây tạo vi-trường kéo quái tiến ngược tối đa 0,04 chiều dài đường, tối đa 4 quái, boss giảm hiệu lực 75%; 3★ thời gian 4,5s; 5★ 4s; 7★ 3,5s. Không được kéo quái vượt ra ngoài đường/qua điểm spawn.
+13 GLITCH [CŨ] — TÍM — khống chế khi ghép. Không bắn; merge-trigger: PvP gây “nhiễu” 1 quân đối thủ ngẫu nhiên trong 2s khiến giảm 30% tốc đánh, KHÔNG mất sao; co-op buff ngẫu nhiên 1 quân đồng đội +20% tốc đánh 5s. Mốc 3★ tăng 2 mục tiêu (nếu có), 5★ kéo dài 3s/7s, 7★ ba mục tiêu. Chỉ kích hoạt khi GLITCH là A hoặc B trong ghép hợp lệ; cap 1 proc/3s trên mỗi người.
+14 VOLTWEAVER [MỚI] — TÍM — combo theo điện. FIRST, toàn đường, 35 dmg, 1,0/s; mỗi kẻ bị ARC đánh nhận 1 Điện tích (tối đa 5, tồn 4s); VOLTWEAVER tiêu 3 Điện tích gây thêm 90 dmg AoE 0,8 ô; 3★ ngưỡng 2 Điện tích, 6★ nổ thêm 1 quái. Không phụ thuộc cùng 1 loại để chơi được: tự tích 1 điện tích mỗi 4 lần bắn.
+15 CHRONO [MỚI] — TÍM — hỗ trợ nhịp thời gian. Không bắn; buff 4 kề: sau mỗi 12 giây quân kề được +35% tốc đánh trong 3 giây; 3★ chu kỳ 10s; 5★ buff 4s; 7★ chu kỳ 8s; các CHRONO lên cùng ô không làm mới trước thời hạn. Định hình đội hình burst.
+
+BẬC VÀNG — 5 quân “phá luật” có câu đố, không sao chép DCDW
+16 PATCHWORK [CŨ] — VÀNG — biến hình cận chiến, vũ khí búa. FIRST trong melee 1,25 ô, chỉ ô sát đường; dạng gấu 70 dmg, 0,75/s. Mỗi lần 2 quân BẤT KỲ ghép trong 4 kề của PATCHWORK, thu 1 Mảnh Vải; 3 Mảnh => hóa “Gấu Khâu Chiến” 10 giây: phạm vi cận chiến tăng 1,25→1,8 ô, búa AoE 1 ô, +60% dmg; tiêu cả 3 Mảnh. Sao tăng CAP mảnh: 1–2★ cap 3, 3–4★ cap 4 (giảm yêu cầu biến hình còn 3), 5–7★ dạng biến hình +20% tốc đánh; không tự trigger từ merge của chính mình nếu nó biến mất. Downside: chiếm ô mép, phải kích hoạt bằng nhịp merge xung quanh.
+17 MIRRORBYTE [MỚI] — VÀNG — “bóng thời điểm”, không copy Child. Target FIRST, toàn đường, 28 dmg, 0,8/s. Mỗi khi tổng số SAO trên bàn chạm một số nguyên tố trong {11,17,23,29,37,43}, MIRRORBYTE ghi “snapshot” 1 quân cùng hàng có DPS cao nhất, rồi trong 5s phát 1 đòn PHỤ mô phỏng 35% damage cơ bản của quân đó mỗi 2s (không sao chép skill/proc/merge); 3★ 45%, 5★ 55%, 7★ 65%. Không kích lại cùng mốc sao hai lần/trận. Downside: cần kiểm soát tổng sao, hiệu quả giảm sau khi đã đi qua mốc.
+18 RAILSHIFT [MỚI] — VÀNG — chơi hình học/hàng-cột. Target FIRST, toàn đường, 42 dmg, 0,8/s. “Đường ray”: nếu có ít nhất 3 quân LIÊN TỤC trong cùng hàng với RAILSHIFT, các quân đó nhận +12% tốc đánh; nếu RAILSHIFT ở cột giữa (cột 3) và 2 quân khác cùng cột thì RAILSHIFT phóng 1 phát xuyên 3 quái mỗi 6s. 3★ bonus hàng +16%, 5★ xuyên 4, 7★ bonus hàng +20%. Hai cấu hình cùng đạt được thì kích hoạt đồng thời nhưng buff cộng dồn bị cap. Downside: cần vị trí chuẩn, phải bỏ bớt ô tối ưu loại khác. Khác bingo kín hàng/cột của DCDW vì yêu cầu CHUỖI LIỀN KỀ và ô giữa, không kín cả hàng/cột.
+19 TAXON [MỚI] — VÀNG — lãi mana theo nhịp quyết định. Không bắn. Mỗi 20 giây, nếu trong 8 giây trước KHÔNG triệu hồi, tạo “Trái phiếu” = 30 mana + 5 mana * sao, đưa vào ví khoá; lần triệu hồi tiếp theo hoàn lại trái phiếu sau khi trả giá; 3★ tích tối đa 2 trái phiếu, 5★ mỗi trái phiếu +20, 7★ thêm +30. Max hoàn 120 mana / 20s / người. Downside: phải lựa chọn giữ mana và chậm triển khai, không tạo mana vô hạn. Không giống Syrinx tạo mana thuần túy theo kích hoạt.
+20 HEXFORGE [MỚI] — VÀNG — sửa lỗi RNG qua vị trí. Target STRONG, toàn đường, 60 dmg, 0,65/s. Sau khi chính HEXFORGE được tạo ra bởi ghép, nó “khắc” ô hiện tại 12 giây; ghép một cặp KHÁC trên ô được khắc trong thời gian đó cho phép chọn 1 trong 2 quân kết quả ngẫu nhiên (hiện 2 thẻ chọn trong 2 giây, không chọn thì lấy thẻ trái), cùng sao đúng luật. 3★ khắc 15s, 5★ 18s, 7★ 22s; mỗi người tối đa 1 ô khắc hoạt động, CD 20s giữa hai lần sử dụng để chống reroll vô hạn. Downside: xác suất và thao tác chọn có giới hạn; chỉ 2 kết quả chứ không chọn tùy ý.
+
+BẬC ĐỎ — 4 quân “thay đổi quy luật”, có điều kiện và phanh an toàn
+21 PARADOX [MỚI] — ĐỎ — bảo toàn sao bằng nợ tương lai. Target FIRST, toàn đường, 40 dmg, 0,9/s. Mỗi 30 giây, nếu PARADOX ≥3★ và ô kề có 1 quân 1–3★, người chơi có thể bấm “Ứng trước”: chuyển 1 sao từ PARADOX sang quân kề (không vượt 7★), PARADOX giảm 1 sao, quân được tăng 1 sao mà KHÔNG đổi loại. Sau 15s nếu PARADOX còn sống, hoàn lại 1 sao CHO PARADOX, nhưng trừ 100 mana; không đủ mana thì PARADOX bị khóa bắn 5s. 5★ cooldown 25s, 7★ 20s; không thể tự tạo sao vô hạn vì sao ứng trước là tạm thời và chỉ 1 khoản nợ/người. Biến cố boss giảm sao có thể khiến khó trả nợ, chủ động tính toán.
+22 EVENT HORIZON [MỚI] — ĐỎ — biến đường đi thành cơ hội. Target STRONG, toàn đường, 50 dmg, 0,7/s. Khi 1 quái vượt điểm 70% đường, kích hoạt “Ranh giới” trong 4s: quái ở khoảng 70–85% bị giảm tốc 25% và nhận +25% damage; CD 18s toàn đội. Tại 3★ vùng 65–85%, 5★ kéo dài 5s, 7★ +35% damage. Mỗi 10s chỉ một field từ mọi EVENT HORIZON; không thay đường đi, không block vô hạn. Downside: chỉ mạnh lúc nguy cấp, không hỗ trợ dồn sát thương từ đầu.
+23 OATHENGINE [MỚI] — ĐỎ — đặt cược vào “hy sinh một ô”. Không bắn, buff 4 kề. Khi bàn có ≥10 quân và OATHENGINE ≥3★, người chơi có thể bấm “Khế ước” (CD 35s): hiến tế 1 quân kề 1–3★ (người chơi chọn), nhận +25% damage cho 4 quân kề còn lại trong 12s; bonus +10% cho mỗi sao của quân hiến tế (tối đa +55%). Tướng hiến tế không biến thành quân mới; ô trống hoàn toàn. 5★ giữ 15s, 7★ hoàn 50 mana sau kích hoạt. Không thể hiến tế PARADOX đang nợ; không kích on-merge. Downside rõ ràng: giảm quân, hao tài nguyên.
+24 NULL ORACLE [MỚI] — ĐỎ — đọc trước RNG có giới hạn. Target FIRST, toàn đường, 35 dmg, 0,8/s. Khi NULL ORACLE ≥2★, mỗi 25s hiển thị 2 biểu tượng tướng dự kiến cho 2 LẦN TRIỆU HỒI KẾ TIẾP (đã khóa seed theo trận). Một lần/trận, có thể đảo thứ tự 2 lượt triệu hồi dự kiến bằng nút “Hoán vị”, tốn 80 mana; từ 4★ tốn 60 mana, 6★ tốn 40; 7★ cho phép 2 lần/trận, lần 2 tốn 100 mana. KHÔNG reroll kết quả ghép, KHÔNG nhìn đối thủ, KHÔNG tạo tướng ngoài bộ. Đây là điều khiển THỨ TỰ ngẫu nhiên, không phải sao chép hay biến hình kiểu DCDW. Downside: chiếm 1 ô cho ít DPS; phải đủ mana để tận dụng tiên đoán.
+
+2.1. Những phép thử synergy và phản synergy quan trọng
+- FROST + LANCE: làm chậm bầy để rail xuyên nhiều mục tiêu; SCORCH + VENOM: DOT đa nguồn nhưng dính cap boss.
+- ARC ở mép + VOLTWEAVER: vòng điện tích. PATCHWORK ở mép + GLITCH hoặc HEXFORGE: muốn merge liên tục quanh gấu nhưng xóa quân có thể phá đội hình.
+- ANCHOR/SPARK/CHRONO quanh LANCE: bài toán không gian 4 kề. RAILSHIFT tranh cùng ô giữa nên có quyết định thực.
+- BROKER + TAXON: dễ thiếu DPS ban đầu; cần Sentinel/Lance. MIRRORBYTE cần kiểm soát tổng sao nhưng phải tránh chiến thuật cố tình chết để kích lại (mốc mỗi trận chỉ 1 lần).
+- PARADOX + OATHENGINE: cấm hiến tế quân liên quan khoản nợ để không exploit; NULL ORACLE và HEXFORGE đều giảm RNG nhưng đánh đổi 2 slot deck, thiết kế cho “bộ kiểm soát vận may”.
+- Điều kiện FREE STYLE tốt: có thể đọc bằng 1 câu, có hiển thị tiến độ trên bàn, có thời điểm “wow”, có counterplay; tránh kỹ năng tùy tiện phá sạch bàn mà không dự báo.
+
+3. SÁU ARCHFIEND ĐỘC QUYỀN NEON GRID
+[ĐỀ XUẤT NG] Chỉ chọn 1/trận, phát lệnh qua nút riêng. Giá lần dùng k = giá gốc * 2^(k-1), làm tròn số nguyên; không tự reset khi đổi wave. Bảng giá minh họa nếu base=80: 80→160→320→640. Để tránh kỹ năng vô dụng cuối trận, cap chi phí tối đa 1.280 mana; áp dụng CHUNG 6 Archfiend. CD độc lập tính từ lúc cast, mana trừ khi cast thành công, không cast khi thiếu mana hoặc hết mục tiêu hợp lệ.
+A1 HELIX — “Hạt Giống Sai Lệch” | base 80 | CD 35s. Triệu hồi 2 quân 1★ ngẫu nhiên vào ô trống với phí đã tính; nếu chỉ 1 ô trống, tạo 1 quân và hoàn 30% mana đã trả; nếu 0 ô, không cast. Khác Hero DCDW về theme, nhưng cùng vai trò kinh tế triệu hồi, cần xem như cơ chế tham khảo chứ không tuyên bố độc nhất.
+A2 SOLARIS — “Quá Tải Lõi” | base 100 | CD 45s. Toàn bộ quân tấn công +55% damage trong 8s, đồng thời +10% tốc quái trong 8s. Dùng lúc boss hoặc khẩn cấp. Không phải buff vô điều kiện +200%.
+A3 AEGIS-9 — “Rollback Khiên” | base 90 | CD 40s. Gỡ hiệu ứng có thể thanh tẩy cho tối đa 4 quân bị debuff nặng nhất và cho khiên chặn 1 hiệu ứng boss trong 8s; khiên không chặn ép ghép quy tắc đặc biệt nếu hiệu ứng ghi “không thể chặn”. Dạy phản ứng cảnh báo.
+A4 SWITCHWITCH — “Trao Đổi Khe Nứt” | base 60 | CD 20s. Chọn 2 ô có quân, đổi vị trí không đổi loại/sao, kể cả khác sao; kéo thả chọn cặp. Sau đổi, cả hai tạm khóa tấn công 0,6s. Đây là công cụ giải bài toán chỗ đứng, không random hóa mọi child như Frey.
+A5 CIPHER KING — “Cách Ly Dữ Liệu” | base 110 | CD 50s. Chọn 1 boss hoặc 4 quái gần FIRST, vô hiệu kỹ năng chủ động 5s; boss chỉ bị 2,5s và nếu đã ra đòn báo trước thì KHÔNG hủy đòn đang diễn ra. Không khóa quái vô hạn, chống boss dồn hiệu ứng.
+A6 BLOOM.exe — “Vườn Lỗi” | base 70 | CD 35s. Chọn 1 ô rỗng tạo 1 bệ buff 10s; quân tại 4 ô kề +25% tốc đánh, quân được triệu hồi lên bệ nhận khiên 1 lần nhưng bệ biến mất. Không có ô rỗng thì không cast. Bệ KHÔNG tính quân và không được dùng để ghép.
+Kiểm soát hiệu quả: tổng mana một kỹ năng x2 nên mạnh nhất ở lần 1–3; mở thông tin chi phí lần kế tiếp ngay dưới nút. Không có Archfiend nào là lựa chọn bắt buộc cho mọi đội hình.
+
+4. TÁM BOSS PHÁ BÀN — PHẢI BÁO TRƯỚC VÀ CÓ KHẮC CHẾ
+[ĐỀ XUẤT NG] Boss xuất hiện lúc wave 10/20/30/40/50/60/70 của co-op, wave 5/10/15... của PvP. Có 8 boss trong pool, 7 boss co-op trong một ván, không phải tất cả 8 cùng xuất hiện. Đòn boss có telegraph toàn màn ≥1,5s, marker chính xác ô bị tấn công, âm báo riêng, phản hồi sau cast. Boss thường mỗi 12–18s tung một chiêu; phải có cooldown anti-chain 4s giữa các hiệu ứng gây giảm sao/xóa ô. Các boss dưới đây là nguyên mẫu nguyên bản phù hợp ngoại hình NEON FRACTURE, không sao chép tên gốc.
+
+B1 CROWN VIRUS — “Vua Virus Triều Quang” | hình: vương miện hologram nhiều mắt, thân giáp điện tử. Cảnh báo: biểu tượng vương miện + 3 ô chớp tím 2,5s. Chiêu: biến 3 quân trong ô đánh dấu thành loại khác trong deck, GIỮ sao (không đụng quân 7★ quá 1 lần/20s). Chu kỳ 18s. Khắc chế: AEGIS-9 chặn 1 lần; chủ động tạm dồn buff vào quân ngoài dấu; HEXFORGE giúp hồi bố cục sau đó. Phản ứng rõ, không đổi cả bàn vô báo.
+B2 CRYO CATHEDRAL — “Giáo Đường Băng Máy” | hình: linh mục robot băng với cột chuông. Cảnh báo: tia xanh vạch từ boss đến 2 ô, 2s. Đóng băng 2 quân 5s, không tấn công/buff nhưng vẫn ghép bình thường; chu kỳ 15s. Khắc chế: AEGIS-9; ghép giải thế; dùng nguồn DPS dự phòng.
+B3 BASALT SERAPH — “Thiên Sứ Hóa Thạch” | hình: 6 cánh đá obsidian gắn chip. Cảnh báo: bóng tượng trên 1 ô trong 3s. Hóa đá 1 quân trong 7s (mất chức năng, không ghép thường), sau hết tự hồi; chu kỳ 20s. Khắc chế: AEGIS-9 gỡ được; SWITCHWITCH chuyển quân quan trọng khỏi vùng trước khi trúng; boss chết gỡ mọi tượng. Không biến vĩnh viễn để tránh soft lock.
+B4 MERGE HARVESTER — “Bọ Gặt Tín Hiệu” | hình: bọ cánh cứng CNC kẹp nam châm. Cảnh báo: dây kéo nối 2 ô cùng sao trong 2,5s. Ép ghép 2 quân cùng sao thành 1 quân ngẫu nhiên +1 sao, ngay cả khác loại, có ưu tiên chọn cặp sao 1–4; chu kỳ 22s. Nếu không có cặp, đòn vô hiệu và boss nhận +15% sát thương 5s. Khắc chế: phân tán sao, tránh giữ cặp giá trị cao, CIPHER KING hoãn đòn TRƯỚC lúc khóa marker. Không thể chặn bằng khiên thường nhưng có telegraph dài.
+B5 RED RETICLE — “Xạ Thủ Tinh Vân Đỏ” | hình: mặt nạ bắn tỉa, ống ngắm laser dọc. Cảnh báo: ô viền đỏ/hồng + đường laser 3s. Giảm 1★ quân sao ≥2; nếu chỉ 1★ thì khóa bắn 6s (KHÔNG hủy), chu kỳ 20s. Lần thứ 3 trong trận nếu cùng quân trúng, đánh dấu 6s thay vì trừ sao. Khắc chế: AEGIS-9, chuyển ô bằng SWITCHWITCH, xử lý boss nhanh. Thực hiện một lượt giảm sao mỗi 15s trên cùng quân.
+B6 INK OCTOMIND — “Bạch Tuộc Mực Plasma” | hình: bạch tuộc 8 drone vòi phun neon, không cần 8 target. Cảnh báo: 3 ô bị quét mực đỏ 2s. Đặt “Nhiễm mực” 7s làm giảm 35% tốc; hết hạn nếu không gỡ sẽ trừ 1★ với sao ≥2, 1★ chỉ bị choáng 2s; chu kỳ 20s. Khắc chế: AEGIS-9 trước khi hết 7s, ghép quân nhiễm mực đúng luật cũng làm mất trạng thái cùng quân cũ (nhưng không copy shield), tập trung boss.
+B7 SWARM PONTIFF — “Giáo Hoàng Bầy Dữ Liệu” | hình: quái tổ hợp ong và vệ tinh. Cảnh báo: 4 cổng triệu hồi trên path nảy sáng 2s. Gọi 6 quái con (HP 0,35x chuẩn của wave, tốc 1,3x), chu kỳ 16s; giết con vẫn nhận mana 50% và không tạo quái đối thủ trong PvP để chống farm. Khắc chế: SCORCH, PULSE, PATCHWORK AoE; dồn sát thương trước khi gọi.
+B8 CLOCK REVENANT — “Vong Linh Đồng Hồ” | hình: người máy thần thoại với nhiều mặt đồng hồ nứt. Cảnh báo: 1 hàng 5 ô phát xung vàng 2,5s. Khóa mọi hành động TRIỆU HỒI vào ô trong hàng đó trong 4s và tăng tốc quái 20% trong 4s, không xóa quân, chu kỳ 18s. Khắc chế: tích mana trước, nâng cấp thay triệu hồi, dùng CIPHER KING hoãn cast; vị trí tấn công ở hàng khác vẫn hoạt động. Boss ép điều chỉnh nhịp kinh tế chứ không phá sao.
+
+4.1. Bảng xuất hiện co-op 70 wave gợi ý
+Wave 10 CRYO CATHEDRAL; 20 SWARM PONTIFF; 30 CROWN VIRUS; 40 MERGE HARVESTER; 50 INK OCTOMIND; 60 RED RETICLE; 70 CLOCK REVENANT hoặc BASALT SERAPH luân phiên theo tuần. Boss thứ 8 gặp trong PvP hoặc vòng co-op kế tiếp. Mỗi wave boss có giai đoạn 3s trước boss cho banner + biểu tượng khắc chế; tại 50/60/70 có thể cộng một elite phụ sau 12s nhưng không đồng thời 2 boss phá bàn trong prototype.
+
+5. CO-OP 70 WAVE: GỐC VÀ CHỌN HƯỚNG CHO NG
+5.1. Đâu là dữ kiện đáng tin
+- [XÁC NHẬN DCDW] Infinite Defense là chế độ 2 người chống wave; một quái tới lối ra kết thúc, sau 30 wave có mốc thưởng rồi các phần thưởng sau. DCDW có thêm Raid dùng khu chung tách hai nhánh, KHÔNG nhầm lẫn raid với infinite defense. Nguồn: NamuWiki.
+- [XÁC NHẬN ở cấp tham khảo Random Dice] Random Dice co-op có hai bàn quân của hai người, quái đi trên đường để cả hai có thể tác động ở đoạn chung; cả hai được hưởng SP khi quái bị hạ theo cộng đồng wiki. Một số bản cập nhật thay đổi lịch boss từ 10 wave sang 5 wave; không cố định lịch lịch sử.
+- [KHÔNG CHẮC] Sơ đồ pixel chính xác, hướng đi, số ô path và liệu Infinite Defense DCDW ở mọi phiên bản dùng cùng hình chữ U/đoạn nối và cùng góc sắp bàn như Random Dice. Ảnh/nguồn công khai cho thấy hai cụm bàn đứng dọc với đường quái đi cạnh nhưng chưa đủ để mô tả chính xác toàn bộ path bản gốc. KHÔNG tự gọi layout đề xuất bên dưới là “layout DCDW chính xác”.
+
+5.2. Layout NEON GRID dọc tự thiết kế, rõ 2 bàn
+Ở điện thoại dọc, chia UI từ trên xuống:
+  00–08%: wave 01/70, timer, HP cửa, ping, nút pause;
+  08–39%: BÀN A 5x3 (người 1), lối quái chữ U men cạnh trái+dưới;
+  39–48%: “NEON BRIDGE” đoạn hành lang chung nối A→B, hiển thị monster flow rõ;
+  48–79%: BÀN B 5x3 (người 2), lối quái chữ U men cạnh trái+dưới;
+  79–100%: bộ 5 tướng, nút Summon, mana/giá kế, Archfiend, chat/emote.
+Một camera dọc cố định (tham chiếu kích thước logic 390x844), cả hai bàn được thấy cùng lúc. Quái spawn trên đường A, nếu vượt vùng A sẽ đi qua NEON BRIDGE sang vùng B, cuối vùng B ra cổng chung. Để người B không bất lực trước boss chưa tới lượt mình, boss có 1 pha 2s khi vào bridge và quái thường còn HP từ A; B có cơ hội bù. Đảo vị trí spawn A/B mỗi ván hoặc luân phiên 10 wave để công bằng, nhưng KHÔNG quay board trực quan khiến người chơi khó thao tác. Đường U là đề xuất NG, không xác nhận là DCDW.
+Khác phương án: hai đường song song rồi nhập vào vùng chung ở đáy; ưu điểm cân bằng cơ hội bắn, nhược điểm nhiều quái trên màn nhỏ. Ưu tiên “A→bridge→B” cho MVP vì dễ hiểu, sau đó A/B luân vai bằng chuyển luồng.
+
+5.3. Quy tắc co-op đề xuất có số
+- 2 người, mỗi người 15 ô, mỗi bên 5 tướng + 1 Archfiend và mana riêng. Wave 1–70, boss ở 10,20,...70; thắng sau khi diệt boss wave 70 và đám quái còn lại. Một quái thường lọt cổng cuối: mất 1 năng lượng Cổng Chung (bắt đầu 3), elite -2, boss chạm cổng = thua; đây là thay đổi có chủ ý cho dễ làm quen, KHÁC luật DCDW infinite defense một quái lọt là thua. Chế độ Hardcore NG: 1 lọt là thua.
+- Sau mỗi quái bị hạ, cả A và B nhận 70% mana reward riêng, người kết liễu nhận thêm 30% (tổng tạo 170% của reward gốc trên hai người — chủ ý tăng kinh tế co-op). Sau playtest có thể dùng 100% cả hai cho đúng cảm giác Random Dice; không chuyển tiền qua lại và tránh spam “farm mana”.
+- HP quái co-op: HP(w) = 70 * 1,145^(w-1) cho thường; tính boss = 35 * HP(w), thêm 1,2x tại wave 40+; xem là hệ số khởi điểm, kiểm tra TTK thực tế và giới hạn số quái.
+- Wave 1–20: 12 quái/wave mỗi 0,85s; 21–40: 16 quái mỗi 0,75s; 41–60: 20 quái mỗi 0,65s; 61–69: 24 quái mỗi 0,6s; boss wave chỉ 1 boss + 6 quân hộ vệ (spawn giãn nhau). Có thời gian nghỉ 5s giữa các wave; wave có thể bắt đầu sớm nếu bấm đồng ý cả hai, đổi thành +20 mana/người. Không ép skip nếu một người không đồng ý.
+- GLITCH trong co-op: merge buff đồng đội thay vì phá đối thủ; mọi hiệu ứng “PvP phá đối thủ” tự ánh xạ thành buff có bảng conversion, không chĩa debuff vào bạn chơi. Boss tác động cân bằng mỗi bàn với ưu tiên không đánh cùng một người hai lần liên tiếp nếu còn đối tượng hợp lệ.
+- Quân melee: tác chiến khi sát đường cạnh bàn mình, không tự bắn xuyên bridge, trừ skill toàn đường. Quân toàn đường chỉ bắn vào quái trong vùng A + bridge khi thuộc A, vùng B + bridge khi thuộc B; không bắn xuyên cả hai bàn vô hạn (tránh người A ăn hết kill/FX).
+- Điểm thưởng: qua wave 10 = 1 sao đánh giá, 30 = 2, 50 = 3, 70 = chiến thắng; điểm dựa thời gian, số lần rò, số boss kill, cứu đồng đội. Thưởng không ảnh hưởng sức mạnh giữa trận.
+- Chống grief: 20s AFK thì AI tạm tiếp quản triệu hồi/nâng cấp có giới hạn, không dùng Archfiend; 60s AFK người kia được chọn thoát vẫn giữ phần thưởng tương ứng. Reconnect 30s, giữ trận server-authoritative.
+
+6. TỔ HỢP DECK THỬ NGHIỆM (5 QUÂN ĐÚNG LUẬT)
+D1 Onboarding: SENTINEL / SCORCH / FROST / PULSE / ANCHOR + HELIX. Học mana, ghép, vị trí buff, DOT.
+D2 Melee & hình học: ARC / VOLTWEAVER / PATCHWORK / SPARK / FROST + SWITCHWITCH (Archfiend).
+D3 Kinh tế khó: BROKER / TAXON / LANCE / CHRONO / PULSE + SOLARIS. Được thưởng nếu sống qua 3 wave đầu.
+D4 Ngẫu nhiên có kiểm soát: HEXFORGE / NULL ORACLE / MARKSMAN / FROST / SCORCH + AEGIS-9. Đánh đổi 2 ô utility để giảm RNG.
+D5 Độc xuyên: VENOM / LANCE / ANCHOR / SPARK / EVENT HORIZON + CIPHER KING. Dùng trước boss mạnh, chống dồn CC.
+D6 Gấu đặt cược: PATCHWORK / GLITCH / OATHENGINE / PULSE / BROKER + BLOOM.exe. Cực nhiều quyết định ghép, hiến tế, timing.
+
+7. UI VÀ THÔNG TIN BẮT BUỘC CHO GAME DỌC
+- Người dùng phải đọc được sao 1–7 ở 32–48px: số sao bằng chữ số rõ + các pip tối đa 7, không chỉ vẽ 7 ngôi sao bé. Màu nền ô rảnh/dính debuff/ô mép hợp melee phải có viền khác nhau cho người mù màu.
+- Trên mỗi quân VÀNG/ĐỎ: một gauge nhỏ như PATCHWORK 2/3 mảnh, TAXON 6s tới trái phiếu, PARADOX “nợ 1★/12s”, MIRRORBYTE tổng sao bàn 22→23. Chạm quân mở tooltip 2 dòng “điều kiện / kết quả”.
+- Khi ghép, hiển thị trước “A+B → ? loại / sao +1”, không làm người chơi tưởng bảo toàn loại. Khi random kết quả có animation 0,25s; phát sáng hiếm nếu VÀNG/ĐỎ nhưng không đổi xác suất.
+- Dự báo boss gồm: chân dung, tên, biểu tượng loại phá bàn, countdown 3s, ô mục tiêu sáng ≥1,5s, cách khắc chế bằng 1 câu. Không tạo nhiều FX lấp path.
+- Nút triệu hồi: hiển thị mana hiện tại + giá lần sau; khi bàn đầy nút disabled và có giải thích. Archfiend hiển thị chi phí hiện tại/lần sau và cooldown. Khi quá nhiều tia, animation gộp, số damage gộp/tick 0,2s.
+- Co-op: icon A/B, HP cổng chung, ping đối tác, dấu “hãy để đối tác giết quái tại bridge” không cần chat tự do. Người xem luôn phân biệt ai đang nhận effect.
+
+8. THỨ TỰ LÀM — CHƠI THỬ CÀNG SỚM CÀNG TỐT
+P0 / Vertical slice (mốc nghiệm thu trong 3–5 ngày công dev, không phải cam kết lịch):
+  (1) 5x3 x2, path cơ bản, 1 mob FIRST, 3 tim, 1 bộ mana và gọi quân 10n.
+  (2) Random 5 quân, ghép đúng loại+sao → ngẫu nhiên trong 5, sao 1–7, move drag, nâng cấp một loại.
+  (3) 5 quân SENTINEL / SCORCH / FROST / PULSE / ANCHOR, 1 Archfiend HELIX, 1 boss CRYO CATHEDRAL có telegraph.
+  (4) Chơi đối kháng với bot mô phỏng board riêng để biết vòng lặp cốt lõi có vui, không cần online ngay.
+  PASS: Người chơi không cần tutorial dài vẫn biết triệu hồi/ghép trong 90s; 90% người thử phân biệt được “sao” với “màu”; người chơi sống 3–5 wave lần đầu, cảm nhận được 1 quyết định mana/merge có giá trị.
+P1 / Cân bằng cảm giác: thêm ARC với quy tắc melee, BROKER và LANCE; thêm GLITCH để thử skill on-merge, boss CROWN VIRUS; tích hợp debug overlay (DPS, quái lọt, tổng sao, mana theo giây, merge/min). Thu thập 20 trận bot và 20 trận người.
+P2 / Cơ chế khác biệt: thêm PATCHWORK, HEXFORGE, TAXON, MIRRORBYTE; 1 boss MERGE HARVESTER. Kiểm tra “wow moment” có xảy ra ít nhất 1 lần/2 trận nhưng không biến game thành spam merge.
+P3 / Hoàn thiện bộ 24 + 6 Archfiend + 8 boss, tool cấu hình data-driven JSON, hệ thống status/trigger chuẩn. Co-op LAN/local giả lập 2 người trước rồi mới matchmaking.
+P4 / Co-op 70 wave, reconnect, server authority + state sync/replay; bảng xếp hạng PvP, chống gian lận, matchmaking theo skill; cosmetic, VFX, hiệu năng mobile.
+
+9. CÔNG THỨC THỬ VÀ CHỈ SỐ CẦN ĐO
+A. Sim 10.000 trận với seed cố định / nhóm deck và giả lập chính sách bot đơn giản: người ưu tiên fill 10–12 ô, nâng cấp tướng đang nhiều bản sao, merge khi board ≥12 và có 2 sao 1/2 trùng. Chạy nhiều bot chính sách để tránh tối ưu theo một bot. Mục tiêu win rate PvP mọi deck hợp lý 45–55% ở ngang kỹ năng; không kết luận dựa một bộ meta.
+B. Track: thời gian trận PvP (đề xuất median 4–7 phút), số lần merge/phút (đề xuất 2–6), tỷ lệ bàn kẹt không còn ghép (<2%), tỉ lệ thắng theo vị trí spawn của melee (khác biệt <5 điểm %), số lần dùng Archfiend (median 2–4), tỷ lệ người bị boss trừ sao mà không thấy báo (<5%).
+C. Co-op: wave median 30–45 ở đội mới, wave 70 dành cho phối hợp tốt; thành công đội hai người mới khoảng 10–20%, đội quen 35–55% là MỤC TIÊU ĐỀ XUẤT chứ không phải dữ liệu thực. Nếu HP tăng lũy thừa làm wave 60 không thể qua, dùng curve đoạn và tăng mana reward, không buff tùy tiện mọi quân.
+D. Không để quá 3 trạng thái phức tạp đồng thời trên một quái/ô; server tick cố định 20Hz; client render 60FPS mục tiêu, logic hiệu ứng xử lý deterministic. Mỗi skill JSON có: trigger, condition, targetSelector, effect, magnitude, starScaling, cooldown, cap, modeOverride, VFX telegraph, counterTag.
+E. Rủi ro balance: damage nhiều tia * buff tốc * buff crit * độc dễ nhân cấp số; on-merge tạo mana/nhân tướng có thể tạo vòng lặp; 7★ quá hiếm nếu yêu cầu 64 quân ban đầu (để làm 1 quân 7★ từ 1★ cần 2^6 = 64 bản sao, chưa tính ngẫu nhiên). Vì thế NG phải có tăng sao qua skill giới hạn, kinh tế thêm và trận đủ dài, nhưng tránh biến 7★ thành mục tiêu bắt buộc PvP.
+
+10. CHECKLIST NỘI DUNG TRƯỚC KHI LÀM ART/VFX
+[ ] Viết 24 quân dưới dạng data, test sao 1/3/5/7, cap, stack và trạng thái hiếm.
+[ ] Test tính ngẫu nhiên: 5 loại đều 20%, ghi seed/replay; không đồng nhất “độ hiếm” với xác suất random trong deck.
+[ ] Test GHÉP: không nuốt input khi drag thất bại, không cho >7★; merge boss phải bảo toàn số sao theo mô tả.
+[ ] Test vị trí melee: spawn giữa bàn có thể giải cứu bằng SWITCHWITCH hoặc 2 swap lượt miễn phí/giá rẻ.
+[ ] Test kinh tế: BROKER+TAXON không nhân mana qua đồng đội; SWARM PONTIFF không feed exploit.
+[ ] Test boss: bắt buộc marker ít nhất 1,5–3s; không trùng tác động vô lý; khiên/purge có ma trận rõ.
+[ ] Test dọc 390x844: cả hai bàn co-op nhìn đủ rõ, chạm chính xác, không bấm nhầm Archfiend.
+[ ] Chưa làm 24 animation chi tiết trước khi khẳng định core loop; placeholder silhouettes dùng được đến P2.
+
+11. NGUYÊN TẮC THIẾT KẾ VÀ BẢN QUYỀN
+Tham khảo core loop và thể loại là hợp lý để nghiên cứu, nhưng NEON GRID nên tự tạo artwork, tên unit, VFX, thoại, audio, biểu tượng, UI, đường đi, boss; không sao chép code hay asset của DCDW/Random Dice. “FREE STYLE” phải có sự tương tác rõ giữa các quyết định (mana / merge / sao / vị trí / thời gian), thay vì mô phỏng y hệt từng Legendary/Ancient. Bậc ĐỎ nên tác động cách người chơi quyết định, không chỉ sát thương gấp 10.
+
+12. NGUỒN THAM KHẢO ĐỂ ĐỐI CHIẾU (đọc ngày 03/11/2026)
+[1] NamuWiki mirror — Destiny Child: Defense War: https://namu.moe/w/%EB%8D%B0%EC%8A%A4%ED%8B%B0%EB%8B%88%20%EC%B0%A8%EC%9D%BC%EB%93%9C%3A%EB%94%94%ED%8E%9C%EC%8A%A4%20%EC%9B%8C
+[2] BlueStacks — DCDW Beginner's Guide: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+[3] BlueStacks — Tips & Strategies: https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-tips-tricks-en.html
+[4] MobyGames — DCDW game summary / modes: https://www.mobygames.com/game/176430/destiny-child-defense-war/
+[5] Random Dice community wiki — Co-op PvE: https://random-dice.fandom.com/wiki/PvE_%28Player_versus_Enviroment%29
+[6] Random Dice Wiki — Bosses: https://randomdice.wiki.gg/wiki/Bosses
+[7] Historical Random Dice co-op mode update 2020: https://wasi-gamezoids.fc2.net/blog-entry-372.html
+[8] Historical DCDW screenshots (co-op section): https://www.mobygames.com/game/176430/destiny-child-defense-war/screenshots/
+
+PHỤ LỤC: BA THỬ NGHIỆM PHẢI CHẠY TRƯỚC KHI CHỐT V0.2
+Thử A (20 người, chơi 5 phút): người chơi có thích quyết định “ghép hay giữ quân” không, có hiểu random sau ghép không?
+Thử B (mỗi người 3 deck): tướng VÀNG/ĐỎ có khiến thay đổi chiến thuật chứ không chỉ mạnh sẵn không; ghi lại 3 khoảnh khắc tạo đột biến.
+Thử C (hai người co-op): người đứng ở bàn A/B có cảm thấy đều đóng góp không; nếu không, chuyển sang 2 lane song song nhập chung, đừng cố giữ A→B vì giống game tham chiếu.
+
+HẾT TÀI LIỆU.

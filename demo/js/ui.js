@@ -93,7 +93,7 @@
     capChon();
   }
   const MEO = {
-    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles come down the left lane, then run the <b>middle corridor</b> between both boards to the core — hold out with your <b>ALLY</b> for <b>70 waves</b>.',
+    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles come down the left lane, then run the <b>middle corridor</b> between both boards to the core — hold out with your <b>ALLY</b> for <b>70 waves</b> — <b>a single leak loses the run</b>.',
     pvp: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.',
   };
   // ---- Archfiend (ô thứ 6): chọn 1 trong ARCHFIEND, nhớ lựa chọn cuối ----
