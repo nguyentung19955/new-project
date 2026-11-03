@@ -234,7 +234,7 @@ Người dùng: "chưa đổi phong cách game, toàn bộ vẫn là cyber". Là
 ## PATCHWORK — tướng PIXEL ART đầu tiên + đường render pixel dùng lại (03/11/2026, phiên tự động)
 Người dùng đã quyết định chuyển game sang pixel art dần dần. PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ, dòng 97/174 tài liệu tư vấn 24 tướng) là tướng pixel đầu tiên. Không viết test; đã chạy thử bằng trình duyệt (390×844, DPR 2 và 3): không lỗi JS, xem ảnh chụp đứng yên / đang đập / dạng to.
 
-1. **Ảnh** (copy nguyên, không vẽ lại / không méo) → `demo/assets/v3/pixel/`: `patchwork_8dir.png` (8 ô 128), `patchwork_idle_s.png` (4 ô 176), `patchwork_atk_s|w|n.png` (6 ô 224×176).
+1. **Ảnh** (copy nguyên, không vẽ lại / không méo; bản dap6 đã căn khung của phiên khác đẩy lên cùng lúc — ảnh 12 khung `px_patchwork_dap12_s.png` CHƯA dùng) → `demo/assets/v3/pixel/`: `patchwork_8dir.png` (8 ô 128), `patchwork_idle_s.png` (4 ô 176), `patchwork_atk_s|w|n.png` (6 ô 224×176).
    - **Lưu ý thứ tự 8 hướng**: xem ảnh thì thứ tự thật trên màn hình là **S, SW, W, NW, N, NE, E, SE** (ô 3 quay mặt sang TRÁI = W, khớp `atk_w`), không phải S, SE, E… như ghi chú PixelLab. Đã khai đúng theo ảnh trong `data.js px.dir8.thuTu` — nếu ảnh khác thì chỉ sửa mảng này.
 2. **Đường render pixel** (`render.js vePixel`, bật khi `TUONG[id].px` có và ảnh đã tải):
    - `imageSmoothingEnabled = false`; tỉ lệ tính theo **px thiết bị**: cao ≈ `C.TUONG_CAO × co` như tướng khác → số px thiết bị / 1 px ảnh, **≥ 1 thì làm tròn số nguyên** (iPhone DPR 3: đúng 1:1), < 1 thì giữ tỉ lệ nhưng góc ảnh bắt lưới px thiết bị.
