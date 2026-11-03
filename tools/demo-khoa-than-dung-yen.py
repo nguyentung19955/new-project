@@ -16,7 +16,7 @@ for k in range(1,n):
     d=np.abs(fk-f0).sum(2)/4
     m=ndimage.gaussian_filter(d,3)>T
     m=ndimage.binary_opening(m,iterations=2); m=ndimage.binary_dilation(m,iterations=6)
-    m=ndimage.gaussian_filter(m.astype(float),2)[...,None]
+    m=(m.astype(float) if os.environ.get('CUNG')=='1' else ndimage.gaussian_filter(m.astype(float),2))[...,None]   # CUNG=1: mặt nạ cứng cho pixel art (không pha màu)
     out.append(fk*m+f0*(1-m))
 Image.fromarray(np.concatenate(out,1).clip(0,255).astype(np.uint8)).save(dst)
 print('ok',n)
