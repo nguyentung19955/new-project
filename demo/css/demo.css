@@ -294,3 +294,7 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .tb-wave.coop #tb-dot small { font-size: 12px; }
 /* tên tướng dài (PATCHWORK...) trên thẻ dưới: thu chữ cho vừa thẻ 54px */
 .the .ten.dai { font-size: 8.6px; letter-spacing: 0; }
+
+/* chưa có tướng (đang làm lại): chữ nút SUMMON nhỏ lại cho vừa */
+#nut-trieu.rong .tr-ten { font-size: 12px; letter-spacing: 0.5px; }
+#nut-trieu.rong .tr-gia { font-size: 10px; }

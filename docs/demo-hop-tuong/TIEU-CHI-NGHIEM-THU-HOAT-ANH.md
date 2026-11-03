@@ -14,3 +14,8 @@ Mỗi hướng phải đạt ĐỦ trước khi đưa vào game:
 8. Pixel hóa đồng đều: chiều cao thân giống nhau giữa các hướng, chân chạm cùng một mốc.
 
 Hướng nào trượt tiêu chí → bảo ChatGPT vẽ lại hướng đó trước khi làm tiếp.
+
+9. Động tác hợp vũ khí: súng phun lửa/tia liên tục KHÔNG giật lùi — đứng yên, tay kia đỡ súng giữ thế ngắm; súng nổ/pháo mới có giật. Hiệu ứng (lửa, tia, khói) vẽ RIÊNG, không vẽ chung vào khung nhân vật.
+
+## Quy trình trước khi gửi (bắt buộc)
+Tự kiểm 1–9 ở trên + mọi mục trong BAI-HOC-LOI-SAI.md. Chưa đạt hết → vẽ lại/sửa, không gửi. Đạt hết mới gửi GIF cho người dùng.

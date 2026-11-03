@@ -294,7 +294,7 @@
     },
   };
   function spr(key, w, h, f) { let s = SPR_CACHE.get(key); if (!s) { s = mk(w, h, f); SPR_CACHE.set(key, s); } return s; }
-  const sprUnit = (id) => spr('u' + id, 64, 64, (c) => { if (VE_UNIT[id]) VE_UNIT[id](c, HANH[TUONG[id].hanh]); else de(c, HANH[TUONG[id].hanh]); });   // tướng mới chưa có ảnh: chỉ bệ đứng
+  const sprUnit = (id) => spr('u' + id, 64, 64, (c) => { if (!TUONG[id]) return; if (VE_UNIT[id]) VE_UNIT[id](c, HANH[TUONG[id].hanh]); else de(c, HANH[TUONG[id].hanh]); });   // tướng mới chưa có ảnh: chỉ bệ đứng
   const sprQuai = (k) => spr('q' + k, 40, 40, (c) => (VE_QUAI[k] || VE_QUAI.thuong)(c));
   const sprBoss = (b) => spr('b' + b.id, 80, 80, (c) => VE_BOSS[b.id](c, b.mau));
   const sprBanh = () => spr('gear', 80, 80, (c) => {   // bánh răng xoay quanh OVERCLOCK
@@ -1712,7 +1712,7 @@
       c.fillStyle = lg(c, 0, 0, 0, px, [[0, hexA(a.mau, 0.6)], [1, '#0b0f22']]); c.fillRect(0, 0, px, px);
       const x = anhAF(id);   // archfiend_<id>.png → mặt cắt từ cutin_<id>.png → portrait tạm
       if (x) c.drawImage(x[0], x[1], x[2], x[3], x[4], 0, 0, px, px * x[4] / x[3]);
-      else veChanDungVao(c, a.anh, px, px, true);
+      else if (a.anh && TUONG[a.anh]) veChanDungVao(c, a.anh, px, px, true);   // portrait tạm của 1 tướng (nếu có)
     };
     ve1(); THE_VE.push({ cvs, f: ve1 });
   }
