@@ -34,3 +34,4 @@ Mỗi lỗi: chuyện gì sai → vì sao → cách tránh (bắt buộc làm th
 
 ## Quy tắc gửi (người dùng yêu cầu 03/11)
 20. **Chỉ gửi người dùng khi đã đạt HẾT sổ.** Mỗi lần ChatGPT vẽ xong: tự kiểm đủ TIEU-CHI-NGHIEM-THU-HOAT-ANH.md (1–9) + từng mục lỗi trong sổ này (bảng tay, danh sách chi tiết, đủ tay 12 khung, camera giống hướng đã duyệt, đo đỉnh/đáy, không rung). Còn một mục chưa đạt → tự sửa/vẽ lại, KHÔNG gửi bản dở để hỏi. Chỉ gửi GIF khi mọi mục đạt, kèm dòng "đã kiểm: …".
+21. **Tự bào chữa để cho qua** (SCORCH N: tay trái biến mất ở các khung giữa, GIF nhìn như tay chớp tắt; thiếu dây kính sau đầu; ống dẫn gần như không thấy — mình lại kết luận "bị che tự nhiên" rồi gửi). → Mục nào trong sổ không đạt thì là KHÔNG ĐẠT, không được tự tìm lý do cho qua. Nhìn GIF như người chơi: thấy bộ phận chớp tắt/biến mất là lỗi. Hướng lưng (N/NE/NW): tay tự do phải đặt ở chỗ người xem THẤY được (vòng ra cạnh thân đỡ súng), ghi rõ trong prompt.
