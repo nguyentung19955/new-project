@@ -4,7 +4,7 @@
   const C = CAU_HINH, G = GAME, R = RENDER;
   const $ = (s) => document.querySelector(s);
   const wrap = $('#wrap'), cv = $('#cv'), ctx = cv.getContext('2d');
-  let S = null, A = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = [], boCu = null, thang = false;
+  let S = null, A = null, tocDo = 1, dung = false, tua = 1, keo = null, chon = BO_MAC_DINH.filter((id) => TUONG[id]).slice(0, 5), boCu = null, thang = false;
   // giao diện kỹ năng chủ động (VÀNG): menu = ô đang mở hàng nút kỹ năng; chon = { i, k, ten, ds } đang chọn ô cho kỹ năng k
   const UI = { menu: null, chon: null };
   const KY_LUC = 'neon-grid.best', KY_CHE = 'neon-grid.mode';
@@ -160,7 +160,7 @@
       b.className = 'the'; b.dataset.act = 'bac'; b.dataset.id = id; b.title = `${t.ten} — power up`;
       mauBac(b, id);
       b.style.left = (6 + n * 61) + 'px';
-      b.innerHTML = `<canvas></canvas><span class="so-ban" hidden></span><span class="them" hidden></span><span class="bac"></span><span class="ten">${t.ten}</span><span class="gia"></span>`;
+      b.innerHTML = `<canvas></canvas><span class="so-ban" hidden></span><span class="them" hidden></span><span class="bac"></span><span class="ten${t.ten.length > 8 ? ' dai' : ''}">${t.ten}</span><span class="gia"></span>`;
       R.veThe(b.querySelector('canvas'), id, 54, 62);
       bo.appendChild(b);
     });

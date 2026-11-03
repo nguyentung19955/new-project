@@ -230,3 +230,18 @@ Người dùng: "chưa đổi phong cách game, toàn bộ vẫn là cyber". Là
 - Màn thấp (720): bàn thu nhỏ theo bề cao nên hai bên lộ nền than nhiều hơn.
 - Ảnh skin ICE khá tím-lam (đúng ảnh ChatGPT, không chỉnh màu).
 - Bộ test cũ `tests/demo-hop-tuong` vẫn viết cho bản cũ — chưa chạy, chưa sửa.
+
+## PATCHWORK — tướng PIXEL ART đầu tiên + đường render pixel dùng lại (03/11/2026, phiên tự động)
+Người dùng đã quyết định chuyển game sang pixel art dần dần. PATCHWORK (VÀNG · BIẾN HÌNH · Ô KỀ, dòng 97/174 tài liệu tư vấn 24 tướng) là tướng pixel đầu tiên. Không viết test; đã chạy thử bằng trình duyệt (390×844, DPR 2 và 3): không lỗi JS, xem ảnh chụp đứng yên / đang đập / dạng to.
+
+1. **Ảnh** (copy nguyên, không vẽ lại / không méo) → `demo/assets/v3/pixel/`: `patchwork_8dir.png` (8 ô 128), `patchwork_idle_s.png` (4 ô 176), `patchwork_atk_s|w|n.png` (6 ô 224×176).
+   - **Lưu ý thứ tự 8 hướng**: xem ảnh thì thứ tự thật trên màn hình là **S, SW, W, NW, N, NE, E, SE** (ô 3 quay mặt sang TRÁI = W, khớp `atk_w`), không phải S, SE, E… như ghi chú PixelLab. Đã khai đúng theo ảnh trong `data.js px.dir8.thuTu` — nếu ảnh khác thì chỉ sửa mảng này.
+2. **Đường render pixel** (`render.js vePixel`, bật khi `TUONG[id].px` có và ảnh đã tải):
+   - `imageSmoothingEnabled = false`; tỉ lệ tính theo **px thiết bị**: cao ≈ `C.TUONG_CAO × co` như tướng khác → số px thiết bị / 1 px ảnh, **≥ 1 thì làm tròn số nguyên** (iPhone DPR 3: đúng 1:1), < 1 thì giữ tỉ lệ nhưng góc ảnh bắt lưới px thiết bị.
+   - **Neo chân**: đo khung 0 mỗi ảnh (đáy phần hình + tâm chân ở 3 hàng đáy) → đặt đúng (cx, chân) như tướng khác; giữ bóng đổ chung, **không đế màu**, không viền màu bậc (pixel đã có viền tối).
+   - **Hướng** theo `v.hg` (hệ quay theo quái sẵn có): đứng yên = ô hướng đó của dir8; nhìn S thì phát `idle_s` 4 khung × 180ms; đang đánh: S/SE/SW → atk_s, N/NE/NW → atk_n, W → atk_w, **E = lật gương atk_w**.
+   - Xuất hiện: chỉ hiện dần (không phóng to/nhỏ để px không vỡ). Chân dung thẻ + cut-in VÀNG dùng ô S của dir8 (không smoothing).
+   - **Thêm tướng pixel sau**: thả ảnh vào `assets/v3/pixel/` + khai `px: { dir8, idle, atk: { file, w, h, nhip, trung, huong }, to }` trong `TUONG` (mô tả ở đầu `data.js`). Không cần sửa code.
+3. **Nhịp đòn** (`game.js tacDong / chuoiDon`): 6 khung 300/140/180/60/260/200 ms; **sát thương ra đúng đầu khung 5** (680ms sau khi vung); không bắt đầu đòn mới khi chuỗi 1.14s chưa xong (kể cả có OVERCLOCK / COPY BUFFER). Tướng cũ vẫn dùng `C.TAC_DONG` như trước.
+4. **Kỹ năng** (`data.js patchwork`, `game.js DON.dap` + `DAC_BIET.bienHinh`): đập quái gần nhất (dmg 30, cd 1.7s) + văng 50% quanh đó (r 26→32 từ 5★), **làm chậm 18%→24%** trong 1.2s (trùm một nửa); vòng sóng dẹt ở chỗ đập + dưới chân, rung màn rất nhẹ. Mỗi **5 đòn (4 từ 5★)** → **STITCH UP**: to ×1.25 trong 4s (5s từ 3★), sát thương ×1.5, vùng ×1.4, tướng **ô kề** +15% tốc đánh (25% từ 5★). Hệ mới `Stitch` (màu VFX hồng #ff6f91).
+5. **Bộ bài**: màn chọn tướng chọn sẵn `BO_MAC_DINH` = PATCHWORK, SCORCH, FROST, LANCE, GLITCH (người chơi đổi được). Bàn AI giữ nguyên. Tên dài trên thẻ dưới tự thu chữ (`.the .ten.dai`).
