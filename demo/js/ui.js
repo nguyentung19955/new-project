@@ -93,7 +93,7 @@
     capChon();
   }
   const MEO = {
-    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles walk the top lane, then <b>your</b> lane below — hold out with your <b>ALLY</b> for <b>70 waves</b>.',
+    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles come down the left lane, then run the <b>middle corridor</b> between both boards to the core — hold out with your <b>ALLY</b> for <b>70 waves</b>.',
     pvp: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.',
   };
   // ---- Archfiend (ô thứ 6): chọn 1 trong ARCHFIEND, nhớ lựa chọn cuối ----
@@ -180,7 +180,7 @@
       e.textContent = v === 'dang' ? `⚠ ${ten} LIVE` : v <= 0 ? `${ten} THIS WAVE` : `${ten} IN ${v} WAVE${v > 1 ? 'S' : ''}`;
       e.classList.toggle('dang', v === 'dang'); e.classList.toggle('gan', v !== 'dang' && v <= 2);   // 2 wave cuối: đổi màu + nhịp chậm
     });
-    set('quai', coop ? S.quai.length + A.quai.length + A.conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
+    set('quai', coop ? S.quai.length + A.conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     if (coop) set('mang', S.coop.mang, (v) => { const b = $('#tb-mang b'); b.textContent = `${v}/${S.coop.max}`; b.classList.toggle('thap', v <= 3); });
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });

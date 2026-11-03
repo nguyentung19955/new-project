@@ -386,17 +386,16 @@
   for (const k of SKIN_IDS) nap('v3skin:' + k, `${V3}skin_${k}.png`);
   const anhSkin = (B) => B && B.SKIN ? co('v3skin:' + B.SKIN.id) : null;
   function veSkin(c, B) { const im = anhSkin(B), k = B.SKIN; if (!im) return false; c.drawImage(im, k.x, k.y, k.w, k.h); return true; }
-  // CO-OP: "cầu" nối hành lang trái bàn trên xuống bàn dưới = mảnh hành lang dọc CẮT từ ảnh skin bàn trên (gồm 2 vách), lặp theo chiều dọc
-  function veCau(c, B) {
-    const im = anhSkin(B), k = B.SKIN, cau = B.CAU; if (!im || !cau) return;
-    const s = SKIN[k.id], g = s.grid, L = s.lane;
-    const sx = (L.x - L.w / 2) * s.w - 12, sw = L.w * s.w + 24, sy = g[1] * s.h + 6, sh = (g[3] - g[1]) * s.h * 0.9;
-    const dw = sw * k.tl, dh = sh * k.tl, x = cau.x - dw / 2;
-    c.save(); c.beginPath(); c.rect(x - 2, cau.y0, dw + 4, cau.y1 - cau.y0); c.clip();
-    for (let y = cau.y0; y < cau.y1; y += dh - 1) c.drawImage(im, sx, sy, sw, sh, x, y, dw, dh);
+  // CO-OP: bàn người chơi (dưới) vẽ ảnh skin nhưng CẮT bỏ hành lang trái + dưới của ảnh (B.CAT: chỉ giữ phần bên phải mép hành lang trái
+  // và phía trên mép hành lang dưới) — quái chỉ đi hành lang trái + hành lang giữa của ảnh bàn trên. Mép cắt có bóng mềm cho hoà vào nền.
+  function veSkinCat(c, B) {
+    const im = anhSkin(B), k = B.SKIN, cat = B.CAT; if (!im) return;
+    if (!cat) { veSkin(c, B); return; }
+    c.save(); c.beginPath(); c.rect(cat.x, k.y - 40, W - cat.x + 40, cat.y - k.y + 40); c.clip();
+    c.drawImage(im, k.x, k.y, k.w, k.h);
+    c.fillStyle = lg(c, cat.x, 0, cat.x + 10, 0, [[0, 'rgba(0,0,0,0.45)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(cat.x, k.y, 10, cat.y - k.y);
+    c.fillStyle = lg(c, 0, cat.y - 8, 0, cat.y, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.45)']]); c.fillRect(cat.x, cat.y - 8, W - cat.x, 8);
     c.restore();
-    // mép trên/dưới hoà vào sàn: bóng mềm (không vẽ hình)
-    c.fillStyle = lg(c, 0, cau.y1 - 10, 0, cau.y1, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.25)']]); c.fillRect(x, cau.y1 - 10, dw, 10);
   }
   // NỀN: xám xanh than trung tính (không còn nền tím neon) + vài VẾT NỨT cyan rất mờ (thế giới NEON FRACTURE: neon chỉ là điểm nhấn)
   function veNen(c, r) {
@@ -421,8 +420,8 @@
       if (coSkin) {
         veNen(c, r);
         // bàn dưới trước, bàn trên sau (trang trí đáy bàn trên đè lên trang trí đỉnh bàn dưới; hành lang không bị che)
-        veSkin(c, coop ? G.BAN_NG_CO : G.BAN_NG); veSkin(c, coop ? G.BAN_AI_CO : G.BAN_AI);
-        if (coop) veCau(c, G.BAN_AI_CO);
+        if (coop) veSkinCat(c, G.BAN_NG_CO); else veSkin(c, G.BAN_NG);
+        veSkin(c, coop ? G.BAN_AI_CO : G.BAN_AI);   // co-op: hành lang trái + hành lang dưới ảnh bàn trên = đường quái hình ⊢ (hành lang giữa 2 bàn)
         for (const B of coop ? [G.BAN_AI_CO, G.BAN_NG_CO] : BANS) veMieng(c, B, coop && !B.ai);
         return;
       }
@@ -431,10 +430,9 @@
       if (bg) c.drawImage(bg, 0, 0, W, H);
       else { veSan(c, 0, 0, W, C.GIUA_Y, 1); veSan(c, 0, C.GIUA_Y, W, H - C.GIUA_Y, 0); veViMach(c, 0, C.TOP_H, W, C.DUOI_Y - C.TOP_H, r); }
       c.fillStyle = 'rgba(0,0,0,0.08)'; c.fillRect(0, 0, W, H);
-      const ds = coop ? [Object.assign({}, G.BAN_AI_CO, { noi: false }), G.BAN_NG_CO] : BANS;
-      if (coop) ds[1] = Object.assign({}, G.BAN_NG_CO, { noi: true });   // co-op: bàn dưới nối tiếp hành lang trên (không vẽ cổng sinh thứ 2)
+      const ds = coop ? [Object.assign({}, G.BAN_AI_CO, { CONG: G.BAN_NG_CO.CONG })] : BANS;   // co-op: 1 đường chung (cổng cuối hành lang giữa)
       for (const B of ds) veHanhLang(c, B);
-      veBanTinh(c, G.BAN_AI, 1); veBanTinh(c, G.BAN_NG, 0);
+      veBanTinh(c, coop ? G.BAN_AI_CO : G.BAN_AI, 1); veBanTinh(c, coop ? G.BAN_NG_CO : G.BAN_NG, 0);
     }, k);
     L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 300, 640, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.30)']]); c.fillRect(0, 0, W, H); }, 1) };
     LK = k0; L.coop = coop; L.skin = C.SKIN_NG + '|' + C.SKIN_AI;
@@ -1315,7 +1313,7 @@
     }
     if (goi) veKeoO(c, S, keo, t);
     for (const f of S.fx) if (f.k === 'gop') veGopCu(c, S, f, tg);
-    const qs = S.quai.slice().sort((a, b) => a.y - b.y);
+    const qs = S.coop && S.ai ? [] : S.quai.slice().sort((a, b) => a.y - b.y);   // co-op: mảng quái chung → chỉ vẽ 1 lần (ở bàn người chơi, vẽ sau)
     for (const q of qs) veQuai(c, q, t, tg);
     for (const d of S.dan) veDan(c, d, tg);
     for (const f of S.fx) veFx(c, S, f);
@@ -1402,6 +1400,7 @@
 
   // ---------- THANH GIỮA MỎNG (kiểu DCDW): PVP "ROUND N" + đồng hồ giây / tên trùm của round (cờ đầu hàng = nút DOM bên phải) · CO-OP: dải đèn nguy hiểm mỏng ----------
   function veThanhGiua(c, S, A, t) {
+    if (S.coop) return;   // co-op: giữa 2 bàn là HÀNH LANG GIỮA (đường quái), không vẽ thanh; wave / trùm đã có ở HUD trên
     const y = C.THANH_Y, h = C.THANH_H, x0 = C.BAN_X - 2, x1 = W - 3, cy = y + h / 2;
     c.save();
     rr(c, x0, y, x1 - x0, h, 5); c.fillStyle = 'rgba(8,10,20,0.86)'; c.fill(); c.lineWidth = 1; c.strokeStyle = 'rgba(150,170,210,0.35)'; c.stroke();
@@ -1608,7 +1607,7 @@
     if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.3)']]); c.fillRect(0, 0, W, H); c.restore(); }
     if (!S) return;
     if (S.bao && !(coop && S.bao.boss)) {   // dải thông báo round / trùm: đè lên THANH GIỮA (co-op trùm dùng màn giới thiệu)
-      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 8, (b.T - b.t) * 4)), hh = b.boss ? 46 : 30, y0 = C.GIUA_Y - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
+      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 8, (b.T - b.t) * 4)), hh = b.boss ? 46 : 30, y0 = (coop ? C.GIUA_CO : C.GIUA_Y) - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
       c.save(); c.globalAlpha = a;
       const sx = (1 - Math.min(1, b.t * 5)) * 30;
       c.fillStyle = 'rgba(3,4,14,0.9)'; c.fillRect(0, y0, W, hh);
