@@ -108,9 +108,9 @@ const TUONG = {
       idle: { s: { file: 'patchwork_idle_s', o: 224, ms: 260 }, se: { file: 'patchwork_idle_s', o: 224, ms: 260 }, sw: { file: 'patchwork_idle_s', o: 224, ms: 260 },
         w: { file: 'patchwork_idle_w', o: 224, ms: 260 }, e: { file: 'patchwork_idle_e', o: 224, ms: 260 },
         n: { file: 'patchwork_idle_n', o: 224, ms: 260 }, ne: { file: 'patchwork_idle_n', o: 224, ms: 260 }, nw: { file: 'patchwork_idle_n', o: 224, ms: 260 } },
-      atk: { file: { s: 'patchwork_atk_s', w: 'patchwork_atk_w', n: 'patchwork_atk_n' }, w: 224, h: 176,
+      atk: { file: { s: 'patchwork_atk_s', w: 'patchwork_atk_w', e: 'patchwork_atk_e', n: 'patchwork_atk_n' }, w: 224, h: 176,
         nhip: [200, 70, 70, 70, 70, 120, 60, 40, 160, 120, 80, 80], trung: 8,   // 12 khung ChatGPT; búa chạm đất ở khung 9
-        huong: { s: ['s', 0], se: ['s', 0], sw: ['s', 0], w: ['w', 0], e: ['w', 1], n: ['n', 0], ne: ['n', 0], nw: ['n', 0] } },
+        huong: { s: ['s', 0], se: ['s', 0], sw: ['s', 0], w: ['w', 0], e: ['e', 0], n: ['n', 0], ne: ['n', 0], nw: ['n', 0] } },
       to: 1.25 } },
 };
 const TUONG_IDS = Object.keys(TUONG);
