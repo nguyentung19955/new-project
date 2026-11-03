@@ -51,6 +51,7 @@ for j in range(1,n):
     shifts.append((best[1],best[2]))
 sc=116/H0
 SACH=os.environ.get('SACH')=='1'
+VIEN=os.environ.get('SACH')=='vien'   # chỉ dọn viền: giữ nguyên cách thu nhỏ/màu bên trong
 def khuNhieu(q,al):
     # 1) bỏ điểm lẻ: ô đặc có <=1 hàng xóm đặc   2) điểm màu lạc: khác mọi hàng xóm -> lấy màu hàng xóm phổ biến nhất
     H,W=al.shape; q=q.copy(); al=al.copy()
@@ -71,12 +72,20 @@ for j in range(n):
     dx,dy=shifts[j]; bj=body(masks[j]); ay=(b0+dy) if os.environ.get("NEO")=="dy" else np.nonzero(bj.any(1))[0][-1]; ax=cx0+dx
     yy,xx=np.nonzero(masks[j]); X0,X1,Y0,Y1=xx.min(),xx.max()+1,yy.min(),yy.max()+1
     c=Image.fromarray(L[j].astype(np.uint8),'RGBA').crop((X0,Y0,X1,Y1))
+    if VIEN:
+        ca=np.array(c); ca[:,:,3]=np.where(ndimage.binary_erosion(ca[:,:,3]>110,iterations=2),ca[:,:,3],0); c=Image.fromarray(ca,'RGBA')
     if SACH:   # gọt viền 2px nguồn (bỏ quầng nền trắng) trước khi thu nhỏ
         ca=np.array(c); ca[:,:,3]=np.where(ndimage.binary_erosion(ca[:,:,3]>110,iterations=1),ca[:,:,3],0); c=Image.fromarray(ca,'RGBA')
     c2=c.resize((max(1,round(c.width*sc)),max(1,round(c.height*sc))),Image.BOX if SACH else Image.LANCZOS)
     a2=np.array(c2); al=a2[:,:,3]>(140 if SACH else 110)
     q=Image.fromarray(a2[:,:,:3]).quantize(colors=(28 if SACH else 40),method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGB')
     q=np.array(q)
+    if VIEN:
+        for _ in range(2):
+            nb=sum(np.roll(np.roll(al,a,0),b,1) for a in(-1,0,1) for b in(-1,0,1) if (a,b)!=(0,0)); al=al&(nb>=3)
+        lb,kb=ndimage.label(al); sz=ndimage.sum(al,lb,range(1,kb+1))
+        for i,z in enumerate(sz):
+            if z<6: al[lb==i+1]=False
     if SACH:
         q,al=khuNhieu(q,al)
         vien=al&~ndimage.binary_erosion(al)   # viền ngoài 1px tô màu tối nhất -> nét viền kín như pixel art
