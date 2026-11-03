@@ -930,16 +930,28 @@
       c.restore();
     });
   }
+  function veKiem(c, x, y, m) {   // biểu tượng kiếm nhỏ (cận chiến)
+    c.save(); c.translate(x, y); c.rotate(-Math.PI / 4); c.lineCap = 'round';
+    c.strokeStyle = 'rgba(0,0,0,0.8)'; c.lineWidth = 3.2; c.beginPath(); c.moveTo(0, -5); c.lineTo(0, 4); c.moveTo(-2.6, 2); c.lineTo(2.6, 2); c.stroke();
+    c.strokeStyle = m; c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, -5); c.lineTo(0, 4); c.moveTo(-2.6, 2); c.lineTo(2.6, 2); c.stroke(); c.restore();
+  }
+  function veNgoaiTam(c, x, y, t) {   // cận chiến đứng ô KHÔNG với tới đường: kiếm mờ + gạch chéo đỏ (nhịp nhẹ)
+    c.save(); c.globalAlpha = 0.6 + 0.25 * Math.sin(t * 4);
+    c.beginPath(); c.arc(x, y, 6.5, 0, 7); c.fillStyle = 'rgba(4,6,14,0.8)'; c.fill();
+    veKiem(c, x, y, 'rgba(200,205,215,0.7)');
+    c.strokeStyle = '#ff5a5a'; c.lineWidth = 1.6; c.beginPath(); c.arc(x, y, 5.6, 0, 7); c.moveTo(x - 4, y + 4); c.lineTo(x + 4, y - 4); c.stroke(); c.restore();
+  }
   function veNhanO(c, S, v, i, t) {   // sao + trạng thái (lớp trên cùng của bàn)
     const [x, y] = G.oXY(S, i), cx = x + C.O / 2;
     const dau = y + C.OH - C.CHAN - C.TUONG_CAO * (TUONG[v.id].co || 1);   // đỉnh đầu (theo cỡ chuẩn, KHÔNG theo nhún) → sao cố định
     veSao(c, cx, Math.max(y + (v.sao > 3 ? 6 : 4), dau - (v.sao > 3 ? 4 : 2)), v.sao);
-    const buff = G.afBat(S, 'tocDanh') || v.bufT > 0, debuff = v.nong > 0 || v.corrT > 0 || v.khoaT > 0, my = y + C.OH - C.CHAN - C.TUONG_CAO * 0.55;
+    const buff = G.afBat(S, 'tocDanh') || v.bufT > 0 || !!v.keB, debuff = v.nong > 0 || v.corrT > 0 || v.khoaT > 0, my = y + C.OH - C.CHAN - C.TUONG_CAO * 0.55;
     if (buff) veMuiTen(c, x + C.O - 7, my, true, t);
     if (debuff) veMuiTen(c, x + 7, my, false, t);
     let ix = x + 4;
     const nhan = (txt, mau) => { c.font = '700 6px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left'; const w = c.measureText(txt).width + 4;
       c.fillStyle = 'rgba(4,6,14,0.85)'; rr(c, ix, y + C.OH - 11, w, 8, 2); c.fill(); c.fillStyle = mau; c.fillText(txt, ix + 2, y + C.OH - 4.5); ix += w + 2; };
+    if (G.laCanChien(v.id) && !G.oCanChien(S, i)) veNgoaiTam(c, x + 8, y + 9, t);   // cận chiến NGOÀI TẦM: không ra đòn ở ô này
     if (v.khoaT > 0) nhan('LOCK ' + Math.ceil(v.khoaT), '#ff8080');   // JAMMER khoá kỹ năng
     if (v.bufT > 0) nhan('BUF', '#00ffa3');                          // GLITCH COPY BUFFER
     if (v.giaoDichT > S.t) nhan('$', '#ffd84a');                     // BROKER TRADE
@@ -1311,6 +1323,7 @@
       if (keo && keo.i === i) { c.save(); c.globalAlpha = 0.3; veUnit(c, S, v, i, tg, t); c.restore(); continue; }
       veUnit(c, S, v, i, tg, t, goi && G.gopDuoc(S, keo.i, i));
     }
+    veDayKe(c, S, t);
     if (goi) veKeoO(c, S, keo, t);
     for (const f of S.fx) if (f.k === 'gop') veGopCu(c, S, f, tg);
     const qs = S.coop && S.ai ? [] : S.quai.slice().sort((a, b) => a.y - b.y);   // co-op: mảng quái chung → chỉ vẽ 1 lần (ở bàn người chơi, vẽ sau)
@@ -1324,7 +1337,14 @@
   }
   // KÉO THẢ: ô nguồn viền CAM · ô ghép được (cùng loại cùng sao) viền XANH-VÀNG sáng · ô trống hợp lệ viền cyan nhạt · ô không hợp lệ đỏ mờ
   function veKeoO(c, S, keo, t) {
-    const nh = 0.6 + 0.4 * Math.sin(t * 10);
+    const nh = 0.6 + 0.4 * Math.sin(t * 10), goi = S.o[keo.i], can = goi && G.laCanChien(goi.id);
+    if (can) for (let j = 0; j < S.o.length; j++) {   // CẬN CHIẾN đang được kéo/giữ: tô sáng các ô SÁT ĐƯỜNG nó đánh được (vàng cam) + biểu tượng kiếm
+      if (!G.oCanChien(S, j)) continue;
+      const [x, y] = G.oXY(S, j);
+      c.save(); rr(c, x + 3, y + 3, C.O - 6, C.OH - 6, 4);
+      c.fillStyle = `rgba(255,190,60,${0.10 + 0.06 * nh})`; c.fill(); c.lineWidth = 1.6; c.setLineDash([4, 3]); c.strokeStyle = `rgba(255,200,80,${0.55 + 0.3 * nh})`; c.stroke();
+      c.setLineDash([]); veKiem(c, x + C.O - 9, y + 9, '#ffd27a'); c.restore();
+    }
     for (let j = 0; j < S.o.length; j++) {
       const [x, y] = G.oXY(S, j), tren = keo.x >= x && keo.x < x + C.O && keo.y >= y && keo.y < y + C.OH;
       c.save(); rr(c, x + 1, y + 1, C.O - 2, C.OH - 2, 4);
@@ -1334,6 +1354,24 @@
       else { c.fillStyle = `rgba(255,40,60,${tren ? 0.24 : 0.14})`; c.fill(); c.lineWidth = 1; c.strokeStyle = 'rgba(255,70,80,0.45)'; c.stroke(); }
       c.restore();
     }
+  }
+  // HỖ TRỢ 4 Ô KỀ: đường nối MỜ từ tướng hỗ trợ (TUONG[id].keBuff) tới các ô kề đang có tướng được buff
+  const MAU_KE = { tocDanh: '#ffd84a', chiMang: '#ff5a7a', satThuong: '#ff9a2a', lamCham: '#5ee7ff' };
+  function veDayKe(c, S, t) {
+    let co = false;
+    for (let i = 0; i < S.o.length; i++) {
+      const v = S.o[i], kb = v && TUONG[v.id].keBuff; if (!kb || v.khoaT > 0) continue;
+      const [x0, y0] = G.oTam(S, i), m = MAU_KE[kb.k] || '#ffffff';
+      for (const j of G.ke(i)) {
+        if (!S.o[j]) continue;
+        if (!co) { c.save(); co = true; }
+        const [x1, y1] = G.oTam(S, j);
+        c.globalAlpha = 0.22 + 0.1 * Math.sin(t * 3 + i); c.strokeStyle = m; c.lineWidth = 2; c.setLineDash([3, 3]); c.lineDashOffset = -t * 12;
+        c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+        c.globalAlpha = 0.45; c.fillStyle = m; c.beginPath(); c.arc(x1 + (x0 - x1) * 0.25, y1 + (y0 - y1) * 0.25, 2, 0, 7); c.fill();
+      }
+    }
+    if (co) c.restore();
   }
   function veSoBan(c, S) { for (const s of S.so) veSo(c, s); }
   // ================= KỸ NĂNG CHỦ ĐỘNG (VÀNG) + PACKET SWAP — giao diện trên canvas; ui.js dò chạm bằng các hộp trả về =================
