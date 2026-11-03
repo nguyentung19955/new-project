@@ -8,7 +8,7 @@ V='/root/neon/docs/demo-hop-tuong/nguon-chatgpt/v3/'
 src,cols,rows,name=sys.argv[1],int(sys.argv[2]),int(sys.argv[3]),sys.argv[4]
 durs=[int(x) for x in sys.argv[5].split(',')] if len(sys.argv)>5 else None
 im=Image.open(V+src).convert('RGBA'); arr=np.array(im).astype(np.float32); m=arr[:,:,3]>40
-lab,k=ndimage.label(ndimage.binary_dilation(m,iterations=2)); lab=lab*m
+lab,k=ndimage.label(ndimage.binary_dilation(m,iterations=1)); lab=lab*m
 W,H=im.size; n=cols*rows
 cen=[((c+0.5)*W/cols,(r+0.5)*H/rows) for r in range(rows) for c in range(cols)]
 sizes=ndimage.sum(m,lab,range(1,k+1)); com=ndimage.center_of_mass(m,lab,range(1,k+1))
@@ -50,16 +50,39 @@ for j in range(1,n):
             if e<best[0]: best=(e,dx,dy)
     shifts.append((best[1],best[2]))
 sc=116/H0
+SACH=os.environ.get('SACH')=='1'
+def khuNhieu(q,al):
+    # 1) bỏ điểm lẻ: ô đặc có <=1 hàng xóm đặc   2) điểm màu lạc: khác mọi hàng xóm -> lấy màu hàng xóm phổ biến nhất
+    H,W=al.shape; q=q.copy(); al=al.copy()
+    nb=sum(np.roll(np.roll(al,a,0),b,1) for a in(-1,0,1) for b in(-1,0,1) if (a,b)!=(0,0))
+    al&=nb>=2
+    key=(q[:,:,0].astype(np.int32)<<16)|(q[:,:,1].astype(np.int32)<<8)|q[:,:,2]
+    out=q.copy()
+    for y in range(1,H-1):
+        for x in range(1,W-1):
+            if not al[y,x]: continue
+            ks=[key[y+a,x+b] for a in(-1,0,1) for b in(-1,0,1) if (a,b)!=(0,0) and al[y+a,x+b]]
+            if len(ks)>=5 and key[y,x] not in ks:
+                k=max(set(ks),key=ks.count); out[y,x]=[(k>>16)&255,(k>>8)&255,k&255]
+    return out,al
 FW,FH=224,int(os.environ.get("FH",176))
 frames=[]
 for j in range(n):
     dx,dy=shifts[j]; bj=body(masks[j]); ay=(b0+dy) if os.environ.get("NEO")=="dy" else np.nonzero(bj.any(1))[0][-1]; ax=cx0+dx
     yy,xx=np.nonzero(masks[j]); X0,X1,Y0,Y1=xx.min(),xx.max()+1,yy.min(),yy.max()+1
     c=Image.fromarray(L[j].astype(np.uint8),'RGBA').crop((X0,Y0,X1,Y1))
-    c2=c.resize((max(1,round(c.width*sc)),max(1,round(c.height*sc))),Image.LANCZOS)
-    a2=np.array(c2); al=a2[:,:,3]>110
-    q=Image.fromarray(a2[:,:,:3]).quantize(colors=40,method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGB')
-    p=Image.fromarray(np.dstack([np.array(q),(al*255).astype('uint8')]),'RGBA')
+    if SACH:   # gọt viền 2px nguồn (bỏ quầng nền trắng) trước khi thu nhỏ
+        ca=np.array(c); ca[:,:,3]=np.where(ndimage.binary_erosion(ca[:,:,3]>110,iterations=1),ca[:,:,3],0); c=Image.fromarray(ca,'RGBA')
+    c2=c.resize((max(1,round(c.width*sc)),max(1,round(c.height*sc))),Image.BOX if SACH else Image.LANCZOS)
+    a2=np.array(c2); al=a2[:,:,3]>(140 if SACH else 110)
+    q=Image.fromarray(a2[:,:,:3]).quantize(colors=(28 if SACH else 40),method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).convert('RGB')
+    q=np.array(q)
+    if SACH:
+        q,al=khuNhieu(q,al)
+        vien=al&~ndimage.binary_erosion(al)   # viền ngoài 1px tô màu tối nhất -> nét viền kín như pixel art
+        lum=q.sum(2); dk=q[al][np.argmin(lum[al])] if al.any() else [20,15,20]
+        q[vien]=(np.array(dk)*0.6+np.array([25,18,24])*0.4).astype(np.uint8)
+    p=Image.fromarray(np.dstack([q,(al*255).astype('uint8')]),'RGBA')
     px=round(FW/2-(ax-X0)*sc); py=round(FH-int(os.environ.get("PADB",8))-(ay-Y0)*sc)
     assert px>=0 and px+p.width<=FW and py>=0 and py+p.height<=FH+8,(j,px,py,p.size)
     F=Image.new('RGBA',(FW,FH),(0,0,0,0)); F.paste(p,(px,py),p); frames.append(F)
