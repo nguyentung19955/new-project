@@ -1084,7 +1084,20 @@
     let ix = x + 4;
     const nhan = (txt, mau) => { c.font = '700 6px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'left'; const w = c.measureText(txt).width + 4;
       c.fillStyle = 'rgba(4,6,14,0.85)'; rr(c, ix, y + C.OH - 11, w, 8, 2); c.fill(); c.fillStyle = mau; c.fillText(txt, ix + 2, y + C.OH - 4.5); ix += w + 2; };
-    if (G.laCanChien(v.id) && !G.oCanChien(S, i)) veNgoaiTam(c, x + 8, y + 9, t);   // cận chiến NGOÀI TẦM: không ra đòn ở ô này
+    if (G.laCanChien(v.id) && !G.oCanChien(S, i)) veNgoaiTam(c, x + 8, y + 9, t);
+    { const kn = TUONG[v.id].kn;   // VÒNG HỒI KỸ NĂNG (05/11, kiểu DCDW): góc dưới phải ô — vòng màu hệ đầy dần theo kn.cd; đầy/đang tung chiêu = sáng nhịp
+      if (kn && kn.cd && v.knCd != null) {
+        const mau = HANH[TUONG[v.id].hanh].mau, dang = v.knT0 != null && S.t - v.knT0 < 0.9, p = dang ? 1 : Math.max(0, Math.min(1, 1 - v.knCd / kn.cd));
+        const bx = x + C.O - 6.5, byy = y + C.OH - 7;
+        c.save(); c.globalAlpha = S.ai ? 0.6 : 0.95;
+        c.beginPath(); c.arc(bx, byy, 4.6, 0, 7); c.fillStyle = 'rgba(4,6,14,0.78)'; c.fill();
+        c.lineWidth = 1.6; c.strokeStyle = 'rgba(150,160,185,0.35)'; c.beginPath(); c.arc(bx, byy, 3.4, 0, 7); c.stroke();
+        c.strokeStyle = mau; c.beginPath(); c.arc(bx, byy, 3.4, -Math.PI / 2, -Math.PI / 2 + p * Math.PI * 2); c.stroke();
+        if (dang || p > 0.97) { veGlow(c, mau, bx, byy, 7, dang ? 0.9 : 0.4 + 0.3 * Math.sin(t * 8)); }
+        c.fillStyle = p > 0.97 || dang ? '#ffffff' : mau; c.beginPath(); c.arc(bx, byy, 1.1, 0, 7); c.fill();
+        c.restore();
+      }
+    }   // cận chiến NGOÀI TẦM: không ra đòn ở ô này
     if (v.khoaT > 0) nhan('LOCK ' + Math.ceil(v.khoaT), '#ff8080');   // JAMMER khoá kỹ năng
     if (v.bufT > 0) nhan('BUF', '#00ffa3');                          // GLITCH COPY BUFFER
     if (v.giaoDichT > S.t) nhan('$', '#ffd84a');                     // BROKER TRADE
@@ -1257,8 +1270,10 @@
     const g = d.goc != null ? d.goc : Math.atan2(d.q.y - d.y, d.q.x - d.x), im = co('v3proj:' + d.id), dai = 12;
     const b9 = co(`fx9:${d.id}:bay`);
     if (b9) {   // bộ v9: sheet đạn bay 6 khung (vẽ hướng PHẢI) xoay theo góc bay, tâm tại viên đạn, cỡ FX9.bay px
-      const fh = b9.height, f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % Math.max(1, Math.round(b9.width / fh)), z = FX9.bay;
-      c.save(); c.globalCompositeOperation = 'lighter'; c.translate(d.x, d.y); c.rotate(g); c.drawImage(b9, f * fh, 0, fh, fh, -z / 2, -z / 2, z, z); c.restore(); return;
+      // 05/11: MŨI đạn ở đúng vị trí viên đạn (ảnh vẽ mũi bên phải ~0,8 ô) → lúc vừa bắn, đuôi đạn còn nằm ở tay, không "mọc" giữa không trung
+      const fh = b9.height, f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % Math.max(1, Math.round(b9.width / fh)), z = FX9.bay * (d.to || 1);
+      const di = Math.hypot(d.x - (d.x0 == null ? d.x : d.x0), d.y - (d.y0 == null ? d.y : d.y0)), lui = Math.min(z * 0.3, di);   // mới rời tay: chưa đẩy đuôi ra sau tay
+      c.save(); c.globalCompositeOperation = 'lighter'; c.translate(d.x, d.y); c.rotate(g); c.drawImage(b9, f * fh, 0, fh, fh, -z / 2 - lui, -z / 2, z, z); c.restore(); return;
     }
     if (im) {
       const f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % 2, k = doProj(im, f);   // khung 1 ↔ 2
@@ -1387,21 +1402,54 @@
     } else if (f.k === 'kn') {
       c.strokeStyle = f.mau; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 7 + 40 * k, 0, 7); c.stroke();
     } else if ((f.k === 'nong' || f.k === 'trung9') && f.id && co(`fx9:${f.id}:${f.k === 'nong' ? 'phat' : 'trung'}`)) {   // bộ v9: chớp tại tay / nổ khi trúng (6 khung)
-      const im = co(`fx9:${f.id}:${f.k === 'nong' ? 'phat' : 'trung'}`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n)), z = f.k === 'nong' ? FX9.phat : FX9.trung;
+      const im = co(`fx9:${f.id}:${f.k === 'nong' ? 'phat' : 'trung'}`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n)), z = f.k === 'nong' ? FX9.phat : f.z || FX9.trung;   // trung9: f.z = cỡ theo thân quái (game.js fxTrung)
       c.globalCompositeOperation = 'lighter'; c.globalAlpha = 1; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z);
     } else if (f.k === 'trung9') {
     } else if (f.k === 'kn9' && co(`fx9:${f.id}:kn`)) {   // bộ DC: hiệu ứng kỹ năng fx_<id>_kn (6 khung): chan = đáy ảnh tại chân quái (cột lửa) · quat = hình quạt xoay theo goc (đỉnh quạt tại tướng)
       const im = co(`fx9:${f.id}:kn`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n));
       c.globalAlpha = 1;
-      if (f.quat) { const z = Math.min(f.quat * 1.15, C.TUONG_CAO * 1.8); /* quạt băng tối đa ~1,8× chiều cao tướng */ c.translate(f.x, f.y); c.rotate(f.goc + Math.PI / 2); c.drawImage(im, fr * fh, 0, fh, fh, -z / 2, -z * 0.8, z, z); }
-      else if (f.chan) { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z * 0.86, z, z); }
-      else { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z); }
+      if (f.quat) {   // FROST (05/11): HÌNH QUẠT đỉnh tại TAY, nửa góc f.nua, bán kính = tầm trúng thật f.quat (nở trong 45% đầu) + MẶT SÓNG (ảnh) chạy từ tay ra mép quạt
+        const e = Math.min(1, k / 0.45), R0 = f.quat * (1 - (1 - e) * (1 - e)), nua = f.nua || 0.7, aa = k < 0.45 ? 1 : Math.max(0, 1 - (k - 0.45) / 0.55);
+        c.globalAlpha = aa;
+        const gr = c.createRadialGradient(f.x, f.y, 0, f.x, f.y, Math.max(1, R0));
+        gr.addColorStop(0, 'rgba(190,245,255,0.30)'); gr.addColorStop(0.6, 'rgba(94,231,255,0.10)'); gr.addColorStop(1, 'rgba(94,231,255,0.02)');
+        c.fillStyle = gr; c.beginPath(); c.moveTo(f.x, f.y); c.arc(f.x, f.y, Math.max(1, R0), f.goc - nua, f.goc + nua); c.closePath(); c.fill();
+        c.strokeStyle = `rgba(210,250,255,${0.4 * (1 - k)})`; c.lineWidth = 0.8; c.stroke();
+        // ảnh quạt: đỉnh ở 0,74 ô, mép trên 0,2 ô → bán kính ảnh ≈ 0,54 ô; cỡ theo bề rộng sóng tại khoảng cách R0, tối đa 1,6× chiều cao tướng
+        const z = Math.max(C.TUONG_CAO * 0.7, Math.min(C.TUONG_CAO * 1.6, R0 * 1.3)), dA = Math.max(0, R0 - 0.54 * z);
+        c.translate(f.x + Math.cos(f.goc) * dA, f.y + Math.sin(f.goc) * dA); c.rotate(f.goc + Math.PI / 2); c.drawImage(im, fr * fh, 0, fh, fh, -z / 2, -z * 0.74, z, z);
+      }
+      else if (f.chan) { const z = f.r ? f.r * 2.5 : FX9.kn; /* vòng đáy cột lửa ≈ 0,4 ô = bán kính sát thương thật */ c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z * 0.86, z, z); }
+      else { const z = f.nho ? C.TUONG_CAO * 0.9 : FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z); }
     } else if (f.k === 'kn9') {
     } else if (f.k === 'nong') {   // CHỚP ĐẦU NÒNG 60–80ms: lõi trắng + quầng màu hệ + 2 tia ngắn theo hướng bắn
       const r = 5 * (1 - k * 0.5); veGlow(c, f.mau, f.x, f.y, r * 2.2, a); c.fillStyle = '#ffffff'; c.globalAlpha = a; c.beginPath(); c.arc(f.x, f.y, r * 0.55, 0, 7); c.fill();
       c.strokeStyle = f.mau; c.lineWidth = 1.4; c.lineCap = 'round';
       for (const lch of [-0.45, 0.45]) { c.beginPath(); c.moveTo(f.x, f.y); c.lineTo(f.x + Math.cos(f.goc + lch) * r * 1.8, f.y + Math.sin(f.goc + lch) * r * 1.8); c.stroke(); }
       c.beginPath(); c.moveTo(f.x, f.y); c.lineTo(f.x + Math.cos(f.goc) * r * 2.4, f.y + Math.sin(f.goc) * r * 2.4); c.stroke();
+    } else if (f.k === 'setTia') {   // ARC kỹ năng (05/11): TIA SÉT gấp khúc từ TAY tướng tới TỪNG quái (đầu tia bám quái), quầng ở hai đầu
+      c.lineJoin = 'round'; c.globalAlpha = k < 0.6 ? 1 : (1 - k) / 0.4;
+      veGlow(c, f.mau, f.x, f.y, 10, 0.9);
+      f.qs.forEach((q, n) => {
+        if (q && q.hp > 0 && !q.ra) f.pts[n] = [q.x, q.y - q.co / 2];
+        const [x1, y1] = f.pts[n], dx = x1 - f.x, dy = y1 - f.y, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, buoc = Math.max(3, Math.round(L / 14));
+        c.beginPath(); c.moveTo(f.x, f.y);
+        for (let s2 = 1; s2 <= buoc; s2++) { const kk = s2 / buoc, j = s2 < buoc ? (Math.random() - 0.5) * 9 : 0; c.lineTo(f.x + dx * kk + nx * j, f.y + dy * kk + ny * j); }
+        c.strokeStyle = f.mau; c.lineWidth = 3; c.stroke(); c.strokeStyle = '#ffffff'; c.lineWidth = 1.1; c.stroke();
+        veGlow(c, f.mau, x1, y1, 10, 0.9);
+      });
+    } else if (f.k === 'knTen') {   // TUNG CHIÊU (05/11): vòng sáng màu hệ nở ở CHÂN tướng + nhãn TÊN KỸ NĂNG nổi trên đầu 0,9 s → biết AI tung chiêu GÌ
+      const v = S.o[f.i]; if (!v || v.uid !== f.uid) { c.restore(); return; }
+      const [x, y] = G.oXY(S, f.i), cx = x + C.O / 2, chan = y + C.OH - C.CHAN, dau = chan - C.TUONG_CAO * (TUONG[v.id].co || 1);
+      const kr = Math.min(1, k / 0.55);
+      c.globalAlpha = 1 - kr; c.strokeStyle = f.mau; c.lineWidth = 2.2; c.beginPath(); c.ellipse(cx, chan, 7 + 17 * kr, (7 + 17 * kr) * 0.36, 0, 0, 7); c.stroke();
+      c.lineWidth = 1; c.strokeStyle = '#ffffff'; c.beginPath(); c.ellipse(cx, chan, 5 + 11 * kr, (5 + 11 * kr) * 0.36, 0, 0, 7); c.stroke();
+      veGlow(c, f.mau, cx, chan - 3, 18, 0.55 * (1 - k));
+      c.globalCompositeOperation = 'source-over'; c.globalAlpha = k < 0.1 ? k / 0.1 : k > 0.75 ? Math.max(0, (1 - k) / 0.25) : 1;
+      c.font = '900 7.5px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const w = c.measureText(f.ten).width + 10, ty = Math.max(y - 2, dau - 7 - 6 * Math.min(1, k * 2)), bx = Math.max(4 + w / 2, Math.min(C.W - 4 - w / 2, cx));
+      c.fillStyle = 'rgba(6,8,18,0.88)'; rr(c, bx - w / 2, ty - 6, w, 12, 6); c.fill(); c.strokeStyle = f.mau; c.lineWidth = 1.2; c.stroke();
+      c.shadowColor = f.mau; c.shadowBlur = 4; c.fillStyle = '#ffffff'; c.fillText(f.ten, bx, ty + 0.5); c.shadowBlur = 0; c.textBaseline = 'alphabetic';
     } else if (f.k === 'phan') {   // MANTIS phản / kén vỡ: lục giác nở + vỡ
       c.strokeStyle = f.mau || '#bcd4ff'; c.lineWidth = 2; hexP(c, o[0], o[1], f.r * (1 + 0.6 * k), k * 2); c.stroke();
     } else if (f.k === 'chonO') {  // ô được kỹ năng chủ động chọn: viền ô chớp

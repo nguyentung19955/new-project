@@ -150,7 +150,7 @@
     const kCo = cheTran !== 'pvp';   // co-op + solo: mạng chung, 70 wave
     $('#tb-mang').hidden = !kCo; $('.tb-giua').classList.toggle('coop', kCo); $('.tb-wave').classList.toggle('coop', kCo);
     $('#nut-co').hidden = kCo;   // PVP: cờ đầu hàng đỏ bên phải thanh giữa
-    $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
+    $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true; tt.hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
     const ai = $('#tb-ai'); ai.innerHTML = ''; ai.hidden = cheTran === 'solo';   // solo: không có đội AI
@@ -251,10 +251,47 @@
     if (v && S) $('#dung-bo').innerHTML = S.deck.map((id) => `${TUONG[id].ten} <b>LV ${S.bac[id] + 1}</b>`).join(' · ') + (S.af ? ` · <b>${ARCHFIEND[S.af.id].ten}</b>` : '');
   }
 
+  // ---- BẢNG THÔNG TIN TƯỚNG (05/11, người dùng: "không biết tướng có skill gì") ----
+  // moTT(id, v, i): v/i = tướng trên bàn (hiện ★ sao, đặt bảng cạnh ô); không có = từ thẻ (đặt trên hàng thẻ). Bảng không nhận chạm (pointer-events: none):
+  // chạm bất kỳ đâu → đóng, còn thao tác chạm/kéo/ghép vẫn chạy bình thường.
+  const tt = $('#tt');
+  function moTT(id, v, i) {
+    const t = TUONG[id]; if (!t) return;
+    const b = BAC[t.bac] || BAC.trang, h = HANH[t.hanh], kn = t.kn || {};
+    tt.style.setProperty('--h', b.mau); tt.style.setProperty('--hh', h.mau);
+    tt.querySelector('.tt-ten').textContent = t.ten;
+    tt.querySelector('.tt-bac').textContent = b.ten + ' · ' + t.chuc;
+    tt.querySelector('.tt-phu').innerHTML = `${t.kieu}` + (v ? ` · <em>${'★'.repeat(Math.min(7, v.sao || 1))}</em>` : '') + (S && S.bac ? ` · LV ${(S.bac[id] || 0) + 1}` : '');
+    tt.querySelector('.tt-don').textContent = (t.mo || '').split(/\s*Skill:/)[0];
+    tt.querySelector('.tt-kn-ten').textContent = kn.ten || 'SKILL';
+    tt.querySelector('.tt-cd').textContent = kn.cd ? `CD ${kn.cd}s` : '';
+    tt.querySelector('.tt-kn-mo').textContent = kn.mo || ((t.mo || '').split(/Skill:\s*/)[1] || '');
+    R.veThe(tt.querySelector('canvas'), id, 56, 72);
+    tt.hidden = false;
+    const cao = tt.offsetHeight || 96, rong = 260;
+    let x = (C.W - rong) / 2, y;
+    if (i != null && S) {   // trên bàn: đặt ngay trên ô (đủ chỗ) hoặc ngay dưới ô
+      const [ox, oy] = G.oXY(S, i); x = Math.max(6, Math.min(C.W - rong - 6, ox + C.O / 2 - rong / 2));
+      y = oy - cao - 4 >= C.TOP_H + 4 ? oy - cao - 4 : oy + C.OH + 4;
+    } else y = C.DUOI_Y - cao - 6;   // từ thẻ: ngay trên hàng SUMMON/thẻ
+    tt.style.left = x + 'px'; tt.style.top = y + 'px';
+  }
+  const dongTT = () => { tt.hidden = true; };
+  wrap.addEventListener('pointerdown', () => { if (!tt.hidden) dongTT(); }, true);   // chạm đâu cũng đóng (không chặn sự kiện)
+  // GIỮ thẻ tướng ~0,42 s → mở bảng (không nâng cấp); chạm nhanh vẫn là nâng cấp như cũ
+  let giuThe = null, boClick = false;
+  $('#bo-bac').addEventListener('pointerdown', (e) => {
+    const b = e.target.closest('.the'); if (!b) return;
+    clearTimeout(giuThe); boClick = false;
+    giuThe = setTimeout(() => { giuThe = null; boClick = true; moTT(b.dataset.id); }, 420);
+  });
+  for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) $('#bo-bac').addEventListener(ev, () => { clearTimeout(giuThe); giuThe = null; });
+
   // ---- nút ----
   wrap.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
     const a = b.dataset.act;
+    if (a === 'bac' && boClick) { boClick = false; return; }   // vừa GIỮ thẻ để xem thông tin → không nâng cấp
     if (a === 'vao') batDau(chon);
     else if (a === 'che') { che = ['pvp', 'solo'].includes(b.dataset.che) ? b.dataset.che : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
@@ -303,6 +340,7 @@
     const [x, y] = toFrame(e.clientX, e.clientY), j = oTai(x, y);
     const cham = j === keo.i && Math.hypot(x - keo.x0, y - keo.y0) < 8;   // CHẠM (không kéo) tướng có kỹ năng chủ động → mở hàng nút
     if (cham && S && G.chuDong(S, j).length) UI.menu = j;
+    else if (cham && S && S.o[j]) moTT(S.o[j].id, S.o[j], j);   // CHẠM (không kéo) tướng → bảng thông tin + kỹ năng
     else if (S && j >= 0 && S.o[keo.i] === S.o[keo.i]) G.tha(S, keo.i, j);
     keo = null; capNhat();
   };
@@ -339,6 +377,6 @@
   window.DEMO = {
     get S() { return S; }, get A() { return A; }, G, batDau, fromFrame, toFrame,
     oClient: (i) => { const [x, y] = G.oTam(S, i); return fromFrame(x, y); },
-    tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; }, UI,
+    tua: (n) => (tua = n), get dung() { return dung; }, get thang() { return thang; }, UI, moTT,
   };
 })();

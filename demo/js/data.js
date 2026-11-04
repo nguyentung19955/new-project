@@ -68,6 +68,9 @@ const V9 = (id, tc, them) => Object.assign({ thu: 'v9', dir8: { file: id + '_dun
 // ẢNH BỘ DC (04/11 tối, phong cách Destiny Child — thay bộ v9): demo/assets/dc/<id>_dung|tc|kn.png — 8 HÀNG s se e ne n nw w sw × n khung, ô 192,
 // CHÂN ở (96,172) mỗi ô. Số khung: demo/assets/dc/meta.json (anims.dung / tc / kn). Hiệu ứng fx_<id>_bay|trung|kn.png (1 hàng 6 khung ô 128, nền trong,
 // vẽ 'lighter'; bay: mũi đạn hướng PHẢI → xoay theo hướng bắn). kn = hoạt ảnh kỹ năng (nhip, trung = khung tung chiêu) — game.js KY_NANG.
+// nong (05/11): ĐIỂM TAY ra đòn theo hướng { s..sw: [x, y] } trong ô 192 — đo ở khung 'trung' của sheet tấn công (vùng tay/vũ khí vươn ra so với ảnh đứng)
+//   rồi chọn bằng mắt; đạn, chớp tay, đỉnh quạt băng, gốc tia sét, cầu lửa kỹ năng đều xuất phát từ điểm này (render.js diemNong).
+// TUONG[id].kn.ten / kn.mo: TÊN + mô tả 1 dòng của KỸ NĂNG — hiện ở bảng thông tin tướng (chạm tướng / giữ thẻ) và chữ nổi khi tung chiêu.
 const DC = (id, nDung, nKn, them) => Object.assign({ thu: 'dc', dir8: { file: id + '_dung', o: 192, doc: true, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
   tho: { ms: nDung > 4 ? 120 : 200, n: nDung }, fx: id, fxL: ['bay', 'trung', 'kn'],
   atk: { file: id + '_tc', o: 192, nhip: [70, 65, 65, 65, 65, 60, 60, 65, 70, 75, 80, 90], trung: 6 },
@@ -82,31 +85,31 @@ const TUONG = {
     dmg: 36, cd: 1.36, muc: 'dau', hit: 'flame', co: 1.1,
     don: { k: 'dan', toc: 1000 },
     hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 3: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }],
-    kn: { k: 'cotLua', cd: 8, he: 2.2, r: 30, van: 0.6, chay: { r: 26, T: 3, dps: 14, n: 4 } },
-    px: DC('scorch', 8, 12) },
+    kn: { k: 'cotLua', ten: 'FIRE PILLAR', mo: 'Hurls a blazing fist at the lead enemy: a fire pillar erupts, hitting nearby foes and leaving burning ground.', cd: 8, he: 2.2, r: 30, van: 0.6, chay: { r: 26, T: 3, dps: 14, n: 4 } },
+    px: DC('scorch', 8, 12, { nong: { s: [80, 130], se: [129, 134], e: [146, 105], ne: [130, 69], n: [80, 75], nw: [64, 84], w: [51, 112], sw: [67, 130] } }) },
   // 02 FROST — Skadi, nữ thần băng: TRẮNG · Băng · quái ĐẦU · mũi băng (đạn), làm chậm 20% trong 1,5 s (3★: 25%).
   //   KỸ NĂNG (8 s): SÓNG BĂNG hình quạt phía trước — làm chậm 40% 2,5 s; quái đang chậm thì đóng băng 0,8 s (trùm không đóng băng).
   frost: { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Ice bolt', mo: 'Ice bolts slow the lead enemy. Skill: frost wave cone slows, freezes slowed foes.',
     dmg: 27, cd: 1.7, muc: 'dau', hit: 'frost', co: 1.1,
     don: { k: 'dan', toc: 900 },
     hieu: [{ k: 'bang', cham: { 1: 0.20, 3: 0.25 }, max: 1, T: 1.5 }],
-    kn: { k: 'quatBang', cd: 8, he: 1.2, tam: 150, goc: 40, cham: 0.4, T: 2.5, dong: 0.8 },
-    px: DC('frost', 4, 12) },
+    kn: { k: 'quatBang', ten: 'FROST WAVE', mo: 'Blasts a cone of frost toward the enemy: slows 40% for 2.5s, freezes foes that were already slowed.', cd: 8, he: 1.2, tam: 150, goc: 40, cham: 0.4, T: 2.5, dong: 0.8 },
+    px: DC('frost', 4, 12, { nong: { s: [97, 125], se: [124, 108], e: [136, 106], ne: [133, 100], n: [97, 90], nw: [62, 86], w: [54, 101], sw: [59, 116] } }) },
   // 03 ARC — Raijin, nữ thần sấm: TRẮNG · Sét · quái GẦN · cầu sét bay nhanh; mỗi đòn thứ 3 sét nảy sang quái kế.
   //   KỸ NĂNG (8 s): VÒNG SÉT quanh bản thân (vẽ SAU LƯNG) — đánh 3 quái gần nhất, choáng 0,5 s (trùm không choáng).
   arc: { bac: 'trang', ten: 'ARC', chuc: 'SOLAR SPARK', hanh: 'Voltage', kieu: 'Spark shot', mo: 'Fast spark shots at the nearest enemy. Skill: lightning ring hits 3 foes, short stun.',
     dmg: 40, cd: 1.15, muc: 'gan', hit: 'electric', co: 1.1,
     don: { k: 'dan', toc: 1500 },
     hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }],
-    kn: { k: 'vongSet', cd: 8, he: 1.5, so: 3, choang: 0.5, sau: true },
-    px: DC('arc', 8, 12) },
+    kn: { k: 'vongSet', ten: 'THUNDER RING', mo: 'Lightning arcs from her to the 3 nearest enemies, stunning them briefly.', cd: 8, he: 1.5, so: 3, choang: 0.5, sau: true },
+    px: DC('arc', 8, 12, { nong: { s: [100, 128], se: [132, 140], e: [139, 114], ne: [132, 85], n: [85, 70], nw: [66, 78], w: [52, 112], sw: [64, 130] } }) },
   // 05 EMBERBUG — Hotaru, linh đom đóm mê ngủ: TRẮNG · Lửa · quái ĐẦU · ném đom đóm (đạn).
   //   KỸ NĂNG (8 s): 5 ĐOM ĐÓM tự tìm mục tiêu (chia cho các quái trong tầm, mỗi con he × sát thương).
   emberbug: { bac: 'trang', ten: 'EMBERBUG', chuc: 'FIREFLY', hanh: 'Plasma', kieu: 'Firefly toss', mo: 'Tosses fireflies at the lead enemy. Skill: 5 homing fireflies.',
     dmg: 30, cd: 1.3, muc: 'dau', hit: 'flame', co: 1.1,
     don: { k: 'dan', toc: 800 },
-    kn: { k: 'domDom', cd: 8, he: 0.7, so: 5, toc: 520 },
-    px: DC('emberbug', 4, 7) },
+    kn: { k: 'domDom', ten: 'FIREFLY SWARM', mo: 'Releases 5 homing fireflies that seek out enemies in range.', cd: 8, he: 0.7, so: 5, toc: 520 },
+    px: DC('emberbug', 4, 7, { nong: { s: [100, 130], se: [121, 130], e: [127, 109], ne: [116, 74], n: [97, 80], nw: [70, 90], w: [66, 104], sw: [66, 132] } }) },
 
   // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
   // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".

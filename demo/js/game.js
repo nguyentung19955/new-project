@@ -776,23 +776,31 @@
     baoSkill(S, k === 'hoanDoi' ? j : i, m.cf.ten);
     return true;
   }
+  // nổ khi trúng (fx_<id>_trung) ĐÚNG trên quái: bám theo quái (f.q), cỡ theo thân quái (~1,25 × co, 22–46 px — không to hơn tướng)
+  const fxTrung = (S, q, id, T) => S.fx.push({ k: 'trung9', x: q.x, y: q.y - q.co / 2, q, z: Math.max(22, Math.min(46, q.co * 1.25)), t: 0, T: T || 0.36, id });
   // ---- KY_NANG — kỹ năng tự động của bộ DC (TUONG[id].kn, BO-24-TUONG-V2.md CHỐT 18h40): mỗi kn.cd giây (đếm khi có quái) chạy hoạt ảnh
   //   px.kn (sheet <id>_kn), chiêu ra ĐÚNG đầu khung px.kn.trung. Sát thương = satThuong × he (theo sao/bậc như đòn thường → không phá cơ chế ghép/bậc).
   //   fx 'kn9' = sheet fx_<id>_kn (render.js): vẽ tại mục tiêu; kn.sau (ARC) → vẽ SAU LƯNG tướng (render veUnit theo v.knFxT).
   const tacKn = (id) => { const a = T[id].px && T[id].px.kn; if (!a) return 0.4; let n = 0; for (let k = 0; k < a.trung; k++) n += a.nhip[k]; return n / 1000; };
   const chuoiKn = (id) => { const a = T[id].px && T[id].px.kn; return a ? a.nhip.reduce((x, y) => x + y, 0) / 1000 : 0; };
   const trongTamDS = (S, i, v) => S.quai.filter((o) => nham(o) && trongTam(S, i, T[v.id], o) && (S.coop || o.ban === S));
+  // 05/11 (người dùng: "hiệu ứng ở chỗ vớ vẩn, không liền mạch với tướng"): MỌI kỹ năng xuất phát từ TAY tướng (nong = điểm tay theo hướng, data.js px.nong):
+  //   SCORCH ném cầu lửa từ tay → tới quái mới bùng cột lửa · FROST quạt băng đỉnh ở tay, bán kính = tầm thật · ARC tia sét từ tay tới TỪNG quái · EMBERBUG đom đóm bay ra từ tay.
   const KY_NANG = {
-    cotLua(S, i, v, q, dmg, cf) {      // SCORCH: cột lửa tại quái — q nhận đủ, quái trong r nhận van ×; để vệt cháy
-      const r = cf.r * K, mau = HANH[T[v.id].hanh].mau;
-      trung(S, q, dmg, v, mau, true);
-      for (const o of S.quai) if (o !== q && nham(o) && kc(o, q) < r) trung(S, o, dmg * cf.van, v, mau);
-      S.vung.push({ k: 'lua', x: q.x, y: q.y, r: cf.chay.r * K, t: 0, T: cf.chay.T, dmg: cf.chay.dps * 0.5 * heSo(S, v), n: cf.chay.n, tick: 0, v });
-      S.fx.push({ k: 'kn9', id: v.id, x: q.x, y: q.y, t: 0, T: 0.6, chan: true });
-      S.rung = Math.max(S.rung || 0, 0.04);
+    cotLua(S, i, v, q, dmg, cf) {      // SCORCH: ném CẦU LỬA từ tay (đạn to, nhanh) → tới quái: cột lửa — q nhận đủ, quái trong r nhận van ×; để vệt cháy
+      const [x0, y0] = nong(S, i, v), mau = HANH[T[v.id].hanh].mau;
+      chopNong(S, x0, y0, mau, q, v.id);
+      bayDan(S, x0, y0, q, dmg, v, mau, 760, { hieu: false, to: 1.55, khiTrung(S2, d, o, px, py) {   // o = quái trúng (null nếu đã chết giữa đường), (px, py) = chân
+        const r = cf.r * K, tam = { x: px, y: py };
+        if (o) trung(S2, o, d.dmg, v, mau, true);
+        for (const e of S2.quai) if (e !== o && nham(e) && kc(e, tam) < r) trung(S2, e, d.dmg * cf.van, v, mau);
+        S2.vung.push({ k: 'lua', x: px, y: py, r: cf.chay.r * K, t: 0, T: cf.chay.T, dmg: cf.chay.dps * 0.5 * heSo(S2, v), n: cf.chay.n, tick: 0, v });
+        S2.fx.push({ k: 'kn9', id: v.id, x: px, y: py, t: 0, T: 0.6, chan: true, r });   // cột lửa: vòng đáy = bán kính sát thương thật r
+        S2.rung = Math.max(S2.rung || 0, 0.04);
+      } });
     },
-    quatBang(S, i, v, q, dmg, cf) {    // FROST: sóng băng hình quạt hướng về quái — chậm cham trong T giây; quái đang chậm → đóng băng (trừ trùm)
-      const [ox, oy] = oXY(S, i), x0 = ox + C.O / 2, y0 = thanY(oy), a = Math.atan2(q.y - q.co / 2 - y0, q.x - x0);
+    quatBang(S, i, v, q, dmg, cf) {    // FROST: sóng băng hình quạt từ TAY hướng về quái — chậm cham trong T giây; quái đang chậm → đóng băng (trừ trùm)
+      const [x0, y0] = nong(S, i, v), a = Math.atan2(q.y - q.co / 2 - y0, q.x - x0);
       const tam = Math.min(280, Math.max(cf.tam * K, Math.hypot(q.x - x0, q.y - q.co / 2 - y0) + 24)), mau = HANH[T[v.id].hanh].mau;
       for (const o of S.quai) {
         if (!nham(o)) continue;
@@ -802,28 +810,32 @@
         const daCham = o.chillT > 0 || o.slowBang > 0;
         trung(S, o, dmg, v, mau, o === q);
         if (!sống(o)) continue;
+        fxTrung(S, o, v.id, 0.4);
         o.chill = Math.max(o.chill, 1); o.chillT = Math.max(o.chillT || 0, cf.T); o.chillK = Math.max(o.chillK || 0, cf.cham);
         if (daCham && !o.boss) o.choang = Math.max(o.choang || 0, cf.dong);
       }
-      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0, t: 0, T: 0.55, goc: a, quat: tam });
+      // render: hình quạt đỉnh tại tay, nửa góc = cf.goc (đúng vùng trúng), mặt sóng (ảnh fx_frost_kn) chạy từ tay ra tới bán kính tam
+      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0, t: 0, T: 0.55, goc: a, quat: tam, nua: cf.goc * Math.PI / 180 });
     },
-    vongSet(S, i, v, q, dmg, cf) {     // ARC: vòng sét quanh bản thân — 3 quái gần nhất trong tầm, choáng ngắn (trừ trùm)
-      const [cx, cy] = oTam(S, i), mau = HANH[T[v.id].hanh].mau;
+    vongSet(S, i, v, q, dmg, cf) {     // ARC: vòng sét quanh bản thân (sau lưng) + TIA SÉT từ tay tới từng quái (3 quái gần nhất trong tầm), choáng ngắn (trừ trùm)
+      const [cx, cy] = oTam(S, i), [x0, y0] = nong(S, i, v), mau = HANH[T[v.id].hanh].mau;
       const ds = trongTamDS(S, i, v).sort((a, b) => Math.hypot(a.x - cx, a.y - cy) - Math.hypot(b.x - cx, b.y - cy)).slice(0, cf.so);
       if (!ds.includes(q) && sống(q)) ds.splice(Math.max(0, ds.length - 1), ds.length ? 1 : 0, q);
-      for (const o of ds) { trung(S, o, dmg, v, mau, true); if (sống(o) && !o.boss) o.choang = Math.max(o.choang || 0, cf.choang); S.fx.push({ k: 'trung9', x: o.x, y: o.y - o.co / 2, t: 0, T: 0.36, id: v.id }); }
-      if (ds.length) S.fx.push({ k: 'set', pts: [[cx, cy - 6], ...ds.map((o) => [o.x, o.y - o.co / 2])], t: 0, T: 0.25, mau });
+      for (const o of ds) { trung(S, o, dmg, v, mau, true); if (sống(o) && !o.boss) o.choang = Math.max(o.choang || 0, cf.choang); fxTrung(S, o, v.id); }
+      if (ds.length) S.fx.push({ k: 'setTia', x: x0, y: y0, qs: ds.slice(), pts: ds.map((o) => [o.x, o.y - o.co / 2]), t: 0, T: 0.3, mau, i });
       v.knFxT = S.t;   // render: fx_arc_kn sau lưng tướng 0,6 s
       S.hitStop = Math.max(S.hitStop || 0, C.HIT_STOP.chuoi);
     },
-    domDom(S, i, v, q, dmg, cf) {      // EMBERBUG: so đom đóm bay tự tìm mục tiêu (chia đều quái trong tầm, quái đầu trước)
-      const [ox, oy] = oXY(S, i), x0 = ox + C.O / 2, y0 = thanY(oy), mau = HANH[T[v.id].hanh].mau;
+    domDom(S, i, v, q, dmg, cf) {      // EMBERBUG: so đom đóm bay ra TỪ TAY, tự tìm mục tiêu (chia đều quái trong tầm, quái đầu trước)
+      const [x0, y0] = nong(S, i, v), mau = HANH[T[v.id].hanh].mau;
       let ds = trongTamDS(S, i, v).sort((a, b) => b.d - a.d); if (!ds.length) ds = [q];
+      const a = Math.atan2(q.y - q.co / 2 - y0, q.x - x0);
       for (let n = 0; n < cf.so; n++) {
-        const o = ds[n % ds.length], g = -Math.PI / 2 + (n - (cf.so - 1) / 2) * 0.5;
-        bayDan(S, x0 + Math.cos(g) * 10, y0 + Math.sin(g) * 8, o, dmg, v, mau, cf.toc * (0.85 + 0.08 * n), { hieu: false });
+        const o = ds[n % ds.length], g = a + (n - (cf.so - 1) / 2) * 0.45;   // xoè quạt nhỏ quanh hướng ném
+        bayDan(S, x0 + Math.cos(g) * 4, y0 + Math.sin(g) * 4, o, dmg, v, mau, cf.toc * (0.85 + 0.08 * n), { hieu: false });
       }
-      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0 - 4, t: 0, T: 0.6 });
+      chopNong(S, x0, y0, mau, q, v.id);
+      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0, t: 0, T: 0.5, nho: true });   // xoáy đom đóm nhỏ NGAY TẠI TAY
     },
   };
   function kyNang(S, i, v) {
@@ -851,7 +863,8 @@
   function trungDan(S, d) {
     const q = d.q;
     if (!sống(q)) return;
-    if (coFx9(d.id)) S.fx.push({ k: 'trung9', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.36, id: d.id });   // bộ v9: nổ khi trúng (fx_<ten>_trung)
+    if (d.khiTrung) { d.khiTrung(S, d, q, q.x, q.y); return; }   // đạn KỸ NĂNG (cầu lửa SCORCH): tới nơi mới gây sát thương + hiệu ứng
+    if (coFx9(d.id)) fxTrung(S, q, d.id);   // bộ v9/DC: nổ khi trúng (fx_<ten>_trung), bám theo quái
     if (trung(S, q, d.dmg, d.v, d.mau, false, false, false, 'dan') === false) return;   // bị phản / né: không áp hiệu ứng
     if (d.hieu) apHieu(S, q, d.dmg, d.v);
   }
@@ -917,7 +930,7 @@
         if (!dangKn && v.knCd > 0) v.knCd -= dt;
         if (!dangKn && v.knCd <= 0 && !(v.khoaT > 0) && !(v.cho > 0) && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) {
           const q = chonMuc(S, i, v);
-          if (q) { v.knCd = kn.cd; v.knT0 = S.t; v.knCho = tacKn(v.id); v.knQ = q; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; v.gocMuc = gocTo(S, i, q); chonHuong(v, v.gocMuc, mm); return; }
+          if (q) { v.knCd = kn.cd; v.knT0 = S.t; v.knCho = tacKn(v.id); v.knQ = q; S.fx.push({ k: 'knTen', i, uid: v.uid, ten: kn.ten || T[v.id].chuc, mau: HANH[T[v.id].hanh].mau, t: 0, T: 0.9 }); v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; v.gocMuc = gocTo(S, i, q); chonHuong(v, v.gocMuc, mm); return; }
           v.knCd = 0.2;
         }
         if (dangKn || v.knCho > 0) return;
@@ -945,7 +958,8 @@
         if (k >= 1) { d.xong = true; noLuu(S, d); }
         continue;
       }
-      if (!sống(q) || (!S.coop && q.ban !== S)) { d.xong = true; continue; }
+      if (d.khiTrung && sống(q)) { d.lx = q.x; d.ly = q.y; }   // cầu lửa kỹ năng: nhớ chỗ quái — quái chết giữa đường thì vẫn nổ tại đó
+      if (!sống(q) || (!S.coop && q.ban !== S)) { d.xong = true; if (d.khiTrung && d.lx != null) d.khiTrung(S, d, null, d.lx, d.ly); continue; }
       const tx = q.x, ty = q.y - q.co / 2, dx = tx - d.x, dy = ty - d.y, k = Math.hypot(dx, dy), b = d.spd * dt;
       if (k <= b + 6) { d.xong = true; trungDan(S, d); }
       else { d.x += dx / k * b; d.y += dy / k * b; d.goc = Math.atan2(dy, dx); }
@@ -1027,7 +1041,7 @@
     }
     if (S.coop) { let j = 0; for (const q of S.quai) if (sống(q)) S.quai[j++] = q; S.quai.length = j; }   // lọc TẠI CHỖ: 2 bàn giữ chung 1 mảng
     else S.quai = S.quai.filter((q) => sống(q));
-    for (const f of S.fx) f.t += dt;
+    for (const f of S.fx) { f.t += dt; if (f.q && sống(f.q)) { f.x = f.q.x; f.y = f.q.y - f.q.co / 2; } }   // hiệu ứng trúng có f.q: BÁM theo quái trong lúc còn hiện
     S.fx = S.fx.filter((f) => f.t < f.T);
     for (const s of S.so) s.t += dt;
     S.so = S.so.filter((s) => s.t < (s.T || 0.8));
