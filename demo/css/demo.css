@@ -298,3 +298,23 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 /* chưa có tướng (đang làm lại): chữ nút SUMMON nhỏ lại cho vừa */
 #nut-trieu.rong .tr-ten { font-size: 12px; letter-spacing: 0.5px; }
 #nut-trieu.rong .tr-gia { font-size: 10px; }
+
+/* BẢNG THÔNG TIN TƯỚNG (05/11) — ui.js moTT: chân dung + tên màu bậc + kiểu đánh + KỸ NĂNG (tên, mô tả, hồi chiêu) */
+#tt { position: absolute; left: 65px; top: 300px; width: 260px; z-index: 30; display: flex; gap: 8px; padding: 7px 8px 8px 7px; pointer-events: none;
+  border-color: var(--h, #3ce7ff); box-shadow: 0 0 14px color-mix(in srgb, var(--h, #3ce7ff) 45%, transparent), 0 6px 18px rgba(0,0,0,0.6);
+  background: linear-gradient(170deg, color-mix(in srgb, var(--h, #3ce7ff) 18%, rgba(10,14,36,0.94)), rgba(8,10,26,0.95) 55%); animation: ttmo .14s ease-out; }
+@keyframes ttmo { from { transform: scale(0.92); opacity: 0; } }
+#tt .tt-anh { width: 56px; height: 72px; flex: none; border-radius: 4px; border: 1px solid var(--h, #3ce7ff); background: #0d1226; }
+#tt .tt-than { flex: 1; min-width: 0; }
+#tt .tt-dau { display: flex; align-items: baseline; gap: 6px; }
+#tt .tt-ten { font: 900 13px/1.1 var(--tit); letter-spacing: 1px; color: #fff; text-shadow: 0 0 7px var(--h), 0 1px 0 #000; }
+#tt .tt-bac { font: 700 7.5px/1 var(--tit); letter-spacing: 1.2px; color: var(--h); text-shadow: 0 0 5px var(--h); }
+#tt .tt-phu { margin-top: 3px; font: 700 10px/1.1 var(--body); color: var(--hh, #9fd8ff); letter-spacing: .4px; }
+#tt .tt-phu em { font-style: normal; color: #ffe27a; }
+#tt .tt-don { margin-top: 2px; font: 600 10px/1.15 var(--body); color: #b9c6e4; }
+#tt .tt-kn { margin-top: 5px; padding: 4px 5px 5px; border-radius: 4px; background: rgba(0,0,0,0.38); border-left: 2px solid var(--hh, #3ce7ff); }
+#tt .tt-kn-dau { display: flex; align-items: center; gap: 5px; }
+#tt .tt-kn-dau i { font: 900 6.5px/1 var(--tit); font-style: normal; letter-spacing: 1px; padding: 2px 3px; border-radius: 2px; background: var(--hh, #3ce7ff); color: #05070f; }
+#tt .tt-kn-ten { flex: 1; font: 900 9.5px/1 var(--tit); letter-spacing: .6px; color: #fff; text-shadow: 0 0 6px var(--hh, #3ce7ff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#tt .tt-cd { font: 700 8px/1 var(--tit); color: #ffe27a; white-space: nowrap; }
+#tt .tt-kn-mo { margin-top: 3px; font: 600 10px/1.15 var(--body); color: #e3ecff; }
