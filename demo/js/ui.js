@@ -8,9 +8,9 @@
   // giao diện kỹ năng chủ động (VÀNG): menu = ô đang mở hàng nút kỹ năng; chon = { i, k, ten, ds } đang chọn ô cho kỹ năng k
   const UI = { menu: null, chon: null };
   const KY_LUC = 'neon-grid.best', KY_CHE = 'neon-grid.mode';
-  // chế độ chơi: 'coop' (mặc định, đồng đội AI, 70 wave) hoặc 'pvp' (AI MIRROR như cũ); nhớ lựa chọn cuối
+  // chế độ chơi: 'coop' (mặc định, đồng đội AI, 70 wave), 'solo' (một mình, 1 bàn) hoặc 'pvp' (AI MIRROR như cũ); nhớ lựa chọn cuối
   let che = 'coop';
-  try { const v = localStorage.getItem(KY_CHE); if (v === 'pvp' || v === 'coop') che = v; } catch (e) { /* không đọc được */ }
+  try { const v = localStorage.getItem(KY_CHE); if (v === 'pvp' || v === 'coop' || v === 'solo') che = v; } catch (e) { /* không đọc được */ }
   let cheTran = che;   // chế độ của trận đang chơi
 
   // ---- KHUNG: luôn LẤP ĐẦY CHIỀU RỘNG (scale = rộng/390), chiều cao logic co giãn (H = cao/scale), trừ vùng an toàn (tai thỏ / thanh home) ----
@@ -94,7 +94,8 @@
     capChon();
   }
   const MEO = {
-    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles come down the left lane, then run the <b>middle corridor</b> between both boards to the core — hold out with your <b>ALLY</b> for <b>70 waves</b> — <b>a single leak loses the run</b>.',
+    coop: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles march straight down the <b>left lane</b> past your <b>ALLY</b>\'s board and yours to the core — both boards fire at them. Hold out for <b>70 waves</b> — <b>a single leak loses the run</b>.',
+    solo: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge. Hostiles march straight down the <b>left lane</b> past your board to the core — hold out <b>alone</b> for <b>70 waves</b> — <b>a single leak loses the run</b>.',
     pvp: 'Summon random heroes · drag a hero onto the <b>same hero of the same rank</b> to merge into a higher rank. Outlast the <b>AI MIRROR</b> board above.',
   };
   // ---- Archfiend (ô thứ 6): chọn 1 trong ARCHFIEND, nhớ lựa chọn cuối ----
@@ -143,14 +144,16 @@
     boCu = deck.slice(); cheTran = che;
     { const khac = SKIN_IDS.filter((k) => k !== skinChon); G.datSkin(skinChon, khac[Math.floor(Math.random() * khac.length)] || skinChon); $('#duoi').style.top = C.DUOI_Y + 'px'; $('#nut-co').style.top = (C.THANH_Y + C.THANH_H / 2 - 18) + 'px'; }
     if (cheTran === 'coop') ({ S, A } = G.moiCoop(deck, BO_AI, afChon, AF_AI));
+    else if (cheTran === 'solo') ({ S, A } = G.moiSolo(deck, afChon));
     else { S = G.moi(deck, false, null, afChon); A = G.moi(BO_AI, true, S, AF_AI); }
     dung = false; keo = null; thang = false; UI.menu = null; UI.chon = null;
-    $('#tb-mang').hidden = cheTran !== 'coop'; $('.tb-giua').classList.toggle('coop', cheTran === 'coop'); $('.tb-wave').classList.toggle('coop', cheTran === 'coop');
-    $('#nut-co').hidden = cheTran === 'coop';   // PVP: cờ đầu hàng đỏ bên phải thanh giữa
+    const kCo = cheTran !== 'pvp';   // co-op + solo: mạng chung, 70 wave
+    $('#tb-mang').hidden = !kCo; $('.tb-giua').classList.toggle('coop', kCo); $('.tb-wave').classList.toggle('coop', kCo);
+    $('#nut-co').hidden = kCo;   // PVP: cờ đầu hàng đỏ bên phải thanh giữa
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false;
     // 6 ô đội AI trên TOP HUD (5 tướng + leader)
-    const ai = $('#tb-ai'); ai.innerHTML = '';
+    const ai = $('#tb-ai'); ai.innerHTML = ''; ai.hidden = cheTran === 'solo';   // solo: không có đội AI
     for (const id of BO_AI) { const o = document.createElement('div'); o.className = 'ai-o'; mauBac(o, id); o.innerHTML = '<canvas></canvas>'; R.veChanDung(o.querySelector('canvas'), id, 22); ai.appendChild(o); }   // icon đội AI 22px (P1.3: 20–24)
     { const o = document.createElement('div'); o.className = 'ai-o ld'; o.style.setProperty('--h', ARCHFIEND[AF_AI].mau); o.title = ARCHFIEND[AF_AI].ten; o.innerHTML = '<canvas></canvas>'; R.veAF(o.querySelector('canvas'), AF_AI, 22); ai.appendChild(o); }   // ô 6: Archfiend của AI
     { const b = $('#the-af'), a = ARCHFIEND[afChon]; b.style.setProperty('--h', a.mau); b.querySelector('.af-ten').textContent = a.ten; b.title = a.mo; R.veAF(b.querySelector('canvas'), afChon, 66); }
@@ -181,7 +184,7 @@
       e.textContent = v === 'dang' ? `⚠ ${ten} LIVE` : v <= 0 ? `${ten} THIS WAVE` : `${ten} IN ${v} WAVE${v > 1 ? 'S' : ''}`;
       e.classList.toggle('dang', v === 'dang'); e.classList.toggle('gan', v !== 'dang' && v <= 2);   // 2 wave cuối: đổi màu + nhịp chậm
     });
-    set('quai', coop ? S.quai.length + A.conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
+    set('quai', coop ? S.quai.length + (A || S).conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     if (coop) set('mang', S.coop.mang, (v) => { const b = $('#tb-mang b'); b.textContent = `${v}/${S.coop.max}`; b.classList.toggle('thap', v <= 3); });
     const lk = Math.floor(S.lk);
     set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
@@ -225,21 +228,21 @@
     $('#ketqua').hidden = false;
   }
   function ketThucCoop() {
-    const co = S.coop, dot = co.thang ? COOP.DOT_MAX : S.dot, kt = KY_LUC + '.coop';
+    const co = S.coop, dot = co.thang ? COOP.DOT_MAX : S.dot, kt = KY_LUC + (co.solo ? '.solo' : '.coop');
     thang = co.thang;
     const ten = $('#kq-ten'), bang = $('#ketqua .bang');
     ten.textContent = thang ? 'VICTORY' : 'CORE DESTROYED'; ten.dataset.t = ten.textContent;
     bang.classList.toggle('do', !thang); bang.classList.toggle('thang', thang);
     let kl = 0; try { kl = +localStorage.getItem(kt) || 0; if (dot > kl) localStorage.setItem(kt, dot); } catch (e) { /* không lưu được */ }
     $('#kq-dot').textContent = `WAVE ${dot}/${COOP.DOT_MAX}`;
-    $('#kq-phu').textContent = `${thang ? `Cleared all ${COOP.DOT_MAX} waves · ` : ''}${S.giet + A.giet} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
+    $('#kq-phu').textContent = `${thang ? `Cleared all ${COOP.DOT_MAX} waves · ` : ''}${S.giet + (A ? A.giet : 0)} hostiles destroyed · Best: wave ${Math.max(kl, dot)}${dot > kl && kl ? ' — NEW RECORD' : ''}`;
     // sát thương từng tướng của người chơi (theo loại tướng trong bộ) + tổng của đồng đội
     const tong = (tk) => Object.values(tk).reduce((a, b) => a + b, 0);
     const ds = S.deck.map((id) => [id, S.tk[id] || 0]).sort((a, b) => b[1] - a[1]), mx = Math.max(1, ds.length ? ds[0][1] : 0);
     const so = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e4 ? Math.round(n / 1e3) + 'K' : Math.round(n) + '');
     const ks = $('#kq-sat');
     ks.innerHTML = '<div class="ks-ten">YOUR DAMAGE</div>' + ds.map(([id, n]) => `<div class="ks" style="--h:${HANH[TUONG[id].hanh].mau}"><span>${TUONG[id].ten}</span><i><u style="width:${Math.round(n / mx * 100)}%"></u></i><em>${so(n)}</em></div>`).join('')
-      + `<div class="ks-ten" style="margin-top:4px">YOU ${so(tong(S.tk))} · ALLY ${so(tong(A.tk))}</div>`;
+      + (A ? `<div class="ks-ten" style="margin-top:4px">YOU ${so(tong(S.tk))} · ALLY ${so(tong(A.tk))}</div>` : `<div class="ks-ten" style="margin-top:4px">TOTAL ${so(tong(S.tk))}</div>`);
     ks.hidden = false;
     $('#ketqua').hidden = false;
   }
@@ -253,7 +256,7 @@
     const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
     const a = b.dataset.act;
     if (a === 'vao') batDau(chon);
-    else if (a === 'che') { che = b.dataset.che === 'pvp' ? 'pvp' : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
+    else if (a === 'che') { che = ['pvp', 'solo'].includes(b.dataset.che) ? b.dataset.che : 'coop'; try { localStorage.setItem(KY_CHE, che); } catch (er) { /* không lưu được */ } capChe(); }
     else if (a === 'ngaunhien') { chon = TUONG_IDS.slice().sort(() => Math.random() - 0.5).slice(0, 5); capChon(); }
     else if (a === 'trieu' && S && !S.deck.length) { /* chưa có tướng — đang làm lại: không làm gì */ }
     else if (a === 'trieu' && S && !dung && !S.het) { if (G.trieuHoi(S) < 0) R.baoThieu(G.trong(S).length ? 'Not enough mana.' : 'Board is full.'); capNhat(); }
@@ -314,8 +317,8 @@
     if (S && !S.het && !dung) {
       let t = dt * tocDo * tua;
       while (t > 0) {
-        const b = Math.min(1 / 60, t); G.buoc(S, b); G.buoc(A, b); t -= b;
-        if (S.coop) G.botCoop(A, b);   // co-op: đồng đội AI; không có thắng do AI chết — thua khi hết mạng chung, thắng khi qua wave 70
+        const b = Math.min(1 / 60, t); G.buoc(S, b); if (A) G.buoc(A, b); t -= b;
+        if (S.coop) { if (A) G.botCoop(A, b); }   // solo: không có đồng đội   // co-op: đồng đội AI; không có thắng do AI chết — thua khi hết mạng chung, thắng khi qua wave 70
         else { G.botAI(A, b); if (A.het && !S.het) { thang = true; S.het = true; } }   // PVP: AI hết mạng trước → thắng
         if (S.het) break;
       }

@@ -21,7 +21,7 @@
     return Object.assign(B, { ai, BX: C.BAN_X, BY: by, OX, OY, SW: C.COT * C.BUOC_X, SH: C.HANG * C.BUOC_Y, DUONG, DOAN, TAM_HL, DAI, P: DAI / C.DAI_CU,
       RA: DUONG[DUONG.length - 1], HL: hl || [], CONG: cong || null, SINH: DUONG[0] });
   }
-  const BAN_NG = {}, BAN_AI = {}, BAN_AI_CO = {}, BAN_NG_CO = {};
+  const BAN_NG = {}, BAN_AI = {}, BAN_AI_CO = {}, BAN_NG_CO = {}, BAN_SO = {};
   // ẢNH SKIN BÀN (data.js SKIN): thu nhỏ ĐỀU ảnh skin k sao cho lưới 5×3 trong ảnh trùng lưới logic (góc trên trái gx, gy; rộng C.BAN_W).
   // Trả về vị trí ảnh + hành lang trong ảnh đổi sang toạ độ logic (lx = tâm hành lang trái, ly = tâm hành lang dưới, top/end, lw/lh = bề rộng).
   function hinhSkin(k, gx, gy) {
@@ -75,21 +75,33 @@
     C.DUONG_AI = duong(kAI); C.DUONG_NG = duong(kNG);
     Object.assign(dungBan(BAN_NG, false, C.DUONG_NG, hanhLang(kNG), cong(kNG)), { SKIN: kNG });
     Object.assign(dungBan(BAN_AI, true, C.DUONG_AI, hanhLang(kAI), cong(kAI)), { SKIN: kAI });
-    // CO-OP kiểu Destiny Child: Defense War (hình ⊢): quái sinh đầu hành lang TRÁI bàn trên → xuống dọc mép trái → rẽ PHẢI chạy trong
-    // HÀNH LANG GIỮA (= hành lang dưới của ảnh skin bàn trên, nằm giữa 2 bàn) → CỔNG (avatar) cuối hành lang giữa bên phải.
-    // Không còn thanh giữa; bàn người chơi đặt ngay dưới hành lang giữa, ảnh skin bàn dưới bị CẮT bỏ hành lang trái + dưới (không dùng).
-    // Hai bàn dùng CHUNG 1 đường (cùng DUONG/DOAN/DAI/P) và chung 1 mảng quái (moiCoop) → cả 2 bàn bắn được quái trên hành lang giữa.
-    // bàn dưới sát hành lang giữa (trang trí đỉnh ảnh bàn dưới nằm khuất dưới mép ảnh bàn trên) để tướng bàn dưới — kể cả đánh gần (tầm 1.6 ô) — với tới quái
-    const VB = GW * R.VIEN + 2, TREN_D = GW * R.TREN * 0.5;
-    const du = Math.max(0, cao - ESS - TREN_D - GH - VB);   // chiều cao dư: 60% trên bàn trên, 40% dưới bàn dưới
-    const aiY = dinh + du * 0.6 + GW * R.TREN, kA = hinhSkin(C.SKIN_AI, C.BAN_X, aiY);
-    const ngY = kA.ly + kA.lh / 2 + TREN_D, kN = hinhSkin(C.SKIN_NG, C.BAN_X, ngY);
-    C.GIUA_CO = kA.ly;   // tâm hành lang giữa (dải thông báo wave co-op)
-    const dCo = duong(kA);
-    Object.assign(dungBan(BAN_AI_CO, true, dCo, hanhLang(kA), null, aiY), { SKIN: kA });
-    Object.assign(dungBan(BAN_NG_CO, false, dCo, [], cong(kA), ngY), { SKIN: kN, CAT: { x: kN.lx + kN.lw / 2, y: kN.ly - kN.lh / 2 } });
-    C.D_RE_CO = BAN_AI_CO.DOAN[0].d;   // quãng đường tới góc rẽ vào hành lang giữa
-    const P = BAN_AI_CO.DAI / (COOP.THOI_GIAN_DUONG * C.DAI_CU); BAN_AI_CO.P = P; BAN_NG_CO.P = P;   // đi hết đường ≈ THOI_GIAN_DUONG × thời gian 1 làn PVP
+    // CO-OP chuẩn DCDW (ảnh thật tham-chieu/dcdw_coop_wave6.png): MỘT LÀN DỌC duy nhất ở MÉP TRÁI màn — quái sinh trên cùng, đi THẲNG xuống
+    // dưới cùng (không rẽ, không hành lang ngang). Hai bàn 5×3 chồng nhau bên PHẢI làn: trên = ĐỒNG ĐỘI AI, dưới = người chơi; khoảng giữa chỉ là nền.
+    // Ảnh skin mỗi bàn bị CẮT bỏ hành lang trái + dưới của ảnh (B.CAT); thân làn vẽ riêng (render.js veLanDoc) suốt chiều cao.
+    // Hai bàn dùng CHUNG 1 đường + chung 1 mảng quái (moiCoop) → tướng cả 2 bàn bắn được mọi quái trong tầm.
+    // SOLO: chỉ 1 bàn người chơi, làn dọc ngắn hơn (cao vùng bàn + chút) cùng kiểu.
+    const VB = GW * R.VIEN, ESC = GW * R.TREN + GH + VB;   // 1 bàn đã cắt: trang trí đỉnh tới hết vành dưới lưới
+    const duDoc = Math.max(0, cao - 2 * ESC);
+    const aiY = dinh + duDoc * 0.3 + GW * R.TREN, ngY = aiY + GH + VB + duDoc * 0.4 + GW * R.TREN;
+    const kA = hinhSkin(C.SKIN_AI, C.BAN_X, aiY), kN = hinhSkin(C.SKIN_NG, C.BAN_X, ngY);
+    const LX = kN.lx, LW = kN.lw, cat = (k) => ({ x: k.lx + k.lw / 2, y: k.ly - k.lh / 2 });
+    const lanDoc = (y0, y1) => ({ x: LX - LW / 2, y: y0, w: LW, h: y1 - y0 });
+    const L0 = dinh + 4, L1 = day - 2;                      // làn co-op: sát HUD trên → sát HUD dưới
+    const dCo = [[LX, L0 + 30], [LX, L1 - 34]];             // chân quái: ra khỏi cổng sinh → tới lõi
+    C.LAN_CO = Object.assign(lanDoc(L0, L1), { sinh: [LX, L0 + 20], loi: [LX, L1 - 26] });
+    C.GIUA_CO = (aiY + GH + VB + ngY - GW * R.TREN) / 2;   // giữa 2 bàn (dải thông báo wave)
+    Object.assign(dungBan(BAN_AI_CO, true, dCo, [C.LAN_CO], null, aiY), { SKIN: kA, CAT: cat(kA) });
+    Object.assign(dungBan(BAN_NG_CO, false, dCo, [], C.LAN_CO.loi, ngY), { SKIN: kN, CAT: cat(kN) });
+    C.D_RE_CO = (C.GIUA_CO - dCo[0][1]);   // quãng đường tới giữa 2 bàn: trước đó quái "thuộc" bàn trên (trùm/tinh anh tác động bàn trên), sau đó bàn dưới
+    const P = BAN_AI_CO.DAI / (COOP.THOI_GIAN_DUONG * C.DAI_CU); BAN_AI_CO.P = P; BAN_NG_CO.P = P;   // đi hết làn ≈ THOI_GIAN_DUONG × thời gian 1 làn PVP
+    // SOLO: 1 bàn, đặt thấp (gần HUD dưới như bàn người chơi DCDW); làn dọc từ trên trang trí đỉnh bàn ~70px tới dưới vành bàn ~60px
+    const soY = dinh + Math.max(0, cao - ESC) * 0.6 + GW * R.TREN, kS = hinhSkin(C.SKIN_NG, C.BAN_X, soY);
+    const S0 = Math.max(dinh + 4, soY - GW * R.TREN - 70), S1 = Math.min(day - 2, soY + GH + VB + 70);
+    const dSo = [[LX, S0 + 30], [LX, S1 - 34]];
+    C.LAN_SO = Object.assign(lanDoc(S0, S1), { sinh: [LX, S0 + 20], loi: [LX, S1 - 26] });
+    C.GIUA_SO = soY - GW * R.TREN - 24;
+    Object.assign(dungBan(BAN_SO, false, dSo, [C.LAN_SO], C.LAN_SO.loi, soY), { SKIN: kS, CAT: cat(kS) });
+    BAN_SO.P = BAN_SO.DAI / (SOLO.THOI_GIAN_DUONG * C.DAI_CU);
     return H;
   }
   // đổi skin 2 bàn (ng = người chơi, ai = bàn trên) rồi dựng lại bố cục
@@ -134,7 +146,15 @@
     S.coop = A.coop = co; S.ban = A; A.ban = S; S.mang = A.mang = co.mang;
     S.quai = A.quai;   // CHUNG 1 mảng quái + chung 1 đường: tướng 2 bàn cùng thấy/bắn quái (bàn dưới chỉ bắn từ góc rẽ vào hành lang giữa — chonMuc)
     A.nid = 100000;   // uid quái sinh từ 2 bàn không trùng
+    A.dieu = true;    // bàn đồng đội điều phối wave + cho quái đi (mảng chung)
     return { S, A };
+  }
+  // SOLO: chỉ 1 bàn người chơi, nhịp wave/trùm như co-op nhưng máu quái × SOLO.MAU; S tự điều phối (S.ban = S)
+  function moiSolo(deck, af) {
+    const co = { mang: COOP.MANG, max: COOP.MANG, dot: 0, thang: false, choT: COOP.CHO_DAU, solo: true, mauK: SOLO.MAU };
+    const S = moi(deck, false, null, af);
+    S.B = BAN_SO; S.coop = co; S.ban = S; S.dieu = true; S.mang = co.mang;
+    return { S, A: null };
   }
   const giaTrieu = (S) => C.giaTrieu(S.triệu);
   const giaBac = (S, id) => (S.bac[id] >= C.BAC_MAX ? Infinity : C.giaBac(S.bac[id]));
@@ -268,7 +288,7 @@
     let bao;
     if (laBoss) {
       const n = w / 10 - 1, idx = cuoi ? B.length - 1 : n % B.length, vong = Math.floor(n / B.length), b = B[idx];
-      const q = themQuai(A, 'boss', COOP.mauBoss(w, idx, vong, cuoi), 26 * (1 + Math.min(0.24, 0.08 * vong)), null, cuoi ? 58 : 52);
+      const q = themQuai(A, 'boss', COOP.mauBoss(w, idx, vong, cuoi) * (co.mauK || 1), 26 * (1 + Math.min(0.24, 0.08 * vong)), null, cuoi ? 58 : 52);
       q.lech = 0; datViTri(A, q);
       q.boss = b; q.vong = vong; q.cuoi = cuoi; q.thuong = 60 + 6 * w; q.songT = 0; q.knCD = b.kn.map(() => 0); q.tele = null; q.linkCap = 0;
       A.boss = q;
@@ -279,7 +299,7 @@
   }
   function sinhCoop(S) {
     const w = S.dot;
-    sinhLoai(S, w, chonQuai(S, w), COOP.mauQuai(w), COOP.tocQuai(w));
+    sinhLoai(S, w, chonQuai(S, w), COOP.mauQuai(w) * (S.coop.mauK || 1), COOP.tocQuai(w));
   }
   // ---- QUÁI: chọn loại theo wave (dữ liệu QUAI.tu/ti), TINH ANH từ wave TINH_ANH_TU (số theo soTinhAnh, rải đều trong wave) ----
   function chonBo(w) {
@@ -326,7 +346,7 @@
       if (co.choT <= 0) {
         if (co.dot > 0) {
           const th = COOP.thuongDot(co.dot);
-          for (const X of [A, S]) { X.lk += th; X.so.push({ x: X.B.OX + X.B.SW / 2, y: X.B.OY + X.B.SH / 2, v: `WAVE CLEAR +${th}`, t: 0, mau: '#ffe27a', lk: 1, to: 1 }); }
+          for (const X of new Set([A, S])) { X.lk += th; X.so.push({ x: X.B.OX + X.B.SW / 2, y: X.B.OY + X.B.SH / 2, v: `WAVE CLEAR +${th}`, t: 0, mau: '#ffe27a', lk: 1, to: 1 }); }
         }
         batDauDotCoop(A); co.choT = COOP.NGHI;
       }
@@ -388,7 +408,7 @@
   // LUẬT NỀN (GDD 1.3): tướng CẬN CHIẾN chỉ ra đòn khi tâm ô cách tâm hành lang ≤ TAM_CAN_CHIEN cạnh ô. Co-op bàn dưới: chỉ tính hành lang GIỮA.
   const kcDoan = (x, y, g) => { const t = Math.max(0, Math.min(g.d, (x - g.x0) * g.ux + (y - g.y0) * g.uy)); return Math.hypot(x - g.x0 - g.ux * t, y - g.y0 - g.uy * t); };
   function kcDuong(S, i) {   // khoảng cách tâm ô i → tâm hành lang, tính bằng số cạnh ô
-    const [x, y] = oTam(S, i), ds = S.B.TAM_HL || S.B.DOAN, dd = S.coop && !S.ai ? ds.slice(1) : ds;
+    const [x, y] = oTam(S, i), ds = S.B.TAM_HL || S.B.DOAN, dd = ds;   // co-op/solo: 1 làn dọc thẳng — mọi bàn đo tới cùng làn
     return Math.min(...dd.map((g) => kcDoan(x, y, g))) / C.BUOC_X;
   }
   const laCanChien = (id) => !!(T[id] && T[id].tam);
@@ -397,7 +417,6 @@
     const td0 = T[v.id];
     if (td0.tam && !oCanChien(S, i)) return null;   // cận chiến đứng sâu trong bàn: đứng được nhưng KHÔNG ra đòn
     let DS = S.quai.filter((o) => nham(o) && trongTam(S, i, td0, o));
-    if (S.coop && !S.ai) DS = DS.filter((o) => o.d >= C.D_RE_CO - 40);   // co-op: bàn dưới bắn quái trên hành lang giữa (từ góc rẽ), bàn trên bắn cả đường
     if (!DS.length) return null;
     const td = T[v.id], f = MUC[td.muc] || MUC.dau;
     return f(S, DS, v, td, i);
@@ -833,7 +852,7 @@
     if (S.hitStop > 0) { S.hitStop -= dt; return; }   // hit-stop: đứng hình cả bàn 20–35ms sau đòn mạnh
     S.t += dt;
     // đợt (bàn AI: nhận cùng đợt với người chơi — khi người chơi sang đợt mới thì AI cũng sang)
-    if (S.coop) { if (S.ai) dieuPhoiCoop(S, dt); else S.dot = S.coop.dot; if (S.het) return; }
+    if (S.coop) { if (S.dieu) dieuPhoiCoop(S, dt); else S.dot = S.coop.dot; if (S.het) return; }
     else if (S.theo && S.theo.dot > S.dot) batDauDot(S);
     if (S.coop) { /* co-op: wave do dieuPhoiCoop lo */ }
     else if (S.conSinh > 0) {
@@ -960,7 +979,7 @@
     }
     S.vung = S.vung.filter((z) => z.t < z.T);
     // quái (co-op: mảng quái chung — chỉ bàn đồng đội (trên) cho quái đi/xử lý, tránh chạy 2 lần)
-    if (!S.coop || S.ai) for (const q of S.quai) {
+    if (!S.coop || S.dieu) for (const q of S.quai) {
       if (!sống(q)) continue;
       const X = chuQuai(S, q);   // bàn chịu tác động của tinh anh / trùm (= S ngoài co-op)
       q.khung += dt * 7;
@@ -1152,7 +1171,7 @@
   const API = { kcDuong, laCanChien, oCanChien, tinhKeBuff, moi, moiCoop, botCoop, buoc, botAI, trieuHoi, tha, lenBac, gopDuoc, giaTrieu, giaBac, satThuong, oXY, oTam, ke, viTri, trong, nong,
     giaAF, dungAF, afBat, coHieu, theoSao, boCuc, datSkin, hinhSkin, MUC, DON, HIEU, DAC_BIET, CHU_DONG, chuDong, oHopLe, dungChuDong, chonKetQua, HG_DIR,
     nongHook: null,
-    BAN_NG, BAN_AI, BAN_AI_CO, BAN_NG_CO, K, setRnd: (f) => (rnd = f) };
+    BAN_NG, BAN_AI, BAN_AI_CO, BAN_NG_CO, BAN_SO, moiSolo, K, setRnd: (f) => (rnd = f) };
   root.GAME = API;
   if (typeof module !== 'undefined') module.exports = API;
 })(typeof window !== 'undefined' ? window : globalThis);

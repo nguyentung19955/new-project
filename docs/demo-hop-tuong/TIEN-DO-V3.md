@@ -254,3 +254,13 @@ Người dùng đã quyết định chuyển game sang pixel art dần dần. PA
 - `render.js`: đọc sheet đứng theo hàng, phát thở 4 khung (tắt nhún code), đạn vẽ sheet `bay` xoay theo góc bay, chớp `phat` tại tay lúc ra đòn, nổ `trung` khi trúng. Giữ nguyên mượt xoay hướng (MUOT).
 - `game.js`: chớp tay của bộ v9 kéo dài 0,3 s; trúng đạn sinh hiệu ứng `trung9`; HIEU `bang` không có `voR` thì chỉ làm chậm (không vỡ băng).
 - Chưa chạy thử (người dùng tự test).
+
+## 04/11/2026 20:12 — Sửa CO-OP theo ảnh thật DCDW + thêm chế độ SOLO (phiên tự động)
+- **CO-OP sửa đường quái**: bỏ đường hình ⊢ (rẽ ngang hành lang giữa). Giờ là **một làn dọc duy nhất ở mép trái**, quái sinh ở cổng trên cùng (`assets/bg/portal.png`) và đi **thẳng xuống** lõi dưới cùng (`assets/bg/core.png`, avatar Archfiend + tim mạng chung đặt trên lõi). Hai bàn 5×3 chồng bên phải làn: trên = ĐỒNG ĐỘI AI, dưới = người chơi; khoảng giữa chỉ là nền (dải "WAVE n/70" hiện ở đây).
+- Thân làn: lát nối tiếp đoạn hành lang trái **cắt từ ảnh skin bàn người chơi** (không vẽ lại pixel). Ảnh skin mỗi bàn bị cắt bỏ hành lang trái + dưới của ảnh.
+- Bắn: tướng bàn nào cũng bắn mọi quái trong tầm (bỏ giới hạn "bàn dưới chỉ bắn từ góc rẽ"); cận chiến đo tầm tới làn dọc. Quái tới cuối làn mới trừ mạng chung. Nhịp wave/trùm/70 wave/AI đồng đội giữ nguyên; thời gian đi hết làn vẫn ≈ `COOP.THOI_GIAN_DUONG`.
+- Code: `game.js boCuc` (bố cục co-op mới + `C.LAN_CO`, `BAN_SO`/`C.LAN_SO` cho solo), `chonMuc`/`kcDuong` bỏ lọc góc rẽ, `C.D_RE_CO` = giữa 2 bàn (quái trước mốc thuộc bàn trên cho trùm/tinh anh); `render.js veLanDoc` + `taoLop(k, che)`.
+- **SOLO mới**: nút thứ 3 "SOLO" ở màn chọn tướng (nhớ bằng localStorage `neon-grid.mode`). Chỉ 1 bàn người chơi, làn dọc trái ngắn (cao vùng bàn + ~70px trên/dưới), không có đội AI ở HUD. Nhịp wave/trùm/mạng như co-op, máu quái × `SOLO.MAU` = 0.55 (`data.js SOLO`). Kỷ lục riêng `neon-grid.best.solo`. Màn kết quả không có cột ALLY.
+- Cân bằng nhanh (bot giả lập trong node, 4 trận mỗi chế độ): co-op tới wave ~40–44, solo ~31–46 → 0.55 tạm hợp lý.
+- Tự kiểm 390×844 bằng Playwright: ảnh so sánh `tu-kiem/coop-solo-lan-doc.png` (trái: ảnh thật DCDW · giữa: CO-OP · phải: SOLO) — làn dọc trái, 2 bàn chồng bên phải, quái đi thẳng xuống. Không lỗi JS.
+- PVP giữ nguyên.
