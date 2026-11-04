@@ -11,7 +11,7 @@ function taoMoiTruong() {
   ctx.REN = { coDau: () => 40, lamNen: noop, t: 0 };
   ctx.UI = { vaoTran: noop, canhBaoTrum: noop, bangWave: noop, ketQua: noop };
   vm.createContext(ctx);
-  for (const f of ['meta', 'data', 'fx', 'game', 'skills', 'skills2']) vm.runInContext(fs.readFileSync(path.join(goc, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
+  for (const f of ['meta', 'text', 'data', 'fx', 'game', 'skills', 'skills2']) vm.runInContext(fs.readFileSync(path.join(goc, 'js', f + '.js'), 'utf8'), ctx, { filename: f + '.js' });
   vm.runInContext('G.roster = window.ROSTER_EMBED; G.rosterMap = {}; for (const r of G.roster) G.rosterMap[r.id] = r;', ctx);
   return ctx;
 }

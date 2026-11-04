@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -17,9 +17,9 @@
 
     <!-- THANH TRÊN: băng WAVE · trùm / số quái · tim -->
     <div id="top" hidden>
-      <div id="tb-wave"><span>WAVE</span><b id="tb-so">1</b></div>
+      <div id="tb-wave"><span data-t="wave">WAVE</span><b id="tb-so">1</b></div>
       <div id="tb-giua">
-        <div id="tb-trum"><img src="assets/ui_canh_bao_trum.png" alt=""><span id="tb-trum-chu">TRÙM SAU 9 WAVE</span></div>
+        <div id="tb-trum"><img src="assets/ui_canh_bao_trum.png" alt=""><span id="tb-trum-chu"></span></div>
         <div id="tb-trum-mau" hidden><i></i></div>
       </div>
       <div id="tb-tim"></div>
@@ -29,21 +29,21 @@
     <!-- HÀNG DƯỚI kiểu DCDW: mana · nút TRIỆU HỒI · tốc độ / tạm dừng; hàng thẻ: 5 ụ (nâng cấp) + Ma vương -->
     <div id="duoi" hidden>
       <div id="mana-hop"><img src="assets/ui_mana.png" alt=""><b id="mana">0</b></div>
-      <button id="nut-trieu" data-act="trieu"><img src="assets/ui_nut_trieu.png" alt=""><span class="tr-ten">TRIỆU HỒI</span><span class="tr-gia"><img src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></button>
+      <button id="nut-trieu" data-act="trieu"><img src="assets/ui_nut_trieu.png" alt=""><span class="tr-chu"><span class="tr-ten" data-t="summon">SUMMON</span><span class="tr-gia"><img src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></span></button>
       <div class="nut-cot">
         <button class="nut-nho" data-act="tocdo" id="nut-tocdo">1×</button>
-        <button class="nut-nho" data-act="dung" aria-label="Tạm dừng">❚❚</button>
+        <button class="nut-nho" data-act="dung" aria-label="Pause">❚❚</button>
       </div>
       <div id="bo-the"></div>
       <button id="the-mv" data-act="mv"><img class="mv-ic" alt=""><span class="mv-ten"></span><span class="mv-gia"><img src="assets/ui_mana.png" alt=""><b>0</b></span><i class="mv-cd"></i></button>
     </div>
 
-    <div id="bang-wave" hidden><img src="assets/ui_bang_wave.png" alt=""><b></b><span></span></div>
+    <div id="bang-wave" hidden><div class="bw-dai"><b></b><span></span></div></div>
     <div id="canh-bao" hidden><img src="assets/ui_canh_bao_trum.png" alt=""><b></b><span></span></div>
 
     <!-- BẢNG THÔNG TIN Ụ (chạm ụ / giữ thẻ) -->
     <div id="tt" hidden>
-      <div class="tt-the"><img class="tt-khung" alt=""><img class="tt-anh" alt=""></div>
+      <div class="tt-the"><img class="tt-anh" alt=""></div>
       <div class="tt-than">
         <div class="tt-dau"><b class="tt-ten"></b><span class="tt-bac"></span></div>
         <div class="tt-phu"></div>
@@ -55,10 +55,10 @@
     <!-- MÀN CHỌN BỘ BÀI: 64 ụ theo bậc, chọn 5 (tối đa 1 ụ ĐỎ) + 1 Ma vương + chế độ -->
     <div id="chon" class="man">
       <div class="chon-dau">
-        <div class="logo"><b>TURRET MERGE</b><span>GHÉP Ụ SÚNG · THỦ THÀNH</span></div>
+        <div class="logo"><b>TURRET MERGE</b><span data-t="subtitle">MERGE · DEFEND · SURVIVE</span></div>
         <div class="chon-hang">
-          <div class="chon-goi">CHỌN 5 Ụ <b id="chon-dem">0/5</b></div>
-          <button class="nut-xep" data-act="xep" id="nut-xep">XẾP: THEO BẬC</button>
+          <div class="chon-goi"><span data-t="pick5">PICK 5 TURRETS</span> <b id="chon-dem">0/5</b></div>
+          <button class="nut-xep" data-act="xep" id="nut-xep">SORT: TIER</button>
         </div>
         <div id="chon-bo"></div>
       </div>
@@ -66,24 +66,24 @@
       <div class="chon-cuoi">
         <div class="chon-mv" id="chon-mv"></div>
         <div class="chon-che">
-          <button class="che" data-act="che" data-che="coop"><b>CO-OP</b><span>2 người · 1 quái lọt là thua</span></button>
-          <button class="che" data-act="che" data-che="solo"><b>SOLO</b><span>1 bàn · 3 tim</span></button>
-          <button class="che" data-act="che" data-che="pvp"><b>PVP</b><span>giết quái gửi đối thủ</span></button>
+          <button class="che" data-act="che" data-che="coop"><b>CO-OP</b><span data-t="coopSub"></span></button>
+          <button class="che" data-act="che" data-che="solo"><b>SOLO</b><span data-t="soloSub"></span></button>
+          <button class="che" data-act="che" data-che="pvp"><b>PVP</b><span data-t="pvpSub"></span></button>
         </div>
         <div class="chon-nut">
-          <button class="nut" data-act="ngaunhien">NGẪU NHIÊN</button>
-          <button class="nut chinh" data-act="vao" id="nut-vao" disabled>VÀO TRẬN</button>
+          <button class="nut" data-act="ngaunhien" data-t="random">RANDOM</button>
+          <button class="nut chinh" data-act="vao" id="nut-vao" data-t="start" disabled>START</button>
         </div>
       </div>
     </div>
 
     <div id="dung" class="man phu" hidden>
       <div class="bang">
-        <div class="bang-ten">TẠM DỪNG</div>
+        <div class="bang-ten" data-t="paused">PAUSED</div>
         <div class="bang-nut">
-          <button class="nut" data-act="amthanh" id="nut-am">ÂM THANH: BẬT</button>
-          <button class="nut" data-act="bo">BỎ TRẬN</button>
-          <button class="nut chinh" data-act="tiep">CHƠI TIẾP</button>
+          <button class="nut" data-act="amthanh" id="nut-am" data-t="soundOn">SOUND: ON</button>
+          <button class="nut" data-act="bo" data-t="quit">QUIT</button>
+          <button class="nut chinh" data-act="tiep" data-t="resume">RESUME</button>
         </div>
       </div>
     </div>
@@ -91,18 +91,19 @@
     <div id="ketqua" class="man phu" hidden>
       <div class="bang">
         <img class="kq-ic" src="assets/ui_thuong.png" alt="">
-        <div class="bang-ten" id="kq-ten">THUA</div>
+        <div class="bang-ten" id="kq-ten"></div>
         <div class="kq-so" id="kq-so"></div>
         <div class="kq-phu" id="kq-phu"></div>
         <div class="bang-nut">
-          <button class="nut" data-act="doibo">ĐỔI BỘ BÀI</button>
-          <button class="nut chinh" data-act="choilai">CHƠI LẠI</button>
+          <button class="nut" data-act="doibo" data-t="changeDeck">CHANGE DECK</button>
+          <button class="nut chinh" data-act="choilai" data-t="again">PLAY AGAIN</button>
         </div>
       </div>
     </div>
   </div>
 
   <script src="js/meta.js"></script>
+  <script src="js/text.js"></script>
   <script src="js/data.js"></script>
   <script src="js/fx.js"></script>
   <script src="js/sound.js"></script>

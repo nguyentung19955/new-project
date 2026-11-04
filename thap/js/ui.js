@@ -2,6 +2,11 @@
 'use strict';
 
 const $ = (s) => document.querySelector(s);
+// co chữ cho vừa khung: giảm cỡ chữ tới khi không tràn (tối đa 2 dòng nếu khung cho phép)
+function fitText(el, max, min) {
+  if (!el) return; let f = max; el.style.fontSize = f + 'px';
+  while (f > min && (el.scrollWidth > el.clientWidth + 0.5 || el.scrollHeight > el.clientHeight + 0.5)) { f -= 0.5; el.style.fontSize = f + 'px'; }
+}
 const UI = {
   keo: null, chon: [], mv: 'hero', che: 'solo', xep: 'bac', ttHet: 0, giu: null, manaCu: 0,
 
@@ -10,7 +15,8 @@ const UI = {
     // roster.json là nguồn dữ liệu chính (id, tên, bậc, kỹ năng); dự phòng bản nhúng trong meta.js
     let r = null;
     try { const res = await fetch('assets/roster.json', { cache: 'no-cache' }); if (res.ok) r = await res.json(); } catch (e) { }
-    G.roster = r || window.ROSTER_EMBED || [];
+    G.roster = applyText(r || window.ROSTER_EMBED || []);
+    document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
     REN.init($('#cv'));
     this.docDebug();
@@ -52,20 +58,20 @@ const UI = {
   veChon() {
     const luoi = $('#chon-luoi'); luoi.innerHTML = '';
     const ds = G.roster.slice();
-    if (this.xep === 'ten') ds.sort((a, b) => (SKILLS[b.id] ? 1 : 0) - (SKILLS[a.id] ? 1 : 0) || a.ten.localeCompare(b.ten, 'vi'));
+    if (this.xep === 'ten') ds.sort((a, b) => (SKILLS[b.id] ? 1 : 0) - (SKILLS[a.id] ? 1 : 0) || a.ten.localeCompare(b.ten, 'en'));
     const nhom = this.xep === 'bac' ? TIER_LIST.map(t => [t, ds.filter(r => r.bac === t)]) : [[null, ds]];
     for (const [bac, rs] of nhom) {
       if (bac) {
         const h = document.createElement('div'); h.className = 'nhom'; h.style.setProperty('--m', TIERS[bac].mau);
         const co = rs.filter(r => SKILLS[r.id]).length;
-        h.innerHTML = '<i></i>' + TIERS[bac].ten + ' · ' + TIERS[bac].tenDai + ' <span>' + co + '/' + rs.length + ' chơi được' + (bac === 'do' ? ' · tối đa 1 ụ đỏ' : '') + '</span>';
+        h.innerHTML = '<i></i><b>' + TIERS[bac].ten + '</b><span>' + co + '/' + rs.length + ' ' + TEXT.ui.playable + (bac === 'do' ? ' · ' + TEXT.ui.maxOneMythic : '') + '</span>';
         luoi.appendChild(h);
       }
       const g = document.createElement('div'); g.className = 'luoi';
       for (const r of rs) g.appendChild(this.theChon(r));
       luoi.appendChild(g);
     }
-    $('#nut-xep').textContent = this.xep === 'bac' ? 'XẾP: THEO BẬC' : 'XẾP: THEO TÊN';
+    $('#nut-xep').textContent = this.xep === 'bac' ? TEXT.ui.sortTier : TEXT.ui.sortName;
     const mv = $('#chon-mv'); mv.innerHTML = '';
     for (const [id, d] of Object.entries(MAVUONG)) {
       const b = document.createElement('button'); b.className = 'mv' + (this.mv === id ? ' chon' : ''); b.dataset.act = 'mv-chon'; b.dataset.id = id;
@@ -74,14 +80,16 @@ const UI = {
     }
     document.querySelectorAll('.che').forEach(b => b.classList.toggle('chon', b.dataset.che === this.che));
     this.veBoChon();
+    requestAnimationFrame(() => luoi.querySelectorAll('.ten').forEach(e => fitText(e, 10.5, 7)));
   },
   theChon(r) {
     const c = document.createElement('div');
     const co = !!SKILLS[r.id];
     c.className = 'c' + (co ? '' : ' khoa') + (this.chon.includes(r.id) ? ' chon' : '');
     c.dataset.act = 'chon-u'; c.dataset.id = r.id;
-    c.innerHTML = '<div class="nen"></div><img class="anh" loading="lazy" src="assets/nho/' + r.id + '.png" alt="" onerror="this.style.visibility=\'hidden\'">' +
-      '<img class="khung" src="assets/tier_card_' + r.bac + '.png" alt=""><div class="ten" style="color:' + TIERS[r.bac].mau + '">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">SẮP CÓ</div>');
+c.style.setProperty('--m', TIERS[r.bac].mau);
+    c.innerHTML = '<i class="gem"></i><img class="anh" loading="lazy" src="' + portraitOf(r.id) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+      '<div class="ten">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">' + TEXT.ui.soon + '</div>');
     return c;
   },
   veBoChon() {
@@ -89,7 +97,7 @@ const UI = {
     for (let i = 0; i < 5; i++) {
       const id = this.chon[i], r = id && G.rosterMap[id];
       const o = document.createElement('div'); o.className = 'o-bo';
-      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img src="assets/nho/' + id + '.png" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
+      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img src="' + portraitOf(id) + '" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
       b.appendChild(o);
     }
     $('#chon-dem').textContent = this.chon.length + '/5';
@@ -102,14 +110,14 @@ const UI = {
     const i = this.chon.indexOf(id);
     if (i >= 0) this.chon.splice(i, 1);
     else {
-      if (this.chon.length >= 5) return this.nhac('Bộ bài đã đủ 5 ụ');
-      if (r.bac === 'do' && this.chon.some(x => G.rosterMap[x].bac === 'do')) return this.nhac('Chỉ được 1 ụ ĐỎ (Cổ đại) trong bộ');
+      if (this.chon.length >= 5) return this.nhac(TEXT.ui.deckFull);
+      if (r.bac === 'do' && this.chon.some(x => G.rosterMap[x].bac === 'do')) return this.nhac(TEXT.ui.oneMythic);
       this.chon.push(id);
     }
     SND.nut();
     this.veBoChon();
   },
-  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;background:#b0001a;padding:8px 14px;border-radius:10px;font-weight:900;font-size:13px;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
+  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;background:#b0001a;padding:8px 14px;border-radius:10px;font-weight:900;font-size:13px;white-space:nowrap;text-align:center;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
 
   vao() {
     if (this.chon.length !== 5) return;
@@ -125,12 +133,13 @@ const UI = {
     for (const id of B.deck) {
       const r = G.rosterMap[id];
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
-      d.innerHTML = '<div class="nen"></div><img class="anh" src="assets/nho/' + id + '.png" alt=""><img class="khung" src="assets/tier_card_' + r.bac + '.png" alt="">' +
+      d.style.setProperty('--m', TIERS[r.bac].mau);
+      d.innerHTML = '<i class="gem"></i><img class="anh" src="' + portraitOf(id) + '" alt="">' +
         '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     const mv = MAVUONG[B.mv.id];
-    $('#the-mv .mv-ic').src = 'assets/' + mv.icon + '.png'; $('#the-mv .mv-ten').textContent = mv.ten;
+    $('#the-mv .mv-ic').src = 'assets/' + mv.icon + '.png'; $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['tier_ring_trang', 'tier_ring_xanh', 'tier_ring_tim', 'tier_ring_vang', 'tier_ring_do', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_de', 'mimic_nong'];
@@ -155,7 +164,7 @@ const UI = {
       const n = B.t.filter(T => T && T.id === id).length;
       d.querySelector('.so').textContent = n ? '×' + n : '';
       const g = d.querySelector('.gia b');
-      if (lv >= 5) { g.textContent = 'MAX'; d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      if (lv >= 5) { g.textContent = TEXT.ui.max; d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; g.textContent = gia; d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
     const mv = B.mv, md = MAVUONG[mv.id], te = $('#the-mv');
@@ -166,17 +175,17 @@ const UI = {
     // trùm
     const trum = G.quai.find(e => e.trum && !e.chet && G.duong[e.p].ban === 0) || G.quai.find(e => e.trum && !e.chet);
     if (trum) { $('#tb-trum-chu').textContent = TRUM[trum.trum].ten; $('#tb-trum-mau').hidden = false; $('#tb-trum-mau i').style.width = (trum.hp / trum.max * 100) + '%'; }
-    else { $('#tb-trum-mau').hidden = true; const con = LUAT.songTrum - (Math.max(1, G.wave) % LUAT.songTrum); $('#tb-trum-chu').textContent = con === LUAT.songTrum ? 'WAVE TRÙM!' : 'TRÙM SAU ' + con + ' WAVE'; }
+    else { $('#tb-trum-mau').hidden = true; const con = LUAT.songTrum - (Math.max(1, G.wave) % LUAT.songTrum); $('#tb-trum-chu').textContent = con === LUAT.songTrum ? TEXT.ui.bossWave : TEXT.ui.bossIn(con); }
     // tim
     const key = G.che + B.tim + (G.ban[1] ? G.ban[1].tim : '');
     if (key !== this._timKey) {
       this._timKey = key;
       const el = $('#tb-tim'); el.innerHTML = '';
-      if (G.che === 'coop') el.innerHTML = '<div class="chu">LỌT 1 QUÁI<br>LÀ THUA</div>';
+      if (G.che === 'coop') el.innerHTML = '<div class="chu">' + TEXT.ui.coopLeak + '</div>';
       else {
         const max = G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo;
         const mk = (n, cls) => { let s = ''; for (let i = 0; i < max; i++) s += '<img class="' + (i < n ? '' : 'mat') + '" src="assets/ui_tim.png" alt="">'; return s; };
-        if (G.che === 'pvp') el.innerHTML = '<div class="doi"><div>ĐỐI THỦ ' + mk(G.ban[1].tim) + '</div><div>BẠN ' + mk(B.tim) + '</div></div>';
+        if (G.che === 'pvp') el.innerHTML = '<div class="doi"><div><span>' + TEXT.ui.rival + '</span>' + mk(G.ban[1].tim) + '</div><div><span>' + TEXT.ui.you + '</span>' + mk(B.tim) + '</div></div>';
         else el.innerHTML = mk(B.tim);
       }
     }
@@ -184,7 +193,7 @@ const UI = {
   },
   bangWave(w, trum) {
     const b = $('#bang-wave');
-    b.querySelector('b').textContent = 'WAVE ' + w; b.querySelector('span').textContent = trum ? 'TRÙM ĐANG TỚI!' : (w === 1 ? 'Triệu hồi & ghép ụ súng!' : '');
+    b.querySelector('b').textContent = TEXT.ui.wave + ' ' + w; const sp = b.querySelector('span'); sp.textContent = trum ? TEXT.ui.bossComing : (w === 1 ? TEXT.ui.wave1Hint : ''); sp.hidden = !sp.textContent;
     b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; b.classList.add('chay');
     clearTimeout(this._bw); this._bw = setTimeout(() => b.hidden = true, 1700);
   },
@@ -196,36 +205,38 @@ const UI = {
     clearTimeout(this._cb); this._cb = setTimeout(() => b.hidden = true, 2200);
   },
   ketQua(k) {
-    const e = $('#ketqua'); e.hidden = false;
+    const e = $('#ketqua'); e.hidden = false; $('#tt').hidden = true;
     e.classList.toggle('thang', k.thang); e.classList.toggle('thua', !k.thang);
-    $('#kq-ten').textContent = k.thang ? 'CHIẾN THẮNG' : 'THẤT BẠI';
-    $('#kq-so').innerHTML = 'Trụ tới <b>WAVE ' + k.wave + '</b>';
+    $('#kq-ten').textContent = k.thang ? TEXT.ui.victory : TEXT.ui.defeat;
+    $('#kq-so').innerHTML = TEXT.ui.reached(k.wave);
     $('#kq-phu').textContent = k.ly || '';
   },
 
   // ---------- thông tin ụ ----------
   moTT(id, T, giu) {
     const r = G.rosterMap[id], tt = $('#tt'), tier = TIERS[r.bac], sk = SKILLS[id];
-    tt.querySelector('.tt-khung').src = 'assets/tier_card_' + r.bac + '.png';
-    tt.querySelector('.tt-anh').src = 'assets/nho/' + id + '.png';
+    tt.style.setProperty('--m', tier.mau);
+    tt.querySelector('.tt-anh').src = portraitOf(id);
     tt.querySelector('.tt-ten').textContent = r.ten; tt.querySelector('.tt-ten').style.color = tier.mau;
-    const bac = tt.querySelector('.tt-bac'); bac.textContent = tier.ten + ' · ' + tier.tenDai; bac.style.color = tier.mau; bac.style.border = '1px solid ' + tier.mau;
-    tt.querySelector('.tt-phu').textContent = 'Theo thẻ DCDW: ' + r.dcdw + (sk ? ' · ' + ({ tc: 'Tấn công', ht: 'Hỗ trợ', db: 'Đặc biệt' }[sk.vai]) : ' · SẮP CÓ');
+    const bac = tt.querySelector('.tt-bac'); bac.textContent = tier.ten;
+    tt.querySelector('.tt-phu').textContent = sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon;
     tt.querySelector('.tt-kn').textContent = r.kyNang;
     let so = '';
     if (T && sk) {
       so = T.sao + '★ · LV' + G.ban[T.ban].lv[id];
-      if (sk.dmg) so += ' · Sát thương ' + Math.round(dmgU(T));
+      if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
       if (sk.mo) so += ' · ' + sk.mo(T);
-      if (T.st.da) so += ' · HOÁ ĐÁ (ghép với đá cùng sao)';
-      if (T.st.bang > 0) so += ' · ĐÓNG BĂNG';
-      if (T.st.lua > 0) so += ' · ĐANG CHÁY';
-      if (sk.chuDong) so += T.nap >= 1 ? ' · ĐÃ ĐẦY: CHẠM Ụ ĐỂ DÙNG' : ' · nạp ' + Math.round(T.nap * 100) + '%';
-    } else if (!sk) so = 'Ụ này sẽ mở ở bản cập nhật sau.';
-    else so = 'Sát thương gốc ' + Math.round((sk.dmg || 0) * tier.hs) + ' · ×' + tier.hs + ' theo bậc';
+      if (T.st.da) so += ' · ' + TEXT.ui.stoned;
+      if (T.st.bang > 0) so += ' · ' + TEXT.ui.frozen;
+      if (T.st.lua > 0) so += ' · ' + TEXT.ui.burning;
+      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
+    } else if (!sk) so = TEXT.ui.comingSoon;
+    else so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
     tt.querySelector('.tt-so').textContent = so;
     tt.style.top = G.ban.length && !$('#top').hidden ? '470px' : '300px';
+    tt.style.zIndex = $('#chon').hidden ? 8 : 12; // màn chọn: nổi trên bảng chọn
     tt.hidden = false;
+    fitText(tt.querySelector('.tt-ten'), 18, 12);
     this.ttHet = performance.now() + (giu ? 2600 : 2200);
   },
 
@@ -245,9 +256,9 @@ const UI = {
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (B) dungMV(B); break;
       case 'tocdo': G.tocDo = G.tocDo === 1 ? 2 : 1; el.textContent = G.tocDo + '×'; break;
-      case 'dung': G.dung = true; $('#dung').hidden = false; break;
+      case 'dung': G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;
-      case 'amthanh': $('#nut-am').textContent = 'ÂM THANH: ' + (SND.batTat() ? 'BẬT' : 'TẮT'); break;
+      case 'amthanh': $('#nut-am').textContent = SND.batTat() ? TEXT.ui.soundOn : TEXT.ui.soundOff; break;
       case 'bo': case 'doibo':
         G.ban = []; G.quai = []; G.dung = false;
         $('#dung').hidden = true; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; this.veChon(); break;
@@ -277,7 +288,7 @@ const UI = {
       const k = this.keo; if (!k) return;
       const [x, y] = this.diemLogic(e); k.x = x; k.y = y;
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
-        if (k.T.st.bang > 0) { FX.chu1(x, y - 20, 'ĐÓNG BĂNG', '#7fdcff', 12); this.keo = null; return; }
+        if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
         k.dang = true; $('#tt').hidden = true;
       }
     });
@@ -293,7 +304,7 @@ const UI = {
       const D = this.uTai(k.x, k.y);
       if (D && D !== k.T && B.t[k.T.o] === k.T) {
         if (hopLeGhep(k.T, D)) ghep(B, k.T, D);
-        else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.sao !== D.sao ? 'KHÁC SAO' : 'KHÁC LOẠI', '#ff9a9a', 12); }
+        else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.sao !== D.sao ? TEXT.fx.diffStar : TEXT.fx.diffType, '#ff9a9a', 12); }
       }
     };
     cv.addEventListener('pointerup', het); cv.addEventListener('pointercancel', () => { this.keo = null; });

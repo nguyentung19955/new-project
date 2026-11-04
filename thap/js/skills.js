@@ -20,7 +20,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 SKILLS.canon = { // Pháo Nổ (Joan of Arc): bắn chậm, nổ lan; sao tăng vùng nổ
   vai: 'tc', dmg: 24, toc: 0.75, nham: 'dau',
   banKinh: (T) => 28 + 6 * T.sao,
-  mo: (T) => 'Vùng nổ ' + SKILLS.canon.banKinh(T) + ' px',
+  mo: (T) => 'Blast radius ' + SKILLS.canon.banKinh(T) + ' px',
   ban(G, B, T, E) {
     giat(T, 1.4); const [x, y] = chopNong(T, 34); phutKhoi(x, y, 2); SND.phao();
     const dmg = dmgU(T), r = this.banKinh(T);
@@ -30,7 +30,7 @@ SKILLS.canon = { // Pháo Nổ (Joan of Arc): bắn chậm, nổ lan; sao tăng 
 };
 SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
   vai: 'tc', dmg: 6, toc: 3.0, tocSao: 0.14, nham: 'dau',
-  mo: (T) => 'Tốc bắn ' + tocU(T).toFixed(1) + '/s',
+  mo: (T) => 'Fire rate ' + tocU(T).toFixed(1) + '/s',
   ban(G, B, T, E) {
     giat(T, 0.35); const [x, y] = dauNong(T);
     FX.no('chop_nong', x, y, 22 + Math.random() * 8, 0.07, T.goc + rnd(-0.1, 0.1));
@@ -42,19 +42,19 @@ SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
 SKILLS.bang = { // Băng (Liza): làm chậm quái đầu 35% trong 4 s
   vai: 'tc', dmg: 9, toc: 1.1, nham: 'dau',
   cham: (T) => Math.min(0.55, 0.35 + 0.03 * (T.sao - 1)),
-  mo: (T) => 'Làm chậm ' + Math.round(SKILLS.bang.cham(T) * 100) + '% · 4 s',
+  mo: (T) => 'Slow ' + Math.round(SKILLS.bang.cham(T) * 100) + '% · 4s',
   ban(G, B, T, E) {
     giat(T, 0.6); chopNong(T, 20); SND.bang();
     const dmg = dmgU(T), c = this.cham(T);
     danThang(B, T, E, 'dan_bang', 430, 22, (G, d, M) => {
       FX.no('bang_vo', d.x, d.y, 46, 0.35);
-      if (M) { trung(M, dmg, { B, mau: '#bff4ff' }); if (!M.d.khangCham) { M.cham = Math.max(M.cham, c); M.chamT = 4; } else FX.chu1(M.x, M.y - 20, 'MIỄN', '#7fdcff', 11); }
+      if (M) { trung(M, dmg, { B, mau: '#bff4ff' }); if (!M.d.khangCham) { M.cham = Math.max(M.cham, c); M.chamT = 4; } else FX.chu1(M.x, M.y - 20, 'IMMUNE', '#7fdcff', 11); }
     }, 'bang');
   },
 };
 SKILLS.doc = { // Độc (Unknown): gây độc theo thời gian + đám mây độc đọng lại
   vai: 'tc', dmg: 6, toc: 0.9, nham: 'dau',
-  mo: (T) => 'Độc ' + Math.round(dmgU(T) * 1.6) + '/s · 4 s',
+  mo: (T) => 'Poison ' + Math.round(dmgU(T) * 1.6) + '/s · 4s',
   ban(G, B, T, E) {
     giat(T, 0.5); const [x, y] = dauNong(T); SND.doc();
     for (let i = 0; i < 4; i++) FX.hat1('lua', x, y, Math.cos(T.goc + rnd(-0.4, 0.4)) * 120, Math.sin(T.goc + rnd(-0.4, 0.4)) * 120, 0.3, 7, '#9dff5a');
@@ -67,7 +67,7 @@ SKILLS.doc = { // Độc (Unknown): gây độc theo thời gian + đám mây đ
 };
 SKILLS.tia = { // Bắn Tỉa (Artemis): nhắm quái nhiều máu nhất; +100% vào quái to / trùm
   vai: 'tc', dmg: 58, toc: 0.42, nham: 'mau',
-  mo: () => '+100% vào quái to & trùm',
+  mo: () => '+100% vs big enemies & bosses',
   ban(G, B, T, E) {
     giat(T, 1.6); const [x, y] = chopNong(T, 34); phutKhoi(x, y, 1); SND.tia();
     let dmg = dmgU(T); if (E.d.to || E.trum) dmg *= 2;
@@ -78,7 +78,7 @@ SKILLS.tia = { // Bắn Tỉa (Artemis): nhắm quái nhiều máu nhất; +100%
 };
 SKILLS.set = { // Tesla (Arges): sét chuỗi N quái = số sao
   vai: 'tc', dmg: 15, toc: 0.85, nham: 'dau',
-  mo: (T) => 'Sét chuỗi ' + T.sao + ' quái',
+  mo: (T) => 'Chains to ' + T.sao + ' enemies',
   ban(G, B, T, E) {
     giat(T, 0.4); const [x, y] = dauNong(T); SND.set();
     const dmg = dmgU(T), chuoi = [E], ds = dsMucTieu(B);
@@ -112,7 +112,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
 SKILLS.radar = { // Radar (Kirinus): hỗ trợ +tốc bắn cho 4 ô kề
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.2 + 0.05 * T.sao + 0.03 * ((G.ban[T.ban].lv.radar || 1) - 1),
-  mo: (T) => '+' + Math.round(SKILLS.radar.them(T) * 100) + '% tốc bắn ô kề',
+  mo: (T) => '+' + Math.round(SKILLS.radar.them(T) * 100) + '% fire rate to neighbors',
   hoTro(G, T, N) { N.buf.toc += this.them(T); },
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
@@ -123,7 +123,7 @@ SKILLS.radar = { // Radar (Kirinus): hỗ trợ +tốc bắn cho 4 ô kề
 };
 SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép xong buff tấn công
   vai: 'db', dmg: 8, toc: 1.0, nham: 'dau',
-  mo: () => 'Ghép với mọi ụ cùng sao · ụ mới +50% công 8 s',
+  mo: () => 'Merges with any same-star turret · result +50% attack 8s',
   ban(G, B, T, E) {
     giat(T, 0.3);
     const dmg = dmgU(T);
@@ -132,7 +132,7 @@ SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép 
 };
 SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạnh (đổi mục tiêu thì về 0)
   vai: 'tc', dmg: 12, toc: 1,
-  mo: (T) => 'Tia tăng tới ×4 sau 3 s',
+  mo: (T) => 'Beam ramps to ×4 over 3s',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     if (E !== (T.las && T.las.E)) T.las = E ? { E, ramp: 0, acc: 0, so: 0 } : null;
@@ -154,7 +154,7 @@ SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạ
 };
 SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng cao nổ lan
   vai: 'tc', dmg: 20, toc: 0.55, nham: 'ngau',
-  mo: () => 'Nổ lan 46 px · mục tiêu ngẫu nhiên',
+  mo: () => 'Splash 46 px · random targets',
   ban(G, B, T, E) {
     giat(T, 1.8); const [x, y] = chopNong(T, 30); phutKhoi(x, y, 3); SND.phao();
     const dmg = dmgU(T);
@@ -171,7 +171,7 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
     for (let i = 0; i < 3; i++) { const X = B.t[i * 5 + c]; if (X && X.id === 'railgun') doc++; }
     return { ngang, doc };
   },
-  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Hàng ngang ' + b.ngang + '/5 · hàng dọc ' + b.doc + '/3'; },
+  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Row ' + b.ngang + '/5 · Column ' + b.doc + '/3'; },
   capNhat(G, B, T) {
     const b = this.bingo(B, T);
     T.buf.dmg += (b.ngang - 1) * 0.12 + (b.ngang >= 5 ? 1 : 0);
@@ -186,7 +186,7 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
 };
 SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn bàn bị vệ tinh bắn phá từ trời 20 s
   vai: 'tc', dmg: 14, toc: 1.1, nham: 'dau',
-  mo: () => 'Khi ghép: bắn phá từ vệ tinh 20 s',
+  mo: () => 'On merge: orbital strike for 20s',
   ban(G, B, T, E) {
     giat(T, 0.5); chopNong(T, 22); SND.lien();
     const dmg = dmgU(T);
@@ -194,7 +194,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn b
   },
   ghep(G, B, a, b) {
     B.phao = 20; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2;
-    const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'VỆ TINH KHAI HOẢ!', '#9fe6ff', 16, 'to');
+    const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'ORBITAL STRIKE!', '#9fe6ff', 16, 'to');
     SND.mv();
   },
   phaoBan(G, B, dt) { // gọi từ vòng cập nhật bàn khi B.phao > 0
@@ -208,7 +208,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn b
 };
 SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): dựng tường ánh sáng chặn đường rồi nổ
   vai: 'tc', dmg: 26, toc: 1,
-  mo: (T) => 'Tường chặn ' + (2.4 + 0.3 * T.sao).toFixed(1) + ' s rồi nổ',
+  mo: (T) => 'Wall holds ' + (2.4 + 0.3 * T.sao).toFixed(1) + 's, then explodes',
   capNhat(G, B, T, dt) {
     const tg = G.hu.find(o => o.k === 'tuong' && o.T === T);
     if (tg) { xoayDau(T, null, dt, tg.x, tg.y); return true; }
@@ -227,7 +227,7 @@ SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): dựng tường ánh sá
 // ============ ĐỎ ============
 SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
   vai: 'tc', dmg: 18, toc: 1,
-  mo: (T) => 'Hố đen bán kính ' + (64 + 4 * T.sao) + ' px · nghiền ×8',
+  mo: (T) => 'Black hole radius ' + (64 + 4 * T.sao) + ' px · crush ×8',
   capNhat(G, B, T, dt) {
     const ho = G.hu.find(o => o.k === 'hoden' && o.T === T);
     if (ho) { xoayDau(T, null, dt, ho.x, ho.y); return true; }
@@ -247,7 +247,7 @@ SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   vai: 'tc', dmg: 28, toc: 1,
-  mo: (T) => 'Nạp ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + ' s · sấm ×12 vùng 92 px',
+  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×12 in 92 px',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);

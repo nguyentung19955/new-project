@@ -247,7 +247,7 @@ function trung(E, dmg, o) {
   // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
   if (T && T.buf && !o.phu) {
     if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
-    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); FX.chu1(E.x, E.y - 22, 'TỬ THẦN', '#c77dff', 13, 'to'); FX.no('laser_trung', E.x, E.y, 50, 0.3); }
+    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); FX.chu1(E.x, E.y - 22, TEXT.fx.reaper, '#c77dff', 13, 'to'); FX.no('laser_trung', E.x, E.y, 50, 0.3); }
   }
   E.hp -= dmg; E.flash = 0.09;
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
@@ -275,7 +275,7 @@ function chet(E, B) {
   FX.tiaLua(E.x, E.y, E.trum ? 30 : 8, '#ffb060', 160, 10);
   FX.khoi(E.x, E.y, E.d.co * 0.5);
   FX.no('laser_trung', E.x, E.y, E.d.co * (E.trum ? 2.2 : 1.3), 0.35);
-  if (E.trum) { FX.lac(12); FX.sang(0.5, '#ffffff'); FX.chu1(E.x, E.y - 30, 'HẠ TRÙM!', '#ffd23f', 24, 'to'); SND.no(1); }
+  if (E.trum) { FX.lac(12); FX.sang(0.5, '#ffffff'); FX.chu1(E.x, E.y - 30, TEXT.fx.bossDown, '#ffd23f', 24, 'to'); SND.no(1); }
   if (E.d.tach) for (let i = 0; i < E.d.tach.n; i++) {
     const c = sinhQuai(E.d.tach.id, E.p, Math.max(0, E.s - i * 9), E.d.tach.hs || 1, E.gui); c.vao = 1;
   }
@@ -386,7 +386,7 @@ function capNhatU(B, T, dt) {
   if (st.lua > 0) {
     st.lua -= dt;
     if (Math.random() < dt * 10) { const c = tamU(T); FX.hat1('than', c.x + rnd(-18, 18), c.y + rnd(-10, 14), rnd(-8, 8), -30, 0.6, 5, '#ff8a2a'); }
-    if (st.lua <= 0) { st.lua = 0; haSao(B, T, 'Cháy rụi'); if (!B.t[T.o]) return; }
+    if (st.lua <= 0) { st.lua = 0; haSao(B, T, 'burn'); if (!B.t[T.o]) return; }
   }
   const sk = SKILLS[T.id];
   T.tuoi += dt;
@@ -418,7 +418,7 @@ function xoayDau(T, E, dt, x, y) {
 function giat(T, m) { T.rv -= (m || 1) * 240; T.chop = 0.1; }
 function haSao(B, T, ly) {
   const c = B.o[T.o];
-  if (T.sao <= 1) { B.t[T.o] = null; FX.no('no_phao', c.x, c.y, 70, 0.5); FX.chu1(c.x, c.y - 20, 'PHÁ HUỶ!', '#ff4b3e', 16, 'to'); FX.lac(6); SND.no(0.6); return; }
+  if (T.sao <= 1) { B.t[T.o] = null; FX.no('no_phao', c.x, c.y, 70, 0.5); FX.chu1(c.x, c.y - 20, TEXT.fx.destroyed, '#ff4b3e', 16, 'to'); FX.lac(6); SND.no(0.6); return; }
   T.sao--; T.sang = 1; FX.chu1(c.x, c.y - 20, '−1★', '#ff4b3e', 18, 'to'); FX.tiaLua(c.x, c.y, 12, '#ff4b3e', 150);
 }
 
@@ -446,11 +446,11 @@ function lot(E) {
   const p = G.duong[E.p], B = G.ban[p.ban];
   FX.sang(0.35, '#ff2030'); FX.lac(8);
   SND.lot();
-  if (G.che === 'coop') { ketThuc(false, 'Một quái đã lọt tới lõi!'); return; } // co-op: 1 quái lọt là THUA
+  if (G.che === 'coop') { ketThuc(false, TEXT.end.leak); return; } // co-op: 1 quái lọt là THUA
   B.tim -= E.tim;
   const [x, y] = viTri(p, p.len);
   FX.chu1(x - 20, y - 26, '−' + E.tim + '♥', '#ff4b3e', 20, 'to');
-  if (B.tim <= 0) { B.tim = 0; ketThuc(G.che === 'pvp' ? B.i !== 0 : false, G.che === 'pvp' ? (B.i === 0 ? 'Bạn hết tim' : 'Đối thủ hết tim') : 'Lõi bị phá!'); }
+  if (B.tim <= 0) { B.tim = 0; ketThuc(G.che === 'pvp' ? B.i !== 0 : false, G.che === 'pvp' ? (B.i === 0 ? TEXT.end.youOut : TEXT.end.rivalOut) : TEXT.end.coreDown); }
 }
 function capNhatTrum(E, dt) {
   const B = G.ban[E.ban];
@@ -476,17 +476,17 @@ function capNhatTrum(E, dt) {
 }
 // khiên 1 lần trên ụ (Máy Khiên / Hào Quang): chặn chiêu trùm hoặc phá của đối thủ
 function chanKhien(B, T) {
-  if (B && B.khien > 0 && T) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#fff6c0', 0.4); FX.chu1(c.x, c.y - 18, 'CHẶN', '#fff6c0', 14); return true; } // khiên toàn bàn
+  if (B && B.khien > 0 && T) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#fff6c0', 0.4); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#fff6c0', 14); return true; } // khiên toàn bàn
   if (!T || !(T.khien > 0)) return false;
   T.khien--; const c = B.o[T.o];
-  FX.vong1(c.x, c.y, 12, 44, '#9fe6ff', 0.4, 4); FX.chu1(c.x, c.y - 22, 'KHIÊN CHẶN', '#9fe6ff', 13, 'to'); FX.tiaLua(c.x, c.y, 10, '#bff4ff', 150);
+  FX.vong1(c.x, c.y, 12, 44, '#9fe6ff', 0.4, 4); FX.chu1(c.x, c.y - 22, TEXT.fx.shieldBlock, '#9fe6ff', 13, 'to'); FX.tiaLua(c.x, c.y, 10, '#bff4ff', 150);
   return true;
 }
 function thucHienChieu(E, B) {
   const muc = B.t.filter(T => T && E.bao.muc.includes(T.uid));
   for (const T of muc) T.st.ngam = 0;
   if (B.khien > 0) { // khiên Ma vương chặn chiêu trùm
-    for (const T of muc) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#9fe6ff', 0.4); FX.chu1(c.x, c.y - 18, 'CHẶN', '#9fe6ff', 14); }
+    for (const T of muc) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#9fe6ff', 0.4); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#9fe6ff', 14); }
     return;
   }
   // Máy Khiên: ụ có khiên chặn 1 lần chiêu trùm
@@ -514,7 +514,7 @@ function thucHienChieu(E, B) {
       }
       break;
     case 'nightmare':
-      for (const T of muc) { const c = rong(T); G.hu.push({ k: 'tiaTia', t: 0, song: 0.25, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau: '#ff3b3b' }); haSao(B, T, 'Bắn tỉa'); }
+      for (const T of muc) { const c = rong(T); G.hu.push({ k: 'tiaTia', t: 0, song: 0.25, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau: '#ff3b3b' }); haSao(B, T, 'snipe'); }
       SND.tia();
       break;
     case 'octopus':
