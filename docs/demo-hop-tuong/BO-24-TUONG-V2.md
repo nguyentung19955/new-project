@@ -1,0 +1,54 @@
+# BỘ 24 TƯỚNG v2 — 6 chủ đề, thiết kế theo khung xương PixelLab (chốt 04/11/2026)
+
+Giữ nguyên **cơ chế, bậc, hệ, mục tiêu** của 24 tướng trong `tu-van-chatgpt-the-gioi-24-tuong-70-wave.txt`. Chỉ đổi **ngoại hình + chủ đề + động tác**.
+Chủ đề chia ngẫu nhiên (xáo trộn seed 2411), mỗi chủ đề 4 tướng:
+1 Hậu tận thế tái sinh (Hopepunk/Solarpunk) · 2 Thần thoại châu Á & võ hiệp (Eastern Fantasy/Wuxia Punk) · 3 Kinh dị vũ trụ + cơ khí sinh học (Biomechanical/Cosmic Horror) · 4 Huyền ảo tăm tối (Dark Fantasy) · 5 Neon tương lai (Cyberpunk/Techwear) · 6 Cận đại hoài cổ (Steampunk/Urban Fantasy).
+Bộ thử SENTINEL / PULSE / ANCHOR (v4–v6) và 3 ảnh ChatGPT v7 chỉ là bản thử quy trình — không thuộc bể 24.
+
+## Luật thiết kế để hợp PixelLab
+- **Người (khung mannequin)**, tỉ lệ NGƯỜI LỚN (không chibi trẻ con). Nam/nữ cân bằng.
+- **Không cầm vũ khí/đồ vật trong tay.** Trang bị phải **gắn liền người**: găng, ống phóng gắn cẳng tay, ba lô, bình đeo, cánh nhỏ, gai trên lưng.
+- **Hình dáng nói lên vai:** sát thương = dáng tấn công; hỗ trợ/kinh tế = đồ phát sóng/ba lô, dáng hiền; khống chế = áo choàng, phép.
+- Tránh chi tiết bay lơ lửng, khăn/dải vải dài, cánh/mũ quá to (che người khi xoay).
+- Ảnh gốc mặt trước: **ChatGPT vẽ** (đẹp, mặt người lớn) theo góc từ trên cao → PixelLab xoay 8 hướng + động tác. Hiệu ứng: ChatGPT vẽ riêng.
+
+## Bảng động tác (đã thử trên PixelLab)
+| Mã | Động tác | Cách gọi | Tình trạng |
+|---|---|---|---|
+| ĐỨNG | thở | mẫu `breathing-idle` (skeleton-v3) | sạch 8 hướng |
+| ĐẤM | đấm thẳng 1 tay → tia/đạn bay từ nắm đấm | mẫu `lead-jab` | sạch (3 khung) |
+| PHÉP | hai tay giơ lên rồi vung ra trước | tự mô tả, tay trống, 6 khung | sạch |
+| SÓNG | hai tay ngang ngực mở lòng bàn tay rồi hạ | tự mô tả, 6 khung | sạch |
+| ĐÁ | đá cao / đá xoay (cận chiến) | mẫu `high-kick` / `roundhouse-kick` | cần thử |
+Không dùng: `fireball` (tự vẽ lửa), `throw-object` (nhoè đầu, vẽ vật), `pushing` (cúi rạp), nhảy/bay (rời ô).
+
+## 24 tướng
+| # | Tên | Bậc | Hệ · mục tiêu | Chủ đề | Ngoại hình (dáng theo vai) | Đánh |
+|---|---|---|---|---|---|---|
+| 01 | SCORCH | TRẮNG | Lửa · ĐẦU | Võ hiệp | Nam võ sư Hoả Quyền, vạm vỡ, búi tóc đỏ, áo võ cụt tay đỏ cam, băng quấn tay cháy sém, đai đen | ĐẤM (quyền lửa) |
+| 02 | FROST | TRẮNG | Băng · ĐẦU | Huyền ảo tăm tối | Nữ phù thuỷ băng tang tóc, da tái, vương miện băng gai, áo choàng xám lam gấu rách, găng đen | PHÉP |
+| 03 | ARC | TRẮNG | Sét · GẦN (cận chiến) | Hậu tận thế tái sinh | Nam thợ điện năng lượng mặt trời, áo canvas vá, tấm pin mặt trời trên lưng, găng đồng to quấn dây | ĐÁ (sét) |
+| 04 | VENOM | TRẮNG | Độc · MẠNH | Huyền ảo tăm tối | Nữ thầy độc đầm lầy, áo choàng rêu xanh, bình độc đeo thắt lưng, móng tay xanh lục | PHÉP (phun độc) |
+| 05 | EMBERBUG | TRẮNG | Lửa · CUỐI | Kinh dị vũ trụ | Nam người lai bọ, giáp xác đỏ cam, túi đèn phát sáng sau lưng, râu ăng-ten | ĐẤM (tàn lửa liên tục) |
+| 06 | TIDAL | TRẮNG | Nước · ĐẦU | Cận đại hoài cổ | Nữ thợ lặn đồng, mũ lặn đồng tròn có kính, bình nước đồng sau lưng nối ống vào cổ tay | ĐẤM (giọt nước) |
+| 07 | NEEDLE | TRẮNG | Xuyên · YẾU | Kinh dị vũ trụ | Nữ thợ săn sinh học, cẳng tay phải mọc gai xương dài (liền tay), mắt côn trùng | ĐẤM (phóng kim xương) |
+| 08 | LANCE | LAM | Điện từ · MẠNH | Cận đại hoài cổ | Nam xạ thủ quý tộc, áo đuôi tôm, kính một mắt, ống phóng đồng gắn cẳng tay phải | ĐẤM (tia xuyên) |
+| 09 | BRAMBLE | LAM | Thực vật · ĐẦU | Neon tương lai | Nữ hacker thực vật, áo techwear đen, dây leo phát sáng xanh lục quấn hai tay, tóc rêu | PHÉP (gai trói) |
+| 10 | ECHO | LAM | Âm · ĐÁM | Võ hiệp | Nữ ca kỹ áo lụa tím, chuỗi chuông đồng nhỏ quanh eo, búi tóc cài trâm | PHÉP (sóng âm) |
+| 11 | QUILL | LAM | Vật lý · GẦN | Huyền ảo tăm tối | Nam kỵ sĩ nhím, giáp đen gỉ, lưng mọc chùm gai thép tỏa | PHÉP (bắn gai tỏa) |
+| 12 | MOTH | LAM | Ảo ảnh · NGẪU NHIÊN | Võ hiệp | Nữ đạo sĩ bướm đêm, áo đạo tím than, cánh bướm nhỏ hoa văn mắt sau lưng, mạng che mặt | PHÉP (bụi phấn) |
+| 13 | BASTION | LAM | Đất · ĐẦU | Kinh dị vũ trụ | Nam khổng lồ đá-sinh học, mai đá có hốc phát sáng trên lưng, hai nắm tay to như tảng đá | ĐẤM (chấn động) |
+| 14 | WARP | TÍM | Hư không · CUỐI | Kinh dị vũ trụ | Nữ phi hành gia bị vũ trụ nhập, mũ kính nứt, bộ đồ phi hành rách, mắt tím phát sáng | PHÉP (cầu hư không) |
+| 15 | SPECTER | TÍM | Linh thể · MẠNH | Cận đại hoài cổ | Nam thám tử ma, mũ quả dưa, áo măng tô, da trong mờ xám xanh, kính một mắt sáng | ĐẤM (chỉ tay đánh dấu) |
+| 16 | TESLA | TÍM | Sét · ĐÁM | Cận đại hoài cổ | Nữ nhà phát minh, kính bảo hộ, ba lô cuộn coil đồng, găng cao su dài | PHÉP (tia xích) |
+| 17 | ALCHEM | TÍM | Hoá học · ĐẦU | Hậu tận thế tái sinh | Nữ nhà giả kim làm vườn, mũ rơm, tạp dề nhiều túi, bình thuỷ tinh hai màu đeo thắt lưng | PHÉP |
+| 18 | HUSH | TÍM | Bóng tối · YẾU | Neon tương lai | Nữ sát thủ techwear, mặt nạ câm, hoodie đen viền tím, găng phi tiêu gắn cổ tay | ĐẤM (phi tiêu ngắt) |
+| 19 | BROKER | VÀNG | Kinh tế · BÀN | Hậu tận thế tái sinh | Nam thương nhân chợ tái sinh, áo choàng chắp vá, ba lô to đầy hàng, kính tròn | SÓNG |
+| 20 | GLITCH | VÀNG | Hack · BÀN/ĐẦU | Neon tương lai | Nam người máy đầu màn hình CRT mặt pixel xanh bạc hà, cáp cắm sau lưng | SÓNG |
+| 21 | PATCHWORK | VÀNG | Biến hình · Ô KỀ | Hậu tận thế tái sinh | Người gấu bông khâu tay cỡ người lớn, hai nửa xanh/đỏ, cúc áo, đường chỉ to | SÓNG |
+| 22 | MIRROR | VÀNG | Sao chép · Ô KỀ | Võ hiệp | Nữ pháp sư gương, gương đồng tròn gắn sau lưng như vầng hào quang, áo hai nửa đen/trắng | SÓNG |
+| 23 | CROWN ZERO | ĐỎ | Thời gian · ĐẦU/BÀN | Neon tương lai | Nam vua lỗi, vương miện vỡ ánh hologram, áo choàng lưới neon, áo giáp đen | PHÉP |
+| 24 | ORACLE | ĐỎ | Vận mệnh · BÀN/ĐÁM | Huyền ảo tăm tối | Nữ tiên tri, áo choàng đen thêu sao, mắt đơn lớn vẽ trên trán, tóc bạc dài tết | PHÉP |
+
+## Thứ tự làm
+Mỗi lần 3 tướng (người dùng duyệt cùng lúc). Ảnh gốc ChatGPT → soát góc nhìn → PixelLab xoay 8 hướng (chọn nguyên bộ) → nhập nhân vật → ĐỨNG + động tác đánh → soát từng khung → GIF → hiệu ứng ChatGPT → ghép game.
