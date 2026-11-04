@@ -1,5 +1,5 @@
 // DEMO "NEON GRID — Merge Defense" (cyberpunk) — DỮ LIỆU: tướng, bậc, Archfiend, quái, trùm, bố cục.
-// TƯỚNG: làm lại từ đầu (03/11/2026); 04/11 gắn 3 tướng bộ v4 (SENTINEL, PULSE, ANCHOR) — ảnh demo/assets/v4/, định dạng ghi chú trong khối TUONG.
+// TƯỚNG: làm lại từ đầu (03/11/2026); 04/11 bộ v9 (SCORCH, FROST, ARC — PixelLab) thay bộ thử v4 (SENTINEL, PULSE, ANCHOR) — ảnh demo/assets/v9/.
 // NGUYÊN TẮC: bám Destiny Child: Defense War (DCDW). Thêm tướng mới = thêm 1 mục trong TUONG (+ ảnh trong demo/assets/v3/), KHÔNG sửa logic.
 // Kỹ năng ghép từ các "loại hành vi" có tham số (game.js: MUC, DON, HIEU, DAC_BIET). Cách viết: docs/demo-hop-tuong/TIEN-DO-V3.md.
 'use strict';
@@ -58,29 +58,34 @@ const BAC = {
 // độ lệch (dx,dy) tìm được để khung 0 khớp nhất ảnh đứng cùng hướng (so alpha + màu, thử ±24px), cùng độ dịch cho cả 4 khung → chân chung (96,147).
 const V4 = (id, them) => Object.assign({ thu: 'v4', dir8: { file: id + '_dung', o: 192, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
   atk: { file: id + '_tc', o: 192, nhip: [60, 60, 110, 130], trung: 1 }, neo: [96, 147] }, them || {});
+// ẢNH BỘ v9 (04/11, thay SENTINEL/PULSE/ANCHOR): demo/assets/v9/<id>_dung.png (8 HÀNG s se e ne n nw w sw × 4 khung thở, ô 192) + <id>_tc.png
+// (8 hàng × 12 khung tấn công). Ghép bằng docs/demo-hop-tuong/ghep_sheet_v9.py từ nguon-tuong/v9/ (PixelLab, KHÔNG sửa pixel, KHÔNG lật gương):
+// chân mọi hướng ở (96,160); khung tấn công dịch chung theo độ lệch khớp alpha khung 0 với ảnh đứng. Hiệu ứng: fx_<id>_phat|bay|trung.png (ChatGPT, 6 khung).
+// dir8.doc = sheet theo hàng (khung 0 = ảnh đứng) · tho = thở 4 khung ~170 ms · atk 12 khung ~60–90 ms, trung = khung 6 (đòn ra đầu khung 6).
+const V9 = (id, tc, them) => Object.assign({ thu: 'v9', dir8: { file: id + '_dung', o: 192, doc: true, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
+  tho: { ms: 170, n: 4 }, fx: id,
+  atk: { file: id + '_tc', o: 192, nhip: [70, 65, 65, 65, 65, 60, 60, 65, 70, 75, 80, 90], trung: 6 }, neo: [96, 160] }, them || {});
 // nhip (ms) theo khung sheet tấn công: khung 0 = TƯ THẾ ĐỨNG → không phát, nhip[0] là thời gian HOÀ ảnh đứng → khung 1 (render.js);
 // khung 'trung' (ra lực) nhanh ~60, lấy đà ~90, về tư thế chậm 110–130; sau khung cuối render hoà về ảnh đứng (MUOT.HOA_VE). game.js dùng nhip để canh lúc trúng.
 const TUONG = {
-  // 03 SENTINEL — lính gác bắn ổn định (docs/demo-hop-tuong/ho-so-tuong/03-SENTINEL.md): quái đi đầu, tầm toàn đường, 45 dmg, 0,9 đòn/s;
-  //   mỗi 3★ thêm ĐÁNH DẤU +10% sát thương nhận vào (dùng hành vi hack: 1★ 0%, 3★ +10%, 6★ +20%). Đạn bắn ra ở đầu khung 1 (giật đầu+thân).
-  sentinel: { bac: 'trang', ten: 'SENTINEL', chuc: 'SENTRY', hanh: 'Cryo', kieu: 'Steady shot', mo: 'Steady shots at the lead enemy. Every 3★: mark +10% damage taken.',
-    dmg: 45, cd: 1 / 0.9, muc: 'dau', hit: 'kinetic', co: 1.0,
+  // 01 SCORCH — võ sư Hoả Quyền (BO-24-TUONG-V2.md): TRẮNG · Lửa · quái ĐẦU · đấm ra quả cầu lửa bay (đạn), trúng để vệt cháy 2 giây.
+  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'FIRE FIST', hanh: 'Plasma', kieu: 'Fire punch', mo: 'Punches fireballs at the lead enemy; burns the lane for 2s.',
+    dmg: 36, cd: 1.36, muc: 'dau', hit: 'flame', co: 1.0,
+    don: { k: 'dan', toc: 1000 },
+    hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 3: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }],
+    px: V9('scorch', 'dam12') },
+  // 02 FROST — phù thuỷ băng: TRẮNG · Băng · quái ĐẦU · phép bắn mũi băng (đạn), làm chậm 20% trong 1,5 s (3★: 25%) — HIEU bang không vỡ (không voR).
+  frost: { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Ice bolt', mo: 'Ice bolts at the lead enemy: slow 20% for 1.5s.',
+    dmg: 27, cd: 1.7, muc: 'dau', hit: 'frost', co: 1.0,
+    don: { k: 'dan', toc: 900 },
+    hieu: [{ k: 'bang', cham: { 1: 0.20, 3: 0.25 }, max: 1, T: 1.5 }],
+    px: V9('frost', 'phep12') },
+  // 03 ARC — thợ điện mặt trời: TRẮNG · Sét · quái GẦN · đấm ra cầu sét bay nhanh tầm ngắn (đạn, KHÔNG cận chiến cứng); mỗi đòn thứ 3 sét nảy sang quái kế.
+  arc: { bac: 'trang', ten: 'ARC', chuc: 'SOLAR SPARK', hanh: 'Voltage', kieu: 'Spark shot', mo: 'Fast spark shots at the nearest enemy; every 3rd chains lightning.',
+    dmg: 40, cd: 1.15, muc: 'gan', hit: 'electric', co: 1.0,
     don: { k: 'dan', toc: 1500 },
-    hieu: [{ k: 'hack', moi: 1, T: 2, them: { 1: 0, 3: 0.1, 6: 0.2 } }],
-    px: V4('sentinel') },
-  // 04 PULSE — nổ lan (04-PULSE.md): quái đi đầu, tầm toàn đường, 24 dmg, 0,85 đòn/s, nổ 0,65 ô, tối đa 5 mục tiêu.
-  //   Khung 2 của hoạt ảnh vung tay → sinh quả lựu đạn bay vòng cung (code) tới quái rồi nổ.
-  pulse: { bac: 'trang', ten: 'PULSE', chuc: 'GRENADIER', hanh: 'Plasma', kieu: 'Splash grenade', mo: 'Lobs a grenade at the lead enemy: 0.65-tile blast, up to 5 targets.',
-    dmg: 24, cd: 1 / 0.85, muc: 'dau', hit: 'flame', co: 1.0,
-    don: { k: 'luu', T: 0.45, cao: 0.5, r: 0.65, so: 5 },
-    px: V4('pulse', { atk: { file: 'pulse_tc', o: 192, nhip: [60, 90, 60, 120], trung: 2 } }) },
-  // 05 ANCHOR — hỗ trợ KHÔNG bắn (05-ANCHOR.md): buff 4 ô kề +8% tốc đánh mỗi 2★ (1★ 8% · 3★ 16% · 5★ 24% · 7★ 32%).
-  //   Cột neo là VẬT RIÊNG (render veCotNeo, tạm vẽ code); mỗi 3 giây đưa tay cầm điều khiển ra trước + vòng sóng xanh lục 4 ô kề.
-  anchor: { bac: 'trang', ten: 'ANCHOR', chuc: 'ENGINEER', hanh: 'Hack', kieu: 'Support beacon', mo: 'Does not attack. Adjacent heroes (4 tiles) get +8% attack speed per 2★.',
-    dmg: 0, cd: 3, muc: 'dau', co: 1.05,
-    keBuff: { k: 'tocDanh', gt: { 1: 0.08, 3: 0.16, 5: 0.24, 7: 0.32 } },
-    hoTro: { cd: 3, cot: true },
-    px: V4('anchor', { atk: { file: 'anchor_tc', o: 192, nhip: [60, 90, 60, 120], trung: 2 } }) },
+    hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }],
+    px: V9('arc', 'dam12') },
 
   // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
   // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".
