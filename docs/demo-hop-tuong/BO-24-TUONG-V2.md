@@ -115,3 +115,21 @@ Mọi tướng là **thần thoại / truyền thuyết hoá thân thành cô g�
 | 23 | CROWN ZERO | Nữ hoàng thời gian | vương miện vỡ, áo choàng đen hoa văn đồng hồ | PHÉP |
 | 24 | ORACLE | Pythia (tiên tri) | mắt thứ ba trên trán, tóc bạc tết, áo trắng vàng sao | PHÉP |
 Ảnh gốc: ChatGPT (nhiều phiên song song). Sau đó PixelLab: xoay 8 hướng → nhập (mannequin) → đứng thở (breathing-idle) + đòn 12 khung tự mô tả.
+
+## CẬP NHẬT (04/11 18h10): TỰ DO GIỚI TÍNH & LOÀI — VẪN NÉT VẼ DESTINY CHILD
+Người dùng: "cả nam cả nữ, cả quái vật, rồng… free style". Nét vẽ gacha Hàn kiểu DC giữ nguyên; nam = chàng trai anime điển trai trưởng thành, SD chibi cao cấp; quái/rồng = sinh vật 4 chân đẹp kiểu gacha (khung xương PixelLab: dog/cat/lion/bear).
+Thay đổi so với bảng trên (các tướng không nhắc giữ nguyên là nữ):
+| # | Tên | Mới | Loại / khung xương | Đòn |
+|---|---|---|---|---|
+| 11 | QUILL | Cửu vĩ hồ dạng thú: cáo trắng chín đuôi gọn, giáp vảy thép | thú · dog | VỒ |
+| 13 | BASTION | Atlas, nam khổng lồ trẻ, giáp đá tím, khiên-tháp trên lưng | nam · mannequin | ĐẤM |
+| 15 | SPECTER | Anubis, nam, mặt nạ chó rừng đen vàng, áo choàng hồn | nam · mannequin | PHÉP |
+| 16 | TESLA | Zeus, nam, vương miện tia sét, toga trắng vàng | nam · mannequin | PHÉP |
+| 17 | ALCHEM | Hermes Trismegistus, nam giả kim, kính một mắt, đai bình thuốc | nam · mannequin | PHÉP |
+| 18 | HUSH | Bastet dạng thú: báo đen mắt vàng, trang sức Ai Cập | thú · cat | VỒ |
+| 19 | BROKER | Fafnir: rồng con vàng ôm của, vảy vàng, sừng ngọc | rồng · lion | VỒ |
+| 20 | GLITCH | Loki, nam lừa lọc, áo công nghệ xanh bạc hà, sừng | nam · mannequin | SÓNG |
+| 21 | PATCHWORK | Gấu bông khâu tay khổng lồ (tsukumogami), nửa xanh nửa đỏ | quái · bear | ĐẬP |
+| 23 | CROWN ZERO | Chronos, nam vua thời gian, vương miện vỡ, áo choàng đồng hồ | nam · mannequin | PHÉP |
+| 24 | ORACLE | Nhân sư (Sphinx): sư tử cánh, mặt nạ vàng, mắt thứ ba | quái · lion | VỒ |
+Tỉ lệ: 13 nữ · 6 nam · 5 quái/rồng.
