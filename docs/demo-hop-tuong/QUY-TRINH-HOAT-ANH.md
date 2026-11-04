@@ -52,7 +52,7 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 - Hiệu ứng (tia, cầu nổ, vòng sóng) nhờ ChatGPT vẽ riêng.
 
 ## LUẬT THIẾT KẾ TƯỚNG (người dùng chốt 04/11, 15h)
-1. BỎ chủ đề cyberpunk. Ngoại hình tự do sáng tạo, miễn hợp với thứ PixelLab vẽ đẹp: hình khối to dễ đọc, chi tiết đẹp (khung 128), không cầm đồ vật nhỏ.
+1. BỎ chủ đề cyberpunk và KHÔNG dùng phong cách Việt Nam/châu Á thần thoại. Phong cách: châu Âu, thần thoại, viễn tưởng, vũ trụ. Ngoại hình tự do sáng tạo, miễn hợp với thứ PixelLab vẽ đẹp: hình khối to dễ đọc, chi tiết đẹp (khung 128), không cầm đồ vật nhỏ.
 2. Hình dáng phải nói lên vai trò (hỗ trợ trông như hỗ trợ; tướng hỗ trợ có thể là nữ).
 3. Mỗi tướng chỉ có động tác game cần (đứng + tấn công/phát sóng). Hiệu ứng nhờ ChatGPT vẽ riêng.
 4. Quy trình: tạo 4 mẫu mặt trước (pixen, high top-down) → người dùng chọn → xoay 8 hướng → nhập nhân vật → động tác (mẫu có sẵn skeleton-v3 hoặc tự mô tả tay trống) → soát từng khung → GIF.
