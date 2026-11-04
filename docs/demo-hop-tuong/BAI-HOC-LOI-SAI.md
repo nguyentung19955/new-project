@@ -61,3 +61,8 @@ Nguồn: video "Destiny Child: Defense War Co-op Gameplay (63 Wave)" (youtube F3
 - Hai bàn 5×3 xếp chồng bên PHẢI làn: bàn trên = đồng đội (ALLY, chân dung ở góc trên phải), bàn dưới = người chơi (chân dung góc dưới phải). Giữa hai bàn chỉ là nền sàn kim loại, không có đường.
 - Quái đi ngang qua cạnh trái bàn trên rồi tiếp tục xuống cạnh trái bàn dưới → cả hai bàn cùng bắn chung một dòng quái. Quái lọt hết làn mới trừ mạng chung.
 - HUD: WAVE góc trên trái, đội hình 6 thẻ tướng ở trên (của đồng đội) và ở dưới (của mình), nút triệu hồi ở giữa dưới.
+
+## CO-OP cập nhật 04/11 21h40 — 2 cổng gặp nhau ở giữa
+- Người dùng: "tướng mình chỉ bắn ở bên mình, quái vào vùng chung mới bắn được"; quái không được đi thẳng 1 mạch.
+- Tư vấn ChatGPT (dẫn hướng dẫn tiếng Hàn): quái của mỗi người sinh ở điểm KHÁC nhau, gặp nhau ở giữa, chung đích cuối. Đường cụ thể (rẽ ở đâu, lõi ở đâu) là PHỎNG ĐOÁN — cần video để khớp chính xác.
+- Đang làm: cổng trên (cạnh bàn đồng đội) đi xuống + cổng dưới (cạnh bàn mình) đi lên → gặp ở khe giữa → hành lang chung sang phải → lõi ở mép phải khe (chỗ ánh đỏ trong ảnh thật). Vùng chung = khe giữa: cả 2 bàn bắn; nhánh trên chỉ bàn trên bắn, nhánh dưới chỉ bàn dưới bắn.
