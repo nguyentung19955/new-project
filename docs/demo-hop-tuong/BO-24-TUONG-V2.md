@@ -85,3 +85,33 @@ Phong cách anime vui tươi; mỗi tướng 1 điểm nhận diện "lạ" mà 
 | MIRROR | người | Người pha lê, thân là gương phản chiếu nhiều mặt |
 | CROWN ZERO | ngựa | Ngựa ma đen đội vương miện vỡ, bờm lửa tím |
 | ORACLE | người | Nữ tiên tri, mắt đơn lớn giữa trán, tóc là bầu trời sao |
+
+## CHỐT CUỐI (04/11 17h57): PHONG CÁCH DESTINY CHILD — THAY TOÀN BỘ NGOẠI HÌNH Ở TRÊN
+Mọi tướng là **thần thoại / truyền thuyết hoá thân thành cô gái anime gacha** (nhân vật nguyên bản, chỉ mượn phong cách), tỉ lệ SD chibi cao cấp như nhân vật chiến đấu DCDW (đầu ~1/3 thân, mặt thiếu nữ trưởng thành, không trẻ con), trang phục kín đáo, trang sức cầu kỳ, pixel art chi tiết viền đen 1px, góc nhìn từ trên cao, dáng chữ A, tay không. Tóc buộc gọn (tóc xoã dài làm PixelLab nhoè khi chuyển động). Cơ chế/bậc/hệ giữ nguyên.
+| # | Tên | Hoá thân | Điểm nhận diện | Đòn |
+|---|---|---|---|---|
+| 01 | SCORCH | Agni (lửa) | tóc đỏ buộc cao, sừng lửa vàng, võ phục đỏ vàng | ĐẤM |
+| 02 | FROST | Skadi (băng) | vương miện sừng hươu băng, áo lông trắng, váy rune | PHÉP |
+| 03 | ARC | Raijin (sấm) | sừng nhỏ, vòng trống sấm sau lưng, áo khoác tia sét | ĐẤM |
+| 04 | VENOM | Medusa | tóc là các rắn nhỏ cuộn gọn, áo xanh lục, bình độc ở hông | PHÉP |
+| 05 | EMBERBUG | Hotaru (thần đom đóm) | kimono ngắn đỏ cam, đèn lồng đom đóm ở thắt lưng | PHÉP |
+| 06 | TIDAL | Amphitrite (biển) | vương miện vỏ sò, váy san hô xanh nước, vòng ngọc trai | PHÉP |
+| 07 | NEEDLE | Arachne (thợ dệt) | áo hoa văn mạng nhện, găng chỉ bạc, búi tóc cài kim | ĐẤM |
+| 08 | LANCE | Artemis (mặt trăng) | áo thợ săn trắng bạc, giáp vai trăng khuyết | ĐẤM |
+| 09 | BRAMBLE | Dryad (cây) | tóc lá buộc gọn, hoa trên đầu, váy rễ cây ngắn | PHÉP |
+| 10 | ECHO | Benzaiten (âm nhạc) | tai nghe vỏ ốc, váy tím, dải nốt nhạc thêu | PHÉP |
+| 11 | QUILL | Cửu vĩ hồ | tai cáo, đuôi cáo gọn, giáp vảy thép | ĐẤM |
+| 12 | MOTH | Nyx (đêm) | đôi cánh bướm đêm nhỏ, áo tím than, mạng che mặt | PHÉP |
+| 13 | BASTION | Gaia (núi) | giáp đá phát sáng tím, khiên-tháp nhỏ trên lưng | ĐẤM |
+| 14 | WARP | Nut (bầu trời Ai Cập) | áo đen rắc sao, vòng hư không tím sau lưng | PHÉP |
+| 15 | SPECTER | Hel (âm phủ) | nửa trắng nửa đen, đèn lồng hồn ở hông | PHÉP |
+| 16 | TESLA | Zeus (nữ) | vương miện tia sét, toga ngắn trắng vàng | PHÉP |
+| 17 | ALCHEM | Hecate (giả kim) | mũ phù thủy nhỏ, đai đầy bình thuốc hai màu | PHÉP |
+| 18 | HUSH | Bastet | tai mèo, đồ ninja đen vàng Ai Cập, chuông ở cổ | ĐẤM |
+| 19 | BROKER | Fortuna (vận may) | mũ cánh nhỏ, túi tiền vàng, áo vàng trắng | SÓNG |
+| 20 | GLITCH | Pandora | chiếc hộp phát sáng đeo hông, áo công nghệ xanh bạc hà | SÓNG |
+| 21 | PATCHWORK | Tsukumogami búp bê vải | áo chắp vá hai nửa xanh/đỏ, đường khâu, cúc áo | SÓNG |
+| 22 | MIRROR | Amaterasu (gương) | gương bát giác sau lưng, kimono trắng đỏ | SÓNG |
+| 23 | CROWN ZERO | Nữ hoàng thời gian | vương miện vỡ, áo choàng đen hoa văn đồng hồ | PHÉP |
+| 24 | ORACLE | Pythia (tiên tri) | mắt thứ ba trên trán, tóc bạc tết, áo trắng vàng sao | PHÉP |
+Ảnh gốc: ChatGPT (nhiều phiên song song). Sau đó PixelLab: xoay 8 hướng → nhập (mannequin) → đứng thở (breathing-idle) + đòn 12 khung tự mô tả.
