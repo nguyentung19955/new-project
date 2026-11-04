@@ -430,17 +430,47 @@
     }
     c.restore();
   }
-  function taoLop(k0, coop) {
+  // LÀN DỌC (co-op / solo, chuẩn DCDW): thân làn = dải hành lang TRÁI cắt từ ảnh skin bàn người chơi (đoạn thẳng giữa lưới), lát nối tiếp
+  // suốt chiều cao làn (không vẽ lại pixel); đầu làn = CỔNG SINH (assets/bg/portal.png), cuối làn = LÕI (assets/bg/core.png).
+  nap('bg:portal', 'assets/bg/portal.png'); nap('bg:core', 'assets/bg/core.png');
+  function veLanDoc(c, lan, B) {
+    const im = anhSkin(B), k = B && B.SKIN;
+    if (im && k) {
+      const s = SKIN[k.id], g = s.grid, L = s.lane, sx = (L.x - L.w / 2) * s.w, sw = L.w * s.w, sy = (g[1] + 0.03) * s.h, sh = (g[3] - g[1] - 0.06) * s.h;
+      const dh = sh * k.tl;
+      c.save(); c.beginPath(); c.rect(lan.x - 1, lan.y, lan.w + 2, lan.h); c.clip();
+      for (let y = lan.y; y < lan.y + lan.h; y += dh - 1) c.drawImage(im, sx, sy, sw, sh, lan.x, y, lan.w, dh);
+      // mép làn: bóng tối 2 bên cho dải lát liền khối với nền
+      c.fillStyle = lg(c, lan.x, 0, lan.x + 8, 0, [[0, 'rgba(0,0,0,0.55)'], [1, 'rgba(0,0,0,0)']]); c.fillRect(lan.x, lan.y, 8, lan.h);
+      c.fillStyle = lg(c, lan.x + lan.w - 8, 0, lan.x + lan.w, 0, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.55)']]); c.fillRect(lan.x + lan.w - 8, lan.y, 8, lan.h);
+      c.restore();
+    } else veHanhLang(c, Object.assign({}, B, { HL: [lan], CONG: null, noi: true }));
+    // mũi tên rất mờ chỉ hướng đi xuống
+    c.save(); c.strokeStyle = 'rgba(255,90,110,0.22)'; c.lineWidth = 2; c.lineCap = 'round'; c.lineJoin = 'round';
+    const cx = lan.x + lan.w / 2;
+    for (let y = lan.sinh[1] + 40; y < lan.loi[1] - 40; y += 56) { c.beginPath(); c.moveTo(cx - 5, y - 4); c.lineTo(cx, y + 1); c.lineTo(cx + 5, y - 4); c.stroke(); }
+    c.restore();
+    // cổng sinh (đầu làn) + lõi (cuối làn)
+    const po = co('bg:portal'), lo = co('bg:core');
+    { const [x, y] = lan.sinh, w = lan.w * 0.95, h = w * 1.1; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#ff2bd6', x, y, w * 0.8, 0.35); c.restore();
+      if (po) c.drawImage(po, x - w / 2, y - h / 2, w, h); else { c.fillStyle = '#07040c'; c.beginPath(); c.ellipse(x, y, w / 2.4, h / 2.4, 0, 0, 7); c.fill(); } }
+    { const [x, y] = lan.loi, w = lan.w * 1.15; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#3ce7ff', x, y, w * 0.8, 0.3); c.restore();
+      if (lo) c.drawImage(lo, x - w / 2, y - w * 0.55, w, w); }
+  }
+  // che: false (PVP) | 'coop' | 'solo'
+  function taoLop(k0, che) {
     const k = Math.min(k0, 3);
     let sd = 5; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    const coop = che === 'coop', solo = che === 'solo';
     const tinh = mk(W, H, (c) => {
       const coSkin = anhSkin(G.BAN_NG) && anhSkin(G.BAN_AI);
       if (coSkin) {
         veNen(c, r);
-        // bàn dưới trước, bàn trên sau (trang trí đáy bàn trên đè lên trang trí đỉnh bàn dưới; hành lang không bị che)
-        if (coop) veSkinCat(c, G.BAN_NG_CO); else veSkin(c, G.BAN_NG);
-        veSkin(c, coop ? G.BAN_AI_CO : G.BAN_AI);   // co-op: hành lang trái + hành lang dưới ảnh bàn trên = đường quái hình ⊢ (hành lang giữa 2 bàn)
-        for (const B of coop ? [G.BAN_AI_CO, G.BAN_NG_CO] : BANS) veMieng(c, B, coop && !B.ai);
+        if (coop) { veSkinCat(c, G.BAN_NG_CO); veSkinCat(c, G.BAN_AI_CO); veLanDoc(c, C.LAN_CO, G.BAN_NG_CO); return; }
+        if (solo) { veSkinCat(c, G.BAN_SO); veLanDoc(c, C.LAN_SO, G.BAN_SO); return; }
+        // PVP: bàn dưới trước, bàn trên sau (trang trí đáy bàn trên đè lên trang trí đỉnh bàn dưới; hành lang không bị che)
+        veSkin(c, G.BAN_NG); veSkin(c, G.BAN_AI);
+        for (const B of BANS) veMieng(c, B, false);
         return;
       }
       // DỰ PHÒNG (ảnh skin chưa tải): sàn + hành lang + khay/ô vẽ code như cũ
@@ -448,12 +478,12 @@
       if (bg) c.drawImage(bg, 0, 0, W, H);
       else { veSan(c, 0, 0, W, C.GIUA_Y, 1); veSan(c, 0, C.GIUA_Y, W, H - C.GIUA_Y, 0); veViMach(c, 0, C.TOP_H, W, C.DUOI_Y - C.TOP_H, r); }
       c.fillStyle = 'rgba(0,0,0,0.08)'; c.fillRect(0, 0, W, H);
-      const ds = coop ? [Object.assign({}, G.BAN_AI_CO, { CONG: G.BAN_NG_CO.CONG })] : BANS;   // co-op: 1 đường chung (cổng cuối hành lang giữa)
-      for (const B of ds) veHanhLang(c, B);
-      veBanTinh(c, coop ? G.BAN_AI_CO : G.BAN_AI, 1); veBanTinh(c, coop ? G.BAN_NG_CO : G.BAN_NG, 0);
+      if (coop) { veLanDoc(c, C.LAN_CO, G.BAN_NG_CO); veBanTinh(c, G.BAN_AI_CO, 1); veBanTinh(c, G.BAN_NG_CO, 0); }
+      else if (solo) { veLanDoc(c, C.LAN_SO, G.BAN_SO); veBanTinh(c, G.BAN_SO, 0); }
+      else { for (const B of BANS) veHanhLang(c, B); veBanTinh(c, G.BAN_AI, 1); veBanTinh(c, G.BAN_NG, 0); }
     }, k);
     L = { tinh, toi: mk(W, H, (c) => { c.fillStyle = rg(c, W / 2, H / 2, 300, 640, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.30)']]); c.fillRect(0, 0, W, H); }, 1) };
-    LK = k0; L.coop = coop; L.skin = C.SKIN_NG + '|' + C.SKIN_AI;
+    LK = k0; L.che = che; L.skin = C.SKIN_NG + '|' + C.SKIN_AI;
   }
   // cổng sinh quái trên ảnh skin: vết nứt cyan nhỏ phát sáng ở đầu hành lang (hạt sáng, không vẽ hình) + đế cổng mờ ở cuối hành lang
   function veMieng(c, B, noi) {
@@ -1600,7 +1630,8 @@
     c.restore();
     if (a && S.af.T > 0) { c.strokeStyle = '#ffffff'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r + 1.5, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * S.af.T / ARCHFIEND[S.af.id].T); c.stroke(); }   // vòng thời gian hiệu lực
     // tim: PVP 3 tim bên trái avatar; CO-OP: 1 tim + số mạng chung
-    if (S.coop) { veTim(c, x - r - 12, y, 5, true); c.font = '900 10px Orbitron, "Segoe UI", sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)'; const tx = `${S.coop.mang}`; c.strokeText(tx, x - r - 19, y + 0.5); c.fillStyle = S.coop.mang <= 3 ? '#ff6b6b' : '#ffffff'; c.fillText(tx, x - r - 19, y + 0.5); }
+    if (S.coop) { const ph = x - r - 26 < 0, hx = ph ? x + r + 10 : x - r - 12, tx0 = ph ? x + r + 17 : x - r - 19;   // làn dọc sát mép trái: tim + số mạng sang PHẢI avatar
+      veTim(c, hx, y, 5, true); c.font = '900 10px Orbitron, "Segoe UI", sans-serif'; c.textAlign = ph ? 'left' : 'right'; c.textBaseline = 'middle'; c.lineWidth = 2.5; c.strokeStyle = 'rgba(0,0,0,0.85)'; const tx = `${S.coop.mang}`; c.strokeText(tx, tx0, y + 0.5); c.fillStyle = S.coop.mang <= 3 ? '#ff6b6b' : '#ffffff'; c.fillText(tx, tx0, y + 0.5); }
     else for (let i = 0; i < C.MANG; i++) veTim(c, x - r - 10 - (C.MANG - 1 - i) * 12, y, 4.6, i < S.mang);
     c.restore();
   }
@@ -1731,8 +1762,8 @@
   function ve(c, S, t, k, keo, A, ui) {
     const dt = Math.min(0.05, Math.max(0, t - tTruoc)); tTruoc = t;
     if (H !== C.H) { H = C.H; batLai = true; }   // đổi chiều cao màn → dựng lại lớp tĩnh (bàn dưới đã dời)
-    const coop = !!(S && S.coop);
-    if (!L || LK !== k || batLai || L.coop !== coop || L.skin !== C.SKIN_NG + '|' + C.SKIN_AI) { taoLop(k, coop); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
+    const coop = !!(S && S.coop), che = coop ? (S.coop.solo ? 'solo' : 'coop') : false;
+    if (!L || LK !== k || batLai || L.che !== che || L.skin !== C.SKIN_NG + '|' + C.SKIN_AI) { taoLop(k, che); batLai = false; for (let n = THE_VE.length - 1; n >= 0; n--) { if (THE_VE[n].cvs.isConnected) THE_VE[n].f(); else THE_VE.splice(n, 1); } }
     c.save();
     // rung màn ≤ 2px logic (chỉ sân, không rung HUD)
     if (S && S.rung > 0 && Q.cao) c.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
@@ -1762,7 +1793,7 @@
     if (S && S.fx.some((f) => f.k === 'thanh')) { c.save(); c.fillStyle = rg(c, W / 2, H / 2, 260, 620, [[0, 'rgba(255,0,40,0)'], [1, 'rgba(255,0,40,0.3)']]); c.fillRect(0, 0, W, H); c.restore(); }
     if (!S) return;
     if (S.bao && !(coop && S.bao.boss)) {   // dải thông báo round / trùm: đè lên THANH GIỮA (co-op trùm dùng màn giới thiệu)
-      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 8, (b.T - b.t) * 4)), hh = b.boss ? 46 : 30, y0 = (coop ? C.GIUA_CO : C.GIUA_Y) - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
+      const b = S.bao, a = Math.max(0, Math.min(1, b.t * 8, (b.T - b.t) * 4)), hh = b.boss ? 46 : 30, y0 = (che === 'solo' ? C.GIUA_SO : coop ? C.GIUA_CO : C.GIUA_Y) - hh / 2, cy = y0 + hh / 2, m = b.boss ? '#ff3b3b' : '#3ce7ff';
       c.save(); c.globalAlpha = a;
       const sx = (1 - Math.min(1, b.t * 5)) * 30;
       c.fillStyle = 'rgba(3,4,14,0.9)'; c.fillRect(0, y0, W, hh);

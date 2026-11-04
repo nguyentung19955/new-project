@@ -280,3 +280,10 @@ const COOP = {
   CUOI: 2,
   mauBoss: (w, idx, vong, cuoi) => COOP.mauQuai(w) * COOP.BOI_BOSS[idx] * Math.pow(COOP.NHAN_VONG, vong) * (cuoi ? COOP.CUOI : 1),
 };
+
+// ===== CHẾ ĐỘ SOLO: người chơi MỘT MÌNH (offline), 1 bàn 5×3, làn dọc trái như co-op nhưng ngắn (cao vùng bàn + chút) =====
+// Dùng nhịp wave / trùm / 70 wave / mạng của COOP; chỉ khác: máu quái (thường + trùm) × MAU vì không có bàn đồng đội gánh.
+const SOLO = {
+  MAU: 0.55,            // máu quái × 0.55 so với co-op (núm cân bằng — thử nghiệm)
+  THOI_GIAN_DUONG: 1.0, // làn ngắn hơn: đi hết làn ≈ 1.0 × thời gian 1 làn PVP (co-op 1.4)
+};
