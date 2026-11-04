@@ -1,0 +1,7 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#5a5f69"><canvas id=c width=900 height=900></canvas>
+<script src="rig.js"></script><script>
+(async()=>{const def=await (await fetch('sentinel.json')).json(); const R=await RIG.load(def,'parts/');
+const ctx=document.getElementById('c').getContext('2d'); RIG.draw(ctx,R,{},450,560,0.75,false);
+// pivot dots
+window.done=true;})();
+</script>

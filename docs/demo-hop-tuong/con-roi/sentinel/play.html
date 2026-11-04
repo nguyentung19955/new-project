@@ -1,0 +1,14 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#5a5f69"><canvas id=c width=720 height=420></canvas>
+<script src="rig.js"></script><script src="anim.js"></script><script>
+(async()=>{const def=await (await fetch('sentinel.json')).json(); window.R=await RIG.load(def,'parts/');
+const ctx=document.getElementById('c').getContext('2d');
+window.drawAt=function(t){ctx.clearRect(0,0,720,420);ctx.fillStyle='#5a5f69';ctx.fillRect(0,0,720,420);
+ // left: idle ; middle: attack loop every 0.9s ; right: flipped attack
+ const idle=RIG.sample(CLIPS.idle,t);
+ const ta=t%0.9; const atk=RIG.add(idle,RIG.sample(CLIPS.attack,ta));
+ RIG.draw(ctx,R,idle,120,300,0.33,false);
+ RIG.draw(ctx,R,atk,360,300,0.33,false);
+ RIG.draw(ctx,R,atk,600,300,0.33,true);
+ ctx.fillStyle='#fff';ctx.font='14px sans-serif';ctx.fillText('dung tho',85,410);ctx.fillText('tan cong',325,410);ctx.fillText('lat trai',570,410);};
+window.done=true;})();
+</script>
