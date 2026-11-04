@@ -606,7 +606,8 @@
   // chớp sáng nhỏ ở đầu nòng 60–80ms (render 'nong'), hướng về mục tiêu
   // bộ v9 (TUONG[id].px.fx): chớp dùng sheet fx_<ten>_phat (6 khung, 0,3 s) — render 'nong' có id
   const coFx9 = (id) => !!(id && T[id] && T[id].px && T[id].px.fx);
-  const chopNong = (S, x, y, mau, q, id) => S.fx.push({ k: 'nong', x, y, t: 0, T: coFx9(id) ? 0.3 : C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x), id: coFx9(id) ? id : null });
+  const coPhat = (id) => coFx9(id) && (!T[id].px.fxL || T[id].px.fxL.includes('phat'));   // bộ DC không có fx_phat → chớp code
+  const chopNong = (S, x, y, mau, q, id) => S.fx.push({ k: 'nong', x, y, t: 0, T: coPhat(id) ? 0.3 : C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x), id: coPhat(id) ? id : null });
   // HIEU — hiệu ứng khi trúng (TRẮNG/LAM/TÍM dùng lại được). (S, q, dmg, v, cfg, hs) — cfg = 1 mục trong TUONG[id].hieu
   const HIEU = {
     chay(S, q, dmg, v, cf, hs) {   // LỬA: để lại vệt cháy trên làn, đốt n quái / 0.5s
@@ -747,6 +748,62 @@
     baoSkill(S, k === 'hoanDoi' ? j : i, m.cf.ten);
     return true;
   }
+  // ---- KY_NANG — kỹ năng tự động của bộ DC (TUONG[id].kn, BO-24-TUONG-V2.md CHỐT 18h40): mỗi kn.cd giây (đếm khi có quái) chạy hoạt ảnh
+  //   px.kn (sheet <id>_kn), chiêu ra ĐÚNG đầu khung px.kn.trung. Sát thương = satThuong × he (theo sao/bậc như đòn thường → không phá cơ chế ghép/bậc).
+  //   fx 'kn9' = sheet fx_<id>_kn (render.js): vẽ tại mục tiêu; kn.sau (ARC) → vẽ SAU LƯNG tướng (render veUnit theo v.knFxT).
+  const tacKn = (id) => { const a = T[id].px && T[id].px.kn; if (!a) return 0.4; let n = 0; for (let k = 0; k < a.trung; k++) n += a.nhip[k]; return n / 1000; };
+  const chuoiKn = (id) => { const a = T[id].px && T[id].px.kn; return a ? a.nhip.reduce((x, y) => x + y, 0) / 1000 : 0; };
+  const trongTamDS = (S, i, v) => S.quai.filter((o) => nham(o) && trongTam(S, i, T[v.id], o) && (S.coop || o.ban === S));
+  const KY_NANG = {
+    cotLua(S, i, v, q, dmg, cf) {      // SCORCH: cột lửa tại quái — q nhận đủ, quái trong r nhận van ×; để vệt cháy
+      const r = cf.r * K, mau = HANH[T[v.id].hanh].mau;
+      trung(S, q, dmg, v, mau, true);
+      for (const o of S.quai) if (o !== q && nham(o) && kc(o, q) < r) trung(S, o, dmg * cf.van, v, mau);
+      S.vung.push({ k: 'lua', x: q.x, y: q.y, r: cf.chay.r * K, t: 0, T: cf.chay.T, dmg: cf.chay.dps * 0.5 * heSo(S, v), n: cf.chay.n, tick: 0, v });
+      S.fx.push({ k: 'kn9', id: v.id, x: q.x, y: q.y, t: 0, T: 0.6, chan: true });
+      S.rung = Math.max(S.rung || 0, 0.04);
+    },
+    quatBang(S, i, v, q, dmg, cf) {    // FROST: sóng băng hình quạt hướng về quái — chậm cham trong T giây; quái đang chậm → đóng băng (trừ trùm)
+      const [ox, oy] = oXY(S, i), x0 = ox + C.O / 2, y0 = thanY(oy), a = Math.atan2(q.y - q.co / 2 - y0, q.x - x0);
+      const tam = Math.min(280, Math.max(cf.tam * K, Math.hypot(q.x - x0, q.y - q.co / 2 - y0) + 24)), mau = HANH[T[v.id].hanh].mau;
+      for (const o of S.quai) {
+        if (!nham(o)) continue;
+        const dx = o.x - x0, dy = o.y - o.co / 2 - y0, d = Math.hypot(dx, dy); if (d > tam + o.co * 0.3) continue;
+        let lech = Math.abs(Math.atan2(dy, dx) - a) % (2 * Math.PI); if (lech > Math.PI) lech = 2 * Math.PI - lech;
+        if (o !== q && lech > cf.goc * Math.PI / 180) continue;
+        const daCham = o.chillT > 0 || o.slowBang > 0;
+        trung(S, o, dmg, v, mau, o === q);
+        if (!sống(o)) continue;
+        o.chill = Math.max(o.chill, 1); o.chillT = Math.max(o.chillT || 0, cf.T); o.chillK = Math.max(o.chillK || 0, cf.cham);
+        if (daCham && !o.boss) o.choang = Math.max(o.choang || 0, cf.dong);
+      }
+      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0, t: 0, T: 0.55, goc: a, quat: tam });
+    },
+    vongSet(S, i, v, q, dmg, cf) {     // ARC: vòng sét quanh bản thân — 3 quái gần nhất trong tầm, choáng ngắn (trừ trùm)
+      const [cx, cy] = oTam(S, i), mau = HANH[T[v.id].hanh].mau;
+      const ds = trongTamDS(S, i, v).sort((a, b) => Math.hypot(a.x - cx, a.y - cy) - Math.hypot(b.x - cx, b.y - cy)).slice(0, cf.so);
+      if (!ds.includes(q) && sống(q)) ds.splice(Math.max(0, ds.length - 1), ds.length ? 1 : 0, q);
+      for (const o of ds) { trung(S, o, dmg, v, mau, true); if (sống(o) && !o.boss) o.choang = Math.max(o.choang || 0, cf.choang); S.fx.push({ k: 'trung9', x: o.x, y: o.y - o.co / 2, t: 0, T: 0.36, id: v.id }); }
+      if (ds.length) S.fx.push({ k: 'set', pts: [[cx, cy - 6], ...ds.map((o) => [o.x, o.y - o.co / 2])], t: 0, T: 0.25, mau });
+      v.knFxT = S.t;   // render: fx_arc_kn sau lưng tướng 0,6 s
+      S.hitStop = Math.max(S.hitStop || 0, C.HIT_STOP.chuoi);
+    },
+    domDom(S, i, v, q, dmg, cf) {      // EMBERBUG: so đom đóm bay tự tìm mục tiêu (chia đều quái trong tầm, quái đầu trước)
+      const [ox, oy] = oXY(S, i), x0 = ox + C.O / 2, y0 = thanY(oy), mau = HANH[T[v.id].hanh].mau;
+      let ds = trongTamDS(S, i, v).sort((a, b) => b.d - a.d); if (!ds.length) ds = [q];
+      for (let n = 0; n < cf.so; n++) {
+        const o = ds[n % ds.length], g = -Math.PI / 2 + (n - (cf.so - 1) / 2) * 0.5;
+        bayDan(S, x0 + Math.cos(g) * 10, y0 + Math.sin(g) * 8, o, dmg, v, mau, cf.toc * (0.85 + 0.08 * n), { hieu: false });
+      }
+      S.fx.push({ k: 'kn9', id: v.id, x: x0, y: y0 - 4, t: 0, T: 0.6 });
+    },
+  };
+  function kyNang(S, i, v) {
+    const cf = T[v.id].kn; if (!cf || !KY_NANG[cf.k]) return;
+    let q = v.knQ && nham(v.knQ) && (S.coop || v.knQ.ban === S) ? v.knQ : chonMuc(S, i, v); v.knQ = null;
+    if (!q) return;
+    KY_NANG[cf.k](S, i, v, q, satThuong(S, v) * cf.he, cf);
+  }
   // TƯỚNG PIXEL (TUONG[id].px.atk): đòn ra ĐÚNG đầu khung `trung` của chuỗi nhịp; không bắt đầu đòn mới khi chuỗi cũ chưa xong
   const tacDong = (id) => { const a = T[id].px && T[id].px.atk; if (!a) return C.TAC_DONG; let n = 0; for (let k = 0; k < a.trung; k++) n += a.nhip[k]; return n / 1000; };
   const chuoiDon = (id) => { const a = T[id].px && T[id].px.atk; return a ? a.nhip.reduce((x, y) => x + y, 0) / 1000 : 0; };
@@ -823,6 +880,19 @@
           S.fx.push({ k: 'neoSong', i, t: 0, tre: tacDong(v.id), T: tacDong(v.id) + 0.6 });
         } else if (v.cd <= 0) v.cd = 0.1;
         return;
+      }
+      const kn = T[v.id].kn;
+      if (kn && T[v.id].px && T[v.id].px.kn) {   // KỸ NĂNG bộ DC (KY_NANG): hồi kn.cd giây; không chen giữa chuỗi đòn thường; trong lúc chạy kỹ năng không đánh thường
+        if (v.knCd == null) v.knCd = kn.cd * (0.45 + 0.35 * rnd());
+        if (v.knCho > 0) { v.knCho -= dt; if (v.knCho <= 0) { v.knCho = 0; if (!(v.khoaT > 0)) kyNang(S, i, v); } }
+        const dangKn = v.knT0 != null && S.t - v.knT0 < chuoiKn(v.id);
+        if (!dangKn && v.knCd > 0) v.knCd -= dt;
+        if (!dangKn && v.knCd <= 0 && !(v.khoaT > 0) && !(v.cho > 0) && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) {
+          const q = chonMuc(S, i, v);
+          if (q) { v.knCd = kn.cd; v.knT0 = S.t; v.knCho = tacKn(v.id); v.knQ = q; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; v.gocMuc = gocTo(S, i, q); chonHuong(v, v.gocMuc, mm); return; }
+          v.knCd = 0.2;
+        }
+        if (dangKn || v.knCho > 0) return;
       }
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
       else if (v.cd <= 0 && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = tacDong(v.id); v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; v.gocMuc = gocTo(S, i, q); chonHuong(v, v.gocMuc, mm); } else v.cd = 0.05; }

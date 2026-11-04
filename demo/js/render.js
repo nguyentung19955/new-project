@@ -17,7 +17,7 @@
   const C = CAU_HINH, G = GAME;
   const W = C.W; let H = C.H;   // H (chiều cao logic) đổi theo màn — ve() dựng lại lớp tĩnh khi đổi
   const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
-  const FX9 = { phat: 24, bay: 28, trung: 36 };   // cỡ hiển thị (px logic) hiệu ứng bộ v9
+  const FX9 = { phat: 24, bay: 30, trung: 40, kn: 60 };   // cỡ hiển thị (px logic) hiệu ứng bộ v9
   const MUOT = { TRE: 30, DOI_MIN: 0.25, HOA_1: 0.13, HOA_BUOC: 0.11, HOA_VE: 0.08, THO_T: 1.6, THO_PX: 1 };   // xem ghi chú đầu file
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
@@ -80,7 +80,8 @@
     nap(`px:${id}:8`, `${PXD}${P.dir8.file}.png`);
     for (const d in P.idle || {}) nap(`px:${id}:idle:${d}`, `${PXD}${P.idle[d].file}.png`);
     if (P.atk && typeof P.atk.file === 'string') nap(`px:${id}:atk`, `${PXD}${P.atk.file}.png`);
-    if (P.fx) for (const l of ['phat', 'bay', 'trung']) nap(`fx9:${id}:${l}`, `${PXD}fx_${P.fx}_${l}.png`);   // hiệu ứng bộ v9
+    if (P.kn && P.kn.file) nap(`px:${id}:kn`, `${PXD}${P.kn.file}.png`);   // bộ DC: sheet kỹ năng 8 hàng
+    if (P.fx) for (const l of P.fxL || ['phat', 'bay', 'trung']) nap(`fx9:${id}:${l}`, `${PXD}fx_${P.fx}_${l}.png`);   // hiệu ứng bộ v9 / DC
     else if (P.atk) for (const d in P.atk.file) nap(`px:${id}:atk:${d}`, `${PXD}${P.atk.file[d]}.png`);
   }
 
@@ -896,10 +897,11 @@
       if (P.tho && P.dir8.doc) { const n = P.tho.n || 4; return { im: im8, f: Math.floor(tg * 1000 / P.tho.ms + phaIdle(v) * n) % n, hang: h8, fw: P.dir8.o, fh: P.dir8.o }; }   // v9: thở bằng khung thật
       return { im: im8, f: c8, hang: h8, fw: P.dir8.o, fh: P.dir8.o, ref: true };
     };
-    const A = P.atk; let khung = null;
-    if (A && typeof A.file === 'string') { const ia = co(`px:${v.id}:atk`); if (ia) { const o = A.o || P.dir8.o, hang = Math.max(0, (A.hang || P.dir8.thuTu).indexOf(ten)); khung = (f) => ({ im: ia, f, hang, fw: o, fh: o }); } }
+    const laKn = P.kn && v.knT0 != null && co(`px:${v.id}:kn`) && (v.atkT == null || v.knT0 >= v.atkT);   // bộ DC: đang chạy kỹ năng → sheet kn
+    const A = laKn ? P.kn : P.atk; let khung = null;
+    if (A && typeof A.file === 'string') { const ia = co(`px:${v.id}:${laKn ? 'kn' : 'atk'}`); if (ia) { const o = A.o || P.dir8.o, hang = Math.max(0, (A.hang || P.dir8.thuTu).indexOf(ten)); khung = (f) => ({ im: ia, f, hang, fw: o, fh: o }); } }
     else if (A) { const [d, l] = A.huong[ten] || ['s', 0], ia = co(`px:${v.id}:atk:${d}`); if (ia) khung = (f) => ({ im: ia, f, hang: 0, fw: A.w, fh: A.h, lat: !!l }); }
-    const el = v.atkT == null ? -1 : tg - v.atkT;
+    const t0 = laKn ? v.knT0 : v.atkT, el = t0 == null ? -1 : tg - t0;
     if (!khung || el < 0) return { lop: [Object.assign(dung(), { a: 1 })], dang: false };
     const nh = A.nhip, vao = nh[0] / 1000; let t = vao;
     if (el < vao) { const k = el / vao; return { lop: [Object.assign(dung(), { a: hoa(1 - k) }), Object.assign(khung(1), { a: hoa(k) })], dang: true }; }
@@ -918,7 +920,7 @@
     const T0 = c.getTransform(), kx = Math.hypot(T0.a, T0.b) || 1;
     const cao = C.TUONG_CAO * (TUONG[v.id].co || 1) * (v.toT > 0 ? P.to || 1.25 : 1);
     let r = cao * kx / hRef;
-    if (r >= 1) { const rn = Math.round(r); if (!P.neo || Math.abs(rn - r) / r < 0.12) r = rn; }   // px nguyên khi không lệch cỡ quá 12% (P.neo: giữ cỡ 1,1–1,3 ô)
+    if (r >= 1 && P.thu !== 'dc') { const rn = Math.round(r); if (!P.neo || Math.abs(rn - r) / r < 0.12) r = rn; }   // px nguyên khi không lệch cỡ quá 12% (P.neo: giữ cỡ 1,1–1,3 ô)
     const s = r / kx;
     // thở: 0 hoặc −THO_PX px sprite gốc (làm tròn, không co giãn), chu kỳ THO_T, pha ngẫu nhiên mỗi tướng; tắt khi đang đánh
     if (v._pha == null) v._pha = Math.random();
@@ -994,6 +996,10 @@
     if (v.nong > 0) veGlow(c, '#ff3355', cx, chan - 18, 24, 0.45 + 0.15 * Math.sin(t * 12));
     if (v.corrT > 0) veGlow(c, '#c04dff', cx, chan - 18, 24, 0.4);
     if (TUONG[v.id].hoTro && TUONG[v.id].hoTro.cot && !moiGop) veCotNeo(c, cx + C.O * 0.34, chan - 3, t, v);   // cột neo: VẬT RIÊNG cạnh nhân vật (sau lưng)
+    if (v.knFxT != null && S.t - v.knFxT < 0.6 && co(`fx9:${v.id}:kn`)) {   // bộ DC (ARC kn.sau): vòng sét SAU LƯNG tướng — vẽ trước sprite
+      const im = co(`fx9:${v.id}:kn`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor((S.t - v.knFxT) / 0.6 * n)), z = C.TUONG_CAO * 1.25;
+      c.save(); c.globalCompositeOperation = 'lighter'; c.drawImage(im, fr * fh, 0, fh, fh, cx - z / 2, chan - C.TUONG_CAO * 0.55 - z / 2, z, z); c.restore();
+    }
     veHinhTuong(c, v, cx, chan, tg, i);
   }
   function veGopCu(c, S, f, tg) {   // merge: 2 tướng cũ (ô kéo + ô đích) thu nhỏ đều và trượt vào tâm ô đích trong GOP_THU giây
@@ -1203,7 +1209,7 @@
     const b9 = co(`fx9:${d.id}:bay`);
     if (b9) {   // bộ v9: sheet đạn bay 6 khung (vẽ hướng PHẢI) xoay theo góc bay, tâm tại viên đạn, cỡ FX9.bay px
       const fh = b9.height, f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % Math.max(1, Math.round(b9.width / fh)), z = FX9.bay;
-      c.save(); c.translate(d.x, d.y); c.rotate(g); c.drawImage(b9, f * fh, 0, fh, fh, -z / 2, -z / 2, z, z); c.restore(); return;
+      c.save(); c.globalCompositeOperation = 'lighter'; c.translate(d.x, d.y); c.rotate(g); c.drawImage(b9, f * fh, 0, fh, fh, -z / 2, -z / 2, z, z); c.restore(); return;
     }
     if (im) {
       const f = Math.floor((tg - (d.t0 == null ? (d.t0 = tg) : d.t0)) / 0.06) % 2, k = doProj(im, f);   // khung 1 ↔ 2
@@ -1333,8 +1339,15 @@
       c.strokeStyle = f.mau; c.lineWidth = 2; c.beginPath(); c.arc(o[0], o[1], 7 + 40 * k, 0, 7); c.stroke();
     } else if ((f.k === 'nong' || f.k === 'trung9') && f.id && co(`fx9:${f.id}:${f.k === 'nong' ? 'phat' : 'trung'}`)) {   // bộ v9: chớp tại tay / nổ khi trúng (6 khung)
       const im = co(`fx9:${f.id}:${f.k === 'nong' ? 'phat' : 'trung'}`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n)), z = f.k === 'nong' ? FX9.phat : FX9.trung;
-      c.globalCompositeOperation = 'source-over'; c.globalAlpha = 1; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z);
+      c.globalCompositeOperation = 'lighter'; c.globalAlpha = 1; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z);
     } else if (f.k === 'trung9') {
+    } else if (f.k === 'kn9' && co(`fx9:${f.id}:kn`)) {   // bộ DC: hiệu ứng kỹ năng fx_<id>_kn (6 khung): chan = đáy ảnh tại chân quái (cột lửa) · quat = hình quạt xoay theo goc (đỉnh quạt tại tướng)
+      const im = co(`fx9:${f.id}:kn`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n));
+      c.globalAlpha = 1;
+      if (f.quat) { const z = f.quat * 1.15; c.translate(f.x, f.y); c.rotate(f.goc + Math.PI / 2); c.drawImage(im, fr * fh, 0, fh, fh, -z / 2, -z * 0.8, z, z); }
+      else if (f.chan) { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z * 0.86, z, z); }
+      else { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z); }
+    } else if (f.k === 'kn9') {
     } else if (f.k === 'nong') {   // CHỚP ĐẦU NÒNG 60–80ms: lõi trắng + quầng màu hệ + 2 tia ngắn theo hướng bắn
       const r = 5 * (1 - k * 0.5); veGlow(c, f.mau, f.x, f.y, r * 2.2, a); c.fillStyle = '#ffffff'; c.globalAlpha = a; c.beginPath(); c.arc(f.x, f.y, r * 0.55, 0, 7); c.fill();
       c.strokeStyle = f.mau; c.lineWidth = 1.4; c.lineCap = 'round';

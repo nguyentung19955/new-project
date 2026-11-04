@@ -1,5 +1,5 @@
 // DEMO "NEON GRID — Merge Defense" (cyberpunk) — DỮ LIỆU: tướng, bậc, Archfiend, quái, trùm, bố cục.
-// TƯỚNG: làm lại từ đầu (03/11/2026); 04/11 bộ v9 (SCORCH, FROST, ARC — PixelLab) thay bộ thử v4 (SENTINEL, PULSE, ANCHOR) — ảnh demo/assets/v9/.
+// TƯỚNG: làm lại từ đầu (03/11/2026); 04/11 tối bộ DC (SCORCH, FROST, ARC, EMBERBUG — phong cách Destiny Child) thay bộ v9 — ảnh demo/assets/dc/.
 // NGUYÊN TẮC: bám Destiny Child: Defense War (DCDW). Thêm tướng mới = thêm 1 mục trong TUONG (+ ảnh trong demo/assets/v3/), KHÔNG sửa logic.
 // Kỹ năng ghép từ các "loại hành vi" có tham số (game.js: MUC, DON, HIEU, DAC_BIET). Cách viết: docs/demo-hop-tuong/TIEN-DO-V3.md.
 'use strict';
@@ -65,27 +65,48 @@ const V4 = (id, them) => Object.assign({ thu: 'v4', dir8: { file: id + '_dung', 
 const V9 = (id, tc, them) => Object.assign({ thu: 'v9', dir8: { file: id + '_dung', o: 192, doc: true, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
   tho: { ms: 170, n: 4 }, fx: id,
   atk: { file: id + '_tc', o: 192, nhip: [70, 65, 65, 65, 65, 60, 60, 65, 70, 75, 80, 90], trung: 6 }, neo: [96, 160] }, them || {});
+// ẢNH BỘ DC (04/11 tối, phong cách Destiny Child — thay bộ v9): demo/assets/dc/<id>_dung|tc|kn.png — 8 HÀNG s se e ne n nw w sw × n khung, ô 192,
+// CHÂN ở (96,172) mỗi ô. Số khung: demo/assets/dc/meta.json (anims.dung / tc / kn). Hiệu ứng fx_<id>_bay|trung|kn.png (1 hàng 6 khung ô 128, nền trong,
+// vẽ 'lighter'; bay: mũi đạn hướng PHẢI → xoay theo hướng bắn). kn = hoạt ảnh kỹ năng (nhip, trung = khung tung chiêu) — game.js KY_NANG.
+const DC = (id, nDung, nKn, them) => Object.assign({ thu: 'dc', dir8: { file: id + '_dung', o: 192, doc: true, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
+  tho: { ms: nDung > 4 ? 120 : 200, n: nDung }, fx: id, fxL: ['bay', 'trung', 'kn'],
+  atk: { file: id + '_tc', o: 192, nhip: [70, 65, 65, 65, 65, 60, 60, 65, 70, 75, 80, 90], trung: 6 },
+  kn: { file: id + '_kn', o: 192, nhip: nKn >= 12 ? [70, 70, 70, 70, 70, 70, 75, 75, 80, 80, 85, 95] : [80, 80, 85, 85, 90, 95, 110], trung: nKn >= 12 ? 6 : 4 },
+  neo: [96, 172] }, them || {});
 // nhip (ms) theo khung sheet tấn công: khung 0 = TƯ THẾ ĐỨNG → không phát, nhip[0] là thời gian HOÀ ảnh đứng → khung 1 (render.js);
 // khung 'trung' (ra lực) nhanh ~60, lấy đà ~90, về tư thế chậm 110–130; sau khung cuối render hoà về ảnh đứng (MUOT.HOA_VE). game.js dùng nhip để canh lúc trúng.
 const TUONG = {
-  // 01 SCORCH — võ sư Hoả Quyền (BO-24-TUONG-V2.md): TRẮNG · Lửa · quái ĐẦU · đấm ra quả cầu lửa bay (đạn), trúng để vệt cháy 2 giây.
-  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'FIRE FIST', hanh: 'Plasma', kieu: 'Fire punch', mo: 'Punches fireballs at the lead enemy; burns the lane for 2s.',
-    dmg: 36, cd: 1.36, muc: 'dau', hit: 'flame', co: 1.0,
+  // 01 SCORCH — Agni, nữ võ sư lửa (BO-24-TUONG-V2.md CHỐT 18h40): TRẮNG · Lửa · quái ĐẦU · đấm ra quả cầu lửa bay (đạn), trúng để vệt cháy 2 giây.
+  //   KỸ NĂNG (8 s): CỘT LỬA tại quái đầu — sát thương diện nhỏ + để vệt cháy.
+  scorch: { bac: 'trang', ten: 'SCORCH', chuc: 'FIRE FIST', hanh: 'Plasma', kieu: 'Fire punch', mo: 'Punches fireballs at the lead enemy. Skill: fire pillar burns a small area.',
+    dmg: 36, cd: 1.36, muc: 'dau', hit: 'flame', co: 1.1,
     don: { k: 'dan', toc: 1000 },
     hieu: [{ k: 'chay', r: { 1: 22, 3: 27 }, T: { 1: 2, 3: 2.7 }, dps: 10, n: { 1: 3, 5: 4 } }],
-    px: V9('scorch', 'dam12') },
-  // 02 FROST — phù thuỷ băng: TRẮNG · Băng · quái ĐẦU · phép bắn mũi băng (đạn), làm chậm 20% trong 1,5 s (3★: 25%) — HIEU bang không vỡ (không voR).
-  frost: { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Ice bolt', mo: 'Ice bolts at the lead enemy: slow 20% for 1.5s.',
-    dmg: 27, cd: 1.7, muc: 'dau', hit: 'frost', co: 1.0,
+    kn: { k: 'cotLua', cd: 8, he: 2.2, r: 30, van: 0.6, chay: { r: 26, T: 3, dps: 14, n: 4 } },
+    px: DC('scorch', 8, 12) },
+  // 02 FROST — Skadi, nữ thần băng: TRẮNG · Băng · quái ĐẦU · mũi băng (đạn), làm chậm 20% trong 1,5 s (3★: 25%).
+  //   KỸ NĂNG (8 s): SÓNG BĂNG hình quạt phía trước — làm chậm 40% 2,5 s; quái đang chậm thì đóng băng 0,8 s (trùm không đóng băng).
+  frost: { bac: 'trang', ten: 'FROST', chuc: 'CRYOMANCER', hanh: 'Cryo', kieu: 'Ice bolt', mo: 'Ice bolts slow the lead enemy. Skill: frost wave cone slows, freezes slowed foes.',
+    dmg: 27, cd: 1.7, muc: 'dau', hit: 'frost', co: 1.1,
     don: { k: 'dan', toc: 900 },
     hieu: [{ k: 'bang', cham: { 1: 0.20, 3: 0.25 }, max: 1, T: 1.5 }],
-    px: V9('frost', 'phep12') },
-  // 03 ARC — thợ điện mặt trời: TRẮNG · Sét · quái GẦN · đấm ra cầu sét bay nhanh tầm ngắn (đạn, KHÔNG cận chiến cứng); mỗi đòn thứ 3 sét nảy sang quái kế.
-  arc: { bac: 'trang', ten: 'ARC', chuc: 'SOLAR SPARK', hanh: 'Voltage', kieu: 'Spark shot', mo: 'Fast spark shots at the nearest enemy; every 3rd chains lightning.',
-    dmg: 40, cd: 1.15, muc: 'gan', hit: 'electric', co: 1.0,
+    kn: { k: 'quatBang', cd: 8, he: 1.2, tam: 150, goc: 40, cham: 0.4, T: 2.5, dong: 0.8 },
+    px: DC('frost', 4, 12) },
+  // 03 ARC — Raijin, nữ thần sấm: TRẮNG · Sét · quái GẦN · cầu sét bay nhanh; mỗi đòn thứ 3 sét nảy sang quái kế.
+  //   KỸ NĂNG (8 s): VÒNG SÉT quanh bản thân (vẽ SAU LƯNG) — đánh 3 quái gần nhất, choáng 0,5 s (trùm không choáng).
+  arc: { bac: 'trang', ten: 'ARC', chuc: 'SOLAR SPARK', hanh: 'Voltage', kieu: 'Spark shot', mo: 'Fast spark shots at the nearest enemy. Skill: lightning ring hits 3 foes, short stun.',
+    dmg: 40, cd: 1.15, muc: 'gan', hit: 'electric', co: 1.1,
     don: { k: 'dan', toc: 1500 },
     hieu: [{ k: 'chuoi', moi: 3, nhay: { 1: 1, 3: 2 }, r: { 1: 85, 5: 100 }, he: 0.35 }],
-    px: V9('arc', 'dam12') },
+    kn: { k: 'vongSet', cd: 8, he: 1.5, so: 3, choang: 0.5, sau: true },
+    px: DC('arc', 8, 12) },
+  // 05 EMBERBUG — Hotaru, linh đom đóm mê ngủ: TRẮNG · Lửa · quái ĐẦU · ném đom đóm (đạn).
+  //   KỸ NĂNG (8 s): 5 ĐOM ĐÓM tự tìm mục tiêu (chia cho các quái trong tầm, mỗi con he × sát thương).
+  emberbug: { bac: 'trang', ten: 'EMBERBUG', chuc: 'FIREFLY', hanh: 'Plasma', kieu: 'Firefly toss', mo: 'Tosses fireflies at the lead enemy. Skill: 5 homing fireflies.',
+    dmg: 30, cd: 1.3, muc: 'dau', hit: 'flame', co: 1.1,
+    don: { k: 'dan', toc: 800 },
+    kn: { k: 'domDom', cd: 8, he: 0.7, so: 5, toc: 520 },
+    px: DC('emberbug', 4, 7) },
 
   // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
   // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".
