@@ -87,3 +87,6 @@ Vẽ nhân vật game pixel art: [tên], [chủ đề], [giới tính, dáng, tr
 ## Bước 5 — Soát + giao
 - Căn chân mọi khung về cùng 1 điểm (1 độ dịch chung/hướng). Soát phóng to từng khung: không khói/lửa/vệt, không tay thừa, không chấm thừa.
 - GIF 8 hướng (đứng → đánh → đứng) gửi người dùng; chỉ gửi khi đạt hết. Hiệu ứng nhờ ChatGPT vẽ riêng.
+
+## Khoá chân từng khung (chốt 04/11 19h20)
+Khung nào nhân vật bị trượt/giật khỏi chỗ đứng: KHÔNG gọi lại PixelLab, dùng code dịch NGUYÊN khung (không vẽ pixel) cho bàn chân đang chạm đất về đúng vị trí khung đầu (rig/gifDC.py: tìm cụm chân ở đáy, khớp cụm gần nhất với khung 0, dịch ≤14px ngang, ≤10px dọc). Động tác nhảy cao hơn ngưỡng thì giữ nguyên. Chỉ dùng PixelLab khi thân bị vẽ sai (nhoè, tay thừa, vệt sáng).
