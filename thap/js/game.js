@@ -505,10 +505,10 @@ function aiBan(B, dt) {
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
   ts.sort((a, b) => a.sao - b.sao);
-  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hopLeGhep(a, b) && SKILLS[a.id].vai !== 'ht') { ghep(B, a, b); return; }
+  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hopLeGhep(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
   if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (hopLeGhep(a, b)) { ghep(B, a, b); return; }
   const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => B.lv[a] - B.lv[b]);
-  if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + B.gia) nangCap(B, loai[0]);
+  if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
 
 function ketThuc(thang, ly) {

@@ -3158,3 +3158,13 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Summon: rơi từ trên xuống, bẹp/nảy, vòng bụi + chớp. Merge: 2 ụ bay vào nhau trắng dần → chớp trắng, sóng, sao bung, ụ mới bật ra quá đà, chữ "+1★". Kéo: ụ nhấc lên có bóng, ô ghép được nảy + sáng, ô khác tối đi. Nâng cấp: vòng quét quanh mọi ụ cùng loại.
 - Trùm: vòng báo trước + dấu "!" trên ụ bị nhắm (SNIPE = ống ngắm đỏ), đóng băng = khối băng, hoá đá = ụ xám + vết nứt. Số sát thương bật to (chí mạng to hơn, màu), quái trúng độc có mây độc, bị chậm phủ lạnh.
 - UI: nút SUMMON thở khi đủ mana, số mana nảy khi đổi, băng rôn wave trượt vào.
+
+## claude/demo-hop-tuong — TURRET MERGE (thap/) VIẾT LẠI theo DCDW (04/11, phiên luật + kỹ năng + hoạt ảnh)
+- thap/ được viết lại hoàn toàn (không còn engine tướng của demo/): `js/data.js` (luật, bậc, quái, trùm, bố cục), `js/skills.js` (BẢNG KỸ NĂNG đăng ký theo id), `js/game.js` (luật), `js/render.js` (vẽ), `js/fx.js` (hạt), `js/ui.js` (giao diện), `js/sound.js`, `js/meta.js` (tự sinh: tỉ lệ đầu súng + roster nhúng).
+- Dữ liệu ụ đọc từ `assets/roster.json` (64 ụ: id, tên, bậc, thẻ DCDW, kỹ năng). Ụ chơi được = có `SKILLS['<id>']`; bảng chọn liệt kê đủ 64, ụ chưa có kỹ năng hiện "SẮP CÓ" và không chọn được. Thêm ụ: viết `SKILLS.<id> = { vai, dmg, toc, nham, ban(G,B,T,E) | capNhat(G,B,T,dt), hoTro, ghep, mo }` trong skills.js — không cần sửa chỗ khác.
+- 16 ụ đã có kỹ năng: canon, lien, bang, doc, tia, set, mana (TRẮNG) · radar, mimic, laser, mortar (XANH) · railgun, orbital, wallgen (VÀNG) · blackhole, overlord (ĐỎ).
+- Luật DCDW: triệu hồi 10 rồi +10; ghép 2 ụ cùng loại cùng sao → ụ NGẪU NHIÊN trong bộ +1 sao (tối đa 7); Mimic ghép với mọi ụ cùng sao (+50% công 8 s); hỗ trợ buff 4 ô kề; nâng cấp theo loại 100/200/400/700; Ma vương 3 lựa chọn (Gọi viện / Cuồng lực / Khiên thánh), mana ×2 mỗi lần dùng + hồi chiêu; mục tiêu mặc định = quái đầu.
+- Chế độ: SOLO 3 tim (đường chữ U ôm bàn); CO-OP 2 cổng → vùng chung → 1 lõi, lọt 1 quái là thua, mỗi bàn chỉ bắn nhánh mình + vùng chung; PVP quái mình giết bị GỬI sang đối thủ, 3 tim. Quái to/trùm lọt mất 2 tim.
+- Quái: thường, bay nhanh, bay xanh miễn chậm, khổng lồ, tách (chết đẻ 5), que tách (wave 30+, chết đẻ 3 tách). Trùm mỗi 10 wave (Mad Crown, Freezer, Janus Cube, Joker King, Nightmare, Octopus Eyes) — báo trước 1,4 s bằng tâm ngắm đỏ trên ụ + khung tung chiêu.
+- Hình: `tools/thap-cat-hinh.py` chép ảnh đã cắt ở docs/demo-hop-tuong/thap-art/ vào thap/assets/ (khay thu nhỏ, đường cắt sát dải, lớp phủ bỏ ụ mẫu ở giữa), tự cắt từ raw_*.png nếu còn thiếu, sinh ảnh nhỏ `assets/nho/<id>.png` cho bảng chọn và `js/meta.js`.
+- Kiểm thử nhanh bằng tham số: `?mode=solo|coop|pvp&deck=a,b,c,d,e&wave=10&fill=4&mana=2000&auto=1&speed=2&af=hero|dahlia|eve`.

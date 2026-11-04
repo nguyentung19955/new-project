@@ -62,7 +62,7 @@ const MAVUONG = {
 // máu quái theo wave (tăng nhanh dần như DCDW)
 function mauWave(w) { return Math.round(80 * Math.pow(1.15, w - 1) + 30 * w); }
 // mana khi giết
-function manaGiet(w) { return 10 + 3 * Math.floor((w - 1) / 2); }
+function manaGiet(w) { return 10 + 2 * (w - 1); }
 
 // thành phần wave
 function taoWave(w) {

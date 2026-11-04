@@ -129,7 +129,7 @@ img { -webkit-user-drag: none; pointer-events: none; }
 .c .anh { position: relative; z-index: 1; width: 60px; height: 60px; margin-top: 14px; filter: drop-shadow(0 3px 3px #000b); }
 .c .ten { position: absolute; z-index: 3; left: 4px; right: 4px; bottom: 0px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 900; text-align: center; line-height: 1; padding: 0 9px; color: #fff !important; text-shadow: 0 1px 2px #000, 0 0 3px #000; overflow: hidden; }
 .c .sapco { position: absolute; z-index: 4; top: 34px; left: 6px; right: 6px; text-align: center; font-size: 10px; font-weight: 900; color: #ffe46b; background: #000c; border-radius: 4px; transform: rotate(-8deg); padding: 2px 0; }
-.c.khoa .anh { filter: grayscale(1) brightness(.5); }
+.c.khoa .anh { filter: saturate(.55) brightness(.72) drop-shadow(0 3px 3px #000b); }
 .c.khoa .nen { opacity: .6; }
 .c.chon .nen { box-shadow: 0 0 0 2px #7dff6a inset, 0 0 14px #7dff6a; }
 .c.chon::after { content: '✓'; position: absolute; z-index: 5; right: 4px; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #2fbf4a; font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 0 #0a5; }
