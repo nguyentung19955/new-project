@@ -57,7 +57,9 @@ const BAC = {
 // Ghép bằng script từ docs/demo-hop-tuong/nguon-tuong/moi/ (ảnh PixelLab, KHÔNG sửa pixel): ảnh đứng 128 đặt tại (32,32) trong ô; khung tấn công dịch theo
 // độ lệch (dx,dy) tìm được để khung 0 khớp nhất ảnh đứng cùng hướng (so alpha + màu, thử ±24px), cùng độ dịch cho cả 4 khung → chân chung (96,147).
 const V4 = (id, them) => Object.assign({ thu: 'v4', dir8: { file: id + '_dung', o: 192, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
-  atk: { file: id + '_tc', o: 192, nhip: [70, 70, 70, 70], trung: 1 }, neo: [96, 147] }, them || {});
+  atk: { file: id + '_tc', o: 192, nhip: [60, 60, 110, 130], trung: 1 }, neo: [96, 147] }, them || {});
+// nhip (ms) theo khung sheet tấn công: khung 0 = TƯ THẾ ĐỨNG → không phát, nhip[0] là thời gian HOÀ ảnh đứng → khung 1 (render.js);
+// khung 'trung' (ra lực) nhanh ~60, lấy đà ~90, về tư thế chậm 110–130; sau khung cuối render hoà về ảnh đứng (MUOT.HOA_VE). game.js dùng nhip để canh lúc trúng.
 const TUONG = {
   // 03 SENTINEL — lính gác bắn ổn định (docs/demo-hop-tuong/ho-so-tuong/03-SENTINEL.md): quái đi đầu, tầm toàn đường, 45 dmg, 0,9 đòn/s;
   //   mỗi 3★ thêm ĐÁNH DẤU +10% sát thương nhận vào (dùng hành vi hack: 1★ 0%, 3★ +10%, 6★ +20%). Đạn bắn ra ở đầu khung 1 (giật đầu+thân).
@@ -71,14 +73,14 @@ const TUONG = {
   pulse: { bac: 'trang', ten: 'PULSE', chuc: 'GRENADIER', hanh: 'Plasma', kieu: 'Splash grenade', mo: 'Lobs a grenade at the lead enemy: 0.65-tile blast, up to 5 targets.',
     dmg: 24, cd: 1 / 0.85, muc: 'dau', hit: 'flame', co: 1.0,
     don: { k: 'luu', T: 0.45, cao: 0.5, r: 0.65, so: 5 },
-    px: V4('pulse', { atk: { file: 'pulse_tc', o: 192, nhip: [70, 70, 70, 70], trung: 2 } }) },
+    px: V4('pulse', { atk: { file: 'pulse_tc', o: 192, nhip: [60, 90, 60, 120], trung: 2 } }) },
   // 05 ANCHOR — hỗ trợ KHÔNG bắn (05-ANCHOR.md): buff 4 ô kề +8% tốc đánh mỗi 2★ (1★ 8% · 3★ 16% · 5★ 24% · 7★ 32%).
   //   Cột neo là VẬT RIÊNG (render veCotNeo, tạm vẽ code); mỗi 3 giây đưa tay cầm điều khiển ra trước + vòng sóng xanh lục 4 ô kề.
   anchor: { bac: 'trang', ten: 'ANCHOR', chuc: 'ENGINEER', hanh: 'Hack', kieu: 'Support beacon', mo: 'Does not attack. Adjacent heroes (4 tiles) get +8% attack speed per 2★.',
     dmg: 0, cd: 3, muc: 'dau', co: 1.05,
     keBuff: { k: 'tocDanh', gt: { 1: 0.08, 3: 0.16, 5: 0.24, 7: 0.32 } },
     hoTro: { cd: 3, cot: true },
-    px: V4('anchor', { atk: { file: 'anchor_tc', o: 192, nhip: [70, 70, 70, 70], trung: 2 } }) },
+    px: V4('anchor', { atk: { file: 'anchor_tc', o: 192, nhip: [60, 90, 60, 120], trung: 2 } }) },
 
   // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
   // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".
