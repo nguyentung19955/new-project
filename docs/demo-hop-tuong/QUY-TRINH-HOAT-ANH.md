@@ -52,7 +52,38 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 - Hiệu ứng (tia, cầu nổ, vòng sóng) nhờ ChatGPT vẽ riêng.
 
 ## LUẬT THIẾT KẾ TƯỚNG (người dùng chốt 04/11, 15h)
-1. (Cập nhật 15h47) Bể 24 tướng chia NGẪU NHIÊN vào 6 chủ đề: hậu tận thế tái sinh, thần thoại châu Á & võ hiệp, kinh dị vũ trụ + cơ khí sinh học, huyền ảo tăm tối, neon tương lai (cyberpunk), cận đại hoài cổ (steampunk). Xem BO-24-TUONG-V2.md. Ngoại hình hợp thứ PixelLab vẽ đẹp, tỉ lệ người lớn, không cầm đồ vật nhỏ. Ngoại hình tự do sáng tạo, miễn hợp với thứ PixelLab vẽ đẹp: hình khối to dễ đọc, chi tiết đẹp (khung 128), không cầm đồ vật nhỏ.
+1. (Cập nhật 15h47) Bể 24 tướng chia NGẪU NHIÊN vào 6 chủ đề: hậu tận thế tái sinh, thần thoại châu Á & võ hiệp, kinh dị vũ trụ + cơ khí sinh học, huyền ảo tăm tối, neon tương lai (cyberpunk), cận đại hoài cổ (steampunk). Xem BO-24-TUONG-V2.md. Ngoại hình hợp thứ PixelLab vẽ đẹp, tỉ lệ người lớn, không cầm đồ vật nhỏ.
 2. Hình dáng phải nói lên vai trò (hỗ trợ trông như hỗ trợ; tướng hỗ trợ có thể là nữ).
 3. Mỗi tướng chỉ có động tác game cần (đứng + tấn công/phát sóng). Hiệu ứng nhờ ChatGPT vẽ riêng.
 4. Quy trình: tạo 4 mẫu mặt trước (pixen, high top-down) → người dùng chọn → xoay 8 hướng → nhập nhân vật → động tác (mẫu có sẵn skeleton-v3 hoặc tự mô tả tay trống) → soát từng khung → GIF.
+
+
+# QUY TRÌNH CHUẨN (viết lại 04/11 16h): ChatGPT vẽ nhân vật → PixelLab dựng hoạt ảnh
+Thay thế mọi quy trình cũ ở trên khi mâu thuẫn. Bể tướng + ngoại hình + mã động tác: BO-24-TUONG-V2.md.
+
+## Bước 1 — ChatGPT vẽ ảnh gốc (Claude tự gửi qua trình duyệt)
+- 1 ảnh/tướng, mặt trước (S), toàn thân, tay không buông xuôi hơi tách khỏi thân, chân đứng rộng bằng vai.
+- Góc TỪ TRÊN CAO chéo xuống (thấy rõ đỉnh đầu + vai, thân ngắn lại). Nếu ảnh ra gần nhìn thẳng → nhờ vẽ lại, không dùng.
+- Tỉ lệ người lớn (đầu ~1/5 thân), pixel art chi tiết, viền đen 1px, nền trắng trơn, không bóng/hiệu ứng/vũ khí cầm tay.
+- Mẫu prompt (thay [ ]):
+```
+Vẽ nhân vật game pixel art: [tên], [chủ đề], [giới tính, dáng, trang phục, trang bị gắn người]. Tỉ lệ người lớn (đầu ~1/5 thân), mặt trưởng thành, không chibi. Góc nhìn TỪ TRÊN CAO chéo xuống ~45° (thấy rõ đỉnh đầu và vai), quay mặt thẳng về người xem, đứng thẳng, hai tay không buông xuôi hơi tách khỏi thân. Viền đen 1px, nền trắng trơn, không vũ khí cầm tay, không hiệu ứng, không bóng.
+```
+- Chuyển ảnh: ChatGPT → tab GitHub (upload `nguon-tuong/<tên>/`) → `git pull`.
+
+## Bước 2 — Chuẩn bị ảnh cho PixelLab (code chỉ cắt/thu nhỏ)
+- Xoá nền trắng (tách theo màu nền nối biên), cắt sát nhân vật, thu nhỏ cao ~110px, đặt giữa khung 128×128, chân ở đáy. Không vẽ/sửa pixel.
+
+## Bước 3 — PixelLab xoay 8 hướng
+- `/generate-8-rotations-v3` (first_frame = ảnh bước 2, mô tả ngắn + "exactly two arms, empty hands"), chạy 2–3 seed, chọn NGUYÊN 1 bộ.
+- Soát: đúng bên phụ kiện, không tay thừa, cao đều, góc nhìn giữ như ảnh gốc. Chưa đạt → chạy lại cả bộ.
+
+## Bước 4 — Nhập nhân vật + mô phỏng hoạt ảnh
+- `/create-character-v3` (reference = S, 7 hướng còn lại, view high top-down, template mannequin).
+- `/characters/animations` mode `skeleton-v3`, đủ 8 hướng một lệnh:
+  ĐỨNG = template `breathing-idle`; ĐẤM = template `lead-jab`; PHÉP/SÓNG = action_description tự mô tả tay trống (6 khung) — câu mẫu trong BO-24-TUONG-V2.md; ĐÁ = `high-kick`/`roundhouse-kick` (cần thử).
+- Hướng hỏng: xoá hướng đó rồi tạo lại cùng `animation_group_id`, đổi seed.
+
+## Bước 5 — Soát + giao
+- Căn chân mọi khung về cùng 1 điểm (1 độ dịch chung/hướng). Soát phóng to từng khung: không khói/lửa/vệt, không tay thừa, không chấm thừa.
+- GIF 8 hướng (đứng → đánh → đứng) gửi người dùng; chỉ gửi khi đạt hết. Hiệu ứng nhờ ChatGPT vẽ riêng.
