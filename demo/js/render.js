@@ -17,7 +17,7 @@
   const C = CAU_HINH, G = GAME;
   const W = C.W; let H = C.H;   // H (chiều cao logic) đổi theo màn — ve() dựng lại lớp tĩnh khi đổi
   const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
-  const FX9 = { phat: 24, bay: 30, trung: 40, kn: 60 };   // cỡ hiển thị (px logic) hiệu ứng bộ v9
+  const FX9 = { phat: 24, bay: 22, trung: 34, kn: 60 };   // cỡ hiển thị (px logic) hiệu ứng bộ v9
   const MUOT = { TRE: 30, DOI_MIN: 0.25, HOA_1: 0.13, HOA_BUOC: 0.11, HOA_VE: 0.08, THO_T: 1.6, THO_PX: 1 };   // xem ghi chú đầu file
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
@@ -1374,7 +1374,7 @@
     } else if (f.k === 'kn9' && co(`fx9:${f.id}:kn`)) {   // bộ DC: hiệu ứng kỹ năng fx_<id>_kn (6 khung): chan = đáy ảnh tại chân quái (cột lửa) · quat = hình quạt xoay theo goc (đỉnh quạt tại tướng)
       const im = co(`fx9:${f.id}:kn`), fh = im.height, n = Math.max(1, Math.round(im.width / fh)), fr = Math.min(n - 1, Math.floor(k * n));
       c.globalAlpha = 1;
-      if (f.quat) { const z = f.quat * 1.15; c.translate(f.x, f.y); c.rotate(f.goc + Math.PI / 2); c.drawImage(im, fr * fh, 0, fh, fh, -z / 2, -z * 0.8, z, z); }
+      if (f.quat) { const z = Math.min(f.quat * 1.15, C.TUONG_CAO * 1.8); /* quạt băng tối đa ~1,8× chiều cao tướng */ c.translate(f.x, f.y); c.rotate(f.goc + Math.PI / 2); c.drawImage(im, fr * fh, 0, fh, fh, -z / 2, -z * 0.8, z, z); }
       else if (f.chan) { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z * 0.86, z, z); }
       else { const z = FX9.kn; c.drawImage(im, fr * fh, 0, fh, fh, f.x - z / 2, f.y - z / 2, z, z); }
     } else if (f.k === 'kn9') {
