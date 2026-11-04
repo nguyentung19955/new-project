@@ -5,8 +5,8 @@
 // Thông số ở MUOT (ngay dưới):
 //   TRE 30°      vùng trễ: giữ hướng đang nhìn tới khi góc tới mục tiêu (v.gocMuc) lệch khỏi TÂM hướng đó > 30°; hết quái → giữ hướng cuối.
 //   DOI_MIN 0,15s đổi hướng đích tối đa 1 lần mỗi 0,15 s.
-//   HOA_1 80ms   đổi sang hướng kề: vẽ cả 2 ảnh, alpha A giảm / B tăng (B vẽ trên, alpha = min(1, 2k) mỗi bên → không lộ nền giữa chừng).
-//   HOA_BUOC 55ms mỗi bước kề khi phải đi qua nhiều hướng (nối tiếp, không nhảy cóc; quay 180° đi vòng qua S).
+//   HOA_1 130ms   đổi sang hướng kề: vẽ cả 2 ảnh, alpha A giảm / B tăng (B vẽ trên, alpha = min(1, 2k) mỗi bên → không lộ nền giữa chừng).
+//   HOA_BUOC 110ms mỗi bước kề khi phải đi qua nhiều hướng (nối tiếp, không nhảy cóc; quay 180° đi vòng qua S).
 //   Tấn công: thời gian khung ở data.js TUONG[id].px.atk.nhip (ms). Khung 0 = tư thế đứng → không phát; nhip[0] (60) = hoà ảnh đứng → khung 1;
 //     SENTINEL 60/60/110/130 (trung khung 1), PULSE & ANCHOR 60/90/60/120 (trung khung 2); hết chuỗi hoà về ảnh đứng HOA_VE 80ms.
 //   THO_T 1,6s   thở: dịch thân 0/−1 px theo px sprite gốc (làm tròn, không co giãn/xoay), lệch pha ngẫu nhiên từng tướng; tắt khi đang đánh.
@@ -15,7 +15,7 @@
   const C = CAU_HINH, G = GAME;
   const W = C.W; let H = C.H;   // H (chiều cao logic) đổi theo màn — ve() dựng lại lớp tĩnh khi đổi
   const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
-  const MUOT = { TRE: 30, DOI_MIN: 0.15, HOA_1: 0.08, HOA_BUOC: 0.055, HOA_VE: 0.08, THO_T: 1.6, THO_PX: 1 };   // xem ghi chú đầu file
+  const MUOT = { TRE: 30, DOI_MIN: 0.25, HOA_1: 0.13, HOA_BUOC: 0.11, HOA_VE: 0.08, THO_T: 1.6, THO_PX: 1 };   // xem ghi chú đầu file
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
   const ANH = {};
