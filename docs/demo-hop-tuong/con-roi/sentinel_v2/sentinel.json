@@ -1,0 +1,158 @@
+{
+"parts": {
+"skirt": {
+"img": "p_skirt.png",
+"pivot": [
+110,
+40
+],
+"at": [
+0,
+0
+]
+},
+"torso": {
+"img": "p_torso.png",
+"pivot": [
+130,
+182
+],
+"parent": "skirt",
+"at": [
+112,
+24
+]
+},
+"head": {
+"img": "p_head.png",
+"pivot": [
+215,
+372
+],
+"parent": "torso",
+"at": [
+128,
+18
+]
+},
+"arm_r_up": {
+"img": "p_arm_r_up.png",
+"pivot": [
+40,
+50
+],
+"parent": "torso",
+"at": [
+205,
+80
+],
+"rest": -8,
+"s": 0.78
+},
+"fore_r": {
+"img": "p_fore_r.png",
+"pivot": [
+28,
+100
+],
+"parent": "arm_r_up",
+"at": [
+118,
+98
+],
+"rest": 4
+},
+"arm_l_up": {
+"img": "p_arm_l_up.png",
+"pivot": [
+38,
+45
+],
+"parent": "torso",
+"at": [
+22,
+76
+],
+"rest": 75,
+"s": 0.78
+},
+"fore_l": {
+"img": "p_fore_l.png",
+"pivot": [
+22,
+42
+],
+"parent": "arm_l_up",
+"at": [
+118,
+86
+],
+"rest": -5
+},
+"thigh_r": {
+"img": "p_thigh_r.png",
+"pivot": [
+48,
+18
+],
+"parent": "skirt",
+"at": [
+160,
+50
+],
+"rest": -4
+},
+"shin_r": {
+"img": "p_shin_r.png",
+"pivot": [
+60,
+28
+],
+"parent": "thigh_r",
+"at": [
+48,
+72
+],
+"rest": 4
+},
+"thigh_l": {
+"img": "p_thigh_l.png",
+"pivot": [
+50,
+18
+],
+"parent": "skirt",
+"at": [
+70,
+48
+],
+"rest": 5
+},
+"shin_l": {
+"img": "p_shin_l.png",
+"pivot": [
+60,
+28
+],
+"parent": "thigh_l",
+"at": [
+50,
+72
+],
+"rest": -5
+}
+},
+"order": [
+"arm_l_up",
+"fore_l",
+"thigh_l",
+"shin_l",
+"thigh_r",
+"shin_r",
+"skirt",
+"torso",
+"head",
+"arm_r_up",
+"fore_r"
+]
+}

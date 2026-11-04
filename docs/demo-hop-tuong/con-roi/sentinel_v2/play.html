@@ -1,0 +1,10 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#5a5f69"><canvas id=c width=640 height=440></canvas>
+<script src="rig.js"></script><script src="anim.js"></script><script>
+(async()=>{const def=await (await fetch('sentinel.json')).json(); window.R=await RIG.load(def,'parts/');
+const ctx=document.getElementById('c').getContext('2d');
+window.drawAt=function(t){ctx.fillStyle='#5a5f69';ctx.fillRect(0,0,640,440);
+ const idle=RIG.sample(CLIPS.idle,t); const atk=RIG.add(idle,RIG.sample(CLIPS.attack,t%0.9));
+ RIG.draw(ctx,R,idle,170,305,0.4,false); RIG.draw(ctx,R,atk,460,305,0.4,false);
+ ctx.fillStyle='#fff';ctx.font='15px sans-serif';ctx.fillText('dung tho',130,430);ctx.fillText('tan cong',420,430);};
+window.done=true;})();
+</script>

@@ -1,0 +1,7 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#5a5f69"><canvas id=c width=1500 height=520></canvas>
+<script src="rig.js"></script><script>
+(async()=>{const def=await (await fetch('sentinel.json')).json(); const R=await RIG.load(def,'parts/');
+const ctx=document.getElementById('c').getContext('2d');
+const poses=[{},{arm_r_up:{a:-30},fore_r:{a:-30}},{arm_r_up:{a:25},fore_r:{a:35}},{head:{a:-8},torso:{a:-6}},{arm_l_up:{a:-25},fore_l:{a:-40}},{thigh_r:{a:-15},shin_r:{a:15},thigh_l:{a:12},shin_l:{a:-12}}];
+poses.forEach((p,i)=>RIG.draw(ctx,R,p,130+i*245,420,0.5,false)); window.done=true;})();
+</script>
