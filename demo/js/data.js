@@ -1,5 +1,5 @@
 // DEMO "NEON GRID — Merge Defense" (cyberpunk) — DỮ LIỆU: tướng, bậc, Archfiend, quái, trùm, bố cục.
-// TƯỚNG: đang làm lại từ đầu (03/11/2026) — xem mẫu 1 tướng mới trong khối TUONG bên dưới.
+// TƯỚNG: làm lại từ đầu (03/11/2026); 04/11 gắn 3 tướng bộ v4 (SENTINEL, PULSE, ANCHOR) — ảnh demo/assets/v4/, định dạng ghi chú trong khối TUONG.
 // NGUYÊN TẮC: bám Destiny Child: Defense War (DCDW). Thêm tướng mới = thêm 1 mục trong TUONG (+ ảnh trong demo/assets/v3/), KHÔNG sửa logic.
 // Kỹ năng ghép từ các "loại hành vi" có tham số (game.js: MUC, DON, HIEU, DAC_BIET). Cách viết: docs/demo-hop-tuong/TIEN-DO-V3.md.
 'use strict';
@@ -46,8 +46,40 @@ const BAC = {
 //           atk  : { file: { <d>: tên }, w, h, nhip: [ms từng khung], trung: chỉ số khung gây sát thương,
 //                    huong: { s|se|e|ne|n|nw|w|sw: [d, lật gương 0/1] } }   — sát thương ra ĐÚNG đầu khung `trung` (game.js), không đánh nhanh hơn cả chuỗi
 //           to   : hệ số cỡ khi ở dạng BIẾN HÌNH (v.toT > 0)
+//           (04/11, bộ v4) thu  : thư mục ảnh trong demo/assets/ (vd. 'v4'); mặc định v3/pixel
+//                          atk.file là CHUỖI = 1 sheet tấn công 8 hàng (thứ tự hàng = dir8.thuTu, 8 ảnh thật — KHÔNG lật gương) × n khung, ô vuông atk.o
+//                          neo  : [x, y] CHÂN cố định trong ô sheet (đứng & tấn công đã căn chung bằng script → chuyển đứng↔tấn công không nhảy)
+//                          nong : (tuỳ chọn) { <hướng>: [x, y] } điểm ra đòn trong ô sheet; không có thì ước lượng giữa thân + lệch theo hướng
+//   hoTro : HỖ TRỢ KHÔNG BẮN (ANCHOR) { cd: giây giữa 2 lần phát sóng (chỉ hiệu ứng, theo tốc đánh), cot: true = vẽ CỘT NEO cạnh nhân vật }
+//   don { k: 'luu', T, cao, r, so } : NÉM LỰU ĐẠN vòng cung (T giây, cao × cao ô) → nổ lan r ô, tối đa so quái (PULSE)
 //           Neo chân: đáy phần hình + tâm chân (đo hàng đáy khung 0 mỗi ảnh) đặt đúng chỗ chân các tướng khác.
+// ẢNH BỘ v4 (04/11): demo/assets/v4/<id>_dung.png (8 ô 192×192 1 hàng: s se e ne n nw w sw) + <id>_tc.png (8 hàng × 4 khung, ô 192).
+// Ghép bằng script từ docs/demo-hop-tuong/nguon-tuong/moi/ (ảnh PixelLab, KHÔNG sửa pixel): ảnh đứng 128 đặt tại (32,32) trong ô; khung tấn công dịch theo
+// độ lệch (dx,dy) tìm được để khung 0 khớp nhất ảnh đứng cùng hướng (so alpha + màu, thử ±24px), cùng độ dịch cho cả 4 khung → chân chung (96,147).
+const V4 = (id, them) => Object.assign({ thu: 'v4', dir8: { file: id + '_dung', o: 192, thuTu: ['s', 'se', 'e', 'ne', 'n', 'nw', 'w', 'sw'] },
+  atk: { file: id + '_tc', o: 192, nhip: [70, 70, 70, 70], trung: 1 }, neo: [96, 147] }, them || {});
 const TUONG = {
+  // 03 SENTINEL — lính gác bắn ổn định (docs/demo-hop-tuong/ho-so-tuong/03-SENTINEL.md): quái đi đầu, tầm toàn đường, 45 dmg, 0,9 đòn/s;
+  //   mỗi 3★ thêm ĐÁNH DẤU +10% sát thương nhận vào (dùng hành vi hack: 1★ 0%, 3★ +10%, 6★ +20%). Đạn bắn ra ở đầu khung 1 (giật đầu+thân).
+  sentinel: { bac: 'trang', ten: 'SENTINEL', chuc: 'SENTRY', hanh: 'Cryo', kieu: 'Steady shot', mo: 'Steady shots at the lead enemy. Every 3★: mark +10% damage taken.',
+    dmg: 45, cd: 1 / 0.9, muc: 'dau', hit: 'kinetic', co: 1.0,
+    don: { k: 'dan', toc: 1500 },
+    hieu: [{ k: 'hack', moi: 1, T: 2, them: { 1: 0, 3: 0.1, 6: 0.2 } }],
+    px: V4('sentinel') },
+  // 04 PULSE — nổ lan (04-PULSE.md): quái đi đầu, tầm toàn đường, 24 dmg, 0,85 đòn/s, nổ 0,65 ô, tối đa 5 mục tiêu.
+  //   Khung 2 của hoạt ảnh vung tay → sinh quả lựu đạn bay vòng cung (code) tới quái rồi nổ.
+  pulse: { bac: 'trang', ten: 'PULSE', chuc: 'GRENADIER', hanh: 'Plasma', kieu: 'Splash grenade', mo: 'Lobs a grenade at the lead enemy: 0.65-tile blast, up to 5 targets.',
+    dmg: 24, cd: 1 / 0.85, muc: 'dau', hit: 'flame', co: 1.0,
+    don: { k: 'luu', T: 0.45, cao: 0.5, r: 0.65, so: 5 },
+    px: V4('pulse', { atk: { file: 'pulse_tc', o: 192, nhip: [70, 70, 70, 70], trung: 2 } }) },
+  // 05 ANCHOR — hỗ trợ KHÔNG bắn (05-ANCHOR.md): buff 4 ô kề +8% tốc đánh mỗi 2★ (1★ 8% · 3★ 16% · 5★ 24% · 7★ 32%).
+  //   Cột neo là VẬT RIÊNG (render veCotNeo, tạm vẽ code); mỗi 3 giây đưa tay cầm điều khiển ra trước + vòng sóng xanh lục 4 ô kề.
+  anchor: { bac: 'trang', ten: 'ANCHOR', chuc: 'ENGINEER', hanh: 'Hack', kieu: 'Support beacon', mo: 'Does not attack. Adjacent heroes (4 tiles) get +8% attack speed per 2★.',
+    dmg: 0, cd: 3, muc: 'dau', co: 1.05,
+    keBuff: { k: 'tocDanh', gt: { 1: 0.08, 3: 0.16, 5: 0.24, 7: 0.32 } },
+    hoTro: { cd: 3, cot: true },
+    px: V4('anchor', { atk: { file: 'anchor_tc', o: 192, nhip: [70, 70, 70, 70], trung: 2 } }) },
+
   // 03/11/2026: ĐÃ XOÁ HẾT tướng cũ (scorch, frost, arc, venom, lance, warp, broker/miner, glitch, patchwork) + ảnh của chúng.
   // Làm lại từ đầu theo docs/demo-hop-tuong/QUY-TRINH-HOAT-ANH.md. Danh sách rỗng → game vẫn chạy, nút SUMMON báo "CHƯA CÓ TƯỚNG".
   //
@@ -134,8 +166,9 @@ const CAU_HINH = {
   // rộng ≤ ô. CHÂN tướng đặt ở TL_CHAN × chiều cao ô tính từ mép trên (0.75 = gần đáy ô như DCDW; khoảng nên dùng 0.72–0.78) → CHAN = khoảng cách chân–đáy ô (game.js boCuc tính lại)
   // BONG: bóng đổ mềm sát chân (elip tối, rộng BONG_W × rộng ô, dẹt BONG_DET, độ đậm BONG_A) để tướng "chạm sàn". KHÔNG còn đế màu bậc trên bàn (bậc chỉ hiện ở thẻ + màn chọn tướng).
   // 02/11 skin bàn: ô theo ảnh skin (~57×47, rộng hơn cao) → chân ở 80%, cao 82% ô để tướng đầy ô như DCDW
-  TL_CHAN: 0.80, BONG_W: 0.45, BONG_DET: 0.24, BONG_A: 0.35,
-  TL_CAO: 0.82, CAO_MIN: 36, CAO_MAX: 46, CHAN: 17, TUONG_CAO: 44, TUONG_RONG: 64,
+  // 04/11 bộ v4: nhân vật cao ~1,2 ô (TL_CAO 1.2), chân đặt GIỮA ô (TL_CHAN 0.62, hơi thấp hơn tâm để đầu không đè ô trên quá nhiều)
+  TL_CHAN: 0.62, BONG_W: 0.45, BONG_DET: 0.24, BONG_A: 0.35,
+  TL_CAO: 1.2, CAO_MIN: 40, CAO_MAX: 90, CHAN: 17, TUONG_CAO: 44, TUONG_RONG: 64,
   TL: 58 / 70,          // tỉ lệ không gian so với bản ngang cũ — nhân bán kính vùng hiệu ứng
   // ANIMATION (tư vấn ChatGPT bước 3–4): SHEET_TUONG = false → tướng luôn là ẢNH TĨNH theo hướng (<anh>_<dir>.png), dịch NGUYÊN KHỐI bằng code:
   //   idle: nhún ±NHUN px, chu kỳ NHUN_T giây · attack 240ms: lùi LUI px (LUI_T) → lao tới LAO px (LAO_T, đạn phát ĐÚNG lúc này từ đầu nòng) → về (VE_T)
@@ -145,7 +178,8 @@ const CAU_HINH = {
   //   đổi xa (> 45°) thì đi qua các hướng trung gian, mỗi nấc BUOC giây (cảm giác xoay người)
   //   không có quái > VE_S giây → từ từ quay về MAC_DINH (2 = nhìn xuống, phía hành lang dưới), mỗi nấc BUOC_VE giây
   //   WARP (xoay bằng code): nội suy góc LERP /giây · NHIN: dò mục tiêu mỗi 0.05s
-  HUONG: { DOI_MIN: 0.4, LECH: 30, BUOC: 0.06, BUOC_VE: 0.12, VE_S: 1.2, MAC_DINH: 2, LERP: 7, NHIN: 0.05 },
+  // 04/11: đổi hướng đi qua lần lượt các hướng kề, mỗi bước 0,05 s (không nhảy cóc, không lật gương — 8 ảnh thật)
+  HUONG: { DOI_MIN: 0.25, LECH: 30, BUOC: 0.05, BUOC_VE: 0.12, VE_S: 1.2, MAC_DINH: 2, LERP: 7, NHIN: 0.05 },
   SHEET_TUONG: false, ATK_ANH: 0.12, NHUN: 0.5, NHUN_T: 1.7, LUI: 1.5, LUI_T: 0.07, LAO: 2.5, LAO_T: 0.045, VE_T: 0.125, CHOP_NONG: 0.07,
   TAC_DONG: 0.07, GIU_KHUNG: 0.045,          // đạn ra sau LUI_T (70ms) kể từ lúc bắt đầu đòn
   HIT_FX: 0.12, HIT_PX: 16, SINH_T: 0.22, GOP_T: 0.18,   // trúng đòn 120ms (đỉnh ~12px), summon 220ms, merge 180ms

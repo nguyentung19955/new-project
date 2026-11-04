@@ -586,6 +586,22 @@
       }
     }
   };
+  // PULSE: NÉM LỰU ĐẠN (cfg = TUONG[id].don { k: 'luu', T, cao, r, so }): quả lựu đạn bay VÒNG CUNG trong T giây (bám theo quái) tới quái,
+  // rồi NỔ LAN bán kính r ô quanh điểm rơi, trúng tối đa `so` quái (gần tâm nổ trước). Không phải đòn trực tiếp (MANTIS không phản, CICADA né không được).
+  DON.luu = function (S, i, v, q, dmg, cfg) {
+    const [x, y] = nong(S, i, v), mau = HANH[T[v.id].hanh].mau;
+    S.dan.push({ cung: true, x, y, x0: x, y0: y, gx: x, gy: y, tx: q.x, ty: q.y - q.co * 0.25, q, t: 0, T: cfg.T || 0.45, cao: (cfg.cao || 0.45) * C.BUOC_Y,
+      dmg, v, id: v.id, mau, r: theoSao(cfg.r, v.sao) || 0.65, so: theoSao(cfg.so, v.sao) || 5 });
+  };
+  function noLuu(S, d) {
+    const R = d.r * C.BUOC_X, x = d.tx, y = d.ty;
+    const ds = S.quai.filter((o) => nham(o) && Math.hypot(o.x - x, (o.y - o.co * 0.25 - y) / 0.7) <= R + o.co * 0.3)
+      .sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y)).slice(0, d.so);
+    let dau = true;
+    for (const o of ds) { trung(S, o, d.dmg, d.v, d.mau); if (dau) { apHieu(S, o, d.dmg, d.v); dau = false; } }
+    S.fx.push({ k: 'noLan', x, y, r: R, t: 0, T: 0.35 });
+    S.rung = Math.max(S.rung || 0, 0.02);
+  }
   // chớp sáng nhỏ ở đầu nòng 60–80ms (render 'nong'), hướng về mục tiêu
   const chopNong = (S, x, y, mau, q) => S.fx.push({ k: 'nong', x, y, t: 0, T: C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x) });
   // HIEU — hiệu ứng khi trúng (TRẮNG/LAM/TÍM dùng lại được). (S, q, dmg, v, cfg, hs) — cfg = 1 mục trong TUONG[id].hieu
@@ -796,6 +812,14 @@
       const tocKe = v.keB && v.keB.tocDanh ? 1 + v.keB.tocDanh : 1;   // hỗ trợ ô kề: tốc đánh (tổng mọi buff tốc đánh trần +150%)
       v.cd -= dt * Math.min(1 + C.KE_TRAN.tocDanh, tocAF * (v.bufT > 0 ? 1 + v.bufHe : 1) * tocKe) / cham;
       // đòn đánh theo hoạt ảnh: bắt đầu attack (14fps), đạn/đòn phát ra đúng lúc vào khung ra đòn (khung 3, TAC_DONG)
+      const ht = T[v.id].hoTro;
+      if (ht) {   // HỖ TRỢ KHÔNG BẮN (ANCHOR): buff ô kề chạy qua keBuff; mỗi ht.cd giây (theo tốc đánh) phát hoạt ảnh tấn công + vòng sóng (chỉ để nhìn)
+        if (v.cd <= 0 && !(v.khoaT > 0) && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) {
+          v.cd = ht.cd; v.atkT = S.t; v.danh = 0.3;
+          S.fx.push({ k: 'neoSong', i, t: 0, tre: tacDong(v.id), T: tacDong(v.id) + 0.6 });
+        } else if (v.cd <= 0) v.cd = 0.1;
+        return;
+      }
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
       else if (v.cd <= 0 && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = tacDong(v.id); v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; chonHuong(v, gocTo(S, i, q), mm); } else v.cd = 0.05; }
     });
@@ -812,6 +836,13 @@
     // đạn
     for (const d of S.dan) {
       const q = d.q;
+      if (d.cung) {   // lựu đạn vòng cung: bám vị trí quái (quái chết thì rơi ở chỗ cũ), tới nơi thì nổ lan
+        if (sống(q) && (S.coop || q.ban === S)) { d.tx = q.x; d.ty = q.y - q.co * 0.25; }
+        d.t += dt; const k = Math.min(1, d.t / d.T);
+        d.gx = d.x0 + (d.tx - d.x0) * k; d.gy = d.y0 + (d.ty - d.y0) * k; d.x = d.gx; d.y = d.gy - d.cao * 4 * k * (1 - k);
+        if (k >= 1) { d.xong = true; noLuu(S, d); }
+        continue;
+      }
       if (!sống(q) || (!S.coop && q.ban !== S)) { d.xong = true; continue; }
       const tx = q.x, ty = q.y - q.co / 2, dx = tx - d.x, dy = ty - d.y, k = Math.hypot(dx, dy), b = d.spd * dt;
       if (k <= b + 6) { d.xong = true; trungDan(S, d); }

@@ -13,3 +13,23 @@
 5. **Tự kiểm hết sổ** — đặt khung 1 cạnh ảnh PixelLab của hướng đó + các hướng đã duyệt; đo đỉnh/đáy; xem GIF như người chơi. Không đạt → vẽ lại, không gửi, không tự bào chữa.
 6. **Gửi người dùng** GIF (3× NEAREST) khi đạt hết; gộp các hướng đã duyệt vào 1 GIF.
 7. Hiệu ứng (lửa, tia…) vẽ riêng sau cùng; code gắn vào nòng theo hướng.
+
+## Nhân vật PixelLab bản 2 (Skeleton, 04/11/2026)
+- SENTINEL: 7adaadc3-d190-4f2f-ad28-a95aedfd37b2
+- PULSE: 381466c9-218e-486b-bad5-38c58f34ccce
+- ANCHOR: 1d4fe8b4-1ab6-421e-a63f-34ee7c5e60c5
+Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
+
+## Quy trình PixelLab chuẩn cho tướng (chốt 04/11)
+1. Chuẩn bị MỘT hình mặt trước (S) đúng tư thế dùng trong game, thấy rõ vũ khí (vũ khí chĩa vào người xem sẽ bị hiểu thành vũ khí ngắn).
+2. Gọi `/generate-8-rotations-v3` (2 lượt/lần) với `description` liệt kê chi tiết + tay cầm vũ khí. Chạy 2–3 seed, chọn NGUYÊN một bộ; không ghép hướng giữa các bộ, không lật gương, không vá lẻ.
+3. Thứ tự ảnh trả về: S, SE, E, NE, N, NW, W, SW (khi gốc là S). Gốc không phải S thì kết quả lộn xộn — không dùng.
+4. Soát trước khi gửi: phụ kiện đúng bên ở mọi hướng, vũ khí đúng tay (hướng lưng có thể che tay), cao thân lệch ≤ ~5px, căn chân y=114 x=64 bằng code.
+5. Gọi API từ máy làm việc: `/root/rig/pl.py` (mã ở `/root/.plk`, quyền 600, không in, không commit).
+
+## Hoạt ảnh chuẩn bằng PixelLab (chốt 04/11, SENTINEL đạt)
+1. Bộ 8 hướng đã duyệt (từ `/generate-8-rotations-v3`) → nhập thành nhân vật: `/create-character-v3` với `reference_image`=S + `direction_images` đủ 7 hướng còn lại, `view='high top-down'`, `template_id='mannequin'` (0,25 lượt, PixelLab không vẽ lại, tự dựng bộ xương 3D).
+2. Tạo động tác: `/characters/animations` `mode='skeleton-v3'`, KHÔNG có `template_animation_id`, `action_description` = mô tả THUẦN ĐỘNG TÁC (không chữ "bắn/súng/giật súng/fire" → tránh lửa khói), thêm "nothing else appears"; `frame_count` 4; đủ 8 `directions` trong MỘT lệnh → 1 chuyển động 3D chung cho cả 8 hướng (~3 lượt/hướng, 3–5 phút).
+3. Soát: không hiệu ứng, chi tiết như hình đã duyệt, không mất vũ khí.
+4. Hướng hỏng: `DELETE /characters/{id}/animations/{group}/directions/{dir}` rồi tạo lại hướng đó với `animation_group_id` của bộ (giữ đúng chuyển động chung), đổi seed. KHÔNG sửa pixel, KHÔNG ghép hướng từ bộ khác.
+5. Giới hạn: tối đa 8 job chạy cùng lúc → chạy từng bộ một.
