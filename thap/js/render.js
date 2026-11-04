@@ -252,15 +252,16 @@ const REN = {
     }
   },
   veNhanBan(ctx) {
-    ctx.font = '800 10px "Be Vietnam Pro",sans-serif'; ctx.textAlign = 'left';
+    ctx.font = '800 10px "Be Vietnam Pro",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const B of G.ban) {
       if (G.ban.length < 2) break;
-      const s = B.ten, w = ctx.measureText(s).width + 14;
-      const x = B.x + B.w - w - 10, y = B.y + 1;
-      ctx.fillStyle = B.i === 0 ? 'rgba(40,140,255,.85)' : (G.che === 'pvp' ? 'rgba(220,40,50,.85)' : 'rgba(40,190,120,.85)');
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - 6, w, 14, 5) : ctx.rect(x, y - 6, w, 14); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.fillText(s, x + 7, y + 4.5);
+      const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 14, h = 15;
+      const x = Math.min(B.x + B.w - w - 10, W - w - 8), y = B.y + 1; // y = tâm nhãn
+      ctx.fillStyle = B.i === 0 ? 'rgba(40,140,255,.9)' : (G.che === 'pvp' ? 'rgba(220,40,50,.9)' : 'rgba(40,190,120,.9)');
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - h / 2, w, h, 5) : ctx.rect(x, y - h / 2, w, h); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText(s, x + w / 2, y + 0.5);
     }
+    ctx.textBaseline = 'alphabetic';
   },
 
   veQuai(ctx) {
@@ -588,14 +589,15 @@ const REN = {
       ctx.font = '900 ' + Math.round(c.co * sc) + 'px "Be Vietnam Pro",sans-serif';
       ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.85)';
       if (c.kieu === 'nhan') { // nhãn kỹ năng trên ụ: viên thuốc tối viền màu bậc
-        const w = ctx.measureText(c.s).width + 12, h = c.co + 6;
-        const x = clamp(c.x, w / 2 + 3, W - w / 2 - 3); // không tràn mép màn
-        ctx.fillStyle = 'rgba(10,12,16,.82)'; ctx.strokeStyle = c.vien || c.mau; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, y - h + 4, w, h, 6) : ctx.rect(x - w / 2, y - h + 4, w, h); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = c.mau; ctx.fillText(c.s, x, y); continue;
+        const w = Math.ceil(ctx.measureText(c.s).width) + 14, h = Math.round(c.co * sc) + 7, cy = y - h / 2 + 4; // cy = tâm viên thuốc
+        const x = clamp(c.x, w / 2 + 4, W - w / 2 - 4); // không tràn mép màn
+        ctx.fillStyle = 'rgba(10,12,16,.85)'; ctx.strokeStyle = c.vien || c.mau; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, cy - h / 2, w, h, 6) : ctx.rect(x - w / 2, cy - h / 2, w, h); ctx.fill(); ctx.stroke();
+        ctx.textBaseline = 'middle'; ctx.fillStyle = c.mau; ctx.fillText(c.s, x, cy + 0.5); ctx.textBaseline = 'alphabetic'; continue;
       }
       if (c.kieu === 'mana') { this.anhGiua(ctx, 'ui_mana', c.x - ctx.measureText(c.s).width / 2 - 8, y - c.co * 0.35, 14); }
-      ctx.strokeText(c.s, c.x, y); ctx.fillStyle = c.mau; ctx.fillText(c.s, c.x, y);
+      const hw = ctx.measureText(c.s).width / 2 + 4, cx = clamp(c.x, hw, W - hw);
+      ctx.strokeText(c.s, cx, y); ctx.fillStyle = c.mau; ctx.fillText(c.s, cx, y);
     }
     ctx.globalAlpha = 1;
   },

@@ -1,450 +1,578 @@
 [
  {
   "id": "canon",
-  "ten": "Pháo Nổ",
+  "ten": "Cannon",
   "bac": "trang",
   "dcdw": "Joan of Arc",
-  "kyNang": "Bắn chậm, nổ lan; sao tăng vùng nổ"
+  "kyNang": "Slow explosive shells; stars widen the blast",
+  "ten_vi": "Pháo Nổ",
+  "kyNang_vi": "Bắn chậm, nổ lan; sao tăng vùng nổ"
  },
  {
   "id": "xucxac",
-  "ten": "Pháo May Rủi",
+  "ten": "Dice Gun",
   "bac": "trang",
   "dcdw": "Fenrir",
-  "kyNang": "Sát thương ngẫu nhiên 3–300; chí mạng luôn tối đa"
+  "kyNang": "Random 3–300% damage; crits always roll max",
+  "ten_vi": "Pháo May Rủi",
+  "kyNang_vi": "Sát thương ngẫu nhiên 3–300; chí mạng luôn tối đa"
  },
  {
   "id": "lien",
-  "ten": "Liên Thanh",
+  "ten": "Gatling",
   "bac": "trang",
   "dcdw": "Esch",
-  "kyNang": "Bắn rất nhanh; sao tăng tốc bắn"
+  "kyNang": "Very fast fire; stars raise fire rate",
+  "ten_vi": "Liên Thanh",
+  "kyNang_vi": "Bắn rất nhanh; sao tăng tốc bắn"
  },
  {
   "id": "phun",
-  "ten": "Súng Phun Loạn",
+  "ten": "Scatter",
   "bac": "trang",
   "dcdw": "Hairball",
-  "kyNang": "Bắn cực nhanh vào quái ngẫu nhiên"
+  "kyNang": "Rapid fire at random enemies",
+  "ten_vi": "Súng Phun Loạn",
+  "kyNang_vi": "Bắn cực nhanh vào quái ngẫu nhiên"
  },
  {
   "id": "sungluc",
-  "ten": "Súng Lục",
+  "ten": "Revolver",
   "bac": "trang",
   "dcdw": "Girl detective",
-  "kyNang": "Một phát sát thương lớn vào quái đầu"
+  "kyNang": "One heavy shot at the lead enemy",
+  "ten_vi": "Súng Lục",
+  "kyNang_vi": "Một phát sát thương lớn vào quái đầu"
  },
  {
   "id": "bang",
-  "ten": "Băng",
+  "ten": "Frost",
   "bac": "trang",
   "dcdw": "Liza",
-  "kyNang": "Làm chậm quái đầu 35% 4 s"
+  "kyNang": "Slows the lead enemy 35% for 4s",
+  "ten_vi": "Băng",
+  "kyNang_vi": "Làm chậm quái đầu 35% 4 s"
  },
  {
   "id": "doc",
-  "ten": "Độc",
+  "ten": "Venom",
   "bac": "trang",
   "dcdw": "Unknown",
-  "kyNang": "Gây độc theo thời gian"
+  "kyNang": "Poison damage over time",
+  "ten_vi": "Độc",
+  "kyNang_vi": "Gây độc theo thời gian"
  },
  {
   "id": "mana",
-  "ten": "Máy Mana",
+  "ten": "Mana Core",
   "bac": "trang",
   "dcdw": "Syrinx",
-  "kyNang": "Không bắn; sinh mana mỗi 7 s"
+  "kyNang": "Does not shoot; makes mana every 7s",
+  "ten_vi": "Máy Mana",
+  "kyNang_vi": "Không bắn; sinh mana mỗi 7 s"
  },
  {
   "id": "tia",
-  "ten": "Bắn Tỉa",
+  "ten": "Sniper",
   "bac": "trang",
   "dcdw": "Artemis",
-  "kyNang": "Nhắm quái nhiều máu nhất; +100% vào quái to"
+  "kyNang": "Targets the highest-HP enemy; +100% vs big foes",
+  "ten_vi": "Bắn Tỉa",
+  "kyNang_vi": "Nhắm quái nhiều máu nhất; +100% vào quái to"
  },
  {
   "id": "set",
   "ten": "Tesla",
   "bac": "trang",
   "dcdw": "Arges",
-  "kyNang": "Sét chuỗi N quái = số sao"
+  "kyNang": "Chain lightning hits N enemies (N = stars)",
+  "ten_vi": "Tesla",
+  "kyNang_vi": "Sét chuỗi N quái = số sao"
  },
  {
   "id": "maychem",
-  "ten": "Máy Chém",
+  "ten": "Guillotine",
   "bac": "trang",
   "dcdw": "Scaffold",
-  "kyNang": "Xác suất giết ngay quái nhỏ"
+  "kyNang": "Chance to instantly kill small enemies",
+  "ten_vi": "Máy Chém",
+  "kyNang_vi": "Xác suất giết ngay quái nhỏ"
  },
  {
   "id": "phagiap",
-  "ten": "Phá Giáp",
+  "ten": "Breaker",
   "bac": "trang",
   "dcdw": "Freya",
-  "kyNang": "Gắn suy yếu: quái nhận thêm sát thương"
+  "kyNang": "Weakens enemies so they take more damage",
+  "ten_vi": "Phá Giáp",
+  "kyNang_vi": "Gắn suy yếu: quái nhận thêm sát thương"
  },
  {
   "id": "bua",
-  "ten": "Búa Đẩy",
+  "ten": "Hammer",
   "bac": "trang",
   "dcdw": "Atalante",
-  "kyNang": "Chí mạng đẩy lùi quái"
+  "kyNang": "Critical hits knock enemies back",
+  "ten_vi": "Búa Đẩy",
+  "kyNang_vi": "Chí mạng đẩy lùi quái"
  },
  {
   "id": "nam",
-  "ten": "Nắm Đấm Sắt",
+  "ten": "Iron Fist",
   "bac": "trang",
   "dcdw": "Vesta",
-  "kyNang": "Đánh gần: nổ tỏa tròn xung quanh, rất nhanh"
+  "kyNang": "Melee: rapid ring blasts all around",
+  "ten_vi": "Nắm Đấm Sắt",
+  "kyNang_vi": "Đánh gần: nổ tỏa tròn xung quanh, rất nhanh"
  },
  {
   "id": "bomhen",
-  "ten": "Bom Hẹn Giờ",
+  "ten": "Time Bomb",
   "bac": "trang",
   "dcdw": "Hecate",
-  "kyNang": "Gắn bom hẹn giờ vào quái ngẫu nhiên, 5 s nổ"
+  "kyNang": "Sticks a bomb on a random enemy; boom in 5s",
+  "ten_vi": "Bom Hẹn Giờ",
+  "kyNang_vi": "Gắn bom hẹn giờ vào quái ngẫu nhiên, 5 s nổ"
  },
  {
   "id": "nhanmana",
-  "ten": "Máy Nhân Mana",
+  "ten": "Mana Doubler",
   "bac": "xanh",
   "dcdw": "Thisbe",
-  "kyNang": "Khi GHÉP: nhận nhiều mana"
+  "kyNang": "On merge: gain lots of mana",
+  "ten_vi": "Máy Nhân Mana",
+  "kyNang_vi": "Khi GHÉP: nhận nhiều mana"
  },
  {
   "id": "kiembang",
-  "ten": "Kiếm Băng",
+  "ten": "Ice Blade",
   "bac": "xanh",
   "dcdw": "Ymir",
-  "kyNang": "+400% sát thương vào quái đang bị chậm"
+  "kyNang": "+400% damage to slowed enemies",
+  "ten_vi": "Kiếm Băng",
+  "kyNang_vi": "+400% sát thương vào quái đang bị chậm"
  },
  {
   "id": "mimic",
   "ten": "Mimic",
   "bac": "xanh",
   "dcdw": "Aurora",
-  "kyNang": "Ghép với BẤT KỲ ụ cùng sao; ghép xong buff tấn công"
+  "kyNang": "Merges with ANY same-star turret; attack buff after",
+  "ten_vi": "Mimic",
+  "kyNang_vi": "Ghép với BẤT KỲ ụ cùng sao; ghép xong buff tấn công"
  },
  {
   "id": "chimang",
-  "ten": "Ăng-ten Chí Mạng",
+  "ten": "Crit Antenna",
   "bac": "xanh",
   "dcdw": "Siren",
-  "kyNang": "Hỗ trợ: +tỉ lệ chí mạng 4 ô kề"
+  "kyNang": "Support: +crit chance for 4 neighbors",
+  "ten_vi": "Ăng-ten Chí Mạng",
+  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng 4 ô kề"
  },
  {
   "id": "dichchuyen",
-  "ten": "Bệ Dịch Chuyển",
+  "ten": "Teleporter",
   "bac": "xanh",
   "dcdw": "Merlin",
-  "kyNang": "Đổi chỗ với ụ khác cùng sao"
+  "kyNang": "Swaps places with a same-star turret",
+  "ten_vi": "Bệ Dịch Chuyển",
+  "kyNang_vi": "Đổi chỗ với ụ khác cùng sao"
  },
  {
   "id": "radar",
   "ten": "Radar",
   "bac": "xanh",
   "dcdw": "Kirinus",
-  "kyNang": "Hỗ trợ: +30% tốc bắn 4 ô kề"
+  "kyNang": "Support: +30% fire rate for 4 neighbors",
+  "ten_vi": "Radar",
+  "kyNang_vi": "Hỗ trợ: +30% tốc bắn 4 ô kề"
  },
  {
   "id": "drone",
-  "ten": "Bệ Phóng Drone",
+  "ten": "Drone Bay",
   "bac": "xanh",
   "dcdw": "Hermes",
-  "kyNang": "Khi GHÉP: phóng drone bom chạy ngược đường đâm quái"
+  "kyNang": "On merge: launches bomb drones up the path",
+  "ten_vi": "Bệ Phóng Drone",
+  "kyNang_vi": "Khi GHÉP: phóng drone bom chạy ngược đường đâm quái"
  },
  {
   "id": "tron",
-  "ten": "Bộ Trộn",
+  "ten": "Blender",
   "bac": "xanh",
   "dcdw": "Zarramim",
-  "kyNang": "Ghép với bất kỳ ụ nào; sao = trung bình"
+  "kyNang": "Merges with any turret; stars = average",
+  "ten_vi": "Bộ Trộn",
+  "kyNang_vi": "Ghép với bất kỳ ụ nào; sao = trung bình"
  },
  {
   "id": "nangluong",
-  "ten": "Pháo Năng Lượng",
+  "ten": "Energy Cannon",
   "bac": "xanh",
   "dcdw": "Jupiter",
-  "kyNang": "Sát thương tăng theo mana đang có"
+  "kyNang": "Damage grows with your current mana",
+  "ten_vi": "Pháo Năng Lượng",
+  "kyNang_vi": "Sát thương tăng theo mana đang có"
  },
  {
   "id": "laser",
   "ten": "Laser",
   "bac": "xanh",
   "dcdw": "Nebula",
-  "kyNang": "Tia liên tục, giữ lâu càng mạnh"
+  "kyNang": "Continuous beam that grows stronger",
+  "ten_vi": "Laser",
+  "kyNang_vi": "Tia liên tục, giữ lâu càng mạnh"
  },
  {
   "id": "lanhgia",
-  "ten": "Máy Phát Lạnh",
+  "ten": "Chiller",
   "bac": "xanh",
   "dcdw": "Neptune",
-  "kyNang": "Hỗ trợ: ụ kề bắn kèm làm chậm"
+  "kyNang": "Support: neighbors’ shots also slow",
+  "ten_vi": "Máy Phát Lạnh",
+  "kyNang_vi": "Hỗ trợ: ụ kề bắn kèm làm chậm"
  },
  {
   "id": "mortar",
-  "ten": "Súng Cối",
+  "ten": "Mortar",
   "bac": "xanh",
   "dcdw": "Nade",
-  "kyNang": "Bắn quái ngẫu nhiên, nổ lan"
+  "kyNang": "Shells random enemies with splash damage",
+  "ten_vi": "Súng Cối",
+  "kyNang_vi": "Bắn quái ngẫu nhiên, nổ lan"
  },
  {
   "id": "khuech",
-  "ten": "Bộ Khuếch Đại",
+  "ten": "Amplifier",
   "bac": "xanh",
   "dcdw": "Mars",
-  "kyNang": "Hỗ trợ: +sát thương cộng dồn cho 4 ô kề"
+  "kyNang": "Support: stacking damage for 4 neighbors",
+  "ten_vi": "Bộ Khuếch Đại",
+  "kyNang_vi": "Hỗ trợ: +sát thương cộng dồn cho 4 ô kề"
  },
  {
   "id": "vungdoc",
-  "ten": "Bom Vũng Độc",
+  "ten": "Toxic Pool",
   "bac": "xanh",
   "dcdw": "Flora",
-  "kyNang": "Ném vũng độc lên đường"
+  "kyNang": "Throws poison puddles on the path",
+  "ten_vi": "Bom Vũng Độc",
+  "kyNang_vi": "Ném vũng độc lên đường"
  },
  {
   "id": "loa",
-  "ten": "Loa Hồi Chiêu",
+  "ten": "Cooldown Horn",
   "bac": "xanh",
   "dcdw": "Melpomene",
-  "kyNang": "Khi GHÉP: giảm hồi chiêu kỹ năng Ma vương"
+  "kyNang": "On merge: cuts Archfiend skill cooldown",
+  "ten_vi": "Loa Hồi Chiêu",
+  "kyNang_vi": "Khi GHÉP: giảm hồi chiêu kỹ năng Ma vương"
  },
  {
   "id": "hutmana",
-  "ten": "Máy Hút Mana",
+  "ten": "Mana Leech",
   "bac": "xanh",
   "dcdw": "Elizabeth",
-  "kyNang": "Mỗi phát trúng nhận mana"
+  "kyNang": "Gains mana on every hit",
+  "ten_vi": "Máy Hút Mana",
+  "kyNang_vi": "Mỗi phát trúng nhận mana"
  },
  {
   "id": "min",
-  "ten": "Bệ Rải Mìn",
+  "ten": "Mine Layer",
   "bac": "xanh",
   "dcdw": "Ptah",
-  "kyNang": "Rải mìn trên đường; đôi khi mìn sao (x3)"
+  "kyNang": "Lays mines on the path; some are star mines (×3)",
+  "ten_vi": "Bệ Rải Mìn",
+  "kyNang_vi": "Rải mìn trên đường; đôi khi mìn sao (x3)"
  },
  {
   "id": "cuongno",
-  "ten": "Súng Cuồng Nộ",
+  "ten": "Berserker",
   "bac": "tim",
   "dcdw": "Danu",
-  "kyNang": "Chí mạng → chế độ bùng nổ tốc bắn 5 s"
+  "kyNang": "Crits trigger a 5s fire-rate frenzy",
+  "ten_vi": "Súng Cuồng Nộ",
+  "kyNang_vi": "Chí mạng → chế độ bùng nổ tốc bắn 5 s"
  },
  {
   "id": "baotuyet",
-  "ten": "Bão Tuyết",
+  "ten": "Blizzard",
   "bac": "tim",
   "dcdw": "Mayauel",
-  "kyNang": "Định kỳ làm chậm TOÀN BỘ quái"
+  "kyNang": "Periodically slows ALL enemies",
+  "ten_vi": "Bão Tuyết",
+  "kyNang_vi": "Định kỳ làm chậm TOÀN BỘ quái"
  },
  {
   "id": "nhanban",
-  "ten": "Máy Nhân Bản",
+  "ten": "Cloner",
   "bac": "tim",
   "dcdw": "Ivory",
-  "kyNang": "Khi GHÉP: gọi thêm 1 ụ 1 sao"
+  "kyNang": "On merge: summons an extra 1★ turret",
+  "ten_vi": "Máy Nhân Bản",
+  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ 1 sao"
  },
  {
   "id": "lienket",
-  "ten": "Chuỗi Liên Kết",
+  "ten": "Chain Link",
   "bac": "tim",
   "dcdw": "Won",
-  "kyNang": "Mạnh hơn theo số ụ cùng loại nối liền kề"
+  "kyNang": "Stronger with more linked turrets of its type",
+  "ten_vi": "Chuỗi Liên Kết",
+  "kyNang_vi": "Mạnh hơn theo số ụ cùng loại nối liền kề"
  },
  {
   "id": "kepha",
-  "ten": "Kẹp Phá",
+  "ten": "Clamp",
   "bac": "tim",
   "dcdw": "Myrina",
-  "kyNang": "Khi GHÉP: PVP làm chậm ụ đối thủ; co-op tăng tốc ụ đồng đội"
+  "kyNang": "On merge: PVP slows rival turrets; Co-op speeds allies",
+  "ten_vi": "Kẹp Phá",
+  "kyNang_vi": "Khi GHÉP: PVP làm chậm ụ đối thủ; co-op tăng tốc ụ đồng đội"
  },
  {
   "id": "taylo",
-  "ten": "Máy Tẩy Lỗi",
+  "ten": "Cleanser",
   "bac": "tim",
   "dcdw": "Gemina",
-  "kyNang": "Khi GHÉP: xoá hiệu ứng xấu cho N ụ"
+  "kyNang": "On merge: removes debuffs from N turrets",
+  "ten_vi": "Máy Tẩy Lỗi",
+  "kyNang_vi": "Khi GHÉP: xoá hiệu ứng xấu cho N ụ"
  },
  {
   "id": "khien",
-  "ten": "Máy Khiên",
+  "ten": "Shield Gen",
   "bac": "tim",
   "dcdw": "Mona",
-  "kyNang": "Khi GHÉP: khiên chặn 1 lần cho N ụ"
+  "kyNang": "On merge: one-hit shield for N turrets",
+  "ten_vi": "Máy Khiên",
+  "kyNang_vi": "Khi GHÉP: khiên chặn 1 lần cho N ụ"
  },
  {
   "id": "hopbi",
-  "ten": "Hộp Bí Ẩn",
+  "ten": "Mystery Box",
   "bac": "tim",
   "dcdw": "Daron",
-  "kyNang": "Sau 47 s biến thành ụ ngẫu nhiên 1–7 sao"
+  "kyNang": "After 47s becomes a random 1–7★ turret",
+  "ten_vi": "Hộp Bí Ẩn",
+  "kyNang_vi": "Sau 47 s biến thành ụ ngẫu nhiên 1–7 sao"
  },
  {
   "id": "nangsao",
-  "ten": "Bệ Nâng Sao",
+  "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "Khi GHÉP: +1 sao cho 1 ụ khác"
+  "kyNang": "On merge: +1★ to another turret",
+  "ten_vi": "Bệ Nâng Sao",
+  "kyNang_vi": "Khi GHÉP: +1 sao cho 1 ụ khác"
  },
  {
   "id": "tuthan",
-  "ten": "Cột Tử Thần",
+  "ten": "Reaper Pillar",
   "bac": "tim",
   "dcdw": "Thanatos",
-  "kyNang": "Hỗ trợ: ụ kề có xác suất giết ngay quái nhỏ"
+  "kyNang": "Support: neighbors may instantly kill small enemies",
+  "ten_vi": "Cột Tử Thần",
+  "kyNang_vi": "Hỗ trợ: ụ kề có xác suất giết ngay quái nhỏ"
  },
  {
   "id": "xaotron",
-  "ten": "Máy Xáo Trộn",
+  "ten": "Scrambler",
   "bac": "tim",
   "dcdw": "Neban",
-  "kyNang": "Khi GHÉP: PVP đổi ngẫu nhiên ụ đối thủ"
+  "kyNang": "On merge: PVP shuffles rival turrets",
+  "ten_vi": "Máy Xáo Trộn",
+  "kyNang_vi": "Khi GHÉP: PVP đổi ngẫu nhiên ụ đối thủ"
  },
  {
   "id": "epxung",
-  "ten": "Bộ Ép Xung",
+  "ten": "Overclock",
   "bac": "tim",
   "dcdw": "Pararamim",
-  "kyNang": "Ghép với ụ cùng sao: ụ đó +65% tốc bắn"
+  "kyNang": "Drag onto a same-star turret: +65% fire rate",
+  "ten_vi": "Bộ Ép Xung",
+  "kyNang_vi": "Ghép với ụ cùng sao: ụ đó +65% tốc bắn"
  },
  {
   "id": "no5",
-  "ten": "Nỏ Năm Nhịp",
+  "ten": "Fifth Shot",
   "bac": "tim",
   "dcdw": "Amor",
-  "kyNang": "Phát thứ 5 bắn 3 mũi tên nổ"
+  "kyNang": "Every 5th shot fires 3 exploding bolts",
+  "ten_vi": "Nỏ Năm Nhịp",
+  "kyNang_vi": "Phát thứ 5 bắn 3 mũi tên nổ"
  },
  {
   "id": "bao",
-  "ten": "Súng Bão",
+  "ten": "Storm Gun",
   "bac": "tim",
   "dcdw": "Pantheon",
-  "kyNang": "Trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại"
+  "kyNang": "Instant, very fast hits; slower next to its own kind",
+  "ten_vi": "Súng Bão",
+  "kyNang_vi": "Trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại"
  },
  {
   "id": "anhsang",
-  "ten": "Tháp Ánh Sáng",
+  "ten": "Lighthouse",
   "bac": "tim",
   "dcdw": "Venus",
-  "kyNang": "Quả cầu sáng định kỳ gọi ụ 1 sao"
+  "kyNang": "Light orbs periodically summon 1★ turrets",
+  "ten_vi": "Tháp Ánh Sáng",
+  "kyNang_vi": "Quả cầu sáng định kỳ gọi ụ 1 sao"
  },
  {
   "id": "aten",
-  "ten": "Pháo Thanh Tẩy",
+  "ten": "Purifier",
   "bac": "vang",
   "dcdw": "Aten",
-  "kyNang": "+300% vào quái trúng độc; giết thì nổ lan"
+  "kyNang": "+300% vs poisoned enemies; kills explode",
+  "ten_vi": "Pháo Thanh Tẩy",
+  "kyNang_vi": "+300% vào quái trúng độc; giết thì nổ lan"
  },
  {
   "id": "dongbo",
-  "ten": "Pháo Đồng Bộ",
+  "ten": "Sync Cannon",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "Mạnh hơn theo số ụ cùng sao trên bàn"
+  "kyNang": "Stronger for each same-star turret on the board",
+  "ten_vi": "Pháo Đồng Bộ",
+  "kyNang_vi": "Mạnh hơn theo số ụ cùng sao trên bàn"
  },
  {
   "id": "railgun",
   "ten": "Railgun",
   "bac": "vang",
   "dcdw": "Removal Tee",
-  "kyNang": "Bingo: đủ hàng ngang +sát thương, đủ hàng dọc +tốc bắn"
+  "kyNang": "Bingo: full row +damage, full column +fire rate",
+  "ten_vi": "Railgun",
+  "kyNang_vi": "Bingo: đủ hàng ngang +sát thương, đủ hàng dọc +tốc bắn"
  },
  {
   "id": "vughep",
-  "ten": "Vua Ghép",
+  "ten": "Merge King",
   "bac": "vang",
   "dcdw": "Aurora King",
-  "kyNang": "Ghép cùng sao: +1 sao (bản vàng +2)"
+  "kyNang": "Same-star merge: +1★ (Gold version +2★)",
+  "ten_vi": "Vua Ghép",
+  "kyNang_vi": "Ghép cùng sao: +1 sao (bản vàng +2)"
  },
  {
   "id": "sinhdoi",
-  "ten": "Máy Sinh Đôi",
+  "ten": "Twin Maker",
   "bac": "vang",
   "dcdw": "Berit",
-  "kyNang": "Khi GHÉP: gọi thêm 1 ụ cùng sao"
+  "kyNang": "On merge: summons an extra same-star turret",
+  "ten_vi": "Máy Sinh Đôi",
+  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ cùng sao"
  },
  {
   "id": "hasao",
-  "ten": "Súng Hạ Sao",
+  "ten": "Star Breaker",
   "bac": "vang",
   "dcdw": "Giltine",
-  "kyNang": "Khi GHÉP: PVP -1 sao ụ đối thủ; co-op +sao ụ đồng đội"
+  "kyNang": "On merge: PVP −1★ to a rival turret; Co-op +★ to an ally",
+  "ten_vi": "Súng Hạ Sao",
+  "kyNang_vi": "Khi GHÉP: PVP -1 sao ụ đối thủ; co-op +sao ụ đồng đội"
  },
  {
   "id": "saochep",
-  "ten": "Máy Sao Chép",
+  "ten": "Copycat",
   "bac": "vang",
   "dcdw": "Shamash",
-  "kyNang": "Sao chép ụ bất kỳ cùng sao (giảm sát thương)"
+  "kyNang": "Copies any same-star turret (less damage)",
+  "ten_vi": "Máy Sao Chép",
+  "kyNang_vi": "Sao chép ụ bất kỳ cùng sao (giảm sát thương)"
  },
  {
   "id": "ngoisao",
-  "ten": "Pháo Ngôi Sao",
+  "ten": "Star Cannon",
   "bac": "vang",
   "dcdw": "Darby",
-  "kyNang": "Tổng sao bội số 10 → tăng tốc; đủ 50 → siêu sát thương"
+  "kyNang": "Star total in 10s → faster; 50★ → huge damage",
+  "ten_vi": "Pháo Ngôi Sao",
+  "kyNang_vi": "Tổng sao bội số 10 → tăng tốc; đủ 50 → siêu sát thương"
  },
  {
   "id": "soi",
-  "ten": "Sói Máy",
+  "ten": "Mech Wolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Đánh gần; bản thức tỉnh luôn chí mạng"
+  "kyNang": "Melee; awakened form always crits",
+  "ten_vi": "Sói Máy",
+  "kyNang_vi": "Đánh gần; bản thức tỉnh luôn chí mạng"
  },
  {
   "id": "tienhoa",
-  "ten": "Hộp Tiến Hoá",
+  "ten": "Evolver",
   "bac": "vang",
   "dcdw": "Moa",
-  "kyNang": "Sau một lúc biến thành ụ ngẫu nhiên +1 sao"
+  "kyNang": "After a while becomes a random turret +1★",
+  "ten_vi": "Hộp Tiến Hoá",
+  "kyNang_vi": "Sau một lúc biến thành ụ ngẫu nhiên +1 sao"
  },
  {
   "id": "cauvong",
-  "ten": "Máy Cầu Vồng",
+  "ten": "Rainbow",
   "bac": "vang",
   "dcdw": "Yuna",
-  "kyNang": "Vẽ cầu vồng lên đường: quái yếu đi (co-op)"
+  "kyNang": "Paints rainbows on the path that weaken enemies",
+  "ten_vi": "Máy Cầu Vồng",
+  "kyNang_vi": "Vẽ cầu vồng lên đường: quái yếu đi (co-op)"
  },
  {
   "id": "wallgen",
-  "ten": "Máy Dựng Tường",
+  "ten": "Wall Projector",
   "bac": "vang",
   "dcdw": "Cleopatra",
-  "kyNang": "Dựng tường chặn đường rồi nổ"
+  "kyNang": "Raises a wall on the path, then it explodes",
+  "ten_vi": "Máy Dựng Tường",
+  "kyNang_vi": "Dựng tường chặn đường rồi nổ"
  },
  {
   "id": "orbital",
-  "ten": "Vệ Tinh",
+  "ten": "Orbital",
   "bac": "vang",
   "dcdw": "Mafdet",
-  "kyNang": "Khi GHÉP: mọi vệ tinh bắn phá từ trời 20 s"
+  "kyNang": "On merge: every satellite bombards for 20s",
+  "ten_vi": "Vệ Tinh",
+  "kyNang_vi": "Khi GHÉP: mọi vệ tinh bắn phá từ trời 20 s"
  },
  {
   "id": "blackhole",
-  "ten": "Hố Đen",
+  "ten": "Black Hole",
   "bac": "do",
-  "dcdw": "(mới)",
-  "kyNang": "Hút quái lại rồi nghiền"
+  "dcdw": "(new)",
+  "kyNang": "Pulls enemies in and crushes them",
+  "ten_vi": "Hố Đen",
+  "kyNang_vi": "Hút quái lại rồi nghiền"
  },
  {
   "id": "overlord",
   "ten": "Overlord",
   "bac": "do",
   "dcdw": "Jacheongbi",
-  "kyNang": "Khởi động chậm, nạp đầy bắn siêu sấm nổ diện rộng"
+  "kyNang": "Slow charge, then a massive thunder blast",
+  "ten_vi": "Overlord",
+  "kyNang_vi": "Khởi động chậm, nạp đầy bắn siêu sấm nổ diện rộng"
  },
  {
   "id": "lophanung",
-  "ten": "Lò Phản Ứng Băng",
+  "ten": "Cryo Reactor",
   "bac": "do",
   "dcdw": "Devil Cider Liza",
-  "kyNang": "Hào quang làm chậm quanh; càng chậm càng đau; kỹ năng chủ động"
+  "kyNang": "Slowing aura: slower = more damage; active skill",
+  "ten_vi": "Lò Phản Ứng Băng",
+  "kyNang_vi": "Hào quang làm chậm quanh; càng chậm càng đau; kỹ năng chủ động"
  },
  {
   "id": "haoquang",
-  "ten": "Hào Quang Thánh",
+  "ten": "Holy Halo",
   "bac": "do",
   "dcdw": "Halo Mona",
-  "kyNang": "Kỹ năng chủ động: khiên bất tử toàn bàn vài giây"
+  "kyNang": "Active skill: board-wide invincibility shield",
+  "ten_vi": "Hào Quang Thánh",
+  "kyNang_vi": "Kỹ năng chủ động: khiên bất tử toàn bàn vài giây"
  }
 ]

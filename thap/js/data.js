@@ -7,11 +7,11 @@ const W = 430, H = 860;
 // 5 BẬC như DCDW: Thường→TRẮNG, Hiếm→XANH, Sử thi→TÍM, Huyền thoại→VÀNG, Cổ đại→ĐỎ
 // hs = hệ số sức mạnh (chỉ số tăng theo bậc), lv0 = cấp thẻ khởi đầu kiểu DCDW (chỉ để hiển thị)
 const TIERS = {
-  trang: { ten: 'TRẮNG', tenDai: 'Thường', mau: '#e9eef4', mau2: '#9aa6b4', hs: 1.0, thuTu: 0 },
-  xanh:  { ten: 'XANH',  tenDai: 'Hiếm',  mau: '#4fb8ff', mau2: '#1f6fd1', hs: 1.3, thuTu: 1 },
-  tim:   { ten: 'TÍM',   tenDai: 'Sử thi', mau: '#c77dff', mau2: '#7b2cd6', hs: 1.65, thuTu: 2 },
-  vang:  { ten: 'VÀNG',  tenDai: 'Huyền thoại', mau: '#ffd23f', mau2: '#d18b00', hs: 2.1, thuTu: 3 },
-  do:    { ten: 'ĐỎ',    tenDai: 'Cổ đại', mau: '#ff4b3e', mau2: '#b3121c', hs: 2.7, thuTu: 4 },
+  trang: { ten: TEXT.tier.trang, tenDai: TEXT.tier.trang, mau: '#e9eef4', mau2: '#9aa6b4', hs: 1.0, thuTu: 0 },
+  xanh:  { ten: TEXT.tier.xanh, tenDai: TEXT.tier.xanh,  mau: '#4fb8ff', mau2: '#1f6fd1', hs: 1.3, thuTu: 1 },
+  tim:   { ten: TEXT.tier.tim, tenDai: TEXT.tier.tim, mau: '#c77dff', mau2: '#7b2cd6', hs: 1.65, thuTu: 2 },
+  vang:  { ten: TEXT.tier.vang, tenDai: TEXT.tier.vang, mau: '#ffd23f', mau2: '#d18b00', hs: 2.1, thuTu: 3 },
+  do:    { ten: TEXT.tier.do, tenDai: TEXT.tier.do, mau: '#ff4b3e', mau2: '#b3121c', hs: 2.7, thuTu: 4 },
 };
 const TIER_LIST = ['trang', 'xanh', 'tim', 'vang', 'do'];
 
@@ -32,31 +32,31 @@ const LUAT = {
 // QUÁI (ảnh quai_<id>.png: 4 khung nhìn XUỐNG)
 // hp = bội số máu wave, v = tốc độ px/s, co = cỡ vẽ, tim = số tim mất khi lọt
 const QUAI = {
-  bo:       { ten: 'Quỷ bò',      hp: 1.0, v: 34, co: 40, tim: 1, mana: 1 },
-  bay:      { ten: 'Quỷ bay',     hp: 0.6, v: 62, co: 40, tim: 1, bay: true, mana: 1 },
-  bay_bang: { ten: 'Quỷ bay xanh', hp: 0.85, v: 50, co: 42, tim: 1, bay: true, khangCham: true, mana: 1 },
-  khong_lo: { ten: 'Khổng lồ',    hp: 4.5, v: 22, co: 60, tim: 2, to: true, mana: 2 },
-  tach:     { ten: 'Quỷ tách',    hp: 1.6, v: 30, co: 46, tim: 1, tach: { id: 'nho', n: 5 }, mana: 1 },
-  que_tach: { ten: 'Que tách',    hp: 3.2, v: 26, co: 54, tim: 2, to: true, tach: { id: 'tach', n: 3, hs: 0.5 }, mana: 2 },
-  nho:      { ten: 'Quỷ con',     hp: 0.22, v: 44, co: 26, tim: 1, anh: 'tach', mana: 0.3 },
+  bo:       { ten: TEXT.mob.bo,      hp: 1.0, v: 34, co: 40, tim: 1, mana: 1 },
+  bay:      { ten: TEXT.mob.bay,     hp: 0.6, v: 62, co: 40, tim: 1, bay: true, mana: 1 },
+  bay_bang: { ten: TEXT.mob.bay_bang, hp: 0.85, v: 50, co: 42, tim: 1, bay: true, khangCham: true, mana: 1 },
+  khong_lo: { ten: TEXT.mob.khong_lo,    hp: 4.5, v: 22, co: 60, tim: 2, to: true, mana: 2 },
+  tach:     { ten: TEXT.mob.tach,    hp: 1.6, v: 30, co: 46, tim: 1, tach: { id: 'nho', n: 5 }, mana: 1 },
+  que_tach: { ten: TEXT.mob.que_tach,    hp: 3.2, v: 26, co: 54, tim: 2, to: true, tach: { id: 'tach', n: 3, hs: 0.5 }, mana: 2 },
+  nho:      { ten: TEXT.mob.nho,     hp: 0.22, v: 44, co: 26, tim: 1, anh: 'tach', mana: 0.3 },
 };
 
 // TRÙM (trum_<id>.png: khung 0–2 đi, khung 3 tung chiêu) — mỗi 10 wave, lọt mất 2 tim
 const TRUM = {
-  mad_crown:  { ten: 'MAD CROWN',  kn: 'XÁO TRỘN', mo: 'Biến 3 ụ thành loại ngẫu nhiên', mau: '#ff6ad5' },
-  freezer:    { ten: 'FREEZER',    kn: 'ĐÓNG BĂNG', mo: 'Đóng băng 1 ụ mạnh nhất', mau: '#7fdcff' },
-  janus:      { ten: 'JANUS CUBE', kn: 'HOÁ ĐÁ', mo: 'Hoá đá 1 ụ (đá chỉ ghép với đá cùng sao)', mau: '#e0c070' },
-  joker_king: { ten: 'JOKER KING', kn: 'ÉP GHÉP', mo: 'Ném Mimic vào 1 ụ, ép ghép với ụ cùng sao', mau: '#ffd23f' },
-  nightmare:  { ten: 'NIGHTMARE',  kn: 'BẮN TỈA', mo: 'Bắn tỉa ụ sao cao nhất: −1 sao (1 sao thì nổ)', mau: '#ff3b3b' },
-  octopus:    { ten: 'OCTOPUS EYES', kn: 'THIÊU ĐỐT', mo: 'Đốt 3 ụ: hết lửa −1 sao nếu chưa được giải', mau: '#ff8a2a' },
+  mad_crown:  { ten: TEXT.boss.mad_crown.name, kn: TEXT.boss.mad_crown.skill, mo: TEXT.boss.mad_crown.desc, mau: '#ff6ad5' },
+  freezer:    { ten: TEXT.boss.freezer.name, kn: TEXT.boss.freezer.skill, mo: TEXT.boss.freezer.desc, mau: '#7fdcff' },
+  janus:      { ten: TEXT.boss.janus.name, kn: TEXT.boss.janus.skill, mo: TEXT.boss.janus.desc, mau: '#e0c070' },
+  joker_king: { ten: TEXT.boss.joker_king.name, kn: TEXT.boss.joker_king.skill, mo: TEXT.boss.joker_king.desc, mau: '#ffd23f' },
+  nightmare:  { ten: TEXT.boss.nightmare.name, kn: TEXT.boss.nightmare.skill, mo: TEXT.boss.nightmare.desc, mau: '#ff3b3b' },
+  octopus:    { ten: TEXT.boss.octopus.name, kn: TEXT.boss.octopus.skill, mo: TEXT.boss.octopus.desc, mau: '#ff8a2a' },
 };
 const TRUM_THU_TU = ['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare', 'octopus'];
 
 // ỨNG VIÊN MA VƯƠNG (kỹ năng chủ động, mana NHÂN ĐÔI mỗi lần dùng, có hồi chiêu)
 const MAVUONG = {
-  hero:   { ten: 'GỌI VIỆN',  icon: 'ui_thuong', gia: 30, cd: 15, mo: 'Gọi ngay 2 ụ 1 sao (miễn phí)' },
-  dahlia: { ten: 'CUỒNG LỰC', icon: 'ui_sao',    gia: 40, cd: 25, mo: '+100% sát thương toàn bàn 10 giây' },
-  eve:    { ten: 'KHIÊN THÁNH', icon: 'ui_tim',  gia: 40, cd: 25, mo: 'Giải mọi hiệu ứng xấu + khiên chặn chiêu trùm 8 giây' },
+  hero:   { ten: TEXT.af.hero.name,  icon: 'ui_thuong', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
+  dahlia: { ten: TEXT.af.dahlia.name, icon: 'ui_sao',    gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
+  eve:    { ten: TEXT.af.eve.name, icon: 'ui_tim',  gia: 40, cd: 25, mo: TEXT.af.eve.desc },
 };
 
 // máu quái theo wave (tăng nhanh dần như DCDW)
@@ -100,8 +100,8 @@ function boCuc(che) {
     const cuoi = y2 + th + 34;
     return {
       ban: [
-        { x: tx, y: y2, w: tw, h: th, ai: false, ten: 'BẠN' },
-        { x: tx, y: y1, w: tw, h: th, ai: true, ten: 'ĐỒNG ĐỘI' },
+        { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
+        { x: tx, y: y1, w: tw, h: th, ai: true, ten: TEXT.ui.ally },
       ],
       duong: [
         { pts: [[lx, cuoi], [lx, gy], [W - 26, gy]], ban: 0, nhap: 1 },  // nhánh dưới (của mình)
@@ -115,8 +115,8 @@ function boCuc(che) {
     const y1 = 100, y2 = 394;
     return {
       ban: [
-        { x: tx, y: y2, w: tw, h: th, ai: false, ten: 'BẠN' },
-        { x: tx, y: y1, w: tw, h: th, ai: true, ten: 'ĐỐI THỦ' },
+        { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
+        { x: tx, y: y1, w: tw, h: th, ai: true, ten: TEXT.ui.rival },
       ],
       duong: [
         { pts: [[lx, y2 - 22], [lx, y2 + th + 26], [W - 26, y2 + th + 26]], ban: 0 },
@@ -127,7 +127,7 @@ function boCuc(che) {
   // SOLO: một bàn giữa màn, đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
   const y = 262;
   return {
-    ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: 'BẠN' }],
+    ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: TEXT.ui.you }],
     duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],
   };
 }
