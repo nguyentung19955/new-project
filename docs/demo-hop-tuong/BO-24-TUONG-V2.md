@@ -62,3 +62,26 @@ Không dùng: `fireball` (tự vẽ lửa), `throw-object` (nhoè đầu, vẽ v
 
 ## Thứ tự làm
 Mỗi lần 3 tướng (người dùng duyệt cùng lúc). Ảnh gốc ChatGPT → soát góc nhìn → PixelLab xoay 8 hướng (chọn nguyên bộ) → nhập nhân vật → ĐỨNG + động tác đánh → soát từng khung → GIF → hiệu ứng ChatGPT → ghép game.
+
+## BẢN PHÁ CÁCH (04/11 17h50 — thay ngoại hình cũ của các tướng chưa làm)
+Phong cách anime vui tươi; mỗi tướng 1 điểm nhận diện "lạ" mà vẫn hợp khung xương PixelLab (người / chó / mèo / sư tử / ngựa / gấu).
+| Tên | Khung | Ngoại hình phá cách |
+|---|---|---|
+| EMBERBUG | người | Người bọ cánh cứng, bụng đèn lồng phát sáng cam trên lưng |
+| TIDAL | người | Nữ thợ lặn đồng, mũ lặn tròn có cửa kính lộ mặt, bình nước sau lưng |
+| NEEDLE | người | Búp bê gỗ khớp nối cỡ người, mắt cúc áo, kim may to gắn cẳng tay |
+| LANCE | người | Kỵ sĩ đầu là ngọn hải đăng thu nhỏ có đèn quét |
+| BRAMBLE | người | Cô gái xương rồng mặc hoodie, gai nhỏ, hoa nở trên đầu |
+| ECHO | người | Ca sĩ đầu là quả chuông đồng lớn, áo vest tím |
+| MOTH | người | Bướm đêm hình người, áo choàng chính là đôi cánh khép |
+| WARP | người | Phi hành gia, mặt kính mũ là một hố đen xoáy tím |
+| SPECTER | người | Thám tử ma đầu là ngọn nến cháy xanh, áo măng tô |
+| TESLA | sư tử | Sư tử máy, bờm là các cuộn coil đồng phát điện |
+| ALCHEM | người | Nhà giả kim mặt nạ mỏ chim, tạp dề đầy bình hai màu |
+| HUSH | mèo | Mèo đen ninja, khăn bịt mặt, chuông câm ở cổ |
+| BROKER | người | Thương nhân béo đầu là chiếc két sắt có mặt số |
+| GLITCH | người | Người máy đầu TV CRT mặt pixel xanh bạc hà |
+| PATCHWORK | gấu | Gấu bông khâu tay cỡ lớn, hai nửa xanh/đỏ |
+| MIRROR | người | Người pha lê, thân là gương phản chiếu nhiều mặt |
+| CROWN ZERO | ngựa | Ngựa ma đen đội vương miện vỡ, bờm lửa tím |
+| ORACLE | người | Nữ tiên tri, mắt đơn lớn giữa trán, tóc là bầu trời sao |
