@@ -3150,3 +3150,11 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Người dùng chốt thêm: tướng trong trận vẽ **chibi anime cyberpunk** (đầu to, mắt anime to có đốm sáng, mống màu theo hệ, tóc mái nhọn); **thẻ tướng** ở màn chọn là thẻ bài dọc kiểu gacha: khung vát góc viền gradient theo hệ, ảnh bán thân lớn trên nền thành phố riêng, ánh kim lướt, chỉ số DMG/RATE, danh hiệu, chọn thì nổi lên + viền chạy + số thứ tự; thẻ nâng cấp dưới trận cũng dùng ảnh bán thân.
 - Ảnh: người dùng gen theo `docs/demo-hop-tuong/PROMPT-CHATGPT.md` (6 lô song song, cùng STYLE GUIDE + ảnh style-reference), thả vào `demo/assets/` là tự dùng.
 - Test: `node tests/demo-hop-tuong/demo-hop-tuong.test.js`.
+
+## claude/demo-hop-tuong — TURRET MERGE (thap/): ảnh ụ súng ChatGPT + hoạt ảnh "juicy" (04/11)
+- Ụ súng dùng ảnh `thap/assets/<id>_de.png` (đế) + `<id>_nong.png` (đầu súng, nòng hướng phải, xoay quanh tâm ảnh); đầu súng chuẩn hoá theo vành đế bằng số đo từng ảnh (`ART` trong render.js); hình vẽ code chỉ còn làm dự phòng.
+- Sao = chấm kiểu mặt xúc xắc 1–7 trên vành đế (chấm giữa nằm trên tâm đầu súng). Bóng tiếp xúc + bóng đầu súng, ánh sáng cố định từ trên-trái.
+- Hoạt ảnh: xoay mượt + quét chậm khi rảnh; giật lùi lò xo; chớp đầu nòng gắn theo nòng (ảnh fx_chop_nong), khói/vỏ đạn/phun độc; tesla nạp sáng cuộn dây trước khi phóng; laser tia lõi + quầng + ảnh tia + nổ ở đích; pháo bay vòng cung có bóng + ảnh nổ + vòng đúng bán kính nổ; băng có vệt sao lấp lánh + ảnh vỡ băng; radar quay chảo + vòng ping; máy mana bập bềnh, sáng + lấp lánh khi sinh mana; mimic đổi màu cầu vồng.
+- Summon: rơi từ trên xuống, bẹp/nảy, vòng bụi + chớp. Merge: 2 ụ bay vào nhau trắng dần → chớp trắng, sóng, sao bung, ụ mới bật ra quá đà, chữ "+1★". Kéo: ụ nhấc lên có bóng, ô ghép được nảy + sáng, ô khác tối đi. Nâng cấp: vòng quét quanh mọi ụ cùng loại.
+- Trùm: vòng báo trước + dấu "!" trên ụ bị nhắm (SNIPE = ống ngắm đỏ), đóng băng = khối băng, hoá đá = ụ xám + vết nứt. Số sát thương bật to (chí mạng to hơn, màu), quái trúng độc có mây độc, bị chậm phủ lạnh.
+- UI: nút SUMMON thở khi đủ mana, số mana nảy khi đổi, băng rôn wave trượt vào.

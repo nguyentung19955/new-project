@@ -126,6 +126,29 @@ for f in sorted(os.listdir(NGUON)):
         shutil.copy2(os.path.join(NGUON, f), os.path.join(DICH, f))
 shutil.copy2(os.path.join(NGUON, 'roster.json'), os.path.join(DICH, 'roster.json'))
 
+# 1b) chuẩn hoá file chính thức cho game: khay nhẹ hơn; đường thẳng/góc cắt sát dải đường (để lặp khít)
+def _mo(ten):
+    return Image.open(os.path.join(DICH, ten)).convert('RGBA')
+if co('khay.png'):
+    k = _mo('khay.png')
+    if k.size[0] > 900:
+        k = k.crop(k.getbbox()); k = k.resize((900, round(900 * k.size[1] / k.size[0])), Image.LANCZOS); k.save(os.path.join(DICH, 'khay.png'), optimize=True)
+if co('duong_thang.png'):
+    s_ = _mo('duong_thang.png')
+    if s_.size[0] == s_.size[1]:
+        s_ = khoi_lon_nhat(s_); a_ = np.asarray(s_)[..., 3] > 60
+        cot = np.nonzero(a_[a_.shape[0] // 2])[0]
+        s_ = s_.crop((cot.min(), 0, cot.max() + 1, s_.size[1]))
+        s_ = s_.resize((160, round(160 * s_.size[1] / s_.size[0])), Image.LANCZOS); s_.save(os.path.join(DICH, 'duong_thang.png'), optimize=True)
+if co('duong_goc.png'):
+    g_ = _mo('duong_goc.png')
+    if g_.size[0] == g_.size[1] and g_.size[0] > 200:
+        g_ = khoi_lon_nhat(g_); a_ = np.asarray(g_)[..., 3] > 60
+        cot = np.nonzero(a_[2])[0]; L, R = cot.min(), cot.max()
+        hang = np.nonzero(a_[:, -3])[0]; T, B = hang.min(), hang.max()
+        bw = max(R - L, B - T)
+        g_ = g_.crop((L, B - bw, L + bw, B)).resize((160, 160), Image.LANCZOS); g_.save(os.path.join(DICH, 'duong_goc.png'), optimize=True)
+
 # 2) bàn máy móc xám
 if not co('khay.png') and co('raw_khay.png'):
     k = tach_nen(Image.open(os.path.join(NGUON, 'raw_khay.png')), 'tim')
@@ -167,11 +190,15 @@ if co('raw_ui.png'):
     W, H = u.size
     cw, ch = W / 4, H / 3
     for i, ten in enumerate(UI):
-        if co(ten + '.png'):
+        if co(ten + '.png') and not ten.startswith('phu'):
             continue
         x, y = i % 4, i // 4
-        c = u.crop((int(x * cw) + 6, int(y * ch) + 6, int((x + 1) * cw) - 6 + (30 if ten == 'ui_bang_wave' else 0), int((y + 1) * ch) - 6))
-        c = vuong(khoi_lon_nhat(c) if not ten.startswith('phu') else c)
+        if co(ten + '.png'):  # bản chính thức (đã có ụ mẫu ở giữa) → chỉ bỏ ụ mẫu
+            c = Image.open(os.path.join(NGUON, ten + '.png')).convert('RGBA')
+            c = vuong(c)
+        else:
+            c = u.crop((int(x * cw) + 6, int(y * ch) + 6, int((x + 1) * cw) - 6 + (30 if ten == 'ui_bang_wave' else 0), int((y + 1) * ch) - 6))
+            c = vuong(khoi_lon_nhat(c) if not ten.startswith('phu') else c)
         if ten.startswith('phu'):
             # bỏ ụ súng mẫu ở giữa → chỉ giữ khung hiệu ứng
             arr = np.asarray(c).astype(np.float32)
