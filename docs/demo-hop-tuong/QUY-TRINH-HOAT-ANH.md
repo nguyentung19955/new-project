@@ -39,3 +39,10 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 - **Mô tả động tác:** không dùng chữ gợi bắn (fire, shoot, recoil, kick, muzzle) → PixelLab tự thêm lửa/khói/tia. Dùng chữ thuần động tác: "both arms snap up a little and the head and upper body jerk back once". Luôn thêm: "the pistol stays in the right hand and stays fully visible; no extra hands or arms; feet stay planted; nothing else appears".
 - **Khung 0** của động tác là tư thế đứng do PixelLab dựng lại, hay nhoè → trong game và GIF dùng ảnh đứng thay khung 0.
 - **Soát trước khi gửi người dùng** (không gửi bản còn lỗi): tự động (vạch xanh súng không tụt dưới 70% trung vị, không mảnh rời >15px, không màu lửa) + nhìn phóng to từng khung từng hướng (tay thừa, súng mờ, vệt nhoè). Hướng nào hỏng: xoá hướng đó và tạo lại trong cùng nhóm động tác, lặp tới khi đạt.
+
+## Chốt 04/11 chiều — bộ v6 "chỉ dùng cái PixelLab làm tốt"
+- Bỏ vũ khí (súng nhỏ trong tay luôn sinh nhoè/khói/tay thừa). Sửa ảnh gốc bằng `/edit-image-pixen` ("remove the X, empty hands").
+- Đứng: mẫu `breathing-idle`, mode `skeleton-v3` (di chuyển nhân vật, không vẽ lại) → sạch 8 hướng.
+- Tấn công: SENTINEL = mẫu `lead-jab`; PULSE = skeleton-v3 tự mô tả "hai tay giơ lên đầu rồi vung ra trước, tay trống" (6 khung). ANCHOR hỗ trợ: chỉ đứng.
+- Mẫu bị loại: fireball (tự vẽ lửa), throw-object (nhoè đầu, vẽ vật), pushing (cúi rạp), cross-punch (nhoè khung cuối).
+- File: `nguon-tuong/v6/` + GIF xem trước. Hiệu ứng (tia, cầu nổ, sóng buff) game vẽ riêng.
