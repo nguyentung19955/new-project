@@ -544,7 +544,7 @@
   const DON = {
     dan(S, i, v, q, dmg, cfg) {   // đạn bay TỪ ĐẦU NÒNG (so viên nối đuôi; hiệu ứng khi trúng chỉ gắn ở viên cuối)
       const [x, y] = nong(S, i, v), so = cfg.so || 1, mau = HANH[T[v.id].hanh].mau;
-      chopNong(S, x, y, mau, q);
+      chopNong(S, x, y, mau, q, v.id);
       for (let n = 0; n < so; n++) bayDan(S, x, y, q, dmg, v, mau, (cfg.toc || 800) * (n ? 0.86 : 1), { hieu: n === so - 1 });
     },
     chem(S, i, v, q, dmg) {       // đánh ngay (cận chiến / tia điện tức thời), không đạn — chớp nhỏ ở mũi kiếm
@@ -604,7 +604,9 @@
     S.rung = Math.max(S.rung || 0, 0.02);
   }
   // chớp sáng nhỏ ở đầu nòng 60–80ms (render 'nong'), hướng về mục tiêu
-  const chopNong = (S, x, y, mau, q) => S.fx.push({ k: 'nong', x, y, t: 0, T: C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x) });
+  // bộ v9 (TUONG[id].px.fx): chớp dùng sheet fx_<ten>_phat (6 khung, 0,3 s) — render 'nong' có id
+  const coFx9 = (id) => !!(id && T[id] && T[id].px && T[id].px.fx);
+  const chopNong = (S, x, y, mau, q, id) => S.fx.push({ k: 'nong', x, y, t: 0, T: coFx9(id) ? 0.3 : C.CHOP_NONG, mau, goc: Math.atan2(q.y - q.co / 2 - y, q.x - x), id: coFx9(id) ? id : null });
   // HIEU — hiệu ứng khi trúng (TRẮNG/LAM/TÍM dùng lại được). (S, q, dmg, v, cfg, hs) — cfg = 1 mục trong TUONG[id].hieu
   const HIEU = {
     chay(S, q, dmg, v, cf, hs) {   // LỬA: để lại vệt cháy trên làn, đốt n quái / 0.5s
@@ -613,7 +615,7 @@
     bang(S, q, dmg, v, cf) {       // BĂNG: tích tầng lạnh (chậm cham × tầng); đủ max tầng → vỡ băng gây sát thương vùng
       if (q.voLock > 0) return;
       q.chill = Math.min(cf.max, q.chill + 1); q.chillT = theoSao(cf.T, v.sao); q.chillK = theoSao(cf.cham, v.sao);
-      if (q.chill >= cf.max) {
+      if (cf.voR && q.chill >= cf.max) {   // không có voR (FROST v9): chỉ làm chậm cham trong T giây, không vỡ
         const r = theoSao(cf.voR, v.sao) * K;
         q.chill = 0; q.chillT = 0; q.voLock = 1.5;
         for (const o of S.quai) if (sống(o) && kc(o, q) < r) trung(S, o, dmg * cf.voDmg, v, HANH[T[v.id].hanh].mau);
@@ -764,6 +766,7 @@
   function trungDan(S, d) {
     const q = d.q;
     if (!sống(q)) return;
+    if (coFx9(d.id)) S.fx.push({ k: 'trung9', x: q.x, y: q.y - q.co / 2, t: 0, T: 0.36, id: d.id });   // bộ v9: nổ khi trúng (fx_<ten>_trung)
     if (trung(S, q, d.dmg, d.v, d.mau, false, false, false, 'dan') === false) return;   // bị phản / né: không áp hiệu ứng
     if (d.hieu) apHieu(S, q, d.dmg, d.v);
   }

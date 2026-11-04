@@ -245,3 +245,12 @@ Người dùng đã quyết định chuyển game sang pixel art dần dần. PA
 3. **Nhịp đòn** (`game.js tacDong / chuoiDon`): 6 khung 300/140/180/60/260/200 ms; **sát thương ra đúng đầu khung 5** (680ms sau khi vung); không bắt đầu đòn mới khi chuỗi 1.14s chưa xong (kể cả có OVERCLOCK / COPY BUFFER). Tướng cũ vẫn dùng `C.TAC_DONG` như trước.
 4. **Kỹ năng** (`data.js patchwork`, `game.js DON.dap` + `DAC_BIET.bienHinh`): đập quái gần nhất (dmg 30, cd 1.7s) + văng 50% quanh đó (r 26→32 từ 5★), **làm chậm 18%→24%** trong 1.2s (trùm một nửa); vòng sóng dẹt ở chỗ đập + dưới chân, rung màn rất nhẹ. Mỗi **5 đòn (4 từ 5★)** → **STITCH UP**: to ×1.25 trong 4s (5s từ 3★), sát thương ×1.5, vùng ×1.4, tướng **ô kề** +15% tốc đánh (25% từ 5★). Hệ mới `Stitch` (màu VFX hồng #ff6f91).
 5. **Bộ bài**: màn chọn tướng chọn sẵn `BO_MAC_DINH` = PATCHWORK, SCORCH, FROST, LANCE, GLITCH (người chơi đổi được). Bàn AI giữ nguyên. Tên dài trên thẻ dưới tự thu chữ (`.the .ten.dai`).
+
+## 04/11 bộ v9 — SCORCH, FROST, ARC (PixelLab) thay bộ thử v4 (phiên tự động)
+- Xoá SENTINEL / PULSE / ANCHOR khỏi `demo/js/data.js` và xoá `demo/assets/v4/`. Bộ tướng giờ là 3 tướng TRẮNG theo `BO-24-TUONG-V2.md`: SCORCH (Lửa, quái ĐẦU, đạn lửa + vệt cháy 2 s), FROST (Băng, quái ĐẦU, đạn băng làm chậm 20% trong 1,5 s; 3★ 25%), ARC (Sét, quái GẦN, đạn sét bay nhanh tầm ngắn — không cận chiến cứng; mỗi đòn thứ 3 sét nảy).
+- Script `docs/demo-hop-tuong/ghep_sheet_v9.py` (chỉ cắt/căn/ghép, không sửa pixel, không lật gương) → `demo/assets/v9/<id>_dung.png` (8 hàng × 4 khung thở) + `<id>_tc.png` (8 hàng × 12 khung tấn công), ô 192, chân mọi hướng ở (96,160). Khung tấn công dịch chung theo độ lệch khớp alpha khung 0 với ảnh đứng (thử ±40 px). Độ dịch ghi ở `demo/assets/v9/meta.json`.
+- Hiệu ứng ChatGPT thu nhỏ LANCZOS → `fx_<id>_phat|bay|trung.png` (1 hàng 6 khung, ô 48/56/72 = 2× cỡ hiển thị 24/28/36 px).
+- `data.js`: hàm `V9(id, tc)` — dir8 dùng khung 0 sheet đứng (`doc: true`), thở 4 khung 170 ms (`tho`), tấn công 12 khung 60–90 ms, đòn ra đầu khung 6 (`trung: 6`), `co` 1.0 cả 3 (cao bằng nhau, ngang tướng cũ).
+- `render.js`: đọc sheet đứng theo hàng, phát thở 4 khung (tắt nhún code), đạn vẽ sheet `bay` xoay theo góc bay, chớp `phat` tại tay lúc ra đòn, nổ `trung` khi trúng. Giữ nguyên mượt xoay hướng (MUOT).
+- `game.js`: chớp tay của bộ v9 kéo dài 0,3 s; trúng đạn sinh hiệu ứng `trung9`; HIEU `bang` không có `voR` thì chỉ làm chậm (không vỡ băng).
+- Chưa chạy thử (người dùng tự test).
