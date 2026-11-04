@@ -89,7 +89,8 @@
     const L0 = dinh + 4, L1 = day - 2;                      // làn co-op: sát HUD trên → sát HUD dưới
     const dCo = [[LX, L0 + 30], [LX, L1 - 34]];             // chân quái: ra khỏi cổng sinh → tới lõi
     C.LAN_CO = Object.assign(lanDoc(L0, L1), { sinh: [LX, L0 + 20], loi: [LX, L1 - 26] });
-    C.GIUA_CO = (aiY + GH + VB + ngY - GW * R.TREN) / 2;   // giữa 2 bàn (dải thông báo wave)
+    C.GIUA_CO = (aiY + GH + VB + ngY - GW * R.TREN) / 2;
+    C.VUNG_CO = { tren: aiY + GH + VB, duoi: ngY - GW * R.TREN };   // vùng chung = khe giữa đáy bàn trên và đỉnh bàn dưới   // giữa 2 bàn (dải thông báo wave)
     Object.assign(dungBan(BAN_AI_CO, true, dCo, [C.LAN_CO], null, aiY), { SKIN: kA, CAT: cat(kA) });
     Object.assign(dungBan(BAN_NG_CO, false, dCo, [], C.LAN_CO.loi, ngY), { SKIN: kN, CAT: cat(kN) });
     C.D_RE_CO = (C.GIUA_CO - dCo[0][1]);   // quãng đường tới giữa 2 bàn: trước đó quái "thuộc" bàn trên (trùm/tinh anh tác động bàn trên), sau đó bàn dưới
@@ -404,7 +405,9 @@
   };
   // như Defense War: mọi tướng trên bàn bắn được mọi quái trên làn của CHÍNH bàn đó (S.quai chỉ chứa quái làn này) — không giới hạn tầm
   // TƯỚNG ĐÁNH GẦN (td.tam = tầm tính bằng số ô, đo từ tâm ô tướng): chỉ đánh quái trong phạm vi; tướng đánh xa không giới hạn
-  const trongTam = (S, i, td, o) => { if (!td.tam) return true; const [x, y] = oTam(S, i); return Math.hypot(o.x - x, o.y - y) <= td.tam * C.BUOC_X; };
+  // CO-OP chuẩn DCDW: tướng mỗi bàn chỉ bắn quái ở ĐOẠN LÀN CẠNH BÀN MÌNH; đoạn giữa 2 bàn (C.VUNG_CO) là VÙNG CHUNG — cả 2 bàn cùng bắn.
+  const vungMinh = (S, o) => { const Z = C.VUNG_CO; if (!S.coop || S.coop.solo || !Z) return true; return S.ai ? o.y <= Z.duoi : o.y >= Z.tren; };
+  const trongTam = (S, i, td, o) => { if (!vungMinh(S, o)) return false; if (!td.tam) return true; const [x, y] = oTam(S, i); return Math.hypot(o.x - x, o.y - y) <= td.tam * C.BUOC_X; };
   // LUẬT NỀN (GDD 1.3): tướng CẬN CHIẾN chỉ ra đòn khi tâm ô cách tâm hành lang ≤ TAM_CAN_CHIEN cạnh ô. Co-op bàn dưới: chỉ tính hành lang GIỮA.
   const kcDoan = (x, y, g) => { const t = Math.max(0, Math.min(g.d, (x - g.x0) * g.ux + (y - g.y0) * g.uy)); return Math.hypot(x - g.x0 - g.ux * t, y - g.y0 - g.uy * t); };
   function kcDuong(S, i) {   // khoảng cách tâm ô i → tâm hành lang, tính bằng số cạnh ô
@@ -819,7 +822,7 @@
   };
   function kyNang(S, i, v) {
     const cf = T[v.id].kn; if (!cf || !KY_NANG[cf.k]) return;
-    let q = v.knQ && nham(v.knQ) && (S.coop || v.knQ.ban === S) ? v.knQ : chonMuc(S, i, v); v.knQ = null;
+    let q = v.knQ && nham(v.knQ) && vungMinh(S, v.knQ) && (S.coop || v.knQ.ban === S) ? v.knQ : chonMuc(S, i, v); v.knQ = null;
     if (!q) return;
     KY_NANG[cf.k](S, i, v, q, satThuong(S, v) * cf.he, cf);
   }

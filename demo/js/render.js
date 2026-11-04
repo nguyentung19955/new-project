@@ -445,6 +445,12 @@
       c.fillStyle = lg(c, lan.x + lan.w - 8, 0, lan.x + lan.w, 0, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.55)']]); c.fillRect(lan.x + lan.w - 8, lan.y, 8, lan.h);
       c.restore();
     } else veHanhLang(c, Object.assign({}, B, { HL: [lan], CONG: null, noi: true }));
+    // CO-OP: VÙNG CHUNG (đoạn làn giữa 2 bàn) — cả 2 bàn cùng bắn: dải tím sáng + viền vạch; ngoài vùng này mỗi bàn chỉ bắn đoạn cạnh bàn mình
+    if (C.VUNG_CO && lan === C.LAN_CO) { const Z = C.VUNG_CO, h = Z.duoi - Z.tren;
+      if (h > 4) { c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(190,80,255,0.16)'; c.fillRect(lan.x, Z.tren, lan.w, h);
+        c.strokeStyle = 'rgba(220,140,255,0.75)'; c.lineWidth = 1.5; c.setLineDash([5, 4]);
+        for (const y of [Z.tren, Z.duoi]) { c.beginPath(); c.moveTo(lan.x, y); c.lineTo(lan.x + lan.w, y); c.stroke(); }
+        c.restore(); } }
     // mũi tên rất mờ chỉ hướng đi xuống
     c.save(); c.strokeStyle = 'rgba(255,90,110,0.22)'; c.lineWidth = 2; c.lineCap = 'round'; c.lineJoin = 'round';
     const cx = lan.x + lan.w / 2;
