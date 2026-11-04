@@ -54,3 +54,10 @@ Mỗi lỗi: chuyện gì sai → vì sao → cách tránh (bắt buộc làm th
 36. **Không lật gương con rối (04/11).** Người dùng muốn GHÉP: mỗi hướng (quay phải / quay trái) một bộ mảnh riêng, súng luôn tay phải.
 37. **Báo "sạch" khi hướng NW còn tay thừa (04/11).** Người dùng đã chỉ ra NW thừa động tác tay cầm súng; mình chỉ sửa khung động tác, không soát ẢNH ĐỨNG NW — chính ảnh đứng (bộ xoay) đã sai: súng lơ lửng không có tay cầm, tay trái thừa thõng xuống chân. → Soát cả ảnh đứng lẫn mọi khung; lỗi nằm ở bộ xoay thì phải xoay lại cả bộ.
 38. **Quy tắc mới (người dùng 04/11):** VŨ KHÍ LUÔN ĐI THEO TAY — không có súng lơ lửng, không có tay "cầm" mà không có súng. Động tác trong game chủ yếu là TAY; tay–đầu–thân phải chuyển động mượt, có cảm giác đã tay (lấy đà, lực, nảy về). Khi chưa chắc cách làm động tác cho đã mắt → xin tư vấn ChatGPT (trả lời vào file .txt).
+
+## CO-OP chuẩn DCDW (đối chiếu ảnh thật 04/11 20h) — tham-chieu/dcdw_coop_wave6.png
+Nguồn: video "Destiny Child: Defense War Co-op Gameplay (63 Wave)" (youtube F3GUJEZDcFU). Quan sát:
+- MỘT làn quái duy nhất, thẳng đứng, chạy dọc MÉP TRÁI màn hình từ trên xuống dưới. KHÔNG có hành lang ngang giữa hai bàn, KHÔNG có đường hình ⊢.
+- Hai bàn 5×3 xếp chồng bên PHẢI làn: bàn trên = đồng đội (ALLY, chân dung ở góc trên phải), bàn dưới = người chơi (chân dung góc dưới phải). Giữa hai bàn chỉ là nền sàn kim loại, không có đường.
+- Quái đi ngang qua cạnh trái bàn trên rồi tiếp tục xuống cạnh trái bàn dưới → cả hai bàn cùng bắn chung một dòng quái. Quái lọt hết làn mới trừ mạng chung.
+- HUD: WAVE góc trên trái, đội hình 6 thẻ tướng ở trên (của đồng đội) và ở dưới (của mình), nút triệu hồi ở giữa dưới.
