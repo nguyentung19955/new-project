@@ -33,3 +33,9 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 3. Soát: không hiệu ứng, chi tiết như hình đã duyệt, không mất vũ khí.
 4. Hướng hỏng: `DELETE /characters/{id}/animations/{group}/directions/{dir}` rồi tạo lại hướng đó với `animation_group_id` của bộ (giữ đúng chuyển động chung), đổi seed. KHÔNG sửa pixel, KHÔNG ghép hướng từ bộ khác.
 5. Giới hạn: tối đa 8 job chạy cùng lúc → chạy từng bộ một.
+
+### Ghi chú bắt buộc khi gửi PixelLab (chốt 04/11, sau SENTINEL B)
+- **Vị trí nhân vật giữa các hướng/khung:** PixelLab có thể trả mỗi hướng một khung (canvas) khác cỡ (vd. N 112px, còn lại 128px) và đặt nhân vật lệch → khi phát nhân vật bị dịch chỗ. Sau khi tải về PHẢI căn bằng code: đưa giữa 2 bàn chân về x=64, đáy chân về y=114 trên khung 128×128, cho cả ảnh đứng lẫn mọi khung tấn công (cùng một độ dịch cho cả bộ khung của 1 hướng). Kiểm lại bằng số: mọi hướng, mọi khung chân = (64,114).
+- **Mô tả động tác:** không dùng chữ gợi bắn (fire, shoot, recoil, kick, muzzle) → PixelLab tự thêm lửa/khói/tia. Dùng chữ thuần động tác: "both arms snap up a little and the head and upper body jerk back once". Luôn thêm: "the pistol stays in the right hand and stays fully visible; no extra hands or arms; feet stay planted; nothing else appears".
+- **Khung 0** của động tác là tư thế đứng do PixelLab dựng lại, hay nhoè → trong game và GIF dùng ảnh đứng thay khung 0.
+- **Soát trước khi gửi người dùng** (không gửi bản còn lỗi): tự động (vạch xanh súng không tụt dưới 70% trung vị, không mảnh rời >15px, không màu lửa) + nhìn phóng to từng khung từng hướng (tay thừa, súng mờ, vệt nhoè). Hướng nào hỏng: xoá hướng đó và tạo lại trong cùng nhóm động tác, lặp tới khi đạt.
