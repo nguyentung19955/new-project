@@ -496,6 +496,7 @@
   // ---- HƯỚNG QUAY 8 hướng theo quái (kiểu Destiny Child: Defense War) ----
   // hg: 0=E 1=SE 2=S 3=SW 4=W 5=NW 6=N 7=NE (toạ độ màn hình, y xuống dưới); goc: góc liên tục (rad) cho tướng xoay bằng code
   // Thông số ở data.js CAU_HINH.HUONG (DOI_MIN, LECH, BUOC, BUOC_VE, VE_S, MAC_DINH, LERP, NHIN).
+  // v.gocMuc = góc thô (rad) tới mục tiêu gần nhất — render.js (tướng pixel v4) tự lọc trễ/hoà trộn hướng từ góc này, giữ nguyên khi hết quái.
   // v.hgDich = hướng muốn tới; v.hg = hướng đang vẽ, bước dần 1 nấc (45°) mỗi BUOC giây → cảm giác xoay người, không giật.
   const HG = C.HUONG;
   const gocTo = (S, i, q) => { const [ox, oy] = oXY(S, i); return Math.atan2(q.y - thanY(oy), q.x - (ox + C.O / 2)); };   // từ giữa thân tướng tới quái
@@ -525,7 +526,7 @@
     if (v.nhin <= 0) { v.nhin = HG.NHIN; v.mucNhin = chonMuc(S, i, v); }   // dò mục tiêu thưa (20 lần/giây)
     const q = v.mucNhin && sống(v.mucNhin) && v.mucNhin.ban === S ? v.mucNhin : null;
     let dich = null, ve = false;
-    if (q) { v.khongMuc = 0; dich = gocTo(S, i, q); const moiMuc = q.uid !== v.mucUid; if (moiMuc) v.mucUid = q.uid; chonHuong(v, dich, moiMuc); }
+    if (q) { v.khongMuc = 0; dich = v.gocMuc = gocTo(S, i, q); const moiMuc = q.uid !== v.mucUid; if (moiMuc) v.mucUid = q.uid; chonHuong(v, dich, moiMuc); }
     else {   // không có quái > VE_S giây → từ từ quay về hướng mặc định (nhìn về phía đường quái)
       v.khongMuc = (v.khongMuc || 0) + dt; v.mucUid = null;
       if (v.khongMuc > HG.VE_S) { ve = true; dich = HG.MAC_DINH * Math.PI / 4; if (v.hgDich !== HG.MAC_DINH && S.t - (v.hgT || -9) >= HG.DOI_MIN) { v.hgDich = HG.MAC_DINH; v.hgT = S.t; } }
@@ -821,7 +822,7 @@
         return;
       }
       if (v.cho > 0) { v.cho -= dt; if (v.cho <= 0) { v.cho = 0; ban(S, i, v); } }
-      else if (v.cd <= 0 && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = tacDong(v.id); v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; chonHuong(v, gocTo(S, i, q), mm); } else v.cd = 0.05; }
+      else if (v.cd <= 0 && !(v.atkT != null && S.t - v.atkT < chuoiDon(v.id))) { const q = chonMuc(S, i, v); if (q) { v.cd = T[v.id].cd; v.danh = 0.3; v.cho = tacDong(v.id); v.atkT = S.t; v.mucNhin = q; v.khongMuc = 0; const mm = q.uid !== v.mucUid; v.mucUid = q.uid; v.gocMuc = gocTo(S, i, q); chonHuong(v, v.gocMuc, mm); } else v.cd = 0.05; }
     });
     // sát thương trễ (CORRUPTOR) + nhịp sét trễ (ARC 7★)
     for (const p of S.treo) { p.t -= dt; if (p.t <= 0) { p.xong = true; trung(S, p.q, p.dmg, p.v, p.mau, false, false, true); } }

@@ -1,10 +1,21 @@
 // DEMO "NEON GRID — Merge Defense" — đồ hoạ cyberpunk vẽ procedural bằng canvas (glow / bloom / mưa / parallax).
 // Ảnh người dùng thả vào demo/assets/ (đúng tên trong docs/demo-hop-tuong/PROMPT-CHATGPT.md) được ưu tiên thay hình vẽ code.
 'use strict';
+// ---------- LÀM MƯỢT TƯỚNG PIXEL v4 (SENTINEL / PULSE / ANCHOR) — chỉ code hiển thị, không đổi pixel ảnh ----------
+// Thông số ở MUOT (ngay dưới):
+//   TRE 30°      vùng trễ: giữ hướng đang nhìn tới khi góc tới mục tiêu (v.gocMuc) lệch khỏi TÂM hướng đó > 30°; hết quái → giữ hướng cuối.
+//   DOI_MIN 0,15s đổi hướng đích tối đa 1 lần mỗi 0,15 s.
+//   HOA_1 80ms   đổi sang hướng kề: vẽ cả 2 ảnh, alpha A giảm / B tăng (B vẽ trên, alpha = min(1, 2k) mỗi bên → không lộ nền giữa chừng).
+//   HOA_BUOC 55ms mỗi bước kề khi phải đi qua nhiều hướng (nối tiếp, không nhảy cóc; quay 180° đi vòng qua S).
+//   Tấn công: thời gian khung ở data.js TUONG[id].px.atk.nhip (ms). Khung 0 = tư thế đứng → không phát; nhip[0] (60) = hoà ảnh đứng → khung 1;
+//     SENTINEL 60/60/110/130 (trung khung 1), PULSE & ANCHOR 60/90/60/120 (trung khung 2); hết chuỗi hoà về ảnh đứng HOA_VE 80ms.
+//   THO_T 1,6s   thở: dịch thân 0/−1 px theo px sprite gốc (làm tròn, không co giãn/xoay), lệch pha ngẫu nhiên từng tướng; tắt khi đang đánh.
+//   Vẽ: imageSmoothingEnabled = false, góc ảnh bắt đúng lưới pixel thiết bị.
 (function () {
   const C = CAU_HINH, G = GAME;
   const W = C.W; let H = C.H;   // H (chiều cao logic) đổi theo màn — ve() dựng lại lớp tĩnh khi đổi
   const Q = { cao: true, hat: 200 };   // chất lượng: tự hạ khi FPS thấp
+  const MUOT = { TRE: 30, DOI_MIN: 0.15, HOA_1: 0.08, HOA_BUOC: 0.055, HOA_VE: 0.08, THO_T: 1.6, THO_PX: 1 };   // xem ghi chú đầu file
 
   // ---------- ảnh người dùng (tuỳ chọn) ----------
   const ANH = {};
@@ -741,10 +752,10 @@
     const [ox, oy] = G.oXY(S, i), cx = ox + C.O / 2, chan = oy + C.OH - C.CHAN;
     const P4 = TUONG[v.id].px;
     if (P4 && P4.neo) {   // tướng v4 (TẠM): điểm ra đòn = giữa thân + lệch theo hướng đang nhìn (bảng P.nong [x, y] theo hướng trong ô sheet nếu có)
-      const ten = HG_TEN[v.hg == null ? 2 : v.hg], cao = C.TUONG_CAO * (TUONG[v.id].co || 1), b = P4.nong && P4.nong[ten];
+      const ten = HG_TEN[v._d != null ? v._d : v.hg == null ? 2 : v.hg], cao = C.TUONG_CAO * (TUONG[v.id].co || 1), b = P4.nong && P4.nong[ten];
       if (b) { const im8 = co(`px:${v.id}:8`), ref = im8 ? doPx(im8, P4.dir8.o, P4.dir8.o, Math.max(0, P4.dir8.thuTu.indexOf('s'))) : null, k = ref ? cao / (ref.day - ref.y0) : cao / 96;
         return [cx + (b[0] - P4.neo[0]) * k, chan + (b[1] - P4.neo[1]) * k]; }
-      const g = (v.hg == null ? 2 : v.hg) * Math.PI / 4;
+      const g = (v._d != null ? v._d : v.hg == null ? 2 : v.hg) * Math.PI / 4;
       return [cx + Math.cos(g) * cao * 0.36, chan - cao * 0.5 + Math.sin(g) * cao * 0.28];
     }
     const hh = hinhTinh(v, cx, chan, v.hg == null ? 2 : v.hg, null); if (!hh) return null;
@@ -851,38 +862,73 @@
     } catch (e) { /* ảnh khác nguồn: neo giữa đáy ô */ }
     DO_PX.set(key, d); return d;
   }
-  function khungNhip(nhip, el) {   // chỉ số khung theo nhịp (ms) tại el giây kể từ lúc bắt đầu đòn; -1 = hết chuỗi
-    if (el < 0) return -1; let t = 0;
-    for (let k = 0; k < nhip.length; k++) { t += nhip[k] / 1000; if (el < t) return k; }
-    return -1;
+  // hướng hiển thị của tướng pixel: vùng trễ MUOT.TRE + tối đa 1 lần / MUOT.DOI_MIN, rồi đi từng hướng kề có hoà trộn.
+  // trả về [A, B, k]: đang hoà từ hướng A sang B, tiến độ k (0..1); đứng yên thì A = B, k = 1.
+  function huongPx(v, tg) {
+    if (v._d == null || tg < v._t0 - 1) { const h = v.hg == null ? 2 : v.hg; v._d = v._toi = v._dDich = h; v._t0 = tg; v._dur = 0; v._dT = -9; }
+    if (v.gocMuc != null) {
+      const deg = v.gocMuc * 180 / Math.PI; let lech = Math.abs(deg - v._dDich * 45) % 360; if (lech > 180) lech = 360 - lech;
+      if (lech > MUOT.TRE && tg - v._dT >= MUOT.DOI_MIN) { v._dDich = ((Math.round(deg / 45) % 8) + 8) % 8; v._dT = tg; }
+    }
+    let noi = false;
+    for (let n = 0; n < 9; n++) {
+      if (v._toi !== v._d) { if (tg - v._t0 < v._dur) break; v._t0 += v._dur; v._d = v._toi; noi = true; }   // xong 1 bước → bước sau nối liền
+      if (v._d === v._dDich) break;
+      const d = ((v._dDich - v._d) % 8 + 8) % 8, cung = d < 4 || (d === 4 && [1, 2, 3].some((k) => (v._d + k) % 8 === 2));
+      const con = cung ? d : 8 - d;
+      v._toi = (v._d + (cung ? 1 : 7)) % 8; v._dur = con === 1 && !noi ? MUOT.HOA_1 : MUOT.HOA_BUOC;
+      if (!noi) v._t0 = tg;
+    }
+    return v._toi === v._d ? [v._d, v._d, 1] : [v._d, v._toi, Math.max(0, Math.min(1, (tg - v._t0) / v._dur))];
+  }
+  const hoa = (x) => Math.min(1, 2 * x);   // alpha hoà trộn: lớp ra = hoa(1-k), lớp vào (vẽ trên) = hoa(k)
+  // các lớp ảnh của 1 hướng tại thời điểm tg: [{ im, f, hang, fw, fh, lat, a }] theo thứ tự vẽ; dang = đang trong chuỗi tấn công (kể cả hoà)
+  function lopPx(v, P, im8, ten, tg) {
+    const dung = () => {
+      const id = P.idle && P.idle[ten], ii = id && co(`px:${v.id}:idle:${ten}`);
+      if (ii) { const n = Math.max(1, Math.round(ii.width / id.o)); return { im: ii, f: Math.floor(tg * 1000 / id.ms + phaIdle(v) * n) % n, hang: 0, fw: id.o, fh: id.o }; }
+      return { im: im8, f: Math.max(0, P.dir8.thuTu.indexOf(ten)), hang: 0, fw: P.dir8.o, fh: P.dir8.o, ref: true };
+    };
+    const A = P.atk; let khung = null;
+    if (A && typeof A.file === 'string') { const ia = co(`px:${v.id}:atk`); if (ia) { const o = A.o || P.dir8.o, hang = Math.max(0, (A.hang || P.dir8.thuTu).indexOf(ten)); khung = (f) => ({ im: ia, f, hang, fw: o, fh: o }); } }
+    else if (A) { const [d, l] = A.huong[ten] || ['s', 0], ia = co(`px:${v.id}:atk:${d}`); if (ia) khung = (f) => ({ im: ia, f, hang: 0, fw: A.w, fh: A.h, lat: !!l }); }
+    const el = v.atkT == null ? -1 : tg - v.atkT;
+    if (!khung || el < 0) return { lop: [Object.assign(dung(), { a: 1 })], dang: false };
+    const nh = A.nhip, vao = nh[0] / 1000; let t = vao;
+    if (el < vao) { const k = el / vao; return { lop: [Object.assign(dung(), { a: hoa(1 - k) }), Object.assign(khung(1), { a: hoa(k) })], dang: true }; }
+    for (let f = 1; f < nh.length; f++) { t += nh[f] / 1000; if (el < t) return { lop: [Object.assign(khung(f), { a: 1 })], dang: true }; }
+    const e2 = el - t;
+    if (e2 < MUOT.HOA_VE) { const k = e2 / MUOT.HOA_VE; return { lop: [Object.assign(khung(nh.length - 1), { a: hoa(1 - k) }), Object.assign(dung(), { a: hoa(k) })], dang: true }; }
+    return { lop: [Object.assign(dung(), { a: 1 })], dang: false };
   }
   function vePixel(c, v, cx, chan, tg) {
     const P = TUONG[v.id].px, im8 = co(`px:${v.id}:8`); if (!P || !im8) return false;
-    const ten = HG_TEN[hgHien(v, tg)];
-    let im = null, f = 0, fw, fh, lat = false, hang = 0;
-    const fA = P.atk && v.atkT != null ? khungNhip(P.atk.nhip, tg - v.atkT) : -1;
-    if (fA >= 0 && typeof P.atk.file === 'string') {   // 1 sheet tấn công: hàng = hướng hiện tại (8 ảnh thật, không lật gương)
-      const ia = co(`px:${v.id}:atk`); if (ia) { im = ia; f = fA; fw = fh = P.atk.o || P.dir8.o; hang = Math.max(0, (P.atk.hang || P.dir8.thuTu).indexOf(ten)); }
-    } else if (fA >= 0) { const [d, l] = P.atk.huong[ten] || ['s', 0]; im = co(`px:${v.id}:atk:${d}`); if (im) { f = fA; fw = P.atk.w; fh = P.atk.h; lat = !!l; } }
-    const id = P.idle && P.idle[ten];
-    if (!im && id && co(`px:${v.id}:idle:${ten}`)) {
-      im = co(`px:${v.id}:idle:${ten}`); fw = fh = id.o; const n = Math.max(1, Math.round(im.width / fw));
-      f = Math.floor(tg * 1000 / id.ms + phaIdle(v) * n) % n;
-    }
-    if (!im) { im = im8; fw = fh = P.dir8.o; f = Math.max(0, P.dir8.thuTu.indexOf(ten)); }
+    const [hA, hB, kH] = huongPx(v, tg);
+    const LA = lopPx(v, P, im8, HG_TEN[hA], tg), LB = hB !== hA ? lopPx(v, P, im8, HG_TEN[hB], tg) : null;
+    const lop = LB ? [...LA.lop.map((l) => Object.assign(l, { a: l.a * hoa(1 - kH) })), ...LB.lop.map((l) => Object.assign(l, { a: l.a * hoa(kH) }))] : LA.lop;
     // cỡ: chiều cao phần hình ô S của dir8 = C.TUONG_CAO × co (× to khi biến hình) → làm tròn theo px thiết bị
     const ref = doPx(im8, P.dir8.o, P.dir8.o, Math.max(0, P.dir8.thuTu.indexOf('s'))), hRef = ref.day - ref.y0;
     const T0 = c.getTransform(), kx = Math.hypot(T0.a, T0.b) || 1;
     const cao = C.TUONG_CAO * (TUONG[v.id].co || 1) * (v.toT > 0 ? P.to || 1.25 : 1);
     let r = cao * kx / hRef;
     if (r >= 1) { const rn = Math.round(r); if (!P.neo || Math.abs(rn - r) / r < 0.12) r = rn; }   // px nguyên khi không lệch cỡ quá 12% (P.neo: giữ cỡ 1,1–1,3 ô)
-    const s = r / kx, m = P.neo ? { day: P.neo[1], tam: P.neo[0] } : doPx(im, fw, fh, im === im8 ? f : 0);   // P.neo: neo chân CỐ ĐỊNH trong ô sheet (đứng & tấn công đã căn chung) → không nhảy
-    const tam = lat ? fw - m.tam : m.tam;
+    const s = r / kx;
+    // thở: 0 hoặc −THO_PX px sprite gốc (làm tròn, không co giãn), chu kỳ THO_T, pha ngẫu nhiên mỗi tướng; tắt khi đang đánh
+    if (v._pha == null) v._pha = Math.random();
+    const dang = LA.dang || (LB && LB.dang);
+    const tho = dang ? 0 : -MUOT.THO_PX * Math.round(0.5 - 0.5 * Math.cos(2 * Math.PI * (tg / MUOT.THO_T + v._pha)));
     const snapX = (x) => (Math.round(T0.a * x + T0.e) - T0.e) / T0.a, snapY = (y) => (Math.round(T0.d * y + T0.f) - T0.f) / T0.d;
-    const x = snapX(cx - tam * s), y = snapY(chan - m.day * s), w = fw * s, h = fh * s;
+    const a0 = c.globalAlpha;
     c.save(); c.imageSmoothingEnabled = false;
-    if (lat) { c.translate(x + w, y); c.scale(-1, 1); c.drawImage(im, f * fw, hang * fh, fw, fh, 0, 0, w, h); }
-    else c.drawImage(im, f * fw, hang * fh, fw, fh, x, y, w, h);
+    for (const L of lop) {
+      if (L.a <= 0.001) continue;
+      const m = P.neo ? { day: P.neo[1], tam: P.neo[0] } : doPx(L.im, L.fw, L.fh, L.ref ? L.f : 0);   // P.neo: neo chân CỐ ĐỊNH trong ô sheet (đứng & tấn công đã căn chung) → không nhảy
+      const tam = L.lat ? L.fw - m.tam : m.tam;
+      const x = snapX(cx - tam * s), y = snapY(chan - (m.day - tho) * s), w = L.fw * s, h = L.fh * s;
+      c.globalAlpha = a0 * Math.min(1, L.a);
+      if (L.lat) { c.save(); c.translate(x + w, y); c.scale(-1, 1); c.drawImage(L.im, L.f * L.fw, L.hang * L.fh, L.fw, L.fh, 0, 0, w, h); c.restore(); }
+      else c.drawImage(L.im, L.f * L.fw, L.hang * L.fh, L.fw, L.fh, x, y, w, h);
+    }
     c.restore();
     return true;
   }
