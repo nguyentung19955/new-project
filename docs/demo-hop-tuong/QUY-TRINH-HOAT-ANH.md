@@ -46,3 +46,7 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 - Tấn công: SENTINEL = mẫu `lead-jab`; PULSE = skeleton-v3 tự mô tả "hai tay giơ lên đầu rồi vung ra trước, tay trống" (6 khung). ANCHOR hỗ trợ: chỉ đứng.
 - Mẫu bị loại: fireball (tự vẽ lửa), throw-object (nhoè đầu, vẽ vật), pushing (cúi rạp), cross-punch (nhoè khung cuối).
 - File: `nguon-tuong/v6/` + GIF xem trước. Hiệu ứng (tia, cầu nổ, sóng buff) game vẽ riêng.
+
+- **Nguyên tắc thiết kế (người dùng chốt):** hình dáng phải nói lên vai trò. Hỗ trợ → ba lô/đĩa tín hiệu, dấu cộng, dáng hiền; nổ lan → dây đeo cầu nổ; bắn thẳng → dáng gọn, nắm đấm năng lượng. Kiểm "nhìn hình đoán được vai" trước khi xoay 8 hướng.
+- ANCHOR v6: sửa ảnh cũ bằng edit-image-pixen thêm ba lô + đĩa tín hiệu + vòng tay; động tác "phát sóng" tự mô tả (skeleton-v3, 6 khung) sạch.
+- Hiệu ứng (tia, cầu nổ, vòng sóng) nhờ ChatGPT vẽ riêng.

@@ -1,4 +1,12 @@
-# Hồ sơ tướng 05 — ANCHOR (bản 2, thiết kế cho Skeleton PixelLab)
+# Hồ sơ tướng 05 — ANCHOR
+
+## Bản v6 (chốt 04/11 chiều) — hình dáng theo vai HỖ TRỢ
+- Người máy kỹ sư tín hiệu chibi: mũ xanh thép kính xanh lục, lõi ngực xanh lục có dấu cộng nhỏ, vòng sáng xanh lục ở hai cẳng tay.
+- Ba lô cam nâu TO sau lưng, cột ngắn mang ĐĨA TÍN HIỆU xanh lục trên đầu + 1 ăng-ten mảnh → nhìn là biết "phát sóng/hỗ trợ".
+- Tay không. Động tác: đứng thở (breathing-idle) + phát sóng (hai tay giơ ngang ngực mở lòng bàn tay rồi hạ).
+- File: nguon-tuong/v6/anchor_dung_*, anchor_phat_song_*, ANCHOR_ho_tro.gif. Vòng sóng buff = hiệu ứng riêng (ChatGPT).
+
+## Bản cũ (bản 2)
 
 - **Tên / Số / Bậc màu:** ANCHOR · 05 · TRẮNG
 - **Vai trò & chiêu (GDD):** hỗ trợ, KHÔNG bắn; buff 4 ô kề +8% tốc đánh mỗi 2★.
