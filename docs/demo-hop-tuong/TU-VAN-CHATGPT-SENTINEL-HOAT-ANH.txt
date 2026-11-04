@@ -1,0 +1,191 @@
+TƯ VẤN ANIMATION TẤN CÔNG SENTINEL – GAME TOWER DEFENSE MOBILE
+Đầu vào: sprite sheet 8 hướng (S, SE, E, NE, N, NW, W, SW), mỗi hàng 8 cột; cột 1 là tư thế đứng, các cột tiếp theo là chuyển động hiện tại.
+Mục tiêu: bắn súng lục bằng tay phải, tay trái đưa lên đỡ, có một cú giật ngắn và độ nảy rõ, đứng tại chỗ; không sinh lửa/khói trong PixelLab.
+
+QUY ƯỚC
+- 8 hướng trên ảnh theo thứ tự từ trên xuống: S, SE, E, NE, N, NW, W, SW.
+- Tay phải = tay GIỮ súng; tay trái = tay ĐỠ. Phải/trái luôn tính theo cơ thể nhân vật, không theo bên trái/phải màn hình.
+- “Đẩy tới” nghĩa là theo hướng nòng súng/chỉ hướng mục tiêu trong không gian nhân vật; không nhất thiết là sang phải màn hình.
+- “Giật về” nghĩa là nòng súng cùng hai tay dịch ngược đường ngắm, gần về vai; KHÔNG để súng trượt rời khỏi bàn tay.
+- Các khoảng dịch pixel dưới đây chỉ là gợi ý thử nghiệm ở độ phân giải sprite nguồn 128 × 128; tùy kích thước phần nhân vật thực tế trong ô mà giảm/tăng để không phá silhouette.
+
+1. ĐỌC LỖI TỪ SPRITE SHEET HIỆN TẠI
+
+1.1. Độ khác biệt giữa các khung chưa đủ mạnh
+Các cột kế tiếp trong nhiều hàng trông khá giống nhau khi xem cả bảng thu nhỏ. Dù có thay đổi tay/súng và thân, ba mốc “chuẩn bị – giật – hồi” chưa tạo thành silhouette thật sự khác biệt. Cần phóng đại một số pose quan trọng thay vì trải chuyển động nhỏ đều qua 7–8 khung.
+
+1.2. Chưa đọc rõ hành động tay trái đưa lên đỡ
+Ở hàng S/SE/E, chuyển động tổng thể cho thấy hai tay gần vùng vũ khí nhưng không đọc rõ thời điểm tay trái TỪ vị trí nghỉ đi lên, chạm dưới bàn tay phải hoặc đáy súng, rồi hai tay cùng chuyển động. Nên có ít nhất 1–2 key pose cho hành động vào vị trí, sau đó giữ tiếp xúc cho đến giai đoạn hồi.
+
+1.3. Thiếu một “cú giật” có nhịp sắc
+Các pose hiện tại dễ cho cảm giác súng đổi độ nghiêng hoặc tay dịch ít, thay vì cả cụm vai–khuỷu–bàn tay–súng bị kéo bật về trong 1 nhịp rất ngắn. Một cú giật tốt cần pose đỉnh tương phản: trước đó tay hơi duỗi, ngay sau đó súng lùi rõ 2–4 px (nếu kích thước phù hợp), khuỷu tay co và vai ép nhẹ.
+
+1.4. Nhiều hướng đang thiếu dấu hiệu hướng bắn khi thu nhỏ
+Ở S nhìn từ trên cao, nòng súng và hai tay nằm trước ngực nên dễ che dải V cyan. Ở N, NE, NW, đầu/mũ trùm và vai che gần hết tay; vài cột súng rất khó nhìn thấy. Đây không hẳn là lỗi phối cảnh: nhìn từ sau thì khuất là hợp lý, nhưng cần tạo dấu hiệu thay thế bằng vai, khuỷu tay, cánh tay trái, độ lắc mũ và phần nòng còn lộ.
+
+1.5. Kích thước/chân/điểm neo cần kiểm soát
+Trong bản tổng hợp có những khác biệt nhỏ về vị trí hoặc độ mở chân giữa khung. Với tướng đứng tại chỗ, không để chân trượt theo chuyển động tay. Cố định tâm hông và điểm chạm đất; nếu muốn nảy, điều khiển có chủ ý bằng một offset rất nhỏ hoặc code.
+
+1.6. Nguy cơ sai nối tay–vũ khí khi tái tạo từ khung xương chung
+Đặc biệt ở các hướng nghiêng và hướng lưng, không thể lấy cùng một chuyển động 2D đơn giản rồi đổi hướng nếu không điều chỉnh thứ tự che khuất. Cần kiểm tra cổ tay phải luôn ôm đúng báng, ngón trỏ đúng cò, tay trái tiếp xúc dưới tay phải/đáy súng; không có bàn tay thứ ba, súng lơ lửng hay nòng tách khỏi thân súng.
+
+Lưu ý: các nhận xét trên dựa vào việc xem bảng tổng quan, không phải kiểm tra từng pixel hay dữ liệu khung xương gốc của PixelLab. Các độ dịch và thời gian là thông số đề xuất để thử trong game, không phải giá trị bắt buộc của Destiny Child: Defense War.
+
+2. THIẾT KẾ CHU KỲ 8 KHUNG – BẢN ƯU TIÊN
+
+Tổng thời gian đề xuất: 415 ms/chu kỳ (khoảng 2,41 chu kỳ mỗi giây nếu lặp liên tục). Thời gian mỗi hình KHÔNG bằng nhau; nhịp nhanh nằm tại thời điểm đẩy–giật.
+
+F1 – READY/IDLE – 70 ms
+Súng trong tay phải ở vị trí sẵn sàng ngang ngực, hướng vào mục tiêu. Tay trái nghỉ thấp hơn, hơi gập; thân đứng vững. Đây cũng là ảnh nối mượt với idle.
+
+F2 – SUPPORT HAND RISE – 55 ms
+Tay trái đưa lên, khuỷu gập vừa phải; bàn tay tiến đến dưới tay cầm hoặc dưới đáy súng. Tay phải và súng gần như giữ nguyên. Đầu hướng mục tiêu; thân nghiêng trước cực nhẹ. Cần đọc được sự khác biệt giữa tay trái thấp (F1) và cao (F2).
+
+F3 – BRACE / ANTICIPATION – 35 ms
+Hai tay đã chạm nhau, tay trái khóa vị trí đỡ. Hai khuỷu hơi thu vào, súng lùi 1–2 px về vai và hạ rất nhẹ, như lấy đà. Vai khép nhẹ; thân nén xuống hoặc ngả sau 1 px, không bước chân. Giữ ngắn, tránh cảm giác chờ lâu.
+
+F4 – FORWARD SNAP – 25 ms
+Hai tay đẩy súng thẳng về hướng ngắm: tay phải gần duỗi thẳng (không khóa cứng), tay trái áp sát đỡ, nòng giữ ngang ngực. Vai đi trước chút ít, thân đẩy lên/rướn trước 1 px. Đây là pose “ra đòn”, nên khác F3 dễ nhận ra ngay cả ở kích thước hiển thị 32–64 px.
+
+F5 – SHARP KICKBACK – 35 ms
+CẢ HAI TAY và SÚNG bật ngược về vai 2–4 px so với F4 (đo theo trục nòng), khuỷu gập rõ. Vai bên phải giật lùi một ít, thân và đầu trễ nhịp 1 px. Súng vẫn nằm chắc trong tay phải; tay trái vẫn đỡ. Không tự thêm chớp đầu nòng, lửa, khói hay vỏ đạn trong sprite.
+
+F6 – COUNTER-BOUNCE – 45 ms
+Hai tay và súng nảy tiến ra trước khoảng 1–2 px so với F5 nhưng chưa trở lại F4. Đầu và vai bắt đầu ổn định; chuyển động có overshoot nhỏ, không bật mạnh lần thứ hai. Tay trái chưa buông.
+
+F7 – SETTLE / LOWER SUPPORT – 65 ms
+Súng trở lại tư thế sẵn sàng, khuỷu tay phải bớt căng. Tay trái rời vị trí đỡ và hạ xuống dần; thân về giữa, đầu theo sau một nhịp nhỏ. Giảm tốc ở cuối.
+
+F8 – RECOVER TO READY – 85 ms
+Gần giống F1 nhưng có thể giữ chênh lệch 0–1 px ở tay/đầu để làm êm điểm nối; tay trái về thấp. Chuyển mượt về F1/idle hoặc đợi đợt tấn công tiếp theo.
+
+Bảng thời gian tóm tắt:
+F1 70 | F2 55 | F3 35 | F4 25 | F5 35 | F6 45 | F7 65 | F8 85 = 415 ms.
+
+Gợi ý nhịp: F1→F2 dễ đọc, F2→F3 hơi tăng tốc, F3→F4 cực nhanh, F4→F5 giật mạnh, F5→F6 nảy nhanh vừa, F6→F7 chậm dần, F7→F8 thả lỏng.
+
+QUAN TRỌNG VỀ GAMEPLAY:
+- Đặt thời điểm gây sát thương / sinh đạn tại F4 (hoặc ngay ranh giới F4–F5), dùng animation event. Không lệ thuộc render FPS.
+- Nếu tốc độ tấn công thực tế khác 2,41 lần/giây, scale thời gian các frame theo attack interval; nhưng KHÔNG nén quá mạnh làm biến mất pose đỡ và pose giật. Tách animation chuẩn và nhịp phát đạn nếu cần.
+- Nếu muốn súng đỡ bằng hai tay xuyên suốt lúc liên tục bắn nhanh: phiên bản “sustained” có thể bỏ động tác tay trái hạ xuống ở F7–F8; chỉ đưa tay trái lên một lần ở đầu loạt, rồi lặp phần F3–F7 ngắn hơn. Tránh cảnh tay trái cứ nâng–hạ ở mỗi viên khi tốc bắn cao.
+
+3. THÂN – ĐẦU – TAY: TẠO LỰC VÀ FOLLOW-THROUGH
+
+Ưu tiên chuyển động theo mức độ: tay phải + súng > tay trái > vai > thân > đầu > chân. Tướng thủ thành đứng tại chỗ nên không cho cả người lắc mạnh như nhân vật chạy.
+
+Tay phải: xác định một điểm socket báng súng gắn cố định với bàn tay; nòng/khẩu súng chỉ quay cùng cổ tay, không tự trôi. Chuyển động chính theo trục ngắm, không chỉ xoay súng lên xuống. Ở F4 tay gần thẳng, F5 khuỷu co rõ, F6 duỗi bớt.
+
+Tay trái: F1 thấp, F2 nâng, F3–F6 đỡ thật, F7 buông, F8 thấp. Khi đỡ, tay trái nằm DƯỚI/SAU bàn tay phải, không xuyên qua cò hoặc che đầu nòng. Khớp khuỷu phải hợp giải phẫu; tay đỡ bám vào điểm support socket trên tay/súng, không chuyển động độc lập trong F3–F6.
+
+Vai: vai phải lùi ở F5; vai trái chỉ chịu lực nhẹ. Hai vai không vung đối xứng như đấm boxing. Giữ shoulder guards không tách rời cánh tay.
+
+Thân: nghiêng/nén 1–2 px tối đa trong độ phân giải nguồn tương ứng; xoay nhỏ quanh hông. Không cho dải V cyan méo quá mức và không kéo giãn áo giáp.
+
+Đầu/mũ: gần như giữ hướng mục tiêu. Đầu trễ hơn vai một chút, ngả 0–1 px ở F5, hồi ở F6–F7. Không làm mũ phồng/xẹp, đổi kích thước, trượt khỏi cổ. Ăng-ten có thể nảy nhẹ 1 px trễ hơn đầu nếu được animate riêng, nhưng không làm đổi bên hoặc rời đế.
+
+Chân: gần như khóa tại chỗ. Nếu muốn cảm giác lực, có thể cho thân/hông nhún 1 px trong khi đế giày giữ y nguyên tọa độ. Không đổi độ dài chân, không làm hai bàn chân trượt ngang.
+
+4. IDLE (THỞ) ĐỀ XUẤT
+
+Một loop 4–6 khung, chu kỳ khoảng 1.2–1.8 giây, khác biệt rất nhỏ:
+- Thân/ngực nâng khoảng 1 px rồi hạ; có thể đổi độ sáng vùng giáp rất nhẹ, KHÔNG co giãn to nhỏ đầu hoặc toàn nhân vật.
+- Vai nâng/hạ 0–1 px; tay súng giữ chắc, nòng không quét liên tục như đang tìm mục tiêu.
+- Tay trái nghỉ thoải mái và đung đưa cực nhẹ nếu cần.
+- Mũ/đầu gần như đứng yên; ăng-ten nảy trễ rất nhỏ để có cảm giác sống.
+- Chân, điểm chạm đất, tâm hông cố định.
+- Dùng chuyển tiếp 50–100 ms (hoặc 2–3 tick ở tốc độ render phù hợp) từ idle sang attack, và attack về idle để không “nhảy pose”.
+
+Không cần cả nhân vật lên xuống 2–3 px liên tục: như vậy ở kích thước 32 px sẽ giống nhảy tại chỗ và dễ gây nhiễu khi có nhiều tướng trên bàn.
+
+5. XỬ LÝ HƯỚNG LƯNG N / NE / NW
+
+NGUYÊN TẮC: không cố ép súng phải nhìn rõ ở tất cả hướng. Độ khuất tự nhiên là đúng; điều cần rõ là vai và tay phản ứng với một hành động có lực.
+
+N (lưng thẳng): đầu và phần lưng/hood có thể che nòng súng gần như hoàn toàn. Giữ súng ở đúng phía tay phải và hướng ra xa camera. Cho thấy một chút khuỷu phải hoặc tay đỡ lộ sát bên sườn, vai phải thu rồi giật, mũ đáp nhịp nhỏ. Không đưa súng giả ra bên cạnh chỉ để “show” vũ khí.
+
+NE (lưng 3/4 hướng phải): ở góc này tay phải có thể khuất một phần sau thân hoặc đầu tùy cấu tạo. Cho nòng súng thò ra rất ít ở phía đúng không gian của vai/cổ tay, chỉ khi góc ngắm cho phép. Đọc lực qua đường viền vai, elbow silhouette, và đầu hơi trễ. Không để một đoạn nòng nổi tách khỏi bàn tay.
+
+NW (lưng 3/4 hướng trái): phía lộ của tay phải khác với NE; kiểm tra đúng thứ tự chồng lớp. Tay trái có thể che một phần tay phải khi đỡ, nhưng không tạo thành tay thứ ba. Súng chỉ lộ ở cạnh thân nếu đường ngắm đúng với phối cảnh.
+
+Thiết kế animation theo 3 nhóm để tiết kiệm:
+A) S, SE, SW: ưu tiên đọc rõ hai tay chạm–đỡ, súng đẩy tới rồi lùi.
+B) E, W: ưu tiên silhouette súng và khuỷu; chiều dài chuyển động theo hướng ngang dễ nhận ra.
+C) N, NE, NW: ưu tiên vai, khuỷu, nhún nhỏ ở thân/hood; chấp nhận súng bị che.
+
+Đối với mỗi hướng, đặt lại order vẽ các layer (tay gần/tay xa, súng, mũ, torso). Không mirror bừa vì ăng-ten phải giữ đúng phía cơ thể; tay phải luôn là tay cầm súng.
+
+6. PROMPT TIẾNG ANH NGẮN CHO PIXELLAB
+
+Prompt chính (không dùng các từ dễ làm sinh hiệu ứng):
+“8-frame chibi pistol arm animation, fixed high top-down camera. Standing in place. Right hand firmly grips the compact pistol at chest height; left hand rises to support it. Brief brace, quick forward extension, sharp short backward arm snap, small forward bounce, smooth return to ready. The pistol remains rigidly attached to the right hand. Subtle shoulder and hood follow-through. Feet planted, same size and ground anchor in every frame. Preserve original character, colors, facing and antenna side. No muzzle flash, smoke, sparks, particles, shells or extra hands.”
+
+Prompt phiên bản ngắn hơn:
+“8 frames: ready, left hand lifts, both hands brace, quick forward extension, short backward snap, small bounce, lower support hand, settle. Pistol attached to right hand; fixed feet; tiny shoulder and hood motion; identical scale, camera and design. No effects.”
+
+Nếu PixelLab cho nhập prompt theo từng frame:
+F1: “Ready pose, right hand holds pistol at chest height, left hand relaxed low.”
+F2: “Left hand lifts toward the pistol grip, right hand and pistol steady.”
+F3: “Both hands brace together, elbows tuck in slightly, shoulders compress.”
+F4: “Both arms extend quickly forward, pistol level, feet planted.”
+F5: “Both arms snap briefly backward toward the chest, elbows bend, shoulders follow.”
+F6: “Arms bounce slightly forward, hood follows with a tiny delay.”
+F7: “Pistol settles level, left support hand begins to lower.”
+F8: “Return to ready pose, left hand relaxed, torso and feet unchanged.”
+
+Negative constraints (thêm vào prompt nếu PixelLab hỗ trợ):
+“No gun floating, no detached hands, no extra arms, no gun deformation, no character scaling, no enlarged hood, no foot sliding, no new objects, no camera shift, no glow or weapon effects.”
+
+Lưu ý ngôn ngữ: prompt chính ở trên tránh các từ “fire”, “shoot”, “recoil” nhưng vẫn dùng “pistol” để công cụ hiểu đó là vũ khí đang cầm. Không thể đảm bảo 100% công cụ sẽ không thêm hiệu ứng; kiểm tra sprite sau khi sinh và xóa hiệu ứng bằng hậu xử lý nếu cần.
+
+7. NÊN LÀM BẰNG CODE KHI CHẠY GAME
+
+7.1. Làm bằng sprite/animation (phần không thể thay bằng hiệu ứng code đơn giản)
+- Hành động tay trái đưa lên đỡ và hạ xuống.
+- Tay phải gập/duỗi; cổ tay và súng giữ chung hệ tọa độ.
+- Thứ tự che khuất chính xác cho đủ 8 hướng.
+- Các silhouette F3, F4, F5 quan trọng.
+- Giữ đúng thiết kế mũ, ăng-ten, giáp, chân, proportions.
+
+7.2. Làm bằng code (khuyến nghị)
+- Camera/sprite root micro-kick: offset toàn bộ sprite dọc trục ngược hướng đòn khoảng 0.5–1 pixel hiển thị, rất ngắn (20–40 ms), rồi về 0 trong 60–90 ms. Nếu sprite đã vẽ thân giật nhiều thì giảm hoặc bỏ micro-kick.
+- Scale punch cực nhỏ cho riêng upper-body rig nếu engine hỗ trợ (ví dụ 0.99–1.01), KHÔNG scale toàn nhân vật làm chân trượt và đầu nở. Với pixel art thuần, ưu tiên pixel-snapped translations hơn scale phân số.
+- Frame event sinh đạn tại đúng socket đầu nòng ở F4. Quỹ đạo game tính theo hướng/target logic, không phụ thuộc hình nòng có bị che ở góc lưng.
+- Muzzle flash/chớp nòng dạng FX riêng nếu muốn: một flash ngắn 25–45 ms tại barrel socket, tự chọn bật/tắt; không bake vào frame nhân vật. Nếu người chơi muốn không có lửa khói, tắt FX hoàn toàn.
+- Vệt sáng cyan rất nhỏ ở phần nòng hoặc visor (tùy thẩm mỹ), tối đa 40–70 ms; tránh làm cả người nhấp nháy trắng.
+- Âm thanh click/thump ngắn đồng bộ F4; layer âm trầm nhẹ làm đòn có lực hơn cả việc thêm nhiều frame.
+- Mini screen shake chỉ cho hit quan trọng, critical hoặc boss, không rung camera mỗi viên khi trên bàn có hàng chục đơn vị.
+- Hit stop 15–30 ms chỉ cân nhắc khi đạn trúng mục tiêu lớn hoặc hiệu ứng đặc biệt; với súng lục tốc độ nhanh, tránh chặn cả game loop hoặc đóng băng đơn vị khác.
+- Animation speed scaling theo attack speed, có event marker, đảm bảo mỗi lần gây sát thương chỉ kích hoạt một lần và không bị mất khi FPS thấp.
+
+CẢNH BÁO PHỐI HỢP: nếu đã vẽ F5 lùi 3–4 px, đừng cộng thêm code lùi 3–4 px nữa; nhân vật sẽ giật quá mạnh và dễ văng khỏi ô. Bắt đầu với sprite chính, sau đó tăng FX từng chút một.
+
+8. WORKFLOW PIXELLAB + GAME ENGINE
+
+Bước 1 – Khóa ảnh gốc: lưu ảnh đứng F1 của từng hướng, xác định chân/tâm hông và vùng an toàn trong canvas 128 × 128.
+Bước 2 – Khóa 3 key poses: dựng F3 (nén/đỡ), F4 (duỗi tới), F5 (giật lùi) cho S, E và N trước. Chỉ khi 3 góc này thuyết phục mới triển khai 5 hướng còn lại.
+Bước 3 – Đặt tay và súng: vẽ/rig tay phải trước; súng parent theo tay phải. Đặt tay trái đến điểm đỡ trên tay phải/súng; F3–F6 phải dính nhau về chuyển động.
+Bước 4 – Tạo F2/F6 và F7/F8: dùng làm chuyển tiếp nhưng không san phẳng khác biệt của key pose. Không bắt mọi frame dịch đúng cùng một khoảng cách.
+Bước 5 – Làm kiểm tra ở kích thước THẬT trong game (32 hoặc 48 hoặc 64 px nếu đó là kích thước hiển thị): người xem có đọc được “tay trái lên → súng tới → giật → trở về” không?
+Bước 6 – Soát theo từng hướng và từng frame: đúng tay phải, đúng vị trí ăng-ten, không xuất hiện tay thừa, bàn chân không trượt, súng không rời bàn tay; vũ khí và nhân vật cùng pixel density.
+Bước 7 – Xuất sprite không bake flash/khói; đưa FX, phát đạn, micro-kick, sound vào engine qua animation event.
+
+9. CHECKLIST NGHIỆM THU
+
+[ ] 8 hướng, mỗi hướng đủ 8 khung, đúng thứ tự.
+[ ] Khung đứng đầu và cuối nối liền được với idle.
+[ ] Khuỷu tay trái có hành trình nâng rõ từ thấp lên đỡ.
+[ ] Khi đã đỡ, bàn tay trái luôn gắn đúng vùng đỡ của súng/tay phải.
+[ ] Tay phải ôm báng súng xuyên suốt; không có súng trôi độc lập.
+[ ] F3/F4/F5 khác silhouette rõ ngay cả khi thu nhỏ.
+[ ] F5 có cú giật sắc; F6 nảy lại nhỏ hơn; F7/F8 chậm dần.
+[ ] Vai/thân/mũ có follow-through nhỏ, không biến dạng đầu.
+[ ] Chân và anchor giữ cố định; không đổi chiều cao nhân vật bất thường.
+[ ] N/NE/NW tuân thủ occlusion tự nhiên; không cố vẽ súng xuyên mũ.
+[ ] Không extra hand/extra arm; ăng-ten không đổi bên.
+[ ] Không tạo lửa/khói/chớp trong sprite gốc.
+[ ] Sự kiện phát đạn gắn đúng thời điểm, chỉ gọi một lần mỗi đòn.
+[ ] Ở nhịp bắn nhanh, cân nhắc giữ tay trái luôn ở tư thế đỡ.
+
+10. KHUYẾN NGHỊ CHỐT
+
+Giữ 8 frame/hướng và 415 ms làm bản mẫu đầu tiên. Đừng cố “mượt” bằng cách làm nhiều pose gần như trùng nhau: ưu tiên một cú giật lùi F5 mạnh nhưng rất ngắn, có F4 duỗi tới và F6 nảy về. Hãy diễn hoạt hai tay trước, dùng vai và mũ để bổ trợ, giữ chân đứng yên. Với góc lưng, chấp nhận súng khuất để bảo toàn đúng phối cảnh; đọc lực bằng silhouette vai/cánh tay. Để hiệu ứng flash, rung, âm thanh và phát đạn cho game engine, không đưa vào prompt sinh sprite.
