@@ -247,7 +247,10 @@ for r in ROSTER:
     s_ = meta[r['id']]['s']
     n2 = no.resize((round(256 * s_ * 0.86), round(256 * s_ * 0.86)), Image.LANCZOS)
     o = de.copy()
-    o.alpha_composite(n2, ((256 - n2.size[0]) // 2, (256 - n2.size[1]) // 2)) if n2.size[0] <= 256 else None
+    if n2.size[0] > 256:  # đầu to hơn bệ: cắt giữa
+        m_ = (n2.size[0] - 256) // 2
+        n2 = n2.crop((m_, m_, m_ + 256, m_ + 256))
+    o.alpha_composite(n2, ((256 - n2.size[0]) // 2, (256 - n2.size[1]) // 2))
     o = o.rotate(0).resize((112, 112), Image.LANCZOS)
     o.save(os.path.join(DICH, 'nho', r['id'] + '.png'), optimize=True)
 print('xong', len(meta), 'đầu súng')

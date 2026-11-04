@@ -387,13 +387,19 @@ HU.tuong = { // tường ánh sáng chặn đường rồi nổ
     // tia chiếu từ ụ tới tường
     const T = o.T;
     if (G.ban[T.ban].t[T.o] === T) { const [x, y] = dauNong(T); ctx.globalAlpha = a * 0.5; R.tia(ctx, 'tia_laser', x, y, o.x, o.y, 6, o.t * 200); ctx.globalAlpha = a; }
+    // tấm tường ánh sáng: dải sáng dày + vạch quét + 2 cột phát ở mép đường
+    ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
+    const day = 9 + 2 * Math.sin(o.t * 30);
+    const g = ctx.createLinearGradient(-day * 2, 0, day * 2, 0);
+    g.addColorStop(0, 'rgba(80,255,255,0)'); g.addColorStop(0.5, 'rgba(150,255,255,.75)'); g.addColorStop(1, 'rgba(80,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(-day * 2, -L, day * 4, L * 2);
+    for (let i = -3; i <= 3; i++) { const yy = ((o.t * 60 + i * 12) % (L * 2)) - L; ctx.fillStyle = 'rgba(210,255,255,.5)'; ctx.fillRect(-day, yy, day * 2, 1.5); }
+    ctx.restore();
     for (let k = -1; k <= 1; k++) {
       const ox = Math.cos(o.goc) * k * 4, oy = Math.sin(o.goc) * k * 4;
       R.tia(ctx, 'tia_set', o.x - nx * L + ox, o.y - ny * L + oy, o.x + nx * L + ox, o.y + ny * L + oy, 16 - Math.abs(k) * 5, o.t * 150 + k * 40);
     }
-    const g = ctx.createRadialGradient(o.x, o.y, 2, o.x, o.y, L * 1.1);
-    g.addColorStop(0, 'rgba(120,255,255,.5)'); g.addColorStop(1, 'rgba(120,255,255,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x, o.y, L * 1.1, 0, Math.PI * 2); ctx.fill();
+    for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#7ffcff'), o.x + nx * L * sg, o.y + ny * L * sg, 26 + 4 * Math.sin(o.t * 20));
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
@@ -417,11 +423,24 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
   ve(ctx, o, R) {
     const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1), r = o.r * (0.55 + 0.1 * Math.sin(o.t * 9));
     ctx.save(); ctx.translate(o.x, o.y);
+    // vành bồi tụ mờ + lõi đen đặc
     const g = ctx.createRadialGradient(0, 0, 0, 0, 0, o.r);
-    g.addColorStop(0, 'rgba(0,0,0,' + 0.95 * mo + ')'); g.addColorStop(0.35, 'rgba(20,0,30,' + 0.8 * mo + ')'); g.addColorStop(0.7, 'rgba(120,20,90,' + 0.25 * mo + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    g.addColorStop(0, 'rgba(0,0,0,' + mo + ')'); g.addColorStop(0.28, 'rgba(8,0,14,' + 0.95 * mo + ')'); g.addColorStop(0.42, 'rgba(150,20,90,' + 0.55 * mo + ')'); g.addColorStop(0.7, 'rgba(90,10,120,' + 0.2 * mo + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, o.r, 0, Math.PI * 2); ctx.fill();
     ctx.globalCompositeOperation = 'lighter';
-    for (let k = 0; k < 3; k++) { ctx.globalAlpha = 0.55 * mo; R.khung(ctx, 'fx_laser_trung', 3 + k % 2, 0, 0, r * (2.2 - k * 0.45), -o.t * (3 + k * 2) + k); }
+    // tay xoáy quay (vòng cung sáng cuộn vào tâm)
+    for (let k = 0; k < 4; k++) {
+      const a0 = -o.t * 4.5 + k * Math.PI / 2;
+      ctx.strokeStyle = k % 2 ? 'rgba(255,90,170,' + 0.7 * mo + ')' : 'rgba(190,110,255,' + 0.7 * mo + ')';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i <= 16; i++) { const u = i / 16, rr = r * (1.35 - u * 0.95), a = a0 + u * 2.6; const px = Math.cos(a) * rr, py = Math.sin(a) * rr; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 0.5 * mo; R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = mo;
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,150,220,' + 0.9 * mo + ')'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, r * 0.34, 0, Math.PI * 2); ctx.stroke();
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
@@ -449,6 +468,16 @@ HU.chieuTrum = { // tia phép của trùm tới ụ bị nhắm
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1 - u;
     R.tia(ctx, 'tia_laser', o.x0, o.y0, o.x0 + (o.x1 - o.x0) * Math.min(1, u * 3), o.y0 + (o.y1 - o.y0) * Math.min(1, u * 3), 10, o.t * 300);
     R.anhGiua(ctx, 'tia_lua', o.x1, o.y1, 50 * (1 - u), o.t * 5, 1);
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  },
+};
+HU.gui = { // PVP: quái đã giết bay sang cổng đối thủ (vệt tím)
+  ve(ctx, o, R) {
+    const u = o.t / o.song, e = u * u * (3 - 2 * u);
+    const x = o.x0 + (o.x1 - o.x0) * e, y = o.y0 + (o.y1 - o.y0) * e - Math.sin(u * Math.PI) * 60;
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 5; i++) { const v = Math.max(0, e - i * 0.03); const xx = o.x0 + (o.x1 - o.x0) * v, yy = o.y0 + (o.y1 - o.y0) * v - Math.sin(Math.max(0, u - i * 0.03) * Math.PI) * 60; R.anhGiua(ctx, R.cham1('#c77dff'), xx, yy, 18 - i * 3, 0, 0.9 - i * 0.15); }
+    R.anhGiua(ctx, 'tia_lua', x, y, 20, o.t * 8, 1);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };

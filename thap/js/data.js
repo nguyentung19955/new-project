@@ -125,7 +125,7 @@ function boCuc(che) {
     };
   }
   // SOLO: một bàn giữa màn, đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
-  const y = 236;
+  const y = 262;
   return {
     ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: 'BẠN' }],
     duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],

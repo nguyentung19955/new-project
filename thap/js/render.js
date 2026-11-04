@@ -213,8 +213,9 @@ const REN = {
     if (!G.ban.length) return;
     this.veCongLoi(ctx);
     this.veNhanBan(ctx);
-    for (const o of G.hu) if ((o.k === 'may' || o.k === 'hoden') && HU[o.k].ve) HU[o.k].ve(ctx, o, this);
+    for (const o of G.hu) if (o.k === 'may') HU.may.ve(ctx, o, this);
     this.veQuai(ctx);
+    for (const o of G.hu) if (o.k === 'hoden') HU.hoden.ve(ctx, o, this); // hố đen đè lên quái bị hút
     this.veO(ctx);
     for (const o of G.hu) if (o.k === 'tuong') HU.tuong.ve(ctx, o, this);
     this.veLaser(ctx);
@@ -448,6 +449,11 @@ const REN = {
     if (T.st.ngam > 0) { ctx.save(); ctx.rotate(this.t * 2); const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }
     if (B.khien > 0 && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.25 + 0.1 * Math.sin(this.t * 5); ctx.strokeStyle = '#9fe6ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, S * 0.56, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al; }
     ctx.restore();
+    // chớp trắng lúc vừa ghép xong
+    if (an && an.k === 'no' && an.t < 0.14) {
+      ctx.save(); ctx.translate(x, y + oy); ctx.scale(sx, sy); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - an.t / 0.14);
+      this.ve1(ctx, T.id + '_de', S * 0.86, 'trang'); this.ve1(ctx, T.id + '_de', S * 0.86, 'trang'); ctx.restore(); ctx.globalAlpha = al;
+    }
     // chấm sao sáng nhấp nháy nhẹ
     ctx.globalAlpha = 1;
   },

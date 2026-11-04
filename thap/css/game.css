@@ -126,8 +126,8 @@ img { -webkit-user-drag: none; pointer-events: none; }
 .c { position: relative; height: 104px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
 .c .khung { position: absolute; inset: -6px -6px -4px; width: calc(100% + 12px); height: calc(100% + 10px); object-fit: contain; z-index: 2; }
 .c .nen { position: absolute; inset: 5px 9px 10px; border-radius: 6px; background: radial-gradient(circle at 50% 35%, #41454f, #141519 80%); }
-.c .anh { position: relative; z-index: 1; width: 56px; height: 56px; margin-top: 10px; filter: drop-shadow(0 3px 3px #000b); }
-.c .ten { position: relative; z-index: 3; font-size: 9px; font-weight: 900; text-align: center; line-height: 1.05; padding: 2px 8px 0; text-shadow: 0 1px 2px #000; max-height: 22px; overflow: hidden; }
+.c .anh { position: relative; z-index: 1; width: 60px; height: 60px; margin-top: 14px; filter: drop-shadow(0 3px 3px #000b); }
+.c .ten { position: absolute; z-index: 3; left: 4px; right: 4px; bottom: 0px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 8.5px; font-weight: 900; text-align: center; line-height: 1; padding: 0 9px; color: #fff !important; text-shadow: 0 1px 2px #000, 0 0 3px #000; overflow: hidden; }
 .c .sapco { position: absolute; z-index: 4; top: 34px; left: 6px; right: 6px; text-align: center; font-size: 10px; font-weight: 900; color: #ffe46b; background: #000c; border-radius: 4px; transform: rotate(-8deg); padding: 2px 0; }
 .c.khoa .anh { filter: grayscale(1) brightness(.5); }
 .c.khoa .nen { opacity: .6; }

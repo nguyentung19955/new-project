@@ -242,7 +242,11 @@ function chet(E, B) {
   // PVP: quái mình giết được GỬI sang đối thủ (quái đã gửi thì không gửi tiếp)
   if (G.che === 'pvp' && !E.gui && !E.trum && E.id !== 'nho') {
     const dich = G.duong.findIndex(p => p.ban !== G.duong[E.p].ban);
-    if (dich >= 0) G.hang.push({ t: G.t + 0.6, id: E.id, p: dich, gui: true });
+    if (dich >= 0) {
+      G.hang.push({ t: G.t + 0.6, id: E.id, p: dich, gui: true });
+      const [px, py] = G.duong[dich].pts[0];
+      G.hu.push({ k: 'gui', t: 0, song: 0.6, x0: E.x, y0: E.y, x1: px, y1: py });
+    }
   }
 }
 
