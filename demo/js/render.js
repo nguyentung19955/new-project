@@ -578,10 +578,14 @@
   }
   // BÓNG ĐỔ mềm sát chân (C.BONG_*): elip tối, tâm đậm → mép mờ, để tướng trông đứng trên sàn ô
   function veBongChan(c, cx, chan) {
+    // bóng tiếp đất 2 lớp: quầng mềm rộng (nhân vật đè lên mặt ô) + lõi tối đặc sát chân (chân "chạm" sàn, không như hình dán)
     const rx = C.O * C.BONG_W / 2, ry = rx * C.BONG_DET;
-    c.save(); c.translate(cx, chan); c.scale(1, ry / rx);
-    c.fillStyle = rg(c, 0, 0, 0, rx, [[0, `rgba(0,0,0,${C.BONG_A})`], [0.6, `rgba(0,0,0,${C.BONG_A * 0.75})`], [1, 'rgba(0,0,0,0)']]);
-    c.beginPath(); c.arc(0, 0, rx, 0, 7); c.fill(); c.restore();
+    c.save(); c.translate(cx, chan + 1); c.scale(1, ry / rx);
+    c.fillStyle = rg(c, 0, 0, 0, rx, [[0, `rgba(0,0,0,${C.BONG_A * 0.8})`], [0.55, `rgba(0,0,0,${C.BONG_A * 0.45})`], [1, 'rgba(0,0,0,0)']]);
+    c.beginPath(); c.arc(0, 0, rx, 0, 7); c.fill();
+    const r2 = rx * 0.5;
+    c.fillStyle = rg(c, 0, 0, 0, r2, [[0, 'rgba(0,0,0,0.75)'], [0.7, 'rgba(0,0,0,0.45)'], [1, 'rgba(0,0,0,0)']]);
+    c.beginPath(); c.arc(0, 0, r2, 0, 7); c.fill(); c.restore();
   }
   // MŨI TÊN nhỏ cạnh tướng: XANH ▲ = đang được buff (tốc đánh), ĐỎ ▼ = đang bị debuff (trùm / tinh anh)
   function veMuiTen(c, x, y, len, t) {
@@ -973,7 +977,7 @@
     const tho = dang || P.tho ? 0 : -MUOT.THO_PX * Math.round(0.5 - 0.5 * Math.cos(2 * Math.PI * (tg / MUOT.THO_T + v._pha)));
     const snapX = (x) => (Math.round(T0.a * x + T0.e) - T0.e) / T0.a, snapY = (y) => (Math.round(T0.d * y + T0.f) - T0.f) / T0.d;
     const a0 = c.globalAlpha;
-    c.save(); c.imageSmoothingEnabled = false;
+    c.save(); c.imageSmoothingEnabled = r < 0.95; c.imageSmoothingQuality = 'high';   // thu nhỏ sprite DC: làm mịn (không răng cưa như dán đè), phóng to: giữ pixel
     for (const L of lop) {
       if (L.a <= 0.001) continue;
       const m = P.neo ? { day: P.neo[1], tam: P.neo[0] } : doPx(L.im, L.fw, L.fh, L.ref ? L.f : 0, L.ref ? L.hang : 0);   // P.neo: neo chân CỐ ĐỊNH trong ô sheet (đứng & tấn công đã căn chung) → không nhảy

@@ -195,7 +195,7 @@ const CAU_HINH = {
   // BONG: bóng đổ mềm sát chân (elip tối, rộng BONG_W × rộng ô, dẹt BONG_DET, độ đậm BONG_A) để tướng "chạm sàn". KHÔNG còn đế màu bậc trên bàn (bậc chỉ hiện ở thẻ + màn chọn tướng).
   // 02/11 skin bàn: ô theo ảnh skin (~57×47, rộng hơn cao) → chân ở 80%, cao 82% ô để tướng đầy ô như DCDW
   // 04/11 bộ v4: nhân vật cao ~1,2 ô (TL_CAO 1.2), chân đặt GIỮA ô (TL_CHAN 0.62, hơi thấp hơn tâm để đầu không đè ô trên quá nhiều)
-  TL_CHAN: 0.62, BONG_W: 0.45, BONG_DET: 0.24, BONG_A: 0.35,
+  TL_CHAN: 0.62, BONG_W: 0.7, BONG_DET: 0.3, BONG_A: 0.55,
   TL_CAO: 1.2, CAO_MIN: 40, CAO_MAX: 90, CHAN: 17, TUONG_CAO: 44, TUONG_RONG: 64,
   TL: 58 / 70,          // tỉ lệ không gian so với bản ngang cũ — nhân bán kính vùng hiệu ứng
   // ANIMATION (tư vấn ChatGPT bước 3–4): SHEET_TUONG = false → tướng luôn là ẢNH TĨNH theo hướng (<anh>_<dir>.png), dịch NGUYÊN KHỐI bằng code:
