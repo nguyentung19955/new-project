@@ -5,8 +5,18 @@ Chủ đề chia ngẫu nhiên (xáo trộn seed 2411), mỗi chủ đề 4 tư�
 1 Hậu tận thế tái sinh (Hopepunk/Solarpunk) · 2 Thần thoại châu Á & võ hiệp (Eastern Fantasy/Wuxia Punk) · 3 Kinh dị vũ trụ + cơ khí sinh học (Biomechanical/Cosmic Horror) · 4 Huyền ảo tăm tối (Dark Fantasy) · 5 Neon tương lai (Cyberpunk/Techwear) · 6 Cận đại hoài cổ (Steampunk/Urban Fantasy).
 Bộ thử SENTINEL / PULSE / ANCHOR (v4–v6) và 3 ảnh ChatGPT v7 chỉ là bản thử quy trình — không thuộc bể 24.
 
+## PHONG CÁCH CHỐT (04/11 16h13)
+Anime game vui tươi, sáng sủa, biểu cảm sinh động (cười, nháy mắt, tự tin), màu tươi; tỉ lệ đầu ~1/4 thân — không chibi trẻ con, không nghiêm túc u tối. Mẫu: `nguon-tuong/v7/scorch_vui.png`, `frost_vui.png`, `arc_vui.png`.
+
+## Chuẩn để PixelLab skeleton-v3 chạy sạch (bắt buộc khi vẽ ảnh gốc)
+- Dáng chữ A: đứng thẳng, hai chân tách rộng bằng vai thấy rõ, hai tay buông hơi tách khỏi thân (không chạm hông), bàn tay mở/thả lỏng.
+- Tay chân lộ rõ khớp: KHÔNG váy/áo choàng dài che chân, KHÔNG tay áo rộng thùng thình.
+- KHÔNG chi tiết bay: tóc rất dài xõa, ruy băng, khăn, đuôi áo dài, cánh to, vật lơ lửng. Tóc buộc gọn; phụ kiện nhỏ gắn chặt người.
+- Hình khối rõ, viền đen, nền trắng trơn, toàn thân, mặt trước, góc từ trên cao chéo xuống.
+- Thú 4 chân: dùng khung `dog`/`cat`/`lion`/`horse`/`bear` — vẽ đứng 4 chân, nhìn 3/4 mặt trước, chân tách rõ, đuôi ngắn/gọn. Không côn trùng/ốc/drone (không có khung xương).
+
 ## Luật thiết kế để hợp PixelLab
-- **Người (khung mannequin)**, tỉ lệ NGƯỜI LỚN (không chibi trẻ con). Nam/nữ cân bằng.
+- Phần lớn là người (khung mannequin), một số là THÚ 4 CHÂN (VENOM chó máy bồn độc, BASTION gấu đá pháo đài, QUILL mèo nhím gai thép, PATCHWORK gấu bông). Nam/nữ cân bằng.
 - **Không cầm vũ khí/đồ vật trong tay.** Trang bị phải **gắn liền người**: găng, ống phóng gắn cẳng tay, ba lô, bình đeo, cánh nhỏ, gai trên lưng.
 - **Hình dáng nói lên vai:** sát thương = dáng tấn công; hỗ trợ/kinh tế = đồ phát sóng/ba lô, dáng hiền; khống chế = áo choàng, phép.
 - Tránh chi tiết bay lơ lửng, khăn/dải vải dài, cánh/mũ quá to (che người khi xoay).
