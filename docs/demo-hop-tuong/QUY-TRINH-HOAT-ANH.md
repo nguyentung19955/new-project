@@ -19,3 +19,10 @@
 - PULSE: 381466c9-218e-486b-bad5-38c58f34ccce
 - ANCHOR: 1d4fe8b4-1ab6-421e-a63f-34ee7c5e60c5
 Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
+
+## Quy trình PixelLab chuẩn cho tướng (chốt 04/11)
+1. Chuẩn bị MỘT hình mặt trước (S) đúng tư thế dùng trong game, thấy rõ vũ khí (vũ khí chĩa vào người xem sẽ bị hiểu thành vũ khí ngắn).
+2. Gọi `/generate-8-rotations-v3` (2 lượt/lần) với `description` liệt kê chi tiết + tay cầm vũ khí. Chạy 2–3 seed, chọn NGUYÊN một bộ; không ghép hướng giữa các bộ, không lật gương, không vá lẻ.
+3. Thứ tự ảnh trả về: S, SE, E, NE, N, NW, W, SW (khi gốc là S). Gốc không phải S thì kết quả lộn xộn — không dùng.
+4. Soát trước khi gửi: phụ kiện đúng bên ở mọi hướng, vũ khí đúng tay (hướng lưng có thể che tay), cao thân lệch ≤ ~5px, căn chân y=114 x=64 bằng code.
+5. Gọi API từ máy làm việc: `/root/rig/pl.py` (mã ở `/root/.plk`, quyền 600, không in, không commit).
