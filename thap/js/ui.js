@@ -187,7 +187,12 @@
     set('quai', coop ? S.quai.length + (A || S).conSinh : S.quai.length + S.conSinh, (v) => ($('#tb-quai b').textContent = v));
     if (coop) set('mang', S.coop.mang, (v) => { const b = $('#tb-mang b'); b.textContent = `${v}/${S.coop.max}`; b.classList.toggle('thap', v <= 3); });
     const lk = Math.floor(S.lk);
-    set('lk', lk, (v) => { $('#lk').textContent = v; $('#lk-hop b').classList.toggle('dai', v >= 10000); });
+    set('lk', lk, (v) => {
+      const b = $('#lk-hop b'), truoc = +$('#lk').textContent || 0;
+      $('#lk').textContent = v; b.classList.toggle('dai', v >= 10000);
+      // số mana NẢY khi đổi: tăng = vàng sáng bật lên, giảm = co nhẹ (khởi động lại animation CSS)
+      if (!ep && v !== truoc) { const k = v > truoc ? 'tang' : 'giam'; b.classList.remove('tang', 'giam'); void b.offsetWidth; b.classList.add(k); }
+    });
     const g = G.giaTrieu(S), full = !G.trong(S).length;
     const rong = !S.deck.length;   // chưa có tướng (đang làm lại)
     set('trieu', g + '|' + (lk >= g) + full + rong, () => { $('#nut-trieu .tr-ten').textContent = rong ? 'CHƯA CÓ TƯỚNG' : 'SUMMON'; $('#nut-trieu').classList.toggle('rong', rong); if (rong) { $('#gia-trieu').textContent = 'đang làm lại'; $('#nut-trieu .tr-gia .ic-e').hidden = true; $('#nut-trieu').classList.add('thieu'); return; } $('#gia-trieu').textContent = full ? 'GRID FULL' : g; $('#nut-trieu .tr-gia .ic-e').hidden = full; $('#nut-trieu').classList.toggle('thieu', lk < g || full); });
