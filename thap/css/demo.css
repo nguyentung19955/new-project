@@ -324,3 +324,11 @@ button { font-family: inherit; color: inherit; cursor: pointer; touch-action: ma
 .chon-dau { position: relative; padding-top: 30px !important; }
 .tt-cs { margin-top: 3px; font: 700 10px var(--tit, sans-serif); letter-spacing: .5px; color: #cfe6ff; }
 .tt-cs b { color: #fff; }
+
+/* TURRET MERGE 04/11 — nảy số mana + nút SUMMON thở khi đủ mana */
+#lk-hop b.tang { animation: manaTang .32s cubic-bezier(.3,1.6,.5,1); }
+#lk-hop b.giam { animation: manaGiam .22s ease-out; }
+@keyframes manaTang { 0% { transform: scale(1); } 35% { transform: scale(1.28); color: #fff4b0; text-shadow: 0 0 14px #ffe27a, 0 0 4px #fff; } 100% { transform: scale(1); } }
+@keyframes manaGiam { 0% { transform: scale(1); } 40% { transform: scale(0.86); color: #ffb0d8; } 100% { transform: scale(1); } }
+#nut-trieu:not(.thieu) { animation: vienchay 3s linear infinite, nhipnut 1.4s ease-in-out infinite, thoTrieu 1.4s ease-in-out infinite; }
+@keyframes thoTrieu { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.045); } }
