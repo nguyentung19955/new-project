@@ -265,6 +265,7 @@ SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn si
 
 // ================= HIỆU ỨNG TRÊN SÂN =================
 HU.may = { // đám mây độc đọng lại
+  duoi: true,
   cap(G, o, dt) {
     o.tick -= dt; if (o.tick > 0) return;
     o.tick = 0.3;
@@ -306,13 +307,14 @@ HU.ping = { // radar: vòng ping lan tới ụ được buff
   ve(ctx, o, R) {
     const c = tamU(o.T), u = o.t / o.song;
     ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(90,255,230,' + (1 - u) * 0.8 + ')'; ctx.lineWidth = 2;
+    const rgb = o.rgb || '90,255,230';
+    ctx.strokeStyle = 'rgba(' + rgb + ',' + (1 - u) * 0.8 + ')'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(c.x, c.y, 10 + u * 40, 0, Math.PI * 2); ctx.stroke();
     for (const N of o.ke) {
       const n = tamU(N);
       const px = c.x + (n.x - c.x) * Math.min(1, u * 1.6), py = c.y + (n.y - c.y) * Math.min(1, u * 1.6);
       R.anhGiua(ctx, 'tia_lua', px, py, 16 * (1 - u * 0.5), 0, 0.9 * (1 - u));
-      if (u > 0.55) { ctx.strokeStyle = 'rgba(90,255,230,' + (1 - u) * 1.6 + ')'; ctx.beginPath(); ctx.arc(n.x, n.y, 26, 0, Math.PI * 2); ctx.stroke(); }
+      if (u > 0.55) { ctx.strokeStyle = 'rgba(' + rgb + ',' + (1 - u) * 1.6 + ')'; ctx.beginPath(); ctx.arc(n.x, n.y, 26, 0, Math.PI * 2); ctx.stroke(); }
     }
     ctx.globalCompositeOperation = 'source-over';
   },

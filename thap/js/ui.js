@@ -220,6 +220,7 @@ const UI = {
       if (T.st.da) so += ' · HOÁ ĐÁ (ghép với đá cùng sao)';
       if (T.st.bang > 0) so += ' · ĐÓNG BĂNG';
       if (T.st.lua > 0) so += ' · ĐANG CHÁY';
+      if (sk.chuDong) so += T.nap >= 1 ? ' · ĐÃ ĐẦY: CHẠM Ụ ĐỂ DÙNG' : ' · nạp ' + Math.round(T.nap * 100) + '%';
     } else if (!sk) so = 'Ụ này sẽ mở ở bản cập nhật sau.';
     else so = 'Sát thương gốc ' + Math.round((sk.dmg || 0) * tier.hs) + ' · ×' + tier.hs + ' theo bậc';
     tt.querySelector('.tt-so').textContent = so;
@@ -283,7 +284,12 @@ const UI = {
     const het = (e) => {
       const k = this.keo; this.keo = null; if (!k) return;
       const B = G.ban[0];
-      if (!k.dang) { if (B.t[k.T.o] === k.T) this.moTT(k.T.id, k.T); return; }
+      if (!k.dang) {
+        if (B.t[k.T.o] !== k.T) return;
+        const sk = SKILLS[k.T.id];
+        if (sk.chuDong && k.T.nap >= 1 && !k.T.st.bang && !k.T.st.da) { sk.chuDong(G, B, k.T); return; } // ụ ĐỎ: chạm khi nạp đầy = dùng kỹ năng chủ động
+        this.moTT(k.T.id, k.T); return;
+      }
       const D = this.uTai(k.x, k.y);
       if (D && D !== k.T && B.t[k.T.o] === k.T) {
         if (hopLeGhep(k.T, D)) ghep(B, k.T, D);

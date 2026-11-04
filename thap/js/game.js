@@ -81,45 +81,65 @@ function taoU(B, id, sao, o) {
   const r = rosterOf(id);
   return {
     uid: G.uid++, id, sao, bac: r.bac, ban: B.i, o, goc: -Math.PI / 2 + rnd(-0.4, 0.4), vgoc: 0, rx: 0, rv: 0,
-    cd: rnd(0.1, 0.6), anim: null, st: { bang: 0, da: false, lua: 0, ngam: 0 }, buf: { toc: 0, dmg: 0 },
+    cd: rnd(0.1, 0.6), anim: null, st: { bang: 0, da: false, lua: 0, ngam: 0, kep: 0 }, buf: { toc: 0, dmg: 0, crit: 0, cham: 0, chet: 0 },
     nap: 0, muc: null, pha: Math.random() * 6.28, sang: 0, aurora: 0, chop: 0, lvSang: 0, banLan: 0,
+    khien: 0, tocT: 0, tocV: 0, epxung: 0, banSao: false, nhanT: 0, tuoi: 0,
   };
 }
+// gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
+function sinhU(T) { const sk = SKILLS[T.id]; if (sk && sk.sinh) sk.sinh(G, T); return T; }
+// bàn còn lại (PVP = đối thủ, CO-OP = đồng đội), SOLO = null
+function banKhac(B) { return G.ban.find(X => X !== B) || null; }
 function oTrong(B) { const ds = []; for (let i = 0; i < 15; i++) if (!B.t[i]) ds.push(i); return ds; }
 function trieu(B, mienPhi, idEp) {
   const tr = oTrong(B); if (!tr.length) return null;
   if (!mienPhi) { if (B.mana < B.gia) return null; B.mana -= B.gia; B.gia += LUAT.giaTrieuTang; }
   const o = pick(tr);
   const id = idEp || pick(B.deck);
-  const T = taoU(B, id, 1, o);
+  const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
   T.anim = { k: 'tha', t: 0 };
   return T;
 }
 function hopLeGhep(a, b) {
   if (!a || !b || a === b) return false;
-  if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.bang > 0 || b.st.bang > 0) return false;
+  if (!a.st.da && !b.st.da && ghepDacBiet(a, b)) return true; // ghép đặc biệt (có loại không cần cùng sao)
+  if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
   if (a.id === b.id) return true;
   return a.id === 'mimic' || b.id === 'mimic'; // MIMIC ghép với BẤT KỲ ụ cùng sao
+}
+// ghép ĐẶC BIỆT (Bộ Trộn, Dịch Chuyển, Ép Xung, Vua Ghép, Sao Chép…): kỹ năng của ụ KÉO quyết định
+function ghepDacBiet(a, b) {
+  if (a.id === b.id) return null;
+  const sa = SKILLS[a.id];
+  if (sa && sa.ghepDB && sa.ghepDB.hopLe(a, b)) return { sk: sa, a, b };
+  const sb = SKILLS[b.id]; // Bộ Trộn ghép được cả 2 chiều
+  if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
+  return null;
 }
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
   const B2 = G.ban[b.ban];
+  if (!ep && a.id !== b.id) {
+    const db = ghepDacBiet(a, b);
+    if (db) { const r = db.sk.ghepDB.lam(G, B2, db.a, db.b, db.dao); SND.ghep(); return r; }
+  }
   const coMimic = a.id === 'mimic' || b.id === 'mimic';
-  const ra = taoU(B2, pick(B2.deck), Math.min(LUAT.saoMax, b.sao + 1), b.o);
+  const ra = sinhU(taoU(B2, pick(B2.deck), Math.min(LUAT.saoMax, b.sao + 1), b.o));
   B2.t[a.o] = null; B2.t[b.o] = ra;
   ra.anim = { k: 'no', t: 0 };
   ra.goc = b.goc;
   if (coMimic) ra.aurora = 8; // Aurora: ghép xong được buff tấn công
   G.bay.push({ id: a.id, sao: a.sao, x0: B2.o[a.o].x, y0: B2.o[a.o].y, x1: B2.o[b.o].x, y1: B2.o[b.o].y, t: 0, bac: a.bac });
-  for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) sk.ghep(G, B2, a, b, ra); }
   const c = B2.o[b.o];
   FX.vong1(c.x, c.y, 8, 46, '#ffffff', 0.35, 4);
   FX.tiaLua(c.x, c.y, 16, tierOf(ra.id).mau, 190, 12);
-  FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to');
+  // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…)
+  for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) sk.ghep(G, B2, a, b, B2.t[b.o] || ra); }
+  if ((B2.t[b.o] || ra).sao > b.sao) FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to');
   SND.ghep();
   return ra;
 }
@@ -156,6 +176,7 @@ function dmgU(T) {
   let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * (1 + 0.18 * ((B.lv[T.id] || 1) - 1));
   d *= 1 + T.buf.dmg;
   if (T.aurora > 0) d *= 1.5;
+  if (T.banSao) d *= 0.5; // bản sao của Máy Sao Chép: −50% sát thương
   if (B.cuong > 0) d *= 2;
   return d;
 }
@@ -163,7 +184,15 @@ function tocU(T) {
   const sk = SKILLS[T.id];
   let r = sk.toc || 1;
   if (sk.tocSao) r *= 1 + sk.tocSao * (T.sao - 1);
-  return r * (1 + T.buf.toc);
+  r *= 1 + T.buf.toc + T.epxung;
+  if (T.st.kep > 0) r *= 0.6; // bị Kẹp Phá của đối thủ
+  return r;
+}
+// tỉ lệ chí mạng: 10% gốc + kỹ năng + Ăng-ten Chí Mạng kề bên
+function critU(T) {
+  if (!T || !T.buf) return 0.1;
+  const sk = SKILLS[T.id] || {};
+  return Math.min(1, 0.1 + (sk.crit || 0) + T.buf.crit);
 }
 function banDuocQuai(B, E) {
   if (E.chet || E.vao < 1) return false;
@@ -207,9 +236,19 @@ function sinhTrum(id, pi) {
 function trung(E, dmg, o) {
   if (E.chet) return 0;
   o = o || {};
-  let crit = o.crit != null ? o.crit : Math.random() < 0.1;
+  const T = o.T !== undefined ? o.T : G.dangBan; // ụ gây đòn (để tính chí mạng / hỗ trợ kề)
+  const sk = T && SKILLS[T.id];
+  let crit = o.crit != null ? o.crit : Math.random() < critU(T);
+  if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
   if (crit) dmg *= 2;
-  if (E.yeu > 0) dmg *= 1.25;
+  if (E.yeu > 0) dmg *= 1 + (E.yeuK || 0.25);      // Phá Giáp
+  if (E.cvT > 0) dmg *= 1 + (E.cvK || 0.3);        // cầu vồng (solo / co-op): quái yếu đi
+  if (E.giapT > 0) dmg *= 0.75;                    // cầu vồng đối thủ (PVP): quái trâu hơn
+  // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
+  if (T && T.buf && !o.phu) {
+    if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
+    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); FX.chu1(E.x, E.y - 22, 'TỬ THẦN', '#c77dff', 13, 'to'); FX.no('laser_trung', E.x, E.y, 50, 0.3); }
+  }
   E.hp -= dmg; E.flash = 0.09;
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
   if (!o.im) {
@@ -219,7 +258,8 @@ function trung(E, dmg, o) {
       E.soAcc = 0; E.soT = G.t;
     }
   }
-  if (E.hp <= 0) chet(E, o.B);
+  if (sk && !o.phu) { if (sk.khiTrung) sk.khiTrung(G, T, E, dmg, crit); if (crit && sk.khiCrit) sk.khiCrit(G, T, E); }
+  if (E.hp <= 0) { chet(E, o.B); if (sk && !o.phu && sk.khiGiet) sk.khiGiet(G, T, E, dmg); }
   return dmg;
 }
 function noLan(x, y, r, dmg, B, o) {
@@ -294,11 +334,13 @@ function capNhat(dt) {
     }
   }
   for (const B of G.ban) capNhatBan(B, dt);
+  G.dangBan = null;
   capNhatQuai(dt);
   // đạn
-  for (let i = G.dan.length - 1; i >= 0; i--) { const d = G.dan[i]; if (capNhatDan(d, dt)) G.dan.splice(i, 1); }
+  for (let i = G.dan.length - 1; i >= 0; i--) { const d = G.dan[i]; G.dangBan = d.T || null; if (capNhatDan(d, dt)) G.dan.splice(i, 1); }
   // hiệu ứng kỹ năng đặc biệt (tường, hố đen, vệ tinh, tia…)
-  for (let i = G.hu.length - 1; i >= 0; i--) { const o = G.hu[i]; o.t += dt; const k = HU[o.k]; if ((k && k.cap && k.cap(G, o, dt)) || o.t >= o.song) G.hu.splice(i, 1); }
+  for (let i = G.hu.length - 1; i >= 0; i--) { const o = G.hu[i]; o.t += dt; G.dangBan = o.T || null; const k = HU[o.k]; if ((k && k.cap && k.cap(G, o, dt)) || o.t >= o.song) { if (k && k.het) k.het(G, o); G.hu.splice(i, 1); } }
+  G.dangBan = null;
   for (let i = G.bay.length - 1; i >= 0; i--) { G.bay[i].t += dt; if (G.bay[i].t > 0.2) G.bay.splice(i, 1); }
   // dọn quái chết (sau hoạt ảnh vỡ)
   for (let i = G.quai.length - 1; i >= 0; i--) { const E = G.quai[i]; if (E.chet) { E.tChet += dt; if (E.tChet > 0.25) G.quai.splice(i, 1); } }
@@ -310,7 +352,11 @@ function capNhatBan(B, dt) {
   B.mv.cd = Math.max(0, B.mv.cd - dt);
   if (B.phao > 0) SKILLS.orbital.phaoBan(G, B, dt); // vệ tinh bắn phá sau khi ghép ụ Vệ Tinh
   // hỗ trợ: reset rồi các ụ hỗ trợ buff 4 ô kề (trên-dưới-trái-phải)
-  for (const T of B.t) if (T) { T.buf.toc = 0; T.buf.dmg = 0; }
+  for (const T of B.t) if (T) {
+    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0;
+    if (T.tocT > 0) { T.tocT -= dt; T.buf.toc += T.tocV; } // tăng tốc tạm thời (Kẹp Phá co-op…)
+    if (T.st.kep > 0) T.st.kep -= dt;
+  }
   for (const T of B.t) if (T && !T.st.bang && !T.st.da) { const sk = SKILLS[T.id]; if (sk.hoTro) for (const N of keCan(B, T.o)) if (N && !N.st.da) sk.hoTro(G, T, N); }
   for (const T of B.t) if (T) capNhatU(B, T, dt);
   if (B.ai || G.debug.auto) aiBan(B, dt);
@@ -343,9 +389,11 @@ function capNhatU(B, T, dt) {
     if (st.lua <= 0) { st.lua = 0; haSao(B, T, 'Cháy rụi'); if (!B.t[T.o]) return; }
   }
   const sk = SKILLS[T.id];
+  T.tuoi += dt;
+  G.dangBan = T;
   if (sk.capNhat && sk.capNhat(G, B, T, dt)) return; // kỹ năng tự quản lý (laser, overlord, mana…)
   if (!sk.dmg) return;
-  const E = sk.nham === 'mau' ? quaiMauNhat(B) : sk.nham === 'ngau' ? (T.muc && !T.muc.chet && banDuocQuai(B, T.muc) && T.cd > 0.05 ? T.muc : quaiNgauNhien(B)) : quaiDau(B);
+  const E = sk.chonMuc ? sk.chonMuc(G, B, T) : sk.nham === 'mau' ? quaiMauNhat(B) : sk.nham === 'ngau' ? (T.muc && !T.muc.chet && banDuocQuai(B, T.muc) && T.cd > 0.05 ? T.muc : quaiNgauNhien(B)) : quaiDau(B);
   T.muc = E;
   xoayDau(T, E, dt);
   T.cd -= dt * tocU(T);
@@ -426,6 +474,14 @@ function capNhatTrum(E, dt) {
   FX.chu1(E.x, E.y - 52, TRUM[E.trum].kn + '!', TRUM[E.trum].mau, 18, 'to');
   SND.bao();
 }
+// khiên 1 lần trên ụ (Máy Khiên / Hào Quang): chặn chiêu trùm hoặc phá của đối thủ
+function chanKhien(B, T) {
+  if (B && B.khien > 0 && T) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#fff6c0', 0.4); FX.chu1(c.x, c.y - 18, 'CHẶN', '#fff6c0', 14); return true; } // khiên toàn bàn
+  if (!T || !(T.khien > 0)) return false;
+  T.khien--; const c = B.o[T.o];
+  FX.vong1(c.x, c.y, 12, 44, '#9fe6ff', 0.4, 4); FX.chu1(c.x, c.y - 22, 'KHIÊN CHẶN', '#9fe6ff', 13, 'to'); FX.tiaLua(c.x, c.y, 10, '#bff4ff', 150);
+  return true;
+}
 function thucHienChieu(E, B) {
   const muc = B.t.filter(T => T && E.bao.muc.includes(T.uid));
   for (const T of muc) T.st.ngam = 0;
@@ -433,6 +489,8 @@ function thucHienChieu(E, B) {
     for (const T of muc) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#9fe6ff', 0.4); FX.chu1(c.x, c.y - 18, 'CHẶN', '#9fe6ff', 14); }
     return;
   }
+  // Máy Khiên: ụ có khiên chặn 1 lần chiêu trùm
+  for (let i = muc.length - 1; i >= 0; i--) if (chanKhien(B, muc[i])) muc.splice(i, 1);
   const rong = (T) => B.o[T.o];
   const deBan = (T, ten, mau) => { const c = rong(T); G.hu.push({ k: 'chieuTrum', t: 0, song: 0.45, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau }); };
   switch (E.trum) {
@@ -504,9 +562,12 @@ function aiBan(B, dt) {
   if (B.mv.cd <= 0 && B.mana >= B.mv.gia && B.mana > 200 && Math.random() < 0.3) { dungMV(B); return; }
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
+  // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy
+  for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
   ts.sort((a, b) => a.sao - b.sao);
-  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hopLeGhep(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
-  if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (hopLeGhep(a, b)) { ghep(B, a, b); return; }
+  const hl = (a, b) => hopLeGhep(a, b) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
+  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
+  if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { ghep(B, a, b); return; }
   const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => B.lv[a] - B.lv[b]);
   if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
