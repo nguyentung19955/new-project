@@ -445,20 +445,29 @@
       c.fillStyle = lg(c, lan.x + lan.w - 8, 0, lan.x + lan.w, 0, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,0,0,0.55)']]); c.fillRect(lan.x + lan.w - 8, lan.y, 8, lan.h);
       c.restore();
     } else veHanhLang(c, Object.assign({}, B, { HL: [lan], CONG: null, noi: true }));
-    // CO-OP: VÙNG CHUNG (đoạn làn giữa 2 bàn) — cả 2 bàn cùng bắn: dải tím sáng + viền vạch; ngoài vùng này mỗi bàn chỉ bắn đoạn cạnh bàn mình
+    if (lan.phu) return;   // lần gọi phụ: chỉ lát sàn
+    // CO-OP: HÀNH LANG CHUNG nằm ngang dọc khe giữa 2 bàn (J → lõi bên phải): lát cùng loại sàn làn (đổi trục dọc ↔ ngang)
+    const H = lan.ngang;
+    if (H) { c.save(); c.translate(0, H.y); c.transform(0, 1, 1, 0, 0, 0);
+      veLanDoc(c, { x: -H.h / 2, y: H.x0, w: H.h, h: H.x1 - H.x0, phu: true }, B); c.restore(); }
+    // CO-OP: VÙNG CHUNG = khe giữa 2 bàn (đoạn làn dọc giữa + hành lang ngang) — cả 2 bàn cùng bắn; ngoài vùng này mỗi bàn chỉ bắn nhánh cạnh bàn mình
     if (C.VUNG_CO && lan === C.LAN_CO) { const Z = C.VUNG_CO, h = Z.duoi - Z.tren;
-      if (h > 4) { c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(190,80,255,0.16)'; c.fillRect(lan.x, Z.tren, lan.w, h);
-        c.strokeStyle = 'rgba(220,140,255,0.75)'; c.lineWidth = 1.5; c.setLineDash([5, 4]);
-        for (const y of [Z.tren, Z.duoi]) { c.beginPath(); c.moveTo(lan.x, y); c.lineTo(lan.x + lan.w, y); c.stroke(); }
-        c.restore(); } }
-    // mũi tên rất mờ chỉ hướng đi xuống
+      c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = 'rgba(190,80,255,0.15)';
+      if (h > 4) c.fillRect(lan.x, Z.tren, lan.w, h);
+      if (H) c.fillRect(lan.x + lan.w, H.y - H.h / 2, H.x1 - lan.x - lan.w, H.h);
+      c.strokeStyle = 'rgba(220,140,255,0.7)'; c.lineWidth = 1.5; c.setLineDash([5, 4]);
+      if (h > 4) for (const y of [Z.tren, Z.duoi]) { c.beginPath(); c.moveTo(lan.x, y); c.lineTo(lan.x + lan.w, y); c.stroke(); }
+      c.restore(); }
+    // mũi tên rất mờ chỉ hướng đi: nhánh trên xuống, nhánh dưới lên, hành lang chung sang phải
     c.save(); c.strokeStyle = 'rgba(255,90,110,0.22)'; c.lineWidth = 2; c.lineCap = 'round'; c.lineJoin = 'round';
-    const cx = lan.x + lan.w / 2;
-    for (let y = lan.sinh[1] + 40; y < lan.loi[1] - 40; y += 56) { c.beginPath(); c.moveTo(cx - 5, y - 4); c.lineTo(cx, y + 1); c.lineTo(cx + 5, y - 4); c.stroke(); }
+    const cx = lan.x + lan.w / 2, jy = H ? H.y : lan.loi[1];
+    for (let y = lan.sinh[1] + 40; y < jy - 30; y += 56) { c.beginPath(); c.moveTo(cx - 5, y - 4); c.lineTo(cx, y + 1); c.lineTo(cx + 5, y - 4); c.stroke(); }
+    if (lan.sinh2) for (let y = lan.sinh2[1] - 40; y > jy + 30; y -= 56) { c.beginPath(); c.moveTo(cx - 5, y + 4); c.lineTo(cx, y - 1); c.lineTo(cx + 5, y + 4); c.stroke(); }
+    if (H) for (let x = lan.x + lan.w + 20; x < lan.loi[0] - 30; x += 50) { c.beginPath(); c.moveTo(x - 4, jy - 5); c.lineTo(x + 1, jy); c.lineTo(x - 4, jy + 5); c.stroke(); }
     c.restore();
-    // cổng sinh (đầu làn) + lõi (cuối làn)
+    // cổng sinh (đầu mỗi nhánh) + lõi (cuối đường chung)
     const po = co('bg:portal'), lo = co('bg:core');
-    { const [x, y] = lan.sinh, w = lan.w * 0.95, h = w * 1.1; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#ff2bd6', x, y, w * 0.8, 0.35); c.restore();
+    for (const sp of [lan.sinh, lan.sinh2]) { if (!sp) continue; const [x, y] = sp, w = lan.w * 0.95, h = w * 1.1; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#ff2bd6', x, y, w * 0.8, 0.35); c.restore();
       if (po) c.drawImage(po, x - w / 2, y - h / 2, w, h); else { c.fillStyle = '#07040c'; c.beginPath(); c.ellipse(x, y, w / 2.4, h / 2.4, 0, 0, 7); c.fill(); } }
     { const [x, y] = lan.loi, w = lan.w * 1.15; c.save(); c.globalCompositeOperation = 'lighter'; veGlow(c, '#3ce7ff', x, y, w * 0.8, 0.3); c.restore();
       if (lo) c.drawImage(lo, x - w / 2, y - w * 0.55, w, w); }
