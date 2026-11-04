@@ -50,3 +50,9 @@ Thứ tự cột trong ảnh kiểm: S, SE, E, NE, N, NW, W, SW.
 - **Nguyên tắc thiết kế (người dùng chốt):** hình dáng phải nói lên vai trò. Hỗ trợ → ba lô/đĩa tín hiệu, dấu cộng, dáng hiền; nổ lan → dây đeo cầu nổ; bắn thẳng → dáng gọn, nắm đấm năng lượng. Kiểm "nhìn hình đoán được vai" trước khi xoay 8 hướng.
 - ANCHOR v6: sửa ảnh cũ bằng edit-image-pixen thêm ba lô + đĩa tín hiệu + vòng tay; động tác "phát sóng" tự mô tả (skeleton-v3, 6 khung) sạch.
 - Hiệu ứng (tia, cầu nổ, vòng sóng) nhờ ChatGPT vẽ riêng.
+
+## LUẬT THIẾT KẾ TƯỚNG (người dùng chốt 04/11, 15h)
+1. BỎ chủ đề cyberpunk. Ngoại hình tự do sáng tạo, miễn hợp với thứ PixelLab vẽ đẹp: hình khối to dễ đọc, chi tiết đẹp (khung 128), không cầm đồ vật nhỏ.
+2. Hình dáng phải nói lên vai trò (hỗ trợ trông như hỗ trợ; tướng hỗ trợ có thể là nữ).
+3. Mỗi tướng chỉ có động tác game cần (đứng + tấn công/phát sóng). Hiệu ứng nhờ ChatGPT vẽ riêng.
+4. Quy trình: tạo 4 mẫu mặt trước (pixen, high top-down) → người dùng chọn → xoay 8 hướng → nhập nhân vật → động tác (mẫu có sẵn skeleton-v3 hoặc tự mô tả tay trống) → soát từng khung → GIF.
