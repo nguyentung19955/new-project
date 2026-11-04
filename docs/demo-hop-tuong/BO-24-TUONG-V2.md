@@ -133,3 +133,34 @@ Thay đổi so với bảng trên (các tướng không nhắc giữ nguyên là
 | 23 | CROWN ZERO | Chronos, nam vua thời gian, vương miện vỡ, áo choàng đồng hồ | nam · mannequin | PHÉP |
 | 24 | ORACLE | Nhân sư (Sphinx): sư tử cánh, mặt nạ vàng, mắt thứ ba | quái · lion | VỒ |
 Tỉ lệ: 13 nữ · 6 nam · 5 quái/rồng.
+
+## CHỐT (04/11 18h40): THIẾT KẾ THEO THƯ VIỆN ĐỘNG TÁC PIXELLAB (tư vấn ChatGPT + chỉnh)
+Ý người dùng: tận dụng động tác có sẵn của PixelLab để tạo cá tính & kỹ năng (vd. `drinking` → uống bia được buff). Thay thế bảng "TỰ DO GIỚI TÍNH & LOÀI" ở trên.
+| # | Tên | Hoá thân | Loài · khung | Đứng chờ | Đòn thường | Kỹ năng (động tác → tác dụng) |
+|---|---|---|---|---|---|---|
+| 01 | SCORCH | Agni, nữ võ sư lửa | nữ · mannequin | fight-stance-idle | đấm (tự mô tả 12 khung) | surprise-uppercut → cột lửa tại quái, thiêu đốt |
+| 02 | FROST | Skadi, nữ thần băng kiêu kỳ | nữ | breathing-idle | đẩy hai tay (tự mô tả) | pushing → sóng băng làm chậm, quái đã chậm thì đóng băng |
+| 03 | ARC | Raijin, nữ thần sấm nghịch ngợm | nữ | fight-stance-idle | đấm | hurricane-kick → đá xoay, điện 3 quái gần, choáng |
+| 04 | VENOM | Medusa | nữ | breathing-idle | phép | surprise-uppercut → ánh mắt hoá đá quái mạnh nhất |
+| 05 | EMBERBUG | Hotaru, linh đom đóm mê ngủ | nữ | breathing-idle | throw-object | two-footed-jump → 5 đom đóm tự tìm mục tiêu |
+| 06 | TIDAL | Amphitrite | nữ | breathing-idle | pushing | phép → bong bóng nước nảy 4 quái, gây Ướt (tăng sát thương Sét) |
+| 07 | NEEDLE | Arachne, thợ dệt cầu toàn | nữ | breathing-idle | lead-jab | cross-punch → chùm kim xuyên cả hàng |
+| 08 | LANCE | Artemis, không bao giờ bắn trượt | nữ | fight-stance-idle | lead-jab | pushing → hút quái lại rồi bắn tia xuyên |
+| 09 | BRAMBLE | Dryad nghịch ngợm | nữ | breathing-idle | phép | crouching → getting-up → gai mọc trên đường giữ chân quái |
+| 10 | ECHO | Benzaiten | nữ | breathing-idle | lead-jab (sóng âm) | surprise-uppercut → nốt cao, vòng sóng âm ngắt kỹ năng quái |
+| 11 | QUILL | Cửu vĩ hồ | thú · dog | idle | bark (gai thép gần) | running → lao ra mép ô rồi về, giảm giáp |
+| 12 | MOTH | Nyx | nữ | breathing-idle | phép | backflip → 2 phân thân ảo bắn vài giây |
+| 13 | BASTION | Gaia: gấu đá mê bia mật ong | thú · bear | idle-long | attack-left/right | **drinking** → uống thùng bia mật ong: tăng phòng thủ + sát thương; stand-on-hind-legs → chấn động làm chậm |
+| 14 | WARP | Nut | nữ | breathing-idle | phép | pushing → cổng không gian đưa 3 quái về sau (không áp dụng boss) |
+| 15 | SPECTER | Anubis | nam · mannequin | breathing-idle | phép (hồn) | taking-punch → đánh dấu quái yếu, chết thì nổ hồn |
+| 16 | TESLA | Rồng sấm (Raijū) | rồng · lion | idle | vồ | vồ tại chỗ → sét chuyền sang quái bị Ướt |
+| 17 | ALCHEM | Thoth, nhà giả kim lập dị | nam | breathing-idle | throw-object | **drinking** → uống thuốc thử: ngẫu nhiên tăng tốc đánh / sát thương / đòn gây Độc |
+| 18 | HUSH | Bastet: hắc miêu ninja | thú · cat | idle | vồ | rình (sneak) → ám sát quái cuối hàng, chí mạng lớn |
+| 19 | BROKER | Hermes, ông chủ ngân hàng | nam | breathing-idle | throw-object (đồng xu) | **picking-up** → nhặt vàng, tạo vàng (có giới hạn mỗi đợt) |
+| 20 | GLITCH | Loki, hacker | nam | fight-stance-idle | lead-jab | surprise-uppercut → giảm kháng, khoá kỹ năng quái |
+| 21 | PATCHWORK | Chimera (sư tử–dê–rồng) | quái · lion | idle | vồ | gầm → đổi 3 dạng Lửa/Độc/Xuyên |
+| 22 | MIRROR | Kỳ Lân vảy gương | thần thú · horse | idle | giậm | nhảy → sao chép kỹ năng tướng kề bên (yếu hơn) |
+| 23 | CROWN ZERO | Chronos, hoàng đế thời gian | nam | fight-stance-idle | cross-punch | pushing → dừng thời gian quái thường (boss chỉ chậm) |
+| 24 | ORACLE | Urðr, nữ thần vận mệnh | nữ | breathing-idle | phép | two-footed-jump → đánh dấu quái nguy hiểm, đồng minh đánh mạnh hơn |
+Tỉ lệ: 13 nữ · 5 nam · 6 quái/thú/rồng. Ưu tiên cơ chế: WARP, BROKER, MIRROR, PATCHWORK, CROWN ZERO.
+Lưu ý: `fireball` tự vẽ lửa → đòn "phép" dùng động tác tự mô tả tay không; id động tác của mèo/sư tử/ngựa đối chiếu khi nhập nhân vật.
