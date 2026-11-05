@@ -49,5 +49,5 @@ for c in ORDER:
 W = max(b.width for b in blocks); H = sum(b.height for b in blocks) + 10 * len(blocks)
 S = Image.new('RGB', (W, H), (0, 0, 0)); y = 0
 for b in blocks: S.paste(b, (0, y)); y += b.height + 10
-S.save(OUT, optimize=True)
+S.quantize(colors=256, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE).save(OUT, optimize=True)  # bảng màu 256 → nhẹ ~1/4
 print('bảng:', OUT, S.size)
