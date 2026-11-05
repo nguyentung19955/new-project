@@ -175,5 +175,17 @@ const TVB = {
   }, true);
   // B10/B11: nhãn bàn
   if (typeof REN !== 'undefined') { REN.veNhanBan = function (ctx) { TVB.nhan(ctx); }; }
+  // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) dưới đầu ụ, nằm trên mặt bàn
+  if (typeof REN !== 'undefined' && REN.veKeo) {
+    const kGoc = REN.veKeo;
+    REN.veKeo = function (ctx) {
+      const k = UI.keo;
+      if (k && k.dang && typeof UI.diemKeo === 'function') {
+        const a = this.img('tv_keo_bong'), B = G.ban[k.T.ban];
+        if (a && B) { const [hx, hy] = UI.diemKeo(k), w = Math.min(B.cw, B.ch) * 1.08, h = w * a.height / a.width; ctx.globalAlpha = 0.9; ctx.drawImage(a, hx - w / 2, hy + (k.lech ? 6 : -4) + B.ch * 0.18 - h / 2, w, h); ctx.globalAlpha = 1; }
+      }
+      return kGoc.apply(this, arguments);
+    };
+  }
 })();
 window.TVB = TVB;
