@@ -1,0 +1,224 @@
+(Chép nguyên văn câu trả lời của ChatGPT, cuộc trò chuyện "Tư vấn chuyển đổi game", 05/11/2026 ~07:40. Hình minh hoạ và sơ đồ trong khung chat không chép được.)
+
+TƯ VẤN CHUYỂN ĐỔI LINH KHÍ → EUROPEAN FAIRY-TALE ACTION RPG
+
+Bản đánh giá chiến lược • 05/11/2026 • Dành cho Spiritblade (spiritblade.web.app)
+
+Kết luận điều hành
+
+Tôi khuyên giữ ý tưởng Great Storybook, nhưng thay đổi cách kể và cách thể hiện. Đừng biến trò chơi thành cuộc phiêu lưu đi nhặt những trang sách thất lạc. Hãy biến nó thành một game hành động nơi vũ khí ghi nhớ hành động của người chơi, còn quái vật học cách chống lại người chơi.
+
+Đó mới là điểm khác biệt đáng quảng bá toàn cầu.
+
+Đánh giá đề xuất hiện tại: 7/10 (điểm đánh giá sáng tạo chủ quan, không phải điểm khảo sát thị trường).
+
+Ba quyết định quan trọng nhất:
+1. Giữ Soul Weapons + Adaptive Monsters làm trục chính. Storybook là lời giải thích về thế giới, không phải tính năng quan trọng nhất.
+2. Ưu tiên sửa 5 phút chơi đầu trước khi vẽ lại hàng trăm sprite sheet. Một game đẹp nhưng không thể hiện cơ chế đặc trưng sẽ khó giữ chân người chơi.
+3. Chuyển sang phong cách Dark Whimsical Fairy Tale (cổ tích huyền bí, vừa quyến rũ vừa nguy hiểm), không đi theo fantasy châu Âu quá hiện thực, u ám hoặc đầy chi tiết.
+
+Tôi cũng không tin ước lượng thay art 30% là ngân sách tổng dự án an toàn. Với hơn 700 sprite sheet, còn phải tính UI, kiểm tra độ rõ trên điện thoại, chuyển đổi nội dung, QA animation và cân bằng gameplay.
+
+1. Great Storybook có đủ mạnh không?
+1.1. Điểm mạnh
+Great Storybook (Cuốn Đại Truyện) kết nối khá tự nhiên nhiều hệ thống đã có:
+- Những trang bị xé rời tạo lý do cho bốn vùng, boss và khả năng mở rộng vùng mới.
+- Ba loại Ink (Mực cổ) giải thích Fire, Poison, Ice mà không cần thay toàn bộ cơ chế.
+- Weapon Awakening trở thành sự kiện có ý nghĩa trong thế giới.
+- Boss có thể học từ hành động của người chơi vì quy tắc cố định của câu chuyện đã bị phá vỡ.
+Cấu trúc bốn Chapter (Chương truyện) cũng phù hợp với bốn zone hiện tại, giúp tái sử dụng artwork tốt hơn so với việc thay thế toàn bộ bối cảnh.
+
+1.2. Vấn đề lớn nhất
+Cuốn sách bị xé trang là một tiền đề quen thuộc. Cơ chế quái học cách chiến đấu mới là điểm độc đáo.
+Một trailer chỉ cho thấy trang sách bay, khu rừng bị nguyền và ba loại mực sẽ giống rất nhiều game fantasy indie. Người xem không hiểu tại sao phải chơi Spiritblade thay vì một game hành động khác.
+Ngoài ra, mô-típ mọi sinh vật phải tuân theo câu chuyện được viết sẵn dễ gây câu hỏi: nhân vật chính có đang giải phóng họ, hay lại bắt họ vào quy tắc cũ? Đó là một cơ hội kể chuyện tốt, nhưng phải có chủ đích.
+
+1.3. Hai ý tưởng trung tâm thay thế
+Phương án A — The Living Forge (Lò Rèn Sống)
+Một lò rèn cổ từng tạo ra vũ khí có linh hồn. Lõi của lò vỡ thành nhiều Heartshards (Mảnh Tim Lò), khiến quái vật hấp thụ ký ức chiến đấu. Vũ khí lớn lên qua từng trận đánh; Fire, Poison và Ice là ba dòng sức mạnh nguyên thủy. Mỗi boss giữ một mảnh lõi.
+Ưu điểm: gần hệ thống rèn hiện tại nhất, giải thích tiến hóa vũ khí rất dễ, chi phí chuyển đổi cốt truyện thấp. Nhược điểm: dễ trở thành fantasy nguyên tố quen thuộc, thiếu bản sắc cổ tích.
+
+Phương án B — The Unwritten Oath (Lời Thề Chưa Được Viết)
+Một giao ước cổ buộc mỗi quái vật phải lặp lại số phận của nó. Lindworm phá giao ước thành những Oath Fragments (Mảnh Ước). Quái vật bắt đầu học hành động của kẻ đối đầu. Ba loại mực Fire/Poison/Ice dùng để khắc lời thề mới lên vũ khí. Mỗi boss giữ một mảnh giao ước.
+Ưu điểm: chủ đề số phận và sự tự do có chiều sâu hơn, thích hợp boss biết học và phản ứng. Nhược điểm: trừu tượng, khó truyền đạt trong 30 giây đầu.
+
+1.4. Phương án tôi chọn
+Giữ Storybook, vay mượn điểm mạnh của The Unwritten Oath.
+Đề xuất tên lore: The Unwritten Tales (Những Truyện Chưa Được Viết).
+Trước đây, Great Storybook ghi lại số phận của các sinh vật. Khi các trang bị xé rời, quái vật không còn bị buộc phải lặp lại hành động cũ. Chúng bắt đầu viết số phận mới bằng cách học người đối diện.
+Vũ khí sống cũng có khả năng học hỏi. Nhưng khác quái vật, chúng học từ người đồng hành và phát triển cùng họ.
+Vấn đề trung tâm không phải phục hồi cuốn sách về nguyên trạng, mà là: Liệu một thế giới nên được viết sẵn số phận, hay được phép tự viết câu chuyện của mình?
+Điểm này tạo nền tảng cho các chapter tương lai mà không cần xác định tổng số trang.
+Thông điệp marketing đề xuất: Your blade remembers. Your enemies learn. (Vũ khí ghi nhớ. Kẻ thù học hỏi.)
+Câu này mạnh hơn việc nhấn vào một cuốn sách bị xé. Nó nói ngay cho người chơi biết hai điều lạ nhất trong game.
+
+2. Tên game và nhân vật
+2.1. Kiểm tra sơ bộ tên game (nguồn công khai ngày 05/11/2026)
+- Spiritblade: mô tả đúng fantasy vũ khí sống nhưng khá chung; có tên gần trùng → giữ làm tên tạm.
+- Spiritblade: The Torn Storybook: rõ cốt truyện nhưng dài, mang cảm giác game thiên về đọc truyện → không chọn.
+- Talesworn (Người Thề Với Truyện): ngắn, dễ làm logo, có cá tính → ứng viên tốt.
+- The Unwritten Blade (Lưỡi Kiếm Chưa Được Viết): kết nối câu chuyện và vũ khí → ứng viên thứ hai.
+- Storyforged (Được Rèn Từ Truyện): gắn chủ đề rèn vũ khí với cổ tích → đáng thử.
+Phát hiện quan trọng: Đã có game Spirit Blades trên Google Play, nhân vật Spiritblade trong Chronicles of Gionia và tên Spirit Blade: Awaken trên App Store. Đây là các trùng/gần trùng có thật về mặt tên gọi, không đồng nghĩa với kết luận xâm phạm nhãn hiệu.
+Với Talesworn, tìm kiếm nhanh chưa xác nhận được một trò chơi cùng tên nổi bật, nhưng từ này đã được người khác sử dụng làm tên trên mạng (Royal Road). Chưa thể kết luận tên khả dụng về pháp lý, domain hoặc kho ứng dụng.
+Khuyến nghị: Dùng Talesworn làm hướng đặt thương hiệu cần xác minh thêm. Tiếp tục giữ spiritblade.web.app trong quá trình chuyển đổi vì domain kỹ thuật không bắt buộc phải giống tên hiển thị. Trước khi công bố chính thức, tra cứu Steam, App Store, Google Play, itch.io, WIPO Global Brand Database và cơ sở dữ liệu nhãn hiệu ở các thị trường mục tiêu.
+
+2.2. Tên hero
+Chọn Rowan (tên cây thanh lương trà, gắn với truyền thống dân gian châu Âu).
+Tên ngắn, dễ đọc, phù hợp nhân vật 12–13 tuổi và không khóa giới tính một cách quá cứng trong cảm nhận của khán giả. Tuy nhiên, đây là tên phổ biến; không nên xây dựng tính độc quyền thương hiệu chỉ dựa vào Rowan.
+Kit cũng ổn nhưng ít đặc trưng. Tamsin có sắc thái cổ tích rõ, phù hợp nếu muốn nhân vật nữ. Tôi không đề nghị đổi giới tính chỉ để tạo khác biệt.
+Đề xuất giới thiệu nhân vật: Rowan — The Apprentice Who Forges Living Blades.
+
+3. Gameplay cho người chơi mobile toàn cầu
+3.1. Thứ tự ưu tiên
+- (1) Chứng minh cơ chế trong 5 phút: rất nên làm → P0, làm đầu tiên.
+- (3) Giảm xuống 2 vũ khí, đơn giản UI: rất nên làm, có điều chỉnh → P1.
+- (2) Tale Cards sau mỗi phòng: có tiềm năng nhưng dễ quá tải → P2, thử nghiệm nhỏ.
+Tôi sẽ không làm 30 Tale Cards trước. Việc quan trọng là chứng minh combat hiện tại thực sự thú vị trên màn hình iPhone.
+
+3.2. Cơ chế quái vật học: cần thiết kế lại cách phản ứng
+Điểm rủi ro trong đề xuất Stage 1-1 là người chơi liên tục sử dụng Fire rồi bị mini-boss kháng Fire. Nếu không có giải thích trực quan, người chơi sẽ hiểu rằng trò chơi trừng phạt việc sử dụng vũ khí mình yêu thích.
+Tôi đề xuất một cơ chế Adaptation (Thích nghi) dựa trên luật rõ ràng, không cần AI chạy trên server. Ví dụ vòng tương tác của Toadstool King: vòng học — đối phó — khai thác điểm yếu.
+Đề xuất cân bằng ban đầu, cần kiểm thử:
+- Boss bắt đầu thích nghi sau khoảng 3–4 lần lạm dụng cùng một đòn hoặc khi đầy adaptation meter.
+- Fire Guard giảm khoảng 25–35% hiệu quả Fire trong thời gian ngắn, không miễn nhiễm hoàn toàn.
+- Ice phá guard nhanh hơn, mở khoảng trống để tấn công.
+- Boss vẫn có thể bị đánh bại chỉ bằng kỹ năng né và sử dụng Fire khéo léo.
+- Mỗi boss chỉ nên học một hoặc hai kiểu hành vi trong giai đoạn đầu.
+- Thông báo bằng icon, thay đổi tư thế và hiệu ứng dễ nhận ra. Không cần một câu thoại dài giải thích thuật toán thích nghi.
+
+3.3. Hai vũ khí trong mỗi stage
+Tôi đồng ý, với một thay đổi quan trọng: người chơi vẫn sở hữu cả bốn loại vũ khí và lựa chọn hai vũ khí trước khi bắt đầu stage.
+Trong chiến đấu chỉ cần một nút SWAP lớn. Đừng thêm bốn nút vũ khí nhỏ vào màn hình vốn có cả Attack, Dodge, Skill và Potion.
+Hệ thống nâng cấp Lv1–15 với bốn dạng White → Sprout → Formed → Awakened phải giữ. Đây là một phần cốt lõi của game, không nên hy sinh để đơn giản hóa UI.
+Một con số Power duy nhất có thể dùng để tóm tắt, nhưng vẫn cần cho người chơi xem Damage, Cooldown, hiệu ứng nguyên tố và khả năng tương tác khi mở thông tin chi tiết.
+Village bar nên là Play / Forge / Friends / Quests / Shop, thay cho Heroes nếu hiện tại chưa có nhiều hero chơi được.
+Chiêu bắn xa hiện được gọi là "chuong" nên đổi tên và nhận diện hoàn toàn, chẳng hạn Ink Bolt (Đạn Mực) hoặc Spirit Burst (Bộc Phát Linh Lực), giữ chức năng gameplay.
+
+3.4. Tale Cards: giảm từ 30 xuống 9–12
+Ý tưởng tốt nhưng không nên hiển thị lựa chọn sau mọi phòng. Người chơi action RPG có thể thấy mệt khi liên tục phải dừng đánh để lựa chọn.
+Thử trước 9–12 thẻ, thuộc ba nhóm Offense, Defense và Element. Chỉ xuất hiện sau elite, chest hoặc khoảng 2–3 fight rooms.
+Ví dụ:
+- Ember Trail (Vệt Than Hồng): Dodge để lại vệt lửa trong thời gian ngắn.
+- Venom Edge (Lưỡi Độc): Combo cuối tăng tích lũy Poison.
+- Winter Guard (Giáp Mùa Đông): Né đúng thời điểm tạo lớp bảo vệ Ice.
+Tất cả chỉ tồn tại trong một run, không thay thế progression vĩnh viễn.
+
+3.5. Năm phút đầu tiên (ưu tiên P0)
+- 0:00–0:20 — Vào trận ngay. Người chơi chọn Play, Rowan đi vào Thornwood (Rừng Gai). Không bắt đăng nhập Google, không mở đầu bằng nhiều trang hội thoại.
+- 0:20–1:00 — Combat căn bản. Hai hoặc ba quái nhỏ, hướng dẫn di chuyển và đánh. Đòn đánh có hit-stop ngắn, flash trúng đòn, vũ khí rõ trên nền.
+- 1:00–1:45 — Học né và phản công. Một địch có telegraph rõ. Người chơi Dodge thành công rồi tung combo. Hướng dẫn SWAP chỉ khi đã cần.
+- 1:45–2:30 — Fire Ink xuất hiện. Trang truyện đỏ bay vào sword và biến đổi vũ khí. Thể hiện bằng thay đổi pixel art thực sự, không chỉ một hạt sáng nhỏ. Đây có thể là sức mạnh tạm thời trong demo, không phải tự động bỏ qua mốc Lv3.
+- 2:30–3:50 — Quái học cách người chơi đánh. Toadstool King thích nghi với Fire và tạo Fire Guard. Ice weapon nằm ngay trên đường đi để người chơi thử chuyển vũ khí, không phải một vật phẩm bí mật dễ bỏ lỡ.
+- 3:50–5:00 — Thành quả. Đánh bại mini-boss, weapon nhận một dấu hiệu trưởng thành theo hành vi, lấy Page Scrap (Mảnh Trang), quay lại Hollin (Ngôi Làng Trong Thung). Forge được mở rõ ràng.
+Mục tiêu là người chơi tự nói được: "Kiếm của mình thay đổi theo cách mình chiến đấu, còn con boss thật sự phản ứng với mình."
+
+3.6. Ba mươi phút đầu tiên
+- 0–5 phút — Bất ngờ — Weapon growth và boss adaptation.
+- 5–10 phút — Làm chủ — Elite, shrine, lựa chọn Tale Card đầu.
+- 10–20 phút — Xây dựng phong cách — Forge, hai vũ khí, thử nguyên tố.
+- 20–30 phút — Chinh phục và mong quay lại — Grimbark hoặc teaser boss, page đầu, nhiệm vụ cứu bạn.
+Đừng ép người chơi khám phá tất cả menu trong 30 phút. Chỉ cần biết mình có thể đánh, né, đổi vũ khí, rèn và tiến đến thử thách tiếp theo.
+
+3.7. UX và dữ liệu cần đo
+Với canvas 480×270, không nên tính kích thước nút cảm ứng chỉ theo game pixels. Cần kiểm tra touch targets theo CSS/device viewport trên iPhone thực, kể cả safe area.
+Nên thử trợ giúp khóa mục tiêu nhẹ theo hướng đánh và một số chỉ báo i-frame. Dùng state machine cho boss thích nghi trước khi nghĩ đến AI phức tạp.
+Theo dõi các sự kiện: thời điểm đòn đánh đầu tiên, lần Dodge thành công, thời điểm thấy Fire Ink, có nhận ra boss thích nghi không, đã SWAP sang Ice chưa, tỷ lệ đánh bại boss, thời điểm thoát game, FPS và lỗi save. Không cần dữ liệu định danh cá nhân để đo các tương tác này.
+
+4. Visual Direction — European Fairy-Tale
+4.1. Phong cách nên chọn
+Dark Whimsical Fairy Tale — Cổ tích huyền bí, có nét đáng yêu nhưng nguy hiểm.
+Nó nên giống những hình minh họa truyện cổ được chuyển thành pixel art chất lượng cao: gỗ, rễ cây, mái đá, lâu đài, nấm độc, rừng gai, mực cổ và ánh sáng ấm.
+Không nên là dark fantasy hiện thực, nhiễu texture và phủ quá nhiều bóng. Cũng không nên là medieval fantasy chung chung với áo giáp xám, nền đất nâu và quái vật giống nhau.
+
+4.2. Palette màu đề xuất
+Deep #1D2530 · Forest #273A35 · Moss #49624A · Leaf #789B65 · Parchment #E9D8B2 · Ivory #F7EACA · Wood #74523F · Outline #18202A · Saffron #E0A23A · Hero Blue #3E6FA8 · Leather #986342 · Skin #E7BE92 · Fire #F26838 · Poison #75B44A · Ice #64BED5 · Danger #CF5261
+Các màu bổ sung: Fire highlight #FFC067, Poison highlight #B9E86B, Ice highlight #B7F0EF, Epic #A27BC4, Legendary #EBC36D.
+
+4.3. Hero Rowan
+Thiết kế saffron capelet + blue tunic là đúng hướng. Đây là thay đổi có giá trị lớn nhất trong dự thảo art.
+Silhouette cần khóa: Hood/capelet vàng chiếm mảng dễ thấy nhất từ trên cao; áo xanh tương phản nền rừng; apron da chỉ là điểm nhấn; vũ khí mang đường sáng nguyên tố.
+Sprite vẫn dùng canvas 48×48, nhưng phần nhân vật hữu dụng có thể rộng khoảng 34–40 pixel tùy animation. Đừng vẽ quá nhiều dây đai, túi và đường khâu trên một nhân vật nhỏ.
+Chỉ thay head và recolor body là hướng tối ưu về chi phí, nhưng phải thử ngay với cả bốn bộ animation. Một hood đẹp ở idle có thể làm silhouette khó đọc trong dodge roll hoặc combo.
+
+4.4. Village và zones
+Hollin cần có cottages đá ngà, khung gỗ, mái slate xanh xám, cửa lò rèn cam ấm. NPC phải khác nhau bằng hình khối và màu điểm nhấn. Ba người bạn được giải cứu nên tạo thay đổi nhìn thấy được trong làng.
+Bốn zone nên có vật liệu nền khác nhau:
+- Thornwood (Rừng Gai): đất olive, rễ và lá lớn — tránh sàn rừng dày đặc chi tiết.
+- Drowned Grotto (Hang Ngập): đá xanh xám, vũng nước phẳng — tránh phản chiếu sáng gây rối.
+- Emberhold (Thành Than Hồng): gạch đá và vệt dung nham — tránh cả màn hình đỏ/cam.
+- Mirefen (Đầm Sương): bùn xanh xám, nấm và lau sậy — tránh Poison VFX lẫn màu sàn.
+Mỗi floor nên chia ba lớp: nền phẳng có tương phản thấp, trang trí phụ, và vật thể tương tác có tương phản cao. Giảm decoration ngay dưới vị trí chân nhân vật.
+
+4.5. Monsters và bosses
+Tôi đồng ý giữ Grimbark và Sir Inkmaw, nhưng phản đối việc đơn giản hóa Vulpina thành một đuôi chỉ để trông giống cáo phương Tây. Chín đuôi là silhouette rất đáng giá. Có thể giảm xuống ba đuôi lớn hoặc cách điệu thành những dải lửa rõ ràng, nhưng đừng làm mất hoàn toàn đặc điểm nhận diện.
+- Grimbark — Briar King (Vua Gai Gỗ): Giữ hình cây; bổ sung vương miện gai bất đối xứng, lõi sáng và hai tay rễ lớn. Phase thể hiện bằng thay đổi pattern chứ không chỉ đổi màu.
+- Sir Inkmaw — Kraken Knight (Hiệp Sĩ Mực Sâu): Bộ giáp và rìu san hô là nhận diện chính; không cần thêm nhiều xúc tu nhỏ khiến silhouette lộn xộn.
+- Vulpina — Fox Witch (Phù Thủy Cáo): Giữ những đuôi lửa lớn, mũ nhọn, một mặt nạ dễ nhận. Hợp nhất chi tiết Đông/Tây có chủ đích, không chỉ đổi trang phục.
+- Lindworm — River Serpent (Rắn Long Sông): Đây là boss cần redraw thực sự. Đầu phải rõ, thân chia khúc để animation dễ kiểm soát, ba phase thay đổi hành vi và không gian chiến đấu.
+
+4.6. UI và fonts
+UI nên dùng parchment cho menu, charcoal cho combat HUD. Trong chiến đấu, khung mảnh, icon lớn, màu nguyên tố rõ. Những vết rách, mực loang và góc giấy chỉ nên là chi tiết phụ.
+Pixelify Sans phù hợp headings ngắn và HUD, Silkscreen phù hợp số và nhãn ngắn. Cả hai có bản phát hành theo SIL OFL 1.1, nhưng cần phân phối kèm thông báo giấy phép phù hợp.
+Ở canvas 480×270, mức thử ban đầu là HUD 9–12 game pixels và text chính 12–14 game pixels. Tuy nhiên, đây không phải thông số được đảm bảo dễ đọc: phải kiểm tra kích thước hiển thị thực trên iPhone. Văn bản dài có thể dùng HTML/CSS overlay có khả năng điều chỉnh theo viewport và safe area.
+
+4.7. Pixel-art standards
+- Hero: canvas ~48×48. Quái nhỏ: ~24–40 px. Boss: ~64–96 px, tùy room.
+- Màu mỗi hero: khoảng 12–20 màu. Quái thường: khoảng 8–16 màu. Boss: khoảng 20–32 màu.
+- Outline: 1 game pixel, #18202A. Shading: 2–4 cấp màu theo vật liệu.
+- Rendering: pixel snapping, nearest-neighbor, không blur. VFX: layer riêng, không dính vào sprite sheet cơ thể.
+Các giới hạn màu là mục tiêu hướng dẫn art, không phải luật cứng.
+Render từ offscreen canvas cố định 480×270, tắt image smoothing, giữ aspect ratio và tránh camera dịch chuyển theo subpixel. Cần kiểm tra trường hợp scale CSS phân số gây rung hoặc nhòe.
+
+4.8. Thứ tự redraw
+- P0: Rowan, bốn vũ khí và ba nguyên tố; Thornwood floor mẫu; combat HUD; adaptation indicator; Toadstool King; title splash cơ bản.
+- P1: Hollin và NPC chính, Grimbark, template Tale Cards, UI Forge, chapter markers, các item icon được nhìn thấy thường xuyên.
+- P2: Các zone và boss còn lại, UI secondary, animation trang sách, logo và trailer hoàn thiện.
+Với khoảng 718 sprite sheets, cần inventory theo năm nhãn: KEEP / RECOLOR / OVERPAINT / REDRAW / REMOVE. Đừng xem redraw toàn bộ là điều kiện để ra bản beta.
+Ước lượng "30% art effort" nên được kiểm tra bằng một mẫu khoảng 20 assets đại diện, tính cả cắt sprite, atlas, animation, QA và hiệu năng.
+
+5. Sáu prompt tạo artwork bằng tiếng Anh
+01 — Rowan / Hero
+Top-down 3/4 pixel-art RPG hero sprite, Rowan a young European fairytale blacksmith apprentice, large saffron hooded capelet, blue tunic, leather apron, small satchel with one parchment corner, short sword, instantly readable 48x48 silhouette, dark 1px outline, limited palette, crisp hand-placed pixels, centered, flat solid magenta #FF00FF background, no blur, no text, no shadows.
+
+02 — Hollin / Village
+Top-down 3/4 pixel-art modular village building kit, cozy European fairytale blacksmith cottage with ivory stone, timber beams, slate roof, warm orange forge doorway, bold readable roof silhouette, game-ready isolated building, crisp limited-palette pixels, flat solid magenta #FF00FF background, no blur, no text, no shadows.
+
+03 — Thorncap Goblin / Monster
+Top-down 3/4 pixel-art forest enemy, Thorncap Goblin mushroom creature, oversized red-brown spiked mushroom cap, tiny green limbs, one bright amber eye, simple attack-ready silhouette readable at 32x32, clean 1px outline, crisp limited palette, flat solid magenta #FF00FF background, no blur, no text, no shadows.
+
+04 — Grimbark / Boss
+Top-down 3/4 pixel-art boss Grimbark the Briar King, ancient walking oak stump with giant thorn crown, glowing amber core, asymmetrical root fists, broad readable silhouette for a 96x96 boss, dark whimsical European fairytale style, crisp limited palette, flat solid magenta #FF00FF background, no blur, no text, no shadows.
+
+05 — Combat HUD / Frame Kit
+Game-ready 2D pixel-art HUD frame kit for 480x270 landscape action RPG, separate HP bar frame, spirit meter frame, two weapon-slot frames, small dodge and skill button frames, ivory parchment edges on dark charcoal with subtle ink corners, consistent 1px borders, clean readable spacing, isolated assets, flat solid magenta #FF00FF background, no blur, no text, no shadows.
+
+06 — Title Screen / Background
+Landscape 16:9 pixel-art fairytale title-screen BACKGROUND only, enchanted thornwood path leading to a distant glowing stone-and-timber village, torn parchment pages drifting among branches, saffron warm window glow, deep forest greens and navy shadows, open low-detail space in upper center for a separate logo, crisp limited-palette pixels, flat solid magenta #FF00FF background outside illustrated scenery, no blur, no text, no shadows.
+Lưu ý title screen: Magenta chỉ hợp lý ở vùng trong suốt bao quanh các sprite hoặc lớp cảnh tách riêng. Nếu tạo một bức background kín 16:9 thì không nên ép magenta xuất hiện trong cảnh. Nên tạo các layer cây, làng và trang giấy riêng nếu cần parallax/compositing.
+
+6. Roadmap ba phase — mỗi phase có thể ship
+01 VERTICAL SLICE — First 5 Minutes — Playable Prototype
+Ship một đường link chơi được với Rowan recolor, chuỗi 3–4 phòng Thornwood, sword + Ice weapon mượn tạm, Fire Ink event, Toadstool King biết thích nghi, một reward page, quay về hub tối giản. Có guest play, local save, logging lỗi và kiểm tra FPS trên iPhone.
+Tiêu chí đạt: Người chơi hiểu được hai cơ chế vũ khí phát triển và quái vật học hỏi mà không phải đọc nhiều giải thích.
+
+02 CORE LOOP — First Chapter — Complete Playable Loop
+Ship Thornwood đầy đủ hoặc một chapter được rút gọn hợp lý, Grimbark ba phase, Forge Lv1–15, lựa chọn hai trong bốn vũ khí, 9–12 Tale Cards, Hollin UI mới và một người bạn được giải cứu. Giữ save migration để tài khoản cũ không mất dữ liệu. Google login xuất hiện đúng lúc, không chặn vòng chơi đầu.
+Tiêu chí đạt: Một buổi chơi khoảng 30 phút có lựa chọn build, boss đáng nhớ, tiến triển dài hạn và lý do quay lại.
+
+03 GLOBAL BETA — Four Chapters — Global Expansion
+Chuyển đổi Drowned Grotto, Emberhold và Mirefen theo từng bản cập nhật. Hoàn thiện bosses, UI phụ, localization English-first nhưng vẫn giữ Vietnamese, accessibility, cloud save, title, thumbnail và phần trình bày trên web. Inkwyrm có thể là teaser hoặc nội dung mở rộng; không buộc phải đưa vào bản beta nếu làm tăng phạm vi quá mức.
+Tiêu chí đạt: Hoạt động ổn định trên nhiều đời iPhone Safari, save đúng, không mất điều khiển vì safe area và không tụt hiệu năng nghiêm trọng khi có nhiều quái/VFX.
+Mỗi phase phải có URL kiểm thử được, release notes, bản sao save có thể khôi phục, smoke test iPhone Safari và ảnh chụp kiểm tra ở kích thước gameplay thực. Nên có một câu khảo sát duy nhất sau lần chơi đầu: "What made this game different?"
+
+7. Những quyết định nên khóa ngay
+- World concept: The Unwritten Tales, phiên bản nâng cấp của Great Storybook.
+- Tên làm việc cần kiểm tra nhãn hiệu: Talesworn.
+- Hero: Rowan.
+- Thông điệp cốt lõi: Your blade remembers. Your enemies learn.
+- Gameplay đầu tiên: Fire Ink → mini-boss học Fire → Ice phản đòn → weapon growth.
+- Loadout: Hai vũ khí mỗi run, bốn loại vũ khí vẫn được sở hữu.
+- Tale Cards: MVP 9–12 lá, không triển khai cả 30 lá ban đầu.
+- Art direction: Dark Whimsical Fairy Tale, Rowan vàng nghệ/xanh lam, sàn tối có ít nhiễu.
+- Cách ship: Ba bản playable, không làm lại toàn bộ game rồi mới phát hành.
+Điều quan trọng nhất: Đừng để Spiritblade trở thành một bản reskin châu Âu của Linh Khí. Hãy dùng lần chuyển đổi này để đưa hai cơ chế độc đáo nhất — vũ khí ghi nhớ và quái vật học hỏi — thành thứ người chơi nhìn thấy, cảm nhận và muốn giới thiệu.
