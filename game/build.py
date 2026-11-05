@@ -203,6 +203,11 @@ def ghi_manifest():
         # vài ảnh quan trọng (bìa màn chào + ảnh bậc 0 cần cho màn chào / làng) để kiểm web sau khi đăng tải được
         m['anh_quan_trong'] = [THU_MUC_ANH + '/' + x for x in ds if x.startswith('bia-') and x.endswith('.webp')][:2] + list(KICH.get('quan_trong', []))[:4]
     m['kich_thuoc'].pop('quan_trong', None)
+    # F4: ảnh chia trang + danh sách ảnh cần theo vùng (bộ tải đọc _u trong trang; cổng kiểm đối chiếu tệp có thật)
+    for k in ('chia_trang', 'anh_vung'):
+        v = m['kich_thuoc'].pop(k, None)
+        if v:
+            m[k] = v
     write(os.path.join(DIST, TEN_MANIFEST), json.dumps(m, ensure_ascii=False, indent=1) + '\n')
     print('Đã ghi dist/%s (buildId %s)' % (TEN_MANIFEST, BUILD['id'] or '—'))
 
@@ -559,7 +564,7 @@ def bat_buoc(t):
     ma, d = t['ma'], t.get('doi_tuong')
     if ma in HINH_LON_SAU:  # 11/10 (chủ dự án duyệt): hình lớn không cần ở màn chào → tải sau; game vẽ code cho tới khi ảnh về
         return False
-    if d == 'zed' and ma in ('zed-rung', 'zed-bien', 'zed-lau', 'zed-vk-he', 'zed-vk-gan'):  # zed-vk-gan (16/10, gân tiến độ Luyện): tải sau, chưa về thì ảnh thường; zed-vk-he (16/10, ảnh vũ khí theo hệ): tải sau, chưa về thì ảnh cấp nhuộm như cũ; trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
+    if d == 'zed' and ma in ('zed-moi', 'zed-rung', 'zed-bien', 'zed-lau', 'zed-vk-he', 'zed-vk-gan'):  # zed-moi (05/11 F4): hình mặc định là Rowan → tấm ninja cũ chỉ tải khi cần (?zedbo=ninja)  # zed-vk-gan (16/10, gân tiến độ Luyện): tải sau, chưa về thì ảnh thường; zed-vk-he (16/10, ảnh vũ khí theo hệ): tải sau, chưa về thì ảnh cấp nhuộm như cũ; trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
         return False
     if d in ('nguoi-lang', 'giao-dien', 'vat-pham', 'zed', 'em-be'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng; em-be: 3 NPC
         return True
@@ -727,6 +732,164 @@ def webp_nhieu(ds):
     return out
 
 
+# ---------- F4 (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md): CHIA TRANG ẢNH LỚN ----------
+# Bản web ảnh rời: mọi ảnh có cạnh > 2048 điểm (tấm thân Rowan / trang phục, bản to ×1,2, trùm, dáng pha, vài hiệu ứng dài) được cắt lại
+# thành các TRANG ≤ 2048 × 2048 — KHÔNG đổi điểm ảnh nào: chỉ chép nguyên từng Ô KHUNG sang trang (ô trong suốt hoàn toàn thì bỏ).
+# Tấm thân Zed xếp ô theo NHÓM động tác (chung / kiem / thuong / bua / phitieu) để chỉ trang của vũ khí đang mang phải giải mã.
+# Kết quả ghi vào thông số ảnh: "trang" (ảnh tam / anh) hoặc "trang_to" (bản to) = { w, h, cw, ch, cols, rows,
+#   p: [[rộng, cao, png, webp|null, byte tải, nhóm], …], o: [trang, x, y] cho từng ô (hàng trước), -1 = ô trống }. Game: js/trang_anh.js.
+# Tệp nguyên tấm vẫn ghi ra (cờ quay lui ?trangcu=1), không tính vào "người chơi tải"; trang tính thay. Tắt hẳn: LK_CHIA_TRANG=0.
+TRANG_MAX = 2048
+VK_NHOM = ('kiem', 'thuong', 'bua', 'phitieu')
+
+
+def chia_trang_bat():
+    return os.environ.get('LK_CHIA_TRANG', '1') != '0'
+
+
+def co_png(png):
+    """(rộng, cao) đọc từ đầu tệp PNG."""
+    import struct
+    return struct.unpack('>II', png[16:24])
+
+
+DI_CHUYEN = ('dung', 'di', 'chay', 'chay2tay', 'lon', 'trung')  # động tác đi lại (làng + trận); còn lại là đòn đánh / chưởng / chết
+
+
+def nhom_dong_tac(ten, a):
+    """Nhóm của một động tác tấm Zed: 'chung' (đứng / đi / chạy / lộn / trúng đòn, tay không), 'di-<vũ khí>' (các động tác đó khi cầm vũ khí:
+    hàng nắm tay), '<vũ khí>' (đòn của vũ khí: kiem_1, db_bua, phitieu_chum…), 'danh' (đòn không theo vũ khí: chưởng, đâm, chết)."""
+    goc = ten.split('~')[0]
+    vk = a.get('vk') if isinstance(a, dict) and a.get('vk') in VK_NHOM else None
+    if not vk:
+        for w in VK_NHOM:
+            if goc == w or goc.startswith(w + '_') or goc.endswith('_' + w):
+                vk = w
+                break
+    dong = goc.split('_')[0]
+    if dong in DI_CHUYEN:
+        return 'di-' + vk if vk else 'chung'
+    return vk or 'danh'
+
+
+def nhom_hang_zed(t, so_hang):
+    """Nhóm của từng hàng ô (96 điểm) tấm thân Zed: hàng thân (hang) + hàng nắm tay (hang_tay, nam.hang_tay) của mỗi động tác.
+    Hàng dùng chung nhiều nhóm → 'chung'; hàng không động tác nào nhắc tới → 'khac' (chỉ tải khi vẽ tới)."""
+    ds = {}
+    for ten, a in (t.get('dong_tac') or {}).items():
+        if not isinstance(a, dict):
+            continue
+        n = nhom_dong_tac(ten, a)
+        for r in (a.get('hang'), a.get('hang_tay'), (a.get('nam') or {}).get('hang_tay') if isinstance(a.get('nam'), dict) else None):
+            if isinstance(r, int) and 0 <= r < so_hang:
+                ds.setdefault(r, set()).add(n)
+    return [('chung' if len(ds[r]) > 1 else next(iter(ds[r]))) if r in ds else 'khac' for r in range(so_hang)]  # hàng nhiều nhóm dùng → 'chung'
+
+
+def ke_hoach_trang(t, key, w, h):
+    """(cw, ch, nhóm theo ô) cho ảnh key của tệp t, hoặc None nếu không cần chia. Nhóm theo ô: hàm (cột, hàng) → tên nhóm."""
+    if max(w, h) <= TRANG_MAX or not chia_trang_bat():
+        return None
+    net = int(t.get('net') or 1)
+    if t.get('doi_tuong') == 'zed' and key == 'tam' and isinstance(t.get('dong_tac'), dict):
+        ch = int(t.get('khung_cao') or 48) * net
+        if w <= TRANG_MAX and h % ch == 0:
+            nh = nhom_hang_zed(t, h // ch)
+            return (w, ch, lambda c, r: nh[r])
+    if t.get('doi_tuong') == 'zed' and key == 'tam_to' and isinstance(t.get('to'), dict):
+        to = t['to']
+        o, cot, cot_goc, oc = int(to.get('o') or 0), int(to.get('cot') or 0), int(to.get('cot_goc') or 12), to.get('o_cua') or []
+        if o > 0 and cot > 0:
+            ch_ = int(t.get('khung_cao') or 48) * net
+            nh = nhom_hang_zed(t, 10 ** 4)
+            nhom_j = {}
+            for idx, j in enumerate(oc):  # ô bản to j = ô (hàng, cột) của tấm thường → cùng nhóm với hàng đó
+                if isinstance(j, int) and j >= 0:
+                    nhom_j[j] = nh[idx // cot_goc] if idx // cot_goc < len(nh) else 'khac'
+            return (o, o, lambda c, r: nhom_j.get(r * cot + c, 'khac'))
+    fw, fh = int(t.get('khung_rong') or 0) * net, int(t.get('khung_cao') or 0) * net
+    if 0 < fw <= TRANG_MAX and 0 < fh <= TRANG_MAX:
+        return (fw, fh, lambda c, r: '')
+    return (1024, 1024, lambda c, r: '')
+
+
+def chia_mot(png, w, h, kh):
+    """Cắt ảnh png (w × h) theo kế hoạch kh → (thông số không có tệp, [ảnh trang PIL]). Chỉ chép nguyên ô (lossless)."""
+    from PIL import Image
+    cw, ch, nhom = kh
+    im = Image.open(io.BytesIO(png)).convert('RGBA')
+    cols, rows = -(-w // cw), -(-h // ch)
+    o = [-1, 0, 0] * (cols * rows)
+    theo = {}  # nhóm → [(c, r)]
+    thu_tu = []
+    for r in range(rows):
+        for c in range(cols):
+            box = (c * cw, r * ch, min(w, (c + 1) * cw), min(h, (r + 1) * ch))
+            if im.crop(box).getbbox() is None:
+                continue  # ô trong suốt hoàn toàn: không cần (vẽ ô trống = không vẽ gì)
+            g = nhom(c, r)
+            if g not in theo:
+                theo[g] = []
+                thu_tu.append(g)
+            theo[g].append((c, r, box))
+    pc, pr = max(1, TRANG_MAX // cw), max(1, TRANG_MAX // ch)
+    trang, spec_p = [], []
+    for g in thu_tu:
+        ds = theo[g]
+        for k0 in range(0, len(ds), pc * pr):
+            phan = ds[k0:k0 + pc * pr]
+            n = len(phan)
+            # số cột của trang: ít ô thừa nhất (ô trống trong trang cũng tốn bộ nhớ), hàng không quá pr
+            cot = min((q for q in range(1, pc + 1) if -(-n // q) <= pr), key=lambda q: (-(-n // q) * q, -q))
+            pw, ph = min(n, cot) * cw, -(-n // cot) * ch
+            pg = Image.new('RGBA', (pw, ph), (0, 0, 0, 0))
+            i = len(trang)
+            for m, (c, r, box) in enumerate(phan):
+                x, y = (m % cot) * cw, (m // cot) * ch
+                pg.paste(im.crop(box), (x, y))
+                q = (r * cols + c) * 3
+                o[q], o[q + 1], o[q + 2] = i, x, y
+            trang.append(pg)
+            spec_p.append([pw, ph, g])
+    return {'w': w, 'h': h, 'cw': cw, 'ch': ch, 'cols': cols, 'rows': rows, 'o': o}, spec_p, trang
+
+
+def chia_tat_ca(viec, thu):
+    """viec: [(t, khoá ra 'trang' | 'trang_to', png, kế hoạch, w, h, chỉ WebP khi không có điểm mờ)] → ghi trang vào dist/anh, gắn thông số; trả {id(t), khoá: byte tải}."""
+    if not viec:
+        return {}
+    ra, pngs, chi = [], [], []
+    for (t, kr, png, kh, w, h, gon) in viec:
+        sp, sp_p, ds = chia_mot(png, w, h, kh)
+        for k, pg in enumerate(ds):
+            b = io.BytesIO(); pg.save(b, 'PNG', optimize=True)
+            pngs.append(b.getvalue()); chi.append((len(ra), k))
+        ra.append((t, kr, sp, sp_p, gon))
+    webps = webp_nhieu(pngs)
+    p_ra = {}
+    for (vi, k), png, wb in zip(chi, pngs, webps):
+        t, kr, sp, sp_p, gon = ra[vi]
+        if gon and wb and not alpha_gon(png):
+            wb = None  # như bản to nguyên tấm: chỉ ảnh không có điểm mờ mới dùng WebP
+        ten = '%s-%s%d.%s' % (t['ma'], 'to' if kr == 'trang_to' else 't', k, hashlib.sha256(png).hexdigest()[:10])
+        with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+            f.write(png)
+        duong_webp, tai = None, len(png)
+        if wb and len(wb) < len(png):
+            tw = '%s-%s%d.%s' % (t['ma'], 'to' if kr == 'trang_to' else 't', k, hashlib.sha256(wb).hexdigest()[:10])
+            with open(os.path.join(thu, tw + '.webp'), 'wb') as f:
+                f.write(wb)
+            duong_webp, tai = THU_MUC_ANH + '/' + tw + '.webp', len(wb)
+        p_ra.setdefault(vi, []).append((k, [sp_p[k][0], sp_p[k][1], THU_MUC_ANH + '/' + ten + '.png', duong_webp, tai, sp_p[k][2]], len(png), tai))
+    kq = {}
+    for vi, (t, kr, sp, sp_p, gon) in enumerate(ra):
+        ds = sorted(p_ra.get(vi, []))
+        sp['p'] = [x[1] for x in ds]
+        t[kr] = sp
+        kq[(id(t), kr)] = (sum(x[3] for x in ds), sum(x[2] for x in ds), sum(x[1][0] * x[1][1] for x in ds), len(ds))
+    return kq
+
+
 def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     """Ghi dist/linh-khi-nhe.html (mã + thông số hình) và dist/anh/* (ảnh rời PNG + WebP)."""
     thu = os.path.join(DIST, THU_MUC_ANH)
@@ -742,6 +905,29 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     tong_png = tong_webp = tong_tot = so_webp = 0
     cu_n = cu_tot = cu_png = 0  # tấm cũ (mục muot_cua) nằm trên máy chủ nhưng game chỉ tải khi bật cờ → không tính vào người chơi tải (15/10 don-tep B: bỏ tấm cu_cua / ?quaicu=1)
     bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
+    # F4: chia trang ảnh có cạnh > 2048 (không chia tấm cũ chỉ dùng khi bật cờ quay lui)
+    CO = ('muot_cua', 'net_cua', 'san_cua', 'dau_cua', 'vk_cu_cua')
+    viec, KICH['chia_trang'] = [], []
+    for (i, k), png in zip(vt, pngs):
+        w_, h_ = co_png(png)
+        kh = None if any(ds[i].get(c) for c in CO) else ke_hoach_trang(ds[i], k, w_, h_)
+        if kh:
+            viec.append((ds[i], 'trang', png, kh, w_, h_, False))
+    for t in ds:
+        if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,') and not any(t.get(c) for c in CO):
+            png = base64.b64decode(t['tam_to'].split(',', 1)[1])
+            w_, h_ = co_png(png)
+            kh = ke_hoach_trang(t, 'tam_to', w_, h_)
+            if kh:
+                viec.append((t, 'trang_to', png, kh, w_, h_, True))
+    chia = chia_tat_ca(viec, thu)
+    for (t, kr, png, kh, w_, h_, _) in viec:
+        b = chia[(id(t), kr)]
+        KICH['chia_trang'].append({'ma': t['ma'], 'anh': 'tam_to' if kr == 'trang_to' else 'tam', 'rong': w_, 'cao': h_, 'mib_nguyen': round(w_ * h_ * 4 / 1048576, 1),
+                                   'so_trang': b[3], 'mib_trang': round(b[2] * 4 / 1048576, 1), 'tai_nguyen_kb': 0, 'tai_trang_kb': b[0] // 1024})
+        tong_png += b[1]
+    if chia:
+        print('Chia trang (F4, ≤ %d điểm, ?trangcu=1 = tải nguyên tấm): %d ảnh → %d trang' % (TRANG_MAX, len(viec), sum(v[3] for v in chia.values())))
     for (i, k), png, w in zip(vt, pngs, webps):
         t = ds[i]
         ten = '%s.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
@@ -758,12 +944,19 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             tot = len(w)
             tong_webp += len(w)
             so_webp += 1
+        wh = list(co_png(png))  # F4: rộng × cao của ảnh (_u[5], _u[6]) để bộ tải biết bộ nhớ trước khi tải
+        if isinstance(t.get('trang'), dict):  # F4: người chơi tải các trang thay cho tấm nguyên (tấm nguyên chỉ cho ?trangcu=1)
+            for x in KICH['chia_trang']:
+                if x['ma'] == t['ma'] and x['anh'] == 'tam':
+                    x['tai_nguyen_kb'] = tot // 1024
+            tot = chia[(id(t), 'trang')][0]
+            cu_png += len(png)  # tấm nguyên chỉ cho ?trangcu=1: không tính vào "trình duyệt không có WebP" (tải trang PNG thay)
         if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cu_cua'):  # 05/11 F4: vũ khí ChatGPT cũ (?vkpl=0) cũng vậy  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
             cu_png += len(png)
             vr = vung_rieng(custom[i])  # như quái thường của vùng đó (khi bật cờ thì tải theo vùng như tấm cũ trước đây)
-            t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0]
+            t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0] + wh
             continue
         tong_tot += tot
         # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
@@ -775,12 +968,33 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
         if vr >= 0 and bac == 0:
             bac = 2  # ảnh riêng một vùng không còn tải ở màn chào (tải khi chọn vùng)
         # _u[4] (14/10): 1 = ảnh riêng của vùng _u[2] (chỉ tải khi chọn vùng đó / tải trước vùng kế tiếp)
-        t['_u'] = [bac, tot, vr if vr >= 0 else (VUNG_SO.get(t.get('vung'), -1) if quai else -1), 1 if trum else 0, 1 if vr >= 0 else 0]
+        t['_u'] = [bac, tot, vr if vr >= 0 else (VUNG_SO.get(t.get('vung'), -1) if quai else -1), 1 if trum else 0, 1 if vr >= 0 else 0] + wh
         nhom = 'vung%d' % vr if vr >= 0 else 'loi'
         bang.setdefault(nhom, [0, 0, 0])
         bang[nhom][0] += 1
         bang[nhom][1] += tot
         bang[nhom][2] += len(png)
+    # F4: DANH SÁCH ẢNH CẦN THEO VÙNG (build-manifest.json "anh_vung"): lõi (màn chào / làng) và từng vùng — quái + nền ("thuong", tải trước khi
+    # vào ải của vùng) và trùm + dáng pha ("trum", tải ở phòng trước phòng trùm). Mỗi ảnh: mã, cỡ, MiB giải mã, các tệp (trang nếu chia trang).
+    av = {}
+    for t in ds:
+        u = t.get('_u')
+        if not isinstance(u, list) or len(u) < 7 or any(t.get(c) for c in CO):
+            continue
+        if u[4] and u[2] >= 0:
+            nh = av.setdefault('vung%d' % u[2], {'thuong': [], 'trum': []})['trum' if u[3] else 'thuong']
+        elif u[0] == 0:
+            nh = av.setdefault('loi', {'thuong': [], 'trum': []})['thuong']
+        else:
+            continue
+        tp = t.get('trang')
+        tep = [q[3] or q[2] for q in tp['p']] if isinstance(tp, dict) else [t.get('webp') or t.get('tam') or t.get('anh')]
+        mib = sum(q[0] * q[1] for q in tp['p']) * 4 / 1048576 if isinstance(tp, dict) else u[5] * u[6] * 4 / 1048576
+        nh.append({'ma': t['ma'], 'rong': u[5], 'cao': u[6], 'mib': round(mib, 2), 'tep': tep})
+    for v in av.values():
+        v['mib_thuong'] = round(sum(x['mib'] for x in v['thuong']), 1)
+        v['mib_trum'] = round(sum(x['mib'] for x in v['trum']), 1)
+    KICH['anh_vung'] = av
     # 05/11 F4: tấm vũ khí ChatGPT cũ (<mã>-vkcu, ?vkpl=0) có ảnh kiếm vuông lồng trong "kiem_vuong.tam" → ảnh rời riêng, KHÔNG tính tải đầu
     for t in ds:
         kv = t.get('kiem_vuong') if t.get('vk_cu_cua') else None
@@ -808,6 +1022,12 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             t['tam_to_webp'] = THU_MUC_ANH + '/' + tw + '.webp'
             tot = len(w)
             tong_webp += len(w)
+        if isinstance(t.get('trang_to'), dict):  # F4: bản to chia trang → người chơi tải các trang
+            for x in KICH['chia_trang']:
+                if x['ma'] == t['ma'] and x['anh'] == 'tam_to':
+                    x['tai_nguyen_kb'] = tot // 1024
+            tot = chia[(id(t), 'trang_to')][0]
+            cu_png += len(png)
         if not t.get('net_cua') and not t.get('dau_cua'):
             tong_tot += tot; tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
     # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải

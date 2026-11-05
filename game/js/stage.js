@@ -488,6 +488,8 @@
     leaveRoom();
     S.idx = id;
     if (map.rooms[id] && map.rooms[id].type === 'boss') uuTienTrum(S.r, true); // lượt tải trước lúc vào ải chưa xong / hỏng: thử lại khi vào phòng trùm
+    // F4 (on-dinh-f4-chia-anh): phòng trước phòng trùm (có cửa thông phòng trùm) → giải mã ảnh trùm + dáng pha ngay bây giờ (trước đó chỉ tải sẵn tệp)
+    try { const rm = map.rooms[id], SC = G.spriteCustom; if (rm && SC && SC.trumSap && (rm.type === 'boss' || Object.keys(rm.doors || {}).some((d) => map.rooms[rm.doors[d]] && map.rooms[rm.doors[d]].type === 'boss'))) SC.trumSap(S.r); } catch (e) { /* chỉ là tải ảnh */ }
     let W = S.worlds[id];
     const first = !W;
     if (first) {

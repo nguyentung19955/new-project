@@ -107,19 +107,19 @@
    "kiem",
    "Thức tỉnh Độc",
    "danh",
-   876
+   946
   ],
   [
    "kiem",
    "Thức tỉnh Băng",
    "dung",
-   797
+   810
   ],
   [
    "kiem",
    "Thức tỉnh Băng",
    "danh",
-   896
+   927
   ],
   [
    "kiem",
@@ -167,7 +167,7 @@
    "thuong",
    "Trắng",
    "danh",
-   208
+   996
   ],
   [
    "thuong",
@@ -221,25 +221,25 @@
    "thuong",
    "Thành hình Độc",
    "dung",
-   611
+   723
   ],
   [
    "thuong",
    "Thành hình Độc",
    "danh",
-   628
+   716
   ],
   [
    "thuong",
    "Thành hình Băng",
    "dung",
-   629
+   690
   ],
   [
    "thuong",
    "Thành hình Băng",
    "danh",
-   644
+   735
   ],
   [
    "thuong",
@@ -257,25 +257,25 @@
    "thuong",
    "Thức tỉnh Độc",
    "dung",
-   1269
+   1382
   ],
   [
    "thuong",
    "Thức tỉnh Độc",
    "danh",
-   1275
+   1360
   ],
   [
    "thuong",
    "Thức tỉnh Băng",
    "dung",
-   1285
+   1355
   ],
   [
    "thuong",
    "Thức tỉnh Băng",
    "danh",
-   1293
+   1346
   ],
   [
    "thuong",
@@ -377,13 +377,13 @@
    "bua",
    "Thành hình Độc",
    "dung",
-   374
+   466
   ],
   [
    "bua",
    "Thành hình Độc",
    "danh",
-   138
+   261
   ],
   [
    "bua",
@@ -413,25 +413,25 @@
    "bua",
    "Thức tỉnh Độc",
    "dung",
-   738
+   931
   ],
   [
    "bua",
    "Thức tỉnh Độc",
    "danh",
-   218
+   345
   ],
   [
    "bua",
    "Thức tỉnh Băng",
    "dung",
-   695
+   808
   ],
   [
    "bua",
    "Thức tỉnh Băng",
    "danh",
-   194
+   359
   ],
   [
    "bua",
@@ -507,9 +507,21 @@
   ],
   [
    "phitieu",
+   "Thành hình Độc",
+   "danh",
+   110
+  ],
+  [
+   "phitieu",
    "Thành hình Băng",
    "dung",
    71
+  ],
+  [
+   "phitieu",
+   "Thành hình Băng",
+   "danh",
+   64
   ],
   [
    "phitieu",
@@ -521,13 +533,25 @@
    "phitieu",
    "Thức tỉnh Độc",
    "dung",
-   125
+   240
+  ],
+  [
+   "phitieu",
+   "Thức tỉnh Độc",
+   "danh",
+   216
   ],
   [
    "phitieu",
    "Thức tỉnh Băng",
    "dung",
-   110
+   311
+  ],
+  [
+   "phitieu",
+   "Thức tỉnh Băng",
+   "danh",
+   176
   ],
   [
    "phitieu",

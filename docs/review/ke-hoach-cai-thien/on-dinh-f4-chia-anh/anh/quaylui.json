@@ -1,0 +1,38 @@
+{
+ "lang_miss": 0,
+ "vk": [
+  [
+   "sword",
+   "sword"
+  ],
+  [
+   "spear",
+   "sword"
+  ],
+  [
+   "hammer",
+   "sword"
+  ],
+  [
+   "bow",
+   "bow"
+  ]
+ ],
+ "ai_miss": 0,
+ "doi_bo_miss": 0,
+ "trum_miss": 0,
+ "trum_san": [
+  "mocTinh:true",
+  "mocTinh-p2:true",
+  "mocTinh-p3:true"
+ ],
+ "tk": {
+  "mib": 0,
+  "trang": 0,
+  "san": 0,
+  "miss": 0,
+  "bo": 0,
+  "loi": 0
+ },
+ "loi_js": []
+}

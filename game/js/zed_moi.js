@@ -85,6 +85,9 @@
     if (G.NET_CU || !t || !t.to || typeof t.tam_to !== 'string' || typeof Image === 'undefined') return null;
     if (!T._to) {
       const img = new Image(), r = { img, ready: false };
+      // F4 (on-dinh-f4-chia-anh): bản web chia trang ("trang_to") → chỉ giải mã trang nhóm động tác đang cần (js/trang_anh.js), cùng đối tượng img
+      const TA = G.trangAnh, tr = TA && TA.bat() && t.trang_to && typeof t.trang_to === 'object' ? TA.gan(img, t.trang_to, (T._ma || T.ma || 'zed') + '-to', 'tran') : null;
+      if (tr) { TA.tai(tr, TA.nhomCan('tran'), (ok) => { if (ok) r.ready = true; else r.hong = true; }, 2); T._to = r; return null; }
       // 17/10 (dung-luong-17-10): bản ảnh rời có thêm WebP lossless của bản to ("tam_to_webp", điểm ảnh y hệt) → tải WebP khi trình duyệt
       // đọc được (js/sprite_custom.js SC.roi.webp); WebP lỗi thì tải lại bản PNG như trước.
       const SC0 = G.spriteCustom, wp = typeof t.tam_to_webp === 'string' && SC0 && SC0.roi && SC0.roi.webp === true ? t.tam_to_webp : null;
@@ -122,7 +125,7 @@
     const to = q.__to === T && I === T.img ? T.tep.to : null, im = to ? anhTo(T) : null; // ảnh khác tấm thân (I ≠ T.img, vd. tấm thương cao): vẽ như cũ
     if (im) {
       const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = to.o_cua[row * to.cot_goc + col];
-      if (j != null && j >= 0) {
+      if (j != null && j >= 0 && (!G.trangAnh || G.trangAnh.co(im, (j % to.cot) * to.o + 1, Math.floor(j / to.cot) * to.o + 1))) { // F4: trang bản to chưa có → vẽ tấm thường
         const k = to.k;
         q.drawImage(im, (j % to.cot) * to.o + (sx - col * 96) * k, Math.floor(j / to.cot) * to.o + (sy - row * 96) * k, sw * k, sh * k, dx, dy, dw, dh);
         return;
@@ -161,10 +164,14 @@
     // TALESWORN 05/11 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bộ mặc định (ninja) vẽ bằng tấm ROWAN (zed-rowan: cùng ô,
     // cùng neo với zed-moi, chỉ đổi màu thân + đầu mũ trùm). Luật chơi / bộ / skill vẫn là 'ninja'. ?zedbo=ninja: về hình ninja cũ.
     if (ma === 'zed-moi' && G.ROWAN_HINH) ma = 'zed-rowan';
-    const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
+    // F4 (on-dinh-f4-chia-anh): bộ đang mặc chưa tải xong → vẽ tạm ninja CHỈ khi tấm ninja đã có sẵn (không bắt tải zed-moi 54 MiB chỉ để vẽ tạm)
+    const zm = SC.zed && SC.zed['zed-moi'];
+    const z = ma === 'zed-moi' ? lay('zed-moi') : lay(ma) || (zm && zm.ready && zm.img ? zm : null);
     if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep, z._ma); }
     return z;
   };
+  // F4 (on-dinh-f4-chia-anh): vào ải → bắt đầu giải mã bản to của tấm thân đang mặc ngay (trong lúc chờ ảnh vùng), để đòn đầu tiên không thiếu khung
+  G.zedToTruoc = () => { try { const T = layThan(); if (T) anhTo(T); } catch (e) { /* chỉ là tải trước */ } };
   // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
   // lộn 6, trúng đòn 4; hiện chỉ bộ ninja zed-moi) → dùng THAY hàng cũ cùng tên, cả hàng cầm vũ khí dung~16_<loại> → dung_<loại>.
   // Hàng đứng mới thở thật, nối vòng 8→1 êm → phát thẳng 1→8 (không đi-về QUA_LAI). Bộ trang phục chưa có ảnh mới giữ hàng cũ.
@@ -425,6 +432,7 @@
         }
         lop.forEach((h, j) => {
           if (h == null) return;
+          if (G.trangAnh && !G.trangAnh.du(T.img, x0, h * 96, 96, 96)) { cho = true; return; } // F4: trang chưa giải mã → chưa nhớ
           const y0 = j * 96;
           veT(q, T, T.img, x0, h * 96, 96, 96, x0, y0, 96, 96);
           for (let c = 0; c < ct.length; c += 4) q.clearRect(x0 + ct[c], y0 + ct[c + 1], 1, ct[c + 2] - ct[c + 1] + 1);
@@ -1182,6 +1190,7 @@
     let cv = null;
     try {
       const h = 96 - y0;
+      if (G.trangAnh && !G.trangAnh.du(T.img, i * 96, hang * 96 + y0, 96, h)) return null; // F4: trang chưa giải mã → chưa nhớ (lần sau dựng)
       cv = document.createElement('canvas'); cv.width = 96; cv.height = h;
       const q = cv.getContext('2d');
       veT(q, T, T.img, i * 96, hang * 96 + y0, 96, h, 0, 0, 96, h);

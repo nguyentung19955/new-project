@@ -17343,6 +17343,7 @@ MA._xong();
     if (roiCan) {
       if (!phongTrum || typeof ma !== 'string') return false;
       const ds = [ma, ma + '-p2', ma + '-p3'];
+      try { const q = SC.roi && SC.roi.ds && SC.roi.ds.get(ma); if (q && SC.trumSap) SC.trumSap(q.vung); } catch (e) { /* bỏ qua */ } // F4: đang ở phòng trùm → giữ trùm
       if (SC.roiThuLai) SC.roiThuLai((m) => ds.indexOf(m) >= 0);
       for (const k of ds) if (SC.ds[k] && !SC.ds[k].ready) roiCan(k);
       return true;
@@ -17444,6 +17445,13 @@ MA._xong();
     const NGAN_SACH = (MAY.yeu ? 64 : MAY.ios ? 96 : 128) * 1048576; // byte (ước tính rộng × cao × 4)
     const WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
     const choGiai = [], boTruoc = {}; let soNhaSom = 0, henDon = 0, dangGiai = 0, theHe = 0, pxGiu = 0, soBo = 0, soLoiTai = 0, decodeCham = 0;
+    // F4 (on-dinh-f4-chia-anh): ảnh chia trang (js/trang_anh.js) — bộ nhớ tính theo trang đã giải mã; TRANG = có dùng chia trang (không ?trangcu=1)
+    const TA = G.trangAnh && G.trangAnh.bat() ? G.trangAnh : null;
+    const pxTong = () => pxGiu + (TA ? TA.px() : 0);
+    // F4: TRÙM + DÁNG PHA chỉ giải mã khi tới PHÒNG TRƯỚC PHÒNG TRÙM (Suối hồi) hoặc phòng trùm (js/stage.js gọi SC.trumSap); vào ải trùm chỉ
+    // tải sẵn tệp vào bộ nhớ đệm trình duyệt (SC.trumAm, không giải mã). ?trangcu=1: như F3 (trùm tải cùng vùng, màn chờ đợi cả trùm).
+    const HOAN_TRUM = !!TA && !G.TRANG_CU;
+    const trumCan = {};
     const nhatLoi = []; // [{ ma, ly, t }] 200 lỗi gần nhất
     const ghiLoi = (it, ly) => { soLoiTai++; nhatLoi.push({ ma: it.ma, ly, t: bayGio() }); if (nhatLoi.length > 200) nhatLoi.shift(); };
     let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
@@ -17455,7 +17463,7 @@ MA._xong();
     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
     SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa,
       // F3: bộ nhớ ảnh rời đang giữ, thống kê lỗi, trạng thái từng ảnh, giới hạn đang dùng
-      boNho: () => { let so = 0; for (const it of theoMa.values()) if (it.ve) so++; return { px: pxGiu, mb: (pxGiu * 4) / 1048576, so, nganSachMb: NGAN_SACH / 1048576 }; },
+      boNho: () => { let so = 0; for (const it of theoMa.values()) if (it.ve) so++; const px = pxTong(); return { px, mb: (px * 4) / 1048576, so, nganSachMb: NGAN_SACH / 1048576, mbRoi: (pxGiu * 4) / 1048576, mbTrang: TA ? (TA.px() * 4) / 1048576 : 0, trumCan: Object.keys(trumCan) }; },
       loiTai: () => soLoiTai,
       thongKe: () => ({ moi: TAI_MOI, may: Object.assign({}, MAY), gioiHan: { gap: MAX_GAP, thuong: MAX, thap: MAX_THAP, giai: GIAI_MAX, nganSachMb: NGAN_SACH / 1048576 },
         dangGiai, choGiai: choGiai.length, theHe, soBo, soLoiTai, decodeCham, loi: nhatLoi.slice(), tt: (() => { const d = {}; for (const it of theoMa.values()) { const k = it.tt || 'idle'; d[k] = (d[k] || 0) + 1; } return d; })() }),
@@ -17488,6 +17496,7 @@ MA._xong();
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
+      if (TA && t.trang && typeof t.trang === 'object') it.tr = TA.gan(img, t.trang, ma); // F4: ảnh chia trang (game vẫn dùng đúng đối tượng img)
       theoMa.set(ma, it); hang.push(it); AS.tong++;
       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
       bom();
@@ -17523,7 +17532,7 @@ MA._xong();
     function bom0() {
       if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
       if (dang < MAX_GAP && hang.length) {
-        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
+        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (HOAN_TRUM ? (trumCan[it.vung] ? 1 : 99) : trumMo && it.vung === v ? 2 : 5) : 3);
         for (const it of hang) { it.u = uu(it); if (!it.dangTai && it.tt !== 'failed') it.tt = it.u >= 90 ? (it.tt === 'evicted' ? 'evicted' : 'idle') : 'queued'; }
         hang.sort((a, b) => a.u - b.u || a.co - b.co);
         // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
@@ -17546,6 +17555,7 @@ MA._xong();
     // Ưu tiên ảnh riêng vùng: vùng đã chọn (quái, nền) ngang quái vùng đang chơi; trùm vùng sau phần còn lại (ngay khi vào ải 4–5);
     // vùng tải trước: bậc thấp (nhiều nhất 3 tệp một lúc); vùng chưa mở: 99 (không tải).
     function uuVung(it) {
+      if (HOAN_TRUM && it.trum) return trumCan[it.vung] ? 1 : 99; // F4: trùm chỉ tải khi tới phòng trước trùm / phòng trùm
       const m = moVung[it.vung];
       if (m === 2) return it.trum ? (trumMo && it.vung === vung ? 2 : 3) : 2;
       if (m === 1) return it.trum ? 6 : 5;
@@ -17555,7 +17565,7 @@ MA._xong();
     function taiTruocKhiRanh() {
       if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length || dangGiai || choGiai.length || soNhaSom) return;
       if (TAI_MOI && MAY.yeu) return; // F3: máy yếu không tải trước vùng kế tiếp
-      if (!G.BO_NHO_CU && pxGiu * 4 > NGAN_SACH * 0.7) return; // F3: gần hết ngân sách bộ nhớ ảnh: không tải trước
+      if (!G.BO_NHO_CU && pxTong() * 4 > NGAN_SACH * 0.7) return; // F3: gần hết ngân sách bộ nhớ ảnh: không tải trước
       for (const it of hang) if ((it.u == null ? 0 : it.u) < 90) return;
       const k = vungChon + 1;
       if (k < moVung.length && !moVung[k] && !boTruoc[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
@@ -17566,12 +17576,49 @@ MA._xong();
       const m = vungMuon(r);
       if (vungChon !== r || moVung[r] !== 2 || (m >= 0 && moVung[m] !== 2)) { const doi = vungChon !== r; vungChon = r; moVung[r] = 2; if (m >= 0) moVung[m] = 2; ketThuc = false; napSauDangChay = true; if (doi) doiVung('chọn vùng ' + (r + 1)); bom(); }
     };
+    // F4: tới phòng trước phòng trùm (hoặc phòng trùm): mở tải + giải mã trùm vùng r (ưu tiên ngay sau hình đang cần)
+    SC.trumSap = function (r) {
+      r = r | 0;
+      if (!HOAN_TRUM || trumCan[r]) return;
+      trumCan[r] = 1; ketThuc = false; napSauDangChay = true; ghi('Tới gần phòng trùm: giải mã ảnh trùm vùng ' + (r + 1) + '.'); bom();
+    };
+    // F4: vào ải trùm: tải sẵn TỆP ảnh trùm vào bộ nhớ đệm trình duyệt (không giải mã, không tốn bộ nhớ ảnh) để lúc giải mã không phải chờ mạng
+    SC.trumAm = function (r) {
+      if (!HOAN_TRUM || typeof fetch !== 'function') return;
+      for (const it of theoMa.values()) {
+        if (!it.trum || it.vung !== (r | 0) || it.ve || it.am) continue;
+        it.am = 1;
+        const ds = it.tr ? it.tr.p.map((pg) => (pg.webp && coWebp ? pg.webp : pg.png)) : [coWebp && it.webp ? it.webp : it.png];
+        for (const u of ds) { try { fetch(u, { credentials: 'same-origin' }).then((x) => (x.ok ? x.blob() : null)).catch(() => {}); } catch (e) { /* bỏ qua */ } }
+      }
+    };
+    // F4: rời ải trùm / về làng: thôi giữ trùm (bộ nhớ quá ngân sách thì giải phóng)
+    function boTrumCan(ly) {
+      let co = false;
+      for (const k in trumCan) { delete trumCan[k]; co = true; }
+      if (co) setTimeout(() => donBoNho(ly), 0);
+    }
+    // F4: mỗi 3 giây, quá ngân sách → bỏ tấm trang phục không mặc đã lâu không vẽ (12 s), rồi trang tấm thân lâu không vẽ (LRU, js/trang_anh.js)
+    if (TA && !G.BO_NHO_CU && typeof setInterval === 'function') setInterval(() => {
+      try {
+        if (pxTong() * 4 <= NGAN_SACH) return;
+        const t = Date.now(), ao = aoDangMac(); let n = 0;
+        for (const it of theoMa.values()) {
+          if (!it.ve || !laAo(it) || it.ma === ao || (it.tCan && t - it.tCan < 12000)) continue;
+          if (it.tr && performance.now() - (it.tr.tVe || 0) < 12000) continue;
+          if (coTheBo(it) && boAnh(it)) n++;
+        }
+        n += TA.don(Math.max(0, NGAN_SACH * 0.85 - pxGiu * 4));
+        if (n) ghi('Bộ nhớ ảnh: bỏ ' + n + ' tấm / trang lâu không vẽ (' + ((pxTong() * 4) / 1048576).toFixed(1) + ' MiB).');
+      } catch (e) { /* bỏ qua */ }
+    }, 3000);
+    if (HOAN_TRUM && typeof setInterval === 'function') setInterval(() => { try { if (G.scene && G.scene === G.Village) boTrumCan('về làng'); } catch (e) { /* bỏ qua */ } }, 2000);
     // Tiến độ ảnh riêng của vùng r (trum: tính cả trùm vùng và dáng pha). san: đủ ảnh để vào ải.
     SC.vungTien = function (r, trum) {
       let xong = 0, tong = 0, loi = 0;
       const m = vungMuon(r);
       if (G.TAI_VUNG) for (const it of theoMa.values()) {
-        if (!it.khoa || (it.vung !== r && it.vung !== m) || (it.trum && !trum)) continue;
+        if (!it.khoa || (it.vung !== r && it.vung !== m) || (it.trum && (!trum || HOAN_TRUM))) continue; // F4: trùm không chặn vào ải (tải ở phòng trước trùm)
         tong++; if (it.ve) xong++; else if (hongDs.indexOf(it) >= 0) loi++;
       }
       return { san: xong >= tong, xong, tong, loi, pct: tong ? Math.floor(xong / tong * 100) : 100 };
@@ -17617,7 +17664,20 @@ MA._xong();
     //  (2) quá lâu không nạp xong (QUA_LAU_MIN + theo cỡ tệp) thì trả chỗ, xếp lại hàng với URL mới (?lan=…t<n>), tối đa TREO_MAX lần;
     //      kết quả muộn của lượt cũ bị bỏ qua (lanTai).
     const DECODE_CHO = 2000, QUA_LAU_MIN = 45000, QUA_LAU_MOI_KB = 50, TREO_MAX = 3; // 50 ms mỗi KB ≈ 20 KB/s: tệp 3 MB được chờ tới ~3 phút
-    function tai(it, thap, gap) { return TAI_MOI ? taiMoi(it, thap, gap) : taiCu(it, thap, gap); }
+    function tai(it, thap, gap) { return it.tr ? taiTrang(it, thap, gap) : TAI_MOI ? taiMoi(it, thap, gap) : taiCu(it, thap, gap); }
+    // F4: ảnh chia trang — tải + giải mã các trang cần (tấm thân Zed: nhóm 'chung' + vũ khí đang mang; tấm khác: mọi trang) qua js/trang_anh.js,
+    // đủ thì báo xong như một ảnh (onload gốc của hình). Hàng trang có hạn giờ / thử lại riêng; hỏng hẳn → như ảnh hỏng (thử lại khi cần).
+    function taiTrang(it, thap, gap) {
+      dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio(); it.tt = 'fetching';
+      const lanTai = (it.lanTai = (it.lanTai | 0) + 1);
+      let xong = false;
+      TA.tai(it.tr, it.tr.nhom ? TA.nhomCan('lang') : null, (ok) => {
+        if (xong || it.lanTai !== lanTai) return;
+        xong = true; dang--; if (it.thap) dangThap--; if (it.gap) dangGap--; it.dangTai = false;
+        if (ok) { it.tGiai = bayGio(); choApDung.push(it); keo(); } else hongMoi(it, 'trang-loi', '');
+        bom();
+      }, it.can ? 0 : gap ? 1 : 4);
+    }
     function taiCu(it, thap, gap) {
       it.tt = 'fetching';
       dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio();
@@ -17759,14 +17819,15 @@ MA._xong();
     // (thử đồ, js/zed_moi.js gọi SC.canAnh); chưa về thì game vẽ tạm bộ mặc định như trước. Đổi vùng mà quá ngân sách: bỏ tấm không mặc.
     // ?bonhocu=1: tải cả ba như cũ.
     function laAo(it) {
-      if (G.BO_NHO_CU || !it || typeof it.ma !== 'string' || it.ma === 'zed-moi' || it.ma === 'zed-rowan') return false;
+      if (G.BO_NHO_CU || !it || typeof it.ma !== 'string' || it.ma === 'zed-rowan') return false;
+      if (it.ma === 'zed-moi' && (G.TRANG_CU || G.ROWAN_HINH === false)) return false; // F4: hình mặc định là Rowan → tấm ninja cũ zed-moi cũng chỉ tải khi cần (như trang phục)
       const B = G.ZED_BO;
       if (!B) return false;
       for (const k in B) if (B[k] && B[k].tam === it.ma) return true;
       return false;
     }
     function aoDangMac() {
-      try { const b = G.zedBo ? G.zedBo() : 'ninja', B = G.ZED_BO; return B && B[b] ? B[b].tam : 'zed-moi'; } catch (e) { return 'zed-moi'; }
+      try { const b = G.zedBo ? G.zedBo() : 'ninja', B = G.ZED_BO, m = B && B[b] ? B[b].tam : 'zed-moi'; return m === 'zed-moi' && G.ROWAN_HINH !== false && !G.TRANG_CU ? 'zed-rowan' : m; } catch (e) { return 'zed-moi'; }
     }
     function vungGiu() {
       const s = new Set();
@@ -17798,6 +17859,7 @@ MA._xong();
       else if (fa && fa.img0 === img) { fa.ready = false; }
       else return false;
       img.onload = null; img.onerror = null;
+      if (it.tr) TA.boHet(it.tr); // F4: bỏ mọi trang đã giải mã
       try { img.removeAttribute('src'); } catch (e) { try { img.src = ''; } catch (e2) { /* bỏ qua */ } }
       it.ve = false; it.tt = 'evicted'; it.lan = 0; it.treo = 0; it.can = 0; it.dangTai = false;
       daXong = Math.max(0, daXong - 1); AS.xong = daXong; pxGiu -= it.px | 0; it.px = 0; soBo++;
@@ -17805,19 +17867,20 @@ MA._xong();
       return true;
     }
     function donBoNho(ly) {
-      if (G.BO_NHO_CU || !G.TAI_VUNG || pxGiu * 4 <= NGAN_SACH) return 0;
+      if (G.BO_NHO_CU || !G.TAI_VUNG || pxTong() * 4 <= NGAN_SACH) return 0;
       const giu = vungGiu(), t = Date.now(), ung = [];
       const ao = /^(chọn|vào ải)/.test(ly) ? aoDangMac() : null; // tấm trang phục không mặc: chỉ bỏ lúc đổi vùng (không bỏ giữa lúc đang thử đồ)
       for (const it of theoMa.values()) {
         if (!it.ve || (it.tCan && t - it.tCan < 20000)) continue;
-        if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao)) { if (coTheBo(it)) ung.push(it); }
+        if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao) || (HOAN_TRUM && it.trum && !trumCan[it.vung])) { if (coTheBo(it)) ung.push(it); }
       }
       ung.sort((a, b) => (a.tNhan || 0) - (b.tNhan || 0)); // giải mã xong sớm nhất (cũ nhất) bỏ trước
-      const truoc = pxGiu, bo = new Set();
+      const truoc = pxTong(), bo = new Set();
       let n = 0;
-      for (const it of ung) { if (pxGiu * 4 <= NGAN_SACH * 0.85) break; if (boAnh(it)) { n++; bo.add(it.vung); } }
+      for (const it of ung) { if (pxTong() * 4 <= NGAN_SACH * 0.85) break; if (boAnh(it)) { n++; bo.add(it.vung); } }
+      if (TA && pxTong() * 4 > NGAN_SACH * 0.85) n += TA.don(Math.max(0, NGAN_SACH * 0.85 - pxGiu * 4)); // F4: trang tấm thân Zed lâu không vẽ (LRU)
       for (const r of bo) if (!giu.has(r)) { moVung[r] = 0; boTruoc[r] = 1; } // vùng có ảnh bị bỏ: về "chưa mở" (chọn lại / vào ải thì tải lại), không tải trước nữa
-      if (n) { ketThuc = false; ghi('Bộ nhớ ảnh (' + ly + '): giải phóng ' + n + ' ảnh vùng cũ, ' + ((truoc * 4) / 1048576).toFixed(1) + ' → ' + ((pxGiu * 4) / 1048576).toFixed(1) + ' MiB (ngân sách ' + (NGAN_SACH / 1048576) + ' MiB).'); bom(); }
+      if (n) { ketThuc = false; ghi('Bộ nhớ ảnh (' + ly + '): giải phóng ' + n + ' ảnh vùng cũ, ' + ((truoc * 4) / 1048576).toFixed(1) + ' → ' + ((pxTong() * 4) / 1048576).toFixed(1) + ' MiB (ngân sách ' + (NGAN_SACH / 1048576) + ' MiB).'); bom(); }
       return n;
     }
     // Ảnh đã giải mã xong: báo cho game (onload gốc của SC.add / themDo / themGd / fxAnh.add) theo từng đợt ngắn (≤ 6 ms),
@@ -17832,14 +17895,14 @@ MA._xong();
         while (choApDung.length) {
           const it = choApDung.shift();
           it.ve = true; it.tt = 'ready'; daXong++; AS.xong = daXong; it.tNhan = bayGio();
-          it.px = (it.img.naturalWidth | 0) * (it.img.naturalHeight | 0); pxGiu += it.px; // F3: pixel đã giải mã đang giữ
+          it.px = it.tr ? 0 : (it.img.naturalWidth | 0) * (it.img.naturalHeight | 0); pxGiu += it.px; // F3: pixel đã giải mã đang giữ (F4: ảnh chia trang tính ở js/trang_anh.js)
           try { if (it.xong) it.xong.call(it.img); } catch (e) { SC.loi.push(it.ma + ': ' + ((e && e.message) || e)); }
           if (/^gd-/.test(it.ma) && !henGd) henGd = setTimeout(() => { henGd = 0; xoaNhoSau(true); }, 700); // ô phòng, giao diện: dựng lại hình đã nhớ
           if (Date.now() - t0 > 6) break;
         }
         if (choApDung.length) keo();
         // F3: vừa nhận thêm ảnh mà vượt ngân sách (vùng mới về sau khi đã rời vùng cũ) → dọn ảnh vùng không chơi, nhiều nhất 2 giây một lần
-        if (!G.BO_NHO_CU && pxGiu * 4 > NGAN_SACH && !henDon) henDon = setTimeout(() => { henDon = 0; donBoNho('vượt ngân sách'); }, 2000);
+        if (!G.BO_NHO_CU && pxTong() * 4 > NGAN_SACH && !henDon) henDon = setTimeout(() => { henDon = 0; donBoNho('vượt ngân sách'); }, 2000);
         capNhat();
       };
       setTimeout(chay, 0);
@@ -17889,6 +17952,8 @@ MA._xong();
       if (typeof g0 === 'function' && !g0.roi) {
         const g1 = function (r, i) {
           try { const v0 = vung; vung = Math.max(0, Math.min(moVung.length - 1, r | 0)); trumMo = (i | 0) >= 3; if (v0 !== vung) doiVung('vào ải vùng ' + (vung + 1)); } catch (e) { /* bỏ qua */ }
+          if (HOAN_TRUM && G.scene !== G.ChoVung) { boTrumCan('vào ải'); if ((i | 0) >= 4) SC.trumAm(vung); } // F4
+          if (TA && G.zedToTruoc) G.zedToTruoc(); // F4: bản to tấm thân (trong trận) giải mã sẵn
           // tải theo vùng: vùng chưa đủ ảnh (ải trùm: cả trùm vùng) → màn chờ, đủ rồi mới vào ải
           if (G.TAI_VUNG && G.scene !== G.ChoVung) {
             const self = this, args = arguments;

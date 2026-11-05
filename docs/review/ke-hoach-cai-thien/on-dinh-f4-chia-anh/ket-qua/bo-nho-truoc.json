@@ -1,0 +1,159 @@
+{
+ "co": "",
+ "dist": "/tmp/claude-0/w/dist-truoc",
+ "moc": [
+  {
+   "moc": "màn chào",
+   "mib": 193.4,
+   "dinh": 193.4,
+   "so_anh": 513,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 191,
+   "trang": null,
+   "scene": "?"
+  },
+  {
+   "moc": "làng",
+   "mib": 222.1,
+   "dinh": 222.1,
+   "so_anh": 514,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 191,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "ải 1-1 (vào)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "ải 1-1 (đổi vũ khí)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "làng (sau ải)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "ải trùm 1-5 (phòng đầu)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: phòng trước trùm",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: phòng trùm (Thornwood)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: đang đánh trùm",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "ai"
+  },
+  {
+   "moc": "làng (sau trùm)",
+   "mib": 310.6,
+   "dinh": 310.6,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 279.5,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ rung",
+   "mib": 391.6,
+   "dinh": 391.6,
+   "so_anh": 571,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 313.7,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ bien",
+   "mib": 443.8,
+   "dinh": 443.8,
+   "so_anh": 573,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 347.9,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ lau",
+   "mib": 496.1,
+   "dinh": 496.1,
+   "so_anh": 575,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 382,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ ninja",
+   "mib": 496.1,
+   "dinh": 496.1,
+   "so_anh": 575,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 382,
+   "trang": null,
+   "scene": "lang"
+  },
+  {
+   "moc": "ải 1-1 mặc bộ rung",
+   "mib": 496.1,
+   "dinh": 496.1,
+   "so_anh": 575,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 382,
+   "trang": null,
+   "scene": "ai"
+  }
+ ],
+ "loi_js": [],
+ "so_loi_js": 0,
+ "dinh": 496.1
+}

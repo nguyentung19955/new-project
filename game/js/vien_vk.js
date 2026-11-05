@@ -173,8 +173,9 @@
   const VK_LOAI = { kiem: 1, thuong: 1, bua: 1, phitieu: 1 };
   let daDung = false;
   function viecDungSan() {
-    const SC = G.spriteCustom, V = SC && SC.zed && SC.zed['zed-vk'], T = SC && SC.zed && SC.zed['zed-moi'];
-    if (!V || !V.ready || !V.img || !T || !T.ready || !T.tep) return null;
+    // F4 (on-dinh-f4-chia-anh): chỉ cần SỐ LIỆU tấm thân (tỉ lệ vk_tl), không cần ảnh → đọc tệp Rowan (hoặc ninja), KHÔNG bắt tải tấm zed-moi (54 MiB)
+    const SC = G.spriteCustom, V = SC && SC.zed && SC.zed['zed-vk'], T = SC && SC.zed && (SC.zed['zed-rowan'] || SC.zed['zed-moi']);
+    if (!V || !V.ready || !V.img || !T || !T.tep) return null;
     const tl = {}; // loại → các tỉ lệ vẽ trên tay (vk_tl) của tấm thân
     for (const k in T.tep.dong_tac) { const a = T.tep.dong_tac[k]; if (a && a.vk && VK_LOAI[a.vk] && a.vk_tl) (tl[a.vk] = tl[a.vk] || {})[a.vk_tl] = 1; }
     const viec = [];

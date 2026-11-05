@@ -1,0 +1,249 @@
+{
+ "co": "&trangcu=1",
+ "dist": "/home/claude/new-project/game/dist",
+ "moc": [
+  {
+   "moc": "màn chào",
+   "mib": 189.2,
+   "dinh": 189.2,
+   "so_anh": 510,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 186.9,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "?"
+  },
+  {
+   "moc": "làng",
+   "mib": 218,
+   "dinh": 218,
+   "so_anh": 511,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 186.9,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "ải 1-1 (vào)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "ải 1-1 (đổi vũ khí)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "làng (sau ải)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "ải trùm 1-5 (phòng đầu)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: phòng trước trùm",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: phòng trùm (Thornwood)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "ải trùm: đang đánh trùm",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  },
+  {
+   "moc": "làng (sau trùm)",
+   "mib": 306.4,
+   "dinh": 306.4,
+   "so_anh": 565,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 275.4,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ rung",
+   "mib": 387.4,
+   "dinh": 387.4,
+   "so_anh": 568,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 309.5,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ bien",
+   "mib": 439.7,
+   "dinh": 439.7,
+   "so_anh": 570,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 343.7,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ lau",
+   "mib": 491.9,
+   "dinh": 491.9,
+   "so_anh": 572,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 377.9,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "làng mặc bộ ninja",
+   "mib": 491.9,
+   "dinh": 491.9,
+   "so_anh": 572,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 377.9,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "lang"
+  },
+  {
+   "moc": "ải 1-1 mặc bộ rung",
+   "mib": 491.9,
+   "dinh": 491.9,
+   "so_anh": 572,
+   "anh_lon_nhat": "1152x12192",
+   "game_mib": 377.9,
+   "trang": {
+    "mib": 0,
+    "trang": 0,
+    "san": 0,
+    "miss": 0,
+    "bo": 0
+   },
+   "scene": "ai"
+  }
+ ],
+ "loi_js": [],
+ "so_loi_js": 0,
+ "dinh": 491.9
+}

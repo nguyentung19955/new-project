@@ -33,6 +33,14 @@ buoc "2) Bài kiểm lưu mây (Firebase giả, không mạng)"
 node game/tests/cloud_save_regression.test.js > "$OUT/luu-may.txt" 2>&1 || hong "Bài kiểm lưu mây" "game/tests/cloud_save_regression.test.js hỏng: $(tail -n 3 "$OUT/luu-may.txt" | tr '\n' ' ' | cut -c1-300)"
 echo "  ĐẠT" | tee -a "$LOG"
 
+# F4 (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md): 6 bản lưu mẫu cũ của F2 (game/tests/fixtures-luu/*.json) — nạp / nâng cấp /
+# lưu → nạp lại không mất gì, ghi máy an toàn, màn Khôi phục, hai thẻ; lưu mây với Firestore giả (không mạng, không tài khoản thật).
+buoc "2b) Bài kiểm bản lưu mẫu F2 (6 fixture, node, không mạng)"
+node game/tests/luu_an_toan.test.js > "$OUT/luu-mau.txt" 2>&1 || hong "Bản lưu mẫu (fixture)" "game/tests/luu_an_toan.test.js hỏng: $(grep -m3 -E '✗|LỖI|Error' "$OUT/luu-mau.txt" | tr '\n' ' ' | cut -c1-300)"
+tail -n 1 "$OUT/luu-mau.txt" | tee -a "$LOG"
+node game/tests/luu_may.test.js > "$OUT/luu-may-mau.txt" 2>&1 || hong "Lưu mây với bản lưu mẫu" "game/tests/luu_may.test.js hỏng: $(grep -m3 -E '✗|LỖI|Error' "$OUT/luu-may-mau.txt" | tr '\n' ' ' | cut -c1-300)"
+tail -n 1 "$OUT/luu-may-mau.txt" | tee -a "$LOG"
+
 buoc "3) Kiểm ảnh nguồn (JSON, mã trùng, ô khung)"
 python3 tools/phat-hanh/kiem_anh.py > "$OUT/kiem-anh.txt" 2>&1 || hong "Kiểm ảnh" "$(grep -m3 'LỖI' "$OUT/kiem-anh.txt" | tr '\n' ' ' | cut -c1-400)"
 tail -n 2 "$OUT/kiem-anh.txt" | tee -a "$LOG"
