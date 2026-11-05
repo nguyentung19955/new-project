@@ -1,0 +1,38 @@
+/* TURRET MERGE — MÀN XÂY BỘ BÀI bố cục DCDW (js/dkdcdw.js). Khung logic 430 (#wrap phóng theo màn). Nạp sau otoigian.css.
+   Tấm/nút = PNG có sẵn: .hm-chip (h2_tam_mong / h2_tam_xanh khi bật), băng chỉ huy p7_tam (9 lát), ô chỉ huy = ô tối giản viền vàng + vương miện. */
+/* hàng bộ mẫu số 1…8 */
+html body #chon .dkd-pre { flex: none; display: flex; align-items: center; gap: 6px; margin: 4px var(--le) 6px; height: 34px; }
+html body #chon .dkd-pre-t { font: 800 11px/1 var(--f-hien); letter-spacing: .12em; color: var(--m-mo); margin-right: 4px; }
+html body #chon .dkd-pre .dkd-so { flex: 0 0 34px; width: 34px; height: 34px; padding: 0; justify-content: center; font: 800 14px/1 var(--f-hien); letter-spacing: 0; border-image-width: 8px 10px; }
+html body #chon .dkd-pre .dkd-so.on { color: #fff; }
+
+/* băng chỉ huy gọn */
+html body #chon .dkd-cmd { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; height: 60px; margin: 0 0 2px; padding: 0 12px 0 8px; box-sizing: border-box; cursor: pointer;
+  border: 0 solid transparent; border-image: url(../assets/p7_tam.png?v=0933bbf5) 40 60 fill / 14px 20px stretch; background: none; color: var(--m-chu); text-align: left;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+html body #chon .dkd-cmd:active { scale: .985; }
+html body #wrap #chon .dkd-cmd .dkd-cmd-po { width: 46px; height: 46px; flex: none; margin: 0; }
+html body #chon .dkd-cmd-chu { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+html body #chon .dkd-cmd-chu small { font: 800 10px/1 var(--f-hien); letter-spacing: .14em; color: var(--m-mo); }
+html body #chon .dkd-cmd-chu b { font: 800 16px/1.1 var(--f-hien); letter-spacing: .04em; color: #ffd76a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #chon .dkd-cmd-chu em { font: 600 12px/1.25 var(--f-chu); font-style: normal; color: var(--m-mo); white-space: nowrap; overflow-x: clip; text-overflow: ellipsis; }
+html body #chon .dkd-cmd-doi { flex: none; height: 36px; padding: 0 12px; display: flex; align-items: center; font: 800 12px/1 var(--f-hien); letter-spacing: .08em; color: var(--m-chu);
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png?v=e2d3b84d) 49.5 85.9 fill / 10px 16px stretch; }
+
+/* đếm 3/5 + RANDOM: mỏng */
+html body #chon.xem-dk .dk-dem { height: 24px; }
+/* 5 ô bộ bài (ô thứ 6 đã thành băng chỉ huy): ô 70 */
+html body #wrap #chon #chon-bo { height: 74px !important; min-height: 74px !important; justify-content: space-between !important; }
+html body #wrap #chon #chon-bo .o-bo { flex: 0 0 70px !important; width: 70px !important; height: 70px !important; }
+
+/* hàng xếp/lọc: ô tìm co lại + 3 chip + nút lọc */
+html body #chon .dk-tim { height: 44px; margin: 8px var(--le) 0; gap: 6px; }
+html body #chon .dk-tim .dk-o { flex: 1 1 auto; min-width: 0; }
+html body #chon .dkd-xep { flex: none; display: flex; gap: 4px; }
+html body #chon .dkd-xep .dkd-x { height: 44px; padding: 0 7px; font-size: 11px; letter-spacing: .04em; border-image-width: 10px 12px; }
+/* nhãn ứng viên */
+html body #chon .dkd-nhan { flex: none; margin: 6px var(--le) 0; height: 18px; display: flex; align-items: baseline; gap: 6px; font: 800 12px/1 var(--f-hien); letter-spacing: .12em; color: var(--m-mo); }
+html body #chon .dkd-nhan span { color: var(--m-chu); letter-spacing: .02em; }
+html body #chon #chon-luoi { padding-top: 6px !important; }
+/* BỘ SƯU TẬP: không bộ mẫu / chỉ huy */
+html body #chon.bst .dkd-pre, html body #chon.bst .dkd-cmd { display: none; }
