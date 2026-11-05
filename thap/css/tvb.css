@@ -38,7 +38,7 @@ html body #wrap.co-tvb .nut-nho[data-act="tocdo"]::after { font-size: 13px; heig
 /* ================= B8 · DẢI XEM NHANH 64 px@390 (70 logic): chân dung 44 · tên 14 · 1 dòng 12 · DMG/RATE · nút 44 ================= */
 html body #wrap.co-tvb #tt.hb-qi { left: 18px; right: 18px; height: 70px; gap: 10px; }
 html body #wrap.co-tvb #tt.hb-qi .tt-the, html body #wrap.co-tvb #tt.hb-qi .tt-anh { width: 48px; height: 48px; }
-html body #wrap.co-tvb #tt.hb-qi .tt-than { grid-template-rows: 24px 19px; padding-right: 46px; column-gap: 10px; }
+html body #wrap.co-tvb #tt.hb-qi .tt-than { grid-template-rows: 24px 19px; padding-right: 6px; column-gap: 10px; }
 html body #wrap.co-tvb #tt.hb-qi .tt-ten { height: 24px; line-height: 24px; font-size: 15.5px; }
 html body #wrap.co-tvb #tt.hb-qi .hb-sao { font-size: 15px; }
 html body #wrap.co-tvb #tt.hb-qi .hb-sao img { width: 14px; height: 14px; }
@@ -124,3 +124,7 @@ html body #wrap.co-tvb #tt.hb-qi .hb-sao.tvb-hang { width: 62px; height: 26px; p
 html body #wrap.co-tvb #tt.hb-qi .hb-sao.tvb-hang span { font-size: 15px; line-height: 26px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao.tvb-hang { width: 72px; height: 30px; padding-left: 30px; }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao.tvb-hang span { font-size: 17px; line-height: 30px; }
+/* XEM ỤI TRONG TRẬN (người dùng: inspect_dung_game.png): chỉ dải gọn, không tấm lớn, không tạm dừng. Dải không nhận chạm —
+   chạm xuyên qua (nút triệu hồi/mana/bàn vẫn bấm được), chạm bất kỳ đâu = đóng dải (js/tvb.js). Cột số ngắn để tên không bị cắt. */
+html body #wrap.co-tvb #tt.hb-qi:not(.hb-rong) { pointer-events: none; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so .ht { max-width: 118px; }

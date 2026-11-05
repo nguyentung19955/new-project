@@ -87,7 +87,6 @@ function upLuatGhep(id) {
   else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
   L.push(['Normal merge', 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
-  if (typeof THAO_TUNG_SAO !== 'undefined' && THAO_TUNG_SAO.has(id)) L.push(['Star-shaping', 'Max 2 star-shaping turrets per deck.']);
   L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star.']);
   return L;
 }

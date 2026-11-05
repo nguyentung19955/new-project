@@ -562,7 +562,4 @@ Object.assign(GROW, {
 });
 Object.assign(NHIP, { hydra: (T) => (T.sao >= 7 ? 'fused beam 0.6/s' : (SKILLS.hydra.toc * (1 + 0.2 * (T.sao >= 3))).toFixed(2) + ' volleys/s × ' + Math.min(6, T.sao) + ' barrels') });
 
-// ---------- luật bộ bài (§5.1): tối đa 2 ụ "thao túng sao", ≥2 ụ Tấn công (nhắc, không chặn) ----------
-const THAO_TUNG_SAO = new Set(['vughep', 'sinhdoi', 'nangsao', 'tienhoa', 'loren', 'khoisinh', 'pandora']);
-const _deckNNGoc = deckNgauNhien;
-deckNgauNhien = function (tru) { for (let i = 0; i < 20; i++) { const d = _deckNNGoc(tru); if (d.filter(id => THAO_TUNG_SAO.has(id)).length <= 2) return d; } return _deckNNGoc(tru); };
+// (đã BỎ luật bộ bài "tối đa 2 ụ thao túng sao" + bộ lọc deckNgauNhien theo luật đó — người dùng không yêu cầu)

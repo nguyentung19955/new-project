@@ -20,7 +20,6 @@ const DK = {
     if (deck.includes(id)) return 'Already in your deck';
     if (deck.length >= 5) return TEXT.ui.deckFull;
     if (this.bac(id) === 'do' && deck.some(x => this.bac(x) === 'do')) return TEXT.ui.oneMythic;
-    if (typeof THAO_TUNG_SAO !== 'undefined' && THAO_TUNG_SAO.has(id) && deck.filter(x => THAO_TUNG_SAO.has(x)).length >= 2) return TEXT.ui.max2Star;
     return '';
   },
   // bộ bài mới nếu thả `id` (từ lưới) vào ô i — null + câu lỗi nếu sai luật

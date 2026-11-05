@@ -1,6 +1,9 @@
 // TURRET MERGE — HUD MƯỢT B: HUD TRONG TRẬN GỌN (docs/demo-hop-tuong/thap-art/TU-VAN-HUD-MUOT.txt §3D/§3E/§4)
 //  · Bàn của mình to hơn + căn giữa vùng chơi (data.js boCuc); CO-OP/PVP: bàn đồng đội / đối thủ gọn ở trên.
-//  · XEM NHANH: chạm ụ → dải ~60 px (chân dung 44 · tên + ★ · 1 dòng kỹ năng · 2 số DMG / RATE · nút ›). Không che ô nào:
+//  · XEM NHANH (11/2026, người dùng: inspect_dung_game.png): chạm ụ → CHỈ dải gọn (chân dung · tên màu độ hiếm + ★ · 1 dòng kỹ năng
+//    · 2 số DMG / RATE). KHÔNG còn nút › / tấm mở rộng / Details / tạm dừng trong trận — trận luôn chạy (mọi chế độ).
+//    Đóng: chạm ngoài / chạm lại ụ / bắt đầu kéo / tự ẩn ~4 s. (Ghi chú cũ bên dưới về tấm mở rộng: không còn dùng.)
+//    Vị trí cũ: dải ~60 px. Không che ô nào:
 //      SOLO = ngay trên khay dưới (dưới làn đường dưới); CO-OP/PVP = ngay dưới thanh trên (đè bàn gọn phía trên, chưa tới ô).
 //    Nút › → TẤM MỞ RỘNG (đủ 4 số, nguồn buff, mốc sao, Details ›) + nút đóng; SOLO trượt lên từ đáy (che khay, không che ô),
 //    CO-OP/PVP thả xuống từ trên (che bàn gọn). Không phủ nền mờ lên bàn: bàn vẫn chạm/ghép được; chạm ụ khác = đổi nội dung,
@@ -37,20 +40,18 @@ const HB = {
     tt._hb = 1;
     const than = tt.querySelector('.tt-than');
     const so = document.createElement('div'); so.className = 'hb-so'; than.insertBefore(so, tt.querySelector('.tt-so'));
-    const mo = document.createElement('button'); mo.className = 'hb-mo'; mo.type = 'button'; mo.setAttribute('aria-label', 'More');
-    mo.innerHTML = '<img src="assets/mui_tiep.png" alt="">';
-    tt.appendChild(mo);
+    // (đã BỎ nút › mở tấm lớn trong trận — người dùng: chỉ xem gọn, không dừng trận, không Details)
     const dong = document.createElement('button'); dong.className = 'hb-dong'; dong.type = 'button'; dong.setAttribute('aria-label', 'Close');
     dong.textContent = 'CLOSE'; // chữ thay icon (QUY-TAC 1: không dùng ký tự ✕ giả icon) — chờ icon close A12/c2
     tt.appendChild(dong);
     const chan = (e) => { e.stopPropagation(); };
-    for (const b of [mo, dong]) { b.addEventListener('pointerdown', chan); b.addEventListener('pointerup', chan); }
-    mo.addEventListener('click', (e) => { e.stopPropagation(); this.moRong(!tt.classList.contains('hb-rong')); });
+    for (const b of [dong]) { b.addEventListener('pointerdown', chan); b.addEventListener('pointerup', chan); }
     dong.addEventListener('click', (e) => { e.stopPropagation(); this.dongHet(); });
     // ẩn #tt (bất kỳ chỗ nào trong game) → tắt nền mờ + về dạng dải
     new MutationObserver(() => { if (tt.hidden) tt.classList.remove('hb-rong', 'hb-vao'); }).observe(tt, { attributes: true, attributeFilter: ['hidden'] });
   },
   moRong(rong) {
+    rong = false; // trong trận chỉ có dải xem gọn (không tấm lớn, không tạm dừng)
     const tt = $('#tt'); if (tt.hidden) return;
     tt.classList.toggle('hb-rong', rong);
     this.dat(tt, rong);
@@ -65,7 +66,8 @@ const HB = {
       if (s.coDmg) return '<span><small>DMG</small><b>' + f(s.dmg) + '</b></span><span><small>RATE</small><b>' + (s.frozen ? '0' : s.toc.toFixed(2)) + '</b><i>/s</i></span>';
       const sk = SKILLS[T.id]; if (sk && sk.vai === 'ht' && typeof hoTroTT === 'function') { const h = hoTroTT(T); if (h) return '<span class="ht">' + ST.esc(h.dong.replace(' (current)', '')) + '</span>'; }
     }
-    const d = $('#tt .tt-so .d-so'); return d ? '<span class="ht">' + d.textContent + '</span>' : '';
+    const d = $('#tt .tt-so .d-so'), s = d ? d.textContent.replace(/^\s*\d+\s*★?\s*·\s*LV\s*\d+(\s*·\s*)?/, '') : ''; // bỏ "N★ · LVn" (sao đã có cạnh tên)
+    return s ? '<span class="ht">' + (typeof ST !== 'undefined' ? ST.esc(s) : s) + '</span>' : '';
   },
   veSo() {
     const tt = $('#tt'); if (tt.hidden || !tt.classList.contains('hb-qi')) return;
