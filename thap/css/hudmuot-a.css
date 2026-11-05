@@ -225,3 +225,19 @@
 #chon #chon-luoi::-webkit-scrollbar, .hm-tam::-webkit-scrollbar { display: none; width: 0; height: 0; }
 #chon #chon-luoi .luoi { min-width: 0; }
 #chon #chon-luoi .c { min-width: 0; }
+
+/* ===== Pass 7 — raw_p7_a1 đã nối (tools/thap-cat-p7-a.py): A02 nút chính p7_nut1(_an/_tat) · A03 nút phụ p7_nut2(_an) · A01 tấm p7_tam ===== */
+.hm-choi, .hm-nut2.vang { color: #ffd677; border-image: url(../assets/p7_nut1.png) 74 128 fill / 24px 40px stretch; }
+.hm-choi b { text-shadow: 0 2px 0 #000c, 0 0 14px #ffb93a55; }
+.hm-choi small { color: #c9b48d; }
+.hm-nut2.vang { color: #ffd677; border-image-width: 18px 30px; }
+#chon button.hm-choi.hm-an, #hm-mo button.hm-nut2.vang.hm-an { border-image-source: url(../assets/p7_nut1_an.png); filter: none; }
+#chon button.hm-choi:disabled { border-image-source: url(../assets/p7_nut1_tat.png); filter: none; color: var(--m-mo); }
+#chon button.hm-choi:disabled small { color: var(--m-mo); }
+.hm-tab button, .hm-nut2:not(.vang), .hm-ic:not(.dk-lui) { border-image: url(../assets/p7_nut2.png) 56 92 fill / 16px 26px stretch; }
+.hm-ic:not(.dk-lui) { border-image-width: 14px 22px; }
+#chon button.hm-an:not(.hm-choi):not(.dk-lui), #hm-mo button.hm-nut2.hm-an:not(.vang), #hm-mo .hm-ic.hm-an { border-image-source: url(../assets/p7_nut2_an.png); filter: none; }
+.hm-tam { border-image: url(../assets/p7_tam.png) 52 70 fill / 18px 24px stretch; padding: 22px 24px 30px; }
+/* raw_p7_a2 đã nối: A07 ô bộ bài trống p7_o_trong · ô CHỜ ĐỔI p7_o_doi (hổ phách) — ô có ụ giữ khung độ hiếm the_khung_<bậc> */
+#chon #chon-bo .o-bo:not([data-id]) { border: 0 solid transparent; border-image: url(../assets/p7_o_trong.png) 84 84 fill / 24px stretch; }
+#chon #chon-bo .o-bo.hm-armed::after { inset: -5px -5px; background: none; border: 0 solid transparent; border-image: url(../assets/p7_o_doi.png) 96 / 26px stretch; }
