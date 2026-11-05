@@ -1,0 +1,72 @@
+/* TURRET MERGE — HUD/menu dùng ẢNH CHATGPT thay hình vẽ bằng CSS (docs/demo-hop-tuong/HINH-VE-CODE-AUDIT.md: S1, S2, S5, S6, S7).
+   Nạp SAU hud.css. Chữ/số vẫn là DOM (đọc rõ, đổi ngôn ngữ được); bố cục + kích thước giữ nguyên như hud.css.
+   Tấm thép co giãn bằng border-image (9 mảnh) để đinh tán / góc / đèn LED không bị méo. Ảnh @2x. */
+
+/* ---------- SUMMON: tấm vàng sọc nguy hiểm (H1) — ảnh nằm trên nắp phím nên vẫn lún khi bấm ---------- */
+#nut-trieu { background: #0b0c0e; box-shadow: inset 0 2px 4px #000, 0 1px 0 #ffffff12; border-radius: 10px; }
+#nut-trieu .tr-cap { background: none; box-shadow: none; }
+#nut-trieu .tr-cap::before { content: ''; position: absolute; inset: -5px -5px -6px; z-index: 0; pointer-events: none;
+  border-style: solid; border-width: 18px 33px 15px 20px; border-image: url(../assets/hud_trieu_san.png) 46 70 40 44 fill / 18px 33px 15px 20px round stretch;
+  filter: drop-shadow(0 4px 0 #3a2600) drop-shadow(0 1px 0 #000); transition: filter .06s ease-out; }
+#nut-trieu .tr-cap > * { position: relative; z-index: 1; }
+#nut-trieu.thieu .tr-cap { background: none; box-shadow: none; }
+#nut-trieu.thieu .tr-cap::before { border-image-source: url(../assets/hud_trieu_tat.png); filter: drop-shadow(0 4px 0 #1d1c1a) drop-shadow(0 1px 0 #000); }
+#nut-trieu:active .tr-cap, #nut-trieu.an .tr-cap { box-shadow: none; }
+#nut-trieu:active .tr-cap::before, #nut-trieu.an .tr-cap::before { filter: drop-shadow(0 1px 0 #000); }
+#nut-trieu .tr-led { display: none; } /* đèn đã có trong ảnh (sáng = đủ mana, tắt = thiếu) */
+#nut-trieu.thieu .tr-ten { color: #2b2a27; text-shadow: 0 1px 0 #bdb7aa; }
+
+/* ---------- MANA: màn LCD trong khung thép (H2) ---------- */
+#mana-hop { background: none; box-shadow: none; border-style: solid; border-width: 0;
+  border-image: url(../assets/hud_mana.png) 32 26 32 26 fill / 16px 13px 16px 13px stretch; }
+#mana-hop::before { content: none; }
+#mana-hop img { margin-left: 3px; }
+
+/* ---------- WAVE: tấm thép bắt bu-lông (H4) ---------- */
+#tb-wave { background: none; box-shadow: none; border-image: url(../assets/hud_wave.png) 30 fill / 15px stretch; }
+#tb-wave span, #tb-wave b { color: #1f2329; text-shadow: 0 1px 0 #ffffff66; } /* chữ khắc tối trên thép sáng */
+
+/* ---------- TIM: hộp thép 3 ổ đèn + bóng đèn bật/tắt (H5) ---------- */
+#tb-tim:has(> .den:nth-child(3):last-child) { background: url(../assets/hud_tim_khung.png) center / 100% 100% no-repeat; box-shadow: none; padding: 5px 8px 5px; }
+#tb-tim .den, #tb-tim .den.mat { width: 16px; height: 16px; margin: 0 2px; background: url(../assets/den_tim_bat.png) center / 100% 100% no-repeat; box-shadow: 0 0 6px #ff4b3e66; border-radius: 50%; }
+#tb-tim .den.mat { background-image: url(../assets/den_tim_tat.png); box-shadow: none; }
+#tb-tim .doi .den, #tb-tim .doi .den.mat { width: 12px; height: 12px; margin: 0 1px; }
+
+/* ---------- 1× / tạm dừng: keycap thép (H3) — "1×" giữ chữ, ❚❚ thay bằng icon ---------- */
+.nut-nho { background: url(../assets/phim.png) center / 100% 100% no-repeat; box-shadow: 0 3px 0 #000a; text-shadow: 0 -1px 0 #000, 0 1px 0 #ffffff22; color: #20242a; }
+.nut-nho:active { background-image: url(../assets/phim_nhan.png); box-shadow: 0 1px 0 #000a; }
+.nut-nho[data-act="dung"] { font-size: 0; color: transparent; background: url(../assets/ic_dung.png) center / 30px 30px no-repeat, url(../assets/phim.png) center / 100% 100% no-repeat; }
+.nut-nho[data-act="dung"]:active { background: url(../assets/ic_dung.png) center calc(50% + 2px) / 30px 30px no-repeat, url(../assets/phim_nhan.png) center / 100% 100% no-repeat; }
+
+/* ---------- băng bắt đầu WAVE / cảnh báo TRÙM (H12, H13) ---------- */
+#bang-wave .bw-dai { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_wave_nen.png) 40 110 fill / 20px 55px stretch; }
+#canh-bao { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_trum_nen.png) 40 110 fill / 20px 55px stretch; }
+#canh-bao b, #canh-bao span { text-shadow: 0 2px 0 #000, 0 0 6px #000; }
+/* cut-in chỉ huy (H14 giữ hoạt ảnh code): vân thép gen phủ nhẹ thay sọc CSS */
+#cutin .ci-nen::after { background: url(../assets/bang_cutin_nen.png) center / 100% 100% no-repeat; opacity: .38; mix-blend-mode: overlay; }
+
+/* ---------- bảng Tạm dừng / Kết quả: khung thép 9 mảnh (P1) ---------- */
+.bang { background: none; box-shadow: 0 14px 40px #000; border-radius: 0; border-style: solid; border-width: 0;
+  border-image: url(../assets/khung_bang.png) 56 fill / 28px stretch; }
+
+/* ---------- màn chọn bộ bài ---------- */
+/* logo (M1): ảnh thay chữ — chữ vẫn trong DOM (ẩn đi) cho trình đọc màn hình; dòng phụ giữ chữ */
+.logo b { width: 260px; max-width: 72vw; aspect-ratio: 704 / 288; margin: 0 auto; background: url(../assets/logo.png) center / contain no-repeat;
+  color: transparent; text-shadow: none; font-size: 0; filter: drop-shadow(0 3px 0 #000a); }
+.logo span { display: block; margin-top: -2px; }
+/* ô bộ bài trống (M5): hốc thẻ thép thay viền đứt */
+#chon-bo .o-bo { border: 0; border-image: url(../assets/o_trong.png) 28 fill / 12px stretch; }
+#chon-bo .o-bo[data-id] { border-image: none; }
+/* nút chế độ (M6): thêm icon */
+.che { position: relative; padding-left: 34px; }
+.che::before { content: ''; position: absolute; left: 4px; top: 50%; width: 30px; height: 30px; margin-top: -15px; background: center / contain no-repeat; filter: drop-shadow(0 1px 0 #000); }
+.che[data-che="coop"]::before { background-image: url(../assets/ic_coop.png); }
+.che[data-che="solo"]::before { background-image: url(../assets/ic_solo.png); }
+.che[data-che="pvp"]::before { background-image: url(../assets/ic_pvp.png); }
+
+/* ---------- nền (S7b, S7c) ---------- */
+/* màn chọn bộ bài (M2): sàn xưởng thép, giữa ít chi tiết để thẻ đọc rõ */
+#chon { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
+.chon-cuoi { background: linear-gradient(#1b1c1fe6, #151618f2); }
+/* khung dưới trận (H8): console thép — 9 mảnh để góc/ống không méo khi co theo bề rộng màn */
+#duoi { background: none; box-shadow: 0 -4px 10px #0008; border: 0; border-image: url(../assets/nen_hud_duoi.png) 34 84 64 84 fill / 17px 42px 32px 42px stretch; }

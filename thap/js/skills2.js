@@ -851,6 +851,7 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza): hào quang l�
     const r = this.r(T);
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha = al * 0.18; R.anhGiua(ctx, R.cham1('#7fdcff'), 0, 0, r * 1.2);
+    // (hu_vongbang.png đã cắt nhưng KHÔNG dùng: vùng lạnh rộng gần cả bàn, vòng gạch băng to che hết ụ → giữ vòng nét đứt mảnh)
     ctx.globalAlpha = al * 0.4; ctx.strokeStyle = '#bff4ff'; ctx.lineWidth = 1.5; ctx.setLineDash([8, 10]); ctx.lineDashOffset = -R.t * 20;
     ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
 
@@ -941,7 +942,7 @@ HU.bom = { // bom hẹn giờ dính trên quái, đếm ngược rồi nổ
   },
   ve(ctx, o, R) {
     const con = Math.max(0, o.song - o.t), nhay = con < 1.5 ? Math.sin(o.t * 40) > 0 : Math.sin(o.t * 10) > 0;
-    R.anhGiua(ctx, 'dan_phao', o.x + 8, o.y - 10, 15, -0.6);
+    if (!R.ve1(ctx, 'ic_bom', 17, '', o.x + 8, o.y - 11)) R.anhGiua(ctx, 'dan_phao', o.x + 8, o.y - 10, 15, -0.6); // bom ChatGPT (S2)
     if (nhay) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#ff3b3b'), o.x + 8, o.y - 14, 16); ctx.globalCompositeOperation = 'source-over'; }
     ctx.font = '900 11px ' + FONT.display; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
     ctx.strokeText(Math.ceil(con) + '', o.x + 8, o.y - 20); ctx.fillStyle = con < 1.5 ? '#ff4b3e' : '#ffe46b'; ctx.fillText(Math.ceil(con) + '', o.x + 8, o.y - 20);
@@ -982,7 +983,7 @@ HU.min = { // mìn trên đường
     return false;
   },
   ve(ctx, o, R) {
-    R.anhGiua(ctx, 'dan_phao', o.x, o.y, o.sao3 ? 18 : 14, 0);
+    if (!R.ve1(ctx, 'hu_min', o.sao3 ? 20 : 16, '', o.x, o.y)) R.anhGiua(ctx, 'dan_phao', o.x, o.y, o.sao3 ? 18 : 14, 0); // mìn ChatGPT (S4)
     if (Math.sin(o.t * 6 + o.x) > 0.3) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 22 : 12); ctx.globalCompositeOperation = 'source-over'; }
   },
 };
@@ -1003,6 +1004,19 @@ HU.cauvong = { // cầu vồng trên đường
     const mau = ['#ff4b6b', '#ff9a3a', '#ffe46b', '#4bff9a', '#4fb8ff', '#c77dff'];
     ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     const n = Math.max(2, Math.floor(o.pts.length * Math.min(1, o.t / 0.5)));
+    const dai = R.img('hu_cauvong'); // dải cầu vồng ChatGPT (S5), lặp ngang dọc đường
+    if (dai) {
+      const h = 22, sw = 8.6 * dai.height / h; ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a * 0.85;
+      const m0 = ctx.getTransform();
+      for (let i = 0; i < n; i++) {
+        const [x, y, g] = o.pts[i], c = Math.cos(g), s = Math.sin(g), sx = Math.min(dai.width - sw, (i * 8 * dai.height / h + R.t * 60) % dai.width);
+        ctx.setTransform(m0.a * c, m0.a * s, -m0.a * s, m0.a * c, m0.e + m0.a * x, m0.f + m0.a * y);
+        ctx.drawImage(dai, sx, 0, sw, dai.height, -4.3, -h / 2, 8.6, h);
+      }
+      ctx.setTransform(m0);
+      if (Math.random() < 0.3) { const q = pick(o.pts); FX.hat1('lua', q[0] + rnd(-10, 10), q[1] + rnd(-10, 10), 0, -20, 0.5, 5, pick(mau)); }
+      ctx.globalAlpha = 1; ctx.lineCap = 'butt'; return;
+    }
     for (let k = 0; k < mau.length; k++) {
       const lech = (k - 2.5) * 3.2;
       ctx.strokeStyle = mau[k]; ctx.globalAlpha = a * 0.55; ctx.lineWidth = 3;

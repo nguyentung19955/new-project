@@ -185,6 +185,7 @@ HU.truyNaVe = { // ký hiệu "$" lục giác trên đầu mọi quái truy nã 
     for (const E of G.quai) {
       if (E.chet || !E.truyNa) continue;
       const x = E.x, y = E.y - (E.d.co || 40) * 0.55 - 8, r = 7;
+      if (R.ve1(ctx, 'ic_truyna', 17, '', x, y)) continue; // huy hiệu $ ChatGPT (S2)
       ctx.globalAlpha = 0.95; ctx.fillStyle = '#2a1c05'; ctx.beginPath();
       for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + Math.PI / 6; i ? ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r) : ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r); }
       ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#f0b030'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -247,6 +248,8 @@ HU.chay = { // CHÁY: 4 s, mỗi 0.5 s, than hồng bay lên trên quái
 HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
   ve(ctx, o, R) {
     const u = o.t / o.song, r = o.L * (0.3 + 0.7 * u);
+    const tk = R.co('hu_trangkhuyet', Math.max(24, r * 1.1)); // sóng trăng ChatGPT (S4): lưỡi liềm hướng theo o.g, nở theo bán kính
+    if (tk) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.9; ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.g); const w = r * 0.55; ctx.drawImage(tk, r - w * 0.75, -r * 0.5, w, r); ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return; }
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.75;
     ctx.fillStyle = 'rgba(90,123,255,.35)'; ctx.beginPath(); ctx.moveTo(o.x, o.y); ctx.arc(o.x, o.y, r, o.g - 0.45, o.g + 0.45); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = '#c8d4ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(o.x, o.y, r, o.g - 0.45, o.g + 0.45); ctx.stroke();
@@ -304,6 +307,8 @@ SKILLS.guongcong = {
   veThem(ctx, T, S, al, R) { // 6 mảnh gương bay vòng tròn quanh tâm (sáng khi sẵn sàng)
     const n = T.sao >= 7 ? 6 : T.sao >= 4 ? 4 : 2, san = T.nap >= 1;
     for (let i = 0; i < n; i++) { const a = R.t * 1.2 + i * Math.PI * 2 / n, x = Math.cos(a) * S * 0.45, y = Math.sin(a) * S * 0.45;
+      const mg = R.co('hu_manhguong', 11); // mảnh gương ChatGPT (S4)
+      if (mg) { ctx.globalAlpha = al * (san ? 1 : 0.45); ctx.save(); ctx.translate(x, y); ctx.rotate(a + Math.PI / 2); ctx.drawImage(mg, -5.5, -5.5, 11, 11); ctx.restore(); continue; }
       ctx.globalAlpha = al * (san ? 0.95 : 0.4); ctx.fillStyle = san ? '#e8fdff' : '#7d93a0'; ctx.beginPath(); ctx.moveTo(x, y - 3.5); ctx.lineTo(x + 2.5, y); ctx.lineTo(x, y + 3.5); ctx.lineTo(x - 2.5, y); ctx.closePath(); ctx.fill(); }
     if (san) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.1 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#bff6ff'), 0, 0, S); ctx.globalCompositeOperation = 'source-over'; }
     ctx.globalAlpha = al;

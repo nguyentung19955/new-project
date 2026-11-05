@@ -48,8 +48,10 @@ const VX = {
   // vòng TRÒN (arc) — r bán kính, w nét
   vong(ctx, x, y, r, w, mau, al) { if (al <= 0.01 || r <= 0.5) return; ctx.globalAlpha = al; ctx.strokeStyle = mau; ctx.lineWidth = w; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); },
   // vòng phù văn: vòng tròn + 8 vạch ngắn + 3 cung quay (đóng dấu triệu hồi)
-  vongPhu(ctx, x, y, r, mau, al, quay) {
+  vongPhu(ctx, x, y, r, mau, al, quay, code) { // code = true: giữ vòng vẽ code (cần đúng màu họ)
     if (al <= 0.01) return;
+    const vp = !code && REN.co('fx_vong_trieu', r * 2.3); // vòng phù văn ChatGPT (S4): code xoay + phóng
+    if (vp) { ctx.save(); ctx.translate(x, y); ctx.rotate(quay || 0); ctx.globalAlpha = al; ctx.drawImage(vp, -r * 1.15, -r * 1.15, r * 2.3, r * 2.3); ctx.restore(); return; }
     ctx.save(); ctx.translate(x, y); ctx.rotate(quay || 0);
     ctx.globalAlpha = al; ctx.strokeStyle = mau; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke();
@@ -338,7 +340,7 @@ const VX = {
         const u = tt / (e.dai - this.TRE_LO);
         e.ids.forEach((id, i) => {
           const m = TIERS[G.rosterMap[id].bac].mau, ho = HO_CUA[id] ? HO[HO_CUA[id].ho].mau : m;
-          this.vongPhu(ctx, c.x, c.y, S * (0.5 + 0.7 * this.eo(u / 0.5)) * (1 + i * 0.12), ho, (1 - u) * 0.9, tt * 2 * (i ? -1 : 1));
+          this.vongPhu(ctx, c.x, c.y, S * (0.5 + 0.7 * this.eo(u / 0.5)) * (1 + i * 0.12), ho, (1 - u) * 0.9, tt * 2 * (i ? -1 : 1), true);
           const v = (tt - 0.05 - i * 0.08) / 0.22; if (v <= 0) return;
           ctx.globalCompositeOperation = 'source-over';
           const ic = REN.img('nho/' + id), s = this.bo(v, 2.2), ox = (i - (e.ids.length - 1) / 2) * S * 0.62;

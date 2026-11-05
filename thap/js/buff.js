@@ -39,10 +39,16 @@ function veKyHieu(x, k, r, mau) { // x: ctx đã dời về tâm; r: nửa cạn
 Object.assign(REN, {
   // tấm ký hiệu 12×12 (px logic): nền than #151A20 92%, viền màu trên/trái 1 px, ký hiệu 8×8 ở giữa — dựng sẵn đúng điểm ảnh
   kyHieu(k, px, rong) {
-    const kk = this.s * this.dpr, n = Math.max(8, Math.round(px * kk)), key = 'kh|' + k + '|' + n + (rong ? 'r' : '');
+    const ic = BUFF[k] ? this.img('ic_' + k) : null; // icon ChatGPT (S2) thay hình vector; chưa tải → vector
+    const kk = this.s * this.dpr, n = Math.max(8, Math.round(px * kk)), key = 'kh|' + k + '|' + n + (rong ? 'r' : '') + (ic ? '|a' : '');
     let c = this.cache[key]; if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = this.c2d(c), q = n / px, B = BUFF[k], m = B ? B.mau : '#ffffff';
+    if (ic) {
+      if (rong) x.globalAlpha = 0.5;
+      this.veNho(x, ic, 0, 0, ic.width, ic.height, 0, 0, n, n);
+      return (this.cache[key] = c);
+    }
     x.scale(q, q);
     x.globalAlpha = rong ? 0.7 : 0.93; x.fillStyle = '#151A20';
     x.beginPath(); x.roundRect ? x.roundRect(0, 0, px, px, px * 0.22) : x.rect(0, 0, px, px); x.fill();
@@ -55,6 +61,7 @@ Object.assign(REN, {
   // ảnh ký hiệu cho bảng DOM (data URL, dựng 1 lần)
   kyHieuURL(k) {
     this._khu = this._khu || {}; if (this._khu[k]) return this._khu[k];
+    if (this.img('ic_' + k)) return (this._khu[k] = 'assets/ic_' + k + '.png'); // icon ChatGPT
     const c = document.createElement('canvas'); c.width = c.height = 36; const x = c.getContext('2d');
     x.fillStyle = '#151A20'; x.beginPath(); x.roundRect ? x.roundRect(0, 0, 36, 36, 8) : x.rect(0, 0, 36, 36); x.fill();
     x.strokeStyle = BUFF[k].mau; x.lineWidth = 2.5; x.beginPath(); x.moveTo(1.5, 30); x.lineTo(1.5, 1.5); x.lineTo(30, 1.5); x.stroke();
@@ -196,7 +203,7 @@ VX.veDs = function (ctx, R) {
     } else if (e.k === 'sach') {
       const u = tt / e.dai;
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1 - u; ctx.translate(c.x, c.y - S * 0.1); ctx.rotate(u * 0.8);
-      const r = S * (0.2 + 0.25 * VX.eo(u)); veKyHieu(ctx, 'taylo', r, '#E8E5C8'); ctx.restore();
+      const r = S * (0.2 + 0.25 * VX.eo(u)), ic = R.co('ic_taylo', S * 0.9); if (ic) ctx.drawImage(ic, -r, -r, r * 2, r * 2); else veKyHieu(ctx, 'taylo', r, '#E8E5C8'); ctx.restore();
     } else if (e.k === 'mn') {
       const u = tt / e.dai; ctx.globalAlpha = u < 0.25 ? u / 0.25 : 1 - (u - 0.25) / 0.75;
       const ky = R.kyHieu('mana', 12); ctx.drawImage(ky, c.x - S * 0.32 - 6, c.y - S * 0.18 - u * 10 - 6, 12, 12);

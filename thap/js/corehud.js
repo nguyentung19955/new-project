@@ -31,9 +31,13 @@ const CORE = {
 
   // lõi đã cắt sẵn + vết nứt theo mức (vết nứt chỉ vẽ trên phần đặc của ảnh: source-atop)
   loiNut(ren, px, muc) {
-    const key = px + '|' + muc + '|' + ren.s + '|' + ren.dpr;
+    // ảnh ChatGPT lõi hư: loi_hu2 (còn 1 tim, nứt đỏ) dùng nguyên ảnh; loi_hu1 (còn 2 tim) ảnh gen gần như chưa thấy nứt
+    // → dùng làm nền + giữ 2 vết nứt cam mảnh vẽ code bên trên để người chơi vẫn đọc được "đã mất 1 tim"
+    if (muc >= 2) { const b = ren.co('loi_hu2', px, ''); if (b) return b; }
+    const nen = muc === 1 && ren.co('loi_hu1', px, '') ? 'loi_hu1' : 'loi';
+    const key = px + '|' + muc + '|' + ren.s + '|' + ren.dpr + '|' + nen;
     if (this._nut[key]) return this._nut[key];
-    const a = ren.co('loi', px, ''); if (!a) return null;
+    const a = ren.co(nen, px, ''); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     if (muc > 0) {

@@ -448,6 +448,12 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
   ve(ctx, o, R) {
     const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1), r = o.r * (0.55 + 0.1 * Math.sin(o.t * 9));
     ctx.save(); ctx.translate(o.x, o.y);
+    const hd = R.co('hu_hoden', o.r * 2); // đĩa xoáy ChatGPT (S4): code chỉ xoay + nhịp
+    if (hd) {
+      ctx.globalAlpha = mo; ctx.save(); ctx.rotate(-o.t * 4.5); const rr = o.r * (0.92 + 0.06 * Math.sin(o.t * 9)); ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 * mo; R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2);
+      ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
+    }
     // vành bồi tụ mờ + lõi đen đặc
     const g = ctx.createRadialGradient(0, 0, 0, 0, 0, o.r);
     g.addColorStop(0, 'rgba(0,0,0,' + mo + ')'); g.addColorStop(0.28, 'rgba(8,0,14,' + 0.95 * mo + ')'); g.addColorStop(0.42, 'rgba(150,20,90,' + 0.55 * mo + ')'); g.addColorStop(0.7, 'rgba(90,10,120,' + 0.2 * mo + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');

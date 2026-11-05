@@ -176,6 +176,10 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
     for (const b of G.ban) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
     for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
+    for (const b of G.ban) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)
+    // ảnh ChatGPT thay hình vẽ code trên canvas: huy hiệu sao, ngọc độ hiếm, icon buff, lõi hư, mũi tên đường, bảng tên bàn
+    ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
+      'ic_toc', 'ic_dmg', 'ic_crit', 'ic_cham', 'ic_chet', 'ic_mana', 'ic_khien', 'ic_taylo', 'ic_sao', 'ic_bom', 'ic_truyna');
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
@@ -464,4 +468,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
 };
 
-FONT.ready.then(() => UI.init()); // đợi phông → canvas không bao giờ vẽ bằng phông dự phòng
+// đợi phông → canvas không bao giờ vẽ bằng phông dự phòng; VÀ đợi mọi <script> phía sau (glyph.js, nhandien.js, …) chạy xong:
+// trước đây khi phông đã có trong bộ đệm, UI.init chạy giữa lúc các file sau còn đang tải → vòng vẽ gọi ND.* →
+// 'ReferenceError: ND is not defined' → đường đi rơi về bản vẽ dự phòng xám phẳng.
+Promise.all([FONT.ready, new Promise(ok => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ok, { once: true }) : ok())]).then(() => UI.init());
