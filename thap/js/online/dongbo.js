@@ -25,11 +25,12 @@ const ONS = {
   batDau(o) {
     this.o = o; this.code = o.code; this.host = o.host; this.seed = o.seed || 1; this.me = o.me; this.ban = o.ban;
     this.hostWave = 0; this.banVao = false; this.toiVao = false; this.rx = Date.now(); this.dungChung = false; this.mat = null; this.lech = 0; this.soAct = 0; this._tuHost = false; this._end = null; this.t0 = Date.now();
-    G.debug.deck2 = o.deckBan.filter(id => SKILLS[id]);
     G.tocDo = 1;
     UI.che = 'coop';
     this.on = true;
-    batDau('coop', o.deckMe.filter(id => SKILLS[id]), MAVUONG[o.mvMe] ? o.mvMe : 'hero');
+    const hop = (d) => { d = (d || []).filter(id => SKILLS[id] && G.rosterMap[id]); return d.length === 5 ? d : (UI.chon.length === 5 ? UI.chon.slice() : deckNgauNhien()); };
+    G.debug.deck2 = hop(o.deckBan);
+    batDau('coop', hop(o.deckMe), MAVUONG[o.mvMe] ? o.mvMe : 'hero');
     delete G.debug.deck2;
     const B1 = G.ban[1];
     B1.net = true; B1.ten = escTen(o.tenBan) || 'ALLY';
@@ -246,6 +247,15 @@ const ONS = {
     const a = el.dataset.act;
     if (a === 'ons-ai') { e.stopImmediatePropagation(); SND.nut(); this.choiVoiAI(); return; }
     if (a === 'ons-het') { e.stopImmediatePropagation(); SND.nut(); this.ketThucMang('leave'); if (typeof ONL !== 'undefined') ONL.roiPhong(); this.anMat(); G.dung = false; ketThuc(false, 'Online match ended'); return; }
+    // sau trận online (phòng đã xoá): PLAY ONLINE AGAIN → menu + bảng ONLINE; EDIT DECK → menu
+    if (!this.on && typeof ONL !== 'undefined' && ONL.vuaChoi && (a === 'choilai' || a === 'doibo') && G.ketThuc) {
+      e.stopImmediatePropagation(); ONL.vuaChoi = false; if (ONL.code) ONL.roiPhong();
+      G.ban = []; G.quai = []; G.dung = false; SND.nhac(0);
+      for (const id of ['ketqua', 'top', 'duoi', 'dung']) { const x = document.getElementById(id); if (x) x.hidden = true; }
+      document.getElementById('chon').hidden = false; UI.veChon();
+      if (a === 'choilai') ONL.moBang();
+      return;
+    }
     if (!this.on && !(typeof ONL !== 'undefined' && ONL.code && a === 'choilai' && ONL.dangTran)) {
       if (typeof ONL !== 'undefined' && ONL.code && ONL.dangTran && (a === 'doibo' || a === 'bo')) { ONL.roiPhong(); ONL.dangTran = false; }
       return;
@@ -325,10 +335,11 @@ const ONS = {
       if (!daXong && G.ketThuc) {
         if (self.on && self.host) { self.ghiState({ thang: !!thang, ly: ly || '' }); }
         if (self.on) {
+          if (typeof ONL !== 'undefined') ONL.xoaSauTran(); // chủ phòng xoá phòng sau 5 s
           setTimeout(() => self.ketThucMang('end'), 1500);
-          setTimeout(() => { // màn kết quả online: chơi lại = về sảnh phòng, đổi bộ = rời phòng
+          setTimeout(() => { // màn kết quả online: chơi lại = mở bảng ONLINE (tạo / vào phòng mới), đổi bộ = về menu
             const l = document.querySelector('#ketqua [data-act="choilai"]'), d = document.querySelector('#ketqua [data-act="doibo"]');
-            if (l) l.textContent = 'BACK TO ROOM'; if (d) d.textContent = 'LEAVE ROOM';
+            if (l) l.textContent = 'PLAY ONLINE AGAIN'; if (d) d.textContent = 'EDIT DECK';
           }, 1200);
         }
         if (typeof TK !== 'undefined') TK.ghiTran(!!thang, G.wave);
