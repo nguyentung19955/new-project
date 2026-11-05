@@ -57,7 +57,7 @@ const KQO = {
     kq.classList.toggle('trung', ket.loai === 'trung');
     kq.classList.toggle('thang', ket.loai === 'thang'); kq.classList.toggle('thua', ket.loai === 'thua');
     const ic = bang.querySelector('.kq-ic');
-    if (ic) { if (!ic.dataset.goc) ic.dataset.goc = ic.getAttribute('src'); ic.src = ket.loai === 'trung' ? 'assets/vong_xich.png' : ic.dataset.goc; }
+    if (ic) { if (!ic.dataset.goc) ic.dataset.goc = ic.getAttribute('src'); ic.src = ket.loai === 'trung' ? 'assets/vong_xich.webp?v=9254774a' : ic.dataset.goc; }
     const ten = document.getElementById('kq-ten'), phu = document.getElementById('kq-phu');
     const so = document.querySelector('#kq-so b');
     const wRoi = this.ctx.roi ? Math.max(1, this.ctx.roi.wave) : ket.wave, ban = this.ten();

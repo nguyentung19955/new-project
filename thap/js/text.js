@@ -160,12 +160,17 @@ function anhTen(ten) {
   if (!_dauV1) _dauV1 = new Set(window.DAU_V1);
   return _dauV1.has(ten) ? ten + '_v1' : ten;
 }
-function iconOf(id) { return 'assets/' + anhTen('nho/' + id) + '.png'; }
+function iconOf(id) { const t = anhTen('nho/' + id); return typeof anhUrl === 'function' ? anhUrl(t) : 'assets/' + t + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 // ảnh LỚN cho trang ụ/chỉ huy (3× cỡ hiển thị, tools/thap-hero.py); thẻ/thanh bài vẫn dùng pilot_<id>.png nhỏ
 function heroOf(id) { return 'assets/hero/hero_' + id + (id.indexOf('af_') === 0 ? '.webp' : '.jpg'); } // chỉ huy: nền trong suốt (webp)
-function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }
+function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? (typeof anhUrl === 'function' ? anhUrl('pilot_' + id) : 'assets/pilot_' + id + '.png') : iconOf(id)); }
 // ảnh trên thẻ: chỉ chân dung phi công (KHÔNG huy hiệu/icon tròn nhỏ cạnh mặt — người dùng yêu cầu bỏ; độ hiếm = màu khung); chưa có phi công → icon ụ to
-function cardArt(id) { return hasPilot(id) ? '<img class="anh pilot" src="' + portraitOf(id) + '" alt="">' : '<img class="anh" src="' + iconOf(id) + '" alt="">'; }
+// lưới 85 thẻ được dựng sẵn lúc khởi động (màn bộ bài đang ẩn): trước khi HOME hiện, ảnh để ở data-tm-src (trình duyệt KHÔNG
+// tải 85 chân dung trước HOME); taitai.js tải chúng ở đợt nền rồi gán src (lấy từ bộ đệm). Mở bộ bài sớm → cổng bấm đợi đợt nền.
+function cardArt(id) {
+  const a = typeof srcTai === 'function' ? srcTai() : 'src';
+  return hasPilot(id) ? '<img class="anh pilot" ' + a + '="' + portraitOf(id) + '" alt="">' : '<img class="anh" ' + a + '="' + iconOf(id) + '" alt="">';
+}
 // phủ tên/kỹ năng tiếng Anh lên dữ liệu roster (roster.json giữ bản tiếng Việt ở ten_vi / kyNang_vi)
 function applyText(roster) { for (const r of roster) { const t = TEXT.turret[r.id]; if (t) { r.ten = t.name; r.kyNang = t.skill; } } return roster; }

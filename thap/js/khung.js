@@ -13,7 +13,7 @@
 //  đều cắt quanh MẶT bằng matFit(): cửa sổ nhỏ → phóng vào mặt; cửa sổ rộng/thấp → cắt quanh đầu, không cắt quanh ngực.
 const FACE_BOX = {canon:[54.9,31.2,49.2],xucxac:[45,60,66],lien:[50.8,33.3,53.3],phun:[47,27,44],sungluc:[44.7,28.3,55.3],bang:[48.8,31.3,53.3],doc:[52,23,45],mana:[38.5,29.2,57.4],tia:[28.2,23,41],set:[40.5,24.1,47.1],maychem:[30.2,28.2,55.3],phagiap:[59.1,27.3,53.3],bua:[52.9,31.1,57.8],nam:[65.2,30.3,63.5],bomhen:[50.9,25.1,61.5],nhanmana:[57,28.2,59.4],kiembang:[63.1,31.8,60.7],mimic:[59.1,31.8,60.7],chimang:[45,22,42],dichchuyen:[52,25,46],radar:[55,28.3,55.3],drone:[75.3,24.2,47.1],tron:[38.5,24.1,47.1],nangluong:[55,27.1,53.3],laser:[46.7,27.1,53.3],lanhgia:[67.3,30.3,63.5],mortar:[46.8,30.3,59.4],khuech:[55,20.9,45.1],vungdoc:[45,58,75],loa:[54.9,31.8,60.7],hutmana:[48.7,29.2,49.2],min:[59,31.8,60.7],cuongno:[48,23,46],baotuyet:[55,28.2,55.3],nhanban:[62,18,36],lienket:[50.9,27.3,53.3],kepha:[46.7,30.3,59.4],taylo:[54.9,28.3,63.5],khien:[42.7,27.3,53.3],hopbi:[48.8,32.3,71.8],nangsao:[34.4,33.8,64.8],tuthan:[30,54,52],xaotron:[55,31.7,60.7],epxung:[69.4,34.8,66.9],no5:[54.9,28.2,55.3],bao:[54.9,28.3,55.3],anhsang:[55,29.4,53.3],aten:[46.7,31.3,61.5],dongbo:[71.4,30.3,59.4],railgun:[59,29.4,57.4],vughep:[45,58,80],sinhdoi:[55,28.3,55.3],hasao:[32.3,31.7,60.7],saochep:[50.9,33.8,64.8],ngoisao:[65,27,54],soi:[48.7,26.6,50.4],tienhoa:[42.7,31.2,61.5],cauvong:[63,25,48],wallgen:[35,62,72],orbital:[45,28,48],blackhole:[54.9,27.1,53.3],overlord:[58,25,46],lophanung:[46.8,29.4,57.4],haoquang:[59.1,29.2,53.3],nayda:[38.6,33.8,64.8],combo:[59,31.8,60.7],khoathoigian:[50.8,30.6,58.7],hydra:[34.5,30.7,58.7],cuuvi:[55,26,48],pandora:[45,23,43],luoicheo:[40.6,27.1,49.2],ngaithoigian:[52,20,40],nemesis:[48.7,25.1,49.2],docton:[52,22,41],thaukinh:[50.9,24.1,47.1],nhieusong:[60,23,44],santhuong:[46.7,31.7,60.7],nhatthuc:[37,25,48],loren:[50.8,30.7,58.7],guongcong:[71.3,33.9,64.8],marionette:[32.4,27.1,53.3],chuato:[50,27,50],leviathan:[44.7,25.1,49.2],khoisinh:[42.6,27.3,53.3],ronglua:[42.7,23,45.1],af_hero:[46.9,24.4,44.9],af_dahlia:[48.8,22.5,41],af_eve:[54.7,26.4,41]};
 const MAT = {
-  re: /(?:pilot_(\w+)|(af_\w+))\.png/,
+  re: /(?:pilot_(\w+)|(af_\w+))\.(?:png|webp)/,
   id(img) { const m = this.re.exec(img.getAttribute('src') || ''); return m ? (m[1] || m[2]) : null; },
   // tính & gán cắt cho 1 ảnh: object-position (cover) + phóng thêm (scale + clip-path) khi cửa sổ nhỏ
   fit(img) {
@@ -75,10 +75,10 @@ const KHUNG = {
   tai(src, lop, cb) {
     const im = new Image();
     im.onload = () => { this.bat[lop] = true; document.documentElement.classList.add(lop); if (cb) cb(); };
-    im.src = 'assets/' + src + '.png';
+    im.src = typeof anhUrl === 'function' ? anhUrl(src) : 'assets/' + src + '.png';
   },
   // ?v=băm (js/ver-anh.js lúc xuất bản): khung Pass 9 đổi cỡ ảnh (lề hoạ tiết) → điện thoại không được dùng ảnh cũ trong bộ đệm
-  url(bac) { const t = 'the_khung_' + bac, v = (typeof ANH_V !== 'undefined' && ANH_V[t]) ? '?v=' + ANH_V[t] : ''; return 'assets/' + t + '.png' + v; },
+  url(bac) { const t = 'the_khung_' + bac, v = (typeof ANH_V !== 'undefined' && ANH_V[t]) ? '?v=' + ANH_V[t] : ''; return typeof anhUrl === 'function' ? anhUrl(t) : 'assets/' + t + '.png' + v; },
   // thêm khung vào 1 thẻ (DOM): chỉ ảnh khung — KHÔNG thêm vạch màu khoá/độ hiếm bên trong (khung ảnh đã đủ; màu khoá chỉ còn ở huy hiệu glyph PNG)
   gan(el, bac) {
     if (!el || el.querySelector(':scope > .kh')) return;
@@ -88,11 +88,15 @@ const KHUNG = {
 };
 (() => {
   // khung: cần đủ 6 ảnh mới bật (tránh thẻ có thẻ không)
+  // khởi động nhanh: tải SAU khi HOME hiện (TAI.sauHome) — các lớp co-* chỉ dùng ở màn bộ bài / trận
+  const lam = (f) => (typeof TAI !== 'undefined' && TAI.sauHome ? TAI.sauHome(f) : f());
+  lam(() => {
   let n = 0; const xong = () => { if (++n === 6) document.documentElement.classList.add('co-khung'); };
   for (const b of ['trang', 'xanh', 'tim', 'vang', 'do', 'mv']) KHUNG.tai('the_khung_' + b, 'co-k-' + b, xong);
   KHUNG.tai('ui_khay_doi', 'co-khay', () => { if (typeof DP !== 'undefined' && DP.el && !DP.el.hidden) DP.ve(); });
   KHUNG.tai('ui_lv', 'co-lv'); KHUNG.tai('ui_gia', 'co-gia'); KHUNG.tai('ui_den_xanh', 'co-den');
-  KHUNG.tai('ui_trieu_ic', 'co-trieu', () => { const im = document.querySelector('#nut-trieu .tr-cap > img'); if (im) { im.src = 'assets/ui_trieu_ic.png'; im.classList.add('ic-trieu'); } });
+  KHUNG.tai('ui_trieu_ic', 'co-trieu', () => { const im = document.querySelector('#nut-trieu .tr-cap > img'); if (im) { im.src = typeof anhUrl === 'function' ? anhUrl('ui_trieu_ic') : 'assets/ui_trieu_ic.png'; im.classList.add('ic-trieu'); } });
+  });
   if (typeof UI === 'undefined') return;
   const bac = (id) => (G.rosterMap[id] && G.rosterMap[id].bac) || 'trang';
   const vaoGoc = UI.vaoTran;

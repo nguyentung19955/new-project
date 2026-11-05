@@ -130,7 +130,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (let i = 0; i < 5; i++) {
       const id = this.chon[i], r = id && G.rosterMap[id];
       const o = document.createElement('div'); o.className = 'o-bo'; o.dataset.slot = i; // hợp đồng kéo-thả (QUY-TAC-HINH.md quy tắc 10)
-      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img src="' + portraitOf(id) + '" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
+      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + portraitOf(id) + '" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
       b.appendChild(o);
     }
     $('#chon-dem').textContent = this.chon.length + '/5';
@@ -169,7 +169,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
       d.innerHTML = cardArt(id) +
-        '<span class="lv">LV1</span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
+        '<span class="lv">LV1</span><span class="gia"><img src="assets/ui_nangcap.webp?v=21f670ed" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
@@ -294,7 +294,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const tt = $('#tt'), B = G.ban[0], an = tt.querySelector('.tt-anh');
     tt.style.setProperty('--m', d.mau);
     an.onerror = () => { an.onerror = null; an.src = mvIcURL(id); };
-    an.src = 'assets/' + d.anh + '.png';
+    an.src = typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png';
     tt.querySelector('.tt-ten').textContent = d.ten; tt.querySelector('.tt-ten').style.color = d.mau;
     tt.querySelector('.tt-bac').textContent = 'COMMANDER';
     tt.querySelector('.tt-phu').textContent = 'Archfiend skill · tap the button to cast';
@@ -315,7 +315,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const d = MAVUONG[id], c = $('#cutin'); if (!d || !c) return;
     const po = c.querySelector('.ci-po');
     po.onerror = () => { po.onerror = null; po.src = mvIcURL(id); po.classList.add('fb'); };
-    po.classList.remove('fb'); po.src = 'assets/' + d.anh + '.png';
+    po.classList.remove('fb'); po.src = typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png';
     c.querySelector('.ci-ki').src = mvIcURL(id);
     const b = c.querySelector('b');
     b.textContent = ''; b.style.fontSize = '';
@@ -513,7 +513,7 @@ Promise.all([FONT.ready, new Promise(ok => document.readyState === 'loading' ? d
 // ★ trong chữ DOM → ảnh ngôi sao ChatGPT (sao_chu.png, raw_p4_ui_1) — QUY-TAC-HINH §1: không dùng ký tự để giả icon (rà soát vẽ tay, pass 4 UI).
 //  Bọc mọi nút chữ có '★' trong #wrap (menu, trang ụ/chỉ huy, bảng thông tin, kết quả, hướng dẫn…); alt="★" giữ nghĩa khi sao chép/đọc màn hình.
 (() => {
-  const SAO = 'assets/sao_chu.png', BO = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'OPTION', 'TITLE']);
+  const SAO = 'assets/sao_chu.webp?v=98b4132b', BO = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'OPTION', 'TITLE']);
   const doi = (t) => {
     const p = t.parentNode; if (!p || BO.has(p.nodeName) || p.closest('svg')) return;
     const ph = t.nodeValue.split('★'); if (ph.length < 2) return;

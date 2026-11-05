@@ -5,7 +5,7 @@
 /* ---------- bảng chỉ dẫn ---------- */
 #hd { position: absolute; left: 0; top: 0; width: 430px; height: 860px; z-index: 30; pointer-events: none; }
 #hd .hd-the { position: absolute; left: 22px; right: 22px; pointer-events: auto; display: flex; flex-direction: column; gap: 3px; text-align: center;
-  border: 0 solid transparent; border-width: 14px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 14px stretch; padding: 2px 6px 0; }
+  border: 0 solid transparent; border-width: 14px; border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 14px stretch; padding: 2px 6px 0; }
 #hd.hd-tren .hd-the { top: 62px; }
 #hd.hd-duoi .hd-the { top: 516px; }
 #hd .hd-so { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; color: #6fe3ff; text-shadow: 0 1px 0 #000; }
@@ -35,7 +35,7 @@
   border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/h2_chip_tat.png?v=aebc5f1d) 0 54.5 fill / 0 12px stretch; }
 #bb-loc .bb-chip button.on { color: #eaffff; border-image-source: url(../assets/h2_chip.png?v=11229d10); }
 #bb-tim { flex: 1; min-width: 0; height: 30px; font: 700 16px/1 inherit; font-family: inherit; color: #e8f6ff; background: none; outline: none; padding: 0 4px;
-  border: 0 solid transparent; border-width: 8px 12px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 8px 12px stretch; -webkit-appearance: none; appearance: none; }
+  border: 0 solid transparent; border-width: 8px 12px; border-image: url(../assets/h2_lcd.webp?v=e23fa299) 56.4 94.1 fill / 8px 12px stretch; -webkit-appearance: none; appearance: none; }
 #bb-tim::placeholder { color: #6f8796; font-size: 13px; }
 #bb-trong { padding: 24px 12px; text-align: center; font-size: 12px; font-weight: 700; color: #9aa3b2; }
 .c[hidden], .luoi[hidden], .nhom[hidden], #bb-trong[hidden] { display: none !important; }
@@ -48,7 +48,7 @@
 #bb-dai .bb-hang { display: flex; gap: 6px; overflow-x: auto; padding: 4px 2px 6px; scroll-snap-type: x mandatory; touch-action: pan-x pan-y; scrollbar-width: none; }
 #bb-dai .bb-hang::-webkit-scrollbar { display: none; }
 .bb-the { position: relative; flex: none; width: 188px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 3px;
-  border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 12px stretch; padding: 0 2px; }
+  border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 12px stretch; padding: 0 2px; }
 .bb-the.chon::after { content: ''; position: absolute; inset: -12px; border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_chon.png?v=daa6d148) 34 fill / 12px stretch; pointer-events: none; }
 .bb-ten { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; }
 .bb-ten b { font-size: 12.5px; font-weight: 900; letter-spacing: .6px; color: #ffe08a; white-space: nowrap; }
@@ -63,7 +63,7 @@
 /* ---------- khoá bộ sưu tập (trước khi xong/bỏ qua hướng dẫn) ---------- */
 #chon.hd-khoa #chon-luoi > .nhom, #chon.hd-khoa #chon-luoi > .luoi, #chon.hd-khoa #bb-loc, #chon.hd-khoa #bb-trong { display: none !important; }
 #bb-khoa { margin: 10px 6px; padding: 4px 6px; text-align: center; display: flex; flex-direction: column; gap: 6px;
-  border: 0 solid transparent; border-width: 14px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 14px stretch; }
+  border: 0 solid transparent; border-width: 14px; border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 14px stretch; }
 #bb-khoa b { font-size: 15px; font-weight: 900; letter-spacing: 1px; color: #ffe08a; }
 #bb-khoa span { font-size: 11.5px; font-weight: 700; line-height: 1.35; color: #c9d1dc; }
 #bb-khoa div { display: flex; justify-content: center; gap: 8px; }
@@ -75,7 +75,7 @@
 #kq-chi { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; text-align: left; }
 .kq-hang { display: flex; gap: 4px; }
 .kq-o { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 62px;
-  border: 0 solid transparent; border-width: 10px 14px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 10px 14px stretch; }
+  border: 0 solid transparent; border-width: 10px 14px; border-image: url(../assets/h2_lcd.webp?v=e23fa299) 56.4 94.1 fill / 10px 14px stretch; }
 .kq-o small { font-size: 8.5px; font-weight: 800; letter-spacing: .8px; color: #8fd8ff; white-space: nowrap; }
 .kq-o b { font-size: 21px; font-weight: 900; line-height: 1.05; color: #ffe08a; text-shadow: 0 2px 0 #000; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .kq-o em { font-style: normal; font-size: 8.5px; font-weight: 900; color: #7dff9a; letter-spacing: .6px; }

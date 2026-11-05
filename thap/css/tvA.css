@@ -74,7 +74,7 @@ html.co-hud2 body #bo-the .the .lv, html.co-hud2.co-khung body #bo-the .the.co-k
   top: calc(var(--khh, 74px) * .838 - 14px); bottom: auto; left: calc(15.6% + 1px); right: auto; }
 
 /* ---------- §E07 ô bộ bài TRỐNG (tv_o_trong.png, cửa sổ trong suốt 16.7–83.3 % × 17.4–81.8 %) ---------- */
-html body #chon #chon-bo .o-bo:not([data-id]) { border: 0; border-image: none; background: url(../assets/tv_o_trong.png?v=83a285f8) center / 100% auto no-repeat; }
+html body #chon #chon-bo .o-bo:not([data-id]) { border: 0; border-image: none; background: url(../assets/tv_o_trong.webp?v=da883474) center / 100% auto no-repeat; }
 
 /* dải đồng đội/đối thủ: bộ đếm ụ (DCDW) xuống góc phải DƯỚI — không sát trán khi mặt lệch phải */
 html body #dp-dai .dp-the .dp-dem { top: auto; bottom: -2px; right: -2px; }

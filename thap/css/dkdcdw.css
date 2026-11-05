@@ -8,7 +8,7 @@ html body #chon .dkd-pre .dkd-so.on { color: #fff; }
 
 /* băng chỉ huy gọn */
 html body #chon .dkd-cmd { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; height: 60px; margin: 0 0 2px; padding: 0 12px 0 8px; box-sizing: border-box; cursor: pointer;
-  border: 0 solid transparent; border-image: url(../assets/p7_tam.png?v=0933bbf5) 40 60 fill / 14px 20px stretch; background: none; color: var(--m-chu); text-align: left;
+  border: 0 solid transparent; border-image: url(../assets/p7_tam.webp?v=c162b231) 40 60 fill / 14px 20px stretch; background: none; color: var(--m-chu); text-align: left;
   -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 html body #chon .dkd-cmd:active { scale: .985; }
 html body #wrap #chon .dkd-cmd .dkd-cmd-po { width: 46px; height: 46px; flex: none; margin: 0; }
@@ -17,7 +17,7 @@ html body #chon .dkd-cmd-chu small { font: 800 10px/1 var(--f-hien); letter-spac
 html body #chon .dkd-cmd-chu b { font: 800 16px/1.1 var(--f-hien); letter-spacing: .04em; color: #ffd76a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html body #chon .dkd-cmd-chu em { font: 600 12px/1.25 var(--f-chu); font-style: normal; color: var(--m-mo); white-space: nowrap; overflow-x: clip; text-overflow: ellipsis; }
 html body #chon .dkd-cmd-doi { flex: none; height: 36px; padding: 0 12px; display: flex; align-items: center; font: 800 12px/1 var(--f-hien); letter-spacing: .08em; color: var(--m-chu);
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png?v=e2d3b84d) 49.5 85.9 fill / 10px 16px stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.webp?v=5340bce8) 49.5 85.9 fill / 10px 16px stretch; }
 
 /* đếm 3/5 + RANDOM: mỏng */
 html body #chon.xem-dk .dk-dem { height: 24px; }

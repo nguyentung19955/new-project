@@ -81,7 +81,7 @@ const HB = {
     tt.classList.add('hb-qi'); tt.classList.remove('hb-rong');
     // tên + ★ (số sao trong trận) trên 1 dòng; dòng vai trò/độ hiếm ẩn (đã có ở tấm mở rộng)
     const sao = tt.querySelector('.hb-sao') || (() => { const b = document.createElement('b'); b.className = 'hb-sao'; tt.querySelector('.tt-dau').insertBefore(b, tt.querySelector('.tt-bac')); return b; })();
-    sao.innerHTML = T ? T.sao + '<img src="assets/ui_sao.png" alt="">' : ''; sao.hidden = !T;
+    sao.innerHTML = T ? T.sao + '<img src="assets/ui_sao.webp?v=bae43e7e" alt="">' : ''; sao.hidden = !T;
     const so = tt.querySelector('.hb-so'); so._h = null;
     this.veSo();
     this.dat(tt, false);

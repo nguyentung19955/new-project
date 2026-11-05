@@ -6,11 +6,11 @@
 #nut-trieu { background: #0b0c0e; }
 #nut-trieu .tr-cap { background: none; box-shadow: none; }
 #nut-trieu .tr-cap::before { content: ''; position: absolute; inset: -5px -5px -6px; z-index: 0; pointer-events: none;
-  border-style: solid; border-width: 18px 33px 15px 20px; border-image: url(../assets/hud_trieu_san.png?v=73870c80) 46 70 40 44 fill / 18px 33px 15px 20px round stretch;
+  border-style: solid; border-width: 18px 33px 15px 20px; border-image: url(../assets/hud_trieu_san.webp?v=f1a2f5a0) 46 70 40 44 fill / 18px 33px 15px 20px round stretch;
   filter: drop-shadow(0 1px 0 #000); transition: filter .06s ease-out; } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nut-trieu .tr-cap > * { position: relative; z-index: 1; }
 #nut-trieu.thieu .tr-cap { background: none; box-shadow: none; }
-#nut-trieu.thieu .tr-cap::before { border-image-source: url(../assets/hud_trieu_tat.png?v=5cd93773); filter: drop-shadow(0 1px 0 #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+#nut-trieu.thieu .tr-cap::before { border-image-source: url(../assets/hud_trieu_tat.webp?v=e9a96bd4); filter: drop-shadow(0 1px 0 #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nut-trieu:active .tr-cap, #nut-trieu.an .tr-cap { box-shadow: none; }
 #nut-trieu:active .tr-cap::before, #nut-trieu.an .tr-cap::before { filter: drop-shadow(0 1px 0 #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nut-trieu .tr-led { display: none; } /* đèn đã có trong ảnh (sáng = đủ mana, tắt = thiếu) */
@@ -18,7 +18,7 @@
 
 /* ---------- MANA: màn LCD trong khung thép (H2) ---------- */
 #mana-hop { background: none; box-shadow: none; border-style: solid; border-width: 0;
-  border-image: url(../assets/hud_mana.png?v=b98392d0) 32 26 32 26 fill / 16px 13px 16px 13px stretch; }
+  border-image: url(../assets/hud_mana.webp?v=2db0b852) 32 26 32 26 fill / 16px 13px 16px 13px stretch; }
 #mana-hop::before { content: none; }
 #mana-hop img { margin-left: 3px; }
 
@@ -39,29 +39,29 @@
 .nut-nho[data-act="dung"]:active { background: url(../assets/ic_dung.png?v=11f23d05) center calc(50% + 2px) / 30px 30px no-repeat, url(../assets/phim_nhan.png?v=270fc22c) center / 100% 100% no-repeat; }
 
 /* ---------- băng bắt đầu WAVE / cảnh báo TRÙM (H12, H13) ---------- */
-#bang-wave .bw-dai { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_wave_nen.png?v=0cf180e5) 40 110 fill / 20px 55px stretch; }
-#canh-bao { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_trum_nen.png?v=be089280) 40 110 fill / 20px 55px stretch; }
+#bang-wave .bw-dai { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_wave_nen.webp?v=4251b5c5) 40 110 fill / 20px 55px stretch; }
+#canh-bao { background: none; box-shadow: none; border: 0; border-image: url(../assets/bang_trum_nen.webp?v=0ecab6eb) 40 110 fill / 20px 55px stretch; }
 #canh-bao b, #canh-bao span { text-shadow: 0 2px 0 #000, 0 0 6px #000; }
 /* cut-in chỉ huy (H14 giữ hoạt ảnh code): vân thép gen phủ nhẹ thay sọc CSS */
-#cutin .ci-nen::after { background: url(../assets/bang_cutin_nen.png?v=bf744a91) center / 100% 100% no-repeat; opacity: .38; mix-blend-mode: overlay; }
+#cutin .ci-nen::after { background: url(../assets/bang_cutin_nen.webp?v=3038931b) center / 100% 100% no-repeat; opacity: .38; mix-blend-mode: overlay; }
 
 /* ---------- bảng Tạm dừng / Kết quả: khung thép 9 mảnh (P1) ---------- */
 .bang { background: none; border-radius: 0; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 28px stretch; }
+  border-image: url(../assets/khung_bang.webp?v=24d6a27d) 85.2 fill / 28px stretch; }
 
 /* ---------- màn chọn bộ bài ---------- */
 /* logo (M1): ảnh thay chữ — chữ vẫn trong DOM (ẩn đi) cho trình đọc màn hình; dòng phụ giữ chữ */
-.logo b { width: 260px; max-width: 72vw; aspect-ratio: 704 / 288; margin: 0 auto; background: url(../assets/logo.png?v=9e998069) center / contain no-repeat;
+.logo b { width: 260px; max-width: 72vw; aspect-ratio: 704 / 288; margin: 0 auto; background: url(../assets/logo.webp?v=d6964dd9) center / contain no-repeat;
   color: transparent; text-shadow: none; font-size: 0; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .logo span { display: block; margin-top: -2px; }
 /* ô bộ bài trống (M5): hốc thẻ thép thay viền đứt */
-#chon-bo .o-bo { border: 0; border-image: url(../assets/o_trong.png?v=5eaaad4c) 28 fill / 12px stretch; }
+#chon-bo .o-bo { border: 0; border-image: url(../assets/o_trong.webp?v=2e0a5f19) 28 fill / 12px stretch; }
 #chon-bo .o-bo[data-id] { border-image: none; }
 /* nút chế độ (M6): thêm icon */
 .che { position: relative; padding-left: 34px; }
 .che::before { content: ''; position: absolute; left: 4px; top: 50%; width: 30px; height: 30px; margin-top: -15px; background: center / contain no-repeat; filter: drop-shadow(0 1px 0 #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
-.che[data-che="coop"]::before { background-image: url(../assets/ic_coop.png?v=ab3a62d6); }
-.che[data-che="solo"]::before { background-image: url(../assets/ic_solo.png?v=1ff3b41a); }
+.che[data-che="coop"]::before { background-image: url(../assets/ic_coop.webp?v=16c8e2ff); }
+.che[data-che="solo"]::before { background-image: url(../assets/ic_solo.webp?v=2c431b86); }
 .che[data-che="pvp"]::before { background-image: url(../assets/ic_pvp.png?v=0ab38083); }
 
 /* ---------- nền (S7b, S7c) ---------- */
@@ -69,4 +69,4 @@
 #chon { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
 .chon-cuoi { background: #151618f2; }
 /* khung dưới trận (H8): console thép — 9 mảnh để góc/ống không méo khi co theo bề rộng màn */
-#duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.png?v=4af9ebbf) 51.6 127.5 97.2 127.5 fill / 17px 42px 32px 42px stretch; }
+#duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.webp?v=5fa104b8) 51.6 127.5 97.2 127.5 fill / 17px 42px 32px 42px stretch; }

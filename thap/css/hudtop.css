@@ -5,8 +5,8 @@
 /* ================= RAY 330×46: 2 nửa ảnh gốc (tỉ lệ 46/111), chỉ giãn dải phẳng x 234–240 / 358–364 của ảnh 600 px ================= */
 .co-hud2 #top { --W: 330px; left: 50px; width: var(--W); background: none; }
 .co-hud2 #top::before, .co-hud2 #top::after { content: ''; position: absolute; z-index: 0; top: 0; height: 46px; width: calc(var(--W) / 2 + 124.33px); pointer-events: none; box-sizing: border-box; border: 0 solid transparent; }
-.co-hud2 #top::before { left: 0; border-image: url(../assets/h2_rail.png?v=0ff98d67) 0 360 0 234 fill / 0 149.19px 0 96.97px / 0 stretch; clip-path: inset(0 124.33px 0 0); }
-.co-hud2 #top::after { right: 0; border-image: url(../assets/h2_rail.png?v=0ff98d67) 0 236 0 358 fill / 0 97.8px 0 148.36px / 0 stretch; clip-path: inset(0 0 0 124.33px); }
+.co-hud2 #top::before { left: 0; border-image: url(../assets/h2_rail.webp?v=9eec3187) 0 360 0 234 fill / 0 149.19px 0 96.97px / 0 stretch; clip-path: inset(0 124.33px 0 0); }
+.co-hud2 #top::after { right: 0; border-image: url(../assets/h2_rail.webp?v=9eec3187) 0 236 0 358 fill / 0 97.8px 0 148.36px / 0 stretch; clip-path: inset(0 0 0 124.33px); }
 .co-hud2 #top > * { z-index: 1; }
 
 /* khoang 1 · WAVE N (khoang x 17.9–86.3) */
@@ -50,8 +50,8 @@
 /* tấm treo dưới khoang tim: CO-OP = 3 tim chung · PVP = tim đối thủ (không chạm giá đồng đội #dp-dai, x ≤ 252) */
 #ht-phu { display: none; }
 .co-hud2 #ht-phu:not([hidden]) { position: absolute; right: 16px; top: 41px; height: 17px; padding: 0 8px; display: flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none;
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png?v=e2d3b84d) 0 66.1 fill / 0 9px / 0 stretch; }
-.co-hud2 #ht-phu.do { border-image-source: url(../assets/h2_tam_do.png?v=d0a9aca1); }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.webp?v=5340bce8) 0 66.1 fill / 0 9px / 0 stretch; }
+.co-hud2 #ht-phu.do { border-image-source: url(../assets/h2_tam_do.webp?v=25694b5a); }
 .co-hud2 #ht-phu.do .ht-ai { color: #ff9a8f; }
 .co-hud2 #ht-phu.xanh .ht-ai { color: #9ff5c8; font-size: 9px; margin: 0; }
 .co-hud2 #ht-phu .ht-tim { width: 12px; height: 11px; }

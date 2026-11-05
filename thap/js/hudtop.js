@@ -21,7 +21,7 @@ const HT = {
   dung() {
     const top = $('#top'); if (!top || top._ht) return; top._ht = 1;
     const w = $('#tb-wave');
-    if (w && !w.querySelector('.ht-ic')) { const i = document.createElement('img'); i.className = 'ht-ic'; i.alt = ''; i.src = 'assets/h2_canh_bao.png'; w.insertBefore(i, w.firstChild); }
+    if (w && !w.querySelector('.ht-ic')) { const i = document.createElement('img'); i.className = 'ht-ic'; i.alt = ''; i.src = 'assets/h2_canh_bao.webp?v=5cf92aa4'; w.insertBefore(i, w.firstChild); }
     if (!$('#ht-phu')) { const p = document.createElement('div'); p.id = 'ht-phu'; p.hidden = true; top.appendChild(p); }
     const tim = $('#tb-tim'); if (tim) tim.setAttribute('aria-label', this.CHU.lives);
   },
@@ -163,7 +163,7 @@ const HT = {
   const tcGoc = UI.theChon;
   UI.theChon = function (r) {
     const c = tcGoc.apply(this, arguments), sk = SKILLS[r.id], ic = c.querySelector('.ic');
-    if (ic && sk && HUD2.VAI[sk.vai]) { ic.src = 'assets/' + HUD2.VAI[sk.vai] + '.png'; ic.classList.add('h2-vai'); c.classList.add('ht-goc'); }
+    if (ic && sk && HUD2.VAI[sk.vai]) { ic.src = (typeof anhUrl === 'function' ? anhUrl(HUD2.VAI[sk.vai]) : 'assets/' + HUD2.VAI[sk.vai] + '.png'); ic.classList.add('h2-vai'); c.classList.add('ht-goc'); }
     return c;
   };
 })();

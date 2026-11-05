@@ -159,10 +159,10 @@ const UP = {
     if (this.el) return this.el;
     const el = document.createElement('div'); el.id = 'up'; el.className = 'man up7'; el.hidden = true;
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Turret file');
-    const x = '<button class="up-x" data-up="dongtam" aria-label="Close"><img src="assets/ic_lui.png" alt=""></button>';
+    const x = '<button class="up-x" data-up="dongtam" aria-label="Close"><img src="assets/ic_lui.webp?v=002747c0" alt=""></button>';
     el.innerHTML =
       '<div class="up-nen" aria-hidden="true"></div>' +
-      '<div class="up-dau"><button class="up-lui" data-up="dong" aria-label="Back"><img src="assets/ic_lui.png" alt=""></button>' +
+      '<div class="up-dau"><button class="up-lui" data-up="dong" aria-label="Back"><img src="assets/ic_lui.webp?v=002747c0" alt=""></button>' +
       '<div class="up-so"></div><span class="up-mui"><button data-up="truoc" aria-label="Previous"><img class="lat" src="assets/mui_tiep.png" alt=""></button>' +
       '<button data-up="sau" aria-label="Next"><img src="assets/mui_tiep.png" alt=""></button></span></div>' +
       '<div class="up-than"><div class="up-noi"><div class="up-a"></div></div></div>' +
@@ -454,7 +454,7 @@ const UP = {
     if (ph.length === 2) ph = ['Starting form'].concat(ph);
     if (ph.length !== 3) ph = null;
     return '<div class="up-gd">' + g.ten.map((t, k) =>
-      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.webp?v=5b0cfbfb" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
       '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
   },
@@ -561,7 +561,7 @@ if (!UP_XEM) {
   // nạp sẵn Test range ~1.5 s sau khi màn chọn hiện (đã tải xong menu, không trong trận)
   let rnh = 0; const hen = setInterval(() => {
     const c = document.getElementById('chon');
-    const ok = typeof TAI !== 'undefined' && TAI.daBoot && !TAI.cho && c && !c.hidden && !(G.ban && G.ban.length);
+    const ok = typeof TAI !== 'undefined' && TAI.daBoot && TAI.nenXong !== false && !TAI.cho && c && !c.hidden && !(G.ban && G.ban.length); // đợi cả đợt nạp nền (khởi động nhanh)
     rnh = ok ? rnh + 1 : 0;
     if (UP.ifr) clearInterval(hen); else if (rnh >= 3) { clearInterval(hen); try { UP.chuanBi(); } catch (e) { console.warn('UP.chuanBi', e); } }
   }, 500);

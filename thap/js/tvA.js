@@ -5,7 +5,7 @@
 // §B2/E08: ô bộ bài CÓ ỤI dùng khung tv_o_co.png (cửa sổ trong suốt, không thanh qua mặt) thay khung độ hiếm dày
 (() => {
   if (typeof UI === 'undefined' || !UI.veBoChon) return;
-  const doi = () => document.querySelectorAll('#chon-bo .o-bo[data-id] > img.kh').forEach(k => { if (!/tv_o_co/.test(k.getAttribute('src'))) k.src = 'assets/tv_o_co.png'; });
+  const doi = () => document.querySelectorAll('#chon-bo .o-bo[data-id] > img.kh').forEach(k => { if (!/tv_o_co/.test(k.getAttribute('src'))) k.src = 'assets/tv_o_co.webp?v=1bb815ad'; });
   const goc = UI.veBoChon;
   UI.veBoChon = function () { const r = goc.apply(this, arguments); doi(); return r; };
   doi();

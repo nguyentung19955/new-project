@@ -232,7 +232,7 @@ const ONL = {
     if (!el) {
       el = document.createElement('div'); el.id = 'onl-sanh'; el.className = 'man onl-man sanh7';
       el.innerHTML = '<div class="s7-nen" aria-hidden="true"></div>' +
-        '<div class="s7-dau"><button class="s7-lui" data-act="onl-roi" aria-label="Leave room"><img src="assets/ic_lui.png" alt=""></button><b>CO-OP LOBBY</b><i></i></div>' +
+        '<div class="s7-dau"><button class="s7-lui" data-act="onl-roi" aria-label="Leave room"><img src="assets/ic_lui.webp?v=002747c0" alt=""></button><b>CO-OP LOBBY</b><i></i></div>' +
         '<section class="s7-moi"><small>ROOM CODE</small><div class="sanh-ma" id="sanh-ma" data-act="onl-copy" role="button" aria-label="Copy room code"></div>' +
         '<div class="s7-nut2"><button class="nut" data-act="onl-copy" id="sanh-copy">COPY CODE</button><button class="nut" data-act="onl-chiase">SHARE LINK</button></div>' +
         '<span class="s7-ok" id="sanh-ok"><img src="assets/chon_huy.png" alt=""><b>COPIED</b></span></section>' +
@@ -250,7 +250,7 @@ const ONL = {
     this.capNhatSanh();
   },
   theNguoi(p, laToi) {
-    if (!p) return '<div class="sanh-p trong"><span class="s7-av ghost"><img src="assets/ic_coop.png" alt=""></span><div class="s7-ten"><b>Waiting for teammate<span class="s7-cham"><i>.</i><i>.</i><i>.</i></span></b><small>Send them the code or link</small></div></div>';
+    if (!p) return '<div class="sanh-p trong"><span class="s7-av ghost"><img src="assets/ic_coop.webp?v=16c8e2ff" alt=""></span><div class="s7-ten"><b>Waiting for teammate<span class="s7-cham"><i>.</i><i>.</i><i>.</i></span></b><small>Send them the code or link</small></div></div>';
     const deck = String(p.deck || '').split(',').filter(id => G.rosterMap[id]);
     const mv = MAVUONG[p.mv] ? p.mv : 'hero';
     return '<div class="sanh-p' + (p.ready ? ' san' : '') + (p.on === false ? ' mat' : '') + '" data-u="' + (laToi ? 'me' : 'ban') + '">' +

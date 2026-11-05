@@ -31,7 +31,7 @@ const HD = {
     const d = document.createElement('div'); d.id = 'hd'; d.hidden = true;
     d.innerHTML = '<div class="hd-the"><small class="hd-so"></small><b class="hd-chu"></b><span class="hd-phu"></span><em class="hd-dat" hidden></em>' +
       '<div class="hd-nut"><button class="nut-xep hd-ok" type="button">GOT IT</button><button class="nut-xep hd-bo" type="button" data-act="bo">SKIP TUTORIAL</button></div></div>' +
-      '<img class="hd-mui" src="assets/h2_canh_bao.png" alt="">';
+      '<img class="hd-mui" src="assets/h2_canh_bao.webp?v=5cf92aa4" alt="">';
     w.appendChild(d); this.el = d;
     d.querySelector('.hd-ok').addEventListener('click', (e) => { e.stopPropagation(); this.xongBuoc(); });
     // nút BỎ QUA mang data-act="bo": UI.bam (bắt ở document) đưa về màn chọn như nút QUIT; ở đây chỉ ghi trạng thái trước

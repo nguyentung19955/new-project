@@ -8,7 +8,7 @@ const TK = {
   KEY: 'tm_hoso',
   AV: ['laser', 'canon', 'bang', 'doc', 'drone', 'bao', 'kiembang', 'lien', 'hydra', 'cuuvi', 'anhsang', 'aten'],
   ho: null, // { name, av, bestWave, wins, games }
-  avURL(av) { return 'assets/pilot_' + (TK.AV.includes(av) ? av : 'laser') + '.png'; },
+  avURL(av) { const t = 'pilot_' + (TK.AV.includes(av) ? av : 'laser'); return typeof anhUrl === 'function' ? anhUrl(t) : 'assets/' + t + '.png'; },
   tenMacDinh(uid) { return 'Pilot-' + String(uid || Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9]/g, '').slice(-4).toUpperCase(); },
   docMay() { try { return JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) { return null; } },
   luuMay() { try { localStorage.setItem(this.KEY, JSON.stringify(this.ho)); } catch (e) { } },

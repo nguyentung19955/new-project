@@ -133,7 +133,7 @@ const DK = {
     const ma = document.createElement('div'); ma.className = 'dk-ma';
     ma.style.width = mw + 'px'; ma.style.height = mh + 'px'; ma.style.setProperty('--khh', mh + 'px');
     const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url(this.bac(d.id)) : '';
-    ma.innerHTML = '<img class="dk-ma-de" src="assets/chon_de_xanh.png" alt=""><div class="dk-ma-in"><img class="dk-ma-po" src="' + portraitOf(d.id) + '" alt="" draggable="false">' + (kh ? '<img class="dk-ma-kh" src="' + kh + '" alt="" draggable="false">' : '') + '</div>';
+    ma.innerHTML = '<img class="dk-ma-de" src="assets/chon_de_xanh.webp?v=a30e6e2b" alt=""><div class="dk-ma-in"><img class="dk-ma-po" src="' + portraitOf(d.id) + '" alt="" draggable="false">' + (kh ? '<img class="dk-ma-kh" src="' + kh + '" alt="" draggable="false">' : '') + '</div>';
     w.appendChild(ma);
     const cx = (r.left + r.width / 2 - rw.left) / s, cy = (r.top + Math.min(r.height, r.width * 1.2) / 2 - rw.top) / s;
     const k = this.keo = { ...d, ma, s, rw, mw, mh, ox: cx, oy: cy, // tâm gốc (logic px)

@@ -157,7 +157,7 @@ const CHAT = {
       p = document.createElement('div'); p.id = 'chat-bang';
       document.getElementById('wrap').appendChild(p);
     }
-    p.innerHTML = '<div class="chat-dau"><b>QUICK CHAT</b><small class="chat-cho"></small><button class="chat-x" data-act="chat-dong" aria-label="Close"><img src="assets/p7_ic_dong.png" alt=""></button></div>' +
+    p.innerHTML = '<div class="chat-dau"><b>QUICK CHAT</b><small class="chat-cho"></small><button class="chat-x" data-act="chat-dong" aria-label="Close"><img src="assets/p7_ic_dong.webp?v=14f619f0" alt=""></button></div>' +
       '<div class="chat-cau">' + this.CAU.map(c => '<button data-act="chat-q" data-v="' + c + '">' + c + '</button>').join('') + '</div>' +
       '<div class="chat-emo">' + Object.entries(this.EMO).map(([k, f]) => '<button data-act="chat-e" data-v="' + k + '" aria-label="' + k + '"><img src="assets/' + f + '.png" alt=""></button>').join('') + '</div>' +
       (oSanh ? '<div class="chat-go"><input id="chat-chu" maxlength="60" autocomplete="off" placeholder="Type a message…" enterkeyhint="send"><button data-act="chat-x">SEND</button></div>' : '') +

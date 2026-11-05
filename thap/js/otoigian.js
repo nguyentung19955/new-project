@@ -10,7 +10,7 @@
 const OT = {
   BAC: ['trang', 'xanh', 'tim', 'vang', 'do'],
   bac(id) { return (G.rosterMap && G.rosterMap[id] && G.rosterMap[id].bac) || 'trang'; },
-  vien(bac) { return 'assets/o_vien_' + bac + '.png'; },
+  vien(bac) { return (typeof anhUrl === 'function' ? anhUrl('o_vien_' + bac) : 'assets/' + 'o_vien_' + bac + '.png'); },
   // gắn viền + ngọc vào 1 phần tử (idempotent; đổi bậc khi ô đổi tướng)
   gan(el, bac, ngoc) {
     if (!el) return;

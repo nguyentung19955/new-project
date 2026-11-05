@@ -18,14 +18,14 @@
 .c .ten { border-top: 0; }
 /* thẻ chỉ huy (3 ô): tấm thép khung_tt; đang chọn = khung sáng khung_chon (như nút chế độ) */
 .mv { position: relative; background: none; border-radius: 0; border: 0 solid transparent; border-width: 0; border-style: solid;
-  border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 8px stretch; }
+  border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 8px stretch; }
 .mv.chon { background: none; }
 .mv.chon::after { content: ''; position: absolute; inset: -3px; border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_chon.png?v=daa6d148) 34 fill / 12px stretch; pointer-events: none; }
 .mv-anh { background: #120c0e; border: 0; border-radius: 0; }
 .mv-anh .ki, #cutin .ci-ki { border: 0; border-radius: 0; background: url(../assets/h2_vong_xam.png?v=85675fd5) center / 100% 100% no-repeat; padding: 3px; filter: none; }
 /* nút chế độ ONLINE / CO-OP / SOLO / PVP: tấm thép khung_tt (đang chọn giữ khung_chon của hud2.css) */
 .che, .co-s10 .che.chon { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 8px stretch; }
+  border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 8px stretch; }
 .che.chon { transform: none; }
 .che span { font-size: 8.5px; line-height: 1.05; }
 
@@ -47,14 +47,14 @@
 .up-ho-nho img.gap { opacity: .2; filter: grayscale(1); }
 /* dải thông số / bảng / thẻ: tấm khung_tt */
 .up-spec, .up-bang, .up-gd1, .up-the, .up-luoi { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none;
-  border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 10px stretch; }
+  border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 10px stretch; }
 .up-spec { padding: 4px 6px; }
 .up-spec div { border-left: 0; }
 .up-bang { padding: 6px 4px; overflow: visible; }
 .up-hang { border-top: 0; }
 .up-hang.dau { background: none; }
 .up-hang.moc { box-shadow: none; background: none; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/hang_sang.png?v=48544359) 40 70 fill / 7px 13px stretch; }
+  border-image: url(../assets/hang_sang.webp?v=b0784d10) 40 70 fill / 7px 13px stretch; }
 .up-the { padding: 6px; }
 .up-the img { border-radius: 0; }
 /* tiêu đề mục: số trên tấm ui_lv, gạch ngang = thanh thép h2_thanh */
@@ -65,7 +65,7 @@
   border-image: url(../assets/h2_tam_mong.png?v=030a8edb) 0 30 fill / 0 10px / 0 stretch; }
 /* THỬ BẮN: khung monitor = khung_bang; 4 góc = h2_glint; đèn REC = den_tim_bat */
 .up-tv { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 9px;
-  border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 16px stretch; }
+  border-image: url(../assets/khung_bang.webp?v=24d6a27d) 85.2 fill / 16px stretch; }
 .up-tv-khung { border-radius: 0; }
 .up-tv .g { width: 16px; height: 14px; border: 0 !important; background: url(../assets/h2_glint.png?v=6087dcbd) center / 100% 100% no-repeat; }
 .up-tv .tl { left: 5px; top: 5px; } .up-tv .tr { right: 5px; top: 5px; transform: scaleX(-1); }
@@ -74,11 +74,11 @@
 .up-phat { box-shadow: none; }
 /* chọn sao xem trước: nút thép; đang chọn = nút vàng */
 .up-sao-chon button { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; color: #e9edf2; text-shadow: 0 1px 0 #000;
-  border-image: url(../assets/nut_lon_thep.png?v=8d894a00) 0 105.4 fill / 0 16px / 0 stretch; }
-.up-sao-chon button.chon { background: none; color: #3a1d00; text-shadow: 0 1px 0 #ffd98a; border-image-source: url(../assets/nut_lon_vang.png?v=6bc90e94); }
+  border-image: url(../assets/nut_lon_thep.webp?v=8c159a97) 0 105.4 fill / 0 16px / 0 stretch; }
+.up-sao-chon button.chon { background: none; color: #3a1d00; text-shadow: 0 1px 0 #ffd98a; border-image-source: url(../assets/nut_lon_vang.webp?v=679452f1); }
 /* dấu chân buff: ô = hốc thép o_trong (ô ụ / ô được buff có icon PNG bên trong) */
 .up-luoi { padding: 8px; }
-.up-luoi i, .up-luoi i.u, .up-luoi i.b { border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png?v=5eaaad4c) center / 100% 100% no-repeat; }
+.up-luoi i, .up-luoi i.u, .up-luoi i.b { border-radius: 0; box-shadow: none; background: url(../assets/o_trong.webp?v=2e0a5f19) center / 100% 100% no-repeat; }
 .up-luoi i:not(.u):not(.b) { opacity: .55; }
 .up-dl, .up-dl dt, .up-dl dd { border: 0; }
 .up-dl dt, .up-dl dd { padding: 6px 0; }
@@ -88,34 +88,34 @@
 .up-thang .cur { color: var(--c); border-image-source: url(../assets/h2_chip.png?v=11229d10); }
 .up-gd1 .anh .dau.loc.s2, .up-gd1 .anh .dau.loc.s3 { filter: none; }
 /* bộ bài 5 ô dưới trang: ô trống = o_trong; ụ đang xem = khung_chon */
-.up-bo img, .up-bo i { border: 0; border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png?v=5eaaad4c) center / 100% 100% no-repeat; }
+.up-bo img, .up-bo i { border: 0; border-radius: 0; box-shadow: none; background: url(../assets/o_trong.webp?v=2e0a5f19) center / 100% 100% no-repeat; }
 .up-bo img.cur { border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_chon.png?v=daa6d148) 34 / 6px / 3px stretch; }
 
 /* ================= BẢNG THÔNG TIN Ụ (#tt) + DẢI TÊN (#nd-dai) ================= */
 #tt, .co-s10 #tt { box-shadow: none; }
-#tt .tt-the { border: 0; border-radius: 0; background: url(../assets/o_trong.png?v=5eaaad4c) center / 100% 100% no-repeat; }
+#tt .tt-the { border: 0; border-radius: 0; background: url(../assets/o_trong.webp?v=2e0a5f19) center / 100% 100% no-repeat; }
 #tt .tt-bac { border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; background: none; padding: 0 8px; text-shadow: 0 1px 0 #000;
   border-image: url(../assets/ui_lv.png?v=8ea237e1) 0 16 fill / 0 6px / 0 stretch; }
 #tt .st-hang > div { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 4px 8px 3px;
-  border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 6px 10px stretch; }
+  border-image: url(../assets/h2_lcd.webp?v=e23fa299) 56.4 94.1 fill / 6px 10px stretch; }
 #tt .d-chip span, #tt .tt-so .d-thang span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 6px 0 5px;
   border-image: url(../assets/ui_lv.png?v=8ea237e1) 0 16 fill / 0 5px / 0 stretch; }
 #tt .tt-so .d-thang span.cur { background: none; color: var(--m); }
 #tt .tt-ct { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 10px;
   border-image: url(../assets/h2_chip.png?v=11229d10) 0 54.5 fill / 0 9px / 0 stretch; }
 #nd-dai { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 0 14px 0 4px;
-  border-image: url(../assets/h2_tam.png?v=ba7369d6) 0 66.1 fill / 0 12px / 0 stretch; }
+  border-image: url(../assets/h2_tam.webp?v=d64d73de) 0 66.1 fill / 0 12px / 0 stretch; }
 #nd-gt .gt-bang { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 20px stretch; }
-#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 10px stretch; }
+  border-image: url(../assets/khung_bang.webp?v=24d6a27d) 85.2 fill / 20px stretch; }
+#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_tt.webp?v=074822a9) 47.1 fill / 10px stretch; }
 
 /* ================= CUT-IN CHỈ HUY: băng thép bang_cutin_nen (không gradient/viền/quầng) ================= */
 #cutin .ci-nen { background: none; box-shadow: none; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/bang_cutin_nen.png?v=bf744a91) 40 110 fill / 18px 50px stretch; }
+  border-image: url(../assets/bang_cutin_nen.webp?v=3038931b) 40 110 fill / 18px 50px stretch; }
 #cutin .ci-nen::after { content: none; }
 /* vệt sáng quét qua băng = ảnh ci_quet.png (chỉ dời/mờ, không vẽ) */
 #cutin .ci-nen::before { content: ''; position: absolute; top: -6px; bottom: -6px; left: 0; width: 100px; z-index: 1; pointer-events: none;
-  background: url(../assets/ci_quet.png?v=7ef1832d) center / contain no-repeat; transform: translateX(-120px); opacity: 0; }
+  background: url(../assets/ci_quet.webp?v=1c8f2f57) center / contain no-repeat; transform: translateX(-120px); opacity: 0; }
 #cutin.chay .ci-nen::before { animation: ci-quet 1.1s .35s ease-in-out 2 both; }
 @keyframes ci-quet { 0% { transform: translateX(-120px); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(520px); opacity: 0; } }
 

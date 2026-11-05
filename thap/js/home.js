@@ -49,7 +49,7 @@ const HM = {
 
   veHome() {
     const m = this.CHE[this.che];
-    this.el('hm-che-ic').src = 'assets/' + m.ic + '.png';
+    this.el('hm-che-ic').src = (typeof anhUrl === 'function' ? anhUrl(m.ic) : 'assets/' + m.ic + '.png');
     this.el('hm-che-ten').textContent = m.ten;
     const n = UI.chon.length;
     this.el('hm-choi-phu').textContent = n === 5 ? m.phu() : 'Choose ' + (5 - n) + ' more turret' + (5 - n > 1 ? 's' : '');
@@ -88,9 +88,10 @@ const HM = {
     o.style.setProperty('--mm', d.mau);
     if (o.dataset.mv === UI.mv) return;
     o.dataset.mv = UI.mv;
-    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url('mv') : 'assets/the_khung_mv.png';
-    o.innerHTML = '<span class="o-mv-po"><img class="po" src="assets/' + d.anh + '.png" alt="" draggable="false" onerror="this.onerror=null;this.src=\'' + mvIcURL(UI.mv) + '\'"></span>' +
-      '<img class="o-mv-kh" src="' + kh + '" alt="" draggable="false"><img class="o-mv-ki" src="' + mvIcURL(UI.mv) + '" alt="" draggable="false">';
+    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url('mv') : 'assets/the_khung_mv.webp?v=0aae27e6';
+    const sa = typeof srcTai === 'function' ? srcTai() : 'src';
+    o.innerHTML = '<span class="o-mv-po"><img class="po" ' + sa + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" draggable="false" onerror="this.onerror=null;this.src=\'' + mvIcURL(UI.mv) + '\'"></span>' +
+      '<img class="o-mv-kh" ' + sa + '="' + kh + '" alt="" draggable="false"><img class="o-mv-ki" ' + sa + '="' + mvIcURL(UI.mv) + '" alt="" draggable="false">';
   },
 
   // ---------- bảng trượt ----------
@@ -107,7 +108,7 @@ const HM = {
     mo.classList.remove('vao'); mo.classList.add('ra');
     clearTimeout(this._dg); this._dg = setTimeout(() => { if (!this.sheet) { mo.hidden = true; mo.classList.remove('ra'); } }, 200);
   },
-  dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-ic1 hm-dong" data-act="hm-dong" aria-label="Close"><img src="assets/p7_ic_dong.png" alt=""></button></div>'; },
+  dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-ic1 hm-dong" data-act="hm-dong" aria-label="Close"><img src="assets/p7_ic_dong.webp?v=14f619f0" alt=""></button></div>'; },
 
   moChe() {
     this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
@@ -141,7 +142,7 @@ const HM = {
       // tư vấn C §B4: tên 15 · chế độ 11 · 5 ụ nhỏ · 1 dòng lối chơi · 1 chữ LOAD bên phải (IN USE khi đang dùng)
       return '<button class="hm-hang hm-pre' + (dung ? ' on' : '') + '" data-act="hm-pre-chon" data-bb="' + a.id + '"><span class="hm-pre-chu"><b>' + a.ten + '</b><small>' + this.esc(a.che) + '</small></span>' +
         '<em>' + (dung ? 'IN USE' : 'LOAD') + '</em>' +
-        '<span class="hm-pre-u">' + (typeof OT !== 'undefined' ? OT.hang(a.deck, a.mv) : a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt="">') + '</span>' +
+        '<span class="hm-pre-u">' + (typeof OT !== 'undefined' ? OT.hang(a.deck, a.mv) : a.deck.map(id => '<img ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt="">') + '</span>' +
         '<span class="hm-pre-mo">' + this.esc(a.plan) + '</span></button>';
     }).join('') + '</div>');
   },

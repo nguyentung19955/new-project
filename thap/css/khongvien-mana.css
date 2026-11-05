@@ -16,7 +16,7 @@ html:root body #the-mv .cht-glow, html:root body #the-mv.cht-san .cht-glow { dis
 
 /* 3) nút triệu hồi: bỏ 1 nhịp sáng viền khi vừa đủ (h2-san → giữ ảnh nút thường) và nhịp ::after cũ */
 html:root body #nut-trieu::after { content: none !important; animation: none !important; }
-html:root.co-hud2 body #nut-trieu.h2-san:not(.thieu):not(.an):not(:active) { background-image: url(../assets/h2_trieu_cho.png?v=0c21af52); }
+html:root.co-hud2 body #nut-trieu.h2-san:not(.thieu):not(.an):not(:active) { background-image: url(../assets/h2_trieu_cho.webp?v=648ee731); }
 
 /* 4) đủ / thiếu: số giá trắng sáng ↔ đỏ nhạt; thẻ thiếu mờ .6 (không lọc xám, không viền) */
 html:root body #bo-the .the.thieu, html:root body #the-mv.thieu { opacity: .6; }

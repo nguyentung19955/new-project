@@ -130,7 +130,7 @@ const TVB = {
     HB.dung = function (tt) {
       const moi = !tt._hb; const r = dGoc.apply(this, arguments);
       if (moi) {
-        const d = tt.querySelector('.hb-dong'); if (d) { d.innerHTML = '<img src="assets/p7_ic_dong.png" alt="">'; }
+        const d = tt.querySelector('.hb-dong'); if (d) { d.innerHTML = '<img src="assets/p7_ic_dong.webp?v=14f619f0" alt="">'; }
         new MutationObserver(() => { if ((tt.hidden || !tt.classList.contains('hb-rong')) && (TVB._dungBoi || tt.classList.contains('tvb-dung'))) TVB.chay(); }).observe(tt, { attributes: true, attributeFilter: ['hidden', 'class'] });
       }
       return r;

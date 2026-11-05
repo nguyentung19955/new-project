@@ -14,7 +14,7 @@ html body #wrap #bo-the .the .gia { width: 49px !important; margin-left: -24.5px
 html body #wrap #the-mv .mv-gia { width: 65px; margin-left: -32.5px; }
 
 /* ô chân dung xem nhanh trong trận: khung o_trong (150×190) co giãn 9 lát (góc giữ tỉ lệ) thay cho nền 100% 100% trên ô vuông */
-html body #wrap #tt .tt-the { background: none; border: 0 solid transparent; border-image: url(../assets/o_trong.png?v=5eaaad4c) 26 fill / 7px / 0 stretch; }
+html body #wrap #tt .tt-the { background: none; border: 0 solid transparent; border-image: url(../assets/o_trong.webp?v=2e0a5f19) 26 fill / 7px / 0 stretch; }
 html body #wrap #tt.hb-qi.hb-rong .tt-the, html body #wrap #tt:not(.hb-qi) .tt-the { border-image-width: 10px; }
 
 /* rãnh/thanh loi_khuc_day (69×28): 2 đầu tròn giữ tỉ lệ, chỉ khúc giữa kéo dài (trước: kéo cả ảnh ×14 ngang) */

@@ -26,7 +26,7 @@
 #dp-dai { position: absolute; left: 62px; z-index: 6; height: 34px; display: flex; align-items: center; gap: 3px; padding: 2px 5px 2px 4px;
   background: #121418e6; }
 #top[hidden] ~ #dp-dai { display: none; }
-#dp-dai.anh { background: url(../assets/ui_khay_doi.png?v=b28bf332) center / 100% 100% no-repeat; box-shadow: none; padding: 3px 7px 3px 6px; }
+#dp-dai.anh { background: url(../assets/ui_khay_doi.webp?v=673f7617) center / 100% 100% no-repeat; box-shadow: none; padding: 3px 7px 3px 6px; }
 #dp-dai .dp-nhan { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 7.5px; font-weight: 900; letter-spacing: .6px; color: #63d68b; text-transform: uppercase; margin-right: 1px; }
 #dp-dai.pvp .dp-nhan { color: #ff6b5e; }
 #dp-dai .dp-the { --k: #9aa6b4; position: relative; width: 26px; height: 28px; padding: 0; border: 0; overflow: hidden; background: #1a1d22; cursor: pointer; }
@@ -87,13 +87,13 @@
 .co-lv #bo-the .the .lv, .co-lv #bo-the .the .so:not(:empty) { background: none; border: 0 solid transparent; border-image: url(../assets/ui_lv.png?v=8ea237e1) 0 16 fill / 0 5px / 0 stretch;
   height: 14px; line-height: 14px; padding: 0 5px; color: #f1f3f6; text-shadow: 0 1px 0 #000; }
 .co-lv #bo-the .the .so:not(:empty) { color: #ffe46b; }
-.co-gia #bo-the .the .gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image: url(../assets/ui_gia.png?v=3043b07c) 0 55.5 fill / 0 7px / 0 stretch; }
+.co-gia #bo-the .the .gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image: url(../assets/ui_gia.webp?v=a5282f2b) 0 55.5 fill / 0 7px / 0 stretch; }
 .co-den #bo-the .the.du .gia::after, .co-den #the-mv.du .mv-gia::after { width: 8px; height: 8px; border-radius: 0; box-shadow: none; background: url(../assets/ui_den_xanh.png?v=ff8b6f2e) center / contain no-repeat; }
 .co-grow .the .gu, .co-grow .c .gu { background: none; border: 0 solid transparent; border-image: url(../assets/ui_grow.png?v=8de147a9) 0 20 fill / 0 6px / 0 stretch; border-radius: 0;
   height: 13px; line-height: 13px; padding: 0 7px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; box-shadow: none; }
 
 /* ---------- khay đồng đội S9: 6 ô theo đúng vị trí ô trong ảnh (x 8.3–92.4 %, y 25–74 %) ---------- */
-.co-khay #dp-dai { width: 236px; height: 48px; padding: 0; display: block; background: url(../assets/ui_khay_doi.png?v=b28bf332) center / 100% 100% no-repeat; box-shadow: none; }
+.co-khay #dp-dai { width: 236px; height: 48px; padding: 0; display: block; background: url(../assets/ui_khay_doi.webp?v=673f7617) center / 100% 100% no-repeat; box-shadow: none; }
 .co-khay #dp-dai .dp-nhan { display: none; }
 .co-khay #dp-dai .dp-the { position: absolute; top: 10px; width: 30px; height: 28px; margin: 0; }
 .co-khay #dp-dai .dp-the:nth-of-type(1) { left: 20px; } .co-khay #dp-dai .dp-the:nth-of-type(2) { left: 53px; } .co-khay #dp-dai .dp-the:nth-of-type(3) { left: 86px; }
