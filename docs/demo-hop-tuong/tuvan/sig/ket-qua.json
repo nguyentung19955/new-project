@@ -1,0 +1,15 @@
+{
+ "errs": [],
+ "fps": {
+  "marionette,ngaithoigian,blackhole,ronglua,leviathan": {
+   "fps": 32.75,
+   "sigMsTB": 0,
+   "sigMsMax": 0.1
+  },
+  "hydra,pandora,hasao,vughep,chuato": {
+   "fps": 29.5,
+   "sigMsTB": 0,
+   "sigMsMax": 0.1
+  }
+ }
+}

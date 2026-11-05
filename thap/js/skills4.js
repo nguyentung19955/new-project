@@ -378,18 +378,8 @@ HU.roi = {
     noLan(x, y, 60, o.dmg, o.B, { phu: true, mau: '#ff9ac0' });
     FX.no('no_phao', x, y, 120, 0.45); FX.vong1(x, y, 6, 60, '#ff6aa0', 0.35, 4); FX.lac(3); SND.no(0.6);
   },
-  ve(ctx, o, R) {
-    const E = o.E; if (E.chet || !conTren(o.T)) return;
-    const [x, y] = dauNong(o.T), r = (E.d.co || 40) * 0.45;
-    ctx.globalCompositeOperation = 'lighter';
-    for (const k of [-1, 1]) { // dây rối = các đoạn tia PNG nối theo đường cong bậc 2 (toán), không còn quadraticCurveTo
-      const cx = (x + E.x) / 2 + k * 10, cy = Math.min(y, E.y) - 40, ex = E.x + k * 5, ey = E.y - r, pts = [];
-      for (let i = 0; i <= 8; i++) { const q = i / 8, w = 1 - q; pts.push([w * w * x + 2 * w * q * cx + q * q * ex, w * w * y + 2 * w * q * cy + q * q * ey]); }
-      PX.duong(ctx, pts, 1, '#ffffff', 0.7);
-    }
-    PX.vong(ctx, E.x, E.y, r + 2, 2, '#4bff9a', 0.85);
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-  },
+  // hình: tay rối khổng lồ + 4 dây móc + nhấc bổng + nổ rối đồ chơi = ảnh PNG ChatGPT (js/sigfx.js, sig_l22_*); không vẽ dây bằng code
+  ve() { },
 };
 
 // =====================================================================================================
