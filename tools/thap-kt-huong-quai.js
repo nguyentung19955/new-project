@@ -16,10 +16,10 @@ const fps = (p, ms) => p.evaluate((ms) => new Promise(ok => { let n = 0, t0 = pe
   for (const mode of ['solo', 'coop', 'pvp']) {
     const p = await b.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 2 });
     p.on('pageerror', e => kq.errs.push(mode + ': ' + e.message));
-    await p.goto(`http://localhost:8765/thap/?mode=${mode}&deck=lien,canon,bang,tia,set&wave=3&nointro=1`, { waitUntil: 'load' });
+    await p.goto(`http://localhost:${process.env.PORT || 8765}/thap/?mode=${mode}&deck=lien,canon,bang,tia,set&wave=3&nointro=1`, { waitUntil: 'load' });
     await p.waitForTimeout(2500);
     await p.evaluate(() => { UI.canhBaoTrum = () => {}; G.cho = 1e9; G.hang.length = 0; for (const B of G.ban) { B.tim = 1e9; B.t.fill(null); B.ai = false; } G.quai.length = 0; });
-    for (const id of [...QUAI, ...TRUM]) {
+    for (const id of [...QUAI, ...TRUM].filter(id => !process.env.CHI || process.env.CHI.split(',').includes(id))) {
       const ds = await p.evaluate(([id, laTrum]) => {
         G.quai.length = 0; const ra = [];
         G.duong.forEach((pd, pi) => pd.segs.forEach((g, si) => {
@@ -60,7 +60,7 @@ const fps = (p, ms) => p.evaluate((ms) => new Promise(ok => { let n = 0, t0 = pe
   for (const mode of ['solo', 'coop', 'pvp']) {
     const p = await bg.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 2 });
     p.on('pageerror', e => kq.errs.push(mode + ' fps: ' + e.message));
-    await p.goto(`http://localhost:8765/thap/?mode=${mode}&deck=lien,canon,bang,tia,set&wave=3&nointro=1`, { waitUntil: 'load' });
+    await p.goto(`http://localhost:${process.env.PORT || 8765}/thap/?mode=${mode}&deck=lien,canon,bang,tia,set&wave=3&nointro=1`, { waitUntil: 'load' });
     await p.waitForTimeout(2500);
     await p.evaluate(() => { UI.canhBaoTrum = () => {}; G.cho = 1e9; G.hang.length = 0; for (const B of G.ban) { B.tim = 1e9; B.t.fill(null); B.ai = false; } });
     await p.evaluate(([Q, T]) => {
