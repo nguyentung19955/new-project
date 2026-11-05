@@ -275,7 +275,7 @@ const UP = {
     }
     const gl = this.el.querySelector('.up-gl');
     if (gl && typeof ND !== 'undefined' && ND.url && typeof GLYPH !== 'undefined') { // biểu tượng nhận diện (glyph.js): màu khoá = ô trong bộ bài
-      try { const k = UI.chon.indexOf(this.id); gl.src = ND.url(this.id, k >= 0 ? ND.KEY[k % 5] : null, 48); gl.hidden = k < 0; } catch (e) { gl.hidden = true; }
+      gl.hidden = true; // (bỏ huy hiệu vai trò tròn — vai trò chỉ là chữ ở dòng meta)
     }
     const id = this.id, co = upCo(id), trong = UI.chon.includes(id);
     chu.textContent = !co ? UP_TXT.locked : trong ? UP_TXT.remove : UP_TXT.add;

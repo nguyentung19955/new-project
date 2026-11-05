@@ -71,7 +71,7 @@ const HM = {
     if (id && G.rosterMap[id]) {
       const r = G.rosterMap[id], t = TIERS[r.bac], sk = SKILLS[id];
       noi.dataset.id = id; noi.style.setProperty('--m', t.mau);
-      noi.innerHTML = '<span class="dk-noi-po"><img src="' + portraitOf(id) + '" alt=""></span><img class="dk-noi-u" src="' + iconOf(id) + '" alt="">' +
+      noi.innerHTML = '<span class="dk-noi-po"><img src="' + portraitOf(id) + '" alt=""></span>' +
         '<span class="dk-noi-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small></span><img class="dk-noi-ct" src="assets/p7_ic_phai.png" alt="Details">';
       if (typeof MAT !== 'undefined') requestAnimationFrame(() => { const im = noi.querySelector('.dk-noi-po img'); if (im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true }); });
     } else { delete noi.dataset.id; noi.innerHTML = '<span class="dk-noi-trong">Drag a turret into a slot · tap for details</span>'; }
@@ -163,7 +163,7 @@ const HM = {
     else if (trong) nut = '<button class="hm-nut2" data-act="hm-bo" data-id="' + id + '">REMOVE</button>';
     else nut = '<button class="hm-nut2 vang" data-act="hm-them" data-id="' + id + '">' + (this.armed >= 0 && UI.chon[this.armed] ? 'SWAP IN' : 'ADD TO DECK') + '</button>';
     const ghi = tuO && trong ? '<div class="hm-xem-ghi">Close this, then pick a turret below to swap this slot.</div>' : (this.armed >= 0 && !trong && !this.bst ? '<div class="hm-xem-ghi">Replaces ' + this.esc(G.rosterMap[UI.chon[this.armed]] ? G.rosterMap[UI.chon[this.armed]].ten : '') + '</div>' : '');
-    this.mo('xem', '<div class="hm-xem" style="--m:' + t.mau + '"><span class="hm-xem-po"><img src="' + portraitOf(id) + '" alt=""></span><img class="hm-xem-u" src="' + iconOf(id) + '" alt="">' +
+    this.mo('xem', '<div class="hm-xem" style="--m:' + t.mau + '"><span class="hm-xem-po"><img src="' + portraitOf(id) + '" alt=""></span>' +
       '<span class="hm-xem-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small><span class="hm-xem-kn">' + this.esc(r.kyNang || '') + '</span></span></div>' +
       ghi + '<div class="hm-cai2">' + nut + '<button class="hm-nut2" data-act="hm-ct" data-id="' + id + '">DETAILS</button></div>');
     const im = this.el('hm-tam').querySelector('.hm-xem-po img'); if (typeof MAT !== 'undefined' && im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true });

@@ -30,7 +30,7 @@ const VT = {
     const r = G.rosterMap[id] || { bac: 'trang', ten: id }, mau = ND.mau(B, id);
     const anh = hasPilot(id) ? '<img class="vt-po pilot" src="' + portraitOf(id) + '" alt="">' : '<img class="vt-po" src="' + iconOf(id) + '" alt="">';
     return '<div class="vt-the" style="--i:' + i + '"><div class="vt-kh">' + anh + '<img class="vt-khung" src="' + KHUNG.url(r.bac) + '" alt=""></div>' +
-      '<div class="vt-ten"><img src="' + ND.url(id, mau, 40) + '" alt=""><b style="color:' + (mau || '#fff') + '">' + r.ten + '</b></div></div>';
+      '<div class="vt-ten"><b style="color:' + (mau || '#fff') + '">' + r.ten + '</b></div></div>';
   },
   theMV(B, i) {
     const d = MAVUONG[B.mv.id];

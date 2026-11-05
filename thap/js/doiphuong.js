@@ -26,7 +26,7 @@ const DP = {
     B.deck.forEach((id, i) => {
       const k = (typeof ND !== 'undefined' && ND.mau(B, id)) || ND.KEY[i % 5];
       const ten = (G.rosterMap[id] && G.rosterMap[id].ten) || id;
-      h += '<button class="dp-the" data-dp="u" data-id="' + id + '" style="--k:' + k + '" aria-label="' + ten + '"><img class="po" src="' + portraitOf(id) + '" alt=""><img class="gl" src="' + ND.url(id, k, 20) + '" alt=""></button>';
+      h += '<button class="dp-the" data-dp="u" data-id="' + id + '" style="--k:' + k + '" aria-label="' + ten + '"><img class="po" src="' + portraitOf(id) + '" alt=""></button>';
     });
     const d = MAVUONG[B.mv.id];
     h += '<button class="dp-the dp-mv" data-dp="mv" data-id="' + B.mv.id + '" style="--k:' + d.mau + '" aria-label="' + d.ten + '"><img class="po" src="assets/' + d.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + mvIcURL(B.mv.id) + '\'"></button>';

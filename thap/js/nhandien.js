@@ -89,7 +89,7 @@ const ND = {
     B.deck.forEach((id) => {
       const r = G.rosterMap[id], mau = this.mau(B, id), sk = SKILLS[id] || {};
       const d = document.createElement('div'); d.className = 'gt-o'; d.style.setProperty('--k', mau);
-      d.innerHTML = '<img class="gt-gl" src="' + this.url(id, mau, 40) + '" alt=""><img class="gt-u" src="' + iconOf(id) + '" alt=""><b>' + r.ten + '</b><span>' + (TEXT.ui.role[sk.vai] || '') + '</span>';
+      d.innerHTML = '<img class="gt-u" src="' + iconOf(id) + '" alt=""><b>' + r.ten + '</b><span>' + (TEXT.ui.role[sk.vai] || '') + '</span>';
       hang.appendChild(d);
     });
     el.hidden = false; el.classList.remove('ra'); void el.offsetWidth; el.classList.add('vao');
@@ -114,7 +114,7 @@ const ND = {
     if (!im) { im = document.createElement('img'); im.className = 'tt-gl'; im.alt = ''; dau.insertBefore(im, dau.firstChild); }
     const tran = G.ban.length && !$('#top').hidden;
     const mau = T ? this.mauU(T) : (tran ? this.mau(G.ban[0], id) : null);
-    im.src = this.url(id, mau, 40); im.hidden = false;
+    im.hidden = true; // (bỏ huy hiệu vai trò tròn cạnh chân dung trong bảng thông tin — vai trò là chữ ở dòng phụ)
   },
 
   init() {
@@ -147,14 +147,14 @@ const ND = {
   UI.moTTMV = function () { const r = moTTMVGoc.apply(this, arguments); const im = $('#tt .tt-gl'); if (im) im.hidden = true; return r; };
   // màn chọn: huy hiệu trung tính trên mọi thẻ; 5 ô bộ bài đã chọn = 5 màu khoá (đúng màu sẽ thấy trong trận)
   const theChonGoc = UI.theChon;
-  UI.theChon = function (r) { const c = theChonGoc.apply(this, arguments); const im = document.createElement('img'); im.className = 'gl'; im.alt = ''; im.src = ND.url(r.id, null, 40); c.appendChild(im); return c; };
+  UI.theChon = function (r) { return theChonGoc.apply(this, arguments); }; // (bỏ huy hiệu vai trò tròn cạnh mặt phi công — vai trò chỉ còn là chữ ở trang ụ / bộ lọc)
   const veBoChonGoc = UI.veBoChon;
   UI.veBoChon = function () {
     const r = veBoChonGoc.apply(this, arguments);
     $('#chon-bo').querySelectorAll('.o-bo').forEach((o, i) => {
       const id = o.dataset.id; if (!id) return;
       o.style.setProperty('--k', ND.KEY[i]); // (bỏ lớp nd-k: viền màu vẽ CSS)
-      const im = document.createElement('img'); im.className = 'gl'; im.alt = ''; im.src = ND.url(id, ND.KEY[i], 40); o.appendChild(im);
+      // (bỏ huy hiệu vai trò tròn trên ô bộ bài — chỉ còn chân dung + khung độ hiếm)
     });
     return r;
   };
