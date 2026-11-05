@@ -215,7 +215,7 @@ const HM = {
     const an = im.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(' + (x1 - x0) + 'px,' + (y1 - y0) + 'px) scale(.85)', opacity: 1 }], { duration: 290, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
     an.onfinish = () => { im.remove(); xung(); };
   },
-  // đủ 5: vệt sáng quét dọc thanh bộ bài (ảnh chọn sẵn chon_bung, chờ D04)
+  // đủ 5: vệt sáng quét dọc thanh bộ bài — đã bỏ (vệt 4 khung giật), xem css/chonthe.css
   duBo() { if (this.giam()) return; const b = this.el('chon-bo'); b.classList.remove('hm-du'); void b.offsetWidth; b.classList.add('hm-du'); setTimeout(() => b.classList.remove('hm-du'), 700); },
 
   choi() {

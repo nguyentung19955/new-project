@@ -1,0 +1,452 @@
+{
+ "tag": "sau",
+ "errs": [],
+ "vung": {
+  "the_luoi": {
+   "anims": [
+    {
+     "el": "#hm-anh.",
+     "ten": "hm-tho",
+     "props": [
+      "transform"
+     ],
+     "ms": 6000,
+     "lap": null,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    }
+   ],
+   "layout": 2,
+   "paint": 58,
+   "styleRecalc": 176,
+   "khung": 133
+  },
+  "o_bo": {
+   "anims": [
+    {
+     "el": "#hm-anh.",
+     "ten": "hm-tho",
+     "props": [
+      "transform"
+     ],
+     "ms": 6000,
+     "lap": null,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    }
+   ],
+   "layout": 0,
+   "paint": 46,
+   "styleRecalc": 101,
+   "khung": 96
+  },
+  "o_cho_doi": {
+   "anims": [
+    {
+     "el": "#hm-anh.",
+     "ten": "hm-tho",
+     "props": [
+      "transform"
+     ],
+     "ms": 6000,
+     "lap": null,
+     "easing": "linear"
+    },
+    {
+     "el": ".o-bo.co-kh.hm-armed::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    }
+   ],
+   "layout": 0,
+   "paint": 46,
+   "styleRecalc": 101,
+   "khung": 96
+  },
+  "o_tha": {
+   "anims": [
+    {
+     "el": "#hm-anh.",
+     "ten": "hm-tho",
+     "props": [
+      "transform"
+     ],
+     "ms": 6000,
+     "lap": null,
+     "easing": "linear"
+    },
+    {
+     "el": ".o-bo.co-kh.dk-hop::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    }
+   ],
+   "layout": 0,
+   "paint": 42,
+   "styleRecalc": 98,
+   "khung": 95
+  },
+  "chi_huy_chon": {
+   "anims": [
+    {
+     "el": "#hm-anh.",
+     "ten": "hm-tho",
+     "props": [
+      "transform"
+     ],
+     "ms": 6000,
+     "lap": null,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    },
+    {
+     "el": ".c.co-kh.chon::after",
+     "ten": "sel-hien",
+     "props": [
+      "opacity"
+     ],
+     "ms": 140,
+     "lap": 1,
+     "easing": "linear"
+    }
+   ],
+   "layout": 0,
+   "paint": 26,
+   "styleRecalc": 97,
+   "khung": 85
+  },
+  "tran_solo": [
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".cht-glow",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   }
+  ],
+  "tran_coop": [
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".cht-glow",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   }
+  ],
+  "tran_pvp": [
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".the.co-kh.ht-goc::after",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   },
+   {
+    "el": ".cht-glow",
+    "ten": "sel-tho",
+    "props": [
+     "opacity"
+    ],
+    "ms": 2000,
+    "lap": null,
+    "easing": "linear"
+   }
+  ]
+ }
+}

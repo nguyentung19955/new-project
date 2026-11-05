@@ -1,34 +1,47 @@
-/* TURRET MERGE — thẻ ĐÃ CHỌN ở màn chọn bộ bài (ảnh ChatGPT raw_sel_card.png, cắt bằng tools/thap-cat-chonthe.py).
-   · .sel-v  quầng xanh-vàng ôm mép ngoài khung độ hiếm (dải 4 khung lặp, chỉ thẻ đã chọn — tối đa 5 thẻ chạy hoạt ảnh)
-   · .sel-d  đế sáng mềm dưới thẻ (xanh; cam cho vàng/đỏ)
-   · .sel-b  bùng chọn 1 lần (dải 4 khung) — trên thẻ và trên ô thanh bộ bài khi thẻ vào ô
-   · huy hiệu 'trong bộ' = ảnh của nút thêm/bỏ (.up-q) ở góc trên-phải ô cửa sổ (không che mặt / LV / icon vai trò / tên)
-   Ảnh chân dung KHÔNG bị tô màu. Lề ảnh theo hộp khung thẻ: vòng 9 %, bùng 30 % mỗi cạnh. */
-.c.chon, .c.co-bung { overflow: visible; z-index: 3; }
-.c .sel-v, .c .sel-d, .sel-b { position: absolute; pointer-events: none; display: block; }
-/* hộp khung thẻ: lưới chọn = trái 0, trên 0, rộng 100 %, cao --khh */
-.c .sel-v { z-index: 3; left: -9%; width: 118%; top: calc(var(--khh, 80px) * -.09); height: calc(var(--khh, 80px) * 1.18); overflow: hidden; transition: opacity .16s ease-out; }
-.c .sel-v::before { content: ''; position: absolute; left: 0; top: 0; width: 400%; height: 100%; background: url(../assets/chon_vong.png) 0 0 / 100% 100% no-repeat; animation: sel-vong 1s steps(4) infinite; will-change: transform; }
-@keyframes sel-vong { to { transform: translateX(-100%); } }
-.c .sel-d { z-index: -1; left: -14%; width: 128%; aspect-ratio: 300 / 203; bottom: -9px; background: url(../assets/chon_de_xanh.png) center / 100% 100% no-repeat; transition: opacity .16s ease-out; }
-.c.chon .ten { background: #0e101499; } /* đế sáng lộ qua tấm tên (không tô chân dung) */
-.c .sel-d.cam { background-image: url(../assets/chon_de_cam.png); }
-.c .sel-v.tat, .c .sel-d.tat { opacity: 0; }
-/* bùng: hộp = khung + 30 % mỗi cạnh */
-.sel-b { z-index: 5; overflow: hidden; animation: sel-bung-mo .46s ease-out forwards; }
-.sel-b::before { content: ''; position: absolute; left: 0; top: 0; width: 400%; height: 100%; background: url(../assets/chon_bung.png) 0 0 / 100% 100% no-repeat; animation: sel-bung .4s steps(4) forwards; }
-@keyframes sel-bung { to { transform: translateX(-100%); } }
-@keyframes sel-bung-mo { 0% { opacity: 1; transform: scale(.94); } 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.03); } }
-.c .sel-b { left: -30%; width: 160%; top: calc(var(--khh, 80px) * -.3); height: calc(var(--khh, 80px) * 1.6); }
-/* ô thanh bộ bài: khung 50×58 ở giữa ô (pass2.css) */
-#chon-bo .o-bo { overflow: visible; }
-#chon-bo .o-bo > i.sel-b, .co-khung #chon-bo .o-bo.co-kh > i.sel-b { display: block; inset: auto; border: 0 !important; border-radius: 0; box-shadow: none !important; left: calc(50% - 40px); width: 80px; top: -17.4px; height: 92.8px; }
-/* huy hiệu 'trong bộ' thay nút ✓ (vẫn là nút bỏ) — đặt trong góc trên-phải ô cửa sổ */
+/* TURRET MERGE — trạng thái ĐANG CHỌN (một kiểu duy nhất, gọn như DCDW) — người dùng: "hiệu ứng được chọn quá xấu, giật giật".
+   Cũ: quầng 4 khung lặp steps(4) (chon_vong.png, mỗi 250 ms đổi hình → giật) + đế sáng cam/xanh dưới thẻ + bùng steps(4) khi thêm.
+   Mới (mọi nơi: lưới bộ sưu tập, ô bộ bài, ô chờ đổi, ô thả khi kéo, chỉ huy, thẻ thanh bài trong trận SOLO/CO-OP/PVP/ONLINE):
+   · thẻ nhấc nhẹ: translate 0 -4px + scale 1.04, 140 ms ease-out, không nảy (thuộc tính translate/scale riêng → không đè hoạt ảnh vào hm-vao)
+   · viền sáng TĨNH: ảnh ChatGPT khung_chon.png (xanh lơ) ÔM NGOÀI khung độ hiếm — khung độ hiếm vẫn thấy đủ, không cắt
+   · không quầng nhấp nháy, không mây cam, không hoạt ảnh box-shadow/filter. Chỉ đổi độ mờ của viền khi bật/tắt (140 ms). */
+.c { transition: translate .14s ease-out, scale .14s ease-out; }
+.c.chon { translate: 0 -4px; scale: 1.04; z-index: 3; overflow: visible; }
+.c.chon::after { content: ''; position: absolute; z-index: 5; pointer-events: none; left: -7px; right: -7px; top: -7px; height: calc(var(--khh, 80px) + 14px);
+  box-sizing: border-box; border: 11px solid transparent; border-image: url(../assets/khung_chon.png) 34 / 11px stretch; animation: sel-hien .14s ease-out both; }
+@keyframes sel-hien { from { opacity: 0; } to { opacity: 1; } }
+/* lưới cuộn: chừa chỗ cho thẻ hàng đầu nhấc lên + viền (không bị cắt mép trên) */
+#chon #chon-luoi { padding-top: 10px; }
+/* huy hiệu 'trong bộ' = ảnh của nút thêm/bỏ (.up-q) ở góc trên-phải ô cửa sổ (không che mặt / LV / icon vai trò / tên) */
 .c.chon .up-q, .co-s10 .c.chon .up-q { width: 30px; height: 16px; border: 0; border-radius: 0; background: url(../assets/chon_huy.png) center / 100% 100% no-repeat; filter: drop-shadow(0 1px 1px #000a); }
 .co-khung .c.chon.co-kh .up-q { right: calc(15.6% - 2px); top: calc(var(--khh) * .189 - 1px); width: 30px; height: 16px; }
 .c.chon .up-q::before { content: none; }
+
+/* Ô BỘ BÀI chờ đổi (hm-armed) + ô thả dưới ngón tay khi kéo (dk-tren): cùng kiểu — nhấc nhẹ + viền tĩnh, không nhịp, không nảy */
+#chon #chon-bo .o-bo { transition: translate .14s ease-out, scale .14s ease-out; }
+#chon #chon-bo .o-bo.hm-armed, #chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren { translate: 0 -4px; scale: 1.04; transform: none; z-index: 3; }
+#chon #chon-bo .o-bo.hm-armed::after, #chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren::after { content: ''; position: absolute; z-index: 4; pointer-events: none; inset: -7px; box-sizing: border-box; border: 11px solid transparent; background: none;
+  border-image: url(../assets/khung_chon.png) 34 / 11px stretch; animation: sel-hien .14s ease-out both; }
+/* ô thả dưới ngón tay: tắt khung dày nhịp 0,5 s (dk-vien) → dùng đúng viền chọn ở trên; các ô hợp lệ khác vẫn mờ .45 */
+#chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren > img.dk-vien.dk-vien.dk-vien.dk-vien.dk-vien { animation: none; opacity: 0; }
+#chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren { transition: translate .14s ease-out, scale .14s ease-out; }
+/* thẻ vừa vào ô: bỏ nảy 1→1.08→1 và vệt bùng 4 khung khi đủ 5 (cùng bộ ảnh giật cũ) */
+#chon #chon-bo .o-bo.hm-xung { animation: none; }
+#chon #chon-bo.hm-du::after { content: none; animation: none; }
+
+/* chỉ huy đang dùng (màn chọn chỉ huy) */
+.mv { transition: translate .14s ease-out, scale .14s ease-out; }
+.mv.chon { translate: 0 -2px; scale: 1.02; }
+
+/* TRONG TRẬN — thẻ thanh bài đủ mana + thẻ chỉ huy sẵn sàng: viền khung_chon tĩnh-chậm, chỉ đổi độ mờ ≥ 1.8 s trên lớp ảnh dựng sẵn (GPU) */
+html body #bo-the .the.du::after { animation: sel-tho 2s ease-in-out infinite; will-change: opacity; }
+#the-mv.cht-san .cht-glow { animation: sel-tho 2s ease-in-out infinite; will-change: opacity; transform: none; }
+@keyframes sel-tho { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+/* chạm nâng cấp thẻ thanh bài: bỏ chớp filter brightness(2) (vẽ lại cả thẻ) → nhấc nhẹ 140 ms */
+.the.sang { animation: sel-nhac .14s ease-out; }
+@keyframes sel-nhac { from { translate: 0 -4px; scale: 1.04; } to { translate: 0 0; scale: 1; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .c .sel-v::before { animation: none; }
-  .sel-b { display: none; }
-  .c .sel-v, .c .sel-d { transition: none; }
+  .c, .c.chon, #chon #chon-bo .o-bo, .mv { transition: none; }
+  .c.chon::after, #chon #chon-bo .o-bo.hm-armed::after, #chon #chon-bo.dk-keo .o-bo.dk-tren::after, .the.sang { animation: none; }
+  html body #bo-the .the.du::after, #the-mv.cht-san .cht-glow { animation: none; opacity: .9; }
 }
