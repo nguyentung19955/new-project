@@ -83,7 +83,7 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
     danThang(B, T, E, 'dan_phao', 520, 15, (G, d, M) => {
       if (M) trung(M, dmg, { B, crit: false, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
       FX.tiaLua(d.x, d.y, roll >= 240 ? 12 : 3, '#ffd080', 170, 8);
-      if (roll >= 240) { nhanU(T, roll === 300 ? 'MAX 300%!' : 'DICE ' + roll + '%', '#ffd23f'); FX.no('no_phao', d.x, d.y, 50, 0.3); }
+      if (roll >= 240) { buffNo(T, roll === 300 ? 'max' : 'dmg', (roll - 200) / 100); FX.no('no_phao', d.x, d.y, 50, 0.3); }
     });
   },
 };
@@ -196,7 +196,7 @@ SKILLS.nhanmana = { // Máy Nhân Mana (Thisbe): khi GHÉP nhận nhiều mana
     const c = B.o[b.o];
     FX.chu1(c.x, c.y - 46, '+' + n, '#d9a8ff', 18, 'mana');
     for (let i = 0; i < 16; i++) FX.hat1('lua', c.x + rnd(-20, 20), c.y + rnd(-10, 10), rnd(-30, 30), rnd(-110, -50), 0.7, 8, '#c77dff');
-    nhanU(ra, 'MANA BOOST', '#d9a8ff', true); if (!B.ai) SND.mana();
+    buffNo(ra, 'mana', 1); if (!B.ai) SND.mana();
   },
 };
 SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang bị chậm · bậc XANH họ Frost: hơi lạnh LAN sang quái quanh điểm chém
@@ -400,8 +400,8 @@ SKILLS.cuongno = { // Súng Cuồng Nộ (Danu): chí mạng → chế độ bù
     const dai = ms(T, 5) ? 7 : 5;
     if (T.cuongT > 0) { T.cuongT = Math.min(dai, T.cuongT + 1); return; }
     T.rage = (T.rage || 0) + 1; T.rageT = ms(T, 3) ? 8 : 5;
-    if (T.rage >= 2) { T.rage = 0; T.cuongT = dai; nhanU(T, 'FRENZY!', '#ff5040', true); }
-    else nhanU(T, 'RAGE', '#ff7a3a');
+    if (T.rage >= 2) { T.rage = 0; T.cuongT = dai; buffNo(T, 'max', 0.8); }
+    else buffNo(T, 'dmg', 0.4);
   },
   sangDau: (T) => T.cuongT > 0 ? 0.3 + 0.15 * Math.sin(G.t * 20) : (T.rage > 0 ? 0.12 : 0),
 };
@@ -570,7 +570,7 @@ SKILLS.epxung = { // Bộ Ép Xung (Pararamim): kéo lên ụ khác CÙNG SAO �
       G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       b.epxung += 0.65; b.anim = { k: 'no', t: 0.25 }; b.sang = 1;
       const c = B.o[b.o]; FX.no('dien', c.x, c.y, 80, 0.4); FX.tiaLua(c.x, c.y, 16, '#ff9a3a', 200, 10);
-      nhanU(b, 'OVERCLOCK +65%', '#ff9a3a', true);
+      buffNo(b, 'toc', 1); // OVERCLOCK: bùng hào quang tốc (không nhãn chữ)
       return b;
     },
   },
@@ -587,7 +587,7 @@ SKILLS.no5 = { // Nỏ Năm Nhịp (Amor): phát thứ 5 bắn 3 mũi tên nổ
         banDan({ img: 'dan_tia', x, y, muc: Q, px: Q.x, py: Q.y, sp: 520, co: 26, B, T,
           trung(G, d) { noLan(d.x, d.y, 34, dmg * 2, B, { mau: '#ff8af0' }); FX.no('no_phao', d.x, d.y, 70, 0.4); FX.vong1(d.x, d.y, 4, 34, '#ff8af0', 0.3, 3); SND.no(0.3); } });
       });
-      nhanU(T, '5TH SHOT!', '#ff8af0', true);
+      buffNo(T, 'crit', 1); // phát thứ 5: bùng ngắn
     } else {
       giat(T, 0.7); chopNong(T, 22); SND.lien();
       danThang(B, T, E, 'dan_tia', 600, 18, (G, d, M) => { if (M) trung(M, dmg, { B }); });
@@ -666,7 +666,6 @@ SKILLS.dongbo = { // Pháo Đồng Bộ (Cosmem): mạnh hơn theo số ụ cùn
     giat(T, 0.8); chopNong(T, 26); SND.tia();
     const dmg = dmgU(T);
     danThang(B, T, E, 'dan_tia', 640, 20 + (T.dong || 0) * 1.5, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ffe46b' }); FX.no('dien', d.x, d.y, 30, 0.2); });
-    if ((T.dong || 0) >= 5) nhanU(T, 'SYNC ×' + T.dong, '#ffe46b');
   },
 };
 SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đó +1 sao (bản vàng 10% → +2)

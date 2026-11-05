@@ -47,7 +47,7 @@ SKILLS.docton = {
   capNhat(G, B, T) {
     const n = this.ke(B, T), ace = n === 0;
     if (ace) { T.buf.toc += 1; T.buf.crit += this.a(T); } else if (n >= 3) T.buf.toc -= 0.3;
-    if (ace && !T.ace) { nhanU(T, 'ACE', '#ff3a4a', true); if (!B.ai) SND.thucTinh(); }
+    if (ace && !T.ace) { buffNo(T, 'max', 0.6); if (!B.ai) SND.thucTinh(); }
     T.ace = ace; return false;
   },
   ban(G, B, T, E) {
@@ -366,7 +366,7 @@ SKILLS.marionette = {
       if (ds.length) {
         T.nap = 0;
         for (const E of ds) { E.roi = true; E.gui = true; E.khongMana = true; G.hu.push({ k: 'roi', t: 0, song: this.t(T), E, B, T, dmg: dmgU(T) * 8, dam: [] }); }
-        nhanU(T, 'PUPPET!', '#ff6aa0', true); if (!B.ai) SND.mana();
+        buffNo(T, 'crit', 1); if (!B.ai) SND.mana();
       }
     }
     return false;
