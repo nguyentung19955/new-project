@@ -34,3 +34,10 @@ if co_tam('raw_p7_a2.png'):
     luu(co(s[0], w=270), 'p7_o_co.png', 'viền ô có ụ (A07)'); luu(co(s[1], w=270), 'p7_o_doi.png', 'viền ô CHỜ ĐỔI (A07, hổ phách)'); luu(co(s[2], w=270), 'p7_o_chon.png', 'viền ô đang chọn (A07, lam)')
     luu(co(khoa_kin(o(0, 0)), w=380), 'p7_the_chon.png', 'khung thẻ chọn A04 (dự phòng; thẻ chọn đang dùng hiệu ứng raw_sel_card)')
 for x in BAO[-5:]: print(*x)
+# raw_p7_a3 · 1024×1536 · 1 cột × 6 hàng: A09 thanh đầu · A10 ô tìm · H03 nút chế độ (ổ thả xuống) · D01 dải nổi bật (ô chân dung trái) · D03 hàng có ổ tròn · A11 tiền tệ
+if co_tam('raw_p7_a3.png'):
+    R = 'raw_p7_a3.png'; o = lambda i: cat(R, (0, i * 256, 1024, i * 256 + 256))
+    for i, n, g in [(0, 'p7_dau', 'thanh đầu A09 (màn bộ bài)'), (1, 'p7_tim', 'ô tìm A10'), (2, 'p7_che', 'nút chế độ H03 (ổ ▼ phải)'),
+                    (3, 'p7_noi', 'dải ụ nổi bật D01 (ô chân dung trái)'), (4, 'p7_hang', 'hàng có ổ tròn D03 (chỉ huy / bộ mẫu)'), (5, 'p7_tien', 'ổ tiền tệ A11 (chưa dùng)')]:
+        luu(o(i), n + '.png', g)
+for x in BAO[-6:]: print(*x)

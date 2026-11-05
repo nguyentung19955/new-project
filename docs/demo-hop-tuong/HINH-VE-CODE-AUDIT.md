@@ -978,4 +978,4 @@ và `css/hud2.css` (thanh trên, khay, nút).
 
 Thứ tự ưu tiên: b1 (thanh + dải xem nhanh) → b2 (nút) → b4 → b3.
 
-**Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME), `raw_p7_d00` → `thap/assets/nen_deck.jpg` (nền màn bộ bài) — 1024×1536 đục, giữ nguyên độ nét tấm raw; `raw_p7_a1` → `p7_nut1(_an/_tat)`, `p7_nut2(_an)`, `p7_tam`; `raw_p7_a2` → `p7_o_trong`, `p7_o_doi` (+ `p7_o_co`, `p7_o_chon`, `p7_the_chon` dự phòng) (`tools/thap-cat-p7-a.py`). Các tấm còn lại (h02, a3–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
+**Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME), `raw_p7_d00` → `thap/assets/nen_deck.jpg` (nền màn bộ bài) — 1024×1536 đục, giữ nguyên độ nét tấm raw; `raw_p7_a1` → `p7_nut1(_an/_tat)`, `p7_nut2(_an)`, `p7_tam`; `raw_p7_a2` → `p7_o_trong`, `p7_o_doi` (+ `p7_o_co`, `p7_o_chon`, `p7_the_chon` dự phòng) ; `raw_p7_a3` → `p7_dau`, `p7_tim`, `p7_che`, `p7_noi`, `p7_hang` (+ `p7_tien` chưa dùng) (`tools/thap-cat-p7-a.py`). Các tấm còn lại (h02, a4–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
