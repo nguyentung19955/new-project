@@ -979,3 +979,14 @@ và `css/hud2.css` (thanh trên, khay, nút).
 Thứ tự ưu tiên: b1 (thanh + dải xem nhanh) → b2 (nút) → b4 → b3.
 
 **Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME), `raw_p7_d00` → `thap/assets/nen_deck.jpg` (nền màn bộ bài) — 1024×1536 đục, giữ nguyên độ nét tấm raw; `raw_p7_a1` → `p7_nut1(_an/_tat)`, `p7_nut2(_an)`, `p7_tam`; `raw_p7_a2` → `p7_o_trong`, `p7_o_doi` (+ `p7_o_co`, `p7_o_chon`, `p7_the_chon` dự phòng) ; `raw_p7_a3` → `p7_dau`, `p7_tim`, `p7_che`, `p7_noi`, `p7_hang` (+ `p7_tien` chưa dùng); `raw_p7_a4` → 16 icon `p7_ic_*` (`tools/thap-cat-p7-a.py`). Các tấm còn lại (h02, a5–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
+
+## Pass 8 — counters (bộ đếm kỹ năng + số ụ trên bàn, 2026-11-05 · `thap/js/demkn.js`, nghiên cứu `DCDW-DEM-SAO.md`)
+
+Đang dùng ảnh có sẵn: khung `h2_tag` (74×30, cắt 3 mảnh), icon `h2_ic_chong` (số ụ trên bàn), `ic_sao` / `ic_dmg` / `ic_toc` / `ic_chet` / `ic_mana` (64 px). Đủ dùng; 3 tấm dưới giúp rõ nghĩa hơn và nét hơn (tấm trên ô cao ~14 px CSS × R.s × DPR3 ≈ 40–48 px > 30 px của h2_tag).
+Đính kèm `docs/demo-hop-tuong/tuvan/demsao2/coop_ban.jpg`. Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial metal game UI, FLAT SOLID #FF00FF magenta background, no text, no letters, no numbers."*
+
+| raw | cỡ / lưới | prompt ngắn | thay cho |
+|---|---|---|---|
+| raw_p8_dem_u | 1024×1024, lưới 2×2 (ô 512) | 1 "Tiny white-silver silhouette icon of ONE round top-down turret with a short barrel, thick dark outline" · 2 same with a small ×-free stack of TWO turrets offset · 3 same, warm brass tint · 4 same, cyan tint | `h2_ic_chong` (số ụ loại này trên bàn — không giống ngôi sao) |
+| raw_p8_tam_dem | 1536×512, 1 hàng × 3 (ô 512×512) | "Short horizontal dark gunmetal counter plate, rounded ends, thin brass rim, recessed empty middle, readable at tiny size" · 2 same, gold-lit rim (milestone reached) · 3 same, red-lit rim (penalty) | `h2_tag` cắt 3 mảnh (nét hơn, có bản "đạt mốc") |
+| raw_p8_ic | 1024×1024, lưới 4×4 (ô 256) | consistent round metal-rimmed icons, one per cell: fox tail flame (Nine-Tail tails) · combo burst chevrons (Combo Core) · chain link (Chain Link) · bingo row/column grid (Railgun) · anvil with ember (Scrap Forge) · deep water spiral (Leviathan) · lone ace spade (Lone Ace) · wolf claw (Werewolf kills) · sync waves (Sync Cannon) · diagonal X grid (Resonance Grid) · rest empty | `ic_dmg` / `ic_chet` / `ic_toc` dùng chung trên tấm đếm |

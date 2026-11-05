@@ -103,13 +103,7 @@ SKILLS.combo = {
     for (let i = 0; i < Math.min(2, gd); i++) { const rr = S * (0.43 + i * 0.05), vp = PX.mau('fx_vong_trieu', gd === 3 ? '#ff5a1a' : '#ff8a2a'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i ? -1 : 1) * R.t * 0.6, al * 0.55); }
     if (gd === 3) { ctx.globalAlpha = al * (0.3 + 0.12 * Math.sin(R.t * 8)); R.anhGiua(ctx, R.cham1('#ff5a1a'), 0, 0, S * 0.75); }
     ctx.globalCompositeOperation = 'source-over';
-    if (n > 0) {
-      const s = '×' + n; ctx.globalAlpha = al; ctx.font = '900 9px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const w = ctx.measureText(s).width + 8, y = S * 0.44;
-      R.anhGiua(ctx, 'h2_tag', 0, y, w + 10); // nhãn = khung PNG h2_tag (thay viên thuốc roundRect vẽ code)
-      ctx.globalAlpha = al; ctx.fillStyle = '#ffd0a0'; ctx.fillText(s, 0, y + 0.5);
-      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    }
+    // số COMBO ×N: tấm đếm chung ở đáy ô (demkn.js)
   },
 };
 

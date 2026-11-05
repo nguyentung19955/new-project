@@ -210,7 +210,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
       chu(d._lv || (d._lv = d.querySelector('.lv')), 'LV' + lv);
-      // (bỏ số đếm '×n ụ trên bàn' dưới thẻ — DCDW không hiện, người chơi tưởng là số sao / bộ đếm của kỹ năng)
+      // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
