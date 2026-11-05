@@ -68,3 +68,13 @@ const OT = {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bat); else bat();
   addEventListener('resize', () => OT.co());
 })();
+// ── ô chân dung nhỏ của BẢNG XEM (phiên thứ 3): xem nhanh bộ bài (.hm-xem-po) + bảng chạm trận (#tt .tt-the) = cùng ô tối giản
+(() => {
+  const ganXem = (el, id) => { if (el && id && G.rosterMap && G.rosterMap[id]) OT.gan(el, OT.bac(id), false); };
+  const boc = (o, k, lay) => { if (!o || typeof o[k] !== 'function') return; const g = o[k]; o[k] = function () { const r = g.apply(this, arguments); try { lay.apply(this, arguments); } catch (e) { } return r; }; };
+  const lam = () => {
+    if (typeof HM !== 'undefined') boc(HM, 'moXem', (id) => ganXem(document.querySelector('#hm-tam .hm-xem-po'), id));
+    if (typeof UI !== 'undefined') boc(UI, 'moTT', (id) => ganXem(document.querySelector('#tt .tt-the'), id));
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', lam); else lam();
+})();

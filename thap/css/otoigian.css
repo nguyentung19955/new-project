@@ -92,3 +92,8 @@ html body #wrap #the-mv.ot > img.ot-mien { right: 0 !important; top: -6px !impor
    mắt ~48 % chiều cao, tóc cách mép trên ≥ 15 % (dưới thanh viền), phóng ≤ 1.15× cover; trống trên tóc ≤ 10 % khi ảnh gốc tóc sát mép. */
 html body #wrap #chon #chon-luoi .c.ot > img.anh, html body #wrap #chon #chon-bo .o-bo.ot > img:not(.ov):not(.kh):not(.gl):not(.dk-vien) {
   --po-mat: .48 !important; --po-toc: .15 !important; --po-zoom: 1.15 !important; --po-ho: .10 !important; }
+
+/* ───────── BẢNG XEM: ô chân dung nhỏ (xem nhanh bộ bài .hm-xem-po · bảng chạm trận #tt .tt-the) — cùng ô tối giản ───────── */
+html body #wrap .hm-xem-po.ot, html body #wrap #tt .tt-the.ot { position: relative; border-image: none !important; overflow: visible !important; }
+html body #wrap .hm-xem-po.ot > img:first-child:not(.ov), html body #wrap #tt .tt-the.ot > img.tt-anh { --po-mat: .46 !important; --po-toc: .14 !important; --po-zoom: 1.2 !important; --po-ho: .10 !important; }
+html body #wrap #tt .tt-the.ot > .tt-gl, html body #wrap #tt .tt-the.ot > img:not(.tt-anh):not(.ov) { display: none !important; }

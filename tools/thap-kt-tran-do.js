@@ -68,7 +68,7 @@ module.exports = function doTrang(opt) {
     // chữ phải nằm trong TẤM ảnh (nền / border-image) gần nhất — tấm có thể là chính nó hoặc cha ≤ 3 bậc
     for (let x = e, d = 0; x && d < 4 && x !== document.body; x = x.parentElement, d++) {
       const xs = getComputedStyle(x);
-      const coAnh = (xs.backgroundImage && /url\(/.test(xs.backgroundImage)) || (xs.borderImageSource && xs.borderImageSource !== 'none');
+      const coAnh = (xs.backgroundImage && /url\(/.test(xs.backgroundImage)) || (xs.borderImageSource && xs.borderImageSource !== 'none') || x.classList.contains('ot'); // ô tối giản (o-toigian): viền là <img.ov> PNG con, chữ LV/số nằm trên ảnh trong ô
       if (!coAnh) { if (d > 0 && (cuonDuoc(xs, 'Y') || cuonDuoc(xs, 'X'))) break; continue; }
       const xr = x.getBoundingClientRect(); if (xr.height > 220) break;
       const sc = xr.width / (x.offsetWidth || xr.width) || 1, m = 1.5 * sc;
