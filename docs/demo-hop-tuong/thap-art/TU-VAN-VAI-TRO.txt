@@ -1,0 +1,527 @@
+TURRET MERGE — ROLE ECONOMY, ROSTER REBALANCE & SKILL PASS
+Senior Game Design Review | 5 November 2026
+Scope: 85 turrets, five rarities, five-turret deck, 5x3 board, SOLO / CO-OP / PVP
+
+============================================================
+EXECUTIVE RECOMMENDATION
+============================================================
+
+Current role mix:
+  Attack   51 / 85 = 60.0%
+  Special  27 / 85 = 31.8%
+  Support   7 / 85 =  8.2%
+
+Recommended role mix:
+  Attack   40 / 85 = 47.1%
+  Special  27 / 85 = 31.8%
+  Support  18 / 85 = 21.2%
+
+This is not a universal genre formula. It is a target for THIS roster and its five-slot deck. A five-turret deck needs enough damage engines to survive, but the other slots must offer meaningful decisions: economy, board manipulation, debuffs, protection, star/merge control, and ally/opponent interaction. With only seven Supports, most decks will default to stacking damage engines and a few obvious Special picks. Raising Support to 18 creates real composition choices without making damage dealers scarce.
+
+Target by rarity (counts sum to 85):
+
+Rarity       Total    Attack    Special    Support
+Common         15        9         4          2
+Rare           17        8         4          5
+Epic           22        9         8          5
+Legendary      22        9         8          5
+Mythic          9        5         3          1
+TOTAL          85       40        27         18
+
+Why this distribution:
+- Common: most units should be easy-to-understand damage or basic tactical pieces. Two Supports introduce adjacency early without making the starter pool feel passive.
+- Rare: this is where players should first build proper engines. Five Supports create a meaningful choice between fire-rate, crit, control, and damage amplification.
+- Epic: broad build-arounds, counterplay, and board-management effects belong here. Keep nine Attack units so Epic decks still have damage options.
+- Legendary: powerful build-defining effects and mode interaction. A Support-heavy Legendary deck should be possible, but it must still include enough Attack units to clear waves.
+- Mythic: five distinct damage fantasies, three transformational/board-control Specials, and one premium Support. Mythics should be unusual, not automatically better versions of lower-rarity Supports.
+
+============================================================
+1. WHAT IS KNOWN ABOUT THE REFERENCE GAMES
+============================================================
+
+Important distinction: public descriptions establish broad combat and deck structures; they do NOT provide a transferable, authoritative role-percentage formula or a complete current balance spreadsheet. The percentages and numbers in this document are recommendations for Turret Merge, not claims about either reference game's internal tuning.
+
+DESTINY CHILD: DEFENSE WAR (DCDW)
+Public game descriptions describe a five-unit team plus an Archfiend/commander. Players spend mana to summon randomly selected units from their chosen team, merge matching units to raise their star/level and transform into another random team unit, and use mana for upgrades or the Archfiend skill. The opponent's activity is visible in real time; PvP and co-op are central modes. This is the closest reference for your five-turret-plus-commander deck and merge-to-random-unit loop.
+Design lesson: a five-slot pool has to create deck identity through the interaction of a small number of units. A unit that changes the value of another unit, changes the merge decision, or changes the opponent's board can be as deck-defining as a damage dealer.
+
+RANDOM DICE
+Public guides describe a five-die deck and a 15-slot board. Summoning spends SP and places a random die from the deck; merging same-type, same-pip dice normally creates a random die from the deck at one higher pip. The pip count generally increases attack rate. The game has PvP and co-op, and its pool includes damage, slow/debuff, buff, economy, and merge-manipulation effects. Community strategy guides repeatedly emphasize that damage dice often need a support/buff partner, while co-op players benefit from committing to a clear damage or support plan instead of splitting resources ineffectively.
+Design lesson: supports must multiply the value of a damage engine, not merely be weak damage units with a buff attached. Board position and merge timing are strategic resources. Support slots compete with damage slots, so their contribution must be measurable.
+
+DCDW and Random Dice are inspirations, not templates to copy exactly. Turret Merge has its own 5x3 board, three shared co-op lives, shared-wave PvP premise, commander, and proposed star thresholds. Tune those systems together.
+
+============================================================
+2. ROLE DEFINITIONS — MAKE THE LABELS MEAN SOMETHING
+============================================================
+
+ATTACK
+- Directly deals repeatable damage to enemies.
+- May include control attached to a meaningful damage pattern (for example, a damaging frost projectile).
+- Its primary board value is damage dealt per second (DPS), target coverage, burst, or boss execution.
+- If a unit does not directly attack or deal damage, it should not be labelled Attack merely because its effect is offensive.
+
+SPECIAL
+- Changes the rules or state of the board, merge economy, summon pool, enemy path, enemy state, commander cooldown, or opponent/ally board.
+- Usually does not provide reliable repeatable DPS.
+- Includes economy, copying, summoning, rerolling, star manipulation, control, timed spells, and merge triggers.
+- Special can be offensive (jam, scramble, rewind), but the main value is tactical state change rather than damage output.
+
+SUPPORT
+- Does not attack.
+- Provides a persistent or periodic benefit to nearby turrets, the board, or the team: damage, fire rate, crit, protection, resistance, range, control amplification, or team utility.
+- A Support must create a positioning decision. If its effect works equally well anywhere and has no meaningful targeting or placement condition, it risks feeling like a passive tax.
+- A Support's buff should be visible in combat stats or combat feedback.
+
+Do not use “Support” as a catch-all for every non-attacking effect. Economy, copying, summoning, merging, and enemy manipulation remain Special. Support is specifically about making other units better or safer.
+
+============================================================
+3. RE-ROLE PLAN — EXISTING UNITS
+============================================================
+
+Re-role only where the current head fantasy naturally supports the new job. Keep each turret's existing visual identity, silhouette, palette, and theme. These are mechanical changes, not art redesigns.
+
+COMMON — 15 total: 9 Attack / 4 Special / 2 Support
+1. Frost: Attack -> Special.
+   New skill: Periodically freezes the lead enemy for 2 seconds; freeze has a short boss duration and cannot be chained by multiple Frosts.
+   Why: the core identity is reliable crowd control, not damage output. Keep the icy projectile/weapon look.
+
+2. Venom: Attack -> Special.
+   New skill: Marks the lead enemy with Venom for 5 seconds; marked enemies take 12% more damage from all turrets. Multiple Venom marks refresh duration, not the vulnerability value.
+   Why: make the poison identity a team debuff rather than a second generic damage-over-time gun. Keep poison globes and toxic colors.
+
+3. Breaker: Attack -> Support.
+   New skill: Every 6 seconds, exposes the strongest nearby enemy; adjacent Attack turrets deal 10% more damage to exposed targets.
+   Why: the name already promises weakening. It becomes a clear early-game damage amplifier.
+
+4. Hammer: Attack -> Support.
+   New skill: Adjacent Attack turrets gain 8% critical damage; their critical hits briefly stagger normal enemies.
+   Why: a hammer is a natural reinforcement/impact support. It creates a useful defensive niche without making it another melee DPS turret.
+
+5. Time Bomb: Attack -> Special.
+   New skill: Periodically attaches a 5-second bomb to a random enemy; the detonation deals no direct turret DPS but briefly weakens nearby enemies by 10%.
+   Why: preserve the delayed-explosion fantasy while making the unit a tactical setup tool. If the explosion itself is kept damaging in implementation, classify it as Attack instead.
+
+COMMON result: Mana Core, Frost, Venom, Time Bomb = 4 Special; Breaker and Hammer = 2 Support; the remaining 9 are Attack.
+
+RARE — 17 total: 8 Attack / 4 Special / 5 Support
+6. Mana Leech: Special -> Attack.
+   New skill: Fires leech bolts at the lead enemy; each hit deals modest damage and restores a small amount of mana, subject to a per-second mana cap.
+   Why: it now directly attacks, and the mana return is a secondary rider. Avoid uncapped economy loops.
+
+7. Blender: Special -> Support.
+   New skill: Adjacent Attack turrets gain 6% fire rate; each additional distinct adjacent Attack type adds another 2%, up to 12% total.
+   Why: “blending” different turret types into a mixed engine gives the unit a distinct placement identity. It rewards composition rather than raw stacking.
+
+EPIC — 22 total: 9 Attack / 8 Special / 5 Support
+8. Cleanser: Special -> Support.
+   New skill: Every 12 seconds, removes one negative effect from up to two adjacent turrets; if no debuff is present, grants them 5% damage reduction until the next pulse.
+   Why: a persistent defensive aura belongs in Support. Its periodic cleanse remains useful in PvP/Co-op without becoming a free full-board reset.
+
+9. Shield Gen: Special -> Support.
+   New skill: Adjacent turrets gain a shield that blocks one enemy control effect; the shield recharges every 18 seconds and cannot stack.
+   Why: this is a protection engine, not a one-time merge spell. Keep the industrial generator and shield visuals.
+
+10. Star Lift: Special -> Support.
+    New skill: The two adjacent lowest-star turrets gain 4% attack speed per star of Star Lift, up to 20%; at 5 stars, the lowest-star neighbour also gains a one-time +1 star progress pip (not a full star).
+    Why: make it a star-progression support with a positional trade-off. Do not grant full stars repeatedly.
+
+LEGENDARY — 22 total: 9 Attack / 8 Special / 5 Support
+11. Star Breaker: Attack -> Support.
+    New skill: Adjacent allies gain 8% merge-effect strength; in PvP, the first time each round an enemy turret reaches 5 stars, reduce its fire rate by 8% for 6 seconds; in Co-op, instead grant the lowest-star ally 8% fire rate for 6 seconds.
+    Why: the unit's defining feature is star/merge interaction. This creates a mode-aware support rather than a conventional damage turret. The PvP clause must be capped to one trigger per round.
+
+12. Mirror Gate: Special -> Support.
+    New skill: Adjacent allies gain 15% resistance to enemy control effects; once every 20 seconds in PvP, reflects one eligible control effect, while in Co-op it copies one ally merge-trigger buff at 50% strength.
+    Why: its core identity is defensive team interaction. Make the reflection/copy effect conditional and cooldown-limited.
+
+MYTHIC — 9 total: 5 Attack / 3 Special / 1 Support
+13. Holy Halo: Attack -> Special.
+    New skill: Active skill grants the whole team a 2-second invulnerability barrier; bosses and direct boss mechanics are mitigated rather than cancelled. Long cooldown; no permanent uptime.
+    Why: a board-wide active shield is a tactical emergency button, not an Attack turret.
+
+14. Cryo Reactor: Attack -> Support.
+    New skill: Emits a slowing aura that reduces enemy movement speed by 12%; adjacent Attack turrets deal 6% more damage to slowed enemies. At 5 stars the aura also reduces enemy attack/ability tempo where applicable.
+    Why: the reactor is a board aura and damage-enabler. Keep its cold-energy core and reactor silhouette.
+
+============================================================
+4. NEW SKILL DIRECTIONS FOR UNITS THAT SHOULD KEEP THEIR ROLE
+============================================================
+
+The following are tuning/clarity upgrades, not role changes. Keep the current look and role.
+
+- Radar (Support): retain +30% fire rate for four neighbours as the high-clarity identity, but use a lower starting value and star scaling/caps defined below. Avoid an unconditional +30% at 1 star.
+- Crit Antenna (Support): make it crit chance, not another generic damage multiplier. At 1 star +3 percentage points to adjacent turrets; at 3/5/7 stars scale to the caps in section 5.
+- Chiller (Support): adjacent turrets apply a small slow on hit; the slow is capped and does not stack additively with Frost/Blizzard.
+- Amplifier (Support): adjacent Attack turrets gain stacking damage for consecutive hits on the same target; stacks reset on target change or after a short idle window. This is distinct from fire rate.
+- Reaper Pillar (Support): adjacent turrets gain a low chance to execute normal enemies below a small HP threshold; bosses are immune to execution and instead take a capped bonus damage hit.
+- Focus Lens (Support): adjacent turrets gain crit damage; critical hits pierce one additional target. Keep crit chance separate so Focus Lens and Crit Antenna have different jobs.
+- Resonance Grid (Support): buffs four diagonal neighbours. If all four diagonal cells are occupied by turrets, activate a modest resonance bonus. Its unusual diagonal geometry is the point; do not also give it a large cross-shaped aura.
+- Lone Ace (Attack): preserve the no-adjacent-turret condition; make the bonus visibly stronger when isolated, but ensure a 5x3 board can actually create a safe isolated position.
+- Bounty Beacon (Special): mark one enemy; its kill grants mana. Add a per-wave mana cap and do not let multiple Beacons multiply the same reward.
+- Clamp (Special): preserve mode interaction, but use a short, capped effect. PvP: reduce one rival turret's fire rate by 12% for 5 seconds. Co-op: grant one ally turret +12% fire rate for 5 seconds. Trigger only on merge, with a target priority rule.
+- Scrambler (Special): shuffle a small set of rival turret positions, never reroll or destroy units. In Co-op, either do not affect allies or convert to a harmless reposition/formation assist.
+- Signal Jammer (Special): PvP jams one selected/highest-star rival turret for a short duration; Co-op gives one free 1-star summon to the ally. Add cooldown, target immunity window, and no repeated lockout.
+- Chrono Lock (Special): stores damage dealt to the lead enemy while it is locked, then releases a capped burst on unlock. The stored amount must have a ceiling based on the target's max HP.
+- Chrono Throne (Special): keep the slow-over-time and active rewind fantasy. Rewind should move enemies back a fixed fraction of path progress, not reset them to spawn, and should have a boss-specific reduced effect.
+- Genesis Core (Special): periodically adds star progress to the weakest turret; active summons a turret at average board star. Define “weakest” deterministically and cap star-generation per round.
+- Scrap Forge (Special): consumes a dragged 1–3 star turret to grant a permanent damage bonus to a chosen Attack turret. The consumed unit's value must be priced by star and rarity; cap total bonus per match.
+- Marionette (Special): takes control of one normal enemy, turns it backward briefly, then detonates. Bosses are immune to reversal and take a short vulnerability debuff instead.
+- Pandora Vault (Special): one of six random spells on merge. Each spell must have comparable expected value; remove extreme outcomes that decide a match by luck alone.
+- Merge King (Special): same-star merge grants +1 star progress or a controlled star bonus, not an unconditional full star every merge.
+- Twin Maker (Special): on merge, summons an extra turret with a lower star value and a strict per-round summon cap.
+- Copycat (Special): copies one same-star turret's skill at reduced effectiveness; copy cannot copy another Copycat or recursively copy itself.
+- Evolver (Special): after a visible timer, becomes a random turret +1 star; the timer pauses while disabled and cannot produce a Mythic above the intended cap.
+- Mimic (Special): retain same-star merge flexibility, but after the merge gains a brief attack buff only if the resulting unit is Attack.
+- Teleporter (Special): swaps with a same-star turret; cannot bypass board locks or move a turret into an invalid cell.
+- Mana Doubler (Special): merge grants a large mana burst, but apply a per-round ceiling and diminishing returns if repeatedly merged.
+- Cooldown Horn (Special): merge reduces commander cooldown by a fixed amount, with a minimum cooldown floor and per-round cap.
+- Cloner (Special): on merge, summons one extra 1-star turret only if a board cell is free; cap extra summons per round.
+- Mystery Box (Special): after 47 seconds becomes a random 1–7 star turret. Make the timer visible and show the outcome odds; prevent the box from becoming an exploit for guaranteed high stars.
+- Overclock (Special): drag onto a same-star turret for +65% fire rate briefly, then apply a short heat/slowdown penalty. This is a targeted tactical action, not a permanent buff.
+- Lighthouse (Attack): orbiting light orbs shoot nearby enemies; every 20 seconds, one orb summons a 1-star turret if a board cell is free. This keeps the turret an Attack unit while making its summon a secondary effect.
+- Orbital (Special): on merge, launches a timed satellite bombardment. Treat the bombardment as a temporary spell window rather than permanent DPS.
+- Wall Projector (Attack): wall blocks/redirects enemies briefly, then explodes for burst damage. Its damage budget must include both the delay value and the explosion.
+- Railgun (Attack): full row gives damage; full column gives fire rate. Avoid a multiplicative double bonus that makes the centre tile mandatory.
+- Star Cannon (Attack): star-total breakpoints grant fire rate; the 50-star effect should be a short burst or capped bonus, not a permanent exponential multiplier.
+- Hydra (Attack): heads scale with stars and split targets; at 7 stars fuse into a beam. Limit target count and boss damage.
+- Nine-Tail (Attack): kills build tails; at nine, fires homing fireballs. Add a tail decay/round reset rule so early-wave farming does not bank infinite burst.
+- Nemesis (Attack): executes enemies under an HP threshold; against bosses, deals a capped percentage of max HP with a long internal cooldown.
+- Eclipse (Attack): alternate Day burn beam and Night slow wave every 8 seconds. Both states need comparable average value.
+- Purifier (Attack): bonus versus poisoned enemies; kills explode. The explosion must have a per-target damage cap and should not chain indefinitely.
+- Rainbow (Support): the path is painted with a weakening trail; allies gain a small damage bonus against enemies standing in it. Keep the trail's uptime limited.
+- Sync Cannon (Support): adjacent same-star Attack turrets gain a small damage bonus per matching pair, with a hard cap. It should reward coordination without requiring an impossible full-board mirror.
+- Resonance Grid (Support): diagonal-only support geometry is intentional; avoid adding a second large aura that makes it universally mandatory.
+- Mana Core (Special): generates mana every 7 seconds. Use a per-match production cap and ensure its value competes with an Attack turret slot.
+- Iron Fist (Attack): ring blasts hit enemies around the turret; its local coverage is its differentiator, not raw single-target DPS.
+- Guillotine (Attack): instant-kill chance applies only to normal enemies below a small HP threshold; bosses take a capped damage proc.
+- Dice Gun (Attack): random damage spread is exciting, but normalize average DPS to its rarity budget. “Crits always roll max” must not make the 300% high roll a frequent outcome.
+- Scatter (Attack): rapid random targeting; balance around average hits on the actual lane width and enemy count.
+- Revolver (Attack): one heavy lead-target shot; high boss/elite value is paid for with slower coverage.
+- Cannon (Attack): slow explosive shells; stars widen blast radius, but splash damage is falloff-based.
+- Gatling (Attack): very fast fire; stars raise fire rate, but use diminishing returns and an attack-speed cap.
+- Sniper (Attack): highest-HP target; +100% versus big foes should be included in its boss DPS budget.
+- Tesla (Attack): chain lightning hits N targets where N = stars; damage per chain must fall with each jump or be budgeted accordingly.
+- Berserker (Attack): critical hits trigger a 5-second fire-rate frenzy; add a trigger cooldown and cap attack speed.
+- Blizzard (Attack): periodically slows all enemies; its slow is a control effect and should not stack additively with other global slows.
+- Chain Link (Attack): stronger with more linked turrets of its type; use diminishing returns after the second/third link.
+- Fifth Shot (Attack): every fifth shot fires three exploding bolts; balance around expected burst per five shots.
+- Storm Gun (Attack): very fast instant hits; own-kind proximity penalty must be legible and not make duplicate summons feel broken.
+- Ricochet (Attack): disc bounces to N enemies, stronger each bounce; cap bounce count and boss bounce scaling.
+- Combo Core (Attack): each merge of two Combo Cores gives all Combo Cores permanent damage; use a match-wide stack cap and diminishing returns.
+- Black Hole (Attack): pulls enemies together and crushes them; cap pull strength and boss displacement.
+- Overlord (Attack): slow charge, massive thunder blast; clear charge telegraph and a predictable burst budget.
+- Hive Queen (Attack): raises mini-drone swarm; active kamikaze. Budget drone damage as part of the main turret, not as free extra DPS.
+- Leviathan (Attack): swallows normal enemies to stack power; boss interaction should be capped and stacks should decay/reset at a clear point.
+- Wyrm Engine (Attack): cone flame sweep; active dragon dive. Its cone coverage should be priced into its DPS budget.
+- Holy Halo (Special): active team invulnerability; use a long cooldown and boss mechanic exceptions.
+- Cryo Reactor (Support): aura slow + bonus damage from adjacent Attack turrets to slowed targets; avoid double-counting slow value as both full DPS and full control.
+
+============================================================
+5. SUPPORT SYNERGY RULES — MAKE A SUPPORT WORTH A DECK SLOT
+============================================================
+
+A. ADJACENCY ON THE 5x3 BOARD
+- Default Support range: the four orthogonal neighbours (up, down, left, right). Do not include diagonals by default.
+- A Support placed in a corner can reach 2 cells; edge can reach 3; interior can reach 4. This naturally makes central placements powerful but vulnerable to opportunity cost.
+- A Support only buffs eligible turrets. Most generic buffs should affect Attack turrets; selected specialist supports may affect Special units if explicitly stated.
+- A Support cannot buff itself. Support-to-Support buffs should be rare and explicitly tagged.
+- Resonance Grid is the exception: it affects four diagonal neighbours only. Do not let its diagonal aura also include orthogonal cells.
+- If a turret is dragged or teleported, recalculate adjacency immediately. Show affected cells with a clean outline/highlight.
+- For a 5x3 board, avoid effects that require 8 neighbours or a full ring; the geometry cannot support them consistently.
+
+B. STAR SCALING — 3 / 5 / 7 STAR MILESTONES
+Use a three-stage curve. Stars 1–2 provide the basic aura; star 3 improves the core stat; star 5 unlocks a secondary utility; star 7 unlocks a signature payoff. Do not scale every stat linearly.
+
+Suggested generic buff multipliers (relative to the Support's 1-star value):
+  1 star: 1.00x
+  2 stars: 1.20x
+  3 stars: 1.45x  (first milestone)
+  4 stars: 1.65x
+  5 stars: 1.90x  (second milestone + small utility)
+  6 stars: 2.10x
+  7 stars: 2.35x  (signature effect)
+
+Example for a +8% fire-rate Support at 1 star:
+  1 star: +8%
+  2 stars: +9.6%
+  3 stars: +11.6%
+  4 stars: +13.2%
+  5 stars: +15.2% plus a small secondary perk
+  6 stars: +16.8%
+  7 stars: +18.8% plus signature perk
+
+Round to readable values in the UI. These are design targets, not a requirement to expose decimals.
+
+C. STACKING AND CAPS
+- Same named buff from multiple copies: strongest value applies; do not add the full values together. A second copy may extend uptime or add a small capped bonus.
+- Different buff categories can coexist: fire rate + crit chance + crit damage + vulnerability are allowed, but each category has its own cap.
+- Suggested global caps from Supports:
+  Fire rate: +45% total from Support effects.
+  Damage dealt: +35% total from Support effects.
+  Crit chance: +20 percentage points from Support effects, with a global crit chance ceiling.
+  Crit damage: +50% relative from Support effects.
+  Enemy vulnerability: +25% total from all sources.
+  Enemy slow: 35% ordinary enemies; bosses have a lower effective cap, e.g. 15%.
+  Damage reduction/shield: no permanent full immunity; one-hit shields need a recharge/cooldown.
+- Support buffs should not multiply each other. Apply additive bonuses within a category, then clamp to the cap. Avoid FireRate x Damage x Crit multipliers that compound into runaway DPS.
+- If a Support has a special condition (same star, different types, diagonal placement, no neighbours), state it clearly in its tooltip.
+
+D. MODE RULES
+- PvP: support disruption should be temporary, targetable, and counterable. Never allow repeated stun/jam/slow lockouts on the same turret. Give affected units a short immunity window after control ends.
+- Co-op: support should create a team contribution that is visible to both players. Use a clear “ally buff” indicator and do not require one player to sacrifice all damage just to be a useful partner.
+- Shared three lives: defensive Supports can prevent leaks, but should not create permanent invulnerability or erase boss mechanics. A shield should block a defined event, not all damage for a long duration.
+- If the two co-op boards share one enemy lane, clarify whether buffs affect only the owner's board, the ally board, or both. Default recommendation: owner-board only, except units explicitly designed for ally interaction.
+- PvP premise says both players defend the same waves and outlast the rival. Prefer interaction that changes the rival's board efficiency or timing, not direct enemy-wave ownership or unavoidable damage. Avoid effects that make the rival lose lives without a meaningful response.
+
+============================================================
+6. BALANCE GUIDELINES — DPS, SUPPORT VALUE, AND TESTING
+============================================================
+
+A. NORMALIZED DPS BUDGET BY RARITY
+Use a 1-star, same-level, no-buff Attack turret as the baseline. The ranges below are relative to a Common Attack turret's sustained single-target DPS, after accounting for target uptime and accuracy. They are starting budgets for internal tests, not fixed live-game numbers.
+
+Rarity       Sustained DPS target     Burst / niche budget
+Common          1.00x                 up to 1.25x in its niche
+Rare            1.20–1.40x            up to 1.70x in its niche
+Epic            1.45–1.75x            up to 2.10x in its niche
+Legendary       1.80–2.20x            up to 2.60x in its niche
+Mythic          2.30–2.80x            up to 3.30x in a narrow window
+
+Interpretation:
+- A high-burst turret must pay with charge time, downtime, target restriction, or lower coverage.
+- A splash/chain turret must be measured against actual multi-enemy waves, not a single target dummy.
+- A boss specialist should not also be best at clearing normal waves.
+- A random-damage turret should be balanced on expected damage and variance, not its maximum roll.
+- A control turret's slow/stun value is additional utility. Do not also give it top-tier raw DPS.
+- Higher rarity should expand options and mechanics, not simply invalidate lower-rarity units.
+
+B. SUPPORT VALUE EQUIVALENCE
+A Support should usually create value equal to roughly 15–25% of the total DPS of the Attack turrets it actually buffs, at 3–5 stars. A 7-star Support can reach 25–35% value in a well-built formation, but only with a real positional or composition condition.
+
+Example:
+- Four adjacent Attack turrets each deal 100 DPS = 400 team DPS.
+- A Support that grants +15% effective damage creates about +60 DPS equivalent.
+- That Support is contributing 15% of the buffed Attack group's base DPS, before counting its defensive/utility value.
+- If the Support only buffs one turret for +10%, it is usually not worth a full deck slot unless it has a powerful secondary effect.
+
+Deck-slot test:
+- Compare a Support deck slot against the Attack turret that would otherwise occupy that slot.
+- A Support that buffs three Attack turrets by 12% creates roughly 36% of one turret's base DPS as damage value (assuming equal DPS), before secondary utility.
+- A Support that buffs four Attack turrets by 15% creates 60% of one turret's base DPS. That can be a good trade if the Support also provides positioning gameplay and does not stack without limit.
+- For five-slot decks, target a Support to be worth one moderate Attack turret when it has 3–4 eligible neighbours. If it has only one neighbour, it should be weaker than an Attack slot.
+
+C. DECK COMPOSITION EXPECTATIONS
+Do not force a single exact deck formula, but test the following common compositions:
+1. 3 Attack + 1 Support + 1 Special: reliable default.
+2. 2 Attack + 2 Support + 1 Special: specialist formation; must survive only with strong adjacency and efficient merges.
+3. 3 Attack + 2 Special: aggressive control/economy deck; should be viable but less stable than the default.
+4. 4 Attack + 1 Special: straightforward damage deck; should remain a valid beginner option.
+5. 2 Attack + 1 Support + 2 Special: high-skill combo deck; should have a clear setup payoff, not automatically beat simpler decks.
+
+No deck should be mandatory because one Support buffs everything at once. A good Support should have a clear target set and a meaningful placement cost.
+
+D. ECONOMY AND MERGE SAFETY
+- Mana-generating Specials need a per-wave or per-match cap.
+- Extra summon effects need a per-round cap and a free-cell requirement.
+- Star-generation effects need a cap and must not recursively trigger other star-generation effects without a limit.
+- Merge-trigger effects should have an internal cooldown or diminishing returns when repeatedly triggered.
+- Copy effects cannot copy themselves recursively.
+- Permanent damage growth needs a match-wide ceiling.
+- Control effects need boss resistance, diminishing returns, or shorter duration.
+- A random spell pool should have similar expected value for each outcome; avoid one jackpot result deciding the match.
+
+E. TELEMETRY TO COLLECT
+For every turret, record:
+- Damage dealt per minute, split normal enemies / elites / bosses.
+- Time active and target uptime.
+- Enemies slowed, stunned, pushed, executed, or leaked.
+- Mana generated/spent and commander cooldown reduced.
+- Number of allies buffed, buff uptime, and estimated DPS gained.
+- Merge count, star distribution, summon count, and board occupancy.
+- PvP rival DPS lost due to disruption, plus duration of each disable.
+- Co-op contribution split: damage, prevented leaks, ally buffs, economy, and control.
+
+Balance by win rate and pick rate across skill bands, not win rate alone. A high pick rate with average win rate can indicate a mandatory-feeling unit; a low pick rate with high win rate can indicate a niche specialist that needs better readability, not necessarily a nerf.
+
+============================================================
+7. COMPLETE 85-TURRET ROSTER — FINAL ROLE AND SKILL TABLE
+============================================================
+
+Legend:
+A = Attack | Sp = Special | Su = Support
+“Unchanged” means keep the original skill concept; numbers can still be tuned to the rules above.
+Every Support is non-attacking. Skills below are concise gameplay definitions.
+
+COMMON (15)
+Name | Rarity | Old role | New role | New skill / final skill
+Cannon | Common | Attack | Attack | Slow explosive shells; stars widen blast radius with damage falloff.
+Gatling | Common | Attack | Attack | Very fast fire; stars raise fire rate with diminishing returns and an attack-speed cap.
+Frost | Common | Attack | Special | Periodically freezes the lead enemy for 2s; boss duration reduced and multiple Frosts cannot chain-freeze.
+Venom | Common | Attack | Special | Marks the lead enemy for 5s; all turrets deal 12% more damage to the marked target.
+Sniper | Common | Attack | Attack | Targets the highest-HP enemy; +100% damage vs big foes, included in its boss DPS budget.
+Tesla | Common | Attack | Attack | Chain lightning hits N enemies (N = stars); damage falls per jump.
+Mana Core | Common | Special | Special | Generates mana every 7s; production has a per-match cap.
+Dice Gun | Common | Attack | Attack | Random 3–300% damage; crits roll max, but average DPS is normalized and high rolls remain rare.
+Scatter | Common | Attack | Attack | Rapidly fires at random enemies; balanced around average target uptime.
+Revolver | Common | Attack | Attack | One heavy shot at the lead enemy; high single-target damage, low coverage.
+Guillotine | Common | Attack | Attack | Chance to execute normal enemies below a small HP threshold; bosses take capped bonus damage instead.
+Breaker | Common | Attack | Support | Every 6s exposes the strongest nearby enemy; adjacent Attack turrets deal 10% more damage to it.
+Hammer | Common | Attack | Support | Adjacent Attack turrets gain 8% crit damage; their crits briefly stagger normal enemies.
+Iron Fist | Common | Attack | Attack | Melee ring blasts hit enemies around the turret; strong local coverage.
+Time Bomb | Common | Attack | Special | Attaches a 5s bomb to a random enemy; detonation weakens nearby enemies by 10% briefly.
+
+RARE (17)
+Name | Rarity | Old role | New role | New skill / final skill
+Radar | Rare | Support | Support | Buffs up to 4 orthogonal neighbours with fire rate; scale from a modest base to the fire-rate cap.
+Mimic | Rare | Special | Special | Merges with any same-star turret; gains a short attack buff only if the result is Attack.
+Laser | Rare | Attack | Attack | Continuous beam grows stronger while held on one target; loses charge when retargeting.
+Mortar | Rare | Attack | Attack | Shells random enemies with splash damage; splash falloff prevents excessive wave scaling.
+Mana Doubler | Rare | Special | Special | On merge grants a large mana burst; diminishing returns and a per-round cap apply.
+Ice Blade | Rare | Attack | Attack | Deals +400% damage to slowed enemies; its base DPS is lower to pay for the matchup bonus.
+Crit Antenna | Rare | Support | Support | Grants crit chance to up to 4 orthogonal neighbours; obeys the global crit cap.
+Teleporter | Rare | Special | Special | Swaps places with a same-star turret; respects locked cells and legal board positions.
+Drone Bay | Rare | Attack | Attack | On merge launches bomb drones up the path; drone damage counts toward its burst budget.
+Blender | Rare | Special | Support | Adjacent Attack turrets gain 6% fire rate; each additional distinct adjacent Attack type adds 2%, up to 12%.
+Energy Cannon | Rare | Attack | Attack | Damage grows with current mana; use diminishing returns so hoarding mana is not mandatory.
+Chiller | Rare | Support | Support | Adjacent turrets' hits apply a small slow; slow does not stack additively with other slows.
+Amplifier | Rare | Support | Support | Adjacent Attack turrets build damage on repeated hits to one target; stacks reset on retarget/idle.
+Toxic Pool | Rare | Attack | Attack | Throws poison puddles on the path; puddle uptime and overlapping damage are capped.
+Cooldown Horn | Rare | Special | Special | On merge reduces commander cooldown; minimum cooldown floor and per-round cap apply.
+Mana Leech | Rare | Special | Attack | Fires leech bolts; each hit deals modest damage and restores mana up to a per-second cap.
+Mine Layer | Rare | Attack | Attack | Lays mines on the path; some are star mines dealing 3x damage, with limited spawn frequency.
+
+EPIC (22)
+Name | Rarity | Old role | New role | New skill / final skill
+Berserker | Epic | Attack | Attack | Critical hits trigger a 5s fire-rate frenzy; trigger cooldown and attack-speed cap apply.
+Blizzard | Epic | Attack | Attack | Periodically slows all enemies; global slow has a cap and boss resistance.
+Cloner | Epic | Special | Special | On merge summons an extra 1-star turret if a cell is free; extra summons capped per round.
+Chain Link | Epic | Attack | Attack | Stronger with more linked turrets of its type; diminishing returns after early links.
+Clamp | Epic | Special | Special | On merge: PvP reduces one rival turret's fire rate 12% for 5s; Co-op grants one ally +12% for 5s.
+Cleanser | Epic | Special | Support | Every 12s removes one negative effect from up to 2 adjacent turrets; otherwise grants brief 5% damage reduction.
+Shield Gen | Epic | Special | Support | Adjacent turrets gain a one-hit control shield; recharges every 18s and cannot stack.
+Mystery Box | Epic | Special | Special | After 47s becomes a random 1–7 star turret; timer and odds visible, high-star outcomes controlled.
+Star Lift | Epic | Special | Support | Adjacent lowest-star turrets gain attack speed; at 5 stars one neighbour gains limited star progress.
+Reaper Pillar | Epic | Support | Support | Adjacent turrets gain a low chance to execute small normal enemies below an HP threshold; bosses take capped bonus damage.
+Scrambler | Epic | Special | Special | On merge shuffles a small set of rival turret positions in PvP; never destroys or rerolls units.
+Overclock | Epic | Special | Special | Drag onto same-star turret for +65% fire rate briefly, followed by a short heat penalty.
+Fifth Shot | Epic | Attack | Attack | Every fifth shot fires 3 exploding bolts; balance around average damage per five-shot cycle.
+Storm Gun | Epic | Attack | Attack | Instant, very fast hits; slower next to its own kind, with a clear proximity indicator.
+Lone Ace | Epic | Attack | Attack | With no adjacent turrets, gains 2x fire rate and bonus crit; the isolation condition is clearly shown.
+Focus Lens | Epic | Support | Support | Adjacent turrets gain crit damage; their critical hits pierce one additional target.
+Signal Jammer | Epic | Special | Special | On merge, briefly jams one rival turret in PvP; in Co-op, grants the ally one free 1-star summon, with cooldown/caps.
+Bounty Beacon | Epic | Special | Special | Marks an enemy; killing it grants extra mana, subject to a per-wave cap and no duplicate reward.
+Lighthouse | Epic | Attack | Attack | Orbiting light orbs shoot nearby enemies; periodically summons a 1-star turret if a cell is free.
+Railgun | Legendary | Attack | Attack | Full row grants damage; full column grants fire rate; avoid a multiplicative double bonus.
+Orbital | Legendary | Attack | Special | On merge, launches a timed satellite bombardment; its value is a temporary spell window, not permanent DPS.
+Wall Projector | Legendary | Attack | Attack | Raises a wall on the path, then explodes; both delay and explosion count toward its damage budget.
+Purifier | Legendary | Attack | Attack | +300% vs poisoned enemies; kills explode with capped damage and no infinite chain.
+Sync Cannon | Legendary | Attack | Support | Adjacent same-star Attack turrets gain a capped damage bonus for matching pairs.
+Merge King | Legendary | Special | Special | Same-star merges grant controlled star progress; no unlimited full-star generation.
+Twin Maker | Legendary | Special | Special | On merge summons an extra turret at reduced star value; strict per-round cap.
+Star Breaker | Legendary | Attack | Support | Adjacent allies gain merge-effect strength; PvP disrupts one 5-star rival briefly, Co-op buffs a low-star ally.
+Copycat | Legendary | Special | Special | Copies a same-star turret's skill at reduced strength; no recursive Copycat chains.
+Star Cannon | Legendary | Attack | Attack | Star-total multiples of 10 grant fire rate; 50 stars triggers a capped temporary damage burst.
+Mech Wolf | Legendary | Attack | Attack | Melee attacker; Alpha form always crits, with Alpha uptime priced into its DPS.
+Evolver | Legendary | Special | Special | After a timer becomes a random turret +1 star; outcome and timer are visible, with star ceiling.
+Rainbow | Legendary | Attack | Support | Paints a weakening trail on the path; allies deal a small bonus to enemies standing in it.
+Ricochet | Epic | Attack | Attack | Disc bounces to N enemies, stronger each bounce; bounce count and boss scaling capped.
+Combo Core | Epic | Attack | Attack | Each merge of two Combo Cores grants all Combo Cores permanent damage up to a match-wide cap.
+Chrono Lock | Epic | Special | Special | Locks the lead enemy; stored damage releases as a capped burst when the lock ends.
+Hydra | Legendary | Attack | Attack | Heads equal stars and hit different enemies; at 7 stars fuse into a capped giant beam.
+Nine-Tail | Legendary | Attack | Attack | Each kill grows a fire tail; at 9 tails fires 9 homing fireballs, then resets/decays.
+Pandora Vault | Legendary | Special | Special | On merge opens one of 6 random spells; outcomes have comparable expected value.
+Resonance Grid | Legendary | Support | Support | Buffs 4 diagonal neighbours; all 4 occupied activates a modest resonance bonus.
+Nemesis | Legendary | Attack | Attack | Executes enemies below an HP threshold; boss damage is capped % max HP with a long cooldown.
+Eclipse | Legendary | Attack | Attack | Switches Day burn beam / Night slowing wave every 8s; both modes have comparable average value.
+Scrap Forge | Legendary | Attack | Special | Drag 1–3 star turrets into it to consume them for permanent Attack damage; total bonus capped.
+Mirror Gate | Legendary | Special | Support | Adjacent allies gain control resistance; PvP reflects one control effect per cooldown, Co-op copies an ally merge buff at half strength.
+Marionette | Legendary | Special | Special | Controls one normal enemy and walks it backward before it explodes; bosses receive vulnerability instead.
+
+MYTHIC (9)
+Name | Rarity | Old role | New role | New skill / final skill
+Black Hole | Mythic | Attack | Attack | Pulls enemies together and crushes them; pull strength and boss displacement are capped.
+Overlord | Mythic | Attack | Attack | Slow charge then massive thunder blast; clear telegraph and burst downtime.
+Cryo Reactor | Mythic | Attack | Support | Slowing aura reduces enemy movement 12%; adjacent Attack turrets deal 6% more damage to slowed enemies.
+Holy Halo | Mythic | Attack | Special | Active skill grants team 2s invulnerability; boss mechanics are mitigated, not cancelled.
+Chrono Throne | Mythic | Special | Special | Enemies slow over time; active Rewind pushes enemies back a fixed path distance, reduced for bosses.
+Hive Queen | Mythic | Attack | Attack | Raises mini-drone swarm; active kamikaze damage counts toward its DPS budget.
+Leviathan | Mythic | Attack | Attack | Swallows normal enemies to stack power; boss interaction and total stacks are capped.
+Genesis Core | Mythic | Special | Special | Periodically adds star progress to the weakest turret; active summons at average board stars, with caps.
+Wyrm Engine | Mythic | Attack | Attack | Cone flame sweep burns enemies; active dragon dive along the path, with total burst budget.
+
+============================================================
+8. IMPLEMENTATION PRIORITIES
+============================================================
+
+PHASE 1 — CLASSIFICATION AND DATA
+- Update role metadata for the 14 re-roles listed above.
+- Ensure Support turrets have no direct attack projectile or hidden DPS.
+- Add explicit target rules, cooldowns, caps, and mode-specific descriptions to every Special.
+- Update deck filters and collection UI to use the new roles.
+
+PHASE 2 — SUPPORT READABILITY
+- Show orthogonal affected cells when a Support is selected.
+- Show the exact current buff value and number of eligible neighbours.
+- Display a small buff icon over affected turrets.
+- Add a cap indicator when another Support cannot increase the same buff category.
+- For diagonal Resonance Grid, use a visibly different shape from standard adjacency.
+
+PHASE 3 — MODE SAFETY
+- Add PvP control immunity windows and duration caps.
+- Add Co-op ally-target validation and clear owner/ally labels.
+- Prevent board effects from causing infinite merges, summons, mana, star growth, or permanent damage.
+- Test all effects with three shared Co-op lives and the shared-wave PvP rules.
+
+PHASE 4 — PLAYTEST MATRIX
+Test every rarity with:
+- 3 Attack / 1 Support / 1 Special.
+- 4 Attack / 1 Special.
+- 2 Attack / 2 Support / 1 Special.
+- 2 Attack / 1 Support / 2 Special.
+- 3 Attack / 2 Special.
+
+Run each composition in Solo, Co-op, and PvP. Track win rate, leak count, boss clear time, board occupancy, and buff value. Test at low, medium, and high star distributions; a Support that is fair at 1 star may become oppressive at 7 stars.
+
+============================================================
+9. DESIGNER'S FINAL CALL
+============================================================
+
+Adopt 40 Attack / 27 Special / 18 Support as the initial roster target:
+- Common: 9 / 4 / 2
+- Rare: 8 / 4 / 5
+- Epic: 9 / 8 / 5
+- Legendary: 9 / 8 / 5
+- Mythic: 5 / 3 / 1
+
+This fixes the biggest structural problem without turning the game into a passive aura simulator. Attack remains the largest single role. Special stays at 27 because merge randomness, economy, control, copying, and mode interaction are central to the genre. Support rises to 18 so a player can make a genuine deck-building choice about how to multiply, protect, and position their Attack core.
+
+The most important balancing rule is this: a Support should usually be worth about 15–25% of the DPS of the Attack group it actually buffs at 3–5 stars, and up to 25–35% at 7 stars in a well-built formation. If it cannot reach that value with 3–4 eligible neighbours, it will lose the deck-slot competition. If it exceeds that value with no positioning cost, it will become mandatory.
+
+Keep the visual fantasy of every turret. Re-role the mechanic, not the art. Use the 3/5/7-star milestones to add identity and decisions rather than simply multiplying every stat.
+
+============================================================
+SOURCES AND REFERENCE NOTES
+============================================================
+
+These sources support the public-facing mechanics described in section 1. The recommended role mix, balance budgets, and re-role decisions are original design recommendations for Turret Merge.
+
+1. MobyGames — Destiny Child: Defense War (game overview and match structure):
+https://www.mobygames.com/game/176430/destiny-child-defense-war/
+
+2. BlueStacks — Destiny Child: Defense War combat system and unit types:
+https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/combat-system-and-unit-types-en.html
+
+3. Random Dice Hub — Random Dice beginner guide (five-die deck, summon, merge, SP, modes):
+https://randomdicehub.com/guides/random-dice-beginner-guide/
+
+4. Random Dice Wiki — Dice mechanics (merge and pip/attack-rate mechanics; community-maintained):
+https://random-dice.fandom.com/wiki/Dice_Mechanics
+
+5. Random Dice Wiki.gg — General tips (support synergy, PvP offense, co-op role commitment; community-maintained):
+https://randomdice.wiki.gg/wiki/General_Tips
+
+6. Random Dice Wiki.gg — Game modes:
+https://randomdice.wiki.gg/wiki/Game_Modes
+
+END OF DOCUMENT
