@@ -65,4 +65,4 @@ Chủ game duyệt lúc 15:41 ngày 05/11 (đề xuất mục 6 của `docs/revi
 - `game/js/quai_pl.js`, `game/js/ten_moi.js`, `game/dist/*`
 - Thư mục này: `bao-cao.md`, `cong-cu/chup.py`, `anh/`
 
-Commit: (ghi ở dòng dưới sau khi đẩy)
+Commit đã đẩy lên `khoi-tao-du-an`: `138e3c1` (code + dist + báo cáo + ảnh).
