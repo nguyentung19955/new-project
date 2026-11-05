@@ -403,7 +403,8 @@ HU.gLuot = { // lướt tới: 3 bóng đầu sói đỏ mờ dọc đường đ
 };
 
 // ---- VỆ TINH (Mafdet): tia lam → tia + vòng ngắm trước khi trúng → GHÉP: mọi Vệ Tinh thức tỉnh, mỗi phát = 3 GIÁO TRỜI có tâm ngắm đỏ (không nổ lan) ----
-ATK.orbital = ['Small cyan bolt', 'Longer bolt + a target marker locks onto the enemy before impact', 'ON MERGE (all Orbitals): every shot calls 3 SKY LANCES with red reticles, staggered barrage (single-target hits)'];
+// (QA vàng-đỏ: Vệ Tinh là ụ ĐẶC BIỆT không bắn thường — chữ cũ tả đạn từng dạng không có thật; P.orbital.ban bên dưới không bao giờ chạy)
+ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merge two to call the strike', 'BOMBARDMENT (20s after a merge): a sky lance every 0.32s on a random enemy, 30 px blast'];
 P.orbital = () => {
   const sk = SKILLS.orbital, bg = sk.ban;
   sk.ban = function (G, B, T, E) {
@@ -539,7 +540,8 @@ HU.gXich = { ve(ctx, o, R) { const u = o.t / o.song; if (!o.Q.chet) { o.x1 = o.Q
   ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.5; R.anhGiua(ctx, R.cham1('#c77dff'), x1, y1, 30); veXich(ctx, o.x0, o.y0, x1, y1, 3.2, 7, '#e8c8ff', 1 - u * u, 6 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- PHÁO ĐỒNG BỘ (Cosmem): viên vàng → viên + sóng nhịp ở nòng (mọi Pháo Đồng Bộ đập cùng nhịp 1 s) → FULL SYNC: tia vàng tức thì hội tụ ----
-ATK.dongbo = ['Single gold pellet', 'SYNCED: pellet + gold sound-wave arcs at the muzzle; every Sync Cannon pulses on the same 1s beat', 'FULL SYNC: instant converging gold BEAM, gold ring + crit sparks'];
+// (QA vàng-đỏ: Pháo Đồng Bộ là ụ HỖ TRỢ không bắn — chữ cũ tả đạn/tia không có thật)
+ATK.dongbo = ['OFFLINE: no same-star Attack neighbour (no shots — Support)', 'SYNCED: 1–2 same-star Attack neighbours get +damage; pulses on a 1s beat', 'FULL SYNC: 3+ matched neighbours — the biggest +damage (5★: +fire rate too)'];
 P.dongbo = () => {
   const sk = SKILLS.dongbo, vt = sk.veThem;
   sk.ban = function (G, B, T, E) {

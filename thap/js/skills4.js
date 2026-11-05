@@ -404,12 +404,15 @@ Object.assign(MOC_RIENG, {
   nemesis: { 7: ['REAPER LEAP', 'Executions leap to the nearest enemy'] },
   nhatthuc: { 7: ['TOTAL ECLIPSE', 'Each swap: both modes 1.5s + ×4 ring blast'] },
   marionette: { 7: ['TWIN PUPPETS', 'Controls 2 enemies at once (4★+: big enemies too)'] },
+  // Forge không bắn → mốc chung '+20% speed / +25% effect / +30% effect' không làm gì; sao thật sự đổi số cộng dồn mỗi lần ăn (f)
+  loren: { 3: ['HOT COALS', 'Each feed +2 stacks (3★ food ×3)'], 5: ['BELLOWS', 'Each feed +3 stacks'], 7: ['MOLTEN CORE', 'Each feed +4 stacks'] },
 });
 Object.assign(GROW, {
   nemesis: ttSao('#d01e3a', ['SCALES', 'SCYTHE', 'VERDICT'], '1–3★ / 4–6★ / 7★: executions leap to a 2nd enemy'),
   nhatthuc: ttSao('#ffcc33', ['DUSK', 'CORONA', 'TOTAL ECLIPSE'], '1–3★ / 4–6★ / 7★: both modes at once on every swap'),
   marionette: ttSao('#a01848', ['STRINGS', 'GOLDEN HAND', 'TWIN PUPPETS'], '1–3★ / 4–6★ (big enemies) / 7★ (2 puppets)'),
   guongcong: ttSao('#bff6ff', ['MIRROR', 'TWIN PANES', 'SHARD HALO'], '1–3★ / 4–6★ / 7★: reflects ×2'),
-  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–14 / 15–39 / 40+ (hot shards hit 2 more)',
-    gd: (T) => { const n = T.lo || 0; return { s: n >= 40 ? 3 : n >= 15 ? 2 : 1, p: n / 60, v: [0.25, 2 / 3] }; } },
+  // (QA vàng-đỏ: ngưỡng cũ 15/40 cộng dồn từ bản Forge bắn — trần nay 15 → dạng 3 không bao giờ tới; 'hot shards' không còn)
+  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–4 / 5–14 / 15 (full: +60% to your best Attack turret)',
+    gd: (T) => { const n = T.lo || 0; return { s: n >= 15 ? 3 : n >= 5 ? 2 : 1, p: n / 15, v: [1 / 3, 1] }; } },
 });

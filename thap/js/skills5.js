@@ -79,7 +79,7 @@ HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu tr�
       d.cd -= dt * (1 + T.buf.toc);
       if (d.cd <= 0) {
         let M = null, best = 150; for (const E of dsMucTieu(B)) if (!E.chet) { const L = Math.hypot(E.x - d.x, E.y - d.y); if (L < best) { best = L; M = E; } }
-        d.cd = 0.5;
+        d.cd = M ? Math.max(0, d.cd + 0.5) : 0; // cộng dồn (đúng 2 phát/s ở mọi tốc độ khung hình); không có quái trong 150 px → chờ sẵn
         if (M) {
           G.dangBan = T; trung(M, dmg * (d.vang ? 3 : 1), { B, mau: d.vang ? '#ffd23f' : '#ffb070', phu: false, im: !d.vang && Math.random() < 0.5 });
           G.hu.push({ k: 'chich', t: 0, song: 0.12, x0: d.x, y0: d.y, x1: M.x, y1: M.y, vang: d.vang });
@@ -125,7 +125,7 @@ HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông �
 // =====================================================================================================
 // R3 · LEVIATHAN (leviathan) — Đỏ TC: bắn bọt nước nổ 30 px. Mỗi e s NUỐT 1 quái thường (không to, không trùm, GĐ1–2 không nuốt quái bay)
 //      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +4% sát thương, tối đa 100). 4★+: nuốt được quái to (×3 cộng dồn).
-//      CHỦ ĐỘNG "TIDAL BREATH" (3★+, hồi 35 s): tia nước quét DỌC đường 1.5 s, mỗi 0.25 s dmg×(4+0.1×cộng dồn), đẩy lùi 20 px.
+//      CHỦ ĐỘNG "TIDAL BREATH" (3★+, hồi 35 s): tia nước quét DỌC cả đường 1.4 s, mỗi quái trúng 1 lần dmg×(4+0.1×cộng dồn), đẩy lùi 20 px.
 //      PVP: như solo (không còn luật gửi quái).
 // =====================================================================================================
 SKILLS.leviathan = {
@@ -164,7 +164,7 @@ SKILLS.leviathan = {
     if (T.nap < 1 || T.sao < 3) return false;
     T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 2.4);
     const p = G.duong.find(q => q.ban === B.i) || G.duong[0];
-    G.hu.push({ k: 'thoThuy', t: 0, song: 1.5, T, B, p, tick: 0, dmg: dmgU(T) * (4 + 0.1 * (T.vuc || 0)), da: new Map() });
+    G.hu.push({ k: 'thoThuy', t: 0, song: 1.4, T, B, p, tick: 0, dmg: dmgU(T) * (4 + 0.1 * (T.vuc || 0)), da: new Map() });
     nhanU(T, 'TIDAL BREATH!', '#7fdcff', true); SND.gSongTho(); FX.sang(0.12, '#7fdcff');
     return true;
   },
@@ -207,16 +207,17 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
-HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ lõi về cổng trong 1.5 s; mỗi 0.25 s đánh quái ≤70 px quanh nó (mỗi quái ≤3 lần)
+HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ lõi về cổng trong 1.4 s (tới hết đường); mỗi 0.1 s đánh quái ≤70 px quanh nó — MỖI QUÁI TRÚNG ĐÚNG 1 LẦN ×(4+0.1×cộng dồn)
+  // (QA vàng-đỏ: bản cũ nhịp 0.25 s cách nhau ~173 px > tầm 2×82 → có quái lọt khe; tia hết 1.5 s trước khi tới ~80 px cuối đường → quái gần cổng không bị trúng)
   cap(G, o, dt) {
     if (!conTren(o.T)) return true;
     o.tick -= dt;
     const s = o.p.len * (1 - Math.min(1, o.t / o.song)); [o.x, o.y] = viTri(o.p, s);
     if (o.tick <= 0) {
-      o.tick = 0.25; G.dangBan = o.T;
+      o.tick += 0.1; G.dangBan = o.T;
       for (const E of dsMucTieu(o.B)) {
-        if (E.chet || Math.hypot(E.x - o.x, E.y - o.y) > 70 + E.d.co * 0.3) continue;
-        const n = o.da.get(E) || 0; if (n >= 3) continue; o.da.set(E, n + 1);
+        if (E.chet || o.da.has(E) || Math.hypot(E.x - o.x, E.y - o.y) > 70 + E.d.co * 0.3) continue;
+        o.da.set(E, 1);
         trung(E, o.dmg, { B: o.B, mau: '#bff4ff' }); E.s = Math.max(0, E.s - (E.trum ? 7 : 20));
       }
       FX.tiaLua(o.x, o.y, 4, '#dff8ff', 160, 8); FX.vong1(o.x, o.y, 8, 40, '#7fdcff', 0.22, 2);
@@ -331,7 +332,7 @@ SKILLS.ronglua = {
     T.phun = Math.max(0, (T.phun || 0) - dt);
     T.tick = (T.tick || 0) - dt * (1 + T.buf.toc) * (this.toc / 5);
     if (E && T.tick <= 0) {
-      T.tick = 0.2; T.phun = 0.3; T.banLan++;
+      T.tick = Math.max(0, T.tick + 0.2); T.phun = 0.3; T.banLan++; // cộng dồn: đúng 5 nhịp/s ở mọi tốc độ khung hình
       const gd = gdSao(T), a = this.goc(T) / 2, dmg = dmgU(T);
       for (const Q of dsMucTieu(B)) {
         if (Q.chet) continue;
@@ -440,9 +441,9 @@ themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (activ
 
 Object.assign(MOC_RIENG, {
   chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full)'], 5: ['QUICK BROOD', 'More drones, faster hatching'], 7: ['ROYAL BROOD', 'Every 5th drone is gold ×3'] },
-  leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks)'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
-  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap when full)'], 5: ['BLOOM', 'Neighbours +15% damage'], 7: ['SEED OF LIFE', 'Each raise also summons a free 1★'] },
-  ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
+  leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks) — starts at 4★'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
+  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap when full)'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'], 7: ['SEED OF LIFE', 'Each raise also summons a free 1★'] },
+  ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses (starts at 4★)'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
 });
 Object.assign(GROW, {
   chuato: { mau: '#ff6a2a', khongAnh: true, ten: ['NEST', 'HIVE', 'ROYAL HIVE'], dk: '1–3★ / 4–6★ (drones perch on neighbours) / 7★ ROYAL: every 5th drone gold ×3',
