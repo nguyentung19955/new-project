@@ -132,3 +132,23 @@ html body #wrap #the-mv.ot:has(> .cht-vong.cd:not([hidden])) > img.ot-mien { dis
 
 /* trang ụ › "đi cùng" (.up-the): ô ảnh 106×72 quá dẹt → phải phóng theo bề rộng, đầu chiếm 62–77 % (máy kiểm khung mặt ≤ 60 %). Ô vuông: cả đầu gọn trong ảnh. */
 html body .up-the img { height: auto !important; aspect-ratio: 1 / 1; }
+
+/* ───────── KHAY TRẬN gọn như DCDW (dcdw_khay_toigian.png — người dùng: "tương tự cái này cũng vậy") ─────────
+   Giá dưới ô = ngọc mana nhỏ + số (bỏ tấm giá/chip nền quanh từng thẻ); màu số giữ nghĩa cũ (đủ = trắng/xanh, thiếu = đỏ — tư vấn B).
+   Đã tối đa (LV5): thẻ nhỏ "MAX" (chữ) góc trên-trái, ẩn giá (không còn gì để trả). Thẻ chỉ huy: cùng kiểu giá. SOLO / CO-OP / PVP / ONLINE chung #bo-the. */
+html body #wrap #bo-the .the.ot > .gia, html.co-hud2 body #wrap #bo-the .the.ot > .gia, html.co-hud2.co-gia body #wrap #bo-the .the.ot > .gia,
+html body #wrap #the-mv.ot > .mv-gia, html.co-hud2 body #wrap #the-mv.ot > .mv-gia, html.co-hud2.co-gia body #wrap #the-mv.ot > .mv-gia {
+  background: none !important; background-image: none !important; border: 0 !important; border-image: none !important; box-shadow: none !important;
+  width: auto !important; min-width: 0 !important; left: 50% !important; right: auto !important; margin-left: 0 !important; translate: -50% 0 !important; transform: none !important;
+  padding: 0 !important; gap: 2px !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+html body #wrap #bo-the .the.ot > .gia img, html body #wrap #the-mv.ot > .mv-gia img {
+  display: block !important; position: static !important; flex: none; width: calc(12px * var(--ot-k)) !important; height: calc(12px * var(--ot-k)) !important;
+  content: url(../assets/h2_ngoc.png?v=0f7afd02) !important; margin: 0 !important; }
+html body #wrap #bo-the .the.ot > .gia b, html body #wrap #the-mv.ot > .mv-gia b {
+  font: 800 calc(13px * var(--ot-k))/1 Oxanium, sans-serif !important; text-shadow: 0 0 2px #000, 0 1px 1px #000, 1px 0 1px #000, -1px 0 1px #000 !important; }
+html body #wrap #the-mv.ot > .mv-gia img { width: calc(14px * var(--ot-k)) !important; height: calc(14px * var(--ot-k)) !important; }
+html body #wrap #the-mv.ot > .mv-gia b { font-size: calc(15px * var(--ot-k)) !important; }
+/* tối đa: ẩn giá, thẻ chữ MAX góc trên-trái ô (góc trên-phải = số ụ trên bàn) */
+html body #wrap #bo-the .the.ot.max > .gia { visibility: hidden !important; }
+html body #wrap #bo-the .the.ot.max::before { content: 'MAX'; position: absolute; z-index: 6; left: 11%; top: 9%; pointer-events: none;
+  font: 900 calc(11px * var(--ot-k))/1 Oxanium, sans-serif; letter-spacing: .3px; color: #ffd24a; text-shadow: 0 0 2px #000, 0 1px 1px #000, 1px 0 1px #000, -1px 0 1px #000; }
