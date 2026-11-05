@@ -80,6 +80,21 @@ const SIG = {
   veTren(ctx, R) { for (const m of this.ds) { const K = this.K[m.k]; if (K.ve) try { K.ve.call(this, ctx, m, R); } catch (e) { console.error(e); } } },
   veDuoi(ctx, R) { for (const m of this.ds) { const K = this.K[m.k]; if (K.duoi) try { K.duoi.call(this, ctx, m, R); } catch (e) { console.error(e); } } },
   conHu(o) { return G.hu.includes(o); },
+  // các góc rẽ của 1 làn: đỉnh, hướng vào gA, góc quay d (+ rẽ phải / − rẽ trái trên màn y-xuống), s tại đỉnh
+  gocRe(P) {
+    if (P._gocRe) return P._gocRe;
+    const ra = [];
+    for (let i = 1; i < P.segs.length; i++) {
+      const q = P.segs[i - 1], g = P.segs[i], gA = Math.atan2(q.dy, q.dx);
+      let d = Math.atan2(g.dy, g.dx) - gA; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+      if (Math.abs(d) > 0.01) ra.push({ x: g.x0, y: g.y0, gA, d, sJ: g.s0 });
+    }
+    return (P._gocRe = ra);
+  },
+  // ảnh khúc cua sig_m07_corner: trong ảnh dòng nước đi từ trái sang (hướng 0) rồi rẽ xuống (+90°); đỉnh tâm dòng ≈ (180, 46)/240×187
+  cua(ctx, q, f, a) { // rẽ trái = lật dọc = lật ngang + xoay thêm 180°
+    return this.k(ctx, 'sig_m07_corner', f, q.x, q.y, 240 * 0.29, { g: q.gA + (q.d < 0 ? Math.PI : 0), lat: q.d < 0, ax: 180 / 240, ay: 46 / 187, a });
+  },
 };
 
 // ===================================================== PHÁT HIỆN (đúng lúc kỹ năng nổ ra) =====================================================
@@ -239,9 +254,19 @@ SIG.K = {
         const o = m.o, u = Math.min(1, o.t / o.song), a = Math.min(1, o.t / 0.08, (1 - u) / 0.12);
         // dải nước đặt nối tiếp theo tâm đường (xoay theo hướng đoạn) từ lõi tới đầu sóng
         const s1 = P.len * (1 - u), nb = this.n('leviathan', 'breath'), buoc = 34;
+        // góc rẽ: KHÔNG đặt dải thẳng đè qua đỉnh góc (trước: 2 khối thẳng chồng lệch, tách đôi) → dùng ảnh khúc cua ChatGPT
+        // sig_m07_corner (4 khung mọc dần theo đầu sóng), xoay theo hướng làn / lật khi rẽ trái, vẽ đè lên chỗ nối
+        const gocs = this.gocRe(P), XA = 22;
         for (let s = P.len - 8, i = 0; s > s1 && i < 40; s -= buoc, i++) {
-          const [x, y, g] = viTri(P, s - buoc / 2), dau = s - buoc <= s1;
+          const sc = s - buoc / 2, dau = s - buoc <= s1;
+          if (!dau && gocs.some(q => Math.abs(sc - q.sJ) < XA)) continue;
+          const [x, y, g] = viTri(P, sc);
           this.k(ctx, 'sig_m07_breath', dau ? 1 + Math.floor(this.t * 12) % 2 : 3 + (Math.floor(this.t * 10) + i) % 3, x, y, buoc * 1.45, { g, a: a * (dau ? 0.9 : 1) });
+        }
+        for (const q of gocs) {
+          if (q.sJ > P.len - 8 || s1 > q.sJ + 16) continue; // đầu sóng chưa tới góc
+          const f = Math.min(3, Math.floor((q.sJ + 16 - s1) / 14));
+          this.cua(ctx, q, f, a);
         }
         // cổ rắn biển trồi lên cạnh lõi, há miệng phun
         const fn = Math.min(7, o.t / 0.35 * 7.99);

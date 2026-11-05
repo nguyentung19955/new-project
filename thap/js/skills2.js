@@ -867,7 +867,7 @@ SKILLS.cauvong = { // Máy Cầu Vồng (Yuna) — HỖ TRỢ (đợt vai trò):
     if (ms(T, 5)) dau.push(clamp(E.s - L - 30, 0, p.len - L)); // 5★ DOUBLE ARC
     for (const s0 of dau) {
       const pts = []; for (let s = s0; s <= s0 + L; s += 8) pts.push(viTri(p, s));
-      G.hu.push({ k: 'cauvong', t: 0, song: 6 + 0.5 * T.sao, pts, k2: 0.05, cham: ms(T, 7) ? 0.10 : 0, pvp: false, T, B });
+      G.hu.push({ k: 'cauvong', t: 0, song: 6 + 0.5 * T.sao, pts, p, s0, L, k2: 0.05, cham: ms(T, 7) ? 0.10 : 0, pvp: false, T, B });
     }
     nhanU(T, 'RAINBOW', '#ff6ad5', true);
     return true;
@@ -1057,7 +1057,83 @@ HU.min = { // mìn trên đường
     if (Math.sin(o.t * 6 + o.x) > 0.3) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 22 : 12); ctx.globalCompositeOperation = 'source-over'; }
   },
 };
+// Dải ảnh PNG chạy LIỀN dọc làn (qua góc rẽ không tách đôi): đoạn thẳng = ảnh lặp theo chiều dài; góc rẽ = khúc cong
+// (quạt các lát ảnh mỏng xoay quanh tâm bên trong góc, bán kính trong r0) → ray/dải màu uốn liền, không hở, không chồng sáng.
+// Toạ độ ảnh = s (độ dài trên đường) × k + lệch → không bắt đầu lại từ mỗi đoạn, không lật ảnh ở góc.
+// Vẽ đục vào canvas phụ (o._cv) rồi dán 1 lần với độ mờ → chỗ nối không sáng gấp đôi. Trả false nếu thiếu dữ liệu.
+function veDaiDuong(ctx, o, img, P, sA, sB, h, lech, alpha, r0) {
+  if (!(sB > sA)) return true;
+  r0 = r0 == null ? 8 : r0;
+  const m0 = ctx.getTransform(), sc = Math.max(1, Math.hypot(m0.a, m0.b)), k = img.height / h, IW = img.width;
+  // khung bao (tính 1 lần cho mỗi vệt — vệt không đổi chỗ)
+  if (!o._bb || o._sc !== sc) { o._khoa = null;
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; const pad = h + r0 + 4;
+    const them = (x, y) => { x0 = Math.min(x0, x - pad); y0 = Math.min(y0, y - pad); x1 = Math.max(x1, x + pad); y1 = Math.max(y1, y + pad); };
+    const sMax = o.s0 != null && o.L != null ? o.s0 + o.L : sB;
+    them(...viTri(P, o.s0 != null ? o.s0 : sA)); them(...viTri(P, sMax));
+    for (const g of P.segs) if (g.s0 > (o.s0 != null ? o.s0 : sA) && g.s0 < sMax) them(g.x0, g.y0);
+    o._bb = [x0, y0, x1 - x0, y1 - y0];
+    const cv = o._cv || (o._cv = document.createElement('canvas'));
+    cv.width = Math.ceil(o._bb[2] * sc); cv.height = Math.ceil(o._bb[3] * sc); o._sc = sc;
+  }
+  const [bx, by, bw, bh] = o._bb, cv = o._cv, S = o._sc;
+  const khoa = Math.round(lech / 3) + '|' + Math.round(sB * 2); // ảnh trôi 60 px/s → vẽ lại canvas phụ khi lệch ≥ 3 px ảnh (≈1 px màn) hoặc vệt dài thêm
+  if (o._khoa === khoa) return dan();
+  o._khoa = khoa; lech = Math.round(lech / 3) * 3;
+  const c = cv.getContext('2d');
+  c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cv.width, cv.height);
+  const tx = (s) => (((s * k + lech) % IW) + IW) % IW;
+  const khung = (x, y, g) => { const co = Math.cos(g), si = Math.sin(g); c.setTransform(S * co, S * si, -S * si, S * co, S * (x - bx), S * (y - by)); };
+  const gocs = P.segs.map((g, i) => { // góc rẽ ở đầu đoạn i (i>0): góc quay, cắt bớt t mỗi bên
+    if (i === 0) return null;
+    const q = P.segs[i - 1], gA = Math.atan2(q.dy, q.dx), gB = Math.atan2(g.dy, g.dx);
+    let d = gB - gA; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+    if (Math.abs(d) < 0.01) return null;
+    const th = Math.abs(d), t = Math.min((r0 + h / 2) * Math.tan(th / 2), q.len / 2, g.len / 2);
+    return { gA, d, th, t, sJ: g.s0, x: g.x0, y: g.y0, sg: Math.sign(d) };
+  });
+  // đoạn thẳng
+  P.segs.forEach((g, i) => {
+    const ta = gocs[i] ? gocs[i].t : 0, tb = gocs[i + 1] ? gocs[i + 1].t : 0;
+    let a0 = Math.max(sA, g.s0 + ta), a1 = Math.min(sB, g.s0 + g.len - tb);
+    if (a1 <= a0) return;
+    const goc = Math.atan2(g.dy, g.dx);
+    khung(g.x0, g.y0, goc);
+    for (let s = a0; s < a1 - 1e-3;) {
+      const x = tx(s), cw = Math.min(IW - x, (a1 - s) * k), w = cw / k, cuoi = s + w >= a1 - 1e-3;
+      c.drawImage(img, x, 0, Math.max(0.5, cw), img.height, s - g.s0, -h / 2, w + (cuoi ? 0 : 0.6), h);
+      s += w;
+    }
+  });
+  // khúc cong ở góc rẽ: quạt lát ảnh quanh tâm C (bên trong góc), cùng hướng dải (không lật)
+  for (const G2 of gocs) {
+    if (!G2) continue;
+    const f0 = Math.max(sA, G2.sJ - G2.t), f1 = Math.min(sB, G2.sJ + G2.t);
+    if (f1 <= f0) continue;
+    const ca = Math.cos(G2.gA), sa = Math.sin(G2.gA), nIx = -sa * G2.sg, nIy = ca * G2.sg, R0 = r0 + h / 2;
+    const cx = G2.x + nIx * R0 - ca * G2.t, cy = G2.y + nIy * R0 - sa * G2.t;
+    const n = Math.max(2, Math.ceil(G2.th * (f1 - f0) / (2 * G2.t) / 0.045)), ds = (f1 - f0) / n;
+    for (let j = 0; j < n; j++) {
+      const s = f0 + j * ds, psi = G2.gA + G2.d * (s - (G2.sJ - G2.t)) / (2 * G2.t);
+      khung(cx, cy, psi);
+      const x = tx(s + ds / 2), cw = Math.max(0.6, Math.min(IW - x, ds * k)), w = (r0 + h) * G2.th * ds / (2 * G2.t) + (j === n - 1 ? 0.2 : 0.8);
+      c.drawImage(img, x, 0, cw, img.height, 0, -G2.sg * R0 - h / 2, w, h);
+    }
+  }
+  return dan();
+  function dan() {
+    const ga = ctx.globalAlpha, co = ctx.globalCompositeOperation;
+    ctx.globalAlpha = alpha; ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(cv, bx, by, bw, bh);
+    ctx.globalAlpha = ga; ctx.globalCompositeOperation = co;
+    return true;
+  }
+}
 HU.cauvong = { // cầu vồng trên đường
+  veLien(ctx, o, R, dai, a) { // dài hiện tăng dần 0,5 s đầu (đầu vệt mọc, quẹo mượt qua góc)
+    const h = 22, sE = o.s0 + o.L * Math.min(1, o.t / 0.5);
+    veDaiDuong(ctx, o, dai, o.p, o.s0, Math.max(o.s0 + 8, sE), h, R.t * 60, a * 0.85);
+  },
   duoi: true,
   cap(G, o) {
     for (const E of G.quai) {
@@ -1076,6 +1152,11 @@ HU.cauvong = { // cầu vồng trên đường
     ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     const n = Math.max(2, Math.floor(o.pts.length * Math.min(1, o.t / 0.5)));
     const dai = R.img('hu_cauvong'); // dải cầu vồng ChatGPT (S5), lặp ngang dọc đường
+    if (dai && o.p) { // vẽ LIỀN qua góc rẽ: từng đoạn thẳng + khúc cong (quạt ảnh) ở góc, toạ độ ảnh nối tiếp theo chiều dài đường
+      this.veLien(ctx, o, R, dai, a);
+      if (Math.random() < 0.3) { const q = pick(o.pts); FX.hat1('lua', q[0] + rnd(-10, 10), q[1] + rnd(-10, 10), 0, -20, 0.5, 5, pick(mau)); }
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.lineCap = 'butt'; return;
+    }
     if (dai) {
       const h = 22, sw = 8.6 * dai.height / h; ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a * 0.85;
       const m0 = ctx.getTransform();
