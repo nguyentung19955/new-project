@@ -1,0 +1,242 @@
+TURRET MERGE — 85-UNIT TURRET HEAD ART DIRECTION BIBLE
+Version 1.0 | English | Source: supplied 1500 x 864 pilot/head roster image
+
+PURPOSE
+Rebuild the turret heads so a player can identify rarity from the turret itself, identify its pilot through a secondary visual signature, and identify its gameplay function through a distinct top-down silhouette. The design is for 48 px in-game readability, round board footprint, right-pointing weapon axis, thick dark outlines, and chunky stylized sci-fi metal. Rarity follows the supplied roster, not any incidental colors already present in the current heads. The supplied image is a compact contact sheet: pilot color/motif notes below are visual interpretations at contact-sheet resolution, not claims about exact costume hex codes.
+
+A. RARITY COLOR AND SHAPE SYSTEM
+
+GLOBAL MATERIAL PALETTE (shared across ALL rarities)
+  Body highlight / white steel: #F2F5F7
+  Body base / light steel:   #C9D3DB
+  Body midtone:             #A0AFBC
+  Body shadow:              #687684
+  Deep recess:              #303845
+  Thick outline:            #151A25
+  Universal neutral rivet:  #DCE3E8
+  Keep the neutral steel family visually dominant even for MYTHIC.
+
+Rarity   Main body      Rarity trim  Rarity glow  Dark trim     Approx visible area allocation
+COMMON   #DCE5EC       #AEBBC6     #EAF3F8     #657585       76% steel / 12% neutral trim / 4% neutral light / 8% pilot accent
+RARE     #C9D3DB       #278BEE     #6FD2FF     #1751A0       67% steel / 19% blue trim / 6% blue glow / 8% pilot accent
+EPIC     #C9D3DB       #8C46DE     #D19BFF     #54228E       62% steel / 22% purple trim / 8% purple glow / 8% pilot accent
+LEGENDARY#D2D8DD       #E6AE36     #FFE58B     #9C681C       57% steel / 25% gold trim / 10% gold glow / 8% pilot accent
+MYTHIC   #CBD3DA       #E1444D     #FF7B75     #8F1F36       53% steel / 27% crimson trim / 12% crimson glow / 8% pilot accent
+
+Percentages are target screen-visible color areas (exclude transparent background, black outlines and dark recesses), with ±3 percentage points tolerance. Glow refers to bright painted accents INSIDE the sprite, not broad bloom halos. Pilot accent 8% is a hard upper limit, not a quota. In a neutral or low-saturation pilot, use only 3–5%. Avoid an all-red common, all-purple rare, or all-gold mythic.
+
+VALUE AND HIERARCHY
+  1. All rarities use the same light steel base. Rarity hue appears at recurring standardized sites: outer rim, barrel collar, raised fins, connector ribs, small gem sockets.
+  2. Preserve light/dark separation: steel highlights brighter than colored trims; recesses dark; only 1–2 glow points at COMMON/RARE.
+  3. Put the rarity accent on the exterior perimeter and front muzzle where it survives downsampling. Keep the pilot accent INBOARD (core, grip, rear cartridge, tiny emblem, internal fluid, small optics).
+  4. At a glance, the eye must first see WHITE / BLUE / PURPLE / GOLD / RED, then the pilot signature, then the weapon type. If the pilot color conflicts with rarity, reduce pilot area and saturation, never recolor the rarity ring.
+  5. Do not use magenta #FF00FF anywhere on the turret: it is the exact background/key color.
+
+ORNAMENT / SILHOUETTE RULES
+  COMMON: 1 main body + 1 functional nozzle/skill shape; 0 decorative wings; 0–2 rivets; one simple collar; no colored rarity gem. Rounded compact outline; no ornate fins. Common can have a small skill-colored pilot indicator.
+  RARE: 1–2 added functional panels; 2 blue perimeter strips or brackets; at most 1 small blue gem and 2 luminous ticks. Keep body simple and recognizable.
+  EPIC: 2–3 raised modules; segmented purple outer ring; 2–4 purposeful fins/teeth; at most 2 purple gems and 3 light nodes. Moderate silhouette layering.
+  LEGENDARY: 3–4 layered components; gold crown/crossbar/ray motif chosen for the SKILL, not copied across every turret; 4–6 silhouette details; 1 focal gold gem + 2–4 tiny lights. Gold is metallic edging, not yellow paint over the whole body.
+  MYTHIC: 4–6 nested components; asymmetric or radial signature extensions; 6–9 bold silhouette features; 1 crimson focal seal + up to 5 tiny crimson nodes. Ornate but never visually noisy. Red armor remains trim/plate accents, not the entire shell.
+
+GLOW / GEM RULES
+  Rarity glow color is fixed by tier. Skill energy can have a different hue ONLY as a tiny internal core/beam/chemical (counted as pilot/skill accent). The largest luminous rim and perimeter indicator MUST use rarity glow. COMMON uses near-white light, not red or blue rarity lights. RARE has blue lights; EPIC purple; LEGENDARY warm gold; MYTHIC crimson. No exterior bloom, no blurry gradients, no detached VFX, no large aura. Glow is hard-edged cel shading at 48 px.
+
+PILOT BLENDING ALGORITHM
+  Choose ONE pilot anchor color and ONE signature motif from the contact sheet. Apply the anchor to an internal 3–8% area, such as a fluid reservoir, optic, fabric-wrap strip, or pilot badge. Translate the motif into functional metal geometry (goggles -> lens ring; clock -> indexed dial; hair spikes -> fins; wings -> side vanes; serpent -> coiled nozzle). Pilot motifs must never add random nonfunctional decorations. If the pilot's main color equals a DIFFERENT rarity tier (e.g. a red-haired COMMON), constrain it to one internal detail; if it equals the current rarity, still preserve the neutral body. Use colored skill fluid in an enclosed cavity, not on the outer frame. Prefer shape recognition over hue when conflicts arise.
+
+48 PX PRODUCTION TEST
+  Master draw at 192 x 192 (4x target), reduce to 48 x 48 using nearest-neighbor for silhouette checking, then inspect at 100% and 200%. Functional right-facing barrel axis is mandatory for weapons; support/auras/portals use a short right-pointing output port or a right-oriented opening rather than inventing a gun. Main silhouette must fit within a circular 40–44 px footprint, with at most 2 px deliberate projection for long guns. Minimum critical feature 2 px at game scale; no 1 px-only identity cues. Limit to 3 value groups per material and use a 2–3 px dark outline at 48 px where possible. Use a fixed light from upper-left. Rarity passes only if the turret is correctly classified without its card border or pilot portrait. Pilot passes only if a viewer can match a turret to its portrait among similar skills. Skill passes only if silhouettes remain distinguishable in grayscale.
+
+ART REVIEW GATES
+  Gate 1: rarity recognition (5/5 categories at 48 px in shuffled blind test).
+  Gate 2: pilot matching (at least 80% correct within each tier, without names).
+  Gate 3: skill recognition (at least 80% correct among similar weapon classes).
+  Gate 4: production alignment (center, 2x2 grid consistency, right-facing axis, flat exact magenta key, no text).
+  Gate 5: silhouette separation (no near-identical silhouette for two heads in same rarity).
+
+B. COMPLETE 85-UNIT REDESIGN ROSTER
+Each entry: Name | Rarity | Observed pilot signature | Skill silhouette | Final art directive
+01. Cannon | COMMON | Pilot: Cobalt-blue hair, orange scarf, brass cannon gear | Silhouette: Short oversized shell barrel with recoil collar | Design: Silver stub cannon, brass scarf-wrap collar and a squat blast chamber; one amber shell port.
+02. Dice Gun | COMMON | Pilot: Long violet-black hair, playful pink accents, white-red dice | Silhouette: Six-sided dice drum and short muzzle | Design: Silver dice-cylinder gun with six black pips, a restrained pink pilot stitch and a red die indicator.
+03. Gatling | COMMON | Pilot: White swept hair, orange goggles, red-brown mechanic outfit | Silhouette: Six clustered rotary barrels | Design: Plain silver six-barrel rotor with tiny copper mechanic bolts and a red rear bearing.
+04. Scatter | COMMON | Pilot: Blonde hair, white-gold costume, warm orange ornament | Silhouette: Four-way splayed muzzle cluster | Design: Silver four-nozzle fan head with one amber central hinge and tiny cream-gold pilot filigree.
+05. Revolver | COMMON | Pilot: Teal swept hair, gold-brown jacket, brass gun motif | Silhouette: Six-chamber revolver cylinder | Design: Chunky silver revolver drum with one exposed brass chamber and teal grip marker.
+06. Frost | COMMON | Pilot: White-silver hair, blue ice armor, cyan crystals | Silhouette: Crystal-tipped cold barrel | Design: Pale steel freeze nozzle, small faceted ice prong and one icy-blue frost vent.
+07. Venom | COMMON | Pilot: Dark hair and black outfit, neon-lime toxin equipment | Silhouette: Toxin reservoir and twin injector nozzles | Design: Silver compact sprayer with a small lime toxin tank and two needle-like forward injectors.
+08. Mana Core | COMMON | Pilot: Indigo-violet hair, purple crystal jewelry and robes | Silhouette: Non-firing crystal generator | Design: Silver circular generator with a single violet crystal in its center and no combat barrel.
+09. Sniper | COMMON | Pilot: Shaved dark hair, muted purple uniform, green scope | Silhouette: Long narrow precision rifle barrel | Design: Silver slim long barrel with a small olive-green sight and one dark-violet stock mark.
+10. Tesla | COMMON | Pilot: Gold-brown wild hair, bronze electrical gear, yellow sparks | Silhouette: Twin lightning prongs and coil | Design: Silver paired electrodes around a compact brass induction coil, tiny yellow arc gap.
+11. Guillotine | COMMON | Pilot: Bald veteran, gray beard, dark red coat, execution blade | Silhouette: Forward guillotine blade jaw | Design: Silver cleaver-jaw head with one crimson pilot grip inset, stark open cutting slot.
+12. Breaker | COMMON | Pilot: Red hair, black-red armor, orange impact device | Silhouette: Heavy armor-cracking chisel muzzle | Design: Silver blunt chisel barrel, tiny red grip tape and one orange fracture tooth.
+13. Hammer | COMMON | Pilot: White beard, orange goggles, rugged brown armor | Silhouette: Boxy striking piston head | Design: Silver twin-piston hammer face, a small copper goggle-ring accent and visible return springs.
+14. Iron Fist | COMMON | Pilot: Silver-pink hair, red-black martial gauntlets | Silhouette: Circular punching ring emitter | Design: Steel knuckle-ring with four blunt segments and a small red fist emblem.
+15. Time Bomb | COMMON | Pilot: Aqua hair, cream costume, gold clock ornament | Silhouette: Clock-face sticky-bomb launcher | Design: Silver round timed charge drum, small black clock hands and a single pale-gold fuse dot.
+16. Mana Doubler | RARE | Pilot: Aqua-blue hair, pale blue outfit, luminous cyan gem | Silhouette: Paired mana chambers with merge bridge | Design: Silver twin crystal canisters joined by cobalt trim and a tiny cyan pilot-gem bridge.
+17. Ice Blade | RARE | Pilot: Black-purple hair, icy-blue sword and dark robe | Silhouette: Forward ice sword edge | Design: Steel sword-spine turret with blue rarity rails and a sharp pale-cyan blade tip.
+18. Mimic | RARE | Pilot: Pink-violet hair, multicolor prismatic costume | Silhouette: Shape-shifting faceted copy cube | Design: Silver rotating mimic cube, cobalt frame corners and one tiny rainbow pilot facet.
+19. Crit Antenna | RARE | Pilot: Deep brown skin, red armor, circular red signal gear | Silhouette: Tall circular crit dish and red reticle | Design: Steel radar dish with blue edge marks, slim crimson pilot reticle and forward signal pin.
+20. Teleporter | RARE | Pilot: Blue hair, purple-blue portal machinery | Silhouette: Two offset portal rings | Design: Twin steel portal hoops with blue rarity edge lights and violet pilot inner swirls.
+21. Radar | RARE | Pilot: White-silver hair, teal goggles, green radar display | Silhouette: Circular scanning radar screen | Design: Silver disc with cobalt scan ticks, a tiny emerald pilot sweep and a right-facing sensor nub.
+22. Drone Bay | RARE | Pilot: White hair, black-gold uniform, yellow drone accents | Silhouette: Open drone hangar and mini launch rails | Design: Silver octagonal drone dock with blue rim rails, two small amber pilot launch clamps.
+23. Blender | RARE | Pilot: Red hair, violet-black clothes, colorful mixing flask | Silhouette: Visible spiral mixing chamber | Design: Steel bowl-shaped rotor with blue guide fins and a small purple-magenta mixing core.
+24. Energy Cannon | RARE | Pilot: Chestnut-brown hair, gold-violet coat, cyan energy cannon | Silhouette: Large circular energy muzzle | Design: Steel cannon with blue concentric rings and a small warm-gold pilot power cell.
+25. Laser | RARE | Pilot: Short dark hair, red-black techwear, magenta laser gear | Silhouette: Long narrow continuous-beam lens | Design: Silver needle-beam barrel with blue side rails and a tiny hot-pink pilot focusing lens.
+26. Chiller | RARE | Pilot: White spiky hair, icy-blue jacket and goggles | Silhouette: Wide cryo fan rotor | Design: Steel circular cold-fan head, blue chill fins and one cyan snowflake pilot stamp.
+27. Mortar | RARE | Pilot: Bald white-bearded soldier, olive-yellow armor | Silhouette: Upward angled large shell tube | Design: Silver squat mortar pot with blue ring collar, tiny olive pilot ammo canister.
+28. Amplifier | RARE | Pilot: Gray-white hair, violet clothing, purple speaker gear | Silhouette: Horn-shaped sound amplifier | Design: Silver right-facing megaphone with blue resonance ribs and a violet pilot speaker diaphragm.
+29. Toxic Pool | RARE | Pilot: Brown curls, green slime stains, lime flask | Silhouette: Wide spill nozzle and slime tank | Design: Steel low spill spout with blue tank braces and a tiny lime pilot slime window.
+30. Cooldown Horn | RARE | Pilot: Blonde hair, cream-gold costume, hourglass and horn | Silhouette: Trumpet horn plus hourglass core | Design: Silver trumpet-shaped cooldown horn with blue mouth ring and a tiny amber hourglass bead.
+31. Mana Leech | RARE | Pilot: Orange-blonde hair, purple armor, dark red claw device | Silhouette: Paired siphon fangs and intake hose | Design: Steel twin-fang siphon with blue tube clamps and a small ruby-violet pilot intake.
+32. Mine Layer | RARE | Pilot: Pink hair, red-gold goggles, yellow equipment | Silhouette: Rear mine magazine and drop hatch | Design: Steel mine cassette with blue rim and two ochre pilot hazard studs; right-side deploy port.
+33. Berserker | EPIC | Pilot: Flame-red hair, black-red armor, crimson demonic motifs | Silhouette: Spiked rapid-fire muzzle and rage core | Design: Silver armored rotary head with purple rarity spines and a contained crimson rage eye.
+34. Blizzard | EPIC | Pilot: Silver-blue hair, blue winter gear, snowflake accessory | Silhouette: Fourfold snowflake freeze turbine | Design: Steel snowflake fan with purple hub tracery and icy-cyan pilot crystal blades.
+35. Cloner | EPIC | Pilot: Dark skin, dark outfit, orange-yellow construction module | Silhouette: Dual mirrored fabrication arms | Design: Steel dual printer arms with purple cloning rails and amber pilot construction cassette.
+36. Chain Link | EPIC | Pilot: Dark-purple hair, black-violet armor, lilac chain jewel | Silhouette: Interlocking link nodes | Design: Steel paired chain-loop emitters with purple connectors and a tiny violet pilot gem.
+37. Clamp | EPIC | Pilot: Pink-red hair, goggles, black-red clamp gear | Silhouette: Two opposing mechanical clamp jaws | Design: Steel gripping jaws with purple actuator ribs and a small red pilot pressure gauge.
+38. Cleanser | EPIC | Pilot: Blue hair, pale outfit, white-blue cleanser device | Silhouette: Spray nozzle and purifying filter | Design: Silver cleansing pump with purple filter ring and a small white-cyan pilot wash capsule.
+39. Shield Gen | EPIC | Pilot: Red hair, brown armor, cyan shield disc | Silhouette: Broad forward barrier projector | Design: Steel hex shield emitter with purple rim nodes and cyan pilot barrier core.
+40. Mystery Box | EPIC | Pilot: Blue hair, ornate gold clothing, question-mark crate | Silhouette: Closed mystery crate with split lid | Design: Steel question-crate head with purple locks and a tiny gold pilot question seal.
+41. Star Lift | EPIC | Pilot: Black hair, gold star accessories, navy-purple outfit | Silhouette: Rising star elevator spindle | Design: Steel star-lift platform with purple elevation rails and a small gold pilot star at apex.
+42. Reaper Pillar | EPIC | Pilot: White beard, black hood, toxic-green spectral flames | Silhouette: Tall reaper totem and scythe arc | Design: Steel execution pillar with purple ribbing and one small ghost-green pilot scythe mark.
+43. Scrambler | EPIC | Pilot: Lime-green hair, black-purple clothing, violet swirl | Silhouette: Two circling shuffle arrows | Design: Steel dual-arrow vortex wheel with purple arrow tracks and a tiny lime pilot lock pin.
+44. Overclock | EPIC | Pilot: Black-white hair, orange tech suit, clockwork sparks | Silhouette: Gear-driven overclock turbine | Design: Steel gear turbine with purple speed fins and a small orange pilot clock pinion.
+45. Fifth Shot | EPIC | Pilot: Brown-pink hair, red-gold cap, teal five-hole gun | Silhouette: Five-index chamber and explosive fifth port | Design: Steel five-step barrel wheel with purple index tabs and one teal pilot chamber window.
+46. Storm Gun | EPIC | Pilot: Ash-blonde hair, blue-gray coat, violet storm coils | Silhouette: Twin lightning emitters and storm rotor | Design: Steel lightning rotor with purple conduction ribs and a small electric-blue pilot arc tip.
+47. Lighthouse | EPIC | Pilot: Dark hair, red-black coat, orange lantern motif | Silhouette: Beacon lantern with orbiting summon ports | Design: Steel miniature lighthouse with purple orbit slots and warm-orange pilot lantern glass.
+48. Ricochet | EPIC | Pilot: Violet-pink hair, lime visor, neon-green disc | Silhouette: Spinning rebound disc with angled fins | Design: Steel angled disc launcher with purple bearing ring and a tiny lime pilot bounce chevron.
+49. Combo Core | EPIC | Pilot: Pink hair, black-purple clothing, magenta combo rings | Silhouette: Layered combo counter rings | Design: Steel triple-ring combo rotor with purple count marks and one pink pilot central pip.
+50. Chrono Lock | EPIC | Pilot: White hair, black-gold armor, gold clock badge | Silhouette: Clock hand clamp around frozen target | Design: Steel clock-lock disc with purple stop teeth and tiny brass pilot clock hands.
+51. Lone Ace | EPIC | Pilot: Black hat, dark gold outfit, playing-card ace | Silhouette: Single high-caliber card-shaped barrel | Design: Steel solitary ace-card cannon with purple suit pip and a small cream pilot card face.
+52. Focus Lens | EPIC | Pilot: Orange hair, goggles, bright teal optics | Silhouette: Large telescoping precision lens | Design: Steel concentric optical tube with purple focusing rails and teal pilot lens glass.
+53. Signal Jammer | EPIC | Pilot: Gray hair, red tech coat, red interference device | Silhouette: Crossed radio antennas and static disc | Design: Steel jammer disc with purple interference vanes and a small red pilot warning diode.
+54. Bounty Beacon | EPIC | Pilot: Violet hair, gold-brown outfit, green bounty coin | Silhouette: Coin-shaped bounty beacon and tagger | Design: Steel bounty marker with purple targeting teeth and a tiny green-gold pilot coin.
+55. Purifier | LEGENDARY | Pilot: Purple hair, white-gold ceremonial attire, sunburst halo | Silhouette: Radiant holy purifier lance | Design: Silver-gold sun-lance with gold rarity rays, tiny violet pilot jewel and white radiant center.
+56. Sync Cannon | LEGENDARY | Pilot: Violet-black hair, purple headphones, cyan tech jewelry | Silhouette: Twin synchronized linked muzzles | Design: Steel paired sync barrels in gold harness with violet pilot timing gem and cyan beat tick.
+57. Railgun | LEGENDARY | Pilot: Curly brown hair, purple coat, electric-blue railgun | Silhouette: Long cross-axis rail launcher | Design: Steel gold-trim cross-rail gun with one blue pilot accelerator strip and visible orthogonal guide.
+58. Merge King | LEGENDARY | Pilot: White-blonde hair, royal cream clothing, purple-gold crown | Silhouette: Crowned central merge prism | Design: Silver royal merge hub with gold crown prongs and a small purple pilot king gem.
+59. Twin Maker | LEGENDARY | Pilot: Dark skin, braided dark hair, navy-gold costume, twin blue orbs | Silhouette: Symmetrical double fabrication cradles | Design: Steel mirrored twin pods linked by gold bridge, two small cyan pilot birth cores.
+60. Star Breaker | LEGENDARY | Pilot: Pale hair, navy-gold outfit, star-shaped golden weapon | Silhouette: Heavy star-shaped breaker jaws | Design: Silver star-crusher with gold five-point teeth and a small blue pilot impact notch.
+61. Copycat | LEGENDARY | Pilot: Silver hair, violet-black outfit, cyan hologram copy | Silhouette: Two nested duplicate frames | Design: Steel dual-image duplicator with gold frame corners and a tiny cyan pilot ghost outline.
+62. Star Cannon | LEGENDARY | Pilot: Dark hair, gold outfit, star badge | Silhouette: Five-point star cannon muzzle | Design: Steel five-point muzzle encased in gold star frame, one amber pilot star jewel.
+63. Mech Wolf | LEGENDARY | Pilot: Green hair, dark suit, gray wolf mask | Silhouette: Mechanical wolf head with bite jaws | Design: Silver wolf-jaw mech with gold brow guards and a small jade pilot eye.
+64. Evolver | LEGENDARY | Pilot: Pink-red hair, green growth outfit, lime leaf emblem | Silhouette: Growing leaf helix and evolving chamber | Design: Silver evolution pod with gold growth rings and a compact leaf-green pilot sprout.
+65. Rainbow | LEGENDARY | Pilot: Orange-brown hair, purple-gold armor, prismatic beam | Silhouette: Faceted prism beam nozzle | Design: Silver gold-braced prism barrel with a thin seven-color pilot light line only inside lens.
+66. Wall Projector | LEGENDARY | Pilot: Dark hair, black-orange suit, glowing orange screen | Silhouette: Wide planar wall emitter | Design: Steel horizontal shield-wall projector with gold side pillars and orange pilot grid slit.
+67. Orbital | LEGENDARY | Pilot: Dark outfit, orange visor, blue satellite gear | Silhouette: Satellite hub with four solar panels | Design: Silver orbital cross with gold antenna tips and a small blue pilot solar-cell center.
+68. Hydra | LEGENDARY | Pilot: Bald pilot, dark green armor, green serpent insignia | Silhouette: Three serpent-head firing nozzles | Design: Steel triple hydra necks with gold collars and small jade pilot fang eyes.
+69. Nine-Tail | LEGENDARY | Pilot: Silver hair, warm red-gold attire, orange fox-fire | Silhouette: Nine fanned fox-tail exhausts | Design: Silver nine-tail fan nozzle with gold tail roots and tiny orange pilot foxfire cores.
+70. Pandora Vault | LEGENDARY | Pilot: Dark skin, gray hair, violet-gold jewelry, ornate chest | Silhouette: Six-chamber sealed spell vault | Design: Steel six-lock vault wheel with gold sealwork and a small violet pilot central sigil.
+71. Resonance Grid | LEGENDARY | Pilot: Aqua hair, cyan geometric jewelry, blue crystal grid | Silhouette: Diagonal four-node resonance lattice | Design: Silver diamond lattice with gold vertex caps and small turquoise pilot resonator lines.
+72. Nemesis | LEGENDARY | Pilot: Pale lavender hair, red-black attire, judgment scales | Silhouette: Balanced judgment scale with execution blade | Design: Steel judgment-scale turret with gold beams and one red pilot verdict gem.
+73. Eclipse | LEGENDARY | Pilot: Teal-dark hair, gold-black celestial attire, solar glow | Silhouette: Half-sun half-moon circular muzzle | Design: Steel eclipse disc with gold solar rays and a small teal pilot crescent highlight.
+74. Scrap Forge | LEGENDARY | Pilot: Green hair, orange industrial armor, scrap machinery | Silhouette: Feeding jaws and molten forge furnace | Design: Steel scrap-eating forge with gold jaw hinges and orange pilot molten slot.
+75. Mirror Gate | LEGENDARY | Pilot: Purple-black hair, pale blue crystal costume | Silhouette: Two facing mirror portal panels | Design: Silver twin mirror portals in gold frames with pale-cyan pilot reflection edges.
+76. Marionette | LEGENDARY | Pilot: Red hair, brown-gold puppet-master costume, wooden dolls | Silhouette: Puppet crossbar with four string anchors | Design: Steel marionette crossbar with gold anchor hooks and warm-brown pilot wooden spool.
+77. Black Hole | MYTHIC | Pilot: Emerald-green hair, black-purple armor, violet singularity | Silhouette: Deep layered singularity ring and orbiting fins | Design: Silver multi-ring gravity well with crimson mythic runes, violet pilot event horizon and six offset orbit blades.
+78. Overlord | MYTHIC | Pilot: Dark hair, red-black demonic armor, fiery horn insignia | Silhouette: Horned thunder-demon crown and lightning claws | Design: Silver horned thunder engine with crimson layered crown, scarlet pilot demon eye and forked discharge horns.
+79. Cryo Reactor | MYTHIC | Pilot: Gray hair, blue-white cryo armor, cyan reactor vessel | Silhouette: Massive multi-ring cryogenic reactor | Design: Silver triple-concentric reactor with crimson containment clasps and bright ice-blue pilot core.
+80. Holy Halo | MYTHIC | Pilot: Pale hair, cream-white angelic robes, golden wings | Silhouette: Winged angel halo shield generator | Design: Silver winged halo with crimson mythic seal nodes and warm-gold pilot feather inlays.
+81. Chrono Throne | MYTHIC | Pilot: Golden hair, gold clock robes, purple time throne | Silhouette: Clock throne with nested hands and gears | Design: Silver time-throne dial with crimson royal time locks and violet-gold pilot hourglass crest.
+82. Hive Queen | MYTHIC | Pilot: Magenta-red hair, black-gold insect regalia, honeycomb | Silhouette: Insect queen abdomen and six drone ports | Design: Silver hive-crown engine with crimson segmented armor, honey-gold pilot cells and six radial larva docks.
+83. Leviathan | MYTHIC | Pilot: Black hair, blue-green sea-serpent armor, turquoise waves | Silhouette: Coiled sea-serpent jaws and water turbine | Design: Silver coiled leviathan head with crimson fin crests and turquoise pilot wave channels.
+84. Genesis Core | MYTHIC | Pilot: White-bearded elder, white-gold robe, green life orb | Silhouette: Blooming four-petal life reactor | Design: Silver layered life-core blossom with crimson mythic lock petals and bright leaf-green pilot seed.
+85. Wyrm Engine | MYTHIC | Pilot: Dark purple hair, crimson dragon armor, orange flames | Silhouette: Dragon-head furnace with twin flame horns | Design: Silver dragon furnace with crimson scale plates, orange pilot magma throat and elaborate split-horn muzzle.
+
+C. 22 READY-TO-PASTE IMAGE GENERATION PROMPTS
+
+Production note: Each prompt is deliberately under 90 words. Sheets 01–21 contain four heads (some sheets mix adjacent tiers); Sheet 22 contains Wyrm Engine only (the remaining three cells must stay empty magenta). Keep prompts independent: paste one at a time with the reference contact sheet attached. Rarity sequence is COMMON -> RARE -> EPIC -> LEGENDARY -> MYTHIC. The final sheet has one turret because 85 is not divisible by four.
+
+COMMON base: white/silver steel #DCE5EC, neutral gray #AEBBC6, near-white glints #EAF3F8.
+RARE base: silver #C9D3DB, blue #278BEE, cyan-blue lights #6FD2FF.
+EPIC base: silver #C9D3DB, purple #8C46DE, lilac lights #D19BFF.
+LEGENDARY base: silver #D2D8DD, gold #E6AE36, warm lights #FFE58B.
+MYTHIC base: silver #CBD3DA, crimson #E1444D, scarlet lights #FF7B75.
+
+SHEET 01 | COMMON | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Cannon [COMMON]: stub shell cannon, tiny brass scarf collar; Dice Gun [COMMON]: dice-cylinder, pink pilot stitch; Gatling [COMMON]: six-barrel rotor, copper goggles bolt; Scatter [COMMON]: four-nozzle fan, amber hinge. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 02 | COMMON | 4 turret(s) | 81 words
+Create a 2x2 sprite sheet: Revolver [COMMON]: six-shot drum, teal pilot marker; Frost [COMMON]: crystal freeze nozzle, icy-blue prong; Venom [COMMON]: twin toxin needles, lime reservoir; Mana Core [COMMON]: violet crystal generator, right output port. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 03 | COMMON | 4 turret(s) | 79 words
+Create a 2x2 sprite sheet: Sniper [COMMON]: long precision barrel, olive sight; Tesla [COMMON]: twin electric prongs, brass coil; Guillotine [COMMON]: cleaver jaws, tiny red handle; Breaker [COMMON]: chisel impact muzzle, red grip. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 04 | COMMON + RARE | 4 turret(s) | 82 words
+Create a 2x2 sprite sheet: Hammer [COMMON]: dual piston striker, copper bolt; Iron Fist [COMMON]: knuckle shock ring, red emblem; Time Bomb [COMMON]: clock charge launcher, gold fuse; Mana Doubler [RARE]: paired mana tanks, cyan bridge. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 05 | RARE | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Ice Blade [RARE]: ice sword muzzle, cyan tip; Mimic [RARE]: copy cube, tiny rainbow facet; Crit Antenna [RARE]: radar dish, crimson reticle; Teleporter [RARE]: twin portal rings, violet interiors. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 06 | RARE | 4 turret(s) | 78 words
+Create a 2x2 sprite sheet: Radar [RARE]: scan disc, emerald sweep; Drone Bay [RARE]: drone hangar, amber clamps; Blender [RARE]: spiral mixer, violet center; Energy Cannon [RARE]: round energy muzzle, warm-gold cell. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 07 | RARE | 4 turret(s) | 76 words
+Create a 2x2 sprite sheet: Laser [RARE]: thin beam lens, pink optic; Chiller [RARE]: cryo fan, cyan snowflake; Mortar [RARE]: squat shell tube, olive ammo; Amplifier [RARE]: megaphone, violet diaphragm. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 08 | RARE | 4 turret(s) | 81 words
+Create a 2x2 sprite sheet: Toxic Pool [RARE]: slime spill spout, lime window; Cooldown Horn [RARE]: trumpet and hourglass bead; Mana Leech [RARE]: siphon fangs, ruby intake; Mine Layer [RARE]: mine cassette, ochre hazard studs. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 09 | EPIC | 4 turret(s) | 78 words
+Create a 2x2 sprite sheet: Berserker [EPIC]: rage rotary, crimson eye; Blizzard [EPIC]: snowflake turbine, cyan ice blades; Cloner [EPIC]: twin printer arms, amber cassette; Chain Link [EPIC]: interlocking loops, violet jewel. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 10 | EPIC | 4 turret(s) | 79 words
+Create a 2x2 sprite sheet: Clamp [EPIC]: gripping jaws, red gauge; Cleanser [EPIC]: wash filter, cyan capsule; Shield Gen [EPIC]: hex barrier projector, cyan core; Mystery Box [EPIC]: sealed crate, gold question seal. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 11 | EPIC | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Star Lift [EPIC]: star lift spindle, gold star; Reaper Pillar [EPIC]: scythe totem, green spirit; Scrambler [EPIC]: two shuffle arrows, lime pin; Overclock [EPIC]: speed gear turbine, orange pinion. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 12 | EPIC | 4 turret(s) | 77 words
+Create a 2x2 sprite sheet: Fifth Shot [EPIC]: five-index drum, teal window; Storm Gun [EPIC]: storm rotor, electric-blue tip; Lighthouse [EPIC]: summoning beacon, orange glass; Ricochet [EPIC]: rebound disc, lime chevron. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 13 | EPIC | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Combo Core [EPIC]: triple combo rings, pink pip; Chrono Lock [EPIC]: clock clamp, brass hands; Lone Ace [EPIC]: ace-card barrel, cream suit; Focus Lens [EPIC]: telescopic optic, teal lens. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 14 | EPIC + LEGENDARY | 4 turret(s) | 79 words
+Create a 2x2 sprite sheet: Signal Jammer [EPIC]: crossed antennas, red diode; Bounty Beacon [EPIC]: coin tagger, green-gold coin; Purifier [LEGENDARY]: holy sun-lance, violet jewel; Sync Cannon [LEGENDARY]: synchronized twin muzzles, violet gem. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 15 | LEGENDARY | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Railgun [LEGENDARY]: cross-axis railgun, blue strip; Merge King [LEGENDARY]: crowned merge prism, purple jewel; Twin Maker [LEGENDARY]: two birth pods, cyan cores; Star Breaker [LEGENDARY]: star-crusher jaws, blue notch. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 16 | LEGENDARY | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Copycat [LEGENDARY]: double hologram frames, cyan ghost; Star Cannon [LEGENDARY]: star-shaped muzzle, amber jewel; Mech Wolf [LEGENDARY]: wolf bite jaws, jade eye; Evolver [LEGENDARY]: leaf evolution pod, green sprout. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 17 | LEGENDARY | 4 turret(s) | 81 words
+Create a 2x2 sprite sheet: Rainbow [LEGENDARY]: prism beam barrel, thin rainbow lens; Wall Projector [LEGENDARY]: planar wall emitter, orange grid; Orbital [LEGENDARY]: satellite cross, blue solar center; Hydra [LEGENDARY]: three serpent heads, jade eyes. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 18 | LEGENDARY | 4 turret(s) | 81 words
+Create a 2x2 sprite sheet: Nine-Tail [LEGENDARY]: nine foxfire exhaust tails, orange cores; Pandora Vault [LEGENDARY]: six-lock spell vault, violet seal; Resonance Grid [LEGENDARY]: diagonal lattice, turquoise lines; Nemesis [LEGENDARY]: judgment scales, red verdict gem. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 19 | LEGENDARY | 4 turret(s) | 81 words
+Create a 2x2 sprite sheet: Eclipse [LEGENDARY]: sun-moon disc, teal crescent; Scrap Forge [LEGENDARY]: scrap jaws and furnace, orange molten slot; Mirror Gate [LEGENDARY]: facing mirror portals, cyan reflections; Marionette [LEGENDARY]: puppet crossbar, wooden spool. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 20 | MYTHIC | 4 turret(s) | 82 words
+Create a 2x2 sprite sheet: Black Hole [MYTHIC]: six-blade singularity ring, violet horizon; Overlord [MYTHIC]: horned thunder engine, scarlet eye; Cryo Reactor [MYTHIC]: triple-ring cryo core, icy-blue center; Holy Halo [MYTHIC]: winged shield halo, gold feathers. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 21 | MYTHIC | 4 turret(s) | 80 words
+Create a 2x2 sprite sheet: Chrono Throne [MYTHIC]: time-throne dial, violet-gold crest; Hive Queen [MYTHIC]: hive crown, honey-gold cells; Leviathan [MYTHIC]: coiled sea serpent, turquoise channels; Genesis Core [MYTHIC]: life blossom reactor, leaf-green seed. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+SHEET 22 | MYTHIC | 1 turret(s) | 74 words
+Create a 2x2 sprite sheet: Wyrm Engine [MYTHIC]: dragon furnace, orange magma throat; EMPTY: plain magenta, no object; EMPTY: plain magenta, no object; EMPTY: plain magenta, no object. Tier colors: COMMON white/gray, RARE blue, EPIC purple, LEGENDARY gold, MYTHIC crimson; silver bodies, tiny internal pilot accents. Reference style: top-down chunky sci-fi metal, dark outlines, round footprint, right-facing output. Center each in equal cells, wide gaps. Solid #FF00FF background, no text, pilots, shadows or VFX.
+
+D. THREE BEFORE -> AFTER ART-DIRECTION EXAMPLES
+
+1) BREAKER (COMMON): CURRENT -> A strong orange/red mechanical nose can be mistaken for a high-tier unit when the border is hidden. AFTER -> Make 76% of the exposed surface light steel; reduce red to a tiny pilot grip and orange to one chisel-impact tooth. Keep the heavy armor-breaking chisel silhouette. The white body reads COMMON instantly, while the red-haired pilot still has a recognizable cue. No red external trim.
+
+2) TELEPORTER (RARE): CURRENT -> Saturated purple-blue portal rings are attractive but visually compete with EPIC purple classification. AFTER -> Keep two distinct portal hoops as the skill signature, give both hoops broad silver bodies and standardized BLUE perimeter brackets, then place violet only INSIDE the portals. The player sees RARE blue first, the pilot's purple-blue portal identity second, and swap/teleport mechanics third.
+
+3) BLACK HOLE (MYTHIC): CURRENT -> A purple vortex-centric head looks close to an EPIC purple turret despite being MYTHIC. AFTER -> Build a layered silver gravity well with six aggressive orbital blades and unmistakable CRIMSON outer seal plates/rune nodes; confine violet to the tiny event horizon. Keep the deep circular implosion silhouette, add mythic-tier construction density, and avoid flooding the body red. At 48 px the outer ring reads MYTHIC, the purple core reads the pilot's singularity motif.
+
+IMPLEMENTATION / EXPORT CHECKLIST
+  [ ] Same top-down orientation, same light source, same apparent diameter across all 85.
+  [ ] Every combat muzzle aims right; generators/auras show a right-side output socket.
+  [ ] Body remains neutral light steel in every rarity.
+  [ ] Colored trim and lights strictly follow tier; pilot accent stays internal and <=8%.
+  [ ] White/common never uses a large red or purple external rim.
+  [ ] Mythic silhouette is intricate but does not exceed the allocated cell or blur at 48 px.
+  [ ] Each generated 2x2 cell has equal size and wide magenta gutters; no captions or letters.
+  [ ] Magenta background must be exactly #FF00FF, flat with no gradients or antialias spill.
+  [ ] Generate and evaluate at 4x, downsample for 48 px review; correct identity failures before production.
+  [ ] Final alpha extraction should use exact keying or controlled tolerance only after inspecting edge pixels; preserve dark outlines.
+
+END OF DOCUMENT
