@@ -9,6 +9,9 @@ const TAI_MAT = { matMang: true };
 // ảnh theo TÊN → URL thật: bản .webp (nén chất lượng cao lúc xuất bản, cùng số điểm ảnh — tools/thap-ver.py → ANH_W) nếu có,
 // không thì .png?v=băm. Màn tải, REN.taiAnh, chân dung (portraitOf), khung thẻ… đều đi qua đây → cùng 1 URL, không tải 2 lần.
 var TAI_WEBP = true;
+// lúc tệp gần nhất về (PerformanceObserver): mạng còn chạy thì không huỷ ảnh đang tải chậm (TAI._mot)
+var TAI_VE = Date.now();
+try { new PerformanceObserver((l) => { if (l.getEntries().length) TAI_VE = Date.now(); }).observe({ type: 'resource', buffered: false }); } catch (e) { }
 function anhUrl(ten) {
   if (typeof anhTen === 'function') ten = anhTen(ten); // ?ucu=1: bộ đầu cũ <ten>_v1 (text.js)
   const w = TAI_WEBP && typeof ANH_W !== 'undefined' && ANH_W[ten];
@@ -50,13 +53,15 @@ const TAI = {
       // yêu cầu treo (mạng chập chờn, Safari đứng tải) → không đợi mãi: hết hạn 20 s, 40 s… thì tải lại bằng URL mới
       let het = false, hen = 0;
       try {
-        await Promise.race([im.decode(), new Promise((ok, no) => { hen = setTimeout(() => { het = true; no(new Error('het han')); }, 20000 * (lan + 1)); })]);
+        // chỉ coi là treo khi KHÔNG tệp nào về trong 15 s (3G chậm: ảnh 450 KB chia băng thông có thể mất > 40 s mà vẫn đang về —
+        // huỷ rồi tải lại từ đầu chỉ làm chậm thêm: đo Fast 3G thấy nen_home / home_af_hero bị tải 2 lần)
+        await Promise.race([im.decode(), new Promise((ok, no) => { const xem = () => { hen = setTimeout(() => { if (Date.now() - TAI_VE < 15000) return xem(); het = true; no(new Error('het han')); }, 20000 * (lan + 1)); }; xem(); })]);
         clearTimeout(hen); this.loiLien = 0; return im;
       } catch (e) { clearTimeout(hen); }
       if (this.mat) throw TAI_MAT;
       if (het) { im.src = ''; console.warn('[TAI] tải treo, thử lại', it.url); continue; }
-      let st = -1;
-      try { st = (await fetch(url, { cache: 'no-store' })).status; } catch (e) { }
+      let st = -1; // chỉ hỏi trạng thái (HEAD) — GET no-store từng tải lại CẢ tệp (ảnh tới 1,5 MB) chỉ để xem 200/404
+      try { st = (await fetch(url, { method: 'HEAD', cache: 'no-store' })).status; } catch (e) { }
       if (st >= 200 && st < 300 && !png && /\.webp\?v=/.test(url)) { png = true; TAI_WEBP = false; continue; } // có tệp mà không giải mã được webp → .png
       if (st === 404 || st === 410 || (st >= 200 && st < 300 && lan >= 2) || (st >= 400 && lan >= 5)) {
         this.thieu.add(it.url); console.warn('[TAI] missing asset', it.url, st); return null;
@@ -84,7 +89,7 @@ const TAI = {
     const i = p.lastIndexOf('/assets/'); return ANH_B[i >= 0 ? p.slice(i + 1) : p] || 60000;
   },
   // tải cả danh sách (so luồng song song, mặc định 6); dot() → đợt TDO đang hiện (hoặc null) để báo % theo byte
-  async nap(ds, dot, so) {
+  async nap(ds, dot, so, nen) { // nen: việc nền — nhường hết băng thông khi đang tải trận (TAI.cho)
     const lay = typeof dot === 'function' ? dot : () => dot;
     let i = 0;
     const lam = async (it) => {
@@ -97,7 +102,7 @@ const TAI = {
       const d2 = lay(); if (d2) { d2.them(it.url, this.byte(it.url)); d2.xong(it.url); }
     };
     const d0 = lay(); if (d0) for (const it of ds) d0.them(it.url, this.byte(it.url), true);
-    const luong = async () => { while (i < ds.length) await lam(ds[i++]); };
+    const luong = async () => { while (i < ds.length) { while (nen && this.cho) await this.ngu(250); if (i >= ds.length) break; await lam(ds[i++]); } };
     await Promise.all(Array.from({ length: Math.min(so || 6, ds.length) }, luong));
   },
 
@@ -216,7 +221,9 @@ const TAI = {
   async napMenu() {
     const dauTien = !this.daBoot;
     this.hien('LOADING', dauTien);
-    const tat = this.dsMenu(), home = (!this.xem && !this.cho && this.dsHome()) || tat;
+    // trận đang chờ (lần đầu → trận hướng dẫn, ?mode=): HOME không hiện → không đợi ảnh menu nào (trước: đợi CẢ menu ~10 MB,
+    // gồm 85 chân dung, trước khi trận được tải); tran() tự lấy phần cần cho trận, còn lại tải nền SAU khi trận chạy
+    const tat = this.dsMenu(), home = this.xem ? tat : this.cho && dauTien ? [] : (this.dsHome() || tat);
     const dot = this.cho ? null : TDO.dot(dauTien ? Math.max(TDO.p || 0, 20) : 0, 100, dauTien);
     try { await this.nap(home, () => (this.cho ? null : dot)); }
     catch (e) { if (e === TAI_MAT) return; throw e; }
@@ -234,7 +241,7 @@ const TAI = {
     if (!con.length) { this.nenXong = true; this.ganSrc(); return; }
     this.nenXong = false;
     const phien = this._nenPhien = (this._nenPhien || 0) + 1;
-    this.nenP = this.nap(con, () => this.nenDot, 4).then(() => {
+    this.nenP = this.nap(con, () => this.nenDot, 4, true).then(() => {
       if (phien !== this._nenPhien) return;
       this.nenXong = true; if (this.nenDot) this.nenDot.ket(); this.nenDot = null; this.ganSrc();
       const b = this._choBam; this._choBam = null;
@@ -249,7 +256,7 @@ const TAI = {
   sauHome(fn) { if (this.daBoot || this.xem || this.cho || this._hetHoan) fn(); else this._sau.push(fn); },
   thaHoan() { this._hetHoan = true; const sau = this._sau; this._sau = []; for (const f of sau) { try { f(); } catch (e) { console.error('[TAI] sauHome', e); } } const ds = this._hoan; this._hoan = []; for (const [a, u, ten] of ds) if (!a.src && (!ten || REN.anh[ten] === a)) a.src = u; },
   // ảnh thẻ dựng lúc khởi động (cardArt → data-tm-src) → gán src thật khi đợt nền đã tải xong (lấy từ bộ đệm)
-  ganSrc() { document.querySelectorAll('img[data-tm-src]').forEach(im => { im.setAttribute('src', im.getAttribute('data-tm-src')); im.removeAttribute('data-tm-src'); }); },
+  ganSrc(vung) { document.querySelectorAll(vung ? vung.split(',').map(v => v.trim() + ' img[data-tm-src]').join(',') : 'img[data-tm-src]').forEach(im => { im.setAttribute('src', im.getAttribute('data-tm-src')); im.removeAttribute('data-tm-src'); }); },
   // bấm nút menu khi đợt nền chưa xong: hiện màn tải với % của phần còn lại, xong thì bấm lại hộ
   choNen(el) {
     this._choBam = el;
@@ -279,8 +286,13 @@ const TAI = {
   // ---------- vào trận: đợi mọi ảnh của trận giải mã xong; vòng lặp đứng yên (TAI.cho) ----------
   tran(ds) {
     const phien = ++this._phien; this.cho = true;
-    this.thaHoan(); this.ganSrc(); // ảnh tĩnh của HUD trận (index.html data-tm-src) → gán src; danh sách dưới đợi chúng giải mã
+    // ảnh tĩnh của HUD trận (index.html data-tm-src) → gán src; danh sách dưới đợi chúng giải mã. CHỈ vùng trận — lưới 85 thẻ
+    // của màn bộ bài (cũng data-tm-src) để đợt nền gán sau, không tranh băng thông với màn tải trận
+    this.thaHoan(); this.ganSrc('#top, #duoi, #canh-bao, #cutin, #tt, #ketqua, #dung, #bang-wave, #tb-doi');
     this.hien(this.xem ? 'LOADING' : 'LOADING BATTLE');
+    // ảnh TRÙM (~5 MB, 12 trùm × dải 8 khung/hướng; trùm đầu tiên ở wave 10): màn tải trận KHÔNG đợi — tải nền 3 luồng ngay khi
+    // trận chạy, theo thứ tự xuất hiện (REN.img vẫn tự tải nếu cần sớm hơn). Trận hướng dẫn lần đầu trên 3G: 137 s → ~66 s.
+    const sau = this.xem ? [] : ds.filter(t => /^trum_/.test(t)); if (sau.length) ds = ds.filter(t => !/^trum_/.test(t));
     const d = this.ds(); for (const t of ds) d.anh(t); d.anh('fx_vong_lv');
     const dot = TDO.dot(0, 100);
     (async () => {
@@ -296,6 +308,7 @@ const TAI = {
       catch (e) { if (e === TAI_MAT) return; throw e; }
       if (phien !== this._phien || this.mat) return;
       dot.ket(); this.cho = false; this.an();
+      if (sau.length) { const d2 = this.ds(); for (const t of sau) d2.anh(t); try { await this.nap(d2.ket(), null, 3); } catch (e) { if (e !== TAI_MAT) console.warn('[TAI] trum', e); } }
     })();
   },
 

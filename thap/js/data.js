@@ -85,7 +85,7 @@ function mvIcURL(id) { const d = MAVUONG[id]; return d.icon === 'lua' ? MV_LUA :
 // ảnh chân dung Ma vương; nếu ảnh chưa có / lỗi → tự đổi sang biểu tượng (không bao giờ ô trống)
 function mvArt(id) {
   const d = MAVUONG[id], ic = mvIcURL(id);
-  return '<span class="mv-anh" style="--mm:' + d.mau + '"><img class="po" src="assets/' + d.anh + '.png" alt="" onerror="this.onerror=null;this.classList.add(\'fb\');this.src=\'' + ic + '\'"><img class="ki" src="' + ic + '" alt=""></span>';
+  return '<span class="mv-anh" style="--mm:' + d.mau + '"><img class="po" ' + (typeof srcTai === 'function' && !(G.ban && G.ban.length) ? srcTai() : 'src') + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" onerror="this.onerror=null;this.classList.add(\'fb\');this.src=\'' + ic + '\'"><img class="ki" src="' + ic + '" alt=""></span>';
 }
 
 // máu quái theo wave (tăng nhanh dần như DCDW)

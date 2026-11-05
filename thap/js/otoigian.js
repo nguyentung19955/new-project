@@ -30,7 +30,7 @@ const OT = {
   },
   // hàng ô nhỏ (bộ mẫu, kết quả, sảnh): 5 ụ + chỉ huy — HTML; quet() gắn viền
   mini(id) { return '<i class="ot-mini" data-id="' + id + '"><img class="po" src="' + portraitOf(id) + '" alt="' + ((G.rosterMap[id] || {}).ten || '') + '" draggable="false"></i>'; },
-  miniMV(mv) { const d = MAVUONG[mv]; return d ? '<i class="ot-mini ot-mv" data-mv="' + mv + '"><img class="po" src="assets/' + d.anh + '.png" alt="' + d.ten + '" draggable="false"></i>' : ''; },
+  miniMV(mv) { const d = MAVUONG[mv]; return d ? '<i class="ot-mini ot-mv" data-mv="' + mv + '"><img class="po" ' + (typeof srcTai === 'function' && !(G.ban && G.ban.length) ? srcTai() : 'src') + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="' + d.ten + '" draggable="false"></i>' : ''; },
   hang(deck, mv) { return '<span class="ot-hang">' + deck.map(id => this.mini(id)).join('') + (mv ? this.miniMV(mv) : '') + '</span>'; },
   mien(el) {
     if (!el || el.querySelector(':scope > img.ot-mien')) return;

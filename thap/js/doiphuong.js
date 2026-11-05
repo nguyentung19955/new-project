@@ -29,7 +29,7 @@ const DP = {
       h += '<button class="dp-the" data-dp="u" data-id="' + id + '" style="--k:' + k + '" aria-label="' + ten + '"><img class="po" src="' + portraitOf(id) + '" alt=""></button>';
     });
     const d = MAVUONG[B.mv.id];
-    h += '<button class="dp-the dp-mv" data-dp="mv" data-id="' + B.mv.id + '" style="--k:' + d.mau + '" aria-label="' + d.ten + '"><img class="po" src="assets/' + d.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + mvIcURL(B.mv.id) + '\'"></button>';
+    h += '<button class="dp-the dp-mv" data-dp="mv" data-id="' + B.mv.id + '" style="--k:' + d.mau + '" aria-label="' + d.ten + '"><img class="po" src="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" onerror="this.onerror=null;this.src=\'' + mvIcURL(B.mv.id) + '\'"></button>';
     el.innerHTML = h;
     // vị trí: trên bàn phía trên, chừa cổng đường bên trái và bảng tên bàn bên phải
     el.style.top = Math.round(B.y - (typeof KHUNG !== 'undefined' && KHUNG.bat['co-khay'] ? 46 : 37)) + 'px';
