@@ -311,11 +311,23 @@ async function tran(b, W, H, D, co, m) {
   await sleep(2500);
   const f = await fps(p, 3000); console.log('    fps ' + m + ': ' + f.fps.toFixed(0) + ' (game ' + f.p90.toFixed(1) + ' ms/khung p90)');
   if (f.thap) await loi(p, co, m + '_fps', 'fps thấp', ['fps ' + f.fps.toFixed(0) + ' < 45, game ' + f.p90.toFixed(1) + ' ms/khung (' + W + '×' + H + ' DPR ' + D + ')']);
+  if (m !== 'solo') await buoc(p, co, m + '_ghep_vughep', async () => {
+    const s = await p.evaluate(() => { const B = G.ban[0], o0 = B.t.findIndex(T => !T), keep = B.t.slice(); for (let i = 0; i < 15; i++) B.t[i] = null; B.t[0] = sinhU(taoU(B, 'vughep', 2, 0)); B.t[1] = sinhU(taoU(B, 'vughep', 2, 1)); const r = ghep(B, B.t[0], B.t[1]); const kq = [!!B.t[0], B.t[1] && B.t[1].id, B.t[1] && B.t[1].sao, r === B.t[1]]; for (let i = 0; i < 15; i++) B.t[i] = keep[i]; return kq; });
+    if (s[0] || s[1] !== 'vughep' || s[2] !== 3 || !s[3]) throw new Error(m + ': Merge King★2 + Merge King★2 không ra Merge King★3 (' + JSON.stringify(s) + ')');
+  });
   if (m === 'solo') {
     // ghép kéo + chạm–chạm
     const dat = () => p.evaluate(() => { const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null; const put = (o, id, s) => { B.t[o] = sinhU(taoU(B, id, s, o)); B.t[o].vxA = null; }; put(0, 'canon', 1); put(1, 'canon', 1); put(5, 'bang', 1); put(6, 'bang', 1); UI.keo = null; UI.chonGhep = null; });
     await buoc(p, co, 'ghep_keo', async () => { await dat(); await sleep(150); const a = await viTri(p, 0), c = await viTri(p, 1); await keo(p, a[0], a[1], c[0], c[1], 60); /* chuột: lech = 0 (ui.js) */ await sleep(400); const s = await p.evaluate(() => [G.ban[0].t[0], G.ban[0].t[1]].filter(Boolean).map(T => T.sao)); if (!(s.length === 1 && s[0] === 2)) throw new Error('kéo ghép canon★1 → canon★1 không ra ★2 (' + JSON.stringify(s) + ')'); });
     await buoc(p, co, 'ghep_cham', async () => { const a = await viTri(p, 5), c = await viTri(p, 6); await p.mouse.click(a[0], a[1]); await sleep(250); await p.mouse.click(c[0], c[1]); await sleep(500); const s = await p.evaluate(() => [G.ban[0].t[5], G.ban[0].t[6]].filter(Boolean).map(T => T.sao)); if (!(s.length === 1 && s[0] === 2)) throw new Error('chạm–chạm bang★1 + bang★1 không ghép (' + JSON.stringify(s) + ')'); });
+    // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên); 7★ không ghép
+    await buoc(p, co, 'ghep_vughep', async () => {
+      await p.evaluate(() => { const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null; const put = (o, id, s) => { B.t[o] = sinhU(taoU(B, id, s, o)); B.t[o].vxA = null; }; put(0, 'vughep', 2); put(1, 'vughep', 2); put(3, 'vughep', LUAT.saoMax); put(4, 'vughep', LUAT.saoMax); UI.keo = null; UI.chonGhep = null; });
+      await sleep(150); const a = await viTri(p, 0), c = await viTri(p, 1); await keo(p, a[0], a[1], c[0], c[1], 60); await sleep(400);
+      const s = await p.evaluate(() => { const B = G.ban[0]; return { a: !!B.t[0], b: B.t[1] && [B.t[1].id, B.t[1].sao], max: hopLeGhep(B.t[3], B.t[4]) }; });
+      if (s.a || !s.b || s.b[0] !== 'vughep' || s.b[1] !== 3) throw new Error('Merge King★2 + Merge King★2 không ra Merge King★3 (' + JSON.stringify(s) + ')');
+      if (s.max) throw new Error('Merge King ở sao tối đa vẫn ghép được');
+    });
     await buoc(p, co, 'xem_nhanh', async () => { const o = await p.evaluate(() => G.ban[0].t.findIndex(Boolean)); const a = await viTri(p, o); await p.mouse.click(a[0], a[1]); await sleep(350); if (await p.evaluate(() => document.getElementById('tt').hidden)) throw new Error('chạm ụ không mở bảng xem nhanh'); });
     await p.evaluate(() => { try { HB.dongHet(); } catch (e) { } UI.chonGhep = null; });
     await buoc(p, co, 'tam_dung', async () => { await bam(p, '[data-act="dung"]'); await sleep(300); if (await p.evaluate(() => document.getElementById('dung').hidden)) throw new Error('nút dừng không mở bảng'); });

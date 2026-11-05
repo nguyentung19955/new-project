@@ -211,11 +211,13 @@ const ONS = {
     if (!d) return;
     const a = B1.t[d.a], b = B1.t[d.b];
     if (a && b && a !== b) {
+      const cl = a.id === b.id && a.id === d.id && ghepDacBiet(a, b); // ghép đặc biệt CÙNG LOẠI (Merge King + Merge King): tất định → chạy y hệt (cùng hiệu ứng/nhãn)
       const deck = B1.deck; B1.deck = [d.id]; // ụ ra = đúng ụ bạn kia nhận được (pick trong bộ 1 phần tử)
-      try { ghep(B1, a, b, true); } finally { B1.deck = deck; }
+      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; }
     }
     const T = B1.t[d.b];
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }
+    if (B1.t[d.b] && d.vg != null && B1.t[d.b].id === 'vughep') B1.t[d.b].vang = !!d.vg; // cờ vàng Merge King theo đúng máy bạn kia
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
   },
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
@@ -390,7 +392,7 @@ const ONS = {
     g('ghep', (goc) => function (B, a, b, ep) {
       const ao = a && a.o, bo = b && b.o, laToi = self.on && b && b.ban === 0 && !self._apDung;
       const r = goc.apply(this, arguments);
-      if (laToi && r) { const T = G.ban[0].t[bo] || r; self.gui('gh', { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0 }); }
+      if (laToi && r) { const T = G.ban[0].t[bo] || r; self.gui('gh', { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0 }); }
       return r;
     });
     g('nangCap', (goc) => function (B, id) {

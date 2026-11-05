@@ -139,7 +139,7 @@ function hopLeGhep(a, b) {
 }
 // ghép ĐẶC BIỆT (Bộ Trộn, Dịch Chuyển, Ép Xung, Vua Ghép, Sao Chép…): kỹ năng của ụ KÉO quyết định
 function ghepDacBiet(a, b) {
-  if (a.id === b.id) return null;
+  if (a.id === b.id && !(SKILLS[a.id] && SKILLS[a.id].ghepDB && SKILLS[a.id].ghepDB.cungLoai)) return null; // cùng loại: chỉ ụ khai báo cungLoai (Merge King) mới ghép đặc biệt
   const sa = SKILLS[a.id];
   if (sa && sa.ghepDB && sa.ghepDB.hopLe(a, b)) return { sk: sa, a, b };
   const sb = SKILLS[b.id]; // Bộ Trộn ghép được cả 2 chiều
@@ -150,7 +150,7 @@ function ghepDacBiet(a, b) {
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
   const B2 = G.ban[b.ban];
-  if (!ep && a.id !== b.id) {
+  if (!ep) {
     const db = ghepDacBiet(a, b);
     if (db) { const r = db.sk.ghepDB.lam(G, B2, db.a, db.b, db.dao); SND.ghep(); return r; }
   }
