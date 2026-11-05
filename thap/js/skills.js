@@ -11,8 +11,7 @@ const HU = {}; // hiệu ứng kỹ năng trên sân: HU[k] = { cap(G,o,dt) → 
 // --- tiện ích chung cho kỹ năng ---
 function chopNong(T, co) { const [x, y] = dauNong(T); FX.no('chop_nong', x, y, co || 30, 0.12, T.goc); return [x, y]; }
 function phutKhoi(x, y, n) { for (let i = 0; i < (n || 1); i++) FX.khoi(x + rnd(-3, 3), y + rnd(-3, 3), rnd(12, 18), rnd(-8, 8), rnd(-24, -10)); }
-// hệ số nhịp cho ụ TỰ QUẢN LÝ nhịp (capNhat: laser, băng, độc, bom, vũng độc, mìn…): giống tocU — buff tốc + Ép Xung (Overclock) + bị Kẹp Phá đối thủ −40%
-function nhipU(T) { return Math.max(0, 1 + T.buf.toc + (T.epxung || 0)) * (T.st && T.st.kep > 0 ? 0.6 : 1); }
+// nhipU(T) (hệ số nhịp cho ụ tự quản nhịp: buff tốc + Ép Xung + Kẹp Phá) khai báo ở skills2.js — Frost / Venom / Laser dùng lúc chạy
 function danThang(B, T, E, img, sp, co, trungFn, duoi) {
   const [x, y] = dauNong(T);
   return banDan({ img, x, y, muc: E, px: E.x, py: E.y, sp, co, B, T, trung: trungFn, duoi });

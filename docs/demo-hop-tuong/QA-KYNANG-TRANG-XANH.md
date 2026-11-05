@@ -32,7 +32,9 @@ Không đổi số cân bằng nào (sát thương gốc / tốc / giá trị h�
 - Iron Fist: cận chiến 105 px — chỉ đánh khi đứng sát đường (ô 2 cách đường 89 px → đánh được).
 - Mortar: 3 mảnh chùm (×45%) rơi cách 30 px nên thường trúng cả mục tiêu chính → 1 mục tiêu nhận ~+45% mỗi 3 phát (đã tính vào công thức DPS).
 - Mana Leech: trần mana/giây tính theo cửa sổ bắt đầu từ phát trúng đầu → thực tế ~75–85% trần, không bao giờ vượt.
-- Ngoài bộ (gửi phiên Sử thi+ / Huyền thoại): cùng lỗi #7 (Overclock / Kẹp Phá không tác dụng) còn ở Wall Projector, Black Hole, Overlord, Blizzard, Hydra 7★, Chrono Lock, Hive Queen, Leviathan, Genesis Core, Wyrm Engine (`(1 + T.buf.toc)` trong skills.js / skills2–5.js, growfx.js) — có thể dùng `nhipU(T)`.
+- `nhipU(T)` dùng chung với phiên QA Sử thi (khai báo 1 lần ở skills2.js). Ngoài bộ còn đọc `(1 + T.buf.toc)` (Overclock / Kẹp Phá không tác dụng): Wall Projector, Black Hole, Overlord (+ tia grow-up growfx.js), Hydra 7★, Marionette, Hive Queen, Leviathan, Genesis Core, Wyrm Engine — để phiên Huyền thoại/Đỏ quyết.
+- Ba bộ kiểm chạy chung sau rebase: `thap-kt-kynang-tx.js` 193/193 · `thap-kt-kynang-tim.js` 155/155 · `thap-kt-kynang-vd.js` 223/223.
+- `thap/js/meta.js` ROSTER_EMBED lệch roster.json ở 29 ụ Sử thi+ (có từ trước, do phiên khác) — chỉ đồng bộ phần Thường/Hiếm.
 
 ## Kiểm cân bằng sau sửa (`tools/thap-sim-vaitro.js`)
 
