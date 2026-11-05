@@ -17,9 +17,9 @@ html body #the-mv::after, html body #the-mv::before { content: none !important; 
 html body #the-mv.thieu, html body #the-mv.du { filter: none !important; }
 /* khung ChatGPT: đúng tỉ lệ ảnh (271×328) — không bóp dẹt */
 html body #the-mv > .kh { position: absolute; left: 5px; top: 0; width: 80px; height: 97px; z-index: 2; pointer-events: none; object-fit: fill; }
-/* cửa sổ chân dung: x 15.6–84.4 %, y 18.9–83.8 % của khung; chừa đáy cho tấm tên */
+/* cửa sổ chân dung: x 15.6–84.4 %, y 18.9–83.8 % của khung — phủ KÍN ô cửa sổ (tấm tên đã ẩn ở hudtop.css; trước chừa đáy 12 px → dải xám ngang dưới mặt) */
 html body #the-mv .mv-ic, html body.co-khung #the-mv.co-kh .mv-ic, html.co-khung body #the-mv.co-kh .mv-ic {
-  position: absolute; z-index: 1; left: 17.5px; width: 55px; top: 18.3px; height: 51px; margin: 0; overflow: hidden; background: #0d0f14;
+  position: absolute; z-index: 1; left: 17.5px; width: 55px; top: 18.3px; height: 63px; margin: 0; overflow: hidden; background: #0d0f14;
 }
 html body #the-mv .mv-ic .mv-anh { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; background: none; box-shadow: none; overflow: hidden; }
 html body #the-mv .mv-ic .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: none; transition: filter .25s; }
