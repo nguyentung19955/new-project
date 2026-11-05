@@ -1,21 +1,21 @@
 {
  "errs": [],
  "fps_solo": {
-  "fps": 60.1,
+  "fps": 60.2,
   "maxFrame": 16.8,
   "quai": 60,
   "veQuaiMs": {
-   "tb": 1.19,
-   "p95": 2.5
+   "tb": 1.15,
+   "p95": 2.6
   }
  },
  "fps_coop": {
-  "fps": 60.1,
-  "maxFrame": 16.8,
+  "fps": 59.4,
+  "maxFrame": 49.9,
   "quai": 60,
   "veQuaiMs": {
-   "tb": 1.12,
-   "p95": 2.5
+   "tb": 1.42,
+   "p95": 2.8
   }
  },
  "fps_pvp": {
@@ -23,8 +23,8 @@
   "maxFrame": 16.8,
   "quai": 60,
   "veQuaiMs": {
-   "tb": 1.12,
-   "p95": 2.7
+   "tb": 0.94,
+   "p95": 1.4
   }
  }
 }
