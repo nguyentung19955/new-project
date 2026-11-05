@@ -1,0 +1,72 @@
+/* TURRET MERGE — P0-05 thanh trên + băng wave/trùm, P0-04 góc huy hiệu (js/hudtop.js). Nạp SAU hud2.css / vaotran.css.
+   Chỉ ảnh ChatGPT có sẵn: h2_rail (ray), h2_canh_bao (chevron wave), chân dung trùm (vaotran.js), ht_tim (= ui_tim thu nhỏ),
+   h2_tam_do / h2_tam_xanh (tấm treo), loi_khuc_day (rãnh). Code: chữ/số, vị trí/phóng/mờ, cắt ảnh (clip-path). Khung logic 430×860. */
+
+/* ================= RAY 330×46: 2 nửa ảnh gốc (tỉ lệ 46/111), chỉ giãn dải phẳng x 234–240 / 358–364 của ảnh 600 px ================= */
+.co-hud2 #top { --W: 330px; left: 50px; width: var(--W); background: none; }
+.co-hud2 #top::before, .co-hud2 #top::after { content: ''; position: absolute; z-index: 0; top: 0; height: 46px; width: calc(var(--W) / 2 + 124.33px); pointer-events: none; box-sizing: border-box; border: 0 solid transparent; }
+.co-hud2 #top::before { left: 0; border-image: url(../assets/h2_rail.png) 0 360 0 234 fill / 0 149.19px 0 96.97px / 0 stretch; clip-path: inset(0 124.33px 0 0); }
+.co-hud2 #top::after { right: 0; border-image: url(../assets/h2_rail.png) 0 236 0 358 fill / 0 97.8px 0 148.36px / 0 stretch; clip-path: inset(0 0 0 124.33px); }
+.co-hud2 #top > * { z-index: 1; }
+
+/* khoang 1 · WAVE N (khoang x 17.9–86.3) */
+.co-hud2 #tb-wave { left: 18px; width: 68px; gap: 3px; }
+.co-hud2 #tb-wave .ht-ic { flex: none; width: 11px; height: 13px; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2 #tb-wave span { font-size: 9px; color: #cfd6df; letter-spacing: .3px; }
+.co-hud2 #tb-wave b { font-size: 17px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; }
+.co-hud2 #tb-wave.ht-nay { animation: ht-nay .42s ease-out; }
+@keyframes ht-nay { 0% { transform: scale(1.35); filter: brightness(1.8); } 100% { transform: none; filter: none; } }
+
+/* khoang 2 · BOSS IN N + chân dung (khoang x 90 → W−90) */
+.co-hud2 #tb-giua { left: 90px; width: calc(var(--W) - 180px); }
+.co-hud2 #tb-trum { justify-content: center; gap: 5px; font-size: 12px; font-weight: 800; color: #fff; letter-spacing: .2px; text-shadow: 0 1px 0 #000, 0 0 4px #000; white-space: nowrap; overflow: visible; }
+.co-hud2 #tb-trum .vt-chip { width: 21px; height: 21px; margin: -3px 0 -2px; filter: drop-shadow(0 1px 1px #000); }
+.co-hud2 #top.gan #tb-trum { color: #ffc547; }
+.co-hud2 #top.trum #tb-trum { color: #ff7266; }
+/* cảnh báo trùm: CHỈ khoang này đập (ảnh + chữ phóng/sáng), ray và 2 khoang kia đứng yên */
+.co-hud2 #tb-giua.ht-canh #tb-trum { color: #ff5a4e; animation: ht-dap .52s ease-in-out 5; }
+.co-hud2 #tb-giua.ht-canh .vt-chip { animation: ht-dap2 .52s ease-in-out 5; }
+@keyframes ht-dap { 0%, 100% { transform: none; filter: none; } 50% { transform: scale(1.12); filter: brightness(1.5); } }
+@keyframes ht-dap2 { 0%, 100% { transform: none; } 50% { transform: scale(1.3); } }
+/* rãnh tiến độ / máu trùm: rãnh ảnh x 52.2 → W−52.2 (toạ độ trong khoang giữa: −37.8) */
+.co-hud2 #tb-seg, .co-hud2 #tb-trum-mau { left: -37.8px; width: calc(var(--W) - 104.4px); }
+.co-hud2 #tb-seg .h2-day, .co-hud2 #tb-trum-mau i { background-size: calc(var(--W) - 104.4px) 100%; }
+
+/* khoang 3 · ♥ N/3 (khoang x W−86.3 → W−17.9) */
+.co-hud2 #tb-tim { left: auto; right: 18px; width: 68px; gap: 2px; color: #fff; }
+.co-hud2 #tb-tim::before { content: none; }
+.co-hud2 #tb-tim .ht-tim { flex: none; width: 16px; height: 14px; margin-right: 1px; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2 #tb-tim .ht-n, #ht-phu .ht-n { font-size: 17px; line-height: 19px; font-weight: 800; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; }
+.co-hud2 #tb-tim .ht-max, #ht-phu .ht-max { font-size: 11px; font-weight: 800; color: #c3cad3; text-shadow: 0 1px 0 #000; margin-left: -1px; }
+.co-hud2 #tb-tim .ht-n.nguy, #ht-phu .ht-n.nguy { color: #ff5a4e; }
+.co-hud2 #tb-tim.nguy .ht-tim { animation: ht-tim 0.9s ease-in-out infinite; }
+@keyframes ht-tim { 50% { transform: scale(1.25); } }
+.co-hud2 #tb-tim.ht-mat { animation: ht-mat .5s ease-out; }
+@keyframes ht-mat { 0% { transform: scale(1.4); filter: brightness(2); } 100% { transform: none; filter: none; } }
+.co-hud2 #tb-tim .ht-ai, #ht-phu .ht-ai { font-size: 8.5px; font-weight: 800; letter-spacing: .3px; margin-right: 2px; text-shadow: 0 1px 0 #000; }
+.co-hud2 #tb-tim.pvp .ht-ai { color: #7cc4ff; }
+.co-hud2 #tb-tim.pvp { gap: 1px; }
+.co-hud2 #tb-tim.pvp .ht-tim { width: 13px; height: 12px; }
+/* tấm treo dưới khoang tim: CO-OP = 3 tim chung · PVP = tim đối thủ (không chạm giá đồng đội #dp-dai, x ≤ 252) */
+#ht-phu { display: none; }
+.co-hud2 #ht-phu:not([hidden]) { position: absolute; right: 16px; top: 41px; height: 17px; padding: 0 8px; display: flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none;
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png) 0 40 fill / 0 9px / 0 stretch; }
+.co-hud2 #ht-phu.do { border-image-source: url(../assets/h2_tam_do.png); }
+.co-hud2 #ht-phu.do .ht-ai { color: #ff9a8f; }
+.co-hud2 #ht-phu.xanh .ht-ai { color: #9ff5c8; font-size: 9px; margin: 0; }
+.co-hud2 #ht-phu .ht-tim { width: 12px; height: 11px; }
+.co-hud2 #ht-phu .ht-n { font-size: 13px; line-height: 15px; }
+.co-hud2 #ht-phu .ht-max { font-size: 9.5px; }
+
+/* ================= BĂNG WAVE / TRÙM: ≤0,7 s trên bàn rồi trượt lên ray (khoang tương ứng chớp/đập) ================= */
+#bang-wave.ht-bw { animation: ht-bw .7s ease-in both; }
+@keyframes ht-bw { 0% { opacity: 0; transform: scaleY(0); } 10% { opacity: 1; transform: none; } 62% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translate(-38%, -320px) scale(.3); } }
+#canh-bao.ht-cb { animation: ht-cb .7s ease-in both; }
+@keyframes ht-cb { 0% { opacity: 0; transform: scaleY(0); } 10% { opacity: 1; transform: scaleY(1.08); } 16% { transform: none; } 62% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-315px) scale(.25); } }
+@media (prefers-reduced-motion: reduce) { #bang-wave.ht-bw, #canh-bao.ht-cb { animation: ht-mo .7s linear both; } @keyframes ht-mo { 0%, 80% { opacity: 1; } 100% { opacity: 0; } } }
+
+/* ================= P0-04 · GÓC HUY HIỆU TRÊN THẺ: vai trò trên-trái · LV trên-phải · nhận diện dưới-trái · số trên bàn dưới-phải ================= */
+.co-hud2.co-khung #bo-the .the.ht-goc.co-kh .ic.h2-vai, .co-hud2 #bo-the .the.ht-goc .ic.h2-vai { top: calc(var(--khh, 74px) * .189 + 1px); bottom: auto; left: calc(15.6% + 1px); right: auto; width: 14px; height: 14px; opacity: 1; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2.co-khung #bo-the .the.ht-goc.co-kh .lv, .co-hud2 #bo-the .the.ht-goc .lv { left: auto; right: calc(15.6% + 1px); max-width: calc(68.8% - 17px); }
+.co-hud2 #bo-the .the.ht-goc .h2-so { top: calc(var(--khh, 74px) * .838 - 14px); }
+.co-khung .c.ht-goc.co-kh .ic.h2-vai { top: calc(var(--khh) * .189 + 1px); left: calc(15.6% + 1px); right: auto; width: 15px; height: 15px; border-radius: 0; background: none; filter: drop-shadow(0 1px 0 #000); }

@@ -172,22 +172,25 @@ const HUD2 = {
     REN.huyHieu = function (n, d) {
       const anh = this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao');
       if (!anh) return hhGoc.apply(this, arguments);
-      const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh3|' + n + '|' + N;
+      // P0-04: SAO TRÊN BÀN = khiên to cùng cỡ mọi cấp (7★ chỉ thêm viền sáng ngoài), số to; ô vẽ 1.7d (REN.veHuyHieu bên dưới)
+      const E = 1.7, k = this.s * this.dpr, N = Math.max(8, Math.round(d * E * k)), key = 'hh4|' + n + '|' + N;
       let c = this.cGet(key); if (c) return c;
       c = document.createElement('canvas'); c.width = c.height = N;
-      const x = this.c2d(c), q = N / (d * 1.5);
-      const w = d * (n >= 7 ? 1.42 : 1.2) * q, h = w * anh.height / anh.width;
+      const x = this.c2d(c), q = N / (d * E);
+      const w = d * (n >= 7 ? 1.6 : 1.35) * q, h = w * anh.height / anh.width;
       this.veNho(x, anh, 0, 0, anh.width, anh.height, Math.round(N / 2 - w / 2), Math.round(N / 2 - h / 2), Math.round(w), Math.round(h));
-      x.scale(q, q); x.translate(d * 0.75, d * 0.75);
-      let f = Math.round(d * 0.74 * 10) / 10;
+      x.scale(q, q); x.translate(d * E / 2, d * E / 2);
+      let f = Math.round(d * 0.86 * 10) / 10;
       x.font = '800 ' + f + 'px ' + FONT.display;
-      const tw = x.measureText(n).width, maxW = d * 0.72; // số 2–3 chữ số: thu nhỏ để nằm gọn trong tấm khiên
-      if (tw > maxW) { f = Math.max(d * 0.4, Math.floor(f * maxW / tw * 10) / 10); x.font = '800 ' + f + 'px ' + FONT.display; }
+      const tw = x.measureText(n).width, maxW = d * 0.8; // số 2–3 chữ số: thu nhỏ để nằm gọn trong tấm khiên
+      if (tw > maxW) { f = Math.max(d * 0.45, Math.floor(f * maxW / tw * 10) / 10); x.font = '800 ' + f + 'px ' + FONT.display; }
       x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
-      x.lineWidth = d * 0.13; x.strokeStyle = '#05070a'; x.strokeText(n, 0, d * 0.02);
-      x.fillStyle = n >= 7 ? '#ffd25a' : '#fff6df'; x.fillText(n, 0, d * 0.02);
+      x.lineWidth = d * 0.15; x.strokeStyle = '#05070a'; x.strokeText(n, 0, d * 0.02);
+      x.fillStyle = n >= 7 ? '#ffd25a' : '#ffffff'; x.fillText(n, 0, d * 0.02);
       return this.cSet(key, c);
     };
+    const vhGoc = REN.veHuyHieu;
+    REN.veHuyHieu = function (ctx, x, y, n, d) { if (!this.img(n >= 7 ? 'h2_sao_sang' : 'h2_sao')) return vhGoc.apply(this, arguments); const c = this.huyHieu(n, d); if (c) ctx.drawImage(c, x - d * 0.85, y - d * 0.85, d * 1.7, d * 1.7); };
   }
 
   // 11 · lõi: 3 ảnh trạng thái (nguyên / mẻ / nguy) thay vết nứt vẽ code; chớp đỏ = ảnh viền đỏ
