@@ -17,6 +17,8 @@ const TRUM_MOI = {
 };
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
 const TRUM_ANH = new Set([]);
+// trùm mới đã có CHÂN DUNG ChatGPT (trum_<id>_portrait.png) → băng giới thiệu / màn mở trận dùng chân dung thay dải đi
+const TRUM_CHANDUNG = new Set(['hive']);
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }
 // bể trùm cho lịch ngẫu nhiên (game.js lichTrum): 6 cũ + 6 mới; TRUM_THU_TU (thứ tự CO-OP cố định) giữ nguyên
@@ -232,7 +234,7 @@ if (typeof VT !== 'undefined') {
   for (const id in TRUM_MOI) VT.NGUY[id] = TRUM_MOI[id].nguy;
   const _sp = VT.sprite, _nf = VT.soKhung;
   const anh = (id) => (TRUM_MOI[id] && !TRUM_ANH.has(id) ? TRUM_MOI[id].anhTam : id);
-  VT.sprite = (id) => _sp.call(VT, anh(id));
-  VT.soKhung = (id) => _nf.call(VT, anh(id));
+  VT.sprite = (id) => (TRUM_CHANDUNG.has(id) ? 'url(assets/trum_' + id + '_portrait.png)' : _sp.call(VT, anh(id)));
+  VT.soKhung = (id) => (TRUM_CHANDUNG.has(id) ? 1 : _nf.call(VT, anh(id))); // 1 khung: nền 100% → hoạt ảnh bước khung không dịch ảnh
 }
 })();
