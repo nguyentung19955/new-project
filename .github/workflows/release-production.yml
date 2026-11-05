@@ -49,6 +49,10 @@ jobs:
           [ -n "$FIREBASE_SA" ] || { echo "Thiếu secret FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH" > "$RUNNER_TEMP/loi-tom-tat.txt"; exit 1; }
 
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools/phat-hanh
+            .github
       - uses: actions/setup-node@v4
         with:
           node-version: 22

@@ -37,6 +37,10 @@ jobs:
       SO_LAN: ${{ github.event_name == 'schedule' && '1' || '11' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            tools/phat-hanh
+            .github
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

@@ -184,10 +184,12 @@ jobs:
           fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
           # Bản staging vừa đăng và đã kiểm đúng commit này → đưa ĐÚNG bản đó lên bản thật (không dựng lại).
           # Không được (staging hỏng / clone lỗi) → đăng thẳng như trước (cùng thư mục site đã qua cổng kiểm).
-          if [ "${{ steps.kiemthu.outcome }}" = "success" ] && $fb hosting:clone "$SITE:$KENH_THU" "$SITE:live" > out.txt 2>&1; then
+          if [ "${{ steps.kiemthu.outcome }}" = "success" ] && $fb hosting:clone "$SITE:$KENH_THU" "$SITE:live" > clone.txt 2>&1; then
             echo "## ✅ Đã đưa bản staging lên https://$SITE.web.app (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
+            echo "Đường đăng: hosting:clone bản staging → bản thật"
           elif $fb deploy --only hosting > out.txt 2>&1; then
             echo "## ✅ Đã đăng https://$SITE.web.app (commit ${GITHUB_SHA::7}, đăng thẳng)" >> "$GITHUB_STEP_SUMMARY"
+            echo "Đường đăng: đăng thẳng (firebase deploy) — staging/clone không dùng được: $(tail -n 2 clone.txt 2>/dev/null | tr '\n' ' ' | cut -c1-300)"
           else
             echo "::error title=Đăng thất bại::$(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 6 | tr '\n' ' ' | cut -c1-900)"
             echo "Đăng lên bản thật thất bại (Firebase): $(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 3 | tr '\n' ' ' | cut -c1-500)" > "$RUNNER_TEMP/loi-tom-tat.txt"
