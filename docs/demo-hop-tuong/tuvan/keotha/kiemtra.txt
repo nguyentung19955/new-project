@@ -1,0 +1,57 @@
+== 390x844
+OK   the→o trong (giu)
+OK   the→o trong (ngang)
+OK   the→o day (swap)
+OK   o→o (doi cho)
+OK   o→luoi (bo)
+OK   o vuot xuong (bo)
+OK   Mythic thu 2 bi chan + toast (Only 1 Mythic turret per deck|1)
+  keo bat dau trong luc cuon: 0
+OK   vuot doc nhanh = cuon (0→2392)
+OK   cham the → trang chi tiet
+OK   ADD trong chi tiet
+OK   REMOVE trong chi tiet
+OK   BACK ve man bo bai
+OK   cham o → chi tiet
+OK   cham chi huy → chi tiet
+OK   bo du → nut khoa
+OK   chuot: the→o
+OK   khong loi trang (0)
+== 360x780
+OK   the→o trong (giu)
+OK   the→o trong (ngang)
+OK   the→o day (swap)
+OK   o→o (doi cho)
+OK   o→luoi (bo)
+OK   o vuot xuong (bo)
+OK   Mythic thu 2 bi chan + toast (Only 1 Mythic turret per deck|1)
+  keo bat dau trong luc cuon: 0
+OK   vuot doc nhanh = cuon (0→221)
+OK   cham the → trang chi tiet
+OK   ADD trong chi tiet
+OK   REMOVE trong chi tiet
+OK   BACK ve man bo bai
+OK   cham o → chi tiet
+OK   cham chi huy → chi tiet
+OK   bo du → nut khoa
+OK   chuot: the→o
+OK   khong loi trang (0)
+== 430x932
+OK   the→o trong (giu)
+OK   the→o trong (ngang)
+OK   the→o day (swap)
+OK   o→o (doi cho)
+OK   o→luoi (bo)
+OK   o vuot xuong (bo)
+OK   Mythic thu 2 bi chan + toast (Only 1 Mythic turret per deck|1)
+  keo bat dau trong luc cuon: 0
+OK   vuot doc nhanh = cuon (0→2393)
+OK   cham the → trang chi tiet
+OK   ADD trong chi tiet
+OK   REMOVE trong chi tiet
+OK   BACK ve man bo bai
+OK   cham o → chi tiet
+OK   cham chi huy → chi tiet
+OK   bo du → nut khoa
+OK   chuot: the→o
+OK   khong loi trang (0)
