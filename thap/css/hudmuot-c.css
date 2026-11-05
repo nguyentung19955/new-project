@@ -284,3 +284,8 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #ketqua.kq7 .bang-nut .nut { flex: none; width: 100%; height: 52px; font-size: 15px; }
 #ketqua.kq7 .bang-nut .nut.chinh { height: 66px; font-size: 20px; letter-spacing: .06em; border-width: 0; border-image-slice: 91.3 165.9 fill; border-image-width: 30px 56px; }
 @media (prefers-reduced-motion: reduce) { #ketqua.kq7 .kq-ic, #ketqua.kq7 .bang-ten, #ketqua.kq7 .kq-so, #ketqua.kq7 #kq-chi, #ketqua.kq7 .bang-nut, #ketqua.kq7.mo-ct .kq-ct { animation: none; } }
+/* sảnh: DECK (đổi bộ bài, ẩn khi đã READY) cạnh READY */
+#onl-sanh .s7-hang { display: flex; gap: 10px; width: 100%; }
+#onl-sanh .s7-cuoi .s7-hang .nut { flex: 1 1 auto; width: auto; }
+#onl-sanh .s7-cuoi .s7-hang #sanh-bo { flex: 0 0 30%; font-size: 16px; border-image-width: 30px 40px; }
+#onl-sanh .s7-cuoi .s7-hang #sanh-bo[hidden] { display: none; }

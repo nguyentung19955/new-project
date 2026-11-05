@@ -1,0 +1,18 @@
+OK   SHARE LINK: Join my TURRET MERGE co-op room UEHT · http://localhost:8787/thap/?room=UEHT
+OK   B: có màn tải khi mở link
+OK   B: không chạy hướng dẫn / trận SOLO (HD.dang=false, G.ban=0)
+OK   B: vào thẳng SẢNH (2 thẻ + nút READY, không bảng CREATE ROOM), sau 3209 ms
+OK   B: mã đã gỡ khỏi URL (?net=mock&mockws=ws%3A%2F%2Flocalhost%3A8787)
+OK   B: hướng dẫn chưa bị đánh dấu xong (để mời lại sau)
+OK   A: thấy B vào phòng
+OK   B: DECK ở sảnh mở màn bộ bài
+OK   B: ‹ về lại sảnh, bộ mới đã ghi (drone,bao,kiembang,hydra,anhsang)
+OK   A: thấy bộ mới của B
+OK   Cả 2 READY → vào trận CO-OP online
+OK   B: mở lại link giữa trận → vào lại trận
+OK   B: vào lại không hướng dẫn, không kẹt ở sảnh, URL sạch (wave 0)
+OK   C: phòng đầy → báo rõ
+OK   D: mã sai → "not found or has ended"
+OK   D: nút CREATE A NEW ROOM / HOME · "Room ZZZQ was not found or has ended."
+OK   D: HOME → về menu
+OK   Không lỗi trang (0)

@@ -73,3 +73,10 @@
 .sanh-ping { font-family: var(--f-ui); font-size: 10px; font-weight: 700; color: #8b95a3; min-height: 12px; margin-top: 6px; }
 
 /* trong trận: tên đồng đội + ping hiện trên nhãn bàn đồng đội (render.js veNhanBan) — không cần CSS */
+/* link mời hỏng (đầy / hết / không có): chỉ còn dòng báo + CREATE A NEW ROOM / HOME */
+.onl-bang .onl-tao2 { display: none; }
+.onl-bang.moi-loi .onl-tao2 { display: inline; }
+.onl-bang.moi-loi .onl-tao1, .onl-bang.moi-loi .onl-nho, .onl-bang.moi-loi .onl-hang, .onl-bang.moi-loi #onl-lai { display: none; }
+.onl-bang.moi-loi .onl-loi { font-size: 15px; }
+/* đổi bộ bài từ sảnh CO-OP: không có PLAY / PLAY TUTORIAL (‹ = về sảnh) */
+#chon.onl-doibo #hm-choi, #chon.onl-doibo [data-act="hd-choi"], #chon.onl-doibo [data-act="hd-boqua"] { display: none !important; }

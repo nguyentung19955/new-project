@@ -197,7 +197,9 @@ const HD = {
   UI.init = async function () {
     const r = await initGoc.apply(this, arguments);
     HD.dung();
-    if (!G.debug.mode && !HD.moKhoa() && !q.get('notut')) HD.batDau();
+    // mở từ link mời CO-OP (?room= / ?phong= / #room=): vào thẳng phòng, hướng dẫn để lần mở sau (không ép trước khi vào phòng)
+    const moi = /^[A-Za-z]{4}$/.test(q.get('room') || q.get('phong') || new URLSearchParams(String(location.hash).slice(1)).get('room') || new URLSearchParams(String(location.hash).slice(1)).get('phong') || '');
+    if (!G.debug.mode && !HD.moKhoa() && !q.get('notut') && !moi) HD.batDau();
     return r;
   };
 })();
