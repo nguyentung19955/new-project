@@ -89,7 +89,7 @@ const BOBAI = {
     UI.chon = a.deck.slice(); UI.mv = a.mv;
     try { localStorage.setItem('turret_bo', JSON.stringify({ chon: UI.chon, mv: UI.mv, che: UI.che })); } catch (e) { }
     SND.nut(); UI.veChon();
-    UI.nhac(a.ten + ' loaded — tap START or swap cards');
+    UI.nhac(a.ten + ' loaded — tap PLAY or swap cards');
   },
 
   // khoá bộ sưu tập trước khi xong/bỏ qua hướng dẫn
