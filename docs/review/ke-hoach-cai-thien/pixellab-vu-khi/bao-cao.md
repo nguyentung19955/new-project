@@ -57,9 +57,9 @@ Nhận xét nhanh:
 - Trong game: hình chụp khi bật `?vkpl=1` cho thấy tay Rowan nắm đúng cán ở mọi loại và mọi cấp, cả lúc đứng lẫn lúc đánh. Không có lỗi JS.
 - Lệnh kiểm:
   - `node --check` cho vien_vk.js, zed_moi.js, vk_moi.js: đạt.
-  - `python3 game/build.py`: bản một tệp **27,24 MB / 30 MB**.
-  - `LK_ANH_ROI=1 python3 game/build.py --hai-tep`: "người chơi tải" **19,70 MB / 20 MB**.
-- Cảnh báo dung lượng: 3 tấm mới (WebP khoảng 0,5 MB) đang được build.py tính vào phần ảnh tải. Tấm ảnh nạp theo yêu cầu, nên trên web thực tế chỉ ai bật `?vkpl=1` mới tải. Tuy vậy, mức 19,70 MB đã sát trần 20 MB.
+  - `python3 game/build.py`: bản một tệp **27,29 MB / 30 MB**.
+  - `LK_ANH_ROI=1 python3 game/build.py --hai-tep`: "người chơi tải" **19,72 MB / 20 MB**.
+- Cảnh báo dung lượng: 3 tấm mới (WebP khoảng 0,5 MB) đang được build.py tính vào phần ảnh tải. Tấm ảnh nạp theo yêu cầu, nên trên web thực tế chỉ ai bật `?vkpl=1` mới tải. Tuy vậy, mức 19,72 MB đã sát trần 20 MB.
   - Nếu chọn dùng PixelLab thật: **thay** tấm cũ bằng tấm mới (bỏ tấm ChatGPT) thì dung lượng còn giảm.
   - Nếu không chọn: xoá 3 tệp `zed-vk-pl*.sprite.json`.
 
