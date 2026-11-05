@@ -12,6 +12,8 @@ html body #wrap .ot > img.anh, html body #wrap .ot > img:first-child:not(.ov):no
   right: auto !important; bottom: auto !important; max-width: none !important; max-height: none !important; margin: 0 !important; border-radius: var(--ot-r) !important; object-fit: cover !important; z-index: 1 !important; background: #0d0f14; overflow: hidden; }
 html body #wrap .ot > img.anh, html body #wrap .ot > img:first-child:not(.ov), html body #wrap .ot > img.po, html body #wrap .ot .o-mv-po img, html body #wrap .ot .mv-anh img.po {
   --po-mat: .42; --po-toc: .10; --po-ho: .08; --po-zoom: 2.2; --po-zmin: 1; }
+/* khung mặt ô nhỏ (js/chandung.js datDau): viền o_vien_* đè 8,1 % mỗi cạnh cửa sổ ảnh → tính tóc/mắt/cằm theo vùng thấy */
+html body #wrap .ot > img.anh, html body #wrap .ot > img:first-child:not(.ov), html body #wrap .ot > img.po, html body #wrap .ot .o-mv-po img, html body #wrap .ot .mv-anh img.po, html body #wrap .ot > img.tt-anh { --po-mep: .081; }
 html body #wrap .ot .o-mv-po img, html body #wrap .ot .mv-anh img.po { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
 /* viền độ hiếm PNG (ruột trong suốt) */
 html body #wrap .ot > img.ov.ov { position: absolute !important; z-index: 4 !important; left: 0 !important; top: 0 !important; right: auto !important; bottom: auto !important; width: 100% !important; height: var(--ot-sq, 100%) !important;
@@ -121,3 +123,7 @@ html body #wrap.co-tvb #canh-bao.tvb-cb span, html body #tt.hb-qi .hb-so .ht { o
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong { right: 0; }
 /* khay trận: chip số ụ ở góc trên-phải → mặt dời trái nhẹ (không bị chip đè) */
 html body #wrap #bo-the .the.ot > img.anh { --po-x: .40; }
+/* thẻ chỉ huy trận (ô tối giản): vòng hồi chiêu/tác dụng + số giây nằm TRONG ô (trừ viền 6 %) — máy kiểm chữ ô tối giản (thap-kt-tran-do.js) */
+html body #wrap #the-mv.ot .cht-vong { top: 7% !important; }
+html body #wrap #the-mv.ot .cht-vong.cd { right: 7% !important; left: auto !important; }
+html body #wrap #the-mv.ot .cht-vong.tac { left: 7% !important; right: auto !important; }
