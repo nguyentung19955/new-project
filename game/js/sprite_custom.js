@@ -110,6 +110,9 @@
   // TALESWORN phiên D (05/11, talesworn-d-gan-anh/bao-cao.md): tấm Rowan phiên C giữ ở zed-rowan-daucu (mục "dau_cua": 'zed-rowan'),
   // chỉ ở bản hai tệp (web), chỉ nạp khi ?rowancu=1 (G.ROWAN_DAU_CU); có tấm cũ thì bỏ tấm mới (mục "dau_moi"). Bản một tệp: cờ không đổi gì.
   if (G.ROWAN_DAU_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]rowancu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.ROWAN_DAU_CU = cu; }
+  // F4 (05/11, on-dinh-f4-chia-anh/bao-cao.md): vũ khí PixelLab nướng sẵn vào zed-vk / zed-vk-he / zed-vk-gan (mục "vk_moi"); tấm ChatGPT cũ giữ ở
+  // <mã>-vkcu (mục "vk_cu_cua"), chỉ ở bản hai tệp (web), chỉ nạp khi ?vkpl=0 (G.VK_PL = false) — có tấm cũ thì bỏ tấm mới. Bản một tệp: cờ không đổi gì.
+  if (G.VK_PL === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vkpl=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_PL = !tat; }
   if (G.SAN_MOI === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]sanmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SAN_MOI = !tat; }
   if (G.ANH_MUOT_CU === undefined) {
     let cu = false;
@@ -178,6 +181,10 @@
         if (!G.ROWAN_DAU_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.dau_cua });
       } else if (G.ROWAN_DAU_CU && tep.dau_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.dau_cua === tep.ma)) return null;
+      if (typeof tep.vk_cu_cua === 'string') { // F4: vũ khí ChatGPT cũ, chỉ khi ?vkpl=0
+        if (G.VK_PL !== false) return null;
+        tep = Object.assign({}, tep, { ma: tep.vk_cu_cua });
+      } else if (G.VK_PL === false && tep.vk_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.vk_cu_cua === tep.ma)) return null;
       if (typeof tep.san_cua === 'string') { // 17/10 sàn dịu: sàn cũ, chỉ khi ?sanmoi=0; có sàn cũ thì bỏ sàn mới
         if (G.SAN_MOI !== false) return null;
         tep = Object.assign({}, tep, { ma: tep.san_cua });
@@ -1900,7 +1907,7 @@
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : G.VK_PL === false && typeof t.vk_cu_cua === 'string' ? t.vk_cu_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;

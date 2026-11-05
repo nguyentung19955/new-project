@@ -137,7 +137,7 @@ def main():
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
     # 17/10 thuong-luong-that: tấm ghi "chi_hai_tep" (Thuồng Luồng thật 3 pha, ~2,9 MB) chỉ ở bản web — bản một tệp (trần 30 MB, đã sát trần) vẽ hình tạm cũ.
-    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('chi_hai_tep')])  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
+    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('vk_cu_cua') and not t.get('chi_hai_tep')])  # vk_cu_cua (05/11 F4): vũ khí ChatGPT cũ <mã>-vkcu, chỉ web (?vkpl=0)  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
     js = gom(mot, khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
@@ -758,7 +758,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             tot = len(w)
             tong_webp += len(w)
             so_webp += 1
-        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua'):  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
+        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cu_cua'):  # 05/11 F4: vũ khí ChatGPT cũ (?vkpl=0) cũng vậy  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
             cu_png += len(png)
@@ -781,6 +781,16 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
         bang[nhom][0] += 1
         bang[nhom][1] += tot
         bang[nhom][2] += len(png)
+    # 05/11 F4: tấm vũ khí ChatGPT cũ (<mã>-vkcu, ?vkpl=0) có ảnh kiếm vuông lồng trong "kiem_vuong.tam" → ảnh rời riêng, KHÔNG tính tải đầu
+    for t in ds:
+        kv = t.get('kiem_vuong') if t.get('vk_cu_cua') else None
+        if isinstance(kv, dict) and isinstance(kv.get('tam'), str) and kv['tam'].startswith('data:image/png;base64,'):
+            png = base64.b64decode(kv['tam'].split(',', 1)[1])
+            ten = '%s-kv.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
+            with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+                f.write(png)
+            t['kiem_vuong'] = dict(kv, tam=THU_MUC_ANH + '/' + ten + '.png')
+            cu_tot += len(png); cu_png += len(png); tong_png += len(png)
     # 17/10 do-net: bản to ×1,2 của tấm Cu Tí ("tam_to", js/zed_moi.js tải khi vẽ Cu Tí trong trận lần đầu) → ảnh rời riêng, đường dẫn thay chuỗi base64
     ds_to = [t for t in ds if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,')]
     png_to = [base64.b64decode(t['tam_to'].split(',', 1)[1]) for t in ds_to]

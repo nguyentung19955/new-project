@@ -1,0 +1,552 @@
+{
+ "so_o": 104,
+ "khac_ban_thu_vkpl1": [
+  [
+   "kiem",
+   "Trắng",
+   "dung",
+   316
+  ],
+  [
+   "kiem",
+   "Trắng",
+   "danh",
+   390
+  ],
+  [
+   "kiem",
+   "Mầm Lửa",
+   "dung",
+   520
+  ],
+  [
+   "kiem",
+   "Mầm Lửa",
+   "danh",
+   742
+  ],
+  [
+   "kiem",
+   "Mầm Độc",
+   "dung",
+   483
+  ],
+  [
+   "kiem",
+   "Mầm Độc",
+   "danh",
+   746
+  ],
+  [
+   "kiem",
+   "Mầm Băng",
+   "dung",
+   528
+  ],
+  [
+   "kiem",
+   "Mầm Băng",
+   "danh",
+   773
+  ],
+  [
+   "kiem",
+   "Thành hình Lửa",
+   "dung",
+   865
+  ],
+  [
+   "kiem",
+   "Thành hình Lửa",
+   "danh",
+   1063
+  ],
+  [
+   "kiem",
+   "Thành hình Độc",
+   "dung",
+   860
+  ],
+  [
+   "kiem",
+   "Thành hình Độc",
+   "danh",
+   1028
+  ],
+  [
+   "kiem",
+   "Thành hình Băng",
+   "dung",
+   911
+  ],
+  [
+   "kiem",
+   "Thành hình Băng",
+   "danh",
+   1089
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Lửa",
+   "dung",
+   769
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Lửa",
+   "danh",
+   855
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Độc",
+   "dung",
+   753
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Độc",
+   "danh",
+   876
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Băng",
+   "dung",
+   797
+  ],
+  [
+   "kiem",
+   "Thức tỉnh Băng",
+   "danh",
+   896
+  ],
+  [
+   "kiem",
+   "Trắng gân",
+   "dung",
+   295
+  ],
+  [
+   "kiem",
+   "Trắng gân",
+   "danh",
+   523
+  ],
+  [
+   "kiem",
+   "Mầm gân",
+   "dung",
+   316
+  ],
+  [
+   "kiem",
+   "Mầm gân",
+   "danh",
+   525
+  ],
+  [
+   "kiem",
+   "Thành hình gân",
+   "dung",
+   316
+  ],
+  [
+   "kiem",
+   "Thành hình gân",
+   "danh",
+   525
+  ],
+  [
+   "thuong",
+   "Trắng",
+   "dung",
+   201
+  ],
+  [
+   "thuong",
+   "Trắng",
+   "danh",
+   208
+  ],
+  [
+   "thuong",
+   "Mầm Lửa",
+   "dung",
+   344
+  ],
+  [
+   "thuong",
+   "Mầm Lửa",
+   "danh",
+   353
+  ],
+  [
+   "thuong",
+   "Mầm Độc",
+   "dung",
+   390
+  ],
+  [
+   "thuong",
+   "Mầm Độc",
+   "danh",
+   386
+  ],
+  [
+   "thuong",
+   "Mầm Băng",
+   "dung",
+   338
+  ],
+  [
+   "thuong",
+   "Mầm Băng",
+   "danh",
+   334
+  ],
+  [
+   "thuong",
+   "Thành hình Lửa",
+   "dung",
+   595
+  ],
+  [
+   "thuong",
+   "Thành hình Lửa",
+   "danh",
+   602
+  ],
+  [
+   "thuong",
+   "Thành hình Độc",
+   "dung",
+   611
+  ],
+  [
+   "thuong",
+   "Thành hình Độc",
+   "danh",
+   628
+  ],
+  [
+   "thuong",
+   "Thành hình Băng",
+   "dung",
+   629
+  ],
+  [
+   "thuong",
+   "Thành hình Băng",
+   "danh",
+   644
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Lửa",
+   "dung",
+   1247
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Lửa",
+   "danh",
+   1241
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Độc",
+   "dung",
+   1269
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Độc",
+   "danh",
+   1275
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Băng",
+   "dung",
+   1285
+  ],
+  [
+   "thuong",
+   "Thức tỉnh Băng",
+   "danh",
+   1293
+  ],
+  [
+   "thuong",
+   "Trắng gân",
+   "dung",
+   235
+  ],
+  [
+   "thuong",
+   "Trắng gân",
+   "danh",
+   228
+  ],
+  [
+   "thuong",
+   "Mầm gân",
+   "dung",
+   201
+  ],
+  [
+   "thuong",
+   "Mầm gân",
+   "danh",
+   208
+  ],
+  [
+   "thuong",
+   "Thành hình gân",
+   "dung",
+   201
+  ],
+  [
+   "thuong",
+   "Thành hình gân",
+   "danh",
+   208
+  ],
+  [
+   "bua",
+   "Trắng",
+   "dung",
+   176
+  ],
+  [
+   "bua",
+   "Trắng",
+   "danh",
+   61
+  ],
+  [
+   "bua",
+   "Mầm Lửa",
+   "dung",
+   273
+  ],
+  [
+   "bua",
+   "Mầm Lửa",
+   "danh",
+   128
+  ],
+  [
+   "bua",
+   "Mầm Độc",
+   "dung",
+   277
+  ],
+  [
+   "bua",
+   "Mầm Độc",
+   "danh",
+   125
+  ],
+  [
+   "bua",
+   "Mầm Băng",
+   "dung",
+   271
+  ],
+  [
+   "bua",
+   "Mầm Băng",
+   "danh",
+   113
+  ],
+  [
+   "bua",
+   "Thành hình Lửa",
+   "dung",
+   393
+  ],
+  [
+   "bua",
+   "Thành hình Lửa",
+   "danh",
+   146
+  ],
+  [
+   "bua",
+   "Thành hình Độc",
+   "dung",
+   374
+  ],
+  [
+   "bua",
+   "Thành hình Độc",
+   "danh",
+   138
+  ],
+  [
+   "bua",
+   "Thành hình Băng",
+   "dung",
+   381
+  ],
+  [
+   "bua",
+   "Thành hình Băng",
+   "danh",
+   137
+  ],
+  [
+   "bua",
+   "Thức tỉnh Lửa",
+   "dung",
+   751
+  ],
+  [
+   "bua",
+   "Thức tỉnh Lửa",
+   "danh",
+   204
+  ],
+  [
+   "bua",
+   "Thức tỉnh Độc",
+   "dung",
+   738
+  ],
+  [
+   "bua",
+   "Thức tỉnh Độc",
+   "danh",
+   218
+  ],
+  [
+   "bua",
+   "Thức tỉnh Băng",
+   "dung",
+   695
+  ],
+  [
+   "bua",
+   "Thức tỉnh Băng",
+   "danh",
+   194
+  ],
+  [
+   "bua",
+   "Trắng gân",
+   "dung",
+   195
+  ],
+  [
+   "bua",
+   "Trắng gân",
+   "danh",
+   66
+  ],
+  [
+   "bua",
+   "Mầm gân",
+   "dung",
+   176
+  ],
+  [
+   "bua",
+   "Mầm gân",
+   "danh",
+   61
+  ],
+  [
+   "bua",
+   "Thành hình gân",
+   "dung",
+   176
+  ],
+  [
+   "bua",
+   "Thành hình gân",
+   "danh",
+   61
+  ],
+  [
+   "phitieu",
+   "Trắng",
+   "dung",
+   18
+  ],
+  [
+   "phitieu",
+   "Mầm Lửa",
+   "dung",
+   36
+  ],
+  [
+   "phitieu",
+   "Mầm Độc",
+   "dung",
+   42
+  ],
+  [
+   "phitieu",
+   "Mầm Băng",
+   "dung",
+   36
+  ],
+  [
+   "phitieu",
+   "Thành hình Lửa",
+   "dung",
+   71
+  ],
+  [
+   "phitieu",
+   "Thành hình Độc",
+   "dung",
+   69
+  ],
+  [
+   "phitieu",
+   "Thành hình Băng",
+   "dung",
+   71
+  ],
+  [
+   "phitieu",
+   "Thức tỉnh Lửa",
+   "dung",
+   119
+  ],
+  [
+   "phitieu",
+   "Thức tỉnh Độc",
+   "dung",
+   125
+  ],
+  [
+   "phitieu",
+   "Thức tỉnh Băng",
+   "dung",
+   110
+  ],
+  [
+   "phitieu",
+   "Trắng gân",
+   "dung",
+   23
+  ],
+  [
+   "phitieu",
+   "Mầm gân",
+   "dung",
+   18
+  ],
+  [
+   "phitieu",
+   "Thành hình gân",
+   "dung",
+   18
+  ]
+ ],
+ "loi": []
+}
