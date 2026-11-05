@@ -517,6 +517,11 @@
   G.ZED_BO_KEYS = ['ninja', 'rung', 'bien', 'lau'];
   G.ZED_BO_THU = null;
   try { const m = typeof location !== 'undefined' && /[?&]zedbo=([a-z]+)(&|$)/.exec(location.search || ''); if (m && G.ZED_BO[m[1]]) G.ZED_BO_THU = m[1]; } catch (e) { /* giữ mặc định */ }
+  // ROWAN (TALESWORN 05/11/2026, docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): nhân vật chính vẽ bằng tấm zed-rowan (áo lam,
+  // quần nâu, tạp dề da, mũ trùm vàng nghệ) thay hình ninja ở bộ mặc định. CHỈ HÌNH: bộ, skill, giá, bản lưu vẫn là 'ninja'.
+  // ?zedbo=ninja: về hình ninja cũ. ?zedbo=rowan: như mặc định.
+  G.ROWAN_HINH = true;
+  try { if (typeof location !== 'undefined' && /[?&]zedbo=ninja(&|$)/.test(location.search || '')) G.ROWAN_HINH = false; } catch (e) { /* giữ mặc định */ }
   // chỉ số vùng của bộ (vùng có trùm mở bộ đó); không tìm thấy tên vùng thì lấy vùng đầu tiên
   G.zedBoVung = function (k) {
     const B = G.ZED_BO[k];

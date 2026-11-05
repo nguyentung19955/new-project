@@ -6,9 +6,12 @@
 //     bắt đầu tải ngay khi trang còn đang về (window.LK_BIA = { n, img }). Không có thì tệp này tải lúc mã game vừa chạy.
 //     Ảnh chưa về: village.js vẽ cảnh làng như cũ (không Cu Tí), ảnh về thì hiện dần 0,8 giây. Ảnh hỏng cả WebP lẫn JPEG: giữ cảnh làng.
 //   - Hiệu ứng nhẹ: Ken Burns rất chậm (chu kỳ ~50 giây), đom đóm quanh cây đa, ánh nước lấp lánh. Không có gì nhấp nháy mạnh.
+// TALESWORN 05/11/2026 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bìa 3 "bia-3-talesworn" (rừng gai, làng xa, ảnh
+//   ChatGPT thu nét 480×270 kiểu điểm ảnh) là MẶC ĐỊNH; vẽ không phóng mờ (không Ken Burns, không làm mịn). ?mandau=cu: về 2 bìa cũ
+//   (ngẫu nhiên, ?bia=1|2 như trước). ?bia=3 ép bìa mới.
 (function () {
   const G = window.G;
-  const TEN = ['bia-1-cay-da', 'bia-2-dong-song'];
+  const TEN = ['bia-1-cay-da', 'bia-2-dong-song', 'bia-3-talesworn'];
   const B = { TEN, n: 0, ten: '', img: null, ok: false, hong: false, tOk: 0, tDau: 0 };
   G.bia = B;
   const bayGio = () => (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now()) / 1000;
@@ -16,9 +19,10 @@
     let q = '';
     try { q = String(location.search || ''); } catch (e) { /* bỏ qua */ }
     const L = window.LK_BIA;
-    if (L && (L.n === 1 || L.n === 2)) return L.n; // màn tải HTML đã chọn (và đã bắt đầu tải) → dùng đúng bìa đó
-    const m = /[?&]bia=([12])(&|$)/.exec(q);
+    if (L && (L.n === 1 || L.n === 2 || L.n === 3)) return L.n; // màn tải HTML đã chọn (và đã bắt đầu tải) → dùng đúng bìa đó
+    const m = /[?&]bia=([123])(&|$)/.exec(q);
     if (m) return +m[1];
+    if (!/[?&]mandau=cu(&|$)/.test(q)) return 3; // Talesworn
     return Math.random() < 0.5 ? 1 : 2;
   }
   B.n = chon();
@@ -27,7 +31,7 @@
     window.LK_BIA = { n: B.n };
     try {
       const el = document.getElementById('lk-tai'), d = el ? String(el.getAttribute('data-bia') || '').split('|') : [];
-      const o = B.n && d.length > 5 ? d[B.n * 3 - 1] : '';
+      const o = B.n && d.length >= B.n * 3 ? d[B.n * 3 - 1] : '';
       if (o && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(o)) el.style.backgroundImage = 'linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url(' + o + ')';
     } catch (e) { /* bỏ qua */ }
   }
@@ -81,31 +85,36 @@
   }, { // bìa 2: ba vùng + dòng sông giữa
     dom: { n: 7, x: [4, 160], y: [10, 120] },
     nuoc: { n: 20, y: [152, 232] },
+  }, { // bìa 3 (Talesworn): đom đóm trong rừng gai hai bên, ánh nước sông giữa
+    dom: { n: 10, x: [10, 470], y: [60, 200] },
+    nuoc: { n: 12, y: [182, 206], x: [200, 330] },
   }];
   const HAT = HIEU.map((h, k) => {
     if (!h) return null;
     const r = hat(97 + k * 31);
     const dom = [], nuoc = [];
     for (let i = 0; i < h.dom.n; i++) dom.push({ x: h.dom.x[0] + r() * (h.dom.x[1] - h.dom.x[0]), y: h.dom.y[0] + r() * (h.dom.y[1] - h.dom.y[0]), p: r() * 6.28, v: 0.25 + r() * 0.35, b: 4 + r() * 6 });
-    for (let i = 0; i < h.nuoc.n; i++) nuoc.push({ x: 8 + r() * 464, y: h.nuoc.y[0] + r() * (h.nuoc.y[1] - h.nuoc.y[0]), p: r() * 6.28, v: 0.5 + r() * 0.9, w: 2 + Math.round(r() * 3) });
+    const nx = h.nuoc.x || [8, 472];
+    for (let i = 0; i < h.nuoc.n; i++) nuoc.push({ x: nx[0] + r() * (nx[1] - nx[0]), y: h.nuoc.y[0] + r() * (h.nuoc.y[1] - h.nuoc.y[0]), p: r() * 6.28, v: 0.5 + r() * 0.9, w: 2 + Math.round(r() * 3) });
     return { dom, nuoc };
   });
   // màu ánh nước theo phía: trái vàng ấm, giữa xanh lam, phải đỏ (đúng màu phản chiếu trong cả hai bìa)
-  function mauNuoc(x) { return x < 170 ? '255,226,150' : x < 320 ? '170,220,255' : '255,160,130'; }
+  function mauNuoc(x) { return B.n === 3 ? '255,206,120' : x < 170 ? '255,226,150' : x < 320 ? '170,220,255' : '255,160,130'; }
 
   // Vẽ ảnh lên canvas thế giới (G.wx), toạ độ game 480×270. a: độ hiện (0..1), t: giây.
   B.ve = function (c, a, t) {
     if (!B.ok || a <= 0) return;
     const im = B.img;
     // Ken Burns rất chậm: phóng 1,03 ↔ 1,07 (chu kỳ 50 giây), trôi ngang nhẹ (chu kỳ 73 giây); luôn phủ kín khung
-    const z = 0.5 - 0.5 * Math.cos((t * 2 * Math.PI) / 50), s = 1.03 + 0.04 * z;
+    const diem = B.n === 3; // bìa điểm ảnh: đứng yên, không làm mịn (phóng ×2 điểm gần nhất), không Ken Burns
+    const z = diem ? 0 : 0.5 - 0.5 * Math.cos((t * 2 * Math.PI) / 50), s = diem ? 1 : 1.03 + 0.04 * z;
     const w = 480 * s, h = 270 * s, mx = (w - 480) / 2, my = (h - 270) / 2;
     const x = -mx + mx * 0.7 * Math.sin((t * 2 * Math.PI) / 73), y = -my + my * 0.5 * Math.sin((t * 2 * Math.PI) / 61);
     G.wxDat(c, 0, 0);
     const ga = c.globalAlpha, sm = c.imageSmoothingEnabled;
     c.globalAlpha = ga * a;
-    c.imageSmoothingEnabled = true;
-    try { c.imageSmoothingQuality = 'high'; } catch (e) { /* bỏ qua */ }
+    c.imageSmoothingEnabled = !diem;
+    if (!diem) try { c.imageSmoothingQuality = 'high'; } catch (e) { /* bỏ qua */ }
     c.drawImage(im, x, y, w, h);
     c.imageSmoothingEnabled = sm;
     // hiệu ứng trong toạ độ ảnh (đi theo Ken Burns)

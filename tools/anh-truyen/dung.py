@@ -30,14 +30,36 @@ CO = (960, 540)
 # Bìa màn hình chính (js/bia.js: ngẫu nhiên 1 trong 2, ?bia=1 / ?bia=2 ép)
 GOC_BIA = os.path.join(ROOT, 'docs', 'anh-goc', 'bia')
 RA_BIA = os.path.join(ROOT, 'game', 'art', 'bia')
-BIA = ['bia-1-cay-da', 'bia-2-dong-song']
+BIA = ['bia-1-cay-da', 'bia-2-dong-song', 'bia-3-talesworn']
+# TALESWORN 05/11 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan): bìa 3 lấy thẳng ảnh gốc ChatGPT (không chép thêm bản vào docs/anh-goc/bia)
+# và THU NÉT kiểu điểm ảnh: lượng tử màu → mỗi điểm 480×270 lấy màu xuất hiện nhiều nhất trong ô (không trung bình) → phóng ×2 kiểu
+# "điểm gần nhất" thành 960×540. WebP chất lượng cao hơn (giữ cạnh điểm ảnh).
+GOC_RIENG = {'bia-3-talesworn': os.path.join(ROOT, 'docs', 'tu-van-toan-cau', 'chatgpt-05-11', 'man-dau-nen-nguon-chatgpt.png')}
+THU_NET = {'bia-3-talesworn': (480, 270)}
+
+
+def thu_net(im, co):
+    """Thu ảnh về co (rộng, cao) điểm ảnh: mỗi điểm = màu có thật xuất hiện nhiều nhất trong ô nguồn (sau lượng tử 96 màu)."""
+    import numpy as np
+    q = im.quantize(96, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    pal = np.array(q.getpalette()[:96 * 3], dtype=np.uint8).reshape(-1, 3)
+    a = np.array(q)
+    H0, W0 = a.shape
+    w, h = co
+    ra = np.zeros((h, w, 3), np.uint8)
+    for j in range(h):
+        ya, yb = int(j * H0 / h), max(int(j * H0 / h) + 1, int((j + 1) * H0 / h))
+        for i in range(w):
+            xa, xb = int(i * W0 / w), max(int(i * W0 / w) + 1, int((i + 1) * W0 / w))
+            ra[j, i] = pal[np.bincount(a[ya:yb, xa:xb].ravel(), minlength=len(pal)).argmax()]
+    return Image.fromarray(ra)
 CO_MO = (32, 18)
 
 
 def dung(ten):
     bia = ten in BIA
     goc, ra = (GOC_BIA, RA_BIA) if bia else (GOC, RA)
-    src = os.path.join(goc, ten + '.png')
+    src = GOC_RIENG.get(ten) or os.path.join(goc, ten + '.png')
     if not os.path.isfile(src):
         return None
     im = Image.open(src).convert('RGB')
@@ -48,11 +70,12 @@ def dung(ten):
             nw = round(h * 16 / 9); im = im.crop(((w - nw) // 2, 0, (w - nw) // 2 + nw, h))
         else:
             nh = round(w * 9 / 16); im = im.crop((0, (h - nh) // 2, w, (h - nh) // 2 + nh))
-    im = im.resize(CO, Image.LANCZOS)
+    net = ten in THU_NET
+    im = thu_net(im, THU_NET[ten]).resize(CO, Image.NEAREST) if net else im.resize(CO, Image.LANCZOS)
     os.makedirs(ra, exist_ok=True)
     pw, pj = os.path.join(ra, ten + '.webp'), os.path.join(ra, ten + '.jpg')
-    im.save(pw, 'WEBP', quality=80, method=6)
-    im.save(pj, 'JPEG', quality=80, optimize=True, progressive=True)
+    im.save(pw, 'WEBP', quality=92 if net else 80, method=6)
+    im.save(pj, 'JPEG', quality=90 if net else 80, optimize=True, progressive=True)
     if bia:  # bản rất nhỏ cho nền mờ màn tải (trình duyệt phóng to tự làm mờ)
         im.resize(CO_MO, Image.BOX).save(os.path.join(ra, ten + '.mo.jpg'), 'JPEG', quality=70, optimize=True)
     return os.path.getsize(pw), os.path.getsize(pj)

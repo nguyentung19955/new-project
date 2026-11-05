@@ -407,7 +407,7 @@ def chep_truyen(truyen, thu):
 
 # ---------- Bìa màn hình chính (15/10, bia-moi): ảnh tải sớm ----------
 BIA_DIR = os.path.join(ROOT, 'art', 'bia')
-BIA_TEN = ('bia-1-cay-da', 'bia-2-dong-song')  # thứ tự = ?bia=1 / ?bia=2, trùng js/bia.js và tools/anh-truyen/dung.py
+BIA_TEN = ('bia-1-cay-da', 'bia-2-dong-song', 'bia-3-talesworn')  # bìa 3 (Talesworn 05/11, mặc định; ?mandau=cu về 1|2)  # thứ tự = ?bia=1 / ?bia=2, trùng js/bia.js và tools/anh-truyen/dung.py
 
 
 def bia_anh():

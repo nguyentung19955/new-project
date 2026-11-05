@@ -10,6 +10,9 @@
 // Phi tiêu (thay cung): ném tay không; viên phi tiêu bay là ảnh vk-phi-tieu cấp hiện tại, xoay khi bay.
 // Trang phục (13/10/2026, docs/review/ke-hoach-cai-thien/zed-bo-rung, zed-bo-bien, zed-bo-lau): tấm thân chọn theo G.zedBo() — 'ninja' = zed-moi,
 // 'rung' = zed-rung, 'bien' = zed-bien, 'lau' = zed-lau (cùng chuẩn, neo dùng lại của bộ ninja); thử nhanh: ?zedbo=rung, ?zedbo=bien, ?zedbo=lau.
+// ROWAN (TALESWORN 05/11/2026, docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bộ mặc định vẽ bằng tấm zed-rowan
+// (dựng bằng docs/anh-goc/zed/trang-phuc/bo-5-rowan/dung-rowan.py từ zed-moi: cùng ô, cùng neo → dùng chung mọi bảng số của zed-moi).
+// G.ROWAN_HINH (js/data.js). ?zedbo=ninja: hình ninja cũ.
 // Luôn bật (đợt 2 bỏ cờ ?zedmoi=0 / ?zed=0). Ảnh chưa tải xong → lớp vẽ bên trong (G.art.hero) vẽ tạm cho tới khi có.
 // CẦM VŨ KHÍ LÚC ĐỨNG / ĐI / CHẠY (13/10/2026, docs/review/ke-hoach-cai-thien/zed-cam-vk/YEU-CAU.md): hàng dung/di/chay vẽ vũ khí đang cầm
 // trong TAY PHẢI (cùng tay lúc chém) theo hàng neo riêng dung_<loại>, di_<loại>, chay_<loại> của tấm thân (cùng ảnh thân, neo + nắm tay riêng;
@@ -154,6 +157,9 @@
   const layThan = () => {
     let ma = 'zed-moi';
     try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b]) ma = G.ZED_BO[b].tam; } catch (e) { ma = 'zed-moi'; }
+    // TALESWORN 05/11 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bộ mặc định (ninja) vẽ bằng tấm ROWAN (zed-rowan: cùng ô,
+    // cùng neo với zed-moi, chỉ đổi màu thân + đầu mũ trùm). Luật chơi / bộ / skill vẫn là 'ninja'. ?zedbo=ninja: về hình ninja cũ.
+    if (ma === 'zed-moi' && G.ROWAN_HINH) ma = 'zed-rowan';
     const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
     if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep, z._ma); }
     return z;
@@ -218,7 +224,7 @@
     if (!D || !D.dong_tac || D._hang16) return;
     D._hang16 = 1;
     const dt = D.dong_tac;
-    Object.keys(dt).forEach((k) => { if (dt[k] && typeof dt[k] === 'object') { dt[k]._khoa = k; dt[k]._ma = ma || 'zed-moi'; } }); // cam-vk-chuan: khoá gốc + tấm
+    Object.keys(dt).forEach((k) => { if (dt[k] && typeof dt[k] === 'object') { dt[k]._khoa = k; dt[k]._ma = ma || 'zed-moi'; if (D.anh_thay) dt[k]._thay = D.anh_thay; } }); // cam-vk-chuan: khoá gốc + tấm (_thay: khung thay ảnh bản Rowan)
     if (HANG_CU) return;
     Object.keys(dt).forEach((k) => {
       if (k.indexOf('~16') < 0 || (KIEM16[k] && !KIEM_MOI) || (!CHAY_MOI && k.indexOf('chay~16') === 0) || (k === 'bua_nen~16' && !BUA_MOI)) return;
@@ -243,7 +249,7 @@
   // docs/anh-goc/zed/cat-than.py). Chân quay theo hướng chạy (o.mdx), thân trên theo hướng chém (o.face) → chạy trái chém phải được.
   // Hàng cúi/khuỵu (kiếm 3, búa, quét, đặc biệt) không ghép: vẽ toàn thân hàng đòn (combat chậm lại, js/moves.js CHAY_DANH_CFG).
   // Bật khi G.CHAY_DANH là 'than' (mặc định) hoặc 'eo' và G.CHAY_DANH_MOI (tắt bằng ?chaydanh=0 → cách cũ).
-  const BO_MA = { 'zed-moi': 'moi', 'zed-rung': 'rung', 'zed-bien': 'bien', 'zed-lau': 'lau' };
+  const BO_MA = { 'zed-moi': 'moi', 'zed-rung': 'rung', 'zed-bien': 'bien', 'zed-lau': 'lau', 'zed-rowan': 'moi' }; // zed-rowan: cùng ô / số đo với zed-moi
   const eoBat = () => G.CHAY_DANH_MOI !== false && !!G.ZED_EO && (G.CHAY_DANH === 'than' || G.CHAY_DANH === 'eo');
   const coEo = (ten) => eoBat() && G.ZED_EO.hang.indexOf(ten) >= 0;
   // Sửa bóp eo / vặn người (zed-eo-sua): cần dữ liệu phiên bản 2 (mỗi khung [y, x, c, l, r]). Tắt ?eosua=0.
@@ -321,12 +327,13 @@
   // dựng bằng cam-vk-chuan/sua.py) thay neo từng khung (điểm cầm đúng tâm nắm tay, cán qua hai nắm tay, thêm tay thứ hai đang nằm trên cán,
   // phi tiêu theo hướng cẳng tay) và điểm cầm trên ảnh kiếm (chuôi khuất dưới nắm tay, đốc chắn ngay mép nắm tay rồi lưỡi). Chỉ thay khi
   // tấm còn đúng bản đã đo (neo gốc / điểm cầm gốc khớp) — tấm dựng lại thì tự về số của tấm. Chỉ HÌNH. Tắt: ?camchuan=0 (G.CAM_CHUAN).
+  const maSo = (m) => (!m || m === 'zed-rowan' ? 'zed-moi' : m); // bảng số đo của tấm: zed-rowan dùng chung của zed-moi
   function camChuan(da, b) {
     const C = G.CAM_CHUAN !== false && G.CAM_CHUAN_DATA;
     if (!C) return b;
     try {
       let neo = b.neo, cam = b.cam;
-      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      const mR = maSo(da._ma), R = C.bo && C.bo[mR] && C.bo[mR][da._khoa];
       if (R && neo && R.so === neo.length) {
         const g0 = neo.find((x) => x);
         if (g0 && Math.abs(g0[0] - R.goc[0]) < 0.02 && Math.abs(g0[1] - R.goc[1]) < 0.02 && g0[2] === R.goc[2]) {
@@ -348,15 +355,16 @@
     const C = G.THUONG_CAO !== false && G.NGON_ANH !== false && typeof document !== 'undefined' && G.THUONG_CAO_DATA;
     if (!C) return b;
     try {
-      const R = C.bo && C.bo[da._ma || 'zed-moi'] && C.bo[da._ma || 'zed-moi'][da._khoa];
+      const mR = maSo(da._ma), R = C.bo && C.bo[mR] && C.bo[mR][da._khoa];
       if (!R || !b.neo || R.so !== b.neo.length) return b;
       const neo = b.neo.slice(), k = {};
       let co = false;
       Object.keys(R.khung).forEach((i) => {
         const r = R.khung[i], n = neo[+i];
         if (n && Math.abs(n[0] - r.cu[0]) < 0.02 && Math.abs(n[1] - r.cu[1]) < 0.02 && Math.abs(n[2] - r.cu[2]) < 0.05) {
-          if (r.anh && !anhThay(r.anh)) return; // khung thay ảnh mà không tải được ảnh: giữ khung + neo cũ
-          neo[+i] = r.neo; k[+i] = r.anh ? { anh: r.anh } : r.cot; co = true;
+          const anh = (r.anh && da._thay && da._thay[da._khoa + '#' + i]) || r.anh; // Rowan: khung thay ảnh đã đổi màu + đầu (zed-rowan anh_thay)
+          if (anh && !anhThay(anh)) return; // khung thay ảnh mà không tải được ảnh: giữ khung + neo cũ
+          neo[+i] = r.neo; k[+i] = anh ? { anh } : r.cot; co = true;
         }
       });
       return co ? Object.assign({}, b, { neo, cao: { k, khoa: da._khoa, hang: da.hang } }) : b;

@@ -978,7 +978,28 @@
   datBoCuc();
   G.titleLayout = TL; // để bài kiểm tra biết nút nằm ở đâu
   // Tiêu đề: chữ LINH KHÍ có viền tối dày + bóng đổ lệch xuống, dòng phụ SPIRITBLADE giãn chữ (tên miền spiritblade.web.app).
+  // TALESWORN 05/11/2026 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bìa 3 (rừng gai, js/bia.js) → logo TẠM bằng chữ:
+  // "TALESWORN" to, viền mực + bóng, dòng "THE UNWRITTEN TALES" và câu chủ đề "Your blade remembers. Your enemies learn." Không trống đồng,
+  // không ảnh logo LINH KHÍ. Logo vẽ tay sẽ thay sau. ?mandau=cu: màn đầu cũ (bìa 1|2 + logo LINH KHÍ + trống đồng).
+  function titleLogoTalesworn() {
+    const u = G.ux, y0 = 62;
+    ui.font(34, true); u.textAlign = 'center'; u.lineJoin = 'round';
+    u.fillStyle = 'rgba(0,0,0,0.6)'; u.fillText('TALESWORN', 240, y0 + 3);
+    u.lineWidth = 5; u.strokeStyle = '#18202A'; u.strokeText('TALESWORN', 240, y0);
+    ui.text('TALESWORN', 240, y0, { size: 34, bold: true, align: 'center', color: '#E0A23A', shadow: false });
+    u.save(); u.beginPath(); u.rect(120, y0 - 26, 240, 11); u.clip(); // dải sáng nửa trên mặt chữ (vàng nghệ sáng)
+    ui.text('TALESWORN', 240, y0, { size: 34, bold: true, align: 'center', color: '#F2C46A', shadow: false }); u.restore();
+    u.lineJoin = 'miter';
+    ui.font(8, true);
+    const sub = 'T H E   U N W R I T T E N   T A L E S', sw = u.measureText(sub).width;
+    u.fillStyle = '#A86A22';
+    u.fillRect(Math.round(240 - sw / 2 - 24), y0 + 11, 16, 1); u.fillRect(Math.round(240 + sw / 2 + 8), y0 + 11, 16, 1);
+    ui.text(sub, 240, y0 + 14, { size: 8, bold: true, align: 'center', color: '#E9D8B2' });
+    if (T.chuTrongKhung) T.chuTrongKhung('Your blade remembers. Your enemies learn.', 90, y0 + 20, 300, 14, { vien: [0, 0, 0, 0], size: 8, min: 6.5, bold: false, color: '#F7EACA', shadow: true });
+    else ui.text('Your blade remembers. Your enemies learn.', 240, y0 + 30, { size: 8, align: 'center', color: '#F7EACA' });
+  }
   function titleLogo() {
+    if (G.bia && G.bia.n === 3) { titleLogoTalesworn(); return; }
     const u = G.ux, dy = TL.logo[1] - 52, bia = !!(G.bia && G.bia.n); // dy: bố cục bìa dời cả khối logo lên trên (TL_BIA)
     T.drum(TL.trong[0], TL.trong[1], TL.trong[2], 0.85); // mặt trống đồng nhỏ làm biểu tượng, nằm trên chữ (không còn nằm sau chữ)
     // Phiên C3: có tệp gd-logo (ảnh AI 200×40, chữ LINH KHÍ khắc gỗ; trang tools/tach-giao-dien, lô "Logo") thì vẽ ảnh vào đúng chỗ của chữ;
