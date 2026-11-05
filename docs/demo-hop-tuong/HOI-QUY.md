@@ -65,3 +65,7 @@ Sửa: bỏ nạp dải 4 khung cho trùm đã có ảnh riêng (dùng dải _8 
 ## 2026-11-05 — session huong3 (hướng nhìn tinh anh/trùm)
 - Kiểm 390x844x3 NHANH: menu/solo/coop/pvp/landau XANH; **online_tran TRƯỢT (kẹt chờ `ONS.on && G.ban.length===2`)** — lỗi CÓ SẴN, không do huong3:
   chạy lại với quaianim.js + trum.js bản trước huong3 (4ff9437) vẫn trượt y hệt. Xuất hiện sau đợt sửa sảnh online 9151d9e (phiên online đang làm) → giao phiên online.
+## 2026-11-05 — `.cht-vong > b` ra ngoài ô tối giản #the-mv (mọi cỡ, mv / solo_trum)
+Vòng hồi chiêu chỉ huy (13s…) đặt `right:-1px` → chữ lệch ra ngoài khung ô `#the-mv.ot` (có sẵn trên nhánh trước phiên khởi động nhanh).
+Phiên khác đã sửa cùng lúc (1cadf35, cách mép 7 %) → giữ bản đó.
+Phiên khởi động nhanh (docs/demo-hop-tuong/tuvan/khoidong/BAO-CAO.md): thêm `tools/thap-kt-khoidong.js` (DECK/PLAY bấm sớm khi đợt nền chưa xong).

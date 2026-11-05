@@ -77,15 +77,15 @@ Không làm (đề xuất sau): rút gọn (minify) 67 tệp js lúc xuất bả
 | | màn tải hiện | % đầu tiên > 0 | 50 % | HOME bấm được | byte trước HOME |
 |---|---|---|---|---|---|
 | TRƯỚC · Fast 3G lạnh | 6 563 | **105 172** | 312 997 | **360 227** (6 phút) | 60,7 MB / 491 tệp |
-| SAU · Fast 3G lạnh | 721 | **1 360** | 13 677 | **19 436** | 2,09 MB / 143 tệp |
+| SAU · Fast 3G lạnh | 726 | **1 365** | 14 914 | **20 801** | 2,35 MB / 151 tệp |
 | TRƯỚC · 4G lạnh | 1 278 | 15 597 | 52 996 | 59 912 | 60,7 MB |
-| SAU · 4G lạnh | 333 | 563 | 2 068 | **3 135** | 2,19 MB |
+| SAU · 4G lạnh | 319 | 531 | 2 180 | **3 588** | 2,37 MB |
 | TRƯỚC · 4G ấm | 275 | 911 | 5 585 | 11 366 | 9,7 MB (bộ đệm không giữ hết 60 MB) |
-| SAU · 4G ấm | 276 | 276 | 589 | **625** | 0,02 MB |
+| SAU · 4G ấm | 289 | 289 | 693 | **713** | 0,04 MB |
 
-Mục tiêu: % đầu < 1,5 s trên Fast 3G → **ĐẠT (1,36 s)**. HOME < 6 s trên Fast 3G → **CHƯA ĐẠT (19,4 s)**: phần cần cho HOME
-còn ≈ 2,1 MB (js 0,44 MB, ảnh chỉ huy HOME 0,45 MB, nền HOME 0,2 MB, nền màn tải 0,2 MB, khung/nút…) — ở 180 KB/s riêng
-băng thông đã ≈ 12 s. 4G lạnh 3,1 s, 4G ấm 0,6 s (< 1,5 s → ĐẠT).
+Mục tiêu: % đầu < 1,5 s trên Fast 3G → **ĐẠT (1,37 s)**. HOME < 6 s trên Fast 3G → **CHƯA ĐẠT (20,8 s)**: phần cần cho HOME
+còn ≈ 2,3 MB (js 0,44 MB, ảnh chỉ huy HOME 0,45 MB, nền HOME 0,2 MB, nền màn tải 0,2 MB, khung/nút…) — ở 180 KB/s riêng
+băng thông đã ≈ 12 s. 4G lạnh 3,6 s, 4G ấm 0,7 s (< 1,5 s → ĐẠT). (Số SAU đo trên bản đã gộp các phiên khác tới df67bcf.)
 
 Ảnh dòng thời gian (Fast 3G): `truoc-dongthoigian.png` (110 s vẫn 0 %), `sau-dongthoigian.png` (1 s đã có thanh, 21 s HOME).
 
@@ -93,5 +93,6 @@ băng thông đã ≈ 12 s. 4G lạnh 3,1 s, 4G ấm 0,6 s (< 1,5 s → ĐẠT).
 
 - `tools/thap-kt-khoidong.js` (4G lạnh): bấm DECK ngay khi HOME hiện → hiện màn tải, mở bộ bài đủ ảnh (0 ảnh hỏng);
   bấm PLAY ngay ở HOME → trận chạy, `REN.thieu` = 0, `TAI.thieu` = 0, 0 lỗi 4xx/trang → XANH.
-- `tools/thap-kt-hoiquy.js` 4 cỡ: 2 lỗi "chữ tràn" ở cut-in chỉ huy lúc đang trượt ra (chụp giữa hoạt ảnh) — chạy lại
-  `CHI=solo` 360+390 → XANH (bản gốc cũng XANH) → lỗi chập chờn theo thời điểm chụp, không do khởi động.
+- `tools/thap-kt-hoiquy.js` 4 cỡ → **XANH** (0 lỗi, 1182 s). Trước đó bản gộp có sẵn 7 lỗi "`.cht-vong > b` ra ngoài ô tối giản"
+  (vòng hồi chiêu chỉ huy lệch −1px ra mép ô `#the-mv.ot`, có cả trên nhánh gốc không có thay đổi của phiên này) → sửa tạm
+  `css/otoigian.css` (vòng cách mép 8px) — khi gộp, phiên khác đã sửa cùng chỗ (1cadf35, 7 %) → giữ bản của họ. Lần chạy đầu có 2 lỗi chập chờn ở cut-in đang trượt ra.
