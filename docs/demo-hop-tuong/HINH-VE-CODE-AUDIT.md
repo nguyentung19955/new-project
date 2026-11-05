@@ -727,3 +727,13 @@ Kiểm thử: `tools/thap-kt-keoghep.js` · ảnh `docs/demo-hop-tuong/tuvan/keo
 Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached — đính kèm `khung_chon.png` + `sup_ring.png`):
 - **P3-3 bốn vòng đích kéo ghép** → `kg_vong_hople/chon/sai/xong.png` (cắt 128): "Game UI sheet, 4x1 grid, 4 perfectly circular target rings for a merge drag: 1 valid (subdued steel with soft cyan glow), 2 selected (bright cyan, thicker, 4 small notches), 3 invalid (dark steel with dull orange-red edge), 4 merged (bright white-gold flash ring). Transparent empty centers, same style as attached, solid #FF00FF background, no text. 1024x256."
 - **P3-4 tấm kết quả ghép** → `kg_tam_ketqua.png` (3 mảnh ngang, cao 48): "Small beveled dark-steel merge result plaque, wide horizontal pill, clear empty center for text, small round socket on the left for a star badge, simple lightning-bolt corners in cyan, same style as attached, centered, solid #FF00FF background, no text. 1024x256."
+## 11. Pass 3 — tiền tệ + chỉ huy (P0-06 / P0-09, 2026-11-05)
+
+Đã làm (`thap/js/chihuy.js` luật, `thap/js/tien-ui.js` + `thap/css/tien.css` HUD, `TIEN`/`CHI`/`LUAT_MV` trong `data.js`, test `node tools/test-chihuy.js`):
+- Chỉ có 1 tiền: MANA trong trận. Ngọc `h2_ngoc` chung cho hộp mana, Triệu hồi, Chỉ huy. Số xanh "100" dưới thẻ = **POWER-UP theo loại trong trận** (LV1→5, +18% sát thương, trả bằng mana) → icon riêng `ui_nangcap` (mũi tên xanh) + gợi ý 1 lần (khung `khung_tt`).
+- Tạm dùng ảnh có sẵn: thanh RAGE = `h2_tam_mong` + `loi_khuc_day` (đổi sắc cam); khiên lõi = `ic_khien`; chớp ô Reinforce = cổng triệu hồi HUD2 có sẵn; hồi chiêu = số giây (chữ).
+
+Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached):
+- **P3-3 3 glyph** (đính kèm `h2_ngoc.png` + `ui_nangcap.png`): "3 small game UI glyphs in a row, same style as attached: purple mana crystal, green upgrade-arrow hex token, orange cooldown clock. Crisp, thick dark outline, readable at 14px. Solid #FF00FF background, no text."
+- **P3-4 3 overlay trạng thái** (đính kèm `h2_tam_mong.png` + `loi.png`): "3 separate thin industrial status overlays, same style as attached: orange rage edge glow strip (seamless, for a board frame), cyan shield ring around a round core, gold spawn flash burst for one square tile. Solid #FF00FF background, no text."
+- **P3-5 dải đầy cam** (đính kèm `loi_khuc_day.png`): "Same pill fill strip as attached but molten orange, bright core, solid #FF00FF background, no text. 256x32." (thay `hue-rotate` của thanh RAGE)

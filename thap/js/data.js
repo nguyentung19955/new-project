@@ -58,6 +58,26 @@ const MAVUONG = {
   dahlia: { ten: TEXT.af.dahlia.name, anh: 'af_dahlia', icon: 'lua',       mau: '#ff6a3a', gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
   eve:    { ten: TEXT.af.eve.name,    anh: 'af_eve',    icon: 'sup_khien', mau: '#ffe9a0', gia: 40, cd: 25, mo: TEXT.af.eve.desc },
 };
+// LUẬT CHỈ HUY (P0-09) — chihuy.js là máy trạng thái dùng bảng này (node: tools/test-chihuy.js)
+//  hieuLuc = giây tác dụng (thanh RAGE 10 s / khiên lõi 8 s) · pham = 'ban': chỉ bàn của người dùng (CO-OP không lan sang đồng đội)
+//  hetCho = đồng hồ tác dụng DỪNG khi đang nghỉ giữa wave và bàn không còn quái (không phí RAGE/khiên lúc chuyển wave)
+//  hero: bàn đủ chỗ → 2 ụ 1★ miễn phí (không tăng giá Triệu hồi); thiếu ô → mỗi ụ thiếu = +1★ cho ụ yếu nhất; bàn đầy & mọi ụ đã 7★ → không dùng được, không trừ mana
+Object.assign(MAVUONG.hero,   { pham: 'ban', so: 2, duPhong: 'nangYeu' });
+Object.assign(MAVUONG.dahlia, { pham: 'ban', hieuLuc: 10, khoa: 'cuong' });
+Object.assign(MAVUONG.eve,    { pham: 'ban', hieuLuc: 8, khoa: 'khien' });
+const LUAT_MV = { heSoGia: 2, hetCho: true }; // giá ×2 mỗi lần dùng: 40 → 80 → 160
+
+// TIỀN TỆ (P0-06): trong game chỉ có MỘT loại tiền — MANA trong trận (giết quái, ụ mana). Không có tiền sưu tầm/ngoài trận.
+//  3 khoản chi đều trả bằng mana nhưng là 3 HÀNH ĐỘNG khác nhau → icon hành động riêng cho Nâng cấp (mũi tên xanh),
+//  còn Triệu hồi + Chỉ huy dùng CHUNG ngọc mana.
+const TIEN = {
+  mana: { ten: 'MANA', glyph: 'h2_ngoc', glyphCu: 'ui_mana', pham: 'tran', mo: 'In-battle energy from kills. Resets every match.' },
+};
+const CHI = {
+  trieu: { tien: 'mana', icon: 'h2_ngoc',    ten: 'SUMMON',    mo: 'Random 1★ turret from your deck. +10 each time.' },
+  mv:    { tien: 'mana', icon: 'h2_ngoc',    ten: 'COMMANDER', mo: 'Commander skill. Cost ×2 after each cast.' },
+  nang:  { tien: 'mana', icon: 'ui_nangcap', ten: 'POWER-UP',  mo: 'Spends MANA: +18% damage to every turret of this type, this match only (LV1→5).' },
+};
 // biểu tượng kỹ năng Ma vương: ảnh trong assets/, riêng RAGE = ngọn lửa vẽ bằng code (SVG)
 const MV_LUA = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff2a10"/><stop offset=".6" stop-color="#ff8a1a"/><stop offset="1" stop-color="#ffd23a"/></linearGradient><linearGradient id="b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb21a"/><stop offset="1" stop-color="#fff6b0"/></linearGradient></defs><path d="M32 3c3 10 15 16 15 31a15 15 0 0 1-30 0c0-7 4-12 7-15 0 5 2 8 5 9-1-9 1-17 3-25z" fill="url(#a)" stroke="#5a0a00" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 30c2 6 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 4 3 5 0-4 0-8 1-12z" fill="url(#b)"/></svg>');
 function mvIcURL(id) { const d = MAVUONG[id]; return d.icon === 'lua' ? MV_LUA : 'assets/' + d.icon + '.png'; }
