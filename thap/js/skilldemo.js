@@ -609,7 +609,7 @@ SD.veLop = function (x) {
   if (ks.cd) {
     const mx = 384, my = SD_Y0 + 24, cd = B.mv.cd;
     sdVe(x, 'ui_gia', mx, my, 88, 34);
-    x.save(); x.beginPath(); x.arc(mx - 26, my, 11, 0, Math.PI * 2); x.clip(); sdVe(x, MAVUONG[B.mv.id].anh, mx - 26, my, 24); x.restore();
+    x.save(); x.beginPath(); x.arc(mx - 26, my, 11, 0, Math.PI * 2); x.clip(); sdVe(x, MAVUONG[B.mv.id].anh, mx - 26, my, 24); x.restore(); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
     sdChu(x, cd > 0 ? cd.toFixed(1) + 's' : 'Ready', mx + 9, my + 1, '#e6f6ff', 14);
   }
   // 14) chú thích (giữa trên) + thẻ mốc sao cuối vòng
@@ -617,7 +617,7 @@ SD.veLop = function (x) {
   // 15) quay chậm: nhãn chữ
   if (G.tocDo < 1) sdChu(x, 'Slow-mo', W - 12, SD_Y0 + 54, '#ffe46b', 11, 'right');
   // 16) chuyển vòng: tối nhanh
-  const re = (now - this.tRe) / 260; if (re < 1) { x.globalAlpha = 1 - re; x.fillStyle = '#0d0f12'; x.fillRect(0, 0, W, H); }
+  const re = (now - this.tRe) / 260; if (re < 1) { x.globalAlpha = 1 - re; x.fillStyle = '#0d0f12'; x.fillRect(0, 0, W, H); } // vetay-ok: nen — lớp tối đặc toàn màn khi chuyển vòng
   x.restore();
 };
 SD.mau = function () { return this.mv ? MAVUONG[this.mv].mau : tierOf(this.id).mau; };
@@ -625,7 +625,7 @@ SD.veNgonChi = function (x, X, Y, al) { x.save(); x.globalAlpha *= al == null ? 
 SD.veNutMV = function (x, B, now) {
   const c = B.o[9], d = MAVUONG[this.mv], ks = this.ks, cx = c.x, cy = c.y - 4, tc = ks.mvT;
   const nh = this.t > tc && this.t < tc + 0.18 ? 0.9 : 1;
-  x.save(); x.beginPath(); x.arc(cx, cy, 21 * nh, 0, Math.PI * 2); x.clip(); sdVe(x, d.anh, cx, cy + 2, 46 * nh); x.restore();
+  x.save(); x.beginPath(); x.arc(cx, cy, 21 * nh, 0, Math.PI * 2); x.clip(); sdVe(x, d.anh, cx, cy + 2, 46 * nh); x.restore(); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
   sdVe(x, 'ui_nut_trieu', cx, cy, 56 * nh);
   const cd = B.mv.cd, chu = cd > 0 ? Math.ceil(cd) + 's' : d.gia + '';
   if (cd > 0) sdChu(x, chu, cx, cy + 36, '#cfe8ff', 12); else { sdVe(x, 'ui_mana', cx - 13, cy + 36, 13); sdChu(x, String(B.mv.gia), cx + 5, cy + 36, '#e6c8ff', 12); }

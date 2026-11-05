@@ -703,7 +703,7 @@ const REN = {
       ctx.globalAlpha = 0.45 * al;
       this.anhGiua(ctx, this.cham1('#000000'), E.x + 2, E.y + 3 + (bay ? 6 : 0), co * 0.75 * (bay ? 0.75 : 1)); // bóng = fx_cham_trang PNG tô đen (không arc code)
       ctx.globalAlpha = al;
-      const ten = E.trum ? 'trum_' + E.trum : 'quai_' + (E.d.anh || E.id);
+      const ten = E.trum ? (this.tenQuai ? this.tenQuai(E).replace(/_8$/, '') : 'trum_' + E.trum) : 'quai_' + (E.d.anh || E.id); // trùm mới: ảnh mượn (trum.js)
       let f, f2 = -1, fr = 0;
       if (E.trum) f = E.bao ? 3 : [0, 1, 2, 1][Math.floor(E.khung * 0.8) % 4];
       else { const kf = E.khung % 4; f = Math.floor(kf); const r = kf - f; if (r > 0.65) { f2 = (f + 1) % 4; fr = (r - 0.65) / 0.35; fr = fr * fr * (3 - 2 * fr); } }

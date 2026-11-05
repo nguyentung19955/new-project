@@ -18,7 +18,7 @@ html body #chon #chon-bo .o-mv .o-mv-po { position: absolute; z-index: 1; left: 
 html body #chon #chon-bo .o-mv .o-mv-po img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; --po-mat: .45; --po-toc: .10; --po-ho: .11; --po-zoom: 2.4; }
 html body #chon #chon-bo .o-mv .o-mv-kh { position: absolute; z-index: 2; left: 2px; top: 1px; width: 58px; height: 70.2px; object-fit: fill; pointer-events: none; }
 /* biểu tượng kỹ năng chỉ huy: góc phải dưới cửa sổ (không đè mặt) */
-html body #chon #chon-bo .o-mv .o-mv-ki { position: absolute; z-index: 3; right: 11px; top: 45px; width: 16px; height: 16px; object-fit: contain; pointer-events: none; filter: drop-shadow(0 1px 1px #000); }
+html body #chon #chon-bo .o-mv .o-mv-ki { position: absolute; z-index: 3; right: 11px; top: 45px; width: 16px; height: 16px; object-fit: contain; pointer-events: none; filter: drop-shadow(0 1px 1px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 html body #chon #chon-bo .o-mv:active, html body #chon #chon-bo .o-mv.hm-an { scale: .965; }
 /* đang kéo ụ: ô chỉ huy mờ đi (không nhận ụ) */
 html body #chon #chon-bo.dk-keo .o-mv { opacity: .55; transition: opacity .12s; }

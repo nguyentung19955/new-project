@@ -192,7 +192,7 @@
 }
 .hm-tam-pre .hm-pre-u { justify-content: flex-start; }
 .hm-tam-pre .hm-pre-u img, .hm-tam-pre .hm-pre-u img.mv { flex: none; width: 30px; height: 30px; padding: 0; border: 0; border-image: none; background: none; }
-#nd-gt.vt7 .vt-sau b { white-space: normal; line-height: 1.1; overflow-wrap: anywhere; } /* tên dài xuống dòng thay vì bị thu < 13 px */
+#nd-gt.vt7 .vt-sau b { white-space: normal; line-height: 1.45; overflow-wrap: anywhere; } /* tên dài xuống dòng thay vì bị thu < 13 px */
 
 /* ============ Top-15 #15 CHUYỂN ĐỘNG: chuyển màn 180–240 ms, không khoá chạm, nút hiện sớm ============ */
 #chon > .hm, #chon > .dk { transition: opacity var(--tg-man) var(--e-em), transform var(--tg-man) var(--e-ra), visibility 0s linear 0s; }

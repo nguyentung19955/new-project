@@ -19,7 +19,7 @@ const HM = {
   che: 'solo', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
   giam: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   esc: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
-  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che]) this.che = l.che; if (l.bac) this.bac = l.bac; } } catch (e) { } },
+  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che]) this.che = l.che; if (l.bac === 'all' || (typeof TIERS !== 'undefined' && typeof l.bac === 'string' && TIERS[l.bac])) this.bac = l.bac; } } catch (e) { } },
   luu() { try { localStorage.setItem(this.KEY, JSON.stringify({ che: this.che, bac: this.bac })); } catch (e) { } },
   luuBo() { try { localStorage.setItem('turret_bo', JSON.stringify({ chon: UI.chon, mv: UI.mv, che: UI.che })); } catch (e) { } },
   el: (id) => document.getElementById(id),

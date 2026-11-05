@@ -123,6 +123,7 @@ const TVB = {
   UI.vaoTran = function () {
     TVB.chay();
     const r = vaoGoc.apply(this, arguments);
+    try { if (typeof REN !== 'undefined') for (const n of ['tv_hang1', 'tv_hang2', 'tv_hang3', 'tv_hang4', 'tv_dich1', 'tv_dich2', 'tv_dich3', 'tv_dich4', 'tv_khong', 'tv_keo_bong', 'tv_lui1', 'tv_lui2', 'tv_lui3', 'tv_lui4', 'tv_ghep1', 'tv_ghep2', 'tv_ghep3', 'tv_ghep4', 'tv_ghep5', 'tv_ghep6', 'tv_ghep7', 'tv_ghep8']) REN.img(n); } catch (e) { } // nạp sẵn (giải mã trước khi kéo/ghép)
     try { TVB.full(); const top = $('#top'); if (top) top._tvb = null; TVB.vs(); } catch (e) { console.error('TVB', e); }
     return r;
   };
@@ -140,6 +141,14 @@ const TVB = {
         const d = tt.querySelector('.hb-dong'); if (d) { d.innerHTML = '<img src="assets/p7_ic_dong.png" alt="">'; }
         new MutationObserver(() => { if ((tt.hidden || !tt.classList.contains('hb-rong')) && (TVB._dungBoi || tt.classList.contains('tvb-dung'))) TVB.chay(); }).observe(tt, { attributes: true, attributeFilter: ['hidden', 'class'] });
       }
+      return r;
+    };
+    // cấp sao (merge rank) ở dải / tấm: tấm E23 (tv_hang1–4 theo bậc 1–2 · 3–4 · 5–6 · 7+) + số trong ô trống — cùng 1 chỗ cạnh tên
+    const moGoc2 = HB.mo;
+    HB.mo = function (tt, id, T) {
+      const r = moGoc2.apply(this, arguments);
+      const sao = tt.querySelector('.hb-sao');
+      if (sao && T && REN.img('tv_hang1')) { const n = T.sao, h = n >= 7 ? 4 : n >= 5 ? 3 : n >= 3 ? 2 : 1; sao.className = 'hb-sao tvb-hang'; sao.style.setProperty('--hang', 'url(../assets/tv_hang' + h + '.png)' /* var dùng trong css/tvb.css → đường dẫn tính từ css/ */); sao.innerHTML = '<span>' + n + '</span>'; sao.setAttribute('aria-label', n + ' star'); }
       return r;
     };
     // tấm mở rộng: dải 64 px@390 cao 70 logic, đặt sát trên khay (SOLO)

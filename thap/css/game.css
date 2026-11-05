@@ -26,7 +26,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #tb-trum-mau { width: 130px; max-width: 100%; height: 8px; background: #000a; border: 1px solid transparent; overflow: hidden; }
 #tb-trum-mau i { display: block; height: 100%; width: 100%; background: #ff9a3a; transition: width .15s; }
 #tb-tim { flex: none; display: flex; gap: 2px; align-items: center; justify-content: flex-end; max-width: 104px; }
-#tb-tim img { width: 22px; height: 22px; filter: drop-shadow(0 2px 2px #000); transition: transform .2s, opacity .3s; }
+#tb-tim img { width: 22px; height: 22px; filter: drop-shadow(0 2px 2px #000); transition: transform .2s, opacity .3s; } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #tb-tim img.mat { opacity: .22; filter: grayscale(1); transform: scale(.8); }
 #tb-tim .chu { font-size: 10px; font-weight: 800; color: #ffb0b0; text-align: center; line-height: 1.15; padding: 3px 7px; background: #12151bdd; border: 1.5px solid transparent; white-space: nowrap; }
 #tb-tim .doi { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
@@ -45,7 +45,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #nut-trieu { position: absolute; left: 124px; top: 6px; width: 182px; height: 70px;
   background: #5a1aa8; border: 2px solid transparent;
   display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .08s, filter .2s; }
-#nut-trieu > img { width: 38px; height: 38px; flex: none; filter: drop-shadow(0 2px 3px #0008); }
+#nut-trieu > img { width: 38px; height: 38px; flex: none; filter: drop-shadow(0 2px 3px #0008); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nut-trieu .tr-chu { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 #nut-trieu .tr-ten { font-size: 19px; font-weight: 900; letter-spacing: .5px; line-height: 1.1; text-shadow: 0 2px 0 #3a1270; }
 #nut-trieu .tr-gia { display: flex; align-items: center; justify-content: center; gap: 3px; margin-top: 3px; padding: 1px 10px; background: #2a0d50aa; font-weight: 900; font-size: 14px; line-height: 18px; }
@@ -64,9 +64,9 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 .the, .c { --m: #9aa6b4; position: relative; display: flex; flex-direction: column; align-items: center; background: #1c2026; border: 1.5px solid transparent; overflow: hidden; }
 /* chân dung phi công: to, giữa thẻ, nền tối trơn; icon ụ nhỏ ở góc dưới-phải (tư vấn D) */
 .the .anh.pilot, .c .anh.pilot { filter: none; object-fit: cover; object-position: 50% 15%; background: #252a31; }
-.the .ic, .c .ic { position: absolute; z-index: 2; right: 2px; width: 22px; height: 22px; border-radius: 50%; background: none; border: 0; filter: drop-shadow(0 1px 2px #000); }
+.the .ic, .c .ic { position: absolute; z-index: 2; right: 2px; width: 22px; height: 22px; border-radius: 50%; background: none; border: 0; filter: drop-shadow(0 1px 2px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .the { width: 64px; height: 94px; }
-.the .anh { width: 50px; height: 50px; margin-top: 16px; filter: drop-shadow(0 3px 3px #000a); }
+.the .anh { width: 50px; height: 50px; margin-top: 16px; filter: drop-shadow(0 3px 3px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .the .anh.pilot { width: 58px; height: 68px; margin-top: 2px; }
 .the .ic { bottom: 22px; }
 .the .lv { position: absolute; z-index: 2; left: 3px; top: 4px; height: 13px; padding: 0 4px; background: #000a; font-size: 9px; font-weight: 900; line-height: 13px; text-align: center; }
@@ -143,7 +143,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #chon { display: flex; flex-direction: column; background: #16171a; }
 .chon-dau { padding: 12px 12px 6px; }
 .logo { text-align: center; }
-.logo b { display: block; font-size: 30px; font-weight: 900; letter-spacing: 2px; background: #7d8590; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 #000); }
+.logo b { display: block; font-size: 30px; font-weight: 900; letter-spacing: 2px; background: #7d8590; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 3px 0 #000); } /* vetay-ok: text — bóng chữ */
 .logo span { font-size: 11px; font-weight: 800; color: #ffb35a; letter-spacing: 3px; }
 .chon-hang { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
 .chon-goi { font-size: 13px; font-weight: 900; }
@@ -160,7 +160,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 .nhom span { color: #8a92a0; font-size: 10px; }
 .luoi { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; }
 .c { height: 104px; cursor: pointer; }
-.c .anh { width: 56px; height: 56px; margin-top: 12px; flex: none; filter: drop-shadow(0 3px 3px #000b); }
+.c .anh { width: 56px; height: 56px; margin-top: 12px; flex: none; filter: drop-shadow(0 3px 3px #000b); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .c .anh.pilot { width: calc(100% - 6px); height: 70px; margin-top: 3px; }
 .c .ic { bottom: 30px; }
 .c .ten { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; padding: 0 4px; display: flex; align-items: center; justify-content: center; text-align: center;
@@ -215,7 +215,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
   background: #120c0e; border: 1px solid transparent; }
 .mv-anh .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
 .mv-anh .po.fb { inset: 12%; width: 76%; height: 76%; object-fit: contain; }
-.mv-anh .ki { position: absolute; right: 1px; bottom: 1px; width: 18px; height: 18px; padding: 1px; border-radius: 50%; background: none; border: 0; filter: drop-shadow(0 1px 2px #000); }
+.mv-anh .ki { position: absolute; right: 1px; bottom: 1px; width: 18px; height: 18px; padding: 1px; border-radius: 50%; background: none; border: 0; filter: drop-shadow(0 1px 2px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .mv-anh .po.fb + .ki { display: none; }
 #the-mv .mv-anh .ki { width: 17px; height: 17px; }
 /* băng WAVE / cảnh báo trùm: chữ dài tự thu nhỏ, không tràn mép */
@@ -231,8 +231,8 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
   border-top: 2px solid transparent; border-bottom: 2px solid transparent; transform-origin: 50% 50%; }
 #cutin .ci-nen::after { content: none; }
 #cutin .ci-po-hop { position: absolute; left: 0; top: 0; width: 150px; height: 132px; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
-#cutin .ci-po { width: 150px; height: 150px; object-fit: cover; object-position: 50% 10%; margin-top: -4px; filter: drop-shadow(0 0 8px #000); }
+  -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); } /* vetay-ok: mask — mặt nạ cắt mép ảnh, không thấy như vật thể */
+#cutin .ci-po { width: 150px; height: 150px; object-fit: cover; object-position: 50% 10%; margin-top: -4px; filter: drop-shadow(0 0 8px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #cutin .ci-po.fb { width: 96px; height: 96px; margin: 18px 0 0 26px; object-fit: contain; }
 #cutin .ci-chu { position: absolute; left: 156px; right: 14px; top: 28px; bottom: 28px; display: flex; flex-direction: column; justify-content: center; min-width: 0; text-align: left; }
 #cutin small { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--mm); line-height: 1.2; }
@@ -287,7 +287,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #nd-gt .gt-hang { display: flex; gap: 5px; }
 #nd-gt .gt-o { --k: #fff; flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; padding: 6px 2px 5px; background: #1a1e25; border: 2.5px solid transparent; }
 #nd-gt .gt-gl { width: 34px; height: 34px; }
-#nd-gt .gt-u { width: 46px; height: 46px; margin: 1px 0 2px; filter: drop-shadow(0 2px 2px #000a); }
+#nd-gt .gt-u { width: 46px; height: 46px; margin: 1px 0 2px; filter: drop-shadow(0 2px 2px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nd-gt .gt-o b { width: 100%; height: 15px; line-height: 15px; text-align: center; font-size: 11px; font-weight: 900; color: var(--k); white-space: nowrap; overflow: hidden; text-transform: uppercase; }
 #nd-gt .gt-o span { font-size: 9px; font-weight: 800; color: #9aa3b2; }
 #nd-gt .gt-phu { text-align: center; font-size: 10.5px; font-weight: 700; color: #9aa3b2; margin-top: 8px; }

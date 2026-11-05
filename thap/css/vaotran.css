@@ -25,7 +25,7 @@
   border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; animation: vt-pop .36s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(.12s + var(--i) * .14s); }
 #nd-gt .vt-tt .vt-w { font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #ffcf6a; text-shadow: 0 1px 0 #000; }
 #nd-gt .vt-tt.dau .vt-w { color: #ff8a7a; }
-#nd-gt .vt-sp { display: block; width: 84px; height: 84px; margin: 2px 0 1px; background: 0 0 / calc(var(--nf) * 100%) 100% no-repeat; animation: vt-8 .9s steps(8) infinite; filter: drop-shadow(0 3px 2px #000c); }
+#nd-gt .vt-sp { display: block; width: 84px; height: 84px; margin: 2px 0 1px; background: 0 0 / calc(var(--nf) * 100%) 100% no-repeat; animation: vt-8 .9s steps(8) infinite; filter: drop-shadow(0 3px 2px #000c); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #nd-gt .vt-sp[style*="--nf:4"] { animation-name: vt-4; animation-timing-function: steps(4); }
 @keyframes vt-8 { from { background-position: 0 0; } to { background-position: -672px 0; } }
 @keyframes vt-4 { from { background-position: 0 0; } to { background-position: -336px 0; } }

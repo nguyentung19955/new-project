@@ -30,16 +30,16 @@ const VX = {
     const a = REN.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
-    const g = x.createLinearGradient(0, a.height * y0, 0, a.height * y1);
+    const g = x.createLinearGradient(0, a.height * y0, 0, a.height * y1); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
     g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-    x.globalCompositeOperation = 'destination-in'; x.fillStyle = g; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'destination-in'; x.fillStyle = g; x.fillRect(0, 0, c.width, c.height); // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
     return (this._mn[key] = c);
   },
   // tô màu 1 canvas (giữ độ sáng + alpha) — cột sáng theo màu bậc ụ
   toMau(c, mau) {
     if (!c) return null; const key = '_tm' + mau; if (c[key]) return c[key];
     const t = document.createElement('canvas'); t.width = c.width; t.height = c.height;
-    const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'color'; x.fillStyle = mau; x.fillRect(0, 0, t.width, t.height);
+    const x = t.getContext('2d'); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'color'; x.fillStyle = mau; x.fillRect(0, 0, t.width, t.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
     x.globalCompositeOperation = 'destination-in'; x.drawImage(c, 0, 0);
     return (c[key] = t);
   },

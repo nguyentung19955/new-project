@@ -26,7 +26,7 @@
 /* HERO */
 .up-hero { position: relative; height: 214px; margin: 0 -14px; display: flex; overflow: hidden; border-bottom: 0;
   background: #22252a; } /* nền phẳng, không lưới kẻ */
-.up-po { position: relative; width: 208px; flex: none; clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%); background: #111; }
+.up-po { position: relative; width: 208px; flex: none; clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%); background: #111; } /* vetay-ok: mask — mặt nạ cắt mép ảnh, không thấy như vật thể */
 .up-po img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .up-seri { position: absolute; left: 10px; bottom: 8px; z-index: 1; font-family: var(--f-display); font-size: 11px; letter-spacing: .12em; color: #fffc; }
@@ -34,9 +34,9 @@
 .up-mam { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; }
 .up-u { position: relative; z-index: 1; width: 112px; height: 112px; }
 .up-u img { position: absolute; left: 50%; top: 50%; display: block; }
-.up-u .de { width: 112px; height: 112px; margin: -56px 0 0 -56px; filter: drop-shadow(0 6px 6px #000a); }
+.up-u .de { width: 112px; height: 112px; margin: -56px 0 0 -56px; filter: drop-shadow(0 6px 6px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .up-u .dau { width: calc(112px * var(--kd)); height: calc(112px * var(--kd)); margin: calc(-56px * var(--kd)) 0 0 calc(-56px * var(--kd));
-  transform: rotate(-90deg); animation: up-quet 5.2s ease-in-out infinite; filter: drop-shadow(0 4px 4px #0009); }
+  transform: rotate(-90deg); animation: up-quet 5.2s ease-in-out infinite; filter: drop-shadow(0 4px 4px #0009); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .up-u .dau.fb { transform: none; animation: none; width: 84px; height: 84px; margin: -42px 0 0 -42px; }
 @keyframes up-quet { 0%, 100% { transform: rotate(-118deg); } 18% { transform: rotate(-118deg) translateX(-4px); } 22% { transform: rotate(-118deg); }
   50% { transform: rotate(-62deg); } 68% { transform: rotate(-62deg) translateX(-4px); } 72% { transform: rotate(-62deg); } }
@@ -118,8 +118,8 @@
 .up-gd1 .anh img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .up-gd1 .anh .de { inset: 9px; width: 56px; height: 56px; }
 .up-gd1 .anh .dau { transform: rotate(-90deg); }
-.up-gd1 .anh .dau.loc.s2 { filter: brightness(1.15) drop-shadow(0 0 4px var(--g)); }
-.up-gd1 .anh .dau.loc.s3 { filter: brightness(1.3) drop-shadow(0 0 8px var(--g)); }
+.up-gd1 .anh .dau.loc.s2 { filter: brightness(1.15) drop-shadow(0 0 4px var(--g)); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+.up-gd1 .anh .dau.loc.s3 { filter: brightness(1.3) drop-shadow(0 0 8px var(--g)); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .up-gd1 b { display: block; font-size: 12px; color: var(--g); }
 .up-gd1 span { display: block; margin-top: 3px; font-size: 11.5px; line-height: 1.3; color: #c9ced5; }
 .up-mt { align-self: center; font-style: normal; color: var(--mo); font-size: 14px; }
@@ -188,7 +188,7 @@
 .up-tv > .up-tv-sao { position: absolute; left: 14px; bottom: 12px; z-index: 2; pointer-events: none; font-family: var(--f-display); font-size: 15px; color: var(--m); text-shadow: 0 1px 2px #000, 0 0 6px #000; }
 .up-tv:not(.tat) .up-tv-tat { display: none; }
 .up-tv.tat .up-ifr, .up-tv.tat .up-phat, .up-tv.tat .up-tv-sao { display: none; }
-.up-gl { position: absolute; left: 10px; top: 10px; width: 40px; height: 40px; filter: drop-shadow(0 2px 3px #000a); }
+.up-gl { position: absolute; left: 10px; top: 10px; width: 40px; height: 40px; filter: drop-shadow(0 2px 3px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .up-xem #nd-gt, .up-xem #nd-dai { display: none !important; }
 /* Test range đang tải: thanh tải nằm ở PHẦN TRÊN khung cắt (y logic 150…530) — trước đây ở giữa iframe (y≈430) bị thanh "Add to deck" che → khung trông đen */
 .up-xem #tai.nho { align-items: flex-start; padding-top: 200px; }

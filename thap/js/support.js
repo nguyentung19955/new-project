@@ -36,7 +36,7 @@ Object.assign(REN, {
     const a = this.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
-    x.globalCompositeOperation = 'color'; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'color'; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
     x.globalCompositeOperation = 'destination-in'; x.drawImage(a, 0, 0);
     return (this.xam[key] = c);
   },
