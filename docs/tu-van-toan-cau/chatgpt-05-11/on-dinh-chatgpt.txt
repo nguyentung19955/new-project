@@ -1,0 +1,111 @@
+(Câu trả lời của ChatGPT ngày 05/11/2026 trong cuộc trò chuyện "Kế hoạch ổn định Talesworn". Đây là bản chép sát nguyên văn các mục chính; bảng biểu chuyển thành dòng. Bản đầy đủ trong khung chat; ChatGPT có tạo tệp Talesworn_Stability_Plan_VI.txt.)
+
+TALESWORN — KẾ HOẠCH ỔN ĐỊNH GAME WEB MOBILE
+Bản đánh giá kiến trúc · 05/11/2026 · Ưu tiên iPhone Safari, sau đó Android Chrome
+
+KẾT LUẬN: Talesworn chưa nên mở rộng cho người chơi toàn cầu ngay. Không phải vì dùng JavaScript thuần, Canvas 2D hay 82 file JS, mà vì quy trình phát hành, bảo vệ save và quản lý tài nguyên chưa đủ an toàn.
+Ba nguy cơ lớn nhất: (1) mỗi lần AI push code có thể làm hỏng production, không có bước kiểm tra/phê duyệt bắt buộc; (2) một lỗi save có thể xóa tiến trình người chơi, nhất là khi chuyển giữa offline, Google sign-in và cloud; (3) 720 sprite sheets có thể khiến Safari hết bộ nhớ dù dung lượng tải đã tối ưu.
+Không cần viết lại game bằng React, TypeScript hay engine khác. Giữ Canvas 2D và game loop hiện tại, xây thêm các lớp bảo vệ.
+P0 (bắt buộc trước khi phát hành): cách ly production, kiểm thử tự động, bảo vệ save, giới hạn asset memory, thông báo lỗi deploy, rollback.
+P1 (giai đoạn ổn định): đo hiệu năng thực tế, quản lý chất lượng tự động, kiểm soát AI agent, thu thập lỗi từ thiết bị người chơi.
+P2 (sau khi ổn định): refactor sâu, texture atlas nâng cao, cache offline hoàn chỉnh, tối ưu dài hạn.
+Công sức: S ≈ nửa–1 ngày agent; M = 2–4 ngày; L ≥ 5 ngày.
+
+1. TOP 10 RỦI RO
+1 Deploy code lỗi trực tiếp lên production — P0, M
+2 Save bị ghi đè, mất dữ liệu hoặc migrate sai — P0, L
+3 Safari hết memory và tự đóng tab — P0, M–L
+4 Lazy loader treo hoặc thiếu sprite — P0, M
+5 Code mới và asset cũ bị trộn do cache — P0, M
+6 Game loop quá tải, đứng hình hoặc chạy sai — P0, M
+7 Google login và cloud sync lỗi trên Safari — P0, M
+8 AI agent sửa đè code của nhau — P0, M
+9 Text overflow, UI lỗi trên máy thật — P1, M
+10 Deploy, crash hoặc mạng lỗi mà không ai biết — P0, S–M
+
+R1 Production hỏng sau một lần push: production chỉ cập nhật qua workflow phát hành riêng; mọi thay đổi qua Pull Request; CI phải thành công; bản mới qua staging và kiểm tra trên iPhone; có release ID, bản cũ để rollback, cảnh báo deploy thất bại. Đạt khi: một agent push code lỗi không thể tự động thay đổi production.
+R2 Mất save: mỗi save có schemaVersion; mọi migration có test; luôn giữ bản save hợp lệ trước đó; không ghi cloud save ngay khi đăng nhập; không bao giờ dùng save mặc định rỗng thay save lỗi; local và cloud khác nhau thì hiện lựa chọn phục hồi an toàn. Đạt khi: save cũ vẫn tải được; giả lập mất mạng, JSON lỗi, đóng tab giữa lúc save không xóa tiến trình hợp lệ cuối cùng.
+R3 Safari thiếu RAM: 19,5 MB tải ≠ 19,5 MB bộ nhớ (ảnh RGBA 2048×2048 giải mã ≈ 16 MiB). Chỉ giữ sprite của khu vực đang chơi + dùng chung; LRU cache; giới hạn số ảnh decode cùng lúc; theo dõi tổng pixel đang giữ; placeholder + recovery. Đạt khi: chuyển qua lại nhiều khu vực không làm bộ nhớ tăng liên tục.
+R4 Lazy loader: mỗi asset có trạng thái idle/queued/fetching/decoding/ready/failed/evicted; retry có giới hạn theo đợt + cooldown, cho thử lại khi gameplay yêu cầu; mọi download/decode có timeout và giải phóng slot; một ảnh hỏng không khóa hàng đợi; mỗi zone có danh sách asset bắt buộc, chưa đủ thì không vào chơi; test giả lập 404, timeout, mạng chậm, decode lỗi. Lưu ý: img.decode() là Promise, không chắc chạy hoàn toàn ngoài main thread; timeout bằng Promise.race không hủy decode bên dưới.
+R5 Stale cache: asset dùng tên chứa hash nội dung; mỗi release có manifest cố định; HTML phải revalidate; không xóa asset cũ ngay khi phát hành. Đạt khi: reload trong lúc deploy không tạo bản lai giữa hai release.
+R6 Game loop quá tải: giữ fixed timestep, giới hạn số bước catch-up, đo riêng update/render, object pooling, giảm hiệu ứng trước khi giảm gameplay. Đạt khi: chuyển app ra nền rồi quay lại, quái không nhảy hàng trăm bước.
+R7 Firebase Auth trên Safari: cấu hình authDomain phù hợp domain web.app và redirect URI; test login thật trên Safari/Chrome, có và không có save local; đăng nhập lỗi vẫn chơi offline, không mất tiến trình.
+R8 AI agent cùng sửa G: mỗi agent một branch/worktree; quy định người phụ trách module; cấm push trực tiếp nhánh production; merge tuần tự qua CI.
+R9 Font/ngôn ngữ làm hỏng layout: measureText đo thật, giới hạn dòng, kiểm tra font đã load, screenshot test hai ngôn ngữ + vùng an toàn iPhone.
+R10 Lỗi không ai biết: thông báo khi workflow thất bại, kiểm tra website sau deploy, heartbeat độc lập, dashboard lỗi. Đạt khi: production không thể lỗi âm thầm nhiều ngày.
+
+2. QUY TRÌNH PHÁT HÀNH (chủ game không biết code)
+Luồng: các AI agent (branch riêng, không push production) → Pull Request + CI (build, test, validate assets, save migration, lint) → Preview/Staging (Firebase project riêng, smoke tests, iPhone QA) → Owner duyệt release (đúng artifact đã test) → Production spiritblade.web.app (post-deploy smoke test, monitoring, rollback).
+Tách môi trường (P0/M): tạo Firebase project riêng talesworn-staging (Firestore + Auth thử nghiệm). Firebase Hosting có preview channels, release history, clone version giữa channel. Preview channel cùng project KHÔNG tự cách ly Firestore.
+Quy trình hằng ngày: agent xong → tạo PR → GitHub tự kiểm Pass/Fail → PR đạt mới merge → bản phát hành lên staging → owner mở staging trên iPhone chơi 5–10 phút theo checklist → owner bấm Run workflow "Release production" → GitHub kiểm lại artifact, deploy, smoke test production → lỗi thì Firebase Hosting → Release history → Roll back.
+Pipeline A — mỗi PR (P0/M): checkout commit cố định; cài dependencies có lockfile; JS syntax, ESLint, TypeScript checkJs; asset validator (JSON parse, ID duy nhất, kích thước, khung, tham chiếu); build web + bản một tệp; kiểm giới hạn 30 MB; unit test, save migration test, loader failure test; Playwright Chromium/WebKit; deploy PR preview vào staging; HTTP smoke test preview URL; đăng URL + kết quả vào PR; chặn merge khi bước bắt buộc fail.
+Pipeline B — khi release (P0/M): lấy đúng commit đã qua CI; build một lần, lưu artifact có hash; deploy staging cố định; chạy đủ bộ kiểm; chờ owner duyệt; đưa đúng artifact đó lên production (không rebuild); kiểm HTTP, build ID, asset manifest ở production; gửi thông báo thành công/thất bại; lưu commit SHA, manifest hash, thời gian, Firebase release ID. Giai đoạn đầu để owner quyết định rollback.
+Smoke tests tối thiểu: trang tải không trắng/không lỗi JS nghiêm trọng; 100% asset bắt buộc khu vực mở đầu ready; New Game/Continue chạy; di chuyển, đánh, đổi vũ khí, né; save → reload giữ nguyên; tải ≥5 fixture save cũ; ?cloud=0 chơi và lưu được; Google login + cloud sync trên staging; EN/VI không tràn chữ; stress nhiều quái/hiệu ứng không crash; giả lập 404, mạng chậm, decode timeout; build ID web đúng artifact được duyệt. Dùng test account riêng, không ghi đè save thật của owner.
+Deploy alerts (P0/S): thông báo GitHub khi workflow fail + job cảnh báo độc lập (email/webhook); scheduled workflow 15–30 phút/lần gọi production kiểm HTTP 200, build manifest, asset trọng yếu. HTTP 200 không có nghĩa game chạy — cần cả synthetic smoke test. Lưu ý: required reviewers của GitHub environments trên gói Free/Pro/Team chỉ có cho repo public; repo private dùng workflow phát hành thủ công + giới hạn quyền deploy.
+
+3. TẢI ẢNH VÀ BỘ NHỚ TRÊN iPHONE
+Mục tiêu tải (đề xuất): first playable (HTML, JS, font, menu, hero, zone đầu) ≤ 5 MB; dữ liệu phiên chơi đầu ≤ 8 MB; mỗi zone thêm ≤ 2–4 MB; bản một tệp ≤ 30 MB, không dùng làm web mặc định. Có thể tải menu trước, chọn New Game mới tải khu vực đầu với thanh tiến độ thật.
+Giới hạn ảnh (P0/M): atlas thường 512×512 hoặc 1024×1024; atlas lớn tối đa 2048×2048; nền chia tile/layer; tránh ≥4096×4096 trong gameplay iPhone.
+Texture atlas: có, chọn lọc (P1/M): nhóm theo chức năng/vòng đời (hero + vũ khí, HUD/UI, quái từng zone, boss riêng, VFX đi cùng nhau). Không ghép cả 720 tấm thành một atlas. Benchmark trước/sau.
+Loader mới (P0/M–L): fetch song song low-end 4, normal 6–8; decode song song low-end 1, normal 2; preload zone kế tắt ở low-end; hàng critical trước; fetch timeout 10–15 s; decode watchdog 5–10 s; exponential backoff; tối đa 3 retry mỗi đợt rồi cooldown; retry khi gameplay yêu cầu lại; generation token bỏ kết quả cũ khi chuyển zone; metric mọi thất bại theo asset ID + lý do. Không tạo hàng loạt decode mới cho cùng ảnh sau timeout; fetch dùng AbortController.
+Quản lý bộ nhớ (P0/M–L): AssetManager có acquire/release/evict; mỗi ảnh ghi assetId, zoneId, width, height, estimatedRGBABytes, lastUsed, referenceCount, status. Ngân sách pixel đã giải mã: low-end ~64 MiB, normal ~96–128 MiB. Giữ hero, UI, zone đang chơi, boss hiện tại; evict zone cũ khi rời và hết tham chiếu. ImageBitmap gọi close(). Stress-test chuyển zone 20–30 lần.
+Service Worker: CHƯA bật trong P0. Dùng cache Firebase Hosting: HTML + manifest Cache-Control: no-cache; asset có hash: public, max-age=31536000, immutable; không dùng tên cũ cho nội dung mới; giữ asset vài release cũ; hiện "New version available", chỉ reload ở menu/checkpoint sau khi save. P2 mới cân nhắc Service Worker.
+
+4. HỆ THỐNG SAVE
+Schema có version (P0/L): metadata schemaVersion, saveId, revision, updatedAt, gameBuild, progress, inventory, equipment, settings. Migration tuần tự v3→v4→…→v7, mỗi bước một hàm deterministic, không mạng, không sửa raw save. Không xóa field lạ. Save có version mới hơn code: không ghi đè, báo cập nhật.
+Backup trước khi ghi localStorage (P0/M): đọc + validate save hiện tại → tạo save mới → kiểm JSON/schema/invariants → ghi key tạm → đọc lại xác minh → giữ bản cũ ở key backup → chuyển bản mới thành current → xóa key tạm. Khởi động: kiểm current, tạm, backup, chọn bản hợp lệ phù hợp nhất. Giữ ≥2 snapshot. Bắt QuotaExceededError, không xóa bản đang dùng để ghi bản mới.
+Cloud save (P0/L): users/{uid}/saves/main; users/{uid}/saveBackups/{revision} vài snapshot gần nhất; revision tăng dần + Firestore transaction compare-and-swap. Offline thì lưu journal local, online lại đọc revision mới nhất rồi mới sync. Security Rules: request.auth.uid khớp chủ save, giới hạn kích thước/cấu trúc.
+Conflict: cloud trống + local hợp lệ → hỏi xác nhận upload lần đầu; local trống + cloud hợp lệ → tải cloud, giữ backup; cùng revision + checksum → không làm gì; một bản kế thừa bản kia → đồng bộ bản mới theo lịch sử revision; hai bản tiến triển độc lập → giữ cả hai, hỏi người chơi; một bản lỗi → dùng bản hợp lệ, giữ bản lỗi; cloud schema mới hơn client → chặn ghi. Không chọn theo đồng hồ điện thoại; không cộng gộp inventory/quest. Màn conflict hiện khu vực, thời gian chơi, cấp, vật phẩm quan trọng, thời điểm lưu; nút Use Cloud / Keep This Device / Cancel; backup cả hai trước.
+Phục hồi: current local → local backup → cloud current → cloud backups → người chơi chọn snapshot → chỉ New Game khi không còn bản hợp lệ. Không âm thầm reset. Fixture save cũ trong repo + snapshot test; test đóng tab giữa lúc ghi, offline/reconnect, hai tab, quota đầy, rollback code. Rollback code ≠ rollback schema: trong 3 tuần chỉ migration tương thích ngược.
+
+5. NGÂN SÁCH HIỆU NĂNG
+16,67 ms/khung: logic + AI + collision 5 ms; render 6 ms; input + overhead + GC 5,67 ms. Máy thường 60 FPS; máy yếu ~30 FPS khi nặng; logic không nhanh/chậm theo FPS; P95 khung gần 16,7 ms (hoặc 33,3 ms ở 30 FPS); không đứng >1 s; không crash trong stress 30 phút trên máy thấp nhất. Không chỉ đo FPS trung bình.
+Mốc thử: quái đang hoạt động 25–40; hiệu ứng gameplay 30 (low 15–20); hạt trang trí 80–120 (low 20–40); số sát thương 20–30 (low 10–15); rung màn có giới hạn (low tắt). KHÔNG xóa quái/hitbox để tăng FPS — chỉ giảm phần trình bày.
+Object pooling (P1/M) cho projectile, hit effect, particle, số sát thương, vật va chạm tạm; reset đủ khi trả pool.
+Collision/AI (P1/M): spatial grid; cache pathfinding/line-of-sight; không tạo mảng tạm trong vòng nóng; không getImageData mỗi khung; offscreen canvas cho lớp tĩnh nếu đo có lợi.
+Auto quality (P1/M): High/Normal/Low; bỏ qua lúc tải, chuyển tab, 10 s đầu sau resume; cửa sổ 10–15 s; giảm 1 cấp khi vượt; giữ ≥60 s mới cân nhắc nâng; người chơi chọn tay được. document.hidden/pagehide: lưu checkpoint, dừng loop; quay lại reset accumulator. Fixed step 16,667 ms; kẹp thời gian trôi sau resume 100–250 ms; tối đa 3–5 bước logic/khung, vượt thì bỏ backlog.
+Đo mỗi phiên: thời gian khởi động, tới menu, tới lúc chơi được; byte tải; độ trễ fetch/decode; retry; sprite thiếu; FPS trung bình, P95/P99; thời gian update/render; long task; số quái/đạn/hiệu ứng/hạt; số lần chuyển zone; pixel đã giải mã đang giữ; độ trễ save, lỗi sync; sự kiện ẩn/hiện. Safari không có performance.memory.
+
+6. SỨC KHỎE MÃ NGUỒN
+Không đổi framework. Giảm phụ thuộc ngầm. Subsystem: core (vòng lặp, thời gian), render, assets, combat, entities, world, ui, save, platform (Firebase, auth, mạng), telemetry. Giữ G nhưng lập danh sách field thuộc module nào; SaveManager là nơi duy nhất ghi save; AssetManager là nơi duy nhất giữ cache ảnh.
+AGENTS.md (P0/S–M): mỗi task một branch/worktree; không push thẳng main/production; không sửa module ngoài phạm vi; sửa interface chung thì cập nhật caller + test; không đổi save schema thiếu migration + fixture; không thêm URL flag mới chỉ để né sửa lỗi; không xóa asset/đổi asset ID khi chưa chạy validator; không force push nhánh chung; chạy test liên quan và báo kết quả; kết thúc bằng PR có mô tả, rủi ro, cách rollback. CODEOWNERS cho module nhạy cảm. Chỉ một người/một workflow được deploy production.
+Nghỉ hưu URL flags (P1/M): lập bảng flag | mặc định | chủ | mục đích | ngày thêm | phụ thuộc | kế hoạch xóa; phân loại debug / rollout tạm / cài đặt người chơi / rollback cũ; chốt mặc định; xóa từng nhóm nhỏ kèm nhánh mã cũ; cài đặt thật chuyển sang FeatureConfig có version. ?cloud=0 là chế độ quan trọng, giữ và có test riêng.
+Lint rẻ (P0/S–M): node --check; ESLint (biến chưa khai báo, khai báo trùng, mã không tới được); tsc --allowJs --checkJs --noEmit + JSDoc cho module quan trọng; JSON schema cho asset/save; lockfile; test thứ tự nạp JS. Bật quy tắc bắt lỗi thật trước, áp dụng nghiêm cho tệp mới/sửa. Khai báo kiểu cho các field cốt lõi của G.
+Báo lỗi (P0/S–M): window.onerror, unhandledrejection, lỗi tải asset, lỗi save nghiêm trọng, lỗi auth/cloud, lỗi vòng lặp, kèm release ID và zone. Sentry (free tier) hoặc endpoint riêng trên Firebase. Không gửi save, email, token, credentials. Phân loại Fatal / Major / Recoverable. Màn phục hồi với Reload, Retry, Export Diagnostic ID.
+
+7. THEO DÕI SAU RA MẮT
+Công cụ: GitHub Actions (CI, deploy, cảnh báo) P0; Firebase Hosting (lịch sử, rollback) P0; Sentry hoặc tương đương P0; uptime monitor P0; Firebase/Google Cloud (Auth, Firestore, quota) P0; Playwright synthetic test P0; BigQuery/Looker Studio hoặc dashboard nhẹ P1.
+Telemetry tối thiểu: event, buildId, sessionId ngẫu nhiên, platform, browserFamily, zoneId, assetId, errorCode, durationMs. Không ghi IP trong payload. Lấy mẫu 1–5% phiên cho hiệu năng.
+KPI mục tiêu: crash-free sessions ≥ 99,5%; save hợp lệ ≥ 99,9%; asset quan trọng tải thành công ≥ 99,9%; first playable P75 ≤ 8 s. Biểu đồ lỗi theo release, thời gian tải P50/P75/P95 trên 4G, asset thiếu theo zone, FPS theo nền tảng/chất lượng, xung đột/lỗi sync save, trạng thái deploy, thời gian từ phát hiện lỗi tới rollback. Ghi session_start + heartbeat thưa để nhận diện phiên kết thúc bất thường.
+Ngưỡng cảnh báo: HTTP check fail 2 lần liên tiếp; deploy fail; lỗi JS nghiêm trọng tăng mạnh sau release; asset quan trọng lỗi >1% (đủ mẫu); lỗi cloud save tăng mạnh; nhiều phiên khởi động >20 s → điều tra; save hỏng đã xác minh → dừng phát hành mới.
+
+8. KẾ HOẠCH 3 TUẦN (đóng băng tính năng gameplay lớn; chỉ sửa lỗi, tối ưu, test, phục hồi)
+Tuần 1 — ngăn release lỗi và mất save: tạo staging Firebase project + tài khoản test; chặn auto-deploy production từ work branch; tách branch, PR, CI, release workflow; cảnh báo deploy fail; chuẩn hóa save schema + backup; test migration save cũ; smoke test bắt buộc; thiết lập rollback và thử rollback một lần. Đầu ra: không push đơn lẻ nào phá được production; save cũ có test và backup.
+Tuần 2 — ổn định loader và hiệu năng: giảm tải song song từ 24; giới hạn decode, watchdog, retry; AssetManager có eviction + đếm tham chiếu; kiểm kê 720 tấm và kích thước giải mã; tách asset critical / optional; bộ đếm hiệu năng + preset chất lượng; stress chuyển zone, nhiều quái, resume; kiểm UI EN/VI. Đầu ra: không deadlock hàng đợi; bộ nhớ không tăng mãi khi chuyển zone; có số liệu frame-time trên iPhone.
+Tuần 3 — regression, beta kín, diễn tập ra mắt: chạy đủ ~30 test cũ, sửa/bỏ test lỗi thời; test iPhone Safari + Android Chrome; 4G chậm, offline/reconnect, reload giữa lúc save; login/logout, conflict hai thiết bị; phiên chơi 30–60 phút; kiểm dashboard + cảnh báo; diễn tập deploy lỗi + rollback; beta kín nhóm nhỏ; đóng hết bug P0 và bug P1 nghiêm trọng. Đầu ra: release candidate đã kiểm, có rollback, monitoring, báo cáo ổn định thực tế.
+Ma trận thiết bị: iPhone đời cũ còn hỗ trợ (Safari, ít RAM, 4G); iPhone đời mới (vùng an toàn); Android tầm trung (Chrome, 4G); desktop (Chromium/WebKit automation); hai thiết bị cùng tài khoản (conflict). Thử chuyển nền, cuộc gọi đến, khóa/mở máy, xoay màn hình, Safari tự reload tab. Playwright WebKit không thay được iPhone thật.
+Go/No-Go (10 điều kiện): production khóa, CI + staging chạy; rollback đã thử thành công; không còn bug P0; save cũ migrate được, backup/recovery chạy; conflict cloud không tự xóa dữ liệu; không deadlock loader trong fault test; không crash stress 30 phút trên máy mục tiêu; UI EN/VI không tràn nghiêm trọng; monitoring + cảnh báo deploy chạy; beta kín đạt mục tiêu crash/tải/save với đủ mẫu.
+
+9. KHÔNG NÊN LÀM TRONG 3 TUẦN NÀY
+Không chuyển React/Phaser/engine khác; không viết lại 55.700 dòng; không đổi toàn bộ save format một lần; không ghép 720 tấm thành atlas khổng lồ; không thêm Service Worker phức tạp trước khi sửa cache/release; không tăng tải song song chỉ để tải nhanh hơn; không xóa hết rollback flags ngay; không để agent tự sửa smoke test cho pass mà không kiểm hành vi thật; không bật auto-release production khi chưa có staging + test; không dùng FPS trung bình làm tiêu chí duy nhất.
+
+10. LỆNH GIAO VIỆC ĐẦU TIÊN CHO AI AGENT (nguyên văn)
+TASK: TALESWORN P0 STABILIZATION — RELEASE SAFETY FOUNDATION
+Project: Talesworn, plain JavaScript + Canvas 2D, Firebase Hosting/Firestore/Auth.
+Goal: Prevent untested code from reaching production, protect existing user saves, and establish reliable deployment monitoring.
+Requirements:
+- Audit the current GitHub Actions, Firebase Hosting configuration, build scripts, save code and test scripts. Report findings before making destructive changes.
+- Implement separate CI checks and a manually approved production release workflow. Direct pushes by AI agents must not deploy production.
+- Configure PR previews and a staging environment using a separate Firebase project for test Auth/Firestore data.
+- Add mandatory checks: JS syntax, lint, asset validation, build sizes, Playwright smoke tests and backward-compatible save migration tests.
+- Introduce buildId and asset manifest versioning. Use immutable content-hashed assets and appropriate cache headers.
+- Add release failure notifications, scheduled production health checks and a documented rollback procedure.
+- Preserve all existing save data. Do not change live save schema without tested migrations and backup/recovery.
+- Provide GitHub workflow names, required secrets, repository settings, test commands and an owner-facing release checklist.
+- Implement changes in small PRs. Do not deploy to production, overwrite real Firestore data or alter production security rules without explicit owner approval.
+- Define acceptance tests and demonstrate CI failure, successful staging deploy, failed deploy alert and safe rollback.
+Constraints: keep existing plain JavaScript and Canvas architecture; do not rewrite gameplay systems; do not remove existing features or URL flags during this task; never use production player accounts for automated tests; do not claim an iPhone Safari test passed unless it was run on a real iPhone or a clearly identified mobile browser testing service.
+Deliverables: working workflows, tests, configuration, AGENTS.md, a rollback runbook and a short non-programmer owner guide.
+
+11. NGUỒN ĐÃ ĐỐI CHIẾU: Firebase Hosting (releases, preview channels, rollback; GitHub Actions integration), GitHub (deployment environments, approvals), Firestore (transactions), Firebase Auth (Safari, redirect sign-in), MDN (HTMLImageElement.decode), WebKit (iOS canvas dimension limit). Các ngưỡng dung lượng/bộ nhớ/số quái/thời gian tải là mục tiêu đề xuất, chưa phải số đo thật.
+CHỐT ƯU TIÊN: nếu chỉ đủ sức làm ba việc: release safety, save protection, asset memory management.
