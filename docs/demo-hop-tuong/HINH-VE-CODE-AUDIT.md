@@ -716,3 +716,14 @@ Code: `thap/js/hud2.js` + `thap/css/hud2.css` (nạp sau cùng, chỉ bọc hàm
 
 Còn vẽ bằng code (giữ) và lý do: chữ/số (LV, giá, mana, wave, tên trùm — đổi ngôn ngữ, sắc nét); nút dừng xem trước khi đang phát dùng phím vuông (không có bản tròn); dấu ✓ thẻ đã chọn ở menu (chưa có ảnh "đã chọn"); nhịp nhấp nháy thanh lõi khi còn 1 tim (độ mờ ảnh); viền/ô của 4 ô số trong bảng thông tin (K13, bảng dữ liệu); quầng sáng lõi (gradient có sẵn của render.js); hình dự phòng khi ảnh chưa tải (chỉ `?debug`). Bỏ qua: #02 (quyết định điều phối), hàng 1 tấm 13 (viền nén nút hình chữ nhật — không khớp nút tròn), lớp phủ "không khả dụng" tấm 12 (ô giá xám đã đủ).
 Lỗi có sẵn (không thuộc phiên này): PVP đôi khi xin `assets/ic_cdmg.png` (404).
+
+## 10. Pass 3 — kéo ghép (P0-02) + kết quả ghép (P0-03) (2026-11-05)
+
+Code: `thap/js/keoghep.js` (mới), `ui.js ganCham` (kéo/chạm–chạm/huỷ), `nhandien.js veKeo/veKeoTren` (giao cho KG), `render.js veO/veKeo` (mờ ô sai 0.4, đầu ụ nằm trên ngón tay).
+Bỏ hình vẽ code cũ: viền bạc hà + chấm tâm, cung nối nét đứt, vòng gạch chéo, bóng tròn dưới ụ đang kéo.
+Dùng tạm ảnh có sẵn: ô hợp lệ = `khung_chon` (S10, 9 mảnh) · ô rê hợp lệ / ụ đã chọn = `sup_ring` · ô rê sai = `h2_vong_do` · tấm kết quả + mẹo = `nhan_kn` + `h2_sao` (số sao to) · chớp = `h2_vfx_ghep` (hud2_13).
+Kiểm thử: `tools/thap-kt-keoghep.js` · ảnh `docs/demo-hop-tuong/tuvan/keoghep/`.
+
+Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached — đính kèm `khung_chon.png` + `sup_ring.png`):
+- **P3-3 bốn vòng đích kéo ghép** → `kg_vong_hople/chon/sai/xong.png` (cắt 128): "Game UI sheet, 4x1 grid, 4 perfectly circular target rings for a merge drag: 1 valid (subdued steel with soft cyan glow), 2 selected (bright cyan, thicker, 4 small notches), 3 invalid (dark steel with dull orange-red edge), 4 merged (bright white-gold flash ring). Transparent empty centers, same style as attached, solid #FF00FF background, no text. 1024x256."
+- **P3-4 tấm kết quả ghép** → `kg_tam_ketqua.png` (3 mảnh ngang, cao 48): "Small beveled dark-steel merge result plaque, wide horizontal pill, clear empty center for text, small round socket on the left for a star badge, simple lightning-bolt corners in cyan, same style as attached, centered, solid #FF00FF background, no text. 1024x256."

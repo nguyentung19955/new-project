@@ -89,49 +89,9 @@ const ND = {
     ctx.globalAlpha = al; ctx.lineWidth = w; ctx.strokeStyle = mau;
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(c.x - cw / 2, c.y - ch / 2, cw, ch, 8) : ctx.rect(c.x - cw / 2, c.y - ch / 2, cw, ch); ctx.stroke();
   },
-  veKeo(ctx) {
-    const k = UI.keo; if (!k || !k.dang) return;
-    const src = k.T, B = G.ban[src.ban]; if (!B || B.t[src.o] !== src) return;
-    const t = REN.t, nh = 0.5 + 0.5 * Math.sin(t * 7);
-    const D = UI.uTai(k.x, k.y), hover = D && D !== src ? D : null;
-    ctx.save();
-    for (let i = 0; i < 15; i++) {
-      const N = B.t[i]; if (!N || N === src || !hopLeGhep(src, N)) continue;
-      const c = B.o[i], on = hover === N;
-      // viền tối lót + viền bạc hà nhấp nháy (rê lên: dày 4.5)
-      this.oVien(ctx, B, i, on ? 7.5 : 5.5, 'rgba(4,8,6,.75)', 1, 3);
-      this.oVien(ctx, B, i, on ? 4.5 : 3, this.MINT, on ? 1 : 0.6 + 0.4 * nh, 3);
-      ctx.globalAlpha = 1; ctx.fillStyle = '#0b0e13'; ctx.beginPath(); ctx.arc(c.x, c.y, on ? 4.6 : 3.6, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(c.x, c.y, on ? 3 : 2.2, 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.restore(); ctx.globalAlpha = 1;
-  },
-  // phần rê (cung nối / gạch chéo): vẽ TRÊN ụ đang kéo để ngón tay không che mất
-  veKeoTren(ctx) {
-    const k = UI.keo; if (!k || !k.dang) return;
-    const src = k.T, B = G.ban[src.ban]; if (!B || B.t[src.o] !== src) return;
-    const t = REN.t, D = UI.uTai(k.x, k.y), hover = D && D !== src ? D : null;
-    ctx.save();
-    if (hover) {
-      const c0 = B.o[src.o], c1 = B.o[hover.o];
-      if (hopLeGhep(src, hover)) { // cung nối ngắn từ ô gốc → ô đích
-        const mx = (c0.x + c1.x) / 2, my = (c0.y + c1.y) / 2 - Math.max(18, Math.hypot(c1.x - c0.x, c1.y - c0.y) * 0.25);
-        ctx.globalAlpha = 0.9; ctx.lineCap = 'round';
-        ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(4,8,6,.7)'; ctx.beginPath(); ctx.moveTo(c0.x, c0.y); ctx.quadraticCurveTo(mx, my, c1.x, c1.y); ctx.stroke();
-        ctx.lineWidth = 2.6; ctx.strokeStyle = this.MINT; ctx.setLineDash([7, 5]); ctx.lineDashOffset = -t * 40;
-        ctx.beginPath(); ctx.moveTo(c0.x, c0.y); ctx.quadraticCurveTo(mx, my, c1.x, c1.y); ctx.stroke(); ctx.setLineDash([]);
-      } else { // ô KHÔNG ghép được: vòng gạch chéo trung tính (không đỏ, không gợi ý hợp lệ)
-        const r = Math.min(B.cw, B.ch) * 0.24;
-        ctx.globalAlpha = 0.95; ctx.lineCap = 'round';
-        for (const [w, m] of [[6, 'rgba(6,8,11,.85)'], [3, '#e6e9ee']]) {
-          ctx.lineWidth = w; ctx.strokeStyle = m;
-          ctx.beginPath(); ctx.arc(c1.x, c1.y, r, 0, Math.PI * 2); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(c1.x - r * 0.7, c1.y + r * 0.7); ctx.lineTo(c1.x + r * 0.7, c1.y - r * 0.7); ctx.stroke();
-        }
-      }
-    }
-    ctx.restore(); ctx.globalAlpha = 1;
-  },
+  // kéo ghép: chỉ ảnh ChatGPT (khung_chon / sup_ring / h2_vong_do) — xem keoghep.js (P0-02)
+  veKeo(ctx) { if (typeof KG !== 'undefined') KG.veDuoi(ctx); },
+  veKeoTren(ctx) { if (typeof KG !== 'undefined') KG.veTren(ctx); },
 
   // ---------- chạm thẻ bộ bài: khoanh mọi ụ cùng loại ~0,8 s ----------
   soiThe(id) { if (G.ban.length) this.soi = { id, t0: performance.now() }; },

@@ -173,6 +173,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
+    ds.push('khung_chon', 'h2_vong_do', 'nhan_kn', 'h2_vfx_ghep'); // kéo ghép (keoghep.js)
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
     for (const b of G.ban) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
     for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
@@ -393,7 +394,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B) dungMV(B); break;
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
-      case 'dung': G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
+      case 'dung': this.huyKeo(); G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;
       case 'amthanh': SND.batTat(); SND.nut(); break;
       case 'nhac': SND.batTatNhac(); SND.nut(); break;
@@ -412,43 +413,67 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (let i = 0; i < 15; i++) { const T = B.t[i]; if (!T) continue; const c = B.o[i], d = Math.hypot(c.x - x, c.y - y); if (d < Math.min(B.cw, B.ch) * 0.6 && d < bd) { bd = d; best = T; } }
     return best;
   },
+  // điểm thả khi kéo = tâm đầu ụ (chạm: nằm TRÊN ngón tay ~0,6 ô để không bị che; chuột: đúng con trỏ)
+  diemKeo(k) { return [k.x, k.y - (k.lech || 0)]; },
+  // huỷ kéo / bỏ chọn chạm–chạm an toàn (thả ngoài, touchcancel, mất capture, tạm dừng, ẩn tab)
+  huyKeo() {
+    this.keo = null; this.chonGhep = null;
+    if (this.xemHT) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 600; }
+  },
   ganCham() {
     const cv = $('#cv');
+    this.chonGhep = null; // chế độ chạm–chạm: { T, t0 }
     cv.addEventListener('pointerdown', (e) => {
-      if (!G.ban.length || G.ketThuc) return;
+      if (!G.ban.length || G.ketThuc || G.dung) return;
+      if (this.keo) return; // ngón thứ 2 khi đang kéo: bỏ qua (không tạo thao tác thứ 2)
       SND.mo();
       const [x, y] = this.diemLogic(e), T = this.uTai(x, y);
-      if (!T) { $('#tt').hidden = true; this.xemHT = null; return; }
+      if (!T) { $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null; return; }
       if (laHoTro(T)) { SND.hoTro(); if (!this.xemHT || this.xemHT.T !== T || !this.xemHT.giu && this.xemHT.het < performance.now()) this.xemHT = { T, t0: performance.now(), giu: true }; else { this.xemHT.giu = true; this.xemHT.het = 0; } }
       else this.xemHT = null;
-      cv.setPointerCapture(e.pointerId);
-      this.keo = { T, x, y, x0: x, y0: y, dang: false };
+      try { cv.setPointerCapture(e.pointerId); } catch (er) { }
+      const B = G.ban[0], C = Math.min(B.cw, B.ch);
+      this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6) };
     });
     cv.addEventListener('pointermove', (e) => {
-      const k = this.keo; if (!k) return;
+      const k = this.keo; if (!k || e.pointerId !== k.id) return;
       const [x, y] = this.diemLogic(e); k.x = x; k.y = y;
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
-        k.dang = true; $('#tt').hidden = true; this.xemHT = null;
+        k.dang = true; $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null;
       }
     });
     const het = (e) => {
-      const k = this.keo; this.keo = null; if (!k) return;
+      const k = this.keo; if (!k || (e && e.pointerId !== k.id)) return;
+      this.keo = null;
       if (this.xemHT && this.xemHT.giu) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 2400; }
       const B = G.ban[0];
+      if (!B || G.ketThuc || G.dung || B.t[k.T.o] !== k.T) { this.chonGhep = null; return; }
       if (!k.dang) {
-        if (B.t[k.T.o] !== k.T) return;
+        // chạm–chạm: đã chọn 1 ụ → chạm ô đang sáng = ghép; chạm lại chính nó = bỏ chọn
+        const c = this.chonGhep && typeof KG !== 'undefined' ? KG.nguon() : null;
+        if (c && c !== k.T && hopLeGhep(c, k.T)) { this.chonGhep = null; $('#tt').hidden = true; ghep(B, c, k.T); return; }
+        if (c && c === k.T) { this.chonGhep = null; $('#tt').hidden = true; return; }
+        this.chonGhep = null;
         const sk = SKILLS[k.T.id];
         if (sk.chuDong && k.T.nap >= 1 && !k.T.st.bang && !k.T.st.da) { sk.chuDong(G, B, k.T); return; } // ụ ĐỎ: chạm khi nạp đầy = dùng kỹ năng chủ động
-        this.moTT(k.T.id, k.T); return;
+        this.moTT(k.T.id, k.T);
+        if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
+        return;
       }
-      const D = this.uTai(k.x, k.y);
-      if (D && D !== k.T && B.t[k.T.o] === k.T) {
+      // kéo: chỉ ghép khi thả đúng lên ô HỢP LỆ; mọi chỗ khác = huỷ (không ghép)
+      const [hx, hy] = this.diemKeo(k), D = this.uTai(hx, hy);
+      if (D && D !== k.T) {
         if (hopLeGhep(k.T, D)) ghep(B, k.T, D);
         else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.sao !== D.sao ? TEXT.fx.diffStar : TEXT.fx.diffType, '#ff9a9a', 12); }
       }
     };
-    cv.addEventListener('pointerup', het); cv.addEventListener('pointercancel', () => { this.keo = null; if (this.xemHT) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 600; } });
+    cv.addEventListener('pointerup', het);
+    cv.addEventListener('pointercancel', (e) => { if (!this.keo || e.pointerId === this.keo.id) this.huyKeo(); });
+    cv.addEventListener('lostpointercapture', (e) => { if (this.keo && e.pointerId === this.keo.id) setTimeout(() => { if (this.keo && this.keo.id === e.pointerId) this.huyKeo(); }, 0); });
+    cv.addEventListener('touchcancel', () => this.huyKeo());
+    document.addEventListener('visibilitychange', () => { if (document.hidden) this.huyKeo(); });
+    addEventListener('blur', () => { if (this.keo) this.huyKeo(); });
     // giữ thẻ ở hàng dưới → bảng thông tin (không nâng cấp)
     const bo = $('#bo-the');
     bo.addEventListener('pointerdown', (e) => { const d = e.target.closest('.the'); if (!d) return; clearTimeout(this.giu); this.giu = setTimeout(() => { this._boQuaBam = true; this.moTT(d.dataset.id, null, true); }, 480); });
