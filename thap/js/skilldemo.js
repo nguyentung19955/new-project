@@ -83,15 +83,15 @@ const SD_K = {
   bua: { q: Q.hang(3, 175, 50, 6), may: [2.6, 4.2], c: [[0.2, 'Heavy hammer shots'], [2.4, 'Crits knock enemies back', { ev: 'hit', cham: 0.7 }]] },
   nam: { o: 2, q: Q.nhom(5, 175, 16, 8), c: [[0.2, 'Melee: only hits enemies nearby'], [1.6, 'Ring blasts hit all around', { ev: 'hit', cham: 0.5 }]] },
   bomhen: { q: Q.hang(4, 170, 34, 8), c: [[0.2, 'Sticks a bomb on an enemy'], [1.2, 'It explodes after 5 seconds'], [5.2, 'Boom! Blast hits nearby enemies', { ev: 'hit', cham: 0.6 }]], dai: 9 },
-  nhanmana: { kieu: 'ghep', mana: 1, c: [[0.2, 'Merge two Mana Doublers'], [2.5, 'Merging gives bonus mana', { ev: 'mana', cham: 0.6 }]] },
+  nhanmana: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Mana Doublers'], [2.5, 'Merging gives bonus mana', { ev: 'mana', cham: 0.6 }]] },
   kiembang: { q: Q.nhom(4, 170, 22, 12), c: [[0.2, 'Each hit chills nearby enemies'], [1.4, 'Slowed enemies take ×5 damage', { ev: 'hit', cham: 0.6 }]] },
-  mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, 'Result gets +50% attack', { ev: 'sao', cham: 0.6 }]] },
+  mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, 'Result gets +50% attack', { ev: 'moi', cham: 0.6 }]] },
   dichchuyen: { o: 2, q: Q.nhom(4, 170, 18, 9), ke: [[12, 'nam', 's']], keo: [2.6, 2, 12], c: [[0.2, 'Iron Fist is too far away'], [1.6, 'Drag onto a same-star turret'], [2.6, 'They swap places', { cham: 0.6 }], [4.2, 'Now it reaches the enemies']] },
   drone: { kieu: 'ghep', q: Q.hang(4, 175, 40, 5), c: [[0.2, 'Merge two Drone Bays'], [2.5, 'Merging launches bomb drones', { cham: 0.5 }], [4.4, 'Drones fly up the path']] },
-  tron: { kieu: 'gDB', ban: 'canon', saoBan: (s) => Math.min(7, s + 2), c: [[0.2, 'Merges with any turret'], [2.5, 'New stars: average of both', { ev: 'sao', cham: 0.6 }]] },
+  tron: { kieu: 'gDB', ban: 'canon', saoBan: (s) => Math.min(7, s + 2), c: [[0.2, 'Merges with any turret'], [2.5, 'New stars: average of both', { ev: 'moi', cham: 0.6 }]] },
   nangluong: { q: Q.hang(3, 175, 50, 8), mana: 1, manaDau: 60, truoc: null, them: [[3.4, (B) => { B.mana += 600; }]], c: [[0.2, 'Damage grows with your mana'], [3.4, 'More mana, bigger hits', { ev: 'hit', cham: 0.6 }]] },
   laser: { q: Q.hang(3, 180, 50, 14), c: [[0.2, 'Locks a beam on one enemy'], [2.2, 'Beam ramps up to ×4', { cham: 0.5 }]] },
-  mortar: { q: Q.nhom(6, 185, 22, 7), c: [[0.2, 'Shells random enemies'], [1.2, 'Every 3rd shell splits apart', { ev: 'shot%3', cham: 0.7 }]] },
+  mortar: { q: Q.nhom(6, 185, 22, 7), c: [[0.2, 'Shells random enemies'], [1.2, 'Every 3rd shell splits apart', { ev: 'hit', cham: 0.7 }]] },
   vungdoc: { q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Throws a poison pool'], [2.0, 'Enemies walking through get poisoned', { cham: 0.5 }]] },
   loa: { kieu: 'ghep', cd: 1, c: [[0.2, 'Your Archfiend skill is cooling'], [2.5, 'Merging cuts the cooldown', { cham: 0.6 }]] },
   hutmana: { q: Q.hang(4, 175, 40, 6), mana: 1, manaDau: 0, c: [[0.2, 'Every hit makes a little mana'], [2.0, 'Mana flows to your counter', { ev: 'mana', cham: 0.5 }]] },
@@ -100,13 +100,13 @@ const SD_K = {
   baotuyet: { q: Q.nhom(5, 180, 26, 10), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Blizzard every few seconds'], [1.3, 'Slows every enemy on the path', { cham: 0.6 }]] },
   nhanban: { kieu: 'ghep', c: [[0.2, 'Merge two Cloners'], [2.5, 'Merging summons a free turret', { ev: 'moi', cham: 0.6 }]] },
   lienket: { q: Q.hang(3, 175, 50, 6), ke: [[6, 'lienket', 's'], [8, 'lienket', 's']], c: [[0.2, 'Linked twins power each other'], [1.4, (T) => 'Chain of ' + (T.chuoi || 3) + ': +' + Math.round(0.4 * ((T.chuoi || 3) - 1) * 100) + '% damage', { ev: 'hit', cham: 0.5 }]] },
-  kepha: { kieu: 'ghep', c: [[0.2, 'Merge two Jammers'], [2.5, 'Merging speeds up your turrets', { cham: 0.6 }]] },
+  kepha: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Jammers'], [2.5, 'Rival turrets get clamped', { cham: 0.6 }], [4.0, 'Clamped: −40% fire rate']] },
   taylo: { kieu: 'ghep', dong: [2, 6], c: [[0.2, 'Two turrets are frozen'], [2.5, 'Merging clears their debuffs', { cham: 0.7 }]] },
-  khien: { kieu: 'ghep', q: Q.trum('nightmare', 3.4, 80), c: [[0.2, 'Merge two Shield Gens'], [2.5, 'Merging shields your turrets', { cham: 0.5 }], [3.4, 'The boss aims a skill…'], [4.6, 'Shield blocks one boss skill', { cham: 0.6 }]], dai: 9 },
-  hopbi: { kieu: 'phu', truoc: (T) => { T.tuoi = SKILLS.hopbi.can(T) - 3.2; }, c: [[0.2, 'Counts down, then opens'], [3.0, (T, s) => 'Becomes a random ' + (s >= 7 ? 5 : s >= 5 ? 3 : 1) + '–7★ turret', { ev: 'moi', cham: 0.6 }]] },
+  khien: { kieu: 'ghep', q: Q.trum('nightmare', 3.4, 80), c: [[0.2, 'Merge two Shield Gens'], [2.5, 'Merging shields your turrets', { cham: 0.5 }], [3.4, 'The boss aims a skill…'], [4.6, 'Shield blocks one boss skill', { ev: 'chan', cham: 0.6 }]], dai: 9 },
+  hopbi: { kieu: 'phu', dem: (T) => SKILLS.hopbi.can(T) - T.tuoi, truoc: (T) => { T.tuoi = SKILLS.hopbi.can(T) - 3.2; }, c: [[0.2, 'Counts down, then opens'], [3.0, (T, s) => 'Becomes a random ' + (s >= 7 ? 5 : s >= 5 ? 3 : 1) + '–7★ turret', { ev: 'moi', cham: 0.6 }]] },
   nangsao: { kieu: 'ghep', c: [[0.2, 'Merge two Star Lifts'], [2.5, 'Another turret gets +1★', { ev: 'sao', cham: 0.6 }]] },
-  xaotron: { kieu: 'ghep', c: [[0.2, 'Merge two Scramblers'], [2.5, 'Lonely turrets get a partner', { cham: 0.6 }]] },
-  epxung: { kieu: 'gDB', ban: 'lien', c: [[0.2, 'Drag onto a same-star turret'], [2.5, '+65% fire rate, it stacks', { cham: 0.6 }]] },
+  xaotron: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Scramblers'], [2.5, 'Rival turrets get shuffled', { cham: 0.7 }], [4.0, 'Their board layout breaks']] },
+  epxung: { kieu: 'gDB', ban: 'lien', so: { o: 8, k: 'toc' }, c: [[0.2, 'Drag onto a same-star turret'], [2.5, '+65% fire rate, it stacks', { cham: 0.6 }]] },
   no5: { q: Q.nhom(5, 175, 20, 9), c: [[0.2, 'Counts its shots'], [1.0, '5th shot fires 3 exploding bolts', { ev: 'shot%5', cham: 0.7 }]] },
   bao: { q: Q.hang(6, 200, 30, 10), may: [2.4, 3.6], lien: 1, c: [[0.2, 'Instant hits, very fast'], [2.3, 'Some hits arc to another', { ev: 'hit', cham: 0.5 }]] },
   anhsang: { q: Q.hang(3, 170, 50, 6), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Light orbs charge up'], [1.4, 'Summons a free 1★ turret', { ev: 'moi', cham: 0.6 }]] },
@@ -115,11 +115,11 @@ const SD_K = {
   railgun: { day: 1, q: Q.hang(3, 175, 50, 8), ke: [[5, 'lien', 1], [6, 'canon', 1], [8, 'set', 1], [9, 'bang', 1], [2, 'lien', 1], [12, 'canon', 1]], c: [[0.2, 'Fill its row: more damage'], [1.6, 'Fill its column: faster fire', { cham: 0.5 }], [3.2, 'Bingo powers the piercing shot', { ev: 'hit', cham: 0.5 }]] },
   vughep: { kieu: 'gDB', ban: 'canon', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Target gets +1★, keeps type', { ev: 'sao', cham: 0.6 }]] },
   sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merging adds a same-star twin', { ev: 'moi', cham: 0.6 }]] },
-  hasao: { kieu: 'ghep', c: [[0.2, 'Merge two Star Breakers'], [2.5, 'A turret gets +1★', { ev: 'sao', cham: 0.6 }]] },
+  hasao: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 5], [14, 'set', 2]], c: [[0.2, 'Merge two Star Breakers'], [2.5, 'Rival’s best turret loses 1★', { ev: 'sao', cham: 0.7 }]] },
   saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Becomes a copy (half damage)', { cham: 0.6 }]] },
   ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], c: [[0.2, 'Counts every star on the board'], [1.6, '10★ total: faster fire', { cham: 0.5 }]] },
   soi: { o: 2, q: Q.nhom(5, 175, 18, 6), c: [[0.2, 'Melee wolf claws nearby enemies'], [1.6, 'Kills make it grow stronger', { ev: 'kill', cham: 0.5 }]] },
-  tienhoa: { kieu: 'phu', truoc: (T) => { T.tuoi = SKILLS.tienhoa.can(T) - 3.2; }, c: [[0.2, 'Charges up, then evolves'], [3.0, 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] },
+  tienhoa: { kieu: 'phu', dem: (T) => SKILLS.tienhoa.can(T) - T.tuoi, truoc: (T) => { T.tuoi = SKILLS.tienhoa.can(T) - 3.2; }, c: [[0.2, 'Charges up, then evolves'], [3.0, 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] },
   cauvong: { q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Paints a rainbow on the path'], [1.6, 'Enemies on it take +30% damage', { cham: 0.5 }]] },
   wallgen: { q: Q.dong(6, 0.55, 12), truoc: (T) => { T.nap = 0.7; }, c: [[0.2, 'Raises a wall on the path'], [2.6, 'Wall stops enemies, then explodes', { cham: 0.6 }]], dai: 9 },
   orbital: { kieu: 'ghep', q: Q.hang(4, 175, 40, 10), c: [[0.2, 'Merge two Orbitals'], [2.5, 'Merging calls a sky strike', { cham: 0.5 }], [4.2, 'Bombards the path for 20s']] },
@@ -132,17 +132,19 @@ const SD_K = {
   khoathoigian: { q: Q.hang(3, 175, 50, 12), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Freezes the lead enemy in time'], [1.2, 'Damage is stored while locked', { cham: 0.5 }], [2.6, 'Release: stored damage bursts', { ev: 'hit', cham: 0.5 }]] },
   hydra: { q: Q.hang(7, 205, 28, 7), lien: 1, c: [[0.2, (T, s) => s >= 7 ? 'Barrels fuse into a beam' : s + (s > 1 ? ' barrels' : ' barrel') + ', different targets'], [1.2, (T, s) => s >= 7 ? 'Pierces the whole line' : 'Each barrel picks its own', { ev: 'hit', cham: 0.6 }]] },
   cuuvi: { q: Q.dong(9, 0.4, 1), truoc: (T) => { T.duoi = 6; }, c: [[0.2, 'Kills grow fire tails'], [1.8, '9 tails: homing foxfires', { cham: 0.7 }]] },
-  pandora: { kieu: 'ghep', c: [[0.2, 'Merge two Pandora Vaults'], [2.5, 'Opens 1 of 6 big effects', { cham: 0.7 }]] },
+  pandora: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Pandora Vaults'], [2.5, 'The vault spins…', { cham: 0.8 }], [3.5, () => SD.pdr ? 'Vault opens: ' + SD.pdr.toLowerCase().replace('×3', '') .trim() : 'Opens 1 of 6 big effects', { cham: 0.5 }]] },
   luoicheo: { kieu: 'ht', ke: CHEO4.map((o, i) => [o, i % 2 ? 'canon' : 'lien', 's']), c: [[0.2, 'Buffs the 4 diagonal cells'], [2.0, 'All 4 filled: resonance', { cham: 0.5 }]] },
   ngaithoigian: { q: Q.nhom(5, 200, 26, 30), cham: [4.2], truoc: (T) => { T.nap = 0.92; T.napDay = -99; }, c: [[0.2, 'Enemies slow down over time'], [4.2, 'Tap: rewind pushes enemies back', { cham: 0.7 }]], dai: 9 },
   nemesis: { q: Q.trum('janus', 99, 40).concat(Q.hang(2, 210, 40, 3)), c: [[0.2, 'Executes enemies at low HP'], [2.4, 'Bosses lose chunks of max HP', { ev: 'hit', cham: 0.5 }]] },
   docton: { q: Q.dong(8, 0.5, 4), them: [[4.2, (B) => { const N = sinhU(taoU(B, 'lien', SD.sao, 8)); B.t[8] = N; VX.trieu(N); }]], c: [[0.2, 'Alone: double fire rate'], [4.2, 'A neighbour cancels the bonus', { cham: 0.6 }]] },
   thaukinh: { kieu: 'ht', may: [1.8, 3.4, 'ke'], q: Q.hang(5, 200, 30, 8), c: [[0.2, 'Neighbours’ crits hit harder'], [1.8, 'Crits pierce through enemies', { cham: 0.5 }]] },
-  nhieusong: { kieu: 'ghep', c: [[0.2, 'Merge two Signal Jammers'], [2.5, 'Merging slows all enemies', { cham: 0.6 }]] },
+  nhieusong: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Signal Jammers'], [2.5, 'Rival turrets get jammed', { cham: 0.7 }], [3.6, 'Jammed: −40% fire rate']] },
   santhuong: { q: Q.to(4), mana: 1, manaDau: 0, truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Marks an enemy (big first)'], [2.0, 'Marked kills give bonus mana', { ev: 'mana', cham: 0.6 }]] },
   nhatthuc: { q: Q.hang(4, 180, 40, 14), truoc: (T) => { T.doiT = 3.6; }, c: [[0.2, 'Day: a burning beam'], [3.6, 'Night: a slowing wave', { cham: 0.6 }]] },
-  loren: { kieu: 'gDB', ban: 'lien', saoBan: 1, keoNguoc: 1, c: [[0.2, 'Feed it a 1–3★ turret'], [2.5, 'Each one adds damage stacks', { cham: 0.6 }]] },
-  guongcong: { q: Q.trum('octopus', 1.6, 90), truoc: (T) => { T.nap = 1; }, c: [[0.2, 'Charges a mirror shield'], [1.6, 'The boss aims a skill…'], [3.0, 'The mirror blocks it', { cham: 0.6 }]] },
+  loren: { kieu: 'gDB', ban: 'lien', saoBan: 1, keoNguoc: 1, so: { o: 7, k: 'dmg' }, c: [[0.2, 'Feed it a 1–3★ turret'], [2.5, 'Each one adds damage stacks', { cham: 0.6 }]] },
+  guongcong: { q: Q.trum('octopus', 1.6, 90), truoc: (T) => { T.nap = 1; }, doi: [[4, 'kepha', 3], [9, 'canon', 4], [14, 'set', 3]],
+    them: [[5.0, (B, D, T) => { if (T) T.nap = 1; const K = D && D.t[4]; if (K) SKILLS.kepha.ghep(G, D, K, K, K); }]], dai: 9.4,
+    c: [[0.2, 'Charges a mirror shield'], [1.6, 'The boss aims a skill…'], [3.0, 'The mirror blocks it', { cham: 0.6 }], [4.4, 'Rival casts a Clamp…'], [5.0, 'Mirror reflects it back', { cham: 0.7 }]] },
   marionette: { q: Q.hang(4, 190, 36, 14), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Takes control of an enemy'], [1.6, 'Walks it back, then boom', { cham: 0.5 }]], dai: 9 },
   chuato: { q: Q.hang(5, 200, 36, 8), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.de = 99; }, c: [[0.2, 'Breeds hunter drones'], [4.6, 'Tap: the swarm dives in', { cham: 0.7 }]], dai: 9 },
   leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Devours a small enemy'], [1.4, 'Each meal stacks damage'], [4.6, 'Tap: tidal breath sweeps', { cham: 0.7 }]], dai: 9 },
@@ -155,6 +157,22 @@ const SD_K = {
   khuech: { c: [[0.2, 'Buffs the 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may reap small enemies'], [2.2, 'Reaped souls explode', { ev: 'kill', cham: 0.6 }]] },
 };
+// ---------- chỉ huy (Ma vương): chạm nút → kỹ năng thật (dungMV) ----------
+const SD_MV = {
+  hero: { ke: [[6, 'lien', 2], [8, 'canon', 2], [12, 'set', 1]], q: Q.hang(4, 180, 40, 8), mana: 1, manaDau: 60, mvT: 2.4,
+    c: [[0.2, 'Reinforce: free turrets'], [1.4, 'Tap the commander'], [2.5, 'Two free 1★ turrets appear', { ev: 'moi', cham: 0.7 }], [5.0, 'Cost doubles each use']] },
+  dahlia: { ke: [[2, 'lien', 3], [6, 'canon', 3], [7, 'sungluc', 3], [8, 'set', 3], [12, 'bang', 3]], q: Q.hang(3, 170, 46, 9).concat(Q.dong(14, 0.75, 9, 'bo', 1.2)), mana: 1, manaDau: 60, mvT: 2.6, dai: 13.6, glow: 1,
+    c: [[0.2, 'Normal damage numbers'], [1.6, 'Tap the commander'], [2.7, 'Whole board: +100% damage', { cham: 0.7 }], [5.0, 'Every damage number doubles'], [8.4, 'Rage lasts 10 seconds']] },
+  eve: { ke: [[2, 'lien', 3], [6, 'canon', 3], [7, 'sungluc', 4], [8, 'set', 3], [12, 'bang', 3]], dong: [6, 8], da: [12], q: Q.trum('freezer', 3.4, 90), mvT: 2.0, dai: 9.4,
+    c: [[0.2, 'Debuffs lock your turrets'], [1.1, 'Tap the commander'], [2.1, 'All debuffs cleared', { cham: 0.7 }], [3.4, 'The boss aims a skill…'], [4.8, 'Holy Shield blocks it', { ev: 'chan', cham: 0.7 }]] },
+};
+function sdKichBanMV(mv) {
+  const r = Object.assign({}, SD_MV[mv]), d = MAVUONG[mv];
+  r.kieu = 'mv'; r.o = null; r.ke = (r.ke || []).slice(); r.c = r.c.slice(); r.dai = r.dai || 8.4;
+  r.mo = mv === 'dahlia' ? '10s rage, ' + d.cd + 's cooldown' : d.gia + ' mana, ' + d.cd + 's cooldown';
+  if (!r.q.some(q => q.t)) { const h = Math.max(3, ...r.q.filter(q => !q.trum).map(q => q.h)); r.q = r.q.concat(Q.dong(3, 0.9, h, 'bo', 3.2)); }
+  return r;
+}
 // đòn đánh theo dạng (nút Stage 1/2/3)
 const SD_GD = {
   overlord: ['Silent charge, no shots', 'Sparks jump to nearby enemies', 'Sky pillar plus aftershock arcs'],
@@ -214,10 +232,10 @@ const SD_MO = {
   saochep: () => 'Copy deals 50% damage',
   nangsao: () => 'Result keeps stars, +1★ elsewhere',
   pandora: () => 'Merge: 1 of 6 vault effects',
-  kepha: (T) => 'Merge: +' + Math.round((0.4 + 0.05 * T.sao) * 100) + '% speed to ' + (1 + Math.floor(T.sao / 2)) + ' turrets',
-  xaotron: () => 'Merge: lonely turrets get partners',
-  hasao: () => 'Merge: +1★ to a turret',
-  nhieusong: () => 'Merge: slows all enemies 20%',
+  kepha: (T) => 'Merge: clamps ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets',
+  xaotron: (T) => 'Merge: shuffles ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets',
+  hasao: () => 'Merge: rival’s best −1★',
+  nhieusong: (T) => 'Merge: jams ' + SKILLS.nhieusong.n({ sao: Math.min(7, T.sao + 1) }) + ' rival turrets',
   cauvong: () => 'Rainbow: +30% damage taken',
   ngaithoigian: () => 'Enemies slow up to 15%',
   hydra: (T) => T.sao >= 7 ? 'Fused head: ×6 piercing beam' : T.sao + (T.sao > 1 ? ' barrels' : ' barrel') + ', 55% damage each',
@@ -285,48 +303,57 @@ function sdKichBan(id) {
 
 // ===================================================== chạy =====================================================
 SD.bat = function (id, sao, gd) {
-  if (!SKILLS[id] || !G.rosterMap[id]) return;
+  const mv = /^mv:/.test(id || '') ? id.slice(3) : null; // 'mv:<id>' = clip kỹ năng chỉ huy
+  if (mv ? !MAVUONG[mv] || !SD_MV[mv] : (!SKILLS[id] || !G.rosterMap[id])) return;
   const doi = id !== this.id;
-  this.id = id; this.sao = clamp(sao || 1, 1, 7); this.gd = gd || 0;
+  this.id = id; this.mv = mv; this.sao = mv ? 1 : clamp(sao || 1, 1, 7); this.gd = mv ? 0 : gd || 0;
   if (doi || !G.ban.length) {
-    const deck = [id].concat(['lien', 'canon', 'set', 'bang', 'sungluc'].filter(x => x !== id)).slice(0, 5);
-    batDau('solo', deck, 'hero');
+    const deck = mv ? ['lien', 'canon', 'set', 'bang', 'sungluc'] : [id].concat(['lien', 'canon', 'set', 'bang', 'sungluc'].filter(x => x !== id)).slice(0, 5);
+    batDau('solo', deck, mv || 'hero');
   }
   G.cho = 1e9; G.wave = 6; G.tocDo = 1; G.dung = !!this.dungMuon;
-  this.ks = sdKichBan(id);
+  this.ks = mv ? sdKichBanMV(mv) : sdKichBan(id);
   this.xep();
 };
 SD.xep = function () {
   const id = this.id, s = this.sao, ks = this.ks;
   SD_RNG.s = 1234567 + s * 101 + (this.gd || 0) * 7;
   const deck = G.ban[0] ? G.ban[0].deck : [id];
-  const B = taoBan(boCuc('solo').ban[0], 0, deck, 'hero');
-  G.ban = [B]; this.B = B;
+  const B = taoBan(boCuc('solo').ban[0], 0, deck, this.mv || 'hero');
+  G.ban = [B]; this.B = B; this.D = null; UI.keo = null;
+  // bàn đối thủ thu nhỏ: 3 ụ ở cột phải (cùng toạ độ ô) — trận tự vẽ, kỹ năng PVP tác động thật lên nó
+  if (ks.doi) {
+    const D = taoBan(boCuc('solo').ban[0], 1, ['canon', 'set', 'bang', 'lien', 'tia'], 'hero'); D.ten = 'Rival'; D.ai = false; D.mana = 0;
+    G.ban.push(D); this.D = D;
+    for (const [o, x, ss] of ks.doi) { const N = sinhU(taoU(D, x, ss === 's' ? Math.min(s, 6) : ss, o)); D.t[o] = N; N.goc = -Math.PI / 2; N.gd = null; }
+  }
   G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0; FX.reset(); VX.reset();
   UI.xemHT = null; UI.xemU = null;
   B.mana = ks.manaDau != null ? ks.manaDau : 999; B.gia = 10; G.tocDo = 1;
   const dat = (o, x, sao) => { const T = sinhU(taoU(B, x, sao, o)); B.t[o] = T; T.cd = 0.15 + 0.1 * (o % 3); T.goc = -Math.PI / 2; return T; };
   // ụ chính (ghép: chưa thể là 7★)
   const sChinh = ks.saoU || (ks.kieu === 'ghep' || ks.kieu === 'gDB' ? Math.min(s, 6) : s);
-  this.T = dat(ks.o, id, sChinh);
-  if (this.gd) this.T._epGd = this.gd;
+  this.T = this.mv ? null : dat(ks.o, id, sChinh);
+  if (this.gd && this.T) this.T._epGd = this.gd;
   for (const [o, x, ss] of ks.ke) { const N = dat(o, x, ss === 's' ? sChinh : typeof ss === 'function' ? ss(sChinh) : ss); if (this.gd && x === id) N._epGd = this.gd; }
   if (ks.dong) for (const o of ks.dong) if (B.t[o]) B.t[o].st.bang = 99;
+  if (ks.da) for (const o of ks.da) if (B.t[o]) B.t[o].st.da = true;
   for (const T of B.t) if (T) T.gd = null;
   if (ks.truoc) try { ks.truoc(this.T, B); } catch (e) { }
   if (ks.cd) B.mv.cd = MAVUONG[B.mv.id].cd;
   // máu quái: theo sát thương 1 phát của ụ chính (ụ không bắn: theo sức bắn cả bàn)
-  let d1 = 0; try { if (SKILLS[id].dmg) d1 = dmgU(this.T); } catch (e) { }
+  let d1 = 0; try { if (this.T && SKILLS[id].dmg) d1 = dmgU(this.T); } catch (e) { }
   if (!(d1 > 0)) { for (const T of B.t) if (T) { try { if (SKILLS[T.id].dmg) d1 = Math.max(d1, dmgU(T)); } catch (e) { } } }
   this.d1 = Math.max(4, d1 || 20);
   this.hen = ks.q.map(q => Object.assign({}, q, { t: q.t || 0, xong: false }));
   this.t = 0; this.lap++; this.tRe = performance.now();
   this.da = new Set(B.t.filter(Boolean).map(T => T.uid));
-  this.saoCu = {}; for (const T of B.t) if (T) this.saoCu[T.uid] = T.sao;
+  this.saoCu = {}; for (const X of G.ban) for (const T of X.t) if (T) { this.saoCu[T.uid] = T.sao; this.da.add(T.uid); }
+  this.buffT = {}; this.chan = []; this.soDoi = null; this.pdr = null; this.mvXong = false;
   this.kq = []; this.soMana = []; this.moi = []; this.vet = {}; this.nhan = []; this.manaCu = B.mana; this.banCu = 0;
   this.cIdx = -1; this.chamDen = -1; this.cho = null; this.keoXong = false; this.chamXong = {}; this.themXong = {};
   this.ev = {};
-  this.moSao = sdMoSao(id, this.T);
+  this.moSao = this.mv ? ks.mo : sdMoSao(id, this.T);
 };
 // dòng số liệu ở sao đang xem (cuối vòng): bảng ghi đè → SUP.chu → sk.mo
 function sdMoSao(id, T) {
@@ -361,10 +388,29 @@ SD.tick = function (dt) {
   }
 
   // việc theo giờ: kéo-ghép, chạm kỹ năng, thêm ụ…
-  if (ks.keo && !this.keoXong && this.t >= ks.keo[0]) {
-    this.keoXong = true;
-    const a = B.t[ks.keo[1]], b = B.t[ks.keo[2]];
-    if (a && b && hopLeGhep(a, b)) { const r = ghep(B, a, b); if (r && r.id === this.id) this.T = r; else if (B.t[ks.keo[2]] && B.t[ks.keo[2]].id === this.id) this.T = B.t[ks.keo[2]]; else if (B.t[ks.keo[1]] && B.t[ks.keo[1]].id === this.id) this.T = B.t[ks.keo[1]]; }
+  if (ks.keo && !this.keoXong) {
+    const a = B.t[ks.keo[1]], b = B.t[ks.keo[2]], t0 = ks.keo[0] - 1.2;
+    // kéo thật của trận (UI.keo): giữ 0,25 s → rê theo cung → thả lên ô đích
+    if (this.t >= t0 && a && b) {
+      const ca = B.o[a.o], cb = B.o[b.o], u = clamp((this.t - t0 - 0.3) / 0.85, 0, 1), e = u * u * (3 - 2 * u);
+      const g = UI.keo && UI.keo.sd ? UI.keo : (UI.keo = { T: a, x: ca.x, y: ca.y, x0: ca.x, y0: ca.y, dang: false, sd: 1 });
+      g.px = g.x; g.py = g.y;
+      g.x = ca.x + (cb.x - ca.x) * e; g.y = ca.y + (cb.y - ca.y) * e - Math.sin(e * Math.PI) * 26; g.dang = this.t > t0 + 0.3;
+    }
+    if (this.t >= ks.keo[0]) {
+      this.keoXong = true; if (UI.keo && UI.keo.sd) UI.keo = null;
+      const so = ks.so, N0 = so && B.t[so.o], v0 = N0 ? sdSo(N0, so.k) : null;
+      if (a && b && hopLeGhep(a, b)) {
+        const r = this.voiDoi(() => ghep(B, a, b));
+        if (r && r.id === this.id) this.T = r; else if (B.t[ks.keo[2]] && B.t[ks.keo[2]].id === this.id) this.T = B.t[ks.keo[2]]; else if (B.t[ks.keo[1]] && B.t[ks.keo[1]].id === this.id) this.T = B.t[ks.keo[1]];
+        const hp = G.hu.find(h => h.k === 'pandora'); if (hp && typeof PANDORA !== 'undefined') this.pdr = PANDORA[hp.chon[0]].ten;
+        if (so) VX.hen(0.75, () => { const N = B.t[so.o]; if (N && v0 != null) this.soDoi = { o: so.o, a: v0, b: sdSo(N, so.k), ic: so.k === 'toc' ? 'ic_toc' : 'ic_dmg', t0: performance.now() }; });
+      }
+    }
+  }
+  if (ks.mvT != null && !this.mvXong && this.t >= ks.mvT) { // chạm nút chỉ huy → dùng kỹ năng thật (dungMV)
+    this.mvXong = true; B.mv.cd = 0; if (B.mana < B.mv.gia) B.mana = B.mv.gia; this.manaCu = B.mana;
+    try { dungMV(B); } catch (e) { console.error(e); }
   }
   if (ks.cham) for (const tc of ks.cham) if (!this.chamXong[tc] && this.t >= tc) {
     this.chamXong[tc] = true;
@@ -374,23 +420,31 @@ SD.tick = function (dt) {
       const c = B.o[T.o]; this.tay = { x: c.x, y: c.y, t0: this.t, keo: null };
     }
   }
-  if (ks.them) ks.them.forEach(([tt, fn], i) => { if (!this.themXong[i] && this.t >= tt) { this.themXong[i] = true; try { fn(B); } catch (e) { } } });
+  if (ks.them) ks.them.forEach(([tt, fn], i) => { if (!this.themXong[i] && this.t >= tt) { this.themXong[i] = true; try { this.voiDoi(() => fn(B, this.D, this.T)); } catch (e) { console.error(e); } } });
   // phát hiện sự kiện: bắn thứ N, mana tăng, sao tăng, ụ mới
   const T = this.T && B.t[this.T.o] === this.T ? this.T : null;
   if (T && T.banLan !== this.banCu) { this.banCu = T.banLan; this.phat('shot'); for (const n of [3, 5]) if (T.banLan % n === 0) this.phat('shot%' + n); }
   if (B.mana > this.manaCu + 0.5) {
     const n = Math.round(B.mana - this.manaCu);
-    if (n < 400) { const c = B.o[(T || T0).o]; const E = this.giet && G.t - this.giet.t < 0.05 ? this.giet.E : null; this.soMana.push({ x: E ? E.x : c.x, y: E ? E.y : c.y - 10, n, t0: performance.now() }); this.phat('mana'); }
+    if (n < 400) { const c = B.o[(T || T0 || { o: 7 }).o]; const E = this.giet && G.t - this.giet.t < 0.05 ? this.giet.E : null; this.soMana.push({ x: E ? E.x : c.x, y: E ? E.y : c.y - 10, n, t0: performance.now() }); this.phat('mana'); }
   }
   this.manaCu = B.mana;
-  for (const X of B.t) if (X) {
-    if (!this.da.has(X.uid)) { this.da.add(X.uid); this.saoCu[X.uid] = X.sao; if (this.t > 0.3) { this.moi.push({ T: X, t0: performance.now(), k: 'moi' }); this.phat('moi'); if (X.id === this.id) this.T = X; } }
-    else if (X.sao > this.saoCu[X.uid]) { this.saoCu[X.uid] = X.sao; this.moi.push({ T: X, t0: performance.now(), k: 'sao' }); this.phat('sao'); }
+  for (const Bx of G.ban) for (const X of Bx.t) if (X) {
+    if (!this.da.has(X.uid)) { this.da.add(X.uid); this.saoCu[X.uid] = X.sao; if (this.t > 0.3) { this.moi.push({ T: X, t0: performance.now(), k: 'moi' }); this.phat('moi'); if (Bx === B && X.id === this.id && !this.mv) this.T = X; } }
+    else if (X.sao > this.saoCu[X.uid]) { this.moi.push({ T: X, t0: performance.now(), k: 'sao', n: X.sao }); this.saoCu[X.uid] = X.sao; this.phat('sao'); }
+    else if (X.sao < this.saoCu[X.uid]) { this.moi.push({ T: X, t0: performance.now(), k: 'ha', n: X.sao }); this.saoCu[X.uid] = X.sao; this.phat('sao'); }
   }
-  if (this.cho && this.t > this.cho.t1) this.cho = null;
+  if (this.cho && this.t > this.cho.t1) { (this.thieu || (this.thieu = [])).push(this.cho.ev + '@' + this.cIdx); this.cho = null; }
   G.tocDo = this.t < this.chamDen ? 0.32 : 1;
   if (this.t >= ks.dai) this.xep();
 };
+// chạy fn như đang ở PVP (bàn đối thủ thu nhỏ) — chỉ trong lúc ghép / phép của kịch bản
+SD.voiDoi = function (fn) {
+  if (!this.D) return fn();
+  const che = G.che; G.che = 'pvp';
+  try { return fn(); } finally { G.che = che; }
+};
+function sdSo(T, k) { try { return k === 'toc' ? tocU(T).toFixed(1) + '/s' : String(Math.round(dmgU(T))); } catch (e) { return null; } }
 SD.phat = function (ev) {
   this.ev[ev] = this.t;
   if (this.cho && (this.cho.ev === ev || (this.cho.ev === 'hit' && ev === 'kill'))) { this.chamDen = this.t + this.cho.cham; this.cho = null; }
@@ -417,115 +471,172 @@ SD.moc = function () {
   capNhat = function (dt) { _cap(dt); try { SD.tick(dt); } catch (e) { console.error(e); } };
   const _fx = FX.capNhat.bind(FX);
   FX.capNhat = function (dt) { return _fx(dt * (G.tocDo < 1 ? 0.45 : 1)); };
+  // ụ mới (triệu hồi miễn phí, nhân bản, hộp mở…) rơi vào 3 cột giữa đang xem, không vào cột rìa bị làm mờ
+  const _oTrong = oTrong;
+  oTrong = function (B) { const a = _oTrong(B); if (!SD.ks || SD.ks.day) return a; const g = a.filter(i => i % 5 >= 1 && i % 5 <= 3); return g.length ? g : a; };
+  REN.veNhanBan = function () { };
+  // khiên chặn (Máy Khiên / Holy Shield / Hào Quang): đánh dấu để vẽ ảnh khiên lớn + chú thích chờ sự kiện 'chan'
+  if (VX.chanKhien) { const _ck = VX.chanKhien.bind(VX); VX.chanKhien = function (B, T) { try { if (SD.ks && T) { SD.chan.push({ T, t0: performance.now() }); SD.phat('chan'); } } catch (e) { } return _ck(B, T); }; } // bàn đối thủ thu nhỏ: nhãn riêng ở cột phải (không dùng nhãn bàn PVP)
   const _ve0 = REN.ve0.bind(REN);
   REN.ve0 = function () { _ve0(); try { SD.veLop(REN.ctx); } catch (e) { console.error(e); } };
 };
 
 // ===================================================== lớp vẽ chú thích =====================================================
 const SD_Y0 = 150; // mép trên khung cắt (toạ độ logic) — khớp unitpage.js
-function sdRR(x, X, Y, w, h, r) { x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, r); else x.rect(X, Y, w, h); }
+// ---------- vẽ bằng ẢNH (QUY-TAC-HINH.md): code chỉ đặt vị trí / xoay / phóng / mờ ảnh PNG + chữ số ----------
+const SD_IC = { toc: 'ic_toc', dmg: 'ic_dmg', crit: 'ic_crit', cdmg: 'ic_crit', cham: 'ic_cham', chet: 'ic_chet', mana: 'ic_mana', khien: 'ic_khien', taylo: 'ic_taylo' }; // ký hiệu buff → ảnh icon có sẵn
+const sdIm = (ten) => { try { return REN.img(ten); } catch (e) { return null; } };
+function sdVe(x, ten, cx, cy, w, h, rot) {
+  const im = sdIm(ten); if (!im) return false;
+  h = h || w * im.height / im.width;
+  if (rot) { x.save(); x.translate(cx, cy); x.rotate(rot); x.drawImage(im, -w / 2, -h / 2, w, h); x.restore(); }
+  else x.drawImage(im, cx - w / 2, cy - h / 2, w, h);
+  return true;
+}
+function sdKhung(x, ten, f, n, cx, cy, s) { // 1 khung của dải ảnh n khung ngang (fx_starup, fx_summon, fx_buff…)
+  const im = sdIm(ten); if (!im) return false;
+  const fw = im.width / n, k = clamp(Math.floor(f), 0, n - 1);
+  x.drawImage(im, k * fw, 0, fw, im.height, cx - s / 2, cy - s / 2, s, s * im.height / fw); return true;
+}
+function sdChu(x, s, cx, cy, mau, px, canh) {
+  x.font = '800 ' + px + 'px "TM Display", sans-serif'; x.textAlign = canh || 'center'; x.textBaseline = 'middle';
+  x.lineJoin = 'round'; x.lineWidth = Math.max(2.5, px * 0.26); x.strokeStyle = 'rgba(8,10,14,.92)'; x.strokeText(s, cx, cy);
+  x.fillStyle = mau; x.fillText(s, cx, cy);
+}
+// ngón tay: ảnh bàn tay ChatGPT chưa có (prompt trong docs/demo-hop-tuong/HINH-VE-CODE-AUDIT.md) — có ảnh thì đặt tên vào SD_TAY.
+// Hiện dùng mũi tên ảnh duong_mui chỉ vào đầu ngón.
+const SD_TAY = null; // vd. 'ui_tay'
+SD.veNgon = function (x, X, Y, rot, an) {
+  const s = an ? 0.88 : 1;
+  if (SD_TAY && sdVe(x, SD_TAY, X + 10 * s, Y + 16 * s, 34 * s)) return;
+  const r = rot == null ? Math.PI / 2 : rot, L = 20;
+  x.save(); x.globalAlpha *= 0.95;
+  sdVe(x, 'duong_mui', X - Math.cos(r) * L, Y - Math.sin(r) * L, 36 * s, 24 * s, r);
+  x.restore();
+};
 SD.veLop = function (x) {
   if (!this.ks || !G.ban.length) return;
-  const B = G.ban[0], k = REN.s * REN.dpr, now = performance.now(), ks = this.ks, m = tierOf(this.id).mau;
-  x.save(); x.setTransform(k, 0, 0, k, 0, 0); x.globalCompositeOperation = 'source-over'; x.lineCap = 'round'; x.lineJoin = 'round';
-  // 1) bàn 3×3: làm mờ 2 cột rìa
+  const B = G.ban[0], k = REN.s * REN.dpr, now = performance.now(), ks = this.ks, m = this.mau();
+  x.save(); x.setTransform(k, 0, 0, k, 0, 0); x.globalCompositeOperation = 'source-over';
+  // 1) bàn 3×3: làm mờ 2 cột rìa (mặt nạ chức năng) — có bàn đối thủ thu nhỏ thì cột phải là bàn đối thủ
   if (!ks.day) {
     x.fillStyle = 'rgba(14,16,20,0.62)';
-    for (const c of [0, 4]) { const a = B.o[c], z = B.o[10 + c]; sdRR(x, a.x - B.cw * 0.5, a.y - B.ch * 0.52, B.cw, z.y - a.y + B.ch * 1.04, 8); x.fill(); }
+    for (const c of (this.D ? [0] : [0, 4])) { const a = B.o[c], z = B.o[10 + c]; x.fillRect(a.x - B.cw * 0.5, a.y - B.ch * 0.52, B.cw, z.y - a.y + B.ch * 1.04); }
+    if (this.D) { const a = B.o[4], y = a.y - B.ch * 0.68; sdVe(x, 'ic_pvp', a.x - 28, y, 15); sdChu(x, this.D.ten || 'Rival', a.x - 18, y, '#ff8a80', 12, 'left'); }
   }
   const T = this.T && B.t[this.T.o] === this.T ? this.T : null;
-  // 2) ụ chính: vòng chỉ định nhỏ dưới bệ
-  if (T) { const c = B.o[T.o]; x.globalAlpha = 0.55 + 0.25 * Math.sin(now / 260); x.strokeStyle = m; x.lineWidth = 2; x.setLineDash([5, 5]); x.lineDashOffset = -now / 60; x.beginPath(); x.arc(c.x, c.y, B.cw * 0.52, 0, 7); x.stroke(); x.setLineDash([]); x.globalAlpha = 1; }
-  // 3) mục tiêu đang ngắm (ụ bắn, chú thích đầu)
-  if (T && T.muc && !T.muc.chet && SKILLS[this.id].dmg && this.cIdx <= 0 && !ks.lien) this.veNgam(x, T.muc.x, T.muc.y, (T.muc.d.co || 40) * 0.42, m, now);
-  // 4) biểu tượng trạng thái trên quái
+  // 2) ụ chính: mũi tên ảnh chỉ xuống trong câu đầu
+  if (T && this.cIdx <= 0 && this.t < 1.6) { const c = B.o[T.o]; this.veNgonChi(x, c.x, c.y - B.ch * 0.62 - 5 * Math.abs(Math.sin(now / 170)), 0.85); }
+  // 3) mục tiêu đang ngắm: tâm ngắm ảnh phu_ngam
+  if (T && T.muc && !T.muc.chet && SKILLS[this.id] && SKILLS[this.id].dmg && this.cIdx <= 0 && !ks.lien) { const r = (T.muc.d.co || 40) * 0.5 + 6; x.globalAlpha = 0.85; sdVe(x, 'phu_ngam', T.muc.x, T.muc.y, r * 2 + 4 * Math.sin(now / 140), 0, now / 900); x.globalAlpha = 1; }
+  // 4) biểu tượng trạng thái trên quái (ảnh)
   for (const E of G.quai) if (!E.chet && E.vao > 0.5) {
     let ix = E.x + (E.d.co || 40) * 0.32, iy = E.y - (E.d.co || 40) * 0.42; const ds = [];
-    if (E.chan > 0) ds.push('dung'); else if (E.cham > 0 && E.chamT > 0) ds.push('cham');
-    if (E.docT > 0) ds.push('doc');
-    if (E.yeu > 0 || E.cvT > 0 || E.fbT > 0 || E.azT > 0) ds.push('yeu');
-    for (const d of ds) { this.veIcon(x, d, ix, iy); ix += 13; }
+    if (E.chan > 0 || (E.cham > 0 && E.chamT > 0)) ds.push('ic_cham');
+    if (E.docT > 0) ds.push('glyph/doc');
+    if (E.yeu > 0 || E.cvT > 0 || E.fbT > 0 || E.azT > 0) ds.push('glyph/phagiap');
+    for (const d of ds) { sdVe(x, d, ix, iy, 14); ix += 14; }
   }
-  // 5) thứ tự trúng (chuỗi / nảy / nhiều nòng): số 1-2-3 trên quái trúng trong 0,7 s gần nhất
+  // 5) thứ tự trúng (chuỗi / nảy / nhiều nòng): số 1-2-3 trên quái trúng gần nhất
   if (ks.lien) {
     const da = []; for (const h of this.kq) if (this.t - h.t < 0.45 && !h.E.chet && !da.includes(h.E)) da.push(h.E);
-    let i = 0, truoc = null;
-    for (const E of da) {
-      i++;
-      if (truoc) { x.globalAlpha = 0.5; x.strokeStyle = '#fff'; x.lineWidth = 1.5; x.setLineDash([3, 4]); x.beginPath(); x.moveTo(truoc.x, truoc.y - 4); x.lineTo(E.x, E.y - 4); x.stroke(); x.setLineDash([]); x.globalAlpha = 1; }
-      this.veSo(x, E.x, E.y - (E.d.co || 40) * 0.55, i, m); truoc = E;
-    }
+    da.forEach((E, i) => sdChu(x, String(i + 1), E.x, E.y - (E.d.co || 40) * 0.58, '#ffffff', 14));
   }
-  // 6) hỗ trợ: ký hiệu buff + % trên từng ụ được buff, tia nối
+  // 6) hỗ trợ: ký hiệu buff (ảnh ic_*) bật lên trên từng ụ được buff + %; khung buff (dải fx_buff) lúc vừa nhận
   if (ks.buff && T) {
-    const c0 = B.o[T.o];
     for (const N of B.t) if (N && N !== T && N.nguon) {
       const ng = N.nguon.filter(n => n.T === T); if (!ng.length) continue;
-      const c = B.o[N.o], u = (now / 900 + N.o * 0.13) % 1;
-      x.globalAlpha = 0.6; x.strokeStyle = BUFF[ng[0].k] ? BUFF[ng[0].k].mau : m; x.lineWidth = 2; x.setLineDash([2, 6]); x.lineDashOffset = -now / 40;
-      x.beginPath(); x.moveTo(c0.x, c0.y); x.lineTo(c.x, c.y); x.stroke(); x.setLineDash([]);
-      x.globalAlpha = 1 - u; x.fillStyle = x.strokeStyle; x.beginPath(); x.arc(c0.x + (c.x - c0.x) * u, c0.y + (c.y - c0.y) * u, 3, 0, 7); x.fill();
-      x.globalAlpha = 1; this.veNhan(x, c.x, c.y - B.ch * 0.5, '+' + Math.round(ng[0].v * 100) + '%', BUFF[ng[0].k] ? BUFF[ng[0].k].mau : m, ng[0].k);
+      const c = B.o[N.o], kk = ng[0].k, mau = BUFF[kk] ? BUFF[kk].mau : m;
+      const t0 = this.buffT[N.uid] || (this.buffT[N.uid] = now), u = clamp((now - t0) / 260, 0, 1), nay = u < 1 ? 0.6 + 0.55 * Math.sin(u * Math.PI * 0.8) : 1;
+      if (now - t0 < 900) sdKhung(x, 'fx_buff', (now - t0) / 150, 6, c.x, c.y, B.cw * 1.1);
+      const y = c.y - B.ch * 0.5 - 2 * Math.sin(now / 300 + N.o);
+      sdVe(x, SD_IC[kk] || 'ic_dmg', c.x - 12, y, 18 * nay);
+      sdChu(x, '+' + Math.round(ng[0].v * 100) + '%', c.x + 2, y, mau, 12, 'left');
     }
   }
-  // 7) ụ mới / ụ lên sao: vòng sáng + nhãn
+  // 7) ụ mới / ụ lên sao: dải ảnh fx_summon / fx_starup + mũi tên ảnh + nhãn
   this.moi = this.moi.filter(o => now - o.t0 < 1600);
   for (const o of this.moi) {
-    if (!B.t[o.T.o] || B.t[o.T.o] !== o.T) continue;
-    const c = B.o[o.T.o], u = (now - o.t0) / 1600;
-    x.globalAlpha = 1 - u; x.strokeStyle = o.k === 'sao' ? '#ffe46b' : '#7dffb0'; x.lineWidth = 3;
-    x.beginPath(); x.arc(c.x, c.y, B.cw * (0.45 + 0.15 * Math.sin(u * Math.PI)), 0, 7); x.stroke(); x.globalAlpha = 1;
-    this.veMuiTen(x, c.x, c.y - B.ch * 0.62 - 8 * Math.abs(Math.sin(now / 160)), x.strokeStyle);
-    if (o.k === 'moi') this.veNhan(x, c.x, c.y + B.ch * 0.5, 'New', '#7dffb0');
+    const Bo = G.ban[o.T.ban]; if (!Bo || Bo.t[o.T.o] !== o.T) continue;
+    const c = Bo.o[o.T.o], u = (now - o.t0) / 1600;
+    if (u < 0.6 && o.k !== 'ha') sdKhung(x, o.k === 'sao' ? 'fx_starup' : 'fx_summon', u / 0.6 * 6, 6, c.x, c.y - B.ch * 0.12, B.cw * 1.15);
+    x.globalAlpha = Math.min(1, (1 - u) * 3);
+    this.veNgonChi(x, c.x, c.y - B.ch * 0.62 - 8 * Math.abs(Math.sin(now / 160)), 1);
+    if (o.k === 'moi') sdChu(x, 'New', c.x, c.y + B.ch * 0.52, '#7dffb0', 12);
+    if (o.k === 'sao') sdChu(x, o.n + '★', c.x, c.y + B.ch * 0.52, '#ffe46b', 13);
+    if (o.k === 'ha') sdChu(x, o.n + '★', c.x, c.y + B.ch * 0.52, '#ff8a80', 13);
+    x.globalAlpha = 1;
   }
-  // 8) kéo-ghép: bàn tay + mũi tên cong 1 s trước khi thả
-  if (ks.keo && this.t > ks.keo[0] - 1.1 && this.t < ks.keo[0] + 0.15) {
-    const a = B.o[ks.keo[1]], b = B.o[ks.keo[2]], u = clamp((this.t - (ks.keo[0] - 1.1)) / 1.0, 0, 1);
-    const mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - 34;
-    x.strokeStyle = '#fff'; x.lineWidth = 3; x.globalAlpha = 0.85; x.setLineDash([6, 5]);
-    x.beginPath(); x.moveTo(a.x, a.y); x.quadraticCurveTo(mx, my, b.x, b.y); x.stroke(); x.setLineDash([]);
-    const px = (1 - u) * (1 - u) * a.x + 2 * (1 - u) * u * mx + u * u * b.x, py = (1 - u) * (1 - u) * a.y + 2 * (1 - u) * u * my + u * u * b.y;
-    x.globalAlpha = 1; this.veTay(x, px, py, false);
-    x.strokeStyle = '#ffe46b'; x.lineWidth = 2.5; x.globalAlpha = 0.6 + 0.4 * Math.sin(now / 120); x.beginPath(); x.arc(b.x, b.y, B.cw * 0.5, 0, 7); x.stroke(); x.globalAlpha = 1;
+  // 7a) khiên vừa chặn: ảnh khiên (sup_khien) bật lên trên ụ + chữ
+  this.chan = (this.chan || []).filter(o => now - o.t0 < 2200);
+  for (const o of this.chan) {
+    const Bo = G.ban[o.T.ban]; if (!Bo) continue; const c = Bo.o[o.T.o], u = (now - o.t0) / 2200, nay = u < 0.1 ? 0.6 + u / 0.12 * 0.5 : 1.1 - Math.min(0.1, u);
+    x.globalAlpha = Math.min(1, (1 - u) * 3); sdVe(x, 'sup_khien', c.x, c.y - 4, B.cw * 0.8 * nay); x.globalAlpha = 1;
   }
-  // 9) chạm kỹ năng chủ động
+  // 7b) Cuồng nộ: vòng lửa ảnh (phu_lua) trên mọi ụ trong 10 s + '×2' bật lên lúc kích hoạt
+  if (ks.glow && B.cuong > 0) for (const N of B.t) if (N) {
+    const c = B.o[N.o], tt = this.t - ks.mvT;
+    x.globalAlpha = 0.5 + 0.25 * Math.sin(now / 180 + N.o); sdVe(x, 'phu_lua', c.x, c.y, B.cw * 1.02); x.globalAlpha = 1;
+    if (tt < 1.6) { x.globalAlpha = Math.min(1, (1.6 - tt) * 2); sdChu(x, '×2', c.x + B.cw * 0.3, c.y - B.ch * 0.42 - tt * 6, '#ff8a6a', 15); x.globalAlpha = 1; }
+  }
+  // 8) kéo-ghép: trận tự vẽ ụ đang kéo + ô hợp lệ (UI.keo); thêm ngón tay / mũi tên ở đầu ngón
+  if (UI.keo && UI.keo.sd) { const g = UI.keo; this.veNgon(x, g.x, g.y, Math.atan2(g.y - (g.py || g.y0), g.x - (g.px || g.x0)) || 0, g.dang); }
+  if (this.soDoi && now - this.soDoi.t0 < 3200) { // chỉ số trước → sau (ép xung, lò rèn…)
+    const o = this.soDoi, Bo = G.ban[0], N = Bo.t[o.o]; if (N) { const c = Bo.o[o.o], u = clamp((now - o.t0) / 220, 0, 1); x.globalAlpha = u * Math.min(1, (3200 - (now - o.t0)) / 300); sdVe(x, o.ic, c.x - 54, c.y + B.ch * 0.56, 16); sdChu(x, o.a + ' → ' + o.b, c.x - 44, c.y + B.ch * 0.56, '#7dffb0', 13, 'left'); x.globalAlpha = 1; }
+  }
+  // 9) chạm kỹ năng chủ động: ngón tay + vòng ảnh nở ra
   if (ks.cham && !sdKhoa()) for (const tc of ks.cham) if (this.t > tc - 0.9 && this.t < tc + 0.5 && T) {
     const c = B.o[T.o], u = this.t < tc ? 0 : (this.t - tc) / 0.5;
-    if (u > 0) { x.globalAlpha = 1 - u; x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.arc(c.x, c.y, 14 + 40 * u, 0, 7); x.stroke(); x.globalAlpha = 1; }
-    this.veTay(x, c.x + 6, c.y + 8 - (this.t < tc ? 6 * Math.abs(Math.sin(now / 130)) : 0), u > 0);
+    if (u > 0) { x.globalAlpha = 1 - u; sdVe(x, 'fx_vong_lv', c.x, c.y, 24 + 70 * u); x.globalAlpha = 1; }
+    this.veNgon(x, c.x, c.y - (this.t < tc ? 6 * Math.abs(Math.sin(now / 130)) : 0), Math.PI / 2, u > 0);
   }
-  // 10) mana: ô đếm góc phải trên + số bay về
+  // 10) chỉ huy: nút kỹ năng (ảnh nút + chân dung) ở cột phải + ngón tay chạm
+  if (this.mv) this.veNutMV(x, B, now);
+  // 11) đồng hồ đếm ngược trên ụ (Hộp Bí Ẩn / Tiến Hoá…)
+  if (ks.dem && T) { let r = 0; try { r = ks.dem(T); } catch (e) { } if (r > 0 && r < 9.5) { const c = B.o[T.o], n = Math.ceil(r), f = 1 - (n - r); sdChu(x, String(n), c.x, c.y - B.ch * 0.7, '#e6c8ff', Math.round(18 + 10 * f)); } }
+  // 12) mana: ô đếm (ảnh ui_gia + ui_mana) góc phải trên + số bay về
   if (ks.mana) {
-    const mx = 386, my = SD_Y0 + 24;
-    x.fillStyle = 'rgba(10,12,16,0.82)'; sdRR(x, mx - 40, my - 14, 80, 28, 14); x.fill();
-    x.strokeStyle = '#c77dff'; x.lineWidth = 1.5; x.stroke();
-    const im = REN.img && REN.img('ui_mana'); if (im) x.drawImage(im, mx - 36, my - 11, 22, 22); else { x.fillStyle = '#c77dff'; x.beginPath(); x.arc(mx - 25, my, 8, 0, 7); x.fill(); }
-    x.fillStyle = '#f1e6ff'; x.font = '800 15px "TM Display", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(String(Math.round(B.mana)), mx + 10, my + 1);
+    const mx = 384, my = SD_Y0 + 24;
+    sdVe(x, 'ui_gia', mx, my, 88, 34);
+    sdVe(x, 'ui_mana', mx - 28, my, 22);
+    sdChu(x, String(Math.round(B.mana)), mx + 8, my + 1, '#f1e6ff', 15);
     this.soMana = this.soMana.filter(o => now - o.t0 < 900);
     for (const o of this.soMana) {
       const u = VX.eo((now - o.t0) / 900), px = o.x + (mx - 10 - o.x) * u, py = o.y + (my - o.y) * u - Math.sin(u * Math.PI) * 30;
-      x.globalAlpha = 1 - Math.max(0, u - 0.8) * 5; x.font = '800 14px "TM Display", sans-serif'; x.lineWidth = 3; x.strokeStyle = '#1a0d26'; x.strokeText('+' + o.n, px, py); x.fillStyle = '#e6c8ff'; x.fillText('+' + o.n, px, py);
+      x.globalAlpha = 1 - Math.max(0, u - 0.8) * 5; sdVe(x, 'ui_mana', px - 18, py, 14); sdChu(x, '+' + o.n, px + 2, py, '#e6c8ff', 14); x.globalAlpha = 1;
     }
-    x.globalAlpha = 1;
   }
-  // 11) hồi chiêu Archfiend (Cooldown Horn)
+  // 13) hồi chiêu chỉ huy (Cooldown Horn): ảnh ui_gia + chân dung + số giây
   if (ks.cd) {
-    const mx = 386, my = SD_Y0 + 24, cd = B.mv.cd, tong = MAVUONG[B.mv.id].cd;
-    x.fillStyle = 'rgba(10,12,16,0.82)'; sdRR(x, mx - 40, my - 14, 80, 28, 14); x.fill();
-    x.strokeStyle = '#6fc8ff'; x.lineWidth = 1.5; x.stroke();
-    x.beginPath(); x.moveTo(mx - 25, my); x.arc(mx - 25, my, 9, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (1 - cd / tong)); x.closePath(); x.fillStyle = '#6fc8ff'; x.fill();
-    x.fillStyle = '#e6f6ff'; x.font = '800 14px "TM Display", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(cd > 0 ? cd.toFixed(1) + 's' : 'Ready', mx + 10, my + 1);
+    const mx = 384, my = SD_Y0 + 24, cd = B.mv.cd;
+    sdVe(x, 'ui_gia', mx, my, 88, 34);
+    x.save(); x.beginPath(); x.arc(mx - 26, my, 11, 0, Math.PI * 2); x.clip(); sdVe(x, MAVUONG[B.mv.id].anh, mx - 26, my, 24); x.restore();
+    sdChu(x, cd > 0 ? cd.toFixed(1) + 's' : 'Ready', mx + 9, my + 1, '#e6f6ff', 14);
   }
-  // 12) chú thích (giữa trên) + thẻ mốc sao cuối vòng
+  // 14) chú thích (giữa trên) + thẻ mốc sao cuối vòng
   this.veChu(x, now);
-  // 13) quay chậm: viền + nhãn
-  if (G.tocDo < 1) {
-    x.strokeStyle = 'rgba(255,228,107,0.55)'; x.lineWidth = 3; x.strokeRect(3, SD_Y0 + 3, W - 6, 374);
-    x.fillStyle = '#ffe46b'; x.font = '800 11px "TM Display", sans-serif'; x.textAlign = 'right'; x.textBaseline = 'middle'; x.fillText('Slow-mo', W - 12, SD_Y0 + 52);
-  }
-  // 14) chuyển vòng: tối nhanh
+  // 15) quay chậm: nhãn chữ
+  if (G.tocDo < 1) sdChu(x, 'Slow-mo', W - 12, SD_Y0 + 54, '#ffe46b', 11, 'right');
+  // 16) chuyển vòng: tối nhanh
   const re = (now - this.tRe) / 260; if (re < 1) { x.globalAlpha = 1 - re; x.fillStyle = '#0d0f12'; x.fillRect(0, 0, W, H); }
   x.restore();
+};
+SD.mau = function () { return this.mv ? MAVUONG[this.mv].mau : tierOf(this.id).mau; };
+SD.veNgonChi = function (x, X, Y, al) { x.save(); x.globalAlpha *= al == null ? 1 : al; sdVe(x, 'duong_mui', X, Y, 26, 17, Math.PI / 2); x.restore(); };
+SD.veNutMV = function (x, B, now) {
+  const c = B.o[9], d = MAVUONG[this.mv], ks = this.ks, cx = c.x, cy = c.y - 4, tc = ks.mvT;
+  const nh = this.t > tc && this.t < tc + 0.18 ? 0.9 : 1;
+  x.save(); x.beginPath(); x.arc(cx, cy, 21 * nh, 0, Math.PI * 2); x.clip(); sdVe(x, d.anh, cx, cy + 2, 46 * nh); x.restore();
+  sdVe(x, 'ui_nut_trieu', cx, cy, 56 * nh);
+  const cd = B.mv.cd, chu = cd > 0 ? Math.ceil(cd) + 's' : d.gia + '';
+  if (cd > 0) sdChu(x, chu, cx, cy + 36, '#cfe8ff', 12); else { sdVe(x, 'ui_mana', cx - 13, cy + 36, 13); sdChu(x, String(B.mv.gia), cx + 5, cy + 36, '#e6c8ff', 12); }
+  if (B.cuong > 0) sdChu(x, 'Rage ' + Math.ceil(B.cuong) + 's', cx, cy - 36, '#ff8a6a', 12);
+  if (B.khien > 0) sdChu(x, 'Shield ' + Math.ceil(B.khien) + 's', cx, cy - 36, '#bfe8ff', 12);
+  if (this.t > tc - 0.9 && this.t < tc + 0.5) {
+    const u = this.t < tc ? 0 : (this.t - tc) / 0.5;
+    if (u > 0) { x.globalAlpha = 1 - u; sdVe(x, 'fx_vong_lv', cx, cy, 30 + 70 * u); x.globalAlpha = 1; }
+    this.veNgon(x, cx, cy - (this.t < tc ? 6 * Math.abs(Math.sin(now / 130)) : 0), Math.PI / 2, u > 0);
+  }
 };
 SD.cauChu = function () {
   const ks = this.ks, T = this.T || {}; const s = this.sao;
@@ -535,6 +646,7 @@ SD.cauChu = function () {
   return { chu: sdSC(v), t0: c[0], dau: c[2] && c[2].dau };
 };
 SD.mocChu = function () { // mốc sao đã mở ở sao đang xem (cuối vòng)
+  if (this.mv) return null;
   const s = this.sao;
   const ds = mocCua(this.id).filter(m => m.n <= s); if (!ds.length) return null;
   const m = ds[ds.length - 1];
@@ -545,57 +657,26 @@ SD.veChu = function (x, now) {
   let o = null;
   if (this.t >= t0) { // cuối vòng: số liệu ở sao này → mốc sao đã mở
     const mc = this.sao >= 3 ? this.mocChu() : null;
+    const dau = this.mv ? null : this.sao + '★';
     if (mc && (this.t >= t0 + 1.2 || !this.moSao)) o = { chu: mc.chu, dau: mc.dau, t0: this.moSao ? t0 + 1.2 : t0 };
-    else if (this.moSao) o = { chu: this.moSao, dau: this.sao + '★', t0 };
-    else o = { chu: 'Higher stars: stronger', dau: this.sao + '★', t0 };
+    else if (this.moSao) o = { chu: this.moSao, dau, t0 };
+    else o = { chu: 'Higher stars: stronger', dau, t0 };
   }
   if (!o) o = this.cauChu();
   if (!o || !o.chu) return;
-  const u = clamp((this.t - o.t0) / 0.18, 0, 1), cx = ks.mana || ks.cd ? 176 : W / 2, cy = SD_Y0 + 25;
-  x.font = '800 16px "TM UI", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-  let w = x.measureText(o.chu).width; const fs = w > 264 ? 16 * 264 / w : 16; if (fs !== 16) { x.font = '800 ' + fs.toFixed(1) + 'px "TM UI", sans-serif'; w = 264; }
-  const dw = o.dau ? (x.font = '800 12px "TM Display", sans-serif', x.measureText(o.dau).width + 14) : 0;
-  const bw = w + 26 + dw, bx = cx - bw / 2;
+  const u = clamp((this.t - o.t0) / 0.18, 0, 1), cx = ks.mana || ks.cd ? 170 : W / 2, cy = SD_Y0 + 25;
+  const chu = (o.dau ? o.dau + '  ' : '') + o.chu;
+  x.font = '800 16px "TM UI", sans-serif';
+  let w = x.measureText(chu).width; const fs = w > 250 ? 16 * 250 / w : 16; if (fs !== 16) w = 250;
+  const bw = w + 44;
   x.globalAlpha = u; x.save(); x.translate(cx, cy); x.scale(0.94 + 0.06 * u, 0.94 + 0.06 * u); x.translate(-cx, -cy);
-  x.fillStyle = 'rgba(12,14,18,0.86)'; sdRR(x, bx, cy - 16, bw, 32, 16); x.fill();
-  x.strokeStyle = o.dau ? '#ffe46b' : tierOf(this.id).mau; x.lineWidth = 1.5; x.stroke();
-  if (o.dau) { x.fillStyle = '#ffe46b'; sdRR(x, bx + 5, cy - 11, dw - 4, 22, 11); x.fill(); x.fillStyle = '#16171a'; x.font = '800 12px "TM Display", sans-serif'; x.fillText(o.dau, bx + 3 + dw / 2, cy + 1); }
-  x.fillStyle = '#f4f6f8'; x.font = '800 ' + fs.toFixed(1) + 'px "TM UI", sans-serif'; x.fillText(o.chu, bx + dw + (bw - dw) / 2, cy + 1);
+  if (!sdVe(x, 'bang_wave_nen', cx, cy, bw, 40)) { x.fillStyle = 'rgba(12,14,18,0.86)'; x.fillRect(cx - bw / 2, cy - 16, bw, 32); }
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '800 ' + fs.toFixed(1) + 'px "TM UI", sans-serif';
+  if (o.dau) { // đầu dòng màu vàng (sao / mốc) + phần chữ trắng
+    const wd = x.measureText(o.dau + '  ').width, x0 = cx - w / 2;
+    x.textAlign = 'left'; x.fillStyle = '#ffe46b'; x.fillText(o.dau, x0, cy + 1); x.fillStyle = '#f4f6f8'; x.fillText(o.chu, x0 + wd, cy + 1);
+  } else { x.fillStyle = '#f4f6f8'; x.fillText(o.chu, cx, cy + 1); }
   x.restore(); x.globalAlpha = 1;
-};
-SD.veNgam = function (x, ex, ey, r, m, now) {
-  const q = r + 4 + 2 * Math.sin(now / 140);
-  x.strokeStyle = m; x.lineWidth = 2;
-  x.beginPath(); x.arc(ex, ey, q, 0, 7); x.stroke();
-  for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + now / 900; x.beginPath(); x.moveTo(ex + Math.cos(a) * (q - 5), ey + Math.sin(a) * (q - 5)); x.lineTo(ex + Math.cos(a) * (q + 5), ey + Math.sin(a) * (q + 5)); x.stroke(); }
-};
-SD.veSo = function (x, X, Y, n, m) {
-  x.fillStyle = '#fff'; x.beginPath(); x.arc(X, Y, 8, 0, 7); x.fill(); x.strokeStyle = m; x.lineWidth = 2; x.stroke();
-  x.fillStyle = '#111'; x.font = '800 11px "TM Display", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(String(n), X, Y + 0.5);
-};
-SD.veIcon = function (x, k, X, Y) {
-  const mau = { cham: '#8fe3ff', doc: '#8dff4a', yeu: '#d9a8ff', dung: '#e8fbff' }[k];
-  x.fillStyle = 'rgba(10,12,16,0.85)'; x.beginPath(); x.arc(X, Y, 6.5, 0, 7); x.fill(); x.strokeStyle = mau; x.lineWidth = 1.5; x.stroke();
-  x.strokeStyle = mau; x.fillStyle = mau; x.lineWidth = 1.4;
-  if (k === 'cham' || k === 'dung') { for (let i = 0; i < 3; i++) { const a = i * Math.PI / 3; x.beginPath(); x.moveTo(X - Math.cos(a) * 4, Y - Math.sin(a) * 4); x.lineTo(X + Math.cos(a) * 4, Y + Math.sin(a) * 4); x.stroke(); } }
-  else if (k === 'doc') { x.beginPath(); x.moveTo(X, Y - 4); x.quadraticCurveTo(X + 4, Y + 1, X, Y + 3.5); x.quadraticCurveTo(X - 4, Y + 1, X, Y - 4); x.fill(); }
-  else { x.beginPath(); x.moveTo(X - 3.5, Y - 2); x.lineTo(X + 3.5, Y - 2); x.lineTo(X, Y + 3.5); x.closePath(); x.fill(); }
-};
-SD.veNhan = function (x, X, Y, s, mau, k) {
-  x.font = '800 12px "TM Display", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-  const w = x.measureText(s).width + 12;
-  x.fillStyle = 'rgba(10,12,16,0.88)'; sdRR(x, X - w / 2, Y - 9, w, 18, 9); x.fill(); x.strokeStyle = mau; x.lineWidth = 1.2; x.stroke();
-  x.fillStyle = mau; x.fillText(s, X, Y + 0.5);
-};
-SD.veMuiTen = function (x, X, Y, mau) {
-  x.fillStyle = mau; x.beginPath(); x.moveTo(X, Y + 7); x.lineTo(X - 7, Y - 2); x.lineTo(X - 2.5, Y - 2); x.lineTo(X - 2.5, Y - 9); x.lineTo(X + 2.5, Y - 9); x.lineTo(X + 2.5, Y - 2); x.lineTo(X + 7, Y - 2); x.closePath(); x.fill();
-};
-SD.veTay = function (x, X, Y, an) { // bàn tay chỉ (vẽ bằng code)
-  x.save(); x.translate(X, Y); x.rotate(-0.35); const s = an ? 0.9 : 1; x.scale(s, s);
-  x.fillStyle = '#fff'; x.strokeStyle = '#16171a'; x.lineWidth = 2;
-  x.beginPath(); x.moveTo(-3, 0); x.lineTo(-3, 16); x.quadraticCurveTo(-11, 12, -12, 18); x.quadraticCurveTo(-6, 26, -1, 34); x.lineTo(13, 34); x.quadraticCurveTo(17, 26, 16, 16);
-  x.lineTo(16, 12); x.quadraticCurveTo(13, 9, 11, 12); x.quadraticCurveTo(9, 8, 6, 11); x.quadraticCurveTo(4, 7, 3, 10); x.lineTo(3, 0); x.quadraticCurveTo(0, -4, -3, 0); x.closePath();
-  x.fill(); x.stroke(); x.restore();
 };
 
 // ===================================================== khởi động trong iframe =====================================================

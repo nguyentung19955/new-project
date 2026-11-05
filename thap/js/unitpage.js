@@ -143,6 +143,12 @@ function upKhac(id) {
 function upSoSeri(id) { const i = G.roster.findIndex(r => r.id === id); return 'TM-' + String(i + 1).padStart(3, '0'); }
 
 // ===================================================== trang =====================================================
+// trang chỉ huy: thời lượng + giải thích (tiếng Anh như phần còn lại của giao diện)
+const UP_MV = {
+  hero: { lau: 'Instant', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Fills only the empty cells left'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
+  dahlia: { lau: '10s', dl: [['Effect', 'Every turret on your board deals double damage'], ['Stacks with', 'Stars, card levels and support buffs'], ['Best with', 'Cast it as a boss arrives']] },
+  eve: { lau: '8s', dl: [['Effect', 'Clears freeze, stone and burn from every turret'], ['Shield', 'Blocks every boss skill for 8 seconds'], ['Best with', 'Boss waves that lock your turrets']] },
+};
 const UP = {
   id: null, ds: [], sao: 3, dungXem: false,
   giam: () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches),
@@ -198,6 +204,7 @@ const UP = {
     if (typeof UI !== 'undefined' && UI.veBoChon) UI.veBoChon();
   },
   buoc(d) {
+    if (this.mv) { const ds = Object.keys(MAVUONG), j = (ds.indexOf(this.mv) + d + ds.length) % ds.length; this.veMV(ds[j], d); return; }
     if (!this.ds.length) return;
     const i = this.ds.indexOf(this.id), j = (i + d + this.ds.length) % this.ds.length;
     this.ve(this.ds[j], d);
@@ -212,6 +219,7 @@ const UP = {
     else if (a === 'sao') this.chonSao(+b.dataset.s);
     else if (a === 'gd') this.chonGd(+b.dataset.g);
     else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.dungXem || this._thay === false }); this.nutPhat(); }
+    else if (a === 'bo' && this.mv) { UI.mv = this.mv; if (UI.veChon) UI.veChon(); this.capNutBo(); try { SND.nut(); } catch (e) { } }
     else if (a === 'bo') {
       if (!upCo(this.id)) return;
       UI.chonU(this.id); this.capNutBo();
@@ -228,6 +236,12 @@ const UP = {
     el.addEventListener('pointercancel', () => { x0 = null; });
   },
   capNutBo() {
+    if (this.mv) { // trang chỉ huy: nút chọn chỉ huy + chỉ huy đang dùng
+      const nut = this.el.querySelector('.up-nut'), dang = UI.mv === this.mv, cur = MAVUONG[UI.mv] || MAVUONG.hero;
+      nut.textContent = dang ? 'Selected' : 'Use commander'; nut.disabled = false; nut.classList.toggle('bo', dang);
+      this.el.querySelector('.up-bo').innerHTML = '<b>Commander</b><span><img src="assets/' + cur.anh + '.png" alt="' + upEsc(cur.ten) + '" class="cur"></span>';
+      return;
+    }
     const gl = this.el.querySelector('.up-gl');
     if (gl && typeof ND !== 'undefined' && ND.url && typeof GLYPH !== 'undefined') { // biểu tượng nhận diện (glyph.js): màu khoá = ô trong bộ bài
       try { const k = UI.chon.indexOf(this.id); gl.src = ND.url(this.id, k >= 0 ? ND.KEY[k % 5] : null, 48); gl.hidden = false; } catch (e) { gl.hidden = true; }
@@ -243,7 +257,7 @@ const UP = {
   // ---------- dựng nội dung 1 ụ ----------
   ve(id, huong) {
     const r = G.rosterMap[id]; if (!r) return;
-    this.id = id;
+    this.id = id; this.mv = null;
     const el = this.el, tier = TIERS[r.bac] || TIERS.trang, sk = SKILLS[id], co = !!sk;
     el.style.setProperty('--m', tier.mau); el.style.setProperty('--m2', tier.mau2);
     const i = this.ds.indexOf(id);
@@ -253,6 +267,7 @@ const UP = {
     const [ha, hb] = this.html(id, r, tier, sk).split('\u0000');
     noi.querySelector('.up-a').innerHTML = ha; noi.querySelector('.up-b').innerHTML = hb || '';
     noi.querySelector('.up-tv').classList.toggle('tat', !co); noi.querySelector('.up-sao-chon').hidden = !co;
+    const sb = noi.querySelector('.up-tv-sao'); if (sb) sb.hidden = false;
     el.querySelector('.up-than').scrollTop = 0;
     if (huong && !this.giam()) { noi.classList.remove('trai', 'phai'); void noi.offsetWidth; noi.classList.add(huong > 0 ? 'phai' : 'trai'); }
     this.capNutBo();
@@ -266,6 +281,47 @@ const UP = {
     }
     this.ganXem(id);
     this.chonSao(this.sao, true);
+    requestAnimationFrame(() => fitText(noi.querySelector('.up-ten'), 30, 18));
+  },
+
+  // ---------- trang CHỈ HUY (chạm thẻ chỉ huy ở màn chọn): chân dung · kỹ năng · giá/hồi chiêu · Test range ----------
+  moMV(id, tu) {
+    if (!MAVUONG[id]) return;
+    const el = this.dung(), moi = el.hidden;
+    this.veMV(id, 0);
+    if (moi) {
+      el.hidden = false; el.querySelector('.up-than').scrollTop = 0;
+      try { history.pushState({ up: 1 }, ''); this._ls = true; } catch (e) { this._ls = false; }
+      if (!this.giam()) {
+        const w = document.getElementById('wrap').getBoundingClientRect(), s = w.width / W;
+        if (tu) el.style.transformOrigin = ((tu.left + tu.width / 2 - w.left) / s) + 'px ' + ((tu.top + tu.height / 2 - w.top) / s) + 'px';
+        el.classList.remove('vao'); void el.offsetWidth; el.classList.add('vao');
+      }
+    }
+  },
+  veMV(id, huong) {
+    const d = MAVUONG[id]; if (!d) return;
+    this.mv = id; this.id = null;
+    const el = this.el, ds = Object.keys(MAVUONG), i = ds.indexOf(id);
+    el.style.setProperty('--m', d.mau); el.style.setProperty('--m2', d.mau);
+    el.querySelector('.up-so').textContent = 'Commander ' + (i + 1) + ' of ' + ds.length;
+    const noi = el.querySelector('.up-noi');
+    if (!noi.firstChild) noi.innerHTML = '<div class="up-a"></div>' + this.muc(2, UP_TXT.sec.test, this.tvHTML()) + '<div class="up-b"></div>';
+    const tt = UP_MV[id] || {}, ten = upSC(String(d.ten).toLowerCase());
+    noi.querySelector('.up-a').innerHTML =
+      '<section class="up-hero"><div class="up-po"><img src="assets/' + d.anh + '.png" alt=""><span class="up-seri">CMD-0' + (i + 1) + '</span></div>' +
+      '<div class="up-mam"><i class="up-vong"></i><i class="up-vong b"></i><div class="up-u"><img class="de" src="assets/ui_nut_trieu.png" alt=""><img class="dau fb" style="border-radius:50%" src="assets/' + d.anh + '.png" alt=""></div></div></section>' +
+      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips"><span class="up-chip bac">Commander</span><span class="up-chip">Active skill</span></div></div>' +
+      '<div class="up-spec">' + this.o('Cost', d.gia + ' mana') + this.o('Cooldown', d.cd + 's') + this.o('Next cost', '×2 per use') + this.o('Lasts', tt.lau || '—') + '</div>' +
+      this.muc(1, UP_TXT.sec.skill, '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>');
+    noi.querySelector('.up-b').innerHTML = this.muc(3, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
+    noi.querySelector('.up-tv').classList.remove('tat');
+    noi.querySelectorAll('.up-sao-chon').forEach(e => { e.hidden = true; });
+    const sb = noi.querySelector('.up-tv-sao'); if (sb) sb.hidden = true;
+    el.querySelector('.up-than').scrollTop = 0;
+    if (huong && !this.giam()) { noi.classList.remove('trai', 'phai'); void noi.offsetWidth; noi.classList.add(huong > 0 ? 'phai' : 'trai'); }
+    this.capNutBo();
+    this.ganXem('mv:' + id);
     requestAnimationFrame(() => fitText(noi.querySelector('.up-ten'), 30, 18));
   },
 
@@ -385,7 +441,7 @@ const UP = {
   // ---------- xem trước trực tiếp (iframe = chính game ở chế độ preview) ----------
   ganXem(id) {
     const tv = this.el.querySelector('.up-tv'); if (!tv) return;
-    if (!SKILLS[id]) { this.guiXem({ dung: true }); return; }
+    if (!SKILLS[id] && !/^mv:/.test(id)) { this.guiXem({ dung: true }); return; }
     if (!this.ifr) {
       const f = document.createElement('iframe');
       f.className = 'up-ifr'; f.title = 'Live preview'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
@@ -434,6 +490,12 @@ const UP = {
 
 // ===================================================== móc vào màn chọn =====================================================
 if (!UP_XEM) {
+  // thẻ chỉ huy ở màn chọn: chạm = chọn (như cũ) + mở trang chỉ huy
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-act="mv-chon"]'); if (!el) return;
+    const r = el.getBoundingClientRect(), id = el.dataset.id;
+    setTimeout(() => UP.moMV(id, r), 0);
+  }, true);
   // thẻ ở màn chọn: chạm = mở hồ sơ; nút nhỏ góc phải = thêm/bỏ nhanh
   const _theChonGoc = UI.theChon;
   UI.theChon = function (r) {
@@ -532,7 +594,7 @@ if (UP_XEM) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', napSD); else napSD();
   const batXem = (id, sao, gd) => (window.SD ? SD.bat(id, sao, gd) : UPX.bat(id, sao));
   // UI.init có thể đã chạy trước khi file này nạp (phông sẵn) → chờ roster + canvas sẵn sàng rồi dựng cảnh
-  const cho = setInterval(() => { if (G.rosterMap && G.rosterMap[UP_XEM] && REN.cv && (window.SD || performance.now() > 4000)) { clearInterval(cho); if (!UPX.id && !(window.SD && SD.id)) batXem(UP_XEM, +UP_Q.get('star') || 4, +UP_Q.get('gd') || 0); } }, 60);
+  const cho = setInterval(() => { if (G.rosterMap && (G.rosterMap[UP_XEM] || /^mv:/.test(UP_XEM)) && REN.cv && (window.SD || performance.now() > 4000)) { clearInterval(cho); if (!UPX.id && !(window.SD && SD.id)) batXem(UP_XEM, +UP_Q.get('star') || 4, +UP_Q.get('gd') || 0); } }, 60);
   addEventListener('message', (e) => {
     const d = e.data && e.data.tmXem; if (!d) return;
     if (d.dung != null) { UPX.dungMuon = !!d.dung; if (window.SD) SD.dungMuon = !!d.dung; if (G.ban.length) G.dung = !!d.dung; }

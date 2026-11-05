@@ -676,3 +676,13 @@ Còn lại sau pass 2: Q5 (thẻ chỉ huy ở menu — thẻ ngang, khung dọc
 Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached):
 - **P3-1 icon mất tín hiệu** (đính kèm `vong_xich.png` + `ui_canh_bao_trum.png`): "Game UI icon, broken wireless signal: three curved signal arcs above a small antenna, cracked with a red X, chunky metal sci-fi style, thick dark outline, same style as attached, centered, solid #FF00FF background, no text. 512x512."
 - **P3-2 dải đầy thanh tải** (đính kèm `hud_trum_khung.png`): "Horizontal glowing energy fill strip for a loading bar, golden-amber with bright core and subtle segment ticks, seamless left-to-right, same style as attached, solid #FF00FF background, no text. 1024x128."
+
+## 8. Test range (skilldemo.js) — bỏ hình vẽ code, cần thêm 1 ảnh (S12)
+
+Đã thay bằng ảnh có sẵn: bàn tay vẽ code → ụ kéo thật của trận (`UI.keo`) + mũi tên `duong_mui`; vòng/mũi tên/nhãn viên thuốc → `fx_starup` / `fx_summon` / `fx_buff` / `fx_vong_lv` / `phu_ngam` / `phu_lua` / `sup_khien` / `ic_*` / `glyph/*`; dải chú thích → `bang_wave_nen`; ô mana/hồi chiêu → `ui_gia` + `ui_mana`; nút chỉ huy → `ui_nut_trieu` + chân dung `af_*` (mặt nạ tròn). Code chỉ còn vẽ chữ/số và mặt nạ làm mờ cột rìa.
+
+**S12 — bàn tay chỉ (1 ảnh, 128×128 → `thap/assets/ui_tay.png`)**, rồi đặt `const SD_TAY = 'ui_tay'` trong `thap/js/skilldemo.js`:
+```
+Single game UI icon: a white cartoon hand with index finger pointing down-left (tap / drag gesture), thick dark outline, soft shading, same style as attached. Centered, no text. Flat solid magenta #FF00FF background.
+```
+(Đính kèm `thap/assets/ui_nut_trieu.png` làm mẫu phong cách.)
