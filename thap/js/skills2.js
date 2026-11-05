@@ -60,7 +60,7 @@ function nangSao(B, T, n, chu) {
 function hoTroNhip(G, B, T, dt, rgb, chuKy, quay) {
   if (quay) T.goc += dt * quay; else xoayDau(T, null, dt);
   T.nhip = (T.nhip || 0) + dt / chuKy;
-  if (T.nhip >= 1) { T.nhip = 0; const ke = keCan(B, T.o).filter(Boolean); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.7, T, ke, rgb }); }
+  if (T.nhip >= 1) { T.nhip = 0; const ke = keCan(B, T.o).filter(Boolean); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb }); }
 }
 function veQuaCau(ctx, R, n, r, t, mau, co) { // n quả cầu quay quanh tâm
   ctx.globalCompositeOperation = 'lighter';
@@ -215,7 +215,7 @@ SKILLS.chimang = { // Ăng-ten Chí Mạng (Siren): hỗ trợ +tỉ lệ chí m
   them: (T) => 0.08 + 0.03 * (T.sao - 1) + 0.02 * (lvU(T) - 1),
   mo: (T) => '+' + Math.round(SKILLS.chimang.them(T) * 100) + '% crit to 4 neighbors',
   hoTro(G, T, N) { N.buf.crit += this.them(T); },
-  capNhat(G, B, T, dt) { hoTroNhip(G, B, T, dt, '255,210,63', 2.4, 0.9); return true; },
+  capNhat(G, B, T, dt) { hoTroNhip(G, B, T, dt, '255,80,90', 2.4, 0.9); return true; },
 };
 SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khác CÙNG SAO → đổi chỗ
   vai: 'db', dmg: 10, toc: 1.0, nham: 'dau',
@@ -286,7 +286,7 @@ SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): hỗ trợ — ụ kề bắn
   hoTro(G, T, N) { N.buf.cham = Math.max(N.buf.cham, this.cham(T)); },
   capNhat(G, B, T, dt) {
     hoTroNhip(G, B, T, dt, '127,220,255', 2.4, 0.6);
-    if (Math.random() < dt * 4) { const c = tamU(T); FX.hat1('lua', c.x + rnd(-14, 14), c.y + rnd(-10, 10), rnd(-8, 8), rnd(-30, -10), 0.6, 5, '#bff4ff'); }
+    if (Math.random() < dt * 1.2) { const c = tamU(T); FX.hat1('lua', c.x + rnd(-14, 14), c.y + rnd(-10, 10), rnd(-8, 8), rnd(-30, -10), 0.6, 5, '#bff4ff'); }
     return true;
   },
 };

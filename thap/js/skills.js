@@ -117,7 +117,7 @@ SKILLS.radar = { // Radar (Kirinus): hỗ trợ +tốc bắn cho 4 ô kề
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
     T.nap += dt / 2.2;
-    if (T.nap >= 1) { T.nap = 0; const ke = keCan(B, T.o).filter(Boolean); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.7, T, ke }); }
+    if (T.nap >= 1) { T.nap = 0; const ke = keCan(B, T.o).filter(Boolean); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '255,180,60' }); }
     return true;
   },
 };
@@ -304,20 +304,21 @@ HU.set = { // sét chuỗi: đoạn sét rung mỗi ~50 ms
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
   },
 };
-HU.ping = { // radar: vòng ping lan tới ụ được buff
+HU.ping = { // ụ hỗ trợ kích hoạt buff: 1 xung năng lượng ngắn (~180 ms) chạy tới ụ được buff — không quầng, không vòng to
   ve(ctx, o, R) {
-    const c = tamU(o.T), u = o.t / o.song;
+    const c = tamU(o.T), u = Math.min(1, o.t / o.song), e = 1 - (1 - u) * (1 - u);
+    const rgb = o.rgb || '255,180,60';
     ctx.globalCompositeOperation = 'lighter';
-    const rgb = o.rgb || '90,255,230';
-    ctx.strokeStyle = 'rgba(' + rgb + ',' + (1 - u) * 0.8 + ')'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(c.x, c.y, 10 + u * 40, 0, Math.PI * 2); ctx.stroke();
     for (const N of o.ke) {
-      const n = tamU(N);
-      const px = c.x + (n.x - c.x) * Math.min(1, u * 1.6), py = c.y + (n.y - c.y) * Math.min(1, u * 1.6);
-      R.anhGiua(ctx, 'tia_lua', px, py, 16 * (1 - u * 0.5), 0, 0.9 * (1 - u));
-      if (u > 0.55) { ctx.strokeStyle = 'rgba(' + rgb + ',' + (1 - u) * 1.6 + ')'; ctx.beginPath(); ctx.arc(n.x, n.y, 26, 0, Math.PI * 2); ctx.stroke(); }
+      const n = tamU(N), dx = n.x - c.x, dy = n.y - c.y, L = Math.hypot(dx, dy) || 1;
+      const p0 = Math.max(0, e - 0.35), r0 = 14;
+      const ax = c.x + dx * (r0 / L) + (dx * (1 - 2 * r0 / L)) * p0, ay = c.y + dy * (r0 / L) + (dy * (1 - 2 * r0 / L)) * p0;
+      const bx = c.x + dx * (r0 / L) + (dx * (1 - 2 * r0 / L)) * e, by = c.y + dy * (r0 / L) + (dy * (1 - 2 * r0 / L)) * e;
+      ctx.strokeStyle = 'rgba(' + rgb + ',' + (0.55 * (1 - u * 0.6)) + ')'; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.globalAlpha = 0.7 * (1 - u * 0.5); R.anhGiua(ctx, R.cham1('rgb(' + rgb + ')'), bx, by, 9); ctx.globalAlpha = 1;
     }
-    ctx.globalCompositeOperation = 'source-over';
+    ctx.lineCap = 'butt'; ctx.globalCompositeOperation = 'source-over';
   },
 };
 HU.rail = { // railgun: vạch nạp → tia xuyên

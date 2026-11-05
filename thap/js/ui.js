@@ -8,7 +8,7 @@ function fitText(el, max, min) {
   while (f > min && (el.scrollWidth > el.clientWidth + 0.5 || el.scrollHeight > el.clientHeight + 0.5)) { f -= 0.5; el.style.fontSize = f + 'px'; }
 }
 const UI = {
-  keo: null, chon: [], mv: 'hero', che: 'solo', xep: 'bac', ttHet: 0, giu: null, manaCu: 0,
+  keo: null, xemHT: null, chon: [], mv: 'hero', che: 'solo', xep: 'bac', ttHet: 0, giu: null, manaCu: 0,
 
   // ---------- khởi động ----------
   async init() {
@@ -101,7 +101,7 @@ const UI = {
     c.className = 'c' + (co ? '' : ' khoa') + (this.chon.includes(r.id) ? ' chon' : '');
     c.dataset.act = 'chon-u'; c.dataset.id = r.id;
 c.style.setProperty('--m', TIERS[r.bac].mau);
-    c.innerHTML = '<i class="gem"></i><img class="anh" loading="lazy" src="' + portraitOf(r.id) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+    c.innerHTML = cardArt(r.id) +
       '<div class="ten">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">' + TEXT.ui.soon + '</div>');
     return c;
   },
@@ -148,16 +148,16 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const r = G.rosterMap[id];
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
-      d.innerHTML = '<i class="gem"></i><img class="anh" src="' + portraitOf(id) + '" alt="">' +
+      d.innerHTML = cardArt(id) +
         '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     const mv = MAVUONG[B.mv.id];
     $('#the-mv .mv-ic').src = 'assets/' + mv.icon + '.png'; $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
-    const ds = ['tier_ring_trang', 'tier_ring_xanh', 'tier_ring_tim', 'tier_ring_vang', 'tier_ring_do', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
-      'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_de', 'mimic_nong'];
-    for (const b of G.ban) for (const id of b.deck) ds.push(id + '_de', id + '_nong');
+    const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
+      'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
+    for (const b of G.ban) for (const id of b.deck) ds.push(id + '_nong');
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     REN.napTruoc(ds);
@@ -251,7 +251,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     } else if (!sk) so = TEXT.ui.comingSoon;
     else so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
     tt.querySelector('.tt-so').textContent = so;
-    tt.style.top = G.ban.length && !$('#top').hidden ? '470px' : '300px';
+    // trong trận: không che bàn của mình (solo: ngay dưới bàn; co-op/pvp: đè lên bàn đồng đội/đối thủ phía trên)
+    const B0 = G.ban[0], tran = G.ban.length && !$('#top').hidden;
+    tt.style.top = !tran ? '300px' : (G.ban.length > 1 ? '60px' : Math.round(B0.y + B0.h + 8) + 'px');
     tt.style.zIndex = $('#chon').hidden ? 8 : 12; // màn chọn: nổi trên bảng chọn
     tt.hidden = false;
     fitText(tt.querySelector('.tt-ten'), 18, 12);
@@ -298,7 +300,9 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       if (!G.ban.length || G.ketThuc) return;
       SND.mo();
       const [x, y] = this.diemLogic(e), T = this.uTai(x, y);
-      if (!T) { $('#tt').hidden = true; return; }
+      if (!T) { $('#tt').hidden = true; this.xemHT = null; return; }
+      if (laHoTro(T)) { if (!this.xemHT || this.xemHT.T !== T || !this.xemHT.giu && this.xemHT.het < performance.now()) this.xemHT = { T, t0: performance.now(), giu: true }; else { this.xemHT.giu = true; this.xemHT.het = 0; } }
+      else this.xemHT = null;
       cv.setPointerCapture(e.pointerId);
       this.keo = { T, x, y, x0: x, y0: y, dang: false };
     });
@@ -307,11 +311,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const [x, y] = this.diemLogic(e); k.x = x; k.y = y;
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
-        k.dang = true; $('#tt').hidden = true;
+        k.dang = true; $('#tt').hidden = true; this.xemHT = null;
       }
     });
     const het = (e) => {
       const k = this.keo; this.keo = null; if (!k) return;
+      if (this.xemHT && this.xemHT.giu) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 2400; }
       const B = G.ban[0];
       if (!k.dang) {
         if (B.t[k.T.o] !== k.T) return;
@@ -325,7 +330,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         else { const c = B.o[D.o]; FX.chu1(c.x, c.y - 22, k.T.sao !== D.sao ? TEXT.fx.diffStar : TEXT.fx.diffType, '#ff9a9a', 12); }
       }
     };
-    cv.addEventListener('pointerup', het); cv.addEventListener('pointercancel', () => { this.keo = null; });
+    cv.addEventListener('pointerup', het); cv.addEventListener('pointercancel', () => { this.keo = null; if (this.xemHT) { this.xemHT.giu = false; this.xemHT.het = performance.now() + 600; } });
     // giữ thẻ ở hàng dưới → bảng thông tin (không nâng cấp)
     const bo = $('#bo-the');
     bo.addEventListener('pointerdown', (e) => { const d = e.target.closest('.the'); if (!d) return; clearTimeout(this.giu); this.giu = setTimeout(() => { this._boQuaBam = true; this.moTT(d.dataset.id, null, true); }, 480); });

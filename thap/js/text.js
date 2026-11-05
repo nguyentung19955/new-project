@@ -122,6 +122,12 @@ const TEXT = {
 };
 
 // ảnh chân dung thẻ của 1 ụ (đổi ảnh: thêm TEXT.turret[id].portrait)
-function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || ('assets/nho/' + id + '.png'); }
+// chân dung phi công (đã duyệt) — thêm id vào đây khi có ảnh assets/pilot_<id>.png mới
+const PILOTS = new Set(['canon', 'lien', 'tia', 'laser', 'set', 'bang', 'radar', 'chimang', 'khuech', 'mana']);
+function iconOf(id) { return 'assets/nho/' + id + '.png'; }
+function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
+function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }
+// ảnh trên thẻ: chân dung phi công to ở giữa + icon ụ nhỏ ở góc; chưa có phi công → icon ụ to
+function cardArt(id) { return hasPilot(id) ? '<img class="anh pilot" src="' + portraitOf(id) + '" alt=""><img class="ic" src="' + iconOf(id) + '" alt="">' : '<img class="anh" src="' + iconOf(id) + '" alt="">'; }
 // phủ tên/kỹ năng tiếng Anh lên dữ liệu roster (roster.json giữ bản tiếng Việt ở ten_vi / kyNang_vi)
 function applyText(roster) { for (const r of roster) { const t = TEXT.turret[r.id]; if (t) { r.ten = t.name; r.kyNang = t.skill; } } return roster; }
