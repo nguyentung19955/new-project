@@ -16,6 +16,7 @@ const UI = {
     let r = null;
     try { const res = await fetch('assets/roster.json', { cache: 'no-cache' }); if (res.ok) r = await res.json(); } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []);
+    SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
     this.docDebug();
@@ -220,7 +221,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const b = $('#canh-bao');
     b.querySelector('b').textContent = TRUM[id].ten; b.querySelector('span').textContent = TRUM[id].kn + ': ' + TRUM[id].mo;
     b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; b.classList.add('chay');
-    SND.bao();
+    SND.canhBao();
     clearTimeout(this._cb); this._cb = setTimeout(() => b.hidden = true, 2200);
   },
   ketQua(k) {
@@ -273,15 +274,16 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'xep': this.xep = this.xep === 'bac' ? 'ten' : 'bac'; this.veChon(); break;
       case 'ngaunhien': this.chon = deckNgauNhien(); SND.nut(); this.veBoChon(); break;
       case 'vao': this.vao(); break;
-      case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.nut(); } break;
+      case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (B) dungMV(B); break;
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;
-      case 'amthanh': $('#nut-am').textContent = SND.batTat() ? TEXT.ui.soundOn : TEXT.ui.soundOff; break;
+      case 'amthanh': SND.batTat(); SND.nut(); break;
+      case 'nhac': SND.batTatNhac(); SND.nut(); break;
       case 'bo': case 'doibo':
-        G.ban = []; G.quai = []; G.dung = false;
+        G.ban = []; G.quai = []; G.dung = false; SND.nhac(0);
         $('#dung').hidden = true; $('#ketqua').hidden = true; $('#top').hidden = true; $('#duoi').hidden = true; $('#chon').hidden = false; this.veChon(); break;
       case 'choilai': batDau(this.che, this.chon, this.mv); break;
     }
@@ -302,7 +304,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       SND.mo();
       const [x, y] = this.diemLogic(e), T = this.uTai(x, y);
       if (!T) { $('#tt').hidden = true; this.xemHT = null; return; }
-      if (laHoTro(T)) { if (!this.xemHT || this.xemHT.T !== T || !this.xemHT.giu && this.xemHT.het < performance.now()) this.xemHT = { T, t0: performance.now(), giu: true }; else { this.xemHT.giu = true; this.xemHT.het = 0; } }
+      if (laHoTro(T)) { SND.hoTro(); if (!this.xemHT || this.xemHT.T !== T || !this.xemHT.giu && this.xemHT.het < performance.now()) this.xemHT = { T, t0: performance.now(), giu: true }; else { this.xemHT.giu = true; this.xemHT.het = 0; } }
       else this.xemHT = null;
       cv.setPointerCapture(e.pointerId);
       this.keo = { T, x, y, x0: x, y0: y, dang: false };

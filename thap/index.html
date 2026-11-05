@@ -58,7 +58,7 @@
         <div class="logo"><b>TURRET MERGE</b><span data-t="subtitle">MERGE · DEFEND · SURVIVE</span></div>
         <div class="chon-hang">
           <div class="chon-goi"><span data-t="pick5">PICK 5 TURRETS</span> <b id="chon-dem">0/5</b></div>
-          <button class="nut-xep" data-act="xep" id="nut-xep">SORT: TIER</button>
+          <span style="display:flex;gap:6px"><button class="nut-xep" data-act="nhac" data-t="musicOn">MUSIC: ON</button><button class="nut-xep" data-act="amthanh" data-t="sfxOn">SFX: ON</button><button class="nut-xep" data-act="xep" id="nut-xep">SORT: TIER</button></span>
         </div>
         <div id="chon-bo"></div>
       </div>
@@ -81,7 +81,8 @@
       <div class="bang">
         <div class="bang-ten" data-t="paused">PAUSED</div>
         <div class="bang-nut">
-          <button class="nut" data-act="amthanh" id="nut-am" data-t="soundOn">SOUND: ON</button>
+          <button class="nut" data-act="nhac" id="nut-nhac" data-t="musicOn">MUSIC: ON</button>
+          <button class="nut" data-act="amthanh" id="nut-am" data-t="sfxOn">SFX: ON</button>
           <button class="nut" data-act="bo" data-t="quit">QUIT</button>
           <button class="nut chinh" data-act="tiep" data-t="resume">RESUME</button>
         </div>

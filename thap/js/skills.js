@@ -148,7 +148,7 @@ SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạ
     T.rx = -1.2 - Math.sin(G.t * 40) * 0.6; T.rv = 0;
     if (T.las.so > 0.25) { trung(E, T.las.acc, { B, crit: false, mau: '#ff8af0' }); T.las.acc = 0; T.las.so = 0; }
     if (Math.random() < dt * 20) FX.tiaLua(E.x, E.y, 1, '#ff8af0', 120, 8);
-    if (!B.ai && Math.random() < dt * 4) SND.laser();
+    if (!B.ai) SND.laser(); // tia âm duy trì, tự tắt dần khi ngừng bắn
     return true;
   },
 };
