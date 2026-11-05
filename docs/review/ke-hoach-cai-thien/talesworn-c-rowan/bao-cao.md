@@ -70,4 +70,4 @@ Prompt ChatGPT ngắn (tiếng Anh, nền magenta #FF00FF) ở `docs/yeu-cau-anh
 
 ## Commit
 
-Xem dòng cuối mục này sau khi đẩy.
+`c2e9c523` — "Talesworn (C): Rowan thay Cu Tí trên màn hình … + màn đầu mới rừng gai, chữ TALESWORN … + dựng lại dist" (đã đẩy lên khoi-tao-du-an, nằm sau commit phiên A `be93a7ff`; dist dựng lại sau khi gộp, web tải đầu 19,42 MB).
