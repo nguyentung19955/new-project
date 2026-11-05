@@ -72,7 +72,8 @@ def lam(id):
         dai(f, 192).save(os.path.join(ASS, 'fx_trum_%s.png' % id), optimize=True); print('→ fx_trum_%s.png' % id)
     if os.path.exists(p('portrait')):
         im = khoa(Image.open(p('portrait'))); im = im.crop(im.getbbox())
-        im.thumbnail((360, 360), Image.LANCZOS)  # băng giới thiệu ≈ 120 css px × 3
+        c = max(im.size); q = Image.new('RGBA', (c, c), (0, 0, 0, 0)); q.paste(im, ((c - im.width) // 2, (c - im.height) // 2)); im = q  # vuông, giữa
+        im = im.resize((600, 600), Image.LANCZOS) if c > 600 else im  # màn mở trận 200 css px × 3
         im.save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True); print('→ trum_%s_portrait.png' % id)
 
 
