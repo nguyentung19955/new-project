@@ -1,0 +1,10 @@
+/* TURRET MERGE — màn kết quả trận ONLINE (js/online/ketqua-onl.js). Chỉ ảnh có sẵn; chữ bằng code. */
+#ketqua.kq7.trung .kq-ic { width: 48px; height: 48px; margin: 36px 0 36px; filter: none; content: normal; }
+#ketqua.trung .bang-ten { color: var(--c-chu, #e8eef6); }
+#ketqua.kq7.trung .kq-phu { color: var(--c-mo, #9aa6b8); font-weight: 700; }
+#ketqua.kq7 .kqo-nut { width: 100%; display: flex; flex-direction: column-reverse; gap: 10px; }
+#ketqua.kq7 .kqo-nut .nut.cho { opacity: .72; font-size: 16px; }
+#ketqua.kq7 #kqo-tt { width: 100%; margin-top: auto; padding: 0 0 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--c-mo, #9aa6b8); min-height: 18px; }
+#ketqua.kq7 #kqo-tt + .bang-nut { margin-top: 0; }
+#ketqua.kq7 .kq-meo .kqo-roi { margin-bottom: 4px; }
+#ketqua.kq7 .kq-meo .kqo-roi > span, #ketqua.kq7 .kq-meo > span.kqo-viec { display: block; font-size: 15px; font-weight: 700; color: var(--c-chu, #e8eef6); }

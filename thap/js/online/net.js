@@ -119,8 +119,8 @@ const NET = {
     o = o || {};
     if (this.kieu === 'mock') {
       const sid = 's' + (++this._mSid);
-      this._mSub[sid] = cb; this._mockGui('sub', { p, ev, sid, sau: o.sau || null });
-      return () => { delete this._mSub[sid]; this._mockGui('unsub', { sid }); };
+      this._mSub[sid] = cb; this._mockGui('sub', { p, ev, sid, sau: o.sau || null }).catch(() => { });
+      return () => { delete this._mSub[sid]; this._mockGui('unsub', { sid }).catch(() => { }); }; // mất mạng: máy chủ giả đã quên lượt nghe khi socket đóng
     }
     let q = this._ref(p);
     if (o.sau) q = q.orderByKey().startAt(o.sau);
