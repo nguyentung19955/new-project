@@ -265,3 +265,37 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 @keyframes ci-troi-chu { 0% { translate: 0 0; } 100% { translate: -6px 0; } }
 @keyframes ci-quet { 0% { transform: translateX(-120px) skewX(-18deg); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateX(520px) skewX(-18deg); opacity: 0; } }
 @keyframes ci-dap { 0% { opacity: 0; transform: scale(2.2) translateY(-4px); filter: blur(2px); } 60% { opacity: 1; filter: none; } 100% { opacity: 1; transform: scale(1); } }
+
+/* ===== HỆ NHẬN DIỆN Ụ (nhandien.js / glyph.js) ===== */
+/* thẻ bộ bài trong trận: viền = MÀU KHOÁ của loại ụ (giống vòng quanh bệ trên bàn) + huy hiệu biểu tượng; độ hiếm = vạch mảnh dưới */
+.the.nd-k { border: 2.5px solid var(--k); box-shadow: 0 0 0 1px #05070a, 0 0 8px -2px var(--k); }
+.the.nd-k .gia { border-top: 2px solid var(--m); }
+.the .gl { position: absolute; z-index: 3; left: 1px; bottom: 21px; width: 24px; height: 24px; pointer-events: none; }
+.c .gl { position: absolute; z-index: 3; left: 2px; bottom: 29px; width: 21px; height: 21px; pointer-events: none; }
+#chon-bo .o-bo.nd-k i { border: 2.5px solid var(--k); }
+#chon-bo .o-bo .gl { position: absolute; left: 1px; bottom: 1px; width: 20px; height: 20px; pointer-events: none; }
+#tt .tt-gl { flex: none; width: 28px; height: 28px; margin: -2px -4px -2px -2px; }
+/* dải nhận diện 1 dòng khi chạm ụ: biểu tượng · TÊN · vai trò · sao */
+#nd-dai { --k: #d9dee6; position: absolute; left: 50%; z-index: 9; height: 28px; display: flex; align-items: center; gap: 5px; padding: 0 11px 0 2px; border-radius: 14px;
+  background: #0c0f14f0; border: 2px solid var(--k); box-shadow: 0 4px 12px #000b; pointer-events: none; white-space: nowrap; transform: translateX(-50%);
+  font-family: var(--f-ui, inherit); font-size: 13px; font-weight: 800; color: #e9ecf1; }
+#nd-dai img { width: 27px; height: 27px; }
+#nd-dai b { font-size: 14.5px; font-weight: 900; letter-spacing: .3px; text-transform: uppercase; }
+#nd-dai i { font-style: normal; color: #6b7380; }
+#nd-dai .nd-sao { color: #fff6df; font-weight: 900; }
+#nd-dai.vao { animation: nd-vao .16s ease-out; }
+@keyframes nd-vao { from { opacity: 0; transform: translate(-50%, 4px) scale(.94); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+/* giới thiệu 5 ụ khi vào trận */
+#nd-gt { position: absolute; inset: 0; z-index: 15; display: flex; align-items: center; justify-content: center; background: #05070ab8; }
+#nd-gt.vao { animation: nd-mo .18s ease-out; }
+#nd-gt.ra { opacity: 0; transition: opacity .2s; }
+@keyframes nd-mo { from { opacity: 0; } to { opacity: 1; } }
+#nd-gt .gt-bang { width: 414px; padding: 12px 8px 10px; border-radius: 14px; background: #12151bf2; border: 1.5px solid #ffffff22; box-shadow: 0 12px 30px #000c; }
+#nd-gt .gt-ten { text-align: center; font-size: 15px; font-weight: 900; letter-spacing: 1px; color: #fff; margin-bottom: 8px; }
+#nd-gt .gt-hang { display: flex; gap: 5px; }
+#nd-gt .gt-o { --k: #fff; flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; padding: 6px 2px 5px; border-radius: 10px; background: #1a1e25; border: 2.5px solid var(--k); }
+#nd-gt .gt-gl { width: 34px; height: 34px; }
+#nd-gt .gt-u { width: 46px; height: 46px; margin: 1px 0 2px; filter: drop-shadow(0 2px 2px #000a); }
+#nd-gt .gt-o b { width: 100%; height: 15px; line-height: 15px; text-align: center; font-size: 11px; font-weight: 900; color: var(--k); white-space: nowrap; overflow: hidden; text-transform: uppercase; }
+#nd-gt .gt-o span { font-size: 9px; font-weight: 800; color: #9aa3b2; }
+#nd-gt .gt-phu { text-align: center; font-size: 10.5px; font-weight: 700; color: #9aa3b2; margin-top: 8px; }
