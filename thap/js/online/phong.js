@@ -142,32 +142,53 @@ const ONL = {
     this.code = null; this.meta = null; this.khach = null; this.pl = {}; this.state = null; this.luuPhong();
     const s = document.getElementById('onl-sanh'); if (s) s.hidden = true;
   },
+  // SẢNH đứng riêng (TU-VAN-HUD-MUOT §3F): ‹ thoát (chạm 2 lần) · CO-OP LOBBY · tấm mã phòng (mã to + COPY + SHARE) ·
+  //  2 hàng người chơi (chân dung · tên · READY/NOT READY · 5 ụ nhỏ) · 1 dòng luật · nút READY to dính đáy.
   veSanh() {
     let el = document.getElementById('onl-sanh');
     if (!el) {
-      el = document.createElement('div'); el.id = 'onl-sanh'; el.className = 'man phu onl-man';
-      el.innerHTML = '<div class="bang onl-bang sanh">' +
-        '<div class="onl-nho">ROOM CODE</div><div class="sanh-ma" id="sanh-ma"></div>' +
-        '<button class="nut" data-act="onl-chiase">SHARE INVITE LINK</button>' +
+      el = document.createElement('div'); el.id = 'onl-sanh'; el.className = 'man onl-man sanh7';
+      el.innerHTML = '<div class="s7-nen" aria-hidden="true"></div>' +
+        '<div class="s7-dau"><button class="s7-lui" data-act="onl-roi" aria-label="Leave room"><img src="assets/ic_lui.png" alt=""></button><b>CO-OP LOBBY</b><i></i></div>' +
+        '<section class="s7-moi"><small>ROOM CODE</small><div class="sanh-ma" id="sanh-ma"></div>' +
+        '<div class="s7-nut2"><button class="nut" data-act="onl-copy" id="sanh-copy">COPY CODE</button><button class="nut" data-act="onl-chiase">SHARE LINK</button></div>' +
+        '<span class="s7-ok" id="sanh-ok"><img src="assets/chon_huy.png" alt=""><b>COPIED</b></span></section>' +
         '<div class="sanh-ds" id="sanh-ds"></div>' +
+        '<div class="s7-luat">CO-OP • 2 PLAYERS • 3 SHARED LIVES</div>' +
         '<div class="sanh-ping" id="sanh-ping"></div>' +
         '<div class="onl-loi" id="sanh-loi"></div>' +
-        '<div class="bang-nut"><button class="nut chinh" data-act="onl-san" id="sanh-san">READY</button>' +
-        '<button class="nut" data-act="onl-roi">LEAVE ROOM</button></div></div>';
+        '<div class="s7-cuoi"><small id="sanh-goi"></small><button class="nut chinh" data-act="onl-san" id="sanh-san">READY</button></div>';
       document.getElementById('wrap').appendChild(el);
     }
+    const moi = el.hidden;
     el.hidden = false;
+    if (moi && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { el.classList.remove('vao'); void el.offsetWidth; el.classList.add('vao'); }
+    this._roiCho = 0;
     this.capNhatSanh();
   },
   theNguoi(p, laToi) {
-    if (!p) return '<div class="sanh-p trong"><div class="sp-cho">Waiting for a friend…<br><small>Share the code or link</small></div></div>';
+    if (!p) return '<div class="sanh-p trong"><span class="s7-av ghost"><img src="assets/ic_coop.png" alt=""></span><div class="s7-ten"><b>Waiting for teammate<span class="s7-cham"><i>.</i><i>.</i><i>.</i></span></b><small>Send them the code or link</small></div></div>';
     const deck = String(p.deck || '').split(',').filter(id => G.rosterMap[id]);
     const mv = MAVUONG[p.mv] ? p.mv : 'hero';
-    return '<div class="sanh-p' + (p.ready ? ' san' : '') + (p.on === false ? ' mat' : '') + '">' +
-      '<div class="sp-dau"><img class="sp-av" src="' + TK.avURL(p.av) + '" alt=""><b>' + escTen(p.name) + (laToi ? ' (YOU)' : '') + '</b>' +
-      '<i class="sp-led' + (p.on === false ? ' tat' : '') + '"></i><span class="sp-san">' + (p.ready ? 'READY' : 'NOT READY') + '</span></div>' +
-      '<div class="sp-bo">' + deck.map(id => '<span class="sp-u" style="--m:' + TIERS[G.rosterMap[id].bac].mau + '"><img src="' + portraitOf(id) + '" alt=""><img class="kh" src="assets/the_khung_' + G.rosterMap[id].bac + '.png" alt="" onerror="this.remove()"></span>').join('') +
-      '<span class="sp-mv">' + mvArt(mv) + '</span></div></div>';
+    return '<div class="sanh-p' + (p.ready ? ' san' : '') + (p.on === false ? ' mat' : '') + '" data-u="' + (laToi ? 'me' : 'ban') + '">' +
+      '<span class="s7-av"><img class="sp-av" src="' + TK.avURL(p.av) + '" alt=""></span>' +
+      '<div class="s7-ten"><b>' + escTen(p.name) + (laToi ? ' <em>YOU</em>' : '') + '</b>' +
+      '<span class="s7-bo">' + deck.map(id => '<img src="' + iconOf(id) + '" alt="">').join('') + '<img class="mv" src="' + mvIcURL(mv) + '" alt=""></span></div>' +
+      '<span class="s7-tt"><i class="sp-led' + (p.on === false ? ' tat' : '') + '"></i><span class="sp-san">' + (p.on === false ? 'OFFLINE' : p.ready ? 'READY' : 'NOT READY') + '</span>' +
+      (p.ready ? '<img class="s7-huy" src="assets/chon_huy.png" alt="">' : '') + '</span></div>';
+  },
+  // COPY: chỉ chép mã 4 chữ; báo "COPIED" 1,2 s
+  chepMa() {
+    const c = this.code; if (!c) return;
+    const ok = () => { const e = document.getElementById('sanh-ok'); if (!e) return; e.classList.remove('hien'); void e.offsetWidth; e.classList.add('hien'); clearTimeout(this._ok); this._ok = setTimeout(() => e.classList.remove('hien'), 1200); };
+    try { if (navigator.clipboard) navigator.clipboard.writeText(c).then(ok, () => this.baoLoi('Room code: ' + c)); else this.baoLoi('Room code: ' + c); } catch (e) { this.baoLoi('Room code: ' + c); }
+  },
+  // thoát sảnh: chạm 2 lần trong 2,5 s (tránh bấm nhầm rời phòng)
+  roiHoi() {
+    const t = performance.now();
+    if (this._roiCho && t - this._roiCho < 2500) { this._roiCho = 0; this.roiPhong(); return; }
+    this._roiCho = t; this.baoLoi('Tap ‹ again to leave the room.');
+    clearTimeout(this._roiH); this._roiH = setTimeout(() => { if (this._roiCho) { this._roiCho = 0; this.baoLoi(''); } }, 2500);
   },
   capNhatSanh() {
     const el = document.getElementById('onl-sanh'); if (!el || el.hidden && !this.code) return;
@@ -180,10 +201,18 @@ const ONL = {
     const me = this.me(), banId = this.ban();
     el.querySelector('#sanh-ma').textContent = this.code || '';
     const toi = this.pl[me], ban = banId ? this.pl[banId] : null;
-    el.querySelector('#sanh-ds').innerHTML = this.theNguoi(toi, true) + this.theNguoi(ban, false);
+    const ds = el.querySelector('#sanh-ds'), hNew = this.theNguoi(toi, true) + this.theNguoi(ban, false);
+    if (ds._h !== hNew) { // chỉ vẽ lại khi đổi; người mới vào = hiện dần 240 ms
+      const coBan = !!ds.querySelector('[data-u="ban"]');
+      ds.innerHTML = hNew; ds._h = hNew;
+      if (ban && !coBan) { const r = ds.querySelector('[data-u="ban"]'); if (r) r.classList.add('vao'); }
+    }
     const nut = el.querySelector('#sanh-san');
-    nut.textContent = toi && toi.ready ? 'NOT READY' : 'READY';
+    nut.textContent = toi && toi.ready ? 'CANCEL READY' : 'READY';
     nut.classList.toggle('chinh', !(toi && toi.ready));
+    const goi = el.querySelector('#sanh-goi');
+    if (goi) goi.textContent = toi && toi.ready ? (ban && ban.ready ? 'Both ready — launching…' : ban ? 'Waiting for ' + escTen(ban.name) + ' to get ready' : 'Starts when your teammate joins and is ready') : 'Starts when both players are ready';
+    el.classList.toggle('ca-hai', !!(toi && ban && toi.ready && ban.ready));
     // khách rời phòng: chủ phòng thấy ô trống lại
     if (this.host && this.khach && !this.pl[this.khach] && this._khachCo) { this.khach = null; }
     if (this.khach && this.pl[this.khach]) this._khachCo = true;
@@ -250,7 +279,8 @@ const ONL = {
         return true;
       }
       case 'onl-san': { SND.nut(); const t = this.pl[this.me()]; this.ghiToi({ ready: !(t && t.ready) }); return true; }
-      case 'onl-roi': SND.nut(); this.roiPhong(); return true;
+      case 'onl-roi': SND.nut(); if (el && el.closest && el.closest('#onl-sanh')) this.roiHoi(); else this.roiPhong(); return true;
+      case 'onl-copy': SND.nut(); this.chepMa(); return true;
       case 'onl-chiase': SND.nut(); this.chiaSe(); return true;
     }
     return false;

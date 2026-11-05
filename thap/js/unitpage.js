@@ -153,25 +153,33 @@ const UP = {
   id: null, ds: [], sao: 3, dungXem: false,
   giam: () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches),
 
+  // HUD mượt C (TU-VAN-HUD-MUOT §3C): 1 màn không cuộn — hero tràn viền (phi công + đầu súng) · tên + 1 dòng meta · 4 thông số 2×2 ·
+  //  thẻ kỹ năng 1–2 dòng (chạm = bảng CHI TIẾT trượt lên: mọi mục cũ) · hàng TEST RANGE (chạm = bảng thử bắn trượt lên) · nút Add/Remove dính đáy.
+  //  iframe Test range nằm cố định trong bảng thử bắn (không bao giờ chuyển chỗ trong DOM — chuyển chỗ = nạp lại); chỉ chạy khi bảng mở.
   dung() {
     if (this.el) return this.el;
-    if (!document.getElementById('up-sd-css')) { // nút sao 1/4/7 + nút dạng của clip minh hoạ
-      const st = document.createElement('style'); st.id = 'up-sd-css';
-      st.textContent = '.up-sao-chon.up-sd-sao{grid-template-columns:repeat(3,1fr)}.up-sao-chon.up-sd-gd{grid-template-columns:.8fr 1fr 1fr 1fr}.up-sao-chon.up-sd-gd[hidden]{display:none}.up-sd-gd button{font-size:12px}';
-      document.head.appendChild(st);
-    }
-    const el = document.createElement('div'); el.id = 'up'; el.className = 'man'; el.hidden = true;
+    const el = document.createElement('div'); el.id = 'up'; el.className = 'man up7'; el.hidden = true;
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Turret file');
+    const x = '<button class="up-x" data-up="dongtam" aria-label="Close"><img src="assets/ic_lui.png" alt=""></button>';
     el.innerHTML =
-      '<div class="up-dau"><button class="up-lui" data-up="dong" aria-label="Back"><i></i><span>' + UP_TXT.back + '</span></button>' +
-      '<div class="up-so"></div><span class="up-mui"><button data-up="truoc" aria-label="Previous turret">‹</button><button data-up="sau" aria-label="Next turret">›</button></span></div>' +
-      '<div class="up-than"><div class="up-noi"></div></div>' +
-      '<div class="up-cuoi"><div class="up-bo"></div><button class="up-nut" data-up="bo"></button></div>';
+      '<div class="up-nen" aria-hidden="true"></div>' +
+      '<div class="up-dau"><button class="up-lui" data-up="dong" aria-label="Back"><img src="assets/ic_lui.png" alt=""></button>' +
+      '<div class="up-so"></div><span class="up-mui"><button data-up="truoc" aria-label="Previous"><img class="lat" src="assets/mui_tiep.png" alt=""></button>' +
+      '<button data-up="sau" aria-label="Next"><img src="assets/mui_tiep.png" alt=""></button></span></div>' +
+      '<div class="up-than"><div class="up-noi"><div class="up-a"></div></div></div>' +
+      '<div class="up-cuoi"><button class="up-nut" data-up="bo"><b class="up-nut-chu"></b><small class="up-nut-so"></small></button></div>' +
+      '<div class="up-man" data-up="dongtam" aria-hidden="true"></div>' +
+      '<section class="up-tam up-ct" aria-label="Details"><div class="up-tam-dau"><b class="up-tam-ten"></b>' + x + '</div><div class="up-tam-than"><div class="up-b"></div></div></section>' +
+      '<section class="up-tam up-ts" aria-label="Test range"><div class="up-tam-dau"><b class="up-ts-ten">Test range</b>' + x + '</div><div class="up-tam-than">' + this.tvHTML() + '</div></section>';
     document.getElementById('wrap').appendChild(el);
     el.addEventListener('click', (e) => this.bam(e));
     this.vuot(el.querySelector('.up-than'));
     addEventListener('popstate', () => { if (!el.hidden) this.dong(true); });
-    addEventListener('keydown', (e) => { if (el.hidden) return; if (e.key === 'Escape') this.dong(); else if (e.key === 'ArrowRight') this.buoc(1); else if (e.key === 'ArrowLeft') this.buoc(-1); });
+    addEventListener('keydown', (e) => {
+      if (el.hidden) return;
+      if (e.key === 'Escape') { if (this.tam) this.dongTam(); else this.dong(); }
+      else if (!this.tam && e.key === 'ArrowRight') this.buoc(1); else if (!this.tam && e.key === 'ArrowLeft') this.buoc(-1);
+    });
     this.el = el; return el;
   },
   // danh sách theo đúng thứ tự đang hiện trên màn chọn (xếp theo bậc / họ / tên)
@@ -184,23 +192,25 @@ const UP = {
     this.ds = this.danhSach();
     const moi = el.hidden;
     this.ve(id, 0);
-    if (moi) {
-      el.hidden = false; el.querySelector('.up-than').scrollTop = 0;
-      try { history.pushState({ up: 1 }, ''); this._ls = true; } catch (e) { this._ls = false; }
-      if (!this.giam()) {
-        const w = document.getElementById('wrap').getBoundingClientRect(), s = w.width / W;
-        if (tu) { const r = tu.getBoundingClientRect(); el.style.transformOrigin = ((r.left + r.width / 2 - w.left) / s) + 'px ' + ((r.top + r.height / 2 - w.top) / s) + 'px'; }
-        el.classList.remove('vao'); void el.offsetWidth; el.classList.add('vao');
-      }
-    }
+    if (moi) this.hien(el);
     try { SND.nut(); } catch (e) { }
+  },
+  hien(el) {
+    clearTimeout(this._ra); el.classList.remove('ra');
+    el.hidden = false; el.querySelector('.up-than').scrollTop = 0;
+    try { history.pushState({ up: 1 }, ''); this._ls = true; } catch (e) { this._ls = false; }
+    if (!this.giam()) { el.classList.remove('vao'); void el.offsetWidth; el.classList.add('vao'); }
   },
   dong(tuLS) {
     if (!this.el || this.el.hidden) return;
-    this.el.hidden = true; this.id = null;
+    const el = this.el;
+    this.dongTam(true); this.id = null;
     if (this.ifr) this.guiXem({ dung: true });
     if (!tuLS && this._ls) { this._ls = false; try { history.back(); } catch (e) { } }
     this._ls = false;
+    const an = () => { el.hidden = true; el.classList.remove('ra', 'vao'); };
+    if (this.giam()) an(); else { el.classList.remove('vao'); el.classList.add('ra'); clearTimeout(this._ra); this._ra = setTimeout(an, 190); }
+    this._an = true; setTimeout(() => { this._an = false; }, 0);
     if (typeof UI !== 'undefined' && UI.veBoChon) UI.veBoChon();
   },
   buoc(d) {
@@ -209,22 +219,43 @@ const UP = {
     const i = this.ds.indexOf(this.id), j = (i + d + this.ds.length) % this.ds.length;
     this.ve(this.ds[j], d);
   },
+  // bảng trượt lên: 'ct' = chi tiết · 'ts' = Test range
+  moTam(k) {
+    if (!this.el) return;
+    this.tam = k;
+    this.el.classList.toggle('mo-ct', k === 'ct'); this.el.classList.toggle('mo-ts', k === 'ts');
+    if (k === 'ct') this.el.querySelector('.up-ct .up-tam-than').scrollTop = 0;
+    if (k === 'ts') { this.khungXem(); requestAnimationFrame(() => this.khungXem()); }
+    this.guiXem({ dung: this.canDung() }); this.nutPhat();
+    try { SND.nut(); } catch (e) { }
+  },
+  dongTam(im) {
+    if (!this.el || !this.tam) return;
+    this.tam = null; this.el.classList.remove('mo-ct', 'mo-ts');
+    this.guiXem({ dung: true });
+    if (!im) try { SND.nut(); } catch (e) { }
+  },
   bam(e) {
     const b = e.target.closest('[data-up]'); if (!b) return;
     const a = b.dataset.up;
     if (a === 'dong') this.dong();
     else if (a === 'truoc') this.buoc(-1);
     else if (a === 'sau') this.buoc(1);
-    else if (a === 'mo') this.ve(b.dataset.id, 1);
-    else if (a === 'sao') this.chonSao(+b.dataset.s);
+    else if (a === 'more') this.moTam('ct');
+    else if (a === 'test') this.moTam('ts');
+    else if (a === 'dongtam') this.dongTam();
+    else if (a === 'mo') { this.dongTam(true); this.ve(b.dataset.id, 1); }
+    else if (a === 'sao') { this.chonSao(+b.dataset.s); if (b.dataset.mo) this.moTam('ts'); }
     else if (a === 'gd') this.chonGd(+b.dataset.g);
     else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.canDung() }); this.nutPhat(); }
-    else if (a === 'bo' && this.mv) { UI.mv = this.mv; if (UI.veChon) UI.veChon(); this.capNutBo(); try { SND.nut(); } catch (e) { } }
+    else if (a === 'bo' && this.mv) { UI.mv = this.mv; if (UI.veChon) UI.veChon(); this.capNutBo(); this.nhay(b); try { SND.nut(); } catch (e) { } }
     else if (a === 'bo') {
       if (!upCo(this.id)) return;
-      UI.chonU(this.id); this.capNutBo();
+      UI.chonU(this.id); this.capNutBo(); this.nhay(b);
     }
   },
+  // nút chính: chớp vàng tại chỗ 90 ms (ảnh nút, không vẽ)
+  nhay(b) { if (this.giam()) return; b.classList.remove('nhay'); void b.offsetWidth; b.classList.add('nhay'); },
   // vuốt ngang ở thân trang → ụ trước / sau
   vuot(el) {
     let x0 = null, y0 = 0, t0 = 0;
@@ -236,22 +267,20 @@ const UP = {
     el.addEventListener('pointercancel', () => { x0 = null; });
   },
   capNutBo() {
-    if (this.mv) { // trang chỉ huy: nút chọn chỉ huy + chỉ huy đang dùng
-      const nut = this.el.querySelector('.up-nut'), dang = UI.mv === this.mv, cur = MAVUONG[UI.mv] || MAVUONG.hero;
-      nut.textContent = dang ? 'Selected' : 'Use commander'; nut.disabled = false; nut.classList.toggle('bo', dang);
-      this.el.querySelector('.up-bo').innerHTML = '<b>Commander</b><span><img src="assets/' + cur.anh + '.png" alt="' + upEsc(cur.ten) + '" class="cur"></span>';
-      return;
+    const nut = this.el.querySelector('.up-nut'), chu = nut.querySelector('.up-nut-chu'), so = nut.querySelector('.up-nut-so');
+    if (this.mv) { // trang chỉ huy: dùng chỉ huy này
+      const dang = UI.mv === this.mv;
+      chu.textContent = dang ? 'Selected' : 'Use commander'; so.textContent = dang ? '' : 'Current: ' + upSC(String((MAVUONG[UI.mv] || MAVUONG.hero).ten).toLowerCase());
+      nut.disabled = false; nut.classList.toggle('bo', dang); return;
     }
     const gl = this.el.querySelector('.up-gl');
     if (gl && typeof ND !== 'undefined' && ND.url && typeof GLYPH !== 'undefined') { // biểu tượng nhận diện (glyph.js): màu khoá = ô trong bộ bài
-      try { const k = UI.chon.indexOf(this.id); gl.src = ND.url(this.id, k >= 0 ? ND.KEY[k % 5] : null, 48); gl.hidden = false; } catch (e) { gl.hidden = true; }
+      try { const k = UI.chon.indexOf(this.id); gl.src = ND.url(this.id, k >= 0 ? ND.KEY[k % 5] : null, 48); gl.hidden = k < 0; } catch (e) { gl.hidden = true; }
     }
-    const el = this.el, id = this.id, nut = el.querySelector('.up-nut'), co = upCo(id), trong = UI.chon.includes(id);
-    nut.textContent = !co ? UP_TXT.locked : trong ? UP_TXT.remove : UP_TXT.add;
+    const id = this.id, co = upCo(id), trong = UI.chon.includes(id);
+    chu.textContent = !co ? UP_TXT.locked : trong ? UP_TXT.remove : UP_TXT.add;
+    so.textContent = co ? UP_TXT.deck(UI.chon.length) : '';
     nut.disabled = !co; nut.classList.toggle('bo', trong);
-    el.querySelector('.up-bo').innerHTML = '<b>' + UP_TXT.deck(UI.chon.length) + '</b><span>' + [0, 1, 2, 3, 4].map(i => {
-      const x = UI.chon[i]; return x ? '<img src="' + iconOf(x) + '" alt="' + upEsc(upTen(x)) + '"' + (x === id ? ' class="cur"' : '') + '>' : '<i></i>';
-    }).join('') + '</span>';
   },
 
   // ---------- dựng nội dung 1 ụ ----------
@@ -259,21 +288,22 @@ const UP = {
     const r = G.rosterMap[id]; if (!r) return;
     this.id = id; this.mv = null;
     const el = this.el, tier = TIERS[r.bac] || TIERS.trang, sk = SKILLS[id], co = !!sk;
-    el.style.setProperty('--m', tier.mau); el.style.setProperty('--m2', tier.mau2);
+    el.style.setProperty('--m', tier.mau); el.style.setProperty('--m2', tier.mau2); el.dataset.bac = r.bac; el.classList.remove('la-mv');
     const i = this.ds.indexOf(id);
-    el.querySelector('.up-so').textContent = UP_TXT.file(i + 1, this.ds.length);
+    el.querySelector('.up-so').innerHTML = 'Turret file <span>' + (i + 1) + ' / ' + this.ds.length + '</span>';
     const noi = el.querySelector('.up-noi');
-    if (!noi.firstChild) noi.innerHTML = '<div class="up-a"></div>' + this.muc(2, UP_TXT.sec.test, this.tvHTML()) + '<div class="up-b"></div>';
-    const [ha, hb] = this.html(id, r, tier, sk).split('\u0000');
-    noi.querySelector('.up-a').innerHTML = ha; noi.querySelector('.up-b').innerHTML = hb || '';
-    noi.querySelector('.up-tv').classList.toggle('tat', !co); noi.querySelector('.up-sao-chon').hidden = !co;
-    const sb = noi.querySelector('.up-tv-sao'); if (sb) sb.hidden = false;
+    noi.querySelector('.up-a').innerHTML = this.html(id, r, tier, sk);
+    el.querySelector('.up-b').innerHTML = this.chiTiet(id, r, tier, sk);
+    el.querySelector('.up-tam-ten').textContent = upTen(id);
+    el.querySelector('.up-ts-ten').textContent = upTen(id) + ' · test range';
+    el.querySelector('.up-tv').classList.toggle('tat', !co); el.querySelector('.up-sd-sao').hidden = !co;
+    const sb = el.querySelector('.up-tv-sao'); if (sb) sb.hidden = false;
     el.querySelector('.up-than').scrollTop = 0;
     if (huong && !this.giam()) { noi.classList.remove('trai', 'phai'); void noi.offsetWidth; noi.classList.add(huong > 0 ? 'phai' : 'trai'); }
     this.capNutBo();
     // xem trước = clip minh hoạ kỹ năng (skilldemo.js): mặc định 4★; ụ đổi dạng có thêm nút Stage
     this.sao = co ? 4 : 1; this.gd = 0;
-    const gdc = noi.querySelector('.up-sd-gd');
+    const gdc = el.querySelector('.up-sd-gd');
     if (gdc) {
       const coGd = co && typeof laGrow === 'function' && laGrow(id);
       gdc.hidden = !coGd;
@@ -284,40 +314,35 @@ const UP = {
     requestAnimationFrame(() => fitText(noi.querySelector('.up-ten'), 30, 18));
   },
 
-  // ---------- trang CHỈ HUY (chạm thẻ chỉ huy ở màn chọn): chân dung · kỹ năng · giá/hồi chiêu · Test range ----------
+  // ---------- trang CHỈ HUY (chạm thẻ chỉ huy ở màn chọn): cùng khuôn với trang ụ ----------
   moMV(id, tu) {
     if (!MAVUONG[id]) return;
     const el = this.dung(), moi = el.hidden;
     this.veMV(id, 0);
-    if (moi) {
-      el.hidden = false; el.querySelector('.up-than').scrollTop = 0;
-      try { history.pushState({ up: 1 }, ''); this._ls = true; } catch (e) { this._ls = false; }
-      if (!this.giam()) {
-        const w = document.getElementById('wrap').getBoundingClientRect(), s = w.width / W;
-        if (tu) el.style.transformOrigin = ((tu.left + tu.width / 2 - w.left) / s) + 'px ' + ((tu.top + tu.height / 2 - w.top) / s) + 'px';
-        el.classList.remove('vao'); void el.offsetWidth; el.classList.add('vao');
-      }
-    }
+    if (moi) this.hien(el);
   },
   veMV(id, huong) {
     const d = MAVUONG[id]; if (!d) return;
     this.mv = id; this.id = null;
     const el = this.el, ds = Object.keys(MAVUONG), i = ds.indexOf(id);
-    el.style.setProperty('--m', d.mau); el.style.setProperty('--m2', d.mau);
-    el.querySelector('.up-so').textContent = 'Commander ' + (i + 1) + ' of ' + ds.length;
+    el.style.setProperty('--m', d.mau); el.style.setProperty('--m2', d.mau); el.dataset.bac = 'mv'; el.classList.add('la-mv');
+    el.querySelector('.up-so').innerHTML = 'Commander <span>' + (i + 1) + ' / ' + ds.length + '</span>';
     const noi = el.querySelector('.up-noi');
-    if (!noi.firstChild) noi.innerHTML = '<div class="up-a"></div>' + this.muc(2, UP_TXT.sec.test, this.tvHTML()) + '<div class="up-b"></div>';
     const tt = UP_MV[id] || {}, ten = upSC(String(d.ten).toLowerCase());
     noi.querySelector('.up-a').innerHTML =
-      '<section class="up-hero"><div class="up-po"><img src="assets/' + d.anh + '.png" alt=""><span class="up-seri">CMD-0' + (i + 1) + '</span></div>' +
-      '<div class="up-mam"><img class="up-vong mv" src="assets/h2_mv_huy.png" alt=""><div class="up-u"><img class="de" src="assets/ui_nut_trieu.png" alt=""><img class="dau fb" style="border-radius:50%" src="assets/' + d.anh + '.png" alt=""></div></div></section>' +
-      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips"><span class="up-chip bac">Commander</span><span class="up-chip">Active skill</span></div></div>' +
+      '<section class="up-hero"><div class="up-pi"><img src="assets/' + d.anh + '.png" alt=""></div><span class="up-seri">CMD-0' + (i + 1) + '</span>' +
+      '<div class="up-mam cmd"><img class="up-vong cmd" src="assets/h2_mv_huy.png" alt=""><img class="up-mvic" src="' + mvIcURL(id) + '" alt=""></div></section>' +
+      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ACTIVE SKILL • ' + upEsc(d.cd) + 'S COOLDOWN</div></div>' +
       '<div class="up-spec">' + this.o('Cost', d.gia + ' mana') + this.o('Cooldown', d.cd + 's') + this.o('Next cost', '×2 per use') + this.o('Lasts', tt.lau || '—') + '</div>' +
-      this.muc(1, UP_TXT.sec.skill, '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>');
-    noi.querySelector('.up-b').innerHTML = this.muc(3, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
-    noi.querySelector('.up-tv').classList.remove('tat');
-    noi.querySelectorAll('.up-sao-chon').forEach(e => { e.hidden = true; });
-    const sb = noi.querySelector('.up-tv-sao'); if (sb) sb.hidden = true;
+      this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest();
+    el.querySelector('.up-b').innerHTML =
+      this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>') +
+      this.muc(2, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
+    el.querySelector('.up-tam-ten').textContent = ten;
+    el.querySelector('.up-ts-ten').textContent = ten + ' · test range';
+    el.querySelector('.up-tv').classList.remove('tat');
+    el.querySelectorAll('.up-sao-chon').forEach(e => { e.hidden = true; });
+    const sb = el.querySelector('.up-tv-sao'); if (sb) sb.hidden = true;
     el.querySelector('.up-than').scrollTop = 0;
     if (huong && !this.giam()) { noi.classList.remove('trai', 'phai'); void noi.offsetWidth; noi.classList.add(huong > 0 ? 'phai' : 'trai'); }
     this.capNutBo();
@@ -325,63 +350,77 @@ const UP = {
     requestAnimationFrame(() => fitText(noi.querySelector('.up-ten'), 30, 18));
   },
 
+  // thẻ kỹ năng (1–2 dòng) — chạm = bảng chi tiết
+  theKN(nhan, chu, them) {
+    return '<button class="up-kn" data-up="more"><small>' + upEsc(nhan) + them + '</small><span class="up-kn-chu">' + upEsc(chu) + '</span>' +
+      '<em>More<img src="assets/mui_tiep.png" alt=""></em></button>';
+  },
+  hangTest() {
+    return '<button class="up-hang-ts" data-up="test"><img class="ic" src="assets/ic_phat.png" alt=""><b>Test range</b><span>Watch it fire</span><img class="mt" src="assets/mui_tiep.png" alt=""></button>';
+  },
+  // màn chính trang ụ
   html(id, r, tier, sk) {
     const ten = upTen(id), vai = upVai(id), h = hoTT(id), grow = sk && laGrow(id);
-    const P = [];
-    // HERO: chân dung phi công + đầu súng trên bệ chung (đầu quét chậm + chớp nòng)
     const kd = Math.min(1.3, (REN.kDau ? REN.kDau(id) : 0.8) / 0.714); // tỉ lệ đầu so với bệ (bệ = 71.4% cạnh ô)
-    P.push('<section class="up-hero">' +
-      '<div class="up-po"><img src="' + portraitOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"><span class="up-seri">' + upSoSeri(id) + '</span></div>' +
-      '<div class="up-mam"><img class="up-vong" src="assets/tier_ring_' + r.bac + '.png" alt=""><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt=""><img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div>' +
-      '<img class="up-ngoc" src="assets/ngoc_' + r.bac + '.png" alt=""><img class="up-gl" alt="" hidden></div></section>');
-    // bảng tên
-    const chip = ['<span class="up-chip bac">' + upEsc(upSC(tier.ten)) + '</span>'];
-    if (vai) chip.push('<span class="up-chip">' + UP_TXT.role[vai] + '</span>');
-    if (sk && sk.chuDong) chip.push('<span class="up-chip">Active skill</span>');
-    if (!sk) chip.push('<span class="up-chip soon">Coming soon</span>');
-    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips">' + chip.join('') + '</div>' +
-      (h ? '<div class="up-ho-nho"><span>' + upEsc(upSC(h.ten)) + ' family</span>' + h.nac.map((n, k) => '<img class="' + (k + 1 === h.bac ? 'cur' : n.gap ? 'gap' : '') + '" src="assets/ngoc_' + n.bac + '.png" alt="">').join('') + '<em>tier ' + h.bac + ' of 5</em></div>' : '') +
-      '</div>');
-    // dải thông số nhanh
+    const P = [];
+    // HERO tràn viền: phi công (khung mặt FACE_BOX — khung.js) mờ dần về phải/dưới bằng mặt nạ; đầu súng trên bệ ở góc phải dưới
+    P.push('<section class="up-hero"><div class="up-pi"><img src="' + portraitOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<span class="up-seri">' + upSoSeri(id) + '</span>' +
+      '<div class="up-mam"><img class="up-vong" src="assets/tier_ring_' + r.bac + '.png" alt=""><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt="">' +
+      '<img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div><img class="up-gl" alt="" hidden></div></section>');
+    // tên + MỘT dòng meta (độ hiếm • vai trò • bậc họ)
+    const meta = ['<b>' + upEsc(String(tier.ten).toUpperCase()) + '</b>'];
+    if (vai) meta.push(UP_TXT.role[vai].toUpperCase());
+    if (h) meta.push('TIER ' + h.bac);
+    if (grow) meta.push('GROW-UP');
+    if (sk && sk.chuDong) meta.push('ACTIVE');
+    if (!sk) meta.push('COMING SOON');
+    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta">' + meta.join(' • ') + '</div></div>');
+    // 4 thông số 2×2
     const bs = sk ? upBangSao(id) : [];
     const s1 = bs[0] || {};
-    P.push('<div class="up-spec">' +
-      this.o('Damage 1★', s1.dmg != null ? s1.dmg : '—') + this.o('Fire rate', s1.toc ? upSC(s1.toc) : '—') +
-      this.o('Target', sk ? upNham(id) : '—') + this.o('Reach', sk ? upTam(id) : '—') + '</div>');
-    // 01 kỹ năng
-    const moi = HO_MOI[id];
-    P.push(this.muc(1, UP_TXT.sec.skill,
+    const tam = sk ? (typeof sk.tam === 'number' ? 'Melee' : 'Whole path') : '—';
+    const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
+    P.push('<div class="up-spec">' + (ht
+      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', sk.huong ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.o('Fire rate', s1.toc ? upSC(s1.toc).replace(' shots/s', '/s') : '—') +
+        this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
+    // kỹ năng 1 dòng + Test range
+    P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · 3 forms' : ''));
+    if (sk) P.push(this.hangTest());
+    return P.join('');
+  },
+  // bảng CHI TIẾT: mọi thông tin cũ (không xoá, chỉ để sau 1 chạm)
+  chiTiet(id, r, tier, sk) {
+    const vai = upVai(id), h = hoTT(id), grow = sk && laGrow(id), P = [];
+    const bs = sk ? upBangSao(id) : [], s1 = bs[0] || {}, moi = HO_MOI[id];
+    let n = 1;
+    P.push(this.muc(n++, UP_TXT.sec.skill,
       '<p class="up-mo">' + upEsc(upSC(r.kyNang || '')) + '.</p>' +
       (vai ? '<p class="up-phu"><b>' + UP_TXT.role[vai] + '.</b> ' + UP_TXT.roleMo[vai] + '</p>' : '') +
       (moi ? '<p class="up-phu"><b>Its twist:</b> ' + upEsc(upSC(moi)) + '.</p>' : '') +
-      (s1.kn ? '<div class="up-so1">' + s1.kn.split(/\s·\s/).map(x => '<span>' + upEsc(x) + '</span>').join('') + '</div>' : '')));
-    P.push('\u0000'); // 02 thử bắn: khối cố định (iframe không được tháo khỏi DOM, tháo ra = nạp lại)
+      (s1.kn ? '<div class="up-so1">' + s1.kn.split(/\s·\s/).map(x => '<span>' + upEsc(x) + '</span>').join('') + '</div>' : '') +
+      (sk ? '<dl class="up-dl"><dt>Reach</dt><dd>' + upEsc(upTam(id)) + '</dd><dt>Target</dt><dd>' + upEsc(upNham(id)) + '</dd>' +
+        (h ? '<dt>Family</dt><dd>' + upEsc(upSC(h.ten)) + ' · tier ' + h.bac + ' of 5</dd>' : '') + '</dl>' : '')));
     if (sk) {
-      // 03 bảng sao
       const moc = {}; for (const m of mocCua(id)) moc[m.n] = m;
-      P.push(this.muc(3, UP_TXT.sec.stars,
+      P.push(this.muc(n++, UP_TXT.sec.stars,
         '<div class="up-bang"><div class="up-hang dau"><span>★</span><span>Damage</span><span>Rate</span><span>Effect</span></div>' +
-        bs.map(x => '<button class="up-hang' + (moc[x.s] ? ' moc' : '') + '" data-up="sao" data-s="' + x.s + '"><span class="s">' + x.s + '</span><span>' + (x.dmg != null ? x.dmg : '—') + '</span><span>' + upEsc(x.toc ? x.toc.replace(' shots/s', '/s') : '—') + '</span><span class="kn">' + upEsc(x.kn || '—') + '</span>' +
+        bs.map(x => '<button class="up-hang' + (moc[x.s] ? ' moc' : '') + '" data-up="sao" data-mo="1" data-s="' + x.s + '"><span class="s">' + x.s + '</span><span>' + (x.dmg != null ? x.dmg : '—') + '</span><span>' + upEsc(x.toc ? x.toc.replace(' shots/s', '/s') : '—') + '</span><span class="kn">' + upEsc(x.kn || '—') + '</span>' +
           (moc[x.s] ? '<em><b>' + x.s + '★ unlock · ' + upEsc(upSC(moc[x.s].ten)) + '.</b> ' + upEsc(upSC(moc[x.s].mo)) + '.</em>' : '') + '</button>').join('') +
         '</div><p class="up-ghi">Values at card level 1, no buffs. Each in-battle level-up adds +18% damage. Tap a row to test it.</p>'));
-      let n = 4;
-      // 04 grow-up
       if (grow) P.push(this.muc(n++, UP_TXT.sec.grow, this.growHTML(id)));
-      // 05 dấu chân buff
       const dc = upDauChan(id);
       if (dc) P.push(this.muc(n++, UP_TXT.sec.foot, this.chanHTML(id, dc)));
-      // ghép
       P.push(this.muc(n++, UP_TXT.sec.merge, '<dl class="up-dl">' + upLuatGhep(id).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>'));
       P.push(this.muc(n++, UP_TXT.sec.modes, '<dl class="up-dl">' + upCheDo(id).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>'));
       if (h) P.push(this.muc(n++, UP_TXT.sec.family, this.hoHTML(id, h)));
-      // cặp đôi + khắc chế
       const cd = upCapDoi(id), kh = upKhac(id);
       P.push(this.muc(n++, UP_TXT.sec.pair,
         (cd.length ? '<div class="up-cap">' + cd.map(x => this.theNho(x.id, x.ly)).join('') + '</div>' : '') +
         '<dl class="up-dl"><dt>Strong vs</dt><dd>' + upEsc(kh.tot.join(' · ')) + '</dd><dt>Watch out</dt><dd>' + kh.so.map(upEsc).join('<br>') + '</dd></dl>'));
     } else {
-      P.push(this.muc(3, 'Status', '<p class="up-phu">This turret is designed but not in the game yet. It will unlock in a future update.</p>' +
-        (h ? this.hoHTML(id, h) : '')));
+      P.push(this.muc(n++, 'Status', '<p class="up-phu">This turret is designed but not in the game yet. It will unlock in a future update.</p>' + (h ? this.hoHTML(id, h) : '')));
     }
     return P.join('');
   },
@@ -393,7 +432,7 @@ const UP = {
       '<div class="up-sao-chon up-sd-gd" role="group" aria-label="Preview stage" hidden></div>';
   },
   o(k, v) { return '<div><small>' + k + '</small><b>' + upEsc(v) + '</b></div>'; },
-  muc(n, ten, noi) { return '<section class="up-muc"><h3><i>' + String(n).padStart(2, '0') + '</i>' + ten + '</h3>' + noi + '</section>'; },
+  muc(n, ten, noi) { return '<section class="up-muc"><h3>' + ten + '</h3>' + noi + '</section>'; },
   theNho(id, ly) {
     const r = G.rosterMap[id], m = r ? TIERS[r.bac].mau : '#9aa6b4';
     return '<button class="up-the" data-up="mo" data-id="' + id + '" style="--c:' + m + '"><img src="' + portraitOf(id) + '" alt=""><b>' + upEsc(upTen(id)) + '</b><span>' + upEsc(ly) + '</span></button>';
@@ -440,15 +479,13 @@ const UP = {
 
   // ---------- xem trước trực tiếp (iframe = chính game ở chế độ preview) ----------
   // dừng clip khi: người xem bấm dừng · khung ra khỏi màn hình · tab ẩn · trang hồ sơ đóng (iframe nạp sẵn lúc ẩn)
-  canDung() { return !!(this.dungXem || this._thay === false || document.hidden || !this.el || this.el.hidden); },
+  canDung() { return !!(this.dungXem || this.tam !== 'ts' || document.hidden || !this.el || this.el.hidden); },
   // NẠP SẴN Test range: khi màn chọn rảnh, dựng khung trang hồ sơ (ẩn) + iframe → ảnh trận tải trước, mở trang ụ là chạy ngay
   //  (iframe KHÔNG bao giờ bị chuyển chỗ trong DOM — chuyển chỗ = trình duyệt nạp lại từ đầu).
   chuanBi() {
     if (this.ifr || UP_XEM) return;
     try { if (navigator.connection && navigator.connection.saveData) return; } catch (e) { }
     const el = this.dung(); if (!el.hidden) return;
-    const noi = el.querySelector('.up-noi');
-    if (!noi.firstChild) noi.innerHTML = '<div class="up-a"></div>' + this.muc(2, UP_TXT.sec.test, this.tvHTML()) + '<div class="up-b"></div>';
     const id = ((typeof UI !== 'undefined' && UI.chon) || []).find(x => SKILLS[x] && G.rosterMap[x]) || (G.roster || []).map(r => r.id).find(x => SKILLS[x]);
     if (!id) return;
     if (!this.sao) this.sao = 4;

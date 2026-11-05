@@ -7,7 +7,7 @@
 //  · Chip "Boss in N" trên ray: thêm chân dung trùm sắp tới (khung 0 của dải 8 khung, cắt bằng background-position).
 'use strict';
 const VT = {
-  TONG: 3.8,          // giây — tự đóng
+  TONG: 4.0,          // giây — tự đóng (≥ 3 s đọc kịp; chạm CONTINUE / bất kỳ đâu để vào ngay)
   SO_TRUM: 3,         // số trùm xem trước
   NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes your best turret', janus: 'Petrifies 1 turret',
     joker_king: 'Forces a merge', nightmare: 'Snipes your top turret', octopus: 'Burns 3 turrets' },
@@ -41,24 +41,36 @@ const VT = {
     return '<section class="vt-bo" style="--t:' + tre + 's"><div class="vt-bang xanh"><b>' + nhan + '</b></div><div class="vt-hang">' +
       B.deck.map((id, i) => this.theU(B, id, i)).join('') + this.theMV(B, 5) + '</div></section>';
   },
+  // HUD mượt C (TU-VAN-HUD-MUOT §3G): 1 trùm LỚN (trùm gần nhất: dải 8 khung chạy tại chỗ, WAVE, tên, 1 dòng mối đe doạ)
+  //  + 2 ô nhỏ trùm sắp tới + (CO-OP/PVP) 1 dải bộ bài đồng đội / đối thủ + nút CONTINUE đếm ngược. Bộ bài của mình không nhắc lại.
   dung() {
     const ds = this.dsTrum(this.SO_TRUM), toi = this.lanCuaToi(), coop = G.che === 'coop' && G.duong.length > 1;
-    let h = '<section class="vt-trum"><div class="vt-bang do"><b>' + (G.che === 'pvp' ? this.CHU.bossPvp : this.CHU.boss) + '</b></div><div class="vt-hang tr">';
-    ds.forEach((w, i) => {
+    const tt = (w, i) => {
       const id = this.trumO(w, toi), T = TRUM[id], nf = this.soKhung(id);
-      h += '<div class="vt-tt' + (i === 0 ? ' dau' : '') + '" style="--i:' + i + ';--m:' + T.mau + '"><span class="vt-w">' + this.CHU.wave + ' ' + w + '</span>' +
-        '<i class="vt-sp" style="background-image:' + this.sprite(id) + ';--nf:' + nf + '"></i><b>' + T.ten + '</b><span class="vt-ng">' + (this.NGUY[id] || T.kn) + '</span>';
-      if (coop) { const id2 = this.trumO(w, 1 - toi); h += '<span class="vt-dd"><i style="background-image:' + this.sprite(id2) + ';--nf:' + this.soKhung(id2) + '"></i>' + this.CHU.allyLane + ': ' + TRUM[id2].ten + '</span>'; }
-      h += '</div>';
-    });
-    h += '</div></section>';
-    h += this.boBai(G.ban[0], this.CHU.you, 0.75);
-    if (G.ban[1]) h += this.boBai(G.ban[1], G.che === 'pvp' ? this.CHU.rival : this.CHU.ally, 1.3);
-    h += '<div class="vt-cham"><b>' + this.CHU.tap + '</b></div>';
+      const dd = coop ? (() => { const id2 = this.trumO(w, 1 - toi); return id2 !== id ? '<span class="vt-dd"><i style="background-image:' + this.sprite(id2) + ';--nf:' + this.soKhung(id2) + '"></i>' + this.CHU.allyLane + ': ' + TRUM[id2].ten + '</span>' : ''; })() : '';
+      return '<div class="vt-tt' + (i === 0 ? ' dau' : '') + '" style="--i:' + i + ';--m:' + T.mau + '"><span class="vt-w">' + this.CHU.wave + ' ' + w + '</span>' +
+        '<i class="vt-sp" style="background-image:' + this.sprite(id) + ';--nf:' + nf + '"></i><div class="vt-chu"><span class="vt-w2">' + this.CHU.wave + ' ' + w + '</span><b>' + T.ten + '</b><span class="vt-ng">' + (this.NGUY[id] || T.kn) + '</span>' + dd + '</div></div>';
+    };
+    let h = '<div class="vt-bang do"><b>' + (G.che === 'pvp' ? this.CHU.bossPvp : this.CHU.boss) + '</b></div>';
+    if (ds.length) h += tt(ds[0], 0);
+    if (ds.length > 1) h += '<div class="vt-sau">' + ds.slice(1).map((w, i) => tt(w, i + 1)).join('') + '</div>';
+    if (G.ban[1]) { // bộ bài đồng đội / đối thủ: 1 dải gọn
+      const B = G.ban[1], mv = MAVUONG[B.mv.id];
+      h += '<div class="vt-doi"><small>' + (G.che === 'pvp' ? this.CHU.rival : this.CHU.ally) + '</small><span>' +
+        B.deck.map(id => { const r = G.rosterMap[id] || { bac: 'trang' }; return '<i class="vt-mini"><img class="po" src="' + portraitOf(id) + '" alt=""><img class="kh" src="' + KHUNG.url(r.bac) + '" alt=""></i>'; }).join('') +
+        (mv ? '<i class="vt-mini"><img class="po" src="assets/' + mv.anh + '.png" alt=""><img class="kh" src="' + KHUNG.url('mv') + '" alt=""></i>' : '') + '</span></div>';
+    }
+    h += '<div class="vt-cham"><b>CONTINUE</b><small class="vt-dem"></small></div>';
     this.el.innerHTML = '<div class="vt-cot">' + h + '</div>';
+    this.el.classList.add('vt7');
     this.el.classList.toggle('hai', !!G.ban[1]);
   },
-
+  // đếm ngược trên nút CONTINUE (chữ, không vẽ)
+  dem() {
+    const e = this.el && this.el.querySelector('.vt-dem'); if (!e || !this.mo) return;
+    const con = Math.max(0, Math.ceil(this.TONG - (performance.now() - this.t0) / 1000));
+    e.textContent = 'Starting in ' + con; this._d = setTimeout(() => this.dem(), 250);
+  },
   batDau() {
     if (!this.el || !G.ban.length) return;
     clearTimeout(this._h); cancelAnimationFrame(this._raf);
@@ -70,14 +82,14 @@ const VT = {
       this.dung();
       this.el.hidden = false; void this.el.offsetWidth; this.el.classList.add('vao');
       this.el.querySelectorAll('.vt-ten b, .vt-tt b').forEach(b => fitText(b, parseFloat(getComputedStyle(b).fontSize), 6.5)); // sau khi hiện (đo được bề rộng)
-      this.t0 = performance.now();
+      this.t0 = performance.now(); this.dem();
       this._h = setTimeout(() => this.dong(), this.TONG * 1000);
     };
     cho();
   },
   dong() {
     if (!this.mo) return;
-    this.mo = false; clearTimeout(this._h); cancelAnimationFrame(this._raf);
+    this.mo = false; clearTimeout(this._h); clearTimeout(this._d); cancelAnimationFrame(this._raf);
     this.el.classList.add('ra');
     if (G.ban.length && $('#dung').hidden) G.dung = false;
     setTimeout(() => { if (!this.mo) { this.el.hidden = true; this.el.classList.remove('vao', 'ra'); this.el.innerHTML = ''; } }, 240);

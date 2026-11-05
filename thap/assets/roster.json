@@ -15,7 +15,7 @@
   "dcdw": "Fenrir",
   "kyNang": "Random 3–300% damage; crits always roll max",
   "ten_vi": "Pháo May Rủi",
-  "kyNang_vi": "Sát thương ngẫu nhiên 3–300; chí mạng luôn tối đa"
+  "kyNang_vi": "Sát thương ngẫu nhiên 3–300%; chí mạng luôn tối đa"
  },
  {
   "id": "lien",
@@ -49,18 +49,18 @@
   "ten": "Frost",
   "bac": "trang",
   "dcdw": "Liza",
-  "kyNang": "Slows the lead enemy 35% for 4s",
+  "kyNang": "Special: every 6s freezes the lead enemy 2s (bosses 0.6s); no chain-freeze",
   "ten_vi": "Băng",
-  "kyNang_vi": "Làm chậm quái đầu 35% 4 s"
+  "kyNang_vi": "Đặc biệt: mỗi 6 s đóng băng quái đầu 2 s (trùm 0,6 s); không đóng băng nối tiếp"
  },
  {
   "id": "doc",
   "ten": "Venom",
   "bac": "trang",
   "dcdw": "Unknown",
-  "kyNang": "Poison damage over time",
+  "kyNang": "Special: marks the lead enemy 5s — it takes +12% damage from all turrets",
   "ten_vi": "Độc",
-  "kyNang_vi": "Gây độc theo thời gian"
+  "kyNang_vi": "Đặc biệt: đánh dấu quái đầu 5 s — quái nhận thêm 12% sát thương từ mọi ụ"
  },
  {
   "id": "mana",
@@ -100,21 +100,21 @@
  },
  {
   "id": "phagiap",
-  "ten": "Breaker",
+  "ten": "Armor Breaker",
   "bac": "trang",
   "dcdw": "Freya",
-  "kyNang": "Weakens enemies so they take more damage",
+  "kyNang": "Support: every 3s exposes the lead + toughest enemy; Attack neighbours hit them +22%",
   "ten_vi": "Phá Giáp",
-  "kyNang_vi": "Gắn suy yếu: quái nhận thêm sát thương"
+  "kyNang_vi": "Hỗ trợ: mỗi 3 s làm LỘ quái đầu + quái trâu nhất; ụ Tấn công kề +22% vào quái bị lộ"
  },
  {
   "id": "bua",
   "ten": "Hammer",
   "bac": "trang",
   "dcdw": "Atalante",
-  "kyNang": "Critical hits knock enemies back",
+  "kyNang": "Support: Attack neighbours get crit chance + crit damage; their crits stagger",
   "ten_vi": "Búa Đẩy",
-  "kyNang_vi": "Chí mạng đẩy lùi quái"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +tỉ lệ & sát thương chí mạng; chí mạng của chúng làm quái choáng ngắn"
  },
  {
   "id": "nam",
@@ -130,9 +130,9 @@
   "ten": "Time Bomb",
   "bac": "trang",
   "dcdw": "Hecate",
-  "kyNang": "Sticks a bomb on a random enemy; boom in 5s",
+  "kyNang": "Special: 5s bomb on a random enemy; the blast weakens nearby enemies 10%",
   "ten_vi": "Bom Hẹn Giờ",
-  "kyNang_vi": "Gắn bom hẹn giờ vào quái ngẫu nhiên, 5 s nổ"
+  "kyNang_vi": "Đặc biệt: gắn bom 5 s vào quái ngẫu nhiên; nổ làm quái quanh đó yếu đi 10%"
  },
  {
   "id": "nhanmana",
@@ -148,9 +148,9 @@
   "ten": "Ice Blade",
   "bac": "xanh",
   "dcdw": "Ymir",
-  "kyNang": "+400% damage to slowed enemies",
+  "kyNang": "+400% vs slowed; each hit chills nearby enemies",
   "ten_vi": "Kiếm Băng",
-  "kyNang_vi": "+400% sát thương vào quái đang bị chậm"
+  "kyNang_vi": "+400% vào quái đang chậm; mỗi đòn làm lạnh quái quanh"
  },
  {
   "id": "mimic",
@@ -166,9 +166,9 @@
   "ten": "Crit Antenna",
   "bac": "xanh",
   "dcdw": "Siren",
-  "kyNang": "Support: +crit chance for 4 neighbors",
+  "kyNang": "Support: +crit chance for N/E/S/W neighbours (6% at 1★ → 20% at 7★)",
   "ten_vi": "Ăng-ten Chí Mạng",
-  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng 4 ô kề"
+  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng cho 4 ô kề (6% ở 1★ → 20% ở 7★)"
  },
  {
   "id": "dichchuyen",
@@ -184,9 +184,9 @@
   "ten": "Radar",
   "bac": "xanh",
   "dcdw": "Kirinus",
-  "kyNang": "Support: +30% fire rate for 4 neighbors",
+  "kyNang": "Support: +fire rate for N/E/S/W neighbours (12% at 1★ → 28% at 7★)",
   "ten_vi": "Radar",
-  "kyNang_vi": "Hỗ trợ: +30% tốc bắn 4 ô kề"
+  "kyNang_vi": "Hỗ trợ: +tốc bắn cho 4 ô kề (12% ở 1★ → 28% ở 7★)"
  },
  {
   "id": "drone",
@@ -199,12 +199,12 @@
  },
  {
   "id": "tron",
-  "ten": "Blender",
+  "ten": "Fusion Mixer",
   "bac": "xanh",
   "dcdw": "Zarramim",
-  "kyNang": "Merges with any turret; stars = average",
+  "kyNang": "Support: +6% fire rate to Attack neighbours, +2% per different type (max 12% at 1★)",
   "ten_vi": "Bộ Trộn",
-  "kyNang_vi": "Ghép với bất kỳ ụ nào; sao = trung bình"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +6% tốc bắn, +2% mỗi loại Tấn công khác nhau (tối đa 12% ở 1★)"
  },
  {
   "id": "nangluong",
@@ -229,27 +229,27 @@
   "ten": "Chiller",
   "bac": "xanh",
   "dcdw": "Neptune",
-  "kyNang": "Support: neighbors’ shots also slow",
+  "kyNang": "Support: neighbours’ hits also slow (max 35%, bosses 15%)",
   "ten_vi": "Máy Phát Lạnh",
-  "kyNang_vi": "Hỗ trợ: ụ kề bắn kèm làm chậm"
+  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (tối đa 35%, trùm 15%)"
  },
  {
   "id": "mortar",
   "ten": "Mortar",
   "bac": "xanh",
   "dcdw": "Nade",
-  "kyNang": "Shells random enemies with splash damage",
+  "kyNang": "Shells random enemies; every 3rd shell is a CLUSTER",
   "ten_vi": "Súng Cối",
-  "kyNang_vi": "Bắn quái ngẫu nhiên, nổ lan"
+  "kyNang_vi": "Bắn quái ngẫu nhiên, nổ lan; mỗi phát thứ 3 là đạn CHÙM"
  },
  {
   "id": "khuech",
   "ten": "Amplifier",
   "bac": "xanh",
   "dcdw": "Mars",
-  "kyNang": "Support: stacking damage for 4 neighbors",
+  "kyNang": "Support: Attack neighbours stack damage on repeated hits to one target (per enemy)",
   "ten_vi": "Bộ Khuếch Đại",
-  "kyNang_vi": "Hỗ trợ: +sát thương cộng dồn cho 4 ô kề"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề cộng dồn sát thương khi đánh liên tiếp 1 quái"
  },
  {
   "id": "vungdoc",
@@ -274,9 +274,9 @@
   "ten": "Mana Leech",
   "bac": "xanh",
   "dcdw": "Elizabeth",
-  "kyNang": "Gains mana on every hit",
+  "kyNang": "Leech bolts at the lead enemy; each hit restores a little mana (capped per second)",
   "ten_vi": "Máy Hút Mana",
-  "kyNang_vi": "Mỗi phát trúng nhận mana"
+  "kyNang_vi": "Tia hút bắn quái đầu; mỗi phát trúng hồi chút mana (có trần mỗi giây)"
  },
  {
   "id": "min",
