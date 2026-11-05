@@ -721,11 +721,21 @@ SKILLS.dongbo = { // Pháo Đồng Bộ (Cosmem) — HỖ TRỢ (đợt vai trò
 SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đó +1 sao (bản vàng 10% → +2)
   vai: 'db', dmg: 16.67, toc: 0.9, nham: 'dau',
   sinh(G, T) { T.vang = Math.random() < 0.1; },
-  mo: (T) => 'Drag onto same-star turret: +' + (T.vang ? 2 : 1) + '★, keeps its type' + (T.vang ? ' (GOLD)' : ''),
+  mo: (T) => 'Drag onto same-star turret: +' + (T.vang ? 2 : 1) + '★, keeps its type' + (T.vang ? ' (GOLD)' : '') + ' · Merge King + Merge King: one Merge King +1★',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
-    hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.id !== 'vughep' && b.ban === a.ban,
+    cungLoai: true, // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên)
+    hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,
+    xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (b.id === 'vughep' ? 1 : a.vang ? 2 : 1)), // huy hiệu sao xem trước khi rê
     lam(G, B, a, b) {
+      if (b.id === 'vughep') { // MK + MK: giữ ụ đích (Merge King), +1★ đúng 1 lần (không cộng +1★/+2★ đặc biệt chồng lên);
+        // bản vàng: giữ vàng nếu 1 trong 2 là vàng (không quay lại 10% → tất định, 2 máy online ra cùng kết quả)
+        B.t[a.o] = null;
+        G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
+        b.vang = !!(a.vang || b.vang);
+        nangSao(B, b, 1, b.vang ? 'GOLD KING +1★' : 'MERGE KING +1★');
+        return b;
+      }
       B.t[a.o] = null;
       G.bay.push({ id: a.id, sao: a.sao, x0: B.o[a.o].x, y0: B.o[a.o].y, x1: B.o[b.o].x, y1: B.o[b.o].y, t: 0, bac: a.bac });
       nangSao(B, b, a.vang ? 2 : 1, a.vang ? 'GOLD KING +2★' : 'MERGE KING +1★');

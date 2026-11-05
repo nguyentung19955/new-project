@@ -188,7 +188,7 @@ Object.assign(REN, {
         }
       } else {
         const p = E._ph * n, i = Math.floor(p); f0 = i % n; f1 = (i + 1) % n; fr = p - i;
-        if (E.trum && E.bao && n !== 4 && !(typeof TRUM_ANH !== 'undefined' && TRUM_ANH.has(E.trum))) { /* trùm đã có ảnh riêng (_8): không có dải 4 khung 'trum_<id>' → không nạp (hết 404) */ const a4 = this.coDai(this.tenQuai(E).replace(/_8$/, ''), co); /* trùm mới chưa có ảnh riêng: dải 4 khung của trùm MƯỢN (trum.js) — 'trum_<id>' không tồn tại → 404 */ if (a4) { E._daiBao = a4; } }
+        if (E.trum && E.bao && n !== 4) { const t4 = this.tenQuai(E).replace(/_8$/, ''), a4 = TRUM_THU_TU.includes(t4.slice(5)) && this.coDai(t4, co); /* chỉ 6 trùm cũ có dải 4 khung trum_<id>.png (hive/jammer… chỉ có _8 → không xin ảnh 404) */ /* trùm mới chưa có ảnh riêng: dải 4 khung của trùm MƯỢN (trum.js) — 'trum_<id>' không tồn tại → 404 */ if (a4) { E._daiBao = a4; } }
       }
       // hoà: 4 khung hoà ở 55% cuối, 8 khung hoà ở 45% cuối (đỡ bóng ma), smoothstep
       const nguong = dong ? 0.65 : n >= 8 ? 0.55 : 0.45;

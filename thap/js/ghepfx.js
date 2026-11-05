@@ -183,7 +183,8 @@ const GF = {
     const src = this.cam && this.cam.T, C = this.tile(B);
     const ve1 = (N, al, sc) => {
       if (!N || !hopLeGhep(src, N) || al <= 0.01) return;
-      const db = ghepDacBiet(src, N) && !src.st.da, n = db ? N.sao : Math.min(LUAT.saoMax, N.sao + 1); // ghép đặc biệt: không hứa sao mới
+      const dr = !src.st.da && ghepDacBiet(src, N), xs = dr && dr.sk.ghepDB.xemSao ? dr.sk.ghepDB.xemSao(dr.a, dr.b) : 0;
+      const db = !!dr && !xs, n = xs || (db ? N.sao : Math.min(LUAT.saoMax, N.sao + 1)); // ghép đặc biệt: không hứa sao mới (trừ loại biết trước sao — Merge King)
       if (db) return;
       const d = C * 0.42 * sc, o = B.o[N.o], hb = REN.huyHieuDong(n, d); // cỡ đang nảy → bậc cỡ cố định (không dựng canvas mỗi khung)
       const x = clamp(o.x + C * 0.42, B.x + d * 0.7, B.x + B.w - d * 0.7), y = Math.max(B.y + d * 0.7, o.y - C * 0.5 - C * 0.22 * this.eo((now - this.hoverT0 - 90) / 90));
