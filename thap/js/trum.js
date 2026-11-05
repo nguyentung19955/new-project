@@ -18,7 +18,7 @@ const TRUM_MOI = {
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
 // ↓ 5 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
 const TRUM_ANH = new Set(['hive', 'jammer']); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
-const TRUM_HUONG = new Set(['hive_side', 'hive_back']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
+const TRUM_HUONG = new Set(['hive_side', 'hive_back', 'jammer_side']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
 const TRUM_FX = new Set([]); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
 const TRUM_ATK = new Set(['hive']); // trum_<id>_atk_16.png — dải ĐÁNH 16 khung (thân trùm tung chiêu, nhìn về bàn) — quaianim.js phát lúc báo chiêu
 const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
