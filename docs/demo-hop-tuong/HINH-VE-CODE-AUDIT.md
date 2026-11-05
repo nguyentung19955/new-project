@@ -646,3 +646,20 @@ Same style as attached: chunky cartoon mobile-game, bold dark outline.
 Flat solid magenta #FF00FF background, wide gaps.
 ```
 (Đính kèm `thap/assets/hud_wave.png` + một ảnh đầu súng làm mẫu phong cách cho cả S10, S11.)
+
+## 6. Kết quả ráp S8/S9 (pass 2)
+
+Cắt: `python3 tools/thap-cat-s89.py` (khoá magenta, khối liền 3×2, cửa sổ khung giữ trong suốt). Khung thẻ được **chuẩn hoá theo ô cửa sổ** (ảnh 128×148, cửa sổ x 15.6–84.4 %, y 18.9–83.8 %) → 1 bộ CSS cho 6 khung. Code: `thap/js/khung.js` + `thap/css/pass2.css`; mỗi ảnh chỉ bật khi tải được (lớp `html.co-…`), thiếu ảnh → giữ bản CSS cũ.
+
+| Ảnh | Đích (2×) | Dùng ở | Mục |
+|---|---|---|---|
+| `the_khung_trang/xanh/tim/vang/do.png` | 128×148 | thẻ hàng bộ bài, thẻ màn chọn, 5 ô bộ bài đã chọn (khung trên chân dung, vạch màu khoá mảnh trong cửa sổ) | Q1 Q2 Q3 |
+| `the_khung_mv.png` | 128×148 | thẻ chỉ huy hàng dưới | Q4 |
+| `ui_trieu_ic.png` | 96 | vòng trống nút Summon (xám khi chưa đủ) | Q6 |
+| `ui_lv.png` | 50×32, 3 mảnh | LV1 / ×N | Q7 |
+| `ui_gia.png` | 84×40, 3 mảnh | giá nâng cấp + giá chỉ huy | Q8 |
+| `ui_den_xanh.png` | 24 | đèn đủ mana | Q9 |
+| `ui_grow.png` | 71×28, 3 mảnh | nhãn GROW-UP (trận + menu) | Q10 |
+| `ui_khay_doi.png` | 460×151 | khay dải đồng đội/đối thủ, 6 thẻ đặt đúng 6 ô | Q11 |
+
+Còn lại sau pass 2: Q5 (thẻ chỉ huy ở menu — thẻ ngang, khung dọc không hợp → để lại), Q12–Q22 chờ S10/S11, Q23–Q24 dùng ảnh đã có (phiên sau).

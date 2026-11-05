@@ -32,7 +32,7 @@ const DP = {
     h += '<button class="dp-the dp-mv" data-dp="mv" data-id="' + B.mv.id + '" style="--k:' + d.mau + '" aria-label="' + d.ten + '"><img class="po" src="assets/' + d.anh + '.png" alt="" onerror="this.onerror=null;this.src=\'' + mvIcURL(B.mv.id) + '\'"></button>';
     el.innerHTML = h;
     // vị trí: trên bàn phía trên, chừa cổng đường bên trái và bảng tên bàn bên phải
-    el.style.top = Math.round(B.y - 37) + 'px';
+    el.style.top = Math.round(B.y - (typeof KHUNG !== 'undefined' && KHUNG.bat['co-khay'] ? 46 : 37)) + 'px';
     el.hidden = false;
   },
 };
