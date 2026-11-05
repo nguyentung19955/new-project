@@ -10,7 +10,14 @@ const ONL = {
   HET_HAN: 2 * 3600e3, // phòng bỏ dở quá 2 giờ: coi như không còn
   code: null, host: false, meta: null, khach: null, pl: {}, state: null, _off: [], dangTran: false,
   me() { return NET.user && NET.user.uid; },
-  ban() { const me = this.me(); if (!this.meta) return null; return this.host ? this.khach : this.meta.host; },
+  // đồng đội: khách → chủ phòng (meta.host). Chủ phòng → ô 'khach'; nếu ô đó lệch/cũ (khách rời rồi vào lại, sự kiện đến lệch thứ tự)
+  // thì lấy người còn lại trong pl/ — sảnh KHÔNG được kẹt "Waiting for teammate" khi khách đã ở trong phòng.
+  ban() {
+    const me = this.me(); if (!this.meta) return null;
+    if (!this.host) return this.meta.host;
+    if (this.khach && this.pl[this.khach]) return this.khach;
+    return Object.keys(this.pl || {}).find(k => k !== me && this.pl[k]) || this.khach || null;
+  },
   luuPhong() { try { if (this.code) localStorage.setItem('tm_phong', JSON.stringify({ code: this.code, at: Date.now() })); else localStorage.removeItem('tm_phong'); } catch (e) { } },
   phongCu() { try { const v = JSON.parse(localStorage.getItem('tm_phong') || 'null'); return v && Date.now() - v.at < this.HET_HAN ? v : null; } catch (e) { return null; } },
 
@@ -33,7 +40,7 @@ const ONL = {
     const moi = this.maMoi();
     if (moi) this.vaoTuMoi(moi);
     // mở lại game khi trận online còn chạy (mốc ≤ 3 phút) → tự VÀO LẠI, không cần bấm REJOIN MATCH
-    else { const cu = this.phongCu(); if (cu && Date.now() - cu.at < 3 * 60e3) setTimeout(() => this.tuVaoLai(cu.code), 600); }
+    else { const cu = this.phongCu(); if (cu && Date.now() - cu.at < 3 * 60e3) setTimeout(() => this.tuVaoLai(cu.code), 600); this.veLaiSanh(); } // trận đang chạy → tuVaoLai · đang ở SẢNH → veLaiSanh
   },
   maMoi() {
     const q = new URLSearchParams(location.search), h = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
@@ -62,6 +69,26 @@ const ONL = {
     this._moi = null; this.boMaKhoiURL();
     this.moBang(); const b = document.querySelector('#onl-bang .onl-bang'); if (b) b.classList.add('moi-loi');
     this.baoLoi(s); NET.san().then(() => this.baoLoi(s)); // moBang tự xoá dòng báo khi mạng sẵn — ghi lại sau
+  },
+  // tải lại trang (F5 / tự tải bản mới) lúc đang ở SẢNH: vào lại đúng phòng (uid ẩn danh giữ nguyên → vẫn là chủ phòng / khách)
+  veLaiSanh() {
+    const cu = this.phongCu(); if (!cu || this.code) return;
+    const tai = typeof TAI !== 'undefined' && TAI.bootP ? TAI.bootP : Promise.resolve();
+    const cho = () => { // chờ màn tải xong rồi mới mở sảnh
+      if (this.code || typeof UI === 'undefined') return;
+      NET.san().then((ok) => {
+        if (!ok || this.code) return;
+        const me = this.me();
+        return Promise.all([NET.get('rooms/' + cu.code + '/meta'), NET.get('rooms/' + cu.code + '/khach').catch(() => null)]).then(([m, k]) => {
+          if (this.code || !m || m.st !== 'cho' || NET.gio() - (m.at || 0) > this.HET_HAN) return;
+          if (m.host !== me && k !== me) return;
+          this.host = m.host === me; this._laiVao = false;
+          console.log('[ONL] tải lại trang → vào lại sảnh ' + cu.code + (this.host ? ' (chủ phòng)' : ' (khách)'));
+          this.batDauSanh(cu.code);
+        });
+      }).catch(() => { });
+    };
+    tai.then(() => setTimeout(cho, 100));
   },
   doiHoSo() { if (this.code && NET.ok) this.ghiToi({}); },
 
@@ -173,6 +200,8 @@ const ONL = {
     this.thoiNghe(); this.vuaChoi = false; this._khachCo = false; this.khach = null; this.pl = {}; this.meta = null;
     this.code = c; this.luuPhong(); this._thayCho = false; this._daCoMeta = false; this.dangTran = false; this._sauTran = false;
     const goc = 'rooms/' + c + '/', me = this.me();
+    this._tBat = 0; this._dangBat = false; this._caHai = 0;
+    this.baoLoi(''); // xoá 'Creating room…' / 'Joining…' (trước đây kẹt lại trên sảnh)
     this.ghiToi({ ready: false });
     NET.khiNgat(goc + 'pl/' + me + '/on', false);
     this._off.push(NET.nghe(goc + 'meta', 'value', (v) => { this.meta = v; this.capNhatSanh(); }));
@@ -180,6 +209,8 @@ const ONL = {
     this._off.push(NET.nghe(goc + 'pl', 'value', (v) => { this.pl = v || {}; this.capNhatSanh(); }));
     this._off.push(NET.nghe(goc + 'state', 'value', (v) => { this.state = v; if (typeof ONS !== 'undefined') ONS.khiState(v); }));
     this.dongBang(); this.veSanh();
+    // nhịp dự phòng: sự kiện bị lỡ / ghi lỗi → sảnh vẫn tự kiểm lại mỗi 1 s (bắt đầu trận, hiện đồng đội)
+    clearInterval(this._nhip); this._nhip = setInterval(() => { if (!this.code) { clearInterval(this._nhip); return; } if (!this.dangTran) this.capNhatSanh(); }, 1000);
   },
   thoiNghe() { for (const f of this._off.splice(0)) try { f(); } catch (e) { } },
   roiPhong() {
@@ -191,7 +222,7 @@ const ONL = {
       if (this.host) NET.remove('rooms/' + c).catch(() => { });
       else NET.update('rooms/' + c, { ['pl/' + me]: null, khach: null, ['members/' + me]: null }).catch(() => { }); // một lần ghi, lúc còn là thành viên
     }
-    this.code = null; this.meta = null; this.khach = null; this.pl = {}; this.state = null; this.luuPhong();
+    this.code = null; this.meta = null; this.khach = null; this.pl = {}; this.state = null; this.luuPhong(); clearInterval(this._nhip);
     const s = document.getElementById('onl-sanh'); if (s) s.hidden = true;
   },
   // SẢNH đứng riêng (TU-VAN-HUD-MUOT §3F): ‹ thoát (chạm 2 lần) · CO-OP LOBBY · tấm mã phòng (mã to + COPY + SHARE) ·
@@ -268,16 +299,24 @@ const ONL = {
     const goi = el.querySelector('#sanh-goi');
     if (goi) goi.textContent = toi && toi.ready ? (ban && ban.ready ? 'Both ready — launching…' : ban ? 'Waiting for ' + escTen(ban.name) + ' to get ready' : 'Starts when your teammate joins and is ready') : 'Starts when both players are ready';
     el.classList.toggle('ca-hai', !!(toi && ban && toi.ready && ban.ready));
-    // khách rời phòng: chủ phòng thấy ô trống lại
-    if (this.host && this.khach && !this.pl[this.khach] && this._khachCo) { this.khach = null; }
-    if (this.khach && this.pl[this.khach]) this._khachCo = true;
-    // cả 2 READY → chủ phòng ghi st = 'tran' (một lần) → cả 2 vào trận
-    if (this.meta && this.meta.st === 'cho' && this.host && toi && ban && toi.ready && ban.ready && ban.on !== false && !this._dangBat) {
-      this._dangBat = true;
-      NET.update('rooms/' + this.code + '/meta', { st: 'tran', k0: NET.khoa(), seed: 1 + Math.floor(Math.random() * 1e9), at: NET.TS })
-        .catch((e) => this.baoLoi(e.code || e.message)).then(() => { this._dangBat = false; });
-    }
+    // cả 2 READY → bắt đầu trận: ghi meta.st = 'tran' bằng TRANSACTION (chỉ 1 lần thắng, không ghi đè trận đã bắt đầu).
+    // Chủ phòng ghi ngay; khách cũng tự ghi nếu sau 1,5 s vẫn chưa thấy 'tran' (chủ phòng ngủ máy / lỡ sự kiện).
+    // Luật database chặt (chỉ chủ phòng được ghi meta) → khách bị từ chối thì im lặng chờ chủ phòng.
+    const caHai = !!(this.meta && this.meta.st === 'cho' && toi && ban && toi.ready && ban.ready && ban.on !== false);
+    if (!caHai) this._caHai = 0; else if (!this._caHai) this._caHai = Date.now();
+    if (caHai && !this._dangBat && (this.host || Date.now() - this._caHai > 1500) && Date.now() - (this._tBat || 0) > 2500) this.batTran();
     if (this.meta && this.meta.st === 'tran' && !this.dangTran && !this._sauTran && toi && ban && !el.hidden) this.vaoTran(!this._thayCho); // chưa từng thấy 'cho' = trận đang chạy → vào lại
+  },
+  batTran() {
+    const c = this.code; if (!c) return;
+    this._dangBat = true; this._tBat = Date.now();
+    const k0 = NET.khoa(), seed = 1 + Math.floor(Math.random() * 1e9);
+    const xong = () => { this._dangBat = false; };
+    const hen = setTimeout(xong, 4000); // ghi treo (mất mạng) → thử lại ở nhịp sau
+    NET.tx('rooms/' + c + '/meta', (m) => (m && m.st === 'cho') ? Object.assign({}, m, { st: 'tran', k0, seed, at: NET.TS }) : undefined)
+      .then((r) => { console.log('[ONL] bắt đầu trận ' + c + (r && r.committed ? ' (mình ghi)' : ' (đã có người ghi)')); })
+      .catch((e) => { const s = e && (e.code || e.message); if (!this._baoTx) console.warn('[ONL] bắt đầu trận bị từ chối (' + s + ')' + (this.host ? '' : ' — chờ chủ phòng')); this._baoTx = true; if (this.host) this.baoLoi('Could not start: ' + s); })
+      .then(() => { clearTimeout(hen); xong(); });
   },
   vaoTran(laiVao) {
     const me = this.me(), banId = this.ban(), toi = this.pl[me], ban = this.pl[banId];

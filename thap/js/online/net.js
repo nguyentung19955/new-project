@@ -112,6 +112,16 @@ const NET = {
   set(p, v) { return this.kieu === 'mock' ? this._mockGui('set', { p, v }) : this._ref(p).set(v); },
   update(p, v) { return this.kieu === 'mock' ? this._mockGui('update', { p, v }) : this._ref(p).update(v); },
   remove(p) { return this.kieu === 'mock' ? this._mockGui('remove', { p }) : this._ref(p).remove(); },
+  // transaction: fn(giá trị hiện tại) → giá trị mới | undefined (= thôi). Trả Promise<{committed}>; bị luật từ chối → reject.
+  tx(p, fn) {
+    if (this.kieu !== 'mock') return this._ref(p).transaction(fn, undefined, false).then((r) => ({ committed: !!(r && r.committed) }));
+    const thu = (lan) => this._mockGui('get', { p }).then((cu) => {
+      const moi = fn(cu == null ? null : JSON.parse(JSON.stringify(cu)));
+      if (moi === undefined) return { committed: false };
+      return this._mockGui('cas', { p, cu: JSON.stringify(cu == null ? null : cu), v: moi }).then((r) => (r && r.lai && lan < 20) ? thu(lan + 1) : { committed: !(r && r.lai) });
+    });
+    return thu(0);
+  },
   // khoá mới theo thứ tự thời gian (giống push key)
   khoa() { return this.kieu === 'mock' ? this._mockKhoa() : this._db.ref().push().key; },
   // nghe: ev = 'value' | 'child_added'; o.sau = khoá → chỉ nhận con có khoá ≥ o.sau. Trả hàm huỷ.
