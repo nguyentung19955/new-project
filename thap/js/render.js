@@ -72,6 +72,8 @@ const REN = {
     this.donCache(); this._chu = null;
     if (G.ban.length) this.lamNen();
   },
+  // làm tròn toạ độ logic về điểm ảnh thiết bị (UI tĩnh: tấm tên, khung) → ảnh không bị lọc lại lệch nửa điểm ảnh (nhoè)
+  px(v) { const k = this.s * this.dpr; return Math.round(v * k) / k; },
   // bật lọc ảnh chất lượng cao cho mọi ngữ cảnh vẽ 2D
   min(x) { x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; return x; },
   c2d(c) { return this.min(c.getContext('2d')); },
@@ -175,6 +177,10 @@ const REN = {
     for (const k in this.xam) if (!k.startsWith('diu|') && !giu.has(k)) delete this.xam[k];
     this.donCache(); this._chu = null;
   },
+  // ảnh TÌNH HUỐNG (hào quang buff, nổ/tia riêng của vài ụ, đồ vật kỹ năng): không bắt màn tải đợi giải mã trước trận —
+  // tải khi vẽ lần đầu (img() tự tải), chỉ ảnh thật sự xuất hiện mới chiếm bộ nhớ. Ảnh đã cắt lại ở 3× nặng hơn → giữ ngân sách iOS.
+  LUOI: /^(fxb_|hu_|pandora_dia$|fx_(dien|laser_trung|khoi_doc|bang_vo|link|awaken)$)/,
+  boLuoi(ds) { return ds.filter(t => !this.LUOI.test(t)); },
   CO_DINH: new Set(['khay', 'duong_thang', 'duong_goc', 'duong_nga3', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana']),
   // bản trắng (chớp khi trúng đòn) / bản xám (hoá đá) — dựng 1 lần, dùng lại
   banTrang(ten) {
@@ -672,11 +678,11 @@ const REN = {
       const den = B.i === 0 ? '#5aa8ff' : (G.che === 'pvp' ? '#ff4b3e' : '#63d68b');
       const tam = this.img('hud_ten_ban'); // tấm tên thép ChatGPT (S1): 3 mảnh (đầu có ổ LED · giữa giãn · đuôi)
       if (tam) {
-        const th = 20, tw = w + 6, sc = th / tam.height, dau = Math.round(tam.height * 1.05), cuoi = Math.round(tam.height * 0.45);
-        const x0 = x - 3, y0 = y - th / 2;
-        ctx.drawImage(tam, 0, 0, dau, tam.height, x0, y0, dau * sc, th);
-        ctx.drawImage(tam, dau, 0, tam.width - dau - cuoi, tam.height, x0 + dau * sc, y0, tw - (dau + cuoi) * sc, th);
-        ctx.drawImage(tam, tam.width - cuoi, 0, cuoi, tam.height, x0 + tw - cuoi * sc, y0, cuoi * sc, th);
+        const th = 20, tw = this.px(w + 6), sc = th / tam.height, dau = Math.round(tam.height * 1.05), cuoi = Math.round(tam.height * 0.45);
+        const x0 = this.px(x - 3), y0 = this.px(y - th / 2), xa = this.px(x0 + dau * sc), xb = this.px(x0 + tw - cuoi * sc); // mép mảnh trùng điểm ảnh thiết bị: không lằn nối, không nhoè
+        ctx.drawImage(tam, 0, 0, dau, tam.height, x0, y0, xa - x0, th);
+        ctx.drawImage(tam, dau, 0, tam.width - dau - cuoi, tam.height, xa, y0, xb - xa, th);
+        ctx.drawImage(tam, tam.width - cuoi, 0, cuoi, tam.height, xb, y0, x0 + tw - xb, th);
         ctx.fillStyle = den; ctx.beginPath(); ctx.arc(x0 + tam.height * 0.5 * sc, y, 2.6, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#16181c'; ctx.fillText(s, x0 + dau * sc + 1, y + 1.3); ctx.fillStyle = '#f2f4f7'; ctx.fillText(s, x0 + dau * sc + 1, y + 0.5);
         continue;

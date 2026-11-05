@@ -191,7 +191,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
     if (typeof FXU !== 'undefined') { ds.push(...FXU.dsAnh(G.ban)); FXU.donMau(); } // hiệu ứng đánh v2 của các ụ trong bộ bài (fxu.js)
     REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
-    TAI.tran(ds); // màn tải trận: đợi mọi ảnh giải mã xong (img.decode) rồi mới chạy
+    TAI.tran(REN.boLuoi ? REN.boLuoi(ds) : ds); // màn tải trận: đợi ảnh giải mã xong (img.decode) rồi mới chạy — trừ ảnh tình huống (REN.LUOI: tải khi vẽ lần đầu)
   },
 
   // ---------- cập nhật HUD mỗi khung ----------
