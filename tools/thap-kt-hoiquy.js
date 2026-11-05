@@ -270,7 +270,7 @@ async function menu(b, W, H, D, co) {
   await buoc(p, co, 'tim', async () => { const i = p.locator('#dk-o input, #dk-tim, .dk-tim input').first(); if (await i.count()) { await i.fill('can'); await sleep(300); await i.fill(''); } });
   await buoc(p, co, 'bo_mau', () => bam(p, '[data-act="hm-pre"]'));
   await p.evaluate(() => HM.dong(true));
-  await buoc(p, co, 'chi_huy', async () => { const o = p.locator('#chon-bo .o-mv'); await bam(p, (await o.count()) && await o.first().isVisible() ? '#chon-bo .o-mv' : '#dk-mv'); }); // ô chỉ huy (ô thứ 6 thanh bộ bài) hoặc hàng chỉ huy cũ
+  await buoc(p, co, 'chi_huy', async () => { const o = p.locator('#chon-bo .o-mv'), c = p.locator('#dkd-cmd'); await bam(p, (await c.count()) && await c.first().isVisible() ? '#dkd-cmd' : (await o.count()) && await o.first().isVisible() ? '#chon-bo .o-mv' : '#dk-mv'); }); // ô chỉ huy (ô thứ 6 thanh bộ bài) hoặc hàng chỉ huy cũ
   await p.evaluate(() => { HM.dong(true); try { UP.dong(); } catch (e) { } });
   await buoc(p, co, 'trang_chi_huy', () => p.evaluate(() => UP.moMV('hero')), { cho: 700 });
   await p.evaluate(() => { try { UP.dong(); } catch (e) { } });
