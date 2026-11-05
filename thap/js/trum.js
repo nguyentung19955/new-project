@@ -16,9 +16,11 @@ const TRUM_MOI = {
   leech:     { ten: 'STAR LEECH',    kn: 'STAR THEFT',   mo: 'Steals 1★ from your top turret, then dashes. Kill it to get the stars back', nguy: 'Steals stars — kill it to get them back', mau: '#ffd84a', tuWave: 40, hp: 0.8, v: 16, anhTam: 'nightmare' },
 };
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
-const TRUM_ANH = new Set([]);
-// trùm mới đã có CHÂN DUNG ChatGPT (trum_<id>_portrait.png) → băng giới thiệu / màn mở trận dùng chân dung thay dải đi
-const TRUM_CHANDUNG = new Set(['hive']);
+// ↓ 4 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
+const TRUM_ANH = new Set([]); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
+const TRUM_HUONG = new Set([]); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
+const TRUM_FX = new Set([]); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
+const TRUM_CHANDUNG = new Set(['hive']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }
 // bể trùm cho lịch ngẫu nhiên (game.js lichTrum): 6 cũ + 6 mới; TRUM_THU_TU (thứ tự CO-OP cố định) giữ nguyên
@@ -32,7 +34,7 @@ const TRM = {
   hsPhu: 1, // hệ số máu quái do trùm gọi ra (chỉ sim chỉnh)
   prismCan: (w) => (w >= 40 ? 4 : 3),
   // hiệu ứng chiêu: ảnh ChatGPT riêng fx_trum_<id> nếu đã có, không thì ảnh FX có sẵn
-  fx(id, ten, x, y, co, song) { const r = 'trum_' + id; if (TRUM_ANH.has(id) && typeof REN !== 'undefined' && REN.img && REN.img('fx_' + r)) FX.no(r, x, y, co, song); else FX.no(ten, x, y, co, song); },
+  fx(id, ten, x, y, co, song) { FX.no(TRUM_FX.has(id) ? 'trum_' + id : ten, x, y, co, Math.max(song || 0, TRUM_FX.has(id) ? 0.6 : 0)); },
   chu(x, y, s, mau, co) { FX.chu1(x, y, s, mau, co || 13, 'to'); },
 };
 
@@ -228,7 +230,7 @@ if (typeof REN !== 'undefined' && REN.tenQuai) {
 }
 // ảnh riêng đã có: bật dải 8 khung + 2 hướng nhìn ngang/sau trong hệ hướng nhìn của quaianim.js (HUONG8, Pass 5) — không viết hệ riêng
 if (typeof TRUM8 !== 'undefined') for (const id of TRUM_ANH) TRUM8.add(id);
-if (typeof HUONG8 !== 'undefined') for (const id of TRUM_ANH) { HUONG8.add('trum_' + id + '_side'); HUONG8.add('trum_' + id + '_back'); }
+if (typeof HUONG8 !== 'undefined') for (const k of TRUM_HUONG) HUONG8.add('trum_' + k);
 // chưa có ảnh riêng: REN.tenQuai trả dải MƯỢN (trum_<anhTam>_8) → hệ hướng nhìn tự dùng hướng ngang/sau của trùm mượn khi Pass 5 về
 if (typeof VT !== 'undefined') {
   for (const id in TRUM_MOI) VT.NGUY[id] = TRUM_MOI[id].nguy;
