@@ -1,0 +1,35 @@
+/* TURRET MERGE — KÉO THẢ màn XÂY BỘ BÀI (js/dkkeo.js). Chỉ ảnh PNG có sẵn: khung độ hiếm the_khung_*, chân dung, đế sáng chon_de_xanh,
+   khung chọn khung_chon. Code chỉ dịch / phóng / mờ (transform + opacity). */
+/* giữ lâu trên iOS: không menu ảnh, không bôi chữ; ô bộ bài không cuộn → touch-action none; thẻ lưới vẫn cuộn dọc */
+#chon #chon-luoi .c, #chon #chon-bo .o-bo { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+#chon #chon-luoi .c { touch-action: pan-y; }
+#chon #chon-bo .o-bo { touch-action: none; }
+#chon #chon-luoi .c img, #chon #chon-bo .o-bo img { -webkit-user-drag: none; }
+.dk-dang-keo, .dk-dang-keo * { -webkit-user-select: none !important; user-select: none !important; cursor: grabbing !important; }
+.dk-dang-keo #chon-luoi { overflow: hidden !important; touch-action: none; }
+
+/* bóng ma theo ngón tay */
+.dk-ma { position: absolute; left: 0; top: 0; z-index: 70; pointer-events: none; will-change: transform; transform-origin: 50% 50%; }
+.dk-ma-de { position: absolute; left: -18%; width: 136%; bottom: -16px; height: auto; aspect-ratio: 300 / 203; opacity: .85; }
+.dk-ma-in { position: absolute; inset: 0; }
+.dk-ma-po { position: absolute; left: 15.6%; width: 68.8%; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649); object-fit: cover; object-position: 50% 14%; }
+.dk-ma-kh { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+/* nguồn đang được kéo: mờ đi (ảnh vẫn là ảnh) */
+#chon .dk-nguon { opacity: .35; transition: opacity .12s; }
+
+/* ô hợp lệ: khung_chon.png mờ; ô dưới ngón tay: sáng + nảy nhẹ */
+#chon #chon-bo .o-bo > img.dk-vien.dk-vien.dk-vien.dk-vien.dk-vien { /* thắng .co-khung … .o-bo.co-kh > img:not(.kh):not(.gl) (chân dung ô) */ position: absolute !important; left: -8px !important; top: -7px !important; width: calc(100% + 16px) !important; height: calc(100% + 14px) !important;
+  z-index: 6; pointer-events: none; object-fit: fill; opacity: 0; transition: opacity .12s; }
+#chon #chon-bo.dk-keo .o-bo.dk-hop > img.dk-vien.dk-vien.dk-vien.dk-vien.dk-vien { opacity: .45; }
+#chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren > img.dk-vien.dk-vien.dk-vien.dk-vien.dk-vien { opacity: 1; animation: dk-vien .5s ease-in-out infinite alternate; }
+#chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren { transform: scale(1.06); transition: transform .12s cubic-bezier(0.18, 1.15, 0.32, 1); }
+#chon #chon-bo.dk-keo .o-bo { transition: transform .12s ease-out; }
+@keyframes dk-vien { from { opacity: .7; } to { opacity: 1; } }
+/* kéo ô ra lưới (bỏ khỏi bộ): lưới mờ nhẹ báo vùng thả */
+#chon #chon-luoi.dk-nhan { transition: opacity .12s; }
+#chon #chon-luoi.dk-nhan.dk-tren-luoi { opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  #chon #chon-bo.dk-keo .o-bo.dk-hop.dk-tren { transform: none; }
+  #chon #chon-bo.dk-keo .o-bo.dk-tren > img.dk-vien.dk-vien.dk-vien.dk-vien.dk-vien { animation: none; }
+}
