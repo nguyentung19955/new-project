@@ -6,10 +6,9 @@ SUP.luoicheo = { icon: 'sup_khuech', mau: '#45e0c8', link: 'sup_link', ke: true,
 SUP_LOAI.luoicheo = 'dmg';
 SUP_GIA.luoicheo = (T) => SKILLS.luoicheo.them(T);
 
-// luật bộ bài: tối đa 1 Đỏ (có sẵn) · tối đa 2 ụ "thao túng sao" · nhắc nếu < 2 ụ Tấn công
+// luật bộ bài: tối đa 1 Đỏ (có sẵn) · nhắc nếu < 2 ụ Tấn công (đã BỎ luật "tối đa 2 ụ thao túng sao" — người dùng không yêu cầu)
 const _chonUGoc = UI.chonU;
 UI.chonU = function (id) {
-  if (SKILLS[id] && !this.chon.includes(id) && THAO_TUNG_SAO.has(id) && this.chon.filter(x => THAO_TUNG_SAO.has(x)).length >= 2) return this.nhac(TEXT.ui.max2Star);
   const r = _chonUGoc.call(this, id);
   if (this.chon.length === 5 && this.chon.filter(x => SKILLS[x] && SKILLS[x].vai === 'tc').length < 2) this.nhac(TEXT.ui.need2Atk);
   return r;

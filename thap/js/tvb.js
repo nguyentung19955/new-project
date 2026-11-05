@@ -14,7 +14,7 @@
 const TVB = {
   CB_H: 98,           // chiều cao băng trùm (logic) = 89 px@390
   DEN_MS: 2400,
-  CHU: { full1: 'BOARD', full2: 'FULL', fullLy: 'BOARD FULL · MERGE TO FREE A SLOT', skill: 'SKILL IN', dung: 'PAUSED · TAP OUTSIDE TO RESUME', vs: 'VS', you: 'YOU', ally: 'ALLY', rival: 'RIVAL' },
+  CHU: { full1: 'BOARD', full2: 'FULL', fullLy: 'BOARD FULL · MERGE TO FREE A SLOT', skill: 'SKILL IN', vs: 'VS', you: 'YOU', ally: 'ALLY', rival: 'RIVAL' },
   _dungBoi: false,
 
   // ---------- B7 · bàn đầy ----------
@@ -36,15 +36,7 @@ const TVB = {
 
   // ---------- B9 · tấm mở rộng: SOLO tạm dừng ----------
   solo() { return G.che === 'solo' && !(typeof ONS !== 'undefined' && ONS.on); },
-  moRong(rong) {
-    const tt = $('#tt');
-    if (rong && this.solo() && !G.dung && !G.ketThuc) { G.dung = true; this._dungBoi = true; tt.classList.add('tvb-dung'); }
-    if (!rong) { this.chay(); return; }
-    if (this._dungBoi) requestAnimationFrame(() => { // dòng báo ngay trên mép tấm
-      let c = $('#tvb-dungchu'); if (!c) { c = document.createElement('div'); c.id = 'tvb-dungchu'; c.textContent = this.CHU.dung; $('#wrap').appendChild(c); }
-      c.style.top = Math.round(tt.offsetTop - 24) + 'px'; c.hidden = !this._dungBoi; // offsetTop: không tính transform của hoạt ảnh trượt
-    });
-  },
+  moRong() { this.chay(); }, // xem ụ KHÔNG BAO GIỜ tạm dừng trận (mọi chế độ) — người dùng: inspect_dung_game.png
   chay() {
     const tt = $('#tt'); if (tt && tt.classList.contains('tvb-dung')) tt.classList.remove('tvb-dung'); const c = $('#tvb-dungchu'); if (c && !c.hidden) c.hidden = true;
     if (this._dungBoi) { this._dungBoi = false; if ($('#dung').hidden) G.dung = false; }
@@ -156,17 +148,17 @@ const TVB = {
     HB.dat = function (tt, rong) {
       const r = datGoc.apply(this, arguments);
       if (!rong && !this.hai()) tt.style.top = (674 - 6 - 70) + 'px';
+      if (this.hai() && !rong) { tt.style.top = '680px'; return r; } // 2 bàn: dải gọn đè hàng mana/triệu hồi của khay (không che ô bàn nào; chạm xuyên qua dải)
       if (this.hai()) { tt.style.top = '68px'; if (rong) tt.style.maxHeight = Math.max(200, Math.round(this.oBan(G.ban[0]).tren - 8) - 68) + 'px'; } // dưới tấm treo RIVAL / SHARED của ray
       if (rong && !this.hai()) { tt.style.top = 'auto'; tt.style.bottom = '8px'; tt.style.maxHeight = '518px'; }
       return r;
     };
   }
-  // SOLO đang dừng vì tấm mở rộng: chạm ngoài tấm = đóng tấm + chạy tiếp (không tính là chạm bàn)
+  // dải xem ụ: chạm bất kỳ chỗ nào ngoài dải = đóng (không chặn cú chạm — bàn vẫn chạm/kéo/ghép bình thường)
   document.addEventListener('pointerdown', (e) => {
-    if (!TVB._dungBoi) return;
-    const tt = $('#tt'); if (!tt || tt.hidden || tt.contains(e.target)) return;
-    if (e.target.closest && e.target.closest('#dung, [data-act="dung"]')) { TVB._dungBoi = false; return; } // bấm Tạm dừng thật: giữ dừng
-    HB.dongHet(); TVB.chay(); e.stopPropagation(); e.preventDefault();
+    const tt = $('#tt'); if (!tt || tt.hidden || !tt.classList.contains('hb-qi') || tt.contains(e.target)) return;
+    if (e.target && e.target.id === 'cv') return; // trên bàn: ui.js tự xử lý (chạm ụ khác = đổi, chạm lại chính nó / ô trống = đóng, kéo = đóng)
+    HB.dongHet();
   }, { capture: true });
 
   // B12: băng trùm gọn — đặt vị trí theo chế độ trước mỗi lần hiện; giữ ngắn hơn

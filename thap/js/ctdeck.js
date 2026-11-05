@@ -12,7 +12,7 @@
   const oS = () => [...document.querySelectorAll('#chon-bo .o-bo')];
   const dangDeck = () => { const c = $i('chon'); return !!(c && !c.hidden && c.classList.contains('xem-dk') && !(G.ban && G.ban.length)); };
   const loi = (deck, id) => (typeof DK !== 'undefined' ? DK.loi(deck, id) : '');
-  // bộ đầy: có ô nào thay được không (luật 1 Mythic / 2 thao túng sao)
+  // bộ đầy: có ô nào thay được không (luật 1 Mythic)
   const thayDuoc = (id) => UI.chon.some((_, i) => !loi(UI.chon.filter((__, k) => k !== i), id));
   const CTD = window.CTD = { tuDeck: false, cho: null };
 

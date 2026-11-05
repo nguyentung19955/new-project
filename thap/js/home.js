@@ -185,7 +185,7 @@ const HM = {
     const im = this.el('hm-tam').querySelector('.hm-xem-po img'); if (typeof MAT !== 'undefined' && im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true });
   },
 
-  // thêm (hoặc đổi vào ô đang chờ) — theo đúng luật bộ bài của UI.chonU (1 ĐỎ, 2 ụ thao túng sao…)
+  // thêm (hoặc đổi vào ô đang chờ) — theo đúng luật bộ bài của UI.chonU (1 ĐỎ…)
   them(id) {
     const truoc = UI.chon.slice(), cu = this.armed >= 0 ? UI.chon[this.armed] : null;
     if (cu) {

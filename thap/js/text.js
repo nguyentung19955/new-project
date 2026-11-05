@@ -16,7 +16,7 @@ const TEXT = {
     changeDeck: 'Change deck', again: 'Play again', pause: 'Pause',
     summon: 'Summon',
     deckFull: 'Your deck already has 5 turrets', oneMythic: 'Only 1 Mythic turret per deck',
-    max2Star: 'Max 2 star-shaping turrets per deck', need2Atk: 'Tip: take at least 2 Attack turrets',
+    need2Atk: 'Tip: take at least 2 Attack turrets',
     bossIn: (n) => 'Boss in ' + n, bossWave: 'Boss wave',
     rival: 'Rival', you: 'You', ally: 'Ally',
     wave: 'Wave', bossComing: 'BOSS INCOMING!', wave1Hint: 'Summon & merge turrets!',

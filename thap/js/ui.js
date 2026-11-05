@@ -468,6 +468,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         this.chonGhep = null;
         const sk = SKILLS[k.T.id];
         if (sk.chuDong && k.T.nap >= 1 && !k.T.st.bang && !k.T.st.da) { sk.chuDong(G, B, k.T); return; } // ụ ĐỎ: chạm khi nạp đầy = dùng kỹ năng chủ động
+        if (!$('#tt').hidden && this.xemU && this.xemU.T === k.T) { $('#tt').hidden = true; this.ttHet = 0; this.xemU = null; return; } // chạm lại ụ đang xem = đóng dải
         this.moTT(k.T.id, k.T);
         if (!k.T.st.bang && B.t.some(N => N && N !== k.T && hopLeGhep(k.T, N))) this.chonGhep = { T: k.T, t0: performance.now() };
         return;

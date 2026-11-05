@@ -6,7 +6,7 @@ html body #tt.hb-qi { left: 8px; right: 8px; height: 60px; max-height: none; box
   border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 10px stretch; background: none; padding: 0 0 0 2px; overflow: visible; }
 html body #tt.hb-qi .tt-the { width: 40px; height: 40px; margin: 0; }
 html body #tt.hb-qi .tt-anh { width: 40px; height: 40px; object-fit: cover; object-position: 50% 15%; }
-html body #tt.hb-qi .tt-than { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 21px 17px; column-gap: 8px; align-items: center; padding-right: 40px; }
+html body #tt.hb-qi .tt-than { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 21px 17px; column-gap: 8px; align-items: center; padding-right: 4px; }
 html body #tt.hb-qi .tt-dau { grid-column: 1; grid-row: 1; gap: 5px; min-width: 0; }
 html body #tt.hb-qi .tt-ten { flex: 0 1 auto; height: 21px; line-height: 21px; font-size: 15px; }
 html body #tt.hb-qi .tt-bac, html body #tt.hb-qi .tt-phu, html body #tt.hb-qi .tt-gl, html body #tt.hb-qi .tt-so { display: none; }
