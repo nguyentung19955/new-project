@@ -1,0 +1,14 @@
+[
+["ongVo","idle","The wasp hovers in place: its body bobs gently up and down by a few pixels and its four wings flutter quickly; legs and stinger stay attached.",6,1],
+["ongVo","move","The wasp flies forward: the body leans forward and bobs up and down in a steady rhythm while the wings flutter quickly.",6,1],
+["ongVo","tele","The wasp pulls its body back and up, curling its striped abdomen forward under the body so the long needle stinger points ahead, and holds that tense pose.",6,1],
+["ongVo","atk","The wasp darts forward in one quick straight lunge with the abdomen and needle stinger thrust forward, then pulls back to its hovering pose.",6,1],
+["ongVo","hit","The wasp's body jerks backward and tilts as if struck, then recovers to the hovering pose.",4,1],
+["ongVo","die","The wasp's wings stop, its body tips over sideways and drops down to the ground, landing on its side and lying still.",7,1],
+["nhimDoc","idle","The hedgehog stands and breathes: its body rises and sinks slightly, the quills lift a little and settle, the nose twitches.",6,1],
+["nhimDoc","move","The hedgehog walks forward on its short legs with small quick steps, the quilled body swaying gently.",8,1],
+["nhimDoc","tele","The hedgehog tucks its head and legs in and curls up into a tight round ball of quills, then holds the ball shape.",6,1],
+["nhimDoc","atk","The hedgehog, curled into a tight round ball of quills, rolls forward along the ground, tumbling over one full turn.",6,1],
+["nhimDoc","hit","The hedgehog flinches backward with its quills bristling, then settles back.",4,1],
+["nhimDoc","die","The hedgehog topples over onto its side, its legs curl up and it lies still.",7,1]
+]

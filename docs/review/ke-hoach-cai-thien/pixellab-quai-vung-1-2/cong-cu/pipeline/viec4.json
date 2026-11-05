@@ -1,0 +1,8 @@
+[
+["heoNanh","idle","The big boar stands on four legs and breathes heavily: its sides rise and fall, the head bobs slightly and the bristly mane twitches.",6,1],
+["heoNanh","move","The big boar trots forward on its four legs with heavy steps, head low, mane bouncing.",8,1],
+["heoNanh","tele","The boar lowers its head with the long tusks pointed forward, crouches back on its hind legs and scrapes one front hoof backward once, then holds the lowered charging stance.",6,1],
+["heoNanh","atk","The boar lunges forward in a powerful charge with its head down and tusks thrust forward, then pulls up and stops.",6,1],
+["heoNanh","hit","The boar flinches, its head jerking back and body recoiling, then steadies.",4,1],
+["heoNanh","die","The boar staggers, its legs buckle and it collapses onto its side and lies still.",8,1]
+]

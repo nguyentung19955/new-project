@@ -137,7 +137,7 @@ def main():
 
     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
     # 17/10 thuong-luong-that: tấm ghi "chi_hai_tep" (Thuồng Luồng thật 3 pha, ~2,9 MB) chỉ ở bản web — bản một tệp (trần 30 MB, đã sát trần) vẽ hình tạm cũ.
-    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('vk_cu_cua') and not t.get('chi_hai_tep')])  # vk_cu_cua (05/11 F4): vũ khí ChatGPT cũ <mã>-vkcu, chỉ web (?vkpl=0)  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
+    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('vk_cu_cua') and not t.get('quai_cu_cua') and not t.get('chi_hai_tep')])  # quai_cu_cua (05/11 pixellab-quai-vung-1-2): quái ChatGPT cũ <mã>-plcu, chỉ web (?quaipl=0)  # vk_cu_cua (05/11 F4): vũ khí ChatGPT cũ <mã>-vkcu, chỉ web (?vkpl=0)  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
     js = gom(mot, khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
     script = '<script>\n' + js + '</script>'
     full = trang(js)
@@ -906,7 +906,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     cu_n = cu_tot = cu_png = 0  # tấm cũ (mục muot_cua) nằm trên máy chủ nhưng game chỉ tải khi bật cờ → không tính vào người chơi tải (15/10 don-tep B: bỏ tấm cu_cua / ?quaicu=1)
     bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
     # F4: chia trang ảnh có cạnh > 2048 (không chia tấm cũ chỉ dùng khi bật cờ quay lui)
-    CO = ('muot_cua', 'net_cua', 'san_cua', 'dau_cua', 'vk_cu_cua')
+    CO = ('muot_cua', 'net_cua', 'san_cua', 'dau_cua', 'vk_cu_cua', 'quai_cu_cua')
     viec, KICH['chia_trang'] = [], []
     for (i, k), png in zip(vt, pngs):
         w_, h_ = co_png(png)
@@ -951,7 +951,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
                     x['tai_nguyen_kb'] = tot // 1024
             tot = chia[(id(t), 'trang')][0]
             cu_png += len(png)  # tấm nguyên chỉ cho ?trangcu=1: không tính vào "trình duyệt không có WebP" (tải trang PNG thay)
-        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cu_cua'):  # 05/11 F4: vũ khí ChatGPT cũ (?vkpl=0) cũng vậy  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
+        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cu_cua') or t.get('quai_cu_cua'):  # 05/11 pixellab-quai-vung-1-2: quái ChatGPT cũ (?quaipl=0)  # 05/11 F4: vũ khí ChatGPT cũ (?vkpl=0) cũng vậy  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
             cu_n += 1
             cu_tot += tot
             cu_png += len(png)
@@ -1115,7 +1115,7 @@ TOOL = os.path.join(os.path.dirname(ROOT), 'tools', 'xuong-sprite')
 # Mã game mà công cụ cần để vẽ hình gốc (quái, em bé, nền phòng) và vẽ hình tự làm giống hệt trong game.
 TOOL_GAME_JS = ['js/ngon_ngu.js', 'js/data.js', 'js/art.js', 'js/weapon_art.js', 'js/hero_tinhlinh.js', 'js/env_art.js', 'js/monster_art.js', 'js/room_art.js', 'js/village_scene.js', 'js/sprite_custom.js', 'js/mapgen.js', 'js/minimap.js', 'js/btn_art.js']  # mapgen + minimap + btn_art: trang Tách Giao Diện vẽ thử bản đồ và nút bằng đúng code game; env_art: trang Tách Phòng vẽ thử đồ vật trong phòng
 TOOL_JS = ['xu-ly-anh.js', 'khung.js', 'tu-doan.js', 'do.js', 'giao-dien.js']
-RUNTIME_KEYS = ('chi_hai_tep', 'loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
+RUNTIME_KEYS = ('chi_hai_tep', 'quai_cu_cua', 'quai_moi', 'loai', 'phien_ban', 'ma', 'ten', 'doi_tuong', 'vung', 'thay_cho', 'tam', 'khung_rong', 'khung_cao', 'goc', 'rong', 'cao', 'bong', 'dong_tac',
                 'anh', 'vu_khi', 'trang_phuc', 'vat_pham', 'dung_yen', 'nhun', 'nhun_buoc', 'neo', 'khoac_do', 'cu',
                 'net', 'nhan_vat', 'diem', 'diem_theo', 'cap', 'can_tam', 'muot_cua', 'muot', 'bo_va', 'vung_mat', 'net_cua', 'net_moi',
                 'tam_n3', 'tam_n4', 'o_n3', 'o_n4')  # tam_n3/4 + o_n3/4 (17/10 net-cao-quai): ảnh nét cao quái / trùm / người làng (trang ảnh + chỗ từng khung) — chỉ bản ảnh rời (bo_net_cao bỏ ở bản một tệp). net_cua, net_moi (17/10 do-net): tấm cũ trước khi dựng lại cho nét (?netcu=1) / tấm mới. vung_mat (15/10 sua-lang-npc): ô mặt người làng ghi tay cho dải lối tắt. can_tam (14/10 trum-chet-pha3): độ dời ngang từng khung để tâm thân trùm trùng điểm neo. net: ảnh gấp net lần (thiếu là game đọc thành 1 → hình to gấp đôi, khung bị cắt)

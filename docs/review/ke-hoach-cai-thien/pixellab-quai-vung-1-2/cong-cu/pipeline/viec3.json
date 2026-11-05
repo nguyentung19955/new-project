@@ -1,0 +1,17 @@
+[
+["mocTinh","idle","The giant tree creature breathes slowly: its trunk rises and sinks slightly, the branch arms sway gently and the leafy crown rustles a little. Root feet stay planted.",6,1],
+["mocTinh","move","The giant tree creature walks forward with slow heavy steps on its thick root legs, the trunk swaying, branch arms swinging slightly.",8,1],
+["mocTinh","tele","The giant tree creature raises its right branch arm high up and back over its shoulder, leaning back, and holds it there. Root feet stay planted.",6,1],
+["mocTinh","atk","The giant tree creature swings its raised right branch arm down and across in front of its body in one big sweeping lash, then returns to standing. Root feet stay planted.",6,1],
+["mocTinh","hit","The giant tree creature jolts backward, the trunk leaning back, then rights itself. Root feet stay planted.",4,1],
+["mocTinh","die","The giant tree creature leans and topples slowly forward, crashing down onto the ground and lying still.",8,1],
+["mocTinh","tele_c2","The giant tree creature lifts both branch arms up beside its head with the twig fingers spread, and holds that pose. Root feet stay planted.",6,1],
+["mocTinh","atk_c2","The giant tree creature bends forward and slams both branch arms down onto the ground in front of it, then straightens up. Root feet stay planted.",6,1],
+["mocTinh","tele_c3","The giant tree creature leans back and spreads both branch arms wide to the sides, its crown tilting back, and holds. Root feet stay planted.",6,1],
+["mocTinh","atk_c3","The giant tree creature shakes its whole trunk and leafy crown vigorously from side to side with both arms spread wide, then settles. Root feet stay planted.",6,1],
+["mocTinh","tele_c4","The giant tree creature draws both branch arms in close to its chest and hunches over, and holds that pose. Root feet stay planted.",6,1],
+["mocTinh","atk_c4","The giant tree creature flings both branch arms forward and outward in a wide sweeping gesture, then lowers them. Root feet stay planted.",6,1],
+["mocTinh","tele_c5","The giant tree creature lifts its right root leg high off the ground, leaning onto the other leg, and holds it raised.",6,1],
+["mocTinh","atk_c5","The giant tree creature stomps its raised root leg down hard onto the ground, its whole body jolting, then stands firm.",6,1],
+["mocTinh","phase","The giant tree creature throws both branch arms up high and leans back with its mouth wide open as if roaring, then lowers its arms halfway and glares. Root feet stay planted.",8,1]
+]

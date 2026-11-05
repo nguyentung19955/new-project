@@ -1,0 +1,112 @@
+{
+ "ongVo": {
+  "goc": "s11-1",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s1",
+   "hit": "hit-s1",
+   "die": "die-s1"
+  }
+ },
+ "boHung": {
+  "goc": "s11-4",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s1",
+   "hit": "hit-s1",
+   "die": "die-s1"
+  }
+ },
+ "nhimDoc": {
+  "goc": "s11-2",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s2",
+   "hit": "hit-s1",
+   "die": "die-s1"
+  }
+ },
+ "socNo": {
+  "goc": "s11-0",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s2",
+   "hit": "hit-s1",
+   "die": "die-s1"
+  }
+ },
+ "heoNanh": {
+  "goc": "s11-3",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s1",
+   "hit": "hit-s1",
+   "die": "die-s1"
+  }
+ },
+ "namPhong": {
+  "goc": "s11-7",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s1",
+   "hit": "hit-s2",
+   "die": "die-s1"
+  }
+ },
+ "namPhongChua": {
+  "goc": "s11-1",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1",
+   "tele": "tele-s1",
+   "atk": "atk-s1",
+   "hit": "hit-s1",
+   "die": "die-s1",
+   "tele_chieu1": "tele_chieu1-s1",
+   "atk_chieu1": "atk_chieu1-s1:0-2,6-7"
+  }
+ },
+ "chonBong": {
+  "goc": "s11-0",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s2",
+   "tele": "tele-s1",
+   "atk": "atk-s2:0-3,5",
+   "hit": "hit-s1",
+   "die": "die-s2"
+  }
+ },
+ "mocTinh": {
+  "goc": "s12-0",
+  "rows": {
+   "idle": "idle-s1",
+   "move": "move-s1:0-5,7",
+   "tele": "tele-s1:2-5",
+   "atk": "atk-s1:2-5",
+   "hit": "hit-s1",
+   "die": "die-s2",
+   "tele_c2": "tele_c2-s1:2-5",
+   "atk_c2": "atk_c2-s1:2-4",
+   "tele_c3": "tele_c3-s1:1-5",
+   "atk_c3": "atk_c3-s1:0-4",
+   "tele_c4": "tele_c4-s1:1-5",
+   "atk_c4": "atk_c4-s2",
+   "tele_c5": "tele_c5-s1",
+   "atk_c5": "atk_c5-s1:0,2,3,5",
+   "phase": "phase-s2:1-7"
+  }
+ }
+}

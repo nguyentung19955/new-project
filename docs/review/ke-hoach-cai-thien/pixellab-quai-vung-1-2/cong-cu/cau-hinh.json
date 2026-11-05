@@ -1,0 +1,841 @@
+{
+ "ongVo": {
+  "ma": "thimbleWasp",
+  "ten": "Thimble Wasp",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 0.6,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.4,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.5
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.67
+   }
+  ]
+ },
+ "boHung": {
+  "ma": "acornBeetle",
+  "ten": "Acorn Beetle",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.79,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "chonBong": {
+  "ma": "hoodWeasel",
+  "ten": "Hooded Weasel",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.35,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.45
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "namPhong": {
+  "ma": "puffcap",
+  "ten": "Puffcap",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.35,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 1.0
+   },
+   {
+    "ten": "atk",
+    "giay": 0.9
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "socNo": {
+  "ma": "pineconeSquirrel",
+  "ten": "Pinecone Squirrel",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.66,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.5
+   },
+   {
+    "ten": "atk",
+    "giay": 0.75
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.75
+   }
+  ]
+ },
+ "nhimDoc": {
+  "ma": "briarHedgehog",
+  "ten": "Briar Hedgehog",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.74,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 2.2
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6,
+    "lap_tu": 1,
+    "lap_den": 5
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "heoNanh": {
+  "ma": "tuskBoar",
+  "ten": "Longtusk Boar",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.87,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.45
+   },
+   {
+    "ten": "atk",
+    "giay": 0.65
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.4,
+    "mo": 0.64
+   }
+  ]
+ },
+ "namPhongChua": {
+  "ma": "puffcapKing",
+  "ten": "Puffcap King",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.85,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.7
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.4,
+    "mo": 0.64
+   },
+   {
+    "ten": "tele_chieu1",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_chieu1",
+    "giay": 0.7
+   }
+  ]
+ },
+ "mocTinh": {
+  "ma": "grimbark",
+  "ten": "Grimbark the Briar King",
+  "vung": "rung",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.4,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.8,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6
+   },
+   {
+    "ten": "hit",
+    "giay": 0.3
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.6
+   },
+   {
+    "ten": "tele_c2",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c2",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c3",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c3",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c4",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c4",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c5",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c5",
+    "giay": 0.6
+   },
+   {
+    "ten": "phase",
+    "giay": 0.7
+   }
+  ],
+  "pha": [
+   "mocTinh-p2",
+   "mocTinh-p3"
+  ]
+ },
+ "cua": {
+  "ma": "tinCrab",
+  "ten": "Tin Soldier Crab",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.56,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.75
+   }
+  ]
+ },
+ "caCon": {
+  "ma": "goldMinnow",
+  "ten": "Golden Minnow",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.35,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.67
+   }
+  ]
+ },
+ "oc": {
+  "ma": "teapotHermit",
+  "ten": "Teapot Hermit",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 1.0,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.4
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.75
+   }
+  ]
+ },
+ "haiQuy": {
+  "ma": "shellAnemone",
+  "ten": "Shell Anemone",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.9,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.9
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.3,
+    "mo": 0.69
+   }
+  ]
+ },
+ "caChuon": {
+  "ma": "wingFish",
+  "ten": "Winged Flying Fish",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.35,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.35
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "caNoc": {
+  "ma": "pufferling",
+  "ten": "Pufferling",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.35,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 1.0
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.67
+   }
+  ]
+ },
+ "sua": {
+  "ma": "lanternJelly",
+  "ten": "Lantern Jelly",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.48,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.5
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "nhim": {
+  "ma": "urchinImp",
+  "ten": "Urchin Imp",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.48,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 2.2
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "cuaTuong": {
+  "ma": "crabGeneral",
+  "ten": "Crab General",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.99,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   },
+   {
+    "ten": "tele_chieu1",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk_chieu1",
+    "giay": 0.55
+   },
+   {
+    "ten": "tele_chieu2",
+    "giay": 0.6
+   },
+   {
+    "ten": "atk_chieu2",
+    "giay": 0.55
+   }
+  ]
+ },
+ "caNocChua": {
+  "ma": "pufferKing",
+  "ten": "Puffer King",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.2,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.84,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.55
+   },
+   {
+    "ten": "hit",
+    "giay": 0.35
+   },
+   {
+    "ten": "die",
+    "giay": 1.1,
+    "mo": 0.82
+   }
+  ]
+ },
+ "cuaDa": {
+  "ma": "crystalCrab",
+  "ten": "Crystal Crab",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.4,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.8,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6
+   },
+   {
+    "ten": "hit",
+    "giay": 0.3
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.6
+   },
+   {
+    "ten": "tele_chieu1",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_chieu1",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_chieu2",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_chieu2",
+    "giay": 0.6
+   }
+  ],
+  "pha": [
+   "cuaDa-p2"
+  ]
+ },
+ "nguTinh": {
+  "ma": "inkmaw",
+  "ten": "Sir Inkmaw the Kraken Knight",
+  "vung": "bien",
+  "rows": [
+   {
+    "ten": "idle",
+    "giay": 1.4,
+    "lap": true
+   },
+   {
+    "ten": "move",
+    "giay": 0.8,
+    "lap": true
+   },
+   {
+    "ten": "tele",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk",
+    "giay": 0.6
+   },
+   {
+    "ten": "hit",
+    "giay": 0.3
+   },
+   {
+    "ten": "die",
+    "giay": 1.2,
+    "mo": 0.6
+   },
+   {
+    "ten": "tele_c2",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c2",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c3",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c3",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c4",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c4",
+    "giay": 0.6
+   },
+   {
+    "ten": "tele_c5",
+    "giay": 0.7
+   },
+   {
+    "ten": "atk_c5",
+    "giay": 0.6
+   },
+   {
+    "ten": "phase",
+    "giay": 0.7
+   }
+  ],
+  "pha": [
+   "nguTinh-p2",
+   "nguTinh-p3"
+  ]
+ }
+}
