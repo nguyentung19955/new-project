@@ -94,7 +94,7 @@ HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu tr�
   },
 };
 function veDrone(ctx, R, x, y, k, vang, pha, al) { // ong máy = ảnh PNG fx_chuato_dan / fx_chuato_hieu (ChatGPT); vỗ cánh = nhịp phóng ảnh
-  const ten = vang && REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan';
+  const ten = vang ? (typeof FXU !== 'undefined' && FXU.co('fx_chuato_dan3') ? 'fx_chuato_dan3' : REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan') : 'fx_chuato_dan'; // ong chúa vàng = dan3 (tờ G4)
   R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1) * (1 + 0.05 * Math.sin(pha * 0.7)), 0.15 * Math.sin(pha * 0.13), al == null ? 1 : al);
 }
 HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, o.vang ? 2.4 : 1.6, o.vang ? '#ffe680' : '#ff9a50', 1 - u); ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
@@ -364,7 +364,7 @@ SKILLS.ronglua = {
   sangDau: (T) => (T.phun > 0 ? 0.2 : 0) + (T.gd === 3 ? 0.12 : 0),
 };
 // nón lửa = ảnh PNG fx_ronglua_dan (ChatGPT) — dạng 2/3 tô màu lửa xanh (thay sprite gradient + quadraticCurveTo dựng bằng code)
-function anhNon(gd) { return gd > 1 ? PX.mau('fx_ronglua_dan', RONG_MAU[gd].b) : REN.img('fx_ronglua_dan'); }
+function anhNon(gd) { if (gd > 1 && typeof FXU !== 'undefined' && FXU.co('fx_ronglua_dan' + gd)) return REN.img('fx_ronglua_dan' + gd); return gd > 1 ? PX.mau('fx_ronglua_dan', RONG_MAU[gd].b) : REN.img('fx_ronglua_dan'); }
 HU.nonLua = { // nón lửa: ảnh PNG fx_ronglua_dan kéo theo tầm + góc, 2 lớp lệch pha + rung nhẹ, chỉ hiện khi đang phun (mờ dần 0.3 s)
   cap(G, o) { return !conTren(o.T) || o.T.id !== 'ronglua'; },
   ve(ctx, o, R) {
@@ -422,9 +422,10 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
     ctx.globalCompositeOperation = 'lighter'; PX.cham(ctx, 0, 0, 150, m.a, 0.7 * a);
     // thân rồng = ảnh PNG fx_ronglua_no (đầu rồng phun lửa, ChatGPT) — dạng 2/3 tô lửa xanh; vỗ cánh = nhịp phóng
     // (bỏ cánh/đốt thân/đầu/mắt vẽ bằng lineTo + arc). Chờ ảnh thân rồng bay từ trên xuống: raw_p4_fx_1 ô 'rong_bay'.
-    const ro = gd > 1 ? PX.mau('fx_ronglua_no', m.b) : REN.img('fx_ronglua_no'), vo = 1 + 0.06 * Math.sin(R.t * 18);
+    const rd = typeof FXU !== 'undefined' && FXU.co('fx_ronglua_dacbiet') && REN.img('fx_ronglua_dacbiet'); // rồng bổ nhào nhìn từ trên (tờ G4, đầu hướng xuống ảnh → xoay −90°)
+    const ro = rd || (gd > 1 ? PX.mau('fx_ronglua_no', m.b) : REN.img('fx_ronglua_no')), vo = 1 + 0.06 * Math.sin(R.t * 18);
     ctx.globalCompositeOperation = 'source-over';
-    if (ro) PX.ve(ctx, ro, 0, 0, 84 * vo, 84 * vo * ro.height / ro.width, 0, a);
+    if (ro) PX.ve(ctx, ro, 0, 0, 84 * vo, 84 * vo * ro.height / ro.width, rd ? -Math.PI / 2 : 0, a);
     const non = anhNon(gd); ctx.globalCompositeOperation = 'lighter';
     if (non) PX.ve(ctx, non, 50, 0, 60, 60 * non.height / non.width, 0, 0.8 * a);
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';

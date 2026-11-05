@@ -89,12 +89,50 @@ def khoa(a, bg, mem):
     return np.dstack([np.clip(a2, 0, 255), al * 255])
 
 
+GIU_HONG = ('cauvong', 'mimic', 'combo', 'st_cauvong')  # ảnh có màu hồng/tím thật (dải cầu vồng, viên hồng)
+
+
+def khu_hong(rgba, ten=''):
+    """Khử viền hồng/tím sẫm của nền magenta (ChatGPT đổ bóng magenta sẫm quanh hình → khoá màu tưởng là phần đặc).
+    Ảnh KHÔNG phải tông tím/hồng: điểm có sắc magenta (R≈B, cả hai > G) bị giảm alpha theo độ magenta + trừ phần magenta.
+    Ảnh tông tím/hồng (hoặc trong GIU_HONG) giữ nguyên."""
+    if any(k in ten for k in GIU_HONG):
+        return rgba
+    a = rgba
+    al = a[..., 3] / 255
+    R, G, B = a[..., 0], a[..., 1], a[..., 2]
+    mx = np.maximum(np.maximum(R, B), 1)
+    hue = np.abs(R - B) / mx < 0.4
+    m = np.where(hue, (np.minimum(R, B) - G) / mx, 0)
+    dac = al > 0.9
+    if dac.sum() < 20:
+        return a
+    if ((m > 0.45) & dac).sum() / dac.sum() > 0.30:  # ảnh tông tím/hồng
+        return a
+    f = np.clip(1 - (m - 0.25) / 0.4, 0, 1)
+    s = np.clip(np.minimum(R, B) - G, 0, None) * (m > 0.25)
+    o = a.copy()
+    o[..., 0] = R - s; o[..., 2] = B - s
+    o[..., 3] = a[..., 3] * f
+    return o
+
+
 def luu(rgba, ten, cmax, pivot='giua'):
+    rgba = khu_hong(rgba, ten)
     al = rgba[..., 3]
     ys, xs = np.nonzero(al > 8)
     if len(xs) == 0:
         print('  RỖNG', ten); return
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+    # vệt mảnh mờ (đường nối ô / nhiễu) kéo dài khung → bỏ, khung theo phần đặc + lề 8 px
+    mo = ndi.binary_opening(al > 8, iterations=2)
+    if mo.any():
+        ys2, xs2 = np.nonzero(mo)
+        b = (max(0, ys2.min() - 8), min(al.shape[0], ys2.max() + 9), max(0, xs2.min() - 8), min(al.shape[1], xs2.max() + 9))
+        if (b[1] - b[0]) < 0.8 * (y1 - y0) or (b[3] - b[2]) < 0.8 * (x1 - x0):
+            print('  cắt vệt mảnh', ten, (y1 - y0, x1 - x0), '→', (b[1] - b[0], b[3] - b[2]))
+            rgba = rgba.copy(); keep = np.zeros(al.shape, bool); keep[b[0]:b[1], b[2]:b[3]] = True
+            rgba[..., 3] *= keep; y0, y1, x0, x1 = b
     c = rgba[y0:y1, x0:x1]
     h, w = c.shape[:2]
     s = min(1.0, cmax / max(w, h))
