@@ -115,7 +115,7 @@ const UI = {
     c.className = 'c' + (co ? '' : ' khoa') + (this.chon.includes(r.id) ? ' chon' : '');
     c.dataset.act = 'chon-u'; c.dataset.id = r.id;
 c.style.setProperty('--m', TIERS[r.bac].mau);
-    c.innerHTML = cardArt(r.id) + (co && laGrow(r.id) ? '<span class="gu">GROW-UP</span>' : '') +
+    c.innerHTML = cardArt(r.id) +
       '<div class="ten">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">' + TEXT.ui.soon + '</div>');
     return c;
   },
@@ -162,7 +162,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const r = G.rosterMap[id];
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
-      d.innerHTML = cardArt(id) + (laGrow(id) ? '<span class="gu">GROW-UP</span>' : '') +
+      d.innerHTML = cardArt(id) +
         '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
@@ -353,8 +353,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const nh = buffTongHop(T);
       if (nh.length) L.push('<div class="d-nhan">EFFECTS ON ' + esc(G.rosterMap[id].ten.toUpperCase()) + ':' + nh.map(r => '<div class="d-buff"><img src="' + REN.kyHieuURL(r.k) + '" alt=""><span><b style="color:' + BUFF[r.k].mau + '">' + BUFF[r.k].ten + (r.cach === 'charges' ? ' ×' + r.tong : r.cach === 'timed' ? '' : ' +' + (r.k === 'chet' ? (r.tong * 100).toFixed(1) : Math.round(r.tong * 100)) + '%') + '</b> <small>[' + esc(r.nguon.join(', ')) + ']' + (r.nguon.length > 1 ? ' · ' + r.cach : '') + '</small></span></div>').join('') + '</div>');
     } else if (SUP_LOAI[id] && SUP_GIA[id]) L.push('<div class="d-buff"><img src="' + REN.kyHieuURL(SUP_LOAI[id]) + '" alt=""><span>' + BUFF[SUP_LOAI[id]].ten + ' to ' + (sk.tamChu || '4 adjacent cells (N/E/S/W)') + '</span></div>');
-    // grow-up: điều kiện · dạng hiện tại · tiến độ
-    if (laGrow(id)) {
+    // (bỏ dòng chữ grow-up: người chơi tự khám phá; vòng 3 cung quanh đầu vẫn còn)
+    if (false) {
       const g = GROW[id];
       let d = '<b style="color:' + g.mau + '">GROW-UP</b> ';
       if (T) { const st = g.gd(T); d += 'stage ' + st.s + '/3 <b style="color:' + g.mau + '">' + g.ten[st.s - 1] + '</b> · ' + Math.round(clamp(st.p, 0, 1) * 100) + '% · '; }

@@ -30,7 +30,7 @@ const UP_TXT = {
     db: 'Bends the rules: odd merges, swaps, mana or transformations.',
   },
   target: { dau: 'Lead enemy', mau: 'Toughest enemy', ngau: 'Random enemy', tu: 'Own pattern', khong: 'Does not shoot' },
-  sec: { skill: 'Skill', test: 'Test range', stars: 'Star levels', grow: 'Grow-up', foot: 'Buff footprint', merge: 'Merge rules', modes: 'Modes and deck', family: 'Family ladder', pair: 'Partners and counters' },
+  sec: { skill: 'Skill', test: 'Test range', stars: 'Star levels', grow: 'Forms', foot: 'Buff footprint', merge: 'Merge rules', modes: 'Modes and deck', family: 'Family ladder', pair: 'Partners and counters' },
 };
 
 // ===================================================== dữ liệu suy ra =====================================================
@@ -269,7 +269,6 @@ const UP = {
     // bảng tên
     const chip = ['<span class="up-chip bac">' + upEsc(upSC(tier.ten)) + '</span>'];
     if (vai) chip.push('<span class="up-chip">' + UP_TXT.role[vai] + '</span>');
-    if (grow) chip.push('<span class="up-chip gu">Grow-up</span>');
     if (sk && sk.chuDong) chip.push('<span class="up-chip">Active skill</span>');
     if (!sk) chip.push('<span class="up-chip soon">Coming soon</span>');
     P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips">' + chip.join('') + '</div>' +

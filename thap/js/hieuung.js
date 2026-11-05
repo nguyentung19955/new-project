@@ -83,9 +83,8 @@ const VX = {
     const cB = () => { const B = G.ban[T.ban]; return B && B.t[T.o] === T ? B.o[T.o] : null; };
     if (den === 3 && (!g.lap || !T._daAwk)) { // ụ chu kỳ (nạp/xả): chữ to chỉ lần đầu, sau đó chỉ nhãn nhỏ
       T._daAwk = true;
-      this.hen(0.3, () => { const c = cB(); if (!c) return; nhanU(T, 'AWAKEN!', g.mau, true); FX.chu1(c.x, c.y - 54, g.ten[2], g.mau, 13, 'to'); });
-    } else if (den === 3) { if (T.id !== 'cuongno') this.hen(0.3, () => nhanU(T, g.ten[2], g.mau)); }
-    else if (!g.lap) this.hen(0.3, () => nhanU(T, 'EVOLVE! ' + g.ten[den - 1], g.mau, true));
+      // (không hiện chữ)
+    }
   },
   saoLen(T, n, ten, tre) {
     this.hen(tre || 0, () => {

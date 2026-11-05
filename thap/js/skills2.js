@@ -753,8 +753,8 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng sao trên bàn là bội 1
 SKILLS.soi = { // Sói Máy (Werewolf): cận chiến nhanh; 30% ra bản THỨC TỈNH: tốc ×2, luôn chí mạng
   vai: 'tc', dmg: 14.44, toc: 1.8, nham: 'dau', tam: 108,
   // DCDW Werewolf: 30% ra bản THỨC TỈNH ngay khi triệu hồi; còn lại LỚN DẦN: PUP → HUNTER (3★ / 20 mạng) → AWAKENED (5★ / 50 mạng)
-  sinh(G, T) { T.thuc = Math.random() < 0.3; T.giet = 0; if (T.thuc) setTimeout(() => { nhanU(T, 'WOLF AWAKENED!', '#ff4b3e', true); SND.thucTinh(); }, 250); },
-  mo: (T) => 'Melee 108 px · ' + ['PUP', 'HUNTER: +40% speed', 'AWAKENED: ×2 speed, always crits'][giaiDoan(T) - 1] + ' · kills ' + (T.giet || 0) + (ms(T, 7) ? ' · howl +25% to neighbours' : ''),
+  sinh(G, T) { T.thuc = Math.random() < 0.3; T.giet = 0; if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
+  mo: (T) => 'Melee 108 px · ' + ['PUP', 'HUNTER: +40% speed', 'ALPHA: ×2 speed, always crits'][giaiDoan(T) - 1] + ' · kills ' + (T.giet || 0) + (ms(T, 7) ? ' · howl +25% to neighbours' : ''),
   luonCrit: (T) => giaiDoan(T) >= 3,
   chonMuc(G, B, T) { return quaiDauTam(B, T, this.tam); },
   capNhat(G, B, T, dt) {

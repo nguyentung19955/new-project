@@ -190,9 +190,7 @@ VX.bien = function (T, tu, den) {
   this.hen(ngan ? 0.2 : 0.52, () => { if (cB() && T.cd > 0.02) T.cd = 0.01; });
   if (ngan) return;
   // ĐÚNG 1 chữ cho mỗi lần biến hình: tên riêng của dạng (Supernova!, Fused Head!…) nếu có, không thì 'Awakened!'
-  let chu = tenBien(g.ten && g.ten[den - 1]) || (den === 3 ? 'Awakened!' : '');
-  if (T.id === 'orbital' && den === 3) { if (B && G.t - (B._orbBn || -9) < 1.5) return; if (B) B._orbBn = G.t; chu = 'Bombardment!'; }
-  if (chu) this.hen(0.3, () => { if (cB()) chuBien(T, chu, g.mau); });
+  // (không hiện chữ biến hình — người chơi tự khám phá; chỉ giữ hiệu ứng hình + âm thanh)
 };
 // 'WHITE WYRM' → 'White Wyrm!' (chữ hoa-thường ngắn như HUD)
 function tenBien(s) { return s ? s.toLowerCase().replace(/(^|[\s-])(\S)/g, (a, b, c) => b + c.toUpperCase()).replace(/!*$/, '!') : ''; }
@@ -408,7 +406,7 @@ HU.gSuong = { duoi: true, ve(ctx, o, R) { const u = o.t / o.song, r = o.r * (0.2
 HU.gBaoLuoi = { ve(ctx, o, R) { if (!GFX.coDOM) return; const u = o.t / o.song, im = anhLuoi(Math.min(o.r, 220)), k = o.r / Math.min(o.r, 220); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.85; ctx.drawImage(im, o.x - im.width * k / 2, o.y - im.height * k / 2, im.width * k, im.height * k); ctx.globalAlpha = (1 - u) * 0.35; R.anhGiua(ctx, R.cham1('#dffaff'), o.x, o.y, o.r * 2); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- SÓI MÁY (Warwolf): 1 vuốt cam → 2 vuốt chéo (lao tới) → THỨC TỈNH: 2 nhát chí mạng siêu nhanh, 3 vệt đỏ thẫm, mỗi 4 đòn LƯỚT tới ----
-ATK.soi = ['Single amber claw swipe', 'X-shaped double slash (two hits), head lunges', 'AWAKENED: twin fast always-crit slashes, triple crimson claw marks, every 4th hit DASHES to the target'];
+ATK.soi = ['Single amber claw swipe', 'X-shaped double slash (two hits), head lunges', 'ALPHA: twin fast always-crit slashes, triple crimson claw marks, every 4th hit DASHES to the target'];
 P.soi = () => {
   const sk = SKILLS.soi;
   sk.ban = function (G, B, T, E) {
@@ -447,7 +445,7 @@ HU.gLuot = { // lướt tới: 3 bóng đầu sói đỏ mờ dọc đường đ
 };
 
 // ---- VỆ TINH (Mafdet): tia lam → tia + vòng ngắm trước khi trúng → GHÉP: mọi Vệ Tinh thức tỉnh, mỗi phát = 3 GIÁO TRỜI có tâm ngắm đỏ (không nổ lan) ----
-ATK.orbital = ['Small cyan bolt', 'Longer bolt + a target marker locks onto the enemy before impact', 'MERGE-AWAKENED (all Orbitals): every shot calls 3 SKY LANCES with red reticles, staggered barrage (single-target hits)'];
+ATK.orbital = ['Small cyan bolt', 'Longer bolt + a target marker locks onto the enemy before impact', 'ON MERGE (all Orbitals): every shot calls 3 SKY LANCES with red reticles, staggered barrage (single-target hits)'];
 P.orbital = () => {
   const sk = SKILLS.orbital, bg = sk.ban;
   sk.ban = function (G, B, T, E) {
@@ -643,7 +641,7 @@ function veLucGiac(ctx, r, mau, al) { ctx.globalAlpha = al; ctx.strokeStyle = ma
 HU.gDauAn = { ve(ctx, o, R) { const u = o.t / o.song; ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(u * 2); ctx.globalCompositeOperation = 'lighter'; veLucGiac(ctx, 6 + 6 * VX.eo(u), '#2ee89a', 1 - u); veLucGiac(ctx, 3 + 3 * u, '#ffffff', (1 - u) * 0.8); ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- CỬU VĨ (Nine-Tail): lửa hồ ly cam thẳng → lửa hồ ly bay UỐN LƯỢN có vệt lửa → 7★: lửa xanh-trắng uốn lượn nổ vòng 26 px ----
-ATK.cuuvi = ['Straight orange foxfire orb', 'BLAZING TAILS: foxfire curls in a wavy path with a flame trail, tail-flick on hit', 'AWAKENED 7★: blue-white foxfire curls and bursts in a 26 px ring'];
+ATK.cuuvi = ['Straight orange foxfire orb', 'BLAZING TAILS: foxfire curls in a wavy path with a flame trail, tail-flick on hit', '7★: blue-white foxfire curls and bursts in a 26 px ring'];
 P.cuuvi = () => {
   const sk = SKILLS.cuuvi;
   sk.ban = function (G, B, T, E) {
