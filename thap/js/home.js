@@ -81,6 +81,7 @@ const HM = {
     const b = this.el('chon-bo'); if (!b) return;
     let o = b.querySelector(':scope > .o-mv');
     if (!o) { o = document.createElement('button'); o.className = 'o-mv'; o.dataset.act = 'hm-mv6'; }
+    o.dataset.slot = 'mv'; // hợp đồng kéo-thả: ô chỉ huy (dkkeo.js không nhận ụ vào đây)
     if (o !== b.lastElementChild) b.appendChild(o);
     const d = MAVUONG[UI.mv] || MAVUONG.hero;
     o.setAttribute('aria-label', 'Commander: ' + d.ten + ' (tap to change)');

@@ -391,6 +391,11 @@ async function online(b, W, H, D, co) {
   // vẽ tay (tĩnh)
   try { execFileSync('node', [path.join(__dirname, 'thap-kt-vetay.js'), '--list'], { stdio: 'pipe' }); }
   catch (e) { const ds = String(e.stdout || '').split('\n').filter(l => /\[/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'vetay', loai: 'vẽ tay', chi: l, anh: '' }); console.log('  ✗ vẽ tay: ' + ds.length + ' dòng (node tools/thap-kt-vetay.js --list)'); }
+  // kéo-thả bộ bài bằng cảm ứng thật (tools/thap-kt-keo.js) — lớp/ô bộ bài đổi mà mất kéo-thả = TRƯỢT
+  if (!process.env.CHI || /keo|menu/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-keo.js'), BASE], { stdio: 'pipe', env: process.env }); console.log(String(o).trim()); }
+    catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'keo', loai: 'kéo-thả bộ bài', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kéo-thả: kẹt'); }
+  }
   const b = await chromium.launch();
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   for (const [W, H, D] of SIZES) {
