@@ -123,3 +123,7 @@ html body #wrap.co-tvb #canh-bao.tvb-cb span, html body #tt.hb-qi .hb-so .ht { o
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong { right: 0; }
 /* khay trận: chip số ụ ở góc trên-phải → mặt dời trái nhẹ (không bị chip đè) */
 html body #wrap #bo-the .the.ot > img.anh { --po-x: .40; }
+/* thẻ chỉ huy trận (ô tối giản): vòng hồi chiêu/tác dụng + số giây nằm TRONG ô (trừ viền 6 %) — máy kiểm chữ ô tối giản (thap-kt-tran-do.js) */
+html body #wrap #the-mv.ot .cht-vong { top: 7% !important; }
+html body #wrap #the-mv.ot .cht-vong.cd { right: 7% !important; left: auto !important; }
+html body #wrap #the-mv.ot .cht-vong.tac { left: 7% !important; right: auto !important; }
