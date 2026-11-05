@@ -25,12 +25,25 @@ const UI = {
     document.addEventListener('click', (e) => this.bam(e));
     this.ganCham();
     REN.napTruoc(['khay', 'duong_thang', 'duong_goc', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana']);
-    let tr = performance.now();
+    // vòng lặp: mô phỏng bước cố định (BUOC) + bộ tích luỹ; vẽ NỘI SUY giữa 2 trạng thái → mượt ở mọi tần số màn hình.
+    // Tăng tốc 2×/3× = nhiều bước hơn mỗi khung (cùng BUOC nhỏ). Sau khi chuyển tab: kẹp thời gian bù.
+    let tr = -1, tichLuy = 0, alpha = 1;
     const vong = (n) => {
-      let dt = Math.min(0.05, (n - tr) / 1000); tr = n;
-      if (!G.dung && G.ban.length) { const k = G.tocDo; const buoc = k > 1 ? 2 : 1; for (let i = 0; i < buoc; i++) capNhat(dt * k / buoc); }
-      REN.ve(G.dung ? 0 : dt);
-      if (G.ban.length) this.capNhat();
+      if (tr < 0) tr = n;
+      let thuc = (n - tr) / 1000; tr = n;
+      if (!(thuc > 0)) thuc = 0; else if (thuc > 0.1) thuc = 0.1;
+      if (!G.dung && G.ban.length) {
+        const k = G.tocDo || 1, toiDa = Math.ceil(k * 0.1 / BUOC) + 1;
+        tichLuy += thuc * k;
+        let so = 0;
+        while (tichLuy >= BUOC && so < toiDa) { chupTruoc(); capNhat(BUOC); tichLuy -= BUOC; so++; }
+        if (tichLuy >= BUOC) tichLuy = BUOC * 0.999; // máy quá chậm: bỏ phần nợ, không "xoáy chết"
+        alpha = tichLuy / BUOC;
+        FX.giam = k > 1 ? 1 / Math.sqrt(k) : 1;
+        FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
+      }
+      REN.ve(G.dung ? 0 : thuc, alpha);
+      if (G.ban.length && (this._hud = !this._hud)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       requestAnimationFrame(vong);
     };
     requestAnimationFrame(vong);
@@ -128,6 +141,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   vaoTran() {
     $('#chon').hidden = true; $('#ketqua').hidden = true; $('#dung').hidden = true;
     $('#top').hidden = false; $('#duoi').hidden = false; $('#tt').hidden = true;
+    const nt = $('#nut-tocdo'); if (nt) nt.textContent = G.tocDo + '×';
     const B = G.ban[0];
     const bo = $('#bo-the'); bo.innerHTML = '';
     for (const id of B.deck) {
@@ -150,32 +164,36 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
 
   // ---------- cập nhật HUD mỗi khung ----------
+  // chỉ ghi DOM khi giá trị ĐỔI (ghi lại cùng giá trị mỗi khung vẫn bắt trình duyệt dựng lại bố cục/vẽ lại)
   capNhat() {
     const B = G.ban[0];
+    const chu = (el, v) => { v = '' + v; if (el._v !== v) { el._v = v; el.textContent = v; } };
+    const cao = (el, k, v) => { if (el['_' + k] !== v) { el['_' + k] = v; el.style[k] = v; } };
     const m = Math.floor(B.mana);
     const mEl = $('#mana');
-    if (m !== this.manaCu) { mEl.textContent = m; if (m > this.manaCu) { mEl.classList.remove('nay'); void mEl.offsetWidth; mEl.classList.add('nay'); setTimeout(() => mEl.classList.remove('nay'), 120); } this.manaCu = m; }
-    $('#gia-trieu').textContent = B.gia;
+    if (m !== this.manaCu) { chu(mEl, m); if (m > this.manaCu && !this._nay) { this._nay = true; mEl.classList.add('nay'); setTimeout(() => { mEl.classList.remove('nay'); this._nay = false; }, 120); } this.manaCu = m; }
+    chu($('#gia-trieu'), B.gia);
     const nt = $('#nut-trieu'), du = B.mana >= B.gia && oTrong(B).length > 0;
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
-      d.querySelector('.lv').textContent = 'LV' + lv;
-      const n = B.t.filter(T => T && T.id === id).length;
-      d.querySelector('.so').textContent = n ? '×' + n : '';
-      const g = d.querySelector('.gia b');
-      if (lv >= 5) { g.textContent = TEXT.ui.max; d.classList.add('max'); d.classList.remove('du', 'thieu'); }
-      else { const gia = LUAT.giaNangCap[lv - 1]; g.textContent = gia; d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
+      chu(d._lv || (d._lv = d.querySelector('.lv')), 'LV' + lv);
+      let n = 0; for (const T of B.t) if (T && T.id === id) n++;
+      chu(d._so || (d._so = d.querySelector('.so')), n ? '×' + n : '');
+      const g = d._g || (d._g = d.querySelector('.gia b'));
+      if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
+      else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
     });
     const mv = B.mv, md = MAVUONG[mv.id], te = $('#the-mv');
-    te.querySelector('.mv-gia b').textContent = mv.gia;
-    te.querySelector('.mv-cd').style.height = (mv.cd / md.cd * 100) + '%';
+    chu(te.querySelector('.mv-gia b'), mv.gia);
+    cao(te.querySelector('.mv-cd'), 'height', (Math.round(mv.cd / md.cd * 200) / 2) + '%');
     te.classList.toggle('du', mv.cd <= 0 && B.mana >= mv.gia); te.classList.toggle('thieu', !(mv.cd <= 0 && B.mana >= mv.gia));
-    $('#tb-so').textContent = Math.max(1, G.wave);
+    chu($('#tb-so'), Math.max(1, G.wave));
     // trùm
     const trum = G.quai.find(e => e.trum && !e.chet && G.duong[e.p].ban === 0) || G.quai.find(e => e.trum && !e.chet);
-    if (trum) { $('#tb-trum-chu').textContent = TRUM[trum.trum].ten; $('#tb-trum-mau').hidden = false; $('#tb-trum-mau i').style.width = (trum.hp / trum.max * 100) + '%'; }
-    else { $('#tb-trum-mau').hidden = true; const con = LUAT.songTrum - (Math.max(1, G.wave) % LUAT.songTrum); $('#tb-trum-chu').textContent = con === LUAT.songTrum ? TEXT.ui.bossWave : TEXT.ui.bossIn(con); }
+    const tm = $('#tb-trum-mau');
+    if (trum) { chu($('#tb-trum-chu'), TRUM[trum.trum].ten); if (tm.hidden) tm.hidden = false; cao($('#tb-trum-mau i'), 'width', (Math.round(trum.hp / trum.max * 400) / 4) + '%'); }
+    else { if (!tm.hidden) tm.hidden = true; const con = LUAT.songTrum - (Math.max(1, G.wave) % LUAT.songTrum); chu($('#tb-trum-chu'), con === LUAT.songTrum ? TEXT.ui.bossWave : TEXT.ui.bossIn(con)); }
     // tim
     const key = G.che + B.tim + (G.ban[1] ? G.ban[1].tim : '');
     if (key !== this._timKey) {
@@ -255,7 +273,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.nut(); } break;
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
       case 'mv': if (B) dungMV(B); break;
-      case 'tocdo': G.tocDo = G.tocDo === 1 ? 2 : 1; el.textContent = G.tocDo + '×'; break;
+      case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;
       case 'amthanh': $('#nut-am').textContent = SND.batTat() ? TEXT.ui.soundOn : TEXT.ui.soundOff; break;

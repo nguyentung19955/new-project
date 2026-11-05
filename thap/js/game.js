@@ -6,6 +6,18 @@ const G = {
   wave: 0, tWave: 0, hang: [], t: 0, tocDo: 1, dung: false, ketThuc: null, chung: false,
   uid: 1, chonBan: null, cho: 0, debug: {},
 };
+// bước mô phỏng CỐ ĐỊNH (giây). Tăng tốc 2×/3× = chạy NHIỀU bước hơn mỗi khung, không bao giờ dùng bước to hơn.
+const BUOC = 1 / 60;
+// chụp trạng thái TRƯỚC mỗi bước mô phỏng → lúc vẽ nội suy giữa trạng thái cũ và mới (chuyển động không bị giật)
+function chupTruoc() {
+  for (const E of G.quai) { E._x = E.x; E._y = E.y; E._g = E.gv; }
+  for (const d of G.dan) { d._x = d.x; d._y = d.y; d._z = d.z || 0; }
+  for (const B of G.ban) for (const T of B.t) if (T) { T._g = T.goc; T._rx = T.rx; }
+  for (const o of G.hu) {
+    if (o.x !== undefined) { o._x = o.x; o._y = o.y; }
+    if (o.ds) for (const q of o.ds) { q._x = q.x; q._y = q.y; }
+  }
+}
 
 // ---------- tiện ích ----------
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -315,7 +327,7 @@ function wavMoi() {
 
 // ---------- vòng cập nhật ----------
 function capNhat(dt) {
-  if (G.ketThuc) { FX.capNhat(dt); return; }
+  if (G.ketThuc) return; // hiệu ứng (FX) chạy theo thời gian thực trong vòng lặp chính
   G.t += dt;
   if (G.cho > 0) { G.cho -= dt; if (G.cho <= 0) wavMoi(); }
   else {
@@ -344,7 +356,6 @@ function capNhat(dt) {
   for (let i = G.bay.length - 1; i >= 0; i--) { G.bay[i].t += dt; if (G.bay[i].t > 0.2) G.bay.splice(i, 1); }
   // dọn quái chết (sau hoạt ảnh vỡ)
   for (let i = G.quai.length - 1; i >= 0; i--) { const E = G.quai[i]; if (E.chet) { E.tChet += dt; if (E.tChet > 0.25) G.quai.splice(i, 1); } }
-  FX.capNhat(dt);
 }
 
 function capNhatBan(B, dt) {
@@ -378,8 +389,10 @@ function dauNong(T) {
 function capNhatU(B, T, dt) {
   if (T.anim) { T.anim.t += dt; if (T.anim.t > 0.6) T.anim = null; }
   T.aurora = Math.max(0, T.aurora - dt); T.sang = Math.max(0, T.sang - dt * 3); T.chop = Math.max(0, T.chop - dt); T.lvSang = Math.max(0, T.lvSang - dt * 1.4);
-  // lò xo giật lùi
-  T.rv += (-520 * T.rx - 26 * T.rv) * dt; T.rx += T.rv * dt;
+  // lò xo giật lùi (có vượt quá nhẹ) — chạy theo "thời gian nhìn" (chậm hơn tốc độ game) để ở 2×/3× vẫn thấy giật rõ
+  const dv = dt / Math.sqrt(G.tocDo || 1);
+  T.rv += (-560 * T.rx - 30 * T.rv) * dv; T.rx += T.rv * dv;
+  if (T.rx < -9) { T.rx = -9; if (T.rv < 0) T.rv = 0; }
   const st = T.st;
   if (st.bang > 0) { st.bang -= dt; return; }
   if (st.da) return;
@@ -411,11 +424,13 @@ function xoayDau(T, E, dt, x, y) {
   const c = tamU(T);
   if (E || x != null) dich = Math.atan2((E ? E.y : y) - c.y, (E ? E.x : x) - c.x);
   else dich = -Math.PI / 2 + Math.sin(G.t * 0.5 + T.pha) * 0.9;
+  // lò xo giảm chấn tới hạn: tăng tốc rồi hãm êm vào đúng hướng, không giật/không lắc
   const d = gocLech(T.goc, dich);
-  const k = E || x != null ? 14 : 2.2;
-  T.goc += d * Math.min(1, dt * k);
+  const w = E || x != null ? 24 : 3.2;
+  T.vgoc = clamp((T.vgoc || 0) + (w * w * d - 2 * w * (T.vgoc || 0)) * dt, -30, 30);
+  T.goc += T.vgoc * dt;
 }
-function giat(T, m) { T.rv -= (m || 1) * 240; T.chop = 0.1; }
+function giat(T, m) { T.rv -= (m || 1) * 230; T.chop = 0.1; }
 function haSao(B, T, ly) {
   const c = B.o[T.o];
   if (T.sao <= 1) { B.t[T.o] = null; FX.no('no_phao', c.x, c.y, 70, 0.5); FX.chu1(c.x, c.y - 20, TEXT.fx.destroyed, '#ff4b3e', 16, 'to'); FX.lac(6); SND.no(0.6); return; }
@@ -438,6 +453,8 @@ function capNhatQuai(dt) {
     E.bob += dt * 6;
     if (E.s >= p.len) { lot(E); continue; }
     [E.x, E.y, E.goc] = viTri(p, E.s);
+    // hướng nhìn mượt khi rẽ góc đường (không quay ngoắt 90°)
+    E.gv = E.gv == null ? E.goc : E.gv + gocLech(E.gv, E.goc) * Math.min(1, dt * 11);
     if (E.trum) capNhatTrum(E, dt);
   }
 }
@@ -526,7 +543,7 @@ function thucHienChieu(E, B) {
 // ---------- đạn ----------
 // d: {img, x,y, muc (quái), px,py, sp, cong (độ cao vòng cung), t, dai (tổng thời gian nếu cong), B, T, trung(G,d,E), duoi}
 function banDan(o) {
-  o.t = 0;
+  o.t = 0; o.sx = o.x; o.sy = o.y;
   if (o.cong) { const dx = o.px - o.x, dy = o.py - o.y; o.x0 = o.x; o.y0 = o.y; o.dai = Math.max(0.35, Math.hypot(dx, dy) / o.sp); }
   G.dan.push(o); return o;
 }

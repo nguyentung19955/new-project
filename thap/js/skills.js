@@ -291,8 +291,9 @@ HU.tiaTia = { // vệt đạn tỉa mờ dần
 HU.set = { // sét chuỗi: đoạn sét rung mỗi ~50 ms
   cap(G, o) { for (const d of o.ds) if (!d.Q.chet) { d.x = d.Q.x; d.y = d.Q.y; } },
   ve(ctx, o, R) {
-    const u = o.t / o.song, nhip = Math.floor(o.t / 0.05);
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1 - u * 0.6;
+    // rung sét đổi theo đồng hồ thật (~22 lần/giây) — không phụ thuộc tốc độ khung/tốc độ game; hiện nhanh, tắt mềm
+    const u = Math.min(1, o.t / o.song), nhip = Math.floor(R.t / 0.045);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, u / 0.08 + 0.35) * (1 - u * u);
     let x0 = o.x, y0 = o.y;
     if (o.T && G.ban[o.T.ban].t[o.T.o] === o.T) [x0, y0] = dauNong(o.T);
     for (let i = 0; i < o.ds.length; i++) {
@@ -456,8 +457,8 @@ HU.sam = { // overlord: tia sấm khổng lồ + chớp màn hình
   },
   ve(ctx, o, R) {
     const u = o.t / o.song;
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1 - u;
-    const nhip = Math.floor(o.t / 0.05);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.max(0, 1 - u) * (1.15 - 0.15 * Math.cos(R.t * 40));
+    const nhip = Math.floor(R.t / 0.045);
     R.set(ctx, o.x0, o.y0, o.x, o.y, 40, o.seed + nhip);
     R.set(ctx, o.x + 14, -30, o.x, o.y, 60, o.seed + nhip * 3 + 1);
     R.set(ctx, o.x - 18, -30, o.x, o.y, 34, o.seed + nhip * 5 + 2);

@@ -2,7 +2,7 @@
 'use strict';
 const SND = (() => {
   let ac = null, tat = false, master = null;
-  const lan = {};
+  const lan = {}, nhieu = {};
   function mo() { if (ac || tat) return; try { ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = 0.28; master.connect(ac.destination); } catch (e) { tat = true; } }
   function han(k, ms) { const n = performance.now(); if (lan[k] && n - lan[k] < ms) return false; lan[k] = n; return true; }
   function tone(f0, f1, dur, kieu, vol, tre) {
@@ -14,8 +14,13 @@ const SND = (() => {
   }
   function on(dur, vol, loc) {
     if (!ac || tat) return;
-    const t = ac.currentTime, n = Math.floor(ac.sampleRate * dur), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
-    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+    // bộ đệm tiếng ồn dựng 1 lần cho mỗi độ dài (trước đây tạo lại mỗi phát bắn → tốn CPU luồng chính)
+    const t = ac.currentTime, kd = Math.round(dur * 100);
+    let b = nhieu[kd];
+    if (!b) {
+      const n = Math.floor(ac.sampleRate * kd / 100); b = nhieu[kd] = ac.createBuffer(1, n, ac.sampleRate); const d = b.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+    }
     const s = ac.createBufferSource(), g = ac.createGain(), f = ac.createBiquadFilter();
     f.type = 'lowpass'; f.frequency.value = loc || 900; s.buffer = b; g.gain.value = vol || 0.3;
     s.connect(f); f.connect(g); g.connect(master); s.start(t);
