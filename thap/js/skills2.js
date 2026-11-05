@@ -907,9 +907,9 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ
   veThem(ctx, T, S, al, R) { // vùng lạnh quanh lò: vòng nét đứt mảnh + quầng
     const r = this.r(T);
     ctx.globalCompositeOperation = 'lighter';
-    ctx.globalAlpha = al * 0.18; R.anhGiua(ctx, R.cham1('#7fdcff'), 0, 0, r * 1.2);
-    ctx.globalAlpha = al * 0.4; ctx.strokeStyle = '#bff4ff'; ctx.lineWidth = 1.5; ctx.setLineDash([8, 10]); ctx.lineDashOffset = -R.t * 20;
-    ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    // (quầng tầm lạnh to bỏ: phóng ảnh chấm sáng lên cỡ cả bàn lộ mép tròn như vòng tầm — QUY-TAC-HINH 1)
+    // (vòng tầm nét đứt vẽ code ĐÃ BỎ — QUY-TAC-HINH 1, ảnh người dùng vetay_board_rings.png; tầm lạnh = quầng PNG ở trên)
+
   },
 };
 SKILLS.haoquang = { // Hào Quang Thánh (Halo Mona) — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn; chủ động: hàng rào BẤT TỬ ngắn cho cả đội (quái thường lọt không mất tim,

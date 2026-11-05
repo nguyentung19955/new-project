@@ -24,49 +24,16 @@ const ND = {
   },
   mauU(T) { return T ? this.mau(G.ban[T.ban], T.id) : null; },
 
-  // huy hiệu biểu tượng: đĩa tròn màu khoá + hình tối (mau = null → đĩa tối + hình trắng). d = đường kính logic
+  // HUY HIỆU VAI TRÒ = icon PNG ChatGPT h2_vai_<vai>.png (QUY-TAC-HINH: bỏ đĩa màu + hình vector vẽ code). d = đường kính logic
+  VAI: { tc: 'h2_vai_tc', ht: 'h2_vai_ht', db: 'h2_vai_db', kc: 'h2_vai_kc', phu: 'h2_vai_phu' },
+  anhVai(id) { const sk = SKILLS[id] || {}; return this.VAI[sk.vai] || 'h2_vai_tc'; },
   huy(id, mau, d, da) {
-    const k = REN.s * REN.dpr, N = Math.max(10, Math.round(d * 1.3 * k)), key = 'ndh|' + id + '|' + (mau || '-') + '|' + N + (da ? '|x' : '') + '|' + this.glAnh(id, N);
-    let c = REN.cache[key]; if (c) return c;
-    c = document.createElement('canvas'); c.width = c.height = N;
-    this.veHuy(c.getContext('2d'), id, mau, N, da);
-    return (REN.cache[key] = c);
+    const ten = this.anhVai(id), a = da ? REN.banXam(ten) : REN.img(ten); if (!a) return null;
+    return REN.mip(a, d * 1.3 * REN.s * REN.dpr);
   },
-  // 1 = hình nhận diện đang là ảnh PNG (glyph/<id>.png) ở cỡ đĩa N → khoá bộ đệm đổi khi ảnh tải xong
-  glAnh(id, N) { return GLYPH.coAnh ? GLYPH.coAnh(id, Math.round(N / 1.3 * 0.74)) : 0; },
-  veHuy(x, id, mau, N, da) {
-    const r = N / 1.3 / 2, cx = N / 2, cy = N / 2;
-    x.fillStyle = 'rgba(0,0,0,.5)'; x.beginPath(); x.arc(cx, cy + r * 0.12, r * 1.04, 0, Math.PI * 2); x.fill(); // bóng
-    x.fillStyle = '#0b0e13'; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill(); // viền tối
-    const nen = da ? '#8a8f96' : (mau || '#1a1f27');
-    x.fillStyle = nen; x.beginPath(); x.arc(cx, cy, r - Math.max(1, r * 0.13), 0, Math.PI * 2); x.fill();
-    if (!mau) { x.strokeStyle = this.TRUNG; x.lineWidth = Math.max(1, r * 0.12); x.beginPath(); x.arc(cx, cy, r - r * 0.2, 0, Math.PI * 2); x.stroke(); }
-    const g = Math.round(r * 2 * 0.74), m = GLYPH.mask(id, g);
-    const t = document.createElement('canvas'); t.width = t.height = g;
-    const tx = t.getContext('2d'); tx.drawImage(m, 0, 0); tx.globalCompositeOperation = 'source-in'; tx.fillStyle = mau || da ? '#0d1117' : '#ffffff'; tx.fillRect(0, 0, g, g);
-    x.drawImage(t, Math.round(cx - g / 2), Math.round(cy - g / 2));
-  },
-  // ảnh dataURL cho DOM (thẻ, bảng thông tin, dải nhận diện)
-  url(id, mau, px) {
-    px = px || 64; const N = Math.round(px * 1.3), key = id + '|' + (mau || '-') + '|' + px + '|' + this.glAnh(id, N); if (this._url[key]) return this._url[key];
-    const c = document.createElement('canvas'); c.width = c.height = N;
-    this.veHuy(c.getContext('2d'), id, mau, N);
-    return (this._url[key] = c.toDataURL());
-  },
-  // ảnh glyph PNG vừa tải xong → thay mọi <img> DOM đang hiện bản vector của ụ đó
-  doiAnhDOM(id) {
-    const cu = {};
-    for (const k in this._url) if (k.startsWith(id + '|') && k.endsWith('|0')) { const [, m, px] = k.split('|'); cu[this._url[k]] = [m === '-' ? null : m, +px]; }
-    if (!Object.keys(cu).length) return;
-    for (const im of document.querySelectorAll('img')) { const v = cu[im.getAttribute('src')]; if (v) im.src = this.url(id, v[0], v[1]); }
-  },
-  // vòng màu khoá quanh bệ (vẽ vào ảnh thân dựng sẵn — dưới đầu súng). R = bán kính, tròn tuyệt đối
-  veVong(x, R, mau, da) {
-    if (!mau) return;
-    x.lineWidth = 5.2; x.strokeStyle = 'rgba(6,8,11,.9)'; x.beginPath(); x.arc(0, 0, R, 0, Math.PI * 2); x.stroke();
-    x.lineWidth = 3; x.strokeStyle = da ? '#8a8f96' : mau; x.beginPath(); x.arc(0, 0, R, 0, Math.PI * 2); x.stroke();
-  },
-
+  // ảnh cho DOM (thẻ, bảng thông tin, dải nhận diện): đường dẫn PNG có sẵn
+  url(id) { return 'assets/' + this.anhVai(id) + '.png'; },
+  doiAnhDOM() {},
   // ---------- lớp huy hiệu (vẽ SAU hiệu ứng → không bao giờ bị đạn/tia che) ----------
   // gọi từ REN.veU: xếp hàng; REN.veHangHuy vẽ cả loạt
   xep(T, x, y, C, hs, al, B) {
@@ -77,18 +44,12 @@ const ND = {
   veHuyHieu(ctx, h) {
     const T = h.T, d = h.d * h.hs; if (d < 1) return;
     ctx.globalAlpha = h.al;
-    const c = this.huy(T.id, this.mauU(T), h.d, T.st && T.st.da);
-    ctx.drawImage(c, h.gx - d * 0.65, h.gy - d * 0.65, d * 1.3, d * 1.3);
+    const c = this.huy(T.id, null, h.d, T.st && T.st.da);
+    if (c) ctx.drawImage(c, h.gx - d * 0.6, h.gy - d * 0.6, d * 1.2, d * 1.2);
     REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d);
     ctx.globalAlpha = 1;
   },
 
-  // ---------- kéo ghép: viền ô hợp lệ / mờ ô sai / cung nối / gạch chéo ----------
-  oVien(ctx, B, o, w, mau, al, pad) {
-    const c = B.o[o], cw = B.cw - pad * 2, ch = B.ch - pad * 2;
-    ctx.globalAlpha = al; ctx.lineWidth = w; ctx.strokeStyle = mau;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(c.x - cw / 2, c.y - ch / 2, cw, ch, 8) : ctx.rect(c.x - cw / 2, c.y - ch / 2, cw, ch); ctx.stroke();
-  },
   // kéo ghép: chỉ ảnh ChatGPT (khung_chon / sup_ring / h2_vong_do) — xem keoghep.js (P0-02)
   veKeo(ctx) { if (typeof KG !== 'undefined') KG.veDuoi(ctx); },
   veKeoTren(ctx) { if (typeof KG !== 'undefined') KG.veTren(ctx); },
@@ -98,18 +59,13 @@ const ND = {
   veSoi(ctx) {
     const s = this.soi; if (!s) return;
     const u = (performance.now() - s.t0) / 800; if (u >= 1) { this.soi = null; return; }
-    const B = G.ban[0], mau = this.mau(B, s.id) || this.TRUNG, al = u < 0.75 ? 1 : (1 - u) / 0.25;
-    const nh = 0.5 + 0.5 * Math.sin(u * Math.PI * 6);
-    ctx.save();
-    for (let i = 0; i < 15; i++) {
+    const B = G.ban[0], al = u < 0.75 ? 1 : (1 - u) / 0.25, vong = REN.img('sup_ring'); if (!vong) return;
+    const nh = 0.5 + 0.5 * Math.sin(u * Math.PI * 6), C = Math.min(B.cw, B.ch);
+    for (let i = 0; i < 15; i++) { // khoanh = vòng chọn sup_ring PNG nhịp nhẹ (không viền/ô tô màu vẽ code)
       const T = B.t[i]; if (!T || T.id !== s.id) continue;
-      const c = B.o[i], cw = B.cw - 4, ch = B.ch - 4;
-      ctx.globalAlpha = al * 0.18; ctx.fillStyle = mau;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(c.x - cw / 2, c.y - ch / 2, cw, ch, 9) : ctx.rect(c.x - cw / 2, c.y - ch / 2, cw, ch); ctx.fill();
-      this.oVien(ctx, B, i, 6, 'rgba(6,8,11,.8)', al, 2);
-      this.oVien(ctx, B, i, 3 + nh, mau, al, 2);
+      REN.anhGiua(ctx, vong, B.o[i].x, B.o[i].y, C * (1 + 0.06 * nh), 0, al);
     }
-    ctx.restore(); ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1;
   },
 
   // ---------- dải nhận diện 1 dòng khi chạm ụ ----------
@@ -149,7 +105,7 @@ const ND = {
     const B = G.ban[0]; if (!B) return;
     document.querySelectorAll('#bo-the .the').forEach((d) => {
       const id = d.dataset.id, mau = this.mau(B, id);
-      d.style.setProperty('--k', mau); d.classList.add('nd-k');
+      d.style.setProperty('--k', mau); // (bỏ lớp nd-k: viền màu khoá vẽ CSS — QUY-TAC-HINH 1)
       const im = document.createElement('img'); im.className = 'gl'; im.alt = ''; im.src = this.url(id, mau, 40);
       d.appendChild(im);
     });
@@ -199,7 +155,7 @@ const ND = {
     const r = veBoChonGoc.apply(this, arguments);
     $('#chon-bo').querySelectorAll('.o-bo').forEach((o, i) => {
       const id = o.dataset.id; if (!id) return;
-      o.style.setProperty('--k', ND.KEY[i]); o.classList.add('nd-k');
+      o.style.setProperty('--k', ND.KEY[i]); // (bỏ lớp nd-k: viền màu vẽ CSS)
       const im = document.createElement('img'); im.className = 'gl'; im.alt = ''; im.src = ND.url(id, ND.KEY[i], 40); o.appendChild(im);
     });
     return r;

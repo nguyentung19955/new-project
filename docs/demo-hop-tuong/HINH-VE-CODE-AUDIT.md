@@ -787,3 +787,15 @@ Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, "same styl
 - **P3-ON4 bộ 4 icon nhỏ online** (1536×384, lưới 4×1 → cắt 48 px: `ic_ping_tot`, `ic_ping_xau`, `ic_chia_se`, `ic_google_khung`): "4 small bold HUD icons, thick dark outline, readable at 16px: green signal bars (good connection), red signal bars with a crack (bad connection), share arrow coming out of a box, an empty round white badge socket (for a sign-in logo), same style as attached, solid #FF00FF background, no text."
 - **P3-ON5 chip tài khoản** (768×256 → cắt 9 mảnh, `thap/assets/tk_chip.png`, thay `#tk-chip`): "Small horizontal gunmetal pill-shaped account badge, round avatar socket on the left with a thin cyan ring, empty right part for a name, same style as attached, solid #FF00FF background, no text."
 Ghi chú: nút "SIGN IN WITH GOOGLE" hiện chỉ là chữ trên `nut_lon_thep` — không tự vẽ logo Google; muốn có logo thì dùng đúng ảnh logo chính thức của Google (theo hướng dẫn thương hiệu) đặt trong `ic_google_khung`.
+
+## 16. Pass 4 — board (rà soát 100% vẽ tay trên bàn chiến đấu, 2026-11-05)
+
+Bảng kiểm kê đầy đủ: `docs/demo-hop-tuong/VE-TAY-RASOAT-BOARD.md`. Mọi phần tử vẽ code trong khu đã bỏ hoặc thay PNG có sẵn; 3 chỗ chờ ảnh mới (đang để màu đặc / PNG tạm).
+Gen xong lưu `docs/demo-hop-tuong/thap-art/raw_p4_board_N.png`, cắt khoá magenta (quy tắc 5).
+
+- **raw_p4_board_1 — sàn trận** (1 ô, 1024×2048, lát được theo chiều dọc) → `thap/assets/san_tran.png`, thay màu nền đặc #1d1f23 trong `REN.lamNen0`:
+  "Seamless dark gunmetal factory floor texture, subtle steel plates and faint grime, very low contrast, darker toward the edges, same style as the attached game screenshot, no text."
+- **raw_p4_board_2 — 5 đĩa màu khoá bộ bài** (lưới 5×1, 1280×256) → `thap/assets/nd_dia_<0..4>.png` (96 px), đặt sau `h2_vai_*` ở góc trên-trái ô để trả lại màu khoá:
+  "5 small round metal badge sockets with a glowing colored rim: blue, red, lime, teal, purple; empty dark center, chunky outline, same style as the attached game screenshot, flat #FF00FF background, no text."
+- **raw_p4_board_3 — vòng nạp năng lượng chia đoạn** (lưới 4×2, 8 khung 0→100 %, 1024×512) → `thap/assets/vong_nap_<0..7>.png` (thay `fx_vong_mong` tô màu ở `REN.veU`):
+  "8 frames of a thin white segmented energy ring filling clockwise from 1/8 to full, soft glow, same style as the attached game screenshot, flat #FF00FF background, no text."
