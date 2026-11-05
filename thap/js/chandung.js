@@ -30,14 +30,34 @@ const PO_NEO = {
   loren: [0, 32.4, 44.7], guongcong: [0, 32.4, 65.7], marionette: [0, 28.1, 37.5], chuato: [3, 28, 52], leviathan: [0, 26, 52.2],
   khoisinh: [0, 27.1, 41.5], ronglua: [0, 24.9, 39.6], af_hero: [4, 36, 50], af_dahlia: [4, 35, 55], af_eve: [4, 35, 55],
 };
+// ảnh LỚN trang ụ / chỉ huy (assets/hero/hero_<id>.jpg|webp 1170×1020 — tools/thap-hero.py, hiện 1:1, KHÔNG phóng): mốc riêng vì khung cắt khác pilot_<id>.png
+const HERO_NEO = {
+  canon: [0, 30, 55], xucxac: [0, 45, 55], lien: [0, 22, 55], phun: [0, 28, 60], sungluc: [0, 25, 60], bang: [0, 25, 60], doc: [6, 28, 40],
+  mana: [3, 33, 45], tia: [3, 25, 45], set: [0, 22, 40], maychem: [0, 28, 45], phagiap: [0, 28, 45], bua: [0, 32, 45], nam: [3, 30, 48],
+  bomhen: [0, 33, 50], nhanmana: [0, 35, 55], kiembang: [0, 40, 55], mimic: [0, 37, 55], chimang: [0, 40, 45], dichchuyen: [0, 40, 50],
+  radar: [0, 30, 60], drone: [0, 32, 62], tron: [0, 20, 40], nangluong: [0, 33, 58], laser: [0, 40, 50], lanhgia: [0, 30, 60], mortar: [0, 20, 40],
+  khuech: [0, 25, 55], vungdoc: [0, 40, 45], loa: [0, 40, 55], hutmana: [0, 28, 45], min: [0, 32, 50], cuongno: [0, 35, 45], baotuyet: [0, 32, 55],
+  nhanban: [5, 40, 58], lienket: [0, 30, 55], kepha: [0, 45, 30], taylo: [0, 30, 50], khien: [0, 30, 50], hopbi: [0, 40, 45], nangsao: [0, 35, 45],
+  tuthan: [0, 28, 45], xaotron: [0, 35, 30], epxung: [0, 30, 55], no5: [0, 30, 40], bao: [0, 40, 50], anhsang: [0, 33, 55], aten: [0, 30, 55],
+  dongbo: [0, 25, 75], railgun: [0, 35, 55], vughep: [0, 52, 55], sinhdoi: [0, 22, 60], hasao: [0, 28, 50], saochep: [0, 30, 60], ngoisao: [0, 35, 65],
+  soi: [0, 30, 50], tienhoa: [0, 35, 50], cauvong: [0, 35, 45], wallgen: [10, 45, 45], orbital: [0, 30, 52], blackhole: [0, 30, 60],
+  overlord: [5, 40, 60], lophanung: [0, 25, 40], haoquang: [0, 35, 62], nayda: [0, 35, 45], combo: [0, 35, 58], khoathoigian: [0, 15, 50],
+  hydra: [3, 30, 40], cuuvi: [0, 30, 45], pandora: [3, 25, 45], luoicheo: [0, 32, 45], ngaithoigian: [0, 30, 62], nemesis: [0, 28, 55],
+  docton: [5, 28, 50], thaukinh: [0, 25, 50], nhieusong: [0, 35, 65], santhuong: [0, 28, 50], nhatthuc: [0, 30, 60], loren: [0, 33, 40],
+  guongcong: [0, 30, 62], marionette: [0, 25, 45], chuato: [3, 40, 50], leviathan: [0, 30, 55], khoisinh: [0, 25, 40], ronglua: [0, 30, 30],
+  af_hero: [0, 36, 50], af_dahlia: [0, 35, 55], af_eve: [5, 38, 55],
+};
 // mốc của 1 ảnh: PO_NEO, hoặc suy từ FACE_BOX (khung đầu tóc→cằm: mắt ≈ giữa khung đầu)
 function poNeo(id) {
+  if (id && id.startsWith('hero:')) return HERO_NEO[id.slice(5)] || null;
   if (PO_NEO[id]) return PO_NEO[id];
   const f = typeof FACE_BOX !== 'undefined' && FACE_BOX[id]; if (!f) return null;
   const top = f[1] - f[2] / 2; return [top, top + f[2] * 0.5, f[0]];
 }
 (() => {
   if (typeof MAT === 'undefined') return;
+  const reHero = /hero\/hero_(\w+)\.(?:jpg|webp)/, idGoc = MAT.id;
+  MAT.id = function (img) { const m = reHero.exec(img.getAttribute('src') || ''); return m ? 'hero:' + m[1] : idGoc.call(this, img); };
   const so = (cs, k, d) => { const v = parseFloat(cs.getPropertyValue(k)); return isFinite(v) ? v : d; };
   MAT.fit = function (img) {
     const id = this.id(img), a = id && poNeo(id);
@@ -81,6 +101,11 @@ function poNeo(id) {
     s.clipPath = 'inset(' + cb.toFixed(2) + 'px ' + (W - ca - W / z).toFixed(2) + 'px ' + (H - cb - H / z + ho / z).toFixed(2) + 'px ' + ca.toFixed(2) + 'px' + (r ? ' round ' + (r / z).toFixed(2) + 'px' : '') + ')';
   };
   const xoaGoc = MAT.xoa; MAT.xoa = function (img) { img.style.translate = ''; img._po = null; return xoaGoc.call(this, img); };
+  // ảnh hero (không chứa 'pilot_') — khung.js không tự bắt: tự theo dõi
+  const quetHero = (n) => { if (n.nodeType !== 1) return; if (n.tagName === 'IMG') { if (reHero.test(n.getAttribute('src') || '')) MAT.gan(n); } else n.querySelectorAll('img[src*="hero/hero_"]').forEach(im => MAT.gan(im)); };
+  const batHero = () => new MutationObserver(ms => { for (const m of ms) { if (m.type === 'attributes') quetHero(m.target); else m.addedNodes.forEach(quetHero); } })
+    .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
+  if (document.body) batHero(); else document.addEventListener('DOMContentLoaded', batHero);
   // ảnh đã cắt trước khi file này nạp → cắt lại theo mốc mới
   document.querySelectorAll('img[src*="pilot_"],img[src*="af_"]').forEach(im => MAT.fit(im));
 })();

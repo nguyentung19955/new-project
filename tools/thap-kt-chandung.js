@@ -13,10 +13,10 @@ const OUT = process.env.OUT || 'docs/demo-hop-tuong/tuvan/tvA/portrait_qa.png';
 const TMP = fs.mkdtempSync('/tmp/kt-cd-');
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 // dải mắt mục tiêu (phần chiều cao cửa sổ) theo §D; tóc phải ≥ 0 (trong cửa sổ)
-const DAI = { roster: [.30, .50], slot: [.33, .52], summary: [.30, .55], quick: [.30, .52], tray: [.33, .52], inspect: [.33, .52], partner: [.30, .56], detail: [.30, .48], commander: [.30, .48], cmd: [.28, .56] };
+const DAI = { roster: [.30, .50], slot: [.33, .52], summary: [.30, .55], quick: [.30, .52], tray: [.33, .52], inspect: [.33, .52], partner: [.30, .56], detail: [.12, .55], commander: [.12, .55], cmd: [.28, .56] }; // hero: ảnh 1:1 cắt sẵn (tools/thap-hero.py) — chỉ kiểm mắt trong vùng trên của ảnh
 
 // đỉnh tóc tối thiểu (phần cửa sổ): khung độ hiếm the_khung_* có tấm ngọc giữa cạnh trên lấn 4 % khung = 6,2 % cửa sổ
-const TOC = { roster: .065, tray: .065, slot: .02, partner: .02, summary: .02, quick: .02, inspect: .02, detail: .03, commander: .03, cmd: .065 };
+const TOC = { roster: .065, tray: .065, slot: .02, partner: .02, summary: .02, quick: .02, inspect: .02, detail: 0, commander: 0, cmd: .065 };
 // trong trang: đo 1 ảnh chân dung → {id, box (so với phần tử chụp), mat, toc, x, che}
 const DO = ([sel, host]) => {
   const im = document.querySelector(sel); if (!im) return null;
