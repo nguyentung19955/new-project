@@ -165,7 +165,7 @@ function ghep(B, a, b, ep) {
   G._treNhan = 0;
   if (kh.length) VX.kichHoat(B2, b.o, kh);
   const kq = B2.t[b.o] || ra;
-  if (kq.sao > b.sao) VX.hen(VX.TRE_LO, () => { const c = B2.o[b.o]; FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to'); });
+  // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
   if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
   SND.ghep(kq.sao, B2.ai);
   return ra;

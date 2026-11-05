@@ -754,7 +754,7 @@ const REN = {
         }
         let o = {};
         const ng = typeof KG !== 'undefined' ? KG.nguon() : (keo && keo.dang ? keo.T : null); // kéo hoặc chạm–chạm (keoghep.js)
-        if (ng && ng.ban === B.i && ng !== T && !hopLeGhep(ng, T)) o.alpha = 0.4; // ô không ghép được: mờ hẳn
+        if (ng && ng.ban === B.i && ng !== T && !hopLeGhep(ng, T)) o.alpha = 0.62; // ô không ghép được: mờ nhẹ (spec TU-VAN-HIEU-UNG-CHUNG mục 1D)
         this.veU(ctx, T, B.o[i].x, B.o[i].y, o);
       }
     }
