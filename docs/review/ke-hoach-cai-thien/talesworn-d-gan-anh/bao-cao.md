@@ -112,4 +112,4 @@ Công cụ (chạy lại được):
 
 ## Commit
 
-(điền sau khi đẩy)
+`c543884c` — "Talesworn (D): gắn ảnh ChatGPT 05/11 — bản thử 5 phút đầu thôi mượn ảnh (…), Rowan 16 đầu (…), cắt sẵn khung HUD bản 2 (?hudmoi=1, mặc định tắt) + dựng lại dist" (đã đẩy lên khoi-tao-du-an, nằm sau `318cf22b`).
