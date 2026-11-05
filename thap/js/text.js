@@ -138,6 +138,11 @@ const TEXT = {
     loren:        { name: 'Scrap Forge',    skill: 'Drag a 1–3★ turret onto it: permanent damage stacks' },
     guongcong:    { name: 'Mirror Gate',    skill: 'PVP: reflects rival control. Co-op: copies ally merges. Solo: blocks boss skills' },
     marionette:   { name: 'Marionette',     skill: 'Takes control of an enemy, walks it backward, then boom' },
+    // đợt 3 — 4 ụ Đỏ (skills5.js)
+    chuato:       { name: 'Hive Queen',     skill: 'Breeds hunter drones. Active (3★+): SWARM kamikaze' },
+    leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for endless stacks. Active (3★+): TIDAL BREATH sweeps the path' },
+    khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets' },
+    ronglua:      { name: 'Wyrm Engine',    skill: 'Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path' },
   },
 };
 
@@ -145,7 +150,8 @@ const TEXT = {
 // chân dung phi công (đã duyệt) — thêm id vào đây khi có ảnh assets/pilot_<id>.png mới
 const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang',
   'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
-  'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette']);
+  'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette',
+  'chuato', 'leviathan', 'khoisinh', 'ronglua']);
 function iconOf(id) { return 'assets/nho/' + id + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }

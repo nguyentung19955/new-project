@@ -427,6 +427,49 @@ const SND = (() => {
     hoLy() { const v = V('hoLy', 2); if (!v) return; const t = v.t;
       burst(v, t, 0.25, 0.2, 'bandpass', 600, 2, null, 4000);
       for (const m of [1, 1.5, 2.01]) tone(v, 'sine', 660 * m, 0, t + 0.12, 0.9, 0.07 / m); gui(v, 0.4); fin(v); },
+    // ---- GROW-UP / WAKE-UP (growfx.js): biến hình + đòn đánh riêng từng dạng ----
+    // nạp biến hình (0–220 ms): quét cao dần + rít ồn
+    gNap() { const v = V('gNap', 2); if (!v) return; const t = v.t;
+      tone(v, 'sine', 260, 1300, t, 0.22, 0.12); tone(v, 'triangle', 520, 2600, t + 0.02, 0.2, 0.04); burst(v, t, 0.22, 0.08, 'bandpass', 800, 3, null, 5000); fin(v); },
+    // khoá dạng mới (220 ms): cú "thịch" nặng + chuông ánh kim (lon = thức tỉnh dạng 3)
+    gKhoa(lon) { const v = V('gKhoa', 2); if (!v) return; const t = v.t;
+      tone(v, 'sine', 150, 40, t, 0.22, 0.5); burst(v, t, 0.09, 0.3, 'lowpass', 900, 1);
+      const cs = lon ? [1, 1.26, 1.5, 2] : [1, 1.5]; cs.forEach((m, i) => tone(v, 'sine', 880 * m, 0, t + 0.03 + i * 0.03, lon ? 0.7 : 0.35, 0.06));
+      if (lon) { vaoCrush(v, 0.15); duck(0.4, 0.5); } gui(v, 0.35); fin(v); },
+    // vuốt cào: 1 = 1 nhát · 2 = 2 nhát chéo · 3 = 2 nhát chí mạng + tiếng kim loại
+    gVuot(n) { const v = V('gVuot', 1); if (!v) return; const t = v.t, k = n || 1;
+      for (let i = 0; i < Math.min(2, k); i++) burst(v, t + i * 0.06, 0.07, 0.22, 'bandpass', 2400 + 800 * k, 2, null, 900);
+      if (k >= 3) { tone(v, 'square', 2600, 1800, t, 0.05, 0.04); tone(v, 'sine', 3800, 0, t + 0.06, 0.12, 0.05); } fin(v); },
+    gArc() { const v = V('gArc', 0); if (!v) return; const t = v.t; burst(v, t, 0.05, 0.16, 'highpass', 3000, 1); tone(v, 'sawtooth', 1800, 400, t, 0.05, 0.04); fin(v); },
+    // cột sét từ trời (Overlord dạng 3): sấm trầm + rè
+    gCot() { const v = V('gCot', 2); if (!v) return; const t = v.t;
+      burst(v, t, 0.5, 0.4, 'lowpass', 1600, 1, null, 120); tone(v, 'sine', 90, 30, t, 0.5, 0.6); burst(v, t, 0.18, 0.2, 'highpass', 5000, 1); vaoCrush(v, 0.25); duck(0.6, 0.6); fin(v); },
+    // giáo trời (Vệ Tinh bắn phá): "bíp" ngắm + rít rơi + nổ đục
+    gTam() { const v = V('gTam', 0); if (!v) return; const t = v.t; tone(v, 'square', 1760, 0, t, 0.04, 0.03); tone(v, 'square', 1760, 0, t + 0.07, 0.04, 0.03); fin(v); },
+    gLance() { const v = V('gLance', 1); if (!v) return; const t = v.t;
+      tone(v, 'sawtooth', 2400, 300, t, 0.14, 0.05); burst(v, t + 0.12, 0.16, 0.3, 'lowpass', 700, 1); tone(v, 'sine', 120, 45, t + 0.12, 0.16, 0.3); fin(v); },
+    // sao: 1 lấp lánh · 2 đôi · 3 sao chổi (vụt + chuông)
+    gSao(k) { const v = V('gSao', 1); if (!v) return; const t = v.t;
+      if ((k || 1) >= 3) { burst(v, t, 0.2, 0.14, 'bandpass', 1200, 2, null, 6000); [1, 1.5, 2].forEach((m, i) => tone(v, 'sine', 1320 * m, 0, t + 0.05 + i * 0.04, 0.4, 0.05)); }
+      else { tone(v, 'triangle', 2093, 2637, t, 0.06, 0.06); if (k === 2) tone(v, 'triangle', 2637, 3136, t + 0.05, 0.06, 0.05); } gui(v, 0.25); fin(v); },
+    gXich() { const v = V('gXich', 1); if (!v) return; const t = v.t; for (let i = 0; i < 3; i++) { burst(v, t + i * 0.025, 0.02, 0.18, 'bandpass', 4200 - i * 500, 8); tone(v, 'sine', 2900 + i * 300, 0, t + i * 0.025, 0.05, 0.03); } fin(v); },
+    gVang() { const v = V('gVang', 1); if (!v) return; const t = v.t; tone(v, 'sine', 1568, 0, t, 0.18, 0.08); tone(v, 'square', 784, 0, t, 0.06, 0.03); tone(v, 'sine', 2352, 0, t + 0.02, 0.2, 0.04); gui(v, 0.3); fin(v); },
+    gKim() { const v = V('gKim', 1); if (!v) return; const t = v.t; burst(v, t, 0.012, 0.22, 'bandpass', 3400, 7); tone(v, 'triangle', 3000, 1200, t + 0.01, 0.08, 0.05); fin(v); },
+    gEcho() { const v = V('gEcho', 1); if (!v) return; const t = v.t; tone(v, 'sine', 600, 1400, t, 0.18, 0.06); burst(v, t, 0.2, 0.06, 'bandpass', 2000, 4, null, 600); gui(v, 0.5); fin(v); },
+    // lửa: 1 cam · 2 lam (gắt hơn) · 3 trắng (rít cao)
+    gLua(m) { const v = V('gLua', 0); if (!v) return; const t = v.t, k = m || 1;
+      burst(v, t, 0.16, 0.12, 'lowpass', 700 + 500 * k, 0.7); burst(v, t, 0.1, 0.05 * k, 'bandpass', 2500 + 1200 * k, 1.5); fin(v); },
+    gBang() { const v = V('gBang', 1); if (!v) return; const t = v.t; for (let i = 0; i < 3; i++) tone(v, 'sine', vr(3200 + i * 600, 0.05), 0, t + i * 0.03, 0.08, 0.04); burst(v, t, 0.05, 0.08, 'highpass', 6000, 1); fin(v); },
+    gThe() { const v = V('gThe', 0); if (!v) return; const t = v.t; burst(v, t, 0.03, 0.14, 'bandpass', 3000, 3); tone(v, 'square', 660, 990, t, 0.04, 0.03); fin(v); },
+    gNung() { const v = V('gNung', 1); if (!v) return; const t = v.t; burst(v, t, 0.12, 0.2, 'lowpass', 900, 1); tone(v, 'sine', 220, 90, t, 0.12, 0.2); fin(v); },
+    gHo() { const v = V('gHo', 0); if (!v) return; const t = v.t; burst(v, t, 0.14, 0.12, 'bandpass', 900, 2, null, 2600); tone(v, 'sine', 880, 0, t + 0.04, 0.15, 0.03); fin(v); },
+    // ---- 4 ụ Đỏ đợt 3 (skills5.js) ----
+    gOng() { const v = V('gOng', 0); if (!v) return; const t = v.t; tone(v, 'sawtooth', 190, 210, t, 0.25, 0.05); tone(v, 'square', 95, 105, t, 0.25, 0.02); burst(v, t, 0.2, 0.03, 'bandpass', 1500, 2); fin(v); },
+    gSwarm() { const v = V('gSwarm', 2); if (!v) return; const t = v.t; for (let i = 0; i < 5; i++) tone(v, 'sawtooth', vr(180 + i * 40, 0.1), 700 + i * 90, t + i * 0.04, 0.4, 0.04); burst(v, t, 0.5, 0.1, 'bandpass', 1200, 2, null, 3500); gui(v, 0.3); fin(v); },
+    gNuot() { const v = V('gNuot', 1); if (!v) return; const t = v.t; burst(v, t, 0.4, 0.16, 'lowpass', 1800, 2, null, 200); tone(v, 'sine', 300, 60, t + 0.3, 0.2, 0.4); fin(v); },
+    gSongTho() { const v = V('gSongTho', 2); if (!v) return; const t = v.t; burst(v, t, 1.4, 0.3, 'lowpass', 600, 1, null, 2400); tone(v, 'sine', 70, 50, t, 1.2, 0.4); burst(v, t + 0.2, 1.1, 0.08, 'highpass', 4000, 1); duck(0.5, 1.4); fin(v); },
+    gHop(lon) { const v = V('gHop', 2); if (!v) return; const t = v.t; const cs = lon ? [523, 659, 784, 1047] : [659, 988]; cs.forEach((f, i) => { tone(v, 'triangle', f, 0, t + i * 0.05, 0.8, 0.05); tone(v, 'sine', f * 2, 0, t + i * 0.05, 0.6, 0.02); }); gui(v, 0.5); fin(v); },
+    gRong() { const v = V('gRong', 2); if (!v) return; const t = v.t; tone(v, 'sawtooth', 160, 60, t, 0.9, 0.18); burst(v, t, 0.9, 0.3, 'lowpass', 1400, 1, null, 300); vaoCrush(v, 0.3); duck(0.6, 1); fin(v); },
   };
 
   // =====================================================================================================
