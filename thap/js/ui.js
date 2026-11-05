@@ -166,7 +166,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
     const seg = $('#tb-seg'); if (seg) { seg.innerHTML = ''; for (let i = 1; i <= LUAT.songTrum; i++) { const c = document.createElement('i'); if (i === LUAT.songTrum) c.className = 'boss'; seg.appendChild(c); } this._segW = -1; }
     const mv = MAVUONG[B.mv.id];
-    $('#the-mv .mv-ic').innerHTML = mvArt(B.mv.id); $('#the-mv').style.setProperty('--mm', mv.mau); $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
+    $('#the-mv .mv-ic').innerHTML = mvArt(B.mv.id); $('#the-mv').style.setProperty('--mm', mv.mau); $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 12, 8);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
