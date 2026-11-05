@@ -25,3 +25,4 @@ The coordinator accidentally started TWO sessions from trigger trig_01KTd72bwt9m
 - Lưới/ô bộ bài trong `thap/css/tvA.css` (mục §B2/§B19: 3 cột 125, ô 72×81 khung E07/E08) nạp TRƯỚC khung-p9.css/chonthe.css — phiên thẻ tối giản cứ ghi đè hình học lưới/ô (5 cột…),
   chỉ giữ biến --po-* trên ảnh chân dung để mặt không bị cắt.
 - KHÔNG nối E09 (quầng chọn lặp 4 khung — người dùng vừa chê "giật") và E12 (khung thẻ kho — phiên tile tối giản sở hữu viền thẻ, raw_p10_khung_toigian).
+- 16:10 phiên thứ 3: sửa "ô phóng quá" (tile_zoom_qua.png) — chỉ thêm 1 luật CUỐI css/otoigian.css (biến --po-* cho ô kho + ô bộ bài). Khay trận giữ nguyên. Tiếp theo: kiểm 4 cỡ màn + xuất bản.

@@ -87,3 +87,8 @@ html body #wrap #the-mv.ot > img.ov.ov { left: 5px !important; top: 2px !importa
 html body #wrap #the-mv.ot .mv-ic, html.co-khung body #wrap #the-mv.ot.co-kh .mv-ic { left: 9.8px !important; top: 6.8px !important; width: 70.4px !important; height: 70.4px !important; border-radius: 12px; }
 html body #wrap #the-mv.ot .mv-ic .mv-anh { position: absolute !important; inset: 0 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0 !important; }
 html body #wrap #the-mv.ot > img.ot-mien { right: 0 !important; top: -6px !important; width: 28px !important; }
+
+/* người dùng (tile_zoom_qua.png): ô kho/bộ bài "phóng quá" → đỉnh tóc chui dưới viền. Lùi ra như DCDW: cả đầu + vai trong ô,
+   mắt ~48 % chiều cao, tóc cách mép trên ≥ 15 % (dưới thanh viền), phóng ≤ 1.15× cover; trống trên tóc ≤ 10 % khi ảnh gốc tóc sát mép. */
+html body #wrap #chon #chon-luoi .c.ot > img.anh, html body #wrap #chon #chon-bo .o-bo.ot > img:not(.ov):not(.kh):not(.gl):not(.dk-vien) {
+  --po-mat: .48 !important; --po-toc: .15 !important; --po-zoom: 1.15 !important; --po-ho: .10 !important; }
