@@ -129,4 +129,6 @@ di chuyển đúng theo động tác.
 - `docs/anh-goc/pixellab-quai-nam/` — ảnh gốc PixelLab, 8 hướng, khung từng động tác đã chọn, tấm ghép, `chon.json` (bản nào được chọn)
 - Thư mục này: `cong-cu/` (`dung-quai-pl.py`, `gif.py`, `chup.py`), `anh/`
 
-Commit: (ghi ở dòng cuối sau khi đẩy)
+Commit đã đẩy lên `khoi-tao-du-an`:
+- `53caf79` PixelLab vẽ 3 quái nấm Thornwood: Thorncap Goblin (thay hình Heo Rừng Con), Spore Puff (thay hình Hoa Phun Bào Tử), Toadstool King (trùm bản thử 5 phút đầu, có thế dựng khiên lúc Fire Guard); chỉ đổi hình, cờ ?quaipl=0 quay lui + dựng lại dist
+- `df8de8a` PixelLab quái nấm: dựng lại dist sau khi gộp (vũ khí PixelLab, F2, F3), bản nhìn dựng khiên làm mới khi ảnh được tải lại, chụp soát lại
