@@ -5,7 +5,7 @@ Phiên này làm theo đúng cách đã chạy tốt ở phiên quái nấm (`pi
 PixelLab → động tác khung xương (skeleton) PixelLab**, code chỉ cắt / đặt vị trí / ghép tấm. **Chỉ đổi HÌNH**: không đổi luật chơi, chỉ số,
 hộp va chạm, thời điểm ra đòn, thời lượng động tác (giữ nguyên số giây của từng hàng như tấm cũ). Không chơi thử bằng tay — chỉ chụp headless.
 
-> TRẠNG THÁI: **XONG cả hai vùng** — vùng 1 Rừng Gai (commit 650bd03) và vùng 2 Hang Chìm (commit sau, mục 7).
+> TRẠNG THÁI: **XONG cả hai vùng** — vùng 1 Rừng Gai (commit 650bd03) và vùng 2 Hang Chìm (commit e0767e4, mục 7).
 
 ## 1. Tóm tắt cho chủ game
 
