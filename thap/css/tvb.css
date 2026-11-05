@@ -1,0 +1,119 @@
+/* TURRET MERGE — TƯ VẤN TOÀN BỘ phần B (js/tvb.js): trận dễ đọc. Nạp CUỐI. Khung logic 430×860 (390 px = ×0,907).
+   Chỉ chữ/số + ảnh PNG ChatGPT có sẵn: h2_rail, h2_trieu_tat, khung_tt, bang_trum_nen, hud_ten_ban, h2_tam_do, p7_ic_dong (QUY-TAC-HINH.md). */
+
+/* ================= §C / B7 · THANH TRÊN: ray rộng hơn (366 px@390), chữ ≥ 12 px@390 ================= */
+html.co-hud2 body #wrap.co-tvb #top { --W: 384px; left: 23px; z-index: 7; }
+html body #wrap.co-tvb #tb-wave .ht-ic { display: none; }
+html body #wrap.co-tvb #tb-wave { gap: 4px; }
+html body #wrap.co-tvb #tb-wave span { font-size: 12.5px; font-weight: 800; color: #d6dce4; letter-spacing: .2px; }
+html body #wrap.co-tvb #tb-wave b { font-size: 19px; }
+html body #wrap.co-tvb #tb-trum { font-size: 14px; gap: 6px; }
+html body #wrap.co-tvb #tb-trum .vt-chip { width: 24px; height: 24px; }
+/* BOSS IN N: hổ phách = đang đếm ngược · đỏ = wave sau là trùm / trùm ở sân */
+html body #wrap.co-tvb #top.tvb-cam #tb-trum { color: #ffc547; }
+html body #wrap.co-tvb #top.tvb-do #tb-trum { color: #ff5a4e; }
+html body #wrap.co-tvb #tb-tim .ht-n { font-size: 19px; }
+html body #wrap.co-tvb #tb-tim .ht-max { font-size: 12.5px; }
+html body #wrap.co-tvb #tb-tim .ht-ai, html body #wrap.co-tvb #ht-phu .ht-ai { font-size: 12px; letter-spacing: 0; }
+html body #wrap.co-tvb #tb-tim.pvp .ht-max { display: none; } /* PVP: "YOU ♥ 3" — số tim to, tách khỏi tấm RIVAL */
+html body #wrap.co-tvb #ht-phu:not([hidden]) { height: 21px; top: 42px; right: 20px; padding: 0 10px; }
+html body #wrap.co-tvb #ht-phu .ht-n { font-size: 15px; }
+html body #wrap.co-tvb #ht-phu .ht-max { font-size: 11.5px; }
+html body #wrap.co-tvb #ht-phu.xanh .ht-ai { font-size: 12px; }
+
+/* ================= B7 · BÀN ĐẦY: nút Triệu hồi tắt (ảnh h2_trieu_tat) + "BOARD FULL" 2 dòng ================= */
+html body #wrap.co-tvb #nut-trieu .tr-ten { font-size: 13px; }
+html body #wrap.co-tvb #nut-trieu .tr-gia { font-size: 15px; }
+html body #wrap.co-tvb #nut-trieu.tn-day { background-image: url(../assets/h2_trieu_tat.png); }
+html body #wrap.co-tvb #nut-trieu.tn-day:active, html body #wrap.co-tvb #nut-trieu.tn-day.an { background-image: url(../assets/h2_trieu_tat.png); }
+html body #wrap.co-tvb #nut-trieu.tn-day .tr-cap { transform: none !important; }
+html body #wrap.co-tvb #nut-trieu.tn-day .tr-gia { display: none; }
+html body #wrap.co-tvb #nut-trieu.tn-day .tn-full { display: flex; flex-direction: column; align-items: center; margin: 0; font-size: 13.5px; line-height: 14px; letter-spacing: .04em; color: #24262a; text-shadow: 0 1px 0 #a7abb1; }
+html body #wrap.co-tvb #nut-trieu.tn-day .tn-full[hidden] { display: none; }
+html body #wrap.co-tvb #nut-trieu.tn-day .tn-full b { font-weight: 900; }
+html body #wrap.co-tvb .tvb-ly { left: 50% !important; transform: translateX(-50%); font-size: 14px; }
+/* phím tốc độ: nhãn 1×/2× ≥ 12 px@390 */
+html body #wrap.co-tvb .nut-nho[data-act="tocdo"]::after { font-size: 13px; height: 16px; line-height: 16px; }
+
+/* ================= B8 · DẢI XEM NHANH 64 px@390 (70 logic): chân dung 44 · tên 14 · 1 dòng 12 · DMG/RATE · nút 44 ================= */
+html body #wrap.co-tvb #tt.hb-qi { left: 18px; right: 18px; height: 70px; gap: 10px; }
+html body #wrap.co-tvb #tt.hb-qi .tt-the, html body #wrap.co-tvb #tt.hb-qi .tt-anh { width: 48px; height: 48px; }
+html body #wrap.co-tvb #tt.hb-qi .tt-than { grid-template-rows: 24px 19px; padding-right: 46px; column-gap: 10px; }
+html body #wrap.co-tvb #tt.hb-qi .tt-ten { height: 24px; line-height: 24px; font-size: 15.5px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-sao { font-size: 15px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-sao img { width: 14px; height: 14px; }
+html body #wrap.co-tvb #tt.hb-qi .tt-kn { font-size: 13.5px; line-height: 19px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so { gap: 12px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so span { flex-direction: column; align-items: flex-end; gap: 0; line-height: 1; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so span i { display: none; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so small { font-size: 10.5px; line-height: 11px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so b { font-size: 16px; line-height: 15px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so .ht { font-size: 13px; max-width: 168px; flex-direction: row; }
+html body #wrap.co-tvb #tt.hb-qi .tt-than { grid-template-rows: 26px 19px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-mo { width: 48px; height: 48px; margin-top: -24px; right: -8px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-mo img { width: 24px; height: 23px; }
+
+/* ================= B9 · TẤM MỞ RỘNG: tấm đáy ≤ 470 px@390, chân dung 64, 4 ô số 2×2, mốc sao, đóng 44 ================= */
+html body #wrap.co-tvb #tt.hb-qi.hb-rong { left: 13px; right: 13px; height: auto; gap: 12px; padding: 6px 6px 8px 6px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-the, html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-anh { width: 70px; height: 70px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-than { padding-right: 44px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-dau { gap: 6px; flex-wrap: wrap; row-gap: 2px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-ten { font-size: 20px; height: 26px; line-height: 26px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao { font-size: 17px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-bac { font-size: 12px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-phu { font-size: 13.5px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-kn { font-size: 14.5px; line-height: 1.32; margin: 2px 0 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+/* 4 ô số 2×2 (≈ 162×52 @390) — chỉ chữ/số trên nền tấm khung_tt (không thêm khung vẽ) */
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-live { margin: 0 0 6px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang { display: grid !important; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang > div { min-width: 0; min-height: 54px; display: flex; flex-wrap: wrap; align-content: center; align-items: baseline; column-gap: 5px; padding: 5px 12px 5px 14px; margin: 0; box-sizing: border-box; flex: none !important; width: auto !important; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang > div small { flex-basis: 100%; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang s { font-size: 12px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang em, html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang u { font-size: 12.5px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang small { font-size: 12.5px !important; line-height: 15px; color: #aab4bf; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang b { font-size: 21px !important; line-height: 24px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .st-hang i { font-size: 12.5px !important; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-so { font-size: 13.5px; line-height: 1.35; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip { gap: 6px; flex-wrap: wrap; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span { font-size: 12.5px; max-width: none !important; flex: none; overflow: visible; text-overflow: clip; white-space: nowrap; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-ct { height: 44px; line-height: 42px; font-size: 14px; padding: 0 14px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong { width: 48px; height: 48px; right: -10px; top: -10px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong img { width: 26px; height: 26px; }
+/* SOLO đang dừng vì tấm mở: một dòng báo nhỏ (chữ) */
+#tvb-dungchu { position: absolute; z-index: 27; left: 0; right: 0; text-align: center; font-size: 13.5px; font-weight: 800; letter-spacing: .3px; color: #dfe5ec; text-shadow: 0 1px 0 #000, 0 0 4px #000, 0 0 8px #000; pointer-events: none; }
+#tvb-dungchu[hidden] { display: none; }
+
+/* ================= B12 · CẢNH BÁO TRÙM GỌN ≤ 96 px@390 (98 logic): chân dung 56 · tên 18 · mối đe doạ 13 · đếm 16 ================= */
+html body #wrap.co-tvb #canh-bao.tvb-cb { left: 8px; right: 8px; min-height: 0; box-sizing: border-box; padding: 0 64px 0 52px; z-index: 28;
+  display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; grid-template-rows: auto auto auto; column-gap: 10px; align-content: center; align-items: center; justify-items: start; text-align: left;
+  border-image: url(../assets/bang_trum_nen.png) 40 110 fill / 16px 46px stretch; }
+html body #wrap.co-tvb #canh-bao.tvb-cb > img { display: none; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp { display: block; grid-column: 1; grid-row: 1 / 4; width: 62px; height: 62px; margin: 0; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao .cb-sp { animation: cb-8n2 .9s steps(8) infinite; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-den .cb-sp, html body #wrap.co-tvb #canh-bao.tvb-cb.cb-ra .cb-sp { animation: cb-8n2 .9s steps(8) infinite; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp[style*="--nf:4"] { animation-name: cb-4n2; animation-timing-function: steps(4); }
+@keyframes cb-8n2 { from { background-position: 0 0; } to { background-position: -496px 0; } }
+@keyframes cb-4n2 { from { background-position: 0 0; } to { background-position: -248px 0; } }
+html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { display: block; grid-column: 2; font-size: 13px; letter-spacing: 1px; color: #ffd23f; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao .cb-w { color: #ffc547; animation: cb-nhay .5s ease-in-out infinite alternate; }
+html body #wrap.co-tvb #canh-bao.tvb-cb b { grid-column: 2; max-width: 100%; font-size: 20px; line-height: 23px; letter-spacing: 1px; padding: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao b { color: #fff; }
+html body #wrap.co-tvb #canh-bao.tvb-cb span { grid-column: 2; max-width: 100%; font-size: 14.5px; line-height: 17px; margin: 0; color: #fff3ef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #wrap.co-tvb #canh-bao .tvb-dem { display: none; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem { grid-column: 3; grid-row: 1 / 4; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 54px; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem[hidden] { display: none; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem small { font-size: 11.5px; font-weight: 800; color: #ffc547; text-shadow: 0 1px 0 #000, 0 0 4px #000; white-space: nowrap; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem b { grid-column: auto; font-size: 20px; line-height: 22px; color: #ffc547; overflow: visible; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-den .tvb-dem b, html body #wrap.co-tvb #canh-bao.tvb-cb.cb-den .tvb-dem small { color: #ff6a5e; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-den { animation: cb-vao .24s ease-out both; }
+html body #wrap.co-tvb #canh-bao.tvb-cb.cb-ra { animation: cb-ra .3s ease-in both; }
+
+/* ================= B11 · PVP: "VS" giữa khe 2 bàn (tấm h2_tam_do) ================= */
+#tvb-vs { position: absolute; z-index: 5; left: 50%; width: 58px; height: 26px; margin-left: -29px; display: flex; align-items: center; justify-content: center; pointer-events: none;
+  font-size: 15px; font-weight: 900; letter-spacing: 2px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; box-sizing: border-box;
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_do.png) 0 40 fill / 0 13px / 0 stretch; }
+#tvb-vs[hidden] { display: none; }
+#top[hidden] ~ #tvb-vs { display: none; }
+@media (prefers-reduced-motion: reduce) { html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp, html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { animation: none !important; } }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span { height: 22px; padding: 0 7px 0 5px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span b { font-size: 12.5px; }
