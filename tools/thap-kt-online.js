@@ -47,7 +47,7 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   await Bp.p.evaluate(() => ONL.moBang()); await Bp.p.fill('#onl-ma', code); await Bp.p.click('[data-act="onl-vao"]');
   await A.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 10000 });
   await Bp.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 10000 });
-  const sanh = await Bp.p.evaluate(() => [...document.querySelectorAll('#sanh-ds .sanh-p')].map(e => ({ ten: e.querySelector('b').textContent, u: e.querySelectorAll('.s7-bo img:not(.mv)').length, mv: !!e.querySelector('.s7-bo img.mv') })));
+  const sanh = await Bp.p.evaluate(() => [...document.querySelectorAll('#sanh-ds .sanh-p')].map(e => ({ ten: e.querySelector('b').textContent, u: e.querySelectorAll('.sp-u').length, mv: !!e.querySelector('.sp-mv img') })));
   kt(sanh.length === 2 && sanh.every(x => x.u === 5 && x.mv), 'Sảnh: 2 người, mỗi người 5 thẻ + chỉ huy ' + JSON.stringify(sanh));
   await A.p.screenshot({ path: OUT + '02_A_sanh.png' });
   // người thứ 3 không vào được phòng đầy
