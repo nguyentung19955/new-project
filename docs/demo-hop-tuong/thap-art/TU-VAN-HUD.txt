@@ -1,0 +1,203 @@
+TURRET MERGE — IN-BATTLE HUD ART-DIRECTION AUDIT
+Co-op portrait battle | Screenshot review | 05 November 2026
+Prepared as a production-ready brief for AI-generated art and implementation agents.
+
+SCOPE AND NON-NEGOTIABLES
+- Critique is based on the supplied 860 x 1720 portrait screenshot, not a live build or usability test. All measurements below are design targets; validate them on actual devices.
+- Keep the two 5x3 boards, left enemy highway, right core, bottom turret deck, commander, Summon, speed, and pause. This is a HUD redesign, not a combat-system redesign.
+- ALL graphical UI shapes (panels, frames, icons, progress tracks, buttons, ornamental borders, glow overlays) must come from ChatGPT-generated raster art. Code may position, crop, scale, tint where appropriate, mask, compose and animate art sprites, and render legible dynamic text. Do NOT substitute CSS/canvas-drawn rectangles, circles, strokes, gradients, or vector icons for the final UI graphics.
+- For every asset prompt below: isolated sprite(s), flat solid #FF00FF magenta background, no text/letters/numbers, no shadow cast onto background, no cropped parts. Remove magenta to real transparent alpha in the asset pipeline, with edge-fringe cleanup. Keep master PNG/WebP with alpha. Do not display magenta in game.
+- The best reference lesson from Random Dice / Rush Royale / Destiny Child: Defense War / Clash Royale is quick parsing of action, resource and unit state, NOT copying any one game's iconography, copyrighted artwork or exact layout.
+
+EXECUTIVE DIAGNOSIS
+The battle field has a coherent heavy-industrial concept. The HUD looks 'AI-made' because it combines too many locally impressive ornamental assets without a single rigorous system. Every module competes to be the hero: beveled silver metal, yellow/black warning stripes, blue/teal LCD, gold trims, orange medal rims, multi-colour rarity glows, anime portraits, chunky engraved type, glossy gems and decorative bolts. Individual textures look finished, but hierarchy, scale, framing, typography and component relationships do not. The most important action — tapping Summon — is less visually decisive than the surrounding frame. Portrait art on all six cards is more dramatic than game state, yet the player needs to understand card level, affordable upgrades and turret composition in fractions of a second.
+
+One-sentence direction: 'A battle cockpit attached to an industrial turret tray' — restrained charcoal machinery, light brushed steel for structure, ONE signal colour per functional state, authentic mechanical detail only at corners, and high-contrast information surfaces.
+
+1. WHAT FEELS GENERIC / AI-GENERATED, WITH SCREEN-SPECIFIC EVIDENCE
+1) Decorative overload: the bottom HUD stack has rivets, diagonals, rounded bevels, yellow hazard tape and ornamental corner brackets on nearly every component. The repetition is ornamental rather than functional.
+2) Inconsistent design language: the industrial tray is dark, low-saturation, almost matte; the bottom HUD is bright polished silver; the turret rings are fluorescent; the portrait cards look like a separate fantasy gacha game. These could be intentional layers, but there is no clear transition rule.
+3) Generic 'premium game UI' beveling: the mana readout, speed/pause buttons and Summon machine use different bevel radii and edge thicknesses, instead of a reusable component family.
+4) Text and material clash: 'Summon' is dark relief text over dark, highly textured metal, while card labels and counters are tiny gold and grey objects on noisy frames. Decoration wins over readability.
+5) Functional rank is reversed: Summon, the primary action, is lower-contrast than the mana LCD and commander illustration. Its cost is detached below it in a little inset, making the button look inert.
+6) The deck has five distinct hero portraits and a larger commander illustration, but mechanical roles, upgrade availability and costs lack a consistent rhythm; the illustrated faces steal attention from the board.
+7) The ally strip is an overdesigned mini-presentation: portraits, badges, colored borders, enclosing armor and warning stripes crowd a narrow high-priority top area. It reads as a second deck, not quick co-op context.
+8) Star level is a separate floating gold hex badge at a turret corner, which reads like yet another floating UI token rather than an integrated turret state. Small dice-like or engraved details do not scale well.
+9) The Wave panel, boss timer and three red orb indicators in the top bar do not read as one scoreboard. Players may not immediately know whether the right orbs mean lives, boss stages or something else.
+10) Field information and UI compete in saturated colour: neon purple laser, lime/teal/red turret rings, enemy red/purple and cyan path chevrons, then equally bright HUD accents. There is no controlled visual budget.
+
+2. HIERARCHY, GLANCE READABILITY, THUMB REACH, DENSITY
+The intended 1-second reading order should be:
+  A. What threatens me? Enemies on left lane, core condition, immediate boss warning.
+  B. Can I act? Available mana + one dominant Summon button.
+  C. Which turret/upgrade matters? Five deck cards with clearly legible availability and LV.
+  D. Team context: ally status and loadout (supporting, not competing).
+  E. Rare controls: speed, pause and commander skill.
+
+Present hierarchy: the mana panel and large commander card have more visual weight than the actual Summon surface; the top UI presents several unrelated 'hero' badges. The top ally module is too tall/heavy relative to its job. The deck cards are too intricate at their rendered size.
+
+Target zone map (relative to safe display area, not fixed screenshot pixels):
+- Top 0-9%: compact battle status row: wave | BOSS IN N | life/core state. Protect notches/status bar.
+- Top 9-14%: collapsible/compact ally-loadout strip; 5 icons + one commander badge.
+- Middle ~14-78%: prioritize combat boards and enemy path; no intrusive permanently opaque overlays beyond core/team labels.
+- Bottom ~78-89%: control rail (mana, oversized Summon, speed, pause); place Summon in comfortable lower thumb arc.
+- Bottom ~89-100%: five cards + commander action, aligned to same baseline; bottom safe-area padding preserved.
+These are design proportions to test, not instructions to distort the battlefield. On tall phones, spend extra height on the arena, not more chrome. On short devices, reduce decorative trim first, then portrait size, never primary touch targets.
+
+Reachability: the main Summon target should be at least 56 x 56 CSS px (prefer 64-72 on phones) with a larger transparent hit area if artwork is irregular. Speed/pause need >=44 x 44 CSS px hit targets and ~8 CSS px separation. Five deck cards need visually distinct but not touch-overlapping hit regions. Allow left- and right-thumb play: Summon central, mana legible from either side, secondary controls to far right but not touching screen edge. Commander active button should sit just above or alongside the bottom-right thumb, not become an accidental replacement for Summon.
+
+At small scale: use 2-3 tiers of type size only. Suggested test starting points in CSS pixels at a 390px-wide viewport: 19-22 for boss countdown/primary action, 15-18 for mana and wave, 11-13 for card level/cost and small metadata. Avoid text smaller than 11-12 CSS px for critical numbers. Use tabular numerals and a solid dark text plate. Verify across Safari dynamic viewport, devicePixelRatio, noninteger scaling and screenshot downsampling. Do not rely on thin strokes, colored outlines or glow as sole status indicators.
+
+Reduce constant information density: show wave, boss ETA, lives, mana, Summon cost, LV and upgrade affordability all the time. Show detailed turret stats, ally portrait tooltips, commander biography, detailed upgrade benefits, etc., only on tap/hold. Hide the deck's redundant mini-ornaments and decorative badges.
+
+3. TOP BAR AND ALLY LOADOUT
+TOP BAR PROPOSAL
+- Use ONE unified horizontal 'status rail' with three compartments carved from the same matte steel asset family.
+- Left: wave number as the largest item in its compartment; small 'WAVE' label. Current screenshot's 'Wave 2' embossed plate looks decorative and disproportionate.
+- Center: small boss emblem + 'BOSS IN 8' as an obvious countdown, with one discreet segmented progress strip beneath. Shift to amber at <=3 waves and red for incoming boss; communicate meaning with text as well as colour. The existing boss icon is small yet detailed and the progress cells are too subdued.
+- Right: the three red orbs must be named. IF they represent lives, replace with a heart/core icon + '3/3' or three simple readable life tokens. IF they represent a different resource, use that mechanic's icon and label. Do not relabel until the game logic is confirmed.
+- Avoid duplicating life/core state: the core crystal on the battlefield should show hit feedback; the top rail gives permanent count/health.
+- Fix all three to one baseline, common inset, one cap shape and shared thickness. Top safe-area padding must respect iPhone notch/Dynamic Island.
+
+ALLY STRIP PROPOSAL
+- Treat as peripheral information, not a second main deck. Thin 5-turret loadout silhouettes with compact rarity edge, plus separate commander medallion. Use either portrait heads OR turret icons consistently; portraits are currently very dense.
+- Reduce outer framing and yellow warning tape by roughly half. Individual slots should feel like slots in the SAME metal rail, not five independently decorated cards.
+- An 'ALLY' label with one stable team colour/tiny status dot; tap strip to expand into fuller portraits and levels. If team names are shown, truncate gracefully and provide accessible tooltip/expanded view.
+- Distinguish 'loadout' (what the ally can summon) from 'currently deployed' (what is on their board); never imply deployed counts through a static loadout strip.
+- Avoid misleading live-status ornamentation on icons unless the underlying data exists.
+
+4. DECK, COMMANDER, SUMMON: SPECIFIC SYSTEM
+DECK CARD TEMPLATE (FIVE CARDS)
+- Replace five custom ornate portrait frames with ONE reusable card construction: shared dark backplate, one rarity edge overlay, portrait crop, top-left LV plate, top-right inventory/count plate, bottom upgrade-cost strip.
+- Give each datum a dedicated place: LV is not confused with rarity; count (x2/x1) has a small stack icon; mana upgrade cost has the same gem icon used on the mana HUD. If a quantity actually means another mechanic, use its true semantic label. Screenshot labels should be verified against code; don't redesign based on guesses.
+- All five portraits same crop and lighting. Preserve authored hero art but reduce visual dominance through a consistent dark lower fade/BG behind numbers (generated as sprite overlay).
+- Rarity = 1 thin colour accent at the outer edge + one tiny matching notch (optional). Do not make the entire frame gold/blue/purple AND add unrelated colourful borders inside. Rarity palette can be white / blue / purple / gold / red if consistent with the game's established tier rules, while gameplay/element icons use their own separate code.
+- Affordable upgrade: a single restrained green indicator on cost tab and optional 1x pulse on becoming affordable. Unaffordable: text still readable, reduce action highlights, not entire portrait visibility. Max level: replace cost with MAX, not a fake currency requirement.
+- Cards selected/pressed: 2-3px equivalent upward translation and frame brightness/single highlight, without obscuring their status labels. Icons are raster generated; runtime text remains crisp.
+
+COMMANDER CARD
+- Distinguish this from the five deck slots as a SKILL CONTROL, not an oversized sixth collectible: one portrait medallion or cropped bust, skill readiness meter, short action label and cooldown/cost displayed clearly.
+- Screenshot's 'REINFORCE' plate dominates and crowds the already dense lower-right corner. Keep the actual key art in a smaller crop, put the actionable effect/readiness on top, and maintain one exact touch target.
+- If commander card is passive, DO NOT show it as an obvious tappable skill. Label/passive treatment should reflect the mechanic. If it is activatable, show charge/cooldown and unmistakable pressed/ready state.
+
+SUMMON BUTTON
+- Most important visual change. Replace the broad rectangular embossed 'Summon' housing and tiny cost inset with a raised physical button: simple dark-gunmetal chassis, bright copper/amber mechanical rim, low-noise center bearing a readable 'SUMMON' text layer and adjacent mana-gem cost.
+- A bold circular or rounded-hex press zone is acceptable as an IMAGE asset, but do not use a code-drawn circle. Place it dead center of the control rail and make it visually taller than adjacent controls.
+- Distinguish states with image layers: idle, available, unaffordable, pressed, cooldown/disabled (only if mechanic exists). The same button may use shared base art with state overlays rather than separate full copies.
+- Cost belongs ON the button, tied to the current mana currency; maintain a direct glance relation between the mana number and cost. Avoid false 3D relief that looks disabled when tappable.
+- If held to multi-summon, show the real rule in tutorial; do not visually suggest hold action without implementation.
+
+5. COLOUR / MATERIAL / TYPOGRAPHY RULES
+Materials: 80% charcoal/gunmetal (#24292E to #454B50) low-saturation; 15% lighter steel edges (#737B80 and selective #B7BEC1); 5% accent. Use warm hazard amber (~#E4A43A) ONLY for primary action, boss imminence and industrial warnings, not for every rim. Cyan/teal should be reserved for ally/positive or technical signal where semantically justified, not general decoration. Keep faction colors separate from rarity and element colours. Pick one gold metal hue for medals — avoid mixing brass, rose gold and yellow plastic rims.
+
+Material recipes (all raster): 1) Structural frame: dark brushed steel, 2px-scale dark rim, tiny corner rivets; no yellow tape except at major machine transitions. 2) Interactive key: slightly raised machined metal, controlled edge highlight, small deep shadow under key. 3) Readout: nearly-black recessed LCD with high-contrast off-white numerals. 4) Rarity: paper-thin edge strips/no heavy ornate border. 5) Danger: amber -> red only for threat and urgency. Do not include arbitrary light bloom over numeric surfaces.
+
+Typography: create/use ONE licensed production font family for the HUD with robust Latin and digit rendering (e.g., a strong condensed/semibold sans font), plus at most ONE display face for event callouts. Render dynamic copy in code for localization: 'WAVE', 'BOSS IN', 'ALLY', 'SUMMON', 'MAX', currencies, counts. Do not ask image generator to paint UI copy or numbers; it will be inconsistent and unlocalizable. Use semibold numerals, tabular figure spacing, high contrast; dark stroke/drop shadow only where needed for a stable 4.5:1-ish contrast target on backplates. The screenshot's embossed 'Summon' lettering and multi-style card typography must be standardized.
+
+Critical icon vocabulary: one mana diamond everywhere; one level marker; one stack/count mark; one rarity treatment; one life/core indicator; one ability cooldown state. Avoid mixing glowing blue diamonds with purple gems to indicate the SAME currency.
+
+6. MOTION AND FEEDBACK (SMALL, INFORMATIVE, SAFE)
+- Summon press: 90-130ms downstroke (sprite position/scale), metallic flash at press edge, 100-160ms release. Summon spawn: one subtle portal pulse at summoned socket, not an all-screen white flash.
+- Mana: count-up text on gain; brief 120ms earned-gem spark at resource readout; no constant pulsing LCD.
+- Affordability crossing: when mana >= cost, tiny 1-cycle amber rim pulse on Summon and faint green upgrade tick on eligible cards. Stop after one cycle.
+- Unaffordable tap: 100ms local horizontal nudge, brief red cost value, optional quiet dry click; do NOT punish with long animations.
+- Upgrade: card frame tightens/flares once and LV number increments with a 150ms pop; tier-color flash must not cover the number.
+- Merge: 180-250ms connection arc between exact source/target slots, then a crisp star-count increment above the resulting turret; never hide board enemies for the effect.
+- Boss near: at <=3 waves a quick amber countdown accent; at arrival one concise 'BOSS' label and edge pulse with reduced-motion option.
+- Core hit/life lost: local core crack flash, top lives indicator steps down on the same animation beat; optional haptic if supported/user-enabled.
+- Commander ready: medallion rim pulses only 1-2 times; cooldown uses authored segmented art and number, not an endlessly spinning glow.
+- Ally action: tiny 'ALLY SUMMON' toast near ally board only for high-value events, rate limited; do not flood combat.
+- Respect prefers-reduced-motion, visibility pause, 30/60 FPS constraints, and no expensive full-screen blur or glow shaders on mobile Safari. Animation state must be tied to actual game events, not arbitrary timers.
+
+7. PRIORITIZED 15-CHANGE PRODUCTION BACKLOG
+Every item supplies a specific art-generation brief and a code-delivery requirement. Priorities P0 = ship first, P1 = second pass, P2 = polish. Asset prompts deliberately say NO TEXT so all labels and real data stay programmatic. Every prompt inherits the mandatory #FF00FF background, separated elements, clean dark outline, centered sprites, no words or numbers, and no cropped art.
+
+01 [P0] CENTRAL SUMMON BUTTON — fixes primary-action hierarchy.
+ART: 'Top-down polished mobile-game HUD sprite sheet, 4 frames in one row: large raised industrial press button, dark steel base, restrained warm-amber copper rim, broad clean recessed center, states idle / enabled glowing rim / physically pressed / disabled dim; cohesive flat machine style, no other panels, no text, flat solid #FF00FF background.'
+CODE: Replace existing decorative Summon art with a single clickable central button; render 'SUMMON' and live mana cost as text + approved gem sprite ON button; implement states from mana >= summonCost and actual cooldown; >=56px tap target, touch-action manipulation, down/up transitions; keep accessibility label updated.
+
+02 [P0] COMMON FIVE-CARD CHASSIS — removes five independent fantasy frames.
+ART: 'One clean dark-gunmetal portrait card chassis with 9-slice-safe flat edges, small rivets ONLY at corners, reserved empty top badge pads and bottom cost well, plus separate transparent pressed overlay; five equal alternative hairline rim overlays white blue purple gold red arranged beside it, no portraits or text, #FF00FF.'
+CODE: Refactor cardRenderer to use one reusable card background + independent rarity overlay + portrait texture + status text; share exact slot sizes/gaps and hit areas; rarity reflects game data; no extra custom borders in per-unit art.
+
+03 [P0] LARGE LEGIBLE CARD DATA PLATES — critical upgrade readability.
+ART: 'Reusable mini HUD kit: compact rectangular dark level tag, stack-count tag with tiny stack silhouette, recessed mana-cost chip with one small empty icon socket, and muted unavailable overlay; precise flat edges, industrial sci-fi, isolated assets, no text, #FF00FF.'
+CODE: Render 'LV 1', 'x2', and numeric upgrade cost in consistent fixed positions on all five cards, use current model data; show MAX/locked/error correctly; localize labels; >=11-12px CSS text; use same gem sprite as mana readout; add stable alignment for 1-4 digits.
+
+04 [P0] TOP STATUS RAIL — unifies wave/boss/lives.
+ART: 'Single wide segmented gunmetal industrial status rail with three clearly distinct shallow recessed bays, minimal corner bolts, thin matte steel edge; separate subtle slim segmented-progress track; no labels or emblems, #FF00FF, allow 9-slice horizontal stretch.'
+CODE: Replace detached Wave plate, floating boss block and isolated right orb cluster with one top layout; slot wave left, boss countdown center, confirmed life/health mechanic right; data-bind all; safe-area padding; warn amber <=3 waves; do not assume orbs equal lives without confirming model.
+
+05 [P0] READABLE MANA / COST PAIR — fixes resource-action relationship.
+ART: 'Low-noise compact recessed black LCD meter with brushed-steel outer lip and tiny cyan signal strip at left; matching beveled purple mana diamond icon as separate sprite; wide clean numeric area, no digits, no text, #FF00FF.'
+CODE: Collapse overly large mana housing; render high-contrast live numeric mana (tabular); place directly adjacent to Summon; ensure gem icon identical in card cost/readout/Summon; support large amounts and 1,000 grouping; prevent any animated overlays covering digits.
+
+06 [P0] COMMANDER CARD AS ACTION — removes confusing sixth-card dominance.
+ART: 'Compact dark steel commander skill medallion frame, broad clear portrait aperture, thin distinct red-violet ability edge, separate slim charge/cooldown ring sprites for idle/ready/disabled; no character, no text, #FF00FF.'
+CODE: Crop existing commander art into one portrait viewport; use real passive/active mechanic to decide whether button is tappable; add readiness/cooldown text or charge indicator, tooltip and explicit skill action; reduce width to comparable ~1.0-1.3 card widths unless test shows otherwise.
+
+07 [P0] BOARD STAR-LEVEL MARKER — eliminates floating tiny gold hex noise.
+ART: 'Industrial turret star badge system, seven matching small dark metal shield tabs with clear center for a large dynamic digit, thin ivory edge and one warm amber notch, no engraved numerals; plus one selected-state glow overlay; #FF00FF.'
+CODE: Replace independent ornate gold star corner tokens with one same-position badge per turret, render large 1-7 numeral, maintain uniform size and avoid overlap with turret silhouette; test at actual ~50px turret size. If existing star art is gameplay-mandatory, A/B compare numeric badge versus die pips on the turret TOP, not both simultaneously.
+
+08 [P1] ALLY LOADOUT MICRO-RAIL — reduces top crowding.
+ART: 'Long slim dark metal ally equipment rack with five identical square icon sockets plus one circular commander socket, fine neutral steel edge, no hazard tape except two small end marks; separate minimal team-status dot, #FF00FF.'
+CODE: Replace big armor strip; render five normalized turret icons or consistent cropped pilot heads, rarity edge only; ally label and green/grey presence state; optional expandable detail on tap; don't claim count of active deployed turrets from a loadout graphic.
+
+09 [P1] TURRET ROLE PICTOGRAM FAMILY — quicker deck recognition.
+ART: 'Five bold industrial mini-icons in one row, equal size and line weight: cannon muzzle offensive, twin small barrels sub-offensive, antenna support, snowflake/freeze control, hexagonal spark special; luminous white glyph on dark transparent-centered dark plates, no text, #FF00FF.'
+CODE: Assign role from data to a reserved card corner, make icon lower salience than LV/cost; keep role and rarity independent; ensure role taxonomy matches actual gameplay and all players can identify icons through tap tooltip.
+
+10 [P1] SPEED / PAUSE MATCHED KEYCAPS — standardizes buttons.
+ART: 'Two matching small square industrial machine keycap bases with soft bevel and minimal screws, plus separate pause symbol and speed-chevron symbol sprites, neutral silver on charcoal; states idle pressed disabled in columns, no text, #FF00FF.'
+CODE: Use shared control component and spacing; render live '1x/2x' in text only if supported; >=44px hitboxes; label accessibility; guard pause game lifecycle and disable rapid double-tap state glitches.
+
+11 [P1] CORE / LIFE FEEDBACK FAMILY — aligns field and scoreboard.
+ART: 'Small compact matching machine-life icon and three progression states of a cyan crystal core: intact, chipped, critical; separate short red edge flash and single amber warning chevron; no text, #FF00FF.'
+CODE: Tie top status readout to actual core/lives model; show persistent numeric state and local right-core visual condition; trigger synchronized state change on core damage; use colour + icon state, not red glow alone; support co-op ally/you differentiation.
+
+12 [P1] CARD AFFORDABILITY / UPGRADE RESPONSE — quiet useful feedback.
+ART: 'Transparent overlay sprite kit for a narrow green 'ready' corner glint, thin amber upgrade burst, and muted dark unavailable filter, each isolated on #FF00FF; no full-frame bright bloom, no words.'
+CODE: Compute upgradeAvailable per turret on mana or price change; overlay once when transitioning false->true, no perpetual sparkles; use clear disabled interaction and correct onTap upgrade validation; feedback <=200ms.
+
+13 [P1] PRESS / MERGE / SUMMON FEEDBACK VFX — celebrates action without obstructing enemies.
+ART: 'Polished small sci-fi HUD VFX sprite sheet, 3 rows x 6 frames: button edge compression highlight, small socket portal ignition, merge connection spark; vivid cyan and amber with tight clean contours; empty surrounding space, no text, #FF00FF.'
+CODE: Add event-driven animation player on summon/merge/press only, spatially anchored to affected socket or button; cull offscreen, no full-screen bloom, cap concurrent emitters, pause on hidden tab, honor reduced motion.
+
+14 [P2] TACTICAL READOUT TYPE + PLATES — makes labels look designed.
+ART: 'Tiny matching dark industrial text backplates for boss warning, ally tag, numeric counters and tooltips, four isolated horizontal 9-slice-safe shapes with square corners and tiny bolts at extreme ends; no symbols/text, #FF00FF.'
+CODE: Enforce one HUD font tokens table for size/weight/line height/spacing; dynamic localized labels only; use no code-drawn background shapes; tabular-nums where possible; truncation/ellipsis and overflow tests in English, Vietnamese and German-length mock strings.
+
+15 [P2] UNIFIED EDGE / TRANSITION KIT — stops collage appearance.
+ART: 'Modular industrial trim atlas: matte charcoal 9-slice corner, straight edge segment, narrow brushed steel separator, small warning-stripe end cap, tiny bolt, subtle machined joint; same top-left diffuse light, no cyan cast, isolated on #FF00FF.'
+CODE: Replace miscellaneous ornate joins across top/bottom HUD with reusable atlas pieces; apply common corner radius, edge thickness and spacing tokens; delete redundant independent borders; cache sprites; avoid scaling ornate corners nonuniformly.
+
+PRIORITY / SHIPPING ORDER
+Sprint 1 — hierarchy and function: #01 Summon, #03 readable card values, #04 top status, #05 mana, #02 card chassis, #06 commander. Ship internal build and check task-completion times; do not wait for polish.
+Sprint 2 — battle clarity and consistency: #07 star indicators, #08 ally rail, #10 control keys, #11 core status, #09 roles, #12 affordability.
+Sprint 3 — satisfying finish: #13 feedback effects, #14 text plates, #15 system-wide trim; QA and adjust animation restraint.
+Dependency note: #02 and #03 should be implemented together; #04 and #11 share the same underlying 'lives' mechanic verification; #01 and #05 share currency state; #06 needs a mechanic decision for active versus passive commander.
+
+ASSET PRODUCTION RULES FOR AI ART + CODING AGENTS
+A. Create ONE source style sheet first: 10x reference crop of an existing board socket + a material/lighting spec. Use same perspective: near-top-down/orthographic HUD sprites; no random isometric angle. Choose consistent painted pixel density and 1px-equivalent outline at target render size.
+B. Generate assets by FAMILY (status rail, cards, controls), not one-at-a-time isolated fantasies. Use same lighting (diffuse upper-left), neutral metal, limited accent. Preserve coherent sizes across states.
+C. For flexible 9-slice panels, insist on flat center and edge runs; ornaments only in corners/end caps. Export normal/pressed/disabled as pixel-aligned equal-size states.
+D. Keep art text-free. All current data, ability names, localized labels, quantities and costs rendered at runtime with approved typography. Custom icon silhouettes are allowed as generated art; do not have AI paint tiny letters or 'LV1'.
+E. Magenta is a temporary chroma key only. Convert to RGBA transparent, remove magenta fringes; check all anti-aliased edges at 1x and 2x on dark metal. Preserve separate masters for silhouettes, overlays, icons and effects.
+F. Atlas naming suggestion: hud_summon_{idle,ready,pressed,disabled}; hud_card_base; hud_rarity_{white,blue,purple,gold,red}; hud_tag_{level,count,cost}; hud_status_rail; hud_ally_rail; hud_core_{intact,chipped,critical}; hud_control_{speed,pause}; hud_trim_*. Use one manifest for source rect, logical size, anchor, padding and states.
+G. Code should draw only the imported sprites and live text. Implement reusable sprite composition/layout, not hard-coded screen-specific screenshot coordinates. Declare input/hover/pressed/disabled transitions separately from art; map UI actions to actual game state, never to visual timers alone.
+H. If UI uses Canvas2D, no CSS/CSS-drawn panel art; Canvas text can remain live. Use asset cropping and 9-slice via drawImage; pixel-snap edges where needed; maintain proper imageSmoothingEnabled according to art type. Precache source images to avoid per-frame decoding.
+
+MEASUREMENT / ACCEPTANCE TESTS
+- 1-second glance: 8/10 test players can identify wave, boss distance, life/core state, mana and whether Summon is affordable without coaching.
+- 3-second action: 8/10 can locate and press Summon first try, including on a small iPhone.
+- Deck: at gameplay size, an unfamiliar player can correctly distinguish LV, quantity and upgrade cost on four out of five cards; no label overlaps at 320/375/390/430 CSS px widths or large text settings.
+- Contrast: critical information retains sufficient contrast over bright combat VFX; no meaning is encoded only in red/green.
+- Touch: minimum 44x44 CSS px for secondary buttons and 56x56 for Summon, with expanded invisible hitboxes; never overlap neighboring cards.
+- Top: all content respects Safari safe-area insets, notch, dynamic toolbar and orientation changes; no cut-off status numbers.
+- Performance: benchmark on a real lower-end iPhone; avoid new per-frame allocations or full-screen filters; VFX are bounded, and sprites are cached/atlased.
+- Co-op: ally status, skill button, mana and top bar always reflect correct player ownership and real-time network state; do not confuse ally currencies with your own.
+- Screenshot test: compare original vs redesigned at identical wave/action; enlarged board readability and reduced ornamentation should be clear even when zoomed out to 25%.
+
+FINAL CREATIVE DIRECTION
+Stop trying to make every HUD component beautiful. Make the GAME beautiful and its INTERFACE decisive. Keep craftsmanship at the edges, a dark quiet center behind every datum, only one bright primary action, and one consistent metal system. The result should feel authored by a game UI team: repeatable rules, obvious affordances, legible consequences, and enough visual silence for turrets, enemies and beams to be the spectacle.
