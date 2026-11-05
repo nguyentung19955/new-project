@@ -778,5 +778,53 @@
   "vai": "db",
   "ho": "trap",
   "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "chuato",
+  "ten": "Hive Queen",
+  "bac": "do",
+  "dcdw": "Lilith / Summoner",
+  "kyNang": "Breeds hunter drones. Active (3★+): SWARM kamikaze",
+  "ten_vi": "Chúa Tổ",
+  "kyNang_vi": "Nuôi bầy drone mini tự săn quái; CHỦ ĐỘNG: cả bầy lao vào tự sát",
+  "vai": "tc",
+  "ho": "summon",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "leviathan",
+  "ten": "Leviathan",
+  "bac": "do",
+  "dcdw": "Leviathan / Nidhogg",
+  "kyNang": "Devours enemies for stacks. Active (3★+): TIDAL BREATH sweeps the path",
+  "ten_vi": "Thuỷ Quái",
+  "kyNang_vi": "Nuốt chửng quái thường lấy cộng dồn; CHỦ ĐỘNG: tia thở quét hết đường",
+  "vai": "tc",
+  "ho": "heavy",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "khoisinh",
+  "ten": "Genesis Core",
+  "bac": "do",
+  "dcdw": "Brownie / Aurora King",
+  "kyNang": "Raises your lowest turret +1★. Active (3★+): GENESIS summons turrets",
+  "ten_vi": "Lõi Khởi Sinh",
+  "kyNang_vi": "Định kỳ +1★ ụ yếu nhất; CHỦ ĐỘNG: gọi ụ ở mức sao trung bình",
+  "vai": "db",
+  "ho": "star",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "ronglua",
+  "ten": "Wyrm Engine",
+  "bac": "do",
+  "dcdw": "Tiamat",
+  "kyNang": "Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path",
+  "ten_vi": "Rồng Máy",
+  "kyNang_vi": "Phun lửa hình nón quét bàn, đốt cháy; CHỦ ĐỘNG: rồng bổ nhào dọc đường",
+  "vai": "tc",
+  "ho": "blast",
+  "moi": "TUONG-MOI-20"
  }
 ]
