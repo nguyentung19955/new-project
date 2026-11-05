@@ -5,16 +5,16 @@
 | id | loại | trước (đi xuống) | ngang (phải) | trái | sau (đi lên) | đánh (tung chiêu, nhìn bàn) |
 |---|---|---|---|---|---|---|
 | bo | thường | ✅ | ✅ | ⇋ | ✅ | không có chiêu |
-| bay | thường (bay) | ✅ | ✅ | ⇋ | ⏳ ↔ | không có chiêu |
+| bay | thường (bay) | ✅ | ✅ | ⇋ | ✅ | không có chiêu |
 | bay_bang | thường (bay) | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
-| tach | thường (tách → nho) | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
+| tach | thường (tách → nho) | ✅ | ✅ | ⇋ | ⏳ ↔ | không có chiêu |
 | khong_lo | TINH ANH | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
 | que_tach | TINH ANH | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
 | mad_crown | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
-| freezer | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
+| freezer | trùm cũ | ✅ | ✅ | ⇋ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | janus | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | joker_king | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
-| nightmare | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
+| nightmare | trùm cũ | ✅ | ✅ | ⇋ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | octopus | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | hive | trùm mới | ✅ | ✅ | ⇋ | ✅ | ✅ dải 16 |
 | jammer | trùm mới | ✅ | ✅ | ⇋ | ✅ | ⏳ (q_p6 fx) |
