@@ -34,7 +34,7 @@ const KT = () => { // khung hiện + ô cha nào overflow != visible mà cắt v
   const kt = async (ten) => { kq[ten] = await p.evaluate(KT); };
   await p.goto(BASE + '/thap/?notut=1&nointro=1', { waitUntil: 'load' }); await p.waitForTimeout(3000);
   await p.evaluate(() => HM.di('dk')); await p.waitForTimeout(1200);
-  await chup('deck_o', '#chon-bo'); await chup('deck_mv', '#dk-mv'); await kt('deck');
+  await chup('deck_o', '#chon-bo'); await chup('deck_mv', '#chon-bo .o-mv'); await kt('deck');
   // bộ sưu tập: cuộn tới thẻ đỏ / vàng / tím
   for (const bac of ['do', 'vang', 'tim', 'xanh']) {
     const id = await p.evaluate((bac) => { const c = [...document.querySelectorAll('#chon-luoi .c[data-id]')].find(c => (c.querySelector('img.kh') || {}).src && c.querySelector('img.kh').src.includes('the_khung_' + bac + '.png'));

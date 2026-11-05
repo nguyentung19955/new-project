@@ -120,6 +120,7 @@ const DK = {
   // ô dưới ngón tay (vùng chạm nới 12 px mỗi bên)
   oDuoi() {
     const k = this.keo, x = k.x, y = k.y, n = 12 * k.s;
+    if (this.trenMV()) return -1;
     let best = -1, bd = 1e9;
     this.oS().forEach((o, i) => {
       const r = o.getBoundingClientRect();
@@ -128,12 +129,21 @@ const DK = {
     });
     return best;
   },
+  trenMV() { const m = document.querySelector('#chon-bo .o-mv'), r = m && m.getBoundingClientRect(), k = this.keo; return !!r && r.width > 0 && k.x >= r.left && k.x <= r.right && k.y >= r.top - 6 * k.s && k.y <= r.bottom + 6 * k.s; },
+  laMV() {
+    const m = document.querySelector('#chon-bo .o-mv');
+    if (m && !this.giam()) m.animate([0, -6, 6, -4, 4, 0].map(dx => ({ transform: 'translateX(' + dx + 'px)' })), { duration: 260, easing: 'linear' });
+    if (m) { m.classList.add('dk-lac'); setTimeout(() => m.classList.remove('dk-lac'), 300); }
+    return this.sai('Commander slot · tap it to change commander');
+  },
   trenLuoi() { const l = document.getElementById('chon-luoi'), r = l && l.getBoundingClientRect(); return !!r && this.keo.y > r.top - 8 * this.keo.s; },
 
   tha() {
     const k = this.keo; if (!k) return;
     if (k.raf) { cancelAnimationFrame(k.raf); k.raf = 0; }
     this.veMa();
+    // thả lên ô CHỈ HUY (ô thứ 6): không nhận ụ → ô lắc ngắn + nhắc, ụ về chỗ
+    if (this.trenMV()) return this.laMV();
     const i = k.tren;
     if (k.tu === 'the') {
       if (i < 0) return this.ve();

@@ -49,7 +49,7 @@ if (require.main === module) (async () => {
     await p.goto(BASE + '/thap/?notut=1&nointro=1', { waitUntil: 'load' }); await p.waitForTimeout(3000);
     await chup('home_deck', '.hm-tab'); await kt('home');
     await p.evaluate(() => HM.di('dk')); await p.waitForTimeout(1200);
-    await chup('deck_o', '#chon-bo', 14); await chup('deck_noi', '#dk-noi'); await chup('deck_mv', '#dk-mv'); await chup('deck_luoi', '#chon-luoi .luoi', 0); await kt('deck');
+    await chup('deck_o', '#chon-bo', 14); await chup('deck_mv', '#chon-bo .o-mv'); await chup('deck_luoi', '#chon-luoi .luoi', 0); await kt('deck');
     await p.evaluate((id) => HM.moXem(id), DECK[0]); await p.waitForTimeout(700); await chup('xem', '#hm-tam', 0); await kt('xem');
     await p.evaluate(() => HM.moMVs()); await p.waitForTimeout(700); await chup('chihuy', '#hm-tam', 0); await kt('chihuy');
     await p.evaluate(() => HM.moPre()); await p.waitForTimeout(700); await chup('presets', '#hm-tam', 0); await kt('presets');

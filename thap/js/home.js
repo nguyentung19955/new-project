@@ -1,7 +1,7 @@
 // TURRET MERGE — HUD mượt A (TU-VAN-HUD-MUOT.txt §3A HOME + §3B DECK BUILDER + §4 chuyển động).
 //  #chon = MENU (mọi file khác vẫn coi "#chon hiện" = đang ở menu). Bên trong 2 màn:
 //   · .hm HOME: hồ sơ + kỷ lục, logo, ảnh lớn (chỉ huy đang dùng), chọn CHẾ ĐỘ (1 bảng: SOLO / CO-OP / PVP / ONLINE), nút PLAY, DECK / COLLECTION.
-//   · .dk XÂY BỘ BÀI: BACK + tiêu đề + PRESETS; 5 ô lớn; dải ụ nổi bật; chỉ huy 1 hàng; tìm + FILTER; lưới 3 cột; PLAY dính đáy.
+//   · .dk XÂY BỘ BÀI: BACK + tiêu đề + PRESETS; 5 ô + ô chỉ huy thứ 6 (chạm = chọn chỉ huy); tìm + FILTER; lưới 3 cột; PLAY dính đáy.
 //  Bảng trượt dưới (#hm-mo): chế độ · cài đặt (nhạc/SFX/âm lượng, hồ sơ, hướng dẫn) · bộ mẫu (presets) · bộ lọc (vai trò/độ hiếm/sắp xếp)
 //   · chỉ huy · XEM NHANH thẻ (ADD/REMOVE + DETAILS → trang ụ). Chỉ dời chỗ — không bỏ tính năng nào.
 //  Hình: chỉ ảnh ChatGPT có sẵn (QUY-TAC-HINH.md); ảnh Pass 7 (raw_p7_*) chờ gen — xem đầu css/hudmuot-a.css.
@@ -69,22 +69,27 @@ const HM = {
     this.el('dk-choi-phu').textContent = n === 5 ? m.ten + ' · ' + m.phu() : (5 - n) + ' more to go';
     // ô đang chờ đổi
     document.querySelectorAll('#chon-bo .o-bo').forEach((o, i) => o.classList.toggle('hm-armed', i === this.armed));
-    // dải nổi bật: ụ vừa xem / vừa thêm; chưa có → hướng dẫn 1 dòng
-    const id = (this.noi && G.rosterMap[this.noi]) ? this.noi : UI.chon[0], noi = this.el('dk-noi');
-    if (id && G.rosterMap[id]) {
-      const r = G.rosterMap[id], t = TIERS[r.bac], sk = SKILLS[id];
-      noi.dataset.id = id; noi.style.setProperty('--m', t.mau);
-      noi.innerHTML = '<span class="dk-noi-po"><img src="' + portraitOf(id) + '" alt=""></span>' +
-        '<span class="dk-noi-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small></span><img class="dk-noi-ct" src="assets/p7_ic_phai.png" alt="Details">';
-      if (typeof MAT !== 'undefined') requestAnimationFrame(() => { const im = noi.querySelector('.dk-noi-po img'); if (im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true }); });
-    } else { delete noi.dataset.id; noi.innerHTML = '<span class="dk-noi-trong">Drag a turret into a slot · tap for details</span>'; }
-    // chỉ huy: 1 hàng gọn
-    const d = MAVUONG[UI.mv] || MAVUONG.hero, mv = this.el('dk-mv');
-    mv.style.setProperty('--mm', d.mau);
-    mv.innerHTML = '<span class="dk-mv-po"><img src="' + mvIcURL(UI.mv) + '" alt=""></span><span class="dk-mv-chu"><small>COMMANDER</small><b>' + this.esc(d.ten) + '</b></span><span class="dk-mv-mo">' + this.esc(d.mo) + '</span><em>DETAILS</em>';
+    // chỉ huy = ô thứ 6 cuối hàng bộ bài (khung chỉ huy the_khung_mv + chân dung + biểu tượng kỹ năng); chạm = bảng chọn chỉ huy.
+    //  (dải "ụ nổi bật" + hàng chỉ huy riêng đã bỏ — người dùng: không cần; chạm thẻ/ô đã mở trang chi tiết)
+    this.veMV6();
     // số bộ lọc đang bật
     const so = (BOBAI.loc.vai !== 'all' ? 1 : 0) + (this.bac !== 'all' ? 1 : 0) + (UI.xep !== 'bac' ? 1 : 0), b = this.el('dk-loc-so');
     if (b) { b.hidden = !so; b.textContent = so; }
+  },
+
+  veMV6() {
+    const b = this.el('chon-bo'); if (!b) return;
+    let o = b.querySelector(':scope > .o-mv');
+    if (!o) { o = document.createElement('button'); o.className = 'o-mv'; o.dataset.act = 'hm-mv6'; }
+    if (o !== b.lastElementChild) b.appendChild(o);
+    const d = MAVUONG[UI.mv] || MAVUONG.hero;
+    o.setAttribute('aria-label', 'Commander: ' + d.ten + ' (tap to change)');
+    o.style.setProperty('--mm', d.mau);
+    if (o.dataset.mv === UI.mv) return;
+    o.dataset.mv = UI.mv;
+    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url('mv') : 'assets/the_khung_mv.png';
+    o.innerHTML = '<span class="o-mv-po"><img class="po" src="assets/' + d.anh + '.png" alt="" draggable="false" onerror="this.onerror=null;this.src=\'' + mvIcURL(UI.mv) + '\'"></span>' +
+      '<img class="o-mv-kh" src="' + kh + '" alt="" draggable="false"><img class="o-mv-ki" src="' + mvIcURL(UI.mv) + '" alt="" draggable="false">';
   },
 
   // ---------- bảng trượt ----------
@@ -267,6 +272,7 @@ const HM = {
       case 'hm-loc-bac': this.bac = el.dataset.k; this.luu(); SND.nut(); BOBAI.ap(); this.locLai(); break;
       case 'hm-loc-xep': UI.xep = el.dataset.k; SND.nut(); UI.veChon(); this.locLai(); break;
       case 'hm-loc-xoa': BOBAI.loc.vai = 'all'; BOBAI.loc.q = ''; BOBAI.luu(); this.bac = 'all'; this.luu(); { const t = this.el('bb-tim'); if (t) t.value = ''; } UI.xep = 'bac'; UI.veChon(); this.locLai(); break;
+      case 'hm-mv6': SND.nut(); this.moMVs(); break; // ô chỉ huy (thứ 6): chạm = bảng chọn 1 trong 3 chỉ huy, mỗi hàng có DETAILS
       case 'hm-mvs': SND.nut(); if (typeof UP !== 'undefined') UP.moMV(UI.mv, el); else this.moMVs(); break; // hàng chỉ huy: chạm = trang chi tiết (đổi chỉ huy bằng mũi tên + Use commander)
       case 'hm-mv-chon': UI.mv = el.dataset.id; this.luuBo(); SND.nut(); this.dong(); this.ve(); break;
       case 'hm-mv-ct': { const id = el.dataset.id, r = el.getBoundingClientRect(); this.dong(true); if (typeof UP !== 'undefined') UP.moMV(id, r); break; }

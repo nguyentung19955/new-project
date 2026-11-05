@@ -5,6 +5,7 @@
 // LỖI nếu: mắt hoặc đỉnh tóc nằm NGOÀI cửa sổ ảnh, mắt ngoài dải mục tiêu của chỗ chứa, hoặc chip/huy hiệu đè lên vùng mặt.
 // Chạy (gốc repo): python3 -m http.server 8765 &  ;  node tools/thap-kt-chandung.js   → docs/demo-hop-tuong/tuvan/tvA/portrait_qa.png
 // Thoát mã 1 nếu có lỗi.
+const MAVUONG_IDS = { hero: 1, dahlia: 1, eve: 1 };
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 const BASE = process.env.BASE || 'http://localhost:8765/thap/';
@@ -69,9 +70,10 @@ const DO = ([sel, host]) => {
     await p.evaluate((g) => { UI.chon = g.slice(); UI.veBoChon(); HM.ve(); }, g); await sleep(150);
     for (let j = 0; j < g.length; j++) await chup(p, 'slot', g[j], `#chon-bo .o-bo:nth-child(${j + 1}) > img:not(.kh):not(.gl):not(.dk-vien)`, '.o-bo');
   }
-  for (const id of ids) {
-    await p.evaluate((id) => { HM.noi = id; HM.ve(); }, id);
-    await chup(p, 'summary', id, '#dk-noi .dk-noi-po img', '#dk-noi');
+  // dải "ụ nổi bật" đã bỏ (bo2hang) — ô chỉ huy thứ 6 trong hàng bộ bài
+  for (const mv of Object.keys(MAVUONG_IDS)) {
+    await p.evaluate((mv) => { UI.mv = mv; HM.ve(); }, mv); await sleep(150);
+    await chup(p, 'slot_mv', 'af_' + mv, '#chon-bo .o-mv .o-mv-po img', '.o-mv-po');
   }
   for (const id of ids) {
     await p.evaluate((id) => { HM.dong(true); HM.moXem(id); }, id); await sleep(320);

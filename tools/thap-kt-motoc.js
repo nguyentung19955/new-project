@@ -63,7 +63,7 @@ function audit() {
   await chup(p, '01-home'); await crop(p, '.hm-anh', 'z01-home-hero', 1, 0.5);
   await p.evaluate(() => { UI.chon = ['sungluc', 'canon', 'bang', 'tia', 'aten']; UI.veBoChon(); HM.di('dk'); HM.ve(); });
   await p.waitForTimeout(1200); await chup(p, '02-deck');
-  await crop(p, '#chon-luoi .c', 'z02-roster', 10); await crop(p, '#chon-bo .o-bo', 'z03-slot', 5, 0.8); await crop(p, '#dk-noi .dk-noi-po', 'z04-noi', 1, 0.8);
+  await crop(p, '#chon-luoi .c', 'z02-roster', 10); await crop(p, '#chon-bo .o-bo', 'z03-slot', 5, 0.8);
   await p.evaluate(() => { try { HM.moPre(); } catch (e) { } }); await p.waitForTimeout(700); await chup(p, '03-presets'); await crop(p, '#hm-mo img[src*="pilot_"]', 'z05-preset', 6, 0.8);
   await p.evaluate(() => { try { HM.dong(true); HM.moXem('sungluc'); } catch (e) { } }); await p.waitForTimeout(700); await chup(p, '04-xem'); await crop(p, '.hm-xem-po', 'z06-xem', 1, 0.7);
   await p.evaluate(() => { try { HM.dong(true); HM.moMVs(); } catch (e) { } }); await p.waitForTimeout(700); await chup(p, '05-mvs'); await crop(p, '#hm-mo .mv-anh', 'z07-mvs', 3, 0.8);
