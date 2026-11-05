@@ -612,9 +612,11 @@ const REN = {
     const t = this.t, KC = 30, V = 22, daVe = new Set();
     const mui = this.co('duong_mui', 14); // mũi tên ChatGPT (S4) dập dọc đường; chưa tải → (chỉ ?debug) nét vẽ code
     if (!mui && !this.dbg) return;
+    const hien = Math.max(0, Math.min(1, (8 - (G.t || 0)) / 2)); // chỉ hiện lúc mới vào trận (~6 s) rồi mờ dần tắt
+    if (hien <= 0) return;
     ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.lineWidth = 3;
     const m0 = ctx.getTransform();
-    if (mui) ctx.globalAlpha = 0.42;
+    if (mui) ctx.globalAlpha = 0.42 * hien;
     ctx.beginPath();
     for (const p of G.duong) {
       const pts = p.pts; let s0 = 0;
