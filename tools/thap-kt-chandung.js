@@ -95,10 +95,10 @@ const DO = ([sel, host, NEO]) => {
     await p.evaluate((g) => { UI.chon = g.slice(); UI.veBoChon(); HM.ve(); }, g); await sleep(150);
     for (let j = 0; j < g.length; j++) await chup(p, 'slot', g[j], `#chon-bo .o-bo:nth-child(${j + 1}) > img:not(.kh):not(.gl):not(.dk-vien)`, '.o-bo');
   }
-  // dải "ụ nổi bật" đã bỏ (bo2hang) — ô chỉ huy thứ 6 trong hàng bộ bài
+  // chỉ huy: băng chỉ huy gọn kiểu DCDW (js/dkdcdw.js) thay ô thứ 6
   if (co('slot')) for (const mv of Object.keys(MAVUONG_IDS)) {
     await p.evaluate((mv) => { UI.mv = mv; HM.ve(); }, mv); await sleep(150);
-    await chup(p, 'slot_mv', 'af_' + mv, '#chon-bo .o-mv .o-mv-po img', '.o-mv-po');
+    await chup(p, 'slot_mv', 'af_' + mv, '#dkd-cmd .dkd-cmd-po img', '.dkd-cmd-po');
   }
   if (co('quick')) for (const id of ids) {
     await p.evaluate((id) => { HM.dong(true); HM.moXem(id); }, id); await sleep(320);
