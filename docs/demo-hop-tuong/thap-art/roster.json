@@ -446,5 +446,175 @@
   "bac": "do",
   "dcdw": "Halo Mona",
   "kyNang": "Kỹ năng chủ động: khiên bất tử toàn bàn vài giây"
+ },
+ {
+  "id": "nayda",
+  "ten": "Đĩa Nảy",
+  "bac": "tim",
+  "dcdw": "Child cung thủ",
+  "kyNang": "Đĩa nảy sang N quái, mỗi lần nảy mạnh hơn",
+  "vai": "tc",
+  "ho": "energy",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "combo",
+  "ten": "Lõi Combo",
+  "bac": "tim",
+  "dcdw": "Random Dice Combo",
+  "kyNang": "Mỗi lần ghép 2 Lõi Combo → mọi Lõi Combo +sát thương vĩnh viễn",
+  "vai": "tc",
+  "ho": "summon",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "khoathoigian",
+  "ten": "Khoá Thời Gian",
+  "bac": "tim",
+  "dcdw": "Freezer / Mayauel",
+  "kyNang": "Khoá quái đầu trong thời gian; mở khoá nổ phần sát thương đã dồn",
+  "vai": "db",
+  "ho": "trap",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "hydra",
+  "ten": "Hydra",
+  "bac": "vang",
+  "dcdw": "Hydra / Tiamat",
+  "kyNang": "Số nòng = số sao, mỗi nòng bắn 1 quái khác; 7★ hợp thành tia khổng lồ",
+  "vai": "tc",
+  "ho": "rapid",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "cuuvi",
+  "ten": "Cửu Vĩ",
+  "bac": "vang",
+  "dcdw": "Kumiho",
+  "kyNang": "Mỗi lần giết mọc 1 đuôi lửa; đủ 9 đuôi xả 9 cầu lửa tự dẫn",
+  "vai": "tc",
+  "ho": "blast",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "pandora",
+  "ten": "Hộp Pandora",
+  "bac": "vang",
+  "dcdw": "Pandora",
+  "kyNang": "Khi GHÉP: mở hộp — 1 trong 6 phép lớn ngẫu nhiên",
+  "vai": "db",
+  "ho": "joker",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "luoicheo",
+  "ten": "Lưới Cộng Hưởng",
+  "bac": "vang",
+  "dcdw": "(ChatGPT G05)",
+  "kyNang": "Hỗ trợ 4 ô CHÉO: +sát thương; đủ 4 ô chéo → cộng hưởng",
+  "vai": "ht",
+  "ho": "amp",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "ngaithoigian",
+  "ten": "Ngai Thời Gian",
+  "bac": "do",
+  "dcdw": "Chronos",
+  "kyNang": "Quái chậm dần theo thời gian; CHỦ ĐỘNG Rewind đẩy lùi mọi quái",
+  "vai": "db",
+  "ho": "trap",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "nemesis",
+  "ten": "Nữ Thần Phán Xử",
+  "bac": "vang",
+  "dcdw": "Nemesis / Lancelot",
+  "kyNang": "Xử tử quái dưới ngưỡng máu; vào trùm gây % máu tối đa",
+  "vai": "tc",
+  "ho": "execute",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "docton",
+  "ten": "Độc Tôn",
+  "bac": "tim",
+  "dcdw": "Blade Dancer",
+  "kyNang": "Không có ụ kề → tốc bắn ×2 và +chí mạng",
+  "vai": "tc",
+  "ho": "heavy",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "thaukinh",
+  "ten": "Thấu Kính",
+  "bac": "tim",
+  "dcdw": "Siren+",
+  "kyNang": "Hỗ trợ: ụ kề +sát thương chí mạng, chí mạng xuyên quái",
+  "vai": "ht",
+  "ho": "crit",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "nhieusong",
+  "ten": "Máy Nhiễu Sóng",
+  "bac": "tim",
+  "dcdw": "Cain / Neban",
+  "kyNang": "Khi GHÉP: PVP nhiễu ụ đối thủ; Co-op đồng đội triệu hồi miễn phí",
+  "vai": "db",
+  "ho": "guard",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "santhuong",
+  "ten": "Đèn Săn Thưởng",
+  "bac": "tim",
+  "dcdw": "Syrinx / Thisbe",
+  "kyNang": "Gắn truy nã lên quái; giết quái truy nã được thêm mana",
+  "vai": "db",
+  "ho": "mana",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "nhatthuc",
+  "ten": "Nhật Thực",
+  "bac": "vang",
+  "dcdw": "Aten (Solar/Lunar)",
+  "kyNang": "Đổi Ngày (tia đốt) ⇄ Đêm (sóng làm chậm) mỗi 8 s",
+  "vai": "tc",
+  "ho": "frost",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "loren",
+  "ten": "Lò Rèn Phế Liệu",
+  "bac": "vang",
+  "dcdw": "Treant / Scrapper",
+  "kyNang": "Kéo ụ 1–3★ vào để ăn: +sát thương vĩnh viễn",
+  "vai": "tc",
+  "ho": "star",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "guongcong",
+  "ten": "Cổng Gương",
+  "bac": "vang",
+  "dcdw": "Eve / Mona",
+  "kyNang": "PVP phản đòn khống chế; Co-op sao chép hiệu ứng ghép đồng đội",
+  "vai": "db",
+  "ho": "guard",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "marionette",
+  "ten": "Rối Máy",
+  "bac": "vang",
+  "dcdw": "Child điều khiển rối",
+  "kyNang": "Chiếm điều khiển quái, bắt đi ngược đường rồi nổ",
+  "vai": "db",
+  "ho": "trap",
+  "moi": "TUONG-MOI-20"
  }
 ]

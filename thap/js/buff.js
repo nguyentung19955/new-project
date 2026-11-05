@@ -109,7 +109,7 @@ Object.assign(REN, {
     else if (k === 'taylo') dich = B.t.filter(N => N && N !== T && (N.st.bang > 0 || N.st.da || N.st.lua > 0 || N.st.kep > 0)).map(N => ({ o: N.o, N }));
     else if (k === 'mana') dich = [];
     else { dich = []; const cc = T.o % 5, hh = (T.o / 5) | 0, cheo = loaiMoc(T.id) === 'ht' && mocChung(T, 5);
-      for (const [dc, dh] of [[-1, 0], [1, 0], [0, -1], [0, 1]].concat(cheo ? [[-1, -1], [1, -1], [-1, 1], [1, 1]] : [])) { const c2 = cc + dc, h2 = hh + dh; if (c2 >= 0 && c2 < 5 && h2 >= 0 && h2 < 3) dich.push({ o: h2 * 5 + c2, N: B.t[h2 * 5 + c2] }); } }
+      for (const [dc, dh] of (SKILLS[T.id].huong ? SKILLS[T.id].huong(T) : [[-1, 0], [1, 0], [0, -1], [0, 1]].concat(cheo ? [[-1, -1], [1, -1], [-1, 1], [1, 1]] : []))) { const c2 = cc + dc, h2 = hh + dh; if (c2 >= 0 && c2 < 5 && h2 >= 0 && h2 < 3) dich.push({ o: h2 * 5 + c2, N: B.t[h2 * 5 + c2] }); } }
     // 1) ô đích: hợp lệ = tô 20% + viền màu; trống / không nhận = viền xám nét đứt
     for (const d of dich) { const hop = d.N && !d.N.st.da; oVuong(B.o[d.o], hop ? mau : '#7d8590', hop ? null : [4, 4], hop ? mau : null, vao * (hop ? 1 : 0.7)); }
     // 2) dây mảnh tĩnh qua khe: lõi màu 1 px alpha .7 trên lớp than 3 px; chạy 1 nhịp sáng ~150 ms khi vừa chạm
@@ -162,7 +162,7 @@ function hoTroTT(T) {
   const pc = (v) => (id === 'tuthan' ? (v * 100).toFixed(1) : Math.round(v * 100)) + '%';
   const cheo = mocChung(T, 5) && loaiMoc(id) === 'ht';
   const nhan = oHoTro(B, T).filter(N => N && N !== T && !N.st.da).length;
-  return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: (cheo ? '8 cells around (N/E/S/W + diagonals)' : '4 adjacent cells (N/E/S/W)') + ' · affecting ' + nhan + '/' + (cheo ? 8 : 4),
+  return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: (SKILLS[id].tamChu || (cheo ? '8 cells around (N/E/S/W + diagonals)' : '4 adjacent cells (N/E/S/W)')) + ' · affecting ' + nhan + '/' + (cheo && !SKILLS[id].huong ? 8 : 4),
     tach: 'Base 1★ LV1 +' + pc(goc) + ' · stars +' + pc(saoV - goc) + ' · LV' + lv + ' +' + pc(lvV - saoV) + (he > 1 ? ' · milestone ×' + he : '') };
 }
 

@@ -327,7 +327,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       // buff ĐANG NHẬN: tổng cuối + từng nguồn + cách cộng
       const nh = buffTongHop(T);
       if (nh.length) L.push('<div class="d-nhan">EFFECTS ON ' + esc(G.rosterMap[id].ten.toUpperCase()) + ':' + nh.map(r => '<div class="d-buff"><img src="' + REN.kyHieuURL(r.k) + '" alt=""><span><b style="color:' + BUFF[r.k].mau + '">' + BUFF[r.k].ten + (r.cach === 'charges' ? ' ×' + r.tong : r.cach === 'timed' ? '' : ' +' + (r.k === 'chet' ? (r.tong * 100).toFixed(1) : Math.round(r.tong * 100)) + '%') + '</b> <small>[' + esc(r.nguon.join(', ')) + ']' + (r.nguon.length > 1 ? ' · ' + r.cach : '') + '</small></span></div>').join('') + '</div>');
-    } else if (SUP_LOAI[id] && SUP_GIA[id]) L.push('<div class="d-buff"><img src="' + REN.kyHieuURL(SUP_LOAI[id]) + '" alt=""><span>' + BUFF[SUP_LOAI[id]].ten + ' to 4 adjacent cells (N/E/S/W)</span></div>');
+    } else if (SUP_LOAI[id] && SUP_GIA[id]) L.push('<div class="d-buff"><img src="' + REN.kyHieuURL(SUP_LOAI[id]) + '" alt=""><span>' + BUFF[SUP_LOAI[id]].ten + ' to ' + (sk.tamChu || '4 adjacent cells (N/E/S/W)') + '</span></div>');
     // grow-up: điều kiện · dạng hiện tại · tiến độ
     if (laGrow(id)) {
       const g = GROW[id];
