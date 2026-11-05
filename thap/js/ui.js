@@ -18,8 +18,8 @@ const UI = {
     G.roster = applyText(r || window.ROSTER_EMBED || []);
     document.querySelectorAll('[data-t]').forEach(e => { const v = TEXT.ui[e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
     G.rosterMap = {}; for (const x of G.roster) G.rosterMap[x.id] = x;
-    REN.init($('#cv'));
     this.docDebug();
+    REN.init($('#cv'));
     try { const l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && l.chon) { this.chon = l.chon.filter(id => SKILLS[id] && G.rosterMap[id]); this.mv = MAVUONG[l.mv] ? l.mv : 'hero'; this.che = l.che || 'solo'; } } catch (e) { }
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));
@@ -65,6 +65,7 @@ const UI = {
     if (q.get('auto')) d.auto = true;
     if (q.get('af')) d.af = q.get('af');
     if (q.get('speed')) G.tocDo = +q.get('speed');
+    if (q.get('dpr')) d.dpr = +q.get('dpr'); // kiểm thử: ép độ phân giải vẽ
   },
 
   // ---------- màn chọn bộ bài ----------

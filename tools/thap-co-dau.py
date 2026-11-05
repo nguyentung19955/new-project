@@ -21,8 +21,8 @@ for f in sorted(glob.glob(os.path.join(A, '*_nong.png'))):
     r = np.sqrt((xs + .5 - w / 2) ** 2 + (ys + .5 - h / 2) ** 2).max() / (w / 2)
     K = min(0.61 / wb, 0.68 / eq, 0.92 / r)
     out[id] = round(float(K), 3)
-    # icon the 112px: be chung + dau sung huong len tren-phai
-    N = 112; ic = Image.new('RGBA', (N, N), (0, 0, 0, 0))
+    # icon the 192px (du net cho the 60px tren man 3x): be chung + dau sung huong len tren-phai
+    N = 192; ic = Image.new('RGBA', (N, N), (0, 0, 0, 0))
     sc = 0.84 / max(BE, K * r)                               # phong to cho vua icon
     b = int(round(N * BE * sc)); ic.alpha_composite(de.resize((b, b), Image.LANCZOS), ((N - b) // 2, (N - b) // 2))
     d = int(round(N * K * sc)); hd = im.resize((d, d), Image.LANCZOS).rotate(45 if id != 'mana' else 0, Image.BICUBIC)
