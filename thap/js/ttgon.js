@@ -24,6 +24,7 @@
       if (!coLive && sk.mo) { try { so += ' · ' + sk.mo(T); } catch (e) { } }
       if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
       L.push('<div class="d-so g1">' + esc(so) + '</div>');
+      if (coLive && sk.demTT) { try { L.push('<div class="d-so g1 d-dem">' + esc(sk.demTT(T)) + '</div>'); } catch (e) { } } // bộ đếm kỹ năng (Star Cannon: ★ đã đếm n/50)
     }
     if (false) { // (bỏ dòng chữ grow-up — người chơi tự khám phá)
       const g = GROW[id];
