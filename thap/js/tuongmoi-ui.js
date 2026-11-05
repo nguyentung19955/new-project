@@ -18,12 +18,17 @@ UI.chonU = function (id) {
 // Focus Lens: loại buff mới "sát thương chí mạng" (sao 4 cánh trong vòng tròn)
 BUFF.cdmg = { ten: 'Crit damage', mau: '#6fd0ff' };
 BUFF_THU_TU.splice(BUFF_THU_TU.indexOf('crit') + 1, 0, 'cdmg');
+// ký hiệu cdmg = icon ChatGPT ic_crit (chưa có ảnh riêng ic_cdmg — HINH-VE-CODE-AUDIT.md Pass 4 — ui); không vẽ vòng bằng code
 const _veKyHieuGoc = veKyHieu;
 veKyHieu = function (x, k, r, mau) {
   if (k !== 'cdmg') return _veKyHieuGoc(x, k, r, mau);
-  _veKyHieuGoc(x, 'crit', r * 0.8, mau);
-  x.strokeStyle = mau; x.lineWidth = r * 0.16; x.beginPath(); x.arc(0, 0, r * 0.95, 0, 7); x.stroke();
+  const ic = REN.img('ic_crit'); if (ic) x.drawImage(ic, -r, -r, r * 2, r * 2);
 };
+(() => {
+  const kh = REN.kyHieu, khu = REN.kyHieuURL;
+  REN.kyHieu = function (k, px, rong) { return kh.call(this, k === 'cdmg' ? 'crit' : k, px, rong); };
+  REN.kyHieuURL = function (k) { return khu.call(this, k === 'cdmg' ? 'crit' : k); };
+})();
 SUP.thaukinh = { icon: 'sup_chimang', mau: '#6fd0ff', link: 'sup_link', ke: true, chu: (T) => '+' + pct(SKILLS.thaukinh.k(T) * heSoHT(T)) + '% CRIT DMG · PIERCE' };
 SUP_LOAI.thaukinh = 'cdmg';
 SUP_GIA.thaukinh = (T) => SKILLS.thaukinh.k(T);

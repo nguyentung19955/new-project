@@ -56,7 +56,7 @@ const TRUM_THU_TU = ['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare',
 // ỨNG VIÊN MA VƯƠNG (kỹ năng chủ động, mana NHÂN ĐÔI mỗi lần dùng, có hồi chiêu)
 const MAVUONG = {
   hero:   { ten: TEXT.af.hero.name,   anh: 'af_hero',   icon: 'ui_thuong', mau: '#6fc8ff', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
-  dahlia: { ten: TEXT.af.dahlia.name, anh: 'af_dahlia', icon: 'lua',       mau: '#ff6a3a', gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
+  dahlia: { ten: TEXT.af.dahlia.name, anh: 'af_dahlia', icon: 'fx_cuongno_hieu', mau: '#ff6a3a', gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
   eve:    { ten: TEXT.af.eve.name,    anh: 'af_eve',    icon: 'sup_khien', mau: '#ffe9a0', gia: 40, cd: 25, mo: TEXT.af.eve.desc },
 };
 // LUẬT CHỈ HUY (P0-09) — chihuy.js là máy trạng thái dùng bảng này (node: tools/test-chihuy.js)

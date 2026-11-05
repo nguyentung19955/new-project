@@ -179,7 +179,7 @@ const ONS = {
   truTim(n, id) {
     const B = G.ban[0]; if (!B || G.ketThuc) return;
     B.tim = Math.max(0, B.tim - (n || 1));
-    FX.chu1(W - 60, (G.duong[0].pts[2] || [0, 300])[1] - 26, '−' + (n || 1) + '♥', '#ff4b3e', 20, 'to'); FX.sang(0.3, '#ff2030');
+    FX.chu1(W - 60, (G.duong[0].pts[2] || [0, 300])[1] - 26, '−' + (n || 1) + ' LIFE', '#ff4b3e', 20, 'to'); FX.sang(0.3, '#ff2030');
     this.ghiState();
     if (B.tim <= 0) ketThuc(false, TEXT.end.coopOut);
   },
