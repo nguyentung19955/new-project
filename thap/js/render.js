@@ -891,9 +891,10 @@ const REN = {
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
+  VONG_BAC: 0.94, // đường kính vòng bậc / cạnh ô
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (this.img('ngoc_' + T.bac) ? '|n' : '');
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (this.img('tier_ring_' + T.bac) ? '|r' : '');
     let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
@@ -906,11 +907,10 @@ const REN = {
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
     x.drawImage(de, -SB / 2, -SB / 2, SB, SB);
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
-    // ngọc độ hiếm: hình thoi nhỏ ở mép dưới-trái bệ (ưu tiên thấp nhất)
-    const gx = -SB * 0.4, gy = SB * 0.4, gr = Math.max(3, S * 0.055);
-    if (this.anNgoc) return this.cSet(key, c); // P0-04: độ hiếm chỉ ở khung thẻ (js/hudtop.js)
-    const ngoc = this.img('ngoc_' + T.bac); // viên ngọc ChatGPT (S2); hoá đá → bản xám
-    if (ngoc) { const g = da ? (this.banXam('ngoc_' + T.bac) || ngoc) : ngoc, w = gr * 3; x.drawImage(this.mip(g, w * q), gx - w / 2, gy - w / 2, w, w); return this.cSet(key, c); }
+    // ĐỘ HIẾM TRƯỚC TIÊN (như DCDW): vòng bậc ChatGPT tier_ring_<bac>.png (trắng/xanh/tím/vàng/đỏ) ôm bệ, dưới đầu súng.
+    // Không còn vòng màu vai trò / ngọc nhỏ — màu vòng = màu khung thẻ ở dải bộ bài (thẻ ↔ bàn khớp nhau).
+    const vb = da ? (this.banXam('tier_ring_' + T.bac) || this.img('tier_ring_' + T.bac)) : this.img('tier_ring_' + T.bac);
+    if (vb) { const w = S * this.VONG_BAC; x.drawImage(this.mip(vb, w * q), -w / 2, -w / 2, w, w); }
     return this.cSet(key, c);
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.

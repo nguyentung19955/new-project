@@ -82,8 +82,7 @@ const VX = {
       const B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return;
       this.ds.push({ k: 'sao', T, B, o: T.o, t0: this.t, dai: 0.75, n });
       const c = B.o[T.o];
-      FX.chu1(c.x, c.y - 58, 'SKILL UP', '#ffe46b', 15, 'to');
-      this.hen(0.18, () => nhanU(T, n + '★ ' + ten, '#ffe46b', true));
+      // (bỏ chữ nổi 'SKILL UP' + nhãn sao trên ô — tấm kết quả ghép đã đủ)
       SND.sao();
     });
   },

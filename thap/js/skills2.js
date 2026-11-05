@@ -13,6 +13,7 @@ const conTren = (T) => { const B = G.ban[T.ban]; return !!B && B.t[T.o] === T; }
 const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * ((B.lv[id] || 1) - 1));
 // nhãn kỹ năng ngắn hiện trên ụ khi kỹ năng kích hoạt
 function nhanU(T, s, mau, ep) {
+  return; // BỎ nhãn chữ nổi trên ô (SHATTER ×5, CLONE +1…) — người dùng: vô dụng, rối bàn; buff/kỹ năng đã có hiệu ứng ảnh ChatGPT. Chỉ giữ số sát thương + tấm kết quả ghép.
   if (G._treNhan && typeof VX !== 'undefined') { const d = G._treNhan; VX.hen(d, () => nhanU(T, s, mau, ep)); return; } // đang ghép: hiện lúc kết quả lộ ra
   if (!T || (!ep && G.t - (T.nhanT || -9) < 0.9)) return;
   T.nhanT = G.t;
