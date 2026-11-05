@@ -857,3 +857,29 @@ Ghi chú: 10 ụ còn lại có ảnh dạng 1/2/3 riêng nhưng vẽ theo ĐẦ
 đang dùng đầu v2 + quầng màu (growfx.js mục 7). Muốn thấy rõ đổi dạng trên bàn: gen thêm 1 hàng 3 dạng cho mỗi ụ theo đúng mẫu trên (đính kèm đầu v2 `<id>_nong.png` làm dạng 1).
 
 **Đã nối raw_p4_ui_1.png** (`tools/thap-cat-p4-ui.py`, khoá magenta + khoá vùng kín trong vòng): `ic_cdmg` (96 px, ký hiệu buff CRIT DMG), `sao_chu` (64 px, ★ trong chữ DOM), `ci_quet` (vệt quét băng cut-in), `hang_sang` (9 mảnh, dòng mốc sao), `mui_tiep` (48 px, mũi tên grow-up). Vùng UI hết mục chờ ảnh.
+
+## Pass 7 — detail/lobby/boss (HUD mượt C: trang ụ, trang chỉ huy, sảnh online, màn trùm mở trận, kết quả; 2026-11-05)
+
+Theo `thap-art/TU-VAN-HUD-MUOT.txt` §5 (U01–U06, L01–L05, X01–X06). Trong lúc chờ, các màn đã dựng lại bằng ảnh có sẵn
+(nen_menu.jpg, khung_tt, khung_bang, h2_tam, h2_lcd, nut_lon_vang/thep, ic_lui, mui_tiep, ic_phat, trum_<id>_8, af_*, pilot_*).
+Gen xong lưu vào `docs/demo-hop-tuong/thap-art/raw_p7_<id>.png` → session HUD-C cắt (khoá magenta, 3× cỡ hiển thị) + nối.
+Nếu tấm A12 (bộ icon chung) của session HUD-A đã có thì c2 có thể bỏ — HUD-C dùng chung.
+
+**Tiền tố chung (dán đầu mọi prompt):** *"Match the attached TURRET MERGE screenshot: premium chunky sci-fi industrial metal, graphite gunmetal, restrained antique brass, sparse cyan energy, crisp mobile game UI illustration. Isolated sprites on FLAT SOLID #FF00FF magenta background, no text, no letters, no numbers, generous padding, no drop shadow outside sprite bounds."*
+Đính kèm: `docs/demo-hop-tuong/tuvan/hudmuot/c/sau/u_common_390.png` (hoặc ảnh trước `.../c/truoc/u_common_390.png`).
+
+| tấm | lưới | ô → id | prompt |
+|---|---|---|---|
+| **raw_p7_c1.png** | 1536×1024, 3×2 | 1 `p7_stat` | Small recessed graphite stat cell plate, tiny round metallic icon socket on the left, wide empty number area, one thin beveled edge, landscape 3:1. |
+| | | 2 `p7_skill` | Wide simple gunmetal skill description plate with one small cyan accent tab on the top-left edge, calm empty center, no dividers, landscape 4:1, 9-slice friendly. |
+| | | 3 `p7_test` | Thin dark interactive row plate with a small round target emblem socket on the left and a right chevron socket, landscape 6:1. |
+| | | 4 `p7_code` | Large horizontal communications console plate, broad blank dark code screen, two small square button sockets on the right, restrained cyan indicator light, landscape 2.4:1. |
+| | | 5 `p7_row` | Wide low-profile teammate row plate with a circular avatar recess on the left and a tiny status-light socket on the right, empty center, landscape 4:1. |
+| | | 6 `p7_ghost` | Neutral dark metal pilot silhouette emblem inside a round recess (head and shoulders), faint cyan signal dots above, square. |
+| **raw_p7_c2.png** | 1024×512, 4×2 | close · copy · share · chevron_right · target · check · info · crown | Consistent chunky metallic UI icons, 24px reading size, steel with brass rim, one per cell: close X, copy (two sheets), share (arrow out of box), right chevron, crosshair target, check mark, info "i" disc, small host crown. |
+| **raw_p7_c3.png** | 1536×1024, 3×2 | mad_crown · freezer · janus · joker_king · nightmare · octopus | Large boss bust portraits for an intro screen, SAME characters as the attached sprite strips `thap/assets/trum_<id>_8.png` (attach all six), 3/4 front view, head and shoulders filling the cell, strong readable face, isolated. |
+| **raw_p7_c4.png** | 1536×1024, 3×1 (cao) | 1 `p7_boss_big` · 2 `p7_boss_small` · 3 `p7_wave_badge` | 1: tall heavy graphite-and-bronze boss portrait frame, big open window, one small badge socket at the top. 2: small landscape boss preview plate with square art opening on the left and a short empty text strip. 3: small red-bronze wave badge plate, empty. |
+| **raw_p7_bg_detail.png** | 1024×1536 OPAQUE (không magenta) | nền trang ụ/chỉ huy | Portrait dark workshop interior, gentle top lighting, uncluttered negative space in the upper half for hero art, calm low-contrast lower half for controls, no interface, no words. |
+| **raw_p7_bg_lobby.png** | 1024×1536 OPAQUE | nền sảnh online | Portrait quiet futuristic radio room with two vacant pilot stations, dark graphite and warm brass, calm low-contrast centre, no text. |
+
+Tuỳ chọn (P2, nhiều ảnh): chân dung phi công cỡ lớn (bust 768 px, không khung) cho hero trang ụ — hiện `pilot_<id>.png` chỉ 256 px nên hero chỉ phóng ~1.1×.
