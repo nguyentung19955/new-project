@@ -70,3 +70,46 @@
 .co-hud2.co-khung #bo-the .the.ht-goc.co-kh .lv, .co-hud2 #bo-the .the.ht-goc .lv { left: auto; right: calc(15.6% + 1px); max-width: calc(68.8% - 17px); }
 .co-hud2 #bo-the .the.ht-goc .h2-so { top: calc(var(--khh, 74px) * .838 - 14px); }
 .co-khung .c.ht-goc.co-kh .ic.h2-vai { top: calc(var(--khh) * .189 + 1px); left: calc(15.6% + 1px); right: auto; width: 15px; height: 15px; border-radius: 0; background: none; filter: drop-shadow(0 1px 0 #000); }
+
+/* ================= THÔNG BÁO TRÙM: báo trước (cb-bao) → trùm đến (cb-den, giữ ≥2,1 s) → bay lên khoang Boss (cb-ra) =================
+   Chỉ ảnh PNG có sẵn (băng bang_trum_nen, icon ui_canh_bao_trum, dải chân dung trum_<id>_8) + chữ DOM; chuyển động = transform/opacity. */
+#canh-bao .cb-sp, #canh-bao .cb-w { display: none; }
+#canh-bao.cb-bao, #canh-bao.cb-den, #canh-bao.cb-ra { pointer-events: none; overflow: visible; }
+#canh-bao .cb-sp { width: 64px; height: 64px; background: 0 0 / calc(var(--nf, 8) * 100%) 100% no-repeat; filter: drop-shadow(0 3px 2px #000c); }
+#canh-bao .cb-w { font-style: normal; font-weight: 900; letter-spacing: 2px; color: #ffd8d2; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
+/* (1) báo trước: băng thấp, hàng ngang icon | chân dung | chữ */
+#canh-bao.cb-bao { top: 196px; min-height: 0; padding: 13px 26px 10px; display: grid; grid-template-columns: 40px 64px minmax(0, 1fr); grid-template-rows: auto auto auto;
+  column-gap: 8px; align-items: center; justify-items: start; text-align: left; animation: cb-vao .3s ease-out both; }
+#canh-bao.cb-bao > img { grid-row: 1 / 4; grid-column: 1; width: 40px; height: 40px; }
+#canh-bao.cb-bao .cb-sp { display: block; grid-row: 1 / 4; grid-column: 2; animation: cb-8n .9s steps(8) infinite; }
+#canh-bao.cb-bao .cb-sp[style*="--nf:4"] { animation-name: cb-4n; animation-timing-function: steps(4); }
+#canh-bao.cb-bao .cb-w { display: block; grid-column: 3; font-size: 13px; color: #ff8a7a; animation: cb-nhay .5s ease-in-out infinite alternate; }
+#canh-bao.cb-bao b { grid-column: 3; font-size: 20px; letter-spacing: 1.5px; padding: 0; text-align: left; }
+#canh-bao.cb-bao span { grid-column: 3; font-size: 13px; color: #ffe9e4; }
+/* (2) trùm đến: cột giữa — WAVE N BOSS / chân dung to / tên / 1 dòng mối đe doạ */
+#canh-bao.cb-den { top: 214px; min-height: 0; padding: 12px 24px 14px; animation: cb-vao .3s ease-out both; }
+#canh-bao.cb-den > img { display: none; }
+#canh-bao.cb-den .cb-w { display: block; font-size: 13px; color: #ffd23f; }
+#canh-bao.cb-den .cb-sp { display: block; width: 92px; height: 92px; margin: 2px 0 0; animation: cb-8 .9s steps(8) infinite, cb-sp-vao .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+#canh-bao.cb-den .cb-sp[style*="--nf:4"] { animation: cb-4 .9s steps(4) infinite, cb-sp-vao .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+#canh-bao.cb-den b { font-size: 28px; color: var(--m, #fff); }
+#canh-bao.cb-den span { font-size: 15px; color: #fff3ef; margin-top: 2px; }
+/* (3) ra: thu nhỏ bay lên khoang Boss trên ray */
+#canh-bao.cb-ra { animation: cb-ra .32s ease-in both; }
+#canh-bao.cb-ra .cb-sp, #canh-bao.cb-ra .cb-w { display: block; }
+#canh-bao.cb-ra > img { display: none; }
+@keyframes cb-vao { 0% { opacity: 0; transform: scaleY(0); } 70% { opacity: 1; transform: scaleY(1.08); } 100% { opacity: 1; transform: none; } }
+@keyframes cb-ra { 0% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-200px) scale(.25); } }
+@keyframes cb-sp-vao { 0% { opacity: 0; transform: translateY(-26px) scale(1.7); } 100% { opacity: 1; transform: none; } }
+@keyframes cb-nhay { from { opacity: .6; } to { opacity: 1; } }
+@keyframes cb-8 { from { background-position: 0 0; } to { background-position: -736px 0; } }
+@keyframes cb-4 { from { background-position: 0 0; } to { background-position: -368px 0; } }
+@keyframes cb-8n { from { background-position: 0 0; } to { background-position: -512px 0; } }
+@keyframes cb-4n { from { background-position: 0 0; } to { background-position: -256px 0; } }
+@media (prefers-reduced-motion: reduce) {
+  #canh-bao.cb-bao, #canh-bao.cb-den { animation: ht-mo2 .2s linear both; }
+  #canh-bao .cb-sp, #canh-bao.cb-bao .cb-w { animation: none !important; }
+  #canh-bao.cb-ra { animation: ht-mo3 .3s linear both; }
+  @keyframes ht-mo2 { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes ht-mo3 { from { opacity: 1; } to { opacity: 0; } }
+}

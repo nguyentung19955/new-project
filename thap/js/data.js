@@ -97,7 +97,7 @@ function manaGiet(w) { return 10 + 2 * (w - 1); }
 function taoWave(w, rng) { // rng: RNG có hạt giống (PVP: 2 bên cùng wave)
   rng = rng || Math.random;
   if (w % LUAT.songTrum === 0) {
-    const id = TRUM_THU_TU[(w / LUAT.songTrum - 1) % TRUM_THU_TU.length];
+    const id = typeof trumCuaWave === 'function' ? trumCuaWave(w, 0) : TRUM_THU_TU[(w / LUAT.songTrum - 1) % TRUM_THU_TU.length]; // lịch trùm: game.js
     return { trum: id, ds: Array(4).fill('bo') };
   }
   const n = Math.min(32, 9 + Math.floor(w * 0.75));
