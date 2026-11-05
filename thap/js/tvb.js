@@ -206,6 +206,22 @@ const TVB = {
       return r;
     };
   }
+  // §C · thả sai / huỷ: ụ bật về ô cũ → khi chạm ô, chớp thép-xanh nhẹ 4 khung E21 (tv_lui1–4) ở ô gốc (không nổ)
+  if (typeof GF !== 'undefined' && GF.veCam) {
+    const vcGoc = GF.veCam;
+    GF.veCam = function (ctx) {
+      const r0 = vcGoc.apply(this, arguments);
+      if (!this.ve || !this.ve.length || !REN.img('tv_lui1')) return r0;
+      const now = this.now();
+      for (const r of this.ve) {
+        const dai = this.giam() ? 0.2 : 0.34, u = (now - r.t0) / 1000 / dai; if (u < 0.55 || u >= 1) continue;
+        const v = (u - 0.55) / 0.45, a = REN.img('tv_lui' + (1 + Math.min(3, Math.floor(v * 4)))); if (!a) continue;
+        const o = r.B.o[r.o], S = this.tile(r.B) * 0.98;
+        ctx.globalAlpha = 0.75 * (1 - v * 0.6); ctx.drawImage(a, o.x - S / 2, o.y - S / 2, S, S); ctx.globalAlpha = 1;
+      }
+      return r0;
+    };
+  }
   // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) thay bóng de_chung nhuộm tối trong lớp cầm (ghepfx.js veCam)
   if (typeof REN !== 'undefined' && REN.veKeo && REN.co) {
     const kGoc = REN.veKeo, coGoc = REN.co;
