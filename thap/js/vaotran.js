@@ -11,7 +11,7 @@ const VT = {
   SO_TRUM: 3,         // số trùm xem trước
   NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes your best turret', janus: 'Petrifies 1 turret',
     joker_king: 'Forces a merge', nightmare: 'Snipes your top turret', octopus: 'Burns 3 turrets' },
-  CHU: { boss: 'BOSSES THIS MATCH', wave: 'WAVE', you: 'YOUR DECK', ally: 'ALLY DECK', rival: 'RIVAL DECK', allyLane: 'Ally lane', cmd: 'CMDR', tap: 'TAP TO START' },
+  CHU: { boss: 'BOSSES THIS MATCH', wave: 'WAVE', you: 'YOUR DECK', ally: 'ALLY DECK', rival: 'RIVAL DECK', bossPvp: 'SAME WAVES & BOSSES FOR BOTH', allyLane: 'Ally lane', cmd: 'CMDR', tap: 'TAP TO START' },
   el: null, mo: false,
 
   // trùm của làn đường p ở wave w (cùng công thức taoWave + wavMoi)
@@ -46,7 +46,7 @@ const VT = {
   },
   dung() {
     const ds = this.dsTrum(this.SO_TRUM), toi = this.lanCuaToi(), coop = G.che === 'coop' && G.duong.length > 1;
-    let h = '<section class="vt-trum"><div class="vt-bang do"><b>' + this.CHU.boss + '</b></div><div class="vt-hang tr">';
+    let h = '<section class="vt-trum"><div class="vt-bang do"><b>' + (G.che === 'pvp' ? this.CHU.bossPvp : this.CHU.boss) + '</b></div><div class="vt-hang tr">';
     ds.forEach((w, i) => {
       const id = this.trumO(w, toi), T = TRUM[id], nf = this.soKhung(id);
       h += '<div class="vt-tt' + (i === 0 ? ' dau' : '') + '" style="--i:' + i + ';--m:' + T.mau + '"><span class="vt-w">' + this.CHU.wave + ' ' + w + '</span>' +

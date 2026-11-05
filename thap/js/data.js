@@ -26,6 +26,7 @@ const LUAT = {
   timSolo: 3, timPvp: 3, timCoop: 3, // CO-OP: 3 tim CHUNG (giữ ở bàn 0); quái to / trùm lọt mất 2 tim
   songTrum: 10,          // trùm mỗi 10 wave
   waveMax: 70,
+  pvpDotTu: 30,          // PVP: từ wave 30 = ĐỘT TỬ — wave nào cũng có trùm, máu trùm tăng dần tới khi 1 bên vỡ
   thoiGianWave: 20,      // giây / wave thường
 };
 
@@ -93,7 +94,8 @@ function mauWave(w) { return Math.round(80 * Math.pow(1.15, w - 1) + 30 * w); }
 function manaGiet(w) { return 10 + 2 * (w - 1); }
 
 // thành phần wave
-function taoWave(w) {
+function taoWave(w, rng) { // rng: RNG có hạt giống (PVP: 2 bên cùng wave)
+  rng = rng || Math.random;
   if (w % LUAT.songTrum === 0) {
     const id = TRUM_THU_TU[(w / LUAT.songTrum - 1) % TRUM_THU_TU.length];
     return { trum: id, ds: Array(4).fill('bo') };
@@ -102,7 +104,7 @@ function taoWave(w) {
   const ds = [];
   for (let i = 0; i < n; i++) {
     let id = 'bo';
-    const r = Math.random();
+    const r = rng();
     if (w >= 2 && r < 0.2) id = 'bay';
     else if (w >= 8 && r < 0.33) id = 'bay_bang';
     else if (w >= 6 && r < 0.46) id = 'tach';

@@ -324,7 +324,7 @@ HU.hoHoa = { // cầu lửa hồ ly: bung ra theo vòng rồi tự dẫn đườ
 
 // =====================================================================================================
 // G4 · PANDORA VAULT (pandora) — Vàng ĐB: khi GHÉP mở hộp, quay 1 trong 6 (đều nhau; 6★+ quay 2 lần lấy cái tốt hơn; 7★ luôn 2 hiệu ứng)
-//   1 MANA RAIN +10×sao · 2 FREEZE toàn bộ quái 1.5 s (trùm 0.5; PVP: gửi kèm 1 quái nhỏ sang đối thủ) · 3 STAR GIFT +1★ 1 ụ ngẫu nhiên
+//   1 MANA RAIN +10×sao · 2 FREEZE toàn bộ quái 1.5 s (trùm 0.5) · 3 STAR GIFT +1★ 1 ụ ngẫu nhiên
 //   4 VAULT BOMBS 3 quả vào 3 quái đầu dmg×(3+sao) · 5 SHIELD chặn 1 lần cho 3 ụ · 6 FRENZY toàn bàn +40% tốc bắn 6 s
 //   Co-op: 3/5/6 áp cả đồng đội. +★ từ hộp KHÔNG tính là ghép (không kích hoạt hiệu ứng ghép).
 // =====================================================================================================
@@ -352,7 +352,7 @@ SKILLS.pandora = {
     if (k === 'dong') {
       for (const E of dsMucTieu(B)) if (!E.chet) { E.chan = Math.max(E.chan || 0, E.trum ? 0.5 : 1.5); FX.no('bang_vo', E.x, E.y, 44, 0.3); }
       FX.sang(0.18, '#bff4ff'); SND.bang();
-      if (G.che === 'pvp') { const dich = G.duong.findIndex(p => p.ban !== B.i); if (dich >= 0) { G.hang.push({ t: G.t + 0.65, id: 'nho', p: dich, gui: true }); const [px, py] = G.duong[dich].pts[0]; G.hu.push({ k: 'gui', t: 0, song: 0.6, x0: c.x, y0: c.y, x1: px, y1: py }); } }
+      // PVP: không gửi quái sang đối thủ (2 bên cùng wave)
     }
     if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(N => N && N.sao < LUAT.saoMax && !N.st.da); if (ds.length) { const N = pick(ds), n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
     if (k === 'bom') {

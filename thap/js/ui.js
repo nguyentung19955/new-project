@@ -62,6 +62,7 @@ const UI = {
     if (q.get('deck2')) d.deck2 = q.get('deck2').split(',').filter(id => SKILLS[id]);
     if (q.get('wave')) d.wave = +q.get('wave');
     if (q.get('mana')) d.mana = +q.get('mana');
+    if (q.get('seed')) d.seed = +q.get('seed'); // PVP: hạt giống wave
     if (q.get('fill')) d.fill = +q.get('fill');
     if (q.get('auto')) d.auto = true;
     if (q.get('af')) d.af = q.get('af');

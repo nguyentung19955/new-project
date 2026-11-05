@@ -136,7 +136,7 @@ HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông �
 // R3 · LEVIATHAN (leviathan) — Đỏ TC: bắn bọt nước nổ 30 px. Mỗi e s NUỐT 1 quái thường (không to, không trùm, GĐ1–2 không nuốt quái bay)
 //      trong 120 px → +1 VỰC SÂU (mỗi cộng dồn +4% sát thương, tối đa 100). 4★+: nuốt được quái to (×3 cộng dồn).
 //      CHỦ ĐỘNG "TIDAL BREATH" (3★+, hồi 35 s): tia nước quét DỌC đường 1.5 s, mỗi 0.25 s dmg×(4+0.1×cộng dồn), đẩy lùi 20 px.
-//      PVP: quái bị nuốt không gửi sang đối thủ và không cho mana.
+//      PVP: như solo (không còn luật gửi quái).
 // =====================================================================================================
 SKILLS.leviathan = {
   vai: 'tc', dmg: 24, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
@@ -202,8 +202,7 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
       o.da = true; const T = o.T, B = o.B;
       const lon = E.d.to ? 3 : 1;
       T.vuc = Math.min(100, (T.vuc || 0) + lon);
-      if (G.che === 'pvp') { E.gui = true; const m = Math.round(manaGiet(G.wave) * E.d.mana); E.hp = 0; chet(E, B); B.mana -= m; B.manaNay -= m; }
-      else { E.hp = 0; chet(E, B); }
+      E.hp = 0; chet(E, B);
       if (conTren(T)) { const c = tamU(T); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.4, x0: o.x, y0: o.y, x1: c.x, y1: c.y, mau: '#7fdcff' }); nhanU(T, '+' + lon + ' ABYSS', '#7fdcff'); }
       FX.tiaLua(o.x, o.y, 6, '#bff4ff', 140, 7);
       return true;

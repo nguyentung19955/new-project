@@ -10,7 +10,7 @@ const TEXT = {
     family: 'Family', tierOf: (i) => 'Tier ' + i + '/5', next: 'next', top: 'top of the line', gap: 'gap', planned: 'planned',
     playable: 'playable', maxOneMythic: 'max 1 Mythic',
     soon: 'SOON',
-    coopSub: '2 players · 3 shared lives', soloSub: '1 board · 3 hearts', pvpSub: 'Kills send enemies to rival',
+    coopSub: '2 players · 3 shared lives', soloSub: '1 board · 3 hearts', pvpSub: 'Outlast your rival on the same waves',
     random: 'Random', start: 'Start',
     paused: 'Paused', soundOn: 'Sound: on', soundOff: 'Sound: off', sfxOn: 'SFX: on', sfxOff: 'SFX: off', musicOn: 'Music: on', musicOff: 'Music: off', quit: 'Quit', resume: 'Resume',
     changeDeck: 'Change deck', again: 'Play again', pause: 'Pause',
@@ -35,7 +35,7 @@ const TEXT = {
     blocked: 'BLOCKED', shieldBlock: 'SHIELD BLOCK',
   },
   // lý do kết trận
-  end: { coopOut: 'Your shared lives ran out!', youOut: 'You ran out of hearts', rivalOut: 'Rival ran out of hearts', coreDown: 'The core was destroyed!' },
+  end: { coopOut: 'Your shared lives ran out!', youOut: 'Your rival outlasted you on the same waves', rivalOut: 'You outlasted your rival on the same waves', coreDown: 'The core was destroyed!' },
   tier: {
     trang: 'COMMON', xanh: 'RARE', tim: 'EPIC', vang: 'LEGENDARY', do: 'MYTHIC',
   },
@@ -113,7 +113,7 @@ const TEXT = {
     ngoisao:    { name: 'Star Cannon',   skill: 'Star total in 10s → faster; 50★ → huge damage' },
     soi:        { name: 'Werewolf',     skill: 'Melee wolf that GROWS: Pup → Hunter → Alpha (always crits)' },
     tienhoa:    { name: 'Evolver',       skill: 'After a while becomes a random turret +1★' },
-    cauvong:    { name: 'Rainbow',       skill: 'Paints rainbows on the path that weaken enemies' },
+    cauvong:    { name: 'Rainbow',       skill: 'Paints rainbows on the path that weaken enemies. PVP: paints the rival lane, their enemies take −25% damage' },
     wallgen:    { name: 'Wall Projector', skill: 'Raises a wall on the path, then it explodes' },
     orbital:    { name: 'Orbital',       skill: 'On merge: sky bombardment 20s; Orbitals power up while it lasts' },
     blackhole:  { name: 'Black Hole',    skill: 'Pulls enemies in and crushes them' },
