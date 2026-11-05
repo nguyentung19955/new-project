@@ -25,7 +25,7 @@ const UI = {
     this.veChon();
     document.addEventListener('click', (e) => this.bam(e));
     this.ganCham();
-    REN.napTruoc(['khay', 'duong_thang', 'duong_goc', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana']);
+    TAI.napMenu(); // màn tải: mọi ảnh của menu (logo, nền, thẻ, phi công, khung) + ảnh nền trận cố định — thanh tiến độ thật
     // vòng lặp: mô phỏng bước cố định (BUOC) + bộ tích luỹ; vẽ NỘI SUY giữa 2 trạng thái → mượt ở mọi tần số màn hình.
     // Tăng tốc 2×/3× = nhiều bước hơn mỗi khung (cùng BUOC nhỏ). Sau khi chuyển tab: kẹp thời gian bù.
     let tr = -1, tichLuy = 0, alpha = 1;
@@ -33,7 +33,7 @@ const UI = {
       if (tr < 0) tr = n;
       let thuc = (n - tr) / 1000; tr = n;
       if (!(thuc > 0)) thuc = 0; else if (thuc > 0.1) thuc = 0.1;
-      if (!G.dung && G.ban.length) {
+      if (!G.dung && !TAI.cho && G.ban.length) { // TAI.cho: đang tải ảnh của trận → đứng yên dưới màn tải
         const k = G.tocDo || 1, toiDa = Math.ceil(k * 0.1 / BUOC) + 1;
         tichLuy += thuc * k;
         let so = 0;
@@ -43,7 +43,7 @@ const UI = {
         FX.giam = k > 1 ? 1 / Math.sqrt(k) : 1;
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
       }
-      REN.ve(G.dung ? 0 : thuc, alpha);
+      if (!TAI.cho) REN.ve(G.dung ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh)
       if (G.ban.length && (this._hud = !this._hud)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       requestAnimationFrame(vong);
     };
@@ -184,7 +184,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
     REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
-    REN.napTruoc(ds);
+    TAI.tran(ds); // màn tải trận: đợi mọi ảnh giải mã xong (img.decode) rồi mới chạy
   },
 
   // ---------- cập nhật HUD mỗi khung ----------

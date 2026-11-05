@@ -663,3 +663,16 @@ Cắt: `python3 tools/thap-cat-s89.py` (khoá magenta, khối liền 3×2, cửa
 | `ui_khay_doi.png` | 460×151 | khay dải đồng đội/đối thủ, 6 thẻ đặt đúng 6 ô | Q11 |
 
 Còn lại sau pass 2: Q5 (thẻ chỉ huy ở menu — thẻ ngang, khung dọc không hợp → để lại), Q12–Q22 chờ S10/S11, Q23–Q24 dùng ảnh đã có (phiên sau).
+
+## 7. Pass 3 — màn tải + màn mất mạng (2026-11-05)
+
+Đã làm (`thap/js/taitai.js`, `thap/css/taitai.css`, `thap/js/taitai-anh.js`):
+- Màn tải có tiến độ thật (đã tải / tổng, %) lúc mở game, lúc vào trận và trong khung Test range; chỉ dùng ảnh ChatGPT có sẵn:
+  `nen_menu.jpg`, `logo.png`, khung thanh `hud_trum_khung.png` (9 mảnh), dải đầy `tai_day.png` (cắt dải giữa `tia_laser.png`, đổi sắc sang vàng; bản lưu ở `thap-art/tai_day.png`), vòng xoay `fx_vong_lv.png`.
+- Màn mất mạng: `khung_bang` + icon tạm `vong_xich` + nút `hud_trieu_san` (bản thu nhỏ nhúng sẵn để hiện được cả khi không tải được tệp nào).
+- Hình vẽ code dự phòng trong `render.js` (bệ `deCode`, ngọc hình thoi, lục giác sao, khay xám, chấm quái/đạn, mũi tên đường) chỉ còn khi có `?debug`.
+- Còn lại (file của phiên khác, chưa đụng): `growfx.js` tự vẽ `g_sao_choi`, `g_kim_gio` bằng code; `buff.js` icon vector khi chưa tải.
+
+Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached):
+- **P3-1 icon mất tín hiệu** (đính kèm `vong_xich.png` + `ui_canh_bao_trum.png`): "Game UI icon, broken wireless signal: three curved signal arcs above a small antenna, cracked with a red X, chunky metal sci-fi style, thick dark outline, same style as attached, centered, solid #FF00FF background, no text. 512x512."
+- **P3-2 dải đầy thanh tải** (đính kèm `hud_trum_khung.png`): "Horizontal glowing energy fill strip for a loading bar, golden-amber with bright core and subtle segment ticks, seamless left-to-right, same style as attached, solid #FF00FF background, no text. 1024x128."
