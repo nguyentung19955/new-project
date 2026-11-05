@@ -78,3 +78,5 @@ html body #chon #chon-bo .o-bo:not([data-id]) { border: 0; border-image: none; b
 
 /* dải đồng đội/đối thủ: bộ đếm ụ (DCDW) xuống góc phải DƯỚI — không sát trán khi mặt lệch phải */
 html body #dp-dai .dp-the .dp-dem { top: auto; bottom: -2px; right: -2px; }
+/* khay trận (ô tối giản o-toigian): số ụ ở góc trên-phải → mặt lệch trái một chút để chip không chạm trán */
+html body #wrap #bo-the .the.ot > img.anh { --po-x: .44; }

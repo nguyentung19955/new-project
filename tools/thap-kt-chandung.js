@@ -16,7 +16,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const DAI = { roster: [.30, .50], slot: [.33, .52], summary: [.30, .55], quick: [.30, .52], tray: [.33, .52], inspect: [.33, .52], partner: [.30, .56], detail: [.12, .55], commander: [.12, .55], cmd: [.28, .56] }; // hero: ảnh 1:1 cắt sẵn (tools/thap-hero.py) — chỉ kiểm mắt trong vùng trên của ảnh
 
 // đỉnh tóc tối thiểu (phần cửa sổ): khung độ hiếm the_khung_* có tấm ngọc giữa cạnh trên lấn 4 % khung = 6,2 % cửa sổ
-const TOC = { roster: .065, tray: .065, slot: .02, partner: .02, summary: .02, quick: .02, inspect: .02, detail: 0, commander: 0, cmd: .065 };
+const TOC = { roster: .02, tray: .02, slot: .02, partner: .02, summary: .02, quick: .02, inspect: .02, detail: 0, commander: 0, cmd: .02 }; // ô tối giản o-toigian: viền mảnh, không tấm ngọc lấn cửa sổ
 // trong trang: đo 1 ảnh chân dung → {id, box (so với phần tử chụp), mat, toc, x, che}
 const DO = ([sel, host]) => {
   const im = document.querySelector(sel); if (!im) return null;
@@ -33,7 +33,7 @@ const DO = ([sel, host]) => {
   const che = [...h.querySelectorAll('img, button, i, span, b')].filter(e => e !== im && !e.contains(im) && !e.classList.contains('kh') && getComputedStyle(e).display !== 'none' && getComputedStyle(e).visibility !== 'hidden' && +getComputedStyle(e).opacity > 0.05).filter(e => {
     const b = e.getBoundingClientRect(); if (b.width < 2 || b.width > win.w * 0.7) return false;
     const fw = win.w * 0.22, fh = win.h * 0.16; // vùng mắt/trán
-    return b.left < mx + fw && b.right > mx - fw && b.top < my + fh && b.bottom > my - fh * 1.6;
+    return b.left < mx + fw && b.right > mx - fw && b.top < my + fh * .6 && b.bottom > my - fh; // dải mắt + trán thấp (chip trên tóc ở góc thì cho phép)
   }).map(e => e.className || e.tagName);
   return { id: MAT.id(im), box: [hb.left, hb.top, hb.width, hb.height], win, mat: po.mat, toc: po.toc, x: po.x, che };
 };
