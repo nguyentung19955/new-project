@@ -23,7 +23,6 @@ const HUD2 = {
   vaoTran() {
     this._du = null; this._theDu = {}; this._tim = -1;
     document.querySelectorAll('#bo-the .the').forEach(d => {
-      if (!d.querySelector('.h2-so')) { const s = document.createElement('span'); s.className = 'h2-so'; d.appendChild(s); }
       const sk = SKILLS[d.dataset.id], ic = d.querySelector('.ic');
       if (ic && sk && this.VAI[sk.vai]) { ic.src = 'assets/' + this.VAI[sk.vai] + '.png'; ic.classList.add('h2-vai'); ic.alt = (TEXT.ui.role && TEXT.ui.role[sk.vai]) || ''; }
     });
@@ -40,9 +39,7 @@ const HUD2 = {
     this._du = du;
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id;
-      let n = 0; for (const T of B.t) if (T && T.id === id) n++;
-      const s = d._h2so || (d._h2so = d.querySelector('.h2-so'));
-      if (s && s._n !== n) { s._n = n; s.dataset.n = n; s.textContent = n ? n : ''; }
+      // (bỏ tấm đếm 'số ụ loại này trên bàn' — không rõ nghĩa, dễ tưởng là số sao của Star Cannon; DCDW không có)
       this.vuaThe(d);
       const duT = d.classList.contains('du');
       if (this._theDu[id] === false && duT) this.motLan(d, 'h2-glint', 900); // vừa đủ mana nâng cấp: góc sáng 1 lần
@@ -79,7 +76,6 @@ const HUD2 = {
   vuaThe(d) {
     const W = d.offsetWidth * 0.688 - 2; // bề rộng ô cửa sổ khung (x 15.6–84.4 %)
     this.vua(d._lv || (d._lv = d.querySelector('.lv')), W - 8, 8.5, 6.5);
-    this.vua(d._h2so || (d._h2so = d.querySelector('.h2-so')), W - 16, 9, 7);
     const g = d._g || (d._g = d.querySelector('.gia b'));
     if (g) this.vua(g, 50 * 0.56 - 1, 11, 7.5); // cửa số của ô giá: x 34–90 % (ảnh h2_chip)
   },
