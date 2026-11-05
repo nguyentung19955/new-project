@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|---|
 | bo | thường | ✅ | ✅ | ⇋ | ✅ | không có chiêu |
 | bay | thường (bay) | ✅ | ✅ | ⇋ | ✅ | không có chiêu |
-| bay_bang | thường (bay) | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
+| bay_bang | thường (bay) | ✅ | ✅ | ⇋ | ⏳ ↔ | không có chiêu |
 | tach | thường (tách → nho) | ✅ | ✅ | ⇋ | ✅ | không có chiêu |
 | khong_lo | TINH ANH | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
 | que_tach | TINH ANH | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | không có chiêu |
@@ -18,7 +18,7 @@
 | octopus | trùm cũ | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | hive | trùm mới | ✅ | ✅ | ⇋ | ✅ | ✅ dải 16 |
 | jammer | trùm mới | ✅ | ✅ | ⇋ | ✅ | ⏳ (q_p6 fx) |
-| prism | trùm mới | ⏳ mượn janus | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
+| prism | trùm mới | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
 | twin_core | trùm mới | ⏳ mượn joker_king | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
 | patcher | trùm mới | ⏳ mượn octopus | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
 | leech | trùm mới | ⏳ mượn nightmare | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
