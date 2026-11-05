@@ -1,0 +1,700 @@
+TURRET MERGE — PORTRAIT MOBILE UI/UX REDESIGN
+
+Senior Art Director’s Production Specification | 390 × 844 reference viewport | 5 November 2026
+
+SOURCE AND CONFIDENCE This review is based on the six supplied TURRET
+MERGE screenshots (left to right: menu/deck picker, Cannon detail,
+battle, battle with Sniper info, online lobby, boss introduction). DCDW
+and Random Dice are design references, not sources of reusable assets.
+No side-by-side DCDW screenshot or instrumented DCDW build was supplied.
+Accordingly, any statement about specific DCDW pixel sizes, animation
+timings, exact component counts, or screen flows would be speculative.
+‘Reference-informed’ below means a broadly recognizable genre convention
+or visual impression, NOT a verified DCDW implementation. All
+measurements and motion values below are proposed TURRET MERGE targets,
+not measurements of DCDW.
+
+EXECUTIVE DIRECTION Current problem: almost every available surface is
+treated as a decorated, information-bearing control. Dark embossed
+plates, tiny labels, intricate borders, multiple accent colors, and
+repeated card frames compete at the same priority. The result is not
+primarily a lack of polish; it is a lack of editorial selection. Make
+the game board and turret silhouettes the stars. Keep a deliberately
+premium industrial sci-fi identity, but reserve ornament for navigation
+anchors, rare rewards, and primary calls to action.
+
+Three non-negotiables: 1. One dominant decision per screen; one dominant
+action per screen. 2. Keep full game information accessible, but not
+simultaneously visible. 3. All visual geometry, gradients, frames,
+icons, shadows, glows, and effects are pre-rendered AI-generated PNG
+sprites; runtime code may position, crop, scale, tint by alpha/opacity
+where appropriate, rotate, animate transforms, and draw dynamic
+text/numbers only. No runtime vector rectangles, CSS gradients, borders,
+shadows, or procedural shapes.
+
+1.  WHY THE DCDW-STYLE EXPERIENCE FEELS SMOOTHER
+
+EVIDENCE LEVELS KNOWN FROM YOUR SCREENSHOTS: Your menu combines logo,
+player identity, pick count, three sorting/filter controls, search,
+category tabs, preset deck cards, a large turret roster, mode choices,
+and two bottom actions. Your Cannon page displays character art, an
+equipment portrait, stat strip, skill copy, an extended test-range
+preview, and a bottom remove button. Battle shows a compact 5×3 board
+with a large amount of unused vertical dark field; an information
+overlay consumes lower board-adjacent space. Lobby uses a central modal
+over an already dense menu. Boss intro shows three small framed boss
+cards with substantial empty space. REFERENCE-INFORMED, NOT VERIFIED
+DCDW FACTS: A polished hero/collection experience tends to emphasize
+expressive full-bleed character art, an immediately readable primary
+action, calmer visual grouping, and selectively revealed details.
+Merge-defense battle UIs typically protect board visibility and place
+economy/summon controls at a stable thumb-friendly edge. These are
+design patterns, not claims about exact DCDW UI. GENERAL BEST PRACTICE /
+PROPOSED TURRET MERGE TARGETS:
+
+Visual hierarchy: target 3 attention levels. Level 1 = screen’s central
+choice (selected turret, active board, or READY). Level 2 = supporting
+actions (deck slots, summon cost, navigation). Level 3 = metadata
+(rarity, stats, descriptions). At a glance, viewers should identify
+Level 1 in under 1 second. Use contrast and scale before decorative
+borders.
+
+Visible element budget: menu landing 5–7 major groups; collection/deck
+builder 4–6 groups; detail 4–5 groups; battle 4 fixed HUD zones plus
+board; lobby 3–4 groups; boss intro 2–3 groups. A ‘group’ is a
+perceptual cluster, not an individual card or digit. This is a review
+target, not a DCDW count.
+
+Spacing and safe area: design in logical 390×844 units; top inset 44,
+bottom gesture inset 34 as provisional iPhone-style values; adapt
+dynamically to real device insets. Outer horizontal gutter 20–24; gap
+between major zones 16–24; within components 8–12; touch targets >=44×44
+(prefer 48–56). Leave 8–12 between adjacent tappable objects. Never
+place critical text beneath notches or gesture areas. On Android,
+recalculate rather than hard-code insets.
+
+Typography: one condensed display face for large headers and numbers,
+one clean sans for labels/body. Proposed sizes in logical px: 28–32
+screen title, 22–26 hero name, 18–20 key numbers, 15–16 primary
+controls, 13–14 secondary labels, 11–12 tertiary metadata only. Minimum
+readable UI text target 12–13 at 1×; never shrink core battle data to
+9px to fit ornament. Weights: bold for hierarchy, medium for labels,
+regular for descriptions. Restrict ALL CAPS to short tags (e.g., EPIC,
+READY).
+
+Color discipline: near-black graphite #10141B and slate #222B35 as
+bases; warm brass #D9A64A for primary action/reward; icy cyan #4EDCE8
+for selected/interactive/energy; off-white #F0F2F4 for text; muted gray
+#8996A4 for tertiary copy; red #ED5967 only for danger/HP; purple for
+rarity/unique resource only. Limit each screen to 1 dominant accent + 1
+contextual accent; the battle itself already supplies colorful turret
+imagery. Avoid using cyan, green, orange, purple, and gold all as
+equivalent button highlights.
+
+Frames and plates: three reusable families: (A) light neutral recessed
+plate for passive content, (B) medium brass mechanical frame for cards,
+(C) rare luminous premium frame for active choice/legendary moment.
+Reduce border detail by ~50% on repeated elements. One outer border is
+enough; avoid stacked frames inside frames inside panels. Keep
+decorative corner bolts on hero/primary plates, not every statistic.
+
+Depth: pre-render soft contact shadow and narrow rim highlights into
+PNGs; background at lowest contrast, content plates mid contrast,
+selected items highest contrast. Simulate elevation through 2–4px PNG
+sprite offset and pre-rendered shadow states. Use dark translucent PNG
+scrims to isolate modals. Do not blur the entire game screen merely to
+suggest premium depth.
+
+Motion: continuity is a polish multiplier. Prefer 180–300ms navigation,
+90–130ms press response, and restrained overshoot on selected items.
+Keep static text stable; animate image layers, opacity and translation
+rather than constantly pulsing everything. A successful merge can be
+energetic; the whole HUD should not be.
+
+Icon density: a pictogram should replace text only if its meaning is
+learned and unmistakable. Never place more than 2–3 small metadata
+glyphs in a card’s default state. Put advanced tags in detail view.
+Standardize icon bounding boxes (20/24/32px) and stroke/silhouette
+weight.
+
+Progressive disclosure: roster card -> selection preview -> detail
+sheet; battle turret tap -> short inspect popover -> optional expanded
+details; boss preview -> one signature mechanic per boss -> optional
+‘How to counter’. Information must be discoverable, not erased.
+
+Full-bleed character art: use a large turret pilot or hero illustration
+that bleeds beyond a simple rectangular portrait, with its focal
+face/gun kept clear of text. Place title and CTA on a calm lower plate
+or dark pre-rendered fade. This is a proposed way to capture
+character-forward appeal; it is NOT a claim that every DCDW screen uses
+full-bleed art.
+
+2.  SCREEN-BY-SCREEN DIAGNOSIS — EXACT ELEMENTS IN THE SHEET
+
+SCREEN A — MAIN MENU / DECK PICKER Visible: profile chip ‘Pilot-3TLB
+OFFLINE’; huge TURRET MERGE logo; ‘Merge · defend · survive’; ‘Pick 5
+turrets 0/5’; five empty gold-framed deck slots; Music on, SFX on, Sort:
+tier; ALL/ATTACK/SUPPORT/SPECIAL; Search; ‘STARTER DECKS’ with BOSS
+HUNTER, BLAST ZONE and a partially clipped third preset; ‘COMMON 15/15
+playable’; small framed Cannon/Dice Gun/Gatling/Scatter/Revolver cards
+plus another row; REINFORCE/RAGE/HOLY SHIELD modifier strip;
+ONLINE/CO-OP/SOLO/PVP mode tiles; Random and Start buttons. Remove from
+this screen: inline Music/SFX toggles (Settings); redundant ‘Merge ·
+defend · survive’ during routine use; permanent preset descriptions;
+‘15/15 playable’ as a prominent section header; second bottom Random
+action as a peer to Start. Merge: ALL/ATTACK/SUPPORT/SPECIAL + Search +
+Sort into a single compact filter/search row on Collection; starter
+presets into a ‘Load preset’ sheet; mode choices into one selected mode
+chip on Home; REINFORCE/RAGE/HOLY SHIELD into separate
+commander/modifier loadout. Move: logo/profile/mode/start to Home; deck
+slots/roster/filter to Deck Builder; music and SFX to Settings; starter
+deck carousel to Presets modal. Enlarge: turret artwork and selected
+deck slots. Show five readable 56–60px portraits rather than tiny
+thumbnail frames with multiple badges.
+
+SCREEN B — CANNON UNIT PAGE Visible: Back, ‘File 1/85’, previous/next
+arrows, large bearded Cannon pilot illustration, round turret render,
+Cannon title, Common and Attack tags, ‘Explosive family’ colored
+diamonds, tier 1 of 5, four statistics (Damage 33, Fire rate 0.55
+shots/s, Target Lead enemy, Reach Whole path), ‘01 Skill’ line,
+explanatory paragraphs, ‘Blast radius 34 px’ label, ‘02 Test range’
+section, preview image, Deck 3/5, five mini deck slots, large Remove
+from deck button. Remove: ‘File 1/85’ from primary header; decorative
+section rules; redundant colored family diamonds if a concise family
+label is present; long multi-paragraph skill copy in default view;
+bottom mini-deck strip when it duplicates the deck builder. Merge:
+Common + Attack + tier into one metadata line; Damage/Rate/Reach/Target
+into a tidy 2×2 spec block; skill title + one-sentence behavior into a
+single card. Hide behind tap: full mechanical explanation, ‘Blast radius
+34 px’, test range controls, upgrade/tier progression, advanced
+targeting details. Move: previous/next arrows into small top-right swipe
+affordance or remove in favor of swipe between entries; Add/Remove from
+deck into one sticky bottom CTA. Enlarge: Cannon pilot and turret
+silhouette. Do not give both identical visual prominence: pilot hero
+~60% of upper art, turret render ~25%.
+
+SCREEN C — BATTLE Visible: WAVE 9 / BOSS IN 1 / 3/3 hearts top plate; a
+separate translucent ‘Wave 9’ banner; compact 5×3 board in middle-lower
+area with colored rings, turret levels and glowing status effects; edge
+boss/portal effects; purple currency counter 999; SUMMON BOARD FULL
+center control; fast-forward and pause; bottom five unit cards with
+costs/level-like metadata; REINFORCE card/button and purple 30 cost.
+Remove: redundant ‘Wave 9’ banner after initial 800ms announcement;
+ornamental top bar micro-labels; persistent ‘BOARD FULL’ as a giant
+center message (disable Summon, show compact ‘FULL’); repeated
+costs/levels if identical across all five cards. Merge: wave and boss
+countdown into one status rail; speed and pause into compact right-side
+controls; currency and summon cost into one bottom economic cluster.
+Hide behind tap: turret ability descriptions, precise DPS, secondary
+status details; retain immediate star/merge level markers on board.
+Move: 5-card deck row and commander to an anchored lower action tray;
+enlarge playfield while preserving safe touch boundaries. Enlarge: board
+footprint and tappable cells; inspect selected turret via subtle
+highlight and a contextual popover outside the grid.
+
+SCREEN D — BATTLE WITH SNIPER TAP PANEL Visible: same battle plus a
+large dark Sniper info plate across lower board area, with pilot
+thumbnail, Sniper title, COMMON, Attack, description ‘Targets the
+highest-HP enemy; +100% vs big foes’, Damage 69.6, Rate 0.35/s, Crit
+10%, DPS 26.8, three small skill badges and Details. Remove from quick
+inspect: Crit and DPS together with Damage and Rate; three tiny skill
+badges; long effect sentence; prominent rarity label. Merge: name +
+tier + role into one header; 1-line unique behavior + 2 numbers into one
+compact quick inspect. Hide behind Details: full 4-stat table, skill
+badges, synergy tags and formula details. Move: quick inspect above the
+action tray, never over the grid or over the summon control.
+Auto-dismiss on empty-space tap, other turret tap, or after ~4s only if
+not interacting. Preserve explicit close. Enlarge: selected turret
+visual feedback on board, not the info card itself.
+
+SCREEN E — ONLINE LOBBY Visible: darkened deck picker in background;
+‘ROOM CODE’ central heavy plate; large green A B C D; SHARE INVITE LINK
+button; two repeated ‘Waiting for a friend…’ rectangular rows; READY
+gold button; LEAVE ROOM gray button. Remove: active readable menu
+beneath the modal; duplicate instruction ‘Share the code or link’ in
+both waiting rows; overbuilt nested framing. Merge: room code and
+copy/share into one invitation hero block; player slots into compact
+avatar/name/status rows. Move: lobby to its own screen rather than an
+overlay on the deck picker; Leave Room to top-left back/exit with
+confirmation; Ready to one fixed bottom primary CTA. Enlarge: room code
+(24–30px) and player presence indicators. Show a single host/waiting
+state clearly.
+
+SCREEN F — BOSS INTRO Visible: top wave/boss/HP bar dimmed; header
+‘BOSSES THIS MATCH’; three framed cards for WAVE 10 MAD CROWN ‘Scrambles
+3 turrets’, WAVE 20 FREEZER ‘Freezes your best turret’, WAVE 30 JANUS
+CUBE ‘Petrifies 1 turret’; dark battle board behind. Remove: redundant
+full battle HUD under the intro; unnecessary micro-ornaments around each
+card; persistent intro after player has understood the threats. Merge:
+each boss portrait + name + short threat into one clean card; replace
+three large equally decorated cards with one focused featured boss and
+two compact upcoming markers if shown during a match. Hide behind tap:
+full boss mechanics, counterplay and secondary phases. Move: at match
+start show a 2–3s preview sequence or tap-to-continue, never block an
+active wave without pausing simulation. During battle show next boss as
+a small upcoming chip in top rail. Enlarge: boss art, especially the
+nearest boss; readable 14px threat labels.
+
+3.  REDESIGNED INFORMATION ARCHITECTURE
+
+HOME: profile, hero art, current mode, PLAY, Deck/Collection/Settings
+navigation. DECK BUILDER: five-slot loadout + simple 3-column turret
+grid + filters; tap turret to select; tap Details for full page;
+separate Presets drawer. UNIT DETAIL: full-bleed pilot + turret render +
+one-line skill + 2×2 essentials + sticky Add/Remove. BATTLE: one top
+status bar + board + quick inspect + bottom action tray. LOBBY:
+standalone room invitation, two player rows, READY, exit. BOSS PREVIEW:
+brief pre-match overlay or dedicated intro sequence, never a permanently
+complex layer.
+
+FLOW: HOME -> DECK -> (tap card -> preview sheet -> DETAILS optional) ->
+HOME/PLAY -> SOLO battle or ONLINE lobby -> boss preview -> battle. HOME
+-> Collection uses same roster component as Deck but without loadout
+selection. Persist mode and deck state.
+
+WIRE FRAME CONVENTIONS Reference viewport 390w × 844h logical pixels;
+y=0 top. Top safe inset 44; bottom safe inset 34. Coordinates below are
+target rectangles [x,y,w,h]. They are layout guidance; verify against
+actual screen ratio, native font rendering, localization and
+accessibility. ‘PNG’ means pre-rendered AI art, including all decorative
+backgrounds, frames, gradients, and icons. Text/numbers are
+code-rendered. Overlay areas may overlap background art but never
+interactive controls.
+
+3A. HOME / MAIN MENU [0,0,390,844] full-bleed industrial hangar
+background PNG (quiet lower half) [20,54,350,44] profile/avatar and
+currency compact row [24,112,342,78] logo PNG, optional tiny version
+label [0,175,390,380] oversized pilot/turret duo hero art PNG, focal
+point center-right [20,508,350,56] current mode selector plate: SOLO ▾
+(opens mode sheet) [20,574,350,68] primary PLAY gold button
+[20,655,350,80] three navigation tabs: DECK / COLLECTION / EVENTS
+[20,746,350,52] secondary small Settings + social access [0,810,390,34]
+gesture-safe background only ASCII: +————————————–+ | safe 44 | |
+[avatar/profile] [currency] | | LOGO | | | | LARGE HERO ART | | (no
+floating labels) | | | | [ SOLO mode v ] | | [ PLAY ] | | [ DECK ]
+[COLLECTION] [EVENTS] | | [ settings ] [social] | | safe bottom |
++————————————–+ Rule: Home is not a turret catalog. A returning player
+should press PLAY without scrolling.
+
+3B. DECK BUILDER / TURRET SELECTION — PRIORITY SCREEN [0,0,390,844]
+muted workshop backdrop PNG [20,52,350,44] Back + ‘BUILD DECK’ + Presets
+icon [20,108,350,38] ‘3 / 5 selected’ + small deck name; no verbose
+tutorial [16,154,358,84] five deck slots each 62×70, gap ~10; slot
+includes portrait only + tiny level pip; selected slot cyan PNG frame
+[20,252,350,52] featured selected turret mini hero art on left,
+name/role on right; Details chevron; when none selected show ‘Tap a
+turret’ [20,316,350,48] search field (left) + filter button (right);
+sorting inside filter sheet [20,374,350,332] 3-column scroll grid, cards
+~108×112, gutters ~12, rows spaced 12; ~2.7 rows visible; portrait
+dominant; name + rarity pip only [20,722,350,64] sticky ‘SAVE DECK’ /
+‘PLAY WITH DECK’ primary button (disabled until 5 chosen, if exactly
+five required) [0,810,390,34] safe bottom ASCII: +————————————–+ | <
+BACK BUILD DECK PRESETS | | 3/5 selected | | [ 1 ][ 2 ][ 3 ][ + ][ + ] |
+| [featured art] Cannon ATTACK > | | [ Search turrets… ] [Filter] | |
+[CARD] [CARD] [CARD] | | [CARD] [CARD] [CARD] | | [CARD] [CARD] [CARD] |
+| (scroll) | | [ SAVE DECK ] | | safe bottom | +————————————–+ CARD
+DEFAULT: one turret image 76×76, one name 13–14px, one 8px rarity dot or
+slim pre-rendered rarity strip; do NOT print Damage/Rate/DPS or
+multi-icon roles on grid cards. Card selected state = premium cyan/brass
+edge overlay PNG + 2px lift + check seal PNG; no flat green wash.
+Selection interaction: tap a roster card adds to next empty slot, if
+deck full prompts replace selected slot; tap a deck slot arms
+replacement. Long-press may open quick preview; an explicit Details
+chevron ensures accessibility. Presets open a bottom sheet with 2–4
+large named rows, not a permanent horizontal carousel. Filter sheet
+offers role, rarity, owned/unowned, sort; search persists when returning
+from detail. Collection may reuse grid with no five-slot row and a
+larger preview panel.
+
+OPTIONAL ALTERNATIVE (NOT DEFAULT): If business requirements demand
+immediate roster browsing from the main landing page, use two tabs
+‘PLAY’ and ‘DECK’, but still do not render both full Home and full Deck
+simultaneously. Preferred: distinct Home and Deck Builder screens.
+
+3C. UNIT DETAIL [0,0,390,844] bespoke low-contrast workshop background
+PNG [20,52,350,44] back / ‘TURRET FILE’ / next navigation
+[0,105,390,324] full-bleed pilot hero art PNG (pilot left/center), large
+turret model PNG anchored right-bottom; avoid hard split portrait box
+[20,410,350,52] ‘Cannon’ 26px, ‘COMMON • ATTACK • TIER 1’ 12px
+[20,474,350,94] 2×2 specs: Damage / Fire Rate / Range / Target; each
+metric on restrained pre-rendered plate [20,582,350,92] skill card:
+‘Splash Shells’ + 1-line skill summary; tap ‘More’ for detailed
+explanation [20,688,350,48] ‘TEST RANGE’ secondary row, opens test scene
+rather than embedded thumbnail [20,746,350,58] ADD TO DECK / REMOVE FROM
+DECK sticky button [0,810,390,34] safe ASCII: +————————————–+ | < BACK
+TURRET FILE > | | | | FULL-BLEED PILOT ART | | [TURRET RENDER] | | | |
+Cannon | | COMMON • ATTACK • TIER 1 | | [Damage] [Fire Rate] | | [Range
+] [Target ] | | [ Splash Shells — brief effect > ] | | [ TEST RANGE > ]
+| | [ ADD TO DECK ] | +————————————–+ Optional expanded detail sheet
+contains exact 34px blast radius, targeting semantics, star scaling,
+synergies, and long descriptions. Keep all mechanics, just defer them.
+
+3D. BATTLE — CORE HUD [0,0,390,844] dark arena/background PNG; safe top
+44 [14,50,362,62] single top status plate PNG: Wave 9, Boss in 1, HP
+3/3, optional boss progress thin image-backed bar [20,120,350,38]
+temporary wave transition announcement; absent during normal play
+[16,176,358,390] primary arena region; 5×3 board centered with 5
+columns, grid cells ~61×61 and gaps ~5 (total width 325); board itself
+~325×193, but larger arena region accommodates enemy loop and
+projectiles; use full region, not an isolated tiny island
+[20,576,350,48] quick inspect anchor area (empty normally); do not cover
+board [14,634,362,170] bottom command tray PNG: row A five deck cards,
+row B currency, Summon, commander, speed/pause [0,810,390,34] safe
+bottom More precise tray: [20,644,350,76] five card slots width ~62,
+gaps 10; art only + small stars/cost when relevant [20,730,86,58]
+currency plate (number ~20px) [112,726,116,66] SUMMON primary mechanical
+button, cost small below/inside [236,730,62,58] commander ability
+(cooldown arc pre-rendered sprite sequence) [306,730,30,28] speed;
+[342,730,30,28] pause (increase touch hit regions to >=44 by extending
+invisible interaction bounds, without overlaps) ASCII: +————————————–+ |
+safe 44 | | [WAVE 9] [BOSS IN 1] [HP 3/3] | | | | ENEMY LOOP / VFX | |
++————————–+ | | | [ ][ ][ ][ ][ ] | | | | [ ][ ][ ][ ][ ] | | | | [ ][
+][ ][ ][ ] | | | +————————–+ | | ENEMY LOOP / VFX | | | | [optional
+compact quick inspect] | | [T1][T2][T3][T4][T5] | | [999] [ SUMMON 100 ]
+[CMD] [>>][||] | | safe bottom | +————————————–+ IMPORTANT GEOMETRY
+CHECK: The depicted board is 5×3 but appears horizontally broad. For a
+390px screen, 5×61 + 4×5 = 325px, x=32.5. This fits; the 390px tall
+arena region is for path, effects and breathing room, NOT a 390px-tall
+grid. Validate enemy loop bounds and tap targets at native scale before
+freezing tray y positions. If enemies travel outside the board,
+prioritize their visibility over decorative negative space. If the game
+is designed with a larger camera world, tune the camera framing rather
+than blindly stretching board sprites.
+
+Battle micro-rules: top bar must remain legible over explosions via a
+pre-rendered dark backing; never show both large wave banner and status
+label persistently. Board-full: Summon button uses disabled sprite and
+text ‘FULL’; on tap give a small shake and no large modal. If resource
+insufficient, disabled state plus cost red for 450ms after tap. Card row
+is for loadout identity and optional info, not five equal secondary
+summon buttons if summon is random. Commander cooldown uses a
+pre-rendered ring sequence (no procedural arc). Pause opens dedicated
+menu sheet. Speed state toggles 1×/2× with text, not ornate icon
+clutter.
+
+3E. BATTLE QUICK INSPECT [20,570,350,60] compact inspect plate PNG with
+44px portrait, name 15px, 1-line ability 12–13px, two concise metrics
+(e.g. DMG 69.6 / RATE 0.35/s) and small Details arrow. If text
+overflows, clamp to one line with accessible Details. Anchor above
+bottom tray; board remains visible. If space conflicts with enemy path,
+put inspect in a top-edge side drawer or temporarily shift arena camera
+by <=20px rather than cover interactive cells. Expanded detail = bottom
+sheet [12,356,366,454] with scrim and explicit close; pause/slow battle
+only if product rules permit. Do not display 4 stats + 3 tiny skill
+icons in the 60px quick inspect.
+
+3F. ONLINE LOBBY — STANDALONE [0,0,390,844] quiet hangar/network room
+background PNG [20,52,350,44] Back + ‘CO-OP LOBBY’ + optional settings
+[20,132,350,154] central invite plate: ‘ROOM CODE’ 13px; ABCD 30px with
+6–8px letter spacing; Copy 44px button and Share 44px button
+[20,310,350,84] player 1 host row: avatar, name, READY / NOT READY
+[20,406,350,84] player 2 row: placeholder silhouette, ‘Waiting for
+teammate’, animated 3-dot indicator [20,512,350,70] optional selected
+mode and match rules, one short line [20,702,350,70] large READY /
+CANCEL READY button [20,780,350,24] subtle ‘Leave lobby’ text link if
+back icon is not sufficient [0,810,390,34] safe bottom ASCII:
++————————————–+ | < BACK CO-OP LOBBY | | | | ROOM CODE | | A B C D | |
+[COPY] [SHARE] | | [HOST avatar] Player 1 READY | | [ghost avatar]
+Waiting… | | | | CO-OP • 2 PLAYERS | | | | [ READY ] | | safe bottom |
++————————————–+ READY remains enabled if ready-up is permitted before
+partner joins; otherwise label it ‘WAITING FOR PLAYER’ and explain
+requirement. Avoid a misleading interactive READY that cannot work. When
+both players are ready, show 0.6–1.0s synced launch transition.
+
+3G. BOSS INTRO / MATCH THREATS [0,0,390,844] darkened arena art with
+dedicated pre-rendered scrim PNG [20,70,350,54] ‘BOSSES THIS MATCH’
+title [24,150,342,330] featured first boss: large MAD CROWN
+illustration, ‘WAVE 10’ badge, one-line ‘Scrambles 3 turrets’
+[20,510,350,112] two smaller upcoming boss tiles side-by-side: FREEZER
+(W20), JANUS CUBE (W30), name + 1-line effect [20,698,350,62] ‘CONTINUE’
+or timed ‘STARTING IN 2’ CTA [0,810,390,34] safe ASCII: +————————————–+
+| BOSSES THIS MATCH | | | | LARGE MAD CROWN ART | | WAVE 10 • Scrambles
+3 | | | | [FREEZER / W20] [JANUS / W30] | | | | [ CONTINUE ] |
++————————————–+ During active match, never show this full page; use
+compact next-boss chip or a 1s nonblocking banner. Avoid presenting
+speculative counterplay unless actual mechanics are confirmed.
+
+4.  MOTION AND FEEL SPECIFICATION
+
+EASING TOKENS (proposed, not DCDW measurements) FAST_OUT =
+cubic-bezier(0.2, 0.8, 0.2, 1) SOFT_IN_OUT = cubic-bezier(0.4, 0,
+0.2, 1) SPRING_LITE = cubic-bezier(0.18, 1.15, 0.32, 1) (subtle
+overshoot) EXIT = cubic-bezier(0.4, 0, 1, 1) Prefer 60fps; no
+unnecessary layout recalculation; animate image transforms/opacity and
+numeric text only. Respect reduced-motion preferences (replace
+scale/slide with 120ms crossfade).
+
+Navigation: Home -> Deck: outgoing art 180ms fade, incoming backdrop
+220ms fade, panel 260ms slide +12px -> 0, stagger card row 20ms each
+capped 100ms. Detail opens from tapped card with 240ms image-scale
+continuity if technically feasible; otherwise 220ms crossfade and 16px
+upward translation. Back reverses in 180–220ms. Lobby entrance 280ms
+with background fade and invite plate rising 20px. Boss intro 300ms art
+reveal; 100ms stagger between boss tiles.
+
+Button press: on touch down, button image scales to 0.965 in 75ms,
+switch to pre-rendered pressed sprite, release 120ms SPRING_LITE to 1.0.
+Primary CTA adds 90ms localized gold flash sprite, never a whole-screen
+white flash. Disabled button stays quiet; invalid action uses 2× 4px
+horizontal shake over 180ms and optional haptic tick.
+
+Roster card: on touch down scale 0.98/80ms; on select, cyan/brass
+selected overlay PNG alpha 0->1 in 140ms; card rises 2px over 160ms;
+tiny check badge enters at 0.85->1 scale 160ms; selected slot receives a
+180ms warm rim sweep PNG. Do not use permanent fast pulsing. On deselect
+120ms fade, no explosion. Desktop hover is not a mobile primary state;
+use pressed/focused/selected states.
+
+Deck add: selected turret portrait flies as a small image duplicate from
+card center to target slot in 260–320ms FAST_OUT, with destination slot
+pulse 140ms. If motion is disabled, immediate slot swap + 120ms
+highlight. Replacement must make old and new card identities obvious.
+
+Numbers: currency gain text interpolates in 220–350ms, integer step
+easing out; critical damage number 160ms upward drift + 120ms fade; wave
+number swaps via 180ms vertical roll. Do not animate every small stat in
+the HUD at once. If a numerical value changes repeatedly, coalesce
+updates to avoid unreadable rolling.
+
+Battle summon: 100ms button press, 180ms summoning energy PNG, 220ms
+turret image pop 0.75->1.05->1 with 2px settle; cap total ~400ms. Merge:
+90ms convergence, 140ms impact sprite, 220ms resulting turret scale
+settle; total 450ms, while retaining immediate input response.
+Board-full feedback 180ms shake and no huge message.
+
+Quick inspect: 150ms slide up 8px + fade; switching selected turret
+crossfades content 100ms with stable panel geometry; dismissal 120ms.
+Expanded sheet 260ms up from bottom with 180ms scrim. Don’t force timed
+dismissal when user is reading.
+
+Lobby: copied room code gets 1.2s ‘COPIED’ text confirmation and a
+single 180ms check glyph animation. Waiting indicator three dots cycles
+every 900ms with low amplitude. Ready toggles plate art and status text
+in 180ms. Player joins with 240ms avatar fade and restrained gold glint;
+no repetitive celebratory effects.
+
+Boss preview: featured portrait 240ms fade/scale 0.94->1, name 120ms
+fade, threat 150ms fade. Auto-advance only if user can reliably read;
+minimum 2.5–3.0s or explicit Continue. Pause combat while a blocking
+intro is shown.
+
+SOUND/HAPTICS: one soft mechanical click for card select; heavier
+low-frequency thump for PLAY/SUMMON; short bright ping for successful
+deck fill; muted click for disabled. Haptics optional and
+user-configurable. No repeated haptic on passive animations.
+
+5.  AI PNG ART PRODUCTION LIST — SHORT ENGLISH PROMPTS
+
+GLOBAL PREFIX (prepend to EVERY prompt): ‘Match the attached TURRET
+MERGE screenshots: premium chunky sci-fi industrial metal, graphite
+gunmetal, restrained antique brass, sparse cyan energy, crisp game UI
+illustration, polished readable silhouettes. Isolated sprite on FLAT
+SOLID #FF00FF magenta background for chroma-key extraction, no text, no
+letters, no numbers, no characters unless requested, no UI mockup, no
+drop shadow outside sprite bounds, generous padding.’
+
+IMPORTANT PRODUCTION RULES: The background for exported individual
+sprites is flat #FF00FF, never a magenta gradient. Internal pre-rendered
+shadows and glow may exist INSIDE the sprite silhouette. For truly
+translucent glow, request a separate glow-only asset and convert keyed
+magenta to alpha in offline asset preparation; validate no magenta
+fringe. For full-bleed screen backgrounds, generate a separate
+full-frame opaque illustration (the flat-magenta rule applies to
+isolated sprites, not final opaque background art). No code-generated
+plates, shadows, borders, progress bars, cooldown arcs, or gradients.
+Generate base/pressed/disabled/selected variants and 9-slice-ready
+center regions as separate PNGs; runtime can 9-slice a supplied image,
+not draw a shape. Generate any dynamic progress bar as pre-rendered fill
+sprite clipped/scaled by code.
+
+CORE SYSTEM (P0) A01. Neutral panel plate: ‘Wide shallow gunmetal panel,
+one thin beveled edge, minimal rivets, calm empty center,
+9-slice-friendly.’ A02. Primary gold button: ‘Wide heavy brass
+mechanical action button, broad empty center, three variants normal
+pressed disabled.’ A03. Secondary button: ‘Quiet dark graphite
+mechanical button, thin steel rim, normal pressed disabled.’ A04.
+Selected card frame: ‘Square brass card outline with restrained cyan
+edge energy and four locked corner brackets, hollow empty center, four
+loop frames.’ A05. Card selection burst: ‘Small cyan-gold mechanical
+bracket snap and restrained sparks, six sequential isolated frames.’
+A06. Roster card base: ‘Portrait card plate, simple dark metal, subtle
+rarity socket, broad artwork window, no inset mini frames.’ A07. Five
+deck slot states: ‘Compact square metal slot, empty, occupied,
+armed-for-replace, selected, disabled variants, centered
+transparent-looking interior.’ A08. Modal scrim: ‘Full-screen uniform
+near-black translucent-looking overlay artwork, clean and undecorated.’
+A09. Top navigation bar: ‘Thin wide graphite header plate with two small
+brass anchor corners and clean empty center.’ A10. Filter/search field:
+‘Long recessed gunmetal search field and compact square filter button,
+simple borders, empty interiors.’ A11. Currency plate: ‘Small dark
+horizontal currency counter capsule, purple crystal socket on left,
+empty number area.’ A12. Generic icon set: ‘Consistent 24px chunky
+metallic icons: back, close, search, filter, settings, copy, share,
+info, pause, speed, check; separated grid, no text.’
+
+HOME (P1) H01. Home background: ‘Portrait 390:844 dark industrial turret
+hangar, dramatic upper architecture, calm low-contrast lower half, no
+interface, no words.’ (OPAQUE FULL-SCREEN EXCEPTION) H02. Home hero art:
+‘Large charismatic turret pilot beside an oversized brass-silver cannon,
+dynamic 3/4 illustration, clean silhouette, composition weighted
+center-right, isolated.’ H03. Mode selector: ‘Wide recessed
+mode-selection capsule with one small mechanical dropdown socket,
+subdued graphite and brass.’ H04. Home navigation tabs: ‘Three compact
+matched industrial navigation tabs, idle and active variants, quiet
+metal surfaces.’
+
+DECK / COLLECTION (P0) D01. Featured turret preview plate: ‘Wide
+low-profile plate with portrait opening on left and empty label area on
+right, single brass edge.’ D02. Rarity strips: ‘Five thin pre-rendered
+card accent strips: common neutral, rare blue, epic violet, legendary
+gold, mythic crimson, equal dimensions.’ D03. Preset row: ‘Wide slim
+industrial preset row with small icon socket, minimal frame, empty text
+area.’ D04. Deck-complete effect: ‘Small contained gold-and-cyan rim
+sweep around a five-slot loadout, six frames, no screen-filling
+particles.’
+
+UNIT DETAIL (P1) U01. Detail backdrop: ‘Portrait dark workshop interior,
+gentle top lighting, uncluttered negative space for hero art and bottom
+controls.’ (OPAQUE FULL-SCREEN EXCEPTION) U02. Pilot cutout: ‘Large
+detailed Cannon pilot bust, bearded veteran with blue-gray hair and
+brass armor, expressive pose, no rectangular portrait frame.’ U03.
+Turret cutout: ‘Top-down silver-brass stub cannon turret, crisp readable
+round footprint, isolated high-resolution render.’ U04. Stat plate:
+‘Small recessed graphite stat cell, tiny metallic icon socket, spacious
+number area, four identical variants.’ U05. Skill description plate:
+‘Wide simple gunmetal skill plate with one small cyan accent tab, empty
+center, no section dividers.’ U06. Test range row: ‘Thin dark
+interactive row with a small target emblem on left and right chevron
+socket.’
+
+BATTLE (P0) B01. Battle top rail: ‘Wide compact gunmetal HUD bar, three
+calm sections for wave, boss timer, and hearts, minimal brass hardware.’
+B02. Board surround: ‘Portrait battle arena frame, industrial loop-path
+perimeter, subtle cyan lane markers, broad clear center for a 5 by 3
+grid.’ B03. Battle card tray: ‘Low-profile horizontal graphite command
+tray with five evenly spaced card wells, one lower control shelf.’ B04.
+Summon button: ‘Medium round-square heavy brass summoning button, normal
+pressed disabled and full states, clean center.’ B05. Commander button:
+‘Compact round mechanical ability button with cyan energy core, ready
+and cooldown variants.’ B06. Cooldown ring sheet: ‘Twelve discrete
+mechanical ring fill states from full cyan to empty dark, equal square
+cells.’ B07. Wave announcement: ‘Short restrained metallic wave banner
+with subtle cyan edge sweep, empty text field, six animation frames.’
+B08. Quick inspect plate: ‘Wide very shallow dark mechanical inspection
+strip, small portrait socket, broad empty label field, subtle Details
+chevron.’ B09. Expanded inspect sheet: ‘Tall bottom sheet panel with
+soft pre-rendered shadow and simple brass header edge, large clean
+interior.’ B10. Merge VFX: ‘Compact cyan-gold mechanical energy
+convergence and spark impact, eight animation frames, no large white
+flash.’ B11. Disabled feedback: ‘Tiny dull amber mechanical warning
+flash and short vibration streaks, four frames.’
+
+LOBBY (P1) L01. Lobby background: ‘Portrait quiet futuristic radio room
+with two vacant pilot stations, dark graphite and warm brass, no text.’
+(OPAQUE FULL-SCREEN EXCEPTION) L02. Invite code plate: ‘Large horizontal
+communications console plate, broad blank code area, two small button
+sockets, restrained cyan indicator.’ L03. Player slot: ‘Wide low-profile
+teammate row with circular avatar recess and tiny ready-status light,
+empty center.’ L04. Waiting avatar: ‘Neutral dark metal pilot silhouette
+emblem, subtle animated cyan signal dots, four frames.’ L05. Ready
+button: ‘Wide gold command button, ready idle pressed waiting and locked
+variants, no lettering.’
+
+BOSS INTRO (P1) X01. Boss featured card: ‘Large tall boss portrait
+frame, simple heavy graphite and bronze, generous open illustration
+area, one wave badge socket.’ X02. Boss compact card: ‘Small landscape
+boss preview plate with art opening and short text strip, matching
+subdued metal frame.’ X03. Mad Crown art: ‘Expressive sinister crowned
+mechanical jester boss, purple and gold, clean silhouette, isolated
+portrait.’ X04. Freezer art: ‘Chunky crystalline blue ice guardian boss,
+strong readable face and shoulders, isolated portrait.’ X05. Janus Cube
+art: ‘Floating two-faced purple-gold puzzle cube boss, readable
+silhouette, isolated portrait.’ X06. Boss reveal VFX: ‘Restrained bronze
+iris sweep and small cyan energy glints, six isolated frames.’
+
+ASSET DELIVERY SPEC - Each UI sprite: PNG with clean keyed alpha after
+offline processing; include original #FF00FF master and processed
+transparent export. Check edge contamination at 200% zoom. - For
+animation: equal-size cells, consistent anchor/pivot, one row per
+animation, named frame order. Runtime never guesses sprite boundaries. -
+9-slice assets: deliver corner/edge-safe geometry, document cap insets,
+and test minimum/maximum stretch sizes. - Opaque backgrounds: 390×844
+design composition, plus taller safe-bleed master (e.g., 450×1000) for
+device crop; no text baked in. - Deliver @2x or @3x high-res masters as
+appropriate; layout coordinates remain logical px. Ensure smallest
+detail survives 390px width and compression. - Font rendering is
+code-permitted. Dynamic numbers, labels, usernames, localized copy,
+progress value, and status text are never baked into PNGs. - Every
+required runtime state must have a source image: normal, pressed,
+selected, disabled, empty, loading, ready, cooldown, and locked where
+relevant. Avoid runtime tint as the sole selected-state signal.
+
+6.  PRIORITIZED IMPLEMENTATION CHECKLIST
+
+P0 — FIX THE CORE READABILITY FIRST [ ] Capture baseline on 390×844 and
+two other portrait aspect ratios; measure tap errors, time-to-PLAY, deck
+build completion time, battle mis-taps, and quick-inspect readability. [
+] Define the two fonts, six color roles, 8px spacing rhythm, safe-area
+rules, 44px minimum tap targets, and three plate families. [ ] Split
+current combined menu into Home and Deck Builder; preserve direct access
+to PLAY. [ ] Remove permanent preset descriptions, audio toggles,
+redundant category controls, modifier row, and mode grid from deck
+selection; relocate, do not delete features. [ ] Rebuild Deck Builder
+with five large slots, three-column turret grid, search/filter sheet,
+selected-card PNG overlays, and sticky save/play action. [ ] Redesign
+battle top rail into one status group; remove persistent Wave 9
+duplication. [ ] Enlarge/reframe board within available arena while
+checking enemy-path visibility and input hitboxes. [ ] Consolidate
+bottom deck, currency, Summon, commander, speed, and pause into a stable
+action tray. [ ] Replace current oversized Sniper quick info with 60px
+inspect strip + optional expanded sheet. [ ] Generate P0 asset pack
+A01–A12, D01–D04, B01–B11; validate PNG-only visual rule.
+
+P1 — POLISH THE REST OF THE JOURNEY [ ] Create Home hero composition and
+simple mode selector. [ ] Rebuild Cannon detail with full-bleed pilot,
+dominant turret model, four essentials, one-line skill, optional test
+range. [ ] Move co-op lobby to a standalone screen; simplify code
+sharing and player statuses. [ ] Redesign boss preview with one featured
+boss and two compact upcoming bosses. [ ] Implement consistent 180–300ms
+navigation, 75–130ms button response, and 150–320ms selection feedback.
+[ ] Generate P1 home/detail/lobby/boss PNG assets and required
+pressed/disabled states. [ ] Run readability tests at native 390px, low
+brightness, with color-vision variation and reduced-motion enabled.
+
+P2 — QUALITY / PERFORMANCE / INSTRUMENTATION [ ] Add polished
+card-to-slot flight, currency tick-ups, restrained boss reveals and
+merge feedback. [ ] Audit PNG atlases, batching, texture memory, alpha
+fringes, mipmaps, and overdraw; target stable 60fps on mid-tier phones.
+[ ] Verify keyboard/search behavior, long turret names, localization
+expansion, and touch/gesture safe areas. [ ] A/B test Home->Deck
+separation and inspect strip; track first-play time, deck editing
+success, info-panel opens, accidental taps, and retention. [ ] Remove
+any ornament that fails the ‘does it improve hierarchy or feedback?’
+review.
+
+ACCEPTANCE CRITERIA / ART-DIRECTOR SIGN-OFF - From Home, a returning
+player identifies PLAY in <=1 second and starts a known mode with <=2
+deliberate taps. - In Deck Builder, the five selected turrets and
+remaining slots are immediately legible; a player can replace a slot
+without reading instructions. - Every turret card remains recognizable
+at native phone resolution; selected state is unmistakable without
+relying solely on color. - During battle, the board, incoming enemies,
+HP, currency, summon availability, and commander readiness are readable
+without opening an overlay. - Quick inspect never obscures a tappable
+board cell; extended stats remain one tap away. - Lobby room code,
+share, partner status, and READY are visually unambiguous. - Boss intro
+is readable and never interrupts live combat without a deliberate
+pause. - All visuals originate in generated PNG assets; runtime renders
+only text/numbers and image transforms/crops. No code-drawn decorative
+geometry. - At 390×844, minimum touch targets >=44px and critical
+labels >=13px unless validated by device testing.
+
+FINAL ART DIRECTION The solution is not to make the metallic art flatter
+or less distinctive. It is to give that art fewer, more important places
+to shine. Use one beautiful hero image instead of six competing
+portraits; one confident primary button instead of several
+equal-priority buttons; one coherent battle status rail instead of
+multiple banners; one quick-inspect line instead of a miniature
+encyclopedia. Make the industrial frame support the turret, not compete
+with it. That is the difference between ‘more decoration’ and ‘more
+polish.’
