@@ -184,6 +184,11 @@ const TVB = {
         const a = REN.img('tv_dich' + (1 + (Math.floor(performance.now() / 125) % 4)));
         if (a) { const S = co / 1.22 * 0.98; ctx.globalAlpha = Math.min(1, (al || 1) * 1.15); ctx.drawImage(a, x - S / 2, y - S / 2, S, S); ctx.globalAlpha = 1; return; }
       }
+      // ghép thành công: vòng rèn cf_vong_ren (6 khung) → chớp nạp cyan-vàng 8 khung E20 (tv_ghep1–8) cùng nhịp 255–470 ms
+      if (ten === 'cf_vong_ren') {
+        const i = 1 + Math.min(7, Math.floor(f / 5 * 7.99)), a = REN.img('tv_ghep' + i);
+        if (a) { ctx.globalAlpha = Math.min(1, al == null ? 1 : al); ctx.drawImage(a, x - co / 2, y - co / 2, co, co); ctx.globalAlpha = 1; return true; }
+      }
       return khGoc.apply(this, arguments);
     };
   }
@@ -199,6 +204,22 @@ const TVB = {
       for (let i = 0; i < 15; i++) { const N = B.t[i]; if (!N || N === src || hopLeGhep(src, N)) continue; const c = B.o[i]; ctx.drawImage(a, c.x - S / 2, c.y - S / 2, S, S); }
       ctx.globalAlpha = 1;
       return r;
+    };
+  }
+  // §C · thả sai / huỷ: ụ bật về ô cũ → khi chạm ô, chớp thép-xanh nhẹ 4 khung E21 (tv_lui1–4) ở ô gốc (không nổ)
+  if (typeof GF !== 'undefined' && GF.veCam) {
+    const vcGoc = GF.veCam;
+    GF.veCam = function (ctx) {
+      const r0 = vcGoc.apply(this, arguments);
+      if (!this.ve || !this.ve.length || !REN.img('tv_lui1')) return r0;
+      const now = this.now();
+      for (const r of this.ve) {
+        const dai = this.giam() ? 0.2 : 0.34, u = (now - r.t0) / 1000 / dai; if (u < 0.55 || u >= 1) continue;
+        const v = (u - 0.55) / 0.45, a = REN.img('tv_lui' + (1 + Math.min(3, Math.floor(v * 4)))); if (!a) continue;
+        const o = r.B.o[r.o], S = this.tile(r.B) * 0.98;
+        ctx.globalAlpha = 0.75 * (1 - v * 0.6); ctx.drawImage(a, o.x - S / 2, o.y - S / 2, S, S); ctx.globalAlpha = 1;
+      }
+      return r0;
     };
   }
   // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) thay bóng de_chung nhuộm tối trong lớp cầm (ghepfx.js veCam)

@@ -114,11 +114,11 @@ const TAI = {
   },
   hien(nhan) {
     this.dung(); const t = this.el;
-    t.hidden = false; t.classList.remove('het');
+    t.hidden = false; t.classList.remove('het'); if (!this.xem) document.documentElement.classList.add('tai-mo');
     t.querySelector('.tai-chu b').textContent = nhan || 'LOADING';
     this.tienDo(0, 0);
   },
-  an() { if (this.el) this.el.hidden = true; },
+  an() { if (this.el) this.el.hidden = true; document.documentElement.classList.remove('tai-mo'); },
   tienDo(xong, tong) {
     if (!this.el) return;
     const p = tong ? Math.floor(xong / tong * 100) : 0;
