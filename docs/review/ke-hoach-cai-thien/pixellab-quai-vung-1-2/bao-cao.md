@@ -5,7 +5,7 @@ Phiên này làm theo đúng cách đã chạy tốt ở phiên quái nấm (`pi
 PixelLab → động tác khung xương (skeleton) PixelLab**, code chỉ cắt / đặt vị trí / ghép tấm. **Chỉ đổi HÌNH**: không đổi luật chơi, chỉ số,
 hộp va chạm, thời điểm ra đòn, thời lượng động tác (giữ nguyên số giây của từng hàng như tấm cũ). Không chơi thử bằng tay — chỉ chụp headless.
 
-> TRẠNG THÁI: **Vùng 1 Rừng Gai: XONG, đã đẩy.** Vùng 2 Hang Chìm: đang làm (mục 7 cập nhật khi xong).
+> TRẠNG THÁI: **XONG cả hai vùng** — vùng 1 Rừng Gai (commit 650bd03) và vùng 2 Hang Chìm (commit sau, mục 7).
 
 ## 1. Tóm tắt cho chủ game
 
@@ -88,14 +88,42 @@ GIF từng động tác (phóng ×3 NEAREST, đứng → động tác → đứn
 ## 6. Chi phí PixelLab (số thật, GET /balance + `usage` từng việc)
 
 - Đầu phiên: 6.112,55 lượt. Đến lúc đẩy vùng 1: số dư 4.104,25 (tài khoản dùng chung với phiên Rowan và phiên quái vùng 3–4).
-- Phiên này tính riêng (cộng `usage` của từng việc): **811 lượt** đến lúc đẩy vùng 1 (đã gồm ảnh gốc + 8 hướng + nhập + một phần động tác vùng 2).
+- Phiên này tính riêng (cộng `usage` của từng việc): **811 lượt** lúc đẩy vùng 1; **tổng cả phiên: 1.022,5 lượt** (trần giao 1.800).
+- Số dư cuối (GET /balance): **3.773,01 / 10.000** (tài khoản dùng chung với phiên Rowan và phiên quái vùng 3–4 nên chênh lệch đầu–cuối lớn hơn phần phiên này).
 
-## 7. Vùng 2 — Hang Chìm
+## 7. Vùng 2 — Hang Chìm (12 con)
 
-(đang làm)
+| Mã quái | Tên cũ | Hình mới | Ghi chú động tác |
+|---|---|---|---|
+| `cua` (Lính xông) | Cua Lính | **Tin Soldier Crab** — cua xanh đội mũ lính chì chóp lông đỏ, cầm nĩa bạc làm giáo | đứng, bò ngang, rút nĩa lấy đà, đâm nĩa, trúng, lật ngửa (bỏ 2 khung gục có bụi) |
+| `caCon` (Bầy) | Bầy Cá Con | **Golden Minnow** — cá vàng điều ước vây lụa | đứng, bơi, cong mình, lao, trúng, lật bụng (bỏ 1 khung có vệt) |
+| `oc` (Khiên) | Ốc Mượn Hồn | **Teapot Hermit** — cua ẩn sĩ sống trong ấm trà sứ xanh trắng nứt | báo đòn = **rút hẳn vào ấm** (game dùng làm thế "trong vỏ"), trúng đòn bỏ 2 khung có mảnh văng |
+| `haiQuy` (Xạ thủ) | Hải Quỳ | **Shell Anemone** — hải quỳ hồng một mắt trong vỏ sò ngọc trai | thu xúc tu → xoè quạt |
+| `caChuon` (Nhanh) | Cá Chuồn | **Winged Flying Fish** — cá chuồn cánh lông chim | 8 hướng chạy lại 3 lần (bộ đầu hướng đông-nam nhìn thẳng mặt) |
+| `caNoc` (Cảm tử) | Cá Nóc | **Pufferling** — cá nóc tròn mắt lo âu | phồng to → rung (bỏ 1 khung nhoè) |
+| `sua` (Đặt bom) | Sứa Bom | **Lantern Jelly** — sứa chuông thuỷ tinh tím có nút bần đồng, lõi sáng vàng | bỏ khung nhoè ở báo đòn / trúng đòn |
+| `nhim` (Gai) | Nhím Biển | **Urchin Imp** — cầu gai tím hai mắt sáng | xoay tại chỗ (lặp khung 1–3) |
+| `cuaTuong` (Tinh anh) | Cua Tướng | **Crab General** — cua đỏ đội mũ sắt sừng vàng, cờ trên lưng | **chiêu Mưa tinh thể** có hàng riêng (giơ hai càng → nện xuống); đòn thường bỏ khung càng nhoè; "kẹp chéo" (2 lần chạy đều nhoè càng) dùng hàng báo / đánh thường |
+| `caNocChua` (Tinh anh) | Cá Nóc Chúa | **Puffer King** — cá nóc vua đội vương miện san hô đỏ | lăn = lắc tới lui (lặp khung 2–5) |
+| `cuaDa` (Trùm nhỏ) | Cua Đá | **Crystal Crab** — cua khổng lồ mai phủ pha lê xanh tím | đứng / đi chạy lại (bản 1 có hơi khói, khung tan nát); **Đập càng rung sàn** và **Tường tinh thể** có hàng riêng |
+| `nguTinh` (Trùm vùng) | Ngư Tinh | **Sir Inkmaw the Kraken Knight** — bạch tuộc hiệp sĩ mũ giáp, vai vỏ ốc, rìu san hô | hàng riêng cho Phun băng (c3), Cột nước đuổi (c4), Xoáy hút (c5), gầm chuyển pha; Sóng thần (c2) 2 khung cuối vỡ hạt → dùng hàng báo / đánh thường |
+
+Hiệu ứng vùng 2 đổi sang PixelLab VFX (bản "pro", cùng cỡ khung / neo / số khung / thời lượng như ảnh cũ): vũng điện của Sứa (`hu-vung-dien`),
+vệt nhớt Ốc (`hu-vet-nhot`), tường tinh thể Cua Đá (`hu-tuong-tinh-the`), sóng thần (`hu-song-than`), tường sóng (`hu-tuong-song`),
+xoáy nước (`hu-xoay-nuoc`), mảnh san hô văng (`hu-manh-san-ho`); **rút vỏ Ốc** (`hu-vo-oc`) dựng từ chính khung "rút vào ấm" của Teapot Hermit (phát ngược).
+Để nguyên (bản PixelLab kém hơn ảnh cũ / vẽ nhầm): `hu-dap-san` (đập sàn — ra vòng nứt mờ nhạt), `hu-phun-bang` (phun băng — bản pro thành khối
+xám mờ), `hu-bang-nhon-roi` (băng nhọn rơi — mất cột băng), `hu-ngu-tinh-mo-man` (màn ra mắt — vẽ luôn một hiệp sĩ người vào hiệu ứng).
+
+Kiểm vùng 2 (cùng cổng kiểm, kết quả thật):
+- `bash tools/phat-hanh/cong_kiem.sh`: **ĐẠT** (130 giây) — **người chơi tải 16,18 / 20 MB**, bản một tệp **22,71 / 30 MB**, smoke test 14 bước đạt.
+- Chụp headless 844 × 390 vùng 1 + vùng 2 (`anh/tran-v0-*`, `anh/tran-v1-*`): mọi quái thường + tinh anh đứng / ra đòn, Sir Inkmaw c1–c5,
+  Crystal Crab đứng / kẹp / đập / tường; `?quaipl=0` (`*-cu.png`) → hình cũ. **0 lỗi trang.** (Bài chụp cho em bé máu 99.999 để không chết giữa
+  chừng — chỉ trong bài chụp.)
+- Điểm neo: lần ghép cuối đổi điểm neo sang **giữa thân** theo chiều ngang (nhiều con bay / bò ngang không có chân rõ) cho cả 21 tấm.
 
 ## 8. Việc còn lại / đề xuất
 
+- Trùm vùng mới chỉ có MỘT dáng cho cả 3 pha (dáng pha 2/3 cũ là tấm ChatGPT, nay chỉ ở `?quaipl=0`); đổi pha có hàng "gầm". Muốn đổi màu / dáng theo pha: làm thêm bằng PixelLab (~60 lượt / trùm).
 - Một số quái vùng 1 nhỏ hơn hình cũ ~20–30% (Acorn Beetle, Pinecone Squirrel, Briar Hedgehog, Hooded Weasel) vì khung PixelLab 84 điểm ảnh;
   hộp va chạm không đổi. Muốn to bằng cũ: tạo lại ảnh gốc 112 điểm ảnh rồi chạy lại động tác (~45 lượt / con). Vùng 2 đã chọn cỡ khung theo hình cũ.
 - Tên chữ (sổ yêu quái, lời nhắc) vẫn là tên cũ (Bầy Ong Vò Vẽ…) — ngoài phạm vi "chỉ hình"; đề xuất phiên chữ đổi tên theo bảng mục 1.
@@ -103,7 +131,7 @@ GIF từng động tác (phóng ×3 NEAREST, đứng → động tác → đứn
 
 ## Tệp
 
-- `game/art/custom/<mã>.sprite.json` (9 tấm mới vùng 1), `<mã>-plcu.sprite.json` (tấm cũ, chỉ `?quaipl=0`), `hu-pl-*.sprite.json` (5 hiệu ứng)
+- `game/art/custom/<mã>.sprite.json` (21 tấm mới), `<mã>-plcu.sprite.json` (tấm cũ + dáng pha trùm, chỉ `?quaipl=0`), `hu-pl-*.sprite.json` (13 hiệu ứng)
 - `game/js/quai_pl.js`, `game/js/sprite_custom.js`, `game/build.py`, `game/dist/*`
 - `docs/anh-goc/pixellab-quai-vung-1-2/` — ảnh gốc, 8 hướng, khung đã chọn, tấm ghép, dải hiệu ứng, `chon.json`
 - `cong-cu/`: `dung-quai-pl.py`, `cau-hinh.json`, `gif.py`, `chup.py`; `cong-cu/pipeline/` (các lệnh gọi PixelLab đã dùng; khoá đọc từ `/root/.plk`, không nằm trong repo)

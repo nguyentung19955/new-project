@@ -13,7 +13,7 @@ GOC = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 SETUP = os.path.join(GOC, 'game', 'tests', 'setup.js')
 LOI = []
 VAO0 = r'''([r, i]) => { G.resetSave(); G.save.sound = false; G.keys = {}; G.keyP = {}; G.startStage(r, i, 0); return 1; }'''
-VAO1 = r'''() => { const S = G.getRun(); S.fade = 0; S.mode = 'play'; return S.r; }'''
+VAO1 = r'''() => { const S = G.getRun(); S.fade = 0; S.mode = 'play'; S.P.inv = 99; S.P.maxhp = 99999; S.P.hp = 99999; return S.r; }'''
 SACH = r'''() => { const S = G.getRun(), Wd = S.W; S.fade = 0; S.hint = null; for (const k of ['mobs','ents','projs','spawns']) if (Wd[k]) Wd[k].length = 0;
   Wd.waves = []; Wd.waveT = 999; Wd.banner = null; S.P.inv = 99; return true; }'''
 QUAI = r'''(r) => { const S = G.getRun(), Wd = S.W, P = S.P; P.x = Wd.x0 + 30; P.y = (Wd.y0 + Wd.y1) / 2;
@@ -24,9 +24,9 @@ QUAI = r'''(r) => { const S = G.getRun(), Wd = S.W, P = S.P; P.x = Wd.x0 + 30; P
   M.elite[r].forEach((a, k) => { const e = G.spawnEnemy('elite', P.x + 345, Wd.y0 + h * (0.28 + k * 0.42), { art: a }); ds.push(e); });
   for (const e of ds) { e.cd = 99; e.face = -1; e.skCd = 99; }
   return ds.map((e) => e.art + (G.quaiPl && G.quaiPl.tamMoi && G.quaiPl.tamMoi(e.art) ? '*' : '')); }'''
-DANH = r'''() => { for (const e of G.getRun().W.ents) { e.cd = 0; e.skCd = e.role === 'elite' ? 0 : e.skCd; } G.getRun().P.inv = 99; return 1; }'''
+DANH = r'''() => { const P = G.getRun().P; P.maxhp = Math.max(P.maxhp || 0, 99999); P.hp = P.maxhp; for (const e of G.getRun().W.ents) { e.cd = 0; e.skCd = e.role === 'elite' ? 0 : e.skCd; } G.getRun().P.inv = 99; return 1; }'''
 TRUM = r'''() => { const S = G.getRun(), Wd = S.W, b = Wd.boss; if (!b) return null; b.cd = 99; b.vx = 0; b.vy = 0; S.P.inv = 99; Wd.banner = null; S.hint = null;
-  S.P.x = b.x - 110; S.P.y = b.y + 4; return [b.art, b.kind, !!(G.quaiPl && G.quaiPl.tamMoi && G.quaiPl.tamMoi(b.art))]; }'''
+  S.P.x = b.x - 110; S.P.y = b.y + 4; S.P.maxhp = Math.max(S.P.maxhp || 0, 99999); S.P.hp = S.P.maxhp; return [b.art, b.kind, !!(G.quaiPl && G.quaiPl.tamMoi && G.quaiPl.tamMoi(b.art))]; }'''
 
 
 def mo(b, co=''):
@@ -65,11 +65,12 @@ def chay(b, r, nhan, co):
         vao(pg, r, i); pg.wait_for_timeout(800); cho_anh(pg)
         n = pg.evaluate('() => { const S = G.getRun(); const k = S.map.rooms.findIndex((x) => x && x.type === "boss"); return k; }')
         pg.evaluate('(n) => { G.gotoRoom(n); const S = G.getRun(); S.fade = 0; S.mode = "play"; S.trans = null; return 1; }', n)
+        pg.evaluate('() => { const P = G.getRun().P; P.inv = 99; P.hp = P.maxhp; return 1; }')
         pg.wait_for_timeout(3500); cho_anh(pg)
         print(nhan, ten, pg.evaluate(TRUM))
         pg.screenshot(path=os.path.join(OUT, 'v%d-3-%s-dung%s.png' % (r, ten, nhan)))
         for c in chieu:
-            pg.evaluate('(c) => { G.bossDebug(c); const S = G.getRun(); S.P.inv = 99; return 1; }', c)
+            pg.evaluate('(c) => { G.bossDebug(c); const S = G.getRun(); S.P.inv = 99; S.P.hp = S.P.maxhp; return 1; }', c)
             pg.wait_for_timeout(650)
             pg.screenshot(path=os.path.join(OUT, 'v%d-3-%s-%s%s.png' % (r, ten, c, nhan)))
             pg.wait_for_timeout(2300)

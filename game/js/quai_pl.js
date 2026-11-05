@@ -26,10 +26,13 @@
   const V12 = {
     ongVo: 'thimbleWasp', boHung: 'acornBeetle', chonBong: 'hoodWeasel', namPhong: 'puffcap', socNo: 'pineconeSquirrel', nhimDoc: 'briarHedgehog',
     heoNanh: 'tuskBoar', namPhongChua: 'puffcapKing', mocTinh: 'grimbark',
+    cua: 'tinCrab', caCon: 'goldMinnow', oc: 'teapotHermit', haiQuy: 'shellAnemone', caChuon: 'wingFish', caNoc: 'pufferling', sua: 'lanternJelly',
+    nhim: 'urchinImp', cuaTuong: 'crabGeneral', caNocChua: 'pufferKing', cuaDa: 'crystalCrab', nguTinh: 'inkmaw',
   };
   // Hiệu ứng riêng của các quái đó: mã cũ → mã dải khung PixelLab
   const HU = {};
-  for (const k of ['cau-dat-lan', 'gai-re', 'qua-doc-roi', 'nut-re-moc', 'dan-qua-no']) HU['hu-' + k] = 'hu-pl-' + k;
+  for (const k of ['cau-dat-lan', 'gai-re', 'qua-doc-roi', 'nut-re-moc', 'dan-qua-no', // vùng 1
+    'vung-dien', 'vet-nhot', 'vo-oc', 'tuong-tinh-the', 'song-than', 'tuong-song', 'xoay-nuoc', 'manh-san-ho']) HU['hu-' + k] = 'hu-pl-' + k; // vùng 2
   // Khác 3 quái nấm: tấm mới mang THẲNG mã quái cũ (tệp "quai_moi"), tấm ChatGPT cũ là <mã>-plcu chỉ nạp khi ?quaipl=0 (js/sprite_custom.js,
   // game/build.py quai_cu_cua) — người chơi không phải tải hai bản. Nên V12 KHÔNG nằm trong THAY; ở đây chỉ thêm hàng riêng của chiêu (banCua).
   const QP = (G.quaiPl = { MOI, V12, HU, THAY: { heoCon: 'thorncapGoblin', hoaBaoTu: 'sporePuff', namChua: (G.slice && G.slice.anhTrum) || 'toadstoolKing' }, TRUM: { namChua: (G.slice && G.slice.anhTrum) || 'toadstoolKing' } });

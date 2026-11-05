@@ -614,7 +614,9 @@
    },
    {
     "ten": "atk",
-    "giay": 0.55
+    "giay": 0.55,
+    "lap_tu": 1,
+    "lap_den": 3
    },
    {
     "ten": "hit",
@@ -660,14 +662,6 @@
     "mo": 0.82
    },
    {
-    "ten": "tele_chieu1",
-    "giay": 0.6
-   },
-   {
-    "ten": "atk_chieu1",
-    "giay": 0.55
-   },
-   {
     "ten": "tele_chieu2",
     "giay": 0.6
    },
@@ -698,7 +692,9 @@
    },
    {
     "ten": "atk",
-    "giay": 0.55
+    "giay": 0.55,
+    "lap_tu": 2,
+    "lap_den": 5
    },
    {
     "ten": "hit",
@@ -795,14 +791,6 @@
     "ten": "die",
     "giay": 1.2,
     "mo": 0.6
-   },
-   {
-    "ten": "tele_c2",
-    "giay": 0.7
-   },
-   {
-    "ten": "atk_c2",
-    "giay": 0.6
    },
    {
     "ten": "tele_c3",

@@ -3,7 +3,7 @@
 
 Giống hệt cách của phiên quái nấm (pixellab-quai-nam/cong-cu/dung-quai-pl.py): chỉ CẮT + ĐẶT + GHÉP, không vẽ / vá / đổi màu điểm ảnh nào.
 - Mọi khung một con cùng một khung vẽ PixelLab (cùng nhân vật, cùng khung xương, hướng south-east) → MỘT ô cắt chung, không dời riêng khung nào.
-- Điểm neo (goc) = giữa chân ở khung idle-00 (đáy hình), net 2 (2 điểm ảnh PixelLab = 1 điểm game).
+- Điểm neo (goc) = giữa thân theo chiều ngang + đáy hình ở khung idle-00, net 2 (2 điểm ảnh PixelLab = 1 điểm game).
 - Hàng thêm (tele_<chiêu>, atk_<chiêu>, phase): game/js/quai_pl.js đọc từ tệp và dùng khi quái ra đúng chiêu đó.
 Chạy:  python3 docs/review/ke-hoach-cai-thien/pixellab-quai-vung-1-2/cong-cu/dung-quai-pl.py [--ghi] [mã cũ ...]
 """
@@ -38,7 +38,7 @@ def dung(con, cfg):
     a = np.array(rows[0][1][0])[..., 3] > 0
     ys, xs = np.where(a)
     by = int(ys.max())
-    fx = int(round(xs[ys >= by - 3].mean()))
+    fx = int(round((xs.min() + xs.max() + 1) / 2))  # giữa thân (khung đứng): nhiều con không có chân rõ (bay, bò ngang) — neo giữa thân để lật trái/phải không lệch khỏi hộp va chạm
     fy = by + 1
     x0, y0 = bb[0] - 2, bb[1] - 2
     if (fx - x0) % 2: x0 -= 1

@@ -4,7 +4,7 @@ sys.path.insert(0, '/tmp/claude-0/pl')
 from hu_cu import tai
 OUT = '/home/claude/new-project/game/art/custom/'
 SRCD = '/home/claude/new-project/docs/anh-goc/pixellab-quai-vung-1-2/hieu-ung/'
-Z1 = ['hu-cau-dat-lan', 'hu-gai-re', 'hu-la-chem', 'hu-qua-doc-roi', 'hu-nut-re-moc', 'hu-khoi-doc-nho', 'hu-dan-qua-no']
+Z1 = ['hu-x-unused', 'hu-cau-dat-lan', 'hu-gai-re', 'hu-la-chem', 'hu-qua-doc-roi', 'hu-nut-re-moc', 'hu-khoi-doc-nho', 'hu-dan-qua-no']
 def frames_vfx(d):
     png = [f for f in glob.glob(d + '/*.png') if 'normals' not in f][0]; js = [f for f in glob.glob(d + '/*.json') if not f.endswith(('ok', 'conv.json'))]
     js = [f for f in js if 'conv' not in f][0]
