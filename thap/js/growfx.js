@@ -47,10 +47,12 @@ function sao5(x, r, r2, n) { n = n || 5; x.beginPath(); for (let i = 0; i < n * 
 function vienCapsule(x, L, r) { x.beginPath(); x.moveTo(-L / 2 + r, -r); x.lineTo(L / 2 - r, -r); x.arc(L / 2 - r, 0, r, -Math.PI / 2, Math.PI / 2); x.lineTo(-L / 2 + r, r); x.arc(-L / 2 + r, 0, r, Math.PI / 2, Math.PI * 1.5); x.closePath(); }
 GFX.taoSprite = function () {
   // Hộp Bí Ẩn: mảnh bài kim cương tím (dạng 1) · bóng "?" (dạng 2)
-  taoAnh('g_the_tim', 64, 40, '#c77dff', (x) => { quang(x, 20, 'rgba(199,125,255,.7)'); x.beginPath(); x.moveTo(18, 0); x.lineTo(0, -12); x.lineTo(-18, 0); x.lineTo(0, 12); x.closePath(); x.fillStyle = '#7b2cd6'; x.fill(); x.lineWidth = 3; x.strokeStyle = '#f0dcff'; x.stroke(); x.fillStyle = '#ffffff'; x.beginPath(); x.arc(0, 0, 3, 0, 7); x.fill(); });
+  // g_the_tim: đã thay bằng PNG v2 (fxu.js FXU.THAY) — chỉ giữ màu vệt
+  MAU_VET.g_the_tim = '#c77dff';
   taoAnh('g_hoi', 48, 48, '#d9a8ff', (x) => { quang(x, 24, 'rgba(199,125,255,.8)'); x.fillStyle = '#3a1060'; x.beginPath(); x.arc(0, 0, 13, 0, 7); x.fill(); x.lineWidth = 3; x.strokeStyle = '#e8c8ff'; x.stroke(); x.fillStyle = '#ffffff'; x.font = '900 20px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('?', 0, 1); });
   // Hộp Tiến Hoá: viên hổ phách (1) · xỉ vàng nóng chảy hình giọt (2)
-  taoAnh('g_xi_vang', 40, 40, '#ffb43a', (x) => { quang(x, 20, 'rgba(255,180,58,.8)'); x.fillStyle = '#ffb43a'; x.beginPath(); x.arc(0, 0, 8, 0, 7); x.fill(); x.fillStyle = '#fff3c0'; x.beginPath(); x.arc(2, -2, 3, 0, 7); x.fill(); });
+  // g_xi_vang: đã thay bằng PNG v2 (fxu.js FXU.THAY) — chỉ giữ màu vệt
+  MAU_VET.g_xi_vang = '#ffb43a';
   taoAnh('g_xi_nong', 72, 36, '#ff8a1a', (x) => { quang(x, 18, 'rgba(255,138,26,.7)'); const g = x.createLinearGradient(-26, 0, 22, 0); g.addColorStop(0, 'rgba(255,90,20,0)'); g.addColorStop(0.5, '#ff7a1a'); g.addColorStop(0.85, '#ffd36a'); g.addColorStop(1, '#ffffff');
     x.fillStyle = g; x.beginPath(); x.moveTo(-28, 0); x.quadraticCurveTo(0, -11, 14, -9); x.arc(14, 0, 9, -Math.PI / 2, Math.PI / 2); x.quadraticCurveTo(0, 11, -28, 0); x.fill(); });
   // Lò Phản Ứng Băng: kim băng
@@ -71,14 +73,16 @@ GFX.taoSprite = function () {
   // Hydra dạng 1: kim ngọc lục bảo
   taoAnh('g_kim_ngoc', 64, 14, '#2ee89a', (x) => { quang(x, 9, 'rgba(46,232,154,.85)'); x.fillStyle = '#c8ffe8'; x.beginPath(); x.moveTo(28, 0); x.lineTo(-4, -3.2); x.lineTo(-26, 0); x.lineTo(-4, 3.2); x.closePath(); x.fill(); });
   // Cửu Vĩ: lửa hồ ly cam (1/2) · xanh-trắng (3)
-  for (const [ten, m, m2] of [['g_ho_cam', '#ffa020', '#fff0c0'], ['g_ho_xanh', '#7fd8ff', '#ffffff']]) taoAnh(ten, 48, 32, m, (x) => {
+  MAU_VET.g_ho_cam = '#ffa020'; // g_ho_cam: PNG v2 fx_cuuvi_dan (fxu.js)
+  for (const [ten, m, m2] of [['g_ho_xanh', '#7fd8ff', '#ffffff']]) taoAnh(ten, 48, 32, m, (x) => {
     quang(x, 16, m + 'cc'); x.fillStyle = m; x.beginPath(); x.moveTo(-22, 0); x.quadraticCurveTo(-6, -10, 6, -8); x.arc(6, 0, 8, -Math.PI / 2, Math.PI / 2); x.quadraticCurveTo(-6, 10, -22, 0); x.fill();
     x.fillStyle = m2; x.beginPath(); x.arc(7, 0, 4, 0, 7); x.fill(); });
   // Ngai Thời Gian: kim đồng hồ vàng + quả đối trọng ruby
   taoAnh('g_kim_gio', 80, 20, '#ffd86a', (x) => { quang(x, 10, 'rgba(255,42,58,.6)'); x.fillStyle = '#ffd86a'; x.beginPath(); x.moveTo(36, 0); x.lineTo(-20, -3); x.lineTo(-20, 3); x.closePath(); x.fill(); x.fillStyle = '#ff2a3a'; x.beginPath(); x.arc(-24, 0, 5, 0, 7); x.fill(); x.lineWidth = 1.5; x.strokeStyle = '#ffe9a0'; x.stroke(); });
   // Hive Queen: ngòi chích · Leviathan: bọt nước · Resonance Grid: vòng ngọc lam (đạn vọng)
-  taoAnh('g_ngoi', 60, 16, '#ffc23a', (x) => { quang(x, 9, 'rgba(255,120,30,.8)'); x.fillStyle = '#ffc23a'; x.beginPath(); x.moveTo(26, 0); x.lineTo(-10, -4); x.lineTo(-24, 0); x.lineTo(-10, 4); x.closePath(); x.fill(); x.fillStyle = '#ff4a1a'; x.beginPath(); x.arc(-12, 0, 3, 0, 7); x.fill(); });
-  for (const [ten, r] of [['g_bot', 9], ['g_bot_lon', 12]]) taoAnh(ten, 40, 40, '#7fdcff', (x) => { quang(x, 20, 'rgba(31,182,217,.7)'); x.fillStyle = 'rgba(31,182,217,.55)'; x.beginPath(); x.arc(0, 0, r, 0, 7); x.fill(); x.lineWidth = 2.5; x.strokeStyle = '#dff8ff'; x.stroke(); if (r > 10) { x.lineWidth = 1.2; x.beginPath(); x.arc(0, 0, r * 0.6, 0, 7); x.stroke(); } x.fillStyle = '#ffffff'; x.beginPath(); x.arc(-r * 0.35, -r * 0.35, r * 0.25, 0, 7); x.fill(); });
+  // g_ngoi: đã thay bằng PNG v2 (fxu.js FXU.THAY) — chỉ giữ màu vệt
+  MAU_VET.g_ngoi = '#ffc23a';
+  MAU_VET.g_bot = MAU_VET.g_bot_lon = '#7fdcff'; // g_bot / g_bot_lon: PNG v2 fx_leviathan_dan (fxu.js)
   taoAnh('g_vong_ngoc', 32, 32, '#45e0c8', (x) => { quang(x, 16, 'rgba(69,224,200,.8)'); x.lineWidth = 3; x.strokeStyle = '#bff8ee'; x.beginPath(); x.arc(0, 0, 6, 0, 7); x.stroke(); });
 };
 // vệt hạt theo đạn (d.vetG = { mau, n hạt/giây, k }) — móc vào TVX.dan (mọi đạn đi qua mỗi bước)

@@ -43,6 +43,12 @@ const FX = {
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
     if (this.anim.length >= this.MAX_ANIM) this.anim.shift();
+    // hiệu ứng v2 theo ụ (fxu.js): chớp nòng / nổ trúng riêng của ụ đang bắn — 1 ảnh tĩnh, code chỉ phóng/xoay/mờ
+    const U = typeof FXU !== 'undefined' && typeof G !== 'undefined' && G.dangBan;
+    if (U) {
+      const t1 = ten === 'chop_nong' ? FXU.ten(U, 'no') : FXU.NO_CHUNG.has(ten) ? FXU.ten(U, 'trung') : null;
+      if (t1) return this.no1(t1, ten === 'chop_nong', x, y, co, song, goc, bam, U);
+    }
     // ngân sách hiệu ứng (tư vấn C): trúng đòn thường ≤ ~0.75 ô & ≤ 0.26 s; đòn lớn ≤ ~1.4 ô & ≤ 0.45 s
     if (ten !== 'chop_nong') {
       const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // 2 = chiêu lớn / trùm / ụ đỏ: giữ chỗ cho cảnh hoành tráng
@@ -55,6 +61,21 @@ const FX = {
       const T = typeof G !== 'undefined' && G.dangBan;
       if (T && T.buf && T.o != null) { A.T = T; A.dg = gocLech(T.goc, A.goc); }
       A.song = Math.max(0.085, A.song);
+    }
+    this.anim.push(A);
+  },
+  // 1 ảnh tĩnh v2: nong = chớp nòng (neo mép trái tại đầu nòng, bám nòng) · còn lại = nổ trúng (xoay ngẫu nhiên)
+  no1(ten, nong, x, y, co, song, goc, bam, T) {
+    const cf = FXU.cfg(T.id);
+    const A = { ten, mot: nong ? 'no' : 'trung', x, y, co, t: 0, song: 0, goc: goc || 0, bam: bam || null, T: null, dg: 0 };
+    if (nong) {
+      A.co = Math.max(30, co * 1.25) * (cf.kn || 1); A.song = 0.13;
+      if (T.buf && T.o != null) { A.T = T; A.dg = gocLech(T.goc, A.goc); }
+    } else {
+      const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // giữ ngân sách cỡ như FX.no, nhưng sống ≥ 0.2 s cho dễ đọc
+      A.co = Math.min(co * 0.7, [36, 64, 110][cap]) * (cf.kt || 1); // ảnh đã cắt sát (dải cũ có lề) → nhỏ hơn số đường kính cũ
+      A.song = clamp(song || 0.3, 0.2, [0.3, 0.45, 0.6][cap]);
+      A.goc = Math.random() * 6.28;
     }
     this.anim.push(A);
   },
