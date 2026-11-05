@@ -1,0 +1,268 @@
+TURRET MERGE — SIGNATURE MOMENTS
+31 Legendary + Mythic Turret Skill Showcases
+Art/Implementation Brief | 2026-11-05 | English
+
+GOAL
+Every high-tier turret should have an immediately recognizable "I know what just happened" beat, not a larger ordinary bullet. Each entry below specifies: (1) a 0.6–1.5 second visual sequence with timed beats, (2) an optional modest gameplay twist and whether it affects balance, (3) an exact asset sheet name with named sprite groups, animation frames and target sizes, (4) one concise art-generation prompt, and (5) image-only implementation. These are visual event lengths, NOT changes to any existing multi-second active durations. Most mechanics are optional and require balance testing.
+
+REFERENCE ART STYLE AND NON-NEGOTIABLE RENDER CONTRACT
+Reference: provided TURRET MERGE CO-OP screenshot — 5x3 top-down mini turret heads on industrial gunmetal board, enemy path to left, cores on right. New assets must echo the head's exact motifs, metal material, turret colors and dark cartoon outline. All generated source sheets have perfectly flat solid MAGENTA #FF00FF between isolated cells and sprites. No baked letters, damage numbers, UI, grid frames, cast shadows or bloom that disappears into chroma key. Remove magenta into genuine alpha OFFLINE at asset preparation time; preserve smooth edges and avoid halos. One sheet per turret here; groups within a sheet are independent pieces for reuse. Except where noted, target source cells are 256x256 or 192x192; actual on-screen render is typically 48–160 CSS px depending on enemy and signature emphasis. A sprite sheet with a 1x8 hand animation consists of eight square frames, not a single continuous illustration.
+
+Allowed renderer operations: drawImage from pre-created transparent PNG (including atlas frame crop), translate, rotate, scale, flip, tint and opacity; flipbook frame selection; layer/anchor transforms; optionally adjust already-existing sprite position, animation speed, or visibility. NO canvas strokes, no code-drawn lines/shapes, procedural particles, gradients, circles, paths, canvas shadows, live SVG VFX, or procedural shaders. A textured beam/tether is a PNG transformed between endpoints, NEVER a stroked line. Rendering text/numeric HUD is allowed outside VFX; don't bake text into art.
+
+Animation semantics: use absolute world/lane anchors and a path-coordinate timeline. Easing is interpolation of sprite transforms, not visible vector drawing. Preload atlases. Use deterministic seeded cosmetics so CO-OP/PVP peers can reproduce the same action; gameplay state is server/authoritative simulation, VFX-only client. In enemy crowding, cap one large showcase at a time per side, prioritize active mythics and first-of-kind procs, and fall back to brief 2–4-frame compact impacts for concurrent triggers. Critical enemy telegraphs retain their priority. Screenshake optional <=2 px and 80 ms, off for reduced motion. Strong visual beats should not hide the entire path or obscure enemy HP bars for over 250 ms. Scale giant effects as layered transparent imagery, NOT higher true attack hitboxes.
+
+ATLAS NOTATION
+A sheet can have named groups packed in rows (e.g. row A 1x8 256-square cells; row B 1x6 192-square cells). Maintain JSON specifying each region, pivot, cell rect, duration and hierarchy. Use the names in the ASSET line as group identifiers. Prompts all end implicitly with: 'polished top-down cartoon sci-fi tower-defense VFX matching my exact turret-head reference; strong clean outlines, carefully separated frames, flat solid magenta #FF00FF background, no text, no grid lines.'
+
+============================== LEGENDARY (22) ==============================
+
+L01 — PURIFIER | The White-Flame Exorcism
+SIGNATURE (1.00 s): 0.00–0.18 a bright ivory filtration wheel opens behind the target already marked with poison; 0.18–0.40 a surgical white-gold lance burns the toxic mark green-to-white; 0.40–0.67 spectral poison is ripped upward into a tiny glass retort; 0.67–1.00 on kill the retort pops into a clean starburst and nearby enemies show a white scorch emblem. On no-kill, use a smaller dry flash, not a fake chain explosion.
+TWIST: On poison-kill explosions, convert 20% of a victim's remaining poison duration into a short 0.6s purification vulnerability on splash targets (balance-changing: YES; lower explosion base damage in testing, do not stack vulnerability).
+ASSET: purifier_signature.png — exorcism_wheel [1x6,192²], poison_extract [1x6,192²], purifier_pop [1x6,256²], scorch_mark [1x2,96²].
+PROMPT: 'An ivory-and-gold mechanical purification seal, poison wisps vacuumed into a tiny retort, then a brilliant clean white-gold starburst; separate compact animation strips.'
+CODE: center wheel at target, scale 0.7→1.15 and rotate 25°; swap extract frames over poisoned sprite; translate retort upward; pop only on authoritative kill, splash event uses existing radius logic; tint existing poison marker to pale green, no new geometry.
+
+L02 — SYNC CANNON | The Constellation Lock
+SIGNATURE (0.96 s): 0.00–0.20 up to three visible same-star allies blink in sequence; 0.20–0.40 pre-rendered gold links snap into a star-map around the Sync Cannon; 0.40–0.62 a ring of tiny mechanical clock dials converges into its barrel; 0.62–0.96 one condensed blue-gold pulse fires, with a 'perfect harmony' ripple on impact.
+TWIST: If 3+ matching-star units are present, every fifth Sync shot briefly pierces one additional enemy (balance-changing: YES; modest pierce damage only). Otherwise cosmetic only.
+ASSET: sync_signature.png — link_strip [1x3,256x64], clock_ring [1x6,192²], harmony_pulse [1x6,192²], impact_ripple [1x5,192²].
+PROMPT: 'Gold-blue constellation circuitry, elegant miniature synchronized clocks, a compact condensed cosmic pulse and angular star-map impact, separated sprite strips.'
+CODE: find matching unit anchors from game state; place a max of three textured PNG links using rotate + scaleX from those anchors to cannon; render wheel sequence at muzzle; move pulse along actual aim vector; link images fade by 0.5 s.
+
+L03 — RAILGUN | The Bingo Crosshair
+SIGNATURE (0.90 s): 0.00–0.15 matched full row or column socket edges light in a clear chase pattern; 0.15–0.36 two enormous steel caliper jaws clamp around Railgun; 0.36–0.58 a thin authored targeting slit lines up with the path; 0.58–0.90 a hyper-fast rail slug hits with a hard rectangular metal punch. Row = orange punch; column = cyan rapid cycle; both = split orange-cyan shot.
+TWIST: With both bingo conditions, first rail shot after a merge inflicts 0.2s stagger on normal enemies (balance-changing: YES; bosses immune). Otherwise use existing damage and fire-rate effects.
+ASSET: railgun_signature.png — socket_flash [1x3,96²], caliper [1x6,192²], rail_trace [1x4,256x64], steel_impact [1x6,192²].
+PROMPT: 'Industrial precision railgun clamp, directional amber/cyan bingo socket flashes, a sharp electromagnetic streak, angular steel-splinter hit.'
+CODE: flash only actual occupied row/column tiles, animate PNG caliper scaleX inward, aim rail texture by rotation and scaling length, hit event synced with deterministic shot timestamp; no code grid overlays.
+
+L04 — MERGE KING | The Crown Coronation
+SIGNATURE (1.14 s): 0.00–0.24 both equal-star donors fold into spinning gold crests; 0.24–0.50 a giant crown hologram floats over the merge socket; 0.50–0.78 a royal hammer taps the crown once; 0.78–1.14 a tall gold star token stamps onto the resulting turret with an unmistakable extra-rank sparkle.
+TWIST: None recommended: the guaranteed +1 star on same-star merge is already high-value. BALANCE: No change; animation must show the actual outcome, not promise a star if the merge fails.
+ASSET: merge_king_signature.png — crest [1x5,192²], crown [1x7,256²], hammer_stamp [1x6,256²], star_stamp [1x6,192²].
+PROMPT: 'Whimsical machine monarchy: two spinning gilded crests, a floating mechanical crown, royal stamping hammer and a chunky newly promoted gold star.'
+CODE: animate donors toward midpoint, hide old unit sprites only at committed merge; crown and hammer are PNG flipbooks anchored to destination; delayed gold star stamp after new rank known.
+
+L05 — TWIN MAKER | The Mirror Assembly Line
+SIGNATURE (1.18 s): 0.00–0.25 an industrial hinge splits open; 0.25–0.52 two mini conveyor silhouettes appear; 0.52–0.78 a stamped hologram duplicates the resulting turret head; 0.78–1.18 an identical starred unit lands in an actual available socket with a synchronized double clang. If no free slot, show locked conveyor/jam icon without a fake spawn.
+TWIST: Once per 10 merges, extra turret may inherit a brief 2s cosmetic twin aura (balance-changing: NO). Do not add free extra strength beyond stated spawning mechanic.
+ASSET: twin_maker_signature.png — hinge [1x6,256²], twin_stamp [1x6,192²], twin_spawn_ring [1x6,192²], jam_icon [1x2,96²].
+PROMPT: 'Compact teal-gold twin-making mechanical assembly line, mirror-stamped duplicate silhouette and paired landing rings; playful precise factory animation.'
+CODE: new unit is resolved before VFX; move two PNG hologram icons toward their real destination sockets; use copied current turret-head PNG and stars, and only commit actual spawn if legal.
+
+L06 — STAR BREAKER | The Rank Saboteur / Rank Gift
+SIGNATURE (1.28 s): 0.00–0.25 a black-red crown of fractured stars opens above Star Breaker; 0.25–0.58 PVP launches a tiny hooded star-thief toward rival board, CO-OP launches a blue-gold star courier toward ally board; 0.58–0.84 target star badge shatters or gains one glowing pip; 0.84–1.28 thief returns with star dust / courier salutes and evaporates.
+TWIST: None (already disruptive). BALANCE: No additional change; respect protected targets, star floor/ceiling, immunity and network authority; unsuccessful procs get a softer blocked seal.
+ASSET: star_breaker_signature.png — thief [1x8,192²], courier [1x8,192²], rank_shatter [1x6,192²], rank_gift [1x6,192²], protected_seal [1x3,96²].
+PROMPT: 'Two contrasted rank messengers: crimson mischievous star thief and cyan-gold friendly star courier, broken-star and gifted-star impact sprites.'
+CODE: animate messenger as PNG moving between board anchors; choose effect branch by mode and actual server outcome; update star badge only at authoritative apply event; don't fabricate a victim.
+
+L07 — COPYCAT | The Mask Swap
+SIGNATURE (0.92 s): 0.00–0.22 Copycat's eye opens like a camera shutter; 0.22–0.46 a deck of theatrical metallic masks fans above it; 0.46–0.70 one chosen same-star ally mask flips forward; 0.70–0.92 the chosen turret head materializes as a smooth silhouette swap with a remaining violet 'copied' eye.
+TWIST: Copies keep a tiny one-time 'first strike' shimmer, purely cosmetic (balance-changing: NO). The copied type and star follow existing rules.
+ASSET: copycat_signature.png — shutter [1x6,192²], masks [1x6,256²], disguise_pop [1x6,192²], copied_eye [1x3,96²].
+PROMPT: 'Mischievous violet mechanical mimic camera iris, theatrical metal masks spinning and one vivid disguise reveal with tiny glowing eye.'
+CODE: show target's EXISTING turret-head PNG texture inside authored mask silhouette where layering permits; rotate/scale mask sheet above Copycat; swap the true sprite and abilities when committed; eye overlay fades.
+
+L08 — STAR CANNON | The Decimal Supernova
+SIGNATURE (1.36 s): 0.00–0.23 a ring of ten individual luminous star tokens counts inward visually; 0.23–0.55 an enormous black-gold numeric dial WITHOUT digits aligns into a barrel; 0.55–0.78 at total-star multiple of 10, rapid rhythmic three-pulse shot; at >=50 total board stars the barrel unfolds into a sun-cannon; 0.78–1.36 one colossal gold star-comet smashes into the path, shrinking immediately after impact.
+TWIST: Do NOT make the 50-star shot additionally stun; it is already a major reward. BALANCE: No change.
+ASSET: star_cannon_signature.png — ten_star_ring [1x8,256²], dial [1x6,256²], rapid_pulse [1x4,192²], super_comet [1x8,256²], star_impact [1x6,256²].
+PROMPT: 'Gilded mathematical star-cannon unfolding into a radiant sun chamber, ten-point glowing star ring, rapid pulses and one enormous golden comet blast.'
+CODE: read total actual board stars; 10x branch uses compact pulses; >=50 uses super_comet with scale 0.8→1.4; camera flash via authored screen-edge image alpha only; keep enemy outline legible.
+
+L09 — MECH WOLF | The Predator's Final Howl
+SIGNATURE (1.15 s): 0.00–0.24 mechanical wolf helmet reconfigures into its final jaw; 0.24–0.52 three scarlet claw afterimages orbit; 0.52–0.78 a predatory howl mouth appears above the tile; 0.78–1.15 Mech Wolf dashes a short distance to claw the nearest target, landing a golden 'critical' slash. For earlier forms, play smaller mechanical jaw swaps, not the guaranteed-crit halo.
+TWIST: Every fifth final-form crit brands target for 0.5s to highlight next hit visually (balance-changing: NO unless damage is modified). Keep gameplay existing.
+ASSET: mech_wolf_signature.png — morph_jaw [1x8,256²], howl [1x6,256²], claw_arc [1x6,192²], crit_cut [1x6,192²].
+PROMPT: 'Aggressive gold-red mechanical wolf helmet changing forms, spectral wolf howl, three claw swipes and a decisive sharp golden critical impact.'
+CODE: swap authored head form sprites in morph frames; offset existing turret sprite toward enemy by <=one tile then return; place slash PNG at target, always crit only if gameplay final-form state.
+
+L10 — EVOLVER | The Cocoon Roulette
+SIGNATURE (1.27 s): 0.00–0.22 shell plates fold over Evolver; 0.22–0.60 a luminous teal mechanical chrysalis spins, silhouetted possible heads flicker; 0.60–0.94 shell splits with an impossible origami turn; 0.94–1.27 new random turret +1 star pops out, with star badge visibly stamping last.
+TWIST: None; the +1 rank evolution is already valuable. BALANCE: No change; show the actual chosen turret only after server or deterministic RNG resolves it.
+ASSET: evolver_signature.png — cocoon [1x8,256²], head_silhouette [1x5,192²], hatch [1x7,256²], upgraded_star [1x5,128²].
+PROMPT: 'Teal-steel sci-fi metamorphosis cocoon, playful flickering silhouettes, origami mechanical shell cracking and glowing turret awakening.'
+CODE: choose real result first; flicker masks, use new existing turret sprite at shell rupture, stamp existing +1 rank; timing tied to true evolution completion.
+
+L11 — RAINBOW | The Prism Road Painter
+SIGNATURE (1.12 s): 0.00–0.28 a tiny roller brush drops from the rainbow turret; 0.28–0.58 it unrolls a luminous paint-ribbon across the road; 0.58–0.83 a huge cartoon prism raindrop bounces once on a target; 0.83–1.12 the ground retains a translucent authored rainbow stain while enemies touched reveal a broken-armor motif.
+TWIST: Stained enemies take 2% extra damage per distinct rainbow overlap, capped 6% (balance-changing: YES; test with existing weaken magnitude and do NOT stack permanently).
+ASSET: rainbow_signature.png — paint_roller [1x6,192²], rainbow_ribbon [1x5,256x64], prism_drop [1x6,192²], weak_mark [1x3,96²].
+PROMPT: 'Whimsical industrial rainbow roller, colorful glossy ribbon stain for a dark sci-fi walkway, bouncing prism droplet and fragile-armor symbol.'
+CODE: orient stretchable PNG ribbon to an existing path segment; spawn a fixed number of pre-authored stains at route waypoints (not generated lines); use enemy entry/exit overlap events to update weaken status.
+
+L12 — WALL PROJECTOR | The Roadblock Detonation
+SIGNATURE (1.02 s): 0.00–0.20 four hazard pylons jump out of the road; 0.20–0.49 an illustrated translucent energy barricade unfolds upward from a thin steel base; 0.49–0.76 enemies visibly brake against it; 0.76–1.02 bolts in the wall overload red and it explodes outward in a flat controlled shock slab.
+TWIST: Enemies that hit wall within 0.2s of detonation take an additional small 10% wall-damage bonus (balance-changing: YES; bosses get no stun; cap total).
+ASSET: wall_projector_signature.png — pylons [1x4,192²], wall_rise [1x8,256x192], wall_overload [1x5,256x192], slab_burst [1x6,256²].
+PROMPT: 'Heavy orange-hazard portable roadblock pylons, translucent cyan barricade rising from floor, red overloaded seams and a chunky metal-slab explosion.'
+CODE: anchor wall at valid path intercept and use PNG vertical scale from foot anchor; enemies stop via physics/status system, not sprite collision trick; on expire show burst and resume route.
+
+L13 — ORBITAL | The Satellite Rain
+SIGNATURE (1.35 s): 0.00–0.24 after a real merge, a miniature orbital targeting map opens around Orbital; 0.24–0.55 tiny satellite silhouettes roll into a crescent across top of gameplay; 0.55–0.88 three sky-to-road drops land in time-staggered impacts; 0.88–1.35 a fading orbital rain marker appears. The actual bombardment lasts the existing 20 seconds, with only brief repeated compact impacts thereafter.
+TWIST: Every fifth orbital strike during the 20s mode leaves a 0.4s cosmetic reticle on the next target; NO balance change.
+ASSET: orbital_signature.png — orbit_map [1x6,256²], satellite [1x6,192²], falling_payload [1x5,192x256], orbital_impact [1x7,256²], marker [1x3,96²].
+PROMPT: 'Navy-cyan orbital platform with rotating miniature satellites, sharp descending cosmic bolts and chunky teal-gold impact craters.'
+CODE: use actual per-satellite cooldowns; three visual drops may be condensed to true shots; travel via simple translate from off-board y to valid target and play flipbooks; never imply nonexistent strikes.
+
+L14 — HYDRA | The Seven-Head Union
+SIGNATURE (1.44 s): 0.00–0.33 each available snake-head hologram opens a jaw with colored eye; 0.33–0.70 heads bite distinct eligible enemies in a readable stagger; at 7 stars, 0.70–1.00 heads curl around one giant crown muzzle; 1.00–1.44 their light fuses into a single searing emerald serpent beam. Under 7 stars, end in multiple bite impacts instead.
+TWIST: At 7 stars, surplus target count beyond the 7 simultaneously tracked enemies adds 0 damage (balance-changing: NO); preserve single-beam existing DPS design.
+ASSET: hydra_signature.png — head [1x8,192²], snake_bite [1x6,192²], seven_fusion [1x8,256²], serpent_beam [1x4,256x80], beam_hit [1x6,256²].
+PROMPT: 'Green-gold techno hydra hologram with many fierce distinct serpent heads, snapping bites, seven heads fusing into crowned emerald serpent beam.'
+CODE: spawn up to star-count head PNGs around turret using indexed predefined offsets; each tracks a DISTINCT real target; at 7 swap to fusion animation, rotate/scale beam strip toward aim vector; hitboxes stay rules-based.
+
+L15 — NINE-TAIL | The Foxfire Fan
+SIGNATURE (1.20 s): 0.00–0.26 after a kill an ethereal ember fox tail blooms behind turret; 0.26–0.56 tail array fans wider to actual collected count; at nine, 0.56–0.76 fox eyes flash as nine tails point at separate targets; 0.76–1.20 nine mini foxfire comets peel away in spirals and seek enemies. If not nine, end with a short gentle fan flare and persistent tail count.
+TWIST: Ninth kill grants a one-time 0.5s heat mark on the last target of the nine shots, purely cosmetic; BALANCE: NO.
+ASSET: nine_tail_signature.png — single_tail [1x6,192²], tail_fan [1x9,256²], fox_eye [1x4,192²], foxfire [1x6,128²], fire_impact [1x5,128²].
+PROMPT: 'Fiery crimson-gold cyber kitsune tails blooming one by one, nine-tail radiant fan, nine tiny fox-shaped tracking fireballs and tiny flame hits.'
+CODE: maintain kill count in simulation, display tail sprite count with authored variants, create up to nine projectile PNGs following precomputed target positions with rotation; no hand-coded spiral drawings, only translation paths.
+
+L16 — PANDORA VAULT | The Six-Fate Jackpot
+SIGNATURE (1.48 s): 0.00–0.27 black-violet box rattles after merge; 0.27–0.58 six contrasting faceplates orbit in a fast roulette; 0.58–0.86 heavy mechanical vault lock clicks open; 0.86–1.17 the selected spell's iconic creature/object jumps out; 1.17–1.48 a compact signature burst confirms the actual one of six spell outcomes.
+TWIST: Optional anti-streak: no same spell three times in a row (balance-changing: YES because distribution changes; only if simulation seeded and explicitly approved). Otherwise none.
+ASSET: pandora_signature.png — vault [1x8,256²], six_spell_icons [6x1,128²], fate_wheel [1x6,256²], outcome_bursts [6x4,192²].
+PROMPT: 'Mysterious black-violet mechanical Pandora vault opening with six distinct ominous magic symbols and six crisp colored outcome bursts, separated sheets.'
+CODE: result is chosen before reveal; roulette cycles fixed icon PNGs, ends on actual selected icon; dispatch unique outcome sprite group from same sheet; do not show misleading unselected spell.
+
+L17 — RESONANCE GRID | The Four-Diagonal Chord
+SIGNATURE (0.97 s): 0.00–0.20 each occupied diagonal neighbor flashes from its corner; 0.20–0.46 four pre-authored circuit ribbons reach toward Resonance Grid; 0.46–0.68 when all four exist the center unfolds into a gold-teal diamond harp; 0.68–0.97 a square resonance shockfold pulses ONCE across four unit centers.
+TWIST: With all four, grant 0.3s of temporary visual immunity to buff removal cue only (cosmetic, BALANCE: NO); not actual invincibility. Avoid additional combat buffs beyond existing synergy.
+ASSET: resonance_signature.png — diagonal_link [1x4,256x64], corner_flash [1x4,96²], diamond_harp [1x7,256²], chord_pulse [1x6,256²].
+PROMPT: 'Teal-gold diamond resonance instrument with four elegant diagonal luminous circuit strings and one geometric square musical shockfold.'
+CODE: for existing diagonal neighbor positions render 0–4 PNG links rotated/scaled; center harp only with 4 valid neighbors; flash those turret sprites without covering star badges.
+
+L18 — NEMESIS | The Verdict Guillotine
+SIGNATURE (1.08 s): 0.00–0.20 enemy under execute threshold is tagged by one ominous red vertical eye; 0.20–0.52 an immense black steel guillotine silhouette drops in from top edge; 0.52–0.73 narrow crimson execution slash lands; 0.73–1.08 target dissolves into angular red-black shards. Bosses instead receive a sharp fracture strike representing % max HP, NEVER a guaranteed kill if not true.
+TWIST: Executed normal enemy leaves a 0.3s fear visual on nearest neighbor, strictly cosmetic (BALANCE: NO).
+ASSET: nemesis_signature.png — verdict_eye [1x5,192²], guillotine [1x7,256²], kill_slash [1x6,256²], boss_fracture [1x6,192²].
+PROMPT: 'Menacing red-black sci-fi judgment eye, huge angular spectral guillotine, one surgical crimson slash and sharp black-red execution fragments.'
+CODE: branch by enemy type, HP and true execution result; image descends via translateY anchored over enemy; apply damage at cut frame; normal death animation only if actually killed; boss fracture always damage-only.
+
+L19 — ECLIPSE | The Day-Night Crown
+SIGNATURE (1.30 s): 0.00–0.27 sun disc rotates over a dark moon and the board receives a thin authored warm or cool edge vignette; 0.27–0.60 day mode opens solar horns and fires a narrow amber burn beam; night mode moon turns sideways and releases a crescent-shaped cyan slow wave; 0.60–1.30 a tiny corresponding sun/moon emblem remains by turret. Every real 8 s mode switch triggers only one showcase.
+TWIST: Enemies surviving a day-to-night transition gain a brief visible 'steam shock' marker but NO extra damage (BALANCE: NO).
+ASSET: eclipse_signature.png — eclipse_disc [1x8,256²], day_beam [1x4,256x64], night_crescent [1x7,256²], phase_icon [2x2,96²], edge_tint_art [2x1,256²].
+PROMPT: 'Black-orange eclipsed mechanical sun and cool cyan crescent moon, thin solar-burn ray, gentle icy moon wave and two tiny phase emblems.'
+CODE: 8s mode timer in simulation; play disc flipbook on state transition; rotate/scale image-based beam or center moon wave on path target; scale edge art alpha briefly, never full-screen fill rectangles.
+
+L20 — SCRAP FORGE | The Hungry Foundry
+SIGNATURE (1.23 s): 0.00–0.24 player drags an eligible 1–3 star turret into forge and its jaw-hatch opens; 0.24–0.52 actual donor unit collapses into three recognizable metal modules; 0.52–0.85 furnace glows as a giant orange piston stamps them; 0.85–1.23 forge spits a glowing steel ingot back into itself, forging a permanent damage emblem.
+TWIST: Optional diminishing returns after repeated feeds (balance-changing: YES; recommended cap or soft cap to prevent runaway scaling). Existing consumed-turret rule must be clearly communicated BEFORE drag confirmation.
+ASSET: scrap_forge_signature.png — hunger_jaw [1x7,256²], scrap_modules [1x6,192²], forge_piston [1x6,256²], permanent_ingot [1x5,192²], reject_icon [1x2,96²].
+PROMPT: 'Orange hot industrial foundry with huge hungry mechanical jaw, crushed turret scrap, stamping piston, molten ingot and permanent forge crest.'
+CODE: only accept eligible donor when confirmed; show a pre-rendered eligibility socket overlay while dragging (no drawn shape); animate donor existing PNG shrinking to jaw, then remove it; update permanent buff at actual consumption.
+
+L21 — MIRROR GATE | The Reversal Arch
+SIGNATURE (1.18 s): 0.00–0.26 tall silver-blue mirror arch erupts from tile; 0.26–0.53 a hostile crimson control sigil travels toward it in PVP / friendly ally merge emblem travels in CO-OP; 0.53–0.80 PVP mirror flips and spits sigil back, CO-OP mirror splits into two archways and duplicates merge pulse; 0.80–1.18 arch folds back with a bright silver wink.
+TWIST: None. BALANCE: No change, and prevent recursive reflection/copy chains by tagging origin and one-time eligibility.
+ASSET: mirror_gate_signature.png — arch [1x7,256²], enemy_sigil [1x4,128²], friend_sigil [1x4,128²], reflect_burst [1x6,192²], duplicate_burst [1x6,192²].
+PROMPT: 'Polished silver-teal sci-fi mirror gate arch, one red hostile spell symbol reflected back and a friendly blue twin merge symbol splitting into two.'
+CODE: choose PVP/CO-OP visual branch from simulation event; rotate/flip same enemy sigil PNG on reversal; travel along endpoint anchors, not a code line; never fire if reflect/copy was resisted.
+
+L22 — MARIONETTE | The Ghost Puppeteer's Hand
+SIGNATURE (1.47 s): 0.00–0.20 Marionette turret's purple eye winks; a tiny brass puppet stage appears above targeted path segment. 0.20–0.43 a GIGANTIC translucent skeletal dollmaker hand emerges from darkness overhead (kept within board) and opens fingers. 0.43–0.61 four GOLD-VIOLET HOOKED puppet strings snap downward onto head/arms of the actual enemy. 0.61–0.94 enemy lifts vertically ~10–16 screen px, feet kick, with a small oval shadow/anchor PNG left on the path. 0.94–1.24 hand drags it BACKWARDS along its existing path progress (e.g. 0.7–1.0 enemy-body lengths or authoritative specified distance), as strings shiver; 1.24–1.47 hand closes fist; enemy drops and detonates in a purple toy-splinter burst. Entire sequence is visually legible on a 390px-wide screen and NEVER uses a white code line.
+TWIST: While dangling, enemy attack/contact is suppressed if existing control already does that; for extra flair, one neighbor within 0.6 body widths shows a 0.3s startled doll-face icon (BALANCE: NO). Optional 0.15s area stagger at explosion would affect balance: YES; test separately and do not add by default. Bosses/immune enemies: use a brief failed-hook shatter, NO pickup or backward displacement.
+ASSET: marionette_signature.png — puppet_stage [1x5,256²], ghost_hand [1x10,256²], hooked_string [1x6,256x80], hanging_shadow [1x3,128²], toy_explosion [1x8,256²], immune_break [1x4,128²]. String PNG is a narrow gold-violet textured string with large illustrated hooks on BOTH ends; avoid one continuous sheet that becomes an ugly stretched glowing line. For four strings, use 2–4 shorter duplicate PNG segments. On-screen hand 85–120 CSS px; target hit ~70–105 CSS px; hand never covers more than 1–2 path lanes.
+PROMPT: 'Oversized eerie friendly ghost puppeteer hand in violet smoke, tiny brass toy theatre, four hooked luminous gold-violet puppet threads, hanging shadow and purple wind-up doll explosion; separated clearly animated parts.'
+CODE: remove ALL canvas moveTo/lineTo/stroke calls for tether. Track target by enemy ID, not a screen coordinate snapshot. Hand: anchored to victim with a -45px to -75px y offset, scale 0.4→1.1, hand flipbook, gentle wrist rotation. Strings: each authored PNG strip positioned by midpoint, rotated via atan2 and length-scaled with a clamp so hooks do not stretch; alternatively keep illustrated hooks as separate endpoint sprites while scaling ONLY middle texture. Victim: add temporary visual drawY offset, set authoritative pathProgress decrease over control interval using the game's current path interpolation; temporarily suppress standard forward step while controlled. Shadow: place authored PNG on path. Explosion: trigger exactly on outcome timer; if simulation does not actually kill, use less violent release poof, not an implied fatal burst. Animation queue cancels safely on death, stage change and target immunity. Layer order: path shadow < enemy < strings < hand < burst. Use one signature at a time to avoid crowd clutter.
+
+=============================== MYTHIC (9) ================================
+All mythic active abilities have a distinct tap/cooldown confirmation in HUD. Their 0.6–1.5 s showpiece is an opening or apex moment; pre-existing lingering gameplay effects may continue. Never auto-fire a cinematic if player has not pressed the ACTIVE skill or if the skill is unavailable.
+
+M01 — BLACK HOLE | The Folded City
+SIGNATURE (1.48 s): 0.00–0.28 player taps ACTIVE; nearby road tiles seem to peel up as pre-rendered floating tile shards; 0.28–0.58 a black-violet gravity lens opens like a camera iris above road; 0.58–1.05 enemies actually inside pull zone spiral toward its center with stretched smoky silhouettes; 1.05–1.30 lens compresses into a pinpoint; 1.30–1.48 a bright inverse-color crush flash pops and releases survivors. Do not remove enemies if not actually killed.
+TWIST: Light enemies near center get a very short 0.3s post-crush slow (BALANCE: YES; bosses reduced or immune). Existing pull/damage core remains primary.
+ASSET: black_hole_active.png — floating_shards [1x5,256²], gravity_lens [1x9,256²], swirl [1x8,256²], crush [1x7,256²], survivor_release [1x4,192²].
+PROMPT: 'Black-violet cosmic camera-iris singularity folding little industrial road fragments inward, swirling gravity mist and a brilliant compressed crush pop.'
+CODE: show textured lens/swirls with flipbooks plus shrinking scale; enemy path positions are moved by existing pull mechanic, visual rotation/offset only; effect avoids occupying the full display; active HUD consumed on confirmation.
+
+M02 — OVERLORD | The King's Thunderfall
+SIGNATURE (1.45 s): 0.00–0.27 ACTIVE begins: broad mechanical crown descends above Overlord and energy collects around barrel; 0.27–0.78 several heavy thunder drums thump visually as four arc coils lock into place; 0.78–1.12 a HUGE jagged violet-red lightning serpent punches from cloud to chosen target; 1.12–1.45 ground splits into a regal thunder crest and disappears. Slow charge should remain telegraphed and interruptible per existing rules.
+TWIST: The huge blast chains one reduced 15%-power visual secondary strike to nearest enemy IF current design needs extra utility (BALANCE: YES). Do not add by default.
+ASSET: overlord_active.png — crown_coil [1x8,256²], charge_drum [1x6,192²], thunder_serpent [1x7,256x256], crest_hit [1x7,256²].
+PROMPT: 'Terrifying red-violet royal thunder cannon charging with huge metal crown and circular coils, one jagged serpent-shaped thunderbolt and regal stone-crack impact.'
+CODE: shake actual turret sprite <=2px at charge climax, flipbook coil, use textured bolt PNG rotated/scaled between cloud spawn and target with nonstretch endpoints, apply hit at lightning-frame contact; honor cancelled charge.
+
+M03 — CRYO REACTOR | The Absolute Zero Chamber
+SIGNATURE (1.32 s): 0.00–0.25 ACTIVE slams icy reactor shutters outward; 0.25–0.55 thin blue atmosphere forms a dome-shaped cryo chamber over adjacent route; 0.55–0.94 progressively slower targets get thicker authored rim-frost image layers; 0.94–1.32 a giant ice crystal tuning fork rings, shattering frost shards into the road; final static cryo aura persists only while active state says so.
+TWIST: At maximum slow, one hit causes a brittle-snap for 5% extra damage, once per enemy per active (BALANCE: YES; boss capped).
+ASSET: cryo_reactor_active.png — shutters [1x6,256²], chill_dome [1x7,256²], frost_rim [1x4,128²], tuning_fork [1x6,256²], crystal_snap [1x6,192²].
+PROMPT: 'Cyan mechanical cryo reactor opening icy shutters, pale translucent frost chamber, thickening ice shells, giant frozen tuning fork and crystalline snap.'
+CODE: anchor authored dome over actual active radius as scaled image; frost rim selection from simulation slow percent (e.g. 0/25/50/75%); do not fake status values from art; play snap if damage event qualifies.
+
+M04 — HOLY HALO | The Sanctuary Cathedral
+SIGNATURE (1.18 s): 0.00–0.25 ACTIVE sends an enormous ivory-gold mechanical angelic ring unfolding over board; 0.25–0.56 a miniature cathedral ceiling of overlapping stained-glass geometric shields materializes; 0.56–0.81 every friendly board socket receives a compact gold shield emblem; 0.81–1.18 a single wave of soft ivory light sweeps across and leaves unobtrusive small protected icons for EXACT invincibility duration.
+TWIST: None — board-wide invincibility is already potentially powerful. BALANCE: NO change. Enforce actual duration/cooldown and avoid invincibility extending to ally unless intended.
+ASSET: holy_halo_active.png — angel_ring [1x8,256²], cathedral_roof [1x7,256²], per_turret_shield [1x5,128²], sanctuary_sweep [1x6,256x128].
+PROMPT: 'Majestic ivory-gold sci-fi sanctuary ring, delicate geometric stained-glass shield canopy and tiny luminous protection crests, sacred but mechanical.'
+CODE: position ring at screen-space board center, fan authored shield emblem sprites to friendly turret anchors; scale canopy rather than draw polygons; all icons fade precisely when shield state ends; preserve touch interactions.
+
+M05 — CHRONO THRONE | The Reverse Film
+SIGNATURE (1.50 s): 0.00–0.28 ACTIVE makes a colossal gold-blue throne/clock dial rise behind the Chrono unit; 0.28–0.62 eight enormous clock hands twitch backward; 0.62–1.18 ghosted snapshots of each affected enemy rewind along their PREVIOUS ACTUAL saved route coordinates; 1.18–1.50 the clock snaps shut with a shattered hourglass seal as enemies resume forward progress from newly authoritative positions.
+TWIST: Enemies rewound past an authored checkpoint gain 0.2s of continued slow (BALANCE: YES; bosses scaled or exempt). Use only if anti-stall balance passes.
+ASSET: chrono_throne_active.png — throne_dial [1x8,256²], backwards_hands [1x8,256²], enemy_echo [1x5,128²], hourglass_snap [1x6,256²].
+PROMPT: 'Ancient gold-cyan mechanical time throne, giant clock hands spinning backward, translucent afterimage silhouettes and shattering hourglass seal.'
+CODE: buffer recent positions/pathProgress for eligible enemies; on successful ACTIVE rewind, interpolate actual enemy sprites from current to authoritative earlier positions; display 2–3 PNG 'echo' overlays, NOT code-drawn trails; timer remains simulation-owned.
+
+M06 — HIVE QUEEN | The Swarm's Last Dance
+SIGNATURE (1.30 s): 0.00–0.25 ACTIVE Queen opens a wasp-like regal abdomen and sends one command pheromone pulse; 0.25–0.53 all live mini drones freeze into a recognizable crown formation; 0.53–0.93 they dive in staggered bee-line arcs toward actual enemy targets; 0.93–1.30 a chain of tiny yellow-black honeycomb explosions ripples along road, ending on one queen sting crest.
+TWIST: Optional return of 1 drone after ACTIVE if at least 6 drones sacrificed (BALANCE: YES; reduces opportunity cost). Default: pure kamikaze as listed.
+ASSET: hive_queen_active.png — queen_open [1x7,256²], pheromone_pulse [1x6,256²], drone [1x6,96²], honeycomb_explosion [1x6,192²], sting_crest [1x5,192²].
+PROMPT: 'Regal yellow-black cyber insect queen commanding tiny hornet drones into crown formation, swooping swarm kamikaze with geometric honeycomb firebursts.'
+CODE: use existing drone entities, pause AI only if ACTIVE mandates it; synchronize formation offsets via transforms; then translate existing drone PNGs to assigned targets; destroy actual drones only at collision, explosions triggered by damage events.
+
+M07 — LEVIATHAN | The Ocean Opens
+SIGNATURE (1.42 s): 0.00–0.27 ACTIVE casts a massive turquoise shadow of a sea-beast jaw across road; 0.27–0.55 a translucent watery serpent neck rises beyond the path edge; 0.55–1.14 it opens a giant mouth and SWEEPS a thick teal foam-and-rune breath across the ENTIRE eligible path length, bending around visible segment turns with separate authored directional pieces; 1.14–1.42 the wave recedes leaving one wet turquoise sigil. Swallowed enemy count must match real stacks; no phantom consumption.
+TWIST: Breath can consume up to 2 stored swallow stacks for +X% duration/damage only if explicitly chosen (BALANCE: YES, risks snowballing); default is no additional consumption mechanic.
+ASSET: leviathan_active.png — jaw_shadow [1x4,256²], leviathan_neck [1x8,256²], water_breath_strip [1x6,256x96], breath_corner [1x4,192²], wet_sigils [1x4,128²].
+PROMPT: 'Colossal teal cyber sea serpent surfacing with open jaws, rushing watery rune breath strips including matching corner flow, foamy path hit and wet marks.'
+CODE: compose authored straight/corner PNG stream segments along known route tile centers; rotate images according to path tangent, move breath wavefront with time; no strokes; target checks use actual path segment geometry in simulation.
+
+M08 — GENESIS CORE | The First Star Factory
+SIGNATURE (1.22 s): 0.00–0.24 ACTIVE core unfolds like a cosmic seed; 0.24–0.47 glowing microscopic stars orbit the board's EXISTING lowest-star turrets; 0.47–0.77 a huge crystalline calculating machine sorts those light tokens into a central star chamber; 0.77–1.05 a newborn turret egg lands in an actual free tile; 1.05–1.22 shell breaks to reveal correct random turret at computed average star level. Periodic passive +1 on weakest turret gets only a 0.55s compact star-growing bud, not the full cinematic.
+TWIST: Round half up rather than down for average star would be BALANCE-CHANGING and is NOT assumed; use existing specified rounding. No other twist recommended.
+ASSET: genesis_core_active.png — cosmic_seed [1x7,256²], sorting_chamber [1x7,256²], newborn_egg [1x6,192²], birth_hatch [1x6,192²], passive_bud [1x5,128²].
+PROMPT: 'Radiant green-gold biotech genesis seed, microscopic stars sorted by crystalline machine, newborn turret egg cracking open and tiny passive star bud.'
+CODE: find REAL weakest-star set and valid destination from game state; render existing sprites with authored tiny icons as anchors; start hatch only if spawn slot is actually free; on commit reveal true turret and existing rank badge, never visual-average guess.
+
+M09 — WYRM ENGINE | The Dragon's Flightpath
+SIGNATURE (1.48 s): 0.00–0.23 ACTIVE wakes the dragon-shaped turret with fiery eyes; 0.23–0.52 its armored red wings unfold ABOVE the board; 0.52–0.94 a huge spectral mechanical wyrm dives ALONG the left enemy path (use waypoints around corners), leaving a broad flaming cone at its snout; 0.94–1.25 dragon curls upward as the cone sweep finishes; 1.25–1.48 it dissolves into a recognizable charred dragon crest. Normal cone attacks retain compact 0.4s jaw flame and should not constantly replay full dive.
+TWIST: Active's first hit on an already burning target adds one short 0.25s knockback on normal units (BALANCE: YES; bosses immune, can cause overlap with path logic). Default use existing cone fire damage.
+ASSET: wyrm_engine_active.png — dragon_wake [1x6,256²], mech_wings [1x6,256²], flying_wyrm [1x8,256²], flame_cone [1x6,256x192], charred_crest [1x5,192²].
+PROMPT: 'Crimson-red mechanical dragon awakening, broad metal wings, dynamic top-down diving wyrm and one wide orange fire cone with dragon-shaped ember crest.'
+CODE: move a scaled flying-wyrm PNG along a sampled existing path-coordinate array, rotate by lane tangent, layer flame-cone PNG ahead of snout, fire damage from existing active hit test per segment; on turn the image rotates, not new drawn curves.
+
+===================== THE 10 MOST IMPACTFUL TO BUILD FIRST =====================
+The ranking favors surprise, immediately legible gameplay meaning, relevance to screenshots/complaints and reuse of assets or code. It does NOT rank combat power.
+1. MARIONETTE (L22): Fixes the explicit embarrassing white code line; ghost hand and hooked strings become a signature marketing moment; establishes reusable tether + target-follow system.
+2. CHRONO THRONE (M05): Reverse-time action is unforgettable; establishes enemy path snapshots/rewind visual system.
+3. BLACK HOLE (M01): One high-contrast obvious mass-control event; establishes centralized pull/showcase pipeline.
+4. WYRM ENGINE (M09): Dragon flight path creates immediate spectacle; establishes authored sprite motion over route waypoints.
+5. LEVIATHAN (M07): Sweeping sea-beast breath sells mythic class and teaches path-aligned authored beam pieces.
+6. HYDRA (L14): Readable star-to-heads mechanic and 7-star fusion creates aspiration; establishes multi-target sprite fan-out.
+7. PANDORA VAULT (L16): Jackpot anticipation and six outcomes create shareable novelty; teaches outcome-specific dispatch.
+8. STAR BREAKER (L06): Distinctive PVP/co-op dual-mode expression; establishes remote-board targeted VFX and outcome gating.
+9. MERGE KING (L04): Makes star growth unmistakable during the game's central input; reusable extra-rank feedback.
+10. HIVE QUEEN (M06): Swarm formation then sacrifice is very different from beams; reuses existing drone entities and endpoint-impact timing.
+
+SECOND WAVE: Nine-Tail, Mech Wolf, Holy Halo, Star Cannon, Mirror Gate, Eclipse, Orbital. Other units can ship with compact versions first and receive full signatures later.
+
+PRODUCTION PIPELINE AND EFFORT PRIORITY
+Stage A (shared engine): PNG VFX manifest (cell rect, pivot, scale, fps, attach-to-target, layering), transform-only actor stack; event-bound VFX dispatcher, kill/merge/result gating, deterministic cosmetic seed; sprite-pool cap; chroma-to-alpha build and edge test; client perf and reduce-motion settings. Build MARIONETTE first as validation that every visible tether is authored art and that dragged enemies follow actual pathProgress. Stage B: five crowd-pleasers (Chrono, Black Hole, Wyrm, Leviathan, Hydra). Stage C: cross-board and economy visuals (Star Breaker, Merge King, Pandora, Twin Maker, Evolver, Scrap Forge). Stage D: remaining entries and 30fps visual optimizations.
+
+BUDGET AND ACCESSIBILITY
+- Prefer 192–256 px square source cells for high-impact illustrations; for 60–100 px displayed effects, 128px can suffice. Do not blindly allocate full 2048² atlases to every tiny aura. Pack each unique character/sheet into efficient WebP/PNG atlas only after the authored-magenta source is chroma-keyed; retain original editable sources.
+- Limit 1 large 256px-class animation + <=6 small actor sprites simultaneously per side in heavy waves; reuse sprite pools. If many procs occur, select deterministic compressed animation instead of queueing 2 seconds of delays. A 1.5s signature should not block player interaction.
+- Use distinct shape/motion as well as colors: hand/grab, crown/stamp, wolf/jaw, dragon/dive, clock/rewind, door/reflect, hive/sacrifice. Colorblind users and small screens should still identify the gameplay cue. Support reduced-motion: 1–2 held PNG impact frames, no camera movement, same gameplay.
+- Define event contract in code: onStart, onCommit, onHit, onKill, onEnd, onCancel. Damage and status are resolved by simulation, not by arbitrary animation frames; visuals match real outcomes. CO-OP and PVP remote events should use authoritative actor IDs and snapshots. Do not animate star increases/decreases on the wrong unit or nonexistent protected target.
+- Validate at true 390px wide iPhone Safari screenshot; overlay no more than one cinematic on enemy path when bosses telegraph. Compare whether 5 beta users can identify turret skill from the showpiece alone without text; target >=4/5 correctly for top 10.
+
+PROMPT USAGE NOTE
+Each entry provides ONE cohesive image-generation prompt for its ONE named composite sprite sheet; arrange its listed named groups in separate, non-touching rows or generate as multiple crops while preserving the listed metadata. Prompts are art briefs rather than a claim that the corresponding PNG assets were generated already. All visual assets are to be produced by ChatGPT image generation, not by hand-coded vector effects.
+
+END OF DOCUMENT
