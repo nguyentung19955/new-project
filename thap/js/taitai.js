@@ -41,16 +41,23 @@ const TAI = {
     return p;
   },
   async _mot(it) {
+    let png = false;
     for (let lan = 0; ; lan++) {
       if (this.mat) throw TAI_MAT;
       const im = new Image(); im.decoding = 'async';
-      let url = it.url;
-      if (lan >= 1 && /\.webp\?v=/.test(url)) { url = url.replace(/\.webp\?v=[0-9a-f]+/, '.png'); TAI_WEBP = false; } // webp không giải mã được → .png
-      im.src = url + (lan > 1 ? (url.indexOf('?') >= 0 ? '&' : '?') + 'r=' + lan : '');
-      try { await im.decode(); this.loiLien = 0; return im; } catch (e) { }
+      const url = png ? it.url.replace(/\.webp\?v=[0-9a-f]+/, '.png') : it.url;
+      im.src = url + (lan ? (url.indexOf('?') >= 0 ? '&' : '?') + 'r=' + lan : '');
+      // yêu cầu treo (mạng chập chờn, Safari đứng tải) → không đợi mãi: hết hạn 20 s, 40 s… thì tải lại bằng URL mới
+      let het = false, hen = 0;
+      try {
+        await Promise.race([im.decode(), new Promise((ok, no) => { hen = setTimeout(() => { het = true; no(new Error('het han')); }, 20000 * (lan + 1)); })]);
+        clearTimeout(hen); this.loiLien = 0; return im;
+      } catch (e) { clearTimeout(hen); }
       if (this.mat) throw TAI_MAT;
+      if (het) { im.src = ''; console.warn('[TAI] tải treo, thử lại', it.url); continue; }
       let st = -1;
       try { st = (await fetch(url, { cache: 'no-store' })).status; } catch (e) { }
+      if (st >= 200 && st < 300 && !png && /\.webp\?v=/.test(url)) { png = true; TAI_WEBP = false; continue; } // có tệp mà không giải mã được webp → .png
       if (st === 404 || st === 410 || (st >= 200 && st < 300 && lan >= 2) || (st >= 400 && lan >= 5)) {
         this.thieu.add(it.url); console.warn('[TAI] missing asset', it.url, st); return null;
       }

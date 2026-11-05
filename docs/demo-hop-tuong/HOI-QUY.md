@@ -69,3 +69,9 @@ Sửa: bỏ nạp dải 4 khung cho trùm đã có ảnh riêng (dùng dải _8 
 Vòng hồi chiêu chỉ huy (13s…) đặt `right:-1px` → chữ lệch ra ngoài khung ô `#the-mv.ot` (có sẵn trên nhánh trước phiên khởi động nhanh).
 Phiên khác đã sửa cùng lúc (1cadf35, cách mép 7 %) → giữ bản đó.
 Phiên khởi động nhanh (docs/demo-hop-tuong/tuvan/khoidong/BAO-CAO.md): thêm `tools/thap-kt-khoidong.js` (DECK/PLAY bấm sớm khi đợt nền chưa xong).
+
+## 2026-11-05 — (khởi động nhanh) kẹt "LOADING BATTLE 99 %" lần đầu (390x844 boot, chập chờn)
+Yêu cầu ảnh bị treo (máy kiểm giả mạng chậm rồi bỏ chặn giữa chừng) → `img.decode()` đợi mãi. Sửa `TAI._mot`: hết hạn 20 s/40 s… thì
+tải lại URL mới; webp lỗi giải mã → .png. `CHI=landau` 4 cỡ ×3 lần: XANH.
+Còn lại: `online_tran` (bước vào trận online trong thap-kt-hoiquy.js) TRƯỢT cả trên nhánh gốc d8171e8 không có thay đổi của phiên này
+(thap-kt-online.js riêng thì OK) — chưa sửa, báo phiên ONLINE.
