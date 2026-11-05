@@ -1,0 +1,295 @@
+64-TURRET REDRAW — ART DIRECTION BIBLE + GROW-UP SYSTEM
+Merge tower-defense | 5x3 industrial machine board | 5 rarity tiers | 1–7 merge stars
+Version 1.0 — 05 November 2026
+
+EXECUTIVE DECISION
+==================
+Redraw the roster around “industrial mechanism first, colored magic second.” A turret is identified by its silhouette, mechanical function, and one focal detail—not by a loud colored donut. Keep a shared understated BASE family; spend most of the visual variety on the independently rotating HEAD. Do NOT give every turret seven complete visual versions. Use one standard art set per turret, a restrained universal star-progress overlay, and bespoke 2–3-stage growth art only for units whose gameplay genuinely transforms. Prototype a handful of extreme roles before commissioning all 64.
+
+TARGET READABILITY
+==================
+* Camera: true top-down / ~straight overhead, consistent across all assets.
+* Board: 5 columns x 3 rows, dark neutral grey machine sockets. Units are viewed around 46–50 display pixels per cell; evaluate final readability at the actual on-phone render size, not only at 512 px source size.
+* Sprite assembly: static BASE centered in the cell; independently rotating HEAD pivot at the exact center. Default authored head/barrel direction = RIGHT (0 degrees). Effects and UI indicators are separate rendering layers.
+* Design hierarchy at 48 px: (1) broad silhouette, (2) gun vs. non-gun role, (3) one signature mechanical landmark, (4) restrained colored accent, (5) rarity micro-detail. Tiny grooves and bolts cannot rescue a weak silhouette.
+* Aim for no more than ~70–80% of the cell occupied by the main body; allow directional barrels to approach ~88–92% of the cell bounds only when verified not to overlap neighboring units. Exact safe margins must be decided with the engine's rotation/culling test.
+* Rarity is valuable metadata, but it must NOT overwhelm role recognition or turn each unit into a colored disk.
+
+1. STYLE BIBLE — THE 64-TURRET SYSTEM
+====================================
+
+1.1. MATERIAL / COLOR RULES
+---------------------------
+Base material: desaturated iron/charcoal/gunmetal with a cool-neutral or slightly warm-neutral specular edge. Avoid global cyan/blue tint on metals; the board already supplies cool/dark contrast.
+
+Suggested starting palette (art direction targets, not strict shader constants):
+* Board/background: #303136 to #414247; recesses #222327.
+* Turret darkest structural outline: #17191D to #202228 (not pure black everywhere).
+* Main painted metal: #53575E / #62666D.
+* Raised planes: #82858A; highlight used sparingly: #A5A8AA.
+* Accent hues: common neutral warm white; rare blue; epic violet; legendary brass-gold; mythic crimson-red. Mechanic-specific accents may instead be orange/teal/cyan etc.; keep these function accents separate from rarity badges.
+
+A useful normal-state pixel-area budget: approximately 75–85% neutral structure, 10–20% darker/lighter metal shape contrast, and no more than ~5–8% bright emissive accent. Treat percentages as review guardrails, not requirements to count every pixel. The central focal light may be brighter than the tiny rarity mark; never outline the ENTIRE base with full-power glow.
+
+Color coding rule: ONE primary functional accent per turret (e.g., frost cyan, cannon orange, death violet). Rarity stays a small, separate, consistent UI/trim signal. Exception: an indispensable secondary color for a mechanic (e.g., a multi-element prism) may use tiny subordinate accents, but the silhouette must still work in grayscale. Use neutral metals to differentiate shapes via value rather than rainbow palettes.
+
+Avoid: neon edge tracing on every plate; thick continuous illuminated rims; competing glow lines; excessive chrome; tiny neon bolts; rainbow gradients; shadows painted below the sprite; highlights that imply a different viewing angle.
+
+1.2. BASE AND RIM LANGUAGE
+--------------------------
+ONE shared connection grammar: the BASE is the industrial socket/docking footprint, not a mini display pedestal.
+* 2 or 3 shared base families maximum: circular bolt-ring (standard), square clamp plate (heavy/utility), narrow anchor plate (tall structures). Same nominal visual mass and center pivot for all. A specific unit may have a custom silhouette on the HEAD, not an entirely different bright outer ring.
+* Outer rim = thin dark metal lip plus 2–4 restrained latches or breaks. Not a thick, glowing continuous donut. At 48 px, border should read as approximately 1–2 displayed pixels, not a fifth of the icon diameter.
+* Rarity treatment = ONE tiny inset notch/gem/tick or a very narrow segmented metal inlay, not a colored perimeter halo. Keep the rarity mark at a fixed location on the BASE so players can learn it.
+* BASE should be relatively flat and low contrast; HEAD is highest contrast. Avoid a base ring larger/brighter than the head.
+* Do not embed star pips into the BASE art. Star UI is its own layer and must remain readable at star 7.
+* The game board already has socket borders; do not draw a second thick socket under the turret. Double borders are a leading cause of visual noise.
+
+Recommended layer order (back to front): board > base > ground utility aura (when active) > rotating head > action VFX > state/merge-star UI > interaction/selection UI. Alter as necessary for auras that must visibly pass behind the unit, but do not bake them into its artwork.
+
+1.3. DETAIL BUDGET — “ONE HERO DETAIL”
+--------------------------------------
+At 48 px choose:
+* 1 dominant form: wheel, diamond, fork, fan, box, obelisk, dish, crescent, etc.
+* 1 signature working part: barrel, six muzzle holes, condenser coils, saw mouth, skull lamp, hatch seam, etc.
+* 1 supporting mechanical cue: two clamps, one vent pair, one brace, one hinge, or one armor bevel.
+* 1 small functional light/color highlight. Optional rarity marker is shared UI language, not another focal object.
+
+As a rule of thumb, use no more than 3 large meaningful masses, 1–2 significant internal divisions, and 1 bright focal point. At 48 px, any groove thinner than a displayed pixel will disappear or flicker during rotation; remove or exaggerate it. Signature details should survive scaling to 32 px for compact UI thumbnails. Reserve painted micro-detail for larger card portraits / inspection previews, not board sprites.
+
+Source art can be created at 4x or 8x target resolution, but must be regularly downsampled with the actual game's filtering and rotated in-engine at 45-degree increments. Thick outlines may become too heavy after downscale: review actual raster output.
+
+1.4. SHAPE GRAMMAR PER GAMEPLAY ROLE
+-----------------------------------
+ATTACKERS (offensive / sub-offensive): asymmetry + clear firing direction. The barrel, muzzle, blade, beam port or launch rails point RIGHT in source art. Use strong rectangular or tapered forward projection and a visibly anchored receiver at center. Differentiate weapon families by the negative space around the barrel (fat short tube vs. many barrels vs. very thin rail vs. forked prongs). Sub-offensive units can look lighter/secondary but still directional.
+
+SUPPORTS (buffs / economy): centered symmetry, NO gun silhouette. Use dish, emitter ring, drum, fan, crystal reservoir, speaker, pedestal, antenna, pump, or paired tanks. Point their visual energy inward/upward rather than forward. If a support head rotates mechanically, the rotation should not imply it is shooting; most supports can keep a locked neutral head orientation.
+
+CONTROL (slow, stun, jam, displace): restraint / containment language. C-shaped jaws, opposing pincers, grid shutters, ring traps, vortex sockets, crossed antennae. Their silhouette reads as catching, freezing, disrupting or channeling—not firing a normal bullet. A control that actually shoots has a short specialized emitter, clearly unlike a cannon. Use only small in-game active-state animations for control fields.
+
+SUMMON / MERGE-TRIGGER / UTILITY: apparatus rather than cannon. Hinged box, split capsule, paired funnels, spinner, dice cradle, upgrade forge, mixing drum, portal hatch. A top hatch, seam, rotating mechanism, or paired half-shell telegraphs “this thing changes another thing.” No long forward barrels unless that utility has an actual directional attack.
+
+SPECIAL / GROW: a mechanical chassis with a reserved expansion zone or visibly incomplete housing. Folded arms, closed iris, sealed hatch, docking clamps, empty rail slots, dormant coils, crown frame. At later stages, these same landmarks unfold or fill; shape continuity makes the evolution understandable. Avoid random full-body redesigns for the same named unit.
+
+The 64 designs need not be evenly split into five visual classes: determine true gameplay role first. Dual-role units should take the silhouette of their PRIMARY job and one secondary internal cue. Never trade away weapon/non-weapon readability just to show rarity.
+
+1.5. RARITY WITHOUT GARISHNESS
+------------------------------
+Five tiers: WHITE / BLUE / PURPLE / GOLD / RED. Show rarity mostly through (a) a small fixed-position badge/notch on BASE and (b) card-frame treatment; only lightly through sprite trim.
+* White: plain exposed steel, one utilitarian latch, neutral white status pip.
+* Blue: same structural language, one clean blue inlay/notch, subtle better finish.
+* Purple: one tiny violet etched recess or additional beveled armor corner; no full glow ring.
+* Gold: 1–2 brass hardware edges or a restrained crown/crest-shaped *mechanical* piece where it fits the unit's fantasy; warm glints, not gold paint everywhere.
+* Red: richer dark-metal machining, small crimson core or two controlled red slits; a sharper or more imposing focal shape rather than larger fire/horns on everything.
+
+Gameplay color vs. rarity color: if Cannon has orange mechanics and happens to be purple rarity, preserve orange as the weapon's focal accent; put the purple in its uniform tiny tier badge, not a glowing purple ring around an orange cannon.
+
+Silhouette should not universally grow with rarity: low-tier equipment can have a distinctive big pipe while mythic equipment is a compact dangerous-looking core. “Premium” = confident composition / deliberate engineering, not simply more ornament.
+
+1.6. HOW TO KEEP 64 READABLY DISTINCT
+-------------------------------------
+Build a silhouette matrix before final illustration. For each turret record:
+ID | Name | Gameplay role | Primary contour | Direction cue | Signature part | Main accent | Base family | Rarity | Growth mechanic | Closest visual neighbor.
+
+Use at least 12 contour archetypes across the roster: circle, square, diamond, triangle/wedge, elongated rail, twin-tube, fork/Y, C-jaw, dish, fan/flower, box/hatch, standing obelisk, turbine, linked rings, asymmetric arm. Variants can share archetypes, but adjacent deck options should not share the same contour AND focal part.
+
+Three checks for every new design:
+1) Grayscale test: can players distinguish its silhouette from the two nearest visual neighbors at 48 px?
+2) Black-fill test: can they identify attack vs. support vs. utility even when inner details disappear?
+3) Blink test: show 12 mixed units for ~1 second on a 5x3 board; can testers locate a named unit without relying on bright color rims?
+
+Use a 64-cell printed/contact-sheet inventory at actual scale throughout production. Approve designs as a roster, not as 64 impressive isolated illustrations. Keep distinct names and asset IDs separate from the visible art; no labels baked into board sprites.
+
+1.7. 2D TECHNICAL ART CONTRACT
+-------------------------------
+Per standard turret:
+* BASE: RGBA transparent image; static; center anchored at the socket center.
+* HEAD: RGBA transparent image; default RIGHT; pivot/anchor at EXACT cell center; barrel/moving appendages contained in the authored safe bounding box.
+* Optional separate emissive mask for runtime color/intensity control; optional effects layer generated/animated independently.
+* Source sheets on flat #FF00FF are fine for visual-generation keying, BUT do not ship magenta-keyed artwork with pink anti-aliasing fringes. Extract and clean to true alpha, inspect edges on grey, black and white backgrounds.
+* If head art is generated with weapon receiver offset from the cell center, do not rotate the entire visible bounding box around its midpoint. Align the real mechanical axle to the fixed canvas center, even if the muzzle stretches far right.
+* Keep base, head and all growth stages at the same canvas dimensions and pivot. No per-stage drift, wobbly scaling, dropped frames, or inconsistent lighting.
+* Prefer 256x256 or 512x512 working cells as convenient source assets, then export engine-ready power-of-two dimensions as needed. Target size/filtering is engine dependent; validate in the game.
+* Standardize naming, e.g.: turret_cannon_base.png; turret_cannon_head_s0.png; turret_reactor_head_s1.png; turret_reactor_base_s1.png; turret_reactor_transform_01.png. Define stage 0/1/2 explicitly in data to avoid naming ambiguity.
+
+2. REVIEW OF THE 10 TRIAL TURRETS
+=================================
+Overall: a GOOD direction for mechanic readability—silhouettes are already distinct and supporters usually look non-weapon-like. However, the trial art still uses bright perimeter segments and heavy circular plates too often; it risks recreating the old “loud colored rims” problem when 15 units fill a board. Keep the signature centers and quiet the frames.
+
+ATTACKERS
+1. CANNON (orange): KEEP the squat receiver, short fat single muzzle, and bold orange muzzle lip. CHANGE four large corner caps and multiple glowing circular arcs: reduce to two understated latches and one small orange charging slot. The cannon must be recognizable in flat grayscale.
+2. GATLING (yellow): KEEP square base and multi-hole rotary cluster—the strongest mechanical contrast with Cannon. CHANGE the number/arrangement to six unmistakable distinct barrel bores at game scale (a 2x3 or ring arrangement chosen by legibility); simplify yellow border strips. Do not let the receiver look like a second enormous circular base.
+3. SNIPER (blue): KEEP thin long right-pointing barrel and narrow diamond chassis. CHANGE glowing blue triangle panels to mostly dark metal engraving; preserve only a small blue optic. Shorten or widen barrel slightly if its 1-pixel trace flickers when rotated. Put the head axle in the actual center of the diamond, not halfway along the muzzle.
+4. LASER (magenta): KEEP prism/lens source and large single emitter aperture. CHANGE tall rectangular wall-like chassis so it reads top-down rather than side-on; cut violet side windows to 1 focal core + 1 tiny indicator. The brief's “no magenta on the art” conflicts with a magenta functional accent on a magenta key background: for image generation, use pink-violet distinguishable from #FF00FF and explicitly avoid exact key-color pixels; prefer true alpha export to prevent accidental erasure.
+5. TESLA (cyan): KEEP three distinct prongs and visible central coil. CHANGE the unit's directional language: it currently appears like a forward weapon, which is fine ONLY if Tesla attacks toward enemies. If it is a radial emitter, rebalance all three prongs around the core so it reads as a symmetric generator. Reduce multiple cyan ring bars; retain 1–2 strong coil segments.
+
+SUPPORTS
+6. RADAR (teal): KEEP the unmistakable dish silhouette and antenna mast. CHANGE dish brightness and clutter; use a shallow dish with one focal sensor point. It should read at 48 px even if the support head does not rotate. Keep under-ring teal lights minimal.
+7. CRIT BEACON (red): KEEP central targeting reticle—the fastest read. CHANGE the surrounding four red rectangles and big circular armor; let the reticle dominate. Ensure it does not get confused with an enemy-targeted status overlay (use different border/placement for active overlays).
+8. FROST GENERATOR (ice blue): KEEP fan and snowflake, one of the strongest non-gun silhouettes. CHANGE four bright edge lights and heavy outer ring. Make fan vanes fewer or thicker if they blur at 48 px; snowflake can be a simple 4–6-point glyph.
+9. AMPLIFIER (orange): KEEP speaker cone as signature. CHANGE orange concentric light rings: one short pulse ring in VFX at activation is better than permanently luminous circles. Recheck against Cannon because both are orange and circular; speaker should be concave/no muzzle, Cannon has a projecting tube.
+10. DEATH TOTEM (violet): KEEP tall obelisk and skull lamp—excellent category break from all other turrets. CHANGE the large glowing side triangles and top gem; make the skull smaller but higher contrast and keep a strong vertical triangular silhouette. Watch its full silhouette during rotation: if it is non-directional, do not rotate it.
+
+TRIAL-SHEET VERDICT
+* Keep as primary shape references: Gatling, Sniper, Radar, Frost, Death Totem.
+* Keep but simplify most aggressively: Cannon, Laser, Tesla, Crit Beacon, Amplifier.
+* One systematic redraw pass: cut outer-rim glow by roughly 60–80% visually, remove redundant latches, enlarge the one hero detail, and render on the actual grey 5x3 board before approval. The percentage is a visual direction, not a precise pixel-level requirement.
+* Review all ten together at 48 px, in pairs that might be confused (Cannon vs. Amplifier; Cannon vs. Laser; Crit vs. enemy-target reticle; Tesla vs. Radar).
+
+3. GROW-UP / EVOLUTION DESIGN
+============================
+
+3.1. THE RECOMMENDED SYSTEM: HYBRID, NOT SEVEN FULL REDRAWS
+----------------------------------------------------------
+Make two independent progression signals:
+A) MERGE STAR RANK (universal): a clear 1–7-star indicator and restrained shared upgrades. It is always accurate to the numeric merge rank.
+B) TRUE GROWTH/TRANSFORMATION (select units): dedicated stage assets + a signature transformation event. These reflect actual gameplay state: charge, countdown, metamorphosis, or conversion. Do not promise evolution by showing a visual growth stage when gameplay has not changed.
+
+Default rule for the 64 turrets: 1 stable BASE + 1 HEAD, no bespoke stage art for every merge star. Provide subtle rank polish via runtime overlay (e.g., 1 narrow additional armor tick or small coil activation at high rank), keeping common silhouette stable. On its own, a 7-star upgrade can be communicated through the star UI and a rewarding universal merge effect.
+
+For 4–8 flagship units with real grow/transform identity, commission THREE visual states where useful:
+Stage A / dormant: sealed, smaller functional core, 1–2 key components folded.
+Stage B / active: one mechanical module opens, power channels become visible, signature part enlarges by ~10–15% within the same footprint.
+Stage C / apex: one final unmistakable part unfolds or locks into place; glow strengthens selectively; do not triple the complexity.
+
+If a unit only has a binary state, two variants are better than fake stages. Allow stage progression to be triggered by its mechanic, not automatically by stars unless the actual skill uses merge stars as its threshold.
+
+3.2. STARS 1–7: UNIVERSAL VISUAL LANGUAGE
+----------------------------------------
+Recommended star representation at ~48–50 px: a fixed small dark high-contrast BADGE displaying the numeral 1–7 plus a small star glyph, positioned consistently outside the head's busiest feature (e.g., upper-left of cell). This is more readable than seven tiny pips on a dense board. Keep badge size and placement consistent and make it UI, not painted into the rotating head. If the game identity strongly wants DCDW/Random Dice-style pips, test them as an alternative: for ranks 5–7, compact 2-row arrangements generally become crowded; a numeral remains the default recommendation.
+
+Optional rank polish shared by all 64: 1–2 stars = baseline; 3–5 stars = slightly more polished micro-inlay or secondary LED; 6–7 stars = subtle higher-energy idle pulse and a tiny extra metal clamp. These should be mostly shader/runtime features or one shared decorative layer—not 64 x 3 authored heads. Under no circumstance should this replace a legible rank numeral.
+
+3.3. WHICH TURRETS GET UNIQUE GROWTH ART?
+----------------------------------------
+PRIORITY 1 — dedicated transformations:
+* MYSTERY BOX (47-second random conversion): closed crate/hatch with mystery slot -> stressed/seamed hatch with ticking seam -> luminous locked-in pre-reveal. The box *then becomes another turret's base/head*, rather than staying as a Stage C Mystery Box. Use a short pre-conversion tell near the end of its timer; do not show a precise time until it is real gameplay state.
+* EVOLUTION BOX (delayed random conversion +1 star): compact incubator/forge -> open powered chamber -> crown-like assembly with one visibly elevated star socket. At completion, swaps to the random target turret at computed star rank (+1 as game rules permit). Show the rank upgrade explicitly and accurately.
+* REACTOR (mechanical grow/power-up, if actual skill includes a charge/state): dormant core in bracing -> opened heat exchangers -> expanded core with stable energy crown/vents. Color changes should reflect heat/charge state, not unrelated rarity.
+* OVERLORD (slow-charge heavy unit): compact locked cannon -> exposed charging coil/expanded rails -> massive final rail alignment and high-charge aperture. At peak charge, use highly visible focal-core light, not a full red ring covering the board.
+
+PRIORITY 2 — selective after playtest:
+* A unit whose identity is permanent self-evolution or stacking power (e.g., star forge / growth engine), if one exists in the final roster.
+* One legendary and one mythic with truly distinct transformation mechanics, to make high rarity feel special without decorating all rare units.
+
+NO unique 3-stage art by default for: generic Cannon, Gatling, Sniper, Radar, Crit Beacon, Frost Generator, Amplifier, basic slows, economy support, and passive buff gear. Their rank is a number/upgrade and a satisfying merge VFX, not a redesign.
+
+3.4. STAGE TRIGGER SPECIFICATION
+--------------------------------
+Do NOT equate time stage with merge-star stage.
+* Mystery Box: states driven by its normalized time-to-transform (e.g., dormant 0–70%, active 70–93%, imminent 93–100% of 47 s; exact breakpoints can change during playtesting). Countdown continues accurately through pauses/resumes per game rules. The final stage is a warning/readiness tell, not an extra power level.
+* Evolution Box: similarly driven by normalized progress, with visibly different finishing graphic to communicate the +1-star reward.
+* Reactor: stages tied to its actual gameplay power/heat thresholds, or remain cosmetic if it has no charge mechanic. Avoid inventing stats or buffs through art.
+* Overlord: stages tied to 0–35%, 35–80%, and 80–100% of charge; at charged/ready state, keep a restrained cyclic idle tell until firing.
+* Star 7: every turret gets a brief universal apex merge celebration; only true growth units enter a bespoke final stage if the mechanic itself warrants it.
+
+3.5. TRANSFORMATION VFX — MOBILE-READABLE EVENT
+------------------------------------------------
+Duration target for an in-place grow event: ~480–650 milliseconds. The following 560 ms storyboard is a starting point to tune in-engine at 60 FPS:
+
+0–80 ms: ANTICIPATION. Existing machine lights dip; moving head freezes or brakes briefly; 1–2 latches twitch inward. Tiny centered charge glow, not full-screen flash.
+80–190 ms: OPEN. Hatch/rails/shell separates; 2–4 large articulated pieces slide away on short paths. Preserve mechanical continuity and turret anchor.
+190–310 ms: ASSEMBLY. New stage pieces rise/slide/lock with a quick stagger; one bright core reveal. Optionally use a clipped silhouette flash for 1–2 frames (~17–33 ms), never enough to obscure the whole neighboring tile.
+310–390 ms: LOCK + IMPACT. A tight, low-opacity radial shockwave ring expands ~0.6 to 1.1 cell widths before vanishing; 2–3 mechanical sparks; short screen-space camera punch ONLY if it does not disrupt aiming or competitive readability.
+390–560 ms: SETTLE. New head stabilizes; emissive accents return to sustained low level; updated rank badge/identity label appears immediately and accurately. No long glow bloom.
+
+For an actual Mystery/Evolution Box CONVERSION, use a slightly longer and more celebratory ~650–800 ms sequence at completion: anticipation -> open -> target silhouette revealed -> replacement turret snaps into place -> brief identity/rarity confirmation -> quiet settle. The target sprite and correct star badge should be visible by roughly the 450–600 ms point; gameplay simulation should not depend on animation playback. Use fallback instant swap when animations are skipped.
+
+For ordinary merges of any two units, 220–350 ms is sufficient: a 70–100 ms inward compression, a 60–100 ms crisp join flash, then a 90–150 ms small shockwave + new rank badge pop. Avoid applying the 560 ms growth cinematic to every merge in a fast-paced battle.
+
+VFX boundaries:
+* Flash should generally remain inside the unit's cell; transient shockwave may reach adjacent cell edges but should not look like a persistent neighbor buff link.
+* Use under-head ring effects for area growth; use over-head spark accents for final snap. Never bake VFX into base/head stage art.
+* Do not imply an attack hit, a damage buff, or an enemy status that is not occurring.
+* Design low-intensity mode for 10+ simultaneous transforms; cap concurrent bloom and suppress global camera shake in PvP.
+* Reduced-motion option: 100–150 ms crossfade/scale lock-in, no shake, no large pulse. Critical game-state information stays readable.
+* Feedback can include a short mechanical click and small synth charge but should be optional/muted by user settings.
+
+3.6. BASE/HEAD GROWTH PRODUCTION DECISION
+-----------------------------------------
+When a growth unit evolves, prefer a mostly invariant BASE with upgraded HEAD because pivot/rotation alignment stays stable and art cost drops. Commission a different stage BASE only if a base-level gameplay landmark must actually grow (e.g., Reactor's expanding heat sinks or Evolution Box's opening incubator). Across all stages, preserve unit center, camera angle, light direction, silhouette lineage and maximum rotation safe zone.
+
+Suggested asset budget per unit:
+* Standard turret: 1 BASE + 1 HEAD + shared runtime star badge + reusable universal merge VFX.
+* Two-state transformer: 1 BASE + 2 HEADS (and optional 1 altered BASE) + one bespoke 0.5-second transform effect.
+* Three-state flagship: 1 BASE + 3 HEADS (optional 2 additional BASE stage variants) + a short assembly animation/effect. Split motion pieces from static art if doing skeletal/tween animation.
+
+Optional production strategy: do NOT generate all three stages in isolation. Lock Stage A first, then make a second image sheet showing A/B/C side by side, preserving body identity and exact center. Use a composited in-engine preview of the *same* turret rotating through eight angles to expose pivot errors.
+
+4. REUSABLE IMAGE PROMPTS
+========================
+
+4.1. STANDARD BASE + HEAD SHEET — MASTER TEMPLATE
+-------------------------------------------------
+Copy/paste and replace bracketed fields:
+
+"Production sprite sheet for a mobile merge tower-defense game: [TURRET_NAME], gameplay role [ROLE], rarity [RARITY]. Crisp polished stylized sci-fi game art, bold clean dark outline, soft controlled cel shading, high-end mobile readability; strict TOP-DOWN overhead view, NO perspective. Neutral desaturated gunmetal industrial machine design, mostly grey with ONLY one small [ACCENT_COLOR] functional light. Signature silhouette: [PRIMARY_CONTOUR]. Unique central mechanism: [SIGNATURE_PART]. Distinctive functional detail: [SECONDARY_PART].
+
+Sheet layout exactly TWO EQUAL SQUARE CELLS in one horizontal row. LEFT cell = BASE only, static low-profile docking socket, no head, thin dark metal outer lip and no luminous colored donut. RIGHT cell = HEAD only, no base, centered mechanical rotation pivot, default attack direction RIGHT (0 degrees). If [ROLE] is non-attacking support/utility, no weapon barrel; symmetrical equipment-like head. If attacking, [BARREL_DESIGN] pointing exactly RIGHT. Both cells same scale, same overhead lighting, consistent exact center anchor and safe margins. Each item entirely within its own square; fully separated; no overlap between cells. Rarity signaled by a single tiny [RARITY_COLOR] badge/notch, NOT a glowing perimeter. Functional color limited to one focal part, not a colored frame. Large negative spaces and signature forms readable at 48 px. Flat solid chroma-key BACKGROUND #FF00FF, no gradients in background; do not use #FF00FF inside the art; avoid pink halos on edges. NO text, numbers, stars, labels, grid lines, shadows, people, visual effects, extra objects, or perspective tilt."
+
+For laser with a pink/magenta accent, use a slightly red-violet or lavender hue rather than exact chroma-key #FF00FF; ask for alpha-clean export and verify keying manually.
+
+4.2. THREE-STAGE GROWTH SHEET — MASTER TEMPLATE
+-----------------------------------------------
+"Character-conserving progression sheet for turret [TURRET_NAME], SAME model throughout. Exactly 3 columns x 2 rows of EQUAL SQUARE CELLS. Columns: A dormant [DESCRIPTION_A], B activated [DESCRIPTION_B], C apex [DESCRIPTION_C]. Row 1 = BASE ONLY in each stage, row 2 = matching independently rotating HEAD ONLY in each stage. Exact same body center/pivot, same scale, same top-down camera, same gunmetal value palette, same lighting and default RIGHT-facing barrel orientation (or no barrel for non-attackers). Preserve recognizable [PRIMARY_CONTOUR] and [SIGNATURE_PART] across all stages. Changes should be mechanical: opening [HINGE], adding [MODULE], extending [COIL_OR_BARREL], revealing [CORE]. A = simple/folded; B = one clear part deployed; C = final structural upgrade, no random redesign. Normal emissive accent [ACCENT_COLOR] occupies a small portion; no full colored rim. All items isolated, balanced scale, no touch/overlap; flat #FF00FF background, no background gradients, no text, no stars, no VFX, no shadows, no perspective, no extra frames."
+
+If the base does not change, prefer a 1 BASE + 3 HEAD custom sheet (4 equal cells) to eliminate unnecessary duplicate art. A generated reference sheet is for art direction; production should separate/align/check the individual alpha sprites.
+
+4.3. OPTIONAL TRANSFORM PARTS / EFFECT PROMPT
+---------------------------------------------
+"Top-down mechanical transformation VFX and separated part references for [TURRET_NAME], [STAGE_A] to [STAGE_B]. Same neutral industrial sci-fi style and [ACCENT_COLOR] glow. Show 4–6 isolated large moving hardware pieces and a separate thin activation shockwave ring, designed to assemble around an exact center pivot. Use simple readable shapes, minimal sparks, no full-screen bloom. Flat black background for additive VFX, or pure chroma-key magenta for mechanical pieces; specify the chosen background per sheet. No text, no shadow, no turret base duplicated."
+
+IMPORTANT PROMPT PRODUCTION NOTE: For the most reliable generation, author separate sheets for complex heads and VFX; do not ask an image model to create exact alpha, engine pivots, or precise equal-size segmentation by language alone. Normalize/crop/pad assets with a script and verify anchor alignment in-engine. Color keying is a staging convention, not final transparency.
+
+4.4. A SHORT NEGATIVE CONSTRAINT TO APPEND TO EVERY PROMPT
+----------------------------------------------------------
+"Avoid: thick luminous circles; giant color rims; repetitive circular bodies; all-over neon; extra barrels on supports; decorative horns on every rarity; tiny unreadable engraving; off-center pivot; barrel pointing diagonally; side view; drop shadow; lens flare; background props; lettering; stars painted into art."
+
+5. PRODUCTION PRIORITY AND FIRST VALIDATION BATCH
+=================================================
+
+5.1. ORDER OF OPERATIONS
+------------------------
+P0. Establish neutral industrial board palette, viewport screenshots, safe cell bounds, exact alpha/pivot export contract. Without this, every illustration can look good independently yet bad in play.
+P1. Draw 15–20 thumbnail silhouettes in grayscale spanning all five gameplay roles and varied footprint archetypes. Reject look-alikes before adding detail.
+P2. Redraw a SIX-TURRET representative batch as separate base/head: attacker, multibarrel, very thin sniper, symmetric support, tall special, actual growth unit.
+P3. Show these six on the board with mixed rarities and star badges (ranks 1, 3, 5, 7). Rotate heads through 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°. Test at 48 px and 32 px.
+P4. Implement one growth state machine and shared transform VFX for a chosen flagship; verify that a stage art change is correctly driven by gameplay values.
+P5. Freeze style and shape matrix; produce remaining 58 turrets by role family in small batches (6–10), each with integrated board review.
+P6. Add premium bespoke growth assets to the remaining eligible units and optimize concurrent particle/flash load on mobile.
+
+5.2. FIRST BATCH (SIX UNITS)
+---------------------------
+A. CANNON — standard single heavy attacker. Test reducing colored rings while retaining one strong barrel.
+B. GATLING — complex attacker. Test six readable bores, square body, fast-rotating head.
+C. SNIPER — long thin attacker. Test line thickness, pivot, neighbor overlap at diagonal angles.
+D. FROST GENERATOR — non-gun support. Test fan/snowflake and neutral rim.
+E. DEATH TOTEM — tall symmetric support/control. Test non-round silhouette, no inappropriate head rotation.
+F. OVERLORD — grow/charge flagship. Test A/B/C stage identity, charge-driven telegraph, 560 ms assembly VFX, high-tier restraint.
+
+Why these six: they test all the risky extremes (heavy, multi-barrel, elongated, radial support, tall equipment, transformation). Laser and Radar should be the next two after this first pass, specifically to validate lens/dish top-down geometry.
+
+5.3. PASS / FAIL GATES
+----------------------
+* On a screenshot of a full 5x3 board, testers can locate the six chosen types by shape even with all accent glow disabled.
+* In neutral grayscale, no pair of the six becomes confusing at 48 px.
+* Supports have no false gun silhouette and do not appear to aim/fire when idle.
+* Each head rotates around the center without jumping, clipping unintended neighbors, or changing its apparent size.
+* BASE does not compete with HEAD or the socket rim; rarity can still be read from UI/card cues.
+* Rank 1–7 remains legible in a crowded board, including effects and overlapping nearby emitters.
+* A/B/C growth stages are clearly the SAME named turret, with one distinct added mechanical step each; transformed units show correct state and rank.
+* No magenta edge contamination after asset alpha extraction; no blur/noise after downsampling.
+* At maximum anticipated simultaneous activity, visual clutter does not hide enemy lane movement, star badges or transform outcomes.
+
+5.4. RECOMMENDED QUICK COMPARISON TEST
+--------------------------------------
+Mock three variants of the SAME six-turret batch on identical grey machine boards:
+V1 = current trial style.
+V2 = current art with 70% less perceived perimeter glow + simplified borders.
+V3 = V2 plus enlarged signature mechanical landmark and thin fixed rarity notch.
+
+Show all boards without title/name labels at the same display size. Ask 5–8 testers to name role, locate a turret after a one-second glance, and rate clutter on a simple 1–5 scale. Choose the version with the best speed/accuracy and lowest clutter, not the version with the prettiest zoomed-in painting. This test is small enough to run before spending on the remaining 58 units.
+
+FINAL PRODUCTION RULE
+=====================
+The turret's signature is its FUNCTIONAL MACHINE FORM. The BASE makes it belong to the world; the HEAD makes it identifiable; the star badge communicates merge power; the restrained rarity notch communicates tier; transformation assets are reserved for units whose actual mechanics evolve. If all five signals are separated, the 5x3 board can remain calm even with 64 visually distinct turret types.
