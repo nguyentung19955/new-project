@@ -2,7 +2,7 @@
 //  1) đạn/hiệu ứng trúng RIÊNG theo dạng (vẽ bằng code, hướng PHẢI, tròn tuyệt đối): đổi QUỸ ĐẠO hoặc HÌNH VA CHẠM, không chỉ sáng hơn
 //  2) vòng đo 3 CUNG quanh ĐẦU súng (khe hở nằm dưới huy hiệu sao): cung đầy dần tới dạng sau, gần tới thì nháy 2 Hz
 //  3) khoảnh khắc biến hình 0–650 ms: báo trước (vòng siết) → nén (đầu co 1–2 px, lõi nạp) → chớp + sóng tròn → đổi ảnh đầu _s1/_s2/_s3 → lắng + PHÁT BẮN ĐẦU
-//     chữ ngắn "Awakened!" + âm thanh; ụ chu kỳ (nạp/xả) chỉ nảy 300 ms, chữ to chỉ lần đầu
+//     ĐÚNG 1 chữ ngắn (tên dạng, vd "Supernova!", không có thì "Awakened!") + âm thanh; ụ chu kỳ (nạp/xả) chỉ nảy 300 ms, chữ to chỉ lần đầu
 //  4) giới hạn dễ nhìn: nét 2–4 px, hạt có trần, hiệu ứng ụ nằm trong ô, huy hiệu sao luôn ở trên cùng
 // Nạp CUỐI (sau ui.js / tuongmoi-ui.js). Chạy được trong mô phỏng node (tools/thap-sim-moi.js) — phần vẽ tự bỏ qua khi không có document.
 'use strict';
@@ -189,10 +189,34 @@ VX.bien = function (T, tu, den) {
   // phát bắn đầu tiên sau khi lắng (bằng chứng đã đổi cách đánh)
   this.hen(ngan ? 0.2 : 0.52, () => { if (cB() && T.cd > 0.02) T.cd = 0.01; });
   if (ngan) return;
-  let chu = den === 3 ? 'Awakened!' : g.ten[den - 1];
+  // ĐÚNG 1 chữ cho mỗi lần biến hình: tên riêng của dạng (Supernova!, Fused Head!…) nếu có, không thì 'Awakened!'
+  let chu = tenBien(g.ten && g.ten[den - 1]) || (den === 3 ? 'Awakened!' : '');
   if (T.id === 'orbital' && den === 3) { if (B && G.t - (B._orbBn || -9) < 1.5) return; if (B) B._orbBn = G.t; chu = 'Bombardment!'; }
-  this.hen(0.3, () => { const c = cB(); if (!c) return; nhanU(T, chu, g.mau, true); if (den === 3 && g.ten[2].toLowerCase() !== chu.slice(0, -1).toLowerCase()) FX.chu1(c.x, c.y - 52, g.ten[2], g.mau, 12, 'to'); });
+  if (chu) this.hen(0.3, () => { if (cB()) chuBien(T, chu, g.mau); });
 };
+// 'WHITE WYRM' → 'White Wyrm!' (chữ hoa-thường ngắn như HUD)
+function tenBien(s) { return s ? s.toLowerCase().replace(/(^|[\s-])(\S)/g, (a, b, c) => b + c.toUpperCase()).replace(/!*$/, '!') : ''; }
+function goChuBien(T) { if (GFX.coDOM) for (let i = FX.chu.length - 1; i >= 0; i--) if (FX.chu[i].chuT === T) FX.chu.splice(i, 1); }
+// chữ biến hình duy nhất của ụ: chống trùng (cùng ụ trong ~1 s chỉ 1 chữ — chữ mới thay chữ cũ), luôn vẽ trên cùng, kẹp trong màn
+function chuBien(T, s, mau) {
+  if (G._treNhan) { VX.hen(G._treNhan, () => chuBien(T, s, mau)); return; } // đang ghép: hiện lúc kết quả lộ ra
+  const B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return;
+  if (GFX.coDOM && FX.chu.some(q => q.chuT === T && q.s === s && q.t < 1)) return; // cùng chữ vừa hiện (<1 s): giữ nguyên, không nhân đôi
+  goChuBien(T); // mỗi ụ chỉ 1 chữ biến hình: chữ mới thay chữ cũ, không chồng
+  T.nhanT = G.t; // chặn luôn nhãn kỹ năng thường (FUSED BEAM, METEOR…) ngay sau đó
+  const c = B.o[T.o], n = FX.chu1(c.x, Math.max(34, c.y - 30), s, mau || TIERS[T.bac].mau, 11, 'nhan');
+  if (n) { n.vien = TIERS[T.bac].mau; n.chuT = T; }
+}
+// vẽ: chữ biến hình chỉ hiện từ lúc đổi ảnh đầu (≥300 ms) và nằm trên mọi chữ khác
+if (GFX.coDOM && typeof REN !== 'undefined' && REN.veChu && !REN._gfxChu) {
+  const goc = REN.veChu; REN._gfxChu = true;
+  REN.veChu = function (ctx) {
+    const ds = FX.chu, an = (c) => { const T = c.chuT, B = T && T.vxB; return !!(B && B.len && !B.ngan && VX.t - B.t0 < 0.3); };
+    const tren = ds.filter(c => c.chuT), con = ds.filter(c => !c.chuT);
+    FX.chu = con.concat(tren.filter(c => !an(c)));
+    try { goc.call(this, ctx); } finally { FX.chu = ds; }
+  };
+}
 VX.veBien = function (ctx, T, C, al, da, R) {
   const B = T.vxB; if (!B) return false;
   const tt = this.t - B.t0;
