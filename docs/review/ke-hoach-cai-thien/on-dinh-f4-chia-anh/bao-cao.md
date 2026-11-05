@@ -119,4 +119,8 @@ Cờ mới `?trangcu=1` (thêm 05/11 cho đường quay lui của thay đổi l�
 ## 8. Commit
 
 - Bước A: **`231a568`** — "F4 bước A: vũ khí PixelLab thành MẶC ĐỊNH …" (đã đẩy).
-- F4 chia trang + bộ nhớ + cổng kiểm: xem dòng cuối (ghi sau khi đẩy).
+- F4 chia trang + bộ nhớ + cổng kiểm: **`1ca8014`** — "F4 ổn định: chia ảnh lớn thành trang ≤ 2048 …" (đã đẩy). Trước khi đẩy đã
+  `git pull --rebase`: đụng nhau ở `game/dist` với phiên quái nấm (`138e3c1`) → dựng lại dist rồi chạy lại cổng kiểm (`LK_BO_DUNG=1`):
+  **ĐẠT** (lưu mây, 6 bản lưu mẫu 47 + 26 mục, kiểm ảnh, trần dung lượng: một tệp 27,40 MB / 30, web tải đầu **19,65 MB** / 20, smoke 14/14).
+  Cổng kiểm đầy đủ (dựng lại dist trong cổng) trước đó cũng ĐẠT.
+- Có một phiên F4 chạy trùng giờ (`3535558`, chỉ ghi chú + bản nháp ở `phien-trung/`, không đổi game) — bản đẩy là của phiên này.
