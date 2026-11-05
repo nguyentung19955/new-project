@@ -101,6 +101,11 @@
   font-size: 9px; font-weight: 800; line-height: 13px; color: #ffe08a; text-shadow: 0 1px 0 #000; border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 4px / 0 stretch; pointer-events: none; }
 .co-hud2 #bo-the .the .h2-so::before { content: ''; width: 9px; height: 9px; background: url(../assets/h2_ic_chong.png) center / contain no-repeat; }
 .co-hud2 #bo-the .the .h2-so:empty, .co-hud2 #bo-the .the .h2-so[data-n="0"] { display: none; }
+/* số 2–3 chữ số (LV 10/40/99, đếm 12/15): mỗi nhãn 1 ô riêng — LV hàng 1 trái, tấm đếm hàng 2 phải (cách nhau theo chiều dọc, không bao giờ chạm nhau); cỡ chữ do HUD2.vua() thu nhỏ */
+.co-hud2 #bo-the .the .lv, .co-hud2.co-khung #bo-the .the.co-kh .lv { white-space: nowrap; max-width: calc(68.8% - 2px); box-sizing: border-box; overflow: hidden; }
+.co-hud2 #bo-the .the .h2-so { top: calc(var(--khh, 74px) * .189 + 15px); white-space: nowrap; max-width: calc(68.8% - 2px); box-sizing: border-box; }
+.co-hud2 #bo-the .the .gia b { white-space: nowrap; }
+.co-hud2 #mana, .co-hud2 #gia-trieu, .co-hud2 #the-mv .mv-gia b { white-space: nowrap; }
 /* ô giá: ảnh 109×40 → 50×18; hốc ngọc x 9–30 %, cửa số x 34–90 % */
 .co-hud2 #bo-the .the .gia, .co-hud2.co-khung #bo-the .the.co-kh .gia, .co-hud2.co-gia #bo-the .the .gia { left: 50%; right: auto; width: 50px; margin-left: -25px; height: 18px; bottom: 0; padding: 0 0 0 17px; gap: 0;
   justify-content: center; border: 0; border-image: none; box-shadow: none; background: url(../assets/h2_chip.png) center / 100% 100% no-repeat; font-size: 11px; color: #e7ecf1; }
