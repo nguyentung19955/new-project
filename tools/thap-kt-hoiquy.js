@@ -334,6 +334,16 @@ async function tran(b, W, H, D, co, m) {
       await kiem(p, co, 'solo_w12');
       await p.evaluate(() => { G.debug.auto = false; G.tocDo = 1; });
     }
+    // MỌI trùm trong bể (6 cũ + trùm mới): gọi ra từng con → không 404 ảnh, không lỗi trang, băng cảnh báo không tràn
+    const ds = await p.evaluate(() => (typeof TRUM_POOL !== 'undefined' ? TRUM_POOL : TRUM_THU_TU).slice());
+    for (const id of ds) {
+      await buoc(p, co, 'trum_' + id, async () => {
+        await p.evaluate((id) => { G.quai = []; G.ketThuc = null; G.dung = false; G.tim = 99; document.getElementById('ketqua').hidden = true; G.hang.push({ t: G.t, trum: id, p: 0 }); try { UI.canhBaoTrum(id); } catch (e) { } }, id);
+        await sleep(1500);
+        const co1 = await p.evaluate((id) => G.quai.some(q => q.trum === id), id); if (!co1) throw new Error('gọi trùm ' + id + ' mà không thấy trên đường');
+      }, { cho: 200 });
+    }
+    await p.evaluate(() => { G.quai = []; });
   } else {
     await p.evaluate(() => { G.debug.auto = true; G.tocDo = 2; });
     const w0 = await p.evaluate(() => G.wave); await sleep(14000);

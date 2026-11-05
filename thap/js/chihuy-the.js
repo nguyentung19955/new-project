@@ -45,8 +45,8 @@ const CHT = {
     if (con > 0) { this.dat(vt.querySelector('.f'), '--p', Math.min(1, con / d.hieuLuc).toFixed(3)); this.dat(vt.querySelector('b'), 'text', Math.ceil(con) + 's'); }
     // giá: cỡ chữ theo số chữ số + nhãn bội số ×2/×4…
     const gia = B.mv.gia, n = String(gia).length, x = te.querySelector('.cht-x');
-    this.dat(te, '--cht-gs', (n <= 3 ? 15 : n === 4 ? 13 : 11) + 'px');
-    const boi = Math.round(gia / d.gia);
+    const boi = Math.round(gia / d.gia), L = n + (boi >= 2 ? String(boi).length * 0.6 : 0); // tính cả nhãn ×N (×16 làm tràn tấm 2 px)
+    this.dat(te, '--cht-gs', (L <= 3.6 ? 15 : L <= 4.6 ? 13 : 11) + 'px');
     if (x) { this.dat(x, 'hidden', !(boi >= 2)); if (boi >= 2) this.dat(x, 'text', '×' + boi); }
   },
 };

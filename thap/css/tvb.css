@@ -98,7 +98,7 @@ html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { display: block; grid-column: 2; 
 html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao .cb-w { color: #ffc547; animation: cb-nhay .5s ease-in-out infinite alternate; }
 html body #wrap.co-tvb #canh-bao.tvb-cb b { grid-column: 2; max-width: 100%; font-size: 20px; line-height: 23px; letter-spacing: 1px; padding: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao b { color: #fff; }
-html body #wrap.co-tvb #canh-bao.tvb-cb span { grid-column: 2; max-width: 100%; font-size: 14.5px; line-height: 17px; margin: 0; color: #fff3ef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #wrap.co-tvb #canh-bao.tvb-cb span { grid-column: 2; max-width: 100%; font-size: 14.5px; line-height: 20px; margin: 0; color: #fff3ef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html body #wrap.co-tvb #canh-bao .tvb-dem { display: none; }
 html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem { grid-column: 3; grid-row: 1 / 4; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 54px; }
 html body #wrap.co-tvb #canh-bao.tvb-cb .tvb-dem[hidden] { display: none; }

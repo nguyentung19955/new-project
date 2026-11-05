@@ -174,7 +174,7 @@ Object.assign(REN, {
         }
       } else {
         const p = E._ph * n, i = Math.floor(p); f0 = i % n; f1 = (i + 1) % n; fr = p - i;
-        if (E.trum && E.bao && n !== 4) { const a4 = this.coDai('trum_' + E.trum, co); if (a4) { E._daiBao = a4; } }
+        if (E.trum && E.bao && n !== 4) { const a4 = this.coDai(this.tenQuai(E).replace(/_8$/, ''), co); /* trùm mới chưa có ảnh riêng: dải 4 khung của trùm MƯỢN (trum.js) — 'trum_<id>' không tồn tại → 404 */ if (a4) { E._daiBao = a4; } }
       }
       // hoà: 4 khung hoà ở 55% cuối, 8 khung hoà ở 45% cuối (đỡ bóng ma), smoothstep
       const nguong = dong ? 0.65 : n >= 8 ? 0.55 : 0.45;
