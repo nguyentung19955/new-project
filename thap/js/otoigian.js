@@ -28,6 +28,10 @@ const OT = {
       }
     } else if (p) p.remove();
   },
+  // hàng ô nhỏ (bộ mẫu, kết quả, sảnh): 5 ụ + chỉ huy — HTML; quet() gắn viền
+  mini(id) { return '<i class="ot-mini" data-id="' + id + '"><img class="po" src="' + portraitOf(id) + '" alt="' + ((G.rosterMap[id] || {}).ten || '') + '" draggable="false"></i>'; },
+  miniMV(mv) { const d = MAVUONG[mv]; return d ? '<i class="ot-mini ot-mv" data-mv="' + mv + '"><img class="po" src="assets/' + d.anh + '.png" alt="' + d.ten + '" draggable="false"></i>' : ''; },
+  hang(deck, mv) { return '<span class="ot-hang">' + deck.map(id => this.mini(id)).join('') + (mv ? this.miniMV(mv) : '') + '</span>'; },
   mien(el) {
     if (!el || el.querySelector(':scope > img.ot-mien')) return;
     const m = document.createElement('img'); m.className = 'ot-mien'; m.src = 'assets/o_mien.png'; m.alt = ''; m.draggable = false; el.appendChild(m);
@@ -43,6 +47,10 @@ const OT = {
     r.querySelectorAll('#bo-the .the[data-id]').forEach(t => this.gan(t, this.bac(t.dataset.id), false));
     const mv = document.getElementById('the-mv'); if (mv && mv.querySelector('.mv-anh')) { this.gan(mv, 'vang', false); this.mien(mv); }
     r.querySelectorAll('.vt-mini').forEach(m => { const po = m.querySelector('img.po'), id = po && MAT.id(po); const b = /^af_/.test(id || '') ? 'vang' : this.bac(id); this.gan(m, b, false); if (/^af_/.test(id || '')) this.mien(m); });
+    r.querySelectorAll('.ot-mini[data-id]').forEach(m => this.gan(m, this.bac(m.dataset.id), false));
+    r.querySelectorAll('.ot-mini.ot-mv').forEach(m => { this.gan(m, 'vang', false); this.mien(m); });
+    const tt = document.querySelector('#tt .tt-the'), ta = tt && tt.querySelector('.tt-anh');
+    if (ta && ta.getAttribute('src')) { const id = MAT.id(ta); if (id) { this.gan(tt, /^af_/.test(id) ? 'vang' : this.bac(id), false); } }
     r.querySelectorAll('.dp-the[data-id]').forEach(d => this.gan(d, this.bac(d.dataset.id), false));
   },
   // cỡ chữ/khe theo px THẬT: #wrap là khung logic 430 phóng theo màn → --ot-k = 430 / bề rộng thật
@@ -61,9 +69,13 @@ const OT = {
     new MutationObserver(ms => {
       for (const m of ms) {
         const t = m.target;
-        if (t.nodeType === 1 && (t.closest('#chon-luoi,#chon-bo,#bo-the,#the-mv,.vt-mini,#dp-dai,#vaotran') || t.querySelector && t.querySelector('.vt-mini,.dp-the'))) { if (!hen) hen = requestAnimationFrame(lam); return; }
+        // chỉ khi có PHẦN TỬ mới (không phải chữ số LV/đếm đổi mỗi khung, không phải chính viền/ngọc của ô)
+        if (m.type === 'childList' && ![...m.addedNodes].some(n => n.nodeType === 1 && !(n.classList.contains('ov') || n.classList.contains('ot-p') || n.classList.contains('ot-mien')))) continue;
+        if (m.type === 'attributes') continue;
+        if (t.nodeType === 1 && (t.closest('#chon-luoi,#chon-bo,#bo-the,#the-mv,.vt-mini,#dp-dai,#vaotran,#tt,.ot-hang,#ketqua,#hm-tam,#onl-sanh') || t.querySelector && t.querySelector('.vt-mini,.dp-the'))) { if (!hen) hen = requestAnimationFrame(lam); return; }
       }
-    }).observe(document.body, { childList: true, subtree: true });
+      if (ms.some(m => m.type === 'attributes' && m.target.classList && m.target.classList.contains('tt-anh')) && !hen) hen = requestAnimationFrame(lam);
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bat); else bat();
   addEventListener('resize', () => OT.co());

@@ -80,8 +80,8 @@ const KQ = {
     h += '<button class="kq-xem" data-kq="ct">Match details<img src="assets/mui_tiep.png" alt=""></button><div class="kq-ct">';
     if (ds.length) h += '<div class="kq-dong"><small>' + (k.thang ? 'LIVES LOST' : 'WHAT GOT THROUGH') + '</small><span>' + ds.slice(0, 4).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n).join(' · ') + '</span></div>';
     else if (!k.thang) h += '<div class="kq-dong"><small>WHAT HAPPENED</small><span>' + (k.ly || '') + '</span></div>';
-    h += '<div class="kq-dong"><small>DECK PLAYED</small><div class="kq-bo">' + m.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + (G.rosterMap[id] || {}).ten + '">').join('') +
-      (MAVUONG[m.mv] ? '<img class="kq-mv" src="' + mvIcURL(m.mv) + '" alt=""><i>' + MAVUONG[m.mv].ten + '</i>' : '') + '</div></div></div>';
+    h += '<div class="kq-dong"><small>DECK PLAYED</small><div class="kq-bo">' + (typeof OT !== 'undefined' ? OT.hang(m.deck, MAVUONG[m.mv] ? m.mv : null) : m.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + (G.rosterMap[id] || {}).ten + '">').join('')) +
+      (typeof OT === 'undefined' && MAVUONG[m.mv] ? '<img class="kq-mv" src="' + mvIcURL(m.mv) + '" alt=""><i>' + MAVUONG[m.mv].ten + '</i>' : '') + '</div></div></div>';
     chi.innerHTML = h;
     // số wave đếm lên 0 → wave trong ~350 ms (giảm chuyển động: hiện ngay)
     const so = document.querySelector('#kq-so b');

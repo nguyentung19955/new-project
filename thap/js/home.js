@@ -141,7 +141,7 @@ const HM = {
       // tư vấn C §B4: tên 15 · chế độ 11 · 5 ụ nhỏ · 1 dòng lối chơi · 1 chữ LOAD bên phải (IN USE khi đang dùng)
       return '<button class="hm-hang hm-pre' + (dung ? ' on' : '') + '" data-act="hm-pre-chon" data-bb="' + a.id + '"><span class="hm-pre-chu"><b>' + a.ten + '</b><small>' + this.esc(a.che) + '</small></span>' +
         '<em>' + (dung ? 'IN USE' : 'LOAD') + '</em>' +
-        '<span class="hm-pre-u">' + a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt=""></span>' +
+        '<span class="hm-pre-u">' + (typeof OT !== 'undefined' ? OT.hang(a.deck, a.mv) : a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt="">') + '</span>' +
         '<span class="hm-pre-mo">' + this.esc(a.plan) + '</span></button>';
     }).join('') + '</div>');
   },

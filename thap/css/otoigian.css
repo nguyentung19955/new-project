@@ -11,7 +11,7 @@ html body #wrap .ot > img.anh, html body #wrap .ot > img:first-child:not(.ov):no
   position: absolute !important; left: var(--ot-in) !important; top: var(--ot-in) !important; width: calc(100% - 2 * var(--ot-in)) !important; height: calc(var(--ot-sq, 100%) - 2 * var(--ot-in)) !important;
   right: auto !important; bottom: auto !important; max-width: none !important; max-height: none !important; margin: 0 !important; border-radius: var(--ot-r) !important; object-fit: cover !important; z-index: 1 !important; background: #0d0f14; overflow: hidden; }
 html body #wrap .ot > img.anh, html body #wrap .ot > img:first-child:not(.ov), html body #wrap .ot > img.po, html body #wrap .ot .o-mv-po img, html body #wrap .ot .mv-anh img.po {
-  --po-mat: .40; --po-toc: .07; --po-ho: .06; --po-zoom: 2.2; --po-zmin: 1; }
+  --po-mat: .42; --po-toc: .10; --po-ho: .08; --po-zoom: 2.2; --po-zmin: 1; }
 html body #wrap .ot .o-mv-po img, html body #wrap .ot .mv-anh img.po { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 0 !important; }
 /* viền độ hiếm PNG (ruột trong suốt) */
 html body #wrap .ot > img.ov.ov { position: absolute !important; z-index: 4 !important; left: 0 !important; top: 0 !important; right: auto !important; bottom: auto !important; width: 100% !important; height: var(--ot-sq, 100%) !important;
@@ -97,3 +97,27 @@ html body #wrap #chon #chon-luoi .c.ot > img.anh, html body #wrap #chon #chon-bo
 html body #wrap .hm-xem-po.ot, html body #wrap #tt .tt-the.ot { position: relative; border-image: none !important; overflow: visible !important; }
 html body #wrap .hm-xem-po.ot > img:first-child:not(.ov), html body #wrap #tt .tt-the.ot > img.tt-anh { --po-mat: .46 !important; --po-toc: .14 !important; --po-zoom: 1.2 !important; --po-ho: .10 !important; }
 html body #wrap #tt .tt-the.ot > .tt-gl, html body #wrap #tt .tt-the.ot > img:not(.tt-anh):not(.ov) { display: none !important; }
+/* ───────── HÀNG Ô NHỎ (.ot-mini): bộ mẫu, kết quả "DECK PLAYED", sảnh ONLINE — 5 ụ + chỉ huy ───────── */
+html body #wrap .ot-hang { display: flex; align-items: center; gap: 3px; }
+html body #wrap .ot-mini { position: relative; display: block; flex: none; width: 34px; height: 34px; }
+html body #wrap .ot-mini.ot-mv { margin-left: 4px; }
+html body #wrap .hm-pre .hm-pre-u .ot-mini { width: 32px; height: 32px; }
+html body #wrap #onl-sanh .s7-bo .ot-mini { width: 26px; height: 26px; }
+html body #wrap .ot-mini > img.po { left: 6% !important; top: 6% !important; width: 88% !important; height: 88% !important; margin: 0 !important; }
+html body #wrap .ot-mini > img.ot-mien { width: 44% !important; top: -12% !important; right: -4% !important; }
+/* xem ụ trong trận (#tt): chân dung nhỏ cùng ô */
+html body #wrap #tt .tt-the.ot { background: none !important; border: 0 !important; }
+html body #wrap #tt .tt-the.ot > img.tt-anh { position: absolute !important; left: 6% !important; top: 6% !important; width: 88% !important; height: 88% !important; border-radius: var(--ot-r) !important; object-fit: cover !important; }
+/* dải đối thủ / đồng đội + vào trận */
+html body #wrap .dp-the.ot > img.po, html body #wrap .vt-mini.ot > img.po { position: absolute !important; left: 6% !important; top: 6% !important; width: 88% !important; height: 88% !important; border-radius: var(--ot-r) !important; object-fit: cover !important; }
+html body #wrap .hm-pre .hm-pre-u, html body #wrap .hm-pre .hm-pre-u .ot-hang, html body #wrap .kq-bo .ot-hang, html body #wrap .s7-bo .ot-hang { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 4px !important; }
+html body #wrap .hm-pre .hm-pre-u .ot-mini, html body #wrap .ot-hang .ot-mini { padding: 0 !important; border: 0 !important; background: none !important; }
+html body #wrap .hm-pre .hm-pre-u .ot-mini { width: 36px !important; height: 36px !important; }
+
+/* (đặt ở tệp nạp CUỐI để thắng tvb.css) */
+/* chữ 1 dòng có ellipsis: cắt NGANG thôi (overflow-x: clip) — trước 'overflow: hidden' cắt luôn đỉnh/đáy chữ 14,5 px trong dòng 17 px (máy kiểm: tràn dọc 4 px) */
+html body #wrap.co-tvb #canh-bao.tvb-cb span, html body #tt.hb-qi .hb-so .ht { overflow-x: clip; overflow-y: visible; }
+/* bảng xem ụ mở rộng: vùng chạm nút đóng thò −10 px ra ngoài → #tt (cuộn dọc) cuộn ngang 10 px; giữ trong mép (icon 26 px vẫn ở góc) */
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong { right: 0; }
+/* khay trận: chip số ụ ở góc trên-phải → mặt dời trái nhẹ (không bị chip đè) */
+html body #wrap #bo-the .the.ot > img.anh { --po-x: .40; }
