@@ -1,0 +1,22 @@
+OK   Bạn (B) rời giữa trận → A chơi tiếp với AI, KHÔNG ra màn kết quả / DEFEAT {"kt":false,"thay":true,"kq":false}
+OK   Hết trận do bạn rời, còn tim → MATCH ENDED · Partner left · Reached WAVE (không khiên đỏ) ["MATCH ENDED","Partner left","Reached WAVE 2"]
+OK   Thẻ WHAT HAPPENED: "WHAT HAPPENEDLinh left at wave 2. Your wave and best record are saved." (không mẹo nâng cấp)
+OK   Bạn đã đi: FIND NEW PARTNER · PLAY SOLO · HOME, không RETRY/REMATCH: FIND NEW PARTNER, PLAY SOLO, HOME
+OK   PLAY SOLO → trận SOLO cùng bộ, đã rời phòng {"che":"solo","ban":1,"on":false,"code":null,"kq":false}
+OK   SOLO thua không đổi: DEFEAT · RETRY SAME DECK · EDIT DECK EDIT DECK, RETRY SAME DECK
+OK   PVP đối thủ rời → VICTORY · Opponent left — you win by forfeit · nút FIND NEW PARTNER, PLAY SOLO, HOME
+OK   Tim chung về 0 → DEFEAT thật ở cả 2 máy
+OK   Bạn còn trong phòng: REMATCH · BACK TO LOBBY · HOME (A: REMATCH, BACK TO LOBBY, HOME / B: REMATCH, BACK TO LOBBY, HOME)
+OK   A bấm REMATCH → trạng thái chờ: WAITING FOR LINH… · Rematch request sent — tap again to cancel
+OK   B thấy lời mời: Tung wants a rematch · ACCEPT REMATCH
+OK   Một người bấm thì chưa bắt đầu (cả 2 phải đồng ý)
+OK   Cả 2 đồng ý → trận mới với cả 2 (wave A=1 B=1, tim 3, act 5/6)
+OK   B về sảnh → A: "Linh is waiting in the lobby" · nút BACK TO LOBBY, HOME
+OK   BACK TO LOBBY → cả 2 ở sảnh CÙNG phòng EJJK (st=cho)
+OK   B về HOME → A: REMATCH ẩn · FIND NEW PARTNER, PLAY SOLO, HOME · "Linh left the room"
+OK   B: HOME → menu, đã rời phòng
+OK   FIND NEW PARTNER → bảng ONLINE (tạo / vào phòng mới) {"bang":true,"code":null}
+OK   Mất mạng, còn tim → MATCH ENDED · Connection lost
+OK   B đóng ứng dụng → sau ân hạn AI lái bàn B, trận A chạy tiếp (không DEFEAT)
+OK   Tim về 0 sau khi AI thay → DEFEAT thật · "WHAT HAPPENEDLinh left at wave 2 — AI took overFIX FOR NEXT …" · FIND NEW PARTNER, PLAY SOLO, HOME
+OK   Không lỗi trang (0)

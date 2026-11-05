@@ -1010,3 +1010,12 @@ Người dùng: phần tóc trên cùng của chân dung cứ mờ mờ (= "vạ
 - Sửa: `tools/thap-cat-khung-p9.py` cắt lại cả 6 khung, lề đối xứng 18/16 (đơn vị ô cũ), K 2.6 (= độ nét tối đa của raw) → 437×499; cửa sổ vẫn trùng nhau ở mọi bậc (mặt không xê dịch).
   `css/khung-p9.css`: `img[src*="the_khung_"] { scale: 1.2727 1.2 }` (ô <img> giữ nguyên chỗ cũ ở mọi nơi; hoạ tiết tràn ra ngoài ô) + `.the.co-kh, .c.co-kh { overflow: visible }`.
 - Kiểm: `tools/thap-kt-khung-p9.js` (ảnh `tuvan/khung/sau_*.jpg`, ghép `sau.png`; trước: `truoc.png`), thap-kt-vach.js + thap-kt-tran.js ĐẠT (2 tool đã tính `scale` của khung).
+
+## Pass KQO — màn kết quả trận online "MATCH ENDED" (2026-11-05, `thap/js/online/ketqua-onl.js`)
+
+Đang dùng ảnh có sẵn: `vong_xich.png` (147 px → hiện 48 px CSS, đạt 3×) làm biểu tượng màn trung tính (bạn rời / mất mạng). Khiên đỏ `ic_thua` chỉ còn cho thua thật.
+Muốn biểu tượng to như VICTORY/DEFEAT (120 px CSS → cần 360 px):
+
+| raw | cỡ / lưới | prompt ngắn | thay cho |
+|---|---|---|---|
+| raw_kqo_ic | 1024×512, 1 hàng × 2 (ô 512) | "Same style as attached game screenshot, chunky sci-fi industrial metal game UI icon, FLAT SOLID #FF00FF magenta background, no text: 1) round steel emblem with a broken chain link in the middle, calm blue-grey glow (match ended, partner left) · 2) same emblem with a broken signal/antenna symbol (connection lost)" | `vong_xich` trên màn MATCH ENDED |
