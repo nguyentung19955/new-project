@@ -107,4 +107,4 @@ Theo bảng mục 8 của `docs/tu-van-toan-cau/huong-c-co-tich-chau-au.md`, ch�
 
 ## 6. Commit
 
-(ghi ở dưới sau khi đẩy)
+- `7667304b` Talesworn phiên B: tiếng Anh mặc định (?lang=en|vi), tên mới hai thứ tiếng (lớp tên G.ten, js/ten_moi.js), lời truyện The Unwritten Tales, gộp từ điển, tiêu đề trang Talesworn; ?ten=cu quay lui + dựng lại dist. Đã đẩy lên nhánh `khoi-tao-du-an` (gộp sau commit của phiên A và C; dist dựng lại sau khi gộp).
