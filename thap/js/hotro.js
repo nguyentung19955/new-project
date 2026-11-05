@@ -99,7 +99,7 @@ const HOTRO = {
     if (h.lanh && E.chamT > 0 && E.cham > 0) b += h.lanh;
     if (h.vet && E.cvT > 0) b += h.vet;
     if (h.amp) { // Amplifier: cộng dồn THEO TỪNG QUÁI (đòn liên tiếp vào cùng quái), nghỉ 1.5 s → về 0; 7★ nghỉ 3 s
-      const M = T._amp || (T._amp = new Map()), x = M.get(E.uid), het = h.ampGiu ? 3 : 1.5;
+      const M = T._amp || (T._amp = new Map()), x = M.get(E.uid), het = Math.max(h.ampGiu ? 3 : 1.5, 1.3 / Math.max(0.05, tocU(T))); // ụ bắn chậm (Revolver 0.6/s, Sniper…) vẫn cộng dồn được: cửa sổ ≥ 1 nhịp bắn
       const n = x && G.t - x.t < het ? Math.min(h.ampMax || 5, x.n + 1) : 0;
       M.set(E.uid, { n, t: G.t }); if (M.size > 40) for (const [k, v] of M) if (G.t - v.t > het) M.delete(k);
       b += h.amp * n;
@@ -110,7 +110,7 @@ const HOTRO = {
   // sau khi tính chí mạng: chậm khi trúng (trần thường 35% / trùm 15%), giết ngay (ngưỡng máu), choáng khi chí mạng
   khiTrung(T, E, dmg, crit, o) {
     const b = T.buf, h = T.ht || {};
-    if (b.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : this.CAP.cham)); }
+    if (b.cham > 0 && !E.d.khangCham) { E.chamT = Math.max(E.chamT, 2); E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : this.CAP.cham)); } // quái kháng chậm: không đồng hồ chậm (Ice Blade không coi là 'đang chậm')
     if (b.chet > 0 && Math.random() < b.chet) {
       if (E.trum) dmg += Math.min(dmg, E.max * 0.01); // trùm: không giết ngay — thêm 1 đòn nhỏ có trần 1% máu tối đa
       else if ((!E.d.to || h.chetTo) && (E.hp - dmg) / E.max < (E.d.to ? 0.15 : (h.ngNguong || 0.25))) { dmg = Math.max(dmg, E.hp + 1); VX.chem(E); }
@@ -178,7 +178,7 @@ lanDoc = function (E, B) {
   _lanDocHT(E, B);
   if (!(E.vmLay > 0) || !(E.vmT > 0)) return;
   const Q = dsMucTieu(B || G.ban[0]).filter(Q => Q !== E && !Q.chet && !(Q.vmT > 1)).sort((a, b) => Math.hypot(a.x - E.x, a.y - E.y) - Math.hypot(b.x - E.x, b.y - E.y))[0];
-  if (Q && Math.hypot(Q.x - E.x, Q.y - E.y) < 90) { Q.vmT = 5; Q.vmK = E.vmK; Q.vmLay = 1; Q.yeu = Math.max(Q.yeu, 5); Q.docT = Math.max(Q.docT || 0, 5); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.35, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#9dff5a' }); }
+  if (Q && Math.hypot(Q.x - E.x, Q.y - E.y) < 90) { Q.vmT = 5; Q.vmK = E.vmK; Q.vmLay = 1; Q.yeu = Math.max(Q.yeu, 5); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.35, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#9dff5a' }); }
 };
 // SÀN TẤN CÔNG (đợt vai trò): bàn có < 2 ụ Tấn công, hoặc ụ Tấn công < HOTRO.SAN_TC số ụ trên bàn → Triệu hồi / kết quả GHÉP chỉ ra thẻ Tấn công trong bộ
 // (bộ nhiều Hỗ trợ / Đặc biệt không chết yểu và luôn có ụ để buff)

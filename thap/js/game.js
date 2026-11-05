@@ -269,7 +269,7 @@ function trung(E, dmg, o) {
   const sk = T && SKILLS[T.id];
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
-  if (T && T._critChac && !o.phu) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng
+  if (T && T._critChac && !o.phu && o.crit == null) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng (đòn đã tự quyết chí mạng — Dice Gun / tia Laser / chém — không bị ép)
   if (crit) { dmg *= 2 + ((T && T.buf && T.buf.cdmg) || 0); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   const vu = HOTRO.vuln(E); if (vu) dmg *= 1 + vu;     // suy yếu quái: mọi nguồn cộng lại, trần 25% (hotro.js)
@@ -516,7 +516,7 @@ function capNhatQuai(dt) {
     if (E.fbT > 0) E.fbT -= dt; if (E.azT > 0) E.azT -= dt;
     if (E.vmT > 0) E.vmT -= dt; if (E.ywT > 0) E.ywT -= dt; if (E.loT > 0) E.loT -= dt; if (E.tpT > 0) E.tpT -= dt; if (E.tempoT > 0) E.tempoT -= dt;
     if (E.chamT > 0) { E.chamT -= dt; if (E.chamT <= 0) E.cham = 0; }
-    if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.chet) continue; }
+    if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.docT <= 0) E.doc = 0; if (E.chet) continue; } // hết độc → xoá dps độc (không sống lại khi bị gắn cờ độc sau)
     let v = E.d.v * (1 - (E.d.khangCham ? 0 : E.cham));
     if (E.chan > 0) { E.chan -= dt; v = E.trum ? v * 0.5 : 0; }
     if (E.keo) { E.s += E.keo * dt; E.keo = 0; }

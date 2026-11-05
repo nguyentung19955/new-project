@@ -80,7 +80,7 @@ const MOC_RIENG = {
   bomhen:    { 3: ['LONG FUSE', 'Weakness lasts 6s'], 5: ['SHOCKWAVE', 'Blast staggers 0.5s'], 7: ['TWIN BOMBS', 'Throws 2 bombs'] },
   haoquang:  { 3: ['STEADY HALO', 'Barrier 2.5s'], 5: ['PURGE', 'Also cleanses every turret'], 7: ['BLESSING', 'Barrier 3.5s + 30% speed'] },
   radar:     { 5: ['LOCK-ON', 'Aura ×1.9 + neighbours +4% crit'], 7: ['OVERDRIVE', 'Aura ×2.35 + every 8s: +25% fire rate 2s'] },
-  chimang:   { 3: ['SHARP EYE', '+8% crit chance'], 5: ['DEADLY EYE', '+13% crit chance, +10% crit damage'], 7: ['CERTAIN STRIKE', '+20% crit; every 6s a sure crit'] },
+  chimang:   { 3: ['SHARP EYE', '+11% crit chance'], 5: ['DEADLY EYE', '+15% crit chance, +10% crit damage'], 7: ['CERTAIN STRIKE', '+20% crit; every 6s a sure crit'] },
   lanhgia:   { 5: ['FROSTNIP', 'Aura ×1.9 + damage vs slowed'], 7: ['FLASH FREEZE', 'Aura ×2.35 + every 8s a hit freezes'] },
   khuech:    { 5: ['DEEP STACKS', 'Aura ×1.9, 7 stacks'], 7: ['LOCKED IN', 'Aura ×2.35, stacks last 3s'] },
   tuthan:    { 5: ['DEEP REAP', 'Aura ×1.9, threshold 40% HP'], 7: ['GRIM HARVEST', 'Aura ×2.35, big enemies under 15%'] },

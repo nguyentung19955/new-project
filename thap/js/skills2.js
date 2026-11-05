@@ -82,9 +82,10 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
   mo: () => 'Each shot 3–300% damage · crit = 300%',
   ban(G, B, T, E) {
     giat(T, 0.9); const [x, y] = chopNong(T, 26); phutKhoi(x, y, 1); SND.phao();
-    const crit = Math.random() < critU(T), roll = crit ? 300 : 3 + rint(298), dmg = dmgU(T) * roll / 100;
+    const chac = !!T._critChac; if (chac) T._critChac = false; // Crit Antenna 7★: cú chắc chắn chí mạng = cú tối đa (không nhân đôi thêm)
+    const crit = chac || Math.random() < critU(T), roll = crit ? 300 : 3 + rint(298), dmg = dmgU(T) * (crit ? 1.5 : roll / 100); // chí mạng: 150% × (2 + sát thương chí mạng) = 300% (+ Hammer/Focus Lens)
     danThang(B, T, E, 'dan_phao', 520, 15, (G, d, M) => {
-      if (M) trung(M, dmg, { B, crit: false, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
+      if (M) trung(M, dmg, { B, crit, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
       FX.tiaLua(d.x, d.y, roll >= 240 ? 12 : 3, '#ffd080', 170, 8);
       if (roll >= 240) { buffNo(T, roll === 300 ? 'max' : 'dmg', (roll - 200) / 100); FX.no('no_phao', d.x, d.y, 50, 0.3); }
     });
@@ -98,6 +99,7 @@ SKILLS.phun = { // Súng Phun Loạn (Hairball): bắn cực nhanh vào quái ng
     FX.no('chop_nong', x, y, 16 + Math.random() * 6, 0.06, T.goc + rnd(-0.2, 0.2)); SND.lien();
     const dmg = dmgU(T);
     danThang(B, T, E, 'dan_lien', 640, 12, (G, d, M) => { if (M) trung(M, dmg, { B }); FX.tiaLua(d.x, d.y, 1, '#ffd080', 100, 6); });
+    T.muc = null; // phát sau chọn quái NGẪU NHIÊN mới (cũ: ở 60 khung/s cửa sổ đổi mục tiêu cd ≤ 0.05 bị nhảy qua → bám 1 con)
   },
 };
 SKILLS.sungluc = { // Súng Lục (Girl detective): một phát lớn trúng tức thì vào quái đầu
@@ -182,7 +184,7 @@ SKILLS.bomhen = { // Bom Hẹn Giờ (Hecate) — ĐẶC BIỆT (đợt vai trò
     const ds = dsMucTieu(B).filter(E => !E.chet && !E.bom);
     if (!T.muc || T.muc.chet || T.muc.bom || !banDuocQuai(B, T.muc)) T.muc = ds.length ? pick(ds) : null;
     xoayDau(T, T.muc || quaiDau(B), dt);
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / 2);
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / 2);
     if (T.nap < 1 || !T.muc) return true;
     T.nap = 0; giat(T, 0.7); chopNong(T, 20); SND.nap();
     const dsBom = [T.muc].concat(ms(T, 7) ? ds.filter(E => E !== T.muc).slice(0, 1) : []); // 7★ TWIN BOMBS
@@ -210,23 +212,25 @@ SKILLS.nhanmana = { // Máy Nhân Mana (Thisbe): khi GHÉP nhận nhiều mana
     buffNo(ra, 'mana', 1); if (!B.ai) SND.mana();
   },
 };
+// quái ĐANG CHẬM thật (có % chậm còn hạn, hoặc đang đóng băng) — quái kháng chậm có đồng hồ mà 0% chậm KHÔNG tính
+function biCham(E) { return !!E && ((E.chamT > 0 && E.cham > 0) || E.chan > 0); }
 SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang bị chậm · bậc XANH họ Frost: hơi lạnh LAN sang quái quanh điểm chém
   vai: 'tc', dmg: 16.8, toc: 0.75, nham: 'dau',
   mo: (T) => '×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage to slowed enemies · chills enemies within 44 px (20% · 2s)' + (ms(T, 5) ? ' · splinters' : ''),
-  chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (E.chamT > 0 ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
+  chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biCham(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
     giat(T, 0.7); chopNong(T, 22); SND.bang();
     const dmg = dmgU(T);
     danThang(B, T, E, 'dan_bang', 560, 22, (G, d, M) => {
       if (!M) return;
-      const cham = M.chamT > 0, k = ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5;
+      const cham = biCham(M), k = ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5;
       trung(M, dmg * (cham ? k : 1), { B, mau: cham ? '#7fdcff' : '#ffffff' });
       FX.no('bang_vo', d.x, d.y, cham ? 64 : 36, 0.3);
-      if (cham && ms(T, 5)) { noLan(d.x, d.y, 40, dmg * k * 0.4, B, { phu: true, mau: '#bff4ff' }); FX.vong1(d.x, d.y, 6, 40, '#bff4ff', 0.3, 3); } // 5★ SPLINTERS
+      if (cham && ms(T, 5)) { for (const Q of dsMucTieu(B)) if (Q !== M && Math.hypot(Q.x - d.x, Q.y - d.y) <= 40 + Q.d.co * 0.25) trung(Q, dmg * k * 0.4, { B, phu: true, mau: '#bff4ff' }); FX.vong1(d.x, d.y, 6, 40, '#bff4ff', 0.3, 3); } // 5★ SPLINTERS: mảnh văng ra quái XUNG QUANH (không đánh lại mục tiêu chính)
       if (cham) nhanU(T, 'SHATTER ×' + k, '#7fdcff');
       // LAN CHẬM: quái quanh điểm trúng (trừ mục tiêu) bị lạnh 20% · 2 s → lượt chém sau nhắm chúng ×5
       let lan = 0;
-      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
+      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, Q.trum ? 0.15 : 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
       if (lan) FX.vong1(d.x, d.y, 8, 44, '#bff4ff', 0.3, 2);
     }, 'bang');
   },
@@ -315,7 +319,7 @@ SKILLS.khuech = { // Bộ Khuếch Đại (Mars): HỖ TRỢ — ụ Tấn công
   vai: 'ht', dmg: 0, toc: 0, chiTC: true,
   buoc: (T) => 0.09 * HOTRO.k(T),
   max: (T) => (ms(T, 5) ? 7 : 5),       // 5★ DEEP STACKS
-  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks, per enemy) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's',
+  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks, per enemy) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's without a hit (slow guns: one missed shot)',
   hoTro(G, T, N, ra) { ra.amp = this.buoc(T); ra.ampMax = this.max(T); if (ms(T, 7)) ra.ampGiu = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '255,120,60', 2.0); return true; },
 };
@@ -326,7 +330,7 @@ SKILLS.vungdoc = { // Bom Vũng Độc (Flora): ném vũng độc lên đường
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     if (T.nap >= 1 && E) {
       T.nap = 0; giat(T, 1.2); const [x, y] = chopNong(T, 24); SND.doc();
       const p = G.duong[E.p], dps = dmgU(T) * 3.5, r = (30 + 2 * T.sao) * (ms(T, 7) ? 1.5 : 1), yeu = ms(T, 5);
@@ -379,7 +383,7 @@ SKILLS.min = { // Bệ Rải Mìn (Ptah): rải mìn trên đường; đôi khi 
     const E = ds.length ? ds[0] : null;
     if (T.minDichT > 0) T.minDichT -= dt; else T.minDich = null;
     xoayDau(T, T.minDich ? null : E, dt, T.minDich && T.minDich[0], T.minDich && T.minDich[1]);
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     const soMin = G.hu.filter(o => o.k === 'min' && o.T === T).length;
     if (T.nap >= 1 && E && soMin < 6) {
       const Q = pick(ds), p = G.duong[Q.p], [px, py] = viTri(p, Math.min(p.len - 16, Q.s + rnd(30, 110)));
@@ -680,13 +684,13 @@ SKILLS.anhsang = { // Tháp Ánh Sáng (Venus): quả cầu sáng = số sao; đ
 SKILLS.aten = { // Pháo Thanh Tẩy (Aten): +300% vào quái trúng độc; giết thì nổ lan
   vai: 'tc', dmg: 22.15, toc: 0.65, nham: 'dau',
   mo: (T) => '×' + (ms(T, 7) ? 6 : 4) + ' vs poisoned · kills explode ×2 in ' + (ms(T, 3) ? 70 : 50) + ' px' + (ms(T, 5) ? ' (poisons)' : ''),
-  chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (E.docT > 0 ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
+  chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (biDoc(E) ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
     giat(T, 0.9); chopNong(T, 28); SND.tia();
     const dmg = dmgU(T);
     danThang(B, T, E, 'dan_tia', 620, 24, (G, d, M) => {
       if (!M) return;
-      const doc = M.docT > 0;
+      const doc = biDoc(M); // độc thật (vũng / lây) hoặc dấu Venom
       trung(M, dmg * (doc ? (ms(T, 7) ? 6 : 4) : 1), { B, mau: doc ? '#9dff5a' : '#ffe46b' }); // 7★ PURGE
       FX.no(doc ? 'laser_trung' : 'dien', d.x, d.y, doc ? 50 : 30, 0.25);
     });
