@@ -118,7 +118,7 @@ const PX = {
   // (dựng sẵn từng cung vào bộ đệm theo góc lượng tử 1/128 vòng → mỗi khung chỉ 1 drawImage, không clip mỗi khung)
   _cung: new Map(),
   cung(ctx, x, y, r, a0, a1, nguoc, w, mau, al) {
-    if (!(r > 0.5) || Math.abs(a1 - a0) < 0.003 || (al != null && al <= 0.01)) return;
+    if (!(r > 0.5) || !(Math.abs(a1 - a0) >= 0.003) || (al != null && !(al > 0.01))) return; // góc NaN (tiến độ dạng chưa có) → bỏ, không tạo canvas 0 px làm vỡ cả lượt vẽ ụ
     const vm = this.mau('fx_vong_mong', mau); if (!vm) return;
     const q = Math.PI / 64, b0 = Math.round(a0 / q), b1 = Math.round(a1 / q), S = r * this.K_VONG, n = Math.max(8, Math.round(S * REN.s * REN.dpr));
     const key = mau + '|' + n + '|' + b0 + '|' + b1 + '|' + (nguoc ? 1 : 0);
