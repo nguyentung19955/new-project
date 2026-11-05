@@ -1,11 +1,11 @@
 /* TURRET MERGE — giao diện (khung logic 430×860, co giãn theo màn hình) */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; background: #0d0e10; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
-body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: #fff; }
+body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: #fff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
 #wrap { position: absolute; left: 50%; top: 50%; width: 430px; height: 860px; transform-origin: 50% 50%; overflow: hidden; background: #1d1f23; }
 #cv { position: absolute; inset: 0; display: block; }
 button { font-family: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: 0; }
-img { -webkit-user-drag: none; pointer-events: none; }
+img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 [hidden] { display: none !important; }
 
 /* ---------- thanh trên ---------- */

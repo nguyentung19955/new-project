@@ -42,7 +42,7 @@ Object.assign(REN, {
     ctx.globalAlpha = al * 0.16; ctx.fillStyle = mau; // nền ô (alpha 0.12–0.18)
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4, 7) : ctx.rect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4); ctx.fill();
     ctx.globalAlpha = al;
-    if (k) ctx.drawImage(k, -w / 2, -h / 2, w, h);
+    if (k) ctx.drawImage(this.mip(k, Math.min(w, h) * sc * this.s * this.dpr), -w / 2, -h / 2, w, h);
     else { ctx.strokeStyle = mau; ctx.lineWidth = 2; ctx.strokeRect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4); }
     ctx.restore();
   },
@@ -87,12 +87,12 @@ Object.assign(REN, {
       const u = (e - tre) / 0.45; if (u < 0 || u > 1 || !vr) continue;
       const r = C * (0.45 + (max - 0.45) * easeOut(u));
       ctx.globalAlpha = (1 - u) * (1 - u) * 0.95 * tat;
-      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(u * 1.2); ctx.drawImage(vr, -r, -r, r * 2, r * 2); ctx.restore();
+      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(u * 1.2); ctx.drawImage(this.mip(vr, r * 2 * this.s * this.dpr), -r, -r, r * 2, r * 2); ctx.restore();
     }
     if (vr) {
       const r = C * 0.56 * backOut(e / 0.3);
       ctx.globalAlpha = 0.55 * tat * clamp(e / 0.15, 0, 1);
-      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(this.t * 0.8); ctx.drawImage(vr, -r, -r, r * 2, r * 2); ctx.restore();
+      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(this.t * 0.8); ctx.drawImage(this.mip(vr, r * 2 * this.s * this.dpr), -r, -r, r * 2, r * 2); ctx.restore();
     }
     // 3) dây năng lượng tới từng đích (dựng trong ~200 ms, so le) + gói năng lượng chạy theo nhịp
     const day = this.toMau(S.link, mau) || this.img(S.link);
