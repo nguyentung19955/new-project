@@ -327,21 +327,26 @@ function coTrum(w) { return w % LUAT.songTrum === 0 || pvpDotTu(w) > 0; }
 function lichTrum(w) { // trùm (làn 0) của wave w trong lịch ngẫu nhiên — tính tuần tự, nhớ lại
   const k = G.hat + '|' + G.che;
   if (!G._lt || G._lt.k !== k) G._lt = { k, w: 0, cu: null, ds: {}, r: rngHat((G.hat || 1) * 2246822519 + 3266489917) };
-  const L = G._lt, n = TRUM_THU_TU.length;
+  const L = G._lt;
   while (L.w < w) {
     L.w++;
     if (!coTrum(L.w)) continue;
     if (G.che === 'coop' && L.w <= TRUM_COOP_CO_DINH) { L.ds[L.w] = L.cu = trumCoDinh(L.w); continue; } // nối tiếp không lặp từ trùm cố định cuối (wave 50)
-    let id, lan = 0; do id = TRUM_THU_TU[Math.floor(L.r() * n)]; while (id === L.cu && ++lan < 20);
+    const be = trumBe(L.w), n = be.length; // bể trùm (trum.js: 6 cũ + 6 mới, lọc theo wave xuất hiện)
+    let id, lan = 0; do id = be[Math.floor(L.r() * n)]; while (id === L.cu && ++lan < 20);
     L.ds[L.w] = L.cu = id;
   }
   return L.ds[w] || TRUM_THU_TU[0];
 }
+function trumBe(w) { // bể trùm ngẫu nhiên của wave w (TRUM_POOL ở trum.js; thiếu file → 6 trùm cũ)
+  if (typeof TRUM_POOL === 'undefined') return TRUM_THU_TU;
+  const ds = TRUM_POOL.filter(id => trumTuWave(id) <= w); return ds.length ? ds : TRUM_THU_TU;
+}
 function trumCoDinh(w) { return TRUM_THU_TU[Math.max(0, Math.ceil(w / LUAT.songTrum) - 1) % TRUM_THU_TU.length]; }
 function trumCuaWave(w, p) {
-  const n = TRUM_THU_TU.length;
   const id = G.che === 'coop' && w <= TRUM_COOP_CO_DINH ? trumCoDinh(w) : lichTrum(w);
-  return G.che === 'coop' && p === 1 ? TRUM_THU_TU[(TRUM_THU_TU.indexOf(id) + 3) % n] : id;
+  if (G.che === 'coop' && p === 1) { const be = w <= TRUM_COOP_CO_DINH ? TRUM_THU_TU : trumBe(w), i = be.indexOf(id); return be[((i < 0 ? 0 : i) + 3) % be.length]; }
+  return id;
 }
 function wavMoi() {
   G.wave++;
