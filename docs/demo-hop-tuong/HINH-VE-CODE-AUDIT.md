@@ -521,3 +521,128 @@ Cắt: `python3 tools/thap-cat-ui.py` (khoá magenta, tìm ô bằng khối li�
 - Vòng phù văn khi KỸ NĂNG GHÉP kích hoạt vẫn vẽ code (cần đúng màu họ); vòng khi TRIỆU HỒI dùng ảnh.
 - Glyph: ảnh PNG từ 14 px thiết bị trở lên, nhỏ hơn giữ vector; tải lười, tải xong tự thay ảnh DOM đang hiện bản vector.
 - Sửa lỗi đua `ND is not defined`: `UI.init` đợi cả `DOMContentLoaded` (mọi script sau ui.js đã chạy).
+
+## 5. Pass 2 — rà lại toàn bộ (2026-11-05, sau khi ráp S1–S7)
+
+Ảnh chụp (Playwright 430×860, 2×): `docs/demo-hop-tuong/tuvan/audit2/` — `01–03` menu/chọn bộ bài · `04–05` trang chi tiết ụ · `06` SOLO · `07` CO-OP (dải đồng đội mới) · `08` PVP (dải đối thủ) · `09` chạm ụ grow-up (bảng gọn) · `10` chạm ụ hỗ trợ · `11` tạm dừng · `12` kết quả · `13` trùm · `14` chạm thẻ đồng đội.
+
+Cùng phiên đã làm: bỏ thanh 3 khúc trên lõi ở CO-OP (3 đèn HUD là đủ); dải bộ bài đồng đội/đối thủ (5 thẻ + chỉ huy, chạm = thông tin); bảng thông tin gọn (ẩn dải tên nổi, 1 dòng kỹ năng, 4 ô số, nguồn buff khi có, 1 dòng grow-up, 3 chip mốc sao, nút **Details ›**). S8/S9 (khung thẻ, icon Summon, khay đồng đội, tấm LV/giá, đèn xanh, ruy-băng GROW-UP) — xem mục 6.
+
+### Tóm tắt pass 2
+
+| | Số mục |
+|---|---|
+| Phần tử còn vẽ bằng code/CSS (không phải PNG) | **46** |
+| → **THAY** | **24** (11 do S8/S9 · 11 cần tấm mới S10/S11 · 2 dùng ảnh đã có) |
+| → **GIỮ code** | **22** (số/chữ động, thanh tiến độ, vòng tròn đổi bán kính, bảng chữ) |
+| Tấm ChatGPT mới cần gen | **2** (S10, S11) |
+
+### Bảng kiểm kê pass 2
+
+| ID | Phần tử | Code hiện tại | Quyết định | Tấm |
+|---|---|---|---|---|
+| Q1 | Khung thẻ ụ ở hàng bộ bài (viền CSS màu bậc) | `hud.css #bo-the .the` box-shadow | **THAY** khung theo độ hiếm | S8 |
+| Q2 | Khung thẻ ở màn chọn bộ bài | `game.css .c` border | **THAY** | S8 |
+| Q3 | 5 ô bộ bài đã chọn (chân dung + viền màu khoá) | `.o-bo` CSS | **THAY** khung độ hiếm | S8 |
+| Q4 | Thẻ chỉ huy (REINFORCE …) hàng dưới | `#the-mv` box-shadow | **THAY** | S8 |
+| Q5 | Thẻ chỉ huy ở menu (3 thẻ) | `.mv` CSS | **THAY** | S8 |
+| Q6 | Vòng trống trong nút Summon | `ui_nut_trieu` lọc tối | **THAY** icon | S9 |
+| Q7 | Nhãn LV1 / ×N trên thẻ | `.lv` `.so` hộp CSS | **THAY** tấm | S9 |
+| Q8 | Ô giá nâng cấp (100) đáy thẻ + giá chỉ huy | `.gia` `.mv-gia` CSS | **THAY** tấm | S9 |
+| Q9 | Chấm xanh "đủ mana" | CSS chấm | **THAY** đèn | S9 |
+| Q10 | Nhãn GROW-UP trên thẻ (trận + menu) | `.gu` CSS | **THAY** ruy-băng | S9 |
+| Q11 | Khay dải đồng đội/đối thủ | `pass2.css #dp-dai` | **THAY** khay | S9 |
+| Q12 | Khung bảng thông tin chạm ụ | `#tt` viền bo tròn CSS | **THAY** khung 9 mảnh (màu bậc vẽ đè 1 vạch mảnh) | S10 |
+| Q13 | Nhãn kỹ năng trên bàn ("SHATTER ×5", "Rage!") | `render.js veChu` roundRect | **THAY** tấm viên thuốc 3 mảnh (chữ giữ) | S10 |
+| Q14 | Nút lớn Random / Start / Resume / Play again / Quit / Change deck | CSS gradient | **THAY** 2 skin (thép tối · vàng) | S10 |
+| Q15 | Nút "Add to deck" (xanh lá) | `unitpage.css .up-nut` | **THAY** skin xanh | S10 |
+| Q16 | Nút nhỏ Music/SFX/Sort + Back + ‹ › (trang chi tiết) | CSS | **THAY** skin nút nhỏ | S10 |
+| Q17 | Khung nút chế độ đang chọn (CO-OP/SOLO/PVP) | border CSS | **THAY** khung sáng | S10 |
+| Q18 | Nút "+" thêm nhanh trên thẻ menu | `.up-q` CSS | **THAY** | S10 |
+| Q19 | Biểu tượng THUA ở bảng kết quả (đang dùng vương miện cho cả thắng/thua) | `ui_thuong` | **THAY** | S10 |
+| Q20 | Thanh 3 khúc trên lõi (SOLO/PVP) | `corehud.js veHud` fillRect | **THAY** khung + khúc đầy/rỗng (chớp/nứt giữ code) | S11 |
+| Q21 | Dải ô "Boss in N" | `#tb-seg i` CSS | **THAY** 3 đèn (tắt/sáng/trùm) | S11 |
+| Q22 | Nút phát/dừng xem trước (trang chi tiết) | CSS + ký tự | **THAY** icon | S11 |
+| Q23 | Khung thanh máu trùm | gradient | **THAY** — dùng `hud_trum_khung.png` đã có | — |
+| Q24 | Đầu nhóm bậc "◆ COMMON / ■ RARE" + ô thoi góc banner hồ sơ | ký tự ◆ CSS | **THAY** — dùng `ngoc_*.png` đã có | — |
+| K1 | Phần đầy thanh máu trùm, thanh máu quái | CSS / canvas | GIỮ (động) | — |
+| K2 | Số sát thương, +mana, +1★, −1♥ | chữ | GIỮ | — |
+| K3 | Vòng màu khoá quanh bệ, đĩa huy hiệu | arc | GIỮ (màu động, tròn tuyệt đối) | — |
+| K4 | Vòng nạp kỹ năng, vòng tiến độ grow-up, 3 cung | arc | GIỮ (tiến độ) | — |
+| K5 | Vòng tầm bắn nét đứt / vùng Cryo | arc | GIỮ (bán kính động) | — |
+| K6 | Kéo-ghép: viền ô hợp lệ, cung nối, gạch chéo | canvas | GIỮ | — |
+| K7 | Chạm ụ hỗ trợ: viền đứt, ô tô màu | canvas + `sup_*` | GIỮ | — |
+| K8 | Vòng phù văn kỹ năng GHÉP (màu họ) | canvas | GIỮ | — |
+| K9 | Dây Marionette, vòng Nemesis, 9 lửa, cầu sáng, REWIND | canvas | GIỮ | — |
+| K10 | Lớp hồi chiêu thẻ chỉ huy | CSS chiều cao % | GIỮ | — |
+| K11 | Chữ "1×" trên phím tốc độ | chữ | GIỮ | — |
+| K12 | Ray mảnh dưới hàng thẻ | CSS 6 px | GIỮ | — |
+| K13 | 4 ô số + chip mốc sao + nút Details trong bảng gọn | CSS ô chữ | GIỮ (chữ phải sắc) | — |
+| K14 | Thẻ nhỏ trong dải đồng đội (26 px) | CSS viền màu khoá | GIỮ (quá nhỏ cho khung ảnh; khay là ảnh) | — |
+| K15 | Nhãn độ hiếm "MYTHIC" / "EPIC" | CSS chữ viền | GIỮ | — |
+| K16 | Hộp "Rival / You" + đèn tim PVP | chữ + `den_tim_*` | GIỮ | — |
+| K17 | Trang chi tiết: tab 1★–7★, chip Epic/Attack, thang họ, bảng chỉ số, số mục "01" | CSS chữ | GIỮ (bảng dữ liệu) | — |
+| K18 | Góc khung xem trước, thẻ 3 dạng grow-up | CSS | GIỮ | — |
+| K19 | Ô vuông màu họ "■□" khi xếp theo họ | ký tự | GIỮ | — |
+| K20 | Lớp "SOON" thẻ khoá | CSS | GIỮ | — |
+| K21 | Cut-in: vệt chéo, ánh quét | CSS hoạt ảnh trên `bang_cutin_nen` | GIỮ | — |
+| K22 | Bệ / đường / khay dự phòng khi ảnh lỗi | canvas | GIỮ (chỉ dự phòng) | — |
+
+### Prompt pass 2
+
+**S10 — Nút & khung bảng** · 1536×1536 · lưới 3×3 (ô 512) → `thap-art/raw_s10.png`
+
+| Ô | File | Đích | Dùng cho |
+|---|---|---|---|
+| 1 | `nut_lon_vang.png` | 9-slice | Start / Resume / Play again (Q14) |
+| 2 | `nut_lon_thep.png` | 9-slice | Random / Quit / Change deck / Music / SFX (Q14) |
+| 3 | `nut_lon_xanh.png` | 9-slice | Add to deck (Q15) |
+| 4 | `nut_nho.png` | 9-slice | Music/SFX/Sort, Back, ‹ › (Q16) |
+| 5 | `khung_chon.png` | 9-slice | nút chế độ đang chọn (Q17) |
+| 6 | `khung_tt.png` | 9-slice | bảng thông tin chạm ụ (Q12) |
+| 7 | `nhan_kn.png` | 3 mảnh | nhãn kỹ năng trên bàn (Q13) |
+| 8 | `nut_cong.png` | 32 | nút "+" (Q18) |
+| 9 | `ic_thua.png` | 96 | biểu tượng THUA (Q19) |
+
+```
+Game UI sheet, 3x3 grid, centered, no text:
+1 wide rounded button, glossy amber-yellow with dark steel rim
+2 wide rounded button, dark gunmetal with steel rim
+3 wide rounded button, bright green with dark steel rim
+4 small square steel keycap button
+5 thin glowing cyan selection frame, empty inside
+6 dark riveted steel info panel frame, empty inside
+7 small dark pill label plate, steel rim
+8 small round steel button with plus sign
+9 broken cracked steel shield icon, defeat
+Same style as attached: chunky cartoon mobile-game, bold dark outline, soft top-left light.
+Flat solid magenta #FF00FF background, wide gaps.
+```
+
+**S11 — Thanh nhỏ & icon** · 1536×768 · lưới 4×2 (ô 384) → `thap-art/raw_s11.png`
+
+| Ô | File | Đích | Dùng cho |
+|---|---|---|---|
+| 1 | `loi_thanh_khung.png` | 3 mảnh | khung thanh 3 khúc trên lõi (Q20) |
+| 2 | `loi_khuc_day.png` | 34×8 ×2 | khúc đầy (Q20) |
+| 3 | `loi_khuc_rong.png` | 34×8 ×2 | khúc mất (Q20) |
+| 4 | `seg_tat.png` | 16 | ô "Boss in" chưa qua (Q21) |
+| 5 | `seg_sang.png` | 16 | ô đã qua / hiện tại (Q21) |
+| 6 | `seg_trum.png` | 16 | ô trùm (Q21) |
+| 7 | `ic_phat.png` | 48 | nút phát xem trước (Q22) |
+| 8 | `ic_lui.png` | 48 | mũi tên Back / ‹ › (Q16) |
+
+```
+Game UI sheet, 4x2 grid, centered, no text:
+1 long thin empty steel bar frame with 3 slots
+2 one glowing cyan-green energy bar segment
+3 one empty dark cracked bar segment
+4 tiny square LED cell, off, dark grey
+5 tiny square LED cell, lit white-cyan
+6 tiny square LED cell, red with small skull
+7 white play triangle icon
+8 white chevron arrow icon pointing left
+Same style as attached: chunky cartoon mobile-game, bold dark outline.
+Flat solid magenta #FF00FF background, wide gaps.
+```
+(Đính kèm `thap/assets/hud_wave.png` + một ảnh đầu súng làm mẫu phong cách cho cả S10, S11.)
