@@ -39,7 +39,7 @@ const HUD2 = {
     this._du = du;
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id;
-      // (bỏ tấm đếm 'số ụ loại này trên bàn' — không rõ nghĩa, dễ tưởng là số sao của Star Cannon; DCDW không có)
+      // số ụ loại này trên bàn: js/demkn.js (.dem-u, icon chồng ụ PNG + số, không nhầm với sao)
       this.vuaThe(d);
       const duT = d.classList.contains('du');
       if (this._theDu[id] === false && duT) this.motLan(d, 'h2-glint', 900); // vừa đủ mana nâng cấp: góc sáng 1 lần

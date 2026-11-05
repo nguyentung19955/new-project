@@ -174,13 +174,7 @@ SKILLS.leviathan = {
     ctx.globalCompositeOperation = 'lighter'; // vây = lấp lánh PNG tô vàng trên vòng (thay vạch lineTo vẽ code)
     for (let i = 0; i < vay; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / vay + R.t * 0.2; PX.sao(ctx, Math.cos(a) * S * 0.385, Math.sin(a) * S * 0.385, 7, '#ffd23f', al * 0.55, a); }
     ctx.globalCompositeOperation = 'source-over';
-    if (n > 0) {
-      const s = '' + n; ctx.globalAlpha = al; ctx.font = '900 9px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const w = ctx.measureText(s).width + 8, y = S * 0.44;
-      R.anhGiua(ctx, 'h2_tag', 0, y, w + 10); // nhãn = khung PNG h2_tag
-      ctx.globalAlpha = al; ctx.fillStyle = '#bff4ff'; ctx.fillText(s, 0, y + 0.5);
-      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    }
+    // số VỰC SÂU: tấm đếm chung ở đáy ô (demkn.js)
   },
 };
 HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 0.6 s → biến mất, vệt nước bay về Leviathan
