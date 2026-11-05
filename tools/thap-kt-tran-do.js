@@ -68,6 +68,12 @@ module.exports = function doTrang(opt) {
     // chữ phải nằm trong TẤM ảnh (nền / border-image) gần nhất — tấm có thể là chính nó hoặc cha ≤ 3 bậc
     for (let x = e, d = 0; x && d < 4 && x !== document.body; x = x.parentElement, d++) {
       const xs = getComputedStyle(x);
+      // ô tướng tối giản (.ot — js/otoigian.js): chữ LV/đếm nằm TRÊN ẢNH chân dung (kiểu DCDW) — tấm của chữ là ô, chữ phải trong ô (trừ viền 6 %)
+      if (x.classList && x.classList.contains('ot')) {
+        const xr = x.getBoundingClientRect(), v = x.querySelector(':scope > img.ov'), vr = v ? v.getBoundingClientRect() : xr, k = vr.width * 0.06;
+        if (R.l < vr.left + k - 1 || R.r > vr.right - k + 1 || R.t < xr.top - 1 || R.b > Math.max(vr.bottom, xr.bottom) + 1) { out.chu.push(ten(e) + ' "' + t.slice(0, 24) + '" ra ngoài ô tối giản ' + ten(x)); daBao.add(e); }
+        break;
+      }
       const coAnh = (xs.backgroundImage && /url\(/.test(xs.backgroundImage)) || (xs.borderImageSource && xs.borderImageSource !== 'none') || x.classList.contains('ot'); // ô tối giản (o-toigian): viền là <img.ov> PNG con, chữ LV/số nằm trên ảnh trong ô
       if (!coAnh) { if (d > 0 && (cuonDuoc(xs, 'Y') || cuonDuoc(xs, 'X'))) break; continue; }
       const xr = x.getBoundingClientRect(); if (xr.height > 220) break;
