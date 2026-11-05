@@ -351,7 +351,7 @@
     o = o || {};
     x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
     let twd = 0;
-    if (title) { ui.font(11, true); twd = Math.ceil(G.ux.measureText(title).width); }
+    if (title) { const doTd = () => { ui.font(11, true); twd = Math.ceil(G.ux.measureText(title).width); }; if (G.phong) G.phong.voi('td', doTd); else doTd(); }
     // 14/10: khung bảng ảnh AI (gd-khung-bang): viền ảnh phủ từ x - 3 tới x + w + 3 (như viền code), lòng nâu; tiêu đề có vạch đồng bên dưới
     const gp = khungCo('gd-khung-bang');
     if (gp) {
@@ -391,8 +391,8 @@
   function tieuDe(title, x, y, w, h, o, anh) {
     const r = x + w - (o.rightPad || 0);
     // khung ảnh phủ từ (x - 3, y - 3) cỡ (w + 6, h + 6); khung code viền 4
-    if (anh) T.chuTrongKhung(title, x - 3, y - 3, w + 6, h + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(w, h), vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi });
-    else T.chuTrongKhung(title, x, y, w, h, { vien: [4, 4, 4, 4], vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi });
+    if (anh) T.chuTrongKhung(title, x - 3, y - 3, w + 6, h + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(w, h), vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi, vai: 'td' });
+    else T.chuTrongKhung(title, x, y, w, h, { vien: [4, 4, 4, 4], vung: [x + 7, y, r - x - 7, 19.5], align: 'left', size: 11, min: 8, bold: true, color: C.hi, vai: 'td' });
   }
   // Ô con trong bảng. sel: đang chọn (viền vàng sáng). o: { col: màu viền riêng, fill }
   T.inset = function (x, y, w, h, sel, o) {
@@ -619,7 +619,9 @@
   T.chuFont = chuFont;
   const REF = 64, MUC = new Map();
   let docCv = null, docG = null, cheDo = null, doiPhong = 0;
-  const famPhong = () => (ui.FONT || '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif');
+  const famPhong = () => (G.phong ? G.phong.ho(G.phong.vai) : ui.FONT || '"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif');
+  // Talesworn phiên E (js/phong.js): phông chủ đề vẽ ở cỡ × hệ số của vai (tiêu đề / thân) → đo ở REF × hệ số, số đo vẫn theo em của cỡ danh nghĩa
+  const refPx = () => REF * (G.phong ? G.phong.k(G.phong.vai) : 1);
   function butDo() {
     if (!docG) { docCv = document.createElement('canvas'); docCv.width = 16; docCv.height = 16; docG = docCv.getContext('2d', { willReadFrequently: true }); }
     return docG;
@@ -627,14 +629,14 @@
   const boDau = (s) => { try { return s.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) { return s; } };
   // đo bằng trình duyệt ở cỡ REF (đơn vị: em)
   function doTD(s, bold) {
-    const g = butDo(); g.font = (bold ? '700 ' : '500 ') + REF + 'px ' + famPhong(); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+    const g = butDo(); g.font = (bold ? '700 ' : '500 ') + refPx() + 'px ' + famPhong(); g.textAlign = 'left'; g.textBaseline = 'alphabetic';
     const m = g.measureText(s);
     if (m.actualBoundingBoxAscent == null) return null;
     return { w: m.width / REF, l: m.actualBoundingBoxLeft / REF, r: m.actualBoundingBoxRight / REF, a: m.actualBoundingBoxAscent / REF, d: m.actualBoundingBoxDescent / REF };
   }
   // đo bằng quét điểm ảnh (không tin số đo của trình duyệt)
   function doQuet(s, bold) {
-    const g = butDo(), f = (bold ? '700 ' : '500 ') + REF + 'px ' + famPhong();
+    const g = butDo(), f = (bold ? '700 ' : '500 ') + refPx() + 'px ' + famPhong();
     g.font = f; const W = g.measureText(s).width;
     const pad = REF, cw = Math.ceil(W + pad * 2), ch = Math.ceil(REF * 2.8), base = Math.round(REF * 1.7);
     if (docCv.width < cw || docCv.height < ch) { docCv.width = Math.max(docCv.width, cw); docCv.height = Math.max(docCv.height, ch); }
@@ -663,7 +665,7 @@
   // dưới đường cơ sở), ab (đỉnh THÂN chữ: mực trên của chuỗi đã bỏ dấu).
   T.hopMuc = function (s, bold) {
     s = String(s);
-    const k = (bold ? 1 : 0) + '|' + s;
+    const k = (bold ? 1 : 0) + (G.phong ? G.phong.vai : '') + '|' + s;
     let q = MUC.get(k);
     if (q) return q;
     const qd = chonCheDo() === 'quet' ? doQuet : (t, b) => doTD(t, b) || doQuet(t, b);
@@ -701,7 +703,7 @@
       let giau = false;
       if (DIGIT.test(s) && s.length >= 3) giau = HAS.test(mark(s));
       if (!giau) {
-        const q = T.hopMuc(G.LANG !== 'vi' && G.tv ? G.tv(s) : s, bold);
+        const q = T.hopMuc((G.LANG !== 'vi' || G.phong) && G.tv ? G.tv(s) : s, bold); // Talesworn E: tiếng Việt cũng qua lớp tên mới (đo đúng chữ sẽ vẽ)
         return { w: Math.max(q.w, q.l + q.r) * fs, a: q.a * fs, d: q.d * fs, l: q.l * fs, r: q.r * fs, adv: q.w * fs, ab: q.ab * fs, muc: true };
       }
     }
@@ -744,14 +746,19 @@
   // (x, y, w, h): khung. o: { khung: mã ảnh khung | null, vien: [t, r, b, l] viền khi khung vẽ code, dem (2), size, min (6,5), bold,
   //   dong: số dòng tối đa (mặc định 1), giãn: khoảng giữa hai dòng (2,5), align 'center' | 'left' | 'right', vung: [x, y, w, h] chỉ được đặt trong vùng này
   //   (ví dụ phần bên phải biểu tượng), phu: { s, size, bold } dòng phụ nhỏ bên dưới (nút có hai dòng), dy: dời cả khối (nút đang bấm) }
+  // Talesworn phiên E: o.vai ('td' tiêu đề) → đo và đặt bằng phông của vai đó (js/phong.js); ?phongcu=1: bỏ qua
   T.datChu = function (s, x, y, w, h, o) {
+    if (o && o.vai && G.phong && o.vai !== G.phong.vai) return G.phong.voi(o.vai, () => T.datChu(s, x, y, w, h, o));
     o = o || {};
     s = String(s == null ? '' : s);
-    const src = G.LANG === 'vi' || !G.tv ? s : G.tv(s);
-    const ps = o.phu && o.phu.s ? (G.LANG === 'vi' || !G.tv ? String(o.phu.s) : G.tv(String(o.phu.s))) : '';
+    // Talesworn E (phông mới): tiếng Việt cũng đo chữ ĐÃ qua lớp tên mới (G.tv: "Cô Thợ May" → "Cô Odile"), đúng chữ canvas sẽ vẽ;
+    // trước đây đo tên cũ rồi vẽ tên mới → lệch / tràn. ?phongcu=1: như trước phiên.
+    const khongDich = G.LANG === 'vi' && !G.phong;
+    const src = khongDich || !G.tv ? s : G.tv(s);
+    const ps = o.phu && o.phu.s ? (khongDich || !G.tv ? String(o.phu.s) : G.tv(String(o.phu.s))) : '';
     const ga = o.khung ? khungCo(o.khung) : null;
     const vg = o.vung;
-    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') + (o.trongVien ? '|tv' : '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', o.tamX, G.ux.font.replace(/^[^"]*/, ''), chuFont() ? 'm' + doiPhong : ''].join('|');
+    const key = [src, ps, G.LANG, x, y, w, h, ga ? o.khung + '|' + ga.pw + '|' + (o.kKhung || '') + '|' + (o.vienAnh || '') + (o.trongVien ? '|tv' : '') : 'c' + (o.vien || ''), o.size, o.min, o.bold ? 1 : 0, o.dong, o.align, o.dem, o.gian, vg ? vg.join(',') : '', o.phu ? o.phu.size + '|' + (o.phu.bold ? 1 : 0) : '', o.tamX, G.ux.font.replace(/^[^"]*/, ''), chuFont() ? 'm' + doiPhong : '', G.phong ? G.phong.vai : ''].join('|');
     const nho = DAT_NHO.get(key);
     if (nho) return nho;
     T.chuDo.lan++;
@@ -916,6 +923,7 @@
   };
   // Đặt và vẽ chữ trong lòng khung. o như T.datChu, thêm color, shadow, phu.color. Trả về kết quả của T.datChu.
   T.chuTrongKhung = function (s, x, y, w, h, o) {
+    if (o && o.vai && G.phong && o.vai !== G.phong.vai) return G.phong.voi(o.vai, () => T.chuTrongKhung(s, x, y, w, h, o));
     o = o || {};
     if (s == null || s === '') return null;
     const kq = T.datChu(s, x, y, w, h, o), dy = o.dy || 0;
@@ -1074,8 +1082,7 @@
     const ns = big ? 9 : elite ? 7.5 : 8;
     ui.font(6.5, true);
     const sw = o.sub ? G.ux.measureText(o.sub).width + 12 : 0;
-    ui.font(ns, true);
-    const tw = G.ux.measureText(name).width;
+    let tw = 0; const doTen = () => { ui.font(ns, true); tw = G.ux.measureText(name).width; }; if (G.phong) G.phong.voi('td', doTen); else doTen();
     // khung tinh anh rộng theo chữ (tên loài + dấu hiệu), trùm cố định
     const w = big ? 226 : elite ? Math.round(G.clamp(tw + sw + 18, 150, 224)) : 196, bh = big ? 11 : elite ? 7 : 9, ph = big ? 30 : elite ? 22 : 26;
     const x = Math.round(cx - w / 2);
@@ -1104,7 +1111,7 @@
       const ma = gkt ? (big ? 'gd-khung-trum' : elite ? 'gd-khung-tinh-anh' : 'gd-khung-trum-nho') : 'gd-khung-nho', vc = [2, 2, 2, 2], tren = [x, y, w, by - y - 0.5];
       let phai = x + w;
       if (o.sub) { const k2 = T.chuTrongKhung(o.sub, x, y, w, ph, { khung: ma, vien: vc, vung: tren, align: 'right', size: 6.5, bold: true, color: '#ffb48a' }); if (k2 && k2.lines[0]) phai = k2.lines[0].x - doChu(k2.lines[0].s, k2.size, true).w - 3; }
-      T.chuTrongKhung(name, x, y, w, ph, { khung: ma, vien: vc, vung: [x, y, phai - x, by - y - 0.5], align: o.sub ? 'left' : 'center', size: ns, min: 6.5, bold: true, color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8' });
+      T.chuTrongKhung(name, x, y, w, ph, { khung: ma, vien: vc, vung: [x, y, phai - x, by - y - 0.5], align: o.sub ? 'left' : 'center', size: ns, min: 6.5, bold: true, color: big ? '#ffe2c8' : elite ? '#ffd0a8' : '#ffd9c8', vai: 'td' });
     }
     T.bar(x + (big ? 6 : 5), by, bw, elite ? 'hp' : 'boss', o.frac, null, { h: bh, marks: 1, lag: o.lag, col: elite ? '#ff8a3a' : null, hi: elite ? '#ffc890' : null });
     // vạch pha (trùm đổi pha ở 60% và 30% máu)
@@ -1414,8 +1421,11 @@
     o = o || {};
     const size = o.size || 8, lines = ui.wrap(text, w - 14, size, true), h = Math.max(24, lines.length * (size + 3) + 15);
     x = Math.round(x); y = Math.round(y); w = Math.round(w);
-    ui.font(7.5, true);
-    const nw = name ? Math.ceil(G.ux.measureText(name).width) + 12 : 0;
+    let nw = 0; const doTen = () => { ui.font(7.5, true); nw = name ? Math.ceil(G.ux.measureText(name).width) + 12 : 0; };
+    if (G.phong && name) G.phong.voi('td', () => { // Talesworn E: phông tiêu đề có nét vươn ra ngoài bước chữ → thẻ rộng theo mực thật
+      doTen(); const q = T.hopMuc(G.tv ? G.tv(name) : name, true), fs = ui.fs(7.5, true);
+      nw = Math.max(nw, Math.ceil((q.l + q.r) * fs) + 12);
+    }); else doTen();
     const th = 14; // chu-lech-khung: thẻ tên cao 12 chỉ có lòng 8 điểm, chữ có dấu (Ông, Thợ) cao ~9 → thẻ cao 14 (lòng 10)
     // 14/10: hộp thoại ảnh AI (gd-khung-thoai, cuộn giấy hai trục): thẻ tên, đuôi, chữ vẽ như cũ; chữ nâu sẫm trên giấy kem
     const gt = khungCo('gd-khung-thoai');
@@ -1431,7 +1441,7 @@
         if (tx >= 0) for (let i = 0; i < 5; i++) { R(L + tx + i, Y + h - 1 + i, 9 - i * 2 > 0 ? 9 - i * 2 : 1, 1, i === 0 ? '#f3e8c8' : C.dk); if (9 - i * 2 > 2) R(L + tx + i + 1, Y + h - 1 + i, 7 - i * 2, 1, '#f3e8c8'); }
       }), x - L, y - 7, w + 2 + L * 2, h + 10);
       // chu-lech-khung: thẻ tên + lời thoại trong lòng cuộn giấy
-      if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi });
+      if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi, vai: 'td' });
       T.chuTrongKhung(text, x - L, y - 2, w + L * 2, h + 4, { khung: 'gd-khung-thoai', vien: [7, 11, 6, 11], align: 'left', dong: lines.length + 1, gian: 3, size, min: Math.min(size, 7), bold: true, color: '#2a1a14', shadow: false });
       return h;
     }
@@ -1445,7 +1455,7 @@
       // đuôi chỉ xuống người đang nói
       const tx = o.tail == null ? 18 : o.tail; if (tx >= 0) for (let i = 0; i < 5; i++) { R(tx + i, Y + h - 1 + i, 9 - i * 2 > 0 ? 9 - i * 2 : 1, 1, i === 0 ? '#f3e8c8' : C.dk); if (9 - i * 2 > 2) R(tx + i + 1, Y + h - 1 + i, 7 - i * 2, 1, '#f3e8c8'); }
     }), x, y - 7);
-    if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi });
+    if (name) T.chuTrongKhung(name, x + 6, y - 7, nw, th, { vien: [2, 2, 2, 2], size: 7.5, bold: true, color: C.hi, vai: 'td' });
     T.chuTrongKhung(text, x, y, w, h, { vien: [3, 5, 3, 5], align: 'left', dong: lines.length + 1, gian: 3, size, min: Math.min(size, 7), bold: true, color: '#2a1a14', shadow: false });
     return h;
   };
@@ -1567,6 +1577,7 @@
   }
   const HAS = /[\ue000-\ue00f]/;
   function richText(str, x, y, o) {
+    if (o && o.vai && G.phong && o.vai !== G.phong.vai) return G.phong.voi(o.vai, () => richText(str, x, y, o)); // Talesworn E: vai phông (js/phong.js)
     if (typeof str !== 'string' || str.length < 3) return oldText(str, x, y, o);
     const t = mark(str);
     if (!HAS.test(t)) return oldText(str, x, y, o);

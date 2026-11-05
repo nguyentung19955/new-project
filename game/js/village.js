@@ -258,7 +258,7 @@
     T.panel(248, 206, 226, 60, null, { plain: true, noBand: true });
     if (V.sel) {
       const r = V.sel[0], i = V.sel[1], R = G.REGIONS[r], b = G.stageStats(r, i, V.diff);
-      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, 220, { size: 9.5, bold: true, color: GOLD }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
+      ui.text(G.t(V.diff ? '{0} · {1} · khó 2' : '{0} · {1}', R.name, i === 4 ? 'Ải trùm' : G.t('Ải {0}', i + 1)), 256, 220, { size: 9.5, bold: true, color: GOLD, vai: 'td' }); // chu-lech-khung: +1 cho dấu chữ không chạm viền trên
       const l2 = G.t('{0} · 8 phòng · ', i === 4 ? G.t('Trùm {0}', R.bossName) : G.t('Trùm nhỏ {0}', R.mini));
       // 15/10 sua-lang-npc: dòng dài (tiếng Anh "Mini-boss … · Poison") lấn vào dưới nút Lên đò (x 404) → giữ cỡ nhỏ cũ 6,5 cho vừa
       const l3 = G.t('hệ {0}', G.EL[R.el].name);
@@ -981,7 +981,10 @@
   // TALESWORN 05/11/2026 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bìa 3 (rừng gai, js/bia.js) → logo TẠM bằng chữ:
   // "TALESWORN" to, viền mực + bóng, dòng "THE UNWRITTEN TALES" và câu chủ đề "Your blade remembers. Your enemies learn." Không trống đồng,
   // không ảnh logo LINH KHÍ. Logo vẽ tay sẽ thay sau. ?mandau=cu: màn đầu cũ (bìa 1|2 + logo LINH KHÍ + trống đồng).
+  // Talesworn phiên E (js/phong.js): chữ logo + dòng THE UNWRITTEN TALES bằng phông tiêu đề Grenze Gotisch, câu chủ đề bằng phông thân.
+  // ?phongcu=1: Be Vietnam Pro như trước.
   function titleLogoTalesworn() {
+    if (G.phong && G.phong.vai !== 'td') { G.phong.voi('td', titleLogoTalesworn); return; }
     const u = G.ux, y0 = 62;
     ui.font(34, true); u.textAlign = 'center'; u.lineJoin = 'round';
     u.fillStyle = 'rgba(0,0,0,0.6)'; u.fillText('TALESWORN', 240, y0 + 3);
@@ -995,7 +998,7 @@
     u.fillStyle = '#A86A22';
     u.fillRect(Math.round(240 - sw / 2 - 24), y0 + 11, 16, 1); u.fillRect(Math.round(240 + sw / 2 + 8), y0 + 11, 16, 1);
     ui.text(sub, 240, y0 + 14, { size: 8, bold: true, align: 'center', color: '#E9D8B2' });
-    if (T.chuTrongKhung) T.chuTrongKhung('Your blade remembers. Your enemies learn.', 90, y0 + 20, 300, 14, { vien: [0, 0, 0, 0], size: 8, min: 6.5, bold: false, color: '#F7EACA', shadow: true });
+    if (T.chuTrongKhung) T.chuTrongKhung('Your blade remembers. Your enemies learn.', 90, y0 + 20, 300, 14, { vien: [0, 0, 0, 0], size: 8, min: 6.5, bold: false, color: '#F7EACA', shadow: true, vai: 'than' });
     else ui.text('Your blade remembers. Your enemies learn.', 240, y0 + 30, { size: 8, align: 'center', color: '#F7EACA' });
   }
   function titleLogo() {

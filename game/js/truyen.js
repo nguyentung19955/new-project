@@ -377,7 +377,7 @@
     // chấm tiến độ
     const n = d.ds.length;
     for (let i = 0; i < n; i++) ui.rect(240 - n * 6 + i * 12 + 2, 14, 8, 3, i === d.i ? '#f6dc92' : 'rgba(246,220,146,0.35)');
-    if (f.tieuDe) ui.text(f.tieuDe, 240, 34, { size: 10, bold: true, align: 'center', color: '#f6dc92' });
+    if (f.tieuDe) ui.text(f.tieuDe, 240, 34, { size: 10, bold: true, align: 'center', color: '#f6dc92', vai: 'td' });
     if (T.sbtn(SKIP[0], SKIP[1], SKIP[2], SKIP[3], 'Bỏ qua ✕', { size: 8.5 })) { het(); return; }
     if (G.click) { const ok = d.t > 0.3; G.click = null; if (ok) chamTiep(); }
   };
@@ -450,7 +450,7 @@
           G.wxDat(c, 0, 0);
         }
       });
-      ds.forEach((q, i) => ui.text(G.REGIONS[i].bossName, q[1], 60, { size: 10, bold: true, align: 'center', color: q[2] }));
+      ds.forEach((q, i) => ui.text(G.REGIONS[i].bossName, q[1], 60, { size: 10, bold: true, align: 'center', color: q[2], vai: 'td' }));
     } else if (k === 'emBe') {
       G.wxDat(c, 0, 0);
       const ds = [['hunter', '#1e3a24', '#3a6a3a'], ['healer', '#12283c', '#2e5a7a'], ['wrestler', '#3a160e', '#7a3020']];

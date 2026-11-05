@@ -925,7 +925,10 @@
   });
   const eio = (x) => (x < 0.5 ? 2 * x * x : 1 - 2 * (1 - x) * (1 - x));
   const FONTS = new Map();
-  function fontOf(size) {
+  // Talesworn phiên E (js/phong.js): số sát thương bằng phông số Silkscreen; chuỗi có chữ cái (vd. "Sạch bóng quái!") rơi về phông thân.
+  // ?phongcu=1 (G.phong = null): Be Vietnam Pro như cũ.
+  function fontOf(size, s) {
+    if (G.phong) return G.phong.font(true, Math.round(size * 2) / 2, 'so', s);
     const k = Math.round(size * 2);
     let f = FONTS.get(k);
     if (!f) { f = '700 ' + (k / 2) + 'px ' + FONT; FONTS.set(k, f); }
@@ -949,7 +952,7 @@
       sc *= 0.88 + 0.12 * a;
       if (n.nay != null && S.t - n.nay < 0.12) sc *= 1 + 0.18 * (1 - (S.t - n.nay) / 0.12); // vừa cộng dồn: nảy nhẹ một nhịp
       const size = Math.max(n.min || D.coChu, n.size * sc), so = laSo(n);
-      c.font = fontOf(size);
+      c.font = fontOf(size, n.s);
       const w = c.measureText(n.s).width + 2 + (n.kind === 2 ? 36 : 0), up = size * (so ? 0.8 : 1.02), dn = size * (so ? 0.12 : 0.3);
       const x = n.x - cam;
       let y = n.y + size * 0.35 - n.day, ok = false;
@@ -970,7 +973,7 @@
       const jit = n.kind === 1 && age < 0.15 ? (((age * 60) | 0) % 2 ? 0.5 : -0.5) : 0;
       const x = n.x - cam + jit;
       c.globalAlpha = n.va;
-      c.font = fontOf(size);
+      c.font = fontOf(size, n.s);
       c.lineWidth = n.kind ? 2.4 : 1.8;
       c.strokeStyle = n.edge;
       c.strokeText(n.s, x, y);
@@ -1002,7 +1005,7 @@
       const jit = n.kind === 1 && age < 0.15 ? (((age * 60) | 0) % 2 ? 0.8 : -0.8) : 0; // chí mạng: rung nhẹ lúc mới bật
       const x = n.x - cam + jit, y = n.y + size * 0.35;
       c.globalAlpha = a;
-      c.font = fontOf(size);
+      c.font = fontOf(size, n.s);
       // viền tối quanh chữ (chí mạng, tên đòn dày hơn) để đọc rõ trên điện thoại, nền sáng hay tối đều thấy
       c.lineWidth = n.kind ? 2.4 : 1.8;
       c.strokeStyle = n.edge;

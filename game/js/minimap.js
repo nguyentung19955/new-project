@@ -194,7 +194,7 @@
       const v = gK.vien || [0, 0, 0, 0], t = Math.min(v[0], 13), r = Math.min(v[1], 48), b = Math.min(v[2], 13), l = Math.min(v[3], 48);
       ui.rect(50, 14, 380, 242, 'rgba(20,16,14,0.94)');
       G.spriteCustom.veGd(G.ux, gK, 50 - l, 14 - t, 380 + l + r, 242 + t + b);
-      ui.text(G.t('Bản đồ ải · {0} {1}', reg.name, S.i + 1), 58, 29, { size: 11, bold: true, color: '#ffd27a' });
+      ui.text(G.t('Bản đồ ải · {0} {1}', reg.name, S.i + 1), 58, 29, { size: 11, bold: true, color: '#ffd27a', vai: 'td' });
     } else ui.panel(50, 14, 380, 242, G.t('Bản đồ ải · {0} {1}', reg.name, S.i + 1));
     ui.rect(60, 36, 252, 172, 'rgba(8,16,16,0.6)', '#5a3d1a');
     grid(S, 64, 40, 244, 164, 36, 28, 12, 3);

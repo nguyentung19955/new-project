@@ -13,7 +13,10 @@
   // Phiên hiệu năng (V11): thẻ phông chữ Google không chặn vẽ nữa (media="print", tải xong mới bật): mạng chặn Google thì game không phải
   // chờ hết thời gian chờ mới chạy. Ở đây chờ tệp CSS phông về (hoặc lỗi) rồi mới nạp phông, trong cùng hạn 1,2 giây như cũ.
   try {
-    if (document.fonts && document.fonts.load) {
+    // Talesworn phiên E (05/11): phông chủ đề nhúng sẵn (js/phong.js, không cần mạng) → chờ phông nạp xong, tối đa 2,5 giây, rồi mới vẽ khung đầu.
+    // ?phongcu=1 (G.phong = null): chờ Be Vietnam Pro của Google như trước.
+    if (G.phong && G.phong.san) Promise.race([G.phong.san, new Promise((r) => setTimeout(r, 2500))]).then(start, start);
+    else if (document.fonts && document.fonts.load) {
       const lk = document.querySelector('link[href*="fonts.googleapis.com"]');
       // Phiên hiệu năng 13/10: tệp CSS phông đã LỖI trước khi tệp này chạy (mạng chặn Google, chơi ngoại tuyến): sự kiện 'error' đã qua,
       // chờ nữa chỉ phí trọn 1,2 giây trước màn chào → vào ngay (index.html ghi dấu data-loi ở onerror). Phông dự phòng như khi hết giờ chờ.

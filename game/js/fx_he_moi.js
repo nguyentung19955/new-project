@@ -357,7 +357,7 @@
   // đóng băng: biểu tượng to hơn, sáng nhấp nháy. Quái thường: bên phải thanh máu nhỏ; trùm: dưới hàng biểu tượng có sẵn trên đầu (thêm số tầng).
   const ui0 = fx.drawUI;
   function chu(c, s, x, y, mau) {
-    c.font = '700 6px "Be Vietnam Pro", system-ui, sans-serif';
+    c.font = G.phong ? G.phong.font(true, 6, 'so', s) : '700 6px "Be Vietnam Pro", system-ui, sans-serif'; // Talesworn E: số tầng bằng phông số (?phongcu=1: cũ)
     c.textAlign = 'left'; c.lineJoin = 'round'; c.lineWidth = 1.8; c.strokeStyle = 'rgba(10,8,6,0.95)';
     c.strokeText(s, x, y); c.fillStyle = mau; c.fillText(s, x, y);
   }

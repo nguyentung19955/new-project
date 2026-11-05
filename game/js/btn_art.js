@@ -765,7 +765,7 @@
   }
   function label(ctx, s, x, y, col) {
     ctx.save();
-    ctx.font = '700 6.5px ' + FONT;
+    ctx.font = G.phong ? G.phong.font(true, 6.5, 'than', s) : '700 6.5px ' + FONT; // Talesworn E: phông thân (?phongcu=1: cũ)
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.lineWidth = 1.6; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(12,8,6,0.85)';
     ctx.strokeText(s, x, y);
