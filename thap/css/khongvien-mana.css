@@ -1,0 +1,26 @@
+/* TURRET MERGE — BỎ VIỀN "ĐỦ MANA" (người dùng: "bỏ cái viền lúc đủ năng lượng đi", tuvan/vien_du_nangluong.png). Nạp CUỐI.
+   Mọi chế độ dùng chung khay #duoi (SOLO / CO-OP / PVP / ONLINE / Test range) → sửa 1 chỗ ở đây.
+   Đủ / thiếu mana đọc kiểu DCDW, KHÔNG viền / quầng / nhịp / chớp:
+   · đủ mana: thẻ sáng bình thường, số giá trắng sáng
+   · thiếu mana: cả thẻ mờ .6, số giá đỏ nhạt
+   Không đụng trạng thái ĐANG CHỌN (chonthe.css .c.chon / .o-bo.hm-armed) — chỉ lớp .du/.thieu trong trận. */
+
+/* 1) thẻ thanh bài (nâng cấp): bỏ khung khung_chon.png thở ở ::after + góc sáng 1 lần khi vừa đủ */
+html:root body #bo-the .the.du::after { content: none !important; animation: none !important; border: 0 !important; border-image: none !important; }
+html:root body #bo-the .the .h2-glint { display: none !important; animation: none !important; }
+html:root body #bo-the .the.du, html:root body #bo-the .the.co-kh.du { box-shadow: none !important; }
+html:root body #bo-the .the.du > .kh { filter: none !important; }
+
+/* 2) thẻ chỉ huy: bỏ quầng khung_chon nhịp (.cht-glow) */
+html:root body #the-mv .cht-glow, html:root body #the-mv.cht-san .cht-glow { display: none !important; animation: none !important; opacity: 0 !important; }
+
+/* 3) nút triệu hồi: bỏ 1 nhịp sáng viền khi vừa đủ (h2-san → giữ ảnh nút thường) và nhịp ::after cũ */
+html:root body #nut-trieu::after { content: none !important; animation: none !important; }
+html:root.co-hud2 body #nut-trieu.h2-san:not(.thieu):not(.an):not(:active) { background-image: url(../assets/h2_trieu_cho.png?v=0c21af52); }
+
+/* 4) đủ / thiếu: số giá trắng sáng ↔ đỏ nhạt; thẻ thiếu mờ .6 (không lọc xám, không viền) */
+html:root body #bo-the .the.thieu, html:root body #the-mv.thieu { opacity: .6; }
+html:root body #bo-the .the.thieu .gia { opacity: 1 !important; color: #ff8a7a !important; }
+html:root body #bo-the .the.du .gia { color: #f4f7fb !important; }
+html:root body #the-mv.du .mv-gia, html:root.co-hud2 body #the-mv.cht-san .mv-gia { color: #f4f7fb !important; }
+html:root body #the-mv.du.tn-day .mv-gia { color: #ff8a7a !important; } /* bàn đầy: chỉ huy không dùng được → vẫn đỏ */

@@ -33,6 +33,7 @@ const UI = {
     // Tăng tốc 2×/3× = nhiều bước hơn mỗi khung (cùng BUOC nhỏ). Sau khi chuyển tab: kẹp thời gian bù.
     let tr = -1, tichLuy = 0, alpha = 1;
     const vong = (n) => {
+      const t0v = performance.now();
       if (tr < 0) tr = n;
       let thuc = (n - tr) / 1000; tr = n;
       if (!(thuc > 0)) thuc = 0; else if (thuc > 0.1) thuc = 0.1;
@@ -48,6 +49,7 @@ const UI = {
       }
       if (!TAI.cho) REN.ve(G.dung ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh)
       if (G.ban.length && (this._hud = !this._hud)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
+      REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)
       requestAnimationFrame(vong);
     };
     requestAnimationFrame(vong);
@@ -148,7 +150,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     SND.nut();
     this.veBoChon();
   },
-  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;padding:8px 22px;border:0 solid transparent;border-image:url(assets/h2_tam_do.png) 30 44 fill / 10px 18px stretch;text-shadow:0 1px 0 #000;font-weight:900;font-size:13px;white-space:nowrap;text-align:center;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
+  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;padding:8px 22px;border:0 solid transparent;border-image:url(assets/h2_tam_do.png) 49.4 72.6 fill / 10px 18px stretch;text-shadow:0 1px 0 #000;font-weight:900;font-size:13px;white-space:nowrap;text-align:center;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
 
   vao() {
     if (this.chon.length !== 5) return;

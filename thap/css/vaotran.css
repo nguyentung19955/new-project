@@ -11,8 +11,8 @@
 
 /* băng tiêu đề */
 #nd-gt .vt-bang { width: 300px; height: 46px; display: flex; align-items: center; justify-content: center; border: 0 solid transparent;
-  border-image: url(../assets/bang_wave_nen.png) 40 110 fill / 16px 46px stretch; animation: vt-bang .32s cubic-bezier(.2,1.4,.4,1) both; animation-delay: var(--t, 0s); }
-#nd-gt .vt-bang.do { border-image-source: url(../assets/bang_trum_nen.png); }
+  border-image: url(../assets/bang_wave_nen.png?v=0cf180e5) 40 110 fill / 16px 46px stretch; animation: vt-bang .32s cubic-bezier(.2,1.4,.4,1) both; animation-delay: var(--t, 0s); }
+#nd-gt .vt-bang.do { border-image-source: url(../assets/bang_trum_nen.png?v=be089280); }
 #nd-gt .vt-bang b { font-family: var(--f-ui, inherit); font-size: 16px; font-weight: 900; letter-spacing: 1.5px; color: #fff; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
 #nd-gt .vt-bang.do b { color: #ffe1dc; }
 #nd-gt .vt-bo .vt-bang { width: 240px; height: 38px; border-image-width: 14px 40px; animation-delay: var(--t); }
@@ -22,7 +22,7 @@
 /* thẻ trùm */
 #nd-gt .vt-hang { display: flex; justify-content: center; gap: 6px; margin-top: 6px; width: 100%; }
 #nd-gt .vt-tt { position: relative; width: 132px; padding: 12px 8px 12px; display: flex; flex-direction: column; align-items: center; border: 0 solid transparent;
-  border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; animation: vt-pop .36s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(.12s + var(--i) * .14s); }
+  border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 20px stretch; animation: vt-pop .36s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(.12s + var(--i) * .14s); }
 #nd-gt .vt-tt .vt-w { font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #ffcf6a; text-shadow: 0 1px 0 #000; }
 #nd-gt .vt-tt.dau .vt-w { color: #ff8a7a; }
 #nd-gt .vt-sp { display: block; width: 84px; height: 84px; margin: 2px 0 1px; background: 0 0 / calc(var(--nf) * 100%) 100% no-repeat; animation: vt-8 .9s steps(8) infinite; filter: drop-shadow(0 3px 2px #000c); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
@@ -56,7 +56,7 @@
 @keyframes vt-truot { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: none; } }
 
 /* chạm để bắt đầu */
-#nd-gt .vt-cham { width: 230px; height: 40px; margin-top: 4px; display: flex; align-items: center; justify-content: center; background: url(../assets/h2_tam_mong.png) center / 100% 100% no-repeat;
+#nd-gt .vt-cham { width: 230px; height: 40px; margin-top: 4px; display: flex; align-items: center; justify-content: center; background: url(../assets/h2_tam_mong.png?v=030a8edb) center / 100% 100% no-repeat;
   animation: vt-nhay 1s ease-in-out infinite alternate, vt-pop .3s both; animation-delay: 1.4s; }
 #nd-gt .vt-cham b { font-size: 12px; font-weight: 900; letter-spacing: 1.5px; color: #e9edf2; }
 @keyframes vt-nhay { from { opacity: .55; } to { opacity: 1; } }

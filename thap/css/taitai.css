@@ -1,17 +1,17 @@
 /* MÀN TẢI + MÀN MẤT MẠNG (taitai.js) — chỉ ảnh ChatGPT: nen_menu, logo, khung thanh hud_trum_khung, dải đầy tai_day,
    vòng xoay fx_vong_lv, khung_bang, vong_xich, hud_trieu_san. Mức đầy = cắt ảnh (clip-path), không vẽ thanh bằng CSS. */
-#tai { position: absolute; inset: 0; z-index: 60; background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat;
+#tai { position: absolute; inset: 0; z-index: 60; background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat;
   display: flex; align-items: center; justify-content: center; }
 /* MÀN TẢI / MẤT MẠNG TRÀN MÀN (bản sửa "chỉ 1 dải ở giữa"): gắn thẳng vào <body>, phủ CẢ cửa sổ (không nằm trong khung
    430×860 của #wrap → hết cột giữa + hai dải tối hai bên/trên dưới). Nội dung co theo --tk (taitai.js đặt khi đổi cỡ). */
 body > #tai, body > #matmang { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; }
 body > #tai .tai-giua, body > #matmang .mm-bang { transform: scale(var(--tk, 1)); }
-html.dang-tai, html.dang-tai body { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
+html.dang-tai, html.dang-tai body { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
 #tai[hidden] { display: none; }
 #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; }
-#tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(../assets/logo.png) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+#tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(../assets/logo.png?v=9e998069) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #tai .tai-thanh { position: relative; width: 330px; height: 34px; border-style: solid; border-width: 0;
-  border-image: url(../assets/hud_trum_khung.png) 14 22 fill / 12px 19px stretch; }
+  border-image: url(../assets/hud_trum_khung.png?v=b7df67bd) 36.9 58 fill / 12px 19px stretch; }
 #tai .tai-day { position: absolute; left: 14px; right: 14px; top: 9px; bottom: 9px; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
 #tai .tai-day img { display: block; width: 100%; height: 100%; }
 /* SỬA: một luật img chung trong game làm ảnh dải đầy bị object-fit: contain → ảnh 192×28 co lại thành mẩu ở GIỮA rãnh.
@@ -21,7 +21,7 @@ html body #tai.nho .tai-thanh .tai-day { left: 12px; right: 12px; }
 html body #tai .tai-thanh .tai-day img { position: absolute; left: 0; top: 0; width: 100% !important; height: 100% !important;
   max-width: none !important; max-height: none !important; margin: 0 !important; object-fit: fill !important; object-position: 0 50% !important; transform: none !important; }
 /* nền màn tải phủ kín cả màn hình (cả 2 dải ngoài khung 430), không chỉ cột giữa */
-html.tai-mo, html.tai-mo body { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
+html.tai-mo, html.tai-mo body { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
 #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px var(--f-display); color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
 #tai .tai-so { font-size: 12px; opacity: .7; }
 /* khung xem trước (Test range): nền tối, chỉ thanh nhỏ ở giữa bàn */

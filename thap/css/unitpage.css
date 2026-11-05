@@ -82,7 +82,7 @@
 .up-tv .bl { left: 2px; bottom: 2px; border-right: 0; border-top: 0; } .up-tv .br { right: 2px; bottom: 2px; border-left: 0; border-top: 0; }
 .up-tv-chu { position: absolute; left: 14px; right: 14px; top: 12px; z-index: 2; display: flex; justify-content: space-between; pointer-events: none; font-family: var(--f-display); font-size: 12px; text-shadow: 0 1px 2px #000; }
 .up-tv-chu .rec { display: flex; align-items: center; gap: 5px; color: #ff6a5a; }
-.up-tv-chu .rec::before { content: ''; width: 7px; height: 7px; background: url(../assets/den_tim_bat.png) center / contain no-repeat; animation: up-nhay 1.2s steps(2) infinite; }
+.up-tv-chu .rec::before { content: ''; width: 7px; height: 7px; background: url(../assets/den_tim_bat.png?v=d26306a2) center / contain no-repeat; animation: up-nhay 1.2s steps(2) infinite; }
 @keyframes up-nhay { 50% { opacity: .2; } }
 .up-tv-chu b { color: var(--m); font-size: 14px; }
 .up-phat { position: absolute; right: 12px; bottom: 12px; z-index: 3; width: 40px; height: 40px; border-radius: 50%; background: none; border: 1px solid transparent; }
@@ -172,7 +172,7 @@
 .up-nut:active:not(:disabled) { transform: translateY(2px); }
 
 /* màn chọn: nút thêm/bỏ nhanh ở góc thẻ (chạm thân thẻ = mở hồ sơ) */
-.c .up-q { position: absolute; z-index: 6; right: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: url(../assets/nut_cong.png) center / 100% 100% no-repeat; border: 1.5px solid transparent; }
+.c .up-q { position: absolute; z-index: 6; right: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: url(../assets/nut_cong.png?v=9bba4520) center / 100% 100% no-repeat; border: 1.5px solid transparent; }
 .c .up-q::before { content: '+'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; line-height: 1; color: #fff; }
 .c .up-q::after { content: ''; position: absolute; inset: -7px; }
 

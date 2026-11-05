@@ -26,12 +26,12 @@
   --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --le: 18px;
   --tg-man: .22s; --tg-ra: .18s; --tg-nhan: .1s;
   /* họ vật liệu (ảnh ChatGPT) */
-  --vl-a: url(../assets/p7_nut1.png); --vl-a-cat: 74 128 fill;
-  --vl-a-sang: url(../assets/h2_tam_xanh.png); --vl-a-sang-cat: 30 52 fill;
-  --vl-b: url(../assets/p7_nut2.png); --vl-b-cat: 56 92 fill;
-  --vl-b-hang: url(../assets/h2_tam.png); --vl-b-hang-cat: 22 40 fill;
-  --vl-c: url(../assets/p7_tam.png); --vl-c-cat: 52 70 fill;
-  --vl-d: url(../assets/p7_tam.png); --vl-d-cat: 52 70 fill;
+  --vl-a: url(../assets/p7_nut1.png?v=5826b274); --vl-a-cat: 74 128 fill;
+  --vl-a-sang: url(../assets/h2_tam_xanh.png?v=e2d3b84d); --vl-a-sang-cat: 49.5 85.9 fill;
+  --vl-b: url(../assets/p7_nut2.png?v=244c0999); --vl-b-cat: 56 92 fill;
+  --vl-b-hang: url(../assets/h2_tam.png?v=ba7369d6); --vl-b-hang-cat: 36.4 66.1 fill;
+  --vl-c: url(../assets/p7_tam.png?v=0933bbf5); --vl-c-cat: 52 70 fill;
+  --vl-d: url(../assets/p7_tam.png?v=0933bbf5); --vl-d-cat: 52 70 fill;
 }
 
 /* ============ họ C dùng chung: ô thông tin chìm (thay khung_tt nhiều đinh tán) ============ */
@@ -48,7 +48,7 @@
 .hm-choi { height: 76px; }
 .hm-choi b { font-size: 30px; }
 .hm-choi small { font-size: var(--t-phu); }
-#chon button.hm-choi.thieu { border-image-source: url(../assets/p7_nut1_tat.png); color: var(--tv-mo); }
+#chon button.hm-choi.thieu { border-image-source: url(../assets/p7_nut1_tat.png?v=613b07dc); color: var(--tv-mo); }
 #chon button.hm-choi.thieu b { text-shadow: 0 2px 0 #000c; }
 #chon button.hm-choi.thieu small { color: var(--tv-chu); }
 .hm-tab { gap: var(--s2); }

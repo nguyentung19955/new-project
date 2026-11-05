@@ -7,7 +7,7 @@
 /* chip tài khoản (menu, góc trên trái) */
 #chon .chon-dau { position: relative; }
 #tk-chip { position: absolute; left: 6px; top: 6px; z-index: 3; display: flex; align-items: center; gap: 5px; max-width: 132px; height: 40px;
-  padding: 0 6px 0 2px; border: 0 solid transparent; border-width: 8px; border-image: url(../assets/khung_tt.png) 42 fill / 8px stretch;
+  padding: 0 6px 0 2px; border: 0 solid transparent; border-width: 8px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 8px stretch;
   background: none; color: #eef2f6; text-align: left; }
 #tk-chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex: none; }
 #tk-chip span { display: flex; flex-direction: column; min-width: 0; line-height: 1.05; }
@@ -16,8 +16,8 @@
 #tk-chip.google small { color: #9dffb0; }
 
 /* nút ONLINE trong hàng chế độ */
-.che.onl-che::before { background-image: url(../assets/ic_coop.png); }
-.che.onl-che::after { content: ''; position: absolute; left: 24px; top: 8px; width: 10px; height: 10px; background: url(../assets/led_xanh.png) center / contain no-repeat; }
+.che.onl-che::before { background-image: url(../assets/ic_coop.png?v=ab3a62d6); }
+.che.onl-che::after { content: ''; position: absolute; left: 24px; top: 8px; width: 10px; height: 10px; background: url(../assets/led_xanh.png?v=7f9fdc23) center / contain no-repeat; }
 
 /* bảng chung */
 .onl-man { z-index: 40; }
@@ -28,7 +28,7 @@
 .onl-loi { font-family: var(--f-ui); font-size: 11px; font-weight: 700; color: #ffb3a8; min-height: 14px; line-height: 1.25; word-break: break-word; }
 .onl-hang { display: flex; gap: 8px; }
 .onl-hang .nut { flex: 0 0 96px; }
-#onl-ma, #tk-ten { flex: 1; min-width: 0; height: 48px; border: 0 solid transparent; border-width: 8px 12px; border-image: url(../assets/h2_lcd.png) 36 60 fill / 8px 12px stretch;
+#onl-ma, #tk-ten { flex: 1; min-width: 0; height: 48px; border: 0 solid transparent; border-width: 8px 12px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 8px 12px stretch;
   background: none; color: #9dffb0; font-family: var(--f-so, monospace); font-size: 22px; font-weight: 800; letter-spacing: 6px; text-align: center; text-transform: uppercase;
   -webkit-appearance: none; appearance: none; outline: none; }
 #tk-ten { letter-spacing: 0; font-size: 17px; text-transform: none; text-align: left; height: 42px; }
@@ -40,7 +40,7 @@
 .tk-ten-hop { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; text-align: left; }
 .tk-ten-hop small { font-family: var(--f-ui); font-size: 10px; font-weight: 700; color: #9aa3b2; }
 .tk-so { display: flex; gap: 6px; margin: 10px 0 4px; }
-.tk-so > div { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 0 solid transparent; border-width: 6px 10px; border-image: url(../assets/h2_lcd.png) 36 60 fill / 6px 10px stretch; }
+.tk-so > div { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 0 solid transparent; border-width: 6px 10px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 6px 10px stretch; }
 .tk-so b { font-family: var(--f-so, monospace); font-size: 20px; color: #ffe08a; line-height: 1.1; }
 .tk-so span { font-family: var(--f-ui); font-size: 8px; font-weight: 800; color: #8b95a3; letter-spacing: .5px; }
 .tk-avs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 6px; }
@@ -50,9 +50,9 @@
 
 /* sảnh chờ */
 .sanh-ma { font-family: var(--f-so, monospace); font-size: 40px; font-weight: 800; letter-spacing: 10px; color: #9dffb0; text-align: center;
-  padding: 4px 0 2px 10px; margin: 4px auto 8px; width: 210px; border: 0 solid transparent; border-width: 10px 14px; border-image: url(../assets/h2_lcd.png) 36 60 fill / 10px 14px stretch; }
+  padding: 4px 0 2px 10px; margin: 4px auto 8px; width: 210px; border: 0 solid transparent; border-width: 10px 14px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 56.4 94.1 fill / 10px 14px stretch; }
 .sanh-ds { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-.sanh-p { border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_tt.png) 42 fill / 12px stretch; padding: 0 2px; text-align: left; }
+.sanh-p { border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 12px stretch; padding: 0 2px; text-align: left; }
 .sanh-p.trong { min-height: 64px; display: flex; align-items: center; justify-content: center; }
 .sanh-p.mat { opacity: .6; }
 .sp-cho { font-family: var(--f-ui); font-size: 13px; font-weight: 700; color: #b8c2cf; text-align: center; }
@@ -60,10 +60,10 @@
 .sp-dau { display: flex; align-items: center; gap: 6px; }
 .sp-av { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
 .sp-dau b { flex: 1; min-width: 0; font-family: var(--f-ui); font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-led { width: 12px; height: 12px; background: url(../assets/led_xanh.png) center / contain no-repeat; }
-.sp-led.tat { background-image: url(../assets/den_tim_tat.png); }
+.sp-led { width: 12px; height: 12px; background: url(../assets/led_xanh.png?v=7f9fdc23) center / contain no-repeat; }
+.sp-led.tat { background-image: url(../assets/den_tim_tat.png?v=06e4d913); }
 .sp-san { font-family: var(--f-ui); font-size: 10px; font-weight: 800; color: #9aa3b2; padding: 3px 10px; }
-.sanh-p.san .sp-san { color: #b8ffc8; text-shadow: 0 1px 0 #000; border: 0 solid transparent; border-width: 0 9px; border-image: url(../assets/h2_tam_xanh.png) 0 40 fill / 0 9px / 0 stretch; }
+.sanh-p.san .sp-san { color: #b8ffc8; text-shadow: 0 1px 0 #000; border: 0 solid transparent; border-width: 0 9px; border-image: url(../assets/h2_tam_xanh.png?v=e2d3b84d) 0 66.1 fill / 0 9px / 0 stretch; }
 .sp-bo { display: flex; gap: 4px; margin-top: 6px; align-items: flex-end; }
 .sp-u { position: relative; flex: 1; aspect-ratio: 3 / 4; max-width: 44px; }
 .sp-u img { position: absolute; inset: 8% 8% 8% 8%; width: 84%; height: 84%; object-fit: cover; }

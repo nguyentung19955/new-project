@@ -154,8 +154,8 @@
 #the-mv:active { transform: translateY(2px); }
 
 /* ---------- RÀ SOÁT VẼ TAY pass 4 · board: khung DOM nhận diện ụ = ảnh ChatGPT, không viền/bóng/bo tròn vẽ CSS ---------- */
-#nd-dai { border: 0 solid transparent; border-radius: 0; box-shadow: none; background: none; border-image: url(../assets/h2_tam_xanh.png) 0 40 fill / 0 14px / 0 stretch; }
-#nd-gt .gt-o { border: 0 solid transparent; border-radius: 0; background: none; border-image: url(../assets/khung_chon.png) 34 fill / 10px stretch; }
+#nd-dai { border: 0 solid transparent; border-radius: 0; box-shadow: none; background: none; border-image: url(../assets/h2_tam_xanh.png?v=e2d3b84d) 0 66.1 fill / 0 14px / 0 stretch; }
+#nd-gt .gt-o { border: 0 solid transparent; border-radius: 0; background: none; border-image: url(../assets/khung_chon.png?v=daa6d148) 34 fill / 10px stretch; }
 #nd-gt .gt-u { filter: none; }
 #dp-dai .dp-the { box-shadow: none; border-radius: 0; }
 #dp-dai .dp-the::after { content: none; }

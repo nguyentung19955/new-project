@@ -2,13 +2,13 @@
 #bo-the .the .dem-u { position: absolute; z-index: 5; right: calc(15.6% + 1px); top: calc(var(--khh, 74px) * .838 - 14px); height: 13px; box-sizing: border-box;
   display: flex; align-items: center; gap: 1px; padding: 0 4px 0 2px; pointer-events: none; white-space: nowrap;
   font: 800 9px/13px var(--f-display); color: #f2f6fa; text-shadow: 0 1px 0 #000;
-  border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 4px / 0 stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tag.png?v=2a927b84) 0 23.1 fill / 0 4px / 0 stretch; }
 #bo-the .the .dem-u img { width: 9px; height: 9px; display: block; }
 #bo-the .the .dem-u b { font: inherit; }
 #bo-the .the .dem-u[hidden], #dp-dai .dp-dem[hidden] { display: none !important; }
 /* dải thẻ nhỏ đồng đội / đối thủ: số ụ trên bàn CỦA HỌ, góc trên-phải ô chân dung */
 #dp-dai .dp-the .dp-dem { position: absolute; z-index: 3; right: -2px; top: -2px; left: auto; height: 9px; padding: 0 2px 0 1px; gap: 0;
   display: flex; align-items: center; pointer-events: none; font: 800 7px/9px var(--f-display); color: #f2f6fa; text-shadow: 0 1px 0 #000;
-  border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 3px / 0 stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tag.png?v=2a927b84) 0 23.1 fill / 0 3px / 0 stretch; }
 #dp-dai .dp-the .dp-dem img { width: 7px; height: 7px; display: block; }
 #dp-dai .dp-the { overflow: visible; }

@@ -17,7 +17,7 @@
 #up.up7.ra { animation: up7-ra .18s var(--e-exit) forwards; pointer-events: none; }
 @keyframes up7-vao { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes up7-ra { to { opacity: 0; transform: translateY(12px); } }
-#up.up7 .up-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg) center / cover no-repeat; opacity: .32; pointer-events: none; }
+#up.up7 .up-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; opacity: .32; pointer-events: none; }
 #up.up7 > :not(.up-nen) { position: relative; z-index: 1; }
 
 /* thanh trên: ‹ (về) · TURRET FILE n/85 · ‹‹ ›› (lướt) */
@@ -64,13 +64,13 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 /* 4 thông số 2×2 trên tấm thép mảnh h2_tam */
 #up.up7 .up-spec { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; padding: 0; border: 0; border-image: none; background: none; }
 #up.up7 .up-spec div { height: 52px; padding: 0 16px; display: flex; flex-direction: column; justify-content: center; min-width: 0;
-  border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png) 14 40 fill / 8px 14px stretch; }
+  border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png?v=ba7369d6) 23.1 66.1 fill / 8px 14px stretch; }
 #up.up7 .up-spec small { font-size: 11px; font-weight: 700; color: var(--c-mo); }
 #up.up7 .up-spec b { margin-top: 1px; font-size: 17px; line-height: 1.1; color: var(--c-chu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* thẻ kỹ năng 1–2 dòng (chạm = chi tiết) */
 #up.up7 .up-kn { position: relative; display: block; width: 100%; margin-top: 12px; padding: 4px 8px 6px; text-align: left; color: var(--c-chu); background: none;
-  border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; }
+  border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 10px stretch; }
 #up.up7 .up-kn small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--c-lam); }
 #up.up7 .up-kn-chu { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 3px; padding-right: 54px;
   font-size: 15px; font-weight: 700; line-height: 1.3; }
@@ -79,7 +79,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 
 /* hàng TEST RANGE */
 #up.up7 .up-hang-ts { width: 100%; height: 56px; margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 0 8px; background: none; color: var(--c-chu); text-align: left;
-  border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png) 14 40 fill / 8px 14px stretch; }
+  border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png?v=ba7369d6) 23.1 66.1 fill / 8px 14px stretch; }
 #up.up7 .up-hang-ts .ic { width: 32px; height: 32px; flex: none; }
 #up.up7 .up-hang-ts b { font-size: 15px; font-weight: 800; }
 #up.up7 .up-hang-ts span { flex: 1; font-size: 12px; font-weight: 700; color: var(--c-mo); }
@@ -89,13 +89,13 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #up.up7 .up-cuoi { padding: 6px 20px 18px; background: none; }
 #up.up7 .up-bo { display: none; }
 #up.up7 .up-nut { position: relative; flex: 1; height: 66px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 0 40px; background: none; color: #3a1d00; text-shadow: 0 1px 0 #ffe2a0;
-  border: 0 solid transparent; border-width: 0; border-image: url(../assets/nut_lon_vang.png) 44 80 fill / 30px 56px stretch; }
+  border: 0 solid transparent; border-width: 0; border-image: url(../assets/nut_lon_vang.png?v=6bc90e94) 91.2 165.8 fill / 30px 56px stretch; }
 #up.up7 .up-nut-chu { font-family: var(--f-display); font-size: 20px; font-weight: 800; line-height: 1.05; white-space: nowrap; }
 #up.up7 .up-nut-so { font-size: 11px; font-weight: 800; opacity: .75; }
 #up.up7 .up-nut-so:empty { display: none; }
-#up.up7 .up-nut.bo, #up.up7 .up-nut:disabled { border-image-source: url(../assets/nut_lon_thep.png); color: #e9edf2; text-shadow: 0 1px 0 #000; }
+#up.up7 .up-nut.bo, #up.up7 .up-nut:disabled { border-image-source: url(../assets/nut_lon_thep.png?v=8d894a00); color: #e9edf2; text-shadow: 0 1px 0 #000; }
 #up.up7 .up-nut:disabled { opacity: .6; }
-#up.up7 .up-nut::after { content: ''; position: absolute; left: 50%; top: -22px; width: 154px; height: 71px; margin-left: -77px; background: url(../assets/h2_burst.png) center / contain no-repeat; opacity: 0; pointer-events: none; }
+#up.up7 .up-nut::after { content: ''; position: absolute; left: 50%; top: -22px; width: 154px; height: 71px; margin-left: -77px; background: url(../assets/h2_burst.png?v=2a0085aa) center / contain no-repeat; opacity: 0; pointer-events: none; }
 #up.up7 .up-nut.nhay::after { animation: up7-chop .32s ease-out; }
 @keyframes up7-chop { 0% { opacity: 0; transform: scale(.7); } 28% { opacity: 1; } 100% { opacity: 0; transform: scale(1.08) translateY(-6px); } }
 
@@ -103,7 +103,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #up.up7 .up-man { position: absolute; inset: 0; z-index: 5; background: #05070bcc; opacity: 0; pointer-events: none; transition: opacity .18s ease-out; }
 #up.up7.mo-ct .up-man, #up.up7.mo-ts .up-man { opacity: 1; pointer-events: auto; }
 #up.up7 .up-tam { position: absolute; left: 6px; right: 6px; bottom: 0; z-index: 6; display: flex; flex-direction: column; max-height: 84%; padding: 2px 6px 10px;
-  border: 0 solid transparent; border-width: 18px; border-image: url(../assets/khung_bang.png) 56 fill / 18px stretch;
+  border: 0 solid transparent; border-width: 18px; border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 18px stretch;
   transform: translateY(104%); visibility: hidden; transition: transform .2s var(--e-exit), visibility 0s .2s; }
 #up.up7 .up-ct { height: 80%; }
 #up.up7.mo-ct .up-ct, #up.up7.mo-ts .up-ts { transform: none; visibility: visible; transition: transform .26s var(--e-out), visibility 0s; }
@@ -143,7 +143,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #onl-sanh.sanh7.vao .s7-moi { animation: s7-len .28s var(--e-out); }
 @keyframes s7-vao { from { opacity: 0; } to { opacity: 1; } }
 @keyframes s7-len { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-#onl-sanh .s7-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg) center / cover no-repeat; opacity: .38; pointer-events: none; }
+#onl-sanh .s7-nen { position: absolute; inset: 0; background: url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; opacity: .38; pointer-events: none; }
 #onl-sanh .s7-dau { position: relative; height: 56px; display: flex; align-items: center; padding: 0 8px; }
 #onl-sanh .s7-dau b { flex: 1; text-align: center; font-size: 15px; font-weight: 900; letter-spacing: .16em; color: var(--c-chu); }
 #onl-sanh .s7-dau i { width: 48px; }
@@ -151,7 +151,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #onl-sanh .s7-lui img { width: 40px; height: 40px; }
 /* tấm mời: mã to + COPY + SHARE */
 #onl-sanh .s7-moi { position: relative; margin: 18px 22px 0; padding: 18px 18px 20px; display: flex; flex-direction: column; align-items: center;
-  border: 0 solid transparent; border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; }
+  border: 0 solid transparent; border-image: url(../assets/khung_bang.png?v=0e0b278f) 85.2 fill / 20px stretch; }
 #onl-sanh .s7-moi small { font-size: 13px; font-weight: 800; letter-spacing: .16em; color: var(--c-mo); }
 #onl-sanh .sanh-ma { width: 236px; margin: 8px auto 14px; padding: 6px 0 4px 10px; font-size: 44px; letter-spacing: 12px; }
 #onl-sanh .s7-nut2 { display: flex; gap: 10px; width: 100%; }
@@ -165,7 +165,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 @keyframes s7-huy { from { transform: scale(.6); } to { transform: none; } }
 /* 2 hàng người chơi */
 #onl-sanh .sanh-ds { margin: 22px 22px 0; gap: 12px; }
-#onl-sanh .sanh-p { height: 88px; min-height: 0; display: flex; align-items: center; gap: 12px; padding: 0 6px; border-width: 0; border-image: url(../assets/khung_tt.png) 42 fill / 12px stretch; text-align: left; }
+#onl-sanh .sanh-p { height: 88px; min-height: 0; display: flex; align-items: center; gap: 12px; padding: 0 6px; border-width: 0; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 12px stretch; text-align: left; }
 #onl-sanh .sanh-p.trong { justify-content: flex-start; }
 #onl-sanh .sanh-p.vao { animation: s7-den .24s ease-out; }
 @keyframes s7-den { from { opacity: 0; } to { opacity: 1; } }
@@ -192,7 +192,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #onl-sanh .sanh-ping, #onl-sanh .onl-loi { margin: 6px 22px 0; text-align: center; }
 #onl-sanh .s7-cuoi { position: absolute; left: 22px; right: 22px; bottom: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 #onl-sanh .s7-cuoi small { font-size: 12px; font-weight: 700; color: var(--c-mo); min-height: 15px; }
-#onl-sanh .s7-cuoi .nut { width: 100%; flex: none; height: 66px; font-size: 20px; letter-spacing: .08em; border-width: 0; border-image-slice: 44 80 fill; border-image-width: 30px 56px; }
+#onl-sanh .s7-cuoi .nut { width: 100%; flex: none; height: 66px; font-size: 20px; letter-spacing: .08em; border-width: 0; border-image-slice: 91.3 165.9 fill; border-image-width: 30px 56px; }
 #onl-sanh.ca-hai .s7-cuoi .nut { animation: s7-chay .8s ease-in-out infinite alternate; }
 @keyframes s7-chay { to { filter: brightness(1.15); } }
 @media (prefers-reduced-motion: reduce) { #onl-sanh.sanh7.vao, #onl-sanh.sanh7.vao .s7-moi, #onl-sanh .s7-cham i, #onl-sanh.ca-hai .s7-cuoi .nut, #onl-sanh .s7-ok.hien img { animation: none; } }
@@ -212,7 +212,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #nd-gt.vt7 .vt-tt.dau { width: 340px; padding: 14px 18px 18px; display: flex; flex-direction: column; align-items: center; animation: vt7-lon .24s var(--e-out) both; }
 @keyframes vt7-lon { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
 #nd-gt.vt7 .vt-tt.dau .vt-w { height: 30px; padding: 0 22px; display: flex; align-items: center; font-size: 13px; letter-spacing: .14em; color: #ffd9d2;
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_do.png) 0 50 fill / 0 18px stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_do.png?v=d0a9aca1) 0 82.5 fill / 0 18px stretch; }
 #nd-gt.vt7 .vt-tt.dau .vt-sp { width: 200px; height: 200px; margin: 6px 0 2px; }
 #nd-gt.vt7.hai .vt-tt.dau .vt-sp { width: 168px; height: 168px; }
 #nd-gt.vt7 .vt-tt.dau .vt-w2 { display: none; }
@@ -225,7 +225,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 /* 2 ô trùm sắp tới */
 #nd-gt.vt7 .vt-sau { width: 360px; display: flex; gap: 10px; margin-top: 12px; }
 #nd-gt.vt7 .vt-sau .vt-tt { flex: 1; min-width: 0; width: auto; height: 96px; padding: 4px 6px; flex-direction: row; align-items: center; gap: 4px;
-  border-image: url(../assets/khung_tt.png) 42 fill / 12px stretch; animation: vt7-lon .24s var(--e-out) both; animation-delay: calc(.12s + var(--i) * .1s); }
+  border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 12px stretch; animation: vt7-lon .24s var(--e-out) both; animation-delay: calc(.12s + var(--i) * .1s); }
 #nd-gt.vt7 .vt-sau .vt-tt > .vt-w { display: none; }
 #nd-gt.vt7 .vt-sau .vt-sp { flex: none; width: 66px; height: 66px; margin: 0; }
 #nd-gt.vt7 .vt-sau .vt-chu { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -244,7 +244,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #nd-gt.vt7 .vt-mini .kh { inset: 0; width: 100%; height: 100%; }
 /* CONTINUE + đếm ngược */
 #nd-gt.vt7 .vt-cham { width: 300px; height: 68px; margin-top: 22px; flex-direction: column; gap: 0; background: none; border: 0 solid transparent;
-  border-image: url(../assets/nut_lon_vang.png) 44 80 fill / 30px 56px stretch; animation: vt7-mo .2s .5s both; }
+  border-image: url(../assets/nut_lon_vang.png?v=6bc90e94) 91.2 165.8 fill / 30px 56px stretch; animation: vt7-mo .2s .5s both; }
 #nd-gt.vt7 .vt-cham b { line-height: 1.1; font-size: 19px; letter-spacing: .12em; color: #3a1d00; text-shadow: 0 1px 0 #ffe2a0; }
 #nd-gt.vt7 .vt-cham small { line-height: 1.1; font-size: 11px; font-weight: 800; color: #3a1d00b0; }
 @media (prefers-reduced-motion: reduce) { #nd-gt.vt7 .vt-sp, #nd-gt.vt7 .vt-tt, #nd-gt.vt7 .vt-tt b, #nd-gt.vt7 .vt-ng, #nd-gt.vt7 .vt-doi, #nd-gt.vt7 .vt-cham { animation: none; } }
@@ -268,7 +268,7 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #ketqua.kq7 .kq-o small { font-size: 11px; letter-spacing: .12em; color: var(--c-mo); }
 #ketqua.kq7 .kq-o b { font-size: 26px; }
 #ketqua.kq7 .kq-o em { font-size: 11px; }
-#ketqua.kq7 .kq-meo { padding: 8px 16px 12px; text-align: left; border: 0 solid transparent; border-image: url(../assets/khung_tt.png) 42 fill / 12px stretch; }
+#ketqua.kq7 .kq-meo { padding: 8px 16px 12px; text-align: left; border: 0 solid transparent; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 47.1 fill / 12px stretch; }
 #ketqua.kq7 .kq-meo small { margin-top: 4px; font-size: 11px; letter-spacing: .12em; color: var(--c-mo); }
 #ketqua.kq7 .kq-meo small.kq-tn { margin-top: 8px; color: var(--c-lam); }
 #ketqua.kq7 .kq-meo > span { display: block; font-size: 15px; font-weight: 700; color: var(--c-chu); }
@@ -282,5 +282,5 @@ html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to botto
 #ketqua.kq7 .kq-bo img { width: 34px; height: 34px; }
 #ketqua.kq7 .bang-nut { width: 100%; margin-top: auto; display: flex; flex-direction: column-reverse; gap: 10px; animation: kq7-mo .22s .36s both; }
 #ketqua.kq7 .bang-nut .nut { flex: none; width: 100%; height: 52px; font-size: 15px; }
-#ketqua.kq7 .bang-nut .nut.chinh { height: 66px; font-size: 20px; letter-spacing: .06em; border-width: 0; border-image-slice: 44 80 fill; border-image-width: 30px 56px; }
+#ketqua.kq7 .bang-nut .nut.chinh { height: 66px; font-size: 20px; letter-spacing: .06em; border-width: 0; border-image-slice: 91.3 165.9 fill; border-image-width: 30px 56px; }
 @media (prefers-reduced-motion: reduce) { #ketqua.kq7 .kq-ic, #ketqua.kq7 .bang-ten, #ketqua.kq7 .kq-so, #ketqua.kq7 #kq-chi, #ketqua.kq7 .bang-nut, #ketqua.kq7.mo-ct .kq-ct { animation: none; } }
