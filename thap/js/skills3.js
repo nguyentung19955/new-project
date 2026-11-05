@@ -196,7 +196,7 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
 
 // =====================================================================================================
 // G2 · HYDRA (hydra) — Vàng TC: số nòng = số sao (tối đa 6), mỗi nòng bắn 1 quái KHÁC (ưu tiên gần lối ra), 55% sát thương/nòng.
-//      7★ "HỢP ĐẦU": 6 nòng nhập 1 → tia khổng lồ xuyên toàn bộ quái trên 1 đường, ×6, 0.6 lần/s. GROW-UP: 1–3★ / 4–6★ / 7★.
+//      7★ "HỢP ĐẦU": 6 nòng nhập 1 → tia khổng lồ xuyên toàn bộ quái trên 1 đường, ×6, 0.6 lần/s. Forms: 1–3★ / 4–6★ / 7★.
 // =====================================================================================================
 SKILLS.hydra = {
   vai: 'tc', dmg: 15, toc: 1.2, nham: 'dau',
@@ -251,7 +251,7 @@ SKILLS.cuuvi = {
   vai: 'tc', dmg: 16, toc: 1.2, nham: 'dau',
   sinh(G, T) { T.duoi = 0; T.trumAcc = 0; },
   heSo: (T) => 2 + 0.5 * T.sao,
-  mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + 5 * (T.duoi || 0) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · AWAKENED: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per 8% HP dealt',
+  mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + 5 * (T.duoi || 0) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · NINE-TAIL: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per 8% HP dealt',
   them(T, n) {
     T.duoi = Math.min(9, (T.duoi || 0) + n);
     if (T.duoi >= 9) this.xa(T);
@@ -575,20 +575,20 @@ themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)')
 
 Object.assign(MOC_RIENG, {
   luoicheo: { 5: ['RESONANCE LINK', 'Diagonal turrets also +15% fire rate'] },
-  cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['AWAKENED', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
+  cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
   hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] },
   pandora: { 3: ['QUICK HANDS', '+20% fire rate'], 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'Every opening fires 2 effects'] },
   ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart)'] },
 });
 
 Object.assign(GROW, {
-  hydra: { mau: '#2ee89a', ten: ['HATCHLING', 'MANY HEADS', 'FUSED HEAD'], dk: '1–3★ / 4–6★ (more barrels, glow) / 7★ AWAKENED: barrels fuse into a ×6 piercing beam',
+  hydra: { mau: '#2ee89a', ten: ['HATCHLING', 'MANY HEADS', 'FUSED HEAD'], dk: '1–3★ / 4–6★ (more barrels, glow) / 7★: barrels fuse into a ×6 piercing beam',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: (T.sao - 1) / 6, v: [0.5] }) },
-  cuuvi: { mau: '#ffa020', lap: true, ten: ['KIT', 'BLAZING TAILS', 'NINE-TAIL AWAKENED'], dk: 'Tails 0–4 / 5–8 (fire glow) · 7★ AWAKENED: white-blue foxfires, blast 40 px',
+  cuuvi: { mau: '#ffa020', lap: true, ten: ['KIT', 'BLAZING TAILS', 'NINE-TAIL'], dk: 'Tails 0–4 / 5–8 (fire glow) · 7★: white-blue foxfires, blast 40 px',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : (T.duoi || 0) >= 5 ? 2 : 1, p: T.sao >= 7 ? 1 : (T.duoi || 0) / 9, v: [5 / 9] }) },
   luoicheo: { mau: '#45e0c8', lap: true, ten: ['IDLE', 'HUMMING', 'RESONANCE'], dk: 'Diagonal turrets 0–1 / 2–3 / all 4 (only the 3 middle-row centre cells) = RESONANCE ×1.5',
     gd: (T) => { const n = SKILLS.luoicheo.dem(T); return { s: n >= 4 ? 3 : n >= 2 ? 2 : 1, p: n / 4, v: [0.5] }; } },
-  ngaithoigian: { mau: '#ff2a3a', ten: ['DIAL', 'TWELVE HOURS', 'THRONE OF TIME'], dk: '1–3★ / 4–6★ / 7★ AWAKENED (restores a heart) · ring = REWIND charge (from 3★)',
+  ngaithoigian: { mau: '#ff2a3a', ten: ['DIAL', 'TWELVE HOURS', 'THRONE OF TIME'], dk: '1–3★ / 4–6★ / 7★ (restores a heart) · ring = REWIND charge (from 3★)',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: T.sao >= 3 ? T.nap : (T.sao - 1) / 2, v: [] }) },
   combo: { mau: '#ff8a2a', khongAnh: true, ten: ['WARM-UP', 'ON A ROLL', 'OVERDRIVE'], dk: 'COMBO 0–9 / 10–19 (2 spinning rings) / 20+ (red-hot core)',
     gd: (T) => { const n = SKILLS.combo.hieuLuc(G.ban[T.ban] || { combo: 0 }); return { s: n >= 20 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 20), v: [0.5] }; } },

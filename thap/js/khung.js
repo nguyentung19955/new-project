@@ -26,7 +26,7 @@ const KHUNG = {
   let n = 0; const xong = () => { if (++n === 6) document.documentElement.classList.add('co-khung'); };
   for (const b of ['trang', 'xanh', 'tim', 'vang', 'do', 'mv']) KHUNG.tai('the_khung_' + b, 'co-k-' + b, xong);
   KHUNG.tai('ui_khay_doi', 'co-khay', () => { if (typeof DP !== 'undefined' && DP.el && !DP.el.hidden) DP.ve(); });
-  KHUNG.tai('ui_lv', 'co-lv'); KHUNG.tai('ui_gia', 'co-gia'); KHUNG.tai('ui_den_xanh', 'co-den'); KHUNG.tai('ui_grow', 'co-grow');
+  KHUNG.tai('ui_lv', 'co-lv'); KHUNG.tai('ui_gia', 'co-gia'); KHUNG.tai('ui_den_xanh', 'co-den');
   KHUNG.tai('ui_trieu_ic', 'co-trieu', () => { const im = document.querySelector('#nut-trieu .tr-cap > img'); if (im) { im.src = 'assets/ui_trieu_ic.png'; im.classList.add('ic-trieu'); } });
   if (typeof UI === 'undefined') return;
   const bac = (id) => (G.rosterMap[id] && G.rosterMap[id].bac) || 'trang';

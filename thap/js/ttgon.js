@@ -25,7 +25,7 @@
       if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
       L.push('<div class="d-so g1">' + esc(so) + '</div>');
     }
-    if (laGrow(id) && GROW[id]) { // grow-up: 1 dòng
+    if (false) { // (bỏ dòng chữ grow-up — người chơi tự khám phá)
       const g = GROW[id];
       let d = '<b style="color:' + g.mau + '">GROW-UP</b> ';
       if (T) { const st = g.gd(T); d += st.s + '/3 <b style="color:' + g.mau + '">' + esc(g.ten[st.s - 1]) + '</b> · ' + Math.round(clamp(st.p, 0, 1) * 100) + '%'; }

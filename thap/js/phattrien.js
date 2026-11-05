@@ -41,7 +41,7 @@ const HO_MOI = {
   overlord: 'thunder blast + aftershock arcs (active-tier finisher)',
   sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
   lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +65% fire rate (stacks)',
-  bua: 'crits knock back', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'grows into an AWAKENED wolf: every hit crits',
+  bua: 'crits knock back', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'changes form into an Alpha wolf: every hit crits',
   phagiap: 'weakens one enemy', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'stronger per same-star turret',
   cauvong: 'weakens EVERY enemy on a painted stretch',
   bomhen: 'timed bomb on one enemy', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
@@ -79,7 +79,7 @@ const MOC_RIENG = {
   vungdoc:   { 3: ['TWIN POOLS', 'Throws a second pool'], 5: ['CORROSION', 'Pools weaken: +15% damage taken'], 7: ['TOXIC LAKE', 'Pools 50% wider'] },
   aten:      { 3: ['BIG BANG', 'Kill explosion 70 px'], 5: ['TOXIC BLAST', 'Kill explosion poisons'], 7: ['PURGE', '×6 vs poisoned'] },
   cuongno:   { 3: ['HOT BLOOD', 'Rage lasts 8s'], 5: ['BLOODLUST', 'Frenzy lasts 7s'], 7: ['RAMPAGE', 'Frenzy: +25% crit'] },
-  soi:       { 3: ['HUNTER', 'Grow-up stage 2: +40% fire rate'], 5: ['AWAKEN', 'Stage 3: every hit crits, ×2 speed'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
+  soi:       { 3: ['HUNTER', 'Form 2: +40% fire rate'], 5: ['ALPHA', 'Form 3: every hit crits, ×2 speed'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
   hopbi:     { 3: ['QUICK OPEN', 'Opens 10s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },
   tienhoa:   { 3: ['FAST GROWTH', 'Evolves 20% faster'], 5: ['BREAKTHROUGH', '25% chance of +2★'], 7: ['ASCEND', 'Picks your highest-tier card'] },
@@ -149,7 +149,7 @@ const GROW = {
     gd: (T) => ({ s: T.nap >= 0.9 ? 3 : T.nap >= 0.6 ? 2 : 1, p: T.nap, v: [0.6, 0.9] }) },
   lophanung: { mau: '#9fe6ff', lap: true, ten: ['IDLE CORE', 'HEATING', 'CRYO STORM READY'], dk: 'Active charge <50% / 50–99% / full (tap to FREEZE)',
     gd: (T) => ({ s: T.nap >= 1 || T.bungT > 0 ? 3 : T.nap >= 0.5 ? 2 : 1, p: T.nap, v: [0.5, 1] }) },
-  soi: { mau: '#ff4b3e', ten: ['PUP', 'HUNTER', 'AWAKENED'], dk: 'Hunter: 3★ or 20 kills · Awakened: 5★ or 50 kills (30% are born awakened)',
+  soi: { mau: '#ff4b3e', ten: ['PUP', 'HUNTER', 'ALPHA'], dk: 'Hunter: 3★ or 20 kills · Alpha: 5★ or 50 kills (30% are born as Alpha)',
     gd: (T) => {
       const k = T.giet || 0, s = T.thuc || T.sao >= 5 || k >= 50 ? 3 : T.sao >= 3 || k >= 20 ? 2 : 1;
       return { s, p: s === 3 ? 1 : Math.max(k / 50, (T.sao - 1) / 4), v: [0.4, 1] };
