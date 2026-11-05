@@ -60,7 +60,7 @@ Không chơi thử bằng tay, chỉ chụp màn hình tự động.
 - `tran-4-trum-nho[-cu].png`, `tran-4-trum-nho-chieu-1.png`: Old Mudwhisker.
 - `tran-3-trum[-cu].png`, `tran-3-trum-chieu-2.png`: Vulpina.
 - `tran-4-trum[-cu].png`, `tran-4-trum-chieu-1.png`: Lindworm.
-- GIF từng động tác, phóng to ×3: `anh/gif-<tên>-<hàng>.gif`, ví dụ `gif-vulpina-atk_c3.gif`, `gif-lindworm-atk_c2.gif`, `gif-oldMudwhisker-atk_chieu1.gif`.
+- GIF từng động tác, phóng to ×3: `anh/gif-<tên>-<hàng>.gif`, ví dụ `gif-hoTinh-pl-atk_c3.gif`, `gif-lindworm-atk_c2.gif`, `gif-oldMudwhisker-atk_chieu1.gif`.
 
 ## Cách làm (theo quy trình của báo cáo pixellab-quai-nam)
 
@@ -142,4 +142,4 @@ Nhân vật trên PixelLab mang tên "Talesworn <tên tiếng Anh>" (vẫn còn 
 
 Commit trên `khoi-tao-du-an`:
 - `b67f97a`, `bfd0e4d`: vùng 3 (+ dựng lại dist sau khi gộp).
-- `7e401a9` và các commit dựng lại dist / báo cáo ngay sau: vùng 4.
+- `7e401a9`, `ecbe6c1`, `13ec44c`: vùng 4 (+ dựng lại dist, báo cáo).
