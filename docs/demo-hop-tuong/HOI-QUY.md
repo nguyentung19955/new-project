@@ -57,3 +57,7 @@ dải đầy của thanh tải không trải hết rãnh.
 ## Vì sao sửa xong lại sinh lỗi
 Nhiều phiên cùng sửa thap/ một lúc, mỗi phiên chỉ chụp màn mình sửa. Luật CSS chung (vd. `img { object-fit: contain }`, `!important` ở tvA/tvb/tvc/otoigian)
 đè lên màn khác mà không ai nhìn lại. Bộ kiểm này đi hết mọi màn ở 4 cỡ → chạy trước khi push là thấy ngay.
+
+## 2026-11-05 — 404 trum_hive.png / trum_jammer.png (390x844, trum_jammer/prism/twin_core/patcher)
+Sau khi hive/jammer có ảnh riêng (TRUM_ANH), lúc trùm báo chiêu `quaianim.js` vẫn nạp dải 4 khung `trum_<id>` (không tồn tại) → 404 lặp.
+Sửa: bỏ nạp dải 4 khung cho trùm đã có ảnh riêng (dùng dải _8 / dải đánh). Kiểm lại 390x844x3 NHANH: XANH.
