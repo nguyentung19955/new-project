@@ -3,6 +3,7 @@
 # tính PILOT_FIT (x canh mặt). Nguồn: docs/demo-hop-tuong/thap-art/redo/pilot_<id>_v3.png (nếu có) hoặc _v2.png → thap/assets/pilot_<id>.png.
 # In ra dòng PILOT_FIT để dán vào thap/js/khung.js. Bảng xem: docs/demo-hop-tuong/tuvan/pilotfit/all.png
 import re, json, sys, numpy as np
+sys.exit('BỎ: công cụ này làm MỜ đỉnh tóc (dải kéo dài + blur) và chỉ 256 px — dùng tools/thap-pilot-net.py')
 from PIL import Image, ImageFilter, ImageDraw
 import os
 R=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..')+'/'

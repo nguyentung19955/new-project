@@ -1,0 +1,117 @@
+{
+ "rep": {
+  "01-home": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 2
+  },
+  "02-deck": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 91
+  },
+  "03-presets": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 91
+  },
+  "04-xem": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 92
+  },
+  "05-mvs": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 91
+  },
+  "06-unit-revolver": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 92
+  },
+  "07-commander": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 92
+  },
+  "08-sanh": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 91
+  },
+  "1-solo-vaotran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 6
+  },
+  "1-solo-tran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 6
+  },
+  "1-solo-tt": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 7
+  },
+  "1-solo-ketqua": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 6
+  },
+  "1-coop-vaotran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 18
+  },
+  "1-coop-tran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 12
+  },
+  "1-pvp-vaotran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 18
+  },
+  "1-pvp-tran": {
+   "mask": [],
+   "overlay": [],
+   "blur": [],
+   "badge": [],
+   "n": 12
+  }
+ },
+ "errs": []
+}

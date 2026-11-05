@@ -155,7 +155,7 @@ const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'd
 function iconOf(id) { return 'assets/nho/' + id + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }
-// ảnh trên thẻ: chân dung phi công to ở giữa + icon ụ nhỏ ở góc; chưa có phi công → icon ụ to
-function cardArt(id) { return hasPilot(id) ? '<img class="anh pilot" src="' + portraitOf(id) + '" alt=""><img class="ic" src="' + iconOf(id) + '" alt="">' : '<img class="anh" src="' + iconOf(id) + '" alt="">'; }
+// ảnh trên thẻ: chỉ chân dung phi công (KHÔNG huy hiệu/icon tròn nhỏ cạnh mặt — người dùng yêu cầu bỏ; độ hiếm = màu khung); chưa có phi công → icon ụ to
+function cardArt(id) { return hasPilot(id) ? '<img class="anh pilot" src="' + portraitOf(id) + '" alt="">' : '<img class="anh" src="' + iconOf(id) + '" alt="">'; }
 // phủ tên/kỹ năng tiếng Anh lên dữ liệu roster (roster.json giữ bản tiếng Việt ở ten_vi / kyNang_vi)
 function applyText(roster) { for (const r of roster) { const t = TEXT.turret[r.id]; if (t) { r.ten = t.name; r.kyNang = t.skill; } } return roster; }

@@ -53,7 +53,7 @@ MUC = {
     # thẻ / chân dung (DOM <img>)
     'the_khung_trang': (1.45, ['raw_s8.png'], 'dac'), 'the_khung_xanh': (1.45, ['raw_s8.png'], 'dac'), 'the_khung_tim': (1.45, ['raw_s8.png'], 'dac'),
     'the_khung_vang': (1.45, ['raw_s8.png'], 'dac'), 'the_khung_do': (1.45, ['raw_s8.png'], 'dac'), 'the_khung_mv': (2.05, ['raw_s8.png'], 'dac'),
-    'af_hero': (1.85, ['raw_commanders.png'], 'dac'), 'af_dahlia': (1.85, ['raw_commanders.png'], 'dac'), 'af_eve': (1.85, ['raw_commanders.png'], 'dac'),
+    'af_hero': (1.6, ['raw_commanders.png'], 'dac'), 'af_dahlia': (1.6, ['raw_commanders.png'], 'dac'), 'af_eve': (1.6, ['raw_commanders.png'], 'dac'),  # 474 → tối đa độ nét raw (ô 724)
     # HUD dưới (DOM nền 100% 100% / contain — không phụ thuộc cỡ điểm ảnh)
     'h2_burst': (1.6, ['raw_hud2_12.png'], 'sang'),
     'h2_trieu_cho': (1.55, ['raw_hud2_01.png'], 'dac'), 'h2_trieu_san': (1.55, ['raw_hud2_01.png'], 'dac'), 'h2_trieu_an': (1.55, ['raw_hud2_01.png'], 'dac'),
