@@ -10,6 +10,7 @@
 //   python3 -m http.server 8765 &
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-online-mock-server.js 8787 &
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-hoiquy.js            (SIZES=390x844x3 để chạy 1 cỡ; NHANH=1 bỏ wave 12)
+//   (gồm cả tools/thap-kt-online-sanh.js — sảnh online qua đường code Firebase với SDK + máy chủ giả, tự bật cổng 8790/8791; CHI=sanh)
 // Ảnh chụp mỗi lỗi: OUT (mặc định docs/demo-hop-tuong/hoiquy/). Thoát mã 1 nếu còn lỗi.
 'use strict';
 const { chromium } = require('playwright');
@@ -396,8 +397,14 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-keo.js'), BASE], { stdio: 'pipe', env: process.env }); console.log(String(o).trim()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'keo', loai: 'kéo-thả bộ bài', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kéo-thả: kẹt'); }
   }
-  const b = await chromium.launch();
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
+  // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
+  // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần
+  if (CHI.test('sanh') || CHI.test('online')) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-online-sanh.js')], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log('  ✓ sảnh online (thap-kt-online-sanh.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^FAIL|Error/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-online-sanh.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'sanh', loai: 'online sảnh', chi: l.slice(0, 300), anh: '' }); console.log('  ✗ sảnh online: ' + ds.length + ' dòng (node tools/thap-kt-online-sanh.js)'); }
+  }
+  const b = await chromium.launch();
   for (const [W, H, D] of SIZES) {
     const co = W + 'x' + H; console.log('— ' + co + ' DPR ' + D);
     if (CHI.test('landau')) await lanDau(b, W, H, D, co).catch(e => loi(null, co, 'landau', 'kẹt', [e.message]));

@@ -8,6 +8,7 @@ Chỉ chạy trên BẢN XUẤT BẢN (nhánh claude/mobile-tower-defense-game-k
  · index.html: <script src="js/x.js?v=băm"> / <link href="css/x.css?v=băm"> (băm 8 ký tự từng tệp)
  · js/ver-anh.js: ANH_V = { 'quai_bo_side_8': 'băm', … } → REN.taiAnh tải 'assets/<tên>.png?v=băm'
  · ver.json {v}: + đoạn kiểm tra ở đầu index.html (fetch no-store) — bản trang đang mở cũ hơn bản trên máy chủ → tải lại 1 lần
+   (KHÔNG tải lại khi đã vào sảnh/trận online: ONL.code / ONS.on — tải lại giữa sảnh làm mất người nghe của chủ phòng)
 """
 import hashlib, json, os, re, sys
 
@@ -52,7 +53,7 @@ h = re.sub(r'(src)="((?:assets)/[^"]+\.(?:png|jpg)(?:\?[^"]*)?)"', gan, h)  # �
 h = re.sub(r'(<script src="js/)', '<script src="js/ver-anh.js?v=' + bam(va) + '"></script>\n  \\1', h, count=1)
 V = hashlib.sha1(''.join(re.findall(r'\?v=([0-9a-f]{8})', h)).encode()).hexdigest()[:10]
 kt = ('<script id="tm-ver">(function(){var V="%s";try{fetch("ver.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()})'
-      '.then(function(j){if(j&&j.v&&j.v!==V){var k="tm-ver-tai";if(sessionStorage.getItem(k)!==j.v){sessionStorage.setItem(k,j.v);location.reload()}}})'
+      '.then(function(j){if(j&&j.v&&j.v!==V){if(typeof ONL!=="undefined"&&ONL.code||typeof ONS!=="undefined"&&ONS.on)return;var k="tm-ver-tai";if(sessionStorage.getItem(k)!==j.v){sessionStorage.setItem(k,j.v);location.reload()}}})'
       '.catch(function(){})}catch(e){}})();</script>') % V
 h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="tm-ver" content="%s">\n  %s' % (V, kt), 1)
 open(ip, 'w', encoding='utf-8').write(h)

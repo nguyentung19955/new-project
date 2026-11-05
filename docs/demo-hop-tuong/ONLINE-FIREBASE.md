@@ -294,6 +294,22 @@ Kết quả (2 context Playwright 390×844, ảnh `tuvan/online/2may_*.jpg` — 
 - Máy chủ: **0 thao tác bị rules từ chối**, 0 phòng còn lại (đã xoá phòng thử), 0 lỗi trang.
 `tools/thap-kt-online.js` (máy chủ giả cũ) cũng cập nhật cho luồng mới: hết trận → phòng bị xoá → phòng mới → trận mới — toàn bộ OK.
 
+### Sửa lỗi "không vào game được" (05/11 tối — `lobby_host_ket.png` / `lobby_khach_ket.png`)
+
+- **Nguyên nhân**: sảnh chủ phòng chỉ tìm đồng đội qua ô `khach` và có một cờ cũ `_khachCo` (không bao giờ xoá). Khách vào sảnh, **rời rồi vào lại**
+  (hoặc sự kiện `khach` đến trước `pl/{uid}`) → máy chủ phòng tự đặt `khach = null` và không bao giờ nhận lại (giá trị trên máy chủ không đổi nên
+  không có sự kiện mới) → chủ phòng thấy mãi "Waiting for teammate…", khách thấy cả 2 READY "Both ready — launching…" nhưng chỉ chủ phòng
+  được ghi bắt đầu trận → không ai vào trận. Chữ "Creating room…" / "Joining…" trên sảnh chỉ là chữ cũ không được xoá.
+- **Sửa** (`js/online/phong.js`, `net.js`): chủ phòng lấy đồng đội từ `khach` hoặc người còn lại trong `pl/`; bỏ cờ `_khachCo`; bắt đầu trận bằng
+  **transaction** trên `meta` (`NET.tx`) — chủ phòng ghi ngay, khách tự ghi nếu sau 1,5 s chưa thấy `st='tran'` (luật chặt §4 chỉ cho chủ phòng
+  ghi `meta` → khách bị từ chối thì im lặng chờ); nhịp 1 s tự kiểm lại sảnh; xoá chữ trạng thái khi vào sảnh; **tải lại trang ở sảnh → tự vào lại
+  đúng phòng** (uid ẩn danh của Firebase giữ nguyên → vẫn là chủ phòng/khách); đoạn tự tải bản mới (`ver.json`, `tools/thap-ver.py`)
+  **không tải lại** khi đang ở sảnh/trận online.
+- **Kiểm**: `tools/thap-kt-online-sanh.js` (đã gắn vào `tools/thap-kt-hoiquy.js`, `CHI=sanh`) — 2 context Playwright, đường code Firebase thật
+  với SDK giả + máy chủ giả **thi hành đúng file luật** (`tools/thap-fb-gia/luat.js`), chạy cả luật đang publish lẫn luật chặt: mã phòng, link mời,
+  khách rời–vào lại, chủ phòng tải lại, khách tải lại, chủ phòng im → khách bắt đầu; cả 2 vào trận ≤ 3 s, cùng hạt giống, không lỗi trang,
+  không bị luật từ chối ngoài dự kiến, dọn sạch phòng thử. Code cũ: bài này ĐỎ đúng như ảnh người dùng gửi. Firebase thật vẫn không gọi được từ máy kiểm.
+
 ## 7. Quay lui
 
 - Tắt online cho mọi người: để `apiKey: ""` trong `thap/js/online/firebase-config.js` (hoặc xoá 6 dòng `js/online/*.js` + 1 dòng `css/online.css` trong `thap/index.html`).

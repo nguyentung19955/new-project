@@ -1,0 +1,4 @@
+{"rules":{"turretmerge":{
+  "profiles":{"$uid":{".read":"auth != null",".write":"auth != null && auth.uid === $uid"}},
+  "rooms":{"$code":{".read":"auth != null",
+    ".write":"auth != null && (!data.exists() || data.child('members').child(auth.uid).exists() || newData.child('members').child(auth.uid).exists())"}}}}}

@@ -1,11 +1,11 @@
 // Fake firebase compat (app+auth+database) for local tests, talking to server.js over WebSocket.
 (function () {
   const WS = 'ws://localhost:8790';
-  let ws, ready, rid = 0, sid = 0; const pend = {}, subsCb = {}, subsPath = {}; let hello = null;
+  let ws, ready, rid = 0, sid = 0; const pend = {}, subsCb = {}, subsPath = {}, subsCancel = {}; let hello = null;
   function connect() {
     ws = new WebSocket(WS);
     ready = new Promise(ok => ws.onopen = ok);
-    ws.onmessage = e => { const m = JSON.parse(e.data); if (m.op === 'res') { const p = pend[m.rid]; delete pend[m.rid]; p && p(m); } else if (m.op === 'val') { const c = subsCb[m.id]; c && c(m.v); } else if (m.op === 'cancel') { console.error('fake rtdb: read denied ' + subsPath[m.id]); } };
+    ws.onmessage = e => { const m = JSON.parse(e.data); if (m.op === 'res') { const p = pend[m.rid]; delete pend[m.rid]; p && p(m); } else if (m.op === 'val') { const c = subsCb[m.id]; c && c(m.v); } else if (m.op === 'cancel') { const h = subsCancel[m.id]; delete subsCb[m.id]; if (h) h(Object.assign(new Error('permission_denied'), { code: 'PERMISSION_DENIED' })); else console.warn('fake rtdb: read denied ' + subsPath[m.id]); } };
   }
   connect();
   function send(o) { return ready.then(() => new Promise(ok => { o.rid = ++rid; pend[o.rid] = ok; ws.send(JSON.stringify(o)); })); }
@@ -47,10 +47,10 @@
       async update(v) { await hello; chk(await send({ op: 'update', path, v })); },
       async remove() { await hello; chk(await send({ op: 'remove', path })); },
       async once() { await hello; if (path.startsWith('.info')) return snap(key, path === '.info/connected' ? true : 0); const m = chk(await send({ op: 'get', path })); return snap(key, m.v); },
-      on(ev, cb) {
+      on(ev, cb, huy) {
         if (path === '.info/connected') { setTimeout(() => cb(snap('connected', true)), 0); return cb; }
         if (path === '.info/serverTimeOffset') { setTimeout(() => cb(snap('o', 0)), 0); return cb; }
-        const id = ++sid; subsPath[id] = path; const seen = new Set();
+        const id = ++sid; subsPath[id] = path; if (typeof huy === 'function') subsCancel[id] = huy; const seen = new Set();
         subsCb[id] = (v) => {
           if (ev === 'value') cb(snap(key, v));
           else if (ev === 'child_added' && v && typeof v === 'object') for (const k of Object.keys(v).sort()) { if (seen.has(k)) continue; if (q && q.startAt && k < q.startAt) continue; seen.add(k); cb(snap(k, v[k])); }

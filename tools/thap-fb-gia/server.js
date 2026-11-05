@@ -20,23 +20,24 @@ function denorm(v) { // object with 0..n keys -> array (like RTDB)
   return o; }
 function sv(v) { if (v && typeof v === 'object') { if (v['.sv'] === 'timestamp') return Date.now(); const o = Array.isArray(v) ? [] : {}; for (const k in v) o[k] = sv(v[k]); return o; } return v; }
 function setIn(t, p, v) { const ks = split(p); if (!ks.length) return norm(v) || {}; t = t || {}; let c = t; for (let i = 0; i < ks.length - 1; i++) { if (c[ks[i]] == null || typeof c[ks[i]] !== 'object') c[ks[i]] = {}; c = c[ks[i]]; } c[ks[ks.length - 1]] = v; return norm(t) || {}; }
-// rules
-function canRead(uid, p) { const k = split(p); if (!uid) return false; return k[0] === 'turretmerge' && (k[1] === 'profiles' || k[1] === 'rooms') && k.length >= 3; }
-function canWrite(uid, p, newRoot) {
-  const k = split(p); if (!uid || k[0] !== 'turretmerge' || k.length < 3) return false;
-  if (k[1] === 'profiles') return uid === k[2];
-  if (k[1] === 'rooms') { const base = 'turretmerge/rooms/' + k[2]; const data = get(root, base), nd = get(newRoot, base);
-    return data == null || !!(data.members && data.members[uid] != null) || !!(nd && nd.members && nd.members[uid] != null); }
-  return false;
-}
-function commit(newRoot) { root = newRoot; if (LOG) fs.writeFileSync(LOG, JSON.stringify(root)); notify(); }
+// rules — thi hành ĐÚNG file luật JSON (luat.js). Mặc định: luật đang publish (luat-dang-chay.json, xem ONLINE-FIREBASE.md §1);
+// RULES=docs/demo-hop-tuong/turretmerge-database.rules.json = bản luật chặt (§4).
+const LUAT = require('./luat.js').tao(JSON.parse(fs.readFileSync(process.env.RULES || require('path').join(__dirname, 'luat-dang-chay.json'), 'utf8')));
+console.log('fake rtdb rules:', process.env.RULES || 'luat-dang-chay.json');
+function canRead(uid, p) { return !!uid && LUAT.doc(uid, root, p); }
+function canWrite(uid, dsP, newRoot) { if (!uid) return 'PERMISSION_DENIED'; const r = LUAT.ghi(uid, root, newRoot, dsP.map(split)); if (r) { denied.push(['rule', uid, r.o]); return r.loi; } return null; }
+function commit(newRoot) { root = newRoot; if (LOG) fs.writeFileSync(LOG, JSON.stringify(root)); huyKhongDoc(); notify(); }
+// như RTDB: mất quyền đọc (vd. bị xoá khỏi members) → người nghe bị huỷ
+function huyKhongDoc() { for (const [ws, m] of subs) for (const [id, s] of m) if (!canRead(uids.get(ws), s.path)) { m.delete(id); denied.push(['read-revoked', uids.get(ws), s.path]); ws.send(JSON.stringify({ op: 'cancel', id, err: 'PERMISSION_DENIED' })); } }
 function notify() { for (const [ws, m] of subs) for (const [id, s] of m) { const v = JSON.stringify(denorm(get(root, s.path))); if (v !== s.last) { s.last = v; ws.send(JSON.stringify({ op: 'val', id, v: JSON.parse(v) })); } } }
 function doWrite(uid, op, p, v) {
   v = sv(clone(v));
   let nr = clone(root) || {};
-  if (op === 'set') { nr = setIn(nr, p, v); if (!canWrite(uid, p, nr)) return 'PERMISSION_DENIED'; }
-  else if (op === 'remove') { nr = setIn(nr, p, null); if (!canWrite(uid, p, nr)) return 'PERMISSION_DENIED'; }
-  else if (op === 'update') { const paths = Object.keys(v); for (const k of paths) nr = setIn(nr, p + '/' + k, v[k]); for (const k of paths) if (!canWrite(uid, p + '/' + k, nr)) return 'PERMISSION_DENIED'; }
+  if (op === 'set') nr = setIn(nr, p, v);
+  else if (op === 'remove') nr = setIn(nr, p, null);
+  else if (op === 'update') { for (const k of Object.keys(v)) nr = setIn(nr, p + '/' + k, v[k]); }
+  const e = canWrite(uid, op === 'update' ? Object.keys(v).map(k => p + '/' + k) : [p], nr);
+  if (e) return e;
   commit(nr); return null;
 }
 const wss = new WebSocketServer({ port: PORT });
@@ -60,4 +61,4 @@ wss.on('connection', ws => {
   });
   ws.on('close', () => { const uid = uids.get(ws); for (const o of od.get(ws) || []) { const e = doWrite(uid, o.kind, o.path, o.v); if (e) denied.push(['od', uid, o.path]); } subs.delete(ws); od.delete(ws); uids.delete(ws); });
 });
-console.log('fake rtdb on', PORT);
+wss.on('listening', () => console.log('fake rtdb on', PORT));

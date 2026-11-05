@@ -82,6 +82,10 @@ wss.on('connection', (ws) => {
         if (/^turretmerge\/rooms\/[A-Z]{4}$/.test(P) && m.v && m.v.khach) { const cu = lay(P + '/khach'); if (cu && cu !== ws.uid) return tl(null, 'PERMISSION_DENIED'); }
         for (const k in m.v) datGiaTri(P + '/' + k, m.v[k]); baoThayDoi(P); return tl(null);
       case 'remove': datGiaTri(P, null); baoThayDoi(P); return tl(null);
+      case 'cas': { // so-và-ghi cho NET.tx (transaction): giá trị đã đổi → báo thử lại
+        const cu = lay(P); if (JSON.stringify(cu == null ? null : cu) !== m.cu) return tl({ lai: true });
+        datGiaTri(P, m.v); baoThayDoi(P); return tl({ lai: false });
+      }
       case 'sub': {
         const key = ws.uid + ':' + m.sid + ':' + Math.random();
         const s = { ws, sid: m.sid, p: P, ev: m.ev, sau: m.sau, biet: new Set() };
