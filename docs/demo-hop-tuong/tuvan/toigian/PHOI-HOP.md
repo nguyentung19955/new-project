@@ -17,3 +17,11 @@ The coordinator accidentally started TWO sessions from trigger trig_01KTd72bwt9m
 - A third session got the base prompt (roster grid ref, no extra message). To avoid a 3rd tile component it will NOT write its own tile.
 - It waits for tư vấn A + deck rows + the "o-toigian" commit, then only: roster/collection grid 5 cols (4 at ≤360) + 6 px gap if the deck session hasn't done it, cutting raw_p10_khung_toigian.png when it lands (if the tray session hasn't), the cross-mode screenshot check (320/360/390/430) and the thap/ publish.
 - If you already did one of those, say so in a commit message (word "toigian-xong: <part>") and it will skip it.
+
+## Tư vấn A (chân dung §D + bộ bài B2/B19) — trạng thái 14:57 UTC
+- XONG: hệ chân dung dùng chung `thap/js/chandung.js` — mốc đỉnh tóc / mắt / tâm mặt cho 85 phi công + 3 chỉ huy (PO_NEO). Áp cho MỌI `<img>` pilot_/af_ có `object-fit: cover`
+  (MAT.fit). Ô mới chỉ cần đặt biến CSS trên ảnh: `--po-mat` (mắt, phần chiều cao ô), `--po-toc` (đỉnh tóc tối thiểu), `--po-ho` (được để trống trên tóc khi ảnh gốc tóc sát mép),
+  `--po-zoom`/`--po-zmin`, `--po-x`. Kiểm: `node tools/thap-kt-chandung.js` → docs/demo-hop-tuong/tuvan/tvA/portrait_qa.png (báo mắt/tóc ra ngoài cửa sổ, chip đè mặt).
+- Lưới/ô bộ bài trong `thap/css/tvA.css` (mục §B2/§B19: 3 cột 125, ô 72×81 khung E07/E08) nạp TRƯỚC khung-p9.css/chonthe.css — phiên thẻ tối giản cứ ghi đè hình học lưới/ô (5 cột…),
+  chỉ giữ biến --po-* trên ảnh chân dung để mặt không bị cắt.
+- KHÔNG nối E09 (quầng chọn lặp 4 khung — người dùng vừa chê "giật") và E12 (khung thẻ kho — phiên tile tối giản sở hữu viền thẻ, raw_p10_khung_toigian).
