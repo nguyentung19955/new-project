@@ -57,3 +57,11 @@ Ghi chú cho phiên sau:
 ## Quay lui
 
 - Không có thay đổi game. Nếu cần bỏ báo cáo: revert commit này.
+
+## Lần chạy lại theo lịch — 05/11/2026 (phiên session_017N7QXqfkK27mirk6Hvvt7g)
+
+- Kiểm lại: máy chạy lần này **vẫn không có `/root/.plk`** (và không có khoá trong biến môi trường). Dừng đúng như đề bài.
+- Không gọi PixelLab (chi phí **0 lượt**), không sửa `game/**`, HUD đang chạy giữ nguyên, không đăng web mới.
+- Bảng kiểm kê HUD ở trên vẫn dùng được cho phiên sau.
+- **Chủ game cần làm:** gửi khoá PixelLab kèm lần chạy tiếp (tệp .txt đính kèm). Lịch chạy tự động sẽ còn dừng ở bước này cho tới khi có khoá —
+  nên tạm tắt lịch hoặc chạy lại bằng tay khi đã có khoá.
