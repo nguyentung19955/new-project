@@ -1,0 +1,79 @@
+/* TURRET MERGE — THẺ CHỈ HUY TRONG TRẬN (SOLO/CO-OP/PVP) — nạp CUỐI, ghi đè mọi lớp cũ của #the-mv.
+   Người chơi phải luôn nhìn rõ chỉ huy: chân dung ĐỦ MÀU, mặt khung bằng FACE_BOX (khung.js MAT.fit), trong khung ChatGPT the_khung_mv.
+   Chỉ dùng ảnh PNG ChatGPT + chữ/số (thap/QUY-TAC-HINH.md). Vòng quét = ảnh vòng PNG + mặt nạ cắt hình quạt (mask), không vẽ cung.
+   Đổi ảnh (khi có tấm Pass 4 riêng cho thẻ chỉ huy — HINH-VE-CODE-AUDIT.md raw_p4_board_4) chỉ cần sửa các biến dưới đây.
+   Hộp thiết kế 90×110 (khung 430 px, #wrap tự co theo màn). */
+#the-mv {
+  --cht-glow: url(../assets/khung_chon.png);      /* sẵn sàng: quầng xanh (ảnh khung chọn) */
+  --cht-bien: url(../assets/h2_tag.png);          /* tấm tên kỹ năng */
+  --cht-chip: url(../assets/h2_chip.png);         /* ô giá: hốc ngọc + số */
+  --cht-chip-tat: url(../assets/h2_chip_tat.png);
+}
+html body #the-mv, html body #the-mv.co-kh {
+  width: 90px; height: 110px; padding: 0; background: transparent !important; border: 0 !important; border-radius: 0 !important;
+  box-shadow: none !important; filter: none !important; overflow: visible;
+}
+html body #the-mv::after, html body #the-mv::before { content: none !important; animation: none !important; }
+html body #the-mv.thieu, html body #the-mv.du { filter: none !important; }
+/* khung ChatGPT: đúng tỉ lệ ảnh (271×328) — không bóp dẹt */
+html body #the-mv > .kh { position: absolute; left: 5px; top: 0; width: 80px; height: 97px; z-index: 2; pointer-events: none; object-fit: fill; }
+/* cửa sổ chân dung: x 15.6–84.4 %, y 18.9–83.8 % của khung; chừa đáy cho tấm tên */
+html body #the-mv .mv-ic, html body.co-khung #the-mv.co-kh .mv-ic, html.co-khung body #the-mv.co-kh .mv-ic {
+  position: absolute; z-index: 1; left: 17.5px; width: 55px; top: 18.3px; height: 51px; margin: 0; overflow: hidden; background: #0d0f14;
+}
+html body #the-mv .mv-ic .mv-anh { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; background: none; box-shadow: none; overflow: hidden; }
+html body #the-mv .mv-ic .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: none; transition: filter .25s; }
+html body #the-mv .mv-ic .ki { display: none !important; }   /* icon kỹ năng đè ngực/mặt → bỏ, tên kỹ năng đã có ở tấm dưới */
+/* tấm tên kỹ năng: mép dưới cửa sổ, không đè mặt */
+html body #the-mv .mv-ten, html body #the-mv .mv-ten[style], html.co-khung body #the-mv.co-kh .mv-ten {
+  position: absolute; z-index: 3; left: 11px; right: 11px; width: auto; top: 68px; height: 15px !important; margin: 0; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+  border: solid transparent; border-width: 4px 6px; border-image: var(--cht-bien) 10 16 10 16 fill / 4px 6px / 0 stretch; box-sizing: border-box;
+  background: none; color: #f2f6fa; font-family: var(--f-ui, inherit); font-weight: 800; letter-spacing: .02em; line-height: 1;
+  text-shadow: 0 1px 0 #000; padding: 0; font-size: 8.5px;
+}
+/* ô giá: hốc ngọc mana chung + số to */
+html body #the-mv .mv-gia, html.co-hud2 body #the-mv .mv-gia, html.co-hud2.co-khung body #the-mv.co-kh .mv-gia, html.co-hud2.co-gia body #the-mv .mv-gia {
+  position: absolute; z-index: 3; left: 50%; right: auto; top: 86px; bottom: auto; width: 70px; margin-left: -35px; height: 24px;
+  padding: 0 0 0 24px; display: flex; align-items: center; justify-content: center; gap: 1px;
+  border: 0; border-image: none !important; box-shadow: none; background: var(--cht-chip) center / 100% 100% no-repeat;
+  color: #f0f4f8; font-size: 15px; font-weight: 900; line-height: 1;
+}
+html body #the-mv .mv-gia img, html.co-hud2 body #the-mv .mv-gia img { position: absolute; left: 4px; top: 4px; width: 16px; height: 16px; content: url(../assets/h2_ngoc.png); }
+html body #the-mv .mv-gia b { font-size: var(--cht-gs, 15px) !important; text-shadow: 0 1px 0 #000; }
+html body #the-mv .mv-gia::after { content: none !important; }
+html body #the-mv .mv-gia .cht-x { font-style: normal; font-size: 9px; font-weight: 900; color: #ffb35a; margin-left: 2px; align-self: flex-start; margin-top: 4px; text-shadow: 0 1px 0 #000; }
+html body #the-mv .mv-gia .cht-x[hidden] { display: none; }
+html.co-hud2 body #the-mv.cht-san .mv-gia { color: #7dffa8 !important; background-image: var(--cht-chip) !important; }
+html.co-hud2 body #the-mv.cht-thieu .mv-gia, html.co-hud2 body #the-mv.cht-day .mv-gia { color: #ff8a7a !important; background-image: var(--cht-chip-tat) !important; }
+html.co-hud2 body #the-mv.cht-hoi .mv-gia { color: #c9c1d6 !important; background-image: var(--cht-chip-tat) !important; }
+/* lớp cũ: tấm phủ đen hồi chiêu, thanh RAGE tô màu, số giây to đè mặt → bỏ (thay bằng vòng quét PNG) */
+html body #the-mv .mv-cd, html body #the-mv .tn-thanh, html body #the-mv .tn-cd { display: none !important; }
+html body #the-mv .tn-full { position: absolute; z-index: 4; left: 11px; right: 11px; top: 68px; height: 15px; display: flex; align-items: center; justify-content: center;
+  font-size: 8.5px; font-weight: 900; color: #ff8a7a; background: none; text-shadow: 0 1px 0 #000; }
+html body #the-mv .tn-full[hidden] { display: none; }
+html body #the-mv.tn-day .mv-ten { color: transparent !important; text-shadow: none !important; }
+/* KHÔNG ĐỦ MANA / BÀN ĐẦY / HỒI CHIÊU: chỉ tối nhẹ chân dung (≤ 35 %), giữ đủ màu — không bao giờ phủ xám */
+html body #the-mv.cht-thieu .mv-ic .po, html body #the-mv.cht-day .mv-ic .po { filter: brightness(.74); }
+html body #the-mv.cht-hoi .mv-ic .po { filter: brightness(.68); }
+html body #the-mv.tn-day .mv-ic { filter: none !important; }
+/* SẴN SÀNG: quầng PNG nhịp (chỉ đổi độ mờ/phóng) */
+#the-mv .cht-glow { position: absolute; z-index: 0; left: -1px; top: -5px; width: 92px; height: 107px; pointer-events: none; opacity: 0; box-sizing: border-box;
+  border: solid transparent; border-width: 12px; border-image: var(--cht-glow) 30 fill / 12px / 0 stretch; transition: opacity .2s; }
+#the-mv.cht-san .cht-glow { opacity: 1; animation: cht-nhip 1.1s ease-in-out infinite; }
+@keyframes cht-nhip { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.025); } }
+/* huy hiệu thiếu mana: vòng đỏ + ngọc mana (PNG) ở góc trên-phải */
+#the-mv .cht-khoa { position: absolute; z-index: 5; right: 1px; top: 4px; width: 24px; height: 24px; pointer-events: none; }
+#the-mv .cht-khoa img { position: absolute; }
+#the-mv .cht-khoa .v { inset: 0; width: 100%; height: 100%; }
+#the-mv .cht-khoa .g { left: 6px; top: 6px; width: 12px; height: 12px; }
+#the-mv .cht-khoa[hidden], #the-mv .cht-vong[hidden] { display: none; }
+/* vòng quét: rãnh PNG + vòng màu PNG bị cắt hình quạt (mask) + số giây */
+#the-mv .cht-vong { position: absolute; z-index: 5; top: 2px; width: 28px; height: 28px; pointer-events: none; }
+#the-mv .cht-vong.cd { right: -1px; }
+#the-mv .cht-vong.tac { left: -1px; }
+#the-mv .cht-vong img { position: absolute; inset: 0; width: 100%; height: 100%; }
+#the-mv .cht-vong .f { -webkit-mask: conic-gradient(#000 calc(var(--p, 0) * 1turn), #0000 0); mask: conic-gradient(#000 calc(var(--p, 0) * 1turn), #0000 0); } /* vetay-ok: mask — mặt nạ cắt hình quạt cho vòng PNG */
+#the-mv .cht-vong b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #fff;
+  text-shadow: 0 1px 0 #000, 0 0 2px #000; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+#the-mv .cht-vong.tac .f.mong { inset: -3px; width: calc(100% + 6px); height: calc(100% + 6px); }

@@ -800,6 +800,9 @@ Gen xong lưu `docs/demo-hop-tuong/thap-art/raw_p4_board_N.png`, cắt khoá mag
 - **raw_p4_board_3 — vòng nạp năng lượng chia đoạn** (lưới 4×2, 8 khung 0→100 %, 1024×512) → `thap/assets/vong_nap_<0..7>.png` (thay `fx_vong_mong` tô màu ở `REN.veU`):
   "8 frames of a thin white segmented energy ring filling clockwise from 1/8 to full, soft glow, same style as the attached game screenshot, flat #FF00FF background, no text."
 
+- **raw_p4_board_4 — thẻ chỉ huy trong trận** (lưới 3×2, 1536×1024, ô 512; đính kèm ảnh `docs/demo-hop-tuong/tuvan/chihuy/san_390_eve.png`) → cắt vào `thap/assets/cht_*.png`, đổi biến/ảnh ở đầu `thap/css/chihuy-the.css` + `CHT.VONG_TAC` (`thap/js/chihuy-the.js`). Đang dùng tạm: khung_chon (quầng), h2_vong_do+h2_ngoc (huy hiệu), h2_vong_xam/tim/do + fx_vong_mong (vòng quét):
+  "Same style as the attached game screenshot, flat #FF00FF background, no text. 1) soft cyan-white READY glow halo hugging a tall card frame (aspect 0.83), empty transparent inside; 2) small round LOCK badge: steel ring with a purple mana crystal and a tiny padlock; 3) empty dark steel ring gauge track (perfect circle, thick); 4) same ring fully filled with bright violet energy; 5) same ring filled with red-orange rage fire energy; 6) same ring filled with golden holy light."
+
 ## Pass 4 — ui (rà soát vẽ tay 100 %, vùng UI: menu, trang ụ/chỉ huy, bảng thông tin, cut-in, kết quả, online, tải; 2026-11-05)
 
 Bảng kiểm kê: `docs/demo-hop-tuong/VE-TAY-RASOAT-ui.md`. Mọi chỗ khác đã thay bằng ảnh có sẵn; trong lúc chờ, phần dưới đang **không vẽ gì / dùng ảnh gần nhất**.
