@@ -8,6 +8,7 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 const DO = require('./thap-kt-tran-do.js');
+const { KT_VACH } = require('./thap-kt-vach.js'); // khung độ hiếm: chân dung gọn trong ô cửa sổ, khung không méo (vạch khung cắt ngang mặt)
 const OUT = process.env.OUT || '';
 const BASE = process.env.BASE || 'http://localhost:8765/thap/';
 const MOCK = +(process.env.MOCK || 8787);
@@ -72,6 +73,7 @@ const doDu = async (p) => {
     await p.evaluate(async (us) => { window.__KT_NAT = window.__KT_NAT || {}; await Promise.all(us.map(u => new Promise(ok => { const i = new Image(); i.onload = () => { __KT_NAT[u] = [i.naturalWidth, i.naturalHeight]; ok(); }; i.onerror = ok; i.src = u; }))); window.__KT_CAN = new Set(); }, can);
     r = await p.evaluate(DO);
   }
+  r.vach = (await p.evaluate(KT_VACH)).hong;
   return r;
 };
 

@@ -87,9 +87,12 @@
 #chon #chon-bo { margin: 0; padding: 0; min-height: 86px; gap: 10px; background: none; justify-content: space-between; position: relative; }
 #chon #chon-bo .o-bo { flex: 0 0 70px; height: 86px; border-image-width: 14px; cursor: pointer; }
 .co-khung #chon #chon-bo .o-bo.co-kh { --khh: 85px; }
-.co-khung #chon #chon-bo .o-bo.co-kh > .kh { left: 0; width: 100%; }
+/* khung đúng tỉ lệ ảnh 271×328 (70 × 85): game.css "#chon-bo .o-bo img { height: 52px }" (có #id) từng bóp khung còn 52 px → vạch đáy khung cắt ngang mặt, chân dung tràn dưới khung */
+.co-khung #chon #chon-bo .o-bo.co-kh > .kh { left: 0; top: 0; width: 100%; height: var(--khh); object-fit: fill; }
 .co-khung #chon #chon-bo .o-bo.co-kh > img:not(.kh):not(.gl) { left: 15.6%; width: 68.8% !important; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649) !important; }
-#chon #chon-bo .o-bo .gl, .co-khung #chon #chon-bo .o-bo.co-kh .gl { left: auto; right: 2px; top: auto; bottom: 0; width: 18px; height: 18px; z-index: 3; }
+#chon #chon-bo .o-bo .gl { left: auto; right: 2px; top: auto; bottom: 0; width: 18px; height: 18px; z-index: 3; }
+/* huy hiệu vai trò: trong ô cửa sổ, góc phải dưới (như thẻ lưới) — không ra ngoài khung, không che ngọc góc khung */
+.co-khung #chon #chon-bo .o-bo.co-kh .gl { left: auto; right: calc(15.6% + 1px); top: calc(var(--khh) * .838 - 16px); bottom: auto; width: 15px; height: 15px; z-index: 3; }
 #chon #chon-bo .o-bo.hm-armed::after { content: ''; position: absolute; inset: -7px -8px; z-index: 4; pointer-events: none; background: url(../assets/khung_chon.png) center / 100% 100% no-repeat; animation: hm-armed .9s var(--e-em) infinite alternate; }
 @keyframes hm-armed { from { opacity: .55; } to { opacity: 1; } }
 #chon #chon-bo .o-bo.hm-xung { animation: hm-xung .3s var(--e-nay); }
