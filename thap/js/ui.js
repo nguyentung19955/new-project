@@ -412,7 +412,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
 
   // ---------- chạm / kéo ghép trên bàn ----------
-  diemLogic(e) { const r = $('#cv').getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; },
+  diemLogic(e, r) { r = r || $('#cv').getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; },
   uTai(x, y) {
     const B = G.ban[0]; if (!B) return null;
     let best = null, bd = 1e9;
@@ -439,11 +439,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       else this.xemHT = null;
       try { cv.setPointerCapture(e.pointerId); } catch (er) { }
       const B = G.ban[0], C = Math.min(B.cw, B.ch);
-      this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6) };
+      // khung canvas đo 1 lần lúc chạm (pointermove KHÔNG đọc bố cục → không ép trình duyệt tính lại layout mỗi lần rê)
+      this.keo = { T, x, y, x0: x, y0: y, dang: false, id: e.pointerId, lech: e.pointerType === 'mouse' ? 0 : Math.round(C * 0.6), r: cv.getBoundingClientRect() };
+      if (typeof REN !== 'undefined' && REN.nongKeo && !laHoTro(T)) REN.nongKeo(T); // dựng sẵn bản nhấc + huy hiệu, rải theo khung
     });
     cv.addEventListener('pointermove', (e) => {
       const k = this.keo; if (!k || e.pointerId !== k.id) return;
-      const [x, y] = this.diemLogic(e); k.x = x; k.y = y;
+      // chỉ ghi toạ độ mới nhất (trình duyệt đã gộp các lần rê trong 1 khung); vẽ theo ngón ở khung rAF kế tiếp
+      const [x, y] = this.diemLogic(e, k.r); k.x = x; k.y = y;
       if (!k.dang && Math.hypot(x - k.x0, y - k.y0) > 7) {
         if (k.T.st.bang > 0) { FX.chu1(x, y - 20, TEXT.fx.frozen, '#7fdcff', 12); this.keo = null; return; }
         k.dang = true; $('#tt').hidden = true; this.xemHT = null; this.chonGhep = null;

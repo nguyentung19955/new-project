@@ -45,7 +45,7 @@ const ND = {
     const T = h.T, d = h.d * h.hs; if (d < 1) return;
     ctx.globalAlpha = h.al;
     // (bỏ icon vai trò trên bàn — độ hiếm = vòng bậc PNG; vai trò chỉ ở bảng chạm ụ / thẻ bộ bài)
-    REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d);
+    if (h.dong) REN.veHuyHieuDong(ctx, h.sx, h.sy, T.sao, d); else REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d); // cỡ đang nảy/phóng: bậc cỡ cố định
     ctx.globalAlpha = 1;
   },
 
