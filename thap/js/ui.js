@@ -221,9 +221,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     if (key !== this._timKey) {
       this._timKey = key;
       const el = $('#tb-tim'); el.innerHTML = '';
-      if (G.che === 'coop') el.innerHTML = '<div class="chu"><i class="den' + (B.tim > 0 ? '' : ' mat') + '"></i>' + TEXT.ui.coopLeak + '</div>';
-      else {
-        const max = G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo;
+      {
+        const max = G.che === 'pvp' ? LUAT.timPvp : G.che === 'coop' ? LUAT.timCoop : LUAT.timSolo; // co-op: 3 đèn tim chung
         const mk = (n, cls) => { let s = ''; for (let i = 0; i < max; i++) s += '<i class="den' + (i < n ? '' : ' mat') + '"></i>'; return s; }; // đèn báo tim
         if (G.che === 'pvp') el.innerHTML = '<div class="doi"><div><span class="doi-thu">' + TEXT.ui.rival + '</span>' + mk(G.ban[1].tim) + '</div><div><span class="ban">' + TEXT.ui.you + '</span>' + mk(B.tim) + '</div></div>';
         else el.innerHTML = mk(B.tim);
