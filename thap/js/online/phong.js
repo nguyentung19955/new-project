@@ -1,7 +1,7 @@
 // TURRET MERGE — PHÒNG CO-OP ONLINE (2 người): Create room → mã 4 chữ + link chia sẻ, Join bằng mã; sảnh chờ hiện bộ bài +
 // chỉ huy + READY của cả 2; cả 2 READY → chủ phòng bấm giờ → cả 2 vào CÙNG một trận có hạt giống (dongbo.js lo phần trong trận).
 // Phòng cũ hơn 2 giờ (meta.at) = bỏ qua. Hết trận: chủ phòng XOÁ phòng.
-// Dữ liệu:  turretmerge/rooms/{CODE}/ meta{host,at,st,seed,k0} · members/{uid}=true · khach (uid khách) · pl/{uid} · act · snap · ping · state
+// Dữ liệu:  turretmerge/rooms/{CODE}/ meta{host,at,st,seed,k0} · members/{uid}=true · khach (uid khách) · pl/{uid} · act · snap · ping · state · chat (chat.js: ≤ 30 tin)
 // Hình: chỉ ảnh có sẵn (khung_bang, khung_tt, h2_lcd, nut_lon_*, the_khung_*, af_*, pilot_*, led_xanh, h2_tam_xanh) — QUY-TAC-HINH.md.
 'use strict';
 
@@ -32,6 +32,8 @@ const ONL = {
     }
     const moi = this.maMoi();
     if (moi) this.vaoTuMoi(moi);
+    // mở lại game khi trận online còn chạy (mốc ≤ 3 phút) → tự VÀO LẠI, không cần bấm REJOIN MATCH
+    else { const cu = this.phongCu(); if (cu && Date.now() - cu.at < 3 * 60e3) setTimeout(() => this.tuVaoLai(cu.code), 600); }
   },
   maMoi() {
     const q = new URLSearchParams(location.search), h = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
@@ -93,6 +95,16 @@ const ONL = {
         el.querySelector('#onl-lai').dataset.code = cu.code;
       }).catch(() => { });
     });
+  },
+  tuVaoLai(c) {
+    NET.san().then((ok) => {
+      if (!ok || this.code) return;
+      return NET.get('rooms/' + c + '/meta').then((m) => {
+        if (!m || m.st !== 'tran' || this.code || (typeof ONS !== 'undefined' && ONS.on) || (typeof G !== 'undefined' && G.ban.length)) return;
+        if (typeof ONS !== 'undefined') ONS.baoNho('Reconnecting…', 4000);
+        this.host = m.host === this.me(); this._laiVao = true; this.batDauSanh(c);
+      });
+    }).catch(() => { });
   },
   dongBang() { const el = document.getElementById('onl-bang'); if (el) el.hidden = true; },
   baoLoi(s) { for (const id of ['onl-loi', 'sanh-loi']) { const e = document.getElementById(id); if (e) e.textContent = s || ''; } },
@@ -290,7 +302,7 @@ const ONL = {
   xoaSauTran() {
     const c = this.code; if (!c) return;
     this.vuaChoi = true;
-    if (!this.host) return;
+    if (!this.host || this._giuPhong) return; // bạn đang vắng (AI lái bàn bạn): giữ phòng để bạn về còn thấy kết quả (phòng tự hết hạn)
     setTimeout(() => {
       if (this.code !== c) return;
       this.thoiNghe(); NET.huyKhiNgat('rooms/' + c + '/pl/' + this.me() + '/on');

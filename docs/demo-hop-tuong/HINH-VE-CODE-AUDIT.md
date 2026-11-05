@@ -1019,3 +1019,16 @@ Muốn biểu tượng to như VICTORY/DEFEAT (120 px CSS → cần 360 px):
 | raw | cỡ / lưới | prompt ngắn | thay cho |
 |---|---|---|---|
 | raw_kqo_ic | 1024×512, 1 hàng × 2 (ô 512) | "Same style as attached game screenshot, chunky sci-fi industrial metal game UI icon, FLAT SOLID #FF00FF magenta background, no text: 1) round steel emblem with a broken chain link in the middle, calm blue-grey glow (match ended, partner left) · 2) same emblem with a broken signal/antenna symbol (connection lost)" | `vong_xich` trên màn MATCH ENDED |
+
+## Pass 11 — chat (chat nhanh online + dải "Reconnecting…", 2026-11-05 · `thap/js/online/chat.js`, `thap/css/chat.css`)
+
+Đang dùng ảnh có sẵn (không vẽ tay): nút CHAT = `h2_tag` (cắt 3 mảnh) · bảng = `khung_tt` · nút câu / SEND = `nut_lon_thep` · ô chữ = `h2_lcd` · bong bóng + dải "Reconnecting…" / "Back in the match" = `h2_tam` · đóng = `p7_ic_dong` · 4 biểu cảm TẠM = `ic_sao` (vui), `chon_huy` (ok), `ic_bom` (nổ), `ic_chet` (toang). Chữ (câu nhanh, tên, tin) = DOM.
+Khi có ảnh: lưu `docs/demo-hop-tuong/thap-art/raw_p11_<id>.png`, cắt khoá magenta + Lanczos về 3× cỡ CSS lớn nhất (cột "cỡ CSS"), đổi tên ảnh trong `chat.css` / `CHAT.EMO`.
+Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial metal game UI, FLAT SOLID #FF00FF magenta background, no text, no letters, no numbers."*
+
+| raw | cỡ / lưới | prompt ngắn | thay cho (cỡ CSS lớn nhất) |
+|---|---|---|---|
+| raw_p11_bong | 1536×512, 1 hàng × 2 (ô 768×512) | 1 "Small speech bubble plate, dark gunmetal with thin cyan rim, short tail pointing down-right, empty middle, stretchable sides" · 2 same, warm brass rim (my own message) | `h2_tam` bong bóng (210×28 → 630×84) |
+| raw_p11_nut | 1024×512, 1 hàng × 2 (ô 512) | 1 "Tiny square metal button with a speech-bubble icon, cyan glow" · 2 same, dimmed / pressed | `h2_tag` + chữ CHAT (48×26 → 144×78) |
+| raw_p11_emo | 1024×1024, lưới 2×2 (ô 512) | round metal-rimmed emote badges, chunky cartoon faces on a small robot turret head: 1 cheering with stars · 2 thumbs-up / OK · 3 shocked with sweat drop · 4 crying / defeated | `ic_sao`, `chon_huy`, `ic_bom`, `ic_chet` (46×46 → 138×138) |
+| raw_p11_bang | 1024×768, 1 ô | "Compact chat panel frame, dark riveted steel, thin cyan edge lights, empty inside, 9-slice friendly corners" | `khung_tt` bảng chat (318×300) |

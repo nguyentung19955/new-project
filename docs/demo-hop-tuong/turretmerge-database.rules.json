@@ -167,6 +167,28 @@
               ".validate": false
             }
           },
+          "chat": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid && !newData.exists()",
+            "$id": {
+              ".write": "auth != null && data.parent().parent().child('members').child(auth.uid).exists() && (!data.exists() || !newData.exists())",
+              ".validate": "newData.hasChildren(['u', 't', 'v']) && newData.child('u').val() === auth.uid && $id.length <= 40",
+              "u": {
+                ".validate": "newData.isString()"
+              },
+              "t": {
+                ".validate": "newData.val() === 'q' || newData.val() === 'e' || newData.val() === 'x'"
+              },
+              "v": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 60"
+              },
+              "at": {
+                ".validate": "newData.isNumber() && newData.val() <= now"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
           "$other": {
             ".validate": false
           }

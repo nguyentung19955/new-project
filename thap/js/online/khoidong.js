@@ -11,11 +11,13 @@
         const a = el.dataset.act;
         if (a.startsWith('tk-')) { if (TK.bam(a, el)) e.stopImmediatePropagation(); return; }
         if (a.startsWith('onl-')) { if (ONL.bam(a, el)) e.stopImmediatePropagation(); return; }
+        if (a.startsWith('chat-')) { if (typeof CHAT !== 'undefined' && CHAT.bam(a, el)) e.stopImmediatePropagation(); return; }
         ONS.bamTruoc(e);
       } catch (er) { console.error('[online] bấm', er); }
     }, true);
     try { TK.init(); } catch (e) { console.error('[online] TK', e); }
     try { ONL.init(); } catch (e) { console.error('[online] ONL', e); }
+    try { if (typeof CHAT !== 'undefined') CHAT.init(); } catch (e) { console.error('[online] CHAT', e); }
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', chay, { once: true }); else chay();
 })();

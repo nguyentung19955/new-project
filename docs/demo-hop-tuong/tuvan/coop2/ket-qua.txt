@@ -1,0 +1,22 @@
+OK   Sảnh: A gõ "hello shit team" → B thấy "hello **** team" (lọc từ xấu) trong nhật ký
+OK   Sảnh: bong bóng hiện trên hàng của A ở máy B
+OK   Giới hạn: tin thứ 2 trong 2 s bị chặn
+OK   Sảnh: B gửi biểu cảm → A thấy trong nhật ký (3 tin)
+OK   Chữ tự do cắt ở 60 ký tự
+OK   Trận 1: cả 2 vào CO-OP online
+OK   Trận: bảng chat KHÔNG có ô chữ tự do, trận không dừng
+OK   Trận: A "Help my lane!" → bong bóng trên bàn đồng đội ở B
+OK   Trận: B gửi biểu cảm → A thấy bong bóng
+OK   Bong bóng tự tắt sau ~3 s
+OK   B ẩn app: sau ~6 s A cho AI lái bàn B, trận không dừng (thay=im)
+OK   A chơi tiếp khi B vắng: wave 1 → 3
+OK   B về: A trả bàn cho B (không còn AI)
+OK   B tự đồng bộ: wave A 3 / B 3, tim 3 = 3
+OK   Bàn B lấy lại cả phần AI đã xây: 15/15 ô khớp (A thấy 9 ụ trước khi về)
+OK   B điều khiển lại bàn mình: B triệu hồi → A thấy ngay
+OK   Trận xong khi B vắng → B về thấy màn kết quả
+OK   HOST ẩn app → khách B nắm quyền: AI lái bàn host, B tự chạy wave 1 → 3
+OK   Host về: đồng bộ theo khách — wave 3/3, tim 3/3
+OK   Host đóng hẳn → khách chơi tiếp với AI (G.t 53.6 → 55.6)
+OK   fps máy B: 59
+OK   Không lỗi trang (0)
