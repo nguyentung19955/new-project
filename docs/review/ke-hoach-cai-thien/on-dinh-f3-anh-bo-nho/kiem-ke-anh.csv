@@ -1,0 +1,697 @@
+ma,loai,vung_rieng,bac_tai,trum,rong,cao,MiB_giai_ma,KB_webp,KB_png,tep
+zed-moi,zed,chung,0,0,1152,12192,53.58,276.0,305.9,anh/zed-moi.7cd13288bc.webp
+zed-rowan,zed,chung,0,0,1152,12192,53.58,129.3,539.9,anh/zed-rowan.653f0d1af5.webp
+zed-bien,zed,chung,1,0,1152,7776,34.17,183.6,200.0,anh/zed-bien.816bb5e41d.webp
+zed-lau,zed,chung,1,0,1152,7776,34.17,195.9,214.9,anh/zed-lau.ad0cb4b1f3.webp
+zed-rung,zed,chung,1,0,1152,7776,34.17,187.0,205.8,anh/zed-rung.3561d057bb.webp
+hoTinh,quai,V3 Lâu đài cổ,3,1,2988,2520,28.72,891.9,1015.9,anh/hoTinh.9fcc1ea59e.webp
+mocTinh-p3,quai,V1 Rừng già,3,1,2288,2410,21.03,738.3,800.6,anh/mocTinh-p3.dd88c29f7e.webp
+hoTinh-p2,quai,V3 Lâu đài cổ,3,1,2848,1710,18.58,855.5,946.3,anh/hoTinh-p2.6e395ddab9.webp
+hoTinh-p3,quai,V3 Lâu đài cổ,3,1,2976,1630,18.5,957.3,1059.0,anh/hoTinh-p3.5c1eb1f0b9.webp
+thuongLuong,quai,V4 Sông sâu,3,1,3438,1260,16.52,730.7,809.7,anh/thuongLuong.2c6f44bd82.webp
+nguTinh,quai,V2 Hang biển,3,1,2272,1752,15.18,522.7,573.8,anh/nguTinh.ee29abbeb2.webp
+mocTinh,quai,V1 Rừng già,3,1,2016,1836,14.12,834.1,904.2,anh/mocTinh.9225c448b0.webp
+mocTinh-p2,quai,V1 Rừng già,3,1,2336,1470,13.1,712.7,788.3,anh/mocTinh-p2.d29f0e0950.webp
+nguTinh-p2,quai,V2 Hang biển,3,1,2272,1460,12.65,559.8,617.9,anh/nguTinh-p2.105d0e1b08.webp
+nguTinh-p3,quai,V2 Hang biển,3,1,2272,1460,12.65,576.8,623.4,anh/nguTinh-p3.e022960df6.webp
+thuongLuong-p3,quai,V4 Sông sâu,3,1,3056,1008,11.75,524.1,601.3,anh/thuongLuong-p3.e4ab992a54.webp
+thuongLuong-p2,quai,V4 Sông sâu,3,1,2674,1008,10.28,543.5,598.6,anh/thuongLuong-p2.a4d7a73afc.webp
+cuaDa,quai,V2 Hang biển,2,0,1712,1296,8.46,413.8,452.2,anh/cuaDa.1716d0364b.webp
+namPhongChua,quai,V1 Rừng già,2,0,1488,1248,7.08,161.9,184.9,anh/namPhongChua.5604a76016.webp
+namChua,quai,V1 Rừng già,2,0,1280,1368,6.68,283.1,302.9,anh/namChua.d9dc8df37b.webp
+cuaTuong,quai,V2 Hang biển,2,0,1368,1212,6.32,228.5,250.3,anh/cuaTuong.42ad18df2b.webp
+caNocChua,quai,V2 Hang biển,2,0,1164,1332,5.91,206.8,228.2,anh/caNocChua.b3e3918dfe.webp
+hoLua,quai,V3 Lâu đài cổ,2,0,1360,972,5.04,286.3,303.6,anh/hoLua.ff0c3d7b69.webp
+cuaDa-p2,quai,V2 Hang biển,2,0,1664,744,4.72,266.1,281.0,anh/cuaDa-p2.20636f3ed5.webp
+hoLua-p2,quai,V3 Lâu đài cổ,2,0,1536,792,4.64,249.6,265.5,anh/hoLua-p2.43ead23b00.webp
+hu-doi-pha,hieu-ung,chung,1,0,2752,328,3.44,100.8,115.5,anh/hu-doi-pha.dc177ee166.webp
+heoNanh,quai,V1 Rừng già,2,0,1140,768,3.34,137.2,154.4,anh/heoNanh.69eb2e15ba.webp
+namChua-p2,quai,V1 Rừng già,2,0,1106,768,3.24,206.8,218.1,anh/namChua-p2.6b6b60aa63.webp
+hu-ngu-tinh-mo-man,hieu-ung,chung,1,0,2400,310,2.84,11.6,17.5,anh/hu-ngu-tinh-mo-man.bed9c9fc2d.webp
+hu-trum-no-fire,hieu-ung,chung,1,0,2304,320,2.81,58.8,71.8,anh/hu-trum-no-fire.92681fa642.webp
+hu-trum-no-ice,hieu-ung,chung,1,0,2304,320,2.81,48.2,58.6,anh/hu-trum-no-ice.7ba8a26f90.webp
+hu-trum-no-poison,hieu-ung,chung,1,0,2304,320,2.81,50.0,62.1,anh/hu-trum-no-poison.f76ddb9e26.webp
+hu-trum-no,hieu-ung,chung,1,0,2304,320,2.81,57.8,70.2,anh/hu-trum-no.566413e424.webp
+socNo,quai,V1 Rừng già,2,0,948,696,2.52,65.6,75.5,anh/socNo.8b6e9d9195.webp
+zed-vk-he,zed,chung,1,0,469,1375,2.46,112.8,129.0,anh/zed-vk-he.87b6a37232.webp
+tuongMa,quai,V3 Lâu đài cổ,2,0,780,792,2.36,87.5,102.2,anh/tuongMa.d214be418b.webp
+cocTia,quai,V4 Sông sâu,2,0,900,672,2.31,88.5,104.9,anh/cocTia.eb6abe8d14.webp
+oc,quai,V2 Hang biển,2,0,864,696,2.29,110.5,119.1,anh/oc.5855e4ece8.webp
+huChua,quai,V3 Lâu đài cổ,2,0,660,876,2.21,92.5,99.5,anh/huChua.6bce6c24c9.webp
+hu-dap-san,hieu-ung,chung,1,0,1944,294,2.18,84.5,95.7,anh/hu-dap-san.0b0f94a84a.webp
+cua,quai,V2 Hang biển,2,0,960,576,2.11,76.6,85.4,anh/cua.5a0f0bb75b.webp
+hu-tien-hoa-fire,hieu-ung,chung,1,0,1536,360,2.11,58.3,64.8,anh/hu-tien-hoa-fire.0d6a3feed2.webp
+hu-tien-hoa-ice,hieu-ung,chung,1,0,1536,360,2.11,74.7,84.2,anh/hu-tien-hoa-ice.c99f80aa1a.webp
+hu-tien-hoa-poison,hieu-ung,chung,1,0,1536,360,2.11,72.0,82.6,anh/hu-tien-hoa-poison.09ab99e0ef.webp
+hu-tien-hoa,hieu-ung,chung,1,0,1536,360,2.11,50.9,58.5,anh/hu-tien-hoa.97aeea30e0.webp
+meoDen,quai,V3 Lâu đài cổ,2,0,804,636,1.95,57.7,65.1,anh/meoDen.b6e380d0d2.webp
+hoaBaoTu,quai,V1 Rừng già,2,0,756,660,1.9,61.0,67.6,anh/hoaBaoTu.30c3489669.webp
+raiCa,quai,V4 Sông sâu,2,0,768,588,1.72,53.9,58.0,anh/raiCa.6b49df5caf.webp
+hu-xoay-nuoc,hieu-ung,chung,1,0,2208,204,1.72,139.6,154.2,anh/hu-xoay-nuoc.e24647ef21.webp
+heoCon,quai,V1 Rừng già,2,0,780,576,1.71,65.2,78.7,anh/heoCon.095b57bb61.webp
+doiThan,quai,V3 Lâu đài cổ,2,0,768,576,1.69,62.7,68.5,anh/doiThan.26ad3c9490.webp
+caChuon,quai,V2 Hang biển,2,0,648,672,1.66,60.3,67.7,anh/caChuon.f1d5334baa.webp
+baBa,quai,V4 Sông sâu,2,0,936,432,1.54,76.8,85.0,anh/baBa.c535c9f457.webp
+haiQuy,quai,V2 Hang biển,2,0,672,600,1.54,94.1,101.5,anh/haiQuy.e47f14937a.webp
+boHung,quai,V1 Rừng già,2,0,744,528,1.5,52.9,57.1,anh/boHung.94fe35553b.webp
+gd-khung-ban-do,giao-dien,chung,1,0,760,484,1.4,18.6,22.8,anh/gd-khung-ban-do.622949d2a4.webp
+sua,quai,V2 Hang biển,2,0,576,624,1.37,68.3,75.1,anh/sua.8f111eba5a.webp
+caCon,quai,V2 Hang biển,2,0,696,516,1.37,59.4,63.7,anh/caCon.3bd2d8f284.webp
+caNoc,quai,V2 Hang biển,2,0,600,588,1.35,43.4,47.5,anh/caNoc.9f72903f06.webp
+tieuYeu,quai,V3 Lâu đài cổ,2,0,588,600,1.35,58.3,63.8,anh/tieuYeu.0719f35eb8.webp
+diaTrau,quai,V4 Sông sâu,2,0,708,492,1.33,58.4,71.9,anh/diaTrau.62c17ccf96.webp
+hu-phun-bang,hieu-ung,chung,1,0,1512,230,1.33,56.9,63.8,anh/hu-phun-bang.0508632aa5.webp
+linhMa,quai,V3 Lâu đài cổ,2,0,576,540,1.19,37.0,38.5,anh/linhMa.789193e897.webp
+chonBong,quai,V1 Rừng già,2,0,624,480,1.14,53.6,60.8,anh/chonBong.72e98a158e.webp
+tuongDa,quai,V3 Lâu đài cổ,2,0,492,588,1.1,57.7,64.6,anh/tuongDa.13c71230fe.webp
+nhimDoc,quai,V1 Rừng già,2,0,600,480,1.1,68.6,73.0,anh/nhimDoc.25b03c99b3.webp
+hu-vong-hoi-quai,hieu-ung,chung,1,0,1272,226,1.1,23.9,29.1,anh/hu-vong-hoi-quai.f297d39308.webp
+namPhong,quai,V1 Rừng già,2,0,564,492,1.06,31.2,37.6,anh/namPhong.40a21aa966.webp
+gd-bt-tron,giao-dien,chung,0,0,1472,184,1.03,48.0,56.2,anh/gd-bt-tron.6a6b7db18b.webp
+gd-bt-vanh,giao-dien,chung,0,0,1472,184,1.03,48.8,53.7,anh/gd-bt-vanh.d5aca69a0e.webp
+ongVo,quai,V1 Rừng già,2,0,564,468,1.01,35.5,36.3,anh/ongVo.478297365f.webp
+zed-vk,zed,chung,0,0,523,481,0.96,43.7,51.6,anh/zed-vk.f94475f433.webp
+denLong,quai,V3 Lâu đài cổ,2,0,480,516,0.94,45.1,48.2,anh/denLong.92dfa4eaef.webp
+hu-no-bang,hieu-ung,chung,1,0,1536,160,0.94,34.5,38.0,anh/hu-no-bang.01c9b670f8.webp
+hu-no-doc,hieu-ung,chung,1,0,1536,160,0.94,34.7,39.2,anh/hu-no-doc.0d5ab60ba3.webp
+hu-no-khoi,hieu-ung,chung,1,0,1536,160,0.94,25.0,29.1,anh/hu-no-khoi.bf9b12459a.webp
+hu-no-lua,hieu-ung,chung,1,0,1536,160,0.94,39.1,43.8,anh/hu-no-lua.ada046b0d4.webp
+hu-soc-nhiet,hieu-ung,chung,1,0,1536,160,0.94,39.2,42.5,anh/hu-soc-nhiet.39b299c8a7.webp
+nhim,quai,V2 Hang biển,2,0,456,528,0.92,37.9,39.5,anh/nhim.b792ae63fd.webp
+hu-mua-phi-tieu,hieu-ung,chung,1,0,1152,200,0.88,36.9,40.7,anh/hu-mua-phi-tieu.707d15e291.webp
+nhimThan,quai,V3 Lâu đài cổ,2,0,504,444,0.85,40.1,42.5,anh/nhimThan.4c7ff130b7.webp
+hu-may-doc,hieu-ung,chung,1,0,1152,192,0.84,25.3,30.1,anh/hu-may-doc.b8c6e4195a.webp
+hu-vung-doc,hieu-ung,chung,1,0,1152,192,0.84,26.5,29.3,anh/hu-vung-doc.b60858c0e7.webp
+hu-phun-lua-quat,hieu-ung,chung,1,0,1152,188,0.83,38.0,43.5,anh/hu-phun-lua-quat.120c79b61c.webp
+huLua,quai,V3 Lâu đài cổ,2,0,444,480,0.81,35.4,37.0,anh/huLua.72d7e66c92.webp
+hu-vong-phep,hieu-ung,chung,1,0,1536,128,0.75,43.1,46.3,anh/hu-vong-phep.6ae9fd4368.webp
+gd-lang-nen,giao-dien,chung,0,0,720,270,0.74,91.8,99.4,anh/gd-lang-nen.05d96f92ac.webp
+hu-la-chem,hieu-ung,chung,1,0,1060,172,0.7,30.4,33.9,anh/hu-la-chem.5541b5cca8.webp
+hu-quai-hien,hieu-ung,chung,1,0,816,192,0.6,29.9,33.7,anh/hu-quai-hien.63939ac4e7.webp
+hu-len-cap,hieu-ung,chung,1,0,1920,80,0.59,22.6,25.3,anh/hu-len-cap.c35ededb6a.webp
+hu-tam-giac-bua,hieu-ung,V3 Lâu đài cổ,1,0,876,164,0.55,21.4,24.3,anh/hu-tam-giac-bua.9e27559794.webp
+zed-vk-gan,zed,chung,1,0,453,306,0.53,19.7,22.3,anh/zed-vk-gan.85d3cd1ce6.webp
+gd-ban-do-vung,giao-dien,chung,1,0,480,270,0.49,88.6,99.6,anh/gd-ban-do-vung.0666934e5b.webp
+hu-vung-quai-doc,hieu-ung,chung,1,0,864,144,0.47,19.2,21.8,anh/hu-vung-quai-doc.c7b1327474.webp
+hu-quet-giao-fire,hieu-ung,chung,1,0,1664,72,0.46,4.3,5.1,anh/hu-quet-giao-fire.b23b03c9f8.webp
+hu-quet-giao-ice,hieu-ung,chung,1,0,1664,72,0.46,4.0,4.6,anh/hu-quet-giao-ice.9ae79607e8.webp
+hu-quet-giao-poison,hieu-ung,chung,1,0,1664,72,0.46,3.9,4.5,anh/hu-quet-giao-poison.d5a12da02c.webp
+hu-quet-giao,hieu-ung,chung,1,0,1664,72,0.46,6.6,7.4,anh/hu-quet-giao.ca1f708c53.webp
+gd-so-trang,giao-dien,chung,0,0,332,346,0.44,53.8,63.1,anh/gd-so-trang.e61bd12175.webp
+hu-gai-toa,hieu-ung,chung,1,0,792,136,0.41,6.3,7.1,anh/hu-gai-toa.ef7abb630c.webp
+hu-fire-guard,hieu-ung,chung,1,0,768,128,0.38,14.4,46.6,anh/hu-fire-guard.8e28836e56.webp
+hu-bang-nhon-roi,hieu-ung,chung,1,0,552,168,0.35,10.8,11.8,anh/hu-bang-nhon-roi.7bacff0362.webp
+hu-nen-dat-fire,hieu-ung,chung,1,0,960,96,0.35,6.0,6.9,anh/hu-nen-dat-fire.8f296cedaa.webp
+hu-nen-dat-ice,hieu-ung,chung,1,0,960,96,0.35,8.1,9.1,anh/hu-nen-dat-ice.a6e32de84e.webp
+hu-nen-dat-poison,hieu-ung,chung,1,0,960,96,0.35,8.6,9.6,anh/hu-nen-dat-poison.2367fdf530.webp
+hu-nen-dat,hieu-ung,chung,1,0,960,96,0.35,8.6,9.6,anh/hu-nen-dat.96236b6c73.webp
+gd-bt-quat,giao-dien,chung,0,0,648,138,0.34,15.2,17.2,anh/gd-bt-quat.c7a7d63d2a.webp
+hu-vung-dien,hieu-ung,V2 Hang biển,1,0,1024,84,0.33,24.9,26.5,anh/hu-vung-dien.846737c0ca.webp
+nl-ren,nguoi-lang,chung,0,0,444,184,0.31,25.1,26.8,anh/nl-ren.7cacd8a9dc.webp
+hu-tu-luc,hieu-ung,chung,1,0,624,126,0.3,12.6,13.9,anh/hu-tu-luc.35f9b011d6.webp
+nl-lai,nguoi-lang,chung,0,0,420,184,0.29,21.5,22.7,anh/nl-lai.b8e07a05fe.webp
+hu-bang-vo,hieu-ung,chung,1,0,672,112,0.29,15.4,42.6,anh/hu-bang-vo.161efca0d9.webp
+hu-chem-bua,hieu-ung,chung,0,0,672,112,0.29,6.4,7.3,anh/hu-chem-bua.15689756c8.webp
+hu-chi-mang,hieu-ung,chung,0,0,672,112,0.29,15.0,16.2,anh/hu-chi-mang.afc5d85999.webp
+nl-may,nguoi-lang,chung,0,0,420,176,0.28,22.4,24.2,anh/nl-may.590038995b.webp
+hu-quai-chet,hieu-ung,chung,0,0,768,96,0.28,9.0,10.1,anh/hu-quai-chet.cc3c050138.webp
+nl-tu,nguoi-lang,chung,0,0,360,200,0.27,21.0,22.3,anh/nl-tu.92714c91e3.webp
+nl-mo,nguoi-lang,chung,0,0,408,176,0.27,22.1,23.7,anh/nl-mo.d8313b4b1a.webp
+hu-vo-oc,hieu-ung,V2 Hang biển,1,0,672,104,0.27,24.1,26.7,anh/hu-vo-oc.f4b9bc1f74.webp
+hu-tuong-song,hieu-ung,V2 Hang biển,1,0,660,102,0.26,21.2,22.8,anh/hu-tuong-song.792308dc9c.webp
+hu-nam-moc,hieu-ung,chung,1,0,576,116,0.25,13.5,15.3,anh/hu-nam-moc.8d1f893c4f.webp
+gd-nen-song-san-tl,giao-dien,V4 Sông sâu,2,0,256,256,0.25,25.7,30.9,anh/gd-nen-song-san-tl.9388c05728.webp
+hu-vung-quai-do,hieu-ung,chung,1,0,624,104,0.25,11.3,12.8,anh/hu-vung-quai-do.197f42b670.webp
+hu-vung-quai-lua,hieu-ung,chung,1,0,624,104,0.25,11.7,12.5,anh/hu-vung-quai-lua.9ab06869e0.webp
+hu-chem-kiem,hieu-ung,chung,0,0,672,96,0.25,4.7,5.2,anh/hu-chem-kiem.d2bce42cd5.webp
+hu-song-doi,hieu-ung,chung,1,0,640,96,0.23,13.9,15.0,anh/hu-song-doi.4246c0b63c.webp
+hu-qua-doc-roi,hieu-ung,chung,1,0,480,126,0.23,9.9,11.1,anh/hu-qua-doc-roi.38ab1644d9.webp
+gd-dau-phong-trum,giao-dien,chung,0,0,246,240,0.23,11.2,13.6,anh/gd-dau-phong-trum.5b671bc24a.webp
+nl-xen,nguoi-lang,chung,0,0,384,148,0.22,18.0,19.3,anh/nl-xen.2463c3b130.webp
+hu-hao-quang-gian,hieu-ung,chung,1,0,600,94,0.22,11.8,13.0,anh/hu-hao-quang-gian.cec7a3d03c.webp
+hu-dong-bang,hieu-ung,chung,1,0,576,96,0.21,11.4,12.9,anh/hu-dong-bang.5661f857ea.webp
+hu-pha-giap,hieu-ung,chung,0,0,576,96,0.21,8.8,9.6,anh/hu-pha-giap.4c31092137.webp
+hu-chem-kiem-nang-3,hieu-ung,chung,0,0,612,90,0.21,6.0,6.7,anh/hu-chem-kiem-nang-3.20596e73b3.webp
+nl-do,nguoi-lang,chung,0,0,408,132,0.21,16.8,17.8,anh/nl-do.86d689bf5c.webp
+hu-cong,hieu-ung,chung,1,0,672,80,0.21,13.3,14.6,anh/hu-cong.1f5c9a8e2c.webp
+hu-song-dong,hieu-ung,V4 Sông sâu,1,0,448,112,0.19,23.2,27.6,anh/hu-song-dong.4b7b5b4c89.webp
+hu-cot-lua,hieu-ung,chung,1,0,384,128,0.19,5.5,6.1,anh/hu-cot-lua.66a8e909ff.webp
+hu-cot-nuoc,hieu-ung,chung,1,0,384,128,0.19,4.7,5.2,anh/hu-cot-nuoc.9eccd2a2c7.webp
+em-be-wrestler,em-be,chung,0,0,360,136,0.19,11.9,12.5,anh/em-be-wrestler.90e0f27320.webp
+hu-chem-kiem-nang-2,hieu-ung,chung,0,0,612,80,0.19,5.3,5.8,anh/hu-chem-kiem-nang-2.35cd7e3f84.webp
+em-be-hunter,em-be,chung,0,0,360,132,0.18,13.3,14.1,anh/em-be-hunter.8a9137be3d.webp
+hu-vung-lua,hieu-ung,chung,1,0,528,88,0.18,9.1,9.9,anh/hu-vung-lua.dc79b85b51.webp
+hu-hoi-mau,hieu-ung,chung,1,0,480,96,0.18,8.3,9.4,anh/hu-hoi-mau.3a90dd8f4c.webp
+hu-ra-chieu-fire,hieu-ung,chung,1,0,480,96,0.18,9.8,10.7,anh/hu-ra-chieu-fire.70048dae22.webp
+hu-ra-chieu-ice,hieu-ung,chung,1,0,480,96,0.18,9.7,10.8,anh/hu-ra-chieu-ice.70f6b79850.webp
+hu-ra-chieu-poison,hieu-ung,chung,1,0,480,96,0.18,12.3,31.1,anh/hu-ra-chieu-poison.db756ae95f.webp
+hu-ra-chieu,hieu-ung,chung,1,0,480,96,0.18,7.3,8.3,anh/hu-ra-chieu.4bee7add47.webp
+hu-ra-chuong-fire,hieu-ung,chung,1,0,480,96,0.18,9.9,11.0,anh/hu-ra-chuong-fire.188d956eb6.webp
+hu-ra-chuong-ice,hieu-ung,chung,1,0,480,96,0.18,9.7,10.8,anh/hu-ra-chuong-ice.1d580b99d1.webp
+hu-ra-chuong-poison,hieu-ung,chung,1,0,480,96,0.18,12.4,30.0,anh/hu-ra-chuong-poison.048b61022d.webp
+hu-ra-chuong,hieu-ung,chung,1,0,480,96,0.18,8.5,9.7,anh/hu-ra-chuong.2ca1fb776b.webp
+hu-chem-luot-fire,hieu-ung,chung,0,0,768,56,0.16,3.5,3.8,anh/hu-chem-luot-fire.08fa7b186a.webp
+hu-chem-luot-ice,hieu-ung,chung,0,0,768,56,0.16,3.5,3.9,anh/hu-chem-luot-ice.77f9932532.webp
+hu-chem-luot-poison,hieu-ung,chung,0,0,768,56,0.16,3.4,3.7,anh/hu-chem-luot-poison.03b50b9ff4.webp
+hu-chem-luot,hieu-ung,chung,0,0,768,56,0.16,3.9,4.4,anh/hu-chem-luot.32d84cc968.webp
+hu-quai-dap,hieu-ung,chung,1,0,590,72,0.16,8.5,9.2,anh/hu-quai-dap.c323b13910.webp
+nl-sen,nguoi-lang,chung,0,0,312,136,0.16,9.9,10.6,anh/nl-sen.44d4c1960a.webp
+hu-khi-the,hieu-ung,chung,1,0,408,102,0.16,13.1,14.2,anh/hu-khi-the.a0127c3304.webp
+hu-gai-re,hieu-ung,chung,1,0,432,94,0.15,9.2,9.7,anh/hu-gai-re.bf002a7d21.webp
+hu-vong-song,hieu-ung,chung,1,0,660,60,0.15,4.4,5.3,anh/hu-vong-song.88c563a139.webp
+hu-lap-lanh,hieu-ung,chung,1,0,480,80,0.15,7.4,17.5,anh/hu-lap-lanh.ccbe8d4599.webp
+hu-nut-re-moc,hieu-ung,chung,1,0,640,60,0.15,1.6,1.9,anh/hu-nut-re-moc.f08359c9d4.webp
+hu-trung-nang,hieu-ung,chung,0,0,480,80,0.15,9.9,21.6,anh/hu-trung-nang.1f55d26fcc.webp
+gd-bt-dai,giao-dien,chung,0,0,1360,28,0.15,10.3,11.2,anh/gd-bt-dai.3e2cd1f0a8.webp
+em-be-healer,em-be,chung,0,0,288,132,0.15,12.2,12.9,anh/em-be-healer.191a417e4a.webp
+hu-chem-kiem-nang-4,hieu-ung,chung,0,0,612,62,0.14,6.4,6.9,anh/hu-chem-kiem-nang-4.667f2361ce.webp
+hu-tram-nguyet-fire,hieu-ung,chung,1,0,384,96,0.14,9.0,10.6,anh/hu-tram-nguyet-fire.476543177f.webp
+hu-tram-nguyet-ice,hieu-ung,chung,1,0,384,96,0.14,13.8,34.7,anh/hu-tram-nguyet-ice.5141bae9f2.webp
+hu-tram-nguyet-poison,hieu-ung,chung,1,0,384,96,0.14,13.0,33.4,anh/hu-tram-nguyet-poison.0babac5f0c.webp
+hu-tram-nguyet,hieu-ung,chung,1,0,384,96,0.14,8.1,9.3,anh/hu-tram-nguyet.f3f31b5f3f.webp
+gd-khung-bang,giao-dien,chung,0,0,352,104,0.14,18.9,21.3,anh/gd-khung-bang.b61f8651c6.webp
+gd-cong-ai-ngay,giao-dien,chung,0,0,184,192,0.13,18.3,21.2,anh/gd-cong-ai-ngay.b7ec1b5512.webp
+hu-chem-kiem-nang-gon-2,hieu-ung,chung,0,0,468,74,0.13,3.3,3.8,anh/hu-chem-kiem-nang-gon-2.3f010faf3a.webp
+hu-ep-thanh-cong,hieu-ung,chung,1,0,360,96,0.13,16.2,17.7,anh/hu-ep-thanh-cong.b71241d771.webp
+hu-huy-hieu,hieu-ung,chung,1,0,432,80,0.13,12.8,14.3,anh/hu-huy-hieu.234351d83c.webp
+gd-lang-cay-da,giao-dien,chung,0,0,206,162,0.13,7.2,8.4,anh/gd-lang-cay-da.5477f20c2f.webp
+gd-lang-dinh,giao-dien,chung,0,0,238,140,0.13,6.8,7.6,anh/gd-lang-dinh.99b73a61a6.webp
+hu-nhan-thuong,hieu-ung,chung,1,0,372,88,0.12,11.6,12.6,anh/hu-nhan-thuong.c3db2b184a.webp
+gd-vien-man-do,giao-dien,chung,0,0,240,136,0.12,0.4,0.6,anh/gd-vien-man-do.158ae1e235.webp
+hu-ep-tut-bac,hieu-ung,chung,1,0,408,80,0.12,9.7,10.6,anh/hu-ep-tut-bac.52ea7c5439.webp
+gd-nen-song-tuong-sau,giao-dien,V4 Sông sâu,2,0,330,98,0.12,13.3,15.3,anh/gd-nen-song-tuong-sau.220f90746a.webp
+gd-logo,giao-dien,chung,0,0,400,80,0.12,3.5,4.0,anh/gd-logo.eea68f7742.webp
+hu-be-trung-fire,hieu-ung,chung,1,0,400,80,0.12,4.8,5.3,anh/hu-be-trung-fire.b897c47267.webp
+hu-be-trung-ice,hieu-ung,chung,1,0,400,80,0.12,4.0,4.4,anh/hu-be-trung-ice.cbb7a7c717.webp
+hu-be-trung-poison,hieu-ung,chung,1,0,400,80,0.12,3.9,4.4,anh/hu-be-trung-poison.288f1dcde6.webp
+hu-be-trung,hieu-ung,chung,1,0,400,80,0.12,3.9,4.2,anh/hu-be-trung.a317eb63bd.webp
+hu-no-nho-fire,hieu-ung,chung,1,0,400,80,0.12,5.1,5.7,anh/hu-no-nho-fire.2d3ce7549d.webp
+hu-no-nho-ice,hieu-ung,chung,1,0,400,80,0.12,4.5,4.9,anh/hu-no-nho-ice.9f87b17a4e.webp
+hu-no-nho-poison,hieu-ung,chung,1,0,400,80,0.12,4.4,4.8,anh/hu-no-nho-poison.40ab6e2d83.webp
+hu-no-nho,hieu-ung,chung,1,0,400,80,0.12,4.9,5.5,anh/hu-no-nho.6dc01d53eb.webp
+hu-phi-tieu-chum,hieu-ung,chung,1,0,400,80,0.12,6.7,7.4,anh/hu-phi-tieu-chum.e2402efaca.webp
+hu-chem-kiem-nang-gon-3,hieu-ung,chung,0,0,444,72,0.12,3.6,4.1,anh/hu-chem-kiem-nang-gon-3.bf7d4d08a9.webp
+hu-ep-that-bai,hieu-ung,chung,1,0,320,96,0.12,13.6,15.3,anh/hu-ep-that-bai.902e31d545.webp
+hu-song-than,hieu-ung,chung,1,0,372,80,0.11,10.1,11.0,anh/hu-song-than.8758dbf520.webp
+hu-vung-luc-binh,hieu-ung,V4 Sông sâu,1,0,564,52,0.11,6.2,6.8,anh/hu-vung-luc-binh.a04a010689.webp
+hu-chem-kiem-nang-gon-1,hieu-ung,chung,0,0,516,56,0.11,3.1,3.5,anh/hu-chem-kiem-nang-gon-1.29b0b275c9.webp
+hu-cao-quai,hieu-ung,chung,1,0,400,70,0.11,5.2,5.8,anh/hu-cao-quai.ed495d3840.webp
+hu-vung-quai-bang,hieu-ung,chung,1,0,408,68,0.11,5.8,6.1,anh/hu-vung-quai-bang.e036c799bf.webp
+hu-khien-nuoc,hieu-ung,chung,1,0,384,68,0.1,11.3,11.9,anh/hu-khien-nuoc.c2b4d68bc5.webp
+hu-day-leo,hieu-ung,chung,1,0,360,72,0.1,8.4,9.2,anh/hu-day-leo.3b4567edc8.webp
+hu-tu-luc-vong,hieu-ung,chung,1,0,456,54,0.09,4.7,5.1,anh/hu-tu-luc-vong.1d1358eb6e.webp
+hu-phan-don,hieu-ung,chung,1,0,384,62,0.09,6.1,6.7,anh/hu-phan-don.87eddbafba.webp
+hu-chem-kiem-nang-1,hieu-ung,chung,0,0,612,38,0.09,3.3,3.5,anh/hu-chem-kiem-nang-1.43b7663cc1.webp
+gd-vong-fire,giao-dien,chung,0,0,152,152,0.09,3.6,4.2,anh/gd-vong-fire.6a90775812.webp
+gd-vong-ice,giao-dien,chung,0,0,152,152,0.09,2.9,3.3,anh/gd-vong-ice.1fb93989d1.webp
+gd-vong-poison,giao-dien,chung,0,0,152,152,0.09,3.2,3.6,anh/gd-vong-poison.f9cd5bfff0.webp
+gd-vong-thuong,giao-dien,chung,0,0,152,152,0.09,3.9,4.5,anh/gd-vong-thuong.d1687deaf4.webp
+gd-lang-lo-ren,giao-dien,chung,0,0,168,136,0.09,6.2,7.1,anh/gd-lang-lo-ren.6b5e603467.webp
+hu-moi-truong-rung-domdom,hieu-ung,V1 Rừng già,1,0,416,54,0.09,3.5,4.4,anh/hu-moi-truong-rung-domdom.531207ceaf.webp
+hu-dam-giao,hieu-ung,chung,0,0,560,40,0.09,2.9,3.1,anh/hu-dam-giao.d2aff76f2c.webp
+gd-khung-thoai,giao-dien,chung,0,0,274,80,0.08,9.5,10.8,anh/gd-khung-thoai.c2f2fc9b03.webp
+gd-dau-phong-thu-thach,giao-dien,chung,0,0,148,148,0.08,5.3,5.8,anh/gd-dau-phong-thu-thach.fbdc48a93d.webp
+hu-xoc-toi,hieu-ung,chung,1,0,520,42,0.08,2.7,3.3,anh/hu-xoc-toi.37ac8c44d8.webp
+hu-chem-kiem-nang-gon-4,hieu-ung,chung,0,0,516,42,0.08,2.7,3.0,anh/hu-chem-kiem-nang-gon-4.e5c2038faa.webp
+hu-song-vung-sau,hieu-ung,V4 Sông sâu,1,0,416,52,0.08,7.0,7.7,anh/hu-song-vung-sau.7d41205939.webp
+hu-quai-cao-fire,hieu-ung,chung,1,0,320,64,0.08,2.4,2.6,anh/hu-quai-cao-fire.51b50e6dc7.webp
+hu-quai-cao-ice,hieu-ung,chung,1,0,320,64,0.08,2.3,2.5,anh/hu-quai-cao-ice.65480c8a07.webp
+hu-quai-cao-poison,hieu-ung,chung,1,0,320,64,0.08,2.2,2.4,anh/hu-quai-cao-poison.8942490dbb.webp
+hu-quai-cao,hieu-ung,chung,1,0,320,64,0.08,2.4,2.6,anh/hu-quai-cao.52fbf5da7c.webp
+hu-trung,hieu-ung,chung,0,0,320,64,0.08,3.3,4.0,anh/hu-trung.355a42b0fa.webp
+gd-the-viec-xong,giao-dien,chung,0,0,298,68,0.08,6.6,8.7,anh/gd-the-viec-xong.74fb2eaaee.webp
+hu-manh-da,hieu-ung,chung,1,0,312,64,0.08,2.0,2.2,anh/hu-manh-da.0d756842b6.webp
+gd-the-viec,giao-dien,chung,0,0,292,68,0.08,6.1,7.8,anh/gd-the-viec.79ff375924.webp
+hu-cau-lua-ma,hieu-ung,chung,1,0,248,76,0.07,6.5,7.0,anh/hu-cau-lua-ma.9b203f8779.webp
+hu-nut-dat,hieu-ung,chung,1,0,312,56,0.07,5.4,5.7,anh/hu-nut-dat.cc238bdf4a.webp
+gd-can-de,giao-dien,chung,0,0,132,132,0.07,2.1,2.5,anh/gd-can-de.5e681b854e.webp
+gd-dau-phong-tinh-anh,giao-dien,chung,0,0,132,130,0.07,4.5,4.9,anh/gd-dau-phong-tinh-anh.92de83e4a3.webp
+hu-khoi-tron,hieu-ung,chung,1,0,312,54,0.06,3.9,4.5,anh/hu-khoi-tron.1cc57fa00a.webp
+gd-nen-bien-ngoai,giao-dien,V2 Hang biển,2,0,128,128,0.06,9.6,10.9,anh/gd-nen-bien-ngoai.15b695406e.webp
+gd-nen-bien-san-nhan,giao-dien,V2 Hang biển,2,0,128,128,0.06,4.1,11.8,anh/gd-nen-bien-san-nhan.e4dff9d0bc.webp
+gd-nen-bien-san0,giao-dien,V2 Hang biển,2,0,128,128,0.06,4.3,12.1,anh/gd-nen-bien-san0.08e69f5f4c.webp
+gd-nen-bien-san1,giao-dien,V2 Hang biển,2,0,128,128,0.06,4.4,12.1,anh/gd-nen-bien-san1.4bb64dc22c.webp
+gd-nen-bien-san2,giao-dien,V2 Hang biển,2,0,128,128,0.06,4.3,12.0,anh/gd-nen-bien-san2.f0fe023512.webp
+gd-nen-lau-ngoai,giao-dien,V3 Lâu đài cổ,2,0,128,128,0.06,9.7,10.7,anh/gd-nen-lau-ngoai.6d199a18de.webp
+gd-nen-lau-san-nhan,giao-dien,V3 Lâu đài cổ,2,0,128,128,0.06,4.2,11.1,anh/gd-nen-lau-san-nhan.0e166f2815.webp
+gd-nen-lau-san0,giao-dien,V3 Lâu đài cổ,2,0,128,128,0.06,4.2,9.9,anh/gd-nen-lau-san0.6e2ce19de9.webp
+gd-nen-lau-san1,giao-dien,V3 Lâu đài cổ,2,0,128,128,0.06,4.2,10.3,anh/gd-nen-lau-san1.4e260fa2a7.webp
+gd-nen-lau-san2,giao-dien,V3 Lâu đài cổ,2,0,128,128,0.06,4.3,11.0,anh/gd-nen-lau-san2.f31237aa19.webp
+gd-nen-rung-ngoai,giao-dien,V1 Rừng già,2,0,128,128,0.06,2.4,3.1,anh/gd-nen-rung-ngoai.9332f156f4.webp
+gd-nen-rung-san-nhan,giao-dien,V1 Rừng già,2,0,128,128,0.06,1.1,3.4,anh/gd-nen-rung-san-nhan.7aa91ca71a.webp
+gd-nen-rung-san0,giao-dien,V1 Rừng già,2,0,128,128,0.06,0.9,2.5,anh/gd-nen-rung-san0.180888dfa9.webp
+gd-nen-rung-san1,giao-dien,V1 Rừng già,2,0,128,128,0.06,0.9,2.7,anh/gd-nen-rung-san1.7adf6dff0b.webp
+gd-nen-rung-san2,giao-dien,V1 Rừng già,2,0,128,128,0.06,1.1,3.3,anh/gd-nen-rung-san2.17e1d4afe6.webp
+gd-nen-song-ngoai,giao-dien,V4 Sông sâu,2,0,128,128,0.06,10.2,11.3,anh/gd-nen-song-ngoai.0aca9463e1.webp
+gd-nen-song-san-nhan,giao-dien,V4 Sông sâu,2,0,128,128,0.06,3.3,8.5,anh/gd-nen-song-san-nhan.4c3ed72401.webp
+gd-nen-song-san0,giao-dien,V4 Sông sâu,2,0,128,128,0.06,3.0,7.8,anh/gd-nen-song-san0.c3455fa5c0.webp
+gd-nen-song-san1,giao-dien,V4 Sông sâu,2,0,128,128,0.06,3.3,8.2,anh/gd-nen-song-san1.7e35b7afee.webp
+gd-nen-song-san2,giao-dien,V4 Sông sâu,2,0,128,128,0.06,3.1,7.9,anh/gd-nen-song-san2.0d03fa8247.webp
+gd-nut-noi-chuyen-bam,giao-dien,chung,0,0,128,128,0.06,4.4,5.1,anh/gd-nut-noi-chuyen-bam.a17e6fa810.webp
+gd-nut-noi-chuyen-sang,giao-dien,chung,0,0,128,128,0.06,4.1,4.7,anh/gd-nut-noi-chuyen-sang.da33026733.webp
+gd-nut-noi-chuyen,giao-dien,chung,0,0,128,128,0.06,4.6,5.1,anh/gd-nut-noi-chuyen.a838ecc459.webp
+hu-trung-phi-tieu,hieu-ung,chung,0,0,256,64,0.06,2.4,2.9,anh/hu-trung-phi-tieu.377f90d1dc.webp
+hu-lon,hieu-ung,chung,1,0,400,40,0.06,3.3,3.7,anh/hu-lon.5d35326308.webp
+gd-lang-hang-xen,giao-dien,chung,0,0,144,110,0.06,2.5,2.8,anh/gd-lang-hang-xen.629428cc61.webp
+hu-doc-toe,hieu-ung,chung,1,0,360,44,0.06,3.0,3.4,anh/hu-doc-toe.c1f90eec8f.webp
+gd-lang-nha-may,giao-dien,chung,0,0,154,102,0.06,5.0,5.6,anh/gd-lang-nha-may.647316c01d.webp
+hu-cau-dat-lan,hieu-ung,V1 Rừng già,1,0,352,44,0.06,7.2,7.8,anh/hu-cau-dat-lan.69e419cade.webp
+hu-nam-con,hieu-ung,V1 Rừng già,1,0,276,56,0.06,4.2,4.5,anh/hu-nam-con.736fcce93b.webp
+hu-bao-vung-vong,hieu-ung,chung,1,0,384,40,0.06,3.2,3.5,anh/hu-bao-vung-vong.b2df35745e.webp
+hu-thuong-bang-dat,hieu-ung,chung,1,0,320,48,0.06,0.4,1.0,anh/hu-thuong-bang-dat.c5e632c9a2.webp
+hu-giot-he-poison,hieu-ung,chung,1,0,280,54,0.06,3.0,3.3,anh/hu-giot-he-poison.0dd2e70def.webp
+hu-phan-than,hieu-ung,chung,1,0,250,60,0.06,4.8,5.3,anh/hu-phan-than.99625369dc.webp
+gd-bang-viec,giao-dien,chung,0,0,124,120,0.06,7.4,9.2,anh/gd-bang-viec.d8379f39e7.webp
+hu-bam-bang,hieu-ung,chung,1,0,248,60,0.06,6.3,6.7,anh/hu-bam-bang.3ef00e62b0.webp
+hu-am-sat,hieu-ung,chung,1,0,320,46,0.06,3.5,3.9,anh/hu-am-sat.b4fd598574.webp
+hu-bam-lua-rong,hieu-ung,chung,1,0,320,46,0.06,5.7,6.0,anh/hu-bam-lua-rong.af1ef5c7b6.webp
+hu-giot-he-ice,hieu-ung,chung,1,0,280,52,0.06,3.6,3.9,anh/hu-giot-he-ice.a3758284d7.webp
+gd-hud2-bang-giay,giao-dien,chung,0,0,258,56,0.06,5.6,14.9,anh/gd-hud2-bang-giay.ffb0781569.webp
+gd-tt-lau-tham-tron,giao-dien,V3 Lâu đài cổ,2,0,120,120,0.05,4.8,5.6,anh/gd-tt-lau-tham-tron.6559098dd5.webp
+hu-nhua-rung,hieu-ung,chung,1,0,224,64,0.05,3.7,4.1,anh/hu-nhua-rung.9bbaa04a6e.webp
+hu-bam-doc,hieu-ung,chung,1,0,232,60,0.05,3.8,4.3,anh/hu-bam-doc.4017ea90fd.webp
+gd-lang-cong,giao-dien,chung,0,0,124,112,0.05,3.1,3.4,anh/gd-lang-cong.bf3ddaf53a.webp
+hu-trang-muc-lua,hieu-ung,chung,1,0,288,48,0.05,2.8,8.7,anh/hu-trang-muc-lua.d4f8df92d8.webp
+hu-hat-no,hieu-ung,chung,0,0,260,52,0.05,1.7,2.0,anh/hu-hat-no.cfa73b5092.webp
+hu-tich-chuong,hieu-ung,chung,1,0,264,50,0.05,2.9,3.4,anh/hu-tich-chuong.c4b17dc004.webp
+hu-nut-san,hieu-ung,chung,1,0,124,106,0.05,3.3,3.6,anh/hu-nut-san.eb394d059e.webp
+gd-nen-bien-tuong-sau,giao-dien,V2 Hang biển,2,0,128,98,0.05,7.4,8.9,anh/gd-nen-bien-tuong-sau.a9e1ec96eb.webp
+gd-nen-lau-tuong-sau,giao-dien,V3 Lâu đài cổ,2,0,128,98,0.05,6.7,7.5,anh/gd-nen-lau-tuong-sau.4c95e902f1.webp
+gd-nen-rung-tuong-sau,giao-dien,V1 Rừng già,2,0,128,98,0.05,2.3,3.0,anh/gd-nen-rung-tuong-sau.336be34ff2.webp
+gd-vong-ngoc,giao-dien,chung,0,0,112,112,0.05,2.1,2.4,anh/gd-vong-ngoc.2e3fa9586e.webp
+gd-vong-sat,giao-dien,chung,0,0,112,112,0.05,2.4,2.8,anh/gd-vong-sat.ad5777b4f5.webp
+hu-doi-vk,hieu-ung,chung,1,0,260,48,0.05,1.9,2.5,anh/hu-doi-vk.262a13baeb.webp
+hu-giot-he-fire,hieu-ung,chung,1,0,240,52,0.05,3.0,3.3,anh/hu-giot-he-fire.a59b07ff6a.webp
+hu-gai-bang,hieu-ung,chung,1,0,264,46,0.05,3.5,3.9,anh/hu-gai-bang.1a34a9739c.webp
+hu-lao-bui,hieu-ung,chung,1,0,310,38,0.04,2.7,3.0,anh/hu-lao-bui.b89fc10d51.webp
+gd-dau-phong-nguyen,giao-dien,chung,0,0,108,108,0.04,3.3,3.6,anh/gd-dau-phong-nguyen.fa4a5e4a3d.webp
+hu-khoi-doc-nho,hieu-ung,V1 Rừng già,1,0,216,54,0.04,2.6,2.8,anh/hu-khoi-doc-nho.7cadafac4c.webp
+gd-tt-lau-tham-vuong,giao-dien,V3 Lâu đài cổ,2,0,136,84,0.04,4.2,4.9,anh/gd-tt-lau-tham-vuong.3b32952f4c.webp
+hu-dong-dau,hieu-ung,chung,1,0,190,60,0.04,2.5,2.8,anh/hu-dong-dau.ca21bb9406.webp
+hu-vet-chay,hieu-ung,chung,1,0,280,40,0.04,5.2,5.5,anh/hu-vet-chay.3446e80165.webp
+hu-song-dat,hieu-ung,chung,1,0,248,44,0.04,4.2,4.5,anh/hu-song-dat.7654c5f576.webp
+hu-vet-nhot,hieu-ung,V2 Hang biển,1,0,336,32,0.04,4.5,4.9,anh/hu-vet-nhot.4190412c1d.webp
+gd-cot-nang-rung,giao-dien,chung,0,0,54,196,0.04,0.5,0.6,anh/gd-cot-nang-rung.93cb8add6d.webp
+hu-bam-lua,hieu-ung,chung,1,0,176,60,0.04,4.6,5.0,anh/hu-bam-lua.780c536160.webp
+hu-chuong-doc,hieu-ung,chung,1,0,256,40,0.04,2.5,2.8,anh/hu-chuong-doc.e7d3aa5eab.webp
+hu-chuong-lua,hieu-ung,chung,1,0,256,40,0.04,3.9,4.6,anh/hu-chuong-lua.f44fe320d7.webp
+hu-sao-chop,hieu-ung,chung,1,0,230,44,0.04,1.2,1.5,anh/hu-sao-chop.323b8bcbfe.webp
+hu-vung-dau-chay,hieu-ung,V4 Sông sâu,1,0,384,26,0.04,3.1,3.3,anh/hu-vung-dau-chay.6170768323.webp
+hu-vat-luc-binh,hieu-ung,V4 Sông sâu,1,0,224,42,0.04,3.4,3.6,anh/hu-vat-luc-binh.ef6081aef7.webp
+hu-vat-den-dau,hieu-ung,V4 Sông sâu,1,0,176,52,0.03,2.6,2.8,anh/hu-vat-den-dau.4d8bd264e9.webp
+hu-tuong-tinh-the,hieu-ung,V2 Hang biển,1,0,240,38,0.03,3.2,3.5,anh/hu-tuong-tinh-the.195a81e444.webp
+hu-ray-bang,hieu-ung,chung,1,0,180,50,0.03,1.0,1.2,anh/hu-ray-bang.864cbe20fe.webp
+hu-chuong-bang,hieu-ung,chung,1,0,256,32,0.03,3.9,7.5,anh/hu-chuong-bang.95d85472f8.webp
+gd-phuc-lanh-ca,giao-dien,chung,0,0,90,90,0.03,3.9,4.2,anh/gd-phuc-lanh-ca.9cf4bc9a2d.webp
+gd-phuc-lanh-guom,giao-dien,chung,0,0,90,90,0.03,3.4,3.9,anh/gd-phuc-lanh-guom.ffeb07eaf2.webp
+gd-phuc-lanh-hoa,giao-dien,chung,0,0,90,90,0.03,5.8,6.2,anh/gd-phuc-lanh-hoa.4b982d4cf1.webp
+gd-phuc-lanh-ngan,giao-dien,chung,0,0,90,90,0.03,5.1,5.7,anh/gd-phuc-lanh-ngan.04c467556a.webp
+gd-phuc-lanh-ngua,giao-dien,chung,0,0,90,90,0.03,4.8,5.4,anh/gd-phuc-lanh-ngua.ef32a0fda9.webp
+gd-phuc-lanh-no,giao-dien,chung,0,0,90,90,0.03,3.6,3.9,anh/gd-phuc-lanh-no.bdba4100ae.webp
+gd-phuc-lanh-noc,giao-dien,chung,0,0,90,90,0.03,5.0,5.6,anh/gd-phuc-lanh-noc.1bda64793d.webp
+gd-phuc-lanh-nui,giao-dien,chung,0,0,90,90,0.03,5.1,5.8,anh/gd-phuc-lanh-nui.8392b071c6.webp
+gd-phuc-lanh-riu,giao-dien,chung,0,0,90,90,0.03,4.1,4.5,anh/gd-phuc-lanh-riu.8b7875cfff.webp
+gd-phuc-lanh-song,giao-dien,chung,0,0,90,90,0.03,5.7,6.4,anh/gd-phuc-lanh-song.776966c678.webp
+gd-phuc-lanh-suong,giao-dien,chung,0,0,90,90,0.03,5.3,5.7,anh/gd-phuc-lanh-suong.75f4b8e2a0.webp
+gd-phuc-lanh-than,giao-dien,chung,0,0,90,90,0.03,3.3,3.9,anh/gd-phuc-lanh-than.fc80c7b89a.webp
+gd-phuc-lanh-tre,giao-dien,chung,0,0,90,90,0.03,2.6,3.1,anh/gd-phuc-lanh-tre.33357d6262.webp
+gd-phuc-lanh-trong,giao-dien,chung,0,0,90,90,0.03,5.3,5.7,anh/gd-phuc-lanh-trong.654415dacd.webp
+hu-lua-bung,hieu-ung,chung,1,0,192,42,0.03,2.1,2.3,anh/hu-lua-bung.8b11ae04da.webp
+hu-vet-luot,hieu-ung,chung,1,0,336,24,0.03,1.2,1.5,anh/hu-vet-luot.942b1b7269.webp
+gd-dai-thong-bao,giao-dien,chung,0,0,218,36,0.03,3.4,3.6,anh/gd-dai-thong-bao.0dab12a8ba.webp
+hu-ban-cung-fire,hieu-ung,chung,1,0,256,30,0.03,2.1,2.4,anh/hu-ban-cung-fire.bdab41edf0.webp
+gd-o-vk-0,giao-dien,chung,0,0,108,70,0.03,0.5,0.6,anh/gd-o-vk-0.29611a6069.webp
+hu-va-cham,hieu-ung,chung,1,0,208,36,0.03,1.0,1.7,anh/hu-va-cham.f1f23af87b.webp
+hu-lang-khung-cui,hieu-ung,chung,1,0,168,44,0.03,1.1,1.3,anh/hu-lang-khung-cui.4055218966.webp
+gd-khung-trum,giao-dien,chung,0,0,120,60,0.03,0.8,1.0,anh/gd-khung-trum.ccaccc1839.webp
+hu-ban-cung-poison,hieu-ung,chung,1,0,256,28,0.03,2.1,2.3,anh/hu-ban-cung-poison.d8b2b4ed8a.webp
+gd-nut-vuong,giao-dien,chung,0,0,84,84,0.03,1.4,1.6,anh/gd-nut-vuong.3703c8a4d1.webp
+gd-trong-dong,giao-dien,chung,0,0,84,84,0.03,2.7,3.1,anh/gd-trong-dong.cd69eea515.webp
+hu-bom-to,hieu-ung,chung,1,0,160,44,0.03,1.5,1.6,anh/hu-bom-to.b7d0afbfe6.webp
+hu-ban-cung-ice,hieu-ung,chung,1,0,256,26,0.03,1.9,2.2,anh/hu-ban-cung-ice.dd170eec84.webp
+hu-ban-cung,hieu-ung,chung,1,0,256,26,0.03,0.9,1.5,anh/hu-ban-cung.a085558a3b.webp
+gd-the-trum-chon,giao-dien,chung,0,0,80,82,0.03,4.6,4.9,anh/gd-the-trum-chon.117a2a2644.webp
+gd-the-trum-khoa,giao-dien,chung,0,0,80,82,0.03,3.1,3.4,anh/gd-the-trum-khoa.8f85abd646.webp
+gd-the-trum,giao-dien,chung,0,0,80,82,0.03,4.0,4.2,anh/gd-the-trum.0cf778cf8f.webp
+hu-vet-dau,hieu-ung,V3 Lâu đài cổ,1,0,252,26,0.02,2.4,2.6,anh/hu-vet-dau.921890864b.webp
+hu-bua-tam-giac,hieu-ung,V3 Lâu đài cổ,1,0,192,34,0.02,2.1,2.3,anh/hu-bua-tam-giac.5eabde1855.webp
+hu-bot-doc,hieu-ung,chung,1,0,180,36,0.02,1.8,1.9,anh/hu-bot-doc.6b6d822a35.webp
+gd-danh-hieu-bac,giao-dien,chung,0,0,202,32,0.02,4.2,5.2,anh/gd-danh-hieu-bac.bbdeb45991.webp
+gd-danh-hieu-dong,giao-dien,chung,0,0,202,32,0.02,4.2,5.1,anh/gd-danh-hieu-dong.615d9d89a4.webp
+gd-danh-hieu-vang,giao-dien,chung,0,0,202,32,0.02,4.1,5.1,anh/gd-danh-hieu-vang.6ab95e9f89.webp
+gd-cua-lau-tren-khoa,giao-dien,V3 Lâu đài cổ,2,0,80,80,0.02,2.3,2.6,anh/gd-cua-lau-tren-khoa.c5d41cedf2.webp
+gd-cua-lau-tren,giao-dien,V3 Lâu đài cổ,2,0,80,80,0.02,2.2,2.5,anh/gd-cua-lau-tren.ec7cc76615.webp
+gd-nut-doi,giao-dien,chung,0,0,80,80,0.02,1.2,3.3,anh/gd-nut-doi.7c135bbfd1.webp
+gd-khung-canh-bao,giao-dien,chung,0,0,168,38,0.02,2.3,2.6,anh/gd-khung-canh-bao.9b1b18f722.webp
+hu-manh-san-ho,hieu-ung,V2 Hang biển,1,0,228,28,0.02,1.6,1.7,anh/hu-manh-san-ho.323bd53d36.webp
+gd-cua-rung-tren-khoa,giao-dien,V1 Rừng già,2,0,80,78,0.02,2.5,2.9,anh/gd-cua-rung-tren-khoa.8dad9799ec.webp
+hu-vet-vung,hieu-ung,chung,1,0,256,24,0.02,0.9,1.0,anh/hu-vet-vung.a7021c3650.webp
+hu-giot-doc-san,hieu-ung,chung,1,0,180,34,0.02,2.2,2.3,anh/hu-giot-doc-san.da3eddb530.webp
+gd-cua-bien-tren-khoa,giao-dien,V2 Hang biển,2,0,80,76,0.02,2.3,2.7,anh/gd-cua-bien-tren-khoa.bb1c362406.webp
+gd-cua-rung-tren,giao-dien,V1 Rừng già,2,0,80,76,0.02,2.3,2.7,anh/gd-cua-rung-tren.da0981b174.webp
+hu-tia-mom,hieu-ung,chung,1,0,160,38,0.02,1.4,1.7,anh/hu-tia-mom.c17507e9d7.webp
+gd-nut-chinh,giao-dien,chung,0,0,126,48,0.02,2.5,2.9,anh/gd-nut-chinh.aba883d09f.webp
+gd-nut-chon,giao-dien,chung,0,0,126,48,0.02,2.6,3.0,anh/gd-nut-chon.c05dee798c.webp
+gd-nut-nguy,giao-dien,chung,0,0,126,48,0.02,2.5,3.0,anh/gd-nut-nguy.f6dd4de343.webp
+gd-nut-thuong,giao-dien,chung,0,0,126,48,0.02,2.6,3.0,anh/gd-nut-thuong.557e96d5ba.webp
+gd-cua-bien-tren,giao-dien,V2 Hang biển,2,0,80,74,0.02,2.1,2.5,anh/gd-cua-bien-tren.acffb29119.webp
+gd-hud2-nut-tron-2,giao-dien,chung,0,0,76,76,0.02,0.8,2.6,anh/gd-hud2-nut-tron-2.56855794e2.webp
+gd-hud2-nut-tron,giao-dien,chung,0,0,76,76,0.02,0.8,2.7,anh/gd-hud2-nut-tron.d05f209e26.webp
+gd-tt-rung-tien-canh-trai,giao-dien,V1 Rừng già,2,0,80,72,0.02,2.5,2.8,anh/gd-tt-rung-tien-canh-trai.ef139144bc.webp
+gd-tt-rung-tien-canh-phai,giao-dien,V1 Rừng già,2,0,78,72,0.02,2.2,2.6,anh/gd-tt-rung-tien-canh-phai.8ccfb273eb.webp
+gd-tt-bien-tien-canh-phai,giao-dien,V2 Hang biển,2,0,80,70,0.02,1.7,2.1,anh/gd-tt-bien-tien-canh-phai.b1faf6a791.webp
+gd-tt-bien-tien-canh-trai,giao-dien,V2 Hang biển,2,0,80,70,0.02,1.8,2.0,anh/gd-tt-bien-tien-canh-trai.1eb8cf5326.webp
+gd-tt-song-tien-canh-phai,giao-dien,V4 Sông sâu,2,0,80,70,0.02,1.7,1.9,anh/gd-tt-song-tien-canh-phai.61f102fbd2.webp
+gd-tt-song-tien-canh-trai,giao-dien,V4 Sông sâu,2,0,80,70,0.02,1.7,1.9,anh/gd-tt-song-tien-canh-trai.39e226d4d3.webp
+gd-dau-phong,giao-dien,chung,0,0,92,60,0.02,2.8,3.3,anh/gd-dau-phong.4ff598af60.webp
+gd-song-cau,giao-dien,chung,0,0,124,44,0.02,2.5,2.8,anh/gd-song-cau.ec91805173.webp
+gd-tt-lau-tien-canh-trai,giao-dien,V3 Lâu đài cổ,2,0,80,68,0.02,1.8,2.1,anh/gd-tt-lau-tien-canh-trai.83db5f6dae.webp
+gd-khung-trum-nho,giao-dien,chung,0,0,104,52,0.02,0.5,0.6,anh/gd-khung-trum-nho.d2a7fa5339.webp
+hu-hat-linh-khi,hieu-ung,chung,1,0,176,30,0.02,1.5,1.7,anh/hu-hat-linh-khi.05ce546d1f.webp
+gd-cua-song-duoi,giao-dien,V4 Sông sâu,2,0,92,54,0.02,2.0,2.2,anh/gd-cua-song-duoi.902f44bb61.webp
+gd-vat-thuong-nhan,giao-dien,chung,0,0,72,68,0.02,1.7,1.9,anh/gd-vat-thuong-nhan.7471bb2824.webp
+gd-khung-nho,giao-dien,chung,0,0,128,38,0.02,0.7,0.8,anh/gd-khung-nho.da880ffc63.webp
+hu-choang,hieu-ung,chung,1,0,240,20,0.02,0.5,0.6,anh/hu-choang.a9f852a03c.webp
+hu-dan-ten-poison,hieu-ung,chung,0,0,160,30,0.02,2.6,2.8,anh/hu-dan-ten-poison.49a3d40ff5.webp
+hu-gon-nuoc,hieu-ung,chung,1,0,240,20,0.02,0.5,0.5,anh/hu-gon-nuoc.6da6ff1a9e.webp
+gd-cua-rung-duoi-khoa,giao-dien,V1 Rừng già,2,0,92,52,0.02,1.8,2.1,anh/gd-cua-rung-duoi-khoa.cdcc2196a1.webp
+gd-cua-song-duoi-khoa,giao-dien,V4 Sông sâu,2,0,92,52,0.02,2.2,2.4,anh/gd-cua-song-duoi-khoa.93e459c60e.webp
+gd-o-con-chon,giao-dien,chung,0,0,70,68,0.02,1.4,1.4,anh/gd-o-con-chon.a5c143e609.webp
+gd-cua-song-tren-khoa,giao-dien,V4 Sông sâu,2,0,84,56,0.02,2.1,2.3,anh/gd-cua-song-tren-khoa.613c09c711.webp
+gd-the-ai-chon,giao-dien,chung,0,0,70,67,0.02,3.0,3.2,anh/gd-the-ai-chon.b1dbb656c7.webp
+gd-the-ai-khoa,giao-dien,chung,0,0,70,67,0.02,1.8,1.9,anh/gd-the-ai-khoa.53ea2e8420.webp
+gd-the-ai,giao-dien,chung,0,0,70,67,0.02,2.2,2.3,anh/gd-the-ai.5c4f7acedc.webp
+hu-bom-bang,hieu-ung,chung,1,0,128,36,0.02,1.2,1.3,anh/hu-bom-bang.0b284ecb3c.webp
+hu-bom-phao,hieu-ung,chung,1,0,128,36,0.02,1.1,1.2,anh/hu-bom-phao.56ec5a0951.webp
+hu-dan-qua-no,hieu-ung,chung,1,0,128,36,0.02,1.0,1.1,anh/hu-dan-qua-no.9baa5f2a29.webp
+hu-nuoc-dang,hieu-ung,chung,1,0,192,24,0.02,3.4,3.5,anh/hu-nuoc-dang.67a6526900.webp
+gd-lang-do,giao-dien,chung,0,0,88,52,0.02,1.3,1.4,anh/gd-lang-do.05813cdfe8.webp
+gd-cua-song-tren,giao-dien,V4 Sông sâu,2,0,84,54,0.02,1.9,2.1,anh/gd-cua-song-tren.3a12105e24.webp
+gd-o-con,giao-dien,chung,0,0,68,66,0.02,1.2,1.4,anh/gd-o-con.cf9113c472.webp
+gd-cot-nang-lau,giao-dien,chung,0,0,56,80,0.02,1.5,1.8,anh/gd-cot-nang-lau.c411e6d476.webp
+gd-hud2-thanh-mau,giao-dien,chung,0,0,160,28,0.02,0.3,0.9,anh/gd-hud2-thanh-mau.5f3cc971a1.webp
+gd-tt-lau-tien-canh-phai,giao-dien,V3 Lâu đài cổ,2,0,80,56,0.02,1.6,1.8,anh/gd-tt-lau-tien-canh-phai.d850dead61.webp
+hu-dan-ten-fire,hieu-ung,chung,0,0,160,28,0.02,2.4,2.6,anh/hu-dan-ten-fire.136202d918.webp
+hu-dan-ten-ice,hieu-ung,chung,0,0,160,28,0.02,2.4,2.7,anh/hu-dan-ten-ice.3ca6bc7263.webp
+gd-lang-thanh-duoi,giao-dien,chung,0,0,130,34,0.02,3.0,4.0,anh/gd-lang-thanh-duoi.cec803db9d.webp
+gd-cot-nang-bien,giao-dien,chung,0,0,56,78,0.02,1.6,2.0,anh/gd-cot-nang-bien.9c9c5ca88b.webp
+hu-quang-dan,hieu-ung,chung,1,0,216,20,0.02,1.0,1.3,anh/hu-quang-dan.3b58643549.webp
+gd-cua-bien-duoi-khoa,giao-dien,V2 Hang biển,2,0,92,46,0.02,1.6,2.0,anh/gd-cua-bien-duoi-khoa.f6be092343.webp
+gd-cua-lau-duoi-khoa,giao-dien,V3 Lâu đài cổ,2,0,92,46,0.02,1.6,1.8,anh/gd-cua-lau-duoi-khoa.29bed04fc8.webp
+gd-ai-ngay-da,giao-dien,chung,0,0,64,64,0.02,2.9,3.6,anh/gd-ai-ngay-da.ffa400507d.webp
+gd-ai-ngay-mai,giao-dien,chung,0,0,64,64,0.02,2.8,3.5,anh/gd-ai-ngay-mai.51ca7c0591.webp
+gd-ai-ngay-vang,giao-dien,chung,0,0,64,64,0.02,2.9,3.5,anh/gd-ai-ngay-vang.59418d50be.webp
+gd-o-do-0-chon,giao-dien,chung,0,0,64,64,0.02,0.5,0.6,anh/gd-o-do-0-chon.f072f21003.webp
+gd-o-do-0,giao-dien,chung,0,0,64,64,0.02,0.5,0.7,anh/gd-o-do-0.a61985c497.webp
+gd-so-bia,giao-dien,chung,0,0,64,64,0.02,3.1,3.6,anh/gd-so-bia.b375e6350b.webp
+gd-the-thuong,giao-dien,chung,0,0,64,64,0.02,0.5,0.6,anh/gd-the-thuong.acc59d37c0.webp
+hu-bao-vung-soc,hieu-ung,chung,1,0,128,32,0.02,0.5,0.6,anh/hu-bao-vung-soc.8f6f448480.webp
+gd-o-phong-cur,giao-dien,chung,0,0,72,56,0.02,0.4,0.5,anh/gd-o-phong-cur.5494e12bd7.webp
+gd-o-phong,giao-dien,chung,0,0,72,56,0.02,0.7,0.8,anh/gd-o-phong.921658665c.webp
+gd-thanh-tren,giao-dien,chung,0,0,122,32,0.01,1.9,2.3,anh/gd-thanh-tren.b8f6bce263.webp
+gd-khung-tinh-anh,giao-dien,chung,0,0,88,44,0.01,0.3,0.4,anh/gd-khung-tinh-anh.88c5058ae1.webp
+hu-moi-truong-rung-la,hieu-ung,V1 Rừng già,1,0,176,22,0.01,0.8,1.0,anh/hu-moi-truong-rung-la.cf83907343.webp
+gd-cua-rung-duoi,giao-dien,V1 Rừng già,2,0,92,42,0.01,1.6,1.9,anh/gd-cua-rung-duoi.9d6c24795b.webp
+gd-so-o-0,giao-dien,chung,0,0,62,62,0.01,3.1,3.6,anh/gd-so-o-0.5ca4d56027.webp
+gd-so-o-1,giao-dien,chung,0,0,62,62,0.01,2.8,3.4,anh/gd-so-o-1.9d96a922df.webp
+gd-so-o-2,giao-dien,chung,0,0,62,62,0.01,2.8,3.3,anh/gd-so-o-2.489541b60e.webp
+gd-lang-day-phoi,giao-dien,chung,0,0,72,52,0.01,0.6,0.7,anh/gd-lang-day-phoi.c641d5683f.webp
+gd-cua-bien-duoi,giao-dien,V2 Hang biển,2,0,92,40,0.01,1.5,1.7,anh/gd-cua-bien-duoi.e92c51741d.webp
+gd-cua-lau-duoi,giao-dien,V3 Lâu đài cổ,2,0,92,40,0.01,1.4,1.6,anh/gd-cua-lau-duoi.5340d8159a.webp
+gd-can-num,giao-dien,chung,0,0,60,60,0.01,1.0,1.1,anh/gd-can-num.31f409541e.webp
+gd-o-ep-0,giao-dien,chung,0,0,60,60,0.01,2.3,2.8,anh/gd-o-ep-0.f42d0058d1.webp
+gd-o-ep-1,giao-dien,chung,0,0,60,60,0.01,2.3,2.8,anh/gd-o-ep-1.2d2e2d6651.webp
+gd-o-ep-2,giao-dien,chung,0,0,60,60,0.01,2.3,2.8,anh/gd-o-ep-2.4ec4a75264.webp
+gd-o-ep-3,giao-dien,chung,0,0,60,60,0.01,2.3,2.8,anh/gd-o-ep-3.8991dc2109.webp
+gd-o-ep-4,giao-dien,chung,0,0,60,60,0.01,2.3,2.7,anh/gd-o-ep-4.3e6958cfa9.webp
+gd-o-ep-5,giao-dien,chung,0,0,60,60,0.01,2.3,2.8,anh/gd-o-ep-5.8ef9ed7711.webp
+gd-o-ep-6,giao-dien,chung,0,0,60,60,0.01,2.4,2.7,anh/gd-o-ep-6.d475db3722.webp
+gd-vat-suoi-mau,giao-dien,chung,0,0,60,60,0.01,1.3,1.4,anh/gd-vat-suoi-mau.483dae4769.webp
+gd-nen-bien-tuong-ben,giao-dien,V2 Hang biển,2,0,28,128,0.01,2.1,2.4,anh/gd-nen-bien-tuong-ben.80a668275e.webp
+gd-nen-lau-tuong-ben,giao-dien,V3 Lâu đài cổ,2,0,28,128,0.01,2.0,2.6,anh/gd-nen-lau-tuong-ben.ffe8263390.webp
+gd-nen-rung-tuong-ben,giao-dien,V1 Rừng già,2,0,28,128,0.01,0.9,1.2,anh/gd-nen-rung-tuong-ben.69a26162b3.webp
+gd-nen-song-tuong-ben,giao-dien,V4 Sông sâu,2,0,28,128,0.01,1.6,1.9,anh/gd-nen-song-tuong-ben.a0de48ecbe.webp
+gd-ruong-ngay-mo,giao-dien,chung,0,0,64,56,0.01,2.8,3.3,anh/gd-ruong-ngay-mo.4ea77f3426.webp
+gd-ruong-ngay,giao-dien,chung,0,0,64,56,0.01,2.5,3.0,anh/gd-ruong-ngay.5178eebc0a.webp
+gd-tham-lau,giao-dien,chung,0,0,44,80,0.01,3.7,4.3,anh/gd-tham-lau.cd318f121a.webp
+gd-vat-suoi-mana,giao-dien,chung,0,0,60,58,0.01,1.4,1.6,anh/gd-vat-suoi-mana.f0e136ede8.webp
+gd-hud2-thanh-linh-luc,giao-dien,chung,0,0,134,24,0.01,0.3,0.8,anh/gd-hud2-thanh-linh-luc.b85991429c.webp
+gd-huy-khung-bac,giao-dien,chung,0,0,56,56,0.01,2.4,3.0,anh/gd-huy-khung-bac.4580af6e43.webp
+gd-huy-khung-dong,giao-dien,chung,0,0,56,56,0.01,2.5,2.9,anh/gd-huy-khung-dong.95e4a77ef0.webp
+gd-huy-khung-khoa,giao-dien,chung,0,0,56,56,0.01,2.5,3.1,anh/gd-huy-khung-khoa.63808e4aec.webp
+gd-huy-khung-vang,giao-dien,chung,0,0,56,56,0.01,2.6,2.9,anh/gd-huy-khung-vang.8642b1c9a7.webp
+hu-dan-bao-tu,hieu-ung,chung,1,0,112,28,0.01,1.0,1.0,anh/hu-dan-bao-tu.c2071c1615.webp
+hu-dan-bot,hieu-ung,chung,1,0,112,28,0.01,0.7,0.7,anh/hu-dan-bot.fefbc575f7.webp
+hu-dan-bua,hieu-ung,chung,1,0,112,28,0.01,0.7,0.7,anh/hu-dan-bua.da070bf4a7.webp
+hu-dan-phao,hieu-ung,chung,1,0,112,28,0.01,0.5,0.6,anh/hu-dan-phao.c432f58ebb.webp
+gd-lang-cay-rom,giao-dien,chung,0,0,54,58,0.01,1.3,1.4,anh/gd-lang-cay-rom.3b4820a82d.webp
+gd-cua-lau-ben,giao-dien,V3 Lâu đài cổ,2,0,32,96,0.01,1.2,1.4,anh/gd-cua-lau-ben.2cee4a5113.webp
+gd-nen-bien-mep,giao-dien,V2 Hang biển,2,0,128,24,0.01,1.8,2.0,anh/gd-nen-bien-mep.18223a361c.webp
+gd-nen-bien-tuong-truoc,giao-dien,V2 Hang biển,2,0,128,24,0.01,2.1,2.2,anh/gd-nen-bien-tuong-truoc.67eec59701.webp
+gd-nen-lau-mep,giao-dien,V3 Lâu đài cổ,2,0,128,24,0.01,1.7,1.9,anh/gd-nen-lau-mep.17b767a816.webp
+gd-nen-lau-tuong-truoc,giao-dien,V3 Lâu đài cổ,2,0,128,24,0.01,1.6,1.8,anh/gd-nen-lau-tuong-truoc.18ffe1a71f.webp
+gd-nen-rung-mep,giao-dien,V1 Rừng già,2,0,128,24,0.01,0.8,0.9,anh/gd-nen-rung-mep.980ab29cbe.webp
+gd-nen-rung-tuong-truoc,giao-dien,V1 Rừng già,2,0,128,24,0.01,0.9,1.1,anh/gd-nen-rung-tuong-truoc.698f8d3c09.webp
+gd-nen-song-mep,giao-dien,V4 Sông sâu,2,0,128,24,0.01,2.0,2.3,anh/gd-nen-song-mep.d2c09bafec.webp
+gd-vat-suoi-mana-het,giao-dien,chung,0,0,60,50,0.01,1.3,1.5,anh/gd-vat-suoi-mana-het.d929717284.webp
+gd-vat-suoi-mau-het,giao-dien,chung,0,0,60,50,0.01,1.3,1.6,anh/gd-vat-suoi-mau-het.ea9ff37f4c.webp
+hu-bia-hat,hieu-ung,chung,1,0,120,24,0.01,0.6,0.7,anh/hu-bia-hat.70af6e5c75.webp
+gd-cua-lau-ben-khoa,giao-dien,V3 Lâu đài cổ,2,0,32,88,0.01,1.2,1.3,anh/gd-cua-lau-ben-khoa.df8bf1c722.webp
+gd-vat-ban-tho,giao-dien,chung,0,0,52,54,0.01,1.0,1.1,anh/gd-vat-ban-tho.64f9cfd65e.webp
+gd-tt-bien-mo-neo,giao-dien,V2 Hang biển,2,0,52,52,0.01,1.3,1.4,anh/gd-tt-bien-mo-neo.78ae52059f.webp
+gd-vat-ruong-do,giao-dien,chung,0,0,48,56,0.01,1.1,1.2,anh/gd-vat-ruong-do.efb780b212.webp
+hu-moi-truong-rung-nam-sang,hieu-ung,V1 Rừng già,1,0,144,18,0.01,0.8,0.9,anh/hu-moi-truong-rung-nam-sang.6aa2ff57dc.webp
+gd-ruot-thanh,giao-dien,chung,0,0,64,40,0.01,1.0,1.1,anh/gd-ruot-thanh.3b62a9ff06.webp
+hu-dan-lua,hieu-ung,chung,1,0,128,20,0.01,1.1,1.4,anh/hu-dan-lua.8a5acd1daf.webp
+hu-tia-gay,hieu-ung,chung,1,0,256,10,0.01,0.6,0.7,anh/hu-tia-gay.503bebf848.webp
+gd-cua-rung-ben-khoa,giao-dien,V1 Rừng già,2,0,32,78,0.01,1.4,1.5,anh/gd-cua-rung-ben-khoa.1cb85f7227.webp
+gd-cua-rung-ben,giao-dien,V1 Rừng già,2,0,32,78,0.01,1.3,1.5,anh/gd-cua-rung-ben.66425161e7.webp
+gd-vat-ruong-mo,giao-dien,chung,0,0,48,52,0.01,1.1,1.2,anh/gd-vat-ruong-mo.9f051e51fa.webp
+gd-vat-be-thu-thach-het,giao-dien,chung,0,0,40,62,0.01,1.0,1.2,anh/gd-vat-be-thu-thach-het.fa051db40b.webp
+gd-vat-be-thu-thach,giao-dien,chung,0,0,40,62,0.01,1.0,1.1,anh/gd-vat-be-thu-thach.0c4f44e347.webp
+gd-cua-bien-ben-khoa,giao-dien,V2 Hang biển,2,0,32,74,0.01,1.2,1.4,anh/gd-cua-bien-ben-khoa.3eb9a6ffd2.webp
+gd-cua-bien-ben,giao-dien,V2 Hang biển,2,0,32,74,0.01,1.2,1.4,anh/gd-cua-bien-ben.42c0437f84.webp
+gd-vat-ruong,giao-dien,chung,0,0,56,42,0.01,1.0,1.2,anh/gd-vat-ruong.b88428be59.webp
+gd-bong-khung,giao-dien,chung,0,0,48,48,0.01,0.1,0.1,anh/gd-bong-khung.1588ddbf2a.webp
+gd-bua-fire,giao-dien,chung,0,0,48,48,0.01,0.4,0.5,anh/gd-bua-fire.f411c07412.webp
+gd-bua-giu-bac,giao-dien,chung,0,0,48,48,0.01,1.7,2.0,anh/gd-bua-giu-bac.e98d59e214.webp
+gd-bua-ice,giao-dien,chung,0,0,48,48,0.01,0.4,0.5,anh/gd-bua-ice.d8c15afa29.webp
+gd-bua-poison,giao-dien,chung,0,0,48,48,0.01,0.5,0.6,anh/gd-bua-poison.5180b02dc3.webp
+gd-da-nang-bac,giao-dien,chung,0,0,48,48,0.01,1.8,2.1,anh/gd-da-nang-bac.2dc00a6c1e.webp
+gd-lang-gieng,giao-dien,chung,0,0,64,36,0.01,0.9,1.1,anh/gd-lang-gieng.089289b80b.webp
+gd-nen-song-tuong-truoc,giao-dien,V4 Sông sâu,2,0,96,24,0.01,1.5,1.6,anh/gd-nen-song-tuong-truoc.65816c2565.webp
+gd-nut-binh-mau,giao-dien,chung,0,0,48,48,0.01,0.6,0.6,anh/gd-nut-binh-mau.9057403b3b.webp
+gd-nut-chuong-fire,giao-dien,chung,0,0,48,48,0.01,0.5,0.5,anh/gd-nut-chuong-fire.e5d6ee915d.webp
+gd-nut-chuong-ice,giao-dien,chung,0,0,48,48,0.01,0.4,0.4,anh/gd-nut-chuong-ice.c9d5770366.webp
+gd-nut-chuong-poison,giao-dien,chung,0,0,48,48,0.01,0.6,0.7,anh/gd-nut-chuong-poison.34a42d9026.webp
+gd-nut-dac-biet-bow,giao-dien,chung,0,0,48,48,0.01,1.1,1.6,anh/gd-nut-dac-biet-bow.4e33f29899.webp
+gd-nut-dac-biet-hammer,giao-dien,chung,0,0,48,48,0.01,1.2,1.6,anh/gd-nut-dac-biet-hammer.92a33a3bef.webp
+gd-nut-dac-biet-spear,giao-dien,chung,0,0,48,48,0.01,1.1,1.4,anh/gd-nut-dac-biet-spear.d1de1f6bdf.webp
+gd-nut-dac-biet-sword,giao-dien,chung,0,0,48,48,0.01,1.2,1.6,anh/gd-nut-dac-biet-sword.640a290e6d.webp
+gd-nut-danh-bow,giao-dien,chung,0,0,48,48,0.01,1.1,1.6,anh/gd-nut-danh-bow.6e2d410efa.webp
+gd-nut-danh-hammer,giao-dien,chung,0,0,48,48,0.01,0.9,1.3,anh/gd-nut-danh-hammer.3b4f99c7a1.webp
+gd-nut-danh-spear,giao-dien,chung,0,0,48,48,0.01,0.6,1.0,anh/gd-nut-danh-spear.9f2ae97ff0.webp
+gd-nut-danh-sword,giao-dien,chung,0,0,48,48,0.01,0.8,1.2,anh/gd-nut-danh-sword.d4847650ed.webp
+gd-nut-ne,giao-dien,chung,0,0,48,48,0.01,0.7,0.7,anh/gd-nut-ne.bc1b02b82b.webp
+gd-nut-tam-dung,giao-dien,chung,0,0,48,48,0.01,0.3,0.4,anh/gd-nut-tam-dung.75a9cf6cae.webp
+hu-dan-cau,hieu-ung,chung,1,0,96,24,0.01,0.7,0.8,anh/hu-dan-cau.0eaf7ce36f.webp
+gd-vat-tinh-the,giao-dien,chung,0,0,46,50,0.01,1.1,1.2,anh/gd-vat-tinh-the.adc2daf2a6.webp
+gd-cua-song-ben-khoa,giao-dien,V4 Sông sâu,2,0,30,74,0.01,1.1,1.2,anh/gd-cua-song-ben-khoa.c11c44d23c.webp
+gd-cua-song-ben,giao-dien,V4 Sông sâu,2,0,30,74,0.01,0.9,1.0,anh/gd-cua-song-ben.550ab51db5.webp
+hu-lang-lua-lo,hieu-ung,chung,1,0,72,30,0.01,0.6,0.7,anh/hu-lang-lua-lo.75407e9b86.webp
+gd-lang-bang-tranh,giao-dien,chung,0,0,46,46,0.01,0.7,0.8,anh/gd-lang-bang-tranh.1fa15640c6.webp
+gd-tt-lau-tuong-hiep-si,giao-dien,V3 Lâu đài cổ,2,0,32,64,0.01,1.2,1.3,anh/gd-tt-lau-tuong-hiep-si.e620e9e0a2.webp
+hu-dan-gai-bang,hieu-ung,chung,1,0,128,16,0.01,0.5,0.5,anh/hu-dan-gai-bang.dd4c3e45e6.webp
+hu-dan-gai,hieu-ung,chung,1,0,128,16,0.01,0.4,0.4,anh/hu-dan-gai.dc4745a095.webp
+hu-dan-hat-doc,hieu-ung,chung,1,0,128,16,0.01,0.4,0.5,anh/hu-dan-hat-doc.8514a3b158.webp
+hu-suong-dai,hieu-ung,chung,1,0,256,8,0.01,0.3,0.4,anh/hu-suong-dai.d5efb4c8fa.webp
+gd-icon-viec-0,giao-dien,chung,0,0,44,44,0.01,1.4,1.8,anh/gd-icon-viec-0.d3eeac6aed.webp
+gd-icon-viec-1,giao-dien,chung,0,0,44,44,0.01,1.5,1.8,anh/gd-icon-viec-1.0f171be38d.webp
+gd-icon-viec-10,giao-dien,chung,0,0,44,44,0.01,1.5,1.8,anh/gd-icon-viec-10.20d408ce61.webp
+gd-icon-viec-11,giao-dien,chung,0,0,44,44,0.01,1.6,1.9,anh/gd-icon-viec-11.7809e54df2.webp
+gd-icon-viec-2,giao-dien,chung,0,0,44,44,0.01,1.6,1.9,anh/gd-icon-viec-2.80ca1e7c08.webp
+gd-icon-viec-3,giao-dien,chung,0,0,44,44,0.01,1.3,1.7,anh/gd-icon-viec-3.09a9f53197.webp
+gd-icon-viec-4,giao-dien,chung,0,0,44,44,0.01,1.6,2.1,anh/gd-icon-viec-4.72a2347a60.webp
+gd-icon-viec-5,giao-dien,chung,0,0,44,44,0.01,1.4,1.7,anh/gd-icon-viec-5.5ef1b179a4.webp
+gd-icon-viec-6,giao-dien,chung,0,0,44,44,0.01,1.4,1.8,anh/gd-icon-viec-6.7f3a0f7ba1.webp
+gd-icon-viec-7,giao-dien,chung,0,0,44,44,0.01,1.7,2.0,anh/gd-icon-viec-7.9746c2e641.webp
+gd-icon-viec-8,giao-dien,chung,0,0,44,44,0.01,1.3,1.6,anh/gd-icon-viec-8.f2d65fbdcb.webp
+gd-icon-viec-9,giao-dien,chung,0,0,44,44,0.01,1.7,2.1,anh/gd-icon-viec-9.84201072c7.webp
+gd-vat-nam-doc,giao-dien,chung,0,0,46,42,0.01,0.9,1.0,anh/gd-vat-nam-doc.cc59e41631.webp
+hu-quang-den,hieu-ung,chung,1,0,160,12,0.01,0.2,0.3,anh/hu-quang-den.2bfec668f2.webp
+gd-vat-ban-tho-het,giao-dien,chung,0,0,52,36,0.01,1.0,1.1,anh/gd-vat-ban-tho-het.6e2012880f.webp
+gd-bong-thoai,giao-dien,chung,0,0,64,28,0.01,0.4,0.6,anh/gd-bong-thoai.b915c5cccc.webp
+hu-lang-tia-lo,hieu-ung,chung,1,0,72,24,0.01,0.3,0.4,anh/hu-lang-tia-lo.b1a67dc73a.webp
+gd-tt-rung-co-thu,giao-dien,V1 Rừng già,2,0,42,40,0.01,0.9,1.0,anh/gd-tt-rung-co-thu.050260cddc.webp
+gd-vat-chau-than,giao-dien,chung,0,0,36,46,0.01,0.8,0.8,anh/gd-vat-chau-than.eed4aa759c.webp
+gd-tt-lau-co-do,giao-dien,V3 Lâu đài cổ,2,0,32,50,0.01,0.7,0.8,anh/gd-tt-lau-co-do.5400e66f67.webp
+hu-moi-truong-bien-giot,hieu-ung,V2 Hang biển,1,0,72,22,0.01,0.4,0.5,anh/hu-moi-truong-bien-giot.bf4c38c6b1.webp
+gd-the-nho,giao-dien,chung,0,0,78,20,0.01,0.7,0.7,anh/gd-the-nho.b7ff018173.webp
+gd-tt-lau-co-xanh,giao-dien,V3 Lâu đài cổ,2,0,32,48,0.01,0.7,0.8,anh/gd-tt-lau-co-xanh.029dd1fb6e.webp
+gd-hud2-o-vk-2,giao-dien,chung,0,0,40,38,0.01,0.2,0.7,anh/gd-hud2-o-vk-2.393a06989f.webp
+gd-khung-mau,giao-dien,chung,0,0,66,22,0.01,0.3,0.3,anh/gd-khung-mau.bacd0e4bb6.webp
+gd-hud2-o-vk,giao-dien,chung,0,0,38,38,0.01,0.3,0.8,anh/gd-hud2-o-vk.342c1d5432.webp
+gd-tt-lau-cot-da,giao-dien,V3 Lâu đài cổ,2,0,24,60,0.01,0.8,0.9,anh/gd-tt-lau-cot-da.98f660c9b9.webp
+gd-tt-bien-vung-sang,giao-dien,V2 Hang biển,2,0,50,28,0.01,0.8,0.9,anh/gd-tt-bien-vung-sang.21043b6162.webp
+hu-bong-chan,hieu-ung,chung,0,0,68,20,0.01,0.3,0.5,anh/hu-bong-chan.471b368d5b.webp
+gd-khung-mau-quai,giao-dien,chung,0,0,164,8,0.01,0.5,0.6,anh/gd-khung-mau-quai.9c5b899f5a.webp
+gd-huy-hinh-0,giao-dien,chung,0,0,36,36,0.0,0.9,1.2,anh/gd-huy-hinh-0.614447d53e.webp
+gd-huy-hinh-1,giao-dien,chung,0,0,36,36,0.0,1.1,1.4,anh/gd-huy-hinh-1.11f0a17eb1.webp
+gd-huy-hinh-10,giao-dien,chung,0,0,36,36,0.0,1.1,1.5,anh/gd-huy-hinh-10.a40906f1a4.webp
+gd-huy-hinh-11,giao-dien,chung,0,0,36,36,0.0,1.0,1.4,anh/gd-huy-hinh-11.1f0961f61e.webp
+gd-huy-hinh-12,giao-dien,chung,0,0,36,36,0.0,1.1,1.5,anh/gd-huy-hinh-12.1ab845f6a9.webp
+gd-huy-hinh-13,giao-dien,chung,0,0,36,36,0.0,1.3,1.7,anh/gd-huy-hinh-13.7b6ec9e07b.webp
+gd-huy-hinh-14,giao-dien,chung,0,0,36,36,0.0,1.2,1.6,anh/gd-huy-hinh-14.fe16dcf397.webp
+gd-huy-hinh-15,giao-dien,chung,0,0,36,36,0.0,1.1,1.5,anh/gd-huy-hinh-15.e68d4199e2.webp
+gd-huy-hinh-2,giao-dien,chung,0,0,36,36,0.0,1.1,1.5,anh/gd-huy-hinh-2.388f862319.webp
+gd-huy-hinh-3,giao-dien,chung,0,0,36,36,0.0,1.1,1.4,anh/gd-huy-hinh-3.0afc30de8d.webp
+gd-huy-hinh-4,giao-dien,chung,0,0,36,36,0.0,1.1,1.4,anh/gd-huy-hinh-4.809372451f.webp
+gd-huy-hinh-5,giao-dien,chung,0,0,36,36,0.0,1.1,1.4,anh/gd-huy-hinh-5.466c3f23a1.webp
+gd-huy-hinh-6,giao-dien,chung,0,0,36,36,0.0,1.1,1.4,anh/gd-huy-hinh-6.a1f8213a2e.webp
+gd-huy-hinh-7,giao-dien,chung,0,0,36,36,0.0,0.8,1.2,anh/gd-huy-hinh-7.db935a75f6.webp
+gd-huy-hinh-8,giao-dien,chung,0,0,36,36,0.0,1.3,1.5,anh/gd-huy-hinh-8.f7b8708030.webp
+gd-huy-hinh-9,giao-dien,chung,0,0,36,36,0.0,1.0,1.3,anh/gd-huy-hinh-9.a0395270f9.webp
+gd-o-tuan-dau,giao-dien,chung,0,0,36,36,0.0,1.6,2.1,anh/gd-o-tuan-dau.e133230b55.webp
+gd-o-tuan,giao-dien,chung,0,0,36,36,0.0,1.3,1.8,anh/gd-o-tuan.149cf883ba.webp
+gd-page-scrap,giao-dien,chung,0,0,36,36,0.0,0.4,1.1,anh/gd-page-scrap.8f885f22a6.webp
+gd-so-dau-fire,giao-dien,chung,0,0,36,36,0.0,1.3,1.7,anh/gd-so-dau-fire.ee36b52836.webp
+gd-so-dau-ice,giao-dien,chung,0,0,36,36,0.0,1.3,1.7,anh/gd-so-dau-ice.6195df410e.webp
+gd-so-dau-poison,giao-dien,chung,0,0,36,36,0.0,1.3,1.6,anh/gd-so-dau-poison.d08f485c36.webp
+vp-stone,do,chung,0,0,36,36,0.0,0.4,0.5,anh/vp-stone.00ba265ddd.webp
+gd-the-sap-co,giao-dien,chung,0,0,64,20,0.0,0.9,1.1,anh/gd-the-sap-co.563887503a.webp
+gd-tt-bien-tinh-the-to-2,giao-dien,V2 Hang biển,2,0,34,36,0.0,0.7,0.8,anh/gd-tt-bien-tinh-the-to-2.f5cb05610d.webp
+vp-linhkhi-fire,do,chung,0,0,34,36,0.0,0.4,0.5,anh/vp-linhkhi-fire.755864d4e8.webp
+vp-ore,do,chung,0,0,34,36,0.0,0.4,0.4,anh/vp-ore.c8f5ae440d.webp
+gd-tt-rung-tan-la,giao-dien,V1 Rừng già,2,0,42,28,0.0,0.8,0.9,anh/gd-tt-rung-tan-la.f273bbffbb.webp
+gd-tt-bien-tinh-the-to,giao-dien,V2 Hang biển,2,0,32,36,0.0,0.7,0.8,anh/gd-tt-bien-tinh-the-to.67ca489bd8.webp
+hu-hat-bui,hieu-ung,chung,1,0,96,12,0.0,0.1,0.2,anh/hu-hat-bui.9f8367bf06.webp
+hu-lua-duoc,hieu-ung,chung,1,0,48,24,0.0,0.5,0.6,anh/hu-lua-duoc.621c5f3402.webp
+vp-linhkhi-ice,do,chung,0,0,32,36,0.0,0.4,0.5,anh/vp-linhkhi-ice.73eb0cc509.webp
+vp-linhkhi-poison,do,chung,0,0,32,36,0.0,0.3,0.4,anh/vp-linhkhi-poison.2dee67246f.webp
+vp-xp,do,chung,0,0,32,36,0.0,0.3,0.4,anh/vp-xp.a5d3821300.webp
+gd-tt-rung-tan-la-2,giao-dien,V1 Rừng già,2,0,40,28,0.0,0.7,0.8,anh/gd-tt-rung-tan-la-2.e3117096cf.webp
+gd-tt-rung-tan-la-3,giao-dien,V1 Rừng già,2,0,40,28,0.0,0.8,0.8,anh/gd-tt-rung-tan-la-3.c25e0249e1.webp
+gd-tt-lau-cua-so-kinh,giao-dien,V3 Lâu đài cổ,2,0,32,34,0.0,0.6,0.7,anh/gd-tt-lau-cua-so-kinh.3e0e42f295.webp
+vp-gold,do,chung,0,0,30,36,0.0,0.3,0.4,anh/vp-gold.20f3706bbf.webp
+vp-mat1,do,chung,0,0,30,36,0.0,0.4,0.4,anh/vp-mat1.81310bd5fd.webp
+vp-mat2,do,chung,0,0,30,36,0.0,0.4,0.4,anh/vp-mat2.18dacca53a.webp
+vp-potion,do,chung,0,0,30,36,0.0,0.3,0.4,anh/vp-potion.753d6568f4.webp
+vp-shard0,do,chung,0,0,30,36,0.0,0.4,0.4,anh/vp-shard0.f03ceeafa6.webp
+vp-shard1,do,chung,0,0,30,36,0.0,0.4,0.4,anh/vp-shard1.8f7fd1f27f.webp
+vp-shard2,do,chung,0,0,30,36,0.0,0.4,0.4,anh/vp-shard2.dc2f82c120.webp
+gd-bt-fire-guard,giao-dien,chung,0,0,32,32,0.0,0.4,1.1,anh/gd-bt-fire-guard.7525613c32.webp
+gd-khung-mana,giao-dien,chung,0,0,64,16,0.0,0.2,0.3,anh/gd-khung-mana.c6d93a413a.webp
+gd-loi-mon-rung,giao-dien,chung,0,0,32,32,0.0,1.5,1.9,anh/gd-loi-mon-rung.6ce6940199.webp
+gd-long-khung,giao-dien,chung,0,0,32,32,0.0,1.3,1.9,anh/gd-long-khung.773c851ad8.webp
+gd-the-so,giao-dien,chung,0,0,32,32,0.0,1.3,1.7,anh/gd-the-so.2ade592a75.webp
+gd-the-thanh-tuu,giao-dien,chung,0,0,32,32,0.0,1.4,1.7,anh/gd-the-thanh-tuu.add5fde947.webp
+gd-the-viec-ngay,giao-dien,chung,0,0,32,32,0.0,1.3,1.7,anh/gd-the-viec-ngay.dac6970b04.webp
+gd-the-zed,giao-dien,chung,0,0,32,32,0.0,1.3,1.7,anh/gd-the-zed.71c5a68d21.webp
+gd-tt-rung-hoa-nang,giao-dien,V1 Rừng già,2,0,42,24,0.0,0.7,0.7,anh/gd-tt-rung-hoa-nang.fb9a8602f3.webp
+gd-tt-lau-cua-so,giao-dien,V3 Lâu đài cổ,2,0,22,44,0.0,0.6,0.8,anh/gd-tt-lau-cua-so.dfc2ad57fa.webp
+gd-tt-rung-bui-qua,giao-dien,V1 Rừng già,2,0,40,24,0.0,0.7,0.7,anh/gd-tt-rung-bui-qua.4d294e21b2.webp
+gd-lang-de,giao-dien,chung,0,0,36,26,0.0,0.4,0.5,anh/gd-lang-de.649f92680e.webp
+gd-khung-vach-lk,giao-dien,chung,0,0,64,14,0.0,0.5,0.7,anh/gd-khung-vach-lk.2aef027618.webp
+hu-bom-song,hieu-ung,V4 Sông sâu,1,0,56,16,0.0,0.5,0.5,anh/hu-bom-song.a5d48813e9.webp
+vp-mat0,do,chung,0,0,28,30,0.0,0.3,0.3,anh/vp-mat0.0f5b917731.webp
+gd-vat-chau-than-tat,giao-dien,chung,0,0,32,26,0.0,0.6,0.7,anh/gd-vat-chau-than-tat.5dcea43d51.webp
+gd-khung-xp,giao-dien,chung,0,0,56,14,0.0,0.2,0.3,anh/gd-khung-xp.2ef285cf97.webp
+gd-mui-ten-cua,giao-dien,chung,0,0,48,16,0.0,0.4,0.6,anh/gd-mui-ten-cua.4173273346.webp
+gd-cua-o-khoa,giao-dien,chung,0,0,24,30,0.0,0.3,0.4,anh/gd-cua-o-khoa.52b6fc4bb9.webp
+gd-tt-bien-vung-nuoc,giao-dien,V2 Hang biển,2,0,34,20,0.0,0.5,0.6,anh/gd-tt-bien-vung-nuoc.6a95a606f9.webp
+gd-tui,giao-dien,chung,0,0,26,26,0.0,0.3,0.3,anh/gd-tui.078313b1e7.webp
+gd-lang-cot-den,giao-dien,chung,0,0,18,36,0.0,0.3,0.4,anh/gd-lang-cot-den.c8f32d1f4e.webp
+gd-ruot-thanh-trum,giao-dien,chung,0,0,64,10,0.0,0.2,0.3,anh/gd-ruot-thanh-trum.6877ca7d19.webp
+gd-tt-lau-thung-go,giao-dien,V3 Lâu đài cổ,2,0,24,26,0.0,0.5,0.6,anh/gd-tt-lau-thung-go.772bc0f0c8.webp
+gd-tt-bien-dong-da,giao-dien,V2 Hang biển,2,0,30,20,0.0,0.5,0.6,anh/gd-tt-bien-dong-da.e773dae47a.webp
+gd-quai-gai,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-quai-gai.30a1248934.webp
+gd-quai-giap,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-quai-giap.f0b99342ad.webp
+gd-quai-hut,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-quai-hut.8e3fa4e429.webp
+gd-quai-nhanh,giao-dien,chung,0,0,24,24,0.0,0.2,0.2,anh/gd-quai-nhanh.ee7ef6fab8.webp
+gd-quai-no,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-quai-no.ce424a6fcc.webp
+gd-sao-rong,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-sao-rong.e581ae9707.webp
+gd-sao,giao-dien,chung,0,0,24,24,0.0,0.2,0.3,anh/gd-sao.6825896931.webp
+gd-tt-bien-nhu-da,giao-dien,V2 Hang biển,2,0,16,36,0.0,0.4,0.5,anh/gd-tt-bien-nhu-da.360b5d04b8.webp
+gd-tt-bien-dong-da-2,giao-dien,V2 Hang biển,2,0,28,20,0.0,0.4,0.5,anh/gd-tt-bien-dong-da-2.effceb3b16.webp
+gd-tt-song-coc,giao-dien,V4 Sông sâu,2,0,20,28,0.0,0.4,0.5,anh/gd-tt-song-coc.8cf06dde37.webp
+gd-tt-song-da-bun,giao-dien,V4 Sông sâu,2,0,30,18,0.0,0.3,0.3,anh/gd-tt-song-da-bun.e6ed7bf711.webp
+gd-lang-chum,giao-dien,chung,0,0,22,24,0.0,0.3,0.4,anh/gd-lang-chum.14d1adef24.webp
+gd-thanh-cuon,giao-dien,chung,0,0,8,64,0.0,0.3,0.4,anh/gd-thanh-cuon.a5afb1a11a.webp
+gd-cua-dau-lau,giao-dien,chung,0,0,22,22,0.0,0.3,0.4,anh/gd-cua-dau-lau.6087435f87.webp
+gd-lang-dia-chon,giao-dien,chung,0,0,22,22,0.0,0.9,1.1,anh/gd-lang-dia-chon.5823de8b73.webp
+gd-lang-dia,giao-dien,chung,0,0,22,22,0.0,0.8,1.0,anh/gd-lang-dia.3f42b2b72a.webp
+gd-tt-rung-day-leo-3,giao-dien,V1 Rừng già,2,0,12,40,0.0,0.4,0.5,anh/gd-tt-rung-day-leo-3.38449c4b10.webp
+gd-cham-than,giao-dien,chung,0,0,18,26,0.0,0.2,0.2,anh/gd-cham-than.97c94fa72e.webp
+gd-thanh-tren-vach,giao-dien,chung,0,0,14,32,0.0,0.4,0.4,anh/gd-thanh-tren-vach.c101b6537d.webp
+gd-tt-bien-nhu-da-4,giao-dien,V2 Hang biển,2,0,16,28,0.0,0.4,0.4,anh/gd-tt-bien-nhu-da-4.4642df37e9.webp
+gd-tt-lau-hom-go,giao-dien,V3 Lâu đài cổ,2,0,28,16,0.0,0.4,0.5,anh/gd-tt-lau-hom-go.416a1a5e7c.webp
+gd-huy-chuong-1,giao-dien,chung,0,0,22,20,0.0,0.2,0.3,anh/gd-huy-chuong-1.fb87c6177d.webp
+gd-huy-chuong-2,giao-dien,chung,0,0,22,20,0.0,0.2,0.3,anh/gd-huy-chuong-2.99489b020c.webp
+gd-huy-chuong-3,giao-dien,chung,0,0,22,20,0.0,0.2,0.3,anh/gd-huy-chuong-3.c12ab42c0d.webp
+gd-tt-rung-nam-do,giao-dien,V1 Rừng già,2,0,22,20,0.0,0.4,0.5,anh/gd-tt-rung-nam-do.ae04a15804.webp
+gd-tt-rung-day-leo,giao-dien,V1 Rừng già,2,0,12,36,0.0,0.4,0.5,anh/gd-tt-rung-day-leo.c107f18411.webp
+gd-tt-rung-goc-cay,giao-dien,V1 Rừng già,2,0,24,18,0.0,0.4,0.5,anh/gd-tt-rung-goc-cay.5b51d2d9fa.webp
+gd-tt-rung-khuc-go,giao-dien,V1 Rừng già,2,0,30,14,0.0,0.4,0.5,anh/gd-tt-rung-khuc-go.e046f70adf.webp
+gd-tt-rung-day-leo-2,giao-dien,V1 Rừng già,2,0,12,34,0.0,0.3,0.4,anh/gd-tt-rung-day-leo-2.efe1b4ee9d.webp
+gd-so-sao-0,giao-dien,chung,0,0,20,20,0.0,0.2,0.4,anh/gd-so-sao-0.74899e5771.webp
+gd-so-sao-1,giao-dien,chung,0,0,20,20,0.0,0.7,0.9,anh/gd-so-sao-1.bff7cdb20a.webp
+gd-so-sao-2,giao-dien,chung,0,0,20,20,0.0,0.4,0.9,anh/gd-so-sao-2.5defae9077.webp
+gd-so-sao-3,giao-dien,chung,0,0,20,20,0.0,0.7,0.9,anh/gd-so-sao-3.0ee440f608.webp
+gd-tt-rung-nam-sang,giao-dien,V1 Rừng già,2,0,22,18,0.0,0.4,0.5,anh/gd-tt-rung-nam-sang.ad7ff0018a.webp
+gd-mau-quai-nho,giao-dien,chung,0,0,32,12,0.0,0.3,0.5,anh/gd-mau-quai-nho.58044a1f1a.webp
+gd-tt-rung-nam-sang-2,giao-dien,V1 Rừng già,2,0,22,16,0.0,0.4,0.4,anh/gd-tt-rung-nam-sang-2.63f0675081.webp
+gd-tt-lau-xuong-so,giao-dien,V3 Lâu đài cổ,2,0,24,14,0.0,0.3,0.4,anh/gd-tt-lau-xuong-so.18e8b98845.webp
+gd-tt-troi,giao-dien,chung,0,0,24,14,0.0,0.2,0.2,anh/gd-tt-troi.623843d08d.webp
+hu-luoi-lua,hieu-ung,chung,1,0,24,14,0.0,0.3,0.4,anh/hu-luoi-lua.e686bdfc17.webp
+gd-tt-bang,giao-dien,chung,0,0,18,18,0.0,0.2,0.2,anh/gd-tt-bang.eb16580539.webp
+gd-tt-chay,giao-dien,chung,0,0,18,18,0.0,0.2,0.2,anh/gd-tt-chay.092b96e4d3.webp
+gd-tt-doc,giao-dien,chung,0,0,18,18,0.0,0.2,0.2,anh/gd-tt-doc.9180b6cc9e.webp
+gd-icon-linh-khi,giao-dien,chung,0,0,16,20,0.0,0.3,0.3,anh/gd-icon-linh-khi.bf1f2ec3db.webp
+gd-tt-bien-tinh-the-2,giao-dien,V2 Hang biển,2,0,16,20,0.0,0.4,0.4,anh/gd-tt-bien-tinh-the-2.cae6b0dd3e.webp
+gd-tt-bien-tinh-the,giao-dien,V2 Hang biển,2,0,16,20,0.0,0.4,0.4,anh/gd-tt-bien-tinh-the.24ecf8d143.webp
+hu-moi-truong-rung-co-lay,hieu-ung,V1 Rừng già,1,0,40,8,0.0,0.4,0.4,anh/hu-moi-truong-rung-co-lay.124b3d215a.webp
+gd-tt-bien-nhu-da-2,giao-dien,V2 Hang biển,2,0,14,22,0.0,0.3,0.4,anh/gd-tt-bien-nhu-da-2.0045281c58.webp
+gd-tt-lau-chan-nen,giao-dien,V3 Lâu đài cổ,2,0,10,30,0.0,0.3,0.4,anh/gd-tt-lau-chan-nen.9fdb4607f4.webp
+gd-ngoc-fire,giao-dien,chung,0,0,18,16,0.0,0.2,0.2,anh/gd-ngoc-fire.9f4ea7f012.webp
+gd-ngoc-ice,giao-dien,chung,0,0,18,16,0.0,0.2,0.2,anh/gd-ngoc-ice.39546dfc82.webp
+gd-ngoc-poison,giao-dien,chung,0,0,18,16,0.0,0.2,0.2,anh/gd-ngoc-poison.44d29383ec.webp
+gd-trum-vach-ten,giao-dien,chung,0,0,48,6,0.0,0.2,0.2,anh/gd-trum-vach-ten.8bd71dfc64.webp
+gd-vat-nam-doc-vo,giao-dien,chung,0,0,26,10,0.0,0.3,0.4,anh/gd-vat-nam-doc-vo.e50ba5c0d3.webp
+gd-he-fire,giao-dien,chung,0,0,16,16,0.0,0.2,0.2,anh/gd-he-fire.05a491dd03.webp
+gd-he-ice,giao-dien,chung,0,0,16,16,0.0,0.2,0.2,anh/gd-he-ice.4aa5127c74.webp
+gd-he-poison,giao-dien,chung,0,0,16,16,0.0,0.2,0.2,anh/gd-he-poison.dc37772123.webp
+gd-loi-noi,giao-dien,chung,0,0,24,10,0.0,0.1,0.2,anh/gd-loi-noi.9708d89145.webp
+gd-vat-tinh-the-vo,giao-dien,chung,0,0,26,8,0.0,0.3,0.4,anh/gd-vat-tinh-the-vo.a1e8d613bf.webp
+gd-lang-den-long,giao-dien,chung,0,0,10,20,0.0,0.2,0.3,anh/gd-lang-den-long.011272eda2.webp
+gd-lang-ga,giao-dien,chung,0,0,14,14,0.0,0.2,0.3,anh/gd-lang-ga.46f4a3c13f.webp
+gd-phong-boss,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-boss.1bfece5bf3.webp
+gd-phong-challenge,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-challenge.1e00328d33.webp
+gd-phong-chest,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-chest.aef6c07d83.webp
+gd-phong-curse,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-curse.109098a10b.webp
+gd-phong-elite,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-elite.8a22960111.webp
+gd-phong-fight,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-fight.082e9f1b39.webp
+gd-phong-fountain,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-fountain.ab76a5a318.webp
+gd-phong-key,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-key.472102ca71.webp
+gd-phong-lock,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-lock.8fef57abb7.webp
+gd-phong-merchant,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-merchant.ad941f537a.webp
+gd-phong-portal,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-portal.c43fb1a651.webp
+gd-phong-start,giao-dien,chung,0,0,14,14,0.0,0.1,0.2,anh/gd-phong-start.6f1fbbc114.webp
+gd-lang-coc,giao-dien,chung,0,0,16,12,0.0,0.3,0.3,anh/gd-lang-coc.783204c2b9.webp
+gd-tt-bien-nhu-da-3,giao-dien,V2 Hang biển,2,0,12,16,0.0,0.3,0.4,anh/gd-tt-bien-nhu-da-3.1c0ddfc377.webp
+gd-tt-lau-duoc,giao-dien,V3 Lâu đài cổ,2,0,8,22,0.0,0.2,0.3,anh/gd-tt-lau-duoc.ea248ca595.webp
+gd-lang-ga-mo,giao-dien,chung,0,0,14,12,0.0,0.2,0.3,anh/gd-lang-ga-mo.c637c85a67.webp
+gd-quai-sap-danh,giao-dien,chung,0,0,8,20,0.0,0.1,0.2,anh/gd-quai-sap-danh.d8dc0c8393.webp
+gd-bia-gach,giao-dien,chung,0,0,36,4,0.0,0.2,0.3,anh/gd-bia-gach.ec0362d802.webp
+gd-tt-bien-vo-so,giao-dien,V2 Hang biển,2,0,12,10,0.0,0.2,0.3,anh/gd-tt-bien-vo-so.f1ee9ee06b.webp
+gd-thanh-cuon-num,giao-dien,chung,0,0,6,18,0.0,0.2,0.2,anh/gd-thanh-cuon-num.48d7b4d6e7.webp
+gd-o-diem-trong,giao-dien,chung,0,0,10,10,0.0,0.2,0.3,anh/gd-o-diem-trong.2f95ea1ea5.webp
+gd-o-diem,giao-dien,chung,0,0,10,10,0.0,0.3,0.3,anh/gd-o-diem.a5bb56b07a.webp
+gd-tt-lau-nen,giao-dien,V3 Lâu đài cổ,2,0,8,12,0.0,0.2,0.3,anh/gd-tt-lau-nen.095f29eeec.webp
+gd-cham-moi,giao-dien,chung,0,0,8,8,0.0,0.2,0.3,anh/gd-cham-moi.d730de995c.webp
+gd-khung-vach-lk-moc,giao-dien,chung,0,0,4,14,0.0,0.1,0.1,anh/gd-khung-vach-lk-moc.df6288c889.webp
+gd-chuong-o-trong,giao-dien,chung,0,0,8,6,0.0,0.2,0.2,anh/gd-chuong-o-trong.d46164aaa9.webp
+gd-chuong-o,giao-dien,chung,0,0,8,6,0.0,0.2,0.2,anh/gd-chuong-o.4570a61d0d.webp
+gd-bong-thoai-duoi,giao-dien,chung,0,0,7,6,0.0,0.1,0.2,anh/gd-bong-thoai-duoi.f540e8b0e7.webp
+gd-ban-do-cham-khoa,giao-dien,chung,0,0,4,4,0.0,0.1,0.1,anh/gd-ban-do-cham-khoa.a0fbfa5394.webp
+gd-ban-do-cham,giao-dien,chung,0,0,4,4,0.0,0.1,0.1,anh/gd-ban-do-cham.06e7c554f7.webp
+gd-chuong-o-noi,giao-dien,chung,0,0,2,6,0.0,0.1,0.1,anh/gd-chuong-o-noi.e17de4c9cd.webp

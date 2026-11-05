@@ -1,0 +1,4 @@
+{"ve": 430, "cho": 2, "hong": 74, "dangTai": 0, "dang": 0, "loiDs": 74, "gan": false, "tt": {"idle": 190, "ready": 430, "failed": 74, "queued": 2}, "decodeCham": 0, "soLoiTai": 325, "lyDo": ["http-404"], "mb": 174.5, "moc": "26 s (đang lỗi 404)", "t": 27.1}
+{"ve": 506, "cho": 0, "hong": 0, "dangTai": 0, "dang": 0, "loiDs": 0, "gan": true, "tt": {"idle": 190, "ready": 506}, "decodeCham": 0, "soLoiTai": 325, "lyDo": ["http-404"], "mb": 186.9, "moc": "hết lỗi + thử lại 15 s", "t": 42.1}
+{"ve": 557, "cho": 0, "hong": 0, "dangTai": 0, "dang": 0, "loiDs": 0, "gan": true, "tt": {"idle": 139, "ready": 557}, "decodeCham": 0, "soLoiTai": 325, "lyDo": ["http-404"], "mb": 268.2, "moc": "vào ải vùng 1", "t": 47.1}
+KQ {"kich_ban": "404", "co": "", "gan_ve_s": 0.0, "loi_js": [], "so_loi_js": 0}

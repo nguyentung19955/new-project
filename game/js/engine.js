@@ -916,15 +916,35 @@
     return !fps || now - veCuoi >= 1 / fps - 0.004;
   }
   G.veYen = { canhYen: (t) => canhYen(t == null ? performance.now() / 1000 : t) }; // cho kiểm thử
+  // F3 ổn định 05/11 (docs/review/ke-hoach-cai-thien/on-dinh-f3-anh-bo-nho/bao-cao.md, tư vấn R6 / mục 5): vòng lặp đã có bước cố định 1/60,
+  // kẹp thời gian trôi 100 ms và tối đa 5 bước / khung (bỏ phần dư). Bổ sung: ẩn tab / chuyển app (visibilitychange, pagehide) thì DỪNG hẳn
+  // (không tính, không vẽ); quay lại thì đặt lại mốc thời gian và bỏ phần tồn (acc = 0) → quái không "nhảy" bước nào sau khi mở lại app.
+  // Đo thời gian tính / vẽ mỗi khung cho bộ đếm hiệu năng (js/hieu_nang.js). Cờ quay lui: ?vonglapcu=1 (như trước, không dừng khi ẩn).
+  let vlCu = false; try { vlCu = /[?&]vonglapcu=1(&|$)/.test(location.search || ''); } catch (e) { vlCu = false; }
+  G.VONG_LAP_CU = vlCu;
+  let nghi = false;
+  G.vongLap = { nghi: () => nghi, soNghi: 0 };
+  if (!vlCu) {
+    const vaoNghi = () => { if (!nghi) G.vongLap.soNghi++; nghi = true; };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) vaoNghi(); });
+    window.addEventListener('pagehide', vaoNghi);
+    window.addEventListener('pageshow', (e) => { if (e && e.persisted) vaoNghi(); }); // trang về từ bộ nhớ đệm trình duyệt (bfcache)
+  }
   function frame(ts) {
     requestAnimationFrame(frame); // đặt trước để một lỗi lẻ không làm đứng game
     const now = ts / 1000;
+    if (!vlCu) {
+      if (document.hidden) { nghi = true; return; } // đang ẩn: không tính, không vẽ
+      if (nghi) { nghi = false; last = now; acc = 0; if (G.hieuNang) G.hieuNang.tiepTuc(); } // vừa quay lại: bỏ khoảng nghỉ, không chạy bù
+    }
+    const HN = G.hieuNang, t0 = HN ? performance.now() : 0;
     acc += Math.min(0.1, Math.max(0, now - last || 0));
     last = now;
     let n = 0;
     while (acc >= STEP && n < 5) { G.tickDraw = n === 0; G.tick(); acc -= STEP; n++; }
     if (acc > STEP) acc = 0; // khung hình quá chậm: bỏ phần dư, không chạy bù dồn
-    if (G.scene && !G.noRender && !nenVe(performance.now() / 1000)) { G.click = null; return; } // V6: khung này không vẽ lại (hình cũ vẫn trên màn)
+    const t1 = HN ? performance.now() : 0;
+    if (G.scene && !G.noRender && !nenVe(performance.now() / 1000)) { G.click = null; if (HN) HN.khung(now, n, t1 - t0, 0, false); return; } // V6: khung này không vẽ lại (hình cũ vẫn trên màn)
     veCuoi = performance.now() / 1000;
     if (G.scene && !G.noRender) {
       if (G.NET !== G.netMuon()) G.setNet(G.netMuon());
@@ -951,11 +971,13 @@
       }
       if (!daGoiSau) { daGoiSau = true; try { if (G.spriteCustom && G.spriteCustom.napSau) G.spriteCustom.napSau(); } catch (e) { /* bỏ qua */ } } // Đợt 10: màn chào đã vẽ → mới bắt đầu tải phần ảnh tải sau (bản 2 tệp)
       veTaiSau();
+      if (HN && HN.HIEN) HN.ve(); // ?perf=1: bảng số hiệu năng
       if (G.portrait) {
         ui.text('Xoay ngang điện thoại để hình to và dễ chơi hơn', 240, -10, { size: 13, align: 'center', color: '#ffd27a' });
       }
     }
     G.click = null; // nút bấm trong giao diện được kiểm tra lúc vẽ, nên xoá sau khi vẽ
+    if (HN) HN.khung(now, n, t1 - t0, performance.now() - t1, true);
   }
   G.run = function () { requestAnimationFrame(frame); };
   // Dùng khi chạy thử tự động: chạy n bước mà không vẽ.

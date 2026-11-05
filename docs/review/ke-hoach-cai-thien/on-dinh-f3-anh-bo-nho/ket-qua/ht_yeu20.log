@@ -1,0 +1,27 @@
+{"moc": "làng (đầu)", "t": 12.9, "mb": 186.9, "so": 506, "bo": 0, "loi": 0, "loiTai": 0, "scene": "lang"}
+{"moc": "vùng 1", "cho_vao_ai": 1.4, "mb": 268.2, "so": 557, "bo": 0, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2", "cho_vao_ai": 1.4, "mb": 266.9, "so": 560, "bo": 51, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3", "cho_vao_ai": 1.2, "mb": 278.1, "so": 555, "bo": 106, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4", "cho_vao_ai": 2.0, "mb": 322, "so": 595, "bo": 155, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 1 (lần 5)", "cho_vao_ai": 1.4, "mb": 280.3, "so": 560, "bo": 239, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2 (lần 6)", "cho_vao_ai": 1.6, "mb": 275.2, "so": 561, "bo": 289, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3 (lần 7)", "cho_vao_ai": 1.5, "mb": 298.4, "so": 560, "bo": 340, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4 (lần 8)", "cho_vao_ai": 1.5, "mb": 316.2, "so": 595, "bo": 391, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 1 (lần 9)", "cho_vao_ai": 1.5, "mb": 269.5, "so": 558, "bo": 478, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2 (lần 10)", "cho_vao_ai": 1.0, "mb": 269.4, "so": 561, "bo": 529, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3 (lần 11)", "cho_vao_ai": 1.3, "mb": 279.2, "so": 556, "bo": 583, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4 (lần 12)", "cho_vao_ai": 2.0, "mb": 322.2, "so": 595, "bo": 633, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 1 (lần 13)", "cho_vao_ai": 1.0, "mb": 281.6, "so": 561, "bo": 717, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2 (lần 14)", "cho_vao_ai": 1.2, "mb": 275.4, "so": 561, "bo": 768, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3 (lần 15)", "cho_vao_ai": 1.1, "mb": 297.3, "so": 559, "bo": 819, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4 (lần 16)", "cho_vao_ai": 1.6, "mb": 314.9, "so": 594, "bo": 869, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 1 (lần 17)", "cho_vao_ai": 1.1, "mb": 268.2, "so": 557, "bo": 956, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2 (lần 18)", "cho_vao_ai": 1.5, "mb": 268.1, "so": 560, "bo": 1007, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3 (lần 19)", "cho_vao_ai": 1.5, "mb": 279.2, "so": 556, "bo": 1061, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4 (lần 20)", "cho_vao_ai": 1.9, "mb": 323.3, "so": 596, "bo": 1111, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 1 (lần 21)", "cho_vao_ai": 0.9, "mb": 281.6, "so": 561, "bo": 1195, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 2 (lần 22)", "cho_vao_ai": 0.8, "mb": 276.5, "so": 562, "bo": 1245, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 3 (lần 23)", "cho_vao_ai": 0.8, "mb": 298.4, "so": 560, "bo": 1296, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "vùng 4 (lần 24)", "cho_vao_ai": 1.5, "mb": 316.2, "so": 595, "bo": 1345, "loi": 0, "loiTai": 0, "scene": "ai"}
+{"moc": "làng (cuối)", "mb": 313.8, "so": 594, "bo": 1347, "loi": 0, "loiTai": 0, "scene": "lang"}
+{"loi_js": [], "so_loi_js": 0, "gioi_han": {"gap": 4, "thuong": 4, "thap": 1, "giai": 1, "nganSachMb": 64}, "may": {"yeu": true, "ios": false}, "tt": {"ready": 594, "evicted": 99, "idle": 3}}

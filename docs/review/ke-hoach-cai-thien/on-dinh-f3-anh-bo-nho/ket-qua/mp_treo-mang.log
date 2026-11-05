@@ -1,0 +1,4 @@
+{"ve": 331, "cho": 166, "hong": 0, "dangTai": 9, "dang": 3, "loiDs": 0, "gan": false, "tt": {"idle": 190, "ready": 331, "queued": 166, "fetching": 9}, "decodeCham": 0, "soLoiTai": 7, "lyDo": ["fetch-qua-gio"], "mb": 122.7, "moc": "20 s", "t": 20.8}
+{"ve": 499, "cho": 0, "hong": 0, "dangTai": 7, "dang": 3, "loiDs": 0, "gan": true, "tt": {"idle": 190, "ready": 499, "fetching": 7}, "decodeCham": 0, "soLoiTai": 25, "lyDo": ["fetch-qua-gio"], "mb": 185, "moc": "45 s", "t": 45.9}
+{"ve": 506, "cho": 0, "hong": 0, "dangTai": 0, "dang": 0, "loiDs": 0, "gan": true, "tt": {"idle": 190, "ready": 506}, "decodeCham": 0, "soLoiTai": 32, "lyDo": ["fetch-qua-gio"], "mb": 186.9, "moc": "75 s", "t": 75.9}
+KQ {"kich_ban": "treo-mang", "co": "", "so_luot_treo": 32, "anh_bi_treo": 16, "anh_treo_da_ve": 16, "anh_treo_khong_trong_hang": 0, "loi_js": [], "so_loi_js": 0}

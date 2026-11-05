@@ -730,8 +730,14 @@
   function settings2() {
     const sv = G.save, AM = G.amThanh;
     frame('Âm thanh, pin, điều khiển');
-    thanhAm('Nhạc', 'nhac', 66);
-    thanhAm('Tiếng', 'tieng', 104);
+    // F3 ổn định 05/11 (js/hieu_nang.js): nút "Hình ảnh" (Tự động → Cao → Thấp) ở cuối hàng Nhạc; hai thanh âm lượng ngắn lại cho vừa chỗ.
+    const HN = G.hieuNang, hep = !!HN;
+    thanhAm('Nhạc', 'nhac', 66, hep);
+    thanhAm('Tiếng', 'tieng', 104, hep);
+    if (HN && T.btn(CX + 232, 66, 68, CDH, 'Hình ảnh', { size: 8.5, sub: HN.nhan(), subSize: 7, disabled: !!HN.lay().coDinh })) {
+      const ch = HN.doi();
+      say(ch === 'tu' ? 'Hình ảnh: tự động. Máy chậm thì bớt hạt, bớt số bay, tắt rung.' : ch === 'cao' ? 'Hình ảnh: cao (đủ hiệu ứng).' : 'Hình ảnh: thấp (ít hạt, ít số bay, không rung màn). Luật chơi không đổi.');
+    }
     if (T.btn(CX + 4, 146, 96, CDH, sv.sound ? 'Âm thanh: bật' : 'Âm thanh: tắt', { size: 8.5, sel: !!sv.sound })) {
       sv.sound = !sv.sound; G.persist(); G.audioStart(); if (AM) AM.capNhat();
       say(sv.sound ? 'Bật cả nhạc lẫn tiếng.' : 'Tắt hết nhạc và tiếng.');
@@ -779,14 +785,14 @@
     return 'Nhạc làng có sáo trúc với đàn bầu đấy. Nghe hay thì để to lên!';
   }
   // Một thanh âm lượng: nút − và + (mỗi lần 10), kéo hoặc chạm trên thanh (mỗi nấc 5). Nhả tay mới lưu.
-  function thanhAm(nhan, k, y) {
+  function thanhAm(nhan, k, y, hep) {
     const AM = G.amThanh, sv = G.save;
     if (!AM) return;
-    const cu = AM.so(k), x0 = CX + 94, x1 = CX + 222;
+    const cu = AM.so(k), x0 = CX + 94, x1 = CX + (hep ? 160 : 222);
     let v = cu;
     ui.text(nhan, CX + 4, y + 20, { size: 9, bold: true, color: TXT });
     if (T.btn(CX + 52, y, 36, CDH, '−', { size: 12 })) v = Math.max(0, v - 10);
-    if (T.btn(CX + 228, y, 36, CDH, '+', { size: 12 })) v = Math.min(100, v + 10);
+    if (T.btn(CX + (hep ? 166 : 228), y, 36, CDH, '+', { size: 12 })) v = Math.min(100, v + 10);
     const theo = (px) => Math.round(G.clamp((px - x0) / (x1 - x0), 0, 1) * 20) * 5;
     for (const p of G.pointers.values()) if (!p.stale && p.sx >= x0 - 6 && p.sx <= x1 + 6 && p.sy >= y - 2 && p.sy <= y + CDH + 2) { v = theo(p.x); p.role = 'ui'; }
     if (G.click && G.inRect(G.click, x0 - 6, y - 2, x1 - x0 + 12, CDH + 4)) { v = theo(G.click.x); G.click = null; }
@@ -794,7 +800,7 @@
     ui.rect(x0, y + 14, x1 - x0, 5, '#14201e', '#3a5a52');
     if (v > 0) ui.rect(x0, y + 14, kx - x0, 5, GOLD);
     ui.rect(Math.round(kx - 4), y + 7, 8, 19, '#f3e8c8', '#2a1a14');
-    ui.text(v ? String(v) : G.t('Tắt'), CX + 300, y + 20, { size: 9, bold: true, align: 'right', color: v ? GOLD : SOFT });
+    ui.text(v ? String(v) : G.t('Tắt'), CX + (hep ? 228 : 300), y + 20, { size: 9, bold: true, align: 'right', color: v ? GOLD : SOFT });
     if (v !== cu) { sv[k] = v; AM.capNhat(); V.cdLuu = k; }
     if (V.cdLuu && !G.pointers.size) { const kk = V.cdLuu; V.cdLuu = null; G.persist(); if (kk === 'tieng') G.sfx('pick'); }
   }

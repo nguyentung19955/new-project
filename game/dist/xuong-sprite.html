@@ -17402,7 +17402,43 @@ MA._xong();
     const theoSrc = new Map(), theoMa = new Map(), hang = [], choApDung = [], hongDs = [];
     // Firebase phục vụ HTTP/2 (nhiều tệp cùng lúc trên một kết nối): hình màn chào / làng và hình đang cần tải 24 tệp một lúc,
     // phần còn lại 16 (trong đó vùng khác / trùm nền nhiều nhất 3) để hình cần ngay không phải xếp hàng sau tệp lớn.
-    const MAX_GAP = 24, MAX = 16, MAX_THAP = 3, WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
+    // F3 ổn định 05/11 (docs/review/ke-hoach-cai-thien/on-dinh-f3-anh-bo-nho/bao-cao.md, tư vấn ChatGPT R3, R4, mục 3.4): BỘ TẢI MỚI.
+    //  - Số tệp tải cùng lúc thích nghi: máy yếu 4, máy thường 8 (hình màn chào / làng / đang cần) và 6 (phần còn lại), thay vì 24 / 16;
+    //    trùm / vùng khác: 1 (máy yếu) hoặc 2. Giải mã cùng lúc: 1 (máy yếu) hoặc 2. Máy yếu không tải trước vùng kế tiếp.
+    //  - Tải bằng fetch có AbortController: 12 giây chưa có trả lời hoặc 12 giây không thêm byte nào thì huỷ (thử lại). Tải xong mới giải mã
+    //    (hàng giải mã riêng); đồng hồ canh giải mã 8 giây: trả chỗ giải mã nhưng KHÔNG tạo lượt giải mã mới cho cùng ảnh (chờ tiếp lượt đó
+    //    tới 30 giây nữa rồi mới coi là hỏng).
+    //  - Hỏng: thử lại sau 1, 3, 9 giây (tăng dần), tối đa 3 lần mỗi đợt rồi nghỉ; đợt mới khi game cần hình đó (roiCan), có mạng lại,
+    //    quay lại app, hoặc bấm "Thử lại" ở màn chờ vùng. WebP hỏng → PNG như cũ.
+    //  - "Thế hệ" (theHe): đổi vùng thì huỷ lượt tải đang dở của ảnh riêng vùng không còn cần, bỏ kết quả muộn.
+    //  - Mỗi ảnh có trạng thái it.tt: idle / queued / fetching / decoding / ready / failed / evicted; lỗi ghi theo mã ảnh + lý do (SC.roi.thongKe()).
+    //  - Giữ sửa lỗi 22/10: hình đang cần mà hỏng thì tải lại ngay, lượt treo không kẹt hàng.
+    // Cờ quay lui: ?taicu=1 (bộ tải cũ: img.src, 24 / 16 / 3 tệp, thử lại 3 s và 10 s).
+    // QUẢN LÝ BỘ NHỚ: cộng pixel đã giải mã của mọi ảnh rời đang giữ (rộng × cao × 4 byte); rời vùng mà quá ngân sách (máy yếu 64 MiB,
+    //  iPhone / iPad 96 MiB, máy khác 128 MiB) thì GIẢI PHÓNG ảnh riêng (quái, trùm, sàn, cửa, trang trí, hiệu ứng riêng) của vùng không còn
+    //  chơi — cũ nhất trước, tới khi còn dưới 85 % ngân sách. Giữ: Rowan, giao diện, làng, ảnh chung, vùng đang chơi / đang chọn (+ vùng mượn),
+    //  trùm vùng đang chơi. Về lại vùng đó thì tải lại như lần đầu (thẻ ải "Đang tải…"). Chỉ bản web (ảnh rời); bản một tệp không đổi.
+    //  Cờ quay lui: ?bonhocu=1 (không giải phóng ảnh).
+    const coCo = (re) => { try { return typeof location !== 'undefined' && re.test(location.search || ''); } catch (e) { return false; } };
+    if (G.TAI_CU === undefined) G.TAI_CU = coCo(/[?&]taicu=1(&|$)/);
+    if (G.BO_NHO_CU === undefined) G.BO_NHO_CU = coCo(/[?&]bonhocu=1(&|$)/);
+    const MAY = (() => {
+      let yeu = false, ios = false;
+      try {
+        const n = navigator, dm = +n.deviceMemory || 0, hc = +n.hardwareConcurrency || 0, cn = n.connection || {};
+        yeu = (dm > 0 && dm <= 3) || (hc > 0 && hc <= 3) || !!cn.saveData || /(^|-)2g$/.test(String(cn.effectiveType || ''));
+        ios = /iPhone|iPad|iPod/.test(n.userAgent || '') || (/Macintosh/.test(n.userAgent || '') && (n.maxTouchPoints | 0) > 1);
+      } catch (e) { /* bỏ qua */ }
+      if (coCo(/[?&]mayyeu=1(&|$)/)) yeu = true; // cho kiểm thử
+      return { yeu, ios };
+    })();
+    const TAI_MOI = !G.TAI_CU && typeof fetch === 'function' && typeof URL !== 'undefined' && !!URL.createObjectURL && typeof Blob !== 'undefined' && (() => { try { return /^https?:$/.test(location.protocol); } catch (e) { return false; } })();
+    const MAX_GAP = TAI_MOI ? (MAY.yeu ? 4 : 8) : 24, MAX = TAI_MOI ? (MAY.yeu ? 4 : 6) : 16, MAX_THAP = TAI_MOI ? (MAY.yeu ? 1 : 2) : 3, GIAI_MAX = MAY.yeu ? 1 : 2;
+    const NGAN_SACH = (MAY.yeu ? 64 : MAY.ios ? 96 : 128) * 1048576; // byte (ước tính rộng × cao × 4)
+    const WEBP_THU = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
+    const choGiai = [], boTruoc = {}; let soNhaSom = 0, henDon = 0, dangGiai = 0, theHe = 0, pxGiu = 0, soBo = 0, soLoiTai = 0, decodeCham = 0;
+    const nhatLoi = []; // [{ ma, ly, t }] 200 lỗi gần nhất
+    const ghiLoi = (it, ly) => { soLoiTai++; nhatLoi.push({ ma: it.ma, ly, t: bayGio() }); if (nhatLoi.length > 200) nhatLoi.shift(); };
     let webpHong = 0, dang = 0, dangThap = 0, dangGap = 0, choThu = 0, mo = false, coWebp = null, vung = -1, trumMo = false, daXong = 0, ketThuc = false, henGd = 0, keoHen = false;
     const moVung = (G.REGIONS || [0, 0, 0]).map(() => 0); // tải theo vùng: 0 chưa mở, 1 tải trước (rảnh), 2 người chơi đã chọn vùng (vùng 4: 4 ô)
     // Vùng 4 còn mượn hình của vùng khác (G.VUNG4_MUON, bước 3 phiên 1): chọn vùng 4 thì tải luôn ảnh vùng mượn, chờ đủ cả hai.
@@ -17410,7 +17446,15 @@ MA._xong();
     let vungChon = -1;
     for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
-    SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa };
+    SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa,
+      // F3: bộ nhớ ảnh rời đang giữ, thống kê lỗi, trạng thái từng ảnh, giới hạn đang dùng
+      boNho: () => { let so = 0; for (const it of theoMa.values()) if (it.ve) so++; return { px: pxGiu, mb: (pxGiu * 4) / 1048576, so, nganSachMb: NGAN_SACH / 1048576 }; },
+      loiTai: () => soLoiTai,
+      thongKe: () => ({ moi: TAI_MOI, may: Object.assign({}, MAY), gioiHan: { gap: MAX_GAP, thuong: MAX, thap: MAX_THAP, giai: GIAI_MAX, nganSachMb: NGAN_SACH / 1048576 },
+        dangGiai, choGiai: choGiai.length, theHe, soBo, soLoiTai, decodeCham, loi: nhatLoi.slice(), tt: (() => { const d = {}; for (const it of theoMa.values()) { const k = it.tt || 'idle'; d[k] = (d[k] || 0) + 1; } return d; })() }),
+      trangThai: (ma) => { const it = theoMa.get(ma); return it ? it.tt || 'idle' : null; },
+      donBoNho: (ly) => donBoNho(ly || 'goi tay'),
+    };
     let tatWebp = false;
     try { tatWebp = typeof location !== 'undefined' && /[?&]webp=0(&|$)/.test(location.search || ''); } catch (e) { tatWebp = false; }
     if (G.ANH_WEBP === false || tatWebp || !ROI.webp || typeof Image === 'undefined') coWebp = false;
@@ -17450,6 +17494,7 @@ MA._xong();
     roiCan = function (ma) {
       const it = theoMa.get(ma);
       if (!it || it.ve) return;
+      it.tCan = Date.now(); // F3: vừa cần → không giải phóng ngay khi rời vùng
       const i = hongDs.indexOf(it);
       if (i >= 0) {
         const t = Date.now();
@@ -17471,13 +17516,13 @@ MA._xong();
     function bom0() {
       if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
       if (dang < MAX_GAP && hang.length) {
-        const v = vungNay(), uu = (it) => (it.can ? 0 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
-        for (const it of hang) it.u = uu(it);
+        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
+        for (const it of hang) { it.u = uu(it); if (!it.dangTai && it.tt !== 'failed') it.tt = it.u >= 90 ? (it.tt === 'evicted' ? 'evicted' : 'idle') : 'queued'; }
         hang.sort((a, b) => a.u - b.u || a.co - b.co);
         // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
         const conGap = dangGap > 0 || hang[0].u <= 1;
         const bo = [];
-        while (dang < MAX_GAP && hang.length) {
+        while (dang < MAX_GAP && hang.length && (!TAI_MOI || choGiai.length < 6)) { // F3: hàng giải mã dài thì chờ, không tải dồn
           const it = hang.shift();
           if (it.u >= 90) { bo.push(it); break; } // ảnh riêng của vùng chưa mở: chưa tải (đã xếp cuối hàng)
           if (it.u > 1 && (!mo || conGap || dang >= MAX)) { bo.push(it); break; } // đã xếp theo ưu tiên: các hình sau cũng không được tải lúc này
@@ -17489,6 +17534,8 @@ MA._xong();
       taiTruocKhiRanh();
       capNhat();
     }
+    // F3: người chơi đang đứng ở màn chờ vùng (G.ChoVung) → ảnh vùng đó là "đang cần" (ưu tiên 0, trước cả ảnh làng còn lại)
+    function choCan(it) { return !!(cho && it.khoa && (it.vung === cho.r || it.vung === vungMuon(cho.r)) && (!it.trum || cho.trum)); }
     // Ưu tiên ảnh riêng vùng: vùng đã chọn (quái, nền) ngang quái vùng đang chơi; trùm vùng sau phần còn lại (ngay khi vào ải 4–5);
     // vùng tải trước: bậc thấp (nhiều nhất 3 tệp một lúc); vùng chưa mở: 99 (không tải).
     function uuVung(it) {
@@ -17499,16 +17546,18 @@ MA._xong();
     }
     // Hết việc (không còn ảnh nào đang tải / chờ thử lại / chờ nhận) → mở tải trước vùng kế tiếp của vùng vừa chọn.
     function taiTruocKhiRanh() {
-      if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length) return;
+      if (!mo || !G.TAI_VUNG || vungChon < 0 || dang || choThu || choApDung.length || dangGiai || choGiai.length || soNhaSom) return;
+      if (TAI_MOI && MAY.yeu) return; // F3: máy yếu không tải trước vùng kế tiếp
+      if (!G.BO_NHO_CU && pxGiu * 4 > NGAN_SACH * 0.7) return; // F3: gần hết ngân sách bộ nhớ ảnh: không tải trước
       for (const it of hang) if ((it.u == null ? 0 : it.u) < 90) return;
       const k = vungChon + 1;
-      if (k < moVung.length && !moVung[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
+      if (k < moVung.length && !moVung[k] && !boTruoc[k]) { moVung[k] = 1; ketThuc = false; napSauDangChay = true; ghi('Rảnh: tải trước ảnh vùng ' + (k + 1) + '.'); bom(); }
     }
     SC.taiVung = function (r) {
       r = r | 0;
       if (!G.TAI_VUNG || r < 0 || r >= moVung.length) return;
       const m = vungMuon(r);
-      if (vungChon !== r || moVung[r] !== 2 || (m >= 0 && moVung[m] !== 2)) { vungChon = r; moVung[r] = 2; if (m >= 0) moVung[m] = 2; ketThuc = false; napSauDangChay = true; bom(); }
+      if (vungChon !== r || moVung[r] !== 2 || (m >= 0 && moVung[m] !== 2)) { const doi = vungChon !== r; vungChon = r; moVung[r] = 2; if (m >= 0) moVung[m] = 2; ketThuc = false; napSauDangChay = true; if (doi) doiVung('chọn vùng ' + (r + 1)); bom(); }
     };
     // Tiến độ ảnh riêng của vùng r (trum: tính cả trùm vùng và dáng pha). san: đủ ảnh để vào ải.
     SC.vungTien = function (r, trum) {
@@ -17550,7 +17599,7 @@ MA._xong();
       r = Math.max(0, Math.min(moVung.length - 1, r | 0));
       SC.taiVung(r);
       if (!G.TAI_VUNG || SC.vungTien(r, trum).san) return fn();
-      cho = { r, trum: !!trum, fn };
+      cho = { r, trum: !!trum, fn }; bom(); // F3: ảnh vùng đang chờ lên ưu tiên 0
       G.setScene(G.ChoVung);
       return undefined;
     };
@@ -17561,7 +17610,9 @@ MA._xong();
     //  (2) quá lâu không nạp xong (QUA_LAU_MIN + theo cỡ tệp) thì trả chỗ, xếp lại hàng với URL mới (?lan=…t<n>), tối đa TREO_MAX lần;
     //      kết quả muộn của lượt cũ bị bỏ qua (lanTai).
     const DECODE_CHO = 2000, QUA_LAU_MIN = 45000, QUA_LAU_MOI_KB = 50, TREO_MAX = 3; // 50 ms mỗi KB ≈ 20 KB/s: tệp 3 MB được chờ tới ~3 phút
-    function tai(it, thap, gap) {
+    function tai(it, thap, gap) { return TAI_MOI ? taiMoi(it, thap, gap) : taiCu(it, thap, gap); }
+    function taiCu(it, thap, gap) {
+      it.tt = 'fetching';
       dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio();
       const lanTai = (it.lanTai = (it.lanTai | 0) + 1);
       const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan || it.treo ? '?lan=' + (it.lan | 0) + (it.treo ? 't' + it.treo : '') : ''), img = it.img;
@@ -17576,7 +17627,7 @@ MA._xong();
           if (++webpHong === 3 && coWebp) { coWebp = false; ghi('Ảnh WebP không đọc được: chuyển sang tải PNG.'); }
         }
         else if (it.lan < CHO_THU.length) { const ms = CHO_THU[it.lan++]; choThu++; setTimeout(() => { choThu--; hang.push(it); bom(); }, ms); }
-        else { hongDs.push(it); SC.loi.push(it.ma + ': không tải được ảnh'); ghi('Không tải được ảnh ' + it.ma + ' (đã thử ' + (it.lan + 1) + ' lần): hình này vẽ bằng code.'); }
+        else { hongDs.push(it); it.tt = 'failed'; ghiLoi(it, 'img-loi'); SC.loi.push(it.ma + ': không tải được ảnh'); ghi('Không tải được ảnh ' + it.ma + ' (đã thử ' + (it.lan + 1) + ' lần): hình này vẽ bằng code.'); }
         bom();
       };
       const coDecode = typeof img.decode === 'function';
@@ -17586,13 +17637,181 @@ MA._xong();
         if (cu()) return;
         if (img.complete && img.naturalWidth) { ok(); return; }
         xongTai(); it.treo = (it.treo | 0) + 1;
-        if (it.treo > TREO_MAX) { hongDs.push(it); SC.loi.push(it.ma + ': tải quá lâu'); ghi('Ảnh ' + it.ma + ' tải quá lâu ' + it.treo + ' lần: hình này vẽ bằng code.'); }
+        if (it.treo > TREO_MAX) { hongDs.push(it); it.tt = 'failed'; ghiLoi(it, 'qua-lau'); SC.loi.push(it.ma + ': tải quá lâu'); ghi('Ảnh ' + it.ma + ' tải quá lâu ' + it.treo + ' lần: hình này vẽ bằng code.'); }
         else { ghi('Ảnh ' + it.ma + ' tải quá lâu: trả chỗ, xếp lại hàng.'); hang.push(it); }
         bom();
       }, QUA_LAU_MIN + (it.co / 1024) * QUA_LAU_MOI_KB);
       img.src = url;
       // Safari đôi khi từ chối img.decode() với ảnh lớn dù ảnh vẫn nạp được (xem SC.napAnh): chưa nạp xong thì chờ onload / onerror (đã gắn ở trên).
       if (coDecode) img.decode().then(ok, () => { if (cu()) return; if (img.complete && img.naturalWidth) ok(); else if (img.complete) hong(); });
+    }
+    // ---------- F3: bộ tải mới (fetch có hạn giờ → hàng giải mã có đồng hồ canh) ----------
+    const FETCH_CHO = 12000, FETCH_IM = 12000, GIAI_CANH = 8000, GIAI_THEM = 30000, LUI = [1000, 3000, 9000];
+    function taiMoi(it, thap, gap) {
+      dang++; it.dangTai = true; it.thap = thap; if (thap) dangThap++; it.gap = gap; if (gap) dangGap++; it.tBat = bayGio(); it.tt = 'fetching';
+      const lanTai = (it.lanTai = (it.lanTai | 0) + 1);
+      it.the = theHe; it.boThe = false;
+      const url = (coWebp && it.webp && !it.boWebp ? it.webp : it.png) + (it.lan ? '?lan=' + (it.lan | 0) : '');
+      let giuCho = true, nha = false, hen = 0, henNha = 0, ly = '';
+      // trả chỗ trong hàng (để ảnh khác được tải) — một lần; nha: đã trả sớm vì máy chủ chậm trả lời (vẫn chờ tiếp tới hạn giờ)
+      const boCho = () => { if (nha) return; nha = true; dang--; if (it.thap) dangThap--; if (it.gap) dangGap--; if (henNha) { clearTimeout(henNha); henNha = 0; } };
+      const traCho = () => { if (!giuCho) return; giuCho = false; boCho(); if (it.nhaSom) { it.nhaSom = false; soNhaSom--; } it.ac = null; if (hen) { clearTimeout(hen); hen = 0; } };
+      // 4 giây chưa có trả lời (kết nối treo / máy chủ chậm): trả chỗ sớm cho ảnh khác (nhiều nhất 8 lượt như vậy cùng lúc), lượt này vẫn chờ tới 12 giây
+      henNha = setTimeout(() => { henNha = 0; if (cu() || !giuCho || nha || soNhaSom >= 8) return; it.nhaSom = true; soNhaSom++; boCho(); bom(); }, 4000);
+      const cu = () => it.lanTai !== lanTai;
+      let ac = null;
+      try { ac = typeof AbortController !== 'undefined' ? new AbortController() : null; } catch (e) { ac = null; }
+      it.ac = ac;
+      const datHen = (ms, lyDo) => { if (hen) clearTimeout(hen); hen = setTimeout(() => { hen = 0; if (cu() || !giuCho) return; ly = lyDo; try { if (ac) ac.abort(); } catch (e) { /* bỏ qua */ } if (!ac) { traCho(); it.lanTai++; hongMoi(it, lyDo, url); } }, ms); };
+      datHen(FETCH_CHO, 'fetch-qua-gio');
+      const kieu = /\.webp(\?|$)/.test(url) ? 'image/webp' : 'image/png';
+      let p;
+      try { p = fetch(url, ac ? { signal: ac.signal, credentials: 'same-origin' } : { credentials: 'same-origin' }); } catch (e) { p = Promise.reject(e); }
+      p.then((res) => {
+        if (cu()) throw new Error('cu');
+        if (henNha) { clearTimeout(henNha); henNha = 0; } // đã có trả lời: giữ chỗ bình thường
+        if (!res.ok) { ly = 'http-' + res.status; throw new Error(ly); }
+        const rd = res.body && res.body.getReader ? res.body.getReader() : null;
+        if (!rd) { datHen(FETCH_CHO + (it.co / 1024) * QUA_LAU_MOI_KB, 'fetch-qua-gio'); return res.blob(); }
+        const phan = [];
+        datHen(FETCH_IM, 'fetch-dung-im');
+        const doc = () => rd.read().then((r) => {
+          if (cu()) { try { rd.cancel(); } catch (e) { /* bỏ qua */ } throw new Error('cu'); }
+          if (r.done) return new Blob(phan, { type: kieu });
+          phan.push(r.value); datHen(FETCH_IM, 'fetch-dung-im');
+          return doc();
+        });
+        return doc();
+      }).then((blob) => {
+        if (cu()) return;
+        traCho();
+        if (!blob || !blob.size) { hongMoi(it, 'tep-rong', url); bom(); return; }
+        it.tt = 'decoding'; choGiai.push({ it, blob, lanTai, url }); boiGiai(); bom();
+      }, (e) => {
+        if (cu()) return;
+        traCho();
+        if (it.boThe) { it.boThe = false; it.dangTai = false; it.tt = 'queued'; hang.push(it); bom(); return; } // đổi vùng: huỷ không tính là hỏng
+        hongMoi(it, ly || 'mang-loi' + (e && e.name === 'TypeError' ? '' : ':' + ((e && e.name) || '')), url); bom();
+      });
+    }
+    function boiGiai() {
+      while (dangGiai < GIAI_MAX && choGiai.length) {
+        let k = 0; for (let x = 0; x < choGiai.length; x++) if (choGiai[x].it.can) { k = x; break; } // hình game đang cần giải mã trước
+        const j = choGiai.splice(k, 1)[0];
+        if (j.it.lanTai !== j.lanTai) continue;
+        giaiMa(j);
+      }
+    }
+    function giaiMa(j) {
+      const it = j.it, img = it.img, coDecode = typeof img.decode === 'function';
+      dangGiai++;
+      let giuGiai = true, het = false, w1 = 0, w2 = 0, u = '';
+      const traGiai = () => { if (!giuGiai) return; giuGiai = false; dangGiai--; boiGiai(); bom(); };
+      const cu = () => het || it.lanTai !== j.lanTai;
+      const ket = (ok, lyDo) => {
+        if (cu()) return;
+        het = true; clearTimeout(w1); clearTimeout(w2); img.onload = null; img.onerror = null;
+        traGiai();
+        if (u) { const uu = u; setTimeout(() => { try { URL.revokeObjectURL(uu); } catch (e) { /* bỏ qua */ } }, 0); }
+        it.dangTai = false;
+        if (ok) { it.tGiai = bayGio(); choApDung.push(it); keo(); bom(); }
+        else { try { img.removeAttribute('src'); } catch (e) { /* bỏ qua */ } hongMoi(it, lyDo, j.url); bom(); }
+      };
+      // ảnh đã nạp (onload): 250 ms sau mà decode() chưa xong thì trả chỗ giải mã cho ảnh sau (decode() treo không làm chậm cả hàng);
+      // DECODE_CHO (2 s) mà decode() vẫn chưa trả lời thì coi như xong (vẽ như ảnh thường), như sửa lỗi 22/10.
+      img.onload = () => { if (cu()) return; if (!coDecode) { ket(true); return; } setTimeout(() => { if (!cu()) traGiai(); }, 250); setTimeout(() => { if (!cu() && img.complete && img.naturalWidth) ket(true); }, DECODE_CHO); };
+      img.onerror = () => ket(false, 'giai-ma-loi');
+      // đồng hồ canh giải mã: trả chỗ (ảnh khác được giải mã), KHÔNG gọi decode() lần nữa cho ảnh này; chờ tiếp lượt đang chạy
+      w1 = setTimeout(() => { if (cu()) return; if (img.complete && img.naturalWidth) { ket(true); return; } decodeCham++; ghiLoi(it, 'giai-ma-cham'); traGiai(); }, GIAI_CANH);
+      w2 = setTimeout(() => { if (cu()) return; if (img.complete && img.naturalWidth) ket(true); else ket(false, 'giai-ma-treo'); }, GIAI_CANH + GIAI_THEM);
+      try { u = URL.createObjectURL(j.blob); } catch (e) { u = ''; }
+      if (!u) { ket(false, 'blob-url'); return; }
+      img.src = u;
+      if (coDecode) img.decode().then(() => ket(true), () => { if (cu()) return; if (img.complete && img.naturalWidth) ket(true); else if (img.complete) ket(false, 'giai-ma-loi'); });
+    }
+    // Hỏng một lượt (bộ tải mới): WebP → PNG; còn lượt trong đợt thì chờ 1 / 3 / 9 giây; hết thì nghỉ (hongDs) tới khi game cần lại.
+    function hongMoi(it, lyDo, url) {
+      it.dangTai = false;
+      ghiLoi(it, lyDo);
+      if (url && url.indexOf('.webp') > 0 && !it.boWebp) {
+        it.boWebp = true; it.tt = 'queued'; hang.push(it);
+        if (++webpHong === 3 && coWebp) { coWebp = false; ghi('Ảnh WebP không đọc được: chuyển sang tải PNG.'); }
+        return;
+      }
+      if (it.lan < LUI.length) {
+        const ms = Math.round(LUI[it.lan++] * (0.8 + Math.random() * 0.4)); choThu++; it.tt = 'queued';
+        setTimeout(() => { choThu--; if (!it.ve && !it.dangTai && hang.indexOf(it) < 0 && hongDs.indexOf(it) < 0) hang.push(it); bom(); }, ms);
+        return;
+      }
+      it.tt = 'failed'; it.tHong = Date.now(); hongDs.push(it);
+      SC.loi.push(it.ma + ': không tải được ảnh (' + lyDo + ')');
+      ghi('Không tải được ảnh ' + it.ma + ' (đã thử ' + it.lan + ' lần, ' + lyDo + '): hình này vẽ bằng code; game cần lại thì tải tiếp.');
+    }
+    // ---------- F3: đổi vùng → thế hệ mới, huỷ tải dở ảnh vùng không cần, giải phóng bộ nhớ nếu quá ngân sách ----------
+    // F3: tấm thân TRANG PHỤC (zed-rung, zed-bien, zed-lau: 1152 × 7776, ~34 MiB giải mã mỗi tấm) chỉ tải khi đang mặc hoặc game cần vẽ
+    // (thử đồ, js/zed_moi.js gọi SC.canAnh); chưa về thì game vẽ tạm bộ mặc định như trước. Đổi vùng mà quá ngân sách: bỏ tấm không mặc.
+    // ?bonhocu=1: tải cả ba như cũ.
+    function laAo(it) {
+      if (G.BO_NHO_CU || !it || typeof it.ma !== 'string' || it.ma === 'zed-moi' || it.ma === 'zed-rowan') return false;
+      const B = G.ZED_BO;
+      if (!B) return false;
+      for (const k in B) if (B[k] && B[k].tam === it.ma) return true;
+      return false;
+    }
+    function aoDangMac() {
+      try { const b = G.zedBo ? G.zedBo() : 'ninja', B = G.ZED_BO; return B && B[b] ? B[b].tam : 'zed-moi'; } catch (e) { return 'zed-moi'; }
+    }
+    function vungGiu() {
+      const s = new Set();
+      for (const r of [vungNay(), vungChon]) if (r >= 0) { s.add(r); const m = vungMuon(r); if (m >= 0) s.add(m); }
+      return s;
+    }
+    function doiVung(ly) {
+      theHe++;
+      if (TAI_MOI) {
+        const giu = vungGiu();
+        for (let r = 0; r < moVung.length; r++) if (moVung[r] === 2 && !giu.has(r)) moVung[r] = 0; // vùng đã chọn trước đó mà nay không chơi / không chọn: thôi tải
+        for (const it of theoMa.values()) {
+          if (!it.dangTai || !it.ac || !it.khoa || it.can || giu.has(it.vung)) continue;
+          if (moVung[it.vung] === 1) continue; // đang tải trước (rảnh) vùng kế: cứ tải tiếp
+          it.boThe = true; try { it.ac.abort(); } catch (e) { /* bỏ qua */ }
+        }
+      }
+      setTimeout(() => donBoNho(ly), 0);
+    }
+    function coTheBo(it) {
+      const img = it.img, sp = SC.ds[it.ma], g = SC.gd && SC.gd[it.ma], fa = G.fxAnh && G.fxAnh.ds && G.fxAnh.ds[it.ma], z = laAo(it) && SC.zed[it.ma];
+      return !!((sp && sp.img === img) || (g && g.img === img) || (fa && fa.img0 === img) || (z && z.img === img));
+    }
+    function boAnh(it) {
+      const img = it.img, sp = SC.ds[it.ma], g = SC.gd && SC.gd[it.ma], fa = G.fxAnh && G.fxAnh.ds && G.fxAnh.ds[it.ma], z = laAo(it) && SC.zed[it.ma];
+      if (z && z.img === img) { z.ready = false; z.img = null; }
+      else if (sp && sp.img === img) { sp.ready = false; sp.img = null; sp.mau = {}; }
+      else if (g && g.img === img) { g.ready = false; g.img = null; g.ghep9.clear(); }
+      else if (fa && fa.img0 === img) { fa.ready = false; }
+      else return false;
+      img.onload = null; img.onerror = null;
+      try { img.removeAttribute('src'); } catch (e) { try { img.src = ''; } catch (e2) { /* bỏ qua */ } }
+      it.ve = false; it.tt = 'evicted'; it.lan = 0; it.treo = 0; it.can = 0; it.dangTai = false;
+      daXong = Math.max(0, daXong - 1); AS.xong = daXong; pxGiu -= it.px | 0; it.px = 0; soBo++;
+      hang.push(it);
+      return true;
+    }
+    function donBoNho(ly) {
+      if (G.BO_NHO_CU || !G.TAI_VUNG || pxGiu * 4 <= NGAN_SACH) return 0;
+      const giu = vungGiu(), t = Date.now(), ung = [];
+      const ao = /^(chọn|vào ải)/.test(ly) ? aoDangMac() : null; // tấm trang phục không mặc: chỉ bỏ lúc đổi vùng (không bỏ giữa lúc đang thử đồ)
+      for (const it of theoMa.values()) {
+        if (!it.ve || (it.tCan && t - it.tCan < 20000)) continue;
+        if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao)) { if (coTheBo(it)) ung.push(it); }
+      }
+      ung.sort((a, b) => (a.tNhan || 0) - (b.tNhan || 0)); // giải mã xong sớm nhất (cũ nhất) bỏ trước
+      const truoc = pxGiu, bo = new Set();
+      let n = 0;
+      for (const it of ung) { if (pxGiu * 4 <= NGAN_SACH * 0.85) break; if (boAnh(it)) { n++; bo.add(it.vung); } }
+      for (const r of bo) if (!giu.has(r)) { moVung[r] = 0; boTruoc[r] = 1; } // vùng có ảnh bị bỏ: về "chưa mở" (chọn lại / vào ải thì tải lại), không tải trước nữa
+      if (n) { ketThuc = false; ghi('Bộ nhớ ảnh (' + ly + '): giải phóng ' + n + ' ảnh vùng cũ, ' + ((truoc * 4) / 1048576).toFixed(1) + ' → ' + ((pxGiu * 4) / 1048576).toFixed(1) + ' MiB (ngân sách ' + (NGAN_SACH / 1048576) + ' MiB).'); bom(); }
+      return n;
     }
     // Ảnh đã giải mã xong: báo cho game (onload gốc của SC.add / themDo / themGd / fxAnh.add) theo từng đợt ngắn (≤ 6 ms),
     // giữa hai đợt nhường cho chạm và khung hình (setTimeout), để chạm không bị trễ mà máy chậm vẫn nhận kịp vài trăm hình.
@@ -17605,12 +17824,15 @@ MA._xong();
         const t0 = Date.now();
         while (choApDung.length) {
           const it = choApDung.shift();
-          it.ve = true; daXong++; AS.xong = daXong; it.tNhan = bayGio();
+          it.ve = true; it.tt = 'ready'; daXong++; AS.xong = daXong; it.tNhan = bayGio();
+          it.px = (it.img.naturalWidth | 0) * (it.img.naturalHeight | 0); pxGiu += it.px; // F3: pixel đã giải mã đang giữ
           try { if (it.xong) it.xong.call(it.img); } catch (e) { SC.loi.push(it.ma + ': ' + ((e && e.message) || e)); }
           if (/^gd-/.test(it.ma) && !henGd) henGd = setTimeout(() => { henGd = 0; xoaNhoSau(true); }, 700); // ô phòng, giao diện: dựng lại hình đã nhớ
           if (Date.now() - t0 > 6) break;
         }
         if (choApDung.length) keo();
+        // F3: vừa nhận thêm ảnh mà vượt ngân sách (vùng mới về sau khi đã rời vùng cũ) → dọn ảnh vùng không chơi, nhiều nhất 2 giây một lần
+        if (!G.BO_NHO_CU && pxGiu * 4 > NGAN_SACH && !henDon) henDon = setTimeout(() => { henDon = 0; donBoNho('vượt ngân sách'); }, 2000);
         capNhat();
       };
       setTimeout(chay, 0);
@@ -17620,7 +17842,7 @@ MA._xong();
       let conHang = 0, khoaCho = 0;
       for (const it of hang) { if ((it.u == null ? 0 : it.u) < 90) conHang++; else khoaCho++; }
       AS.tong = theoMa.size - khoaCho; // ảnh riêng của vùng chưa mở không tính vào "Đang tải thêm ảnh… %"
-      if (conHang || dang || choApDung.length || choThu) { AS.tt = 'tai'; ketThuc = false; return; }
+      if (conHang || dang || choApDung.length || choThu || dangGiai || choGiai.length || soNhaSom) { AS.tt = 'tai'; ketThuc = false; return; }
       if (ketThuc) return;
       ketThuc = true;
       AS.tt = hongDs.length ? 'loi' : 'xong'; AS.hetLuc = Date.now(); AS.loi = hongDs.length ? hongDs.length + ' ảnh không tải được' : '';
@@ -17659,7 +17881,7 @@ MA._xong();
       const g0 = G.startStage;
       if (typeof g0 === 'function' && !g0.roi) {
         const g1 = function (r, i) {
-          try { vung = Math.max(0, Math.min(moVung.length - 1, r | 0)); trumMo = (i | 0) >= 3; } catch (e) { /* bỏ qua */ }
+          try { const v0 = vung; vung = Math.max(0, Math.min(moVung.length - 1, r | 0)); trumMo = (i | 0) >= 3; if (v0 !== vung) doiVung('vào ải vùng ' + (vung + 1)); } catch (e) { /* bỏ qua */ }
           // tải theo vùng: vùng chưa đủ ảnh (ải trùm: cả trùm vùng) → màn chờ, đủ rồi mới vào ải
           if (G.TAI_VUNG && G.scene !== G.ChoVung) {
             const self = this, args = arguments;

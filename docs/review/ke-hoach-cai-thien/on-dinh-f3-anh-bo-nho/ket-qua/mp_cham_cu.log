@@ -1,0 +1,3 @@
+{"ve": 202, "cho": 280, "hong": 0, "dangTai": 24, "dang": 24, "loiDs": 0, "gan": false, "tt": {"idle": 190, "ready": 202, "queued": 280, "fetching": 24}, "decodeCham": 0, "soLoiTai": 0, "lyDo": [], "mb": 113.4, "moc": "8 s", "t": 26.6}
+{"ve": 506, "cho": 0, "hong": 0, "dangTai": 0, "dang": 0, "loiDs": 0, "gan": true, "tt": {"idle": 190, "ready": 506}, "decodeCham": 0, "soLoiTai": 0, "lyDo": [], "mb": 186.9, "moc": "ảnh làng + lõi xong", "t": 46.6}
+KQ {"kich_ban": "cham", "co": "&taicu=1", "gan_ve_sau_khi_hoi_s": 0.9, "anh_lang_xong_s": 27.9, "loi_js": [], "so_loi_js": 0}
