@@ -165,4 +165,9 @@ Gốc rễ lỗi 403 (đề xuất cho chủ game, không bắt buộc): Google 
 
 ## 11. Kiểm web 30 phút — lần chạy thật
 
-(điền sau khi chạy)
+Run 41975056076 (chạy tay, 1 lần): `buildId trên web: 2026.11.05-1233-db8d378 (commit db8d378)` khớp lần đăng thành công gần nhất, ảnh quan trọng tải được,
+mở headless vẽ được màn đầu → **KẾT QUẢ: ĐẠT**, không có issue nào phải mở; rồi tự gọi vòng kế tiếp (run 41975231075, 11 lần kiểm ~5 giờ 30).
+Trong danh sách Actions, lượt kiểm cũ thường hiện **"cancelled" (xám)** vì lượt mới vừa được gọi thay chỗ nó — đó là bình thường, không phải lỗi.
+Lỗi thật thì có issue + email.
+
+Commit cuối của phiên: `6aad979` (ô số lần + báo cáo) và commit ghi kết quả này.
