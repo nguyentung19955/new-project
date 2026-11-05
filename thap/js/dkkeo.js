@@ -1,18 +1,26 @@
 // TURRET MERGE — KÉO THẢ ở màn XÂY BỘ BÀI (HUD mượt A, js/home.js).
 //  · Thẻ trong lưới → 1 trong 5 ô: ô trống = thêm, ô có ụ = đổi (ụ cũ về lưới). Ô → lưới / vuốt nhanh xuống = bỏ khỏi bộ. Ô → ô = đổi chỗ.
-//  · Bắt đầu kéo: giữ 180 ms, hoặc đi ngang > 8 px. Vuốt dọc nhanh = cuộn lưới như cũ.
+//  · Bắt đầu kéo: giữ 150 ms, hoặc đi ngang > 8 px, hoặc (chuột) đi bất kỳ hướng > 8 px. Cảm ứng đi dọc = cuộn lưới (tự cuộn, có quán tính);
+//    đang cuộn mà ngón tay kéo lên khỏi mép trên lưới (về phía bộ bài) = nhấc thẻ dưới điểm chạm lên kéo luôn.
+//  · iOS Safari: lưới ở màn bộ bài đặt touch-action:none và TỰ cuộn → Safari không giành cử chỉ (trước đây pan-y → Safari cuộn + pointercancel = mất kéo).
+//  · HỢP ĐỒNG DOM (QUY-TAC-HINH.md quy tắc 10): thẻ lưới = phần tử [data-id] trong #chon-luoi; ô bộ bài = [data-slot="0..4"] trong #chon-bo
+//    (có data-id khi có ụ); ô chỉ huy = [data-slot="mv"]. Bắt sự kiện ở window (ủy quyền) → sống qua mọi lần vẽ lại; không dựa tên lớp.
 //  · Chạm (không kéo) = trang chi tiết ụ (home.js gọi UP.mo); DK.vuaKeo() chặn cú click sinh ra sau khi thả.
 //  Hình (QUY-TAC-HINH.md): bóng ma = ảnh khung độ hiếm + chân dung + đế sáng chon_de_xanh (PNG có sẵn); ô hợp lệ = khung_chon.png;
 //  thả sai = lắc ảnh + thông báo (UI.nhac, tấm h2_tam_do). Code chỉ dịch/phóng/mờ ảnh (transform, 60 fps).
 'use strict';
 const DK = {
-  GIU: 180, NGUONG: 8, VE: 180,
+  GIU: 150, NGUONG: 8, VE: 180,
   d: null, keo: null, _chan: 0,
   giam: () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches),
   vuaKeo() { return performance.now() < this._chan; },
   moDuoc() { const c = document.getElementById('chon'); return c && !c.hidden && c.classList.contains('xem-dk') && !c.classList.contains('bst') && !(typeof UP !== 'undefined' && UP.el && !UP.el.hidden); },
   bac: (id) => (G.rosterMap[id] && G.rosterMap[id].bac) || 'trang',
-  oS: () => [...document.querySelectorAll('#chon-bo .o-bo')],
+  oS() { const a = [...document.querySelectorAll('#chon-bo [data-slot]:not([data-slot="mv"])')]; return a.length ? a : [...document.querySelectorAll('#chon-bo .o-bo')]; },
+  oMV: () => document.querySelector('#chon-bo [data-slot="mv"], #chon-bo .o-mv'),
+  theCua(t) { const c = t && t.closest && t.closest('#chon-luoi [data-id]'); return c && !c.closest('[data-act="bb-thu"], [data-act^="hd-"]') ? c : null; },
+  oCua(t) { const o = t && t.closest && t.closest('#chon-bo [data-slot][data-id], #chon-bo .o-bo[data-id]'); return o && o.dataset.slot !== 'mv' ? o : null; },
+  luoiDK() { const l = document.getElementById('chon-luoi'); return this.moDuoc() && l ? l : null; },
 
   // luật bộ bài (giống UI.chonU + tuongmoi-ui.js): trả về câu báo lỗi hoặc ''
   loi(deck, id) {
@@ -43,25 +51,32 @@ const DK = {
 
   // ---------- con trỏ ----------
   xuong(e) {
+    if (this.keo && this.keo.ra) { this.don(); this._chan = 0; } // ghost đang bay về/vào ô → kết thúc ngay, nhận cú kéo mới (không nuốt cú chạm)
     if (this.d || this.keo || e.button > 0 || !e.isPrimary || !this.moDuoc()) return;
-    const c = e.target.closest && e.target.closest('#chon-luoi .c[data-id]');
-    const o = !c && e.target.closest && e.target.closest('#chon-bo .o-bo[data-id]');
-    if (!c && !o) return;
-    if (c && (!SKILLS[c.dataset.id] || c.classList.contains('khoa'))) return;
-    if (c && e.target.closest('[data-act="bb-thu"], [data-act^="hd-"]')) return;
-    const el = c || o;
-    this.d = { el, id: el.dataset.id, tu: c ? 'the' : 'o', j: o ? this.oS().indexOf(o) : -1, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), pid: e.pointerId, loai: e.pointerType };
+    this.dungQT();
+    const c = this.theCua(e.target), o = !c && this.oCua(e.target);
+    const l = document.getElementById('chon-luoi'), trongLuoi = !!(l && e.target.closest && e.target.closest('#chon-luoi') && !e.target.closest('#bb-dai'));
+    if (!c && !o && !(trongLuoi && e.pointerType === 'touch')) return;
+    const the = c && SKILLS[c.dataset.id] && !c.classList.contains('khoa') ? c : null;
+    const el = the || o;
+    this.d = { el, id: el ? el.dataset.id : '', tu: o ? 'o' : (the ? 'the' : 'cuon'), j: o ? this.oS().indexOf(o) : -1,
+      x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), pid: e.pointerId, loai: e.pointerType,
+      cuon: false, st0: l ? l.scrollTop : 0, mau: [[performance.now(), e.clientY]] };
     clearTimeout(this._gt);
-    this._gt = setTimeout(() => { if (this.d && !this.keo) this.batDau(); }, this.GIU);
+    if (el) this._gt = setTimeout(() => { if (this.d && !this.keo && !this.d.cuon && this.d.el) this.batDau(); }, this.GIU);
   },
   di(e) {
     const d = this.d;
     if (d && e.pointerId === d.pid && !this.keo) {
-      const dx = e.clientX - d.x0, dy = e.clientY - d.y0, ax = Math.abs(dx), ay = Math.abs(dy);
+      if (e.cancelable && d.loai === 'touch') e.preventDefault();
+      const dx = e.clientX - d.x0, dy = e.clientY - d.y0, ax = Math.abs(dx), ay = Math.abs(dy), t = performance.now();
+      d.x = e.clientX; d.y = e.clientY;
+      if (d.cuon) return this.cuonTay(e, t);
       if (ax < this.NGUONG && ay < this.NGUONG) return;
-      // thẻ lưới: dọc nhanh = cuộn (bỏ kéo); ngang = kéo. Ô bộ bài (không cuộn): đi bất kỳ hướng = kéo
-      if (d.tu === 'the' && ay >= ax) { this.huyD(); return; }
-      d.x = e.clientX; d.y = e.clientY; this.batDau(); return;
+      // thẻ lưới + cảm ứng: đi dọc = cuộn lưới (tự cuộn); ngang = kéo. Chuột/bút: đi bất kỳ hướng = kéo. Ô bộ bài: bất kỳ hướng = kéo
+      if (d.tu === 'cuon' || (d.tu === 'the' && d.loai === 'touch' && ay >= ax)) { clearTimeout(this._gt); d.cuon = true; d.y0c = e.clientY; return this.cuonTay(e, t); }
+      if (!d.el) { this.huyD(); return; }
+      this.batDau(); return;
     }
     const k = this.keo; if (!k || e.pointerId !== k.pid) return;
     if (e.cancelable) e.preventDefault();
@@ -69,17 +84,47 @@ const DK = {
     k.x = e.clientX; k.y = e.clientY; k.mau.push([t, k.y]); while (k.mau.length > 2 && t - k.mau[1][0] > 100) k.mau.shift();
     if (!k.raf) k.raf = requestAnimationFrame(() => { k.raf = 0; this.veMa(); });
   },
+  // tự cuộn lưới theo ngón tay (lưới touch-action:none ở màn bộ bài)
+  cuonTay(e, t) {
+    const d = this.d, l = document.getElementById('chon-luoi'); if (!l) return;
+    l.scrollTop = d.st0 - (e.clientY - d.y0);
+    d.mau.push([t, e.clientY]); while (d.mau.length > 2 && t - d.mau[1][0] > 100) d.mau.shift();
+    // kéo lên khỏi mép trên lưới (về phía bộ bài) = nhấc thẻ dưới điểm chạm
+    const r = l.getBoundingClientRect();
+    if (d.el && d.tu === 'the' && e.clientY < r.top - 10 && e.clientY < d.y0) { d.cuon = false; l.scrollTop = d.st0; this.batDau(); } // trả lưới về chỗ cũ: người chơi muốn kéo, không muốn cuộn
+  },
   len(e) {
-    if (this.d && e.pointerId === this.d.pid && !this.keo) { this.huyD(); return; } // chạm thường → click → home.js mở chi tiết
+    const d = this.d;
+    if (d && e.pointerId === d.pid && !this.keo) {
+      if (d.cuon) { this._chan = performance.now() + 350; this.quanTinh(); }
+      this.huyD(); return; // chạm thường → click → home.js mở chi tiết
+    }
     const k = this.keo; if (!k || e.pointerId !== k.pid) return;
     if (e.type === 'pointercancel') { this.ve(); return; }
     k.x = e.clientX; k.y = e.clientY; this.tha();
   },
+  quanTinh() {
+    const d = this.d, l = document.getElementById('chon-luoi'); if (!d || !l || d.mau.length < 2) return;
+    const a = d.mau[0], b = d.mau[d.mau.length - 1];
+    if (performance.now() - b[0] > 80) return;
+    let v = -(b[1] - a[1]) / Math.max(16, b[0] - a[0]); // px/ms (dương = cuộn xuống)
+    if (Math.abs(v) < 0.1) return;
+    v = Math.max(-4, Math.min(4, v));
+    let t0 = performance.now();
+    const buoc = (t) => {
+      const dt = Math.min(40, t - t0); t0 = t;
+      l.scrollTop += v * dt; v *= Math.pow(0.95, dt / 16);
+      if (Math.abs(v) < 0.02 || l.scrollTop <= 0 || l.scrollTop >= l.scrollHeight - l.clientHeight) { this._qt = 0; return; }
+      this._qt = requestAnimationFrame(buoc);
+    };
+    this._qt = requestAnimationFrame(buoc);
+  },
+  dungQT() { if (this._qt) { cancelAnimationFrame(this._qt); this._qt = 0; } },
   huyD() { clearTimeout(this._gt); this.d = null; },
 
   // ---------- kéo ----------
   batDau() {
-    const d = this.d; clearTimeout(this._gt); if (!d) return;
+    const d = this.d; clearTimeout(this._gt); if (!d || !d.el) return;
     this.d = null;
     const w = document.getElementById('wrap'); if (!w) return;
     const rw = w.getBoundingClientRect(), s = rw.width / W, r = d.el.getBoundingClientRect();
@@ -128,9 +173,9 @@ const DK = {
     });
     return best;
   },
-  trenMV() { const m = document.querySelector('#chon-bo .o-mv'), r = m && m.getBoundingClientRect(), k = this.keo; return !!r && r.width > 0 && k.x >= r.left && k.x <= r.right && k.y >= r.top - 6 * k.s && k.y <= r.bottom + 6 * k.s; },
+  trenMV() { const m = this.oMV(), r = m && m.getBoundingClientRect(), k = this.keo; return !!r && r.width > 0 && k.x >= r.left && k.x <= r.right && k.y >= r.top - 6 * k.s && k.y <= r.bottom + 6 * k.s; },
   laMV() {
-    const m = document.querySelector('#chon-bo .o-mv');
+    const m = this.oMV();
     if (m && !this.giam()) m.animate([0, -6, 6, -4, 4, 0].map(dx => ({ transform: 'translateX(' + dx + 'px)' })), { duration: 260, easing: 'linear' });
     if (m) { m.classList.add('dk-lac'); setTimeout(() => m.classList.remove('dk-lac'), 300); }
     return this.sai('Commander slot · tap it to change commander');
@@ -138,7 +183,8 @@ const DK = {
   trenLuoi() { const l = document.getElementById('chon-luoi'), r = l && l.getBoundingClientRect(); return !!r && this.keo.y > r.top - 8 * this.keo.s; },
 
   tha() {
-    const k = this.keo; if (!k) return;
+    const k = this.keo; if (!k || k.ra) return;
+    k.ra = true;
     if (k.raf) { cancelAnimationFrame(k.raf); k.raf = 0; }
     this.veMa();
     // thả lên ô CHỈ HUY (ô thứ 6): không nhận ụ → ô lắc ngắn + nhắc, ụ về chỗ
@@ -165,7 +211,7 @@ const DK = {
     if (typeof HM !== 'undefined') { HM.noi = id; HM.armed = -1; HM.luuBo(); HM.ve(); }
     try { SND.nut(); } catch (e) { }
     const o = this.oS()[UI.chon.indexOf(id)];
-    const xong = () => { this.don(); if (o) { o.classList.remove('hm-xung'); void o.offsetWidth; o.classList.add('hm-xung'); setTimeout(() => o.classList.remove('hm-xung'), 300); } };
+    const xong = () => { if (this.keo !== k) return; this.don(); if (o) { o.classList.remove('hm-xung'); void o.offsetWidth; o.classList.add('hm-xung'); setTimeout(() => o.classList.remove('hm-xung'), 300); } };
     if (UI.chon.length === 5 && truoc < 5 && typeof HM !== 'undefined') HM.duBo();
     if (UI.chon.length === 5 && UI.chon.filter(x => SKILLS[x] && SKILLS[x].vai === 'tc').length < 2) UI.nhac(TEXT.ui.need2Atk);
     if (!o || this.giam()) return xong();
@@ -181,7 +227,7 @@ const DK = {
     if (this.giam()) return this.don();
     const p = this.diem();
     const a = k.ma.animate([{ transform: this.tf(p.x, p.y, 1.08), opacity: 1 }, { transform: this.tf(p.x, p.y + 30, 0.6), opacity: 0 }], { duration: 180, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' });
-    a.onfinish = () => this.don();
+    a.onfinish = () => this.don(k);
   },
   // thả sai luật: lắc ảnh 3 nhịp + thông báo, rồi về chỗ
   sai(loi) {
@@ -191,18 +237,19 @@ const DK = {
     if (this.giam()) return this.ve();
     const p = this.diem();
     const a = k.ma.animate([0, -7, 7, -5, 5, 0].map(dx => ({ transform: this.tf(p.x + dx, p.y, 1.08) })), { duration: 240, easing: 'linear', fill: 'forwards' });
-    a.onfinish = () => this.ve();
+    a.onfinish = () => { if (this.keo === k) this.ve(); };
   },
   // về chỗ cũ 180 ms
   ve() {
     const k = this.keo; if (!k) return;
+    k.ra = true;
     if (this.giam()) return this.don();
     const p = this.diem();
     const a = k.ma.animate([{ transform: this.tf(p.x, p.y, 1.08), opacity: 1 }, { transform: this.tf(k.ox, k.oy, 1), opacity: 0.6 }], { duration: this.VE, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'forwards' });
-    a.onfinish = () => this.don();
+    a.onfinish = () => this.don(k);
   },
-  don() {
-    const k = this.keo; if (!k) return;
+  don(kk) {
+    const k = this.keo; if (!k || (kk && kk !== k)) return;
     this.keo = null; this._chan = performance.now() + 350;
     k.ma.remove();
     k.el.classList.remove('dk-nguon');
@@ -223,9 +270,9 @@ const DK = {
   addEventListener('pointerup', (e) => { try { DK.len(e); } catch (er) { console.error('DK', er); } }, true);
   addEventListener('pointercancel', (e) => { try { DK.len(e); } catch (er) { console.error('DK', er); } }, true);
   // iOS Safari / Chrome cảm ứng: đang kéo thì chặn cuộn trang + lưới
-  addEventListener('touchmove', (e) => { if (DK.keo && e.cancelable) e.preventDefault(); }, { capture: true, passive: false });
+  addEventListener('touchmove', (e) => { if ((DK.keo || (DK.d && DK.d.loai === 'touch')) && e.cancelable) e.preventDefault(); }, { capture: true, passive: false });
   // giữ lâu: không menu ảnh / không bôi chữ / không kéo ảnh gốc của trình duyệt
-  addEventListener('contextmenu', (e) => { if (e.target.closest && e.target.closest('#chon-luoi .c, #chon-bo .o-bo') && DK.moDuoc()) e.preventDefault(); }, true);
+  addEventListener('contextmenu', (e) => { if (e.target.closest && e.target.closest('#chon-luoi [data-id], #chon-bo [data-slot], #chon-bo .o-bo') && DK.moDuoc()) e.preventDefault(); }, true);
   addEventListener('dragstart', (e) => { if (e.target.closest && e.target.closest('#chon')) e.preventDefault(); }, true);
   addEventListener('blur', () => { if (DK.keo) DK.ve(); DK.huyD(); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && DK.keo) DK.ve(); });
