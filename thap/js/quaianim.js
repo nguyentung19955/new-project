@@ -39,6 +39,29 @@ Object.assign(REN, {
     ctx.drawImage(dai, f * st, 0, fw, dai.height, -co / 2, -co / 2, co, co);
   },
 
+  // trạng thái trên quái bằng ảnh tờ ST (fx_st_*): danh sách cần vẽ cho quái E
+  stV2(E, lanh) {
+    const c = (k) => typeof FXU !== 'undefined' && FXU.co('fx_st_' + k) && this.img('fx_st_' + k);
+    const s = { n: 0 };
+    if (E.chan > 0) { if (lanh && c('dong')) s.dong = 1; else if (c('choang')) s.choang = 1; }
+    if (lanh && !s.dong && c('cham')) s.cham = 1;
+    if (E.docT > 0 && c('doc')) s.doc = 1;
+    if (E.chayT > 0 && c('chay')) s.chay = 1;
+    if (E.cvT > 0 && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && c('khienvang')) s.yeu = 'khienvang'; else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
+    s.n = (s.dong || 0) + (s.choang || 0) + (s.cham || 0) + (s.doc || 0) + (s.chay || 0) + (s.yeu ? 1 : 0);
+    return s;
+  },
+  // vẽ: cỡ = co × 1.1, alpha 0.85, thở ±6% 2 Hz; choáng xoay 120°/s trên đầu; đóng băng phủ lên thân
+  veStV2(ctx, E, s, x, y, co, t) {
+    const tho = 1 + 0.06 * Math.sin(t * 12.6 + E.uid), C = co * 1.02 * tho;
+    if (s.cham) this.anhGiua(ctx, 'fx_st_cham', x, y, C, t * 0.4, 0.85);
+    if (s.doc) this.anhGiua(ctx, 'fx_st_doc', x, y, C, 0, 0.85);
+    if (s.chay) this.anhGiua(ctx, 'fx_st_chay', x, y - co * 0.05, C, 0, 0.85);
+    if (s.yeu) this.anhGiua(ctx, 'fx_st_' + s.yeu, x, y, C * 1.05, s.yeu === 'cauvong' ? t * 1.2 : 0, s.yeu === 'khienvang' ? 0.55 : 0.6);
+    if (s.dong) this.anhGiua(ctx, 'fx_st_dong', x, y, co * 1.05, 0, 0.8);
+    if (s.choang) this.anhGiua(ctx, 'fx_st_choang', x, y - co * 0.42, co * 0.75, 0.12 * Math.sin(t * 6), 0.95);
+    ctx.globalAlpha = 1;
+  },
   veQuai(ctx) {
     const dt = this.dt || 0, k = G.tocDo || 1, t = this.t;
     // xác đang nổ (thời gian thực) — vẽ dưới quái sống
@@ -103,12 +126,13 @@ Object.assign(REN, {
         ctx.globalAlpha = 1;
       }
       const lanh = E.cham > 0 && !E.d.khangCham;
+      const st = this.stV2(E, lanh); // trạng thái v2 (ảnh ChatGPT tờ ST) → vẽ sau thân, bỏ quầng/hạt code
       if (lanh) {
         if (!E._lanhT) { E._lanhT = t; FX.no('bang_vo', x, y, co * 0.8, 0.19); }
-        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2;
-        this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = 1;
+        if (!st.cham) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2;
+          this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = 1; }
       } else E._lanhT = 0;
-      if (E.yeu > 0 || E.cvT > 0 || E.giapT > 0) {
+      if ((E.yeu > 0 || E.cvT > 0 || E.giapT > 0) && !st.yeu) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28;
         const mm = E.cvT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = 1;
@@ -148,7 +172,8 @@ Object.assign(REN, {
         if (fl > 0.02) { const w = this.coDai(ten, co * kc, 'trang'); if (w && daiV === dai) { ctx.globalAlpha = fl; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : f0, C); } }
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }
-      if (E.docT > 0 && Math.random() < 0.06) FX.hat1('lua', x + rnd(-8, 8), y, 0, -20, 0.5, 6, '#9dff5a');
+      if (st.n) this.veStV2(ctx, E, st, x, y, co, t);
+      if (E.docT > 0 && !st.doc && Math.random() < 0.06) FX.hat1('lua', x + rnd(-8, 8), y, 0, -20, 0.5, 6, '#9dff5a');
       // ---- thanh máu (không lắc theo nhún để dễ đọc) ----
       const yb = E.y + hover;
       if (E.hp < E.max && !E.trum) {
