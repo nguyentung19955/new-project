@@ -26,12 +26,21 @@ function cotTroi(ctx, x, y, dai, w, mau, loi, al) {
 // =====================================================================================================
 // 1) SPRITE ĐẠN VẼ BẰNG CODE (đăng ký vào REN.anh như ảnh thường → veDan / REN.co dùng được; vệt màu MAU_VET)
 // =====================================================================================================
+GFX.gen = {}; // tên sprite → hàm dựng (dựng lại khi bộ nhớ ảnh bị dọn giữa các trận)
 function taoAnh(ten, w, h, vet, fn) {
   if (vet && typeof MAU_VET !== 'undefined') MAU_VET[ten] = vet;
   if (!GFX.coDOM) return;
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const x = c.getContext('2d'); x.translate(w / 2, h / 2); fn(x, w, h);
-  REN.anh[ten] = { _cv: c, complete: true, naturalWidth: w };
+  GFX.gen[ten] = () => {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d'); x.translate(w / 2, h / 2); fn(x, w, h);
+    REN.anh[ten] = { _cv: c, complete: true, naturalWidth: w, naturalHeight: h };
+  };
+  GFX.gen[ten]();
+  if (REN.CO_DINH) REN.CO_DINH.add(ten); // không bị "dọn ảnh trận cũ" xoá (render.js)
+}
+if (GFX.coDOM && typeof REN !== 'undefined') { // sprite code: không bao giờ tải file assets/g_*.png
+  const imgGoc = REN.img;
+  REN.img = function (ten) { if (GFX.gen[ten] && !(this.anh[ten] && this.anh[ten]._cv)) GFX.gen[ten](); return imgGoc.call(this, ten); };
 }
 function quang(x, r, mau, al) { const g = x.createRadialGradient(0, 0, 0, 0, 0, r); g.addColorStop(0, mau); g.addColorStop(1, 'rgba(0,0,0,0)'); x.globalAlpha = al == null ? 1 : al; x.fillStyle = g; x.beginPath(); x.arc(0, 0, r, 0, 7); x.fill(); x.globalAlpha = 1; }
 function sao5(x, r, r2, n) { n = n || 5; x.beginPath(); for (let i = 0; i < n * 2; i++) { const a = -Math.PI / 2 + i * Math.PI / n, q = i % 2 ? r2 : r; i ? x.lineTo(Math.cos(a) * q, Math.sin(a) * q) : x.moveTo(Math.cos(a) * q, Math.sin(a) * q); } x.closePath(); }
