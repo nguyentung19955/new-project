@@ -13,12 +13,11 @@ const KHUNG = {
     im.src = 'assets/' + src + '.png';
   },
   url(bac) { return 'assets/the_khung_' + bac + '.png'; },
-  // thêm khung vào 1 thẻ (DOM): ảnh khung + vạch màu khoá mảnh trong ô cửa sổ
+  // thêm khung vào 1 thẻ (DOM): chỉ ảnh khung — KHÔNG thêm vạch màu khoá/độ hiếm bên trong (khung ảnh đã đủ; màu khoá chỉ còn ở huy hiệu glyph PNG)
   gan(el, bac) {
     if (!el || el.querySelector(':scope > .kh')) return;
     const im = document.createElement('img'); im.className = 'kh'; im.alt = ''; im.src = this.url(bac);
-    const k = document.createElement('i'); k.className = 'kh-k';
-    el.append(k, im); el.classList.add('co-kh');
+    el.append(im); el.classList.add('co-kh');
   },
 };
 (() => {

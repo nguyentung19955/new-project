@@ -31,49 +31,58 @@
 #dp-dai.pvp .dp-nhan { color: #ff6b5e; }
 #dp-dai .dp-the { --k: #9aa6b4; position: relative; width: 26px; height: 28px; padding: 0; border: 0; border-radius: 2px; overflow: hidden; background: #1a1d22; cursor: pointer;
   box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 var(--k); }
-#dp-dai .dp-the .po { position: absolute; inset: 2px 0 0; width: 100%; height: calc(100% - 2px); object-fit: cover; object-position: 50% 12%; }
+#dp-dai .dp-the .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
 #dp-dai .dp-the .gl { position: absolute; left: -1px; bottom: -1px; width: 13px; height: 13px; }
 #dp-dai .dp-the::after { content: ''; position: absolute; inset: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--k); opacity: .7; pointer-events: none; }
 #dp-dai .dp-mv { width: 30px; margin-left: 3px; }
-#dp-dai .dp-the.khung::after { display: none; }
+#dp-dai .dp-the { box-shadow: none; } #dp-dai .dp-the::after { display: none; } /* không vạch màu khoá mảnh — màu khoá chỉ ở glyph PNG */
 #dp-dai .dp-the .kh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 
 /* ---------- khung thẻ ChatGPT S8 (js/khung.js) — ô cửa sổ: x 15.6–84.4 %, y 18.9–83.8 % của vùng khung cao --khh ---------- */
 .co-khung .co-kh > .kh { position: absolute; z-index: 2; left: 0; top: 0; width: 100%; height: var(--khh); pointer-events: none; }
-.co-khung .co-kh > .kh-k { position: absolute; z-index: 2; left: 15.6%; width: 68.8%; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649); pointer-events: none;
-  box-shadow: inset 0 0 0 1.5px var(--k, transparent); border-radius: 2px; }
+/* khung ảnh đã đủ → bỏ mọi viền/vạch màu mảnh (khoá ND, độ hiếm) chồng lên thẻ */
+.co-khung .co-kh > .kh-k { display: none; }
+.co-khung .co-kh { outline: 0 !important; }
+.co-khung .co-kh > i:not(.kh) { border: 0 !important; box-shadow: none !important; }
 .co-khung .co-kh > .anh, .co-khung .co-kh > img:not(.kh):not(.gl):not(.ic) { position: absolute; z-index: 1; left: 15.6%; width: 68.8% !important; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649) !important;
   margin: 0 !important; border-radius: 0 !important; object-fit: cover; object-position: 50% 14%; }
 .co-khung .co-kh > .anh:not(.pilot) { object-fit: contain; }
 /* hàng bộ bài trong trận */
 .co-khung #bo-the .the.co-kh { --khh: 74px; background: transparent; box-shadow: none; outline: 0 !important; }
-.co-khung #bo-the .the.co-kh .lv, .co-khung #bo-the .the.co-kh .so { z-index: 3; top: 2px; }
 .co-khung #bo-the .the.co-kh .gu { z-index: 3; top: 15px; }
-.co-khung #bo-the .the.co-kh .gl { z-index: 3; bottom: 17px; left: 0; width: 22px; height: 22px; }
-.co-khung #bo-the .the.co-kh .ic { z-index: 3; bottom: 19px; right: 0; width: 19px; height: 19px; }
+/* nhãn LV / ×N / glyph / icon nằm TRONG ô cửa sổ (x 15.6–84.4 %, y 18.9–83.8 %) — không che ngọc/cánh/vương miện/góc khung */
+.co-khung #bo-the .the.co-kh .lv, .co-khung #bo-the .the.co-kh .so { z-index: 3; top: calc(var(--khh) * .189 + 1px); font-size: 7.5px; }
+.co-khung #bo-the .the.co-kh .lv, .co-lv.co-khung #bo-the .the.co-kh .so:not(:empty) { padding: 0 3px; border-image-width: 0 3px; letter-spacing: -.3px; }
+.co-khung #bo-the .the.co-kh .lv { left: calc(15.6% + 1px); }
+.co-khung #bo-the .the.co-kh .so { right: calc(15.6% + 1px); }
+.co-khung #bo-the .the.co-kh .gl { z-index: 3; top: calc(var(--khh) * .838 - 17px); bottom: auto; left: calc(15.6% + 1px); width: 16px; height: 16px; }
+.co-khung #bo-the .the.co-kh .ic { z-index: 3; top: calc(var(--khh) * .838 - 16px); bottom: auto; right: calc(15.6% + 1px); width: 15px; height: 15px; border-width: 0; }
 .co-khung #bo-the .the.co-kh .gia { height: 18px; z-index: 3; }
 .co-khung #bo-the .the.co-kh.du { box-shadow: none; }
 .co-khung #bo-the .the.co-kh.du > .kh { filter: drop-shadow(0 0 3px #7dff6a88); }
 /* màn chọn */
 .co-khung .c.co-kh { --khh: 80px; background: #15171b; border-color: transparent; }
-.co-khung .c.co-kh .gl { bottom: 27px; left: 0; }
-.co-khung .c.co-kh .ic { bottom: 27px; right: 0; width: 19px; height: 19px; }
+.co-khung .c.co-kh .gl { top: calc(var(--khh) * .838 - 19px); bottom: auto; left: calc(15.6% + 1px); width: 18px; height: 18px; }
+.co-khung .c.co-kh .ic { top: calc(var(--khh) * .838 - 18px); bottom: auto; right: calc(15.6% + 1px); width: 17px; height: 17px; border-width: 0; }
+.co-khung .c.chon.co-kh { box-shadow: none; }
+.co-khung .c.co-kh .up-q { top: calc(var(--khh) * .189 + 1px); right: calc(15.6% + 1px); width: 18px; height: 18px; } /* nút +/✓ trong ô cửa sổ, không che ngọc/cánh góc khung */
+.co-khung .c.co-kh .up-q::before { font-size: 13px; } .co-khung .c.chon.co-kh .up-q::before { font-size: 10px; }
+.co-khung .c.chon.co-kh::after { z-index: 4; top: calc(var(--khh) * .189 + 1px); right: calc(15.6% + 1px); width: 16px; height: 16px; font-size: 10px; }
 .co-khung .c.co-kh .gu { z-index: 3; top: 12px; }
 .co-khung .c.co-kh .ten { height: 24px; }
 .co-khung .c.chon.co-kh > .kh { filter: drop-shadow(0 0 4px #2fbf4a); }
 .co-khung #chon-bo .o-bo.co-kh { --khh: 58px; border: 0; }
-.co-khung #chon-bo .o-bo.co-kh > i:not(.kh-k) { display: none; }
+.co-khung #chon-bo .o-bo.co-kh > i { display: none; }
 /* ô bộ bài: khung 50×58 ở giữa ô (giữ đúng tỉ lệ khung) */
 .co-khung #chon-bo .o-bo.co-kh > .kh { left: calc(50% - 25px); width: 50px; }
 .co-khung #chon-bo .o-bo.co-kh > img:not(.kh):not(.gl) { position: absolute; z-index: 1; left: calc(50% - 17px); width: 34px !important; top: 11px; height: 38px !important; object-fit: cover; object-position: 50% 14%; }
-.co-khung #chon-bo .o-bo.co-kh > i.kh-k { left: calc(50% - 17px); width: 34px; top: 11px; height: 38px; inset: auto; border: 0; position: absolute; left: calc(50% - 17px); top: 11px; }
-.co-khung #chon-bo .o-bo.co-kh .gl { z-index: 3; left: calc(50% - 27px); bottom: 0; width: 17px; height: 17px; }
+.co-khung #chon-bo .o-bo.co-kh .gl { z-index: 3; left: calc(50% - 16px); top: 34px; bottom: auto; width: 14px; height: 14px; }
 /* thẻ chỉ huy */
 .co-khung #the-mv.co-kh { --khh: 76px; background: transparent; box-shadow: none; padding-top: 0; }
 .co-khung #the-mv.co-kh .mv-ic { position: absolute; z-index: 1; left: 15.6%; width: 68.8%; top: calc(76px * .189); height: calc(76px * .649); }
 .co-khung #the-mv.co-kh .mv-ic .mv-anh { border-radius: 0; }
 .co-khung #the-mv.co-kh .mv-ic .po { object-position: 50% 15%; }
-.co-khung #the-mv.co-kh .mv-ten { position: absolute; z-index: 3; left: 0; right: 0; top: 60px; width: auto; height: 15px !important; font-size: 9px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000; }
+.co-khung #the-mv.co-kh .mv-ten { position: absolute; z-index: 3; left: 15.6%; right: 15.6%; top: calc(76px * .838 - 15px); width: auto; height: 15px !important; font-size: 9px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000; }
 .co-khung #the-mv.co-kh .mv-gia { height: 18px; z-index: 3; }
 
 /* ---------- tấm nhỏ S9 ---------- */
