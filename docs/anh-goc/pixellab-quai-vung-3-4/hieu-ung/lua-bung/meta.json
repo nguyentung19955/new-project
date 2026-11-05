@@ -1,0 +1,38 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": true,
+ "name": "talesworn-luaBung",
+ "files": {
+  "talesworn-luabung.gif": "https://api.pixellab.ai/mcp/pixel-tools/55bcaee6-35f4-4901-80bc-5322db10b540/talesworn-luabung.gif",
+  "talesworn-luabung.png": "https://api.pixellab.ai/mcp/pixel-tools/55bcaee6-35f4-4901-80bc-5322db10b540/talesworn-luabung.png",
+  "talesworn-luabung.json": "https://api.pixellab.ai/mcp/pixel-tools/55bcaee6-35f4-4901-80bc-5322db10b540/talesworn-luabung.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 41,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 42,
+  "w": 32
+ },
+ "frames": 6,
+ "message": "A 32x42 looping storybook flame tongue with a red-orange outer layer, orange middle and yellow-white core, its flat base at the bottom centre (16, 41) and its tip flickering upward over 6 frames. The warning about the bottom edge is expected: the base sits on the last row, as you specified, so nothing is clipped. Flicker and curl are the main sliders to tune if you want more or less movement.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=a3e951d7-8a9a-4e81-a441-07feab63f245",
+ "effect_id": "a3e951d7-8a9a-4e81-a441-07feab63f245",
+ "gif_exact": true,
+ "result_id": "55bcaee6-35f4-4901-80bc-5322db10b540",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "1cd4e886-d7dd-4de3-b607-6e5e7964bc4f",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

@@ -1,0 +1,21 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-vet-dau",
+ "ten": "PixelLab: Hũ Chúa · vệt dầu (rộng 18 = bề rộng vệt khi co 1; 1–2 loang, 4–6 ánh cam) (thay hu-vet-dau, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 21,
+ "khung_cao": 13,
+ "goc": [
+  11,
+  7
+ ],
+ "so": 6,
+ "giay": 1.0,
+ "lap": false,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "vung": "laudai",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPwAAAAaCAYAAACTtjH4AAABcklEQVR42u2bvXECMRBGPzEkGBNghg6IIKUGCnATrslNUIBrcIojd+AxBMdPiKObceI5yRySVnov5mYe32lhb0+SAAAAAAAAAAAAAAAgDa6WL/r48HQN+fzxvHd44lma57CWAh+PJppN517Xfh++JOkaYyHgiWdMT1dqkYcE6BPw6dL0tghK89xtN1o9v5nz7PIuMU9XUqH3WTw+4YYuADzz9Qwpfst53lTwy8X6VZI+Pt9fUhZ7jCD/Ctb35uOJZw6eA+v/7CnClKTZdK7xaOI1bCnBc7fdkGcBebpYU8a+hx8pb3rILz6e9jx9nqGt5jmMUXztVLHvok8dZuvwe2CCp31Pn4GZ1TxNt/Rgk3u3s7U4/seVlp5W+SbP0FdI5Jk2T8fQ7v4TWzzxzMXTdEt/PO/d6dK0M4JsX8/g2d16kmecPNl4w4YWPCvyZGstW2vxrMjTcXimO8CcD1HgiWe1h2c4JoknngAAAAAAAABQAj+zFMFDXz7SxQAAAABJRU5ErkJggg=="
+}

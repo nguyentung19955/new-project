@@ -1,0 +1,183 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-luabung 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-luabung 1.png",
+   "frame": {
+    "x": 32,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-luabung 2.png",
+   "frame": {
+    "x": 64,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-luabung 3.png",
+   "frame": {
+    "x": 0,
+    "y": 42,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-luabung 4.png",
+   "frame": {
+    "x": 32,
+    "y": 42,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-luabung 5.png",
+   "frame": {
+    "x": 64,
+    "y": 42,
+    "w": 32,
+    "h": 42
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 42
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 42
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.9761904761904762
+   },
+   "duration": 100
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-luabung.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 96,
+   "h": 84
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 16,
+   "y": 41
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-luabung",
+    "from": 0,
+    "to": 5,
+    "direction": "forward"
+   }
+  ]
+ }
+}

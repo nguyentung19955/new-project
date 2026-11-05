@@ -1,0 +1,131 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-bomphao 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 36
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 167
+  },
+  {
+   "filename": "talesworn-bomphao 1.png",
+   "frame": {
+    "x": 32,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 36
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 167
+  },
+  {
+   "filename": "talesworn-bomphao 2.png",
+   "frame": {
+    "x": 0,
+    "y": 36,
+    "w": 32,
+    "h": 36
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 36
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 167
+  },
+  {
+   "filename": "talesworn-bomphao 3.png",
+   "frame": {
+    "x": 32,
+    "y": 36,
+    "w": 32,
+    "h": 36
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 36
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 36
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 167
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-bomphao.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 64,
+   "h": 72
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 16,
+   "y": 18
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-bomphao",
+    "from": 0,
+    "to": 3,
+    "direction": "forward"
+   }
+  ]
+ }
+}

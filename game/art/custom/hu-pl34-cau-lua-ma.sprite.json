@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-cau-lua-ma",
+ "ten": "PixelLab: Hồ Tinh · cầu lửa ma (thay hu-cau-lua-ma, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 31,
+ "khung_cao": 38,
+ "goc": [
+  15,
+  23
+ ],
+ "so": 4,
+ "giay": 0.4,
+ "lap": true,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPgAAABMCAYAAABAinpoAAADoElEQVR42u3dIW/bQBjG8ddWFTRFY5WCCor2AaIpYCoMWfHQ0FAmDQzlIwwNVGrQUFFwRgqjgajKBygqCIoaFllDJjeQXWqnTuNK6533vv+fNGkqqZ485/PlfElFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAENug03K8CvSNOFJKZ/CTU+/r8OIX+GiZJ/3TFqUbGfz03ay+g9zBr+9y6Z+2aFtELAx++m5O30nIXzZ598r5ATBa5okYnM39wLfwGtB3/L5TCTyz+1nNIl9wt9c2cyen77h9pzECF2d3a7q9thRLtzDA6Tte36lEmtV96ZaKr5rBrdzF6TtO32nMZYuf3ayU7mfw47OT0uxuZZlK3239d/B9Sxgeq+jk1mNH3/Ecxfzl25lNFiKSyWiZm3rx57NMfcbk9YfE37HpO7N3By8Wz4EHnd5PftC3KD7osveifvtl88+Ay9urgzvNWv08/2Su7zpPFlRe4INOy1nYXNr1+c1H6fbaJu5e9P2w3xC773hLdD+T31zIarooPU4RpTuqx8Pvdm9dBvs2t0R367GrCj6fZSaWqqtvX7eD3cqd3HLfxcktVt9p6B1VK5ssUrHRtH0faozFvkv7TJaW6Nd3+aPQ2pdr/j34U6e8xMBJNnLn+i/wy9urh6WqiKymCxPLtdEyT1bTBbkN5HbrsbPat4hsdlbvhx13P+w4S99yYjG31b6bkjuJ9fnY4rJF88zmi63Krf05uPa+3Xrs/L6S7PksvHf+63ei9qhqsejHz0Qz6Z+2nMYL/VBuP06s5dbSd9XF7S/s3dwTERfjQj8KVbYPvLujujmXvB3wagY7uW3l9hf3odwTERfyIk+jPC4pHFnU+Ahl9/1Wndz/83vT3U+MWet7t79DuUN2nYaazUuhpXy66fjsRN3XGD03t4alKn03r+80ynHFQz/T9imimrnV7TAb6Luytxq5Q3WdCgDhL5v8CzcX9X6mDbnJHSl3GuLI3nyWyfZUTzHo3/+vpguZzzJVRxjJTe4m5A56By+FL4QW5R/or5tb2/NwC31X9VYnd6iuj146+KCzOdTgD3Y8PAeV0vdUaTzZ9ZzcWgY6fTer7yTkDuO+xwPF0JoOfFjP/dQRXY2rln3HkmMeT05ilq657Oc8CiG3neyhMydNCG/hwyaWBrnlvvdlj5XZ3F98tF44AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADN9QfbUbbtN/EeWAAAAABJRU5ErkJggg=="
+}

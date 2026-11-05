@@ -1,0 +1,490 @@
+{
+ "linhMa": {
+  "ma": "rustKnight",
+  "ten": "Rusty Armour Ghost",
+  "nhan_vat_pixellab": "2bd3dc53-2c25-4972-8439-a915993da6ae",
+  "anh_goc_seed": 33,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 2
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 2
+   },
+   {
+    "ten": "hit",
+    "seed": 2
+   },
+   {
+    "ten": "die",
+    "seed": 2
+   }
+  ]
+ },
+ "doiThan": {
+  "ma": "cinderBat",
+  "ten": "Cinder Bat",
+  "nhan_vat_pixellab": "a5dfaf07-e685-4036-84fe-d4583e82c9e7",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "denLong": {
+  "ma": "wispLantern",
+  "ten": "Will-o'-Wisp Lantern",
+  "nhan_vat_pixellab": "bdc4f647-b4e1-41df-ba36-6955d38cf6ca",
+  "anh_goc_seed": 44,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 11
+   },
+   {
+    "ten": "move",
+    "seed": 11
+   },
+   {
+    "ten": "tele",
+    "seed": 11
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 11
+   }
+  ]
+ },
+ "meoDen": {
+  "ma": "witchCat",
+  "ten": "Witch's Black Cat",
+  "nhan_vat_pixellab": "cf142bc7-745e-4233-a2b6-82c407f0546f",
+  "anh_goc_seed": 44,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 2
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 2
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 2
+   }
+  ]
+ },
+ "huLua": {
+  "ma": "emberKettle",
+  "ten": "Ember Kettle",
+  "nhan_vat_pixellab": "baf1e1f7-fa94-4e18-9f1e-2440311fd895",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 11
+   },
+   {
+    "ten": "move",
+    "seed": 11
+   },
+   {
+    "ten": "tele",
+    "seed": 11
+   },
+   {
+    "ten": "atk",
+    "seed": 11,
+    "lap_tu": 3,
+    "lap_den": 8
+   },
+   {
+    "ten": "hit",
+    "seed": 11
+   },
+   {
+    "ten": "die",
+    "seed": 11
+   }
+  ],
+  "net": 3
+ },
+ "tieuYeu": {
+  "ma": "bombImp",
+  "ten": "Bomb Imp",
+  "nhan_vat_pixellab": "e6ae2011-3fdc-408a-926c-3c4af6d9a1bc",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 3
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 2
+   }
+  ]
+ },
+ "tuongMa": {
+  "ma": "hauntedCaptain",
+  "ten": "Haunted Knight Captain",
+  "nhan_vat_pixellab": "ef7cf507-37dc-46a5-836f-c4ae65e9813b",
+  "anh_goc_seed": 33,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "net": 3
+ },
+ "huChua": {
+  "ma": "greatCauldron",
+  "ten": "Great Cauldron",
+  "nhan_vat_pixellab": "400d3bbf-4105-4bdb-a753-03d3d6642b71",
+  "anh_goc_seed": 22,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "tuongDa": {
+  "ma": "gargoyleGuard",
+  "ten": "Gargoyle Shieldbearer",
+  "nhan_vat_pixellab": "70cbfba9-33f6-47ea-b5fc-4b5d5011d37c",
+  "anh_goc_seed": 22,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 2
+   }
+  ],
+  "net": 3
+ },
+ "nhimThan": {
+  "ma": "emberHedgehog",
+  "ten": "Ember Hedgehog",
+  "nhan_vat_pixellab": "424d0e10-4452-4b15-9358-7996f413c993",
+  "anh_goc_seed": 44,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 2
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 2
+   },
+   {
+    "ten": "atk",
+    "seed": 1,
+    "lap_tu": 2,
+    "lap_den": 5,
+    "ve": [
+     6,
+     7
+    ]
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "net": 3
+ },
+ "hoLua": {
+  "ma": "cinderLion",
+  "ten": "Cinder Lion",
+  "nhan_vat_pixellab": "868c99e5-8a79-466d-866d-d34c6f0920cf",
+  "anh_goc_seed": 44,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 2
+   },
+   {
+    "ten": "hit",
+    "seed": 2
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   },
+   {
+    "ten": "tele_chieu1",
+    "seed": 1
+   },
+   {
+    "ten": "atk_chieu1",
+    "seed": 2
+   },
+   {
+    "ten": "tele_chieu2",
+    "seed": 2
+   },
+   {
+    "ten": "atk_chieu2",
+    "seed": 1
+   },
+   {
+    "ten": "idle_p2",
+    "seed": 1
+   },
+   {
+    "ten": "tele_p2",
+    "seed": 2
+   }
+  ]
+ },
+ "hoTinh": {
+  "ma": "hoTinh-pl",
+  "ten": "Vulpina the Fox Witch",
+  "nhan_vat_pixellab": "6144aead-926f-4b44-840b-d1261704aa79",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 2
+   },
+   {
+    "ten": "atk",
+    "seed": 2
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   },
+   {
+    "ten": "tele_c1",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c1",
+    "seed": 1
+   },
+   {
+    "ten": "tele_c2",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c2",
+    "seed": 2
+   },
+   {
+    "ten": "tele_c3",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c3",
+    "seed": 1
+   },
+   {
+    "ten": "tele_c4",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c4",
+    "seed": 1
+   },
+   {
+    "ten": "tele_c5",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c5",
+    "seed": 1
+   },
+   {
+    "ten": "idle_p2",
+    "seed": 1
+   },
+   {
+    "ten": "tele_p2",
+    "seed": 1
+   },
+   {
+    "ten": "idle_p3",
+    "seed": 1
+   },
+   {
+    "ten": "tele_p3",
+    "seed": 1
+   }
+  ]
+ }
+}

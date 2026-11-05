@@ -1,0 +1,157 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-tiamom 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.47368421052631576
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-tiamom 1.png",
+   "frame": {
+    "x": 32,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.47368421052631576
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-tiamom 2.png",
+   "frame": {
+    "x": 64,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.47368421052631576
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-tiamom 3.png",
+   "frame": {
+    "x": 0,
+    "y": 38,
+    "w": 32,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.47368421052631576
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-tiamom 4.png",
+   "frame": {
+    "x": 32,
+    "y": 38,
+    "w": 32,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.47368421052631576
+   },
+   "duration": 100
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-tiamom.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 96,
+   "h": 76
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 16,
+   "y": 18
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-tiamom",
+    "from": 0,
+    "to": 4,
+    "direction": "forward"
+   }
+  ]
+ }
+}

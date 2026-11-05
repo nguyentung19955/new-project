@@ -1,0 +1,43 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-noLua2",
+ "files": {
+  "talesworn-nolua2.gif": "https://api.pixellab.ai/mcp/pixel-tools/14ef883c-d43a-410b-a3b4-53dff048b36a/talesworn-nolua2.gif",
+  "talesworn-nolua2.png": "https://api.pixellab.ai/mcp/pixel-tools/14ef883c-d43a-410b-a3b4-53dff048b36a/talesworn-nolua2.png",
+  "talesworn-nolua2.json": "https://api.pixellab.ai/mcp/pixel-tools/14ef883c-d43a-410b-a3b4-53dff048b36a/talesworn-nolua2.json"
+ },
+ "parts": [
+  "flash",
+  "fire",
+  "smoke",
+  "embers"
+ ],
+ "anchor": {
+  "x": 96,
+  "y": 120,
+  "kind": "origin"
+ },
+ "artist": "pro",
+ "canvas": {
+  "h": 160,
+  "w": 192
+ },
+ "frames": 8,
+ "message": "Made an 8-frame, one-shot storybook explosion: a tiny flash, broad orange-yellow billows, then dark smoke and embers that vanish by frame 8. The transparent canvas is exactly 192\u00d7160, anchored at (96, 120), with a spread of roughly 80 pixels to either side.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=bb9a2ad0-720f-46c2-841f-2dbb769a0b28",
+ "effect_id": "bb9a2ad0-720f-46c2-841f-2dbb769a0b28",
+ "gif_exact": true,
+ "result_id": "14ef883c-d43a-410b-a3b4-53dff048b36a",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 8.0
+ },
+ "generation_id": "d24e7302-3b1b-4692-b823-0a3245cb3562",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 8
+}

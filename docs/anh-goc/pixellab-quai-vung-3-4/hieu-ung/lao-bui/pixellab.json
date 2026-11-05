@@ -1,0 +1,157 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-laobui2 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-laobui2 1.png",
+   "frame": {
+    "x": 62,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-laobui2 2.png",
+   "frame": {
+    "x": 124,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-laobui2 3.png",
+   "frame": {
+    "x": 0,
+    "y": 38,
+    "w": 62,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-laobui2 4.png",
+   "frame": {
+    "x": 62,
+    "y": 38,
+    "w": 62,
+    "h": 38
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 38
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 38
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-laobui2.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 186,
+   "h": 76
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 31,
+   "y": 19
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-laobui2",
+    "from": 0,
+    "to": 4,
+    "direction": "forward"
+   }
+  ]
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-tiaMom",
+ "files": {
+  "talesworn-tiamom.gif": "https://api.pixellab.ai/mcp/pixel-tools/dbb7933a-a025-498f-a6d3-98ad05183c52/talesworn-tiamom.gif",
+  "talesworn-tiamom.png": "https://api.pixellab.ai/mcp/pixel-tools/dbb7933a-a025-498f-a6d3-98ad05183c52/talesworn-tiamom.png",
+  "talesworn-tiamom.json": "https://api.pixellab.ai/mcp/pixel-tools/dbb7933a-a025-498f-a6d3-98ad05183c52/talesworn-tiamom.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 18,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 38,
+  "w": 32
+ },
+ "frames": 5,
+ "message": "A four-pointed white sparkle on a soft round glow, starting as a dot and growing to full size over 5 frames, playing once on a 32x38 transparent canvas centred at 16,18. It uses only white and light greys, so the game can tint it. The glow's size and the star's arm length are the main things to tweak.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=8dd4e405-2eb2-49e0-84df-9034d17347ce",
+ "effect_id": "8dd4e405-2eb2-49e0-84df-9034d17347ce",
+ "gif_exact": true,
+ "result_id": "dbb7933a-a025-498f-a6d3-98ad05183c52",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "1f96681c-2a82-4c25-8e50-61acf81a5cac",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

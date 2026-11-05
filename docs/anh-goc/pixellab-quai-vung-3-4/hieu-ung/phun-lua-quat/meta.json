@@ -1,0 +1,41 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-phunLuaQuat2",
+ "files": {
+  "talesworn-phunluaquat2.gif": "https://api.pixellab.ai/mcp/pixel-tools/cd2d553c-c6b0-4668-8db6-6fd5197d65cd/talesworn-phunluaquat2.gif",
+  "talesworn-phunluaquat2.png": "https://api.pixellab.ai/mcp/pixel-tools/cd2d553c-c6b0-4668-8db6-6fd5197d65cd/talesworn-phunluaquat2.png",
+  "talesworn-phunluaquat2.json": "https://api.pixellab.ai/mcp/pixel-tools/cd2d553c-c6b0-4668-8db6-6fd5197d65cd/talesworn-phunluaquat2.json"
+ },
+ "parts": [
+  "breath",
+  "embers"
+ ],
+ "anchor": {
+  "x": 2,
+  "y": 102,
+  "kind": "origin"
+ },
+ "artist": "pro",
+ "canvas": {
+  "h": 188,
+  "w": 192
+ },
+ "frames": 6,
+ "message": "Made a six-frame, one-shot breath on an exact 192\u00d7188 transparent canvas: curling red-orange flames with yellow cores and dark outlines, spreading right from the narrow left-side origin. It shoots outward, holds at full reach, then breaks into rounded flame puffs and disappears.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=7f2f93a5-32d9-4fea-b1e1-4eca953f05b5",
+ "effect_id": "7f2f93a5-32d9-4fea-b1e1-4eca953f05b5",
+ "gif_exact": true,
+ "result_id": "cd2d553c-c6b0-4668-8db6-6fd5197d65cd",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 8.0
+ },
+ "generation_id": "cd857aef-8225-4836-998c-b3eb50821837",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 8
+}

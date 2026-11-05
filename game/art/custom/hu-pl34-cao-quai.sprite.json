@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-cao-quai",
+ "ten": "PixelLab: Vệt cào cận chiến của quái (trắng → game nhuộm theo màu quái; quay theo hướng đòn; DON chem) (thay hu-cao-quai, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 40,
+ "khung_cao": 35,
+ "goc": [
+  20,
+  18
+ ],
+ "so": 5,
+ "giay": 0.3,
+ "lap": false,
+ "xoay": true,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,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"
+}

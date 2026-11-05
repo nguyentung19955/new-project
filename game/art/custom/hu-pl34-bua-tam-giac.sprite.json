@@ -1,0 +1,21 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-bua-tam-giac",
+ "ten": "PixelLab: Tiểu Yêu · lá bùa (cao 12 khi co 1; 4–6 vòng lửa chân) (thay hu-bua-tam-giac, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 16,
+ "khung_cao": 17,
+ "goc": [
+  8,
+  14
+ ],
+ "so": 6,
+ "giay": 0.6,
+ "lap": false,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "vung": "laudai",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAAAiCAYAAAAJUNaOAAADUklEQVR42u2cP2gTURzHf68UCXbRji5ShA4ZDEKGcIMUHNwcXGKXDFIOyZAsDiFYBy2hg8tlOOQhHW5pb+ngpE4BoTiI0lIyFIu4dHCoLmJweQ7lnZfjktzf93vmfh8IvXLXvu/v3u/3fr93710ACIIgCIIgCIIoEizOxcbKsohy3cHXc5aXYCwNOtiuk455YTHOjb91Yznq5SKPDsDSoIPtuuhwHS4AAOoNkxUqACRbL5/B9y/HoedOjobw5t1x7qKxNOhgu046ChkARLGZl5FfspD0Dx+2XoUeqwRLgw62Y+poN03Rbpoi7jksTbkEwE5/w7vpO/0NFAfA0qCD7TrpwCCrQEuVAeRNx8wAGBpmtdstl8Q822/ZnC0NHHAdLlyHC7+9ls2ZZXPlZVLSdlNlgLDjvAhzKtUasNvF1iGfAHXLJVHp9OHgw0flQT/N4ZWWQEQxJ8Dtpil+rTU855c/K52+FyBhQZO23JlW9shMZNSqsUukxE+Bntf7Y79vui3lHYKlAaPdbrkkBr9xdfgdamngwL3VSwAAsLvW8IKh3TSFZXMmr83iqdGk0iaL4FpI6gBbd27D3atXvE+wM1Q4IYaGqO3mXRKotN/v+EatCkatCpXOv7bWz/bgcFv9AOjPTPWGyWQAug4XUecEiTPA+09H6CkZS4MOtqvUIR3JsjkzalUBAHB9/7F3/tv9F1AJrBPkMREO/s9J2SVO1qE5ABGLw+2WN9rvXnsAwWDIcg1gWokTVuPL7AS0EkzkUQIFR+D1s72xwAAAsIYjlueqs+tw4X/65N+blGS+kSgDbLotePvj59hH9SQYS0PUdnsZOoKOffD65E/o8f+2FWMxTQdgg6UBo93ecMSMlcsCQ4d/5O8NR0xO8IOOn3fQh2Ujy+Y4K8EEgUXUOj/XdYCwPSirN8sXBxfbcTPdjx42AqrWELXdwSkAwAhUbYZTbb8/C6gc/X0rwKnWDzIJgLCld7kX/fPpuZI3krA06GA7tg5VDg8pnyLNmjNQCURAkd9doAAggN4Ii8GTR0/RRWNp0MF2nXRA0b4VYtaL2arqXywNOtiuk45CBsCkTsC48VgadLBdJx2FJur31MyjBh1s10kHQRAEQRAEQRAEQRAa8xfUeHc/mUzrMgAAAABJRU5ErkJggg=="
+}

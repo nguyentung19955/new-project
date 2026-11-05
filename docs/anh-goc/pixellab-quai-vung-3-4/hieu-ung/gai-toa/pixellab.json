@@ -1,0 +1,183 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-gaitoa2 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-gaitoa2 1.png",
+   "frame": {
+    "x": 132,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-gaitoa2 2.png",
+   "frame": {
+    "x": 264,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-gaitoa2 3.png",
+   "frame": {
+    "x": 0,
+    "y": 136,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-gaitoa2 4.png",
+   "frame": {
+    "x": 132,
+    "y": 136,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-gaitoa2 5.png",
+   "frame": {
+    "x": 264,
+    "y": 136,
+    "w": 132,
+    "h": 136
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 132,
+    "h": 136
+   },
+   "sourceSize": {
+    "w": 132,
+    "h": 136
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 83
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-gaitoa2.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 396,
+   "h": 272
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 66,
+   "y": 68
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-gaitoa2",
+    "from": 0,
+    "to": 5,
+    "direction": "forward"
+   }
+  ]
+ }
+}

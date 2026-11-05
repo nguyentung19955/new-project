@@ -1,0 +1,38 @@
+{
+ "fps": 6,
+ "kind": "new",
+ "loop": true,
+ "name": "talesworn-bomPhao",
+ "files": {
+  "talesworn-bomphao.gif": "https://api.pixellab.ai/mcp/pixel-tools/b138ce61-cdd7-4629-b49a-adc0f3a6bcde/talesworn-bomphao.gif",
+  "talesworn-bomphao.png": "https://api.pixellab.ai/mcp/pixel-tools/b138ce61-cdd7-4629-b49a-adc0f3a6bcde/talesworn-bomphao.png",
+  "talesworn-bomphao.json": "https://api.pixellab.ai/mcp/pixel-tools/b138ce61-cdd7-4629-b49a-adc0f3a6bcde/talesworn-bomphao.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 18,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 36,
+  "w": 32
+ },
+ "frames": 4,
+ "message": "Here is the black iron cartoon bomb on a 32x36 transparent canvas: a round body about 22 px wide, resting near the bottom centre, with a short brown fuse. The four looping frames shift the sheen across the body to suggest a slow spin, and the fuse tip flickers with a small yellow spark. The body is quite dark, so it may read best on a lighter background.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=fc7529ca-c300-401c-9551-0b264ec1afd2",
+ "effect_id": "fc7529ca-c300-401c-9551-0b264ec1afd2",
+ "gif_exact": true,
+ "result_id": "b138ce61-cdd7-4629-b49a-adc0f3a6bcde",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 2.0
+ },
+ "generation_id": "8eb6f3f5-5e22-44c9-834b-a529764a0f7f",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

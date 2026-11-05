@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-lao-bui",
+ "ten": "PixelLab: Bụi + vạch tốc độ khi quái lao (vạch trắng bên trái = phía sau; lật theo hướng lao; DON lao) (thay hu-lao-bui, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 31,
+ "khung_cao": 19,
+ "goc": [
+  1,
+  17
+ ],
+ "so": 5,
+ "giay": 0.4,
+ "lap": false,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATYAAAAmCAYAAABOHbeGAAACFUlEQVR42u3b0Y2jMBCA4clpm6CENDG04W4iunETRMJNuAO7DO7h5Ijdgyi7S7Cx/0/iJYkUz5DgGRtEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvu+y9YaqzqUM0jl3Oeq7iJu4W4i7Sao6l+SoHx9xE3cLcbfggxScd/JhpgdoRatoTdL4pmkSEZEYoxhjfp2js5zvNM6vn/nphZ5WFCh0iSCE0EQbs4xfVR8xL19vJRf4YcVW0gxXwkxWQtyqOqdKbSnGKCKyS+VW6vleiz1Vq1uv/yYXuS6OW2NW1ZmKrrLF1twzcAlxPxtDCOFx7JmrUs73s0o1hLB7BZtzU2Ft3Gk8VKKv+3PGxfJWpcpsjff+LRVbqbHHGMV7v5mLM7rf70/ft9byP5A37Io65y593x+W2NRiTNOU2oss5fjRcT9rS2KM0nXdy3+GGuJ2zl2MMbO1Vrqu+3RRM8aItXbXi1quuLfO+XI8tKOVtbwsCv/LyziOjxZsHMdPR835UdX/Yl5uHtSaByo0ee/mwdEJXlsQ9t7LMAzN3P6xtXmwVqXtnZeS4t4a0/Jze93XV+L57vueSq3GO7RzzcS5495aSP561LJpkHuzqKS4uYWlgScPrtfraReEj6hmcq09Qg7ZMOG3X1ErmtxuNxmGIdv9bCW2ZMTdztIDTyU08EwkAAAAAAAAUKC/4pU79QRaHq0AAAAASUVORK5CYII="
+}

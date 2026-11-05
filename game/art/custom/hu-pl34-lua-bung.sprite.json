@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-lua-bung",
+ "ten": "PixelLab: Ngọn lửa bùng nhiều lớp (Hồ Tinh / Hổ Lửa F.lua; neo giữa đáy) (thay hu-lua-bung, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 16,
+ "khung_cao": 21,
+ "goc": [
+  8.0,
+  20.5
+ ],
+ "so": 6,
+ "giay": 0.6,
+ "lap": true,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAAAqCAYAAADlA1TjAAAEzklEQVR42u1cvW7iQBAeLBcUCFzRpDkpEiWiuu4kSt7gRHN5NtL4FSipUyFKpEg0aagMSkFhiStg0XpZ2+v1zuwGZiQrQJHZ+flm5hsbAFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYnlZe4vj8Esdn9gTLI0pUl/xvSQ/ekh4wCMyKBXvhgQDACdfsLFwoHhgAoQU3pIQTZ2F58A4QYoXzfSahezaMmSt64IttdRpFTQ7uIgvP+W9JDxbZ9/krzzvUzk9HSRBjILXtug44G8aw3OdksZA7r61Oow6w3OfcK2u4xzXwpIkY4pJiNoxJzuOq81YC4CvPO4vsO2jyORvGZE4PhXvIukUCPBMIRAzSUQLzbdaq8DTeAqWjBNJR4j0BRMulrDw6vdTVXwagGL+oi4CJT7DP44pzxW2N9zV76hxw+QyHD6iB9jH7y2eYDROt/aFwtPk2AwpuIuIw32ZWMTcGwHKfF5KureKftHKs0umTH40n3dvrzfoURCemGP1cFp/aEaiMB4Qw+own3cKFtY4UPlhk3zDfZrfq5rPzyckvv/c9nsoF0uUIJEY+OflVH6BxAJEAusBTOVyX/EB0b0D9X75Xn3UdgSImlJ1Y1SUXPNXmpnbHrtA+32ZnGTBUrZ/S+Wp38dUJZPsH0z4AABxWR9IzXIvidRWZoHMAk86ejpLG9yGipmsnFYXiEu0Jg/mXzZoi+L5It+wPqg1Umf3itQAHxXkouqGu+rssiJGrCizP4K6dL/MQoUcEXAVB272w7VrYFwgBeU1oUxBdcgBsDtqaA+hA4DIBxVyXjhJjpLvUrXYeHfGmug8h+5+y+5n4hBqEroDf6nHowbRfuIQzbAmJSaVRRZ19XRJAFfh17Rcr4LIfKPmPbfLLn7ksClW22+qMbAOgq0AqCHzcmXS5lzcBIGbAQxefYHQl7UvW71+Xvx+7GwioNxKUwdYB/7A6wnjShc36FNTdWIo1tOoPNfZtx+GydWvV9quJzsiGiNyMFsmvviaaASmAZmKDmgSYSwDw/JBbXTHAFN3dbvkMckdyOgJVVv66z4gDjwm6AvDFhbwECKn6myS/D3Ku6mwyfkdNbkOPJ917A1//XS7Af7DK1NmuK3Bh1lVBfn1PGXgfyScXloIeTSH4Sd8jiaxmMGGwnPgaELR1gAkJ9bUOLABfSQDS53Ecd12T6q9N/Otr12OpbgqoW8A8zK9ClI1AZUmPuZUo6KwBPtlXL0UCIoPAtuCQjIKS7fLZTEdhdwD4fEdxwFeed+puwGF2geU+h836ZFTZBtM+KghNRjGSRUCNLrJHs+UCYGm/2w5wXYWSVCCFiNqg3ykJJ6rCpmD3PX9j6K8sAJaTgP33AUpa/2F1hM36hBuACiKKUYHvbFG7HcEYVMrBCHSXxrJCP9b4M5j27+1XzrBZn2C+zYz0o3EAVw6ofO68gogCwg76sDqSdDljEl4BQPT5mxr0SPqD/2lEow6EGIyQvhEXlP9DAgMFAJqMNBjjj/Z/9v761685w9PoDyH+Le1v9CjEHbvXHGCzPjlvv6X6NSAg168ZlZ5Gfwjxb2l/5PL5G4pnc1h/2PpNyWco9scN9/HnFBL487EDgHeAV2kr8rFrxL4t7wew/sD1Y3IRDPv/A3Bdsc4nE4HaAAAAAElFTkSuQmCC"
+}

@@ -1,0 +1,157 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-quaidap 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 118,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5084745762711864,
+    "y": 0.5277777777777778
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-quaidap 1.png",
+   "frame": {
+    "x": 118,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 118,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5084745762711864,
+    "y": 0.5277777777777778
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-quaidap 2.png",
+   "frame": {
+    "x": 236,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 118,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5084745762711864,
+    "y": 0.5277777777777778
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-quaidap 3.png",
+   "frame": {
+    "x": 0,
+    "y": 72,
+    "w": 118,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 118,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5084745762711864,
+    "y": 0.5277777777777778
+   },
+   "duration": 83
+  },
+  {
+   "filename": "talesworn-quaidap 4.png",
+   "frame": {
+    "x": 118,
+    "y": 72,
+    "w": 118,
+    "h": 72
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 118,
+    "h": 72
+   },
+   "sourceSize": {
+    "w": 118,
+    "h": 72
+   },
+   "pivot": {
+    "x": 0.5084745762711864,
+    "y": 0.5277777777777778
+   },
+   "duration": 83
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-quaidap.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 354,
+   "h": 144
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 60,
+   "y": 38
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-quaidap",
+    "from": 0,
+    "to": 4,
+    "direction": "forward"
+   }
+  ]
+ }
+}

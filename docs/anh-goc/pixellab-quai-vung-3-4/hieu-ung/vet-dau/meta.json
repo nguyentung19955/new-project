@@ -1,0 +1,38 @@
+{
+ "fps": 8,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-vetDau",
+ "files": {
+  "talesworn-vetdau.gif": "https://api.pixellab.ai/mcp/pixel-tools/d569407a-9efe-44fd-a2f5-528ac6a5dab8/talesworn-vetdau.gif",
+  "talesworn-vetdau.png": "https://api.pixellab.ai/mcp/pixel-tools/d569407a-9efe-44fd-a2f5-528ac6a5dab8/talesworn-vetdau.png",
+  "talesworn-vetdau.json": "https://api.pixellab.ai/mcp/pixel-tools/d569407a-9efe-44fd-a2f5-528ac6a5dab8/talesworn-vetdau.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 22,
+  "y": 14,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 26,
+  "w": 42
+ },
+ "frames": 6,
+ "message": "A 42x26 one-shot oil slick: a glossy black ellipse (36x16, centred at 22,14) starts as a small blob in frame 1, spreads out by frame 2, then shows orange heat glints on its surface from frames 4 to 6. Transparent background, no sprite or ground. The glint count is the slider to try if you want more or fewer heat sparks.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=888e884b-dc3e-49a8-8025-29136bef9b44",
+ "effect_id": "888e884b-dc3e-49a8-8025-29136bef9b44",
+ "gif_exact": true,
+ "result_id": "d569407a-9efe-44fd-a2f5-528ac6a5dab8",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "6199e64c-95b7-4eb9-a3b1-9027ce05b20a",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

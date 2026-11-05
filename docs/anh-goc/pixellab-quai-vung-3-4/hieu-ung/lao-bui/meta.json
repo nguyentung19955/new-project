@@ -1,0 +1,38 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-laoBui2",
+ "files": {
+  "talesworn-laobui2.gif": "https://api.pixellab.ai/mcp/pixel-tools/50cd318d-31a9-4265-8267-be728a89c1e5/talesworn-laobui2.gif",
+  "talesworn-laobui2.png": "https://api.pixellab.ai/mcp/pixel-tools/50cd318d-31a9-4265-8267-be728a89c1e5/talesworn-laobui2.png",
+  "talesworn-laobui2.json": "https://api.pixellab.ai/mcp/pixel-tools/50cd318d-31a9-4265-8267-be728a89c1e5/talesworn-laobui2.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 31,
+  "y": 19,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 38,
+  "w": 62
+ },
+ "frames": 5,
+ "message": "A 62x38, 5-frame one-shot dust kick: round puffy white-grey clouds grow at the right end around (48, 30) in frames 1-2, drift up and thin in 3-4, and vanish in 5, with three horizontal speed lines trailing left to the edge. The palette is white and light grey only with a grey outline, so the game tint will carry it. The puffs stay small and somewhat separate, so at 1x they read as a dust puff more than a dense cloud; the speed-line timing and puff size are the sliders to adjust.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=a8f45b87-8dcf-482d-bd30-c1c463d062d1",
+ "effect_id": "a8f45b87-8dcf-482d-bd30-c1c463d062d1",
+ "gif_exact": true,
+ "result_id": "50cd318d-31a9-4265-8267-be728a89c1e5",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "6d1ba4fc-8050-4582-aedb-8e94c0ed8aa7",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

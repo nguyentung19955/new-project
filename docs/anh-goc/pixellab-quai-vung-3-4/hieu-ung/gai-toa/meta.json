@@ -1,0 +1,40 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-gaiToa2",
+ "files": {
+  "talesworn-gaitoa2.gif": "https://api.pixellab.ai/mcp/pixel-tools/ea3c7f5c-441a-4583-ad7f-c90fd7b7e235/talesworn-gaitoa2.gif",
+  "talesworn-gaitoa2.png": "https://api.pixellab.ai/mcp/pixel-tools/ea3c7f5c-441a-4583-ad7f-c90fd7b7e235/talesworn-gaitoa2.png",
+  "talesworn-gaitoa2.json": "https://api.pixellab.ai/mcp/pixel-tools/ea3c7f5c-441a-4583-ad7f-c90fd7b7e235/talesworn-gaitoa2.json"
+ },
+ "parts": [
+  "thorns"
+ ],
+ "anchor": {
+  "x": 66,
+  "y": 68,
+  "kind": "origin"
+ },
+ "artist": "pro",
+ "canvas": {
+  "h": 136,
+  "w": 132
+ },
+ "frames": 6,
+ "message": "Made a crisp, top-down thorn burst on the exact 132\u00d7136 canvas, centred at (66, 68). The spikes grow through frames 1\u20133, reach a 64-pixel tip radius in frame 4, then shrink and disappear over frames 5\u20136. Grey outlines keep it within your white-and-light-grey tintable palette.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=7cfa7f76-d83d-4584-b7a9-22f5a1f186d1",
+ "effect_id": "7cfa7f76-d83d-4584-b7a9-22f5a1f186d1",
+ "gif_exact": true,
+ "result_id": "ea3c7f5c-441a-4583-ad7f-c90fd7b7e235",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 8.0
+ },
+ "generation_id": "e848729e-9973-4744-92cd-2c4215912f15",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 8
+}

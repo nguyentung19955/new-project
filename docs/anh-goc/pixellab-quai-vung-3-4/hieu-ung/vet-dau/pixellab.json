@@ -1,0 +1,183 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-vetdau 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-vetdau 1.png",
+   "frame": {
+    "x": 42,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-vetdau 2.png",
+   "frame": {
+    "x": 84,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-vetdau 3.png",
+   "frame": {
+    "x": 0,
+    "y": 26,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-vetdau 4.png",
+   "frame": {
+    "x": 42,
+    "y": 26,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-vetdau 5.png",
+   "frame": {
+    "x": 84,
+    "y": 26,
+    "w": 42,
+    "h": 26
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 42,
+    "h": 26
+   },
+   "sourceSize": {
+    "w": 42,
+    "h": 26
+   },
+   "pivot": {
+    "x": 0.5238095238095238,
+    "y": 0.5384615384615384
+   },
+   "duration": 125
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-vetdau.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 126,
+   "h": 52
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 22,
+   "y": 14
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-vetdau",
+    "from": 0,
+    "to": 5,
+    "direction": "forward"
+   }
+  ]
+ }
+}

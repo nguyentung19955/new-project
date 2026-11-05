@@ -1,0 +1,38 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-buaTamGiac",
+ "files": {
+  "talesworn-buatamgiac.gif": "https://api.pixellab.ai/mcp/pixel-tools/f0e7c3cf-040b-411b-95e6-622240ff819d/talesworn-buatamgiac.gif",
+  "talesworn-buatamgiac.png": "https://api.pixellab.ai/mcp/pixel-tools/f0e7c3cf-040b-411b-95e6-622240ff819d/talesworn-buatamgiac.png",
+  "talesworn-buatamgiac.json": "https://api.pixellab.ai/mcp/pixel-tools/f0e7c3cf-040b-411b-95e6-622240ff819d/talesworn-buatamgiac.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 17,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 34,
+  "w": 32
+ },
+ "frames": 6,
+ "message": "A 32x34 cursed parchment charm: a cream card with a red wax seal stands upright on its tip, trembles for four frames with a faint orange glow around it, then crumbles in blocks and releases grey ash flecks over the last two frames. It plays once over six frames at 10 fps on a transparent background. The glow and the trembling are the easiest things to tune by eye; the card was drawn at 12x24 pixels with its tip at 16,28.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=14a7e258-67e0-4787-ada8-54684c2f93c2",
+ "effect_id": "14a7e258-67e0-4787-ada8-54684c2f93c2",
+ "gif_exact": true,
+ "result_id": "f0e7c3cf-040b-411b-95e6-622240ff819d",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 2.0
+ },
+ "generation_id": "39e07bbb-1162-42ed-a1ef-6799853e8f6c",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

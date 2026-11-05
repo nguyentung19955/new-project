@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-quaiDap",
+ "files": {
+  "talesworn-quaidap.gif": "https://api.pixellab.ai/mcp/pixel-tools/6c2220c7-7769-4e8a-82c4-0eaf96576b7b/talesworn-quaidap.gif",
+  "talesworn-quaidap.png": "https://api.pixellab.ai/mcp/pixel-tools/6c2220c7-7769-4e8a-82c4-0eaf96576b7b/talesworn-quaidap.png",
+  "talesworn-quaidap.json": "https://api.pixellab.ai/mcp/pixel-tools/6c2220c7-7769-4e8a-82c4-0eaf96576b7b/talesworn-quaidap.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 60,
+  "y": 38,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 72,
+  "w": 118
+ },
+ "frames": 5,
+ "message": "A 118x72 ground slam on five frames, playing once: a flash at the centre, a flat white ring racing out to radius 56 (twice as wide as tall), with grey dust puffs and small rubble chips bouncing and settling. It is white and light grey on a transparent background, so the game can tint it. The ring's outer edge sits about 2 px from the left and right canvas edges on the last frame. I kept the exact 118x72 size you asked for, so check that the game doesn't clip it.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=57932b69-75ef-4d44-b8b7-d7aa3b44db17",
+ "effect_id": "57932b69-75ef-4d44-b8b7-d7aa3b44db17",
+ "gif_exact": true,
+ "result_id": "6c2220c7-7769-4e8a-82c4-0eaf96576b7b",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "71b7fccd-7c08-4217-bfac-8e1a499ebb94",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

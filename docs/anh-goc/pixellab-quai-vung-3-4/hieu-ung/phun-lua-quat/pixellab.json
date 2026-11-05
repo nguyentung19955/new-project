@@ -1,0 +1,183 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-phunluaquat2 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-phunluaquat2 1.png",
+   "frame": {
+    "x": 192,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-phunluaquat2 2.png",
+   "frame": {
+    "x": 384,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-phunluaquat2 3.png",
+   "frame": {
+    "x": 0,
+    "y": 188,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-phunluaquat2 4.png",
+   "frame": {
+    "x": 192,
+    "y": 188,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-phunluaquat2 5.png",
+   "frame": {
+    "x": 384,
+    "y": 188,
+    "w": 192,
+    "h": 188
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 192,
+    "h": 188
+   },
+   "sourceSize": {
+    "w": 192,
+    "h": 188
+   },
+   "pivot": {
+    "x": 0.010416666666666666,
+    "y": 0.5425531914893617
+   },
+   "duration": 100
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-phunluaquat2.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 576,
+   "h": 376
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 2,
+   "y": 102
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-phunluaquat2",
+    "from": 0,
+    "to": 5,
+    "direction": "forward"
+   }
+  ]
+ }
+}

@@ -1,0 +1,131 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-cauluama 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 76
+   },
+   "pivot": {
+    "x": 0.4838709677419355,
+    "y": 0.6052631578947368
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-cauluama 1.png",
+   "frame": {
+    "x": 62,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 76
+   },
+   "pivot": {
+    "x": 0.4838709677419355,
+    "y": 0.6052631578947368
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-cauluama 2.png",
+   "frame": {
+    "x": 0,
+    "y": 76,
+    "w": 62,
+    "h": 76
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 76
+   },
+   "pivot": {
+    "x": 0.4838709677419355,
+    "y": 0.6052631578947368
+   },
+   "duration": 125
+  },
+  {
+   "filename": "talesworn-cauluama 3.png",
+   "frame": {
+    "x": 62,
+    "y": 76,
+    "w": 62,
+    "h": 76
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 62,
+    "h": 76
+   },
+   "sourceSize": {
+    "w": 62,
+    "h": 76
+   },
+   "pivot": {
+    "x": 0.4838709677419355,
+    "y": 0.6052631578947368
+   },
+   "duration": 125
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-cauluama.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 124,
+   "h": 152
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 30,
+   "y": 46
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-cauluama",
+    "from": 0,
+    "to": 3,
+    "direction": "forward"
+   }
+  ]
+ }
+}

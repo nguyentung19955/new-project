@@ -1,0 +1,183 @@
+{
+ "frames": [
+  {
+   "filename": "talesworn-buatamgiac 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-buatamgiac 1.png",
+   "frame": {
+    "x": 32,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-buatamgiac 2.png",
+   "frame": {
+    "x": 64,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-buatamgiac 3.png",
+   "frame": {
+    "x": 0,
+    "y": 34,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-buatamgiac 4.png",
+   "frame": {
+    "x": 32,
+    "y": 34,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  },
+  {
+   "filename": "talesworn-buatamgiac 5.png",
+   "frame": {
+    "x": 64,
+    "y": 34,
+    "w": 32,
+    "h": 34
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 32,
+    "h": 34
+   },
+   "sourceSize": {
+    "w": 32,
+    "h": 34
+   },
+   "pivot": {
+    "x": 0.5,
+    "y": 0.5
+   },
+   "duration": 100
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "talesworn-buatamgiac.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 96,
+   "h": 68
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 16,
+   "y": 17
+  },
+  "frameTags": [
+   {
+    "name": "talesworn-buatamgiac",
+    "from": 0,
+    "to": 5,
+    "direction": "forward"
+   }
+  ]
+ }
+}

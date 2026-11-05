@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-bom-phao",
+ "ten": "PixelLab: Bó pháo (Tiểu Yêu) (thay hu-bom-phao, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 16,
+ "khung_cao": 18,
+ "goc": [
+  8,
+  16
+ ],
+ "so": 4,
+ "giay": 0.4,
+ "lap": true,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAAkCAYAAABBszIzAAABfklEQVR42u2aLXLDMBBGV5rAoAABI09wxmPYyT1ymZwuKGcI7BQYGBSFBajIJGNbWnlXaqvv4Thv99OP5bGJAAAAAAAA+E/4x9nX6K4+/MnvX5++NvevGIMpgJpXYOnei03A66X310tfbPAnf6nwq/YjfAw+wsfgw/+X/Cblov3+MCt7Pr9Njobhl/MbjrTvP4iIaBi+Vn87joN4GPDr+C1XHoNzzeIs3do8/LJ+w5W37ZGIiO73W/DPJVbCUvMxdWj6Y+qQ9nOyj/XblOa77pRlJYTCD9Wh7Q/VIelv2yN13Sl68GP9ltP8VASH1BDWwufUoeHn1CHhT8k91m+4AYQOIFLbMfx5/LuYi1Ol7zPRucanhAG/nt9ufeTQes6FP49/tyQv0Tj8+f1Wa8vZAvz5/JZA1WACVM7qY6BzjaiMc/qFP48fOwBuAQATgObfLY/jUGT7gz+f32jei6TehsGv5zfShWh8DAG/nt+WOuVqAD/fb/BdHPwAAACq5AcJBicDgYatuwAAAABJRU5ErkJggg=="
+}

@@ -1,0 +1,20 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-tia-mom",
+ "ten": "PixelLab: Tia sáng ở miệng lúc lấy đà bắn / ném / phun (trắng → nhuộm) (thay hu-tia-mom, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 16,
+ "khung_cao": 19,
+ "goc": [
+  8,
+  9
+ ],
+ "so": 5,
+ "giay": 0.5,
+ "lap": false,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAAmCAYAAABDJpDoAAABVElEQVR42u3ZO47CMBSF4ZPsggoJpfYKpmQ1lCwkJauhZAWu0UhUswymMnKsCIVgX2P0f10Q0nGuX3EiAQAAAAAAAAAAAMBnGcfTfRxPdyqxXs8A4P5r5vfMwfWFd87JOVdlIMR5NQZhrvyu5UHgnJMkee91PB4668LH+UHpdnxbft/q4FvyW6ncsPLFHRGurVajNN9arvy+tWeQeBCkBbBuyzDsNAy7avce51vUYK727/bB6uX6fL5Mgvb7n04G220ovCRttxtJ0u32J0m6Xn8f/8m1LafZS/NztWGu05fef44tuXQ+hxBUlWV2WB0Anm0DuWb8q1tgPPNLt+HT8lNr8ruWDyHpKczqBJizA1qagCXym9yC527SYhUOGd77yauH+NpqN0jzreXKb/Y9YK1HgJor8LPXTrVqUCufT1Hk8y2cb9EAAAAAAAAAAAAAAACY+AdTFDKb70YRewAAAABJRU5ErkJggg=="
+}

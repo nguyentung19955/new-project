@@ -1,0 +1,74 @@
+{
+ "hu-bom-phao": {
+  "nguon": "bomPhao",
+  "effect_id": "fc7529ca-c300-401c-9551-0b264ec1afd2",
+  "artist": "lite",
+  "generations": 2.0
+ },
+ "hu-cau-lua-ma": {
+  "nguon": "cauLuaMa",
+  "effect_id": "13bec6d6-4269-4090-b695-e0ecd3ca9876",
+  "artist": "lite",
+  "generations": 1.0
+ },
+ "hu-phun-lua-quat": {
+  "nguon": "phunLuaQuat2",
+  "effect_id": "7f2f93a5-32d9-4fea-b1e1-4eca953f05b5",
+  "artist": "pro",
+  "generations": 8.0
+ },
+ "hu-vet-dau": {
+  "nguon": "vetDau",
+  "effect_id": "888e884b-dc3e-49a8-8025-29136bef9b44",
+  "artist": "lite",
+  "generations": 1.0
+ },
+ "hu-bua-tam-giac": {
+  "nguon": "buaTamGiac",
+  "effect_id": "14a7e258-67e0-4787-ada8-54684c2f93c2",
+  "artist": "lite",
+  "generations": 2.0
+ },
+ "hu-no-lua": {
+  "nguon": "noLua2",
+  "effect_id": "bb9a2ad0-720f-46c2-841f-2dbb769a0b28",
+  "artist": "pro",
+  "generations": 8.0
+ },
+ "hu-cao-quai": {
+  "nguon": "caoQuai2",
+  "effect_id": "c038b54d-000b-4333-9af4-e47866c35143",
+  "artist": "pro",
+  "generations": 8.0
+ },
+ "hu-lao-bui": {
+  "nguon": "laoBui2",
+  "effect_id": "a8f45b87-8dcf-482d-bd30-c1c463d062d1",
+  "artist": "lite",
+  "generations": 1.0
+ },
+ "hu-quai-dap": {
+  "nguon": "quaiDap",
+  "effect_id": "57932b69-75ef-4d44-b8b7-d7aa3b44db17",
+  "artist": "lite",
+  "generations": 1.0
+ },
+ "hu-gai-toa": {
+  "nguon": "gaiToa2",
+  "effect_id": "7cfa7f76-d83d-4584-b7a9-22f5a1f186d1",
+  "artist": "pro",
+  "generations": 8.0
+ },
+ "hu-tia-mom": {
+  "nguon": "tiaMom",
+  "effect_id": "8dd4e405-2eb2-49e0-84df-9034d17347ce",
+  "artist": "lite",
+  "generations": 1.0
+ },
+ "hu-lua-bung": {
+  "nguon": "luaBung",
+  "effect_id": "a3e951d7-8a9a-4e81-a441-07feab63f245",
+  "artist": "lite",
+  "generations": 1.0
+ }
+}
