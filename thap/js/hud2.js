@@ -43,10 +43,12 @@ const HUD2 = {
       let n = 0; for (const T of B.t) if (T && T.id === id) n++;
       const s = d._h2so || (d._h2so = d.querySelector('.h2-so'));
       if (s && s._n !== n) { s._n = n; s.dataset.n = n; s.textContent = n ? n : ''; }
+      this.vuaThe(d);
       const duT = d.classList.contains('du');
       if (this._theDu[id] === false && duT) this.motLan(d, 'h2-glint', 900); // vừa đủ mana nâng cấp: góc sáng 1 lần
       this._theDu[id] = duT;
     });
+    this.vuaSo();
     // ray trên: ≤3 wave tới trùm = hổ phách; wave trùm / trùm đang chạy = đỏ; phần đầy rãnh = tiến độ tới trùm
     const top = $('#top'), w = Math.max(1, G.wave), chuKy = LUAT.songTrum, vt = ((w - 1) % chuKy) + 1, con = chuKy - (w % chuKy);
     const trum = G.quai.some(e => e.trum && !e.chet);
@@ -60,6 +62,33 @@ const HUD2 = {
     if (B.tim < this._tim) { const ds = document.querySelectorAll('#tb-tim .den.mat'); const e = ds[0]; if (e) this.motLan2(e, 'vua-mat', 450); }
     this._tim = B.tim;
   },
+  // ---------- CHỮ SỐ DÀI (LV 10/40/99, đếm 12/15, giá 1000/10000): mỗi nhãn 1 ô riêng trong ô cửa sổ khung, tự thu nhỏ chữ ----------
+  // đo bằng canvas (chỉ khi chữ ĐỔI) → cỡ chữ = min(cỡ chuẩn, vừa bề rộng ô), không nhỏ hơn cỡ tối thiểu đọc được
+  _do: null,
+  vua(el, maxW, fMax, fMin) {
+    if (!el) return;
+    const t = el.textContent, k = t + '|' + maxW + '|' + fMax;
+    if (el._vk === k) return; el._vk = k;
+    if (!t) { el.style.fontSize = ''; return; }
+    const cs = getComputedStyle(el), c = this._do || (this._do = document.createElement('canvas').getContext('2d'));
+    c.font = cs.fontWeight + ' ' + fMax + 'px ' + cs.fontFamily;
+    const w = c.measureText(t).width + (parseFloat(cs.letterSpacing) || 0) * t.length;
+    const f = w > maxW ? Math.max(fMin, Math.floor(fMax * maxW / w * 4) / 4) : fMax;
+    el.style.fontSize = f + 'px';
+  },
+  vuaThe(d) {
+    const W = d.offsetWidth * 0.688 - 2; // bề rộng ô cửa sổ khung (x 15.6–84.4 %)
+    this.vua(d._lv || (d._lv = d.querySelector('.lv')), W - 8, 8.5, 6.5);
+    this.vua(d._h2so || (d._h2so = d.querySelector('.h2-so')), W - 16, 9, 7);
+    const g = d._g || (d._g = d.querySelector('.gia b'));
+    if (g) this.vua(g, 50 * 0.56 - 1, 11, 7.5); // cửa số của ô giá: x 34–90 % (ảnh h2_chip)
+  },
+  vuaSo() {
+    const m = $('#mana'); if (m) this.vua(m, Math.max(40, m.clientWidth - 13), 25, 14);
+    this.vua($('#gia-trieu'), 33, 14, 9);
+    const mv = document.querySelector('#the-mv .mv-gia b'); if (mv) this.vua(mv, 58 * 0.56 - 1, 12.5, 8);
+  },
+  vuaNhan() { document.querySelectorAll('#bo-the .the').forEach(d => this.vuaThe(d)); this.vuaSo(); },
   motLan(the, lop, ms) { const e = document.createElement('i'); e.className = lop; the.appendChild(e); setTimeout(() => e.remove(), ms); },
   motLan2(el, lop, ms) { el.classList.remove(lop); void el.offsetWidth; el.classList.add(lop); setTimeout(() => el.classList.remove(lop), ms); },
 
@@ -150,8 +179,11 @@ const HUD2 = {
       const w = d * (n >= 7 ? 1.42 : 1.2) * q, h = w * anh.height / anh.width;
       this.veNho(x, anh, 0, 0, anh.width, anh.height, Math.round(N / 2 - w / 2), Math.round(N / 2 - h / 2), Math.round(w), Math.round(h));
       x.scale(q, q); x.translate(d * 0.75, d * 0.75);
-      const f = Math.round(d * 0.74 * 10) / 10;
-      x.font = '800 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
+      let f = Math.round(d * 0.74 * 10) / 10;
+      x.font = '800 ' + f + 'px ' + FONT.display;
+      const tw = x.measureText(n).width, maxW = d * 0.72; // số 2–3 chữ số: thu nhỏ để nằm gọn trong tấm khiên
+      if (tw > maxW) { f = Math.max(d * 0.4, Math.floor(f * maxW / tw * 10) / 10); x.font = '800 ' + f + 'px ' + FONT.display; }
+      x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
       x.lineWidth = d * 0.13; x.strokeStyle = '#05070a'; x.strokeText(n, 0, d * 0.02);
       x.fillStyle = n >= 7 ? '#ffd25a' : '#fff6df'; x.fillText(n, 0, d * 0.02);
       return this.cSet(key, c);
