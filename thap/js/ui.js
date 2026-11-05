@@ -387,4 +387,4 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
 };
 
-UI.init();
+FONT.ready.then(() => UI.init()); // đợi phông → canvas không bao giờ vẽ bằng phông dự phòng
