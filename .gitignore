@@ -25,3 +25,5 @@ docs/anh-goc/**/*-cat/debug.png
 docs/anh-goc/**/*-gif/debug.png
 docs/anh-goc/**/*-cat/*.gif
 docs/anh-goc/**/*-gif/*.gif
+# F1 (05/11): buildId + danh sách tệp của lần đóng gói (game/build.py ghi, workflow chép lên web), đổi mỗi lần dựng
+game/dist/build-manifest.json

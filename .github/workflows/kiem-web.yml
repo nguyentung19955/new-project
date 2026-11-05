@@ -1,0 +1,78 @@
+name: Kiểm spiritblade.web.app mỗi 30 phút
+
+# Phiên F1 (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f1-phat-hanh/bao-cao.md): canh bản thật 30 phút/lần:
+#   HTTP 200, buildId trên web khớp lần đăng thành công gần nhất, vài ảnh quan trọng tải được, mở headless (?cloud=0) thấy màn đầu vẽ được.
+#   Lỗi → chờ 2 phút kiểm lại; lỗi 2 LẦN LIÊN TIẾP → mở issue "Web spiritblade.web.app có vấn đề" (GitHub gửi email). Lần kiểm sau đạt → tự đóng.
+#
+# Vì sao không chỉ dùng "schedule": GitHub chỉ chạy lịch của workflow nằm trên nhánh mặc định (master), mà repo này làm trên khoi-tao-du-an
+# (không đụng master). Nên workflow chạy một VÒNG ~5 giờ 30 (kiểm 11 lần, cách nhau 30 phút) rồi TỰ GỌI lần chạy mới (workflow_dispatch).
+# Mỗi lần đăng web (linh-khi-hosting.yml) cũng khởi động lại vòng. Nếu sau này tệp này được đưa lên master thì dòng schedule tự có hiệu lực
+# (mỗi lần chạy theo lịch chỉ kiểm 1 lần, không tự gọi lại).
+# Tắt hẳn: GitHub → Actions → "Kiểm spiritblade.web.app mỗi 30 phút" → ⋯ → Disable workflow.
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [khoi-tao-du-an]
+    paths: ['.github/workflows/kiem-web.yml', 'tools/phat-hanh/kiem_web.py']
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: kiem-web
+  cancel-in-progress: true
+
+jobs:
+  kiem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    env:
+      GH_TOKEN: ${{ github.token }}
+      WEB: https://spiritblade.web.app
+      TIEU_DE: 'Web spiritblade.web.app có vấn đề'
+      SO_LAN: ${{ github.event_name == 'schedule' && '1' || '11' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Cài Playwright (Chromium)
+        run: |
+          python3 -m pip install --quiet playwright
+          python3 -m playwright install chromium
+      - name: Kiểm định kỳ
+        run: |
+          # Commit mong đợi: lần chạy "Linh Khí lên spiritblade.web.app" thành công gần nhất (khi tự lên bản thật).
+          # Chế độ duyệt tay (TU_DONG_LEN_BAN_THAT: '0'): bản thật do "Release production" đưa lên → chỉ kiểm có buildId, không so commit.
+          mong() {
+            grep -q "TU_DONG_LEN_BAN_THAT: '1'" .github/workflows/linh-khi-hosting.yml || return 0
+            # đang có lần đăng chạy dở → bỏ qua so commit lần này
+            [ "$(gh run list -R "$GITHUB_REPOSITORY" -w linh-khi-hosting.yml -b khoi-tao-du-an -s in_progress -L 1 --json databaseId --jq length)" != "0" ] && return 0
+            [ "$(gh run list -R "$GITHUB_REPOSITORY" -w linh-khi-hosting.yml -b khoi-tao-du-an -s queued -L 1 --json databaseId --jq length)" != "0" ] && return 0
+            gh run list -R "$GITHUB_REPOSITORY" -w linh-khi-hosting.yml -b khoi-tao-du-an -s success -L 1 --json headSha --jq '.[0].headSha // empty'
+          }
+          kiem() { C=$(mong); python3 tools/phat-hanh/kiem_web.py "$WEB" ${C:+--commit "$C"} --cho 60 --ra kq.txt; }
+          for i in $(seq 1 "$SO_LAN"); do
+            echo "=== Lần kiểm $i/$SO_LAN ($(date -u +%H:%M) UTC) ==="
+            if kiem; then
+              bash tools/phat-hanh/bao_dong.sh dong "$TIEU_DE" "✅ Lần kiểm $(date -u '+%Y-%m-%d %H:%M') UTC đạt: $(sed -n 2p kq.txt). Đóng báo động."
+            else
+              echo "Lỗi lần 1, chờ 2 phút kiểm lại…"; sleep 120
+              if kiem; then
+                echo "Lần 2 đạt (lỗi thoáng qua, không báo)."
+              else
+                { echo "## ⚠️ spiritblade.web.app lỗi 2 lần kiểm liên tiếp (cách nhau 2 phút)"; echo; echo '```'; cat kq.txt; echo '```'; echo;
+                  echo "- Trang chạy: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID";
+                  echo "- Cách quay lui một chạm: Firebase Console → Hosting → site spiritblade → Release history → bản trước → ⋮ → Roll back (xem báo cáo F1)."; } > noi.md
+                bash tools/phat-hanh/bao_dong.sh mo1 "$TIEU_DE" noi.md
+              fi
+            fi
+            [ "$i" -lt "$SO_LAN" ] && sleep 1680
+          done
+      - name: Tự gọi vòng kiểm kế tiếp
+        if: (success() || failure()) && github.event_name != 'schedule'
+        run: gh workflow run kiem-web.yml -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"

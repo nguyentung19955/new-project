@@ -1,16 +1,27 @@
 name: Linh Khí lên spiritblade.web.app
 
-# Mỗi lần nhánh khoi-tao-du-an có code game mới: gói game Linh Khí rồi đăng lên https://spiritblade.web.app
+# Mỗi lần nhánh khoi-tao-du-an có code game mới: CỔNG KIỂM → bản thử (staging) → bản thật https://spiritblade.web.app
 # (kèm công cụ Xưởng Sprite ở https://spiritblade.web.app/xuong-sprite.html)
 # Chỉ đụng site "spiritblade" trong dự án sontinhthuytinh, không đụng sontinhthuytinh.web.app hay thanthoaiviet.web.app.
+#
+# Phiên F1 phát hành an toàn (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f1-phat-hanh/bao-cao.md):
+#  1. Cổng kiểm (tools/phat-hanh/cong_kiem.sh): cú pháp JS, bài lưu mây, kiểm ảnh, dựng dist, trần dung lượng, smoke test headless.
+#     HỎNG → KHÔNG đăng gì, bản đang chạy trên web giữ nguyên, mở issue "Đăng web thất bại" (GitHub gửi email).
+#  2. Bản thử: kênh xem trước "staging" của Firebase Hosting (địa chỉ riêng spiritblade--staging-….web.app). Game ở đó TỰ chạy ?cloud=0
+#     (không đọc/ghi lưu mây thật — kênh xem trước dùng chung Firestore).
+#  3. Bản thật: TU_DONG_LEN_BAN_THAT = '1' (như hiện nay, chủ game muốn mỗi push lên web ngay) → đưa ĐÚNG bản staging vừa đăng lên
+#     spiritblade.web.app (hosting:clone, không dựng lại). '0' → chỉ lên staging; bản thật chỉ đổi khi chủ game bấm chạy workflow
+#     "Release production" (.github/workflows/release-production.yml) sau khi đã thử staging trên iPhone.
 on:
   push:
     branches: [khoi-tao-du-an]
-    paths: ['game/**', 'tools/xuong-sprite/**', 'tools/tach-*/**', '.github/workflows/linh-khi-hosting.yml']
+    paths: ['game/**', 'tools/xuong-sprite/**', 'tools/tach-*/**', 'tools/phat-hanh/**', '.github/workflows/linh-khi-hosting.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
+  issues: write
+  actions: write
 
 concurrency:
   group: linh-khi-hosting
@@ -19,20 +30,28 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      loi: ${{ steps.tomtat.outputs.loi }}
+      staging_url: ${{ steps.staging.outputs.url }}
     env:
       FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
       SITE: spiritblade
-      # Đợt 10 (Q5): '1' = đăng bản 2 TỆP (trang nhẹ + tệp ảnh tải sau linh-khi-anh.<mã>.json; tới màn chào nhanh hơn ~4 lần ở mạng 1,5 Mbps,
-      # số đo ở docs/review/ke-hoach-cai-thien/dot-10/bao-cao.md). Đổi thành '0' để đăng bản MỘT tệp như trước (cờ quay lui, không cần sửa code game).
+      # ===== CỜ CHẾ ĐỘ DUYỆT TAY =====
+      # '1' = mỗi push qua cổng kiểm là TỰ lên bản thật spiritblade.web.app (mặc định hiện nay).
+      # '0' = chỉ lên bản thử staging; muốn lên bản thật thì vào GitHub → Actions → "Release production" → Run workflow.
+      TU_DONG_LEN_BAN_THAT: '1'
+      KENH_THU: staging
+      # Đợt 10 (Q5): '1' = đăng bản 2 TỆP (trang nhẹ + ảnh tải sau). '0' = bản MỘT tệp như trước (cờ quay lui, không cần sửa code game).
       HAI_TEP: '1'
-      # Tải nhanh (12/10): '1' = bản 2 tệp dùng ẢNH RỜI (trang chính chỉ có mã + thông số, ảnh WebP/PNG từng tệp ở /anh/, game tải theo ưu tiên;
-      # số đo ở docs/review/ke-hoach-cai-thien/tai-nhanh/bao-cao.md). Đổi thành '0' để về cặp tệp Đợt 10 (linh-khi-anh.<mã>.json), không cần sửa code game.
+      # Tải nhanh (12/10): '1' = bản 2 tệp dùng ẢNH RỜI (/anh/). '0' = về cặp tệp Đợt 10 (linh-khi-anh.<mã>.json).
       ANH_ROI: '1'
     steps:
       - name: Kiểm tra secret
         run: |
           if [ -z "$FIREBASE_SA" ]; then
             echo "::error title=Thiếu secret::Chưa có FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH trong Settings → Secrets → Actions."
+            echo "Thiếu secret FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH (Settings → Secrets → Actions)" > "$RUNNER_TEMP/loi-tom-tat.txt"
             exit 1
           fi
 
@@ -42,10 +61,15 @@ jobs:
         with:
           node-version: 22
 
-      # V4 bước 1: kiểm tra nhanh (không cần trình duyệt) TRƯỚC khi đăng. Có lỗi thì dừng ở đây, bản đang chạy trên web giữ nguyên.
-      # Ảnh rời: Pillow mã hoá WebP lossless; kết quả mã hoá nhớ theo nội dung ảnh (game/.dem-webp) để lần đăng sau không phải mã hoá lại.
-      - name: Cài Pillow (WebP)
-        run: python3 -m pip install --quiet pillow || pip install --quiet --break-system-packages pillow
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Ảnh rời: Pillow mã hoá WebP lossless; kết quả nhớ theo nội dung ảnh (game/.dem-webp) để lần đăng sau không phải mã hoá lại.
+      - name: Cài Pillow + Playwright (Chromium cho smoke test)
+        run: |
+          python3 -m pip install --quiet pillow playwright
+          python3 -m playwright install chromium
 
       - uses: actions/cache@v4
         with:
@@ -53,63 +77,14 @@ jobs:
           key: dem-webp-${{ hashFiles('game/art/custom/*.sprite.json') }}
           restore-keys: dem-webp-
 
-      - name: Kiểm tra nhanh trước khi đăng
-        run: |
-          set -e
-          echo "1) Kiểm tra lỗi gõ (cú pháp) trong mọi tệp game/js/*.js"
-          for f in game/js/*.js; do
-            node --check "$f" || { echo "::error title=Lỗi cú pháp::$f"; exit 1; }
-          done
-          echo "2) Bài kiểm tra lưu mây"
-          node game/tests/cloud_save_regression.test.js || { echo "::error title=Bài kiểm tra lưu mây hỏng::game/tests/cloud_save_regression.test.js"; exit 1; }
-          echo "3) Thử gói game"
-          python3 game/build.py || { echo "::error title=Gói game hỏng::python3 game/build.py"; exit 1; }
+      # CỔNG KIỂM: có lỗi thì dừng ở đây, bản đang chạy trên web giữ nguyên. Cũng là bước dựng + gói site để đăng.
+      - name: Cổng kiểm trước khi đăng (dựng + gói + smoke test)
+        run: bash tools/phat-hanh/cong_kiem.sh "$RUNNER_TEMP/web"
 
-      - name: Gói game
-        run: |
-          mkdir -p "$RUNNER_TEMP/web/site"
-          if [ "$HAI_TEP" = "1" ]; then LK_ANH_ROI="$ANH_ROI" python3 game/build.py --hai-tep; else python3 game/build.py --mot-tep; fi
-          if [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && [ -d game/dist/anh ]; then
-            # Bản ảnh rời: trang chính + thư mục ảnh anh/ (tên có mã nội dung, lưu đệm lâu ở firebase.json bên dưới)
-            cp game/dist/linh-khi-nhe.html "$RUNNER_TEMP/web/site/index.html"
-            cp -r game/dist/anh "$RUNNER_TEMP/web/site/anh"
-            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/linh-khi.html"
-            echo "- Bản ảnh rời: index.html $(stat -c %s game/dist/linh-khi-nhe.html) byte + anh/ $(ls game/dist/anh | wc -l) tệp ($(du -sb game/dist/anh | cut -f1) byte)" >> "$GITHUB_STEP_SUMMARY"
-          elif [ "$HAI_TEP" = "1" ] && [ -f game/dist/linh-khi-nhe.html ] && ls game/dist/linh-khi-anh.*.json > /dev/null 2>&1; then
-            # Bản 2 tệp: trang nhẹ làm trang chính, tệp ảnh tải sau nằm cạnh trang (tên có mã nội dung, lưu đệm lâu ở firebase.json bên dưới)
-            cp game/dist/linh-khi-nhe.html "$RUNNER_TEMP/web/site/index.html"
-            cp game/dist/linh-khi-anh.*.json "$RUNNER_TEMP/web/site/"
-            # Bản một tệp đủ ảnh vẫn đăng kèm ở /linh-khi.html: các trang công cụ (tach-quai, tach-ghep, tach-do) đọc mọi hình đang có trong game từ đó
-            # (trang nhẹ chỉ có một phần hình), và là lối dự phòng để chơi bản một tệp.
-            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/linh-khi.html"
-            echo "- Bản 2 tệp: index.html $(stat -c %s game/dist/linh-khi-nhe.html) byte + $(basename game/dist/linh-khi-anh.*.json) $(stat -c %s game/dist/linh-khi-anh.*.json) byte" >> "$GITHUB_STEP_SUMMARY"
-          else
-            cp game/dist/linh-khi.html "$RUNNER_TEMP/web/site/index.html"
-            echo "- Bản một tệp: index.html $(stat -c %s game/dist/linh-khi.html) byte" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          cp game/web/* "$RUNNER_TEMP/web/site/"
-          # Xưởng Sprite: công cụ tự vẽ sprite (https://spiritblade.web.app/xuong-sprite.html) và bản game thử nó mở bên trong
-          cp game/dist/xuong-sprite.html game/dist/xuong-sprite-thu.html "$RUNNER_TEMP/web/site/"
-          # Tách Sprite Quái: ảnh ChatGPT vẽ (lưới 8×6) → .sprite.json (https://spiritblade.web.app/tach-quai.html)
-          # Mọi trang công cụ tools/tach-<tên>/index.html → https://spiritblade.web.app/tach-<tên>.html
-          for d in tools/tach-*/; do n=$(basename "$d"); [ -f "$d/index.html" ] && cp "$d/index.html" "$RUNNER_TEMP/web/site/$n.html"; done
-          cat > "$RUNNER_TEMP/web/firebase.json" <<EOF
-          {
-            "hosting": {
-              "site": "$SITE",
-              "public": "site",
-              "rewrites": [ { "source": "/game/dist/linh-khi.html", "destination": "/linh-khi.html" } ],
-              "headers": [
-                { "source": "**", "headers": [ { "key": "Cache-Control", "value": "no-cache" } ] },
-                { "source": "/linh-khi-anh.*.json", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] },
-                { "source": "/anh/**", "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ] }
-              ]
-            }
-          }
-          EOF
-
-      # Người dùng đồng ý (09/10): mỗi site chỉ giữ 2 bản gần nhất để không vượt dung lượng Hosting miễn phí.
-      - name: Dọn bản cũ (giữ 2 bản gần nhất mỗi site)
+      # Người dùng đồng ý (09/10): mỗi site chỉ giữ ít bản để không vượt dung lượng Hosting miễn phí.
+      # F1: spiritblade giữ 4 bản mới nhất (mỗi lần đăng có 1 bản staging + 1 bản thật) và KHÔNG BAO GIỜ xoá: bản đang chạy, 2 bản thật
+      # gần nhất (để "Roll back" trong Firebase còn bản cũ mà quay về), bản đang ở mọi kênh xem trước (staging…). Hai site kia giữ 2 như cũ.
+      - name: Dọn bản cũ
         continue-on-error: true
         run: |
           trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
@@ -118,29 +93,29 @@ jobs:
           TOKEN=$(gcloud auth print-access-token)
           API=https://firebasehosting.googleapis.com/v1beta1
           for s in sontinhthuytinh thanthoaiviet spiritblade; do
+            GIU=2; MAXV=2
+            [ "$s" = "$SITE" ] && GIU=4 && MAXV=8
             curl -s -o /dev/null -w "$s config %{http_code}\n" -X PATCH -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-              "$API/sites/$s/config?updateMask=maxVersions" -d '{"maxVersions":2}'
+              "$API/sites/$s/config?updateMask=maxVersions" -d "{\"maxVersions\":$MAXV}"
             : > all.txt; PT=""
             while :; do
               curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/versions?pageSize=100${PT:+&pageToken=$PT}" > page.json
               jq -r '.versions[]? | select(.status == "FINALIZED" or .status == "ABANDONED") | [.createTime, .name, .status] | @tsv' page.json >> all.txt
               PT=$(jq -r '.nextPageToken // empty' page.json); [ -z "$PT" ] && break
             done
-            # Bản đang chạy trên site: không bao giờ xoá.
-            LIVE=$(curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/releases?pageSize=1" | jq -r '.releases[0].version.name // empty')
-            { grep -P '\tFINALIZED$' all.txt | sort -r | tail -n +3; grep -P '\tABANDONED$' all.txt; } | cut -f2 | while read -r v; do
-              [ -n "$v" ] && [ "$v" != "$LIVE" ] && curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $TOKEN" "$API/$v"
+            # Không bao giờ xoá: 2 bản thật gần nhất (bản đang chạy + bản để quay lui) và bản đang ở mọi kênh.
+            : > giu.txt
+            curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/releases?pageSize=2" | jq -r '.releases[]?.version.name // empty' >> giu.txt
+            curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$s/channels?pageSize=50" | jq -r '.channels[]?.release.version.name // empty' >> giu.txt
+            { grep -P '\tFINALIZED$' all.txt | sort -r | tail -n +$((GIU+1)); grep -P '\tABANDONED$' all.txt; } | cut -f2 | while read -r v; do
+              [ -n "$v" ] && ! grep -qxF "$v" giu.txt && curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $TOKEN" "$API/$v"
             done
-            echo "$s: có $(wc -l < all.txt) bản, giữ 2 bản mới nhất"
-            echo "- $s: $(wc -l < all.txt) bản → giữ 2" >> "$GITHUB_STEP_SUMMARY"
+            echo "$s: có $(wc -l < all.txt) bản, giữ $GIU mới nhất + $(sort -u giu.txt | grep -c .) bản đang dùng"
+            echo "- $s: $(wc -l < all.txt) bản → giữ $GIU + bản đang dùng" >> "$GITHUB_STEP_SUMMARY"
           done
 
-      # 22/10 (docs/review/ke-hoach-cai-thien/gan-web-khong-tai/bao-cao.md): hai lần đăng ngày 22/10 hỏng với lỗi
-      # "serviceusage.googleapis.com … 403 Permission denied to get service [firebasehosting.googleapis.com]": trước khi đăng, firebase-tools
-      # hỏi Google "API Hosting đã bật chưa?" và tài khoản dịch vụ không có quyền hỏi (serviceusage.services.get). Khi câu trả lời đã nằm
-      # sẵn trong bộ nhớ của CLI (configstore: apiEnablementCache) thì CLI không hỏi nữa (src/ensureApiEnabled.ts). API Hosting của dự án
-      # vốn đã bật (đăng được tới 17/10) nên ghi sẵn "đã bật". Cách gốc: cấp thêm vai trò "Service Usage Viewer" cho tài khoản dịch vụ
-      # trong Google Cloud IAM; làm xong thì bước này không còn cần nhưng để lại cũng không hại.
+      # 22/10 (docs/review/ke-hoach-cai-thien/gan-web-khong-tai/bao-cao.md): tài khoản dịch vụ không có quyền hỏi "API Hosting đã bật chưa?"
+      # (serviceusage.services.get) → ghi sẵn câu trả lời "đã bật" vào bộ nhớ của firebase-tools (src/ensureApiEnabled.ts).
       - name: Nhớ sẵn "API Hosting đã bật" cho firebase-tools
         run: |
           mkdir -p "$HOME/.config/configstore"
@@ -151,7 +126,51 @@ jobs:
             printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$f"
           fi
 
-      - name: Tạo site và đăng
+      - name: Tạo site nếu chưa có
+        working-directory: ${{ runner.temp }}/web
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          if ! $fb hosting:sites:get "$SITE" > out.txt 2>&1; then
+            $fb hosting:sites:create "$SITE" > out.txt 2>&1 || {
+              echo "::error title=Chưa tạo được site $SITE::$(tail -n 6 out.txt | tr '\n' ' ' | cut -c1-900)"
+              echo "Chưa tạo được site $SITE" > "$RUNNER_TEMP/loi-tom-tat.txt"
+              exit 1
+            }
+          fi
+
+      # BẢN THỬ: kênh xem trước "staging" (địa chỉ riêng, giữ 30 ngày, mỗi lần đăng gia hạn lại). Game ở đó tự chạy ?cloud=0.
+      - name: Đăng bản thử (staging)
+        id: staging
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}/web
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          if $fb hosting:channel:deploy "$KENH_THU" --expires 30d --json > kenh.json 2> kenh.err; then
+            URL=$(jq -r '.result | to_entries[0].value.url // empty' kenh.json)
+            echo "url=$URL" >> "$GITHUB_OUTPUT"
+            echo "## 🧪 Bản thử (staging): $URL" >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice title=Bản thử staging::$URL"
+          else
+            echo "::warning title=Đăng bản thử staging thất bại::$(grep -iE 'error|denied|permission|invalid' kenh.err kenh.json | tail -n 4 | tr '\n' ' ' | cut -c1-600)"
+            exit 1
+          fi
+
+      - name: Kiểm bản thử (staging tự tắt lưu mây)
+        id: kiemthu
+        if: steps.staging.outcome == 'success'
+        continue-on-error: true
+        run: python3 tools/phat-hanh/kiem_web.py "${{ steps.staging.outputs.url }}" --commit "$GITHUB_SHA" --staging --cho 90 --ra "$RUNNER_TEMP/kiem-staging.txt"
+
+      # BẢN THẬT (chỉ khi TU_DONG_LEN_BAN_THAT = '1').
+      - name: Lên bản thật spiritblade.web.app
+        id: banthat
+        if: env.TU_DONG_LEN_BAN_THAT == '1'
         working-directory: ${{ runner.temp }}/web
         run: |
           # Người dùng không muốn "Quyết tâm" (thua nhiều thì mạnh thêm) lên bản chơi: còn G.GRIT thì không đăng.
@@ -163,16 +182,86 @@ jobs:
           printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
-          if ! $fb hosting:sites:get "$SITE" > out.txt 2>&1; then
-            $fb hosting:sites:create "$SITE" > out.txt 2>&1 || {
-              echo "::error title=Chưa tạo được site $SITE::$(tail -n 6 out.txt | tr '\n' ' ' | cut -c1-900)"
-              exit 1
-            }
-          fi
-          if $fb deploy --only hosting > out.txt 2>&1; then
-            echo "## ✅ Đã đăng https://$SITE.web.app (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
-            echo "::notice title=Đã đăng::https://$SITE.web.app"
+          # Bản staging vừa đăng và đã kiểm đúng commit này → đưa ĐÚNG bản đó lên bản thật (không dựng lại).
+          # Không được (staging hỏng / clone lỗi) → đăng thẳng như trước (cùng thư mục site đã qua cổng kiểm).
+          if [ "${{ steps.kiemthu.outcome }}" = "success" ] && $fb hosting:clone "$SITE:$KENH_THU" "$SITE:live" > out.txt 2>&1; then
+            echo "## ✅ Đã đưa bản staging lên https://$SITE.web.app (commit ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
+          elif $fb deploy --only hosting > out.txt 2>&1; then
+            echo "## ✅ Đã đăng https://$SITE.web.app (commit ${GITHUB_SHA::7}, đăng thẳng)" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "::error title=Đăng thất bại::$(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 6 | tr '\n' ' ' | cut -c1-900)"
+            echo "Đăng lên bản thật thất bại (Firebase): $(grep -iE 'error|denied|permission|invalid' out.txt | tail -n 3 | tr '\n' ' ' | cut -c1-500)" > "$RUNNER_TEMP/loi-tom-tat.txt"
             exit 1
+          fi
+          echo "dang=1" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Đã đăng::https://$SITE.web.app"
+
+      - name: Kiểm bản thật sau khi đăng
+        if: env.TU_DONG_LEN_BAN_THAT == '1' && steps.banthat.outputs.dang == '1'
+        run: |
+          if ! python3 tools/phat-hanh/kiem_web.py "https://$SITE.web.app" --commit "$GITHUB_SHA" --cho 180 --ra "$RUNNER_TEMP/kiem-that.txt"; then
+            { echo "Đã đăng nhưng kiểm bản thật sau khi đăng KHÔNG ĐẠT:"; cat "$RUNNER_TEMP/kiem-that.txt"; } > "$RUNNER_TEMP/loi-tom-tat.txt"
+            exit 1
+          fi
+
+      - name: Báo bản thử hỏng (bản thật vẫn lên)
+        if: steps.staging.outcome == 'failure' || steps.kiemthu.outcome == 'failure'
+        run: |
+          { echo "Bản thử staging chưa đăng/kiểm được (bản thật: ${{ env.TU_DONG_LEN_BAN_THAT == '1' && 'vẫn đăng thẳng như trước' || 'KHÔNG đổi' }})."; cat "$RUNNER_TEMP/kiem-staging.txt" 2>/dev/null; } > "$RUNNER_TEMP/loi-tom-tat.txt"
+          echo "::error title=Bản thử staging hỏng::xem tóm tắt"
+          exit 1
+
+      - name: Tóm tắt lỗi cho báo động
+        id: tomtat
+        if: always()
+        run: |
+          f="$RUNNER_TEMP/loi-tom-tat.txt"; [ -f "$RUNNER_TEMP/web/loi-tom-tat.txt" ] && f="$RUNNER_TEMP/web/loi-tom-tat.txt"
+          if [ -f "$f" ]; then { echo 'loi<<HET'; head -c 1500 "$f"; echo; echo 'HET'; } >> "$GITHUB_OUTPUT"; fi
+
+      # Vòng kiểm web 30 phút/lần (.github/workflows/kiem-web.yml) chạy liên tục bằng cách tự gọi lại; mỗi lần đăng khởi động lại vòng đó.
+      - name: Khởi động lại vòng kiểm web 30 phút
+        if: success()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run kiem-web.yml -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+  bao-dong:
+    needs: deploy
+    if: always() && (needs.deploy.result == 'success' || needs.deploy.result == 'failure')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TIEU_DE: 'Đăng web thất bại'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/phat-hanh
+      - name: Mở / đóng issue "Đăng web thất bại"
+        env:
+          LOI: ${{ needs.deploy.outputs.loi }}
+          KQ: ${{ needs.deploy.result }}
+          STAGING: ${{ needs.deploy.outputs.staging_url }}
+        run: |
+          RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          MSG=$(git log -1 --format=%s "$GITHUB_SHA" 2>/dev/null || echo "")
+          if [ "$KQ" = "failure" ]; then
+            {
+              echo "## ❌ Lần đăng web cho commit \`${GITHUB_SHA::7}\` thất bại"
+              echo
+              echo "**Lỗi (tóm tắt):**"
+              echo '```'
+              echo "${LOI:-Không có tóm tắt — mở trang chạy bên dưới, bước có dấu ✗ đỏ.}"
+              echo '```'
+              echo
+              echo "- Bản đang chạy trên https://spiritblade.web.app: **giữ nguyên bản cũ** nếu lỗi ở cổng kiểm; nếu lỗi sau bước đăng thì xem dòng lỗi ở trên."
+              echo "- Commit: $MSG"
+              echo "- Trang chạy: $RUN"
+              [ -n "$STAGING" ] && echo "- Bản thử (staging): $STAGING"
+              echo
+              echo "Việc cần làm: nhờ một phiên AI đọc trang chạy ở trên và sửa lỗi; lần đăng sau thành công thì issue này tự đóng."
+            } > noi.md
+            bash tools/phat-hanh/bao_dong.sh mo "$TIEU_DE" noi.md
+          else
+            bash tools/phat-hanh/bao_dong.sh dong "$TIEU_DE" "✅ Đã đăng lại thành công commit \`${GITHUB_SHA::7}\` ($RUN). Đóng báo động."
           fi

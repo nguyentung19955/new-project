@@ -94,7 +94,12 @@ def main():
     # Phiên bản = giờ đóng gói (giờ Việt Nam), hiện ở góc màn đăng nhập để biết bản mới đã lên web chưa.
     import datetime
     ver = 'lk-' + (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=7)).strftime('%Y.%m.%d-%H%M')
+    dat_build_id(ver)
     parts.append('// ===== phiên bản đóng gói =====\n(window.G = window.G || {}).VERSION = ' + json.dumps(ver) + ';\n')
+    # F1 phát hành an toàn (05/11): buildId = ngày giờ đóng gói + mã commit (GITHUB_SHA trên GitHub Actions, git trên máy) — hiện nhỏ ở
+    # góc Cài đặt (js/village.js) và trong dist/build-manifest.json (kiểm web sau khi đăng so buildId). Cờ tắt: LK_BUILD_ID=0.
+    if BUILD['id']:
+        parts.append('(window.G = window.G || {}).BUILD_ID = ' + json.dumps(BUILD['id']) + ';\n')
     custom = custom_sprites()
     truyen = truyen_anh()
     # Đợt 2: bỏ ghép lớp Zed (js/ghep_lop.js, game/art/lop, cờ ?ghep=1) — Zed vẽ bằng bộ ảnh zed-* (js/zed_moi.js).
@@ -156,6 +161,50 @@ def main():
         print('Bìa màn hình chính nhúng trong bản một tệp: %d ảnh, %d KB' % (len(bia), sum(len(nhung_truyen(v)[1]) for v in bia.values()) // 1024))
     hai_tep(custom, gom, trang, frag, truyen, bia)
     build_tool(full)
+    ghi_manifest()
+
+
+# ---------- F1 phát hành an toàn (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f1-phat-hanh/bao-cao.md): buildId + manifest ----------
+BUILD = {'id': '', 'commit': '', 'version': ''}
+KICH = {}  # số đo dung lượng của lần đóng gói này (anh_roi ghi), chép vào manifest để cổng kiểm đọc
+TEN_MANIFEST = 'build-manifest.json'
+
+
+def dat_build_id(ver):
+    import subprocess
+    sha = os.environ.get('GITHUB_SHA', '')
+    if not sha:
+        try:
+            sha = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True, timeout=10).stdout.strip()
+        except Exception:  # noqa: BLE001
+            sha = ''
+    BUILD['commit'] = sha
+    BUILD['version'] = ver
+    if os.environ.get('LK_BUILD_ID') != '0':
+        BUILD['id'] = ver[3:] + '-' + (sha[:7] or 'local')
+
+
+def ghi_manifest():
+    """dist/build-manifest.json: buildId, commit, giờ đóng gói, cỡ + mã băm các trang, số đo dung lượng (không commit, .gitignore)."""
+    tep = {}
+    for ten in ('linh-khi.html', 'linh-khi-nhe.html', 'artifact.html'):
+        p = os.path.join(DIST, ten)
+        if os.path.isfile(p):
+            with open(p, 'rb') as f:
+                b = f.read()
+            tep[ten] = {'byte': len(b), 'sha256': hashlib.sha256(b).hexdigest()}
+    anh = os.path.join(DIST, THU_MUC_ANH)
+    co_anh = os.path.isdir(anh) and bool(KICH)  # KICH chỉ có khi lần chạy này dựng bản ảnh rời (anh_roi)
+    m = {'buildId': BUILD['id'], 'commit': BUILD['commit'], 'version': BUILD['version'], 'tep': tep, 'kich_thuoc': dict(KICH),
+         'tran': {'mot_tep_byte': 30 * 1024 * 1024, 'nguoi_tai_byte': TRAN_NGUOI_TAI}}
+    if co_anh:
+        ds = sorted(os.listdir(anh))
+        m['anh'] = {'so_tep': len(ds), 'byte': sum(os.path.getsize(os.path.join(anh, x)) for x in ds)}
+        # vài ảnh quan trọng (bìa màn chào + ảnh bậc 0 cần cho màn chào / làng) để kiểm web sau khi đăng tải được
+        m['anh_quan_trong'] = [THU_MUC_ANH + '/' + x for x in ds if x.startswith('bia-') and x.endswith('.webp')][:2] + list(KICH.get('quan_trong', []))[:4]
+    m['kich_thuoc'].pop('quan_trong', None)
+    write(os.path.join(DIST, TEN_MANIFEST), json.dumps(m, ensure_ascii=False, indent=1) + '\n')
+    print('Đã ghi dist/%s (buildId %s)' % (TEN_MANIFEST, BUILD['id'] or '—'))
 
 
 # ---------- Dung lượng 17/10 (docs/review/ke-hoach-cai-thien/dung-luong-17-10/bao-cao.md) ----------
@@ -809,6 +858,8 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             b = bang[k]
             print('  %-55s %3d ảnh  %6.2f MB | %6.2f MB' % (ten_nhom[k], b[0], b[1] / 1048576, b[2] / 1048576))
     nguoi = z1 + tong_tot + bia_tai  # bia-moi: một bìa màn hình chính
+    KICH['quan_trong'] = [ds[i].get('webp') or ds[i][k] for (i, k) in vt if ds[i].get('_u', [9])[0] == 0][:4]
+    KICH.update({'nguoi_tai': nguoi, 'trang_nen': z1, 'anh_tai': tong_tot, 'bia_tai': bia_tai, 'may_chu': may_chu, 'tran_nguoi_tai': TRAN_NGUOI_TAI})
     if cu_n:
         print('  (không tính) %d tấm cũ chỉ tải khi mở ?anhmuotcu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
     print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'

@@ -1,0 +1,70 @@
+name: Thử quay lui (kênh thử, không đụng bản thật)
+
+# Phiên F1 (05/11): diễn tập "Roll back" trên KÊNH XEM TRƯỚC riêng "thu-quay-lui" của site spiritblade — KHÔNG đụng spiritblade.web.app
+# hay kênh staging. Đăng bản A (một trang chữ "BAN-A"), đăng bản B, rồi quay về bản A đúng cách Firebase làm khi bấm Roll back
+# (tạo lại release trỏ vào phiên bản cũ), kiểm trang trả lại chữ "BAN-A", cuối cùng xoá kênh thử.
+# Chạy tay: GitHub → Actions → "Thử quay lui …" → Run workflow. (Cũng tự chạy khi tệp này được sửa.)
+on:
+  workflow_dispatch:
+  push:
+    branches: [khoi-tao-du-an]
+    paths: ['.github/workflows/thu-quay-lui.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: thu-quay-lui
+  cancel-in-progress: false
+
+jobs:
+  thu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+      SITE: spiritblade
+      KENH: thu-quay-lui
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Diễn tập quay lui
+        run: |
+          set -euo pipefail
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet > /dev/null 2>&1
+          mkdir -p "$HOME/.config/configstore"
+          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
+          API=https://firebasehosting.googleapis.com/v1beta1
+          fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
+          dang() {  # dang <chữ>: đăng một trang nhỏ lên kênh thử
+            rm -rf w && mkdir -p w/site && echo "<!doctype html><title>thu</title><p>$1</p>" > w/site/index.html
+            printf '{"hosting":{"site":"%s","public":"site","headers":[{"source":"**","headers":[{"key":"Cache-Control","value":"no-cache"}]}]}}' "$SITE" > w/firebase.json
+            (cd w && $fb hosting:channel:deploy "$KENH" --expires 1d --json > ../kenh.json)
+            jq -r '.result | to_entries[0].value.url' kenh.json
+          }
+          ban() { TOKEN=$(gcloud auth print-access-token); curl -s -H "Authorization: Bearer $TOKEN" "$API/sites/$SITE/channels/$KENH" | jq -r '.release.version.name'; }
+          doc() { for i in $(seq 1 20); do t=$(curl -s -H 'Cache-Control: no-cache' "$URL/?t=$RANDOM$i"); echo "$t" | grep -q "$1" && { echo "ok"; return 0; }; sleep 6; done; echo "SAI: $t"; return 1; }
+          URL=$(dang BAN-A); VA=$(ban); echo "Bản A: $VA ($URL)"; doc BAN-A
+          dang BAN-B > /dev/null; VB=$(ban); echo "Bản B: $VB"; doc BAN-B
+          # QUAY LUI = tạo release mới trỏ vào phiên bản A (Firebase Console "Roll back" làm đúng việc này cho kênh live)
+          TOKEN=$(gcloud auth print-access-token)
+          curl -s -X POST -H "Authorization: Bearer $TOKEN" "$API/sites/$SITE/channels/$KENH/releases?versionName=$VA" | jq -r '"Release mới: \(.name) → \(.version.name)"'
+          [ "$(ban)" = "$VA" ] || { echo "::error::Kênh chưa trỏ về bản A"; exit 1; }
+          doc BAN-A
+          {
+            echo "## ✅ Diễn tập quay lui ĐẠT"
+            echo "- Kênh thử: $URL (đã xoá sau khi thử)"
+            echo "- Bản A: \`$VA\`"; echo "- Bản B: \`$VB\`"
+            echo "- Quay lui B → A: release mới trỏ vào bản A, trang trả lại chữ BAN-A"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Xoá kênh thử
+        if: always()
+        run: |
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive hosting:channel:delete "$KENH" --site "$SITE" --force || true
+          rm -f "$RUNNER_TEMP/sa.json"

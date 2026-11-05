@@ -721,7 +721,8 @@
       else if (T.btn(CX + 132, 208, 120, CDH, 'Xoá hết', { danger: true })) { G.resetSave(); V.confirm = false; goHub(); VS.enter({}); VS.say('Đã xoá tiến trình.'); return null; }
     }
     if (G.VERSION) { // chu-lech-khung: góc dưới phải khung bảng có núm tròn: chữ phiên bản đặt trong lòng, tránh núm
-      T.chuTrongKhung(G.t('Phiên bản {0}', G.VERSION), PX - 3, PY - 3, PW + 6, PH + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(PW, PH), vien: [7, 7, 7, 7], vung: [CX, 249, CW, 12], align: 'right', size: 6.5, bold: false, color: SOFT });
+      // F1 phát hành an toàn (05/11): có buildId (ngày + mã commit, game/build.py) thì hiện buildId để biết bản trên web là commit nào
+      T.chuTrongKhung(G.t('Phiên bản {0}', G.BUILD_ID || G.VERSION), PX - 3, PY - 3, PW + 6, PH + 6, { khung: 'gd-khung-bang', kKhung: T.kBang(PW, PH), vien: [7, 7, 7, 7], vung: [CX, 249, CW, 12], align: 'right', size: 6.5, bold: false, color: SOFT });
     }
     return V.confirm ? 'Ấy ấy! Xoá là mất hết đấy, nghĩ kỹ chưa?' : 'Cốc cốc cốc! Làng nước nghe đây! Cần chỉnh gì cứ bảo anh.';
   }

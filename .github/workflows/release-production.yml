@@ -1,0 +1,142 @@
+name: Release production
+
+# Phiên F1 (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f1-phat-hanh/bao-cao.md): "CHỦ GAME DUYỆT RỒI MỚI LÊN BẢN THẬT".
+# Đưa ĐÚNG bản đang ở bản thử staging (kênh xem trước, đã qua cổng kiểm) lên https://spiritblade.web.app — không dựng lại.
+# Hiện CHƯA dùng: linh-khi-hosting.yml đang để TU_DONG_LEN_BAN_THAT: '1' (mỗi push tự lên bản thật). Khi chủ game đồng ý chuyển sang
+# duyệt tay: đổi cờ đó thành '0'; từ đó mỗi push chỉ lên staging, chủ game thử staging trên iPhone rồi vào
+# GitHub → Actions → "Release production" → Run workflow → gõ LEN → Run.
+# (Chạy được cả lúc cờ đang '1': chỉ là đưa lại bản staging mới nhất — cũng chính là bản thật — lên lần nữa.)
+on:
+  workflow_dispatch:
+    inputs:
+      xac_nhan:
+        description: 'Gõ LEN (chữ in hoa) để đưa bản thử staging lên bản thật spiritblade.web.app'
+        required: true
+        default: ''
+  # Chỉ để GitHub nhận ra workflow này khi tệp được sửa trên nhánh làm việc; lúc push chỉ chạy bước kiểm cấu hình, không đăng gì.
+  push:
+    branches: [khoi-tao-du-an]
+    paths: ['.github/workflows/release-production.yml']
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: linh-khi-production
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      loi: ${{ steps.tomtat.outputs.loi }}
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH }}
+      SITE: spiritblade
+      KENH_THU: staging
+      DANG: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+    steps:
+      - name: Xác nhận
+        run: |
+          if [ "$DANG" != "1" ]; then echo "Push: chỉ kiểm cấu hình workflow, không đăng."; exit 0; fi
+          if [ "${{ inputs.xac_nhan }}" != "LEN" ]; then
+            echo "::error title=Chưa xác nhận::Ô xác nhận phải gõ đúng LEN. Không làm gì."
+            echo "Chưa gõ LEN ở ô xác nhận nên không đưa bản nào lên." > "$RUNNER_TEMP/loi-tom-tat.txt"
+            exit 1
+          fi
+          [ -n "$FIREBASE_SA" ] || { echo "Thiếu secret FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH" > "$RUNNER_TEMP/loi-tom-tat.txt"; exit 1; }
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Cài Playwright (Chromium)
+        if: env.DANG == '1'
+        run: |
+          python3 -m pip install --quiet playwright
+          python3 -m playwright install chromium
+
+      - name: Nhớ sẵn "API Hosting đã bật" cho firebase-tools
+        if: env.DANG == '1'
+        run: |
+          mkdir -p "$HOME/.config/configstore"
+          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
+
+      - name: Đọc bản thử staging
+        id: thu
+        if: env.DANG == '1'
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet > /dev/null 2>&1
+          TOKEN=$(gcloud auth print-access-token)
+          curl -s -H "Authorization: Bearer $TOKEN" "https://firebasehosting.googleapis.com/v1beta1/sites/$SITE/channels/$KENH_THU" > kenh.json
+          URL=$(jq -r '.url // empty' kenh.json); VER=$(jq -r '.release.version.name // empty' kenh.json)
+          if [ -z "$URL" ] || [ -z "$VER" ]; then
+            echo "Chưa có bản thử staging (kênh $KENH_THU trống hoặc đã hết hạn 30 ngày). Push một commit để dựng lại staging." > "$RUNNER_TEMP/loi-tom-tat.txt"
+            exit 1
+          fi
+          M=$(curl -s "$URL/build-manifest.json?t=$(date +%s)")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "commit=$(echo "$M" | jq -r '.commit // empty')" >> "$GITHUB_OUTPUT"
+          echo "build=$(echo "$M" | jq -r '.buildId // empty')" >> "$GITHUB_OUTPUT"
+          echo "Bản thử: $URL — buildId $(echo "$M" | jq -r '.buildId // "?"') — phiên bản Firebase $VER"
+
+      - name: Kiểm lại bản thử trước khi đưa lên
+        if: env.DANG == '1'
+        run: |
+          python3 tools/phat-hanh/kiem_web.py "${{ steps.thu.outputs.url }}" --staging --ra kq.txt || {
+            { echo "Bản thử staging không đạt kiểm, KHÔNG đưa lên bản thật:"; cat kq.txt; } > "$RUNNER_TEMP/loi-tom-tat.txt"; exit 1; }
+
+      - name: Đưa bản thử lên bản thật (hosting:clone)
+        if: env.DANG == '1'
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          if ! npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive hosting:clone "$SITE:$KENH_THU" "$SITE:live" > out.txt 2>&1; then
+            echo "Firebase không đưa được bản lên: $(grep -iE 'error|denied|permission' out.txt | tail -n 3 | tr '\n' ' ' | cut -c1-500)" > "$RUNNER_TEMP/loi-tom-tat.txt"
+            exit 1
+          fi
+          echo "## ✅ Đã đưa bản thử ${{ steps.thu.outputs.build }} lên https://$SITE.web.app" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Kiểm bản thật sau khi đưa lên
+        if: env.DANG == '1'
+        run: |
+          python3 tools/phat-hanh/kiem_web.py "https://$SITE.web.app" --commit "${{ steps.thu.outputs.commit }}" --cho 180 --ra kq.txt || {
+            { echo "Đã đưa lên nhưng kiểm bản thật KHÔNG ĐẠT (cân nhắc quay lui: Firebase → Hosting → Release history → Roll back):"; cat kq.txt; } > "$RUNNER_TEMP/loi-tom-tat.txt"; exit 1; }
+
+      - name: Tóm tắt lỗi
+        id: tomtat
+        if: always()
+        run: |
+          f="$RUNNER_TEMP/loi-tom-tat.txt"
+          if [ -f "$f" ]; then { echo 'loi<<HET'; head -c 1500 "$f"; echo; echo 'HET'; } >> "$GITHUB_OUTPUT"; fi
+
+  bao-dong:
+    needs: release
+    if: always() && github.event_name == 'workflow_dispatch' && (needs.release.result == 'success' || needs.release.result == 'failure')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TIEU_DE: 'Đăng web thất bại'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/phat-hanh
+      - env:
+          LOI: ${{ needs.release.outputs.loi }}
+          KQ: ${{ needs.release.result }}
+        run: |
+          RUN="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ "$KQ" = "failure" ]; then
+            { echo "## ❌ Release production (đưa bản thử lên bản thật) thất bại"; echo; echo '```'; echo "${LOI:-xem trang chạy}"; echo '```'; echo; echo "- Trang chạy: $RUN"; } > noi.md
+            bash tools/phat-hanh/bao_dong.sh mo "$TIEU_DE" noi.md
+          else
+            bash tools/phat-hanh/bao_dong.sh dong "$TIEU_DE" "✅ Release production thành công ($RUN). Đóng báo động."
+          fi
