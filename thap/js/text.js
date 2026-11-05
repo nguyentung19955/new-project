@@ -123,7 +123,7 @@ const TEXT = {
 
 // ảnh chân dung thẻ của 1 ụ (đổi ảnh: thêm TEXT.turret[id].portrait)
 // chân dung phi công (đã duyệt) — thêm id vào đây khi có ảnh assets/pilot_<id>.png mới
-const PILOTS = new Set(['canon', 'lien', 'tia', 'laser', 'set', 'bang', 'radar', 'chimang', 'khuech', 'mana']);
+const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang']);
 function iconOf(id) { return 'assets/nho/' + id + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }
