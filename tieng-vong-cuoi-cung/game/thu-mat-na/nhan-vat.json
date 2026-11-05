@@ -20,8 +20,8 @@
     128,
     172
    ],
-   "ms": 80,
-   "quang_chu_ky": 120,
+   "ms": 110,
+   "quang_chu_ky": 165,
    "ban_thu": {
     "thu_muc": "chay-moi",
     "so_hinh": 0,
@@ -1390,4 +1390,3 @@
  ],
  "bien_the": {}
 }
-
