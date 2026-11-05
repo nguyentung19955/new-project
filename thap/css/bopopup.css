@@ -1,0 +1,12 @@
+/* TURRET MERGE — bỏ chú thích / popup chữ trong trận (js/bopopup.js). Chỉ ẩn chữ + mờ / lắc / đổi màu số; không vẽ hình mới. */
+/* bàn đầy: nút Triệu hồi chỉ MỜ (ảnh tắt có sẵn), không chữ BOARD FULL; thẻ chỉ huy cũng không chữ */
+html:not(.bp-goiy) body #nut-trieu.tn-day .tn-full,
+html:not(.bp-goiy) body #wrap #nut-trieu.tn-day .tn-full,
+html:not(.bp-goiy) body #the-mv .tn-full { display: none !important; }
+html body #nut-trieu.tn-day { opacity: .5; }
+/* Triệu hồi thiếu mana: số mana chớp 1 lần (đỏ + nảy nhẹ) */
+html body #mana-hop.bp-chop b { animation: bp-chop .42s ease-out; }
+@keyframes bp-chop { 0% { color: #ff5a4a; scale: 1.18; } 45% { color: #ff5a4a; scale: 1.06; } 100% { scale: 1; } }
+@media (prefers-reduced-motion: reduce) { html body #mana-hop.bp-chop b { animation: bp-chop2 .42s step-end; } @keyframes bp-chop2 { 0% { color: #ff5a4a; } } }
+/* công tắc BATTLE HINTS */
+.bp-nut.bp-bat { filter: none; }

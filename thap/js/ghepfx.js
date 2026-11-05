@@ -58,7 +58,7 @@ const GF = {
       const c = this.cam; this.cam = null;
       if (!c.daGhep && B && B.t[c.T.o] === c.T) {
         const tr = this.hoverT && this.hoverT !== c.T && !hopLeGhep(c.T, this.hoverT) ? this.hoverT : null;
-        this.ve.push({ T: c.T, B, o: c.T.o, x: c.x, y: c.y, sc: c.sc, t0: now });
+        this.ve.push({ T: c.T, B, o: c.T.o, x: c.x, y: c.y, sc: c.sc, t0: now, sai: !!tr }); // sai: thả lên ụ không ghép được → lắc ngắn khi về ô (thay chữ TYPE/STARS DIFFER — js/bopopup.js)
         if (tr) this.sai = { B, o: tr.o, T: tr, t0: now };
         try { SND.nay(); } catch (e) { }
       }
@@ -145,8 +145,9 @@ const GF = {
     }
     // ụ bật về ô cũ (thả sai / huỷ)
     for (let i = this.ve.length - 1; i >= 0; i--) {
-      const r = this.ve[i], B = r.B, u = (now - r.t0) / 1000, dai = this.giam() ? 0.2 : 0.34;
-      if (u >= dai || B.t[r.o] !== r.T || !G.ban.includes(B)) { this.ve.splice(i, 1); continue; }
+      const r = this.ve[i], B = r.B, u0 = (now - r.t0) / 1000, dai = this.giam() ? 0.2 : 0.34, LAC = r.sai && !this.giam() ? 0.16 : 0;
+      if (u0 >= dai + LAC || B.t[r.o] !== r.T || !G.ban.includes(B)) { this.ve.splice(i, 1); continue; }
+      const u = Math.min(u0, dai - 1e-4);
       const o = B.o[r.o], C = this.tile(B);
       const k = dai / 0.34;
       let x = r.x, y = r.y, sc, ng;
@@ -156,6 +157,7 @@ const GF = {
         x = this.lerp(r.x, o.x, e); y = this.lerp(r.y, o.y, e) - Math.sin(v * Math.PI) * C * 0.18; // đường cong chỉ bằng toạ độ
         sc = this.lerp(1.03, 1, this.eo(v)); ng = -8 * Math.PI / 180 * (1 - this.eo(v));
       }
+      if (u0 >= dai && LAC) { const v = (u0 - dai) / LAC; x += Math.sin(v * Math.PI * 4) * C * 0.06 * (1 - v); } // lắc ngang 2 nhịp, tắt dần (≈160 ms)
       const f = Math.max(0, 3 - u / dai * 4); // hốc đóng lại 3→0
       this.khung(ctx, 'cf_o_nha', f, o.x, o.y, C * 0.9, 0, 0.95 * (1 - clamp((u - 0.28 * k) / (0.06 * k), 0, 1)));
       this.veUCam(ctx, r.T, x, y, sc, ng, C, o, 0);
