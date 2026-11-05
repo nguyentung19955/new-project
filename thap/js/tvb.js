@@ -187,6 +187,20 @@ const TVB = {
       return khGoc.apply(this, arguments);
     };
   }
+  // §C · ô KHÔNG ghép được (có ụ, khác loại/sao): tấm gạch chéo graphite mờ E19 (tv_khong) — không đỏ (chỉ đỏ khi thả vào ô cấm)
+  if (typeof KG !== 'undefined' && KG.veDuoi) {
+    const dGoc = KG.veDuoi;
+    KG.veDuoi = function (ctx) {
+      const r = dGoc.apply(this, arguments);
+      const a = REN.img('tv_khong'), src = this.nguon(); if (!a || !src) return r;
+      const B = G.ban[src.ban]; if (!B || B.t[src.o] !== src) return r;
+      const S = Math.min(B.cw, B.ch) * 0.9;
+      ctx.globalAlpha = 0.42;
+      for (let i = 0; i < 15; i++) { const N = B.t[i]; if (!N || N === src || hopLeGhep(src, N)) continue; const c = B.o[i]; ctx.drawImage(a, c.x - S / 2, c.y - S / 2, S, S); }
+      ctx.globalAlpha = 1;
+      return r;
+    };
+  }
   // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) thay bóng de_chung nhuộm tối trong lớp cầm (ghepfx.js veCam)
   if (typeof REN !== 'undefined' && REN.veKeo && REN.co) {
     const kGoc = REN.veKeo, coGoc = REN.co;

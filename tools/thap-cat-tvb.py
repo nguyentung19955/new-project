@@ -18,7 +18,6 @@ BANG = {
     'E30': (['tv_xem_rong'], 1220, False),                                          # tấm mở rộng 404 css
     'E31': (['tv_tag_ally', 'tv_tag_rival', 'tv_tag_you', 'tv_tag_shared'], 240, True),  # nhãn bàn ~76 css
     'E18': (['tv_dich1', 'tv_dich2', 'tv_dich3', 'tv_dich4'], 240, True),
-    'E19': (['tv_khong'], 240, False),
     'E20': (['tv_ghep%d' % i for i in range(1, 9)], 240, True),
     'E21': (['tv_lui%d' % i for i in range(1, 5)], 240, True),
     'E22': (['tv_de'], 240, False),
@@ -56,3 +55,25 @@ def bong(p, ra, w):
 
 if __name__ == '__main__' and os.path.exists(os.path.join(tvc.NGUON, 'raw_tv_E17.png')) and (not sys.argv[1:] or 'E17' in sys.argv[1:]):
     bong(os.path.join(tvc.NGUON, 'raw_tv_E17.png'), 'tv_keo_bong', 240)
+
+
+def ke_trong(p, ra, w, cat=0.19):
+    """E19: tấm gạch chéo bán trong suốt — tách trộn magenta đúng (p = a·c + (1−a)·M), chỉ lấy LÒNG tấm (bỏ khung góc vàng/đèn cyan:
+    ô không ghép được chỉ cần mờ nhẹ, không thêm khung)."""
+    import numpy as np
+    a = np.asarray(Image.open(p).convert('RGB')).astype(np.float32)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    m = np.clip(np.minimum(r, b) - g, 0, 255)
+    al = np.clip(1 - m / 255, 0, 1)
+    M = np.array([255, 0, 255], np.float32)
+    c = (a - (1 - al)[..., None] * M) / np.maximum(al, 1e-3)[..., None]
+    o = np.dstack([np.clip(c, 0, 255), al * 255])
+    im = Image.fromarray(o.astype(np.uint8), 'RGBA')
+    bb = tvc.khoa(Image.open(p)).getchannel('A').point(lambda v: 255 if v > 200 else 0).getbbox()
+    x0, y0, x1, y1 = bb; dx, dy = (x1 - x0) * cat, (y1 - y0) * cat
+    im = tvc.thu(im.crop((int(x0 + dx), int(y0 + dy), int(x1 - dx), int(y1 - dy))), w)
+    im.save(os.path.join(tvc.DICH, ra + '.png'), optimize=True); print('E19', ra, im.size)
+
+
+if __name__ == '__main__' and os.path.exists(os.path.join(tvc.NGUON, 'raw_tv_E19.png')) and (not sys.argv[1:] or 'E19' in sys.argv[1:]):
+    ke_trong(os.path.join(tvc.NGUON, 'raw_tv_E19.png'), 'tv_khong', 200)
