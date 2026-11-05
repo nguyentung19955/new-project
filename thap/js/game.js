@@ -73,13 +73,25 @@ function deckNgauNhien(tru) {
   return ds;
 }
 
+// PVP: bộ bài đối thủ "có lý" — ≥3 ụ gây sát thương, tối đa 1 ụ hỗ trợ, ưu tiên 1 ụ phá đối thủ (Control)
+function deckDoiThu() {
+  const dc = /PVP|rival/i;
+  for (let lan = 0; lan < 40; lan++) {
+    const d = deckNgauNhien();
+    const danh = d.filter(id => SKILLS[id].dmg && SKILLS[id].vai !== 'ht').length, ht = d.filter(id => SKILLS[id].vai === 'ht').length;
+    const ctl = d.some(id => dc.test(((TEXT.turret || {})[id] || {}).skill || ''));
+    if (danh >= 3 && ht <= 1 && (ctl || lan > 25)) return d;
+  }
+  return deckNgauNhien();
+}
 function batDau(che, deck, mv) {
   G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0;
   G.wave = 0; G.tWave = 0; G.t = 0; G.ketThuc = null; G.dung = false; G.cho = 1.2;
   FX.reset(); VX.reset();
   const bc = boCuc(che);
   G.chung = !!bc.chung;
-  G.ban = bc.ban.map((d, i) => taoBan(d, i, i === 0 ? deck : (G.debug.deck2 || deckNgauNhien()), i === 0 ? mv : pick(Object.keys(MAVUONG))));
+  G.hat = G.debug.seed || (1 + rint(1e9)); G.dotTu = 0; // PVP: hạt giống wave chung của trận
+  G.ban = bc.ban.map((d, i) => taoBan(d, i, i === 0 ? deck : (G.debug.deck2 || (che === 'pvp' ? deckDoiThu() : deckNgauNhien())), i === 0 ? mv : pick(Object.keys(MAVUONG))));
   G.duong = bc.duong.map(taoDuong);
   if (G.debug.mana) for (const B of G.ban) B.mana = G.debug.mana;
   if (G.debug.wave) G.wave = G.debug.wave - 1;
@@ -235,9 +247,9 @@ function sinhQuai(id, pi, s, hs, gui) {
   G.quai.push(E);
   return E;
 }
-function sinhTrum(id, pi) {
+function sinhTrum(id, pi, hs) {
   const p = G.duong[pi];
-  const max = Math.round(mauWave(G.wave) * 30 * (1 + G.wave / 35));
+  const max = Math.round(mauWave(G.wave) * 30 * (1 + G.wave / 35) * (hs || 1)); // hs: PVP đột tử — trùm trâu dần
   const E = { uid: G.uid++, id, d: { co: 86, v: 15, tim: 2, to: true, trum: true }, trum: id, hp: max, max, p: pi, s: 0, x: 0, y: 0, goc: 0,
     cham: 0, chamT: 0, doc: 0, docT: 0, chan: 0, flash: 0, chet: false, khung: 0, tim: 2, vao: 0, bob: 0, keo: 0, yeu: 0,
     knT: 4.5, bao: null, ban: p.ban };
@@ -303,26 +315,40 @@ function chet(E, B) {
   if (E.d.tach) for (let i = 0; i < E.d.tach.n; i++) {
     const c = sinhQuai(E.d.tach.id, E.p, Math.max(0, E.s - i * 9), E.d.tach.hs || 1, E.gui); c.vao = 1;
   }
-  // PVP: quái mình giết được GỬI sang đối thủ (quái đã gửi thì không gửi tiếp)
-  if (G.che === 'pvp' && !E.gui && !E.trum && E.id !== 'nho') {
-    const dich = G.duong.findIndex(p => p.ban !== G.duong[E.p].ban);
-    if (dich >= 0) {
-      G.hang.push({ t: G.t + 0.6, id: E.id, p: dich, gui: true });
-      const [px, py] = G.duong[dich].pts[0];
-      G.hu.push({ k: 'gui', t: 0, song: 0.6, x0: E.x, y0: E.y, x1: px, y1: py });
-    }
-  }
+  // PVP (kiểu DCDW): KHÔNG gửi quái — 2 bên nhận cùng wave, giết chỉ cho mana bàn mình
 }
 
 // ---------- wave ----------
+// RNG có hạt giống (mulberry32) — PVP: wave sinh 1 lần rồi đổ GIỐNG HỆT vào cả 2 làn
+function rngHat(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+// PVP: số wave đột tử đã qua (0 = chưa đột tử)
+function pvpDotTu(w) { return G.che === 'pvp' && w >= LUAT.pvpDotTu ? w - LUAT.pvpDotTu + 1 : 0; }
 function wavMoi() {
   G.wave++;
   const ws = [];
   const soDuong = G.duong.length;
+  if (G.che === 'pvp') {
+    const r = rngHat((G.hat || 1) * 1009 + G.wave * 7919), k = pvpDotTu(G.wave);
+    let w = taoWave(G.wave, r);
+    if (k && !w.trum) w = { trum: TRUM_THU_TU[(G.wave - 1) % TRUM_THU_TU.length], ds: Array(4 + Math.min(8, k)).fill('bo') };
+    const hsT = k ? 1 + 0.5 * k : 1, soT = k ? 1 + Math.floor(k / 3) : 1;
+    // lịch sinh: tính 1 lần (cùng RNG) rồi dùng cho mọi làn → cùng loại / máu / thời điểm
+    const lich = [];
+    if (w.trum) {
+      for (let j = 0; j < soT; j++) lich.push({ dt: 1.5 + j * 2.2, trum: w.trum, hs: hsT });
+      w.ds.forEach((q, i) => lich.push({ dt: 3 + i * 1.2, id: q }));
+    } else w.ds.forEach((q, i) => lich.push({ dt: 0.3 + (i / w.ds.length) * 13 + r() * 0.3, id: q }));
+    for (let pi = 0; pi < soDuong; pi++) for (const h of lich) G.hang.push(Object.assign({ t: G.t + h.dt, p: pi }, h));
+    G.tWave = 0; G.laTrum = !!w.trum; G.dotTu = k;
+    UI.bangWave(G.wave, G.laTrum);
+    if (k === 1 && typeof FX !== 'undefined') FX.chu1(W / 2, H / 2 - 40, 'SUDDEN DEATH', '#ff4b3e', 28, 'to');
+    SND.nhac(G.laTrum ? 2 : 1); SND.wave(G.wave, G.laTrum);
+    return;
+  }
   for (let pi = 0; pi < soDuong; pi++) {
     const w = taoWave(G.wave);
     if (w.trum) {
-      // co-op: mỗi nhánh 1 trùm luân phiên loại; PVP: cả hai bên cùng loại
+      // co-op: mỗi nhánh 1 trùm luân phiên loại
       const id = G.che === 'coop' && pi === 1 ? TRUM_THU_TU[(TRUM_THU_TU.indexOf(w.trum) + 3) % 6] : w.trum;
       G.hang.push({ t: G.t + 1.5, trum: id, p: pi });
       w.ds.forEach((q, i) => G.hang.push({ t: G.t + 3 + i * 1.2, id: q, p: pi }));
@@ -348,14 +374,14 @@ function capNhat(dt) {
     const conTrum = G.quai.some(e => e.trum && !e.chet);
     if (G.laTrum) { if (!conTrum && !G.hang.length && G.tWave > 4) { G.cho = 2.5; G.laTrum = false; } }
     else if (G.tWave >= LUAT.thoiGianWave || (G.tWave > 6 && !G.hang.length && !G.quai.some(e => !e.chet))) G.cho = 1.2;
-    if (G.cho > 0 && G.wave >= LUAT.waveMax && !G.quai.some(e => !e.chet)) ketThuc(true);
+    if (G.cho > 0 && G.che !== 'pvp' && G.wave >= LUAT.waveMax && !G.quai.some(e => !e.chet)) ketThuc(true); // PVP: không giới hạn wave — đột tử tới khi 1 bên hết tim
   }
   // hàng sinh quái
   for (let i = G.hang.length - 1; i >= 0; i--) {
     const h = G.hang[i];
     if (G.t >= h.t) {
       G.hang.splice(i, 1);
-      if (h.trum) sinhTrum(h.trum, h.p); else sinhQuai(h.id, h.p, 0, 1, h.gui);
+      if (h.trum) sinhTrum(h.trum, h.p, h.hs); else sinhQuai(h.id, h.p, 0, 1, h.gui);
     }
   }
   for (const B of G.ban) capNhatBan(B, dt);
@@ -610,6 +636,10 @@ function aiBan(B, dt) {
   B.aiT -= dt; if (B.aiT > 0) return;
   B.aiT = G.che === 'pvp' && B.ai ? 0.9 : 0.6;
   const ts = B.t.filter(Boolean);
+  if (G.che === 'pvp' && B.ai && CH.trangThai(B) === 'san') { // PVP: chỉ huy khi trùm trên làn mình hoặc còn 1 tim
+    const trumLan = G.quai.some(E => E.trum && !E.chet && G.duong[E.p].ban === B.i && E.vao >= 1);
+    if ((trumLan || B.tim <= 1) && (B.mv.id !== 'hero' || oTrong(B).length >= 2)) { dungMV(B); return; }
+  }
   if (CH.trangThai(B) === 'san' && B.mana > 200 && Math.random() < 0.3) { dungMV(B); return; }
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp

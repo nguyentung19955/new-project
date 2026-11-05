@@ -133,7 +133,7 @@ trieu = function (B, mienPhi, idEp) {
 
 // =====================================================================================================
 // P7 · BOUNTY BEACON (santhuong) — Tím ĐB: mỗi 5 s gắn TRUY NÃ lên n quái (ưu tiên quái to/nhiều máu); quái truy nã nhận +10% sát thương,
-//      chết (do bất kỳ ụ nào) → +g mana (trùm ×5). Co-op: mana thưởng chia đôi cho 2 bàn. PVP: quái truy nã bị gửi sang đối thủ mà lọt → bạn +5.
+//      chết (do bất kỳ ụ nào) → +g mana (trùm ×5). Co-op: mana thưởng chia đôi cho 2 bàn. PVP: chỉ làn mình.
 // =====================================================================================================
 SKILLS.santhuong = {
   vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#f0b030',
@@ -160,25 +160,14 @@ chet = function (E, B) {
   if (E.chet) return;
   const pB = B || G.ban[G.duong[E.p].ban] || G.ban[0];
   const mana0 = pB.mana, nay0 = pB.manaNay;
-  const dangGui = G.che === 'pvp' && !E.gui && !E.trum && E.id !== 'nho', n0 = G.hang.length;
   _chetGoc(E, B);
   if (E.khongMana) { pB.mana = mana0; pB.manaNay = nay0; } // Marionette: rối chết không cho mana
-  if (dangGui && E.truyNa && G.hang.length > n0) G.hang[G.hang.length - 1].na = E.truyNa.B; // PVP: dấu truy nã đi theo quái gửi sang
   if (E.truyNa) {
     const g = E.truyNa.g * (E.trum ? 5 : 1), D = G.che === 'coop' ? banKhac(E.truyNa.B) : null;
     if (D) { const h = Math.ceil(g / 2); E.truyNa.B.mana += h; D.mana += h; } else { E.truyNa.B.mana += g; E.truyNa.B.manaNay += g; }
     FX.chu1(E.x, E.y - 30, '+' + g + ' BOUNTY', '#f0b030', 13, 'mana'); if (!E.truyNa.B.ai) SND.mana();
   }
 };
-const _capNhatGoc = capNhat;
-capNhat = function (dt) { // gắn dấu PVP lên quái vừa gửi sang (hàng chờ có trường na)
-  const cu = G.hang.filter(h => h.na && G.t + dt >= h.t);
-  const n0 = G.quai.length;
-  _capNhatGoc(dt);
-  if (cu.length) for (const E of G.quai.slice(n0)) { const h = cu.find(h => h.p === E.p && h.id === E.id && !h._da); if (h) { h._da = true; E.naGui = h.na; } }
-};
-const _lotNa = lot;
-lot = function (E) { if (E.naGui && G.che === 'pvp') { E.naGui.mana += 5; const c = E.naGui.o[7]; FX.chu1(c.x, c.y - 40, '+5 BOUNTY LEAK', '#f0b030', 13, 'mana'); } return _lotNa(E); };
 HU.truyNaVe = { // ký hiệu "$" lục giác trên đầu mọi quái truy nã (1 lớp vẽ chung, tự tạo)
   cap: () => false,
   ve(ctx, o, R) {
