@@ -24,9 +24,42 @@ const ONL = {
     }
     // mạng chập chờn rồi nối lại: máy chủ đã chạy onDisconnect (on = false) → ghi lại on = true + đăng ký lại
     NET.khiNoi((v) => { if (v && this.code && NET.ok) { this.ghiToi({}).catch(() => { }); NET.khiNgat('rooms/' + this.code + '/pl/' + this.me() + '/on', false); } });
-    // link mời: ?phong=ABCD → mở bảng online và vào phòng
-    const q = new URLSearchParams(location.search).get('phong');
-    if (q && /^[A-Za-z]{4}$/.test(q)) setTimeout(() => { this.moBang(q.toUpperCase()); this.vaoPhong(q.toUpperCase()); }, 400);
+    // link mời (?room=ABCD · ?phong=ABCD · #room=ABCD): bỏ qua hướng dẫn/SOLO (huongdan.js), màn tải → vào phòng → thẳng SẢNH
+    // đổi bộ bài từ sảnh: rời màn bộ bài (‹) = về lại sảnh
+    if (typeof HM !== 'undefined' && HM.di && !HM._onlBoc) {
+      const g = HM.di; HM._onlBoc = true;
+      HM.di = function (xem) { const r = g.apply(this, arguments); if (xem !== 'dk' && ONL._doiBo) ONL.xongDoiBo(); return r; };
+    }
+    const moi = this.maMoi();
+    if (moi) this.vaoTuMoi(moi);
+  },
+  maMoi() {
+    const q = new URLSearchParams(location.search), h = new URLSearchParams(String(location.hash || '').replace(/^#/, ''));
+    const c = q.get('room') || q.get('phong') || h.get('room') || h.get('phong') || '';
+    return /^[A-Za-z]{4}$/.test(c) ? c.toUpperCase() : null;
+  },
+  boMaKhoiURL() { // vào xong: bỏ mã khỏi địa chỉ (tải lại trang không vào phòng lần 2; vào lại trận vẫn qua tm_phong)
+    try {
+      const u = new URL(location.href); u.searchParams.delete('room'); u.searchParams.delete('phong');
+      if (/(^#|&)(room|phong)=/.test(u.hash)) u.hash = '';
+      history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+    } catch (e) { }
+  },
+  vaoTuMoi(c) {
+    this._moi = c;
+    const tai = typeof TAI !== 'undefined' && TAI.bootP ? TAI.bootP : Promise.resolve();
+    tai.then(() => {
+      if (typeof TAI !== 'undefined' && TAI.hien) { TAI.hien('JOINING ROOM ' + c); TAI.tienDo(1, 1); const s = TAI.el && TAI.el.querySelector('.tai-so'); if (s) s.textContent = ''; }
+      if (UI.chon.length !== 5) { UI.chon = deckNgauNhien(); if (UI.veBoChon) UI.veBoChon(); } // người mới: bộ ngẫu nhiên, đổi được ở sảnh (DECK)
+      this.vaoPhong(c, true);
+    });
+  },
+  // vào từ link mời hỏng (đầy / hết / không có): báo rõ + CREATE A NEW ROOM / HOME
+  loiMoi(s) {
+    if (typeof TAI !== 'undefined' && TAI.an) TAI.an();
+    this._moi = null; this.boMaKhoiURL();
+    this.moBang(); const b = document.querySelector('#onl-bang .onl-bang'); if (b) b.classList.add('moi-loi');
+    this.baoLoi(s); NET.san().then(() => this.baoLoi(s)); // moBang tự xoá dòng báo khi mạng sẵn — ghi lại sau
   },
   doiHoSo() { if (this.code && NET.ok) this.ghiToi({}); },
 
@@ -39,16 +72,17 @@ const ONL = {
         '<div class="bang-ten">ONLINE CO-OP</div>' +
         '<div class="onl-phu">Play together with a friend: same waves, 3 shared lives, each of you builds your own board.</div>' +
         '<div class="bang-nut">' +
-        '<button class="nut chinh" data-act="onl-tao">CREATE ROOM</button>' +
+        '<button class="nut chinh" data-act="onl-tao"><span class="onl-tao1">CREATE ROOM</span><span class="onl-tao2">CREATE A NEW ROOM</span></button>' +
         '<div class="onl-nho">OR ENTER A ROOM CODE</div>' +
         '<div class="onl-hang"><input id="onl-ma" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD"><button class="nut" data-act="onl-vao">JOIN</button></div>' +
         '<button class="nut" data-act="onl-lai" id="onl-lai" hidden>REJOIN MATCH</button>' +
         '<div class="onl-loi" id="onl-loi"></div>' +
-        '<button class="nut" data-act="onl-dong">BACK</button></div></div>';
+        '<button class="nut" data-act="onl-dong"><span class="onl-tao1">BACK</span><span class="onl-tao2">HOME</span></button></div></div>';
       document.getElementById('wrap').appendChild(el);
       el.querySelector('#onl-ma').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, ''); });
     }
     el.hidden = false;
+    el.querySelector('.onl-bang').classList.remove('moi-loi');
     if (maSan) el.querySelector('#onl-ma').value = maSan;
     this.baoLoi(NET.ok ? '' : 'Connecting…');
     NET.san().then((ok) => {
@@ -93,26 +127,32 @@ const ONL = {
       thu(0).then((c) => { this.host = true; this.batDauSanh(c); }).catch((e) => this.baoLoi('Could not create room: ' + (e.code || e.message)));
     });
   },
-  vaoPhong(c) {
+  vaoPhong(c, tuMoi) {
     this._laiVao = false;
     c = String(c || '').toUpperCase();
-    if (!/^[A-Z]{4}$/.test(c)) return this.baoLoi('Room code = 4 letters.');
-    if (!this.canBo()) return;
+    const loi = (s) => tuMoi ? this.loiMoi(s) : this.baoLoi(s);
+    if (!/^[A-Z]{4}$/.test(c)) return loi('Room code = 4 letters.');
+    if (!this.canBo()) return tuMoi && this.loiMoi('Pick 5 turrets first.');
     NET.san().then((ok) => {
-      if (!ok) return this.baoLoi('Online unavailable (' + NET.loi + ').');
+      if (!ok) return loi('Online unavailable (' + NET.loi + ').');
       this.baoLoi('Joining ' + c + '…');
       NET.get('rooms/' + c + '/meta').then((m) => {
-        if (!m || NET.gio() - (m.at || 0) > this.HET_HAN) throw new Error('Room ' + c + ' not found'); // phòng > 2 giờ: bỏ qua
+        if (!m || NET.gio() - (m.at || 0) > this.HET_HAN) throw new Error('Room ' + c + ' was not found or has ended.'); // phòng > 2 giờ: bỏ qua
         const me = this.me();
+        this._laiVao = m.st === 'tran'; // đã ở trong phòng mà trận đang chạy (mở lại link / rớt mạng) → vào lại trận, giữ bộ bài đã ghi
         if (m.host === me) { this.host = true; return; }
         this.host = false;
         // phòng đã có khách khác → đầy (luật database cũng chặn; kiểm trước để báo rõ)
         return NET.get('rooms/' + c + '/khach').catch(() => null).then((k) => {
-          if (k && k !== me) throw new Error('Room ' + c + ' is full');
+          if (k && k !== me) throw new Error('Room ' + c + ' is full.');
+          if (!k && m.st === 'tran') throw new Error('Room ' + c + ' has already started.');
           // một lần ghi (nguyên khối): ô khách + danh sách thành viên members/{uid} (luật database kiểm thành viên qua members)
-          return NET.update('rooms/' + c, { khach: me, ['members/' + me]: true }).catch(() => { throw new Error('Room ' + c + ' is full'); });
+          return NET.update('rooms/' + c, { khach: me, ['members/' + me]: true }).catch(() => { throw new Error('Room ' + c + ' is full.'); });
         });
-      }).then(() => this.batDauSanh(c)).catch((e) => this.baoLoi(e.message || e.code));
+      }).then(() => {
+        this.batDauSanh(c);
+        if (tuMoi) { this._moi = null; this.boMaKhoiURL(); if (typeof TAI !== 'undefined' && TAI.an) TAI.an(); }
+      }).catch((e) => { this._laiVao = false; loi(e.message || e.code); });
     });
   },
 
@@ -157,7 +197,7 @@ const ONL = {
         '<div class="s7-luat">CO-OP • 2 PLAYERS • 3 SHARED LIVES</div>' +
         '<div class="sanh-ping" id="sanh-ping"></div>' +
         '<div class="onl-loi" id="sanh-loi"></div>' +
-        '<div class="s7-cuoi"><small id="sanh-goi"></small><button class="nut chinh" data-act="onl-san" id="sanh-san">READY</button></div>';
+        '<div class="s7-cuoi"><small id="sanh-goi"></small><div class="s7-hang"><button class="nut" data-act="onl-bo" id="sanh-bo">DECK</button><button class="nut chinh" data-act="onl-san" id="sanh-san">READY</button></div></div>';
       document.getElementById('wrap').appendChild(el);
     }
     const moi = el.hidden;
@@ -212,6 +252,7 @@ const ONL = {
     const nut = el.querySelector('#sanh-san');
     nut.textContent = toi && toi.ready ? 'CANCEL READY' : 'READY';
     nut.classList.toggle('chinh', !(toi && toi.ready));
+    const bo = el.querySelector('#sanh-bo'); if (bo) bo.hidden = !!(toi && toi.ready); // đổi bộ bài: chỉ khi chưa READY
     const goi = el.querySelector('#sanh-goi');
     if (goi) goi.textContent = toi && toi.ready ? (ban && ban.ready ? 'Both ready — launching…' : ban ? 'Waiting for ' + escTen(ban.name) + ' to get ready' : 'Starts when your teammate joins and is ready') : 'Starts when both players are ready';
     el.classList.toggle('ca-hai', !!(toi && ban && toi.ready && ban.ready));
@@ -238,7 +279,7 @@ const ONL = {
   },
   // hết trận / rời trận → về sảnh (PLAY AGAIN) — chủ phòng dọn dữ liệu trận cũ
   veSanhSauTran() {
-    this.dangTran = false; this._sauTran = true; // chờ chủ phòng đặt lại st = 'cho' rồi mới tính READY lần mới
+    this.dangTran = false; this._sauTran = true; this._laiVao = false; // chờ chủ phòng đặt lại st = 'cho' rồi mới tính READY lần mới
     if (!this.code) return false;
     this.ghiToi({ ready: false });
     if (this.host) NET.update('rooms/' + this.code, { act: null, snap: null, state: null, ping: null, 'meta/st': 'cho' }).catch(() => { });
@@ -258,12 +299,28 @@ const ONL = {
     }, 5000);
   },
   hienBangSauRoi(s) { this.moBang(); this.baoLoi(s); },
+  // link mời: ?room=ABCD (máy nhận mở → vào thẳng sảnh, xem vaoTuMoi)
+  linkMoi() { return location.origin + location.pathname + '?room=' + this.code; },
   chiaSe() {
-    const url = location.origin + location.pathname + '?phong=' + this.code;
+    const url = this.linkMoi(), text = 'Join my TURRET MERGE co-op room ' + this.code;
     const xong = (s) => this.baoLoi(s);
-    if (navigator.share) navigator.share({ title: 'TURRET MERGE co-op', text: 'Join my TURRET MERGE room ' + this.code, url }).catch(() => { });
-    else if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => xong('Link copied: ' + url), () => xong(url));
+    if (navigator.share) navigator.share({ title: 'TURRET MERGE co-op', text, url }).catch(() => { });
+    else if (navigator.clipboard) navigator.clipboard.writeText(text + ' ' + url).then(() => xong('Invite link copied'), () => xong(url));
     else xong(url);
+  },
+  // DECK ở sảnh: mở màn bộ bài; nút ‹ của màn bộ bài (hm-ve) đưa về sảnh + ghi bộ mới (khoidong.js gọi xongDoiBo)
+  moDoiBo() {
+    const el = document.getElementById('onl-sanh'); if (!el || !this.code) return;
+    this._doiBo = true; el.hidden = true;
+    const c = document.getElementById('chon'); if (c) c.classList.add('onl-doibo'); // ẩn PLAY / PLAY TUTORIAL (đang ở trong phòng)
+    if (typeof HM !== 'undefined' && HM.di) HM.di('dk');
+  },
+  xongDoiBo() {
+    if (!this._doiBo) return; this._doiBo = false;
+    const c = document.getElementById('chon'); if (c) c.classList.remove('onl-doibo');
+    if (!this.code) return;
+    if (UI.chon.length === 5) { if (typeof HM !== 'undefined' && HM.luuBo) HM.luuBo(); this.ghiToi({}); }
+    this.veSanh();
   },
 
   bam(a, el) {
@@ -284,6 +341,7 @@ const ONL = {
       case 'onl-roi': SND.nut(); if (el && el.closest && el.closest('#onl-sanh')) this.roiHoi(); else this.roiPhong(); return true;
       case 'onl-copy': SND.nut(); this.chepMa(); return true;
       case 'onl-chiase': SND.nut(); this.chiaSe(); return true;
+      case 'onl-bo': SND.nut(); this.moDoiBo(); return true;
     }
     return false;
   },
