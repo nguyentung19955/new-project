@@ -426,20 +426,21 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
 // G05 · RESONANCE GRID (luoicheo) — Vàng HT: chỉ buff 4 ô CHÉO (không buff ô thẳng): +(7+1.6×sao+LV−1)% × hệ số bậc Vàng 2.1 sát thương.
 //      Đủ cả 4 ô chéo có ụ (chỉ ô giữa hàng 2) → RESONANCE ×1.5. 5★ RESONANCE LINK: ụ chéo thêm +15% tốc bắn. Ô ở mép: ít ô chéo, không bù.
 // =====================================================================================================
-SKILLS.luoicheo = {
+SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô CHÉO (không N/E/S/W): +8% sát thương (đường cong HOTRO.K); đủ 4 ô chéo → CỘNG HƯỞNG ×1.5 (7★ ×1.75)
   vai: 'ht', dmg: 0, toc: 0,
-  goc: (T) => (0.07 + 0.016 * T.sao + 0.01 * (lvU(T) - 1)) * TIERS.vang.hs,
-  them(T) { return this.goc(T) * (this.du(T) ? 1.5 : 1); },
+  goc: (T) => 0.08 * HOTRO.k(T),
+  heSo: () => 1.5,
+  them(T) { return this.goc(T) * (this.du(T) ? this.heSo(T) : 1); },
   du(T) { const B = G.ban[T.ban]; if (!B) return false; const ds = oCheo(T.o); return ds.length === 4 && ds.every(o => B.t[o] && !B.t[o].st.da); },
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
   tamChu: '4 DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  mo: (T) => '+' + Math.round(SKILLS.luoicheo.them(T) * 100) + '% damage to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×1.5' : ' · fill all 4 (middle row) for RESONANCE ×1.5') + (T.sao >= 5 ? ' · +15% fire rate' : ''),
-  hoTro(G, T, N) { N.buf.dmg += this.them(T); if (T.sao >= 5) N.buf.toc += 0.15; },
+  mo: (T) => '+' + Math.round(SKILLS.luoicheo.them(T) * 100) + '% damage to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
   gocDau: (T, t) => (T.gd === 3 ? 0.06 * Math.sin(t * 6) : 0), // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
     T.nhip = (T.nhip || 0) + dt / (T.gd === 3 ? 1.2 : 2.4);
-    if (T.nhip >= 1) { T.nhip = 0; const ke = oCheo(T.o).map(o => B.t[o]).filter(N => N && !N.st.da); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '69,224,200' }); }
+    if (T.nhip >= 1) { T.nhip = 0; const ke = oCheo(T.o).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '69,224,200' }); }
     return true;
   },
   sangDau: (T) => (T.gd === 2 ? 0.1 : 0),
@@ -598,6 +599,6 @@ Object.assign(GROW, {
 Object.assign(NHIP, { hydra: (T) => (T.sao >= 7 ? 'fused beam 0.6/s' : (SKILLS.hydra.toc * (1 + 0.2 * (T.sao >= 3))).toFixed(2) + ' volleys/s × ' + Math.min(6, T.sao) + ' barrels') });
 
 // ---------- luật bộ bài (§5.1): tối đa 2 ụ "thao túng sao", ≥2 ụ Tấn công (nhắc, không chặn) ----------
-const THAO_TUNG_SAO = new Set(['vughep', 'sinhdoi', 'nangsao', 'hasao', 'tienhoa', 'loren', 'khoisinh', 'pandora']);
+const THAO_TUNG_SAO = new Set(['vughep', 'sinhdoi', 'nangsao', 'tienhoa', 'loren', 'khoisinh', 'pandora']);
 const _deckNNGoc = deckNgauNhien;
 deckNgauNhien = function (tru) { for (let i = 0; i < 20; i++) { const d = _deckNNGoc(tru); if (d.filter(id => THAO_TUNG_SAO.has(id)).length <= 2) return d; } return _deckNNGoc(tru); };

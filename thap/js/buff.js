@@ -18,9 +18,12 @@ const BUFF = {
   taylo: { ten: 'Cleanse',      mau: '#E8E5C8' }, // chữ thập 4 cánh + vòng nhỏ
 };
 const BUFF_THU_TU = ['tam', 'khien', 'chet', 'toc', 'dmg', 'crit', 'cham', 'mana', 'taylo']; // ưu tiên hiển thị lúc thường
-const SUP_LOAI = { radar: 'toc', chimang: 'crit', lanhgia: 'cham', khuech: 'dmg', tuthan: 'chet', mana: 'mana', nhanmana: 'mana', hutmana: 'mana', khien: 'khien', taylo: 'taylo' };
+const SUP_LOAI = { radar: 'toc', chimang: 'crit', lanhgia: 'cham', khuech: 'dmg', tuthan: 'chet', mana: 'mana', nhanmana: 'mana', hutmana: 'mana', khien: 'khien', taylo: 'taylo',
+  phagiap: 'dmg', bua: 'crit', tron: 'toc', nangsao: 'toc', hasao: 'dmg', guongcong: 'khien', dongbo: 'dmg', cauvong: 'dmg', lophanung: 'cham' }; // đợt vai trò: 9 ụ mới thành Hỗ trợ
 // giá trị hiệu lực của ụ hỗ trợ (để bảng thông tin tách: gốc 1★ LV1 / phần sao / phần cấp / mốc sao)
-const SUP_GIA = { radar: (T) => SKILLS.radar.them(T), chimang: (T) => SKILLS.chimang.them(T), lanhgia: (T) => SKILLS.lanhgia.cham(T), khuech: (T) => SKILLS.khuech.them(T), tuthan: (T) => SKILLS.tuthan.tile(T) };
+const SUP_GIA = { radar: (T) => SKILLS.radar.them(T), chimang: (T) => SKILLS.chimang.them(T), lanhgia: (T) => SKILLS.lanhgia.cham(T), khuech: (T) => SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T),
+  phagiap: (T) => SKILLS.phagiap.k(T), bua: (T) => SKILLS.bua.cd(T), tron: (T) => SKILLS.tron.them(T), nangsao: (T) => SKILLS.nangsao.them(T), hasao: (T) => SKILLS.hasao.k(T),
+  guongcong: (T) => SKILLS.guongcong.khang(T), dongbo: (T) => SKILLS.dongbo.v(T, 1), cauvong: (T) => SKILLS.cauvong.k(T), lophanung: (T) => SKILLS.lophanung.cham(T), tuthan: (T) => SKILLS.tuthan.tile(T) };
 
 // ---------- vẽ ký hiệu (code, nét 1.5 px) ----------
 function veKyHieu(x, k, r, mau) { // x: ctx đã dời về tâm; r: nửa cạnh vùng ký hiệu
@@ -112,7 +115,8 @@ Object.assign(REN, {
     };
     // đích: ô kề theo đúng luật (oHoTro = 4 ô thẳng, 5★ thêm 4 ô chéo); ụ Khiên/Tẩy: các ụ đang có khiên / đang dính hiệu ứng xấu
     let dich;
-    if (k === 'khien') dich = B.t.filter(N => N && N !== T && N.khien > 0).map(N => ({ o: N.o, N }));
+    if (SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && typeof HOTRO !== 'undefined') dich = HOTRO.oDich(T).map(o => ({ o, N: B.t[o] && (HOTRO.nhan(T, B.t[o]) || !SKILLS[T.id].chiTC && B.t[o] !== T) ? B.t[o] : null })); // hỗ trợ: đúng hình ô (hotro.js)
+    else if (k === 'khien') dich = B.t.filter(N => N && N !== T && N.khien > 0).map(N => ({ o: N.o, N }));
     else if (k === 'taylo') dich = B.t.filter(N => N && N !== T && (N.st.bang > 0 || N.st.da || N.st.lua > 0 || N.st.kep > 0)).map(N => ({ o: N.o, N }));
     else if (k === 'mana') dich = [];
     else { dich = []; const cc = T.o % 5, hh = (T.o / 5) | 0, cheo = loaiMoc(T.id) === 'ht' && mocChung(T, 5);
@@ -167,9 +171,9 @@ function hoTroTT(T) {
   const cu = (sao, lv) => { B.lv[id] = lv; const v = fn(Object.assign({}, T, { sao })); B.lv[id] = lv0; return v; };
   const lv = lv0 || 1, goc = cu(1, 1), saoV = cu(T.sao, 1), lvV = cu(T.sao, lv), he = heSoHT(T), hien = lvV * he;
   const pc = (v) => (id === 'tuthan' ? (v * 100).toFixed(1) : Math.round(v * 100)) + '%';
-  const cheo = mocChung(T, 5) && loaiMoc(id) === 'ht';
-  const nhan = oHoTro(B, T).filter(N => N && N !== T && !N.st.da).length;
-  return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: (SKILLS[id].tamChu || (cheo ? '8 cells around (N/E/S/W + diagonals)' : '4 adjacent cells (N/E/S/W)')) + ' · affecting ' + nhan + '/' + (cheo && !SKILLS[id].huong ? 8 : 4),
+  const o = HOTRO.oDich(T), nhan = o.filter(i => HOTRO.nhan(T, B.t[i])).length, max = SKILLS[id].vai === 'ht' && T.ht !== undefined ? null : null;
+  const capNote = o.some(i => B.t[i] && B.t[i].ht && B.t[i].ht.daMax && B.t[i].ht.daMax[k]) ? ' · CAP reached on a neighbour' : '';
+  return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: HOTRO.tamChu(T) + ' · affecting ' + nhan + '/' + o.length + ' cells' + capNote,
     tach: 'Base 1★ LV1 +' + pc(goc) + ' · stars +' + pc(saoV - goc) + ' · LV' + lv + ' +' + pc(lvV - saoV) + (he > 1 ? ' · milestone ×' + he : '') };
 }
 

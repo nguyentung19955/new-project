@@ -10,8 +10,8 @@ const BVX = {
   // k → ảnh + mức "đầy" (buff đạt mức này = đậm/cỡ tối đa) + ưu tiên khi bằng nhau
   LOAI: {
     max:   { anh: 'fxb_max',   day: 1,    uu: 9 }, // MAX POWER vàng: Rage chỉ huy (×2 sát thương)
-    dmg:   { anh: 'fxb_dmg',   day: 1,    uu: 6 }, // DAMAGE UP lửa đỏ cam
-    toc:   { anh: 'fxb_toc',   day: 0.8,  uu: 5 }, // FIRE RATE UP vòng tốc vàng
+    dmg:   { anh: 'fxb_dmg',   day: 0.4,  uu: 6 }, // DAMAGE UP lửa đỏ cam
+    toc:   { anh: 'fxb_toc',   day: 0.45, uu: 5 }, // FIRE RATE UP vòng tốc vàng
     crit:  { anh: 'fxb_crit',  day: 0.3,  uu: 4 }, // CRIT UP vòng lấp lánh tím
     khien: { anh: 'fxb_khien', day: 1,    uu: 8 }, // SHIELD bong bóng lục giác vàng
     chet:  { anh: 'fxb_chet',  day: 0.04, uu: 7 }, // EXECUTE linh hồn xanh lục
@@ -26,12 +26,13 @@ const BVX = {
     const b = T.buf; out.max = out.dmg = out.toc = out.crit = out.khien = out.chet = out.cham = 0;
     if (!b) return out;
     const moc = typeof mocChung === 'function' && mocChung(T, 3) && loaiMoc(T.id) !== 'ht' ? 0.2 : 0;
-    out.dmg = (b.dmg || 0) + (T.aurora > 0 ? 0.5 : 0);
+    out.dmg = (b.dmg || 0) + (b.dkHien || 0) + (T.aurora > 0 ? 0.5 : 0); // dkHien: sát thương có điều kiện từ hỗ trợ (hotro.js — lộ / chậm / cầu vồng / liên tiếp)
     out.toc = (b.toc || 0) - moc + (T.epxung || 0);
     out.crit = (b.crit || 0) + (b.cdmg || 0) * 0.3;
     out.cham = b.cham || 0; out.chet = b.chet || 0;
     if (B && B.cuong > 0 && SKILLS[T.id] && SKILLS[T.id].dmg) out.max = 1; // Rage ×2 sát thương: chỉ ụ có sát thương
     if (T.khien > 0 || (B && B.khien > 0)) out.khien = 1;
+    else if (T.ht && T.ht.khang > 0) out.khien = 0.45; // Mirror Gate kề: kháng khống chế (bong bóng mờ hơn khiên thật)
     return out;
   },
   _m: {}, _tf: -1, _n: 0, _nTruoc: 0,

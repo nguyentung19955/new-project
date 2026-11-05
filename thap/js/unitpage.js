@@ -25,9 +25,9 @@ const UP_TXT = {
   role: { tc: 'Attack', ht: 'Support', ctl: 'Control', db: 'Special' },
   roleMo: {
     tc: 'Deals the damage. Build your deck around 2 or more of these.',
-    ht: 'Does little damage itself. Boosts the turrets placed next to it.',
+    ht: 'Never attacks. Boosts the turrets next to it (up, down, left, right unless stated); stronger at 3/5/7★. Copies of the same Support don’t stack, and each buff type has a cap.',
     ctl: 'Its merge hits the rival in PvP, or helps your ally in co-op.',
-    db: 'Bends the rules: odd merges, swaps, mana or transformations.',
+    db: 'Bends the rules: freezes, marks, mana, odd merges, swaps or transformations. Little or no direct damage.',
   },
   target: { dau: 'Lead enemy', mau: 'Toughest enemy', ngau: 'Random enemy', tu: 'Own pattern', khong: 'Does not shoot' },
   sec: { skill: 'Skill', test: 'Test range', stars: 'Star levels', grow: 'Forms', foot: 'Buff footprint', merge: 'Merge rules', modes: 'Modes and deck', family: 'Family ladder', pair: 'Partners and counters' },

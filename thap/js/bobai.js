@@ -6,19 +6,19 @@
 const BOBAI = {
   KEY: 'turret_loc',
   // 6 nguyên mẫu (theo TU-VAN-TOAN-GAME mục 2C): đơn mục tiêu, nổ lan, khống chế, kinh tế mana, combo/liên kết, hỗ trợ co-op
-  DS: [
-    { id: 'san_trum', ten: 'BOSS HUNTER', che: 'SOLO · PVP', deck: ['sungluc', 'tia', 'phagiap', 'radar', 'nemesis'], mv: 'dahlia',
-      plan: 'Armor Breaker softens, Sniper + Revolver + Nemesis delete bosses; Radar speeds them up.' },
-    { id: 'no_lan', ten: 'BLAST ZONE', che: 'SOLO · CO-OP', deck: ['canon', 'mortar', 'no5', 'khuech', 'cuuvi'], mv: 'dahlia',
-      plan: 'Splash shells clear crowds and splitters; Amplifier next to them stacks damage.' },
-    { id: 'dong_bang', ten: 'DEEP FREEZE', che: 'SOLO · PVP', deck: ['bang', 'kiembang', 'lanhgia', 'baotuyet', 'lophanung'], mv: 'eve',
-      plan: 'Slow everything, then Ice Blade and Cryo Reactor punish slowed and frozen enemies.' },
-    { id: 'mana', ten: 'MANA ENGINE', che: 'SOLO', deck: ['mana', 'nhanmana', 'hutmana', 'nhanban', 'nangluong'], mv: 'hero',
-      plan: 'Bank mana early, upgrade fast; Energy Cannon hits harder the more mana you hold.' },
-    { id: 'combo', ten: 'CHAIN COMBO', che: 'SOLO · CO-OP', deck: ['lienket', 'dongbo', 'combo', 'mimic', 'khuech'], mv: 'hero',
-      plan: 'Fill the board with copies: Chain Link, Sync and Combo Core grow with every twin.' },
-    { id: 'ho_tro', ten: 'SHIELD WALL', che: 'CO-OP', deck: ['chimang', 'radar', 'khien', 'set', 'haoquang'], mv: 'eve',
-      plan: 'Tesla carries; Crit Antenna + Radar buff it; Shield Gen and Holy Halo stop boss skills.' },
+  DS: [ // đợt vai trò (TU-VAN-VAI-TRO mục 6C): mỗi bộ ghi rõ cơ cấu Tấn công / Hỗ trợ / Đặc biệt
+    { id: 'san_trum', ten: 'BOSS HUNTER', che: 'SOLO · PVP', cc: '3A · 1 SUP · 1 SP', deck: ['sungluc', 'tia', 'nemesis', 'phagiap', 'doc'], mv: 'dahlia',
+      plan: 'Breaker exposes the boss for its neighbours, Venom marks it; Sniper, Revolver and Nemesis delete it.' },
+    { id: 'no_lan', ten: 'BLAST ZONE', che: 'SOLO · CO-OP', cc: '4A · 1 SP', deck: ['canon', 'mortar', 'no5', 'cuuvi', 'bomhen'], mv: 'dahlia',
+      plan: 'Four splash guns clear crowds; Time Bomb weakens each pack before the shells land.' },
+    { id: 'dong_bang', ten: 'DEEP FREEZE', che: 'SOLO · PVP', cc: '2A · 2 SUP · 1 SP', deck: ['kiembang', 'baotuyet', 'lanhgia', 'lophanung', 'bang'], mv: 'eve',
+      plan: 'Frost freezes the lead, Chiller and Cryo Reactor keep everyone slow; Ice Blade and Blizzard punish slowed enemies.' },
+    { id: 'mana', ten: 'MANA ENGINE', che: 'SOLO', cc: '3A · 2 SP', deck: ['hutmana', 'nangluong', 'laser', 'mana', 'nhanmana'], mv: 'hero',
+      plan: 'Mana Core and Mana Doubler bank mana, Mana Leech adds more; Energy Cannon hits harder the more you hold.' },
+    { id: 'combo', ten: 'CHAIN COMBO', che: 'SOLO · CO-OP', cc: '2A · 1 SUP · 2 SP', deck: ['lienket', 'combo', 'dongbo', 'mimic', 'nhanban'], mv: 'hero',
+      plan: 'Fill the board with twins: Chain Link and Combo Core grow, Sync Cannon buffs same-star neighbours.' },
+    { id: 'ho_tro', ten: 'SHIELD WALL', che: 'CO-OP', cc: '2A · 2 SUP · 1 SP', deck: ['set', 'lien', 'radar', 'khien', 'haoquang'], mv: 'eve',
+      plan: 'Tesla and Gatling carry; Radar speeds the guns next to it, Shield Gen guards them, Holy Halo saves a leak.' },
   ],
   VAI: [['all', 'ALL'], ['tc', 'ATTACK'], ['ht', 'SUPPORT'], ['db', 'SPECIAL']],
   loc: { vai: 'all', q: '' },
@@ -32,7 +32,9 @@ const BOBAI = {
     if (document.getElementById('bb-loc')) return;
     const luoi = document.getElementById('chon-luoi'); if (!luoi) return;
     const d = document.createElement('div'); d.id = 'bb-loc';
-    d.innerHTML = '<div class="bb-chip">' + this.VAI.map(([k, t]) => '<button type="button" data-bbvai="' + k + '">' + t + '</button>').join('') + '</div>' +
+    const dem = { all: 0, tc: 0, ht: 0, db: 0 }; // số ụ theo vai (đợt vai trò: 40 / 18 / 27)
+    for (const r of G.roster || []) { const sk = SKILLS[r.id]; if (!sk) continue; dem.all++; if (dem[sk.vai] != null) dem[sk.vai]++; }
+    d.innerHTML = '<div class="bb-chip">' + this.VAI.map(([k, t]) => '<button type="button" data-bbvai="' + k + '">' + t + ' <small>' + dem[k] + '</small></button>').join('') + '</div>' +
       '<input id="bb-tim" type="search" placeholder="Search" autocomplete="off" spellcheck="false" enterkeyhint="search">';
     luoi.parentNode.insertBefore(d, luoi);
     d.addEventListener('click', (e) => { const b = e.target.closest('[data-bbvai]'); if (!b) return; e.stopPropagation(); this.loc.vai = b.dataset.bbvai; this.luu(); SND.nut(); this.ap(); });
@@ -74,7 +76,7 @@ const BOBAI = {
       c.innerHTML = '<div class="bb-ten"><b>' + a.ten + '</b><small>' + a.che + '</small></div>' +
         '<div class="bb-u">' + a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + G.rosterMap[id].ten + '" title="' + G.rosterMap[id].ten + '">').join('') +
         '<img class="bb-mv" src="' + mvIcURL(a.mv) + '" alt="' + MAVUONG[a.mv].ten + '" title="' + MAVUONG[a.mv].ten + '"></div>' +
-        '<p>' + a.plan + '</p>' +
+        '<p>' + (a.cc ? '<b>' + a.cc + '</b> · ' : '') + a.plan + '</p>' +
         '<button type="button" class="nut-xep" data-act="bb-thu" data-bb="' + a.id + '">' + (dung ? 'IN USE' : 'TRY DECK') + '</button>';
       h.appendChild(c);
     }

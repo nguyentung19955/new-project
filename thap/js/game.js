@@ -266,22 +266,13 @@ function trung(E, dmg, o) {
   const sk = T && SKILLS[T.id];
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
+  if (T && T._critChac && !o.phu) { crit = true; T._critChac = false; } // Crit Antenna 7★: đòn chắc chắn chí mạng
   if (crit) { dmg *= 2 + ((T && T.buf && T.buf.cdmg) || 0); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
-  if (E.yeu > 0) dmg *= 1 + (E.yeuK || 0.25);      // Phá Giáp
-  if (E.cvT > 0) dmg *= 1 + (E.cvK || 0.3);        // cầu vồng (solo / co-op): quái yếu đi
-  if (E.giapT > 0) dmg *= 0.75;                    // cầu vồng đối thủ (PVP): quái trâu hơn
-  if (E.fbT > 0) dmg *= 1.15;                      // Frost 5★ FROSTBITE
-  if (E.azT > 0) dmg *= 1.25;                      // Cryo Reactor 7★ ABSOLUTE ZERO
-  // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
-  if (T && T.buf && !o.phu) {
-    if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
-    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) {
-      dmg = Math.max(dmg, E.hp + 1); VX.chem(E); // giết ngay: đầu lâu tím + tro (buff.js)
-      // Reaper Pillar (bậc TÍM họ Execute): linh hồn bị gặt NỔ → 12% máu tối đa của nó cho quái quanh 44 px
-      noLan(E.x, E.y, 44, E.max * 0.12, o.B || G.ban[T.ban], { phu: true, mau: '#c77dff' }); FX.vong1(E.x, E.y, 6, 44, '#c77dff', 0.3, 3); FX.tiaLua(E.x, E.y, 8, '#d9a8ff', 150, 8);
-    }
-  }
+  const vu = HOTRO.vuln(E); if (vu) dmg *= 1 + vu;     // suy yếu quái: mọi nguồn cộng lại, trần 25% (hotro.js)
+  if (E.giapT > 0) dmg *= 0.75;                    // giáp đối thủ (PVP)
+  // hỗ trợ kề (hotro.js): sát thương có điều kiện (lộ / chậm / cầu vồng / đòn liên tiếp), chậm khi trúng, giết ngay, choáng khi chí mạng
+  if (T && T.buf && !o.phu) { if (T.ht) dmg *= HOTRO.dkHeSo(T, E); dmg = HOTRO.khiTrung(T, E, dmg, crit, o); }
   E.hp -= dmg; E.flash = 0.09;
   if (T && T.bac && !o.phu && !o.im) TVX.trung(T, E, crit); // hiệu ứng leo thang theo bậc (tiervfx.js)
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
@@ -402,25 +393,13 @@ function capNhatBan(B, dt) {
   if (B.phao > 0) SKILLS.orbital.phaoBan(G, B, dt); // vệ tinh bắn phá sau khi ghép ụ Vệ Tinh
   // hỗ trợ: reset rồi các ụ hỗ trợ buff 4 ô kề (trên-dưới-trái-phải)
   for (const T of B.t) if (T) {
-    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0; T.buf.cdmg = 0; T.buf.xuyen = 0; T.nguon = []; // nguon: buff nhận từ ụ nào (hiển thị buff)
+    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0; T.buf.cdmg = 0; T.buf.xuyen = 0; T.buf.dkHien = 0; T.nguon = []; // nguon: buff nhận từ ụ nào (hiển thị buff)
     if (T.tocT > 0) { T.tocT -= dt; T.buf.toc += T.tocV; } // tăng tốc tạm thời (Kẹp Phá co-op…)
+    if (T.giamT > 0) { T.giamT -= dt; T.buf.toc -= T.giamV || 0; } // giảm tốc nhẹ tạm thời (Star Breaker PVP)
     if (T.st.kep > 0) T.st.kep -= dt;
   }
   mocBuf(B); // mốc sao chung 3★ (+20% tốc)
-  for (const T of B.t) if (T && !T.st.bang && !T.st.da) {
-    const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
-    const k = sk.vai === 'ht' ? heSoHT(T) : 1; // mốc hào quang 3★/7★
-    for (const N of oHoTro(B, T)) if (N && N !== T && !N.st.da) {
-      const b = N.buf, c0 = b.toc, c1 = b.dmg, c2 = b.crit, c3 = b.cham, c4 = b.chet, c5 = b.cdmg || 0;
-      sk.hoTro(G, T, N);
-      if (k !== 1) { b.toc = c0 + (b.toc - c0) * k; b.dmg = c1 + (b.dmg - c1) * k; b.crit = c2 + (b.crit - c2) * k; b.cham = Math.min(0.8, c3 + (b.cham - c3) * k); b.chet = c4 + (b.chet - c4) * k; }
-      // ghi nguồn buff (ụ nào cho bao nhiêu) — chậm: lấy mức CAO nhất, còn lại cộng dồn
-      const ng = N.nguon;
-      if (b.toc > c0) ng.push({ k: 'toc', v: b.toc - c0, T }); if (b.dmg > c1) ng.push({ k: 'dmg', v: b.dmg - c1, T });
-      if (b.crit > c2) ng.push({ k: 'crit', v: b.crit - c2, T }); if (b.chet > c4) ng.push({ k: 'chet', v: b.chet - c4, T }); if (b.cdmg > c5) ng.push({ k: 'cdmg', v: b.cdmg - c5, T });
-      if (SKILLS[T.id].vai === 'ht' && T.id === 'lanhgia') ng.push({ k: 'cham', v: SKILLS.lanhgia.cham(T) * k, T });
-    }
-  }
+  HOTRO.apDung(B, dt); // hệ thống hỗ trợ chung (hotro.js): hình ô, đường cong sao 3/5/7★, bản mạnh nhất / loại, trần theo nhóm
   for (const T of B.t) if (T) capNhatU(B, T, dt);
   if (B.ai || G.debug.auto) aiBan(B, dt);
 }
@@ -501,6 +480,7 @@ function capNhatQuai(dt) {
     const p = G.duong[E.p];
     E.flash = Math.max(0, E.flash - dt); E.vao = Math.min(1, E.vao + dt * 3); E.yeu = Math.max(0, E.yeu - dt);
     if (E.fbT > 0) E.fbT -= dt; if (E.azT > 0) E.azT -= dt;
+    if (E.vmT > 0) E.vmT -= dt; if (E.ywT > 0) E.ywT -= dt; if (E.loT > 0) E.loT -= dt; if (E.tpT > 0) E.tpT -= dt; if (E.tempoT > 0) E.tempoT -= dt;
     if (E.chamT > 0) { E.chamT -= dt; if (E.chamT <= 0) E.cham = 0; }
     if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.chet) continue; }
     let v = E.d.v * (1 - (E.d.khangCham ? 0 : E.cham));
