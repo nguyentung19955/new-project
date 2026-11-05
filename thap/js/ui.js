@@ -181,6 +181,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // ảnh ChatGPT thay hình vẽ code trên canvas: huy hiệu sao, ngọc độ hiếm, icon buff, lõi hư, mũi tên đường, bảng tên bàn
     ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
       'ic_toc', 'ic_dmg', 'ic_crit', 'ic_cham', 'ic_chet', 'ic_mana', 'ic_khien', 'ic_taylo', 'ic_sao', 'ic_bom', 'ic_truyna');
+    if (typeof BVX !== 'undefined') ds.push(...BVX.ANH); // hào quang buff (buffvfx.js)
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt

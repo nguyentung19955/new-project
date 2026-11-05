@@ -598,7 +598,6 @@ P.dongbo = () => {
       G.hu.push({ k: 'gTiaVang', t: 0, song: 0.2, T, E, x0: x, y0: y, x1: E.x, y1: E.y });
       FX.vong1(E.x, E.y, 4, 22, '#ffe46b', 0.25, 2); FX.tiaLua(E.x, E.y, 4, '#fff6c0', 150, 6); if (!B.ai) SND.gVang();
     }
-    if ((T.dong || 0) >= 5) nhanU(T, 'SYNC ×' + T.dong, '#ffe46b');
   };
   sk.veThem = function (ctx, T, S, al, R, B) {
     if (vt) vt.call(this, ctx, T, S, al, R, B);

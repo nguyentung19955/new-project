@@ -99,7 +99,7 @@ SKILLS.combo = {
     const n = B.combo, c = B.o[b.o];
     const hien = () => { FX.chu1(c.x, c.y - 44, 'COMBO ×' + n, '#ff8a2a', Math.min(26, 17 + n * 0.4), 'to'); FX.vong1(c.x, c.y, 8, 46, '#ff8a2a', 0.35, 3); if (!B.ai || G.che === 'pvp') SND.combo(n); };
     if (G._treNhan && typeof VX !== 'undefined') VX.hen(G._treNhan, hien); else hien();
-    for (const X of B.t) if (X && X.id === 'combo' && X !== ra) { X.sang = 1; nhanU(X, '+' + Math.round(this.c(X) * 100) + '%', '#ff8a2a'); }
+    for (const X of B.t) if (X && X.id === 'combo' && X !== ra) { X.sang = 1; buffNo(X, 'dmg', 0.6); }
   },
   sangDau: (T) => (T.gd === 3 ? 0.28 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0),
   veThem(ctx, T, S, al, R, B) { // vòng số quay theo giai đoạn + nhãn ×N dưới bệ

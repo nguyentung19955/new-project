@@ -868,7 +868,7 @@ const REN = {
       // biểu tượng loại (trên-trái) + số sao (trên-phải): vẽ SAU đạn/hiệu ứng (lớp huy hiệu) → không bị che
       if (hs > 0.02) { const h = ND.xep(T, x, y + oy, C, hs, al, B); if (this._hang && !o.ghost) this._hang.push(h); else ND.veHuyHieu(ctx, h); }
       const k2 = C / Math.min(B.cw, B.ch);
-      if (!o.ghost && T.buf) this.veBuffNho(ctx, T, x + B.cw * k2 / 2 - 30, y + oy + B.ch * k2 / 2 - 15); // ký hiệu buff: góc DƯỚI-PHẢI ô
+      // buff: không còn ký hiệu nhỏ trên ô — hiện bằng hào quang ảnh quanh đầu súng (buffvfx.js), số chỉ ở bảng chạm
     }
     ctx.globalAlpha = 1;
     if (A) VX.sau(ctx, T, x, y, S, A);
