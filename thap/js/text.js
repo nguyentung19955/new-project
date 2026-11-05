@@ -152,7 +152,15 @@ const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'd
   'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
   'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette',
   'chuato', 'leviathan', 'khoisinh', 'ronglua']);
-function iconOf(id) { return 'assets/nho/' + id + '.png'; }
+// ?ucu=1: nạp lại BỘ ĐẦU CŨ (trước bộ u2) — ảnh <ten>_v1.png (danh sách DAU_V1 + số cỡ ART_V1 trong artscale.js)
+window.UCU = /[?&]ucu=1(&|$)/.test(location.search);
+let _dauV1 = null;
+function anhTen(ten) {
+  if (!window.UCU || !window.DAU_V1) return ten;
+  if (!_dauV1) _dauV1 = new Set(window.DAU_V1);
+  return _dauV1.has(ten) ? ten + '_v1' : ten;
+}
+function iconOf(id) { return 'assets/' + anhTen('nho/' + id) + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 // ảnh LỚN cho trang ụ/chỉ huy (3× cỡ hiển thị, tools/thap-hero.py); thẻ/thanh bài vẫn dùng pilot_<id>.png nhỏ
 function heroOf(id) { return 'assets/hero/hero_' + id + (id.indexOf('af_') === 0 ? '.webp' : '.jpg'); } // chỉ huy: nền trong suốt (webp)

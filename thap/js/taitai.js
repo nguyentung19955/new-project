@@ -66,7 +66,7 @@ const TAI = {
       const k = this.tuyetDoi(url), c = m.get(k);
       if (c) { if (ten) c.ten = ten; } else m.set(k, { url: k, ten: ten || null });
     };
-    return { them, anh: (ten) => them('assets/' + ten + '.png', ten), ket: () => [...m.values()] };
+    return { them, anh: (ten) => them('assets/' + (typeof anhTen === 'function' ? anhTen(ten) : ten) + '.png', ten), ket: () => [...m.values()] };
   },
   ANH_TAI: ['assets/tai_day.png', 'assets/hud_trum_khung.png', 'assets/fx_vong_lv.png'],
   CO_DINH: ['khay', 'duong_thang', 'duong_goc', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana', 'fx_vong_lv'],
