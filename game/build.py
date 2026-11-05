@@ -566,11 +566,20 @@ def bat_buoc(t):
         return False
     if d == 'zed' and ma in ('zed-moi', 'zed-rung', 'zed-bien', 'zed-lau', 'zed-vk-he', 'zed-vk-gan'):  # zed-moi (05/11 F4): hình mặc định là Rowan → tấm ninja cũ chỉ tải khi cần (?zedbo=ninja)  # zed-vk-gan (16/10, gân tiến độ Luyện): tải sau, chưa về thì ảnh thường; zed-vk-he (16/10, ảnh vũ khí theo hệ): tải sau, chưa về thì ảnh cấp nhuộm như cũ; trang phục Zed bộ Rừng / Biển / Lâu đài (mở sau trùm vùng 1 / 2 / 3): tải sau; chưa về thì js/zed_moi.js vẽ bộ ninja
         return False
+    if d == 'zed' and ma.startswith('zed-rowan-pl-'):  # 05/11 pixellab-rowan: Rowan PixelLab mỗi vũ khí một tấm — tải sau, chỉ tấm đang cầm (chưa về thì vẽ Rowan cũ)
+        return False
     if d in ('nguoi-lang', 'giao-dien', 'vat-pham', 'zed', 'em-be'):  # zed: bộ Zed mới (zed-moi, zed-vk) cần ngay ở làng; em-be: 3 NPC
         return True
     if d == 'hieu-ung':
         return bool(HU_CO_BAN.match(ma))
     return False
+
+
+def chi_khi_can(t):
+    """05/11 pixellab-rowan: tấm thân ninja cũ zed-moi. Từ phiên Talesworn C bộ mặc định vẽ bằng Rowan; F4 cho zed-moi tải như trang phục (chỉ khi mặc)
+    và không bộ nào khác dùng nó → trình duyệt CHỈ tải khi mở ?zedbo=ninja (cờ quay lui). Như tấm cũ (-netcu, -daucu, -vkcu): vẫn nằm trên máy chủ,
+    không tính vào "người chơi tải" (in riêng một dòng)."""
+    return t.get('doi_tuong') == 'zed' and t.get('ma') == 'zed-moi'
 
 
 def thu_tu_sau(t):
@@ -903,6 +912,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     webps = webp_nhieu(pngs)
     ds = [dict(t) for t in custom]
     tong_png = tong_webp = tong_tot = so_webp = 0
+    khi_can_tot = [0]  # 05/11 pixellab-rowan: ảnh chỉ tải khi bật cờ quay lui (không tính người chơi tải)
     cu_n = cu_tot = cu_png = 0  # tấm cũ (mục muot_cua) nằm trên máy chủ nhưng game chỉ tải khi bật cờ → không tính vào người chơi tải (15/10 don-tep B: bỏ tấm cu_cua / ?quaicu=1)
     bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
     # F4: chia trang ảnh có cạnh > 2048 (không chia tấm cũ chỉ dùng khi bật cờ quay lui)
@@ -958,7 +968,10 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
             vr = vung_rieng(custom[i])  # như quái thường của vùng đó (khi bật cờ thì tải theo vùng như tấm cũ trước đây)
             t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0] + wh
             continue
-        tong_tot += tot
+        if chi_khi_can(t):  # 05/11 pixellab-rowan: tấm ninja cũ zed-moi chỉ tải khi ?zedbo=ninja → không tính người chơi tải (in riêng)
+            khi_can_tot[0] += tot
+        else:
+            tong_tot += tot
         # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
         # bậc 0: cần cho màn chào / làng (luật bat_buoc ở trên) · 1: hiệu ứng… · 2: quái thường · 3: trùm và dáng pha
         quai = t.get('doi_tuong') not in ('hieu-ung', 'giao-dien', 'nguoi-lang', 'em-be', 'zed') and t.get('doi_tuong') not in DO_LOAI
@@ -1028,7 +1041,9 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
                     x['tai_nguyen_kb'] = tot // 1024
             tot = chia[(id(t), 'trang_to')][0]
             cu_png += len(png)
-        if not t.get('net_cua') and not t.get('dau_cua'):
+        if chi_khi_can(t):
+            khi_can_tot[0] += tot
+        elif not t.get('net_cua') and not t.get('dau_cua'):
             tong_tot += tot; tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
     # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải
     net_cao = {}
@@ -1092,6 +1107,7 @@ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
     KICH.update({'nguoi_tai': nguoi, 'trang_nen': z1, 'anh_tai': tong_tot, 'bia_tai': bia_tai, 'may_chu': may_chu, 'tran_nguoi_tai': TRAN_NGUOI_TAI})
     if cu_n:
         print('  (không tính) %d tấm cũ chỉ tải khi mở ?anhmuotcu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
+    print('  (không tính) tấm ninja cũ zed-moi, chỉ tải khi ?zedbo=ninja: %.2f MB' % (khi_can_tot[0] / 1048576))
     print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
           % (z1 / 1048576, tong_tot / 1048576, bia_tai / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
              (z1 + tong_png - cu_png + bia_jpg) / 1048576))  # 15/10 soát mượt: không tính tấm cũ (chỉ tải khi bật cờ)

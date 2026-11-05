@@ -1,0 +1,49 @@
+{
+ "loi_trang": [],
+ "anh_zed_da_tai": {
+  "mac-dinh": [
+   "zed-rowan-pl-bua",
+   "zed-rowan-pl-hao",
+   "zed-rowan-pl-kiem",
+   "zed-rowan-pl-phitieu",
+   "zed-rowan-pl-thuong",
+   "zed-rowan-t0",
+   "zed-rowan-t10",
+   "zed-rowan-t7",
+   "zed-rowan-t8",
+   "zed-rowan-t9",
+   "zed-rowan-to0",
+   "zed-rowan-to1",
+   "zed-rowan-to2",
+   "zed-rowan-to3",
+   "zed-rowan-to4",
+   "zed-rowan-to5",
+   "zed-rowan-to6",
+   "zed-rowan-to7",
+   "zed-rowan-to8",
+   "zed-rowan-to9",
+   "zed-vk",
+   "zed-vk-he"
+  ],
+  "&rowancu=1": [
+   "zed-rowan-t0",
+   "zed-rowan-t10",
+   "zed-rowan-t4",
+   "zed-rowan-t7",
+   "zed-rowan-t8",
+   "zed-rowan-t9",
+   "zed-rowan-to0",
+   "zed-rowan-to1",
+   "zed-rowan-to2",
+   "zed-rowan-to3",
+   "zed-rowan-to4",
+   "zed-rowan-to5",
+   "zed-rowan-to6",
+   "zed-rowan-to7",
+   "zed-rowan-to8",
+   "zed-rowan-to9",
+   "zed-vk",
+   "zed-vk-he"
+  ]
+ }
+}

@@ -1234,6 +1234,78 @@
     return cv;
   }
   let tam = null; // canvas phụ khi phải nhuộm cả hình (trúng đòn, băng, độc)
+  // ---------- ROWAN PIXELLAB (05/11/2026, docs/review/ke-hoach-cai-thien/pixellab-rowan/bao-cao.md) ----------
+  // Rowan là nhân vật PixelLab, MỖI LOẠI VŨ KHÍ MỘT NHÂN VẬT (zed-rowan-pl-kiem / -thuong / -bua / -phitieu): vũ khí do PixelLab vẽ sẵn
+  // trong tay ở từng khung → KHÔNG còn lớp vũ khí đặt theo điểm cầm. Code chỉ chọn khung (cùng trạng thái / nhịp như cũ: chon()), đặt giữa
+  // chân vào gốc, chọn hướng se (quay phải) / sw (quay trái, KHÔNG lật gương → vũ khí luôn ở tay phải). Cỡ: 1 điểm PixelLab = 1/2,4 điểm game
+  // (trong trận cỡ ×1,2 trên canvas nét 2 → đúng 1 điểm màn hình). Luật chơi, vùng trúng, nhịp đòn, vệt chém: không đổi.
+  // Chưa có tấm (đang tải) / tay không / trang phục Rừng–Biển–Lâu đài / ?rowancu=1 → vẽ như cũ (thân + lớp vũ khí).
+  if (G.ROWAN_PL === undefined) G.ROWAN_PL = !/[?&]rowancu=(1|dau)(&|$)/.test(QS);
+  const PL_HANG = { chay2tay: 'chay', dam: 'chuong' };
+  function plTam(o) {
+    if (!G.ROWAN_PL || !G.ROWAN_HINH || !SC.zed) return null;
+    try { const b = G.zedBo ? G.zedBo() : 'ninja'; if (G.ZED_BO && G.ZED_BO[b] && G.ZED_BO[b].tam !== 'zed-moi') return null; } catch (e) { return null; }
+    let w = o.weapon, l = w && VK_LOAI[w.type];
+    if (!l && o.p && G.curW) { try { w = G.curW(o.p); l = w && VK_LOAI[w.type]; } catch (e) { l = null; } } // giáo đang bay (tay không): vẫn hình nhân vật giáo
+    if (!l) return null;
+    const ma = 'zed-rowan-pl-' + l, z = SC.zed[ma];
+    if (!z) return null;
+    if (laChinh0(o) || !G.rowanPlMa) G.rowanPlMa = ma; // tấm đang cầm: js/sprite_custom.js giữ / tải trước
+    if (!z.ready && SC.canAnh) SC.canAnh(ma);
+    return z.ready && z.img && z.tep && z.tep.hang ? z : null;
+  }
+  const laChinh0 = (o) => { const p = o.p; let W = null; try { W = G.getWorld ? G.getWorld() : null; } catch (e) { W = null; } return !!(p && W && W.P === p); };
+  // Khung PixelLab cho trạng thái s (đã chọn bằng chon): { k, h, i, r }.
+  function plChon(z, s, D, o) {
+    const s2 = s.theo || s; // chạy mà đánh: hiện đòn (vũ khí nằm trong khung đòn)
+    const ten = s2.ten, a = D.dong_tac[ten];
+    let k = ten.replace(/~.*$/, '');
+    k = PL_HANG[k] || k;
+    const H = z.tep.hang;
+    if (!H[k]) k = /^(di|chay)/.test(k) ? 'chay' : 'dung';
+    const h = o.face < 0 ? 'sw' : 'se', fr = H[k] && H[k][h];
+    if (!fr || !fr.length) return null;
+    const n = fr.length;
+    let i;
+    if (s2.u != null && !(a && a.lap)) i = Math.min(n - 1, Math.floor(kep(s2.u, 0, 1) * n));
+    else { const so = a && a.so ? a.so : n; i = Math.floor(((s2.i | 0) * n) / so) % n; }
+    return { k, h, i, r: fr[i] };
+  }
+  function vePl(c, o, z, s, D) {
+    const P = plChon(z, s, D, o);
+    if (!P) return false;
+    const S = z.tep.do || 1 / 2.4, r = P.r, f = o.face < 0 ? -1 : 1, img = z.img;
+    const lop = (q) => {
+      if (f < 0) q.scale(-1, 1); // veLop lật theo mặt; ảnh hướng sw đã quay trái sẵn → bỏ lật
+      if (G.rowanPlHao) { try { G.rowanPlHao(q, o, -1); } catch (e) { /* hiệu ứng phụ */ } } // hào quang hình thái / hệ (sau lưng)
+      q.drawImage(img, r[0], r[1], r[2], r[3], r[4] * S, r[5] * S, r[2] * S, r[3] * S);
+      if (G.rowanPlHao) { try { G.rowanPlHao(q, o, 1); } catch (e) { /* hiệu ứng phụ */ } }
+    };
+    return veLop(c, o, lop);
+  }
+  G.rowanPl = { tam: plTam, chon: plChon };
+  // Hào quang hình thái / hệ (lớp hiệu ứng, ảnh PixelLab zed-rowan-pl-hao): vũ khí đã qua Trắng → vòng sáng dưới chân theo cấp (1 Mầm,
+  // 2 Thành hình, 3 Thức tỉnh) và hệ (Lửa / Độc / Băng; chưa có hệ: vàng). Nửa sau vòng vẽ trước thân (sau lưng), nửa trước vẽ sau thân.
+  // Chỉ là lớp hiệu ứng (vũ khí vẫn do PixelLab vẽ trong tay). Mờ / thở nhẹ theo thời gian. ?haopl=0: tắt riêng hào quang.
+  const HAO_TAT = /[?&]haopl=0(&|$)/.test(QS);
+  const HAO_A = [0, 0.5, 0.7, 0.9], HAO_K = [0, 0.8, 0.9, 1];
+  G.rowanPlHao = HAO_TAT ? null : function (q, o, lop) {
+    const w = o.weapon, cap = w ? capVk(w) : 0;
+    if (!(cap > 0)) return;
+    const z = SC.zed && SC.zed['zed-rowan-pl-hao'];
+    if (!z) return;
+    if (!z.ready && SC.canAnh) SC.canAnh('zed-rowan-pl-hao');
+    if (!z.ready || !z.img || !z.tep.hao) return;
+    const he = heVk(w) || 'gold', B = z.tep.hao[he] || z.tep.hao.gold, r = B && B[String(cap)];
+    if (!r) return;
+    const S = (z.tep.do || 1 / 2.4) * HAO_K[cap], t = G.time || 0, hh = r[3] / 2;
+    const a0 = q.globalAlpha;
+    q.globalAlpha = a0 * HAO_A[cap] * (0.85 + 0.15 * Math.sin(t * 3));
+    if (lop < 0) q.drawImage(z.img, r[0], r[1], r[2], hh, (-r[2] / 2) * S, -hh * S, r[2] * S, hh * S); // nửa sau (trên)
+    else q.drawImage(z.img, r[0], r[1] + hh, r[2], r[3] - hh, (-r[2] / 2) * S, 0, r[2] * S, (r[3] - hh) * S); // nửa trước (dưới)
+    q.globalAlpha = a0;
+  };
+
   function ve(c, o) {
     const T = layThan();
     if (!T) return false;
@@ -1242,6 +1314,8 @@
     sVe = s; tVe = T;
     anhTo(T); // do-net: bắt đầu tải bản to ngay lần vẽ đầu (làng / chân dung) để vào trận là có
     if (G.NET > 2) anhNet(T, G.NET); // nét cao (?netcao=3|4): bản ảnh đúng nét canvas, chỉ tải khi bật
+    const Z = plTam(o); // Rowan PixelLab: vũ khí vẽ sẵn trong tay, không lớp vũ khí
+    if (Z) { hvNghi(o); if (vePl(c, o, Z, s, D)) return true; }
     const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
     // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
     let Hb = null;
@@ -1500,7 +1574,9 @@
     if (st.ice > 0 || st.poison > 0 || st.fire > 0) return null;
     const w = o.weapon, VV = G.vienVk;
     if (w && VV && VV.co && VV.co(w)) return null;
-    const D = T.tep, s = chon(o, D), V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
+    const D = T.tep, s = chon(o, D), Z = plTam(o);
+    if (Z) { const P = plChon(Z, s, D, o); return P ? ['pl', Z.ma, P.k, P.h, P.i, w ? w.type + ':' + (w.coat || '') + ':' + capVk(w) + ':' + (heVk(w) || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0, G.rowanPlHao && w && capVk(w) > 0 ? Math.floor((G.time || 0) * 8) : 0].join('|') : null; }
+    const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, false) : null, h = HV && HV.get(p);
     return [T._ma, s.ten, s.i, s.eo ? s.eo.i + ':' + (s.eo.lui || 0) + ':' + (s.eo.moi || 0) + ':' + (s.eo.chan || '') : '', s.theo ? s.theo.ten + ':' + s.theo.i : '',
       v ? v.wa.ten + ':' + v.wa.i + ':' + v.cap + ':' + (v.he || '') + ':' + Math.round(v.ang / 2) + ':' + Math.round((v.lean || 0) * 2) + (v.tk ? ':' + Math.round(v.tk.wx * 2) + ',' + Math.round(v.tk.uy * 2) : '') : V ? '-' : '0',
       h ? Math.round(h.gv / 2) + ':' + Math.round(h.lv * 2) : '', o.face < 0 ? -1 : 1, w ? w.type + ':' + (w.coat || '') : '', o.dodge >= 0 ? 1 : 0, o.roundShadow ? 1 : 0].join('|');

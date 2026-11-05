@@ -15685,11 +15685,18 @@ MA._xong();
   // 17/10 sàn dịu (docs/review/ke-hoach-cai-thien/tu-van-17-10-nen-song/bao-cao.md): ảnh sàn gd-nen-*-san* bớt tương phản chi tiết; sàn trước đó
   // giữ ở <mã>-sancu (mục "san_cua"), chỉ có ở bản hai tệp (web), chỉ nạp khi ?sanmoi=0 (G.SAN_MOI = false). Bản một tệp: ?sanmoi=0 không đổi gì.
   // TALESWORN phiên D (05/11, talesworn-d-gan-anh/bao-cao.md): tấm Rowan phiên C giữ ở zed-rowan-daucu (mục "dau_cua": 'zed-rowan'),
-  // chỉ ở bản hai tệp (web), chỉ nạp khi ?rowancu=1 (G.ROWAN_DAU_CU); có tấm cũ thì bỏ tấm mới (mục "dau_moi"). Bản một tệp: cờ không đổi gì.
-  if (G.ROWAN_DAU_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]rowancu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.ROWAN_DAU_CU = cu; }
+  // chỉ ở bản hai tệp (web), chỉ nạp khi ?rowancu=dau (G.ROWAN_DAU_CU); có tấm cũ thì bỏ tấm mới (mục "dau_moi"). Bản một tệp: cờ không đổi gì.
+  // 05/11 pixellab-rowan: cờ này trước là ?rowancu=1; nay ?rowancu=1 = Rowan TRƯỚC PixelLab (thân + lớp vũ khí đặt theo điểm cầm, js/zed_moi.js
+  // G.ROWAN_PL) theo yêu cầu chủ game → đầu phiên C chuyển sang ?rowancu=dau (cùng tác dụng như ?rowancu=1 cũ, kèm luôn thân + lớp vũ khí).
+  if (G.ROWAN_DAU_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]rowancu=dau(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.ROWAN_DAU_CU = cu; }
+  // ROWAN PIXELLAB (05/11 pixellab-rowan): mặc định bật; ?rowancu=1 hoặc ?rowancu=dau → tắt (vẽ thân + lớp vũ khí như trước)
+  if (G.ROWAN_PL === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]rowancu=(1|dau)(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.ROWAN_PL = !tat; }
   // F4 (05/11, on-dinh-f4-chia-anh/bao-cao.md): vũ khí PixelLab nướng sẵn vào zed-vk / zed-vk-he / zed-vk-gan (mục "vk_moi"); tấm ChatGPT cũ giữ ở
   // <mã>-vkcu (mục "vk_cu_cua"), chỉ ở bản hai tệp (web), chỉ nạp khi ?vkpl=0 (G.VK_PL = false) — có tấm cũ thì bỏ tấm mới. Bản một tệp: cờ không đổi gì.
   if (G.VK_PL === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]vkpl=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.VK_PL = !tat; }
+  // 05/11 pixellab-quai-vung-1-2: quái vùng 1–2 vẽ lại bằng PixelLab mang thẳng mã quái cũ (tệp ghi "quai_moi"); tấm ChatGPT cũ thành <mã>-plcu
+  // (mục "quai_cu_cua"), chỉ ở bản hai tệp, chỉ nạp khi ?quaipl=0 (G.QUAI_PL = false, js/quai_pl.js cũng đọc cờ này) — có tấm cũ thì bỏ tấm mới.
+  if (G.QUAI_PL === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaipl=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_PL = !tat; }
   if (G.SAN_MOI === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]sanmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SAN_MOI = !tat; }
   if (G.ANH_MUOT_CU === undefined) {
     let cu = false;
@@ -15754,7 +15761,7 @@ MA._xong();
         if (!G.NET_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.net_cua });
       } else if (G.NET_CU && tep.net_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.net_cua === tep.ma)) return null;
-      if (typeof tep.dau_cua === 'string') { // phiên D: Rowan đầu cũ, chỉ khi ?rowancu=1
+      if (typeof tep.dau_cua === 'string') { // phiên D: Rowan đầu cũ, chỉ khi ?rowancu=dau
         if (!G.ROWAN_DAU_CU) return null;
         tep = Object.assign({}, tep, { ma: tep.dau_cua });
       } else if (G.ROWAN_DAU_CU && tep.dau_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.dau_cua === tep.ma)) return null;
@@ -15762,6 +15769,10 @@ MA._xong();
         if (G.VK_PL !== false) return null;
         tep = Object.assign({}, tep, { ma: tep.vk_cu_cua });
       } else if (G.VK_PL === false && tep.vk_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.vk_cu_cua === tep.ma)) return null;
+      if (typeof tep.quai_cu_cua === 'string') { // pixellab-quai-vung-1-2: quái ChatGPT cũ, chỉ khi ?quaipl=0
+        if (G.QUAI_PL !== false) return null;
+        tep = Object.assign({}, tep, { ma: tep.quai_cu_cua });
+      } else if (G.QUAI_PL === false && tep.quai_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.quai_cu_cua === tep.ma)) return null;
       if (typeof tep.san_cua === 'string') { // 17/10 sàn dịu: sàn cũ, chỉ khi ?sanmoi=0; có sàn cũ thì bỏ sàn mới
         if (G.SAN_MOI !== false) return null;
         tep = Object.assign({}, tep, { ma: tep.san_cua });
@@ -17492,7 +17503,7 @@ MA._xong();
       if (!t || typeof src !== 'string') return false;
       theoSrc.delete(src);
       const u = t._u;
-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : G.VK_PL === false && typeof t.vk_cu_cua === 'string' ? t.vk_cu_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
+      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : G.VK_PL === false && typeof t.vk_cu_cua === 'string' ? t.vk_cu_cua : G.QUAI_PL === false && typeof t.quai_cu_cua === 'string' ? t.quai_cu_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
       img.onload = null; img.onerror = null;
@@ -17532,7 +17543,7 @@ MA._xong();
     function bom0() {
       if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
       if (dang < MAX_GAP && hang.length) {
-        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (HOAN_TRUM ? (trumCan[it.vung] ? 1 : 99) : trumMo && it.vung === v ? 2 : 5) : 3);
+        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac && it.ma !== G.rowanPlMa ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (HOAN_TRUM ? (trumCan[it.vung] ? 1 : 99) : trumMo && it.vung === v ? 2 : 5) : 3);
         for (const it of hang) { it.u = uu(it); if (!it.dangTai && it.tt !== 'failed') it.tt = it.u >= 90 ? (it.tt === 'evicted' ? 'evicted' : 'idle') : 'queued'; }
         hang.sort((a, b) => a.u - b.u || a.co - b.co);
         // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
@@ -17604,7 +17615,7 @@ MA._xong();
         if (pxTong() * 4 <= NGAN_SACH) return;
         const t = Date.now(), ao = aoDangMac(); let n = 0;
         for (const it of theoMa.values()) {
-          if (!it.ve || !laAo(it) || it.ma === ao || (it.tCan && t - it.tCan < 12000)) continue;
+          if (!it.ve || !laAo(it) || it.ma === ao || it.ma === G.rowanPlMa || (it.tCan && t - it.tCan < 12000)) continue;
           if (it.tr && performance.now() - (it.tr.tVe || 0) < 12000) continue;
           if (coTheBo(it) && boAnh(it)) n++;
         }
@@ -17820,6 +17831,7 @@ MA._xong();
     // ?bonhocu=1: tải cả ba như cũ.
     function laAo(it) {
       if (G.BO_NHO_CU || !it || typeof it.ma !== 'string' || it.ma === 'zed-rowan') return false;
+      if (it.ma.indexOf('zed-rowan-pl-') === 0) return true; // 05/11 pixellab-rowan: tấm Rowan PixelLab theo vũ khí — chỉ tải tấm đang cầm (G.rowanPlMa, js/zed_moi.js) như trang phục
       if (it.ma === 'zed-moi' && (G.TRANG_CU || G.ROWAN_HINH === false)) return false; // F4: hình mặc định là Rowan → tấm ninja cũ zed-moi cũng chỉ tải khi cần (như trang phục)
       const B = G.ZED_BO;
       if (!B) return false;
@@ -17872,7 +17884,7 @@ MA._xong();
       const ao = /^(chọn|vào ải)/.test(ly) ? aoDangMac() : null; // tấm trang phục không mặc: chỉ bỏ lúc đổi vùng (không bỏ giữa lúc đang thử đồ)
       for (const it of theoMa.values()) {
         if (!it.ve || (it.tCan && t - it.tCan < 20000)) continue;
-        if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao) || (HOAN_TRUM && it.trum && !trumCan[it.vung])) { if (coTheBo(it)) ung.push(it); }
+        if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao && it.ma !== G.rowanPlMa) || (HOAN_TRUM && it.trum && !trumCan[it.vung])) { if (coTheBo(it)) ung.push(it); }
       }
       ung.sort((a, b) => (a.tNhan || 0) - (b.tNhan || 0)); // giải mã xong sớm nhất (cũ nhất) bỏ trước
       const truoc = pxTong(), bo = new Set();
