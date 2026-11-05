@@ -106,7 +106,10 @@ async function boLuat(b, ten, rulesFile) {
     const c = await taoPhong(A); await anh(A, '01_chu_tao');
     await vaoMa(B, c); await choSanh2(A, B, '1 vào bằng mã'); await ready(A); await ready(B);
     await anh(B, '02_khach_ready');
-    await choTran(A, B, '1 vào bằng mã'); await sleep(800); await anh(A, '03_chu_tran'); await anh(B, '04_khach_tran');
+    await choTran(A, B, '1 vào bằng mã');
+    const vaoBan = await Promise.all([A, B].map(X => X.p.waitForFunction(() => typeof TAI !== 'undefined' && !TAI.cho && G.ban.length === 2 && !document.querySelector('#top').hidden, null, { timeout: 40000 }).then(() => true).catch(() => false)));
+    kt(vaoBan[0] && vaoBan[1], ten + ' · 1: tải xong, cả 2 ở bàn trận');
+    await sleep(2500); await anh(A, '03_chu_tran'); await anh(B, '04_khach_tran');
     await xong(B, A);
   }
   // 2) link mời
