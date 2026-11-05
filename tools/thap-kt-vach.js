@@ -10,7 +10,7 @@ const DECK = ['lophanung', 'radar', 'lien', 'bang', 'canon'];
 const KT_VACH = () => {
   const WX0 = .156, WX1 = .844, WY0 = .189, WY1 = .838, TL = 271 / 328, hong = [], tong = { khung: 0 };
   const hien = (e) => { const r = e.getBoundingClientRect(); if (r.width < 4 || r.height < 4) return false; for (let x = e; x; x = x.parentElement) { const c = getComputedStyle(x); if (c.display === 'none' || c.visibility === 'hidden' || +c.opacity === 0) return false; } return true; };
-  const hop = (e) => { const s = e.style.scale; e.style.scale = 'none'; const t = e.style.transform; const r = e.getBoundingClientRect(); e.style.scale = s; e.style.transform = t; return r; };
+  const hop = (e) => { const s = e.style.scale, tl = e.style.translate; e.style.scale = 'none'; e.style.translate = 'none'; const t = e.style.transform; const r = e.getBoundingClientRect(); e.style.scale = s; e.style.translate = tl; e.style.transform = t; return r; }; // hộp ảnh = cửa sổ (phóng/dời bên trong do js/chandung.js, clip-path giữ trong hộp)
   for (const k of document.querySelectorAll('img.kh, img.vt-khung')) {
     if (!hien(k) || !/the_khung_/.test(k.getAttribute('src') || '')) continue;
     tong.khung++;

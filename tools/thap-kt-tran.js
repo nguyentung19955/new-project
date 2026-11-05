@@ -112,7 +112,7 @@ const doDu = async (p) => {
         const nhay = await p.evaluate(async () => {
           HM.dong(true); HM.di('dk'); const l = document.getElementById('chon-luoi'); l.scrollTop = 0; UI.chon = []; UI.veBoChon(); HM.ve();
           await new Promise(r => setTimeout(r, 300));
-          const vt = () => [...l.querySelectorAll('.c[data-id]')].slice(0, 12).map(c => { const r = c.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top)]; });
+          const vt = () => [...l.querySelectorAll('.c[data-id]')].slice(0, 12).map(c => { const r = c.getBoundingClientRect(), z = c.style.translate, sc = c.style.scale; c.style.transition = 'none'; c.style.translate = 'none'; c.style.scale = 'none'; const q = c.getBoundingClientRect(); c.style.translate = z; c.style.scale = sc; c.style.transition = ''; return [Math.round(q.left), Math.round(q.top)]; }); // bố cục (bỏ nhấc 4 px + scale của thẻ ĐANG CHỌN — chonthe.css, có chủ đích)
           const a = vt(), st = l.scrollTop; HM.them(l.querySelector('.c[data-id]').dataset.id);
           await new Promise(r => setTimeout(r, 500));
           const c = vt(); let d = 0; a.forEach((x, i) => { d = Math.max(d, Math.abs(x[0] - c[i][0]), Math.abs(x[1] - c[i][1])); });

@@ -61,6 +61,8 @@ html body #chon #chon-luoi .c .ten { top: auto; bottom: 0; height: 20px; padding
 html body #chon #chon-luoi .c .ten[style] { font-size: 13.5px !important; }
 /* đang chọn: vòng sáng PNG quanh khung (không đè cửa sổ mặt), KHÔNG đế xanh tràn; chỉ thẻ khoá mới tối */
 html body #chon #chon-luoi .c .sel-d { display: none; }
+/* viền ĐANG CHỌN tĩnh (chonthe.css, khung_chon.png) ôm đúng khung 110 px giữa cột */
+html.co-khung body #chon #chon-luoi .c.co-kh.chon::after { left: calc(50% - var(--kw) / 2 - 7px); right: auto; width: calc(var(--kw) + 14px); }
 html.co-khung body #chon #chon-luoi .c.co-kh .sel-v { left: calc(50% - var(--kw) * .59); width: calc(var(--kw) * 1.18); top: calc(var(--khh) * -.09); height: calc(var(--khh) * 1.18); }
 html.co-khung body #chon #chon-luoi .c.co-kh .sel-b { left: calc(50% - var(--kw) * .8); width: calc(var(--kw) * 1.6); }
 /* PLAY dính đáy 66 cao */
