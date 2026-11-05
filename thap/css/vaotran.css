@@ -1,0 +1,68 @@
+/* MÀN MỞ ĐẦU TRẬN (js/vaotran.js) — chỉ ảnh ChatGPT: bang_trum_nen / bang_wave_nen (băng tiêu đề, cắt 9 mảnh), khung_bang (tấm trùm),
+   the_khung_<bậc> / the_khung_mv (khung thẻ), h2_tam_mong (tấm chữ), dải trum_<id>_8 (chạy khung bằng background-position).
+   Nền mờ phía sau = lớp che chức năng (không phải vật thể). */
+#nd-gt.vt { z-index: 16; background: #04060ad0; align-items: flex-start; }
+#nd-gt.vt.vao { animation: vt-mo .2s ease-out; }
+#nd-gt.vt.ra { opacity: 0; transition: opacity .22s; }
+@keyframes vt-mo { from { opacity: 0; } to { opacity: 1; } }
+#nd-gt .vt-cot { width: 418px; margin-top: 74px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#nd-gt.hai .vt-cot { margin-top: 46px; gap: 9px; }
+#nd-gt section { width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+/* băng tiêu đề */
+#nd-gt .vt-bang { width: 300px; height: 46px; display: flex; align-items: center; justify-content: center; border: 0 solid transparent;
+  border-image: url(../assets/bang_wave_nen.png) 40 110 fill / 16px 46px stretch; animation: vt-bang .32s cubic-bezier(.2,1.4,.4,1) both; animation-delay: var(--t, 0s); }
+#nd-gt .vt-bang.do { border-image-source: url(../assets/bang_trum_nen.png); }
+#nd-gt .vt-bang b { font-family: var(--f-ui, inherit); font-size: 16px; font-weight: 900; letter-spacing: 1.5px; color: #fff; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
+#nd-gt .vt-bang.do b { color: #ffe1dc; }
+#nd-gt .vt-bo .vt-bang { width: 240px; height: 38px; border-image-width: 14px 40px; animation-delay: var(--t); }
+#nd-gt .vt-bo .vt-bang b { font-size: 14px; }
+@keyframes vt-bang { from { opacity: 0; transform: scaleX(.3); } to { opacity: 1; transform: none; } }
+
+/* thẻ trùm */
+#nd-gt .vt-hang { display: flex; justify-content: center; gap: 6px; margin-top: 6px; width: 100%; }
+#nd-gt .vt-tt { position: relative; width: 132px; padding: 12px 8px 12px; display: flex; flex-direction: column; align-items: center; border: 0 solid transparent;
+  border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; animation: vt-pop .36s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(.12s + var(--i) * .14s); }
+#nd-gt .vt-tt .vt-w { font-size: 10px; font-weight: 900; letter-spacing: 1px; color: #ffcf6a; text-shadow: 0 1px 0 #000; }
+#nd-gt .vt-tt.dau .vt-w { color: #ff8a7a; }
+#nd-gt .vt-sp { display: block; width: 84px; height: 84px; margin: 2px 0 1px; background: 0 0 / calc(var(--nf) * 100%) 100% no-repeat; animation: vt-8 .9s steps(8) infinite; filter: drop-shadow(0 3px 2px #000c); }
+#nd-gt .vt-sp[style*="--nf:4"] { animation-name: vt-4; animation-timing-function: steps(4); }
+@keyframes vt-8 { from { background-position: 0 0; } to { background-position: -672px 0; } }
+@keyframes vt-4 { from { background-position: 0 0; } to { background-position: -336px 0; } }
+#nd-gt .vt-tt b { width: 100%; text-align: center; white-space: nowrap; overflow: hidden; font-size: 13px; font-weight: 900; letter-spacing: .5px; color: var(--m); text-shadow: 0 1px 0 #000, 0 0 4px #000; }
+#nd-gt .vt-tt .vt-ng { margin-top: 2px; text-align: center; font-size: 10.5px; line-height: 1.25; font-weight: 700; color: #e4e7ec; text-shadow: 0 1px 0 #000; min-height: 26px; }
+#nd-gt .vt-tt .vt-dd { margin-top: 3px; display: flex; align-items: center; gap: 3px; font-size: 8.5px; font-weight: 800; color: #9fe6ff; white-space: nowrap; max-width: 100%; overflow: hidden; }
+#nd-gt .vt-tt .vt-dd i { width: 20px; height: 20px; flex: none; background: 0 0 / calc(var(--nf) * 100%) 100% no-repeat; }
+#nd-gt.hai .vt-sp { width: 70px; height: 70px; }
+#nd-gt.hai .vt-sp { animation-name: vt-8s; }
+#nd-gt.hai .vt-sp[style*="--nf:4"] { animation-name: vt-4s; }
+@keyframes vt-8s { from { background-position: 0 0; } to { background-position: -560px 0; } }
+@keyframes vt-4s { from { background-position: 0 0; } to { background-position: -280px 0; } }
+#nd-gt.hai .vt-tt { padding: 9px 7px 14px; }
+#nd-gt.hai .vt-tt .vt-ng { min-height: 0; }
+@keyframes vt-pop { from { opacity: 0; transform: translateY(-14px) scale(.8); } to { opacity: 1; transform: none; } }
+
+/* thẻ bộ bài: khung ảnh ChatGPT đặt TRÊN chân dung, ô cửa sổ x 15.6–84.4 %, y 18.9–83.8 % */
+#nd-gt .vt-bo .vt-hang { gap: 4px; }
+#nd-gt .vt-the { width: 64px; display: flex; flex-direction: column; align-items: center; animation: vt-truot .34s cubic-bezier(.2,1.2,.4,1) both; animation-delay: calc(var(--t) + .1s + var(--i) * .07s); }
+#nd-gt .vt-the.vt-cmd { width: 70px; margin-left: 4px; }
+#nd-gt .vt-kh { position: relative; width: 100%; aspect-ratio: 132 / 160; }
+#nd-gt .vt-khung { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
+#nd-gt .vt-po { position: absolute; z-index: 1; left: 15.6%; top: 18.9%; width: 68.8%; height: 64.9%; object-fit: contain; }
+#nd-gt .vt-po.pilot { object-fit: cover; object-position: 50% 8%; }
+#nd-gt .vt-ten { width: 100%; height: 16px; margin-top: 1px; display: flex; align-items: center; justify-content: center; gap: 2px; }
+#nd-gt .vt-ten img { width: 14px; height: 14px; flex: none; }
+#nd-gt .vt-ten b { min-width: 0; white-space: nowrap; overflow: hidden; font-size: 10px; font-weight: 900; text-transform: uppercase; text-shadow: 0 1px 0 #000; }
+@keyframes vt-truot { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: none; } }
+
+/* chạm để bắt đầu */
+#nd-gt .vt-cham { width: 230px; height: 40px; margin-top: 4px; display: flex; align-items: center; justify-content: center; background: url(../assets/h2_tam_mong.png) center / 100% 100% no-repeat;
+  animation: vt-nhay 1s ease-in-out infinite alternate, vt-pop .3s both; animation-delay: 1.4s; }
+#nd-gt .vt-cham b { font-size: 12px; font-weight: 900; letter-spacing: 1.5px; color: #e9edf2; }
+@keyframes vt-nhay { from { opacity: .55; } to { opacity: 1; } }
+
+/* chip "Boss in N": chân dung trùm (khung 0 của dải) thay icon cảnh báo */
+#tb-trum .vt-chip { flex: none; width: 18px; height: 18px; margin: -2px 0; background: 0 0 / calc(var(--nf, 8) * 100%) 100% no-repeat; }
+#tb-trum.co-vt > img { display: none; }
+.co-hud2 #tb-trum .vt-chip { width: 17px; height: 17px; }
+@media (prefers-reduced-motion: reduce) { #nd-gt .vt-sp { animation: none; } #nd-gt .vt-cham { animation: none; } }

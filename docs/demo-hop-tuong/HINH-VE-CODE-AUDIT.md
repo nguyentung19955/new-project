@@ -676,6 +676,7 @@ Còn lại sau pass 2: Q5 (thẻ chỉ huy ở menu — thẻ ngang, khung dọc
 Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style as attached):
 - **P3-1 icon mất tín hiệu** (đính kèm `vong_xich.png` + `ui_canh_bao_trum.png`): "Game UI icon, broken wireless signal: three curved signal arcs above a small antenna, cracked with a red X, chunky metal sci-fi style, thick dark outline, same style as attached, centered, solid #FF00FF background, no text. 512x512."
 - **P3-2 dải đầy thanh tải** (đính kèm `hud_trum_khung.png`): "Horizontal glowing energy fill strip for a loading bar, golden-amber with bright core and subtle segment ticks, seamless left-to-right, same style as attached, solid #FF00FF background, no text. 1024x128."
+- **P3-3 khung xem trước trùm** (màn mở đầu trận `thap/js/vaotran.js`; tạm dùng `khung_bang` 9 mảnh; đính kèm `khung_bang.png` + `bang_trum_nen.png`): "Game UI portrait frame for a boss preview card, tall rectangle 3:4, heavy dark gunmetal with red hazard stripes and a small red warning lamp at top, empty dark inner window, chunky sci-fi style, thick dark outline, same style as attached, solid #FF00FF background, no text. 768x1024." → cắt khoá magenta, lưu `thap/assets/khung_trum_xem.png` (bản gốc `thap-art/`), thay `border-image` của `#nd-gt .vt-tt` trong `thap/css/vaotran.css`.
 
 ## 8. Test range (skilldemo.js) — bỏ hình vẽ code, cần thêm 1 ảnh (S12)
 
