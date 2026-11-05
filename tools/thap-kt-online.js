@@ -131,10 +131,20 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   await Bp.p.screenshot({ path: OUT + '09b_B_ket_qua.png' });
   const hs = await A.p.evaluate(() => TK.ho);
   kt(hs.games >= 1 && hs.bestWave >= 2, 'Hồ sơ cập nhật sau trận: ' + JSON.stringify(hs));
-  await sleep(1800);
+  // hết trận: chủ phòng xoá phòng sau 5 s; khách rời im lặng
+  await sleep(6500);
+  const conPhong = await A.p.evaluate((c) => NET.get('rooms/' + c + '/meta'), code);
+  const kCode = await Bp.p.evaluate(() => ONL.code);
+  kt(conPhong === null && kCode === null, 'Hết trận: chủ phòng đã xoá phòng ' + code + ', khách tự rời');
   await A.p.click('#ketqua [data-act="choilai"]'); await Bp.p.click('#ketqua [data-act="choilai"]');
-  await A.p.waitForSelector('#onl-sanh:not([hidden])', { timeout: 8000 }); await Bp.p.waitForSelector('#onl-sanh:not([hidden])', { timeout: 8000 });
-  kt(true, 'PLAY AGAIN → cả 2 về sảnh phòng ' + code);
+  await A.p.waitForSelector('#onl-bang:not([hidden])', { timeout: 8000 }); await Bp.p.waitForSelector('#onl-bang:not([hidden])', { timeout: 8000 });
+  kt(true, 'PLAY ONLINE AGAIN → cả 2 về bảng ONLINE');
+  await A.p.click('[data-act="onl-tao"]');
+  await A.p.waitForFunction((c) => { const t = (document.querySelector('#sanh-ma') || {}).textContent || ''; return /^[A-Z]{4}$/.test(t) && t !== c && !document.querySelector('#onl-sanh').hidden; }, code, { timeout: 8000 });
+  const code2 = await A.p.textContent('#sanh-ma');
+  await Bp.p.fill('#onl-ma', code2); await Bp.p.click('[data-act="onl-vao"]');
+  await Bp.p.waitForSelector('#onl-sanh:not([hidden])', { timeout: 8000 });
+  kt(true, 'Phòng mới ' + code2 + ': cả 2 vào sảnh');
   await sleep(800);
   await A.p.click('#sanh-san'); await Bp.p.click('#sanh-san');
   await A.p.waitForFunction(() => ONS.on && G.ban.length === 2 && !G.ketThuc, null, { timeout: 15000 });

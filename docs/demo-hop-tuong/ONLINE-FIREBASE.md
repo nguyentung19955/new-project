@@ -37,19 +37,24 @@ Bản luật chặt hơn ở mục 4 (đúng yêu cầu: phòng chỉ thành vi�
 
 - Menu: chip **tài khoản** (góc trên trái: ảnh + tên + GUEST/GOOGLE) → đổi tên, chọn ảnh phi công, xem Best wave / Wins / Matches,
   **SIGN IN WITH GOOGLE**: khách đang chơi được **nối** vào Google (giữ nguyên hồ sơ); Google đã có hồ sơ ở máy khác → chuyển sang hồ sơ đó.
-  Máy tính + Safari iPhone: cửa sổ bật lên (popup). Mở từ màn hình chính iPhone / popup bị chặn → chuyển trang (redirect).
-  *Ghi chú:* đề muốn "redirect trên iOS Safari", nhưng redirect từ github.io sang trang đăng nhập `turret-merge.firebaseapp.com` bị Safari
-  chặn bộ nhớ chéo tên miền (ITP) nên hay mất kết quả → dùng popup trước, redirect chỉ là đường dự phòng.
+  Máy tính: cửa sổ bật lên (popup; bị chặn → tự chuyển trang). iPhone/iPad (Safari, cả khi mở từ màn hình chính): **chuyển trang (redirect)**,
+  kết quả xử lý khi trang mở lại (`getRedirectResult`). Khách → Google dùng `linkWithPopup` / `linkWithRedirect` nên **giữ nguyên uid**.
+  *Rủi ro đã biết:* Safari chặn bộ nhớ chéo tên miền (ITP) giữa `github.io` và `turret-merge.firebaseapp.com`; nếu trên iPhone bấm Google
+  xong quay lại vẫn ghi GUEST → báo lại để đổi sang popup (1 dòng trong `net.js`: `chuyenTrang = this.laIOS() || this.laApp()`).
 - Nút **ONLINE** (hàng chế độ) → **CREATE ROOM** (mã 4 chữ + **SHARE INVITE LINK** `…/thap/?phong=ABCD`) hoặc gõ mã → **JOIN**.
 - Sảnh: thẻ 2 người (ảnh, tên, đèn online, 5 ụ + chỉ huy, READY). Cả 2 **READY** → cùng vào trận. Phòng đủ 2 người → người thứ 3 "Room is full".
 - Trong trận: mỗi người điều khiển bàn của mình (bàn dưới); bàn trên là đồng đội thật, nhãn bàn ghi `Tên · NN ms` (độ trễ). 3 tim chung.
   Tốc độ khoá 1×; nút tạm dừng = tạm dừng cả 2.
 - Mất mạng / bạn kia thoát: trận dừng, đếm 10 s. Quay lại kịp → chơi tiếp. Quá 10 s → **CONTINUE WITH AI** (bàn bạn kia giao cho máy) hoặc **END MATCH**.
   Tải lại trang giữa trận → ONLINE → **REJOIN MATCH** (khôi phục bàn + wave + tim).
-- Hết trận → **BACK TO ROOM** (cả 2 về sảnh, READY lại) / **LEAVE ROOM**.
+- Hết trận → chủ phòng **xoá phòng** sau 5 s (khách nhận kết quả trước rồi tự rời) → **PLAY ONLINE AGAIN** (mở bảng ONLINE, tạo / vào phòng mới) / **EDIT DECK**.
+- Phòng cũ hơn **2 giờ** (`meta.at`) bị bỏ qua: JOIN báo "not found", REJOIN không hiện; tạo phòng không ghi đè phòng của người khác (đổi mã).
 - CO-OP với máy (offline), SOLO, PVP giữ nguyên. `?net=0` = tắt online.
 
-## 4. Luật Realtime Database chặt hơn (dán vào tab Rules — tuỳ chọn, khuyên dùng)
+## 4. Đề xuất rules (chặt hơn — tuỳ chọn, khuyên dùng)
+
+**Code KHÔNG cần đổi rules**: đã kiểm với máy chủ giả thi hành đúng rules đang publish (mục 1) — 0 lần bị từ chối (mục 6).
+Bản dưới chỉ để tăng bảo mật; phiên này **không** đổi console.
 
 ```json
 {
@@ -238,8 +243,8 @@ Luật làm gì:
   người ngoài chỉ đọc `meta` (để biết phòng có tồn tại). Vào phòng = ghi `khach` (chỉ khi còn trống) + `members/{mình}` trong 1 lần → tối đa 2 người.
   Mỗi người chỉ ghi `pl/` `snap/` `ping/` của mình; `act/` chỉ thêm mới, không sửa/xoá của người khác, ≤ 1000 ký tự; `snap` ≤ 3000 ký tự;
   `state` (tim, wave, kết thúc) chỉ chủ phòng ghi; chủ phòng xoá được phòng.
-- **Dọn rác (TTL)**: Realtime Database không tự xoá theo thời gian. Game tự xoá phòng khi chủ phòng rời phòng; phòng bỏ dở quá **6 giờ**
-  thì ai cũng xoá được (luật cho phép) — game tự xoá khi tình cờ tạo trúng mã đó. Mỗi phòng vài chục KB; gói Spark (1 GB lưu, 10 GB tải/tháng,
+- **Dọn rác (TTL)**: Realtime Database không tự xoá theo thời gian. Game tự xoá phòng khi chủ phòng rời phòng **và khi hết trận**;
+  phòng bỏ dở quá **2 giờ** bị game bỏ qua (luật đề xuất còn cho phép ai cũng xoá phòng > 6 giờ; game không tự xoá phòng của người khác). Mỗi phòng vài chục KB; gói Spark (1 GB lưu, 10 GB tải/tháng,
   100 kết nối cùng lúc) dư cho chơi thử. Dọn tay: Realtime Database → Data → `turretmerge/rooms` → xoá.
 
 ## 5. Kỹ thuật đồng bộ ("lockstep-lite")
@@ -271,6 +276,23 @@ Kết quả: `docs/demo-hop-tuong/tuvan/online/ket-qua.txt` + ảnh cùng thư m
 Đã kiểm thêm: SOLO / CO-OP máy / PVP chơi bình thường, không lỗi; SDK Firebase thật tải + khởi tạo không lỗi JS (chỉ lỗi mạng của máy kiểm).
 Trình duyệt tự động (navigator.webdriver) không gọi Firebase thật trừ khi có `?net=fb` (để bài kiểm của các phiên khác không bị lỗi mạng).
 Chưa chạy thử trên Firebase thật — lần đầu mở trên điện thoại nếu chip ghi `OFFLINE` / bảng ghi lỗi, chụp màn hình gửi lại.
+
+### Kiểm thêm theo đúng rules đang publish (phiên 2, 2026-11-05)
+
+Firebase thật vẫn bị mạng máy kiểm chặn (403 cho `gstatic`, `identitytoolkit.googleapis.com`, `*.firebasedatabase.app`) → chạy
+**đúng đường code Firebase** (`?net=fb`, `NET._moFirebase`) nhưng thay 3 tệp `js/online/vendor/*` bằng SDK giả nối tới máy chủ giả
+**thi hành nguyên văn rules đang publish** (đọc chỉ ở `profiles/$uid`, `rooms/$code`; ghi `rooms/$code` chỉ khi phòng chưa có / đã là
+`members/{uid}` / tự thêm mình vào `members`). Công cụ: `tools/thap-fb-gia/` (`server.js`, `client.js`, `kt-2-may.py`).
+Kết quả (2 context Playwright 390×844, ảnh `tuvan/online/2may_*.jpg` — 2 điện thoại cạnh nhau):
+- Khách ẩn danh mặc định ✔ · nối Google: máy tính = popup, iPhone UA = redirect, **uid giữ nguyên** cả 2 ✔
+- Phòng 3 giờ tuổi → "Room not found" ✔ · mã sai → "not found" ✔ · tạo phòng + JOIN → `members` có đúng 2 uid ✔ · người thứ 3 → "full" ✔
+- Cả 2 READY → vào trận; 2 wave: cùng wave 3/3, bàn mình ↔ bàn đồng đội máy kia **15/15 ô** cả 2 chiều ✔
+- Tim chung: khách lọt 1 quái → host trừ → cả 2 còn 2/3 ✔
+- Đóng hẳn context khách → host "PARTNER DISCONNECTED" + dừng trận, `pl/{uid}/on=false` (onDisconnect) ✔ → mở lại (cùng uid) → REJOIN MATCH →
+  cùng wave, tim 2, bàn khôi phục 15/15, host chạy tiếp; chơi thêm 1 wave vẫn 15/15 ✔
+- Hết trận → cả 2 thấy kết quả; chủ phòng xoá phòng; khách tự rời im lặng; PLAY ONLINE AGAIN mở bảng ONLINE ✔
+- Máy chủ: **0 thao tác bị rules từ chối**, 0 phòng còn lại (đã xoá phòng thử), 0 lỗi trang.
+`tools/thap-kt-online.js` (máy chủ giả cũ) cũng cập nhật cho luồng mới: hết trận → phòng bị xoá → phòng mới → trận mới — toàn bộ OK.
 
 ## 7. Quay lui
 

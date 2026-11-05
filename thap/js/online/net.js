@@ -73,14 +73,14 @@ const NET = {
   },
   laIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); },
   laApp() { const m = (s) => !!(window.matchMedia && matchMedia(s).matches); return navigator.standalone === true || m('(display-mode: standalone)') || m('(display-mode: fullscreen)'); },
-  // Đăng nhập Google. Khách ẩn danh → NỐI tài khoản (giữ nguyên uid + hồ sơ). Google đã có tài khoản khác → chuyển sang tài khoản đó.
-  // Máy tính + Safari iPhone: cửa sổ bật lên (popup) — ổn định hơn chuyển trang khi trang game (github.io) khác tên miền đăng nhập.
-  // iPhone mở từ màn hình chính (không có popup) hoặc popup bị chặn → chuyển trang (redirect).
+  // Đăng nhập Google. Khách ẩn danh → NỐI tài khoản (linkWith…: giữ nguyên uid + hồ sơ). Google đã có tài khoản khác → chuyển sang tài khoản đó.
+  // Máy tính: cửa sổ bật lên (popup). iPhone/iPad (Safari, cả khi mở từ màn hình chính): chuyển trang (redirect) — kết quả xử lý ở
+  // getRedirectResult() lần mở trang sau. Popup bị chặn trên máy tính → tự chuyển sang redirect.
   dangNhapGoogle() {
     if (this.kieu === 'mock') return this._mockGui('google', {}).then(u => { this._baoTK(u); return u; });
     if (!this._auth) return Promise.reject(new Error('offline'));
     const fb = this._fb, pv = new fb.auth.GoogleAuthProvider(); pv.setCustomParameters({ prompt: 'select_account' });
-    const u = this._auth.currentUser, chuyenTrang = this.laApp();
+    const u = this._auth.currentUser, chuyenTrang = this.laIOS() || this.laApp();
     const lam = (kieu) => u && u.isAnonymous
       ? (kieu === 'popup' ? u.linkWithPopup(pv) : u.linkWithRedirect(pv))
       : (kieu === 'popup' ? this._auth.signInWithPopup(pv) : this._auth.signInWithRedirect(pv));
