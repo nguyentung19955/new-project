@@ -81,3 +81,12 @@ Playwright headless (rasterize phần mềm), cùng máy, trước → sau: DPR1
 - `raw_p4_board_1.png` → `thap/assets/san_tran.png` (cắt giữa 1:2, 768×1536 = độ nét raw; vẽ qua `REN.diu` cho tối/dịu).
 - `raw_p4_board_3.png` → `thap/assets/vong_nap_0..7.png` (khoá magenta theo khoảng cách màu + tách trộn nền, xám hoá để code tô màu ụ, nhân-trước-alpha Lanczos 160 px ≈ 3× cỡ vẽ 0.9·ô).
 - `REN.toMau` của khu board đổi tên `REN.toMauA` (support.js có `REN.toMau` riêng ghi đè, trả null khi ảnh chưa tải).
+
+## Dọn thanh bài trong trận (deckbar_cluttered_1/2: "nhiều thông tin · rối tinh rối mù")
+CSS cuối `thap/css/hudtop.css` (khối "DỌN THANH BÀI") + `nhandien.js` (không gắn đĩa nhận diện lên thẻ):
+- Thẻ ụ = chân dung trong khung độ hiếm + **1 tấm LV** (góc trên-phải). Bỏ khỏi thanh: icon vai trò (chip đỏ), đĩa nhận diện, số đếm "≡N", nhãn `.gu`, ngọc trong tấm giá (vai trò/chi tiết vẫn ở bảng chạm).
+- Giá nâng cấp = 1 tấm nhỏ dưới thẻ, chỉ số; thiếu mana = tấm tắt mờ; MAX = ẩn tấm giá.
+- Đủ mana nâng cấp = khung sáng `khung_chon.png` (ChatGPT) thở nhẹ quanh khung thẻ — không chữ/viên thuốc.
+- Chỉ huy = chân dung + giá (ẩn tên). Cụm mana + SUMMON + phím tốc độ giữ nguyên ảnh S10/S11.
+Trước/sau 360/390/430 × (đủ/thiếu mana): `tuvan/vetay/board/deckbar_truoc_*.jpg`, `deckbar_sau_*.jpg`, ghép `deckbar_so_sanh.png`. Chạy lại: `tools/thap-kt-deckbar.js`.
+Ảnh mới đề xuất (tuỳ chọn) — `HINH-VE-CODE-AUDIT.md` mục 16, raw_p4_board_4.
