@@ -889,3 +889,31 @@ Code: overlay vẽ sau thân quái, cỡ = `co × 1.1`, alpha 0.85, nhịp thở
 | **Tổng** | | **30** | **450** |
 
 Sau khi có ảnh: session sửa code thay theo cột "Code dùng" ở từng tờ; xoá dần `GFX.taoSprite` (23 sprite canvas), `REN.vet`, `REN.cham1` (cho hiệu ứng), `anhNon`, `veDrone`, các `ve()` dùng arc/gradient trong HU — theo `QUY-TAC-HINH.md`.
+
+---
+
+## Stage heads (đầu dạng 2/3 cho đầu v2)
+
+Đầu v2 (85 ụ, `thap/assets/<id>_nong.png`) đã thay đầu cũ → ảnh `_nong_s1/_s2/_s3` cũ **không còn khớp**. Tạm thời (`artscale.js` `STAGE_DAU_MOI`, `growfx.js` mục 7): cả 3 dạng dùng **đầu mới**, dạng 2 to ×1.04 + quầng viền màu dạng (bóng của chính ảnh đầu), dạng 3 ×1.08 + quầng đậm hơn + `fx_awaken.png`. Số cũ cất trong `STAGE_K_CHO` / `STAGE_TIP_CHO`.
+
+**Cần ảnh mới `_s2` + `_s3` cho 14 ụ** (dạng 1 = đầu v2 hiện tại, không cần gen). Gen theo cặp: đính kèm `thap/assets/<id>_nong.png`, 1 tờ 2 ô (trái = dạng 2, phải = dạng 3).
+Đầu prompt chung (dán trước mỗi dòng): *"Same turret head as attached, same style, top-down view, barrel pointing right, centered, same canvas size, solid magenta #FF00FF background, no text. 2 cells side by side: left = stage 2, right = stage 3 (stronger)."*
+
+| id | Tên | Dạng 2 / 3 | Prompt ngắn (sau đầu prompt chung) |
+|---|---|---|---|
+| overlord | Overlord | CHARGING / OVERCHARGED | `left: red energy coils glowing, crackling sparks on horns; right: horns longer, core blazing white-red, extra capacitor fins` |
+| hopbi | Mystery Box | UNSEALING / ABOUT TO OPEN | `left: lid straps loosening, purple light leaking from seams; right: lid cracked open, bright purple glow and floating question-mark gems` |
+| tienhoa | Evolver | FORGING / ASCENDING | `left: DNA tank glowing gold, extra vine-metal plating; right: golden wings of metal leaves, radiant core, crown spikes` |
+| lophanung | Cryo Reactor | HEATING / CRYO STORM READY | `left: ice crystals grow longer, core pulsing cyan; right: huge frost spikes all around, white-blue storm core, frost mist ring` |
+| soi | Werewolf | HUNTER / ALPHA | `left: bigger wolf head, red eyes, claws extended; right: alpha wolf with spiked armor mane, glowing red scars, bigger jaws` |
+| cuongno | Berserker | RAGE / FRENZY | `left: spikes heated orange, steam vents; right: red-hot glowing spikes, cracked armor leaking fire, twin barrels flared` |
+| ngoisao | Star Cannon | NOVA / SUPERNOVA | `left: star core brighter, extra golden star points; right: blazing white-gold supernova core, rays and bigger star crown` |
+| lienket | Chain Link | LINKED / CHAIN MASTER | `left: chains glowing purple, extra links; right: double chain ring, violet energy gem core, spiked chain hooks` |
+| dongbo | Sync Cannon | SYNCED / FULL SYNC | `left: orbit rings lit gold, twin barrel aligned; right: triple glowing rings, bright synchronized core, longer barrel` |
+| hydra | Hydra | MANY HEADS / FUSED HEAD | `left: five snake heads; right: heads fused into one huge emerald serpent head, glowing green eyes and gem` |
+| cuuvi | Nine-Tail | BLAZING TAILS / NINE-TAIL | `left: tails on fire orange; right: nine tails with white-blue foxfire, glowing fox mask` |
+| luoicheo | Resonance Grid | HUMMING / RESONANCE | `left: diamond nodes glowing teal; right: grid lines bright, crystal pylons at 4 corners, resonance core` |
+| ngaithoigian | Chrono Throne | TWELVE HOURS / THRONE OF TIME | `left: clock face with ruby hands glowing; right: grand throne of gears, ruby crown, floating golden clock rings` |
+| ronglua | Wyrm Engine | BLUE WYRM / WHITE WYRM | `left: dragon flames turn blue, horns longer; right: white-silver dragon head, white-blue fire, armored crest` |
+
+Khi có ảnh: cắt khoá magenta, 256 px, thân đúng tâm (chạy lại đo ở `tools/thap-dau-v2.py`), lưu `<id>_nong_s1` (= đầu v2), `_s2`, `_s3`; chuyển id từ `STAGE_K_CHO`/`STAGE_TIP_CHO` về `STAGE_K`/`STAGE_TIP` (đo lại K) và xoá khỏi `STAGE_DAU_MOI`.

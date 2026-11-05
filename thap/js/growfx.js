@@ -159,7 +159,7 @@ VX.duoiDau = function (ctx, T, S, al, R) {
   if (!laGrow(T.id) || T.st.da) return;
   const g = GROW[T.id], m = g.mau;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  if (T.gd === 3 && g.khongAnh) { ctx.globalAlpha = al * (0.24 + 0.08 * Math.sin(this.t * 6)); REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.1); }
+  if (T.gd === 3 && g.khongAnh && !g.dauMoi) { ctx.globalAlpha = al * (0.24 + 0.08 * Math.sin(this.t * 6)); REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.1); }
   if (T.gd === 3) {
     const B = T.vxB, vao = B && B.len ? clamp((this.t - B.t0 - 0.33) / 0.25, 0, 1) : 1;
     const aw = m === '#ff4b3e' || m === '#ff5040' || m === '#ffd23f' || m === '#ffe46b' ? REN.img('fx_awaken') : this.toMau(REN.img('fx_awaken'), m);
@@ -753,6 +753,30 @@ for (const id of Object.keys(GROW)) if (SKILLS[id]) {
   moVeThem(id);
   const g = GROW[id], f = g.gd;
   if (!g._gfxEp) { g._gfxEp = true; g.gd = (T) => { const r = f(T), ep = T._epGd || (G.debug && G.debug.gd); if (ep) r.s = ep; return r; }; }
+}
+// =====================================================================================================
+// 7) ĐẦU v2 (85 đầu vẽ lại): ảnh dạng _s1/_s2/_s3 cũ không khớp đầu mới → cả 3 dạng dùng ĐẦU MỚI <id>_nong
+//    (artscale.js STAGE_DAU_MOI = hệ số cỡ dạng 1/2/3). Dạng 2/3: quầng viền = bóng của CHÍNH ảnh đầu (REN.co 'trang')
+//    tô màu dạng, to hơn đầu một chút, vẽ cộng sáng ngay dưới đầu; dạng 3 thêm fx_awaken như cũ. Không vẽ hình bằng code.
+//    Khi có ảnh dạng mới: đưa id về STAGE_K/STAGE_TIP (artscale.js) → tự dùng lại ảnh _s.
+// =====================================================================================================
+const SDM = window.STAGE_DAU_MOI || {};
+const laDauMoi = (id) => !!(SDM[id] && !(window.STAGE_K && STAGE_K[id]));
+for (const id of Object.keys(SDM)) if (GROW[id] && laDauMoi(id)) { GROW[id].khongAnh = true; GROW[id].dauMoi = true; }
+if (GFX.coDOM && typeof REN !== 'undefined') {
+  const kGoc = REN.dauK, veGoc = REN.veDauLop;
+  REN.dauK = function (id, gd) { return gd && laDauMoi(id) ? this.kDau(id) * SDM[id][gd - 1] : kGoc.call(this, id, gd); };
+  REN.veDauLop = function (ctx, id, gd, C, al, sc, da, bien) {
+    if (gd >= 2 && !bien && !da && laDauMoi(id) && GROW[id] && !GFX.tat) {
+      const D = C * this.dauK(id, gd) * (sc || 1) * (gd === 3 ? 1.13 : 1.08), tr = this.co(this.dauTen(id, gd), D, 'trang'), q = tr && VX.toMau(tr, GROW[id].mau);
+      if (q) {
+        const a0 = ctx.globalAlpha, op = ctx.globalCompositeOperation;
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (gd === 3 ? 0.5 + 0.15 * Math.sin(VX.t * 5) : 0.34);
+        ctx.drawImage(q, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = op; ctx.globalAlpha = a0;
+      }
+    }
+    return veGoc.call(this, ctx, id, gd, C, al, sc, da, bien);
+  };
 }
 if (GFX.coDOM && typeof REN !== 'undefined') GFX.taoSprite();
 window.GFX = GFX;
