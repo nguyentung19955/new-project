@@ -103,7 +103,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 @keyframes run { to { transform: scale(1.08) rotate(-3deg); } }
 
 /* ---------- bảng thông tin ---------- */
-#tt { --m: #9aa6b4; position: absolute; left: 10px; right: 10px; top: 470px; z-index: 12; display: flex; gap: 10px; padding: 10px; border-radius: 12px; background: #15171cf4; border: 1.5px solid var(--m); box-shadow: 0 10px 24px #000c; }
+#tt { --m: #9aa6b4; pointer-events: none; position: absolute; left: 10px; right: 10px; top: 470px; z-index: 12; display: flex; gap: 10px; padding: 10px; border-radius: 12px; background: #15171cf4; border: 1.5px solid var(--m); box-shadow: 0 10px 24px #000c; }
 #tt .tt-the { position: relative; width: 72px; height: 72px; flex: none; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #1f232a; border: 1.5px solid var(--m); overflow: hidden; }
 #tt .tt-anh { width: 60px; height: 60px; }
 #tt .tt-than { flex: 1; min-width: 0; }
@@ -112,7 +112,16 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #tt .tt-bac { flex: none; font-size: 10px; font-weight: 900; height: 18px; line-height: 16px; padding: 0 6px; border-radius: 5px; color: var(--m); border: 1px solid var(--m); background: #000; text-align: center; }
 #tt .tt-phu { font-size: 11px; color: #9aa3b2; font-weight: 700; margin: 2px 0 6px; }
 #tt .tt-kn { font-size: 13px; font-weight: 700; line-height: 1.35; color: #e8ecf2; }
-#tt .tt-so { font-size: 11px; font-weight: 800; color: #ffe46b; margin-top: 6px; }
+#tt .tt-so { font-size: 11px; font-weight: 800; color: #ffe46b; margin-top: 5px; }
+#tt .tt-so > div { line-height: 1.3; margin-top: 3px; }
+#tt .tt-so .d-grow, #tt .tt-so .d-ho, #tt .tt-so .d-moc { font-size: 10.5px; font-weight: 700; color: #c9d1dc; }
+#tt .tt-so .d-ho i { font-style: normal; color: #9fe6ff; }
+#tt .tt-so .d-moc span { font-weight: 900; color: #7d8590; }
+#tt .tt-so .d-moc span.co { color: #ffe46b; }
+/* thẻ ụ grow-up / thức tỉnh */
+.the .gu, .c .gu { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); top: 17px; padding: 0 4px; height: 11px; line-height: 11px; border-radius: 3px; font-size: 7.5px; font-weight: 900; letter-spacing: .3px; white-space: nowrap;
+  color: #1a0f00; background: linear-gradient(90deg, #ffd23f, #ff8a3a); box-shadow: 0 0 6px #ff8a3a99; }
+.c .gu { top: 4px; }
 
 /* ---------- màn chọn ---------- */
 .man { position: absolute; inset: 0; z-index: 10; }

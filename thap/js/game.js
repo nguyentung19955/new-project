@@ -76,7 +76,7 @@ function deckNgauNhien(tru) {
 function batDau(che, deck, mv) {
   G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0;
   G.wave = 0; G.tWave = 0; G.t = 0; G.ketThuc = null; G.dung = false; G.cho = 1.2;
-  FX.reset();
+  FX.reset(); VX.reset();
   const bc = boCuc(che);
   G.chung = !!bc.chung;
   G.ban = bc.ban.map((d, i) => taoBan(d, i, i === 0 ? deck : (G.debug.deck2 || deckNgauNhien()), i === 0 ? mv : pick(Object.keys(MAVUONG))));
@@ -110,7 +110,7 @@ function trieu(B, mienPhi, idEp) {
   const id = idEp || pick(B.deck);
   const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
-  T.anim = { k: 'tha', t: 0 };
+  VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
   return T;
 }
 function hopLeGhep(a, b) {
@@ -142,17 +142,20 @@ function ghep(B, a, b, ep) {
   const coMimic = a.id === 'mimic' || b.id === 'mimic';
   const ra = sinhU(taoU(B2, pick(B2.deck), Math.min(LUAT.saoMax, b.sao + 1), b.o));
   B2.t[a.o] = null; B2.t[b.o] = ra;
-  ra.anim = { k: 'no', t: 0 };
   ra.goc = b.goc;
   if (coMimic) ra.aurora = 8; // Aurora: ghép xong được buff tấn công
-  G.bay.push({ id: a.id, sao: a.sao, x0: B2.o[a.o].x, y0: B2.o[a.o].y, x1: B2.o[b.o].x, y1: B2.o[b.o].y, t: 0, bac: a.bac });
-  const c = B2.o[b.o];
-  FX.vong1(c.x, c.y, 8, 46, '#ffffff', 0.35, 4);
-  FX.tiaLua(c.x, c.y, 16, tierOf(ra.id).mau, 190, 12);
-  // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…)
-  for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) sk.ghep(G, B2, a, b, B2.t[b.o] || ra); }
-  if ((B2.t[b.o] || ra).sao > b.sao) FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to');
-  SND.ghep((B2.t[b.o] || ra).sao, B2.ai);
+  // hiệu ứng ghép (thời gian thực): ụ kéo bay vòng cung → nén → chớp → quay số thẻ → lộ kết quả bật nảy + sóng tròn + huy hiệu sao
+  VX.ghep(B2, a, b, ra);
+  // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…) — nhãn chữ hiện lúc kết quả lộ ra
+  const kh = [];
+  G._treNhan = VX.TRE_LO;
+  for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, a, b, B2.t[b.o] || ra); kh.push(id); } }
+  G._treNhan = 0;
+  if (kh.length) VX.kichHoat(B2, b.o, kh);
+  const kq = B2.t[b.o] || ra;
+  if (kq.sao > b.sao) VX.hen(VX.TRE_LO, () => { const c = B2.o[b.o]; FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to'); });
+  if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
+  SND.ghep(kq.sao, B2.ai);
   return ra;
 }
 function nangCap(B, id) {
@@ -190,6 +193,7 @@ function dmgU(T) {
   if (T.aurora > 0) d *= 1.5;
   if (T.banSao) d *= 0.5; // bản sao của Máy Sao Chép: −50% sát thương
   if (B.cuong > 0) d *= 2;
+  d *= heSoMocDmg(T); // mốc sao chung 5★/7★ (phattrien.js)
   return d;
 }
 function tocU(T) {
@@ -204,7 +208,7 @@ function tocU(T) {
 function critU(T) {
   if (!T || !T.buf) return 0.1;
   const sk = SKILLS[T.id] || {};
-  return Math.min(1, 0.1 + (sk.crit || 0) + T.buf.crit);
+  return Math.min(1, 0.1 + (sk.crit || 0) + T.buf.crit + themMocCrit(T));
 }
 function banDuocQuai(B, E) {
   if (E.chet || E.vao < 1) return false;
@@ -257,6 +261,8 @@ function trung(E, dmg, o) {
   if (E.yeu > 0) dmg *= 1 + (E.yeuK || 0.25);      // Phá Giáp
   if (E.cvT > 0) dmg *= 1 + (E.cvK || 0.3);        // cầu vồng (solo / co-op): quái yếu đi
   if (E.giapT > 0) dmg *= 0.75;                    // cầu vồng đối thủ (PVP): quái trâu hơn
+  if (E.fbT > 0) dmg *= 1.15;                      // Frost 5★ FROSTBITE
+  if (E.azT > 0) dmg *= 1.25;                      // Cryo Reactor 7★ ABSOLUTE ZERO
   // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
   if (T && T.buf && !o.phu) {
     if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
@@ -290,6 +296,7 @@ function chet(E, B) {
   FX.khoi(E.x, E.y, E.d.co * 0.5);
   FX.no('laser_trung', E.x, E.y, E.d.co * (E.trum ? 2.2 : 1.3), 0.35);
   if (E.trum) { FX.lac(12); FX.sang(0.5, '#ffffff'); FX.chu1(E.x, E.y - 30, TEXT.fx.bossDown, '#ffd23f', 24, 'to'); SND.no(1); }
+  lanDoc(E, pB); // Venom 5★ CONTAGION
   if (E.d.tach) for (let i = 0; i < E.d.tach.n; i++) {
     const c = sinhQuai(E.d.tach.id, E.p, Math.max(0, E.s - i * 9), E.d.tach.hs || 1, E.gui); c.vao = 1;
   }
@@ -356,7 +363,7 @@ function capNhat(dt) {
   // hiệu ứng kỹ năng đặc biệt (tường, hố đen, vệ tinh, tia…)
   for (let i = G.hu.length - 1; i >= 0; i--) { const o = G.hu[i]; o.t += dt; G.dangBan = o.T || null; const k = HU[o.k]; if ((k && k.cap && k.cap(G, o, dt)) || o.t >= o.song) { if (k && k.het) k.het(G, o); G.hu.splice(i, 1); } }
   G.dangBan = null;
-  for (let i = G.bay.length - 1; i >= 0; i--) { G.bay[i].t += dt; if (G.bay[i].t > 0.2) G.bay.splice(i, 1); }
+  for (let i = G.bay.length - 1; i >= 0; i--) { G.bay[i].t += dt; if (G.bay[i].xong || G.bay[i].t > 3) G.bay.splice(i, 1); } // hết khi hoạt ảnh bay (thời gian thực) xong
   // dọn quái chết (sau hoạt ảnh vỡ)
   for (let i = G.quai.length - 1; i >= 0; i--) { const E = G.quai[i]; if (E.chet) { E.tChet += dt; if (E.tChet > 0.25) G.quai.splice(i, 1); } }
 }
@@ -371,7 +378,17 @@ function capNhatBan(B, dt) {
     if (T.tocT > 0) { T.tocT -= dt; T.buf.toc += T.tocV; } // tăng tốc tạm thời (Kẹp Phá co-op…)
     if (T.st.kep > 0) T.st.kep -= dt;
   }
-  for (const T of B.t) if (T && !T.st.bang && !T.st.da) { const sk = SKILLS[T.id]; if (sk.hoTro) for (const N of keCan(B, T.o)) if (N && !N.st.da) sk.hoTro(G, T, N); }
+  mocBuf(B); // mốc sao chung 3★ (+20% tốc)
+  for (const T of B.t) if (T && !T.st.bang && !T.st.da) {
+    const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
+    const k = sk.vai === 'ht' ? heSoHT(T) : 1; // mốc hào quang 3★/7★
+    for (const N of oHoTro(B, T)) if (N && N !== T && !N.st.da) {
+      if (k === 1) { sk.hoTro(G, T, N); continue; }
+      const b = N.buf, c0 = b.toc, c1 = b.dmg, c2 = b.crit, c3 = b.cham, c4 = b.chet;
+      sk.hoTro(G, T, N);
+      b.toc = c0 + (b.toc - c0) * k; b.dmg = c1 + (b.dmg - c1) * k; b.crit = c2 + (b.crit - c2) * k; b.cham = Math.min(0.8, c3 + (b.cham - c3) * k); b.chet = c4 + (b.chet - c4) * k;
+    }
+  }
   for (const T of B.t) if (T) capNhatU(B, T, dt);
   if (B.ai || G.debug.auto) aiBan(B, dt);
 }
@@ -390,7 +407,7 @@ function dauNong(T) {
 }
 
 function capNhatU(B, T, dt) {
-  if (T.anim) { T.anim.t += dt; if (T.anim.t > 0.6) T.anim = null; }
+  if (T.anim) T.anim.t += dt; // hoạt ảnh bật nảy cũ: hieuung.js tự xoá theo thời gian thực
   T.aurora = Math.max(0, T.aurora - dt); T.sang = Math.max(0, T.sang - dt * 3); T.chop = Math.max(0, T.chop - dt); T.lvSang = Math.max(0, T.lvSang - dt * 1.4);
   // lò xo giật lùi (có vượt quá nhẹ) — chạy theo "thời gian nhìn" (chậm hơn tốc độ game) để ở 2×/3× vẫn thấy giật rõ
   const dv = dt / Math.sqrt(G.tocDo || 1);
@@ -407,6 +424,7 @@ function capNhatU(B, T, dt) {
   const sk = SKILLS[T.id];
   T.tuoi += dt;
   G.dangBan = T;
+  tienHoaCap(B, T); // ụ grow-up: đổi dạng khi đạt điều kiện → hoạt ảnh biến hình
   if (sk.capNhat && sk.capNhat(G, B, T, dt)) return; // kỹ năng tự quản lý (laser, overlord, mana…)
   if (!sk.dmg) return;
   const E = sk.chonMuc ? sk.chonMuc(G, B, T) : sk.nham === 'mau' ? quaiMauNhat(B) : sk.nham === 'ngau' ? (T.muc && !T.muc.chet && banDuocQuai(B, T.muc) && T.cd > 0.05 ? T.muc : quaiNgauNhien(B)) : quaiDau(B);
@@ -418,6 +436,7 @@ function capNhatU(B, T, dt) {
       T.cd += 1; if (T.cd < 0) T.cd = 0;
       T.banLan++;
       sk.ban(G, B, T, E);
+      mocBanXong(T); // mốc 5★ DOUBLE TAP
     } else T.cd = 0;
   }
 }
@@ -446,6 +465,7 @@ function capNhatQuai(dt) {
     if (E.chet) continue;
     const p = G.duong[E.p];
     E.flash = Math.max(0, E.flash - dt); E.vao = Math.min(1, E.vao + dt * 3); E.yeu = Math.max(0, E.yeu - dt);
+    if (E.fbT > 0) E.fbT -= dt; if (E.azT > 0) E.azT -= dt;
     if (E.chamT > 0) { E.chamT -= dt; if (E.chamT <= 0) E.cham = 0; }
     if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.chet) continue; }
     let v = E.d.v * (1 - (E.d.khangCham ? 0 : E.cham));

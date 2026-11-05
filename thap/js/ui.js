@@ -103,7 +103,7 @@ const UI = {
     c.className = 'c' + (co ? '' : ' khoa') + (this.chon.includes(r.id) ? ' chon' : '');
     c.dataset.act = 'chon-u'; c.dataset.id = r.id;
 c.style.setProperty('--m', TIERS[r.bac].mau);
-    c.innerHTML = cardArt(r.id) +
+    c.innerHTML = cardArt(r.id) + (co && laGrow(r.id) ? '<span class="gu">GROW-UP</span>' : '') +
       '<div class="ten">' + r.ten + '</div>' + (co ? '' : '<div class="sapco">' + TEXT.ui.soon + '</div>');
     return c;
   },
@@ -150,7 +150,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const r = G.rosterMap[id];
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
-      d.innerHTML = cardArt(id) +
+      d.innerHTML = cardArt(id) + (laGrow(id) ? '<span class="gu">GROW-UP</span>' : '') +
         '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
@@ -159,7 +159,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
-    for (const b of G.ban) for (const id of b.deck) ds.push(id + '_nong');
+    ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
+    for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id)) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     REN.napTruoc(ds);
@@ -241,25 +242,58 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const bac = tt.querySelector('.tt-bac'); bac.textContent = tier.ten;
     tt.querySelector('.tt-phu').textContent = sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon;
     tt.querySelector('.tt-kn').textContent = r.kyNang;
-    let so = '';
-    if (T && sk) {
-      so = T.sao + '★ · LV' + G.ban[T.ban].lv[id];
-      if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
-      if (sk.mo) so += ' · ' + sk.mo(T);
-      if (T.st.da) so += ' · ' + TEXT.ui.stoned;
-      if (T.st.bang > 0) so += ' · ' + TEXT.ui.frozen;
-      if (T.st.lua > 0) so += ' · ' + TEXT.ui.burning;
-      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
-    } else if (!sk) so = TEXT.ui.comingSoon;
-    else so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
-    tt.querySelector('.tt-so').textContent = so;
+    tt.querySelector('.tt-so').innerHTML = this.ttChiTiet(id, T, sk, tier);
+    this.xemU = T ? { T } : null; // ụ đang chọn: hieuung.js hiện dây liên kết / bingo của nó
     // trong trận: không che bàn của mình (solo: ngay dưới bàn; co-op/pvp: đè lên bàn đồng đội/đối thủ phía trên)
     const B0 = G.ban[0], tran = G.ban.length && !$('#top').hidden;
     tt.style.top = !tran ? '300px' : (G.ban.length > 1 ? '60px' : Math.round(B0.y + B0.h + 8) + 'px');
     tt.style.zIndex = $('#chon').hidden ? 8 : 12; // màn chọn: nổi trên bảng chọn
     tt.hidden = false;
     fitText(tt.querySelector('.tt-ten'), 18, 12);
-    this.ttHet = performance.now() + (giu ? 2600 : 2200);
+    this.ttHet = performance.now() + (giu ? 3600 : 3200);
+  },
+
+  // dòng chi tiết bảng thông tin: chỉ số · tốc bắn · họ kỹ năng · mốc sao · grow-up
+  ttChiTiet(id, T, sk, tier) {
+    if (!sk) return TEXT.ui.comingSoon;
+    const esc = (v) => String(v).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    const L = [];
+    let so = '';
+    if (T) {
+      so = T.sao + '★ · LV' + (G.ban[T.ban].lv[id] || 1);
+      if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
+      const tc = tocTT(id, T); if (tc) so += ' · ' + tc;
+      if (sk.mo) so += ' · ' + sk.mo(T);
+      if (T.st.da) so += ' · ' + TEXT.ui.stoned;
+      if (T.st.bang > 0) so += ' · ' + TEXT.ui.frozen;
+      if (T.st.lua > 0) so += ' · ' + TEXT.ui.burning;
+      if (sk.chuDong) so += ' · ' + (T.nap >= 1 ? TEXT.ui.readyTap : TEXT.ui.charge(Math.round(T.nap * 100)));
+    } else {
+      so = TEXT.ui.baseDmg(Math.round((sk.dmg || 0) * tier.hs), tier.hs);
+      const tc = tocTT(id, null); if (tc) so += ' · ' + tc;
+    }
+    L.push('<div class="d-so">' + esc(so) + '</div>');
+    // grow-up: điều kiện · dạng hiện tại · tiến độ
+    if (laGrow(id)) {
+      const g = GROW[id];
+      let d = '<b style="color:' + g.mau + '">GROW-UP</b> ';
+      if (T) { const st = g.gd(T); d += 'stage ' + st.s + '/3 <b style="color:' + g.mau + '">' + g.ten[st.s - 1] + '</b> · ' + Math.round(clamp(st.p, 0, 1) * 100) + '% · '; }
+      else d += g.ten.join(' → ') + ' · ';
+      L.push('<div class="d-grow">' + d + esc(g.dk) + '</div>');
+    }
+    // họ kỹ năng: phát triển từ … / thành …
+    const h = hoTT(id);
+    if (h) {
+      let d = '<b style="color:' + h.mau + '">' + h.ten + ' LINE</b> ';
+      d += h.tu ? 'Evolves from: ' + esc(h.tu) : 'Base of the line';
+      if (h.sau) d += ' · next: ' + esc(h.sau);
+      d += ' · <i>New: ' + esc(h.moi) + '</i>';
+      L.push('<div class="d-ho">' + d + '</div>');
+    }
+    // mốc sao 3★/5★/7★
+    const mm = mocCua(id).map(m => '<span class="' + (T && T.sao >= m.n ? 'co' : '') + '">' + m.n + '★ ' + esc(m.ten) + '</span> ' + esc(m.mo)).join(' · ');
+    L.push('<div class="d-moc">' + mm + '</div>');
+    return L.join('');
   },
 
   // ---------- nút bấm ----------
