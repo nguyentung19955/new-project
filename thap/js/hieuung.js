@@ -248,6 +248,7 @@ const VX = {
     const g = GROW[T.id], st = g.gd(T), m = g.mau;
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     // hào quang lặp (fx_awaken: vòng lửa nhìn thẳng từ trên, tròn) — tô theo màu ụ
+    if (T.gd === 3 && g.khongAnh) { ctx.globalAlpha = al * (0.28 + 0.1 * Math.sin(this.t * 6)); REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.2); } // không có ảnh dạng 3: quầng sáng thay thế
     if (T.gd === 3) {
       const B = T.vxB, vao = B && B.len ? clamp((this.t - B.t0 - 0.3) / 0.25, 0, 1) : 1;
       const aw = m === '#ff4b3e' || m === '#ff5040' || m === '#ffd23f' || m === '#ffe46b' ? REN.img('fx_awaken') : REN.toMau('fx_awaken', m);
@@ -325,7 +326,7 @@ const VX = {
     // lớp ngoài của biến hình (không xoay)
     for (const B of G.ban) for (const T of B.t) if (T && T.vxB) { const c = B.o[T.o]; this.veBienNgoai(ctx, T, c.x, c.y, Math.min(B.cw, B.ch) * 0.98); }
     for (const e of this.ds) {
-      const tt = this.t - e.t0; if (tt < 0) continue;
+      const tt = this.t - e.t0; if (tt < 0 || !e.B || !'sao kh hu lk bg'.includes(e.k)) continue;
       const B = e.B, c = B.o[e.o], S = Math.min(B.cw, B.ch) * 0.98;
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       if (e.k === 'sao') { // đạt mốc sao: bùng sao vàng (phần sao của fx_starup, đã xoá vòng elip) + vòng tròn vàng

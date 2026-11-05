@@ -89,7 +89,7 @@ SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–3
 };
 SKILLS.phun = { // Súng Phun Loạn (Hairball): bắn cực nhanh vào quái ngẫu nhiên
   vai: 'tc', dmg: 3.43, toc: 5, tocSao: 0.08, nham: 'ngau',
-  mo: (T) => 'Fire rate ' + tocU(T).toFixed(1) + '/s · random targets',
+  mo: () => 'random targets · each ★ +8% fire rate',
   ban(G, B, T, E) {
     giat(T, 0.22); const [x, y] = dauNong(T);
     FX.no('chop_nong', x, y, 16 + Math.random() * 6, 0.06, T.goc + rnd(-0.2, 0.2)); SND.lien();
@@ -119,7 +119,7 @@ SKILLS.maychem = { // Máy Chém (Scaffold): xác suất giết ngay quái nhỏ
       if (!M) return;
       if (!M.trum && !M.d.to && Math.random() < tl) {
         G.hu.push({ k: 'chem', t: 0, song: 0.4, x: M.x, y: M.y });
-        trung(M, M.hp + 1, { B, crit: false, mau: '#ff4b3e' }); nhanU(T, 'CHOP!', '#ff4b3e'); SND.no(0.3);
+        trung(M, M.hp + 1, { B, crit: false, mau: '#ff4b3e' }); VX.chem(M); SND.no(0.3);
       } else trung(M, dmg, { B });
     });
   },
@@ -482,7 +482,7 @@ SKILLS.taylo = { // Máy Tẩy Lỗi (Gemina): khi GHÉP xoá hiệu ứng xấu
     const n = 1 + a.sao, c0 = B.o[b.o];
     const xau = (X) => X.st.bang > 0 || X.st.da || X.st.lua > 0 || X.st.kep > 0;
     const ds = B.t.filter(X => X && xau(X)).slice(0, n);
-    for (const X of ds) { X.st.bang = 0; X.st.da = false; X.st.lua = 0; X.st.kep = 0; const c = B.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ffffff'); FX.tiaLua(c.x, c.y, 12, '#ffffff', 160, 10); }
+    for (const X of ds) { X.st.bang = 0; X.st.da = false; X.st.lua = 0; X.st.kep = 0; const c = B.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#E8E5C8'); VX.hen(VX.TRE_LO, () => VX.donSach(B, X)); }
     nhanU(ra, ds.length ? 'CLEANSE ×' + ds.length : 'ALL CLEAN', '#ffffff', true);
   },
 };
@@ -861,7 +861,7 @@ SKILLS.haoquang = { // Hào Quang Thánh (Halo Mona): tia thánh quang; chủ đ
     T.nap = 0; T.napDay = 0; T.sang = 1;
     const tg = 3 + 0.5 * T.sao;
     B.khien = Math.max(B.khien, tg);
-    for (const X of B.t) if (X) { X.st.bang = 0; X.st.da = false; X.st.lua = 0; X.st.kep = 0; X.st.ngam = 0; X.tocT = Math.max(X.tocT, tg); X.tocV = Math.max(X.tocV, 0.3); }
+    for (const X of B.t) if (X) { if (X.st.bang > 0 || X.st.da || X.st.lua > 0 || X.st.kep > 0) VX.donSach(B, X); X.st.bang = 0; X.st.da = false; X.st.lua = 0; X.st.kep = 0; X.st.ngam = 0; X.tocT = Math.max(X.tocT, tg); X.tocV = Math.max(X.tocV, 0.3); }
     const c = tamU(T);
     FX.vong1(c.x, c.y, 20, 260, '#fff6c0', 0.7, 6); FX.sang(0.45, '#fff6c0'); SND.mv();
     for (const X of B.t) if (X && X !== T) { const n = B.o[X.o]; tiaPhep(c.x, c.y, n.x, n.y, '#fff6c0'); }
