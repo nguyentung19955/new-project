@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="c074f1c23f">
-  <script id="tm-ver">(function(){var V="c074f1c23f";try{fetch("ver.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==V){var k="tm-ver-tai";if(sessionStorage.getItem(k)!==j.v){sessionStorage.setItem(k,j.v);location.reload()}}}).catch(function(){})}catch(e){}})();</script>
+  <meta name="tm-ver" content="2f7fea3869">
+  <script id="tm-ver">(function(){var V="2f7fea3869";try{fetch("ver.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==V){var k="tm-ver-tai";if(sessionStorage.getItem(k)!==j.v){sessionStorage.setItem(k,j.v);location.reload()}}}).catch(function(){})}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="css/tvb.css?v=08405316">
   <link rel="stylesheet" href="css/tvA.css?v=1fb7794b">
   <link rel="stylesheet" href="css/khung-p9.css?v=b6703d03">
+  <link rel="stylesheet" href="css/bo2hang.css?v=d8816586"> <!-- bộ bài 1 hàng: 5 ụ + ô chỉ huy thứ 6 -->
   <link rel="stylesheet" href="css/chonthe.css?v=ceee67e1"> <!-- trạng thái ĐANG CHỌN: nạp cuối để thắng các nhịp cũ -->
 </head>
 <body>
@@ -131,8 +132,6 @@
           <div class="dk-dem"><span><b id="chon-dem">0/5</b> <span>SELECTED</span></span><button class="dk-chu" data-act="ngaunhien">RANDOM</button></div>
           <div id="chon-bo"></div>
         </div>
-        <button class="dk-noi" id="dk-noi" data-act="hm-noi"></button>
-        <button class="dk-mv" id="dk-mv" data-act="hm-mvs"></button>
         <div class="dk-tim"><label class="dk-o" id="dk-o"><img class="dk-o-ic" src="assets/p7_ic_tim.png" alt=""></label><button class="hm-ic hm-ic1 dk-loc" data-act="hm-loc" id="dk-loc" aria-label="Filter and sort"><img src="assets/p7_ic_loc.png" alt=""><i id="dk-loc-so" hidden></i></button></div>
         <div id="chon-luoi"></div>
         <div class="chon-cuoi">
@@ -175,7 +174,7 @@
     </div>
   </div>
 
-  <script src="js/ver-anh.js?v=fdc55c24"></script>
+  <script src="js/ver-anh.js?v=3d0c09f1"></script>
   <script src="js/font.js?v=26e0ac3d"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e"></script>
   <script src="js/taitai.js?v=6d27b14b"></script>
@@ -231,8 +230,8 @@
   <script src="js/demkn.js?v=e5d7dbda"></script>
   <script src="js/trum.js?v=96f695c2"></script>
   <script src="js/hudb.js?v=6372e80d"></script>
-  <script src="js/home.js?v=e9a42a6a"></script>
-  <script src="js/dkkeo.js?v=1d5b234a"></script>
+  <script src="js/home.js?v=2d85ff2e"></script>
+  <script src="js/dkkeo.js?v=46d0092b"></script>
   <!-- ONLINE: tài khoản + CO-OP 2 người (Firebase Realtime Database) — SDK chỉ tải khi cần -->
   <script src="js/online/firebase-config.js?v=9e21ce47"></script>
   <script src="js/online/net.js?v=860af477"></script>
@@ -241,7 +240,7 @@
   <script src="js/online/dongbo.js?v=1b62714a"></script>
   <script src="js/online/khoidong.js?v=9dbbb79d"></script>
   <!-- tư vấn B (trận dễ đọc): bọc HB/HT/REN/UI — nạp sau cùng -->
-  <script src="js/tvb.js?v=1aea8d9f"></script>
+  <script src="js/tvb.js?v=2f431c3f"></script>
   <script src="js/tvA.js?v=9413bb07"></script>
 </body>
 </html>
