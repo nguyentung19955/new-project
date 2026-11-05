@@ -4,7 +4,7 @@
 //        OUT=docs/demo-hop-tuong/tuvan/online/ node tools/thap-kt-online.js
 // Kiểm: tạo phòng · vào bằng mã · sảnh 2 bộ bài + READY · cùng vào trận (cùng hạt giống) · chơi ≥ 2 wave (bàn mình do ?auto=1 lái)
 //       · hành động bên này hiện ở bàn đồng đội bên kia · 3 tim chung (khách lọt quái → host trừ → cả 2 cùng số)
-//       · rớt mạng 6 s → cả 2 dừng → nối lại chạy tiếp · tải lại trang → REJOIN MATCH · bạn rời hẳn → CONTINUE WITH AI · không lỗi trang.
+//       · rớt mạng 6 s → không dừng · tải lại trang → REJOIN MATCH · bạn rời hẳn → tự giao AI (không bảng che) · không lỗi trang.
 const { chromium } = require('playwright');
 const fs = require('fs');
 const OUT = process.env.OUT || 'shots/online/';
@@ -40,11 +40,11 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   kt(await A.p.evaluate(() => NET.get('profiles/' + NET.user.uid).then(v => v && v.name === 'Tung' && v.av === 'cuuvi' && v.g === true)), 'Hồ sơ A lưu lên máy chủ (tên, ảnh, g=Google)');
 
   // 1) tạo phòng / vào phòng
-  await A.p.click('#onl-nut'); await A.p.click('[data-act="onl-tao"]');
+  await A.p.evaluate(() => ONL.moBang()); await A.p.click('[data-act="onl-tao"]');
   await A.p.waitForFunction(() => /^[A-Z]{4}$/.test((document.querySelector('#sanh-ma') || {}).textContent || ''), null, { timeout: 10000 });
   const code = await A.p.textContent('#sanh-ma');
   kt(/^[A-Z]{4}$/.test(code), 'Tạo phòng → mã 4 chữ: ' + code);
-  await Bp.p.click('#onl-nut'); await Bp.p.fill('#onl-ma', code); await Bp.p.click('[data-act="onl-vao"]');
+  await Bp.p.evaluate(() => ONL.moBang()); await Bp.p.fill('#onl-ma', code); await Bp.p.click('[data-act="onl-vao"]');
   await A.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 10000 });
   await Bp.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 10000 });
   const sanh = await Bp.p.evaluate(() => [...document.querySelectorAll('#sanh-ds .sanh-p')].map(e => ({ ten: e.querySelector('b').textContent, u: e.querySelectorAll('.sp-u').length, mv: !!e.querySelector('.sp-mv img') })));
@@ -52,7 +52,7 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   await A.p.screenshot({ path: OUT + '02_A_sanh.png' });
   // người thứ 3 không vào được phòng đầy
   const C = await mo('C', ['canon', 'bang', 'lien', 'laser', 'doc']);
-  await C.p.click('#onl-nut'); await C.p.fill('#onl-ma', code); await C.p.click('[data-act="onl-vao"]'); await sleep(800);
+  await C.p.evaluate(() => ONL.moBang()); await C.p.fill('#onl-ma', code); await C.p.click('[data-act="onl-vao"]'); await sleep(800);
   kt(/full/i.test(await C.p.textContent('#onl-loi')), 'Người thứ 3: "Room is full"');
   await C.ctx.close();
   // 2) READY cả 2 → vào trận
@@ -94,22 +94,22 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   const [timA, timB] = await Promise.all([A.p.evaluate(() => G.ban[0].tim), Bp.p.evaluate(() => G.ban[0].tim)]);
   kt(timA === tim0 - 1 && timB === timA, 'Tim chung: B lọt 1 quái → A ' + tim0 + '→' + timA + ', B = ' + timB);
 
-  // 5) rớt mạng 6 s bên B
+  // 5) rớt mạng 6 s bên B → KHÔNG dừng trận bên nào, không bảng che, không giao AI (ân hạn 12 s)
   await Bp.p.evaluate(() => NET._mockNgat(6000));
   await sleep(5200);
-  const [ma, mb] = await Promise.all([A.p.evaluate(() => ({ mat: ONS.mat && ONS.mat.ly, dung: G.dung, chu: (document.querySelector('#mat-ten') || {}).textContent })), Bp.p.evaluate(() => ({ mat: ONS.mat && ONS.mat.ly, dung: G.dung, chu: (document.querySelector('#mat-ten') || {}).textContent }))]);
-  kt(ma.dung && ma.mat && mb.dung && mb.mat, 'Rớt mạng: A "' + ma.chu + '" + B "' + mb.chu + '", cả 2 dừng trận');
+  const [ma, mb] = await Promise.all([A.p.evaluate(() => ({ dung: G.dung, modal: !!document.querySelector('#onl-mat:not([hidden])'), thay: !!ONS.thay })), Bp.p.evaluate(() => ({ dung: G.dung, modal: !!document.querySelector('#onl-mat:not([hidden])'), thay: !!ONS.thay }))]);
+  kt(!ma.dung && !mb.dung && !ma.modal && !mb.modal && !ma.thay && !mb.thay, 'Rớt mạng 6 s: cả 2 chạy tiếp, không bảng che, không giao AI');
   await A.p.screenshot({ path: OUT + '06_A_ban_mat_mang.png' }); await Bp.p.screenshot({ path: OUT + '07_B_mat_mang.png' });
   await sleep(4500);
-  const [ra, rb] = await Promise.all([A.p.evaluate(() => ({ mat: ONS.mat, dung: G.dung })), Bp.p.evaluate(() => ({ mat: ONS.mat, dung: G.dung }))]);
-  kt(!ra.mat && !ra.dung && !rb.mat && !rb.dung, 'Nối lại mạng → cả 2 chạy tiếp');
+  const [ra, rb] = await Promise.all([A.p.evaluate(() => ({ thay: !!ONS.thay, dung: G.dung })), Bp.p.evaluate(() => ({ thay: !!ONS.thay, dung: G.dung }))]);
+  kt(!ra.thay && !ra.dung && !rb.thay && !rb.dung, 'Nối lại mạng → cả 2 vẫn chơi chung (không giao AI)');
 
   // 6) B tải lại trang → REJOIN MATCH
   const wTruoc = await A.p.evaluate(() => G.wave);
   await Bp.p.reload({ waitUntil: 'load' });
   await Bp.p.waitForFunction(() => typeof UI !== 'undefined' && document.querySelector('#onl-nut') && NET.ok, null, { timeout: 30000 });
   await Bp.p.evaluate(() => { UI.chon = ['drone', 'bao', 'kiembang', 'hydra', 'anhsang']; UI.veBoChon(); });
-  await Bp.p.click('#onl-nut');
+  await Bp.p.evaluate(() => ONL.moBang());
   await Bp.p.waitForSelector('#onl-lai:not([hidden])', { timeout: 8000 });
   await Bp.p.screenshot({ path: OUT + '08_B_rejoin.png' });
   await Bp.p.click('#onl-lai');
@@ -153,16 +153,16 @@ const kt = (dk, s) => { (dk ? ok : hong).push(s); console.log((dk ? 'OK   ' : 'F
   const [na, nb] = await Promise.all([A.p.evaluate(() => ONS.tom()), Bp.p.evaluate(() => ONS.tom())]);
   kt(na.tim === 3 && nb.tim === 3 && nb.wave === na.wave && na.wave <= 2, 'Trận mới: tim 3/3, wave ' + na.wave + '/' + nb.wave);
 
-  // 7) B đóng hẳn → A chờ 10 s → CONTINUE WITH AI
+  // 7) B đóng hẳn → A KHÔNG bị chặn: sau ân hạn 12 s bàn đồng đội tự giao cho AI (không bảng che, không bấm gì)
   await Bp.ctx.close();
-  await A.p.waitForSelector('#mat-nut:not([hidden])', { timeout: 25000 });
-  await A.p.screenshot({ path: OUT + '10_A_ban_roi_chon.png' });
-  await A.p.click('[data-act="ons-ai"]');
-  await sleep(2500);
-  const ai = await A.p.evaluate(() => ({ on: ONS.on, ai: G.ban[1].ai && !G.ban[1].net, dung: G.dung, t: G.t }));
+  await sleep(3000);
+  kt(await A.p.evaluate(() => !G.dung && !document.querySelector('#onl-mat:not([hidden])')), 'B rời: A không dừng, không bảng che');
+  await A.p.waitForFunction(() => ONS.thay && G.ban[1].ai && !G.ban[1].net, null, { timeout: 20000 });
+  await A.p.screenshot({ path: OUT + '10_A_ban_roi_AI.png' });
+  const ai = await A.p.evaluate(() => ({ dung: G.dung, t: G.t }));
   await sleep(1500);
   const t2 = await A.p.evaluate(() => G.t);
-  kt(!ai.on && ai.ai && !ai.dung && t2 > ai.t, 'CONTINUE WITH AI: bàn đồng đội giao cho máy, trận chạy tiếp');
+  kt(!ai.dung && t2 > ai.t, 'Bạn rời → tự CHƠI TIẾP VỚI AI, trận chạy tiếp');
   await A.p.screenshot({ path: OUT + '11_A_choi_voi_AI.png' });
 
   kt(errs.length === 0, 'Không lỗi trang (' + errs.length + ')');

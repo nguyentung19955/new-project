@@ -4,7 +4,10 @@
 //    của bạn kia (triệu hồi / ghép / nâng cấp / chỉ huy / kỹ năng chủ động, kèm tick) + ẢNH CHỤP bàn mỗi 1 s (mã băm; lệch → sửa).
 //  · 3 tim CHUNG: host giữ (authoritative). Quái lọt làn của khách → khách báo 'l' → host trừ tim → ghi state.tim cho cả 2.
 //    Quái lọt làn đồng đội trong máy MÌNH không tính (máy bạn kia mới là gốc của làn đó).
-//  · Mất kết nối: dừng trận, đếm 10 s; bạn quay lại → chạy tiếp; quá 10 s → CHƠI TIẾP VỚI MÁY (bàn bạn kia giao cho AI) hoặc KẾT THÚC.
+//  · Bạn kia mất kết nối / rời trận: KHÔNG BAO GIỜ dừng hay chặn trận của mình (không bảng che). Im lặng ≥ 12 s (ân hạn cho
+//    khoá màn / chuyển tab / mạng chập chờn) → bàn bạn kia tự giao cho AI + nhãn nhỏ "Partner left — AI playing" 3 s + chữ AI
+//    trên nhãn bàn đồng đội. Bạn quay lại (nhịp tim mới) → trả bàn lại cho bạn ấy. Bạn bấm rời (bye) → AI ngay, không trả lại.
+//    Kết thúc trận: chỉ ở menu tạm dừng (QUIT).
 //    Tải lại trang giữa trận → bảng ONLINE có nút REJOIN MATCH (khôi phục bàn từ ảnh chụp, tim + wave từ state).
 //  · Tốc độ khoá 1× khi chơi online; nút tạm dừng = tạm dừng CHUNG.
 // Chỉ BỌC hàm có sẵn (trieu/ghep/nangCap/dungMV/wavMoi/lot/ketThuc/aiBan + chuDong của SKILLS) — chơi offline không đổi gì.
@@ -13,6 +16,7 @@
 const ONS = {
   on: false, o: null, host: false, seed: 1, ban: null, me: null, code: null,
   hostWave: 0, banVao: false, toiVao: false, rx: 0, dungChung: false, mat: null, ping: 0, lech: 0, soAct: 0, _apDung: 0, _tuHost: false,
+  thay: null, _dungBan: false, AN_HAN: 12000, // thay = { t, vinh }: bàn đồng đội đang do AI lái (vinh = bạn đã bấm rời → không trả lại)
   _off: [], _tm: [], _pingT: 0, _pingThay: 0,
   goc() { return 'rooms/' + this.code + '/'; },
   gui(k, d) {
@@ -25,6 +29,7 @@ const ONS = {
   batDau(o) {
     this.o = o; this.code = o.code; this.host = o.host; this.seed = o.seed || 1; this.me = o.me; this.ban = o.ban;
     this.hostWave = 0; this.banVao = false; this.toiVao = false; this.rx = Date.now(); this.dungChung = false; this.mat = null; this.lech = 0; this.soAct = 0; this._tuHost = false; this._end = null; this.t0 = Date.now();
+    this.thay = null; this._dungBan = false; this._sAnh = null; this._tPing = null;
     G.tocDo = 1;
     UI.che = 'coop';
     this.on = true;
@@ -46,13 +51,19 @@ const ONS = {
     this._tm.push(setInterval(() => this.guiPing(), 2000));
     if (o.laiVao) this.khoiPhuc();
     this.veHUD();
+    if (!this._vis) { // quay lại từ khoá màn / tab ẩn: tính lại ân hạn từ bây giờ (không coi bạn kia là đã rời chỉ vì MÌNH vừa ngủ)
+      this._vis = () => { if (!document.hidden && this.on) this.rx = Math.max(this.rx, Date.now() - 2000); };
+      document.addEventListener('visibilitychange', this._vis); addEventListener('pageshow', this._vis);
+    }
     if (!this._raf) { const f = () => { this.canh(); this._raf = requestAnimationFrame(f); }; this._raf = requestAnimationFrame(f); }
   },
   // vào lại giữa trận: đặt wave / tim / bàn từ dữ liệu trên máy chủ
   khoiPhuc() {
     const goc = this.goc();
     Promise.all([NET.get(goc + 'state'), NET.get(goc + 'snap/' + this.me), NET.get(goc + 'snap/' + this.ban)]).then(([st, a, b]) => {
-      if (st) { this.hostWave = st.wave || 0; G.wave = Math.max(0, (st.wave || 1) - 1); if (st.tim != null) G.ban[0].tim = st.tim; }
+      // bạn kia có thể đã tự chạy wave khi mình vắng (AI lái bàn mình) → lấy wave lớn hơn giữa state và ảnh chụp của bạn
+      let wb = 0; try { wb = b ? (JSON.parse(b).w || 0) : 0; } catch (e) { }
+      if (st || wb) { const w = Math.max(st && st.wave || 0, wb); this.hostWave = w; G.wave = Math.max(0, (w || 1) - 1); if (st && st.tim != null) G.ban[0].tim = st.tim; }
       if (a) this.apAnh(G.ban[0], JSON.parse(a), true);
       if (b) this.apAnh(G.ban[1], JSON.parse(b), true);
       if (!this.host) this.hostWave = Math.max(this.hostWave, G.wave + 1); // wave hiện tại của host chạy lại ngay ở máy mình
@@ -66,7 +77,7 @@ const ONS = {
     this.on = false;
     for (const f of this._off.splice(0)) try { f(); } catch (e) { }
     for (const t of this._tm.splice(0)) clearInterval(t);
-    this.mat = null; this.dungChung = false; this.anMat();
+    this.mat = null; this.dungChung = false; this._dungBan = false; this.anMat();
   },
 
   // ---------------------------------------------------------------- vòng canh (mỗi khung hình)
@@ -75,21 +86,22 @@ const ONS = {
     if (!G.ban.length) { this.ketThucMang('leave'); return; }
     const dangTai = (typeof TAI !== 'undefined' && TAI.cho) || (typeof VT !== 'undefined' && VT.mo);
     if (!dangTai && !this.toiVao) { this.toiVao = true; NET.update(this.goc() + 'pl/' + this.me, { vao: true }); this.gui('vao'); }
-    // không được tự dừng riêng một máy (bảng thông tin, …) — chỉ dừng khi: tạm dừng chung / mất kết nối / màn mở đầu / màn tải
-    const phaiDung = this.dungChung || !!this.mat;
+    const now = Date.now(), im = now - this.rx;
+    // bạn kia bấm tạm dừng rồi mất tích → bỏ tạm dừng (trận của mình không bao giờ bị kẹt vì bạn kia)
+    if (this.dungChung && this._dungBan && (im > 4000 || this.thay)) { this.dungChung = false; this._dungBan = false; this.hienDung(false); }
+    // không được tự dừng riêng một máy (bảng thông tin, …) — chỉ dừng khi: tạm dừng chung / màn mở đầu / màn tải. Mất kết nối KHÔNG dừng.
+    const phaiDung = this.dungChung;
     if (!dangTai && !G.ketThuc) {
       if (phaiDung && !G.dung) G.dung = true;
       else if (!phaiDung && G.dung) G.dung = false;
     }
     G.tocDo = 1;
-    const now = Date.now();
     if (!G.ketThuc && this.toiVao) {
-      const im = now - this.rx;
-      if (!NET.noi && !this.mat) this.matBan('toi');
-      else if (im > 4000 && !this.mat) this.matBan('im');
-      else if (this.mat && NET.noi && im < 2500 && this.mat.ly !== 'bye') this.banVe();
+      // nhãn trạng thái (không chặn): mình mất mạng / bạn im lặng > 4 s
+      this.mat = !NET.noi ? { ly: 'toi' } : im > 4000 && !this.thay ? { ly: 'im' } : null;
+      if (!this.thay && im > this.AN_HAN && (this.banVao || now - this.t0 > 25000)) this.thayAI(false);
+      else if (this.thay && !this.thay.vinh && NET.noi && im < 2500 && now - this.thay.t > 3000) this.traBan();
     }
-    if (this.mat) this.veMat();
     this.veHUD();
   },
 
@@ -99,6 +111,7 @@ const ONS = {
     this.rx = Date.now(); this.soAct++;
     let d = null; try { d = v.d ? JSON.parse(v.d) : null; } catch (e) { d = null; }
     const B1 = G.ban[1]; if (!B1 || !this.on) return;
+    if (this.thay && v.k !== 'bye') { if (this.thay.vinh) return; this.traBan(); } // bạn quay lại (hành động mới) → trả bàn
     this._apDung++;
     try {
       switch (v.k) {
@@ -110,8 +123,8 @@ const ONS = {
         case 'w': if (!this.host && d) { this.hostWave = Math.max(this.hostWave, d.n); if (G.wave < d.n) { G.cho = 0; wavMoi(); } } break;
         case 'l': if (this.host && d) this.truTim(d.n, d.id); break;
         case 'vao': this.banVao = true; break;
-        case 'pa': this.dungChung = !!(d && d.v); this.hienDung(this.dungChung); break;
-        case 'bye': this.matBan('bye'); break;
+        case 'pa': this.dungChung = !!(d && d.v); this._dungBan = this.dungChung; this.hienDung(this.dungChung); break;
+        case 'bye': this.thayAI(true); break;
       }
     } catch (e) { console.error('[ONS] áp hành động', v.k, e); }
     this._apDung--;
@@ -145,10 +158,14 @@ const ONS = {
   },
   nhanAnh(s) {
     if (!s || !this.on) return;
-    this.rx = Date.now();
+    if (s === this._sAnh) return; // cùng ảnh cũ (nghe lại sau khi nối mạng) ≠ bạn còn sống
+    this._sAnh = s; this.rx = Date.now();
+    if (this.thay) return; // AI đang lái bàn này: chờ nhịp tim mới (canh → traBan) rồi mới nhận ảnh
     let v; try { v = JSON.parse(s); } catch (e) { return; }
     this._anh = v;
     const B1 = G.ban[1]; if (!B1) return;
+    // host vừa quay lại (khoá màn / mất mạng) mà khách đã tự chạy wave xa hơn → nhảy tới wave của khách (không chờ, không dồn quái)
+    if (this.host && v.w > G.wave + 1 && !G.ketThuc) { G.wave = v.w - 1; G.cho = 0; }
     this.apAnh(B1, v, false);
   },
   apAnh(B, v, khoiPhuc) {
@@ -194,50 +211,54 @@ const ONS = {
   guiPing() { if (!this.on) return; this._pingT = Date.now(); NET.set(this.goc() + 'ping/' + this.me, { t: this._pingT, e: this._pingThay || 0 }).catch(() => { }); },
   nhanPing(v) {
     if (!v || !this.on) return;
-    this.rx = Date.now();
+    const k = v.t + ':' + v.e; if (k === this._tPing) return; // giá trị cũ gửi lại khi nối mạng ≠ nhịp tim mới
+    this._tPing = k; this.rx = Date.now();
     if (v.e && v.e === this._pingT) this.ping = Date.now() - this._pingT; // vòng đi-về
     if (v.t && v.t !== this._pingThay) { this._pingThay = v.t; NET.set(this.goc() + 'ping/' + this.me, { t: this._pingT || 0, e: v.t }).catch(() => { }); }
   },
 
-  // ---------------------------------------------------------------- mất kết nối
-  matBan(ly) {
+  // ---------------------------------------------------------------- bạn kia mất kết nối / rời trận (không bao giờ chặn trận của mình)
+  matBan(ly) { if (ly === 'bye') this.thayAI(true); }, // giữ tên cũ (gọi từ phong.js / bài kiểm)
+  // bàn đồng đội → AI lái; mình tự giữ wave + tim (khách thôi chờ host). vinh = bạn đã rời hẳn.
+  thayAI(vinh) {
     if (!this.on || G.ketThuc) return;
-    if (this.mat && !(ly === 'bye' && this.mat.ly !== 'bye')) return;
-    this.mat = { ly, t0: this.mat ? this.mat.t0 : Date.now() };
-    if (ly === 'bye') this.mat.t0 = Date.now() - 10000; // bạn kia bấm rời trận: hỏi luôn, không đợi
+    const B1 = G.ban[1]; if (!B1) return;
+    if (this.thay) { if (vinh) this.thay.vinh = true; return; }
+    this.thay = { t: Date.now(), vinh: !!vinh };
+    B1.net = false; B1.ai = true; B1.aiT = 0; B1.aiThay = true;
+    if (!this.host) this.hostWave = Math.max(this.hostWave, G.wave);
+    if (this.dungChung && this._dungBan) { this.dungChung = false; this._dungBan = false; this.hienDung(false); G.dung = false; }
+    this.mat = null; this.anMat();
+    this.bao(B1, 'PARTNER LEFT — AI PLAYING', '#ffd25a');
+    console.log('[ONS] bàn đồng đội → AI (' + (vinh ? 'rời trận' : 'im lặng ' + Math.round((Date.now() - this.rx) / 1000) + ' s') + ')');
   },
-  banVe() { this.mat = null; this.anMat(); },
-  veMat() {
-    let el = document.getElementById('onl-mat');
-    if (!el) {
-      el = document.createElement('div'); el.id = 'onl-mat'; el.className = 'man phu onl-man';
-      el.innerHTML = '<div class="bang onl-bang"><img class="onl-ic" src="assets/vong_xich.png" alt=""><div class="bang-ten" id="mat-ten"></div><div class="onl-phu" id="mat-phu"></div>' +
-        '<div class="bang-nut" id="mat-nut"><button class="nut chinh" data-act="ons-ai">CONTINUE WITH AI</button><button class="nut" data-act="ons-het">END MATCH</button></div></div>';
-      document.getElementById('wrap').appendChild(el);
-    }
-    el.hidden = false;
-    const con = Math.max(0, 10 - Math.floor((Date.now() - this.mat.t0) / 1000));
-    const toi = this.mat.ly === 'toi';
-    el.querySelector('#mat-ten').textContent = this.mat.ly === 'bye' ? 'PARTNER LEFT' : toi ? 'CONNECTION LOST' : 'PARTNER DISCONNECTED';
-    el.querySelector('#mat-phu').textContent = this.mat.ly === 'bye' ? 'Your partner left the match.' : con > 0 ? (toi ? 'Reconnecting… ' : 'Waiting for your partner… ') + con + ' s' : (toi ? 'Still offline.' : 'Your partner has not come back.');
-    el.querySelector('#mat-nut').hidden = con > 0;
+  // bạn quay lại trong trận → trả bàn (ảnh chụp kế tiếp của bạn ấy sửa lại bàn)
+  traBan() {
+    const B1 = G.ban[1]; if (!this.thay || this.thay.vinh || !B1) return;
+    this.thay = null; B1.net = true; B1.ai = false; B1.aiThay = false; this._sAnh = null;
+    this.bao(B1, 'PARTNER IS BACK', '#63d68b');
+    console.log('[ONS] bạn quay lại → trả bàn');
   },
-  anMat() { const el = document.getElementById('onl-mat'); if (el) el.hidden = true; },
-  // tiếp với AI: bàn bạn kia giao cho máy, mình tự giữ tim + wave
-  choiVoiAI() {
-    const B1 = G.ban[1];
-    this.ketThucMang('ai');
-    if (B1) { B1.net = false; B1.ai = true; B1.ten = TEXT.ui.ally; }
-    if (typeof ONL !== 'undefined') ONL.roiPhong();
-    G.dung = false;
+  // nhãn nhỏ trên bàn đồng đội ~3 s (chữ trên tấm nhãn có sẵn nhan_kn) — không chặn, không chạm
+  bao(B, s, mau) { if (typeof FX === 'undefined' || !B) return; const c = FX.chu1(B.x + B.w / 2, B.y + 34, s, mau, 13, 'nhan'); if (c) c.song = 3; },
+  // phòng bị xoá giữa trận (chủ phòng rời): AI giữ bàn đồng đội, mình chơi tiếp NGOẠI TUYẾN (tạm dừng do bạn bấm thì bỏ)
+  diNgoai() {
+    this.thayAI(true);
+    const giuDung = this.dungChung && !this._dungBan;
+    this.ketThucMang('end');
+    if (!giuDung) { this.hienDung(false); G.dung = false; }
   },
+  veMat() { }, // bảng che cũ (PARTNER LEFT / CONTINUE WITH AI) đã bỏ
+  anMat() { const el = document.getElementById('onl-mat'); if (el) el.remove(); },
+  choiVoiAI() { this.thayAI(true); },
 
   // ---------------------------------------------------------------- tạm dừng chung + HUD
   hienDung(v) { const d = document.getElementById('dung'); if (d) d.hidden = !v; if (typeof UI !== 'undefined' && v) UI.huyKeo(); },
   // tên đồng đội + độ trễ hiện ngay trên nhãn bàn đồng đội (tấm tên thép có sẵn, render.js veNhanBan) — không thêm khung mới
   veHUD() {
-    const B1 = G.ban[1]; if (!this.on || !B1 || !B1.net || !this.o) return;
-    B1.ten = (escTen(this.o.tenBan) || 'ALLY') + (this.mat ? ' · OFFLINE' : this.ping ? ' · ' + this.ping + ' ms' : '');
+    const B1 = G.ban[1];
+    if (!this.on || !B1 || !this.o) return;
+    B1.ten = (escTen(this.o.tenBan) || 'ALLY') + (this.thay ? ' · AI' : this.mat ? ' · OFFLINE' : this.ping ? ' · ' + this.ping + ' ms' : '');
   },
 
 
@@ -310,7 +331,7 @@ const ONS = {
     // wave: hạt giống chung; khách chờ host; khách đổi làn (làn 0 luôn là của mình)
     g('wavMoi', (goc) => function () {
       if (!self.on) return goc.apply(this, arguments);
-      if (!self.host && self.hostWave <= G.wave) { G.cho = 0.1; return; }
+      if (!self.host && !self.thay && self.hostWave <= G.wave) { G.cho = 0.1; return; } // host vắng (AI lái bàn host) → khách tự chạy wave
       if (self.host && G.wave === 0 && !self.banVao && Date.now() - self.t0 < 25000) { G.cho = 0.1; return; }
       const r0 = Math.random, h0 = G.hang.length;
       Math.random = rngHat((self.seed || 1) * 1009 + (G.wave + 1) * 7919);
@@ -322,14 +343,14 @@ const ONS = {
     g('lot', (goc) => function (E) {
       if (!self.on) return goc.apply(this, arguments);
       const p = G.duong[E.p];
-      if (!p || p.ban !== 0) { E.chet = true; E.tChet = 1; return; } // làn đồng đội: máy bạn kia tính
+      if ((!p || p.ban !== 0) && !self.thay) { E.chet = true; E.tChet = 1; return; } // làn đồng đội: máy bạn kia tính (AI lái thì máy mình tính)
       if (self.host) { const r = goc.apply(this, arguments); self.ghiState(); return r; }
       const n = E.tim || 1, r = goc.apply(this, arguments); // khách: trừ tạm ở máy mình (host sẽ ghi số đúng)
-      self.gui('l', { n, id: E.trum || E.id });
+      if (p && p.ban === 0) self.gui('l', { n, id: E.trum || E.id });
       return r;
     });
     g('ketThuc', (goc) => function (thang, ly) {
-      if (self.on && !self.host && !self._tuHost) return; // khách: chỉ host kết thúc trận
+      if (self.on && !self.host && !self._tuHost && !self.thay) return; // khách: chỉ host kết thúc trận (host vắng → mình tự kết thúc)
       const daXong = !!G.ketThuc;
       const r = goc.apply(this, arguments);
       if (!daXong && G.ketThuc) {
@@ -361,6 +382,6 @@ const ONS = {
   tom() {
     const B0 = G.ban[0], B1 = G.ban[1];
     return { on: this.on, host: this.host, wave: G.wave, hostWave: this.hostWave, tim: B0 && B0.tim, dung: G.dung, mat: this.mat && this.mat.ly, ping: this.ping,
-      lech: this.lech, soAct: this.soAct, toi: B0 && this.oCua(B0), ban: B1 && this.oCua(B1), anhBan: this._anh && this._anh.c, ketThuc: G.ketThuc };
+      lech: this.lech, soAct: this.soAct, toi: B0 && this.oCua(B0), ban: B1 && this.oCua(B1), anhBan: this._anh && this._anh.c, ketThuc: G.ketThuc, thay: this.thay && (this.thay.vinh ? 'bye' : 'im'), ai: !!(B1 && B1.ai && !B1.net), im: Date.now() - this.rx };
   },
 };

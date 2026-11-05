@@ -1,0 +1,16 @@
+OK   Trận 1: 2 máy vào CO-OP online
+OK   Rớt mạng 5 s: cả 2 KHÔNG dừng, không bảng che (A dung=false, B dung=false)
+OK   Rớt mạng 5 s: không giao AI (A thay=null, im=333 ms)
+OK   B khoá màn 8 s (A không nghe gì 8544 ms): A chạy tiếp, chưa giao AI (G.t 12.4→20.6)
+OK   B mở lại màn: B không tự coi là đã rời, không giao AI bên nào
+OK   B vắng > 12 s: A tự giao bàn đồng đội cho AI, không bảng che, nhãn "Pilot-WKDP · AI"
+OK   B quay lại: A trả bàn cho B (thay=null, ten "Pilot-WKDP · 47 ms")
+OK   B đóng hẳn: A không dừng, không bảng che (4 s sau)
+OK   A chơi tiếp với AI: bàn đồng đội 7→11 ụ, wave 3→4
+OK   A fps sau khi bạn rời: 50
+OK   Wave chạy tiếp: 3→4
+OK   Host đóng hẳn: khách giao bàn host cho AI, không bảng che
+OK   Khách tự chạy wave khi host vắng: 1→2
+OK   Tạm dừng CHUNG vẫn còn (A bấm dừng → B dừng)
+OK   Host bấm QUIT: khách bỏ tạm dừng, chơi tiếp với AI (G.t 5.6→8.1)
+OK   Không lỗi trang (0)
