@@ -10,8 +10,9 @@
 // quái có dải 8 khung mới (quai_<id>_8.png / trum_<id>_8.png) — thêm id khi ảnh có trong assets/
 const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
 // hệ số cỡ vẽ để thân bản 8 khung to bằng bản 4 khung cũ (đo: trung bình nhân tỉ lệ lõi thân & khung bao)
-const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16 };
-const TRUM8 = new Set([]);
+const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16,
+  freezer: 1.06, janus: 0.87, joker_king: 1.1, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
+const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus']); // janus, joker_king: chờ bản vẽ lại
 
 Object.assign(REN, {
   _xac: [],
@@ -140,9 +141,10 @@ Object.assign(REN, {
         if (bay && !dong) { // cánh rung: vệt mờ của khung kế tiếp, hơi lớn hơn (bỏ khi màn quá đông quái)
           ctx.globalAlpha = 0.22; this.khung0(ctx, daiV, fV + 1, C * 1.035);
         }
-        ctx.globalAlpha = 1; this.khung0(ctx, daiV, fV, C);
+        ctx.globalAlpha = 1; this.khung0(ctx, daiV, fV, daiV === dai ? C : C / kc); // khung tung chiêu (dải 4 khung cũ): cỡ gốc
         if (f1 >= 0 && fr > 0.01 && daiV === dai) { ctx.globalAlpha = fr; this.khung0(ctx, dai, f1, C); }
-        const fl = Math.max(he * 0.85, E.flash > 0 ? 0.25 : 0);
+        // chớp trắng ngắn (tắt nhanh theo bình phương) — trùm bị bắn liên tục không bị trắng xoá
+        const fl = he * he * (E.trum ? 0.4 : 0.7);
         if (fl > 0.02) { const w = this.coDai(ten, co * kc, 'trang'); if (w && daiV === dai) { ctx.globalAlpha = fl; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : f0, C); } }
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }

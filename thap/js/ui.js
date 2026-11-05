@@ -173,6 +173,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
+    if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
     REN.napTruoc(ds);
   },
 
