@@ -25,8 +25,7 @@ const REN = {
 
   init(cv) {
     this.cv = cv; this.ctx = cv.getContext('2d', { alpha: false }); // canvas đục: trình duyệt khỏi trộn nền khi ghép lớp
-    this.coLai();
-    addEventListener('resize', () => this.coLai());
+    this.coLai(); // đổi cỡ/xoay/pageshow/visualViewport: taitai.js hoiKhung() gọi lại coLai()
     if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this.donCache(); }); // phông về muộn: dựng lại ảnh chữ
     // quay lại trang/tab (iOS có thể đã xoá vùng nhớ canvas khi chạy nền) → dựng lại nền; ảnh lỗi → thử tải lại ngay
     const hoi = () => { if (document.hidden) return; this.thuLaiLoi(); if (G.ban.length) this.lamNen(); };
@@ -54,7 +53,8 @@ const REN = {
   // Độ phân giải vẽ = đúng mật độ điểm ảnh thật của máy (tối đa 3×). Trước đây kẹp 2× → máy 3× (iPhone, nhiều Android)
   // phải phóng ảnh 1.5× → mọi hình mềm nhoè, viền răng cưa. Máy yếu (khung > 18 ms kéo dài) tự lùi về 2×.
   coLai() {
-    const vw = innerWidth, vh = innerHeight;
+    const vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
+    if (!(vw > 0 && vh > 0)) { if (typeof hoiKhung === 'function') setTimeout(() => hoiKhung(true), 50); return; } // Safari chưa có viewport → thử lại
     this.s = Math.min(vw / W, vh / H);
     const thuc = devicePixelRatio || 1;
     this.dpr = Math.max(1, Math.min(this.dprMax || 3, G.debug && G.debug.dpr ? G.debug.dpr : thuc));
@@ -277,7 +277,12 @@ const REN = {
   // (không dùng ctx.filter vì Safari iOS chưa hỗ trợ). Tư vấn mục C: bàn tối, trung tính, ít chi tiết sáng.
   diu(ten, sat, con, bri) {
     const key = 'diu|' + ten + '|' + sat + con + bri;
-    if (this.xam[key]) return this.xam[key];
+    if (this.xam[key]) {
+      // iOS Safari có thể xoá vùng nhớ canvas (chạy nền, F5/bfcache, thiếu bộ nhớ) mà KHÔNG báo lỗi → bản dịu thành trong suốt
+      // → khay mất cả viền/khung (SOLO/CO-OP "bàn không có viền"). Tâm ảnh khay/đường luôn đục: tâm trong suốt = bản hỏng → dựng lại.
+      if (this.conSong(this.xam[key])) return this.xam[key];
+      delete this.xam[key];
+    }
     const a = this.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d');
@@ -299,6 +304,12 @@ const REN = {
     // ảnh nền (khay, đường) chỉ dùng qua bản dịu → bỏ bản gốc cỡ lớn khỏi bộ nhớ
     if (this.anh[ten] && this.anh[ten]._cv === a) delete this.anh[ten];
     return (this.xam[key] = c);
+  },
+  // canvas còn điểm ảnh? (đọc 1 điểm ở tâm; canvas 0×0 / bị trình duyệt xoá → false)
+  conSong(c) {
+    if (!c || !(c.width > 0 && c.height > 0)) return false;
+    if (!(c instanceof HTMLCanvasElement)) return true;
+    try { const x = c.getContext('2d'); return !!x && x.getImageData(c.width >> 1, c.height >> 1, 1, 1).data[3] > 0; } catch (e) { return true; }
   },
   diaCong(co) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(co * k)), key = 'dia|' + n;
@@ -430,7 +441,7 @@ const REN = {
     for (const B of G.ban) {
       x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18 * q; x.shadowOffsetY = 8 * q;
       const kh = this.diu('khay', 0.22, 0.72, 0.6);
-      if (kh) x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); else { du = false; if (this.dbg) { x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); } }
+      if (kh) { try { x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); } catch (e) { x.drawImage(kh, B.x, B.y, B.w, B.h); this._diuTam = true; } } else { du = false; if (this.dbg) { x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); } }
       x.restore();
     }
     this.thaMip(this.xam['diu|khay|0.220.720.6']); // các tầng mip chỉ cần lúc dựng nền

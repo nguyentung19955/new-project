@@ -209,9 +209,43 @@ const TAI = {
     else if (ok) this.loiLien = 0;
   },
 };
+
+// ---------- ĐẶT KHUNG #wrap NGAY KHI TRANG MỞ (trước phông/roster/ảnh) ----------
+// Lỗi F5 trên iPhone Safari: trước đây chỉ REN.coLai() (gọi trong UI.init, sau khi chờ phông + roster.json) mới đặt
+// left/top/scale cho #wrap → nếu bước chờ bị treo/chậm, #wrap nằm ở left:50% top:50% chưa co (màn đen, nền lệch góc phải dưới).
+// Giờ đặt khung đồng bộ ngay đây + mọi lần đổi cỡ (resize, visualViewport, xoay máy, pageshow/bfcache, load).
+// innerWidth/Height = 0 (Safari lúc khôi phục trang) → bỏ qua, thử lại khung sau.
+// datKhung() khai báo trong index.html (script nội tuyến ngay trong #wrap); dự phòng nếu thiếu:
+if (typeof datKhung !== 'function') window.datKhung = function () {
+  const wrap = document.getElementById('wrap'); if (!wrap) return false;
+  const vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
+  if (!(vw > 0 && vh > 0)) return false;
+  const thuc = devicePixelRatio || 1, s = Math.min(vw / 430, vh / 860);
+  wrap.style.left = Math.round((vw - 430 * s) / 2 * thuc) / thuc + 'px'; wrap.style.top = Math.round((vh - 860 * s) / 2 * thuc) / thuc + 'px';
+  wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
+  return true;
+};
+// gọi lại bố cục: REN đã sẵn sàng → REN.coLai() (cả canvas); chưa → chỉ đặt khung. Gom nhiều sự kiện vào 1 khung hình.
+let _hkLai = 0, _hkCu = '';
+function hoiKhung(ep) {
+  if (_hkLai) return;
+  _hkLai = requestAnimationFrame(() => {
+    _hkLai = 0;
+    const k = innerWidth + 'x' + innerHeight + '@' + devicePixelRatio;
+    if (!ep && k === _hkCu) return; _hkCu = k;
+    if (typeof REN !== 'undefined' && REN.cv) REN.coLai(); else if (!datKhung()) { _hkCu = ''; hoiKhung(); }
+  });
+}
+datKhung() || hoiKhung();
+addEventListener('resize', () => hoiKhung());
+addEventListener('orientationchange', () => { hoiKhung(); setTimeout(() => hoiKhung(), 300); setTimeout(() => hoiKhung(true), 800); });
+addEventListener('pageshow', () => hoiKhung(true));
+addEventListener('load', () => { hoiKhung(true); setTimeout(() => hoiKhung(), 500); });
+if (window.visualViewport) visualViewport.addEventListener('resize', () => hoiKhung());
+document.addEventListener('visibilitychange', () => { if (!document.hidden) hoiKhung(true); });
 TAI.bootP = new Promise(r => { TAI._bootXong = r; });
 TAI.dung();
-TAI.hien('LOADING'); // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
+TAI.hien('LOADING'); { const w = document.getElementById('wrap'); if (w) w.classList.remove('dang-tai'); } // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
 addEventListener('offline', () => TAI.matMang('offline'));
 addEventListener('online', () => TAI.thu());
 if (!navigator.onLine) TAI.matMang('boot-offline');

@@ -26,6 +26,21 @@
 </head>
 <body>
   <div id="wrap">
+    <script>
+    // đặt khung #wrap NGAY khi trình duyệt dựng tới đây (trước 40+ tệp js, phông, ảnh) — F5 / mạng chậm trên iPhone Safari
+    // không còn màn đen + nền lệch góc phải dưới. taitai.js / REN.coLai() đặt lại mỗi lần đổi cỡ.
+    function datKhung() {
+      var wrap = document.getElementById('wrap'); if (!wrap) return false;
+      var vw = innerWidth || document.documentElement.clientWidth, vh = innerHeight || document.documentElement.clientHeight;
+      if (!(vw > 0 && vh > 0)) return false;
+      var thuc = devicePixelRatio || 1, s = Math.min(vw / 430, vh / 860);
+      wrap.style.left = Math.round((vw - 430 * s) / 2 * thuc) / thuc + 'px'; wrap.style.top = Math.round((vh - 860 * s) / 2 * thuc) / thuc + 'px';
+      wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
+      return true;
+    }
+    if (!/[?&]preview=/.test(location.search)) document.getElementById('wrap').className = 'dang-tai'; // che menu chưa có ảnh tới khi màn tải (taitai.js) dựng xong
+    datKhung(); addEventListener('resize', function () { if (typeof hoiKhung !== 'function') datKhung(); });
+    </script>
     <canvas id="cv"></canvas>
 
     <!-- THANH TRÊN: băng WAVE · trùm / số quái · tim -->
