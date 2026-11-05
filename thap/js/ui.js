@@ -503,10 +503,10 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
 // 'ReferenceError: ND is not defined' → đường đi rơi về bản vẽ dự phòng xám phẳng.
 Promise.all([FONT.ready, new Promise(ok => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ok, { once: true }) : ok())]).then(() => UI.init());
 
-// ★ trong chữ DOM → ảnh ngôi sao ChatGPT (ui_sao.png) — QUY-TAC-HINH §1: không dùng ký tự để giả icon (rà soát vẽ tay, pass 4 UI).
+// ★ trong chữ DOM → ảnh ngôi sao ChatGPT (sao_chu.png, raw_p4_ui_1) — QUY-TAC-HINH §1: không dùng ký tự để giả icon (rà soát vẽ tay, pass 4 UI).
 //  Bọc mọi nút chữ có '★' trong #wrap (menu, trang ụ/chỉ huy, bảng thông tin, kết quả, hướng dẫn…); alt="★" giữ nghĩa khi sao chép/đọc màn hình.
 (() => {
-  const SAO = 'assets/ui_sao.png', BO = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'OPTION', 'TITLE']);
+  const SAO = 'assets/sao_chu.png', BO = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'OPTION', 'TITLE']);
   const doi = (t) => {
     const p = t.parentNode; if (!p || BO.has(p.nodeName) || p.closest('svg')) return;
     const ph = t.nodeValue.split('★'); if (ph.length < 2) return;

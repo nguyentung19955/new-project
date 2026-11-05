@@ -75,6 +75,8 @@ const TAI = {
     for (const u of this.ANH_TAI) d.them(u);
     if (!this.xem) {
       d.them('assets/nen_menu.jpg'); d.them('assets/logo.png'); d.them('assets/khung_bang.png');
+      // ảnh JS chèn ở màn UI (pass 4 vẽ tay): sao trong chữ, ngọc/vòng độ hiếm, huy chương chỉ huy, mũi tên grow-up, thông báo nổi
+      for (const n of ['sao_chu', 'mui_tiep', 'h2_ngoc', 'h2_mv_huy', 'h2_tam_do'].concat(...(typeof TIER_LIST !== 'undefined' ? TIER_LIST : []).map(b => ['ngoc_' + b, 'tier_ring_' + b]))) d.them('assets/' + n + '.png');
       // ảnh trong mọi file CSS (khung, nút, HUD…)
       for (const sh of document.styleSheets) {
         let rs; try { rs = sh.cssRules; } catch (e) { continue; }
