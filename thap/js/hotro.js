@@ -45,7 +45,7 @@ const HOTRO = {
     const goc = new Map();
     for (const N of B.t) if (N) N.ht = null;
     for (const T of B.t) {
-      if (!T || T.st.bang > 0 || T.st.da) continue;
+      if (!T || T.st.bang > 0 || T.st.da || T.st.cam > 0) continue; // cam: bị STATIC JAMMER câm (trum.js)
       const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
       if (sk.vai !== 'ht') { for (const N of oHoTro(B, T)) if (N && N !== T && !N.st.da) sk.hoTro(G, T, N); continue; } // ụ không phải hỗ trợ (Sói 7★…): cộng thẳng như cũ
       for (const o of this.oDich(T)) {

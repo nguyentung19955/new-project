@@ -934,3 +934,27 @@ Lưu raw vào `docs/demo-hop-tuong/thap-art/raw_p5_<id>_side.png` / `raw_p5_<id>
 | octopus | `raw_p5_octopus_side.png` — Side view of the crimson many-eyed octopus boss with flaming crown crawling to the RIGHT, tentacles stepping. | `raw_p5_octopus_back.png` — Back view of the same crimson flaming octopus boss crawling AWAY (up), mantle back and tentacles, no big eye. |
 
 Trong lúc chưa có ảnh: dùng dải TRƯỚC + nghiêng nhẹ theo hướng đi (≤ 8°), lật/hoà 120 ms khi rẽ (`quaianim.js`), không vẽ code.
+
+## Pass 6 — new bosses (2026-11-05, session trùm mới · thiết kế: `TRUM-MOI.md`)
+
+6 trùm mới, mỗi trùm 5 tấm. Chung cho mọi prompt: **solid magenta #FF00FF background, no text, no shadows on background, same style as the attached game screenshot (cyber/mechanical cartoon, thick dark outline, top-down 3/4 view), same character in every frame, same size and same ground line in every cell.** Trùm cũ (6) đã có hướng side/back ở Pass 5 (session hướng nhìn).
+
+Tên file nộp: `raw_p6_<id>_front.png` · `_side.png` · `_back.png` · `_fx.png` · `_portrait.png`
+→ code cắt thành `trum_<id>_8.png` (đi trước), `trum_<id>_side_8.png`, `trum_<id>_back_8.png`, `fx_trum_<id>.png` (dải 16), `trum_<id>_portrait.png` — khoá magenta + đăng ký khung theo thân (`thap-art/dangky_khung.py`) để thân không nhảy khi đổi hướng.
+
+Mẫu (thay `<LOOK>`):
+- (a) FRONT: `2048×256, one row of 8 cells (256 each). Boss <LOOK>, walking TOWARD the camera, 8-frame walk cycle, idle sway, facing down. Solid magenta #FF00FF background, no text, same style as the attached game screenshot.`
+- (b) SIDE: `2048×256, one row of 8 cells. Same boss <LOOK>, walking to the RIGHT, side view, 8-frame walk cycle, same scale and ground line as the front sheet. Solid magenta #FF00FF, no text, same style.`
+- (c) BACK: `2048×256, one row of 8 cells. Same boss <LOOK>, walking AWAY from camera (back view, facing up), 8-frame walk cycle, same scale. Solid magenta #FF00FF, no text, same style.`
+- (d) FX: `1024×1024, 4×4 grid (256 cells), 16-frame ability effect: <FX>, read left-to-right, top-to-bottom, centered in each cell. Solid magenta #FF00FF, no text, same style.`
+- (e) PORTRAIT: `1024×1024, dramatic boss intro portrait of <LOOK>, bust, glowing eyes, centered, for a boss warning banner. Solid magenta #FF00FF background, no text, same style.`
+
+| id | `<LOOK>` | `<FX>` |
+|---|---|---|
+| hive | a hexagonal mechanical hive mothership on 4 short spider legs, amber lights, belly hatch | belly hatch opening and 4 small amber drones flying out |
+| jammer | a radio-antenna robot on 2 chicken legs, tilted radar dish, coils with violet static | violet static wave rings + electric chain locking a target |
+| prism | a crystal-and-steel guardian with a triangular prism body and 3 floating prism shields | prism shield forming, glowing, then shattering into shards |
+| twin_core | a twin-half reactor core joined by a red lightning bridge, on 4 robot legs | core cracking and splitting in two with red lightning |
+| patcher | a bulky repair robot, green liquid tank on its back, wrench arm and nano-spray nozzle | green nano-repair mist burst with floating plus-shaped sparks |
+| leech | a long mechanical leech/beetle robot with a tube proboscis and a glass belly holding glowing stars | golden star being sucked out along a tube, then a speed-dash streak |
+
