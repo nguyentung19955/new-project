@@ -41,3 +41,11 @@ if co_tam('raw_p7_a3.png'):
                     (3, 'p7_noi', 'dải ụ nổi bật D01 (ô chân dung trái)'), (4, 'p7_hang', 'hàng có ổ tròn D03 (chỉ huy / bộ mẫu)'), (5, 'p7_tien', 'ổ tiền tệ A11 (chưa dùng)')]:
         luu(o(i), n + '.png', g)
 for x in BAO[-6:]: print(*x)
+# raw_p7_a4 · 1536×1024 · lưới 4×4 (ô 384×256): A12 bộ icon (hiển thị ≤ 40 css → 120 px)
+if co_tam('raw_p7_a4.png'):
+    R = 'raw_p7_a4.png'
+    TEN = ['lui', 'dong', 'tim', 'loc', 'caidat', 'chep', 'chiase', 'tin', 'dung', 'toc', 'xong', 'bomau', 'phai', 'xuong', 'nhac', 'loa']
+    for i, n in enumerate(TEN):
+        c, r = i % 4, i // 4
+        luu(co(cat(R, (c * 384, r * 256, c * 384 + 384, r * 256 + 256)), h=120), 'p7_ic_' + n + '.png', 'icon A12 ' + n)
+for x in BAO[-16:]: print(*x)

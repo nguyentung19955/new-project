@@ -72,7 +72,7 @@ const HM = {
       const r = G.rosterMap[id], t = TIERS[r.bac], sk = SKILLS[id];
       noi.dataset.id = id; noi.style.setProperty('--m', t.mau);
       noi.innerHTML = '<span class="dk-noi-po"><img src="' + portraitOf(id) + '" alt=""></span><img class="dk-noi-u" src="' + iconOf(id) + '" alt="">' +
-        '<span class="dk-noi-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small></span><span class="dk-noi-ct">DETAILS</span>';
+        '<span class="dk-noi-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small></span><img class="dk-noi-ct" src="assets/p7_ic_phai.png" alt="Details">';
       if (typeof MAT !== 'undefined') requestAnimationFrame(() => { const im = noi.querySelector('.dk-noi-po img'); if (im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true }); });
     } else { delete noi.dataset.id; noi.innerHTML = '<span class="dk-noi-trong">Drag a turret into a slot · tap for details</span>'; }
     // chỉ huy: 1 hàng gọn
@@ -98,7 +98,7 @@ const HM = {
     mo.classList.remove('vao'); mo.classList.add('ra');
     clearTimeout(this._dg); this._dg = setTimeout(() => { if (!this.sheet) { mo.hidden = true; mo.classList.remove('ra'); } }, 200);
   },
-  dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-dong" data-act="hm-dong"><span>CLOSE</span></button></div>'; },
+  dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-ic1 hm-dong" data-act="hm-dong" aria-label="Close"><img src="assets/p7_ic_dong.png" alt=""></button></div>'; },
 
   moChe() {
     this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
