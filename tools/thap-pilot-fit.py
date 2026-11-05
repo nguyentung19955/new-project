@@ -8,7 +8,7 @@ import os
 R=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..')+'/'
 ART=R+'docs/demo-hop-tuong/thap-art/redo/'
 ids=re.findall(r"'(\w+)'",open(R+'thap/js/text.js').read().split('const PILOTS = new Set([')[1].split('])')[0])
-OV={}  # chỉnh tay: {id:{'p':pad_px,'fx':face_x,'y':y%}}
+OV={'phun':{'p':20,'fx':112},'cuuvi':{'p':20},'pandora':{'p':20,'fx':180}}  # v3 đã có chỗ trống trên đầu; chỉnh tay: {id:{'p':pad_px,'fx':face_x,'y':y%}}
 OUT=R+'thap/assets/'
 def src_of(id):
     for v in ('v3','v2'):
