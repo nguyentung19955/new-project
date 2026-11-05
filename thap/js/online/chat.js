@@ -4,14 +4,14 @@
 //  · Tin hiện thành bong bóng ~3 s trên tên/bàn người gửi + nhật ký nhỏ ở sảnh. Tắt chat (MUTE) trong SETTINGS.
 //  · Dữ liệu: rooms/<code>/chat/<khoá> = { u, t:'q'|'e'|'x', v, at } — giữ 30 tin mới nhất (người gửi xoá tin cũ).
 //    Luật database đang chạy chưa có nhánh chat → ghi bị từ chối thì tự gửi qua kênh hành động có sẵn rooms/<code>/act (k:'ch').
-//  · Hình: chỉ ảnh có sẵn (khung_tt = bảng, h2_tam = bong bóng, h2_chip = nút CHAT, nut_lon_thep = nút câu, ic_* = biểu cảm tạm).
+//  · Hình: chỉ ảnh có sẵn (khung_tt = bảng, h2_lcd = bong bóng, nut_lon_thep = nút CHAT + nút câu, ic_* / p7_ic_xong = biểu cảm tạm).
 //    Ảnh riêng cho chat cần gen: HINH-VE-CODE-AUDIT.md "Pass 11 — chat" (raw_p11_*.png).
 'use strict';
 
 const CHAT = {
   CAU: ['Nice!', 'Help my lane!', 'Merge now', 'Boss incoming', 'Save mana', 'Thanks!', 'Hurry up!', 'GG'],
   // biểu cảm tạm = icon có sẵn (thay bằng p11_emo_* khi có ảnh gen)
-  EMO: { vui: 'ic_sao', ok: 'chon_huy', no: 'ic_bom', toang: 'ic_chet' },
+  EMO: { vui: 'ic_sao', ok: 'p7_ic_xong', no: 'ic_bom', toang: 'ic_thua' },
   XAU: ['fuck', 'shit', 'bitch', 'cunt', 'dick', 'asshole', 'nigger', 'fag', 'đm', 'dm', 'vcl', 'vl', 'cc', 'địt', 'dit me', 'lồn', 'lon', 'cặc', 'buồi', 'đéo', 'deo'],
   GIU: 30, CACH: 2000, HIEN: 3000,
   code: null, me: null, keys: [], log: [], _off: [], _t0: null, _gui: 0, dungAct: false, mo: false,

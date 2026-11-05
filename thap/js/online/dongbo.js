@@ -116,7 +116,7 @@ const ONS = {
       console.log('[ONS] đồng bộ lại' + (aiToi ? ' (bạn đã cho AI lái bàn mình)' : '') + ' wave ' + G.wave);
     }).catch((e) => { console.warn('[ONS] đồng bộ lại', e && (e.code || e.message)); xong(); this._offT = this._offT || Date.now(); });
   },
-  // dải chữ nhỏ trên cùng (tấm h2_tam có sẵn) — không chặn, không chạm. ms = 0 → giữ tới khi gọi lại
+  // dải chữ nhỏ trên cùng (tấm h2_lcd có sẵn) — không chặn, không chạm. ms = 0 → giữ tới khi gọi lại
   baoNho(s, ms) {
     let el = document.getElementById('ons-bao');
     if (!s) { this.anBao(); return; }

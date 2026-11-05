@@ -1,9 +1,9 @@
-/* TURRET MERGE — CHAT NHANH (js/online/chat.js). QUY-TAC-HINH: chỉ ảnh ChatGPT có sẵn — h2_tag (nút CHAT), khung_tt (bảng),
-   nut_lon_thep (nút câu soạn sẵn), h2_lcd (ô chữ), h2_tam (bong bóng), ic_* (biểu cảm tạm), p7_ic_dong (đóng).
+/* TURRET MERGE — CHAT NHANH (js/online/chat.js). QUY-TAC-HINH: chỉ ảnh ChatGPT có sẵn — nut_lon_thep (nút CHAT), khung_tt (bảng),
+   nut_lon_thep (nút câu soạn sẵn), h2_lcd (ô chữ + bong bóng + dải thông báo; đủ nét ở DPR 3), ic_* (biểu cảm tạm), p7_ic_dong (đóng).
    Code chỉ đặt chữ, vị trí, cỡ, độ mờ. Ảnh riêng cần gen: HINH-VE-CODE-AUDIT.md "Pass 11 — chat". */
 
-.chat-nut { height: 26px; min-width: 48px; padding: 0 2px; font: 800 10px/1 var(--f-ui); letter-spacing: .08em; color: #e9f6ff; text-shadow: 0 1px 0 #000;
-  background: none; border: 0 solid transparent; border-width: 0 9px; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 9px / 0 stretch; }
+.chat-nut { height: 26px; min-width: 52px; padding: 0 1px; font: 800 10px/1 var(--f-ui); letter-spacing: .08em; color: #e9f6ff; text-shadow: 0 1px 0 #000;
+  background: none; border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/nut_lon_thep.png) 0 64 fill / 0 12px / 0 stretch; }
 .chat-nut.cho { opacity: .55; }
 #chat-nut.tran { position: absolute; z-index: 22; height: 24px; min-width: 44px; }
 #onl-sanh .s7-dau i { display: flex; align-items: center; justify-content: flex-end; font-style: normal; width: 56px; }
@@ -33,7 +33,7 @@
 /* bong bóng ~3 s */
 .chat-bong { position: absolute; z-index: 30; display: flex; align-items: center; max-width: 210px; min-height: 28px; padding: 0 2px;
   font: 800 12px/1.1 var(--f-ui); color: #f4f8fb; text-shadow: 0 1px 0 #000; white-space: nowrap; pointer-events: none;
-  border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/h2_tam.png) 0 40 fill / 0 12px / 0 stretch;
+  border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/h2_lcd.png) 0 60 fill / 0 12px / 0 stretch;
   animation: chat-bong 3s ease-out forwards; }
 .chat-bong span { overflow: hidden; text-overflow: ellipsis; }
 .chat-bong.emo { min-height: 0; border: 0; padding: 0; }
@@ -57,6 +57,6 @@
 /* thông báo nhỏ không chặn (đồng bộ: "Partner is back", "Reconnecting…") */
 #ons-bao { position: absolute; z-index: 47; left: 50%; top: 58px; transform: translateX(-50%); max-width: calc(100% - 40px); min-height: 28px; display: flex; align-items: center; padding: 0 4px;
   font: 800 12px/1.1 var(--f-ui); color: #f4f8fb; text-shadow: 0 1px 0 #000; white-space: nowrap; pointer-events: none;
-  border: 0 solid transparent; border-width: 0 14px; border-image: url(../assets/h2_tam.png) 0 40 fill / 0 14px / 0 stretch; transition: opacity .25s; }
+  border: 0 solid transparent; border-width: 0 14px; border-image: url(../assets/h2_lcd.png) 0 60 fill / 0 14px / 0 stretch; transition: opacity .25s; }
 #ons-bao.an { opacity: 0; }
 #ons-bao[hidden] { display: none; }
