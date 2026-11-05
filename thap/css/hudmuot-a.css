@@ -38,7 +38,7 @@
 /* ================= HOME ================= */
 .hm { overflow: hidden; }
 .hm-nen, .dk-nen { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-.dk-nen { opacity: .35; }
+.dk-nen { opacity: 1; }
 .hm-dau { position: absolute; left: var(--le); right: var(--le); top: 14px; height: 48px; display: flex; align-items: center; gap: var(--g1); z-index: 3; }
 .hm-tk { flex: 1; min-width: 0; display: flex; }
 .hm-tk #tk-chip { position: static; transform: none; margin: 0; max-width: 100%; }

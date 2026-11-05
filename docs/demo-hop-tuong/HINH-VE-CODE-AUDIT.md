@@ -978,4 +978,4 @@ và `css/hud2.css` (thanh trên, khay, nút).
 
 Thứ tự ưu tiên: b1 (thanh + dải xem nhanh) → b2 (nút) → b4 → b3.
 
-**Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME, 1024×1536 đục, giữ nguyên độ nét tấm raw). Các tấm còn lại (d00, h02, a1–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
+**Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME), `raw_p7_d00` → `thap/assets/nen_deck.jpg` (nền màn bộ bài) — 1024×1536 đục, giữ nguyên độ nét tấm raw. Các tấm còn lại (h02, a1–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
