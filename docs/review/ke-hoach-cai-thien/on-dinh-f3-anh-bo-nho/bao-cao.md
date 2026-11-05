@@ -231,4 +231,4 @@ mặc không tải); tải trước vùng đầu ~5,4 MB.
 
 Nhánh `khoi-tao-du-an`: *"F3 ổn định: bộ tải ảnh rời mới (fetch có hạn giờ, giải mã riêng, thử lại tăng dần, trạng thái từng ảnh), giải
 phóng ảnh vùng cũ theo ngân sách bộ nhớ, trang phục chỉ tải khi mặc, dừng vòng lặp khi ẩn tab, bộ đếm hiệu năng + tự giảm hình (?taicu=1,
-?bonhocu=1, ?chatluong=cao, ?vonglapcu=1) + dựng lại dist"* — mã commit ghi ở dòng dưới sau khi đẩy.
+?bonhocu=1, ?chatluong=cao, ?vonglapcu=1) + dựng lại dist"* — đã đẩy: **`504b59a6`** (gộp sau F2 `614a8dd0`). Kèm một commit nhỏ sau đó chỉ ghi dòng này.
