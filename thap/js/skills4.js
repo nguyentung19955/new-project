@@ -65,18 +65,18 @@ SKILLS.docton = {
 // =====================================================================================================
 // P5 · FOCUS LENS (thaukinh) — Tím HT: 4 ô kề +k% sát thương chí mạng; chí mạng của ụ kề XUYÊN thêm 1 quái phía sau (60%); 5★+: 2 quái
 // =====================================================================================================
-SKILLS.thaukinh = {
+SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
-  k: (T) => sao7(T, [0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1]) + 0.05 * (lvU(T) - 1),
-  mo: (T) => 'Neighbours: +' + Math.round(SKILLS.thaukinh.k(T) * heSoHT(T) * 100) + '% crit damage · their crits pierce ' + (T.sao >= 5 ? 2 : 1) + ' enemy behind (60%)',
-  hoTro(G, T, N) { N.buf.cdmg = (N.buf.cdmg || 0) + this.k(T) * heSoHT(T); N.buf.xuyen = Math.max(N.buf.xuyen || 0, T.sao >= 5 ? 2 : 1); },
-  capNhat(G, B, T, dt) { hoTroNhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
+  k: (T) => 0.14 * HOTRO.k(T),
+  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5, SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
+  hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
+  capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
 };
 function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần nhất (đã đi ít hơn) trong 60 px
   const B = o.B || G.ban[T.ban]; if (!B) return;
   const ds = dsMucTieu(B).filter(Q => Q !== E && !Q.chet && Q.p === E.p && Q.s < E.s && Math.hypot(Q.x - E.x, Q.y - E.y) < 60).sort((a, b) => b.s - a.s).slice(0, T.buf.xuyen);
   let x0 = E.x, y0 = E.y;
-  for (const Q of ds) { trung(Q, dmg * 0.6, { B, T, phu: true, crit: false, mau: '#6fd0ff' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.18, x0, y0, x1: Q.x, y1: Q.y, mau: '#6fd0ff' }); x0 = Q.x; y0 = Q.y; }
+  for (const Q of ds) { trung(Q, dmg * (T.ht && T.ht.xuyen100 ? 0.65 : 0.5), { B, T, phu: true, crit: false, mau: '#6fd0ff' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.18, x0, y0, x1: Q.x, y1: Q.y, mau: '#6fd0ff' }); x0 = Q.x; y0 = Q.y; }
 }
 
 // =====================================================================================================
@@ -250,55 +250,61 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
 // G6 · SCRAP FORGE (loren) — Vàng TC: KÉO bất kỳ ụ 1–3★ khác loại thả lên Forge (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ (+4% sát thương/cộng dồn,
 //      tối đa 60, giữ khi ghép lên sao); ăn ụ 3★ = ×3. Búa nóng nổ 30 px; ≥40 cộng dồn: mỗi phát văng 1 mảnh sắt nóng vào 2 quái.
 // =====================================================================================================
-SKILLS.loren = {
-  vai: 'tc', dmg: 13, toc: 1, nham: 'dau',
+SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn; KÉO ụ 1–3★ khác loại thả lên (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ;
+  // mỗi cộng dồn = +4% sát thương VĨNH VIỄN cho ụ Tấn công mạnh nhất trên bàn (sao cao nhất), tối đa 15 cộng dồn (+60%, trần mỗi ụ nhận)
+  vai: 'db', dmg: 0, toc: 0,
+  MAX: 15,
   f: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]),
-  mo: (T) => 'Forge stacks ' + (T.lo || 0) + '/60 → +' + 4 * (T.lo || 0) + '% damage · drag any 1–3★ turret onto it: +' + SKILLS.loren.f(T) + ' (3★ food ×3)',
-  capNhat(G, B, T) { T.buf.dmg += 0.04 * (T.lo || 0); return false; },
+  dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
+  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' → +' + 4 * (T.lo || 0) + '% damage to your best Attack turret' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3)'; },
+  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.8 + (T.pha || 0)) * 0.2,
+  capNhat(G, B, T) {
+    const X = this.dich(B); T.forgeX = X;
+    if (X && T.lo) {
+      if (X._forgeT !== G.t) { X._forgeT = G.t; X._forgeS = 0; }
+      const v = Math.min(0.04 * T.lo, 0.6 - X._forgeS); // trần +60% cho mỗi ụ nhận (nhiều Forge không cộng quá)
+      if (v > 0) { X._forgeS += v; X.buf.dmg += v; X.nguon.push({ k: 'dmg', v, T }); }
+    }
+    return true;
+  },
   ghepDB: {
     haiChieu: true,
-    hopLe: (a, b) => b.id !== 'loren' && b.sao <= 3 && b.ban === a.ban && !b.st.da && (a.lo || 0) < 60,
+    hopLe: (a, b) => b.id !== 'loren' && b.sao <= 3 && b.ban === a.ban && !b.st.da && (a.lo || 0) < SKILLS.loren.MAX,
     lam(G, B, a, b) { // a = Forge, b = ụ bị ăn
       const n = SKILLS.loren.f(a) * (b.sao >= 3 ? 3 : 1);
       B.t[b.o] = null;
       G.bay.push({ id: b.id, sao: b.sao, x0: B.o[b.o].x, y0: B.o[b.o].y, x1: B.o[a.o].x, y1: B.o[a.o].y, t: 0, bac: b.bac });
-      a.lo = Math.min(60, (a.lo || 0) + n); a.sang = 1; a.anim = { k: 'no', t: 0.25 };
+      a.lo = Math.min(SKILLS.loren.MAX, (a.lo || 0) + n); a.sang = 1; a.anim = { k: 'no', t: 0.25 };
       const c = B.o[a.o]; FX.chu1(c.x, c.y - 30, '+' + n + ' FORGE', '#ff6a1a', 15, 'to'); FX.tiaLua(c.x, c.y, 16, '#ff6a1a', 200, 10); FX.no('no_phao', c.x, c.y, 60, 0.35);
+      const X = SKILLS.loren.dich(B); if (X) { const cx = B.o[X.o]; tiaPhep(c.x, c.y, cx.x, cx.y, '#ff6a1a'); }
       SND.dat(); SND.no(0.3);
       return a;
     },
   },
   ghep(G, B, a, b, ra) { if (ra.id === 'loren') ra.lo = Math.max(a.lo || 0, b.lo || 0); },
-  ban(G, B, T, E) {
-    giat(T, 1); const [x, y] = chopNong(T, 26); SND.phao();
-    const dmg = dmgU(T), gd3 = (T.lo || 0) >= 40;
-    banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 420, co: 16, cong: 18, B, T, duoi: true,
-      trung(G, d) {
-        noLan(d.x, d.y, 30, dmg, B, { mau: '#ffb070' }); FX.no('no_phao', d.x, d.y, 60, 0.3); FX.tiaLua(d.x, d.y, 6, '#ff6a1a', 160, 8);
-        if (gd3) for (const Q of dsMucTieu(B).filter(Q => !Q.chet && Math.hypot(Q.x - d.x, Q.y - d.y) < 110).slice(0, 2)) { trung(Q, dmg * 0.5, { B, phu: true, mau: '#ff6a1a' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.18, x0: d.x, y0: d.y, x1: Q.x, y1: Q.y, mau: '#ff6a1a' }); }
-      } });
-  },
-  sangDau: (T) => Math.min(0.35, (T.lo || 0) / 120),
-  veThem(ctx, T, S, al, R) { const n = T.lo || 0; if (n >= 15) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (n >= 40 ? 0.35 + 0.1 * Math.sin(R.t * 7) : 0.18); R.anhGiua(ctx, R.cham1('#ff6a1a'), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } },
+  sangDau: (T) => Math.min(0.35, (T.lo || 0) / 30),
+  veThem(ctx, T, S, al, R) { const n = T.lo || 0; if (n >= 4) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (n >= 10 ? 0.35 + 0.1 * Math.sin(R.t * 7) : 0.18); R.anhGiua(ctx, R.cham1('#ff6a1a'), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } },
 };
 
 // =====================================================================================================
 // G7 · MIRROR GATE (guongcong) — Vàng ĐB (hồi h s): PVP chặn + PHẢN hiệu ứng ghép của đối thủ lên bàn bạn (Clamp/Scramble/−1★/Jam → đối thủ bị Kẹp 4 s;
 //      7★ ×2) · Trùm: chặn (không phản) · Co-op: khi đồng đội ghép ụ có hiệu ứng ghép → sao chép lên bàn bạn ở ½ sao · Solo: chặn 1 kỹ năng trùm / h s.
 // =====================================================================================================
-SKILLS.guongcong = {
-  vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#bff6ff',
-  h: (T) => sao7(T, [30, 27, 24, 21, 18, 15, 12]),
-  mo: (T) => (T.nap >= 1 ? 'READY' : 'charging ' + Math.round(T.nap * 100) + '%') + ' · every ' + SKILLS.guongcong.h(T) + 's: PVP blocks & REFLECTS a rival merge effect · blocks a boss skill · CO-OP copies an ally merge effect at half stars',
-  capNhat(G, B, T, dt) { T.nap = Math.min(1, T.nap + dt / this.h(T)); return false; },
-  ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_bang', co: 15, mau: '#bff6ff', sp: 560 }); },
+SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (đợt vai trò): ụ kề kháng khống chế (xác suất, trần 35%); hồi 20 s (7★ 15 s): PVP chặn + PHẢN 1 hiệu ứng,
+  // trùm: chặn 1 chiêu · CO-OP: sao chép 1 hiệu ứng ghép của đồng đội ở ½ sao. Không bắn.
+  vai: 'ht', dmg: 0, toc: 0, napMau: '#bff6ff',
+  khang: (T) => 0.15 * HOTRO.k(T),
+  h: (T) => (ms(T, 7) ? 15 : 20),
+  mo: (T) => 'Neighbours resist control ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · ' + (T.nap >= 1 ? 'MIRROR READY' : 'mirror ' + Math.round(T.nap * 100) + '%') + ' every ' + SKILLS.guongcong.h(T) + 's: PVP reflects 1 control · blocks a boss skill · CO-OP copies an ally merge at half stars',
+  hoTro(G, T, N, ra) { ra.khang = this.khang(T); },
+  capNhat(G, B, T, dt) { T.nap = Math.min(1, T.nap + dt / this.h(T)); HOTRO.nhip(G, B, T, dt, '191,246,255', 2.8, 0.3); return true; },
   san: (B) => B && B.t.find(X => X && X.id === 'guongcong' && X.nap >= 1 && !X.st.da && !(X.st.bang > 0)),
-  veThem(ctx, T, S, al, R) { // 6 mảnh gương bay vòng tròn quanh tâm (sáng khi sẵn sàng)
+  veThem(ctx, T, S, al, R) { // mảnh gương bay vòng tròn quanh tâm (sáng khi sẵn sàng)
     const n = T.sao >= 7 ? 6 : T.sao >= 4 ? 4 : 2, san = T.nap >= 1;
     for (let i = 0; i < n; i++) { const a = R.t * 1.2 + i * Math.PI * 2 / n, x = Math.cos(a) * S * 0.45, y = Math.sin(a) * S * 0.45;
       const mg = R.co('hu_manhguong', 11); // mảnh gương ChatGPT (S4)
       if (mg) { ctx.globalAlpha = al * (san ? 1 : 0.45); ctx.save(); ctx.translate(x, y); ctx.rotate(a + Math.PI / 2); ctx.drawImage(mg, -5.5, -5.5, 11, 11); ctx.restore(); continue; }
-      ctx.globalAlpha = al * (san ? 0.95 : 0.4); ctx.fillStyle = san ? '#e8fdff' : '#7d93a0'; ctx.beginPath(); ctx.moveTo(x, y - 3.5); ctx.lineTo(x + 2.5, y); ctx.lineTo(x, y + 3.5); ctx.lineTo(x - 2.5, y); ctx.closePath(); ctx.fill(); }
+    }
     if (san) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.1 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#bff6ff'), 0, 0, S); ctx.globalCompositeOperation = 'source-over'; }
     ctx.globalAlpha = al;
   },
@@ -323,7 +329,7 @@ chanKhien = function (B, T) {
 const _thucHienChieuGoc = thucHienChieu;
 thucHienChieu = function (E, B) { G._trumDang = true; try { return _thucHienChieuGoc(E, B); } finally { G._trumDang = false; } };
 // Co-op: sao chép hiệu ứng ghép AN TOÀN của đồng đội (½ sao) lên bàn mình
-const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'khien', 'taylo', 'kepha', 'sinhdoi', 'hasao', 'orbital', 'khoathoigian', 'pandora', 'nhieusong']);
+const GUONG_CHEP = new Set(['nhanmana', 'drone', 'loa', 'nhanban', 'kepha', 'sinhdoi', 'orbital', 'khoathoigian', 'pandora', 'nhieusong']);
 const _ghepGuong = ghep;
 ghep = function (B, a, b, ep) {
   const ids = a && b ? [...new Set([a.id, b.id])].filter(id => GUONG_CHEP.has(id)) : [], saoA = a ? a.sao : 1;

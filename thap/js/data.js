@@ -75,7 +75,7 @@ const TIEN = {
   mana: { ten: 'MANA', glyph: 'h2_ngoc', glyphCu: 'ui_mana', pham: 'tran', mo: 'In-battle energy from kills. Resets every match.' },
 };
 const CHI = {
-  trieu: { tien: 'mana', icon: 'h2_ngoc',    ten: 'SUMMON',    mo: 'Random 1★ turret from your deck. +10 each time.' },
+  trieu: { tien: 'mana', icon: 'h2_ngoc',    ten: 'SUMMON',    mo: 'Random 1★ turret from your deck. +10 each time. Fewer than 2 Attack turrets on board → always an Attack card.' },
   mv:    { tien: 'mana', icon: 'h2_ngoc',    ten: 'COMMANDER', mo: 'Commander skill. Cost ×2 after each cast.' },
   nang:  { tien: 'mana', icon: 'ui_nangcap', ten: 'POWER-UP',  mo: 'Spends MANA: +18% damage to every turret of this type, this match only (LV1→5).' },
 };

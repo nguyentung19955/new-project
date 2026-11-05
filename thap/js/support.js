@@ -9,13 +9,23 @@ const SUP = {
   radar:    { icon: 'sup_radar',   mau: '#ffb43a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.radar.them(T)) + '% FIRE RATE' },
   chimang:  { icon: 'sup_chimang', mau: '#ff5a64', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.chimang.them(T)) + '% CRIT' },
   lanhgia:  { icon: 'sup_lanhgia', mau: '#6fe0ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.lanhgia.cham(T)) + '% SLOW' },
-  khuech:   { icon: 'sup_khuech',  mau: '#ff9a3a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.khuech.them(T)) + '% DAMAGE' },
+  khuech:   { icon: 'sup_khuech',  mau: '#ff9a3a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% / HIT ×' + SKILLS.khuech.max(T) },
   tuthan:   { icon: 'sup_tuthan',  mau: '#c77dff', link: 'sup_link',      ke: true, chu: (T) => (SKILLS.tuthan.tile(T) * 100).toFixed(1) + '% INSTANT KILL' },
   mana:     { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.mana.luong(T) + ' MANA / 7s' },
   nhanmana: { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => 'MERGE: +' + SKILLS.nhanmana.luong(T.sao, G.ban[T.ban]) + ' MANA' },
   hutmana:  { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.hutmana.luong(T).toFixed(1) + ' MANA / HIT' },
-  khien:    { icon: 'sup_khien',   mau: '#5fb8ff', link: 'sup_link', den: 'khien', chu: (T) => 'MERGE: SHIELD ×' + (1 + T.sao) },
-  taylo:    { icon: 'sup_taylo',   mau: '#4bffb0', link: 'sup_link', den: 'taylo', chu: (T) => 'MERGE: CLEANSE ×' + (1 + T.sao) },
+  khien:    { icon: 'sup_khien',   mau: '#5fb8ff', link: 'sup_link', ke: true, chu: (T) => 'SHIELD / ' + SKILLS.khien.ky(T) + 's' },
+  taylo:    { icon: 'sup_taylo',   mau: '#4bffb0', link: 'sup_link', ke: true, chu: (T) => 'CLEANSE ×' + SKILLS.taylo.so(T) + ' / ' + SKILLS.taylo.ky(T) + 's' },
+  // đợt vai trò: ụ chuyển sang HỖ TRỢ (icon có sẵn theo loại buff)
+  phagiap:  { icon: 'sup_khuech',  mau: '#d9a8ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.phagiap.k(T)) + '% VS EXPOSED' },
+  bua:      { icon: 'sup_chimang', mau: '#ffd080', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(0.5, SKILLS.bua.cd(T))) + '% CRIT DMG' },
+  tron:     { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.tron.them(T)) + '% FIRE RATE' },
+  nangsao:  { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.nangsao.them(T)) + '% LOW-STAR RATE' },
+  hasao:    { icon: 'sup_khuech',  mau: '#ff4b3e', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.hasao.k(T)) + '% DAMAGE' },
+  guongcong:{ icon: 'sup_khien',   mau: '#bff6ff', link: 'sup_link',      ke: true, chu: (T) => pct(Math.min(0.35, SKILLS.guongcong.khang(T))) + '% RESIST' },
+  dongbo:   { icon: 'sup_khuech',  mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.dongbo.v(T, Math.max(1, SKILLS.dongbo.dem(G.ban[T.ban], T)))) + '% SAME-STAR' },
+  cauvong:  { icon: 'sup_khuech',  mau: '#ff6ad5', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.cauvong.k(T)) + '% VS RAINBOW' },
+  lophanung:{ icon: 'sup_lanhgia', mau: '#9fe6ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.lophanung.k(T)) + '% VS SLOWED' },
 };
 const laHoTro = (T) => !!(T && SUP[T.id] && SKILLS[T.id]);
 

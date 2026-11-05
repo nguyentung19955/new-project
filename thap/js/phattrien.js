@@ -32,26 +32,26 @@ const HO = {
 };
 // cơ chế MỚI mà mỗi ụ thêm vào họ của nó (bậc sau không chỉ là bản to hơn của bậc trước)
 const HO_MOI = {
-  bang: 'slows one enemy', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
-  baotuyet: 'slows ALL + brief freeze', lophanung: 'freeze aura; frozen enemies SHATTER & explode',
-  doc: 'poison over time', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
+  bang: 'freezes the lead enemy (no damage)', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
+  baotuyet: 'slows ALL + brief freeze', lophanung: 'slow aura that makes neighbours hit slowed enemies harder',
+  doc: 'marks enemies: +12% damage taken', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
   canon: 'splash shells', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
-  orbital: 'merge calls a 20s sky bombardment',
+  orbital: 'merge calls a 20s sky bombardment (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (active-tier finisher)',
   sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
   lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +65% fire rate (stacks)',
-  bua: 'crits knock back', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'changes form into an Alpha wolf: every hit crits',
-  phagiap: 'weakens one enemy', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'stronger per same-star turret',
-  cauvong: 'weakens EVERY enemy on a painted stretch',
-  bomhen: 'timed bomb on one enemy', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
+  bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'changes form into an Alpha wolf: every hit crits',
+  phagiap: 'exposes the toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs same-star Attack neighbours',
+  cauvong: 'paints a trail its neighbours punish',
+  bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute + SOUL BLAST',
-  mana: 'makes mana over time', hutmana: 'mana on every hit', nhanmana: 'mana burst on merge',
+  mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',
   sinhdoi: 'merge summons a SAME-STAR turret',
-  nangsao: 'merge gives +1★ to another turret', vughep: 'drag: +1★ and keeps the type', hasao: 'merge: rival −1★ / ally +1★', ngoisao: 'grows with total board stars',
-  mimic: 'merges with any same-star turret', tron: 'merges with ANY turret', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
-  khien: 'merge shields turrets', taylo: 'merge cleanses turrets', kepha: 'merge clamps rivals / speeds allies', haoquang: 'board-wide invincible shield (active)',
+  nangsao: 'speeds up its lowest-star neighbours', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; punishes rival 5★', ngoisao: 'grows with total board stars',
+  mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
+  khien: 'recharging shields for neighbours', taylo: 'pulses cleanse onto neighbours', kepha: 'merge clamps rivals / speeds allies', haoquang: 'short team-wide barrier (active)',
   hopbi: 'opens into a random 1–7★ turret', tienhoa: 'evolves into a random turret +1★',
 };
 const HO_CUA = {}; // id → { ho, i (bậc 0..4 trong họ) }
@@ -71,11 +71,31 @@ function hoTT(id) {
 // ===================================================== 2) MỐC SAO 3★/5★/7★ =====================================================
 // Ụ có mốc RIÊNG (cơ chế cài trong skills*.js bằng ms(T,n)); ụ khác dùng mốc CHUNG theo loại (cài ở đây + game.js)
 const MOC_RIENG = {
-  bang:      { 3: ['LONG CHILL', 'Slow lasts 6s'], 5: ['FROSTBITE', 'Slowed enemies take +15% damage from everything'], 7: ['DEEP FREEZE', 'Every 4th shot freezes the target 0.8s'] },
+  bang:      { 3: ['LONG FREEZE', 'Freeze lasts 2.5s'], 5: ['QUICK FROST', 'Freezes every 4.5s'], 7: ['DOUBLE FREEZE', 'Freezes 2 lead enemies'] },
   kiembang:  { 3: ['SHATTER ×6', 'Slowed enemies take ×6'], 5: ['SPLINTERS', 'Shatter splashes 40% around'], 7: ['GLACIER', 'Slowed enemies take ×8'] },
   baotuyet:  { 3: ['SQUALL', 'Pulses 1.5s sooner'], 5: ['ICE SHARDS', 'Pulse damage ×3'], 7: ['WHITEOUT', 'Pulse freezes small enemies 1s'] },
-  lophanung: { 3: ['COLD FRONT', 'Aura +20 px'], 5: ['PERMAFROST', 'Active FREEZE lasts 4s'], 7: ['ABSOLUTE ZERO', 'Enemies in the aura take +25% damage from all'] },
-  doc:       { 3: ['THICK CLOUD', 'Poison cloud lasts 50% longer'], 5: ['CONTAGION', 'Poisoned enemies spread poison when they die'], 7: ['NEUROTOXIN', 'Its poison also slows 15%'] },
+  lophanung: { 3: ['COLD FRONT', 'Aura +20 px'], 5: ['DEEP COLD', 'Bosses in the aura cast 25% slower; FREEZE lasts 4s'], 7: ['ABSOLUTE ZERO', 'Enemies in the aura take +10% damage from all'] },
+  doc:       { 3: ['TWIN MARK', 'Marks 2 enemies at once'], 5: ['CONTAGION', 'The mark jumps on when its target dies'], 7: ['NEUROTOXIN', 'Marked enemies are slowed 15%'] },
+  // đợt vai trò — ụ ĐẶC BIỆT mới + mốc 5★/7★ riêng của ụ HỖ TRỢ (3★ = mốc chung ×1.45)
+  bomhen:    { 3: ['LONG FUSE', 'Weakness lasts 6s'], 5: ['SHOCKWAVE', 'Blast staggers 0.5s'], 7: ['TWIN BOMBS', 'Throws 2 bombs'] },
+  haoquang:  { 3: ['STEADY HALO', 'Barrier 2.5s'], 5: ['PURGE', 'Also cleanses every turret'], 7: ['BLESSING', 'Barrier 3.5s + 30% speed'] },
+  radar:     { 5: ['LOCK-ON', 'Aura ×1.9 + neighbours +4% crit'], 7: ['OVERDRIVE', 'Aura ×2.35 + every 8s: +25% fire rate 2s'] },
+  chimang:   { 3: ['SHARP EYE', '+8% crit chance'], 5: ['DEADLY EYE', '+13% crit chance, +10% crit damage'], 7: ['CERTAIN STRIKE', '+20% crit; every 6s a sure crit'] },
+  lanhgia:   { 5: ['FROSTNIP', 'Aura ×1.9 + damage vs slowed'], 7: ['FLASH FREEZE', 'Aura ×2.35 + every 8s a hit freezes'] },
+  khuech:    { 5: ['DEEP STACKS', 'Aura ×1.9, 7 stacks'], 7: ['LOCKED IN', 'Aura ×2.35, stacks last 3s'] },
+  tuthan:    { 5: ['DEEP REAP', 'Aura ×1.9, threshold 40% HP'], 7: ['GRIM HARVEST', 'Aura ×2.35, big enemies under 15%'] },
+  thaukinh:  { 5: ['DOUBLE PIERCE', 'Aura ×1.9, crits pierce 2'], 7: ['TRUE FOCUS', 'Aura ×2.35, pierce hits 65%'] },
+  luoicheo:  { 5: ['RESONANCE LINK', 'Aura ×1.9 + diagonal fire rate'], 7: ['GRAND RESONANCE', 'Aura ×2.35; full resonance: fire rate ×1.5'] },
+  phagiap:   { 5: ['DOUBLE EXPOSE', 'Aura ×1.9, exposes 3 enemies'], 7: ['SHATTERED GUARD', 'Aura ×2.35, exposed +8% from all'] },
+  bua:       { 5: ['HEAVY HAND', 'Aura ×1.9 (crit damage reaches the 50% cap)'], 7: ['QUAKE', 'Aura ×2.35, stagger 0.35s, big enemies too'] },
+  tron:      { 5: ['MIXED FIRE', 'Aura ×1.9; 3+ types: +damage'], 7: ['PERFECT BLEND', 'Aura ×2.35; 4 types: +6% crit'] },
+  taylo:     { 5: ['DEEP CLEAN', 'Every 9s, up to 3 turrets'], 7: ['FRESH START', 'Cleansed: +20% fire rate 4s'] },
+  khien:     { 3: ['QUICK CHARGE', 'Shields every 16s'], 5: ['FAST CHARGE', 'Shields every 14s'], 7: ['COUNTER SHIELD', 'Every 10s; a block gives +20% fire rate'] },
+  nangsao:   { 3: ['LIFT', '+18% fire rate to the 2 lowest'], 5: ['STAR PIP', 'Each wave a star pip (3 pips = +1★)'], 7: ['STAR SURGE', '2 pips = +1★ (max 2★ per match)'] },
+  hasao:     { 5: ['BREAK POINT', 'Aura ×1.9, bigger merge surge'], 7: ['STAR SHATTER', 'Aura ×2.35, merge surge +32%'] },
+  guongcong: { 5: ['POLISHED', 'Aura ×1.9: resist up to 28%'], 7: ['TRUE MIRROR', 'Resist 35%, mirror every 15s'] },
+  dongbo:    { 5: ['PAIRED FIRE', 'Aura ×1.9; 2+ matched: +fire rate'], 7: ['LOOSE SYNC', 'Aura ×2.35; ±1★ counts as matched'] },
+  cauvong:   { 5: ['DOUBLE ARC', 'Aura ×1.9, 2 trails'], 7: ['PRISM', 'Aura ×2.35, trail slows 10%'] },
   vungdoc:   { 3: ['TWIN POOLS', 'Throws a second pool'], 5: ['CORROSION', 'Pools weaken: +15% damage taken'], 7: ['TOXIC LAKE', 'Pools 50% wider'] },
   aten:      { 3: ['BIG BANG', 'Kill explosion 70 px'], 5: ['TOXIC BLAST', 'Kill explosion poisons'], 7: ['PURGE', '×6 vs poisoned'] },
   cuongno:   { 3: ['HOT BLOOD', 'Rage lasts 8s'], 5: ['BLOODLUST', 'Frenzy lasts 7s'], 7: ['RAMPAGE', 'Frenzy: +25% crit'] },
@@ -95,7 +115,7 @@ function loaiMoc(id) {
 const MOC_CHUNG = {
   ban:  { 3: ['QUICK HANDS', '+20% fire rate'], 5: ['DOUBLE TAP', 'Every 4th attack fires twice'], 7: ['APEX', '+30% damage, +10% crit'] },
   tu:   { 3: ['QUICK HANDS', '+20% charge/fire speed'], 5: ['OVERCHARGE', '+25% damage'], 7: ['APEX', '+30% damage, +10% crit'] },
-  ht:   { 3: ['WIDE AURA', 'Aura +25% stronger'], 5: ['DIAGONAL AURA', 'Also buffs the 4 diagonal cells'], 7: ['APEX AURA', 'Aura +60% stronger'] },
+  ht:   { 3: ['TUNED AURA', 'Aura ×1.45 of its 1★ value'], 5: ['FIELD PERK', 'Aura ×1.9 + a small extra perk'], 7: ['SIGNATURE', 'Aura ×2.35 + its signature effect'] }, // hotro.js: đường cong chung HOTRO.K
   khac: { 3: ['QUICK HANDS', '+20% speed'], 5: ['OVERCHARGE', '+25% effect'], 7: ['APEX', '+30% effect'] },
 };
 function mocCua(id) {
@@ -109,15 +129,11 @@ function mocBuf(B) {
   for (const T of B.t) if (T && mocChung(T, 3) && loaiMoc(T.id) !== 'ht') T.buf.toc += 0.2;
 }
 // hệ số hào quang hỗ trợ theo mốc chung
-const heSoHT = (T) => (mocChung(T, 7) ? 1.6 : mocChung(T, 3) ? 1.25 : 1);
+const heSoHT = () => 1; // đợt vai trò: mốc sao của ụ hỗ trợ đã nằm trong đường cong HOTRO.K (hotro.js) — không nhân thêm
 // ô được hào quang chạm tới (5★: thêm 4 ô chéo)
 function oHoTro(B, T) {
-  const ds = keCan(B, T.o);
-  if (loaiMoc(T.id) === 'ht' && mocChung(T, 5)) {
-    const c = T.o % 5, h = (T.o / 5) | 0;
-    for (const [dc, dh] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const cc = c + dc, hh = h + dh; if (cc >= 0 && cc < 5 && hh >= 0 && hh < 3) ds.push(B.t[hh * 5 + cc]); }
-  }
-  return ds;
+  if (loaiMoc(T.id) === 'ht' && typeof HOTRO !== 'undefined') return HOTRO.oDich(T).map(o => B.t[o]); // hỗ trợ: đúng hình ô của nó (không còn ô chéo 5★)
+  return keCan(B, T.o);
 }
 // hệ số sát thương / chí mạng của mốc chung (game.js dmgU / critU)
 function heSoMocDmg(T) {
@@ -162,8 +178,8 @@ const GROW = {
     gd: (T) => { const B = G.ban[T.ban], n = B ? SKILLS.ngoisao.tong(B) : 0; return { s: n >= 50 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 50), v: [0.2, 1], n }; } },
   lienket: { mau: '#c77dff', ten: ['SINGLE', 'LINKED', 'CHAIN MASTER'], dk: '2 linked → Linked · 4+ linked → Chain Master (shots arc to 1 more enemy)',
     gd: (T) => { const n = T.chuoi || 1; return { s: n >= 4 ? 3 : n >= 2 ? 2 : 1, p: Math.min(1, (n - 1) / 3), v: [1 / 3, 1], n }; } },
-  dongbo: { mau: '#ffe46b', ten: ['OFFLINE', 'SYNCED', 'FULL SYNC'], dk: '3+ other turrets at its ★ → Synced · 6+ → Full Sync (+15% crit)',
-    gd: (T) => { const n = T.dong || 0; return { s: n >= 6 ? 3 : n >= 3 ? 2 : 1, p: Math.min(1, n / 6), v: [0.5, 1], n }; } },
+  dongbo: { mau: '#ffe46b', ten: ['OFFLINE', 'SYNCED', 'FULL SYNC'], dk: '1 same-star Attack neighbour → Synced · 3+ → Full Sync',
+    gd: (T) => { const n = T.dong || 0; return { s: n >= 3 ? 3 : n >= 1 ? 2 : 1, p: Math.min(1, n / 3), v: [1 / 3, 1], n }; } },
 };
 const laGrow = (id) => !!(GROW[id] && ((window.STAGE_K && STAGE_K[id]) || GROW[id].khongAnh));
 const giaiDoan = (T) => (laGrow(T.id) ? GROW[T.id].gd(T).s : 0);

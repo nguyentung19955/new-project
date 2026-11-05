@@ -39,43 +39,63 @@ SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
     danThang(B, T, E, 'dan_lien', 700, 16, (G, d, M) => { if (M) { trung(M, dmg, { B }); FX.tiaLua(d.x, d.y, 2, '#ffd080', 120, 7); } });
   },
 };
-SKILLS.bang = { // Băng (Liza): làm chậm quái đầu 35% trong 4 s
-  vai: 'tc', dmg: 11, toc: 0.9, nham: 'dau',
-  cham: (T) => Math.min(0.55, 0.35 + 0.03 * (T.sao - 1)),
-  mo: (T) => 'Slow ' + Math.round(SKILLS.bang.cham(T) * 100) + '% · ' + (ms(T, 3) ? 6 : 4) + 's' + (ms(T, 5) ? ' · frostbite +15%' : '') + (ms(T, 7) ? ' · freeze every 4th' : ''),
-  ban(G, B, T, E) {
-    giat(T, 0.6); chopNong(T, 20); SND.bang();
-    const dmg = dmgU(T), c = this.cham(T), dai = ms(T, 3) ? 6 : 4, dong = ms(T, 7) && T.banLan % 4 === 0;
-    danThang(B, T, E, 'dan_bang', 430, 22, (G, d, M) => {
-      FX.no('bang_vo', d.x, d.y, 46, 0.35);
-      if (M) {
-        trung(M, dmg, { B, mau: '#bff4ff' });
-        if (!M.d.khangCham) {
-          M.cham = Math.max(M.cham, c); M.chamT = Math.max(M.chamT, dai);
-          if (ms(T, 5)) M.fbT = dai; // 5★ FROSTBITE: quái bị chậm nhận thêm 15% mọi sát thương
-          if (dong && !M.trum) { M.chan = Math.max(M.chan || 0, 0.8); FX.no('bang_vo', d.x, d.y, 70, 0.4); nhanU(T, 'DEEP FREEZE', '#bff4ff'); } // 7★
-        } else FX.chu1(M.x, M.y - 20, 'IMMUNE', '#7fdcff', 11);
-      }
-    }, 'bang');
+SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định kỳ ĐÓNG BĂNG quái đầu; không gây sát thương; trùm chỉ 0.6 s; không đóng băng nối tiếp (miễn 3 s)
+  vai: 'db', dmg: 0, toc: 0, napMau: '#bff4ff',
+  ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
+  dai: (T) => (ms(T, 3) ? 2.5 : 2),         // 3★ LONG FREEZE
+  so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
+  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (bosses 0.6s) + 30% chill · 3s freeze immunity',
+  ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
+  capNhat(G, B, T, dt) {
+    const ds = this.ung(G, B);
+    xoayDau(T, ds[0] || quaiDau(B), dt);
+    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    if (T.nap < 1 || !ds.length) return true;
+    T.nap = 0; giat(T, 0.6); chopNong(T, 20); SND.bang();
+    const dai = this.dai(T);
+    for (const E of ds.slice(0, this.so(T))) {
+      E.bangMien = G.t + 1.2; // giữ chỗ: Frost khác không nhắm cùng con khi đạn đang bay
+      danThang(B, T, E, 'dan_bang', 460, 22, (G, d, M) => { FX.no('bang_vo', d.x, d.y, 60, 0.4); if (M) dongBang(M, dai, T); }, 'bang');
+    }
+    return true;
   },
 };
-SKILLS.doc = { // Độc (Unknown): gây độc theo thời gian + đám mây độc đọng lại
-  vai: 'tc', dmg: 4.32, toc: 1.25, nham: 'dau',
-  mo: (T) => 'Poison ' + Math.round(dmgU(T) * 2.2) + '/s · 4s',
-  ban(G, B, T, E) {
-    giat(T, 0.5); const [x, y] = dauNong(T); SND.doc();
+// đóng băng 1 quái (Frost): thường = dai, quái to ×0.6, trùm 0.6 s; sau đó lạnh 30% thêm 2 s; miễn đóng băng 3 s (không khoá nối tiếp)
+function dongBang(E, dai, T) {
+  if (E.chet) return;
+  const d = E.trum ? 0.6 : E.d.to ? dai * 0.6 : dai;
+  E.chan = Math.max(E.chan, d); E.bangMien = G.t + d + 3;
+  E.chamT = Math.max(E.chamT, d + 2); E.cham = Math.max(E.cham, 0.3);
+  FX.chu1(E.x, E.y - 22, 'FROZEN', '#bff4ff', 11); FX.no('bang_vo', E.x, E.y, 70, 0.45);
+}
+SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH DẤU quái đầu 5 s → mọi ụ gây thêm 12% (làm mới thời gian, không cộng dồn giá trị); không tự gây sát thương
+  vai: 'db', dmg: 0, toc: 0, napMau: '#9dff5a',
+  K: 0.12, ky: 2.5,
+  so: (T) => (ms(T, 3) ? 2 : 1), // 3★ TWIN MARK
+  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +12% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
+  capNhat(G, B, T, dt) {
+    const ds = dsMucTieu(B).filter(E => !E.chet && !(E.vmT > 1.2)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s));
+    xoayDau(T, ds[0] || quaiDau(B), dt);
+    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky);
+    if (T.nap < 1 || !ds.length) return true;
+    T.nap = 0; giat(T, 0.5); const [x, y] = dauNong(T); SND.doc();
     for (let i = 0; i < 4; i++) FX.hat1('lua', x, y, Math.cos(T.goc + rnd(-0.4, 0.4)) * 120, Math.sin(T.goc + rnd(-0.4, 0.4)) * 120, 0.3, 7, '#9dff5a');
-    const dmg = dmgU(T);
-    danThang(B, T, E, 'dan_doc', 320, 22, (G, d, M) => {
-      if (M) {
-        trung(M, dmg, { B, mau: '#9dff5a' }); M.doc = Math.max(M.doc, dmg * 2.2); M.docT = 4; M.docB = B;
-        if (ms(T, 5)) M.docLay = 1;                                                                  // 5★ CONTAGION: chết thì lây độc
-        if (ms(T, 7) && !M.d.khangCham) { M.cham = Math.max(M.cham, 0.15); M.chamT = Math.max(M.chamT, 1.5); } // 7★ NEUROTOXIN
-      }
-      G.hu.push({ k: 'may', t: 0, song: ms(T, 3) ? 3.6 : 2.4, x: d.x, y: d.y, r: 24 + T.sao * 2, dps: dmg * 1.1, B, tick: 0 }); // 3★ THICK CLOUD
-    }, 'doc');
+    for (const E of ds.slice(0, this.so(T))) {
+      E.vmT = Math.max(E.vmT || 0, 1.3);
+      danThang(B, T, E, 'dan_doc', 340, 22, (G, d, M) => { if (M) danhDauDoc(M, T, B); FX.no('khoi_doc', d.x, d.y, 40, 0.3); }, 'doc');
+    }
+    return true;
   },
 };
+// dấu độc Venom: suy yếu (HOTRO.vuln) + cờ "trúng độc" cho Purifier (độc 0 sát thương) + dấu hiển thị E.yeu
+function danhDauDoc(E, T, B) {
+  if (E.chet) return;
+  if (!(E.vmT > 1.3)) FX.chu1(E.x, E.y - 24, 'MARKED', '#9dff5a', 10);
+  E.vmT = 5; E.vmK = SKILLS.doc.K; E.yeu = Math.max(E.yeu, 5);
+  E.docT = Math.max(E.docT || 0, 5); E.docB = B;
+  if (ms(T, 5)) E.vmLay = 1;                                                                          // 5★ CONTAGION
+  if (ms(T, 7) && !E.d.khangCham) { E.cham = Math.max(E.cham, 0.15); E.chamT = Math.max(E.chamT, 5); } // 7★ NEUROTOXIN
+}
 SKILLS.tia = { // Bắn Tỉa (Artemis): nhắm quái nhiều máu nhất; +100% vào quái to / trùm
   vai: 'tc', dmg: 69.6, toc: 0.35, nham: 'mau',
   mo: () => '+100% vs big enemies & bosses',
@@ -121,15 +141,16 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
   },
 };
 // ============ XANH ============
-SKILLS.radar = { // Radar (Kirinus): hỗ trợ +tốc bắn cho 4 ô kề
+SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳng (hotro.js: 12% 1★ → 28% 7★, trần chung 45%)
   vai: 'ht', dmg: 0, toc: 0,
-  them: (T) => 0.2 + 0.05 * T.sao + 0.03 * ((G.ban[T.ban].lv.radar || 1) - 1),
-  mo: (T) => '+' + Math.round(SKILLS.radar.them(T) * 100) + '% fire rate to neighbors',
-  hoTro(G, T, N) { N.buf.toc += this.them(T); },
+  them: (T) => 0.12 * HOTRO.k(T),
+  mo: (T) => '+' + Math.round(SKILLS.radar.them(T) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s' : ''),
+  hoTro(G, T, N, ra) { ra.toc = this.them(T); if (ms(T, 5)) ra.crit = 0.04; },
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
     T.nap += dt / 2.2;
-    if (T.nap >= 1) { T.nap = 0; const ke = keCan(B, T.o).filter(Boolean); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '255,180,60' }); }
+    if (T.nap >= 1) { T.nap = 0; const ke = HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '255,180,60' }); }
+    if (ms(T, 7)) { T.odT = (T.odT || 0) + dt; if (T.odT >= 8) { T.odT = 0; for (const o of HOTRO.oDich(T)) { const N = B.t[o]; if (HOTRO.nhan(T, N)) { N.tocT = Math.max(N.tocT, 2); N.tocV = Math.max(N.tocV || 0, 0.25); } } nhanU(T, 'OVERDRIVE', '#ffb43a'); } } // 7★ OVERDRIVE
     return true;
   },
 };
@@ -180,7 +201,7 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
 };
 // ============ VÀNG ============
 SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát thương, đủ hàng dọc +tốc bắn; tia xuyên
-  vai: 'tc', dmg: 81.45, toc: 0.33, nham: 'dau',
+  vai: 'tc', dmg: 70, toc: 0.33, nham: 'dau', // đợt vai trò: −14% (đơn mục tiêu vượt trần ngách Huyền thoại)
   bingo(B, T) {
     const c = T.o % 5, h = (T.o / 5) | 0; let ngang = 0, doc = 0;
     for (let i = 0; i < 5; i++) { const X = B.t[h * 5 + i]; if (X && X.id === 'railgun') ngang++; }
@@ -200,16 +221,13 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
     SND.nap();
   },
 };
-SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn bàn bị vệ tinh bắn phá từ trời 20 s
-  vai: 'tc', dmg: 11, toc: 1.4, nham: 'dau',
-  mo: (T) => ['STANDBY', 'UPLINK +20% fire rate', 'BOMBARDMENT ×2 fire rate'][Math.max(1, giaiDoan(T)) - 1] + ' · on merge: orbital strike 20s',
-  capNhat(G, B, T) { const s = giaiDoan(T); if (s === 3) T.buf.toc += 1; else if (s === 2) T.buf.toc += 0.2; return false; }, // grow-up: UPLINK / BOMBARDMENT
+SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn thường; khi GHÉP → cửa sổ bắn phá từ trời 20 s (phép tạm thời, không phải DPS thường trực)
+  vai: 'db', dmg: 0, toc: 0,
+  mo: (T) => ['STANDBY', 'UPLINK (2+ Orbitals)', 'BOMBARDMENT'][Math.max(1, giaiDoan(T)) - 1] + ' · on merge: orbital strike 20s (' + Math.round(SKILLS.orbital.phaoDmg(G.ban[T.ban], T.sao + 1)) + ' per lance)',
+  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.6 + (T.pha || 0)) * 0.5,
   sangDau: (T) => (T.gd === 3 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // không có ảnh 3 dạng: dạng thức tỉnh = đầu sáng rực + hào quang fx_awaken
-  ban(G, B, T, E) {
-    giat(T, 0.5); chopNong(T, 22); SND.lien();
-    const dmg = dmgU(T);
-    danThang(B, T, E, 'dan_tia', 560, 22, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#9fe6ff' }); FX.no('dien', d.x, d.y, 26, 0.2); });
-  },
+  capNhat() { return true; },
+  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * (((B && B.lv.orbital) || 1) - 1)),
   ghep(G, B, a, b) {
     B.phao = 20; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2;
     const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'ORBITAL STRIKE!', '#9fe6ff', 16, 'to');
@@ -220,8 +238,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn b
     if (B.phaoT > 0) return;
     B.phaoT = 0.32;
     const E = quaiNgauNhien(B); if (!E) return;
-    const dmg = 30 * TIERS.vang.hs * (1 + 0.85 * (B.phaoSao - 1)) * (1 + 0.18 * ((B.lv.orbital || 1) - 1));
-    G.hu.push({ k: 'vetinh', t: 0, song: 0.5, E, x: E.x + rnd(-6, 6), y: E.y, dmg, B, da: false });
+    G.hu.push({ k: 'vetinh', t: 0, song: 0.5, E, x: E.x + rnd(-6, 6), y: E.y, dmg: this.phaoDmg(B, B.phaoSao), B, da: false });
   },
 };
 SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): dựng tường ánh sáng chặn đường rồi nổ
@@ -265,7 +282,7 @@ SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   vai: 'tc', dmg: 28, toc: 1,
-  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×12 in 92 px · aftershock arcs ×2 to 4 more',
+  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
@@ -274,7 +291,7 @@ SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn si
       const c = tamU(T);
       if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.2) return true;
       T.nap = 0; giat(T, 2.2); const [x, y] = chopNong(T, 44); phutKhoi(x, y, 3);
-      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * 12, B, T, da: false, seed: Math.random() * 99 });
+      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * 9, B, T, da: false, seed: Math.random() * 99 });
       SND.sam();
     }
     return true;
@@ -289,7 +306,7 @@ HU.may = { // đám mây độc đọng lại
     o.tick = 0.3;
     for (const E of dsMucTieu(o.B)) if (Math.hypot(E.x - o.x, E.y - o.y) < o.r + 8) {
       E.doc = Math.max(E.doc, o.dps); E.docT = Math.max(E.docT, 1.5); E.docB = o.B;
-      if (o.yeu) { E.yeuK = Math.max(E.yeu > 0 ? (E.yeuK || 0) : 0, 0.15); E.yeu = Math.max(E.yeu, 0.6); } // Toxic Pool 5★ CORROSION
+      if (o.yeu) { E.tpK = 0.15; E.tpT = Math.max(E.tpT || 0, 0.6); E.yeu = Math.max(E.yeu, 0.6); } // Toxic Pool 5★ CORROSION (suy yếu: HOTRO.vuln, E.yeu = dấu hiển thị)
     }
   },
   ve(ctx, o, R) {
