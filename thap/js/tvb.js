@@ -175,16 +175,25 @@ const TVB = {
   }, true);
   // B10/B11: nhãn bàn
   if (typeof REN !== 'undefined') { REN.veNhanBan = function (ctx) { TVB.nhan(ctx); }; }
-  // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) dưới đầu ụ, nằm trên mặt bàn
-  if (typeof REN !== 'undefined' && REN.veKeo) {
-    const kGoc = REN.veKeo;
-    REN.veKeo = function (ctx) {
-      const k = UI.keo;
-      if (k && k.dang && typeof UI.diemKeo === 'function') {
-        const a = this.img('tv_keo_bong'), B = G.ban[k.T.ban];
-        if (a && B) { const [hx, hy] = UI.diemKeo(k), w = Math.min(B.cw, B.ch) * 1.08, h = w * a.height / a.width; ctx.globalAlpha = 0.9; ctx.drawImage(a, hx - w / 2, hy + (k.lech ? 6 : -4) + B.ch * 0.18 - h / 2, w, h); ctx.globalAlpha = 1; }
+  // §C · ô ghép HỢP LỆ: khung vuông cyan nhịp 4 khung E18 (tv_dich1–4) thay vòng nam châm ở ô CHƯA rê (đúng luật hopLeGhep —
+  //       ghepfx.js quyết ô nào); ô đang rê giữ vòng nam châm hút. Chỉ đổi ẢNH vẽ, không đụng logic kéo/ghép của ghepfx.js.
+  if (typeof GF !== 'undefined' && GF.khung) {
+    const khGoc = GF.khung;
+    GF.khung = function (ctx, ten, f, x, y, co, goc, al) {
+      if (ten === 'cf_vong_hop' && f < 2) {
+        const a = REN.img('tv_dich' + (1 + (Math.floor(performance.now() / 125) % 4)));
+        if (a) { const S = co / 1.22 * 0.98; ctx.globalAlpha = Math.min(1, (al || 1) * 1.15); ctx.drawImage(a, x - S / 2, y - S / 2, S, S); ctx.globalAlpha = 1; return; }
       }
-      return kGoc.apply(this, arguments);
+      return khGoc.apply(this, arguments);
+    };
+  }
+  // §C · nhấc ụ khi kéo: bóng nhấc E17 (tv_keo_bong — bóng mềm + 4 góc cyan) thay bóng de_chung nhuộm tối trong lớp cầm (ghepfx.js veCam)
+  if (typeof REN !== 'undefined' && REN.veKeo && REN.co) {
+    const kGoc = REN.veKeo, coGoc = REN.co;
+    REN.veKeo = function (ctx) {
+      const a = this.img('tv_keo_bong'); if (!a) return kGoc.apply(this, arguments);
+      this.co = function (ten, px, kieu) { return ten === 'de_chung' && kieu === 'den' ? a : coGoc.apply(this, arguments); };
+      try { return kGoc.apply(this, arguments); } finally { this.co = coGoc; }
     };
   }
 })();

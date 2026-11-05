@@ -34,31 +34,28 @@
 #up.up7 .up-than { overflow-y: auto; }
 #up.up7 .up-noi { padding: 0 20px 10px; }
 
-/* HERO: phi công tràn viền trái (mờ dần sang phải/xuống), đầu súng ~25 % ở góc phải dưới */
-#up.up7 .up-hero { position: relative; height: 344px; margin: 0 -20px; display: block; overflow: visible; background: none; }
-#up.up7 .up-pi { position: absolute; left: 0; top: -6px; width: 330px; height: 350px; overflow: hidden;
-  /* mờ dần CHỈ sang phải + xuống dưới — phía trên (đỉnh tóc) luôn rõ nét, đặc 100 % (người dùng: "phần tóc trên cùng cứ mờ mờ") */
-  -webkit-mask-image: linear-gradient(to right, #000 58%, transparent 98%), linear-gradient(to bottom, #000 0 68%, transparent 99%);
-  -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, #000 58%, transparent 98%), linear-gradient(to bottom, #000 0 68%, transparent 99%); mask-composite: intersect; }
-#up.up7 .up-pi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* HERO (user 'mờ mờ… để ảnh thôi, không cần ụ súng, làm nét ảnh'): CHỈ ảnh phi công, rộng hết màn, bắt đầu NGAY DƯỚI thanh trên
+   (thanh trên không mờ/không trong suốt, không đè lên ảnh) — không mặt nạ mờ ở đỉnh/hai bên, không huy hiệu ụ đè lên ảnh.
+   Ảnh: assets/hero/hero_<id>.jpg (chỉ huy: hero_af_<id>.webp) 1170×1020 = đúng 3× cỡ hiển thị 390×340 (tools/thap-hero.py) → hiện 1:1, không phóng. */
+#up.up7 .up-hero { position: relative; height: auto; margin: 0 -20px; display: block; overflow: hidden; background: none; }
+#up.up7 .up-pi { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 39 / 34; overflow: hidden; background: #0b0e13;
+  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%); mask-image: linear-gradient(to bottom, #000 84%, transparent 100%); }
+#up.up7 .up-pi img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
+/* thắng mặt nạ cũ 'mờ sang phải' (tvA.css — dành cho huy hiệu ụ đã bỏ): ảnh hero chỉ mờ nhẹ ở đáy */
+html body #up.up7 .up-hero .up-pi { -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%); mask-image: linear-gradient(to bottom, #000 84%, transparent 100%); }
 #up.up7.vao .up-pi { animation: up7-pi .3s var(--e-out); }
-@keyframes up7-pi { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+@keyframes up7-pi { from { opacity: 0; } to { opacity: 1; } }
 #up.up7 .up-seri { left: 20px; bottom: 6px; font-size: 10px; color: #ffffff8c; }
-#up.up7 .up-mam { position: absolute; right: 10px; bottom: -4px; width: 178px; height: 178px; display: block; }
-#up.up7 .up-vong { left: 50%; top: 50%; width: 178px; height: 178px; margin: -89px 0 0 -89px; opacity: 1; }
-#up.up7 .up-vong.cmd { width: 170px; height: 178px; margin: -89px 0 0 -85px; }
-#up.up7 .up-u { position: absolute; left: 50%; top: 50%; width: 124px; height: 124px; margin: -62px 0 0 -62px; }
-#up.up7 .up-u .de { width: 124px; height: 124px; margin: -62px 0 0 -62px; filter: none; }
-#up.up7 .up-u .dau { width: calc(124px * var(--kd)); height: calc(124px * var(--kd)); margin: calc(-62px * var(--kd)) 0 0 calc(-62px * var(--kd)); filter: none; }
-#up.up7 .up-u .dau.fb { width: 92px; height: 92px; margin: -46px 0 0 -46px; }
-#up.up7.vao .up-mam { animation: up7-mam .32s .06s var(--e-spring) both; }
-@keyframes up7-mam { from { opacity: 0; transform: scale(.86); } to { opacity: 1; transform: none; } }
-#up.up7 .up-mvic { position: absolute; left: 50%; top: 50%; width: 92px; height: 92px; margin: -50px 0 0 -46px; object-fit: contain; }
-#up.up7 .up-gl { left: auto; right: 14px; top: 14px; width: 34px; height: 34px; filter: none; }
+#up.up7 .up-mam { display: none; } /* huy hiệu ụ cũ — bỏ khỏi ảnh */
+/* ụ nhỏ cạnh tên (không đè ảnh) + biểu tượng màu ô bộ bài */
+#up.up7 .up-bien { position: relative; padding-right: 58px; }
+#up.up7 .up-bn-ic { position: absolute; right: 0; top: 4px; width: 50px; height: 50px; }
+#up.up7 .up-bn-ic .ic { width: 50px; height: 50px; object-fit: contain; display: block; }
+#up.up7 .up-gl { position: absolute; left: auto; right: -6px; top: -6px; width: 22px; height: 22px; filter: none; }
 #up.up7 .up-ngoc { display: none; }
 
 /* tên + 1 dòng meta */
-#up.up7 .up-bien { padding: 2px 0 12px; }
+#up.up7 .up-bien { padding: 6px 58px 12px 0; }
 #up.up7 .up-ten { font-size: 28px; color: var(--c-chu); text-shadow: 0 2px 0 #000; }
 #up.up7 .up-meta { margin-top: 5px; font-family: var(--f-ui); font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--c-mo); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #up.up7 .up-meta b { color: var(--m); }
