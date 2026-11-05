@@ -587,7 +587,10 @@ const REN = {
   // dòng chảy: mũi tên ›› mờ trôi dọc đường về lõi (co-op: 2 làn nhập vào hành lang chung đọc rõ)
   veDongChay(ctx) {
     const t = this.t, KC = 30, V = 22, daVe = new Set();
+    const mui = this.co('duong_mui', 14); // mũi tên ChatGPT (S4) dập dọc đường; chưa tải → nét vẽ code
     ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.lineWidth = 3;
+    const m0 = ctx.getTransform();
+    if (mui) ctx.globalAlpha = 0.42;
     ctx.beginPath();
     for (const p of G.duong) {
       const pts = p.pts; let s0 = 0;
@@ -600,13 +603,14 @@ const REN = {
           for (let u = ((t * V - s0) % KC + KC) % KC; u < cuoi; u += KC) {
             if (u < dau) continue;
             const cx = ax + dx * u, cy = ay + dy * u, nx = -dy * 6, ny = dx * 6;
+            if (mui) { ctx.setTransform(m0.a * dx, m0.a * dy, -m0.a * dy, m0.a * dx, m0.e + m0.a * cx, m0.f + m0.a * cy); ctx.drawImage(mui, -9, -4.7, 14, 9.3); continue; }
             ctx.moveTo(cx - dx * 5 + nx, cy - dy * 5 + ny); ctx.lineTo(cx + dx * 2, cy + dy * 2); ctx.lineTo(cx - dx * 5 - nx, cy - dy * 5 - ny);
           }
         }
         s0 += L;
       }
     }
-    ctx.strokeStyle = 'rgba(120,235,255,.2)'; ctx.stroke();
+    if (!mui) { ctx.strokeStyle = 'rgba(120,235,255,.2)'; ctx.stroke(); }
     ctx.restore();
   },
   veCongLoi(ctx) {
@@ -640,6 +644,17 @@ const REN = {
       const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 22, h = 16;
       const x = Math.min(B.x + B.w - w - 10, W - w - 8), y = B.y + 1; // y = tâm nhãn
       const den = B.i === 0 ? '#5aa8ff' : (G.che === 'pvp' ? '#ff4b3e' : '#63d68b');
+      const tam = this.img('hud_ten_ban'); // tấm tên thép ChatGPT (S1): 3 mảnh (đầu có ổ LED · giữa giãn · đuôi)
+      if (tam) {
+        const th = 20, tw = w + 6, sc = th / tam.height, dau = Math.round(tam.height * 1.05), cuoi = Math.round(tam.height * 0.45);
+        const x0 = x - 3, y0 = y - th / 2;
+        ctx.drawImage(tam, 0, 0, dau, tam.height, x0, y0, dau * sc, th);
+        ctx.drawImage(tam, dau, 0, tam.width - dau - cuoi, tam.height, x0 + dau * sc, y0, tw - (dau + cuoi) * sc, th);
+        ctx.drawImage(tam, tam.width - cuoi, 0, cuoi, tam.height, x0 + tw - cuoi * sc, y0, cuoi * sc, th);
+        ctx.fillStyle = den; ctx.beginPath(); ctx.arc(x0 + tam.height * 0.5 * sc, y, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#16181c'; ctx.fillText(s, x0 + dau * sc + 1, y + 1.3); ctx.fillStyle = '#f2f4f7'; ctx.fillText(s, x0 + dau * sc + 1, y + 0.5);
+        continue;
+      }
       ctx.fillStyle = '#000'; ctx.fillRect(x, y - h / 2 + 1, w, h);
       ctx.fillStyle = '#2b2e33'; ctx.fillRect(x, y - h / 2, w, h);
       ctx.fillStyle = '#4b5059'; ctx.fillRect(x, y - h / 2, w, 1);
@@ -777,7 +792,12 @@ const REN = {
       ctx.restore(); ctx.globalAlpha = al;
     }
     // vòng quét nâng cấp
-    if (T.lvSang > 0) {
+    const vlv = T.lvSang > 0 ? this.co('fx_vong_lv', S * 1.1) : null; // vòng lên cấp ChatGPT (S4): xoay, nở ra, mờ dần
+    if (vlv) {
+      const k2 = 1 - T.lvSang, r = S * (0.42 + k2 * 0.35);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(1, T.lvSang * 1.4);
+      ctx.rotate(k2 * Math.PI * 2.2); ctx.drawImage(vlv, -r, -r, r * 2, r * 2); ctx.restore(); ctx.globalAlpha = al;
+    } else if (T.lvSang > 0) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#7dff6a'; ctx.lineWidth = 3; ctx.globalAlpha = T.lvSang;
       const a0 = (1 - T.lvSang) * Math.PI * 4;
       ctx.beginPath(); ctx.arc(0, 0, S * 0.4, a0, a0 + Math.PI * 1.2); ctx.stroke();
@@ -825,7 +845,9 @@ const REN = {
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
     if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }
     if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.08 + 0.04 * Math.sin(this.t * 6)); this.anhGiua(ctx, this.cham1('#ffd23f'), 0, 0, S * 0.95); ctx.restore(); ctx.globalAlpha = al; }
-    if (T.st.kep > 0 && !o.ghost) { // bị Kẹp Phá: vòng xích tím quay
+    const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
+    if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
+    else if (T.st.kep > 0 && !o.ghost) { // bị Kẹp Phá: vòng xích tím quay
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#c77dff'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.lineDashOffset = this.t * 30; ctx.globalAlpha = al * 0.7;
       ctx.beginPath(); ctx.arc(0, 0, S * 0.38, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al;
     }
@@ -866,7 +888,7 @@ const REN = {
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
   than(T, S, da, bong) {
     const km = typeof ND !== 'undefined' ? ND.mauU(T) : null; // màu khoá bộ bài (vòng quanh bệ)
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (this.img('ngoc_' + T.bac) ? '|n' : '');
     let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
@@ -881,6 +903,8 @@ const REN = {
     if (km) ND.veVong(x, SB / 2 + 2.2, km, da); // vòng màu khoá 3 px, tròn tuyệt đối, ôm sát bệ (dưới đầu súng)
     // ngọc độ hiếm: hình thoi nhỏ ở mép dưới-trái bệ (ưu tiên thấp nhất)
     const gx = -SB * 0.4, gy = SB * 0.4, gr = Math.max(3, S * 0.055);
+    const ngoc = this.img('ngoc_' + T.bac); // viên ngọc ChatGPT (S2); hoá đá → bản xám
+    if (ngoc) { const g = da ? (this.banXam('ngoc_' + T.bac) || ngoc) : ngoc, w = gr * 3; x.drawImage(this.mip(g, w * q), gx - w / 2, gy - w / 2, w, w); return this.cSet(key, c); }
     x.beginPath(); x.moveTo(gx, gy - gr); x.lineTo(gx + gr, gy); x.lineTo(gx, gy + gr); x.lineTo(gx - gr, gy); x.closePath();
     x.fillStyle = da ? '#8a8a8a' : TIERS[T.bac].mau; x.fill();
     x.lineWidth = 1.4; x.strokeStyle = 'rgba(8,10,12,.9)'; x.stroke();
@@ -906,12 +930,27 @@ const REN = {
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).
   huyHieu(n, d) {
-    const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N;
+    const anh = this.img(n >= 7 ? 'sao_hex7' : 'sao_hex'); // tấm lục giác ChatGPT (S2); chưa tải → vẽ code
+    const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N + (anh ? '|a' : '');
     let c = this.cGet(key); if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), q = N / (d * 1.5); x.scale(q, q); x.translate(d * 0.75, d * 0.75);
     const R = d / 2, hx = (r, oy) => { x.beginPath(); for (let i = 0; i < 6; i++) { const a = (i * 60 - 90) * Math.PI / 180; x.lineTo(Math.cos(a) * r, Math.sin(a) * r + (oy || 0)); } x.closePath(); };
     x.lineJoin = 'round';
+    if (anh) {
+      // sao_hex: lục giác chiếm ~94% ô; sao_hex7 có vương miện phía trên (lục giác ở ~70% dưới) → canh để lục giác trùng chỗ cũ
+      hx(R * 1.02, R * 0.16); x.fillStyle = 'rgba(0,0,0,.5)'; x.fill(); // bóng
+      const w = n >= 7 ? R * 2.75 : R * 2.2, oy = n >= 7 ? -R * 0.3 : 0;
+      x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
+      const px = w * q, cx = N / 2, cy = N / 2 + oy * q;
+      this.veNho(x, anh, 0, 0, anh.width, anh.height, Math.round(cx - px / 2), Math.round(cy - px / 2), Math.round(px), Math.round(px));
+      x.restore();
+      const f = Math.round(R * 1.42 * 10) / 10;
+      x.font = '800 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.lineWidth = R * 0.22; x.strokeStyle = '#05070a'; x.strokeText(n, 0, R * 0.09);
+      x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
+      return this.cSet(key, c);
+    }
     hx(R * 1.02, R * 0.14); x.fillStyle = 'rgba(0,0,0,.55)'; x.fill(); // bóng
     hx(R * 1.0); x.fillStyle = '#07090c'; x.fill(); // viền tối ngoài (nổi trên mọi nền)
     hx(R * 0.86); x.fillStyle = n >= 7 ? '#6e0d19' : '#1b2129'; x.fill();
@@ -1000,7 +1039,7 @@ const REN = {
       ctx.globalAlpha = (1 - u) * 0.6; ctx.strokeStyle = v.mau; ctx.lineCap = 'round'; ctx.lineWidth = Math.min(3, v.day) * (1 - u) + 0.5;
       ctx.beginPath(); ctx.arc(v.x, v.y, Math.max(0.5, v.r0 + (v.r1 - v.r0) * e), 0, 7); ctx.stroke();
     }
-    const lua = this.co('tia_lua', 24);
+    const lua = this.co('tia_lua', 24), tuyet = this.co('hat_tuyet', 12); // hat_tuyet: bông tuyết ChatGPT (S4) cho Blizzard
     for (const p of FX.hat) {
       const u = p.t / p.song;
       if (p.k === 'khoi') continue;
@@ -1008,6 +1047,7 @@ const REN = {
       ctx.globalAlpha = (1 - u) * Math.min(1, u * 14 + 0.3) * 0.75;
       const c = p.co * (p.k === 'than' ? 1 : 1 - u * 0.5);
       if (p.k === 'lua' && lua && (p.mau === '#ffb060' || p.mau === '#ffd080')) ctx.drawImage(lua, p.x - c / 2, p.y - c / 2, c, c);
+      else if (p.mau === '#e8fbff' && tuyet) ctx.drawImage(tuyet, p.x - c * 1.1, p.y - c * 1.1, c * 2.2, c * 2.2);
       else ctx.drawImage(this.mip(this.cham1(p.mau), c * 2 * this.s * this.dpr), p.x - c, p.y - c, c * 2, c * 2);
     }
     ctx.globalCompositeOperation = 'source-over';

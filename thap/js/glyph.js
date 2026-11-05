@@ -199,14 +199,35 @@ const GLYPH = (() => {
   const duPhong = (g) => { const p = []; for (let i = 0; i < 9; i++) { const a = (i * 45 + 22.5) * D; p.push([12 + Math.cos(a) * 10, 12 + Math.sin(a) * 10]); } g.l(p, 2.4); g.c(12, 12, 3); };
 
   const cache = {};
+  // Ảnh ChatGPT (bóng trắng 128×128, assets/glyph/<id>.png) thay hình vector khi đã tải xong và cỡ ≥ 14 px
+  // (nhỏ hơn: vector sắc hơn ảnh thu nhỏ). Ảnh tải lười, chỉ khi cần; tải xong → báo các nơi đã dựng sẵn bằng vector dựng lại.
+  const ANH_MIN = 14, cho = {}, nghe = [];
+  function anh(id) {
+    if (typeof REN === 'undefined' || !REN.img) return null;
+    const ten = 'glyph/' + id, a = REN.img(ten);
+    if (a) return a;
+    const im = REN.anh[ten];
+    if (im && !cho[id] && im.addEventListener) { // lần đầu: đợi tải xong rồi báo đổi
+      cho[id] = true;
+      im.addEventListener('load', () => { for (const k in cache) if (k.startsWith(id + '|')) delete cache[k]; for (const f of nghe) try { f(id); } catch (e) {} }, { once: true });
+    }
+    return null;
+  }
+  // 1 = đang dùng ảnh PNG cho cỡ N (để khoá bộ đệm bên ngoài đổi khi ảnh tải xong)
+  const coAnh = (id, N) => (N >= ANH_MIN && anh(id) ? 1 : 0);
   // mặt nạ glyph trắng N×N px (đã gồm lề), dựng 1 lần
   function mask(id, N) {
-    const key = id + '|' + N; if (cache[key]) return cache[key];
+    const a = N >= ANH_MIN ? anh(id) : null;
+    const key = id + '|' + N + (a ? '|p' : ''); if (cache[key]) return cache[key];
     const c = document.createElement('canvas'); c.width = c.height = N;
-    const x = c.getContext('2d'); x.fillStyle = x.strokeStyle = '#fff'; x.lineJoin = 'round'; x.lineCap = 'round';
+    const x = c.getContext('2d');
+    if (a) { REN.veNho(x, a, 0, 0, a.width, a.height, 0, 0, N, N); return (cache[key] = c); }
+    x.fillStyle = x.strokeStyle = '#fff'; x.lineJoin = 'round'; x.lineCap = 'round';
     x.scale(N / 24, N / 24);
     (G[id] || duPhong)(mk(x));
     return (cache[key] = c);
   }
-  return { G, mask, co: (id) => !!G[id] };
+  // nạp trước ảnh của 1 danh sách ụ (bộ bài) — không chặn
+  const napTruoc = (ids) => { for (const id of ids || []) anh(id); };
+  return { G, mask, co: (id) => !!G[id], coAnh, napTruoc, khiTai: (f) => nghe.push(f) };
 })();

@@ -26,12 +26,14 @@ const ND = {
 
   // huy hiệu biểu tượng: đĩa tròn màu khoá + hình tối (mau = null → đĩa tối + hình trắng). d = đường kính logic
   huy(id, mau, d, da) {
-    const k = REN.s * REN.dpr, N = Math.max(10, Math.round(d * 1.3 * k)), key = 'ndh|' + id + '|' + (mau || '-') + '|' + N + (da ? '|x' : '');
+    const k = REN.s * REN.dpr, N = Math.max(10, Math.round(d * 1.3 * k)), key = 'ndh|' + id + '|' + (mau || '-') + '|' + N + (da ? '|x' : '') + '|' + this.glAnh(id, N);
     let c = REN.cache[key]; if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = N;
     this.veHuy(c.getContext('2d'), id, mau, N, da);
     return (REN.cache[key] = c);
   },
+  // 1 = hình nhận diện đang là ảnh PNG (glyph/<id>.png) ở cỡ đĩa N → khoá bộ đệm đổi khi ảnh tải xong
+  glAnh(id, N) { return GLYPH.coAnh ? GLYPH.coAnh(id, Math.round(N / 1.3 * 0.74)) : 0; },
   veHuy(x, id, mau, N, da) {
     const r = N / 1.3 / 2, cx = N / 2, cy = N / 2;
     x.fillStyle = 'rgba(0,0,0,.5)'; x.beginPath(); x.arc(cx, cy + r * 0.12, r * 1.04, 0, Math.PI * 2); x.fill(); // bóng
@@ -46,10 +48,17 @@ const ND = {
   },
   // ảnh dataURL cho DOM (thẻ, bảng thông tin, dải nhận diện)
   url(id, mau, px) {
-    px = px || 64; const key = id + '|' + (mau || '-') + '|' + px; if (this._url[key]) return this._url[key];
-    const N = Math.round(px * 1.3), c = document.createElement('canvas'); c.width = c.height = N;
+    px = px || 64; const N = Math.round(px * 1.3), key = id + '|' + (mau || '-') + '|' + px + '|' + this.glAnh(id, N); if (this._url[key]) return this._url[key];
+    const c = document.createElement('canvas'); c.width = c.height = N;
     this.veHuy(c.getContext('2d'), id, mau, N);
     return (this._url[key] = c.toDataURL());
+  },
+  // ảnh glyph PNG vừa tải xong → thay mọi <img> DOM đang hiện bản vector của ụ đó
+  doiAnhDOM(id) {
+    const cu = {};
+    for (const k in this._url) if (k.startsWith(id + '|') && k.endsWith('|0')) { const [, m, px] = k.split('|'); cu[this._url[k]] = [m === '-' ? null : m, +px]; }
+    if (!Object.keys(cu).length) return;
+    for (const im of document.querySelectorAll('img')) { const v = cu[im.getAttribute('src')]; if (v) im.src = this.url(id, v[0], v[1]); }
   },
   // vòng màu khoá quanh bệ (vẽ vào ảnh thân dựng sẵn — dưới đầu súng). R = bán kính, tròn tuyệt đối
   veVong(x, R, mau, da) {
@@ -235,5 +244,6 @@ const ND = {
     });
     return r;
   };
+  if (GLYPH.khiTai) GLYPH.khiTai((id) => ND.doiAnhDOM(id));
   ND.init();
 })();

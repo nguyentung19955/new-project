@@ -509,3 +509,15 @@ Same style as the attached tray art. Fill the whole image.
 - Ảnh canvas: nạp qua `REN.img()` / `REN.co()` như mọi asset; giữ đường dự phòng code khi ảnh chưa tải.
 - Icon 12–16 px (B1, B5): thu nhỏ nhiều bước (`REN.mip`) — nếu sau khi ráp vẫn nhoè hơn vector, giữ vector cho cỡ < 14 px và chỉ dùng ảnh trên thẻ/bảng thông tin.
 - Mọi vòng tròn phải tròn tuyệt đối: sau khi cắt, kiểm tra bbox vuông (lệch ≤ 2 px) trước khi dùng.
+
+## 4. Kết quả ráp ảnh (phiên ráp, 2026-11-05)
+
+Cắt: `python3 tools/thap-cat-ui.py` (khoá magenta, tìm ô bằng khối liền, quầng sáng khử trộn màu nền, kiểm tra vòng tròn) → `thap/assets/*.png`, `thap/assets/glyph/<id>.png` (85), tờ tổng hợp `tuvan/audit/cut_contact.png`.
+Ảnh chụp trước/sau 360/390/430: `tuvan/audit/thay-anh/`. Kiểm thử: `tools/thap-kt-hinh-ui.js`, `tools/thap-kt-hinh-fx.js`.
+
+- **Đã thay:** H1 H2 H3 H4 H5 H8 H12 H13 (+ vân thép cut-in H14) · B1 B3 B4 B5 B10 B11 B12 B14 B16 B19 B20 · F7 (vòng triệu hồi) F10 F11 F12 F13 F14 F15 F16 F19 F22 · M1 M2 M5 M6 · P1. CSS mới: `thap/css/anhgen.css` (border-image 9 mảnh, chữ/số vẫn DOM).
+- **Cắt nhưng KHÔNG dùng:** `hu_vongbang` (F17 — vùng lạnh Cryo rộng gần cả bàn, vòng gạch băng to che hết ụ → giữ vòng nét đứt), `hud_trum_khung`, `loi_mau_khung`, `the_vien` (mục `K+` tùy chọn, giữ bố cục cũ).
+- `loi_hu1` (ảnh gen gần như chưa nứt) → dùng làm nền + vẫn vẽ 2 vết nứt cam mảnh bằng code; `loi_hu2` dùng nguyên ảnh.
+- Vòng phù văn khi KỸ NĂNG GHÉP kích hoạt vẫn vẽ code (cần đúng màu họ); vòng khi TRIỆU HỒI dùng ảnh.
+- Glyph: ảnh PNG từ 14 px thiết bị trở lên, nhỏ hơn giữ vector; tải lười, tải xong tự thay ảnh DOM đang hiện bản vector.
+- Sửa lỗi đua `ND is not defined`: `UI.init` đợi cả `DOMContentLoaded` (mọi script sau ui.js đã chạy).

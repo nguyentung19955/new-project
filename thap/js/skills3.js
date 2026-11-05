@@ -61,6 +61,8 @@ HU.dia = { // đĩa nảy: bay đuổi mục tiêu, trúng → tìm quái gần 
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     // lưỡi cưa tròn: đĩa xám + răng + vành vàng chanh (tròn tuyệt đối)
     ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
+    const cua = R.co('hu_luoicua', r * 2.76); // lưỡi cưa ChatGPT (S4)
+    if (cua) { ctx.drawImage(cua, -r * 1.38, -r * 1.38, r * 2.76, r * 2.76); ctx.restore(); return; }
     ctx.fillStyle = '#2a2f36'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
     ctx.fillStyle = '#d6ff3a';
     for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r); ctx.lineTo(Math.cos(a + 0.28) * r * 1.38, Math.sin(a + 0.28) * r * 1.38); ctx.lineTo(Math.cos(a + 0.5) * r, Math.sin(a + 0.5) * r); ctx.fill(); }
@@ -172,10 +174,14 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
   ve(ctx, o, R) {
     const E = o.E, x = E.chet ? o.x : E.x, y = E.chet ? o.y : E.y, r = (E.d.co || 40) * 0.58 + 4, vao = Math.min(1, o.t / 0.12), con = Math.max(0, o.song - o.t);
     ctx.save(); ctx.translate(x, y);
+    const kinh = R.co('hu_khoa', r * 2.1); // kính bát giác + mặt đồng hồ ChatGPT (S4); vành tiến độ + kim + số giây vẽ đè bằng code
+    if (kinh) { const rr = r * (0.8 + 0.2 * vao) * 1.05; ctx.globalAlpha = 0.82 * vao; ctx.drawImage(kinh, -rr, -rr, rr * 2, rr * 2); }
+    else {
     // kính lục giác
     ctx.beginPath(); for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + Math.PI / 6, rr = r * (0.8 + 0.2 * vao); i ? ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr); } ctx.closePath();
     ctx.globalAlpha = 0.22 * vao; ctx.fillStyle = '#45e0c8'; ctx.fill();
     ctx.globalAlpha = 0.9 * vao; ctx.strokeStyle = '#9ff5e6'; ctx.lineWidth = 2; ctx.stroke();
+    }
     // kim đồng hồ quay + vành tiến độ (tròn)
     ctx.globalAlpha = 0.85 * vao; ctx.strokeStyle = '#45e0c8'; ctx.lineWidth = 2.2;
     ctx.beginPath(); ctx.arc(0, 0, r * 0.62, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (con / o.song)); ctx.stroke();
@@ -367,7 +373,10 @@ SKILLS.pandora = {
   },
 };
 // biểu tượng 6 phép (vẽ bằng code, nét như ký hiệu buff)
+const PANDORA_IC = { mana: 'ic_mana', dong: 'ic_cham', sao: 'ic_sao', bom: 'ic_bom', khien: 'ic_khien', cuong: 'ic_toc' }; // icon ChatGPT (S2)
 function vePandora(ctx, k, r, mau) {
+  const ic = PANDORA_IC[k] && REN.co(PANDORA_IC[k], r * 2.6);
+  if (ic) { ctx.drawImage(ic, -r * 1.3, -r * 1.3, r * 2.6, r * 2.6); return; }
   if (k === 'mana') return veKyHieu(ctx, 'mana', r, mau);
   if (k === 'dong') return veKyHieu(ctx, 'cham', r, mau);
   if (k === 'khien') return veKyHieu(ctx, 'khien', r, mau);
@@ -397,8 +406,10 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
     const cx = c.x, cy = c.y - 40, r = 25;
     const dich = o.chon[0], vong = 3 * Math.PI * 2 + (-dich * Math.PI / 3);
     const g0 = -Math.PI / 2 + vong * e; // ô trúng dừng ở đỉnh vòng
-    ctx.save(); ctx.globalAlpha = hien * 0.9; ctx.fillStyle = 'rgba(14,10,24,.88)'; ctx.beginPath(); ctx.arc(cx, cy, r + 13, 0, 7); ctx.fill();
-    ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 1.6; ctx.stroke();
+    const dia = R.co('pandora_dia', (r + 13) * 2); // đĩa quay ChatGPT (S4): 6 hốc xoay theo icon
+    ctx.save(); ctx.globalAlpha = hien * (dia ? 1 : 0.9);
+    if (dia) { ctx.save(); ctx.translate(cx, cy); ctx.rotate(g0 + Math.PI / 2); ctx.drawImage(dia, -(r + 13), -(r + 13), (r + 13) * 2, (r + 13) * 2); ctx.restore(); }
+    else { ctx.fillStyle = 'rgba(14,10,24,.88)'; ctx.beginPath(); ctx.arc(cx, cy, r + 13, 0, 7); ctx.fill(); ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 1.6; ctx.stroke(); }
     PANDORA.forEach((p, i) => {
       const a = g0 + i * Math.PI / 3, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r, trungo = quay >= 1 && o.chon.includes(i);
       ctx.save(); ctx.translate(x, y); ctx.globalAlpha = hien * (quay >= 1 ? (trungo ? 1 : 0.3) : 0.85);
