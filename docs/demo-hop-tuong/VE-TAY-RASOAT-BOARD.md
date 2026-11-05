@@ -6,7 +6,7 @@ Luật: `thap/QUY-TAC-HINH.md` (1: cấm vẽ code giả vật thể · 3: code 
 
 Công cụ kiểm: `node tools/thap-kt-vetay.js <file…>` — quét lệnh vẽ cấm (arc/rect/path/fill/stroke/gradient/setLineDash/shadowBlur/Path2D/putImageData/glyph text; CSS gradient/box-shadow/border/clip-path/drop-shadow), trượt khi dòng không có `// vetay-ok: text|png|mask|debug|hit|nen`.
 Kết quả cuối: **OK — 0 dòng vẽ tay chưa giải trình trong 15 file của khu** (toàn repo: 524 → 320 dòng, phần còn lại thuộc khu khác).
-Ảnh trước/sau 390×844 DPR3: `tuvan/vetay/board/truoc_*.jpg`, `sau_*.jpg`, ghép `so_sanh_truoc_sau.png`. Chạy lại: `tools/thap-kt-vetay-board.js`.
+Ảnh trước/sau 390×844 DPR3: `tuvan/vetay/board/truoc_*.jpg`, `sau_*.jpg` (sau khi ráp sàn + vòng nạp: `sau2_*.jpg`), ghép `so_sanh_truoc_sau.png`. Chạy lại: `tools/thap-kt-vetay-board.js`.
 
 ## Bảng kiểm kê
 
@@ -17,7 +17,7 @@ Trạng thái: **PNG** = thay bằng ảnh ChatGPT có sẵn · **BỎ** = xoá,
 | 1 | **Vòng màu khoá bộ bài quanh bệ ụ** (xanh/đỏ/lục/ngọc/tím — ảnh người dùng) | nhandien.js:64-67 `veVong` arc+stroke, gọi từ render.js:934 | không vẽ; bệ `de_chung.png` đứng một mình | BỎ (CHỜ raw_p4_board_2 nếu muốn lại màu khoá) |
 | 2 | **Vòng tầm nét đứt** quanh Cryo Reactor (ảnh người dùng) | skills2.js:854-855 setLineDash+arc | không vẽ | BỎ |
 | 3 | Quầng tầm lạnh to (mép tròn lộ như vòng tầm) | skills2.js:851 `cham1` phóng cỡ cả bàn | không vẽ | BỎ |
-| 4 | **Vòng sáng trắng nạp năng lượng** quanh bệ (overlord, wallgen, blackhole, mana, ụ có `napMau`) | render.js:821 arc stroke theo % nạp | `fx_vong_mong.png` tô màu, độ sáng theo % nạp | PNG (CHỜ raw_p4_board_3: vòng nạp chia đoạn) |
+| 4 | **Vòng sáng trắng nạp năng lượng** quanh bệ (overlord, wallgen, blackhole, mana, ụ có `napMau`) | render.js:821 arc stroke theo % nạp | `vong_nap_0..7.png` (raw_p4_board_3, 8 khung theo % nạp) tô màu ụ; dự phòng `fx_vong_mong` | PNG ✅ |
 | 5 | Vòng sóng lan (aura tick, FX.vong1, gSuong…) | hieuung.js:49 `VX.vong` arc · render.js:1090 | `fx_vong_mong.png` tô màu, phóng | PNG |
 | 6 | **Chấm vai trò màu góc trên-trái ô** (đĩa màu + hình vector) | nhandien.js:36-47 `veHuy` arc×4 + mặt nạ glyph vector | `h2_vai_tc / h2_vai_ht / h2_vai_db (/kc/phu).png` | PNG |
 | 7 | Thư viện 81 biểu tượng vector nhận diện ụ | glyph.js:1-233 (arc/path/Path2D/setLineDash) | xoá; DOM dùng `h2_vai_*.png` (`ND.url`) | BỎ (code chết đã xoá) |
@@ -36,7 +36,7 @@ Trạng thái: **PNG** = thay bằng ảnh ChatGPT có sẵn · **BỎ** = xoá,
 | 20 | Vệt đạn (`vet`, gradient + path + blur) | render.js:273-279 | `fx_vet_trang.png` tô màu | PNG |
 | 21 | Quầng cổng / quầng lõi (`glow`, radial gradient) | render.js:348-350, corehud.js:84-86 | `fx_cham_trang.png` tô màu | PNG |
 | 22 | Lõi sét trắng kẻ code đè lên dải sét | render.js:417-418 | bỏ (dải `tia_set` PNG giữ) | BỎ |
-| 23 | Sàn trận gradient + quầng tối viền | render.js:439-444 | 1 màu nền đặc #1d1f23 (`vetay-ok: nen`) | CHỜ raw_p4_board_1 |
+| 23 | Sàn trận gradient + quầng tối viền | render.js:439-444 | `san_tran.png` (raw_p4_board_1) dịu màu, phủ kín; lót 1 màu đặc | PNG ✅ |
 | 24 | Bóng đổ code dưới khay + dưới lớp đường (shadowBlur) | render.js:448, 483 | bỏ (khay PNG có viền tối) | BỎ |
 | 25 | Khay xám / đường xám dự phòng (fillRect) | render.js:450, 493, 583 | bỏ | BỎ |
 | 26 | Chớp màn (fillRect toàn màn) | render.js:613 | `fx_cham_trang.png` phóng to | PNG |
@@ -58,7 +58,7 @@ Trạng thái: **PNG** = thay bằng ảnh ChatGPT có sẵn · **BỎ** = xoá,
 
 Không có hình vẽ tay: `buffvfx.js, hudtop.js, hud2.js, keoghep.js, ghepfx.js, chihuy.js, doiphuong.js` (chỉ đặt/phóng/mờ PNG).
 
-**Tổng: 41 nhóm phần tử (≈180 dòng lệnh vẽ) — 22 thay bằng PNG có sẵn · 19 bỏ hẳn · 3 chờ ảnh mới (sàn trận, đĩa màu khoá, vòng nạp chia đoạn — đã có tạm PNG/màu đặc).**
+**Tổng: 41 nhóm phần tử (≈180 dòng lệnh vẽ) — 24 thay bằng PNG (22 có sẵn + 2 ảnh mới raw_p4_board_1/3 đã ráp) · 17 bỏ hẳn · 1 chờ ảnh (raw_p4_board_2 đĩa màu khoá — tuỳ chọn, hiện dùng icon vai trò).**
 
 ## Dòng vẽ còn lại trong khu (đã giải trình — `vetay-ok`)
 
@@ -67,7 +67,7 @@ Không có hình vẽ tay: `buffvfx.js, hudtop.js, hud2.js, keoghep.js, ghepfx.j
 | render.js `banTrang`, `co(...,'den')`, `toBien`, `banXam`, `diu`, `dauBong` | png | bản trắng/xám/đen/dịu màu của chính ảnh PNG (source-in / chỉnh điểm ảnh) |
 | render.js `toMau` | png | tô màu ảnh trắng fx_* ChatGPT (source-atop) |
 | render.js `diaCong` | mask | cắt tròn lõi cổng PNG để xoay |
-| render.js `lamNen0`, `ve0` (#1d1f23) | nen | 1 màu nền đặc toàn màn (như CSS background-color) — chờ raw_p4_board_1 |
+| render.js `lamNen0`, `ve0` (#1d1f23) | nen | 1 màu nền đặc lót dưới ảnh sàn / lúc sàn chưa tải |
 | render.js `veDongChay`, `veQuai`, `veDan` | debug | chỉ khi `?debug` và thiếu ảnh |
 | corehud.js `loiDo` | png | bản đỏ của ảnh lõi |
 | render.js `huyHieu`, buff `+N`, nhãn kỹ năng | text | strokeText/fillText con số / chữ |
@@ -76,3 +76,8 @@ Ngoài khu (để các session kia xử lý; checker liệt kê đủ): `skills*
 
 ## Hiệu năng / lỗi
 Playwright headless (rasterize phần mềm), cùng máy, trước → sau: DPR1 SOLO 58 → 60 fps, CO-OP 43 → 48, PVP 40 → 41; DPR3 SOLO 33 → 33. Không lỗi trang ở cả 3 chế độ. (Headless không có GPU nên 2 bàn thấp hơn máy thật; không có tụt so với trước.)
+
+## Ráp ảnh pass 4 (cùng ngày)
+- `raw_p4_board_1.png` → `thap/assets/san_tran.png` (cắt giữa 1:2, 768×1536 = độ nét raw; vẽ qua `REN.diu` cho tối/dịu).
+- `raw_p4_board_3.png` → `thap/assets/vong_nap_0..7.png` (khoá magenta theo khoảng cách màu + tách trộn nền, xám hoá để code tô màu ụ, nhân-trước-alpha Lanczos 160 px ≈ 3× cỡ vẽ 0.9·ô).
+- `REN.toMau` của khu board đổi tên `REN.toMauA` (support.js có `REN.toMau` riêng ghi đè, trả null khi ảnh chưa tải).

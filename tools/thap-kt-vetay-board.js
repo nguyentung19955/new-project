@@ -12,7 +12,7 @@ const fps = (p, ms) => p.evaluate((ms) => new Promise(ok => { let n = 0; const t
   ];
   for (const [ten, mode, deck] of CANH) {
     const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: +(process.env.DPR || 3) });
-    const errs = []; p.on('pageerror', e => errs.push(e.message));
+    const errs = []; p.on('pageerror', e => errs.push(e.message + ' @ ' + (e.stack || '').split('\n').slice(1, 3).join(' | ')));
     await p.goto(`${BASE}/thap/?mode=${mode}&deck=${deck}&mana=3000&wave=6&notut=1&deck2=khoisinh,ngaithoigian,luoicheo,lien,canon`, { waitUntil: 'load' });
     await p.waitForTimeout(3500);
     for (let i = 0; i < 2; i++) { await p.mouse.click(195, 470); await p.waitForTimeout(700); } // bỏ màn giới thiệu trận

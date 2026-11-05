@@ -247,7 +247,7 @@ const REN = {
   // vẽ ảnh thu nhỏ sẵn ở tâm (0,0) với cỡ px
   ve1(ctx, ten, px, bien, ox, oy) { const c = this.co(ten, px, bien); if (!c) return false; const h = px * c.height / c.width; ctx.drawImage(c, (ox || 0) - px / 2, (oy || 0) - h / 2, px, h); return true; },
   // ẢNH PNG TÔ MÀU (QUY-TAC-HINH mục 3: tô màu ảnh ChatGPT trắng) — dựng 1 lần mỗi màu; ảnh chưa tải → canvas rỗng (không vẽ gì)
-  toMau(ten, mau, a) {
+  toMauA(ten, mau, a) {
     const M = this._toMau || (this._toMau = {}), key = ten + '|' + mau + '|' + (a || 0.78);
     if (M[key]) return M[key];
     const im = this.img(ten); if (!im) return this.rong();
@@ -258,7 +258,7 @@ const REN = {
   },
   // thanh máu = h2_thanh.png: nền tô đen + phần đầy CẮT theo tỉ lệ, tô màu (QUY-TAC-HINH mục 3)
   thanhAnh(ctx, x, y, w, h, u, mau) {
-    const nen = this.toMau('h2_thanh', '#05070a', 0.82), day = this.toMau('h2_thanh', mau, 0.85); if (nen === this._rong) return;
+    const nen = this.toMauA('h2_thanh', '#05070a', 0.82), day = this.toMauA('h2_thanh', mau, 0.85); if (nen === this._rong) return;
     u = clamp(u, 0, 1); ctx.drawImage(nen, x - 1, y - 1, w + 2, h + 2);
     if (u > 0) ctx.drawImage(day, 0, 0, day.width * u, day.height, x, y, w * u, h);
   },
@@ -266,7 +266,7 @@ const REN = {
   // chấm sáng mềm theo màu = fx_cham_trang.png (ChatGPT T22) tô màu — không còn gradient vẽ code
   cham1(mau) {
     if (this.cham[mau]) return this.cham[mau];
-    const c = this.toMau('fx_cham_trang', mau);
+    const c = this.toMauA('fx_cham_trang', mau);
     if (c !== this._rong) this.cham[mau] = c;
     return c;
   },
@@ -274,7 +274,7 @@ const REN = {
   bui1() { return this.img('fx_bui') || this.rong(); },
   // vệt đạn = fx_vet_trang.png (ChatGPT) tô màu
   vet(mau) {
-    const c = this.toMau('fx_vet_trang', mau);
+    const c = this.toMauA('fx_vet_trang', mau);
     if (c !== this._rong) this._vet[mau] = c;
     return c;
   },
@@ -345,7 +345,7 @@ const REN = {
   glow(key, stops) {
     let c = this._glow[key]; if (c) return c;
     const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/.exec(stops[0][1]) || [0, 255, 255, 255, 1];
-    const im = this.toMau('fx_cham_trang', 'rgb(' + m[1] + ',' + m[2] + ',' + m[3] + ')', 0.9); if (im === this._rong) return im;
+    const im = this.toMauA('fx_cham_trang', 'rgb(' + m[1] + ',' + m[2] + ',' + m[3] + ')', 0.9); if (im === this._rong) return im;
     c = document.createElement('canvas'); c.width = c.height = 128;
     const x = c.getContext('2d'); x.globalAlpha = Math.min(1, (+m[4] || 1) * 1.5); x.drawImage(im, 0, 0, 128, 128);
     return (this._glow[key] = c);
@@ -433,9 +433,11 @@ const REN = {
     const x = c.getContext('2d'); if (!x) { this._choNen = true; return; }
     this.min(x);
     x.setTransform(k, 0, 0, k, 0, 0);
-    // sàn: KHÔNG gradient code — để trong suốt, nền #wrap (CSS màu đặc) lộ ra; ảnh sàn mới chờ raw_p4_board_1
-    x.fillStyle = '#1d1f23'; x.fillRect(0, 0, W, H); // vetay-ok: nen (1 màu nền đặc như CSS background-color — không gradient/vật thể)
+    // sàn: KHÔNG gradient code — ảnh ChatGPT san_tran.png (raw_p4_board_1) trên 1 màu nền đặc
+    x.fillStyle = '#1d1f23'; x.fillRect(0, 0, W, H); // vetay-ok: nen (1 màu nền đặc lót dưới ảnh sàn)
     let du = true;
+    const san = this.diu('san_tran', 0.55, 0.8, 0.62); // sàn xưởng ChatGPT (raw_p4_board_1), dịu màu — phủ kín (cover)
+    if (san) { const k2 = Math.max(W / san.width, H / san.height), sw = san.width * k2, sh = san.height * k2; x.drawImage(san, (W - sw) / 2, (H - sh) / 2, sw, sh); } else du = false;
     // khay bàn máy móc xám (bóng đổ dưới khay)
     for (const B of G.ban) {
       x.save(); // (bỏ bóng đổ code dưới khay — khung khay PNG đã có viền tối)
@@ -740,7 +742,7 @@ const REN = {
         this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, E.hp / E.max, TRUM[E.trum].mau);
         if (E.bao) { // đường ngắm tới ụ bị nhắm
           const B = G.ban[E.ban];
-          ctx.save(); ctx.globalAlpha = 0.75; const ln = this.toMau('sup_link', TRUM[E.trum].mau, 0.6), vd = this.img('h2_vong_do'); // dây ngắm = sup_link PNG cuộn + vòng đỏ PNG trên ụ bị nhắm
+          ctx.save(); ctx.globalAlpha = 0.75; const ln = this.toMauA('sup_link', TRUM[E.trum].mau, 0.6), vd = this.img('h2_vong_do'); // dây ngắm = sup_link PNG cuộn + vòng đỏ PNG trên ụ bị nhắm
           for (const T of B.t) if (T && E.bao.muc.includes(T.uid)) { const c = B.o[T.o]; this.tia(ctx, ln, x, y, c.x, c.y, 7, this.t * 60); if (vd) this.anhGiua(ctx, vd, c.x, c.y, Math.min(B.cw, B.ch) * 0.86, 0, 0.8); }
           ctx.restore();
         }
@@ -801,7 +803,9 @@ const REN = {
     if (T.nap > 0.02 && !o.ghost && !laGrow(T.id) && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau)) {
       const m = skT.napMau || (T.id === 'overlord' ? '#ff5040' : T.id === 'mana' ? '#c77dff' : T.id === 'blackhole' ? '#ff3b9b' : '#7ffcff');
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = al * 0.55 * T.nap; this.anhGiua(ctx, this.toMau('fx_vong_mong', m), 0, 0, S * 0.84); // vòng nạp = fx_vong_mong PNG tô màu, sáng dần theo mức nạp
+      const vn = this.toMauA('vong_nap_' + Math.min(7, Math.floor(T.nap * 8)), m, 0.55); // vòng nạp 8 khung ChatGPT (raw_p4_board_3) tô màu ụ
+      if (vn.width > 1) { ctx.globalAlpha = al * 0.9; this.anhGiua(ctx, vn, 0, 0, S * 0.9); }
+      else { ctx.globalAlpha = al * 0.55 * T.nap; this.anhGiua(ctx, this.toMauA('fx_vong_mong', m), 0, 0, S * 0.84); } // khung chưa tải: vòng PNG mảnh
       if (T.nap > 0.8) { ctx.globalAlpha = al * (T.nap - 0.8) * 1.2 * (0.6 + 0.4 * Math.sin(this.t * 30)); this.anhGiua(ctx, this.cham1(m), 0, 0, S * 0.9); }
       ctx.restore(); ctx.globalAlpha = al;
     }

@@ -1,26 +1,16 @@
-   58  thap/css/game.css
-   53  thap/js/growfx.js
-   50  thap/css/unitpage.css
-   33  thap/js/skills5.js
-   31  thap/js/skills3.js
-   13  thap/js/skills.js
-   12  thap/js/hieuung.js
-   12  thap/css/anhgen.css
-   11  thap/js/quaianim.js
-    9  thap/js/skills4.js
-    8  thap/css/pass2.css
-    6  thap/js/support.js
-    5  thap/js/skilldemo.js
-    4  thap/js/skills2.js
+   11  thap/css/game.css
+    6  thap/css/unitpage.css
+    5  thap/css/anhgen.css
+    3  thap/js/hieuung.js
+    3  thap/js/skilldemo.js
+    2  thap/js/fxu.js
     2  thap/js/game.js
     2  thap/js/unitpage.js
+    2  thap/css/pass2.css
     1  thap/js/data.js
-    1  thap/js/fxu.js
-    1  thap/js/tuongmoi-ui.js
+    1  thap/js/support.js
     1  thap/css/chonthe.css
     1  thap/css/huongdan.css
-    1  thap/css/statthuc.css
     1  thap/css/taitai.css
-    1  thap/css/tien.css
     1  thap/css/vaotran.css
-FAIL — 318 dòng vẽ tay chưa có "vetay-ok" trong 73 file
+FAIL — 42 dòng vẽ tay chưa có "vetay-ok" trong 74 file

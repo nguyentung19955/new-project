@@ -101,7 +101,7 @@ Object.assign(REN, {
       if (!d.N || d.N.st.da) continue;
       const n = B.o[d.o], dx = n.x - c.x, dy = n.y - c.y, L = Math.hypot(dx, dy) || 1, r0 = C * 0.36;
       const x0 = c.x + dx / L * r0, y0 = c.y + dy / L * r0, x1 = n.x - dx / L * r0, y1 = n.y - dy / L * r0;
-      ctx.globalAlpha = vao * 0.85; this.tia(ctx, this.toMau('sup_link', mau, 0.5), x0, y0, x1, y1, 6, 0, true); // dây = sup_link PNG tô màu
+      ctx.globalAlpha = vao * 0.85; this.tia(ctx, this.toMauA('sup_link', mau, 0.5), x0, y0, x1, y1, 6, 0, true); // dây = sup_link PNG tô màu
       const p = e / 0.15;
       if (p < 1) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - p) * tat; this.anhGiua(ctx, this.cham1(mau), x0 + (x1 - x0) * p, y0 + (y1 - y0) * p, 10); ctx.globalCompositeOperation = 'source-over'; }
     }
