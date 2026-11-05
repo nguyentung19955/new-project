@@ -322,7 +322,7 @@ HU.tiaTia = { // vệt đạn tỉa mờ dần
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha = 1 - u;
     R.tia(ctx, 'dan_tia', o.x0, o.y0, o.x1, o.y1, 18 * (1 - u * 0.6), 0, true);
-    ctx.globalAlpha = (1 - u) * 0.9; ctx.strokeStyle = o.mau; ctx.lineWidth = 2 * (1 - u); ctx.beginPath(); ctx.moveTo(o.x0, o.y0); ctx.lineTo(o.x1, o.y1); ctx.stroke();
+    PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, 2 * (1 - u), o.mau, (1 - u) * 0.9); // lõi màu = tia PNG tô màu
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
   },
 };
@@ -352,8 +352,7 @@ HU.ping = { // ụ hỗ trợ kích hoạt buff: 1 xung năng lượng ngắn (~
       const p0 = Math.max(0, e - 0.35), r0 = 14;
       const ax = c.x + dx * (r0 / L) + (dx * (1 - 2 * r0 / L)) * p0, ay = c.y + dy * (r0 / L) + (dy * (1 - 2 * r0 / L)) * p0;
       const bx = c.x + dx * (r0 / L) + (dx * (1 - 2 * r0 / L)) * e, by = c.y + dy * (r0 / L) + (dy * (1 - 2 * r0 / L)) * e;
-      ctx.strokeStyle = 'rgba(' + rgb + ',' + (0.55 * (1 - u * 0.6)) + ')'; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      PX.tia(ctx, ax, ay, bx, by, 2.2, 'rgb(' + rgb + ')', 0.55 * (1 - u * 0.6));
       ctx.globalAlpha = 0.7 * (1 - u * 0.5); R.anhGiua(ctx, R.cham1('rgb(' + rgb + ')'), bx, by, 9); ctx.globalAlpha = 1;
     }
     ctx.lineCap = 'butt'; ctx.globalCompositeOperation = 'source-over';
@@ -381,9 +380,7 @@ HU.rail = { // railgun: vạch nạp → tia xuyên
     ctx.globalCompositeOperation = 'lighter';
     if (!o.da) {
       const [x, y] = dauNong(T), u = o.t / o.nap;
-      ctx.globalAlpha = 0.3 + 0.5 * u;
-      ctx.strokeStyle = '#7ffcff'; ctx.lineWidth = 1 + u * 1.5; ctx.setLineDash([6, 6]); ctx.lineDashOffset = -o.t * 80;
-      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(o.goc) * 600, y + Math.sin(o.goc) * 600); ctx.stroke(); ctx.setLineDash([]);
+      PX.tia(ctx, x, y, x + Math.cos(o.goc) * 600, y + Math.sin(o.goc) * 600, 1 + u * 1.5, '#7ffcff', 0.3 + 0.5 * u, -o.t * 80); // đường ngắm = tia PNG trượt
       R.anhGiua(ctx, 'tia_lua', x, y, 14 + u * 22, o.t * 8, 1);
     } else {
       const u = (o.t - o.nap) / (o.song - o.nap);
@@ -432,11 +429,8 @@ HU.tuong = { // tường ánh sáng chặn đường rồi nổ
     // tấm tường ánh sáng: dải sáng dày + vạch quét + 2 cột phát ở mép đường
     ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
     const day = 9 + 2 * Math.sin(o.t * 30);
-    const g = ctx.createLinearGradient(-day * 2, 0, day * 2, 0);
-    g.addColorStop(0, 'rgba(80,255,255,0)'); g.addColorStop(0.5, 'rgba(150,255,255,.75)'); g.addColorStop(1, 'rgba(80,255,255,0)');
-    ctx.fillStyle = g; ctx.fillRect(-day * 2, -L, day * 4, L * 2);
-    for (let i = -3; i <= 3; i++) { const yy = ((o.t * 60 + i * 12) % (L * 2)) - L; ctx.fillStyle = 'rgba(210,255,255,.5)'; ctx.fillRect(-day, yy, day * 2, 1.5); }
-    ctx.restore();
+    ctx.restore(); // tấm tường = tia laser PNG dày tô lục lam (thay dải gradient + vạch fillRect vẽ code)
+    PX.tia(ctx, o.x - nx * L, o.y - ny * L, o.x + nx * L, o.y + ny * L, day * 1.3, '#8affff', a * 0.75, o.t * 60);
     for (let k = -1; k <= 1; k++) {
       const ox = Math.cos(o.goc) * k * 4, oy = Math.sin(o.goc) * k * 4;
       R.tia(ctx, 'tia_set', o.x - nx * L + ox, o.y - ny * L + oy, o.x + nx * L + ox, o.y + ny * L + oy, 16 - Math.abs(k) * 5, o.t * 150 + k * 40);
@@ -471,24 +465,7 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
       ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 * mo; R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2);
       ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
     }
-    // vành bồi tụ mờ + lõi đen đặc
-    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, o.r);
-    g.addColorStop(0, 'rgba(0,0,0,' + mo + ')'); g.addColorStop(0.28, 'rgba(8,0,14,' + 0.95 * mo + ')'); g.addColorStop(0.42, 'rgba(150,20,90,' + 0.55 * mo + ')'); g.addColorStop(0.7, 'rgba(90,10,120,' + 0.2 * mo + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, o.r, 0, Math.PI * 2); ctx.fill();
-    ctx.globalCompositeOperation = 'lighter';
-    // tay xoáy quay (vòng cung sáng cuộn vào tâm)
-    for (let k = 0; k < 4; k++) {
-      const a0 = -o.t * 4.5 + k * Math.PI / 2;
-      ctx.strokeStyle = k % 2 ? 'rgba(255,90,170,' + 0.7 * mo + ')' : 'rgba(190,110,255,' + 0.7 * mo + ')';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i <= 16; i++) { const u = i / 16, rr = r * (1.35 - u * 0.95), a = a0 + u * 2.6; const px = Math.cos(a) * rr, py = Math.sin(a) * rr; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 0.5 * mo; R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2);
-    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = mo;
-    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0, 0, r * 0.32, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,150,220,' + 0.9 * mo + ')'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, r * 0.34, 0, Math.PI * 2); ctx.stroke();
+    // ảnh đĩa xoáy chưa nạp: không vẽ (bỏ lõi đen + tay xoáy vẽ code)
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };

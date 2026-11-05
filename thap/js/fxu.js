@@ -32,6 +32,7 @@ const FXU = {
   // ảnh cần nạp cho bộ bài (lười theo bộ bài → nhẹ bộ nhớ iOS)
   dsAnh(bans) {
     const ds = ['fx_vet_trang', 'fx_cham_trang', 'fx_vong_mong', 'fx_than', 'fx_bui'].filter(t => this.co(t));
+    ds.push('fx_laser_tia', 'fx_tia_sao', 'tai_day', 'fx_vong_trieu'); // ảnh nền của PX (vẽ hiệu ứng chỉ bằng PNG)
     for (const k of ['cham', 'dong', 'doc', 'chay', 'choang', 'yeu', 'cauvong', 'khienvang']) if (this.co('fx_st_' + k)) ds.push('fx_st_' + k);
     for (const b of bans) for (const id of b.deck) for (const c of ['dan', 'no', 'trung', 'hieu', 'tia']) if (this.co('fx_' + id + '_' + c)) ds.push('fx_' + id + '_' + c);
     for (const k in this.THAY) if (this.co(this.THAY[k]) && !ds.includes(this.THAY[k])) ds.push(this.THAY[k]);
@@ -90,35 +91,71 @@ if (typeof HU !== 'undefined' && HU.tiaTia) {
   };
 }
 
-// ---------- Wyrm Engine dạng 1: nón lửa PNG thay sprite canvas anhNon ----------
-if (typeof HU !== 'undefined' && HU.nonLua) {
-  const veCu = HU.nonLua.ve;
-  HU.nonLua.ve = function (ctx, o, R) {
-    const T = o.T; if (!(T.phun > 0)) return;
-    const gd = T.gd || gdSao(T);
-    if (gd !== 1 || !FXU.co('fx_ronglua_dan') || !REN.img('fx_ronglua_dan')) return veCu.call(this, ctx, o, R);
-    const goc = SKILLS.ronglua.goc(T), L = SKILLS.ronglua.tam(T), [x, y] = dauNong(T), al = Math.min(1, T.phun / 0.3);
-    const m = FXU_META.fx_ronglua_dan, im = REN.mip(REN.img('fx_ronglua_dan'), L * REN.s * REN.dpr);
-    const hh = Math.max(L * m[1] / m[0], 2 * L * Math.tan(goc / 2) * 0.95);
-    ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
-    for (let i = 0; i < 2; i++) { // 2 lớp lệch pha + rung nhẹ như cũ
-      const f = 1 + 0.06 * Math.sin(R.t * (31 + i * 17) + i);
-      ctx.globalAlpha = al * (i ? 0.45 : 1); ctx.save(); ctx.rotate(0.05 * Math.sin(R.t * 13 + i * 2));
-      if (i) ctx.globalCompositeOperation = 'lighter';
-      ctx.drawImage(im, -2, -hh * f / 2, L * f, hh * f); ctx.restore();
-    }
-    ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-  };
-}
+// (nón lửa Wyrm Engine: skills5.js HU.nonLua đã vẽ thẳng ảnh fx_ronglua_dan cho mọi dạng)
 
-// ---------- Hive Queen: ong máy PNG thay veDrone (vẽ code) ----------
-if (typeof veDrone === 'function') {
-  const veCu = veDrone;
-  // eslint-disable-next-line no-global-assign
-  veDrone = function (ctx, R, x, y, k, vang, pha, al) {
-    const ten = vang && FXU.co('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan';
-    if (!FXU.co(ten) || !R.img(ten)) return veCu(ctx, R, x, y, k, vang, pha, al);
-    const w = 20 * k * (vang ? 1.15 : 1) * (1 + 0.05 * Math.sin(pha * 0.7)); // vỗ cánh = nhịp phóng nhẹ của chính ảnh
-    R.anhGiua(ctx, ten, x, y, w, 0.15 * Math.sin(pha * 0.13), al == null ? 1 : al);
-  };
-}
+// (ong máy Hive Queen: skills5.js veDrone đã vẽ thẳng ảnh fx_chuato_dan/hieu)
+
+// =====================================================================================================
+// PX — bộ vẽ HIỆU ỨNG CHỈ BẰNG ẢNH PNG (thay mọi arc/stroke/fill/gradient của vùng FX, VE-TAY-RASOAT-fx.md)
+// Code chỉ: đặt vị trí / xoay / phóng / mờ / tô màu ảnh PNG ChatGPT; cung tiến độ = ảnh vòng + mặt nạ cắt (clip) vô hình.
+//   vong  → fx_vong_mong (vòng sáng trắng T22, vòng nằm ở 78% bán kính ảnh) tô màu
+//   cung  → vong + clip hình quạt a0..a1     · tia  → fx_laser_tia (tia trắng) tô màu, kéo/lặp theo đoạn thẳng
+//   cham  → fx_cham_trang tô màu (quầng/hạt)  · sao  → fx_tia_sao tô màu     · bong → fx_cham_trang tô đen (bóng mềm)
+// =====================================================================================================
+const PX = {
+  K_VONG: 2.56, // cỡ ảnh fx_vong_mong / bán kính vòng thấy được
+  mau(ten, mau) { return typeof FXU !== 'undefined' && REN.img(ten) ? (mau ? FXU.mau(ten, mau) : REN.img(ten)) : null; },
+  ve(ctx, im, x, y, w, h, goc, al) {
+    if (!im || !(w > 0.3)) return false;
+    im = REN.mip(im, Math.max(w, h) * REN.s * REN.dpr);
+    if (al != null) { if (al <= 0.01) return false; ctx.globalAlpha = Math.min(1, al); }
+    if (goc) { ctx.save(); ctx.translate(x, y); ctx.rotate(goc); ctx.drawImage(im, -w / 2, -h / 2, w, h); ctx.restore(); }
+    else ctx.drawImage(im, x - w / 2, y - h / 2, w, h);
+    return true;
+  },
+  vong(ctx, x, y, r, w, mau, al) { if (!(r > 0.5)) return; const s = r * this.K_VONG; this.ve(ctx, this.mau('fx_vong_mong', mau), x, y, s, s, 0, al == null ? null : al * Math.min(1, 0.55 + (w || 2) * 0.18)); },
+  // cung tròn a0→a1 (chiều kim đồng hồ; nguoc = ngược) = ảnh vòng bị cắt bởi hình quạt (mặt nạ vô hình)
+  // (dựng sẵn từng cung vào bộ đệm theo góc lượng tử 1/128 vòng → mỗi khung chỉ 1 drawImage, không clip mỗi khung)
+  _cung: new Map(),
+  cung(ctx, x, y, r, a0, a1, nguoc, w, mau, al) {
+    if (!(r > 0.5) || Math.abs(a1 - a0) < 0.003 || (al != null && al <= 0.01)) return;
+    const vm = this.mau('fx_vong_mong', mau); if (!vm) return;
+    const q = Math.PI / 64, b0 = Math.round(a0 / q), b1 = Math.round(a1 / q), S = r * this.K_VONG, n = Math.max(8, Math.round(S * REN.s * REN.dpr));
+    const key = mau + '|' + n + '|' + b0 + '|' + b1 + '|' + (nguoc ? 1 : 0);
+    let c = this._cung.get(key);
+    if (!c) {
+      if (this._cung.size > 600) this._cung.clear();
+      c = document.createElement('canvas'); c.width = c.height = n; const g = c.getContext('2d'), h = n / 2;
+      g.beginPath(); g.moveTo(h, h); g.arc(h, h, h, b0 * q, b1 * q, !!nguoc); g.closePath(); g.clip(); // mặt nạ cắt quạt (vô hình)
+      g.drawImage(REN.mip(vm, n), 0, 0, n, n);
+      // cắt sát khung bao của cung (vòng sáng nằm trong 0.55–1.0 bán kính ảnh) → vẽ ít điểm ảnh hơn mỗi khung
+      let x0 = n, y0 = n, x1 = 0, y1 = 0; const A0 = b0 * q, A1 = b1 * q, d = nguoc ? (A1 > A0 ? A1 - A0 - 2 * Math.PI : A1 - A0) : (A1 < A0 ? A1 - A0 + 2 * Math.PI : A1 - A0);
+      for (let i = 0; i <= 24; i++) { const a = A0 + d * i / 24; for (const k of [0.55, 1]) { const px = h + Math.cos(a) * h * k, py = h + Math.sin(a) * h * k; x0 = Math.min(x0, px); y0 = Math.min(y0, py); x1 = Math.max(x1, px); y1 = Math.max(y1, py); } }
+      x0 = Math.max(0, Math.floor(x0) - 1); y0 = Math.max(0, Math.floor(y0) - 1); x1 = Math.min(n, Math.ceil(x1) + 1); y1 = Math.min(n, Math.ceil(y1) + 1);
+      const t = document.createElement('canvas'); t.width = Math.max(1, x1 - x0); t.height = Math.max(1, y1 - y0); t.getContext('2d').drawImage(c, -x0, -y0);
+      c.width = c.height = 0; t.bx = x0 / n; t.by = y0 / n; t.bw = t.width / n; t.bh = t.height / n; c = t; this._cung.set(key, c);
+    }
+    if (al != null) ctx.globalAlpha = Math.min(1, al * Math.min(1, 0.55 + (w || 2) * 0.18));
+    ctx.drawImage(c, x - S / 2 + c.bx * S, y - S / 2 + c.by * S, c.bw * S, c.bh * S);
+  },
+  // đoạn thẳng sáng (dây, tia, đường ngắm): kéo dãn 1 ảnh; lech != null → lặp ảnh trượt theo lech (nhìn như chạy)
+  tia(ctx, x0, y0, x1, y1, w, mau, al, lech) {
+    const im = this.mau('fx_laser_tia', mau); if (!im) return;
+    if (al != null) { if (al <= 0.01) return; ctx.globalAlpha = Math.min(1, al); }
+    REN.tia(ctx, im, x0, y0, x1, y1, Math.max(3, (w || 2) * 3.2), lech || 0, lech == null);
+  },
+  // đường cong qua các điểm [[x,y],…] = nối các đoạn tia
+  duong(ctx, pts, w, mau, al) { for (let i = 1; i < pts.length; i++) this.tia(ctx, pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1], w, mau, al); },
+  cham(ctx, x, y, co, mau, al) { this.ve(ctx, this.mau('fx_cham_trang', mau), x, y, co, co, 0, al); },
+  sao(ctx, x, y, co, mau, al, goc) { this.ve(ctx, this.mau('fx_tia_sao', mau), x, y, co, co, goc, al); },
+  bong(ctx, x, y, w, h, al) { this.ve(ctx, this.mau('fx_cham_trang', '#000000'), x, y, w, h, 0, al); },
+  // thanh máu nhỏ trên đầu quái/trùm: nền = tai_day tô đen, mức đầy = tai_day tô màu CẮT theo tỉ lệ (QUY-TAC mục 3)
+  thanh(ctx, x, y, w, h, p, mau, khung) {
+    const nen = this.mau('tai_day', '#000000'), day = this.mau('tai_day', mau); if (!nen || !day) return;
+    ctx.globalAlpha = 0.75; ctx.drawImage(REN.mip(nen, w * REN.s * REN.dpr), x - 1, y - 1, w + 2, h + 2);
+    p = clamp(p, 0, 1); ctx.globalAlpha = 1;
+    if (p > 0.002) { const a = REN.mip(day, w * REN.s * REN.dpr); ctx.drawImage(a, 0, 0, a.width * p, a.height, x, y, w * p, h); }
+    if (khung) { const k = REN.img(khung); if (k) { const kw = w + h * 2.6, kh = kw * k.height / k.width; ctx.drawImage(REN.mip(k, kw * REN.s * REN.dpr), x + w / 2 - kw / 2, y + h / 2 - kh / 2, kw, kh); } }
+  },
+};
+// (REN.cham1 = fx_cham_trang PNG tô màu: đã làm ở render.js — vùng board)

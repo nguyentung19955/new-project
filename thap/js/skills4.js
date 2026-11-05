@@ -59,7 +59,7 @@ SKILLS.docton = {
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.16, x0: x, y0: y, x1, y1, mau: '#ff3a4a' });
   },
   sangDau: (T) => (T.ace ? 0.12 : 0),
-  veThem(ctx, T, S, al, R) { if (!T.ace) return; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.55 + 0.2 * Math.sin(R.t * 5)); ctx.strokeStyle = '#ff3a4a'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(0, 0, S * 0.44, 0, 7); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { if (!T.ace) return; ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.44, 1.4, '#ff3a4a', al * (0.55 + 0.2 * Math.sin(R.t * 5))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================
@@ -174,11 +174,7 @@ HU.truyNaVe = { // ký hiệu "$" lục giác trên đầu mọi quái truy nã 
     for (const E of G.quai) {
       if (E.chet || !E.truyNa) continue;
       const x = E.x, y = E.y - (E.d.co || 40) * 0.55 - 8, r = 7;
-      if (R.ve1(ctx, 'ic_truyna', 17, '', x, y)) continue; // huy hiệu $ ChatGPT (S2)
-      ctx.globalAlpha = 0.95; ctx.fillStyle = '#2a1c05'; ctx.beginPath();
-      for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + Math.PI / 6; i ? ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r) : ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r); }
-      ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#f0b030'; ctx.lineWidth = 1.5; ctx.stroke();
-      ctx.font = '900 9px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffd27a'; ctx.fillText('$', x, y + 0.5);
+      R.ve1(ctx, 'ic_truyna', 17, '', x, y); // huy hiệu $ ChatGPT (S2); chưa nạp → không vẽ (bỏ lục giác + chữ $ vẽ code)
     }
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.globalAlpha = 1;
   },
@@ -219,9 +215,9 @@ SKILLS.nhatthuc = {
   },
   sangDau: (T) => (T.ca > 0 ? 0.35 : T.gd === 3 ? 0.12 : 0),
   veThem(ctx, T, S, al, R) { // nửa vành ngày/đêm quanh bệ (tròn): sáng phía chế độ đang bật
-    ctx.globalCompositeOperation = 'lighter'; ctx.lineWidth = 2.2;
-    ctx.globalAlpha = al * (!T.dem || T.ca > 0 ? 0.7 : 0.15); ctx.strokeStyle = '#ffcc33'; ctx.beginPath(); ctx.arc(0, 0, S * 0.43, -Math.PI / 2, Math.PI / 2); ctx.stroke();
-    ctx.globalAlpha = al * (T.dem || T.ca > 0 ? 0.7 : 0.15); ctx.strokeStyle = '#5a7bff'; ctx.beginPath(); ctx.arc(0, 0, S * 0.43, Math.PI / 2, Math.PI * 1.5); ctx.stroke();
+    ctx.globalCompositeOperation = 'lighter'; // 2 nửa vòng = ảnh vòng PNG tô màu, cắt nửa bằng mặt nạ
+    PX.cung(ctx, 0, 0, S * 0.43, -Math.PI / 2, Math.PI / 2, false, 2.2, '#ffcc33', al * (!T.dem || T.ca > 0 ? 0.7 : 0.15));
+    PX.cung(ctx, 0, 0, S * 0.43, Math.PI / 2, Math.PI * 1.5, false, 2.2, '#5a7bff', al * (T.dem || T.ca > 0 ? 0.7 : 0.15));
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
   },
 };
@@ -239,10 +235,7 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
     const u = o.t / o.song, r = o.L * (0.3 + 0.7 * u);
     const tk = R.co('hu_trangkhuyet', Math.max(24, r * 1.1)); // sóng trăng ChatGPT (S4): lưỡi liềm hướng theo o.g, nở theo bán kính
     if (tk) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.9; ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.g); const w = r * 0.55; ctx.drawImage(tk, r - w * 0.75, -r * 0.5, w, r); ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return; }
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.75;
-    ctx.fillStyle = 'rgba(90,123,255,.35)'; ctx.beginPath(); ctx.moveTo(o.x, o.y); ctx.arc(o.x, o.y, r, o.g - 0.45, o.g + 0.45); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = '#c8d4ff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(o.x, o.y, r, o.g - 0.45, o.g + 0.45); ctx.stroke();
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    // ảnh sóng trăng chưa nạp: không vẽ (bỏ quạt + cung vẽ code)
   },
 };
 
@@ -388,9 +381,13 @@ HU.roi = {
   ve(ctx, o, R) {
     const E = o.E; if (E.chet || !conTren(o.T)) return;
     const [x, y] = dauNong(o.T), r = (E.d.co || 40) * 0.45;
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1;
-    for (const k of [-1, 1]) { ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo((x + E.x) / 2 + k * 10, Math.min(y, E.y) - 40, E.x + k * 5, E.y - r); ctx.stroke(); }
-    ctx.globalAlpha = 0.85; ctx.strokeStyle = '#4bff9a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(E.x, E.y, r + 2, 0, 7); ctx.stroke();
+    ctx.globalCompositeOperation = 'lighter';
+    for (const k of [-1, 1]) { // dây rối = các đoạn tia PNG nối theo đường cong bậc 2 (toán), không còn quadraticCurveTo
+      const cx = (x + E.x) / 2 + k * 10, cy = Math.min(y, E.y) - 40, ex = E.x + k * 5, ey = E.y - r, pts = [];
+      for (let i = 0; i <= 8; i++) { const q = i / 8, w = 1 - q; pts.push([w * w * x + 2 * w * q * cx + q * q * ex, w * w * y + 2 * w * q * cy + q * q * ey]); }
+      PX.duong(ctx, pts, 1, '#ffffff', 0.7);
+    }
+    PX.vong(ctx, E.x, E.y, r + 2, 2, '#4bff9a', 0.85);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };

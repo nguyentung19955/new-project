@@ -49,11 +49,8 @@ Object.assign(REN, {
   khungGoc(ctx, x, y, w, h, mau, al, sc) {
     const k = this.toMau('sup_khung', mau);
     ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
-    ctx.globalAlpha = al * 0.16; ctx.fillStyle = mau; // nền ô (alpha 0.12–0.18)
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4, 7) : ctx.rect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4); ctx.fill();
-    ctx.globalAlpha = al;
+    ctx.globalAlpha = al; // chỉ ảnh góc sup_khung tô màu (bỏ nền ô tô màu + viền strokeRect vẽ code)
     if (k) ctx.drawImage(this.mip(k, Math.min(w, h) * sc * this.s * this.dpr), -w / 2, -h / 2, w, h);
-    else { ctx.strokeStyle = mau; ctx.lineWidth = 2; ctx.strokeRect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4); }
     ctx.restore();
   },
   // dây năng lượng chảy từ (x0,y0) tới (x1,y1); p = tiến độ dựng (0..1); t = thời gian (cuộn vân)
@@ -84,11 +81,10 @@ Object.assign(REN, {
     const laDich = new Set(dich.filter(d => d.T).map(d => d.T.o));
     // 1) làm tối các ô không liên quan (đưa mắt vào vùng tác dụng)
     const toi = easeOut(e / 0.18) * tat;
-    ctx.fillStyle = '#05070a';
-    for (let i = 0; i < 15; i++) {
+    const toiA = PX.mau('o_trong', '#05070a'); // ô tối = ảnh ô trống tô đen (thay roundRect vẽ code)
+    for (let i = 0; i < 15 && toiA; i++) {
       if (i === T.o || (S.ke && dich.some(d => B.o[i].x === d.x && B.o[i].y === d.y)) || laDich.has(i)) continue;
-      ctx.globalAlpha = 0.5 * toi; const o = B.o[i];
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(o.x - cw / 2 + 1, o.y - ch / 2 + 1, cw - 2, ch - 2, 6) : ctx.rect(o.x - cw / 2 + 1, o.y - ch / 2 + 1, cw - 2, ch - 2); ctx.fill();
+      const o = B.o[i]; PX.ve(ctx, toiA, o.x, o.y, cw - 2, ch - 2, 0, 0.55 * toi);
     }
     ctx.globalCompositeOperation = 'lighter';
     // 2) vòng quét năng lượng (2 nhịp) + vòng mảnh quay quanh ụ hỗ trợ khi đang chọn
@@ -150,11 +146,8 @@ Object.assign(REN, {
       const tw = Math.ceil(ctx.measureText(txt).width), w = tw + ic * 0.62 + 18, h = 22;
       const bx = clamp(c.x - w / 2, 4, W - w - 4);
       ctx.save(); ctx.translate(bx + w / 2, cy); ctx.scale(0.85 + 0.15 * s, 0.85 + 0.15 * s); ctx.translate(-(bx + w / 2), -cy);
-      ctx.fillStyle = 'rgba(10,12,16,.92)'; ctx.strokeStyle = mau; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, cy - h / 2, w, h, 11) : ctx.rect(bx, cy - h / 2, w, h); ctx.fill(); ctx.stroke();
-      // mũi nhọn chỉ xuống ụ
-      const ax = clamp(c.x, bx + 12, bx + w - 12);
-      ctx.beginPath(); ctx.moveTo(ax - 5, cy + h / 2 - 0.5); ctx.lineTo(ax, cy + h / 2 + 5); ctx.lineTo(ax + 5, cy + h / 2 - 0.5); ctx.closePath(); ctx.fillStyle = mau; ctx.fill();
+      const nk = this.img('nhan_kn'); // nhãn = khung PNG nhan_kn (thay viên thuốc roundRect + mũi nhọn vẽ code)
+      if (nk) ctx.drawImage(this.mip(nk, w * this.s * this.dpr), bx - 4, cy - h / 2 - 3, w + 8, h + 6);
       this.ve1(ctx, S.icon, ic * 0.95, '', bx + ic * 0.38, cy);
       ctx.fillStyle = mau; ctx.fillText(txt, bx + ic * 0.62 + 8, cy + 0.5);
       ctx.restore();

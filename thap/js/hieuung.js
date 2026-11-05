@@ -46,22 +46,12 @@ const VX = {
   // khung f (thực, hoà 2 khung) của dải → vẽ vuông cỡ co ở (x,y)
   khung(ctx, anh, f, x, y, co, goc, al) { if (!anh) return; REN.khungMuot(ctx, null, f, x, y, co, goc || 0, al == null ? 1 : al, REN.mip(anh, co * REN.s * REN.dpr)); },
   // vòng TRÒN (arc) — r bán kính, w nét
-  // vòng mảnh = fx_vong_mong.png (ChatGPT) tô màu — không arc vẽ code (rà soát vẽ tay pass 4 · board); ảnh chưa tải → không vẽ
-  vong(ctx, x, y, r, w, mau, al) { if (al <= 0.01 || r <= 0.5) return; const im = REN.toMau('fx_vong_mong', mau); if (im.width < 2) return; ctx.globalAlpha = al; ctx.drawImage(REN.mip(im, r * 2.3 * REN.s * REN.dpr), x - r * 1.15, y - r * 1.15, r * 2.3, r * 2.3); },
+  vong(ctx, x, y, r, w, mau, al) { if (al <= 0.01 || r <= 0.5) return; PX.vong(ctx, x, y, r, w, mau, al); }, // ảnh fx_vong_mong tô màu
   // vòng phù văn: vòng tròn + 8 vạch ngắn + 3 cung quay (đóng dấu triệu hồi)
-  vongPhu(ctx, x, y, r, mau, al, quay, code) { // code = true: giữ vòng vẽ code (cần đúng màu họ)
+  vongPhu(ctx, x, y, r, mau, al, quay, code) { // code = true: cần đúng màu họ → ảnh vòng phù văn tô màu họ
     if (al <= 0.01) return;
-    const vp = !code && REN.co('fx_vong_trieu', r * 2.3); // vòng phù văn ChatGPT (S4): code xoay + phóng
-    if (vp) { ctx.save(); ctx.translate(x, y); ctx.rotate(quay || 0); ctx.globalAlpha = al; ctx.drawImage(vp, -r * 1.15, -r * 1.15, r * 2.3, r * 2.3); ctx.restore(); return; }
-    ctx.save(); ctx.translate(x, y); ctx.rotate(quay || 0);
-    ctx.globalAlpha = al; ctx.strokeStyle = mau; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke();
-    ctx.lineWidth = 1.2; ctx.globalAlpha = al * 0.8; ctx.beginPath(); ctx.arc(0, 0, r * 0.8, 0, 7); ctx.stroke();
-    ctx.lineWidth = 2.4; ctx.globalAlpha = al;
-    for (let i = 0; i < 3; i++) { const a0 = i * 2.094; ctx.beginPath(); ctx.arc(0, 0, r * 1.12, a0, a0 + 0.9); ctx.stroke(); }
-    ctx.lineWidth = 1.6;
-    for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * 0.82, Math.sin(a) * r * 0.82); ctx.lineTo(Math.cos(a) * r * 0.96, Math.sin(a) * r * 0.96); ctx.stroke(); }
-    ctx.restore();
+    const vp = code ? PX.mau('fx_vong_trieu', mau) : REN.co('fx_vong_trieu', r * 2.3); // vòng phù văn ChatGPT (S4): code xoay + phóng
+    if (vp) { ctx.save(); ctx.translate(x, y); ctx.rotate(quay || 0); ctx.globalAlpha = al; ctx.drawImage(REN.mip(vp, r * 2.3 * REN.s * REN.dpr), -r * 1.15, -r * 1.15, r * 2.3, r * 2.3); ctx.restore(); }
   },
   mauBac: (T) => TIERS[T.bac] ? TIERS[T.bac].mau : '#ffffff',
 
@@ -256,14 +246,7 @@ const VX = {
       const aw = m === '#ff4b3e' || m === '#ff5040' || m === '#ffd23f' || m === '#ffe46b' ? REN.img('fx_awaken') : REN.toMau('fx_awaken', m);
       if (aw) this.khung(ctx, aw, (this.t * 7 + (T.pha || 0)) % 6, 0, 0, S * 1.08, this.t * 0.6, al * 0.32 * vao);
     }
-    // vòng tiến độ nhỏ quanh bệ (tròn) + vạch mốc đổi dạng
-    const r = S * 0.39;
-    ctx.globalAlpha = al * 0.35; ctx.strokeStyle = '#000'; ctx.lineWidth = 3.2; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke();
-    ctx.globalAlpha = al * 0.85; ctx.strokeStyle = m; ctx.lineWidth = 2;
-    const p = clamp(st.p, 0, 1);
-    if (p > 0.005) { ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p); ctx.stroke(); }
-    ctx.globalAlpha = al * 0.9; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4;
-    for (const v of st.v || []) { if (v >= 1) continue; const a = -Math.PI / 2 + Math.PI * 2 * v; ctx.beginPath(); ctx.moveTo(Math.cos(a) * (r - 3), Math.sin(a) * (r - 3)); ctx.lineTo(Math.cos(a) * (r + 3), Math.sin(a) * (r + 3)); ctx.stroke(); }
+    // (bỏ vòng tiến độ thứ 2 quanh bệ — vòng đo grow-up đã có ở growfx.js veGauge, bằng ảnh PNG)
     ctx.restore(); ctx.globalAlpha = al;
   },
   // ---------- biến hình tại chỗ (~560 ms): tối → mở → lắp (fx_evolve) → khoá + sóng tròn → lắng ----------
@@ -345,8 +328,7 @@ const VX = {
           ctx.globalCompositeOperation = 'source-over';
           const ic = REN.img('nho/' + id), s = this.bo(v, 2.2), ox = (i - (e.ids.length - 1) / 2) * S * 0.62;
           ctx.globalAlpha = (u > 0.75 ? (1 - u) / 0.25 : 1);
-          ctx.fillStyle = 'rgba(10,12,16,.85)'; ctx.beginPath(); ctx.arc(c.x + ox, c.y - S * 0.92, S * 0.3 * s, 0, 7); ctx.fill();
-          ctx.lineWidth = 1.5; ctx.strokeStyle = ho; ctx.stroke();
+          REN.anhGiua(ctx, 'h2_vong_xam', c.x + ox, c.y - S * 0.92, S * 0.8 * s); // khung tròn kim loại PNG (thay đĩa + viền code)
           if (ic) REN.anhGiua(ctx, ic, c.x + ox, c.y - S * 0.92, S * 0.56 * s);
           ctx.globalCompositeOperation = 'lighter';
         });

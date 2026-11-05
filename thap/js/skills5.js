@@ -93,20 +93,11 @@ HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu tr�
     for (const d of T.bay) veDrone(ctx, R, d.x, d.y, 1 + (d.vang ? 0.25 : 0), d.vang, G.t * 40 + d.g, d.ra);
   },
 };
-function veDrone(ctx, R, x, y, k, vang, pha, al) { // drone ong máy: 2 cánh tam giác rung + thân tròn đen-đỏ + mắt sáng (đường kính ~8 px)
-  const m = vang ? '#ffd23f' : '#ff6a2a';
-  ctx.save(); ctx.translate(x, y); ctx.scale(k, k); ctx.globalAlpha = al == null ? 1 : al;
-  ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.55; R.anhGiua(ctx, R.cham1(m), 0, 0, 16); ctx.globalAlpha = al == null ? 1 : al;
-  ctx.globalCompositeOperation = 'source-over';
-  const w = 0.6 + 0.4 * Math.abs(Math.sin(pha));
-  ctx.fillStyle = 'rgba(220,240,255,.55)';
-  for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-3, s * 7 * w); ctx.lineTo(3, s * 6 * w); ctx.closePath(); ctx.fill(); }
-  ctx.fillStyle = '#1c1416'; ctx.beginPath(); ctx.arc(0, 0, 3.6, 0, 7); ctx.fill();
-  ctx.strokeStyle = m; ctx.lineWidth = 1.4; ctx.stroke();
-  ctx.fillStyle = vang ? '#fff3b0' : '#ffd0a0'; ctx.beginPath(); ctx.arc(1.4, 0, 1.2, 0, 7); ctx.fill();
-  ctx.restore(); ctx.globalAlpha = 1;
+function veDrone(ctx, R, x, y, k, vang, pha, al) { // ong máy = ảnh PNG fx_chuato_dan / fx_chuato_hieu (ChatGPT); vỗ cánh = nhịp phóng ảnh
+  const ten = vang && REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan';
+  R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1) * (1 + 0.05 * Math.sin(pha * 0.7)), 0.15 * Math.sin(pha * 0.13), al == null ? 1 : al);
 }
-HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1 - u; ctx.strokeStyle = o.vang ? '#ffe680' : '#ff9a50'; ctx.lineWidth = o.vang ? 2.4 : 1.6; ctx.beginPath(); ctx.moveTo(o.x0, o.y0); ctx.lineTo(o.x1, o.y1); ctx.stroke(); R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
+HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, o.vang ? 2.4 : 1.6, o.vang ? '#ffe680' : '#ff9a50', 1 - u); ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông → nổ 35 px
   cap(G, o, dt) {
     if (o.t < 0) return false;
@@ -125,9 +116,8 @@ HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông �
   ve(ctx, o, R) {
     if (o.t < 0) return;
     ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = o.vang ? 'rgba(255,220,90,.8)' : 'rgba(255,110,50,.75)'; ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.beginPath();
-    for (let i = 0; i + 1 < o.vet.length; i += 2) i ? ctx.lineTo(o.vet[i], o.vet[i + 1]) : ctx.moveTo(o.vet[i], o.vet[i + 1]);
-    ctx.lineTo(o.x, o.y); ctx.stroke(); ctx.lineCap = 'butt'; ctx.globalCompositeOperation = 'source-over';
+    const pts = []; for (let i = 0; i + 1 < o.vet.length; i += 2) pts.push([o.vet[i], o.vet[i + 1]]); pts.push([o.x, o.y]);
+    PX.duong(ctx, pts, 2.4, o.vang ? '#ffdc5a' : '#ff6e32', 0.8); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; // vệt = các đoạn tia PNG
     veDrone(ctx, R, o.x, o.y, 1.15, o.vang, G.t * 60, 1);
   },
 };
@@ -181,14 +171,14 @@ SKILLS.leviathan = {
   sangDau: (T) => (T.gd === 3 ? 0.16 + 0.06 * Math.sin(G.t * 5) : T.gd === 2 ? 0.08 : 0) + Math.min(0.15, (T.vuc || 0) / 600),
   veThem(ctx, T, S, al, R) { // vây gai theo cộng dồn VỰC SÂU 0/40/80 (vạch vàng mảnh trên vòng tròn) + số
     const n = T.vuc || 0, vay = n >= 80 ? 12 : n >= 40 ? 8 : 4;
-    ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 2; ctx.globalAlpha = al * 0.55;
-    for (let i = 0; i < vay; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / vay + R.t * 0.2; ctx.beginPath(); ctx.moveTo(Math.cos(a) * S * 0.36, Math.sin(a) * S * 0.36); ctx.lineTo(Math.cos(a) * S * 0.41, Math.sin(a) * S * 0.41); ctx.stroke(); }
+    ctx.globalCompositeOperation = 'lighter'; // vây = lấp lánh PNG tô vàng trên vòng (thay vạch lineTo vẽ code)
+    for (let i = 0; i < vay; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / vay + R.t * 0.2; PX.sao(ctx, Math.cos(a) * S * 0.385, Math.sin(a) * S * 0.385, 7, '#ffd23f', al * 0.55, a); }
     ctx.globalCompositeOperation = 'source-over';
     if (n > 0) {
       const s = '' + n; ctx.globalAlpha = al; ctx.font = '900 9px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const w = ctx.measureText(s).width + 8, y = S * 0.44;
-      ctx.fillStyle = 'rgba(4,18,26,.9)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2, y - 6, w, 12, 6) : ctx.rect(-w / 2, y - 6, w, 12); ctx.fill();
-      ctx.strokeStyle = '#1fb6d9'; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = '#bff4ff'; ctx.fillText(s, 0, y + 0.5);
+      R.anhGiua(ctx, 'h2_tag', 0, y, w + 10); // nhãn = khung PNG h2_tag
+      ctx.globalAlpha = al; ctx.fillStyle = '#bff4ff'; ctx.fillText(s, 0, y + 0.5);
       ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     }
   },
@@ -212,11 +202,8 @@ HU.xoay = { // nuốt: xoáy nước (vòng tròn đồng tâm xoay) hút quái 
   ve(ctx, o, R) {
     const u = o.t / o.song, r = 26 * (1 - u * 0.5);
     ctx.save(); ctx.translate(o.x, o.y); ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) {
-      ctx.rotate(-o.t * 9 - i);
-      ctx.globalAlpha = (0.75 - i * 0.18) * (u < 0.8 ? 1 : (1 - u) / 0.2); ctx.strokeStyle = i ? '#1fb6d9' : '#dff8ff'; ctx.lineWidth = 2.5 - i * 0.5;
-      ctx.beginPath(); ctx.arc(0, 0, r * (1 - i * 0.28), 0, Math.PI * 1.3); ctx.stroke();
-    }
+    const xo = REN.img('fx_leviathan_hieu'); // xoáy nước ChatGPT: code chỉ xoay + thu nhỏ (thay 3 cung arc vẽ code)
+    if (xo) PX.ve(ctx, xo, 0, 0, r * 2.4, r * 2.4 * xo.height / xo.width, -o.t * 9, 0.85 * (u < 0.8 ? 1 : (1 - u) / 0.2));
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
@@ -242,10 +229,7 @@ HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ l
     const [x0, y0] = dauNong(o.T), u = o.t / o.song, a = u < 0.1 ? u / 0.1 : u > 0.85 ? (1 - u) / 0.15 : 1, w = 18 + 4 * Math.sin(R.t * 30);
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
     R.tia(ctx, 'tia_laser', x0, y0, o.x, o.y, w * 0.6, R.t * 500);
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(31,182,217,.7)'; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(o.x, o.y); ctx.stroke();
-    ctx.strokeStyle = 'rgba(223,248,255,.95)'; ctx.lineWidth = w * 0.3; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(o.x, o.y); ctx.stroke();
-    ctx.lineCap = 'butt';
+    PX.tia(ctx, x0, y0, o.x, o.y, w * 0.5, '#1fb6d9', a * 0.7); ctx.globalAlpha = a; // quầng = tia PNG tô màu
     R.anhGiua(ctx, R.cham1('#7fdcff'), o.x, o.y, 90); R.anhGiua(ctx, R.cham1('#ffffff'), o.x, o.y, 34);
     for (let i = 0; i < 3; i++) VX.vong(ctx, o.x, o.y, 18 + ((R.t * 120 + i * 20) % 60), 2.5, '#dff8ff', 0.5 * a);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
@@ -307,12 +291,8 @@ SKILLS.khoisinh = {
   veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi
     const gd = T.gd || 1, p = (T.sinhT || 0) / SKILLS.khoisinh.g(T);
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { ctx.globalAlpha = al * (0.35 + 0.15 * i); ctx.strokeStyle = i === 2 ? '#ff8ab0' : '#ffd23f'; ctx.lineWidth = 1.5; ctx.setLineDash([4 + i * 2, 5]); ctx.lineDashOffset = (i % 2 ? -1 : 1) * R.t * (12 + 6 * i); ctx.beginPath(); ctx.arc(0, 0, S * (0.3 + i * 0.045), 0, 7); ctx.stroke(); }
-    ctx.setLineDash([]);
-    if (gd >= 2) for (let i = 0; i < 8; i++) {
-      const a = i * Math.PI / 4 + R.t * 0.3; ctx.globalAlpha = al * 0.5; ctx.fillStyle = '#ffd23f';
-      ctx.save(); ctx.rotate(a); ctx.beginPath(); ctx.moveTo(S * 0.27, 0); ctx.lineTo(S * 0.35, -S * 0.035); ctx.lineTo(S * 0.4, 0); ctx.lineTo(S * 0.35, S * 0.035); ctx.closePath(); ctx.fill(); ctx.restore();
-    }
+    for (let i = 0; i < 3; i++) { const rr = S * (0.3 + i * 0.045), vp = PX.mau('fx_vong_trieu', i === 2 ? '#ff8ab0' : '#ffd23f'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i % 2 ? -1 : 1) * R.t * (0.4 + 0.2 * i), al * (0.35 + 0.15 * i)); } // vành = vòng phù văn PNG
+    if (gd >= 2) for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + R.t * 0.3; PX.sao(ctx, Math.cos(a) * S * 0.34, Math.sin(a) * S * 0.34, S * 0.12, '#ffd23f', al * 0.5, a); } // cánh sen = lấp lánh PNG
     if (gd === 3) { ctx.globalAlpha = al * (0.5 + 0.2 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#ff8ab0'), 0, 0, S * 0.7); ctx.globalAlpha = al; vePandora(ctx, 'sao', S * 0.09, '#ffffff'); }
     if (p > 0.9) { ctx.globalAlpha = al * (p - 0.9) * 6 * (0.6 + 0.4 * Math.sin(R.t * 20)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 0.8); }
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
@@ -323,11 +303,9 @@ HU.cungSang = { // tia sáng CONG từ lõi sang ụ đích (đầu sáng chạy
     if (o.t < 0) return;
     const u = Math.min(1, o.t / o.song), e = 1 - (1 - u) * (1 - u), mx = (o.x0 + o.x1) / 2, my = (o.y0 + o.y1) / 2 - 40;
     const P = (s) => [(1 - s) * (1 - s) * o.x0 + 2 * (1 - s) * s * mx + s * s * o.x1, (1 - s) * (1 - s) * o.y0 + 2 * (1 - s) * s * my + s * s * o.y1];
-    ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(255,210,63,.7)'; ctx.lineWidth = 3; ctx.beginPath();
-    const s0 = Math.max(0, e - 0.45);
-    for (let i = 0; i <= 12; i++) { const [x, y] = P(s0 + (e - s0) * i / 12); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-    ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.globalCompositeOperation = 'lighter';
+    const s0 = Math.max(0, e - 0.45), pts = []; for (let i = 0; i <= 12; i++) pts.push(P(s0 + (e - s0) * i / 12));
+    PX.duong(ctx, pts, 3, '#ffd23f', 0.7); // cung sáng = các đoạn tia PNG
     const [hx, hy] = P(e); ctx.globalAlpha = 1 - u * 0.5; R.anhGiua(ctx, R.cham1('#ff8ab0'), hx, hy, 26); R.anhGiua(ctx, R.cham1('#ffffff'), hx, hy, 10);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
@@ -384,43 +362,22 @@ SKILLS.ronglua = {
   },
   sangDau: (T) => (T.phun > 0 ? 0.2 : 0) + (T.gd === 3 ? 0.12 : 0),
 };
-// sprite nón lửa dựng sẵn theo (giai đoạn, góc 5°) — hướng PHẢI, gốc ở mép trái giữa; tầm = bề ngang ảnh
-const _nonCache = {};
-function anhNon(gd, deg) {
-  const key = gd + '|' + deg; if (_nonCache[key]) return _nonCache[key];
-  const N = 160, c = document.createElement('canvas'); c.width = N; c.height = N;
-  const x = c.getContext('2d'), a = deg * Math.PI / 360, m = RONG_MAU[gd];
-  x.translate(0, N / 2);
-  const g = x.createRadialGradient(0, 0, 0, 0, 0, N);
-  g.addColorStop(0, m.c); g.addColorStop(0.18, m.c); g.addColorStop(0.42, m.b); g.addColorStop(0.78, m.a + 'aa'); g.addColorStop(1, m.a + '00');
-  x.fillStyle = g; x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, N, -a, a); x.closePath(); x.fill();
-  // khoét "lưỡi lửa": các vệt tối mềm dọc nón → bớt giống đèn pin, ra hình ngọn lửa
-  let sd = gd * 97 + deg; const rn = () => { sd = (sd * 9301 + 49297) % 233280; return sd / 233280; };
-  x.globalCompositeOperation = 'destination-out';
-  for (let i = 0; i < 7; i++) { const g0 = (rn() * 2 - 1) * a * 0.9, r0 = N * (0.45 + rn() * 0.4), w = N * (0.05 + rn() * 0.06); const q = x.createRadialGradient(Math.cos(g0) * r0, Math.sin(g0) * r0, 0, Math.cos(g0) * r0, Math.sin(g0) * r0, w * 2); q.addColorStop(0, 'rgba(0,0,0,.55)'); q.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = q; x.fillRect(-N, -N, N * 3, N * 2); }
-  // mép xa răng cưa mềm
-  x.globalCompositeOperation = 'destination-in'; x.beginPath(); x.moveTo(0, 0);
-  for (let i = 0; i <= 16; i++) { const g0 = -a + 2 * a * i / 16, r0 = N * (i % 2 ? 0.86 : 1); x.lineTo(Math.cos(g0) * r0, Math.sin(g0) * r0); }
-  x.closePath(); x.fillStyle = '#000'; x.fill();
-  x.globalCompositeOperation = 'lighter';
-  // lưỡi lửa sáng (vệt cong) + lõi sáng hẹp ở giữa
-  for (let i = 0; i < 9; i++) { const g0 = (rn() * 2 - 1) * a * 0.75, L = N * (0.4 + rn() * 0.45), cong = (rn() - 0.5) * 0.35;
-    const q = x.createLinearGradient(0, 0, Math.cos(g0) * L, Math.sin(g0) * L); q.addColorStop(0, m.c); q.addColorStop(0.6, m.b + '99'); q.addColorStop(1, m.b + '00');
-    x.strokeStyle = q; x.lineWidth = 3 + rn() * 3; x.lineCap = 'round'; x.globalAlpha = 0.55; x.beginPath(); x.moveTo(4, 0); x.quadraticCurveTo(Math.cos(g0 + cong) * L * 0.55, Math.sin(g0 + cong) * L * 0.55, Math.cos(g0) * L, Math.sin(g0) * L); x.stroke(); }
-  const g2 = x.createRadialGradient(0, 0, 0, 0, 0, N * 0.55); g2.addColorStop(0, '#ffffff'); g2.addColorStop(1, 'rgba(255,255,255,0)');
-  x.globalAlpha = 0.6; x.fillStyle = g2; x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, N * 0.55, -a * 0.35, a * 0.35); x.closePath(); x.fill();
-  return (_nonCache[key] = c);
-}
-HU.nonLua = { // nón lửa: 2 lớp sprite lệch pha + rung nhẹ, chỉ hiện khi đang phun (mờ dần 0.3 s)
+// nón lửa = ảnh PNG fx_ronglua_dan (ChatGPT) — dạng 2/3 tô màu lửa xanh (thay sprite gradient + quadraticCurveTo dựng bằng code)
+function anhNon(gd) { return gd > 1 ? PX.mau('fx_ronglua_dan', RONG_MAU[gd].b) : REN.img('fx_ronglua_dan'); }
+HU.nonLua = { // nón lửa: ảnh PNG fx_ronglua_dan kéo theo tầm + góc, 2 lớp lệch pha + rung nhẹ, chỉ hiện khi đang phun (mờ dần 0.3 s)
   cap(G, o) { return !conTren(o.T) || o.T.id !== 'ronglua'; },
   ve(ctx, o, R) {
     const T = o.T; if (!(T.phun > 0)) return;
-    const gd = T.gd || gdSao(T), deg = Math.round(SKILLS.ronglua.goc(T) * 180 / Math.PI / 5) * 5, L = SKILLS.ronglua.tam(T), [x, y] = dauNong(T);
-    const im = anhNon(gd, deg), al = Math.min(1, T.phun / 0.3);
-    ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc); ctx.globalCompositeOperation = 'lighter';
+    const gd = T.gd || gdSao(T), goc = SKILLS.ronglua.goc(T), L = SKILLS.ronglua.tam(T), [x, y] = dauNong(T);
+    const a0 = anhNon(gd); if (!a0) return;
+    const al = Math.min(1, T.phun / 0.3), im = REN.mip(a0, L * REN.s * REN.dpr);
+    const hh = Math.max(L * a0.height / a0.width, 2 * L * Math.tan(goc / 2) * 0.95);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
     for (let i = 0; i < 2; i++) {
-      const f = 1 + 0.06 * Math.sin(R.t * (31 + i * 17) + i), w = L * f;
-      ctx.globalAlpha = al * (i ? 0.4 : 0.7) * (gd === 3 ? 0.62 : gd === 2 ? 0.85 : 1); ctx.save(); ctx.rotate(0.05 * Math.sin(R.t * 13 + i * 2)); ctx.drawImage(im, -2, -w / 2, w, w); ctx.restore();
+      const f = 1 + 0.06 * Math.sin(R.t * (31 + i * 17) + i);
+      ctx.globalAlpha = al * (i ? 0.45 : 1); ctx.save(); ctx.rotate(0.05 * Math.sin(R.t * 13 + i * 2));
+      if (i) ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(im, -2, -hh * f / 2, L * f, hh * f); ctx.restore();
     }
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
@@ -459,18 +416,16 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
     if (o.x == null) return;
     const u = o.t / o.song, a = u < 0.08 ? u / 0.08 : u > 0.9 ? (1 - u) / 0.1 : 1, gd = gdSao(o.T), m = RONG_MAU[gd];
     ctx.save(); ctx.translate(o.x, o.y);
-    // bóng đổ
-    ctx.globalAlpha = 0.35 * a; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(6, 10, 30, 0, 7); ctx.fill();
+    PX.bong(ctx, 6, 10, 60, 60, 0.35 * a); // bóng đổ = PNG tô đen
     ctx.rotate(o.g);
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7 * a; R.anhGiua(ctx, R.cham1(m.a), 0, 0, 150);
-    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a;
-    const vo = Math.sin(R.t * 18) * 0.25; // vỗ cánh
-    ctx.fillStyle = '#2a0d0d'; ctx.strokeStyle = m.b; ctx.lineWidth = 2;
-    for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(4, 0); ctx.lineTo(-14, s * (46 + 8 * vo)); ctx.lineTo(-22, s * (30 + 6 * vo)); ctx.lineTo(-30, s * (40 + 6 * vo)); ctx.lineTo(-24, s * 8); ctx.closePath(); ctx.fill(); ctx.stroke(); }
-    for (let i = 0; i < 5; i++) { const r = 10 - i * 1.4; ctx.beginPath(); ctx.arc(-i * 11, Math.sin(R.t * 10 - i) * 3, r, 0, 7); ctx.fillStyle = i ? '#3a1010' : '#5a1a12'; ctx.fill(); ctx.strokeStyle = m.b; ctx.lineWidth = 1.5; ctx.stroke(); }
-    ctx.fillStyle = '#5a1a12'; ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(8, -8); ctx.lineTo(8, 8); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = m.c; ctx.beginPath(); ctx.arc(12, -3.5, 1.6, 0, 7); ctx.arc(12, 3.5, 1.6, 0, 7); ctx.fill();
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.8 * a; ctx.drawImage(anhNon(gd, 50), 20, -30, 60, 60);
+    ctx.globalCompositeOperation = 'lighter'; PX.cham(ctx, 0, 0, 150, m.a, 0.7 * a);
+    // thân rồng = ảnh PNG fx_ronglua_no (đầu rồng phun lửa, ChatGPT) — dạng 2/3 tô lửa xanh; vỗ cánh = nhịp phóng
+    // (bỏ cánh/đốt thân/đầu/mắt vẽ bằng lineTo + arc). Chờ ảnh thân rồng bay từ trên xuống: raw_p4_fx_1 ô 'rong_bay'.
+    const ro = gd > 1 ? PX.mau('fx_ronglua_no', m.b) : REN.img('fx_ronglua_no'), vo = 1 + 0.06 * Math.sin(R.t * 18);
+    ctx.globalCompositeOperation = 'source-over';
+    if (ro) PX.ve(ctx, ro, 0, 0, 84 * vo, 84 * vo * ro.height / ro.width, 0, a);
+    const non = anhNon(gd); ctx.globalCompositeOperation = 'lighter';
+    if (non) PX.ve(ctx, non, 50, 0, 60, 60 * non.height / non.width, 0, 0.8 * a);
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
