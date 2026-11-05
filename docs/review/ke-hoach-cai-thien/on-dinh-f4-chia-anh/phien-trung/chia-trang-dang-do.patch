@@ -1,0 +1,747 @@
+--- a/game/js/sprite_custom.js
++++ b/game/js/sprite_custom.js
+@@ -110,6 +110,10 @@
+   // TALESWORN phiên D (05/11, talesworn-d-gan-anh/bao-cao.md): tấm Rowan phiên C giữ ở zed-rowan-daucu (mục "dau_cua": 'zed-rowan'),
+   // chỉ ở bản hai tệp (web), chỉ nạp khi ?rowancu=1 (G.ROWAN_DAU_CU); có tấm cũ thì bỏ tấm mới (mục "dau_moi"). Bản một tệp: cờ không đổi gì.
+   if (G.ROWAN_DAU_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]rowancu=1(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.ROWAN_DAU_CU = cu; }
++  // F4 (05/11, chủ game chọn "Có dùng pixellab", docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md): vũ khí PixelLab nay GHÉP SẴN
++  // trong zed-vk / zed-vk-he / zed-vk-gan (mặc định). Tấm ChatGPT cũ giữ ở <mã>-cu (mục "vk_cua": <mã>), chỉ ở bản web, chỉ nạp khi ?vkpl=0
++  // (G.VKPL_CU); có tấm cũ thì bỏ tấm mới (mục "vk_moi"). Bản một tệp: cờ không đổi gì (không có tấm cũ).
++  if (G.VKPL_CU === undefined) { let cu = false; try { cu = typeof location !== 'undefined' && /[?&]vkpl=0(&|$)/.test(location.search || ''); } catch (e) { cu = false; } G.VKPL_CU = cu; }
+   if (G.SAN_MOI === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]sanmoi=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.SAN_MOI = !tat; }
+   if (G.ANH_MUOT_CU === undefined) {
+     let cu = false;
+@@ -178,6 +182,10 @@
+         if (!G.ROWAN_DAU_CU) return null;
+         tep = Object.assign({}, tep, { ma: tep.dau_cua });
+       } else if (G.ROWAN_DAU_CU && tep.dau_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.dau_cua === tep.ma)) return null;
++      if (typeof tep.vk_cua === 'string') { // F4: vũ khí ChatGPT cũ, chỉ khi ?vkpl=0
++        if (!G.VKPL_CU) return null;
++        tep = Object.assign({}, tep, { ma: tep.vk_cua });
++      } else if (G.VKPL_CU && tep.vk_moi && Array.isArray(G.customSpriteData) && G.customSpriteData.some((t) => t && t.vk_cua === tep.ma)) return null;
+       if (typeof tep.san_cua === 'string') { // 17/10 sàn dịu: sàn cũ, chỉ khi ?sanmoi=0; có sàn cũ thì bỏ sàn mới
+         if (G.SAN_MOI !== false) return null;
+         tep = Object.assign({}, tep, { ma: tep.san_cua });
+@@ -1868,6 +1876,155 @@
+     const vungMuon = (r) => (r === 3 && G.VUNG4_MUON != null && G.VUNG4_MUON !== r ? G.VUNG4_MUON : -1);
+     let vungChon = -1;
+     for (const t of G.customSpriteData) { const src = t && (t.tam || t.anh); if (typeof src === 'string' && Array.isArray(t._u)) theoSrc.set(src, t); }
++    // ---------- F4 CHIA TRANG (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md) ----------
++    // game/build.py cắt mọi tấm có cạnh > 2048 thành TRANG ≤ 2048 × 2048 (chỉ cắt / xếp ô, điểm ảnh y nguyên): t.trang (tấm chính),
++    // t.to_trang (bản to ×1,2 của tấm thân Zed). Ở đây tấm đó thành ẢNH ẢO: vẫn là phần tử <img> cũ (mọi chỗ so sánh / nhớ theo ảnh giữ
++    // nguyên), có rộng × cao của cả tấm, KHÔNG tải gì; CanvasRenderingContext2D.drawImage được bọc: gặp ảnh ảo thì dịch vùng nguồn (toạ độ
++    // của cả tấm) sang đúng trang và vẽ từ trang đó → mọi chỗ vẽ trong game không phải sửa.
++    //  - Mỗi trang là một ảnh trong bộ tải F3 (fetch có hạn giờ, giải mã riêng, thử lại, đếm bộ nhớ, giải phóng) — mã "<mã>@<số>".
++    //  - Tấm thường (trùm + dáng pha, hiệu ứng dài): tải ĐỦ trang khi game cần hình đó (như trước), xong hết mới báo sẵn sàng.
++    //  - Tấm thân Zed (luoi = 1): trang theo NHÓM hàng ('chung', 'kiem', 'thuong', 'bua', 'phitieu', 'khac'). Tấm sẵn sàng khi đủ trang
++    //    'chung'; js/zed_moi.js báo nhóm đang cần (SC.roi.trangMuon); vẽ trúng trang chưa về thì tải ngay trang đó (ô đó bỏ trống lần này).
++    //    Trang không vẽ 20 giây mà bộ nhớ ảnh vượt ngân sách F3 thì giải phóng (vẽ lại thì tải lại).
++    // Quay lui: ?trangcu=1 (G.TRANG_CU) → tải tấm nguyên như trước (tệp vẫn có trên máy chủ, không tính tải đầu).
++    if (G.TRANG_CU === undefined) G.TRANG_CU = coCo(/[?&]trangcu=1(&|$)/);
++    const DI = typeof CanvasRenderingContext2D !== 'undefined' && CanvasRenderingContext2D.prototype && CanvasRenderingContext2D.prototype.drawImage;
++    const TRANG = !G.TRANG_CU && typeof DI === 'function' && typeof Object.defineProperty === 'function';
++    const TR_GIU = 20000; // trang tải lười vừa vẽ / vừa cần trong 20 s: không giải phóng
++    let nayMs = Date.now(), soThieuTrang = 0, soCha = 0;
++    const thieuTheoMa = {};
++    if (TRANG) setInterval(() => { nayMs = Date.now(); }, 250);
++    const laSpec = (sp) => !!(sp && typeof sp === 'object' && sp.w > 0 && sp.h > 0 && sp.ow > 0 && sp.oh > 0 && sp.cot > 0 && Array.isArray(sp.m) && Array.isArray(sp.p) && sp.p.length);
++    // Ảnh ảo: phần tử img có rộng × cao của cả tấm (khai riêng trên phần tử, che thuộc tính gốc), __tr = bộ trang.
++    function lamAo(img, P) {
++      const W = P.spec.w, H = P.spec.h;
++      for (const [k, v] of [['naturalWidth', W], ['naturalHeight', H], ['width', W], ['height', H], ['complete', true]]) {
++        try { Object.defineProperty(img, k, { configurable: true, get: () => v, set: () => {} }); } catch (e) { /* bỏ qua */ }
++      }
++      img.__tr = P;
++    }
++    // Tạo các trang (ảnh trong bộ tải) cho bộ trang P. it0: ảnh gốc trong bộ tải (null với bản to: chỉ là ảnh phụ).
++    function taoTrangCho(P, ma, u, it0) {
++      P.ds = P.spec.p.map((q, i) => {
++        const pit = { img: new Image(), ma: ma + '@' + i, png: q[0], webp: typeof q[1] === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(q[1]) ? q[1] : null,
++          bac: u ? u[0] | 0 : 1, co: +q[5] || 0, vung: u ? u[2] | 0 : -1, trum: !!(u && u[3]), khoa: !!(u && G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3),
++          can: 0, lan: 0, xong: null, hong: null, dangTai: false, thap: false, ve: false, boWebp: false,
++          cha: P, nhom: String(q[4] || ''), luoi: !!P.luoi, muon: !P.luoi, tVe: 0, tMuon: 0, w: q[2] | 0, h: q[3] | 0 };
++        theoMa.set(pit.ma, pit); hang.push(pit);
++        return pit;
++      });
++      P.it = it0; P.ma = ma;
++      if (it0) { it0.P = P; soCha++; }
++    }
++    // Vẽ vùng (sx, sy, sw, sh) của ảnh ảo P lên (dx, dy, dw, dh): chia theo ô lưới trang, ô nào trang chưa về thì gọi tải và bỏ qua.
++    function veAo(c, P, n, a) {
++      const S = P.spec;
++      let sx, sy, sw, sh, dx, dy, dw, dh;
++      if (n >= 9) { sx = +a[1]; sy = +a[2]; sw = +a[3]; sh = +a[4]; dx = +a[5]; dy = +a[6]; dw = +a[7]; dh = +a[8]; }
++      else if (n >= 5) { sx = 0; sy = 0; sw = S.w; sh = S.h; dx = +a[1]; dy = +a[2]; dw = +a[3]; dh = +a[4]; }
++      else { sx = 0; sy = 0; sw = S.w; sh = S.h; dx = +a[1]; dy = +a[2]; dw = S.w; dh = S.h; }
++      if (sw < 0) { sx += sw; sw = -sw; }
++      if (sh < 0) { sy += sh; sh = -sh; }
++      if (!(sw > 0 && sh > 0)) return;
++      const kx = dw / sw, ky = dh / sh, x0 = Math.max(0, sx), y0 = Math.max(0, sy), x1 = Math.min(S.w, sx + sw), y1 = Math.min(S.h, sy + sh);
++      if (x1 <= x0 || y1 <= y0) return;
++      const ow = S.ow, oh = S.oh, M = S.m;
++      for (let cy = Math.floor(y0 / oh + 1e-9); cy * oh < y1 - 1e-9; cy++) {
++        const gy = cy * oh, iy0 = Math.max(y0, gy), iy1 = Math.min(y1, gy + oh);
++        if (iy1 <= iy0) continue;
++        for (let cx = Math.floor(x0 / ow + 1e-9); cx * ow < x1 - 1e-9; cx++) {
++          const gx = cx * ow, ix0 = Math.max(x0, gx), ix1 = Math.min(x1, gx + ow);
++          if (ix1 <= ix0 || cx >= S.cot) continue;
++          const k = (cy * S.cot + cx) * 3, pi = M[k];
++          if (pi == null || pi < 0) continue;
++          const pg = P.ds[pi];
++          if (!pg) continue;
++          pg.tVe = nayMs;
++          if (!pg.ve) { canTrang(pg); soThieuTrang++; thieuTheoMa[P.ma] = (thieuTheoMa[P.ma] || 0) + 1; continue; }
++          DI.call(c, pg.img, M[k + 1] + ix0 - gx, M[k + 2] + iy0 - gy, ix1 - ix0, iy1 - iy0, dx + (ix0 - sx) * kx, dy + (iy0 - sy) * ky, (ix1 - ix0) * kx, (iy1 - iy0) * ky);
++        }
++      }
++    }
++    if (TRANG) {
++      CanvasRenderingContext2D.prototype.drawImage = function (im) {
++        const P = im ? im.__tr : undefined;
++        if (P === undefined) return DI.apply(this, arguments);
++        return veAo(this, P, arguments.length, arguments);
++      };
++    }
++    // Trang tải lười đang cần ngay (vẽ trúng / game hỏi): ưu tiên như hình đang cần (roiCan).
++    function canTrang(pg) {
++      if (pg.ve) return;
++      pg.muon = true; pg.tMuon = nayMs; pg.tCan = Date.now();
++      const i = hongDs.indexOf(pg);
++      if (i >= 0) { const t = Date.now(); if (pg.tThuCan && t - pg.tThuCan < THU_LAI_CAN) return; pg.tThuCan = t; hongDs.splice(i, 1); pg.lan = 0; pg.can = 1; hang.push(pg); ketThuc = false; bom(); return; }
++      if (pg.can) return;
++      pg.can = 1; ketThuc = false;
++      if (!pg.dangTai) bom();
++    }
++    // Ảnh gốc là bộ trang mà game hỏi tới (roiCan): tấm thường → mọi trang; tấm thân → nhóm 'chung'.
++    function canCha(it) {
++      const P = it.P;
++      if (!P) return;
++      for (const pg of P.ds) if (!pg.ve && (!P.luoi || pg.nhom === 'chung')) canTrang(pg);
++    }
++    // Đủ trang để báo ảnh gốc sẵn sàng? (tấm thường: mọi trang; tấm thân: mọi trang nhóm 'chung')
++    function chaDu(P) { for (const pg of P.ds) if (!pg.ve && (!P.luoi || pg.nhom === 'chung')) return false; return true; }
++    // Ảnh mặc định cần ngay khi mở game (tấm thân lười): thân mặc định (Rowan; ?zedbo=ninja: ninja) + trang phục đang mặc.
++    function thanCanDau() {
++      const s = new Set([G.ROWAN_HINH === false ? 'zed-moi' : 'zed-rowan']);
++      const a = aoDangMac(); if (a && a !== 'zed-moi') s.add(a);
++      return s;
++    }
++    function muonDau() {
++      if (!TRANG) return;
++      const s = thanCanDau();
++      for (const it of theoMa.values()) if (it.P && it.P.luoi && !it.ve && s.has(it.ma)) for (const pg of it.P.ds) if (pg.nhom === 'chung' && !pg.muon) { pg.muon = true; pg.tMuon = nayMs; }
++    }
++    // js/zed_moi.js: nhóm trang đang cần của ảnh ảo img (mỗi lần vẽ Rowan; rẻ: chỉ đổi cờ)
++    function trangMuon(img, nhoms) {
++      const P = img && img.__tr;
++      if (!P || !P.ds) return;
++      let moi = false;
++      for (const pg of P.ds) {
++        if (nhoms.indexOf(pg.nhom) < 0) continue;
++        pg.tMuon = nayMs;
++        if (!pg.ve && !pg.muon) { pg.muon = true; moi = true; }
++      }
++      if (moi) { ketThuc = false; bom(); }
++    }
++    // js/zed_moi.js: điểm (x, y) của ảnh ảo đã có trang chưa (chưa: gọi tải trang đó)
++    function trangCo(img, x, y) {
++      const P = img && img.__tr;
++      if (!P) return true;
++      const S = P.spec, cx = Math.floor(x / S.ow + 1e-9), cy = Math.floor(y / S.oh + 1e-9), pi = cx < S.cot ? S.m[(cy * S.cot + cx) * 3] : -1, pg = pi >= 0 ? P.ds[pi] : null;
++      if (!pg) return false;
++      pg.tVe = nayMs;
++      if (pg.ve) return true;
++      canTrang(pg);
++      return false;
++    }
++    // Bản to của tấm thân (ảnh phụ, js/zed_moi.js anhTo): ảnh ảo riêng, mọi trang tải lười.
++    const PHU = new Map();
++    function taoTrangPhu(ma, spec) {
++      if (!TRANG || !laSpec(spec)) return null;
++      let im = PHU.get(ma);
++      if (im) return im;
++      im = new Image();
++      const P = { spec, luoi: 1, ds: [] };
++      lamAo(im, P); taoTrangCho(P, ma, null, null);
++      PHU.set(ma, im); bom();
++      return im;
++    }
++    // Giải phóng một trang (bộ nhớ) — trang về hàng chờ, cần lại thì tải lại.
++    function boTrang(pg) {
++      if (!pg.ve) return false;
++      try { pg.img.onload = null; pg.img.onerror = null; pg.img.removeAttribute('src'); } catch (e) { /* bỏ qua */ }
++      pg.ve = false; pg.tt = 'evicted'; pg.lan = 0; pg.treo = 0; pg.can = 0; pg.dangTai = false; pg.muon = !pg.luoi;
++      daXong = Math.max(0, daXong - 1); AS.xong = daXong; pxGiu -= pg.px | 0; pg.px = 0; soBo++;
++      if (hang.indexOf(pg) < 0) hang.push(pg);
++      return true;
++    }
+     AS.tt = 'cho'; AS.tep = 'anh/'; AS.tong = 0; AS.xong = 0;
+     SC.roi = { get webp() { return coWebp; }, hang: () => hang.length, dang: () => dang, xong: () => daXong, loi: () => hongDs.length, ds: theoMa,
+       // F3: bộ nhớ ảnh rời đang giữ, thống kê lỗi, trạng thái từng ảnh, giới hạn đang dùng
+@@ -1877,7 +2034,24 @@
+         dangGiai, choGiai: choGiai.length, theHe, soBo, soLoiTai, decodeCham, loi: nhatLoi.slice(), tt: (() => { const d = {}; for (const it of theoMa.values()) { const k = it.tt || 'idle'; d[k] = (d[k] || 0) + 1; } return d; })() }),
+       trangThai: (ma) => { const it = theoMa.get(ma); return it ? it.tt || 'idle' : null; },
+       donBoNho: (ly) => donBoNho(ly || 'goi tay'),
++      // F4 chia trang
++      trangMuon: (img, nhoms) => trangMuon(img, nhoms),
++      trangCo: (img, x, y) => trangCo(img, x, y),
++      taoTrangPhu: (ma, spec) => taoTrangPhu(ma, spec),
++      trang: () => {
++        const d = { bat: TRANG, anhChia: soCha + PHU.size, trang: 0, dangGiu: 0, mibTrang: 0, thieu: soThieuTrang, thieuTheoMa: Object.assign({}, thieuTheoMa), theoMa: {} };
++        for (const it of theoMa.values()) {
++          if (!it.cha) continue;
++          d.trang++;
++          const k = it.cha.ma, e = d.theoMa[k] || (d.theoMa[k] = { trang: 0, giu: 0, mib: 0, nhom: {} });
++          e.trang++;
++          if (it.ve) { d.dangGiu++; e.giu++; e.mib += (it.px * 4) / 1048576; d.mibTrang += (it.px * 4) / 1048576; e.nhom[it.nhom || '-'] = (e.nhom[it.nhom || '-'] || 0) + 1; }
++        }
++        return d;
++      },
+     };
++    // F4: trang tải lười tích lại khi chơi (làng → trận → làng) → mỗi 5 giây, vượt ngân sách thì dọn (trang lâu không vẽ, ảnh vùng cũ)
++    if (TRANG) setInterval(() => { if (!G.BO_NHO_CU && pxGiu * 4 > NGAN_SACH) donBoNho('định kỳ'); }, 5000);
+     let tatWebp = false;
+     try { tatWebp = typeof location !== 'undefined' && /[?&]webp=0(&|$)/.test(location.search || ''); } catch (e) { tatWebp = false; }
+     if (G.ANH_WEBP === false || tatWebp || !ROI.webp || typeof Image === 'undefined') coWebp = false;
+@@ -1900,10 +2074,16 @@
+       if (!t || typeof src !== 'string') return false;
+       theoSrc.delete(src);
+       const u = t._u;
+-      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
++      const ma = G.ANH_MUOT_CU && typeof t.muot_cua === 'string' ? t.muot_cua : G.NET_CU && typeof t.net_cua === 'string' ? t.net_cua : G.SAN_MOI === false && typeof t.san_cua === 'string' ? t.san_cua : G.ROWAN_DAU_CU && typeof t.dau_cua === 'string' ? t.dau_cua : G.VKPL_CU && typeof t.vk_cua === 'string' ? t.vk_cua : t.ma; // ?anhmuotcu=1 / ?netcu=1: tấm cũ mang mã gốc
+       const it = { img, ma, png: src, webp: typeof t.webp === 'string' && /^anh\/[A-Za-z0-9_.-]{1,90}\.webp$/.test(t.webp) ? t.webp : null,
+         bac: u[0] | 0, co: +u[1] || 0, vung: u[2] | 0, trum: !!u[3], khoa: !!(G.TAI_VUNG && u[4] && (u[2] | 0) >= 0 && (u[2] | 0) <= 3), can: 0, lan: 0, xong: img.onload, hong: img.onerror, dangTai: false, thap: false, ve: false, boWebp: false };
+       img.onload = null; img.onerror = null;
++      if (TRANG && laSpec(t.trang)) { // F4: tấm chia trang → ảnh ảo; tải các trang thay cho tấm nguyên
++        const P = { spec: t.trang, luoi: t.trang.luoi ? 1 : 0, ds: [] };
++        lamAo(img, P); theoMa.set(ma, it); taoTrangCho(P, ma, u, it);
++        napSauDangChay = true; bom();
++        return true;
++      }
+       theoMa.set(ma, it); hang.push(it); AS.tong++;
+       napSauDangChay = true; // hình em bé / đồ về muộn: chỉ xoá hình đã nhớ khi đang dùng (xoaNhoDoKhiCan), như lúc nạp tệp tải sau
+       bom();
+@@ -1918,6 +2098,7 @@
+       const it = theoMa.get(ma);
+       if (!it || it.ve) return;
+       it.tCan = Date.now(); // F3: vừa cần → không giải phóng ngay khi rời vùng
++      if (it.P) { canCha(it); return; } // F4: tấm chia trang → tải các trang
+       const i = hongDs.indexOf(it);
+       if (i >= 0) {
+         const t = Date.now();
+@@ -1939,7 +2120,8 @@
+     function bom0() {
+       if (coWebp === null) return; // chờ kiểm WebP (vài mili giây)
+       if (dang < MAX_GAP && hang.length) {
+-        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : laAo(it) && it.ma !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
++        muonDau(); // F4: trang 'chung' của thân mặc định + trang phục đang mặc
++        const v = vungNay(), aoMac = aoDangMac(), uu = (it) => (it.can || choCan(it) ? 0 : it.luoi && !it.muon ? 97 : laAo(it.cha ? it.cha.it || it : it) && (it.cha && it.cha.it ? it.cha.it.ma : it.ma) !== aoMac ? 95 : it.khoa ? uuVung(it) : it.bac === 0 ? 1 : it.bac === 2 ? (it.vung === v ? 2 : 4) : it.bac === 3 ? (trumMo && it.vung === v ? 2 : 5) : 3);
+         for (const it of hang) { it.u = uu(it); if (!it.dangTai && it.tt !== 'failed') it.tt = it.u >= 90 ? (it.tt === 'evicted' ? 'evicted' : 'idle') : 'queued'; }
+         hang.sort((a, b) => a.u - b.u || a.co - b.co);
+         // trước màn chào, hoặc còn hình màn chào / làng / hình đang cần chưa về: chỉ tải các hình đó (cả đường truyền cho chúng)
+@@ -2213,6 +2395,11 @@
+       else if (g && g.img === img) { g.ready = false; g.img = null; g.ghep9.clear(); }
+       else if (fa && fa.img0 === img) { fa.ready = false; }
+       else return false;
++      if (it.P) { // F4: ảnh chia trang → giải phóng mọi trang (ảnh ảo giữ nguyên, game hỏi lại thì tải lại trang)
++        for (const pg of it.P.ds) { boTrang(pg); pg.can = 0; pg.muon = !pg.luoi; }
++        it.ve = false; it.tt = 'evicted'; it.can = 0; it.dangTai = false; soBo++;
++        return true;
++      }
+       img.onload = null; img.onerror = null;
+       try { img.removeAttribute('src'); } catch (e) { try { img.src = ''; } catch (e2) { /* bỏ qua */ } }
+       it.ve = false; it.tt = 'evicted'; it.lan = 0; it.treo = 0; it.can = 0; it.dangTai = false;
+@@ -2224,13 +2411,20 @@
+       if (G.BO_NHO_CU || !G.TAI_VUNG || pxGiu * 4 <= NGAN_SACH) return 0;
+       const giu = vungGiu(), t = Date.now(), ung = [];
+       const ao = /^(chọn|vào ải)/.test(ly) ? aoDangMac() : null; // tấm trang phục không mặc: chỉ bỏ lúc đổi vùng (không bỏ giữa lúc đang thử đồ)
++      const luoi = [], dau = TRANG ? thanCanDau() : new Set(); // trang 'chung' của thân đang dùng: luôn giữ (hình người chơi không bao giờ hở)
+       for (const it of theoMa.values()) {
++        if (it.cha) { // F4: trang tải lười (thân Zed) không vẽ / không cần trong TR_GIU ms → có thể bỏ; trang của tấm thường đi theo ảnh gốc
++          if (it.luoi && it.ve && t - Math.max(it.tVe || 0, it.tMuon || 0, it.tNhanMs || 0) > TR_GIU && !(it.nhom === 'chung' && it.cha.it && dau.has(it.cha.it.ma))) luoi.push(it);
++          continue;
++        }
+         if (!it.ve || (it.tCan && t - it.tCan < 20000)) continue;
+         if ((it.khoa && !giu.has(it.vung)) || (ao && laAo(it) && it.ma !== ao)) { if (coTheBo(it)) ung.push(it); }
+       }
+       ung.sort((a, b) => (a.tNhan || 0) - (b.tNhan || 0)); // giải mã xong sớm nhất (cũ nhất) bỏ trước
+       const truoc = pxGiu, bo = new Set();
+       let n = 0;
++      luoi.sort((a, b) => Math.max(a.tVe || 0, a.tMuon || 0) - Math.max(b.tVe || 0, b.tMuon || 0)); // F4: trang lâu không dùng nhất bỏ trước
++      for (const pg of luoi) { if (pxGiu * 4 <= NGAN_SACH * 0.85) break; if (boTrang(pg)) n++; }
+       for (const it of ung) { if (pxGiu * 4 <= NGAN_SACH * 0.85) break; if (boAnh(it)) { n++; bo.add(it.vung); } }
+       for (const r of bo) if (!giu.has(r)) { moVung[r] = 0; boTruoc[r] = 1; } // vùng có ảnh bị bỏ: về "chưa mở" (chọn lại / vào ải thì tải lại), không tải trước nữa
+       if (n) { ketThuc = false; ghi('Bộ nhớ ảnh (' + ly + '): giải phóng ' + n + ' ảnh vùng cũ, ' + ((truoc * 4) / 1048576).toFixed(1) + ' → ' + ((pxGiu * 4) / 1048576).toFixed(1) + ' MiB (ngân sách ' + (NGAN_SACH / 1048576) + ' MiB).'); bom(); }
+@@ -2250,6 +2444,12 @@
+           it.ve = true; it.tt = 'ready'; daXong++; AS.xong = daXong; it.tNhan = bayGio();
+           it.px = (it.img.naturalWidth | 0) * (it.img.naturalHeight | 0); pxGiu += it.px; // F3: pixel đã giải mã đang giữ
+           try { if (it.xong) it.xong.call(it.img); } catch (e) { SC.loi.push(it.ma + ': ' + ((e && e.message) || e)); }
++          if (it.cha) it.tNhanMs = Date.now();
++          const P = it.cha, C = P && P.it; // F4: trang của ảnh chia trang về → đủ trang thì báo ảnh gốc sẵn sàng (như ảnh thường về)
++          if (C && !C.ve && chaDu(P)) {
++            C.ve = true; C.tt = 'ready'; C.tNhan = it.tNhan; C.px = 0; C.dangTai = false;
++            try { if (C.xong) C.xong.call(C.img); } catch (e) { SC.loi.push(C.ma + ': ' + ((e && e.message) || e)); }
++          }
+           if (/^gd-/.test(it.ma) && !henGd) henGd = setTimeout(() => { henGd = 0; xoaNhoSau(true); }, 700); // ô phòng, giao diện: dựng lại hình đã nhớ
+           if (Date.now() - t0 > 6) break;
+         }
+@@ -2264,7 +2464,7 @@
+       if (!mo) return;
+       let conHang = 0, khoaCho = 0;
+       for (const it of hang) { if ((it.u == null ? 0 : it.u) < 90) conHang++; else khoaCho++; }
+-      AS.tong = theoMa.size - khoaCho; // ảnh riêng của vùng chưa mở không tính vào "Đang tải thêm ảnh… %"
++      AS.tong = theoMa.size - khoaCho - soCha; // F4: ảnh gốc chia trang không tính (đếm các trang). Ảnh riêng của vùng chưa mở không tính vào "Đang tải thêm ảnh… %"
+       if (conHang || dang || choApDung.length || choThu || dangGiai || choGiai.length || soNhaSom) { AS.tt = 'tai'; ketThuc = false; return; }
+       if (ketThuc) return;
+       ketThuc = true;
+--- a/game/js/zed_moi.js
++++ b/game/js/zed_moi.js
+@@ -83,6 +83,9 @@
+   function anhTo(T) {
+     const t = T && T.tep;
+     if (G.NET_CU || !t || !t.to || typeof t.tam_to !== 'string' || typeof Image === 'undefined') return null;
++    // F4 chia trang (docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md): bản web có "to_trang" → ảnh ảo chia trang ≤ 2048
++    // (js/sprite_custom.js SC.roi.taoTrangPhu): trang tải theo nhóm đang vẽ, ô nào chưa về thì veT vẽ ô đó từ tấm thường (không hở hình).
++    if (!T._to && t.to_trang && SC.roi && SC.roi.taoTrangPhu) { const im = SC.roi.taoTrangPhu(T.ma + '-to', t.to_trang); if (im) T._to = { img: im, ready: true, trang: true }; }
+     if (!T._to) {
+       const img = new Image(), r = { img, ready: false };
+       // 17/10 (dung-luong-17-10): bản ảnh rời có thêm WebP lossless của bản to ("tam_to_webp", điểm ảnh y hệt) → tải WebP khi trình duyệt
+@@ -123,9 +126,9 @@
+     if (im) {
+       const col = Math.floor(sx / 96 + 1e-6), row = Math.floor(sy / 96 + 1e-6), j = to.o_cua[row * to.cot_goc + col];
+       if (j != null && j >= 0) {
+-        const k = to.k;
+-        q.drawImage(im, (j % to.cot) * to.o + (sx - col * 96) * k, Math.floor(j / to.cot) * to.o + (sy - row * 96) * k, sw * k, sh * k, dx, dy, dw, dh);
+-        return;
++        const k = to.k, x0 = (j % to.cot) * to.o, y0 = Math.floor(j / to.cot) * to.o;
++        // F4: trang của ô này chưa về (tải lười) → vẽ ô từ tấm thường như khi chưa có bản to (SC.roi.trangCo cũng gọi tải trang đó)
++        if (!im.__tr || SC.roi.trangCo(im, x0, y0)) { q.drawImage(im, x0 + (sx - col * 96) * k, y0 + (sy - row * 96) * k, sw * k, sh * k, dx, dy, dw, dh); return; }
+       }
+     }
+     const t2 = q.__to === T && I && I !== T.img ? I.__to : null; // canvas khung thay ảnh (thương quét k6) có bản to riêng
+@@ -161,8 +164,11 @@
+     // TALESWORN 05/11 (docs/review/ke-hoach-cai-thien/talesworn-c-rowan/bao-cao.md): bộ mặc định (ninja) vẽ bằng tấm ROWAN (zed-rowan: cùng ô,
+     // cùng neo với zed-moi, chỉ đổi màu thân + đầu mũ trùm). Luật chơi / bộ / skill vẫn là 'ninja'. ?zedbo=ninja: về hình ninja cũ.
+     if (ma === 'zed-moi' && G.ROWAN_HINH) ma = 'zed-rowan';
+-    const z = (ma !== 'zed-moi' && lay(ma)) || lay('zed-moi');
+-    if (z) { z._ma = z === SC.zed['zed-moi'] ? 'zed-moi' : ma; hang16(z.tep, z._ma); }
++    // F4: tấm trang phục chưa về → vẽ tạm bằng tấm MẶC ĐỊNH đang dùng (Rowan; ?zedbo=ninja: ninja) — trước đây luôn là zed-moi (ninja cũ),
++    // làm game phải tải cả tấm zed-moi (~54 MiB giải mã) dù người chơi không bao giờ thấy hình ninja.
++    const md = G.ROWAN_HINH ? 'zed-rowan' : 'zed-moi';
++    const z = (ma !== md && lay(ma)) || lay(md);
++    if (z) { z._ma = z.ma || ma; hang16(z.tep, z._ma); }
+     return z;
+   };
+   // HÀNG MỚI 16/10 (docs/review/ke-hoach-cai-thien/hang-moi-16-10/bao-cao.md): tấm có khoá "<hàng>~16" (chủ game gen lại: đứng thở 8 khung,
+@@ -297,6 +303,7 @@
+   }
+   const kep = (v, a, b) => (v < a ? a : v > b ? b : v);
+   const VK_LOAI = { sword: 'kiem', spear: 'thuong', hammer: 'bua', bow: 'phitieu' };
++  const NHOM_AI = ['chung', 'kiem', 'thuong', 'bua', 'phitieu'], NHOM_CHUNG = ['chung']; // F4: nhóm trang ảnh thân (game/build.py nhom_hang_zed)
+   // Nắm chuôi (vk-khop-tay): dữ liệu vẽ của một hàng có vũ khí — biến thể mới (da.nam) hoặc cũ khi cờ tắt. Nhớ theo hàng (cờ không đổi giữa chừng).
+   const BT = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+   function bienThe(da) {
+@@ -1232,6 +1239,14 @@
+     if (!a) return false;
+     sVe = s; tVe = T;
+     anhTo(T); // do-net: bắt đầu tải bản to ngay lần vẽ đầu (làng / chân dung) để vào trận là có
++    // F4 chia trang: báo nhóm hàng đang cần để bộ tải giữ / tải trước đúng trang (js/sprite_custom.js SC.roi.trangMuon). Ngoài trận (làng,
++    // chân dung, Lò rèn): tấm thường nhóm 'chung' + vũ khí đang cầm. Trong trận: bản to cả 4 vũ khí (đổi vũ khí xoay vòng 4 món, không chờ).
++    const RO = SC.roi;
++    if (RO && RO.trangMuon) {
++      const lo = o.weapon && VK_LOAI[o.weapon.type];
++      if (o.p) { if (T._to && T._to.trang) RO.trangMuon(T._to.img, NHOM_AI); else RO.trangMuon(T.img, NHOM_AI); }
++      else RO.trangMuon(T.img, lo ? ['chung', lo] : NHOM_CHUNG);
++    }
+     if (G.NET > 2) anhNet(T, G.NET); // nét cao (?netcao=3|4): bản ảnh đúng nét canvas, chỉ tải khi bật
+     const V = lay('zed-vk'), v = V ? vkCua(o, D, s, T, true) : null;
+     // Hàng tay không (ném phi tiêu, đấm): không có vũ khí để xoay → xoay cánh tay duỗi (TAY) + nghiêng thân trên như đòn đâm.
+--- a/game/js/vien_vk.js
++++ b/game/js/vien_vk.js
+@@ -173,8 +173,10 @@
+   const VK_LOAI = { kiem: 1, thuong: 1, bua: 1, phitieu: 1 };
+   let daDung = false;
+   function viecDungSan() {
+-    const SC = G.spriteCustom, V = SC && SC.zed && SC.zed['zed-vk'], T = SC && SC.zed && SC.zed['zed-moi'];
+-    if (!V || !V.ready || !V.img || !T || !T.ready || !T.tep) return null;
++    // F4: chỉ cần SỐ LIỆU tấm thân (tỉ lệ vk_tl trong dong_tac), không cần ảnh → không bắt tải tấm zed-moi (ninja cũ, ~54 MiB giải mã).
++    // Hình mặc định là Rowan (G.ROWAN_HINH) → đọc số liệu zed-rowan (cùng ô, cùng neo, cùng vk_tl); ?zedbo=ninja: zed-moi.
++    const SC = G.spriteCustom, Z = SC && SC.zed, V = Z && Z['zed-vk'], T = Z && ((G.ROWAN_HINH !== false && Z['zed-rowan']) || Z['zed-moi']);
++    if (!V || !V.ready || !V.img || !T || !T.tep || !T.tep.dong_tac) return null;
+     const tl = {}; // loại → các tỉ lệ vẽ trên tay (vk_tl) của tấm thân
+     for (const k in T.tep.dong_tac) { const a = T.tep.dong_tac[k]; if (a && a.vk && VK_LOAI[a.vk] && a.vk_tl) (tl[a.vk] = tl[a.vk] || {})[a.vk_tl] = 1; }
+     const viec = [];
+@@ -265,66 +267,12 @@
+     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
+     return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
+   };
+-  // ---------- VŨ KHÍ PIXELLAB (bản THỬ 05/11, docs/review/ke-hoach-cai-thien/pixellab-vu-khi/bao-cao.md) — MẶC ĐỊNH TẮT, bật: ?vkpl=1 ----------
+-  // Tấm zed-vk-pl (vk[loại][cấp], cấp 0..3) và zed-vk-pl-he (vk[loại][hệ][cấp], cấp 1..3) do PixelLab vẽ (sửa ảnh cũ bằng edit-image-pixen
+-  // nên giữ dáng, hướng mũi, chỗ cán): MỖI Ô CÙNG rộng × cao với ô đang dùng của zed-vk / zed-vk-he (kiếm = ô kiếm vuông) → điểm cầm, neo,
+-  // nắm tay giữ nguyên. Cách gắn: khi cả tấm cũ và tấm PixelLab đã nạp, chép tấm cũ ra canvas, xoá đúng các ô và dán ô PixelLab vào
+-  // (lệch cỡ thì giữ ô cũ), rồi thay z.img → mọi chỗ dùng zed-vk (trên tay Rowan, ô đồ, Lò rèn, nút đánh, phi tiêu bay) thấy ảnh mới.
+-  // Chưa ghép xong (tối đa ~60 s) thì G.vkPlCho() = true → js/zed_moi.js / js/vk_moi.js coi zed-vk như chưa tải (không vẽ ảnh cũ chớp qua).
+-  // mui_kv (khung đầu kiếm chặn đất) lấy theo ảnh PixelLab. Ảnh "gân": tấm zed-vk-pl-gan dán đè zed-vk-gan cùng cách; chưa ghép xong thì
+-  // không dùng gân cũ (ảnh thường) để không trộn ảnh cũ.
+-  // Tắt cờ (mặc định): không làm gì, game y như trước.
+-  G.VK_PL = false;
+-  try { if (typeof location !== 'undefined' && /[?&]vkpl=1(&|$)/.test(location.search || '')) G.VK_PL = true; } catch (e) { G.VK_PL = false; }
+-  if (G.VK_PL && G.vkGanAnh) { const ganCu = G.vkGanAnh; G.vkGanAnh = (loai, cap, r) => (G.VK_PL && !G.VK_PL_GAN ? null : ganCu(loai, cap, r)); }
+-  const PL = { vk: false, he: false, gan: false, loi: 0 };
+-  G.vkPlCho = () => !!G.VK_PL && !PL.vk && PL.loi < 600;
+-  G.vkPl = () => ({ bat: !!G.VK_PL, vk: PL.vk, he: PL.he, gan: PL.gan });
+-  function dan(z, pl, tim) { // tim(loại, hệ, cấp) → ô cũ; pl.tep.vk: ô PixelLab cùng thứ tự
+-    const W = z.img.naturalWidth || z.img.width, H = z.img.naturalHeight || z.img.height;
+-    const c = document.createElement('canvas'); c.width = W; c.height = H;
+-    const q = c.getContext('2d'); q.imageSmoothingEnabled = false; q.drawImage(z.img, 0, 0);
+-    let n = 0;
+-    const mot = (o, r) => { if (!o || !r || o[2] !== r[2] || o[3] !== r[3]) return; q.clearRect(o[0], o[1], o[2], o[3]); q.drawImage(pl.img, r[0], r[1], r[2], r[3], o[0], o[1], o[2], o[3]); n++; };
+-    for (const loai in pl.tep.vk) {
+-      const v = pl.tep.vk[loai];
+-      if (Array.isArray(v)) v.forEach((r, cap) => mot(tim(loai, null, cap), r));
+-      else for (const he in v) (v[he] || []).forEach((r, cap) => mot(tim(loai, he, cap), r));
+-    }
+-    return n ? c : null;
+-  }
+-  function ghepPl() {
+-    if (!G.VK_PL || typeof document === 'undefined') return;
+-    const SC = G.spriteCustom, Z = SC && SC.zed;
+-    if (!Z) { setTimeout(ghepPl, ++PL.loi < 600 ? 100 : 1000); return; }
+-    const can = (ma) => { const z = Z[ma]; if (z && !z.ready && SC.canAnh) SC.canAnh(ma); return z && z.ready && z.img ? z : null; };
+-    try {
+-      const V = can('zed-vk'), P = can('zed-vk-pl');
+-      if (!PL.vk && V && P) {
+-        const c = dan(V, P, (loai, he, cap) => V.tep.vk[loai] && V.tep.vk[loai][cap]);
+-        if (c) {
+-          V.img = c;
+-          if (V.kv && SC.kiemVuong && SC.kiemVuong() && P.tep.mui_kv) V.kv = Object.assign({}, V.kv, { mui: P.tep.mui_kv });
+-          NA.clear();
+-        }
+-        PL.vk = true;
+-      }
+-      const E = can('zed-vk-he'), PE = can('zed-vk-pl-he');
+-      if (PL.vk && !PL.he && E && PE) {
+-        const kv = !!(SC.kiemVuong && SC.kiemVuong());
+-        const c = dan(E, PE, (loai, he, cap) => { const k = loai === 'kiem' ? (kv ? 'kiem_vuong' : null) : loai, h = k && E.tep.vk[k] && E.tep.vk[k][he]; return h && h[cap]; });
+-        if (c) { E.img = c; if (kv && PE.tep.mui_kv) E.tep = Object.assign({}, E.tep, { mui_kv: PE.tep.mui_kv }); }
+-        PL.he = true;
+-      }
+-      const N = can('zed-vk-gan'), PN = can('zed-vk-pl-gan');
+-      if (PL.vk && !PL.gan && N && PN) { // ảnh "gân" PixelLab: cùng cỡ ô zed-vk-gan (kiếm = ô kiếm vuông)
+-        const kv = !!(SC.kiemVuong && SC.kiemVuong());
+-        const c = dan(N, PN, (loai, he, cap) => { const k = loai === 'kiem' ? (kv ? 'kiem_vuong' : null) : loai, h = k && N.tep.vk[k]; return h && h[cap]; });
+-        if (c) { N.img = c; G.VK_PL_GAN = true; }
+-        PL.gan = true;
+-      }
+-    } catch (e) { PL.loi += 50; }
+-    if (!(PL.vk && PL.he && PL.gan) && PL.loi < 5000) setTimeout(ghepPl, ++PL.loi < 600 ? 100 : 1000); // zed-vk-he là ảnh tải sau: chờ tiếp (thưa dần)
+-  }
+-  if (G.VK_PL && typeof setTimeout === 'function') setTimeout(ghepPl, 0);
++  // ---------- VŨ KHÍ PIXELLAB (05/11) — MẶC ĐỊNH từ phiên F4 (chủ game: "Có dùng pixellab") ----------
++  // Bản thử (docs/review/ke-hoach-cai-thien/pixellab-vu-khi/bao-cao.md) ghép ô PixelLab lúc chạy (canvas) khi bật ?vkpl=1. Phiên F4
++  // (docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md) ghép SẴN các ô đó vào chính zed-vk / zed-vk-he / zed-vk-gan (cùng vị
++  // trí, cùng cỡ ô → điểm cầm, neo, nắm tay giữ nguyên; công cụ docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/cong-cu/ghep_vk_pl.py),
++  // nên ở đây không còn ghép gì. Quay lui: ?vkpl=0 (G.VKPL_CU, js/sprite_custom.js) → nạp tấm ChatGPT cũ <mã>-cu (chỉ bản web, tải khi bật cờ).
++  G.VK_PL = !G.VKPL_CU;
++  G.vkPlCho = () => false;
++  G.vkPl = () => ({ bat: !!G.VK_PL, vk: !!G.VK_PL, he: !!G.VK_PL, gan: !!G.VK_PL, ghepSan: true });
+ })();
+--- a/game/build.py
++++ b/game/build.py
+@@ -137,7 +137,7 @@
+ 
+     # 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu, cờ ?anhmuotcu=1) chỉ có ở bản hai tệp (web) — bản một tệp giữ dưới trần 30 MB.
+     # 17/10 thuong-luong-that: tấm ghi "chi_hai_tep" (Thuồng Luồng thật 3 pha, ~2,9 MB) chỉ ở bản web — bản một tệp (trần 30 MB, đã sát trần) vẽ hình tạm cũ.
+-    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('chi_hai_tep')])  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
++    mot, bot_webp = webp_mot([bo_net_cao(t) for t in custom if not t.get('muot_cua') and not t.get('net_cua') and not t.get('san_cua') and not t.get('dau_cua') and not t.get('vk_cua') and not t.get('chi_hai_tep')])  # 17/10: ảnh WebP lossless khi nhỏ hơn (webp_mot)
+     js = gom(mot, khai_truyen_mot(truyen) + khai_bia_mot(bia))  # 17/10 do-net: tấm Cu Tí cũ (<mã>-netcu) cũng chỉ ở bản hai tệp
+     script = '<script>\n' + js + '</script>'
+     full = trang(js)
+@@ -203,6 +203,8 @@
+         # vài ảnh quan trọng (bìa màn chào + ảnh bậc 0 cần cho màn chào / làng) để kiểm web sau khi đăng tải được
+         m['anh_quan_trong'] = [THU_MUC_ANH + '/' + x for x in ds if x.startswith('bia-') and x.endswith('.webp')][:2] + list(KICH.get('quan_trong', []))[:4]
+     m['kich_thuoc'].pop('quan_trong', None)
++    if 'vung_anh' in m['kich_thuoc']:  # F4: ảnh bắt buộc theo vùng (0 Rừng già, 1 Hang biển, 2 Lâu đài cổ, 3 Sông sâu)
++        m['vung_anh'] = m['kich_thuoc'].pop('vung_anh')
+     write(os.path.join(DIST, TEN_MANIFEST), json.dumps(m, ensure_ascii=False, indent=1) + '\n')
+     print('Đã ghi dist/%s (buildId %s)' % (TEN_MANIFEST, BUILD['id'] or '—'))
+ 
+@@ -727,6 +729,129 @@
+     return out
+ 
+ 
++# ---------- F4 (05/11, docs/review/ke-hoach-cai-thien/on-dinh-f4-chia-anh/bao-cao.md): CHIA TRANG ẢNH ≤ 2048 × 2048 ----------
++# iPhone Safari giải mã cả tấm khi vẽ một ô: tấm thân Rowan 1152 × 12192 = 54 MiB dù chỉ đang dùng vài hàng. Bản ảnh rời (web) nay cắt
++# mọi tấm có cạnh > 2048 thành TRANG ≤ 2048 × 2048 — chỉ cắt / xếp lại ô, KHÔNG sửa điểm ảnh nào (mỗi trang kiểm lại từng điểm với tấm gốc).
++#   - tấm thân Zed (zed-rowan, zed-moi, zed-rung/bien/lau…): xếp HÀNG (96 điểm) theo nhóm: 'chung' (đứng, đi, chạy, lộn, trúng đòn…),
++#     'kiem', 'thuong', 'bua', 'phitieu' (hàng thân + hàng tay của động tác cầm vũ khí đó), 'khac' (hàng không động tác nào ghi);
++#     bản to ×1,2 ("tam_to", ô 116) cũng xếp ô theo nhóm của hàng gốc → trang tải LƯỜI: game chỉ tải nhóm đang vẽ.
++#   - tấm khác (trùm + dáng pha, hiệu ứng dài): cắt lưới trang khớp ô khung (không ô nào nằm vắt hai trang), tải cả bộ khi cần hình đó.
++# Thông số: t["trang"] / t["to_trang"] = { w, h, ow, oh, cot, m: [trang, x, y] × ô lưới (ow × oh), p: [[png, webp, rộng, cao, nhóm, byte]],
++# luoi } — js/sprite_custom.js giữ toạ độ CŨ của cả tấm (mọi chỗ vẽ không phải sửa), drawImage tự dịch sang trang.
++# Tấm nguyên vẫn chép lên máy chủ (không tính tải đầu) cho cờ quay lui ?trangcu=1. Cờ tắt khi đóng gói: LK_CHIA_TRANG=0.
++TRANG_MAX = 2048
++NHOM_VK = ('kiem', 'thuong', 'bua', 'phitieu')
++NHOM_THU_TU = ('chung',) + NHOM_VK + ('khac',)
++
++
++def chia_trang_bat():
++    return os.environ.get('LK_CHIA_TRANG', '1') != '0'
++
++
++def nhom_hang_zed(t):
++    """{ hàng: nhóm } của tấm thân Zed theo dong_tac (hang + hang_tay) và kiem_nang.h_tam."""
++    dung = {}
++    for k, a in (t.get('dong_tac') or {}).items():
++        m = re.search(r'(kiem|thuong|bua|phitieu)', k)
++        g = m.group(1) if m else 'chung'
++        for kk in ('hang', 'hang_tay'):
++            v = a.get(kk) if isinstance(a, dict) else None
++            if isinstance(v, int):
++                dung.setdefault(v, set()).add(g)
++    kn = t.get('kiem_nang')
++    if isinstance(kn, dict) and isinstance(kn.get('h_tam'), int):
++        dung.setdefault(kn['h_tam'], set()).add('kiem')
++    return {h: ('chung' if len(gs) > 1 or 'chung' in gs else next(iter(gs))) for h, gs in dung.items()}
++
++
++def _png_rgba(im):
++    b = io.BytesIO()
++    im.save(b, 'PNG', optimize=False, compress_level=9)
++    return b.getvalue()
++
++
++def _xep_o(im, o_list, ow, oh, cot_trang, hang_trang, nhom_cua):
++    """Xếp các ô (x, y) của im (cỡ ow × oh) vào trang theo nhóm. Trả [(ảnh trang, nhóm)], {chỉ số ô: (trang, px, py)}."""
++    from PIL import Image
++    trang, cho = [], {}
++    for g in NHOM_THU_TU:
++        ds = [o for o in o_list if nhom_cua[o] == g]
++        moi = cot_trang * hang_trang
++        for k in range(0, len(ds), moi):
++            phan = ds[k:k + moi]
++            n_hang = (len(phan) + cot_trang - 1) // cot_trang
++            pg = Image.new('RGBA', (min(len(phan), cot_trang) * ow, n_hang * oh), (0, 0, 0, 0))
++            for q, (i, x, y) in enumerate(phan):
++                px, py = (q % cot_trang) * ow, (q // cot_trang) * oh
++                pg.paste(im.crop((x, y, x + ow, y + oh)), (px, py))
++                cho[i] = (len(trang), px, py)
++            trang.append((pg, g))
++    return trang, cho
++
++
++def chia_trang(t, png, kieu):
++    """kieu: 'than' (tấm thân Zed), 'to' (bản to của tấm thân), 'luoi' (tấm thường). Trả (spec không có đường dẫn, [(png trang, nhóm)]) hoặc None."""
++    from PIL import Image
++    im = Image.open(io.BytesIO(png)).convert('RGBA')
++    W, H = im.size
++    if kieu == 'than':
++        oh = int(t.get('khung_cao', 48)) * int(t.get('net', 2) or 1)
++        if oh <= 0 or oh > TRANG_MAX or H % oh or W > TRANG_MAX:
++            return None
++        nh = nhom_hang_zed(t)
++        o_list = [(h, 0, h * oh) for h in range(H // oh)]
++        nhom_cua = {o: nh.get(o[0], 'khac') for o in o_list}
++        trang, cho = _xep_o(im, o_list, W, oh, 1, TRANG_MAX // oh, nhom_cua)
++        ow, cot, luoi = W, 1, 1
++    elif kieu == 'to':
++        to = t.get('to') or {}
++        ow = oh = int(to.get('o') or 0)
++        cot, cg, oc = int(to.get('cot') or 0), int(to.get('cot_goc') or 0), to.get('o_cua') or []
++        if ow <= 0 or cot <= 0 or cg <= 0 or cot * ow > TRANG_MAX or W < cot * ow:
++            return None
++        nh = nhom_hang_zed(t)
++        hang_goc = {}
++        for i, j in enumerate(oc):
++            if isinstance(j, int) and j >= 0:
++                hang_goc[j] = i // cg
++        so_hang = (H + oh - 1) // oh
++        o_list = [(j, (j % cot) * ow, (j // cot) * oh) for j in range(cot * so_hang) if j in hang_goc]
++        nhom_cua = {o: nh.get(hang_goc[o[0]], 'khac') for o in o_list}
++        trang, cho = _xep_o(im, o_list, ow, oh, cot, TRANG_MAX // oh, nhom_cua)
++        luoi = 1
++    else:
++        fw = int(t.get('khung_rong') or 0) * int(t.get('net') or 1)
++        fh = int(t.get('khung_cao') or 0) * int(t.get('net') or 1)
++        ow = (TRANG_MAX // fw) * fw if 0 < fw <= TRANG_MAX else TRANG_MAX
++        oh = (TRANG_MAX // fh) * fh if 0 < fh <= TRANG_MAX else TRANG_MAX
++        cot = (W + ow - 1) // ow
++        trang, cho = [], {}
++        for gy in range(0, H, oh):
++            for gx in range(0, W, ow):
++                i = (gy // oh) * cot + gx // ow
++                cho[i] = (len(trang), 0, 0)
++                trang.append((im.crop((gx, gy, min(W, gx + ow), min(H, gy + oh))), ''))
++        luoi = 0
++    so_o = cot * ((H + oh - 1) // oh)
++    m = []
++    for i in range(so_o):
++        m += list(cho.get(i, (-1, 0, 0)))
++    # Soát: dựng lại cả tấm từ trang → so từng điểm với tấm gốc (ô có trong lưới).
++    for i, (p, px, py) in cho.items():
++        gx, gy = (i % cot) * ow, (i // cot) * oh
++        w_, h_ = min(ow, W - gx), min(oh, H - gy)
++        if trang[p][0].crop((px, py, px + w_, py + h_)).tobytes() != im.crop((gx, gy, gx + w_, gy + h_)).tobytes():
++            sys.exit('%s: trang %d lệch điểm ảnh với tấm gốc (ô %d)' % (t.get('ma'), p, i))
++    spec = {'w': W, 'h': H, 'ow': ow, 'oh': oh, 'cot': cot, 'm': m, 'luoi': luoi}
++    return spec, [(_png_rgba(pg), g) for pg, g in trang]
++
++
++def kich_png(png):
++    """(rộng, cao) đọc thẳng từ đầu tệp PNG."""
++    import struct
++    return struct.unpack('>II', png[16:24]) if png[:8] == b'\x89PNG\r\n\x1a\n' else (0, 0)
++
++
+ def anh_roi(custom, gom, trang, frag, truyen=None, bia=None):
+     """Ghi dist/linh-khi-nhe.html (mã + thông số hình) và dist/anh/* (ảnh rời PNG + WebP)."""
+     thu = os.path.join(DIST, THU_MUC_ANH)
+@@ -742,7 +867,25 @@
+     tong_png = tong_webp = tong_tot = so_webp = 0
+     cu_n = cu_tot = cu_png = 0  # tấm cũ (mục muot_cua) nằm trên máy chủ nhưng game chỉ tải khi bật cờ → không tính vào người chơi tải (15/10 don-tep B: bỏ tấm cu_cua / ?quaicu=1)
+     bang = {}  # nhóm → [số ảnh, byte người chơi tải (WebP khi có), byte PNG]
+-    for (i, k), png, w in zip(vt, pngs, webps):
++    # F4 chia trang: tấm nào có cạnh > 2048 → các trang ≤ 2048 (mã hoá WebP cùng một lượt, có bộ nhớ đệm như ảnh khác)
++    chia = {}  # chỉ số trong vt → (spec, [(png trang, nhóm)])
++    if chia_trang_bat():
++        for q, ((i, k), png) in enumerate(zip(vt, pngs)):
++            W_, H_ = kich_png(png)
++            if W_ > TRANG_MAX or H_ > TRANG_MAX:
++                t0 = custom[i]
++                r = chia_trang(t0, png, 'than' if t0.get('doi_tuong') == 'zed' and isinstance(t0.get('dong_tac'), dict) else 'luoi')
++                if r:
++                    chia[q] = r
++    ds_trang = [pg for q in sorted(chia) for pg, _g in chia[q][1]]
++    webp_trang = webp_nhieu(ds_trang) if ds_trang else []
++    vt_trang, n_trang = {}, 0
++    for q in sorted(chia):
++        vt_trang[q] = webp_trang[n_trang:n_trang + len(chia[q][1])]
++        n_trang += len(chia[q][1])
++    so_trang = 0
++    tr_tai_khong_tinh = 0  # F4: zed-moi (ninja cũ) chỉ tải khi ?zedbo=ninja → không tính vào người chơi tải
++    for q, ((i, k), png, w) in enumerate(zip(vt, pngs, webps)):
+         t = ds[i]
+         ten = '%s.%s' % (t['ma'], hashlib.sha256(png).hexdigest()[:10])
+         with open(os.path.join(thu, ten + '.png'), 'wb') as f:
+@@ -758,12 +901,38 @@
+             tot = len(w)
+             tong_webp += len(w)
+             so_webp += 1
+-        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua'):  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
++        W_, H_ = kich_png(png)
++        if q in chia:  # F4: tấm nguyên ở trên chỉ còn cho ?trangcu=1; người chơi tải các trang
++            spec, ds_pg = chia[q]
++            spec = dict(spec, p=[])
++            tot = 0
++            for j, ((pg, g), pw) in enumerate(zip(ds_pg, vt_trang[q])):
++                tp = '%s.t%d.%s' % (t['ma'], j, hashlib.sha256(pg).hexdigest()[:10])
++                with open(os.path.join(thu, tp + '.png'), 'wb') as f:
++                    f.write(pg)
++                duong_w, b = None, len(pg)
++                tong_png += len(pg)
++                if pw and len(pw) < len(pg):
++                    tw = '%s.t%d.%s' % (t['ma'], j, hashlib.sha256(pw).hexdigest()[:10])
++                    with open(os.path.join(thu, tw + '.webp'), 'wb') as f:
++                        f.write(pw)
++                    duong_w, b = THU_MUC_ANH + '/' + tw + '.webp', len(pw)
++                    tong_webp += len(pw)
++                pw_, ph_ = kich_png(pg)
++                spec['p'].append([THU_MUC_ANH + '/' + tp + '.png', duong_w, pw_, ph_, g, b])
++                tot += b
++            so_trang += len(ds_pg)
++            t['trang'] = spec
++        if t['ma'] == 'zed-moi' and not t.get('net_cua'):
++            tr_tai_khong_tinh += tot
++            t['_u'] = [1, tot, -1, 0, 0, W_, H_]
++            continue
++        if t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cua'):  # F4: vũ khí ChatGPT cũ (?vkpl=0) cũng vậy  # 05/11 talesworn-d: Rowan đầu cũ (?rowancu=1) cũng vậy  # 17/10 sàn dịu: sàn cũ <mã>-sancu (?sanmoi=0) cũng chỉ ở bản hai tệp, không tính tải đầu. 17/10 do-net: tấm Cu Tí cũ <mã>-netcu (?netcu=1) cũng vậy. 15/10 soát mượt: tấm trước khi thay hàng (<mã>-muotcu) chỉ tải khi ?anhmuotcu=1
+             cu_n += 1
+             cu_tot += tot
+             cu_png += len(png)
+             vr = vung_rieng(custom[i])  # như quái thường của vùng đó (khi bật cờ thì tải theo vùng như tấm cũ trước đây)
+-            t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0]
++            t['_u'] = [2, tot, vr, 0, 1 if vr >= 0 else 0, W_, H_]
+             continue
+         tong_tot += tot
+         # _u: [bậc ưu tiên tĩnh, số byte tải, vùng (0 rừng, 1 biển, 2 lâu đài, -1 không theo vùng), trùm/dáng pha]
+@@ -775,12 +944,29 @@
+         if vr >= 0 and bac == 0:
+             bac = 2  # ảnh riêng một vùng không còn tải ở màn chào (tải khi chọn vùng)
+         # _u[4] (14/10): 1 = ảnh riêng của vùng _u[2] (chỉ tải khi chọn vùng đó / tải trước vùng kế tiếp)
+-        t['_u'] = [bac, tot, vr if vr >= 0 else (VUNG_SO.get(t.get('vung'), -1) if quai else -1), 1 if trum else 0, 1 if vr >= 0 else 0]
++        # _u[5], _u[6] (F4): rộng × cao của tấm (bộ tải biết bộ nhớ giải mã TRƯỚC khi tải: rộng × cao × 4 byte)
++        t['_u'] = [bac, tot, vr if vr >= 0 else (VUNG_SO.get(t.get('vung'), -1) if quai else -1), 1 if trum else 0, 1 if vr >= 0 else 0, W_, H_]
+         nhom = 'vung%d' % vr if vr >= 0 else 'loi'
+         bang.setdefault(nhom, [0, 0, 0])
+         bang[nhom][0] += 1
+         bang[nhom][1] += tot
+         bang[nhom][2] += len(png)
++    # F4: danh sách ảnh BẮT BUỘC theo vùng (build-manifest.json "vung_anh"): ảnh riêng vùng (quái, nền, cửa, hiệu ứng riêng) phải về đủ
++    # trước khi vào ải của vùng (màn chờ G.ChoVung); "trum": trùm + dáng pha, tải trước khi vào ải trùm. Mỗi mục: tệp người chơi tải
++    # (WebP khi có) — tấm đã chia trang thì là các trang. Cổng kiểm / bài đo đọc bảng này; bộ tải dùng cùng thông tin (_u) trong trang.
++    vung_anh = {}
++    for (i, k) in vt:
++        t = ds[i]
++        u = t.get('_u') or []
++        if len(u) < 5 or not u[4] or u[2] < 0 or t.get('muot_cua') or t.get('net_cua') or t.get('san_cua') or t.get('dau_cua') or t.get('vk_cua'):
++            continue
++        tep_ = [p_[1] or p_[0] for p_ in t['trang']['p']] if t.get('trang') else [t.get('webp') or t[k]]
++        v_ = vung_anh.setdefault(str(u[2]), {'thuong': [], 'trum': [], 'byte': 0, 'mib_giai_ma': 0.0})
++        v_['trum' if u[3] else 'thuong'].extend(tep_)
++        v_['byte'] += u[1]
++        if len(u) >= 7:
++            v_['mib_giai_ma'] = round(v_['mib_giai_ma'] + u[5] * u[6] * 4 / 1048576, 2)
++    KICH['vung_anh'] = vung_anh
+     # 17/10 do-net: bản to ×1,2 của tấm Cu Tí ("tam_to", js/zed_moi.js tải khi vẽ Cu Tí trong trận lần đầu) → ảnh rời riêng, đường dẫn thay chuỗi base64
+     ds_to = [t for t in ds if isinstance(t.get('tam_to'), str) and t['tam_to'].startswith('data:image/png;base64,')]
+     png_to = [base64.b64decode(t['tam_to'].split(',', 1)[1]) for t in ds_to]
+@@ -798,7 +984,34 @@
+             t['tam_to_webp'] = THU_MUC_ANH + '/' + tw + '.webp'
+             tot = len(w)
+             tong_webp += len(w)
+-        if not t.get('net_cua') and not t.get('dau_cua'):
++        W_, H_ = kich_png(png)
++        if chia_trang_bat() and t.get('doi_tuong') == 'zed' and (W_ > TRANG_MAX or H_ > TRANG_MAX):  # F4: bản to cũng chia trang (tải lười theo nhóm)
++            r = chia_trang(t, png, 'to')
++            if r:
++                spec, ds_pg = r
++                spec = dict(spec, p=[])
++                tot = 0
++                for j, (pg, g) in enumerate(ds_pg):
++                    tp = '%s-to.t%d.%s' % (t['ma'], j, hashlib.sha256(pg).hexdigest()[:10])
++                    with open(os.path.join(thu, tp + '.png'), 'wb') as f:
++                        f.write(pg)
++                    duong_w, b = None, len(pg)
++                    pw = webp_nhieu([pg])[0] if alpha_gon(pg) else None  # như bản to cũ: WebP chỉ khi không có điểm mờ
++                    if pw and len(pw) < len(pg):
++                        tw = '%s-to.t%d.%s' % (t['ma'], j, hashlib.sha256(pw).hexdigest()[:10])
++                        with open(os.path.join(thu, tw + '.webp'), 'wb') as f:
++                            f.write(pw)
++                        duong_w, b = THU_MUC_ANH + '/' + tw + '.webp', len(pw)
++                        tong_webp += len(pw)
++                    pw_, ph_ = kich_png(pg)
++                    spec['p'].append([THU_MUC_ANH + '/' + tp + '.png', duong_w, pw_, ph_, g, b])
++                    tot += b
++                    tong_png += len(pg)
++                    so_trang += 1
++                t['to_trang'] = spec
++        if t['ma'] == 'zed-moi':
++            tr_tai_khong_tinh += tot
++        elif not t.get('net_cua') and not t.get('dau_cua'):
+             tong_tot += tot; tong_png += len(png)  # người chơi tải (khi vào trận lần đầu), không tính vào "lõi" tải trước
+     # 17/10 nét cao: ảnh "tam_n3" / "tam_n4" (Cu Tí, vệt kiếm nặng) → ảnh rời riêng; game CHỈ tải khi bật ?netcao=3|4 → không tính người chơi tải
+     net_cao = {}
+@@ -861,7 +1074,12 @@
+     KICH['quan_trong'] = [ds[i].get('webp') or ds[i][k] for (i, k) in vt if ds[i].get('_u', [9])[0] == 0][:4]
+     KICH.update({'nguoi_tai': nguoi, 'trang_nen': z1, 'anh_tai': tong_tot, 'bia_tai': bia_tai, 'may_chu': may_chu, 'tran_nguoi_tai': TRAN_NGUOI_TAI})
+     if cu_n:
+-        print('  (không tính) %d tấm cũ chỉ tải khi mở ?anhmuotcu=1: %.2f MB' % (cu_n, cu_tot / 1048576))
++        print('  (không tính) %d tấm cũ chỉ tải khi bật cờ quay lui (?anhmuotcu=1, ?netcu=1, ?rowancu=1, ?vkpl=0…): %.2f MB' % (cu_n, cu_tot / 1048576))
++    if tr_tai_khong_tinh:
++        print('  (không tính) zed-moi — hình ninja cũ, chỉ tải khi ?zedbo=ninja (F4): %.2f MB' % (tr_tai_khong_tinh / 1048576))
++    if so_trang:
++        print('Chia trang ≤ %d (F4): %d tấm → %d trang (tấm nguyên vẫn trên máy chủ cho ?trangcu=1, không tính tải đầu)' % (TRANG_MAX, len(chia) + sum(1 for t in ds if t.get('to_trang')), so_trang))
++    KICH['chia_trang'] = {'tam': len(chia) + sum(1 for t in ds if t.get('to_trang')), 'trang': so_trang}
+     print('NGƯỜI CHƠI TẢI (thước đo chính): trang %.2f MB nén + ảnh %.2f MB + bìa %.2f MB = %.2f MB / trần %.0f MB%s; trình duyệt không có WebP: %.2f MB'
+           % (z1 / 1048576, tong_tot / 1048576, bia_tai / 1048576, nguoi / 1048576, TRAN_NGUOI_TAI / 1048576, '  ← VƯỢT TRẦN' if nguoi > TRAN_NGUOI_TAI else '',
+              (z1 + tong_png - cu_png + bia_jpg) / 1048576))  # 15/10 soát mượt: không tính tấm cũ (chỉ tải khi bật cờ)
