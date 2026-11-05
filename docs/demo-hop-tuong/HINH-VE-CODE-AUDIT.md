@@ -737,3 +737,17 @@ Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style
 - **P3-3 3 glyph** (đính kèm `h2_ngoc.png` + `ui_nangcap.png`): "3 small game UI glyphs in a row, same style as attached: purple mana crystal, green upgrade-arrow hex token, orange cooldown clock. Crisp, thick dark outline, readable at 14px. Solid #FF00FF background, no text."
 - **P3-4 3 overlay trạng thái** (đính kèm `h2_tam_mong.png` + `loi.png`): "3 separate thin industrial status overlays, same style as attached: orange rage edge glow strip (seamless, for a board frame), cyan shield ring around a round core, gold spawn flash burst for one square tile. Solid #FF00FF background, no text."
 - **P3-5 dải đầy cam** (đính kèm `loi_khuc_day.png`): "Same pill fill strip as attached but molten orange, bright core, solid #FF00FF background, no text. 256x32." (thay `hue-rotate` của thanh RAGE)
+
+## 12. Pass 3 — hướng dẫn lần đầu, bộ khởi đầu, màn kết quả (P0-01 · P1-01 · P1-02 · P0-07, 2026-11-05)
+
+Đã làm (`thap/js/huongdan.js`, `thap/js/bobai.js`, `thap/js/ketqua.js`, `thap/css/huongdan.css`) — chỉ dùng ảnh có sẵn trong lúc chờ:
+- Bảng chỉ dẫn hướng dẫn: `khung_tt` (9 mảnh) · mũi tên chỉ đích: `h2_canh_bao` xoay 180° · nút GOT IT / SKIP: `nut_nho` · thanh gọn khi chơi tự do: `h2_tag`.
+- Bộ khởi đầu: thẻ `khung_tt`, đang dùng `khung_chon`; chip vai trò `h2_chip` / `h2_chip_tat`; ô tìm `h2_lcd`.
+- Màn kết quả: bảng `khung_bang`, 3 ô số `h2_lcd`, nút `nut_lon_thep/vang`.
+
+Prompt ChatGPT cần gen (nền #FF00FF đặc, không chữ, same style as attached — đính kèm `khung_tt.png` + `h2_lcd.png`):
+- **P3-HD1 tấm chỉ dẫn** (4 ô 1×4, 1536×1024): "4 small industrial tutorial callout plates, gunmetal with cyan pointer corner (top, bottom, left, right), empty center, separate pieces, same style as attached, solid #FF00FF background, no text."
+- **P3-HD2 mũi tên chỉ** (512×512): "Chunky glowing cyan-gold pointer arrow pointing down, metal sci-fi, thick dark outline, same style as attached, solid #FF00FF background, no text."
+- **P3-HD3 bảng tổng kết trận** (1536×1024): "Wide matte-gunmetal battle summary plaque with 3 empty inset metric wells and one highlight rail, same style as attached, solid #FF00FF background, no text."
+- **P3-HD4 huy hiệu bộ khởi đầu** (lưới 3×2, 1536×1024): "6 small sci-fi strategy emblem icons: crosshair, explosion, snowflake, mana crystal, chain links, shield; unified metal style, same style as attached, solid #FF00FF background, no text."
+- **P3-HD5 chip vai trò** (lưới 3×1, 1536×512): "3 engraved metal role-glyph chips: sword (attack), plus-cross (support), star-gear (special), same style as attached, solid #FF00FF background, no text."
