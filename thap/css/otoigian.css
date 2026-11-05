@@ -129,3 +129,6 @@ html body #wrap #the-mv.ot .cht-vong.cd { right: 7% !important; left: auto !impo
 html body #wrap #the-mv.ot .cht-vong.tac { left: 7% !important; right: auto !important; }
 /* lúc có vòng hồi chiêu ở góc trên-phải → ẩn vương miện (1 chip / góc) */
 html body #wrap #the-mv.ot:has(> .cht-vong.cd:not([hidden])) > img.ot-mien { display: none !important; }
+
+/* trang ụ › "đi cùng" (.up-the): ô ảnh 106×72 quá dẹt → phải phóng theo bề rộng, đầu chiếm 62–77 % (máy kiểm khung mặt ≤ 60 %). Ô vuông: cả đầu gọn trong ảnh. */
+html body .up-the img { height: auto !important; aspect-ratio: 1 / 1; }
