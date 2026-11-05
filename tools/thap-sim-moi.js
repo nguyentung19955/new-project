@@ -5,7 +5,7 @@
 'use strict';
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const goc = path.join(__dirname, '..', 'thap');
-const FILES = ['meta', 'text', 'data', 'fx', 'tiervfx', 'game', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4'];
+const FILES = ['meta', 'text', 'data', 'fx', 'tiervfx', 'game', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4', 'skills5', 'growfx'];
 function taoMoiTruong() {
   const noop = () => {};
   const ctx = { console, Math, JSON, Set, Map, Promise, Object, Array, setTimeout: (f) => { ctx._cho.push(f); }, _cho: [], performance: { now: () => 0 } };
@@ -57,7 +57,7 @@ function song(ctx, che, deck, maxT) {
   buoc(ctx, maxT, true);
   return R(ctx, '({ wave: G.wave, thang: G.ketThuc ? G.ketThuc.thang : null })');
 }
-const MOI = ['nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian', 'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette'];
+const MOI = ['nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian', 'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette', 'chuato', 'leviathan', 'khoisinh', 'ronglua'];
 const SO = { ht: ['radar', 'khuech'], tim: ['cuongno', 'bao', 'no5', 'lienket', 'baotuyet'], vang: ['aten', 'dongbo', 'railgun', 'orbital', 'soi', 'ngoisao'], do: ['overlord', 'blackhole', 'lophanung', 'haoquang'] };
 if (require.main === module) {
   const che = process.argv[2] || 'dps';
