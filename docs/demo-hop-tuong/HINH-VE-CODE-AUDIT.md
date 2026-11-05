@@ -686,3 +686,32 @@ Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, same style
 Single game UI icon: a white cartoon hand with index finger pointing down-left (tap / drag gesture), thick dark outline, soft shading, same style as attached. Centered, no text. Flat solid magenta #FF00FF background.
 ```
 (Đính kèm `thap/assets/ui_nut_trieu.png` làm mẫu phong cách.)
+
+## 9. HUD v2 — làm theo TU-VAN-HUD.txt (backlog 15 mục) + S10/S11 (2026-11-05)
+
+Cắt: `python3 tools/thap-cat-hud2.py` (khoá magenta + khối liền theo hộp toạ độ, xén alpha, thu về cỡ dùng ×2; hình tròn kéo lại cho vuông rồi `tron()` — mọi vòng tròn lệch ≤1 px). Tờ tổng hợp: `docs/demo-hop-tuong/tuvan/hudv2/cut_contact.png`.
+Code: `thap/js/hud2.js` + `thap/css/hud2.css` (nạp sau cùng, chỉ bọc hàm có sẵn; bật bằng `html.co-hud2` / `html.co-s10` khi ảnh tải xong → thiếu ảnh giữ HUD cũ), `render.js` (nhãn kỹ năng dùng `nhan_kn`).
+Ảnh chụp trước/sau 360×780 · 390×844 · 430×860 (JPG): `docs/demo-hop-tuong/tuvan/hudv2/truoc/`, `.../sau/` (`tools/thap-kt-hud2.js`). Không lỗi trang; fps 54–60.
+
+| Mục | Ảnh | Đã làm |
+|---|---|---|
+| 01 Summon | `h2_trieu_cho/san/an/tat` | nút nhấn tròn ở giữa ray (98×88, nhô lên trên ray), chữ SUMMON + giá + ngọc NẰM TRÊN nắp; chờ / 1 nhịp sáng viền khi vừa đủ (false→true, 420 ms, không lặp) / nhấn (giữ ≥110 ms, chữ lún theo nắp) / tắt (thiếu mana hoặc bàn đầy); chạm khi thiếu → lắc 100 ms + giá đỏ |
+| 02 khung chung | — | **BỎ QUA** theo quyết định điều phối: giữ 5 khung độ hiếm + khung chỉ huy |
+| 03 dữ liệu thẻ | `h2_tag`, `h2_ic_chong`, `h2_chip`, `h2_chip_tat` | LV (trái) + số trên bàn có icon chồng (phải) trong ô cửa sổ khung; ô giá có hốc ngọc; thiếu mana = ô giá xám (hình khác, không chỉ màu); MAX |
+| 04 thanh trên | `h2_rail`, `loi_khuc_day`, `h2_ic_tim`, `seg_sang`, `seg_trum` | 1 ray 3 khoang: WAVE n · BOSS IN n (hổ phách ≤3 wave, đỏ khi trùm) · icon sự sống + 3 đèn (sáng = còn, sọ đỏ = mất; PVP 2 hàng Rival/You); rãnh dưới = tiến độ tới trùm (cắt ảnh theo %), khi trùm chạy = máu trùm |
+| 05 mana | `h2_lcd`, `h2_ngoc` | màn LCD, số trắng ngà; **1 ngọc mana duy nhất** dùng ở mana, Summon, giá thẻ, giá chỉ huy |
+| 06 chỉ huy | `h2_mv_huy`, `h2_vong_*` (đã cắt) | giữ khung chỉ huy (quyết định điều phối); chỉ đổi ô giá + ngọc. Huy chương/vòng nạp cắt sẵn, chưa dùng |
+| 07 sao trên bàn | `h2_sao`, `h2_sao_sang` | khiên thép + SỐ to (chữ canvas); 7★ dùng bản viền sáng |
+| 08 đồng đội | `h2_khay_doi`, `h2_den_doi` | giá mảnh 5 hốc vuông + hốc tròn chỉ huy, đèn trạng thái; đặt ngay dưới ray (không chồng); chạm vẫn mở bảng thông tin |
+| 09 vai trò | `h2_vai_tc/ht/db` (+ `phu`, `kc` chưa dùng) | icon vai trò ở góc dưới-phải ô cửa sổ thẻ (thay icon ụ nhỏ), mờ hơn LV/giá. Game chỉ có 3 vai (Attack/Support/Special) |
+| 10 phím | `h2_phim_toc_*`, `h2_phim_dung_*` | 2 phím cùng bộ 56×52; tốc độ >1× = phím sáng + nhãn 1×/2×/3× trên tấm mỏng dưới phím |
+| 11 lõi | `h2_loi_0/1/2`, `h2_loi_chop` | lõi nguyên / mẻ / nguy theo số tim (bỏ vết nứt vẽ code), chớp đỏ = ảnh viền đỏ |
+| 12 phản hồi | `h2_glint`, `h2_burst` | góc sáng xanh 1 lần khi thẻ vừa đủ mana (false→true), tia vàng + LV nảy 150 ms khi nâng cấp; bỏ quầng xanh quanh khung |
+| 13 VFX | `h2_vfx_cong` (6 khung), `h2_vfx_ghep` (2 khung) | cổng triệu hồi tại đúng ô (340 ms), chớp ghép tại ô đích lúc lộ kết quả (240 ms); tối đa 6 cùng lúc, không chạy khi ẩn tab, reduced-motion |
+| 14 tấm chữ | `h2_tam_mong` (+ `h2_tam`, `h2_tam_xanh`, `h2_tam_do` đã cắt) | nhãn tốc độ; các tấm còn lại chưa cần (băng wave/trùm, nhãn bàn đã là ảnh) |
+| 15 viền | `h2_thanh` (+ `h2_dam`, `h2_bulong` đã cắt) | ray thép dưới hàng thẻ thay vạch CSS |
+| S10 | `nut_lon_vang/thep/xanh`, `nut_nho`, `khung_chon`, `khung_tt`, `nhan_kn`, `nut_cong`, `ic_thua` | Q12 bảng thông tin · Q13 nhãn kỹ năng trên bàn · Q14 Start/Resume/Play again/Random/Quit/Change deck · Q15 Add to deck · Q16 Music/SFX/Sort/Back · Q17 chế độ đang chọn · Q18 nút + · Q19 khiên vỡ THUA |
+| S11 | `loi_thanh_khung`, `loi_khuc_day/rong`, `seg_*`, `ic_phat`, `ic_lui` | Q20 thanh 3 khúc trên lõi · Q21 ô "Boss in" → rãnh ray + đèn tim · Q22 nút phát xem trước · ‹ › / Back |
+
+Còn vẽ bằng code (giữ) và lý do: chữ/số (LV, giá, mana, wave, tên trùm — đổi ngôn ngữ, sắc nét); nút dừng xem trước khi đang phát dùng phím vuông (không có bản tròn); dấu ✓ thẻ đã chọn ở menu (chưa có ảnh "đã chọn"); nhịp nhấp nháy thanh lõi khi còn 1 tim (độ mờ ảnh); viền/ô của 4 ô số trong bảng thông tin (K13, bảng dữ liệu); quầng sáng lõi (gradient có sẵn của render.js); hình dự phòng khi ảnh chưa tải (chỉ `?debug`). Bỏ qua: #02 (quyết định điều phối), hàng 1 tấm 13 (viền nén nút hình chữ nhật — không khớp nút tròn), lớp phủ "không khả dụng" tấm 12 (ô giá xám đã đủ).
+Lỗi có sẵn (không thuộc phiên này): PVP đôi khi xin `assets/ic_cdmg.png` (404).
