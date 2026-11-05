@@ -130,10 +130,7 @@
 #up.up7 .up-nut-chu { line-height: 1; }
 #up.up7 .up-nut-so { font-size: var(--t-nho); line-height: 1.15; }
 #up.up7.vao { animation-duration: var(--tg-man); }
-/* chỉ huy: huy hiệu lớn hơn (khác hẳn trang ụ) — đặt ở thân dưới-phải, không lên mặt */
-#up.up7.la-mv .up-mam { width: 196px; height: 196px; right: 4px; bottom: -8px; }
-#up.up7.la-mv .up-vong.cmd { width: 188px; height: 196px; margin: -98px 0 0 -94px; }
-#up.up7.la-mv .up-mvic { width: 104px; height: 104px; margin: -56px 0 0 -52px; }
+/* chỉ huy: huy hiệu tròn trên ảnh đã bỏ theo yêu cầu người dùng (commit fe857f0) — chỉ huy khác trang ụ bằng 3 ô kỹ năng + vai trò */
 
 /* ============ B16 SẢNH CO-OP ============ */
 #onl-sanh .s7-dau b { font-size: 17px; }

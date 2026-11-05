@@ -69,7 +69,7 @@ const DO = () => {
         try { await f(p); } catch (e) { errs.push(W + ' ' + ten + ' :: ' + e.message); }
         await sleep(/b18/.test(ten) ? 1700 : 600);
         ghi(W, ten, await p.evaluate(DO));
-        if (OUT) await p.screenshot({ path: `${OUT}${W}_${ten}.jpg`, type: 'jpeg', quality: 80 });
+        if (OUT) await p.screenshot({ path: `${OUT}${W}_${ten}.jpg`, type: 'jpeg', quality: +(process.env.Q || 80) });
       }
       await p.close();
     }
@@ -86,7 +86,7 @@ const DO = () => {
       return { c, p };
     };
     const A = await mo(DECK.split(',')), B = await mo(['drone', 'bao', 'kiembang', 'hydra', 'anhsang']);
-    const chup = async (ten) => { await sleep(400); ghi(W, ten, await A.p.evaluate(DO)); if (OUT) await A.p.screenshot({ path: `${OUT}${W}_${ten}.jpg`, type: 'jpeg', quality: 80 }); };
+    const chup = async (ten) => { await sleep(400); ghi(W, ten, await A.p.evaluate(DO)); if (OUT) await A.p.screenshot({ path: `${OUT}${W}_${ten}.jpg`, type: 'jpeg', quality: +(process.env.Q || 80) }); };
     try {
       await A.p.evaluate(() => ONL.moBang()); await chup('b16_online');
       await A.p.click('[data-act="onl-tao"]');
