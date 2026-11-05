@@ -1,0 +1,7 @@
+/* TURRET MERGE — Pass 9 khung thẻ: the_khung_<bậc>.png cắt lại (tools/thap-cat-khung-p9.py) với lề đối xứng 18/16 (đơn vị ô 132×160)
+   để sừng/lửa (đỏ), vương miện/cánh (chỉ huy), cánh (vàng), ngọc (tím) KHÔNG bị cắt cụt ở mép ảnh.
+   Ô <img> giữ nguyên chỗ cũ ở mọi nơi (bộ bài, thẻ chọn, khay trận, thẻ chỉ huy, vào trận, online, kéo thả);
+   phóng ảnh quanh tâm ô đúng (132+36)/132 × (160+32)/160 → cửa sổ chân dung trùng chỗ cũ, hoạ tiết tràn ra ngoài ô. */
+img[src*="the_khung_"] { scale: 1.2727 1.2; overflow: visible; }
+/* game.css ".the, .c { overflow: hidden }" cắt hoạ tiết tràn ra (khay trận, thẻ bộ sưu tập) → cho tràn khi đã có khung ảnh */
+.co-khung .the.co-kh, .co-khung .c.co-kh { overflow: visible; }

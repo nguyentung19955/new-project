@@ -77,7 +77,8 @@ const KHUNG = {
     im.onload = () => { this.bat[lop] = true; document.documentElement.classList.add(lop); if (cb) cb(); };
     im.src = 'assets/' + src + '.png';
   },
-  url(bac) { return 'assets/the_khung_' + bac + '.png'; },
+  // ?v=băm (js/ver-anh.js lúc xuất bản): khung Pass 9 đổi cỡ ảnh (lề hoạ tiết) → điện thoại không được dùng ảnh cũ trong bộ đệm
+  url(bac) { const t = 'the_khung_' + bac, v = (typeof ANH_V !== 'undefined' && ANH_V[t]) ? '?v=' + ANH_V[t] : ''; return 'assets/' + t + '.png' + v; },
   // thêm khung vào 1 thẻ (DOM): chỉ ảnh khung — KHÔNG thêm vạch màu khoá/độ hiếm bên trong (khung ảnh đã đủ; màu khoá chỉ còn ở huy hiệu glyph PNG)
   gan(el, bac) {
     if (!el || el.querySelector(':scope > .kh')) return;
