@@ -36,6 +36,7 @@ module.exports = function doTrang(opt) {
     const s = getComputedStyle(e);
     if (cuonDuoc(s, 'X')) continue; // khung cuộn ngang có chủ đích
     if (e.tagName === 'INPUT' || e.tagName === 'TEXTAREA') continue;
+    if (e.closest('#cutin.ra')) continue; // dải cut-in chỉ huy đang TRƯỢT RA (0,3 s): chữ trôi khỏi khung là hoạt ảnh thoát có chủ đích
     const elip = s.textOverflow === 'ellipsis' && s.overflowX !== 'visible' && !/flex|grid/.test(s.display); // flex/grid: trình duyệt KHÔNG vẽ dấu … → chữ bị cụt
     const tranW = e.scrollWidth - e.clientWidth;
     if (!elip && tranW > 1 && e.clientWidth > 0) { out.chu.push(ten(e) + ' "' + t.slice(0, 24) + '" tràn ngang ' + tranW + 'px'); daBao.add(e); continue; }
