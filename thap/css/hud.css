@@ -142,3 +142,15 @@
 @media (prefers-reduced-motion: reduce) {
   #nut-trieu .tr-cap, #nut-trieu .tr-led, .nut-nho, .nut { transition: none; }
 }
+
+/* Ô CHỈ HUY to hơn ô ụ (~1.45× rộng, 1.2× cao): hộp đạn "đặc biệt" nhô lên trên ray. 5 ụ hẹp lại 2px để vừa 430 khung. */
+#bo-the { gap: 3px; }
+#bo-the .the { width: 62px; }
+#bo-the .the .anh.pilot { width: 58px; }
+#the-mv { right: 6px; top: 72px; width: 90px; height: 110px; padding-top: 6px; }
+#the-mv .mv-ic { width: 82px; height: 60px; }
+#the-mv .mv-anh .ki { width: 21px; height: 21px; }
+#the-mv .mv-ten, #the-mv .mv-ten[style] { width: 84px; height: 23px !important; line-height: 1.05; }
+#the-mv .mv-gia { height: 22px; font-size: 14px; }
+#the-mv .mv-gia img { width: 15px; height: 15px; }
+#the-mv:active { transform: translateY(2px); }
