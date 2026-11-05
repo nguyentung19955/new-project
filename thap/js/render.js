@@ -915,6 +915,7 @@ const REN = {
     if (km) ND.veVong(x, SB / 2 + 2.2, km, da); // vòng màu khoá 3 px, tròn tuyệt đối, ôm sát bệ (dưới đầu súng)
     // ngọc độ hiếm: hình thoi nhỏ ở mép dưới-trái bệ (ưu tiên thấp nhất)
     const gx = -SB * 0.4, gy = SB * 0.4, gr = Math.max(3, S * 0.055);
+    if (this.anNgoc) return this.cSet(key, c); // P0-04: độ hiếm chỉ ở khung thẻ (js/hudtop.js)
     const ngoc = this.img('ngoc_' + T.bac); // viên ngọc ChatGPT (S2); hoá đá → bản xám
     if (ngoc) { const g = da ? (this.banXam('ngoc_' + T.bac) || ngoc) : ngoc, w = gr * 3; x.drawImage(this.mip(g, w * q), gx - w / 2, gy - w / 2, w, w); return this.cSet(key, c); }
     if (!this.dbg) return this.cSet(key, c); // ngọc chưa tải: bỏ trống (không vẽ hình thoi code)

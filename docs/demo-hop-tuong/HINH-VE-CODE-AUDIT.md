@@ -751,3 +751,15 @@ Prompt ChatGPT cần gen (nền #FF00FF đặc, không chữ, same style as atta
 - **P3-HD3 bảng tổng kết trận** (1536×1024): "Wide matte-gunmetal battle summary plaque with 3 empty inset metric wells and one highlight rail, same style as attached, solid #FF00FF background, no text."
 - **P3-HD4 huy hiệu bộ khởi đầu** (lưới 3×2, 1536×1024): "6 small sci-fi strategy emblem icons: crosshair, explosion, snowflake, mana crystal, chain links, shield; unified metal style, same style as attached, solid #FF00FF background, no text."
 - **P3-HD5 chip vai trò** (lưới 3×1, 1536×512): "3 engraved metal role-glyph chips: sword (attack), plus-cross (support), star-gear (special), same style as attached, solid #FF00FF background, no text."
+
+## 13. Pass 3 — thanh trên dễ đọc (P0-05) + huy hiệu sao/LV/độ hiếm/vai trò (P0-04) (2026-11-05)
+
+Code: `thap/js/hudtop.js` + `thap/css/hudtop.css` (nạp sau cùng), `hud2.js` (khiên sao to 1.35d, số 0.86d, ô vẽ 1.7d), `render.js` (`REN.anNgoc`: bỏ ngọc độ hiếm trên bệ). Kiểm: `tools/thap-kt-hudtop.js` · ảnh `docs/demo-hop-tuong/tuvan/hudtop/` (360/390/430 × SOLO/CO-OP/PVP: băng wave 0,25 s · sau 0,75 s · trùm đập · còn 1 tim).
+- Thanh trên: `WAVE N` (chevron `h2_canh_bao`) | `BOSS IN N` (chân dung trùm, vaotran.js) | `♥ N/3` (`ht_tim` = `ui_tim` thu nhỏ 40 px). Ray `h2_rail` giãn 330 px bằng 2 nửa ảnh gốc, chỉ giãn dải phẳng 6 px cạnh tấm thông gió (không méo bu-lông). Cảnh báo trùm: chỉ khoang Boss đập 2,6 s. Băng WAVE / băng trùm: 0,7 s rồi trượt lên ray. CO-OP: tấm treo `h2_tam_xanh` "SHARED"; PVP: khoang = YOU, tấm treo `h2_tam_do` = RIVAL ♥ N/3.
+- Thẻ trong trận: vai trò trên-trái · LV trên-phải (chỉ trên thẻ) · nhận diện dưới-trái · số ụ trên bàn dưới-phải. Thẻ menu: icon vai trò trên-trái. Ụ trên bàn: chỉ sao số to (trên-phải, cố định, lùi vào ô) + nhận diện (trên-trái); độ hiếm = khung thẻ.
+
+Prompt ChatGPT cần gen (nền #FF00FF đặc, không chữ, same style as attached — đính kèm `h2_rail.png` + `h2_sao.png`):
+- **P3-HT1 ray HUD rộng** (1536×256 → cắt 1320×184): "Single compact brushed-gunmetal HUD rail, 3 empty label wells (middle well twice as wide), thin progress groove under the middle, caution-yellow edge accents, same style as attached, solid #FF00FF background, no text."
+- **P3-HT2 tấm treo tim** (1024×256 → cắt 2 tấm 140×34): "2 small hanging gunmetal sub-plates hooked under a rail, one with a cyan LED (ally), one with a red LED (rival), empty center, same style as attached, solid #FF00FF background, no text."
+- **P3-HT3 3 icon thanh trên** (1536×512, lưới 3×1 → cắt 40 px): "3 tiny bold HUD icons, thick dark outline, readable at 14px: wave (stacked yellow chevrons), boss (red horned skull), life (glossy red heart), same style as attached, solid #FF00FF background, no text."
+- **P3-HT4 7 tấm số sao** (1536×256, 1 hàng 7 ô → cắt 64 px): "7 uniform tiny industrial numbered-badge blank backplates, dark steel shield with one subtle gold-metal outline, 7th slightly brighter gold, empty centers for live numerals, same style as attached, solid #FF00FF background, no text."
