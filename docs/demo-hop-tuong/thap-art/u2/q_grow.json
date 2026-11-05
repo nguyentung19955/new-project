@@ -1,0 +1,92 @@
+[
+ {
+  "id": "overlord",
+  "name": "raw_grow_overlord.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/overlord.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Overlord). Same turret, same size, same base and MYTHIC crimson trims: 1) dormant: closed horns, dim scarlet eye, 2) charging: horns spread, glowing scarlet coils, 3) overcharged: horns blazing white-red, lightning arcs on the rim. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "hopbi",
+  "name": "raw_grow_hopbi.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/hopbi.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Mystery Box). Same turret, same size, same base and EPIC purple trims: 1) sealed crate, 2) unsealing: lid cracked, violet light leaking, 3) about to open: lid lifted, bright violet-gold glow inside. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "tienhoa",
+  "name": "raw_grow_tienhoa.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/tienhoa.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Evolver). Same turret, same size, same base and LEGENDARY gold trims: 1) incubating: closed leaf pod, 2) forging: pod half open, green sprout growing, 3) ascending: pod fully bloomed, bright golden-green core. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "lophanung",
+  "name": "raw_grow_lophanung.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/lophanung.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Cryo Reactor). Same turret, same size, same base and MYTHIC crimson trims: 1) idle core: dim icy center, 2) heating: rings spinning, brighter ice-blue glow, 3) cryo storm ready: rings wide open, white-cyan blazing core with frost spikes. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "soi",
+  "name": "raw_grow_soi.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/soi.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Mech Wolf). Same turret, same size, same base and LEGENDARY gold trims: 1) pup: small closed jaws, 2) hunter: bigger open jaws, jade eye glowing, 3) awakened: huge snarling jaws, crimson eye, extra blade fins. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "orbital",
+  "name": "raw_grow_orbital.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/orbital.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Orbital). Same turret, same size, same base and LEGENDARY gold trims: 1) standby: folded solar panels, 2) uplink: panels open, blue dish glowing, 3) bombardment: panels fully spread, bright targeting ring around. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "cuongno",
+  "name": "raw_grow_cuongno.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/cuongno.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Berserker). Same turret, same size, same base and EPIC purple trims: 1) calm: rotary still, dim eye, 2) rage: rotary spinning, crimson eye glowing, 3) frenzy: barrels red-hot, glowing vents, blazing eye. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "ngoisao",
+  "name": "raw_grow_ngoisao.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/ngoisao.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Star Cannon). Same turret, same size, same base and LEGENDARY gold trims: 1) spark: small star muzzle, 2) nova: bigger star muzzle with glowing points, 3) supernova: huge radiant white-gold star muzzle. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "lienket",
+  "name": "raw_grow_lienket.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/lienket.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Chain Link). Same turret, same size, same base and EPIC purple trims: 1) single loop, 2) linked: two interlocked glowing loops, 3) chain master: triple loops, bright violet energy. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "dongbo",
+  "name": "raw_grow_dongbo.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/dongbo.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Sync Cannon). Same turret, same size, same base and LEGENDARY gold trims: 1) offline: dim twin muzzles, 2) synced: muzzles glowing in unison, 3) full sync: muzzles joined by a bright gold-violet energy bridge. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "hydra",
+  "name": "raw_grow_hydra.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/hydra.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Hydra). Same turret, same size, same base and LEGENDARY gold trims: 1) one serpent head raised, 2) three serpent heads, jade eyes glowing, 3) awakened: heads fused into one huge crowned head, bright jade. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "cuuvi",
+  "name": "raw_grow_cuuvi.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/cuuvi.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Nine-Tail). Same turret, same size, same base and LEGENDARY gold trims: 1) three short foxfire tails, 2) six tails, brighter orange cores, 3) awakened: nine blazing blue-white foxfire tails. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "ngaithoigian",
+  "name": "raw_grow_ngaithoigian.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/ngaithoigian.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Chrono Throne). Same turret, same size, same base and MYTHIC crimson trims: 1) dial at rest, 2) dial hands spinning, gold glow, 3) awakened: throne crowned with a glowing time halo. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "luoicheo",
+  "name": "raw_grow_luoicheo.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/luoicheo.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Resonance Grid). Same turret, same size, same base and LEGENDARY gold trims: 1) dim lattice, 2) lattice glowing turquoise, 3) full resonance: bright white-turquoise lattice with pulse nodes. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ },
+ {
+  "id": "ronglua",
+  "name": "raw_grow_ronglua.png",
+  "ref": "https://raw.githubusercontent.com/nguyentung19955/new-project/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art/tuvan/grow_ref/ronglua.png",
+  "prompt": "Make an image. 3x1 sheet of grow-up stages for the attached turret head (Wyrm Engine). Same turret, same size, same base and MYTHIC crimson trims: 1) closed dragon jaws, dim throat, 2) jaws open, orange magma glow, 3) awakened: roaring jaws, white-hot magma throat, horn crest. Top-down chunky sci-fi metal, dark outlines, right-facing output. Solid #FF00FF background, wide gaps, no text, pilots, shadows or VFX."
+ }
+]
