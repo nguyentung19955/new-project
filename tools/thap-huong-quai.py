@@ -2,7 +2,7 @@
 """Pass 5 — HƯỚNG NHÌN quái/trùm: cắt raw ChatGPT (1 hàng 8 khung, nền #FF00FF) thành dải 8 khung NGANG / SAU
 khớp với dải TRƯỚC đã có (thap/assets/<loai>_<id>_8.png): cùng cỡ khung, cùng tâm thân, cùng cỡ thân → đổi hướng không nhảy, bóng dưới chân giữ chỗ.
 
-  python3 tools/thap-huong-quai.py            # xử lý mọi docs/demo-hop-tuong/thap-art/raw_p5_<id>_<side|back>.png
+  python3 tools/thap-huong-quai.py            # xử lý mọi docs/demo-hop-tuong/thap-art/raw_p5_<id>_<side|back>.png + raw_p12_<id>_<side|back|left>.png (đợt 12: tinh anh/trùm)
   python3 tools/thap-huong-quai.py --ra DIR   # thử: ghi ra DIR, không đụng assets / quaianim.js
 
 Ra: thap/assets/<quai|trum>_<id>_<side|back>_8.png + cập nhật dòng `const HUONG8 = new Set([...])` trong thap/js/quaianim.js.
@@ -18,7 +18,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ART = os.path.join(ROOT, 'docs/demo-hop-tuong/thap-art')
 ASSETS = os.path.join(ROOT, 'thap/assets')
 QA = os.path.join(ROOT, 'thap/js/quaianim.js')
-TRUM = {'freezer', 'janus', 'joker_king', 'mad_crown', 'nightmare', 'octopus'}
+TRUM = {'freezer', 'janus', 'joker_king', 'mad_crown', 'nightmare', 'octopus', 'hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech'}
+# raw NGANG mà ChatGPT vẽ quay sang TRÁI (prompt xin PHẢI) → lật khi cắt; ghi tên file raw (kiểm bằng mắt khi ảnh về)
+LAT_RAW = set()
 
 
 def nap(ten, path):
@@ -71,6 +73,7 @@ def thu(im, s):
 def lam(raw, truoc, n=8):
     tx, ty, ar0, H = do_than(truoc)
     src = Image.open(raw).convert('RGB')
+    if os.path.basename(raw) in LAT_RAW: src = src.transpose(Image.FLIP_LEFT_RIGHT)
     sheet = khoa_magenta(src)
     W, Hs = sheet.size
     xs = cs.cut_lines(sheet, n, W, axis=0)
@@ -103,9 +106,9 @@ def lam(raw, truoc, n=8):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--ra'); ap.add_argument('raws', nargs='*')
     a = ap.parse_args()
-    raws = a.raws or sorted(glob.glob(os.path.join(ART, 'raw_p5_*_side.png')) + glob.glob(os.path.join(ART, 'raw_p5_*_back.png')))
+    raws = a.raws or sorted(f for p in ('p5', 'p12') for v in ('side', 'back', 'left') for f in glob.glob(os.path.join(ART, 'raw_%s_*_%s.png' % (p, v))))
     for r in raws:
-        m = re.match(r'raw_p5_(.+)_(side|back)\.png$', os.path.basename(r))
+        m = re.match(r'raw_p(?:5|12)_(.+)_(side|back|left)\.png$', os.path.basename(r))
         if not m: continue
         id_, v = m.groups(); loai = 'trum_' if id_ in TRUM else 'quai_'
         truoc = os.path.join(ASSETS, loai + id_ + '_8.png')
@@ -115,7 +118,7 @@ def main():
         out.save(dich, optimize=True)
         print('%s → %s  (thu ×%.3f, %dx%d)' % (os.path.basename(r), os.path.relpath(dich, ROOT), s, *out.size))
     if a.ra: return
-    co = sorted(os.path.basename(f)[:-6] for f in glob.glob(os.path.join(ASSETS, '*_side_8.png')) + glob.glob(os.path.join(ASSETS, '*_back_8.png')))
+    co = sorted(os.path.basename(f)[:-6] for v in ('side', 'back', 'left') for f in glob.glob(os.path.join(ASSETS, '*_%s_8.png' % v)))
     js = open(QA, encoding='utf-8').read()
     js2 = re.sub(r"const HUONG8 = new Set\(\[[^\]]*\]\);", 'const HUONG8 = new Set([%s]);' % ', '.join("'%s'" % k for k in co), js, count=1)
     if js2 != js: open(QA, 'w', encoding='utf-8').write(js2)

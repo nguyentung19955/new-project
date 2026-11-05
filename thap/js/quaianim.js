@@ -30,7 +30,16 @@ Object.assign(REN, {
     return goc;
   },
   // ảnh hướng nhìn cần nạp trước (ui.js chuẩn bị trận)
-  dsHuong() { const ds = []; for (const k of HUONG8) ds.push(k + '_8'); return ds; },
+  dsHuong() {
+    const ds = []; for (const k of HUONG8) ds.push(k + '_8');
+    if (typeof TRUM_ATK !== 'undefined') for (const id of TRUM_ATK) ds.push('trum_' + id + '_atk_16'); // dải đánh của trùm mới
+    return ds;
+  },
+  // dải ĐÁNH của trùm (thân tung chiêu, nhìn về BÀN ụ) — chỉ phát trong lúc báo chiêu; chưa có → null
+  tenDanh(E) {
+    if (!E.trum || typeof TRUM_ATK === 'undefined' || !TRUM_ATK.has(E.trum)) return null;
+    const g = 'trum_' + E.trum + '_atk_16'; return this.img(g) ? g : null;
+  },
   // chọn hướng nhìn từ hướng đi trên đoạn đường: 'f' trước (xuống) · 's' ngang (lat ±1) · 'b' sau (lên)
   // trễ (hysteresis): chỉ đổi khi một trục trội rõ (×1.25) và đã giữ hướng cũ ≥ 150 ms → không chớp ở góc
   huongQuai(E, t) {
@@ -47,6 +56,11 @@ Object.assign(REN, {
   tenHuong(ten, v) {
     if (v === 'f' || !HUONG8.size || !ten.endsWith('_8')) return null;
     const g = ten.slice(0, -2) + (v === 's' ? '_side' : '_back');
+    return HUONG8.has(g) && this.img(g + '_8') ? g + '_8' : null;
+  },
+  // dải NGANG quay TRÁI thật (ChatGPT vẽ riêng, cho quái/trùm không đối xứng) — có thì dùng thay vì lật dải phải
+  tenTrai(ten) {
+    if (!ten.endsWith('_8')) return null; const g = ten.slice(0, -2) + '_left';
     return HUONG8.has(g) && this.img(g + '_8') ? g + '_8' : null;
   },
   // vẽ thân 1 hướng nhìn tại gốc toạ độ hiện tại: cánh mờ (quái bay), khung + hoà khung kế, chớp trắng; al = độ mờ chung
@@ -189,16 +203,26 @@ Object.assign(REN, {
         const C = co * sc * kc, fl = he * he * (E.trum ? 0.4 : 0.7); // chớp trắng ngắn — trùm bị bắn liên tục không trắng xoá
         const bao4 = E.bao && E._daiBao && n !== 4; // trùm tung chiêu: khung 3 dải 4 khung cũ (nhìn ra màn hình), cỡ gốc
         const rot = clamp(gv + lac, -HUONG_NGHIENG, HUONG_NGHIENG);
-        const lop = (v, l, al) => { // 1 lớp hướng nhìn v (lật ngang khi đi sang trái)
-          const tS = this.tenHuong(ten, v), d = tS ? this.coDai(tS, co * kc) : dai; if (!d) return;
-          ctx.setTransform(M); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(tS && v === 's' && l < 0 ? -sx : sx, sy);
+        // trùm có dải ĐÁNH riêng: trong lúc báo chiêu quay về BÀN ụ (nhìn ra màn hình) và phát dải đánh theo tiến độ chiêu
+        const tD = E.bao ? this.tenDanh(E) : null, dD = tD && this.coDai(tD, co * kc);
+        const lop = (v, l, al) => { // 1 lớp hướng nhìn v (đi sang trái: dải trái thật nếu có, không thì lật dải phải)
+          if (dD) {
+            const fD = Math.min(dD.nf - 1, Math.floor(clamp(E.bao.t / (E.bao.song || 1.4), 0, 1) * dD.nf));
+            ctx.setTransform(M); ctx.translate(x, y); ctx.scale(sx, sy);
+            this.veThan(ctx, dD, { ten: tD, px: co * kc }, fD, -1, 0, C, bay, dong, fl, al, true);
+            E._tHv = tD; E._lat = 1; return;
+          }
+          const tL = v === 's' && l < 0 ? this.tenTrai(ten) : null;
+          const tS = tL || this.tenHuong(ten, v), d = tS ? this.coDai(tS, co * kc) : dai; if (!d) return;
+          const lat = tS && !tL && v === 's' && l < 0 ? -1 : 1;
+          ctx.setTransform(M); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(lat * sx, sy);
           if (bao4) this.veThan(ctx, E._daiBao, null, 3, -1, 0, C / kc, bay, dong, 0, al, false);
           else this.veThan(ctx, d, { ten: tS || ten, px: co * kc }, f0, f1, fr, C, bay, dong, fl, al, true);
-          E._tHv = tS || ten; E._lat = tS && v === 's' && l < 0 ? -1 : 1;
+          E._tHv = tS || ten; E._lat = lat;
         };
         const u = (t - E._hvT) / HUONG_HOA;
         lop(E._hv, E._hl, 1);
-        if (u < 1 && E._hvCu && !bao4) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
+        if (u < 1 && E._hvCu && !bao4 && !dD) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
         E._gv = rot;
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }

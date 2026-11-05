@@ -13,6 +13,11 @@ GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ART = os.path.join(GOC, 'docs/demo-hop-tuong/thap-art')
 ASS = os.path.join(GOC, 'thap/assets')
 O = 272  # ô khung dải đi (như trum_<cũ>_8.png)
+# dải NGANG ChatGPT vẽ quay sang TRÁI (thay vì phải) → lật lại khi cắt (thân đối xứng đủ để lật)
+LAT_SIDE = {'hive'}
+# tấm fx ChatGPT vẽ CẢ THÂN trùm đang tung chiêu (nhìn về bàn) → cắt thành dải ĐÁNH trum_<id>_atk_16.png
+# cùng tâm/cỡ thân với dải đi (quaianim.js phát dải này trong lúc báo chiêu); không dùng làm hiệu ứng rời fx_trum_<id>
+THAN_FX = {'hive'}
 
 
 def khoa(im):
@@ -53,9 +58,10 @@ def dai(ds, o):
 
 def lam(id):
     p = lambda k: os.path.join(ART, 'raw_p6_%s_%s.png' % (id, k))
-    huong = [k for k in ('front', 'side', 'back') if os.path.exists(p(k))]
+    huong = [k for k in ('front', 'side', 'back', 'left') if os.path.exists(p(k))]
     if huong:
         ds = {k: [khoa(f) for f in o_luoi(Image.open(p(k)), 8, 1)] for k in huong}
+        if 'side' in ds and id in LAT_SIDE: ds['side'] = [f.transpose(Image.FLIP_LEFT_RIGHT) for f in ds['side']]
         tat = vuong(sum((ds[k] for k in huong), []), O)  # cùng khung bao cho mọi hướng
         tam = os.path.join(ASS, '_p6_tam_%s.png' % id)
         dai(tat, O).save(tam)
@@ -67,7 +73,9 @@ def lam(id):
         os.remove(tam)
         b = os.path.join(ART, 'goc_truoc_dangky', os.path.basename(tam))
         if os.path.exists(b): os.remove(b)  # bản tạm, raw gốc đã giữ ở thap-art
-    if os.path.exists(p('fx')):
+    if os.path.exists(p('fx')) and id in THAN_FX:
+        danh(id, khoa(Image.open(p('fx'))))
+    elif os.path.exists(p('fx')):
         f = vuong([khoa(x) for x in o_luoi(Image.open(p('fx')), 4, 4)], 192)
         dai(f, 192).save(os.path.join(ASS, 'fx_trum_%s.png' % id), optimize=True); print('→ fx_trum_%s.png' % id)
     if os.path.exists(p('portrait')):
@@ -77,6 +85,31 @@ def lam(id):
         im.save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True); print('→ trum_%s_portrait.png' % id)
 
 
+def danh(id, sheet):
+    """dải ĐÁNH 16 khung (lưới 4×4) khớp thân dải đi trước: tâm lõi thân + diện tích lõi = trung vị dải trước."""
+    from scipy import ndimage  # noqa
+    spec = importlib.util.spec_from_file_location('dk', os.path.join(ART, 'dangky_khung.py'))
+    dk = importlib.util.module_from_spec(spec); spec.loader.exec_module(dk)
+    truoc = Image.open(os.path.join(ASS, 'trum_%s_8.png' % id)).convert('RGBA'); H = truoc.height
+    am = max(2, H // 24); tx, ty, ar0 = [], [], []
+    for i in range(round(truoc.width / H)):
+        inf = dk.loi_than(np.asarray(truoc.crop((i * H, 0, (i + 1) * H, H)), dtype=np.float32)[..., 3] / 255.0, am)
+        if inf: tx.append(inf[0]); ty.append(inf[1]); ar0.append(inf[2])
+    tx, ty, ar0 = float(np.mean(tx)), float(np.mean(ty)), float(np.median(ar0))
+    cells = o_luoi(sheet, 4, 4)
+    am2 = max(2, cells[0].height // 24)
+    inf = [dk.loi_than(np.asarray(c, dtype=np.float32)[..., 3] / 255.0, am2) for c in cells]
+    s = float(np.sqrt(ar0 / np.median([x[2] for x in inf if x])))
+    out = Image.new('RGBA', (16 * H, H), (0, 0, 0, 0))
+    for i, (c, f) in enumerate(zip(cells, inf)):
+        c2 = c.convert('RGBa').resize((round(c.width * s), round(c.height * s)), Image.LANCZOS).convert('RGBA')
+        cx, cy = (f[0] * s, f[1] * s) if f else (c2.width / 2, c2.height / 2)
+        k = Image.new('RGBA', (H, H), (0, 0, 0, 0))
+        k.paste(c2, (round(tx - cx), round(ty - cy)), c2)  # mép tràn khỏi ô thì bị cắt (drone bay xa)
+        out.paste(k, (i * H, 0))
+    out.save(os.path.join(ASS, 'trum_%s_atk_16.png' % id), optimize=True); print('→ trum_%s_atk_16.png (×%.3f)' % (id, s))
+
+
 def ghi_js():
     """cập nhật 4 tập ảnh trong thap/js/trum.js theo file thật trong assets/."""
     import re
@@ -84,8 +117,9 @@ def ghi_js():
     ids = re.findall(r"^  (\w+): +\{ ten:", s[s.index('const TRUM_MOI'):s.index('};')], re.M)
     co = lambda f: os.path.exists(os.path.join(ASS, f))
     tap = {'TRUM_ANH': [i for i in ids if co('trum_%s_8.png' % i)],
-           'TRUM_HUONG': [i + '_' + k for i in ids for k in ('side', 'back') if co('trum_%s_%s_8.png' % (i, k))],
-           'TRUM_FX': [i for i in ids if co('fx_trum_%s.png' % i)],
+           'TRUM_HUONG': [i + '_' + k for i in ids for k in ('side', 'back', 'left') if co('trum_%s_%s_8.png' % (i, k))],
+           'TRUM_FX': [i for i in ids if co('fx_trum_%s.png' % i) and i not in THAN_FX],
+           'TRUM_ATK': [i for i in ids if co('trum_%s_atk_16.png' % i)],
            'TRUM_CHANDUNG': [i for i in ids if co('trum_%s_portrait.png' % i)]}
     for k, v in tap.items():
         s = re.sub(r'const %s = new Set\(\[[^\]]*\]\);' % k, 'const %s = new Set([%s]);' % (k, ', '.join("'%s'" % x for x in v)), s)

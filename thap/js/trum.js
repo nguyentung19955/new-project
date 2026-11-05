@@ -16,10 +16,11 @@ const TRUM_MOI = {
   leech:     { ten: 'STAR LEECH',    kn: 'STAR THEFT',   mo: 'Steals 1★ from your top turret, then dashes. Kill it to get the stars back', nguy: 'Steals stars — kill it to get them back', mau: '#ffd84a', tuWave: 40, hp: 0.8, v: 16, anhTam: 'nightmare' },
 };
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
-// ↓ 4 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
-const TRUM_ANH = new Set([]); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
-const TRUM_HUONG = new Set([]); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
+// ↓ 5 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
+const TRUM_ANH = new Set(['hive', 'jammer']); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
+const TRUM_HUONG = new Set(['hive_side', 'hive_back']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
 const TRUM_FX = new Set([]); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
+const TRUM_ATK = new Set(['hive']); // trum_<id>_atk_16.png — dải ĐÁNH 16 khung (thân trùm tung chiêu, nhìn về bàn) — quaianim.js phát lúc báo chiêu
 const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }

@@ -1,0 +1,107 @@
+[
+ {
+  "name": "raw_p12_bay_back.png",
+  "ref": "thap/assets/quai_bay_8.png",
+  "prompt": "Make another image. Same orange striped wasp drone flying AWAY, back view, facing up. One row of 8 flap frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_bay_bang_side.png",
+  "ref": "thap/assets/quai_bay_bang_8.png",
+  "prompt": "Make another image. Same ice-crystal winged flyer flying to the RIGHT, side view. One row of 8 flap frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_bay_bang_back.png",
+  "ref": "thap/assets/quai_bay_bang_8.png",
+  "prompt": "Make another image. Same ice-crystal winged flyer flying AWAY, back view, facing up. One row of 8 flap frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_khong_lo_side.png",
+  "ref": "thap/assets/quai_khong_lo_8.png",
+  "prompt": "Make another image. Same big purple armoured giant beetle (elite) walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_khong_lo_back.png",
+  "ref": "thap/assets/quai_khong_lo_8.png",
+  "prompt": "Make another image. Same big purple armoured giant beetle (elite) walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_tach_side.png",
+  "ref": "thap/assets/quai_tach_8.png",
+  "prompt": "Make another image. Same red jelly blob splitter walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_tach_back.png",
+  "ref": "thap/assets/quai_tach_8.png",
+  "prompt": "Make another image. Same red jelly blob splitter walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_que_tach_side.png",
+  "ref": "thap/assets/quai_que_tach_8.png",
+  "prompt": "Make another image. Same purple armoured big splitter bug with a brass back tube (elite) walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_que_tach_back.png",
+  "ref": "thap/assets/quai_que_tach_8.png",
+  "prompt": "Make another image. Same purple armoured big splitter bug with a brass back tube (elite) walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_mad_crown_side.png",
+  "ref": "thap/assets/trum_mad_crown_8.png",
+  "prompt": "Make another image. Same jester boss Mad Crown walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_mad_crown_back.png",
+  "ref": "thap/assets/trum_mad_crown_8.png",
+  "prompt": "Make another image. Same jester boss Mad Crown walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_freezer_side.png",
+  "ref": "thap/assets/trum_freezer_8.png",
+  "prompt": "Make another image. Same ice-crystal golem boss Freezer walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_freezer_back.png",
+  "ref": "thap/assets/trum_freezer_8.png",
+  "prompt": "Make another image. Same ice-crystal golem boss Freezer walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_janus_side.png",
+  "ref": "thap/assets/trum_janus_8.png",
+  "prompt": "Make another image. Same two-faced cube boss Janus with floating stones floating to the RIGHT, side view. One row of 8 float frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_janus_back.png",
+  "ref": "thap/assets/trum_janus_8.png",
+  "prompt": "Make another image. Same two-faced cube boss Janus with floating stones floating AWAY, back view, facing up. One row of 8 float frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_joker_king_side.png",
+  "ref": "thap/assets/trum_joker_king_8.png",
+  "prompt": "Make another image. Same golden slime king boss Joker King walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_joker_king_back.png",
+  "ref": "thap/assets/trum_joker_king_8.png",
+  "prompt": "Make another image. Same golden slime king boss Joker King walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_nightmare_side.png",
+  "ref": "thap/assets/trum_nightmare_8.png",
+  "prompt": "Make another image. Same hooded shadow boss Nightmare with red claws floating to the RIGHT, side view. One row of 8 float frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_nightmare_back.png",
+  "ref": "thap/assets/trum_nightmare_8.png",
+  "prompt": "Make another image. Same hooded shadow boss Nightmare with red claws floating AWAY, back view, facing up. One row of 8 float frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_octopus_side.png",
+  "ref": "thap/assets/trum_octopus_8.png",
+  "prompt": "Make another image. Same fiery octopus boss with one big eye walking to the RIGHT, side view. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p12_octopus_back.png",
+  "ref": "thap/assets/trum_octopus_8.png",
+  "prompt": "Make another image. Same fiery octopus boss with one big eye walking AWAY, back view, facing up. One row of 8 walk frames, same scale and ground line as the attached front strip. Solid magenta #FF00FF background, no text."
+ }
+]
