@@ -1,0 +1,39 @@
+{
+ "url": "http://localhost:8765/thap/",
+ "errs": [],
+ "sai": [],
+ "dem": {
+  "solo bo trai": "135/135 khung → quai_bo_side_8 (lật)",
+  "solo bo xuong": "135/135 khung → quai_bo_8",
+  "solo bo phai": "135/135 khung → quai_bo_side_8",
+  "solo bay trai": "159/159 khung → quai_bay_side_8 (lật)",
+  "solo bay xuong": "159/159 khung → quai_bay_8",
+  "solo bay phai": "159/159 khung → quai_bay_side_8",
+  "coop bo len": "115/115 khung → quai_bo_back_8",
+  "coop bo phai": "115/115 khung → quai_bo_side_8",
+  "coop bo xuong": "115/115 khung → quai_bo_8",
+  "coop bay len": "160/160 khung → quai_bay_8",
+  "coop bay phai": "160/160 khung → quai_bay_side_8",
+  "coop bay xuong": "160/160 khung → quai_bay_8",
+  "pvp bo xuong": "146/146 khung → quai_bo_8",
+  "pvp bo phai": "146/146 khung → quai_bo_side_8",
+  "pvp bay xuong": "176/176 khung → quai_bay_8",
+  "pvp bay phai": "201/201 khung → quai_bay_side_8"
+ },
+ "chuaCo": [
+  "quai_bay: thiếu sau",
+  "quai_bay_bang: thiếu ngang+sau",
+  "quai_khong_lo: thiếu ngang+sau",
+  "quai_tach: thiếu ngang+sau",
+  "quai_que_tach: thiếu ngang+sau",
+  "trum_mad_crown: thiếu ngang+sau",
+  "trum_freezer: thiếu ngang+sau",
+  "trum_janus: thiếu ngang+sau",
+  "trum_joker_king: thiếu ngang+sau",
+  "trum_nightmare: thiếu ngang+sau",
+  "trum_octopus: thiếu ngang+sau"
+ ],
+ "testRange": [
+  "bo s → quai_bo_side_8"
+ ]
+}
