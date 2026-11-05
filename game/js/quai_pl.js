@@ -2,7 +2,8 @@
 // Hình do PixelLab vẽ (một hướng south-east, động tác dựng bằng khung xương PixelLab), ghép thành tấm ở game/art/custom/:
 //   thorncapGoblin  (Thorncap Goblin)  thay HÌNH Heo Rừng Con  (heoCon, Lính xông vùng Rừng: cào chân rồi húc thẳng)
 //   sporePuff       (Spore Puff)       thay HÌNH Hoa Phun Bào Tử (hoaBaoTu, Xạ thủ vùng Rừng: phun 3 hạt bào tử)
-//   toadstoolKing   (Toadstool King)   thay hình mượn Nấm Chúa (namChua) CHỈ trong bản thử 5 phút đầu (js/slice.js, ải 1-1 lần đầu)
+//   toadstoolKing   (Toadstool King)   thay hình Nấm Chúa (namChua) ở MỌI ải (05/11 15:41 chủ game duyệt; trước đó chỉ bản thử 5 phút đầu)
+//                   — docs/review/ke-hoach-cai-thien/quai-nam-moi-ai/bao-cao.md
 // CHỈ ĐỔI HÌNH: mã quái (e.art / b.art) giữ nguyên nên kỹ năng, chỉ số, hộp va chạm, thời điểm ra đòn, hiệu ứng vẽ code y như cũ.
 // Cách làm: lúc vẽ quái mang mã cũ, tạm đặt tấm mới vào chỗ tấm cũ trong G.spriteCustom.ds (js/sprite_custom.js không phải sửa) rồi trả lại.
 // Toadstool King lúc đứng Fire Guard (js/slice.js): đứng / đi phát hàng 'ne' (giơ gậy lên chắn, một lần) rồi hàng 'noi' (giữ thế chắn, lặp).
@@ -14,7 +15,7 @@
   if (G.QUAI_PL === undefined) { let tat = false; try { tat = typeof location !== 'undefined' && /[?&]quaipl=0(&|$)/.test(location.search || ''); } catch (e) { tat = false; } G.QUAI_PL = !tat; }
   const SC = G.spriteCustom, MA = G.monsterArt;
   const MOI = ['thorncapGoblin', 'sporePuff', 'toadstoolKing'];
-  const QP = (G.quaiPl = { MOI, THAY: { heoCon: 'thorncapGoblin', hoaBaoTu: 'sporePuff' }, TRUM: { namChua: (G.slice && G.slice.anhTrum) || 'toadstoolKing' } });
+  const QP = (G.quaiPl = { MOI, THAY: { heoCon: 'thorncapGoblin', hoaBaoTu: 'sporePuff', namChua: (G.slice && G.slice.anhTrum) || 'toadstoolKing' }, TRUM: { namChua: (G.slice && G.slice.anhTrum) || 'toadstoolKing' } });
   if (!SC || !SC.ds || !MA || typeof MA.draw !== 'function') return;
   // Tấm mới không phải con quái riêng: bỏ khỏi danh sách quái (sprite_custom.js tự thêm tấm lạ vào MA.list, dùng cho việc ngày / công cụ).
   if (Array.isArray(MA.list)) for (let i = MA.list.length - 1; i >= 0; i--) if (MOI.indexOf(MA.list[i] && MA.list[i].id) >= 0 && MA.list[i].tuVe) MA.list.splice(i, 1);
@@ -25,6 +26,7 @@
   function tamMoi(id) {
     let m = QP.THAY[id];
     if (!m && QP.TRUM[id] && runSlice() && !G.SLICE_ANH_CU) m = QP.TRUM[id];
+    if (m && QP.TRUM[id] && G.SLICE_ANH_CU && runSlice()) m = null; // ?slicecu=1 trong bản thử: giữ ảnh mượn cũ như trước
     if (!m || !SC.ds[m]) return null;
     return SC.get(m); // chưa tải xong → null (vẽ tấm cũ), đồng thời xin tải ngay (ảnh rời)
   }

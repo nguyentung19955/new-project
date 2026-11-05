@@ -38,10 +38,12 @@
     ['Bộ Rừng Già', 'Bộ Rừng Gai', CS], ['Bộ Hang Biển', 'Bộ Hang Chìm', CS],
     // trùm vùng, trùm nhỏ, trận cuối
     ['Mộc Tinh', 'Lão Cây Gai'], ['Ngư Tinh', 'Hiệp Sĩ Mực'], ['Hồ Tinh', 'Phù Thuỷ Cáo'], ['Thuồng Luồng', 'Lindworm'], ['Hắc Long', 'Rồng Mực'],
-    ['Nấm Chúa', 'Vua Nấm'], ['Cua Đá', 'Cua Pha Lê'], ['Hổ Lửa', 'Sư Tử Than'], ['Cá Trê', 'Lão Cá Trê', { truoc: 'Lão ', sau: ' Râu' }],
+    ['Nấm Chúa', 'Vua Nấm Độc'], ['Cua Đá', 'Cua Pha Lê'], ['Hổ Lửa', 'Sư Tử Than'], ['Cá Trê', 'Lão Cá Trê', { truoc: 'Lão ', sau: ' Râu' }],
     // quái mang dấu Việt Nam / châu Á (hình giữ nguyên, chỉ đổi tên)
     ['Đèn Lồng Ma', 'Ma Đèn Sắt'], ['Mèo Đen Hai Đuôi', 'Mèo Phù Thuỷ'], ['Tiểu Yêu Ném Pháo', 'Yêu Tinh Ném Bom'], ['Ma Da Tóc Rong', 'Tinh Nước Đầm'],
     ['Ba Ba Mai Đồng', 'Rùa Cắn'],
+    // 3 quái nấm vẽ lại bằng PixelLab (05/11, docs/review/ke-hoach-cai-thien/quai-nam-moi-ai/bao-cao.md): tên theo hình mới, mã heoCon / hoaBaoTu giữ nguyên
+    ['Heo Rừng Con', 'Quỷ Lùn Mũ Gai'], ['Heo Con', 'Quỷ Lùn Mũ Gai', CS], ['Hoa Phun Bào Tử', 'Bông Bào Tử'], ['Hoa Bào Tử', 'Bông Bào Tử', CS],
     // trang phục (giữ tên tiếng Anh như bảng mục 8 dòng 44)
     ['Ninja Bóng Đêm', 'Shadow Garb'], ['Thợ Săn Rừng', 'Huntsman'], ['Chiến Binh Biển', 'Tidewarden'], ['Hiệp Sĩ Lâu Đài', 'Castle Knight'],
     // thuật ngữ
@@ -128,7 +130,8 @@
     ['Ngu Tinh', 'Sir Inkmaw', CS], ['the Fish Spirit', 'Sir Inkmaw', CS], ['The Fish Spirit', 'Sir Inkmaw', CS], ['Fish Spirit', 'Sir Inkmaw', CS],
     ['Ho Tinh', 'Vulpina', CS], ['the Fox Spirit', 'Vulpina', CS], ['The Fox Spirit', 'Vulpina', CS], ['Fox Spirit', 'Vulpina', CS],
     ['the River Serpent', 'the Lindworm', CS], ['The River Serpent', 'The Lindworm', CS], ['River Serpent', 'Lindworm', CS], ['Thuong Luong', 'Lindworm', CS],
-    ['Mushroom King', 'Toadstool King', CS], ['Rock Crab', 'Crystal Crab', CS], ['Fire Tiger', 'Cinder Lion', CS], ['Whisker Catfish', 'Old Mudwhisker', CS],
+    ['Mushroom King', 'Toadstool King', CS], ['Boar Piglet', 'Thorncap Goblin', CS], ['Boar charges straight', 'Thorncap Goblin charges straight', CS],
+    ['Spore Flower', 'Spore Puff', CS], ['Spore flower', 'Spore Puff', CS], ['Rock Crab', 'Crystal Crab', CS], ['Fire Tiger', 'Cinder Lion', CS], ['Whisker Catfish', 'Old Mudwhisker', CS],
     ['Black Dragon', 'Inkwyrm', CS],
     // quái
     ['Ghost Lantern', 'Lantern Wisp', CS], ['Two-Tailed Cat', "Witch's Cat", CS], ['Firecracker Imp', 'Goblin Bomber', CS],
