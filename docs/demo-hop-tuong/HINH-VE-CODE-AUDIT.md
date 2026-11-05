@@ -906,3 +906,31 @@ Session HUD-A dùng tạm ảnh có sẵn (nen_menu, logo, af_* chỉ huy, nut_l
 | raw_p7_d02 | 1024×1536, 1 cột × 5 hàng | D02 "Thin pre-rendered card accent strip with tiny gem in the middle, equal size": common steel-silver · rare blue · epic violet · legendary gold · mythic crimson | ngoc_<bac> |
 - **raw_p4_board_4 — viền sáng "nâng cấp được" cho thẻ trong trận** (lưới 2×1, 1024×640: bản sáng + bản dịu) → `thap/assets/the_nang_sang.png` (9 mảnh, thay `khung_chon` ở `#bo-the .the.du::after`):
   "Glowing mint-green rounded rectangular card outline frame, soft outer glow, thin, empty transparent center, portrait card proportions 3:4, same style as the attached game screenshot, flat #FF00FF background, no text."
+
+## Pass 5 — enemy facing (quái/trùm quay mặt theo hướng đi, 2026-11-05)
+
+Người dùng: "boss đang chỉ đi 1 hướng mặt ra màn hình à, dcdw có làm thế không". DCDW: quái quay mặt theo đường đi.
+Hướng đường thực tế: SOLO = TRÁI (cạnh trên) → XUỐNG → PHẢI; CO-OP = XUỐNG (nhánh trên) / LÊN (nhánh dưới) → PHẢI; PVP = XUỐNG → PHẢI.
+→ cần 3 góc nhìn: TRƯỚC (đi xuống — đã có `*_8.png`), NGANG đi sang PHẢI (sang trái = lật ngang bằng code), SAU đi LÊN (quay lưng).
+
+Dán kèm dải gốc tương ứng (`thap/assets/<id>_8.png`). Bố cục chung (thêm vào cuối mỗi prompt):
+*"Layout: one row of 8 walk frames, same creature, same style/palette as the attached sprite strip, flat magenta #FF00FF background, no text."*
+
+Lưu raw vào `docs/demo-hop-tuong/thap-art/raw_p5_<id>_side.png` / `raw_p5_<id>_back.png` → chạy `python3 tools/thap-huong-quai.py` (cắt khoá magenta, đăng ký thân theo dải trước, ghi `thap/assets/<loai>_<id>_side_8.png` / `_back_8.png`, bật trong `quaianim.js` HUONG8).
+
+| id | raw NGANG (đi phải) | raw SAU (đi lên) |
+|---|---|---|
+| bo | `raw_p5_bo_side.png` — Side view of the purple armored beetle crawler walking to the RIGHT, legs stepping, head on the right. | `raw_p5_bo_back.png` — Back view of the same purple beetle crawler walking AWAY (up), shell and rear legs visible, no face. |
+| bay | `raw_p5_bay_side.png` — Side view of the orange striped wasp flying to the RIGHT, wings flapping, stinger on the left. | `raw_p5_bay_back.png` — Back view of the same orange wasp flying AWAY (up), wings spread, stinger toward viewer. |
+| bay_bang | `raw_p5_bay_bang_side.png` — Side view of the ice crystal moth flying to the RIGHT, crystal wings flapping, head on the right. | `raw_p5_bay_bang_back.png` — Back view of the same ice crystal moth flying AWAY (up), crystal wings spread, no face. |
+| khong_lo | `raw_p5_khong_lo_side.png` — Side view of the giant dark-purple armored spider beast walking to the RIGHT, heavy legs stepping. | `raw_p5_khong_lo_back.png` — Back view of the same giant armored beast walking AWAY (up), gold-trimmed back plates, no face. |
+| tach | `raw_p5_tach_side.png` — Side view of the red-orange bubbly slime blob hopping to the RIGHT, eyes on the right side. | `raw_p5_tach_back.png` — Back view of the same red bubbly slime hopping AWAY (up), bubbles on its back, no eyes. |
+| que_tach | `raw_p5_que_tach_side.png` — Side view of the purple armored splitter beetle with gold spine walking to the RIGHT, claws in front. | `raw_p5_que_tach_back.png` — Back view of the same purple splitter beetle walking AWAY (up), gold spine bar visible, no face. |
+| freezer | `raw_p5_freezer_side.png` — Side view of the ice crystal golem boss walking to the RIGHT, heavy steps, crystal spikes on back. | `raw_p5_freezer_back.png` — Back view of the same ice crystal golem boss walking AWAY (up), big crystal spikes on its back. |
+| janus | `raw_p5_janus_side.png` — Side view of the floating two-faced stone/gold cube boss drifting to the RIGHT, orbiting shards, gold face on the right. | `raw_p5_janus_back.png` — Back view of the same two-faced cube boss drifting AWAY (up), plain cracked back face, orbiting shards. |
+| joker_king | `raw_p5_joker_king_side.png` — Side view of the grinning yellow crowned slime king boss oozing to the RIGHT, crown tilted forward. | `raw_p5_joker_king_back.png` — Back view of the same yellow crowned slime king oozing AWAY (up), back of crown and white ruff, no face. |
+| mad_crown | `raw_p5_mad_crown_side.png` — Side view of the jester robot boss with crown and arm cannons walking to the RIGHT, cannons pointing right. | `raw_p5_mad_crown_back.png` — Back view of the same jester robot boss walking AWAY (up), jester hat bells and back armor, no face. |
+| nightmare | `raw_p5_nightmare_side.png` — Side view of the hooded shadow reaper boss with red glowing eye and rifle gliding to the RIGHT, cloak trailing left. | `raw_p5_nightmare_back.png` — Back view of the same hooded shadow reaper gliding AWAY (up), tattered cloak and hood back, red wisps. |
+| octopus | `raw_p5_octopus_side.png` — Side view of the crimson many-eyed octopus boss with flaming crown crawling to the RIGHT, tentacles stepping. | `raw_p5_octopus_back.png` — Back view of the same crimson flaming octopus boss crawling AWAY (up), mantle back and tentacles, no big eye. |
+
+Trong lúc chưa có ảnh: dùng dải TRƯỚC + nghiêng nhẹ theo hướng đi (≤ 8°), lật/hoà 120 ms khi rẽ (`quaianim.js`), không vẽ code.

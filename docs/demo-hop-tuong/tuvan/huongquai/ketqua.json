@@ -1,0 +1,30 @@
+{
+ "errs": [],
+ "fps_solo": {
+  "fps": 60.1,
+  "maxFrame": 16.8,
+  "quai": 60,
+  "veQuaiMs": {
+   "tb": 1.19,
+   "p95": 2.5
+  }
+ },
+ "fps_coop": {
+  "fps": 60.1,
+  "maxFrame": 16.8,
+  "quai": 60,
+  "veQuaiMs": {
+   "tb": 1.12,
+   "p95": 2.5
+  }
+ },
+ "fps_pvp": {
+  "fps": 60.1,
+  "maxFrame": 16.8,
+  "quai": 60,
+  "veQuaiMs": {
+   "tb": 1.12,
+   "p95": 2.7
+  }
+ }
+}

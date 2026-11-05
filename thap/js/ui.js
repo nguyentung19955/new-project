@@ -189,6 +189,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
+    if (REN.dsHuong) ds.push(...REN.dsHuong()); // dải hướng nhìn ngang/sau (quaianim.js, Pass 5)
     if (typeof FXU !== 'undefined') { ds.push(...FXU.dsAnh(G.ban)); FXU.donMau(); } // hiệu ứng đánh v2 của các ụ trong bộ bài (fxu.js)
     REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
     TAI.tran(REN.boLuoi ? REN.boLuoi(ds) : ds); // màn tải trận: đợi ảnh giải mã xong (img.decode) rồi mới chạy — trừ ảnh tình huống (REN.LUOI: tải khi vẽ lần đầu)
