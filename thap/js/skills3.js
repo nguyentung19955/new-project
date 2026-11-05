@@ -469,9 +469,10 @@ SKILLS.ngaithoigian = {
     G.dangBan = T;
     for (const E of ds) { const s1 = E.s * (1 - (E.trum ? r / 3 : r)); keo.push({ E, s0: E.s, s1 }); trung(E, dmg, { B, mau: '#ff6a6a' }); }
     G.hu.push({ k: 'rewind', t: 0, song: 0.6, keo, T, B });
-    if (T.sao >= 7 && !B.daHoiTim && G.che !== 'coop') {
-      const max = G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo;
-      if (B.tim < max) { B.tim++; B.daHoiTim = true; const c = tamU(T); FX.chu1(c.x, c.y - 50, '+1♥ TIME RESTORED', '#ff6a8a', 16, 'to'); }
+    const BT = G.che === 'coop' ? G.ban[0] : B; // co-op: hồi 1 tim CHUNG
+    if (T.sao >= 7 && !B.daHoiTim) {
+      const max = G.che === 'pvp' ? LUAT.timPvp : G.che === 'coop' ? LUAT.timCoop : LUAT.timSolo;
+      if (BT.tim < max) { BT.tim++; B.daHoiTim = true; const c = tamU(T); FX.chu1(c.x, c.y - 50, '+1♥ TIME RESTORED', '#ff6a8a', 16, 'to'); }
     }
     const c = tamU(T);
     FX.vong1(c.x, c.y, 60, 8, '#ff2a3a', 0.4, 5); FX.sang(0.25, '#ff2a3a'); FX.lac(5); SND.tua(); SND.mv();
@@ -566,7 +567,7 @@ Object.assign(MOC_RIENG, {
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['AWAKENED', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
   hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] },
   pandora: { 3: ['QUICK HANDS', '+20% fire rate'], 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'Every opening fires 2 effects'] },
-  ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: saves 1 leak)'] },
+  ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart)'] },
 });
 
 Object.assign(GROW, {
