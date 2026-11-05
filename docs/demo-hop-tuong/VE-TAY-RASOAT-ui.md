@@ -6,7 +6,7 @@ Không đụng: trạng thái thẻ ĐANG CHỌN `.c.chon` (session khác thay �
 **Cách làm.** `tools/thap-kt-vetay-ui.js` mở 27 màn (tải, menu, chọn bộ, trang ụ ×6, trang chỉ huy ×2, tài khoản, online, sảnh, vào trận ×2, trận, bảng thông tin, băng wave, cảnh báo trùm, cut-in, tạm dừng, kết quả, mất mạng, hướng dẫn ×2) ở 390×844 DPR3, quét MỌI phần tử đang hiện + ::before/::after: gradient, box-shadow, viền màu, outline, bo góc có nền màu, clip-path, quầng (drop-shadow màu), khối màu nhỏ không chữ/ảnh, ký tự giả icon; truy ngược luật CSS gây ra. Trước: 1 585 lượt bắt (97 loại phần tử khác nhau); sau: 58 lượt, chỉ còn mặt nạ/cắt ảnh hợp lệ + phần của session khác.
 Thay đổi: nguồn trong các tệp vùng UI đã bỏ gradient/box-shadow/viền màu/bo góc tô màu; ảnh thay thế gom ở `thap/css/vetay-ui.css` (nạp cuối, đè cả luật cũ của hud.css/hud2.css chạm vào màn UI).
 
-**Tổng: 63 hình vẽ code tìm thấy → 39 thay bằng PNG ChatGPT có sẵn, 23 gỡ bỏ, 5 mục chờ ảnh mới (đã có tạm ảnh gần nhất / không vẽ gì).** Prompt: `HINH-VE-CODE-AUDIT.md` mục "Pass 4 — ui" (tấm `raw_p4_ui_1.png`).
+**Tổng: 63 hình vẽ code tìm thấy → 41 thay bằng PNG ChatGPT (36 ảnh có sẵn + 5 ảnh mới từ `raw_p4_ui_1.png`), 22 gỡ bỏ, 0 mục chờ ảnh.** Prompt + cắt: `HINH-VE-CODE-AUDIT.md` mục "Pass 4 — ui", `tools/thap-cat-p4-ui.py`.
 
 Ảnh trước/sau từng màn: `docs/demo-hop-tuong/tuvan/vetay/ui/truoc/*.jpg`, `.../sau/*.jpg`; ảnh cắt từng mục (trái = trước, phải = sau): `.../crop/<id>.jpg`.
 
@@ -26,7 +26,7 @@ Thay đổi: nguồn trong các tệp vùng UI đã bỏ gradient/box-shadow/vi�
 | 12 | Vạch trên tên thẻ | `game.css:171` | gỡ | gỡ | [12](tuvan/vetay/ui/crop/12.jpg) |
 | 13 | Nút + thêm nhanh: vòng viền + chữ + | `unitpage.css:184-185` | nut_cong.png (nguồn + hud2) | PNG | — |
 | 14 | Thông báo nổi đỏ (deck full, …): viên đỏ bo góc | `ui.js:151` | h2_tam_do.png (9 mảnh) | PNG | — |
-| 15 | Ký tự ★ trong mọi chữ DOM (1★, 3★ unlock, 4★…) | `unitpage.js, ui.js, phattrien.js…` | ảnh ui_sao.png chèn trong chữ (ui.js, tự động) | PNG / chờ sao_chu | — |
+| 15 | Ký tự ★ trong mọi chữ DOM (1★, 3★ unlock, 4★…) | `unitpage.js, ui.js, phattrien.js…` | ảnh sao_chu.png (raw_p4_ui_1) chèn trong chữ (ui.js, tự động) | PNG (ảnh mới) | — |
 | 16 | Nền trang hồ sơ: gradient | `unitpage.css:6` | nền tối trơn | gỡ | [16](tuvan/vetay/ui/crop/16.jpg) |
 | 17 | Vạch ngăn đầu/cuối/khối tên | `unitpage.css:12,46,~180` | gỡ | gỡ | [17](tuvan/vetay/ui/crop/17.jpg) |
 | 18 | Lưới kẻ ô "bản vẽ" nền hero (repeating-gradient) | `unitpage.css:28` | nền tối trơn | gỡ | [18](tuvan/vetay/ui/crop/18.jpg) |
@@ -46,7 +46,7 @@ Thay đổi: nguồn trong các tệp vùng UI đã bỏ gradient/box-shadow/vi�
 | 32 | Chấm đỏ REC | `unitpage.css:95` | den_tim_bat.png | PNG | [32](tuvan/vetay/ui/crop/32.jpg) |
 | 33 | Nút dừng/chạy vẽ bằng 2 vạch / tam giác | `unitpage.css:98-102` | h2_phim_dung_cho.png / ic_phat.png (hud2); nguồn bỏ màu | PNG | — |
 | 34 | Nút chọn 1★/4★/7★ và Stage: viên viền, chọn = tô màu | `unitpage.css:106-108` | nut_lon_thep.png; chọn = nut_lon_vang.png | PNG | [34](tuvan/vetay/ui/crop/34.jpg) |
-| 35 | Bảng sao: khung viền, vạch dòng, vạch trái mốc | `unitpage.css:111-120` | khung_tt.png; bỏ vạch (dòng mốc: nền trơn, chờ hang_sang) | PNG / chờ hang_sang | [35](tuvan/vetay/ui/crop/35.jpg) |
+| 35 | Bảng sao: khung viền, vạch dòng, vạch trái mốc | `unitpage.css:111-120` | khung_tt.png; dòng mốc = hang_sang.png (raw_p4_ui_1) | PNG (ảnh mới) | [35](tuvan/vetay/ui/crop/35.jpg) |
 | 36 | 3 thẻ dạng grow-up: khung viền + quầng màu đầu súng | `unitpage.css:124-129` | khung_tt.png; bỏ quầng (ảnh s1/s2/s3 đã khác) | PNG | [36](tuvan/vetay/ui/crop/36.jpg) |
 | 37 | Lưới dấu chân buff: ô vuông tô màu + vòng trong | `unitpage.css:141-145` | o_trong.png (icon PNG trong ô giữ nguyên) | PNG | [37](tuvan/vetay/ui/crop/37.jpg) |
 | 38 | Bảng định nghĩa: vạch kẻ dòng | `unitpage.css:148-149` | gỡ | gỡ | [38](tuvan/vetay/ui/crop/38.jpg) |
@@ -63,17 +63,17 @@ Thay đổi: nguồn trong các tệp vùng UI đã bỏ gradient/box-shadow/vi�
 | 49 | Dải tên nổi khi chạm ụ (#nd-dai): viên viền + bóng | `game.css:282` | h2_tam.png | PNG | — |
 | 50 | Bảng giới thiệu 5 ụ cũ (#nd-gt .gt-*) | `game.css:296,299` | khung_bang.png / khung_tt.png | PNG | — |
 | 51 | Băng cut-in chỉ huy: gradient + 2 viền màu + quầng | `game.css:234-236` | bang_cutin_nen.png (9 mảnh) | PNG | [51](tuvan/vetay/ui/crop/51.jpg) |
-| 52 | Vệt sáng quét qua băng cut-in (gradient) | `game.css:239-240` | gỡ | gỡ / chờ ci_quet | — |
+| 52 | Vệt sáng quét qua băng cut-in (gradient) | `game.css:239-240` | ci_quet.png (raw_p4_ui_1), chỉ dời/mờ | PNG (ảnh mới) | — |
 | 53 | Sọc chéo trên băng cut-in | `game.css:237, anhgen.css:46` | gỡ (ảnh băng đã có vân) | gỡ | — |
 | 54 | Bảng tạm dừng/kết quả/online: bóng đổ | `anhgen.css:49, hud.css:139` | gỡ (khung_bang.png giữ) | gỡ | [54](tuvan/vetay/ui/crop/54.jpg) |
 | 55 | Console dưới trận: bóng đổ | `anhgen.css:72` | gỡ (nen_hud_duoi.png giữ) | gỡ | [55](tuvan/vetay/ui/crop/55.jpg) |
 | 56 | Quầng vàng icon kết quả | `game.css:198` | gỡ | gỡ | — |
 | 57 | Quầng xanh icon khiên lõi | `tien.css:28` | gỡ | gỡ | — |
 | 58 | Quầng xanh khung thẻ đủ mana (trận) | `pass2.css:60` | gỡ (giá xanh của hud2 báo đủ) | gỡ | — |
-| 59 | Ký hiệu buff CRIT DMG: vòng tròn vẽ canvas (arc+stroke) | `tuongmoi-ui.js:25` | ic_crit.png | PNG / chờ ic_cdmg | — |
+| 59 | Ký hiệu buff CRIT DMG: vòng tròn vẽ canvas (arc+stroke) | `tuongmoi-ui.js:25` | ic_cdmg.png (raw_p4_ui_1) | PNG (ảnh mới) | — |
 | 60 | Icon RAGE (chỉ huy Dahlia): ngọn lửa SVG vẽ code | `data.js:59,83` | fx_cuongno_hieu.png | PNG | — |
 | 61 | Chữ nổi "−1♥" (CO-OP online mất tim) | `online/dongbo.js:181` | chữ "−1 LIFE" | gỡ ký tự | — |
-| 62 | Mũi tên › giữa 3 dạng grow-up | `unitpage.js:418` | giữ ký tự (dấu câu) | chờ mui_tiep | — |
+| 62 | Mũi tên › giữa 3 dạng grow-up | `unitpage.js:418` | mui_tiep.png (raw_p4_ui_1) | PNG (ảnh mới) | — |
 | 63 | Nền dự phòng (khi ảnh chưa tải) trong game.css: gradient nút SUMMON/mana/WAVE/thanh trùm/băng wave/trùm/nút .nut/.bang/logo, viền màu thẻ, outline màu khoá, quầng GROW, quầng nút | `game.css:16-191` | gỡ gradient/bóng/viền màu → nền trơn hoặc không gì (ảnh PNG đè lên khi tải) | gỡ | — |
 
 ## Thấy trên màn UI nhưng thuộc session khác (không sửa)
@@ -173,11 +173,11 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | css/pass2.css:92 | `row .the .gu, .co-grow .c .gu { background: none; border: 0 solid transparent; border-image: url(../assets/ui_` | ảnh ChatGPT 9 mảnh (border-image) |
 | css/pass2.css:93 | `r: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; box-shadow: none; }` | tắt (none) |
 | css/pass2.css:96 | `ts/ui_khay_doi.png) center / 100% 100% no-repeat; box-shadow: none; }` | tắt (none) |
-| css/unitpage.css:12 | `; align-items: center; gap: 8px; padding: 0 10px; border-bottom: 1px solid transparent; background: #202328; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/unitpage.css:12 | `; align-items: center; gap: 8px; padding: 0 10px; border-bottom: 0; background: #202328; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:13 | `6px; padding: 0 12px 0 8px; background: #2c3037; border: 1px solid transparent; font-size: 14px; font-weight:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:14 | `.up-lui i { width: 9px; height: 9px; border-left: 2.5px solid transparent; border-bottom: 2.5px solid transpar` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:17 | `{ width: 40px; height: 36px; background: #2c3037; border: 1px solid transparent; font-size: 22px; font-weight:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/unitpage.css:27 | `margin: 0 -14px; display: flex; overflow: hidden; border-bottom: 1px solid transparent;` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/unitpage.css:27 | `margin: 0 -14px; display: flex; overflow: hidden; border-bottom: 0;` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:29 | `o { position: relative; width: 208px; flex: none; clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%); backgroun` | cắt chéo chân dung hero (mặt nạ; phần cắt hero thuộc session chân dung) |
 | css/unitpage.css:37 | `; height: 112px; margin: -56px 0 0 -56px; filter: drop-shadow(0 6px 6px #000a); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
 | css/unitpage.css:39 | `ation: up-quet 5.2s ease-in-out infinite; filter: drop-shadow(0 4px 4px #0009); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
@@ -259,43 +259,43 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | css/vetay-ui.css:49 | `g, .up-gd1, .up-the, .up-luoi { background: none; border: 0 solid transparent; border-style: solid; border-wid` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/vetay-ui.css:52 | `.up-spec div { border-left: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/vetay-ui.css:54 | `.up-hang { border-top: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:56 | `.up-hang.moc { box-shadow: none; }` | tắt (none) |
-| css/vetay-ui.css:58 | `.up-the img { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:60 | `.up-muc h3 i { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-wi` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:63 | `.up-so1 span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-rad` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:66 | `.up-tv { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:68 | `.up-tv-khung { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:69 | `.up-tv .g { width: 16px; height: 14px; border: 0 !important; background: url(../assets/h2_glint.png) center /` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:72 | `-tv-chu .rec::before { width: 10px; height: 10px; border-radius: 0; background: url(../assets/den_tim_bat.png)` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:73 | `.up-phat { box-shadow: none; }` | tắt (none) |
-| css/vetay-ui.css:75 | `.up-sao-chon button { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; bo` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:80 | `.up-luoi i, .up-luoi i.u, .up-luoi i.b { border-radius: 0; box-shadow: none; background: url(../assets/o_trong` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:82 | `.up-dl, .up-dl dt, .up-dl dd { border: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:84 | `.up-thang .nac, .up-thang .nac.gap { border-radius: 0; box-shadow: none; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:85 | `-thang button, .up-thang .cur { background: none; border-radius: 0; border: 0 solid transparent; border-style:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:90 | `.up-bo img, .up-bo i { border: 0; border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png) c` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:91 | `.up-bo img.cur { border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../asset` | ảnh ChatGPT 9 mảnh (border-image) |
-| css/vetay-ui.css:94 | `#tt, .co-s10 #tt { box-shadow: none; }` | tắt (none) |
-| css/vetay-ui.css:95 | `#tt .tt-the { border: 0; border-radius: 0; background: url(../assets/o_trong.png) center / 100% 100% no-repeat` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:96 | `#tt .tt-bac { border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; background:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:98 | `#tt .st-hang > div { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; bord` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:100 | `pan, #tt .tt-so .d-thang span { background: none; border: 0 solid transparent; border-style: solid; border-wid` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:103 | `#tt .tt-ct { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radiu` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:105 | `#nd-dai { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: sol` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:107 | `#nd-gt .gt-bang { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-st` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:109 | `#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-wi` | ảnh ChatGPT 9 mảnh (border-image) |
-| css/vetay-ui.css:112 | `#cutin .ci-nen { background: none; box-shadow: none; border: 0 solid transparent; border-style: solid; border-` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/vetay-ui.css:117 | `.bang, .co-s10 .bang { box-shadow: none; }` | tắt (none) |
-| css/vetay-ui.css:118 | `#duoi { box-shadow: none; }` | tắt (none) |
+| css/vetay-ui.css:56 | `.up-hang.moc { box-shadow: none; background: none; border: 0 solid transparent; border-style: solid; border-wi` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:59 | `.up-the img { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:61 | `.up-muc h3 i { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-wi` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:64 | `.up-so1 span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-rad` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:67 | `.up-tv { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:69 | `.up-tv-khung { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:70 | `.up-tv .g { width: 16px; height: 14px; border: 0 !important; background: url(../assets/h2_glint.png) center /` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:73 | `-tv-chu .rec::before { width: 10px; height: 10px; border-radius: 0; background: url(../assets/den_tim_bat.png)` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:74 | `.up-phat { box-shadow: none; }` | tắt (none) |
+| css/vetay-ui.css:76 | `.up-sao-chon button { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; bo` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:81 | `.up-luoi i, .up-luoi i.u, .up-luoi i.b { border-radius: 0; box-shadow: none; background: url(../assets/o_trong` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:83 | `.up-dl, .up-dl dt, .up-dl dd { border: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:85 | `.up-thang .nac, .up-thang .nac.gap { border-radius: 0; box-shadow: none; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:86 | `-thang button, .up-thang .cur { background: none; border-radius: 0; border: 0 solid transparent; border-style:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:91 | `.up-bo img, .up-bo i { border: 0; border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png) c` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:92 | `.up-bo img.cur { border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../asset` | ảnh ChatGPT 9 mảnh (border-image) |
+| css/vetay-ui.css:95 | `#tt, .co-s10 #tt { box-shadow: none; }` | tắt (none) |
+| css/vetay-ui.css:96 | `#tt .tt-the { border: 0; border-radius: 0; background: url(../assets/o_trong.png) center / 100% 100% no-repeat` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:97 | `#tt .tt-bac { border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; background:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:99 | `#tt .st-hang > div { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; bord` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:101 | `pan, #tt .tt-so .d-thang span { background: none; border: 0 solid transparent; border-style: solid; border-wid` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:104 | `#tt .tt-ct { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radiu` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:106 | `#nd-dai { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: sol` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:108 | `#nd-gt .gt-bang { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-st` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:110 | `#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-wi` | ảnh ChatGPT 9 mảnh (border-image) |
+| css/vetay-ui.css:113 | `#cutin .ci-nen { background: none; box-shadow: none; border: 0 solid transparent; border-style: solid; border-` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/vetay-ui.css:123 | `.bang, .co-s10 .bang { box-shadow: none; }` | tắt (none) |
+| css/vetay-ui.css:124 | `#duoi { box-shadow: none; }` | tắt (none) |
 | js/ui.js:151 | `form:translateX(-50%);z-index:20;padding:8px 22px;border:0 solid transparent;border-image:url(assets/h2_tam_do` | nhãn nổi dùng ảnh h2_tam_do (PNG 9 mảnh) |
-| js/ui.js:342 | `so = T.sao + '★ · LV' + (G.ban[T.ban].lv[id] \|\| 1);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:374 | `au + '">' + TEXT.ui.family + ': ' + h.ten + '</b> ★ ' + TEXT.ui.tierOf(h.bac);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:382 | `+ (T && T.sao >= m.n ? 'co' : '') + '">' + m.n + '★ ' + esc(m.ten) + '</span> ' + esc(m.mo)).join(' · ');` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:513 | `const ph = t.nodeValue.split('★'); if (ph.length < 2) return;` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:515 | `im.className = 'sao-chu'; im.src = SAO; im.alt = '★'; f.appendChild(im); } if (x) f.appendChild(document.creat` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:519 | `if (n.nodeType === 3) { if (n.nodeValue.indexOf('★') >= 0) doi(n); return; }` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:520 | `1 \|\| BO.has(n.nodeName) \|\| n.textContent.indexOf('★') < 0) return;` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/ui.js:522 | `.nextNode()) if (w.currentNode.nodeValue.indexOf('★') >= 0) ds.push(w.currentNode);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:341 | `so = T.sao + '★ · LV' + (G.ban[T.ban].lv[id] \|\| 1);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:373 | `au + '">' + TEXT.ui.family + ': ' + h.ten + '</b> ★ ' + TEXT.ui.tierOf(h.bac);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:381 | `+ (T && T.sao >= m.n ? 'co' : '') + '">' + m.n + '★ ' + esc(m.ten) + '</span> ' + esc(m.mo)).join(' · ');` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:512 | `const ph = t.nodeValue.split('★'); if (ph.length < 2) return;` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:514 | `im.className = 'sao-chu'; im.src = SAO; im.alt = '★'; f.appendChild(im); } if (x) f.appendChild(document.creat` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:518 | `if (n.nodeType === 3) { if (n.nodeValue.indexOf('★') >= 0) doi(n); return; }` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:519 | `1 \|\| BO.has(n.nodeName) \|\| n.textContent.indexOf('★') < 0) return;` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/ui.js:521 | `.nextNode()) if (w.currentNode.nodeValue.indexOf('★') >= 0) ds.push(w.currentNode);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:28 | `own, left, right unless stated); stronger at 3/5/7★. Copies of the same Support don’t stack, and each buff typ` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:89 | `ar merge into a random turret from your deck at +1★. Max 7★.']);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:138 | `ush('Nightmare snipes your highest-star turret: −1★.');` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |

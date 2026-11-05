@@ -852,3 +852,5 @@ bỏ mảnh hình bên cạnh, tách 2 hình dính nhau, giữ tâm/tỉ lệ c�
 - **P3-GS5 luoicheo**: "Same style as attached sheet: one row of 3 grow-up stages of the attached Resonance Grid support turret head (strict top-down, no barrel, square gold frame rotated 45° with 4 diagonal prongs, crystal core, teal #2fd6c0): 1 base, 2 prongs longer with teal light and a second inner ring, 3 awakened prongs blazing with arc halos at the 4 tips; generous spacing, flat pure #FF00FF background, no text."
 Ghi chú: 10 ụ còn lại có ảnh dạng 1/2/3 riêng nhưng vẽ theo ĐẦU CŨ (không khớp đầu v2 đang dùng) nên vẫn tạm cất ở `STAGE_K_CHO` — trong trận cả 3 dạng
 đang dùng đầu v2 + quầng màu (growfx.js mục 7). Muốn thấy rõ đổi dạng trên bàn: gen thêm 1 hàng 3 dạng cho mỗi ụ theo đúng mẫu trên (đính kèm đầu v2 `<id>_nong.png` làm dạng 1).
+
+**Đã nối raw_p4_ui_1.png** (`tools/thap-cat-p4-ui.py`, khoá magenta + khoá vùng kín trong vòng): `ic_cdmg` (96 px, ký hiệu buff CRIT DMG), `sao_chu` (64 px, ★ trong chữ DOM), `ci_quet` (vệt quét băng cut-in), `hang_sang` (9 mảnh, dòng mốc sao), `mui_tiep` (48 px, mũi tên grow-up). Vùng UI hết mục chờ ảnh.
