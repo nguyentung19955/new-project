@@ -114,3 +114,18 @@
 .co-khung .c.ht-goc.co-kh .ic.h2-vai { top: calc(var(--khh) * .189 + 1px); left: calc(15.6% + 1px); right: auto; width: 15px; height: 15px; border-radius: 0; background: none;  }
 
 /* ================= THÔNG BÁO TRÙM: báo trước (cb-bao) → trùm đến (cb-den, giữ ≥2,1 s) → bay lên khoang Boss (cb-ra) ==========
+/* ================= DỌN THANH BÀI TRONG TRẬN (người dùng: deckbar_cluttered_1/2 "nhiều thông tin · rối") — kiểu DCDW / Random Dice =================
+   Thẻ = chân dung trong khung độ hiếm + MỘT tấm LV nhỏ. Giá nâng cấp = 1 tấm nhỏ dưới thẻ (chỉ số, không ngọc).
+   Bỏ khỏi thanh: icon vai trò, đĩa nhận diện, số đếm trên bàn, ngọc trùng (vai trò/chi tiết vẫn ở bảng chạm).
+   Đủ mana nâng cấp = khung sáng khung_chon.png (ảnh ChatGPT) thở nhẹ — không chữ/viên thuốc. Chỉ huy = chân dung + giá. */
+html body #bo-the .the .ic.h2-vai, html body #bo-the .the .gl, html body #bo-the .the .h2-so, html body #bo-the .the .gu, html body #bo-the .the .so { display: none !important; }
+html body #bo-the .the .lv { left: auto !important; right: calc(15.6% + 1px) !important; }
+html body #bo-the .the .gia { width: 38px !important; margin-left: -19px !important; padding: 0 !important; justify-content: center; }
+html body #bo-the .the .gia img { display: none !important; }
+html body #bo-the .the.thieu .gia { opacity: .7; }
+html body #bo-the .the.max .gia { display: none !important; }
+html body #bo-the .the.du::after { content: ''; position: absolute; z-index: 4; left: -2px; right: -2px; top: -2px; height: calc(var(--khh, 74px) + 4px); box-sizing: border-box; pointer-events: none;
+  border: 9px solid transparent; border-image: url(../assets/khung_chon.png) 34 / 9px / 0 stretch; animation: dt-tho 1.4s ease-in-out infinite; }
+@keyframes dt-tho { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { html body #bo-the .the.du::after { animation: none; opacity: .8; } }
+html body #the-mv .mv-ten, html body #the-mv .mv-ten[style] { display: none !important; }

@@ -105,8 +105,7 @@ const ND = {
     document.querySelectorAll('#bo-the .the').forEach((d) => {
       const id = d.dataset.id, mau = this.mau(B, id);
       d.style.setProperty('--k', mau); // (bỏ lớp nd-k: viền màu khoá vẽ CSS — QUY-TAC-HINH 1)
-      const im = document.createElement('img'); im.className = 'gl'; im.alt = ''; im.src = this.url(id, mau, 40);
-      d.appendChild(im);
+      // (không gắn huy hiệu nhận diện lên thẻ trong trận — dọn thanh bài; vai trò xem ở bảng chạm)
     });
   },
   theTT(id, T) {
