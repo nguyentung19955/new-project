@@ -57,7 +57,7 @@
   // Mở vùng (MO_VUNG[3]): chiếu MỘT lần khi người chơi mở trang Sông sâu trên bản đồ Chú Lái Đò lần đầu (khoá mới G.save.truyen.mv).
   // Từ lúc đó Bé Sen vắng ở bến (VS.senVang) cho tới khi hạ Thuồng Luồng; về làng sau lần đầu hạ thì chiếu VUNG_MOI[3] (bé về, mảnh trống thứ 4).
   // Thuồng Luồng ôm mảnh mặt trời trốn đi (giữ tới vùng 8 — docs/cot-truyen/CHUNG.md), câu móc Núi Sét (vùng 5).
-  const MO_VUNG = [];
+  let MO_VUNG = [];
   MO_VUNG[3] = [
     { nen: 'song', tieuDe: 'Sông sâu', loi: 'Ba yêu tinh ngủ rồi, nhưng nước sông vẫn đục ngầu. Bé Sen, con gái Chú Lái Đò, ra bến giặt áo rồi không thấy về.' },
     { nen: 'song', ai: 'lai', loi: 'Cu Tí ơi, cái bóng dài dưới sông bắt Sen đi rồi! Chú chèo đò đưa cháu ngược lên Sông sâu. Bám chắc mạn đò nhé!' },
@@ -73,9 +73,9 @@
     // câu cuối đoạn kết Hồ Tinh: dẫn sang Sông sâu thay cho lời mời Độ khó 2 (Độ khó 2 vẫn mở như cũ)
     KET_MOI[1] = { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Cu Tí ơi, mở bản đồ của chú, ngược dòng lên Sông sâu xem sao!' };
   }
-  const MO_DAU = MO_DAU_MOI, VUNG = VUNG_MOI, KET = KET_MOI;
+  let MO_DAU = MO_DAU_MOI, VUNG = VUNG_MOI, KET = KET_MOI; // Talesworn 05/11: đổi sang bản THE UNWRITTEN TALES ở dưới (trừ ?ten=cu)
   // Trùm: [câu ra mắt, câu khi gục]. Trùm nhỏ theo vùng.
-  const TRUM = {
+  let TRUM = {
     moc: ['Ta là cây cổ thụ thành tinh, nấm độc mọc đầy thân. Linh khí của làng đã chảy vào rễ ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
     ngu: ['Tám xúc tu, một rìu san hô! Đứa bé con dám lội xuống hang của Ngư Tinh sao?', 'Sóng lặng rồi... Ta về đáy biển ngủ tiếp...'],
     ho: ['Chín đuôi lửa, một mặt nạ. Ngươi tưởng thắng được ta ư?', 'Lửa ở đuôi tắt rồi... Mặt nạ của ta nứt mất rồi...'],
@@ -86,11 +86,11 @@
     mini3: ['Ục ục! Râu ta quất một cái là bùn bay khắp sông!', 'Ối... lặn xuống bùn trốn thôi...'],
   };
   // Trùm đổi pha: bong bóng lời ngắn (không dừng trận). Khoá = b.kind, phần tử i = câu khi sang pha i + 1 (b.phase = i)
-  const TRUM_PHA = {
+  let TRUM_PHA = {
     thuong: [null, 'Lạnh buốt như hang Ngư Tinh!', 'Mảnh trống ơi, cháy lên!'],
   };
   // Người làng: câu mới sau khi hạ Mộc Tinh, Ngư Tinh, Hồ Tinh
-  const LANG = {
+  let LANG = {
     lai: ['Rừng già yên rồi. Đò sang Hang biển được rồi đấy cháu.', 'Biển êm thật rồi! Chú chèo một mạch sang Lâu đài cổ.', 'Ba vùng yên ả. Muốn thử Độ khó 2 thì bảo chú.'],
     ren: ['Gỗ linh Rừng già đây rồi! Mang về ông rèn cho.', 'Vảy cá thần cứng thật, tôi lưỡi vào là bén lắm.', 'Lửa Lâu đài cổ thổi lò mới hừng làm sao!'],
     xen: ['Rừng xanh lại, nấm tươi về chợ, bà vui ghê.', 'Thuyền cá về bến rồi, chợ đông hẳn lên.', 'Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.'],
@@ -110,6 +110,88 @@
       mo: 'Cốc cốc! Bé Sen về làng rồi, làng nước ơi!',
     };
     for (const k in L4) LANG[k].push(L4[k]);
+  }
+
+  // ---------- TALESWORN — THE UNWRITTEN TALES (05/11/2026, phiên B; chủ game duyệt hướng cổ tích châu Âu) ----------
+  // Làng Hollin giữ Sách Lớn: mọi quái vật bị viết vào trang sách và phải sống đúng như truyện. Có thứ dưới sông xé các trang,
+  // quái thoát số phận viết sẵn và học cách người chơi đánh (3 hệ = 3 loại mực Lửa / Độc / Băng). Truyện MỞ: không ai biết bao
+  // nhiêu trang bị xé, thêm vùng = thêm một khối vào VUNG. Tên theo docs/tu-van-toan-cau/huong-c-co-tich-chau-au.md mục 5.
+  // KHÔNG có chuông, tiếng vọng. Tranh truyện cũ tạm giữ (khoá nen y như cũ). Bản tiếng Anh: tools/ngon-ngu/tu-dien/truyen-talesworn.json.
+  // ?ten=cu: lời truyện cũ (mạch trống đồng) ở trên.
+  const TALESWORN = !!(G.ten && !G.ten.cu);
+  TR.TALESWORN = TALESWORN;
+  if (TALESWORN) {
+    MO_DAU = [
+      { nen: 'cayda', loi: 'Ngày xửa ngày xưa, làng Hollin giữ một cuốn Sách Lớn. Mọi quái vật đều bị viết vào trang sách, và con nào cũng phải sống đúng như truyện đã kể.' },
+      { nen: 'yeu', loi: 'Một đêm sương, có thứ gì trườn lên từ sông và xé các trang sách. Thoát khỏi truyện cũ, quái vật thức dậy: Lão Cây Gai ở Rừng Gai, Hiệp Sĩ Mực ở Hang Chìm, Phù Thuỷ Cáo ở Lâu đài Than Hồng.' },
+      { nen: 'song', loi: 'Không còn trang nào giữ chân, chúng tự viết số phận mới: đánh với ai, chúng học theo người ấy. Không ai biết đã có bao nhiêu trang bị xé.' },
+      { nen: 'emBe', loi: 'Jory, Liesel và Otto, ba bạn thân của Rowan, đi tìm những trang bị xé thì bị quái vật bắt mất.' },
+      { nen: 'cuti', ai: 'ren', loi: 'Rowan, cầm lấy thanh kiếm này. Nó có hồn, và nó nhớ từng nhát cháu chém. Đi cứu bạn đi. Bác Hob chờ ở bến đò!' },
+    ];
+    VUNG = [
+      [
+        { ai: 'hunter', loi: 'Rowan! Lão Cây Gai trói tớ trong rễ cả tuần. May mà cậu tới!' },
+        { ai: 'tu', loi: 'Cháu mang về một trang rồi! Trong sách, cây táo vàng đã hiện lại. Nhưng Liesel còn kẹt ở Hang Chìm.' },
+        { loi: 'Jory đã về làng, ngồi chơi ở sân làng. Bạn ấy dạy Rowan đánh hiểm và bắn đạn mực xa hơn: xem ở Ông Ambrose.' },
+      ],
+      [
+        { ai: 'healer', loi: 'Nước dưới hang lạnh buốt... Cảm ơn Rowan đã lặn xuống tìm tớ!' },
+        { ai: 'lai', loi: 'Thêm một trang về làng, giếng ước lại đầy nước! Bên kia sông, Lâu đài Than Hồng đỏ rực lửa: Otto ở trong đó.' },
+        { loi: 'Liesel đã về làng, ngồi chơi ở sân làng. Bạn ấy dạy Rowan giữ hiệu ứng lâu và đạn mực hồi máu: xem ở Ông Ambrose.' },
+      ],
+      [
+        { ai: 'wrestler', loi: 'Mụ cáo bắt tớ canh lò sưởi cả tháng! Về nhà thôi, tớ đói lắm rồi!' },
+        { ai: 'tu', loi: 'Trang thứ ba đã về, cối xay gió của làng lại quay. Nhưng chữ trong Sách Lớn vẫn còn mờ.' },
+        { loi: 'Otto đã về làng. Bạn ấy dạy Rowan gồng chịu đòn và bắn đạn mực to hơn: xem ở Ông Ambrose.' },
+      ],
+    ];
+    KET = [
+      { nen: 'hoi', loi: 'Tối ấy cả làng mở hội dưới cây sồi già, mừng ba bạn trở về. Ba trang đã về, nhưng Sách Lớn vẫn chưa lành. Hết truyện... mà chưa hết đâu!' },
+      { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Muốn thử sức thì gặp bác, chạm "Độ khó 2" nhé!' },
+    ];
+    MO_VUNG = [];
+    MO_VUNG[3] = [
+      { nen: 'song', tieuDe: 'Đầm Sương', loi: 'Ba quái vật đã ngủ yên, nhưng nước sông vẫn đục ngầu. Lettie, con gái Bác Hob, ra bến giặt áo rồi không thấy về.' },
+      { nen: 'song', ai: 'lai', loi: 'Rowan ơi, cái bóng dài dưới sông bắt Lettie đi rồi! Bác chèo đò đưa cháu ngược lên Đầm Sương. Bám chắc mạn đò nhé!' },
+    ];
+    if (G.VUNG4) {
+      VUNG.push([
+        { nen: 'b7', loi: 'Lindworm nhả ra một trang, ngoạm lấy Trang Bìa có tên cuốn sách, rồi lặn mất về phía núi xa.' },
+        { ai: 'sen', loi: 'Rowan ơi! Con rắn to ơi là to giấu tớ trong hang dưới thác. Đêm nào nó cũng uống mực từ mấy trang sách!' },
+        { ai: 'lai', loi: 'Lettie ơi, con về rồi! Cảm ơn Rowan. Trang thứ tư đây: đàn ngỗng trời đang bay.' },
+        { ai: 'tu', loi: 'Nó mang đi Trang Bìa. Trên Núi Bão, sấm nổ suốt từ đêm qua... Chắc chắn có chuyện rồi.' },
+        { loi: 'Lettie đã về làng, ngồi ở bến đò với bố.' },
+      ]);
+      KET[1] = { nen: 'hoi', ai: 'lai', loi: 'Đêm xuống, mặt sông lại gợn sóng, như có gì dưới đáy chưa ngủ. Rowan ơi, mở bản đồ của bác, ngược dòng lên Đầm Sương xem sao!' };
+    }
+    TRUM = Object.assign({}, TRUM, {
+      moc: ['Ta là Lão Cây Gai! Truyện cũ bắt ta đứng yên mãi mãi. Giờ ta tự viết truyện của ta!', 'Lá rụng về cội... Rừng ơi, xanh lại đi...'],
+      ngu: ['Tám xúc tu, một rìu san hô! Nhóc con dám lội xuống hang của Hiệp Sĩ Mực sao?', 'Sóng lặng rồi... Ta về đáy biển ngủ tiếp...'],
+      ho: ['Chín đuôi lửa, một mặt nạ! Phù Thuỷ Cáo chưa thua ai bao giờ!', 'Lửa ở đuôi tắt rồi... Mặt nạ của ta nứt mất rồi...'],
+      thuong: ['Sách im rồi, cả dòng sông là của ta! Mực trang sách ngọt lắm, nhóc con!', 'Hừ... Trang này ta mang đi. Lên núi rồi ngươi sẽ biết!'],
+    });
+    TRUM_PHA = { thuong: [null, 'Lạnh buốt như hang Hiệp Sĩ Mực!', 'Mực trang sách ơi, cháy lên!'] };
+    LANG = {
+      lai: ['Rừng Gai yên rồi. Đò sang Hang Chìm được rồi đấy cháu.', 'Biển êm thật rồi! Bác chèo một mạch sang Lâu đài Than Hồng.', 'Ba vùng yên ả. Muốn thử Độ khó 2 thì bảo bác.'],
+      ren: ['Gỗ linh Rừng Gai đây rồi! Mang về bác rèn cho.', 'Vảy cá Hang Chìm cứng thật, tôi lưỡi vào là bén lắm.', 'Lửa Lâu đài Than Hồng thổi lò mới hừng làm sao!'],
+      xen: ['Rừng xanh lại, nấm tươi về chợ, bà vui ghê.', 'Thuyền cá về bến rồi, chợ đông hẳn lên.', 'Cả làng mừng! Bà bán rẻ cho cháu... à mà thôi, giá cũ.'],
+      may: ['Jory về rồi, để cô may cho bạn ấy cái áo mới.', 'Liesel lạnh run, cô đang đan cho cái khăn.', 'Otto đòi áo đỏ như lửa. Cô may ngay!'],
+      do: ['Lão Cây Gai bị viết vào truyện từ thuở xưa. Cháu hạ được nó, Rừng Gai thở lại rồi.', 'Hiệp Sĩ Mực múa rìu san hô giỏi lắm. Cháu hạ được nó, giỏi lắm!', 'Phù Thuỷ Cáo cũng gục rồi. Chuyện Rowan cứu bạn, thầy sẽ chép lại thật đẹp.'],
+      tu: ['Jory chạy nhảy suốt sân làng. Ồn mà vui. Trang đầu tiên đã về giá sách.', 'Liesel về, sân làng có tiếng hát rồi. Hai trang đã về.', 'Đủ ba bạn rồi. Sách Lớn ấm hẳn lên.'],
+      mo: ['Nghe đây! Làng ơi, Rowan hạ được Lão Cây Gai rồi!', 'Nghe đây! Biển êm, đò chạy, cả làng nghe chưa!', 'Nghe đây, nghe đây! Ba quái vật ngủ cả rồi! Mở hội thôi!'],
+    };
+    if (G.VUNG4) {
+      const L4 = {
+        lai: 'Lettie về rồi, đò bác nhẹ hẳn! Muốn lên Núi Bão thì bác chở tới chân núi thôi nhé, sấm to lắm.',
+        ren: 'Vảy Lindworm cứng hơn cả sắt. Bác tôi lưỡi bằng nước sông, bén ngọt!',
+        xen: 'Sông trong lại rồi, cá tôm về chợ đầy rổ.',
+        may: 'Lettie ướt hết áo, cô may cho bé cái váy xanh mới.',
+        do: 'Lindworm chưa chết đâu, nó chỉ trốn. Thầy chép vào sổ: "trang thứ tư, đàn ngỗng trời".',
+        tu: 'Bốn trang đã về giá sách. Còn bao nhiêu trang nữa, ta cũng không biết...',
+        mo: 'Nghe đây! Lettie về làng rồi, cả làng ơi!',
+      };
+      for (const k in L4) LANG[k].push(L4[k]);
+    }
   }
   // ZED: nhân vật chính là Zed. Ba bạn vẫn bị bắt, vẫn được cứu, nhưng về làng thì DẠY Zed (lời Zed đã ghi thẳng vào các bảng trên;
   // bản Cu Tí / "đổi em bé" của cờ ?zed=0 đã xoá khi dọn code 13/10).
@@ -448,7 +530,7 @@
   }
 
   // ---------- khi nào chiếu ----------
-  const TIEU_DE = ['Trống đồng vỡ', 'Ba yêu tinh', 'Bóng dưới sông', 'Bị bắt', 'Lên đường'];
+  const TIEU_DE = TALESWORN ? ['Sách Lớn', 'Những trang bị xé', 'Truyện chưa viết', 'Bị bắt', 'Lên đường'] : ['Trống đồng vỡ', 'Ba yêu tinh', 'Bóng dưới sông', 'Bị bắt', 'Lên đường'];
   const moVung = (r) => (MO_VUNG[r] || []).map((f) => Object.assign({ giay: 6 }, f));
   function moDau() { return MO_DAU.map((f, i) => Object.assign({ tieuDe: TIEU_DE[i] }, f)); }
   function doanVung(r) {

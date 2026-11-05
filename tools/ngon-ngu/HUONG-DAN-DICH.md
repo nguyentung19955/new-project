@@ -140,3 +140,15 @@ Ghi vào `tools/ngon-ngu/tu-dien/<tên nhóm>.json`: một đối tượng JSON 
 | chưa mở | locked |
 | sao | star(s) |
 | mẹo | tip |
+
+## 6. Talesworn (05/11/2026): tên mới, tiếng Anh mặc định
+
+- Tên game hiển thị **Talesworn** (tên miền giữ `spiritblade.web.app`). Thế giới "The Unwritten Tales".
+- Tiếng Anh là mặc định cho người chơi MỚI; máy tiếng Việt → tiếng Việt; người chơi cũ (bản lưu có tiến độ) chưa từng chọn thì giữ tiếng Việt. `?lang=en|vi` chọn thẳng.
+- **Đổi tên KHÔNG sửa khoá từ điển.** Khoá vẫn là chuỗi Việt gốc (có "Mộc Tinh", "Cu Tí"…), bản Anh trong từ điển có thể còn tên cũ ("Moc Tinh").
+  Tên mới được đổi ở bước cuối trước khi vẽ bằng **lớp tên mới** (`G.ten`, js/ngon_ngu.js) theo bảng ở **js/ten_moi.js** (cả tiếng Việt lẫn tiếng Anh).
+  Thêm / sửa tên mới: sửa js/ten_moi.js, không cần sửa từng tệp game.
+- Câu MỚI viết thẳng bằng tên mới (Rowan, Thornwood…), bản Anh đặt trong `tu-dien/truyen-talesworn.json`, `tu-dien/talesworn-sot.json`.
+- `tu-dien/dong-bo-en-js.json`: 92 câu trước đây được thêm tay vào js/ngon_ngu_en.js; từ 05/11 từ điển trong `tu-dien/` và js/ngon_ngu_en.js khớp nhau, cứ sửa JSON rồi chạy `gop.py`.
+- Cờ quay lui `?ten=cu`: tắt lớp tên mới và lời truyện mới (tên, chữ cũ Việt Nam).
+- Bảng thuật ngữ mục 5 ở trên là tên CŨ (khoá); tên hiển thị mới xem docs/review/ke-hoach-cai-thien/talesworn-b-chu/bao-cao.md.

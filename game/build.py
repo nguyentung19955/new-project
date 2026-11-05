@@ -964,7 +964,7 @@ def build_tool(game_full):
         print('Đã ghi %s (%d KB)' % (os.path.relpath(dest, os.path.dirname(ROOT)), len(html.encode('utf-8')) // 1024))
     # Bản game thử đóng gói: game đầy đủ + mã nhận tệp từ công cụ (chỉ trang này có, bản chơi chính không có).
     thu = game_full.replace('</script>\n</body>', '\n// ===== tools/xuong-sprite/nguon/thu.js =====\n' + safe_js(rd('thu.js')) + '</script>\n</body>')
-    thu = thu.replace('<title>Linh Khí</title>', '<title>Linh Khí · bản thử Xưởng Sprite</title>')
+    thu = thu.replace('<title>Talesworn</title>', '<title>Talesworn · bản thử Xưởng Sprite</title>')
     thu = re.sub(r'<link rel="(manifest|apple-touch-icon)"[^>]*>\n', '', thu)  # bản thử mở trong khung của công cụ: không phải ứng dụng
     if 'nguon/thu.js' not in thu:
         sys.exit('Không gắn được thu.js vào bản game thử')
@@ -975,7 +975,7 @@ def build_tool(game_full):
     html = re.sub(r'<script src="(js/[^"]+)"></script>', lambda m: '<script src="../../game/' + m.group(1) + '"></script>', html)
     html = re.sub(r'<link rel="(manifest|apple-touch-icon)"[^>]*>\n', '', html)
     html = html.replace('</body>', '<script src="nguon/thu.js"></script>\n</body>')
-    html = html.replace('<title>Linh Khí</title>', '<title>Linh Khí · bản thử Xưởng Sprite</title>')
+    html = html.replace('<title>Talesworn</title>', '<title>Talesworn · bản thử Xưởng Sprite</title>')
     write(os.path.join(TOOL, 'thu.html'), '<!-- TỆP ĐƯỢC TẠO BỞI game/build.py: bản game thử của Xưởng Sprite, nạp mã game trong repo. -->\n' + html)
 
 

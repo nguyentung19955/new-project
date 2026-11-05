@@ -1,0 +1,6 @@
+{
+ "Thưởng: {0} kinh nghiệm, ~{1} vàng, {2} {3}, {4} mảnh {5}, linh khí": "Reward: {0} XP, ~{1} gold, {2} {3}, {4} {5} shards, Ink",
+ "Linh khí đang có: {0}": "Ink: {0}",
+ "{0} vàng, {1} linh khí": "{0} gold, {1} Ink",
+ "{0} để lại {1}": "{0} dropped {1}"
+}

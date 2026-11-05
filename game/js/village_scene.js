@@ -34,14 +34,17 @@
   const MASK = '#f4eee0', MASK2 = '#d9cfbb', INK = '#1a1420';
   // viec: tên chức năng hiện trong bong bóng; chao: câu nói khi mở bảng; ve: câu chào khi đóng bảng;
   // pos: chỗ đứng; den: chỗ em bé đứng khi nói chuyện.
+  // Talesworn 05/11 (phiên B): chữ trên dải mặt người làng theo thanh nút mới Play / Forge / Shop / Friends / Quests (tư vấn ChatGPT 3.3).
+  // Anh Tom (mo) hiện "Nhiệm vụ" khi thẻ Việc hôm nay đã mở (thẻ đầu của bảng), chưa mở thì "Cài đặt". ?ten=cu: chữ cũ.
+  const TEN_CU = !G.ten || G.ten.cu;
   const NPCS = {
-    lai: { ten: 'Chú Lái Đò', viec: 'Vào ải', ngan: 'Vào ải', chao: 'Đi đâu hả cháu?', ve: 'Đi cẩn thận nhé!', robe: '#8a5632', robe2: '#6a3e22', wide: 0, top: -27, pos: [638, 152], den: [620, 163] },
+    lai: { ten: 'Chú Lái Đò', viec: 'Vào ải', ngan: TEN_CU ? 'Vào ải' : 'Chơi', chao: 'Đi đâu hả cháu?', ve: 'Đi cẩn thận nhé!', robe: '#8a5632', robe2: '#6a3e22', wide: 0, top: -27, pos: [638, 152], den: [620, 163] },
     ren: { ten: 'Ông Thợ Rèn', viec: 'Lò rèn', ngan: 'Lò rèn', chao: 'Đưa đây ông xem lưỡi nào!', ve: 'Đi cẩn thận nhé!', robe: '#9a4a30', robe2: '#7a3622', wide: 2, top: -27, pos: [468, 132], den: [447, 141] },
-    xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: 'Vũ khí', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
+    xen: { ten: 'Bà Hàng Xén', viec: 'Hàng xén', ngan: TEN_CU ? 'Vũ khí' : 'Cửa hàng', chao: 'Mua gì bán gì, vào đây với bà.', ve: 'Lần sau lại ghé bà nhé.', robe: '#8a5a38', robe2: '#6e4428', wide: 1, top: -23, pos: [540, 198], den: [540, 214] },
     may: { ten: 'Cô Thợ May', viec: 'Thợ may', ngan: 'Mũ áo', chao: 'Hạ trùm vùng là cô may bộ mới, gom vàng ghé mua nhé.', ve: 'Mặc đẹp lắm đó!', robe: '#d86a7a', robe2: '#b04a5e', wide: -1, top: -28, pos: [574, 132], den: [555, 141] },
     do: { ten: 'Cụ Đồ', viec: 'Kỹ năng', ngan: 'Kỹ năng', chao: 'Ngồi xuống đây, lão chỉ cho một chiêu.', ve: 'Học rồi nhớ luyện nghe con.', robe: '#4a548c', robe2: '#363e6c', wide: 0, top: -24, sit: true, pos: [364, 150], den: [342, 160] },
-    tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Cu Tí', ngan: 'Cu Tí', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
-    mo: { ten: 'Anh Mõ', viec: 'Cài đặt', ngan: 'Cài đặt', chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
+    tu: { ten: 'Ông Từ', viec: 'Xem chỉ số Cu Tí', ngan: TEN_CU ? 'Cu Tí' : 'Bạn bè', chao: 'Khẽ thôi, các bé đang chơi trong sân.', ve: 'Các bé chơi ngoan nhé.', robe: '#d0a440', robe2: '#a87e2a', wide: 0, top: -27, pos: [142, 140], den: [124, 151] },
+    mo: { ten: 'Anh Mõ', viec: 'Cài đặt', get ngan() { return !TEN_CU && (!G.moDan || G.moDan.the('viecNgay')) && !(G.SU_KIEN_BAT === false) ? 'Nhiệm vụ' : 'Cài đặt'; }, chao: 'Cốc cốc cốc! Làng nước nghe đây!', ve: 'Có gì cứ gọi anh Mõ!', robe: '#3f9a8c', robe2: '#2c7468', wide: -1, top: -26, pos: [100, 92], den: [118, 102] },
   };
   const ORDER = ['lai', 'ren', 'xen', 'may', 'do', 'tu', 'mo']; // thứ tự trên dải lối tắt
   VS.NPCS = NPCS; VS.ORDER = ORDER;

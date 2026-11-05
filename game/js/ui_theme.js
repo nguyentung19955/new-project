@@ -1537,6 +1537,8 @@
     RES_LANG = G.LANG; marked.clear();
     RES_MAP = { 'vàng': 'gold', 'quặng': 'ore', 'đá tôi': 'stone', 'kinh nghiệm': 'xp' };
     (G.REGIONS || []).forEach((r, i) => { if (!r.matChung) RES_MAP[r.mat.toLowerCase()] = 'mat' + i; RES_MAP['mảnh ' + r.bossName.toLowerCase()] = 'shard' + i; }); // matChung: vùng 4 không có nguyên liệu riêng
+    // Talesworn 05/11: chữ đã qua lớp tên mới (G.ten.lop: "mảnh Mộc Tinh" → "mảnh Lão Cây Gai") cũng nhận ra biểu tượng
+    if (G.LANG === 'vi' && G.ten && G.ten.lop) (G.REGIONS || []).forEach((r, i) => { RES_MAP[G.ten.lop('mảnh ' + r.bossName).toLowerCase()] = 'shard' + i; if (!r.matChung) RES_MAP[G.ten.lop(r.mat).toLowerCase()] = 'mat' + i; });
     if (G.LANG !== 'vi') {
       // Ngôn ngữ khác: tên tài nguyên lấy từ từ điển (js/ngon_ngu.js), nhận cả dạng số nhiều có "s" ("3 whetstones").
       const vi = RES_MAP; RES_MAP = {};

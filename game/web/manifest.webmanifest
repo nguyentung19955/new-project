@@ -1,8 +1,8 @@
 {
-  "name": "Linh Khí",
-  "short_name": "Linh Khí",
-  "description": "Game hành động pixel dân gian Việt",
-  "lang": "vi",
+  "name": "Talesworn",
+  "short_name": "Talesworn",
+  "description": "Your blade remembers. Your enemies learn. A pixel fairy-tale action RPG.",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

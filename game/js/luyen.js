@@ -215,7 +215,7 @@
     VM.markInfo = function (w) {
       if (!L.bat() || !w) return mi.apply(this, arguments);
       const st = G.wStage(w), el = st > 0 && G.EL[w.branch] ? w.branch : null, lv = L.cap(w);
-      return { frac: lv / MAX, col: el ? G.EL[el].col : '#b8b0a0', txt: (el ? G.t('{0} · {1}', G.EL[el].name, G.STAGE_NAMES[st]) : G.STAGE_NAMES[0]) + ' · ' + G.t('Lv {0}', lv) };
+      return { frac: lv / MAX, col: el ? G.EL[el].col : '#b8b0a0', txt: (el ? G.t('{0} · {1}', G.EL[el].name, G.STAGE_NAMES[st]) : G.tv(G.STAGE_NAMES[0])) + ' · ' + G.t('Lv {0}', lv) };
     };
     // khối "Linh khí" của màn kết quả: nhắc Luyện thay "đủ linh khí nâng hệ"
     const kq = VM.ketQua;
