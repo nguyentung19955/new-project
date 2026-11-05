@@ -1,0 +1,882 @@
+{
+"af_dahlia": {
+"kieu": "v3",
+"nguon": "raw_commanders.png",
+"o": [
+732,
+0,
+1440,
+724
+]
+},
+"af_eve": {
+"kieu": "v3",
+"nguon": "raw_commanders.png",
+"o": [
+1456,
+0,
+2164,
+724
+]
+},
+"af_hero": {
+"kieu": "v3",
+"nguon": "raw_commanders.png",
+"o": [
+8,
+0,
+716,
+724
+]
+},
+"anhsang": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"aten": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"bang": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"bao": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"baotuyet": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"blackhole": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"bomhen": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"bua": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"canon": {
+"kieu": "o",
+"nguon": "raw_fp1b.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"cauvong": {
+"kieu": "vung",
+"nguon": "raw_fp2.png",
+"o": [
+2,
+6,
+382,
+446
+]
+},
+"chimang": {
+"kieu": "v3",
+"nguon": "raw_pilot_chimang_v3.png",
+"o": [
+180,
+0,
+940,
+1254
+]
+},
+"chuato": {
+"kieu": "v3",
+"nguon": "raw_pilot_chuato_v3.png",
+"o": [
+270,
+0,
+1030,
+1254
+]
+},
+"combo": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"cuongno": {
+"kieu": "vung",
+"nguon": "raw_fp2.png",
+"o": [
+1154,
+6,
+1534,
+446
+]
+},
+"cuuvi": {
+"kieu": "vung",
+"nguon": "raw_fp_fix1.png",
+"o": [
+762,
+38,
+1410,
+696
+]
+},
+"dichchuyen": {
+"kieu": "v3",
+"nguon": "raw_pilot_dichchuyen_v3.png",
+"o": [
+247,
+0,
+1007,
+1254
+]
+},
+"doc": {
+"kieu": "v3",
+"nguon": "raw_pilot_doc_v3.png",
+"o": [
+100,
+0,
+1154,
+1254
+]
+},
+"docton": {
+"kieu": "v3",
+"nguon": "raw_pilot_docton_v3.png",
+"o": [
+100,
+0,
+1154,
+1254
+]
+},
+"dongbo": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"drone": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"epxung": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"guongcong": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"haoquang": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"hasao": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"hopbi": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"hutmana": {
+"kieu": "o",
+"nguon": "raw_fp3.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"hydra": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"kepha": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"khien": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"khoathoigian": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"khoisinh": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"khuech": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"kiembang": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"lanhgia": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"laser": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"leviathan": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"lien": {
+"kieu": "o",
+"nguon": "raw_fp4.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"lienket": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"loa": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"lophanung": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"loren": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"luoicheo": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"mana": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"marionette": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"maychem": {
+"kieu": "o",
+"nguon": "raw_fp5.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"mimic": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"min": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"mortar": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"nam": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"nangluong": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"nangsao": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"nayda": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"nemesis": {
+"kieu": "o",
+"nguon": "raw_fp6.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"ngaithoigian": {
+"kieu": "vung",
+"nguon": "raw_fp7.png",
+"o": [
+2,
+6,
+382,
+446
+]
+},
+"ngoisao": {
+"kieu": "vung",
+"nguon": "raw_fp7.png",
+"o": [
+386,
+6,
+766,
+446
+]
+},
+"nhanban": {
+"kieu": "v3",
+"nguon": "raw_pilot_nhanban_v3.png",
+"o": [
+260,
+0,
+1020,
+1254
+]
+},
+"nhanmana": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"nhatthuc": {
+"kieu": "vung",
+"nguon": "raw_fp7.png",
+"o": [
+1154,
+6,
+1534,
+446
+]
+},
+"nhieusong": {
+"kieu": "v3",
+"nguon": "raw_pilot_nhieusong_v3.png",
+"o": [
+280,
+0,
+1040,
+1254
+]
+},
+"no5": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"orbital": {
+"kieu": "vung",
+"nguon": "raw_fp7.png",
+"o": [
+386,
+518,
+766,
+958
+]
+},
+"overlord": {
+"kieu": "v3",
+"nguon": "raw_pilot_overlord_v3.png",
+"o": [
+240,
+0,
+940,
+1254
+]
+},
+"pandora": {
+"kieu": "vung",
+"nguon": "raw_fp_fix1.png",
+"o": [
+1486,
+38,
+2134,
+696
+]
+},
+"phagiap": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"phun": {
+"kieu": "vung",
+"nguon": "raw_fp_fix1.png",
+"o": [
+38,
+38,
+686,
+696
+]
+},
+"radar": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"railgun": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"ronglua": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"santhuong": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"saochep": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"set": {
+"kieu": "o",
+"nguon": "raw_fp8.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"sinhdoi": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+0,
+0,
+444,
+444
+]
+},
+"soi": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+444,
+0,
+887,
+444
+]
+},
+"sungluc": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+887,
+0,
+1330,
+444
+]
+},
+"taylo": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+1330,
+0,
+1774,
+444
+]
+},
+"thaukinh": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+0,
+444,
+444,
+887
+]
+},
+"tia": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+444,
+444,
+887,
+887
+]
+},
+"tienhoa": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"tron": {
+"kieu": "o",
+"nguon": "raw_fp9.png",
+"o": [
+1330,
+444,
+1774,
+887
+]
+},
+"tuthan": {
+"kieu": "vung",
+"nguon": "raw_fp10.png",
+"o": [
+3,
+123,
+431,
+575
+]
+},
+"vughep": {
+"kieu": "vung",
+"nguon": "raw_fp10.png",
+"o": [
+437,
+123,
+865,
+575
+]
+},
+"vungdoc": {
+"kieu": "vung",
+"nguon": "raw_fp10.png",
+"o": [
+871,
+123,
+1299,
+575
+]
+},
+"wallgen": {
+"kieu": "vung",
+"nguon": "raw_fp10.png",
+"o": [
+1305,
+123,
+1733,
+575
+]
+},
+"xaotron": {
+"kieu": "o",
+"nguon": "raw_redo_pilots.png",
+"o": [
+887,
+444,
+1330,
+887
+]
+},
+"xucxac": {
+"kieu": "vung",
+"nguon": "raw_fp10.png",
+"o": [
+1741,
+123,
+2169,
+575
+]
+}
+}

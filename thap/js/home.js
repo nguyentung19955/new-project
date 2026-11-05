@@ -59,7 +59,7 @@ const HM = {
     let co = 0; for (const r of G.roster || []) if (SKILLS[r.id]) co++;
     this.el('hm-bst-so').textContent = co + ' TURRETS';
     const an = this.el('hm-anh'), d = MAVUONG[UI.mv] || MAVUONG.hero;
-    const src = 'assets/' + d.anh + '.png'; if (an.getAttribute('src') !== src) { an.onerror = () => { an.onerror = null; an.src = mvIcURL(UI.mv); }; an.src = src; }
+    const src = 'assets/hero/home_' + d.anh + '.webp'; if (an.getAttribute('src') !== src) { an.onerror = () => { an.onerror = null; an.src = 'assets/' + d.anh + '.png'; }; an.src = src; } // ảnh nét 1260 px (3× 420 css)
     try { this.el('hm-best').textContent = (typeof TK !== 'undefined' && TK.ho) ? TK.ho.bestWave || 0 : 0; } catch (e) { }
   },
 

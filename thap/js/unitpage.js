@@ -330,9 +330,9 @@ const UP = {
     const noi = el.querySelector('.up-noi');
     const tt = UP_MV[id] || {}, ten = upSC(String(d.ten).toLowerCase());
     noi.querySelector('.up-a').innerHTML =
-      '<section class="up-hero"><div class="up-pi"><img src="assets/' + d.anh + '.png" alt=""></div><span class="up-seri">CMD-0' + (i + 1) + '</span>' +
-      '<div class="up-mam cmd"><img class="up-vong cmd" src="assets/h2_mv_huy.png" alt=""><img class="up-mvic" src="' + mvIcURL(id) + '" alt=""></div></section>' +
-      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ' + upEsc(tt.vai || 'ACTIVE SKILL').toUpperCase() + '</div></div>' +
+      '<section class="up-hero"><div class="up-pi"><img src="' + heroOf('af_' + id) + '" alt="" onerror="this.onerror=null;this.src=\'assets/' + d.anh + '.png\'"></div><span class="up-seri">CMD-0' + (i + 1) + '</span></section>' +
+      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ' + upEsc(tt.vai || 'ACTIVE SKILL').toUpperCase() + '</div>' +
+      '<span class="up-bn-ic"><img class="ic" src="' + mvIcURL(id) + '" alt=""></span></div>' +
       // tư vấn C §B15: 3 thuộc tính kỹ năng (mana · hồi chiêu · thời gian) thay lưới 4 ô của trang ụ — giá ×2 mỗi lần dùng ghi ngay trong ô mana
       '<div class="up-spec ba">' + this.o('Mana cost', d.gia + ' · ×2 next') + this.o('Cooldown', d.cd + 's') + this.o('Duration', tt.lau || '—') + '</div>' +
       this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest(true);
@@ -364,11 +364,9 @@ const UP = {
     const ten = upTen(id), vai = upVai(id), h = hoTT(id), grow = sk && laGrow(id);
     const kd = Math.min(1.3, (REN.kDau ? REN.kDau(id) : 0.8) / 0.714); // tỉ lệ đầu so với bệ (bệ = 71.4% cạnh ô)
     const P = [];
-    // HERO tràn viền: phi công (khung mặt FACE_BOX — khung.js) mờ dần về phải/dưới bằng mặt nạ; đầu súng trên bệ ở góc phải dưới
-    P.push('<section class="up-hero"><div class="up-pi"><img src="' + portraitOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
-      '<span class="up-seri">' + upSoSeri(id) + '</span>' +
-      '<div class="up-mam"><img class="up-vong" src="assets/tier_ring_' + r.bac + '.png" alt=""><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt="">' +
-      '<img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div><img class="up-gl" alt="" hidden></div></section>');
+    // HERO: CHỈ ảnh phi công nét (hero_<id>.jpg = 3× cỡ hiển thị), không huy hiệu ụ đè lên ảnh (user); ụ nhỏ nằm cạnh tên
+    P.push('<section class="up-hero"><div class="up-pi"><img src="' + heroOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + portraitOf(id) + '\'"></div>' +
+      '<span class="up-seri">' + upSoSeri(id) + '</span></section>');
     // tên + MỘT dòng meta (độ hiếm • vai trò • bậc họ)
     const meta = ['<b>' + upEsc(String(tier.ten).toUpperCase()) + '</b>'];
     if (vai) meta.push(UP_TXT.role[vai].toUpperCase());
@@ -376,7 +374,8 @@ const UP = {
     if (grow) meta.push('GROW-UP');
     if (sk && sk.chuDong) meta.push('ACTIVE');
     if (!sk) meta.push('COMING SOON');
-    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta">' + meta.join(' • ') + '</div></div>');
+    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta">' + meta.join(' • ') + '</div>' +
+      '<span class="up-bn-ic"><img class="ic" src="' + iconOf(id) + '" alt=""><img class="up-gl" alt="" hidden></span></div>');
     // 4 thông số 2×2
     const bs = sk ? upBangSao(id) : [];
     const s1 = bs[0] || {};
