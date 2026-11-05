@@ -1,0 +1,61 @@
+// TURRET MERGE — HIỆU ỨNG LEO THANG THEO BẬC (không cần ảnh mới)
+// Cùng 1 họ kỹ năng, bậc càng cao thì đòn đánh càng "giàu" hiệu ứng — nhưng vẫn giữ trần dễ nhìn (hạt ngắn, vòng tròn tròn tuyệt đối, không oval):
+//   TRẮNG = 1 hiệu ứng sạch (của chính kỹ năng, không thêm gì)
+//   XANH  = + vài hạt phụ nhỏ màu họ
+//   TÍM   = + hình phụ: vòng tròn mảnh tại điểm trúng
+//   VÀNG  = + vệt sáng theo đạn, tia lửa tung khi trúng, quầng nhỏ
+//   ĐỎ    = WOW: nổ nhiều lớp + 2 vòng + than hồng đọng lại + chớp màn (giới hạn) + rung ngắn
+// Gọi từ game.js: TVX.trung (mỗi đòn trúng do ụ gây), TVX.ban (mỗi phát bắn), TVX.dan (mỗi bước của đạn bay).
+'use strict';
+
+const TVX = {
+  lacT: -9, sangT: -9,
+  bac: (T) => (T && TIERS[T.bac] ? TIERS[T.bac].thuTu : 0),
+  mau(T) { const h = typeof HO_CUA !== 'undefined' && HO_CUA[T.id]; return h ? HO[h.ho].mau : TIERS[T.bac].mau; },
+  // giới hạn chung toàn màn: rung / chớp không chồng liên tục dù nhiều ụ đỏ
+  duocLac(cd) { if (G.t - this.lacT < cd) return false; this.lacT = G.t; return true; },
+  duocSang(cd) { if (G.t - this.sangT < cd) return false; this.sangT = G.t; return true; },
+  _cho(T, k, cd) { const t = T['_tv' + k] || -9; if (G.t - t < cd) return false; T['_tv' + k] = G.t; return true; },
+
+  trung(T, E, crit) {
+    const b = this.bac(T); if (b < 1 || !E) return;
+    const x = E.x, y = E.y, m = this.mau(T);
+    if (!this._cho(T, 'h', b >= 3 ? 0.18 : 0.12)) return;
+    // XANH+: hạt phụ nhỏ
+    const n = b === 1 ? 4 : b === 2 ? 5 : 6;
+    for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = rnd(60, 120); FX.hat1('lua', x, y, Math.cos(a) * v, Math.sin(a) * v, 0.26, 7, m); }
+    if (b < 2) return;
+    // TÍM+: vòng tròn mảnh (hình phụ)
+    FX.vong1(x, y, 4, b >= 3 ? 26 : 20, m, 0.22, 2);
+    if (b < 3) return;
+    // VÀNG+: tia lửa tung + quầng nhỏ
+    FX.tiaLua(x, y, crit ? 8 : 5, b >= 4 ? '#ffd0a0' : '#ffe9a0', 220, 9);
+    FX.no('laser_trung', x, y, 44, 0.22);
+    if (b < 4) return;
+    // ĐỎ: WOW (mỗi ụ tối đa ~1 lần / 0.9 s, chí mạng được ưu tiên)
+    if (!this._cho(T, 'w', crit ? 0.6 : 0.9)) return;
+    this.wow(x, y, m);
+  },
+  wow(x, y, m) {
+    FX.no('no_phao', x, y, 88, 0.4);
+    FX.no('laser_trung', x, y, 66, 0.3);
+    FX.vong1(x, y, 6, 30, '#ffffff', 0.25, 3);
+    FX.vong1(x, y, 10, 54, m, 0.38, 3);
+    for (let i = 0; i < 6; i++) FX.hat1('than', x + rnd(-16, 16), y + rnd(-10, 10), rnd(-14, 14), rnd(-34, -14), 0.6, 5, i % 2 ? '#ff8a2a' : m);
+    if (this.duocSang(1.6)) FX.sang(0.08, m);
+    if (this.duocLac(0.8)) FX.lac(2);
+  },
+  ban(T) {
+    const b = this.bac(T); if (b < 3 || !this._cho(T, 'b', 0.15)) return;
+    const [x, y] = dauNong(T), m = this.mau(T);
+    for (let i = 0; i < 3; i++) { const a = T.goc + rnd(-0.5, 0.5), v = rnd(60, 130); FX.hat1('lua', x, y, Math.cos(a) * v, Math.sin(a) * v, 0.2, 5, i ? m : '#fff3c0'); }
+    if (b >= 4) FX.vong1(x, y, 3, 16, m, 0.2, 2);
+  },
+  dan(d, dt) {
+    const T = d.T; if (!T || !T.bac) return;
+    const b = this.bac(T); if (b < 3) return;
+    const yy = d.y - (d.z || 0);
+    if (Math.random() < dt * (b >= 4 ? 34 : 24)) FX.hat1('lua', d.x + rnd(-2, 2), yy + rnd(-2, 2), rnd(-12, 12), rnd(-12, 12), 0.22, b >= 4 ? 7 : 6, this.mau(T));
+    if (b >= 4 && Math.random() < dt * 6) FX.hat1('than', d.x, yy, rnd(-8, 8), -16, 0.45, 4, '#ff8a2a');
+  },
+};

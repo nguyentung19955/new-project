@@ -74,9 +74,17 @@ const UI = {
     const luoi = $('#chon-luoi'); luoi.innerHTML = '';
     const ds = G.roster.slice();
     if (this.xep === 'ten') ds.sort((a, b) => (SKILLS[b.id] ? 1 : 0) - (SKILLS[a.id] ? 1 : 0) || a.ten.localeCompare(b.ten, 'en'));
-    const nhom = this.xep === 'bac' ? TIER_LIST.map(t => [t, ds.filter(r => r.bac === t)]) : [[null, ds]];
+    let nhom = this.xep === 'bac' ? TIER_LIST.map(t => [t, ds.filter(r => r.bac === t)]) : [[null, ds]];
+    if (this.xep === 'ho') { // SORT: FAMILY — mỗi họ 1 nhóm, trong họ xếp Trắng → Đỏ
+      nhom = HO_THU_TU.map(k => ['ho:' + k, ds.filter(r => HO_CUA[r.id] && HO_CUA[r.id].ho === k).sort((a, b) => TIERS[a.bac].thuTu - TIERS[b.bac].thuTu)]);
+      const le = ds.filter(r => !HO_CUA[r.id]); if (le.length) nhom.push([null, le]);
+    }
     for (const [bac, rs] of nhom) {
-      if (bac) {
+      if (bac && bac.startsWith('ho:')) {
+        const F = HO[bac.slice(3)], h = document.createElement('div'); h.className = 'nhom'; h.style.setProperty('--m', F.mau);
+        h.innerHTML = '<i></i><b>' + F.ten + '</b><span>' + F.bac.map((x, i) => x.length ? '<u style="color:' + TIERS[TIER_LIST[i]].mau + '">■</u>' : '<u class="gap">□</u>').join('') + ' ' + F.bac.filter(x => x.length).length + '/5 tiers</span>';
+        luoi.appendChild(h);
+      } else if (bac) {
         const h = document.createElement('div'); h.className = 'nhom'; h.style.setProperty('--m', TIERS[bac].mau);
         const co = rs.filter(r => SKILLS[r.id]).length;
         h.innerHTML = '<i></i><b>' + TIERS[bac].ten + '</b><span>' + co + '/' + rs.length + ' ' + TEXT.ui.playable + (bac === 'do' ? ' · ' + TEXT.ui.maxOneMythic : '') + '</span>';
@@ -86,7 +94,7 @@ const UI = {
       for (const r of rs) g.appendChild(this.theChon(r));
       luoi.appendChild(g);
     }
-    $('#nut-xep').textContent = this.xep === 'bac' ? TEXT.ui.sortTier : TEXT.ui.sortName;
+    $('#nut-xep').textContent = this.xep === 'bac' ? TEXT.ui.sortTier : this.xep === 'ho' ? TEXT.ui.sortFamily : TEXT.ui.sortName;
     const mv = $('#chon-mv'); mv.innerHTML = '';
     for (const [id, d] of Object.entries(MAVUONG)) {
       const b = document.createElement('button'); b.className = 'mv' + (this.mv === id ? ' chon' : ''); b.dataset.act = 'mv-chon'; b.dataset.id = id;
@@ -289,14 +297,15 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       else d += g.ten.join(' → ') + ' · ';
       L.push('<div class="d-grow">' + d + esc(g.dk) + '</div>');
     }
-    // họ kỹ năng: phát triển từ … / thành …
+    // họ kỹ năng: "Family: FROST ★ Tier 1/5 → next: Ice Blade (spreads slow…)" + thang 5 bậc (ô trống = chưa có ụ)
     const h = hoTT(id);
     if (h) {
-      let d = '<b style="color:' + h.mau + '">' + h.ten + ' LINE</b> ';
-      d += h.tu ? 'Evolves from: ' + esc(h.tu) : 'Base of the line';
-      if (h.sau) d += ' · next: ' + esc(h.sau);
-      d += ' · <i>New: ' + esc(h.moi) + '</i>';
+      let d = '<b style="color:' + h.mau + '">' + TEXT.ui.family + ': ' + h.ten + '</b> ★ ' + TEXT.ui.tierOf(h.bac);
+      d += h.sau ? ' → ' + TEXT.ui.next + ': <b>' + esc(h.sau) + '</b>' + (h.sauMoi ? ' (' + esc(h.sauMoi) + ')' : '') : ' · ' + TEXT.ui.top;
+      if (h.moi) d += ' · <i>' + esc(h.moi) + '</i>';
       L.push('<div class="d-ho">' + d + '</div>');
+      L.push('<div class="d-thang">' + h.nac.map((n, i) => '<span class="' + (i + 1 === h.bac ? 'cur' : n.gap ? 'gap' : '') + '" style="--m:' + TIERS[n.bac].mau + '">' +
+        (n.gap ? '—' : esc(n.ten.join('/'))) + '</span>').join('<em>›</em>') + '</div>');
     }
     // mốc sao 3★/5★/7★
     const mm = mocCua(id).map(m => '<span class="' + (T && T.sao >= m.n ? 'co' : '') + '">' + m.n + '★ ' + esc(m.ten) + '</span> ' + esc(m.mo)).join(' · ');
@@ -313,7 +322,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'chon-u': this.chonU(el.dataset.id); break;
       case 'mv-chon': this.mv = el.dataset.id; SND.nut(); this.veChon(); break;
       case 'che': this.che = el.dataset.che; SND.nut(); document.querySelectorAll('.che').forEach(b => b.classList.toggle('chon', b.dataset.che === this.che)); break;
-      case 'xep': this.xep = this.xep === 'bac' ? 'ten' : 'bac'; this.veChon(); break;
+      case 'xep': this.xep = this.xep === 'bac' ? 'ho' : this.xep === 'ho' ? 'ten' : 'bac'; this.veChon(); break;
       case 'ngaunhien': this.chon = deckNgauNhien(); SND.nut(); this.veBoChon(); break;
       case 'vao': this.vao(); break;
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
