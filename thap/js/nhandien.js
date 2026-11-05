@@ -44,8 +44,7 @@ const ND = {
   veHuyHieu(ctx, h) {
     const T = h.T, d = h.d * h.hs; if (d < 1) return;
     ctx.globalAlpha = h.al;
-    const c = this.huy(T.id, null, h.d, T.st && T.st.da);
-    if (c) ctx.drawImage(c, h.gx - d * 0.6, h.gy - d * 0.6, d * 1.2, d * 1.2);
+    // (bỏ icon vai trò trên bàn — độ hiếm = vòng bậc PNG; vai trò chỉ ở bảng chạm ụ / thẻ bộ bài)
     REN.veHuyHieu(ctx, h.sx, h.sy, T.sao, d);
     ctx.globalAlpha = 1;
   },

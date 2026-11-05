@@ -135,24 +135,7 @@ Object.assign(REN, {
         this.ve1(ctx, S.icon, ic); ctx.restore();
       }
     });
-    // 5) biểu tượng của chính ụ hỗ trợ (to, trên đầu) + nhãn tiếng Anh màu đặc trưng
-    const u = (e - 0.08) / 0.24;
-    if (u > 0) {
-      ctx.globalAlpha = tat * clamp(u * 3, 0, 1);
-      const s = backOut(u), ic = C * 0.56;
-      const cy = c.y - ch * 0.5 - 22 + (1 - easeOut(u)) * 8;
-      const txt = S.chu(T);
-      ctx.font = '900 12px ' + FONT.display; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-      const tw = Math.ceil(ctx.measureText(txt).width), w = tw + ic * 0.62 + 18, h = 22;
-      const bx = clamp(c.x - w / 2, 4, W - w - 4);
-      ctx.save(); ctx.translate(bx + w / 2, cy); ctx.scale(0.85 + 0.15 * s, 0.85 + 0.15 * s); ctx.translate(-(bx + w / 2), -cy);
-      const nk = this.img('nhan_kn'); // nhãn = khung PNG nhan_kn (thay viên thuốc roundRect + mũi nhọn vẽ code)
-      if (nk) ctx.drawImage(this.mip(nk, w * this.s * this.dpr), bx - 4, cy - h / 2 - 3, w + 8, h + 6);
-      this.ve1(ctx, S.icon, ic * 0.95, '', bx + ic * 0.38, cy);
-      ctx.fillStyle = mau; ctx.fillText(txt, bx + ic * 0.62 + 8, cy + 0.5);
-      ctx.restore();
-      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    }
+    // 5) (bỏ viên thuốc chữ '+N% …' nổi trên ô — vẽ code + vô dụng; số tác dụng ở bảng chạm ụ)
     ctx.globalAlpha = 1;
   },
 });

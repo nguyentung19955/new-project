@@ -165,6 +165,7 @@ function tenBien(s) { return s ? s.toLowerCase().replace(/(^|[\s-])(\S)/g, (a, b
 function goChuBien(T) { if (GFX.coDOM) for (let i = FX.chu.length - 1; i >= 0; i--) if (FX.chu[i].chuT === T) FX.chu.splice(i, 1); }
 // chữ biến hình duy nhất của ụ: chống trùng (cùng ụ trong ~1 s chỉ 1 chữ — chữ mới thay chữ cũ), luôn vẽ trên cùng, kẹp trong màn
 function chuBien(T, s, mau) {
+  return; // bỏ nhãn chữ nổi trên ô (như nhanU) — biến hình đã có hiệu ứng ảnh
   if (G._treNhan) { VX.hen(G._treNhan, () => chuBien(T, s, mau)); return; } // đang ghép: hiện lúc kết quả lộ ra
   const B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return;
   if (GFX.coDOM && FX.chu.some(q => q.chuT === T && q.s === s && q.t < 1)) return; // cùng chữ vừa hiện (<1 s): giữ nguyên, không nhân đôi
