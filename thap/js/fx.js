@@ -8,14 +8,14 @@ const FX = {
   vong: [],       // vòng sóng (đáp đất, ping radar, nâng cấp)
   rung: 0, rungX: 0, rungY: 0,
   chop: 0, chopMau: '#fff',
-  MAX_HAT: 520, MAX_CHU: 70, MAX_ANIM: 90,
+  MAX_HAT: 320, giam: 1, // giam: tỉ lệ giữ hạt (2×/3× sinh hạt nhanh hơn → bớt bằng xác suất để mật độ như 1×) MAX_CHU: 48, MAX_ANIM: 90,
   _kho: [], // kho tái dùng hạt
 
   reset() { this.hat.length = 0; this.chu.length = 0; this.anim.length = 0; this.vong.length = 0; this.rung = 0; this.chop = 0; },
 
   // hạt: k = 'lua' (tia lửa ảnh tia_lua, cộng sáng), 'bui' (bụi xám), 'khoi' (khói ảnh khoi_*), 'than' (than hồng), 'chamsang'
   hat1(k, x, y, vx, vy, song, co, mau) {
-    if (this.hat.length >= this.MAX_HAT) return null;
+    if (this.hat.length >= this.MAX_HAT || (this.giam < 1 && Math.random() > this.giam)) return null;
     const p = this._kho.pop() || {};
     p.k = k; p.x = x; p.y = y; p.vx = vx; p.vy = vy; p.t = 0; p.song = song; p.co = co; p.mau = mau || '#fff';
     p.g = k === 'bui' ? -20 : (k === 'khoi' ? -26 : (k === 'than' ? -30 : 0)); p.xoay = Math.random() * 6.28; p.vxoay = (Math.random() - 0.5) * 4;
@@ -43,7 +43,14 @@ const FX = {
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
     if (this.anim.length >= this.MAX_ANIM) this.anim.shift();
-    this.anim.push({ ten, x, y, co, t: 0, song: song || 0.42, goc: goc || 0, bam: bam || null });
+    const A = { ten, x, y, co, t: 0, song: song || 0.42, goc: goc || 0, bam: bam || null, T: null, dg: 0 };
+    // chớp đầu nòng: bám theo ụ đang bắn (xoay + giật cùng nòng), sống tối thiểu ~5 khung để không "nháy mất"
+    if (ten === 'chop_nong') {
+      const T = typeof G !== 'undefined' && G.dangBan;
+      if (T && T.buf && T.o != null) { A.T = T; A.dg = gocLech(T.goc, A.goc); }
+      A.song = Math.max(0.085, A.song);
+    }
+    this.anim.push(A);
   },
   vong1(x, y, r0, r1, mau, song, day) { this.vong.push({ x, y, r0, r1, mau, t: 0, song: song || 0.45, day: day || 3 }); },
   lac(m) { this.rung = Math.min(14, Math.max(this.rung, m)); },
