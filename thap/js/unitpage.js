@@ -561,7 +561,7 @@ if (!UP_XEM) {
   // nạp sẵn Test range ~1.5 s sau khi màn chọn hiện (đã tải xong menu, không trong trận)
   let rnh = 0; const hen = setInterval(() => {
     const c = document.getElementById('chon');
-    const ok = typeof TAI !== 'undefined' && TAI.daBoot && !TAI.cho && c && !c.hidden && !(G.ban && G.ban.length);
+    const ok = typeof TAI !== 'undefined' && TAI.daBoot && TAI.nenXong !== false && !TAI.cho && c && !c.hidden && !(G.ban && G.ban.length); // đợi cả đợt nạp nền (khởi động nhanh)
     rnh = ok ? rnh + 1 : 0;
     if (UP.ifr) clearInterval(hen); else if (rnh >= 3) { clearInterval(hen); try { UP.chuanBi(); } catch (e) { console.warn('UP.chuanBi', e); } }
   }, 500);

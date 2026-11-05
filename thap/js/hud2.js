@@ -16,7 +16,7 @@ const HUD2 = {
 
   tai(ds, lop) {
     let n = 0; const xong = () => { if (++n === ds.length) { document.documentElement.classList.add(lop); if (lop === 'co-hud2') { this.bat = true; if (typeof DP !== 'undefined' && DP.el && !DP.el.hidden) DP.ve(); } } };
-    for (const s of ds) { const im = new Image(); im.onload = xong; im.src = 'assets/' + s + '.png'; }
+    for (const s of ds) { const im = new Image(); im.onload = xong; im.src = (typeof anhUrl === 'function' ? anhUrl(s) : 'assets/' + s + '.png'); }
   },
 
   // ---------- sau khi vào trận: gắn phần tử phụ (tấm đếm, icon vai trò, phần đầy rãnh tiến độ) ----------
@@ -24,7 +24,7 @@ const HUD2 = {
     this._du = null; this._theDu = {}; this._tim = -1;
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const sk = SKILLS[d.dataset.id], ic = d.querySelector('.ic');
-      if (ic && sk && this.VAI[sk.vai]) { ic.src = 'assets/' + this.VAI[sk.vai] + '.png'; ic.classList.add('h2-vai'); ic.alt = (TEXT.ui.role && TEXT.ui.role[sk.vai]) || ''; }
+      if (ic && sk && this.VAI[sk.vai]) { ic.src = (typeof anhUrl === 'function' ? anhUrl(this.VAI[sk.vai]) : 'assets/' + this.VAI[sk.vai] + '.png'); ic.classList.add('h2-vai'); ic.alt = (TEXT.ui.role && TEXT.ui.role[sk.vai]) || ''; }
     });
     const seg = $('#tb-seg'); if (seg && !seg.querySelector('.h2-day')) { const f = document.createElement('i'); f.className = 'h2-day'; seg.appendChild(f); }
     const nt = $('#nut-tocdo'); if (nt) nt.dataset.x = G.tocDo + '×';
@@ -105,8 +105,9 @@ const HUD2 = {
 };
 
 (() => {
-  HUD2.tai(HUD2.ANH_DOM, 'co-hud2');
-  HUD2.tai(HUD2.ANH_S10, 'co-s10');
+  // khởi động nhanh: ảnh HUD trận + nút S10 tải SAU khi HOME hiện (TAI.sauHome) — không giành băng thông với HOME
+  const lam = (f) => (typeof TAI !== 'undefined' && TAI.sauHome ? TAI.sauHome(f) : f());
+  lam(() => { HUD2.tai(HUD2.ANH_DOM, 'co-hud2'); HUD2.tai(HUD2.ANH_S10, 'co-s10'); });
   if (typeof REN !== 'undefined') { for (const t of HUD2.ANH_CV) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } } }
   if (typeof UI === 'undefined') return;
 

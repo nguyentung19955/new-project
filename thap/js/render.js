@@ -154,9 +154,11 @@ const REN = {
     a.onload = () => { a._loi = false; this.thieu.delete(ten); if (this._choNen && /^(khay|duong_)/.test(ten)) this.lamNen(); };
     const gia = G.debug && G.debug.hongKhay > a._lan && ten === 'khay'; // kiểm thử: giả lỗi tải
     // ?v=<băm nội dung> (js/ver-anh.js do tools/thap-ver.py dán lúc xuất bản): ảnh đổi → URL đổi → điện thoại không dùng bản cũ trong bộ đệm
-    const tf = typeof anhTen === 'function' ? anhTen(ten) : ten; // ?ucu=1: bộ đầu cũ <ten>_v1
-    const v = typeof ANH_V !== 'undefined' && ANH_V[tf], q = [v ? 'v=' + v : '', a._lan ? 'r=' + a._lan : ''].filter(Boolean).join('&');
-    a.src = 'assets/' + (gia ? '__gia_loi__' : tf) + '.png' + (q ? '?' + q : '');
+    // anhUrl (taitai.js): bản .webp nén lúc xuất bản nếu có (ANH_W), không thì .png?v=băm — cùng URL với màn tải → không tải 2 lần
+    const u = gia ? 'assets/__gia_loi__.png' : (typeof anhUrl === 'function' ? anhUrl(ten) : 'assets/' + ten + '.png' + (typeof ANH_V !== 'undefined' && ANH_V[ten] ? '?v=' + ANH_V[ten] : ''));
+    const uu = u + (a._lan ? (u.indexOf('?') >= 0 ? '&' : '?') + 'r=' + a._lan : '');
+    // khởi động: ảnh canvas (trận) gọi sớm từ các tệp js → hoãn tới khi HOME đã hiện (không giành băng thông với màn HOME)
+    if (!(typeof TAI !== 'undefined' && TAI.hoan && TAI.hoan(a, uu, ten))) a.src = uu;
     this.anh[ten] = a;
     return a;
   },

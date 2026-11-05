@@ -41,7 +41,7 @@ Object.assign(REN, {
     return (this.cache[key] = c);
   },
   // ảnh ký hiệu cho bảng DOM
-  kyHieuURL(k) { return 'assets/ic_' + k + '.png'; },
+  kyHieuURL(k) { return (typeof anhUrl === 'function' ? anhUrl('ic_' + k) : 'assets/' + 'ic_' + k + '.png'); },
   // (A) ký hiệu buff lúc thường trên ụ ĐƯỢC buff: góc trên-trái ô, 2 ô 12×12 cách 2 px, thứ 3+ thành "+N"; xuất hiện nảy 1 lần ~170 ms
   veBuffNho(ctx, T, x, y) {
     const ds = buffLoai(T), now = VX.t;

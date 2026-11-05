@@ -74,7 +74,7 @@ const BOBAI = {
       const dung = UI.chon.length === 5 && a.deck.every(id => UI.chon.includes(id)) && UI.mv === a.mv;
       const c = document.createElement('div'); c.className = 'bb-the' + (dung ? ' chon' : '');
       c.innerHTML = '<div class="bb-ten"><b>' + a.ten + '</b><small>' + a.che + '</small></div>' +
-        '<div class="bb-u">' + a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + G.rosterMap[id].ten + '" title="' + G.rosterMap[id].ten + '">').join('') +
+        '<div class="bb-u">' + a.deck.map(id => '<img ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + iconOf(id) + '" alt="' + G.rosterMap[id].ten + '" title="' + G.rosterMap[id].ten + '">').join('') +
         '<img class="bb-mv" src="' + mvIcURL(a.mv) + '" alt="' + MAVUONG[a.mv].ten + '" title="' + MAVUONG[a.mv].ten + '"></div>' +
         '<p>' + (a.cc ? '<b>' + a.cc + '</b> · ' : '') + a.plan + '</p>' +
         '<button type="button" class="nut-xep" data-act="bb-thu" data-bb="' + a.id + '">' + (dung ? 'IN USE' : 'TRY DECK') + '</button>';

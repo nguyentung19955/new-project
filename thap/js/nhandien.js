@@ -32,7 +32,7 @@ const ND = {
     return REN.mip(a, d * 1.3 * REN.s * REN.dpr);
   },
   // ảnh cho DOM (thẻ, bảng thông tin, dải nhận diện): đường dẫn PNG có sẵn
-  url(id) { return 'assets/' + this.anhVai(id) + '.png'; },
+  url(id) { return (typeof anhUrl === 'function' ? anhUrl(this.anhVai(id)) : 'assets/' + this.anhVai(id) + '.png'); },
   doiAnhDOM() {},
   // ---------- lớp huy hiệu (vẽ SAU hiệu ứng → không bao giờ bị đạn/tia che) ----------
   // gọi từ REN.veU: xếp hàng; REN.veHangHuy vẽ cả loạt

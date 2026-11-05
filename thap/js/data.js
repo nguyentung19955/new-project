@@ -81,7 +81,7 @@ const CHI = {
 };
 // biểu tượng kỹ năng Ma vương: ảnh trong assets/, riêng RAGE = ngọn lửa vẽ bằng code (SVG)
 const MV_LUA = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff2a10"/><stop offset=".6" stop-color="#ff8a1a"/><stop offset="1" stop-color="#ffd23a"/></linearGradient><linearGradient id="b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb21a"/><stop offset="1" stop-color="#fff6b0"/></linearGradient></defs><path d="M32 3c3 10 15 16 15 31a15 15 0 0 1-30 0c0-7 4-12 7-15 0 5 2 8 5 9-1-9 1-17 3-25z" fill="url(#a)" stroke="#5a0a00" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 30c2 6 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 4 3 5 0-4 0-8 1-12z" fill="url(#b)"/></svg>');
-function mvIcURL(id) { const d = MAVUONG[id]; return d.icon === 'lua' ? MV_LUA : 'assets/' + d.icon + '.png'; }
+function mvIcURL(id) { const d = MAVUONG[id]; return d.icon === 'lua' ? MV_LUA : (typeof anhUrl === 'function' ? anhUrl(d.icon) : 'assets/' + d.icon + '.png'); }
 // ảnh chân dung Ma vương; nếu ảnh chưa có / lỗi → tự đổi sang biểu tượng (không bao giờ ô trống)
 function mvArt(id) {
   const d = MAVUONG[id], ic = mvIcURL(id);

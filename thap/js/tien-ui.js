@@ -8,7 +8,7 @@ const TIENUI = {
   LY: { thieu: 'NOT ENOUGH MANA', hoi: 'COOLDOWN', day: 'BOARD FULL · ALL 7★', dung: 'PAUSED', ketthuc: '' },
   _gia: -1, _tt: '',
   lan(el, c, ms) { el.classList.remove(c); void el.offsetWidth; el.classList.add(c); setTimeout(() => el.classList.remove(c), ms); },
-  img(n) { return 'assets/' + n + '.png'; },
+  img(n) { return (typeof anhUrl === 'function' ? anhUrl(n) : 'assets/' + n + '.png'); },
   vaoTran() {
     const B = G.ban[0]; if (!B) return;
     const mg = this.img(TIEN.mana.glyph);

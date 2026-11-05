@@ -7,45 +7,39 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#16171a">
   <title>TURRET MERGE</title>
+  <!-- KHỞI ĐỘNG NHANH (tư vấn khởi động): màn tải hiện NGAY từ HTML + CSS nội tuyến dưới đây; mọi css/js của game nằm trong
+       <template id="tm-nap"> và được nạp bởi đoạn script cuối trang (thanh % chạy từ yêu cầu đầu tiên, theo byte).
+       THÊM css/js MỚI: đặt VÀO TRONG <template id="tm-nap"> (đúng thứ tự như trước) — đừng đặt ngoài template. -->
+  <link rel="preload" href="assets/hud_trum_khung.png" as="image">
+  <link rel="preload" href="assets/tai_day.png" as="image">
+  <link rel="preload" href="assets/nen_menu.jpg" as="image">
+  <link rel="preload" href="assets/logo.png" as="image">
+  <style id="tm-tai-css">
+    @font-face { font-family: 'TM Display'; font-weight: 100 900; font-display: swap; src: url(assets/fonts/oxanium/oxanium-latin-800-normal.woff2) format('woff2'); }
+    html, body { margin: 0; height: 100%; background: #16171a; overflow: hidden; }
+    html.dang-tai #wrap > * { visibility: hidden; }
+    #tai { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 60; background: #16171a url(assets/nen_menu.jpg) center / cover no-repeat; display: flex; align-items: center; justify-content: center; }
+    #tai[hidden] { display: none; }
+    #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; transform: scale(var(--tk, 1)); }
+    #tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(assets/logo.png) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+    #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/hud_trum_khung.png) 14 22 fill / 12px 19px stretch; }
+    #tai .tai-day { position: absolute; left: 14px; right: 14px; top: 9px; bottom: 9px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
+    #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
+    #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
+    #tai .tai-so { font-size: 12px; opacity: .7; }
+  </style>
   <link rel="preload" href="assets/fonts/oxanium/oxanium-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/fonts.css">
-  <link rel="stylesheet" href="css/game.css">
-  <link rel="stylesheet" href="css/hud.css">
-  <link rel="stylesheet" href="css/anhgen.css">
-  <link rel="stylesheet" href="css/statthuc.css">
-  <link rel="stylesheet" href="css/unitpage.css">
-  <link rel="stylesheet" href="css/pass2.css">
-  <link rel="stylesheet" href="css/taitai.css">
-  <link rel="stylesheet" href="css/hud2.css">
-  <link rel="stylesheet" href="css/vaotran.css">
-  <link rel="stylesheet" href="css/tien.css">
-  <link rel="stylesheet" href="css/huongdan.css">
-  <link rel="stylesheet" href="css/hudtop.css">
-  <link rel="stylesheet" href="css/online.css">
-  <link rel="stylesheet" href="css/ketqua-onl.css"> <!-- màn kết quả trận online: MATCH ENDED trung tính + nút REMATCH / LOBBY -->
-  <link rel="stylesheet" href="css/vetay-ui.css">
-  <link rel="stylesheet" href="css/chihuy-the.css">
-  <link rel="stylesheet" href="css/hudmuot-c.css">
-  <link rel="stylesheet" href="css/hudb.css">
-  <link rel="stylesheet" href="css/hudmuot-a.css">
-  <link rel="stylesheet" href="css/demkn.css">
-  <link rel="stylesheet" href="css/dkkeo.css">
-  <link rel="stylesheet" href="css/tran.css">
-  <link rel="stylesheet" href="css/tvc.css">
-  <link rel="stylesheet" href="css/tvb.css">
-  <link rel="stylesheet" href="css/tvA.css">
-  <link rel="stylesheet" href="css/khung-p9.css">
-  <link rel="stylesheet" href="css/bo2hang.css"> <!-- bộ bài 1 hàng: 5 ụ + ô chỉ huy thứ 6 -->
-  <link rel="stylesheet" href="css/chonthe.css"> <!-- trạng thái ĐANG CHỌN: nạp cuối để thắng các nhịp cũ -->
-  <link rel="stylesheet" href="css/otoigian.css"> <!-- ô tướng tối giản kiểu DCDW (o-toigian): nạp cuối -->
-  <link rel="stylesheet" href="css/dkdcdw.css"> <!-- màn xây bộ bài bố cục DCDW -->
-  <link rel="stylesheet" href="css/khongvien-mana.css"> <!-- bỏ viền/quầng "đủ mana" trên khay trận: nạp cuối -->
-  <link rel="stylesheet" href="css/bopopup.css"> <!-- bỏ chú thích/popup chữ trong trận (DCDW) -->
-  <link rel="stylesheet" href="css/chat.css"> <!-- chat nhanh online (js/online/chat.js) -->
 </head>
 <body>
+  <div id="tai"><div class="tai-giua"><div class="tai-logo"></div><div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png" alt=""></div></div><div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span><span class="tai-so"></span></div></div></div>
+  <script>(function () {
+    var vw = innerWidth || 390, vh = innerHeight || 844; document.documentElement.style.setProperty('--tk', Math.max(0.8, Math.min(1.6, vw / 430, vh / 640)).toFixed(3));
+    // ảnh chỉ huy lớn của HOME (home.js) — tải SONG SONG với js thay vì đợi js chạy xong
+    if (!/[?&](preview|mode)=/.test(location.search)) { var mv = 'hero'; try { var l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && /^(hero|dahlia|eve)$/.test(l.mv)) mv = l.mv; } catch (e) { }
+      var k = document.createElement('link'); k.rel = 'preload'; k.as = 'image'; k.href = 'assets/hero/home_af_' + mv + '.webp'; document.head.appendChild(k); }
+  })();</script>
   <div id="wrap">
     <script>
     // đặt khung #wrap NGAY khi trình duyệt dựng tới đây (trước 40+ tệp js, phông, ảnh) — F5 / mạng chậm trên iPhone Safari
@@ -68,7 +62,7 @@
     <div id="top" hidden>
       <div id="tb-wave"><span data-t="wave">WAVE</span><b id="tb-so">1</b></div>
       <div id="tb-giua">
-        <div id="tb-trum"><img src="assets/ui_canh_bao_trum.png" alt=""><span id="tb-trum-chu"></span></div>
+        <div id="tb-trum"><img data-tm-src="assets/ui_canh_bao_trum.png" alt=""><span id="tb-trum-chu"></span></div>
         <div id="tb-seg" aria-hidden="true"></div>
         <div id="tb-trum-mau" hidden><i></i></div>
       </div>
@@ -78,19 +72,19 @@
 
     <!-- HÀNG DƯỚI kiểu DCDW: mana · nút TRIỆU HỒI · tốc độ / tạm dừng; hàng thẻ: 5 ụ (nâng cấp) + Ma vương -->
     <div id="duoi" hidden>
-      <div id="mana-hop"><img src="assets/ui_mana.png" alt=""><b id="mana">0</b></div>
-      <button id="nut-trieu" data-act="trieu"><span class="tr-cap"><img src="assets/ui_nut_trieu.png" alt=""><span class="tr-chu"><span class="tr-ten" data-t="summon">Summon</span><span class="tr-gia"><img src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></span></span><i class="tr-led"></i></button>
+      <div id="mana-hop"><img data-tm-src="assets/ui_mana.png" alt=""><b id="mana">0</b></div>
+      <button id="nut-trieu" data-act="trieu"><span class="tr-cap"><img data-tm-src="assets/ui_nut_trieu.png" alt=""><span class="tr-chu"><span class="tr-ten" data-t="summon">Summon</span><span class="tr-gia"><img data-tm-src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></span></span><i class="tr-led"></i></button>
       <div class="nut-cot">
         <button class="nut-nho" data-act="tocdo" id="nut-tocdo">1×</button>
         <button class="nut-nho" data-act="dung" aria-label="Pause"></button>
       </div>
       <div id="bo-the"></div>
-      <button id="the-mv" data-act="mv"><span class="mv-ic"></span><span class="mv-ten"></span><span class="mv-gia"><img src="assets/ui_mana.png" alt=""><b>0</b></span><i class="mv-cd"></i></button>
+      <button id="the-mv" data-act="mv"><span class="mv-ic"></span><span class="mv-ten"></span><span class="mv-gia"><img data-tm-src="assets/ui_mana.png" alt=""><b>0</b></span><i class="mv-cd"></i></button>
     </div>
 
     <div id="bang-wave" hidden><div class="bw-dai"><b></b><span></span></div></div>
     <div id="cutin" hidden><div class="ci-nen"></div><div class="ci-po-hop"><img class="ci-po" alt=""></div><div class="ci-chu"><small>COMMANDER SKILL</small><b></b><span></span></div><img class="ci-ki" alt=""></div>
-    <div id="canh-bao" hidden><img src="assets/ui_canh_bao_trum.png" alt=""><b></b><span></span></div>
+    <div id="canh-bao" hidden><img data-tm-src="assets/ui_canh_bao_trum.png" alt=""><b></b><span></span></div>
 
     <!-- BẢNG THÔNG TIN Ụ (chạm ụ / giữ thẻ) -->
     <div id="tt" hidden>
@@ -125,18 +119,18 @@
         </div>
       </div>
 
-      <div class="dk" id="dk">
-        <img class="dk-nen" src="assets/nen_deck.jpg" alt="">
+      <div class="dk" id="dk"> <!-- data-tm-src: ảnh màn bộ bài tải SAU HOME (taitai.js TAI.ganSrc) -->
+        <img class="dk-nen" data-tm-src="assets/nen_deck.jpg" alt="">
         <div class="dk-dau">
-          <button class="hm-ic hm-ic1 dk-lui" data-act="hm-ve" aria-label="Back"><img src="assets/p7_ic_lui.png" alt=""></button>
+          <button class="hm-ic hm-ic1 dk-lui" data-act="hm-ve" aria-label="Back"><img data-tm-src="assets/p7_ic_lui.png" alt=""></button>
           <b class="dk-tde" id="dk-tde">BUILD DECK</b>
-          <button class="hm-ic hm-ic1 dk-pre" data-act="hm-pre" aria-label="Preset decks"><img src="assets/p7_ic_bomau.png" alt=""></button>
+          <button class="hm-ic hm-ic1 dk-pre" data-act="hm-pre" aria-label="Preset decks"><img data-tm-src="assets/p7_ic_bomau.png" alt=""></button>
         </div>
         <div class="chon-dau">
           <div class="dk-dem"><span><b id="chon-dem">0/5</b> <span>SELECTED</span></span><button class="dk-chu" data-act="ngaunhien">RANDOM</button></div>
           <div id="chon-bo"></div>
         </div>
-        <div class="dk-tim"><label class="dk-o" id="dk-o"><img class="dk-o-ic" src="assets/p7_ic_tim.png" alt=""></label><button class="hm-ic hm-ic1 dk-loc" data-act="hm-loc" id="dk-loc" aria-label="Filter and sort"><img src="assets/p7_ic_loc.png" alt=""><i id="dk-loc-so" hidden></i></button></div>
+        <div class="dk-tim"><label class="dk-o" id="dk-o"><img class="dk-o-ic" data-tm-src="assets/p7_ic_tim.png" alt=""></label><button class="hm-ic hm-ic1 dk-loc" data-act="hm-loc" id="dk-loc" aria-label="Filter and sort"><img data-tm-src="assets/p7_ic_loc.png" alt=""><i id="dk-loc-so" hidden></i></button></div>
         <div id="chon-luoi"></div>
         <div class="chon-cuoi">
           <div class="chon-mv" id="chon-mv" hidden></div>
@@ -166,7 +160,7 @@
 
     <div id="ketqua" class="man phu" hidden>
       <div class="bang">
-        <img class="kq-ic" src="assets/ui_thuong.png" alt="">
+        <img class="kq-ic" data-tm-src="assets/ui_thuong.png" alt="">
         <div class="bang-ten" id="kq-ten"></div>
         <div class="kq-so" id="kq-so"></div>
         <div class="kq-phu" id="kq-phu"></div>
@@ -178,6 +172,41 @@
     </div>
   </div>
 
+  <template id="tm-nap">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/hud.css">
+  <link rel="stylesheet" href="css/anhgen.css">
+  <link rel="stylesheet" href="css/statthuc.css">
+  <link rel="stylesheet" href="css/unitpage.css">
+  <link rel="stylesheet" href="css/pass2.css">
+  <link rel="stylesheet" href="css/taitai.css">
+  <link rel="stylesheet" href="css/hud2.css">
+  <link rel="stylesheet" href="css/vaotran.css">
+  <link rel="stylesheet" href="css/tien.css">
+  <link rel="stylesheet" href="css/huongdan.css">
+  <link rel="stylesheet" href="css/hudtop.css">
+  <link rel="stylesheet" href="css/online.css">
+  <link rel="stylesheet" href="css/ketqua-onl.css"> <!-- màn kết quả trận online: MATCH ENDED trung tính + nút REMATCH / LOBBY -->
+  <link rel="stylesheet" href="css/vetay-ui.css">
+  <link rel="stylesheet" href="css/chihuy-the.css">
+  <link rel="stylesheet" href="css/hudmuot-c.css">
+  <link rel="stylesheet" href="css/hudb.css">
+  <link rel="stylesheet" href="css/hudmuot-a.css">
+  <link rel="stylesheet" href="css/demkn.css">
+  <link rel="stylesheet" href="css/dkkeo.css">
+  <link rel="stylesheet" href="css/tran.css">
+  <link rel="stylesheet" href="css/tvc.css">
+  <link rel="stylesheet" href="css/tvb.css">
+  <link rel="stylesheet" href="css/tvA.css">
+  <link rel="stylesheet" href="css/khung-p9.css">
+  <link rel="stylesheet" href="css/bo2hang.css"> <!-- bộ bài 1 hàng: 5 ụ + ô chỉ huy thứ 6 -->
+  <link rel="stylesheet" href="css/chonthe.css"> <!-- trạng thái ĐANG CHỌN: nạp cuối để thắng các nhịp cũ -->
+  <link rel="stylesheet" href="css/otoigian.css"> <!-- ô tướng tối giản kiểu DCDW (o-toigian): nạp cuối -->
+  <link rel="stylesheet" href="css/dkdcdw.css"> <!-- màn xây bộ bài bố cục DCDW -->
+  <link rel="stylesheet" href="css/khongvien-mana.css"> <!-- bỏ viền/quầng "đủ mana" trên khay trận: nạp cuối -->
+  <link rel="stylesheet" href="css/bopopup.css"> <!-- bỏ chú thích/popup chữ trong trận (DCDW) -->
+  <link rel="stylesheet" href="css/chat.css"> <!-- chat nhanh online (js/online/chat.js) -->
   <script src="js/donet.js"></script>
   <script src="js/font.js"></script>
   <script src="js/taitai-anh.js"></script>
@@ -252,5 +281,66 @@
   <script src="js/dkdcdw.js"></script>
   <script src="js/ctdeck.js"></script> <!-- chi tiết ụ từ màn bộ bài: thêm/bỏ = quay về bộ bài -->
   <script src="js/bopopup.js"></script> <!-- bỏ chú thích/popup chữ trong trận: nạp sau cùng -->
+  </template>
+  <script id="tm-nap-js">
+  // NẠP KHỞI ĐỘNG + THANH TIẾN ĐỘ THEO BYTE (TDO). css trước (song song) → js (song song, chạy đúng thứ tự). Không chặn vẽ màn tải.
+  // TDO.dot(tu, den): một đợt tải hiển thị từ tu% → den%; d.them(khoá, byte) khi bắt đầu, d.xong(khoá) khi xong. % = byte đã về
+  // + ước lượng phần đang tải (băng thông đo được) → thanh chạy đều, không đứng 0% chờ tệp lớn đầu tiên. taitai.js dùng lại.
+  window.TDO = (function () {
+    var bw = 120000, bwB = 0, bwT = 0, cur = null, hien = 0, hen = 0;
+    function el(s) { var t = document.getElementById('tai'); return t && t.querySelector(s); }
+    function ve() {
+      var d = cur; if (!d) return;
+      var now = Date.now(), tong = 0, ve = 0, n = 0, dang = 0, k;
+      for (k in d.m) { var x = d.m[k]; tong += x.b; if (x.x) { ve += x.b; n++; } else if (x.t) dang++; }
+      for (k in d.m) { var y = d.m[k]; if (!y.x && y.t) ve += Math.min(y.b * 0.9, (now - y.t) / 1000 * bw / Math.max(1, dang)); }
+      var f = tong ? ve / tong : 0, p = Math.floor(d.tu + (d.den - d.tu) * Math.min(1, f));
+      if (d.het) p = d.den;
+      if (p < hien) p = hien; hien = p;
+      var a = el('.tai-day'), b = el('.tai-pt'), c = el('.tai-so'), t = document.getElementById('tai');
+      if (a) a.style.setProperty('--p', p + '%'); if (b) b.textContent = p + '%'; if (c) c.textContent = d.sl ? n + '/' + d.sl : ''; if (t) t.dataset.p = p;
+    }
+    function chay() { if (!hen) hen = setInterval(function () { ve(); if (!cur || cur.het) { clearInterval(hen); hen = 0; } }, 100); }
+    return {
+      dot: function (tu, den, giuMoc) {
+        if (!giuMoc) hien = tu;
+        var d = cur = { tu: tu, den: den, m: {}, sl: 0, het: false,
+          them: function (k, b, cho) { if (d.m[k]) { if (!cho && !d.m[k].t) d.m[k].t = Date.now(); return; } d.m[k] = { b: Math.max(2000, b || 60000), t: cho ? 0 : Date.now(), x: false }; d.sl++; chay(); },
+          xong: function (k) { var x = d.m[k]; if (!x || x.x) return; x.x = true; var dt = (Date.now() - x.t) / 1000; bwB += x.b; bwT += Math.max(0.05, dt); if (bwB > 30000) bw = Math.max(20000, bwB / bwT * 2); ve(); },
+          ket: function () { d.het = true; ve(); } };
+        ve(); return d;
+      },
+      ve: ve, get p() { return hien; },
+    };
+  })();
+  (function () {
+    var tpl = document.getElementById('tm-nap'), css = [], js = [], d = TDO.dot(0, 20);
+    var ns = (tpl.content || tpl).querySelectorAll('link[rel=stylesheet], script[src]');
+    for (var i = 0; i < ns.length; i++) (ns[i].tagName === 'LINK' ? css : js).push(ns[i]);
+    var conCss = css.length;
+    js.forEach(function (o) { d.them(o.getAttribute('src'), +o.getAttribute('data-b') || 15000, true); });
+    // các tệp js của game viết theo kiểu "chờ DOMContentLoaded = mọi script đã chạy" (bọc UI.init, dời chip…). Giữ đúng nghĩa đó:
+    // trong lúc nạp, document.readyState báo 'loading'; script cuối chạy xong → phát lại DOMContentLoaded.
+    function chayJs() {
+      var con = js.length;
+      try { Object.defineProperty(document, 'readyState', { configurable: true, get: function () { return 'loading'; } }); } catch (e) { }
+      function het() { try { delete document.readyState; } catch (e) { } d.ket(); document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true })); }
+      js.forEach(function (o) {
+        var s = document.createElement('script'), u = o.getAttribute('src'); s.async = false; s.src = u;
+        d.them(u, +o.getAttribute('data-b') || 15000);
+        s.onload = s.onerror = function () { d.xong(u); if (--con === 0) het(); };
+        document.body.appendChild(s);
+      });
+      if (!js.length) het();
+    }
+    css.forEach(function (o) {
+      var l = document.createElement('link'), u = o.getAttribute('href'); l.rel = 'stylesheet'; l.href = u;
+      d.them(u, +o.getAttribute('data-b') || 8000);
+      l.onload = l.onerror = function () { d.xong(u); if (--conCss === 0) chayJs(); };
+      document.head.appendChild(l);
+    });
+    if (!css.length) chayJs();
+  })();
+  </script>
 </body>
 </html>

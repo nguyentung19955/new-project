@@ -8,7 +8,7 @@
 'use strict';
 const CHT = {
   VONG_TAC: { cuong: 'h2_vong_do', khien: 'fx_vong_mong' },   // vòng tác dụng theo khoá kỹ năng
-  a(n) { return 'assets/' + n + '.png'; },
+  a(n) { return (typeof anhUrl === 'function' ? anhUrl(n) : 'assets/' + n + '.png'); },
   dung(te) {
     if (te.querySelector('.cht-glow')) return;
     te.insertAdjacentHTML('afterbegin', '<span class="cht-glow"></span>');
