@@ -8,7 +8,7 @@ tvc = importlib.util.module_from_spec(sp); sp.loader.exec_module(tvc)
 from PIL import Image
 
 BANG = {
-    'E23': (['tv_hang1', 'tv_hang2', 'tv_hang3', 'tv_hang4'], 132, True),          # huy hiệu sao trên bàn ~44 css (1,7d)
+    'E23': (['tv_hang1', 'tv_hang2', 'tv_hang3', 'tv_hang4'], 210, True),          # tấm cấp sao ở dải xem nhanh / tấm mở rộng ~70×23 css
     'E24': (['tv_mana'], 480, False),                                               # hộp mana 152×54 css
     'E25': (['tv_trieu', 'tv_trieu_an', 'tv_trieu_tat'], 300, True),               # nút triệu hồi 98 css
     'E26': (['tv_ray'], 1160, False),                                               # ray trên 384 css

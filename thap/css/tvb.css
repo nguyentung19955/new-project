@@ -117,3 +117,8 @@ html body #wrap.co-tvb #canh-bao.tvb-cb.cb-ra { animation: cb-ra .3s ease-in bot
 @media (prefers-reduced-motion: reduce) { html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp, html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { animation: none !important; } }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span { height: 22px; padding: 0 7px 0 5px; }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span b { font-size: 12.5px; }
+/* cấp sao ở dải / tấm: tấm E23 (sao trong ổ trái + ô số phải), số 15 px — cùng hình dạng mọi bậc, chỉ đổi viền theo bậc */
+html body #wrap.co-tvb #tt.hb-qi .hb-sao.tvb-hang { width: 62px; height: 26px; padding: 0 0 0 26px; box-sizing: border-box; justify-content: center; background: var(--hang) center / 100% 100% no-repeat; }
+html body #wrap.co-tvb #tt.hb-qi .hb-sao.tvb-hang span { font-size: 15px; line-height: 26px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao.tvb-hang { width: 72px; height: 30px; padding-left: 30px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao.tvb-hang span { font-size: 17px; line-height: 30px; }
