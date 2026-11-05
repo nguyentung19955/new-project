@@ -112,6 +112,7 @@ const chup = async (p, co, buoc) => { const f = OUT + (++nAnh).toString().padSta
 // bỏ qua có chủ đích (mỗi dòng 1 lý do; đừng thêm để "cho xanh" — sửa lỗi thật)
 const BO_QUA = [
   /\.cht-vong > b "\d+s" đè viền khung div#duoi/, // vòng hồi chiêu chỉ huy: huy hiệu PNG cố ý gắn ở góc thẻ, đè mép khay #duoi như DCDW
+  /\.the > span\.lv "LV\d+" đè viền khung div#duoi/, // ô tướng tối giản (otoigian.css): chữ LV nằm TRÊN ảnh ô tướng; ô tướng cố ý chồng lên mép trên khay #duoi
 ];
 const loi = async (p, co, buoc, loai, ds) => {
   ds = (ds || []).filter(x => !BO_QUA.some(r => r.test(x)));
@@ -211,6 +212,9 @@ async function lanDau(b, W, H, D, co) {
   else {
     if (tai.r[0] > 0.5 || tai.r[1] > 0.5 || tai.r[2] < tai.vw - 1 || tai.r[3] < tai.vh - 1) await loi(p, co, 'man_tai', 'màn tải không tràn màn', ['màn tải ' + tai.r.map(Math.round).join(',') + ' trong cửa sổ ' + tai.vw + '×' + tai.vh]);
     if (tai.th < Math.min(tai.vw * 0.6, 270)) await loi(p, co, 'man_tai', 'thanh tải nhỏ', ['thanh tải rộng ' + Math.round(tai.th) + ' px']);
+    // dải đầy (tai_day.png) phải TRẢI HẾT rãnh — lỗi cũ: luật img chung object-fit: contain thu ảnh thành 1 mẩu ở giữa rãnh
+    const day = await p.evaluate(() => { const d = document.querySelector('#tai .tai-day'), im = d && d.querySelector('img'); if (!im || !im.naturalWidth) return null; const r = d.getBoundingClientRect(), s = getComputedStyle(im); let w = im.getBoundingClientRect().width; if (s.objectFit === 'contain' || s.objectFit === 'scale-down') w = Math.min(w, im.naturalWidth * im.getBoundingClientRect().height / im.naturalHeight); return { w, ray: r.width }; });
+    if (day && day.w < day.ray * 0.97) await loi(p, co, 'man_tai', 'dải tải chỉ ở giữa', ['ảnh dải đầy rộng ' + Math.round(day.w) + ' / rãnh ' + Math.round(day.ray) + ' px (object-fit thu nhỏ)']);
     await kiem(p, co, 'man_tai', { cho: 50, chiTai: true });
   }
   await p.unroute(/\/assets\/.*\.(png|jpg)$/);
@@ -265,8 +269,8 @@ async function menu(b, W, H, D, co) {
   await buoc(p, co, 'tim', async () => { const i = p.locator('#dk-o input, #dk-tim, .dk-tim input').first(); if (await i.count()) { await i.fill('can'); await sleep(300); await i.fill(''); } });
   await buoc(p, co, 'bo_mau', () => bam(p, '[data-act="hm-pre"]'));
   await p.evaluate(() => HM.dong(true));
-  await buoc(p, co, 'chi_huy', () => bam(p, '#dk-mv'));
-  await p.evaluate(() => HM.dong(true));
+  await buoc(p, co, 'chi_huy', async () => { const o = p.locator('#chon-bo .o-mv'); await bam(p, (await o.count()) && await o.first().isVisible() ? '#chon-bo .o-mv' : '#dk-mv'); }); // ô chỉ huy (ô thứ 6 thanh bộ bài) hoặc hàng chỉ huy cũ
+  await p.evaluate(() => { HM.dong(true); try { UP.dong(); } catch (e) { } });
   await buoc(p, co, 'trang_chi_huy', () => p.evaluate(() => UP.moMV('hero')), { cho: 700 });
   await p.evaluate(() => { try { UP.dong(); } catch (e) { } });
   await buoc(p, co, 'trang_u', () => p.evaluate(() => { HM.di('dk'); UP.mo('canon'); }), { cho: 700 });

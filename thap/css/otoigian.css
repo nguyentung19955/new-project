@@ -18,10 +18,10 @@ html body #wrap .ot > img.ov.ov { position: absolute !important; z-index: 4 !imp
   margin: 0 !important; padding: 0 !important; object-fit: fill !important; border: 0 !important; border-radius: 0 !important; translate: none !important; scale: none !important; transform: none !important; clip-path: none !important; filter: none; opacity: 1 !important; pointer-events: none; }
 /* hàng ngọc độ hiếm (1 trang … 5 thần thoại) — đáy cửa sổ, giữa */
 html body #wrap .ot > .ot-p { position: absolute; z-index: 5; left: 0; right: 0; top: auto; bottom: 3%; display: flex; justify-content: center; gap: 0; pointer-events: none; }
-html body #wrap .ot > .ot-p img { position: static !important; display: block !important; width: 13% !important; height: auto !important; aspect-ratio: 1 / 1; margin: 0 !important; padding: 0 !important; translate: none !important; scale: none !important; transform: none !important; clip-path: none !important; object-fit: contain !important; filter: drop-shadow(0 1px 1px #000); }
+html body #wrap .ot > .ot-p img { position: static !important; display: block !important; width: 13% !important; height: auto !important; aspect-ratio: 1 / 1; margin: 0 !important; padding: 0 !important; translate: none !important; scale: none !important; transform: none !important; clip-path: none !important; object-fit: contain !important; filter: drop-shadow(0 1px 1px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 /* chip vương miện (chỉ huy) — góc trên-phải */
 html body #wrap .ot > img.ot-mien.ot-mien { position: absolute !important; z-index: 6 !important; right: 1% !important; top: -5% !important; left: auto !important; bottom: auto !important; width: 32% !important; height: auto !important; margin: 0 !important;
-  translate: none !important; scale: none !important; transform: none !important; clip-path: none !important; object-fit: contain !important; pointer-events: none; filter: drop-shadow(0 1px 1px #000c); }
+  translate: none !important; scale: none !important; transform: none !important; clip-path: none !important; object-fit: contain !important; pointer-events: none; filter: drop-shadow(0 1px 1px #000c); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 
 /* ───────── LƯỚI KHO / BỘ SƯU TẬP (#chon-luoi): 5 cột (4 ở màn ≤ 360), khe 6 px thật ───────── */
 html body #chon #chon-luoi .luoi { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: calc(6px * var(--ot-k)) !important; margin-bottom: calc(10px * var(--ot-k)) !important; }
@@ -37,7 +37,7 @@ html body #chon #chon-luoi .c.ot > .sapco { position: absolute; z-index: 6; left
 html body #chon #chon-luoi .c.ot .up-q { position: absolute !important; z-index: 7; right: 0 !important; top: 0 !important; left: auto !important; bottom: auto !important;
   width: 40% !important; height: 40% !important; transform: none !important; background: none !important; border: 0 !important; box-shadow: none !important; }
 html body #chon #chon-luoi .c.ot .up-q::before, html body #chon #chon-luoi .c.ot .up-q::after { content: none !important; }
-html body #chon #chon-luoi .c.ot.chon .up-q { background: url(../assets/chon_huy.png) right 4% top 6% / 70% auto no-repeat !important; filter: drop-shadow(0 1px 1px #000a); }
+html body #chon #chon-luoi .c.ot.chon .up-q { background: url(../assets/chon_huy.png) right 4% top 6% / 70% auto no-repeat !important; filter: drop-shadow(0 1px 1px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 /* ĐANG CHỌN (css/chonthe.css: nhấc nhẹ + viền tĩnh khung_chon) — ôm đúng ô vuông */
 html body #wrap #chon #chon-luoi .c.ot.chon::after { left: -5px !important; right: -5px !important; top: -5px !important; bottom: -5px !important; width: auto !important; height: auto !important; border-width: 9px !important; border-image-width: 9px !important; }
 
