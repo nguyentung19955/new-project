@@ -18,7 +18,7 @@ const TIENUI = {
     if (!te.querySelector('.tn-thanh')) {
       te.insertAdjacentHTML('beforeend', '<span class="tn-thanh" hidden><i></i><b></b></span><b class="tn-cd" hidden></b><b class="tn-full" hidden>FULL</b>');
     }
-    const nt = $('#nut-trieu'); if (!nt.querySelector('.tn-full')) nt.querySelector('.tr-chu').insertAdjacentHTML('beforeend', '<span class="tn-full" hidden>BOARD FULL</span>');
+    const nt = $('#nut-trieu'); if (!nt.querySelector('.tn-full')) nt.querySelector('.tr-chu').insertAdjacentHTML('beforeend', '<span class="tn-full" hidden>FULL</span>');
     if (!$('#tn-khien')) $('#wrap').insertAdjacentHTML('beforeend', '<div id="tn-khien" hidden><img src="' + this.img('ic_khien') + '" alt=""><b></b></div><div id="tn-goi" hidden></div>');
     $('#tn-khien').hidden = true;
     this._gia = B.mv.gia; this._tt = '';

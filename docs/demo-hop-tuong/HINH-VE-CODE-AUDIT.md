@@ -958,3 +958,22 @@ Mẫu (thay `<LOOK>`):
 | patcher | a bulky repair robot, green liquid tank on its back, wrench arm and nano-spray nozzle | green nano-repair mist burst with floating plus-shaped sparks |
 | leech | a long mechanical leech/beetle robot with a tube proboscis and a glass belly holding glowing stars | golden star being sucked out along a tube, then a speed-dash streak |
 
+## Pass 7 — battle (HUD mượt B: thanh trên, bàn to, khay dưới, xem nhanh — TU-VAN-HUD-MUOT.txt §3D/§3E/§5 B01–B11, 2026-11-05)
+
+Trong lúc chờ, HUD trận dùng ảnh có sẵn: thanh trên `h2_rail` (B01), khay `nen_hud_duoi` (B03), nút triệu hồi `h2_trieu_*` (B04),
+thẻ chỉ huy `the_khung_mv` + vòng PNG (B05/B06), băng WAVE `bang_wave_nen` (B07), dải xem nhanh + tấm mở rộng `khung_tt` + `mui_tiep` (B08/B09),
+ghép `h2_vfx_ghep` (B10), lắc khi bàn đầy = chỉ dịch PNG (B11). Gen xong lưu `docs/demo-hop-tuong/thap-art/raw_p7_<id>.png`
+→ session ráp cắt khoá magenta (QUY-TAC §5, 3× cỡ CSS lớn nhất) và thay URL trong `thap/css/hudb.css` (dải xem nhanh / tấm mở rộng / băng WAVE)
+và `css/hud2.css` (thanh trên, khay, nút).
+
+**Tiền tố chung (dán đầu MỌI prompt; đính kèm `docs/demo-hop-tuong/tuvan/hudmuot/b/after_390_solo_2_wave_play.jpg`):**
+*"Match the attached TURRET MERGE battle screenshot: premium chunky sci-fi industrial metal, graphite gunmetal, restrained antique brass, sparse cyan energy, crisp mobile game UI illustration. Isolated sprites on FLAT SOLID #FF00FF magenta background, no text, no letters, no numbers, generous padding, nothing touches the cell edges, no drop shadow outside sprite bounds."*
+
+| tấm | lưới | ô → id | prompt |
+|---|---|---|---|
+| **raw_p7_b1.png** | 1536×1024, 1 cột × 4 hàng | 1 `p7_rail` (B01) · 2 `p7_tray` (B03) · 3 `p7_qi` (B08) · 4 `p7_wave` (B07, ô dài) | 1: Wide compact gunmetal battle HUD bar, three calm recessed sections (left small, centre wide, right small) for wave, boss timer and hearts, minimal brass corner hardware, 7:1. 2: Low-profile horizontal graphite command tray, one upper row of five evenly spaced card wells plus one taller well on the right, one lower control shelf, 2.4:1, 9-slice friendly edges. 3: Wide very shallow dark mechanical inspection strip, small square portrait socket on the left, broad empty label field, small chevron socket on the right, 6.5:1. 4: Short restrained metallic wave banner plate with a subtle cyan edge line, empty text field, 8:1. |
+| **raw_p7_b2.png** | 1536×1024, 4×2 | 1–4 `p7_summon_{normal,pressed,disabled,full}` (B04) · 5–6 `p7_cmd_{ready,cooldown}` (B05) · 7–8 `p7_btn_{speed,pause}` | 1–4: Medium round-square heavy brass summoning button, clean empty centre: normal, pressed (sunk 3 px, darker), disabled (dull grey brass, no glow), full (dull with a small amber lamp). 5–6: Compact round mechanical ability button with cyan energy core: ready (core bright), cooldown (core dark). 7–8: Small square graphite key buttons, empty face, matching set. |
+| **raw_p7_b3.png** | 1536×1024, 4×3 | 12 ô `p7_cd_01..12` (B06) | Twelve discrete mechanical ring fill states for an ability cooldown, from full cyan segmented ring (cell 1) to fully empty dark ring (cell 12), same ring, equal square cells, transparent centre. |
+| **raw_p7_b4.png** | 1536×1024, 1 cột × 3 hàng | 1 `p7_sheet` (B09) · 2 `p7_merge` 8 khung (B10) · 3 `p7_deny` 4 khung (B11) | 1: Tall bottom-sheet panel, simple brass header edge, large clean dark interior, rounded industrial corners, 9-slice friendly, centred in the row. 2: One row of 8 animation frames: compact cyan-gold mechanical energy convergence into a centre spark impact, no large white flash. 3: One row of 4 frames: tiny dull amber mechanical warning flash with short horizontal vibration streaks. |
+
+Thứ tự ưu tiên: b1 (thanh + dải xem nhanh) → b2 (nút) → b4 → b3.
