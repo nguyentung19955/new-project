@@ -115,7 +115,7 @@ const SD_K = {
   railgun: { day: 1, q: Q.hang(3, 175, 50, 8), ke: [[5, 'lien', 1], [6, 'canon', 1], [8, 'set', 1], [9, 'bang', 1], [2, 'lien', 1], [12, 'canon', 1]], c: [[0.2, 'Fill its row: more damage'], [1.6, 'Fill its column: faster fire', { cham: 0.5 }], [3.2, 'Bingo powers the piercing shot', { ev: 'hit', cham: 0.5 }]] },
   vughep: { kieu: 'gDB', ban: 'canon', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Target gets +1★, keeps type', { ev: 'sao', cham: 0.6 }]] },
   sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merging adds a same-star twin', { ev: 'moi', cham: 0.6 }]] },
-  hasao: { kieu: 'ht', c: [[0.2, 'Boosts Attack neighbours'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }], [4.0, 'PvP: punishes a rival’s first 5★']] },
+  hasao: { kieu: 'ht', them: [[4.0, (B, D, T) => { if (!T) return; T.da5Dau = 1; T.w5 = -1; const N = B.t.find(X => X && X !== T && SKILLS[X.id].vai === 'tc'); if (N && N.sao < 5) nangSao(B, N, 5 - N.sao); }]], c: [[0.2, 'Boosts Attack neighbours'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }], [4.0, 'PvP: punishes a rival’s first 5★']] },
   saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Becomes a copy (half damage)', { cham: 0.6 }]] },
   ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], c: [[0.2, 'Counts every star on the board'], [1.6, '10★ total: faster fire', { cham: 0.5 }]] },
   soi: { o: 2, q: Q.nhom(5, 175, 18, 6), c: [[0.2, 'Melee wolf claws nearby enemies'], [1.6, 'Kills make it grow stronger', { ev: 'kill', cham: 0.5 }]] },
