@@ -8,7 +8,9 @@
 'use strict';
 
 // quái có dải 8 khung mới (quai_<id>_8.png / trum_<id>_8.png) — thêm id khi ảnh có trong assets/
-const QUAI8 = new Set([]);
+const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
+// hệ số cỡ vẽ để thân bản 8 khung to bằng bản 4 khung cũ (đo: trung bình nhân tỉ lệ lõi thân & khung bao)
+const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16 };
 const TRUM8 = new Set([]);
 
 Object.assign(REN, {
@@ -54,12 +56,13 @@ Object.assign(REN, {
     const bong = this.bong1(), dong = G.quai.length > 30, M = ctx.getTransform();
     for (const E of G.quai) {
       const co = E.d.co, bay = E.d.bay, ten = this.tenQuai(E);
-      const dai = this.coDai(ten, co);
+      const kc = ten.endsWith('_8') ? K8[E.d.anh || E.id] || 1 : 1; // bản 8 khung: chỉnh cỡ cho bằng bản cũ
+      const dai = this.coDai(ten, co * kc);
       // ---- chết: chuyển thành "xác nổ" chạy theo thời gian thực (lọt cổng thì biến mất luôn) ----
       if (E.chet) {
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
-          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, co: co * (E._sc || 1), f: E._f || 0, t: 0, dai, w: this.coDai(ten, co, 'trang') });
+          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, co: co * kc * (E._sc || 1), f: E._f || 0, t: 0, dai, w: this.coDai(ten, co * kc, 'trang') });
         }
         continue;
       }
@@ -132,7 +135,7 @@ Object.assign(REN, {
         const sy = 1 + am * buoc, sx = 1 - am * 0.6 * buoc;
         const lac = E.trum ? Math.sin(E._ph * Math.PI * 2) * 0.025 : r * 0.12 + buoc * 0.015; // lắc lư nhẹ
         ctx.translate(x, y); ctx.rotate(gv + lac); ctx.scale(sx, sy);
-        const C = co * sc;
+        const C = co * sc * kc;
         const daiV = E.bao && E._daiBao && n !== 4 ? E._daiBao : dai, fV = daiV === dai ? f0 : 3;
         if (bay && !dong) { // cánh rung: vệt mờ của khung kế tiếp, hơi lớn hơn (bỏ khi màn quá đông quái)
           ctx.globalAlpha = 0.22; this.khung0(ctx, daiV, fV + 1, C * 1.035);
@@ -140,7 +143,7 @@ Object.assign(REN, {
         ctx.globalAlpha = 1; this.khung0(ctx, daiV, fV, C);
         if (f1 >= 0 && fr > 0.01 && daiV === dai) { ctx.globalAlpha = fr; this.khung0(ctx, dai, f1, C); }
         const fl = Math.max(he * 0.85, E.flash > 0 ? 0.25 : 0);
-        if (fl > 0.02) { const w = this.coDai(ten, co, 'trang'); if (w && daiV === dai) { ctx.globalAlpha = fl; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : f0, C); } }
+        if (fl > 0.02) { const w = this.coDai(ten, co * kc, 'trang'); if (w && daiV === dai) { ctx.globalAlpha = fl; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : f0, C); } }
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }
       if (E.docT > 0 && Math.random() < 0.06) FX.hat1('lua', x + rnd(-8, 8), y, 0, -20, 0.5, 6, '#9dff5a');
