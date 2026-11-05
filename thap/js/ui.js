@@ -98,7 +98,8 @@ const UI = {
     const mv = $('#chon-mv'); mv.innerHTML = '';
     for (const [id, d] of Object.entries(MAVUONG)) {
       const b = document.createElement('button'); b.className = 'mv' + (this.mv === id ? ' chon' : ''); b.dataset.act = 'mv-chon'; b.dataset.id = id;
-      b.innerHTML = '<img src="assets/' + d.icon + '.png" alt=""><div><b>' + d.ten + '</b><span>' + d.mo + '</span></div>';
+      b.style.setProperty('--mm', d.mau);
+      b.innerHTML = mvArt(id) + '<div><b>' + d.ten + '</b><span>' + d.mo + '</span></div>';
       mv.appendChild(b);
     }
     document.querySelectorAll('.che').forEach(b => b.classList.toggle('chon', b.dataset.che === this.che));
@@ -163,11 +164,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       bo.appendChild(d);
     }
     const mv = MAVUONG[B.mv.id];
-    $('#the-mv .mv-ic').src = 'assets/' + mv.icon + '.png'; $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
+    $('#the-mv .mv-ic').innerHTML = mvArt(B.mv.id); $('#the-mv').style.setProperty('--mm', mv.mau); $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
+    for (const k in MAVUONG) ds.push(MAVUONG[k].anh); // chân dung chỉ huy (cut-in)
     for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
@@ -223,13 +225,13 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   bangWave(w, trum) {
     const b = $('#bang-wave');
     b.querySelector('b').textContent = TEXT.ui.wave + ' ' + w; const sp = b.querySelector('span'); sp.textContent = trum ? TEXT.ui.bossComing : (w === 1 ? TEXT.ui.wave1Hint : ''); sp.hidden = !sp.textContent;
-    b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; b.classList.add('chay');
+    b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; fitText(b.querySelector('b'), 32, 16); b.classList.add('chay');
     clearTimeout(this._bw); this._bw = setTimeout(() => b.hidden = true, 1700);
   },
   canhBaoTrum(id) {
     const b = $('#canh-bao');
     b.querySelector('b').textContent = TRUM[id].ten; b.querySelector('span').textContent = TRUM[id].kn + ': ' + TRUM[id].mo;
-    b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; b.classList.add('chay');
+    b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; fitText(b.querySelector('b'), 26, 14); b.classList.add('chay');
     SND.canhBao();
     clearTimeout(this._cb); this._cb = setTimeout(() => b.hidden = true, 2200);
   },
@@ -259,6 +261,43 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     tt.hidden = false;
     fitText(tt.querySelector('.tt-ten'), 18, 12);
     this.ttHet = performance.now() + (giu ? 3600 : 3200);
+  },
+
+  // bảng thông tin chỉ huy (Ma vương): chân dung + kỹ năng + giá/hồi chiêu
+  moTTMV(id) {
+    const d = MAVUONG[id]; if (!d) return;
+    const tt = $('#tt'), B = G.ban[0], an = tt.querySelector('.tt-anh');
+    tt.style.setProperty('--m', d.mau);
+    an.onerror = () => { an.onerror = null; an.src = mvIcURL(id); };
+    an.src = 'assets/' + d.anh + '.png';
+    tt.querySelector('.tt-ten').textContent = d.ten; tt.querySelector('.tt-ten').style.color = d.mau;
+    tt.querySelector('.tt-bac').textContent = 'COMMANDER';
+    tt.querySelector('.tt-phu').textContent = 'Archfiend skill · tap the button to cast';
+    tt.querySelector('.tt-kn').textContent = d.mo;
+    const gia = B ? B.mv.gia : d.gia, cd = B ? B.mv.cd : 0;
+    tt.querySelector('.tt-so').innerHTML = '<div class="d-so">Cost ' + gia + ' mana (doubles each use) · cooldown ' + d.cd + 's' + (cd > 0 ? ' · ready in ' + Math.ceil(cd) + 's' : '') + '</div>';
+    this.xemU = null;
+    const tran = G.ban.length && !$('#top').hidden;
+    tt.style.top = !tran ? '300px' : (G.ban.length > 1 ? '60px' : Math.round(B.y + B.h + 8) + 'px');
+    tt.style.zIndex = $('#chon').hidden ? 8 : 12;
+    tt.hidden = false; fitText(tt.querySelector('.tt-ten'), 18, 12);
+    this.ttHet = performance.now() + 3600;
+  },
+  // cut-in khi dùng kỹ năng Ma vương: dải ngang toàn màn (trong khung 430), chân dung trượt vào từ trái, tên kỹ năng từ phải
+  cutIn(id, B) {
+    const d = MAVUONG[id], c = $('#cutin'); if (!d || !c) return;
+    const po = c.querySelector('.ci-po');
+    po.onerror = () => { po.onerror = null; po.src = mvIcURL(id); po.classList.add('fb'); };
+    po.classList.remove('fb'); po.src = 'assets/' + d.anh + '.png';
+    c.querySelector('.ci-ki').src = mvIcURL(id);
+    c.querySelector('b').textContent = d.ten; c.querySelector('span').textContent = d.mo;
+    c.style.setProperty('--mm', d.mau);
+    const h = 132, y = B ? B.y + B.h / 2 - h / 2 : H / 2 - h / 2;
+    c.style.top = Math.round(clamp(y, 70, H - 200 - h)) + 'px';
+    c.hidden = false; c.classList.remove('chay'); void c.offsetWidth;
+    fitText(c.querySelector('b'), 34, 16); fitText(c.querySelector('span'), 12, 8);
+    c.classList.add('chay');
+    clearTimeout(this._ci); this._ci = setTimeout(() => { c.hidden = true; c.classList.remove('chay'); }, 820);
   },
 
   // dòng chi tiết bảng thông tin: chỉ số · tốc bắn · họ kỹ năng · mốc sao · grow-up
@@ -327,7 +366,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       case 'vao': this.vao(); break;
       case 'trieu': if (B && !G.ketThuc) { if (trieu(B)) SND.trieu(); } break;
       case 'nang': if (this._boQuaBam) { this._boQuaBam = false; break; } if (B) { if (nangCap(B, el.dataset.id)) { el.classList.remove('sang'); void el.offsetWidth; el.classList.add('sang'); } } break;
-      case 'mv': if (B) dungMV(B); break;
+      case 'mv': if (this._boQuaMV) { this._boQuaMV = false; break; } if (B) dungMV(B); break;
       case 'tocdo': G.tocDo = G.tocDo >= 3 ? 1 : G.tocDo + 1; el.textContent = G.tocDo + '×'; break;
       case 'dung': G.dung = true; $('#dung').hidden = false; $('#tt').hidden = true; break;
       case 'tiep': G.dung = false; $('#dung').hidden = true; break;
@@ -388,6 +427,10 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // giữ thẻ ở hàng dưới → bảng thông tin (không nâng cấp)
     const bo = $('#bo-the');
     bo.addEventListener('pointerdown', (e) => { const d = e.target.closest('.the'); if (!d) return; clearTimeout(this.giu); this.giu = setTimeout(() => { this._boQuaBam = true; this.moTT(d.dataset.id, null, true); }, 480); });
+    // giữ nút Ma vương → bảng thông tin chỉ huy (chạm nhanh = dùng kỹ năng)
+    const nm = $('#the-mv');
+    nm.addEventListener('pointerdown', () => { clearTimeout(this.giu); this._boQuaMV = false; this.giu = setTimeout(() => { this._boQuaMV = true; this.moTTMV(G.ban[0] && G.ban[0].mv.id); }, 480); });
+    for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) nm.addEventListener(ev, () => clearTimeout(this.giu));
     const huy = () => clearTimeout(this.giu);
     bo.addEventListener('pointerup', huy); bo.addEventListener('pointerleave', huy); bo.addEventListener('pointercancel', huy);
     // giữ thẻ ở màn chọn → thông tin

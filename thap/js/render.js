@@ -887,9 +887,10 @@ const REN = {
       ctx.globalAlpha = u > 0.7 ? (1 - u) / 0.3 : 1;
       if (c.kieu !== 'nhan') {
         const mx = c.kieu === 'crit' ? 1.6 : c.kieu === 'to' ? 1.2 : 1, px = Math.round(c.co * mx), im = this.chuAnh(c.s, c.mau, px), q = sc / mx;
-        const w = im.lw * q, h = im.lh * q, cx = clamp(c.x, w / 2, W - w / 2);
+        let q2 = q; if (im.lw * q2 > W - 12) q2 = (W - 12) / im.lw; // chữ dài: tự thu nhỏ cho vừa màn
+        const w = im.lw * q2, h = im.lh * q2, cx = clamp(c.x, w / 2 + 2, W - w / 2 - 2);
         if (c.kieu === 'mana') this.anhGiua(ctx, 'ui_mana', cx - im.tw * q / 2 - 8, y - c.co * 0.35, 14);
-        ctx.drawImage(im, cx - w / 2, y - im.by * q, w, h);
+        ctx.drawImage(im, cx - w / 2, y - im.by * q2, w, h);
         continue;
       }
       ctx.font = '900 ' + Math.round(c.co * sc) + 'px ' + FONT.display;

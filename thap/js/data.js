@@ -54,10 +54,18 @@ const TRUM_THU_TU = ['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare',
 
 // ỨNG VIÊN MA VƯƠNG (kỹ năng chủ động, mana NHÂN ĐÔI mỗi lần dùng, có hồi chiêu)
 const MAVUONG = {
-  hero:   { ten: TEXT.af.hero.name,  icon: 'ui_thuong', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
-  dahlia: { ten: TEXT.af.dahlia.name, icon: 'ui_sao',    gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
-  eve:    { ten: TEXT.af.eve.name, icon: 'sup_khien',  gia: 40, cd: 25, mo: TEXT.af.eve.desc },
+  hero:   { ten: TEXT.af.hero.name,   anh: 'af_hero',   icon: 'ui_thuong', mau: '#6fc8ff', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
+  dahlia: { ten: TEXT.af.dahlia.name, anh: 'af_dahlia', icon: 'lua',       mau: '#ff6a3a', gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
+  eve:    { ten: TEXT.af.eve.name,    anh: 'af_eve',    icon: 'sup_khien', mau: '#ffe9a0', gia: 40, cd: 25, mo: TEXT.af.eve.desc },
 };
+// biểu tượng kỹ năng Ma vương: ảnh trong assets/, riêng RAGE = ngọn lửa vẽ bằng code (SVG)
+const MV_LUA = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff2a10"/><stop offset=".6" stop-color="#ff8a1a"/><stop offset="1" stop-color="#ffd23a"/></linearGradient><linearGradient id="b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb21a"/><stop offset="1" stop-color="#fff6b0"/></linearGradient></defs><path d="M32 3c3 10 15 16 15 31a15 15 0 0 1-30 0c0-7 4-12 7-15 0 5 2 8 5 9-1-9 1-17 3-25z" fill="url(#a)" stroke="#5a0a00" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 30c2 6 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 4 3 5 0-4 0-8 1-12z" fill="url(#b)"/></svg>');
+function mvIcURL(id) { const d = MAVUONG[id]; return d.icon === 'lua' ? MV_LUA : 'assets/' + d.icon + '.png'; }
+// ảnh chân dung Ma vương; nếu ảnh chưa có / lỗi → tự đổi sang biểu tượng (không bao giờ ô trống)
+function mvArt(id) {
+  const d = MAVUONG[id], ic = mvIcURL(id);
+  return '<span class="mv-anh" style="--mm:' + d.mau + '"><img class="po" src="assets/' + d.anh + '.png" alt="" onerror="this.onerror=null;this.classList.add(\'fb\');this.src=\'' + ic + '\'"><img class="ki" src="' + ic + '" alt=""></span>';
+}
 
 // máu quái theo wave (tăng nhanh dần như DCDW)
 function mauWave(w) { return Math.round(80 * Math.pow(1.15, w - 1) + 30 * w); }
