@@ -176,7 +176,7 @@ function dungMV(B) {
   if (mv.id === 'dahlia') { B.cuong = 10; FX.sang(0.5, '#ff7a3a'); }
   if (mv.id === 'eve') {
     B.khien = 8;
-    for (const T of B.t) if (T) { T.st.bang = 0; T.st.da = false; T.st.lua = 0; T.st.ngam = 0; }
+    for (const T of B.t) if (T) { if (T.st.bang > 0 || T.st.da || T.st.lua > 0) VX.donSach(B, T); T.st.bang = 0; T.st.da = false; T.st.lua = 0; T.st.ngam = 0; }
     FX.sang(0.4, '#9fe6ff');
   }
   FX.vong1(cx, cy, 20, 240, '#ffffff', 0.6, 6);
@@ -266,14 +266,14 @@ function trung(E, dmg, o) {
   // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
   if (T && T.buf && !o.phu) {
     if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
-    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); FX.chu1(E.x, E.y - 22, TEXT.fx.reaper, '#c77dff', 13, 'to'); FX.no('laser_trung', E.x, E.y, 50, 0.3); }
+    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); VX.chem(E); } // giết ngay: đầu lâu tím + tro (buff.js)
   }
   E.hp -= dmg; E.flash = 0.09;
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
   if (!o.im) {
     E.soAcc = (E.soAcc || 0) + dmg;
     if (crit || G.t - (E.soT || -9) > 0.2 || E.hp <= 0) {
-      FX.chu1(E.x + rnd(-8, 8), E.y - 14, Math.round(E.soAcc) + '', crit ? '#ffd23f' : (o.mau || '#ffffff'), crit ? 17 : 12, crit ? 'crit' : '');
+      FX.chu1(E.x + rnd(-8, 8), E.y - 16, Math.round(E.soAcc) + '', crit ? '#F7D65B' : (o.mau || '#E9E8E2'), crit ? 15 : 12, crit ? 'crit' : ''); // thường: ngà 12 px · chí mạng: vàng 15 px nảy nhẹ
       E.soAcc = 0; E.soT = G.t;
     }
   }
@@ -374,7 +374,7 @@ function capNhatBan(B, dt) {
   if (B.phao > 0) SKILLS.orbital.phaoBan(G, B, dt); // vệ tinh bắn phá sau khi ghép ụ Vệ Tinh
   // hỗ trợ: reset rồi các ụ hỗ trợ buff 4 ô kề (trên-dưới-trái-phải)
   for (const T of B.t) if (T) {
-    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0;
+    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0; T.nguon = []; // nguon: buff nhận từ ụ nào (hiển thị buff)
     if (T.tocT > 0) { T.tocT -= dt; T.buf.toc += T.tocV; } // tăng tốc tạm thời (Kẹp Phá co-op…)
     if (T.st.kep > 0) T.st.kep -= dt;
   }
@@ -383,10 +383,14 @@ function capNhatBan(B, dt) {
     const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
     const k = sk.vai === 'ht' ? heSoHT(T) : 1; // mốc hào quang 3★/7★
     for (const N of oHoTro(B, T)) if (N && N !== T && !N.st.da) {
-      if (k === 1) { sk.hoTro(G, T, N); continue; }
       const b = N.buf, c0 = b.toc, c1 = b.dmg, c2 = b.crit, c3 = b.cham, c4 = b.chet;
       sk.hoTro(G, T, N);
-      b.toc = c0 + (b.toc - c0) * k; b.dmg = c1 + (b.dmg - c1) * k; b.crit = c2 + (b.crit - c2) * k; b.cham = Math.min(0.8, c3 + (b.cham - c3) * k); b.chet = c4 + (b.chet - c4) * k;
+      if (k !== 1) { b.toc = c0 + (b.toc - c0) * k; b.dmg = c1 + (b.dmg - c1) * k; b.crit = c2 + (b.crit - c2) * k; b.cham = Math.min(0.8, c3 + (b.cham - c3) * k); b.chet = c4 + (b.chet - c4) * k; }
+      // ghi nguồn buff (ụ nào cho bao nhiêu) — chậm: lấy mức CAO nhất, còn lại cộng dồn
+      const ng = N.nguon;
+      if (b.toc > c0) ng.push({ k: 'toc', v: b.toc - c0, T }); if (b.dmg > c1) ng.push({ k: 'dmg', v: b.dmg - c1, T });
+      if (b.crit > c2) ng.push({ k: 'crit', v: b.crit - c2, T }); if (b.chet > c4) ng.push({ k: 'chet', v: b.chet - c4, T });
+      if (SKILLS[T.id].vai === 'ht' && T.id === 'lanhgia') ng.push({ k: 'cham', v: SKILLS.lanhgia.cham(T) * k, T });
     }
   }
   for (const T of B.t) if (T) capNhatU(B, T, dt);
@@ -402,7 +406,9 @@ function tamU(T) { const c = G.ban[T.ban].o[T.o]; return c; }
 // đầu nòng: tính từ ảnh đầu súng + tỉ lệ
 function dauNong(T) {
   const c = tamU(T), m = (window.ART_META || {})[T.id] || { s: 1, tip: 0.9 };
-  const r = REN.coDau(T) * 0.5 * m.tip + T.rx;
+  if (SKILLS[T.id] && SKILLS[T.id].gocDau) return [c.x + Math.cos(T.goc) * 6, c.y + Math.sin(T.goc) * 6]; // ụ không nòng (hỗ trợ, Halo, Horn): phát từ lõi
+  const tip = T.gd && window.STAGE_TIP && STAGE_TIP[T.id] ? STAGE_TIP[T.id][T.gd - 1] : m.tip; // đầu dạng grow-up: mũi nòng riêng
+  const r = REN.coDau(T) * 0.5 * tip + T.rx;
   return [c.x + Math.cos(T.goc) * r, c.y + Math.sin(T.goc) * r];
 }
 
@@ -516,10 +522,10 @@ function capNhatTrum(E, dt) {
 }
 // khiên 1 lần trên ụ (Máy Khiên / Hào Quang): chặn chiêu trùm hoặc phá của đối thủ
 function chanKhien(B, T) {
-  if (B && B.khien > 0 && T) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#fff6c0', 0.4); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#fff6c0', 14); return true; } // khiên toàn bàn
+  if (B && B.khien > 0 && T) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#73A9FF', 11); return true; } // khiên toàn bàn: lục giác chặn
   if (!T || !(T.khien > 0)) return false;
   T.khien--; const c = B.o[T.o];
-  FX.vong1(c.x, c.y, 12, 44, '#9fe6ff', 0.4, 4); FX.chu1(c.x, c.y - 22, TEXT.fx.shieldBlock, '#9fe6ff', 13, 'to'); FX.tiaLua(c.x, c.y, 10, '#bff4ff', 150);
+  VX.chanKhien(B, T); FX.chu1(c.x, c.y - 20, TEXT.fx.blocked, '#73A9FF', 11); // khiên 1 lần: lục giác bung 280 ms + 'BLOCK' 11 px
   return true;
 }
 function thucHienChieu(E, B) {
@@ -527,7 +533,7 @@ function thucHienChieu(E, B) {
   SND.chieuTrum(E.trum);
   for (const T of muc) T.st.ngam = 0;
   if (B.khien > 0) { // khiên Ma vương chặn chiêu trùm
-    for (const T of muc) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#9fe6ff', 0.4); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#9fe6ff', 14); }
+    for (const T of muc) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#73A9FF', 11); }
     return;
   }
   // Máy Khiên: ụ có khiên chặn 1 lần chiêu trùm

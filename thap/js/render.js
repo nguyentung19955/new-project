@@ -371,10 +371,10 @@ const REN = {
   coU(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * 0.98; },
   // đầu súng: đường kính vẽ = cạnh ô × K (artscale.js, đo từ ảnh: thân ~61% ô, mũi nòng ≤ 92% ô) — bệ chung = 70% cạnh ngắn ô
   kDau(id) { const k = (window.HEAD_K || {})[id]; if (k) return k; const m = (window.ART_META || {})[id] || { s: 1 }; return 0.8 * m.s; },
-  coDau(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * (T.gd && laGrow(T.id) ? STAGE_K[T.id][T.gd - 1] : this.kDau(T.id)); },
+  coDau(T) { const B = G.ban[T.ban]; return Math.min(B.cw, B.ch) * this.dauK(T.id, T.gd); },
   // tên ảnh + hệ số cỡ của đầu súng ở dạng gd (0 = đầu thường, 1..3 = dạng grow-up)
-  dauTen(id, gd) { return gd ? id + '_nong_s' + gd : id + '_nong'; },
-  dauK(id, gd) { return gd ? STAGE_K[id][gd - 1] : this.kDau(id); },
+  dauTen(id, gd) { return gd && STAGE_K[id] ? id + '_nong_s' + gd : id + '_nong'; },
+  dauK(id, gd) { return gd && STAGE_K[id] ? STAGE_K[id][gd - 1] : this.kDau(id); },
   // vẽ 1 lớp đầu súng (đã xoay sẵn ở ctx): bien '' thường | 'trang' bóng trắng | 'den' bóng tối; sc = phóng ĐỀU
   veDauLop(ctx, id, gd, C, al, sc, da, bien) {
     const ten = this.dauTen(id, gd), D = C * this.dauK(id, gd) * (sc || 1);
@@ -514,10 +514,12 @@ const REN = {
         ctx.globalAlpha = 0.6 + 0.4 * Math.sin(this.t * 20); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y, co * 0.9, 0, 7); ctx.fill(); ctx.restore();
         ctx.globalAlpha = al;
       }
-      if (E.cham > 0 && !E.d.khangCham) { // bị chậm: quầng băng dưới chân
-        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.3 * al;
-        this.anhGiua(ctx, this.cham1('#7fdcff'), x, y, co * 0.9); ctx.restore(); ctx.globalAlpha = al;
-      }
+      const lanh = E.cham > 0 && !E.d.khangCham && !E.chet;
+      if (lanh) { // bị chậm: viền băng mỏng quanh quái (không tô xanh cả thân) + bông tuyết cạnh thanh máu (vẽ sau)
+        if (!E._lanhT) { E._lanhT = this.t; FX.no('bang_vo', x, y, co * 0.8, 0.19); } // lúc vừa dính chậm: loé băng 190 ms
+        ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2 * al;
+        this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = al;
+      } else E._lanhT = 0;
       if ((E.yeu > 0 || E.cvT > 0 || E.giapT > 0) && !E.chet) { // dấu suy yếu (Phá Giáp: tím), cầu vồng (sắc màu), giáp đối thủ (vàng)
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28 * al;
         const mm = E.cvT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(this.t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
@@ -539,6 +541,7 @@ const REN = {
         ctx.fillStyle = E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a');
         ctx.fillRect(x - w / 2, yy, w * clamp(E.hp / E.max, 0, 1), 3);
       }
+      if (lanh) { ctx.globalAlpha = 0.85 * al; const k = this.kyHieu('cham', 8); ctx.drawImage(k, x - Math.max(18, co * 0.55) / 2 - 10, y - co * 0.42 - 3, 8, 8); ctx.globalAlpha = al; }
       if (E.trum && !E.chet) {
         const w = 70, yy = y - co * 0.55;
         ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(x - w / 2 - 2, yy - 2, w + 4, 8);
@@ -644,12 +647,12 @@ const REN = {
       if (T.id === 'set' && T.cd < 0.18 && !da) sang = (0.18 - T.cd) * 4;
       if (T.id === 'laser' && T.las && T.las.on) sang = 0.2 + T.las.ramp * 0.5;
       if (T.id === 'overlord') sang = T.nap * T.nap * 0.7;
-      if (T.aurora > 0 || T.id === 'mimic') sang = Math.max(sang, 0.25 + 0.2 * Math.sin(this.t * 4 + T.pha));
+      if (T.id === 'mimic') sang = Math.max(sang, 0.25 + 0.2 * Math.sin(this.t * 4 + T.pha));
       if (T.chop > 0) sang = Math.max(sang, T.chop * 3);
       if (skT.sangDau) sang = Math.max(sang, skT.sangDau(T, this.t) || 0);
       if (sang > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.45, sang * 0.6); ctx.drawImage(dau, -D / 2, -D / 2, D, D); }
       ctx.restore();
-      if (T.id === 'mimic' || T.aurora > 0) { // ánh cầu vồng chạy vòng
+      if (T.id === 'mimic') { // ánh cầu vồng chạy vòng (bản sắc Mimic; buff Aurora hiện bằng ký hiệu)
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.22;
         const mau = ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'];
         const k = Math.floor(this.t * 3 + (T.pha || 0)) % 5;
@@ -670,23 +673,11 @@ const REN = {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#c77dff'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.lineDashOffset = this.t * 30; ctx.globalAlpha = al * 0.7;
       ctx.beginPath(); ctx.arc(0, 0, S * 0.38, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al;
     }
-    if ((T.tocT > 0 || T.epxung > 0) && !o.ghost) { // được tăng tốc (Kẹp Phá co-op, Hào Quang) / ép xung: vòng tia lửa quay
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.5;
-      const m = T.tocT > 0 ? '#4bff9a' : '#ff9a3a', a0 = this.t * (T.tocT > 0 ? 5 : 3);
-      for (let i = 0; i < 3; i++) { const a = a0 + i * 2.09; this.anhGiua(ctx, this.cham1(m), Math.cos(a) * S * 0.4, Math.sin(a) * S * 0.4, 8); }
-      ctx.restore(); ctx.globalAlpha = al;
-    }
-    if (T.khien > 0 && !o.ghost) { // khiên 1 lần (Máy Khiên): bong bóng xanh
-      ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = al * 0.45; ctx.strokeStyle = '#9fd8ff'; ctx.lineWidth = 1.3;
-      ctx.beginPath(); ctx.arc(0, 0, S * 0.36, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al;
-    }
     // lớp phủ trạng thái
     if (T.st.bang > 0) { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; }
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
     if (T.st.lua > 0) { const f = 1 + 0.04 * Math.sin(this.t * 22); ctx.save(); ctx.scale(f, f); this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
     if (T.st.ngam > 0) { ctx.save(); ctx.rotate(this.t * 2); const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }
-    if (B.khien > 0 && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.22 + 0.08 * Math.sin(this.t * 5); ctx.strokeStyle = '#9fe6ff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, S * 0.4, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al; }
     ctx.restore();
 
     // lớp UI trên ụ (không xoay theo đầu súng, neo theo ô): huy hiệu cấp sao + biểu tượng buff nhỏ
@@ -695,7 +686,7 @@ const REN = {
       ctx.globalAlpha = al;
       const hs = A ? A.huy : 1; // huy hiệu sao bật nảy lúc lộ kết quả ghép
       if (hs > 0.02) this.veHuyHieu(ctx, x + C * 0.31, y + oy - C * 0.31, T.sao, C * 0.3 * hs);
-      if (!o.ghost && T.buf) this.veBuffNho(ctx, T, x + C * 0.36, y + oy + C * 0.36, C * 0.2);
+      if (!o.ghost && T.buf) this.veBuffNho(ctx, T, x - B.cw / 2 + 3, y + oy - B.ch / 2 + 4); // ký hiệu buff: góc TRÊN-TRÁI ô (sao ở trên-phải)
     }
     ctx.globalAlpha = 1;
     if (A) VX.sau(ctx, T, x, y, S, A);
@@ -780,17 +771,7 @@ const REN = {
     return (this.cache[key] = c);
   },
   veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
-  // biểu tượng buff nhỏ trên ụ được hỗ trợ (góc dưới-phải, xếp sang trái) — không có quầng
-  veBuffNho(ctx, T, x, y, d) {
-    const b = T.buf; let i = 0;
-    const ve = (ten) => { if (i >= 3) return; if (this.ve1(ctx, ten, d, '', x - i * d * 0.82, y)) i++; };
-    if (b.toc > 0.001) ve('sup_radar');
-    if (b.dmg > 0.001) ve('sup_khuech');
-    if (b.crit > 0.001) ve('sup_chimang');
-    if (b.cham > 0.001) ve('sup_lanhgia');
-    if (b.chet > 0.001) ve('sup_tuthan');
-    if (T.khien > 0) ve('sup_khien');
-  },
+
   // laser: bật/tắt mờ dần (thời gian thực), cuộn vân + độ rộng/độ sáng dao động theo thời gian (không theo khung)
   veLaser(ctx) {
     const dt = this.dt;
@@ -899,8 +880,8 @@ const REN = {
     ctx.textAlign = 'center'; ctx.lineJoin = 'round';
     for (const c of FX.chu) {
       const u = c.t / c.song;
-      let sc = 1, y = c.y - u * 26;
-      if (c.kieu === 'crit') sc = 1 + 0.6 * Math.max(0, 1 - u * 5);
+      let sc = 1, y = c.y - VX.eo(u) * (c.kieu === 'crit' ? 17 : c.kieu ? 26 : 13);
+      if (c.kieu === 'crit') sc = c.t < 0.09 ? 1 + 0.12 * Math.sin(c.t / 0.09 * Math.PI) : 1; // chí mạng: nảy 112% trong 90 ms
       if (c.kieu === 'nhan') { sc = u < 0.1 ? 0.6 + u * 4 : 1; y = c.y - Math.min(1, u * 4) * 10; }
       if (c.kieu === 'to') { sc = u < 0.15 ? 0.5 + u / 0.15 * 0.7 : 1.2 - Math.min(0.2, (u - 0.15)); y = c.y - u * 18; }
       ctx.globalAlpha = u > 0.7 ? (1 - u) / 0.3 : 1;

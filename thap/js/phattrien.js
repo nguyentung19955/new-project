@@ -153,7 +153,7 @@ const GROW = {
       const k = T.giet || 0, s = T.thuc || T.sao >= 5 || k >= 50 ? 3 : T.sao >= 3 || k >= 20 ? 2 : 1;
       return { s, p: s === 3 ? 1 : Math.max(k / 50, (T.sao - 1) / 4), v: [0.4, 1] };
     } },
-  orbital: { mau: '#9fe6ff', ten: ['STANDBY', 'UPLINK', 'BOMBARDMENT'], dk: 'Uplink: 2+ Orbitals on board (+20% fire rate) · Bombardment: while its merge strike lasts (×2 fire rate)',
+  orbital: { mau: '#9fe6ff', khongAnh: true, ten: ['STANDBY', 'UPLINK', 'BOMBARDMENT'], dk: 'Uplink: 2+ Orbitals on board (+20% fire rate) · Bombardment: while its merge strike lasts (×2 fire rate)',
     gd: (T) => { const B = G.ban[T.ban], n = B ? demCungLoai(B, 'orbital') : 1, s = B && B.phao > 0 ? 3 : n >= 2 ? 2 : 1; return { s, p: s === 3 ? B.phao / 20 : s === 2 ? 0.5 : 0.2, v: [0.5] }; } },
   cuongno: { mau: '#ff5040', lap: true, ten: ['CALM', 'RAGE', 'FRENZY'], dk: '1st crit → Rage (+25% fire rate) · 2nd crit → Frenzy',
     gd: (T) => { const s = T.cuongT > 0 ? 3 : (T.rage || 0) > 0 ? 2 : 1; return { s, p: s === 3 ? T.cuongT / (ms(T, 5) ? 7 : 5) : s === 2 ? 0.5 : 0, v: [0.5] }; } },
@@ -164,7 +164,7 @@ const GROW = {
   dongbo: { mau: '#ffe46b', ten: ['OFFLINE', 'SYNCED', 'FULL SYNC'], dk: '3+ other turrets at its ★ → Synced · 6+ → Full Sync (+15% crit)',
     gd: (T) => { const n = T.dong || 0; return { s: n >= 6 ? 3 : n >= 3 ? 2 : 1, p: Math.min(1, n / 6), v: [0.5, 1], n }; } },
 };
-const laGrow = (id) => !!(GROW[id] && window.STAGE_K && STAGE_K[id]);
+const laGrow = (id) => !!(GROW[id] && ((window.STAGE_K && STAGE_K[id]) || GROW[id].khongAnh));
 const giaiDoan = (T) => (laGrow(T.id) ? GROW[T.id].gd(T).s : 0);
 // gọi mỗi bước cho từng ụ (game.js capNhatU): phát hiện đổi dạng → hoạt ảnh biến hình
 function tienHoaCap(B, T) {
@@ -199,3 +199,6 @@ function tocTT(id, T) {
   const r = T ? tocU(T) : (sk.toc || 1);
   return r.toFixed(r >= 2 ? 1 : 2) + ' shots/s';
 }
+
+// ụ hỗ trợ / không nòng: KHÔNG xoay theo quái — chỉ quay chậm đều (góc vẽ); Radar giữ chảo quay riêng, Mana Core đứng yên
+for (const id of ['chimang', 'lanhgia', 'khuech', 'tuthan', 'loa', 'haoquang']) if (SKILLS[id]) SKILLS[id].gocDau = (T, t) => (T.pha || 0) + t * (id === 'lanhgia' ? 0.9 : 0.3);

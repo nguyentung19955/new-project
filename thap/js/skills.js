@@ -30,7 +30,7 @@ SKILLS.canon = { // Pháo Nổ (Joan of Arc): bắn chậm, nổ lan; sao tăng 
 };
 SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
   vai: 'tc', dmg: 4.5, toc: 4, tocSao: 0.14, nham: 'dau',
-  mo: (T) => 'Fire rate ' + tocU(T).toFixed(1) + '/s',
+  mo: () => 'each ★ +14% fire rate',
   ban(G, B, T, E) {
     giat(T, 0.35); const [x, y] = dauNong(T);
     FX.no('chop_nong', x, y, 22 + Math.random() * 8, 0.07, T.goc + rnd(-0.1, 0.1));
@@ -113,7 +113,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
     if (T.nap >= 1) {
       T.nap = 0; const n = this.luong(T); B.mana += n; T.sang = 1;
       const c = tamU(T);
-      FX.chu1(c.x, c.y - 24, '+' + n, '#d9a8ff', 15, 'mana');
+      FX.chu1(c.x, c.y - 24, '+' + n, '#d9a8ff', 15, 'mana'); VX.manaRa(B, T);
       for (let i = 0; i < 8; i++) FX.hat1('lua', c.x + rnd(-14, 14), c.y + rnd(-8, 8), rnd(-10, 10), rnd(-60, -30), 0.6, 8, '#c77dff');
       if (!B.ai) SND.mana();
     }
@@ -204,6 +204,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet): bắn thường; khi GHÉP → toàn b
   vai: 'tc', dmg: 11, toc: 1.4, nham: 'dau',
   mo: (T) => ['STANDBY', 'UPLINK +20% fire rate', 'BOMBARDMENT ×2 fire rate'][Math.max(1, giaiDoan(T)) - 1] + ' · on merge: orbital strike 20s',
   capNhat(G, B, T) { const s = giaiDoan(T); if (s === 3) T.buf.toc += 1; else if (s === 2) T.buf.toc += 0.2; return false; }, // grow-up: UPLINK / BOMBARDMENT
+  sangDau: (T) => (T.gd === 3 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // không có ảnh 3 dạng: dạng thức tỉnh = đầu sáng rực + hào quang fx_awaken
   ban(G, B, T, E) {
     giat(T, 0.5); chopNong(T, 22); SND.lien();
     const dmg = dmgU(T);

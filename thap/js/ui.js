@@ -160,7 +160,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
-    for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id)) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
+    for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     REN.napTruoc(ds);
@@ -263,7 +263,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       so = T.sao + '★ · LV' + (G.ban[T.ban].lv[id] || 1);
       if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
       const tc = tocTT(id, T); if (tc) so += ' · ' + tc;
-      if (sk.mo) so += ' · ' + sk.mo(T);
+      if (sk.mo && !(SUP_GIA[id])) so += ' · ' + sk.mo(T); // ụ hỗ trợ: hiệu lực hiện tại nằm ở dòng ký hiệu bên dưới (đã gồm mốc sao)
       if (T.st.da) so += ' · ' + TEXT.ui.stoned;
       if (T.st.bang > 0) so += ' · ' + TEXT.ui.frozen;
       if (T.st.lua > 0) so += ' · ' + TEXT.ui.burning;
@@ -273,6 +273,14 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const tc = tocTT(id, null); if (tc) so += ' · ' + tc;
     }
     L.push('<div class="d-so">' + esc(so) + '</div>');
+    if (T) {
+      // ụ hỗ trợ: hiệu lực HIỆN TẠI + tầm + số ụ đang nhận + tách gốc/sao/cấp (đúng công thức)
+      const h = hoTroTT(T);
+      if (h) L.push('<div class="d-buff"><img src="' + REN.kyHieuURL(h.k) + '" alt=""><span><b style="color:' + BUFF[h.k].mau + '">' + esc(h.dong) + '</b> · ' + esc(h.tam) + '<br><small>' + esc(h.tach) + '</small></span></div>');
+      // buff ĐANG NHẬN: tổng cuối + từng nguồn + cách cộng
+      const nh = buffTongHop(T);
+      if (nh.length) L.push('<div class="d-nhan">EFFECTS ON ' + esc(G.rosterMap[id].ten.toUpperCase()) + ':' + nh.map(r => '<div class="d-buff"><img src="' + REN.kyHieuURL(r.k) + '" alt=""><span><b style="color:' + BUFF[r.k].mau + '">' + BUFF[r.k].ten + (r.cach === 'charges' ? ' ×' + r.tong : r.cach === 'timed' ? '' : ' +' + (r.k === 'chet' ? (r.tong * 100).toFixed(1) : Math.round(r.tong * 100)) + '%') + '</b> <small>[' + esc(r.nguon.join(', ')) + ']' + (r.nguon.length > 1 ? ' · ' + r.cach : '') + '</small></span></div>').join('') + '</div>');
+    } else if (SUP_LOAI[id] && SUP_GIA[id]) L.push('<div class="d-buff"><img src="' + REN.kyHieuURL(SUP_LOAI[id]) + '" alt=""><span>' + BUFF[SUP_LOAI[id]].ten + ' to 4 adjacent cells (N/E/S/W)</span></div>');
     // grow-up: điều kiện · dạng hiện tại · tiến độ
     if (laGrow(id)) {
       const g = GROW[id];

@@ -37,7 +37,7 @@ const FX = {
 
   chu1(x, y, s, mau, co, kieu) {
     if (this.chu.length >= this.MAX_CHU) this.chu.shift();
-    this.chu.push({ x, y, s, mau: mau || '#fff', co: co || 13, t: 0, song: kieu === 'to' ? 1.1 : kieu === 'nhan' ? 1.3 : 0.8, kieu: kieu || '' });
+    this.chu.push({ x, y, s, mau: mau || '#fff', co: co || 13, t: 0, song: kieu === 'to' ? 1.1 : kieu === 'nhan' ? 1.3 : kieu === 'crit' ? 0.6 : !kieu ? 0.5 : 0.8, kieu: kieu || '' });
     return this.chu[this.chu.length - 1];
   },
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay

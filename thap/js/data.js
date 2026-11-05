@@ -56,7 +56,7 @@ const TRUM_THU_TU = ['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare',
 const MAVUONG = {
   hero:   { ten: TEXT.af.hero.name,  icon: 'ui_thuong', gia: 30, cd: 15, mo: TEXT.af.hero.desc },
   dahlia: { ten: TEXT.af.dahlia.name, icon: 'ui_sao',    gia: 40, cd: 25, mo: TEXT.af.dahlia.desc },
-  eve:    { ten: TEXT.af.eve.name, icon: 'ui_tim',  gia: 40, cd: 25, mo: TEXT.af.eve.desc },
+  eve:    { ten: TEXT.af.eve.name, icon: 'sup_khien',  gia: 40, cd: 25, mo: TEXT.af.eve.desc },
 };
 
 // máu quái theo wave (tăng nhanh dần như DCDW)
