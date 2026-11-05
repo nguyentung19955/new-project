@@ -743,9 +743,8 @@ const REN = {
           this.veU(ctx, T, B.o[i].x, B.o[i].y, { alpha: 0.25 }); continue;
         }
         let o = {};
-        if (keo && keo.dang && keo.T.ban === B.i) {
-          if (!hopLeGhep(keo.T, T)) o.alpha = 0.62;
-        }
+        const ng = typeof KG !== 'undefined' ? KG.nguon() : (keo && keo.dang ? keo.T : null); // kéo hoặc chạm–chạm (keoghep.js)
+        if (ng && ng.ban === B.i && ng !== T && !hopLeGhep(ng, T)) o.alpha = 0.4; // ô không ghép được: mờ hẳn
         this.veU(ctx, T, B.o[i].x, B.o[i].y, o);
       }
     }
@@ -1071,8 +1070,8 @@ const REN = {
   veKeo(ctx) {
     const k = UI.keo; if (!k || !k.dang) return;
     const T = k.T;
-    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.arc(k.x + 8, k.y + 14, 20, 0, 7); ctx.fill();
-    this.veU(ctx, T, k.x, k.y - 10, { scale: 1.12 });
+    const [hx, hy] = UI.diemKeo(k); // đầu ụ nằm trên ngón tay (chạm) — điểm thả = tâm đầu ụ
+    this.veU(ctx, T, hx, hy - (k.lech ? 0 : 10), { scale: 1.12 });
   },
   veChu(ctx) {
     ctx.textAlign = 'center'; ctx.lineJoin = 'round';
