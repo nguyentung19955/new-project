@@ -66,7 +66,65 @@
     return use === 'local' && watched && !choseLocal ? 'cloud' : use; // chỉ nghi ngờ khi đã gắn được theo dõi nút
   }
 
-  const META = ['savedAt', 'owner', 'sound'];
+  // F2 (bảo vệ bản lưu): siêu dữ liệu mới (revision, updatedAt…, js/luu_an_toan.js) không tính là "nội dung" (không tự đẩy mây chỉ vì đóng dấu)
+  const META = ['savedAt', 'owner', 'sound', 'revision', 'updatedAt', 'gameBuild', 'schemaVersion', 'tgChoi', '_saoLuuMay'];
+  // Đường lưu mới (js/luu_an_toan.js); ?luucu=1 → G.luuAT.bat = false → mọi hàm dưới đây chạy nhánh cũ y như trước
+  const MOI = () => !!(G.luuAT && G.luuAT.bat);
+  const SAO_MAY = 3, SAO_CACH = 15 * 60 * 1000, TRAN = 380000; // giữ 3 bản sao mây, cách nhau ≥ 15 phút; cả tài liệu < 400000 ký tự (luật Firestore)
+  const numv = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
+  // Dấu của tài liệu mây (so-sánh-rồi-ghi): nội dung chuỗi bản lưu + updatedAt. Bản web cũ ghi đè cũng làm dấu đổi.
+  function tokenOf(d) { return d && typeof d.save === 'string' && d.save ? G.luuAT.hash(d.save) + ':' + numv(d.updatedAt, 0) : 'trong'; }
+  // Đọc tài liệu mây → { trong, hong, moi, s (đã nâng cấp, chưa G.fixSave), raw, token, sao (bản sao mây), at }
+  function docMay(d) {
+    const LA = G.luuAT, token = tokenOf(d);
+    if (!d || typeof d.save !== 'string' || !d.save) return { trong: true, token, sao: [] };
+    let s;
+    try { s = JSON.parse(d.save); } catch (e) { return { hong: true, raw: d.save, token, sao: [] }; }
+    if (!LA.hopLe(s).ok) return { hong: true, raw: d.save, token, sao: [] };
+    const sao = Array.isArray(s._saoLuuMay) ? s._saoLuuMay.filter((x) => x && typeof x.s === 'string') : [];
+    delete s._saoLuuMay;
+    const m = LA.nangCap(s);
+    if (m.moi) return { moi: true, raw: d.save, token, sao };
+    if (m.loi) return { hong: true, raw: d.save, token, sao };
+    return { s: m.s, raw: d.save, token, sao, at: numv(d.updatedAt, 0) };
+  }
+  // Danh sách cho màn Khôi phục: bản mây chính + các bản sao mây
+  function dsMay(may) {
+    const LA = G.luuAT, out = [];
+    if (may.s) out.push({ nguon: 'may', s: JSON.parse(JSON.stringify(may.s)), raw: may.raw, nhan: ['Mây: bản chính'], tt: LA.tomTat(may.s, may.at) });
+    may.sao.forEach((x, i) => {
+      try {
+        const o = JSON.parse(x.s);
+        if (!LA.hopLe(o).ok) return;
+        delete o._saoLuuMay;
+        out.push({ nguon: 'may', s: o, raw: x.s, nhan: ['Mây: bản sao {0}', i + 1], tt: LA.tomTat(o, x.at) });
+      } catch (e) { /* bản sao hỏng: bỏ */ }
+    });
+    return out;
+  }
+  // Tài liệu sẽ ghi: revision > revision trên mây; bản đang có trên mây (nếu khác dòng / cũ hơn 15 phút / ep) thành bản sao mây
+  function taoPayload(o, cur, ep) {
+    const LA = G.luuAT;
+    let curS = null;
+    try { curS = cur && typeof cur.save === 'string' ? JSON.parse(cur.save) : null; } catch (e) { curS = null; }
+    if (curS && (typeof curS !== 'object' || Array.isArray(curS))) curS = null;
+    const curRev = curS ? LA.rev(curS) : 0;
+    const ob = Object.assign({}, o);
+    delete ob._saoLuuMay;
+    ob.revision = Math.max(LA.rev(o), curRev + 1);
+    let sao = curS && Array.isArray(curS._saoLuuMay) ? curS._saoLuuMay.filter((x) => x && typeof x.s === 'string') : [];
+    if (curS) {
+      const truoc = Object.assign({}, curS); delete truoc._saoLuuMay;
+      const dau = sao[0], khacDong = truoc.saveId && o.saveId && truoc.saveId !== o.saveId;
+      if (ep || khacDong || !dau || numv(cur.updatedAt, 0) - numv(dau.at, 0) > SAO_CACH) sao.unshift({ rev: curRev, at: numv(cur.updatedAt, 0), prog: numv(cur.prog, 0), s: JSON.stringify(truoc) });
+    } else if (cur && typeof cur.save === 'string' && cur.save) sao.unshift({ rev: 0, at: numv(cur.updatedAt, 0), prog: 0, s: cur.save.slice(0, 150000), hong: 1 }); // bản mây hỏng: giữ lại
+    sao = sao.slice(0, SAO_MAY);
+    const chuoi = () => JSON.stringify(sao.length ? Object.assign({}, ob, { _saoLuuMay: sao }) : ob);
+    let str = chuoi();
+    while (str.length > TRAN && sao.length) { sao.pop(); str = chuoi(); }
+    if (str.length >= 400000) { const e = new Error('Bản lưu quá lớn để lưu mây'); e.code = 'lk-qua-lon'; throw e; }
+    return { save: str, updatedAt: numv(o.savedAt, Date.now()), prog: progress(o), v: 1, ver: String(G.VERSION).slice(0, 20) };
+  }
   function body(s) { const o = Object.assign({}, s); for (const k of META) delete o[k]; return JSON.stringify(o); }
   let lastBody = null;
 
@@ -78,6 +136,12 @@
 
     // Dòng trạng thái hiện ở Anh Mõ
     label() {
+      if (MOI() && this.online()) {
+        if (G.luuAT.khoa === 'phucHoi') return tr('Đang chờ chọn bản lưu để khôi phục');
+        if (this.choChon) return tr('Đang chờ chọn bản lưu (mây hay máy này)');
+        if (this.chanGhi) return tr('Bản trên mây do game mới hơn tạo: chưa lưu lên mây');
+        if (this.tamDung) return tr('Đã tạm dừng lưu mây trong lần chơi này');
+      }
       if (this.why === 'frame') return 'Bản xem trước: không kết nối được mây, chỉ lưu trên máy';
       if (this.why === 'file') return 'Mở từ tệp trên máy: chỉ lưu trên máy';
       if (this.why === 'no-config' || this.why === 'off') return 'Chưa bật lưu mây: chỉ lưu trên máy';
@@ -146,6 +210,7 @@
         return;
       }
       this.user = u; this.ready = true; this.status = 'ok'; this.myScore = null; this.adminNew = null;
+      this.daDongBo = false; this.mayToken = undefined; this.choChon = false; this.tamDung = false; this.chanGhi = '';
       await this.pull();
       this.flushFeedback && this.flushFeedback();
       if (G.bangVang) G.bangVang.sync();
@@ -179,6 +244,7 @@
 
     // ---------- bản lưu ----------
     async pull() {
+      if (MOI()) return this.pullMoi();
       if (!this.online()) return;
       const uid = this.user.uid;
       try {
@@ -218,15 +284,118 @@
       } catch (e) { this._fail(e); }
     },
     _own() { if (G.save.owner !== this.user.uid) { G.save.owner = this.user.uid; basePersist(); } },
+    // ---------- bản lưu, đường mới (F2): đọc trước, quyết định theo bảng mục 4.4, ghi bằng transaction so-sánh-rồi-ghi ----------
+    pullMoi() {
+      if (!this.online()) return Promise.resolve();
+      if (this._pulling) return this._pulling;
+      this._pulling = this._pullMoi().catch((e) => this._fail(e)).then(() => { this._pulling = null; });
+      return this._pulling;
+    },
+    async _pullMoi() {
+      const LA = G.luuAT, uid = this.user.uid;
+      const snap = await this._doc().get();
+      if (!this.user || this.user.uid !== uid) return;
+      const d = snap.exists ? snap.data() : null;
+      const may = docMay(d);
+      this.mayToken = may.token; this.mayRaw = may.raw || null;
+      LA.mayUngVien = dsMay(may); LA.mayDaXem = true;
+      if (LA.khoa === 'phucHoi') return; // máy đang chờ người chơi chọn bản khôi phục: chưa đụng gì (màn Khôi phục đã có thêm bản mây)
+      let cloud = null;
+      if (may.s) { const r = LA.thuNap(may.s); if (r && !r.moi) cloud = r.s; else may.hong = true; }
+      const local = G.save;
+      const qd = LA.quyetDinh({ local, mayS: cloud, mayTrong: !!may.trong, mayHong: !!may.hong, mayMoi: !!may.moi, mayToken: may.token, dongBo: LA.docDongBo(uid) });
+      this.qdCuoi = qd;
+      if (qd === 'chan-moi') {
+        this.chanGhi = 'moi';
+        LA.moMan({ loai: 'tb', tieuDe: 'Cần cập nhật game', chu: 'Bản lưu này do phiên bản Talesworn mới hơn tạo ra. Hãy tải lại trang để cập nhật. Game sẽ không ghi đè bản lưu này.', nut: [['Tải lại', () => { try { location.reload(); } catch (e) { /* bỏ qua */ } }], ['Đóng', null]] });
+        return;
+      }
+      if (qd === 'hoi') {
+        this.choChon = true;
+        LA.cat(LA.K.xdMay, JSON.stringify(local)); LA.cat(LA.K.xdMayC, may.raw); // sao lưu cả hai trước khi chọn
+        const at = numv(d && d.updatedAt, 0);
+        LA.moMan({ loai: 'xd', may: LA.tomTat(cloud, at), thietBi: LA.tomTat(local), xong: (lua) => this._xongXd(lua, cloud, at, may.token, uid) });
+        return;
+      }
+      this.daDongBo = true;
+      if (qd === 'tai') {
+        LA.cat(LA.K.xdMay, JSON.stringify(local)); // giữ bản máy trước khi thay
+        this.apply(cloud, numv(d && d.updatedAt, 0) || Date.now(), may.token);
+        this.lastSync = Date.now(); this.dirty = false;
+        return;
+      }
+      this._own();
+      if (qd === 'giong') { LA.ghiDongBo(uid, { token: may.token, hash: LA.hashND(local) }); this.lastSync = Date.now(); this.dirty = false; return; }
+      if (qd === 'may-hong') LA.cat(LA.K.mayHong, may.raw);
+      // 'day' / 'may-hong': đẩy bản máy (không ghi ngay lúc vừa đăng nhập: gộp 4 giây, và transaction kiểm lại mây chưa đổi)
+      // 'cho-ghi-dau': mây trống → chờ lần lưu thật đầu tiên (G.persist → queue) mới đưa lên
+      if (qd !== 'cho-ghi-dau' || this.dirty) { this.dirty = true; this.queue(); }
+    },
+    _xongXd(lua, cloud, at, token, uid) {
+      this.choChon = false;
+      if (!this.user || this.user.uid !== uid) return;
+      if (lua === 'may') { this.daDongBo = true; this.apply(cloud, at || Date.now(), token); this.lastSync = Date.now(); this.dirty = false; return; }
+      if (lua === 'thietBi') { this.daDongBo = true; this._own(); this._epSaoLuu = true; this.dirty = true; this.push(true); return; }
+      this.tamDung = true; // Huỷ: không đồng bộ trong lần chơi này (máy vẫn lưu bình thường); mở lại game sẽ hỏi lại
+    },
+    // Người chơi vừa chọn ở màn Khôi phục. Chọn đúng bản mây chính đang có → coi như đã đồng bộ với bản đó (không hỏi lại).
+    sauKhoiPhuc(u) {
+      if (this.online() && u && u.nguon === 'may' && u.raw && u.raw === this.mayRaw) G.luuAT.ghiDongBo(this.user.uid, { token: this.mayToken, hash: G.luuAT.hashND(G.save) });
+      this.daDongBo = false; this.dirty = true;
+      if (this.online()) this.pullMoi();
+    },
+    async pushMoi() {
+      clearTimeout(this._timer);
+      if (!this.online()) { this.dirty = true; return; }
+      const LA = G.luuAT;
+      if (LA.khoa || this.chanGhi || this.choChon || this.tamDung || this.pendingApply) { this.dirty = true; return; }
+      if (!this.daDongBo) { this.dirty = true; return this.pullMoi(); } // chưa đọc mây lần nào (hoặc vừa xung đột): đọc trước
+      const uid = this.user.uid, s = G.save;
+      s.owner = uid;
+      if (!s.savedAt) s.savedAt = Date.now();
+      const seq = this._changeSeq, ep = !!this._epSaoLuu, mong = this.mayToken;
+      const o = JSON.parse(JSON.stringify(s)); delete o._saoLuuMay;
+      const hash = LA.hashND(o);
+      this.status = 'saving';
+      let payload;
+      try {
+        const ref = this._doc();
+        payload = await this.db.runTransaction(async (tx) => {
+          const sn = await tx.get(ref);
+          const cur = sn.exists ? sn.data() : null;
+          if (tokenOf(cur) !== mong) { const e = new Error('Bản trên mây vừa đổi'); e.code = 'lk-xung-dot'; throw e; }
+          const p = taoPayload(o, cur, ep);
+          tx.set(ref, p);
+          return p;
+        });
+      } catch (e) {
+        if (e && e.code === 'lk-xung-dot') { this.status = 'ok'; this.daDongBo = false; this.dirty = true; return this.pullMoi(); }
+        this._fail(e); this.dirty = true;
+        clearTimeout(this._timer);
+        this._retry = Math.min(60000, (this._retry || 2500) * 2);
+        this._timer = setTimeout(() => { if (this.dirty && this.online()) this.push(true); }, this._retry);
+        return;
+      }
+      if (!this.user || this.user.uid !== uid) return;
+      this._epSaoLuu = false;
+      this.mayToken = tokenOf(payload);
+      LA.ghiDongBo(uid, { token: this.mayToken, hash });
+      try { const rv = LA.rev(JSON.parse(payload.save)); if (G.save === s && rv > LA.rev(s)) s.revision = rv; } catch (e) { /* bỏ qua */ }
+      this.lastSync = Date.now(); this.status = 'ok'; this._retry = 0;
+      if (seq === this._changeSeq) this.dirty = false;
+      else { this.dirty = true; this.queue(); }
+    },
     // dùng bản trên mây; đang trong ải thì chờ về làng mới thay (không làm rối trận đang đánh)
-    apply(s, at) {
-      if (G.scene === G.StageScene) { this.pendingApply = { s, at }; return; }
+    apply(s, at, token) {
+      if (G.scene === G.StageScene) { this.pendingApply = { s, at, token }; return; }
+      if (MOI() && s) delete s._saoLuuMay;
       const snd = G.save ? G.save.sound : true, net = G.save ? G.save.net : undefined;
       s.sound = snd; if (net) s.net = net; else delete s.net; // âm thanh, độ nét: giữ theo máy
       if (G.LANG === 'en') s.lang = 'en'; else delete s.lang; // ngôn ngữ: giữ theo máy (js/ngon_ngu.js)
       s.owner = this.user ? this.user.uid : s.owner; s.savedAt = at || s.savedAt || Date.now();
       G.save = s; lastBody = body(s); basePersist();
       this.pendingApply = null;
+      if (MOI() && token && this.user) G.luuAT.ghiDongBo(this.user.uid, { token, hash: G.luuAT.hashND(s) });
       try { if (G.villageScene && G.villageScene.checkNews) G.villageScene.checkNews(); } catch (e) { /* bỏ qua */ }
       try { if (G.villageScene && G.villageScene.say && G.scene === G.Village) G.villageScene.say('Đã tải tiến trình từ mây.'); } catch (e) { /* bỏ qua */ }
     },
@@ -239,6 +408,7 @@
     },
     async push(now) {
       if (!now) { this.queue(); return; }
+      if (MOI()) return this.pushMoi();
       clearTimeout(this._timer);
       if (!this.online()) { this.dirty = true; return; }
       const s = G.save;
@@ -432,7 +602,9 @@
   if (G.Village) {
     const baseEnter = G.Village.enter;
     G.Village.enter = function () {
-      if (C.pendingApply) C.apply(C.pendingApply.s, C.pendingApply.at);
+      // F2: bản mây chờ thay trong lúc đánh ải → về làng thì ĐỌC LẠI và quyết định lại (máy có thể vừa có kết quả ải mới)
+      if (C.pendingApply && MOI()) { C.pendingApply = null; C.daDongBo = false; C.pullMoi(); }
+      else if (C.pendingApply) C.apply(C.pendingApply.s, C.pendingApply.at, C.pendingApply.token);
       return baseEnter.apply(this, arguments);
     };
   }

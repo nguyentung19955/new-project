@@ -1,0 +1,201 @@
+{
+ "_mo_ta": "Đã qua ải 1-1 (2 sao), trước khi có Luyện vũ khí (mài +1, chưa có trường luyen)",
+ "save": {
+  "v": 1,
+  "gold": 85,
+  "ore": 3,
+  "stones": 0,
+  "mats": [
+   1,
+   0,
+   0
+  ],
+  "shards": [
+   0,
+   0,
+   0
+  ],
+  "forge": 1,
+  "heroes": {
+   "smith": {
+    "unlocked": true,
+    "lvl": 2,
+    "xp": 30,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {
+      "luc": 1
+     }
+    }
+   },
+   "hunter": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "bang",
+     "n": {}
+    }
+   },
+   "healer": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "doc",
+     "n": {}
+    }
+   },
+   "wrestler": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   }
+  },
+  "hero": "smith",
+  "weapons": [
+   {
+    "id": 1,
+    "type": "sword",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 1,
+    "name": null,
+    "title": "",
+    "kills": 14,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 2,
+    "type": "bow",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 6,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 3,
+    "type": "spear",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 4,
+    "type": "hammer",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   }
+  ],
+  "nextId": 5,
+  "carry": [
+   1,
+   2
+  ],
+  "stars": {
+   "0-0": 2
+  },
+  "stars2": {},
+  "scars": {},
+  "tut": {
+   "done": true
+  },
+  "sound": true,
+  "wins": 1,
+  "bossGold": {},
+  "lkMoc": 2,
+  "doiNL": 0,
+  "heMoi": 1,
+  "linhKhi": 12,
+  "vkThu": [
+   "sword",
+   "bow",
+   "spear",
+   "hammer"
+  ],
+  "boCap": {},
+  "canLai": 1,
+  "owner": "khach-thu-1",
+  "savedAt": 1760500000000
+ },
+ "mong": {
+  "gold": 85,
+  "stars": {
+   "0-0": 2
+  },
+  "capMin": 2,
+  "linhKhiMin": 12
+ }
+}

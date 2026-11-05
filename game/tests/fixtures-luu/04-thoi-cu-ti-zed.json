@@ -1,0 +1,196 @@
+{
+ "_mo_ta": "Thời Cu Tí: 3 em bé (Thợ Săn cấp 14 cao nhất), vũ khí trường cũ tier/affix/lock, grit, quần áo cũ owned/helm/armor; chưa có zed/heMoi/canLai/Luyện",
+ "save": {
+  "v": 1,
+  "gold": 2400,
+  "ore": 11,
+  "stones": 4,
+  "mats": [
+   6,
+   3,
+   1
+  ],
+  "shards": [
+   2,
+   1,
+   0
+  ],
+  "forge": 2,
+  "heroes": {
+   "smith": {
+    "unlocked": true,
+    "lvl": 5,
+    "xp": 80,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   },
+   "hunter": {
+    "unlocked": true,
+    "lvl": 14,
+    "xp": 900,
+    "sk": {
+     "atk": 2,
+     "def": 1,
+     "elem": 1
+    },
+    "ch": {
+     "cay": "bang",
+     "n": {
+      "luc": 2
+     }
+    }
+   },
+   "healer": {
+    "unlocked": true,
+    "lvl": 9,
+    "xp": 300,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "doc",
+     "n": {}
+    }
+   },
+   "wrestler": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   }
+  },
+  "hero": "hunter",
+  "weapons": [
+   {
+    "id": 1,
+    "type": "sword",
+    "tier": 1,
+    "marks": {
+     "fire": 45,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": "fire",
+    "sharpen": 4,
+    "name": "Kiếm Lửa, kẻ hạ Mộc Tinh",
+    "kills": 530,
+    "bossKills": {
+     "moc": 1
+    },
+    "affix": "crit",
+    "lock": true
+   },
+   {
+    "id": 2,
+    "type": "bow",
+    "tier": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 12,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 2,
+    "name": "Cung Tre",
+    "kills": 220
+   },
+   {
+    "id": 5,
+    "type": "sword",
+    "tier": 2,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 130
+    },
+    "branch": "ice",
+    "sharpen": 6,
+    "name": "Kiếm Băng",
+    "kills": 75
+   },
+   {
+    "id": 7,
+    "type": "spear",
+    "tier": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "kills": 3
+   }
+  ],
+  "nextId": 8,
+  "carry": [
+   1,
+   2
+  ],
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 2,
+   "0-3": 3,
+   "0-4": 2,
+   "1-0": 2,
+   "1-1": 1
+  },
+  "stars2": {},
+  "scars": {
+   "0-4": "fire"
+  },
+  "tut": {
+   "done": true
+  },
+  "sound": false,
+  "wins": 11,
+  "bossGold": {},
+  "grit": 3,
+  "owned": {
+   "helm": [
+    "mu_rom"
+   ],
+   "armor": [
+    "ao_vai"
+   ],
+   "charm": []
+  },
+  "helm": "mu_rom",
+  "armor": "ao_vai",
+  "charm": null,
+  "outfit": "ninja",
+  "savedAt": 1759000000000
+ },
+ "mong": {
+  "gold": 2400,
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 2,
+   "0-3": 3,
+   "0-4": 2,
+   "1-0": 2,
+   "1-1": 1
+  },
+  "capMin": 14
+ }
+}

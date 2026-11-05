@@ -88,7 +88,23 @@
     signOut() { setUser(null); return wait(); },
   };
   user = mkUser(load(LA, null)); auth.currentUser = user;
-  const db = { collection: Col };
+  // F2 (05/11): lưu mây đường mới ghi bằng transaction so-sánh-rồi-ghi. window.__chenGhi = hàm: chạy sau lúc transaction đọc (giả máy khác ghi chen)
+  // → transaction thử lại như Firestore thật (đọc lại, hàm kiểm của game sẽ thấy mây đã đổi).
+  const db = { collection: Col, runTransaction(fn) {
+    if (window.__fbFail) return fail();
+    const chay = (lan) => {
+      const ghi = [], doc0 = {};
+      const tx = { get: (ref) => { doc0[ref.path] = JSON.stringify(fs[ref.path] || null); return wait(snap(ref.path, ref.id)); }, set: (ref, data) => { ghi.push([ref.path, clone(data)]); } };
+      return Promise.resolve(fn(tx)).then((v) => {
+        if (window.__chenGhi) { const f = window.__chenGhi; window.__chenGhi = null; f(); }
+        if (lan < 5 && Object.keys(doc0).some((p) => JSON.stringify(fs[p] || null) !== doc0[p])) return chay(lan + 1); // tài liệu đã đọc bị đổi: thử lại
+        for (const [p, d] of ghi) { fs[p] = d; window.__fsLog.push({ op: 'set', path: p, data: clone(d), tx: true }); }
+        save();
+        return v;
+      });
+    };
+    return chay(0);
+  } };
   const apps = [];
   function GoogleAuthProvider() {}
   const authFn = () => auth;

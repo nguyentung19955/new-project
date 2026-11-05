@@ -1,0 +1,200 @@
+{
+ "_mo_ta": "Người mới: bản lưu đời đầu (tests/cay_luu.json mục 0), chưa qua ải, chưa có Luyện/sổ/nhiệm vụ",
+ "save": {
+  "v": 1,
+  "gold": 0,
+  "ore": 0,
+  "stones": 0,
+  "mats": [
+   0,
+   0,
+   0
+  ],
+  "shards": [
+   0,
+   0,
+   0
+  ],
+  "forge": 1,
+  "heroes": {
+   "smith": {
+    "unlocked": true,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {
+      "luc": 1
+     }
+    }
+   },
+   "hunter": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "bang",
+     "n": {}
+    }
+   },
+   "healer": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "doc",
+     "n": {}
+    }
+   },
+   "wrestler": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   }
+  },
+  "hero": "smith",
+  "weapons": [
+   {
+    "id": 1,
+    "type": "sword",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 3,
+    "type": "spear",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 4,
+    "type": "hammer",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   },
+   {
+    "id": 2,
+    "type": "bow",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 0,
+    "bossKills": {},
+    "affixes": [],
+    "power": null
+   }
+  ],
+  "nextId": 5,
+  "carry": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "stars": {},
+  "stars2": {},
+  "scars": {},
+  "tut": {},
+  "sound": false,
+  "wins": 0,
+  "bossGold": {},
+  "lkMoc": 2,
+  "doiNL": 0,
+  "heMoi": 1,
+  "linhKhi": 0,
+  "vkThu": [
+   "sword",
+   "bow",
+   "spear",
+   "hammer"
+  ],
+  "boCap": {},
+  "daBac": 0,
+  "buaBac": 0,
+  "zed": {
+   "v": 1,
+   "hoc": {}
+  },
+  "savedAt": 1760000000000
+ },
+ "mong": {
+  "gold": 0,
+  "stars": {},
+  "capMin": 1
+ }
+}

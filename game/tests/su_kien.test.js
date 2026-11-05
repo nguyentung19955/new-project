@@ -257,6 +257,8 @@ const sx = (v) => JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Ar
     const may0 = await A.goi('function (r) { G.resetSave(); G.setScene(G.Village); const C = G.cloud; window.__ghi = []; window.__xong = null; ' +
       'C.ready = true; C.enabled = true; C.user = { uid: "u1", isAnonymous: false }; G.save.owner = "u1"; G.save.savedAt = 1; ' +
       'C.db = { collection() { return { doc() { return { get: () => Promise.resolve({ exists: true, data: () => ({ save: r, updatedAt: 2e12 }) }), set: (d) => { window.__ghi.push(d); return Promise.resolve(); }, update: () => Promise.resolve() }; } }; } }; ' +
+      // F2 (05/11): lưu mây đường mới ghi bằng transaction so-sánh-rồi-ghi → Firestore giả có runTransaction (đọc / ghi qua chính tài liệu trên)
+      'C.db.runTransaction = (f) => f({ get: (ref) => ref.get(), set: (ref, d) => { ref.set(d); } }); ' +
       'C.pull().then(() => { window.__xong = "ok"; }, (e) => { window.__xong = String(e); }); return true; }', cu[cu.length - 1]);
     dat(may0, 'gọi C.pull với Firestore giả');
     await A.goi('1'); await A.goi('1');

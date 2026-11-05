@@ -160,42 +160,65 @@ if run('chon'):
     with sync_playwright() as p:
         tmp = Game(p, 'phone'); s0 = base_save(tmp); tmp.close()
         stars_many = {f'{r}-{i}': 3 for r in range(3) for i in range(5)}
-        # a) mây mới hơn → dùng mây; âm thanh giữ theo máy
+        # F2 (05/11, bảo vệ bản lưu): KHÔNG chọn theo đồng hồ máy nữa. Hai bản đều có tiến trình mà chưa rõ lịch sử đồng bộ → màn chọn trên canvas
+        # (G.luuAT, khung + nút ảnh), sao lưu cả hai trước khi chọn. Luật cũ (chọn theo giờ, hộp HTML #lk-conflict) chỉ còn ở ?luucu=1 — thử ở mục e.
+        def chon_xd(g, lua):
+            g.pg.wait_for_function("G.luuAT.mo && G.luuAT.mo.loai === 'xd'", timeout=4000)
+            m = g.ev("({ may: G.luuAT.mo.may, tb: G.luuAT.mo.thietBi })")
+            g.ev(f"G.luuAT.bam('{lua}')"); g.wait(600)
+            return m
+        # a) mây "mới hơn theo giờ" → không tự lấy: hỏi; chọn mây → dùng mây, âm thanh giữ theo máy
         local = dict(s0, gold=5, savedAt=1000, sound=False, owner='khachA')
         cloud = dict(s0, gold=777, savedAt=5000, sound=True, owner='khachA')
         g = Game(p, 'phone', fresh=False, init_script=seed(local, {'linhkhi_users/khachA': {'save': json.dumps(cloud), 'updatedAt': 5000, 'prog': 1, 'v': 1, 'ver': 'x'}}, {'uid': 'khachA', 'isAnonymous': True}))
-        online(g); g.wait(300)
+        online(g); m = chon_xd(g, 'may')
+        ck.ok(m['may']['vang'] == 777 and m['tb']['vang'] == 5, f'hai bản lệch, chưa rõ lịch sử → hỏi (màn chọn: mây {m["may"]["vang"]} / máy {m["tb"]["vang"]})')
+        ck.ok(g.ev("!!localStorage.getItem('linhkhi_save_v1_xd_thietbi') && !!localStorage.getItem('linhkhi_save_v1_xd_may')"), 'sao lưu cả hai trước khi chọn')
         r = g.ev("({ gold: G.save.gold, sound: G.save.sound, n: window.__anonCount || 0, uid: G.cloud.user.uid })")
-        ck.ok(r['gold'] == 777 and r['uid'] == 'khachA' and r['n'] == 0, f'bản trên mây mới hơn → dùng bản trên mây, giữ tài khoản khách cũ ({r})')
+        ck.ok(r['gold'] == 777 and r['uid'] == 'khachA' and r['n'] == 0, f'chọn Dùng bản mây → dùng bản trên mây, giữ tài khoản khách cũ ({r})')
         ck.ok(r['sound'] is False, 'âm thanh giữ theo máy (tắt trên máy, bật trên mây)')
         ck.ok(json.loads(g.ev(f"localStorage.getItem('{SAVE_KEY}')"))['gold'] == 777, 'bản trên mây được ghi xuống máy')
-        g.ev("location.reload()"); g.pg.wait_for_function('window.G && G.scene'); online(g); g.wait(300)
-        ck.ok(g.ev("G.save.gold") == 777 and g.ev("window.__fsLog.filter(x => x.op === 'set').length") == 0, 'mở lại: hai bản như nhau, không ghi thừa')
+        g.ev("location.reload()"); g.pg.wait_for_function('window.G && G.scene'); online(g); g.wait(600)
+        dbg = g.ev("({ gold: G.save.gold, n: window.__fsLog.filter(x => x.op === 'set').length, mo: G.luuAT.mo && G.luuAT.mo.loai, qd: G.cloud.qdCuoi })")
+        ck.ok(dbg['gold'] == 777 and dbg['n'] == 0 and not dbg['mo'], f'mở lại: hai bản như nhau, không hỏi, không ghi thừa ({dbg})')
         ck.done(g); g.close()
-        # b) máy mới hơn → giữ máy, đẩy lên
+        # b) máy "mới hơn theo giờ" → cũng hỏi; chọn Giữ máy này → đẩy lên, bản mây cũ thành bản sao mây
         local = dict(s0, gold=9, savedAt=9000, owner='khachA')
         g = Game(p, 'phone', fresh=False, init_script=seed(local, {'linhkhi_users/khachA': {'save': json.dumps(dict(s0, gold=1)), 'updatedAt': 2000, 'prog': 1, 'v': 1, 'ver': 'x'}}, {'uid': 'khachA', 'isAnonymous': True}))
-        online(g); g.wait(300)
-        ck.ok(g.ev("G.save.gold") == 9 and json.loads(g.ev("window.__fs['linhkhi_users/khachA'].save"))['gold'] == 9, 'bản trên máy mới hơn → giữ và đẩy lên mây')
+        online(g); chon_xd(g, 'thietBi')
+        cl = json.loads(g.ev("window.__fs['linhkhi_users/khachA'].save"))
+        ck.ok(g.ev("G.save.gold") == 9 and cl['gold'] == 9 and any(json.loads(x['s'])['gold'] == 1 for x in cl.get('_saoLuuMay', [])), 'chọn Giữ máy này → đẩy bản máy lên mây, bản mây cũ còn trong bản sao mây')
         ck.done(g); g.close()
-        # c) mây mới hơn nhưng máy đi xa hơn rõ rệt → hỏi lại
-        for pick, want in (('cf-local', 'máy'), ('cf-cloud', 'mây')):
+        # c) máy đi xa hơn rõ rệt: màn chọn có tóm tắt hai bản (vẽ bằng khung / nút ảnh); bấm đúng toạ độ nút trên canvas
+        for lua, want in (('thietBi', 'máy'), ('may', 'mây')):
             local = dict(s0, gold=11, savedAt=1000, stars=stars_many, owner='khachA')
             g = Game(p, 'phone', fresh=False, init_script=seed(local, {'linhkhi_users/khachA': {'save': json.dumps(dict(s0, gold=22)), 'updatedAt': 8000, 'prog': 1, 'v': 1, 'ver': 'x'}}, {'uid': 'khachA', 'isAnonymous': True}))
-            g.pg.wait_for_selector('#lk-conflict', timeout=3000)
-            txt = g.pg.text_content('#lk-conflict')
-            ck.ok('45 sao' in txt and 'Trên mây' in txt, 'hai bản lệch, máy đi xa hơn → hỏi chọn bản, có tóm tắt hai bản')
+            online(g)
+            g.pg.wait_for_function("G.luuAT.mo && G.luuAT.mo.loai === 'xd'", timeout=4000)
+            tb = g.ev("G.luuAT.mo.thietBi")
+            ck.ok(tb['sao'] == 45 and tb['xa'] == 15, 'hai bản lệch, máy đi xa hơn → hỏi chọn bản, có tóm tắt hai bản (máy 45 sao)')
+            g.wait(300)
             if want == 'máy':
                 g.shot(os.path.join(ROOT, '..', 'docs', 'firebase-linh-khi', 'chon-ban-luu.png'))
-            g.pg.click(f'[data-act={pick}]'); g.wait(400)
+            b = g.ev(f"G.luuAT.BO_CUC.xd.nut[{0 if lua == 'may' else 1}]")
+            g.tap(b[0] + b[2] / 2, b[1] + b[3] / 2); g.wait(700)
             gold = g.ev("G.save.gold"); cl = json.loads(g.ev("window.__fs['linhkhi_users/khachA'].save"))['gold']
-            ck.ok((gold, cl) == ((11, 11) if want == 'máy' else (22, 22)), f'chọn giữ bản trên {want}: máy {gold}, mây {cl}')
+            ck.ok((gold, cl) == ((11, 11) if want == 'máy' else (22, 22)), f'chạm nút giữ bản trên {want}: máy {gold}, mây {cl}')
             ck.done(g); g.close()
-        # d) bản lưu cũ chưa có savedAt vẫn đọc được
+        # d) bản lưu cũ chưa có savedAt vẫn đọc được; mây trống → không ghi lúc vừa đăng nhập, lần lưu thật đầu tiên mới đưa lên
         old = dict(s0, gold=321); old.pop('savedAt', None)
         g = Game(p, 'phone', fresh=False, init_script=seed(old))
-        online(g); g.wait(300)
-        ck.ok(g.ev("G.save.gold") == 321 and json.loads(g.ev("window.__fs['linhkhi_users/' + G.cloud.user.uid].save"))['gold'] == 321, 'bản lưu cũ (không có mốc giờ) giữ nguyên và được đẩy lên')
+        online(g); g.wait(600)
+        ck.ok(g.ev("G.save.gold") == 321 and not g.ev("window.__fs['linhkhi_users/' + G.cloud.user.uid]"), 'bản lưu cũ (không có mốc giờ) giữ nguyên; mây trống → chưa ghi lúc vừa đăng nhập')
+        g.ev("G.save.gold += 1; G.persist()"); g.wait(4800)
+        ck.ok(json.loads(g.ev("window.__fs['linhkhi_users/' + G.cloud.user.uid].save"))['gold'] == 322, 'lần lưu thật đầu tiên → đưa lên mây')
+        ck.done(g); g.close()
+        # e) ?luucu=1 (đường lưu cũ): vẫn hộp HTML hỏi khi máy đi xa hơn rõ rệt, như trước
+        local = dict(s0, gold=11, savedAt=1000, stars=stars_many, owner='khachA')
+        g = Game(p, 'phone', url='file://' + ROOT + '/index.html?luucu=1', fresh=False, init_script=seed(local, {'linhkhi_users/khachA': {'save': json.dumps(dict(s0, gold=22)), 'updatedAt': 8000, 'prog': 1, 'v': 1, 'ver': 'x'}}, {'uid': 'khachA', 'isAnonymous': True}))
+        g.pg.wait_for_selector('#lk-conflict', timeout=4000)
+        g.pg.click('[data-act=cf-local]'); g.wait(400)
+        ck.ok(g.ev("G.luuAT.bat") is False and g.ev("G.save.gold") == 11, '?luucu=1: hộp HTML cũ, chọn giữ máy như trước')
         ck.done(g); g.close()
 
 # ---------------------------------------------------------------- 4. nối Google, nút quản trị

@@ -1,0 +1,261 @@
+{
+ "_mo_ta": "Giữa vùng 2 (Hang biển 1-3), vũ khí Luyện 12/10/9/7, bộ Rừng đã mua + cấp bộ, 2 Page Scrap, tiếng Anh",
+ "save": {
+  "v": 1,
+  "gold": 5230,
+  "ore": 0,
+  "stones": 0,
+  "mats": [
+   4,
+   2,
+   0
+  ],
+  "shards": [
+   3,
+   1,
+   0,
+   0
+  ],
+  "forge": 3,
+  "heroes": {
+   "smith": {
+    "unlocked": true,
+    "lvl": 17,
+    "xp": 420,
+    "sk": {
+     "atk": 2,
+     "def": 2,
+     "elem": 1
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {
+      "luc": 3,
+      "hoa": 2
+     }
+    }
+   },
+   "hunter": {
+    "unlocked": true,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "bang",
+     "n": {}
+    }
+   },
+   "healer": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "doc",
+     "n": {}
+    }
+   },
+   "wrestler": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   }
+  },
+  "hero": "smith",
+  "weapons": [
+   {
+    "id": 1,
+    "type": "sword",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 400,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": "fire",
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 812,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 12
+   },
+   {
+    "id": 2,
+    "type": "bow",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 455,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 10
+   },
+   {
+    "id": 3,
+    "type": "spear",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 210,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 9
+   },
+   {
+    "id": 4,
+    "type": "hammer",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 96,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 7
+   }
+  ],
+  "nextId": 5,
+  "carry": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 3,
+   "0-3": 2,
+   "0-4": 3,
+   "1-0": 3,
+   "1-1": 2,
+   "1-2": 1
+  },
+  "stars2": {
+   "0-0": 1
+  },
+  "scars": {},
+  "tut": {
+   "done": true,
+   "chIn": 1,
+   "potion": 1
+  },
+  "sound": true,
+  "wins": 19,
+  "bossGold": {
+   "0": 1
+  },
+  "moDan": {
+   "bao": {}
+  },
+  "lkMoc": 2,
+  "doiNL": 0,
+  "heMoi": 1,
+  "linhKhi": 640,
+  "vkThu": [
+   "sword",
+   "bow",
+   "spear",
+   "hammer"
+  ],
+  "boCap": {
+   "ninja": 2,
+   "rung": 1
+  },
+  "daBac": 0,
+  "buaBac": 0,
+  "nlr": 38,
+  "canLai": 1,
+  "zed": {
+   "v": 1,
+   "hoc": {
+    "hunter": 1
+   },
+   "boMo": {
+    "rung": 1
+   },
+   "bo": "rung",
+   "boMua": 1
+  },
+  "luyenChuyen": 1,
+  "trangSach": 2,
+  "lang": "en",
+  "owner": "google-thu-3",
+  "savedAt": 1762000000000
+ },
+ "mong": {
+  "gold": 5230,
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 3,
+   "0-3": 2,
+   "0-4": 3,
+   "1-0": 3,
+   "1-1": 2,
+   "1-2": 1
+  },
+  "capMin": 17,
+  "luyenMax": 12,
+  "boMo": [
+   "rung"
+  ],
+  "boCap": {
+   "ninja": 2,
+   "rung": 1
+  },
+  "trangSach": 2,
+  "linhKhiMin": 640
+ }
+}

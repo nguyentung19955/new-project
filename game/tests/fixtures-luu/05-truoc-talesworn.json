@@ -1,0 +1,286 @@
+{
+ "_mo_ta": "Trước khi có Talesworn/Page Scrap: vùng 3, Luyện 14/13/12/11, 2 bộ trang phục, chưa có trangSach/tgChoi/schemaVersion",
+ "save": {
+  "v": 1,
+  "gold": 12040,
+  "ore": 0,
+  "stones": 0,
+  "mats": [
+   9,
+   7,
+   5
+  ],
+  "shards": [
+   6,
+   4,
+   2,
+   0
+  ],
+  "forge": 4,
+  "heroes": {
+   "smith": {
+    "unlocked": true,
+    "lvl": 26,
+    "xp": 1500,
+    "sk": {
+     "atk": 3,
+     "def": 3,
+     "elem": 2
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {
+      "luc": 4,
+      "hoa": 3,
+      "bung": 1
+     }
+    }
+   },
+   "hunter": {
+    "unlocked": true,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "bang",
+     "n": {}
+    }
+   },
+   "healer": {
+    "unlocked": true,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "doc",
+     "n": {}
+    }
+   },
+   "wrestler": {
+    "unlocked": false,
+    "lvl": 1,
+    "xp": 0,
+    "sk": {
+     "atk": 0,
+     "def": 0,
+     "elem": 0
+    },
+    "ch": {
+     "cay": "hoa",
+     "n": {}
+    }
+   }
+  },
+  "hero": "smith",
+  "weapons": [
+   {
+    "id": 1,
+    "type": "sword",
+    "family": 0,
+    "rarity": 2,
+    "gold": 0,
+    "marks": {
+     "fire": 1200,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": "fire",
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 2600,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 14
+   },
+   {
+    "id": 2,
+    "type": "bow",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 900
+    },
+    "branch": "ice",
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 1700,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 13
+   },
+   {
+    "id": 3,
+    "type": "spear",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 900,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 12
+   },
+   {
+    "id": 4,
+    "type": "hammer",
+    "family": 0,
+    "rarity": 0,
+    "gold": 0,
+    "marks": {
+     "fire": 0,
+     "poison": 0,
+     "ice": 0
+    },
+    "branch": null,
+    "sharpen": 0,
+    "name": null,
+    "title": "",
+    "kills": 640,
+    "bossKills": {},
+    "affixes": [],
+    "power": null,
+    "luyen": 11
+   }
+  ],
+  "nextId": 5,
+  "carry": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 3,
+   "0-3": 3,
+   "0-4": 3,
+   "1-0": 3,
+   "1-1": 3,
+   "1-2": 3,
+   "1-3": 3,
+   "1-4": 3,
+   "2-0": 3,
+   "2-1": 2,
+   "2-2": 2
+  },
+  "stars2": {
+   "0-0": 2,
+   "0-1": 1
+  },
+  "scars": {},
+  "tut": {
+   "done": true
+  },
+  "sound": true,
+  "wins": 44,
+  "bossGold": {
+   "0": 1,
+   "1": 1
+  },
+  "moDan": {
+   "bao": {}
+  },
+  "lkMoc": 2,
+  "doiNL": 0,
+  "heMoi": 1,
+  "linhKhi": 2210,
+  "vkThu": [
+   "sword",
+   "bow",
+   "spear",
+   "hammer"
+  ],
+  "boCap": {
+   "ninja": 3,
+   "rung": 2,
+   "bien": 1
+  },
+  "daBac": 0,
+  "buaBac": 0,
+  "nlr": 120,
+  "canLai": 1,
+  "zed": {
+   "v": 1,
+   "hoc": {
+    "hunter": 1,
+    "healer": 1
+   },
+   "boMo": {
+    "rung": 1,
+    "bien": 1
+   },
+   "bo": "bien",
+   "boMua": 1
+  },
+  "so": {
+   "v": 1,
+   "q": {},
+   "vung": {},
+   "bu": 1
+  },
+  "tt": {
+   "v": 1,
+   "dem": {},
+   "xong": {},
+   "nhan": {}
+  },
+  "luyenChuyen": 1,
+  "owner": "google-thu-5",
+  "savedAt": 1762300000000
+ },
+ "mong": {
+  "gold": 12040,
+  "stars": {
+   "0-0": 3,
+   "0-1": 3,
+   "0-2": 3,
+   "0-3": 3,
+   "0-4": 3,
+   "1-0": 3,
+   "1-1": 3,
+   "1-2": 3,
+   "1-3": 3,
+   "1-4": 3,
+   "2-0": 3,
+   "2-1": 2,
+   "2-2": 2
+  },
+  "capMin": 26,
+  "luyenMax": 14,
+  "boMo": [
+   "rung",
+   "bien"
+  ],
+  "boCap": {
+   "ninja": 3,
+   "rung": 2,
+   "bien": 1
+  },
+  "linhKhiMin": 2210
+ }
+}
