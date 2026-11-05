@@ -13,6 +13,11 @@ on:
   schedule:
     - cron: '*/30 * * * *'
   workflow_dispatch:
+    inputs:
+      so_lan:
+        description: 'Số lần kiểm trong lượt này (mặc định 11 ≈ 5 giờ 30; 1 = kiểm ngay một lần rồi nối lại vòng)'
+        required: false
+        default: '11'
   push:
     branches: [khoi-tao-du-an]
     paths: ['.github/workflows/kiem-web.yml', 'tools/phat-hanh/kiem_web.py']
@@ -34,7 +39,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       WEB: https://spiritblade.web.app
       TIEU_DE: 'Web spiritblade.web.app có vấn đề'
-      SO_LAN: ${{ github.event_name == 'schedule' && '1' || '11' }}
+      SO_LAN: ${{ github.event_name == 'schedule' && '1' || inputs.so_lan || '11' }}
     steps:
       - uses: actions/checkout@v4
         with:

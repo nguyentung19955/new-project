@@ -114,6 +114,11 @@ Quay về tự đăng: đổi lại `'1'`.
 
 Ngay cả ở chế độ tự đăng hiện nay, bản thật cũng được đưa lên bằng cách **chép bản staging vừa kiểm** (clone); clone lỗi thì tự đăng thẳng như trước.
 
+**Release production chưa được bấm chạy thật trong phiên này** (hệ thống an toàn của phiên AI chặn việc tự đăng bản thật bằng tay — đúng tinh thần
+"chủ game duyệt"). Phần lõi của nó (clone staging → bản thật, kiểm buildId sau khi đưa lên) đã chạy thật trong lần đăng tự động ở commit `db8d378`
+(log "Đường đăng: hosting:clone bản staging → bản thật", 2 giây). Lần push nó chỉ kiểm cấu hình (ĐẠT). Muốn thử: Actions → Release production →
+Run workflow → gõ `LEN` (lúc này staging và bản thật cùng một bản nên không có gì đổi).
+
 ## 7. Bản thử staging không đụng dữ liệu thật
 
 Kênh xem trước dùng chung Firestore với bản thật, nên `dong_goi_site.sh` chèn một đoạn mã nhỏ vào đầu `<head>` của `index.html` và `linh-khi.html`:
@@ -148,8 +153,16 @@ Kênh staging giữ 30 ngày, mỗi lần đăng gia hạn lại; địa chỉ g
 
 - `4b9eb3f` — F1 phát hành an toàn (workflow, công cụ `tools/phat-hanh/`, buildId/manifest, AGENTS.md, dựng lại dist). GitHub Actions: đăng web ĐẠT
   (run 41973459387, 2 phút 51 giây, staging + bản thật buildId `2026.11.05-1222-4b9eb3f`), diễn tập quay lui ĐẠT (run 41973459579).
-- Commit thứ hai (báo cáo này + checkout gọn cho 2 workflow + ghi rõ đường đăng clone/đăng thẳng trong log): xem mục 11.
+- `4e060bd` — báo cáo + checkout gọn cho kiem-web / release-production (12 giây thay vì >2 phút) + log ghi rõ đường đăng.
+  Đăng web ĐẠT (run 41974136212), nhưng log cho thấy clone bị Google chặn (lỗi 403 serviceusage — cùng lỗi 22/10) nên đã **tự đăng thẳng** (đường dự phòng chạy đúng).
+- `db8d378` — sửa: `hosting:clone` hỏi "API Hosting đã bật?" theo **số** dự án (194086791076) → ghi sẵn cả khoá này. Đăng web ĐẠT (run 41974627413):
+  cổng kiểm 24 giây, staging `2026.11.05-1233-db8d378` kiểm ĐẠT (tự `?cloud=0`), **clone staging → bản thật 2 giây**, kiểm bản thật ĐẠT. Cả lần chạy 2 phút 38 giây
+  (bước lấy mã nguồn chiếm ~55 giây vì repo lớn). Diễn tập quay lui chạy lại ĐẠT (run 41974627409).
+- Commit cuối (mục 11): thêm ô "số lần" khi chạy tay kiểm web, cập nhật báo cáo.
 
-## 11. Lần chạy sau commit thứ hai
+Gốc rễ lỗi 403 (đề xuất cho chủ game, không bắt buộc): Google Cloud Console → IAM → tài khoản dịch vụ của secret `FIREBASE_SERVICE_ACCOUNT_SONTINHTHUYTINH`
+→ thêm vai trò **Service Usage Viewer**. Làm xong thì bước "Nhớ sẵn API Hosting đã bật" không còn cần (để lại cũng không hại).
+
+## 11. Kiểm web 30 phút — lần chạy thật
 
 (điền sau khi chạy)
