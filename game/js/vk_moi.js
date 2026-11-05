@@ -606,6 +606,7 @@
     const SC = G.spriteCustom, z = SC && SC.zed && SC.zed['zed-vk'];
     if (!z) return null;
     if (!z.ready && SC.canAnh) SC.canAnh('zed-vk');
+    if (G.vkPlCho && G.vkPlCho()) return null; // ?vkpl=1 (js/vien_vk.js): chờ ghép ảnh vũ khí PixelLab xong mới vẽ
     return z.ready && z.img && z.tep && z.tep.vk ? z : null;
   }
   const NHUOM = new Map();

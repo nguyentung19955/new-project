@@ -150,6 +150,7 @@
     const z = SC.zed && SC.zed[ma];
     if (!z) return null;
     if (!z.ready && SC.canAnh) SC.canAnh(ma);
+    if (ma === 'zed-vk' && G.vkPlCho && G.vkPlCho()) return null; // ?vkpl=1 (js/vien_vk.js): chờ ghép ảnh vũ khí PixelLab xong mới vẽ
     return z.ready && z.img ? z : null;
   };
   // Tấm thân theo trang phục đang mặc (js/data.js G.zedBo: 'ninja' → zed-moi, 'rung' → zed-rung, 'bien' → zed-bien, 'lau' → zed-lau).

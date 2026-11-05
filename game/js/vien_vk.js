@@ -265,4 +265,66 @@
     if (!q || q[2] !== r[2] || q[3] !== r[3]) return null;
     return { img: z.img, x: q[0], y: q[1], w: q[2], h: q[3] };
   };
+  // ---------- VŨ KHÍ PIXELLAB (bản THỬ 05/11, docs/review/ke-hoach-cai-thien/pixellab-vu-khi/bao-cao.md) — MẶC ĐỊNH TẮT, bật: ?vkpl=1 ----------
+  // Tấm zed-vk-pl (vk[loại][cấp], cấp 0..3) và zed-vk-pl-he (vk[loại][hệ][cấp], cấp 1..3) do PixelLab vẽ (sửa ảnh cũ bằng edit-image-pixen
+  // nên giữ dáng, hướng mũi, chỗ cán): MỖI Ô CÙNG rộng × cao với ô đang dùng của zed-vk / zed-vk-he (kiếm = ô kiếm vuông) → điểm cầm, neo,
+  // nắm tay giữ nguyên. Cách gắn: khi cả tấm cũ và tấm PixelLab đã nạp, chép tấm cũ ra canvas, xoá đúng các ô và dán ô PixelLab vào
+  // (lệch cỡ thì giữ ô cũ), rồi thay z.img → mọi chỗ dùng zed-vk (trên tay Rowan, ô đồ, Lò rèn, nút đánh, phi tiêu bay) thấy ảnh mới.
+  // Chưa ghép xong (tối đa ~60 s) thì G.vkPlCho() = true → js/zed_moi.js / js/vk_moi.js coi zed-vk như chưa tải (không vẽ ảnh cũ chớp qua).
+  // mui_kv (khung đầu kiếm chặn đất) lấy theo ảnh PixelLab. Ảnh "gân": tấm zed-vk-pl-gan dán đè zed-vk-gan cùng cách; chưa ghép xong thì
+  // không dùng gân cũ (ảnh thường) để không trộn ảnh cũ.
+  // Tắt cờ (mặc định): không làm gì, game y như trước.
+  G.VK_PL = false;
+  try { if (typeof location !== 'undefined' && /[?&]vkpl=1(&|$)/.test(location.search || '')) G.VK_PL = true; } catch (e) { G.VK_PL = false; }
+  if (G.VK_PL && G.vkGanAnh) { const ganCu = G.vkGanAnh; G.vkGanAnh = (loai, cap, r) => (G.VK_PL && !G.VK_PL_GAN ? null : ganCu(loai, cap, r)); }
+  const PL = { vk: false, he: false, gan: false, loi: 0 };
+  G.vkPlCho = () => !!G.VK_PL && !PL.vk && PL.loi < 600;
+  G.vkPl = () => ({ bat: !!G.VK_PL, vk: PL.vk, he: PL.he, gan: PL.gan });
+  function dan(z, pl, tim) { // tim(loại, hệ, cấp) → ô cũ; pl.tep.vk: ô PixelLab cùng thứ tự
+    const W = z.img.naturalWidth || z.img.width, H = z.img.naturalHeight || z.img.height;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const q = c.getContext('2d'); q.imageSmoothingEnabled = false; q.drawImage(z.img, 0, 0);
+    let n = 0;
+    const mot = (o, r) => { if (!o || !r || o[2] !== r[2] || o[3] !== r[3]) return; q.clearRect(o[0], o[1], o[2], o[3]); q.drawImage(pl.img, r[0], r[1], r[2], r[3], o[0], o[1], o[2], o[3]); n++; };
+    for (const loai in pl.tep.vk) {
+      const v = pl.tep.vk[loai];
+      if (Array.isArray(v)) v.forEach((r, cap) => mot(tim(loai, null, cap), r));
+      else for (const he in v) (v[he] || []).forEach((r, cap) => mot(tim(loai, he, cap), r));
+    }
+    return n ? c : null;
+  }
+  function ghepPl() {
+    if (!G.VK_PL || typeof document === 'undefined') return;
+    const SC = G.spriteCustom, Z = SC && SC.zed;
+    if (!Z) { setTimeout(ghepPl, ++PL.loi < 600 ? 100 : 1000); return; }
+    const can = (ma) => { const z = Z[ma]; if (z && !z.ready && SC.canAnh) SC.canAnh(ma); return z && z.ready && z.img ? z : null; };
+    try {
+      const V = can('zed-vk'), P = can('zed-vk-pl');
+      if (!PL.vk && V && P) {
+        const c = dan(V, P, (loai, he, cap) => V.tep.vk[loai] && V.tep.vk[loai][cap]);
+        if (c) {
+          V.img = c;
+          if (V.kv && SC.kiemVuong && SC.kiemVuong() && P.tep.mui_kv) V.kv = Object.assign({}, V.kv, { mui: P.tep.mui_kv });
+          NA.clear();
+        }
+        PL.vk = true;
+      }
+      const E = can('zed-vk-he'), PE = can('zed-vk-pl-he');
+      if (PL.vk && !PL.he && E && PE) {
+        const kv = !!(SC.kiemVuong && SC.kiemVuong());
+        const c = dan(E, PE, (loai, he, cap) => { const k = loai === 'kiem' ? (kv ? 'kiem_vuong' : null) : loai, h = k && E.tep.vk[k] && E.tep.vk[k][he]; return h && h[cap]; });
+        if (c) { E.img = c; if (kv && PE.tep.mui_kv) E.tep = Object.assign({}, E.tep, { mui_kv: PE.tep.mui_kv }); }
+        PL.he = true;
+      }
+      const N = can('zed-vk-gan'), PN = can('zed-vk-pl-gan');
+      if (PL.vk && !PL.gan && N && PN) { // ảnh "gân" PixelLab: cùng cỡ ô zed-vk-gan (kiếm = ô kiếm vuông)
+        const kv = !!(SC.kiemVuong && SC.kiemVuong());
+        const c = dan(N, PN, (loai, he, cap) => { const k = loai === 'kiem' ? (kv ? 'kiem_vuong' : null) : loai, h = k && N.tep.vk[k]; return h && h[cap]; });
+        if (c) { N.img = c; G.VK_PL_GAN = true; }
+        PL.gan = true;
+      }
+    } catch (e) { PL.loi += 50; }
+    if (!(PL.vk && PL.he && PL.gan) && PL.loi < 5000) setTimeout(ghepPl, ++PL.loi < 600 ? 100 : 1000); // zed-vk-he là ảnh tải sau: chờ tiếp (thưa dần)
+  }
+  if (G.VK_PL && typeof setTimeout === 'function') setTimeout(ghepPl, 0);
 })();
