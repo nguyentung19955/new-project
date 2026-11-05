@@ -17,7 +17,7 @@ O = 272  # ô khung dải đi (như trum_<cũ>_8.png)
 LAT_SIDE = {'hive'}
 # tấm fx ChatGPT vẽ CẢ THÂN trùm đang tung chiêu (nhìn về bàn) → cắt thành dải ĐÁNH trum_<id>_atk_16.png
 # cùng tâm/cỡ thân với dải đi (quaianim.js phát dải này trong lúc báo chiêu); không dùng làm hiệu ứng rời fx_trum_<id>
-THAN_FX = {'hive'}
+THAN_FX = {'hive'}  # (jammer fx = hiệu ứng rời, không thân)
 
 
 def khoa(im):

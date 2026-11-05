@@ -74,6 +74,12 @@ def lam(raw, truoc, n=8):
     tx, ty, ar0, H = do_than(truoc)
     src = Image.open(raw).convert('RGB')
     if os.path.basename(raw) in LAT_RAW: src = src.transpose(Image.FLIP_LEFT_RIGHT)
+    # ChatGPT đôi khi để dải TRẮNG trên/dưới tấm magenta → cắt bỏ các hàng gần như toàn trắng ở hai mép
+    w = (np.asarray(src).min(axis=2) > 235).mean(axis=1)
+    y0, y1 = 0, len(w)
+    while y0 < y1 and w[y0] > 0.9: y0 += 1
+    while y1 > y0 and w[y1 - 1] > 0.9: y1 -= 1
+    if (y0, y1) != (0, len(w)): src = src.crop((0, y0, src.width, y1))
     sheet = khoa_magenta(src)
     W, Hs = sheet.size
     xs = cs.cut_lines(sheet, n, W, axis=0)
