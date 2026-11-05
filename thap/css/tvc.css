@@ -1,0 +1,198 @@
+/* TURRET MERGE — TƯ VẤN C: HỆ THIẾT KẾ (docs/demo-hop-tuong/thap-art/TU-VAN-TOAN-BO.txt §A) áp cho HOME (B1), FILTER (B3), PRESETS (B4),
+   SETTINGS (B5), GAME MODE (B6), TRANG Ụ (B13/B14), TRANG CHỈ HUY (B15), SẢNH CO-OP (B16), XEM TRÙM ĐẦU TRẬN (B17), KẾT QUẢ (B18).
+   Không đụng lưới/ô bộ bài (tư vấn A) và HUD trận (tư vấn B). Nạp SAU CÙNG.
+   QUY-TAC-HINH: mọi tấm/nút = ảnh ChatGPT (border-image / <img>); code chỉ đặt chữ, cỡ, vị trí.
+
+   §A2 MÀU (token đề xuất — chữ & nhấn; màu ảnh giữ nguyên):
+     nền --tv-n0 #10151C / --tv-n1 #1B222B · thép --tv-t0 #303943 / --tv-t1 #47505A · đồng --tv-d0 #A47B3A / --tv-d1 #D7AE60
+     lam --tv-lam #38C9DD = CHỈ đang chọn / năng lượng · đỏ --tv-do #E45555 = cảnh báo · chữ --tv-chu #F4F5F7 / phụ --tv-mo #ADB7C1
+     (các token cũ --m-* / --c-* trỏ về đây để mọi màn dùng chung một bảng màu)
+   §A3 HỌ VẬT LIỆU (4 họ, 1 họ viền):
+     A anh hùng / hành động chính (hiếm: 1 cái mỗi màn) : p7_nut1 (nút vàng) · h2_tam_xanh (dải đang chọn)
+     B tấm tương tác thường (yên)                       : p7_nut2 (nút phụ) · h2_tam (hàng chọn)
+     C dải thông tin chìm (gần phẳng)                   : p7_tam (ô số, thẻ mẹo, thẻ kỹ năng)
+     D bảng trượt (1 viền ngoài duy nhất)                : p7_tam lớn — đầu bảng 1 tiêu đề mạnh
+     → khi ảnh E01 E02 E03 E04 E05 E06 về: thay biến --vl-* bên dưới, không cần sửa từng màn.
+   §A5 CHỮ (khung logic 430 = 390 × 1,1): tiêu đề trang 24 · tiêu đề mục 18 · nút chính 20 · thân 15 · phụ 13.5 · nhãn nhỏ 13
+       → thấp nhất 13 px logic ≈ 12 px trên màn 390 (tools/thap-kt-tvc.js báo chữ < 13 px logic trên các màn này).
+   §A4 KHOẢNG CÁCH: lề 18 (≈16) · khe 8 / 12 · khe mục 16 / 24 · đệm bảng 18 · vùng chạm ≥ 44 (ưu tiên 48).
+   §A7 CHUYỂN ĐỘNG (Top-15 #15): chuyển màn 180–240 ms · nhấn 80–120 ms · không khoá chạm · giảm chuyển động → chỉ mờ 120 ms. */
+:root {
+  --tv-n0: #10151C; --tv-n1: #1B222B; --tv-t0: #303943; --tv-t1: #47505A; --tv-d0: #A47B3A; --tv-d1: #D7AE60;
+  --tv-lam: #38C9DD; --tv-do: #E45555; --tv-chu: #F4F5F7; --tv-mo: #ADB7C1;
+  --m-nen: var(--tv-n0); --m-chu: var(--tv-chu); --m-mo: var(--tv-mo); --m-lam: var(--tv-lam); --m-do: var(--tv-do); --m-vang: var(--tv-d1);
+  --c-nen: var(--tv-n0); --c-chu: var(--tv-chu); --c-mo: var(--tv-mo); --c-lam: var(--tv-lam); --c-do: var(--tv-do); --c-vang: var(--tv-d1);
+  --t-trang: 24px; --t-muc: 18px; --t-nut: 20px; --t-than: 15px; --t-phu: 13.5px; --t-nho: 13px;
+  --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --le: 18px;
+  --tg-man: .22s; --tg-ra: .18s; --tg-nhan: .1s;
+  /* họ vật liệu (ảnh ChatGPT) */
+  --vl-a: url(../assets/p7_nut1.png); --vl-a-cat: 74 128 fill;
+  --vl-a-sang: url(../assets/h2_tam_xanh.png); --vl-a-sang-cat: 30 52 fill;
+  --vl-b: url(../assets/p7_nut2.png); --vl-b-cat: 56 92 fill;
+  --vl-b-hang: url(../assets/h2_tam.png); --vl-b-hang-cat: 22 40 fill;
+  --vl-c: url(../assets/p7_tam.png); --vl-c-cat: 52 70 fill;
+  --vl-d: url(../assets/p7_tam.png); --vl-d-cat: 52 70 fill;
+}
+
+/* ============ họ C dùng chung: ô thông tin chìm (thay khung_tt nhiều đinh tán) ============ */
+#up.up7 .up-spec div, #ketqua.kq7 .kq-o, #ketqua.kq7 .kq-meo, #up.up7 .up-kn, #up.up7 .up-hang-ts, #nd-gt.vt7 .vt-sau .vt-tt {
+  border: 0 solid transparent; border-image: var(--vl-c) var(--vl-c-cat) / 12px 16px stretch; }
+
+/* ============ B1 HOME ============ */
+.hm-dau { opacity: .9; } /* §B1: bớt 30–40 % độ rực của cụm trên so với logo */
+.hm-tien { font-size: var(--t-nho); }
+.hm-che { height: 54px; }
+.hm-che small { display: none; } /* 1 kiểu chữ: biểu tượng + SOLO + ▼ (không MODE / SOLO / CHANGE 3 kiểu) */
+.hm-che b { font-size: 22px; }
+.hm-duoi { gap: var(--s2); bottom: 20px; }
+.hm-choi { height: 76px; }
+.hm-choi b { font-size: 30px; }
+.hm-choi small { font-size: var(--t-phu); }
+#chon button.hm-choi.thieu { border-image-source: url(../assets/p7_nut1_tat.png); color: var(--tv-mo); }
+#chon button.hm-choi.thieu b { text-shadow: 0 2px 0 #000c; }
+#chon button.hm-choi.thieu small { color: var(--tv-chu); }
+.hm-tab { gap: var(--s2); }
+.hm-tab button { height: 58px; } /* §B1: DECK / COLLECTION nhẹ hơn PLAY rõ ràng */
+.hm-tab b { font-size: 15px; }
+.hm-tab small { font-size: var(--t-nho); }
+
+/* ============ BẢNG TRƯỢT chung (họ D): 1 viền ngoài, 1 tiêu đề mạnh, đệm 18, chuyển 220 / 180 ms ============ */
+.hm-tam { left: 12px; right: 12px; padding: 20px var(--le) 26px; border-image: var(--vl-d) var(--vl-d-cat) / 18px 24px stretch; }
+.hm-mo.vao .hm-tam { transition: transform var(--tg-man) var(--e-ra); }
+.hm-mo.ra .hm-tam { transition: transform var(--tg-ra) var(--e-thoat); }
+.hm-tam-dau { min-height: 44px; margin-bottom: var(--s3); }
+.hm-tam-dau b { font-size: 21px; }
+.hm-tam-dau small { font-size: var(--t-phu); }
+.hm-ds { gap: var(--s1); }
+.hm-hang small { font-size: var(--t-phu); }
+.hm-hang em { font-size: var(--t-nho); }
+.hm-nut2 { height: 54px; font-size: 15px; }
+.hm-cai2 { gap: var(--s2); margin-top: var(--s4); }
+
+/* ============ B6 GAME MODE: 4 thẻ cao 90 (≈82), biểu tượng 44, tiêu đề 18, 1 câu 13.5, nhãn chọn bên phải ============ */
+.hm-tam-che .hm-ds { gap: 11px; }
+.hm-chec { min-height: 90px; padding: 10px 16px 10px 14px; gap: 14px; }
+.hm-chec > img { width: 48px; height: 48px; }
+.hm-chec b { font-size: 19px; }
+.hm-chec small { font-size: var(--t-phu); line-height: 1.3; }
+.hm-chec em { align-self: center; }
+.hm-chec:not(.on) b { color: #dfe4ea; }
+
+/* ============ B5 SETTINGS: không lồng khung; mỗi hàng nhãn · thanh · % · nút bật ============ */
+.hm-tam-cai .hm-am2 { height: 56px; margin-top: var(--s1); gap: 10px; }
+.hm-am2 span { width: 62px; flex: none; font-size: 14px; color: var(--tv-chu); }
+.hm-am2 input { flex: 1; min-width: 0; }
+.hm-am2 output { flex: none; width: 48px; text-align: right; font: 800 14px/1 var(--f-hien); color: var(--tv-mo); font-variant-numeric: tabular-nums; }
+.hm-am2 .hm-bat { flex: none; width: 72px; height: 44px; font-size: 0; padding: 0; }
+.hm-am2 .hm-bat::after { font: 800 14px/1 var(--f-hien); letter-spacing: .08em; content: 'ON'; color: var(--tv-lam); }
+.hm-am2 .hm-bat[data-t$="Off"]::after { content: 'OFF'; color: var(--tv-mo); }
+.hm-tam-cai .hm-cai2 .hm-nut2 { height: 50px; font-size: 14px; }
+
+/* ============ B3 FILTER & SORT: 1 họ chip (yên = h2_tam_mong · bật = h2_tam_xanh), lưới đều, không cuộn ngang ============ */
+.hm-tam-loc .hm-loc-nh { margin: var(--s4) 0 var(--s1); font-size: var(--t-nho); }
+.hm-tam-loc .hm-tam-dau + .hm-loc-nh { margin-top: 0; }
+.hm-tam-loc .hm-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s1); }
+.hm-tam-loc .hm-chips.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.hm-tam-loc .hm-chip { justify-content: center; padding: 0 4px; letter-spacing: .02em; gap: 4px; border-image-width: 10px 12px; height: 46px; font-size: 13.5px; min-width: 0; white-space: nowrap; overflow: hidden; }
+.hm-tam-loc .hm-chip small { font-size: var(--t-nho); }
+.hm-tam-loc .hm-cai2 { margin-top: var(--s4); grid-template-columns: 1fr 1.5fr; }
+
+/* ============ B4 PRESETS: tên · chế độ | LOAD ; 5 ụ 30 px ; 1 dòng lối chơi ============ */
+.hm-tam-pre .hm-pre { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "chu nap" "u u" "mo mo"; row-gap: 6px; padding: 10px 16px 12px 16px; min-height: 0; }
+.hm-tam-pre .hm-pre-chu { grid-area: chu; flex-direction: row; align-items: baseline; gap: 10px; }
+.hm-tam-pre .hm-pre-chu b { font-size: 17px; white-space: nowrap; }
+.hm-tam-pre .hm-pre-chu small { font-size: var(--t-nho); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hm-tam-pre .hm-pre em { grid-area: nap; position: static; align-self: center; font-size: var(--t-nho); padding-left: 8px; color: var(--tv-lam); }
+.hm-tam-pre .hm-pre:not(.on) em { color: var(--tv-d1); }
+.hm-tam-pre .hm-pre-u { grid-area: u; }
+.hm-tam-pre .hm-pre-mo { grid-area: mo; font-size: var(--t-phu); line-height: 1.3; }
+
+/* bảng chỉ huy / xem nhanh: chỉ nâng chữ tối thiểu (lưới bộ bài thuộc tư vấn A) */
+.hm-tam-mvs .hm-hang small, .hm-tam-mvs .hm-ct { font-size: var(--t-nho); }
+
+/* ============ B13/B14 TRANG Ụ (1 khuôn cho mọi độ hiếm) · B15 CHỈ HUY ============ */
+#up.up7 .up-so { font-size: var(--t-nho); }
+#up.up7 .up-seri { font-size: var(--t-nho); color: #ffffffa6; }
+#up.up7 .up-meta { font-size: var(--t-nho); }
+#up.up7 .up-spec { gap: var(--s1); }
+#up.up7 .up-spec div { height: 56px; padding: 0 16px; }
+#up.up7 .up-spec small { font-size: var(--t-nho); color: var(--tv-mo); }
+#up.up7 .up-spec b { font-size: 18px; }
+#up.up7 .up-spec.ba { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#up.up7 .up-spec.ba div { padding: 0 12px; }
+#up.up7 .up-kn { margin-top: var(--s2); padding: 8px 14px 10px; }
+#up.up7 .up-kn small { font-size: var(--t-nho); }
+#up.up7 .up-kn-chu { font-size: var(--t-than); }
+#up.up7 .up-kn em { right: 12px; bottom: 8px; font-size: var(--t-nho); }
+#up.up7 .up-hang-ts { padding: 0 14px; margin-top: var(--s2); }
+#up.up7 .up-hang-ts span { font-size: var(--t-nho); }
+#up.up7 .up-nut { height: 72px; gap: 0; }
+#up.up7 .up-nut-chu { line-height: 1; }
+#up.up7 .up-nut-so { font-size: var(--t-nho); line-height: 1.15; }
+#up.up7.vao { animation-duration: var(--tg-man); }
+/* chỉ huy: huy hiệu lớn hơn (khác hẳn trang ụ) — đặt ở thân dưới-phải, không lên mặt */
+#up.up7.la-mv .up-mam { width: 196px; height: 196px; right: 4px; bottom: -8px; }
+#up.up7.la-mv .up-vong.cmd { width: 188px; height: 196px; margin: -98px 0 0 -94px; }
+#up.up7.la-mv .up-mvic { width: 104px; height: 104px; margin: -56px 0 0 -52px; }
+
+/* ============ B16 SẢNH CO-OP ============ */
+#onl-sanh .s7-dau b { font-size: 17px; }
+#onl-sanh .s7-moi { margin: 14px 24px 0; padding: 14px 18px 16px; }
+#onl-sanh .s7-moi small, #onl-sanh .s7-luat, #onl-sanh .s7-cuoi small, #onl-sanh .s7-ten small, #onl-sanh .s7-tt .sp-san, #onl-sanh .s7-ok b { font-size: var(--t-nho); }
+#onl-sanh .s7-ten b em { font-size: var(--t-nho); }
+#onl-sanh .sanh-ma { cursor: pointer; margin: 6px auto 12px; } /* chạm mã = chép */
+#onl-sanh .sanh-p { border-image: var(--vl-b-hang) var(--vl-b-hang-cat) / 12px 22px stretch; height: 92px; }
+#onl-sanh .sanh-p.san { border-image-source: var(--vl-a-sang); border-image-slice: var(--vl-a-sang-cat); }
+#onl-sanh .sanh-p.trong { opacity: .82; }
+#onl-sanh .s7-tt .sp-san { font-size: 14px; }
+#onl-sanh .sanh-p.san .s7-tt .sp-san { color: #9dffb0; }
+#onl-sanh .sanh-ds { margin: var(--s4) 24px 0; gap: var(--s2); }
+#onl-sanh .s7-luat { margin-top: var(--s4); }
+#onl-bang .onl-phu { font-size: var(--t-phu); }
+#onl-bang .onl-nho { font-size: var(--t-nho); }
+.hm-tk #tk-chip { height: 56px; max-width: 170px; gap: 8px; padding-right: 14px; }
+.hm-tk #tk-chip img { width: 34px; height: 34px; }
+.hm-tk #tk-chip span { line-height: 1.3; gap: 0; }
+.hm-tk #tk-chip b { font-size: 14px; line-height: 1.5; }
+.hm-tk #tk-chip small { font-size: var(--t-nho); line-height: 1.2; letter-spacing: .04em; }
+
+/* ============ B17 TRÙM ĐẦU TRẬN: 1 sân khấu lớn + 2 ô nhỏ yên (họ C), chữ ≥ 13 ============ */
+#nd-gt.vt7 .vt-tt.dau .vt-w { font-size: 14px; }
+#nd-gt.vt7 .vt-sau .vt-tt { height: 112px; padding: 8px 10px; }
+#nd-gt.vt7 .vt-sau .vt-w2 { font-size: var(--t-nho); }
+#nd-gt.vt7 .vt-sau b { font-size: 15px; }
+#nd-gt.vt7 .vt-sau .vt-ng { font-size: var(--t-nho); color: var(--tv-mo); }
+#nd-gt.vt7 .vt-tt.dau .vt-dd { font-size: var(--t-nho); }
+#nd-gt.vt7 .vt-doi small { font-size: var(--t-nho); }
+#nd-gt.vt7 .vt-cham small { font-size: var(--t-nho); }
+#nd-gt.vt7 .vt-cham { border-image: var(--vl-a) var(--vl-a-cat) / 24px 40px stretch; }
+#nd-gt.vt7 .vt-cham b { color: #ffd677; text-shadow: 0 2px 0 #000c; }
+#nd-gt.vt7 .vt-cham small { color: #e6d3ad; }
+
+/* ============ B18 KẾT QUẢ: 3 ô số, thua = màn riêng (đỏ tiết chế, chữ "Fell at", nguyên nhân) ============ */
+#ketqua.kq7 .bang { padding-top: 96px; }
+#ketqua.kq7 .kq-hang { gap: var(--s1); }
+#ketqua.kq7 .kq-o { height: 88px; padding: 10px 8px; gap: 2px; }
+#ketqua.kq7 .kq-o small { font-size: var(--t-nho); letter-spacing: .03em; }
+#ketqua.kq7 .kq-o b { font-size: 28px; }
+#ketqua.kq7 .kq-o em { font-size: var(--t-nho); }
+#ketqua.kq7 #kq-chi { gap: var(--s2); margin-top: var(--s4); }
+#ketqua.kq7 .kq-meo { padding: 12px 18px 14px; }
+#ketqua.kq7 .kq-meo small { font-size: var(--t-nho); }
+#ketqua.kq7 .kq-xem { font-size: var(--t-phu); }
+#ketqua.kq7 .kq-phu { font-size: var(--t-phu); }
+#ketqua.kq7 .kq-dong small, #ketqua.kq7 .kq-bo i { font-size: var(--t-nho); }
+#ketqua.kq7 .kq-dong span { font-size: 14px; }
+#ketqua.kq7.thua { background: #0b0708f2; }
+#ketqua.kq7.thua .bang-ten { color: #e86a6a; text-shadow: 0 2px 0 #000; }
+#ketqua.kq7.thua .kq-so { color: var(--tv-mo); }
+#ketqua.kq7.thua .kq-meo small.kq-tn { color: #f0a080; }
+#ketqua.kq7.thua .kq-meo p { color: var(--tv-chu); }
+#ketqua.kq7 .bang-nut .nut { font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-mo.vao .hm-tam, .hm-mo.ra .hm-tam { transition: none; }
+}
+.hm-tam-pre .hm-pre-u { justify-content: flex-start; }
+.hm-tam-pre .hm-pre-u img, .hm-tam-pre .hm-pre-u img.mv { flex: none; width: 30px; height: 30px; padding: 0; border: 0; border-image: none; background: none; }
+#nd-gt.vt7 .vt-sau b { white-space: normal; line-height: 1.1; overflow-wrap: anywhere; } /* tên dài xuống dòng thay vì bị thu < 13 px */

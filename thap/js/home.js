@@ -9,11 +9,13 @@
 const HM = {
   KEY: 'turret_hm',
   CHE: {
-    solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub },
-    coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub },
-    pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub },
-    online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend' },
+    // mo: 1 câu cho bảng GAME MODE (tư vấn C §B6) — nói rõ 4 chế độ khác nhau thế nào (CO-OP/PVP trên máy = bạn máy; ONLINE = phòng bạn bè qua mã)
+    solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub, mo: 'Just you · 1 board · 3 lives' },
+    coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub, mo: 'Team up with an AI ally · 3 shared lives' },
+    pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub, mo: 'Outlast an AI rival on the same waves' },
+    online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend', mo: 'Friend room · join with a 4-letter code' },
   },
+  ICHE: {}, // ảnh biểu tượng chế độ riêng (E32, khi có) — trống = dùng ic_solo/ic_coop/ic_pvp
   che: 'solo', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
   giam: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
   esc: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
@@ -50,7 +52,8 @@ const HM = {
     this.el('hm-che-ic').src = 'assets/' + m.ic + '.png';
     this.el('hm-che-ten').textContent = m.ten;
     const n = UI.chon.length;
-    this.el('hm-choi-phu').textContent = n === 5 ? m.phu() : 'Pick 5 turrets first';
+    this.el('hm-choi-phu').textContent = n === 5 ? m.phu() : 'Choose ' + (5 - n) + ' more turret' + (5 - n > 1 ? 's' : '');
+    this.el('hm-choi').classList.toggle('thieu', n !== 5); // tư vấn C §B1: ảnh nút tắt khi bộ bài chưa đủ (chạm vẫn mở màn bộ bài)
     this.el('hm-deck-so').textContent = n + '/5';
     this.el('hm-deck-u').innerHTML = UI.chon.map(id => '<img src="' + iconOf(id) + '" alt="">').join('');
     let co = 0; for (const r of G.roster || []) if (SKILLS[r.id]) co++;
@@ -102,7 +105,7 @@ const HM = {
 
   moChe() {
     this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
-      '<button class="hm-hang' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '"><img src="assets/' + m.ic + '.png" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
+      '<button class="hm-hang hm-chec' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '" aria-pressed="' + (k === this.che) + '"><img src="assets/' + (this.ICHE[k] || m.ic) + '.png" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.mo || m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
   },
   chonChe(k) {
     if (!this.CHE[k]) return;
@@ -111,16 +114,16 @@ const HM = {
     this.luu(); this.luuBo(); SND.nut(); this.dong(); this.ve();
   },
 
+  // tư vấn C §B5: mỗi hàng = nhãn · thanh trượt · số % · nút bật/tắt nhỏ (chữ ON/OFF theo data-t do SND.nutNhan đặt)
   moCai() {
-    const am = (k, n) => '<label class="hm-am"><span>' + n + '</span><input type="range" min="0" max="100" data-hmam="' + k + '" value="' + Math.round(SND.amLuong(k) * 100) + '"></label>';
+    const am = (k, n, act) => { const v = Math.round(SND.amLuong(k) * 100); return '<div class="hm-am hm-am2"><span>' + n + '</span><input type="range" min="0" max="100" data-hmam="' + k + '" value="' + v + '" aria-label="' + n + ' volume"><output data-hmso="' + k + '">' + v + '%</output><button class="hm-nut2 hm-bat" data-act="' + act + '"></button></div>'; };
     const mo = typeof HD === 'undefined' || HD.moKhoa();
     this.mo('cai', this.dau('SETTINGS') +
-      '<div class="hm-cai2"><button class="hm-nut2" data-act="nhac"></button><button class="hm-nut2" data-act="amthanh"></button></div>' +
-      am('nhac', 'MUSIC') + am('sfx', 'SFX') +
+      am('nhac', 'MUSIC', 'nhac') + am('sfx', 'SFX', 'amthanh') +
       '<div class="hm-cai2"><button class="hm-nut2" data-act="tk-mo">PILOT PROFILE</button><button class="hm-nut2" data-act="hd-choi">' + (mo ? 'REPLAY TUTORIAL' : 'PLAY TUTORIAL') + '</button></div>');
     SND.nutNhan();
     this.el('hm-tam').querySelectorAll('[data-hmam]').forEach(r => {
-      r.addEventListener('input', () => SND.amLuong(r.dataset.hmam, r.value / 100));
+      r.addEventListener('input', () => { SND.amLuong(r.dataset.hmam, r.value / 100); const o = this.el('hm-tam').querySelector('[data-hmso="' + r.dataset.hmam + '"]'); if (o) o.textContent = r.value + '%'; });
       r.addEventListener('change', () => { if (r.dataset.hmam === 'sfx') SND.nut(); });
     });
   },
@@ -129,9 +132,11 @@ const HM = {
     const ds = BOBAI.DS.filter(a => BOBAI.hopLe(a));
     this.mo('pre', this.dau('PRESET DECKS', 'Load one, then swap cards') + '<div class="hm-ds">' + ds.map(a => {
       const dung = UI.chon.length === 5 && a.deck.every(id => UI.chon.includes(id)) && UI.mv === a.mv;
+      // tư vấn C §B4: tên 15 · chế độ 11 · 5 ụ nhỏ · 1 dòng lối chơi · 1 chữ LOAD bên phải (IN USE khi đang dùng)
       return '<button class="hm-hang hm-pre' + (dung ? ' on' : '') + '" data-act="hm-pre-chon" data-bb="' + a.id + '"><span class="hm-pre-chu"><b>' + a.ten + '</b><small>' + this.esc(a.che) + '</small></span>' +
+        '<em>' + (dung ? 'IN USE' : 'LOAD') + '</em>' +
         '<span class="hm-pre-u">' + a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt=""></span>' +
-        '<span class="hm-pre-mo">' + this.esc(a.plan) + '</span>' + (dung ? '<em>IN USE</em>' : '') + '</button>';
+        '<span class="hm-pre-mo">' + this.esc(a.plan) + '</span></button>';
     }).join('') + '</div>');
   },
 
@@ -139,10 +144,16 @@ const HM = {
     const chip = (act, k, t, on) => '<button class="hm-chip' + (on ? ' on' : '') + '" data-act="' + act + '" data-k="' + k + '">' + t + '</button>';
     const dem = { all: 0, tc: 0, ht: 0, db: 0 }; for (const r of G.roster || []) { const sk = SKILLS[r.id]; if (!sk) continue; dem.all++; if (dem[sk.vai] != null) dem[sk.vai]++; }
     this.mo('loc', this.dau('FILTER & SORT') +
-      '<div class="hm-loc-nh">ROLE</div><div class="hm-chips">' + BOBAI.VAI.map(([k, t]) => chip('hm-loc-vai', k, t + ' <small>' + dem[k] + '</small>', BOBAI.loc.vai === k)).join('') + '</div>' +
-      '<div class="hm-loc-nh">RARITY</div><div class="hm-chips">' + chip('hm-loc-bac', 'all', 'ALL', this.bac === 'all') + TIER_LIST.map(t => chip('hm-loc-bac', t, '<img src="assets/ngoc_' + t + '.png" alt="">' + TIERS[t].ten, this.bac === t)).join('') + '</div>' +
-      '<div class="hm-loc-nh">SORT</div><div class="hm-chips">' + [['bac', 'RARITY'], ['ho', 'FAMILY'], ['ten', 'NAME']].map(([k, t]) => chip('hm-loc-xep', k, t, UI.xep === k)).join('') + '</div>' +
-      '<div class="hm-cai2"><button class="hm-nut2" data-act="hm-loc-xoa">RESET</button><button class="hm-nut2 vang" data-act="hm-dong">DONE</button></div>');
+      '<div class="hm-loc-nh">ROLE</div><div class="hm-chips c2">' + BOBAI.VAI.map(([k, t]) => chip('hm-loc-vai', k, t + ' <small>' + dem[k] + '</small>', BOBAI.loc.vai === k)).join('') + '</div>' +
+      '<div class="hm-loc-nh">RARITY</div><div class="hm-chips c3">' + chip('hm-loc-bac', 'all', 'ALL', this.bac === 'all') + TIER_LIST.map(t => chip('hm-loc-bac', t, '<img src="assets/ngoc_' + t + '.png" alt="">' + TIERS[t].ten, this.bac === t)).join('') + '</div>' +
+      '<div class="hm-loc-nh">SORT</div><div class="hm-chips c3">' + [['bac', 'RARITY'], ['ho', 'FAMILY'], ['ten', 'NAME']].map(([k, t]) => chip('hm-loc-xep', k, t, UI.xep === k)).join('') + '</div>' +
+      '<div class="hm-cai2"><button class="hm-nut2" data-act="hm-loc-xoa">RESET</button><button class="hm-nut2 vang" data-act="hm-dong">' + this.soLoc() + '</button></div>');
+  },
+  // tư vấn C §B3: nút xác nhận nói rõ kết quả ("SHOW 37 TURRETS") thay cho DONE
+  soLoc() {
+    const l = this.el('chon-luoi'); if (!l) return 'DONE';
+    const n = [...l.querySelectorAll('.c[data-id]')].filter(c => !c.hidden && c.style.display !== 'none' && c.offsetParent !== null).length;
+    return n ? 'SHOW ' + n + ' TURRET' + (n > 1 ? 'S' : '') : 'NO MATCHES';
   },
   locLai() { if (this.sheet === 'loc') { const s = this.el('hm-tam').scrollTop; this.moLoc(); this.el('hm-tam').scrollTop = s; this.el('hm-mo').classList.add('vao'); } this.veDeck(); },
 

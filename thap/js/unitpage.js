@@ -145,9 +145,9 @@ function upSoSeri(id) { const i = G.roster.findIndex(r => r.id === id); return '
 // ===================================================== trang =====================================================
 // trang chỉ huy: thời lượng + giải thích (tiếng Anh như phần còn lại của giao diện)
 const UP_MV = {
-  hero: { lau: 'Instant', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Fills only the empty cells left'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
-  dahlia: { lau: '10s', dl: [['Effect', 'Every turret on your board deals double damage'], ['Stacks with', 'Stars, card levels and support buffs'], ['Best with', 'Cast it as a boss arrives']] },
-  eve: { lau: '8s', dl: [['Effect', 'Clears freeze, stone and burn from every turret'], ['Shield', 'Blocks every boss skill for 8 seconds'], ['Best with', 'Boss waves that lock your turrets']] },
+  hero: { lau: 'Instant', vai: 'Tempo · fills the board fast', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Fills only the empty cells left'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
+  dahlia: { lau: '10s', vai: 'Burst · save it for a boss', dl: [['Effect', 'Every turret on your board deals double damage'], ['Stacks with', 'Stars, card levels and support buffs'], ['Best with', 'Cast it as a boss arrives']] },
+  eve: { lau: '8s', vai: 'Counter · blocks boss skills', dl: [['Effect', 'Clears freeze, stone and burn from every turret'], ['Shield', 'Blocks every boss skill for 8 seconds'], ['Best with', 'Boss waves that lock your turrets']] },
 };
 const UP = {
   id: null, ds: [], sao: 3, dungXem: false,
@@ -332,9 +332,10 @@ const UP = {
     noi.querySelector('.up-a').innerHTML =
       '<section class="up-hero"><div class="up-pi"><img src="assets/' + d.anh + '.png" alt=""></div><span class="up-seri">CMD-0' + (i + 1) + '</span>' +
       '<div class="up-mam cmd"><img class="up-vong cmd" src="assets/h2_mv_huy.png" alt=""><img class="up-mvic" src="' + mvIcURL(id) + '" alt=""></div></section>' +
-      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ACTIVE SKILL • ' + upEsc(d.cd) + 'S COOLDOWN</div></div>' +
-      '<div class="up-spec">' + this.o('Cost', d.gia + ' mana') + this.o('Cooldown', d.cd + 's') + this.o('Next cost', '×2 per use') + this.o('Lasts', tt.lau || '—') + '</div>' +
-      this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest();
+      '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta"><b>COMMANDER</b> • ' + upEsc(tt.vai || 'ACTIVE SKILL').toUpperCase() + '</div></div>' +
+      // tư vấn C §B15: 3 thuộc tính kỹ năng (mana · hồi chiêu · thời gian) thay lưới 4 ô của trang ụ — giá ×2 mỗi lần dùng ghi ngay trong ô mana
+      '<div class="up-spec ba">' + this.o('Mana cost', d.gia + ' · ×2 next') + this.o('Cooldown', d.cd + 's') + this.o('Duration', tt.lau || '—') + '</div>' +
+      this.theKN('Commander skill', upSC(d.mo) + '.', '') + this.hangTest(true);
     el.querySelector('.up-b').innerHTML =
       this.muc(1, 'Skill', '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>') +
       this.muc(2, 'How it works', '<dl class="up-dl">' + (tt.dl || []).map(([a, b]) => '<dt>' + upEsc(a) + '</dt><dd>' + upEsc(b) + '</dd>').join('') + '</dl>');
@@ -355,8 +356,8 @@ const UP = {
     return '<button class="up-kn" data-up="more"><small>' + upEsc(nhan) + them + '</small><span class="up-kn-chu">' + upEsc(chu) + '</span>' +
       '<em>More<img src="assets/mui_tiep.png" alt=""></em></button>';
   },
-  hangTest() {
-    return '<button class="up-hang-ts" data-up="test"><img class="ic" src="assets/ic_phat.png" alt=""><b>Test range</b><span>Watch it fire</span><img class="mt" src="assets/mui_tiep.png" alt=""></button>';
+  hangTest(mv) {
+    return '<button class="up-hang-ts" data-up="test"><img class="ic" src="assets/ic_phat.png" alt=""><b>' + (mv ? 'Skill preview' : 'Test range') + '</b><span>' + (mv ? 'Watch it cast' : 'Watch it fire') + '</span><img class="mt" src="assets/mui_tiep.png" alt=""></button>';
   },
   // màn chính trang ụ
   html(id, r, tier, sk) {
@@ -383,7 +384,7 @@ const UP = {
     const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
     P.push('<div class="up-spec">' + (ht
       ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', sk.huong ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
-      : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.o('Fire rate', s1.toc ? upSC(s1.toc).replace(' shots/s', '/s') : '—') +
+      : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.oToc(s1.toc) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
     P.push(this.theKN(SUP_LOAI[id] ? 'Support skill' : 'Skill', upSC(r.kyNang || '') + '.', grow ? ' · 3 forms' : ''));
@@ -432,6 +433,17 @@ const UP = {
       '<div class="up-sao-chon up-sd-gd" role="group" aria-label="Preview stage" hidden></div>';
   },
   o(k, v) { return '<div><small>' + k + '</small><b>' + upEsc(v) + '</b></div>'; },
+  // tư vấn C §B14: nhịp bắn dài ("Hole every 9.5s") có nhãn riêng — ô số chỉ giữ con số, không nhét câu vào ô "Fire rate"
+  oToc(toc) {
+    if (!toc) return this.o('Fire rate', '—');
+    const t = upSC(toc).replace(' shots/s', '/s'); let m;
+    if ((m = t.match(/^(\w+) every ([\d.]+s)$/i))) return this.o(upSC(m[1]) + ' interval', m[2]);
+    if ((m = t.match(/^Charges ([\d.]+s)$/i))) return this.o('Charge time', m[1]);
+    if ((m = t.match(/^([\d.]+) volleys\/s/i))) return this.o('Volleys', (+m[1]) + '/s');
+    if ((m = t.match(/^(\w+) ([\d.]+) ticks\/s$/i))) return this.o(upSC(m[1]) + ' ticks', m[2] + '/s');
+    if (/^continuous/i.test(t)) return this.o('Fire rate', 'Continuous');
+    return this.o('Fire rate', t);
+  },
   muc(n, ten, noi) { return '<section class="up-muc"><h3>' + ten + '</h3>' + noi + '</section>'; },
   theNho(id, ly) {
     const r = G.rosterMap[id], m = r ? TIERS[r.bac].mau : '#9aa6b4';

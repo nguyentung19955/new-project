@@ -69,7 +69,7 @@ const VT = {
   dem() {
     const e = this.el && this.el.querySelector('.vt-dem'); if (!e || !this.mo) return;
     const con = Math.max(0, Math.ceil(this.TONG - (performance.now() - this.t0) / 1000));
-    e.textContent = 'Starting in ' + con; this._d = setTimeout(() => this.dem(), 250);
+    e.textContent = 'Auto-start in ' + con + 's'; this._d = setTimeout(() => this.dem(), 250);
   },
   batDau() {
     if (!this.el || !G.ban.length) return;
@@ -81,7 +81,7 @@ const VT = {
       if (typeof TAI !== 'undefined' && TAI.cho) { this._raf = requestAnimationFrame(cho); return; } // còn màn tải: chưa chạy đồng hồ
       this.dung();
       this.el.hidden = false; void this.el.offsetWidth; this.el.classList.add('vao');
-      this.el.querySelectorAll('.vt-ten b, .vt-tt b').forEach(b => fitText(b, parseFloat(getComputedStyle(b).fontSize), 6.5)); // sau khi hiện (đo được bề rộng)
+      this.el.querySelectorAll('.vt-ten b, .vt-tt b').forEach(b => fitText(b, parseFloat(getComputedStyle(b).fontSize), b.closest('.vt-sau') ? 13 : 6.5)); // ô trùm nhỏ: xuống dòng, không thu < 13 px (tư vấn C) // sau khi hiện (đo được bề rộng)
       this.t0 = performance.now(); this.dem();
       this._h = setTimeout(() => this.dong(), this.TONG * 1000);
     };
