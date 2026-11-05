@@ -23,7 +23,7 @@ const LUAT = {
   saoMax: 7,             // tối đa 7 sao
   cot: 5, hang: 3,       // bàn 5×3 = 15 ô
   giaNangCap: [100, 200, 400, 700], // nâng cấp theo loại trong trận (LV1→5)
-  timSolo: 3, timPvp: 3, timCoop: 3, // CO-OP: 3 tim CHUNG (giữ ở bàn 0); quái to / trùm lọt mất 2 tim
+  timSolo: 3, timPvp: 3, // PVP 3 tim; quái to / trùm lọt mất 2 tim
   songTrum: 10,          // trùm mỗi 10 wave
   waveMax: 70,
   thoiGianWave: 20,      // giây / wave thường

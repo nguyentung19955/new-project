@@ -10,7 +10,7 @@ const TEXT = {
     family: 'Family', tierOf: (i) => 'Tier ' + i + '/5', next: 'next', top: 'top of the line', gap: 'gap', planned: 'planned',
     playable: 'playable', maxOneMythic: 'max 1 Mythic',
     soon: 'SOON',
-    coopSub: '2 players · 3 shared lives', soloSub: '1 board · 3 hearts', pvpSub: 'Kills send enemies to rival',
+    coopSub: '2 players · 1 leak = defeat', soloSub: '1 board · 3 hearts', pvpSub: 'Kills send enemies to rival',
     random: 'Random', start: 'Start',
     paused: 'Paused', soundOn: 'Sound: on', soundOff: 'Sound: off', sfxOn: 'SFX: on', sfxOff: 'SFX: off', musicOn: 'Music: on', musicOff: 'Music: off', quit: 'Quit', resume: 'Resume',
     changeDeck: 'Change deck', again: 'Play again', pause: 'Pause',
@@ -18,7 +18,7 @@ const TEXT = {
     deckFull: 'Your deck already has 5 turrets', oneMythic: 'Only 1 Mythic turret per deck',
     max2Star: 'Max 2 star-shaping turrets per deck', need2Atk: 'Tip: take at least 2 Attack turrets',
     bossIn: (n) => 'Boss in ' + n, bossWave: 'Boss wave',
-    rival: 'Rival', you: 'You', ally: 'Ally',
+    coopLeak: '1 leak loses', rival: 'Rival', you: 'You', ally: 'Ally',
     wave: 'Wave', bossComing: 'BOSS INCOMING!', wave1Hint: 'Summon & merge turrets!',
     victory: 'VICTORY', defeat: 'DEFEAT', reached: (w) => 'Reached <b>WAVE ' + w + '</b>',
     role: { tc: 'Attack', ht: 'Support', db: 'Special' },
@@ -35,7 +35,7 @@ const TEXT = {
     blocked: 'BLOCKED', shieldBlock: 'SHIELD BLOCK',
   },
   // lý do kết trận
-  end: { coopOut: 'Your shared lives ran out!', youOut: 'You ran out of hearts', rivalOut: 'Rival ran out of hearts', coreDown: 'The core was destroyed!' },
+  end: { leak: 'An enemy reached the core!', youOut: 'You ran out of hearts', rivalOut: 'Rival ran out of hearts', coreDown: 'The core was destroyed!' },
   tier: {
     trang: 'COMMON', xanh: 'RARE', tim: 'EPIC', vang: 'LEGENDARY', do: 'MYTHIC',
   },

@@ -1,15 +1,15 @@
 // TURRET MERGE — LÕI NHÀ CHÍNH: tim còn lại = thanh máu 3 khúc ngay trên lõi, lõi chớp đỏ / rung / nứt dần khi mất tim.
 // Tách riêng file: render.js chỉ gọi CORE.veLoi() (vẽ lõi) và CORE.veHud() (vẽ huy hiệu, trên cùng).
-// SOLO: 1 lõi · CO-OP: 1 lõi chung, 3 tim CHUNG (giữ ở bàn 0) · PVP: mỗi bên 1 lõi, tim riêng.
+// SOLO: 1 lõi · CO-OP: 1 lõi chung (luật: 1 quái lọt = thua → hiện 1 tim chung) · PVP: mỗi bên 1 lõi, tim riêng.
 'use strict';
 
 const CORE = {
   st: {}, _nut: {}, _do: {},
   // các bàn dồn về lõi này (đầu mút đường đi)
   banCua(key) { const ds = []; for (const p of G.duong) if (p.pts[p.pts.length - 1] + '' === key && !ds.includes(p.ban)) ds.push(p.ban); return ds; },
-  timMax() { return G.che === 'coop' ? LUAT.timCoop : G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo; },
+  timMax() { return G.che === 'coop' ? 1 : G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo; },
   timCon(key) {
-    if (G.che === 'coop') return G.ban[0] ? Math.max(0, G.ban[0].tim) : 0;
+    if (G.che === 'coop') return this._coopLot ? 0 : 1;
     const ds = this.banCua(key), B = G.ban[ds[0]];
     return B ? Math.max(0, B.tim) : 0;
   },
@@ -27,7 +27,7 @@ const CORE = {
     s.nhip = Math.max(0, s.nhip - dt * 2.4); s.cuon = Math.min(1, s.cuon + dt * 4.5);
   },
   // mức hư hại 0..1 (0 = đủ tim)
-  hu(s) { return 1 - s.hien / this.timMax(); },
+  hu(s) { const m = this.timMax(); return G.che === 'coop' ? (s.hien ? 0 : 1) : 1 - s.hien / m; },
 
   // lõi đã cắt sẵn + vết nứt theo mức (vết nứt chỉ vẽ trên phần đặc của ảnh: source-atop)
   loiNut(ren, px, muc) {
@@ -70,7 +70,7 @@ const CORE = {
   // gọi từ REN.veCongLoi thay cho đoạn vẽ lõi; trả true = đã vẽ
   veLoi(ctx, ren, e, key) {
     const s = this.lay(key), t = ren.t, d = this.hu(s), px = 60;
-    const sap = s.hien === 1 && !G.ketThuc, canh = sap ? (0.5 + 0.5 * Math.sin(t * 5)) : 0;
+    const sap = s.hien === 1 && !G.ketThuc, canh = sap ? (0.5 + 0.5 * Math.sin(t * 5)) * (G.che === 'coop' ? 0.5 : 1) : 0;
     const rx = s.rung > 0 ? Math.sin(t * 70) * 3.2 * s.rung : 0, ry = s.rung > 0 ? Math.cos(t * 55) * 1.4 * s.rung : 0;
     const x = e[0] + rx, bob = Math.sin(t * 2.4) * 1.5 * (1 - d * 0.6), y = e[1] - 6 + bob + ry;
     // quầng sáng: xanh lam → đỏ theo mức hư hại; mờ dần khi yếu
@@ -154,11 +154,16 @@ const CORE = {
   vienTron(x, a, b, w, h, r) { x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); },
 };
 
+// CO-OP: luật "1 quái lọt = thua" không trừ tim → ghi nhận để lõi chung về 0 và chớp đỏ.
 // Mỗi trận mới (batDau) đánh số ván để làm mới trạng thái lõi.
 (function () {
+  if (typeof lot === 'function') {
+    const goc = lot;
+    lot = function (E) { if (G.che === 'coop' && !G.ketThuc) CORE._coopLot = true; return goc.apply(this, arguments); };
+  }
   if (typeof batDau === 'function') {
     const goc = batDau;
-    batDau = function () { G._vanCore = (G._vanCore || 0) + 1; CORE.st = {}; return goc.apply(this, arguments); };
+    batDau = function () { G._vanCore = (G._vanCore || 0) + 1; CORE._coopLot = false; CORE.st = {}; return goc.apply(this, arguments); };
   }
   // tim trên thanh trên cùng: tim vừa mất nảy đỏ rồi xám đi (cùng lúc với lõi)
   const st = document.createElement('style');
