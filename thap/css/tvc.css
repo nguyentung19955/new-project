@@ -196,3 +196,13 @@
 .hm-tam-pre .hm-pre-u { justify-content: flex-start; }
 .hm-tam-pre .hm-pre-u img, .hm-tam-pre .hm-pre-u img.mv { flex: none; width: 30px; height: 30px; padding: 0; border: 0; border-image: none; background: none; }
 #nd-gt.vt7 .vt-sau b { white-space: normal; line-height: 1.1; overflow-wrap: anywhere; } /* tên dài xuống dòng thay vì bị thu < 13 px */
+
+/* ============ Top-15 #15 CHUYỂN ĐỘNG: chuyển màn 180–240 ms, không khoá chạm, nút hiện sớm ============ */
+#chon > .hm, #chon > .dk { transition: opacity var(--tg-man) var(--e-em), transform var(--tg-man) var(--e-ra), visibility 0s linear 0s; }
+#chon.xem-hm > .dk, #chon.xem-dk > .hm { transition: opacity var(--tg-ra) var(--e-thoat), transform var(--tg-ra) var(--e-thoat), visibility 0s linear var(--tg-ra); }
+#onl-sanh.sanh7.vao, #onl-sanh.sanh7.vao .s7-moi { animation-duration: var(--tg-man); }
+#ketqua.kq7 .bang-nut { animation-delay: .2s; }
+#ketqua.kq7 #kq-chi { animation-delay: .16s; }
+#nd-gt.vt7 .vt-cham { animation-delay: .24s; }
+#nd-gt.vt7 .vt-doi { animation-delay: .2s; }
+#chon button, #hm-mo button { transition-duration: var(--tg-nhan); }
