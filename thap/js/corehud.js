@@ -106,6 +106,7 @@ const CORE = {
       if (xong.has(key)) continue; xong.add(key);
       const s = this.lay(key); this.capNhat(s, dt);
       s.xa = Math.max(0, (s.xa || 0) - dt * 1.5);
+      if (G.che === 'coop') continue; // CO-OP: 3 tim chung đã hiện ở 3 đèn HUD → chỉ cập nhật trạng thái lõi, không vẽ thanh 3 khúc
       const n = this.timMax(), con = s.hien, cu = Math.max(s.cu, con);
       const sap = con === 1 && n > 1 && !G.ketThuc, canh = sap ? 0.5 + 0.5 * Math.sin(t * 6) : 0;
       const kw = n === 1 ? 34 : 17, gap = 3, pad = 3, hh = 8;
