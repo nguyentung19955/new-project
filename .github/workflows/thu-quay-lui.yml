@@ -37,7 +37,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet > /dev/null 2>&1
           mkdir -p "$HOME/.config/configstore"
-          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
+          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true},"194086791076":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
           API=https://firebasehosting.googleapis.com/v1beta1
           fb="npx --yes firebase-tools@latest --project sontinhthuytinh --non-interactive"
           dang() {  # dang <chữ>: đăng một trang nhỏ lên kênh thử

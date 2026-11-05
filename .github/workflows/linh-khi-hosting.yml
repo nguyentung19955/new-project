@@ -125,6 +125,8 @@ jobs:
           else
             printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$f"
           fi
+          # F1: "hosting:clone" hỏi theo SỐ dự án (194086791076, cũng là messagingSenderId công khai trong js/firebase-config.js) chứ không theo tên
+          jq '.apiEnablementCache["194086791076"]["firebasehosting.googleapis.com"] = true | .apiEnablementCache["194086791076"]["firebase.googleapis.com"] = true' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
 
       - name: Tạo site nếu chưa có
         working-directory: ${{ runner.temp }}/web

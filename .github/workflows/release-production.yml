@@ -69,7 +69,7 @@ jobs:
         if: env.DANG == '1'
         run: |
           mkdir -p "$HOME/.config/configstore"
-          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
+          printf '%s' '{"apiEnablementCache":{"sontinhthuytinh":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true},"194086791076":{"firebasehosting.googleapis.com":true,"firebase.googleapis.com":true}}}' > "$HOME/.config/configstore/firebase-tools.json"
 
       - name: Đọc bản thử staging
         id: thu
