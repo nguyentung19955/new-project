@@ -72,8 +72,11 @@ function DO_THEM(o) {
   // ảnh bị phóng: chỉ đo ở DPR ≥ 2 (DPR 1 chỉ xem bố cục). Bỏ nền phủ > 45 % màn (ảnh nền toàn màn, xem HOI-QUY.md).
   if (dpr >= 2) {
     const NAT = window.__HQ_NAT || (window.__HQ_NAT = {});
+    // đang chạy hoạt ảnh phóng/thu (bung sao, nảy nút…): cỡ lúc chụp không phải cỡ hiển thị → bỏ qua
+    const dongAnim = (e) => { for (let x = e, d = 0; x && d < 5; x = x.parentElement, d++) { if (!x.getAnimations) continue; for (const a of x.getAnimations()) { if (a.playState !== 'running' || !a.effect || !a.effect.getKeyframes) continue; if (a.effect.getKeyframes().some(k => 'transform' in k || 'scale' in k)) return true; } } return false; };
     const xet = (e, url, dw, dh) => {
       if (!/\/assets\//.test(url) || /^data:/.test(url)) return;
+      if (dongAnim(e)) return;
       const n = NAT[url]; if (!n) { out.canAnh.push(url); return; }
       if (dw * dh > vw * vh * 0.45) return;
       const rx = dw * dpr / n[0], ry = dh * dpr / n[1], r = Math.min(rx, ry); // dải kéo dài: xét chiều ít bị kéo nhất
@@ -338,7 +341,7 @@ async function tran(b, W, H, D, co, m) {
     const ds = await p.evaluate(() => (typeof TRUM_POOL !== 'undefined' ? TRUM_POOL : TRUM_THU_TU).slice());
     for (const id of ds) {
       await buoc(p, co, 'trum_' + id, async () => {
-        await p.evaluate((id) => { G.quai = []; G.ketThuc = null; G.dung = false; G.tim = 99; document.getElementById('ketqua').hidden = true; G.hang.push({ t: G.t, trum: id, p: 0 }); try { UI.canhBaoTrum(id); } catch (e) { } }, id);
+        await p.evaluate((id) => { G.quai = []; G.ketThuc = null; G.dung = false; G.tim = 99; document.getElementById('ketqua').hidden = true; G.hang.push({ t: G.t, trum: id, p: 0 }); }, id); /* không gọi UI.canhBaoTrum bằng tay: tạo trạng thái băng giả (băng thật đo ở solo_trum) */
         await sleep(1500);
         const co1 = await p.evaluate((id) => G.quai.some(q => q.trum === id), id); if (!co1) throw new Error('gọi trùm ' + id + ' mà không thấy trên đường');
       }, { cho: 200 });

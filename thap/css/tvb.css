@@ -84,7 +84,7 @@ html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong img { width: 26px; height: 26p
 #tvb-dungchu[hidden] { display: none; }
 
 /* ================= B12 · CẢNH BÁO TRÙM GỌN ≤ 96 px@390 (98 logic): chân dung 56 · tên 18 · mối đe doạ 13 · đếm 16 ================= */
-html body #wrap.co-tvb #canh-bao.tvb-cb { left: 8px; right: 8px; min-height: 0; box-sizing: border-box; padding: 0 64px 0 52px; z-index: 28;
+html body #wrap.co-tvb #canh-bao.tvb-cb { left: 8px; right: 8px; min-height: 0; box-sizing: border-box; padding: 14px 64px 14px 52px; z-index: 28; /* đệm 14 trên/dưới: chữ không đè viền 16 px của bang_trum_nen (≈ 86 px, vẫn ≤ 96) */
   display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; grid-template-rows: auto auto auto; column-gap: 10px; align-content: center; align-items: center; justify-items: start; text-align: left;
   border-image: url(../assets/bang_trum_nen.png) 40 110 fill / 16px 46px stretch; }
 html body #wrap.co-tvb #canh-bao.tvb-cb > img { display: none; }
@@ -94,7 +94,7 @@ html body #wrap.co-tvb #canh-bao.tvb-cb.cb-den .cb-sp, html body #wrap.co-tvb #c
 html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp[style*="--nf:4"] { animation-name: cb-4n2; animation-timing-function: steps(4); }
 @keyframes cb-8n2 { from { background-position: 0 0; } to { background-position: -496px 0; } }
 @keyframes cb-4n2 { from { background-position: 0 0; } to { background-position: -248px 0; } }
-html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { display: block; grid-column: 2; font-size: 13px; letter-spacing: 1px; color: #ffd23f; }
+html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { display: block; grid-column: 2; font-size: 13px; line-height: 15px; letter-spacing: 1px; color: #ffd23f; }
 html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao .cb-w { color: #ffc547; animation: cb-nhay .5s ease-in-out infinite alternate; }
 html body #wrap.co-tvb #canh-bao.tvb-cb b { grid-column: 2; max-width: 100%; font-size: 20px; line-height: 23px; letter-spacing: 1px; padding: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html body #wrap.co-tvb #canh-bao.tvb-cb.cb-bao b { color: #fff; }
