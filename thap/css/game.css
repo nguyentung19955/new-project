@@ -77,7 +77,10 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 @keyframes sang { 0% { transform: scale(1.15); filter: brightness(2); } 100% { transform: none; filter: none; } }
 #the-mv { position: absolute; right: 6px; top: 84px; width: 72px; height: 94px; border-radius: 8px; background: #23161a; border: 1.5px solid #ff6a5a;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 6px; overflow: hidden; }
-#the-mv .mv-ic { width: 36px; height: 36px; flex: none; }
+#the-mv { padding-top: 3px; }
+#the-mv .mv-ic { width: 66px; height: 47px; flex: none; display: block; }
+#the-mv .mv-ic .mv-anh { width: 100%; height: 100%; border-radius: 6px; }
+#the-mv .mv-ten { height: 22px !important; }
 #the-mv .mv-ten { width: 66px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; text-align: center; line-height: 1.05; overflow: hidden; }
 #the-mv .mv-gia { position: absolute; left: 0; right: 0; bottom: 0; height: 20px; display: flex; align-items: center; justify-content: center; gap: 2px; background: #140b0d; border-top: 1px solid #ffffff14; font-size: 12px; font-weight: 900; line-height: 1; }
 #the-mv .mv-gia img { width: 13px; height: 13px; }
@@ -170,7 +173,8 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 .chon-cuoi { padding: 8px 10px 12px; background: #0f1013; border-top: 2px solid #33363d; }
 .chon-mv { display: flex; gap: 6px; }
 .mv { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; padding: 6px 5px; border-radius: 10px; background: #1f1a1c; border: 1.5px solid #4a2a30; text-align: left; }
-.mv img { width: 30px; height: 30px; flex: none; }
+.mv { padding: 4px 5px 4px 4px; }
+.mv .mv-anh { width: 46px; height: 46px; }
 .mv b { display: block; font-size: 10px; font-weight: 900; }
 .mv span { display: block; font-size: 8.5px; color: #c8a8a8; font-weight: 700; line-height: 1.15; }
 .mv.chon { border-color: #ff6a5a; background: #34191d; }
@@ -207,3 +211,38 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #bang-wave b { letter-spacing: 2px; text-shadow: 0 2px 0 #03506a, 0 0 10px #3fc6ee99; }
 #canh-bao b { letter-spacing: 2.5px; text-shadow: 0 2px 0 #500, 0 0 10px #ff3b3b99; }
 #nut-trieu .tr-ten { letter-spacing: 1.2px; }
+
+/* ---------- chân dung chỉ huy (Ma vương): ảnh lớn + biểu tượng kỹ năng nhỏ ở góc, ảnh lỗi → biểu tượng ---------- */
+.mv-anh { --mm: #ff6a5a; position: relative; flex: none; display: block; border-radius: 8px; overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--mm) 45%, #1a1214) 0%, #120c0e 75%); border: 1px solid color-mix(in srgb, var(--mm) 60%, transparent); }
+.mv-anh .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+.mv-anh .po.fb { inset: 12%; width: 76%; height: 76%; object-fit: contain; }
+.mv-anh .ki { position: absolute; right: 1px; bottom: 1px; width: 18px; height: 18px; padding: 1px; border-radius: 50%; background: #0e1014; border: 1px solid var(--mm); filter: drop-shadow(0 1px 2px #000); }
+.mv-anh .po.fb + .ki { display: none; }
+#the-mv .mv-anh .ki { width: 17px; height: 17px; }
+/* băng WAVE / cảnh báo trùm: chữ dài tự thu nhỏ, không tràn mép */
+#bang-wave, #canh-bao { overflow: hidden; }
+#bang-wave .bw-dai { box-sizing: border-box; }
+#bang-wave b, #canh-bao b { display: block; width: 100%; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: clip; box-sizing: border-box; padding: 0 6px; }
+#canh-bao span { max-width: 100%; box-sizing: border-box; }
+/* ---------- CUT-IN kỹ năng chỉ huy (~800 ms, nằm gọn trong khung) ---------- */
+#cutin { --mm: #ff6a5a; position: absolute; left: 0; right: 0; height: 132px; z-index: 7; pointer-events: none; overflow: hidden; }
+#cutin .ci-nen { position: absolute; left: 0; right: 0; top: 18px; bottom: 18px;
+  background: linear-gradient(100deg, #000000e0 0%, color-mix(in srgb, var(--mm) 55%, #10080a) 38%, #000000d8 100%);
+  border-top: 2px solid var(--mm); border-bottom: 2px solid var(--mm); box-shadow: 0 0 18px color-mix(in srgb, var(--mm) 60%, transparent); transform-origin: 50% 50%; }
+#cutin .ci-nen::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(100deg, #ffffff10 0 2px, transparent 2px 14px); }
+#cutin .ci-po-hop { position: absolute; left: 0; top: 0; width: 150px; height: 132px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
+#cutin .ci-po { width: 150px; height: 150px; object-fit: cover; object-position: 50% 10%; margin-top: -4px; filter: drop-shadow(0 0 8px #000); }
+#cutin .ci-po.fb { width: 96px; height: 96px; margin: 18px 0 0 26px; object-fit: contain; }
+#cutin .ci-chu { position: absolute; left: 156px; right: 14px; top: 28px; bottom: 28px; display: flex; flex-direction: column; justify-content: center; min-width: 0; text-align: left; }
+#cutin small { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--mm); line-height: 1.2; }
+#cutin b { display: block; width: 100%; height: 40px; line-height: 40px; font-size: 34px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; overflow: hidden; color: #fff; text-shadow: 0 2px 0 #000, 0 0 12px var(--mm); }
+#cutin span { display: block; width: 100%; height: 15px; line-height: 15px; font-size: 12px; font-weight: 700; color: #f2e6e6; white-space: nowrap; overflow: hidden; }
+#cutin .ci-ki { position: absolute; left: 106px; bottom: 22px; width: 30px; height: 30px; padding: 2px; border-radius: 50%; background: #0e1014; border: 1.5px solid var(--mm); }
+#cutin.chay .ci-nen { animation: ci-nen .8s cubic-bezier(.2,.8,.2,1) both; }
+#cutin.chay .ci-po-hop, #cutin.chay .ci-ki { animation: ci-trai .8s cubic-bezier(.2,.8,.2,1) both; }
+#cutin.chay .ci-chu { animation: ci-phai .8s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes ci-nen { 0% { transform: scaleY(0); opacity: 0; } 12% { transform: scaleY(1); opacity: 1; } 82% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(0); opacity: 0; } }
+@keyframes ci-trai { 0% { transform: translateX(-160px); opacity: 0; } 22% { transform: translateX(0); opacity: 1; } 78% { transform: translateX(8px); opacity: 1; } 100% { transform: translateX(-160px); opacity: 0; } }
+@keyframes ci-phai { 0% { transform: translateX(120px); opacity: 0; } 24% { transform: translateX(0); opacity: 1; } 78% { transform: translateX(-6px); opacity: 1; } 100% { transform: translateX(120px); opacity: 0; } }
