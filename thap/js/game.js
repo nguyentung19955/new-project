@@ -111,7 +111,6 @@ function trieu(B, mienPhi, idEp) {
   const T = sinhU(taoU(B, id, 1, o));
   B.t[o] = T;
   VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
-  SND.trieu();
   return T;
 }
 function hopLeGhep(a, b) {
