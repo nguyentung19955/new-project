@@ -86,7 +86,7 @@ const TVB = {
     ctx.font = FONT.u(14, 800); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     for (const B of G.ban) {
       if (B.i === 0 && !pvp) continue; // CO-OP: bàn mình to ở dưới — không cần "YOU"
-      const s = B.i === 0 ? this.CHU.you : pvp ? this.CHU.rival : this.CHU.ally;
+      const s = (B.i === 0 ? this.CHU.you : pvp ? this.CHU.rival : this.CHU.ally) + (B.aiThay ? ' · AI' : ''); // online: bạn rời → AI lái bàn này
       const tam = R.img('hud_ten_ban'); if (!tam) continue;
       const th = 22, sc = th / tam.height, dau = Math.round(tam.height * 1.05), cuoi = Math.round(tam.height * 0.45);
       const tw = Math.ceil(ctx.measureText(s).width + dau * sc + cuoi * sc + 6);

@@ -194,6 +194,8 @@ const ONL = {
     const el = document.getElementById('onl-sanh'); if (!el || el.hidden && !this.code) return;
     if (this.code && this.meta === null && this._daCoMeta) {
       if (this.vuaChoi || (typeof G !== 'undefined' && G.ketThuc)) { this.roiPhong(); return; } // hết trận: chủ phòng đã dọn phòng — im lặng
+      // đang giữa trận mà chủ phòng rời (phòng bị xoá): KHÔNG chặn — bàn chủ phòng giao cho AI, mình chơi tiếp ngoại tuyến
+      if (typeof ONS !== 'undefined' && ONS.on && typeof G !== 'undefined' && G.ban.length && !G.ketThuc) { ONS.diNgoai(); this.roiPhong(); this.dangTran = false; return; }
       this.baoLoi('The host closed the room.'); this.roiPhong(); this.hienBangSauRoi('The host closed the room.'); return;
     }
     if (this.meta) this._daCoMeta = true;
