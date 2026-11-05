@@ -1,0 +1,242 @@
+TURRET MERGE — CORE FEEDBACK VFX & UX SPECIFICATION
+Portrait mobile merge-defense | CO-OP / PvP / Solo
+Art direction: bold, high-contrast, top-down cartoon machinery, matching the existing round turret heads and dark steel trays.
+Authoring rules: ALL VISIBLE ART IS CHATGPT-GENERATED PNG. Flat #FF00FF backgrounds on requested generation sheets, then chroma-key to real alpha in the asset pipeline. Runtime may position, translate, scale, rotate, fade, tint, flip-book, reorder, clip existing rectangular sprite images if necessary, shake the camera, and briefly stop time. Runtime must NOT draw shapes, strokes, dashes, circles, borders, gradients, particles, text textures, glows, or lines. Use image assets for ALL such visible forms. Text/numerals already used by the game UI can remain the existing font/UI system; new star stamp symbols are PNG.
+
+1. SCREENSHOT DIAGNOSIS AND CREATIVE TARGET
+
+Observed in the supplied 832 x 1799 phone screenshot: on the lower player board, two circular turret heads overlap near the top-left cells. The source slot is marked by a thick, flat bright-green rounded rectangular outline, a faint duplicated turret/ghost remains behind, and the drag/target treatment competes with blue star badges and the existing colorful rarity rings. The top allied board and dense metal frame provide plenty of detail already. The merge interaction needs its own visual language rather than another UI frame laid over the board.
+
+Replace the current treatment with 'MAGNETIC FORGE': a physical turret lifted from a steel socket, attracted into its equal-star partner, compressed into a forge spark, and re-created one star higher. The visual metaphor is industrial machinery + magical energy, not a touchscreen drag-and-drop form. The player must understand four facts immediately: what is held, which targets are legal, where it will land, and what star it becomes.
+
+Visual hierarchy:
+A. Held turret: brightest foreground element, roughly 1.12x base size, above the finger.
+B. Valid hovered target: one vivid animated socket + compact star-up preview.
+C. Other legal targets: quiet single rim breath, no full-screen pulses.
+D. Invalid objects: unchanged or subtly desaturated; never paint the entire board red.
+E. Board frames and enemy path: remain behind these effects.
+
+Minimum principles: show only one strong animation focal point at a time; never cover an enemy's life-critical path readout; stop celebratory effects inside a 1-1.3 tile radius; no permanent bloom; no full-screen camera shake for ordinary merges; keep dragged sprite's star badge readable but attached to the held sprite. Always snap between tile centers, not art-boundary corners.
+
+2. INPUT / MERGE RULES AND FEEL
+
+Assume 5x3 grid, with occupied tile width represented by T = 1 tile and each turret's main circular silhouette ~0.65–0.78T. Suggested reference game-art sizes, independent of CSS pixels: turret head/base 128x128; 1 tile 160x160 authoring space; effects typically 192–256 per-cell for overspill. Scale based on current renderer's actual measured tile centers. If a screen renders a 50 px-wide tile, a 256 px art cell is scaled to about 80 px at 0.5T overspill on each side. Do not render all effects at native asset size.
+
+Pointer-down: hit test against occupied owned player tile only. Drag begins after movement >= 7 screen px OR touch hold >= 90 ms. Keep direct taps available for inspect. On drag start store source ID, original coordinate, star, type, legal target IDs, captured pointer ID, and initial frame. Move held turret with finger but offset its center 0.55T UP from finger on portrait phones so the finger never hides it. Smooth position with a critically damped spring (~45–65 ms positional lag), bounded so it cannot visibly trail by more than 0.25T. The visual follows finger; logical hover uses raw finger hotspot projected onto tile, not the displaced sprite center. Permit slight easing only in visual position, never in legal hit test.
+
+Default legal target: same turret type AND same current star, 1–6 stars, owned and not locked, unless a special turret explicitly overrides matching rules. At 7 stars, show cap/invalid feedback; don't suggest star 8. Re-evaluate when state changes. Hold hovered target only after pointer dwell >= 45 ms or when near its center within 0.36T; release it after 70 ms hysteresis or clear movement into another target. Ignore simultaneous touches or cancel gracefully. Preserve deterministic merge RNG and server/network authority.
+
+Main merge visual is 780 ms: committing consumes input at pointer-up; gameplay merge state occurs once, logically at t=0 on the authoritative side (or with server confirmation); representation hides the old turrets at appropriate cinematic beats, then reveals final result at t~480 ms. This avoids desync. Suspend only the TWO involved turret attack visuals for up to ~300 ms where feasible; combat and enemy travel continue normally. Global hit-stop for gameplay is NOT recommended in live PvP; perform 35–45 ms local visual hit-stop on merge effects/turrets only. Camera shake is a tiny positional transform on board rendering (not the phone viewport or HUD).
+
+3. PICK-UP: 0–150 ms
+
+0–40 ms: finger hits the turret. It compresses to 0.95x with a quick 30 ms ease-out. The source socket gives a tiny mechanical 'click' (one rim PNG frame) while all other cells stay quiet.
+40–105 ms: turret rises 0.55T above finger, scales 0.95->1.14 (easeOutBack), tilts -4 degrees then returns to 0 degrees. A pre-drawn elliptical metallic ambient-contact shadow stays on the source tile and fades from 0.50->0.20 opacity. Held unit gains a baked PNG cool edge glint; no procedural shadow ellipse.
+105–150 ms: held turret settles at 1.10x. The original source tile shows a vacant 'ejected socket' plate PNG and a subtle darkened center, NOT a solid green box. An optional small 3-frame release spark at source plays once. Do not keep a translucent clone of the unit in its former position.
+Easing: compress easeOutCubic; rise easeOutBack, small overshoot; tilt easeOutSine.
+Code: duplicate display instance (same art) or move existing instance into a drag overlay layer; anchor center; apply position/scale/rotation/alpha only; hide the original game piece (not its base socket). Show sprite shadow and source socket PNG underneath. On cancellation restore one original unit only.
+
+4. DRAG: WHILE FINGER MOVES
+
+Held turret is 1.10x; slightly leans -3 to +3 degrees based on horizontal velocity, clamped. Add 2-frame engine/glint highlight only at meaningful velocity changes, or skip to reduce noise. No dashed line, no tracing particle tail, no ghost unit.
+Every valid same-type/same-star target receives an understated 4-frame ring 'breath' over 800 ms at 0.5–0.75 alpha; the ring should be 4–6 px thick at 50 px tile scale, hugging the circular turret base rather than framing the square tile. One shared animation clock avoids random flicker. Do not tint the unit itself bright green; preserve colored role/rarity ring. Targets are visible during drag only, never at idle.
+Nonmatching/blocked targets retain their normal colors with optional dark charcoal metal 'X latch' PNG when pointer hovers them. NEVER show every invalid target simultaneously. Empty cells are not merge targets (unless using a separate reposition rule).
+If target changes while held, previous highlight fades out in 70 ms while next fades in 90 ms. Source stays a dark socket with embedded shadow. If dragging over ally board or path, no target cues.
+Code: legalMatches[] drives PNG ring visibility; sprite instance positions follow tile centers; apply opacity only. The image is an authored segmented circular ring, not a shader/code stroke.
+
+5. HOVER OVER LEGAL TARGET: 0–180 ms, LOOP WHILE HELD
+
+0–65 ms: ring settles from 1.02 to 1.12x and becomes full intensity. The held turret is magnetized toward target center by 0.12T maximum, but finger still controls it; easing easeOutCubic. Do not fully snap until release or the gesture will feel stolen.
+65–115 ms: a small baked 'two-prong magnetic clasp' PNG appears between the two round turret silhouettes; render as ONE compact, pre-drawn icon at midpoint, not a code-drawn connector. Optional if sprites are too crowded.
+90–180 ms: preview chip flies upward 0.22T from target and holds: a large clean star glyph followed by +1 as PRE-BAKED ART (or a separately composited PNG number glyph if dynamic). The preview should indicate actual outcome, e.g. '1 -> 2' or simply '+1 STAR'; at 50 px board scale favor a large symbol + next-star-number badge, no microtype. Put preview above/right of target in nearest free region; clamp into board, and do not cover the user's finger. Preview doesn't promise type outcome if random-result rules apply: show 'STAR 2' only, not a specific turret art.
+Upon exit, preview scales 1->0.85 and fades over 80 ms. Hold invalid target: one dark-red metal X/bump icon for 180 ms, not red whole-screen tint.
+Code: calculate eligible resultStar = min(7, star+1) from gameplay rules; choose one of pre-rendered badge PNGs star_2.png..star_7.png; anchor at target center with positional offset. Pure transforms; no on-the-fly labels or circles.
+
+6. MERGE: SIGNATURE 780 MS CINEMATIC (VALID DROP)
+
+T=0 on pointer-up. Freeze hover target choice for animation. Prevent both pieces from being interacted with again. If network/prediction applies, reserve slots and await authoritative commit before playing irreversible reveal; animation may show a brief tension/charge only while awaiting response.
+
+0–95 ms — MAGNET SNAP: source held turret zips from finger location to a point 0.15T to the left of the target; both heads lean toward center (up to +/-7 degrees), scale to 1.06x. Two pre-painted arc prongs flash once on the outer rim, not a line.
+95–205 ms — SUCK-IN / COMPRESSION: both turret heads shrink 1.06->0.32x toward the exact target tile center using easeInCubic. Source shadow collapses/fades. An 8-frame radial machinery intake / spiral flips rapidly; its art already contains gear teeth and short inward streaks. A 55 ms low-frequency 'vacuum' sound plays over the inward motion.
+205–255 ms — IMPACT / WHITE-HOT FLASH: two images meet and disappear. One 5-frame teal-gold-white forge impact burst appears at center. At t=230, local visual hit-stop 40 ms: hold impact sprite frame and final target pose while enemies keep moving. Board renderer shifts +1.5 px, -1 px, then -1 px, +0.5 px over 70 ms (scale shake amount to 50 px tiles, not full-screen movement). Sound: short weighty metallic 'CLANG' layered with bright glassy chime. Haptic: one medium tap where mobile browser permits (iOS Safari vibration support must not be assumed).
+255–405 ms — ENERGY FORGE: a 6-frame spinning circular colored ring compresses and rebounds around target. Four large authored shard/spark sprites depart ~0.25T using rotations/translations; avoid dozens of particles. Keep brightness contained to target and immediate neighboring boundaries.
+405–520 ms — NEW TURRET REVEAL: actual authoritative output turret appears at target center scale 0.60->1.20->1.00, alpha 0->1 in first 40 ms, easing easeOutBack. Show the correct resulting turret type and star, including any merge-result randomness. The source tile remains empty. Any existing unit attack can restart at t=520.
+490–650 ms — STAR STAMP: a large baked star-rank seal drops 0.20T down onto top-right edge of new turret. At impact it scales 1.35->0.90->1.0 (easeOutBack) and rotates -8->0 degrees. A 5-frame gold/cyan star-stamp pulse plays behind it. DO NOT accidentally show 1 on a now-star-2 turret; use the final star numeral. The permanent existing star badge fades in underneath by t=640, while temporary oversized stamp fades out t=650–735.
+650–780 ms — SETTLE: forge fragments/rim fade; new turret returns to normal animation; source cell returns to regular empty steel tile. Do not allow a second merge by holding the touch from before; require a fresh pointer-down. All temporary VFX are recycled by 780 ms.
+
+Easing recap: snap easeInOutCubic; compression easeInCubic; reveal easeOutBack; pulse easeOutQuad; stamp easeOutBack. Apply scale with center anchors. This fixed authored timeline is the 'premium' merge feel; shorten only in accessibility reduced-motion mode (see below).
+
+7. SUMMON NEW TURRET: 630 MS
+
+0–120 ms: chosen empty tile receives a 6-frame circular violet/teal summoning aperture, 0.6->1.0x, opacity 0->1. The aperture looks like a compact industrial drop hatch, not a free-floating magic circle inconsistent with the board.
+120–260 ms: a 5-frame vertical energy capsule appears just above tile and descends ~0.28T. A 4-frame metallic latch/machine doors image snaps open. The new turret begins appearing as a small 0.70x silhouette.
+260–340 ms: capsule 'lands': turret scales 0.70->1.16, short contact puff under its base, one dull click/whump, very small tile-local shake.
+340–500 ms: turquoise ring ripples out to 1.18x; turret rebounds 1.16->1.00.
+500–630 ms: portal closes, base star marker appears. Gameplay spawn can be authoritative immediately, but do not show turret attacking before reveal if that produces visual contradictions. Multiple rapid summons: stagger visual reveals ~100 ms max; never stall gameplay or allow UI input backlog.
+Code: summon at predetermined empty tile from game logic; play stacked PNGs, interpolated transforms and sprite frame indexes; no radial canvas gradient, no particle drawing.
+
+8. STAR UP / LEVEL UP / SELL / INVALID DROP
+
+A. STAR UP, 420 ms (non-merge star increase, e.g., special skill): 0–80 ring charge; 80–155 star seal flips from old to new (swap PNG at peak shrink); 155–250 golden pulse expands; 250–420 badge returns normal. Keep other turret anatomy unchanged. If the upgrade is created by a merge, use only the 780 ms merge stamp, not a second star-up sequence.
+B. LEVEL UP, 520 ms (deck/type upgrade): 0–130 card frame's side rails illuminate; 130–260 chunky up-arrow badge rises through card; 260–390 LV label/number changes via existing UI; 390–520 a quick trim glint sweeps card edge. Use visual feedback on the CARD, not on every deployed turret; optional one weak faction-colored pulse on affected units capped at 2 per frame. Distinguish level from star clearly: level = vertical arrow/card; star = rank seal on turret.
+C. SELL / SACRIFICE, 500 ms: 0–100 held turret contracts; 100–235 6-frame recycler-claw/gear jaws close around it; 235–330 turret vanishes into a metallic token with one compact spark; 330–500 a pre-drawn mana crystal token flies from board position toward mana LCD, fading/scaling at endpoint; show existing currency UI increment at 350–500 ms. For sacrifice-to-Scrap-Forge variant use same reclaim base art recolored to orange, but trigger destination-specific rules. Do not imply refund when no refund is actually awarded.
+D. INVALID DROP / CANCEL, 260–340 ms: 0–75 held turret tilts ~-8 degrees and shrinks 1.10->1.03; a 4-frame tiny muted red 'no latch' PNG flashes on attempted tile; 75–285 turret springs on a curved-looking path made solely by x/y coordinate animation back to source (easeOutBack), 1.03->1.0; source socket shadow returns; 285–340 remove lift layer. A soft dull 'duk' sound. When releasing outside board or on empty space, omit red X and just bounce back. Do not show an error on source tile or false highlight on rival board.
+
+9. COMMANDER CAST: 850–1100 MS, NON-BLOCKING
+
+A commander active is an explicit premium action, visually distinct from ordinary merge. 0–100 commander portrait button depresses to 0.94x; 100–220 a faction-colored embossed ring appears around portrait; 220–420 large 6-frame commander crest briefly appears near the player's board center or skill effect location (not over whole screen); 420–750 play ability-specific unique PNG effect at targets; 750–1050 crest contracts and portrait shows existing cooldown overlay art. If ability is sustained, main skill continues but the CAST INTRO ends by 1050 ms. Optional voice sting and local board shake at climax. Do not reuse one generic teal burst for every commander: share mechanical casing but give each distinct crest and color. Code sequences sprite frames/transforms, syncs actual skill event to t~300–420 ms, and triggers cooldown from authoritative game state. NEVER paint a cooldown wedge with code: use pre-rendered 8/12/16-step radial overlay sheets if needed.
+
+10. WAVE START: 800–1000 MS
+
+0–180: short steel-tray warning light strip flashes twice at the spawn side; low beep.
+180–420: a pre-rendered 'WAVE' badge or number badge drops just above lane midpoint without obscuring targets, scale 1.15->1.0. If numbers are dynamic, use PNG glyph atlas assembled by positioning PNG sprites only, or existing UI text if allowed.
+420–700: 6-frame directional lane-chevron sweep, designed as art texture, advances a small distance along left path to signal enemies are entering (do not draw arrows in code).
+700–950: label and accent fade, letting enemies own the visual focus. For BOSS wave use amber warning/unique alarm + boss-specific sprite, never just a red-tinted normal wave start.
+Code: enemy spawn timing runs on gameplay clock; warning VFX triggered in advance if system supports it. Avoid delaying wave progression solely for animation. Reuse existing top HUD wave counter without giant duplicative captions.
+
+11. ART ASSET MANIFEST + EXACT ONE-LINE GENERATION PROMPT PER SHEET
+
+Conventions: numbers below are individual FRAME cell dimensions in source image pixels, not the exported final board footprint. Requested sheets must have equal-sized cells with magenta gutters ~16–24 px between content, no outlines/grids between cells, no shadows on the background; object-internal painted contact shadows are allowed. Each prompt refers to matching the CURRENT TURRET MERGE round turret heads, hard-edged cartoon-metal plating, dark charcoal outlines, yellow hazard markings, cool cyan/purple magical energy, high top-down perspective. The art tool's sheet may need crop and align passes to guarantee exact cell dimensions; inspect each before importing. All assets must be PNG RGBA after removing #FF00FF. Avoid accidental magenta details in the intended sprites.
+
+01. pickup_socket_release.png | 1 row x 6 frames | 192x192/frame | loop: no, plays 110 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: top-down dark industrial turret socket unlatching, pressure plates retract and one tiny cyan release spark, chunky cartoon steel with yellow hazard screws; exact consistent circular alignment, flat solid #FF00FF background, no words, no grid, no cut-off.'
+
+02. held_turret_glint.png | 1x4 | 192x192/frame | loop once or subtle hold.
+PROMPT: 'Game-ready 1x4 sprite sheet of thin icy cyan edge-glint overlays hugging an EMPTY circular top-down armored turret silhouette, four sequential glint positions, center transparent, bold cartoon-metal VFX; flat solid #FF00FF background, no text.'
+
+03. lift_contact_shadow.png | 1x1 | 192x192/frame | static.
+PROMPT: 'One compact soft-edged dark charcoal elliptical contact-shadow decal with slight metal hatch reflection for a hovering top-down circular turret, no turret, faint center, isolated on flat solid #FF00FF background, no text.'
+
+04. target_valid_ring.png | 1x4 | 192x192/frame | looping 800 ms.
+PROMPT: 'Game-ready 1x4 sprite sheet: circular magnetic merge-target rim pulsing subtly in mint-cyan with gold bolt notches, hollow transparent center sized for a top-down round turret, four clean loop phases, bold cartoon sci-fi style, flat solid #FF00FF background, no text.'
+
+05. target_invalid_latch.png | 1x4 | 128x128/frame | one-shot 180 ms.
+PROMPT: 'Game-ready 1x4 sprite sheet: compact dull-red steel X-latch symbol pops, wobbles, settles and fades, heavy cartoon industrial bevel, isolated icon, flat solid #FF00FF background, no text.'
+
+06. hover_magnetic_prongs.png | 1x4 | 192x128/frame | optional one-shot 130 ms.
+PROMPT: 'Game-ready 1x4 sprite sheet: two short curved teal-gold magnetic clasp prongs reach inward toward an empty midpoint and snap together, no connecting line, heavy stylized sci-fi metal, flat solid #FF00FF background, no text.'
+
+07. merge_preview_star_badges.png | 2x3 | 128x128/frame | six STATIC next-rank icons for stars 2,3,4,5,6,7; compose from separate cropped cells.
+PROMPT: 'Game-ready 2x3 icon sheet: SIX clearly distinct chunky gold-and-cyan star rank seals for ranks 2, 3, 4, 5, 6 and 7 in row-major order, each with an oversized readable white numeral on a charcoal shield, identical outlines and size, flat solid #FF00FF background, no other text.'
+
+08. merge_vacuum_intake.png | 1x8 | 256x256/frame | 95–205 ms.
+PROMPT: 'Game-ready 1x8 sprite sheet: top-down circular industrial energy intake spiral, cyan and molten gold inward motion, gear teeth and short radial motion strokes painted INTO each frame, center shrinks to white-hot point, bold cartoon VFX, flat solid #FF00FF background, no text.'
+
+09. merge_impact_flash.png | 1x5 | 256x256/frame | 205–290 ms, can hold frame 3 on hit-stop.
+PROMPT: 'Game-ready 1x5 sprite sheet: compact center-bright gold-white-cyan mechanical merge impact, sharp heavy cartoon lightning wedges, starburst peak then fragments, equal centered frames, flat solid #FF00FF background, no text.'
+
+10. merge_forge_ring.png | 1x6 | 256x256/frame | 255–470 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: circular brass gear-forge energy ring spinning, contracting then rebounding, central opening stays clear, cyan sparks and small hazard-gold plates, top-down bold cartoon game VFX, flat solid #FF00FF background, no text.'
+
+11. merge_energy_shards.png | 2x4 | 96x96/frame | 8 alternate painted individual spark/shard sprites, transform them as particles.
+PROMPT: 'Game-ready 2x4 sheet of eight separate stylized mechanical merge sparks: four cyan sharp fragments and four gold steel flecks, each large chunky readable shape, no motion trails between cells, flat solid #FF00FF background, no text.'
+
+12. merge_star_stamp_pulse.png | 1x5 | 192x192/frame | 490–680 ms.
+PROMPT: 'Game-ready 1x5 sprite sheet: gold-and-cyan star-stamp impact pulse, a small circular gear seal slams and sends one chunky crisp rim ripple, center OPEN for separate rank badge, high contrast mobile cartoon metal, flat solid #FF00FF background, no text.'
+
+13. summon_aperture.png | 1x6 | 256x256/frame | 0–630 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: top-down compact industrial summon hatch with purple-cyan energy iris opening, flaring, and closing, black steel rim and yellow hazard ticks, middle clear for a turret, bold cartoon game style, flat solid #FF00FF background, no text.'
+
+14. summon_drop_capsule.png | 1x5 | 192x256/frame | 120–340 ms.
+PROMPT: 'Game-ready 1x5 sprite sheet: small vertical cyan-violet energy drop capsule enclosing an EMPTY transparent center, falling glow and forceful landing squish, compact chunky sci-fi cartoon, flat solid #FF00FF background, no text.'
+
+15. summon_latch_and_land.png | 2x4 | 192x192/frame | row 1 4 latch-opening frames; row 2 4 landing puffs.
+PROMPT: 'Game-ready 2x4 sprite sheet: top row four top-down steel hatch latches opening with cyan hinge glow; bottom row four compact cyan-grey landing dust shock puffs; exactly eight separated centered VFX, bold cartoon metal style, flat solid #FF00FF background, no text.'
+
+16. star_rank_seal_pulse.png | 1x6 | 192x192/frame | 420 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: ornate gold star-rank seal energizes, shrinks to swap center badge, re-expands with one crisp cyan-gold rim pulse and settles, hollow central medallion for separate numeral, bold mobile cartoon look, flat solid #FF00FF background, no text.'
+
+17. level_up_card_glint.png | 1x6 | 160x192/frame | 520 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: tall rectangular gold-and-charcoal turret deck-card border only, cyan energy runs along rails then a gold glint finishes at corner, empty transparent center, clean bold game UI art, flat solid #FF00FF background, no text.'
+
+18. level_up_arrow.png | 1x5 | 96x128/frame | 200 ms.
+PROMPT: 'Game-ready 1x5 sprite sheet: chunky brass-and-cyan vertical upgrade arrow rises, strikes, gleams and fades, a single clean industrial icon per frame, flat solid #FF00FF background, no letters or numbers.'
+
+19. sell_recycler_jaws.png | 1x6 | 192x192/frame | 100–330 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: top-down cartoon sci-fi recycler jaws close around empty center and compress into a small bright teal steel spark, black steel with hazard-yellow stripes, flat solid #FF00FF background, no text.'
+
+20. mana_refund_token.png | 1x4 | 96x96/frame | 235–500 ms.
+PROMPT: 'Game-ready 1x4 sprite sheet: small purple faceted mana crystal token gives four bright glint phases, hard dark outline, matching the existing mana LCD icon in a colorful sci-fi defense game, flat solid #FF00FF background, no text.'
+
+21. commander_cast_crest.png | 1x6 | 256x256/frame | 220–1050 ms, template that may need commander-specific variants.
+PROMPT: 'Game-ready 1x6 sprite sheet: ornate red-violet commander sigil set inside dark gold mech crest, appears with mechanical lock-in, bright pulse and fades, large readable central emblem, bold mobile game cartoon art, flat solid #FF00FF background, no text.'
+
+22. commander_cooldown_steps.png | 2x8 | 160x160/frame | 16 static stages.
+PROMPT: 'Game-ready 2x8 sheet of sixteen stages of a charcoal mechanical segmented cooldown cover over a round commander button, progressively uncovering transparent center clockwise in equal 1/16 steps, gold bevels, no labels, flat solid #FF00FF background.'
+
+23. wave_warning_lane.png | 1x6 | 192x128/frame | 0–700 ms.
+PROMPT: 'Game-ready 1x6 sprite sheet: chunky industrial cyan lane-chevron warning sweep with brass frame, two alert flashes then moving arrow accent, readable at small size, isolate each frame on flat solid #FF00FF background, no text.'
+
+24. wave_title_badge.png | 1x3 | 256x128/frame | normal/elite/boss variants, static empty-label plates.
+PROMPT: 'Game-ready 1x3 sheet of three compact horizontal industrial stage-announcement badges, first cool steel-cyan, second violet-gold elite, third amber-red boss warning, blank center for existing UI label, flat solid #FF00FF background, no words.'
+
+25. board_micro_shock.png | 1x4 | 192x192/frame | optional impact-local burst for star/summon.
+PROMPT: 'Game-ready 1x4 sprite sheet: tiny steel-blue ground contact shock on a dark industrial turret socket, brief crackle, flat horizontal pressure puff, settles, small impact footprint and transparent center, flat solid #FF00FF background, no text.'
+
+Art export naming: every sheet asset gets a JSON crop manifest with columns, rows, originalCellW/H, frameCount, per-frame pivot (x/y fractions), fps or ms/frame, and intended blend mode normal. Avoid additive blending if it is not currently implemented; the bright pixels should work under normal alpha. Standardize 1 PNG per sheet, then an atlas/cell extraction stage; never slice by estimating nonuniform generated gaps.
+
+12. RUNTIME VFX STACK AND IMPLEMENTATION PSEUDOCODE
+
+Order from back to front within the PLAYER board:
+0 board floor / static tiles
+1 under-unit socket/decal/target rings
+2 regular turret bases + deployed turret heads
+3 under-held contact shadow / held turret (drag overlay)
+4 hover result preview + magnetic prongs
+5 merge / summon central burst + shards
+6 temporary star stamp and commander cast crest
+7 HUD (untouched, always legible)
+Enemy path should ordinarily render above distant board VFX only where the two overlap; no merge effects may cover opponent board or fixed bottom HUD. Use a clip rectangle for player board region if existing engine supports clipping, but do not generate a code-drawn mask; otherwise bound world-position and scale to stay within the allocated arena.
+
+Pseudo-API (conceptual, adapt to current JS):
+  vfx.play('merge_vacuum_intake', {x:target.x, y:target.y, frames:8, duration:110, scale:tilePx/160, anchor:[.5,.5]});
+  tween(held, {x:target.x, y:target.y, scale:.32}, 110, 'easeInCubic');
+  vfx.play('merge_impact_flash', {x:target.x, y:target.y, duration:85});
+  vfx.play('merge_forge_ring', {x:target.x, y:target.y, duration:215});
+  vfx.play('merge_star_stamp_pulse', {x:target.x+badgeOffsetX, y:target.y+badgeOffsetY, duration:190});
+These methods draw ONLY source PNG pixels. Transformation functions update sprite properties; they must not create procedural visuals. For additional spark sprites, spawn up to 4 objects each showing an authored PNG shard and tween x/y/rotation/scale/alpha independently.
+
+Interaction state machine:
+IDLE -> PRESSING -> LIFTING -> DRAGGING -> (HOVER_VALID | HOVER_INVALID) -> RELEASED_VALID -> MERGE_PLAYBACK -> IDLE
+  or DRAGGING -> CANCEL_RETURN -> IDLE.
+On pointercancel, browser swipe interruption, orientation resize, game pause, enemy state change, or board update invalidating target: cancel held piece with no merge transaction. Make cleanup idempotent. Block overlapping merge animations on same tile, but keep unrelated gameplay visual transitions independent. Invalid drop never consumes a turn and never modifies merge state.
+
+Authoritative state + presentation: do not defer actual rules for 780 ms merely to 'make effect feel slow'. Apply board transaction exactly once (local or server-authoritative), preserve selected output, and create a playback snapshot of old turret art. Display interim views from the snapshot while underlying game state is committed. If input/network timing causes a mismatch, end safely on correct final board. Sound cue at the same timeline timestamps. Queue incoming board diffs for those two visual cells only, then reconcile.
+
+Mobile performance budget: cap 1 active major merge animation per affected tile, ~4 free shards per impact, no blur filters/canvas shadows, no layout reflow, pre-decode and cache atlas images, render at device-safe backing resolution (do not assume asset 256 means 256 output pixels), use alpha-tested cropped assets (transparent background). Avoid adding 10 simultaneous large alpha layers at 60 FPS. When many merges fire, merge some peripheral effects to a compact 420 ms fallback animation without sacrificing board state clarity.
+
+Audio rough palette: pickup steel click, hover soft magnetic 'tick', merge suction + low metallic clap + high star ping, summon latch + pneumatic thunk, invalid dull clunk, level-up brass click, commander signature chord, wave siren chirp. All short and ducked; merge clang should not mask enemy attack SFX.
+
+Access: 'Reduced VFX' option retains valid target cue and final star change but reduces merge to ~360–450 ms, kills board shake, reduces flashes and shards; optional no haptic. 'Low GPU' mode retains 1 ring, 1 flash, 1 stamp; uses same assets without CSS glow/shader. All outcomes still legible without audio/haptic or red/green distinction.
+
+13. QA ACCEPTANCE TESTS
+
+- At 50 px tile scale, player can identify at least one legal target within 150 ms of pickup, without squinting at mini-badges.
+- Held turret never hides under the finger; its source tile has NO green square and NO ghost duplicate.
+- Dragging across invalid enemy board, path, and outer HUD produces no false valid cue.
+- Hover star preview never indicates impossible star 8; follows special merge rules if applicable.
+- A valid merge has one clear sequence: two units -> single impact -> one new unit -> visibly updated star, all within 780 ms.
+- Result retains deterministic backend-selected turret type; simultaneous effects cannot replace board state.
+- Camera shake moves board visuals only ~1–2 output px and never shifts UI touch hit regions.
+- Effect PNGs are true RGBA after import (no magenta fringe at scaling/rotation).
+- No black/white code lines, canvas circles/boxes, CSS shadows/gradients, rendered particle primitives, or text labels newly drawn by code.
+- 30 / 60 FPS animation timings are wall-clock-based; nonessential steps can skip frames without changing gameplay.
+- Tested on iPhone Safari portrait, during scroll prevention, multitouch, pause/resume, rotated orientation, quick repeated merges, CO-OP and PvP latency.
+- Critical core/lives/path readability survives effects at screen scale.
+
+14. THE SIX SHEETS TO GENERATE FIRST (IN BUILD ORDER)
+
+1. target_valid_ring.png — fixes the biggest 'AI-looking' drag signifier by replacing the thick green rectangle with a proper round magnetic rim.
+2. pickup_socket_release.png — lets the source tile look physically vacated; eliminate lingering ghost copy.
+3. merge_vacuum_intake.png — makes two units visibly converge before the output exists.
+4. merge_impact_flash.png — provides the decisive contact / local hit-stop focal beat.
+5. merge_forge_ring.png — bridges impact to the result so the merge does not appear instantaneous.
+6. merge_star_stamp_pulse.png — gives the resulting star a satisfying, readable payoff.
+
+Implementation note: for the first vertical slice, reuse EXISTING star badges, current turret heads, static shadow treatment and optional plain opacity-based preview. Make ONE polished 780 ms merge work before producing all 25 sheets. Next add 'merge_preview_star_badges.png', then summon_aperture.png. Do not spend time on elaborate commander or wave VFX before pickup/hover/merge readability is solved.
+
+15. SHORT HANDOFF FOR THE AI CODING AGENT
+
+Remove the code-painted green source square; remove dashed connector drawing; remove persistent semi-transparent copy. Introduce a drag overlay instance, an EMPTY source socket PNG, a separate baked shadow PNG, and an animated legal-target circular PNG. Build legal target highlighting from actual merge rules. Use finger position for hit-testing and a visual finger-offset for held unit. At release, lock target and record authoritative transaction. Play the 780 ms merge cinematic in six sequential segments; old units become presentation snapshots; final unit pops in with result star stamp. Use only PNG frame selection and sprite transforms. Enforce rollback / cancellation and caps. Test with star 1 -> 2, star 6 -> 7, invalid star 7, changing board mid-drag, two nearby valid targets, and merges near arena edges.
+
+THE ONE-SENTENCE ART DIRECTION: Every merge should feel like dropping two heavy machines into a pocket-sized magic forge — tactile on pickup, magnetically clear while dragging, and unmistakably rewarding when the new star is stamped.
