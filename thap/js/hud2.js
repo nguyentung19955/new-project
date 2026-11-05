@@ -4,13 +4,13 @@
 //  · 03 tấm LV, tấm đếm (icon chồng), ô giá có ngọc · 09 icon vai trò · 12 góc sáng 1 lần khi vừa đủ mana, tia vàng khi nâng cấp.
 //  · 04 ray trên (WAVE · BOSS IN N · tim) · 05 LCD mana · 07 huy hiệu sao số to · 08 giá đồng đội · 10 phím tốc độ/tạm dừng
 //  · 11 lõi 3 trạng thái + chớp đỏ khi trúng · 13 VFX cổng triệu hồi / tia ghép gắn đúng ô (giới hạn số lượng, tôn trọng reduced-motion)
-//  · S11 thanh 3 khúc trên lõi (khung + khúc đầy/rỗng).
+//  · S11 3 tim = 3 khúc năng lượng trên vòng chân lõi (vẽ trong js/corehud.js, ảnh loi_vong_*).
 'use strict';
 const HUD2 = {
   ANH_DOM: ['h2_rail', 'h2_lcd', 'h2_ngoc', 'h2_trieu_cho', 'h2_trieu_san', 'h2_trieu_an', 'h2_trieu_tat', 'h2_phim_dung_cho', 'h2_phim_dung_an', 'h2_phim_toc_cho', 'h2_phim_toc_an',
     'h2_tag', 'h2_ic_chong', 'h2_chip', 'h2_chip_tat', 'h2_ic_tim', 'seg_sang', 'seg_trum', 'loi_khuc_day', 'h2_khay_doi', 'h2_den_doi', 'h2_thanh', 'h2_tam_mong'],
   ANH_S10: ['nut_lon_thep', 'nut_lon_vang', 'nut_lon_xanh', 'nut_nho', 'khung_chon', 'nut_cong', 'khung_tt', 'ic_lui', 'ic_phat', 'h2_phim_dung_cho'],
-  ANH_CV: ['h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_thanh_khung', 'loi_khuc_day', 'loi_khuc_rong', 'nhan_kn'],
+  ANH_CV: ['h2_sao', 'h2_sao_sang', 'h2_loi_0', 'h2_loi_1', 'h2_loi_2', 'h2_loi_chop', 'loi_vong_trai_sang', 'loi_vong_giua_sang', 'loi_vong_phai_sang', 'loi_vong_trai_tat', 'loi_vong_giua_tat', 'loi_vong_phai_tat', 'loi_vong_no', 'nhan_kn'],
   VAI: { tc: 'h2_vai_tc', ht: 'h2_vai_ht', db: 'h2_vai_db' },
   bat: false, giam: false, _du: null, _theDu: {}, _tim: -1, _vfx: 0,
 
@@ -191,36 +191,11 @@ const HUD2 = {
   }
 
   // 11 · lõi: 3 ảnh trạng thái (nguyên / mẻ / nguy) thay vết nứt vẽ code; chớp đỏ = ảnh viền đỏ
-  // S11 · thanh 3 khúc trên lõi: khung 3 ô + khúc đầy / rỗng (ảnh); khúc vừa mất nhấp nháy rồi rỗng
+  // S11 · 3 tim nằm trên vòng chân lõi: js/corehud.js (CORE.veVong)
   if (typeof CORE !== 'undefined') {
-    const nutGoc = CORE.loiNut, doGoc = CORE.loiDo, hudGoc = CORE.veHud;
+    const nutGoc = CORE.loiNut, doGoc = CORE.loiDo;
     CORE.loiNut = function (ren, px, muc) { return ren.co('h2_loi_' + Math.min(2, muc), px, '') || nutGoc.apply(this, arguments); };
     CORE.loiDo = function (ren, px) { return ren.co('h2_loi_chop', px, '') || doGoc.apply(this, arguments); };
-    CORE.veHud = function (ctx, ren) {
-      const fr = ren.img('loi_thanh_khung'), fd = ren.img('loi_khuc_day'), fo = ren.img('loi_khuc_rong');
-      if (!fr || !fd || !fo || this.timMax() !== 3 || !G.duong || !G.duong.length) return hudGoc.apply(this, arguments);
-      const dt = ren.dt || 0, t = ren.t, xong = new Set();
-      for (const p of G.duong) {
-        const e = p.pts[p.pts.length - 1], key = e + '';
-        if (xong.has(key)) continue; xong.add(key);
-        const s = this.lay(key); this.capNhat(s, dt);
-        s.xa = Math.max(0, (s.xa || 0) - dt * 1.5);
-        if (G.che === 'coop') continue;
-        const con = s.hien, cu = Math.max(s.cu, con), sap = con === 1 && !G.ketThuc;
-        const bw = 64, bh = 28;
-        const rx = s.rung > 0 ? Math.sin(t * 70) * 2.2 * s.rung : 0;
-        const cx = Math.max(bw / 2 + 3, Math.min(W - bw / 2 - 3, e[0])) + rx, cy = Math.max(bh / 2 + 3, Math.min(H - bh / 2 - 3, e[1] - 43));
-        const x0 = cx - bw / 2, y0 = cy - bh / 2;
-        ctx.drawImage(fr, x0, y0, bw, bh);
-        const O = [[0.133, 0.359], [0.391, 0.617], [0.641, 0.875]], sy = y0 + bh * 0.179, sh = bh * 0.571;
-        for (let i = 0; i < 3; i++) {
-          const sx = x0 + bw * O[i][0], sw = bw * (O[i][1] - O[i][0]);
-          if (i < con) { ctx.globalAlpha = sap ? 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(t * 6)) : 1; ctx.drawImage(fd, sx, sy, sw, sh); }
-          else { ctx.globalAlpha = 1; ctx.drawImage(fo, sx, sy, sw, sh); if (i < cu && s.xa > 0) { ctx.globalAlpha = s.xa * (0.5 + 0.5 * Math.sin(t * 40)); ctx.drawImage(fd, sx, sy, sw, sh); } }
-        }
-        ctx.globalAlpha = 1;
-      }
-    };
   }
 })();
 window.HUD2 = HUD2;
