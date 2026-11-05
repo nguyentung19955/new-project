@@ -292,7 +292,7 @@ HU.gXem = { duoi: true, ve(ctx, o, R) { const u = o.t / o.song, a = u < 0.1 ? u 
 ATK.hopbi = ['Violet card shard poke (single, ~0.3× dmg)', '3-way spread of spinning "?" bolts at 3 enemies', 'Stops shooting — confetti sparks: about to open'];
 ATK.tienhoa = ['Amber pellet poke', 'Molten gold slug: ember trail + 20 px splash', 'Thin golden spark BEAM (continuous ticks) — almost a new turret'];
 function chocU(G, B, T, dt) {
-  const s = gdU(T), c = tamU(T), dmg = hsU(T.id, T.sao, B) * 0.3, hop = T.id === 'hopbi';
+  const s = gdU(T), c = tamU(T), dmg = hsU(T.id, T.sao, B) * 0.3 * (1 + T.buf.dmg) * (B.cuong > 0 ? 2 : 1), hop = T.id === 'hopbi'; // QA Tím: đòn chọc cũng ăn buff sát thương + RAGE ×2 như mọi ụ
   T._pk = (T._pk == null ? 0.6 : T._pk) - dt * (1 + T.buf.toc);
   if (s === 3 && hop) { if (T._pk <= 0) { T._pk = 0.25; if (GFX.coDOM) FX.hat1('lua', c.x + rnd(-12, 12), c.y + rnd(-12, 8), rnd(-40, 40), rnd(-80, -30), 0.5, 6, pick(['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'])); } return; }
   if (s === 3) { // Hộp Tiến Hoá: tia vàng mảnh liên tục
@@ -403,7 +403,8 @@ HU.gLuot = { // lướt tới: 3 bóng đầu sói đỏ mờ dọc đường đ
 };
 
 // ---- VỆ TINH (Mafdet): tia lam → tia + vòng ngắm trước khi trúng → GHÉP: mọi Vệ Tinh thức tỉnh, mỗi phát = 3 GIÁO TRỜI có tâm ngắm đỏ (không nổ lan) ----
-ATK.orbital = ['Small cyan bolt', 'Longer bolt + a target marker locks onto the enemy before impact', 'ON MERGE (all Orbitals): every shot calls 3 SKY LANCES with red reticles, staggered barrage (single-target hits)'];
+// (QA vàng-đỏ: Vệ Tinh là ụ ĐẶC BIỆT không bắn thường — chữ cũ tả đạn từng dạng không có thật; P.orbital.ban bên dưới không bao giờ chạy)
+ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merge two to call the strike', 'BOMBARDMENT (20s after a merge): a sky lance every 0.32s on a random enemy, 30 px blast'];
 P.orbital = () => {
   const sk = SKILLS.orbital, bg = sk.ban;
   sk.ban = function (G, B, T, E) {
@@ -539,7 +540,8 @@ HU.gXich = { ve(ctx, o, R) { const u = o.t / o.song; if (!o.Q.chet) { o.x1 = o.Q
   ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - u) * 0.5; R.anhGiua(ctx, R.cham1('#c77dff'), x1, y1, 30); veXich(ctx, o.x0, o.y0, x1, y1, 3.2, 7, '#e8c8ff', 1 - u * u, 6 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- PHÁO ĐỒNG BỘ (Cosmem): viên vàng → viên + sóng nhịp ở nòng (mọi Pháo Đồng Bộ đập cùng nhịp 1 s) → FULL SYNC: tia vàng tức thì hội tụ ----
-ATK.dongbo = ['Single gold pellet', 'SYNCED: pellet + gold sound-wave arcs at the muzzle; every Sync Cannon pulses on the same 1s beat', 'FULL SYNC: instant converging gold BEAM, gold ring + crit sparks'];
+// (QA vàng-đỏ: Pháo Đồng Bộ là ụ HỖ TRỢ không bắn — chữ cũ tả đạn/tia không có thật)
+ATK.dongbo = ['OFFLINE: no same-star Attack neighbour (no shots — Support)', 'SYNCED: 1–2 same-star Attack neighbours get +damage; pulses on a 1s beat', 'FULL SYNC: 3+ matched neighbours — the biggest +damage (5★: +fire rate too)'];
 P.dongbo = () => {
   const sk = SKILLS.dongbo, vt = sk.veThem;
   sk.ban = function (G, B, T, E) {

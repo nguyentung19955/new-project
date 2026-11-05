@@ -292,18 +292,18 @@
   "ten": "Berserker",
   "bac": "tim",
   "dcdw": "Danu",
-  "kyNang": "Crits trigger a 5s fire-rate frenzy",
+  "kyNang": "Crits build RAGE, then a fire-rate FRENZY",
   "ten_vi": "Súng Cuồng Nộ",
-  "kyNang_vi": "Chí mạng → chế độ bùng nổ tốc bắn 5 s"
+  "kyNang_vi": "Chí mạng → NỘ (+25% tốc), chí mạng lần 2 → CUỒNG NỘ tăng mạnh tốc bắn 5 s"
  },
  {
   "id": "baotuyet",
   "ten": "Blizzard",
   "bac": "tim",
   "dcdw": "Mayauel",
-  "kyNang": "Periodically slows ALL enemies",
+  "kyNang": "Slows ALL enemies and briefly freezes small ones",
   "ten_vi": "Bão Tuyết",
-  "kyNang_vi": "Định kỳ làm chậm TOÀN BỘ quái"
+  "kyNang_vi": "Định kỳ làm chậm TOÀN BỘ quái và đóng băng ngắn quái nhỏ"
  },
  {
   "id": "nhanban",
@@ -321,7 +321,7 @@
   "dcdw": "Won",
   "kyNang": "Stronger with more linked turrets of its type",
   "ten_vi": "Chuỗi Liên Kết",
-  "kyNang_vi": "Mạnh hơn theo số ụ cùng loại nối liền kề"
+  "kyNang_vi": "+40% sát thương mỗi ụ cùng loại nối liền kề; 4 ụ nối → đạn nảy thêm 1 quái"
  },
  {
   "id": "kepha",
@@ -337,18 +337,18 @@
   "ten": "Cleanser",
   "bac": "tim",
   "dcdw": "Gemina",
-  "kyNang": "On merge: removes debuffs from N turrets",
+  "kyNang": "Support: every 12s cleanses 2 neighbours; nothing to clean = +8% damage",
   "ten_vi": "Máy Tẩy Lỗi",
-  "kyNang_vi": "Khi GHÉP: xoá hiệu ứng xấu cho N ụ"
+  "kyNang_vi": "Hỗ trợ: mỗi 12 s tẩy hiệu ứng xấu cho 2 ụ kề; không có gì để tẩy → ụ kề +8% sát thương"
  },
  {
   "id": "khien",
   "ten": "Shield Gen",
   "bac": "tim",
   "dcdw": "Mona",
-  "kyNang": "On merge: one-hit shield for N turrets",
+  "kyNang": "Support: neighbours get a 1-hit control shield, recharging every 18s",
   "ten_vi": "Máy Khiên",
-  "kyNang_vi": "Khi GHÉP: khiên chặn 1 lần cho N ụ"
+  "kyNang_vi": "Hỗ trợ: ụ kề có khiên chặn 1 lần khống chế, sạc lại 18 s"
  },
  {
   "id": "hopbi",
@@ -364,18 +364,18 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "On merge: +1★ to another turret",
+  "kyNang": "Support: the 2 lowest-star neighbours fire faster (6% per ★); 5★ grants star pips",
   "ten_vi": "Bệ Nâng Sao",
-  "kyNang_vi": "Khi GHÉP: +1 sao cho 1 ụ khác"
+  "kyNang_vi": "Hỗ trợ: 2 ụ kề sao thấp nhất +6% tốc bắn mỗi sao; 5★ mỗi wave cho nấc sao"
  },
  {
   "id": "tuthan",
   "ten": "Reaper Pillar",
   "bac": "tim",
   "dcdw": "Thanatos",
-  "kyNang": "Support: neighbors may instantly kill small enemies",
+  "kyNang": "Support: neighbours may execute normal enemies under 30% HP",
   "ten_vi": "Cột Tử Thần",
-  "kyNang_vi": "Hỗ trợ: ụ kề có xác suất giết ngay quái nhỏ"
+  "kyNang_vi": "Hỗ trợ: ụ kề có xác suất giết ngay quái thường còn dưới 30% máu"
  },
  {
   "id": "xaotron",
@@ -409,9 +409,9 @@
   "ten": "Storm Gun",
   "bac": "tim",
   "dcdw": "Pantheon",
-  "kyNang": "Instant, very fast hits; slower next to its own kind",
+  "kyNang": "Instant hits that can arc; slower next to its own kind",
   "ten_vi": "Súng Bão",
-  "kyNang_vi": "Trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại"
+  "kyNang_vi": "Trúng tức thì, cực nhanh, đôi khi nảy sét; chậm lại khi đứng cạnh ụ cùng loại"
  },
  {
   "id": "anhsang",
@@ -436,9 +436,9 @@
   "ten": "Sync Cannon",
   "bac": "vang",
   "dcdw": "Cosmem",
-  "kyNang": "Stronger for each same-star turret on the board",
+  "kyNang": "Support: same-star Attack neighbours deal more damage (capped)",
   "ten_vi": "Pháo Đồng Bộ",
-  "kyNang_vi": "Mạnh hơn theo số ụ cùng sao trên bàn"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề CÙNG SAO +sát thương (có trần)"
  },
  {
   "id": "railgun",
@@ -472,9 +472,9 @@
   "ten": "Star Breaker",
   "bac": "vang",
   "dcdw": "Giltine",
-  "kyNang": "On merge: PVP −1★ to a rival turret; Co-op +★ to an ally",
+  "kyNang": "Support: Attack neighbours +damage, merge surge. PVP: first rival 5★ each wave −8% fire rate",
   "ten_vi": "Súng Hạ Sao",
-  "kyNang_vi": "Khi GHÉP: PVP -1 sao ụ đối thủ; co-op +sao ụ đồng đội"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +sát thương, ghép cạnh nó → bùng tốc. PVP: ụ đối thủ lên 5★ đầu mỗi wave −8% tốc bắn"
  },
  {
   "id": "saochep",
@@ -499,9 +499,9 @@
   "ten": "Mech Wolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Melee; awakened form always crits",
+  "kyNang": "Melee wolf that GROWS: Pup → Hunter → Alpha (always crits)",
   "ten_vi": "Sói Máy",
-  "kyNang_vi": "Đánh gần; bản thức tỉnh luôn chí mạng"
+  "kyNang_vi": "Cận chiến, LỚN DẦN: Sói con → Thợ săn → Đầu đàn (luôn chí mạng)"
  },
  {
   "id": "tienhoa",
@@ -517,9 +517,9 @@
   "ten": "Rainbow",
   "bac": "vang",
   "dcdw": "Yuna",
-  "kyNang": "Paints rainbows on the path that weaken enemies",
+  "kyNang": "Support: paints a rainbow trail; Attack neighbours hit enemies on it harder",
   "ten_vi": "Máy Cầu Vồng",
-  "kyNang_vi": "Vẽ cầu vồng lên đường: quái yếu đi (co-op)"
+  "kyNang_vi": "Hỗ trợ: vẽ vệt cầu vồng; ụ Tấn công kề đánh quái trên vệt mạnh hơn"
  },
  {
   "id": "wallgen",
@@ -535,9 +535,9 @@
   "ten": "Orbital",
   "bac": "vang",
   "dcdw": "Mafdet",
-  "kyNang": "On merge: every satellite bombards for 20s",
+  "kyNang": "Special: on merge, a 20s sky bombardment (no normal shots)",
   "ten_vi": "Vệ Tinh",
-  "kyNang_vi": "Khi GHÉP: mọi vệ tinh bắn phá từ trời 20 s"
+  "kyNang_vi": "Đặc biệt: khi GHÉP gọi bắn phá từ trời 20 s (không bắn thường)"
  },
  {
   "id": "blackhole",
@@ -553,7 +553,7 @@
   "ten": "Overlord",
   "bac": "do",
   "dcdw": "Jacheongbi",
-  "kyNang": "Slow charge, then a massive thunder blast",
+  "kyNang": "Slow charge, massive thunder blast + aftershock arcs",
   "ten_vi": "Overlord",
   "kyNang_vi": "Khởi động chậm, nạp đầy bắn siêu sấm nổ diện rộng"
  },
@@ -562,27 +562,27 @@
   "ten": "Cryo Reactor",
   "bac": "do",
   "dcdw": "Devil Cider Liza",
-  "kyNang": "Slowing aura: slower = more damage; active skill",
+  "kyNang": "Support: slowing aura; Attack neighbours hit slowed enemies harder. Active: FREEZE",
   "ten_vi": "Lò Phản Ứng Băng",
-  "kyNang_vi": "Hào quang làm chậm quanh; càng chậm càng đau; kỹ năng chủ động"
+  "kyNang_vi": "Hỗ trợ: hào quang làm chậm; ụ Tấn công kề đánh quái đang chậm mạnh hơn. Chủ động: ĐÓNG BĂNG"
  },
  {
   "id": "haoquang",
   "ten": "Holy Halo",
   "bac": "do",
   "dcdw": "Halo Mona",
-  "kyNang": "Active skill: board-wide invincibility shield",
+  "kyNang": "Special: active 2s team barrier — leaks cost no hearts; boss skills only weakened",
   "ten_vi": "Hào Quang Thánh",
-  "kyNang_vi": "Kỹ năng chủ động: khiên bất tử toàn bàn vài giây"
+  "kyNang_vi": "Đặc biệt: chủ động khiên toàn đội 2 s — quái lọt không mất tim; chiêu trùm chỉ bị giảm"
  },
  {
   "id": "nayda",
   "ten": "Ricochet",
   "bac": "tim",
   "dcdw": "Child cung thủ",
-  "kyNang": "Disc bounces to N enemies, stronger each bounce",
+  "kyNang": "Disc bounces to N enemies (N = stars), stronger each bounce",
   "ten_vi": "Đĩa Nảy",
-  "kyNang_vi": "Đĩa nảy sang N quái, mỗi lần nảy mạnh hơn",
+  "kyNang_vi": "Đĩa nảy sang N quái (N = số sao), mỗi lần nảy mạnh hơn",
   "vai": "tc",
   "ho": "energy",
   "moi": "TUONG-MOI-20"
@@ -688,9 +688,9 @@
   "ten": "Lone Ace",
   "bac": "tim",
   "dcdw": "Blade Dancer",
-  "kyNang": "No neighbors: double fire rate and bonus crit",
+  "kyNang": "No N/E/S/W neighbours: +100% fire rate and bonus crit",
   "ten_vi": "Độc Tôn",
-  "kyNang_vi": "Không có ụ kề → tốc bắn ×2 và +chí mạng",
+  "kyNang_vi": "Không có ụ kề trên/dưới/trái/phải → +100% tốc bắn và +chí mạng",
   "vai": "tc",
   "ho": "heavy",
   "moi": "TUONG-MOI-20"
@@ -748,9 +748,9 @@
   "ten": "Scrap Forge",
   "bac": "vang",
   "dcdw": "Treant / Scrapper",
-  "kyNang": "Drag a 1–3★ turret onto it to feed: permanent damage stacks",
+  "kyNang": "Special: drag a 1–3★ turret onto it — your best Attack turret gains permanent damage (max +60%)",
   "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Kéo ụ 1–3★ vào để ăn: +sát thương vĩnh viễn",
+  "kyNang_vi": "Đặc biệt: kéo ụ 1–3★ vào để ăn — ụ Tấn công mạnh nhất +sát thương vĩnh viễn (tối đa +60%)",
   "vai": "tc",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -760,9 +760,9 @@
   "ten": "Mirror Gate",
   "bac": "vang",
   "dcdw": "Eve / Mona",
-  "kyNang": "PVP: reflects rival control. Co-op: copies ally merge effects. Solo: blocks boss skills",
+  "kyNang": "Support: neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill",
   "ten_vi": "Cổng Gương",
-  "kyNang_vi": "PVP phản đòn khống chế; Co-op sao chép hiệu ứng ghép đồng đội",
+  "kyNang_vi": "Hỗ trợ: ụ kề kháng khống chế. PVP phản 1 khống chế / 20 s; Co-op chép 1 hiệu ứng ghép đồng đội; Solo chặn chiêu trùm",
   "vai": "db",
   "ho": "guard",
   "moi": "TUONG-MOI-20"
@@ -796,7 +796,7 @@
   "ten": "Leviathan",
   "bac": "do",
   "dcdw": "Leviathan / Nidhogg",
-  "kyNang": "Devours enemies for stacks. Active (3★+): TIDAL BREATH sweeps the path",
+  "kyNang": "Devours enemies for endless stacks. Active (3★+): TIDAL BREATH sweeps the path",
   "ten_vi": "Thuỷ Quái",
   "kyNang_vi": "Nuốt chửng quái thường lấy cộng dồn; CHỦ ĐỘNG: tia thở quét hết đường",
   "vai": "tc",
@@ -808,7 +808,7 @@
   "ten": "Genesis Core",
   "bac": "do",
   "dcdw": "Brownie / Aurora King",
-  "kyNang": "Raises your lowest turret +1★. Active (3★+): GENESIS summons turrets",
+  "kyNang": "Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets",
   "ten_vi": "Lõi Khởi Sinh",
   "kyNang_vi": "Định kỳ +1★ ụ yếu nhất; CHỦ ĐỘNG: gọi ụ ở mức sao trung bình",
   "vai": "db",

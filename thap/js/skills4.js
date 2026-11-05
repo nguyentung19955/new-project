@@ -43,7 +43,7 @@ SKILLS.docton = {
   vai: 'tc', dmg: 14, toc: 1, nham: 'dau',
   a: (T) => sao7(T, [0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.25]),
   ke: (B, T) => keCan(B, T.o).filter(Boolean).length,
-  mo(T) { const n = this.ke(G.ban[T.ban], T); return (n === 0 ? 'ACE: ×2 fire rate, +' + Math.round(this.a(T) * 100) + '% crit' + (T.sao >= 7 ? ', pierces 1' : '') : n >= 3 ? 'CROWDED (' + n + ' neighbours): −30% fire rate' : n + ' neighbour(s): normal') + ' · keep its 4 N/E/S/W cells EMPTY'; },
+  mo(T) { const n = this.ke(G.ban[T.ban], T); return (n === 0 ? 'ACE: +100% fire rate, +' + Math.round(this.a(T) * 100) + '% crit' + (T.sao >= 7 ? ', pierces 1' : '') : n >= 3 ? 'CROWDED (' + n + ' neighbours): −30% fire rate' : n + ' neighbour(s): normal') + ' · keep its 4 N/E/S/W cells EMPTY'; },
   capNhat(G, B, T) {
     const n = this.ke(B, T), ace = n === 0;
     if (ace) { T.buf.toc += 1; T.buf.crit += this.a(T); } else if (n >= 3) T.buf.toc -= 0.3;
@@ -86,7 +86,7 @@ function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần 
 SKILLS.nhieusong = {
   vai: 'db', dmg: 11, toc: 1, nham: 'dau',
   n: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]), t: (T) => sao7(T, [3, 3.5, 4, 4.5, 5, 5.5, 6]), m: (T) => sao7(T, [5, 5, 10, 10, 15, 15, 20]),
-  mo: (T) => { const s = SKILLS.nhieusong; return 'On merge: PVP jams ' + s.n(T) + ' rival turrets −40% for ' + s.t(T) + 's + their next summon +' + s.m(T) + ' mana · CO-OP ally next summon FREE + 10% speed · SOLO slows all 20%'; },
+  mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SOLO slows all 20% for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 14, mau: '#8a7bff', sp: 540 }); },
   ghep(G, B, a, b, ra) {
     const S = { sao: Math.min(7, a.sao + 1) }, n = this.n(S), t = this.t(S), m = this.m(S), c0 = B.o[b.o];
@@ -138,9 +138,9 @@ trieu = function (B, mienPhi, idEp) {
 SKILLS.santhuong = {
   vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#f0b030',
   n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [2, 3, 3, 4, 5, 5, 6]),
-  mo: (T) => 'Every 5s marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +10% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
+  mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +10% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
   capNhat(G, B, T, dt) {
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / 5);
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / 5);
     if (T.nap >= 1) {
       const ds = dsMucTieu(B).filter(E => !E.chet && !E.truyNa).sort((a, b) => (b.d.to ? 1e9 : 0) + b.hp - (a.d.to ? 1e9 : 0) - a.hp).slice(0, this.n(T));
       if (ds.length) {
@@ -154,7 +154,7 @@ SKILLS.santhuong = {
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 13, mau: '#ffd27a', sp: 520 }); },
 };
 const _trungNa = trung;
-trung = function (E, dmg, o) { if (E.truyNa && !E.chet) dmg *= 1.1; return _trungNa(E, dmg, o); };
+trung = function (E, dmg, o) { return _trungNa(E, dmg, o); }; // +10% của truy nã: tính trong HOTRO.vuln (chung trần suy yếu 25%) — QA Tím
 const _chetGoc = chet;
 chet = function (E, B) {
   if (E.chet) return;
@@ -400,16 +400,19 @@ themHo('trap', 3, 'marionette', 'turns an enemy against its own wave');
 
 Object.assign(MOC_RIENG, {
   docton: { 7: ['DUELIST', 'ACE shots pierce 1 enemy'] },
-  thaukinh: { 5: ['DOUBLE PIERCE', 'Crits pierce 2 enemies'] },
+  thaukinh: { 5: ['DOUBLE PIERCE', 'Crits pierce 2 enemies'], 7: ['TRUE FOCUS', 'Pierce hits deal 65% (not 50%)'] },
   nemesis: { 7: ['REAPER LEAP', 'Executions leap to the nearest enemy'] },
   nhatthuc: { 7: ['TOTAL ECLIPSE', 'Each swap: both modes 1.5s + ×4 ring blast'] },
   marionette: { 7: ['TWIN PUPPETS', 'Controls 2 enemies at once (4★+: big enemies too)'] },
+  // Forge không bắn → mốc chung '+20% speed / +25% effect / +30% effect' không làm gì; sao thật sự đổi số cộng dồn mỗi lần ăn (f)
+  loren: { 3: ['HOT COALS', 'Each feed +2 stacks (3★ food ×3)'], 5: ['BELLOWS', 'Each feed +3 stacks'], 7: ['MOLTEN CORE', 'Each feed +4 stacks'] },
 });
 Object.assign(GROW, {
   nemesis: ttSao('#d01e3a', ['SCALES', 'SCYTHE', 'VERDICT'], '1–3★ / 4–6★ / 7★: executions leap to a 2nd enemy'),
   nhatthuc: ttSao('#ffcc33', ['DUSK', 'CORONA', 'TOTAL ECLIPSE'], '1–3★ / 4–6★ / 7★: both modes at once on every swap'),
   marionette: ttSao('#a01848', ['STRINGS', 'GOLDEN HAND', 'TWIN PUPPETS'], '1–3★ / 4–6★ (big enemies) / 7★ (2 puppets)'),
   guongcong: ttSao('#bff6ff', ['MIRROR', 'TWIN PANES', 'SHARD HALO'], '1–3★ / 4–6★ / 7★: reflects ×2'),
-  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–14 / 15–39 / 40+ (hot shards hit 2 more)',
-    gd: (T) => { const n = T.lo || 0; return { s: n >= 40 ? 3 : n >= 15 ? 2 : 1, p: n / 60, v: [0.25, 2 / 3] }; } },
+  // (QA vàng-đỏ: ngưỡng cũ 15/40 cộng dồn từ bản Forge bắn — trần nay 15 → dạng 3 không bao giờ tới; 'hot shards' không còn)
+  loren: { mau: '#ff6a1a', khongAnh: true, ten: ['COLD FORGE', 'BELLOWS', 'MOLTEN CORE'], dk: 'Forge stacks 0–4 / 5–14 / 15 (full: +60% to your best Attack turret)',
+    gd: (T) => { const n = T.lo || 0; return { s: n >= 15 ? 3 : n >= 5 ? 2 : 1, p: n / 15, v: [1 / 3, 1] }; } },
 });

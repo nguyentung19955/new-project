@@ -13,6 +13,10 @@ const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach'])
 const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16,
   freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
 const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
+// HƯỚNG NHÌN (Pass 5): dải 8 khung NGANG (đi sang phải; trái = lật) / SAU (đi lên) đã có trong assets/ — tools/thap-huong-quai.py tự cập nhật dòng dưới
+const HUONG8 = new Set([]); // vd 'quai_bo_side', 'trum_octopus_back'
+const HUONG_NGHIENG = 0.139; // dải chưa có: dùng dải TRƯỚC nghiêng ≤ 8° về phía đi
+const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc rẽ
 
 Object.assign(REN, {
   _xac: [],
@@ -24,6 +28,33 @@ Object.assign(REN, {
     const co8 = E.trum ? TRUM8.has(E.trum) : QUAI8.has(E.d.anh || E.id);
     if (co8) { const a = this.img(goc + '_8'); if (a) return goc + '_8'; }
     return goc;
+  },
+  // ảnh hướng nhìn cần nạp trước (ui.js chuẩn bị trận)
+  dsHuong() { const ds = []; for (const k of HUONG8) ds.push(k + '_8'); return ds; },
+  // chọn hướng nhìn từ hướng đi trên đoạn đường: 'f' trước (xuống) · 's' ngang (lat ±1) · 'b' sau (lên)
+  // trễ (hysteresis): chỉ đổi khi một trục trội rõ (×1.25) và đã giữ hướng cũ ≥ 150 ms → không chớp ở góc
+  huongQuai(E, t) {
+    const dx = Math.cos(E.goc), dy = Math.sin(E.goc), ax = Math.abs(dx), ay = Math.abs(dy);
+    let v = E._hv || 'f', l = E._hl || 1;
+    if (ax > ay * 1.25) { v = 's'; l = dx < 0 ? -1 : 1; } else if (ay > ax * 1.25) v = dy > 0 ? 'f' : 'b';
+    if (E.trum) { if (E._t0 == null) E._t0 = t; if (t - E._t0 < 0.9 || E.bao) v = 'f'; } // trùm: vừa vào / tung chiêu → nhìn ra màn hình
+    if (!E._hv) { E._hv = v; E._hl = l; E._hvT = -9; return; }
+    if ((v !== E._hv || (v === 's' && l !== E._hl)) && t - E._hvT > 0.15) {
+      E._hvCu = E._hv; E._hlCu = E._hl; E._hvT = t; E._hv = v; E._hl = l;
+    }
+  },
+  // dải của hướng v cho quái (ten = dải trước): có ảnh hướng đó → tên dải đó, không → null (dùng dải trước + nghiêng)
+  tenHuong(ten, v) {
+    if (v === 'f' || !HUONG8.size || !ten.endsWith('_8')) return null;
+    const g = ten.slice(0, -2) + (v === 's' ? '_side' : '_back');
+    return HUONG8.has(g) && this.img(g + '_8') ? g + '_8' : null;
+  },
+  // vẽ thân 1 hướng nhìn tại gốc toạ độ hiện tại: cánh mờ (quái bay), khung + hoà khung kế, chớp trắng; al = độ mờ chung
+  veThan(ctx, daiV, wTen, fV, f1, fr, C, bay, dong, fl, al, chiDai) {
+    if (bay && !dong) { ctx.globalAlpha = 0.22 * al; this.khung0(ctx, daiV, fV + 1, C * 1.035); }
+    ctx.globalAlpha = al; this.khung0(ctx, daiV, fV, C);
+    if (chiDai && f1 >= 0 && fr > 0.01) { ctx.globalAlpha = fr * al; this.khung0(ctx, daiV, f1, C); }
+    if (chiDai && fl > 0.02) { const w = this.coDai(wTen.ten, wTen.px, 'trang'); if (w) { ctx.globalAlpha = fl * al; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : fV, C); } }
   },
   // vẽ khung f của dải (đã thu nhỏ sẵn) tại gốc toạ độ hiện tại, cỡ co
   khung0(ctx, dai, f, co) {
@@ -63,7 +94,7 @@ Object.assign(REN, {
       if (X.t >= 0.3) { this._xac.splice(i, 1); continue; }
       const u = X.t / 0.3, e = 1 - (1 - u) * (1 - u) * (1 - u);
       const sc = 1 + 0.32 * e, al = (1 - u) * (1 - u);
-      ctx.save(); ctx.translate(X.x, X.y); if (X.goc) ctx.rotate(X.goc);
+      ctx.save(); ctx.translate(X.x, X.y); if (X.goc) ctx.rotate(X.goc); if (X.lat < 0) ctx.scale(-1, 1);
       ctx.globalAlpha = al; this.khung0(ctx, X.dai, X.f, X.co * sc);
       if (X.w) { ctx.globalAlpha = al * (0.9 - 0.6 * u); this.khung0(ctx, X.w, X.f, X.co * sc); }
       ctx.restore();
@@ -79,7 +110,8 @@ Object.assign(REN, {
       if (E.chet) {
         if (!E._pop && E.tChet < 0.25 && dai) {
           E._pop = 1;
-          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, co: co * kc * (E._sc || 1), f: E._f || 0, t: 0, dai, w: this.coDai(ten, co * kc, 'trang') });
+          const tX = E._tHv || ten, dX = this.coDai(tX, co * kc) || dai; // nổ đúng hướng nhìn đang vẽ
+          this._xac.push({ x: E.x, y: E.y + (E._oy || 0), goc: E._gv || 0, lat: E._lat || 1, co: co * kc * (E._sc || 1), f: E._f || 0, t: 0, dai: dX, w: this.coDai(tX, co * kc, 'trang') });
         }
         continue;
       }
@@ -95,7 +127,11 @@ Object.assign(REN, {
       E._fl = E.flash;
       const hk = E._hitT != null ? Math.max(0, 1 - (t - E._hitT) / 0.16) : 0, he = hk * hk;
       // ---- hướng & vị trí ----
-      const gv = E.trum ? 0 : (E.gv != null ? E.gv : E.goc) - Math.PI / 2;
+      // hướng nhìn theo hướng đi trên đường (DCDW): trước/ngang/sau — KHÔNG xoay cả hình nữa; dải hướng chưa có → dải trước nghiêng ≤ 8°
+      this.huongQuai(E, t);
+      const ngD = E._hv === 's' ? E._hl * (HUONG8.size && this.tenHuong(ten, 's') ? 0.035 : HUONG_NGHIENG) : 0;
+      E._ng = E._ng == null ? ngD : E._ng + (ngD - E._ng) * Math.min(1, dt * 12);
+      const gv = E._ng;
       // độ rẽ (để lắc lư nhẹ vào khúc cua)
       const r = E.trum ? 0 : clamp(gocLech(E.gv != null ? E.gv : E.goc, E.goc), -0.8, 0.8);
       const buoc = Math.sin(E._ph * Math.PI * 2 * 2); // 2 bước / vòng khung
@@ -150,17 +186,20 @@ Object.assign(REN, {
         const am = E.trum ? 0.018 : (E.d.tach || E.id === 'nho' ? 0.03 : bay ? 0.012 : 0.022);
         const sy = 1 + am * buoc, sx = 1 - am * 0.6 * buoc;
         const lac = E.trum ? Math.sin(E._ph * Math.PI * 2) * 0.025 : r * 0.12 + buoc * 0.015; // lắc lư nhẹ
-        ctx.translate(x, y); ctx.rotate(gv + lac); ctx.scale(sx, sy);
-        const C = co * sc * kc;
-        const daiV = E.bao && E._daiBao && n !== 4 ? E._daiBao : dai, fV = daiV === dai ? f0 : 3;
-        if (bay && !dong) { // cánh rung: vệt mờ của khung kế tiếp, hơi lớn hơn (bỏ khi màn quá đông quái)
-          ctx.globalAlpha = 0.22; this.khung0(ctx, daiV, fV + 1, C * 1.035);
-        }
-        ctx.globalAlpha = 1; this.khung0(ctx, daiV, fV, daiV === dai ? C : C / kc); // khung tung chiêu (dải 4 khung cũ): cỡ gốc
-        if (f1 >= 0 && fr > 0.01 && daiV === dai) { ctx.globalAlpha = fr; this.khung0(ctx, dai, f1, C); }
-        // chớp trắng ngắn (tắt nhanh theo bình phương) — trùm bị bắn liên tục không bị trắng xoá
-        const fl = he * he * (E.trum ? 0.4 : 0.7);
-        if (fl > 0.02) { const w = this.coDai(ten, co * kc, 'trang'); if (w && daiV === dai) { ctx.globalAlpha = fl; this.khung0(ctx, w, fr > 0.5 && f1 >= 0 ? f1 : f0, C); } }
+        const C = co * sc * kc, fl = he * he * (E.trum ? 0.4 : 0.7); // chớp trắng ngắn — trùm bị bắn liên tục không trắng xoá
+        const bao4 = E.bao && E._daiBao && n !== 4; // trùm tung chiêu: khung 3 dải 4 khung cũ (nhìn ra màn hình), cỡ gốc
+        const rot = clamp(gv + lac, -HUONG_NGHIENG, HUONG_NGHIENG);
+        const lop = (v, l, al) => { // 1 lớp hướng nhìn v (lật ngang khi đi sang trái)
+          const tS = this.tenHuong(ten, v), d = tS ? this.coDai(tS, co * kc) : dai; if (!d) return;
+          ctx.setTransform(M); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(tS && v === 's' && l < 0 ? -sx : sx, sy);
+          if (bao4) this.veThan(ctx, E._daiBao, null, 3, -1, 0, C / kc, bay, dong, 0, al, false);
+          else this.veThan(ctx, d, { ten: tS || ten, px: co * kc }, f0, f1, fr, C, bay, dong, fl, al, true);
+          E._tHv = tS || ten; E._lat = tS && v === 's' && l < 0 ? -1 : 1;
+        };
+        const u = (t - E._hvT) / HUONG_HOA;
+        lop(E._hv, E._hl, 1);
+        if (u < 1 && E._hvCu && !bao4) { const tN = E._tHv, lN = E._lat; lop(E._hvCu, E._hlCu, 1 - u * u * (3 - 2 * u)); E._tHv = tN; E._lat = lN; } // hướng cũ mờ dần 120 ms
+        E._gv = rot;
         ctx.setTransform(M); ctx.globalAlpha = 1;
       }
       if (st.n) this.veStV2(ctx, E, st, x, y, co, t);

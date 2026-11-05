@@ -45,7 +45,7 @@ const HO_MOI = {
   phagiap: 'exposes the toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs same-star Attack neighbours',
   cauvong: 'paints a trail its neighbours punish',
   bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
-  maychem: 'chance to execute small enemies', tuthan: 'neighbours execute + SOUL BLAST',
+  maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',
   sinhdoi: 'merge summons a SAME-STAR turret',
@@ -170,7 +170,7 @@ const GROW = {
       const k = T.giet || 0, s = T.thuc || T.sao >= 5 || k >= 50 ? 3 : T.sao >= 3 || k >= 20 ? 2 : 1;
       return { s, p: s === 3 ? 1 : Math.max(k / 50, (T.sao - 1) / 4), v: [0.4, 1] };
     } },
-  orbital: { mau: '#9fe6ff', khongAnh: true, ten: ['STANDBY', 'UPLINK', 'BOMBARDMENT'], dk: 'Uplink: 2+ Orbitals on board (+20% fire rate) · Bombardment: while its merge strike lasts (×2 fire rate)',
+  orbital: { mau: '#9fe6ff', khongAnh: true, ten: ['STANDBY', 'UPLINK', 'BOMBARDMENT'], dk: 'Uplink: 2+ Orbitals on board (ready to merge) · Bombardment: while its 20s merge strike lasts', // (QA: bỏ '+20% / ×2 fire rate' — Vệ Tinh không bắn thường
     gd: (T) => { const B = G.ban[T.ban], n = B ? demCungLoai(B, 'orbital') : 1, s = B && B.phao > 0 ? 3 : n >= 2 ? 2 : 1; return { s, p: s === 3 ? B.phao / 20 : s === 2 ? 0.5 : 0.2, v: [0.5] }; } },
   cuongno: { mau: '#ff5040', lap: true, ten: ['CALM', 'RAGE', 'FRENZY'], dk: '1st crit → Rage (+25% fire rate) · 2nd crit → Frenzy',
     gd: (T) => { const s = T.cuongT > 0 ? 3 : (T.rage || 0) > 0 ? 2 : 1; return { s, p: s === 3 ? T.cuongT / (ms(T, 5) ? 7 : 5) : s === 2 ? 0.5 : 0, v: [0.5] }; } },
@@ -204,9 +204,10 @@ function lanDoc(E, B) {
 
 // ===================================================== hiển thị tốc bắn =====================================================
 // ụ tự quản lý nhịp (không có "phát/giây" cố định): mô tả nhịp riêng
+const nhip3 = (T) => (T && T.id && mocChung(T, 3) ? 1.2 : 1); // mốc chung 3★ QUICK HANDS (+20% nạp) — số giây hiển thị = số thật
 const NHIP = {
-  laser: () => 'continuous beam', overlord: (T) => 'charges ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's',
-  wallgen: (T) => 'wall every ' + Math.max(5, 9 - 0.4 * T.sao).toFixed(1) + 's', blackhole: (T) => 'hole every ' + Math.max(6, 10 - 0.5 * T.sao).toFixed(1) + 's',
+  laser: () => 'continuous beam', overlord: (T) => 'charges ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's',
+  wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (Math.max(6, 10 - 0.5 * T.sao) / nhip3(T)).toFixed(1) + 's',
   vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + SKILLS.min.ky(T).toFixed(1) + 's',
   baotuyet: (T) => 'pulse every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's', lophanung: () => 'aura 2.5 ticks/s',
 };

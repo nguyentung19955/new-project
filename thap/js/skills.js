@@ -227,7 +227,10 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT (đợt vai trò): KH
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.6 + (T.pha || 0)) * 0.5,
   sangDau: (T) => (T.gd === 3 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // không có ảnh 3 dạng: dạng thức tỉnh = đầu sáng rực + hào quang fx_awaken
   capNhat() { return true; },
-  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * (((B && B.lv.orbital) || 1) - 1)),
+  // mốc sao chung 'khac' (3★ +20% nhịp · 5★ +25% · 7★ +30% hiệu lực) — trước đây chỉ là chữ, Vệ Tinh không bắn nên không áp; nay áp lên đợt bắn phá
+  //   (sao của ụ Vệ Tinh đem ghép = phaoSao − 1). Chỉ huy RAGE (+100% toàn bàn) cũng áp lên giáo trời.
+  mocK: (sao) => (sao - 1 >= 5 ? 1.25 : 1) * (sao - 1 >= 7 ? 1.3 : 1),
+  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * (((B && B.lv.orbital) || 1) - 1)) * SKILLS.orbital.mocK(sao) * (B && B.cuong > 0 ? 2 : 1),
   ghep(G, B, a, b) {
     B.phao = 20; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2;
     const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'ORBITAL STRIKE!', '#9fe6ff', 16, 'to');
@@ -236,7 +239,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT (đợt vai trò): KH
   phaoBan(G, B, dt) { // gọi từ vòng cập nhật bàn khi B.phao > 0
     B.phao -= dt; B.phaoT -= dt;
     if (B.phaoT > 0) return;
-    B.phaoT = 0.32;
+    B.phaoT = Math.max(0, B.phaoT + 0.32 / (B.phaoSao - 1 >= 3 ? 1.2 : 1)); // cộng dồn: đúng 1 giáo / 0.32 s (62 giáo / 20 s; Vệ Tinh 3★+ QUICK HANDS: /1.2) ở mọi tốc độ khung hình
     const E = quaiNgauNhien(B); if (!E) return;
     G.hu.push({ k: 'vetinh', t: 0, song: 0.5, E, x: E.x + rnd(-6, 6), y: E.y, dmg: this.phaoDmg(B, B.phaoSao), B, da: false });
   },
@@ -282,7 +285,7 @@ SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   vai: 'tc', dmg: 28, toc: 1,
-  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
+  mo: (T) => 'Charge ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's · thunder ×9 in 92 px · aftershock arcs ×2 to 4 more',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
@@ -476,8 +479,9 @@ HU.sam = { // overlord: tia sấm khổng lồ + chớp màn hình
       FX.no('dien', o.x, o.y, o.r * 3, 0.55); FX.no('no_phao', o.x, o.y, o.r * 2.2, 0.6); FX.sang(0.7, '#fff6c0'); FX.lac(12);
       FX.vong1(o.x, o.y, 10, o.r, '#fff27a', 0.4, 6); FX.tiaLua(o.x, o.y, 30, '#fff27a', 320, 14);
       // AFTERSHOCK: sét dư chấn nhảy tới 4 quái gần nhất ngoài tâm nổ (×2 mỗi con) — phần "wow" bậc ĐỎ họ Energy
-      const ds = dsMucTieu(o.B).filter(E => !E.chet && Math.hypot(E.x - o.x, E.y - o.y) < 240).sort((a, b) => Math.hypot(a.x - o.x, a.y - o.y) - Math.hypot(b.x - o.x, b.y - o.y)).slice(0, 4);
-      if (ds.length) { for (const E of ds) trung(E, o.dmg / 6, { B: o.B, mau: '#fff27a', phu: true }); G.hu.push({ k: 'set', t: 0, song: 0.3, x: o.x, y: o.y, ds: ds.map(Q => ({ Q, x: Q.x, y: Q.y })), seed: Math.random() * 999 }); }
+      // (QA vàng-đỏ: trước đây o.dmg/6 = ×1.5 và trúng lại cả quái đã dính nổ — chữ kỹ năng hứa ×2 cho 4 quái KHÁC)
+      const ds = dsMucTieu(o.B).filter(E => { const d = Math.hypot(E.x - o.x, E.y - o.y); return !E.chet && d < 240 && d > o.r + E.d.co * 0.25; }).sort((a, b) => Math.hypot(a.x - o.x, a.y - o.y) - Math.hypot(b.x - o.x, b.y - o.y)).slice(0, 4);
+      if (ds.length) { for (const E of ds) trung(E, o.dmg * 2 / 9, { B: o.B, mau: '#fff27a', phu: true }); G.hu.push({ k: 'set', t: 0, song: 0.3, x: o.x, y: o.y, ds: ds.map(Q => ({ Q, x: Q.x, y: Q.y })), seed: Math.random() * 999 }); }
     }
   },
   ve(ctx, o, R) {

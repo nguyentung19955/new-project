@@ -123,10 +123,10 @@ SKILLS.khoathoigian = {
   ky: (T) => sao7(T, [9, 8.5, 8, 7.5, 7, 6.5, 6]),
   dai: (T) => sao7(T, [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5]),
   no: (T) => sao7(T, [0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.75]),
-  mo: (T) => 'Every ' + SKILLS.khoathoigian.ky(T) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
+  mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
   capNhat(G, B, T, dt) {
     if (G.hu.some(o => o.k === 'khoa' && o.T === T)) return false; // tối đa 1 quái bị khoá / ụ
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     if (T.nap >= 1 && this.khoa(G, B, T, T.sao)) T.nap = 0;
     return false;
   },
@@ -339,7 +339,7 @@ SKILLS.pandora = {
     }
     if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(N => N && N.sao < LUAT.saoMax && !N.st.da); if (ds.length) { const N = pick(ds), n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
     if (k === 'bom') {
-      const dmg = hsU('pandora', sao, B) * (3 + sao), ds = quaiTheoDau(B).slice(0, 3);
+      const dmg = hsU('pandora', sao, B) * (3 + sao) * (B.cuong > 0 ? 2 : 1), ds = quaiTheoDau(B).slice(0, 3); // chỉ huy RAGE ×2 cũng áp lên bom hộp
       for (const E of ds) banDan({ img: 'dan_phao', x: c.x, y: c.y, muc: E, px: E.x, py: E.y, sp: 300, co: 18, cong: 60, B, T: null, duoi: true,
         trung(G, d) { noLan(d.x, d.y, 30, dmg, B, { phu: true, mau: '#ff7654' }); FX.no('no_phao', d.x, d.y, 70, 0.4); FX.vong1(d.x, d.y, 4, 30, '#ffb35a', 0.3, 3); SND.no(0.5); } });
     }
@@ -398,10 +398,10 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
 };
 
 // =====================================================================================================
-// G05 · RESONANCE GRID (luoicheo) — Vàng HT: chỉ buff 4 ô CHÉO (không buff ô thẳng): +(7+1.6×sao+LV−1)% × hệ số bậc Vàng 2.1 sát thương.
-//      Đủ cả 4 ô chéo có ụ (chỉ ô giữa hàng 2) → RESONANCE ×1.5. 5★ RESONANCE LINK: ụ chéo thêm +15% tốc bắn. Ô ở mép: ít ô chéo, không bù.
+// G05 · RESONANCE GRID (luoicheo) — Vàng HT: chỉ buff 4 ô CHÉO (không buff ô thẳng): +8% × HOTRO.K (1★1.00→7★2.35, LV +6%/cấp) sát thương.
+//      Đủ cả 4 ô chéo có ụ (chỉ ô giữa hàng 2) → RESONANCE ×1.5. 5★ RESONANCE LINK: ụ chéo thêm +5%×K tốc bắn (7★ đủ 4 ô: ×1.5). Ô ở mép: ít ô chéo, không bù.
 // =====================================================================================================
-SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô CHÉO (không N/E/S/W): +8% sát thương (đường cong HOTRO.K); đủ 4 ô chéo → CỘNG HƯỞNG ×1.5 (7★ ×1.75)
+SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô CHÉO (không N/E/S/W): +8% sát thương (đường cong HOTRO.K); đủ 4 ô chéo → CỘNG HƯỞNG ×1.5 (7★: tốc bắn chéo ×1.5)
   vai: 'ht', dmg: 0, toc: 0,
   goc: (T) => 0.08 * HOTRO.k(T),
   heSo: () => 1.5,
@@ -410,7 +410,7 @@ SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô C
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
   tamChu: '4 DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  mo: (T) => '+' + Math.round(SKILLS.luoicheo.them(T) * 100) + '% damage to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  mo: (T) => '+' + Math.round(SKILLS.luoicheo.them(T) * 100) + '% damage to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
   hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
   gocDau: (T, t) => (T.gd === 3 ? 0.06 * Math.sin(t * 6) : 0), // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
@@ -545,11 +545,10 @@ themHo('joker', 3, 'pandora', 'merge spins a 6-way jackpot');
 themHo('amp', 3, 'luoicheo', 'DIAGONAL support; full grid = RESONANCE');
 themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)');
 
-Object.assign(MOC_RIENG, {
-  luoicheo: { 5: ['RESONANCE LINK', 'Diagonal turrets also +15% fire rate'] },
+Object.assign(MOC_RIENG, { // (luoicheo: mốc 5★/7★ ở phattrien.js — 'Diagonal +15% fire rate' cũ sai số, code = +5%×HOTRO.K)
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
   hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] },
-  pandora: { 3: ['QUICK HANDS', '+20% fire rate'], 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'Every opening fires 2 effects'] },
+  pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'Every opening fires 2 effects'] },
   ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart)'] },
 });
 

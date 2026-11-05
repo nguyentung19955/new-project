@@ -88,6 +88,7 @@ const HOTRO = {
     if (E.loT > 0 && E.loV) v += E.loV;            // Breaker 7★: lộ điểm yếu
     if (E.fbT > 0) v += 0.15;                      // (cũ) Frost 5★ FROSTBITE
     if (E.azT > 0) v += 0.10;                      // Cryo Reactor 7★ ABSOLUTE ZERO
+    if (E.truyNa) v += 0.10;                       // Bounty Beacon: quái truy nã +10%
     return Math.min(this.VULN, v);
   },
   // hệ số sát thương có điều kiện của ụ T lên quái E (đã chia trần với buff sát thương thường)

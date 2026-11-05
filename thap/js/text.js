@@ -50,7 +50,7 @@ const TEXT = {
   },
   // kỹ năng Ma vương (Archfiend)
   af: {
-    hero:   { name: 'REINFORCE',   desc: 'Instantly summon two 1★ turrets (free)' },
+    hero:   { name: 'REINFORCE',   desc: 'Instantly summon two 1★ turrets (free); no room → +1★ to your weakest' },
     dahlia: { name: 'RAGE',        desc: '+100% damage to the whole board for 10s' },
     eve:    { name: 'HOLY SHIELD', desc: 'Clears debuffs + blocks boss skills for 8s' },
   },
@@ -130,13 +130,13 @@ const TEXT = {
     luoicheo:     { name: 'Resonance Grid', skill: 'Support: buffs the 4 DIAGONAL cells (not N/E/S/W); all 4 filled = RESONANCE' },
     ngaithoigian: { name: 'Chrono Throne',  skill: 'Enemies slow over time. Active (3★+): REWIND pushes all enemies back' },
     nemesis:      { name: 'Nemesis',        skill: 'Executes low-HP enemies; % max-HP judgment on bosses' },
-    docton:       { name: 'Lone Ace',       skill: 'No neighbors: double fire rate and bonus crit' },
+    docton:       { name: 'Lone Ace',       skill: 'No N/E/S/W neighbours: +100% fire rate and bonus crit' },
     thaukinh:     { name: 'Focus Lens',     skill: 'Support: neighbours deal more crit damage; crits pierce' },
     nhieusong:    { name: 'Signal Jammer',  skill: 'On merge: PVP jams rival turrets; Co-op gives ally a free summon' },
     santhuong:    { name: 'Bounty Beacon',  skill: 'Marks enemies; marked kills give bonus mana' },
     nhatthuc:     { name: 'Eclipse',        skill: 'Day: burning beam. Night: slowing wave. Swaps every 8s' },
     loren:        { name: 'Scrap Forge',    skill: 'Special: drag a 1–3★ turret onto it — your best Attack turret gains permanent damage (max +60%)' },
-    guongcong:    { name: 'Mirror Gate',    skill: 'Support: neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge' },
+    guongcong:    { name: 'Mirror Gate',    skill: 'Support: neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill' },
     marionette:   { name: 'Marionette',     skill: 'Takes control of an enemy, walks it backward, then boom' },
     // đợt 3 — 4 ụ Đỏ (skills5.js)
     chuato:       { name: 'Hive Queen',     skill: 'Breeds hunter drones. Active (3★+): SWARM kamikaze' },
