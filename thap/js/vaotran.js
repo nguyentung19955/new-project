@@ -14,11 +14,8 @@ const VT = {
   CHU: { boss: 'BOSSES THIS MATCH', wave: 'WAVE', you: 'YOUR DECK', ally: 'ALLY DECK', rival: 'RIVAL DECK', bossPvp: 'SAME WAVES & BOSSES FOR BOTH', allyLane: 'Ally lane', cmd: 'CMDR', tap: 'TAP TO START' },
   el: null, mo: false,
 
-  // trùm của làn đường p ở wave w (cùng công thức taoWave + wavMoi)
-  trumO(w, p) {
-    const id = TRUM_THU_TU[(w / LUAT.songTrum - 1) % TRUM_THU_TU.length];
-    return G.che === 'coop' && p === 1 ? TRUM_THU_TU[(TRUM_THU_TU.indexOf(id) + 3) % 6] : id;
-  },
+  // trùm của làn đường p ở wave w — CÙNG lịch với trận (game.js trumCuaWave: SOLO/PVP ngẫu nhiên theo hạt giống, CO-OP cố định tới wave 59)
+  trumO(w, p) { return trumCuaWave(w, p); },
   lanCuaToi() { const i = (G.duong || []).findIndex(d => d.ban === 0); return i < 0 ? 0 : i; },
   // các wave trùm sắp tới (tính từ wave hiện tại)
   dsTrum(n) {

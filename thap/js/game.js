@@ -90,7 +90,10 @@ function batDau(che, deck, mv) {
   FX.reset(); VX.reset();
   const bc = boCuc(che);
   G.chung = !!bc.chung;
-  G.hat = G.debug.seed || (1 + rint(1e9)); G.dotTu = 0; // PVP: hạt giống wave chung của trận
+  // hạt giống trận: wave PVP + lịch trùm ngẫu nhiên (SOLO/PVP, CO-OP từ wave 60). CO-OP online: dùng seed phòng (ONS.seed) → 2 máy cùng trùm.
+  // G.giuHat = true trước batDau → chơi lại đúng hạt giống cũ (Retry same seed); ?seed=N cũng ép hạt giống.
+  const hatOn = che === 'coop' && typeof ONS !== 'undefined' && ONS.on && ONS.seed;
+  G.hat = G.debug.seed || hatOn || (G.giuHat && G.hat) || (1 + rint(1e9)); G.giuHat = false; G.dotTu = 0; G._lt = null;
   G.ban = bc.ban.map((d, i) => taoBan(d, i, i === 0 ? deck : (G.debug.deck2 || (che === 'pvp' ? deckDoiThu() : deckNgauNhien())), i === 0 ? mv : pick(Object.keys(MAVUONG))));
   G.duong = bc.duong.map(taoDuong);
   if (G.debug.mana) for (const B of G.ban) B.mana = G.debug.mana;
@@ -314,6 +317,32 @@ function chet(E, B) {
 function rngHat(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 // PVP: số wave đột tử đã qua (0 = chưa đột tử)
 function pvpDotTu(w) { return G.che === 'pvp' && w >= LUAT.pvpDotTu ? w - LUAT.pvpDotTu + 1 : 0; }
+// ---------- LỊCH TRÙM ----------
+//  · CO-OP: thứ tự cố định TRUM_THU_TU tới wave TRUM_COOP_CO_DINH, từ wave 60 trở đi ngẫu nhiên.
+//  · SOLO / PVP: ngẫu nhiên mỗi wave trùm (không lặp liền), sinh từ hạt giống trận G.hat bằng RNG RIÊNG
+//    (không đụng RNG sinh wave) → PVP 2 bên giống hệt, CO-OP online 2 máy giống hệt (G.hat = seed phòng).
+//  · Máu / sức mạnh trùm vẫn theo wave (sinhTrum không đổi).
+const TRUM_COOP_CO_DINH = 59;
+function coTrum(w) { return w % LUAT.songTrum === 0 || pvpDotTu(w) > 0; }
+function lichTrum(w) { // trùm (làn 0) của wave w trong lịch ngẫu nhiên — tính tuần tự, nhớ lại
+  const k = G.hat + '|' + G.che;
+  if (!G._lt || G._lt.k !== k) G._lt = { k, w: 0, cu: null, ds: {}, r: rngHat((G.hat || 1) * 2246822519 + 3266489917) };
+  const L = G._lt, n = TRUM_THU_TU.length;
+  while (L.w < w) {
+    L.w++;
+    if (!coTrum(L.w)) continue;
+    if (G.che === 'coop' && L.w <= TRUM_COOP_CO_DINH) { L.ds[L.w] = L.cu = trumCoDinh(L.w); continue; } // nối tiếp không lặp từ trùm cố định cuối (wave 50)
+    let id, lan = 0; do id = TRUM_THU_TU[Math.floor(L.r() * n)]; while (id === L.cu && ++lan < 20);
+    L.ds[L.w] = L.cu = id;
+  }
+  return L.ds[w] || TRUM_THU_TU[0];
+}
+function trumCoDinh(w) { return TRUM_THU_TU[Math.max(0, Math.ceil(w / LUAT.songTrum) - 1) % TRUM_THU_TU.length]; }
+function trumCuaWave(w, p) {
+  const n = TRUM_THU_TU.length;
+  const id = G.che === 'coop' && w <= TRUM_COOP_CO_DINH ? trumCoDinh(w) : lichTrum(w);
+  return G.che === 'coop' && p === 1 ? TRUM_THU_TU[(TRUM_THU_TU.indexOf(id) + 3) % n] : id;
+}
 function wavMoi() {
   G.wave++;
   const ws = [];
@@ -321,7 +350,7 @@ function wavMoi() {
   if (G.che === 'pvp') {
     const r = rngHat((G.hat || 1) * 1009 + G.wave * 7919), k = pvpDotTu(G.wave);
     let w = taoWave(G.wave, r);
-    if (k && !w.trum) w = { trum: TRUM_THU_TU[(G.wave - 1) % TRUM_THU_TU.length], ds: Array(4 + Math.min(8, k)).fill('bo') };
+    if (k && !w.trum) w = { trum: trumCuaWave(G.wave, 0), ds: Array(4 + Math.min(8, k)).fill('bo') };
     const hsT = k ? 1 + 0.5 * k : 1, soT = k ? 1 + Math.floor(k / 3) : 1;
     // lịch sinh: tính 1 lần (cùng RNG) rồi dùng cho mọi làn → cùng loại / máu / thời điểm
     const lich = [];
@@ -339,8 +368,8 @@ function wavMoi() {
   for (let pi = 0; pi < soDuong; pi++) {
     const w = taoWave(G.wave);
     if (w.trum) {
-      // co-op: mỗi nhánh 1 trùm luân phiên loại
-      const id = G.che === 'coop' && pi === 1 ? TRUM_THU_TU[(TRUM_THU_TU.indexOf(w.trum) + 3) % 6] : w.trum;
+      // co-op: mỗi nhánh 1 trùm khác loại (trumCuaWave lo cả thứ tự cố định lẫn ngẫu nhiên)
+      const id = trumCuaWave(G.wave, pi);
       G.hang.push({ t: G.t + 1.5, trum: id, p: pi });
       w.ds.forEach((q, i) => G.hang.push({ t: G.t + 3 + i * 1.2, id: q, p: pi }));
     } else {
