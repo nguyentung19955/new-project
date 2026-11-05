@@ -13,6 +13,13 @@ Cách làm (theo tư vấn ChatGPT 05/11 mục 4.3: "giữ toàn bộ động t�
     phía trên cằm), dán đầu mới: cằm mới trùng cằm cũ, tâm mặt mới trùng tâm mặt cũ. Khung không thấy mặt (lộn tròn, quay lưng):
     tóc đen đổi sang màu mũ trùm (nhìn như mũ trùm từ sau lưng).
   - Neo vũ khí, nắm tay, số khung, nhịp: GIỮ NGUYÊN của bộ ninja (cùng ô, cùng chỗ) → game dùng lại mọi bảng số của zed-moi.
+PHIÊN D (05/11, docs/review/ke-hoach-cai-thien/talesworn-d-gan-anh/bao-cao.md) — 16 đầu cùng nét (docs/yeu-cau-anh/talesworn-anh-05-11/
+rowan-dau-16-nguon-chatgpt.png), cùng tỉ lệ với đầu đang dùng (đầu 3/4 trước-phải của tấm 16 rộng RONG_DAU):
+  - lộn tròn (hàng 3 / 29, khung 2–4): xoá tóc cũ quanh chỗ đầu, dán đầu CÚI GẬP (hình 10 của tấm 16) xoay theo vòng lộn;
+  - trúng đòn (hàng 4 / 30, khung 1–2): đầu NGỬA ĐAU (hình 9), xoá tóc cũ rộng hơn (hết mấy sợi tóc lam ở mép trái);
+  - khung quay lưng (S): đầu sau-phải 3/4 của tấm 16 (thay đầu sau của ảnh 4 góc, cỡ đúng tỉ lệ);
+  - quai dép: mảng da ở thấp (bàn chân) không bao giờ coi là bàn tay → vải đen sát chân thành quần nâu, không thành cổ tay áo lam.
+  Bản phiên C giữ ở game/art/custom/zed-rowan-daucu.sprite.json ("dau_cua"), chỉ nạp khi ?rowancu=1 (bản web).
 Ghi: game/art/custom/zed-rowan.sprite.json (+ "anh_thay": khung thương quét 6 thay ảnh, cùng cách đổi).
      --xem: docs/review/ke-hoach-cai-thien/talesworn-c-rowan/xem-truoc-*.png
 """
@@ -25,7 +32,8 @@ DAY = os.path.dirname(os.path.abspath(__file__))
 GOC = os.path.abspath(os.path.join(DAY, '..', '..', '..', '..', '..'))
 CUSTOM = os.path.join(GOC, 'game', 'art', 'custom')
 NGUON = os.path.join(GOC, 'docs', 'tu-van-toan-cau', 'chatgpt-05-11', 'rowan-4-goc-nguon-chatgpt.png')
-XEM = os.path.join(GOC, 'docs', 'review', 'ke-hoach-cai-thien', 'talesworn-c-rowan')
+XEM = os.path.join(GOC, 'docs', 'review', 'ke-hoach-cai-thien', 'talesworn-d-gan-anh', 'anh')
+NGUON16 = os.path.join(GOC, 'docs', 'yeu-cau-anh', 'talesworn-anh-05-11', 'rowan-dau-16-nguon-chatgpt.png')
 
 H = lambda s: tuple(int(s[i:i + 2], 16) for i in (1, 3, 5))
 VIEN = H('#18202A')
@@ -130,10 +138,119 @@ def dau_co(f):
     return DAU[f]
 
 
+# ---------- phiên D: 16 đầu cùng nét ----------
+CU_DEP = False  # True: luật bàn chân phiên C (để so)
+D16 = {}
+
+
+def dau16(i, f, co=1.0):
+    """Đầu thứ i (0..15) của tấm 16, thu nét cùng tỉ lệ (đầu 3/4 trước-phải, hình 2, rộng RONG_DAU × f).
+    Trả (ảnh RGBA, cằm_y | None, tâm mặt x | None, đỉnh_y, tâm_x)."""
+    key = (i, f, co)
+    if key in D16:
+        return D16[key]
+    im = np.array(Image.open(NGUON16).convert('RGB')).astype(int)
+    r, g, b = im[..., 0], im[..., 1], im[..., 2]
+    nen = (r > 170) & (b > 170) & (g < 120)
+    lab, n = ndimage.label(ndimage.binary_dilation(~nen, iterations=4))
+    ob = [s_ for s_ in ndimage.find_objects(lab) if (s_[0].stop - s_[0].start) > 100]
+    ob.sort(key=lambda s_: (round(s_[0].start / 300), s_[1].start))
+    def mot(j, w=None, k=None):
+        s_ = ob[j]
+        a = im[s_[0], s_[1]]
+        al = ndimage.binary_opening(~nen[s_[0], s_[1]], iterations=1)
+        ra, k2, (bx0, by0) = thu_net(a, al, w or 0, k)
+        sk = (a[..., 0] > 200) & (a[..., 1] > 140) & (a[..., 1] < 210) & (a[..., 2] > 100) & (a[..., 2] < 180) & al
+        lb, nn = ndimage.label(sk)
+        cam = cx = None
+        if nn:
+            sz = ndimage.sum(sk, lb, range(1, nn + 1))
+            if sz.max() > 800:
+                ys, xs = np.nonzero(lb == int(np.argmax(sz)) + 1)
+                cam, cx = (np.percentile(ys, 99) - by0) / k2, (xs.mean() - bx0) / k2
+        return vien_ngoai(ra), cam, cx, k2
+    if ('k', f) not in D16:
+        D16[('k', f)] = mot(1, int(round(RONG_DAU * f)))[3]
+    ra, cam, cx, _ = mot(i, None, D16[('k', f)] / co)
+    al = ra[..., 3] > 0
+    ys, xs = np.nonzero(al)
+    D16[key] = (ra, cam, cx, int(ys.min()), float(xs.mean()))
+    return D16[key]
+
+
+def xoay(ra, deg):
+    """Xoay ảnh đầu (điểm ảnh, không làm mịn) quanh tâm, giữ mép."""
+    h, w = ra.shape[:2]
+    pad = int(max(h, w) * 0.5)
+    im = Image.fromarray(np.pad(ra, ((pad, pad), (pad, pad), (0, 0))))
+    im = im.rotate(deg, resample=Image.NEAREST)
+    o = np.array(im)
+    al = o[..., 3] > 0
+    ys, xs = np.nonzero(al)
+    return o[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+
+
+def dan_tam(a, dau, cx, cy, sau=False):
+    """Dán ảnh đầu dau sao cho tâm hình trùng (cx, cy). sau=True: chỉ dán vào chỗ trống. Trả mặt nạ đã dán."""
+    hh, ww = dau.shape[:2]
+    oy, ox = int(round(cy - hh / 2)), int(round(cx - ww / 2))
+    dan = np.zeros(a.shape[:2], bool)
+    for j in range(hh):
+        for i in range(ww):
+            y, x = oy + j, ox + i
+            if 0 <= y < a.shape[0] and 0 <= x < a.shape[1] and dau[j, i, 3] and (not sau or a[y, x, 3] == 0):
+                a[y, x] = dau[j, i]
+                dan[y, x] = True
+    return dan
+
+
+# Lộn tròn: (tâm đầu x, y trong ô 96, góc xoay độ ngược chiều kim đồng hồ) đo trên tấm ninja hàng 29 (lon~16, hàng game dùng)
+LON = {1: (60, 65, -25), 2: (46, 78, 160), 3: (60, 78, -100)}
+R_LON = 12
+CO_LON = 0.74  # đầu lúc cuộn tròn nhỏ lại (cằm rúc vào ngực, chỉ thấy đỉnh mũ): cỡ bằng mảng tóc cũ
+
+
+def doi_dau_lon(a, f, col):
+    """Lộn tròn: xoá tóc cũ (mảng tối quanh chỗ đầu), dán đầu cúi gập (hình 10) xoay theo vòng lộn."""
+    cx, cy, deg = LON[col]
+    cx, cy = cx * f, cy * f
+    dau = xoay(dau16(9, f, CO_LON)[0], deg)
+    al = a[..., 3] > 0
+    L = luma(a.astype(float))
+    r, b = a[..., 0].astype(int), a[..., 2].astype(int)
+    den = al & (L < 75) & (np.abs(r - b) < 35)
+    yy, xx = np.mgrid[0:a.shape[0], 0:a.shape[1]]
+    d2 = (xx - cx) ** 2 + (yy - cy) ** 2
+    vung = d2 < (R_LON * f) ** 2
+    # vành ngoài (tóc dựng chĩa ra): chỉ bỏ điểm tối nằm PHÍA NGOÀI đầu (hướng ra xa tâm thân), giữ thân áo phía trong
+    ys, xs = np.nonzero(al)
+    tx, ty = xs.mean(), ys.mean()
+    vx, vy = cx - tx, cy - ty
+    nv = max(1e-6, (vx * vx + vy * vy) ** 0.5)
+    ra_ngoai = ((xx - cx) * vx + (yy - cy) * vy) / nv / np.sqrt(np.maximum(d2, 1e-6)) > 0.2
+    vanh = (d2 < ((R_LON + 8) * f) ** 2) & ra_ngoai
+    a[den & (vung | vanh)] = 0
+    dan = dan_tam(a, dau, cx, cy)
+    # vụn tóc cũ còn sót sát đầu: điểm tối lẻ (cụm nhỏ) chạm viền đầu mới
+    _don_vun(a, dan, f)
+    return dan
+
+
+def _don_vun(a, dan, f):
+    al = (a[..., 3] > 0) & ~dan
+    lab, n = ndimage.label(al)
+    if n <= 1:
+        return
+    sz = ndimage.sum(al, lab, range(1, n + 1))
+    lon = int(np.argmax(sz)) + 1
+    for j in range(1, n + 1):
+        if j != lon and sz[j - 1] < 14 * f * f:
+            a[lab == j] = 0
+
+
 def doi_dau_sau(a, f):
     """Khung không thấy mặt (quay lưng, tay che): tóc phần đầu → đầu mũ trùm nhìn từ sau. Trả mặt nạ đã dán hoặc None."""
-    dau_co(f)
-    dau = DAU[('sau', f)]
+    dau = dau16(3, f)[0]  # phiên D: đầu sau-phải 3/4 của tấm 16 (trước: đầu sau của ảnh 4 góc)
     al = a[..., 3] > 0
     L = luma(a.astype(float))
     r, b = a[..., 0].astype(int), a[..., 2].astype(int)
@@ -233,9 +350,12 @@ def doi_than(a, f, tay=False, bo_qua=None):
     yy = np.arange(S)[:, None] * np.ones((1, a.shape[1]))
     lab, n = ndimage.label(da)
     tay_da = np.zeros_like(da)
+    ysa = np.nonzero(al.any(1))[0]
+    y_thap = ysa.min() + 0.7 * (ysa.max() - ysa.min()) if len(ysa) else S
     for j in range(1, n + 1):
         mm = lab == j
-        if np.nonzero(mm)[0].max() < yd + 9 * f:  # bàn chân (da ở ngón chân) nằm thấp dưới đai: không tính
+        # bàn chân (da ở ngón chân) nằm thấp dưới đai: không tính. Phiên D: cả mảng da ở 30% dưới của hình (chân sau nhấc cao lúc chạy)
+        if np.nonzero(mm)[0].max() < yd + 9 * f and (CU_DEP or np.nonzero(mm)[0].mean() < y_thap):
             tay_da |= mm
     gan_tay = ndimage.binary_dilation(tay_da, iterations=max(2, int(round(2.5 * f))))
     duoi = (yy > yd) & ~gan_tay
@@ -278,10 +398,14 @@ def toc_thanh_mu(a, f):
         a[m & (lv == i), :3] = MU[i] if i else VIEN
 
 
-def doi_dau(a, f, D):
-    """Thay đầu ninja bằng đầu Rowan trong ô a (RGBA). Trả mặt nạ các điểm đã dán."""
+def doi_dau(a, f, D, ngua=False, rong=False):
+    """Thay đầu ninja bằng đầu Rowan trong ô a (RGBA). Trả mặt nạ các điểm đã dán.
+    ngua=True (trúng đòn, phiên D): đầu ngửa đau của tấm 16, xoá tóc cũ rộng hơn."""
     cam, cx, mat = D
-    dau, dcam, dcx = dau_co(f)
+    if ngua:
+        dau, dcam, dcx = dau16(8, f)[:3]
+    else:
+        dau, dcam, dcx = dau_co(f)
     al = a[..., 3] > 0
     L = luma(a.astype(float))
     r, b = a[..., 0].astype(int), a[..., 2].astype(int)
@@ -291,7 +415,7 @@ def doi_dau(a, f, D):
     xx = np.arange(S)[None, :] * np.ones((a.shape[0], 1))
     xoa = toc.copy()
     xoa[int(cam) + 1:] = False
-    xoa &= np.abs(xx - cx) < 24 * f
+    xoa &= np.abs(xx - cx) < (34 if ngua or rong else 24) * f
     m = da_mask(a)
     lab, n = ndimage.label(m)
     ids_mat = set(np.unique(lab[mat])) - {0}
@@ -316,11 +440,24 @@ def doi_dau(a, f, D):
                 continue
             a[y, x] = dau[j, i]
             dan[y, x] = True
+    if ngua or rong:
+        _don_vun(a, dan, f)
     return dan
 
 
 # Khung đặc biệt (hàng: {khung: cách}): lộn tròn → tóc thành mũ trùm (cuộn tròn nhìn thấy lưng mũ); nằm sấp (chết) → đầu xoay ngang
 CACH = {3: {1: 'mu', 2: 'mu', 3: 'mu'}, 29: {1: 'mu', 2: 'mu', 3: 'mu'}, 5: {5: 'xoay', 6: 'xoay', 7: 'xoay'}}
+# phiên D: lộn tròn dán đầu cúi gập xoay, trúng đòn khung 1–2 đầu ngửa đau
+CACH_D = {29: {1: 'lon1', 2: 'lon2', 3: 'lon3'},  # hàng 3 (lộn cũ, chỉ dùng khi tắt hàng mới ~16): giữ như phiên C
+          4: {0: 'ngua', 1: 'ngua'}, 30: {0: 'ngua', 1: 'ngua'},
+          5: {0: 'rong'}}  # chết khung 1: đầu thường, xoá tóc cũ rộng (hết sợi tóc lam mép trái)
+PHIEN_C = '--phien-c' in sys.argv  # dựng lại y bản phiên C (để so)
+if not PHIEN_C:
+    for _h, _v in CACH_D.items():
+        CACH.setdefault(_h, {}).update(_v)
+    CU_DEP = False
+else:
+    CU_DEP = True
 
 
 def doi_dau_xoay(a, f, D):
@@ -356,12 +493,15 @@ def lam_o(a, f, tay=False, cach=None):
     if tay:
         doi_than(a, f, True)
         return '-'
+    if cach and cach.startswith('lon'):
+        doi_than(a, f, False, doi_dau_lon(a, f, int(cach[3])))
+        return 'lon'
     D = do_khung(a, f) if cach != 'mu' else None
     if D is not None and cach == 'xoay':
         doi_than(a, f, False, doi_dau_xoay(a, f, D))
         return 'dau'
 
-    dan = doi_dau(a, f, D) if D is not None else None
+    dan = doi_dau(a, f, D, cach == 'ngua', cach == 'rong') if D is not None else None
     if dan is not None:
         doi_than(a, f, False, dan)
         return 'dau'
@@ -406,6 +546,8 @@ def main():
     ra['ma'] = 'zed-rowan'
     ra['ten'] = 'Rowan (Talesworn) — thân bộ ninja đổi màu + đầu mũ trùm ChatGPT'
     ra['bo'] = 'rowan'
+    if not PHIEN_C:
+        ra['dau_moi'] = True  # phiên D: có bản cũ zed-rowan-daucu ("dau_cua"), ?rowancu=1 dùng bản đó
     ra['ghi_chu_rowan'] = 'Dựng bằng docs/anh-goc/zed/trang-phuc/bo-5-rowan/dung-rowan.py từ zed-moi (cùng ô, cùng neo); dùng chung bảng số của zed-moi.'
     ra['tam'] = png64(Image.fromarray(T))
     ra['tam_to'] = png64(Image.fromarray(T2))
@@ -439,14 +581,16 @@ def main():
     khong = {}
     for kk, v in dt.items():
         hh = v['hang']
-        s = ''.join({'dau': 'D', 'mu': 'm', 'sau': 'S', '-': '.'}[bao[(hh, c_)]] for c_ in range(v['so']))
+        s = ''.join({'dau': 'D', 'mu': 'm', 'sau': 'S', 'lon': 'L', '-': '.'}[bao[(hh, c_)]] for c_ in range(v['so']))
         khong[kk] = s
     json.dump({'khung': khong}, open(os.path.join(DAY, 'bao-cao-khung.json'), 'w'), ensure_ascii=False, indent=0)
     if xem:
         os.makedirs(XEM, exist_ok=True)
         A0 = b64png(src['tam'])
         A1 = Image.fromarray(T)
-        for ten, rows in (('dung-chay-kiem', [28, 34, 118, 119, 120]), ('lon-trung-chet', [29, 30, 5, 6, 26]), ('thuong-bua', [10, 11, 12, 13, 35, 18])):
+        cu = os.path.join(CUSTOM, 'zed-rowan-daucu.sprite.json')
+        A0 = b64png(json.load(open(cu, encoding='utf-8'))['tam']) if os.path.exists(cu) else A0  # trên: Rowan phiên C, dưới: phiên D
+        for ten, rows in (('dung-chay-kiem', [28, 34, 118, 119, 120]), ('lon-trung-chet', [29, 30, 3, 4, 5]), ('quay-lung', [9, 13, 35, 2])):
             nen = (78, 102, 62, 255)
             w = 12 * 96
             out = Image.new('RGBA', (w, len(rows) * 96 * 2), nen)

@@ -24,3 +24,7 @@ ChatGPT khuyên mảng vàng (mũ + áo choàng vai) là mảng dễ thấy nh�
 ```
 Pixel-art game asset sheet: 6 small saffron (#E0A23A) shoulder capelets (short cape that covers only the shoulders, darker rim #A86A22, small round brass clasp at the neck) for a 48x48 top-down 3/4 RPG hero, seen from front, front-right 3/4, right, back, and two raised-arm poses. Each about 28x12 pixels, 1px outline #18202A, crisp limited palette, flat solid magenta #FF00FF background, no blur, no text, no shadows.
 ```
+
+**05/11 phiên D — mục 1 và 2 ĐÃ LÀM** bằng `talesworn-anh-05-11/rowan-dau-16-nguon-chatgpt.png` (16 đầu): lộn tròn dùng đầu cúi gập xoay,
+trúng đòn dùng đầu ngửa đau, khung quay lưng dùng đầu sau-phải 3/4. `?rowancu=1` (bản web) xem lại Rowan phiên C.
+Còn mục 3 (áo choàng vai, tuỳ chọn). Báo cáo: `docs/review/ke-hoach-cai-thien/talesworn-d-gan-anh/bao-cao.md`.

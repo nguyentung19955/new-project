@@ -14,6 +14,10 @@
 // Màn chào: người mới chạm "Chơi" là vào thẳng ải 1-1 (không bắt đăng nhập, không chiếu truyện mở đầu trước trận); mời đăng nhập Google
 // vẫn như cũ sau khi qua ải 1 (js/village.js inviteWant).
 // Cờ quay lui: ?slice=0 (G.SLICE_BAT = false) → ải 1-1 và màn chào y như trước. Bản lưu cũ đã qua 1-1 không bao giờ vào bản thử.
+// ẢNH THẬT (phiên D, 05/11 — docs/review/ke-hoach-cai-thien/talesworn-d-gan-anh/bao-cao.md): trang Mực Lửa hu-trang-muc-lua, khiên
+// hu-fire-guard (1–4 lặp, 5–6 vỡ), biểu tượng gd-bt-fire-guard, Page Scrap gd-page-scrap (vật rơi + màn kết quả), mặt nút gd-nut-doi,
+// Thương Băng nằm đất hu-thuong-bang-dat (cắt bằng docs/anh-goc/talesworn-d/cat-anh-slice.py). Ảnh chưa về thì vẽ ảnh mượn như cũ.
+// Cờ ?slicecu=1 (G.SLICE_ANH_CU): luôn dùng ảnh mượn cũ (phiên A).
 // Chữ: js/slice_chu.js (G.SLICE_CHU, dịch qua G.ngonNgu). Móc trong js/stage.js: dòng có chữ "G.slice".
 (function () {
   'use strict';
@@ -21,6 +25,7 @@
   if (!G || !G.startStage) return;
   const coUrl = (re) => { try { return typeof location !== 'undefined' && re.test(location.search || ''); } catch (e) { return false; } };
   if (G.SLICE_BAT === undefined) G.SLICE_BAT = !coUrl(/[?&]slice=0(&|$)/);
+  if (G.SLICE_ANH_CU === undefined) G.SLICE_ANH_CU = coUrl(/[?&]slicecu=1(&|$)/);
   const C = G.SLICE_CHU || {};
   const SL = (G.slice = {});
   // Số liệu (chỉnh ở đây)
@@ -154,7 +159,8 @@
       if (vo && !b.dead) {
         b.exposed = Math.max(b.exposed || 0, SO.choang); b.tired = Math.max(b.tired || 0, SO.choang); b.busy = Math.max(b.busy || 0, SO.choang);
         if (b.st) b.st.stun = Math.max(b.st.stun || 0, SO.choang);
-        if (G.fx && G.fx.anh) G.fx.anh('hu-bang-vo', b.x, b.y - (b.h || 50) * 0.4, {});
+        if (anhMoi('hu-fire-guard')) L.vo = { t0: G.time || 0, x: b.x, y: b.y }; // khung 5–6 của khiên: vỡ thành mảnh băng
+        else if (G.fx && G.fx.anh) G.fx.anh('hu-bang-vo', b.x, b.y - (b.h || 50) * 0.4, {});
         if (G.sfx) G.sfx('boom', 1.4);
       }
     }
@@ -204,8 +210,10 @@
     // Thương Băng trên sàn phòng trùm
     const N = L.nhat;
     if (N && !L.bang) { N.t += dt; if (Math.hypot(P.x - N.x, (P.y - N.y) * 1.3) < 15) capBang(S); }
+    if (L.manh) { L.manh.t += dt; if (L.manh.t > 2.4) L.manh = null; }
     // Fire Guard đếm giờ
     const b = W.boss;
+    if (b) { L.bx = b.x; L.by = b.y; } // chỗ trùm (để mảnh trang rơi đúng chỗ kể cả khi trùm đã bị gỡ)
     if (L.nghi > 0) L.nghi -= dt;
     if (L.guard) { L.guard.t -= dt; if (L.guard.t <= 0 || !b || b.dead) boGuard(S, b, false); }
     // hạ trùm: kiếm lớn lên + Page Scrap (một lần)
@@ -222,6 +230,8 @@
         const dau = !(sv.trangSach > 0);
         sv.trangSach = Math.max(0, Math.floor(+sv.trangSach || 0)) + 1;
         if (S.got) S.got.push(G.t(C.trang, 1));
+        const bx = b ? b.x : L.bx, by = b ? b.y : L.by;
+        if (bx != null) L.manh = { x: bx, y: by - 8, t: 0 }; // chỉ là hình: mảnh trang rơi ra rồi bay vào em bé (phần thưởng đã cộng ở trên)
         if (dau) SL.choLang = true;
       }
     }
@@ -260,6 +270,15 @@
   // ---------- vẽ (chỉ ảnh có sẵn) ----------
   const SCx = () => G.spriteCustom;
   const FA = () => G.fxAnh;
+  // ảnh thật phiên D: có ảnh (đã về) và không bật ?slicecu=1
+  function anhMoi(ma) {
+    if (G.SLICE_ANH_CU) return null;
+    if (/^hu-/.test(ma)) { const F = FA(); return F && F.co(ma) ? F : null; }
+    const S0 = SCx();
+    return S0 && S0.gdSan ? S0.gdSan(ma) : null;
+  }
+  SL.anhMoi = anhMoi;
+  const coGuard = (b) => G.clamp(((b && b.h) || 50) * 1.45 / 64, 0.9, 2.2); // cỡ khiên theo chiều cao trùm
   let trangDo = null; // ảnh trang sổ nhuộm đỏ (một lần)
   function anhTrang() {
     const S0 = SCx(), g = S0 && S0.gdSan ? S0.gdSan('gd-so-trang') : null;
@@ -295,7 +314,9 @@
     G.wxDat(c, -cam, 0);
     try {
       const T = L.trang;
-      if (T && !L.lua) { // trang mực đỏ lượn + lửa cháy trên trang
+      const Fm = T && !L.lua ? anhMoi('hu-trang-muc-lua') : null;
+      if (Fm) Fm.ve(c, 'hu-trang-muc-lua', T.x, T.y, T.t, 0, 1, false, 1); // trang Mực Lửa bay (6 khung lặp)
+      else if (T && !L.lua) { // trang mực đỏ lượn + lửa cháy trên trang
         const im = anhTrang();
         c.save(); c.translate(Math.round(T.x), Math.round(T.y)); c.rotate(Math.sin(t * 4) * 0.35);
         if (F) F.ve(c, 'hu-bam-lua', 0, 9, t, 0, 0.7, false, 0.9); // lửa liếm mép dưới trang
@@ -303,16 +324,37 @@
         c.restore();
       }
       const N = L.nhat;
-      if (N && !L.bang && L.goc.thuong) { // Thương Băng nằm trên sàn, nhấp nhô, lấp lánh
+      const Fb = N && !L.bang ? anhMoi('hu-thuong-bang-dat') : null;
+      if (Fb) Fb.ve(c, 'hu-thuong-bang-dat', N.x, N.y - 7 - Math.sin(N.t * 3) * 1.2, N.t, 0, 1, false, 1); // Thương Băng nằm đất, vòng sáng
+      else if (N && !L.bang && L.goc.thuong) { // Thương Băng nằm trên sàn, nhấp nhô, lấp lánh
         const w = sao(L.goc.thuong, 'ice', 1), y = N.y - 6 - Math.sin(N.t * 3) * 1.5;
         if (F) F.veK(c, 'hu-vong-phep', N.x, N.y + 1, Math.floor(t * 4) % 3, 0, 0.42, false, 0.8, G.EL.ice.col);
         veVk(c, w, N.x, y - 6, 58);
         if (F) F.ve(c, 'hu-lap-lanh', N.x + 6, y - 8, t % 1.2, 0, 0.8, false, 0.9);
       }
       const b = W.boss, g = L.guard;
-      if (g && b && !b.dead) { // Fire Guard: vòng phép Lửa dưới chân trùm
+      const Fg = anhMoi('hu-fire-guard');
+      if (Fg && g && b && !b.dead) { // Fire Guard: khiên lửa trong mờ bao quanh trùm (khung 1–4 lặp), mờ dần lúc sắp tan
+        const mo = g.t < 1 ? Math.max(0.2, g.t) : 1, vao = Math.min(1, ((G.time || 0) - g.t0) / 0.25);
+        Fg.veK(c, 'hu-fire-guard', b.x, b.y - (b.h || 50) * 0.45, Math.floor(((G.time || 0) - g.t0) * 5) % 4, 0, coGuard(b) * (0.7 + 0.3 * vao), false, 0.9 * mo);
+      } else if (g && b && !b.dead) { // Fire Guard: vòng phép Lửa dưới chân trùm
         const mo = g.t < 1 ? Math.max(0.25, g.t) : 1, fr = Math.min(2, Math.floor((t - g.t0) * 8)) + (g.t < 1 ? 3 : 0);
         if (F) F.veK(c, 'hu-vong-phep', b.x, b.y + 2, Math.min(7, fr), 0, 0.85, false, 0.9 * mo, G.EL.fire.col);
+      }
+      const V = L.vo;
+      if (V) { // khiên vỡ: khung 5 rồi 6 (0,2 giây mỗi khung), mảnh băng mờ dần
+        const q = ((G.time || 0) - V.t0) / 0.2;
+        if (q >= 2.5 || !Fg) L.vo = null;
+        else Fg.veK(c, 'hu-fire-guard', b ? b.x : V.x, (b ? b.y : V.y) - ((b && b.h) || 50) * 0.45, q < 1 ? 4 : 5, 0, coGuard(b) * (1 + 0.08 * q), false, q < 2 ? 1 : Math.max(0, 1 - (q - 2) * 2));
+      }
+      const M = L.manh, gm = M ? anhMoi('gd-page-scrap') : null;
+      if (M && gm) { // Page Scrap rơi ra từ trùm, nảy, rồi bay vào em bé
+        const P = S.P, len = M.t < 0.6 ? Math.sin((M.t / 0.6) * Math.PI) * 30 : 0;
+        let x = M.x - Math.min(1, M.t / 0.6) * 56, y = M.y - len - Math.sin(M.t * 5) * 1.2;
+        if (M.t > 1.4 && P) { const k = Math.min(1, (M.t - 1.4) / 0.6); x += (P.x - x) * k; y += (P.y - 14 - y) * k; }
+        const ga = c.globalAlpha; c.globalAlpha = ga * (M.t > 2 ? Math.max(0, 1 - (M.t - 2) / 0.4) : 1);
+        SCx().veGd(c, gm, Math.round(x - 5), Math.round(y - 5), 10, 10);
+        c.globalAlpha = ga;
       }
     } catch (e) { /* hình hỏng không được làm hỏng trận */ }
     G.wxDat(c, 0, 0);
@@ -327,7 +369,11 @@
     if (b && !b.dead && !b.hidden && S0 && S0.gdSan) {
       const he = S0.gdSan('gd-he-fire'), x = b.x - cam, y = b.y - (b.h || 50) - 12;
       if (he) {
-        if (L.guard) {
+        const bt = L.guard ? anhMoi('gd-bt-fire-guard') : null;
+        if (bt) { // biểu tượng Fire Guard (khiên lửa + bút lông) 16×16, phập phồng
+          const k = 1 + 0.1 * Math.sin(t * 8);
+          S0.veGd(u, bt, Math.round(x - 8 * k), Math.round(y - 8 * k), 16 * k, 16 * k);
+        } else if (L.guard) {
           const k = 1 + 0.12 * Math.sin(t * 8);
           if (G.fxAnh) G.fxAnh.veK(u, 'hu-khien-nuoc', x, y + 1, Math.floor(t * 5) % 4, 0, 0.95, false, 0.8);
           S0.veGd(u, he, Math.round(x - 8 * k), Math.round(y - 8 * k), 16 * k, 16 * k);
@@ -342,11 +388,28 @@
       const n = nutDoi(), P = S.P, ke = P.weapons[(P.cur + 1) % P.weapons.length], s = n[2] * 2;
       const nut = S0 && S0.gdSan ? S0.gdSan('gd-nut-vuong') : null, cd = P.swapCd > 0 ? 0.55 : 1;
       const ga = u.globalAlpha; u.globalAlpha = ga * cd;
-      if (nut) S0.veGd(u, nut, Math.round(n[0] - s / 2), Math.round(n[1] - s / 2), s, s);
-      veVk(u, ke, n[0], n[1] - 3, s * 0.62);
+      const mat = anhMoi('gd-nut-doi');
+      if (mat) { // mặt nút ĐỔI (gỗ, góc đồng, 2 mũi tên vòng); vũ khí kế tiếp đã có ở ô vũ khí góc trên
+        S0.veGd(u, mat, Math.round(n[0] - s / 2), Math.round(n[1] - s / 2), s, s);
+      } else {
+        if (nut) S0.veGd(u, nut, Math.round(n[0] - s / 2), Math.round(n[1] - s / 2), s, s);
+        veVk(u, ke, n[0], n[1] - 3, s * 0.62);
+      }
       u.globalAlpha = ga;
       if (ui) ui.text(tv(C.nut || 'ĐỔI'), n[0], n[1] + s / 2 - 3, { size: 7.5, bold: true, align: 'center', color: ke && ke.branch && G.EL[ke.branch] ? G.EL[ke.branch].col : '#f6dc92' });
     }
+  };
+
+  // Màn kết quả (js/stage.js gọi sau khi vẽ các dòng chữ): biểu tượng Page Scrap 17×18 ngay sau dòng "Page Scrap ×1".
+  SL.veKetQua = function (S, ds, x, y, buoc) {
+    const g = S && S.slice && S.slice.xong ? anhMoi('gd-page-scrap') : null, u = G.ux, ui = G.ui;
+    if (!g || !u || !ds) return;
+    const mau = String(G.t(C.trang, 1)).split('×')[0].trim();
+    const i = ds.findIndex((l) => typeof l === 'string' && mau && l.indexOf(mau) >= 0);
+    if (i < 0) return;
+    if (ui && ui.font) ui.font(7.5, false);
+    const w = u.measureText(ds[i]).width;
+    SCx().veGd(u, g, Math.round(x + w + 3), Math.round(y + i * buoc - 12), 17, 18);
   };
 
   // ---------- màn chào → vào thẳng ải 1-1 (người mới) ----------

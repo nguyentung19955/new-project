@@ -14,3 +14,7 @@ Mọi ảnh: pixel art, nền phẳng **magenta #FF00FF** (để tách nền), k
 | 6 | **Nút ĐỔI (SWAP)** — mặt nút có hai mũi tên vòng | 40 × 40 | nút vuông `gd-nut-vuong` + ảnh vũ khí kế tiếp | Pixel-art square UI button 40x40, carved dark wood frame with brass corners, center shows two curved arrows forming a circle (swap symbol) in saffron #E0A23A, outline #18202A, flat solid magenta #FF00FF background, no text. |
 
 Gắn vào game: thả tệp `.sprite.json` (công cụ `tools/tach-hieu-ung` / `tach-giao-dien`) vào `game/art/custom/` rồi đổi mã ảnh trong `game/js/slice.js` (hàm `anhTrang`, `SL.veTheGioi`, `SL.veHud`).
+
+**05/11 phiên D — ĐÃ GẮN ảnh thật** cho cả 6 mục (ảnh ChatGPT `docs/yeu-cau-anh/talesworn-anh-05-11/`, cắt bằng `docs/anh-goc/talesworn-d/cat-anh-slice.py`):
+`hu-trang-muc-lua`, `hu-fire-guard`, `gd-bt-fire-guard`, `hu-thuong-bang-dat`, `gd-page-scrap`, `gd-nut-doi`. Ảnh mượn cũ vẫn xem được bằng `?slicecu=1`.
+Báo cáo: `docs/review/ke-hoach-cai-thien/talesworn-d-gan-anh/bao-cao.md`.

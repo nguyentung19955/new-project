@@ -1467,6 +1467,10 @@
     meoKhung: () => MEO_G.khung, moBanDo: () => { if (S) S.bdMoDen = (G.time || 0) + HG.mo; }, HG, OVK_GON, OBD_GON, bdMo,
   };
 
+  // TALESWORN phiên D (talesworn-d-gan-anh/bao-cao.md): khung HUD bản 2 cắt từ ảnh ChatGPT (docs/anh-goc/talesworn-d/cat-hud-v2.py), CHỈ THỬ:
+  // ?hudmoi=1 (G.HUD_MOI) phủ khung thanh máu + ô vũ khí mới lên HUD cũ. Mặc định TẮT — chủ game xem ảnh so sánh rồi quyết.
+  if (G.HUD_MOI === undefined) { let bat = false; try { bat = typeof location !== 'undefined' && /[?&]hudmoi=1(&|$)/.test(location.search || ''); } catch (e) { bat = false; } G.HUD_MOI = bat; }
+  const hudMoi = (ma) => (G.HUD_MOI && G.spriteCustom && G.spriteCustom.gdSan ? G.spriteCustom.gdSan(ma) : null);
   function drawHud(part) {
     const W = S.W, P = S.P, c = G.ux;
     const doc = !!part, on = (p) => !part || part === p;
@@ -1478,6 +1482,8 @@
     if (on('vien')) {
     // Giai đoạn 4 (yêu cầu 2): thanh máu to hơn, chữ số to; thanh năng lượng có số để biết đủ mana cho chiêu chưa.
     T.bar(4, 3, 120, 'hp', Math.max(0, P.hp / P.maxhp), (G.CHU_RO !== false ? Math.max(0, Math.ceil(P.hp)) : Math.ceil(P.hp)) + ' / ' + P.maxhp, { h: 11, lag: P, size: 7.5 }); // lag: phần máu vừa mất tụt dần (js/ui_theme.js); khoá theo em bé của lượt chơi này
+    const h2 = hudMoi('gd-hud2-thanh-mau'); // TALESWORN phiên D: ?hudmoi=1 thử khung HUD bản 2 (mặc định tắt)
+    if (h2) G.spriteCustom.veGd(c, h2, 2, 1, 124, 15);
     if (coMD('dacBiet') || coMD('chuong')) T.bar(4, 15, 108, 'mana', P.mana / P.maxmana, Math.floor(P.mana) + ' / ' + P.maxmana, { h: 8, size: 6.5 }); // mở dần: chưa có nút tốn mana thì ẩn thanh mana
     const canDrink = P.potions > 0 && !W.noPotion;
     const heldBox = (b) => G.coTro((p) => p.role === 'ui' && hitBox({ x: p.sx, y: p.sy }, b)); // soát mượt phiên 3 mục 22: không chép mảng ngón mỗi lần
@@ -1525,6 +1531,8 @@
         active: on, cd: on ? 0 : P.swapCd / (G.SWAP_CD || 1.5), icon: false, gem: false, id: 'slot' + i,
       }, on && P.swapAt != null && G.time - P.swapAt >= 0 && G.time - P.swapAt < 0.08 ? { ready: P.swapAt, flashDur: 0.08 } : {})); // bao-cao-B: ô vừa đổi nháy 0,08 giây
       if (G.epDo) G.epDo.vien(c, x, 3, ow, oh, G.epDo.bac(w), false, true); // đợt 6: viền màu Bậc ép đồ (Rực lửa có lửa chạy)
+      const o2 = hudMoi(i ? 'gd-hud2-o-vk-2' : 'gd-hud2-o-vk'); // ?hudmoi=1: khung ô vũ khí HUD bản 2 (9 mảnh) phủ lên viền ô
+      if (o2) G.spriteCustom.veGd(c, o2, x - 2, 1, ow + 4, oh + 4);
       // 16/10 bậc ép đồ chỉ ở khung ô: viền ô này là khung bậc → ghi lại để VM.icon ghi số bậc ở góc trên phải (không vẽ thêm ô nhỏ)
       if (G.epDo && G.epDo.khung && G.epDo.khung()) G.epDo.ghiO(x, 3, ow, oh, G.epDo.bat() ? G.epDo.bac(w) : 0, [x + ow - 2, 13]);
       G.art.weaponIcon(c, Object.assign({}, w, { coat: P.coats[w.id] && P.coats[w.id].t > 0 ? P.coats[w.id].el : null }), gon ? x + ow / 2 : x + 13, gon ? 16 : 13, gon ? 20 : 19, on ? (P.atkT > 0 ? 'attack' : 'idle') : 'sleep');
@@ -1953,6 +1961,7 @@
     // Ảnh AI "lên cấp" (hu-len-cap, js/fx_anh.js): quầng sáng chạy lặp sau dòng chữ lên cấp. Không có tệp thì như cũ.
     if (R.up && G.fxAnh && G.fxAnh.co('hu-len-cap')) { const i = texts.slice(0, rows).findIndex((l) => typeof l === 'string' && viOf(R, l).includes('lên cấp')); if (i >= 0) G.fxAnh.ve(G.ux, 'hu-len-cap', 146, y + i * 11.5 - 2, G.time - S.modeT, 0, 0.6, false, 0.85); }
     texts.slice(0, rows).forEach((l, i) => line(l, 86, y + i * 11.5));
+    if (S.slice && G.slice && G.slice.veKetQua) G.slice.veKetQua(S, texts.slice(0, rows), 86, y, 11.5); // bản thử: biểu tượng Page Scrap (js/slice.js)
     let ry = y - 9;
     // ít vũ khí thì thẻ cao hai dòng; nhiều thì thẻ thấp lại một dòng để món nào cũng có hình
     const avail = lim - ry, nW = weps.length, pitch = G.clamp(Math.floor(avail / Math.max(1, nW)), 15, 26), maxCards = Math.max(1, Math.floor(avail / pitch));
@@ -1981,6 +1990,7 @@
     });
     // chữ còn dư thì xuống cột phải, dưới các thẻ vũ khí
     texts.slice(rows).forEach((l, i) => { const cy = ry + 9 + i * 11.5; if (cy <= lim) line(l, 246, cy); });
+    if (S.slice && G.slice && G.slice.veKetQua) G.slice.veKetQua(S, texts.slice(rows).filter((l, i) => ry + 9 + i * 11.5 <= lim), 246, ry + 9, 11.5); // bản thử: Page Scrap ở cột phải
     if (lkN) G.lk.resultBlock(S, 84, lkTop, 312);
     if (gy1 && G.goiY1.veKetQua(R, 84, gyThay ? 192 : gyY, 312)) { S = null; G.setScene(G.Village); return; }
     else if (!R.win && !S.quit && !gyThay) ui.para(G.luyen && G.luyen.bat() ? 'Mẹo: về làng luyện vũ khí ở Ông Thợ Rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.' : 'Mẹo: về làng mài vũ khí ở lò rèn, hoặc chơi lại ải cũ để lên cấp rồi quay lại.', 86, 196, 308, { size: 7.5, color: '#d9cdb8' });
