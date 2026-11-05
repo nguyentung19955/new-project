@@ -14,3 +14,16 @@ UI.chonU = function (id) {
   if (this.chon.length === 5 && this.chon.filter(x => SKILLS[x] && SKILLS[x].vai === 'tc').length < 2) this.nhac(TEXT.ui.need2Atk);
   return r;
 };
+
+// Focus Lens: loại buff mới "sát thương chí mạng" (sao 4 cánh trong vòng tròn)
+BUFF.cdmg = { ten: 'Crit damage', mau: '#6fd0ff' };
+BUFF_THU_TU.splice(BUFF_THU_TU.indexOf('crit') + 1, 0, 'cdmg');
+const _veKyHieuGoc = veKyHieu;
+veKyHieu = function (x, k, r, mau) {
+  if (k !== 'cdmg') return _veKyHieuGoc(x, k, r, mau);
+  _veKyHieuGoc(x, 'crit', r * 0.8, mau);
+  x.strokeStyle = mau; x.lineWidth = r * 0.16; x.beginPath(); x.arc(0, 0, r * 0.95, 0, 7); x.stroke();
+};
+SUP.thaukinh = { icon: 'sup_chimang', mau: '#6fd0ff', link: 'sup_link', ke: true, chu: (T) => '+' + pct(SKILLS.thaukinh.k(T) * heSoHT(T)) + '% CRIT DMG · PIERCE' };
+SUP_LOAI.thaukinh = 'cdmg';
+SUP_GIA.thaukinh = (T) => SKILLS.thaukinh.k(T);

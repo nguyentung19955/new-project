@@ -1,6 +1,8 @@
 # TURRET MERGE — 20 ỤNG/TƯỚNG MỚI (7 Tím · 8 Vàng · 5 Đỏ)
 
 Thiết kế ngày 05/11/2026. Chỉ là tài liệu thiết kế, chưa sửa code `thap/`.
+
+**Tiến độ (05/11/2026):** ĐÃ LÀM đợt 1 (8 ụ, `thap/js/skills3.js`) + đợt 2 (9 ụ, `thap/js/skills4.js`); giao diện `thap/js/tuongmoi-ui.js`; ảnh `tools/thap-tuong-moi.py`; cân bằng `node tools/thap-sim-moi.js dps|song|che`. Chỉnh số so với bản thiết kế: Combo Core dmg 15, Hydra dmg 15 tốc 1.2, Nine-Tail dmg 16 tốc 1.2, Nemesis dmg 26 tốc 0.8, Signal Jammer dmg 11, Bounty Beacon dmg 10, Resonance Grid × hệ số bậc Vàng 2.1, Marionette cú húc tối đa 6 quái và ≤ dmg×4. Còn lại đợt 3: Hive Queen, Leviathan, Genesis Core, Wyrm Engine.
 Tinh thần: các "Child" của DCDW / Destiny Child được dựng lại thành **ụ súng mini sci-fi nhìn từ trên xuống** (bệ tròn + đầu xoay), mỗi ụ có **phi công** riêng trên thẻ.
 Không trùng 64 ụ đang có (`thap-art/roster.json`). Tên hiển thị tiếng Anh (cho `thap/js/text.js`), id tiếng Việt không dấu như quy ước cũ.
 

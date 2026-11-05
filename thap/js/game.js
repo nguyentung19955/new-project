@@ -262,7 +262,7 @@ function trung(E, dmg, o) {
   const sk = T && SKILLS[T.id];
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
-  if (crit) dmg *= 2;
+  if (crit) { dmg *= 2 + ((T && T.buf && T.buf.cdmg) || 0); if (T && T.buf && T.buf.xuyen > 0 && !o.phu && typeof xuyenCrit === 'function') xuyenCrit(E, dmg, T, o); } // Focus Lens: +sát thương chí mạng, chí mạng xuyên
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   if (E.yeu > 0) dmg *= 1 + (E.yeuK || 0.25);      // Phá Giáp
   if (E.cvT > 0) dmg *= 1 + (E.cvK || 0.3);        // cầu vồng (solo / co-op): quái yếu đi
@@ -385,7 +385,7 @@ function capNhatBan(B, dt) {
   if (B.phao > 0) SKILLS.orbital.phaoBan(G, B, dt); // vệ tinh bắn phá sau khi ghép ụ Vệ Tinh
   // hỗ trợ: reset rồi các ụ hỗ trợ buff 4 ô kề (trên-dưới-trái-phải)
   for (const T of B.t) if (T) {
-    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0; T.nguon = []; // nguon: buff nhận từ ụ nào (hiển thị buff)
+    T.buf.toc = 0; T.buf.dmg = 0; T.buf.crit = 0; T.buf.cham = 0; T.buf.chet = 0; T.buf.cdmg = 0; T.buf.xuyen = 0; T.nguon = []; // nguon: buff nhận từ ụ nào (hiển thị buff)
     if (T.tocT > 0) { T.tocT -= dt; T.buf.toc += T.tocV; } // tăng tốc tạm thời (Kẹp Phá co-op…)
     if (T.st.kep > 0) T.st.kep -= dt;
   }
@@ -394,13 +394,13 @@ function capNhatBan(B, dt) {
     const sk = SKILLS[T.id]; if (!sk.hoTro) continue;
     const k = sk.vai === 'ht' ? heSoHT(T) : 1; // mốc hào quang 3★/7★
     for (const N of oHoTro(B, T)) if (N && N !== T && !N.st.da) {
-      const b = N.buf, c0 = b.toc, c1 = b.dmg, c2 = b.crit, c3 = b.cham, c4 = b.chet;
+      const b = N.buf, c0 = b.toc, c1 = b.dmg, c2 = b.crit, c3 = b.cham, c4 = b.chet, c5 = b.cdmg || 0;
       sk.hoTro(G, T, N);
       if (k !== 1) { b.toc = c0 + (b.toc - c0) * k; b.dmg = c1 + (b.dmg - c1) * k; b.crit = c2 + (b.crit - c2) * k; b.cham = Math.min(0.8, c3 + (b.cham - c3) * k); b.chet = c4 + (b.chet - c4) * k; }
       // ghi nguồn buff (ụ nào cho bao nhiêu) — chậm: lấy mức CAO nhất, còn lại cộng dồn
       const ng = N.nguon;
       if (b.toc > c0) ng.push({ k: 'toc', v: b.toc - c0, T }); if (b.dmg > c1) ng.push({ k: 'dmg', v: b.dmg - c1, T });
-      if (b.crit > c2) ng.push({ k: 'crit', v: b.crit - c2, T }); if (b.chet > c4) ng.push({ k: 'chet', v: b.chet - c4, T });
+      if (b.crit > c2) ng.push({ k: 'crit', v: b.crit - c2, T }); if (b.chet > c4) ng.push({ k: 'chet', v: b.chet - c4, T }); if (b.cdmg > c5) ng.push({ k: 'cdmg', v: b.cdmg - c5, T });
       if (SKILLS[T.id].vai === 'ht' && T.id === 'lanhgia') ng.push({ k: 'cham', v: SKILLS.lanhgia.cham(T) * k, T });
     }
   }
