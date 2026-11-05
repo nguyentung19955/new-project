@@ -149,6 +149,11 @@ const UP = {
 
   dung() {
     if (this.el) return this.el;
+    if (!document.getElementById('up-sd-css')) { // nút sao 1/4/7 + nút dạng của clip minh hoạ
+      const st = document.createElement('style'); st.id = 'up-sd-css';
+      st.textContent = '.up-sao-chon.up-sd-sao{grid-template-columns:repeat(3,1fr)}.up-sao-chon.up-sd-gd{grid-template-columns:.8fr 1fr 1fr 1fr}.up-sao-chon.up-sd-gd[hidden]{display:none}.up-sd-gd button{font-size:12px}';
+      document.head.appendChild(st);
+    }
     const el = document.createElement('div'); el.id = 'up'; el.className = 'man'; el.hidden = true;
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Turret file');
     el.innerHTML =
@@ -205,7 +210,8 @@ const UP = {
     else if (a === 'sau') this.buoc(1);
     else if (a === 'mo') this.ve(b.dataset.id, 1);
     else if (a === 'sao') this.chonSao(+b.dataset.s);
-    else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.dungXem }); this.nutPhat(); }
+    else if (a === 'gd') this.chonGd(+b.dataset.g);
+    else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.dungXem || this._thay === false }); this.nutPhat(); }
     else if (a === 'bo') {
       if (!upCo(this.id)) return;
       UI.chonU(this.id); this.capNutBo();
@@ -250,8 +256,14 @@ const UP = {
     el.querySelector('.up-than').scrollTop = 0;
     if (huong && !this.giam()) { noi.classList.remove('trai', 'phai'); void noi.offsetWidth; noi.classList.add(huong > 0 ? 'phai' : 'trai'); }
     this.capNutBo();
-    // xem trước: ụ grow-up theo sao → mặc định 1★ cho dạng đầu; ụ khác 3★
-    this.sao = co ? (laGrow(id) ? 1 : 3) : 1;
+    // xem trước = clip minh hoạ kỹ năng (skilldemo.js): mặc định 4★; ụ đổi dạng có thêm nút Stage
+    this.sao = co ? 4 : 1; this.gd = 0;
+    const gdc = noi.querySelector('.up-sd-gd');
+    if (gdc) {
+      const coGd = co && typeof laGrow === 'function' && laGrow(id);
+      gdc.hidden = !coGd;
+      gdc.innerHTML = coGd ? ['All', 'Stage 1', 'Stage 2', 'Stage 3'].map((t, g) => '<button data-up="gd" data-g="' + g + '"' + (g === 0 ? ' class="chon"' : '') + '>' + t + '</button>').join('') : '';
+    }
     this.ganXem(id);
     this.chonSao(this.sao, true);
     requestAnimationFrame(() => fitText(noi.querySelector('.up-ten'), 30, 18));
@@ -321,7 +333,8 @@ const UP = {
     return '<div class="up-tv"><div class="up-tv-khung"></div><i class="g tl"></i><i class="g tr"></i><i class="g bl"></i><i class="g br"></i>' +
       '<div class="up-tv-chu"><span class="rec">Live</span></div><b class="up-tv-sao"></b>' +
       '<button class="up-phat" data-up="phat" aria-label="Pause preview"></button><div class="up-tv-tat">No test footage yet</div></div>' +
-      '<div class="up-sao-chon" role="group" aria-label="Preview star level">' + [1, 2, 3, 4, 5, 6, 7].map(s => '<button data-up="sao" data-s="' + s + '"' + ([3, 5, 7].includes(s) ? ' class="moc"' : '') + '>' + s + '★</button>').join('') + '</div>';
+      '<div class="up-sao-chon up-sd-sao" role="group" aria-label="Preview star level">' + [1, 4, 7].map(s => '<button data-up="sao" data-s="' + s + '" class="moc">' + s + '★</button>').join('') + '</div>' +
+      '<div class="up-sao-chon up-sd-gd" role="group" aria-label="Preview stage" hidden></div>';
   },
   o(k, v) { return '<div><small>' + k + '</small><b>' + upEsc(v) + '</b></div>'; },
   muc(n, ten, noi) { return '<section class="up-muc"><h3><i>' + String(n).padStart(2, '0') + '</i>' + ten + '</h3>' + noi + '</section>'; },
@@ -376,12 +389,37 @@ const UP = {
     if (!this.ifr) {
       const f = document.createElement('iframe');
       f.className = 'up-ifr'; f.title = 'Live preview'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
-      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao;
+      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&dpr=2';
       this.ifr = f;
-    } else this.guiXem({ id, sao: this.sao });
-    if (!this.ifr.parentNode) tv.querySelector('.up-tv-khung').appendChild(this.ifr);
+    } else this.guiXem({ id, sao: this.sao, gd: this.gd });
+    if (!this.ifr.parentNode) { tv.querySelector('.up-tv-khung').appendChild(this.ifr); this.theoDoiXem(tv); }
+    this.khungXem(); requestAnimationFrame(() => this.khungXem());
     if (this.giam() && this._lanDau !== false) { this.dungXem = true; this._lanDau = false; }
     this.guiXem({ dung: this.dungXem }); this.nutPhat();
+  },
+  // khung cắt: bàn 3×3 + đường trên + dải chú thích (toạ độ logic y 150…530), co theo bề rộng khung
+  khungXem() {
+    const kh = this.el && this.el.querySelector('.up-tv-khung'); if (!kh || !this.ifr) return;
+    const k = (kh.clientWidth || 344) / 430;
+    kh.style.setProperty('--k', k.toFixed(4)); kh.style.height = Math.round(380 * k) + 'px'; this.ifr.style.top = (-150 * k) + 'px';
+  },
+  // ra khỏi màn hình / ẩn tab → dừng clip (đỡ tốn pin); quay lại → chạy tiếp (trừ khi người xem đã bấm dừng)
+  theoDoiXem(tv) {
+    if (this._io) return;
+    const cap = () => this.guiXem({ dung: this.dungXem || !this._thay || document.hidden });
+    this._thay = true;
+    if ('IntersectionObserver' in window) { this._io = new IntersectionObserver((es) => { this._thay = es[es.length - 1].isIntersecting; cap(); }, { threshold: 0.05 }); this._io.observe(tv); }
+    else this._io = true;
+    document.addEventListener('visibilitychange', cap);
+    addEventListener('resize', () => this.khungXem());
+    const kh = tv.querySelector('.up-tv-khung');
+    if (kh && 'ResizeObserver' in window) new ResizeObserver(() => this.khungXem()).observe(kh);
+  },
+  chonGd(g) {
+    this.gd = g || 0;
+    this.el.querySelectorAll('[data-up="gd"]').forEach(b => b.classList.toggle('chon', +b.dataset.g === this.gd));
+    this.guiXem({ id: this.id, sao: this.sao, gd: this.gd });
+    if (this.dungXem) { this.dungXem = false; this.guiXem({ dung: false }); this.nutPhat(); }
   },
   guiXem(d) { try { if (this.ifr && this.ifr.contentWindow) this.ifr.contentWindow.postMessage({ tmXem: d }, '*'); } catch (e) { } },
   nutPhat() { const b = this.el.querySelector('.up-phat'); if (b) { b.classList.toggle('dung', this.dungXem); b.setAttribute('aria-label', this.dungXem ? 'Play preview' : 'Pause preview'); } },
@@ -390,7 +428,7 @@ const UP = {
     this.sao = s;
     this.el.querySelectorAll('[data-up="sao"]').forEach(b => b.classList.toggle('chon', +b.dataset.s === s));
     const t = this.el.querySelector('.up-tv-sao'); if (t) t.textContent = s + '★';
-    if (!lanDau) { this.guiXem({ id: this.id, sao: s }); if (this.dungXem) { this.dungXem = false; this.guiXem({ dung: false }); this.nutPhat(); } }
+    if (!lanDau) { this.guiXem({ id: this.id, sao: s, gd: this.gd }); if (this.dungXem) { this.dungXem = false; this.guiXem({ dung: false }); this.nutPhat(); } }
   },
 };
 
@@ -488,12 +526,16 @@ if (UP_XEM) {
     },
   };
   const _capNhatGoc = capNhat;
-  capNhat = function (dt) { _capNhatGoc(dt); try { UPX.tick(dt); } catch (e) { } };
+  capNhat = function (dt) { _capNhatGoc(dt); if (!window.SD) try { UPX.tick(dt); } catch (e) { } };
+  // clip minh hoạ kỹ năng (skilldemo.js) — nạp sau mọi script của trang; lỗi nạp → giữ cảnh thử bắn cũ (UPX)
+  const napSD = () => { const sc = document.createElement('script'); sc.src = 'js/skilldemo.js'; document.body.appendChild(sc); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', napSD); else napSD();
+  const batXem = (id, sao, gd) => (window.SD ? SD.bat(id, sao, gd) : UPX.bat(id, sao));
   // UI.init có thể đã chạy trước khi file này nạp (phông sẵn) → chờ roster + canvas sẵn sàng rồi dựng cảnh
-  const cho = setInterval(() => { if (G.rosterMap && G.rosterMap[UP_XEM] && REN.cv) { clearInterval(cho); if (!UPX.id) UPX.bat(UP_XEM, +UP_Q.get('star') || 3); } }, 60);
+  const cho = setInterval(() => { if (G.rosterMap && G.rosterMap[UP_XEM] && REN.cv && (window.SD || performance.now() > 4000)) { clearInterval(cho); if (!UPX.id && !(window.SD && SD.id)) batXem(UP_XEM, +UP_Q.get('star') || 4, +UP_Q.get('gd') || 0); } }, 60);
   addEventListener('message', (e) => {
     const d = e.data && e.data.tmXem; if (!d) return;
-    if (d.dung != null) { UPX.dungMuon = !!d.dung; if (G.ban.length) G.dung = !!d.dung; }
-    if (d.id) UPX.bat(d.id, d.sao);
+    if (d.dung != null) { UPX.dungMuon = !!d.dung; if (window.SD) SD.dungMuon = !!d.dung; if (G.ban.length) G.dung = !!d.dung; }
+    if (d.id) batXem(d.id, d.sao, d.gd);
   });
 }
