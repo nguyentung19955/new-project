@@ -4,7 +4,7 @@
 //   1 Tinh anh  1:00–1:45  một con Heo Nanh báo đòn rõ (vạch đỏ, húc thẳng): dạy Né rồi chém trả
 //   2 Đánh quái 1:45–2:30  FIRE INK: trang sách đỏ bay tới, chạm vào → kiếm thành kiếm Lửa cấp Mầm (ảnh kiếm vuông hệ Lửa có sẵn)
 //                          TẠM THỜI tới hết ải (bản sao vũ khí trong trận, bản lưu không đổi: Luyện Lv1–15 giữ nguyên, mốc Lv3 vẫn như cũ)
-//   3 Trùm      2:30–3:50  TOADSTOOL KING (hình Nấm Chúa) THÍCH NGHI: 4 đòn Lửa → dựng FIRE GUARD 7 giây (giảm 30% sát thương Lửa,
+//   3 Trùm      2:30–3:50  TOADSTOOL KING (luật/kỹ năng của Nấm Chúa; hình PixelLab toadstoolKing, js/quai_pl.js) THÍCH NGHI: 4 đòn Lửa → dựng FIRE GUARD 7 giây (giảm 30% sát thương Lửa,
 //                          không miễn), hiện vòng phép Lửa dưới chân + biểu tượng hệ Lửa trên đầu + thẻ "Kháng Lửa / Yếu Băng" ở thanh máu.
 //                          THƯƠNG BĂNG (cấp Mầm, chỉ trong ải này) nằm ngay trên đường từ cửa tới trùm: đi qua là nhặt.
 //                          3 đòn Băng khi đang Guard → vỡ Guard, trùm choáng 2,5 giây (lộ điểm yếu). Chỉ dùng Lửa + né vẫn thắng được.
@@ -41,6 +41,9 @@
     trangToc: 70, // tốc độ trang mực bay
   };
   SL.SO = SO;
+  // Mã ẢNH của trùm bản thử (05/11 pixellab-quai-nam): chỉ đổi hình, trùm vẫn là Nấm Chúa (b.art = 'namChua'). js/quai_pl.js vẽ tấm này
+  // thay Nấm Chúa khi bản thử đang chạy, kể cả thế dựng khiên lúc Fire Guard. ?quaipl=0 hoặc ?slicecu=1: hình Nấm Chúa như cũ.
+  SL.anhTrum = 'toadstoolKing';
   SL.bat = () => G.SLICE_BAT !== false;
   const obj = (v) => !!(v && typeof v === 'object' && !Array.isArray(v));
   // Người mới: chưa xong ải hướng dẫn, chưa có sao ải 1-1

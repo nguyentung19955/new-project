@@ -1,0 +1,27 @@
+{
+ "goblin": {
+  "idle": "idle:4",
+  "move": "move:0",
+  "tele": "tele:5",
+  "atk": "atk:3",
+  "hit": "hit:3",
+  "die": "die:0"
+ },
+ "king": {
+  "idle": "idle:5",
+  "move": "move:0",
+  "tele": "tele:0",
+  "atk": "atk3:3",
+  "hit": "hit:5",
+  "die": "die:9",
+  "khien": "khien2:3"
+ },
+ "puff": {
+  "idle": "idle:0",
+  "move": "move:0",
+  "tele": "tele:0",
+  "atk": "atk:0",
+  "hit": "hit:0",
+  "die": "die2:4"
+ }
+}
