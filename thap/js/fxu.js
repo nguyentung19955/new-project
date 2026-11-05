@@ -158,12 +158,4 @@ const PX = {
     if (khung) { const k = REN.img(khung); if (k) { const kw = w + h * 2.6, kh = kw * k.height / k.width; ctx.drawImage(REN.mip(k, kw * REN.s * REN.dpr), x + w / 2 - kw / 2, y + h / 2 - kh / 2, kw, kh); } }
   },
 };
-// chấm sáng mềm dùng chung (REN.cham1, trước là radial-gradient vẽ code) → ảnh fx_cham_trang tô màu
-if (typeof REN !== 'undefined' && typeof document !== 'undefined') {
-  const cham1Goc = REN.cham1;
-  const rong = document.createElement('canvas'); rong.width = rong.height = 2;
-  const mem = {}; // quầng mềm: ảnh fx_cham_trang tô màu, giảm alpha 0.5 (ảnh gốc đặc hơn gradient cũ → đỡ chói quanh ụ)
-  const mo = (mau) => { if (mem[mau]) return mem[mau]; const a = PX.mau('fx_cham_trang', mau); if (!a) return null;
-    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const x = c.getContext('2d'); x.globalAlpha = 0.5; x.drawImage(a, 0, 0); return (mem[mau] = c); };
-  REN.cham1 = function (mau) { const im = mo(mau); return im || (typeof G !== 'undefined' && G.debug ? cham1Goc.call(this, mau) : rong); };
-}
+// (REN.cham1 = fx_cham_trang PNG tô màu: đã làm ở render.js — vùng board)

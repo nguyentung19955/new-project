@@ -812,3 +812,30 @@ Gen 1 tấm, lưu `docs/demo-hop-tuong/thap-art/raw_p4_ui_1.png` (session UI t�
 4. `hang_sang` — "Thin horizontal steel row highlight strip with faint cyan inner glow edges, very dark centre." (dòng mốc sao trong bảng — đang là nền tô màu trơn)
 5. `mui_tiep` — "Small steel chevron arrow pointing right, amber edge light." (mũi tên giữa 3 dạng grow-up — đang là ký tự ›)
 6. ô 6 để trống (magenta).
+
+## 17. Pass 4 — fx (rà soát 100% vẽ tay vùng hiệu ứng / kỹ năng / quái-trùm, 2026-11-05)
+
+Bảng đầy đủ: `docs/demo-hop-tuong/VE-TAY-RASOAT-fx.md` (93 thứ vẽ code → 70 PNG có sẵn, 5 PNG tạm, 18 bỏ). Mọi vẽ FX nay qua bộ **PX** (fxu.js): chỉ đặt/xoay/phóng/mờ/tô màu PNG.
+Cần 1 tờ ảnh mới để thay 5 chỗ đang dùng PNG tạm + 1 chỗ đã bỏ (VHS). Gen xong lưu `docs/demo-hop-tuong/thap-art/raw_p4_fx_1.png` → session fx cắt (khoá magenta) + nối.
+
+### raw_p4_fx_1 · 1024×1024 · lưới 4×4 (ô 256) · nền magenta #FF00FF đặc · same style as the attached game screenshot · no text
+Prompt chung (dán đầu): *"Game VFX sprite sheet, 4x4 grid of 256px cells, flat solid magenta #FF00FF background, each item centered with padding, top-down view, perfect circles stay perfectly round, same painted mobile-game style as the attached game screenshot, no text, no letters."*
+
+| ô | id | prompt (1–2 dòng) | thay cho |
+|---|---|---|---|
+| 1 | rong_bay | Top-down mechanical fire dragon flying with wings spread, head pointing right, red-gold armor plates, glowing orange eyes. | thân rồng DRAGON DIVE (đang dùng fx_ronglua_no) |
+| 2 | rong_bay_xanh | Same top-down mechanical dragon, blue-white flame variant, wings spread, head right. | rồng dạng 2/3 (đang tô màu) |
+| 3 | luoi_bang | Round frost floor decal: hexagon ice lattice inside a perfect circle, pale cyan lines, transparent center gaps. | sàn lưới băng Cryo dạng 3 (đang hu_vongbang) |
+| 4 | vhs | Horizontal strip of red/cyan VHS rewind scanlines and glitch bars, semi-transparent, tileable left-right. | lớp phủ tua ngược REWIND (đã bỏ) |
+| 5 | grow_cung_trong | Thin dark metal ring segment, 1/3 of a circle arc, empty groove, perfectly circular curvature. | nền cung đo grow-up |
+| 6 | grow_cung_day | Same 1/3 circle arc segment, filled with bright white glowing energy (tintable), soft glow. | cung đo grow-up (đang fx_vong_mong cắt) |
+| 7 | grow_moc | Tiny bright white notch/tick marker gem for a ring gauge, diamond shape. | vạch mốc đổi dạng |
+| 8 | thanh_quai | Tiny horizontal enemy HP bar frame, dark metal, empty inside, very thin (aspect 8:1). | khung thanh máu quái |
+| 9 | thanh_quai_day | Matching thin bar fill, flat bright white with subtle highlight (tintable), aspect 8:1. | mức máu quái (đang tai_day) |
+| 10 | thanh_trum | Small boss HP bar frame with tiny skull cap on the left, dark red metal, aspect 6:1. | thanh máu trùm trên đầu |
+| 11 | tam_ngam_trang | White glowing targeting reticle: circle with 4 short ticks and small center dot (tintable). | vòng ngắm chung (đang fx_tia_hieu tô màu) |
+| 12 | day_trang | Thin straight white glowing energy thread with soft glow, horizontal, tileable (tintable). | dây/tia mảnh chung (đang fx_laser_tia) |
+| 13 | dau_an_luc_giac | Emerald hexagon rune mark, glowing, top-down, small. | dấu ấn Hydra (đang vòng + sao) |
+| 14 | canh_sen | Single golden steel lotus petal, pointed, glowing edge, pointing right. | 8 cánh sen Genesis (đang fx_tia_sao) |
+| 15 | vay_vang | Single small golden fin/spike pointing outward, glowing. | vây VỰC SÂU Leviathan (đang fx_tia_sao) |
+| 16 | bong_mem | Soft black oval drop shadow, blurred edges, top-down. | bóng quái / drone / rồng (đang fx_cham_trang tô đen) |
