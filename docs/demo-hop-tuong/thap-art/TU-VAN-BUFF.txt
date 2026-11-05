@@ -1,0 +1,257 @@
+BUFF READABILITY & COMBAT FEEDBACK — IMPLEMENTATION ART/UX SPEC
+Merge Tower Defense | 64 turret roster | 5×3 board | 430×860 logical portrait viewport
+Version 1.0 — 05 November 2026
+
+EXECUTIVE DECISION
+------------------
+Use TWO layers of feedback, never a permanent web of links:
+(A) At rest: tiny, universally located buff glyphs on the RECEIVING turret, with its existing star display preserved and no permanently glowing tile border.
+(B) On tap/hold: clear four-neighbor footprint, short source-to-recipient connectors, and the ACTUAL aggregated numeric buffs on the selected turret's info panel or on demand.
+(C) On proc: visually meaningful feedback at the entity where the result happened — crit/execute/slow on the enemy, shield/cleanse on the protected turret, mana at the producer/HUD.
+
+Do not rely on color alone. Icon shape + effect location + text-on-inspection are mandatory. Numbers are for inspection and exceptional proc moments, not fifteen continuously running numeric displays.
+
+1. OBSERVATIONS FROM THE ATTACHED SCREENSHOT
+------------------------------------------
+• Board is industrial charcoal, fairly busy already; colorful turret heads, seven-star markers in the upper-right of sockets, rarity accents and enemy/path VFX occupy much of the available visual bandwidth.
+• On the right, several recipient cells get an intense gold/orange CORNER FRAME. It does call attention to recipients, but it reads like a rarity/selection/upgrade state, NOT specifically a fire-rate effect, and is overly bright across multiple cells.
+• The floating “+40% FIRE RATE” tag is large, detached from any particular recipient and competes with combat. It explains the effect temporarily but not the precise set of destinations or whether each recipient is getting that same value.
+• The Radar detail card gives base +30% for 4 neighbors yet a line at its bottom says “4★ · LVundefined · +40% fire rate to neighbors.” “LVundefined” is a visible state/formatting bug; separate star-based bonus from upgrade level and never render a missing field. The +30% versus +40% discrepancy should be explained clearly as base vs current or corrected if accidental.
+• On the left the ordinary state gives no reliable enduring clue that an individual unit is buffed, how many effects apply, or which support generated them.
+• UI priorities must remain star rank > turret type/silhouette > combat buffs > optional proc activity. Do not overlay the bright upper-right rank star with buffs.
+
+2. REFERENCE GAME LESSONS — WHAT IS CONFIRMED VS OUR DESIGN
+----------------------------------------------------------
+RANDOM DICE: Light Dice provides neighboring dice with attack-speed increases; Critical Dice increases crit rate of the four immediately adjacent dice; Lunar Dice has adjacent support and distinct mode/activation conditions. The core lesson is that PLACEMENT and cross-adjacency are part of the strategy. It does not imply that the references show percentage labels over all recipients all the time. Adopt their intuitive neighbor logic, NOT a presumed exact visual UI implementation.
+
+DESTINY CHILD: DEFENSE WAR: units are organized by attack, attack support, control, support and special roles; some support units boost nearby units and some buffs/effects trigger on fusion. The useful lesson is recognizable support identities and abilities, with momentary effect feedback. Public guides verify these mechanics, but do not establish an exact official badge/line/color scheme; the specifications below are recommended original UX rather than claims that DCDW uses those exact graphics.
+
+REFERENCES (text URLs; design research, not a license to copy assets):
+https://randomdice.wiki.gg/wiki/Light_Dice
+https://randomdice.wiki.gg/wiki/Critical_Dice
+https://random-dice.fandom.com/wiki/Lunar_Dice
+https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-tips-tricks-en.html
+https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+
+3. CANONICAL EFFECT LANGUAGE — EXACTLY EIGHT TYPES
+--------------------------------------------------
+These hex values are UI ACCENTS, not turret rarity colors. On dark grey they require a charcoal backing and a pale/white line symbol. Color never stands alone.
+
+Type             Accent    Symbol drawn in 1.5–2 px strokes       At-rest recipient mark / proc
+FIRE RATE        #FFB547   triple chevron / fast-forward >>>     mini amber chevrons / quicker muzzle cadence
+DAMAGE           #FF7654   solid swordhead / angular burst       coral blade notch / stronger hit impact
+CRIT             #F7D65B   four-point sparkle with central dot   yellow sparkle / punctuated CRIT text
+SLOW             #78D9F5   six-arm snowflake                     icy cyan flake / slowed enemy with icy fringe
+INSTANT KILL     #BA94F2   angular skull                         lilac skull / skull pop on killed enemy
+MANA             #58D9AD   diamond droplet / crystal             mint crystal / small resource fly-to-HUD
+SHIELD           #73A9FF   outlined hex shield                   blue hex / barrier absorbs one hit
+CLEANSE          #E8E5C8   four-point white cross with tiny ring  ivory clean-star / brief wiping sparkle
+
+IMPORTANT: Crit yellow and fire-rate amber are close. Their GLYPHS must be visually distinct. Damage coral and red rarity/attacks may overlap: never use a full coral tile rim. Slow and shield are both blue: snowflake vs shield silhouette is non-negotiable. Cleanse ivory must have charcoal backing, not pale text on bright turrets. Instant kill should be deep violet/lilac, not magenta/pink, avoiding the chroma-key sprite background (#FF00FF). Accent colors are independent of art rarity trim: white/blue/purple/gold/red may coexist with any buff.
+
+Semantic distinction:
+• Recipient BOOST: marker lives on turret (fire rate/damage/crit/execute chance/shield/cleanse status).
+• Enemy DEBUFF: marker lives principally on affected enemy (slow). A source turret may also have a tiny “applies slow” passive symbol in its inspector; do not imply every adjacent turret is receiving a slow buff when the effect is applied to enemies.
+• RESOURCE PRODUCTION: show mana on producing support turret and HUD. Do not add mana-receive icons on four neighbors unless your rules actually transfer mana to them.
+• Cleanse: an instantaneous cleanse is an EVENT, not a lasting buff. Persistent marker exists only if there is an ongoing anti-debuff/cleanse protection window.
+
+4. HUD GRID & DIMENSION CONTRACT
+--------------------------------
+Coordinate system: all pixel values below refer to LOGICAL CSS/game pixels at a 430×860 viewport, NOT raw device pixels. Assume sockets visually occupy ~64 width × 55 height. If you render game at internal 2x resolution, multiply all pixel values by 2 inside render targets, but preserve on-screen sizes. Avoid 1-pixel antialias fuzz from fractional pixel alignment.
+
+Per 64×55 socket:
+• Keep 4 px internal safe margin from tile edges; star badge remains at the TOP-RIGHT, unchanged unless it is being standardized separately.
+• Head art and its action VFX occupy the visual center, about 42–48 px diameter; never paint a full buff ring around the silhouette.
+• Main ongoing buff slot: TOP-LEFT inside tile, x=cellLeft+3, y=cellTop+4. Icon plaque = 12×12 px, rounded square/hex charcoal #151A20 at 90–95% opacity, 1 px colored top/left keyline, centered 8×8 symbolic glyph. This is BELOW the star badge in visual priority.
+• Additional effect slots: a tiny strip along LEFT EDGE or bottom-left if it does not collide with turret body; prefer TOP-LEFT anchored 2-icon row (12×12 each, 2 px gap = 26 px total). If your top-left art collides, put the same cluster at bottom-left, y=cellBottom−15. Freeze the location for a whole match; no per-turret random placement.
+• Maximum visible at-rest icons: TWO fully drawn glyphs. With 3+ effects show the most strategically relevant glyph followed by “+N” in a 13×12 plaque, e.g. fast-arrow +2. If exact type diversity is more important in tests, use 3 at 10×10 but NEVER obscure star/weapon. Ordering: temporary/expiring > shield / instant-kill > fire rate > damage > crit > slow > mana > cleanse. This is a DEFAULT; adapt to gameplay importance, not rarity.
+• Do not show “+40%” or “+30%” labels on all 15 cells all the time. For active effects the tap inspector shows actual numbers. Optional for accessibility: a settings toggle “Show buff badges” = Off / Compact (default) / Expanded (only when held, not persistent numbers).
+• Effects on at-rest tile use a stable glyph with alpha 0.85–0.95. Pulse only once on initial gain, then static. No animated gradients looping on every supported unit.
+• If the turret can receive multiple sources of the SAME buff type, show ONE icon with the FINAL effective result; the inspector expands source breakdown. Do not render identical glyphs two or three times.
+• States: bright badge = effect currently active; hollow/desaturated badge = present but inactive due to range, broken link, disarm, or activation requirement (only if such inactive state exists). Do not show a false active buff on empty sockets.
+
+Optional exact collision layout in a cell whose local coordinates span x:0..63, y:0..54:
+  rank/star occupies upper-right priority zone x:45..63, y:0..17;
+  status glyph A occupies x:3..14, y:4..15;
+  status glyph B occupies x:17..28, y:4..15;
+  indicator center is not within the main weapon muzzle corridor from x:28..64, y:19..40.
+If the existing star is larger than assumed, reposition buff icons ONLY, not rank.
+
+5. WHAT THE BUFFED TURRET LOOKS LIKE IN REAL BATTLE
+--------------------------------------------------
+Fire rate: persistent amber >>> tile badge. Actual observable output is reduced time between attacks; muzzle flash cadence and barrel recoil accelerate according to simulation. Do NOT add fake extra projectiles: visuals reflect actual shots. On buff application, 140 ms warm chevrons swipe into badge; no lasting golden border.
+
+Damage up: persistent coral angular-blade badge. Actual impact on enemies gains a slightly larger/saturated impact sprite (+10–15% area max), with the SAME total duration. Never repaint the whole turret red. Damage popups show final DAMAGE; do not print “+40%” after every bullet.
+
+Crit up: persistent yellow sparkle badge. When a real critical hit lands, pop a CRIT-styled damage number on the enemy (section 7). Never pulse the badge on every shot because crit CHANCE is not a guaranteed proc.
+
+Slow: if this turret is the provider, its inspect panel communicates slow chance/strength; enemy receives actual frost overlay after hit. If a buff grants “attacks inflict slow” to another turret, place a cyan flake buff badge on THAT recipient while active; use target VFX for actual slow.
+
+Instant kill: if the turret has an increased execute chance, lilac skull badge stays on turret. Skull/execute effect appears ONLY if the execute condition succeeds, and only on a valid enemy; excluded bosses should show normal hit feedback rather than an ambiguous skull. This effect must never be confused with the Death Totem's static skull silhouette.
+
+Mana: producing turret emits a 90–140 ms mint glyph on actual mana generation, plus a tiny number or flying shard toward the resource counter. If the buff changes a turret's mana yield, badge appears on that turret. No perpetual mint flames on idle generators.
+
+Shield: passive/protection badge is a small blue hex. A VERY THIN partial cyan-blue arc may sit just outside the head (max 1.5 px stroke, max 25% circumference) only if shield state is tactically urgent; otherwise glyph alone. On hit consumed, a 240 ms hexagonal impact / fragmentation effect; icon disappears or updates shield charge.
+
+Cleanse: for one-shot removal, brief ivory sweep and tiny cross over the saved turret (300 ms), NO idle badge. If effect grants future debuff immunity, show a badge for duration and use a short flash each time it blocks a debuff.
+
+When same turret gets 3 or more buffs, keep the normal world-space view QUIET. When a user taps that turret, show a separate compact effect breakdown panel; do not draw a three-color halo or stack animated rim bands.
+
+6. TAP INSPECTION: HOW TO SHOW SOURCE, DESTINATION, STRENGTH
+---------------------------------------------------------
+Treat tapping a SUPPORT turret as “Show why and who,” not “turn on a battle-long rave.”
+
+On initial tap (or hold on desktop):
+1) Selected support gets a BRIGHT WHITE / COOL-GREY 1.5 px dashed outline inside its socket; NOT rarity gold unless gold is actually the support's rarity. Hold duration: until dismissal.
+2) For a four-cardinal-neighbor support, show 4 target SOCKET plates at ~18–22% color fill and 1.5–2 px color edge. Only valid recipients get bright edge; invalid/empty/immune get grey dashed edge. No effect circle if gameplay is exactly grid adjacency.
+3) Draw thin connectors only between source and currently valid recipients: 1 px colored core at alpha 0.7 and 2–3 px charcoal separator behind; connection starts just outside source head, ends just before recipient head, stays BELOW heads/number badges and ABOVE board texture. For adjacent cells: line only across gap between center silhouettes, preferably 14–22 px visible; no diagonal beams unless diagonals are rules-valid.
+4) Show one short 130–180 ms propagation blink on tap, then STATIC links. No constant animated sparks. All highlighting vanishes within 100 ms of deselection, retap elsewhere or starting a merge drag.
+5) Apply a small icon on each supported recipient in the usual buff slot. IF that recipient was already buffed, do not replace other active badges; temporarily prioritize the selected source's icon for inspection only.
+6) The selected card shows CURRENT FINAL numbers and source rule. Example:
+   RADAR • Support • ★4
+   Effect: Attack speed +40% (effective)
+   Reach: 4 adjacent squares (N/E/S/W)
+   Affecting: 3/4 occupied eligible neighbors
+   Base: +30%; star bonus: +10%; other modifiers: 0%
+   Tap any highlighted turret for all received buffs.
+   (Only display the breakdown if these are ACTUAL game formulas. Otherwise label the 30 and 40 accurately or fix data.)
+7) When user taps an ATTACKER, invert flow: show its buff glyphs in a small grid INSIDE the info panel with final % and source names. Example:
+   EFFECTS ON SNIPER: >>> Attack speed +40% [Radar ★4]; blade Damage +18% [Amplifier ★2]; sparkle Crit chance +12% [Crit Beacon ★3].
+   If overlapping similar buffs apply, show final aggregation AND source-by-source breakdown, including caps, priority and whether additive/multiplicative/max only.
+
+Suggested inspection card design at 430×860: full width 400–414 px (8–15 px screen margins), up to 170 px height for one buff, up to 225 px for expanded stacked effects; 12–14 px normal text, 15–17 px heading, 11–12 px secondary metadata, body on almost-black #161A20 / border cool steel #515B67. The image already uses a broad bottom card, so adapt current panel rather than adding floating popups over paths. Minimum touch target 40×40 px for clickable row/toggle, prefer 44×44 px. These are proposed design measurements, not platform-mandated absolutes.
+
+IMPORTANT technical note: a 5-column × 64 px grid is ~320 px wide (plus margins), but your screenshot seems to depict a wider scaled battle canvas. Calculate all overlay coordinates from ACTIVE grid cell bounds in the game's world-to-screen transform, not from hard-coded screenshot positions. A 430×860 HUD might use safe areas / variable letterbox. UI should lock to cell sizes AFTER scale.
+
+7. PROC FEEDBACK: DAMAGE, CRIT, EXECUTE, SLOW, SHIELD, CLEANSE
+-------------------------------------------------------------
+Normal damage: 11–12 px medium-weight ivory #E9E8E2 with thin 1.5 px charcoal outline. Appear 20–45 px above enemy center depending on lane bounds, float vertically 10–16 px over 450–550 ms, ease out; avoid covering enemy HP when possible. If bursts are extremely fast, aggregate same-source damage in a ~120–160 ms window or suppress small normal numbers by settings. Do NOT display each Gatling pellet number if it floods the lane.
+
+Critical damage: 14–16 px gold/ivory #F7D65B, dark 2 px stroke, mild 105–115% scale pop (90 ms), float 14–19 px and fade within 550–650 ms. A very small four-point glyph or short “CRIT” tag may appear beside the number on exceptional big hits, but not as a second long word on every crit. Damage values must remain the actual calculated amounts; visual boost must NOT be a separate fabricated “extra +40%” number.
+
+Instant kill: 14–16 px lilac skull icon appears ABOVE defeated target for 100–140 ms and dissolves as a 220–320 ms violet-ash burst; one condensed “EXECUTE” text only for rare elite/boss-eligible procs, otherwise glyph is enough. For immune enemy, suppress success skull. Prevent concurrent skull overprint from many attacks on same death.
+
+Slow: 1 px icy rim/frost around enemy silhouette with a couple small blue shard pixels and a 6–8 px snowflake marker near healthbar (if any); alpha ~0.8, no 100%-opaque cyan body recolor. On application, a 160–220 ms frost burst then quiet small frost indicator lasting for actual status time. On expiry, dissolve ~120 ms. For repeated applications, refresh duration silently except when meaningful increase in slow tier.
+
+Mana: 10–12 px mint crystal / +resource number at generator, rise 10 px over 450 ms. If linked to top HUD, use a tiny 8–10 px crystal flying on a 280–400 ms path only for important/manual grants; coalesce high-frequency periodic events into one packet every 500–800 ms. Actual HUD count increments immediately from model, not after animation.
+
+Shield absorb: 1.5 px electric-blue hex impact centered on affected turret, 180 ms expand + 100 ms fade (280 ms total). Optional “BLOCK” 11 px only if it prevented a significant boss debuff or hit; shield count shown in inspector or badge micro-counter (max 1 digit), not a permanent ring.
+
+Cleanse: 220–300 ms sweeping ivory/white cross sparkle with 1–2 particles; clear DEBUFF icons instantly from model, fade visual after. “CLEANSED” text reserved for a meaningful hard-control removal, not routine periodic cleanse.
+
+Damage-up alone: do not invent a special orange DAMAGE number color on every hit; normal hits remain white, real crits remain gold. For damage-up use a slightly thicker hit spark and retained attacker glyph. Else player could confuse extra damage with critical damage.
+
+Visual stacking order (back to front): background/board → recipient tint/coverage → connectors → bases → turret heads → status badges → stars/rank → head projectile/VFX → combat damage text → selected panel/tooltips. On enemy lanes: enemy and HP UI above path, proc VFX behind damage numbers.
+
+8. TIMING / MOTION TABLE (60 FPS TARGET)
+---------------------------------------
+Tapped support propagation            150 ms once
+Tap target outline fade-in             100 ms
+Selected link persistence              until deselect, no loop
+Link highlight fade-out                90–120 ms
+Buff gained glyph arrival             140–200 ms once
+Ongoing buff glyph                    static until effect ends
+Buff lost glyph fade                   120–160 ms
+Damage number total                   450–550 ms
+Crit number total                     550–650 ms
+Crit scale pop                         first 90 ms
+Execute skull flash                   100–140 ms
+Execute ash effect                     220–320 ms
+Frost hit burst                        160–220 ms
+Frost removal fade                     120 ms
+Mana popup                             450 ms
+Mana HUD fly (special only)            280–400 ms
+Shield block impact                    240–300 ms
+Cleanse sweep                          220–300 ms
+Selected cell/footprint outline        static, not breathing
+
+Respect “reduce motion” accessibility settings: eliminate camera shake, flying HUD packets and repeated scale pops; retain static symbols, targeted outlines and numeric inspection. Restrict simultaneous big proc numbers to preserve 60 FPS, especially when both boards are visible.
+
+9. WHAT NOT TO DO — FAILURES SPECIFIC TO THIS ART STYLE
+-------------------------------------------------------
+X Do not wrap every buffed 64×55 socket in golden L-corners; gold is already valuable for rarity/high-star signaling.
+X Do not treat every support buff as an all-around halo, especially if effect applies to the four cardinal neighbors only.
+X Do not show full-time thick links from 4–8 supports: it creates a spiderweb and hides heads.
+X Do not put buff values on the turrets constantly; 15 slots × multiple percentages cannot be legible at your scale.
+X Do not place buff chips on the top-right star badge or at a muzzle tip.
+X Do not run rotating neon rim rings: the V3 art direction intentionally reduces glow; preserve it.
+X Do not recolor all turret heads according to buff type — lose rarity and unit identity.
+X Do not use pure magenta/pink effect accents, since sprite-key backgrounds use #FF00FF and it clashes with red/violet turret details.
+X Do not use crit, damage-up, and execute as indistinguishable red numbers.
+X Do not claim a slow “buffed” ally when slow is actually a status on enemies.
+X Do not play a proc flourish merely because a buff is present: only actual simulation events should trigger it.
+X Do not show “LVundefined” or inconsistent base/current percentage descriptions; debugging text must not ship.
+X Do not imply independent buffs stack additively until gameplay stacking rules specify it.
+X Do not make tiny glyph labels your only mode; add optional tap detail + patterns for color-blind play.
+X Do not assume DPR = logical pixels; validate on actual iPhone portrait in the browser.
+
+10. ENGINEERING DATA / STATE CONTRACT
+------------------------------------
+Each buff instance in the authoritative simulation should include:
+  effectType; sourceTurretId; targetEntityId; appliedAtMs; expiresAtMs or permanent;
+  magnitude; magnitudeUnit (% / flat / charges / multiplier); stackingGroup;
+  stackingRule (sum / product / highest / replace / exclusive);
+  activationPredicate; active; sourcePosition; targetPosition.
+
+Derived view per turret:
+  activeEffectTypes[] unique by type, ordered by importance;
+  effectiveBuffs{fireRatePct, damagePct, critChancePct, executeChancePct, shieldCharges, ...};
+  contributingSources[type][] with actual modifier data;
+  procEvents[] with unique event IDs (never infer procs by checking a glow animation).
+
+Rendering implementation:
+• Draw static badges into cached draw calls / texture atlas. Only update when buff membership/amount changes.
+• Compute selected source neighbor cells from board topology, not from distance pixels; use same rules as gameplay.
+• Cache highlight geometry; store world-to-screen positions per frame as necessary; clip off-board lines.
+• At event arrival, spawn pooled visual effect with finite TTL. No dozens of permanent particle emitters.
+• Filter fast repeated damage text and rapid resource popups without changing authoritative damage/mana.
+• Use a debug toggle that overlays source→target arcs and numbers, strictly in developer builds to test correctness.
+• Test ranks 1–7 and all 5 rarities with 0,1,2,3,4 simultaneous effects; under red/magenta/blue turret heads and on light/dark background features.
+
+11. PRIORITIZED IMPLEMENTATION SPRINT
+------------------------------------
+P0 (clarity, quickest meaningful win)
+1) Fix Radar “LVundefined” and settle whether displayed +30% or +40% is base/current; always show final effective effect, rule and recipient count.
+2) Add 12×12 pinned buff badges in a reserved safe top-left spot; one icon per type, group overflow with +N.
+3) On support tap: highlight precisely four cardinal neighbor sockets; valid/invalid differentiation; connectors only while selected; clear instantly on dismissal.
+4) On attacker tap: show all effective buff types, final numeric value, and sources in the existing bottom details card.
+
+P1 (combat understanding)
+5) Differentiate crit from normal damage numbers; support true execute and slow status on the ENEMY; no fake hits.
+6) Add restrained gain/loss feedback for fire rate/damage/crit, and shield/cleanse activation on valid event.
+7) Support aggregation and stacking display across multiple support sources; QA before exposing values.
+
+P2 (polish and accessibility)
+8) Add pooled resource fly-to-HUD for selected high-value mana events; avoid spam.
+9) Optional Compact/Minimal effect display and Reduce Motion setting.
+10) User-test 5 players: (i) identify which turrets Radar buffs in <2 s on tap, (ii) recognize fire-rate and crit indicators unprompted, (iii) explain 2-buff stacking after tapping one unit, (iv) distinguish slow on enemies, (v) find star count unimpeded. Use target thresholds: ≥4/5 pass each critical task; iterate before designing 64 custom icon variants.
+
+12. SPECIFIC MOCK INTERACTION FOR THE SCREENSHOT
+-----------------------------------------------
+Before tap: top row Radar support head is cyan/teal, normal neutral base. Neighboring attackers carry small amber chevrons in top-left if they truly receive speed increase. No gold corners, no orange streak across the board. Star numbers remain untouched.
+
+Tap Radar ★4: Radar socket outlined in cool white. Valid N/E/S/W sockets get thin amber perimeter and 1px amber link; occupied eligible targets get 12px amber chevron symbol. Off-board/empty/impossible links grey, no false +40%. Selected card reads:
+“Radar | Support | 4★”
+“Fire rate +40% (current)”
+“Targets: 4 cardinal adjacent slots | Currently buffed: [actual count]”
+“Details: Base +30% | ★4 modifier +10%” ONLY IF TRUE.
+
+Tap a highlighted attacker: Radar footprint disappears. New card reads its actual total Fire rate +40%, who caused it, and any Damage/Crit/etc effects. During continued play, no gigantic callout stays overhead. Crit hits generate gold punchy damage numbers on enemy lane, slowed enemies show icy status, executes show lilac skull on actual kills.
+
+13. ACCEPTANCE CHECKLIST
+------------------------
+[ ] From idle frame, at least one active buff on a recipient is recognizable by shape without selecting its source.
+[ ] A support tap unambiguously identifies recipients and invalid neighbors.
+[ ] A buffed attacker tap provides exact magnitude and source, with deterministic stacking.
+[ ] Star badges 1–7 never overlap buff badges, links or status text.
+[ ] Normal, crit and execute events are differentiated by value/location/shape, not just color.
+[ ] Enemy slow is displayed on the enemy, not incorrectly as a recipient support badge.
+[ ] No proc VFX fires without matching simulation event.
+[ ] All overlays fit 430×860 and cell dimensions ~64×55, safe areas included.
+[ ] No infinite link animation or permanently flashing recipient borders.
+[ ] DCDW/Random Dice inspiration remains structural; sprites and icon language remain original neutral-gunmetal sci-fi.
+
+FINAL ART-DIRECTION RULE
+------------------------
+“Small icon tells WHAT; tap highlights WHO; panel tells HOW MUCH and FROM WHOM; proc VFX tells WHEN IT ACTUALLY WORKED.”
+
