@@ -238,3 +238,6 @@
 .hm-ic:not(.dk-lui) { border-image-width: 14px 22px; }
 #chon button.hm-an:not(.hm-choi):not(.dk-lui), #hm-mo button.hm-nut2.hm-an:not(.vang), #hm-mo .hm-ic.hm-an { border-image-source: url(../assets/p7_nut2_an.png); filter: none; }
 .hm-tam { border-image: url(../assets/p7_tam.png) 52 70 fill / 18px 24px stretch; padding: 22px 24px 30px; }
+/* raw_p7_a2 đã nối: A07 ô bộ bài trống p7_o_trong · ô CHỜ ĐỔI p7_o_doi (hổ phách) — ô có ụ giữ khung độ hiếm the_khung_<bậc> */
+#chon #chon-bo .o-bo:not([data-id]) { border: 0 solid transparent; border-image: url(../assets/p7_o_trong.png) 84 84 fill / 24px stretch; }
+#chon #chon-bo .o-bo.hm-armed::after { inset: -5px -5px; background: none; border: 0 solid transparent; border-image: url(../assets/p7_o_doi.png) 96 / 26px stretch; }
