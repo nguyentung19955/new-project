@@ -1,6 +1,22 @@
 // TURRET MERGE — vẽ: mọi hình là ảnh ChatGPT trong assets/; code chỉ vẽ hạt, quầng sáng, bóng, chữ, thanh máu
 'use strict';
 
+// bộ đếm bộ nhớ canvas (Safari iOS có trần tổng bộ nhớ canvas; vượt trần → canvas mới trắng/null, ảnh lỗi giải mã):
+// ghi nhận mọi <canvas> tạo ra bằng WeakRef → REN.boNho() cộng số điểm ảnh của các canvas còn sống
+const _DS_CV = [];
+(() => {
+  if (typeof WeakRef === 'undefined') return;
+  const goc = document.createElement.bind(document);
+  let dem = 0;
+  document.createElement = function (ten, o) {
+    const e = goc(ten, o);
+    if (typeof ten === 'string' && ten.toLowerCase() === 'canvas') {
+      _DS_CV.push(new WeakRef(e));
+      if (++dem % 3000 === 0) for (let i = _DS_CV.length - 1; i >= 0; i--) { const c = _DS_CV[i].deref(); if (!c || !c.width) _DS_CV.splice(i, 1); }
+    }
+    return e;
+  };
+})();
 // màu vệt đạn theo ảnh đạn
 const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', dan_tia: '#7fd0ff', tia_lua: '#ffc070' };
 const REN = {
@@ -10,8 +26,30 @@ const REN = {
     this.cv = cv; this.ctx = cv.getContext('2d', { alpha: false }); // canvas đục: trình duyệt khỏi trộn nền khi ghép lớp
     this.coLai();
     addEventListener('resize', () => this.coLai());
-    if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this.cache = {}; }); // phông về muộn: dựng lại ảnh chữ
+    if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this.donCache(); }); // phông về muộn: dựng lại ảnh chữ
+    // quay lại trang/tab (iOS có thể đã xoá vùng nhớ canvas khi chạy nền) → dựng lại nền; ảnh lỗi → thử tải lại ngay
+    const hoi = () => { if (document.hidden) return; this.thuLaiLoi(); if (G.ban.length) this.lamNen(); };
+    document.addEventListener('visibilitychange', hoi); addEventListener('pageshow', hoi);
   },
+  // iOS Safari: trần tổng bộ nhớ canvas thấp → canvas lớn (nền) giữ ≤ 2×
+  laIOS: /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1),
+  // ---------- bộ nhớ đệm ảnh thu nhỏ: 2 THẾ HỆ theo ngân sách điểm ảnh ----------
+  // vượt ngân sách → thế hệ hiện tại thành "cũ", bắt đầu thế hệ mới; tra trúng ở thế hệ cũ → chuyển lên mới (không dựng lại).
+  // Ảnh không dùng nữa (ụ đã bán/không còn trên bàn, cỡ cũ) tự rơi khỏi bộ nhớ sau 2 lần xoay → tổng ≤ ~2 × ngân sách.
+  _cacheCu: {}, _cachePx: 0,
+  nganSach() { return (this.laIOS ? 6 : 9) * 1048576 * Math.min(1, this.dpr * this.dpr / 9) * 9 / 4; }, // điểm ảnh (≈ 13.5 MB iOS / 20 MB máy khác mỗi thế hệ ở 3×)
+  cGet(key) {
+    let c = this.cache[key]; if (c) return c;
+    c = this._cacheCu[key]; if (!c) return null;
+    delete this._cacheCu[key]; this.cache[key] = c; this._cachePx += c.width * c.height; return c;
+  },
+  cSet(key, c) {
+    if (!c) return c;
+    this._cachePx += c.width * c.height;
+    if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
+    return (this.cache[key] = c);
+  },
+  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; },
   // Độ phân giải vẽ = đúng mật độ điểm ảnh thật của máy (tối đa 3×). Trước đây kẹp 2× → máy 3× (iPhone, nhiều Android)
   // phải phóng ảnh 1.5× → mọi hình mềm nhoè, viền răng cưa. Máy yếu (khung > 18 ms kéo dài) tự lùi về 2×.
   coLai() {
@@ -30,7 +68,7 @@ const REN = {
     const r = thuc / this.dpr;
     this.cv.style.width = (this.cv.width * r / (this.s * thuc)) + 'px'; this.cv.style.height = (this.cv.height * r / (this.s * thuc)) + 'px';
     this.min(this.ctx); this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round'; // nét vẽ (vòng, tia, sét) đầu tròn, khử răng cưa
-    this.cache = {}; this._chu = null;
+    this.donCache(); this._chu = null;
     if (G.ban.length) this.lamNen();
   },
   // bật lọc ảnh chất lượng cao cho mọi ngữ cảnh vẽ 2D
@@ -52,6 +90,7 @@ const REN = {
       const w2 = Math.max(1, Math.round(w / 2)), h2 = Math.max(1, Math.round(h / 2));
       const t = document.createElement('canvas'); t.width = w2; t.height = h2;
       this.c2d(t).drawImage(src, x0, y0, w, h, 0, 0, w2, h2);
+      if (src !== a) src.width = src.height = 0; // trả bộ nhớ tầng trung gian ngay (Safari chỉ thu canvas rác rất muộn)
       src = t; x0 = 0; y0 = 0; w = w2; h = h2;
     }
     return [src, x0, y0, w, h];
@@ -60,6 +99,7 @@ const REN = {
   veNho(x, a, sx, sy, sw, sh, dx, dy, dw, dh) {
     const [s2, x0, y0, w, h] = this.thuNho(a, sx, sy, sw, sh, dw, dh);
     x.drawImage(s2, x0, y0, w, h, dx, dy, dw, dh);
+    if (s2 !== a) s2.width = s2.height = 0;
   },
   // chuỗi mipmap của 1 ảnh/canvas (mỗi tầng = ½ tầng trên): vẽ cỡ thay đổi từng khung (khói, hiệu ứng, tia, biểu tượng…)
   // lấy tầng nhỏ nhất vẫn ≥ cỡ cần (điểm ảnh thiết bị) → GPU chỉ thu ≤ 2× → mịn, không nhấp nháy
@@ -78,24 +118,62 @@ const REN = {
     }
   },
 
-  // ---------- ảnh ----------
-  img(ten) {
-    let a = this.anh[ten];
-    if (!a) {
-      a = new Image(); a.decoding = 'async';
-      a.onerror = () => { a._loi = true; this.thieu.add(ten); };
-      a.onload = () => { if (this._choNen) this.lamNen(); };
-      a.src = 'assets/' + ten + '.png';
-      this.anh[ten] = a;
+  // tổng bộ nhớ canvas còn sống (MB, 4 byte/điểm) + canvas lớn nhất + ảnh gốc còn giữ bản giải mã
+  boNho() {
+    let px = 0, n = 0, lon = 0;
+    for (let i = _DS_CV.length - 1; i >= 0; i--) {
+      const c = _DS_CV[i].deref();
+      if (!c || !c.width) { _DS_CV.splice(i, 1); continue; }
+      const p = c.width * c.height; px += p; n++; if (p > lon) lon = p;
     }
+    let anh = 0; for (const k in this.anh) { const a = this.anh[k]; if (a instanceof Image && a.naturalWidth) anh += a.naturalWidth * a.naturalHeight; }
+    return { canvasMB: +(px * 4 / 1048576).toFixed(1), soCanvas: n, lonNhatMB: +(lon * 4 / 1048576).toFixed(1), anhGocMB: +(anh * 4 / 1048576).toFixed(1) };
+  },
+
+  // ---------- ảnh ----------
+  // Tải ảnh. Lỗi (mạng chập chờn / Safari iOS hết bộ nhớ giải mã) → THỬ LẠI với giãn cách tăng dần (1 s, 2 s, 4 s … ≤ 30 s),
+  // không bao giờ bỏ cuộc vĩnh viễn; tải xong → nếu nền đang vẽ tạm (thiếu khay/đường) thì dựng lại nền ngay.
+  taiAnh(ten, lan) {
+    const a = new Image(); a.decoding = 'async';
+    a._lan = lan || 0;
+    a.onerror = () => {
+      a._loi = true; this.thieu.add(ten);
+      clearTimeout(a._hen);
+      if (a._lan >= 7 && !this.CO_DINH.has(ten)) return; // ảnh thật sự không có (404): thôi sau ~2 phút; ảnh nền thì thử mãi
+      a._hen = setTimeout(() => { if (this.anh[ten] === a) this.taiAnh(ten, a._lan + 1); }, Math.min(30000, 1000 * 2 ** Math.min(5, a._lan)));
+    };
+    a.onload = () => { a._loi = false; this.thieu.delete(ten); if (this._choNen && /^(khay|duong_)/.test(ten)) this.lamNen(); };
+    const gia = G.debug && G.debug.hongKhay > a._lan && ten === 'khay'; // kiểm thử: giả lỗi tải
+    a.src = 'assets/' + (gia ? '__gia_loi__' : ten) + '.png' + (a._lan ? '?r=' + a._lan : '');
+    this.anh[ten] = a;
+    return a;
+  },
+  // thử lại NGAY mọi ảnh đang lỗi (quay lại trang, mạng về)
+  thuLaiLoi() { for (const k in this.anh) { const a = this.anh[k]; if (a._loi) { clearTimeout(a._hen); this.taiAnh(k, a._lan + 1); } } },
+  img(ten) {
+    let a = this.anh[ten] || this.taiAnh(ten);
     if (a._cv) return a._cv;
     if (!(a.complete && a.naturalWidth && !a._loi)) return null;
     // chép sang canvas 1 lần: vẽ từ canvas không đụng bộ nhớ đệm giải mã ảnh của trình duyệt (bị dọn → giải mã lại mỗi khung)
     const c = document.createElement('canvas'); c.width = a.naturalWidth; c.height = a.naturalHeight;
-    this.c2d(c).drawImage(a, 0, 0);
-    return (a._cv = c);
+    const x = c.getContext('2d');
+    if (!x) { c.width = c.height = 0; return a; } // hết trần bộ nhớ canvas: vẽ thẳng từ ảnh còn hơn trả null
+    this.min(x).drawImage(a, 0, 0);
+    // bỏ đối tượng Image (bản giải mã của trình duyệt) → chỉ còn 1 bản điểm ảnh trong bộ nhớ thay vì 2
+    a.onload = a.onerror = null;
+    this.anh[ten] = { _cv: c, complete: true, naturalWidth: c.width, naturalHeight: c.height };
+    return c;
   },
-  napTruoc(ds) { return Promise.all(ds.map(t => new Promise(ok => { this.img(t); const a = this.anh[t]; if (a.complete) ok(); else { a.addEventListener('load', ok, { once: true }); a.addEventListener('error', ok, { once: true }); } }))); },
+  napTruoc(ds) { return Promise.all(ds.map(t => new Promise(ok => { const a = this.anh[t] || this.taiAnh(t); if (a.complete) ok(); else { a.addEventListener('load', ok, { once: true }); a.addEventListener('error', ok, { once: true }); } }))); },
+  // trận mới: bỏ mọi ảnh/bộ đệm của ụ, chỉ huy, hiệu ứng KHÔNG thuộc danh sách cần dùng (bộ bài khác của trận trước)
+  chiGiu(ds) {
+    const giu = new Set(ds);
+    for (const k in this.anh) if (!giu.has(k) && !this.CO_DINH.has(k) && this.anh[k]._cv) delete this.anh[k];
+    for (const k in this.trang) if (!giu.has(k)) delete this.trang[k];
+    for (const k in this.xam) if (!k.startsWith('diu|') && !giu.has(k)) delete this.xam[k];
+    this.donCache(); this._chu = null;
+  },
+  CO_DINH: new Set(['khay', 'duong_thang', 'duong_goc', 'duong_nga3', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana']),
   // bản trắng (chớp khi trúng đòn) / bản xám (hoá đá) — dựng 1 lần, dùng lại
   banTrang(ten) {
     if (this.trang[ten]) return this.trang[ten];
@@ -117,30 +195,46 @@ const REN = {
   // ảnh đã thu nhỏ sẵn đúng cỡ vẽ (px logic) — vẽ 1:1 nhanh hơn nhiều trên điện thoại; bien: '' | 'xam' | 'trang' | 'den'
   co(ten, px, bien) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(px * k)), key = ten + '|' + n + '|' + (bien || '');
-    let c = this.cache[key]; if (c) return c;
-    const a = bien === 'xam' ? this.banXam(ten) : bien === 'trang' ? this.banTrang(ten) : this.img(ten);
+    let c = this.cGet(key); if (c) return c;
+    if (bien === 'xam' || bien === 'trang') { // biến thể dựng từ bản ĐÃ THU NHỎ (không giữ bản trắng/xám cỡ gốc)
+      const b = this.co(ten, px, ''); if (!b) return null;
+      return this.cSet(key, this.toBien(b, bien));
+    }
+    const a = this.img(ten);
     if (!a) return null;
     const w = a.width, h = a.height, nw = Math.max(2, Math.round(n * w / Math.max(w, h))), nh = Math.max(2, Math.round(n * h / Math.max(w, h)));
     c = document.createElement('canvas'); c.width = nw; c.height = nh;
     const x = this.c2d(c);
     if (bien === 'den') { x.filter = 'blur(' + Math.max(1, n / 40) + 'px)'; this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, nw, nh); }
     else this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh);
-    if (Object.keys(this.cache).length > 900) this.cache = {};
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
+  },
+  // bản trắng (source-in) / xám (độ sáng) của 1 canvas đã thu nhỏ
+  toBien(b, bien) {
+    const c = document.createElement('canvas'); c.width = b.width; c.height = b.height;
+    const x = c.getContext('2d'); x.drawImage(b, 0, 0);
+    if (bien === 'trang') { x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); }
+    else {
+      const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+      for (let i = 0; i < p.length; i += 4) { const l = (p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11) * 0.85 + 18; p[i] = l * 1.02; p[i + 1] = l; p[i + 2] = l * 0.94; }
+      x.putImageData(d, 0, 0);
+    }
+    for (const q of ['nf', 'fm', 'gap']) if (b[q] != null) c[q] = b[q];
+    return c;
   },
   // dải khung (quái/trùm 4 khung) thu nhỏ sẵn TỪNG KHUNG riêng, cách nhau 2 px trong suốt: cỡ khung nguyên điểm ảnh,
   // không lấy lẹm điểm ảnh khung bên cạnh khi lọc (trước đây dải 768 px thu về bề rộng lẻ → mép khung lem/nhoè)
   coDai(ten, px, bien) {
     const k = this.s * this.dpr, m = Math.max(2, Math.round(px * k)), key = 'dai|' + ten + '|' + m + '|' + (bien || '');
-    let c = this.cache[key]; if (c) return c;
-    const a = bien === 'trang' ? this.banTrang(ten) : this.img(ten); if (!a) return null;
+    let c = this.cGet(key); if (c) return c;
+    if (bien === 'trang') { const b = this.coDai(ten, px, ''); return b ? this.cSet(key, this.toBien(b, 'trang')) : null; }
+    const a = this.img(ten); if (!a) return null;
     const n = Math.max(1, Math.round(a.width / a.height)), fw = a.width / n, G2 = 2;
     c = document.createElement('canvas'); c.width = n * (m + G2); c.height = m;
     const x = this.c2d(c);
     for (let i = 0; i < n; i++) this.veNho(x, a, Math.round(i * fw), 0, Math.round(fw), a.height, i * (m + G2), 0, m, m);
     c.nf = n; c.fm = m; c.gap = G2;
-    if (Object.keys(this.cache).length > 900) this.cache = {};
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   // vẽ ảnh thu nhỏ sẵn ở tâm (0,0) với cỡ px
   ve1(ctx, ten, px, bien, ox, oy) { const c = this.co(ten, px, bien); if (!c) return false; const h = px * c.height / c.width; ctx.drawImage(c, (ox || 0) - px / 2, (oy || 0) - h / 2, px, h); return true; },
@@ -184,8 +278,11 @@ const REN = {
     if (this.xam[key]) return this.xam[key];
     const a = this.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
-    const x = c.getContext('2d'); x.drawImage(a, 0, 0);
-    const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
+    const x = c.getContext('2d');
+    let d;
+    try { x.drawImage(a, 0, 0); d = x.getImageData(0, 0, c.width, c.height); }
+    catch (e) { c.width = c.height = 0; this._diuTam = true; return a; } // thiếu bộ nhớ: tạm dùng ảnh gốc, lamNen sẽ thử lại
+    const p = d.data;
     for (let i = 0; i < p.length; i += 4) {
       const L = p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11;
       for (let k = 0; k < 3; k++) {
@@ -197,22 +294,24 @@ const REN = {
       }
     }
     x.putImageData(d, 0, 0);
+    // ảnh nền (khay, đường) chỉ dùng qua bản dịu → bỏ bản gốc cỡ lớn khỏi bộ nhớ
+    if (this.anh[ten] && this.anh[ten]._cv === a) delete this.anh[ten];
     return (this.xam[key] = c);
   },
   diaCong(co) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(co * k)), key = 'dia|' + n;
-    let c = this.cache[key]; if (c) return c;
+    let c = this.cGet(key); if (c) return c;
     const a = this.img('cong'); if (!a) return null;
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = c.getContext('2d'); x.beginPath(); x.arc(n / 2, n / 2, n * 0.3, 0, 7); x.clip(); this.min(x); this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, n, n);
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   // chữ nổi dựng sẵn thành ảnh (viền + chữ) — vẽ chữ mỗi khung rất tốn; mỗi con số chỉ dựng 1 lần rồi dùng lại suốt đời nó
   chuAnh(s, mau, px) {
     const k = this.s * this.dpr, key = s + '|' + mau + '|' + px;
     const M = this._chu || (this._chu = new Map());
     let c = M.get(key); if (c) return c;
-    if (M.size > 320) M.clear();
+    if (M.size > 200) M.clear();
     const f = '900 ' + px + 'px ' + FONT.display;
     const m = this._mx || (this._mx = document.createElement('canvas').getContext('2d'));
     m.font = f; const tw = m.measureText(s).width, lw = tw + 8, lh = px * 1.35 + 6;
@@ -295,11 +394,21 @@ const REN = {
   },
 
   // ---------- nền tĩnh (khay + đường) dựng 1 lần ----------
+  // Nền dựng ở độ phân giải RIÊNG: iOS ≤ 2× (nền 3× = 10 MB + lớp đường 10 MB, sát trần bộ nhớ canvas của Safari).
+  // Lỗi bất kỳ (ảnh chưa về, hết bộ nhớ) → _choNen = true: vòng vẽ tự thử dựng lại mỗi ~1.5 s, không kẹt mãi ở khay xám.
   lamNen() {
+    this._tNen = performance.now();
+    try { this.lamNen0(); }
+    catch (e) { this._choNen = true; if (G.debug && G.debug.log) console.warn('lamNen', e); }
+  },
+  lamNen0() {
+    this._diuTam = false;
     const c = this.nen || (this.nen = document.createElement('canvas'));
-    const k = this.s * this.dpr;
-    c.width = this.cv.width; c.height = this.cv.height;
-    const x = this.c2d(c);
+    const dn = this.laIOS ? Math.min(2, this.dpr) : this.dpr, q = dn / this.dpr;
+    const k = this.s * dn;
+    c.width = Math.round(this.cv.width * q); c.height = Math.round(this.cv.height * q);
+    const x = c.getContext('2d'); if (!x) { this._choNen = true; return; }
+    this.min(x);
     x.setTransform(k, 0, 0, k, 0, 0);
     // sàn xưởng máy tối (gradient + quầng tối viền)
     const g = x.createLinearGradient(0, 0, 0, H);
@@ -311,11 +420,12 @@ const REN = {
     let du = true;
     // khay bàn máy móc xám (bóng đổ dưới khay)
     for (const B of G.ban) {
-      x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18; x.shadowOffsetY = 8;
+      x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18 * q; x.shadowOffsetY = 8 * q;
       const kh = this.diu('khay', 0.22, 0.72, 0.6);
       if (kh) x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); else { du = false; x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); }
       x.restore();
     }
+    this.thaMip(this.xam['diu|khay|0.220.720.6']); // các tầng mip chỉ cần lúc dựng nền
     // đường đi: ghép ảnh đường thẳng + góc (+ ô ngã ba co-op) lên 1 lớp riêng KHÔNG bóng,
     // rồi đổ bóng 1 lần cho cả lớp → các mảnh ghép không đè bóng lên nhau, không lộ mối nối
     const th = this.diu('duong_thang', 0.25, 0.7, 0.74), gc = this.diu('duong_goc', 0.25, 0.7, 0.74);
@@ -323,7 +433,8 @@ const REN = {
     if (!th || !gc || !n3) du = false;
     const lp = this._lopDuong || (this._lopDuong = document.createElement('canvas'));
     lp.width = c.width; lp.height = c.height;
-    const y = this.c2d(lp); y.setTransform(k, 0, 0, k, 0, 0);
+    const y = lp.getContext('2d'); if (!y) { this._choNen = true; return; }
+    this.min(y); y.setTransform(k, 0, 0, k, 0, 0);
     const R = DUONG_RONG / 2, daVe = new Set();
     for (const p of G.duong) {
       const pts = p.pts;
@@ -344,10 +455,13 @@ const REN = {
       y.drawImage(n3, jx - R, jy - R, DUONG_RONG, DUONG_RONG);
     }
     x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
-    x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10;
+    x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10 * q;
     x.drawImage(lp, 0, 0); x.restore();
-    this._choNen = !du;
+    lp.width = lp.height = 0; // lớp đường chỉ là trung gian: trả bộ nhớ ngay (giữ đối tượng để dùng lại)
+    this._choNen = !du || this._diuTam;
+    if (G.debug && G.debug.log) console.log('[nen]', du ? 'khay OK' : 'TẠM (thiếu ảnh)', c.width + 'x' + c.height, JSON.stringify(this.boNho()));
   },
+  thaMip(a) { if (a && a._mip) { for (let i = 1; i < a._mip.length; i++) a._mip[i].width = a._mip[i].height = 0; a._mip = null; } },
   veDoanDuong(x, th, ax, ay, bx, by) {
     const L = Math.hypot(bx - ax, by - ay); if (L < 1) return;
     x.save(); x.translate(ax, ay); x.rotate(Math.atan2(by - ay, bx - ax) - Math.PI / 2);
@@ -439,7 +553,9 @@ const REN = {
   ve0() {
     const ctx = this.ctx, k = this.s * this.dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    if (this.nen) ctx.drawImage(this.nen, 0, 0); else { ctx.fillStyle = '#222'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); }
+    if (this._choNen && G.ban.length && !(performance.now() - this._tNen < 1500)) this.lamNen(); // nền tạm → thử dựng lại
+    if (G.debug && G.debug.log && !(performance.now() - (this._tLog || 0) < 10000)) { this._tLog = performance.now(); console.log('[bo-nho]', JSON.stringify(this.boNho())); }
+    if (this.nen && this.nen.width) ctx.drawImage(this.nen, 0, 0, this.cv.width, this.cv.height); else { ctx.fillStyle = '#222'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); }
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
     if (!G.ban.length) return;
     this.veDongChay(ctx);
@@ -735,7 +851,7 @@ const REN = {
   },
   dauBong(ten, D, da) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(D * k)), key = 'db|' + ten + '|' + n + '|' + (da ? 1 : 0);
-    let c = this.cache[key]; if (c) return c;
+    let c = this.cGet(key); if (c) return c;
     const a = this.co(ten, D, da ? 'xam' : ''); if (!a) return null;
     const pad = Math.ceil(n * 0.12), N = n + pad * 2;
     c = document.createElement('canvas'); c.width = c.height = N;
@@ -744,14 +860,14 @@ const REN = {
     x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.6)'; x.fillRect(0, 0, N, N);
     x.globalCompositeOperation = 'source-over'; x.drawImage(a, ox, oy);
     c.sc = N / n;
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
   than(T, S, da, bong) {
     const km = typeof ND !== 'undefined' ? ND.mauU(T) : null; // màu khoá bộ bài (vòng quanh bệ)
     const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
-    let c = this.cache[key]; if (c) return c;
+    let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
     if (!de) de = this.deCode(da);
@@ -769,11 +885,11 @@ const REN = {
     x.fillStyle = da ? '#8a8a8a' : TIERS[T.bac].mau; x.fill();
     x.lineWidth = 1.4; x.strokeStyle = 'rgba(8,10,12,.9)'; x.stroke();
     x.fillStyle = 'rgba(255,255,255,.55)'; x.beginPath(); x.moveTo(gx, gy - gr * 0.6); x.lineTo(gx + gr * 0.4, gy - gr * 0.1); x.lineTo(gx, gy); x.closePath(); x.fill();
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   // bệ dự phòng vẽ bằng code (khi chưa có de_chung.png): tấm tròn gunmetal trung tính
   deCode(da) {
-    const key = 'deCode|' + (da ? 1 : 0); if (this.cache[key]) return this.cache[key];
+    const key = 'deCode|' + (da ? 1 : 0); if (this.cGet(key)) return this.cGet(key);
     const N = 256, c = document.createElement('canvas'); c.width = c.height = N;
     const x = c.getContext('2d'), r = N / 2;
     let g = x.createRadialGradient(r * 0.8, r * 0.7, r * 0.1, r, r, r);
@@ -785,13 +901,13 @@ const REN = {
     x.fillStyle = '#5c636b';
     for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + 0.5; x.beginPath(); x.arc(r + Math.cos(a) * r * 0.88, r + Math.sin(a) * r * 0.88, 7, 0, 7); x.fill(); }
     if (da) { x.globalCompositeOperation = 'saturation'; x.fillStyle = '#888'; x.fillRect(0, 0, N, N); }
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).
   huyHieu(n, d) {
     const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N;
-    let c = this.cache[key]; if (c) return c;
+    let c = this.cGet(key); if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), q = N / (d * 1.5); x.scale(q, q); x.translate(d * 0.75, d * 0.75);
     const R = d / 2, hx = (r, oy) => { x.beginPath(); for (let i = 0; i < 6; i++) { const a = (i * 60 - 90) * Math.PI / 180; x.lineTo(Math.cos(a) * r, Math.sin(a) * r + (oy || 0)); } x.closePath(); };
@@ -805,7 +921,7 @@ const REN = {
     x.font = '800 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle';
     x.lineWidth = R * 0.22; x.strokeStyle = '#05070a'; x.strokeText(n, 0, R * 0.09);
     x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
-    return (this.cache[key] = c);
+    return this.cSet(key, c);
   },
   veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
 

@@ -67,6 +67,9 @@ const UI = {
     if (q.get('af')) d.af = q.get('af');
     if (q.get('speed')) G.tocDo = +q.get('speed');
     if (q.get('dpr')) d.dpr = +q.get('dpr'); // kiểm thử: ép độ phân giải vẽ
+    if (q.get('log')) d.log = true; // in bộ đếm bộ nhớ canvas (REN.boNho) mỗi 10 s
+    if (q.get('ios')) REN.laIOS = true; // giả lập giới hạn bộ nhớ iOS (nền ≤ 2×, ngân sách đệm nhỏ)
+    if (q.get('hongkhay')) d.hongKhay = +q.get('hongkhay'); // kiểm thử: N lần tải khay.png đầu tiên giả lỗi
   },
 
   // ---------- màn chọn bộ bài ----------
@@ -171,11 +174,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
-    for (const k in MAVUONG) ds.push(MAVUONG[k].anh); // chân dung chỉ huy (cut-in)
+    for (const b of G.ban) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
     for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
     for (const q of Object.keys(QUAI)) ds.push('quai_' + (QUAI[q].anh || q));
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
+    REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
     REN.napTruoc(ds);
   },
 
