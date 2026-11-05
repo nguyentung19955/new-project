@@ -454,7 +454,7 @@ const UP = {
     if (ph.length === 2) ph = ['Starting form'].concat(ph);
     if (ph.length !== 3) ph = null;
     return '<div class="up-gd">' + g.ten.map((t, k) =>
-      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + id + '_nong' + (anh ? '_s' + (k + 1) : '') + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
+      '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +
       '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>' + (g.lap ? '<p class="up-ghi">Cycles back to stage 1 after it fires.</p>' : '');
   },

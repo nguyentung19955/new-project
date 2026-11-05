@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- TURRET MERGE — bảng kiểm bộ đầu u2 (tools/thap-dau-u2.py). Mở qua http.server ở gốc repo:
+     /tools/thap-kt-dau-u2.html            → mọi đầu trên bệ chung: cỡ trận (ô 55 px), xoay 0°/120°, chồng 4 hướng (tâm lệch → nhòe vành), phóng 3×
+     /tools/thap-kt-dau-u2.html?m=grow     → 15 ụ grow: đầu thường + dạng 1/2/3 (STAGE_K)
+     thêm &ucu=1 → bộ đầu cũ (_v1) -->
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<style>body{margin:0;background:#1d2128;color:#dde;font:10px sans-serif}#w{display:flex;flex-wrap:wrap;gap:4px;padding:4px}
+.c{display:flex;flex-direction:column;align-items:center;background:#262b33;padding:2px}canvas{display:block}</style></head>
+<body><div id="w"></div>
+<script src="../thap/js/meta.js"></script><script src="../thap/js/text.js"></script>
+<script>window.SKILLS = {}; window.GROW = {};</script>
+<script src="../thap/js/artscale.js"></script>
+<script>
+const q = new URLSearchParams(location.search), grow = q.get('m') === 'grow';
+const G_IDS = ['overlord', 'hopbi', 'tienhoa', 'lophanung', 'soi', 'orbital', 'cuongno', 'ngoisao', 'lienket', 'dongbo', 'hydra', 'cuuvi', 'ngaithoigian', 'ronglua', 'luoicheo'];
+const img = (t) => new Promise(r => { const a = new Image(); a.onload = () => r(a); a.onerror = () => r(null); a.src = '../thap/assets/' + anhTen(t) + '.png'; });
+function o(ctx, de, h, K, C, x, y, g, al) {
+  const B = C * 0.714; ctx.drawImage(de, x + (C - B) / 2, y + (C - B) / 2, B, B);
+  if (!h) return; const D = C * K;
+  for (const gg of g) { ctx.save(); ctx.globalAlpha = al; ctx.translate(x + C / 2, y + C / 2); ctx.rotate(gg); ctx.drawImage(h, -D / 2, -D / 2, D, D); ctx.restore(); }
+}
+(async () => {
+  const de = await img('de_chung'), W = document.getElementById('w');
+  const ids = grow ? G_IDS : Object.keys(HEAD_K).sort();
+  for (const id of ids) {
+    const cols = grow ? [[id + '_nong', HEAD_K[id], 'base']].concat([1, 2, 3].map(s => [id + '_nong_s' + s, (STAGE_K[id] || [])[s - 1] || HEAD_K[id], 's' + s])) : [[id + '_nong', HEAD_K[id], '']];
+    const d = document.createElement('div'); d.className = 'c';
+    const C = grow ? 46 : 30, Z = grow ? 0 : 84, n = cols.length;
+    const cv = document.createElement('canvas'), dpr = devicePixelRatio || 1;
+    const Wc = grow ? n * (C + 4) : C * 3 + 8 + Z, Hc = grow ? C : Math.max(C, Z);
+    cv.width = Wc * dpr; cv.height = Hc * dpr; cv.style.width = Wc + 'px'; cv.style.height = Hc + 'px';
+    const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr); ctx.imageSmoothingQuality = 'high';
+    for (let i = 0; i < n; i++) {
+      const [t, K] = cols[i], h = await img(t);
+      if (grow) { o(ctx, de, h, K, C, i * (C + 4), 0, [-Math.PI / 4], 1); continue; }
+      o(ctx, de, h, K, C, 0, (Hc - C) / 2, [0], 1);
+      o(ctx, de, h, K, C, C + 4, (Hc - C) / 2, [2.1], 1);
+      o(ctx, de, h, K, C, 2 * C + 8, (Hc - C) / 2, [0, Math.PI / 2, Math.PI, Math.PI * 1.5], 0.3);
+      o(ctx, de, h, K, Z, 3 * C + 8, 0, [0], 1);
+      ctx.strokeStyle = '#0f08'; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(3 * C + 8 + Z / 2, 0); ctx.lineTo(3 * C + 8 + Z / 2, Z); ctx.moveTo(3 * C + 8, Z / 2); ctx.lineTo(3 * C + 8 + Z, Z / 2); ctx.stroke();
+    }
+    d.appendChild(cv); const s = document.createElement('span'); s.textContent = id + (grow ? '  base / s1 / s2 / s3' : '  K ' + HEAD_K[id]); d.appendChild(s); W.appendChild(d);
+  }
+  document.title = 'xong';
+})();
+</script></body></html>
