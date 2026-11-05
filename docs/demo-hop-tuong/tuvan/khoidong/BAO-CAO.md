@@ -96,3 +96,43 @@ băng thông đã ≈ 12 s. 4G lạnh 3,6 s, 4G ấm 0,7 s (< 1,5 s → ĐẠT).
 - `tools/thap-kt-hoiquy.js` 4 cỡ → **XANH** (0 lỗi, 1182 s). Trước đó bản gộp có sẵn 7 lỗi "`.cht-vong > b` ra ngoài ô tối giản"
   (vòng hồi chiêu chỉ huy lệch −1px ra mép ô `#the-mv.ot`, có cả trên nhánh gốc không có thay đổi của phiên này) → sửa tạm
   `css/otoigian.css` (vòng cách mép 8px) — khi gộp, phiên khác đã sửa cùng chỗ (1cadf35, 7 %) → giữ bản của họ. Lần chạy đầu có 2 lỗi chập chờn ở cut-in đang trượt ra.
+
+## 5. Đợt 2 (phiên kiểm lại sau khi bản trên đã live) — đo lại bản live, sửa thêm
+
+Đo lại bằng bộ đo riêng (Playwright, iPhone 13 DPR 3, CDP Fast 3G 562 ms / 180 KB/s, 4G 165 ms / 9 Mb/s, máy chủ giả
+GitHub Pages HTTP/2 + gzip, bộ đệm trống). Mốc "trận HD" = người chơi MỚI (chưa xong hướng dẫn → vào thẳng trận hướng dẫn).
+
+| | % đầu > 0 | HOME / trận HD chạy | tải trước đó |
+|---|---|---|---|
+| bản cũ 16386d4 · Fast 3G · người chơi cũ | > 400 s (0 %) | > 400 s | ~104 MB |
+| bản live 6f7a3c0 · Fast 3G · người chơi cũ | 1,34 s | 22,7 s | 2,6 MB |
+| **đợt 2** · Fast 3G · người chơi cũ | **1,34 s** | **15,4 s** | 2,4 MB |
+| bản live 6f7a3c0 · Fast 3G · người chơi MỚI (trận HD) | 1,37 s | **162,6 s** | 27,5 MB |
+| **đợt 2** · Fast 3G · người chơi MỚI (trận HD) | 1,37 s | **74,8 s** | 11,6 MB |
+| **đợt 2** · 4G lạnh / ấm · người chơi cũ | 0,51 s / 0,25 s | **2,9 s / 0,59 s** | 4,4 / 1,1 MB |
+| **đợt 2** · Fast 3G ấm | 1,12 s | 1,9 s | 0,02 MB |
+
+Ảnh mốc thời gian (số xanh = lúc chụp thật): `dot2-moc-3g.png`.
+
+Tìm thấy ở bản live và đã sửa:
+
+1. **Người chơi mới: đợi CẢ menu (~10 MB, 85 chân dung) rồi mới tải trận hướng dẫn** — `napMenu` khi đang có trận chờ
+   (`TAI.cho`) lấy danh sách đầy đủ. Giờ: trận chờ → không đợi ảnh menu nào; `tran()` tự lấy phần cần cho trận; phần còn lại
+   tải nền SAU.
+2. **Đợt nền tranh băng thông với màn "LOADING BATTLE"** → đợt nền tạm dừng khi đang tải trận (`nap(…, nen=true)`).
+   `tran()` chỉ gán `data-tm-src` trong vùng HUD trận (trước: gán cả lưới 85 thẻ của màn bộ bài ngay lúc vào trận).
+3. **Ảnh TRÙM (26 dải, ~5 MB webp; trùm đầu ở wave 10) không bắt màn tải trận đợi** — tải nền 3 luồng ngay khi trận chạy
+   (kiểm: 4G, 15 s sau khi trận hướng dẫn chạy đã đủ 26/26 dải, `REN.thieu` = 0).
+4. **Ảnh treo bị huỷ rồi tải lại từ đầu trên 3G**: hạn 20 s/40 s làm `nen_home.jpg`, `home_af_hero.webp` (450 KB) bị tải
+   2 lần. Giờ chỉ coi là treo khi KHÔNG tệp nào về trong 15 s (`TAI_VE`, PerformanceObserver).
+5. **Chân dung chỉ huy tải bản PNG 1 MB × 3** (bảng chỉ huy ẩn ở màn bộ bài dựng lúc khởi động — `mvArt`, ô chỉ huy DCDW,
+   bộ mẫu `miniMV`, màn vào trận, đối phương, icon chế độ, biểu cảm chat): chuỗi `'assets/' + d.anh + '.png'` không qua
+   `anhUrl()` nên không được đổi sang webp (~190 KB) → giờ qua `anhUrl()`; phần ẩn lúc khởi động dùng `srcTai()`.
+6. **`nen_menu.jpg` tải 2 lần** (preload + CSS nội tuyến không `?v=`, `taitai.css` có `?v=`) → `thap-ver.py` dán `?v=` cho
+   `url(assets/…)` / `href="assets/…"` của index.html.
+7. Kiểm trạng thái ảnh lỗi bằng **HEAD** (trước: `GET no-store` tải lại cả tệp tới 1,5 MB chỉ để xem 200/404).
+
+Kiểm: `tools/thap-kt-khoidong.js` (bản xuất bản, 4G) XANH · trận hướng dẫn lần đầu 4G: không thiếu ảnh, 0 lỗi trang/4xx ·
+`tools/thap-kt-hoiquy.js` 4 cỡ — xem dòng cuối.
+Kết quả: `thap-kt-hoiquy.js` 4 cỡ **XANH** (0 lỗi, 1139 s; kéo-thả 21/21 × 3 cỡ, sảnh online XANH) + `CHI=landau` XANH sau khi
+thêm lớp nền mờ 0,5 KB cho màn tải (nền không còn đen ~4 s trên 3G trong lúc `nen_menu.jpg` về).

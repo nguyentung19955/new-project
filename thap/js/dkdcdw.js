@@ -35,7 +35,7 @@ const DKD = {
     const d = MAVUONG[UI.mv] || MAVUONG.hero, c = this.el('#dkd-cmd');
     if (c && c.dataset.mv !== UI.mv) {
       c.dataset.mv = UI.mv; c.setAttribute('aria-label', 'Commander: ' + d.ten + ' (tap to change)');
-      c.innerHTML = '<i class="ot-mini ot-mv dkd-cmd-po" data-mv="' + UI.mv + '"><img class="po" src="assets/' + d.anh + '.png" alt="" draggable="false"></i>' +
+      c.innerHTML = '<i class="ot-mini ot-mv dkd-cmd-po" data-mv="' + UI.mv + '"><img class="po" ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + (typeof anhUrl === 'function' ? anhUrl(d.anh) : 'assets/' + d.anh + '.png') + '" alt="" draggable="false"></i>' +
         '<span class="dkd-cmd-chu"><small>COMMANDER</small><b>' + HM.esc(d.ten) + '</b><em>' + HM.esc(d.mo || '') + '</em></span><span class="dkd-cmd-doi">CHANGE</span>';
     }
     // hàng xếp

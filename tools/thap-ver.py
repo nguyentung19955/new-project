@@ -113,6 +113,8 @@ h = re.sub(r'(src|href)="((?:js|css)/[^"]+\.(?:js|css)(?:\?[^"]*)?)"', gan, h)
 h = re.sub(r'(src)="((?:assets)/[^"]+\.(?:png|jpg)(?:\?[^"]*)?)"', gan, h)  # ảnh tĩnh trong index.html
 h = re.sub(r'(<(?:script|link)[^>]*?(?:src|href)="((?:js|css)/[^"?]+)[^"]*")(?: data-b="\d+")?', lambda m: m.group(1) + (' data-b="%d"' % os.path.getsize(os.path.join(D, m.group(2))) if os.path.isfile(os.path.join(D, m.group(2))) else ''), h)
 if W: h = doiW(h)
+# ảnh màn tải trong CSS nội tuyến / preload của index.html (nen_menu.jpg…) → cùng ?v=băm với css/*.css — trước: tải 2 lần (200 KB)
+h = re.sub(r'(url\(|href=")(assets/[\w\-/]+\.(?:jpg|png))(?:\?v=[0-9a-f]+)?', lambda m: m.group(1) + m.group(2) + '?v=' + bam(os.path.join(D, m.group(2))) if os.path.isfile(os.path.join(D, m.group(2))) else m.group(0), h)
 h = re.sub(r'(<script src="js/)', '<script src="js/ver-anh.js?v=' + bam(va) + '"></script>\n  \\1', h, count=1)
 V = hashlib.sha1(''.join(re.findall(r'\?v=([0-9a-f]{8})', h)).encode()).hexdigest()[:10]
 kt = ('<script id="tm-ver">(function(){var V="%s";try{fetch("ver.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()})'

@@ -112,7 +112,7 @@ const HM = {
 
   moChe() {
     this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
-      '<button class="hm-hang hm-chec' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '" aria-pressed="' + (k === this.che) + '"><img src="assets/' + (this.ICHE[k] || m.ic) + '.png" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.mo || m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
+      '<button class="hm-hang hm-chec' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '" aria-pressed="' + (k === this.che) + '"><img src="' + (typeof anhUrl === 'function' ? anhUrl((this.ICHE[k] || m.ic)) : 'assets/' + (this.ICHE[k] || m.ic) + '.png') + '" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.mo || m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
   },
   chonChe(k) {
     if (!this.CHE[k]) return;

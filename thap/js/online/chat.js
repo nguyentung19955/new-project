@@ -86,7 +86,7 @@ const CHAT = {
     if (k >= this._t0 && (laToi || !this.mute())) { this.bong(m, laToi); if (!laToi && typeof SND !== 'undefined' && SND.nut) try { SND.nut(); } catch (e) { } }
   },
   ten(u) { const p = typeof ONL !== 'undefined' && ONL.pl && ONL.pl[u]; return p && p.name ? escTen(p.name) : (u === (NET.user && NET.user.uid) ? 'You' : 'Partner'); },
-  noiDung(m) { return m.t === 'e' ? '<img src="assets/' + this.EMO[m.v] + '.png" alt="' + m.v + '">' : '<span>' + m.v.replace(/[<>&"]/g, '') + '</span>'; },
+  noiDung(m) { return m.t === 'e' ? '<img src="' + (typeof anhUrl === 'function' ? anhUrl(this.EMO[m.v]) : 'assets/' + this.EMO[m.v] + '.png') + '" alt="' + m.v + '">' : '<span>' + m.v.replace(/[<>&"]/g, '') + '</span>'; },
 
   // bong bóng ~3 s: sảnh = trên hàng người chơi; trận = trên nhãn bàn (đồng đội / đối thủ) hoặc trên bàn mình
   bong(m, laToi) {
@@ -159,7 +159,7 @@ const CHAT = {
     }
     p.innerHTML = '<div class="chat-dau"><b>QUICK CHAT</b><small class="chat-cho"></small><button class="chat-x" data-act="chat-dong" aria-label="Close"><img src="assets/p7_ic_dong.png" alt=""></button></div>' +
       '<div class="chat-cau">' + this.CAU.map(c => '<button data-act="chat-q" data-v="' + c + '">' + c + '</button>').join('') + '</div>' +
-      '<div class="chat-emo">' + Object.entries(this.EMO).map(([k, f]) => '<button data-act="chat-e" data-v="' + k + '" aria-label="' + k + '"><img src="assets/' + f + '.png" alt=""></button>').join('') + '</div>' +
+      '<div class="chat-emo">' + Object.entries(this.EMO).map(([k, f]) => '<button data-act="chat-e" data-v="' + k + '" aria-label="' + k + '"><img src="' + (typeof anhUrl === 'function' ? anhUrl(f) : 'assets/' + f + '.png') + '" alt=""></button>').join('') + '</div>' +
       (oSanh ? '<div class="chat-go"><input id="chat-chu" maxlength="60" autocomplete="off" placeholder="Type a message…" enterkeyhint="send"><button data-act="chat-x">SEND</button></div>' : '') +
       (this.mute() ? '<div class="chat-tat">Chat is muted (SETTINGS). You can still send.</div>' : '');
     p.classList.toggle('sanh', oSanh);
