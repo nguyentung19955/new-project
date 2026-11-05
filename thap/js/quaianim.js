@@ -11,8 +11,8 @@
 const QUAI8 = new Set(['bo', 'bay', 'bay_bang', 'khong_lo', 'tach', 'que_tach']);
 // hệ số cỡ vẽ để thân bản 8 khung to bằng bản 4 khung cũ (đo: trung bình nhân tỉ lệ lõi thân & khung bao)
 const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, que_tach: 1.16,
-  freezer: 1.06, janus: 0.87, joker_king: 1.1, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
-const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus']); // janus, joker_king: chờ bản vẽ lại
+  freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
+const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
 
 Object.assign(REN, {
   _xac: [],
