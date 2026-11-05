@@ -1096,8 +1096,11 @@ const REN = {
       if (c.kieu === 'nhan') { // nhãn kỹ năng trên ụ: viên thuốc tối viền màu bậc
         const w = Math.ceil(ctx.measureText(c.s).width) + 14, h = Math.round(c.co * sc) + 7, cy = y - h / 2 + 4; // cy = tâm viên thuốc
         const x = clamp(c.x, w / 2 + 4, W - w / 2 - 4); // không tràn mép màn
-        ctx.fillStyle = 'rgba(10,12,16,.85)'; ctx.strokeStyle = c.vien || c.mau; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, cy - h / 2, w, h, 6) : ctx.rect(x - w / 2, cy - h / 2, w, h); ctx.fill(); ctx.stroke();
+        const kn = this.img('nhan_kn'); // tấm viên thuốc ChatGPT (S10-7), co giãn 3 mảnh; chưa tải → viên thuốc vẽ code (dự phòng)
+        if (kn) { const sw = kn.width, sh = kn.height, cs = Math.round(sw * 0.24), hh = h + 6, cd = cs * hh / sh, ww = Math.max(w + 10, cd * 2 + 2), x0 = x - ww / 2, y0 = cy - hh / 2;
+          ctx.drawImage(kn, 0, 0, cs, sh, x0, y0, cd, hh); ctx.drawImage(kn, cs, 0, sw - 2 * cs, sh, x0 + cd, y0, ww - 2 * cd, hh); ctx.drawImage(kn, sw - cs, 0, cs, sh, x0 + ww - cd, y0, cd, hh); }
+        else { ctx.fillStyle = 'rgba(10,12,16,.85)'; ctx.strokeStyle = c.vien || c.mau; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, cy - h / 2, w, h, 6) : ctx.rect(x - w / 2, cy - h / 2, w, h); ctx.fill(); ctx.stroke(); }
         ctx.textBaseline = 'middle'; ctx.fillStyle = c.mau; ctx.fillText(c.s, x, cy + 0.5); ctx.textBaseline = 'alphabetic'; continue;
       }
       if (c.kieu === 'mana') { this.anhGiua(ctx, 'ui_mana', c.x - ctx.measureText(c.s).width / 2 - 8, y - c.co * 0.35, 14); }
