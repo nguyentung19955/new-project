@@ -26,3 +26,8 @@ The coordinator accidentally started TWO sessions from trigger trig_01KTd72bwt9m
   chỉ giữ biến --po-* trên ảnh chân dung để mặt không bị cắt.
 - KHÔNG nối E09 (quầng chọn lặp 4 khung — người dùng vừa chê "giật") và E12 (khung thẻ kho — phiên tile tối giản sở hữu viền thẻ, raw_p10_khung_toigian).
 - 16:10 phiên thứ 3: sửa "ô phóng quá" (tile_zoom_qua.png) — chỉ thêm 1 luật CUỐI css/otoigian.css (biến --po-* cho ô kho + ô bộ bài). Khay trận giữ nguyên. Tiếp theo: kiểm 4 cỡ màn + xuất bản.
+
+## Khung mặt ô nhỏ (tile_zoom_qua.png — "zoom quá đà") — 17:10 UTC
+- `thap/js/chandung.js` (datDau): mọi chân dung ≤ 140 px CSS dùng MỘT luật theo mốc PO_NEO [tóc, mắt, tâm x, CẰM]: cả đầu ≈ 52 % vùng thấy (≤ 60 %), mắt ~40 %, tóc ≥ 4 %, cằm + cổ trong ô, ≤ 1.0 px nguồn/px máy ở DPR 3.
+  Vùng thấy = cửa sổ trừ phần viền o_vien_* đè (`--po-mep: .081` trên ô .ot). Các biến `--po-mat/--po-toc/--po-zoom/--po-ho` theo từng chỗ chứa KHÔNG còn tác dụng ở ô nhỏ — đừng thêm nữa; mặt lệch thì sửa mốc PO_NEO.
+- Kiểm: `node tools/thap-kt-chandung.js` (SIZES=360x780x3,390x844x3,430x932x3) + `KT_VACH` (hồi quy) báo LỖI khi đầu > 60 %, cắt tóc/cằm, phóng mờ. Ảnh: docs/demo-hop-tuong/tuvan/khungmat/.

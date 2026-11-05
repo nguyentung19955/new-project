@@ -2,7 +2,7 @@
 // (the_khung_*.png: ô cửa sổ x 15.6–84.4 %, y 18.9–83.8 %; tỉ lệ khung 271 × 328), khung không bị bóp/kéo méo.
 // Chụp phóng to mọi chỗ có chân dung trong khung + chỗ có biểu tượng tướng ở 360×780 / 390×844 / 430×932, DPR 3.
 //   BASE=http://localhost:8765 OUT=docs/demo-hop-tuong/tuvan/vach/sau_ node tools/thap-kt-vach.js
-// Hàm KT_VACH (trong trang) dùng chung cho tools/thap-kt-tran.js.
+// Hàm KT_VACH (trong trang) dùng chung cho tools/thap-kt-tran.js + tools/thap-kt-hoiquy.js — kiểm luôn KHUNG MẶT ô nhỏ (đầu ≤ 60 %, tóc/cằm không cắt).
 const { chromium } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:8765', OUT = process.env.OUT || 'shots/vach_';
 const DECK = ['lophanung', 'radar', 'lien', 'bang', 'canon'];
@@ -28,6 +28,18 @@ const KT_VACH = () => {
     if (ra > 1.5) hong.push(ten + ': chân dung tràn ra ngoài ô cửa sổ ' + ra.toFixed(1) + ' px');
     if (phu < .95) hong.push(ten + ': chân dung chỉ phủ ' + (phu * 100).toFixed(0) + '% ô cửa sổ');
     if (+getComputedStyle(po).zIndex >= +getComputedStyle(k).zIndex && getComputedStyle(k).zIndex !== 'auto') hong.push(ten + ': chân dung nằm TRÊN khung');
+  }
+  // KHUNG MẶT ô nhỏ (js/chandung.js datDau — người dùng: tile_zoom_qua.png "zoom quá đà"; mẫu DCDW): mọi chân dung ≤ 140 px CSS
+  //   LỖI nếu cả đầu (tóc → cằm) > 60 % vùng thấy · cằm bị cắt · tóc bị cắt (< 4 % mà ảnh gốc còn chỗ) · > 1.0 px nguồn / px máy ở DPR 3
+  tong.mat = 0;
+  for (const im of document.querySelectorAll('img[src*="pilot_"], img[src*="af_"]')) {
+    const po = im._po; if (!po || po.che !== 'dau' || !hien(im)) continue;
+    tong.mat++;
+    const p = im.parentElement && im.parentElement.closest('[id], [class]'), ten = 'chân dung ' + (typeof MAT !== 'undefined' ? MAT.id(im) : '') + ' @' + (p ? (p.id ? '#' + p.id : '') + '.' + [...p.classList].slice(0, 2).join('.') : '') + ' ' + im.clientWidth + '×' + im.clientHeight;
+    if (po.dau > .605) hong.push(ten + ': phóng quá — cả đầu ' + (po.dau * 100).toFixed(0) + ' % ô (≤ 60 %)');
+    if (po.cam > .985) hong.push(ten + ': cằm bị cắt (' + (po.cam * 100).toFixed(0) + ' %)');
+    if (po.toc < .04 - 1e-3 && !po.bien) hong.push(ten + ': tóc bị cắt (đỉnh tóc ' + (po.toc * 100).toFixed(1) + ' %)');
+    if (po.nguon > 1.02) hong.push(ten + ': phóng quá độ nét (' + po.nguon.toFixed(2) + ' px nguồn/px máy ở DPR 3)');
   }
   return { tong, hong };
 };
