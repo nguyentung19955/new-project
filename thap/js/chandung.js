@@ -5,6 +5,8 @@
 //    --po-mat : đường mắt ở bao nhiêu phần chiều cao CỬA SỔ (vd .41 = 41 % từ mép trên)
 //    --po-toc : đỉnh tóc cách mép trên tối thiểu (phần chiều cao cửa sổ)
 //    --po-zoom: phóng tối đa so với "cover" (cửa sổ nhỏ → mặt to)
+//    --po-ho  : được để TRỐNG tối đa bao nhiêu phần cửa sổ phía trên tóc khi ảnh gốc tóc sát mép (nền tối của ô; 0 = luôn phủ kín)
+//    --po-zmin: phóng tối thiểu so với cover (để có chỗ dời mặt sang ngang)
 //    --po-x   : tâm mặt ở bao nhiêu phần chiều rộng cửa sổ (mặc định .5; trang ụ .40 để huy hiệu ụ góc phải không đè mặt)
 //  Thuật toán: phóng lớn nhất sao cho (mắt ở --po-mat VÀ tóc cách mép ≥ --po-toc), không nhỏ hơn cover, không quá --po-zoom;
 //  canh tâm mặt theo x; kẹp để ảnh luôn phủ kín cửa sổ (không hở nền). Kết quả lưu img._po = {mat, toc, x} (phần cửa sổ) cho máy kiểm.
@@ -45,25 +47,29 @@ function poNeo(id) {
     const cs = getComputedStyle(img);
     if (cs.objectFit !== 'cover') { if (img._mat) this.xoa(img); return; }
     const e = so(cs, '--po-mat', H < 96 ? 0.43 : 0.40), m = so(cs, '--po-toc', 0.08), zMax = so(cs, '--po-zoom', H < 96 ? 2.2 : 1.6), xT = so(cs, '--po-x', 0.5);
+    const g = so(cs, '--po-ho', 0);                                       // được để trống tối đa g (phần H) TRÊN tóc khi ảnh gốc thiếu khoảng trống
     const hT = a[0] / 100 * nh, eY = a[1] / 100 * nh, fX = a[2] / 100 * nw;
     const c = Math.max(W / nw, H / nh);                                   // tỉ lệ cover
     const kH = (e - m) * H / Math.max(1, eY - hT);                        // phóng lớn nhất còn giữ tóc cách mép ≥ m khi mắt ở e
-    // ảnh gốc không đủ khoảng trống trên tóc (tóc sát mép ảnh) → không thể chừa lề m: ghim mép trên ảnh, mắt vẫn ở e
-    const kT = eY - e * H / kH < 0 ? e * H / eY : kH;
-    const k = Math.max(c, Math.min(kT, c * zMax));
+    // ảnh gốc không đủ khoảng trống trên tóc: để trống ≤ g phía trên (nền tối của ô — "contain" theo §D), mắt vẫn ở e
+    const hoH = Math.max(0, e * H / kH - eY) * kH / H;
+    const kT = hoH <= g ? kH : (e - g) * H / eY;
+    const k = Math.max(c * so(cs, '--po-zmin', 1), Math.min(kT, c * zMax));
     const vw = W / k, vh = H / k;
     const L = Math.max(0, Math.min(nw - vw, fX - xT * vw));
-    // mắt ở e; nhưng TÓC ưu tiên hơn (không đẩy đỉnh tóc ra ngoài mép trên); kẹp để ảnh luôn phủ kín cửa sổ
-    const T = Math.max(0, Math.min(nh - vh, eY - e * vh, hT - m * vh));
-    img._po = { mat: (eY - T) * k / H, toc: (hT - T) * k / H, x: (fX - L) * k / W, k: k / c };
+    // mắt ở e; TÓC ưu tiên (đỉnh tóc không ra ngoài mép trên, cách ≥ m nếu được); ảnh phủ kín cửa sổ, trừ phần trống ≤ g phía trên
+    const T = Math.max(-g * vh, Math.min(nh - vh, eY - e * vh, hT - m * vh));
+    const ho = Math.max(0, -T) * k, Tv = Math.max(0, T);                 // px trống phía trên
+    img._po = { mat: (eY - T) * k / H, toc: (hT - T) * k / H, x: (fX - L) * k / W, k: k / c, ho: ho / H };
     const s = img.style; img._mat = 1;
+    s.translate = ho > 0.05 ? '0 ' + ho.toFixed(2) + 'px' : '';
     if (k <= c * 1.001) {
-      s.objectPosition = (nw - vw > 0.5 ? L / (nw - vw) * 100 : 50).toFixed(2) + '% ' + (nh - vh > 0.5 ? T / (nh - vh) * 100 : 50).toFixed(2) + '%';
-      s.scale = ''; s.transformOrigin = ''; s.clipPath = '';
+      s.objectPosition = (nw - vw > 0.5 ? L / (nw - vw) * 100 : 50).toFixed(2) + '% ' + (nh - vh > 0.5 ? Tv / (nh - vh) * 100 : 50).toFixed(2) + '%';
+      s.scale = ''; s.transformOrigin = ''; s.clipPath = ho > 0.05 ? 'inset(0 0 ' + ho.toFixed(2) + 'px 0)' : '';
       return;
     }
-    // phóng: ảnh cover ở tỉ lệ c, phóng z quanh gốc o → vùng [L, T, vw, vh] lấp đúng ô; clip-path giữ ảnh trong ô
-    const z = k / c, vw0 = W / c, vh0 = H / c, dx = L + vw / 2, dy = T + vh / 2;
+    // phóng: ảnh cover ở tỉ lệ c, phóng z quanh gốc o → vùng [L, Tv, vw, vh] lấp đúng ô; clip-path giữ ảnh trong ô (trừ phần trống trên)
+    const z = k / c, vw0 = W / c, vh0 = H / c, dx = L + vw / 2, dy = Tv + vh / 2;
     const L0 = Math.max(0, Math.min(nw - vw0, dx - vw0 / 2)), T0 = Math.max(0, Math.min(nh - vh0, dy - vh0 / 2));
     const px = (dx - L0) * c, py = (dy - T0) * c;
     const ox = (W / 2 - z * px) / (1 - z), oy = (H / 2 - z * py) / (1 - z);
@@ -72,8 +78,9 @@ function poNeo(id) {
     s.transformOrigin = ox.toFixed(2) + 'px ' + oy.toFixed(2) + 'px';
     s.scale = z.toFixed(4);
     const r = parseFloat(cs.borderTopLeftRadius) || 0;
-    s.clipPath = 'inset(' + cb.toFixed(2) + 'px ' + (W - ca - W / z).toFixed(2) + 'px ' + (H - cb - H / z).toFixed(2) + 'px ' + ca.toFixed(2) + 'px' + (r ? ' round ' + (r / z).toFixed(2) + 'px' : '') + ')';
+    s.clipPath = 'inset(' + cb.toFixed(2) + 'px ' + (W - ca - W / z).toFixed(2) + 'px ' + (H - cb - H / z + ho / z).toFixed(2) + 'px ' + ca.toFixed(2) + 'px' + (r ? ' round ' + (r / z).toFixed(2) + 'px' : '') + ')';
   };
+  const xoaGoc = MAT.xoa; MAT.xoa = function (img) { img.style.translate = ''; img._po = null; return xoaGoc.call(this, img); };
   // ảnh đã cắt trước khi file này nạp → cắt lại theo mốc mới
   document.querySelectorAll('img[src*="pilot_"],img[src*="af_"]').forEach(im => MAT.fit(im));
 })();

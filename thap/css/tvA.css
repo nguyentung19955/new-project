@@ -4,12 +4,12 @@
    Không lớp mờ phía trên đầu; không thanh ngang qua cửa sổ mặt; không chip trên mắt/trán. */
 
 /* ---------- §D mục tiêu cắt cho từng chỗ chứa (biến đọc bởi js/chandung.js) ---------- */
-html body #chon #chon-luoi .c img.anh.pilot { --po-mat: .41; --po-toc: .09; --po-zoom: 1.9; }          /* thẻ kho: mắt 32–42 / 90 */
-html body #chon #chon-bo .o-bo > img { --po-mat: .44; --po-toc: .10; --po-zoom: 2.4; }                  /* ô bộ bài: mắt 22–29 / 58 */
-html body #bo-the .the img.anh.pilot { --po-mat: .43; --po-toc: .08; --po-zoom: 2.4; }                   /* khay trận: mắt 19–25 / 52 */
-html body #tt .tt-anh { --po-mat: .41; --po-toc: .05; --po-zoom: 2.8; }                                  /* bảng chạm 44×44: mắt 16–19 */
-html body .dk-noi-po img, html body .hm-xem-po img, html body .dp-the img.po, html body #the-mv img.po, html body .vt-mini img.po, html body .vt-po.pilot { --po-mat: .42; --po-toc: .08; }
-html body #up .up-pi img { --po-mat: .40; --po-toc: .07; --po-zoom: 1.5; --po-x: .46; }                  /* trang ụ / chỉ huy: mắt 34–46 %, tóc ≥ 20 px */
+html body #chon #chon-luoi .c img.anh.pilot { --po-mat: .42; --po-toc: .09; --po-ho: .11; --po-zoom: 1.9; }          /* thẻ kho: mắt 32–42 / 90 */
+html body #chon #chon-bo .o-bo > img { --po-mat: .45; --po-toc: .10; --po-ho: .11; --po-zoom: 2.4; }                  /* ô bộ bài: mắt 22–29 / 58 */
+html body #bo-the .the img.anh.pilot { --po-mat: .44; --po-toc: .09; --po-ho: .11; --po-zoom: 2.4; }                   /* khay trận: mắt 19–25 / 52 */
+html body #tt .tt-anh { --po-mat: .41; --po-toc: .05; --po-ho: .06; --po-zoom: 2.8; }                                  /* bảng chạm 44×44: mắt 16–19 */
+html body .dk-noi-po img, html body .hm-xem-po img, html body .dp-the img.po, html body #the-mv img.po, html body .vt-mini img.po, html body .vt-po.pilot { --po-mat: .43; --po-toc: .07; --po-ho: .08; }
+html body #up .up-pi img { --po-mat: .40; --po-toc: .07; --po-ho: .07; --po-zoom: 1.5; --po-x: .46; }                  /* trang ụ / chỉ huy: mắt 34–46 %, tóc ≥ 20 px */
 
 /* trang ụ / chỉ huy: KHÔNG mờ phía trên (tóc rõ tới đỉnh) — chỉ mờ sang phải (huy hiệu) và xuống chữ */
 html body #up.up7 .up-pi {
@@ -80,6 +80,6 @@ html body #chon #chon-bo .o-bo:not([data-id]) { border: 0; border-image: none; b
 
 /* ---------- §D trang ụ: bỏ huy hiệu ụ to trên hero (người dùng báo che mặt) · trang chỉ huy: huy hiệu nhỏ ở góc phải dưới thân, không trên mặt ---------- */
 html body #up.up7 .up-mam:has(.up-u) { display: none; }
-html body #up.up7 .up-mam:has(.up-mvic) { right: 8px; bottom: 0; transform: scale(.62); transform-origin: 100% 100%; }
+html body #up.up7.la-mv .up-pi img { --po-x: .37; --po-zmin: 1.2; --po-zoom: 1.8; } /* chỉ huy: mặt lệch trái, huy hiệu chỉ huy (tư vấn C) ở góc phải dưới thân */
 /* dải đồng đội/đối thủ: bộ đếm ụ (DCDW) xuống góc phải DƯỚI — không sát trán khi mặt lệch phải */
 html body #dp-dai .dp-the .dp-dem { top: auto; bottom: -2px; right: -2px; }

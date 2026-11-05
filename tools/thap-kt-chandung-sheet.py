@@ -8,7 +8,7 @@ d = json.load(open(J)); rows = d['rows']; loi = d['loi']
 bad = {}
 for l in loi:
     c, rest = l.split(' ', 1); bad.setdefault((c, rest.split(':')[0]), []).append(l)
-TH = 96   # chiều cao 1 ô
+TH = 128   # chiều cao 1 ô
 COLS = 22
 ORDER = ['roster', 'slot', 'tray', 'inspect', 'summary', 'quick', 'partner', 'detail', 'commander', 'cmd']
 try: F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 11); FB = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 18)
