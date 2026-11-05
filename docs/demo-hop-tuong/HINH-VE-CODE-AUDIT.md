@@ -763,3 +763,12 @@ Prompt ChatGPT cần gen (nền #FF00FF đặc, không chữ, same style as atta
 - **P3-HT2 tấm treo tim** (1024×256 → cắt 2 tấm 140×34): "2 small hanging gunmetal sub-plates hooked under a rail, one with a cyan LED (ally), one with a red LED (rival), empty center, same style as attached, solid #FF00FF background, no text."
 - **P3-HT3 3 icon thanh trên** (1536×512, lưới 3×1 → cắt 40 px): "3 tiny bold HUD icons, thick dark outline, readable at 14px: wave (stacked yellow chevrons), boss (red horned skull), life (glossy red heart), same style as attached, solid #FF00FF background, no text."
 - **P3-HT4 7 tấm số sao** (1536×256, 1 hàng 7 ô → cắt 64 px): "7 uniform tiny industrial numbered-badge blank backplates, dark steel shield with one subtle gold-metal outline, 7th slightly brighter gold, empty centers for live numerals, same style as attached, solid #FF00FF background, no text."
+
+## 14. Chân dung phi công bị cắt mất mắt / đỉnh đầu NGAY TRONG ẢNH GỐC (2026-11-05, session mặt-chân-dung)
+
+Code cắt quanh mặt cho mọi chỗ hiện chân dung: `FACE_BOX` + `MAT.fit()` trong `thap/js/khung.js` (soát: `docs/demo-hop-tuong/tuvan/mat/hero_all.png`, `card_all.png`).
+8 ảnh gốc ChatGPT (`thap-art/redo/pilot_<id>_v2.png`, lưới `raw_fp2.png`, `raw_fp9.png`…) bị cắt ngay ở mắt/trán → code KHÔNG thể hiện đủ mặt, phải gen lại:
+**overlord, doc, docton, chuato, nhieusong, dichchuyen, chimang, nhanban** (trong FACE_BOX đánh dấu phần tử thứ 4 = 1; gen xong thì bỏ cờ và chạy lại `tools/thap-pilot-fit.py`).
+
+Prompt (đính kèm ảnh v2 cũ của đúng nhân vật + `pilot_canon.png` làm mẫu bố cục; lưới 4×2, 1774×887, mỗi ô 1 nhân vật):
+- **P-MAT1** "Same 8 characters and outfits as the attached portraits, redrawn as bust portraits with the WHOLE head inside the frame: full hair/hat and forehead visible, eyes at about 35% from the top, 12% empty space above the hair, shoulders and signature weapon below. Same anime gacha style, same colors, dark plain background, 4x2 grid, no text."
