@@ -635,7 +635,7 @@ SKILLS.no5 = { // Nỏ Năm Nhịp (Amor): phát thứ 5 bắn 3 mũi tên nổ
   },
   veThem(ctx, T, S, al) { // 5 chấm nhịp dưới bệ
     const k = T.banLan % 5;
-    for (let i = 0; i < 5; i++) { ctx.globalAlpha = al * (i < k ? 1 : 0.3); ctx.fillStyle = i < k ? '#ff8af0' : '#555'; ctx.beginPath(); ctx.arc((i - 2) * 6, S * 0.47, 2.2, 0, 7); ctx.fill(); }
+    for (let i = 0; i < 5; i++) PX.cham(ctx, (i - 2) * 6, S * 0.47, 7, i < k ? '#ff8af0' : '#555555', al * (i < k ? 1 : 0.3)); // chấm nhịp = fx_cham_trang tô màu
   },
 };
 SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại
@@ -1025,7 +1025,7 @@ HU.drone = { // drone bom bay ngược đường từ lõi về cổng, đâm qu
   },
   ve(ctx, o, R) {
     if (o.t < 0) return;
-    ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.arc(o.x + 3, o.y + 8, 8, 0, 7); ctx.fill();
+    PX.bong(ctx, o.x + 3, o.y + 8, 18, 18, 0.35);
     const bob = Math.sin(o.t * 14) * 1.5;
     ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#7fdcff'), o.x - Math.cos(o.goc) * 12, o.y - Math.sin(o.goc) * 12 + bob, 20); ctx.globalCompositeOperation = 'source-over';
     R.anhGiua(ctx, 'drone_nong', o.x, o.y - 4 + bob, 34, o.goc);
@@ -1079,13 +1079,7 @@ HU.cauvong = { // cầu vồng trên đường
       if (Math.random() < 0.3) { const q = pick(o.pts); FX.hat1('lua', q[0] + rnd(-10, 10), q[1] + rnd(-10, 10), 0, -20, 0.5, 5, pick(mau)); }
       ctx.globalAlpha = 1; ctx.lineCap = 'butt'; return;
     }
-    for (let k = 0; k < mau.length; k++) {
-      const lech = (k - 2.5) * 3.2;
-      ctx.strokeStyle = mau[k]; ctx.globalAlpha = a * 0.55; ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i < n; i++) { const [x, y, g] = o.pts[i]; const px = x - Math.sin(g) * lech, py = y + Math.cos(g) * lech; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
-      ctx.stroke();
-    }
+    // ảnh dải cầu vồng chưa nạp: không vẽ (bỏ 6 nét màu vẽ code)
     if (Math.random() < 0.3) { const q = pick(o.pts); FX.hat1('lua', q[0] + rnd(-10, 10), q[1] + rnd(-10, 10), 0, -20, 0.5, 5, pick(mau)); }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.lineCap = 'butt';
   },

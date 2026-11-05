@@ -518,8 +518,9 @@ SD.veLop = function (x) {
   x.save(); x.setTransform(k, 0, 0, k, 0, 0); x.globalCompositeOperation = 'source-over';
   // 1) bàn 3×3: làm mờ 2 cột rìa (mặt nạ chức năng) — có bàn đối thủ thu nhỏ thì cột phải là bàn đối thủ
   if (!ks.day) {
-    x.fillStyle = 'rgba(14,16,20,0.62)';
-    for (const c of (this.D ? [0] : [0, 4])) { const a = B.o[c], z = B.o[10 + c]; x.fillRect(a.x - B.cw * 0.5, a.y - B.ch * 0.52, B.cw, z.y - a.y + B.ch * 1.04); }
+    const toi = typeof PX !== 'undefined' && PX.mau('o_trong', '#0e1014'); // ô mờ = ảnh ô trống tô tối (thay fillRect vẽ code)
+    if (toi) for (const c of (this.D ? [0] : [0, 4])) for (const h of [0, 5, 10]) { const a = B.o[c + h]; PX.ve(x, toi, a.x, a.y, B.cw, B.ch, 0, 0.62); }
+    x.globalAlpha = 1;
     if (this.D) { const a = B.o[4], y = a.y - B.ch * 0.68; sdVe(x, 'ic_pvp', a.x - 28, y, 15); sdChu(x, this.D.ten || 'Rival', a.x - 18, y, '#ff8a80', 12, 'left'); }
   }
   const T = this.T && B.t[this.T.o] === this.T ? this.T : null;
@@ -668,7 +669,7 @@ SD.veChu = function (x, now) {
   let w = x.measureText(chu).width; const fs = w > 250 ? 16 * 250 / w : 16; if (fs !== 16) w = 250;
   const bw = w + 44;
   x.globalAlpha = u; x.save(); x.translate(cx, cy); x.scale(0.94 + 0.06 * u, 0.94 + 0.06 * u); x.translate(-cx, -cy);
-  if (!sdVe(x, 'bang_wave_nen', cx, cy, bw, 40)) { x.fillStyle = 'rgba(12,14,18,0.86)'; x.fillRect(cx - bw / 2, cy - 16, bw, 32); }
+  sdVe(x, 'bang_wave_nen', cx, cy, bw, 40); // băng PNG; chưa nạp → chỉ chữ (bỏ hộp fillRect vẽ code)
   x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '800 ' + fs.toFixed(1) + 'px "TM UI", sans-serif';
   if (o.dau) { // đầu dòng màu vàng (sao / mốc) + phần chữ trắng
     const wd = x.measureText(o.dau + '  ').width, x0 = cx - w / 2;

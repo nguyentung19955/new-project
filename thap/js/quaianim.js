@@ -16,15 +16,8 @@ const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 
 
 Object.assign(REN, {
   _xac: [],
-  // bóng mềm (đĩa đen mép mờ) dựng 1 lần
-  bong1() {
-    if (this._bong) return this._bong;
-    const c = document.createElement('canvas'); c.width = c.height = 64;
-    const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, 'rgba(0,0,0,.75)'); g.addColorStop(0.55, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-    x.fillStyle = g; x.fillRect(0, 0, 64, 64);
-    return (this._bong = c);
-  },
+  // bóng mềm = ảnh fx_cham_trang tô đen (PNG, không còn gradient vẽ code); chưa nạp → không vẽ bóng
+  bong1() { return PX.mau('fx_cham_trang', '#000000'); },
   // tên dải ảnh dùng cho quái: ưu tiên bản 8 khung nếu đã nạp được
   tenQuai(E) {
     const goc = E.trum ? 'trum_' + E.trum : 'quai_' + (E.d.anh || E.id);
@@ -115,14 +108,12 @@ Object.assign(REN, {
       // ---- bóng ----
       const bco = co * (bay ? 0.62 : 0.78) * sc * (bay ? 1 - (hover + 6) * 0.02 : 1);
       ctx.globalAlpha = bay ? 0.32 : 0.5;
-      ctx.drawImage(bong, E.x + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
+      if (bong) ctx.drawImage(REN.mip(bong, bco * REN.s * REN.dpr), E.x + 2 - bco / 2, E.y + 4 + (bay ? 8 : 0) - bco * 0.42, bco, bco * 0.84);
       ctx.globalAlpha = 1;
       // ---- quầng báo chiêu của trùm ----
       if (E.bao) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        const gg = ctx.createRadialGradient(x, y, 4, x, y, co * 0.9); const m = TRUM[E.trum].mau;
-        gg.addColorStop(0, m + 'aa'); gg.addColorStop(1, m + '00');
-        ctx.globalAlpha = 0.6 + 0.4 * Math.sin(t * 20); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y, co * 0.9, 0, 7); ctx.fill(); ctx.restore();
+        PX.cham(ctx, x, y, co * 1.8, TRUM[E.trum].mau, 0.6 + 0.4 * Math.sin(t * 20)); ctx.restore(); // quầng = fx_cham_trang tô màu trùm
         ctx.globalAlpha = 1;
       }
       const lanh = E.cham > 0 && !E.d.khangCham;
@@ -153,7 +144,7 @@ Object.assign(REN, {
       const nguong = dong ? 0.65 : n >= 8 ? 0.55 : 0.45;
       fr = fr <= nguong ? 0 : (fr - nguong) / (1 - nguong); fr = fr * fr * (3 - 2 * fr);
       E._f = fr > 0.5 && f1 >= 0 ? f1 : f0; E._gv = gv; E._oy = hover; E._sc = sc;
-      if (!dai) { ctx.fillStyle = '#a040ff'; ctx.beginPath(); ctx.arc(x, y, co * 0.3, 0, 7); ctx.fill(); }
+      if (!dai) { /* ảnh quái chưa nạp: không vẽ chấm thay thế */ }
       else {
         // nhún/nén theo bước (≤3%): dọc hướng đi giãn thì ngang co, gần như giữ diện tích
         const am = E.trum ? 0.018 : (E.d.tach || E.id === 'nho' ? 0.03 : bay ? 0.012 : 0.022);
@@ -178,20 +169,17 @@ Object.assign(REN, {
       const yb = E.y + hover;
       if (E.hp < E.max && !E.trum) {
         const w = Math.max(18, co * 0.55), yy = yb - co * 0.42;
-        ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(E.x - w / 2 - 1, yy - 1, w + 2, 5);
-        ctx.fillStyle = E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a');
-        ctx.fillRect(E.x - w / 2, yy, w * clamp(E.hp / E.max, 0, 1), 3);
+        PX.thanh(ctx, E.x - w / 2, yy, w, 3, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (lanh ? '#6fd8ff' : '#ff4a4a'));
       }
       if (lanh) { ctx.globalAlpha = 0.85; const kh = this.kyHieu('cham', 8); ctx.drawImage(kh, E.x - Math.max(18, co * 0.55) / 2 - 10, yb - co * 0.42 - 3, 8, 8); ctx.globalAlpha = 1; }
       if (E.trum) {
         const w = 70, yy = yb - co * 0.55;
-        ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(E.x - w / 2 - 2, yy - 2, w + 4, 8);
-        ctx.fillStyle = TRUM[E.trum].mau; ctx.fillRect(E.x - w / 2, yy, w * clamp(E.hp / E.max, 0, 1), 4);
-        if (E.bao) {
+        PX.thanh(ctx, E.x - w / 2, yy, w, 4, E.hp / E.max, TRUM[E.trum].mau);
+        if (E.bao) { // dây báo chiêu tới ụ bị nhắm: tia PNG tô màu trùm, lặp + trượt (thay nét đứt vẽ code)
           const B = G.ban[E.ban];
-          ctx.save(); ctx.strokeStyle = TRUM[E.trum].mau; ctx.globalAlpha = 0.7; ctx.lineWidth = 2; ctx.setLineDash([5, 6]); ctx.lineDashOffset = -t * 60;
-          for (const T of B.t) if (T && E.bao.muc.includes(T.uid)) { const c = B.o[T.o]; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(c.x, c.y); ctx.stroke(); }
-          ctx.restore();
+          ctx.save(); ctx.globalCompositeOperation = 'lighter';
+          for (const T of B.t) if (T && E.bao.muc.includes(T.uid)) { const c = B.o[T.o]; PX.tia(ctx, x, y, c.x, c.y, 2, TRUM[E.trum].mau, 0.7, t * 60); }
+          ctx.restore(); ctx.globalAlpha = 1;
         }
       }
     }
