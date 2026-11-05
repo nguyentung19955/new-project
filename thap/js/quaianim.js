@@ -14,7 +14,7 @@ const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, q
   freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
 const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
 // HƯỚNG NHÌN (Pass 5): dải 8 khung NGANG (đi sang phải; trái = lật) / SAU (đi lên) đã có trong assets/ — tools/thap-huong-quai.py tự cập nhật dòng dưới
-const HUONG8 = new Set(['quai_bay_back', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_tach_side', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_nightmare_side']); // vd 'quai_bo_side', 'trum_octopus_back'
+const HUONG8 = new Set(['quai_bay_back', 'quai_bay_bang_side', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_tach_back', 'quai_tach_side', 'trum_freezer_back', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_nightmare_back', 'trum_nightmare_side']); // vd 'quai_bo_side', 'trum_octopus_back'
 const HUONG_NGHIENG = 0.139; // dải chưa có: dùng dải TRƯỚC nghiêng ≤ 8° về phía đi
 const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc rẽ
 

@@ -1,0 +1,62 @@
+/* TURRET MERGE — CHAT NHANH (js/online/chat.js). QUY-TAC-HINH: chỉ ảnh ChatGPT có sẵn — nut_lon_thep (nút CHAT), khung_tt (bảng),
+   nut_lon_thep (nút câu soạn sẵn), h2_lcd (ô chữ + bong bóng + dải thông báo; đủ nét ở DPR 3), ic_* (biểu cảm tạm), p7_ic_dong (đóng).
+   Code chỉ đặt chữ, vị trí, cỡ, độ mờ. Ảnh riêng cần gen: HINH-VE-CODE-AUDIT.md "Pass 11 — chat". */
+
+.chat-nut { height: 26px; min-width: 52px; padding: 0 1px; font: 800 10px/1 var(--f-ui); letter-spacing: .08em; color: #e9f6ff; text-shadow: 0 1px 0 #000;
+  background: none; border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/nut_lon_thep.png?v=8d894a00) 0 64 fill / 0 12px / 0 stretch; }
+.chat-nut.cho { opacity: .55; }
+#chat-nut.tran { position: absolute; z-index: 22; height: 24px; min-width: 44px; }
+#onl-sanh .s7-dau i { display: flex; align-items: center; justify-content: flex-end; font-style: normal; width: 56px; }
+
+/* bảng câu nhanh — gọn, không phủ màn, không dừng trận */
+#chat-bang { position: absolute; z-index: 46; left: 50%; top: 64px; transform: translateX(-50%); width: min(318px, calc(100% - 32px)); padding: 2px 4px 6px;
+  border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_tt.png?v=ba20a0d7) 42 fill / 12px stretch; }
+#chat-bang.sanh { top: 58px; }
+.chat-dau { display: flex; align-items: center; gap: 6px; height: 30px; }
+.chat-dau b { font: 900 12px/1 var(--f-ui); letter-spacing: .14em; color: #cfe6ff; }
+.chat-cho { flex: 1; font: 800 10px/1 var(--f-ui); color: #ffd27a; text-align: right; }
+.chat-x { width: 30px; height: 30px; padding: 0; background: none; border: 0; flex: none; }
+.chat-x img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.chat-cau { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 4px; }
+.chat-cau button { height: 38px; padding: 0 2px; font: 800 12px/1 var(--f-ui); color: #eef1f4; text-shadow: 0 1px 0 #000; white-space: nowrap;
+  background: none; border: 0 solid transparent; border-width: 0 14px; border-image: url(../assets/nut_lon_thep.png?v=8d894a00) 0 64 fill / 0 14px / 0 stretch; }
+.chat-emo { display: flex; justify-content: space-around; margin-top: 6px; }
+.chat-emo button { width: 46px; height: 46px; padding: 0; background: none; border: 0; }
+.chat-emo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.chat-go { display: flex; gap: 6px; margin-top: 6px; }
+#chat-chu { flex: 1; min-width: 0; height: 40px; border: 0 solid transparent; border-width: 6px 10px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 36 60 fill / 6px 10px stretch;
+  background: none; color: #d8ffe2; font: 700 14px/1 var(--f-ui); outline: none; -webkit-appearance: none; appearance: none; }
+.chat-go button { flex: 0 0 72px; height: 40px; font: 800 12px/1 var(--f-ui); color: #eef1f4; text-shadow: 0 1px 0 #000;
+  background: none; border: 0 solid transparent; border-width: 0 14px; border-image: url(../assets/nut_lon_thep.png?v=8d894a00) 0 64 fill / 0 14px / 0 stretch; }
+.chat-tat { margin-top: 6px; font: 700 10px/1.2 var(--f-ui); color: #9aa3b2; text-align: center; }
+
+/* bong bóng ~3 s */
+.chat-bong { position: absolute; z-index: 30; display: flex; align-items: center; max-width: 210px; min-height: 28px; padding: 0 2px;
+  font: 800 12px/1.1 var(--f-ui); color: #f4f8fb; text-shadow: 0 1px 0 #000; white-space: nowrap; pointer-events: none;
+  border: 0 solid transparent; border-width: 0 12px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 0 60 fill / 0 12px / 0 stretch;
+  animation: chat-bong 3s ease-out forwards; }
+.chat-bong span { overflow: hidden; text-overflow: ellipsis; }
+.chat-bong.emo { min-height: 0; border: 0; padding: 0; }
+.chat-bong.emo img { width: 38px; height: 38px; object-fit: contain; display: block; }
+.sanh-p { position: relative; }
+.sanh-p > .chat-bong { right: 64px; top: -16px; }
+.chat-bong.toi { color: #d9f0ff; }
+@keyframes chat-bong { 0% { opacity: 0; transform: translateY(6px); } 8% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .chat-bong { animation: chat-mo 3s linear forwards; } }
+@keyframes chat-mo { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
+
+/* nhật ký nhỏ ở sảnh (4 tin gần nhất) */
+#chat-log { margin: 8px 22px 0; max-height: 78px; overflow: hidden; display: flex; flex-direction: column; gap: 2px; }
+#chat-log[hidden] { display: none; }
+.chat-dong { display: flex; align-items: center; gap: 6px; font: 700 11px/1.25 var(--f-ui); color: #c7d0db; white-space: nowrap; overflow: hidden; }
+.chat-dong b { color: #8fd0ff; font-weight: 800; flex: none; }
+.chat-dong.toi b { color: #9dffb0; }
+.chat-dong span { overflow: hidden; text-overflow: ellipsis; }
+.chat-dong img { width: 18px; height: 18px; object-fit: contain; }
+
+/* thông báo nhỏ không chặn (đồng bộ: "Partner is back", "Reconnecting…") */
+#ons-bao { position: absolute; z-index: 47; left: 50%; top: 58px; transform: translateX(-50%); max-width: calc(100% - 40px); min-height: 28px; display: flex; align-items: center; padding: 0 4px;
+  font: 800 12px/1.1 var(--f-ui); color: #f4f8fb; text-shadow: 0 1px 0 #000; white-space: nowrap; pointer-events: none;
+  border: 0 solid transparent; border-width: 0 14px; border-image: url(../assets/h2_lcd.png?v=0f7a7f10) 0 60 fill / 0 14px / 0 stretch; transition: opacity .25s; }
+#ons-bao.an { opacity: 0; }
+#ons-bao[hidden] { display: none; }
