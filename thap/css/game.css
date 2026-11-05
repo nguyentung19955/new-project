@@ -268,8 +268,8 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 
 /* ===== HỆ NHẬN DIỆN Ụ (nhandien.js / glyph.js) ===== */
 /* thẻ bộ bài trong trận: viền = MÀU KHOÁ của loại ụ (giống vòng quanh bệ trên bàn) + huy hiệu biểu tượng; độ hiếm = vạch mảnh dưới */
-.the.nd-k { border: 2.5px solid var(--k); box-shadow: 0 0 0 1px #05070a, 0 0 8px -2px var(--k); }
-.the.nd-k .gia { border-top: 2px solid var(--m); }
+/* outline (không đụng box-shadow của skin HUD) → khung màu khoá luôn hiện; độ hiếm = vạch 3 px trên cùng của skin */
+#wrap #bo-the .the.nd-k { outline: 2.5px solid var(--k); outline-offset: -2.5px; }
 .the .gl { position: absolute; z-index: 3; left: 1px; bottom: 21px; width: 24px; height: 24px; pointer-events: none; }
 .c .gl { position: absolute; z-index: 3; left: 2px; bottom: 29px; width: 21px; height: 21px; pointer-events: none; }
 #chon-bo .o-bo.nd-k i { border: 2.5px solid var(--k); }

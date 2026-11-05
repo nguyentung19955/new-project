@@ -186,6 +186,14 @@ const GLYPH = (() => {
     guongcong(g) { g.path('M3 23 V11 A9 9 0 0 1 21 11 V23Z'); g.cut(() => { g.l([[7, 17], [13, 8]], 1.8, 'butt'); g.l([[10.5, 19.5], [16.5, 10.5]], 1.4, 'butt'); }); },
     // 81 Marionette: tay điều khiển chữ thập + 3 dây + đầu rối
     marionette(g) { g.r(2, 2, 20, 3, 1.2); g.r(10.5, 0, 3, 8.5, 1); g.l([[4, 5], [6, 16]], 1.4); g.l([[20, 5], [18, 16]], 1.4); g.l([[12, 8.5], [12, 13]], 1.4); g.c(12, 15.5, 3); g.p([[6, 17], [18, 17], [15, 23], [9, 23]]); },
+    // 82 Hive Queen: tổ ong 3 ô lục giác đặc
+    chuato(g) { const hx = (cx, cy, r) => { const p = []; for (let i = 0; i < 6; i++) { const a = (i * 60) * D; p.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); } g.p(p); }; hx(7, 8, 5.6); hx(17, 8, 5.6); hx(12, 16.8, 5.6); g.cut(() => g.c(12, 16.8, 1.8)); },
+    // 83 Leviathan: rắn biển 3 khúc nhô trên sóng + đầu
+    leviathan(g) { g.a(5.5, 15, 3.6, 180, 360, 3, 'butt'); g.a(12.5, 15, 3.6, 180, 360, 3, 'butt'); g.p([[16.5, 15], [17, 7], [23, 10.5], [19.5, 11.5], [19.8, 15]]); g.spath('M1 20 Q4 17.5 7 20 T13 20 T19 20 T24 20', 2.2); },
+    // 84 Genesis Core: hạt mầm tròn + 2 lá non
+    khoisinh(g) { g.c(12, 17, 5.6); g.cut(() => g.c(12, 17, 2)); g.l([[12, 11.5], [12, 7]], 2.2); g.path('M12 8 C9 3 4 2.5 2 4 C3.5 8 8 9.5 12 8Z'); g.path('M12 8 C15 3 20 2.5 22 4 C20.5 8 16 9.5 12 8Z'); },
+    // 85 Wyrm Engine: ngọn lửa rồng (khoét lõi)
+    ronglua(g) { g.path('M12 1 C14 6 20 9 20 15.5 A8 8 0 0 1 4 15.5 C4 11.5 6.5 9 8 7 C8.5 10 9.5 11.5 11 12 C10 8 10.5 4.5 12 1Z'); g.cut(() => g.path('M12 12.5 C13.5 15 15.8 16 15.8 18.5 A3.8 3.8 0 0 1 8.2 18.5 C8.2 16.5 10.5 15 12 12.5Z')); },
   };
   // ụ chưa có hình riêng (dự phòng): chữ cái đầu không dùng → hình bát giác rỗng có chấm (khác mọi hình trên)
   const duPhong = (g) => { const p = []; for (let i = 0; i < 9; i++) { const a = (i * 45 + 22.5) * D; p.push([12 + Math.cos(a) * 10, 12 + Math.sin(a) * 10]); } g.l(p, 2.4); g.c(12, 12, 3); };
