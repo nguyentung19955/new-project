@@ -1,0 +1,16 @@
+# Cần ảnh — bản thử 5 phút đầu (Talesworn, phiên A, 05/11/2026)
+
+Các hình dưới đây hiện đang **mượn ảnh có sẵn gần nhất** trong game (ghi ở cột "Đang tạm dùng"). Có ảnh thật thì thay, không phải sửa luật chơi.
+Mọi ảnh: pixel art, nền phẳng **magenta #FF00FF** (để tách nền), không chữ, không bóng đổ ra nền, không mờ. Bảng màu theo tư vấn ChatGPT mục 4.2
+(Fire #F26838 · Ice #64BED5 · Parchment #E9D8B2 · Outline #18202A · Saffron #E0A23A). Tuyệt đối không có chuông.
+
+| # | Cần ảnh | Cỡ trong game | Đang tạm dùng | Prompt (tiếng Anh, dán thẳng) |
+|---|---|---|---|---|
+| 1 | **Trang mực đỏ bay** (Fire Ink page) — 6 khung lặp, trang giấy cũ rách mép, mực đỏ cháy âm ỉ, lượn trong gió | ~24 × 24 mỗi khung | ảnh trang Sổ yêu quái `gd-so-trang` nhuộm đỏ + lửa `hu-bam-lua` | Pixel-art sprite sheet, 6 frames in a row, a single torn old storybook page drifting and fluttering in the wind, the page is soaked in glowing red fire ink with small embers curling off its torn edges, warm parchment #E9D8B2 with red-orange #F26838 ink glow, dark outline #18202A, crisp limited-palette pixels, flat solid magenta #FF00FF background, no text, no shadow, no blur. |
+| 2 | **Fire Guard** — khiên/vòng bảo vệ màu Lửa quanh trùm, 4 khung lặp + 2 khung vỡ | ~64 × 64 mỗi khung | vòng phép `hu-vong-phep` nhuộm cam dưới chân + khiên nước `hu-khien-nuoc` nhỏ + biểu tượng `gd-he-fire` trên đầu | Pixel-art sprite sheet, 6 frames in a row: frames 1-4 a looping translucent orange-red fire-ink ward dome with swirling ink runes around it, frames 5-6 the ward cracking and shattering into icy-blue shards, fire #F26838, ice #64BED5, dark outline #18202A, crisp pixels, flat solid magenta #FF00FF background, no text, no shadow, no blur. |
+| 3 | **Biểu tượng Fire Guard** (trên đầu trùm) | 16 × 16 | `gd-he-fire` 8 × 8 phóng to | Pixel-art icon 16x16, a small round shield with a flame emblem crossed by a quill-ink stroke, fire #F26838 and saffron #E0A23A, dark outline #18202A, flat solid magenta #FF00FF background, no text. |
+| 4 | **Thương Băng nằm trên đường** (vật nhặt, có ánh sáng) — 4 khung lặp | ~40 × 24 | ảnh thương hệ Băng cấp Mầm (`zed-vk-he`) + vòng phép nhuộm Băng + `hu-lap-lanh` | Pixel-art sprite sheet, 4 frames in a row, an ice spear lying on the forest floor with a soft pulsing frost-blue glow ring under it and tiny sparkles, ice #64BED5, outline #18202A, crisp pixels, flat solid magenta #FF00FF background, no text, no shadow. |
+| 5 | **Page Scrap** (mảnh trang — phần thưởng) | 10 × 10 (vật phẩm rơi) và 17 × 18 (biểu tượng) | chỉ có chữ ở màn kết quả | Pixel-art item icon, a small torn scrap of an old storybook page with a few lines of faded ink and a glowing gold corner, parchment #E9D8B2, saffron #E0A23A glow, outline #18202A, flat solid magenta #FF00FF background, no text. |
+| 6 | **Nút ĐỔI (SWAP)** — mặt nút có hai mũi tên vòng | 40 × 40 | nút vuông `gd-nut-vuong` + ảnh vũ khí kế tiếp | Pixel-art square UI button 40x40, carved dark wood frame with brass corners, center shows two curved arrows forming a circle (swap symbol) in saffron #E0A23A, outline #18202A, flat solid magenta #FF00FF background, no text. |
+
+Gắn vào game: thả tệp `.sprite.json` (công cụ `tools/tach-hieu-ung` / `tach-giao-dien`) vào `game/art/custom/` rồi đổi mã ảnh trong `game/js/slice.js` (hàm `anhTrang`, `SL.veTheGioi`, `SL.veHud`).

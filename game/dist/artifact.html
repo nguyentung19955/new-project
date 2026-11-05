@@ -59,7 +59,7 @@
 <div id="lk-tai" data-bia="||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGQAAAwADAAAAAAAAAAAAAAAAAAMEBQYH/8QAKRAAAQMCBQMDBQAAAAAAAAAAAQIDEQAEBRIhMUETFGEiQnEVUWKBsf/EABcBAAMBAAAAAAAAAAAAAAAAAAIDBAX/xAAlEQACAQEFCQAAAAAAAAAAAAABAgADBBExUfASEyEyM0FxobH/2gAMAwEAAhEDEQA/AOfNMWj9zbWiEtBsn1ugGTPCvjXajFcBNssNsvoeMxlCgVJqzCbhHftG3aGdcJBUAUn7neRzTMcumxjD0hDSkmFBtWZMjSdR5qamzb4DtHOiimTfxmt/T3UpzLBCTt5q22sWekt0vBvImSF8+KyF5eWDaGFNZlr6YkKGiTPGvzSutZDDX1sF3P0wPUBMzvP62rStACi5TEWB9pizi/H1JsLUo3NhKiZUOfyqbE1Hu3jJkqPNFFRUuprOHU5dZSVwmE6+2mNk9u7r7R/aKKqqQLNifB+T/9k=|||data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAASACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAgf/xAAmEAACAgEEAQQCAwAAAAAAAAABAgMRAAQSITEFE1FhgSJBcbHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAQIDBAX/xAAeEQABBAIDAQAAAAAAAAAAAAAAAQIDEiExBBEyIv/aAAwDAQACEQMRAD8A51EIZIo53EASNwHG07mBPFno9HFyeOhl1Y2yFIbtjVkDnr54yzx2vaLSyII1cELvBQEVu5PyeshTWvFJG6qi7OR+A9/4xoa3yQzWRvzsH8YkWrkCMZYlsoSvJHfWUalzFpI4/TRBZbca3HsUcXqvJvPqpZgEAewAFHAP1mZ9aZIoyqKWVa4jX3P+jByGor8aNDgT0gXvDiHTs1EbjRAsX3jKuEH92Ofs4YYGeim/yLulscHjFuT6YNno/wBnDDGfsEej/9k=" role="status" onanimationstart="try{var l=localStorage.getItem('linhkhi_lang')||navigator.language||'vi';if(!/^vi/i.test(l))this.className='en'}catch(e){}try{var q=location.search,d=(this.getAttribute('data-bia')||'').split('|');if(!window.LK_BIA&&d.length>5){var m=/[?&]bia=([12])(&|$)/.exec(q),n=m?+m[1]:Math.random()<.5?1:2,w=d[n*3-3],j=d[n*3-2],o=d[n*3-1],L=window.LK_BIA={n:n};if(w||j){var im=L.img=new Image();im.onerror=function(){if(w&&j&&!L.j){L.j=1;im.src=j}else L.het=1};im.src=w||j}if(o)this.style.backgroundImage='linear-gradient(rgba(18,13,16,.6),rgba(18,13,16,.6)),url('+o+')'}}catch(e){}"><div><b>LINH KHÍ</b><span class="vi">Đang tải…</span><span class="en">Loading…</span><i></i></div></div>
 <script>
 // ===== phiên bản đóng gói =====
-(window.G = window.G || {}).VERSION = "lk-2026.10.22-1723";
+(window.G = window.G || {}).VERSION = "lk-2026.11.05-0914";
 
 // ===== js/ngon_ngu.js =====
 
@@ -32563,7 +32563,8 @@ const tut=r===0&&i===0&&!diff&&!G.save.tut.done;
 const kind=o.kind||(tut?'A':G.mapgen.pickKind(i,G.save.lastKind,G.rnd));
 const seed=o.seed||(tut&&MD()?TUT_SEED:1+Math.floor(G.rnd()*999999));
 const an=o.aiNgay&&G.aiNgay?o.aiNgay:null;
-const map=an?{kind:'N',seed,rooms:[{id:0,x:0,y:0,type:'fight',main:true,doors:{}}],start:0,fountain:-1,boss:-1,gate:null,w:1,h:1}:G.mapgen.make(kind,seed);
+const sl=tut&&!an&&G.slice&&G.slice.bat()?G.slice:null;
+const map=an?{kind:'N',seed,rooms:[{id:0,x:0,y:0,type:'fight',main:true,doors:{}}],start:0,fountain:-1,boss:-1,gate:null,w:1,h:1}:sl?sl.map(seed):G.mapgen.make(kind,seed);
 if(tut)for(const R of map.rooms)if(R.type==='challenge'||R.type==='curse')R.type='merchant';
 if(!an)G.save.lastKind=kind;
 S={
@@ -32577,6 +32578,7 @@ power:G.power(),rec:G.stageRec(r,i,diff),
 };
 if(an){S.aiNgay=an;S.base=G.stageStats(r,4,0);S.rec=G.stageRec(r,4,0);}
 if(S.tut)S.marksMult=2;
+if(sl)sl.batDau(S);
 enterRoom(map.start,null);
 if(S.tut&&S.W)S.W.waveT=3.5;
 S.fade=0.35;
@@ -32746,6 +32748,7 @@ W.banner={s:bs.layers.length?G.t('{0}: {1}',b.name,layerTexts(bs.layers,' · '))
 if(bs.layers.some((l)=>l.type==='antiRanged')){W.banner.s+=' — '+G.t('bắn từ xa yếu đi, lại gần hơn');W.banner.t=5;}
 G.sfx('gong');
 }
+if(S.slice&&G.slice)G.slice.dungPhong(S,W,id,type);
 if(W.cleared)S.cleared[id]=true;
 return W;
 }
@@ -32799,6 +32802,7 @@ P.inv=Math.max(P.inv,first?0.6:0.3);
 P.dashT=0;P.dodgeT=0;P.slideT=0;P.spearOut=null;if(W.mvSp)W.mvSp.length=0;
 if(W.type==='fountain')S.preview=bossSetup().layers;
 S.hint=S.tut?tutHint(W.type==='fight'?(id===1?'fight1':'fight2'):W.type):null;
+if(S.slice&&G.slice)G.slice.vaoPhong(S,W,id,first);
 updateDoors();
 }
 function clearRoom(){
@@ -33180,6 +33184,7 @@ swapP:!!(kp.KeyQ||kp.Tab),potionP:!!(kp.KeyE||kp.KeyH),pauseP:!!(kp.Escape||kp.K
 for(let i=0;i<4;i++)if(kp['Digit'+(i+1)]){inp.swapP=true;inp.swapTo=i;}
 const mm=G.minimap.rect(S),moi=NUT_MOI(),gon=hudGon(),ovk=gon?OVK_GON:OVK;
 for(const d of G.downs){
+if(S.slice&&G.slice&&G.slice.cham(S,d))continue;
 if(G.MEO_GON===true&&S.meoG&&S.meoG.s&&!S.meoG.an&&(G.time||0)-S.meoG.cham>0.3)S.meoG.an=true;
 if(G.inRect(d,ovk[0],ovk[1],ovk[2],ovk[3])){
 if(moi){d.role='vk';d.t0=G.time||0;S.vkTro=d;}else{inp.swapP=true;d.role='ui';}
@@ -33238,6 +33243,7 @@ else{inp.swapP=true;inp.swapTo=S.choDoi.to;}
 if(!coMD('doiVk')){inp.swapP=false;inp.swapTo=undefined;S.choDoi=null;}
 if(!coMD('dacBiet'))inp.specialP=false;
 if(!coMD('chuong')){inp.skillP=false;inp.skill=false;}
+if(S.slice&&G.slice)G.slice.input(S,inp);
 return inp;
 }
 G.StageScene={
@@ -33278,6 +33284,7 @@ if(d<bd){bd=d;S.near=pr;}
 if(S.near&&inp.atkP){inp.atk=false;inp.atkP=false;interact(S.near);if(S.mode!=='play'||S.W!==W)return;}
 else if(S.near)inp.atk=false;
 G.updateWorld(dt,inp);
+if(S.slice&&G.slice)G.slice.tick(S,dt);
 if(DOC())msgTick(W,dt);
 if(W.projs.length)W.projs=W.projs.filter((o)=>o.x>W.geo.fx0-2&&o.x<W.geo.fx1+2&&o.y>W.geo.fy0-26&&o.y<W.geo.fy1+8);
 for(const z of W.zones)if(z.wave&&z.x<W.geo.fx0+3)z.dead=true;
@@ -33320,15 +33327,18 @@ if(DOC()){
 S.docN=(S.docN||0)+1;
 veTran=true;
 try{G.drawWorld(S.r);}finally{veTran=false;}
+if(S.slice&&G.slice)G.slice.veTheGioi(S);
 if(S.trans)slideWorld();
 if(S.docTren!==S.docN)drawHud('tren');
 if(S.docDuoi!==S.docN)drawHud('duoi');
 drawHud('vien');
 }else{
 G.drawWorld(S.r);
+if(S.slice&&G.slice)G.slice.veTheGioi(S);
 if(S.trans)slideWorld();
 drawHud();
 }
+if(S.slice&&G.slice)G.slice.veHud(S);
 const bm=S.mode!=='play'&&G.uiBang?G.uiBang.vao():false;
 try{
 if(S.mode==='map'){G.minimap.drawBig(S);if(G.click){G.click=null;setMode('play');G.sfx('ui');}}
@@ -47226,6 +47236,379 @@ const g=GY.cho;GY.cho=null;
 if(!GY.bat()||!g||!g.s||!G.villageScene||!G.villageScene.say)return;
 try{G.villageScene.say(g.s,5);}catch(e){}
 };
+})();
+
+// ===== js/slice_chu.js =====
+
+(function(){
+const G=window.G;
+if(!G)return;
+G.SLICE_CHU={
+hStart:'Kéo cần trái để đi. Bấm Đánh để chém quái.',
+hNe:'Thấy vạch đỏ là quái sắp lao tới: bấm Né lăn sang bên, rồi chém trả!',
+hTrang:'Một trang sách đỏ đang bay tới… Đi lại chạm vào nó!',
+hLua:'Fire Ink! Kiếm hóa Lửa tới hết ải. Chém quái cho cháy!',
+hTrum:'Toadstool King học cách bạn đánh. Nhặt Thương Băng ngay trên đường!',
+hSwap:'Có 2 vũ khí: bấm ĐỔI để đổi. Băng phá Fire Guard rất nhanh.',
+bLua:'FIRE INK! Kiếm của Rowan bốc Lửa',
+bBang:'Nhặt được Thương Băng! Bấm ĐỔI để cầm',
+bGuard:'FIRE GUARD! Lửa yếu đi, thử Băng',
+bVo:'Phá Fire Guard! Đánh mạnh ngay!',
+bTan:'Fire Guard tan rồi',
+bLon:'Kiếm nhớ {0} đòn Lửa của bạn và lớn lên!',
+trang:'Page Scrap (mảnh trang) ×{0}',
+lang:'Forge (lò rèn) đã mở! Gặp Ông Thợ Rèn để luyện kiếm.',
+nut:'ĐỔI',
+trum:'Toadstool King',
+trumRa:'Toadstool King xuất hiện ở Thornwood!',
+};
+if(G.ngonNgu&&G.ngonNgu.them)G.ngonNgu.them({
+'Kéo cần trái để đi. Bấm Đánh để chém quái.':'Drag the left stick to move. Press Attack to slash.',
+'Thấy vạch đỏ là quái sắp lao tới: bấm Né lăn sang bên, rồi chém trả!':'A red line means a charge is coming: press Dodge to roll aside, then strike back!',
+'Một trang sách đỏ đang bay tới… Đi lại chạm vào nó!':'A red page is drifting your way… Walk over and touch it!',
+'Fire Ink! Kiếm hóa Lửa tới hết ải. Chém quái cho cháy!':'Fire Ink! Your sword burns until the end of this stage. Set them ablaze!',
+'Toadstool King học cách bạn đánh. Nhặt Thương Băng ngay trên đường!':'The Toadstool King learns how you fight. Grab the Ice Spear on the path!',
+'Có 2 vũ khí: bấm ĐỔI để đổi. Băng phá Fire Guard rất nhanh.':'Two weapons: press SWAP to switch. Ice breaks the Fire Guard fast.',
+'FIRE INK! Kiếm của Rowan bốc Lửa':'FIRE INK! Rowan\'s blade catches fire',
+'Nhặt được Thương Băng! Bấm ĐỔI để cầm':'Ice Spear picked up! Press SWAP to wield it',
+'FIRE GUARD! Lửa yếu đi, thử Băng':'FIRE GUARD! Fire is weaker, try Ice',
+'Phá Fire Guard! Đánh mạnh ngay!':'Fire Guard broken! Hit it now!',
+'Fire Guard tan rồi':'The Fire Guard fades',
+'Kiếm nhớ {0} đòn Lửa của bạn và lớn lên!':'Your blade remembers {0} Fire hits, and it grows!',
+'Page Scrap (mảnh trang) ×{0}':'Page Scrap ×{0}',
+'Forge (lò rèn) đã mở! Gặp Ông Thợ Rèn để luyện kiếm.':'The Forge is open! Visit the Smith to temper your blade.',
+'ĐỔI':'SWAP',
+'Toadstool King xuất hiện ở Thornwood!':'The Toadstool King appears in Thornwood!',
+});
+})();
+
+// ===== js/slice.js =====
+
+(function(){
+'use strict';
+const G=window.G;
+if(!G||!G.startStage)return;
+const coUrl=(re)=>{try{return typeof location!=='undefined'&&re.test(location.search||'');}catch(e){return false;}};
+if(G.SLICE_BAT===undefined)G.SLICE_BAT=!coUrl(/[?&]slice=0(&|$)/);
+const C=G.SLICE_CHU||{};
+const SL=(G.slice={});
+const SO={
+nguong:4,
+nguong2:5,
+guardT:7,
+guardPct:0.3,
+bangVo:3,
+bangTru:1.5,
+choang:2.5,
+nghi:3,
+trangToc:70,
+};
+SL.SO=SO;
+SL.bat=()=>G.SLICE_BAT!==false;
+const obj=(v)=>!!(v&&typeof v==='object'&&!Array.isArray(v));
+SL.moi=(sv)=>{sv=sv||G.save;return!!sv&&!(obj(sv.tut)&&sv.tut.done)&&!(obj(sv.stars)&&sv.stars['0-0']>0);};
+const tv=(s)=>(G.tv?G.tv(s):s);
+SL.map=function(seed){
+const R=(id,type,doors)=>({id,x:id,y:0,type,main:true,doors});
+return{
+kind:'S',seed:seed||1610,start:0,fountain:-1,boss:3,gate:null,w:4,h:1,
+rooms:[R(0,'start',{right:1}),R(1,'elite',{left:0,right:2}),R(2,'fight',{left:1,right:3}),R(3,'boss',{left:2})],
+};
+};
+function sao(w,el,st){
+const c=Object.assign({},w);
+c.marks={fire:0,poison:0,ice:0};
+c.branch=el;
+c.marks[el]=G.MARKS[Math.max(0,Math.min(2,(st||1)-1))];
+c.sliceTam=1;
+return c;
+}
+function datLai(P){P.atkT=0;P.hitDone=true;P.cdT=Math.min(P.cdT||0,0.1);if(P.mv)P.mv.cur=null;P.comboI=-1;P.firstHit=true;}
+SL.batDau=function(S){
+const P=S.P,ws=P.weapons||[];
+const kiem=ws.find((w)=>w&&w.type==='sword')||ws[0];
+const thuong=ws.find((w)=>w&&w.type==='spear')||ws.find((w)=>w&&w!==kiem)||kiem;
+S.slice={lua:false,bang:false,xong:false,trang:null,nhat:null,guard:null,dem:0,lan:0,nghi:0,fireN:0,goc:{kiem,thuong},t0:G.time||0};
+if(kiem){P.weapons=[kiem];P.cur=0;}
+};
+function sl(){const S=G.getRun&&G.getRun();return S&&S.slice?S:null;}
+SL.dungPhong=function(S,W,id){
+W.props=W.props.filter((p)=>!p.env);
+if(id===0)W.waves=[['rusher'],['rusher','rusher']];
+else if(id===1)W.waves=[['elite']];
+else if(id===2)W.waves=[['swarm','swarm'],['rusher','swarm']];
+else if(id===3&&W.boss){
+W.boss.name=C.trum||'Toadstool King';
+W.banner={s:C.trumRa||'Toadstool King xuất hiện ở Thornwood!',col:'#ff6a5a',t:3.5};
+}
+};
+SL.vaoPhong=function(S,W,id,first){
+const L=S.slice;
+if(id===0)S.hint=C.hStart;
+else if(id===1)S.hint=C.hNe;
+else if(id===2){
+if(!L.lua&&first){
+L.trang={x:(W.px1!=null?W.px1:W.x1)-6,y:W.y0+6,t:0};
+W.waveT=99;
+}
+S.hint=L.lua?C.hLua:C.hTrang;
+}else if(id===3){
+S.hint=L.bang?C.hSwap:C.hTrum;
+if(!L.bang&&first){
+const P=S.P,bx=W.boss?W.boss.x:P.x+140;
+L.nhat={x:G.clamp(P.x+Math.max(48,(bx-P.x)*0.38),W.x0+20,W.x1-20),y:G.clamp(P.y,W.y0+14,W.y1-8),t:0};
+}
+}
+};
+function capLua(S){
+const L=S.slice,P=S.P,W=S.W;
+if(L.lua)return;
+L.lua=true;L.trang=null;
+const k=L.goc.kiem;
+if(k){
+const i=Math.max(0,P.weapons.findIndex((w)=>w&&(w===k||w.id===k.id)));
+P.weapons[i]=sao(k,'fire',1);
+if(P.cur===i)datLai(P);
+}
+if(G.sfx)G.sfx('evolve');
+if(G.fx&&G.fx.evolve){try{G.fx.evolve('fire',1);}catch(e){}}
+if(W){W.banner={s:C.bLua,col:G.EL.fire.col,t:3.5};if(W.room===2&&!W.cleared)W.waveT=Math.min(W.waveT,1.4);}
+if(S.idx===2)S.hint=C.hLua;
+}
+function capBang(S){
+const L=S.slice,P=S.P,W=S.W;
+if(L.bang)return;
+L.bang=true;L.nhat=null;
+const t=L.goc.thuong;
+if(t&&P.weapons.length<2)P.weapons.push(sao(t,'ice',1));
+if(G.sfx)G.sfx('pick',1.2);
+if(G.fx&&G.fx.anh)G.fx.anh('hu-no-nho-ice',P.x,P.y-10,{});
+if(W)W.banner={s:C.bBang,col:G.EL.ice.col,t:3};
+S.hint=C.hSwap;
+}
+function dungGuard(S,b){
+const L=S.slice,W=S.W;
+const lop={type:'resist',el:'fire',pct:SO.guardPct,slice:1};
+L.guard={t:SO.guardT,ice:0,lop,weak:b.weak.slice(),t0:G.time||0};
+b.layers=(b.layers||[]).concat([lop]);
+if(!b.weak.includes('ice'))b.weak=b.weak.concat(['ice']);
+b.flash=0.25;b.busy=Math.max(b.busy||0,0.45);
+L.lan++;L.dem=0;
+if(G.sfx)G.sfx('gong',1.3);
+if(G.fx&&G.fx.anh)G.fx.anh('hu-trum-no-fire',b.x,b.y-(b.h||50)*0.4,{sc:0.6});
+if(W)W.banner={s:C.bGuard,col:G.EL.fire.col,t:3};
+}
+function boGuard(S,b,vo){
+const L=S.slice,g=L.guard,W=S.W;
+if(!g)return;
+L.guard=null;L.dem=0;L.nghi=SO.nghi;
+if(b){
+b.layers=(b.layers||[]).filter((l)=>l!==g.lop);
+b.weak=g.weak;
+if(vo&&!b.dead){
+b.exposed=Math.max(b.exposed||0,SO.choang);b.tired=Math.max(b.tired||0,SO.choang);b.busy=Math.max(b.busy||0,SO.choang);
+if(b.st)b.st.stun=Math.max(b.st.stun||0,SO.choang);
+if(G.fx&&G.fx.anh)G.fx.anh('hu-bang-vo',b.x,b.y-(b.h||50)*0.4,{});
+if(G.sfx)G.sfx('boom',1.4);
+}
+}
+if(W&&!(b&&b.dead))W.banner={s:vo?C.bVo:C.bTan,col:vo?G.EL.ice.col:'#d9cdb8',t:vo?2.5:1.8};
+}
+const gocDamage=G.damage;
+if(typeof gocDamage==='function'&&!gocDamage.sliceBoc){
+G.damage=function(t,amt,o){
+try{
+const S=t&&t.isBoss?sl():null;
+if(S&&S.W&&t===S.W.boss&&amt>0&&!t.dead&&!t.hidden&&!(t.invuln>0)&&o&&o.fromPlayer!==false&&!o.ch&&o.src!=='dot'){
+const L=S.slice;
+if(o.el==='fire'){
+L.fireN++;
+if(!L.guard&&!(L.nghi>0)){L.dem++;if(L.dem>=(L.lan?SO.nguong2:SO.nguong))dungGuard(S,t);}
+}else if(o.el==='ice'&&L.guard){
+L.guard.ice++;L.guard.t-=SO.bangTru;
+if(G.fx&&G.fx.anh)G.fx.anh('hu-no-nho-ice',t.x,t.y-(t.h||50)*0.5,{});
+if(L.guard.ice>=SO.bangVo)boGuard(S,t,true);
+}
+}
+}catch(e){}
+return gocDamage.apply(this,arguments);
+};
+G.damage.sliceBoc=true;
+}
+SL.tick=function(S,dt){
+const L=S.slice,P=S.P,W=S.W;
+if(!L||!W||!P)return;
+if(!(P.cur>=0&&P.cur<P.weapons.length))P.cur=0;
+if(!L.lua&&(S.cleared[2]||S.idx===3))capLua(S);
+if(W.room===1&&W.spawns)for(const s of W.spawns)if(s.role==='elite'&&!s.opt)s.opt={art:'heoNanh'};
+const T=L.trang;
+if(T&&!L.lua){
+T.t+=dt;
+const dx=P.x-T.x,dy=P.y-10-T.y,d=Math.hypot(dx,dy);
+if(T.t>0.8){const v=SO.trangToc*Math.min(1,(T.t-0.8)/0.6)*dt;if(d>0.5){T.x+=(dx/d)*Math.min(v,d);T.y+=(dy/d)*Math.min(v,d);}}
+T.y+=Math.sin(T.t*3.1)*12*dt;
+if(d<12||T.t>9)capLua(S);
+}
+const N=L.nhat;
+if(N&&!L.bang){N.t+=dt;if(Math.hypot(P.x-N.x,(P.y-N.y)*1.3)<15)capBang(S);}
+const b=W.boss;
+if(L.nghi>0)L.nghi-=dt;
+if(L.guard){L.guard.t-=dt;if(L.guard.t<=0||!b||b.dead)boGuard(S,b,false);}
+if(W.type==='boss'&&S.loot&&S.loot.bossDown&&!L.xong){
+L.xong=true;
+if(L.guard)boGuard(S,b,false);
+const i=P.weapons.findIndex((w)=>w&&w.type==='sword'&&w.sliceTam);
+if(i>=0){P.weapons[i]=sao(L.goc.kiem,'fire',2);P.cur=i;datLai(P);P.swapAt=G.time;}
+if(G.fx&&G.fx.evolve){try{G.fx.evolve('fire',2);}catch(e){}}
+if(G.sfx)G.sfx('evolve',1.2);
+W.banner={s:G.t(C.bLon,Math.max(1,L.fireN)),col:G.EL.fire.col,t:4.5};
+const sv=G.save;
+if(sv){
+const dau=!(sv.trangSach>0);
+sv.trangSach=Math.max(0,Math.floor(+sv.trangSach||0))+1;
+if(S.got)S.got.push(G.t(C.trang,1));
+if(dau)SL.choLang=true;
+}
+}
+};
+const coMD=(f)=>!G.moDan||G.moDan.co(f);
+function nutDoi(){
+const U=G.stageUi;
+if(!U||!U.btnPos)return[384,196,20];
+let b;
+if(!coMD('dacBiet'))b=U.btnPos('special');
+else if(!coMD('chuong'))b=U.btnPos('skill');
+else{const d=U.btnPos('dodge');b=[d[0]-d[2]-30,d[1]-10,18];}
+return[b[0],b[1],Math.max(19,Math.round(b[2]*1.15))];
+}
+SL.nutDoi=nutDoi;
+const coDoi=(S)=>!!(S&&S.slice&&!S.slice.xong&&S.P&&S.P.weapons.length>1&&S.mode==='play');
+SL.cham=function(S,d){
+if(!coDoi(S))return false;
+const n=nutDoi();
+if(Math.hypot(d.x-n[0],d.y-n[1])>n[2]+7)return false;
+d.role='ui';S.slice.doiNgay=true;
+return true;
+};
+SL.input=function(S,inp){
+const L=S.slice;
+if(!L)return;
+const kp=G.keyP||{};
+if(coDoi(S)&&(L.doiNgay||kp.KeyQ||kp.Tab)){inp.swapP=true;inp.swapTo=(S.P.cur+1)%S.P.weapons.length;}
+L.doiNgay=false;
+};
+const SCx=()=>G.spriteCustom;
+const FA=()=>G.fxAnh;
+let trangDo=null;
+function anhTrang(){
+const S0=SCx(),g=S0&&S0.gdSan?S0.gdSan('gd-so-trang'):null;
+if(!g||!g.img||typeof document==='undefined')return null;
+if(trangDo&&trangDo.src===g.img)return trangDo.cv;
+try{
+const cv=document.createElement('canvas');cv.width=g.img.width;cv.height=g.img.height;
+const q=cv.getContext('2d');q.drawImage(g.img,0,0);
+q.globalCompositeOperation='source-atop';q.globalAlpha=0.5;q.fillStyle='#c8402a';q.fillRect(0,0,cv.width,cv.height);
+trangDo={src:g.img,cv};
+return cv;
+}catch(e){return null;}
+}
+function anhVk(w){const VM=G.vkMoi;return VM&&VM.anhO?VM.anhO(w):null;}
+function veVk(c,w,x,y,size,mo){
+const a=anhVk(w);
+if(!a||!a.img)return false;
+const k=(size*1.35)/(a.w+a.h);
+c.save();
+if(mo!=null)c.globalAlpha*=mo;
+c.imageSmoothingEnabled=k<1;
+c.translate(Math.round(x),Math.round(y));
+if(w.type!=='bow')c.rotate(-Math.PI/4);
+c.drawImage(a.img,a.x,a.y,a.w,a.h,(-a.w*k)/2,(-a.h*k)/2,a.w*k,a.h*k);
+c.restore();
+return true;
+}
+SL.veTheGioi=function(S){
+const L=S&&S.slice,W=S&&S.W;
+if(!L||!W||S.trans)return;
+const c=G.wx,cam=G.camVe?G.camVe(W):Math.round(W.cam||0),t=G.time||0,F=FA();
+G.wxDat(c,-cam,0);
+try{
+const T=L.trang;
+if(T&&!L.lua){
+const im=anhTrang();
+c.save();c.translate(Math.round(T.x),Math.round(T.y));c.rotate(Math.sin(t*4)*0.35);
+if(F)F.ve(c,'hu-bam-lua',0,9,t,0,0.7,false,0.9);
+if(im){c.imageSmoothingEnabled=true;c.drawImage(im,-12,-12,23,24);}
+c.restore();
+}
+const N=L.nhat;
+if(N&&!L.bang&&L.goc.thuong){
+const w=sao(L.goc.thuong,'ice',1),y=N.y-6-Math.sin(N.t*3)*1.5;
+if(F)F.veK(c,'hu-vong-phep',N.x,N.y+1,Math.floor(t*4)%3,0,0.42,false,0.8,G.EL.ice.col);
+veVk(c,w,N.x,y-6,58);
+if(F)F.ve(c,'hu-lap-lanh',N.x+6,y-8,t%1.2,0,0.8,false,0.9);
+}
+const b=W.boss,g=L.guard;
+if(g&&b&&!b.dead){
+const mo=g.t<1?Math.max(0.25,g.t):1,fr=Math.min(2,Math.floor((t-g.t0)*8))+(g.t<1?3:0);
+if(F)F.veK(c,'hu-vong-phep',b.x,b.y+2,Math.min(7,fr),0,0.85,false,0.9*mo,G.EL.fire.col);
+}
+}catch(e){}
+G.wxDat(c,0,0);
+};
+SL.veHud=function(S){
+const L=S&&S.slice,W=S&&S.W,u=G.ux,ui=G.ui,S0=SCx();
+if(!L||!W||S.mode!=='play'||S.trans)return;
+const cam=G.camVe?G.camVe(W):Math.round(W.cam||0),t=G.time||0;
+const b=W.boss;
+if(b&&!b.dead&&!b.hidden&&S0&&S0.gdSan){
+const he=S0.gdSan('gd-he-fire'),x=b.x-cam,y=b.y-(b.h||50)-12;
+if(he){
+if(L.guard){
+const k=1+0.12*Math.sin(t*8);
+if(G.fxAnh)G.fxAnh.veK(u,'hu-khien-nuoc',x,y+1,Math.floor(t*5)%4,0,0.95,false,0.8);
+S0.veGd(u,he,Math.round(x-8*k),Math.round(y-8*k),16*k,16*k);
+}else if(L.dem>0&&!(L.nghi>0)){
+const n=L.lan?SO.nguong2:SO.nguong,w0=n*8-2;
+for(let i=0;i<n;i++){const ga=u.globalAlpha;u.globalAlpha=ga*(i<L.dem?1:0.3);S0.veGd(u,he,Math.round(x-w0/2+i*8),Math.round(y-3),6,6);u.globalAlpha=ga;}
+}
+}
+}
+if(coDoi(S)){
+const n=nutDoi(),P=S.P,ke=P.weapons[(P.cur+1)%P.weapons.length],s=n[2]*2;
+const nut=S0&&S0.gdSan?S0.gdSan('gd-nut-vuong'):null,cd=P.swapCd>0?0.55:1;
+const ga=u.globalAlpha;u.globalAlpha=ga*cd;
+if(nut)S0.veGd(u,nut,Math.round(n[0]-s/2),Math.round(n[1]-s/2),s,s);
+veVk(u,ke,n[0],n[1]-3,s*0.62);
+u.globalAlpha=ga;
+if(ui)ui.text(tv(C.nut||'ĐỔI'),n[0],n[1]+s/2-3,{size:7.5,bold:true,align:'center',color:ke&&ke.branch&&G.EL[ke.branch]?G.EL[ke.branch].col:'#f6dc92'});
+}
+};
+if(G.setScene&&!G.setScene.sliceBoc){
+const gocSet=G.setScene;
+let dang=false;
+G.setScene=function(s){
+if(!dang&&SL.bat()&&G.Title&&G.Village&&s===G.Village&&G.scene===G.Title&&SL.moi(G.save)&&!G.botInput){
+dang=true;
+try{G.startStage(0,0,0);return;}catch(e){if(typeof console!=='undefined')console.warn('slice: không vào thẳng ải được',e);}finally{dang=false;}
+}
+const r=gocSet.apply(this,arguments);
+if(s===G.Village&&SL.choLang){SL.choLang=false;SL.langT=(G.time||0)+5.5;}
+return r;
+};
+G.setScene.sliceBoc=true;
+}
+if(G.Village&&G.Village.update&&!G.Village.update.sliceBoc){
+const gocU=G.Village.update;
+G.Village.update=function(){
+const r=gocU.apply(this,arguments);
+if(SL.langT&&(G.time||0)>=SL.langT&&G.scene===G.Village){
+SL.langT=0;
+try{if(G.villageScene&&G.villageScene.say)G.villageScene.say(tv(C.lang),6);if(G.sfx)G.sfx('evolve',1.1);}catch(e){}
+}
+return r;
+};
+G.Village.update.sliceBoc=true;
+}
 })();
 
 // ===== js/main.js =====

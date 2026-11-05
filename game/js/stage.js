@@ -258,7 +258,8 @@
     const seed = o.seed || (tut && MD() ? TUT_SEED : 1 + Math.floor(G.rnd() * 999999));
     // Đợt 6: ẢI THEO NGÀY (js/ai_ngay.js) — một phòng đánh, nhiều đợt quái + 1 tinh anh cuối, không cửa, không trùm
     const an = o.aiNgay && G.aiNgay ? o.aiNgay : null;
-    const map = an ? { kind: 'N', seed, rooms: [{ id: 0, x: 0, y: 0, type: 'fight', main: true, doors: {} }], start: 0, fountain: -1, boss: -1, gate: null, w: 1, h: 1 } : G.mapgen.make(kind, seed);
+    const sl = tut && !an && G.slice && G.slice.bat() ? G.slice : null; // TALESWORN bản thử 5 phút đầu (js/slice.js; ?slice=0 tắt): 4 phòng Thornwood
+    const map = an ? { kind: 'N', seed, rooms: [{ id: 0, x: 0, y: 0, type: 'fight', main: true, doors: {} }], start: 0, fountain: -1, boss: -1, gate: null, w: 1, h: 1 } : sl ? sl.map(seed) : G.mapgen.make(kind, seed);
     // Ải hướng dẫn: phòng phụ ngẫu nhiên (Thử thách, Lời nguyền) đổi thành Thương nhân cho người mới dễ hiểu.
     if (tut) for (const R of map.rooms) if (R.type === 'challenge' || R.type === 'curse') R.type = 'merchant';
     if (!an) G.save.lastKind = kind;
@@ -273,6 +274,7 @@
     };
     if (an) { S.aiNgay = an; S.base = G.stageStats(r, 4, 0); S.rec = G.stageRec(r, 4, 0); }
     if (S.tut) S.marksMult = 2;
+    if (sl) sl.batDau(S);
     enterRoom(map.start, null);
     if (S.tut && S.W) S.W.waveT = 3.5; // phòng đầu ải hướng dẫn: quái ra sau 3,5 giây để người mới kịp đọc chỉ dẫn
     S.fade = 0.35;
@@ -461,6 +463,7 @@
       if (bs.layers.some((l) => l.type === 'antiRanged')) { W.banner.s += ' — ' + G.t('bắn từ xa yếu đi, lại gần hơn'); W.banner.t = 5; }
       G.sfx('gong');
     }
+    if (S.slice && G.slice) G.slice.dungPhong(S, W, id, type); // bản thử 5 phút đầu: đợt quái, tên trùm (js/slice.js)
     if (W.cleared) S.cleared[id] = true;
     return W;
   }
@@ -519,6 +522,7 @@
     P.dashT = 0; P.dodgeT = 0; P.slideT = 0; P.spearOut = null; if (W.mvSp) W.mvSp.length = 0;
     if (W.type === 'fountain') S.preview = bossSetup().layers;
     S.hint = S.tut ? tutHint(W.type === 'fight' ? (id === 1 ? 'fight1' : 'fight2') : W.type) : null;
+    if (S.slice && G.slice) G.slice.vaoPhong(S, W, id, first); // bản thử: lời chỉ dẫn, trang Fire Ink, Thương Băng
     updateDoors();
   }
   function clearRoom() {
@@ -966,6 +970,7 @@
     for (let i = 0; i < 4; i++) if (kp['Digit' + (i + 1)]) { inp.swapP = true; inp.swapTo = i; }
     const mm = G.minimap.rect(S), moi = NUT_MOI(), gon = hudGon(), ovk = gon ? OVK_GON : OVK;
     for (const d of G.downs) {
+      if (S.slice && G.slice && G.slice.cham(S, d)) continue; // bản thử: nút ĐỔI (js/slice.js)
       // tư vấn 17/10 mục 1: lần chạm kế tiếp (sau 0,3 giây kể từ lúc hộp mẹo hiện) thì hộp mẹo ẩn; chạm vẫn làm việc của nó như thường
       if (G.MEO_GON === true && S.meoG && S.meoG.s && !S.meoG.an && (G.time || 0) - S.meoG.cham > 0.3) S.meoG.an = true;
       if (G.inRect(d, ovk[0], ovk[1], ovk[2], ovk[3])) {
@@ -1031,6 +1036,7 @@
     if (!coMD('doiVk')) { inp.swapP = false; inp.swapTo = undefined; S.choDoi = null; }
     if (!coMD('dacBiet')) inp.specialP = false;
     if (!coMD('chuong')) { inp.skillP = false; inp.skill = false; }
+    if (S.slice && G.slice) G.slice.input(S, inp); // bản thử: nút ĐỔI / phím Q mở lại đổi vũ khí khi đã có 2 món
     return inp;
   }
 
@@ -1076,6 +1082,7 @@
       if (S.near && inp.atkP) { inp.atk = false; inp.atkP = false; interact(S.near); if (S.mode !== 'play' || S.W !== W) return; }
       else if (S.near) inp.atk = false;
       G.updateWorld(dt, inp);
+      if (S.slice && G.slice) G.slice.tick(S, dt); // bản thử: Fire Ink, Fire Guard, nhặt Thương Băng, hạ trùm
       if (DOC()) msgTick(W, dt); // Đợt 8: dải thông báo (dòng đã bị dòng mới đẩy lên thì tự đếm giờ ở đây)
       // đạn không bay xuyên tường ra lề màn hình
       if (W.projs.length) W.projs = W.projs.filter((o) => o.x > W.geo.fx0 - 2 && o.x < W.geo.fx1 + 2 && o.y > W.geo.fy0 - 26 && o.y < W.geo.fy1 + 8);
@@ -1127,15 +1134,18 @@
         S.docN = (S.docN || 0) + 1;
         veTran = true;
         try { G.drawWorld(S.r); } finally { veTran = false; }
+        if (S.slice && G.slice) G.slice.veTheGioi(S);
         if (S.trans) slideWorld();
         if (S.docTren !== S.docN) drawHud('tren');
         if (S.docDuoi !== S.docN) drawHud('duoi');
         drawHud('vien');
       } else {
         G.drawWorld(S.r);
+        if (S.slice && G.slice) G.slice.veTheGioi(S);
         if (S.trans) slideWorld();
         drawHud();
       }
+      if (S.slice && G.slice) G.slice.veHud(S); // bản thử: nút ĐỔI, biểu tượng Fire Guard trên đầu trùm
       const bm = S.mode !== 'play' && G.uiBang ? G.uiBang.vao() : false; // soát mượt phiên 3 mục 15: bảng vừa mở phóng 0,94→1 + hiện dần (chạm đổi ngược theo phép phóng)
       try {
       if (S.mode === 'map') { G.minimap.drawBig(S); if (G.click) { G.click = null; setMode('play'); G.sfx('ui'); } }
