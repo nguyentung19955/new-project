@@ -75,7 +75,7 @@ module.exports = function doTrang(opt) {
         if (R.l < vr.left + k - 1 || R.r > vr.right - k + 1 || R.t < xr.top - 1 || R.b > Math.max(vr.bottom, xr.bottom) + 1) { out.chu.push(ten(e) + ' "' + t.slice(0, 24) + '" ra ngoài ô tối giản ' + ten(x)); daBao.add(e); }
         break;
       }
-      const coAnh = (xs.backgroundImage && /url\(/.test(xs.backgroundImage)) || (xs.borderImageSource && xs.borderImageSource !== 'none') || x.classList.contains('ot'); // ô tối giản (o-toigian): viền là <img.ov> PNG con, chữ LV/số nằm trên ảnh trong ô
+      const coAnh = (xs.backgroundImage && /url\(/.test(xs.backgroundImage)) || (xs.borderImageSource && xs.borderImageSource !== 'none');
       if (!coAnh) { if (d > 0 && (cuonDuoc(xs, 'Y') || cuonDuoc(xs, 'X'))) break; continue; }
       const xr = x.getBoundingClientRect(); if (xr.height > 220) break;
       const sc = xr.width / (x.offsetWidth || xr.width) || 1, m = 1.5 * sc;

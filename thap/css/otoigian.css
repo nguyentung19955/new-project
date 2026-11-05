@@ -127,3 +127,5 @@ html body #wrap #bo-the .the.ot > img.anh { --po-x: .40; }
 html body #wrap #the-mv.ot .cht-vong { top: 7% !important; }
 html body #wrap #the-mv.ot .cht-vong.cd { right: 7% !important; left: auto !important; }
 html body #wrap #the-mv.ot .cht-vong.tac { left: 7% !important; right: auto !important; }
+/* lúc có vòng hồi chiêu ở góc trên-phải → ẩn vương miện (1 chip / góc) */
+html body #wrap #the-mv.ot:has(> .cht-vong.cd:not([hidden])) > img.ot-mien { display: none !important; }
