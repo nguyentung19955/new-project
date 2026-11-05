@@ -616,5 +616,45 @@
   "vai": "db",
   "ho": "trap",
   "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "chuato",
+  "ten": "Chúa Tổ",
+  "bac": "do",
+  "dcdw": "Lilith / Summoner",
+  "kyNang": "Nuôi bầy drone mini tự săn quái; CHỦ ĐỘNG: cả bầy lao vào tự sát",
+  "vai": "tc",
+  "ho": "summon",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "leviathan",
+  "ten": "Thuỷ Quái",
+  "bac": "do",
+  "dcdw": "Leviathan / Nidhogg",
+  "kyNang": "Nuốt chửng quái thường lấy cộng dồn; CHỦ ĐỘNG: tia thở quét hết đường",
+  "vai": "tc",
+  "ho": "heavy",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "khoisinh",
+  "ten": "Lõi Khởi Sinh",
+  "bac": "do",
+  "dcdw": "Brownie / Aurora King",
+  "kyNang": "Định kỳ +1★ ụ yếu nhất; CHỦ ĐỘNG: gọi ụ ở mức sao trung bình",
+  "vai": "db",
+  "ho": "star",
+  "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "ronglua",
+  "ten": "Rồng Máy",
+  "bac": "do",
+  "dcdw": "Tiamat",
+  "kyNang": "Phun lửa hình nón quét bàn, đốt cháy; CHỦ ĐỘNG: rồng bổ nhào dọc đường",
+  "vai": "tc",
+  "ho": "blast",
+  "moi": "TUONG-MOI-20"
  }
 ]

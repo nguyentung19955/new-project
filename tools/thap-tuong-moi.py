@@ -40,8 +40,13 @@ MOI = [
     ('loren', 'Lò Rèn Phế Liệu', 'vang', 'Treant / Scrapper', 'Kéo ụ 1–3★ vào để ăn: +sát thương vĩnh viễn', 'Scrap Forge', 'Drag a 1–3★ turret onto it to feed: permanent damage stacks', 'tc', 'star'),
     ('guongcong', 'Cổng Gương', 'vang', 'Eve / Mona', 'PVP phản đòn khống chế; Co-op sao chép hiệu ứng ghép đồng đội', 'Mirror Gate', 'PVP: reflects rival control. Co-op: copies ally merge effects. Solo: blocks boss skills', 'db', 'guard'),
     ('marionette', 'Rối Máy', 'vang', 'Child điều khiển rối', 'Chiếm điều khiển quái, bắt đi ngược đường rồi nổ', 'Marionette', 'Takes control of an enemy, walks it backward, then boom', 'db', 'trap'),
+    # ---- đợt 3 (Đỏ) ----
+    ('chuato', 'Chúa Tổ', 'do', 'Lilith / Summoner', 'Nuôi bầy drone mini tự săn quái; CHỦ ĐỘNG: cả bầy lao vào tự sát', 'Hive Queen', 'Breeds hunter drones. Active (3★+): SWARM kamikaze', 'tc', 'summon'),
+    ('leviathan', 'Thuỷ Quái', 'do', 'Leviathan / Nidhogg', 'Nuốt chửng quái thường lấy cộng dồn; CHỦ ĐỘNG: tia thở quét hết đường', 'Leviathan', 'Devours enemies for stacks. Active (3★+): TIDAL BREATH sweeps the path', 'tc', 'heavy'),
+    ('khoisinh', 'Lõi Khởi Sinh', 'do', 'Brownie / Aurora King', 'Định kỳ +1★ ụ yếu nhất; CHỦ ĐỘNG: gọi ụ ở mức sao trung bình', 'Genesis Core', 'Raises your lowest turret +1★. Active (3★+): GENESIS summons turrets', 'db', 'star'),
+    ('ronglua', 'Rồng Máy', 'do', 'Tiamat', 'Phun lửa hình nón quét bàn, đốt cháy; CHỦ ĐỘNG: rồng bổ nhào dọc đường', 'Wyrm Engine', 'Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path', 'tc', 'blast'),
 ]
-S3 = ['hydra', 'cuuvi', 'ngaithoigian', 'luoicheo']  # có ảnh dạng thức tỉnh → grow-up dạng ảnh
+S3 = ['hydra', 'cuuvi', 'ngaithoigian', 'luoicheo', 'ronglua']  # có ảnh dạng thức tỉnh → grow-up dạng ảnh
 
 
 def head_k(im):
