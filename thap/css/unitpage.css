@@ -201,3 +201,6 @@
 .up-tv.tat .up-ifr, .up-tv.tat .up-phat, .up-tv.tat .up-tv-sao { display: none; }
 .up-gl { position: absolute; left: 10px; top: 10px; width: 40px; height: 40px; filter: drop-shadow(0 2px 3px #000a); }
 .up-xem #nd-gt, .up-xem #nd-dai { display: none !important; }
+/* Test range đang tải: thanh tải nằm ở PHẦN TRÊN khung cắt (y logic 150…530) — trước đây ở giữa iframe (y≈430) bị thanh "Add to deck" che → khung trông đen */
+.up-xem #tai.nho { align-items: flex-start; padding-top: 200px; }
+.up-xem #matmang.nho { align-items: flex-start; padding-top: 150px; }

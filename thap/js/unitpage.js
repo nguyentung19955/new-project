@@ -218,7 +218,7 @@ const UP = {
     else if (a === 'mo') this.ve(b.dataset.id, 1);
     else if (a === 'sao') this.chonSao(+b.dataset.s);
     else if (a === 'gd') this.chonGd(+b.dataset.g);
-    else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.dungXem || this._thay === false }); this.nutPhat(); }
+    else if (a === 'phat') { this.dungXem = !this.dungXem; this.guiXem({ dung: this.canDung() }); this.nutPhat(); }
     else if (a === 'bo' && this.mv) { UI.mv = this.mv; if (UI.veChon) UI.veChon(); this.capNutBo(); try { SND.nut(); } catch (e) { } }
     else if (a === 'bo') {
       if (!upCo(this.id)) return;
@@ -439,19 +439,35 @@ const UP = {
   },
 
   // ---------- xem trước trực tiếp (iframe = chính game ở chế độ preview) ----------
+  // dừng clip khi: người xem bấm dừng · khung ra khỏi màn hình · tab ẩn · trang hồ sơ đóng (iframe nạp sẵn lúc ẩn)
+  canDung() { return !!(this.dungXem || this._thay === false || document.hidden || !this.el || this.el.hidden); },
+  // NẠP SẴN Test range: khi màn chọn rảnh, dựng khung trang hồ sơ (ẩn) + iframe → ảnh trận tải trước, mở trang ụ là chạy ngay
+  //  (iframe KHÔNG bao giờ bị chuyển chỗ trong DOM — chuyển chỗ = trình duyệt nạp lại từ đầu).
+  chuanBi() {
+    if (this.ifr || UP_XEM) return;
+    try { if (navigator.connection && navigator.connection.saveData) return; } catch (e) { }
+    const el = this.dung(); if (!el.hidden) return;
+    const noi = el.querySelector('.up-noi');
+    if (!noi.firstChild) noi.innerHTML = '<div class="up-a"></div>' + this.muc(2, UP_TXT.sec.test, this.tvHTML()) + '<div class="up-b"></div>';
+    const id = ((typeof UI !== 'undefined' && UI.chon) || []).find(x => SKILLS[x] && G.rosterMap[x]) || (G.roster || []).map(r => r.id).find(x => SKILLS[x]);
+    if (!id) return;
+    if (!this.sao) this.sao = 4;
+    this.ganXem(id);
+  },
   ganXem(id) {
     const tv = this.el.querySelector('.up-tv'); if (!tv) return;
     if (!SKILLS[id] && !/^mv:/.test(id)) { this.guiXem({ dung: true }); return; }
+    this._xemId = id;
     if (!this.ifr) {
       const f = document.createElement('iframe');
       f.className = 'up-ifr'; f.title = 'Live preview'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
-      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&dpr=2';
+      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&dpr=2&notut=1';
       this.ifr = f;
     } else this.guiXem({ id, sao: this.sao, gd: this.gd });
     if (!this.ifr.parentNode) { tv.querySelector('.up-tv-khung').appendChild(this.ifr); this.theoDoiXem(tv); }
     this.khungXem(); requestAnimationFrame(() => this.khungXem());
     if (this.giam() && this._lanDau !== false) { this.dungXem = true; this._lanDau = false; }
-    this.guiXem({ dung: this.dungXem }); this.nutPhat();
+    this.guiXem({ dung: this.canDung() }); this.nutPhat();
   },
   // khung cắt: bàn 3×3 + đường trên + dải chú thích (toạ độ logic y 150…530), co theo bề rộng khung
   khungXem() {
@@ -462,7 +478,7 @@ const UP = {
   // ra khỏi màn hình / ẩn tab → dừng clip (đỡ tốn pin); quay lại → chạy tiếp (trừ khi người xem đã bấm dừng)
   theoDoiXem(tv) {
     if (this._io) return;
-    const cap = () => this.guiXem({ dung: this.dungXem || !this._thay || document.hidden });
+    const cap = () => this.guiXem({ dung: this.canDung() });
     this._thay = true;
     if ('IntersectionObserver' in window) { this._io = new IntersectionObserver((es) => { this._thay = es[es.length - 1].isIntersecting; cap(); }, { threshold: 0.05 }); this._io.observe(tv); }
     else this._io = true;
@@ -490,6 +506,18 @@ const UP = {
 
 // ===================================================== móc vào màn chọn =====================================================
 if (!UP_XEM) {
+  // iframe xem trước báo "đã nghe" → gửi lại trạng thái hiện tại (tin gửi lúc iframe còn đang nạp bị mất → trước đây khung đứng đen)
+  addEventListener('message', (e) => {
+    if (!e.data || !e.data.tmXemSS || !UP.ifr || e.source !== UP.ifr.contentWindow) return;
+    UP.guiXem({ id: UP._xemId, sao: UP.sao, gd: UP.gd || 0, dung: UP.canDung() });
+  });
+  // nạp sẵn Test range ~1.5 s sau khi màn chọn hiện (đã tải xong menu, không trong trận)
+  let rnh = 0; const hen = setInterval(() => {
+    const c = document.getElementById('chon');
+    const ok = typeof TAI !== 'undefined' && TAI.daBoot && !TAI.cho && c && !c.hidden && !(G.ban && G.ban.length);
+    rnh = ok ? rnh + 1 : 0;
+    if (UP.ifr) clearInterval(hen); else if (rnh >= 3) { clearInterval(hen); try { UP.chuanBi(); } catch (e) { console.warn('UP.chuanBi', e); } }
+  }, 500);
   // thẻ chỉ huy ở màn chọn: chạm = chọn (như cũ) + mở trang chỉ huy
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-act="mv-chon"]'); if (!el) return;
@@ -515,6 +543,12 @@ if (!UP_XEM) {
 if (UP_XEM) {
   document.documentElement.classList.add('up-xem');
   G.debug.nointro = true;
+  // khung xem trước KHÔNG dựng lưới 85 thẻ của màn chọn (85 chân dung ≈ 6 MB tải thừa → Test range đen rất lâu trên 4G)
+  //  (khoá bằng getter/setter: các file nạp sau — bobai… — bọc UI.veChon cũng không dựng lại được → không tải thêm ~30 icon)
+  // trang hồ sơ ẩn (display:none) → iframe co về 0×0 → REN.coLai dựng canvas 0×0 (lỗi drawImage, mở lại trang vẫn ĐEN).
+  //  Khung xem trước luôn 430×860 → bỏ qua lần đổi cỡ về 0.
+  { const coLaiGoc = REN.coLai; REN.coLai = function () { if (!innerWidth || !innerHeight) return; return coLaiGoc.apply(this, arguments); }; }
+  Object.defineProperty(UI, 'veChon', { configurable: true, get() { return function () { }; }, set() { } });
   for (const k in SND) if (typeof SND[k] === 'function') SND[k] = function () { };
   for (const k of ['bangWave', 'canhBaoTrum', 'ketQua', 'cutIn', 'nhac']) UI[k] = function () { };
   ketThuc = function () { };
@@ -594,10 +628,20 @@ if (UP_XEM) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', napSD); else napSD();
   const batXem = (id, sao, gd) => (window.SD ? SD.bat(id, sao, gd) : UPX.bat(id, sao));
   // UI.init có thể đã chạy trước khi file này nạp (phông sẵn) → chờ roster + canvas sẵn sàng rồi dựng cảnh
-  const cho = setInterval(() => { if (G.rosterMap && (G.rosterMap[UP_XEM] || /^mv:/.test(UP_XEM)) && REN.cv && (window.SD || performance.now() > 4000)) { clearInterval(cho); if (!UPX.id && !(window.SD && SD.id)) batXem(UP_XEM, +UP_Q.get('star') || 4, +UP_Q.get('gd') || 0); } }, 60);
+  //  yêu cầu đến TRƯỚC khi sẵn sàng (trang mẹ đã chuyển ụ) → giữ lại, chạy ụ đó thay ụ trong URL
+  let san = false, choYC = null;
+  const cho = setInterval(() => {
+    const q = choYC || { id: UP_XEM, sao: +UP_Q.get('star') || 4, gd: +UP_Q.get('gd') || 0 };
+    if (G.rosterMap && (G.rosterMap[q.id] || /^mv:/.test(q.id)) && REN.cv && (window.SD || performance.now() > 4000)) {
+      clearInterval(cho); san = true;
+      if (window.SD) SD.dungMuon = !!UPX.dungMuon;
+      if (!UPX.id && !(window.SD && SD.id)) batXem(q.id, q.sao || 4, q.gd || 0);
+    }
+  }, 60);
   addEventListener('message', (e) => {
     const d = e.data && e.data.tmXem; if (!d) return;
     if (d.dung != null) { UPX.dungMuon = !!d.dung; if (window.SD) SD.dungMuon = !!d.dung; if (G.ban.length) G.dung = !!d.dung; }
-    if (d.id) batXem(d.id, d.sao, d.gd);
+    if (d.id) { if (san) batXem(d.id, d.sao, d.gd); else choYC = d; }
   });
+  try { if (parent !== window) parent.postMessage({ tmXemSS: 1 }, '*'); } catch (e) { }
 }
