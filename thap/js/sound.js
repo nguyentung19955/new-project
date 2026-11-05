@@ -395,6 +395,38 @@ const SND = (() => {
         const lp = loc(v, 'lowpass', 700); lp.connect(v.out); tone(v, 'square', 55, 50, t + 1.05, 0.5, 0.15, lp, 0.01);
       }
       gui(v, 0.4); duck(0.85, 2.2); fin(v); },
+    // ---- ỤNG MỚI (skills3.js) ----
+    // tích-tắc đồng hồ (Chrono Lock khoá / Chrono Throne)
+    tich() { const v = V('tich', 1); if (!v) return; const t = v.t;
+      burst(v, t, 0.012, 0.22, 'bandpass', 3200, 6); tone(v, 'sine', 2400, 0, t, 0.02, 0.06);
+      burst(v, t + 0.16, 0.012, 0.16, 'bandpass', 2300, 6); tone(v, 'sine', 1800, 0, t + 0.16, 0.02, 0.05); gui(v, 0.2); fin(v); },
+    // kính thời gian vỡ: chùm leng keng cao + ồn vỡ
+    kinhVo() { const v = V('kinhVo', 1); if (!v) return; const t = v.t;
+      burst(v, t, 0.12, 0.3, 'highpass', 4000, 0.8, null, 9000);
+      for (let i = 0; i < 5; i++) tone(v, 'sine', vr(2600 + i * 700, 0.08), 0, t + i * 0.018, 0.12, 0.05);
+      tone(v, 'sine', 160, 50, t, 0.12, 0.35); gui(v, 0.3); fin(v); },
+    // đạn nảy: "ping" cao dần theo số lần nảy
+    nay(k) { const v = V('nay', 0); if (!v) return; const t = v.t, f = 900 * Math.pow(2, Math.min(8, k || 0) * 2 / 12);
+      tone(v, 'triangle', f, f * 1.6, t, 0.07, 0.11); tone(v, 'sine', f * 2, 0, t, 0.05, 0.04); fin(v); },
+    // COMBO ×N: "ting" tăng cao độ theo combo
+    combo(n) { const v = V('combo', 2); if (!v) return; const t = v.t, r = 523 * Math.pow(2, Math.min(24, n || 1) / 12 * 0.5);
+      [0, 4, 7].forEach((s, i) => tone(v, 'square', r * Math.pow(2, s / 12), 0, t + i * 0.035, 0.09, 0.06));
+      tone(v, 'sine', r * 4, 0, t + 0.1, 0.25, 0.05); gui(v, 0.35); fin(v); },
+    // máy quay thưởng (Pandora): tick-tick nhanh rồi chậm
+    quay() { const v = V('quay', 2); if (!v) return; const t = v.t;
+      let tt = t; for (let i = 0; i < 12; i++) { burst(v, tt, 0.01, 0.14, 'bandpass', 2600 - i * 60, 5); tone(v, 'square', 1300 - i * 30, 0, tt, 0.012, 0.03); tt += 0.035 + i * i * 0.0012; }
+      fin(v); },
+    // tua băng ngược (REWIND): quét cao độ giảm + rè + chuông lớn
+    tua() { const v = V('tua', 2); if (!v) return; const t = v.t;
+      const f = loc(v, 'bandpass', 3000, 2); f.frequency.setValueAtTime(3500, t); f.frequency.exponentialRampToValueAtTime(400, t + 0.6); f.connect(v.out);
+      tone(v, 'sawtooth', 1400, 180, t, 0.6, 0.12, f); burst(v, t, 0.6, 0.12, 'bandpass', 2500, 1, null, 300);
+      vaoCrush(v, 0.3);
+      const t2 = t + 0.62; for (const m of [1, 2.76, 5.4]) tone(v, 'sine', 220 * m, 0, t2, 1.1 / m, 0.18 / m);
+      tone(v, 'sine', 70, 35, t2, 0.4, 0.5); gui(v, 0.4); duck(0.6, 1); fin(v); },
+    // đuôi cáo / cầu lửa hồ ly: "vụt" + chuông đền
+    hoLy() { const v = V('hoLy', 2); if (!v) return; const t = v.t;
+      burst(v, t, 0.25, 0.2, 'bandpass', 600, 2, null, 4000);
+      for (const m of [1, 1.5, 2.01]) tone(v, 'sine', 660 * m, 0, t + 0.12, 0.9, 0.07 / m); gui(v, 0.4); fin(v); },
   };
 
   // =====================================================================================================

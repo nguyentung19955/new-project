@@ -452,6 +452,7 @@ const REN = {
     if (this.veHoTro) this.veHoTro(ctx); // chạm/giữ ụ hỗ trợ: hiển thị vùng & loại buff
     this.veKeo(ctx);
     this.veChu(ctx);
+    if (typeof CORE !== 'undefined') CORE.veHud(ctx, this); // số tim trên lõi nhà chính
     if (FX.chop > 0) { ctx.globalAlpha = Math.min(0.3, FX.chop); ctx.fillStyle = FX.chopMau; ctx.fillRect(-20, -20, W + 40, H + 40); ctx.globalAlpha = 1; }
   },
 
@@ -470,6 +471,7 @@ const REN = {
       }
       const e = p.pts[p.pts.length - 1], key = e + '';
       if (daLoi.has(key)) continue; daLoi.add(key);
+      if (typeof CORE !== 'undefined' && CORE.veLoi(ctx, this, e, key)) continue; // lõi + hư hại/chớp đỏ: js/corehud.js
       const l = this.img('loi'), cl = 60, bob = Math.sin(t * 2.4) * 1.5;
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = (0.24 + 0.06 * Math.sin(t * 3)) / 0.6;

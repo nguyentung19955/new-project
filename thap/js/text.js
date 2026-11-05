@@ -16,6 +16,7 @@ const TEXT = {
     changeDeck: 'CHANGE DECK', again: 'PLAY AGAIN', pause: 'Pause',
     summon: 'SUMMON',
     deckFull: 'Your deck already has 5 turrets', oneMythic: 'Only 1 Mythic turret per deck',
+    max2Star: 'Max 2 star-shaping turrets per deck', need2Atk: 'Tip: take at least 2 Attack turrets',
     bossIn: (n) => 'BOSS IN ' + n + ' WAVES', bossWave: 'BOSS WAVE!',
     coopLeak: '1 LEAK<br>= DEFEAT', rival: 'RIVAL', you: 'YOU', ally: 'ALLY',
     wave: 'WAVE', bossComing: 'BOSS INCOMING!', wave1Hint: 'Summon & merge turrets!',
@@ -119,12 +120,32 @@ const TEXT = {
     overlord:   { name: 'Overlord',      skill: 'Slow charge, massive thunder blast + aftershock arcs' },
     lophanung:  { name: 'Cryo Reactor',  skill: 'Freezing aura; frozen enemies shatter and explode; active skill' },
     haoquang:   { name: 'Holy Halo',     skill: 'Active skill: board-wide invincibility shield' },
+    // ụng mới (TUONG-MOI-20.md) — skills3.js / skills4.js
+    nayda:        { name: 'Ricochet',       skill: 'Disc bounces to N enemies (N = stars), stronger each bounce' },
+    combo:        { name: 'Combo Core',     skill: 'Every Combo Core merge permanently powers up all Combo Cores' },
+    khoathoigian: { name: 'Chrono Lock',    skill: 'Freezes the lead enemy in time; stored damage bursts on release' },
+    hydra:        { name: 'Hydra',          skill: 'One barrel per star, each hits a different enemy; 7★ fuses into a giant beam' },
+    cuuvi:        { name: 'Nine-Tail',      skill: 'Kills grow fire tails; 9 tails unleash 9 homing foxfires' },
+    pandora:      { name: 'Pandora Vault',  skill: 'On merge: opens the vault for 1 of 6 big effects' },
+    luoicheo:     { name: 'Resonance Grid', skill: 'Support: buffs the 4 DIAGONAL cells (not N/E/S/W); all 4 filled = RESONANCE' },
+    ngaithoigian: { name: 'Chrono Throne',  skill: 'Enemies slow over time. Active (3★+): REWIND pushes all enemies back' },
+    nemesis:      { name: 'Nemesis',        skill: 'Executes low-HP enemies; % max-HP judgment on bosses' },
+    docton:       { name: 'Lone Ace',       skill: 'No neighbors: double fire rate and bonus crit' },
+    thaukinh:     { name: 'Focus Lens',     skill: 'Support: neighbors deal more crit damage; crits pierce' },
+    nhieusong:    { name: 'Signal Jammer',  skill: 'On merge: PVP jams rival turrets; Co-op gives ally a free summon' },
+    santhuong:    { name: 'Bounty Beacon',  skill: 'Marks enemies; marked kills give bonus mana' },
+    nhatthuc:     { name: 'Eclipse',        skill: 'Day: burning beam. Night: slowing wave. Swaps every 8s' },
+    loren:        { name: 'Scrap Forge',    skill: 'Drag a 1–3★ turret onto it: permanent damage stacks' },
+    guongcong:    { name: 'Mirror Gate',    skill: 'PVP: reflects rival control. Co-op: copies ally merges. Solo: blocks boss skills' },
+    marionette:   { name: 'Marionette',     skill: 'Takes control of an enemy, walks it backward, then boom' },
   },
 };
 
 // ảnh chân dung thẻ của 1 ụ (đổi ảnh: thêm TEXT.turret[id].portrait)
 // chân dung phi công (đã duyệt) — thêm id vào đây khi có ảnh assets/pilot_<id>.png mới
-const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang']);
+const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang',
+  'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
+  'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette']);
 function iconOf(id) { return 'assets/nho/' + id + '.png'; }
 function hasPilot(id) { const t = TEXT.turret[id]; return !!((t && t.portrait) || PILOTS.has(id)); }
 function portraitOf(id) { const t = TEXT.turret[id]; return (t && t.portrait) || (PILOTS.has(id) ? 'assets/pilot_' + id + '.png' : iconOf(id)); }
