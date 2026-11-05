@@ -51,7 +51,7 @@ const FXU = {
     const a = REN.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
-    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png — tô màu trong alpha của ảnh PNG
     return (this._mau[key] = c);
   },
   donMau() { this._mau = {}; },
@@ -189,7 +189,7 @@ const PX = {
     if (!c) {
       if (this._cung.size > 600) this._cung.clear();
       c = document.createElement('canvas'); c.width = c.height = n; const g = c.getContext('2d'), h = n / 2;
-      g.beginPath(); g.moveTo(h, h); g.arc(h, h, h, b0 * q, b1 * q, !!nguoc); g.closePath(); g.clip(); // mặt nạ cắt quạt (vô hình)
+      g.beginPath(); g.moveTo(h, h); g.arc(h, h, h, b0 * q, b1 * q, !!nguoc); g.closePath(); g.clip(); // mặt nạ cắt quạt (vô hình) // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
       g.drawImage(REN.mip(vm, n), 0, 0, n, n);
       // cắt sát khung bao của cung (vòng sáng nằm trong 0.55–1.0 bán kính ảnh) → vẽ ít điểm ảnh hơn mỗi khung
       let x0 = n, y0 = n, x1 = 0, y1 = 0; const A0 = b0 * q, A1 = b1 * q, d = nguoc ? (A1 > A0 ? A1 - A0 - 2 * Math.PI : A1 - A0) : (A1 < A0 ? A1 - A0 + 2 * Math.PI : A1 - A0);

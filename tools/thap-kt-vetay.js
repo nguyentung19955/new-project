@@ -17,7 +17,7 @@ const JS_RULES = [
   [/\.arc\s*\(/, 'arc'], [/\.arcTo\s*\(/, 'arcTo'], [/\.ellipse\s*\(/, 'ellipse'],
   [/\.(fill|stroke)Rect\s*\(/, 'fill/strokeRect'], [/\.rect\s*\(/, 'rect'], [/\.roundRect\s*\(/, 'roundRect'],
   [/\.(moveTo|lineTo|quadraticCurveTo|bezierCurveTo)\s*\(/, 'path'],
-  [/\.fill\s*\(/, 'fill'], [/\.stroke\s*\(/, 'stroke'],
+  [/\.fill\s*\(\s*(\)|['"](nonzero|evenodd)['"]|(?!null\b|undefined\b|true\b|false\b)[A-Za-z_$][\w$.]*\s*[,)])/, 'fill'] /* Array.fill(giá trị) không phải vẽ */, [/\.stroke\s*\(/, 'stroke'],
   [/create(Linear|Radial|Conic)Gradient/, 'gradient'], [/createPattern/, 'pattern'],
   [/setLineDash/, 'setLineDash'], [/shadowBlur\s*=/, 'shadowBlur'], [/new\s+Path2D/, 'Path2D'],
   [/putImageData/, 'putImageData'],
@@ -31,7 +31,7 @@ const CSS_RULES = [
   [/filter\s*:[^;]*drop-shadow/, 'drop-shadow'], [/text-shadow\s*:(?!\s*none)/, null], // text-shadow on real text is allowed
 ];
 // border dùng làm khung ẢNH (border-image PNG, viền trong suốt) không phải vẽ tay
-const BORDER_ANH = /border-image|solid transparent/;
+const BORDER_ANH = /border-image|(solid|dashed|dotted) transparent/;
 const OK = /vetay-ok\s*:\s*(text|png|mask|debug|hit|nen)/;
 
 function walk(p, out) {

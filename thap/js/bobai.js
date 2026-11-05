@@ -23,7 +23,7 @@ const BOBAI = {
   VAI: [['all', 'ALL'], ['tc', 'ATTACK'], ['ht', 'SUPPORT'], ['db', 'SPECIAL']],
   loc: { vai: 'all', q: '' },
 
-  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) this.loc = { vai: l.vai || 'all', q: '' + (l.q || '') }; } catch (e) { } },
+  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l && typeof l === 'object') this.loc = { vai: this.VAI.some(v => v[0] === l.vai) ? l.vai : 'all', q: typeof l.q === 'string' ? l.q.slice(0, 40) : '' }; } /* bản lưu cũ/hỏng: vai lạ → ALL (không thì lưới trống) */ catch (e) { } },
   luu() { try { localStorage.setItem(this.KEY, JSON.stringify(this.loc)); } catch (e) { } },
   hopLe(a) { return a.deck.every(id => SKILLS[id] && G.rosterMap[id]) && MAVUONG[a.mv]; },
 

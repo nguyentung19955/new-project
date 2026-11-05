@@ -45,10 +45,10 @@
 .hm-tien { height: 40px; display: flex; align-items: center; gap: 6px; padding: 0 16px 0 26px; font: 700 11px/1 var(--f-chu); color: var(--m-mo); letter-spacing: .08em;
   border: 0 solid transparent; border-image: url(../assets/h2_lcd.png) 34 60 fill / 12px 20px stretch; }
 .hm-tien b { font: 800 17px/1 var(--f-hien); color: var(--m-chu); }
-.hm-logo { position: absolute; left: 50%; top: 70px; width: 300px; margin-left: -150px; z-index: 2; pointer-events: none; filter: drop-shadow(0 6px 8px #000a); }
+.hm-logo { position: absolute; left: 50%; top: 70px; width: 300px; margin-left: -150px; z-index: 2; pointer-events: none; filter: drop-shadow(0 6px 8px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .hm-anh { position: absolute; left: 30px; right: 0; top: 170px; height: 420px; z-index: 1; pointer-events: none; display: flex; justify-content: center;
-  -webkit-mask-image: linear-gradient(#000 0 62%, transparent 96%), linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(#000 0 62%, transparent 96%), linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-composite: intersect; }
+  -webkit-mask-image: linear-gradient(#000 0 62%, transparent 96%), linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); -webkit-mask-composite: source-in; /* vetay-ok: mask — mặt nạ cắt mép ảnh, không thấy như vật thể */
+  mask-image: linear-gradient(#000 0 62%, transparent 96%), linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-composite: intersect; } /* vetay-ok: mask — mặt nạ cắt mép ảnh, không thấy như vật thể */
 .hm-anh img { width: 420px; height: 420px; object-fit: cover; object-position: 50% 20%; animation: hm-tho 6s ease-in-out infinite alternate; }
 @keyframes hm-tho { from { transform: translateY(0) scale(1); } to { transform: translateY(-6px) scale(1.012); } }
 .hm-duoi { position: absolute; left: var(--le); right: var(--le); bottom: 22px; z-index: 3; display: flex; flex-direction: column; gap: 12px; }
@@ -105,7 +105,7 @@
   border: 0 solid transparent; border-image: url(../assets/h2_tam.png) 22 40 fill / 12px 22px stretch; }
 .dk-noi-po { flex: none; width: 46px; height: 46px; overflow: hidden; }
 .dk-noi-po img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
-.dk-noi-u { flex: none; width: 34px; height: 34px; object-fit: contain; margin-left: -18px; margin-top: 16px; filter: drop-shadow(0 1px 2px #000); }
+.dk-noi-u { flex: none; width: 34px; height: 34px; object-fit: contain; margin-left: -18px; margin-top: 16px; filter: drop-shadow(0 1px 2px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .dk-noi-chu { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .dk-noi-chu b { font: 800 17px/1 var(--f-hien); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dk-noi-chu small, .dk-mv-chu small { font: 700 12px/1 var(--f-chu); color: var(--m-mo); }
@@ -207,7 +207,7 @@
 .hm-xem { display: flex; gap: 14px; align-items: flex-start; position: relative; }
 .hm-xem-po { flex: none; width: 104px; height: 104px; overflow: hidden; border: 0 solid transparent; border-image: url(../assets/o_trong.png) 28 fill / 10px stretch; }
 .hm-xem-po img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
-.hm-xem-u { position: absolute; left: 70px; top: 70px; width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 2px 3px #000); }
+.hm-xem-u { position: absolute; left: 70px; top: 70px; width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 2px 3px #000); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .hm-xem-chu { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
 .hm-xem-chu b { font: 800 24px/1 var(--f-hien); color: var(--m-chu); }
 .hm-xem-chu small { font: 700 13px/1 var(--f-chu); color: var(--m-mo); }

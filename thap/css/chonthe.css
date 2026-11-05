@@ -12,7 +12,7 @@
 /* lưới cuộn: chừa chỗ cho thẻ hàng đầu nhấc lên + viền (không bị cắt mép trên) */
 #chon #chon-luoi { padding-top: 10px; }
 /* huy hiệu 'trong bộ' = ảnh của nút thêm/bỏ (.up-q) ở góc trên-phải ô cửa sổ (không che mặt / LV / icon vai trò / tên) */
-.c.chon .up-q, .co-s10 .c.chon .up-q { width: 30px; height: 16px; border: 0; border-radius: 0; background: url(../assets/chon_huy.png) center / 100% 100% no-repeat; filter: drop-shadow(0 1px 1px #000a); }
+.c.chon .up-q, .co-s10 .c.chon .up-q { width: 30px; height: 16px; border: 0; border-radius: 0; background: url(../assets/chon_huy.png) center / 100% 100% no-repeat; filter: drop-shadow(0 1px 1px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .co-khung .c.chon.co-kh .up-q { right: calc(15.6% - 2px); top: calc(var(--khh) * .189 - 1px); width: 30px; height: 16px; }
 .c.chon .up-q::before { content: none; }
 

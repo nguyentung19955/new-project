@@ -72,6 +72,13 @@ const HD = {
 
   hien(b) {
     const d = this.el; if (!d) return;
+    // màn mở đầu trận (vaotran.js) còn mở → chưa hiện bảng hướng dẫn (trước đây 2 bảng chồng lên nhau); hiện khi nó đóng
+    if (typeof VT !== 'undefined' && VT.mo) {
+      d.hidden = true; this._choVT = b;
+      clearTimeout(this._hVT); this._hVT = setTimeout(() => { if (this._choVT === b && this.dang && this.BUOC[this.i] === b) { this._choVT = null; this.t0 = G.t; this.hien(b); } }, 150);
+      return;
+    }
+    this._choVT = null;
     const so = this.BUOC.filter(x => !x.cho).length, n = Math.min(so, this.BUOC.indexOf(b) + 1);
     d.querySelector('.hd-so').textContent = 'TUTORIAL ' + n + '/' + so;
     d.querySelector('.hd-chu').textContent = b.chu + (b.can ? ' (' + this.dem + '/' + b.can + ')' : '');

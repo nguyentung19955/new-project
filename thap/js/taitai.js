@@ -96,7 +96,9 @@ const TAI = {
   // ---------- màn tải ----------
   dung() {
     if (this._dung) return; this._dung = true;
-    const w = document.getElementById('wrap') || document.body;
+    // tràn màn: gắn vào <body> (ngoài khung #wrap đã co) — riêng khung xem trước (iframe Test range) giữ trong #wrap
+    const w = (this.xem && document.getElementById('wrap')) || document.body;
+    this.tk(); addEventListener('resize', () => this.tk()); if (window.visualViewport) visualViewport.addEventListener('resize', () => this.tk());
     const t = document.createElement('div'); t.id = 'tai'; if (this.xem) t.className = 'nho';
     t.innerHTML = '<div class="tai-giua"><div class="tai-logo"></div>' +
       '<div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png" alt=""></div></div>' +
@@ -108,9 +110,15 @@ const TAI = {
       '<button class="mm-nut" id="mm-nut">RECONNECT</button></div>';
     w.appendChild(m);
     m.querySelector('.mm-bang').style.borderImageSource = 'url(' + TAI_ANH.khung_bang + ')';
-    m.querySelector('.mm-nut').style.backgroundImage = 'url(' + TAI_ANH.hud_trieu_san + ')';
+    m.querySelector('.mm-nut').style.borderImageSource = 'url(' + TAI_ANH.hud_trieu_san + ')';
     m.querySelector('#mm-nut').addEventListener('click', (e) => { e.stopPropagation(); if (this.lai) this.veMenu(); else this.thu(true); });
     this.el = t;
+  },
+  // hệ số co nội dung màn tải/mất mạng theo cửa sổ (nền thì luôn phủ kín cửa sổ)
+  tk() {
+    const vw = innerWidth || document.documentElement.clientWidth || 390, vh = innerHeight || document.documentElement.clientHeight || 844;
+    const k = Math.max(0.8, Math.min(1.6, vw / 430, vh / 640));
+    document.documentElement.style.setProperty('--tk', k.toFixed(3));
   },
   hien(nhan) {
     this.dung(); const t = this.el;
@@ -247,7 +255,7 @@ if (window.visualViewport) visualViewport.addEventListener('resize', () => hoiKh
 document.addEventListener('visibilitychange', () => { if (!document.hidden) hoiKhung(true); });
 TAI.bootP = new Promise(r => { TAI._bootXong = r; });
 TAI.dung();
-TAI.hien('LOADING'); { const w = document.getElementById('wrap'); if (w) w.classList.remove('dang-tai'); } // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
+TAI.hien('LOADING'); { const w = document.getElementById('wrap'); if (w) w.classList.remove('dang-tai'); document.documentElement.classList.remove('dang-tai'); } // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
 addEventListener('offline', () => TAI.matMang('offline'));
 addEventListener('online', () => TAI.thu());
 if (!navigator.onLine) TAI.matMang('boot-offline');

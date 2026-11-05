@@ -82,8 +82,8 @@
 .co-khung #the-mv.co-kh .mv-gia { height: 18px; z-index: 3; }
 
 /* ---------- tấm nhỏ S9 ---------- */
-.co-trieu #nut-trieu .tr-cap > img.ic-trieu { width: 46px; height: 46px; filter: drop-shadow(0 2px 0 #0008); margin: -6px -4px -6px -6px; }
-.co-trieu #nut-trieu.thieu .tr-cap > img.ic-trieu { filter: grayscale(.85) brightness(.65) drop-shadow(0 2px 0 #0008); }
+.co-trieu #nut-trieu .tr-cap > img.ic-trieu { width: 46px; height: 46px; filter: drop-shadow(0 2px 0 #0008); margin: -6px -4px -6px -6px; } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+.co-trieu #nut-trieu.thieu .tr-cap > img.ic-trieu { filter: grayscale(.85) brightness(.65) drop-shadow(0 2px 0 #0008); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 .co-lv #bo-the .the .lv, .co-lv #bo-the .the .so:not(:empty) { background: none; border: 0 solid transparent; border-image: url(../assets/ui_lv.png) 0 16 fill / 0 5px / 0 stretch;
   height: 14px; line-height: 14px; padding: 0 5px; color: #f1f3f6; text-shadow: 0 1px 0 #000; }
 .co-lv #bo-the .the .so:not(:empty) { color: #ffe46b; }

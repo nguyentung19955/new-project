@@ -54,7 +54,7 @@
       wrap.style.transformOrigin = '0 0'; wrap.style.transform = 'scale(' + s + ')';
       return true;
     }
-    if (!/[?&]preview=/.test(location.search)) document.getElementById('wrap').className = 'dang-tai'; // che menu chưa có ảnh tới khi màn tải (taitai.js) dựng xong
+    if (!/[?&]preview=/.test(location.search)) { document.getElementById('wrap').className = 'dang-tai'; document.documentElement.className = 'dang-tai'; } // che menu chưa có ảnh tới khi màn tải (taitai.js) dựng xong
     datKhung(); addEventListener('resize', function () { if (typeof hoiKhung !== 'function') datKhung(); });
     </script>
     <canvas id="cv"></canvas>
