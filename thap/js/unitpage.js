@@ -222,6 +222,10 @@ const UP = {
     el.addEventListener('pointercancel', () => { x0 = null; });
   },
   capNutBo() {
+    const gl = this.el.querySelector('.up-gl');
+    if (gl && typeof ND !== 'undefined' && ND.url && typeof GLYPH !== 'undefined') { // biểu tượng nhận diện (glyph.js): màu khoá = ô trong bộ bài
+      try { const k = UI.chon.indexOf(this.id); gl.src = ND.url(this.id, k >= 0 ? ND.KEY[k % 5] : null, 48); gl.hidden = false; } catch (e) { gl.hidden = true; }
+    }
     const el = this.el, id = this.id, nut = el.querySelector('.up-nut'), co = upCo(id), trong = UI.chon.includes(id);
     nut.textContent = !co ? UP_TXT.locked : trong ? UP_TXT.remove : UP_TXT.add;
     nut.disabled = !co; nut.classList.toggle('bo', trong);
@@ -261,7 +265,7 @@ const UP = {
     P.push('<section class="up-hero">' +
       '<div class="up-po"><img src="' + portraitOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"><span class="up-seri">' + upSoSeri(id) + '</span></div>' +
       '<div class="up-mam"><i class="up-vong"></i><i class="up-vong b"></i><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt=""><img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div>' +
-      '<span class="up-ngoc"></span></div></section>');
+      '<span class="up-ngoc"></span><img class="up-gl" alt="" hidden></div></section>');
     // bảng tên
     const chip = ['<span class="up-chip bac">' + upEsc(upSC(tier.ten)) + '</span>'];
     if (vai) chip.push('<span class="up-chip">' + UP_TXT.role[vai] + '</span>');
@@ -411,6 +415,7 @@ if (!UP_XEM) {
 // ===================================================== chế độ XEM TRƯỚC (bên trong iframe) =====================================================
 if (UP_XEM) {
   document.documentElement.classList.add('up-xem');
+  G.debug.nointro = true;
   for (const k in SND) if (typeof SND[k] === 'function') SND[k] = function () { };
   for (const k of ['bangWave', 'canhBaoTrum', 'ketQua', 'cutIn', 'nhac']) UI[k] = function () { };
   ketThuc = function () { };
