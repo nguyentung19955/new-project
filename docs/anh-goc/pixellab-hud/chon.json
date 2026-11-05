@@ -1,0 +1,402 @@
+{
+ "gd-vong-thuong": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   152,
+   152
+  ],
+  "giu_hinh": false
+ },
+ "gd-vong-fire": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   152,
+   152
+  ],
+  "giu_hinh": false
+ },
+ "gd-vong-ice": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   152,
+   152
+  ],
+  "giu_hinh": false
+ },
+ "gd-vong-poison": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   152,
+   152
+  ],
+  "giu_hinh": false
+ },
+ "gd-vong-ngoc": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   112,
+   112
+  ],
+  "giu_hinh": false
+ },
+ "gd-vong-sat": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   112,
+   112
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-vuong": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   84,
+   84
+  ],
+  "giu_hinh": true
+ },
+ "gd-can-de": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   132,
+   132
+  ],
+  "giu_hinh": false
+ },
+ "gd-can-num": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   60,
+   60
+  ],
+  "giu_hinh": false
+ },
+ "gd-o-vk-0": {
+  "seed": 23,
+  "cat": [
+   0,
+   1,
+   108,
+   70
+  ],
+  "giu_hinh": true
+ },
+ "gd-nut-doi": {
+  "seed": 83,
+  "cat": [
+   0,
+   0,
+   80,
+   80
+  ],
+  "giu_hinh": true
+ },
+ "gd-nut-danh-sword": {
+  "seed": 51,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-danh-spear": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-danh-hammer": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-danh-bow": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-dac-biet-sword": {
+  "seed": 51,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-dac-biet-spear": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-dac-biet-hammer": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-dac-biet-bow": {
+  "seed": 37,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-chuong-fire": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-chuong-poison": {
+  "seed": 37,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-chuong-ice": {
+  "seed": 64,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-ne": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-binh-mau": {
+  "seed": 23,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-nut-tam-dung": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   48,
+   48
+  ],
+  "giu_hinh": false
+ },
+ "gd-khung-mau": {
+  "seed": 11,
+  "cat": [
+   1,
+   1,
+   66,
+   22
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-mana": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   64,
+   16
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-xp": {
+  "seed": 23,
+  "cat": [
+   0,
+   1,
+   56,
+   14
+  ],
+  "giu_hinh": true
+ },
+ "gd-ruot-thanh": {
+  "seed": 37,
+  "cat": [
+   0,
+   0,
+   64,
+   40
+  ],
+  "giu_hinh": false
+ },
+ "gd-ruot-thanh-trum": {
+  "seed": 83,
+  "cat": [
+   0,
+   3,
+   64,
+   10
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-trum": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   120,
+   60
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-trum-nho": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   104,
+   52
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-tinh-anh": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   88,
+   44
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-mau-quai": {
+  "seed": 37,
+  "cat": [
+   0,
+   12,
+   164,
+   8
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-nho": {
+  "seed": 11,
+  "cat": [
+   0,
+   1,
+   128,
+   38
+  ],
+  "giu_hinh": true
+ },
+ "gd-khung-vach-lk": {
+  "seed": 23,
+  "cat": [
+   0,
+   1,
+   64,
+   14
+  ],
+  "giu_hinh": true
+ },
+ "gd-sao": {
+  "seed": 11,
+  "cat": [
+   0,
+   0,
+   24,
+   24
+  ],
+  "giu_hinh": false
+ },
+ "gd-tt-chay": {
+  "seed": 51,
+  "cat": [
+   1,
+   1,
+   18,
+   18
+  ],
+  "giu_hinh": false
+ },
+ "gd-tt-doc": {
+  "seed": 37,
+  "cat": [
+   1,
+   1,
+   18,
+   18
+  ],
+  "giu_hinh": false
+ },
+ "gd-tt-bang": {
+  "seed": 37,
+  "cat": [
+   1,
+   1,
+   18,
+   18
+  ],
+  "giu_hinh": false
+ }
+}
