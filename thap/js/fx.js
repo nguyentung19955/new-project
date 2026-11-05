@@ -17,7 +17,7 @@ const FX = {
   hat1(k, x, y, vx, vy, song, co, mau) {
     if (this.hat.length >= this.MAX_HAT || (this.giam < 1 && Math.random() > this.giam)) return null;
     const p = this._kho.pop() || {};
-    p.k = k; p.x = x; p.y = y; p.vx = vx; p.vy = vy; p.t = 0; p.song = song; p.co = co; p.mau = mau || '#fff';
+    p.k = k; p.x = x; p.y = y; p.vx = vx; p.vy = vy; p.t = 0; p.song = k === 'khoi' ? song : Math.min(song, 0.6); p.co = k === 'lua' || k === 'than' ? Math.min(co, 12) : co; p.mau = mau || '#fff';
     p.g = k === 'bui' ? -20 : (k === 'khoi' ? -26 : (k === 'than' ? -30 : 0)); p.xoay = Math.random() * 6.28; p.vxoay = (Math.random() - 0.5) * 4;
     this.hat.push(p); return p;
   },
@@ -43,6 +43,12 @@ const FX = {
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
     if (this.anim.length >= this.MAX_ANIM) this.anim.shift();
+    // ngân sách hiệu ứng (tư vấn C): trúng đòn thường ≤ ~0.75 ô & ≤ 0.26 s; đòn lớn ≤ ~1.4 ô & ≤ 0.45 s
+    if (ten !== 'chop_nong') {
+      const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // 2 = chiêu lớn / trùm / ụ đỏ: giữ chỗ cho cảnh hoành tráng
+      co = Math.min(co, [46, 88, 170][cap]);
+      song = Math.min(song || 0.42, [0.26, 0.45, 0.65][cap]);
+    }
     const A = { ten, x, y, co, t: 0, song: song || 0.42, goc: goc || 0, bam: bam || null, T: null, dg: 0 };
     // chớp đầu nòng: bám theo ụ đang bắn (xoay + giật cùng nòng), sống tối thiểu ~5 khung để không "nháy mất"
     if (ten === 'chop_nong') {
@@ -52,9 +58,9 @@ const FX = {
     }
     this.anim.push(A);
   },
-  vong1(x, y, r0, r1, mau, song, day) { this.vong.push({ x, y, r0, r1, mau, t: 0, song: song || 0.45, day: day || 3 }); },
-  lac(m) { this.rung = Math.min(14, Math.max(this.rung, m)); },
-  sang(m, mau) { this.chop = Math.max(this.chop, m); this.chopMau = mau || '#fff'; },
+  vong1(x, y, r0, r1, mau, song, day) { r1 = Math.min(r1, 70); r0 = Math.min(r0, 70); song = Math.min(song || 0.45, 0.4); this.vong.push({ x, y, r0, r1, mau, t: 0, song: song || 0.45, day: day || 3 }); },
+  lac(m) { this.rung = Math.min(8, Math.max(this.rung, m * 0.7)); },
+  sang(m, mau) { this.chop = Math.max(this.chop, Math.min(0.3, m)); this.chopMau = mau || '#fff'; },
 
   capNhat(dt) {
     for (let i = this.hat.length - 1; i >= 0; i--) {
