@@ -187,7 +187,7 @@ const REN = {
     if (this.trang[ten]) return this.trang[ten];
     const a = this.img(ten); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
-    const x = c.getContext('2d'); x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+    const x = c.getContext('2d'); x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (bản trắng của ảnh)
     return (this.trang[ten] = c);
   },
   banXam(ten) {
@@ -197,7 +197,7 @@ const REN = {
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
     const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
     for (let i = 0; i < p.length; i += 4) { const l = (p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11) * 0.85 + 18; p[i] = l * 1.02; p[i + 1] = l; p[i + 2] = l * 0.94; }
-    x.putImageData(d, 0, 0);
+    x.putImageData(d, 0, 0); // vetay-ok: png (bản xám của ảnh)
     return (this.xam[ten] = c);
   },
   // ảnh đã thu nhỏ sẵn đúng cỡ vẽ (px logic) — vẽ 1:1 nhanh hơn nhiều trên điện thoại; bien: '' | 'xam' | 'trang' | 'den'
@@ -213,7 +213,7 @@ const REN = {
     const w = a.width, h = a.height, nw = Math.max(2, Math.round(n * w / Math.max(w, h))), nh = Math.max(2, Math.round(n * h / Math.max(w, h)));
     c = document.createElement('canvas'); c.width = nw; c.height = nh;
     const x = this.c2d(c);
-    if (bien === 'den') { x.filter = 'blur(' + Math.max(1, n / 40) + 'px)'; this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, nw, nh); }
+    if (bien === 'den') { x.filter = 'blur(' + Math.max(1, n / 40) + 'px)'; this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh); x.filter = 'none'; x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, nw, nh); } // vetay-ok: png (bóng = ảnh tô đen)
     else this.veNho(x, a, 0, 0, w, h, 0, 0, nw, nh);
     return this.cSet(key, c);
   },
@@ -221,11 +221,11 @@ const REN = {
   toBien(b, bien) {
     const c = document.createElement('canvas'); c.width = b.width; c.height = b.height;
     const x = c.getContext('2d'); x.drawImage(b, 0, 0);
-    if (bien === 'trang') { x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); }
+    if (bien === 'trang') { x.globalCompositeOperation = 'source-in'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); } // vetay-ok: png
     else {
       const d = x.getImageData(0, 0, c.width, c.height), p = d.data;
       for (let i = 0; i < p.length; i += 4) { const l = (p[i] * 0.3 + p[i + 1] * 0.59 + p[i + 2] * 0.11) * 0.85 + 18; p[i] = l * 1.02; p[i + 1] = l; p[i + 2] = l * 0.94; }
-      x.putImageData(d, 0, 0);
+      x.putImageData(d, 0, 0); // vetay-ok: png
     }
     for (const q of ['nf', 'fm', 'gap']) if (b[q] != null) c[q] = b[q];
     return c;
@@ -246,38 +246,37 @@ const REN = {
   },
   // vẽ ảnh thu nhỏ sẵn ở tâm (0,0) với cỡ px
   ve1(ctx, ten, px, bien, ox, oy) { const c = this.co(ten, px, bien); if (!c) return false; const h = px * c.height / c.width; ctx.drawImage(c, (ox || 0) - px / 2, (oy || 0) - h / 2, px, h); return true; },
-  // chấm sáng mềm theo màu (hạt) — dựng sẵn để không tạo gradient mỗi khung
+  // ẢNH PNG TÔ MÀU (QUY-TAC-HINH mục 3: tô màu ảnh ChatGPT trắng) — dựng 1 lần mỗi màu; ảnh chưa tải → canvas rỗng (không vẽ gì)
+  toMau(ten, mau, a) {
+    const M = this._toMau || (this._toMau = {}), key = ten + '|' + mau + '|' + (a || 0.78);
+    if (M[key]) return M[key];
+    const im = this.img(ten); if (!im) return this.rong();
+    const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
+    const x = c.getContext('2d'); x.drawImage(im, 0, 0);
+    x.globalCompositeOperation = 'source-atop'; x.globalAlpha = a || 0.78; x.fillStyle = mau; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (tô màu ảnh trắng fx_*)
+    return (M[key] = c);
+  },
+  // thanh máu = h2_thanh.png: nền tô đen + phần đầy CẮT theo tỉ lệ, tô màu (QUY-TAC-HINH mục 3)
+  thanhAnh(ctx, x, y, w, h, u, mau) {
+    const nen = this.toMau('h2_thanh', '#05070a', 0.82), day = this.toMau('h2_thanh', mau, 0.85); if (nen === this._rong) return;
+    u = clamp(u, 0, 1); ctx.drawImage(nen, x - 1, y - 1, w + 2, h + 2);
+    if (u > 0) ctx.drawImage(day, 0, 0, day.width * u, day.height, x, y, w * u, h);
+  },
+  rong() { return this._rong || (this._rong = Object.assign(document.createElement('canvas'), { width: 1, height: 1 })); },
+  // chấm sáng mềm theo màu = fx_cham_trang.png (ChatGPT T22) tô màu — không còn gradient vẽ code
   cham1(mau) {
     if (this.cham[mau]) return this.cham[mau];
-    const c = document.createElement('canvas'); c.width = c.height = 64;
-    const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, '#ffffff'); g.addColorStop(0.25, mau); g.addColorStop(1, 'rgba(0,0,0,0)');
-    x.fillStyle = g; x.fillRect(0, 0, 64, 64);
-    return (this.cham[mau] = c);
+    const c = this.toMau('fx_cham_trang', mau);
+    if (c !== this._rong) this.cham[mau] = c;
+    return c;
   },
-
-  // hạt bụi mềm (đĩa xám mép mờ) thay vòng tròn mép cứng
-  bui1() {
-    if (this._bui) return this._bui;
-    const c = document.createElement('canvas'); c.width = c.height = 64;
-    const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, 'rgba(154,150,144,1)'); g.addColorStop(0.55, 'rgba(154,150,144,.85)'); g.addColorStop(1, 'rgba(154,150,144,0)');
-    x.fillStyle = g; x.fillRect(0, 0, 64, 64);
-    return (this._bui = c);
-  },
-  // vệt đạn (motion blur) dựng sẵn theo màu: đuôi mảnh trong suốt → đầu sáng trắng
+  // hạt bụi = fx_bui.png (ChatGPT)
+  bui1() { return this.img('fx_bui') || this.rong(); },
+  // vệt đạn = fx_vet_trang.png (ChatGPT) tô màu
   vet(mau) {
-    let c = this._vet[mau]; if (c) return c;
-    c = document.createElement('canvas'); c.width = 128; c.height = 32;
-    const x = c.getContext('2d');
-    const g = x.createLinearGradient(0, 0, 128, 0);
-    g.addColorStop(0, mau + '00'); g.addColorStop(0.55, mau + '70'); g.addColorStop(0.9, mau + 'ee'); g.addColorStop(1, '#ffffff');
-    x.filter = 'blur(2.5px)'; x.fillStyle = g;
-    x.beginPath(); x.moveTo(2, 16); x.lineTo(112, 7); x.quadraticCurveTo(126, 16, 112, 25); x.closePath(); x.fill();
-    x.filter = 'none';
-    const g2 = x.createLinearGradient(30, 0, 124, 0); g2.addColorStop(0, 'rgba(255,255,255,0)'); g2.addColorStop(1, 'rgba(255,255,255,.95)');
-    x.fillStyle = g2; x.beginPath(); x.moveTo(30, 16); x.lineTo(118, 13.6); x.lineTo(122, 16); x.lineTo(118, 18.4); x.closePath(); x.fill();
-    return (this._vet[mau] = c);
+    const c = this.toMau('fx_vet_trang', mau);
+    if (c !== this._rong) this._vet[mau] = c;
+    return c;
   },
   // ảnh bàn "dịu": giảm bão hoà (sat), giảm tương phản (con), tối đi (bri), ngả nhẹ về gunmetal #292D32 — xử lý điểm ảnh 1 lần
   // (không dùng ctx.filter vì Safari iOS chưa hỗ trợ). Tư vấn mục C: bàn tối, trung tính, ít chi tiết sáng.
@@ -306,7 +305,7 @@ const REN = {
         p[i + k] = v < 0 ? 0 : v > 255 ? 255 : v;
       }
     }
-    x.putImageData(d, 0, 0);
+    x.putImageData(d, 0, 0); // vetay-ok: png (ảnh khay/đường dịu màu)
     // ảnh nền (khay, đường) chỉ dùng qua bản dịu → bỏ bản gốc cỡ lớn khỏi bộ nhớ
     if (this.anh[ten] && this.anh[ten]._cv === a) delete this.anh[ten];
     return (this.xam[key] = c);
@@ -322,7 +321,8 @@ const REN = {
     let c = this.cGet(key); if (c) return c;
     const a = this.img('cong'); if (!a) return null;
     c = document.createElement('canvas'); c.width = c.height = n;
-    const x = c.getContext('2d'); x.beginPath(); x.arc(n / 2, n / 2, n * 0.3, 0, 7); x.clip(); this.min(x); this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, n, n);
+    const x = c.getContext('2d'); x.beginPath(); x.arc(n / 2, n / 2, n * 0.3, 0, 7); x.clip(); // vetay-ok: mask (cắt tròn lõi cổng PNG)
+    this.min(x); this.veNho(x, a, 0, 0, a.width, a.height, 0, 0, n, n);
     return this.cSet(key, c);
   },
   // chữ nổi dựng sẵn thành ảnh (viền + chữ) — vẽ chữ mỗi khung rất tốn; mỗi con số chỉ dựng 1 lần rồi dùng lại suốt đời nó
@@ -341,13 +341,13 @@ const REN = {
     c.tw = tw; c.lw = lw; c.lh = lh; c.by = by;
     M.set(key, c); return c;
   },
-  // quầng sáng tròn dựng sẵn (thay createRadialGradient mỗi khung)
+  // quầng sáng tròn = fx_cham_trang.png tô màu (màu + độ mờ lấy từ mốc đầu) — thay gradient vẽ code
   glow(key, stops) {
     let c = this._glow[key]; if (c) return c;
+    const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/.exec(stops[0][1]) || [0, 255, 255, 255, 1];
+    const im = this.toMau('fx_cham_trang', 'rgb(' + m[1] + ',' + m[2] + ',' + m[3] + ')', 0.9); if (im === this._rong) return im;
     c = document.createElement('canvas'); c.width = c.height = 128;
-    const x = c.getContext('2d'), g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-    for (const [o, m] of stops) g.addColorStop(o, m);
-    x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+    const x = c.getContext('2d'); x.globalAlpha = Math.min(1, (+m[4] || 1) * 1.5); x.drawImage(im, 0, 0, 128, 128);
     return (this._glow[key] = c);
   },
 
@@ -414,8 +414,6 @@ const REN = {
       return;
     }
     for (let i = 0; i < pts.length - 1; i++) this.tia(ctx, 'tia_set', pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], rong, 0, true);
-    ctx.strokeStyle = 'rgba(255,255,230,.9)'; ctx.lineWidth = 1.6; ctx.lineCap = ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0);
-    for (const p of pts) ctx.lineTo(p[0], p[1]); ctx.stroke();
   },
 
   // ---------- nền tĩnh (khay + đường) dựng 1 lần ----------
@@ -435,19 +433,14 @@ const REN = {
     const x = c.getContext('2d'); if (!x) { this._choNen = true; return; }
     this.min(x);
     x.setTransform(k, 0, 0, k, 0, 0);
-    // sàn xưởng máy tối (gradient + quầng tối viền)
-    const g = x.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, '#1c1e22'); g.addColorStop(0.5, '#25272b'); g.addColorStop(1, '#17181b');
-    x.fillStyle = g; x.fillRect(0, 0, W, H);
-    const v = x.createRadialGradient(W / 2, H * 0.45, 120, W / 2, H * 0.45, 560);
-    v.addColorStop(0, 'rgba(255,255,255,0.05)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
-    x.fillStyle = v; x.fillRect(0, 0, W, H);
+    // sàn: KHÔNG gradient code — để trong suốt, nền #wrap (CSS màu đặc) lộ ra; ảnh sàn mới chờ raw_p4_board_1
+    x.fillStyle = '#1d1f23'; x.fillRect(0, 0, W, H); // vetay-ok: nen (1 màu nền đặc như CSS background-color — không gradient/vật thể)
     let du = true;
     // khay bàn máy móc xám (bóng đổ dưới khay)
     for (const B of G.ban) {
-      x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18 * q; x.shadowOffsetY = 8 * q;
+      x.save(); // (bỏ bóng đổ code dưới khay — khung khay PNG đã có viền tối)
       const kh = this.diu('khay', 0.22, 0.72, 0.6);
-      if (kh) { try { x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); } catch (e) { x.drawImage(kh, B.x, B.y, B.w, B.h); this._diuTam = true; } } else { du = false; if (this.dbg) { x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); } }
+      if (kh) { try { x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); } catch (e) { x.drawImage(kh, B.x, B.y, B.w, B.h); this._diuTam = true; } } else { du = false; }
       x.restore();
     }
     this.thaMip(this.xam['diu|khay|0.220.720.6']); // các tầng mip chỉ cần lúc dựng nền
@@ -480,7 +473,6 @@ const REN = {
       y.drawImage(n3, jx - R, jy - R, DUONG_RONG, DUONG_RONG);
     }
     x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
-    x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10 * q;
     x.drawImage(lp, 0, 0); x.restore();
     lp.width = lp.height = 0; // lớp đường chỉ là trung gian: trả bộ nhớ ngay (giữ đối tượng để dùng lại)
     this._choNen = !du || this._diuTam;
@@ -490,7 +482,7 @@ const REN = {
   veDoanDuong(x, th, ax, ay, bx, by) {
     const L = Math.hypot(bx - ax, by - ay); if (L < 1) return;
     x.save(); x.translate(ax, ay); x.rotate(Math.atan2(by - ay, bx - ax) - Math.PI / 2);
-    if (!th) { x.fillStyle = '#44474d'; x.fillRect(-DUONG_RONG / 2, 0, DUONG_RONG, L); x.restore(); return; }
+    if (!th) { x.restore(); return; } // ảnh đường chưa tải: không vẽ thay
     const tl = th.height * (DUONG_RONG / th.width);
     for (let y = 0; y < L; y += tl) {
       const h = Math.min(tl, L - y);
@@ -580,7 +572,8 @@ const REN = {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (this._choNen && G.ban.length && !(performance.now() - this._tNen < 1500)) this.lamNen(); // nền tạm → thử dựng lại
     if (G.debug && G.debug.log && !(performance.now() - (this._tLog || 0) < 10000)) { this._tLog = performance.now(); console.log('[bo-nho]', JSON.stringify(this.boNho())); }
-    if (this.nen && this.nen.width) ctx.drawImage(this.nen, 0, 0, this.cv.width, this.cv.height); else { ctx.fillStyle = '#222'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); }
+    if (!(this.nen && this.nen.width)) { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
+    if (this.nen && this.nen.width) ctx.drawImage(this.nen, 0, 0, this.cv.width, this.cv.height);
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
     if (!G.ban.length) return;
     this.veDongChay(ctx);
@@ -610,7 +603,7 @@ const REN = {
     ND.veKeoTren(ctx);
     this.veChu(ctx);
     if (typeof CORE !== 'undefined') CORE.veHud(ctx, this); // số tim trên lõi nhà chính
-    if (FX.chop > 0) { ctx.globalAlpha = Math.min(0.3, FX.chop); ctx.fillStyle = FX.chopMau; ctx.fillRect(-20, -20, W + 40, H + 40); ctx.globalAlpha = 1; }
+    if (FX.chop > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(0.3, FX.chop); ctx.drawImage(this.cham1(FX.chopMau), -W * 0.6, -H * 0.4, W * 2.2, H * 1.8); ctx.restore(); ctx.globalAlpha = 1; } // chớp màn = fx_cham_trang PNG phóng to
   },
 
   // dòng chảy: mũi tên ›› mờ trôi dọc đường về lõi (co-op: 2 làn nhập vào hành lang chung đọc rõ)
@@ -636,13 +629,13 @@ const REN = {
             if (u < dau) continue;
             const cx = ax + dx * u, cy = ay + dy * u, nx = -dy * 6, ny = dx * 6;
             if (mui) { ctx.setTransform(m0.a * dx, m0.a * dy, -m0.a * dy, m0.a * dx, m0.e + m0.a * cx, m0.f + m0.a * cy); ctx.drawImage(mui, -9, -4.7, 14, 9.3); continue; }
-            ctx.moveTo(cx - dx * 5 + nx, cy - dy * 5 + ny); ctx.lineTo(cx + dx * 2, cy + dy * 2); ctx.lineTo(cx - dx * 5 - nx, cy - dy * 5 - ny);
+            ctx.moveTo(cx - dx * 5 + nx, cy - dy * 5 + ny); ctx.lineTo(cx + dx * 2, cy + dy * 2); ctx.lineTo(cx - dx * 5 - nx, cy - dy * 5 - ny); // vetay-ok: debug (chỉ ?debug khi thiếu duong_mui)
           }
         }
         s0 += L;
       }
     }
-    if (!mui) { ctx.strokeStyle = 'rgba(120,235,255,.2)'; ctx.stroke(); }
+    if (!mui) { ctx.strokeStyle = 'rgba(120,235,255,.2)'; ctx.stroke(); } // vetay-ok: debug
     ctx.restore();
   },
   veCongLoi(ctx) {
@@ -683,14 +676,11 @@ const REN = {
         ctx.drawImage(tam, 0, 0, dau, tam.height, x0, y0, xa - x0, th);
         ctx.drawImage(tam, dau, 0, tam.width - dau - cuoi, tam.height, xa, y0, xb - xa, th);
         ctx.drawImage(tam, tam.width - cuoi, 0, cuoi, tam.height, xb, y0, x0 + tw - xb, th);
-        ctx.fillStyle = den; ctx.beginPath(); ctx.arc(x0 + tam.height * 0.5 * sc, y, 2.6, 0, Math.PI * 2); ctx.fill();
+        // (đèn phe: không vẽ chấm code — ổ LED đã có trong ảnh hud_ten_ban)
         ctx.fillStyle = '#16181c'; ctx.fillText(s, x0 + dau * sc + 1, y + 1.3); ctx.fillStyle = '#f2f4f7'; ctx.fillText(s, x0 + dau * sc + 1, y + 0.5);
         continue;
       }
-      ctx.fillStyle = '#000'; ctx.fillRect(x, y - h / 2 + 1, w, h);
-      ctx.fillStyle = '#2b2e33'; ctx.fillRect(x, y - h / 2, w, h);
-      ctx.fillStyle = '#4b5059'; ctx.fillRect(x, y - h / 2, w, 1);
-      ctx.fillStyle = den; ctx.beginPath(); ctx.arc(x + 8, y, 3, 0, Math.PI * 2); ctx.fill();
+      // ảnh tấm tên chưa tải: chỉ chữ (không vẽ tấm thép code)
       ctx.fillStyle = '#dfe3e9'; ctx.fillText(s, x + 15, y + 0.5);
     }
     ctx.textAlign = 'center';
@@ -706,7 +696,7 @@ const REN = {
       const oy = bay ? -6 + Math.sin(E.bob) * 2.5 : 0;
       // bóng tiếp đất
       ctx.globalAlpha = 0.45 * al;
-      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(E.x + 2, E.y + 3 + (bay ? 6 : 0), co * 0.3 * (bay ? 0.75 : 1), 0, 7); ctx.fill(); // bóng tròn (nhìn thẳng từ trên)
+      this.anhGiua(ctx, this.cham1('#000000'), E.x + 2, E.y + 3 + (bay ? 6 : 0), co * 0.75 * (bay ? 0.75 : 1)); // bóng = fx_cham_trang PNG tô đen (không arc code)
       ctx.globalAlpha = al;
       const ten = E.trum ? 'trum_' + E.trum : 'quai_' + (E.d.anh || E.id);
       let f, f2 = -1, fr = 0;
@@ -716,9 +706,7 @@ const REN = {
       const x = E.x, y = E.y + oy, cv = co * sc;
       if (E.bao) { // trùm báo trước: quầng màu chiêu
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        const gg = ctx.createRadialGradient(x, y, 4, x, y, co * 0.9); const m = TRUM[E.trum].mau;
-        gg.addColorStop(0, m + 'aa'); gg.addColorStop(1, m + '00');
-        ctx.globalAlpha = 0.6 + 0.4 * Math.sin(this.t * 20); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y, co * 0.9, 0, 7); ctx.fill(); ctx.restore();
+        ctx.globalAlpha = 0.6 + 0.4 * Math.sin(this.t * 20); this.anhGiua(ctx, this.cham1(TRUM[E.trum].mau), x, y, co * 1.9); ctx.restore(); // quầng = PNG tô màu
         ctx.globalAlpha = al;
       }
       const lanh = E.cham > 0 && !E.d.khangCham && !E.chet;
@@ -733,7 +721,7 @@ const REN = {
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = al;
       }
       const dai = this.coDai(ten, co);
-      if (!dai || !this.khung(ctx, ten, f, x, y, cv, goc, dai)) { if (this.dbg) { ctx.fillStyle = '#a040ff'; ctx.beginPath(); ctx.arc(x, y, co * 0.3, 0, 7); ctx.fill(); } }
+      if (!dai || !this.khung(ctx, ten, f, x, y, cv, goc, dai)) { if (this.dbg) { ctx.fillStyle = '#a040ff'; ctx.beginPath(); ctx.arc(x, y, co * 0.3, 0, 7); ctx.fill(); } } // vetay-ok: debug
       else if (f2 >= 0) { ctx.globalAlpha = al * fr; this.khung(ctx, ten, f2, x, y, cv, goc, dai); ctx.globalAlpha = al; } // chuyển khung bước đi êm
       if (E.flash > 0 || E.chet) {
         const w = this.coDai(ten, co, 'trang');
@@ -744,19 +732,16 @@ const REN = {
       // thanh máu
       if (!E.chet && E.hp < E.max && !E.trum) {
         const w = Math.max(18, co * 0.55), yy = y - co * 0.42;
-        ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(x - w / 2 - 1, yy - 1, w + 2, 5);
-        ctx.fillStyle = E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a');
-        ctx.fillRect(x - w / 2, yy, w * clamp(E.hp / E.max, 0, 1), 3);
+        this.thanhAnh(ctx, x - w / 2, yy, w, 3.5, E.hp / E.max, E.docT > 0 ? '#7cff4a' : (E.cham > 0 && !E.d.khangCham ? '#6fd8ff' : '#ff4a4a'));
       }
       if (lanh) { ctx.globalAlpha = 0.85 * al; const k = this.kyHieu('cham', 8); ctx.drawImage(k, x - Math.max(18, co * 0.55) / 2 - 10, y - co * 0.42 - 3, 8, 8); ctx.globalAlpha = al; }
       if (E.trum && !E.chet) {
         const w = 70, yy = y - co * 0.55;
-        ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(x - w / 2 - 2, yy - 2, w + 4, 8);
-        ctx.fillStyle = TRUM[E.trum].mau; ctx.fillRect(x - w / 2, yy, w * clamp(E.hp / E.max, 0, 1), 4);
+        this.thanhAnh(ctx, x - w / 2, yy - 1, w, 6, E.hp / E.max, TRUM[E.trum].mau);
         if (E.bao) { // đường ngắm tới ụ bị nhắm
           const B = G.ban[E.ban];
-          ctx.save(); ctx.strokeStyle = TRUM[E.trum].mau; ctx.globalAlpha = 0.7; ctx.lineWidth = 2; ctx.setLineDash([5, 6]); ctx.lineDashOffset = -this.t * 60;
-          for (const T of B.t) if (T && E.bao.muc.includes(T.uid)) { const c = B.o[T.o]; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(c.x, c.y); ctx.stroke(); }
+          ctx.save(); ctx.globalAlpha = 0.75; const ln = this.toMau('sup_link', TRUM[E.trum].mau, 0.6), vd = this.img('h2_vong_do'); // dây ngắm = sup_link PNG cuộn + vòng đỏ PNG trên ụ bị nhắm
+          for (const T of B.t) if (T && E.bao.muc.includes(T.uid)) { const c = B.o[T.o]; this.tia(ctx, ln, x, y, c.x, c.y, 7, this.t * 60); if (vd) this.anhGiua(ctx, vd, c.x, c.y, Math.min(B.cw, B.ch) * 0.86, 0, 0.8); }
           ctx.restore();
         }
       }
@@ -796,8 +781,7 @@ const REN = {
     // bóng tiếp đất (lúc đứng yên: đã nướng sẵn trong ảnh thân → bớt 1 lần tô hình mỗi ụ mỗi khung) — hình TRÒN, không méo
     const bongSan = !an && sx === 1 && sy === 1;
     if (!bongSan) {
-      ctx.fillStyle = 'rgba(0,0,0,.42)';
-      ctx.beginPath(); ctx.arc(x + 2, y + 3 + S * 0.05, S * 0.36 * Math.min(sx, sy), 0, 7); ctx.fill();
+      this.anhGiua(ctx, this.cham1('#000000'), x + 2, y + 3 + S * 0.05, S * 0.9 * Math.min(sx, sy), 0, al * 0.7); ctx.globalAlpha = al; // bóng = PNG tô đen
     }
     if (T.st.lua > 0 || B.cuong > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.1; this.anhGiua(ctx, this.cham1('#ff7a2a'), x, y, S * 1.1); ctx.restore(); ctx.globalAlpha = al; }
     ctx.save(); ctx.translate(x, y + oy); ctx.scale(sx, sy);
@@ -817,8 +801,7 @@ const REN = {
     if (T.nap > 0.02 && !o.ghost && !laGrow(T.id) && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau)) {
       const m = skT.napMau || (T.id === 'overlord' ? '#ff5040' : T.id === 'mana' ? '#c77dff' : T.id === 'blackhole' ? '#ff3b9b' : '#7ffcff');
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      ctx.strokeStyle = m; ctx.lineWidth = 1.8; ctx.globalAlpha = al * 0.7;
-      ctx.beginPath(); ctx.arc(0, 0, S * 0.36, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * T.nap); ctx.stroke();
+      ctx.globalAlpha = al * 0.55 * T.nap; this.anhGiua(ctx, this.toMau('fx_vong_mong', m), 0, 0, S * 0.84); // vòng nạp = fx_vong_mong PNG tô màu, sáng dần theo mức nạp
       if (T.nap > 0.8) { ctx.globalAlpha = al * (T.nap - 0.8) * 1.2 * (0.6 + 0.4 * Math.sin(this.t * 30)); this.anhGiua(ctx, this.cham1(m), 0, 0, S * 0.9); }
       ctx.restore(); ctx.globalAlpha = al;
     }
@@ -828,12 +811,7 @@ const REN = {
       const k2 = 1 - T.lvSang, r = S * (0.42 + k2 * 0.35);
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(1, T.lvSang * 1.4);
       ctx.rotate(k2 * Math.PI * 2.2); ctx.drawImage(vlv, -r, -r, r * 2, r * 2); ctx.restore(); ctx.globalAlpha = al;
-    } else if (T.lvSang > 0) {
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#7dff6a'; ctx.lineWidth = 3; ctx.globalAlpha = T.lvSang;
-      const a0 = (1 - T.lvSang) * Math.PI * 4;
-      ctx.beginPath(); ctx.arc(0, 0, S * 0.4, a0, a0 + Math.PI * 1.2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, S * (0.3 + (1 - T.lvSang) * 0.5), 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al;
-    }
+    } // fx_vong_lv chưa tải: không vẽ vòng code
     // đầu súng
     const C0 = S / 0.98, gd = !o.ghost && T.gd && laGrow(T.id) ? T.gd : 0;
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
@@ -878,10 +856,6 @@ const REN = {
     if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.08 + 0.04 * Math.sin(this.t * 6)); this.anhGiua(ctx, this.cham1('#ffd23f'), 0, 0, S * 0.95); ctx.restore(); ctx.globalAlpha = al; }
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
-    else if (T.st.kep > 0 && !o.ghost) { // bị Kẹp Phá: vòng xích tím quay
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = '#c77dff'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.lineDashOffset = this.t * 30; ctx.globalAlpha = al * 0.7;
-      ctx.beginPath(); ctx.arc(0, 0, S * 0.38, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = al;
-    }
     // lớp phủ trạng thái
     if (T.st.bang > 0) { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; }
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
@@ -910,7 +884,7 @@ const REN = {
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), ox = pad + Math.round((n - a.width) / 2), oy = pad + Math.round((n - a.height) / 2); // đặt nguyên điểm ảnh: không nhoè thêm
     x.filter = 'blur(' + Math.max(1, n / 30) + 'px)'; x.drawImage(a, ox, oy + n * 0.035); x.filter = 'none';
-    x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.6)'; x.fillRect(0, 0, N, N);
+    x.globalCompositeOperation = 'source-in'; x.fillStyle = 'rgba(0,0,0,.6)'; x.fillRect(0, 0, N, N); // vetay-ok: png (bóng đầu súng = ảnh tô đen)
     x.globalCompositeOperation = 'source-over'; x.drawImage(a, ox, oy);
     c.sc = N / n;
     return this.cSet(key, c);
@@ -918,62 +892,40 @@ const REN = {
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
   than(T, S, da, bong) {
-    const km = typeof ND !== 'undefined' ? ND.mauU(T) : null; // màu khoá bộ bài (vòng quanh bệ)
+    const km = 0; // (vòng màu khoá đã bỏ)
     const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (this.img('ngoc_' + T.bac) ? '|n' : '');
     let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
-    if (!de) { if (!this.dbg) return null; de = this.deCode(da); } // thường: KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
+    if (!de) return null; // KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = this.c2d(c);
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
     const SB = S * 0.714;
     de = this.mip(de, SB * q);
-    if (bong) { x.fillStyle = 'rgba(0,0,0,.42)'; x.beginPath(); x.arc(2, SB * 0.06 + 3, SB * 0.5, 0, 7); x.fill(); }
+    if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
     x.drawImage(de, -SB / 2, -SB / 2, SB, SB);
-    if (km) ND.veVong(x, SB / 2 + 2.2, km, da); // vòng màu khoá 3 px, tròn tuyệt đối, ôm sát bệ (dưới đầu súng)
+    // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
     // ngọc độ hiếm: hình thoi nhỏ ở mép dưới-trái bệ (ưu tiên thấp nhất)
     const gx = -SB * 0.4, gy = SB * 0.4, gr = Math.max(3, S * 0.055);
     if (this.anNgoc) return this.cSet(key, c); // P0-04: độ hiếm chỉ ở khung thẻ (js/hudtop.js)
     const ngoc = this.img('ngoc_' + T.bac); // viên ngọc ChatGPT (S2); hoá đá → bản xám
     if (ngoc) { const g = da ? (this.banXam('ngoc_' + T.bac) || ngoc) : ngoc, w = gr * 3; x.drawImage(this.mip(g, w * q), gx - w / 2, gy - w / 2, w, w); return this.cSet(key, c); }
-    if (!this.dbg) return this.cSet(key, c); // ngọc chưa tải: bỏ trống (không vẽ hình thoi code)
-    x.beginPath(); x.moveTo(gx, gy - gr); x.lineTo(gx + gr, gy); x.lineTo(gx, gy + gr); x.lineTo(gx - gr, gy); x.closePath();
-    x.fillStyle = da ? '#8a8a8a' : TIERS[T.bac].mau; x.fill();
-    x.lineWidth = 1.4; x.strokeStyle = 'rgba(8,10,12,.9)'; x.stroke();
-    x.fillStyle = 'rgba(255,255,255,.55)'; x.beginPath(); x.moveTo(gx, gy - gr * 0.6); x.lineTo(gx + gr * 0.4, gy - gr * 0.1); x.lineTo(gx, gy); x.closePath(); x.fill();
-    return this.cSet(key, c);
-  },
-  // bệ dự phòng vẽ bằng code (khi chưa có de_chung.png): tấm tròn gunmetal trung tính
-  deCode(da) {
-    const key = 'deCode|' + (da ? 1 : 0); if (this.cGet(key)) return this.cGet(key);
-    const N = 256, c = document.createElement('canvas'); c.width = c.height = N;
-    const x = c.getContext('2d'), r = N / 2;
-    let g = x.createRadialGradient(r * 0.8, r * 0.7, r * 0.1, r, r, r);
-    g.addColorStop(0, '#5a6068'); g.addColorStop(0.7, '#3a3f46'); g.addColorStop(1, '#23272c');
-    x.fillStyle = g; x.beginPath(); x.arc(r, r, r - 2, 0, 7); x.fill();
-    x.lineWidth = 6; x.strokeStyle = '#15181c'; x.stroke();
-    x.lineWidth = 4; x.strokeStyle = '#4a5058'; x.beginPath(); x.arc(r, r, r * 0.8, 0, 7); x.stroke();
-    x.fillStyle = '#1f2328'; x.beginPath(); x.arc(r, r, r * 0.62, 0, 7); x.fill();
-    x.fillStyle = '#5c636b';
-    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + 0.5; x.beginPath(); x.arc(r + Math.cos(a) * r * 0.88, r + Math.sin(a) * r * 0.88, 7, 0, 7); x.fill(); }
-    if (da) { x.globalCompositeOperation = 'saturation'; x.fillStyle = '#888'; x.fillRect(0, 0, N, N); }
     return this.cSet(key, c);
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).
   huyHieu(n, d) {
     const anh = this.img(n >= 7 ? 'sao_hex7' : 'sao_hex'); // tấm lục giác ChatGPT (S2); chưa tải → vẽ code
-    if (!anh && !this.dbg) return null; // chưa tải: không vẽ lục giác code
+    if (!anh) return null; // chưa tải: không vẽ lục giác code
     const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N + (anh ? '|a' : '');
     let c = this.cGet(key); if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = N;
     const x = this.c2d(c), q = N / (d * 1.5); x.scale(q, q); x.translate(d * 0.75, d * 0.75);
-    const R = d / 2, hx = (r, oy) => { x.beginPath(); for (let i = 0; i < 6; i++) { const a = (i * 60 - 90) * Math.PI / 180; x.lineTo(Math.cos(a) * r, Math.sin(a) * r + (oy || 0)); } x.closePath(); };
+    const R = d / 2;
     x.lineJoin = 'round';
     if (anh) {
       // sao_hex: lục giác chiếm ~94% ô; sao_hex7 có vương miện phía trên (lục giác ở ~70% dưới) → canh để lục giác trùng chỗ cũ
-      hx(R * 1.02, R * 0.16); x.fillStyle = 'rgba(0,0,0,.5)'; x.fill(); // bóng
       const w = n >= 7 ? R * 2.75 : R * 2.2, oy = n >= 7 ? -R * 0.3 : 0;
       x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
       const px = w * q, cx = N / 2, cy = N / 2 + oy * q;
@@ -985,16 +937,6 @@ const REN = {
       x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
       return this.cSet(key, c);
     }
-    hx(R * 1.02, R * 0.14); x.fillStyle = 'rgba(0,0,0,.55)'; x.fill(); // bóng
-    hx(R * 1.0); x.fillStyle = '#07090c'; x.fill(); // viền tối ngoài (nổi trên mọi nền)
-    hx(R * 0.86); x.fillStyle = n >= 7 ? '#6e0d19' : '#1b2129'; x.fill();
-    x.lineWidth = R * 0.17; x.strokeStyle = n >= 7 ? '#ffd25a' : '#f1d58a'; x.stroke();
-    if (n >= 7) { x.fillStyle = '#ffd25a'; x.beginPath(); x.moveTo(-R * 0.42, -R * 0.98); x.lineTo(-R * 0.42, -R * 1.32); x.lineTo(-R * 0.2, -R * 1.13); x.lineTo(0, -R * 1.4); x.lineTo(R * 0.2, -R * 1.13); x.lineTo(R * 0.42, -R * 1.32); x.lineTo(R * 0.42, -R * 0.98); x.closePath(); x.fill(); x.lineWidth = R * 0.08; x.strokeStyle = '#3a1c00'; x.stroke(); }
-    const f = Math.round(R * 1.42 * 10) / 10;
-    x.font = '800 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.lineWidth = R * 0.22; x.strokeStyle = '#05070a'; x.strokeText(n, 0, R * 0.09);
-    x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
-    return this.cSet(key, c);
   },
   veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); if (!c) return; ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
 
@@ -1029,7 +971,7 @@ const REN = {
       const z = d.z || 0, hx = d.x, hy = d.y - z;
       d._ra = (d._ra || 0) + dt;
       const hien = Math.min(1, d._ra / 0.05), sc = 0.55 + 0.45 * hien;
-      if (d.cong) { ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.globalAlpha = hien; ctx.beginPath(); ctx.arc(d.x, d.y + 3, 4 + z * 0.02, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+      if (d.cong) { this.anhGiua(ctx, this.cham1('#000000'), d.x, d.y + 3, (4 + z * 0.02) * 2.6, 0, hien * 0.45); ctx.globalAlpha = 1; } // bóng đạn cong = PNG tô đen
       // hướng bay trên màn = hướng chuyển động giữa 2 bước (gồm cả độ cao vòng cung)
       let goc = d.goc || 0;
       if (d._x !== undefined) { const mx = hx - d._x, my = hy - (d._y - (d._z || 0)); if (mx * mx + my * my > 0.04) goc = Math.atan2(my, mx); }
@@ -1054,7 +996,7 @@ const REN = {
       ctx.globalAlpha = hien;
       const im = this.co(d.img, d.co);
       if (im) { const h = co * im.height / im.width; ctx.drawImage(im, -co / 2, -h / 2, co, h); }
-      else if (this.dbg) { ctx.fillStyle = '#ffd060'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, 7); ctx.fill(); }
+      else if (this.dbg) { ctx.fillStyle = '#ffd060'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, 7); ctx.fill(); } // vetay-ok: debug
       ctx.restore();
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }
@@ -1086,8 +1028,7 @@ const REN = {
         if (im) { ctx.globalAlpha = (1 - u) * 0.85; ctx.drawImage(this.mip(im, r * 2.3 * this.s * this.dpr), v.x - r * 1.15, v.y - r * 1.15, r * 2.3, r * 2.3); }
         continue;
       }
-      ctx.globalAlpha = (1 - u) * 0.6; ctx.strokeStyle = v.mau; ctx.lineCap = 'round'; ctx.lineWidth = Math.min(3, v.day) * (1 - u) + 0.5;
-      ctx.beginPath(); ctx.arc(v.x, v.y, Math.max(0.5, v.r0 + (v.r1 - v.r0) * e), 0, 7); ctx.stroke();
+      // fx_vong_mong chưa tải: không vẽ vòng code
     }
     const lua = this.co('tia_lua', 24), tuyet = this.co('hat_tuyet', 12); // hat_tuyet: bông tuyết ChatGPT (S4) cho Blizzard
     const v2 = typeof FXU !== 'undefined' && FXU.co('fx_cham_trang'), than = v2 && FXU.co('fx_than') && this.co('fx_than', 24); // hạt chung T22
@@ -1163,9 +1104,8 @@ const REN = {
         const kn = this.img('nhan_kn'); // tấm viên thuốc ChatGPT (S10-7), co giãn 3 mảnh; chưa tải → viên thuốc vẽ code (dự phòng)
         if (kn) { const sw = kn.width, sh = kn.height, cs = Math.round(sw * 0.24), hh = h + 6, cd = cs * hh / sh, ww = Math.max(w + 10, cd * 2 + 2), x0 = x - ww / 2, y0 = cy - hh / 2;
           ctx.drawImage(kn, 0, 0, cs, sh, x0, y0, cd, hh); ctx.drawImage(kn, cs, 0, sw - 2 * cs, sh, x0 + cd, y0, ww - 2 * cd, hh); ctx.drawImage(kn, sw - cs, 0, cs, sh, x0 + ww - cd, y0, cd, hh); }
-        else { ctx.fillStyle = 'rgba(10,12,16,.85)'; ctx.strokeStyle = c.vien || c.mau; ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, cy - h / 2, w, h, 6) : ctx.rect(x - w / 2, cy - h / 2, w, h); ctx.fill(); ctx.stroke(); }
-        ctx.textBaseline = 'middle'; ctx.fillStyle = c.mau; ctx.fillText(c.s, x, cy + 0.5); ctx.textBaseline = 'alphabetic'; continue;
+        // nhan_kn chưa tải: chỉ chữ (không viên thuốc code)
+        ctx.textBaseline = 'middle'; if (!kn) ctx.strokeText(c.s, x, cy + 0.5); ctx.fillStyle = c.mau; ctx.fillText(c.s, x, cy + 0.5); ctx.textBaseline = 'alphabetic'; continue;
       }
       if (c.kieu === 'mana') { this.anhGiua(ctx, 'ui_mana', c.x - ctx.measureText(c.s).width / 2 - 8, y - c.co * 0.35, 14); }
       const hw = ctx.measureText(c.s).width / 2 + 4, cx = clamp(c.x, hw, W - hw);

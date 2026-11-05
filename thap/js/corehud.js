@@ -40,24 +40,7 @@ const CORE = {
     const a = ren.co(nen, px, ''); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
     const x = c.getContext('2d'); x.drawImage(a, 0, 0);
-    if (muc > 0) {
-      const w = c.width, h = c.height, k = w / 60;
-      const VET = [
-        [[0.50, 0.30], [0.44, 0.42], [0.53, 0.50], [0.46, 0.62], [0.52, 0.72]],
-        [[0.62, 0.36], [0.70, 0.46], [0.63, 0.55], [0.72, 0.66]],
-        [[0.38, 0.40], [0.31, 0.50], [0.39, 0.58], [0.33, 0.70]],
-        [[0.53, 0.50], [0.60, 0.53]], [[0.46, 0.62], [0.39, 0.64]],
-      ];
-      const n = muc >= 2 ? VET.length : 2;
-      x.globalCompositeOperation = 'source-atop'; x.lineJoin = x.lineCap = 'round';
-      for (let i = 0; i < n; i++) {
-        const v = VET[i]; x.beginPath(); v.forEach(([u, t], j) => j ? x.lineTo(u * w, t * h) : x.moveTo(u * w, t * h));
-        x.strokeStyle = 'rgba(20,6,10,.85)'; x.lineWidth = 2.6 * k; x.stroke();
-        x.strokeStyle = muc >= 2 ? 'rgba(255,80,60,.95)' : 'rgba(255,170,120,.85)'; x.lineWidth = 0.9 * k; x.stroke();
-      }
-      // lõi tối dần
-      x.fillStyle = 'rgba(40,0,10,' + (muc >= 2 ? 0.28 : 0.14) + ')'; x.fillRect(0, 0, w, h);
-    }
+    // (bỏ vết nứt + lớp tối vẽ code: mức hư = ảnh ChatGPT loi_hu1 / loi_hu2; số tim = 3 khúc PNG trên vòng chân lõi)
     if (Object.keys(this._nut).length > 40) this._nut = {};
     return (this._nut[key] = c);
   },
@@ -67,7 +50,7 @@ const CORE = {
     if (this._do[key]) return this._do[key];
     const a = ren.co('loi', px, ''); if (!a) return null;
     const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
-    const x = c.getContext('2d'); x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#ff2a2a'; x.fillRect(0, 0, c.width, c.height);
+    const x = c.getContext('2d'); x.drawImage(a, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#ff2a2a'; x.fillRect(0, 0, c.width, c.height); // vetay-ok: png (bản đỏ của ảnh lõi)
     return (this._do[key] = c);
   },
 

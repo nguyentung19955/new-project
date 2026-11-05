@@ -11,7 +11,7 @@
 
 /* khoang 1 · WAVE N (khoang x 17.9–86.3) */
 .co-hud2 #tb-wave { left: 18px; width: 68px; gap: 3px; }
-.co-hud2 #tb-wave .ht-ic { flex: none; width: 11px; height: 13px; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2 #tb-wave .ht-ic { flex: none; width: 11px; height: 13px;  }
 .co-hud2 #tb-wave span { font-size: 9px; color: #cfd6df; letter-spacing: .3px; }
 .co-hud2 #tb-wave b { font-size: 17px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; }
 .co-hud2 #tb-wave.ht-nay { animation: ht-nay .42s ease-out; }
@@ -20,7 +20,7 @@
 /* khoang 2 · BOSS IN N + chân dung (khoang x 90 → W−90) */
 .co-hud2 #tb-giua { left: 90px; width: calc(var(--W) - 180px); }
 .co-hud2 #tb-trum { justify-content: center; gap: 5px; font-size: 12px; font-weight: 800; color: #fff; letter-spacing: .2px; text-shadow: 0 1px 0 #000, 0 0 4px #000; white-space: nowrap; overflow: visible; }
-.co-hud2 #tb-trum .vt-chip { width: 21px; height: 21px; margin: -3px 0 -2px; filter: drop-shadow(0 1px 1px #000); }
+.co-hud2 #tb-trum .vt-chip { width: 21px; height: 21px; margin: -3px 0 -2px;  }
 .co-hud2 #top.gan #tb-trum { color: #ffc547; }
 .co-hud2 #top.trum #tb-trum { color: #ff7266; }
 /* cảnh báo trùm: CHỈ khoang này đập (ảnh + chữ phóng/sáng), ray và 2 khoang kia đứng yên */
@@ -35,7 +35,7 @@
 /* khoang 3 · ♥ N/3 (khoang x W−86.3 → W−17.9) */
 .co-hud2 #tb-tim { left: auto; right: 18px; width: 68px; gap: 2px; color: #fff; }
 .co-hud2 #tb-tim::before { content: none; }
-.co-hud2 #tb-tim .ht-tim { flex: none; width: 16px; height: 14px; margin-right: 1px; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2 #tb-tim .ht-tim { flex: none; width: 16px; height: 14px; margin-right: 1px;  }
 .co-hud2 #tb-tim .ht-n, #ht-phu .ht-n { font-size: 17px; line-height: 19px; font-weight: 800; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; }
 .co-hud2 #tb-tim .ht-max, #ht-phu .ht-max { font-size: 11px; font-weight: 800; color: #c3cad3; text-shadow: 0 1px 0 #000; margin-left: -1px; }
 .co-hud2 #tb-tim .ht-n.nguy, #ht-phu .ht-n.nguy { color: #ff5a4e; }
@@ -66,16 +66,13 @@
 @media (prefers-reduced-motion: reduce) { #bang-wave.ht-bw, #canh-bao.ht-cb { animation: ht-mo .7s linear both; } @keyframes ht-mo { 0%, 80% { opacity: 1; } 100% { opacity: 0; } } }
 
 /* ================= P0-04 · GÓC HUY HIỆU TRÊN THẺ: vai trò trên-trái · LV trên-phải · nhận diện dưới-trái · số trên bàn dưới-phải ================= */
-.co-hud2.co-khung #bo-the .the.ht-goc.co-kh .ic.h2-vai, .co-hud2 #bo-the .the.ht-goc .ic.h2-vai { top: calc(var(--khh, 74px) * .189 + 1px); bottom: auto; left: calc(15.6% + 1px); right: auto; width: 14px; height: 14px; opacity: 1; filter: drop-shadow(0 1px 0 #000); }
+.co-hud2.co-khung #bo-the .the.ht-goc.co-kh .ic.h2-vai, .co-hud2 #bo-the .the.ht-goc .ic.h2-vai { top: calc(var(--khh, 74px) * .189 + 1px); bottom: auto; left: calc(15.6% + 1px); right: auto; width: 14px; height: 14px; opacity: 1;  }
 .co-hud2.co-khung #bo-the .the.ht-goc.co-kh .lv, .co-hud2 #bo-the .the.ht-goc .lv { left: auto; right: calc(15.6% + 1px); max-width: calc(68.8% - 17px); }
 .co-hud2 #bo-the .the.ht-goc .h2-so { top: calc(var(--khh, 74px) * .838 - 14px); }
-.co-khung .c.ht-goc.co-kh .ic.h2-vai { top: calc(var(--khh) * .189 + 1px); left: calc(15.6% + 1px); right: auto; width: 15px; height: 15px; border-radius: 0; background: none; filter: drop-shadow(0 1px 0 #000); }
-
-/* ================= THÔNG BÁO TRÙM: báo trước (cb-bao) → trùm đến (cb-den, giữ ≥2,1 s) → bay lên khoang Boss (cb-ra) =================
    Chỉ ảnh PNG có sẵn (băng bang_trum_nen, icon ui_canh_bao_trum, dải chân dung trum_<id>_8) + chữ DOM; chuyển động = transform/opacity. */
 #canh-bao .cb-sp, #canh-bao .cb-w { display: none; }
 #canh-bao.cb-bao, #canh-bao.cb-den, #canh-bao.cb-ra { pointer-events: none; overflow: visible; }
-#canh-bao .cb-sp { width: 64px; height: 64px; background: 0 0 / calc(var(--nf, 8) * 100%) 100% no-repeat; filter: drop-shadow(0 3px 2px #000c); }
+#canh-bao .cb-sp { width: 64px; height: 64px; background: 0 0 / calc(var(--nf, 8) * 100%) 100% no-repeat; }
 #canh-bao .cb-w { font-style: normal; font-weight: 900; letter-spacing: 2px; color: #ffd8d2; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
 /* (1) báo trước: băng thấp, hàng ngang icon | chân dung | chữ */
 #canh-bao.cb-bao { top: 196px; min-height: 0; padding: 13px 26px 10px; display: grid; grid-template-columns: 40px 64px minmax(0, 1fr); grid-template-rows: auto auto auto;
@@ -113,3 +110,7 @@
   @keyframes ht-mo2 { from { opacity: 0; } to { opacity: 1; } }
   @keyframes ht-mo3 { from { opacity: 1; } to { opacity: 0; } }
 }
+=======
+.co-khung .c.ht-goc.co-kh .ic.h2-vai { top: calc(var(--khh) * .189 + 1px); left: calc(15.6% + 1px); right: auto; width: 15px; height: 15px; border-radius: 0; background: none;  }
+
+/* ================= THÔNG BÁO TRÙM: báo trước (cb-bao) → trùm đến (cb-den, giữ ≥2,1 s) → bay lên khoang Boss (cb-ra) ==========

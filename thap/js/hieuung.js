@@ -46,7 +46,8 @@ const VX = {
   // khung f (thực, hoà 2 khung) của dải → vẽ vuông cỡ co ở (x,y)
   khung(ctx, anh, f, x, y, co, goc, al) { if (!anh) return; REN.khungMuot(ctx, null, f, x, y, co, goc || 0, al == null ? 1 : al, REN.mip(anh, co * REN.s * REN.dpr)); },
   // vòng TRÒN (arc) — r bán kính, w nét
-  vong(ctx, x, y, r, w, mau, al) { if (al <= 0.01 || r <= 0.5) return; ctx.globalAlpha = al; ctx.strokeStyle = mau; ctx.lineWidth = w; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); },
+  // vòng mảnh = fx_vong_mong.png (ChatGPT) tô màu — không arc vẽ code (rà soát vẽ tay pass 4 · board); ảnh chưa tải → không vẽ
+  vong(ctx, x, y, r, w, mau, al) { if (al <= 0.01 || r <= 0.5) return; const im = REN.toMau('fx_vong_mong', mau); if (im.width < 2) return; ctx.globalAlpha = al; ctx.drawImage(REN.mip(im, r * 2.3 * REN.s * REN.dpr), x - r * 1.15, y - r * 1.15, r * 2.3, r * 2.3); },
   // vòng phù văn: vòng tròn + 8 vạch ngắn + 3 cung quay (đóng dấu triệu hồi)
   vongPhu(ctx, x, y, r, mau, al, quay, code) { // code = true: giữ vòng vẽ code (cần đúng màu họ)
     if (al <= 0.01) return;
