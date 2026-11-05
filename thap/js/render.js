@@ -49,7 +49,7 @@ const REN = {
     if (this._cachePx > this.nganSach() || Object.keys(this.cache).length > 900) { this._cacheCu = this.cache; this.cache = {}; this._cachePx = c.width * c.height; }
     return (this.cache[key] = c);
   },
-  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; },
+  donCache() { this.cache = {}; this._cacheCu = {}; this._cachePx = 0; if (this._nongCo) this._nongCo.clear(); },
   // Độ phân giải vẽ = đúng mật độ điểm ảnh thật của máy (tối đa 3×). Trước đây kẹp 2× → máy 3× (iPhone, nhiều Android)
   // phải phóng ảnh 1.5× → mọi hình mềm nhoè, viền răng cưa. Máy yếu (khung > 18 ms kéo dài) tự lùi về 2×.
   coLai() {
@@ -80,6 +80,7 @@ const REN = {
   // theo dõi thời gian khung: máy không kham nổi 3× (TB > 18 ms suốt ~3 s khi đang chơi) → lùi về 2× một lần
   doKhung(dt) {
     if (this.dpr <= 2 || !G.ban.length || G.dung || !(dt > 0) || dt > 0.1 || (G.debug && G.debug.dpr)) return;
+    if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && (GF.cam || GF.mg.length || GF.ve.length))) return; // đang kéo/ghép: không dựng lại cả canvas giữa chừng (khựng ~0,8 s) — đợi thả xong
     this._ft = this._ft == null ? dt : this._ft * 0.94 + dt * 0.06;
     if (this._ft > 0.018) {
       if ((this._cham = (this._cham || 0) + dt) > 3) { this.dprMax = 2; this._ft = null; this._cham = 0; this.coLai(); }
@@ -570,6 +571,7 @@ const REN = {
     if (!G.ban.length) return this.ve0();
     this.noiSuy(this.a);
     try { this.ve0(); } finally { this.traLai(); }
+    if (this._nong.length) this.chayNong();
   },
   ve0() {
     const ctx = this.ctx, k = this.s * this.dpr;
@@ -775,11 +777,13 @@ const REN = {
   veU(ctx, T, x, y, o) {
     o = o || {};
     const B = G.ban[T.ban] || G.ban[0];
-    const S = Math.min(B.cw, B.ch) * 0.98 * (o.scale || 1);
+    // phóng ĐỘNG (nhấc 0.95→1.14→1.10, hút ghép 1.06→0.32): dùng LẠI ảnh thân/đầu đã dựng ở cỡ ô rồi phóng bằng ma trận
+    // → không dựng canvas mới (thu nhỏ nhiều bước + lọc mờ bóng) mỗi khung — nguyên nhân giật khi kéo ghép (tuvan/muotghep)
+    const kS = o.scale || 1, S = Math.min(B.cw, B.ch) * 0.98, St = S * kS;
     // hoạt ảnh xuất hiện (triệu hồi / ghép / biến hình hộp) theo THỜI GIAN THỰC — hieuung.js; trả về độ phóng (đều), độ nảy, ẩn/hiện
-    const A = o.ghost ? null : VX.truoc(ctx, T, x, y, S, o);
-    if (A && A.an) { VX.sau(ctx, T, x, y, S, A); return; } // đang quay số thẻ / chưa lộ: chỉ vẽ hiệu ứng
-    let sx = A ? A.sx : 1, sy = A ? A.sy : 1, oy = A ? A.oy : 0;
+    const A = o.ghost ? null : VX.truoc(ctx, T, x, y, St, o);
+    if (A && A.an) { VX.sau(ctx, T, x, y, St, A); return; } // đang quay số thẻ / chưa lộ: chỉ vẽ hiệu ứng
+    let sx = (A ? A.sx : 1) * kS, sy = (A ? A.sy : 1) * kS, oy = A ? A.oy : 0;
     const an = A && A.dong ? A : null;
     const al = (o.alpha != null ? o.alpha : 1) * (A ? A.al : 1);
     ctx.globalAlpha = al;
@@ -872,16 +876,16 @@ const REN = {
 
     // lớp UI trên ụ (không xoay theo đầu súng, neo theo ô): huy hiệu cấp sao + biểu tượng buff nhỏ
     if (!o.noBadge) {
-      const C = S / 0.98; // cạnh ô (đã gồm tỉ lệ phóng)
+      const C = St / 0.98; // cạnh ô (đã gồm tỉ lệ phóng)
       ctx.globalAlpha = al;
       const hs = A ? A.huy : 1; // huy hiệu sao bật nảy lúc lộ kết quả ghép
       // biểu tượng loại (trên-trái) + số sao (trên-phải): vẽ SAU đạn/hiệu ứng (lớp huy hiệu) → không bị che
-      if (hs > 0.02) { const h = ND.xep(T, x, y + oy, C, hs, al, B); if (this._hang && !o.ghost) this._hang.push(h); else ND.veHuyHieu(ctx, h); }
+      if (hs > 0.02) { const h = ND.xep(T, x, y + oy, C, hs, al, B); h.dong = hs !== 1 || kS !== 1; if (this._hang && !o.ghost) this._hang.push(h); else ND.veHuyHieu(ctx, h); }
       const k2 = C / Math.min(B.cw, B.ch);
       // buff: không còn ký hiệu nhỏ trên ô — hiện bằng hào quang ảnh quanh đầu súng (buffvfx.js), số chỉ ở bảng chạm
     }
     ctx.globalAlpha = 1;
-    if (A) VX.sau(ctx, T, x, y, S, A);
+    if (A) VX.sau(ctx, T, x, y, St, A);
   },
   dauBong(ten, D, da) {
     const k = this.s * this.dpr, n = Math.max(2, Math.round(D * k)), key = 'db|' + ten + '|' + n + '|' + (da ? 1 : 0);
@@ -946,6 +950,31 @@ const REN = {
     }
   },
   veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); if (!c) return; ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
+  // ---------- MƯỢT KÉO GHÉP (docs/demo-hop-tuong/tuvan/muotghep): cỡ ĐANG CHUYỂN ĐỘNG → bậc cỡ cố định ----------
+  // Huy hiệu / tấm phóng to-nhỏ mỗi khung trước đây dựng 1 canvas MỚI mỗi khung (thu nhỏ nhiều bước từ PNG 3×) → giật.
+  // qd(): làm tròn LÊN cỡ về lưới hình học 8 % (điểm ảnh thiết bị) → mỗi bậc dựng 1 lần, vẽ thu ≤ 8 % (vẫn nét).
+  qd(d) { const k = this.s * this.dpr, n = Math.max(2, d * k), L = Math.log(1.08); return Math.pow(1.08, Math.ceil(Math.log(n) / L - 1e-6)) / k; },
+  // huy hiệu cỡ động: canvas ở bậc qd(d), vẽ đúng cỡ d (tỉ lệ ô vẽ / d đọc từ chính canvas → hợp cả bản hud2 1.7d lẫn bản gốc 1.5d)
+  huyHieuDong(n, d) { const dq = this.qd(d), c = this.huyHieu(n, dq); if (c) c._E = c.width / (dq * this.s * this.dpr); return c; },
+  veHuyHieuDong(ctx, x, y, n, d) { const c = this.huyHieuDong(n, d); if (!c) return; const P = d * c._E; ctx.drawImage(c, x - P / 2, y - P / 2, P, P); },
+  // việc dựng sẵn rải theo khung: mỗi khung chạy 1 việc nhỏ (không dồn vào 1 khung)
+  _nong: [], _nongCo: new Set(),
+  nong(key, fn) { if (key && this._nongCo.has(key)) return; if (key) this._nongCo.add(key); this._nong.push(fn); },
+  chayNong() { for (let i = 0; i < 1 && this._nong.length; i++) { const f = this._nong.shift(); try { f(); } catch (e) { } } },
+  ctxNong() { if (!this._cn) { const c = document.createElement('canvas'); c.width = c.height = 2; this._cn = c.getContext('2d'); } this._cn.setTransform(1, 0, 0, 1, 0, 0); this._cn.globalAlpha = 1; return this._cn; },
+  // dựng sẵn huy hiệu sao n ở nhiều cỡ: MỖI cỡ 1 việc (1 khung) — không dồn
+  nongHuy(n, ds) { for (const d of ds) this.nong('hd|' + n + '|' + Math.round(this.qd(d) * this.s * this.dpr), () => this.huyHieuDong(n, d)); },
+  // ấn giữ 1 ụ (trước khi kéo đủ 7 px): dựng sẵn bóng nhấc + huy hiệu sao các bậc sẽ dùng khi rê/thả (rải theo khung)
+  nongKeo(T) {
+    if (!T || !G.ban.length) return;
+    const B = G.ban[T.ban] || G.ban[0], C = Math.min(B.cw, B.ch), n1 = Math.min(LUAT.saoMax, T.sao + 1), ds = [];
+    this.nong('bong|' + Math.round(C * 0.74 * this.s * this.dpr), () => this.co('de_chung', C * 0.74, 'den'));
+    for (const k of [0.7, 0.8, 0.9, 1]) ds.push(C * 0.42 * k); // sao kế tiếp bay lên (GF.veXemTruoc)
+    for (let k = 0.9; k <= 1.36; k *= 1.08) ds.push(C * 0.34 * 1.8 * k); // con dấu sao lúc ghép (GF.veDau)
+    for (const k of [1.1 / 0.98]) ds.push(C * 0.34 * k); // huy hiệu ụ đang nhấc (phóng 1.10)
+    this.nongHuy(n1, ds); this.nongHuy(T.sao, [C * 0.34 * 1.1]);
+  },
+
 
   // laser: bật/tắt mờ dần (thời gian thực), cuộn vân + độ rộng/độ sáng dao động theo thời gian (không theo khung)
   veLaser(ctx) {

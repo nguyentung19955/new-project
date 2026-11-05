@@ -165,7 +165,7 @@ const GF = {
   },
   // ụ đang cầm: bóng tối của ảnh bệ dưới (ở "mặt đất" giữa ụ và ngón tay) + ụ phóng 1.10, nghiêng
   veUCam(ctx, T, x, y, sc, ng, C, o, nhac) {
-    const bong = REN.co('de_chung', C * 0.74 * sc, 'den');
+    const bong = REN.co('de_chung', C * 0.74, 'den'); // 1 cỡ cố định (bóng mờ có lọc blur: dựng mỗi cỡ rất tốn) — phóng khi vẽ
     if (bong) {
       const lift = Math.hypot(x - o.x, y - o.y) > 2 ? 1 : 0;
       const bx = x + C * 0.05, by = y + C * (0.1 + 0.22 * lift), w = C * 0.74 * sc * (0.95 - 0.1 * lift), h = w * bong.height / bong.width;
@@ -183,9 +183,9 @@ const GF = {
       if (!N || !hopLeGhep(src, N) || al <= 0.01) return;
       const db = ghepDacBiet(src, N) && !src.st.da, n = db ? N.sao : Math.min(LUAT.saoMax, N.sao + 1); // ghép đặc biệt: không hứa sao mới
       if (db) return;
-      const d = C * 0.42 * sc, o = B.o[N.o], hb = REN.huyHieu(n, d);
+      const d = C * 0.42 * sc, o = B.o[N.o], hb = REN.huyHieuDong(n, d); // cỡ đang nảy → bậc cỡ cố định (không dựng canvas mỗi khung)
       const x = clamp(o.x + C * 0.42, B.x + d * 0.7, B.x + B.w - d * 0.7), y = Math.max(B.y + d * 0.7, o.y - C * 0.5 - C * 0.22 * this.eo((now - this.hoverT0 - 90) / 90));
-      if (hb) { ctx.globalAlpha = al; ctx.drawImage(hb, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); ctx.globalAlpha = 1; }
+      if (hb) { const P = d * 1.5; ctx.globalAlpha = al; ctx.drawImage(hb, x - P / 2, y - P / 2, P, P); ctx.globalAlpha = 1; }
     };
     if (this.hoverT) { const u = (now - this.hoverT0 - 90) / 90; if (u > 0) ve1(this.hoverT, this.eo(u), this.lerp(0.7, 1, this.bo(u, 2))); }
     if (this.hoverCu && this.hoverCu !== this.hoverT) { const u = (now - this.hoverCuT0) / 80; if (u < 1) ve1(this.hoverCu, 1 - u, 1 - 0.15 * u); }
@@ -309,7 +309,7 @@ const GF = {
     if (u < 0.25) s = 1.35; else s = u < 0.55 ? this.lerp(1.35, 0.9, this.eo((u - 0.25) / 0.3)) : this.lerp(0.9, 1, this.bo((u - 0.55) / 0.45, 2));
     const ng = -8 * Math.PI / 180 * (1 - this.eo(clamp(u / 0.55, 0, 1)));
     const al = t < M.dau + 30 ? (t - M.dau) / 30 : t > M.dauXong ? 1 - (t - M.dauXong) / 85 : 1;
-    const D = d * 1.8 * s, hb = REN.huyHieu(n, D);
+    const D = d * 1.8 * s, hb = REN.huyHieuDong(n, D); // con dấu phóng 1.35→0.9→1: bậc cỡ cố định
     if (hb && al > 0.01) { ctx.save(); ctx.globalAlpha = al; ctx.translate(hx, y); ctx.rotate(ng); ctx.drawImage(hb, -D * 0.75, -D * 0.75, D * 1.5, D * 1.5); ctx.restore(); }
   },
 
@@ -405,6 +405,48 @@ const GF = {
   };
   // ụ đang kéo: thay "bản sao phóng 1.12 + bóng mờ ở ô" bằng lớp cầm
   REN.veKeo = function (ctx) { GF.veCam(ctx); };
+  // vào trận: giải mã + chép canvas + dựng chuỗi mip cho mọi tấm hiệu ứng kéo/ghép NGAY (rải 1 tấm / khung) — trước đây tấm
+  // cf_no / cf_vong_ren / cf_dau_sao… chỉ được giải mã + thu nhỏ lần đầu ĐÚNG khung thả ghép → khựng lúc ghép (tuvan/muotghep)
+  GF.nongTran = function () {
+    const ds = [...new Set([...GF.ANH, ...KG.ANH])];
+    const lam = (t, lan) => REN.nong(null, () => {
+      const a = REN.img(t), B = G.ban[0];
+      if (!a) { if (lan < 40) setTimeout(() => lam(t, lan + 1), 250); return; } // chưa tải xong: thử lại sau
+      if (!B) return;
+      const C = Math.min(B.cw, B.ch), k = REN.s * REN.dpr;
+      const m = REN.mip(a, C * 0.5 * k); // tầng nhỏ nhất sẽ dùng (khung ~0.5 ô) → mọi tầng lớn hơn cũng có sẵn
+      const x = REN.ctxNong(); for (const c of a._mip || [a]) x.drawImage(c, 0, 0, 1, 1); // ép tải lên bộ nhớ vẽ
+      return m;
+    });
+    for (const t of ds) lam(t, 0);
+    // mọi loại ụ trong bộ bài (kết quả ghép = loại NGẪU NHIÊN trong bộ; triệu hồi cũng vậy): giải mã + dựng sẵn thân/đầu cỡ ô
+    for (const B of G.ban) for (const id of new Set(B.deck || [])) { try { GF.nongU(B, taoU(B, id, 1, 0)); } catch (e) { } }
+  };
+  // dựng sẵn 1 ụ theo từng bước nhỏ (1 bước / khung): ảnh gốc → bản đứng yên → bản đang nảy (không bóng nướng sẵn)
+  GF.nongU = function (B, T) {
+    REN.nong('nu|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => { REN.img(REN.dauTen(T.id, 0)); REN.img('tier_ring_' + T.bac); REN.img('de_chung'); });
+    REN.nong('nu1|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => REN.veU(REN.ctxNong(), T, 0, 0, { ghost: true, noBadge: true }));
+    REN.nong('nu2|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => REN.veU(REN.ctxNong(), T, 0, 0, { ghost: true, noBadge: true, scale: 0.99 }));
+  };
+  // thả ghép: kết quả lộ ra sau 405 ms → trong lúc đó dựng sẵn ụ mới + huy hiệu sao + chữ tấm kết quả (rải theo khung)
+  const bdGoc = GF.batDau;
+  GF.batDau = function (B, a, b, ra) {
+    const r = bdGoc.apply(this, arguments);
+    try {
+      GF.nongU(B, ra);
+      const C = this.tile(B), n = ra.sao;
+      const ds = []; for (let k = 0.08; k <= 1.001; k *= 1.5) ds.push(C * 0.34 * k); // huy hiệu thật bật nảy lúc lộ (bậc 8 % gộp sẵn)
+      if (r.nguoi) {
+        const ro = G.rosterMap[ra.id];
+        REN.nong(null, () => REN.chuAnh(ro ? ro.ten : ra.id, '#ffffff', 12));
+        for (let s2 = 1; s2 <= 1.26; s2 *= 1.08) ds.push(12 * 2.1 * s2 * 0.9); // huy hiệu trên tấm kết quả (phóng 1.25→1)
+      }
+      REN.nongHuy(n, ds);
+    } catch (e) { }
+    return r;
+  };
+  const vaoGF = UI.vaoTran;
+  UI.vaoTran = function () { const r = vaoGF.apply(this, arguments); try { GF.nongTran(); } catch (e) { } return r; };
   // DOM VFX cũ (cổng/chớp ghép hud2) trùng với lớp mới → tắt
   if (typeof HUD2 !== 'undefined') { HUD2.ghep = () => { }; HUD2.cong = () => { }; }
 })();
