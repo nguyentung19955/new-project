@@ -46,7 +46,7 @@
 .co-hud2 #dp-dai .h2-den { position: absolute; left: 4px; top: 16px; width: 9px; height: 9px; background: url(../assets/h2_den_doi.png) center / contain no-repeat; pointer-events: none; }
 .co-hud2 #dp-dai.pvp .h2-den { filter: hue-rotate(250deg) saturate(1.4); }
 .co-hud2 #dp-dai .h2-nhan { position: absolute; left: 190px; top: 13px; height: 17px; line-height: 17px; padding: 0 7px; font-size: 9.5px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: #8ff0c0;
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png) 0 40 fill / 0 9px / 0 stretch; white-space: nowrap; pointer-events: none; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png) 0 66.1 fill / 0 9px / 0 stretch; white-space: nowrap; pointer-events: none; }
 .co-hud2 #dp-dai.pvp .h2-nhan { color: #ff8a80; border-image-source: url(../assets/h2_tam_do.png); }
 
 /* ================= 05 · MANA: màn LCD (ảnh 331×116; cửa sổ x 16.3–92.1 %, y 18–77 %) + ngọc mana duy nhất ================= */
@@ -95,10 +95,10 @@
 /* ================= 03 · DỮ LIỆU THẺ: tấm LV, tấm đếm (icon chồng), ô giá (gem trong hốc) — GIỮ khung độ hiếm ================= */
 /* nhãn nằm TRONG ô cửa sổ khung (x 15.6–84.4 %, y 18.9–83.8 % của --khh) — không che ngọc/cánh/vương miện */
 .co-hud2 #bo-the .the .lv, .co-hud2.co-khung #bo-the .the.co-kh .lv { left: calc(15.6% + 1px); top: calc(var(--khh, 74px) * .189 + 1px); height: 13px; line-height: 13px; padding: 0 4px; font-size: 8.5px; letter-spacing: 0;
-  color: #eef3f7; text-shadow: 0 1px 0 #000; background: none; border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 4px / 0 stretch; border-radius: 0; }
+  color: #eef3f7; text-shadow: 0 1px 0 #000; background: none; border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 23.1 fill / 0 4px / 0 stretch; border-radius: 0; }
 .co-hud2 #bo-the .the .so { display: none !important; }
 .co-hud2 #bo-the .the .h2-so { position: absolute; z-index: 3; right: calc(15.6% + 1px); top: calc(var(--khh, 74px) * .189 + 1px); height: 13px; display: flex; align-items: center; gap: 1px; padding: 0 4px 0 2px;
-  font-size: 9px; font-weight: 800; line-height: 13px; color: #ffe08a; text-shadow: 0 1px 0 #000; border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 14 fill / 0 4px / 0 stretch; pointer-events: none; }
+  font-size: 9px; font-weight: 800; line-height: 13px; color: #ffe08a; text-shadow: 0 1px 0 #000; border: 0 solid transparent; border-image: url(../assets/h2_tag.png) 0 23.1 fill / 0 4px / 0 stretch; pointer-events: none; }
 .co-hud2 #bo-the .the .h2-so::before { content: ''; width: 9px; height: 9px; background: url(../assets/h2_ic_chong.png) center / contain no-repeat; }
 .co-hud2 #bo-the .the .h2-so:empty, .co-hud2 #bo-the .the .h2-so[data-n="0"] { display: none; }
 /* số 2–3 chữ số (LV 10/40/99, đếm 12/15): mỗi nhãn 1 ô riêng — LV hàng 1 trái, tấm đếm hàng 2 phải (cách nhau theo chiều dọc, không bao giờ chạm nhau); cỡ chữ do HUD2.vua() thu nhỏ */
@@ -146,7 +146,7 @@
 @media (prefers-reduced-motion: reduce) { .h2-vfx, .co-hud2 #bo-the .the .h2-burst, .co-hud2 #bo-the .the .h2-glint { animation-duration: .01s !important; } .co-hud2 #nut-trieu.h2-lac, .co-hud2 #bo-the .the.h2-lac { animation: none; } }
 
 /* ================= S10 · nút & khung bảng (menu, tạm dừng, kết quả, bảng thông tin) ================= */
-.co-s10 .nut { border: 0 solid transparent; border-width: 0 22px; border-image: url(../assets/nut_lon_thep.png) 0 50 fill / 0 22px / 0 stretch; background: none; box-shadow: none; border-radius: 0; color: #eef1f4; text-shadow: 0 1px 0 #000; }
+.co-s10 .nut { border: 0 solid transparent; border-width: 0 22px; border-image: url(../assets/nut_lon_thep.png) 0 105.4 fill / 0 22px / 0 stretch; background: none; box-shadow: none; border-radius: 0; color: #eef1f4; text-shadow: 0 1px 0 #000; }
 .co-s10 .nut.chinh { border-image-source: url(../assets/nut_lon_vang.png); color: #3a1d00; text-shadow: 0 1px 0 #ffd98a; }
 .co-s10 .nut:active { transform: translateY(2px); box-shadow: none; filter: brightness(.92); }
 .co-s10 .nut:disabled { filter: grayscale(.9) brightness(.62); }
@@ -159,7 +159,7 @@
 .co-s10 .c .up-q::before { content: none; }
 .co-s10 #ketqua.thua .kq-ic { content: url(../assets/ic_thua.png);  width: 80px; height: 84px; object-fit: contain; }
 /* bảng thông tin chạm ụ: khung thép 9 mảnh (S10-6), màu bậc chỉ ở tên — không viền màu chồng */
-.co-s10 #tt { border: 0 solid transparent; border-width: 14px; border-radius: 0; background: none; box-shadow: none; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; padding: 0; }
+.co-s10 #tt { border: 0 solid transparent; border-width: 14px; border-radius: 0; background: none; box-shadow: none; border-image: url(../assets/khung_tt.png) 47.1 fill / 14px stretch; padding: 0; }
 .co-s10 #tt.gon { padding: 0; }
 
 /* ---------- trang chi tiết ụ (S10/S11): nút Back / ‹ › / phát–dừng xem trước / thêm vào bộ bài ---------- */
@@ -171,7 +171,7 @@
 .co-s10 .up-phat { border: 0; border-radius: 0; background: url(../assets/h2_phim_dung_cho.png) center / 100% 100% no-repeat; width: 42px; height: 39px; }
 .co-s10 .up-phat::before, .co-s10 .up-phat::after { content: none; display: none; }
 .co-s10 .up-phat.dung { width: 40px; height: 40px; border-radius: 50%; background-image: url(../assets/ic_phat.png); }
-.co-s10 .up-nut { border: 0 solid transparent; border-width: 0 22px; border-image: url(../assets/nut_lon_xanh.png) 0 50 fill / 0 22px / 0 stretch; background: none; box-shadow: none; border-radius: 0; color: #0d3a14; text-shadow: 0 1px 0 #c9ffc0; }
+.co-s10 .up-nut { border: 0 solid transparent; border-width: 0 22px; border-image: url(../assets/nut_lon_xanh.png) 0 104.8 fill / 0 22px / 0 stretch; background: none; box-shadow: none; border-radius: 0; color: #0d3a14; text-shadow: 0 1px 0 #c9ffc0; }
 .co-s10 .up-nut.bo { border-image-source: url(../assets/nut_lon_thep.png); background: none; color: #ffb0a6; text-shadow: 0 1px 0 #000; box-shadow: none; }
 .co-s10 .up-nut:disabled { border-image-source: url(../assets/nut_lon_thep.png); background: none; filter: grayscale(1) brightness(.7); color: #c9ced6; text-shadow: none; box-shadow: none; }
 .co-s10 .up-nut:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }

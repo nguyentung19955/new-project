@@ -17,11 +17,22 @@ bam = lambda p: hashlib.sha1(open(p, 'rb').read()).hexdigest()[:8]
 anh = {}
 for goc, _, ds in os.walk(os.path.join(D, 'assets')):
     for f in ds:
-        if f.endswith('.png'):
+        if f.endswith(('.png', '.jpg')):
             p = os.path.join(goc, f)
-            anh[os.path.relpath(p, os.path.join(D, 'assets'))[:-4].replace(os.sep, '/')] = bam(p)
+            k = os.path.relpath(p, os.path.join(D, 'assets'))[:-4].replace(os.sep, '/')
+            if f.endswith('.png') or k not in anh: anh[k] = bam(p)
 va = os.path.join(D, 'js/ver-anh.js')
 open(va, 'w').write('// tự sinh bởi tools/thap-ver.py lúc xuất bản — KHÔNG sửa tay\nvar ANH_V = ' + json.dumps(anh, sort_keys=True, separators=(',', ':')) + ';\n')
+
+# CSS: url(../assets/x.png) → url(../assets/x.png?v=băm) (ảnh cắt lại cỡ khác + border-image slice đổi theo → không được dùng ảnh cũ)
+def css_v(m):
+    p = os.path.normpath(os.path.join(D, 'css', m.group(1)))
+    return 'url(%s%s?v=%s)' % (m.group(1), '', bam(p)) if os.path.isfile(p) else m.group(0)
+for f in os.listdir(os.path.join(D, 'css')):
+    if f.endswith('.css'):
+        cp = os.path.join(D, 'css', f); c = open(cp, encoding='utf-8').read()
+        c2 = re.sub(r'url\(["\']?(\.\./assets/[^"\')?]+\.(?:png|jpg))(?:\?v=[0-9a-f]+)?["\']?\)', css_v, c)
+        if c2 != c: open(cp, 'w', encoding='utf-8').write(c2)
 
 ip = os.path.join(D, 'index.html')
 h = open(ip, encoding='utf-8').read()
@@ -37,6 +48,7 @@ def gan(m):
 
 
 h = re.sub(r'(src|href)="((?:js|css)/[^"]+\.(?:js|css)(?:\?[^"]*)?)"', gan, h)
+h = re.sub(r'(src)="((?:assets)/[^"]+\.(?:png|jpg)(?:\?[^"]*)?)"', gan, h)  # ảnh tĩnh trong index.html
 h = re.sub(r'(<script src="js/)', '<script src="js/ver-anh.js?v=' + bam(va) + '"></script>\n  \\1', h, count=1)
 V = hashlib.sha1(''.join(re.findall(r'\?v=([0-9a-f]{8})', h)).encode()).hexdigest()[:10]
 kt = ('<script id="tm-ver">(function(){var V="%s";try{fetch("ver.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()})'

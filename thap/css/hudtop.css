@@ -50,7 +50,7 @@
 /* tấm treo dưới khoang tim: CO-OP = 3 tim chung · PVP = tim đối thủ (không chạm giá đồng đội #dp-dai, x ≤ 252) */
 #ht-phu { display: none; }
 .co-hud2 #ht-phu:not([hidden]) { position: absolute; right: 16px; top: 41px; height: 17px; padding: 0 8px; display: flex; align-items: center; gap: 2px; white-space: nowrap; pointer-events: none;
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png) 0 40 fill / 0 9px / 0 stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_xanh.png) 0 66.1 fill / 0 9px / 0 stretch; }
 .co-hud2 #ht-phu.do { border-image-source: url(../assets/h2_tam_do.png); }
 .co-hud2 #ht-phu.do .ht-ai { color: #ff9a8f; }
 .co-hud2 #ht-phu.xanh .ht-ai { color: #9ff5c8; font-size: 9px; margin: 0; }

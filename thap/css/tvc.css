@@ -27,9 +27,9 @@
   --tg-man: .22s; --tg-ra: .18s; --tg-nhan: .1s;
   /* họ vật liệu (ảnh ChatGPT) */
   --vl-a: url(../assets/p7_nut1.png); --vl-a-cat: 74 128 fill;
-  --vl-a-sang: url(../assets/h2_tam_xanh.png); --vl-a-sang-cat: 30 52 fill;
+  --vl-a-sang: url(../assets/h2_tam_xanh.png); --vl-a-sang-cat: 49.5 85.9 fill;
   --vl-b: url(../assets/p7_nut2.png); --vl-b-cat: 56 92 fill;
-  --vl-b-hang: url(../assets/h2_tam.png); --vl-b-hang-cat: 22 40 fill;
+  --vl-b-hang: url(../assets/h2_tam.png); --vl-b-hang-cat: 36.4 66.1 fill;
   --vl-c: url(../assets/p7_tam.png); --vl-c-cat: 52 70 fill;
   --vl-d: url(../assets/p7_tam.png); --vl-d-cat: 52 70 fill;
 }

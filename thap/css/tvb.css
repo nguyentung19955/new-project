@@ -111,7 +111,7 @@ html body #wrap.co-tvb #canh-bao.tvb-cb.cb-ra { animation: cb-ra .3s ease-in bot
 /* ================= B11 · PVP: "VS" giữa khe 2 bàn (tấm h2_tam_do) ================= */
 #tvb-vs { position: absolute; z-index: 5; left: 50%; width: 58px; height: 26px; margin-left: -29px; display: flex; align-items: center; justify-content: center; pointer-events: none;
   font-size: 15px; font-weight: 900; letter-spacing: 2px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000; box-sizing: border-box;
-  border: 0 solid transparent; border-image: url(../assets/h2_tam_do.png) 0 40 fill / 0 13px / 0 stretch; }
+  border: 0 solid transparent; border-image: url(../assets/h2_tam_do.png) 0 66 fill / 0 13px / 0 stretch; }
 #tvb-vs[hidden] { display: none; }
 #top[hidden] ~ #tvb-vs { display: none; }
 @media (prefers-reduced-motion: reduce) { html body #wrap.co-tvb #canh-bao.tvb-cb .cb-sp, html body #wrap.co-tvb #canh-bao.tvb-cb .cb-w { animation: none !important; } }

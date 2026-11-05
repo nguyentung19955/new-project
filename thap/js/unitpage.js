@@ -509,7 +509,7 @@ const UP = {
     if (!this.ifr) {
       const f = document.createElement('iframe');
       f.className = 'up-ifr'; f.title = 'Live preview'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
-      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&dpr=2&notut=1';
+      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&notut=1';
       this.ifr = f;
     } else this.guiXem({ id, sao: this.sao, gd: this.gd });
     if (!this.ifr.parentNode) { tv.querySelector('.up-tv-khung').appendChild(this.ifr); this.theoDoiXem(tv); }

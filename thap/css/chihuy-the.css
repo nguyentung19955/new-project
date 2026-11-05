@@ -28,7 +28,7 @@ html body #the-mv .mv-ic .ki { display: none !important; }   /* icon kỹ năng 
 html body #the-mv .mv-ten, html body #the-mv .mv-ten[style], html.co-khung body #the-mv.co-kh .mv-ten {
   position: absolute; z-index: 3; left: 11px; right: 11px; width: auto; top: 68px; height: 15px !important; margin: 0; padding: 0 5px;
   display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
-  border: solid transparent; border-width: 4px 6px; border-image: var(--cht-bien) 10 16 10 16 fill / 4px 6px / 0 stretch; box-sizing: border-box;
+  border: solid transparent; border-width: 4px 6px; border-image: var(--cht-bien) 16.5 26.4 16.5 26.4 fill / 4px 6px / 0 stretch; box-sizing: border-box;
   background: none; color: #f2f6fa; font-family: var(--f-ui, inherit); font-weight: 800; letter-spacing: .02em; line-height: 1;
   text-shadow: 0 1px 0 #000; padding: 0; font-size: 8.5px;
 }

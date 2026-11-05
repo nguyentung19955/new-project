@@ -3,7 +3,7 @@
 
 /* ---------- XEM NHANH: dải 60 px ---------- */
 html body #tt.hb-qi { left: 8px; right: 8px; height: 60px; max-height: none; box-sizing: border-box; z-index: 14; gap: 8px; align-items: center;
-  border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; background: none; padding: 0 0 0 2px; overflow: visible; }
+  border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png) 47.1 fill / 10px stretch; background: none; padding: 0 0 0 2px; overflow: visible; }
 html body #tt.hb-qi .tt-the { width: 40px; height: 40px; margin: 0; }
 html body #tt.hb-qi .tt-anh { width: 40px; height: 40px; object-fit: cover; object-position: 50% 15%; }
 html body #tt.hb-qi .tt-than { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 21px 17px; column-gap: 8px; align-items: center; padding-right: 40px; }
@@ -35,7 +35,7 @@ html body #tt.hb-qi.hb-tren.hb-vao { animation-name: hb-vao2; }
 
 /* ---------- TẤM MỞ RỘNG (nút ›) ---------- */
 html body #tt.hb-qi.hb-rong { height: auto; z-index: 26; pointer-events: auto; align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; padding: 4px 4px 6px 4px;
-  border-width: 14px; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; animation: hb-len .26s cubic-bezier(.2, .8, .2, 1) both; }
+  border-width: 14px; border-image: url(../assets/khung_tt.png) 47.1 fill / 14px stretch; animation: hb-len .26s cubic-bezier(.2, .8, .2, 1) both; }
 html body #tt.hb-qi.hb-tren.hb-rong { animation-name: hb-xuong; }
 @keyframes hb-len { from { opacity: .4; transform: translateY(40px); } to { opacity: 1; transform: none; } }
 @keyframes hb-xuong { from { opacity: .4; transform: translateY(-40px); } to { opacity: 1; transform: none; } }

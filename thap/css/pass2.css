@@ -87,7 +87,7 @@
 .co-lv #bo-the .the .lv, .co-lv #bo-the .the .so:not(:empty) { background: none; border: 0 solid transparent; border-image: url(../assets/ui_lv.png) 0 16 fill / 0 5px / 0 stretch;
   height: 14px; line-height: 14px; padding: 0 5px; color: #f1f3f6; text-shadow: 0 1px 0 #000; }
 .co-lv #bo-the .the .so:not(:empty) { color: #ffe46b; }
-.co-gia #bo-the .the .gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image: url(../assets/ui_gia.png) 0 22 fill / 0 7px / 0 stretch; }
+.co-gia #bo-the .the .gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image: url(../assets/ui_gia.png) 0 55.5 fill / 0 7px / 0 stretch; }
 .co-den #bo-the .the.du .gia::after, .co-den #the-mv.du .mv-gia::after { width: 8px; height: 8px; border-radius: 0; box-shadow: none; background: url(../assets/ui_den_xanh.png) center / contain no-repeat; }
 .co-grow .the .gu, .co-grow .c .gu { background: none; border: 0 solid transparent; border-image: url(../assets/ui_grow.png) 0 20 fill / 0 6px / 0 stretch; border-radius: 0;
   height: 13px; line-height: 13px; padding: 0 7px; color: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; box-shadow: none; }

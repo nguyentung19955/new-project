@@ -29,7 +29,7 @@
 #tn-khien b { margin-top: -4px; font-size: 12px; font-weight: 800; color: #cdeeff; text-shadow: 0 1px 0 #000, 0 0 4px #000; font-variant-numeric: tabular-nums; }
 /* gợi ý 1 lần: POWER-UP (khung bảng thông tin có sẵn) */
 #tn-goi { position: absolute; left: 10px; right: 10px; z-index: 20; display: flex; align-items: center; gap: 8px; padding: 2px 4px; pointer-events: none;
-  border: 14px solid transparent; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; font-size: 12px; line-height: 1.25; color: #dfe6ee; }
+  border: 14px solid transparent; border-image: url(../assets/khung_tt.png) 47.1 fill / 14px stretch; font-size: 12px; line-height: 1.25; color: #dfe6ee; }
 #tn-goi img { width: 30px; height: 30px; flex: none; }
 #tn-goi b { color: #7dffa8; }
 /* bàn đầy + mọi ụ 7★: REINFORCE không dùng được */

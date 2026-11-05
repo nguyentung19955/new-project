@@ -18,14 +18,14 @@
 .c .ten { border-top: 0; }
 /* thẻ chỉ huy (3 ô): tấm thép khung_tt; đang chọn = khung sáng khung_chon (như nút chế độ) */
 .mv { position: relative; background: none; border-radius: 0; border: 0 solid transparent; border-width: 0; border-style: solid;
-  border-image: url(../assets/khung_tt.png) 42 fill / 8px stretch; }
+  border-image: url(../assets/khung_tt.png) 47.1 fill / 8px stretch; }
 .mv.chon { background: none; }
 .mv.chon::after { content: ''; position: absolute; inset: -3px; border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_chon.png) 34 fill / 12px stretch; pointer-events: none; }
 .mv-anh { background: #120c0e; border: 0; border-radius: 0; }
 .mv-anh .ki, #cutin .ci-ki { border: 0; border-radius: 0; background: url(../assets/h2_vong_xam.png) center / 100% 100% no-repeat; padding: 3px; filter: none; }
 /* nút chế độ ONLINE / CO-OP / SOLO / PVP: tấm thép khung_tt (đang chọn giữ khung_chon của hud2.css) */
 .che, .co-s10 .che.chon { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_tt.png) 42 fill / 8px stretch; }
+  border-image: url(../assets/khung_tt.png) 47.1 fill / 8px stretch; }
 .che.chon { transform: none; }
 .che span { font-size: 8.5px; line-height: 1.05; }
 
@@ -39,7 +39,7 @@
 .up-ngoc { position: absolute; right: 10px; top: 10px; width: 18px; height: 18px; transform: none; background: none; box-shadow: none; }
 /* chip: viên thép h2_chip; độ hiếm = chữ màu bậc */
 .up-chip { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; height: 24px; padding: 0 12px;
-  border-image: url(../assets/h2_chip.png) 0 30 fill / 0 10px / 0 stretch; color: #eef1f4; text-shadow: 0 1px 0 #000; }
+  border-image: url(../assets/h2_chip.png) 0 54.5 fill / 0 10px / 0 stretch; color: #eef1f4; text-shadow: 0 1px 0 #000; }
 .up-chip.bac { background: none; color: var(--m); }
 /* thang họ: ngọc độ hiếm ngoc_<bậc> thay vạch màu */
 .up-ho-nho img { width: 13px; height: 13px; opacity: .55; }
@@ -47,7 +47,7 @@
 .up-ho-nho img.gap { opacity: .2; filter: grayscale(1); }
 /* dải thông số / bảng / thẻ: tấm khung_tt */
 .up-spec, .up-bang, .up-gd1, .up-the, .up-luoi { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none;
-  border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; }
+  border-image: url(../assets/khung_tt.png) 47.1 fill / 10px stretch; }
 .up-spec { padding: 4px 6px; }
 .up-spec div { border-left: 0; }
 .up-bang { padding: 6px 4px; overflow: visible; }
@@ -65,7 +65,7 @@
   border-image: url(../assets/h2_tam_mong.png) 0 30 fill / 0 10px / 0 stretch; }
 /* THỬ BẮN: khung monitor = khung_bang; 4 góc = h2_glint; đèn REC = den_tim_bat */
 .up-tv { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 9px;
-  border-image: url(../assets/khung_bang.png) 56 fill / 16px stretch; }
+  border-image: url(../assets/khung_bang.png) 85.2 fill / 16px stretch; }
 .up-tv-khung { border-radius: 0; }
 .up-tv .g { width: 16px; height: 14px; border: 0 !important; background: url(../assets/h2_glint.png) center / 100% 100% no-repeat; }
 .up-tv .tl { left: 5px; top: 5px; } .up-tv .tr { right: 5px; top: 5px; transform: scaleX(-1); }
@@ -74,7 +74,7 @@
 .up-phat { box-shadow: none; }
 /* chọn sao xem trước: nút thép; đang chọn = nút vàng */
 .up-sao-chon button { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; color: #e9edf2; text-shadow: 0 1px 0 #000;
-  border-image: url(../assets/nut_lon_thep.png) 0 50 fill / 0 16px / 0 stretch; }
+  border-image: url(../assets/nut_lon_thep.png) 0 105.4 fill / 0 16px / 0 stretch; }
 .up-sao-chon button.chon { background: none; color: #3a1d00; text-shadow: 0 1px 0 #ffd98a; border-image-source: url(../assets/nut_lon_vang.png); }
 /* dấu chân buff: ô = hốc thép o_trong (ô ụ / ô được buff có icon PNG bên trong) */
 .up-luoi { padding: 8px; }
@@ -84,7 +84,7 @@
 .up-dl dt, .up-dl dd { padding: 6px 0; }
 .up-thang .nac, .up-thang .nac.gap { border-radius: 0; box-shadow: none; }
 .up-thang button, .up-thang .cur { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 0 12px 0 8px;
-  border-image: url(../assets/h2_chip_tat.png) 0 30 fill / 0 10px / 0 stretch; color: #e9edf2; }
+  border-image: url(../assets/h2_chip_tat.png) 0 54.5 fill / 0 10px / 0 stretch; color: #e9edf2; }
 .up-thang .cur { color: var(--c); border-image-source: url(../assets/h2_chip.png); }
 .up-gd1 .anh .dau.loc.s2, .up-gd1 .anh .dau.loc.s3 { filter: none; }
 /* bộ bài 5 ô dưới trang: ô trống = o_trong; ụ đang xem = khung_chon */
@@ -97,17 +97,17 @@
 #tt .tt-bac { border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; background: none; padding: 0 8px; text-shadow: 0 1px 0 #000;
   border-image: url(../assets/ui_lv.png) 0 16 fill / 0 6px / 0 stretch; }
 #tt .st-hang > div { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 4px 8px 3px;
-  border-image: url(../assets/h2_lcd.png) 36 60 fill / 6px 10px stretch; }
+  border-image: url(../assets/h2_lcd.png) 56.4 94.1 fill / 6px 10px stretch; }
 #tt .d-chip span, #tt .tt-so .d-thang span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 6px 0 5px;
   border-image: url(../assets/ui_lv.png) 0 16 fill / 0 5px / 0 stretch; }
 #tt .tt-so .d-thang span.cur { background: none; color: var(--m); }
 #tt .tt-ct { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 10px;
-  border-image: url(../assets/h2_chip.png) 0 30 fill / 0 9px / 0 stretch; }
+  border-image: url(../assets/h2_chip.png) 0 54.5 fill / 0 9px / 0 stretch; }
 #nd-dai { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 0 14px 0 4px;
-  border-image: url(../assets/h2_tam.png) 0 40 fill / 0 12px / 0 stretch; }
+  border-image: url(../assets/h2_tam.png) 0 66.1 fill / 0 12px / 0 stretch; }
 #nd-gt .gt-bang { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; }
-#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; }
+  border-image: url(../assets/khung_bang.png) 85.2 fill / 20px stretch; }
+#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_tt.png) 47.1 fill / 10px stretch; }
 
 /* ================= CUT-IN CHỈ HUY: băng thép bang_cutin_nen (không gradient/viền/quầng) ================= */
 #cutin .ci-nen { background: none; box-shadow: none; border: 0 solid transparent; border-style: solid; border-width: 0;

@@ -47,7 +47,7 @@
 
 /* ---------- bảng Tạm dừng / Kết quả: khung thép 9 mảnh (P1) ---------- */
 .bang { background: none; border-radius: 0; border-style: solid; border-width: 0;
-  border-image: url(../assets/khung_bang.png) 56 fill / 28px stretch; }
+  border-image: url(../assets/khung_bang.png) 85.2 fill / 28px stretch; }
 
 /* ---------- màn chọn bộ bài ---------- */
 /* logo (M1): ảnh thay chữ — chữ vẫn trong DOM (ẩn đi) cho trình đọc màn hình; dòng phụ giữ chữ */
@@ -69,4 +69,4 @@
 #chon { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
 .chon-cuoi { background: #151618f2; }
 /* khung dưới trận (H8): console thép — 9 mảnh để góc/ống không méo khi co theo bề rộng màn */
-#duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.png) 34 84 64 84 fill / 17px 42px 32px 42px stretch; }
+#duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.png) 51.6 127.5 97.2 127.5 fill / 17px 42px 32px 42px stretch; }

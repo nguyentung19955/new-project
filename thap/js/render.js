@@ -77,14 +77,18 @@ const REN = {
   // bật lọc ảnh chất lượng cao cho mọi ngữ cảnh vẽ 2D
   min(x) { x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; return x; },
   c2d(c) { return this.min(c.getContext('2d')); },
-  // theo dõi thời gian khung: máy không kham nổi 3× (TB > 18 ms suốt ~3 s khi đang chơi) → lùi về 2× một lần
+  // theo dõi thời gian khung: chỉ lùi 3× → 2× khi máy THẬT SỰ không giữ nổi 45 khung/giây VÌ VẼ NẶNG:
+  // TB khoảng khung > 22 ms suốt 5 s VÀ TB thời gian JS mỗi khung > 11 ms. Trước đây ngưỡng 18 ms / 3 s, không xét máy bận → iPhone
+  // chế độ Nguồn điện thấp (Safari khoá 30 Hz) hay vài cú giật lúc nổ trùm là tụt hẳn về 2× cho tới hết phiên → mọi hình phóng 1.5× (mờ).
   doKhung(dt) {
     if (this.dpr <= 2 || !G.ban.length || G.dung || !(dt > 0) || dt > 0.1 || (G.debug && G.debug.dpr)) return;
     if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && (GF.cam || GF.mg.length || GF.ve.length))) return; // đang kéo/ghép: không dựng lại cả canvas giữa chừng (khựng ~0,8 s) — đợi thả xong
-    this._ft = this._ft == null ? dt : this._ft * 0.94 + dt * 0.06;
-    if (this._ft > 0.018) {
-      if ((this._cham = (this._cham || 0) + dt) > 3) { this.dprMax = 2; this._ft = null; this._cham = 0; this.coLai(); }
-    } else this._cham = Math.max(0, (this._cham || 0) - dt);
+    const v = (this._viec || 0) / 1000;
+    this._ft = this._ft == null ? dt : this._ft * 0.96 + dt * 0.04;
+    this._fv = this._fv == null ? v : this._fv * 0.96 + v * 0.04;
+    if (this._ft > 0.022 && this._fv > 0.011) {
+      if ((this._cham = (this._cham || 0) + dt) > 5) { this.dprMax = 2; this._ft = this._fv = null; this._cham = 0; this.coLai(); }
+    } else this._cham = Math.max(0, (this._cham || 0) - dt * 2);
   },
   // thu nhỏ chất lượng cao: giảm một nửa nhiều bước (mỗi bước lọc 'high') tới khi còn ≤ 2× đích, rồi mới vẽ lần cuối
   // → không lấm tấm/răng cưa như khi thu 1 lần từ ảnh 256–1290 px xuống vài chục px
