@@ -136,7 +136,7 @@ Object.assign(REN, {
       const s = backOut(u), ic = C * 0.56;
       const cy = c.y - ch * 0.5 - 22 + (1 - easeOut(u)) * 8;
       const txt = S.chu(T);
-      ctx.font = '900 12px "Be Vietnam Pro",system-ui,sans-serif'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.font = '900 12px ' + FONT.display; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
       const tw = Math.ceil(ctx.measureText(txt).width), w = tw + ic * 0.62 + 18, h = 22;
       const bx = clamp(c.x - w / 2, 4, W - w - 4);
       ctx.save(); ctx.translate(bx + w / 2, cy); ctx.scale(0.85 + 0.15 * s, 0.85 + 0.15 * s); ctx.translate(-(bx + w / 2), -cy);

@@ -1,12 +1,13 @@
 /* TURRET MERGE — giao diện (khung logic 430×860, co giãn theo màn hình) */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; background: #0d0e10; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
-body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; color: #fff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+body { font-family: var(--f-ui); color: #fff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
 #wrap { position: absolute; left: 50%; top: 50%; width: 430px; height: 860px; transform-origin: 50% 50%; overflow: hidden; background: #1d1f23; }
 #cv { position: absolute; inset: 0; display: block; }
 button { font-family: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: 0; }
 img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 [hidden] { display: none !important; }
+:root { --f-display: 'TM Display', 'TM UI', system-ui, sans-serif; --f-ui: 'TM UI', system-ui, sans-serif; } /* phông: css/fonts.css */
 
 /* ---------- thanh trên ---------- */
 #top { position: absolute; left: 0; right: 0; top: 0; height: 58px; display: flex; align-items: center; padding: 6px 12px 0; gap: 8px;
@@ -188,3 +189,14 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 #ketqua.thang .bang-ten { color: #ffd23f; }
 #ketqua.thua .kq-ic { filter: grayscale(1) brightness(.6); }
 .bang-nut .nut { flex: none; }
+
+/* ---------- phông chủ đề máy móc / sci-fi (TM Display cho số + nhãn lớn, TM UI cho chữ thường) ---------- */
+.logo b, .logo span, #tb-wave, #tb-trum, #mana-hop b, #nut-trieu .tr-ten, #nut-trieu .tr-gia, .nut-nho, .the .lv, .the .so, .the .gia, .the .gu, .c .gu,
+#the-mv .mv-ten, #the-mv .mv-gia, #bang-wave b, #canh-bao b, #tt .tt-ten, #tt .tt-bac, .chon-goi, .nut-xep, .nhom b, .c .sapco, .mv b, .che b, .nut, .bang-ten, .kq-so b, #tb-tim .chu
+{ font-family: var(--f-display); }
+#mana-hop b, #tb-wave b, #nut-trieu .tr-gia, .the .gia, .the .lv, .the .so, #the-mv .mv-gia, #chon-dem, .kq-so b, #tt .tt-so { font-variant-numeric: tabular-nums; }
+.logo b { letter-spacing: 3px; }
+.chon-goi, .nut-xep, .nhom b, .che b, .nut, #tb-trum, #tt .tt-bac { letter-spacing: .6px; }
+#bang-wave b { letter-spacing: 2px; text-shadow: 0 2px 0 #03506a, 0 0 10px #3fc6ee99; }
+#canh-bao b { letter-spacing: 2.5px; text-shadow: 0 2px 0 #500, 0 0 10px #ff3b3b99; }
+#nut-trieu .tr-ten { letter-spacing: 1.2px; }

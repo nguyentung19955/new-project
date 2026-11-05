@@ -213,7 +213,7 @@ const REN = {
     const M = this._chu || (this._chu = new Map());
     let c = M.get(key); if (c) return c;
     if (M.size > 320) M.clear();
-    const f = '900 ' + px + 'px "Be Vietnam Pro",sans-serif';
+    const f = '900 ' + px + 'px ' + FONT.display;
     const m = this._mx || (this._mx = document.createElement('canvas').getContext('2d'));
     m.font = f; const tw = m.measureText(s).width, lw = tw + 8, lh = px * 1.35 + 6;
     c = document.createElement('canvas'); c.width = Math.ceil(lw * k); c.height = Math.ceil(lh * k);
@@ -478,7 +478,7 @@ const REN = {
     }
   },
   veNhanBan(ctx) {
-    ctx.font = '800 10px "Be Vietnam Pro",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '800 10px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const B of G.ban) {
       if (G.ban.length < 2) break;
       const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 14, h = 15;
@@ -764,7 +764,7 @@ const REN = {
     else { g.addColorStop(0, '#ffe9a0'); g.addColorStop(0.55, '#f4c24a'); g.addColorStop(1, '#c98a1c'); }
     sao(ro, ri); x.fillStyle = g; x.fill();
     const f = Math.round(R * 1.25);
-    x.font = '900 ' + f + 'px "Be Vietnam Pro",system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = '900 ' + f + 'px ' + FONT.display; x.textAlign = 'center'; x.textBaseline = 'middle';
     const ty = R * 0.12;
     if (n >= 7) { x.lineWidth = R * 0.28; x.strokeStyle = '#5a0a10'; x.strokeText(n, 0, ty); x.fillStyle = '#ffffff'; x.fillText(n, 0, ty); }
     else { x.fillStyle = '#1a1206'; x.fillText(n, 0, ty); }
@@ -892,7 +892,7 @@ const REN = {
         ctx.drawImage(im, cx - w / 2, y - im.by * q, w, h);
         continue;
       }
-      ctx.font = '900 ' + Math.round(c.co * sc) + 'px "Be Vietnam Pro",sans-serif';
+      ctx.font = '900 ' + Math.round(c.co * sc) + 'px ' + FONT.display;
       ctx.lineWidth = 3.5; ctx.strokeStyle = 'rgba(0,0,0,.85)';
       if (c.kieu === 'nhan') { // nhãn kỹ năng trên ụ: viên thuốc tối viền màu bậc
         const w = Math.ceil(ctx.measureText(c.s).width) + 14, h = Math.round(c.co * sc) + 7, cy = y - h / 2 + 4; // cy = tâm viên thuốc

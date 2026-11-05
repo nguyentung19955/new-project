@@ -80,7 +80,7 @@ Object.assign(REN, {
     if (ds.length > 2) { // "+N"
       const px = x + 14, w = 13;
       ctx.globalAlpha = 0.92; ctx.fillStyle = '#151A20'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, y, w, 12, 3) : ctx.rect(px, y, w, 12); ctx.fill();
-      ctx.font = '900 8.5px "Be Vietnam Pro",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#E9E8E2';
+      ctx.font = '900 8.5px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#E9E8E2';
       ctx.fillText('+' + (ds.length - 1), px + w / 2, y + 6.5); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     }
     ctx.globalAlpha = 1;

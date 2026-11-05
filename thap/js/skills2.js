@@ -915,7 +915,7 @@ HU.bom = { // bom hẹn giờ dính trên quái, đếm ngược rồi nổ
     const con = Math.max(0, o.song - o.t), nhay = con < 1.5 ? Math.sin(o.t * 40) > 0 : Math.sin(o.t * 10) > 0;
     R.anhGiua(ctx, 'dan_phao', o.x + 8, o.y - 10, 15, -0.6);
     if (nhay) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#ff3b3b'), o.x + 8, o.y - 14, 16); ctx.globalCompositeOperation = 'source-over'; }
-    ctx.font = '900 11px "Be Vietnam Pro",sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
+    ctx.font = '900 11px ' + FONT.display; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
     ctx.strokeText(Math.ceil(con) + '', o.x + 8, o.y - 20); ctx.fillStyle = con < 1.5 ? '#ff4b3e' : '#ffe46b'; ctx.fillText(Math.ceil(con) + '', o.x + 8, o.y - 20);
   },
 };
