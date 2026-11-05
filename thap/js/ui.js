@@ -283,21 +283,30 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     tt.hidden = false; fitText(tt.querySelector('.tt-ten'), 18, 12);
     this.ttHet = performance.now() + 3600;
   },
-  // cut-in khi dùng kỹ năng Ma vương: dải ngang toàn màn (trong khung 430), chân dung trượt vào từ trái, tên kỹ năng từ phải
+  // cut-in khi dùng kỹ năng Ma vương: dải ngang (trong khung 430) ~2,2 s: trượt vào 300 ms → giữ ~1,6 s (chân dung trôi nhẹ,
+  // vệt sáng quét, chữ tên kỹ năng dập từng chữ) → trượt ra 300 ms. Chỉ là lớp phủ: kỹ năng nổ ngay, trận vẫn chạy.
+  // Đặt trên vùng đường/hàng ụ phía trên (không che nút triệu hồi / hàng thẻ). Chạm dải để bỏ qua.
   cutIn(id, B) {
     const d = MAVUONG[id], c = $('#cutin'); if (!d || !c) return;
     const po = c.querySelector('.ci-po');
     po.onerror = () => { po.onerror = null; po.src = mvIcURL(id); po.classList.add('fb'); };
     po.classList.remove('fb'); po.src = 'assets/' + d.anh + '.png';
     c.querySelector('.ci-ki').src = mvIcURL(id);
-    c.querySelector('b').textContent = d.ten; c.querySelector('span').textContent = d.mo;
+    const b = c.querySelector('b');
+    b.textContent = ''; b.style.fontSize = '';
+    [...String(d.ten)].forEach((ch, i) => { const e = document.createElement('i'); e.textContent = ch; e.style.animationDelay = (0.26 + i * 0.045).toFixed(3) + 's'; b.appendChild(e); });
+    c.querySelector('span').textContent = d.mo;
     c.style.setProperty('--mm', d.mau);
-    const h = 132, y = B ? B.y + B.h / 2 - h / 2 : H / 2 - h / 2;
-    c.style.top = Math.round(clamp(y, 70, H - 200 - h)) + 'px';
-    c.hidden = false; c.classList.remove('chay'); void c.offsetWidth;
-    fitText(c.querySelector('b'), 34, 16); fitText(c.querySelector('span'), 12, 8);
+    const h = 132, y = B ? B.y - 110 : 150; // phủ đường + hàng ụ trên của bàn người chơi
+    c.style.top = Math.round(clamp(y, 64, H - 200 - h)) + 'px';
+    c.hidden = false; c.classList.remove('chay', 'ra'); void c.offsetWidth;
+    fitText(b, 34, 16); fitText(c.querySelector('span'), 12, 8);
     c.classList.add('chay');
-    clearTimeout(this._ci); this._ci = setTimeout(() => { c.hidden = true; c.classList.remove('chay'); }, 820);
+    const TONG = 2200, RA = 300;
+    clearTimeout(this._ci); clearTimeout(this._ci2);
+    const ra = () => { clearTimeout(this._ci); clearTimeout(this._ci2); c.classList.add('ra'); this._ci2 = setTimeout(() => { c.hidden = true; c.classList.remove('chay', 'ra'); }, RA); };
+    this._ci = setTimeout(ra, TONG - RA);
+    c.onpointerdown = (e) => { e.stopPropagation(); if (!c.classList.contains('ra')) ra(); };
   },
 
   // dòng chi tiết bảng thông tin: chỉ số · tốc bắn · họ kỹ năng · mốc sao · grow-up

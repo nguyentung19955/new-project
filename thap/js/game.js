@@ -184,9 +184,9 @@ function dungMV(B) {
     FX.vong1(cx, cy, 20, 240, d.mau || '#ffffff', 0.6, 6);
     if (!nguoi) FX.chu1(cx, cy, d.ten, '#fff', 22, 'to'); // bàn máy/đồng đội: chữ nhỏ (đã kẹp trong màn); người chơi: cut-in
   };
-  // người chơi: cut-in chân dung chỉ huy ~0,8 s, hiệu ứng kỹ năng nổ ra khi dải cut-in rút đi
-  if (nguoi && typeof UI !== 'undefined' && UI.cutIn && typeof VX !== 'undefined') { UI.cutIn(mv.id, B); VX.hen(0.6, lam); }
-  else lam();
+  // người chơi: cut-in chân dung chỉ huy ~2,2 s (lớp phủ) — hiệu ứng kỹ năng nổ NGAY, không chờ dải cut-in
+  if (nguoi && typeof UI !== 'undefined' && UI.cutIn) UI.cutIn(mv.id, B);
+  lam();
   SND.mv();
   return true;
 }
