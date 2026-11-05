@@ -1,0 +1,704 @@
+TURRET RECOGNITION SYSTEM — 64 TO 85 UNITS AT ~50 PX
+Practical art-direction, UX and implementation specification
+For the owner's 5×3 merge tower-defense board
+Version: 2026-11-05
+
+========================================================================
+0. EXECUTIVE DECISION — WHAT I WOULD SHIP
+========================================================================
+
+Keep the existing polished, colorful rotating heads. Do NOT redraw all 64–85 turrets or paint every turret an entirely different color. Instead, build a two-level identification system:
+
+(A) PERMANENT IDENTITY (consistent everywhere, even when a player changes deck):
+    - Each turret receives one canonical emblem/glyph, one canonical accent color,
+      one recognizable main silhouette, and one short name.
+    - Identical ID appears on its collection card, deck card, info panel, and board.
+    - Art is a skin of the turret ID; the emblem/color is the readable interface layer.
+
+(B) MATCH-SPECIFIC DIFFERENTIATION (only 5 playable types in a normal deck):
+    - Use the canonical identity by default; optionally add a uniquely colored
+      small outer 'deck key' ring/marker for each of the five active turret types.
+    - DO NOT recolor the whole head dynamically: it harms recognition of the
+      original artwork and makes the same turret change identity across matches.
+    - Highlight actual eligible merge targets instead of requiring players to
+      visually search for duplicates during a drag.
+
+P0: Add five-way deck identity colors + matching deck-bar keys; fix star badge;
+    add tap-to-identify and drag-to-merge target highlighting.
+P1: Add unique central/near-center emblems for all 64 heads; improve scale and
+    suppress clutter; teach the five active units at match entry.
+P2: Refine silhouettes/heads only for the genuinely ambiguous pairs and test
+    with first-time players on a real phone.
+
+TARGET EXPERIENCE:
+Within the first minute, a new player can distinguish five equipped turret
+TYPES; later, they learn the broader catalog by stable icon and name. Expecting
+instant visual memorization of 85 previously unseen units is not realistic.
+Design the system so nobody needs to memorize all 85 to play effectively.
+
+========================================================================
+1. DIAGNOSIS OF THE ATTACHED SCREENSHOT
+========================================================================
+
+The pictured match has a 5×3 grey industrial tray, shared grey circular plates,
+mostly similarly round and similarly sized turret heads, a yellow star-number
+badge at the upper-right of every cell, role/condition icons, several gold
+selection frames, link lines, projectiles, bright beam VFX, and a highly
+textured enemy lane. Different turrets are visually rich at collection-view
+size but converge into the same pattern at phone-board size: 'dark grey ring
++ small colored parts + barrel/core'. Important identity details compete with
+stars, role indicators, energy trails and board art.
+
+Likely sources of confusion, in priority order:
+1. Too little type-specific information is carried by a large, simple shape.
+2. Colors are distributed among small details instead of one stable ID zone.
+3. Supports and attackers often share the same circular silhouette.
+4. The same dominant shared base grey takes up much of each visual.
+5. Star badge, buffs and active VFX cover the silhouette/glyph.
+6. Selection/connection decoration makes already busy cells busier.
+7. No always-easy bridge from a board unit to its deck-card identity.
+
+Do not confuse 'more detailed icon' with 'more identifiable icon'. At 50 px,
+recognition is achieved by fewer, larger, distinct landmarks.
+
+========================================================================
+2. THE 50-PIXEL CELL CONTRACT (DESIGN AT ACTUAL RENDERED SIZE)
+========================================================================
+
+All pixel dimensions below are recommendations measured at FINAL on-screen
+rendered CSS/device-independent game-pixel size of approximately 50×50. If the
+game uses a smaller logical canvas and scales it, multiply consistently by the
+actual render scale. Review screenshots at 1× final size, not zoomed in.
+
+Cell footprint:                   50×50
+Center of turret:                 (25,25)
+Usable head envelope:             36–39 px across (attack barrel may extend
+                                  to ~43 px; leave a 2–3 px safety inset)
+Shared base plate:                <=39–41 px diameter; preferably behind head
+Canonical ID mark/emblem:         14–18 px visual width, ~16–20 px height
+                                  where it can sit without obscuring a weapon
+Emblem negative-space holes:      >=2 px at final display
+Critical emblem stroke:          >=2 px; 1 px only for nonessential detailing
+Head silhouette/readable part:    >=6 px characteristic landmark
+Type color outer arc/key:         2.5–3 px thickness; ~26–34 px ring diameter,
+                                  visible 180–270 degrees, interrupted where
+                                  appropriate by star and weapon
+Star badge:                      13–15 px across; upper-right, consistent
+Star numeral:                    10–12 px bold bitmap/sans, high contrast
+Optional role glyph:             7–9 px only in inspection/deck view; avoid
+                                  permanent second tiny badge on every cell
+Tile spacing:                    maintain >=2 px clear separation of visual
+                                  shapes between neighboring tiles
+
+LAYER ORDER (bottom to top):
+0 board socket → 1 subtle neutral base → 2 type accent ring/key → 3 turret
+head → 4 turret ID emblem (if not already integral to the head) → 5 star
+badge → 6 status overlay → 7 selection/merge glow → 8 transient attack VFX.
+Do not render the ID emblem as a constantly rotating top layer if it needs to
+remain upright. Prefer a fixed upper cap or a billboarded overlay keyed to the
+turret's screen position. For directional heads, keep the functional weapon
+rotating and the readable ID mark stationary.
+
+RULES:
+- 1 primary focal point per turret, not three competing glows.
+- On ordinary play, a 50 px cell should expose ID + star only. On selection,
+  show ability/name/neighbor links in an adjacent inspection area.
+- Do not spend >25% of a turret's visual interior on decorative bolts and
+  trim; reserve that space for emblem, face, weapon, or unique functional core.
+- Reduce background brightness and desaturate industrial metal. Preserve
+  cyan enemy lane/core and actionable feedback, not constant bright trim.
+- A unit must remain identifiable when effects are disabled and in grayscale.
+
+========================================================================
+3. WHAT TO BORROW — AND WHAT NOT TO COPY
+========================================================================
+
+RANDOM DICE:
+Its useful design lesson is compact, repeated visual grammar: a small set of
+chosen dice, simple recognizable type visuals, and an extremely conspicuous
+pip/dot count. Standard merge uses same type and same dot count, with special
+exceptions. Its readability comes from a coherent system, not from giving
+every die an unrestricted neon hue. For your game, a type glyph is analogous
+to a die's central visual identity; the numeric star badge is analogous to its
+pip count. Keep these two readings visually separate.
+
+DESTINY CHILD: DEFENSE WAR:
+The practical model is the five-unit lineup plus leader, random summon from
+that lineup, merging compatible units at equal star level (with special-unit
+exceptions where applicable), and mana power-up from the deck bar. This means
+players mostly need to distinguish five actively equipped types during a
+match, not the entire collection. Therefore optimize five-at-once contrast,
+learnability and selection feedback, then improve the 64–85-unit collection.
+
+DO NOT copy either game's art assets or imply there is a known official color
+algorithm. The palette/overlay system below is a design proposal for this game.
+
+References reviewed:
+- Random Dice mechanics (historical page; explicitly warns its version is old):
+  https://random-dice.fandom.com/wiki/Dice_Mechanics
+- Random Dice starter guide (2026-10-28):
+  https://randomdicehub.com/guides/random-dice-beginner-guide/
+- DCDW overview / deck mechanics:
+  https://www.mobygames.com/game/176430/destiny-child-defense-war/
+- DCDW merging and power-up explanation:
+  https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+
+========================================================================
+4. THE RECOMMENDED IDENTITY SYSTEM: 4 DISTINCT CHANNELS
+========================================================================
+
+CHANNEL 1 — CANONICAL GLYPH (strongest long-term identifier)
+Each turret gets exactly one stable pictogram: a unique symbolic contour,
+centered on the head where possible, or on an upper stationary cap. Make it
+recognizable as a 16 px filled silhouette. Avoid microscopic illustration.
+Examples: Cannon = muzzle ring; Dice Gun = die face; Frost = snowflake;
+Cloner = twin blocks; Chain Link = interlocked links; Overlord = forked bolt.
+Never reuse an emblem across two turrets, even if they share role/element.
+
+CHANNEL 2 — CANONICAL ACCENT (stable in menu, card, battle, tutorials)
+Assign a default hue to each named turret. A palette of 85 individually
+'unique' colors is NOT reliably discriminable at 50 px. Use 10–12 distinct
+color families, plus glyphs and silhouettes. Color is a secondary clue.
+Keep original art hues; place the stable color on the same clearly visible
+2.5–3 px ring/key on every turret and the deck card border.
+
+CHANNEL 3 — SHAPE/ROLE GRAMMAR (predicts what the turret does)
+Attack = directional projection (barrel, blade, muzzle, bow, missile pod).
+Sub-attack = short/paired/projected tool, still clearly directional.
+Support = radial/symmetric field device; NO fake weapon barrel.
+Control = symmetric field shape or a recognizable trap/projector, visually
+separate from gun types.
+Special/merge utility = transformation glyph, box, prism, clock, DNA, crown;
+no weapon-like barrel unless it genuinely attacks.
+Role grammar predicts FUNCTION; the unique glyph identifies the exact TYPE.
+
+CHANNEL 4 — STAR LEVEL (independent variable)
+Stars 1–7 must have one reserved high-contrast badge in the SAME position on
+all turrets. The appearance of the head, glyph, accent and tier should not
+change because the unit moves from 1★ to 7★ unless the upgrade itself is a
+specific visual evolution. Use a numeral, not 1–7 tiny stars scattered around
+its circumference. Keep tier/rarity on collection card, not confused with star.
+
+Rarity vs identity vs role:
+- Rarity (white / blue / purple / gold / red): shown on collection/deck card
+  frame and details, NOT as the primary always-on turret ID rim.
+- Type: emblem + canonical color + silhouette.
+- Role: shape grammar, optionally a small UI icon in info/deck view.
+- Star: fixed top-right badge 1–7.
+- Buff/debuff: temporary icon or overlay, visually subordinate.
+
+========================================================================
+5. COLOR SYSTEM: FIXED ID + OPTIONAL FIVE-DECK KEY
+========================================================================
+
+5A. CANONICAL COLOR PALETTE (12 example anchor hues)
+These are STARTING VALUES for testing against the dark board, not a promise
+that every pair is perceptually distinct or color-blind safe.
+
+Coral red       #F05B55       Burnt orange   #F58B30
+Amber gold      #E6B338       Lime           #A6C83A
+Leaf green      #46B86A       Teal           #26B7A9
+Cyan            #47C9E9       Royal blue     #4D83E9
+Violet          #9770E9       Fuchsia        #D46AC9
+Warm white      #E7D7B8       Copper         #BB8061
+
+Paired border outline: dark #18202A, or near-black #11151C. Avoid letting
+cyan vs teal, red vs orange, purple vs fuchsia be the only distinction.
+Always test with color-vision deficiency simulation and grayscale.
+
+5B. RECOMMENDED 'DECK KEY' ALGORITHM
+The board contains just five active unit TYPES. It is reasonable to assign
+five visually separated KEY COLORS to those types for the duration of a match.
+However, these should color a thin ADDITIONAL key segment/ring, not the entire
+turret head. Keep canonical color/glow/art on the turret itself.
+
+An initial test set of five highly separated deck-key hues:
+1 blue       #4D90F0
+2 amber      #FFC34A
+3 cyan-teal  #33C6C0
+4 coral      #F06A71
+5 violet     #B48AF3
+
+These are not guaranteed color-blind-distinct. Add five DISTINCT shapes to
+the keys (e.g. dot, square, triangle, chevron, diamond) on deck cards and
+optionally as tiny ring cutouts on the board. Better: use the turret's full
+unique glyph as the shape cue. Never assume hue alone is sufficient.
+
+Map TYPE_ID → deckSlotIndex → matchKeyColor ONCE at match setup, and keep it
+constant for this match, across summons/merges/reconnections/replays. Do not
+reassign slots when units are upgraded or die. Prefer the actual sorted deck
+slot order (1–5) because it is predictable and already visible in the HUD.
+
+Example: Five chosen IDs are [Cannon, Radar, Frost, Star Cannon, Mystery Box].
+Cannon gets deck key blue, Radar amber, Frost cyan-teal, Star Cannon coral,
+Mystery Box violet. Their original orange/teal/ice/gold/purple artwork stays.
+A matching colored 3 px corner tick appears on each corresponding deck card.
+
+CAUTION: A player may find a gold Star Cannon marked coral surprising. Hence:
+- P0: prototype runtime keys in an optional 'Quick Read' mode and test them.
+- If this mapping makes learning worse, use fixed canonical colors only, and
+  instead maximize distinction among five types using a neutral outline,
+  five distinct corner shapes, and selection highlights.
+- Never switch palette on the same player between moments of one match.
+- For PvP opponent board, use their own five fixed mapping slots consistently.
+
+5C. IF USING PER-DECK COLOR OPTIMIZATION (ADVANCED)
+A later algorithm may select colors from 8–10 candidates by maximizing the
+minimum perceptual distance across the active five keys in a color-vision-
+deficiency-aware perceptual space (e.g. OKLab/OKLCH simulation). BUT do not
+let arbitrary re-optimization recolor one unit from match to match without
+an anchored label. For a launch-ready game, the fixed five-slot palette with
+shape backup is simpler and more reliable. Do not ship a mathematically
+complex solution before player tests demonstrate value.
+
+========================================================================
+6. GLYPH SPEC: A CONCRETE FIRST PASS FOR ALL 64 EXISTING TURRETS
+========================================================================
+
+These are one-sentence silhouette briefs; they are NOT meant as readable text
+or emoji on the battle board. Each becomes a custom mono-color 16–20 px glyph.
+Retain the owner's roster names/IDs. Check if the shipped ID names differ.
+
+ID  NAME              PRIMARY ID GLYPH / SHAPE BRIEF
+01  Cannon            circular muzzle with one deep cutout
+02  Dice Gun          diagonal die face with four bold pips
+03  Gatling           cluster of three circles in triangular arrangement
+04  Scatter           five short muzzle slots in a fanned wedge
+05  Revolver          six-chamber cylinder with one missing wedge
+06  Frost             broad 6-arm snowflake
+07  Venom             triple-lobed toxin droplet
+08  Mana Core         wide hollow diamond with central spark
+09  Sniper            crosshair with long horizontal sight line
+10  Tesla             thick zigzag lightning bolt
+11  Guillotine        blade dropping through a narrow gate
+12  Breaker           cracked shield/armor tile
+13  Hammer            chunky T-shaped mallet
+14  Iron Fist         angular closed fist/knuckles
+15  Time Bomb         bomb body with clock hand and fuse
+16  Mana Doubler      two overlapping mana droplets
+17  Ice Blade         single diagonal sharp ice dagger
+18  Mimic             two mirrored angular faces/prisms
+19  Crit Antenna      bold targeting reticle + four short spikes
+20  Teleporter        two offset portal loops
+21  Radar             three-sweep radar arcs with center dot
+22  Drone Bay         small drone with four outward propeller prongs
+23  Blender           three-blade spinning impeller
+24  Energy Cannon     three stacked concentric energy arcs
+25  Laser             narrow central beam through square aperture
+26  Chiller           four-vaned fan + central snowflake
+27  Mortar            heavy round shell with outward blast arc
+28  Amplifier         speaker cone + four separated coils
+29  Toxic Pool        irregular corrosive puddle with 3 bubbles
+30  Cooldown Horn     clock gear with 4 horn bells, radial/no barrel
+31  Mana Leech        downward-hook siphon with droplet
+32  Mine Layer        two concentric disk mines
+33  Berserker         double chevrons piercing a heated core
+34  Blizzard          swirling snow spiral with 3 arms
+35  Cloner            twin side-by-side blocks connected by spark
+36  Chain Link        two heavy interlocked oval chain links
+37  Clamp             opposed mechanical pincers
+38  Cleanser          sweeping brush/ray over diamond
+39  Shield Gen        centered hex shield outline with filled core
+40  Mystery Box       solid question-box with exaggerated lid
+41  Star Lift         four-point star lifted by arrow
+42  Reaper Pillar     skull over short crossed scythe crescents
+43  Scrambler         fractured rotating triple-arrow spiral
+44  Overclock         hot gear with a single bolt through center
+45  Fifth Shot        five arrow tips in one broad fan
+46  Storm Gun         wind spiral plus central needle
+47  Lighthouse        beacon tower/radial light-rays
+48  Purifier          eight-point clean sun halo
+49  Sync Cannon       orbit ring crossing a four-point star
+50  Railgun           two parallel long rails with central projectile
+51  Merge King        crown over two converging puzzle halves
+52  Twin Maker        symmetrical twin cores with split center
+53  Star Breaker      sharp star cracked in two
+54  Copycat           original block + identical offset outline
+55  Star Cannon       large pink-centered four-point star
+56  Mech Wolf         wolf-ear wedge + fierce eye/three claws
+57  Evolver           helix enclosed in cocoon
+58  Rainbow           prismatic diamond split into 4 facets
+59  Wall Projector    solid rectangular barrier with arrow
+60  Orbital           satellite rectangle with two broad panel wings
+61  Black Hole        black circle with bright swirling event arc
+62  Overlord          forked lightning over a muzzle ring
+63  Cryo Reactor      ice crystal within horned thermal ring
+64  Holy Halo         open gold halo with two wing wedges
+
+IMPORTANT GLYPH COLLISIONS TO FIX BY VISUAL TEST:
+#06 vs #26 vs #34 vs #63 (all ice), #08 vs #16 vs #31 (mana),
+#19 vs #09 vs #21 (targeting), #41 vs #49 vs #55 (star),
+#01 vs #05 vs #03 (gun), #28 vs #30 vs #47 (speaker/horn/beacon),
+#35 vs #52 vs #54 (duplication), #38 vs #48 vs #64 (purity/holy).
+Use silhouette, surrounding contour and inner negative spaces to separate
+these; if two fail a 16 px squint test, REVISE the emblem, not its color.
+
+FOR NEW IDs #65–85:
+Reserve a fresh glyph key + assigned color anchor + silhouette brief BEFORE
+adding artwork. Build a spreadsheet/JSON registry with tags and duplicates
+check. Don't invent the remaining 21 names; they were not supplied here.
+
+========================================================================
+7. RIM, DECK CARD, STAR BADGE, LABEL AND FEEDBACK
+========================================================================
+
+7A. RIM
+Base structural metal remains dark, neutral and stable. Attach a colored
+'identity arc' INSIDE or just above that base ring where it is not occluded.
+This can be an overlay sprite or programmatically drawn geometry. Recommended
+3 px thick, 65–80% circumference, with one deliberate gap near a barrel.
+The current shared base should not be the only large visible contour.
+When a turret rotates its head, do not rotate the entire ID ring.
+
+7B. DECK BAR MATCHING
+Each of five deck cards shows: same turret art thumbnail, same emblem (12–16
+px), same type/ring color, same short name in non-battle menus, and rarity
+ONLY as a slim outer card accent. Match identity to board exactly. Color is
+not substituted by tier. For active-selection, dim unrelated cards and
+highlight all matching placed turrets.
+
+7C. STAR DISPLAY — REPLACE THE AMBIGUOUS TINY GOLD STAR SHAPE
+On the screenshot each '3' floats on a yellow star-like badge. Make one fixed
+high-contrast dark-inside badge with a large numeric '3' (and optional tiny
+star cutout) at top-right. It must never be hidden under a firing effect.
+Suggested: dark charcoal hexagon 14×14; 1.5 px pale-gold border; bright ivory
+bold numeral (1–7), 11 px cap height; 1 px dark shadow for legibility.
+Keep all seven stars the same badge footprint. A 1–7 segmented ring would
+compete with the type-colored ring, so avoid it in normal play. Don't use 7
+miniature dots or seven mini stars; phone players cannot count them quickly.
+For 7-star apex, add a SMALL crown gleam outside badge only if legible.
+
+7D. LABEL/IDENTIFY UX (PRIORITIZED)
+Tap a turret (single tap, no drag) → bottom/near-board info strip immediately:
+'FROST  •  3★  •  SLOW' plus large 28–36 px head icon, rarity and one-line
+function. Placement should not block the player's drag origin. Strip persists
+until next tap or brief timeout (suggest 2–3 seconds only if auto-dismiss
+works with gameplay; allow closing).
+
+Long press (hold 350–450 ms with <6 px movement) → expanded inspect card:
+short name, canonical emblem, hero/pilot portrait, ability in one sentence,
+star, upgrade tier, compatible merges. Long press should NOT trigger mid-drag.
+
+On deploy/summon → briefly pulse identity ring and show 0.7–1.0 second name
+chip above the tile ONLY for the first 2–3 summons of each type in the first
+few matches or if 'show unit names' accessibility toggle is on. For experienced
+players, no repeated labels clogging the board.
+
+On first use/FTUE → show five deck types as a 5-card mini legend with each
+unit's colored key + emblem + 1-line role. Then ask player to identify one
+board unit, tap for description, and perform one legal merge. Do not force
+all 64 tutorials. After the player demonstrates competence, fade aids.
+
+Optional settings: Quick Read (emblems/keys always emphasized), larger star
+badges, reduced VFX, show names on summon, and high-contrast mode. These must
+not change gameplay mechanics.
+
+7E. MERGE DRAG FEEDBACK — MOST IMPORTANT GAMEPLAY FIX
+When pointer is down and intent to drag has passed threshold:
+- Lift origin 2–3 px / show small source ID emblem near touch location.
+- Mark all legal same-TYPE + same-STAR destinations with a clear thin PULSING
+  border (e.g. 3 px bright mint #75F0B9 + a small white center pip), or a
+  contrast-safe alternate based on background.
+- Dim all invalid occupied cells ~25–40%, but do not reduce board awareness.
+- On hovering an eligible target, grow its border to 4 px and create a short
+  connective arc from source to target; avoid permanent link clutter.
+- On hovering invalid cell, show neutral cross/slash and never imply legality.
+- After release, remove preview within 1 animation frame; on success, one
+  strong merge burst only (<=250–350 ms), and show new ID immediately.
+- Special merge units (Mimic, Copycat, etc.) use actual authoritative game
+  rules; don't hard-code same ID/same star if exceptions exist.
+- On cancellation, restore all cells to normal.
+
+Tap deck card → outline every matching TYPE on the board for ~0.8 s, regardless
+of star, while keeping the star badge visible. This is a useful low-effort
+'where are my X units?' action.
+
+7F. VISUAL EFFECTS BUDGET
+Reduce passive glow, perpetual lightning and VFX over icon centers. Put active
+projectiles ABOVE the unit layer but avoid covering center glyph longer than
+~100 ms. Behind-barrel lightning should not linger on adjacent heads.
+For selection, use ONE outline style; for linked neighbors, use thin 1.5–2 px
+lines with endpoint dots, shown only while selected or truly meaningful.
+If multiple statuses happen, combine icons in inspect strip rather than
+stacking 4+ pictograms on the 50 px tile.
+
+========================================================================
+8. SILHOUETTE AND ROLE RULES FOR ALL FUTURE ART
+========================================================================
+
+OFFENSIVE:
+Main form 'circle + forward protrusion'. Directional muzzle occupies roughly
+20–35% of head diameter; one characteristic muzzle shape per weapon. Cannon
+= one fat tube; Gatling = barrel cluster; Scatter = fan; Sniper = needle;
+Railgun = two rails; Laser = single aperture; Mech Wolf = muzzle + claws.
+Do not let every attacker become the same one-cylinder-right silhouette.
+
+SUB-OFFENSIVE:
+Directional weapon is short (e.g. trap, splash, status projector), with a
+separate distinctive source/core. Visual cue says 'secondary damage/utility'.
+
+SUPPORT:
+Strictly no fake barrel. Symmetric layout with central glyph and 3–4 radial
+modules. Mana Core = crystal; Crit Antenna = four spike target; Chiller = fan;
+Amplifier = speaker+coils (radial); Shield Gen = hex shield; Radar = sweeping
+rings; Cooldown Horn = symmetric horn/gear. Do not point a support 'dish' to
+RIGHT merely to match attackers; directional orientation would mislead.
+
+CONTROL:
+Traps, clamps, portals, shields and cold-field motifs; an enclosing ring or
+opposed arms is more useful than one more cannon muzzle. Keep the core glyph
+prominent; show field radius only on selection.
+
+SPECIAL / MERGE UTILITY:
+Strong icon-like center (question box, crown, two cores, DNA, mirror, prism,
+clock, mimic), minimal hard-to-read small hardware. This is the category with
+most potential to read like Random Dice while preserving the art around it.
+
+All support a 1-color and grayscale silhouette test. Distinguish by OUTER
+shape first, CENTER glyph second, COLOR third, glow last.
+
+========================================================================
+9. IMPACT vs EFFORT PRIORITY TABLE
+========================================================================
+
+Priority | Intervention                                | Impact | Effort
+P0       | Legal merge target highlights               | VERY HIGH | LOW–MED
+P0       | Tap-to-identify with name + ability         | VERY HIGH | LOW
+P0       | Stable deck-card ↔ board type key           | HIGH | LOW–MED
+P0       | Big numeral star badge, fixed position     | HIGH | LOW
+P0       | Reduce persistent effect/selection clutter | HIGH | LOW
+P1       | Emblem overlay for 64 IDs                   | VERY HIGH | MED–HIGH
+P1       | First-match five-unit quick legend         | HIGH | MED
+P1       | Support no-barrel silhouette cleanup       | HIGH | MED–HIGH
+P1       | Distinctive rim/arc overlays               | MED–HIGH | LOW–MED
+P2       | Redraw only confused turret pairs          | HIGH locally | MED–HIGH
+P2       | Runtime five-key palette optimization      | UNCERTAIN | MED–HIGH
+P3       | Permanently label every tile              | LOW/NEGATIVE | LOW–MED
+P3       | Full recolor of all 85 heads               | UNCERTAIN/NEGATIVE | VERY HIGH
+P3       | Seven tiny pips/stars around head           | NEGATIVE | MED
+
+Ranking note: 'recognize at a glance' and 'make a legal merge quickly' are
+related but distinct metrics. Merge highlighting wins the second immediately,
+whereas unique glyph + larger shape wins long-term identity.
+
+========================================================================
+10. CODE-ONLY IMPLEMENTATION — NO ART REDRAW REQUIRED
+========================================================================
+
+SPRINT 0 — MEASURE / INSTRUMENT (0.5–1 day)
+1. Capture screenshots from an actual iPhone landscape at final gameplay
+   scale (including low-brightness mode and saturated VFX moment).
+2. Record cell hitbox, physical visible size and real sprite occlusion.
+3. Add debug overlay: turretId, starLevel, deckSlot; disabled in release.
+4. Track wrong-type merge attempts, successful target time, inspection opens,
+   wrong upgrades, and tap-to-identify use (no personal data needed).
+
+SPRINT 1 — UI CORRECTIONS (1–3 days)
+1. Implement new 14×14 fixed numeric star badge layer and contrast outline.
+2. On selection, show typeName + role + stars in 1-line strip.
+3. On deck card tap, highlight all cells with matching turretId.
+4. Disable continuous selection glow and most passive link lines by default.
+5. Ensure deck card frame/key uses same ID mapping as board.
+
+SPRINT 2 — MERGE PREVIEW (1–3 days)
+1. On pointerDown record source turretId, starLevel and coordinates.
+2. Enter drag after 6–8 px travel (or game-tuned slop); tap otherwise.
+3. Ask the game RULE ENGINE for legalTargets(source, boardState), including
+   special-case merge mechanics. UI must never separately reimplement logic.
+4. Add highlight to legal cells, dim invalid cells; don't animate every cell.
+5. On pointerMove update candidate target; on pointerUp validate again.
+6. On merge success show single compact burst; on cancel clear preview.
+7. Check touch priority: scrolling/inspection, drag start, long press.
+
+SPRINT 3 — TYPE COLOR OVERLAYS (1–2 days)
+1. Add ID_KEY color arc on a draw layer between base/head or above head edge.
+2. Register canonical colors; add 5-key accessibility mode to test.
+3. Match deck cards. Persist mapping for match/replay deterministically.
+4. Build color-blind and grayscale QA screenshots; add glyph/shape backup.
+
+EXAMPLE DATA CONTRACT (pseudocode; not a specific engine API):
+
+TURRETS = {
+  4:  { id:4, name:'Scatter',     role:'attack',  glyph:'scatter_fan',
+        color:'#F58B30', rarity:'common', silhouette:'fan5' },
+  19: { id:19,name:'Crit Antenna',role:'support', glyph:'target4',
+        color:'#F05B55', rarity:'rare', silhouette:'radial4' },
+  26: { id:26,name:'Chiller',     role:'support', glyph:'snow_fan',
+        color:'#47C9E9', rarity:'rare', silhouette:'fan4' }
+};
+
+function startMatch(deckIds) {
+  const keyColors = ['#4D90F0','#FFC34A','#33C6C0','#F06A71','#B48AF3'];
+  return new Map(deckIds.map((turretId, slot) => [turretId, {
+    slot, keyColor:keyColors[slot], glyph:TURRETS[turretId].glyph
+  }]));
+}
+
+function beginDrag(source, board, rules) {
+  const legal = rules.getLegalMergeTargets(source, board);
+  // Pass legal to renderer; do not infer it from art or color.
+  renderer.setMergePreview({sourceCell:source.cell, legalCells:legal});
+}
+
+function renderCell(cell, matchIdentity) {
+  drawNeutralSocket(cell);
+  drawTypeArc(matchIdentity.get(cell.turretId).keyColor);
+  drawExistingHead(cell.headSprite, cell.heading);
+  drawGlyphOverlay(cell.turretId);  // optional until glyph art arrives
+  drawStarBadge(cell.starLevel);
+  drawStatusMinimally(cell.status);
+}
+
+Consider using a monochrome glyph placeholder from available vector/UI shapes
+for only a few turrets during P0, then replace with curated icons at P1.
+Do not rely on generic emoji: platform rendering is inconsistent and too
+complex for 16 px. Avoid canvas text glyphs if font loading differs on iOS.
+
+ENGINEERING EDGE CASES:
+- Glyph stays screen-upright when the head rotates; ID still readable.
+- Capture touches correctly near top-right star badge and tile boundary.
+- Same turret type in multiple cells always has same icon and ring color.
+- 7★ cap and locked units show no fake merge target.
+- Special fusion rules use game engine authoritative decisions.
+- Cloner/Mimic effects that visually copy others need explicit ID indication:
+  original ID and current copied form should not be confused.
+- Transforming units: identify CURRENT gameplay type during action; offer
+  original/base name in detail panel if useful.
+- Opponent board must not be mistaken for player's merge targets.
+- Freeze/poison/slow overlays must not replace the underlying ID glyph.
+- Device performance: batch static arcs in texture atlas; update glow only
+  on interaction. Keep overdraw low on mobile browsers.
+- Touch is not hover: every affordance must work with touch alone.
+
+========================================================================
+11. ART IMPLEMENTATION — AFTER CODE SHIPS
+========================================================================
+
+ART PASS A: 64 glyphs (priority)
+- One monochrome scalable path/SVG for each 64 named units.
+- Flat filled silhouette in 24×24 authoring box, tested at 16×16/18×18.
+- 2 px minimum meaningful stroke at runtime; no internal tiny lettering.
+- Provide white-on-dark and dark-on-light variants if necessary.
+- Export atlas and JSON ID mapping. Have a human validate collisions.
+- Don't put decorative tier frames on the glyph itself.
+
+ART PASS B: 10–20 targeted silhouette repairs
+Use screenshots + test errors to choose pairs, rather than redraw at random.
+Likely candidates: #19 Crit Antenna (remove dish/gun interpretation),
+#26 Chiller (radial fan), #28 Amplifier (radial speaker + coils),
+#30 Cooldown Horn (symmetric gear/horns), #42 Reaper Pillar (totem/skull),
+#60 Orbital (two solar panels, not radar dish), #64 Holy Halo (wings/halo).
+Also inspect weapons #01/#03/#04/#05, #09/#25/#50 and ice family.
+Keep existing outline thickness, top-down camera and color shading.
+
+ART PASS C: simplified mobile LOD
+Each head has a 50 px battle LOD and 96–128 px enlarged card/inspect icon.
+At small LOD, remove redundant bolts/highlights, enlarge glyph and unique
+weapon/claw/wing/core. Keep big art for collection/portraits. This is usually
+more effective than sharpening a detailed sprite at 50 px.
+
+ART PASS D: role readable without art captions
+Test all base heads in black-and-white silhouettes and at 50 px. Attack has
+muzzle; support does not. Special does not resemble an ordinary gun. If a
+support art still resembles a shooter, fix shape—not merely its color.
+
+ASSET NAMING:
+  turret_004_scatter_head.png
+  turret_004_scatter_glyph.svg
+  turret_004_scatter_battle_lod.png (optional)
+  turret_004_scatter_card.png (optional)
+Same ID = same glyph and key in every screen. Store rarity and role in data.
+
+========================================================================
+12. VALIDATION / A-B TEST: DEFINE 'INSTANTLY IDENTIFIABLE'
+========================================================================
+
+Test at 1× display scale on the target iPhone, one hand, during real combat.
+Recruit at least 8–12 novice testers for formative sessions; larger sample
+for a release A/B test. Mix bright and dim environments. Do not coach them
+on each icon before the cold-read task.
+
+TEST A — 5-TYPE MATCH IDENTIFICATION
+Give five deck cards, show 15 mixed units for 5 seconds, then ask:
+'Tap every Frost', 'Which is Radar?', 'Which unit was just summoned?'
+Measure percent correct, median decision time, and error clusters.
+Suggested acceptance goal after a short introduction: >=90% correct within
+~1 second/type selection; set actual release threshold from baseline.
+
+TEST B — LEGAL MERGE
+In a 5×3 mixed board, ask 'Merge the eligible Scatter pair'.
+Record time-to-correct-drop and rejected drops. Goal: >=95% successful on
+first attempt after one explanation and >=30% lower median time than old UI.
+
+TEST C — STAR READABILITY
+Flash 15 tiles at 1× size. Ask number on randomly picked tile and compare
+old yellow star badge against new numeric badge. Goal >=95% star read accuracy.
+
+TEST D — LONG-TERM TRANSFER
+After playing with one deck, give 5 different units; do players use glyph,
+shape and deck strip rather than memorizing a transient color mapping?
+Test canonical-only against five-key mode. If five-key colors harm transfer
+or cause a gold turret to feel inconsistent, turn the option off by default.
+
+TEST E — ACCESSIBILITY / EFFECT LOAD
+Repeat in grayscale/color-vision simulation, lower brightness, and on a
+busy VFX scene. At 50 px the ID must survive with color disabled. Record
+largest confusion pairs and prioritize only those for art repair.
+
+DO NOT claim these numerical goals are proven industry standards; they are
+proposed pass/fail criteria for this project's experiments.
+
+========================================================================
+13. PRACTICAL DELIVERY SCHEDULE
+========================================================================
+
+FAST CODE-ONLY HOTFIX (3–7 developer-days, conditional on architecture):
+Day 1: screenshot measurements + new star badge + tap inspect.
+Day 2: deck-to-board type highlight + remove passive clutter.
+Day 3–4: merge legal-target preview + special-rule tests.
+Day 5: canonical palette / five deck key prototype + deck card match.
+Day 6–7: phone QA, tune hitboxes, adjust colors/effects.
+
+ART/UX PASS (approx. 1–3 weeks depending on staffing):
+Week 1: draw and test 64 first-pass high-contrast glyphs + icon registry.
+Week 2: integrate glyph overlay + first-match five-unit legend; iterate
+        most confused 10–20 icons.
+Week 3: optionally create a clean battle LOD for the worst cases; rerun
+        novice tests and lock visual standard for IDs 65–85.
+
+Time figures are estimates, not commitments; actual effort depends on engine,
+asset pipeline and state-management maturity.
+
+A RECOMMENDED DEFAULT MOCKUP, EXPRESSED IN WORDS:
+Every cell = neutral industrial square, existing turret head, a SINGLE bold
+identity arc on the outer ring, a screen-upright single-function emblem on
+the turret body, and ONE readable '3' star badge at upper-right. No permanent
+labels, no 4-neighbor beams unless selected. Five deck cards beneath use
+identical ID accents + icon. Tap reveals full name. Drag illuminates only
+legal targets. This preserves the original game's colorful art while making
+its controls approachable to new users.
+
+========================================================================
+14. DECISION CHECKLIST / DEFINITION OF DONE
+========================================================================
+
+[ ] Every ID from 1 to 64 has canonical glyph, color, role and name.
+[ ] Newly added IDs 65–85 require these properties before acceptance.
+[ ] Same type always looks the same in deck and board.
+[ ] Five equipped types visually separate at final phone scale.
+[ ] Shared gray bases no longer dominate the identity layer.
+[ ] No support unit advertises a misleading gun barrel.
+[ ] Main glyph survives rotation, grayscale and active combat VFX.
+[ ] 1★ through 7★ readable without counting mini symbols.
+[ ] Legal merge targets are clearly identified on drag; special rules work.
+[ ] Tap identifies any turret in one gesture.
+[ ] New player tutorial only teaches the five active deck types initially.
+[ ] Name labels are available, but not permanently crowding the board.
+[ ] Testers are measurably faster and make fewer identification mistakes.
+
+FINAL RECOMMENDATION
+Ship merge highlighting + tap identification + a legible star badge first.
+Then introduce stable unique glyphs and a clear deck/board identity key.
+Reserve art redraws for evidence-backed failure cases. A fresh player does
+not need to know 85 detailed sci-fi turrets: the board needs to give that
+player an immediate, consistent way to identify the five that matter now.
