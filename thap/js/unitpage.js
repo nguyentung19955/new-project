@@ -310,7 +310,7 @@ const UP = {
     const tt = UP_MV[id] || {}, ten = upSC(String(d.ten).toLowerCase());
     noi.querySelector('.up-a').innerHTML =
       '<section class="up-hero"><div class="up-po"><img src="assets/' + d.anh + '.png" alt=""><span class="up-seri">CMD-0' + (i + 1) + '</span></div>' +
-      '<div class="up-mam"><i class="up-vong"></i><i class="up-vong b"></i><div class="up-u"><img class="de" src="assets/ui_nut_trieu.png" alt=""><img class="dau fb" style="border-radius:50%" src="assets/' + d.anh + '.png" alt=""></div></div></section>' +
+      '<div class="up-mam"><img class="up-vong mv" src="assets/h2_mv_huy.png" alt=""><div class="up-u"><img class="de" src="assets/ui_nut_trieu.png" alt=""><img class="dau fb" style="border-radius:50%" src="assets/' + d.anh + '.png" alt=""></div></div></section>' +
       '<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips"><span class="up-chip bac">Commander</span><span class="up-chip">Active skill</span></div></div>' +
       '<div class="up-spec">' + this.o('Cost', d.gia + ' mana') + this.o('Cooldown', d.cd + 's') + this.o('Next cost', '×2 per use') + this.o('Lasts', tt.lau || '—') + '</div>' +
       this.muc(1, UP_TXT.sec.skill, '<p class="up-mo">' + upEsc(upSC(d.mo)) + '.</p><p class="up-phu"><b>How to cast.</b> Tap the commander button during a battle. The mana cost doubles after each use.</p>');
@@ -332,15 +332,15 @@ const UP = {
     const kd = Math.min(1.3, (REN.kDau ? REN.kDau(id) : 0.8) / 0.714); // tỉ lệ đầu so với bệ (bệ = 71.4% cạnh ô)
     P.push('<section class="up-hero">' +
       '<div class="up-po"><img src="' + portraitOf(id) + '" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"><span class="up-seri">' + upSoSeri(id) + '</span></div>' +
-      '<div class="up-mam"><i class="up-vong"></i><i class="up-vong b"></i><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt=""><img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div>' +
-      '<span class="up-ngoc"></span><img class="up-gl" alt="" hidden></div></section>');
+      '<div class="up-mam"><img class="up-vong" src="assets/tier_ring_' + r.bac + '.png" alt=""><div class="up-u" style="--kd:' + kd.toFixed(3) + '"><img class="de" src="assets/de_chung.png" alt=""><img class="dau" src="assets/' + id + '_nong.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\';this.classList.add(\'fb\')"></div>' +
+      '<img class="up-ngoc" src="assets/ngoc_' + r.bac + '.png" alt=""><img class="up-gl" alt="" hidden></div></section>');
     // bảng tên
     const chip = ['<span class="up-chip bac">' + upEsc(upSC(tier.ten)) + '</span>'];
     if (vai) chip.push('<span class="up-chip">' + UP_TXT.role[vai] + '</span>');
     if (sk && sk.chuDong) chip.push('<span class="up-chip">Active skill</span>');
     if (!sk) chip.push('<span class="up-chip soon">Coming soon</span>');
     P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-chips">' + chip.join('') + '</div>' +
-      (h ? '<div class="up-ho-nho"><span>' + upEsc(upSC(h.ten)) + ' family</span>' + h.nac.map((n, k) => '<i class="' + (k + 1 === h.bac ? 'cur' : n.gap ? 'gap' : '') + '" style="--c:' + TIERS[n.bac].mau + '"></i>').join('') + '<em>tier ' + h.bac + ' of 5</em></div>' : '') +
+      (h ? '<div class="up-ho-nho"><span>' + upEsc(upSC(h.ten)) + ' family</span>' + h.nac.map((n, k) => '<img class="' + (k + 1 === h.bac ? 'cur' : n.gap ? 'gap' : '') + '" src="assets/ngoc_' + n.bac + '.png" alt="">').join('') + '<em>tier ' + h.bac + ' of 5</em></div>' : '') +
       '</div>');
     // dải thông số nhanh
     const bs = sk ? upBangSao(id) : [];

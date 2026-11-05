@@ -13,27 +13,26 @@
 #tt.gon .tt-so .d-so { font-size: 10.5px; }
 #tt.gon .st-ng { max-height: 39px; overflow: hidden; }
 #tt .d-chip { display: flex; align-items: center; gap: 4px; margin-top: 4px; }
-#tt .d-chip span { flex: 0 1 auto; min-width: 0; max-width: 31%; display: inline-flex; align-items: center; gap: 3px; height: 16px; padding: 0 5px 0 3px; border-radius: 3px;
-  background: #0b0d11; border: 1px solid #2a2f38; font-size: 9px; font-weight: 800; color: #7d8590; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#tt .d-chip span { flex: 0 1 auto; min-width: 0; max-width: 31%; display: inline-flex; align-items: center; gap: 3px; height: 16px; padding: 0 5px 0 3px;
+  background: #0b0d11; border: 1px solid transparent; font-size: 9px; font-weight: 800; color: #7d8590; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #tt .d-chip span b { flex: none; color: #9aa3b2; font-size: 9.5px; }
-#tt .d-chip span.co { color: #ffe46b; border-color: #ffe46b55; }
+#tt .d-chip span.co { color: #ffe46b; border-color: transparent; }
 #tt .d-chip span.co b { color: #ffe46b; }
-#tt .tt-ct { pointer-events: auto; cursor: pointer; margin-left: auto; flex: none; height: 18px; line-height: 16px; padding: 0 7px; border-radius: 3px; font-size: 10px; font-weight: 900;
-  color: #e9eef4; background: #262a31; border: 1px solid #4b5059; text-decoration: none; white-space: nowrap; }
+#tt .tt-ct { pointer-events: auto; cursor: pointer; margin-left: auto; flex: none; height: 18px; line-height: 16px; padding: 0 7px; font-size: 10px; font-weight: 900;
+  color: #e9eef4; background: #262a31; border: 1px solid transparent; text-decoration: none; white-space: nowrap; }
 #up.tran .up-cuoi { display: none; } /* mở từ trận: không thêm/bỏ bộ bài */
 
 /* ---------- dải bộ bài đồng đội / đối thủ (js/doiphuong.js) ---------- */
-#dp-dai { position: absolute; left: 62px; z-index: 6; height: 34px; display: flex; align-items: center; gap: 3px; padding: 2px 5px 2px 4px; border-radius: 4px;
-  background: #121418e6; box-shadow: inset 0 0 0 1px #000, inset 0 1px 0 #ffffff14, 0 2px 4px #0008; }
+#dp-dai { position: absolute; left: 62px; z-index: 6; height: 34px; display: flex; align-items: center; gap: 3px; padding: 2px 5px 2px 4px;
+  background: #121418e6; }
 #top[hidden] ~ #dp-dai { display: none; }
 #dp-dai.anh { background: url(../assets/ui_khay_doi.png) center / 100% 100% no-repeat; box-shadow: none; padding: 3px 7px 3px 6px; }
 #dp-dai .dp-nhan { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 7.5px; font-weight: 900; letter-spacing: .6px; color: #63d68b; text-transform: uppercase; margin-right: 1px; }
 #dp-dai.pvp .dp-nhan { color: #ff6b5e; }
-#dp-dai .dp-the { --k: #9aa6b4; position: relative; width: 26px; height: 28px; padding: 0; border: 0; border-radius: 2px; overflow: hidden; background: #1a1d22; cursor: pointer;
-  box-shadow: inset 0 0 0 1px #000, inset 0 2px 0 var(--k); }
+#dp-dai .dp-the { --k: #9aa6b4; position: relative; width: 26px; height: 28px; padding: 0; border: 0; overflow: hidden; background: #1a1d22; cursor: pointer; }
 #dp-dai .dp-the .po { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
 #dp-dai .dp-the .gl { position: absolute; left: -1px; bottom: -1px; width: 13px; height: 13px; }
-#dp-dai .dp-the::after { content: ''; position: absolute; inset: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--k); opacity: .7; pointer-events: none; }
+#dp-dai .dp-the::after { content: ''; position: absolute; inset: 0; opacity: .7; pointer-events: none; }
 #dp-dai .dp-mv { width: 30px; margin-left: 3px; }
 #dp-dai .dp-the { box-shadow: none; } #dp-dai .dp-the::after { display: none; } /* không vạch màu khoá mảnh — màu khoá chỉ ở glyph PNG */
 #dp-dai .dp-the .kh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -42,13 +41,12 @@
 .co-khung .co-kh > .kh { position: absolute; z-index: 2; left: 0; top: 0; width: 100%; height: var(--khh); pointer-events: none; }
 /* khung ảnh đã đủ → bỏ mọi viền/vạch màu mảnh (khoá ND, độ hiếm) chồng lên thẻ */
 .co-khung .co-kh > .kh-k { display: none; }
-.co-khung .co-kh { outline: 0 !important; }
-.co-khung .co-kh > i:not(.kh) { border: 0 !important; box-shadow: none !important; }
+.co-khung .co-kh > i:not(.kh) { border: 0 !important; }
 .co-khung .co-kh > .anh, .co-khung .co-kh > img:not(.kh):not(.gl):not(.ic) { position: absolute; z-index: 1; left: 15.6%; width: 68.8% !important; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649) !important;
   margin: 0 !important; border-radius: 0 !important; object-fit: cover; object-position: 50% 14%; }
 .co-khung .co-kh > .anh:not(.pilot) { object-fit: contain; }
 /* hàng bộ bài trong trận */
-.co-khung #bo-the .the.co-kh { --khh: 74px; background: transparent; box-shadow: none; outline: 0 !important; }
+.co-khung #bo-the .the.co-kh { --khh: 74px; background: transparent; box-shadow: none; }
 .co-khung #bo-the .the.co-kh .gu { z-index: 3; top: 15px; }
 /* nhãn LV / ×N / glyph / icon nằm TRONG ô cửa sổ (x 15.6–84.4 %, y 18.9–83.8 %) — không che ngọc/cánh/vương miện/góc khung */
 .co-khung #bo-the .the.co-kh .lv, .co-khung #bo-the .the.co-kh .so { z-index: 3; top: calc(var(--khh) * .189 + 1px); font-size: 7.5px; }
@@ -59,7 +57,7 @@
 .co-khung #bo-the .the.co-kh .ic { z-index: 3; top: calc(var(--khh) * .838 - 16px); bottom: auto; right: calc(15.6% + 1px); width: 15px; height: 15px; border-width: 0; }
 .co-khung #bo-the .the.co-kh .gia { height: 18px; z-index: 3; }
 .co-khung #bo-the .the.co-kh.du { box-shadow: none; }
-.co-khung #bo-the .the.co-kh.du > .kh { filter: drop-shadow(0 0 3px #7dff6a88); }
+.co-khung #bo-the .the.co-kh.du > .kh { filter: none; }
 /* màn chọn */
 .co-khung .c.co-kh { --khh: 80px; background: #15171b; border-color: transparent; }
 .co-khung .c.co-kh .gl { top: calc(var(--khh) * .838 - 19px); bottom: auto; left: calc(15.6% + 1px); width: 18px; height: 18px; }

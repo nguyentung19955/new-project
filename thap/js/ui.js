@@ -89,12 +89,12 @@ const UI = {
     for (const [bac, rs] of nhom) {
       if (bac && bac.startsWith('ho:')) {
         const F = HO[bac.slice(3)], h = document.createElement('div'); h.className = 'nhom'; h.style.setProperty('--m', F.mau);
-        h.innerHTML = '<i></i><b>' + F.ten + '</b><span>' + F.bac.map((x, i) => x.length ? '<u style="color:' + TIERS[TIER_LIST[i]].mau + '">■</u>' : '<u class="gap">□</u>').join('') + ' ' + F.bac.filter(x => x.length).length + '/5 tiers</span>';
+        h.innerHTML = '<img class="nh-i" src="assets/h2_ngoc.png" alt=""><b>' + F.ten + '</b><span>' + F.bac.map((x, i) => '<img class="nh-ngoc' + (x.length ? '' : ' gap') + '" src="assets/ngoc_' + TIER_LIST[i] + '.png" alt="">').join('') + ' ' + F.bac.filter(x => x.length).length + '/5 tiers</span>';
         luoi.appendChild(h);
       } else if (bac) {
         const h = document.createElement('div'); h.className = 'nhom'; h.style.setProperty('--m', TIERS[bac].mau);
         const co = rs.filter(r => SKILLS[r.id]).length;
-        h.innerHTML = '<i></i><b>' + TIERS[bac].ten + '</b><span>' + co + '/' + rs.length + ' ' + TEXT.ui.playable + (bac === 'do' ? ' · ' + TEXT.ui.maxOneMythic : '') + '</span>';
+        h.innerHTML = '<img class="nh-i" src="assets/ngoc_' + bac + '.png" alt=""><b>' + TIERS[bac].ten + '</b><span>' + co + '/' + rs.length + ' ' + TEXT.ui.playable + (bac === 'do' ? ' · ' + TEXT.ui.maxOneMythic : '') + '</span>';
         luoi.appendChild(h);
       }
       const g = document.createElement('div'); g.className = 'luoi';
@@ -148,7 +148,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     SND.nut();
     this.veBoChon();
   },
-  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;background:#b0001a;padding:8px 14px;border-radius:10px;font-weight:900;font-size:13px;white-space:nowrap;text-align:center;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
+  nhac(s) { const c = $('#chon-goi-nhac') || (() => { const d = document.createElement('div'); d.id = 'chon-goi-nhac'; d.style.cssText = 'position:absolute;left:50%;top:120px;transform:translateX(-50%);z-index:20;padding:8px 22px;border:0 solid transparent;border-image:url(assets/h2_tam_do.png) 30 44 fill / 10px 18px stretch;text-shadow:0 1px 0 #000;font-weight:900;font-size:13px;white-space:nowrap;text-align:center;pointer-events:none;transition:opacity .4s'; document.getElementById('wrap').appendChild(d); return d; })(); c.textContent = s; c.style.opacity = 1; clearTimeout(this._nh); this._nh = setTimeout(() => c.style.opacity = 0, 1300); },
 
   vao() {
     if (this.chon.length !== 5) return;
@@ -503,3 +503,30 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
 // trước đây khi phông đã có trong bộ đệm, UI.init chạy giữa lúc các file sau còn đang tải → vòng vẽ gọi ND.* →
 // 'ReferenceError: ND is not defined' → đường đi rơi về bản vẽ dự phòng xám phẳng.
 Promise.all([FONT.ready, new Promise(ok => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', ok, { once: true }) : ok())]).then(() => UI.init());
+
+// ★ trong chữ DOM → ảnh ngôi sao ChatGPT (ui_sao.png) — QUY-TAC-HINH §1: không dùng ký tự để giả icon (rà soát vẽ tay, pass 4 UI).
+//  Bọc mọi nút chữ có '★' trong #wrap (menu, trang ụ/chỉ huy, bảng thông tin, kết quả, hướng dẫn…); alt="★" giữ nghĩa khi sao chép/đọc màn hình.
+(() => {
+  const SAO = 'assets/ui_sao.png', BO = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'OPTION', 'TITLE']);
+  const doi = (t) => {
+    const p = t.parentNode; if (!p || BO.has(p.nodeName) || p.closest('svg')) return;
+    const ph = t.nodeValue.split('★'); if (ph.length < 2) return;
+    const f = document.createDocumentFragment();
+    ph.forEach((x, i) => { if (i) { const im = document.createElement('img'); im.className = 'sao-chu'; im.src = SAO; im.alt = '★'; f.appendChild(im); } if (x) f.appendChild(document.createTextNode(x)); });
+    p.replaceChild(f, t);
+  };
+  const quet = (n) => {
+    if (n.nodeType === 3) { if (n.nodeValue.indexOf('★') >= 0) doi(n); return; }
+    if (n.nodeType !== 1 || BO.has(n.nodeName) || n.textContent.indexOf('★') < 0) return;
+    const w = document.createTreeWalker(n, NodeFilter.SHOW_TEXT), ds = [];
+    while (w.nextNode()) if (w.currentNode.nodeValue.indexOf('★') >= 0) ds.push(w.currentNode);
+    ds.forEach(doi);
+  };
+  const bat = () => {
+    const wrap = document.getElementById('wrap'); if (!wrap) return;
+    quet(wrap);
+    new MutationObserver((ms) => { for (const m of ms) { if (m.type === 'characterData') quet(m.target); else m.addedNodes.forEach(quet); } })
+      .observe(wrap, { childList: true, characterData: true, subtree: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bat); else bat();
+})();

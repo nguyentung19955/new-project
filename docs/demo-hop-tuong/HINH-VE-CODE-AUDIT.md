@@ -799,3 +799,16 @@ Gen xong lưu `docs/demo-hop-tuong/thap-art/raw_p4_board_N.png`, cắt khoá mag
   "5 small round metal badge sockets with a glowing colored rim: blue, red, lime, teal, purple; empty dark center, chunky outline, same style as the attached game screenshot, flat #FF00FF background, no text."
 - **raw_p4_board_3 — vòng nạp năng lượng chia đoạn** (lưới 4×2, 8 khung 0→100 %, 1024×512) → `thap/assets/vong_nap_<0..7>.png` (thay `fx_vong_mong` tô màu ở `REN.veU`):
   "8 frames of a thin white segmented energy ring filling clockwise from 1/8 to full, soft glow, same style as the attached game screenshot, flat #FF00FF background, no text."
+
+## Pass 4 — ui (rà soát vẽ tay 100 %, vùng UI: menu, trang ụ/chỉ huy, bảng thông tin, cut-in, kết quả, online, tải; 2026-11-05)
+
+Bảng kiểm kê: `docs/demo-hop-tuong/VE-TAY-RASOAT-ui.md`. Mọi chỗ khác đã thay bằng ảnh có sẵn; trong lúc chờ, phần dưới đang **không vẽ gì / dùng ảnh gần nhất**.
+Gen 1 tấm, lưu `docs/demo-hop-tuong/thap-art/raw_p4_ui_1.png` (session UI tự cắt + nối khi tấm xuất hiện):
+
+**raw_p4_ui_1.png** — lưới 3×2, 1536×1024, nền magenta #FF00FF đặc, mỗi ô 1 vật, không chữ, "same style as the attached game screenshot" (đính kèm `docs/demo-hop-tuong/tuvan/vetay/ui/sau/04-unitpage.jpg`):
+1. `ic_cdmg` — "Crit-damage buff icon: bold blue 4-point star inside a thin steel ring, thick dark outline, readable at 16 px." (đang dùng `ic_crit`)
+2. `sao_chu` — "Tiny flat gold star for inline text, thick dark outline, no glow, no sparkle." (đang dùng `ui_sao`, quầng hồng hơi to khi nhỏ)
+3. `ci_quet` — "Diagonal white-cyan light streak / glint sweep, soft edges, for a steel banner." (vệt quét cut-in — đã gỡ, đang không có)
+4. `hang_sang` — "Thin horizontal steel row highlight strip with faint cyan inner glow edges, very dark centre." (dòng mốc sao trong bảng — đang là nền tô màu trơn)
+5. `mui_tiep` — "Small steel chevron arrow pointing right, amber edge light." (mũi tên giữa 3 dạng grow-up — đang là ký tự ›)
+6. ô 6 để trống (magenta).

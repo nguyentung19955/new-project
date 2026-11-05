@@ -1,0 +1,121 @@
+/* TURRET MERGE — PASS 4 rà soát VẼ TAY, vùng UI (docs/demo-hop-tuong/VE-TAY-RASOAT-ui.md). Nạp SAU CÙNG.
+   QUY-TAC-HINH §1/§3: mọi khung/nút/tấm/viên/ngọc trên các màn DOM = ảnh ChatGPT có sẵn (border-image 9 mảnh hoặc background ảnh);
+   code chỉ còn chữ/số, vị trí/cỡ/mờ, nền tối trơn phía sau màn, mặt nạ cắt (mask/clip). File này gỡ phần CSS vẽ tay còn sót
+   (gradient, box-shadow, viền màu, viên bo góc tô màu, vòng tròn, chấm, gạch) — kể cả luật cũ ở hud.css / hud2.css chạm vào màn UI.
+   Không đụng trạng thái thẻ ĐANG CHỌN ở màn chọn bộ bài (.c.chon — session khác) và phần cắt chân dung hero trang ụ (.up-po img). */
+
+/* ---------- mẫu tấm dùng lại ---------- */
+/* khung_tt (255×144, góc 42) · h2_chip (109×40) · ui_lv (50×32) · h2_lcd (331×116) · nut_lon_thep/vang (216×96) · o_trong (150×190) */
+
+/* ================= MÀN CHỌN BỘ BÀI ================= */
+#chon-bo { background: none; box-shadow: none; border-radius: 0; }
+.chon-cuoi { background: #141518f2; box-shadow: none; border-top: 0; }
+.nhom { border-radius: 0; }
+.nhom .nh-i { width: 14px; height: 14px; flex: none; }
+.nhom span .nh-ngoc { width: 10px; height: 10px; vertical-align: -1px; margin-right: 1px; }
+.nhom span .nh-ngoc.gap { opacity: .28; filter: grayscale(1); }
+.co-khung .c.co-kh { background: transparent; border-radius: 0; }
+.c .ten { border-top: 0; }
+/* thẻ chỉ huy (3 ô): tấm thép khung_tt; đang chọn = khung sáng khung_chon (như nút chế độ) */
+.mv { position: relative; background: none; border-radius: 0; border: 0 solid transparent; border-width: 0; border-style: solid;
+  border-image: url(../assets/khung_tt.png) 42 fill / 8px stretch; }
+.mv.chon { background: none; }
+.mv.chon::after { content: ''; position: absolute; inset: -3px; border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_chon.png) 34 fill / 12px stretch; pointer-events: none; }
+.mv-anh { background: #120c0e; border: 0; border-radius: 0; }
+.mv-anh .ki, #cutin .ci-ki { border: 0; border-radius: 0; background: url(../assets/h2_vong_xam.png) center / 100% 100% no-repeat; padding: 3px; filter: none; }
+/* nút chế độ ONLINE / CO-OP / SOLO / PVP: tấm thép khung_tt (đang chọn giữ khung_chon của hud2.css) */
+.che, .co-s10 .che.chon { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
+  border-image: url(../assets/khung_tt.png) 42 fill / 8px stretch; }
+.che.chon { transform: none; }
+.che span { font-size: 8.5px; line-height: 1.05; }
+
+/* ================= TRANG HỒ SƠ Ụ / CHỈ HUY (#up) ================= */
+#up { background: var(--nen); }
+.up-dau, .up-cuoi, .up-bien, .up-hero { border: 0; }
+.up-hero { background: #22252a; }
+/* vòng độ hiếm quanh bệ = ảnh tier_ring_<bậc> (trang chỉ huy: h2_mv_huy) */
+.up-vong { position: absolute; left: 50%; top: 50%; width: 176px; height: 176px; margin: -88px 0 0 -88px; border: 0; border-radius: 0; pointer-events: none; opacity: .9; }
+.up-vong.mv { width: 168px; height: 176px; margin: -88px 0 0 -84px; }
+.up-ngoc { position: absolute; right: 10px; top: 10px; width: 18px; height: 18px; transform: none; background: none; box-shadow: none; }
+/* chip: viên thép h2_chip; độ hiếm = chữ màu bậc */
+.up-chip { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; height: 24px; padding: 0 12px;
+  border-image: url(../assets/h2_chip.png) 0 30 fill / 0 10px / 0 stretch; color: #eef1f4; text-shadow: 0 1px 0 #000; }
+.up-chip.bac { background: none; color: var(--m); }
+/* thang họ: ngọc độ hiếm ngoc_<bậc> thay vạch màu */
+.up-ho-nho img { width: 13px; height: 13px; opacity: .55; }
+.up-ho-nho img.cur { width: 17px; height: 17px; opacity: 1; }
+.up-ho-nho img.gap { opacity: .2; filter: grayscale(1); }
+/* dải thông số / bảng / thẻ: tấm khung_tt */
+.up-spec, .up-bang, .up-gd1, .up-the, .up-luoi { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none;
+  border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; }
+.up-spec { padding: 4px 6px; }
+.up-spec div { border-left: 0; }
+.up-bang { padding: 6px 4px; overflow: visible; }
+.up-hang { border-top: 0; }
+.up-hang.dau { background: none; }
+.up-hang.moc { box-shadow: none; }
+.up-the { padding: 6px; }
+.up-the img { border-radius: 0; }
+/* tiêu đề mục: số trên tấm ui_lv, gạch ngang = thanh thép h2_thanh */
+.up-muc h3 i { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 2px 8px; color: #f1f3f6; text-shadow: 0 1px 0 #000;
+  border-image: url(../assets/ui_lv.png) 0 16 fill / 0 6px / 0 stretch; }
+.up-muc h3::after { height: 6px; background: url(../assets/h2_thanh.png) center / 100% 100% no-repeat; opacity: .8; }
+.up-so1 span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 4px 14px;
+  border-image: url(../assets/h2_tam_mong.png) 0 30 fill / 0 10px / 0 stretch; }
+/* THỬ BẮN: khung monitor = khung_bang; 4 góc = h2_glint; đèn REC = den_tim_bat */
+.up-tv { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 9px;
+  border-image: url(../assets/khung_bang.png) 56 fill / 16px stretch; }
+.up-tv-khung { border-radius: 0; }
+.up-tv .g { width: 16px; height: 14px; border: 0 !important; background: url(../assets/h2_glint.png) center / 100% 100% no-repeat; }
+.up-tv .tl { left: 5px; top: 5px; } .up-tv .tr { right: 5px; top: 5px; transform: scaleX(-1); }
+.up-tv .bl { left: 5px; bottom: 5px; transform: scaleY(-1); } .up-tv .br { right: 5px; bottom: 5px; transform: scale(-1); }
+.up-tv-chu .rec::before { width: 10px; height: 10px; border-radius: 0; background: url(../assets/den_tim_bat.png) center / contain no-repeat; }
+.up-phat { box-shadow: none; }
+/* chọn sao xem trước: nút thép; đang chọn = nút vàng */
+.up-sao-chon button { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; color: #e9edf2; text-shadow: 0 1px 0 #000;
+  border-image: url(../assets/nut_lon_thep.png) 0 50 fill / 0 16px / 0 stretch; }
+.up-sao-chon button.chon { background: none; color: #3a1d00; text-shadow: 0 1px 0 #ffd98a; border-image-source: url(../assets/nut_lon_vang.png); }
+/* dấu chân buff: ô = hốc thép o_trong (ô ụ / ô được buff có icon PNG bên trong) */
+.up-luoi { padding: 8px; }
+.up-luoi i, .up-luoi i.u, .up-luoi i.b { border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png) center / 100% 100% no-repeat; }
+.up-luoi i:not(.u):not(.b) { opacity: .55; }
+.up-dl, .up-dl dt, .up-dl dd { border: 0; }
+.up-dl dt, .up-dl dd { padding: 6px 0; }
+.up-thang .nac, .up-thang .nac.gap { border-radius: 0; box-shadow: none; }
+.up-thang button, .up-thang .cur { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 0 12px 0 8px;
+  border-image: url(../assets/h2_chip_tat.png) 0 30 fill / 0 10px / 0 stretch; color: #e9edf2; }
+.up-thang .cur { color: var(--c); border-image-source: url(../assets/h2_chip.png); }
+.up-gd1 .anh .dau.loc.s2, .up-gd1 .anh .dau.loc.s3 { filter: none; }
+/* bộ bài 5 ô dưới trang: ô trống = o_trong; ụ đang xem = khung_chon */
+.up-bo img, .up-bo i { border: 0; border-radius: 0; box-shadow: none; background: url(../assets/o_trong.png) center / 100% 100% no-repeat; }
+.up-bo img.cur { border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_chon.png) 34 / 6px / 3px stretch; }
+
+/* ================= BẢNG THÔNG TIN Ụ (#tt) + DẢI TÊN (#nd-dai) ================= */
+#tt, .co-s10 #tt { box-shadow: none; }
+#tt .tt-the { border: 0; border-radius: 0; background: url(../assets/o_trong.png) center / 100% 100% no-repeat; }
+#tt .tt-bac { border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; background: none; padding: 0 8px; text-shadow: 0 1px 0 #000;
+  border-image: url(../assets/ui_lv.png) 0 16 fill / 0 6px / 0 stretch; }
+#tt .st-hang > div { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; box-shadow: none; padding: 4px 8px 3px;
+  border-image: url(../assets/h2_lcd.png) 36 60 fill / 6px 10px stretch; }
+#tt .d-chip span, #tt .tt-so .d-thang span { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 6px 0 5px;
+  border-image: url(../assets/ui_lv.png) 0 16 fill / 0 5px / 0 stretch; }
+#tt .tt-so .d-thang span.cur { background: none; color: var(--m); }
+#tt .tt-ct { background: none; border: 0 solid transparent; border-style: solid; border-width: 0; border-radius: 0; padding: 0 10px;
+  border-image: url(../assets/h2_chip.png) 0 30 fill / 0 9px / 0 stretch; }
+#nd-dai { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; padding: 0 14px 0 4px;
+  border-image: url(../assets/h2_tam.png) 0 40 fill / 0 12px / 0 stretch; }
+#nd-gt .gt-bang { background: none; box-shadow: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0;
+  border-image: url(../assets/khung_bang.png) 56 fill / 20px stretch; }
+#nd-gt .gt-o { background: none; border-radius: 0; border: 0 solid transparent; border-style: solid; border-width: 0; border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; }
+
+/* ================= CUT-IN CHỈ HUY: băng thép bang_cutin_nen (không gradient/viền/quầng) ================= */
+#cutin .ci-nen { background: none; box-shadow: none; border: 0 solid transparent; border-style: solid; border-width: 0;
+  border-image: url(../assets/bang_cutin_nen.png) 40 110 fill / 18px 50px stretch; }
+#cutin .ci-nen::after { content: none; }
+
+/* ================= BẢNG (tạm dừng / kết quả / online / tài khoản), console dưới ================= */
+.bang, .co-s10 .bang { box-shadow: none; }
+#duoi { box-shadow: none; }
+
+/* ================= ★ trong chữ = ảnh ui_sao.png (ui.js) ================= */
+.sao-chu { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -.16em; margin: 0 .02em; pointer-events: none; }

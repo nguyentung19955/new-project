@@ -3,14 +3,14 @@
    Tấm thép co giãn bằng border-image (9 mảnh) để đinh tán / góc / đèn LED không bị méo. Ảnh @2x. */
 
 /* ---------- SUMMON: tấm vàng sọc nguy hiểm (H1) — ảnh nằm trên nắp phím nên vẫn lún khi bấm ---------- */
-#nut-trieu { background: #0b0c0e; box-shadow: inset 0 2px 4px #000, 0 1px 0 #ffffff12; border-radius: 10px; }
+#nut-trieu { background: #0b0c0e; }
 #nut-trieu .tr-cap { background: none; box-shadow: none; }
 #nut-trieu .tr-cap::before { content: ''; position: absolute; inset: -5px -5px -6px; z-index: 0; pointer-events: none;
   border-style: solid; border-width: 18px 33px 15px 20px; border-image: url(../assets/hud_trieu_san.png) 46 70 40 44 fill / 18px 33px 15px 20px round stretch;
-  filter: drop-shadow(0 4px 0 #3a2600) drop-shadow(0 1px 0 #000); transition: filter .06s ease-out; }
+  filter: drop-shadow(0 1px 0 #000); transition: filter .06s ease-out; }
 #nut-trieu .tr-cap > * { position: relative; z-index: 1; }
 #nut-trieu.thieu .tr-cap { background: none; box-shadow: none; }
-#nut-trieu.thieu .tr-cap::before { border-image-source: url(../assets/hud_trieu_tat.png); filter: drop-shadow(0 4px 0 #1d1c1a) drop-shadow(0 1px 0 #000); }
+#nut-trieu.thieu .tr-cap::before { border-image-source: url(../assets/hud_trieu_tat.png); filter: drop-shadow(0 1px 0 #000); }
 #nut-trieu:active .tr-cap, #nut-trieu.an .tr-cap { box-shadow: none; }
 #nut-trieu:active .tr-cap::before, #nut-trieu.an .tr-cap::before { filter: drop-shadow(0 1px 0 #000); }
 #nut-trieu .tr-led { display: none; } /* đèn đã có trong ảnh (sáng = đủ mana, tắt = thiếu) */
@@ -28,13 +28,13 @@
 
 /* ---------- TIM: hộp thép 3 ổ đèn + bóng đèn bật/tắt (H5) ---------- */
 #tb-tim:has(> .den:nth-child(3):last-child) { background: url(../assets/hud_tim_khung.png) center / 100% 100% no-repeat; box-shadow: none; padding: 5px 8px 5px; }
-#tb-tim .den, #tb-tim .den.mat { width: 16px; height: 16px; margin: 0 2px; background: url(../assets/den_tim_bat.png) center / 100% 100% no-repeat; box-shadow: 0 0 6px #ff4b3e66; border-radius: 50%; }
+#tb-tim .den, #tb-tim .den.mat { width: 16px; height: 16px; margin: 0 2px; background: url(../assets/den_tim_bat.png) center / 100% 100% no-repeat; border-radius: 50%; }
 #tb-tim .den.mat { background-image: url(../assets/den_tim_tat.png); box-shadow: none; }
 #tb-tim .doi .den, #tb-tim .doi .den.mat { width: 12px; height: 12px; margin: 0 1px; }
 
 /* ---------- 1× / tạm dừng: keycap thép (H3) — "1×" giữ chữ, ❚❚ thay bằng icon ---------- */
-.nut-nho { background: url(../assets/phim.png) center / 100% 100% no-repeat; box-shadow: 0 3px 0 #000a; text-shadow: 0 -1px 0 #000, 0 1px 0 #ffffff22; color: #20242a; }
-.nut-nho:active { background-image: url(../assets/phim_nhan.png); box-shadow: 0 1px 0 #000a; }
+.nut-nho { background: url(../assets/phim.png) center / 100% 100% no-repeat; text-shadow: 0 -1px 0 #000, 0 1px 0 #ffffff22; color: #20242a; }
+.nut-nho:active { background-image: url(../assets/phim_nhan.png); }
 .nut-nho[data-act="dung"] { font-size: 0; color: transparent; background: url(../assets/ic_dung.png) center / 30px 30px no-repeat, url(../assets/phim.png) center / 100% 100% no-repeat; }
 .nut-nho[data-act="dung"]:active { background: url(../assets/ic_dung.png) center calc(50% + 2px) / 30px 30px no-repeat, url(../assets/phim_nhan.png) center / 100% 100% no-repeat; }
 
@@ -46,7 +46,7 @@
 #cutin .ci-nen::after { background: url(../assets/bang_cutin_nen.png) center / 100% 100% no-repeat; opacity: .38; mix-blend-mode: overlay; }
 
 /* ---------- bảng Tạm dừng / Kết quả: khung thép 9 mảnh (P1) ---------- */
-.bang { background: none; box-shadow: 0 14px 40px #000; border-radius: 0; border-style: solid; border-width: 0;
+.bang { background: none; border-radius: 0; border-style: solid; border-width: 0;
   border-image: url(../assets/khung_bang.png) 56 fill / 28px stretch; }
 
 /* ---------- màn chọn bộ bài ---------- */
@@ -67,6 +67,6 @@
 /* ---------- nền (S7b, S7c) ---------- */
 /* màn chọn bộ bài (M2): sàn xưởng thép, giữa ít chi tiết để thẻ đọc rõ */
 #chon { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
-.chon-cuoi { background: linear-gradient(#1b1c1fe6, #151618f2); }
+.chon-cuoi { background: #151618f2; }
 /* khung dưới trận (H8): console thép — 9 mảnh để góc/ống không méo khi co theo bề rộng màn */
-#duoi { background: none; box-shadow: 0 -4px 10px #0008; border: 0; border-image: url(../assets/nen_hud_duoi.png) 34 84 64 84 fill / 17px 42px 32px 42px stretch; }
+#duoi { background: none; border: 0; border-image: url(../assets/nen_hud_duoi.png) 34 84 64 84 fill / 17px 42px 32px 42px stretch; }
