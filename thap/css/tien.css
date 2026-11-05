@@ -1,0 +1,38 @@
+/* HUD tiền tệ + chỉ huy (js/tien-ui.js) — chỉ chữ/số + ảnh PNG có sẵn */
+/* thẻ: icon NÂNG CẤP riêng (mũi tên xanh), không dùng ngọc mana */
+#bo-the .the .gia img.tn-nang, .co-hud2 #bo-the .the .gia img.tn-nang { content: none; }
+.co-hud2 #bo-the .the .gia img.tn-nang { left: 3.4px; top: 2.4px; width: 13px; height: 13px; }
+/* thiếu mana: số đỏ (Triệu hồi · Chỉ huy · Nâng cấp) */
+.co-hud2 #bo-the .the.thieu .gia, #bo-the .the.thieu .gia { color: #ff8a7a !important; }
+.co-hud2 #the-mv.thieu.tn-thieu .mv-gia, #the-mv.thieu.tn-thieu .mv-gia, .co-hud2 #the-mv.thieu.tn-day .mv-gia { color: #ff8a7a !important; }
+.co-hud2 #nut-trieu.thieu .tr-gia { color: #b3261b; }
+/* Triệu hồi khi bàn đầy: chữ BOARD FULL thay giá */
+#nut-trieu .tn-full { font-size: 10px; font-weight: 800; letter-spacing: .02em; color: #3a2a12; line-height: 15px; margin-top: 2px; }
+#nut-trieu.tn-day .tr-gia { display: none; }
+/* chỉ huy: hồi chiêu (giây), bàn đầy, thanh RAGE */
+#the-mv .tn-cd { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font-size: 20px; font-weight: 800; color: #fff; text-shadow: 0 1px 0 #000, 0 0 4px #000, 0 0 8px #000; pointer-events: none; z-index: 4; font-variant-numeric: tabular-nums; }
+#the-mv .tn-full { position: absolute; left: 0; right: 0; top: 26px; text-align: center; font-size: 12px; font-weight: 800; color: #ff8a7a; text-shadow: 0 1px 0 #000, 0 0 4px #000; pointer-events: none; z-index: 4; }
+#the-mv .tn-thanh { position: absolute; left: 6px; right: 6px; bottom: 23px; height: 15px; z-index: 5; pointer-events: none;
+  background: url(../assets/h2_tam_mong.png) center / 100% 100% no-repeat; }
+#the-mv .tn-thanh i { position: absolute; left: 3px; top: 2px; bottom: 2px; max-width: calc(100% - 6px); background: url(../assets/loi_khuc_day.png) left center / 100% 100% no-repeat; filter: hue-rotate(-140deg) saturate(1.8) brightness(1.1); }
+#the-mv .tn-thanh b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; text-shadow: 0 1px 0 #000, 0 0 3px #000; letter-spacing: .03em; }
+#the-mv .mv-gia.tn-nay b { display: inline-block; animation: tn-nay .38s ease-out; }
+@keyframes tn-nay { 0% { transform: scale(1.7); color: #ffd36b; } 100% { transform: scale(1); } }
+/* chữ bay lên trên nút chỉ huy */
+.tn-bay { position: absolute; z-index: 30; transform: translateX(-100%); white-space: nowrap; font-size: 13px; font-weight: 800; color: #ffd36b; pointer-events: none;
+  text-shadow: 0 1px 0 #000, 0 0 4px #000, 0 0 6px #000; animation: tn-bay 1.3s ease-out forwards; font-variant-numeric: tabular-nums; }
+.tn-bay.tn-cam { color: #ff9a4a; } .tn-bay.tn-vang { color: #ffe46b; } .tn-bay.tn-do { color: #ff7b6b; font-size: 11px; }
+@keyframes tn-bay { 0% { opacity: 0; margin-top: 6px; } 12% { opacity: 1; margin-top: 0; } 75% { opacity: 1; } 100% { opacity: 0; margin-top: -16px; } }
+/* khiên bàn ở lõi: icon khiên + giây còn lại */
+#tn-khien { position: absolute; z-index: 6; transform: translate(-50%, 34px); display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+#tn-khien img { width: 30px; height: 30px; filter: drop-shadow(0 0 5px #6fd0ff); }
+#tn-khien b { margin-top: -4px; font-size: 12px; font-weight: 800; color: #cdeeff; text-shadow: 0 1px 0 #000, 0 0 4px #000; font-variant-numeric: tabular-nums; }
+/* gợi ý 1 lần: POWER-UP (khung bảng thông tin có sẵn) */
+#tn-goi { position: absolute; left: 10px; right: 10px; z-index: 20; display: flex; align-items: center; gap: 8px; padding: 2px 4px; pointer-events: none;
+  border: 14px solid transparent; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; font-size: 12px; line-height: 1.25; color: #dfe6ee; }
+#tn-goi img { width: 30px; height: 30px; flex: none; }
+#tn-goi b { color: #7dffa8; }
+/* bàn đầy + mọi ụ 7★: REINFORCE không dùng được */
+.co-hud2 #the-mv.du.tn-day .mv-gia, #the-mv.du.tn-day .mv-gia { color: #ff8a7a !important; }
+.co-hud2 #the-mv.tn-day .mv-gia { background-image: url(../assets/h2_chip_tat.png) !important; }
+#the-mv.tn-day .mv-ic { filter: saturate(.4) brightness(.7); }

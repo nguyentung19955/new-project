@@ -169,24 +169,16 @@ function nangCap(B, id) {
 }
 function dungMV(B) {
   const mv = B.mv, d = MAVUONG[mv.id];
-  if (mv.cd > 0 || B.mana < mv.gia) return false;
-  B.mana -= mv.gia; mv.gia *= 2; mv.cd = d.cd; // mana NHÂN ĐÔI mỗi lần dùng
+  const r = CH.dung(B); // luật (điều kiện, trừ mana, giá ×2, hồi chiêu, bàn đầy, đồng hồ tác dụng): chihuy.js
+  if (!r.ok) return false;
   const cx = B.x + B.w / 2, cy = B.y + B.h / 2, nguoi = !B.ai && B === G.ban[0];
-  const lam = () => {
-    if (!G.ban.includes(B) || G.ketThuc) return;
-    if (mv.id === 'hero') { trieu(B, true); trieu(B, true); }
-    if (mv.id === 'dahlia') { B.cuong = 10; FX.sang(0.5, '#ff7a3a'); }
-    if (mv.id === 'eve') {
-      B.khien = 8;
-      for (const T of B.t) if (T) { if (T.st.bang > 0 || T.st.da || T.st.lua > 0) VX.donSach(B, T); T.st.bang = 0; T.st.da = false; T.st.lua = 0; T.st.ngam = 0; }
-      FX.sang(0.4, '#9fe6ff');
-    }
-    FX.vong1(cx, cy, 20, 240, d.mau || '#ffffff', 0.6, 6);
-    if (!nguoi) FX.chu1(cx, cy, d.ten, '#fff', 22, 'to'); // bàn máy/đồng đội: chữ nhỏ (đã kẹp trong màn); người chơi: cut-in
-  };
+  if (mv.id === 'dahlia') FX.sang(0.5, '#ff7a3a');
+  if (mv.id === 'eve') FX.sang(0.4, '#9fe6ff');
+  FX.vong1(cx, cy, 20, 240, d.mau || '#ffffff', 0.6, 6);
+  if (!nguoi) FX.chu1(cx, cy, d.ten, '#fff', 22, 'to'); // bàn máy/đồng đội: chữ nhỏ (đã kẹp trong màn); người chơi: cut-in
   // người chơi: cut-in chân dung chỉ huy ~2,2 s (lớp phủ) — hiệu ứng kỹ năng nổ NGAY, không chờ dải cut-in
   if (nguoi && typeof UI !== 'undefined' && UI.cutIn) UI.cutIn(mv.id, B);
-  lam();
+  if (nguoi && typeof TIENUI !== 'undefined') TIENUI.daDung(B, r);
   SND.mv();
   return true;
 }
@@ -380,8 +372,7 @@ function capNhat(dt) {
 }
 
 function capNhatBan(B, dt) {
-  B.cuong = Math.max(0, B.cuong - dt); B.khien = Math.max(0, B.khien - dt);
-  B.mv.cd = Math.max(0, B.mv.cd - dt);
+  CH.tick(B, dt); // hồi chiêu + đồng hồ RAGE/khiên (dừng lúc nghỉ giữa wave khi bàn trống quái)
   if (B.phao > 0) SKILLS.orbital.phaoBan(G, B, dt); // vệ tinh bắn phá sau khi ghép ụ Vệ Tinh
   // hỗ trợ: reset rồi các ụ hỗ trợ buff 4 ô kề (trên-dưới-trái-phải)
   for (const T of B.t) if (T) {
@@ -619,7 +610,7 @@ function aiBan(B, dt) {
   B.aiT -= dt; if (B.aiT > 0) return;
   B.aiT = G.che === 'pvp' && B.ai ? 0.9 : 0.6;
   const ts = B.t.filter(Boolean);
-  if (B.mv.cd <= 0 && B.mana >= B.mv.gia && B.mana > 200 && Math.random() < 0.3) { dungMV(B); return; }
+  if (CH.trangThai(B) === 'san' && B.mana > 200 && Math.random() < 0.3) { dungMV(B); return; }
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
   // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy

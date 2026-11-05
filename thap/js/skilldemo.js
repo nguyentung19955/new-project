@@ -410,7 +410,8 @@ SD.tick = function (dt) {
   }
   if (ks.mvT != null && !this.mvXong && this.t >= ks.mvT) { // chạm nút chỉ huy → dùng kỹ năng thật (dungMV)
     this.mvXong = true; B.mv.cd = 0; if (B.mana < B.mv.gia) B.mana = B.mv.gia; this.manaCu = B.mana;
-    try { dungMV(B); } catch (e) { console.error(e); }
+    const d0 = G.dung; G.dung = false; // demo có thể đang 'dừng' để xem — luật chỉ huy (chihuy.js) chặn dùng khi tạm dừng
+    try { dungMV(B); } catch (e) { console.error(e); } G.dung = d0;
   }
   if (ks.cham) for (const tc of ks.cham) if (!this.chamXong[tc] && this.t >= tc) {
     this.chamXong[tc] = true;
