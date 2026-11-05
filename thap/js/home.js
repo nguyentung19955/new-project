@@ -1,0 +1,329 @@
+// TURRET MERGE — HUD mượt A (TU-VAN-HUD-MUOT.txt §3A HOME + §3B DECK BUILDER + §4 chuyển động).
+//  #chon = MENU (mọi file khác vẫn coi "#chon hiện" = đang ở menu). Bên trong 2 màn:
+//   · .hm HOME: hồ sơ + kỷ lục, logo, ảnh lớn (chỉ huy đang dùng), chọn CHẾ ĐỘ (1 bảng: SOLO / CO-OP / PVP / ONLINE), nút PLAY, DECK / COLLECTION.
+//   · .dk XÂY BỘ BÀI: BACK + tiêu đề + PRESETS; 5 ô lớn; dải ụ nổi bật; chỉ huy 1 hàng; tìm + FILTER; lưới 3 cột; PLAY dính đáy.
+//  Bảng trượt dưới (#hm-mo): chế độ · cài đặt (nhạc/SFX/âm lượng, hồ sơ, hướng dẫn) · bộ mẫu (presets) · bộ lọc (vai trò/độ hiếm/sắp xếp)
+//   · chỉ huy · XEM NHANH thẻ (ADD/REMOVE + DETAILS → trang ụ). Chỉ dời chỗ — không bỏ tính năng nào.
+//  Hình: chỉ ảnh ChatGPT có sẵn (QUY-TAC-HINH.md); ảnh Pass 7 (raw_p7_*) chờ gen — xem đầu css/hudmuot-a.css.
+'use strict';
+const HM = {
+  KEY: 'turret_hm',
+  CHE: {
+    solo: { ten: 'SOLO', ic: 'ic_solo', phu: () => TEXT.ui.soloSub },
+    coop: { ten: 'CO-OP', ic: 'ic_coop', phu: () => TEXT.ui.coopSub },
+    pvp: { ten: 'PVP', ic: 'ic_pvp', phu: () => TEXT.ui.pvpSub },
+    online: { ten: 'ONLINE', ic: 'ic_coop', phu: () => 'Co-op with a friend' },
+  },
+  che: 'solo', bac: 'all', armed: -1, noi: null, bst: false, sheet: null,
+  giam: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
+  esc: (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])),
+  doc() { try { const l = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (l) { if (this.CHE[l.che]) this.che = l.che; if (l.bac) this.bac = l.bac; } } catch (e) { } },
+  luu() { try { localStorage.setItem(this.KEY, JSON.stringify({ che: this.che, bac: this.bac })); } catch (e) { } },
+  luuBo() { try { localStorage.setItem('turret_bo', JSON.stringify({ chon: UI.chon, mv: UI.mv, che: UI.che })); } catch (e) { } },
+  el: (id) => document.getElementById(id),
+
+  // ---------- chuyển màn HOME ↔ DECK ----------
+  di(xem, bst) {
+    const c = this.el('chon'); if (!c) return;
+    this.dong(true); this.armed = -1;
+    const toi = xem === 'dk';
+    this.bst = toi && !!bst;
+    c.classList.toggle('bst', this.bst);
+    if (c.classList.contains('xem-dk') !== toi) {
+      c.classList.toggle('xem-dk', toi); c.classList.toggle('xem-hm', !toi);
+      if (toi && !this.giam()) { // các thẻ đầu lưới vào lần lượt 20 ms/thẻ (tối đa 100 ms)
+        const ds = [...document.querySelectorAll('#chon-luoi .c:not([hidden])')].slice(0, 6);
+        ds.forEach((x, i) => { x.style.animationDelay = Math.min(100, i * 20) + 'ms'; x.classList.remove('hm-vao'); void x.offsetWidth; x.classList.add('hm-vao'); });
+        setTimeout(() => ds.forEach(x => { x.classList.remove('hm-vao'); x.style.animationDelay = ''; }), 520);
+      }
+    }
+    this.el('dk-tde').textContent = this.bst ? 'COLLECTION' : 'BUILD DECK';
+    if (toi) { const l = this.el('chon-luoi'); if (l && this._cuonVe !== xem) l.scrollTop = 0; }
+    this._cuonVe = xem;
+    this.ve();
+    // trang ụ mở sẵn Test range khi ở màn bộ bài (unitpage.js đợi #chon hiện)
+  },
+  ve() { this.veHome(); this.veDeck(); },
+
+  veHome() {
+    const m = this.CHE[this.che];
+    this.el('hm-che-ic').src = 'assets/' + m.ic + '.png';
+    this.el('hm-che-ten').textContent = m.ten;
+    const n = UI.chon.length;
+    this.el('hm-choi-phu').textContent = n === 5 ? m.phu() : 'Pick 5 turrets first';
+    this.el('hm-deck-so').textContent = n + '/5';
+    this.el('hm-deck-u').innerHTML = UI.chon.map(id => '<img src="' + iconOf(id) + '" alt="">').join('');
+    let co = 0; for (const r of G.roster || []) if (SKILLS[r.id]) co++;
+    this.el('hm-bst-so').textContent = co + ' TURRETS';
+    const an = this.el('hm-anh'), d = MAVUONG[UI.mv] || MAVUONG.hero;
+    const src = 'assets/' + d.anh + '.png'; if (an.getAttribute('src') !== src) { an.onerror = () => { an.onerror = null; an.src = mvIcURL(UI.mv); }; an.src = src; }
+    try { this.el('hm-best').textContent = (typeof TK !== 'undefined' && TK.ho) ? TK.ho.bestWave || 0 : 0; } catch (e) { }
+  },
+
+  veDeck() {
+    const m = this.CHE[this.che], n = UI.chon.length;
+    const nv = this.el('nut-vao'); if (nv) nv.disabled = n !== 5;
+    this.el('dk-choi-phu').textContent = n === 5 ? m.ten + ' · ' + m.phu() : (5 - n) + ' more to go';
+    // ô đang chờ đổi
+    document.querySelectorAll('#chon-bo .o-bo').forEach((o, i) => o.classList.toggle('hm-armed', i === this.armed));
+    // dải nổi bật: ụ vừa xem / vừa thêm; chưa có → hướng dẫn 1 dòng
+    const id = (this.noi && G.rosterMap[this.noi]) ? this.noi : UI.chon[0], noi = this.el('dk-noi');
+    if (id && G.rosterMap[id]) {
+      const r = G.rosterMap[id], t = TIERS[r.bac], sk = SKILLS[id];
+      noi.dataset.id = id; noi.style.setProperty('--m', t.mau);
+      noi.innerHTML = '<span class="dk-noi-po"><img src="' + portraitOf(id) + '" alt=""></span><img class="dk-noi-u" src="' + iconOf(id) + '" alt="">' +
+        '<span class="dk-noi-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small></span><span class="dk-noi-ct">DETAILS</span>';
+      if (typeof MAT !== 'undefined') requestAnimationFrame(() => { const im = noi.querySelector('.dk-noi-po img'); if (im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true }); });
+    } else { delete noi.dataset.id; noi.innerHTML = '<span class="dk-noi-trong">Tap a turret to preview it</span>'; }
+    // chỉ huy: 1 hàng gọn
+    const d = MAVUONG[UI.mv] || MAVUONG.hero, mv = this.el('dk-mv');
+    mv.style.setProperty('--mm', d.mau);
+    mv.innerHTML = '<span class="dk-mv-po"><img src="' + mvIcURL(UI.mv) + '" alt=""></span><span class="dk-mv-chu"><small>COMMANDER</small><b>' + this.esc(d.ten) + '</b></span><span class="dk-mv-mo">' + this.esc(d.mo) + '</span><em>CHANGE</em>';
+    // số bộ lọc đang bật
+    const so = (BOBAI.loc.vai !== 'all' ? 1 : 0) + (this.bac !== 'all' ? 1 : 0) + (UI.xep !== 'bac' ? 1 : 0), b = this.el('dk-loc-so');
+    if (b) { b.hidden = !so; b.textContent = so; }
+  },
+
+  // ---------- bảng trượt ----------
+  mo(loai, html) {
+    const mo = this.el('hm-mo'), tam = this.el('hm-tam');
+    tam.className = 'hm-tam hm-tam-' + loai; tam.innerHTML = '<i class="hm-keo"></i>' + html;
+    this.sheet = loai;
+    mo.hidden = false; mo.classList.remove('ra'); void mo.offsetWidth; mo.classList.add('vao');
+  },
+  dong(ngay) {
+    const mo = this.el('hm-mo'); if (!mo || mo.hidden) { this.sheet = null; return; }
+    this.sheet = null;
+    if (ngay || this.giam()) { mo.hidden = true; mo.classList.remove('vao', 'ra'); return; }
+    mo.classList.remove('vao'); mo.classList.add('ra');
+    clearTimeout(this._dg); this._dg = setTimeout(() => { if (!this.sheet) { mo.hidden = true; mo.classList.remove('ra'); } }, 200);
+  },
+  dau(t, phu) { return '<div class="hm-tam-dau"><b>' + t + '</b>' + (phu ? '<small>' + phu + '</small>' : '') + '<button class="hm-ic hm-dong" data-act="hm-dong"><span>CLOSE</span></button></div>'; },
+
+  moChe() {
+    this.mo('che', this.dau('GAME MODE') + '<div class="hm-ds">' + Object.entries(this.CHE).map(([k, m]) =>
+      '<button class="hm-hang' + (k === this.che ? ' on' : '') + '" data-act="hm-che-chon" data-che="' + k + '"><img src="assets/' + m.ic + '.png" alt=""><span><b>' + m.ten + '</b><small>' + this.esc(m.phu()) + '</small></span>' + (k === this.che ? '<em>SELECTED</em>' : '') + '</button>').join('') + '</div>');
+  },
+  chonChe(k) {
+    if (!this.CHE[k]) return;
+    this.che = k; if (k !== 'online') UI.che = k;
+    document.querySelectorAll('#chon .che').forEach(b => b.classList.toggle('chon', b.dataset.che === UI.che));
+    this.luu(); this.luuBo(); SND.nut(); this.dong(); this.ve();
+  },
+
+  moCai() {
+    const am = (k, n) => '<label class="hm-am"><span>' + n + '</span><input type="range" min="0" max="100" data-hmam="' + k + '" value="' + Math.round(SND.amLuong(k) * 100) + '"></label>';
+    const mo = typeof HD === 'undefined' || HD.moKhoa();
+    this.mo('cai', this.dau('SETTINGS') +
+      '<div class="hm-cai2"><button class="hm-nut2" data-act="nhac"></button><button class="hm-nut2" data-act="amthanh"></button></div>' +
+      am('nhac', 'MUSIC') + am('sfx', 'SFX') +
+      '<div class="hm-cai2"><button class="hm-nut2" data-act="tk-mo">PILOT PROFILE</button><button class="hm-nut2" data-act="hd-choi">' + (mo ? 'REPLAY TUTORIAL' : 'PLAY TUTORIAL') + '</button></div>');
+    SND.nutNhan();
+    this.el('hm-tam').querySelectorAll('[data-hmam]').forEach(r => {
+      r.addEventListener('input', () => SND.amLuong(r.dataset.hmam, r.value / 100));
+      r.addEventListener('change', () => { if (r.dataset.hmam === 'sfx') SND.nut(); });
+    });
+  },
+
+  moPre() {
+    const ds = BOBAI.DS.filter(a => BOBAI.hopLe(a));
+    this.mo('pre', this.dau('PRESET DECKS', 'Load one, then swap cards') + '<div class="hm-ds">' + ds.map(a => {
+      const dung = UI.chon.length === 5 && a.deck.every(id => UI.chon.includes(id)) && UI.mv === a.mv;
+      return '<button class="hm-hang hm-pre' + (dung ? ' on' : '') + '" data-act="hm-pre-chon" data-bb="' + a.id + '"><span class="hm-pre-chu"><b>' + a.ten + '</b><small>' + this.esc(a.che) + '</small></span>' +
+        '<span class="hm-pre-u">' + a.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + this.esc(G.rosterMap[id].ten) + '">').join('') + '<img class="mv" src="' + mvIcURL(a.mv) + '" alt=""></span>' +
+        '<span class="hm-pre-mo">' + this.esc(a.plan) + '</span>' + (dung ? '<em>IN USE</em>' : '') + '</button>';
+    }).join('') + '</div>');
+  },
+
+  moLoc() {
+    const chip = (act, k, t, on) => '<button class="hm-chip' + (on ? ' on' : '') + '" data-act="' + act + '" data-k="' + k + '">' + t + '</button>';
+    const dem = { all: 0, tc: 0, ht: 0, db: 0 }; for (const r of G.roster || []) { const sk = SKILLS[r.id]; if (!sk) continue; dem.all++; if (dem[sk.vai] != null) dem[sk.vai]++; }
+    this.mo('loc', this.dau('FILTER & SORT') +
+      '<div class="hm-loc-nh">ROLE</div><div class="hm-chips">' + BOBAI.VAI.map(([k, t]) => chip('hm-loc-vai', k, t + ' <small>' + dem[k] + '</small>', BOBAI.loc.vai === k)).join('') + '</div>' +
+      '<div class="hm-loc-nh">RARITY</div><div class="hm-chips">' + chip('hm-loc-bac', 'all', 'ALL', this.bac === 'all') + TIER_LIST.map(t => chip('hm-loc-bac', t, '<img src="assets/ngoc_' + t + '.png" alt="">' + TIERS[t].ten, this.bac === t)).join('') + '</div>' +
+      '<div class="hm-loc-nh">SORT</div><div class="hm-chips">' + [['bac', 'RARITY'], ['ho', 'FAMILY'], ['ten', 'NAME']].map(([k, t]) => chip('hm-loc-xep', k, t, UI.xep === k)).join('') + '</div>' +
+      '<div class="hm-cai2"><button class="hm-nut2" data-act="hm-loc-xoa">RESET</button><button class="hm-nut2 vang" data-act="hm-dong">DONE</button></div>');
+  },
+  locLai() { if (this.sheet === 'loc') { const s = this.el('hm-tam').scrollTop; this.moLoc(); this.el('hm-tam').scrollTop = s; this.el('hm-mo').classList.add('vao'); } this.veDeck(); },
+
+  moMVs() {
+    this.mo('mvs', this.dau('COMMANDER', 'One skill per match, tap its card in battle') + '<div class="hm-ds">' + Object.entries(MAVUONG).map(([id, d]) =>
+      '<div class="hm-hang hm-mvh' + (id === UI.mv ? ' on' : '') + '" style="--mm:' + d.mau + '"><button class="hm-mvh-chon" data-act="hm-mv-chon" data-id="' + id + '"><span class="hm-mvh-po"><img src="' + mvIcURL(id) + '" alt=""></span><span><b>' + this.esc(d.ten) + '</b><small>' + this.esc(d.mo) + '</small></span>' + (id === UI.mv ? '<em>SELECTED</em>' : '') + '</button>' +
+      '<button class="hm-ct" data-act="hm-mv-ct" data-id="' + id + '">DETAILS</button></div>').join('') + '</div>');
+  },
+
+  // XEM NHANH 1 ụ: chân dung + tên + độ hiếm/vai + 1 dòng kỹ năng + THÊM/BỎ + DETAILS (trang ụ đầy đủ)
+  moXem(id, tuO) {
+    const r = G.rosterMap[id]; if (!r) return;
+    this.noi = id; this.veDeck();
+    const t = TIERS[r.bac], sk = SKILLS[id], trong = UI.chon.includes(id);
+    let nut;
+    if (this.bst) nut = '';
+    else if (!sk) nut = '<button class="hm-nut2" disabled>COMING SOON</button>';
+    else if (trong) nut = '<button class="hm-nut2" data-act="hm-bo" data-id="' + id + '">REMOVE</button>';
+    else nut = '<button class="hm-nut2 vang" data-act="hm-them" data-id="' + id + '">' + (this.armed >= 0 && UI.chon[this.armed] ? 'SWAP IN' : 'ADD TO DECK') + '</button>';
+    const ghi = tuO && trong ? '<div class="hm-xem-ghi">Close this, then pick a turret below to swap this slot.</div>' : (this.armed >= 0 && !trong && !this.bst ? '<div class="hm-xem-ghi">Replaces ' + this.esc(G.rosterMap[UI.chon[this.armed]] ? G.rosterMap[UI.chon[this.armed]].ten : '') + '</div>' : '');
+    this.mo('xem', '<div class="hm-xem" style="--m:' + t.mau + '"><span class="hm-xem-po"><img src="' + portraitOf(id) + '" alt=""></span><img class="hm-xem-u" src="' + iconOf(id) + '" alt="">' +
+      '<span class="hm-xem-chu"><b>' + this.esc(r.ten) + '</b><small><em style="color:' + t.mau + '">' + this.esc(t.ten) + '</em> · ' + this.esc(sk ? TEXT.ui.role[sk.vai] : TEXT.ui.soon) + '</small><span class="hm-xem-kn">' + this.esc(r.kyNang || '') + '</span></span></div>' +
+      ghi + '<div class="hm-cai2">' + nut + '<button class="hm-nut2" data-act="hm-ct" data-id="' + id + '">DETAILS</button></div>');
+    const im = this.el('hm-tam').querySelector('.hm-xem-po img'); if (typeof MAT !== 'undefined' && im) im.complete ? MAT.fit(im) : im.addEventListener('load', () => MAT.fit(im), { once: true });
+  },
+
+  // thêm (hoặc đổi vào ô đang chờ) — theo đúng luật bộ bài của UI.chonU (1 ĐỎ, 2 ụ thao túng sao…)
+  them(id) {
+    const truoc = UI.chon.slice(), cu = this.armed >= 0 ? UI.chon[this.armed] : null;
+    if (cu) {
+      const i = this.armed; UI.chon.splice(i, 1);
+      UI.chonU(id);
+      if (UI.chon.includes(id)) { UI.chon.splice(UI.chon.indexOf(id), 1); UI.chon.splice(i, 0, id); UI.veBoChon(); }
+      else { UI.chon = truoc; UI.veBoChon(); return; }
+    } else {
+      if (UI.chon.length >= 5) { UI.nhac('Deck full — tap a slot above to swap it'); return; }
+      UI.chonU(id);
+      if (!UI.chon.includes(id)) return;
+    }
+    this.armed = -1; this.noi = id; this.luuBo();
+    const ve = () => this.bay(id); this.dong(); ve(); this.ve();
+    SND.nut();
+    if (UI.chon.length === 5 && truoc.length < 5) this.duBo();
+  },
+  bo(id) { const i = UI.chon.indexOf(id); if (i < 0) return; UI.chon.splice(i, 1); this.armed = -1; this.luuBo(); UI.veBoChon(); SND.nut(); this.dong(); this.ve(); },
+
+  // ảnh chân dung bay từ thẻ trong lưới → ô bộ bài (260–320 ms, FAST_OUT); giảm chuyển động: chỉ sáng ô 120 ms
+  bay(id) {
+    const i = UI.chon.indexOf(id), o = document.querySelectorAll('#chon-bo .o-bo')[i];
+    if (!o) return;
+    const xung = () => { o.classList.remove('hm-xung'); void o.offsetWidth; o.classList.add('hm-xung'); setTimeout(() => o.classList.remove('hm-xung'), 300); };
+    const the = document.querySelector('#chon-luoi .c[data-id="' + id + '"]:not([hidden])'), w = this.el('wrap');
+    if (this.giam() || !the || !w) { xung(); return; }
+    const rw = w.getBoundingClientRect(), k = rw.width / W, a = the.getBoundingClientRect(), b = o.getBoundingClientRect();
+    if (a.bottom < rw.top || a.top > rw.bottom) { xung(); return; }
+    const im = document.createElement('img'); im.className = 'hm-bay'; im.src = portraitOf(id);
+    const s = 56, x0 = (a.left + a.width / 2 - rw.left) / k - s / 2, y0 = (a.top + a.height * 0.4 - rw.top) / k - s / 2, x1 = (b.left + b.width / 2 - rw.left) / k - s / 2, y1 = (b.top + b.height / 2 - rw.top) / k - s / 2;
+    im.style.left = x0 + 'px'; im.style.top = y0 + 'px'; w.appendChild(im);
+    const an = im.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(' + (x1 - x0) + 'px,' + (y1 - y0) + 'px) scale(.85)', opacity: 1 }], { duration: 290, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+    an.onfinish = () => { im.remove(); xung(); };
+  },
+  // đủ 5: vệt sáng quét dọc thanh bộ bài (ảnh chọn sẵn chon_bung, chờ D04)
+  duBo() { if (this.giam()) return; const b = this.el('chon-bo'); b.classList.remove('hm-du'); void b.offsetWidth; b.classList.add('hm-du'); setTimeout(() => b.classList.remove('hm-du'), 700); },
+
+  choi() {
+    if (UI.chon.length !== 5) {
+      if (!this.el('chon').classList.contains('xem-dk') || this.bst) this.di('dk');
+      UI.nhac('Pick 5 turrets'); return;
+    }
+    if (this.che === 'online') { if (typeof ONL !== 'undefined') ONL.moBang(); return; }
+    UI.che = this.che; this.luuBo(); UI.vao();
+  },
+
+  bam(e) {
+    const el = e.target.closest && e.target.closest('[data-act]');
+    // ô bộ bài: chạm ô có ụ = chọn ô để ĐỔI + xem nhanh (chạm lại = bỏ chọn); ô trống = gợi ý
+    const o = e.target.closest && e.target.closest('#chon-bo .o-bo');
+    if (o && this.el('chon').classList.contains('xem-dk')) {
+      e.stopImmediatePropagation(); e.preventDefault();
+      const i = [...o.parentNode.children].indexOf(o), id = UI.chon[i];
+      if (!id) { this.armed = -1; this.veDeck(); UI.nhac('Tap a turret below'); return; }
+      SND.nut();
+      // lần 1: chọn ô để đổi (sáng khung) — chạm thẻ bên dưới = đổi vào; lần 2: xem nhanh (BỎ / DETAILS)
+      if (this.armed === i) { this.moXem(id, true); return; }
+      this.armed = i; this.noi = id; this.veDeck(); UI.nhac('Pick a turret below to swap in'); return;
+    }
+    // thẻ trong lưới: xem nhanh (thay cho mở thẳng trang ụ / nút + nhỏ)
+    const c = e.target.closest && e.target.closest('#chon-luoi .c[data-id]');
+    if (c && !(el && el.dataset.act === 'bb-thu') && !(el && /^hd-/.test(el.dataset.act))) { e.stopImmediatePropagation(); e.preventDefault(); SND.nut(); this.moXem(c.dataset.id); return; }
+    if (!el) return;
+    const a = el.dataset.act; if (!a.startsWith('hm-')) return;
+    e.stopImmediatePropagation();
+    switch (a) {
+      case 'hm-che': SND.nut(); this.moChe(); break;
+      case 'hm-che-chon': this.chonChe(el.dataset.che); break;
+      case 'hm-choi': SND.mo(); this.choi(); break;
+      case 'hm-deck': SND.nut(); this.di('dk'); break;
+      case 'hm-bst': SND.nut(); this.di('dk', true); break;
+      case 'hm-ve': SND.nut(); this.di('hm'); break;
+      case 'hm-cai': SND.nut(); this.moCai(); break;
+      case 'hm-pre': SND.nut(); this.moPre(); break;
+      case 'hm-pre-chon': this.dong(); BOBAI.thu(el.dataset.bb); this.noi = UI.chon[0]; this.armed = -1; this.ve(); this.duBo(); break;
+      case 'hm-loc': SND.nut(); this.moLoc(); break;
+      case 'hm-loc-vai': BOBAI.loc.vai = el.dataset.k; BOBAI.luu(); SND.nut(); BOBAI.ap(); this.locLai(); break;
+      case 'hm-loc-bac': this.bac = el.dataset.k; this.luu(); SND.nut(); BOBAI.ap(); this.locLai(); break;
+      case 'hm-loc-xep': UI.xep = el.dataset.k; SND.nut(); UI.veChon(); this.locLai(); break;
+      case 'hm-loc-xoa': BOBAI.loc.vai = 'all'; BOBAI.loc.q = ''; BOBAI.luu(); this.bac = 'all'; this.luu(); { const t = this.el('bb-tim'); if (t) t.value = ''; } UI.xep = 'bac'; UI.veChon(); this.locLai(); break;
+      case 'hm-mvs': SND.nut(); this.moMVs(); break;
+      case 'hm-mv-chon': UI.mv = el.dataset.id; this.luuBo(); SND.nut(); this.dong(); this.ve(); break;
+      case 'hm-mv-ct': { const id = el.dataset.id, r = el.getBoundingClientRect(); this.dong(true); if (typeof UP !== 'undefined') UP.moMV(id, r); break; }
+      case 'hm-noi': { const id = el.dataset.id; if (id && typeof UP !== 'undefined') { SND.nut(); UP.mo(id, el); } else if (!id) UI.nhac('Tap a turret below'); break; }
+      case 'hm-them': this.them(el.dataset.id); break;
+      case 'hm-bo': this.bo(el.dataset.id); break;
+      case 'hm-ct': { const id = el.dataset.id, c2 = document.querySelector('#chon-luoi .c[data-id="' + id + '"]') || el; this.dong(true); if (typeof UP !== 'undefined') UP.mo(id, c2); break; }
+      case 'hm-dong': SND.nut(); this.dong(); break;
+    }
+  },
+};
+
+(function () {
+  if (typeof UI === 'undefined' || typeof BOBAI === 'undefined') return;
+  HM.doc();
+  // bấm: pha capture ở window (trước ui.js / unitpage.js / online) — chỉ nuốt nút hm-*, ô bộ bài, thẻ lưới
+  window.addEventListener('click', (e) => { try { HM.bam(e); } catch (er) { console.error('HM', er); } }, true);
+  // nút nhấn: lún 0.965 trong 75 ms, nhả 120 ms (iOS không tự bật :active)
+  document.addEventListener('pointerdown', (e) => { const b = e.target.closest && e.target.closest('#chon button, #hm-mo button'); if (b && !b.disabled) { b.classList.add('hm-an'); const tha = () => { b.classList.remove('hm-an'); removeEventListener('pointerup', tha); removeEventListener('pointercancel', tha); }; addEventListener('pointerup', tha); addEventListener('pointercancel', tha); } }, true);
+  // rời trận → HOME (QUIT); CHANGE DECK → màn bộ bài
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest && e.target.closest('[data-act]'); if (!el) return;
+    if (el.dataset.act === 'bo') HM.di('hm');
+    else if (el.dataset.act === 'doibo') HM.di('dk');
+  }, true);
+
+  // lọc thêm theo ĐỘ HIẾM (bảng FILTER) sau bộ lọc vai trò / tìm kiếm của bobai.js
+  const apGoc = BOBAI.ap.bind(BOBAI);
+  BOBAI.ap = function () {
+    apGoc();
+    const luoi = document.getElementById('chon-luoi'); if (!luoi || HM.bac === 'all') return;
+    let tong = 0;
+    luoi.querySelectorAll('.luoi').forEach(g => {
+      let n = 0;
+      g.querySelectorAll('.c[data-id]').forEach(c => { if (!c.hidden && G.rosterMap[c.dataset.id].bac !== HM.bac) c.hidden = true; if (!c.hidden) n++; });
+      g.hidden = !n; tong += n; const h = g.previousElementSibling; if (h && h.classList.contains('nhom')) h.hidden = !n;
+    });
+    let ko = document.getElementById('bb-trong');
+    if (!tong) { if (!ko) { ko = document.createElement('div'); ko.id = 'bb-trong'; luoi.appendChild(ko); } ko.textContent = 'No turret matches. Open FILTER and tap RESET.'; ko.hidden = false; }
+    else if (ko) ko.hidden = true;
+  };
+  // vẽ lại màn chọn: ô tìm dời vào hàng TÌM + FILTER; thẻ bỏ nút + nhỏ (chạm thẻ = xem nhanh)
+  const veGoc = UI.veChon;
+  UI.veChon = function () {
+    const r = veGoc.apply(this, arguments);
+    try {
+      const t = document.getElementById('bb-tim'), o = document.getElementById('dk-o');
+      if (t && o && t.parentNode !== o) { t.placeholder = 'Search turrets…'; o.appendChild(t); }
+      document.querySelectorAll('#chon-luoi .c').forEach(c => { c.setAttribute('aria-label', (G.rosterMap[c.dataset.id] || {}).ten + ': preview'); });
+      if (HM.bac !== 'all') BOBAI.ap();
+      HM.ve();
+    } catch (e) { console.error('HM', e); }
+    return r;
+  };
+  const boGoc = UI.veBoChon;
+  UI.veBoChon = function () { const r = boGoc.apply(this, arguments); try { HM.ve(); } catch (e) { } return r; };
+  // vào trận: đóng bảng trượt
+  const vaoGoc = UI.vaoTran;
+  UI.vaoTran = function () { HM.dong(true); return vaoGoc.apply(this, arguments); };
+  // chế độ đã lưu (ONLINE nhớ riêng; SOLO/CO-OP/PVP theo UI.che của bộ đã lưu)
+  const initGoc = UI.init;
+  UI.init = async function () {
+    const r = await initGoc.apply(this, arguments);
+    if (HM.che !== 'online' && HM.CHE[UI.che]) HM.che = UI.che;
+    try { HM.ve(); } catch (e) { console.error('HM', e); }
+    return r;
+  };
+  // chip hồ sơ (Firebase) + nút ONLINE: dời vào HOME
+  const sau = () => {
+    if (typeof TK !== 'undefined' && TK.veChip) {
+      const g = TK.veChip.bind(TK);
+      // TK tạo chip trong #chon .chon-dau (màn bộ bài) → dời sang hàng hồ sơ của HOME
+      TK.veChip = function () { const r = g(), c = document.getElementById('tk-chip'), o = document.getElementById('hm-tk'); if (c && o && c.parentNode !== o) o.appendChild(c); try { HM.veHome(); } catch (e) { } return r; };
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sau, { once: true }); else sau();
+})();

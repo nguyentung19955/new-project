@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="css/chihuy-the.css">
   <link rel="stylesheet" href="css/hudmuot-c.css">
   <link rel="stylesheet" href="css/hudb.css">
+  <link rel="stylesheet" href="css/hudmuot-a.css">
 </head>
 <body>
   <div id="wrap">
@@ -88,29 +89,55 @@
       </div>
     </div>
 
-    <!-- MÀN CHỌN BỘ BÀI: 64 ụ theo bậc, chọn 5 (tối đa 1 ụ ĐỎ) + 1 Ma vương + chế độ -->
-    <div id="chon" class="man">
-      <div class="chon-dau">
-        <div class="logo"><b>TURRET MERGE</b><span data-t="subtitle">MERGE · DEFEND · SURVIVE</span></div>
-        <div class="chon-hang">
-          <div class="chon-goi"><span data-t="pick5">PICK 5 TURRETS</span> <b id="chon-dem">0/5</b></div>
-          <span style="display:flex;gap:6px"><button class="nut-xep" data-act="nhac" data-t="musicOn">MUSIC: ON</button><button class="nut-xep" data-act="amthanh" data-t="sfxOn">SFX: ON</button><button class="nut-xep" data-act="xep" id="nut-xep">SORT: TIER</button></span>
+    <!-- MENU (HUD mượt A): 2 màn trong #chon — HOME (.hm: hồ sơ, logo, ảnh lớn, chọn chế độ, PLAY, DECK/COLLECTION) và XÂY BỘ BÀI (.dk).
+         #chon hiện = đang ở menu (mọi file khác vẫn dựa vào điều này); #chon.xem-dk = đang ở màn bộ bài. js/home.js lo chuyển màn + các bảng trượt. -->
+    <div id="chon" class="man xem-hm">
+      <div class="hm" id="hm">
+        <img class="hm-nen" src="assets/nen_home.jpg" alt="">
+        <div class="hm-anh"><img id="hm-anh" alt=""></div>
+        <div class="hm-dau">
+          <div class="hm-tk" id="hm-tk"></div>
+          <div class="hm-tien" id="hm-tien"><span>BEST</span><b id="hm-best">0</b></div>
+          <button class="hm-ic" data-act="hm-cai" aria-label="Settings"><span>SETTINGS</span></button>
         </div>
-        <div id="chon-bo"></div>
-      </div>
-      <div id="chon-luoi"></div>
-      <div class="chon-cuoi">
-        <div class="chon-mv" id="chon-mv"></div>
-        <div class="chon-che">
-          <button class="che" data-act="che" data-che="coop"><b>CO-OP</b><span data-t="coopSub"></span></button>
-          <button class="che" data-act="che" data-che="solo"><b>SOLO</b><span data-t="soloSub"></span></button>
-          <button class="che" data-act="che" data-che="pvp"><b>PVP</b><span data-t="pvpSub"></span></button>
-        </div>
-        <div class="chon-nut">
-          <button class="nut" data-act="ngaunhien" data-t="random">RANDOM</button>
-          <button class="nut chinh" data-act="vao" id="nut-vao" data-t="start" disabled>START</button>
+        <img class="hm-logo" src="assets/logo.png" alt="TURRET MERGE">
+        <div class="hm-duoi">
+          <button class="hm-che" data-act="hm-che" id="hm-che"><img id="hm-che-ic" src="assets/ic_solo.png" alt=""><span><small>MODE</small><b id="hm-che-ten">SOLO</b></span><em>CHANGE</em></button>
+          <button class="hm-choi" data-act="hm-choi" id="hm-choi"><b>PLAY</b><small id="hm-choi-phu"></small></button>
+          <div class="hm-tab">
+            <button data-act="hm-deck" id="hm-deck"><span class="hm-tab-u" id="hm-deck-u"></span><b>DECK</b><small id="hm-deck-so">0/5</small></button>
+            <button data-act="hm-bst"><b>COLLECTION</b><small id="hm-bst-so"></small></button>
+          </div>
         </div>
       </div>
+
+      <div class="dk" id="dk">
+        <img class="dk-nen" src="assets/nen_menu.jpg" alt="">
+        <div class="dk-dau">
+          <button class="hm-ic dk-lui" data-act="hm-ve" aria-label="Back"><img src="assets/ic_lui.png" alt=""></button>
+          <b class="dk-tde" id="dk-tde">BUILD DECK</b>
+          <button class="hm-ic dk-pre" data-act="hm-pre"><span>PRESETS</span></button>
+        </div>
+        <div class="chon-dau">
+          <div class="dk-dem"><span><b id="chon-dem">0/5</b> <span>SELECTED</span></span><button class="dk-chu" data-act="ngaunhien">RANDOM</button></div>
+          <div id="chon-bo"></div>
+        </div>
+        <button class="dk-noi" id="dk-noi" data-act="hm-noi"></button>
+        <button class="dk-mv" id="dk-mv" data-act="hm-mvs"></button>
+        <div class="dk-tim"><label class="dk-o" id="dk-o"></label><button class="hm-ic dk-loc" data-act="hm-loc" id="dk-loc"><span>FILTER</span><i id="dk-loc-so" hidden></i></button></div>
+        <div id="chon-luoi"></div>
+        <div class="chon-cuoi">
+          <div class="chon-mv" id="chon-mv" hidden></div>
+          <div class="chon-che" hidden>
+            <button class="che" data-act="che" data-che="coop"><b>CO-OP</b><span data-t="coopSub"></span></button>
+            <button class="che" data-act="che" data-che="solo"><b>SOLO</b><span data-t="soloSub"></span></button>
+            <button class="che" data-act="che" data-che="pvp"><b>PVP</b><span data-t="pvpSub"></span></button>
+          </div>
+          <button class="nut-xep" data-act="xep" id="nut-xep" hidden>SORT: TIER</button>
+          <button class="hm-choi dk-choi" data-act="hm-choi" id="nut-vao" disabled><b>PLAY</b><small id="dk-choi-phu"></small></button>
+        </div>
+      </div>
+      <div class="hm-mo" id="hm-mo" hidden><div class="hm-mo-nen" data-act="hm-dong"></div><div class="hm-tam" id="hm-tam"></div></div>
     </div>
 
     <div id="dung" class="man phu" hidden>
@@ -193,6 +220,7 @@
   <script src="js/trum.js"></script>
   <script src="js/chonthe.js"></script>
   <script src="js/hudb.js"></script>
+  <script src="js/home.js"></script>
   <!-- ONLINE: tài khoản + CO-OP 2 người (Firebase Realtime Database) — SDK chỉ tải khi cần -->
   <script src="js/online/firebase-config.js"></script>
   <script src="js/online/net.js"></script>

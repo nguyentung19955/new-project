@@ -977,3 +977,5 @@ và `css/hud2.css` (thanh trên, khay, nút).
 | **raw_p7_b4.png** | 1536×1024, 1 cột × 3 hàng | 1 `p7_sheet` (B09) · 2 `p7_merge` 8 khung (B10) · 3 `p7_deny` 4 khung (B11) | 1: Tall bottom-sheet panel, simple brass header edge, large clean dark interior, rounded industrial corners, 9-slice friendly, centred in the row. 2: One row of 8 animation frames: compact cyan-gold mechanical energy convergence into a centre spark impact, no large white flash. 3: One row of 4 frames: tiny dull amber mechanical warning flash with short horizontal vibration streaks. |
 
 Thứ tự ưu tiên: b1 (thanh + dải xem nhanh) → b2 (nút) → b4 → b3.
+
+**Pass 7 home/deck — đã nối:** `raw_p7_h01` → `thap/assets/nen_home.jpg` (nền HOME, 1024×1536 đục, giữ nguyên độ nét tấm raw). Các tấm còn lại (d00, h02, a1–a8, d02) đang chờ; chỗ dùng tạm ghi ở đầu `thap/css/hudmuot-a.css`.
