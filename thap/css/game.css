@@ -171,8 +171,7 @@ img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
   font-size: 10.5px; font-weight: 800; line-height: 1.08; color: #fff; background: #0e1014; border-top: 1px solid #ffffff14; overflow: hidden; overflow-wrap: anywhere; }
 .c .sapco { position: absolute; z-index: 4; top: 30px; left: 6px; right: 6px; height: 18px; line-height: 18px; text-align: center; font-size: 10px; font-weight: 900; color: #ffe46b; background: #000c; border-radius: 4px; }
 .c.khoa .anh { filter: saturate(.55) brightness(.72); }
-.c.chon { box-shadow: 0 0 0 2px #7dff6a; border-color: #7dff6a; }
-.c.chon::after { content: '✓'; position: absolute; z-index: 5; right: 4px; top: 7px; width: 18px; height: 18px; border-radius: 50%; background: #2fbf4a; font-size: 12px; font-weight: 900; line-height: 1; display: flex; align-items: center; justify-content: center; }
+/* thẻ đã chọn: không viền/quầng/tô xanh vẽ code — hiệu ứng ảnh ChatGPT ở css/chonthe.css (js/chonthe.js) */
 .chon-cuoi { padding: 8px 10px 12px; background: #0f1013; border-top: 2px solid #33363d; }
 .chon-mv { display: flex; gap: 6px; }
 .mv { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; padding: 6px 5px; border-radius: 10px; background: #1f1a1c; border: 1.5px solid #4a2a30; text-align: left; }

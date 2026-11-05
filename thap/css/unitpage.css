@@ -183,9 +183,6 @@
 .c .up-q { position: absolute; z-index: 6; right: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #000b; border: 1.5px solid #ffffff8c; }
 .c .up-q::before { content: '+'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; line-height: 1; color: #fff; }
 .c .up-q::after { content: ''; position: absolute; inset: -7px; }
-.c.chon .up-q { background: #2fbf4a; border-color: #b5ffc4; }
-.c.chon .up-q::before { content: '✓'; font-size: 12px; }
-.c.chon:has(.up-q)::after { display: none; }
 
 /* chế độ xem trước (trong iframe): chỉ để lại canvas */
 .up-xem #top, .up-xem #tb-doi, .up-xem #duoi, .up-xem #chon, .up-xem #tt, .up-xem #bang-wave, .up-xem #cutin, .up-xem #canh-bao, .up-xem #dung, .up-xem #ketqua, .up-xem #chon-goi-nhac { display: none !important; }

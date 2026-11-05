@@ -66,11 +66,9 @@
 .co-khung .c.co-kh .ic { top: calc(var(--khh) * .838 - 18px); bottom: auto; right: calc(15.6% + 1px); width: 17px; height: 17px; border-width: 0; }
 .co-khung .c.chon.co-kh { box-shadow: none; }
 .co-khung .c.co-kh .up-q { top: calc(var(--khh) * .189 + 1px); right: calc(15.6% + 1px); width: 18px; height: 18px; } /* nút +/✓ trong ô cửa sổ, không che ngọc/cánh góc khung */
-.co-khung .c.co-kh .up-q::before { font-size: 13px; } .co-khung .c.chon.co-kh .up-q::before { font-size: 10px; }
-.co-khung .c.chon.co-kh::after { z-index: 4; top: calc(var(--khh) * .189 + 1px); right: calc(15.6% + 1px); width: 16px; height: 16px; font-size: 10px; }
+.co-khung .c.co-kh .up-q::before { font-size: 13px; }
 .co-khung .c.co-kh .gu { z-index: 3; top: 12px; }
 .co-khung .c.co-kh .ten { height: 24px; }
-.co-khung .c.chon.co-kh > .kh { filter: drop-shadow(0 0 4px #2fbf4a); }
 .co-khung #chon-bo .o-bo.co-kh { --khh: 58px; border: 0; }
 .co-khung #chon-bo .o-bo.co-kh > i { display: none; }
 /* ô bộ bài: khung 50×58 ở giữa ô (giữ đúng tỉ lệ khung) */
