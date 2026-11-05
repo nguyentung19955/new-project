@@ -118,24 +118,22 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | css/game.css:156 | `hon-bo .o-bo i { position: absolute; inset: -1px; border: 1.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/game.css:163 | `ight: 56px; margin-top: 12px; flex: none; filter: drop-shadow(0 3px 3px #000b); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
 | css/game.css:167 | `e-height: 1.08; color: #fff; background: #0e1014; border-top: 1px solid transparent; overflow: hidden; overflo` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:170 | `.c.chon { box-shadow: 0 0 0 2px #7dff6a; border-color: #7dff6a; }` | trạng thái thẻ ĐANG CHỌN (.c.chon) — session khác đang thay |
-| css/game.css:171 | `.c.chon::after { content: '✓'; position: absolute; z-index: 5; right: 4px; top: 7px; width: 18px; height: 18px` | trạng thái thẻ ĐANG CHỌN (.c.chon) — session khác đang thay |
-| css/game.css:172 | `oi { padding: 8px 10px 12px; background: #0f1013; border-top: 2px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:174 | `gap: 5px; padding: 6px 5px; background: #1f1a1c; border: 1.5px solid transparent; text-align: left; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:181 | `center; text-align: center; background: #22252b; border: 1.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:186 | `ign: center; line-height: 1; background: #2c2f36; border: 2px solid transparent; font-weight: 900; font-size:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:191 | `: 320px; padding: 20px 16px; background: #18191c; border: 2px solid transparent; text-align: center; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:216 | `background: #120c0e; border: 1px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:219 | `om: 1px; width: 18px; height: 18px; padding: 1px; border-radius: 50%; background: none; border: 0; filter: dro` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
-| css/game.css:232 | `border-top: 2px solid transparent; border-bottom: 2px solid transparent; transform-origin: 50% 50%; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:235 | `-webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 7` | mặt nạ mờ mép chân dung cut-in (mặt nạ cắt, không vẽ hình) |
-| css/game.css:236 | `ject-position: 50% 10%; margin-top: -4px; filter: drop-shadow(0 0 8px #000); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
-| css/game.css:243 | `m: 22px; width: 30px; height: 30px; padding: 2px; border-radius: 50%; background: none; border: 0; }` | mặt nạ tròn (ảnh PNG tròn / vùng chạm) — nền none hoặc ảnh |
-| css/game.css:268 | `#chon-bo .o-bo.nd-k i { border: 2.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:273 | `background: #0c0f14f0; border: 2px solid transparent; pointer-events: none; white-space: nowrap; transform:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:286 | `x; padding: 12px 8px 10px; background: #12151bf2; border: 1.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:289 | `enter; padding: 6px 2px 5px; background: #1a1e25; border: 2.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/game.css:291 | `h: 46px; height: 46px; margin: 1px 0 2px; filter: drop-shadow(0 2px 2px #000a); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/game.css:171 | `oi { padding: 8px 10px 12px; background: #0f1013; border-top: 2px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:173 | `gap: 5px; padding: 6px 5px; background: #1f1a1c; border: 1.5px solid transparent; text-align: left; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:180 | `center; text-align: center; background: #22252b; border: 1.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:185 | `ign: center; line-height: 1; background: #2c2f36; border: 2px solid transparent; font-weight: 900; font-size:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:190 | `: 320px; padding: 20px 16px; background: #18191c; border: 2px solid transparent; text-align: center; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:215 | `background: #120c0e; border: 1px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:218 | `om: 1px; width: 18px; height: 18px; padding: 1px; border-radius: 50%; background: none; border: 0; filter: dro` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/game.css:231 | `border-top: 2px solid transparent; border-bottom: 2px solid transparent; transform-origin: 50% 50%; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:234 | `-webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 7` | mặt nạ mờ mép chân dung cut-in (mặt nạ cắt, không vẽ hình) |
+| css/game.css:235 | `ject-position: 50% 10%; margin-top: -4px; filter: drop-shadow(0 0 8px #000); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/game.css:242 | `m: 22px; width: 30px; height: 30px; padding: 2px; border-radius: 50%; background: none; border: 0; }` | mặt nạ tròn (ảnh PNG tròn / vùng chạm) — nền none hoặc ảnh |
+| css/game.css:267 | `#chon-bo .o-bo.nd-k i { border: 2.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:272 | `background: #0c0f14f0; border: 2px solid transparent; pointer-events: none; white-space: nowrap; transform:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:285 | `x; padding: 12px 8px 10px; background: #12151bf2; border: 1.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:288 | `enter; padding: 6px 2px 5px; background: #1a1e25; border: 2.5px solid transparent; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/game.css:290 | `h: 46px; height: 46px; margin: 1px 0 2px; filter: drop-shadow(0 2px 2px #000a); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
 | css/anhgen.css:7 | `#nut-trieu .tr-cap { background: none; box-shadow: none; }` | tắt (none) |
 | css/anhgen.css:10 | `filter: drop-shadow(0 1px 0 #000); transition: filter .06s ease-out; }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
 | css/anhgen.css:12 | `#nut-trieu.thieu .tr-cap { background: none; box-shadow: none; }` | tắt (none) |
@@ -164,18 +162,17 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | css/pass2.css:49 | `the.co-kh { --khh: 74px; background: transparent; box-shadow: none; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/pass2.css:59 | `.co-khung #bo-the .the.co-kh.du { box-shadow: none; }` | tắt (none) |
 | css/pass2.css:65 | `.co-khung .c.chon.co-kh { box-shadow: none; }` | trạng thái thẻ ĐANG CHỌN (.c.chon) — session khác đang thay |
-| css/pass2.css:71 | `.co-khung .c.chon.co-kh > .kh { filter: drop-shadow(0 0 4px #2fbf4a); }` | trạng thái thẻ ĐANG CHỌN (.c.chon) — session khác đang thay |
-| css/pass2.css:72 | `.co-khung #chon-bo .o-bo.co-kh { --khh: 58px; border: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/pass2.css:79 | `-mv.co-kh { --khh: 76px; background: transparent; box-shadow: none; padding-top: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/pass2.css:81 | `.co-khung #the-mv.co-kh .mv-ic .mv-anh { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/pass2.css:87 | `img.ic-trieu { width: 46px; height: 46px; filter: drop-shadow(0 2px 0 #0008); margin: -6px -4px -6px -6px; }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
-| css/pass2.css:88 | `ic-trieu { filter: grayscale(.85) brightness(.65) drop-shadow(0 2px 0 #0008); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
-| css/pass2.css:89 | `#bo-the .the .so:not(:empty) { background: none; border: 0 solid transparent; border-image: url(../assets/ui_` | ảnh ChatGPT 9 mảnh (border-image) |
-| css/pass2.css:92 | `.gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image:` | ảnh ChatGPT 9 mảnh (border-image) |
-| css/pass2.css:93 | `e-mv.du .mv-gia::after { width: 8px; height: 8px; border-radius: 0; box-shadow: none; background: url(../asset` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
-| css/pass2.css:94 | `row .the .gu, .co-grow .c .gu { background: none; border: 0 solid transparent; border-image: url(../assets/ui_` | ảnh ChatGPT 9 mảnh (border-image) |
-| css/pass2.css:95 | `r: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; box-shadow: none; }` | tắt (none) |
-| css/pass2.css:98 | `ts/ui_khay_doi.png) center / 100% 100% no-repeat; box-shadow: none; }` | tắt (none) |
+| css/pass2.css:70 | `.co-khung #chon-bo .o-bo.co-kh { --khh: 58px; border: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/pass2.css:77 | `-mv.co-kh { --khh: 76px; background: transparent; box-shadow: none; padding-top: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/pass2.css:79 | `.co-khung #the-mv.co-kh .mv-ic .mv-anh { border-radius: 0; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/pass2.css:85 | `img.ic-trieu { width: 46px; height: 46px; filter: drop-shadow(0 2px 0 #0008); margin: -6px -4px -6px -6px; }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/pass2.css:86 | `ic-trieu { filter: grayscale(.85) brightness(.65) drop-shadow(0 2px 0 #0008); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/pass2.css:87 | `#bo-the .the .so:not(:empty) { background: none; border: 0 solid transparent; border-image: url(../assets/ui_` | ảnh ChatGPT 9 mảnh (border-image) |
+| css/pass2.css:90 | `.gia, .co-gia #the-mv .mv-gia { background: none; box-shadow: none; border: 0 solid transparent; border-image:` | ảnh ChatGPT 9 mảnh (border-image) |
+| css/pass2.css:91 | `e-mv.du .mv-gia::after { width: 8px; height: 8px; border-radius: 0; box-shadow: none; background: url(../asset` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
+| css/pass2.css:92 | `row .the .gu, .co-grow .c .gu { background: none; border: 0 solid transparent; border-image: url(../assets/ui_` | ảnh ChatGPT 9 mảnh (border-image) |
+| css/pass2.css:93 | `r: #fff; text-shadow: 0 1px 0 #000, 0 0 2px #000; box-shadow: none; }` | tắt (none) |
+| css/pass2.css:96 | `ts/ui_khay_doi.png) center / 100% 100% no-repeat; box-shadow: none; }` | tắt (none) |
 | css/unitpage.css:12 | `; align-items: center; gap: 8px; padding: 0 10px; border-bottom: 1px solid transparent; background: #202328; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:13 | `6px; padding: 0 12px 0 8px; background: #2c3037; border: 1px solid transparent; font-size: 14px; font-weight:` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:14 | `.up-lui i { width: 9px; height: 9px; border-left: 2.5px solid transparent; border-bottom: 2.5px solid transpar` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
@@ -214,8 +211,7 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | css/unitpage.css:169 | `ize: 17px; font-weight: 800; background: #23a845; border: 2px solid transparent; color: #fff; text-shadow: 0 1` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:171 | `037; border-color: transparent; color: var(--mo); box-shadow: none; text-shadow: none; }` | viền 0 / trong suốt (giữ bố cục, không hiện) hoặc gỡ viền |
 | css/unitpage.css:175 | `right: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: url(../assets/nut_cong.png)` | mặt nạ tròn (ảnh PNG tròn / vùng chạm) — nền none hoặc ảnh |
-| css/unitpage.css:179 | `.c.chon .up-q::before { content: '✓'; font-size: 12px; }` | trạng thái thẻ ĐANG CHỌN (.c.chon) — session khác đang thay |
-| css/unitpage.css:194 | `px; top: 10px; width: 40px; height: 40px; filter: drop-shadow(0 2px 3px #000a); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
+| css/unitpage.css:191 | `px; top: 10px; width: 40px; height: 40px; filter: drop-shadow(0 2px 3px #000a); }` | bóng đen dưới ảnh PNG (không phải quầng/hình) |
 | css/online.css:10 | `padding: 0 6px 0 2px; border: 0 solid transparent; border-width: 8px; border-image: url(../assets/khung_tt.p` | ảnh ChatGPT 9 mảnh (border-image) |
 | css/online.css:12 | `#tk-chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex: none; }` | mặt nạ tròn (ảnh PNG tròn / vùng chạm) — nền none hoặc ảnh |
 | css/online.css:31 | `a, #tk-ten { flex: 1; min-width: 0; height: 48px; border: 0 solid transparent; border-width: 8px 12px; border-` | ảnh ChatGPT 9 mảnh (border-image) |
@@ -300,6 +296,7 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | js/ui.js:519 | `if (n.nodeType === 3) { if (n.nodeValue.indexOf('★') >= 0) doi(n); return; }` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/ui.js:520 | `1 \|\| BO.has(n.nodeName) \|\| n.textContent.indexOf('★') < 0) return;` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/ui.js:522 | `.nextNode()) if (w.currentNode.nodeValue.indexOf('★') >= 0) ds.push(w.currentNode);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/unitpage.js:28 | `own, left, right unless stated); stronger at 3/5/7★. Copies of the same Support don’t stack, and each buff typ` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:89 | `ar merge into a random turret from your deck at +1★. Max 7★.']);` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:138 | `ush('Nightmare snipes your highest-star turret: −1★.');` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/unitpage.js:139 | `so.length) so.push('Octopus Eyes burns turrets: −1★ unless cleansed.');` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
@@ -322,13 +319,14 @@ Tạo bằng `python3 tools/thap-kt-vetay-grep-ui.py`. Không còn gradient / bo
 | js/tien-ui.js:111 | `const them = d.so ? ' · board full → +1★ to weakest' : d.hieuLuc ? ' · lasts ' + d.hieuLuc + 's (own board` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/meta.js:3 | `: "Ivory", "kyNang": "On merge: summons an extra 1★ turret", "ten_vi": "Máy Nhân Bản", "kyNang_vi": "Khi GHÉP:` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/phattrien.js:50 | `hfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:52 | `nangsao: 'merge gives +1★ to another turret', vughep: 'drag: +1★ and keeps the type', hasao: 'merge: rival −` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:52 | `up its lowest-star neighbours', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; p` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 | js/phattrien.js:55 | `hopbi: 'opens into a random 1–7★ turret', tienhoa: 'evolves into a random turret +1★',` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:84 | `10s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:85 | `0% faster'], 5: ['BREAKTHROUGH', '25% chance of +2★'], 7: ['ASCEND', 'Picks your highest-tier card'] },` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:148 | `: 'Timer 0–60% / 60–90% / 90–100%, then evolves +1★',` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:152 | `', ten: ['PUP', 'HUNTER', 'ALPHA'], dk: 'Hunter: 3★ or 20 kills · Alpha: 5★ or 50 kills (30% are born as Alpha` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
-| js/phattrien.js:165 | `NCED', 'FULL SYNC'], dk: '3+ other turrets at its ★ → Synced · 6+ → Full Sync (+15% crit)',` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:94 | `5: ['STAR PIP', 'Each wave a star pip (3 pips = +1★)'], 7: ['STAR SURGE', '2 pips = +1★ (max 2★ per match)'] }` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:97 | `d: +fire rate'], 7: ['LOOSE SYNC', 'Aura ×2.35; ±1★ counts as matched'] },` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:104 | `10s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:105 | `0% faster'], 5: ['BREAKTHROUGH', '25% chance of +2★'], 7: ['ASCEND', 'Picks your highest-tier card'] },` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:118 | `ht:   { 3: ['TUNED AURA', 'Aura ×1.45 of its 1★ value'], 5: ['FIELD PERK', 'Aura ×1.9 + a small extra perk']` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:164 | `: 'Timer 0–60% / 60–90% / 90–100%, then evolves +1★',` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
+| js/phattrien.js:168 | `', ten: ['PUP', 'HUNTER', 'ALPHA'], dk: 'Hunter: 3★ or 20 kills · Alpha: 5★ or 50 kills (30% are born as Alpha` | ký tự trong CHỮ/chuỗi dữ liệu → DOM đổi ★ thành ảnh ui_sao.png (ui.js); canvas không dùng chuỗi này |
 
-238 dòng; 0 dòng cần xem tay / còn vi phạm
-
+237 dòng; 0 dòng cần xem tay / còn vi phạm
