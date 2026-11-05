@@ -20,7 +20,7 @@ const TRUM_MOI = {
 const TRUM_ANH = new Set([]); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
 const TRUM_HUONG = new Set([]); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
 const TRUM_FX = new Set([]); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
-const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
+const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }
 // bể trùm cho lịch ngẫu nhiên (game.js lichTrum): 6 cũ + 6 mới; TRUM_THU_TU (thứ tự CO-OP cố định) giữ nguyên
