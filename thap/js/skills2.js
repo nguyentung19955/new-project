@@ -701,7 +701,7 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng sao trên bàn là bội 1
     const n = this.tong(B), boi = n % 10 === 0 && n > 0, thuc = n >= 50;
     if (boi) T.buf.toc += 1; if (thuc) T.buf.dmg += 3.5;
     if (boi && !T.boi) nhanU(T, '10× STARS!', '#ffe46b', true);
-    if (thuc && !T.thucTinh) nhanU(T, 'AWAKEN 50★', '#ffe46b', true);
+    if (thuc && !T.thucTinh) { nhanU(T, 'AWAKEN 50★', '#ffe46b', true); SND.thucTinh(); }
     T.boi = boi; T.thucTinh = thuc;
     return false;
   },
@@ -715,7 +715,7 @@ SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng sao trên bàn là bội 1
 };
 SKILLS.soi = { // Sói Máy (Werewolf): cận chiến nhanh; 30% ra bản THỨC TỈNH: tốc ×2, luôn chí mạng
   vai: 'tc', dmg: 20, toc: 1.3, nham: 'dau', tam: 108,
-  sinh(G, T) { T.thuc = Math.random() < 0.3; if (T.thuc) setTimeout(() => nhanU(T, 'WOLF AWAKENED!', '#ff4b3e', true), 250); },
+  sinh(G, T) { T.thuc = Math.random() < 0.3; if (T.thuc) setTimeout(() => { nhanU(T, 'WOLF AWAKENED!', '#ff4b3e', true); SND.thucTinh(); }, 250); },
   mo: (T) => 'Melee range 108 px (place by the path)' + (T.thuc ? ' · AWAKENED: ×2 speed, always crits' : ' · 30% awakened form'),
   luonCrit: (T) => !!T.thuc,
   chonMuc(G, B, T) { return quaiDauTam(B, T, this.tam); },

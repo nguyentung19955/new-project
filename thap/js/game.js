@@ -152,7 +152,7 @@ function ghep(B, a, b, ep) {
   // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…)
   for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) sk.ghep(G, B2, a, b, B2.t[b.o] || ra); }
   if ((B2.t[b.o] || ra).sao > b.sao) FX.chu1(c.x, c.y - 26, '+1★', '#ffe46b', 18, 'to');
-  SND.ghep();
+  SND.ghep((B2.t[b.o] || ra).sao, B2.ai);
   return ra;
 }
 function nangCap(B, id) {
@@ -161,7 +161,7 @@ function nangCap(B, id) {
   if (B.mana < gia) return false;
   B.mana -= gia; B.lv[id] = lv + 1;
   for (const T of B.t) if (T && T.id === id) { T.lvSang = 1; }
-  SND.nang();
+  if (!B.ai) SND.nang(B.lv[id]);
   return true;
 }
 function dungMV(B) {
@@ -253,6 +253,7 @@ function trung(E, dmg, o) {
   let crit = o.crit != null ? o.crit : Math.random() < critU(T);
   if (sk && sk.luonCrit && sk.luonCrit(T)) crit = true;
   if (crit) dmg *= 2;
+  if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   if (E.yeu > 0) dmg *= 1 + (E.yeuK || 0.25);      // Phá Giáp
   if (E.cvT > 0) dmg *= 1 + (E.cvK || 0.3);        // cầu vồng (solo / co-op): quái yếu đi
   if (E.giapT > 0) dmg *= 0.75;                    // cầu vồng đối thủ (PVP): quái trâu hơn
@@ -280,6 +281,7 @@ function noLan(x, y, r, dmg, B, o) {
 function chet(E, B) {
   if (E.chet) return;
   E.chet = true; E.tChet = 0;
+  SND.chet(!!E.trum);
   const pB = B || G.ban[G.duong[E.p].ban] || G.ban[0];
   const m = Math.round(manaGiet(G.wave) * (E.trum ? 12 : E.d.mana));
   // ụ của bàn nào giết thì bàn đó nhận mana
@@ -323,6 +325,7 @@ function wavMoi() {
   G.tWave = 0;
   G.laTrum = !!ws[0].trum;
   UI.bangWave(G.wave, G.laTrum);
+  SND.nhac(G.laTrum ? 2 : 1); SND.wave(G.wave, G.laTrum);
 }
 
 // ---------- vòng cập nhật ----------
@@ -501,6 +504,7 @@ function chanKhien(B, T) {
 }
 function thucHienChieu(E, B) {
   const muc = B.t.filter(T => T && E.bao.muc.includes(T.uid));
+  SND.chieuTrum(E.trum);
   for (const T of muc) T.st.ngam = 0;
   if (B.khien > 0) { // khiên Ma vương chặn chiêu trùm
     for (const T of muc) { const c = B.o[T.o]; FX.vong1(c.x, c.y, 10, 40, '#9fe6ff', 0.4); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#9fe6ff', 14); }
@@ -592,5 +596,6 @@ function aiBan(B, dt) {
 function ketThuc(thang, ly) {
   if (G.ketThuc) return;
   G.ketThuc = { thang, ly, wave: G.wave };
+  SND.ketThuc(thang); SND.nhac(0);
   setTimeout(() => UI.ketQua(G.ketThuc), 900);
 }

@@ -11,7 +11,7 @@ const TEXT = {
     soon: 'SOON',
     coopSub: '2 players · 1 leak = defeat', soloSub: '1 board · 3 hearts', pvpSub: 'Kills send enemies to rival',
     random: 'RANDOM', start: 'START',
-    paused: 'PAUSED', soundOn: 'SOUND: ON', soundOff: 'SOUND: OFF', quit: 'QUIT', resume: 'RESUME',
+    paused: 'PAUSED', soundOn: 'SOUND: ON', soundOff: 'SOUND: OFF', sfxOn: 'SFX: ON', sfxOff: 'SFX: OFF', musicOn: 'MUSIC: ON', musicOff: 'MUSIC: OFF', quit: 'QUIT', resume: 'RESUME',
     changeDeck: 'CHANGE DECK', again: 'PLAY AGAIN', pause: 'Pause',
     summon: 'SUMMON',
     deckFull: 'Your deck already has 5 turrets', oneMythic: 'Only 1 Mythic turret per deck',
