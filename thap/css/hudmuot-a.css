@@ -241,3 +241,24 @@
 /* raw_p7_a2 đã nối: A07 ô bộ bài trống p7_o_trong · ô CHỜ ĐỔI p7_o_doi (hổ phách) — ô có ụ giữ khung độ hiếm the_khung_<bậc> */
 #chon #chon-bo .o-bo:not([data-id]) { border: 0 solid transparent; border-image: url(../assets/p7_o_trong.png) 84 84 fill / 24px stretch; }
 #chon #chon-bo .o-bo.hm-armed::after { inset: -5px -5px; background: none; border: 0 solid transparent; border-image: url(../assets/p7_o_doi.png) 96 / 26px stretch; }
+/* raw_p7_a3 đã nối: A09 p7_dau (thanh đầu) · A10 p7_tim (ô tìm) · H03 p7_che (nút chế độ, ổ ▼ vẽ sẵn bên phải) · D01 p7_noi (ô chân dung trái) · D03 p7_hang (ổ tròn trái) */
+.dk-dau { padding: 0 6px; border: 0 solid transparent; border-image: url(../assets/p7_dau.png) 60 120 fill / 17px 34px stretch; }
+.dk-dau .hm-ic.dk-pre { height: 40px; }
+.dk-o { padding: 0 18px 0 30px; border-image: url(../assets/p7_tim.png) 60 96 fill / 15px 24px stretch; }
+.hm-che { position: relative; padding: 0 70px 0 14px; border-image: url(../assets/p7_che.png) 52 200 52 74 fill / 16px 62px 16px 22px stretch; }
+.hm-che em { display: none; }
+.dk-noi { position: relative; height: 62px; padding: 0 30px 0 74px; border-image: url(../assets/p7_noi.png) 64 110 64 262 fill / 16px 28px 16px 66px stretch; }
+.dk-noi .dk-noi-po { position: absolute; left: 9px; top: 9px; width: 44px; height: 44px; }
+.dk-noi .dk-noi-u { position: absolute; left: 34px; top: 28px; width: 30px; height: 30px; margin: 0; }
+.dk-noi .dk-noi-trong { margin-left: -40px; }
+.dk-mv { position: relative; height: 54px; padding: 0 30px 0 74px; border-image: url(../assets/p7_hang.png) 44 96 44 210 fill / 15px 30px 15px 72px stretch; }
+.dk-mv .dk-mv-po { position: absolute; left: 13px; top: 8px; width: 38px; height: 38px; }
+/* raw_p7_a4 đã nối: A12 bộ icon p7_ic_* (lui, dong, tim, loc, caidat, bomau, phai… — tools/thap-cat-p7-a.py). Nút chỉ icon: không tấm, vùng chạm 44 px */
+#chon .hm-ic.hm-ic1, #hm-mo .hm-ic.hm-ic1 { width: var(--cham); min-width: var(--cham); height: var(--cham); padding: 0; border-image: none; }
+.hm-ic.hm-ic1 > img { width: 42px; height: auto; max-height: 40px; object-fit: contain; }
+.dk-dau .hm-ic.dk-pre { height: var(--cham); }
+.dk-loc.hm-ic1 { height: 48px; }
+.dk-o { padding-left: 24px; gap: 8px; }
+.dk-o-ic { flex: none; width: 24px; height: 24px; object-fit: contain; }
+img.dk-noi-ct { flex: none; width: 30px; height: 30px; object-fit: contain; }
+.hm-dong.hm-ic1 > img { width: 38px; }
