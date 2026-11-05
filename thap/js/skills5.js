@@ -14,24 +14,24 @@ function napChuDong(G, B, T, dt, cd, sk) {
 }
 
 // =====================================================================================================
-// R2 · HIVE QUEEN (chuato) — Đỏ TC: mỗi c s đẻ 1 drone mini (tối đa n), drone bay quanh tổ rồi tự săn quái gần nhất (35% sát thương ụ / phát).
+// R2 · HIVE QUEEN (chuato) — Đỏ TC: mỗi c s đẻ 1 drone mini (tối đa n), drone bay quanh tổ rồi tự săn quái gần nhất (60% sát thương ụ / phát, mỗi 0.5 s).
 //      GĐ2 (4★+): drone đậu lên 4 ụ kề → +10% tốc bắn. GĐ3 (7★): cứ 5 drone có 1 drone HOÀNG GIA vàng ×3 sát thương.
 //      CHỦ ĐỘNG "SWARM" (3★+, hồi 30 s): cả bầy lao vào chỗ quái đông nhất, mỗi con nổ dmg×3 trong 35 px; bầy đẻ lại từ 0.
-//      Tổng drone tối đa 10 / bàn (nhẹ máy). PVP: drone không sang bàn đối thủ.
+//      Tổng drone tối đa 12 / bàn (nhẹ máy). PVP: drone không sang bàn đối thủ.
 // =====================================================================================================
 SKILLS.chuato = {
-  vai: 'tc', dmg: 16, toc: 0.8, nham: 'dau', napMau: '#ff4a1a',
+  vai: 'tc', dmg: 16, toc: 1, nham: 'dau', napMau: '#ff4a1a',
   c: (T) => sao7r(T, [4, 3.7, 3.4, 3.1, 2.8, 2.5, 2.2]),
   n: (T) => sao7r(T, [3, 4, 5, 6, 7, 8, 10]),
   cd: 30,
-  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 50% dmg each)' + (T.sao >= 4 ? ' · perched drones +10% fire rate to 4 neighbours' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
+  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 60% dmg each)' + (T.sao >= 4 ? ' · perched drones +10% fire rate to 4 neighbours' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
   sinh(G, T) { T.bay = []; T.de = 0; T.deDem = 0; },
   hoTro(G, T, N) { if (T.sao >= 4 && T.bay && T.bay.length) N.buf.toc += 0.1; },
   capNhat(G, B, T, dt) {
     if (!T.bay) this.sinh(G, T);
     const tong = B.t.reduce((s, X) => s + (X && X.id === 'chuato' && X.bay ? X.bay.length : 0), 0);
     T.de += dt * (1 + T.buf.toc);
-    if (T.de >= this.c(T) && T.bay.length < this.n(T) && tong < 10) {
+    if (T.de >= this.c(T) && T.bay.length < this.n(T) && tong < 12) {
       T.de = 0; T.deDem++;
       const c = tamU(T), vang = T.sao >= 7 && T.deDem % 5 === 0;
       T.bay.push({ x: c.x, y: c.y, g: Math.random() * 6.28, r: 0, cd: rnd(0.2, 0.6), vang, ra: 0 });
@@ -67,7 +67,7 @@ SKILLS.chuato = {
 HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu trên ụ kề), tự săn quái gần nhất ≤150 px, tia chích ngắn
   cap(G, o, dt) {
     const T = o.T; if (!conTren(T) || T.id !== 'chuato') return true;
-    const B = o.B, c = tamU(T), dmg = dmgU(T) * 0.5;
+    const B = o.B, c = tamU(T), dmg = dmgU(T) * 0.6;
     const ke = T.sao >= 4 ? keCan(B, T.o).filter(N => N && !N.st.da) : [];
     T.bay.forEach((d, i) => {
       d.ra = Math.min(1, d.ra + dt * 3);

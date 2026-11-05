@@ -103,26 +103,35 @@ function tienDo(T) {
   return r;
 }
 GFX.tienDo = tienDo;
-const KHE = 22 * Math.PI / 180, GOC0 = -Math.PI / 4; // khe ở góc trên-phải (dưới huy hiệu sao)
+// 3 cung = 3 dạng, ôm quanh đầu súng, chừa khe ở 2 huy hiệu góc trên (loại ụ trái · số sao phải) và ở đáy:
+//   dạng 1 = cung TRÁI dâng từ đáy lên · dạng 2 = cung PHẢI dâng từ đáy lên · dạng 3 = cung "vương miện" trên đỉnh, sáng từ trái sang phải
+function cungGauge(B, r) {
+  const C = Math.min(B.cw, B.ch), d = C * 0.34, dx = B.cw / 2 - d / 2 - 1.5, dy = B.ch / 2 - d / 2 - 1.5;
+  const aB = Math.atan2(dy, dx), h = Math.asin(Math.min(0.95, (d * 0.5 + 2.5) / r)), day = 10 * Math.PI / 180, P = Math.PI;
+  let top0 = aB - P + h, top1 = -aB - h; if (top1 - top0 < 0.3) { const m = -P / 2; top0 = m - 0.15; top1 = m + 0.15; }
+  return [[P / 2 + day, P + aB - h, false], [P / 2 - day, -aB + h, true], [top0, top1, false]];
+}
 function veGauge(ctx, T, S, al, R) {
   if (GFX.tat || !laGrow(T.id) || T.st.da) return;
-  const g = GROW[T.id], m = g.mau, td = tienDo(T), s = T.gd || td.s, r = S * 0.455, t = VX.t;
+  const g = GROW[T.id], m = g.mau, td = tienDo(T), s = T.gd || td.s, r = S * 0.455, t = VX.t, Bn = G.ban[T.ban];
+  if (!Bn) return;
   const B = T.vxB, tt = B ? VX.t - B.t0 : 9;
   const siet = B && B.len && tt < 0.22 ? 1 - 0.08 * VX.eo(Math.min(1, tt / 0.1)) : 1; // báo trước: vòng SIẾT lại
-  const R0 = r * siet;
+  const R0 = r * siet, CG = cungGauge(Bn, R0 * (S > 0 ? 1 : 1));
   ctx.save(); ctx.lineCap = 'round';
   for (let i = 0; i < 3; i++) {
-    const a0 = GOC0 + KHE / 2 + i * Math.PI * 2 / 3, a1 = a0 + Math.PI * 2 / 3 - KHE;
+    const [a0, a1, nguoc] = CG[i];
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al * 0.5; ctx.strokeStyle = 'rgba(8,10,14,.95)'; ctx.lineWidth = 3.6;
-    ctx.beginPath(); ctx.arc(0, 0, R0, a0, a1); ctx.stroke();
-    let k = 0, nhay = 1, sang = 0.9;
+    ctx.beginPath(); ctx.arc(0, 0, R0, a0, a1, nguoc); ctx.stroke();
+    let k = 0, nhay = 1;
     if (s > i + 1) k = 1;
-    else if (s === i + 1) { if (s < 3) { k = td.f; if (td.f >= 0.85) nhay = 0.55 + 0.45 * Math.sin(t * Math.PI * 4); } else { k = td.con != null ? td.con : 1; if (td.conS != null && td.conS < 0.8) nhay = 0.35 + 0.65 * (Math.sin(t * Math.PI * 8) > 0 ? 1 : 0); } }
+    else if (s === i + 1) { if (s < 3) { k = td.f; if (td.f >= 0.85) nhay = 0.55 + 0.45 * Math.sin(t * Math.PI * 4); } else { k = td.con != null ? td.con : 1; if (td.conS != null && td.conS < 0.8) nhay = Math.sin(t * Math.PI * 8) > 0 ? 1 : 0.35; } }
     if (s === 3 && i < 2) k = 1;
     if (k <= 0.003) continue;
-    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * sang * nhay; ctx.strokeStyle = m; ctx.lineWidth = s === i + 1 && s < 3 && td.f >= 0.85 ? 2.8 : 2.2;
-    ctx.beginPath(); ctx.arc(0, 0, R0, a0, a0 + (a1 - a0) * k); ctx.stroke();
-    if (s === 3) { ctx.globalAlpha = al * 0.55 * nhay; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, R0, a0, a0 + (a1 - a0) * k); ctx.stroke(); }
+    const a2 = a0 + (a1 - a0) * k;
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.9 * nhay; ctx.strokeStyle = m; ctx.lineWidth = s === i + 1 && s < 3 && td.f >= 0.85 ? 2.8 : 2.2;
+    ctx.beginPath(); ctx.arc(0, 0, R0, a0, a2, nguoc); ctx.stroke();
+    if (s === 3) { ctx.globalAlpha = al * 0.55 * nhay; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, R0, a0, a2, nguoc); ctx.stroke(); }
   }
   // dạng 3: đốm sáng chạy vòng (sống động, nhỏ)
   if (s === 3) { const a = t * 2.2 + (T.pha || 0); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.8; R.anhGiua(ctx, R.cham1(m), Math.cos(a) * R0, Math.sin(a) * R0, 9); }
@@ -233,8 +242,8 @@ VX.veBienNgoai = function (ctx, T, x, y, S) {
     if (tt >= 0.33) { const u = (tt - 0.33) / 0.32; ctx.globalAlpha = (1 - u) * 0.35; REN.anhGiua(ctx, REN.cham1(m), x, y, S * 0.95); }
   }
   ctx.restore(); ctx.globalAlpha = 1;
-  // huy hiệu sao LUÔN trên cùng (không bị sóng/chớp che)
-  REN.veHuyHieu(ctx, x + C * 0.31, y - C * 0.31, T.sao, C * 0.3);
+  // huy hiệu sao + biểu tượng loại: lớp huy hiệu (nhandien.js) vẽ SAU VX.veDs → luôn trên cùng; bản cũ không có lớp đó thì tự vẽ lại
+  if (typeof ND === 'undefined') REN.veHuyHieu(ctx, x + C * 0.31, y - C * 0.31, T.sao, C * 0.3);
 };
 
 // =====================================================================================================
@@ -436,7 +445,7 @@ HU.gGiao = { // giáo trời: 0–0.25 s tâm ngắm ĐỎ bám quái → tia d�
     if (!o.da && o.E && !o.E.chet) { o.x = o.E.x; o.y = o.E.y; }
     if (!o.da && o.t >= 0.25) {
       o.da = true; if (o.E && !o.E.chet) trung(o.E, o.dmg, { B: o.B, mau: '#9fe6ff' });
-      FX.no('dien', o.x, o.y, 44, 0.22); FX.tiaLua(o.x, o.y, 4, '#dff8ff', 150, 7); if (!o.B.ai) SND.gLance();
+      FX.no('dien', o.x, o.y, 30, 0.2); FX.tiaLua(o.x, o.y, 3, '#dff8ff', 150, 7); if (!o.B.ai) SND.gLance();
     }
     return false;
   },
@@ -450,7 +459,7 @@ HU.gGiao = { // giáo trời: 0–0.25 s tâm ngắm ĐỎ bám quái → tia d�
       const u = (o.t - 0.25) / 0.35, a = Math.max(0, 1 - u), y1 = o.y;
       cotTroi(ctx, o.x, y1, 110, 12 * a + 3, '#5fd4ff', '#dff8ff', a);
       VX.vong(ctx, o.x, o.y, 8 + 22 * VX.eo(u * 1.5), 3 * a + 0.5, '#9fe6ff', a * 0.9);
-      R.anhGiua(ctx, R.cham1('#9fe6ff'), o.x, o.y, 46 * a);
+      R.anhGiua(ctx, R.cham1('#9fe6ff'), o.x, o.y, 26 * a);
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },

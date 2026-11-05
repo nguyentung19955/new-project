@@ -2,7 +2,7 @@
 
 Thiết kế ngày 05/11/2026. Chỉ là tài liệu thiết kế, chưa sửa code `thap/`.
 
-**Tiến độ (05/11/2026):** ĐÃ LÀM đợt 1 (8 ụ, `thap/js/skills3.js`) + đợt 2 (9 ụ, `thap/js/skills4.js`); giao diện `thap/js/tuongmoi-ui.js`; ảnh `tools/thap-tuong-moi.py`; cân bằng `node tools/thap-sim-moi.js dps|song|che`. Chỉnh số so với bản thiết kế: Combo Core dmg 15, Hydra dmg 15 tốc 1.2, Nine-Tail dmg 16 tốc 1.2, Nemesis dmg 26 tốc 0.8, Signal Jammer dmg 11, Bounty Beacon dmg 10, Resonance Grid × hệ số bậc Vàng 2.1, Marionette cú húc tối đa 6 quái và ≤ dmg×4. Còn lại đợt 3: Hive Queen, Leviathan, Genesis Core, Wyrm Engine.
+**Tiến độ (05/11/2026):** ĐÃ LÀM đợt 1 (8 ụ, `thap/js/skills3.js`) + đợt 2 (9 ụ, `thap/js/skills4.js`); giao diện `thap/js/tuongmoi-ui.js`; ảnh `tools/thap-tuong-moi.py`; cân bằng `node tools/thap-sim-moi.js dps|song|che`. Chỉnh số so với bản thiết kế: Combo Core dmg 15, Hydra dmg 15 tốc 1.2, Nine-Tail dmg 16 tốc 1.2, Nemesis dmg 26 tốc 0.8, Signal Jammer dmg 11, Bounty Beacon dmg 10, Resonance Grid × hệ số bậc Vàng 2.1, Marionette cú húc tối đa 6 quái và ≤ dmg×4. Đợt 3 (05/11, `thap/js/skills5.js`): Hive Queen, Leviathan, Genesis Core, Wyrm Engine — đã làm (chỉnh số theo sim: Hive Queen dmg 16 tốc 1, drone 60%/0.5 s, trần 12 drone/bàn; Leviathan dmg 24, +4%/cộng dồn, bọt lan 50%; Wyrm Engine dmg 10/nhịp). Grow-up đổi cách đánh từng dạng cho 15 ụ: `thap/js/growfx.js` (xem `GROWFX-WAKEUP-LAM.md`).
 Tinh thần: các "Child" của DCDW / Destiny Child được dựng lại thành **ụ súng mini sci-fi nhìn từ trên xuống** (bệ tròn + đầu xoay), mỗi ụ có **phi công** riêng trên thẻ.
 Không trùng 64 ụ đang có (`thap-art/roster.json`). Tên hiển thị tiếng Anh (cho `thap/js/text.js`), id tiếng Việt không dấu như quy ước cũ.
 
