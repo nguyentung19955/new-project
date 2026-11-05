@@ -1,0 +1,546 @@
+TURRET MERGE — FULL GAME DESIGN REVIEW
+Senior mobile game design / UX / live-ops assessment
+Date: November 5, 2026
+Scope: 3 supplied screenshot tours + owner-provided mechanics
+Benchmarks: Random Dice: Defense; Destiny Child: Defense War (DCDW)
+Audience: Game owner, AI coding agents, artists, QA
+
+EXECUTIVE VERDICT
+=================
+TURRET MERGE already has the hard-to-fake foundation of an appealing merge-defense game: a recognizably constructed industrial battlefield, high-volume turret content, immediate summon/merge tension, a distinct commander layer, several modes, and much better presentation than a generic prototype. The primary issue is no longer simply making the screen attractive. It is turning a visually and mechanically busy demo into a readable, teachable, strategically fair game people choose to replay.
+
+The greatest risks, in order, are:
+1. Players cannot consistently explain WHY a merge, turret, commander activation, or defeat happened.
+2. Five cards out of 85 are a massive discovery/balance burden before players know basic deck roles.
+3. Random summons and random merge outcomes may overpower player skill unless meaningful mitigation, previews, and recovery exist.
+4. Very small battle text, star markers, icons and card badges compete with damage effects and colorful turret silhouettes.
+5. The game currently has little persistent reason to return after a match: no account progression, collection rewards, quests, ranks, seasons, or clear goals.
+6. PvP integrity and cooperative dependency must be proven with instrumentation, not assumed because modes exist.
+
+RECOMMENDED STRATEGY: Build a satisfying 10-minute playable core FIRST; add a small non-pay-to-win progression shell SECOND; add rank/season/event operations THIRD. Do not add 30 more turrets or a shop as substitutes for the missing decision quality.
+
+CONFIDENCE LABELS
+=================
+OBSERVED = directly visible in supplied screenshots.
+CONFIRMED = explicitly stated by the owner.
+INFERENCE = reasonable diagnosis that requires hands-on testing.
+PROPOSAL = design recommendation, not existing game behavior.
+UNVERIFIED = cannot be determined from a static screenshot; QA must test.
+
+REFERENCE POSITIONING
+=====================
+Random Dice's compelling baseline is five-unit deck construction, increasing-cost random summons, matching merge/star rules, short tactical decisions, PvP/co-op and progression around collecting/improving units. Its current public store descriptions also advertise solo, crew, mirror/challenge modes and seasonal ranked play. DCDW's close design lineage includes random Child summons, same-type/star merges, temporary in-match power-ups, commander-like Master Child mechanics and co-op/raid. These are comparison points, not proof that TURRET MERGE should duplicate their exact economies or interfaces.
+
+Important: Random Dice uses in-match type upgrades as a significant agency valve; the owner confirmed card levels starting at 1, but did NOT confirm TURRET MERGE already has an in-match per-type mana upgrade. Treat it as a feature to verify or consider, not as an existing mechanic. Similarly, an in-match 'LV' badge in screenshots does not prove how permanent leveling works. The screenshots show deck cards with green 100 cost bars; do not assume they are the same currency as the summon mana cost. Distinguish costs explicitly.
+
+SCREEN TOUR: SPECIFIC OBSERVATIONS
+==================================
+Menu/deck picker (tour 1): The industrial logo is recognizable; all-metal beveled UI is relatively coherent. The deck-picker grid shows dense five-column collections under rarity headers, a 0/5 deck strip, tiny portrait art, narrow names and add (+) affordances. A Common list reports 15/15 playable, Epic 22/22 playable; the owner confirms 85 total across five rarities. Co-op/Solo/PvP switches and commander selection occupy a tight lower band. The 'Random' versus 'Start' buttons share visual emphasis despite very different consequences.
+
+Turret detail (tour 1): Cannon's illustration, clear name, Common and Attack labels, explosive family, tier meter, numerical damage/fire-rate/target/reach, written skill, and Test range are a strong content template. But text is small, long descriptions crowd the lower half, and star-specific progression is poorly surfaced. 'Damage 1*', '0.55 shots/s', 'Blast radius 34 px' and family tier can be useful to designers but feel technical to a casual new player without plain-language explanations. A green 'Add to deck' CTA is strong.
+
+Commander detail (tour 1): Rage clearly states cost 40 mana, cooldown 25 s, next cost x2 per use and effect lasting 10 s; it communicates an important escalating trade-off. However, '+100% damage for the whole board for 10s' and the demo banner need visual hierarchy and clear timing/status in actual combat. The preview also shows commander selection separately from deck composition.
+
+Solo battle (tour 2): At wave 3, the 5x3 tray, left-side path and portal, right-side core, top wave/boss/lives HUD and bottom mana/summon/speed/pause/deck/commander are recognizable. There is a substantial unused vertical field between top HUD and combat board in some views; this may be intentional layout scaling, but must be tested on actual phone sizes. The turret art + numerous rings/badges is vivid but congested when the board fills. The live wave banner overlays a meaningful part of the combat board.
+
+Co-op battle (tour 2): Two fully populated boards + shared path create a distinctive, dramatic screen. But the upper teammate board is closer to the top, and both displays compete for attention. Communication / ally action context is not visually prominent. Whether the 3 shared lives are self-explanatory is unverified.
+
+PvP battle (tour 2): The rival board, player board, shared-looking vertical route region and top 'Rival / You' labels are visible. The rule that kills send enemies to the rival is owner-confirmed, but the cause-and-effect of sends is not obvious from the stills. It must be made legible through a counted, directional feedback event.
+
+Tap info (tour 2): A contextual Tesla panel covers a large area above the bottom HUD and reports attack type, a one-line skill, damage, rate, crit, DPS, milestone/star effects and Details. This is useful for advanced players; however, it competes with real-time play and has many tiny numeric panels. The '4* + LV1 / 3* QUICK HANDS / 5* DOUBLE TAP / 7* APEX' system needs consistent terminology across the collection and battle.
+
+Summon / merge (tour 3): The round summon button switching from muted to bright orange when ready is one of the strongest before/after changes. It shows 10 then 20 then 30 cost examples. Merge action is not self-explanatory in a still image; a visible center flash appears, but players also need to understand what they sacrificed, what they received, and its new star level. The remaining board is still heavily saturated with concurrent icons, numbers and VFX.
+
+Pause/results (tour 3): Industrial modal composition works. Pause options (music, SFX, quit, resume) are straightforward; quit needs confirmation. Defeat shows WAVE 3, core destroyed, Change deck, Play again. However, 'Play again' has no explicit post-run learning/reward loop. Result is a dead end unless it answers what happened and advances an objective.
+
+NOTE ON AI-MADE LOOK: The screen no longer looks like a wholly random AI illustration. The remaining 'AI-made' effect comes from accumulation: ornate frames on every surface, small incompatible badge styles, independent metal textures, inconsistent visual priorities, occasional mismatched turret portrait/weapon silhouettes, and decorative information that looks equally important. Consistency, spacing and stable icon logic matter more than detail count.
+
+
+1. CORE LOOP AND MOMENT-TO-MOMENT FEEL
+====================================
+WHAT WORKS
+- CONFIRMED: Random selection among five deck turrets and escalating summon mana deliver risk and short-term choice.
+- CONFIRMED: Same-type, same-star merge returns a random higher-star turret; this creates push-your-luck tension.
+- OBSERVED: The circular summon CTA is immediately identifiable; filled boards visually convey rising power.
+- CONFIRMED: Some turrets transform mid-battle and bosses arrive every ten waves: strong opportunities for dramatic moments.
+
+MISSING / WRONG / AT RISK
+- INFERENCE: The player may spend the first 1–2 minutes only summoning whenever affordable, followed by uncertain merges, without other meaningful decisions.
+- INFERENCE: Players may feel punished when two useful attackers become one higher-star supporter (or vice versa) and collapse their DPS.
+- UNVERIFIED: Summon and merge RNG may create unplayable boards, especially without a rescue tool or in-match leveling.
+- OBSERVED: Post-merge feedback does not obviously reveal before/after trade-off.
+- UNVERIFIED: Whether players can cancel a drag, preview compatible targets, and see risk before release.
+
+CONCRETE FIXES
+A. Implement drag preview: show only legal merge targets with a thin animated outline; invalid cells get neutral feedback; dropping outside cancels without penalty. Art: one small transparent-center target ring sheet, 4 states, magenta background.
+B. Before a merge completes, show a compact '2 x Star 2 -> 1 x Star 3 / RANDOM TYPE' preview near the source, not across the screen. Use existing icons + a tiny original tooltip plate. Do NOT promise the resulting unit type.
+C. On completion, animate a 120–180ms shrink of both source turrets, 160–220ms merged reveal, then a bold star numeral and unit-name toast for ~0.6s. Keep attack simulation unaffected. Prefer reduced-motion option.
+D. If in-match per-type upgrades do not exist, test adding an optional mana-funded three-step type power-up (levels 1–4, configurable costs). Compare against a no-upgrade build. This adds controllable power without removing RNG.
+E. Test ONE anti-stall mechanic (not all): a free one-time reroll of a 1-star unit per match; OR a paid 'scrap' of 1-star unit at partial mana refund; OR a once-per-match chosen-type summon. Use a tightly limited rule and show it plainly.
+F. Add deterministic logging for every summon/merge: seed, wave, mana before/after, output type/star, tile, current DPS, enemy leaks, action timestamp. This is mandatory before balancing.
+G. Boss preview 5 seconds before spawn; boss effects should induce a visible tactical response (e.g. 'JAM: skills disabled 3s') rather than unexpected board failure. Test readability under 15 occupied tiles.
+
+SUCCESS CRITERIA
+- In 10 moderated first-session tests, >=8 can describe summon and merge rules accurately after onboarding.
+- >=8/10 can name the result and star after three merges without opening Details.
+- Track 'avoidable dead-board rate' (unable to make a meaningful affordable action for >20s while imminently losing); define a baseline then aim under 5% in introductory mode.
+- Track actions/minute, merge frequency, failure wave, and risk of a single low-roll determining outcome; do not tune against a single screenshot.
+
+
+2. DECK BUILDING, 85 TURRETS, SKILLS AND SYNERGIES
+================================================
+WHAT WORKS
+- CONFIRMED: Five-card deck is easy to hold in memory once the roles are taught; 85 turrets enable extensive experimentation and collection depth.
+- OBSERVED: Rarity grouping, unit names, portrait iconography, stats, skill text, star milestone labels and Test range all exist.
+- OBSERVED: 'Explosive family' suggests a potentially strong deckbuilding identity; role/categorical badges appear in unit and battle UI.
+
+MISSING / WRONG / AT RISK
+- 85 turrets are far too many to hand a new player at once without curated discovery and smart filters. This is a DESIGN EXPOSURE problem, not automatically an argument to delete content.
+- Five rarity tiers can be mistaken for five power tiers, undermining diversity and PvP fairness if higher rarity simply dominates.
+- 'Attack', 'family', rarity, tier, LV, star level, on-board skill milestones and card upgrade level are all separate dimensions that need unambiguous naming.
+- INFERENCE: Dense five-column gallery is challenging to browse on small phones; + buttons near tiny portraits risk erroneous taps.
+- UNVERIFIED: There may be turrets with near-duplicate jobs, accidental unbounded synergies, or weak support units no one wants to roll.
+
+CONCRETE FIXES
+A. Add three lightweight filters above collection: Role (Attack / Sub-attack / Support / Control / Special), Owned / Available, and Search. Use a horizontal scroll chip bar; do not create 20 new tabs.
+B. Give every turret a one-sentence identity and three concise fields: 'Does', 'Works with', 'Struggles against'. Keep detailed coefficients under 'Advanced'. Example: 'Tesla: bounces between nearby enemies; pair with slow; weak into single armored bosses.' (Example, not a verified balance assertion.)
+C. Create 6 curated starter decks, not 85 random recommendations: Single-target, Splash, Crowd Control, Summon Economy, Combo/Link, and Co-op Support; each gets exact five units only after roster audit. Mark intended mode and skill complexity.
+D. Build a synergy graph from data: each turret tagged with up to 2 families and 1–3 interaction tags (e.g. SPLASH, SLOW, CRIT, NEIGHBOR, SUMMON). Show up to two 'Synergy +N' callouts when adding a unit to deck. Calculate from explicit rules, not LLM-generated text at runtime.
+E. Expose an evergreen 'How merging changes my formation' card in detail views and battle help.
+F. Standardize two independent progress measures: COLLECTION LV (persistent) and BOARD STAR (per match). If temporary type upgrades are added, call them BATTLE POWER rather than another 'LV'.
+G. Classify each of the 85: role, base DPS, 1/3/5/7-star behavior, AoE/targeting, mana interactions, co-op effect, PvP risk, counter, VFX intensity, complexity 1–3. Identify mechanical duplicates, weak roles and skills impossible to communicate at game speed.
+H. Launch-discovery: allow all 85 to be browsed but only ~12–20 curated beginner-facing units initially. Unlock remaining units through transparent account milestones; for fair ranked PvP, keep stats normalized and use access safeguards (see fairness section).
+
+SUCCESS CRITERIA
+- Beginner picks a complete legal deck in <90s from new account.
+- >75% of tested players can correctly infer a turret's role from portrait + role icon alone.
+- Run 500+ seeded simulated matches per archetype against identical challenge waves and track pick rate, win rate, average contribution, and underused units; validate with humans before buffs/nerfs.
+
+
+3. COMMANDERS: REINFORCE / RAGE / HOLY SHIELD
+===========================================
+WHAT WORKS
+- CONFIRMED: A commander provides intentional agency distinct from summon RNG.
+- OBSERVED: Rage skill page clearly shows 40 mana, 25-second cooldown, doubling subsequent cost and 10-second effect; this is a meaningful trade-off.
+- OBSERVED: Commander cards and names are easy to recognize, relative to tiny turret portraits.
+
+MISSING / WRONG / AT RISK
+- Commander activations may be lost among turret VFX, or the player may not know the optimal time.
+- 'Next cost x2 per use' is potentially intimidating and easy to misread: the cost display should explicitly change 40 -> 80 -> 160.
+- REINFORCE is labeled as instantly summoning two 1-star turrets for free (screenshot); check how it behaves with a full board, and whether it bypasses escalating summon cost.
+- HOLY SHIELD is described as cleansing debuffs and blocking boss skills for 8s (screenshot); test how it stacks with boss mechanics and PvP interference.
+- INFERENCE: Rage's board-wide 100% damage for 10s could dominate boss breakpoints or solo damage checks; synergy with star scales must be measured.
+
+CONCRETE FIXES
+A. Commander HUD: show one unified ring (readiness/cooldown), current cost, and remaining active seconds. Only ring and button border can animate; avoid giant screen-wide flashes.
+B. Rage cast shows 'RAGE 10s' only once + subtle orange outline around own board; a countdown wedge runs on commander icon. Holy Shield shows a concise shield icon at core + a faint perimeter pulse. Reinforce highlights two actual spawn locations, with fallback wording if there are fewer than two free cells.
+C. Write explicit full-board rules: no vacant tile, cost inflation, cast during pause, simultaneous boss effects, expiration during transitions, manual versus autocast, co-op target scope.
+D. Add 'best use' 3-second optional hint once per commander during tutorial. Avoid forced autoplay.
+E. Normalize commander value by expected saved lives / extra wave reach / win probability, not only raw damage. Compare at fixed difficulty and equal player skill.
+
+SUCCESS CRITERIA
+- First-session players can answer 'What does my commander do?' before match start.
+- >90% of casts reflect intended behavior without accidental misfire; measure unavailable/failed casts separately.
+- No commander exceeds target win-rate spread in fair fixed-deck tests without a clear counter/trade-off. Start with <=5 percentage-point spread after adequate samples as a tuning goal, not a guarantee.
+
+
+4. SOLO / CO-OP / PVP DESIGN
+==========================
+WHAT WORKS
+- CONFIRMED: Three modes reuse the same tactical language, reducing production cost.
+- CONFIRMED: CO-OP shares a path and three lives, incentivizing shared survival.
+- CONFIRMED: In PvP, kills send enemies to rival, creating visible indirect competition.
+- OBSERVED: Two-board CO-OP and PvP make excellent spectator screens.
+
+MISSING / WRONG / AT RISK
+- Co-op may be merely 'two solo players beside each other' without interdependence or simple communication.
+- Shared three lives can cause blame when partner mistakes are invisible; it must be clear which enemy leaked and what happened.
+- PvP may reward runaway snowball: early DPS advantage -> more kills sent -> opponent falls behind -> irreversible loss.
+- Fair matchmaking, bot labels, reconnect, disconnection outcomes, synchronized RNG, cheating resistance, and match duration are UNVERIFIED.
+- Screen density doubles in two-board modes; the upper board must be readable without player taps.
+
+CONCRETE FIXES
+SOLO: Define it as the low-stakes learning and mastery mode. Give each match one attainable objective (reach wave 10, beat a boss without commander, etc.). End with 'new personal best / what killed you / next suggestion'.
+CO-OP: Provide three prebuilt team pings: 'Need damage', 'Use shield at boss', 'Nice combo'. Place next to ally label, rate-limit to prevent spam. Add a minimal co-op team bonus only if playtests show no collaboration (e.g. one support turret aura affecting ally with explicit range or a shared boss vulnerability); avoid full asymmetric systems at launch. Show when a shared life drops: '-1 life • leaked from Ally lane' or corresponding actual source. Do not humiliate players; show factual event, not a blame scoreboard. Allow a dedicated support deck option and reward team result regardless of personal DPS.
+PVP: Validate exact enemy-send rule with a counter: +N sent on kill streak or a 'SENT xN' directional ticker, small enough not to obstruct. Define cap on queue burst per second, synchronized deterministic spawns, and anti-snowball comeback window. Reserve ranked for true online fair matches; bots are fine in practice but must be labeled. Add a 10-second tutorial showing 'Your kills -> rival pressure'.
+GENERAL: Server-authoritative or cross-validated match state for competitive rewards if feasible; a browser game with fully client-trusted results is vulnerable to scripted manipulation. At minimum store reproducible seed, action log and suspicious anomaly telemetry before launching ranked rewards. Explicit disconnect/reconnect policy: resume within a measured window; no silent loss on tab background; handle Safari page visibility and throttling.
+
+SUCCESS CRITERIA
+- 8/10 PvP beginners identify why rival pressure rose.
+- Co-op runs show >50% of pairs using one team-aware action or ping by wave 10 (hypothesis to test).
+- PvP median length target 4–7 min and 90th percentile <12 min (starting targets; tune from data).
+- Disconnect loss rates, leak sources, send counts and comeback rates are logged.
+
+
+5. HUD AND PHONE READABILITY
+===========================
+WHAT WORKS
+- OBSERVED: New horizontal top HUD is more compact and structured than the previous oversized wave/lives arrangement.
+- OBSERVED: Orange summon ready state produces a clear primary CTA; mana counter is legible in the supplied composite.
+- OBSERVED: Pause/fast-forward separated from active summon zone. Two-board UI is well organized relative to its complexity.
+- OBSERVED: Tap info keeps stats in game rather than forcing exit.
+
+MISSING / WRONG / AT RISK
+- Text such as 'LV 1', type badges, star numerals, cost 100, DPS 59.7 and milestone strings can be sub-legible on a phone after scaling.
+- Decorative card frames visually overpower functional numbers and reduce art space.
+- Bright board rings, rarity indicators, family icons, star badges, skill VFX and damage counts often stack in the same 50px area.
+- '100' green deck cost vs mana 260 vs summon purple 10 and commander cost must be clearly explained; different economies should have distinctive iconography and labels.
+- Tap info may obscure combat. Many players need an unobstructed way to examine a turret while paused.
+- UNVERIFIED: Safe-area handling for notch/home indicator, left/right-handed reach, zoom levels, VoiceOver and text scaling.
+
+CONCRETE FIXES
+A. Visual hierarchy in battle: (1) imminent threat/lives/boss (2) summon affordance and resource (3) tile stars + type (4) commander availability (5) speed/pause (6) portrait and optional telemetry. De-emphasize everything else.
+B. Use a large 1–7 NUMBER badge for BOARD STAR on every turret at consistent top-right offset; one color neutral high-contrast. Avoid seven separate tiny stars. Keep turret family color in a narrow rim and role icon in top-left only.
+C. Set a minimum target 44 CSS px for critical buttons on iPhone, with hit box larger than painted artwork; preserve the game viewport aspect ratio independently from DOM touch areas.
+D. Give summon at least 1.2x surrounding control visual weight; show price as '10 mana' or with a unique mana glyph; insufficient-resource state uses readable muted orange, not fully gray.
+E. Show top bar as 'Wave 3 | Boss 7 | Lives 3/3', with distinct icons for each. A slim, genuinely useful wave progress line can remain. At boss warning, only boss region pulses.
+F. Tap panel: collapsed 2-row summary (turret name, star, role; DPS and skill), optional expand Details. Hold-to-inspect or tap once depending accessibility testing. Allow closing by tapping same turret or X. Never cover the summon button or a target tile while dragging.
+G. Verify on 375x812, 390x844, 393x852 and 430x932 CSS viewport equivalents, including notch + home indicator; screenshot at 100% phone render, not enlarged composites.
+H. Add one-handed test for right/left thumb, particularly dragging turret between far cells; consider an optional 'tap source, tap target' merge mode for accessibility.
+I. Test wave banners against action obstruction: shrink/slide to a safe top-of-board line after 0.7 seconds; avoid persistent translucent bar across turret targets.
+
+SUCCESS CRITERIA
+- At arm's-length, 9/10 users correctly state current wave, lives, summon affordability and selected unit star in under 3 seconds.
+- Critical touches >=95% success first attempt in usability sessions.
+- UI snapshot tests for each viewport and state; no text clipping or overlap.
+
+
+6. ART DIRECTION / WHAT STILL FEELS 'AI-MADE'
+============================================
+WHAT WORKS
+- Industrial machine identity has improved and is distinctive.
+- Consistent beveled metal, orange/yellow caution accents, cyan conduits and dark gray board reinforce the theme.
+- Turrets have energetic mechanical silhouettes; commander fantasy portraits provide character.
+- Battle backgrounds are dark enough to support colorful VFX when not overcrowded.
+
+MISSING / WRONG / AT RISK
+- Many components look individually over-rendered: each panel has screws, hazard tape, trim, chromed highlights, engraved lines and colored lights. The screen has no quiet layer.
+- Different UI assets sometimes look as if generated from separate prompts: metal thickness, bevel perspective, corner radii, shadow hardness, indicator scale and font treatment vary.
+- Commander anime portraits and turret mechanical assets need a bridge via shared portrait crop rules / lighting / borders, not forced repainting.
+- Some turret silhouettes may be difficult to identify on the actual board, because portraits communicate personalities while the turret tops communicate mechanisms.
+- Flat magenta backgrounds must be reliably keyed; glow and anti-aliasing can create pink halos. This is a production pipeline issue, not a reason to draw shapes in code.
+
+CONCRETE FIXES
+A. Build an 8-asset UI kit, not 85 more unique frames: plain panel, header strip, slot, rarity trim, primary CTA, secondary CTA, 1–7 star badge, role glyph. Generate all as ChatGPT image assets and use nine-slice image scaling. Runtime code may place, crop, animate, tint existing images or compose text; do not code-draw new borders/ornaments/shapes.
+B. Enforce three surface levels: BACKGROUND (matte gunmetal, very low contrast), CONTAINER (brushed steel, restrained rivets), ACTION (one brighter orange/yellow material). Reserve cyan for energy/path and purple for mana. Rarity color stays on a narrow perimeter, not a second large saturated frame.
+C. Pick one visual camera for all turret gameplay sprites: straight top-down. Keep portrait art separately 3/4 illustration; never use portrait as substitute for gameplay silhouette.
+D. Design one image-generation prompt prefix with exact constraints: 'polished mobile sci-fi 2D, top-down for turret assets; brushed neutral gunmetal; clean thick outer silhouette; medium details readable at 48px; controlled highlights; flat #FF00FF background; centered; no text; no shadow or halo on magenta'.
+E. Text should be rendered by a real consistent font system (game UI lettering cannot be trusted to image generation). Use one condensed display face for titles/numerals and one plain humanist sans for small labels. No over-stroked text. Code-rendered text is appropriate; art prohibition applies to drawn UI shapes, not text and interaction logic.
+F. Every generated image needs a preflight: solid magenta corner check; alpha key threshold; 1px fringe inspection against black/white; 48px downsample readability; consistent padding/pivot; exact named version.
+
+SUCCESS CRITERIA
+- Blind review: testers classify at least 90% of major screens/components as one coherent game design system.
+- Side-by-side 48px silhouette recognition >=80% for beginner turrets.
+- Magenta removal pipeline has no visible pink fringes at 1x or 2x.
+
+
+7. ONBOARDING: THE FIRST TEN MINUTES
+===================================
+WHAT WORKS
+- Game action is easy to demonstrate physically: summon, watch shots, drag to merge, survive.
+- Existing range test and detail page can become a strong learning tool.
+- Casual solo is a natural sandbox for low-pressure onboarding.
+
+MISSING / WRONG / AT RISK
+- Asking a player to pick five units from 85 before playing is excessive.
+- Selecting Solo/Co-op/PvP and a commander before understanding combat increases choice paralysis.
+- Tutorial likely needs to separate BOARD STAR, COLLECTION LEVEL, rarity and battle power if present.
+- No visible clear 'next learning objective' after defeat.
+
+PROPOSED FIRST 10 MINUTES (time budgets are hypotheses; measure)
+0:00–0:25: Start immediately in a prebuilt Solo teaching run, no account wall, no 85-unit gallery. One line 'Stop enemies reaching the core'. One enemy leak dramatizes 3-life display without forcing an early loss.
+0:25–1:15: Give 30 tutorial mana, pulse only the Summon button, let player summon twice. Explain random deck turret, increasing cost on second tap.
+1:15–2:00: Force a legal same-type + same-star pair via scripted tutorial sequence, teach drag/tap merge, then show random result + increased star. IMPORTANT: scripted tutorial drops must be labeled as tutorial setup, not secretly claimed as typical RNG.
+2:00–3:00: Enemy armored wave makes an obvious counter; player taps one turret and sees a two-line skill card. Introduce role colors/icons.
+3:00–4:00: Commander Rage/Shield/Reinforce one-time guided activation, explaining readiness, mana cost and visible result.
+4:00–5:30: Reach a mini-boss or first clear moment. If bosses normally occur every 10 waves, label tutorial miniboss separately; do not imply the standard schedule changed.
+5:30–6:30: Reward first objective (non-random selected starter turret or guaranteed token) + immediate 'play again' prompt.
+6:30–8:00: Guided deck swap: replace exactly one card from a curated 8–12 unit subset. Teach one synergy, e.g. slow + splash.
+8:00–10:00: Solo replay or assisted Co-op preview with choice to skip. Introduce PvP only after core rules understood. Provide a revisit-able 3-panel help.
+
+DESIGN RULES
+- No tutorial box covers the active target.
+- Explain one concept per action; avoid >12 consecutive words during combat when feasible.
+- All tutorials skippable and replayable. Explicit menu Help and Training Room.
+- Capture tutorial funnel completion by step, confusion taps, retries and skips.
+
+SUCCESS CRITERIA
+- >=85% of testers summon unassisted by minute 1, merge unassisted by minute 3.
+- >=70% of first-session players complete first playable match and understand their result.
+- Median time to first meaningful deck edit under 10 minutes.
+
+
+8. PROGRESSION, REWARDS, RETENTION, CONTENT LIVE-OPS
+===================================================
+WHAT WORKS
+- 85 existing turrets provide enough content for collection milestones without immediate art production.
+- Five rarity tiers, commanders, stars, modes, wave records and bosses create multiple mastery axes.
+- Game is not burdened by an existing cash economy; fairness rules can be designed first.
+
+MISSING / WRONG / AT RISK
+- CONFIRMED: No shop/monetization, no account progression. A player can win, lose, change deck and replay, but has no persistent destination.
+- CONFIRMED: No stated quests/chests/ranks/seasons/events. Do not ship all five systems at once; they require upkeep and trust.
+- Progression power creep will break PvP if persistent card levels directly boost ranked combat.
+- Reward inflation and duplicate cards can trivialize collection unless earn rates are controlled.
+
+RECOMMENDED RETENTION LADDER
+STEP 1 — Account-lite profile without mandatory login: local device save, guest UUID, data export/import or linked sign-in later. Version saves and handle storage loss. Keep no-login first session.
+STEP 2 — Persistent Collection XP / Mastery: playing a turret advances its mastery track and rewards cosmetic borders, lore snippets or alternate projectile accents; no ranked power effect.
+STEP 3 — Earned currency: 'Scrap' or 'Blueprint' from matches, one currency initially. Use for deterministic unlocks or capped card upgrades in PvE. State all earn rates visibly.
+STEP 4 — Reward capsule (optional): a non-monetized chest-like reveal every 2–4 matches with a transparent fixed/weighted table and duplicate conversion, plus guaranteed rewards. Do not force artificial timers.
+STEP 5 — 3 rotating daily goals + weekly goal: 'Summon 20 turrets', 'Beat wave 10', 'Play Co-op once'; all objectives should be achievable without purchases or watching ads. Give an alternative for offline players.
+STEP 6 — Achievement milestones and personal-best board: boss streak, no-leak clear, use three synergies, first co-op win, first PvP win.
+STEP 7 — Ranked PvP with cosmetic-only season rewards after networking, matchmaking and cheat resistance are proven. Use MMR separate from display rank, placement matches and rank floor/decay design tested for casuals.
+STEP 8 — Lightweight events (one modifier per week or fortnight) such as 'Every third merge creates a shielded turret' or 'Ice turrets have range +1' — UNRANKED or fixed-deck only until tuned.
+
+CAUTION ABOUT CARD UPGRADES
+Random Dice and DCDW use progression systems to create return motivation. Copying permanent combat power exactly is NOT recommended for a no-monetization fair PvP game. Safer design: each turret has mastery and upgrade levels for PvE, while ranked sets all cards and commanders to standardized equalized stats. Casual PvP may also normalize power by default. Do not make prestige masquerade as skill.
+
+RETENTION METRICS
+- D1 / D7 retention, tutorial completion, solo replay, first deck edit, co-op first match, PvP first match, average sessions/day, rounds/session, milestone claim, reward comprehension.
+- Target benchmarks are hypotheses: D1 25–35% and D7 8–12% as initial test aspirations, not guaranteed industry benchmarks. Adjust for acquisition channel, browser friction and playtest sample.
+- Track per-mode churn reason from one optional single-tap survey ('Too random', 'Hard to read', 'Too long', 'Too easy', 'Other').
+
+
+9. FAIRNESS AND FUN WITHOUT MONETIZATION
+=======================================
+WHAT WORKS
+- No pay-to-win requirements; can market a fair arcade-strategy experience.
+- Skill differentiation can come from timing, deck construction, merge discipline, boss anticipation and commander use.
+- The industrial visual identity and playable browser format lower first-play friction.
+
+RISKS
+- Free unlocks can still create unfair ranked advantage if veterans have higher cards or access to only viable mythics.
+- RNG can erase skill: no comeback, no counterplay or random star 7 trap.
+- Mythic rarity must never mean 'best at everything'.
+- Competitive play with no anti-cheat or trust boundary enables cheating even without money.
+
+RECOMMENDED RULES
+A. Ranked = normalized stats, all legal units earnable, no equipment buffs, fixed same gameplay patch. New players receive 2–3 viable loaner decks, not a junk-only starter roster.
+B. Rarity represents complexity/visual flair/acquisition pace, not automatic absolute DPS superiority. Each mythic has a specific strength, weakness and counter.
+C. Publish exact summon/merge probabilities or clearly say uniform deck-weight selection if that is true. Validate distribution in telemetry. Do not imply all five equally likely unless verified.
+D. Skill expression: legal merge previews, boss telegraphs, meaningful commander timing, and a strictly limited rescue action if needed.
+E. Meta health: top deck share, unit pick/win under equal skill, mirror-match frequency, match duration and variance across random seeds. Aim for multiple competitive archetypes, not one universal best deck.
+F. Persistent progression and cosmetic unlocks should never worsen player odds against a better-funded/longer-playing opponent in ranked.
+G. Co-op rewards shared fairly regardless of commander/turret contribution; discourage AFK with measured participation rules, not damage-only rewards.
+
+SUCCESS CRITERIA
+- New-player loaner decks can reasonably win at calibrated same-skill MMR.
+- Simulations with replicated initial seeds distinguish choice quality from luck; player inputs should explain significant win-rate variance.
+- Regular balance cadence based on reproducible data and user comprehension, not reaction to a single viral screenshot.
+
+
+PRIORITIZED IMPLEMENTATION BACKLOG
+==================================
+Instructions for all items:
+- Each record includes WHY, EXACT CHANGE, VERIFY, and NEW ART with a SHORT ChatGPT image prompt if needed.
+- Prompts are for separate PNG image sheets on a flat pure magenta #FF00FF background; no text, no shadows on magenta, no borders unless the asset itself is a frame. UI shapes must be image assets, not drawn with canvas primitives. Dynamic text, hit areas, masks, cropping, compositing and animation can be code-controlled.
+- P0 = blocking readable fun / meaningful first play. P1 = core product ready for broader release. P2 = live-ops expansion after evidence.
+
+P0-01. Playable onboarding instead of compulsory 85-unit deck choice
+WHY: High first-session cognitive load; new player cannot judge 85 cards.
+EXACT CHANGE: First boot goes to short guided Solo match with fixed five-unit starter deck and starter commander; selectable tutorial skip; record completion per step; defer full gallery until first clear. No fake RNG in ordinary play.
+VERIFY: 10 new users; >=85% summon unassisted by minute 1, >=80% merge unassisted by minute 3; analytics tutorial_step_start/complete.
+NEW ART: YES — '4 small industrial tutorial callout plates, cyan pointer corners, neutral gunmetal, mobile sci-fi, separate pieces, flat #FF00FF background, no text'.
+
+P0-02. Legal merge target preview + safe cancellation
+WHY: Prevent mistaken merges and explain legal actions.
+EXACT CHANGE: During drag, match on same turret ID and same BOARD STAR only; highlight legal targets; maintain finger offset; cancel if released outside a legal target or if gesture interrupted; support tap-source/tap-destination accessibility mode.
+VERIFY: Automated gesture tests for valid, invalid, occupied, touchcancel and pause; <5% mistaken merges in playtests.
+NEW ART: YES — '4 circular target rings: valid, selected, invalid, merged; subdued steel and cyan/orange; transparent centers, flat #FF00FF background, no text'.
+
+P0-03. Merge outcome comprehension
+WHY: Players must know 2 assets were traded for 1 random higher-star result.
+EXACT CHANGE: Brief pre-merge tip 'Random type, +1 star'; after result show name + new star numeral; animate source removal/reveal without changing deterministic logic or attack timers.
+VERIFY: 8/10 users report the correct result after three merges; seeded action log matches displayed events.
+NEW ART: YES — 'small beveled metal merge result plaque with clear central empty space, simple lightning corners, flat #FF00FF background, no text'.
+
+P0-04. Star, rarity, role and level terminology cleanup
+WHY: Many layered progression signifiers look similar and confuse players.
+EXACT CHANGE: BOARD STAR = large 1–7 numeric badge in fixed tile corner; COLLECTION LV appears on card/detail only; rarity shown as thin portrait rim; role icon consistently top-left; temporary battle power gets unique label if implemented.
+VERIFY: 9/10 identify star vs card level; no overlaps with 15 occupied tile screenshots on small iPhones.
+NEW ART: YES — '7 uniform tiny industrial numbered-badge blank backplates, one subtle gold-metal outline, empty centers for live numerals, 1 row, flat #FF00FF background, no text'.
+
+P0-05. Crisis-readable battle HUD
+WHY: Wave, boss and 3 shared lives must be understood at a glance under effects.
+EXACT CHANGE: Top bar order Wave N | Boss in N | Lives N/3 with unique icons and high contrast; boss warning only pulses its segment; reposition wave banner so it doesn't block board after <0.7s.
+VERIFY: Five-second phone glance test, 9/10 correctly report all three; snapshot tests at four phone widths.
+NEW ART: YES — 'single compact brushed-gunmetal HUD rail, 3 reserved empty label wells, caution-yellow edge accents, flat #FF00FF background, no text'.
+
+P0-06. Summon/commander mana economic clarity
+WHY: Screens show summon 10/20/30, commander mana and deck green 100; these may be mistaken as same kind of purchase.
+EXACT CHANGE: Define currencies in code data; give summon and commander an identical mana glyph; distinguish green card upgrade price as collection currency with separate icon and one-time tooltip; display insufficient amount and changing commander costs in real time.
+VERIFY: 8/10 new users explain what is spent for each button; unit tests for cost 40->80->160 and insufficient funds.
+NEW ART: YES — '3 icon glyphs, purple mana crystal, green blueprint hex token, orange cooldown clock, crisp mobile UI, flat #FF00FF background, no text'.
+
+P0-07. Result screen that teaches and rewards
+WHY: Defeat screen is polished but a dead end.
+EXACT CHANGE: Show wave reached, bosses beaten, leaks and cause, deck played, personal best, earned mastery/reward, plus 'Retry same deck' and 'Edit deck' actions; do not fabricate rewards before an economy exists.
+VERIFY: 8/10 know why they lost and what to try next; replay rate and deck-edit rate logged.
+NEW ART: YES — 'wide matte-gunmetal battle summary plaque with 3 quiet inset empty metric wells and one highlight rail, flat #FF00FF background, no text'.
+
+P0-08. Deterministic game telemetry + reproducible seeds
+WHY: Cannot balance 85 units, RNG, PvP or anti-stall by anecdotes.
+EXACT CHANGE: Capture match ID, build version, mode, deck, commander, seed, wave, actions (summon, merge, commander), mana, star/type outputs, leaks, duration, FPS and failure reason. Privacy-preserving pseudonymous IDs; opt-out where required. Provide local replay/debug export.
+VERIFY: Replayed seeded run reproduces exact types/stars/actions; analytics events pass schema tests; crash-free telemetry capture.
+NEW ART: NO.
+
+P0-09. Commander full-board/active state rules
+WHY: Reinforce could fail on full board; Rage next cost escalates; Holy Shield status could be invisible.
+EXACT CHANGE: Define cast preconditions and fallback, cooldown, current cost, active timer, scope on co-op board, and boss cleansing semantics. Show 10s orange Rage bar, 8s Holy Shield core icon, two reinforced slots when possible.
+VERIFY: State-machine tests for full board, low mana, cast during wave transition, rapid taps, co-op and multiple casts.
+NEW ART: YES — '3 thin industrial status overlays: orange rage edge glow, cyan shield perimeter, gold reinforcement spawn flash, separate sprites, flat #FF00FF background, no text'.
+
+P0-10. Real-phone touch/readability QA
+WHY: Desktop composites hide actual font and target size.
+EXACT CHANGE: Audit 375/390/393/430 CSS-width devices, safe areas, Safari bar collapse, touch targets >=44 CSS px for key buttons, hit-testing under scaling, portrait rotation, background resume; test tapped info and merging with either hand.
+VERIFY: Screenshot diff suite; <1% UI overlap/clipping; >=95% first-touch action success in QA sessions.
+NEW ART: NO.
+
+P1-01. Starter archetypes and legal deck suggestions
+WHY: Five of 85 need guidance without dictating a single best answer.
+EXACT CHANGE: Six hand-authored starter archetypes with preview list, synergies and clear 'try deck' action; at least two viable loaner PvP decks; editable after selection.
+VERIFY: First valid deck under 90 seconds; >80% can describe its plan.
+NEW ART: YES — '6 small sci-fi strategy emblem icons: single-target, splash, slow, mana, combo, support; unified silhouette language, flat #FF00FF background, no text'.
+
+P1-02. Search, role filter and compact turret descriptions
+WHY: Five-column 85-unit browser is exhausting.
+EXACT CHANGE: Add owned/search/role filters, role tags, 'Does / Pair with / Countered by'; switch details to summary+advanced; save last scroll/filter.
+VERIFY: Median time to find named turret <15s; users complete one deck adjustment without mis-taps.
+NEW ART: YES — '5 minimal engraved metal role-glyph chips: attack, subattack, support, control, special, isolated on flat #FF00FF background, no text'.
+
+P1-03. In-match agency experiment
+WHY: Pure randomness can dominate better choices.
+EXACT CHANGE: A/B test a low-cost per-type battle power-up versus once-per-match reroll, with explicit restrictions; do NOT ship both simultaneously until measured.
+VERIFY: Compare comeback, loss frustration survey, choice diversity, time-to-death and seeded deck outcomes across cohorts.
+NEW ART: YES — 'one compact machine upgrade dial with 4 lightable segments plus a separate reroll gear emblem, flat #FF00FF background, no text'.
+
+P1-04. Co-op coordination and transparent shared-life losses
+WHY: Two boards need teamwork rather than parallel solo.
+EXACT CHANGE: Add three rate-limited predefined ally pings; show clear shared-life leak source; optional supported-aura indicators without cross-board clutter.
+VERIFY: 8/10 understand shared lives; rate-limits enforced; partner usefulness measured by pings and saves.
+NEW ART: YES — '3 compact cyan co-op tactical symbols: need damage, boss shield, nice combo, readable 24px, flat #FF00FF background, no text'.
+
+P1-05. PvP send feedback and snowball audit
+WHY: 'kills send enemies' must be visible and fair.
+EXACT CHANGE: Add 'SENT +N' arrow cue, sent counter, seeded matchmaking diagnostics; tune burst caps/comeback after test; distinguish bots and humans.
+VERIFY: 8/10 describe sends; no unexplained queue spikes; equal-skill simulated match tests across 1000+ seeds per deck pair.
+NEW ART: YES — 'one horizontal red-vs-cyan directional transfer arrow with mechanical fins, separate pieces, flat #FF00FF background, no text'.
+
+P1-06. First persistent profile / guest save
+WHY: No account progression and browser storage loss risk prevent commitment.
+EXACT CHANGE: Guest profile with schema-versioned save, highest waves, deck presets, tutorial flags and collection mastery; optional cloud link later. Import/export and conflict resolution, no sign-in wall.
+VERIFY: Fresh session restore, offline reload, migration, interrupted write, Safari storage purge recovery documentation.
+NEW ART: YES — 'small sci-fi pilot profile emblem with dark steel hex frame and empty portrait center, flat #FF00FF background, no text'.
+
+P1-07. Mastery and meaningful non-pay-to-win rewards
+WHY: Need replay purpose without permanent PvP advantage.
+EXACT CHANGE: Earn turret mastery, one currency, deterministic milestone rewards and visible reward panel; normalize ranked combat stats regardless of unlock levels.
+VERIFY: Reward transaction idempotent; no duplicates on reload; ranked stats identical for same loadout.
+NEW ART: YES — '5 ascending industrial mastery insignia medals, silver-to-gold mechanical precision, flat #FF00FF background, no text'.
+
+P1-08. Three daily goals + weekly milestone
+WHY: Return motivation can be meaningful without shop.
+EXACT CHANGE: Rotate 3 objectives per day, 1 weekly target; each has progress tracker, claim/reward and accessibility for players avoiding PvP; server-time or robust local handling.
+VERIFY: Daily rollover/timezone tests, no double claims, D1/D7 cohort comparison and completion rate.
+NEW ART: YES — 'three matching metal quest-tab assets: daily, weekly, completed, cyan-orange accents, empty text spaces, flat #FF00FF background, no text'.
+
+P1-09. 85-unit data catalog + balance dashboard
+WHY: Large roster creates opaque duplication and unintended power gaps.
+EXACT CHANGE: Data-export every turret skill, role, rarity, families, base stats, each star milestone, counters and cost; implement seeded auto-battle simulations and statistical reports by mode.
+VERIFY: All 85 pass schema validation; every skill has a test case and readable description; no unknown/missing star state.
+NEW ART: NO.
+
+P1-10. Pause, resume, disconnect and fair match integrity
+WHY: Mobile Safari interrupts sessions; ranked is unsafe if client-trusted.
+EXACT CHANGE: Confirm Quit, handle page visibility and throttled loops, checkpoint Solo; define reconnect rules in co-op/PvP; require server validation or reasonable cross-check before ranked rewards.
+VERIFY: Test lock screen, phone call, tab switch, browser reload, network drops at several waves and reconcile state.
+NEW ART: NO.
+
+P1-11. Reduce decorative over-rendering via common asset kit
+WHY: Remaining 'AI-made' feel comes from mismatched frame systems and visual noise.
+EXACT CHANGE: Replace 7 custom border styles with one 9-slice family; set unified stroke thickness/padding/rim colors; normalize card and commander framing; remove ornaments behind small text.
+VERIFY: Screen-wide style-sheet check; 48px readability; no keying fringes or edge distortion with nine-slice.
+NEW ART: YES — 'industrial sci-fi UI asset kit: 1 matte plate, 1 raised header, 1 recessed slot, 1 primary orange button, 1 secondary steel button, matching rivets, separate sprites on flat #FF00FF, no text'.
+
+P2-01. Ranked seasons (cosmetic rewards only)
+WHY: Long-term competitive goals after fair matchmaking works.
+EXACT CHANGE: 4–6 week season with ranks, placements, MMR, cosmetic-only season badge and archived history; equalized stats.
+VERIFY: Regression tests for rewards, MMR fairness, top-player match quality; no permanent power edge.
+NEW ART: YES — '6 season rank emblems, bronze to mythic-industrial crown, consistent shape progression, flat #FF00FF background, no text'.
+
+P2-02. Earned capsule / reward chest system
+WHY: Collection surprise can add anticipation; avoid manipulative timers.
+EXACT CHANGE: Optional capsule awarded through match objectives; public drops and duplicate conversion; deterministic pity/guarantee if randomness used; zero forced paid prompts.
+VERIFY: 100k seeded drop Monte Carlo conforms to published odds; users correctly understand outcomes.
+NEW ART: YES — 'three closed/openable sci-fi salvage capsules, common steel, rare cyan, mythic gold, isolated on flat #FF00FF background, no text'.
+
+P2-03. Rotating mutator events and challenge modes
+WHY: Use existing roster to offer freshness without new turret flood.
+EXACT CHANGE: Single-rule weekly unranked rotating challenges using fixed decks or normalized stats; clear rules before start; no ranked impact.
+VERIFY: Event participation, 2nd-play rate, rule comprehension, modifier unit tests.
+NEW ART: YES — '4 compact mechanical event badges: frost, overclock, chaos merge, boss hunt, flat #FF00FF background, no text'.
+
+P2-04. Achievement wall / personal records
+WHY: Transform skill achievements into intrinsic return goals.
+EXACT CHANGE: Track best wave by mode, no-leak wins, boss kills, commander mastery, deck archetype clears; claim static cosmetic rewards.
+VERIFY: 100% achievements testable via seeded fixtures; no false claim after reconnect.
+NEW ART: YES — 'six small engraved industrial achievement plaques, consistent gunmetal and brass, empty centers, flat #FF00FF background, no text'.
+
+P2-05. Replays and shareable match recaps
+WHY: Merge outcomes and dramatic saves are inherently social, useful for debugging too.
+EXACT CHANGE: Export compact deterministic recap (seed + action log + key stats); optional vertical clip recording after performance check; no private identifiers in share payload.
+VERIFY: Replay matches deterministic input and event stream; playback desync detection; acceptable mobile memory use.
+NEW ART: YES — 'small industrial replay control strip with play, rewind and share icons, flat #FF00FF background, no text'.
+
+P2-06. Commander and turret cosmetic identity packs
+WHY: Cosmetic goals can reinforce identity without pay-to-win.
+EXACT CHANGE: Earnable alternate border, projectile color accent and commander cast badge; keep silhouette and hit readability unchanged; toggle cosmetics in ranked if needed.
+VERIFY: VFX clarity parity and accessibility; identical damage/collisions across cosmetics.
+NEW ART: YES — '4 restrained sci-fi cosmetic trim packs for turret rims, distinct only at edges, flat #FF00FF background, no text'.
+
+
+RECOMMENDED ORDER OF EXECUTION
+==============================
+SPRINT A: P0-08 telemetry in parallel with P0-01 tutorial, P0-02 merge preview, P0-04 stars/terminology, P0-10 phone QA.
+SPRINT B: P0-03 merge feedback, P0-05 crisis HUD, P0-06 currencies, P0-09 commander states, P0-07 results.
+SPRINT C: P1-01/02 curated deck workflow, P1-09 catalog, P1-03 agency experiment, P1-04/05 multiplayer comprehension.
+SPRINT D: P1-06/07/08 persistent progression and rewards, P1-10 integrity, P1-11 coherent visual kit.
+POST-VALIDATION: P2 seasonal/live-ops systems only when D1/D7, fairness, reconnect and content economics are measured.
+
+FIVE HARD GATES BEFORE PUBLIC RELEASE
+=====================================
+GATE 1. New players can summon, merge, use commander and understand loss without verbal help.
+GATE 2. No accidental merge or hit target failures in standard portrait iPhones; no unreadable essential UI.
+GATE 3. Minimum 85-turret data integrity + stable seeded reproducibility and telemetry.
+GATE 4. Co-op/PvP behavior, shared lives and enemy-send rules are visible and network-safe.
+GATE 5. After every game, the player has one clear reason to play again: objective, mastery, improved deck, next boss or personal record.
+
+DO NOT PRIORITIZE YET
+=====================
+- A real-money store, battle pass, gacha monetization, or ad-driven reward economy.
+- Adding more than 85 turrets before measuring redundancy and role balance.
+- Massive animated UI redesign while merge confusion and first-session retention remain unresolved.
+- High-budget 3D conversion; the industrial 2D artwork can be polished within the present style.
+- Ranked competition before anti-cheat, match integrity and equalization exist.
+
+BENCHMARK SOURCES / FACT-CHECK NOTES
+====================================
+1. Random Dice official App Store: https://apps.apple.com/us/app/random-dice-defense/id1462877149
+   Current listing describes real-time PvP, co-op boss raids, solo, crew, challenges, seasons and rank/trophies.
+2. Random Dice official Google Play: https://play.google.com/store/apps/details?id=com.percent.royaldice
+   Confirms current description of merge, level, PvP/Co-op/Solo and modes.
+3. Random Dice gameplay guide (third party; details may differ by version): https://randomdicehub.com/guides/random-dice-beginner-guide/
+   Describes five-dice deck, increasing-cost SP summons, same-type/star random merges and in-match power-ups. Treat historical/version-specific values as nonbinding.
+4. DCDW gameplay guide (historical): https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-tips-tricks-en.html
+   Describes summon-first vs merge tradeoffs, random outputs and temporary mana upgrades.
+5. Historical Korean coverage of DCDW two-person raid and season crown rewards: https://www.ggemguide.com/news_view.htm?uid=1552442
+   Confirms an example of co-op/raid and a legacy seasonal rewards concept; not a claim about the game's current operation.
+6. Random Dice community mechanics / quests (secondary, version-dependent): https://randomdice.wiki.gg/wiki/Daily_Quests
+   Illustrates recurring quest structure; no recommendation to copy ad/purchase quests.
+
+All screenshot facts refer to user-supplied tour1.jpg, tour2.jpg and tour3.jpg. The analysis cannot confirm actual runtime behavior, server architecture, RNG probabilities, specific hero balance, FPS, account persistence, or engagement metrics. Every stated numeric target is a proposed hypothesis for testing, not a measured result or industry guarantee.
+
+FINAL DESIGN DIRECTION
+======================
+Make TURRET MERGE 'the readable, tactical, fair industrial merge-defense game', not 'Random Dice with 85 ornate skins'. Its defensible differentiators are the tactile mechanical turrets, commander-driven clutch moments, two-board co-op, and meaningful transform/synergy decisions. Give the player enough control to feel responsible for wins, enough randomness to be surprised, and a clear personal objective after each loss. Earn the progression shell by first making the match genuinely satisfying.
