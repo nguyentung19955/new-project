@@ -12,11 +12,11 @@ OK   B ẩn app: sau ~6 s A cho AI lái bàn B, trận không dừng (thay=im)
 OK   A chơi tiếp khi B vắng: wave 1 → 3
 OK   B về: A trả bàn cho B (không còn AI)
 OK   B tự đồng bộ: wave A 3 / B 3, tim 3 = 3
-OK   Bàn B lấy lại cả phần AI đã xây: 15/15 ô khớp (A thấy 8 ụ trước khi về)
+OK   Bàn B lấy lại cả phần AI đã xây: 15/15 ô khớp (A thấy 12 ụ trước khi về)
 OK   B điều khiển lại bàn mình: B triệu hồi → A thấy ngay
 OK   Trận xong khi B vắng → B về thấy màn kết quả
 OK   HOST ẩn app → khách B nắm quyền: AI lái bàn host, B tự chạy wave 1 → 2
 OK   Host về: đồng bộ theo khách — wave 3/3, tim 3/3
-OK   Host đóng hẳn → khách chơi tiếp với AI (G.t 53.5 → 55.6)
-OK   fps máy B: 59
+OK   Host đóng hẳn → khách chơi tiếp với AI (G.t 54.4 → 56.4)
+OK   fps máy B: 60
 OK   Không lỗi trang (0)

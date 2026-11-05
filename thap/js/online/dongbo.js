@@ -180,7 +180,7 @@ const ONS = {
     const B1 = G.ban[1]; if (!B1 || !this.on) return;
     // AI đang lái bàn bạn: bỏ hành động cũ/lạc của bạn — chỉ nhận 'lai' (bạn đã đồng bộ lại → trả bàn) và 'bye'
     if (this.thay && v.k !== 'bye' && v.k !== 'lai') return;
-    if (v.k !== 'an') this._banAn = 0;
+    // (_banAn chỉ xoá khi bạn gửi 'lai' — hành động lạc gửi ngay sau khi ẩn app không được tính là "đã về")
     this._apDung++;
     try {
       switch (v.k) {
