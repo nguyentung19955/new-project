@@ -12,6 +12,7 @@
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/hud.css">
 </head>
 <body>
   <div id="wrap">
@@ -22,6 +23,7 @@
       <div id="tb-wave"><span data-t="wave">WAVE</span><b id="tb-so">1</b></div>
       <div id="tb-giua">
         <div id="tb-trum"><img src="assets/ui_canh_bao_trum.png" alt=""><span id="tb-trum-chu"></span></div>
+        <div id="tb-seg" aria-hidden="true"></div>
         <div id="tb-trum-mau" hidden><i></i></div>
       </div>
       <div id="tb-tim"></div>
@@ -31,7 +33,7 @@
     <!-- HÀNG DƯỚI kiểu DCDW: mana · nút TRIỆU HỒI · tốc độ / tạm dừng; hàng thẻ: 5 ụ (nâng cấp) + Ma vương -->
     <div id="duoi" hidden>
       <div id="mana-hop"><img src="assets/ui_mana.png" alt=""><b id="mana">0</b></div>
-      <button id="nut-trieu" data-act="trieu"><img src="assets/ui_nut_trieu.png" alt=""><span class="tr-chu"><span class="tr-ten" data-t="summon">SUMMON</span><span class="tr-gia"><img src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></span></button>
+      <button id="nut-trieu" data-act="trieu"><span class="tr-cap"><img src="assets/ui_nut_trieu.png" alt=""><span class="tr-chu"><span class="tr-ten" data-t="summon">Summon</span><span class="tr-gia"><img src="assets/ui_mana.png" alt=""><b id="gia-trieu">10</b></span></span></span><i class="tr-led"></i></button>
       <div class="nut-cot">
         <button class="nut-nho" data-act="tocdo" id="nut-tocdo">1×</button>
         <button class="nut-nho" data-act="dung" aria-label="Pause">❚❚</button>

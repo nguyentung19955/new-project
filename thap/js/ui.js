@@ -163,6 +163,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
         '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
+    // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
+    const seg = $('#tb-seg'); if (seg) { seg.innerHTML = ''; for (let i = 1; i <= LUAT.songTrum; i++) { const c = document.createElement('i'); if (i === LUAT.songTrum) c.className = 'boss'; seg.appendChild(c); } this._segW = -1; }
     const mv = MAVUONG[B.mv.id];
     $('#the-mv .mv-ic').innerHTML = mvArt(B.mv.id); $('#the-mv').style.setProperty('--mm', mv.mau); $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 10, 7);
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
@@ -206,6 +208,12 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     // trùm
     const trum = G.quai.find(e => e.trum && !e.chet && G.duong[e.p].ban === 0) || G.quai.find(e => e.trum && !e.chet);
     const tm = $('#tb-trum-mau');
+    const seg = $('#tb-seg');
+    if (seg) {
+      if (seg.hidden !== !!trum) seg.hidden = !!trum;
+      const vt = ((Math.max(1, G.wave) - 1) % LUAT.songTrum) + 1; // vị trí wave hiện tại trong chu kỳ 1..10
+      if (vt !== this._segW) { this._segW = vt; [...seg.children].forEach((c, i) => { c.classList.toggle('on', i + 1 < vt); c.classList.toggle('cur', i + 1 === vt); }); }
+    }
     if (trum) { chu($('#tb-trum-chu'), TRUM[trum.trum].ten); if (tm.hidden) tm.hidden = false; cao($('#tb-trum-mau i'), 'width', (Math.round(trum.hp / trum.max * 400) / 4) + '%'); }
     else { if (!tm.hidden) tm.hidden = true; const con = LUAT.songTrum - (Math.max(1, G.wave) % LUAT.songTrum); chu($('#tb-trum-chu'), con === LUAT.songTrum ? TEXT.ui.bossWave : TEXT.ui.bossIn(con)); }
     // tim
@@ -213,11 +221,11 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     if (key !== this._timKey) {
       this._timKey = key;
       const el = $('#tb-tim'); el.innerHTML = '';
-      if (G.che === 'coop') el.innerHTML = '<div class="chu">' + TEXT.ui.coopLeak + '</div>';
+      if (G.che === 'coop') el.innerHTML = '<div class="chu"><i class="den' + (B.tim > 0 ? '' : ' mat') + '"></i>' + TEXT.ui.coopLeak + '</div>';
       else {
         const max = G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo;
-        const mk = (n, cls) => { let s = ''; for (let i = 0; i < max; i++) s += '<img class="' + (i < n ? '' : 'mat') + '" src="assets/ui_tim.png" alt="">'; return s; };
-        if (G.che === 'pvp') el.innerHTML = '<div class="doi"><div><span>' + TEXT.ui.rival + '</span>' + mk(G.ban[1].tim) + '</div><div><span>' + TEXT.ui.you + '</span>' + mk(B.tim) + '</div></div>';
+        const mk = (n, cls) => { let s = ''; for (let i = 0; i < max; i++) s += '<i class="den' + (i < n ? '' : ' mat') + '"></i>'; return s; }; // đèn báo tim
+        if (G.che === 'pvp') el.innerHTML = '<div class="doi"><div><span class="doi-thu">' + TEXT.ui.rival + '</span>' + mk(G.ban[1].tim) + '</div><div><span class="ban">' + TEXT.ui.you + '</span>' + mk(B.tim) + '</div></div>';
         else el.innerHTML = mk(B.tim);
       }
     }
@@ -443,6 +451,10 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) nm.addEventListener(ev, () => clearTimeout(this.giu));
     const huy = () => clearTimeout(this.giu);
     bo.addEventListener('pointerup', huy); bo.addEventListener('pointerleave', huy); bo.addEventListener('pointercancel', huy);
+    // nút SUMMON: nắp phím lún xuống ngay khi chạm (iOS không tự bật :active) — chỉ chuyển động khi người chơi bấm
+    const nt = $('#nut-trieu');
+    nt.addEventListener('pointerdown', () => nt.classList.add('an'));
+    for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) nt.addEventListener(ev, () => nt.classList.remove('an'));
     // giữ thẻ ở màn chọn → thông tin
     const luoi = $('#chon-luoi');
     luoi.addEventListener('contextmenu', (e) => e.preventDefault());

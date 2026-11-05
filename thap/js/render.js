@@ -512,15 +512,20 @@ const REN = {
     }
   },
   veNhanBan(ctx) {
-    ctx.font = '800 10px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    // nhãn bàn = tấm thép dập nhỏ + đèn màu phe (You xanh · Ally xanh lá · Rival đỏ), chữ thường, không viên thuốc phát sáng
+    ctx.font = FONT.u(11, 800); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (const B of G.ban) {
       if (G.ban.length < 2) break;
-      const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 14, h = 15;
+      const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 22, h = 16;
       const x = Math.min(B.x + B.w - w - 10, W - w - 8), y = B.y + 1; // y = tâm nhãn
-      ctx.fillStyle = B.i === 0 ? 'rgba(46,96,150,.88)' : (G.che === 'pvp' ? 'rgba(150,50,56,.88)' : 'rgba(46,120,92,.88)');
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - h / 2, w, h, 5) : ctx.rect(x, y - h / 2, w, h); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.fillText(s, x + w / 2, y + 0.5);
+      const den = B.i === 0 ? '#5aa8ff' : (G.che === 'pvp' ? '#ff4b3e' : '#63d68b');
+      ctx.fillStyle = '#000'; ctx.fillRect(x, y - h / 2 + 1, w, h);
+      ctx.fillStyle = '#2b2e33'; ctx.fillRect(x, y - h / 2, w, h);
+      ctx.fillStyle = '#4b5059'; ctx.fillRect(x, y - h / 2, w, 1);
+      ctx.fillStyle = den; ctx.beginPath(); ctx.arc(x + 8, y, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#dfe3e9'; ctx.fillText(s, x + 15, y + 0.5);
     }
+    ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
   },
 
