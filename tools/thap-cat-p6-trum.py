@@ -77,7 +77,23 @@ def lam(id):
         im.save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True); print('→ trum_%s_portrait.png' % id)
 
 
+def ghi_js():
+    """cập nhật 4 tập ảnh trong thap/js/trum.js theo file thật trong assets/."""
+    import re
+    js = os.path.join(GOC, 'thap/js/trum.js'); s = open(js, encoding='utf-8').read()
+    ids = re.findall(r"^  (\w+): +\{ ten:", s[s.index('const TRUM_MOI'):s.index('};')], re.M)
+    co = lambda f: os.path.exists(os.path.join(ASS, f))
+    tap = {'TRUM_ANH': [i for i in ids if co('trum_%s_8.png' % i)],
+           'TRUM_HUONG': [i + '_' + k for i in ids for k in ('side', 'back') if co('trum_%s_%s_8.png' % (i, k))],
+           'TRUM_FX': [i for i in ids if co('fx_trum_%s.png' % i)],
+           'TRUM_CHANDUNG': [i for i in ids if co('trum_%s_portrait.png' % i)]}
+    for k, v in tap.items():
+        s = re.sub(r'const %s = new Set\(\[[^\]]*\]\);' % k, 'const %s = new Set([%s]);' % (k, ', '.join("'%s'" % x for x in v)), s)
+    open(js, 'w', encoding='utf-8').write(s); print('trum.js:', tap)
+
+
 if __name__ == '__main__':
     ids = sys.argv[1:] or sorted({os.path.basename(f).split('_')[2] if not os.path.basename(f).startswith('raw_p6_twin_core') else 'twin_core'
                                   for f in glob.glob(os.path.join(ART, 'raw_p6_*.png'))})
     for id in ids: lam(id)
+    ghi_js()
