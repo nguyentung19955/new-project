@@ -61,3 +61,7 @@ Nhiều phiên cùng sửa thap/ một lúc, mỗi phiên chỉ chụp màn mìn
 ## 2026-11-05 — 404 trum_hive.png / trum_jammer.png (390x844, trum_jammer/prism/twin_core/patcher)
 Sau khi hive/jammer có ảnh riêng (TRUM_ANH), lúc trùm báo chiêu `quaianim.js` vẫn nạp dải 4 khung `trum_<id>` (không tồn tại) → 404 lặp.
 Sửa: bỏ nạp dải 4 khung cho trùm đã có ảnh riêng (dùng dải _8 / dải đánh). Kiểm lại 390x844x3 NHANH: XANH.
+
+## 2026-11-05 — session huong3 (hướng nhìn tinh anh/trùm)
+- Kiểm 390x844x3 NHANH: menu/solo/coop/pvp/landau XANH; **online_tran TRƯỢT (kẹt chờ `ONS.on && G.ban.length===2`)** — lỗi CÓ SẴN, không do huong3:
+  chạy lại với quaianim.js + trum.js bản trước huong3 (4ff9437) vẫn trượt y hệt. Xuất hiện sau đợt sửa sảnh online 9151d9e (phiên online đang làm) → giao phiên online.

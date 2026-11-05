@@ -17,7 +17,7 @@
 | nightmare | trùm cũ | ✅ | ✅ | ⇋ | ✅ | ✅ khung 3 (dải 4 cũ) |
 | octopus | trùm cũ | ✅ | ✅ | ⇋ | ⏳ ↔ | ✅ khung 3 (dải 4 cũ) |
 | hive | trùm mới | ✅ | ✅ | ⇋ | ✅ | ✅ dải 16 |
-| jammer | trùm mới | ✅ | ✅ | ⇋ | ✅ | ⏳ (q_p6 fx) |
+| jammer | trùm mới | ✅ | ✅ | ⇋ | ✅ | ✅ nhìn bàn (dải trước) + hiệu ứng rời fx_trum |
 | prism | trùm mới | ✅ | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
 | twin_core | trùm mới | ⏳ mượn joker_king | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |
 | patcher | trùm mới | ⏳ mượn octopus | ⏳ ↔ | ↔ | ⏳ ↔ | ⏳ (q_p6 fx) |

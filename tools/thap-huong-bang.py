@@ -22,7 +22,7 @@ for id, l, nhom in LOAI:
     cho = lambda v: f'raw_p12_{id}_{v}.png' in can or (nhom == 'trùm mới')
     o = lambda f, v: '✅' if co(f) else ('⏳' if cho(v) else '—')
     side, back, left = g + '_side_8.png', g + '_back_8.png', g + '_left_8.png'
-    danh = '✅ dải 16' if co(g + '_atk_16.png') else ('✅ khung 3 (dải 4 cũ)' if l == 'trum' and co(g + '.png') else ('⏳ (q_p6 fx)' if nhom == 'trùm mới' else 'không có chiêu'))
+    danh = '✅ dải 16' if co(g + '_atk_16.png') else '✅ nhìn bàn (dải trước) + hiệu ứng rời fx_trum' if co(f'fx_trum_{id}.png') else ('✅ khung 3 (dải 4 cũ)' if l == 'trum' and co(g + '.png') else ('⏳ (q_p6 fx)' if nhom == 'trùm mới' else 'không có chiêu'))
     dong.append(f"| {id} | {nhom} | {'✅' if tr else '⏳ mượn ' + str(m)} | {o(side, 'side') if co(side) else o(side, 'side') + ' ↔'} | {'✅' if co(left) else ('⇋' if co(side) else '↔')} | {o(back, 'back') if co(back) else o(back, 'back') + ' ↔'} | {danh} |")
     hang.append((f'{id} ({nhom})', [g + '_8.png' if tr else f'trum_{m}_8.png', side, back, g + '_atk_16.png']))
 dong += ['', 'Tờ ảnh: `bang.png` (cột: trước · ngang · sau · đánh; ô trống = chưa có). Dải khung khi đi thật mỗi chế độ: `tong_solo.jpg`, `tong_coop.jpg`, `tong_pvp.jpg`; số liệu: `ketqua.json` (tools/thap-kt-huong.js).',
