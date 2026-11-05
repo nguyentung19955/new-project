@@ -1,0 +1,177 @@
+{
+  "rules": {
+    "turretmerge": {
+      "profiles": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['name'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+          },
+          "av": {
+            ".validate": "newData.isString() && newData.val().length <= 24"
+          },
+          "bestWave": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999"
+          },
+          "wins": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "games": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "g": {
+            ".validate": "newData.isBoolean()"
+          },
+          "at": {
+            ".validate": "newData.isNumber()"
+          }
+        }
+      },
+      "rooms": {
+        "$code": {
+          ".validate": "$code.matches(/^[A-Z]{4}$/) && newData.hasChildren(['meta', 'members'])",
+          ".read": "auth != null && data.child('members').child(auth.uid).exists()",
+          ".write": "auth != null && ((!data.exists() && newData.child('meta/host').val() === auth.uid && newData.child('members').child(auth.uid).exists()) || (!newData.exists() && (data.child('meta/host').val() === auth.uid || data.child('meta/at').val() < now - 21600000)))",
+          "meta": {
+            ".read": "auth != null",
+            ".write": "auth != null && data.child('host').val() === auth.uid && newData.exists()",
+            ".validate": "newData.hasChildren(['host', 'at', 'st', 'seed']) && newData.child('host').val() === auth.uid",
+            "host": {
+              ".validate": "newData.isString() && newData.val().length <= 128"
+            },
+            "at": {
+              ".validate": "newData.isNumber() && newData.val() <= now"
+            },
+            "st": {
+              ".validate": "newData.val() === 'cho' || newData.val() === 'tran'"
+            },
+            "seed": {
+              ".validate": "newData.isNumber()"
+            },
+            "k0": {
+              ".validate": "newData.isString() && newData.val().length <= 40"
+            },
+            "v": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "members": {
+            "$uid": {
+              ".write": "auth != null && $uid === auth.uid && (!newData.exists() || newData.parent().parent().child('khach').val() === auth.uid)",
+              ".validate": "newData.isBoolean()"
+            }
+          },
+          "khach": {
+            ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid && data.parent().child('meta').exists() && data.parent().child('meta/host').val() !== auth.uid) || (data.val() === auth.uid && (newData.val() === auth.uid || !newData.exists())) || (data.parent().child('meta/host').val() === auth.uid && !newData.exists()))",
+            ".validate": "newData.isString() && newData.val().length <= 128"
+          },
+          "pl": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid && !newData.exists()",
+            "$uid": {
+              ".write": "auth != null && $uid === auth.uid && data.parent().parent().child('members').child(auth.uid).exists()",
+              "name": {
+                ".validate": "newData.isString() && newData.val().length <= 16"
+              },
+              "av": {
+                ".validate": "newData.isString() && newData.val().length <= 24"
+              },
+              "deck": {
+                ".validate": "newData.isString() && newData.val().length <= 200"
+              },
+              "mv": {
+                ".validate": "newData.isString() && newData.val().length <= 16"
+              },
+              "ready": {
+                ".validate": "newData.isBoolean()"
+              },
+              "on": {
+                ".validate": "newData.isBoolean()"
+              },
+              "vao": {
+                ".validate": "newData.isBoolean()"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "act": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid && !newData.exists()",
+            "$id": {
+              ".write": "auth != null && !data.exists() && data.parent().parent().child('members').child(auth.uid).exists()",
+              ".validate": "newData.hasChildren(['u', 'k', 'tk']) && newData.child('u').val() === auth.uid && $id.length <= 40",
+              "u": {
+                ".validate": "newData.isString()"
+              },
+              "k": {
+                ".validate": "newData.isString() && newData.val().length <= 8"
+              },
+              "tk": {
+                ".validate": "newData.isNumber()"
+              },
+              "d": {
+                ".validate": "newData.isString() && newData.val().length <= 1000"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "snap": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid && !newData.exists()",
+            "$uid": {
+              ".write": "auth != null && $uid === auth.uid && data.parent().parent().child('members').child(auth.uid).exists()",
+              ".validate": "newData.isString() && newData.val().length <= 3000"
+            }
+          },
+          "ping": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid && !newData.exists()",
+            "$uid": {
+              ".write": "auth != null && $uid === auth.uid && data.parent().parent().child('members').child(auth.uid).exists()",
+              "t": {
+                ".validate": "newData.isNumber()"
+              },
+              "e": {
+                ".validate": "newData.isNumber()"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "state": {
+            ".write": "auth != null && data.parent().child('meta/host').val() === auth.uid",
+            "tim": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10"
+            },
+            "wave": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999"
+            },
+            "end": {
+              "thang": {
+                ".validate": "newData.isBoolean()"
+              },
+              "ly": {
+                ".validate": "newData.isString() && newData.val().length <= 80"
+              },
+              "$other": {
+                ".validate": false
+              }
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    }
+  }
+}

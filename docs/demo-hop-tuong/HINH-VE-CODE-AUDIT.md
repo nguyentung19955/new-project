@@ -772,3 +772,18 @@ Code cắt quanh mặt cho mọi chỗ hiện chân dung: `FACE_BOX` + `MAT.fit(
 
 Prompt (đính kèm ảnh v2 cũ của đúng nhân vật + `pilot_canon.png` làm mẫu bố cục; lưới 4×2, 1774×887, mỗi ô 1 nhân vật):
 - **P-MAT1** "Same 8 characters and outfits as the attached portraits, redrawn as bust portraits with the WHOLE head inside the frame: full hair/hat and forehead visible, eyes at about 35% from the top, 12% empty space above the hair, shoulders and signature weapon below. Same anime gacha style, same colors, dark plain background, 4x2 grid, no text."
+
+## 15. Pass 3 — online: tài khoản + CO-OP online (2026-11-05)
+
+Code: `thap/js/online/*.js` + `thap/css/online.css` (chi tiết: `docs/demo-hop-tuong/ONLINE-FIREBASE.md`). Trong lúc chờ chỉ dùng ảnh có sẵn:
+bảng `khung_bang` (lớp `.bang`) · nút `nut_lon_*` (lớp `.nut`) · chip tài khoản + thẻ người chơi `khung_tt` · ô mã phòng / ô nhập / ô số hồ sơ `h2_lcd` ·
+khung ụ trong sảnh `the_khung_<bậc>` · ảnh đại diện `pilot_*` (mặt nạ tròn) · chỉ huy `af_*` · đèn online `led_xanh` / mất `den_tim_tat` ·
+nhãn READY `h2_tam_xanh` · ô ping `h2_tag` · nút ONLINE: `ic_coop` + `led_xanh` · màn mất kết nối: `vong_xich` (chờ P3-1 icon mất tín hiệu ở mục 7).
+
+Prompt ChatGPT cần gen (nền magenta #FF00FF đặc, không chữ, "same style as attached" — đính kèm `ic_coop.png` + `khung_tt.png`):
+- **P3-ON1 icon chế độ ONLINE** (512×512 → cắt 96 px, `thap/assets/ic_online.png`, thay `.che.onl-che::before`): "Game UI mode icon: two small pilot helmets side by side linked by a glowing cyan signal arc above them, chunky metal sci-fi style, thick dark outline, same style as attached, centered, solid #FF00FF background, no text."
+- **P3-ON2 tấm thẻ người chơi trong sảnh** (1536×512, 2 tấm → cắt 9 mảnh, `thap/assets/sanh_the.png` + `sanh_the_san.png`, thay `border-image` của `.sanh-p` / `.sanh-p.san`): "2 wide horizontal gunmetal player nameplates for a multiplayer lobby, left round avatar socket, empty middle, a row of 6 small empty card slots along the bottom; second plate identical but with a green READY glow along the edges, same style as attached, solid #FF00FF background, no text."
+- **P3-ON3 ô mã phòng** (1024×256 → `thap/assets/ma_phong.png`, thay `.sanh-ma`): "Wide glowing green LCD code display plate with 4 separated empty digit windows, heavy dark steel bezel with 4 bolts, same style as attached, solid #FF00FF background, no text."
+- **P3-ON4 bộ 4 icon nhỏ online** (1536×384, lưới 4×1 → cắt 48 px: `ic_ping_tot`, `ic_ping_xau`, `ic_chia_se`, `ic_google_khung`): "4 small bold HUD icons, thick dark outline, readable at 16px: green signal bars (good connection), red signal bars with a crack (bad connection), share arrow coming out of a box, an empty round white badge socket (for a sign-in logo), same style as attached, solid #FF00FF background, no text."
+- **P3-ON5 chip tài khoản** (768×256 → cắt 9 mảnh, `thap/assets/tk_chip.png`, thay `#tk-chip`): "Small horizontal gunmetal pill-shaped account badge, round avatar socket on the left with a thin cyan ring, empty right part for a name, same style as attached, solid #FF00FF background, no text."
+Ghi chú: nút "SIGN IN WITH GOOGLE" hiện chỉ là chữ trên `nut_lon_thep` — không tự vẽ logo Google; muốn có logo thì dùng đúng ảnh logo chính thức của Google (theo hướng dẫn thương hiệu) đặt trong `ic_google_khung`.

@@ -1,0 +1,24 @@
+OK   A: Sign in with Google (giả) → tài khoản không còn ẩn danh, giữ uid
+OK   Hồ sơ A lưu lên máy chủ (tên, ảnh, g=Google)
+OK   Tạo phòng → mã 4 chữ: JZPJ
+OK   Sảnh: 2 người, mỗi người 5 thẻ + chỉ huy [{"ten":"Ban (YOU)","u":5,"mv":true},{"ten":"Tung","u":5,"mv":true}]
+OK   Người thứ 3: "Room is full"
+OK   Cả 2 READY → cả 2 vào trận CO-OP online
+OK   Bàn đồng đội ở máy B dùng đúng bộ bài của A: canon,bang,lien,laser,doc
+OK   Cùng wave: A=2 B=2
+OK   Bàn A ↔ bàn đồng đội ở B: 15/15 ô giống
+OK   Bàn B ↔ bàn đồng đội ở A: 15/15 ô giống
+OK   Hành động truyền qua lại: A nhận 8, B nhận 8
+OK   Ping hiển thị: 108 ms (máy chủ giả trễ DELAY ms/chiều)
+OK   A triệu hồi canon ô 6 → B thấy ngay ở bàn đồng đội
+OK   Tim chung: B lọt 1 quái → A 3→2, B = 2
+OK   Rớt mạng: A "PARTNER DISCONNECTED" + B "CONNECTION LOST", cả 2 dừng trận
+OK   Nối lại mạng → cả 2 chạy tiếp
+OK   REJOIN: B vào lại wave 2 (A 3, trước 2), tim 2=2, A chạy tiếp
+OK   REJOIN: bàn B khôi phục từ ảnh chụp: 15/15 ô khớp bàn đồng đội ở A
+OK   Hết 3 tim chung → cả 2 máy hiện màn kết quả
+OK   Hồ sơ cập nhật sau trận: {"name":"Tung","av":"cuuvi","bestWave":3,"wins":0,"games":1}
+OK   PLAY AGAIN → cả 2 về sảnh phòng JZPJ
+OK   Trận mới: tim 3/3, wave 1/1
+OK   CONTINUE WITH AI: bàn đồng đội giao cho máy, trận chạy tiếp
+OK   Không lỗi trang (0)
