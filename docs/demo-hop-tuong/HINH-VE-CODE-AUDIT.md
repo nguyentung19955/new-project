@@ -1001,3 +1001,12 @@ Người dùng: phần tóc trên cùng của chân dung cứ mờ mờ (= "vạ
 - Bỏ huy hiệu vai trò tròn (`.gl`, `.ic` trên thẻ, `.gt-gl`, `.tt-gl`, `.up-gl`, icon ụ chồng lên chân dung ở dải nổi bật / bảng xem, icon cạnh tên ở màn vào trận, dải đồng đội/đối thủ). Vai trò chỉ còn là chữ (trang ụ, bộ lọc, dải nổi bật); độ hiếm = màu khung.
 - Kiểm: `node tools/thap-kt-motoc.js` (mask/overlay/blur/huy hiệu = 0 trên 727 chân dung, 0 lỗi trang) · `python3 tools/thap-kt-motoc-png.py` · ảnh trước/sau `docs/demo-hop-tuong/tuvan/motoc/`.
 - Còn chờ: `raw_pilot_{nhieusong,dichchuyen,chimang,nhanban}_v3.png` — khi có, chạy `python3 tools/thap-pilot-net.py` rồi chú thích lại FACE_BOX của 4 id đó bằng tay (lưới 10 %).
+
+## Pass 9 — frames (khung thẻ độ hiếm bị cắt cụt, 2026-11-05)
+
+- Lỗi: `the_khung_<bậc>.png` cắt từ `raw_s8.png` vào ô cố định 132×160 (tools/thap-cat-s89.py) → phần chìa ra ngoài bị cắt thẳng ở mép ảnh:
+  **đỏ** (sừng, lửa đỉnh, mép 2 bên + đáy, chìa ~13/132), **chỉ huy mv** (vương miện + 2 cánh, ~15/132), **vàng** (cánh dưới), **tím** (ngọc đỉnh/đáy + 2 bên), xám/xanh (gờ ống 2 bên, 3–5/132). Thêm: `.the, .c { overflow: hidden }` (game.css) cắt tiếp ở khay trận + bộ sưu tập.
+- Tấm gốc `raw_s8.png` ĐỦ hoạ tiết (không cần gen lại) → **không có ảnh raw_p9_* cần gen**.
+- Sửa: `tools/thap-cat-khung-p9.py` cắt lại cả 6 khung, lề đối xứng 18/16 (đơn vị ô cũ), K 2.6 (= độ nét tối đa của raw) → 437×499; cửa sổ vẫn trùng nhau ở mọi bậc (mặt không xê dịch).
+  `css/khung-p9.css`: `img[src*="the_khung_"] { scale: 1.2727 1.2 }` (ô <img> giữ nguyên chỗ cũ ở mọi nơi; hoạ tiết tràn ra ngoài ô) + `.the.co-kh, .c.co-kh { overflow: visible }`.
+- Kiểm: `tools/thap-kt-khung-p9.js` (ảnh `tuvan/khung/sau_*.jpg`, ghép `sau.png`; trước: `truoc.png`), thap-kt-vach.js + thap-kt-tran.js ĐẠT (2 tool đã tính `scale` của khung).

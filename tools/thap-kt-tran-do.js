@@ -91,7 +91,8 @@ module.exports = function doTrang(opt) {
     if (e.tagName === 'IMG') {
       if (!e.complete || !e.naturalWidth) continue;
       const s = getComputedStyle(e), nw = e.naturalWidth, nh = e.naturalHeight;
-      const w = e.clientWidth, h = e.clientHeight; if (w < 3 || h < 3) continue;
+      const sc = (s.scale && s.scale !== 'none') ? s.scale.split(' ').map(Number) : [1]; // ảnh có lề hoạ tiết phóng bằng scale (css/khung-p9.css): xét tỉ lệ ĐÃ phóng
+      const w = e.clientWidth * sc[0], h = e.clientHeight * (sc[1] || sc[0]); if (w < 3 || h < 3) continue;
       if (/contain|cover|scale-down|none/.test(s.objectFit)) continue;
       const d = lech(w / h, nw / nh); if (d > 0.03) out.anh.push(ten(e) + ' ' + (e.getAttribute('src') || '').split('/').pop() + ' ' + w + '×' + h + ' gốc ' + nw + '×' + nh + ' lệch ' + Math.round(d * 100) + '%');
       continue;

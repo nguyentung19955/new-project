@@ -5,6 +5,7 @@ Khoá magenta (tach_nen, giữ trong suốt ô cửa sổ), khối liền gán �
 Khung thẻ: chuẩn hoá theo Ô CỬA SỔ — cửa sổ của mọi khung nằm đúng cùng 1 hình chữ nhật trong ảnh ra,
 nên CSS chỉ cần 1 bộ toạ độ (in ra --kx/--ky/--kw/--kh). Hoạ tiết nhô ra (cánh, vương miện) giữ trong lề trên.
 Chạy: python3 tools/thap-cat-s89.py
+# LƯU Ý (Pass 9): the_khung_* hiện cắt bằng tools/thap-cat-khung-p9.py (lề cho hoạ tiết, css/khung-p9.css) — chạy file này sẽ cắt cụt lại sừng/vương miện.
 """
 import os, json
 import numpy as np

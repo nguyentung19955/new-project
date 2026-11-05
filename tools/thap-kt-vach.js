@@ -15,7 +15,7 @@ const KT_VACH = () => {
     if (!hien(k) || !/the_khung_/.test(k.getAttribute('src') || '')) continue;
     tong.khung++;
     const p = k.parentElement, ten = (p.id ? '#' + p.id : '') + '.' + [...p.classList].join('.') + (p.dataset.id ? '[' + p.dataset.id + ']' : '');
-    const K = k.getBoundingClientRect();
+    const K = hop(k); // ô khung KHÔNG tính scale của css/khung-p9.css (ảnh có lề cho hoạ tiết tràn ra)
     // tỉ lệ khung (không méo)
     const tl = (K.width / K.height) / TL;
     if (Math.abs(tl - 1) > .03) hong.push(ten + ': khung méo ' + K.width.toFixed(1) + '×' + K.height.toFixed(1) + ' (tỉ lệ lệch ' + ((tl - 1) * 100).toFixed(0) + '%)');
