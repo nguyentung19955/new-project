@@ -156,7 +156,7 @@
 .co-s10 .che.chon { background: linear-gradient(#22303d, #1b2733); box-shadow: none; }
 .co-s10 .che.chon::after { content: ''; position: absolute; inset: -3px; border: 0 solid transparent; border-width: 12px; border-image: url(../assets/khung_chon.png) 34 fill / 12px stretch; pointer-events: none; }
 .co-s10 .c .up-q { border: 0; border-radius: 50%; background: url(../assets/nut_cong.png) center / 100% 100% no-repeat; }
-.co-s10 .c:not(.chon) .up-q::before { content: none; }
+.co-s10 .c .up-q::before { content: none; }
 .co-s10 #ketqua.thua .kq-ic { content: url(../assets/ic_thua.png); filter: drop-shadow(0 4px 0 #000a); width: 80px; height: 84px; object-fit: contain; }
 /* bảng thông tin chạm ụ: khung thép 9 mảnh (S10-6), màu bậc chỉ ở tên — không viền màu chồng */
 .co-s10 #tt { border: 0 solid transparent; border-width: 14px; border-radius: 0; background: none; box-shadow: 0 10px 24px #000c; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; padding: 0; }
