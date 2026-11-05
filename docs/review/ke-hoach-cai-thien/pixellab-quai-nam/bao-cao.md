@@ -98,8 +98,9 @@ di chuyển đúng theo động tác.
 
 - `node --check` mọi `game/js/*.js`: đạt.
 - `python3 tools/phat-hanh/kiem_anh.py`: **ĐẠT** (736 tệp).
-- `python3 game/build.py`: bản một tệp **27,22 / 30 MB** (trước 27,00).
-- `LK_ANH_ROI=1 python3 game/build.py --hai-tep`: web tải đầu **19,69 / 20 MB** (trước 19,52; +0,17 MB), trang chính nén 0,99 / 1,50 MB.
+- `python3 game/build.py`: bản một tệp **27,51 / 30 MB** (sau khi gộp phiên vũ khí PixelLab + F2/F3 đẩy trước; phần 3 quái +0,22 MB).
+- `LK_ANH_ROI=1 python3 game/build.py --hai-tep`: web tải đầu **19,89 / 20 MB** (sau khi gộp các phiên đẩy trước; phần 3 quái +0,17 MB: ảnh WebP 39 + 18 + 114 KB), trang chính nén 1,01 / 1,50 MB. Đã sát trần: phiên sau thêm ảnh cần bớt chỗ khác.
+- Đã `git pull --rebase` (phiên vũ khí PixelLab, F2, F3 đẩy trước; đụng nhau ở `game/dist` → dựng lại dist), rồi kiểm lại toàn bộ:
 - `LK_BO_DUNG=1 bash tools/phat-hanh/cong_kiem.sh` (cổng kiểm như GitHub, dùng dist vừa dựng): **ĐẠT** — lưu mây, kiểm ảnh, trần dung lượng,
   smoke test 14 bước (màn đầu, ải 1-1 đi/đánh/né/đổi vũ khí, lưu → tải lại, `?cloud=0`, EN/VI).
 - Chụp headless 844 × 390 (`cong-cu/chup.py`, `?cloud=0`): ải 1-1 bản thử với 2 Thorncap Goblin + 1 Spore Puff (đứng và đang ra đòn), phòng trùm,

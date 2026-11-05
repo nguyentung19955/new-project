@@ -33,7 +33,7 @@
   function banKhien(sp, ten) {
     let b = banGuard.get(sp);
     if (!b) { b = {}; banGuard.set(sp, b); }
-    if (!b[ten]) {
+    if (!b[ten] || b[ten].img !== sp.img || b[ten].ready !== sp.ready) { // ảnh được giải phóng / tải lại (bộ nhớ, js/sprite_custom.js) → dựng lại bản nhìn
       const a = sp.dt[ten], r = { hang: a.hang, so: a.so, giay: a.giay, lap: ten === 'noi', mo: null };
       b[ten] = Object.assign(Object.create(Object.getPrototypeOf(sp)), sp, { dt: Object.assign({}, sp.dt, { idle: r, move: r }) });
     }
