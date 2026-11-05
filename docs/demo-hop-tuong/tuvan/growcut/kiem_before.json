@@ -1,0 +1,446 @@
+{
+"cuongno_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.446,
+"duoi": 0.052,
+"trai": 0.103,
+"phai": 0.043,
+"bbox": [
+3,
+35,
+251,
+219
+],
+"size": [
+256,
+256
+]
+},
+"cuuvi_nong_s1": {
+"co": [
+"manh1",
+"trung_s2"
+],
+"tren": 0.164,
+"duoi": 0.113,
+"trai": 0.222,
+"phai": 0.375,
+"manh_px": 472,
+"bbox": [
+69,
+56,
+245,
+199
+],
+"size": [
+256,
+256
+]
+},
+"cuuvi_nong_s2": {
+"co": [
+"manh1",
+"trung_s1"
+],
+"tren": 0.164,
+"duoi": 0.113,
+"trai": 0.222,
+"phai": 0.375,
+"manh_px": 472,
+"bbox": [
+69,
+56,
+245,
+199
+],
+"size": [
+256,
+256
+]
+},
+"dongbo_nong_s1": {
+"co": [
+"cut_tren"
+],
+"tren": 0.658,
+"duoi": 0.05,
+"trai": 0.064,
+"phai": 0.17,
+"bbox": [
+45,
+77,
+243,
+247
+],
+"size": [
+290,
+290
+]
+},
+"dongbo_nong_s2": {
+"co": [
+"cut_tren"
+],
+"tren": 0.725,
+"duoi": 0.036,
+"trai": 0.056,
+"phai": 0.162,
+"bbox": [
+37,
+81,
+258,
+259
+],
+"size": [
+298,
+298
+]
+},
+"dongbo_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.88,
+"duoi": 0.032,
+"trai": 0.196,
+"phai": 0.139,
+"bbox": [
+31,
+88,
+279,
+281
+],
+"size": [
+312,
+312
+]
+},
+"hydra_nong_s1": {
+"co": [
+"trung_s2"
+],
+"tren": 0.087,
+"duoi": 0.056,
+"trai": 0.056,
+"phai": 0.146,
+"bbox": [
+10,
+39,
+204,
+216
+],
+"size": [
+256,
+256
+]
+},
+"hydra_nong_s2": {
+"co": [
+"trung_s1"
+],
+"tren": 0.087,
+"duoi": 0.056,
+"trai": 0.056,
+"phai": 0.146,
+"bbox": [
+10,
+39,
+204,
+216
+],
+"size": [
+256,
+256
+]
+},
+"lienket_nong_s2": {
+"co": [
+"cut_tren"
+],
+"tren": 0.577,
+"duoi": 0.052,
+"trai": 0.066,
+"phai": 0.078,
+"bbox": [
+60,
+99,
+272,
+265
+],
+"size": [
+334,
+334
+]
+},
+"lienket_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.604,
+"duoi": 0.056,
+"trai": 0.113,
+"phai": 0.161,
+"bbox": [
+41,
+97,
+290,
+264
+],
+"size": [
+332,
+332
+]
+},
+"lophanung_nong_s1": {
+"co": [
+"cut_tren"
+],
+"tren": 0.642,
+"duoi": 0.209,
+"trai": 0.365,
+"phai": 0.225,
+"bbox": [
+40,
+52,
+226,
+229
+],
+"size": [
+268,
+268
+]
+},
+"lophanung_nong_s2": {
+"co": [
+"cut_tren"
+],
+"tren": 0.668,
+"duoi": 0.091,
+"trai": 0.13,
+"phai": 0.15,
+"bbox": [
+37,
+70,
+256,
+262
+],
+"size": [
+294,
+294
+]
+},
+"lophanung_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.66,
+"duoi": 0.076,
+"trai": 0.245,
+"phai": 0.201,
+"bbox": [
+27,
+75,
+276,
+278
+],
+"size": [
+304,
+304
+]
+},
+"luoicheo_nong_s1": {
+"co": [
+"trung_s2"
+],
+"tren": 0.055,
+"duoi": 0.051,
+"trai": 0.047,
+"phai": 0.051,
+"bbox": [
+10,
+11,
+245,
+244
+],
+"size": [
+256,
+256
+]
+},
+"luoicheo_nong_s2": {
+"co": [
+"trung_s1"
+],
+"tren": 0.055,
+"duoi": 0.051,
+"trai": 0.047,
+"phai": 0.051,
+"bbox": [
+10,
+11,
+245,
+244
+],
+"size": [
+256,
+256
+]
+},
+"ngaithoigian_nong_s1": {
+"co": [
+"cut_trai",
+"trung_s2"
+],
+"tren": 0.028,
+"duoi": 0.033,
+"trai": 0.483,
+"phai": 0.045,
+"bbox": [
+35,
+27,
+245,
+227
+],
+"size": [
+256,
+256
+]
+},
+"ngaithoigian_nong_s2": {
+"co": [
+"cut_trai",
+"trung_s1"
+],
+"tren": 0.028,
+"duoi": 0.033,
+"trai": 0.483,
+"phai": 0.045,
+"bbox": [
+35,
+27,
+245,
+227
+],
+"size": [
+256,
+256
+]
+},
+"ngoisao_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.422,
+"duoi": 0.04,
+"trai": 0.188,
+"phai": 0.144,
+"bbox": [
+31,
+81,
+279,
+261
+],
+"size": [
+312,
+312
+]
+},
+"ronglua_nong_s1": {
+"co": [
+"trung_s2"
+],
+"tren": 0.041,
+"duoi": 0.082,
+"trai": 0.21,
+"phai": 0.112,
+"bbox": [
+27,
+21,
+245,
+234
+],
+"size": [
+256,
+256
+]
+},
+"ronglua_nong_s2": {
+"co": [
+"trung_s1"
+],
+"tren": 0.041,
+"duoi": 0.082,
+"trai": 0.21,
+"phai": 0.112,
+"bbox": [
+27,
+21,
+245,
+234
+],
+"size": [
+256,
+256
+]
+},
+"tienhoa_nong_s2": {
+"co": [
+"cut_tren"
+],
+"tren": 0.509,
+"duoi": 0.057,
+"trai": 0.155,
+"phai": 0.17,
+"bbox": [
+22,
+32,
+233,
+225
+],
+"size": [
+256,
+256
+]
+},
+"tienhoa_nong_s3": {
+"co": [
+"cut_tren"
+],
+"tren": 0.467,
+"duoi": 0.041,
+"trai": 0.188,
+"phai": 0.169,
+"bbox": [
+6,
+5,
+249,
+211
+],
+"size": [
+256,
+256
+]
+},
+"af_eve": {
+"co": [
+"manh1"
+],
+"tren": 0.207,
+"duoi": 1.0,
+"trai": 0.622,
+"phai": 0.312,
+"manh_px": 241,
+"bbox": [
+0,
+0,
+473,
+473
+],
+"size": [
+474,
+474
+]
+}
+}

@@ -1,0 +1,696 @@
+{
+ "cuongno_nong_s2": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.887,
+  "s": 0.7915,
+  "cat_px": 0,
+  "mat_px": 121,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.997,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "cuongno_nong_s3": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.977,
+  "s": 0.7931,
+  "cat_px": 64,
+  "mat_px": 517,
+  "ra_px": 5.4,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.1094,
+  "iou": 1.0,
+  "cc": 0.998,
+  "size": [
+   284,
+   284
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "dongbo_nong_s1": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.916,
+  "s": 0.8373,
+  "cat_px": 0,
+  "mat_px": 2542,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   290,
+   290
+  ],
+  "cu": [
+   290,
+   290
+  ],
+  "ghi": true
+ },
+ "dongbo_nong_s2": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.9,
+  "s": 0.8368,
+  "cat_px": 0,
+  "mat_px": 3794,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   298,
+   298
+  ],
+  "cu": [
+   298,
+   298
+  ],
+  "ghi": true
+ },
+ "dongbo_nong_s3": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.984,
+  "s": 0.8338,
+  "cat_px": 0,
+  "mat_px": 7735,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 0.999,
+  "cc": 0.997,
+  "size": [
+   312,
+   312
+  ],
+  "cu": [
+   312,
+   312
+  ],
+  "ghi": true
+ },
+ "ngoisao_nong_s2": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.981,
+  "s": 0.8121,
+  "cat_px": 0,
+  "mat_px": 196,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.991,
+  "size": [
+   296,
+   296
+  ],
+  "cu": [
+   296,
+   296
+  ],
+  "ghi": true
+ },
+ "ngoisao_nong_s3": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.987,
+  "s": 0.812,
+  "cat_px": 0,
+  "mat_px": 732,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.991,
+  "size": [
+   312,
+   312
+  ],
+  "cu": [
+   312,
+   312
+  ],
+  "ghi": true
+ },
+ "soi_nong_s3": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.962,
+  "s": 0.875,
+  "cat_px": 0,
+  "mat_px": 57,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0391,
+  "iou": 1.0,
+  "cc": 0.998,
+  "size": [
+   266,
+   266
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "lienket_nong_s1": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.981,
+  "s": 0.8654,
+  "cat_px": 0,
+  "mat_px": 1134,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.98,
+  "size": [
+   330,
+   330
+  ],
+  "cu": [
+   330,
+   330
+  ],
+  "ghi": true
+ },
+ "lienket_nong_s2": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.981,
+  "s": 0.8616,
+  "cat_px": 0,
+  "mat_px": 1737,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.982,
+  "size": [
+   334,
+   334
+  ],
+  "cu": [
+   334,
+   334
+  ],
+  "ghi": true
+ },
+ "lienket_nong_s3": {
+  "raw": "raw_grow_stages2.png",
+  "diem": 0.971,
+  "s": 0.8645,
+  "cat_px": 0,
+  "mat_px": 2802,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.979,
+  "size": [
+   332,
+   332
+  ],
+  "cu": [
+   332,
+   332
+  ],
+  "ghi": true
+ },
+ "hopbi_nong_s3": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.903,
+  "s": 0.706,
+  "cat_px": 61,
+  "mat_px": 193,
+  "ra_px": 4.9,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.1016,
+  "iou": 1.0,
+  "cc": 0.985,
+  "size": [
+   282,
+   282
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "lophanung_nong_s1": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.968,
+  "s": 0.7199,
+  "cat_px": 0,
+  "mat_px": 940,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   268,
+   268
+  ],
+  "cu": [
+   268,
+   268
+  ],
+  "ghi": true
+ },
+ "lophanung_nong_s2": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.925,
+  "s": 0.7152,
+  "cat_px": 0,
+  "mat_px": 2806,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.998,
+  "size": [
+   294,
+   294
+  ],
+  "cu": [
+   294,
+   294
+  ],
+  "ghi": true
+ },
+ "lophanung_nong_s3": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.906,
+  "s": 0.7199,
+  "cat_px": 0,
+  "mat_px": 7068,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   304,
+   304
+  ],
+  "cu": [
+   304,
+   304
+  ],
+  "ghi": true
+ },
+ "tienhoa_nong_s2": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.967,
+  "s": 0.7025,
+  "cat_px": 0,
+  "mat_px": 1053,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "tienhoa_nong_s3": {
+  "raw": "raw_grow_stages.png",
+  "diem": 0.89,
+  "s": 0.699,
+  "cat_px": 3282,
+  "mat_px": 1793,
+  "ra_px": 26.9,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.2734,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   326,
+   326
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "cuuvi_nong_s1": {
+  "raw": "raw_new_h2.png",
+  "diem": 0.975,
+  "s": 0.4051,
+  "cat_px": 0,
+  "mat_px": 914,
+  "ra_px": 0.0,
+  "manh": 1,
+  "manh_px": 2520,
+  "loi": true,
+  "e": 1.0,
+  "iou": 0.978,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "cuuvi_nong_s2": {
+  "raw": "raw_new_h2.png",
+  "diem": 0.975,
+  "s": 0.4051,
+  "cat_px": 0,
+  "mat_px": 914,
+  "ra_px": 0.0,
+  "manh": 1,
+  "manh_px": 2520,
+  "loi": true,
+  "e": 1.0,
+  "iou": 0.978,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "ngaithoigian_nong_s1": {
+  "raw": "raw_new_h2.png",
+  "diem": 0.963,
+  "s": 0.5018,
+  "cat_px": 0,
+  "mat_px": 3479,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "ngaithoigian_nong_s2": {
+  "raw": "raw_new_h2.png",
+  "diem": 0.963,
+  "s": 0.5018,
+  "cat_px": 0,
+  "mat_px": 3479,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "ngaithoigian_nong_s3": {
+  "raw": "raw_new_h3.png",
+  "diem": 0.876,
+  "s": 0.446,
+  "cat_px": 0,
+  "mat_px": 1090,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "aten_nong": {
+  "raw": "raw_fs5.png",
+  "diem": 0.975,
+  "s": 0.5313,
+  "cat_px": 0,
+  "mat_px": 1196,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 1.0,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "taylo_nong": {
+  "raw": "raw_fs4.png",
+  "diem": 0.967,
+  "s": 0.4223,
+  "cat_px": 0,
+  "mat_px": 1909,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "dichchuyen_nong": {
+  "raw": "raw_redo_heads_b.png",
+  "diem": 0.989,
+  "s": 0.5036,
+  "cat_px": 0,
+  "mat_px": 217,
+  "ra_px": 0.0,
+  "manh": 1,
+  "manh_px": 7,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.993,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": false,
+  "ghi_chu": "bao nham: vien/quang TIM sat mau nen magenta (anh cu de ban trong) - khong bi cat, giu anh cu"
+ },
+ "hasao_nong": {
+  "raw": "raw_fs9.png",
+  "diem": 0.97,
+  "s": 0.5749,
+  "cat_px": 0,
+  "mat_px": 2716,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0234,
+  "iou": 1.0,
+  "cc": 0.999,
+  "size": [
+   262,
+   262
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "khuech_nong": {
+  "raw": "raw_fs4.png",
+  "diem": 0.961,
+  "s": 0.4947,
+  "cat_px": 0,
+  "mat_px": 1131,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.979,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": false,
+  "ghi_chu": "bao nham: vien/quang TIM sat mau nen magenta (anh cu de ban trong) - khong bi cat, giu anh cu"
+ },
+ "sungluc_nong": {
+  "raw": "raw_fs1.png",
+  "diem": 0.917,
+  "s": 0.3949,
+  "cat_px": 0,
+  "mat_px": 384,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 1.0,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": true
+ },
+ "tron_nong": {
+  "raw": "raw_fs3.png",
+  "diem": 0.992,
+  "s": 0.5575,
+  "cat_px": 0,
+  "mat_px": 920,
+  "ra_px": 0.0,
+  "manh": 1,
+  "manh_px": 6,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.993,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": false,
+  "ghi_chu": "bao nham: vien/quang TIM sat mau nen magenta (anh cu de ban trong) - khong bi cat, giu anh cu"
+ },
+ "xaotron_nong": {
+  "raw": "raw_fs9.png",
+  "diem": 0.914,
+  "s": 0.51,
+  "cat_px": 0,
+  "mat_px": 1666,
+  "ra_px": 0.0,
+  "manh": 0,
+  "manh_px": 0,
+  "loi": true,
+  "e": 1.0,
+  "iou": 1.0,
+  "cc": 0.982,
+  "size": [
+   256,
+   256
+  ],
+  "cu": [
+   256,
+   256
+  ],
+  "ghi": false,
+  "ghi_chu": "bao nham: vien/quang TIM sat mau nen magenta (anh cu de ban trong) - khong bi cat, giu anh cu"
+ }
+}
