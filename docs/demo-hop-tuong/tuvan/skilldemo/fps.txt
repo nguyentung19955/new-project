@@ -1,0 +1,16 @@
+sungluc_4 fps 60.2
+canon_4 fps 56.9
+set_1 fps 60.4
+set_7 fps 60.4
+bang_4 fps 59.9
+doc_4 fps 60.0
+radar_4 fps 60.4
+mana_4 fps 60.3
+vughep_4 fps 60.7
+mimic_4 fps 60.3
+saochep_4 fps 60.5
+haoquang_4 fps 60.4
+soi_4_g1 fps 60.4
+soi_4_g3 fps 60.4
+khien_4 fps 60.5
+dichchuyen_4 fps 60.5
