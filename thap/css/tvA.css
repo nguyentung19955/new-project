@@ -1,0 +1,85 @@
+/* TURRET MERGE — tư vấn toàn bộ (TU-VAN-TOAN-BO.txt) phần A: §B2 XÂY BỘ BÀI · §B19 KHO · §D CHÂN DUNG · LỚP KHUNG.
+   Khung logic 430×860 (#wrap phóng theo màn) = toạ độ bản vẽ 390×844 × 1,1.
+   Thứ tự lớp ở MỌI chỗ chân dung: ảnh phi công (cắt theo mốc mắt/tóc — js/chandung.js) → khung PNG cửa sổ trong suốt → chip ở góc dành riêng.
+   Không lớp mờ phía trên đầu; không thanh ngang qua cửa sổ mặt; không chip trên mắt/trán. */
+
+/* ---------- §D mục tiêu cắt cho từng chỗ chứa (biến đọc bởi js/chandung.js) ---------- */
+html body #chon #chon-luoi .c img.anh.pilot { --po-mat: .41; --po-toc: .09; --po-zoom: 1.9; }          /* thẻ kho: mắt 32–42 / 90 */
+html body #chon #chon-bo .o-bo > img { --po-mat: .44; --po-toc: .10; --po-zoom: 2.4; }                  /* ô bộ bài: mắt 22–29 / 58 */
+html body #bo-the .the img.anh.pilot { --po-mat: .43; --po-toc: .08; --po-zoom: 2.4; }                   /* khay trận: mắt 19–25 / 52 */
+html body #tt .tt-anh { --po-mat: .41; --po-toc: .05; --po-zoom: 2.8; }                                  /* bảng chạm 44×44: mắt 16–19 */
+html body .dk-noi-po img, html body .hm-xem-po img, html body .dp-the img.po, html body #the-mv img.po, html body .vt-mini img.po, html body .vt-po.pilot { --po-mat: .42; --po-toc: .08; }
+html body #up .up-pi img { --po-mat: .40; --po-toc: .07; --po-zoom: 1.5; --po-x: .46; }                  /* trang ụ / chỉ huy: mắt 34–46 %, tóc ≥ 20 px */
+
+/* trang ụ / chỉ huy: KHÔNG mờ phía trên (tóc rõ tới đỉnh) — chỉ mờ sang phải (huy hiệu) và xuống chữ */
+html body #up.up7 .up-pi {
+  -webkit-mask-image: linear-gradient(to right, #000 58%, transparent 98%), linear-gradient(to bottom, #000 0 70%, transparent 99%);
+  mask-image: linear-gradient(to right, #000 58%, transparent 98%), linear-gradient(to bottom, #000 0 70%, transparent 99%); }
+
+/* ---------- §B2 XÂY BỘ BÀI ---------- */
+html body #chon .dk-dau { height: 46px; margin: 8px 18px 0; }
+html body #chon .chon-dau { margin: 0 18px; }
+html body #chon .dk-dem { height: 28px; }
+html body #chon .dk-dem #chon-dem { font-size: 17px; }
+html body #chon .dk-dem > span > span { font-size: 13px; }
+html body #chon .dk-chu { height: 44px; margin: -8px 0; padding: 0 2px 0 10px; width: auto; min-width: max-content; white-space: nowrap; font-size: 13px; letter-spacing: .06em; } /* vùng chạm 44 px, nhìn như dòng 28 px */
+/* 5 ô 72 × 86, khe 8,5 */
+html body #chon #chon-bo { height: 86px; min-height: 86px; gap: 0; justify-content: space-between; }
+html body #chon #chon-bo .o-bo { flex: 0 0 72px; width: 72px; height: 86px; }
+/* ô CÓ ỤI: khung E08 tv_o_co.png (216×242 → 72×81, cửa sổ trong suốt 16.7–83.3 % × 17.4–82.2 %), không thanh nào qua mặt;
+   ảnh chân dung nằm ĐÚNG dưới cửa sổ (lấn viền 1 px để không hở mép) — vẽ trước, khung vẽ sau */
+html.co-khung body #chon #chon-bo .o-bo.co-kh { --khh: 81px; }
+html.co-khung body #chon #chon-bo .o-bo.co-kh > img.kh { left: 0; top: 2px; width: 72px; height: 81px; object-fit: fill; z-index: 2; }
+html.co-khung body #chon #chon-bo .o-bo.co-kh > img:not(.kh):not(.gl):not(.dk-vien) { left: 11px !important; width: 50px !important; top: 15px !important; height: 54px !important; z-index: 1; }
+/* tóm tắt ụ + chỉ huy: mỗi dải 46 cao */
+html body #chon .dk-noi { height: 46px; margin-top: 10px; padding: 0 26px 0 76px; border-image-width: 12px 22px 12px 50px; }
+html body #chon .dk-noi .dk-noi-po { left: 8px; top: 6px; width: 34px; height: 34px; }
+html body #chon .dk-noi .dk-noi-u { left: 44px; top: 9px; width: 28px; height: 28px; }
+html body #chon .dk-noi .dk-noi-trong { margin-left: -46px; font-size: 13px; }
+html body #chon .dk-noi-chu { gap: 3px; }
+html body #chon .dk-noi-chu b { font-size: 15px; }
+html body #chon .dk-noi-chu small { font-size: 13px; }
+html body #chon .dk-mv { height: 46px; margin-top: 8px; padding: 0 26px 0 56px; border-image-width: 12px 22px 12px 54px; }
+html body #chon .dk-mv .dk-mv-po { left: 10px; top: 7px; width: 32px; height: 32px; }
+html body #chon .dk-mv-chu small { font-size: 12px; }
+html body #chon .dk-mv-chu b { font-size: 14px; }
+html body #chon .dk-mv-mo { font-size: 12.5px; }
+/* tìm + lọc: 1 hàng 48 cao */
+html body #chon .dk-tim { height: 48px; margin: 10px 18px 6px; gap: 9px; }
+html body #chon .dk-o #bb-tim { font-size: 15px; }
+html body #chon .dk-loc.hm-ic1 { width: 52px; min-width: 52px; height: 48px; }
+/* lưới 3 cột × 125, khe 9, chỉ cuộn dọc */
+html body #chon #chon-luoi { padding: 6px 18px 12px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+html body #chon #chon-luoi .luoi { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 9px; margin-bottom: 9px; }
+/* thẻ: khung 110 × 133 (đúng tỉ lệ khung 271×328) giữa cột + tên 1 dòng 20 cao */
+html body #chon #chon-luoi .c { height: 155px; overflow: visible; }
+html.co-khung body #chon #chon-luoi .c.co-kh { --khh: 133px; --kw: 110px; }
+html.co-khung body #chon #chon-luoi .c.co-kh > .kh { left: calc(50% - var(--kw) / 2); width: var(--kw); top: 0; height: var(--khh); object-fit: fill; }
+html.co-khung body #chon #chon-luoi .c.co-kh > img.anh { position: absolute; margin: 0; left: calc(50% - var(--kw) * .344); width: calc(var(--kw) * .688) !important; top: calc(var(--khh) * .189); height: calc(var(--khh) * .649) !important; }
+html.co-khung body #chon #chon-luoi .c.co-kh .ic { right: calc(50% - var(--kw) * .344 + 2px); left: auto; top: calc(var(--khh) * .838 - 26px); width: 24px; height: 24px; }
+html body #chon #chon-luoi .c .ten { top: auto; bottom: 0; height: 20px; padding: 0 2px; display: block; font: 700 13.5px/20px var(--f-chu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: none !important; }
+html body #chon #chon-luoi .c .ten[style] { font-size: 13.5px !important; }
+/* đang chọn: vòng sáng PNG quanh khung (không đè cửa sổ mặt), KHÔNG đế xanh tràn; chỉ thẻ khoá mới tối */
+html body #chon #chon-luoi .c .sel-d { display: none; }
+html.co-khung body #chon #chon-luoi .c.co-kh .sel-v { left: calc(50% - var(--kw) * .59); width: calc(var(--kw) * 1.18); top: calc(var(--khh) * -.09); height: calc(var(--khh) * 1.18); }
+html.co-khung body #chon #chon-luoi .c.co-kh .sel-b { left: calc(50% - var(--kw) * .8); width: calc(var(--kw) * 1.6); }
+/* PLAY dính đáy 66 cao */
+html body #chon .chon-cuoi { padding: 6px 18px 12px; }
+html body #chon .dk-choi { height: 66px; }
+html body #chon .dk-choi b { font-size: 24px; }
+html body #chon .dk-choi small { font-size: 12px; }
+/* thông báo ngắn: trên dải tóm tắt */
+#chon.xem-dk ~ #chon-goi-nhac { top: 178px !important; }
+
+/* ---------- §D khay trận: chip LV xuống góc trái DƯỚI cửa sổ (không trên trán), số ụ góc phải dưới ---------- */
+html.co-hud2 body #bo-the .the .lv, html.co-hud2.co-khung body #bo-the .the.co-kh .lv, html.co-hud2.co-khung body #bo-the .the.ht-goc.co-kh .lv {
+  top: calc(var(--khh, 74px) * .838 - 14px); bottom: auto; left: calc(15.6% + 1px); right: auto; }
+
+/* ---------- §E07 ô bộ bài TRỐNG (tv_o_trong.png, cửa sổ trong suốt 16.7–83.3 % × 17.4–81.8 %) ---------- */
+html body #chon #chon-bo .o-bo:not([data-id]) { border: 0; border-image: none; background: url(../assets/tv_o_trong.png) center / 100% auto no-repeat; }
+
+/* ---------- §D trang ụ: bỏ huy hiệu ụ to trên hero (người dùng báo che mặt) · trang chỉ huy: huy hiệu nhỏ ở góc phải dưới thân, không trên mặt ---------- */
+html body #up.up7 .up-mam:has(.up-u) { display: none; }
+html body #up.up7 .up-mam:has(.up-mvic) { right: 8px; bottom: 0; transform: scale(.62); transform-origin: 100% 100%; }
+/* dải đồng đội/đối thủ: bộ đếm ụ (DCDW) xuống góc phải DƯỚI — không sát trán khi mặt lệch phải */
+html body #dp-dai .dp-the .dp-dem { top: auto; bottom: -2px; right: -2px; }
