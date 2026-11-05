@@ -783,7 +783,9 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
 SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng sao trên bàn là bội 10 → tăng tốc; ≥50 sao → +350% sát thương
   vai: 'tc', dmg: 12.73, toc: 1.1, nham: 'dau',
   tong: (B) => B.t.reduce((s, X) => s + (X ? X.sao : 0), 0),
-  mo(T) { const n = this.tong(G.ban[T.ban]); return 'Total stars ' + n + (n % 10 === 0 ? ' (×10: +100% speed)' : '') + (n >= 50 ? ' · ≥50: +350% damage' : ''); },
+  // bộ đếm kỹ năng = tổng ★ của MỌI ụ trên bàn của mình (không phải số Star Cannon) — hiện ở bảng chạm + vòng đo quanh ụ (growfx)
+  demTT(T) { const n = this.tong(G.ban[T.ban]); return 'Stars counted: ' + n + '/50' + (n >= 50 ? ' · SUPERNOVA +350% damage' : '') + (n > 0 && n % 10 === 0 ? ' · ' + n + ' = ×10: ×2 speed' : ' · next ×10 at ' + (Math.floor(n / 10) + 1) * 10); },
+  mo(T) { return this.demTT(T); },
   capNhat(G, B, T) {
     const n = this.tong(B), boi = n % 10 === 0 && n > 0, thuc = n >= 50;
     if (boi) T.buf.toc += 1; if (thuc) T.buf.dmg += 3.5;

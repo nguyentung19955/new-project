@@ -167,7 +167,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
       const d = document.createElement('button'); d.className = 'the'; d.dataset.act = 'nang'; d.dataset.id = id;
       d.style.setProperty('--m', TIERS[r.bac].mau);
       d.innerHTML = cardArt(id) +
-        '<span class="lv">LV1</span><span class="so"></span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
+        '<span class="lv">LV1</span><span class="gia"><img src="assets/ui_nangcap.png" alt=""><b>100</b></span>';
       bo.appendChild(d);
     }
     // dải đoạn tới trùm: 1 ô / wave trong chu kỳ, ô cuối = trùm
@@ -209,8 +209,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
       chu(d._lv || (d._lv = d.querySelector('.lv')), 'LV' + lv);
-      let n = 0; for (const T of B.t) if (T && T.id === id) n++;
-      chu(d._so || (d._so = d.querySelector('.so')), n ? '×' + n : '');
+      // (bỏ số đếm '×n ụ trên bàn' dưới thẻ — DCDW không hiện, người chơi tưởng là số sao / bộ đếm của kỹ năng)
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
       else { const gia = LUAT.giaNangCap[lv - 1]; chu(g, gia); d.classList.toggle('du', B.mana >= gia); d.classList.toggle('thieu', B.mana < gia); }
