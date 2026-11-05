@@ -70,5 +70,17 @@
   "effect_id": "a3e951d7-8a9a-4e81-a441-07feab63f245",
   "artist": "lite",
   "generations": 1.0
+ },
+ "hu-bom-song": {
+  "nguon": "bomSong",
+  "effect_id": "421ca0c3-eeeb-41e4-8a29-87531f0b7a45",
+  "artist": "lite",
+  "generations": 2.0
+ },
+ "hu-no-bang": {
+  "nguon": "noNuoc",
+  "effect_id": "b7da6d75-3917-4e1a-b395-5aab8d0cb2e1",
+  "artist": "pro",
+  "generations": 16.0
  }
 }

@@ -26,16 +26,26 @@
     linhMa: 'rustKnight', doiThan: 'cinderBat', tuongDa: 'gargoyleGuard', denLong: 'wispLantern', meoDen: 'witchCat',
     huLua: 'emberKettle', tieuYeu: 'bombImp', nhimThan: 'emberHedgehog', tuongMa: 'hauntedCaptain', huChua: 'greatCauldron',
     hoLua: 'cinderLion', hoTinh: 'vulpina',
+    // vùng 4 Đầm Sương
+    raiCa: 'otterPoler', diaTrau: 'bogLeech', baBa: 'snapTurtle', cocTia: 'bubbleToad', ranNuoc: 'ribbonSnake', echPhinh: 'pufferFrog',
+    maDa: 'drownedNixie', traiGai: 'thornClam', raiCaChua: 'otterCaptain', cocChua: 'toadKing', caTre: 'oldMudwhisker', thuongLuong: 'lindworm',
   };
+  // Quái vùng 4 chưa từng có tấm ảnh (trước dùng hình tạm mượn con khác nhuộm màu, js/monster_art.js MA.hinhTam): không có tấm <mã>-plcu nên
+  // js/sprite_custom.js vẫn nạp tấm mới cả khi ?quaipl=0 → gỡ ở đây để ?quaipl=0 về đúng hình tạm cũ.
+  const KHONG_CU = ['ranNuoc', 'echPhinh', 'maDa', 'traiGai', 'raiCaChua', 'cocChua', 'caTre'];
   const HU34_RIENG = { 'hu-bom-phao': 'hu-pl34-bom-phao', 'hu-cau-lua-ma': 'hu-pl34-cau-lua-ma', 'hu-phun-lua-quat': 'hu-pl34-phun-lua-quat',
-    'hu-vet-dau': 'hu-pl34-vet-dau', 'hu-bua-tam-giac': 'hu-pl34-bua-tam-giac' };
+    'hu-vet-dau': 'hu-pl34-vet-dau', 'hu-bua-tam-giac': 'hu-pl34-bua-tam-giac', 'hu-bom-song': 'hu-pl34-bom-song' };
   const HU34_CHUNG = { 'hu-no-lua': 'hu-pl34-no-lua', 'hu-lua-bung': 'hu-pl34-lua-bung', 'hu-cao-quai': 'hu-pl34-cao-quai', 'hu-lao-bui': 'hu-pl34-lao-bui',
-    'hu-quai-dap': 'hu-pl34-quai-dap', 'hu-gai-toa': 'hu-pl34-gai-toa', 'hu-tia-mom': 'hu-pl34-tia-mom' };
+    'hu-quai-dap': 'hu-pl34-quai-dap', 'hu-gai-toa': 'hu-pl34-gai-toa', 'hu-tia-mom': 'hu-pl34-tia-mom', 'hu-no-bang': 'hu-pl34-no-bang' };
   if (G.QUAI_PL === false) {
+    if (SC && SC.ds && SC.remove) for (const id of KHONG_CU) { const sp = SC.ds[id]; if (sp && sp.ma === id && !sp.phaCua) SC.remove(id); }
     if (FA && FA.remove) { for (const k in HU34_RIENG) FA.remove(HU34_RIENG[k]); for (const k in HU34_CHUNG) FA.remove(HU34_CHUNG[k]); }
     return;
   }
   if (!SC || !SC.ds || !MA || typeof MA.draw !== 'function') return;
+  // Lindworm (thuongLuong): chỗ mảnh trán sáng lên khi lộ điểm yếu (js/thuong_luong.js TRAN) đo lại trên ảnh mới, theo pha 1..3
+  // (điểm game so với điểm neo, ảnh quay phải; docs/review/ke-hoach-cai-thien/pixellab-quai-vung-3-4/bao-cao.md).
+  if (QP) QP.TRAN_TL = [[-3, -96], [-2, -93], [-4, -95]];
   if (QP) { QP.V34 = V34; if (QP.HU) Object.assign(QP.HU, HU34_RIENG); QP.HU34_CHUNG = HU34_CHUNG; }
 
   // ---- hàng thêm (đọc từ tệp gốc) ----

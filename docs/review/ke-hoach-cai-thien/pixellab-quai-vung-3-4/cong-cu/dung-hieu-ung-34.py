@@ -23,11 +23,14 @@ def main():
         fr = [f['frame'] for f in J['frames']]
         w, h = fr[0]['w'], fr[0]['h']
         t = json.load(open(os.path.join(OUT, cu + '.sprite.json'), encoding='utf-8'))
-        assert (w, h) == (t['khung_rong'] * 2, t['khung_cao'] * 2), (cu, w, h, t['khung_rong'], t['khung_cao'])
+        W, H = int(round(t['khung_rong'] * 2)), int(round(t['khung_cao'] * 2))
+        assert abs(w - W) <= 4 and abs(h - H) <= 4, (cu, w, h, W, H)  # PixelLab có thể trả lệch vài điểm: cắt / thêm lề trong suốt ở giữa (không co giãn)
         assert len(fr) == t['so'], (cu, len(fr), t['so'])
-        dai = Image.new('RGBA', (w * len(fr), h))
+        ox, oy = (w - W) // 2, (h - H) // 2
+        dai = Image.new('RGBA', (W * len(fr), H))
         for i, f in enumerate(fr):
-            dai.paste(sh.crop((f['x'], f['y'], f['x'] + w, f['y'] + h)), (i * w, 0))
+            dai.paste(sh.crop((f['x'] + ox, f['y'] + oy, f['x'] + ox + W, f['y'] + oy + H)), (i * W, 0))
+        w, h = W, H
         b = io.BytesIO(); dai.save(b, 'PNG', optimize=True)
         moi = 'hu-pl34-' + cu[3:]
         tep = {'loai': 'linh-khi-sprite', 'doi_tuong': 'hieu-ung', 'ma': moi, 'ten': 'PixelLab: ' + t.get('ten', cu) + ' (thay ' + cu + ', ?quaipl=0: ảnh cũ)',

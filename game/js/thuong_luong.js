@@ -1028,7 +1028,7 @@
       try {
         const lo = b.exposed > 0;
         if (moi) { // ảnh thật đã có mảnh trống trên trán: chỉ thêm quầng sáng khi lộ điểm yếu, đúng chỗ mảnh trống của ảnh
-          const T0 = TRAN[clamp(b.phase | 0, 0, 2)], f = b.face > 0 ? 1 : -1, x = b.x + T0[0] * f, y = b.y + T0[1];
+          const T0 = ((G.quaiPl && G.quaiPl.TRAN_TL) || TRAN)[clamp(b.phase | 0, 0, 2)], f = b.face > 0 ? 1 : -1, x = b.x + T0[0] * f, y = b.y + T0[1]; // TRAN_TL: ảnh Lindworm PixelLab (js/quai_pl_34.js)
           if (lo) { E(x, y, 10 + Math.sin(t * 10) * 1.5, 8, 'rgba(255,214,120,0.35)'); E(x, y, 5, 4, 'rgba(255,243,176,0.45)'); }
         } else {
         const x = b.x - 8, y = b.y - (b.h || 100) * 0.62;

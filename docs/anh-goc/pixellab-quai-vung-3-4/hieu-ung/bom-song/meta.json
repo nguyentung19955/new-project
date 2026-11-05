@@ -1,0 +1,38 @@
+{
+ "fps": 6,
+ "kind": "new",
+ "loop": true,
+ "name": "talesworn-bomSong",
+ "files": {
+  "talesworn-bomsong.gif": "https://api.pixellab.ai/mcp/pixel-tools/1987a3ef-902d-41db-abe0-683178f17afd/talesworn-bomsong.gif",
+  "talesworn-bomsong.png": "https://api.pixellab.ai/mcp/pixel-tools/1987a3ef-902d-41db-abe0-683178f17afd/talesworn-bomsong.png",
+  "talesworn-bomsong.json": "https://api.pixellab.ai/mcp/pixel-tools/1987a3ef-902d-41db-abe0-683178f17afd/talesworn-bomsong.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 8,
+  "y": 8,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 16,
+  "w": 16
+ },
+ "frames": 4,
+ "message": "Here is the round brown river gourd with a green waterweed band that slides round it, plus one water drop that hangs, falls and splashes, looping over 4 frames. The renderer's smallest canvas is 16 px wide, so this is 16x16 rather than 14x16: the gourd sits in the middle with a 1 px clear margin on each side. Crop the left and right columns to get exactly 14x16. The drop reaches the bottom edge on purpose, as the drip you asked for, so trim or shift it if your game clips there.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=421ca0c3-eeeb-41e4-8a29-87531f0b7a45",
+ "effect_id": "421ca0c3-eeeb-41e4-8a29-87531f0b7a45",
+ "gif_exact": true,
+ "result_id": "1987a3ef-902d-41db-abe0-683178f17afd",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 2.0
+ },
+ "generation_id": "68d02220-ac72-40c1-8384-7ebfb8d2854a",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

@@ -1,0 +1,45 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "talesworn-noNuoc",
+ "files": {
+  "talesworn-nonuoc.gif": "https://api.pixellab.ai/mcp/pixel-tools/be389da7-39f4-42da-8a23-5946ecf1e185/talesworn-nonuoc.gif",
+  "talesworn-nonuoc.png": "https://api.pixellab.ai/mcp/pixel-tools/be389da7-39f4-42da-8a23-5946ecf1e185/talesworn-nonuoc.png",
+  "talesworn-nonuoc.json": "https://api.pixellab.ai/mcp/pixel-tools/be389da7-39f4-42da-8a23-5946ecf1e185/talesworn-nonuoc.json"
+ },
+ "parts": [
+  "rest",
+  "crown",
+  "spray",
+  "foam",
+  "bubbles",
+  "ripples"
+ ],
+ "anchor": {
+  "x": 96,
+  "y": 120,
+  "kind": "origin"
+ },
+ "artist": "pro",
+ "canvas": {
+  "h": 160,
+  "w": 192
+ },
+ "frames": 8,
+ "message": "Created an 8-frame, one-shot storybook splash: a white flash, blue-and-white crown with foam, then bubbles and expanding ripples that vanish. The transparent canvas stays exactly 192\u00d7160, centred at (96, 120), with crisp pixels and dark outlines.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=b7da6d75-3917-4e1a-b395-5aab8d0cb2e1",
+ "effect_id": "b7da6d75-3917-4e1a-b395-5aab8d0cb2e1",
+ "gif_exact": true,
+ "result_id": "be389da7-39f4-42da-8a23-5946ecf1e185",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 16.0
+ },
+ "generation_id": "caf2d11b-f8e7-48de-ade9-c1d51c6a72c9",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 8
+}

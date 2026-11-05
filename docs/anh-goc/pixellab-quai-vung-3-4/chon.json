@@ -486,5 +486,496 @@
     "seed": 1
    }
   ]
+ },
+ "raiCa": {
+  "ma": "otterPoler",
+  "ten": "River Otter Poler",
+  "nhan_vat_pixellab": "237adfa1-57e0-4a79-812a-31b2709845df",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 2
+   }
+  ]
+ },
+ "diaTrau": {
+  "ma": "bogLeech",
+  "ten": "Bog Leech",
+  "nhan_vat_pixellab": "cc2130be-aea9-49bf-a959-ee4d26d5a444",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "net": 3
+ },
+ "baBa": {
+  "ma": "snapTurtle",
+  "ten": "Snapping Turtle",
+  "nhan_vat_pixellab": "57e09380-ffb6-4f04-8710-42fd65bbf56a",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "cocTia": {
+  "ma": "bubbleToad",
+  "ten": "Bubble Toad",
+  "nhan_vat_pixellab": "205c9338-f3c0-4ff0-bce9-211c88e053f4",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "ranNuoc": {
+  "ma": "ribbonSnake",
+  "ten": "Ribbon Water Snake",
+  "nhan_vat_pixellab": "182b8c92-64f5-474e-832a-44e6c32d1110",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "echPhinh": {
+  "ma": "pufferFrog",
+  "ten": "Puffer Frog",
+  "nhan_vat_pixellab": "7c4c25f2-8c99-4ef5-8cee-1b6153b93e95",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "net": 3
+ },
+ "maDa": {
+  "ma": "drownedNixie",
+  "ten": "Drowned Nixie",
+  "nhan_vat_pixellab": "b8d021e2-4725-4cf8-afeb-946647990adb",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "traiGai": {
+  "ma": "thornClam",
+  "ten": "Thornshell Clam",
+  "nhan_vat_pixellab": "5a541e5e-56e0-4c6f-bbfd-c7a768d16f51",
+  "anh_goc_seed": 33,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "cocChua": {
+  "ma": "toadKing",
+  "ten": "Toad King",
+  "nhan_vat_pixellab": "55bb6baa-e8d6-4104-924a-7a3313ae970f",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ]
+ },
+ "raiCaChua": {
+  "ma": "otterCaptain",
+  "ten": "Otter Captain",
+  "nhan_vat_pixellab": "1b60a5cb-2f2d-4aaf-b0bd-5d4638846863",
+  "anh_goc_seed": 11,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 2
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "net": 3
+ },
+ "thuongLuong": {
+  "ma": "lindworm",
+  "ten": "Lindworm the River Serpent",
+  "nhan_vat_pixellab": "4d99b2af-db9a-4759-9402-716439445d3f",
+  "anh_goc_seed": 22,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   },
+   {
+    "ten": "tele_c2",
+    "seed": 1
+   },
+   {
+    "ten": "atk_c2",
+    "seed": 1
+   }
+  ]
+ },
+ "thuongLuongP2": {
+  "ma": "lindworm-p2",
+  "ten": "Lindworm (ice phase)",
+  "nhan_vat_pixellab": "345b651b-aab0-469c-9398-5462cb6483f9",
+  "anh_goc_seed": 1,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "ma_game": "thuongLuong-p2"
+ },
+ "thuongLuongP3": {
+  "ma": "lindworm-p3",
+  "ten": "Lindworm (fire phase)",
+  "nhan_vat_pixellab": "bacfd4cf-2852-4237-ae56-79e8d16ee70a",
+  "anh_goc_seed": 1,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   }
+  ],
+  "ma_game": "thuongLuong-p3"
+ },
+ "caTre": {
+  "ma": "oldMudwhisker",
+  "ten": "Old Mudwhisker",
+  "nhan_vat_pixellab": "7d8db0a1-c0b2-49f0-bd0e-167aaf7145d6",
+  "anh_goc_seed": 33,
+  "xoay_seed": 7,
+  "hang": [
+   {
+    "ten": "idle",
+    "seed": 1
+   },
+   {
+    "ten": "move",
+    "seed": 1
+   },
+   {
+    "ten": "tele",
+    "seed": 1
+   },
+   {
+    "ten": "atk",
+    "seed": 1
+   },
+   {
+    "ten": "hit",
+    "seed": 1
+   },
+   {
+    "ten": "die",
+    "seed": 1
+   },
+   {
+    "ten": "tele_chieu1",
+    "seed": 1
+   },
+   {
+    "ten": "atk_chieu1",
+    "seed": 2
+   },
+   {
+    "ten": "tele_chieu2",
+    "seed": 1
+   },
+   {
+    "ten": "atk_chieu2",
+    "seed": 1
+   },
+   {
+    "ten": "idle_p2",
+    "seed": 1
+   },
+   {
+    "ten": "tele_p2",
+    "seed": 1
+   }
+  ]
  }
 }

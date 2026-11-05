@@ -69,9 +69,11 @@ def chay(b, nhan, co):
         info = pg.evaluate('''() => { const S = G.getRun(), W = S.W, b = W.boss; if (!b) return null; b.busy = 999; b.cd = 99; b.vx = 0; b.vy = 0; b.intro = null; S.P.inv = 99; W.banner = null; S.hint = null;
           for (const k of Object.keys(W)) if (Array.isArray(W[k]) && /^(ents|projs|haz|hazards|zones|bullets|mobs|spawns|warns|aoes)$/.test(k)) W[k].length = 0;
           S.P.x = b.x - 120; S.P.y = b.y + 4; G.spriteCustom.get(b.art); return [b.art, b.kind, Math.round(b.x), Math.round(b.y)]; }''')
-        if info: cho_anh(pg, [info[0]], 40)
+        try: pg.wait_for_function('() => { const b = G.getWorld().boss; return !b || !b.hidden; }', timeout=15000)  # Cá Trê có thể đang lặn bùn
+        except Exception: pass
+        san = cho_anh(pg, [info[0], 'thuongLuong' if info[0] == 'nguTinh' else info[0]], 120) if info else None
         pg.wait_for_timeout(600)
-        print(nhan, ten, info)
+        print(nhan, ten, info, 'anh san', san)
         pg.screenshot(path=os.path.join(OUT, 'tran-%d-%s%s.png' % (VUNG, ten, nhan)))
         if info:
             pg.evaluate('() => { const b = G.getWorld().boss; b.busy = 0; b.cd = 0; return 1; }')

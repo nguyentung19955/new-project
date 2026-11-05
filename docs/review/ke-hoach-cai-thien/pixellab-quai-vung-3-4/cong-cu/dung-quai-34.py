@@ -29,12 +29,16 @@ def khung(cu, hang):
 
 
 def dung(cu, cfg):
+    cu_thu = cu  # thư mục khung (docs/anh-goc/.../<cu_thu>/khung)
+    cu = cfg.get('ma_game', cu)  # mã tấm trong game (dáng pha trùm: thuongLuong-p2 …)
     NET = int(cfg.get('net', 2))  # 2 (mặc định) hoặc 3: chọn net cho thân mới gần cỡ thân cũ nhất (con vẽ cao / to hơn → net 3)
-    tcu = json.load(open(os.path.join(OUT, cu + '-plcu.sprite.json'), encoding='utf-8'))  # tấm ChatGPT cũ (doi-cu.py)
+    pcu = os.path.join(OUT, cu + '-plcu.sprite.json')  # tấm ChatGPT cũ (doi-cu.py)
+    # quái vùng 4 chưa từng có ảnh (hình tạm mượn con khác, monster_art.js MA.hinhTam): không có tấm cũ → cỡ bóng đo từ ảnh mới
+    tcu = json.load(open(pcu, encoding='utf-8')) if os.path.exists(pcu) else {'vung': cfg.get('vung', 'song')}
     dcu = tcu.get('dong_tac', {})
     rows = []
     for r in cfg['hang']:
-        ten = r['ten']; fs = khung(cu, ten)
+        ten = r['ten']; fs = khung(cu_thu, ten)
         assert fs, (cu, ten, 'thiếu khung')
         goc_ten = ten.split('_')[0]
         g = r.get('giay') or (dcu.get(ten, {}).get('giay')) or GIAY_MOI.get(goc_ten, 0.7)
@@ -84,16 +88,17 @@ def main():
     ghi = '--ghi' in sys.argv
     chon = json.load(open(os.path.join(SRC, 'chon.json'), encoding='utf-8'))
     ds = [a for a in sys.argv[1:] if not a.startswith('--')] or list(chon)
+    ds_thu = {}
     for cu in ds:
         cfg = chon[cu]
-        tep, tam = dung(cu, cfg)
+        tep, tam = dung(cu, cfg); ds_thu[tep['ma']] = cu
         print(cu, '→', cfg['ma'], 'khung', tep['khung_rong'], 'x', tep['khung_cao'], 'goc', tep['goc'], 'tam', tam.size,
               '%.0f KB' % (len(tep['tam']) * 3 / 4 / 1024), {k: v['so'] for k, v in tep['dong_tac'].items()})
         assert max(tam.size) <= 8192 and tam.size[0] * tam.size[1] <= 16000000  # trang > 2048 do game/build.py chia (F4)
         if ghi:
-            with open(os.path.join(OUT, cu + '.sprite.json'), 'w', encoding='utf-8') as f:
+            with open(os.path.join(OUT, tep['ma'] + '.sprite.json'), 'w', encoding='utf-8') as f:
                 json.dump(tep, f, ensure_ascii=False, separators=(',', ':'))
-            tam.save(os.path.join(SRC, cu, 'tam-' + cfg['ma'] + '.png'))
+            tam.save(os.path.join(SRC, ds_thu.get(cu, cu), 'tam-' + cfg['ma'] + '.png'))
 
 
 if __name__ == '__main__':

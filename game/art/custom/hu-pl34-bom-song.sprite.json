@@ -1,0 +1,21 @@
+{
+ "loai": "linh-khi-sprite",
+ "doi_tuong": "hieu-ung",
+ "ma": "hu-pl34-bom-song",
+ "ten": "PixelLab: Quả bom bầu bọc rong (Ma Da ném; neo giữa) (thay hu-bom-song, ?quaipl=0: ảnh cũ)",
+ "net": 2,
+ "khung_rong": 7,
+ "khung_cao": 8,
+ "goc": [
+  3.5,
+  4.0
+ ],
+ "so": 4,
+ "giay": 0.5,
+ "lap": true,
+ "xoay": false,
+ "co": 1,
+ "tron": "thuong",
+ "vung": "song",
+ "tam": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAAQCAYAAABDebxFAAABSElEQVR42uWWrW7DMBRGv0QDgVZAcEAUTUFBBUNDJSVDIyPDZSN9jbGB8Up9gZKg4iGjqrIKDFpSEBmOeSiZnbhu2i5Wo10Y3XNP9F3nB/ivlUWBzKJADp3zTICpcX349k6JbpHzVCBPQuQxAQCQ2QjzgmFCBQCAcgG6LVsDPumrVPvSOAQAMF5aOVc+3yZ7E76WTp6EWnJZFMjVtNBk92lS95PZCPun2Mi58vnNFVeJqKl0qUq2YduzuT59d80Lh+dEOyp1mjEB5eLoIMZLMP6lpVnNoZYb7dunbbD5HKhlk6lbaMksnAuf3/VIVM/LsTQv4Vz46iP6+DG+KE3bVmycK1+9wdW0wMs4xTInv69bLs6SmeZ07evL1/oO2sr2PbtVzvgn0xxgEg2F87r8Bp2SDY0DADy8byQclmsfFjspr+m/lv8r3w/mz39DHF/aIAAAAABJRU5ErkJggg=="
+}
