@@ -20,6 +20,7 @@ const _DS_CV = [];
 // màu vệt đạn theo ảnh đạn
 const MAU_VET = { dan_lien: '#ffb347', dan_bang: '#8fe3ff', dan_doc: '#8dff4a', dan_tia: '#7fd0ff', tia_lua: '#ffc070' };
 const REN = {
+  dbg: /[?&]debug(=|&|$)/.test(location.search), // ?debug: cho phép hình vẽ code dự phòng khi thiếu ảnh (chỉ để gỡ lỗi)
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
 
   init(cv) {
@@ -138,6 +139,7 @@ const REN = {
     a._lan = lan || 0;
     a.onerror = () => {
       a._loi = true; this.thieu.add(ten);
+      if (typeof TAI !== 'undefined') TAI.loiAnh(); // lỗi tải giữa trận → kiểm tra mất mạng
       clearTimeout(a._hen);
       if (a._lan >= 7 && !this.CO_DINH.has(ten)) return; // ảnh thật sự không có (404): thôi sau ~2 phút; ảnh nền thì thử mãi
       a._hen = setTimeout(() => { if (this.anh[ten] === a) this.taiAnh(ten, a._lan + 1); }, Math.min(30000, 1000 * 2 ** Math.min(5, a._lan)));
@@ -422,7 +424,7 @@ const REN = {
     for (const B of G.ban) {
       x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 18 * q; x.shadowOffsetY = 8 * q;
       const kh = this.diu('khay', 0.22, 0.72, 0.6);
-      if (kh) x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); else { du = false; x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); }
+      if (kh) x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); else { du = false; if (this.dbg) { x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); } }
       x.restore();
     }
     this.thaMip(this.xam['diu|khay|0.220.720.6']); // các tầng mip chỉ cần lúc dựng nền
@@ -587,7 +589,8 @@ const REN = {
   // dòng chảy: mũi tên ›› mờ trôi dọc đường về lõi (co-op: 2 làn nhập vào hành lang chung đọc rõ)
   veDongChay(ctx) {
     const t = this.t, KC = 30, V = 22, daVe = new Set();
-    const mui = this.co('duong_mui', 14); // mũi tên ChatGPT (S4) dập dọc đường; chưa tải → nét vẽ code
+    const mui = this.co('duong_mui', 14); // mũi tên ChatGPT (S4) dập dọc đường; chưa tải → (chỉ ?debug) nét vẽ code
+    if (!mui && !this.dbg) return;
     ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.lineWidth = 3;
     const m0 = ctx.getTransform();
     if (mui) ctx.globalAlpha = 0.42;
@@ -701,7 +704,7 @@ const REN = {
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = al;
       }
       const dai = this.coDai(ten, co);
-      if (!dai || !this.khung(ctx, ten, f, x, y, cv, goc, dai)) { ctx.fillStyle = '#a040ff'; ctx.beginPath(); ctx.arc(x, y, co * 0.3, 0, 7); ctx.fill(); }
+      if (!dai || !this.khung(ctx, ten, f, x, y, cv, goc, dai)) { if (this.dbg) { ctx.fillStyle = '#a040ff'; ctx.beginPath(); ctx.arc(x, y, co * 0.3, 0, 7); ctx.fill(); } }
       else if (f2 >= 0) { ctx.globalAlpha = al * fr; this.khung(ctx, ten, f2, x, y, cv, goc, dai); ctx.globalAlpha = al; } // chuyển khung bước đi êm
       if (E.flash > 0 || E.chet) {
         const w = this.coDai(ten, co, 'trang');
@@ -836,7 +839,7 @@ const REN = {
         this.anhGiua(ctx, this.cham1(mau[k]), Math.cos(a) * S * 0.26, Math.sin(a) * S * 0.26, S * 0.45);
         ctx.restore(); ctx.globalAlpha = al;
       }
-    }
+    } else if (!o.ghost && typeof TAI !== 'undefined') TAI.veXoay(ctx, 0, 0, D * 0.55); // đầu súng đang tải: vòng xoay PNG nhỏ (không vẽ hình thay thế)
     // tesla: cuộn sáng ở đầu nòng trước khi phóng
     if (T.id === 'set' && T.cd < 0.18 && !da && !o.ghost) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.18 - T.cd) * 3;
@@ -892,7 +895,7 @@ const REN = {
     let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
-    if (!de) de = this.deCode(da);
+    if (!de) { if (!this.dbg) return null; de = this.deCode(da); } // thường: KHÔNG vẽ bệ code (đang tải → vòng xoay PNG)
     c = document.createElement('canvas'); c.width = c.height = n;
     const x = this.c2d(c);
     const q = n / (S * 1.5); x.scale(q, q); x.translate(S * 0.75, S * 0.75);
@@ -905,6 +908,7 @@ const REN = {
     const gx = -SB * 0.4, gy = SB * 0.4, gr = Math.max(3, S * 0.055);
     const ngoc = this.img('ngoc_' + T.bac); // viên ngọc ChatGPT (S2); hoá đá → bản xám
     if (ngoc) { const g = da ? (this.banXam('ngoc_' + T.bac) || ngoc) : ngoc, w = gr * 3; x.drawImage(this.mip(g, w * q), gx - w / 2, gy - w / 2, w, w); return this.cSet(key, c); }
+    if (!this.dbg) return this.cSet(key, c); // ngọc chưa tải: bỏ trống (không vẽ hình thoi code)
     x.beginPath(); x.moveTo(gx, gy - gr); x.lineTo(gx + gr, gy); x.lineTo(gx, gy + gr); x.lineTo(gx - gr, gy); x.closePath();
     x.fillStyle = da ? '#8a8a8a' : TIERS[T.bac].mau; x.fill();
     x.lineWidth = 1.4; x.strokeStyle = 'rgba(8,10,12,.9)'; x.stroke();
@@ -931,6 +935,7 @@ const REN = {
   // Không xoay, neo góc trên-phải ô. 7★: nền đỏ thẫm + vương miện nhỏ phía trên (ngoài huy hiệu).
   huyHieu(n, d) {
     const anh = this.img(n >= 7 ? 'sao_hex7' : 'sao_hex'); // tấm lục giác ChatGPT (S2); chưa tải → vẽ code
+    if (!anh && !this.dbg) return null; // chưa tải: không vẽ lục giác code
     const k = this.s * this.dpr, N = Math.max(8, Math.round(d * 1.5 * k)), key = 'hh2|' + n + '|' + N + (anh ? '|a' : '');
     let c = this.cGet(key); if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = N;
@@ -962,7 +967,7 @@ const REN = {
     x.fillStyle = '#fff6df'; x.fillText(n, 0, R * 0.09);
     return this.cSet(key, c);
   },
-  veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
+  veHuyHieu(ctx, x, y, n, d) { const c = this.huyHieu(n, d); if (!c) return; ctx.drawImage(c, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5); },
 
   // laser: bật/tắt mờ dần (thời gian thực), cuộn vân + độ rộng/độ sáng dao động theo thời gian (không theo khung)
   veLaser(ctx) {
@@ -1011,7 +1016,7 @@ const REN = {
       ctx.globalAlpha = hien;
       const im = this.co(d.img, d.co);
       if (im) { const h = co * im.height / im.width; ctx.drawImage(im, -co / 2, -h / 2, co, h); }
-      else { ctx.fillStyle = '#ffd060'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, 7); ctx.fill(); }
+      else if (this.dbg) { ctx.fillStyle = '#ffd060'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, 7); ctx.fill(); }
       ctx.restore();
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }
