@@ -292,18 +292,18 @@
   "ten": "Berserker",
   "bac": "tim",
   "dcdw": "Danu",
-  "kyNang": "Crits trigger a 5s fire-rate frenzy",
+  "kyNang": "Crits build RAGE, then a fire-rate FRENZY",
   "ten_vi": "Súng Cuồng Nộ",
-  "kyNang_vi": "Chí mạng → chế độ bùng nổ tốc bắn 5 s"
+  "kyNang_vi": "Chí mạng → NỘ (+25% tốc), chí mạng lần 2 → CUỒNG NỘ tăng mạnh tốc bắn 5 s"
  },
  {
   "id": "baotuyet",
   "ten": "Blizzard",
   "bac": "tim",
   "dcdw": "Mayauel",
-  "kyNang": "Periodically slows ALL enemies",
+  "kyNang": "Slows ALL enemies and briefly freezes small ones",
   "ten_vi": "Bão Tuyết",
-  "kyNang_vi": "Định kỳ làm chậm TOÀN BỘ quái"
+  "kyNang_vi": "Định kỳ làm chậm TOÀN BỘ quái và đóng băng ngắn quái nhỏ"
  },
  {
   "id": "nhanban",
@@ -321,7 +321,7 @@
   "dcdw": "Won",
   "kyNang": "Stronger with more linked turrets of its type",
   "ten_vi": "Chuỗi Liên Kết",
-  "kyNang_vi": "Mạnh hơn theo số ụ cùng loại nối liền kề"
+  "kyNang_vi": "+40% sát thương mỗi ụ cùng loại nối liền kề; 4 ụ nối → đạn nảy thêm 1 quái"
  },
  {
   "id": "kepha",
@@ -337,18 +337,18 @@
   "ten": "Cleanser",
   "bac": "tim",
   "dcdw": "Gemina",
-  "kyNang": "On merge: removes debuffs from N turrets",
+  "kyNang": "Support: every 12s cleanses 2 neighbours; nothing to clean = +8% damage",
   "ten_vi": "Máy Tẩy Lỗi",
-  "kyNang_vi": "Khi GHÉP: xoá hiệu ứng xấu cho N ụ"
+  "kyNang_vi": "Hỗ trợ: mỗi 12 s tẩy hiệu ứng xấu cho 2 ụ kề; không có gì để tẩy → ụ kề +8% sát thương"
  },
  {
   "id": "khien",
   "ten": "Shield Gen",
   "bac": "tim",
   "dcdw": "Mona",
-  "kyNang": "On merge: one-hit shield for N turrets",
+  "kyNang": "Support: neighbours get a 1-hit control shield, recharging every 18s",
   "ten_vi": "Máy Khiên",
-  "kyNang_vi": "Khi GHÉP: khiên chặn 1 lần cho N ụ"
+  "kyNang_vi": "Hỗ trợ: ụ kề có khiên chặn 1 lần khống chế, sạc lại 18 s"
  },
  {
   "id": "hopbi",
@@ -364,18 +364,18 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "On merge: +1★ to another turret",
+  "kyNang": "Support: the 2 lowest-star neighbours fire faster (6% per ★); 5★ grants star pips",
   "ten_vi": "Bệ Nâng Sao",
-  "kyNang_vi": "Khi GHÉP: +1 sao cho 1 ụ khác"
+  "kyNang_vi": "Hỗ trợ: 2 ụ kề sao thấp nhất +6% tốc bắn mỗi sao; 5★ mỗi wave cho nấc sao"
  },
  {
   "id": "tuthan",
   "ten": "Reaper Pillar",
   "bac": "tim",
   "dcdw": "Thanatos",
-  "kyNang": "Support: neighbors may instantly kill small enemies",
+  "kyNang": "Support: neighbours may execute normal enemies under 30% HP",
   "ten_vi": "Cột Tử Thần",
-  "kyNang_vi": "Hỗ trợ: ụ kề có xác suất giết ngay quái nhỏ"
+  "kyNang_vi": "Hỗ trợ: ụ kề có xác suất giết ngay quái thường còn dưới 30% máu"
  },
  {
   "id": "xaotron",
@@ -409,9 +409,9 @@
   "ten": "Storm Gun",
   "bac": "tim",
   "dcdw": "Pantheon",
-  "kyNang": "Instant, very fast hits; slower next to its own kind",
+  "kyNang": "Instant hits that can arc; slower next to its own kind",
   "ten_vi": "Súng Bão",
-  "kyNang_vi": "Trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại"
+  "kyNang_vi": "Trúng tức thì, cực nhanh, đôi khi nảy sét; chậm lại khi đứng cạnh ụ cùng loại"
  },
  {
   "id": "anhsang",
@@ -580,9 +580,9 @@
   "ten": "Ricochet",
   "bac": "tim",
   "dcdw": "Child cung thủ",
-  "kyNang": "Disc bounces to N enemies, stronger each bounce",
+  "kyNang": "Disc bounces to N enemies (N = stars), stronger each bounce",
   "ten_vi": "Đĩa Nảy",
-  "kyNang_vi": "Đĩa nảy sang N quái, mỗi lần nảy mạnh hơn",
+  "kyNang_vi": "Đĩa nảy sang N quái (N = số sao), mỗi lần nảy mạnh hơn",
   "vai": "tc",
   "ho": "energy",
   "moi": "TUONG-MOI-20"
@@ -688,9 +688,9 @@
   "ten": "Lone Ace",
   "bac": "tim",
   "dcdw": "Blade Dancer",
-  "kyNang": "No neighbors: double fire rate and bonus crit",
+  "kyNang": "No N/E/S/W neighbours: +100% fire rate and bonus crit",
   "ten_vi": "Độc Tôn",
-  "kyNang_vi": "Không có ụ kề → tốc bắn ×2 và +chí mạng",
+  "kyNang_vi": "Không có ụ kề trên/dưới/trái/phải → +100% tốc bắn và +chí mạng",
   "vai": "tc",
   "ho": "heavy",
   "moi": "TUONG-MOI-20"

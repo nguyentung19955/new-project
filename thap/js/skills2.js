@@ -73,6 +73,8 @@ function veQuaCau(ctx, R, n, r, t, mau, co) { // n quả cầu quay quanh tâm
   for (let i = 0; i < n; i++) { const a = t * 1.6 + i * Math.PI * 2 / n; R.anhGiua(ctx, R.cham1(mau), Math.cos(a) * r, Math.sin(a) * r, co); }
 }
 function boMuc(G, B, T, dt, E) { xoayDau(T, E, dt); } // chỉ xoay theo mục tiêu
+// hệ số nhịp nạp của ụ tự quản lý nhịp (xung / khoá / truy nã): như tốc bắn — buff tốc, Ép Xung, bị Kẹp/Nhiễu −40% (QA Tím)
+const nhipU = (T) => Math.max(0.1, 1 + T.buf.toc + (T.epxung || 0)) * (T.st && T.st.kep > 0 ? 0.6 : 1);
 
 // ===================================================== TRẮNG =====================================================
 SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–300%; chí mạng = luôn tối đa
@@ -425,7 +427,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
   mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's',
   capNhat(G, B, T, dt) {
     T.goc += dt * 0.8; // quạt tuyết quay đều
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     const ds = dsMucTieu(B);
     if (T.nap >= 1 && ds.length) {
       T.nap = 0; T.sang = 1; giat(T, 0.8); SND.bang();
@@ -497,7 +499,7 @@ SKILLS.taylo = { // Máy Tẩy Lỗi (Gemina) — HỖ TRỢ (đợt vai trò): 
   so: (T) => (ms(T, 5) ? 3 : 2),
   xau: (X) => X.st.bang > 0 || X.st.da || X.st.lua > 0 || X.st.kep > 0 || X.giamT > 0,
   mo: (T) => 'Every ' + SKILLS.taylo.ky(T) + 's cleanses up to ' + SKILLS.taylo.so(T) + ' neighbours (freeze/stone/burn/clamp) · nothing to clean: neighbours +' + Math.round(0.08 * HOTRO.k(T) * 100) + '% damage' + (ms(T, 7) ? ' · cleansed: +20% fire rate 4s' : ''),
-  hoTro(G, T, N, ra) { if (T.sach) ra.dmg = 0.08 * HOTRO.k(T); },
+  hoTro(G, T, N, ra) { if (T.sach !== 0) ra.dmg = 0.08 * HOTRO.k(T); }, // chưa tới nhịp đầu = chưa có gì để tẩy → đã có +sát thương
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '232,229,200', 2.6, 0.4);
     T.nap = Math.min(1, T.nap + dt / this.ky(T));
@@ -547,7 +549,7 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
     return true;
   },
 };
-SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò): 2 ụ kề SAO THẤP NHẤT +4% tốc bắn mỗi sao của Star Lift (tối đa 20%); 5★: mỗi wave +1 nấc sao cho ụ kề thấp nhất
+SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò): 2 ụ kề SAO THẤP NHẤT +6% tốc bắn mỗi sao của Star Lift (tối đa 30%); 5★: mỗi wave +1 nấc sao cho ụ kề thấp nhất
   vai: 'ht', dmg: 0, toc: 0, napMau: '#ffe46b',
   them: (T) => Math.min(0.30, 0.06 * T.sao) * (1 + 0.06 * (lvU(T) - 1)),
   can: (T) => (ms(T, 7) ? 2 : 3),        // nấc cần cho +1★ (7★ STAR SURGE: 2)

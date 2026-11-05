@@ -45,7 +45,7 @@ const HO_MOI = {
   phagiap: 'exposes the toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs same-star Attack neighbours',
   cauvong: 'paints a trail its neighbours punish',
   bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
-  maychem: 'chance to execute small enemies', tuthan: 'neighbours execute + SOUL BLAST',
+  maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',
   sinhdoi: 'merge summons a SAME-STAR turret',

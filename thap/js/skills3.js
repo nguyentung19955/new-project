@@ -123,10 +123,10 @@ SKILLS.khoathoigian = {
   ky: (T) => sao7(T, [9, 8.5, 8, 7.5, 7, 6.5, 6]),
   dai: (T) => sao7(T, [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5]),
   no: (T) => sao7(T, [0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.75]),
-  mo: (T) => 'Every ' + SKILLS.khoathoigian.ky(T) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
+  mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
   capNhat(G, B, T, dt) {
     if (G.hu.some(o => o.k === 'khoa' && o.T === T)) return false; // tối đa 1 quái bị khoá / ụ
-    T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
+    T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
     if (T.nap >= 1 && this.khoa(G, B, T, T.sao)) T.nap = 0;
     return false;
   },

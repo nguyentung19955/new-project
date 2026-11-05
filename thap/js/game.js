@@ -213,7 +213,7 @@ function tocU(T) {
   const sk = SKILLS[T.id];
   let r = sk.toc || 1;
   if (sk.tocSao) r *= 1 + sk.tocSao * (T.sao - 1);
-  r *= 1 + T.buf.toc + T.epxung;
+  r *= Math.max(0.1, 1 + T.buf.toc + T.epxung); // QA Tím: nhiều Súng Bão kề nhau không làm tốc bắn âm
   if (T.st.kep > 0) r *= 0.6; // bị Kẹp Phá của đối thủ
   return r;
 }

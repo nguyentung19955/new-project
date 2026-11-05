@@ -130,7 +130,7 @@ const TEXT = {
     luoicheo:     { name: 'Resonance Grid', skill: 'Support: buffs the 4 DIAGONAL cells (not N/E/S/W); all 4 filled = RESONANCE' },
     ngaithoigian: { name: 'Chrono Throne',  skill: 'Enemies slow over time. Active (3★+): REWIND pushes all enemies back' },
     nemesis:      { name: 'Nemesis',        skill: 'Executes low-HP enemies; % max-HP judgment on bosses' },
-    docton:       { name: 'Lone Ace',       skill: 'No neighbors: double fire rate and bonus crit' },
+    docton:       { name: 'Lone Ace',       skill: 'No N/E/S/W neighbours: +100% fire rate and bonus crit' },
     thaukinh:     { name: 'Focus Lens',     skill: 'Support: neighbours deal more crit damage; crits pierce' },
     nhieusong:    { name: 'Signal Jammer',  skill: 'On merge: PVP jams rival turrets; Co-op gives ally a free summon' },
     santhuong:    { name: 'Bounty Beacon',  skill: 'Marks enemies; marked kills give bonus mana' },

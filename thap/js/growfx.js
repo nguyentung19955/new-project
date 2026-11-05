@@ -292,7 +292,7 @@ HU.gXem = { duoi: true, ve(ctx, o, R) { const u = o.t / o.song, a = u < 0.1 ? u 
 ATK.hopbi = ['Violet card shard poke (single, ~0.3× dmg)', '3-way spread of spinning "?" bolts at 3 enemies', 'Stops shooting — confetti sparks: about to open'];
 ATK.tienhoa = ['Amber pellet poke', 'Molten gold slug: ember trail + 20 px splash', 'Thin golden spark BEAM (continuous ticks) — almost a new turret'];
 function chocU(G, B, T, dt) {
-  const s = gdU(T), c = tamU(T), dmg = hsU(T.id, T.sao, B) * 0.3, hop = T.id === 'hopbi';
+  const s = gdU(T), c = tamU(T), dmg = hsU(T.id, T.sao, B) * 0.3 * (1 + T.buf.dmg) * (B.cuong > 0 ? 2 : 1), hop = T.id === 'hopbi'; // QA Tím: đòn chọc cũng ăn buff sát thương + RAGE ×2 như mọi ụ
   T._pk = (T._pk == null ? 0.6 : T._pk) - dt * (1 + T.buf.toc);
   if (s === 3 && hop) { if (T._pk <= 0) { T._pk = 0.25; if (GFX.coDOM) FX.hat1('lua', c.x + rnd(-12, 12), c.y + rnd(-12, 8), rnd(-40, 40), rnd(-80, -30), 0.5, 6, pick(['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'])); } return; }
   if (s === 3) { // Hộp Tiến Hoá: tia vàng mảnh liên tục
