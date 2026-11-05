@@ -52,7 +52,7 @@ function taoBan(def, i, deck, mv) {
   const B = {
     i, x: def.x, y: def.y, w: def.w, h: def.h, ai: def.ai, ten: def.ten,
     o: [], t: Array(15).fill(null), mana: LUAT.manaDau, gia: LUAT.giaTrieu, deck: deck.slice(), lv: {},
-    tim: G.che === 'pvp' ? LUAT.timPvp : LUAT.timSolo, aiT: 0.8,
+    tim: G.che === 'pvp' ? LUAT.timPvp : G.che === 'coop' ? LUAT.timCoop : LUAT.timSolo, aiT: 0.8,
     mv: { id: mv, gia: MAVUONG[mv].gia, cd: 0 }, cuong: 0, khien: 0, phao: 0, phaoSao: 1, phaoT: 0, dem: { giet: 0 },
     manaNay: 0,
   };
@@ -504,11 +504,11 @@ function lot(E) {
   const p = G.duong[E.p], B = G.ban[p.ban];
   FX.sang(0.35, '#ff2030'); FX.lac(8);
   SND.lot();
-  if (G.che === 'coop') { ketThuc(false, TEXT.end.leak); return; } // co-op: 1 quái lọt là THUA
-  B.tim -= E.tim;
+  const BT = G.che === 'coop' ? G.ban[0] : B; // co-op: 3 tim CHUNG (ở bàn 0), quái to / trùm mất như SOLO
+  BT.tim -= E.tim;
   const [x, y] = viTri(p, p.len);
   FX.chu1(x - 20, y - 26, '−' + E.tim + '♥', '#ff4b3e', 20, 'to');
-  if (B.tim <= 0) { B.tim = 0; ketThuc(G.che === 'pvp' ? B.i !== 0 : false, G.che === 'pvp' ? (B.i === 0 ? TEXT.end.youOut : TEXT.end.rivalOut) : TEXT.end.coreDown); }
+  if (BT.tim <= 0) { BT.tim = 0; ketThuc(G.che === 'pvp' ? B.i !== 0 : false, G.che === 'pvp' ? (B.i === 0 ? TEXT.end.youOut : TEXT.end.rivalOut) : G.che === 'coop' ? TEXT.end.coopOut : TEXT.end.coreDown); }
 }
 function capNhatTrum(E, dt) {
   const B = G.ban[E.ban];
