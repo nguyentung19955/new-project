@@ -1,5 +1,5 @@
 // TURRET MERGE — PHÁT TRIỂN KỸ NĂNG kiểu DCDW
-//   1) HỌ KỸ NĂNG: cùng loại kỹ năng ở bậc cao hơn phải THÊM cơ chế mới (Frost → Chiller/Ice Blade → Blizzard → Cryo Reactor…)
+//   1) HỌ KỸ NĂNG theo BẬC: Trắng cơ bản → Xanh lan rộng → Tím cơ chế mới → Vàng combo → Đỏ bùng nổ WOW (Frost → Ice Blade → Blizzard → … → Cryo Reactor)
 //   2) MỐC SAO 3★/5★/7★: nâng cấp kỹ năng thật (không chỉ chỉ số) — hiện trong bảng thông tin, đạt mốc có hiệu ứng 'SKILL UP'
 //   3) Ụ GROW-UP / THỨC TỈNH: 10 ụ có 3 dạng đầu súng (assets/<id>_nong_s1..s3.png) đổi theo điều kiện chơi thật,
 //      đổi dạng có hoạt ảnh biến hình ~560 ms (hieuung.js), dạng cuối có hào quang lặp.
@@ -8,63 +8,64 @@
 const ms = (T, n) => !!T && T.sao >= n; // đã đạt mốc n sao chưa
 
 // ===================================================== 1) HỌ KỸ NĂNG =====================================================
-// buoc: các bậc tiến hoá (mỗi bậc 1 mảng id cùng tầng) — bậc sau "phát triển từ" bậc trước
+// HỌ = chức năng giống nhau; mỗi BẬC (Trắng→Xanh→Tím→Vàng→Đỏ) là 1 nấc thang "mạnh & ấn tượng hơn hẳn", không chỉ số to hơn:
+//   TRẮNG = hiệu ứng cơ bản (1 mục tiêu) · XANH = LAN rộng (nhiều quái / ụ kề) · TÍM = thêm 1 CƠ CHẾ mới
+//   VÀNG = combo / điều kiện mạnh · ĐỎ = kết "WOW" bùng nổ (+ kỹ năng chủ động)
+// bac[i] = danh sách id ở bậc i (0 trắng … 4 đỏ); [] = còn trống → gap[i] gợi ý ụ mới trong docs/demo-hop-tuong/TUONG-MOI-20.md
 const HO = {
-  frost:   { ten: 'FROST',      mau: '#7fdcff', buoc: [['bang'], ['lanhgia', 'kiembang'], ['baotuyet'], ['lophanung']] },
-  poison:  { ten: 'POISON',     mau: '#9dff5a', buoc: [['doc'], ['vungdoc'], ['aten']] },
-  crit:    { ten: 'CRIT',       mau: '#ff5a64', buoc: [['bua', 'nam'], ['chimang'], ['cuongno'], ['soi']] },
-  rapid:   { ten: 'RAPID FIRE', mau: '#ffb43a', buoc: [['lien', 'phun'], ['radar'], ['bao']] },
-  blast:   { ten: 'EXPLOSIVE',  mau: '#ff8a3a', buoc: [['canon', 'xucxac'], ['mortar', 'drone'], ['no5'], ['overlord']] },
-  heavy:   { ten: 'HEAVY SHOT', mau: '#6fc8ff', buoc: [['sungluc', 'tia'], ['railgun']] },
-  trap:    { ten: 'TRAPS',      mau: '#ffb35a', buoc: [['bomhen'], ['min'], ['wallgen']] },
-  energy:  { ten: 'ENERGY',     mau: '#ff8af0', buoc: [['set'], ['laser'], ['orbital']] },
-  control: { ten: 'CONTROL',    mau: '#c77dff', buoc: [['phagiap'], ['cauvong'], ['blackhole']] },
-  execute: { ten: 'EXECUTE',    mau: '#ff4b3e', buoc: [['maychem'], ['tuthan']] },
-  mana:    { ten: 'MANA',       mau: '#d9a8ff', buoc: [['mana'], ['hutmana', 'nhanmana', 'loa', 'nangluong']] },
-  synergy: { ten: 'SYNERGY',    mau: '#ffe46b', buoc: [['khuech'], ['lienket'], ['dongbo']] },
-  summon:  { ten: 'SUMMON',     mau: '#fff6c0', buoc: [['nhanban', 'anhsang'], ['sinhdoi']] },
-  star:    { ten: 'STAR',       mau: '#ffd23f', buoc: [['nangsao'], ['vughep', 'hasao', 'ngoisao']] },
-  joker:   { ten: 'JOKER',      mau: '#ff6ad5', buoc: [['mimic', 'tron', 'dichchuyen'], ['epxung', 'xaotron'], ['saochep']] },
-  guard:   { ten: 'GUARD',      mau: '#9fe6ff', buoc: [['khien', 'taylo', 'kepha'], ['haoquang']] },
-  box:     { ten: 'TRANSFORM',  mau: '#c77dff', buoc: [['hopbi'], ['tienhoa']] },
+  frost:     { ten: 'FROST',      mau: '#7fdcff', bac: [['bang'], ['kiembang', 'lanhgia'], ['baotuyet'], [], ['lophanung']], gap: { 3: 'Eclipse (Night: wide slow)' } },
+  poison:    { ten: 'POISON',     mau: '#9dff5a', bac: [['doc'], ['vungdoc'], [], ['aten'], []], gap: { 2: 'new idea needed', 4: 'new idea needed' } },
+  blast:     { ten: 'EXPLOSIVE',  mau: '#ff8a3a', bac: [['canon', 'xucxac'], ['mortar'], ['no5'], ['orbital'], []], gap: { 4: 'Wyrm Engine' } },
+  energy:    { ten: 'ENERGY',     mau: '#9ffcff', bac: [['set'], ['laser'], ['bao'], ['railgun'], ['overlord']] },
+  heavy:     { ten: 'HEAVY SHOT', mau: '#6fc8ff', bac: [['sungluc', 'tia'], ['nangluong'], [], [], []], gap: { 2: 'Lone Ace', 3: 'Nemesis', 4: 'Leviathan' } },
+  rapid:     { ten: 'RAPID FIRE', mau: '#ffb43a', bac: [['lien', 'phun'], ['radar'], ['epxung'], [], []], gap: { 3: 'Hydra', 4: 'new idea needed' } },
+  crit:      { ten: 'CRIT',       mau: '#ff5a64', bac: [['bua', 'nam'], ['chimang'], ['cuongno'], ['soi'], []], gap: { 4: 'new idea needed' } },
+  amp:       { ten: 'DAMAGE AMP', mau: '#ffe46b', bac: [['phagiap'], ['khuech'], ['lienket'], ['dongbo', 'cauvong'], []], gap: { 4: 'new idea needed' } },
+  trap:      { ten: 'PATH TRAPS', mau: '#ffb35a', bac: [['bomhen'], ['min'], [], ['wallgen'], ['blackhole']], gap: { 2: 'Chrono Lock' } },
+  execute:   { ten: 'EXECUTE',    mau: '#ff4b3e', bac: [['maychem'], [], ['tuthan'], [], []], gap: { 1: 'new idea needed', 3: 'Nemesis', 4: 'new idea needed' } },
+  mana:      { ten: 'MANA',       mau: '#d9a8ff', bac: [['mana'], ['hutmana', 'nhanmana'], [], [], []], gap: { 2: 'Bounty Beacon', 3: 'new idea needed', 4: 'new idea needed' } },
+  summon:    { ten: 'MERGE BONUS', mau: '#fff6c0', bac: [[], ['drone', 'loa'], ['nhanban', 'anhsang'], ['sinhdoi'], []], gap: { 0: 'new idea needed', 4: 'Hive Queen' } },
+  star:      { ten: 'STAR',       mau: '#ffd23f', bac: [[], [], ['nangsao'], ['vughep', 'hasao', 'ngoisao'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'Genesis Core' } },
+  joker:     { ten: 'JOKER',      mau: '#ff6ad5', bac: [[], ['mimic', 'tron', 'dichchuyen'], ['xaotron'], ['saochep'], []], gap: { 0: 'new idea needed', 4: 'new idea needed' } },
+  guard:     { ten: 'GUARD',      mau: '#9fe6ff', bac: [[], [], ['khien', 'taylo', 'kepha'], [], ['haoquang']], gap: { 0: 'new idea needed', 1: 'new idea needed', 3: 'Mirror Gate' } },
+  transform: { ten: 'TRANSFORM',  mau: '#c77dff', bac: [[], [], ['hopbi'], ['tienhoa'], []], gap: { 0: 'new idea needed', 1: 'new idea needed', 4: 'new idea needed' } },
 };
 // cơ chế MỚI mà mỗi ụ thêm vào họ của nó (bậc sau không chỉ là bản to hơn của bậc trước)
 const HO_MOI = {
-  bang: 'Slows one enemy', lanhgia: 'Spreads slow through neighbours’ shots', kiembang: 'Shatters slowed enemies for ×5',
-  baotuyet: 'Pulses a slow over the WHOLE path', lophanung: 'Freezing aura: slower = harder hits + active FREEZE',
-  doc: 'Poison over time + lingering cloud', vungdoc: 'Leaves poison POOLS on the path', aten: 'Cashes in poison: +300%, kills explode',
-  bua: 'Crits knock enemies back', nam: 'Melee ring blasts', chimang: 'Gives crit chance to neighbours',
-  cuongno: 'Crits build RAGE, then FRENZY', soi: 'Grows into an AWAKENED wolf: every hit crits',
-  lien: 'Very fast stream, stars add speed', phun: 'Very fast at random enemies', radar: 'Lends fire rate to neighbours',
-  bao: 'Instant hits with no travel time',
-  canon: 'Splash shells', xucxac: 'Gambles damage 3–300%', mortar: 'Lobs CLUSTER shells at random enemies',
-  drone: 'Merge launches bomb drones', no5: 'Every 5th shot: 3 exploding bolts', overlord: 'Charges up into a thunder blast',
-  sungluc: 'One heavy instant shot', tia: 'Hunts the toughest enemy', railgun: 'Piercing rail + BINGO lines',
-  bomhen: 'Sticks a timed bomb', min: 'Mines wait on the path', wallgen: 'Walls block the path, then explode',
-  set: 'Chain lightning', laser: 'Beam that ramps up while it holds', orbital: 'Merge calls a sky bombardment',
-  phagiap: 'Weakens the enemy it hits', cauvong: 'Weakens EVERY enemy on a painted stretch', blackhole: 'Pulls enemies together and crushes them',
-  maychem: 'Chance to execute small enemies', tuthan: 'Neighbours gain the execute chance',
-  mana: 'Makes mana over time', hutmana: 'Mana on every hit', nhanmana: 'Mana burst on merge', loa: 'Merge cuts Archfiend cooldown',
-  nangluong: 'Turns banked mana into damage',
-  khuech: 'Boosts neighbours’ damage', lienket: 'Stronger per linked turret of its type', dongbo: 'Stronger per turret of its star level',
-  nhanban: 'Merge summons a free 1★', anhsang: 'Summons 1★ turrets over time', sinhdoi: 'Merge summons a free SAME-STAR turret',
-  nangsao: 'Merge gives +1★ to another turret', vughep: 'Drag: +1★ and keeps the type', hasao: 'Merge: rival −1★ / ally +1★',
-  ngoisao: 'Grows with the total stars on the board',
-  mimic: 'Merges with any same-star turret', tron: 'Merges with ANY turret', dichchuyen: 'Swaps two turrets',
-  epxung: 'Gives +65% fire rate for good', xaotron: 'Merge scrambles turrets', saochep: 'Becomes a copy of any turret',
-  khien: 'Merge shields turrets', taylo: 'Merge cleanses turrets', kepha: 'Merge clamps rivals / speeds allies',
-  haoquang: 'Board-wide invincible shield (active)',
-  hopbi: 'Opens into a random 1–7★ turret', tienhoa: 'Evolves into a random turret +1★',
+  bang: 'slows one enemy', kiembang: 'spreads slow + shatters slowed ×5', lanhgia: 'spreads slow through neighbours’ shots',
+  baotuyet: 'slows ALL + brief freeze', lophanung: 'freeze aura; frozen enemies SHATTER & explode',
+  doc: 'poison over time', vungdoc: 'poison POOLS hit every enemy on them', aten: 'cashes in poison ×4; kills explode',
+  canon: 'splash shells', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
+  orbital: 'merge calls a 20s sky bombardment',
+  set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
+  overlord: 'thunder blast + aftershock arcs (active-tier finisher)',
+  sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
+  lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +65% fire rate (stacks)',
+  bua: 'crits knock back', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'grows into an AWAKENED wolf: every hit crits',
+  phagiap: 'weakens one enemy', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'stronger per same-star turret',
+  cauvong: 'weakens EVERY enemy on a painted stretch',
+  bomhen: 'timed bomb on one enemy', min: 'mines across the path', wallgen: 'wall blocks the path, then explodes', blackhole: 'pulls enemies together and crushes them',
+  maychem: 'chance to execute small enemies', tuthan: 'neighbours execute + SOUL BLAST',
+  mana: 'makes mana over time', hutmana: 'mana on every hit', nhanmana: 'mana burst on merge',
+  drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',
+  sinhdoi: 'merge summons a SAME-STAR turret',
+  nangsao: 'merge gives +1★ to another turret', vughep: 'drag: +1★ and keeps the type', hasao: 'merge: rival −1★ / ally +1★', ngoisao: 'grows with total board stars',
+  mimic: 'merges with any same-star turret', tron: 'merges with ANY turret', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
+  khien: 'merge shields turrets', taylo: 'merge cleanses turrets', kepha: 'merge clamps rivals / speeds allies', haoquang: 'board-wide invincible shield (active)',
+  hopbi: 'opens into a random 1–7★ turret', tienhoa: 'evolves into a random turret +1★',
 };
-const HO_CUA = {}; // id → { ho, i (bậc trong họ) }
-for (const k in HO) HO[k].buoc.forEach((ds, i) => ds.forEach(id => { HO_CUA[id] = { ho: k, i }; }));
-// dòng họ cho bảng thông tin
+const HO_CUA = {}; // id → { ho, i (bậc 0..4 trong họ) }
+for (const k in HO) HO[k].bac.forEach((ds, i) => ds.forEach(id => { HO_CUA[id] = { ho: k, i }; }));
+const HO_THU_TU = Object.keys(HO);
+// dòng họ cho bảng thông tin: "Family: FROST ★ Tier 1/5 → next: Ice Blade (spreads slow…)"
 function hoTT(id) {
   const h = HO_CUA[id]; if (!h) return null;
   const F = HO[h.ho], ten = (x) => (TEXT.turret[x] ? TEXT.turret[x].name : x);
-  const tu = h.i > 0 ? F.buoc[h.i - 1].map(ten).join(' / ') : null;
-  const sau = h.i < F.buoc.length - 1 ? F.buoc[h.i + 1].map(ten).join(' / ') : null;
-  return { ten: F.ten, mau: F.mau, tu, sau, moi: HO_MOI[id] || '', chuoi: F.buoc.map(ds => ds.map(ten).join('/')).join(' → ') };
+  let sau = null, sauMoi = '', tu = null;
+  for (let i = h.i + 1; i < 5; i++) if (F.bac[i].length) { sau = F.bac[i].map(ten).join(' / '); sauMoi = F.bac[i].map(x => HO_MOI[x]).filter(Boolean)[0] || ''; break; }
+  for (let i = h.i - 1; i >= 0; i--) if (F.bac[i].length) { tu = F.bac[i].map(ten).join(' / '); break; }
+  const nac = F.bac.map((ds, i) => ({ bac: TIER_LIST[i], ten: ds.map(ten), gap: !ds.length, goiY: (F.gap || {})[i] || '' }));
+  return { ten: F.ten, mau: F.mau, bac: h.i + 1, tu, sau, sauMoi, moi: HO_MOI[id] || '', nac };
 }
 
 // ===================================================== 2) MỐC SAO 3★/5★/7★ =====================================================

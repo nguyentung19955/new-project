@@ -266,9 +266,14 @@ function trung(E, dmg, o) {
   // hỗ trợ kề: Máy Phát Lạnh (chậm kèm), Cột Tử Thần (giết ngay quái nhỏ)
   if (T && T.buf && !o.phu) {
     if (T.buf.cham > 0) { E.chamT = Math.max(E.chamT, 2); if (!E.d.khangCham) E.cham = Math.max(E.cham, T.buf.cham); }
-    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) { dmg = Math.max(dmg, E.hp + 1); VX.chem(E); } // giết ngay: đầu lâu tím + tro (buff.js)
+    if (T.buf.chet > 0 && !E.trum && !E.d.to && Math.random() < T.buf.chet) {
+      dmg = Math.max(dmg, E.hp + 1); VX.chem(E); // giết ngay: đầu lâu tím + tro (buff.js)
+      // Reaper Pillar (bậc TÍM họ Execute): linh hồn bị gặt NỔ → 12% máu tối đa của nó cho quái quanh 44 px
+      noLan(E.x, E.y, 44, E.max * 0.12, o.B || G.ban[T.ban], { phu: true, mau: '#c77dff' }); FX.vong1(E.x, E.y, 6, 44, '#c77dff', 0.3, 3); FX.tiaLua(E.x, E.y, 8, '#d9a8ff', 150, 8);
+    }
   }
   E.hp -= dmg; E.flash = 0.09;
+  if (T && T.bac && !o.phu && !o.im) TVX.trung(T, E, crit); // hiệu ứng leo thang theo bậc (tiervfx.js)
   // số sát thương: gộp theo quái mỗi ~0,2 s cho đỡ rối; chí mạng hiện ngay, to hơn
   if (!o.im) {
     E.soAcc = (E.soAcc || 0) + dmg;
@@ -442,6 +447,7 @@ function capNhatU(B, T, dt) {
       T.cd += 1; if (T.cd < 0) T.cd = 0;
       T.banLan++;
       sk.ban(G, B, T, E);
+      TVX.ban(T);
       mocBanXong(T); // mốc 5★ DOUBLE TAP
     } else T.cd = 0;
   }
@@ -579,6 +585,7 @@ function banDan(o) {
 }
 function capNhatDan(d, dt) {
   d.t += dt;
+  TVX.dan(d, dt);
   if (d.cong) {
     // đạn cầu vồng (pháo, cối): bay theo parabol tới điểm rơi (bám mục tiêu nếu còn sống)
     if (d.muc && !d.muc.chet) { d.px += (d.muc.x - d.px) * Math.min(1, dt * 6); d.py += (d.muc.y - d.py) * Math.min(1, dt * 6); }

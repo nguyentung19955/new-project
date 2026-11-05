@@ -265,7 +265,7 @@ SKILLS.blackhole = { // Hố Đen: hút quái lại rồi nghiền nát
 };
 SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn siêu sấm nổ diện rộng
   vai: 'tc', dmg: 28, toc: 1,
-  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×12 in 92 px',
+  mo: (T) => 'Charge ' + (7 - 0.5 * (T.sao - 1)).toFixed(1) + 's · thunder ×12 in 92 px · aftershock arcs ×2 to 4 more',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     xoayDau(T, E, dt);
@@ -274,7 +274,7 @@ SKILLS.overlord = { // Overlord (Jacheongbi): nạp chậm, đầy thì bắn si
       const c = tamU(T);
       if (Math.abs(gocLech(T.goc, Math.atan2(E.y - c.y, E.x - c.x))) > 0.2) return true;
       T.nap = 0; giat(T, 2.2); const [x, y] = chopNong(T, 44); phutKhoi(x, y, 3);
-      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * 12, B, da: false, seed: Math.random() * 99 });
+      G.hu.push({ k: 'sam', t: 0, song: 0.7, x: E.x, y: E.y, x0: x, y0: y, r: 92, dmg: dmgU(T) * 12, B, T, da: false, seed: Math.random() * 99 });
       SND.sam();
     }
     return true;
@@ -475,6 +475,9 @@ HU.sam = { // overlord: tia sấm khổng lồ + chớp màn hình
       o.da = true; noLan(o.x, o.y, o.r, o.dmg, o.B, { mau: '#fff27a' });
       FX.no('dien', o.x, o.y, o.r * 3, 0.55); FX.no('no_phao', o.x, o.y, o.r * 2.2, 0.6); FX.sang(0.7, '#fff6c0'); FX.lac(12);
       FX.vong1(o.x, o.y, 10, o.r, '#fff27a', 0.4, 6); FX.tiaLua(o.x, o.y, 30, '#fff27a', 320, 14);
+      // AFTERSHOCK: sét dư chấn nhảy tới 4 quái gần nhất ngoài tâm nổ (×2 mỗi con) — phần "wow" bậc ĐỎ họ Energy
+      const ds = dsMucTieu(o.B).filter(E => !E.chet && Math.hypot(E.x - o.x, E.y - o.y) < 240).sort((a, b) => Math.hypot(a.x - o.x, a.y - o.y) - Math.hypot(b.x - o.x, b.y - o.y)).slice(0, 4);
+      if (ds.length) { for (const E of ds) trung(E, o.dmg / 6, { B: o.B, mau: '#fff27a', phu: true }); G.hu.push({ k: 'set', t: 0, song: 0.3, x: o.x, y: o.y, ds: ds.map(Q => ({ Q, x: Q.x, y: Q.y })), seed: Math.random() * 999 }); }
     }
   },
   ve(ctx, o, R) {

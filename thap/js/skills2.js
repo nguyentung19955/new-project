@@ -199,9 +199,9 @@ SKILLS.nhanmana = { // Máy Nhân Mana (Thisbe): khi GHÉP nhận nhiều mana
     nhanU(ra, 'MANA BOOST', '#d9a8ff', true); if (!B.ai) SND.mana();
   },
 };
-SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang bị chậm
-  vai: 'tc', dmg: 18.67, toc: 0.75, nham: 'dau',
-  mo: (T) => '×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage to slowed enemies' + (ms(T, 5) ? ' · splinters' : ''),
+SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang bị chậm · bậc XANH họ Frost: hơi lạnh LAN sang quái quanh điểm chém
+  vai: 'tc', dmg: 16.8, toc: 0.75, nham: 'dau',
+  mo: (T) => '×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage to slowed enemies · chills enemies within 44 px (20% · 2s)' + (ms(T, 5) ? ' · splinters' : ''),
   chonMuc(G, B) { let m = null, best = 1e9; for (const E of dsMucTieu(B)) { const r = G.duong[E.p].len - E.s - (E.chamT > 0 ? 400 : 0); if (r < best) { best = r; m = E; } } return m; },
   ban(G, B, T, E) {
     giat(T, 0.7); chopNong(T, 22); SND.bang();
@@ -213,6 +213,10 @@ SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang
       FX.no('bang_vo', d.x, d.y, cham ? 64 : 36, 0.3);
       if (cham && ms(T, 5)) { noLan(d.x, d.y, 40, dmg * k * 0.4, B, { phu: true, mau: '#bff4ff' }); FX.vong1(d.x, d.y, 6, 40, '#bff4ff', 0.3, 3); } // 5★ SPLINTERS
       if (cham) nhanU(T, 'SHATTER ×' + k, '#7fdcff');
+      // LAN CHẬM: quái quanh điểm trúng (trừ mục tiêu) bị lạnh 20% · 2 s → lượt chém sau nhắm chúng ×5
+      let lan = 0;
+      for (const Q of dsMucTieu(B)) if (Q !== M && !Q.chet && !Q.d.khangCham && Math.hypot(Q.x - d.x, Q.y - d.y) < 44) { Q.cham = Math.max(Q.cham, 0.2); Q.chamT = Math.max(Q.chamT, 2); lan++; }
+      if (lan) FX.vong1(d.x, d.y, 8, 44, '#bff4ff', 0.3, 2);
     }, 'bang');
   },
 };
@@ -405,7 +409,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
   vai: 'tc', dmg: 9, toc: 1, napMau: '#bff4ff',
   ky: (T) => Math.max(4, 11 - 0.6 * T.sao - (ms(T, 3) ? 1.5 : 0)), // 3★ SQUALL
   cham: (T) => Math.min(0.6, 0.3 + 0.03 * T.sao),
-  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s',
+  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's',
   capNhat(G, B, T, dt) {
     T.goc += dt * 0.8; // quạt tuyết quay đều
     T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
@@ -415,7 +419,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
       const c = this.cham(T), dmg = dmgU(T) * 1.5 * (ms(T, 5) ? 3 : 1); // 5★ ICE SHARDS
       for (const E of ds) {
         E.chamT = Math.max(E.chamT, 3); if (!E.d.khangCham) E.cham = Math.max(E.cham, c); trung(E, dmg, { B, mau: '#bff4ff', im: true }); FX.no('bang_vo', E.x, E.y, 44, 0.4);
-        if (ms(T, 7) && !E.trum && !E.d.to) E.chan = Math.max(E.chan || 0, 1); // 7★ WHITEOUT
+        if (!E.trum && !E.d.to && !E.d.khangCham) E.chan = Math.max(E.chan || 0, ms(T, 7) ? 1 : 0.35); // đóng băng ngắn (7★ WHITEOUT: 1 s)
       }
       G.hu.push({ k: 'tuyet', t: 0, song: 1.4, B });
       FX.sang(0.22, '#bff4ff');
@@ -527,7 +531,7 @@ SKILLS.nangsao = { // Bệ Nâng Sao (Brownie): khi GHÉP không tự lên sao m
 SKILLS.tuthan = { // Cột Tử Thần (Thanatos): hỗ trợ — ụ kề có xác suất giết ngay quái nhỏ
   vai: 'ht', dmg: 0, toc: 0,
   tile: (T) => 0.015 + 0.006 * (T.sao - 1) + 0.003 * (lvU(T) - 1),
-  mo: (T) => 'Neighbors: ' + (SKILLS.tuthan.tile(T) * 100).toFixed(1) + '% instant-kill small enemies per hit',
+  mo: (T) => 'Neighbors: ' + (SKILLS.tuthan.tile(T) * 100).toFixed(1) + '% instant-kill small enemies per hit · reaped souls blast 12% max HP around',
   hoTro(G, T, N) { N.buf.chet += this.tile(T); },
   capNhat(G, B, T, dt) { hoTroNhip(G, B, T, dt, '199,125,255', 2.8, 0.5); return true; },
 };
@@ -596,13 +600,17 @@ SKILLS.no5 = { // Nỏ Năm Nhịp (Amor): phát thứ 5 bắn 3 mũi tên nổ
 };
 SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại
   vai: 'tc', dmg: 5.2, toc: 4.5, tocSao: 0.05, nham: 'dau',
-  mo(T) { const n = keCan(G.ban[T.ban], T.o).filter(N => N && N.id === 'bao').length; return 'Instant hits ' + tocU(T).toFixed(1) + '/s' + (n ? ' · next to ' + n + ' ' + TEXT.turret.bao.name + ': −' + n * 30 + '% speed' : ''); },
+  mo(T) { const n = keCan(G.ban[T.ban], T.o).filter(N => N && N.id === 'bao').length; return 'Instant hits ' + tocU(T).toFixed(1) + '/s · 20% arc to a 2nd enemy' + (n ? ' · next to ' + n + ' ' + TEXT.turret.bao.name + ': −' + n * 30 + '% speed' : ''); },
   capNhat(G, B, T) { const n = keCan(B, T.o).filter(N => N && N.id === 'bao').length; T.buf.toc -= 0.3 * n; return false; },
   ban(G, B, T, E) {
     giat(T, 0.3); const [x, y] = dauNong(T); FX.no('chop_nong', x, y, 20, 0.05, T.goc); SND.set();
     trung(E, dmgU(T), { B, mau: '#9ffcff' });
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.09, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#9ffcff' });
     if (Math.random() < 0.4) FX.no('dien', E.x, E.y, 26, 0.15);
+    if (Math.random() < 0.2) { // ARC: tia sét nảy sang quái gần nhất (cơ chế mới của bậc TÍM họ Energy)
+      let Q = null, best = 96; for (const X of dsMucTieu(B)) if (X !== E && !X.chet) { const dd = Math.hypot(X.x - E.x, X.y - E.y); if (dd < best) { best = dd; Q = X; } }
+      if (Q) { trung(Q, dmgU(T) * 0.7, { B, mau: '#9ffcff' }); G.hu.push({ k: 'set', t: 0, song: 0.16, x: E.x, y: E.y, ds: [{ Q, x: Q.x, y: Q.y }], seed: Math.random() * 999 }); }
+    }
   },
 };
 SKILLS.anhsang = { // Tháp Ánh Sáng (Venus): quả cầu sáng = số sao; định kỳ gọi ụ 1 sao
@@ -810,7 +818,8 @@ SKILLS.cauvong = { // Máy Cầu Vồng (Yuna): vẽ cầu vồng lên đường
 SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza): hào quang làm chậm quanh; càng chậm càng đau; chủ động: BÃO BĂNG
   vai: 'tc', dmg: 14, toc: 1, napMau: '#9fe6ff',
   r: (T) => 110 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT
-  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px: slow ' + Math.round((0.35 + 0.03 * T.sao) * 100) + '%, slower = more damage · TAP when full: FREEZE nearby enemies ' + (ms(T, 5) ? 4 : 2.5) + 's',
+  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px: slow ' + Math.round((0.35 + 0.03 * T.sao) * 100) + '%, slower = more damage · frozen enemies SHATTER & explode · TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's',
+  khiGiet(G, T, E) { if (E.chan > 0) voBang(T, G.ban[T.ban] || G.ban[0], E.x, E.y, dmgU(T) * 3); }, // quái chết khi đang đóng băng → vỡ nổ
   capNhat(G, B, T, dt) {
     const r = this.r(T), ds = quaiTrongTam(B, T, r);
     xoayDau(T, ds.length ? quaiDauTam(B, T, r) : null, dt);
@@ -831,7 +840,9 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza): hào quang l�
     if (T.nap < 1) return false;
     T.nap = 0; T.napDay = 0; T.sang = 1; giat(T, 2); T.bungT = 1.6;
     const c = tamU(T), r = this.r(T) * 1.6;
-    for (const E of quaiTrongTam(B, T, r)) { E.chan = ms(T, 5) ? 4 : 2.5; /* 5★ PERMAFROST */ E.chamT = Math.max(E.chamT, 3); trung(E, dmgU(T) * 8, { B, mau: '#bff4ff' }); FX.no('bang_vo', E.x, E.y, 70, 0.5); }
+    const dai = ms(T, 5) ? 4 : 2.5, bi = []; // 5★ PERMAFROST
+    for (const E of quaiTrongTam(B, T, r)) { E.chan = dai; E.chamT = Math.max(E.chamT, 3); trung(E, dmgU(T) * 8, { B, mau: '#bff4ff' }); FX.no('bang_vo', E.x, E.y, 70, 0.5); if (!E.chet) bi.push(E); }
+    if (bi.length) G.hu.push({ k: 'voBang', t: 0, song: dai, ds: bi, T, B, dmg: dmgU(T) * 4 }); // hết băng → từng quái VỠ & NỔ
     FX.vong1(c.x, c.y, 20, r, '#bff4ff', 0.6, 6); FX.sang(0.4, '#bff4ff'); FX.lac(6); SND.mv(); SND.bang();
     nhanU(T, 'ICE STORM!', '#bff4ff', true);
     return true;
@@ -876,6 +887,23 @@ SKILLS.haoquang = { // Hào Quang Thánh (Halo Mona): tia thánh quang; chủ đ
     FX.no('laser_trung', E.x, E.y, 40, 0.25);
   },
   veThem(ctx, T, S, al, R) { if (T.nap >= 1) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.35 + 0.25 * Math.sin(R.t * 6)); R.anhGiua(ctx, R.cham1('#fff6c0'), 0, 0, S * 1.6); } },
+};
+
+// Cryo Reactor: quái đóng băng VỠ VỤN → nổ băng (lớp nổ + mảnh băng + than lạnh đọng lại)
+function voBang(T, B, x, y, dmg) {
+  noLan(x, y, 50, dmg, B, { phu: true, mau: '#bff4ff' });
+  FX.no('bang_vo', x, y, 96, 0.45); FX.no('laser_trung', x, y, 70, 0.3); FX.vong1(x, y, 6, 50, '#bff4ff', 0.32, 4);
+  for (let i = 0; i < 10; i++) { const a = i * 0.628 + Math.random() * 0.3, v = rnd(120, 220); FX.hat1('lua', x, y, Math.cos(a) * v, Math.sin(a) * v, 0.35, 9, i % 2 ? '#ffffff' : '#9fe6ff'); }
+  for (let i = 0; i < 4; i++) FX.hat1('than', x + rnd(-14, 14), y + rnd(-10, 10), rnd(-10, 10), rnd(-26, -12), 0.6, 5, '#bff4ff');
+  if (TVX.duocLac(0.5)) FX.lac(3);
+  SND.bang();
+}
+HU.voBang = { // Cryo Reactor: theo dõi quái bị BÃO BĂNG đóng băng; chết sớm hoặc tan băng → vỡ nổ
+  cap(G, o) {
+    for (const E of o.ds) if (!E._vo && E.chet) { E._vo = 1; voBang(o.T, o.B, E.x, E.y, o.dmg); }
+    return false;
+  },
+  het(G, o) { let i = 0; for (const E of o.ds) if (!E._vo) { E._vo = 1; const x = E.x, y = E.y; VX.hen(0.06 * i++, () => voBang(o.T, o.B, x, y, o.dmg)); } },
 };
 
 // ===================================================== HIỆU ỨNG TRÊN SÂN (mới) =====================================================
