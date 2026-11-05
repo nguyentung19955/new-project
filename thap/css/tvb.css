@@ -48,7 +48,8 @@ html body #wrap.co-tvb #tt.hb-qi .hb-so span { flex-direction: column; align-ite
 html body #wrap.co-tvb #tt.hb-qi .hb-so span i { display: none; }
 html body #wrap.co-tvb #tt.hb-qi .hb-so small { font-size: 10.5px; line-height: 11px; }
 html body #wrap.co-tvb #tt.hb-qi .hb-so b { font-size: 16px; line-height: 15px; }
-html body #wrap.co-tvb #tt.hb-qi .hb-so .ht { font-size: 13px; max-width: 168px; flex-direction: row; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so .ht { font-size: 13px; max-width: 140px; line-height: 18px; flex-direction: row; } /* 140: tên ụ không bị cụt ("Fro") ở dải xem nhanh; 18: chữ không tràn dọc — kt-tran */
+html body #wrap.co-tvb #tt.hb-qi .tt-ten { white-space: nowrap; text-overflow: ellipsis; }
 html body #wrap.co-tvb #tt.hb-qi .tt-than { grid-template-rows: 26px 19px; }
 html body #wrap.co-tvb #tt.hb-qi .hb-mo { width: 48px; height: 48px; margin-top: -24px; right: -8px; }
 html body #wrap.co-tvb #tt.hb-qi .hb-mo img { width: 24px; height: 23px; }
@@ -79,6 +80,7 @@ html body #wrap.co-tvb #tt.hb-qi.hb-rong .d-chip span { font-size: 12.5px; max-w
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .tt-ct { height: 44px; line-height: 42px; font-size: 14px; padding: 0 14px; }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong { width: 48px; height: 48px; right: -10px; top: -10px; }
 html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-dong img { width: 26px; height: 26px; }
+html body #wrap.co-tvb #tt.hb-qi.hb-rong { overflow-x: hidden; } /* nút ✕ lùi ra mép (vùng chạm) không làm tấm cuộn dọc bị tràn ngang 10 px — kt-tran */
 /* SOLO đang dừng vì tấm mở: một dòng báo nhỏ (chữ) */
 #tvb-dungchu { position: absolute; z-index: 27; left: 0; right: 0; text-align: center; font-size: 13.5px; font-weight: 800; letter-spacing: .3px; color: #dfe5ec; text-shadow: 0 1px 0 #000, 0 0 4px #000, 0 0 8px #000; pointer-events: none; }
 #tvb-dungchu[hidden] { display: none; }
