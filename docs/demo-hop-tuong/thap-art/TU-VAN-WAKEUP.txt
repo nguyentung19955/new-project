@@ -1,0 +1,257 @@
+TU-VAN-WAKEUP.txt
+DCDW GROW-UP / WAKE-UP RESEARCH + 12 THREE-STAGE SCI-FI TURRET CONCEPTS
+Prepared 2026-11-05 | English | for a 5x3 mobile merge tower-defense board
+
+SCOPE AND EVIDENCE KEY
+[DOCUMENTED] Explicitly described in the DCDW card archive or period guide.
+[INFERRED] Reasonable gameplay or art-direction inference, NOT verified frame-level footage.
+[PROPOSED] New design for your game, NOT a claim about DCDW.
+[UNVERIFIED] Details cannot be established from available archived descriptions.
+
+IMPORTANT IDENTITY NOTE
+The relevant game is Destiny Child: Defense War (Korean: 데스티니 차일드: 디펜스 워), a Round2/ThumbAge merge defense game, not the original Destiny Child RPG, not Lucky Defense, and not Random Dice. The DCDW archive reports shutdown on July 25, 2024. A separate original Destiny Child game shut down in 2023. Searches for the English phrases “Grow Up” and “Wake Up” did NOT establish an official comprehensive feature taxonomy. Accordingly, the categories below are functional categories, not a fabricated official roster. The archive covers numerous cards, but this is an evidence-backed list of documented transformations rather than a guaranteed exhaustive list across every historic patch.
+
+1. WHICH DCDW UNITS GROW OR AWAKEN?
+
+A. CLEARLY DOCUMENTED AWAKENED / SPECIAL-FORM UNITS
+
+1) WARWOLF (워울프 / Werewolf / Warwolf) — random awakened SPAWN [DOCUMENTED]
+Trigger: a Warwolf is summoned with a 30% chance to appear as Awakened Warwolf; the description also refers to obtaining awakened Warwolves through merging or summoning. This is NOT a 30-second charge transformation, and ordinary 1->7 star merging must not be confused with awakening.
+Effect: normal 1.4-second base attack interval; awakened form 1.0-second interval, rapid close-range strikes that ALWAYS critical-hit. Increasing the awakened unit's stars further improves its attack speed. The period deck guide discusses protecting 3–4 high-star awakened Warwolves and repositioning them via Merlin.
+Visual: an alternate awakened character form is implied by the distinct unit variant, but exact costume/size/aura and transformation frames are UNVERIFIED in the retrieved text. Do not assert that it becomes larger or gains a red aura without gameplay capture.
+Attack change: rapid close-range always-critical melee versus the default attack. Exact slash art, impact spark and weapon shape UNVERIFIED. Safe remake inspiration: plain swipe -> fast twin claw slashes, strong crit hit spark.
+
+2) DAVI (다비) — board-wide star threshold [DOCUMENTED]
+Trigger: total stars across the board hitting multiples of 10 activate Doki-Doki Star speed boosts; reaching 50 total stars unlocks Blood Star Power awakening. The archive describes +300% attack-speed effect at each 10-star milestone and +350% damage at 50 stars (historic data; verify precise stacking semantics before numerical imitation). The archive notes patch changes and a frontmost-target priority.
+Visual: an awakened state is named, but source does NOT establish head enlargement, palette swap, or specific animation [UNVERIFIED].
+Attack change: documented rate/damage changes, NOT a confirmed switch in projectile shape, beam pattern, chain or AoE. If you redesign it visually, represent growing firepower with a tighter, brighter burst stream without presenting that as original DCDW footage.
+
+3) MAFDET (마프데트) — merge-triggered TEMPORARY awakening [DOCUMENTED]
+Trigger: merging Mafdet causes all deployed Mafdets to awaken into the Goddess of Justice for about 23 seconds (archive figure). During the state she launches a Justice Bombardment of multiple spectacular shots; archived base 3 projectiles and +150% bombardment damage, with more bombs at higher stars.
+Visual: “Goddess of Justice” is a separate named form; exact model proportions, light color, aura and transformation duration UNVERIFIED.
+Attack change: normal attack -> multiple prominent bombardment projectiles. IMPORTANT: despite the name, the archive specifically says these bombs do NOT have splash damage. Do not inaccurately describe her as an AoE attacker. This is a particularly useful example of projectiles LOOKING large while damage logic stays single-target.
+
+4) AURORAMIM KING (오로라밈킹) — rare golden spawned variant [DOCUMENTED]
+Trigger: a 10% chance of a Golden Awakened AuroraMim King. Normal same-star merge raises target by 1 star; golden version raises target by 2 stars.
+Visual: golden variant is explicitly named [DOCUMENTED]. Specific glow, silhouette and transition frames UNVERIFIED.
+Attack change: utility star-upgrade effect differs, not documented as a different firing pattern. Thus classify as awaken-like utility form, NOT evidence of altered projectiles.
+
+B. “GROW-UP” / TRANSFORMATION-LIKE CARDS THAT ARE NOT NECESSARILY CALLED AWAKENING
+
+5) JACHEONGBI (자청비) — time-growing fire mode [DOCUMENTED]
+Trigger: gains power with time and reaches Super Mode after a timer. Card data gives a 70-second threshold, but commentary notes a rework and star-dependent longer timers (e.g., very long at 7 stars), so avoid implying one universal timing for all patches/stars. Star upgrades can preserve accumulated progress according to archived discussion.
+Visual: a distinct Super Mode is described; exact aura/size/color not established [UNVERIFIED].
+Attack change: ordinary strikes/bullets -> Super Lightning Bomb with splash/explosion after threshold. This is the clearest documented permanent attack-behavior change among these examples.
+
+6) MOA (모아) — delayed self-replacement / growth utility [DOCUMENTED]
+Trigger: after a waiting timer (archive base 15 seconds; lengthens with star count), Moa transforms into a RANDOM Child at one HIGHER star. No innate attack before transformation. High-star/7-star limitations noted.
+Visual: replacement is mechanically documented; actual morph frames are not [UNVERIFIED].
+Attack change: none from Moa itself; the resulting random unit attacks according to its own type, so this is a form identity change, NOT a deterministic three-stage weapon evolution.
+
+7) VENUS (비너스) — consumable orb counter [DOCUMENTED]
+Trigger: starts with luminous orbs equal to its star count and consumes one about every 20 seconds to summon a random 1-star Child. Gaining/losing stars adds/removes orbs.
+Visual: visible orbiting light orbs are explicitly documented and reflect remaining charges.
+Attack change: NO documented awakened fire mode; use as a verified readable counter-example.
+
+8) DANU (다누) — temporary crit-triggered burst [DOCUMENTED]
+Trigger: critical hit starts 5 seconds of Burst Mode with a large attack-speed bonus (archive lists +400%).
+Visual: exact changes UNVERIFIED.
+Attack change: increased firing frequency; no verified new bullet shape, laser or AoE. Treat as a temporary empowered mode, not formal permanent awakening.
+
+9) AMOR (아모르) — attack-count special shot [DOCUMENTED]
+Trigger: fifth attack shoots explosive arrows at three random enemies.
+Visual: counting from one to five is a natural charge telegraph [PROPOSED]; the original on-unit counter is UNVERIFIED.
+Attack change: standard projectile -> special triple-target explosive arrows on every fifth shot. NOT a lasting new character form; this is a periodic special attack.
+
+10) CLEOPATRA (클레오파트라) — merge-triggered special construct [DOCUMENTED]
+Trigger: periodic temporary walls on the route, with a stronger golden wall created by merging. Archive lists standard wall 2.5 seconds and gold wall 6 seconds, but these values are subject to upgrade/version differences.
+Visual: ordinary wall vs golden wall distinction documented.
+Attack change: stronger/different field construct and its end-of-life explosion, not a change to an ordinary turret bullet.
+
+11) NEBULA (네뷸라) — ramping sustained beam [DOCUMENTED]
+Trigger: sustained focus on one enemy increases beam damage; retargeting resets the damage ramp. Archived interval: 0.25 seconds.
+Visual: beam attack explicitly documented; an accumulating brightness/thickness effect is a PROPOSED readable rendition, not confirmed actual footage.
+Attack change: sustained beam grows damage on same target, but the archive does NOT verify a stage swap into a second beam type.
+
+12) PANTHEON (판테온) — continuous rapid hit, spatial penalty [DOCUMENTED]
+Trigger: normally 0.2-second attacks; adjacent Pantheons slow one another.
+Attack change: archive explicitly describes near-instant hits (effectively hitscan), not a documented awaken.
+
+13) JEGERTY (제거티) — BOARD FORMATION power [DOCUMENTED]
+Trigger: complete column = attack-speed bonus; complete row = damage bonus (“bingo”). No form-change confirmed.
+Attack change: quantified DPS properties rather than verified new VFX. Useful inspiration for a positional awaken telegraph.
+
+C. WHAT NOT TO CLAIM
+- Ordinary star merges from 1 to 7 are generic progression, not evidence of a unique Grow Up state.
+- Ordinary permanent card upgrades purchased outside the match are not character awakenings.
+- DCDW's original IP “Warwolf” and the standalone Destiny Child RPG's separate “Warwolf” must not be conflated.
+- No source located proves that ALL named units have three distinct portrait/sprite evolutions.
+- No retrieved text verifies exact original transformation animation milliseconds, aura gradients, scale percentages, projectile pixel art or VFX frame counts.
+
+2. WHICH VERIFIED DCDW TRANSFORMATIONS CHANGE ATTACK EFFECTS?
+
+CONFIRMED ATTACK-MECHANIC CHANGES:
+- Jacheongbi: timed normal attack -> explosive splash Super Lightning Bomb. Concrete mechanical pattern shift: single-target -> AoE.
+- Mafdet: normal attacks -> multi-shot Justice Bombardment across all Mafdets for a timed state. The multiple bombs are specifically NOT splash damage.
+- Warwolf: normal slower attack -> accelerated guaranteed-critical close-range melee. Distinct striking behavior, but precise visual slash sprite undocumented.
+- Danu: normal attack cadence -> fast critical-triggered burst for 5s; special projectile graphics undocumented.
+- Amor: normal arrows -> three special explosive arrows every fifth attack (periodic, not awakening).
+- Cleopatra: standard wall construct -> stronger golden wall after merge (utility attack), then explosion.
+- Nebula: continuous beam that ramps damage while focused; effect intensity change is plausible but not visually verified.
+
+AWAKENING WITHOUT DOCUMENTED PROJECTILE CLASS CHANGE:
+- Davi: speed/damage scaling and 50-star awakening; no substantiated new beam/projectile/AoE class.
+- Golden AuroraMim King: two-star instead of one-star upgrade, with no distinct attack VFX established.
+
+REPLACEMENT, NOT A DETERMINISTIC PROJECTILE EVOLUTION:
+- Moa: timed randomized higher-star Child replacement.
+
+3. VISUAL LANGUAGE TO BORROW (DESIGN INFERENCES, NOT ARCHIVED ANIMATION FACTS)
+
+Telegraph: show one compact 3-arc stage gauge around the HEAD, not on the shared BASE (base still communicates rarity). A charge counter belongs under the central emblem, 9-11 effective pixels tall when selected, rather than noisy text on all 15 board units. When threshold is near, pulse the final arc at 2 Hz; when ready, one 110ms silhouette flash + 160ms directional emission; the player's first post-transform attack is the proof that something changed.
+
+Size and framing: keep top-down head center exactly locked to cell center; fixed 46-50 px total tile width. Recommended head diameter 26-30 px for Stage 1, 28-32 px for Stage 2, 30-34 px for Stage 3, maximum silhouette extension <= 38 px. Increase recognizable apparatus (twin muzzle/fins/halo/ring) instead of 20% whole-sprite enlargement. Never occlude 1-7 star badge.
+
+Color: the unit's unique identity color remains the same across stages; shift saturation and metallic detail only. Rarity border is separate from ability glow. Distinct shape is essential for color-blind legibility.
+
+Transformation animation: 0-100ms anticipation (halo tightens); 100-220ms 1-2px head compression and core charge; 220-330ms brief flash + radial ring; 330-520ms swap head overlay and deploy new attachments; 520-650ms settle and first shot. All durations are PROPOSED production budgets, not DCDW measurements. If combat simulation runs while the animation plays, apply damage rules atomically on crossing the threshold and avoid an invisible damage pause. For temporary transformations, reserve a 250ms reverse sequence, with an expiry blink 800ms before rollback.
+
+Attack VFX: each stage needs a visibly different TRAJECTORY or IMPACT SHAPE, not just more glow: e.g. bullet -> piercing rail -> branching chain; splash disk -> persistent patch -> three pulses. Keep VFX strokes 2-4 px thick at native resolution, cap particle count and prevent stage halos from filling neighboring tiles. Prefer 4-6 frame effect sprites and 1 clean hit confirm over noisy continuous particle fields.
+
+Readability test: record screen at 480x270 or 844x390 on actual phone, shrink each turret to 45-50 px cell, play a crowded 15-unit board, remove color and mute sound; five first-time testers should identify the unit and whether stage 1/2/3 in under 1 second. If they cannot, simplify head geometry and projectile silhouette before adding glow.
+
+4. TWELVE THREE-STAGE TURRET DESIGNS (ALL NEW / PROPOSED)
+
+Common stage semantics: S1 BASE, S2 GROWN, S3 AWAKENED. Keep distinctive body/head identity; only weapon details and VFX evolve. Timing per card below is a PROPOSED animation spec. Trigger thresholds are sample balance values, adjustable by designer; separate them from generic 1-7 star badge.
+
+01. SCORCH / INCINERATOR — OFFENSE / FLAME
+Trigger: 20 attack hits -> S2; 60 total hits -> S3.
+S1: compact orange nozzle, discrete orange firebolt; circular spark hit (4 frames).
+S2: twin heat vents, short orange piercing flame lance; oval flame impact + 2-tick burn.
+S3: glowing segmented furnace ring, continuous sweeping plasma ribbon, periodic elongated flame carpet on the lane.
+Transition S1->S2 (560ms): 0-100 charge, 100-220 vents open, 220-340 orange flash, 340-460 twin nozzles slide out, 460-560 lance test pulse. S2->S3 (700ms): 0-140 ring ignition, 140-300 core spin, 300-430 burst, 430-600 plasma ribbon wraps nozzle, 600-700 settle.
+Assets: 3 head overlays, 1 base; S1 bolt 4f, S2 lance 4f, S3 ribbon 6f, 3 hit sheets 4/5/6f, burn decal 4f, 2 transitions 6/8f, charge arcs 3 states.
+
+02. FROST / CRYO-LENS — CONTROL / ICE
+Trigger: 12 chilled targets -> S2; 35 total chilled targets -> S3.
+S1: pale-blue ice needle; small crystal chip hit.
+S2: split dual needles creating a wider forked hit and visible frost slow tag.
+S3: stationary cold lens firing short cone pulse that crystallizes enemies and shatters on expiry.
+Transitions 580ms/720ms: 0-120 condensation, 120-260 lens splits, 260-380 ice ring, 380-580 deploy; S3 adds 140ms crystallizing bloom and 100ms settle.
+Assets: 3 heads, needles 4f, split needle 5f, cone 6f, 3 unique hit FX, frozen debuff icon, shatter 6f, condensation 6f, ring 6f.
+
+03. ARC / TESLA NODE — OFFENSE / ELECTRIC
+Trigger: 15 crits -> S2; 45 crits -> S3.
+S1: one straight electric bolt, tiny star hit.
+S2: forked yellow-cyan chain to 2 enemies, two chained node sparks.
+S3: thick lightning spear to primary target then branching 4-node network with delayed pulses.
+Transitions 500ms/680ms: 0-100 capacitors glow, 100-210 prongs fan out, 210-330 electrical flash, 330-500 settle; S3 500-680 overhead coil engages.
+Assets: head variants with 1/2/4 prongs, bolt 4f, chain segment 4f, network segment 6f, 3 sparks, prong deployment 6f, circuit decal 4f.
+
+04. LANCE / RAIL DRIVER — OFFENSE / PIERCE
+Trigger: 10 armor-piercing hits -> S2; 25 -> S3.
+S1: narrow white-cyan slug and tiny metallic spark.
+S2: visibly elongated rail and straight line shot penetrating two enemies; slender tracer and two sequential hits.
+S3: heavy cross-rail cannon fires one near-instant broad-line rail beam with punch-through shockwave.
+Transitions 540ms/760ms: 0-130 rail charges, 130-280 rails extend, 280-390 muzzle line flash, 390-540 settle; awakening adds 220ms giant rail lock and 80ms recoil.
+Assets: 3 head types, muzzle 3/4/6f, tracer 4f, beam 6f, kinetic hits 4/4/6f, rail deploy 6/8f, recoil overlays 3f.
+
+05. WARP / VOID FOLD — SPECIAL / TELEPORT DAMAGE
+Trigger: 8 redirected targets -> S2; 24 -> S3.
+S1: slow purple orb, circular implosion on hit.
+S2: twin phase orbs travel and teleport to a second marked target; two-point portal hit.
+S3: bright void ring drops compact gravity well that ticks damage then snaps closed.
+Transitions 650ms/850ms: 0-160 inner pupil inverts, 160-350 concentric rings fold, 350-500 aperture flash, 500-650 hold; S3 extra 200ms spatial collapse.
+Assets: 3 heads; orbit orb 4f, twin orbs 4f, gravity field loop 8f, implosion 6f, wormhole entry/exit 6f, rupture 8f, rings 8f.
+
+06. VENOM / BIO-REACTOR — SUB-OFFENSE / POISON
+Trigger: 12 poison applications -> S2; 30 -> S3.
+S1: green acid glob that sticks as a single small toxic dot.
+S2: three lobbed droplets spread on hit, short triangular contamination patch.
+S3: heavy translucent capsule bursts into a distinct six-sided corrosive pool with periodic bubbling ticks.
+Transitions 560ms/700ms: 0-120 canister bubbles, 120-270 glass valves grow, 270-380 toxic flash, 380-560 settle; S3 adds 140ms pressure release.
+Assets: 3 reactor overlays, droplet 4f, triple droplet 4f, capsule 5f, poison dot 4f, triangular patch 6f, hex pool loop 8f, bubbling 6f.
+
+07. BROKER / CREDIT PRINTER — SUPPORT / MANA
+Trigger: generate 50 mana -> S2; 160 -> S3.
+S1: mechanical single coin projectile damages target and gives small mana bonus.
+S2: fast triangular holo-chip projectile bounces once to an adjacent enemy; mana ticks shown as tiny floating squares.
+S3: giant gold ring sends a radial 3-way dividend pulse toward three enemies, each valid hit grants capped mana.
+Transitions 480ms/650ms: 0-100 drawer clicks, 100-210 gold disc rises, 210-320 scatter flash, 320-480 settle; S3 170ms halo expansion.
+Assets: 3 heads, coin 4f, triangle chip 4f, dividend pulses 5f, gold hit 4f, currency mini-icon, halo 6f, cash register deploy 6f.
+
+08. GLITCH / DATA-HACKER — CONTROL / CORRUPTION
+Trigger: 10 disrupted enemies -> S2; 28 -> S3.
+S1: small blue digital pixel cube, square glitch hit.
+S2: binary ribbon pierces enemy and briefly scrambles movement; thin noisy line impact.
+S3: rotating CRT eye projects a short wide scan bar and leaves square-grid silence field.
+Transitions 620ms/780ms: 0-140 CRT scanline, 140-290 pixels disassemble, 290-420 color-split glitch, 420-620 reassemble; S3 adds 160ms scan sweep.
+Assets: 3 screen faces, cube 4f, ribbon 6f, scan bar 6f, square hit 4f, distortion 6f, grid decal 6f, transition sheet 8f, debuff icon.
+
+09. ANCHOR / FIELD ENGINEER — SUPPORT / DEPLOYER
+Trigger: 3 sentry assists -> S2; 10 -> S3.
+S1: small green-tagged drone bolt from helper drone, single spark hit.
+S2: two mini drones fire alternating dart beams into the lane; dual hit splashes.
+S3: central engineering node projects triangular support lattice, and satellite drones fire synchronized X-shaped intercept shots.
+Transitions 590ms/740ms: 0-120 remote flashes, 120-260 drone hatch opens, 260-390 drone lift, 390-590 first dart; S3 adds 150ms lattice formation.
+Assets: 3 heads, 1/2/3 drone overlays, drone idle 6f, bolt 4f, dart 4f, X-shot 6f, sync flash 5f, triangular lattice loop 6f.
+
+10. PULSE / GRENADE ARRAY — SUB-OFFENSE / EXPLOSIONS
+Trigger: 8 enemy multihits -> S2; 22 -> S3.
+S1: round orange grenade arcs then makes one compact round blast.
+S2: split cluster grenade pops into three miniature impacts at distinct nearby lane spots.
+S3: orange targeting disc signals heavy plasma mortar, leading to a large crisp three-ring shockwave with delayed damage circles.
+Transitions 560ms/760ms: 0-110 pin animation, 110-250 launcher jaw splits, 250-370 orange bloom, 370-560 settle; S3 adds 200ms targeting charge.
+Assets: 3 heads, grenade 4f, cluster 6f, mortar shell 4f, circular explosion 6f, 3 mini explosions 4f, shockwave 8f, target decal 6f.
+
+11. SENTINEL / PRECISION ARRAY — OFFENSE / SNIPER
+Trigger: 7 consecutive target hits -> S2; 20 -> S3; misses reset only partial combo.
+S1: precise cyan bullet, tiny cross-shaped critical spark.
+S2: charged tracer shot generates a second bright afterimage bullet along same line; twin impact cross.
+S3: condensed white-cyan needle railbeam marks a weak point then fires a delayed second precision strike; NO broad AoE.
+Transitions 520ms/700ms: 0-120 scope brackets clamp, 120-260 optic widens, 260-360 lens flash, 360-520 settle; S3 adds 180ms reticle triple-lock.
+Assets: 3 scope/head pieces, bullet 4f, dual tracer 4f, thin needle beam 6f, 3 cross impact sprites, scope lock 6f, weak-point icon 3f.
+
+12. HOLY SHIELD / AEGIS GENERATOR — DEFENSE / COUNTERATTACK
+Trigger: block 8 enemy effects -> S2; 20 -> S3.
+S1: small cyan-gold retaliatory bolt on blocked damage, tiny shield twinkle.
+S2: rotating double hex shields deflect into a crescent-shaped return arc hitting the closest enemy.
+S3: large white-gold hexagonal barrier projects a lane-wide straight purification pulse at intervals, with hex fractures on impact (not a passive gun).
+Transitions 640ms/820ms: 0-160 shield facets light, 160-330 hex plates split, 330-470 holy circular flash, 470-640 reform; S3 adds 180ms full barrier deployment.
+Assets: 3 hex/shield heads, shield hit 4f, return crescent 5f, wide pulse 6f, hex fracture 6f, barrier 8f loop, aura ring 6f.
+
+5. SHARED PRODUCTION ASSET MATRIX AND IMPLEMENTATION
+
+For each turret:
+- one mechanically unchanged base sprite, three stage-specific HEAD overlays centered in identical 64x64 logical sprite canvases; weapon points RIGHT at 0 degrees and rotates in code;
+- one stage badge icon 1/2/3 independent from merge stars and rarity tier;
+- three projectile/beam definitions with distinctive silhouette and frame count;
+- three hit FX definitions and any persistent field/debuff loop;
+- two transitions (grow and wake) with consistent 0/90/180/270 rotation compatibility;
+- optional sound set: stage cue 160-300ms, shot variants, impact variants;
+- no stage-specific shadows or text baked into sheet; transparent alpha preferred for actual implementation, magenta only as a keyed review/export background.
+
+Recommended budget across 12 units: 36 head overlays + 12 bases + 36 shot types + 36 hit families + 24 transition animations + select status/field decals. Reuse generic VFX primitives (rings, radial flash, smoke, impact spark) across the roster without reusing their distinctive focal silhouette. Keep on-screen active VFX capped: prioritize target impact, then important stage-3 effects, then ambient glows. Avoid screen-filling chains across player and opponent boards.
+
+State machine suggestion:
+  spawned -> S1; progress events accumulate; when threshold_1 reached, atomically set S2 and start GROW animation; when threshold_2 reached, atomically set S3 and start WAKE animation; attacks render based on effective stage. On merge, decide policy explicitly: copy highest stage, reset progress, or weighted transfer. For a friendly competitive game, recommended policy = stage reset on random merge, but 50% of progress preserved if the same type survives; tell players in the details panel. Do NOT silently invent a different policy for different units.
+
+Mobile art QA:
+1. At 50 px board cell, distinguish S1/S2/S3 from center icon + silhouette, not glow alone.
+2. Keep any turret-specific projectile recognizable at 0.5x playback speed and at normal speed.
+3. Test 15 turrets firing simultaneously and in grayscale / reduced motion.
+4. Keep progress telemetry on selected tile; show charged-to-ready brief 1-time burst.
+5. Optional accessibility setting: reduce flash, simplify chains, use solid outline on thin cyan lines.
+
+SOURCES (CHECKED 2026-11-05)
+1. Namu community archive, DCDW card list (Korean):
+   https://namu.moe/w/데스티니%20차일드:디펜스%20워/카드
+   Specific card entries: Danu, Nebula, Venus, Amor, AuroraMim King, Davi, Warwolf, Moa, Jacheongbi, Cleopatra, Mafdet.
+2. Namu DCDW game overview (release, basic merging, shutdown):
+   https://d.namu.moe/w/데스티니%20차일드:디펜스%20워
+3. Contemporary Korean deck guide (2020-12-05), Warwolf strategy:
+   https://kwonzales.tistory.com/6
+4. BlueStacks DCDW beginner's guide, deck and upgrading context:
+   https://www.bluestacks.com/blog/game-guides/destiny-child-defense-war/dcdw-beginner-guide-en.html
+
+RESEARCH LIMITATION: Namu is a user-edited archive, and its entries describe mechanics spanning multiple patches; archived prose can mix old/new balance numbers. No authoritative visual frame-by-frame developer animation sheet was available from these sources. Every original visual detail not explicitly described above is marked UNVERIFIED. The 12 turret stages, millisecond timings, and asset counts are original PROPOSALS for your own game's production.
