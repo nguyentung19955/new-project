@@ -18,10 +18,10 @@ BANG = {
     'E30': (['tv_xem_rong'], 1220, False),                                          # tấm mở rộng 404 css
     'E31': (['tv_tag_ally', 'tv_tag_rival', 'tv_tag_you', 'tv_tag_shared'], 240, True),  # nhãn bàn ~76 css
     'E18': (['tv_dich1', 'tv_dich2', 'tv_dich3', 'tv_dich4'], 240, True),
-    'E20': (['tv_ghep%d' % i for i in range(1, 9)], 240, True),
-    'E21': (['tv_lui%d' % i for i in range(1, 5)], 240, True),
     'E22': (['tv_de'], 240, False),
 }
+
+BANG_LUOI = {'E20': ['tv_ghep%d' % i for i in range(1, 9)], 'E21': ['tv_lui%d' % i for i in range(1, 5)]}
 
 if __name__ == '__main__':
     chi = set(sys.argv[1:])
@@ -77,3 +77,25 @@ def ke_trong(p, ra, w, cat=0.19):
 
 if __name__ == '__main__' and os.path.exists(os.path.join(tvc.NGUON, 'raw_tv_E19.png')) and (not sys.argv[1:] or 'E19' in sys.argv[1:]):
     ke_trong(os.path.join(tvc.NGUON, 'raw_tv_E19.png'), 'tv_khong', 200)
+
+
+def luoi(e, ten, w, cot, hang=1):
+    """Tấm hoạt ảnh cột × hàng ô đều: cắt theo LƯỚI (tia lửa rời không bị tách thành khối riêng), cùng 1 khung = hộp bao chung."""
+    p = os.path.join(tvc.NGUON, 'raw_tv_' + e + '.png')
+    if not os.path.exists(p): return
+    im = tvc.khoa(Image.open(p)); W, H = im.size; cw, ch = W / cot, H / hang
+    o = [im.crop((round(c * cw), round(r * ch), round((c + 1) * cw), round((r + 1) * ch))) for r in range(hang) for c in range(cot)]
+    hop = [x.getchannel('A').point(lambda v: 255 if v > 20 else 0).getbbox() for x in o]
+    hop = [h for h in hop if h]
+    x0 = min(h[0] for h in hop); y0 = min(h[1] for h in hop); x1 = max(h[2] for h in hop); y1 = max(h[3] for h in hop)
+    # vuông, tâm ô (vòng nổ đặt giữa hốc ụ)
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2; s = max(x1 - x0, y1 - y0) / 2 + 2
+    for x, t in zip(o, ten):
+        x = tvc.thu(x.crop((int(cx - s), int(cy - s), int(cx + s), int(cy + s))), w); x.save(os.path.join(tvc.DICH, t + '.png'), optimize=True)
+    print(e, ten[0], '…', len(ten), 'khung', x.size)
+
+
+if __name__ == '__main__':
+    for e, cot in (('E20', 8), ('E21', 4)):
+        if not sys.argv[1:] or e in sys.argv[1:]:
+            luoi(e, BANG_LUOI[e], 300, cot)

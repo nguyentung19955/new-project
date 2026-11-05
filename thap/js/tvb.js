@@ -184,6 +184,11 @@ const TVB = {
         const a = REN.img('tv_dich' + (1 + (Math.floor(performance.now() / 125) % 4)));
         if (a) { const S = co / 1.22 * 0.98; ctx.globalAlpha = Math.min(1, (al || 1) * 1.15); ctx.drawImage(a, x - S / 2, y - S / 2, S, S); ctx.globalAlpha = 1; return; }
       }
+      // ghép thành công: vòng rèn cf_vong_ren (6 khung) → chớp nạp cyan-vàng 8 khung E20 (tv_ghep1–8) cùng nhịp 255–470 ms
+      if (ten === 'cf_vong_ren') {
+        const i = 1 + Math.min(7, Math.floor(f / 5 * 7.99)), a = REN.img('tv_ghep' + i);
+        if (a) { ctx.globalAlpha = Math.min(1, al == null ? 1 : al); ctx.drawImage(a, x - co / 2, y - co / 2, co, co); ctx.globalAlpha = 1; return true; }
+      }
       return khGoc.apply(this, arguments);
     };
   }
