@@ -235,6 +235,7 @@ const NHAC = (() => {
     function buoc(P) {
       const t = P.tiep, s = P.buoc & 15;
       if (s === 0) { if (P.buoc > 0 && ((P.buoc >> 4) & 7) === 0) P.vong++; dauBar(P, t); }
+      else if (!P.f) dauBar(P, t); // bắt kịp nhịp (tab ẩn / máy chậm) nhảy qua ô 0 → chưa có P.f: dựng ngay (tránh lỗi đọc 'kick')
       const b = P.buoc >> 4, ob = b & 7, ban = P.trum ? BAN.trum : P.ban;
       const F = P.f, ch = H[ban.hop[ob]], menu = P.canh === 0;
       // pad: 1 hợp âm / ô nhịp

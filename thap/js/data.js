@@ -121,17 +121,24 @@ const KHAY_HANG = [0.249, 0.499, 0.749];
 const KHAY_TL = 532 / 900;
 const DUONG_RONG = 46; // bề rộng đường đi
 
+// HUD mượt B (TU-VAN-HUD-MUOT §3D): bàn CỦA MÌNH to hơn và dùng khoảng trống dọc (ô ~70×60 thay 64×55);
+// khung khay rộng 408 (mép trang trí trái nằm dưới làn đường trái, mép phải sát mép khung 430),
+// không giãn dọc (giãn làm ảnh đầu ụ vượt ngưỡng mip → tốn khung hình). Bàn đồng đội (CO-OP) / đối thủ (PVP) thu gọn 300 px ở trên, vẫn đọc được.
+// Vùng an toàn: thanh trên ≤ 48, khay dưới ≥ 674; dải xem nhanh SOLO 610–668 (không chồng ô nào).
+const BC_TO = { tw: 408, tx: 22, kv: 1 }, BC_GON = { tw: 300, tx: 92 };
 function boCuc(che) {
-  const tw = 372, th = Math.round(tw * KHAY_TL), tx = 52;
+  const tw = BC_TO.tw, tx = BC_TO.tx;
   const lx = 27; // tâm làn trái
+  const toH = (k) => Math.round(tw * KHAY_TL * k);
+  const gw = BC_GON.tw, gx = BC_GON.tx, gh = Math.round(gw * KHAY_TL);
   if (che === 'coop') {
-    // bàn trên = ĐỒNG ĐỘI, bàn dưới = MÌNH; 2 cổng (trên/dưới) đi vào → gặp ở khe giữa → hành lang chung → lõi bên phải
-    const y1 = 90, gy = y1 + th + 33, y2 = gy + 33;
+    // bàn trên = ĐỒNG ĐỘI (gọn), bàn dưới = MÌNH (to); 2 cổng (trên/dưới) đi vào → gặp ở khe giữa → hành lang chung → lõi bên phải
+    const th = toH(1), y1 = 98, gy = y1 + gh + 33, y2 = gy + 33;
     const cuoi = y2 + th + 34;
     return {
       ban: [
         { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
-        { x: tx, y: y1, w: tw, h: th, ai: true, ten: TEXT.ui.ally },
+        { x: gx, y: y1, w: gw, h: gh, ai: true, ten: TEXT.ui.ally, gon: true },
       ],
       duong: [
         { pts: [[lx, cuoi], [lx, gy], [W - 26, gy]], ban: 0, nhap: 1 },  // nhánh dưới (của mình)
@@ -141,21 +148,21 @@ function boCuc(che) {
     };
   }
   if (che === 'pvp') {
-    // bàn trên = ĐỐI THỦ, bàn dưới = MÌNH; mỗi bàn một đường riêng
-    const y1 = 100, y2 = 394;
+    // bàn trên = ĐỐI THỦ (gọn), bàn dưới = MÌNH (to); mỗi bàn một đường riêng
+    const th = toH(1), y1 = 104, y2 = y1 + gh + 72;
     return {
       ban: [
         { x: tx, y: y2, w: tw, h: th, ai: false, ten: TEXT.ui.you },
-        { x: tx, y: y1, w: tw, h: th, ai: true, ten: TEXT.ui.rival },
+        { x: gx, y: y1, w: gw, h: gh, ai: true, ten: TEXT.ui.rival, gon: true },
       ],
       duong: [
         { pts: [[lx, y2 - 22], [lx, y2 + th + 26], [W - 26, y2 + th + 26]], ban: 0 },
-        { pts: [[lx, y1 - 22], [lx, y1 + th + 26], [W - 26, y1 + th + 26]], ban: 1 },
+        { pts: [[lx, y1 - 22], [lx, y1 + gh + 26], [W - 26, y1 + gh + 26]], ban: 1 },
       ],
     };
   }
-  // SOLO: một bàn giữa màn, đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
-  const y = 262;
+  // SOLO: một bàn giữa vùng chơi (48–604), đường hình chữ U ôm 3 cạnh bàn (trên → trái → dưới) như Random Dice
+  const th = toH(BC_TO.kv), y = Math.round((48 + 604) / 2 - (th + 112) / 2 + 57);
   return {
     ban: [{ x: tx, y, w: tw, h: th, ai: false, ten: TEXT.ui.you }],
     duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],

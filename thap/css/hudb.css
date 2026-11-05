@@ -1,0 +1,79 @@
+/* TURRET MERGE — HUD MƯỢT B (js/hudb.js): dải xem nhanh 60 px + tấm mở rộng, băng WAVE mỏng dưới thanh trên, Triệu hồi FULL.
+   Nạp CUỐI. Chỉ chữ/số + ảnh PNG có sẵn (khung_tt, mui_tiep, ui_sao); QUY-TAC-HINH.md. */
+
+/* ---------- XEM NHANH: dải 60 px ---------- */
+html body #tt.hb-qi { left: 8px; right: 8px; height: 60px; max-height: none; box-sizing: border-box; z-index: 14; gap: 8px; align-items: center;
+  border: 0 solid transparent; border-width: 10px; border-image: url(../assets/khung_tt.png) 42 fill / 10px stretch; background: none; padding: 0 0 0 2px; overflow: visible; }
+html body #tt.hb-qi .tt-the { width: 40px; height: 40px; margin: 0; }
+html body #tt.hb-qi .tt-anh { width: 40px; height: 40px; object-fit: cover; object-position: 50% 15%; }
+html body #tt.hb-qi .tt-than { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 21px 17px; column-gap: 8px; align-items: center; padding-right: 40px; }
+html body #tt.hb-qi .tt-dau { grid-column: 1; grid-row: 1; gap: 5px; min-width: 0; }
+html body #tt.hb-qi .tt-ten { flex: 0 1 auto; height: 21px; line-height: 21px; font-size: 15px; }
+html body #tt.hb-qi .tt-bac, html body #tt.hb-qi .tt-phu, html body #tt.hb-qi .tt-gl, html body #tt.hb-qi .tt-so { display: none; }
+html body #tt.hb-qi .hb-sao { flex: none; display: inline-flex; align-items: center; gap: 1px; font-size: 14px; font-weight: 900; color: #ffd75a; line-height: 1; text-shadow: 0 1px 0 #000; }
+html body #tt.hb-qi .hb-sao[hidden] { display: none; }
+html body #tt.hb-qi .hb-sao img { width: 13px; height: 13px; }
+html body #tt.hb-qi .tt-kn { grid-column: 1 / 3; grid-row: 2; margin: 0; font-size: 12.5px; line-height: 17px; font-weight: 700; color: #d9dee6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #tt.hb-qi .hb-so { grid-column: 2; grid-row: 1; display: flex; gap: 10px; align-items: baseline; white-space: nowrap; font-variant-numeric: tabular-nums; }
+html body #tt.hb-qi .hb-so span { display: inline-flex; align-items: baseline; gap: 3px; }
+html body #tt.hb-qi .hb-so small { font-size: 10px; font-weight: 800; color: #8996a4; letter-spacing: .4px; }
+html body #tt.hb-qi .hb-so b { font-size: 15px; font-weight: 900; color: #f0f2f4; }
+html body #tt.hb-qi .hb-so i { font-size: 10px; font-style: normal; font-weight: 800; color: #8996a4; }
+html body #tt.hb-qi .hb-so .ht { max-width: 150px; overflow: hidden; text-overflow: ellipsis; font-size: 11.5px; font-weight: 800; color: #ffe46b; }
+/* nút › (44 px) — dải vẫn cho chạm xuyên, chỉ nút nhận chạm */
+#tt .hb-mo, #tt .hb-dong { display: none; }
+html body #tt.hb-qi .hb-mo { display: flex; position: absolute; right: -6px; top: 50%; width: 44px; height: 44px; margin-top: -22px; padding: 0; border: 0; background: none;
+  align-items: center; justify-content: center; pointer-events: auto; cursor: pointer; touch-action: manipulation; transition: transform .12s cubic-bezier(.18, 1.15, .32, 1); }
+html body #tt.hb-qi .hb-mo img { width: 22px; height: 21px; transform: rotate(-90deg); transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+html body #tt.hb-qi.hb-tren .hb-mo img { transform: rotate(90deg); }
+html body #tt.hb-qi .hb-mo:active { transform: scale(.965); }
+/* vào: 150 ms trượt 8 px + mờ dần (SOLO lên từ dưới, 2 bàn xuống từ trên) */
+html body #tt.hb-qi.hb-vao { animation: hb-vao .15s cubic-bezier(.2, .8, .2, 1) both; }
+html body #tt.hb-qi.hb-tren.hb-vao { animation-name: hb-vao2; }
+@keyframes hb-vao { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes hb-vao2 { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- TẤM MỞ RỘNG (nút ›) ---------- */
+html body #tt.hb-qi.hb-rong { height: auto; z-index: 26; pointer-events: auto; align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; padding: 4px 4px 6px 4px;
+  border-width: 14px; border-image: url(../assets/khung_tt.png) 42 fill / 14px stretch; animation: hb-len .26s cubic-bezier(.2, .8, .2, 1) both; }
+html body #tt.hb-qi.hb-tren.hb-rong { animation-name: hb-xuong; }
+@keyframes hb-len { from { opacity: .4; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+@keyframes hb-xuong { from { opacity: .4; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
+html body #tt.hb-qi.hb-rong .tt-the { width: 64px; height: 64px; }
+html body #tt.hb-qi.hb-rong .tt-anh { width: 64px; height: 64px; }
+html body #tt.hb-qi.hb-rong .tt-than { display: block; padding-right: 50px; }
+html body #tt.hb-qi.hb-rong .tt-ten { font-size: 18px; height: 24px; line-height: 24px; }
+html body #tt.hb-qi.hb-rong .tt-bac, html body #tt.hb-qi.hb-rong .tt-gl { display: revert; }
+html body #tt.hb-qi.hb-rong .tt-phu { display: block; margin: 1px 0 4px; font-size: 12px; }
+html body #tt.hb-qi.hb-rong .tt-kn { white-space: normal; font-size: 13px; line-height: 1.35; }
+html body #tt.hb-qi.hb-rong .tt-so { display: block; }
+html body #tt.hb-qi.hb-rong .hb-so { display: none; }
+html body #tt.hb-qi.hb-rong .hb-mo { display: none; }
+html body #tt.hb-qi.hb-rong .hb-dong { display: flex; position: absolute; right: -8px; top: -10px; width: 60px; height: 44px; padding: 0; border: 0; background: none;
+  align-items: center; justify-content: center; font-size: 11px; letter-spacing: .06em; font-weight: 900; color: #c9d1dc; text-shadow: 0 1px 0 #000; pointer-events: auto; cursor: pointer; touch-action: manipulation; }
+html body #tt.hb-qi.hb-rong .hb-dong:active { transform: scale(.965); }
+html body #tt.hb-qi.hb-rong .d-chip, html body #tt.hb-qi.hb-rong .tt-ct { pointer-events: auto; }
+html body #tt.hb-qi.hb-rong .d-chip span { max-width: 28%; }
+html body #tt.hb-qi.hb-rong .tt-ct { height: 30px; line-height: 28px; padding: 0 10px; font-size: 12px; }
+
+/* ---------- băng WAVE: dải mỏng ngay dưới thanh trên, ≤ 0,7 s rồi thu vào ô WAVE ---------- */
+html body #bang-wave { top: 50px; }
+html body #bang-wave .bw-dai { width: 300px; padding: 4px 12px; }
+html body #bang-wave b { font-size: 22px; }
+html body #bang-wave span { font-size: 11px; }
+html body #bang-wave.ht-bw { animation: hb-bw .7s ease-in both; }
+@keyframes hb-bw { 0% { opacity: 0; transform: translateY(-6px); } 14% { opacity: 1; transform: none; } 62% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translate(-32%, -34px) scale(.35); } }
+
+/* ---------- Triệu hồi khi bàn đầy: chỉ chữ FULL (không chữ SUMMON tràn khỏi nút) + lắc 180 ms khi chạm ---------- */
+html body #nut-trieu.tn-day .tr-ten { display: none; }
+html body #nut-trieu.tn-day .tn-full { font-size: 15px; font-weight: 900; letter-spacing: .08em; margin-top: 0; }
+html body #nut-trieu.hb-lac { animation: hb-lac .18s linear; }
+@keyframes hb-lac { 0%, 50%, 100% { translate: 0 0; } 25% { translate: -4px 0; } 75% { translate: 4px 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html body #tt.hb-qi.hb-vao, html body #tt.hb-qi.hb-rong { animation: hb-mo .12s linear both; }
+  html body #bang-wave.ht-bw { animation: hb-mo2 .7s linear both; }
+  html body #nut-trieu.hb-lac { animation: none; }
+  @keyframes hb-mo { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes hb-mo2 { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }
+}

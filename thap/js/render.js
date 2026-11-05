@@ -668,6 +668,7 @@ const REN = {
     ctx.font = FONT.u(11, 800); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (const B of G.ban) {
       if (G.ban.length < 2) break;
+      if (B.i === 0) continue; // HUD mượt B: bàn của mình (to, ở dưới) không cần nhãn "You"
       const s = B.ten, w = Math.ceil(ctx.measureText(s).width) + 22, h = 16;
       const x = Math.min(B.x + B.w - w - 10, W - w - 8), y = B.y + 1; // y = tâm nhãn
       const den = B.i === 0 ? '#5aa8ff' : (G.che === 'pvp' ? '#ff4b3e' : '#63d68b');
