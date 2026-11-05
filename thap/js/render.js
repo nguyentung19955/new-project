@@ -316,10 +316,15 @@ const REN = {
       if (kh) x.drawImage(this.mip(kh, B.h * k), B.x, B.y, B.w, B.h); else { du = false; x.fillStyle = '#3a3d42'; x.fillRect(B.x, B.y, B.w, B.h); }
       x.restore();
     }
-    // đường đi: ghép ảnh đường thẳng + góc
+    // đường đi: ghép ảnh đường thẳng + góc (+ ô ngã ba co-op) lên 1 lớp riêng KHÔNG bóng,
+    // rồi đổ bóng 1 lần cho cả lớp → các mảnh ghép không đè bóng lên nhau, không lộ mối nối
     const th = this.diu('duong_thang', 0.25, 0.7, 0.74), gc = this.diu('duong_goc', 0.25, 0.7, 0.74);
-    if (!th || !gc) du = false;
-    const daVe = new Set();
+    const n3 = G.chung ? this.diu('duong_nga3', 0.25, 0.7, 0.74) : 1;
+    if (!th || !gc || !n3) du = false;
+    const lp = this._lopDuong || (this._lopDuong = document.createElement('canvas'));
+    lp.width = c.width; lp.height = c.height;
+    const y = this.c2d(lp); y.setTransform(k, 0, 0, k, 0, 0);
+    const R = DUONG_RONG / 2, daVe = new Set();
     for (const p of G.duong) {
       const pts = p.pts;
       for (let i = 0; i < pts.length - 1; i++) {
@@ -328,22 +333,24 @@ const REN = {
         let [ax, ay] = pts[i], [bx, by] = pts[i + 1];
         const L = Math.hypot(bx - ax, by - ay), dx = (bx - ax) / L, dy = (by - ay) / L;
         const goc0 = i > 0, goc1 = i < pts.length - 2;
-        const chung = G.chung && i === 1; // hành lang chung co-op bắt đầu từ tâm ngã ba
-        const a0 = goc0 && !chung ? DUONG_RONG / 2 : (i === 0 ? -6 : 0), a1 = goc1 ? DUONG_RONG / 2 : -10;
-        this.veDoanDuong(x, th, ax + dx * a0, ay + dy * a0, bx - dx * a1, by - dy * a1);
+        // co-op: làn dọc dừng đúng mép ô ngã ba; hành lang chung bắt đầu đúng mép phải ô ngã ba
+        const a0 = goc0 ? R : -6, a1 = goc1 ? R : -10;
+        this.veDoanDuong(y, th, ax + dx * a0, ay + dy * a0, bx - dx * a1, by - dy * a1);
       }
-      if (!G.chung) for (let i = 1; i < pts.length - 1; i++) this.veGoc(x, gc, pts[i - 1], pts[i], pts[i + 1]);
+      if (!G.chung) for (let i = 1; i < pts.length - 1; i++) this.veGoc(y, gc, pts[i - 1], pts[i], pts[i + 1]);
     }
-    if (G.chung) { // ngã ba co-op: vẽ lại hành lang chung đè lên làn dọc
-      const p = G.duong[0], [ax, ay] = p.pts[1], [bx, by] = p.pts[2];
-      this.veDoanDuong(x, th, ax, ay, bx + 10, by);
+    if (G.chung && n3 !== 1 && n3) { // ô ngã ba: ray trái liền, mở lên/xuống/phải
+      const [jx, jy] = G.duong[0].pts[1];
+      y.drawImage(n3, jx - R, jy - R, DUONG_RONG, DUONG_RONG);
     }
+    x.save(); x.setTransform(1, 0, 0, 1, 0, 0);
+    x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10;
+    x.drawImage(lp, 0, 0); x.restore();
     this._choNen = !du;
   },
   veDoanDuong(x, th, ax, ay, bx, by) {
     const L = Math.hypot(bx - ax, by - ay); if (L < 1) return;
     x.save(); x.translate(ax, ay); x.rotate(Math.atan2(by - ay, bx - ax) - Math.PI / 2);
-    x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10;
     if (!th) { x.fillStyle = '#44474d'; x.fillRect(-DUONG_RONG / 2, 0, DUONG_RONG, L); x.restore(); return; }
     const tl = th.height * (DUONG_RONG / th.width);
     for (let y = 0; y < L; y += tl) {
@@ -361,7 +368,6 @@ const REN = {
       const ok = (a, b) => a[0] === b[0] && a[1] === b[1];
       if ((ok(up, can[0]) && ok(rt, can[1])) || (ok(up, can[1]) && ok(rt, can[0]))) {
         x.save(); x.translate(p1[0], p1[1]); x.rotate(k * Math.PI / 2);
-        x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10;
         x.drawImage(gc, -DUONG_RONG / 2, -DUONG_RONG / 2, DUONG_RONG, DUONG_RONG); x.restore(); return;
       }
       up = [-up[1], up[0]]; rt = [-rt[1], rt[0]];
@@ -436,6 +442,7 @@ const REN = {
     if (this.nen) ctx.drawImage(this.nen, 0, 0); else { ctx.fillStyle = '#222'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); }
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
     if (!G.ban.length) return;
+    this.veDongChay(ctx);
     this.veCongLoi(ctx);
     this.veNhanBan(ctx);
     // vật trên đường (mây độc, vũng độc, mìn, cầu vồng…) vẽ dưới quái
@@ -456,6 +463,31 @@ const REN = {
     if (FX.chop > 0) { ctx.globalAlpha = Math.min(0.3, FX.chop); ctx.fillStyle = FX.chopMau; ctx.fillRect(-20, -20, W + 40, H + 40); ctx.globalAlpha = 1; }
   },
 
+  // dòng chảy: mũi tên ›› mờ trôi dọc đường về lõi (co-op: 2 làn nhập vào hành lang chung đọc rõ)
+  veDongChay(ctx) {
+    const t = this.t, KC = 30, V = 22, daVe = new Set();
+    ctx.save(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (const p of G.duong) {
+      const pts = p.pts; let s0 = 0;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [ax, ay] = pts[i], [bx, by] = pts[i + 1], L = Math.hypot(bx - ax, by - ay), dx = (bx - ax) / L, dy = (by - ay) / L;
+        const key = pts[i] + '|' + pts[i + 1];
+        if (!daVe.has(key)) {
+          daVe.add(key);
+          const dau = i === 0 ? 30 : 0, cuoi = i === pts.length - 2 ? L - 34 : G.chung ? L - 16 : L; // co-op: 2 làn dừng trước tâm ngã ba, hành lang nối tiếp
+          for (let u = ((t * V - s0) % KC + KC) % KC; u < cuoi; u += KC) {
+            if (u < dau) continue;
+            const cx = ax + dx * u, cy = ay + dy * u, nx = -dy * 6, ny = dx * 6;
+            ctx.moveTo(cx - dx * 5 + nx, cy - dy * 5 + ny); ctx.lineTo(cx + dx * 2, cy + dy * 2); ctx.lineTo(cx - dx * 5 - nx, cy - dy * 5 - ny);
+          }
+        }
+        s0 += L;
+      }
+    }
+    ctx.strokeStyle = 'rgba(120,235,255,.2)'; ctx.stroke();
+    ctx.restore();
+  },
   veCongLoi(ctx) {
     const t = this.t, daLoi = new Set();
     for (const p of G.duong) {
