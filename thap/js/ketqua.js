@@ -70,9 +70,12 @@ const KQ = {
     // HUD mượt C: màn riêng gọn — biểu tượng + VICTORY/DEFEAT + WAVE to (đếm lên) · 2 ô số · 1 thẻ "thử tiếp" · Chi tiết (chạm) · RETRY to + EDIT nhỏ
     const kq = document.getElementById('ketqua'); kq.classList.add('kq7'); kq.classList.remove('mo-ct');
     const o = (nhan, so, phu) => '<div class="kq-o"><small>' + nhan + '</small><b>' + so + '</b>' + (phu ? '<em>' + phu + '</em>' : '') + '</div>';
-    let h = '<div class="kq-hang">' + o('BOSSES', m.trum) + (m.tut ? o('LIVES LEFT', G.ban[0] ? G.ban[0].tim : 0) : o('BEST ' + m.che.toUpperCase(), bestWave, moi ? 'NEW BEST' : '')) + '</div>';
-    const nguyen = top ? '<small>' + (k.thang ? 'MOST LIVES LOST TO' : 'WHAT GOT THROUGH') + '</small><span>' + ds.slice(0, 1).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n + (n > 1 ? ' lives' : ' life')).join('') + '</span>' : '';
-    if (!m.tut || !k.thang) h += '<div class="kq-meo">' + nguyen + '<small class="kq-tn">TRY NEXT</small><p>' + KQ.meo(top && top[0]) + '</p></div>';
+    // tư vấn C §B18: 3 ô số (trùm hạ · kỷ lục · tim còn) · THUA có màn riêng: chữ "Fell at", nguyên nhân cụ thể, nhãn mẹo "FIX FOR NEXT RUN"
+    const timCon = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0, timMax = (G.che === 'pvp' ? LUAT.timPvp : G.che === 'coop' ? LUAT.timCoop : LUAT.timSolo) || 3;
+    let h = '<div class="kq-hang">' + o('BOSSES', m.trum) + (m.tut ? '' : o('BEST ' + m.che.toUpperCase(), bestWave, moi ? 'NEW BEST' : '')) + o('LIVES', timCon + '/' + timMax) + '</div>';
+    const nguyen = top ? '<small>' + (k.thang ? 'MOST LIVES LOST TO' : 'WHAT BROKE THROUGH') + '</small><span>' + ds.slice(0, 1).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n + (n > 1 ? ' lives' : ' life')).join('') + '</span>'
+      : (!k.thang && k.ly ? '<small>WHAT HAPPENED</small><span>' + k.ly + '</span>' : '');
+    if (!m.tut || !k.thang) h += '<div class="kq-meo">' + nguyen + '<small class="kq-tn">' + (k.thang ? 'TRY NEXT' : 'FIX FOR NEXT RUN') + '</small><p>' + KQ.meo(top && top[0]) + '</p></div>';
     else if (nguyen) h += '<div class="kq-meo">' + nguyen + '</div>';
     h += '<button class="kq-xem" data-kq="ct">Match details<img src="assets/mui_tiep.png" alt=""></button><div class="kq-ct">';
     if (ds.length) h += '<div class="kq-dong"><small>' + (k.thang ? 'LIVES LOST' : 'WHAT GOT THROUGH') + '</small><span>' + ds.slice(0, 4).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n).join(' · ') + '</span></div>';
@@ -82,6 +85,8 @@ const KQ = {
     chi.innerHTML = h;
     // số wave đếm lên 0 → wave trong ~350 ms (giảm chuyển động: hiện ngay)
     const so = document.querySelector('#kq-so b');
+    if (so && !k.thang && so.previousSibling && so.previousSibling.nodeType === 3) so.previousSibling.textContent = 'Fell at ';
+    const phu = document.getElementById('kq-phu'); if (phu && !k.thang && !top) phu.textContent = ''; // nguyên nhân đã ở thẻ "WHAT HAPPENED" — không lặp
     if (so && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       const t0 = performance.now(), D = 350; so.textContent = 'WAVE 0';
       const buoc = (t) => { const x = Math.min(1, (t - t0) / D); so.textContent = 'WAVE ' + Math.round(wave * (1 - Math.pow(1 - x, 3))); if (x < 1) requestAnimationFrame(buoc); };

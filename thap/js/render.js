@@ -148,7 +148,9 @@ const REN = {
     };
     a.onload = () => { a._loi = false; this.thieu.delete(ten); if (this._choNen && /^(khay|duong_)/.test(ten)) this.lamNen(); };
     const gia = G.debug && G.debug.hongKhay > a._lan && ten === 'khay'; // kiểm thử: giả lỗi tải
-    a.src = 'assets/' + (gia ? '__gia_loi__' : ten) + '.png' + (a._lan ? '?r=' + a._lan : '');
+    // ?v=<băm nội dung> (js/ver-anh.js do tools/thap-ver.py dán lúc xuất bản): ảnh đổi → URL đổi → điện thoại không dùng bản cũ trong bộ đệm
+    const v = typeof ANH_V !== 'undefined' && ANH_V[ten], q = [v ? 'v=' + v : '', a._lan ? 'r=' + a._lan : ''].filter(Boolean).join('&');
+    a.src = 'assets/' + (gia ? '__gia_loi__' : ten) + '.png' + (q ? '?' + q : '');
     this.anh[ten] = a;
     return a;
   },
