@@ -213,7 +213,7 @@ const ONL = {
     return '<div class="sanh-p' + (p.ready ? ' san' : '') + (p.on === false ? ' mat' : '') + '" data-u="' + (laToi ? 'me' : 'ban') + '">' +
       '<span class="s7-av"><img class="sp-av" src="' + TK.avURL(p.av) + '" alt=""></span>' +
       '<div class="s7-ten"><b>' + escTen(p.name) + (laToi ? ' <em>YOU</em>' : '') + '</b>' +
-      '<span class="s7-bo">' + deck.map(id => '<img src="' + iconOf(id) + '" alt="">').join('') + '<img class="mv" src="' + mvIcURL(mv) + '" alt=""></span></div>' +
+      '<span class="s7-bo">' + (typeof OT !== 'undefined' ? OT.hang(deck, MAVUONG[mv] ? mv : null) : deck.map(id => '<img src="' + iconOf(id) + '" alt="">').join('') + '<img class="mv" src="' + mvIcURL(mv) + '" alt="">') + '</span></div>' +
       '<span class="s7-tt"><i class="sp-led' + (p.on === false ? ' tat' : '') + '"></i><span class="sp-san">' + (p.on === false ? 'OFFLINE' : p.ready ? 'READY' : 'NOT READY') + '</span>' +
       (p.ready ? '<img class="s7-huy" src="assets/chon_huy.png" alt="">' : '') + '</span></div>';
   },
