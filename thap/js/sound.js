@@ -521,3 +521,9 @@ const SND = (() => {
   for (const k of Object.keys(S)) API[k] = S[k];
   return API;
 })();
+// móc âm thanh cho hiệu ứng triệu hồi/ghép/biến hình (hieuung.js) — dùng lại các giọng sẵn có, tắt chung bằng nút SFX
+SND.lo = (bac) => SND.nang(2 + Math.min(3, bac || 0));       // lộ kết quả ghép (cao dần theo bậc)
+SND.bien = () => SND.nap();                                   // nạp + khoá khi biến hình
+SND.sao = () => SND.nang(5);                                  // đạt mốc sao SKILL UP / BINGO
+SND.hu = () => SND.thucTinh();                                // tiếng hú Sói thức tỉnh
+SND.xich = () => SND.hoTro();                                 // xích liên kết hình thành
