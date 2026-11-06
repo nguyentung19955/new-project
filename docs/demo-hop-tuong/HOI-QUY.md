@@ -104,3 +104,4 @@ Hồi quy trên nhánh làm việc: ĐỎ vì việc của phiên khác (ụ và
 Vì vậy bản xuất bản lần này = **bản đã xuất bản ac3a8b6 + chỉ js/online/net.js mới** (thap-ver.py chạy lại). Hồi quy trên bản đó: mạng ✓,
 sảnh online (Firebase giả + SDK thật, có theoDoiNgu) ✓, nóng/kéo/cộng hưởng ✓; các ✗ "ảnh mờ" là nợ ảnh đã biết — mốc `thap-kt-hoiquy-mo.json`
 không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). Ụ vàng đợt 2 chưa có trong bản xuất bản → kiểm của nó ✗ là đúng.
+- 06/11 (ụ vàng đợt 2): hồi quy 4 cỡ 1 lỗi 1280x800 solo_trum 'chữ tràn' cut-in (.ci-chu) — chạy lại riêng 1280x800 solo: XANH (chập chờn theo thời điểm hoạt ảnh cut-in, không liên quan ụ mới).
