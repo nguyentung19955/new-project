@@ -15,7 +15,25 @@ sp = importlib.util.spec_from_file_location('u2', os.path.join(GOC, 'tools', 'th
 U2 = importlib.util.module_from_spec(sp); sp.loader.exec_module(U2)
 V2 = U2.V2; A = U2.A; JS = U2.JS; ART = U2.ART
 CUT = os.path.join(ART, 'u3', 'cut')
+# khói/sương TRONG SUỐT trên nền magenta (vd. sương băng của Chiller): tách trộn theo màu sương thật → không thành khói hồng
+SUONG = {'lanhgia': 'bang'}
 TAM_MIN = 0.68   # tầm với nhỏ nhất (K·far): bách phân vị 10 của bộ đầu hiện tại (trung vị ≈ 0.75)
+
+
+def khoa_suong(_):
+    """sương băng trong suốt: màu thật F thuộc họ xanh-trắng (F.r = F.g) → từ C = a·F + (1−a)·M: a = 1 − (C.r − C.g)/(M.r − M.g)"""
+    goc = U2.khoa
+
+    def k(rgb):
+        out, a = goc(rgb)
+        C = rgb.astype(np.float32); Mr, Mg, Mb = U2.M
+        m = (C[..., 0] - C[..., 1] > 12) & (C[..., 2] > 170) & (a > 0)
+        s = np.clip(1 - (C[..., 0] - C[..., 1]) / (Mr - Mg), 0.02, 1)
+        Fg = np.clip((C[..., 1] - Mg * (1 - s)) / s, 0, 255); Fb = np.clip((C[..., 2] - Mb * (1 - s)) / s, 0, 255)
+        F = np.stack([Fg, Fg, Fb], -1)
+        out = out.copy(); a = a.copy(); out[m] = F[m]; a[m] = np.minimum(a[m], s[m])
+        return out, a
+    return k
 
 
 def vanh(HK, bo_qua):
@@ -39,7 +57,10 @@ if __name__ == '__main__':
     VANH = vanh(HK, set(ids)); print('VANH', round(VANH, 3))
     for id_ in ids:
         raw = os.path.join(ART, 'raw_u3_%s.png' % id_)
-        ob = U2.cat_tam(raw, (1, 1), 1)[0]
+        goc = U2.khoa
+        if id_ in SUONG: U2.khoa = khoa_suong(SUONG[id_])
+        try: ob = U2.cat_tam(raw, (1, 1), 1)[0]
+        finally: U2.khoa = goc
         if ob is None: print('THIEU', id_); continue
         im, q, r = ob; im.save(os.path.join(CUT, id_ + '_nong.png'))
         K0, far, _, _ = U2.do_K(im)

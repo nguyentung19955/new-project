@@ -41,3 +41,12 @@ Thứ tự | vẽ lại | giống với | độ hiếm | lý do
 Không vẽ lại lần này (ghi lại): Overlord ≈ Wyrm Engine (Mythic, cả 2 đều có ảnh lớn dần 3 dạng — vẽ lại phải vẽ cả 3 dạng); Star Cannon ≈ Star Lift (khác độ hiếm, khung khác màu); Scrap Forge ≈ Marionette (nòng khác hẳn khi nhìn gần).
 
 Prompt ChatGPT: `CAN-VE.json` (ảnh 1 = ref, ảnh 2 = avoid).
+
+## Đã lắp (tools/thap-dau-u3.py — bản cũ: <id>_nong_v2old.png, nho/<id>_v2old.png)
+
+ụ | độ hiếm | đầu mới
+---|---|---
+Copycat `saochep` | Legendary | gương bạc + ảo ảnh ụ tím (bản sao: icon Copycat góc ô + quầng tím)
+Chiller `lanhgia` | Rare | lõi băng + sương xanh-trắng (sương trong suốt tách theo họ màu băng → không khói hồng)
+Cloner `nhanban` | Epic | bầu kính tím có ụ nhỏ bên trong (session điều phối chọn thêm)
+Cleanser `taylo` | Epic | vòi sen + bọt xà phòng (khác Storm Gun)
