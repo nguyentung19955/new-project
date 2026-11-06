@@ -157,11 +157,10 @@ function veEvoBom(ctx, T, S, al, R) {
   }
   const con = SKILLS.tienhoa.con(T), n = Math.max(0, Math.ceil(con - 1e-6)), cuoi = con <= 3;
   const ph = cuoi ? (con * 2) % 1 : con % 1;                     // nhịp "tích": mỗi giây (3 s cuối: mỗi nửa giây)
-  const nay = 1 + (cuoi ? 0.12 : 0.05) * Math.pow(Math.max(0, ph - 0.7) / 0.3, 2);
-  const rung = cuoi ? Math.sin(t * 38) * 0.12 * (1.2 - con / 3) : 0;
+  const nay = 1, rung = 0; // VFX P2 (YEU-CAU-ANIM): bỏ phập phồng + lắc ảnh bom tĩnh — nhịp tích = tờ p2_evolver chạy khung
   const d = S * 0.56 * nay, bx = S * 0.31, by = S * 0.27, ten = EVO.bom(), so = EVO.so[ten] || EVO.so.evo_bom;
   ctx.translate(bx, by); ctx.rotate(rung);
-  R.anhGiua(ctx, ten, 0, 0, d, 0, al);
+  if (!(typeof P2 !== 'undefined' && P2.evoBom(ctx, T, d, cuoi, al))) R.anhGiua(ctx, ten, 0, 0, d, 0, al);
   if (cuoi && ph > 0.55) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.35 * (ph - 0.55) / 0.45; R.anhGiua(ctx, R.cham1('#ff5a3c'), 0, 0, d * 1.1); ctx.globalCompositeOperation = 'source-over'; }
   const f = Math.round(d * so[2] * 10) / 10;
   ctx.globalAlpha = al; ctx.font = '900 ' + f + 'px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';

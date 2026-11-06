@@ -160,7 +160,8 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
     const E = o.E, x = E.chet ? o.x : E.x, y = E.chet ? o.y : E.y, r = (E.d.co || 40) * 0.58 + 4, vao = Math.min(1, o.t / 0.12), con = Math.max(0, o.song - o.t);
     ctx.save(); ctx.translate(x, y);
     const kinh = R.co('hu_khoa', r * 2.1); // kính bát giác + mặt đồng hồ ChatGPT (S4); vành tiến độ + kim + số giây vẽ đè bằng code
-    if (kinh) { const rr = r * (0.8 + 0.2 * vao) * 1.05; ctx.globalAlpha = 0.82 * vao; ctx.drawImage(kinh, -rr, -rr, rr * 2, rr * 2); }
+    if (HU.khoa.p2 && HU.khoa.p2(ctx, o, 0, 0, r)) { } // VFX P2: ấn khoá = tờ 16 khung (vẽ vòng → giữ → vỡ)
+    else if (kinh) { const rr = r * 1.05; ctx.globalAlpha = 0.82 * vao; ctx.drawImage(kinh, -rr, -rr, rr * 2, rr * 2); }
     // vành tiến độ = ảnh vòng cắt quạt; kim = tia PNG ngắn (thay arc + lineTo vẽ code)
     PX.cung(ctx, 0, 0, r * 0.62, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (con / o.song), false, 2.2, '#45e0c8', 0.85 * vao);
     const a = o.t * 5; PX.tia(ctx, 0, 0, Math.cos(a - Math.PI / 2) * r * 0.48, Math.sin(a - Math.PI / 2) * r * 0.48, 1.6, '#ffffff', 0.85 * vao);
@@ -501,7 +502,8 @@ HU.rewind = { // tua ngược 0.6 s: quái chạy lùi (nội suy) + sọc VHS +
       const c = tamU(o.T), r = 30 + 30 * a;
       // mặt đồng hồ quay NGƯỢC = ảnh hu_khoa (ChatGPT S4) tô đỏ, xoay ngược (thay vòng + vạch + kim vẽ code)
       const dh = PX.mau(FXU.co('fx_khoathoigian_hieu') ? 'fx_khoathoigian_hieu' : 'hu_khoa', '#ff6a6a');
-      if (dh) { ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, dh, c.x, c.y, r * 2, r * 2, -o.t * 18, 0.8 * a); }
+      if (HU.rewind.p2 && HU.rewind.p2(ctx, o, c, r, 0.85 * a)) { } // VFX P2: mặt đồng hồ quay ngược = tờ 16 khung
+      else if (dh) { ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, dh, c.x, c.y, r * 2, r * 2, 0, 0.8 * a); } // chưa có tờ: đứng yên mờ dần (bỏ xoay ảnh tĩnh)
     }
     ctx.globalCompositeOperation = 'source-over';
     // vệt lùi của từng quái (đường thẳng mờ từ chỗ cũ)
