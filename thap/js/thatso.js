@@ -114,8 +114,8 @@
     sk.chuDong = function (G, B, T) { const tu = T._tuPhat, r = cd.apply(this, arguments); if (r && tu) { T.tuPhatG = G.t; T.tuPhatN = (T.tuPhatN || 0) + 1; } return r; };
   }
   // vẽ trong lớp huy hiệu (nhandien.js — sau đạn/hiệu ứng): góc TRÊN-TRÁI ô (huy hiệu sao ở trên-phải, tấm đếm ở đáy → không chồng)
-  //  ảnh ChatGPT vfxp0_tudong (CAN-VE-p0.json); chưa về → ic_phat (nút phát PNG có sẵn). Nảy 0 → 1.2 → 1 trong 0.18 s, mờ 0.3 s cuối.
-  const ANH_TU = () => 'ic_phat'; // (đổi sang 'vfxp0_tudong' khi ảnh CAN-VE-p0 về — không gọi ảnh chưa có: tránh 404)
+  //  ảnh ChatGPT vfxp0_tudong (CAN-VE-p0.json, vòng mũi tên + tia sét); chưa nạp xong → ic_phat (nút phát PNG có sẵn). Nảy 0 → 1.2 → 1 trong 0.18 s, mờ 0.3 s cuối.
+  const ANH_TU = () => (REN.img('vfxp0_tudong') ? 'vfxp0_tudong' : 'ic_phat'); // ảnh ChatGPT raw_vfxp0_tudong (CAN-VE-p0) — nạp sẵn lúc vào game
   if (typeof ND !== 'undefined' && ND.veHuyHieu) {
     const veHH = ND.veHuyHieu;
     ND.veHuyHieu = function (ctx, h) {
@@ -128,5 +128,5 @@
       ctx.globalAlpha = 1;
     };
   }
-  if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['ic_phat']) REN.CO_DINH.add(t);
+  if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['vfxp0_tudong', 'ic_phat']) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } } // giữ + giải mã sẵn (không giải mã giữa trận)
 })();
