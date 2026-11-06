@@ -1061,7 +1061,8 @@ const REN = {
         if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
       }
       ctx.globalAlpha = 1;
-      this.khungMuot(ctx, 'fx_' + a.ten, u * 5.999, x, y, a.co * sc, goc, Math.min(0.82, al)); // trần độ sáng cộng
+      const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6; // dải 6 khung (fx_*) hoặc 16 khung (fx_trum_<id>)
+      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(0.82, al)); // trần độ sáng cộng
     }
     const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
     for (const v of FX.vong) {

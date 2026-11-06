@@ -17,11 +17,11 @@ const TRUM_MOI = {
 };
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
 // ↓ 5 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
-const TRUM_ANH = new Set(['hive', 'jammer', 'prism']); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
-const TRUM_HUONG = new Set(['hive_side', 'hive_back', 'jammer_side', 'jammer_back']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
-const TRUM_FX = new Set(['jammer']); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
-const TRUM_ATK = new Set(['hive']); // trum_<id>_atk_16.png — dải ĐÁNH 16 khung (thân trùm tung chiêu, nhìn về bàn) — quaianim.js phát lúc báo chiêu
-const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
+const TRUM_ANH = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_8.png (đi trước) — bỏ ảnh mượn
+const TRUM_HUONG = new Set(['hive_side', 'hive_back', 'jammer_side', 'jammer_back', 'prism_side', 'prism_back', 'twin_core_side', 'twin_core_back', 'patcher_side', 'patcher_back', 'leech_side', 'leech_back']); // 'id_side' / 'id_back' — dải hướng nhìn ngang/sau
+const TRUM_FX = new Set(['jammer', 'prism', 'patcher', 'leech']); // fx_trum_<id>.png — dải hiệu ứng chiêu 16 khung
+const TRUM_ATK = new Set(['hive', 'twin_core']); // trum_<id>_atk_16.png — dải ĐÁNH 16 khung (thân trùm tung chiêu, nhìn về bàn) — quaianim.js phát lúc báo chiêu
+const TRUM_CHANDUNG = new Set(['hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech']); // trum_<id>_portrait.png — băng giới thiệu / màn mở trận dùng chân dung
 const TRUM_CU_WAVE = 10; // 6 trùm cũ: có từ wave 10
 for (const id in TRUM_MOI) { const M = TRUM_MOI[id]; TRUM[id] = { ten: M.ten, kn: M.kn, mo: M.mo, mau: M.mau, moi: true }; }
 // bể trùm cho lịch ngẫu nhiên (game.js lichTrum): 6 cũ + 6 mới; TRUM_THU_TU (thứ tự CO-OP cố định) giữ nguyên
@@ -68,7 +68,7 @@ const TRUM_KN = {
     chon: (E) => (E.khien && !E.khien.on && E.khien.be <= 0 ? [] : null), // chỉ niệm khi khiên đã vỡ xong → dựng lại
     lam(E) {
       E.khien.on = true; E.khien.ds.clear(); E.khien.can = TRM.prismCan(G.wave); E.giapT = 0.5;
-      TRM.fx('prism', 'bang_vo', E.x, E.y, 120, 0.5); TRM.chu(E.x, E.y - 46, 'SHIELD UP', TRUM_MOI.prism.mau, 14);
+      FX.no('bang_vo', E.x, E.y, 120, 0.5); TRM.chu(E.x, E.y - 46, 'SHIELD UP', TRUM_MOI.prism.mau, 14);
     },
     tick(E, dt) {
       const K = E.khien; if (!K) return;
@@ -90,8 +90,9 @@ const TRUM_KN = {
       for (const T of muc) {
         const c = B.o[T.o]; G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: E.x, y1: E.y, mau: TRUM_MOI.leech.mau });
         T.sao--; T.sang = 1; E.kho++;
-        TRM.fx('leech', 'hasao_trung', c.x, c.y, 80, 0.45); TRM.chu(c.x, c.y - 20, '−1★ STOLEN', '#ff4b3e', 14);
+        FX.no('hasao_trung', c.x, c.y, 80, 0.45); TRM.chu(c.x, c.y - 20, '−1★ STOLEN', '#ff4b3e', 14);
       }
+      TRM.fx('leech', 'hasao_trung', E.x, E.y, 110, 0.6); // fx_trum_leech: sao bị hút vào thân + lao (bám theo trùm)
       E.dashT = TRM.DASH_S; TRM.chu(E.x, E.y - 46, 'DASH!', TRUM_MOI.leech.mau, 15);
     },
     tick(E, dt) {
@@ -180,8 +181,10 @@ chet = function (E, B) {
   if (E.chet) return;
   _chetGoc(E, B);
   if (E.trum === 'twin_core' && !E.con) {
+    // chiêu TÁCH: thân lõi NỨT (trum_twin_core_atk_16, nhìn về bàn) phát tại chỗ chết, rồi 2 lõi con chạy ra
+    if (typeof REN !== 'undefined' && REN.nutTrum && TRUM_ATK.has('twin_core')) REN.nutTrum(E); else TRM.fx('twin_core', 'no_phao', E.x, E.y, 140, 0.5);
     sinhLoiCon(E, -10); sinhLoiCon(E, 10);
-    TRM.fx('twin_core', 'no_phao', E.x, E.y, 140, 0.5); TRM.chu(E.x, E.y - 40, 'SPLIT!', TRUM_MOI.twin_core.mau, 16);
+    FX.no('no_phao', E.x, E.y, 90, 0.35); TRM.chu(E.x, E.y - 40, 'SPLIT!', TRUM_MOI.twin_core.mau, 16);
   }
   if (E.trum === 'leech' && E.kho > 0) {
     const BB = G.ban[E.ban];

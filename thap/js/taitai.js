@@ -292,7 +292,7 @@ const TAI = {
     this.hien(this.xem ? 'LOADING' : 'LOADING BATTLE');
     // ảnh TRÙM (~5 MB, 12 trùm × dải 8 khung/hướng; trùm đầu tiên ở wave 10): màn tải trận KHÔNG đợi — tải nền 3 luồng ngay khi
     // trận chạy, theo thứ tự xuất hiện (REN.img vẫn tự tải nếu cần sớm hơn). Trận hướng dẫn lần đầu trên 3G: 137 s → ~66 s.
-    const sau = this.xem ? [] : ds.filter(t => /^trum_/.test(t)); if (sau.length) ds = ds.filter(t => !/^trum_/.test(t));
+    const sau = this.xem ? [] : ds.filter(t => /^(fx_)?trum_/.test(t)); if (sau.length) ds = ds.filter(t => !/^(fx_)?trum_/.test(t));
     const d = this.ds(); for (const t of ds) d.anh(t); d.anh('fx_vong_lv');
     const dot = TDO.dot(0, 100);
     (async () => {
