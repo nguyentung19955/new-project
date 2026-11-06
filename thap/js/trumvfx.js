@@ -18,7 +18,7 @@
 'use strict';
 const TVF = {
   // ảnh riêng đã về (thap/assets/<ten>.png) — tools cắt ảnh thêm tên vào đây
-  CO: new Set(['tb_doiloai', 'tb_bang', 'tb_da', 'tb_mimic', 'tb_snipe']),
+  CO: new Set(['tb_doiloai', 'tb_bang', 'tb_da', 'tb_mimic', 'tb_snipe', 'tb_lua', 'tb_xich', 'tb_sao', 'tb_khien', 'tb_trum', 'tb_suachua', 'tb_to', 'prism_seg', 'cmd_capsule', 'cmd_rage', 'cmd_khien']),
   // tên ảnh riêng → ảnh mượn trong lúc chờ (ảnh có sẵn, cùng ý nghĩa nhất)
   TAM: {
     tb_doiloai: 'fx_st_cauvong', tb_bang: 'hu_vongbang', tb_da: 'cf_vong_ren', tb_mimic: 'tier_ring_vang', tb_snipe: 'fx_st_dau',
@@ -30,7 +30,8 @@ const TVF = {
   TO: { tb_khien: '#9fd8ff', tb_trum: '#ff7a3a', tb_to: '#ffb648', cmd_rage: '#ff9a3a' },
   DAU: { mad_crown: 'tb_doiloai', freezer: 'tb_bang', janus: 'tb_da', joker_king: 'tb_mimic', nightmare: 'tb_snipe', octopus: 'tb_lua', jammer: 'tb_xich', leech: 'tb_sao' },
   VONG: { hive: 'tb_to', patcher: 'tb_suachua', prism: 'tb_trum' }, // trùm tự niệm: vòng dưới chân
-  XOAY: { tb_snipe: 0, tb_sao: 0, tb_mimic: 0, tb_lua: 0.3, tb_xich: 0.4 },                  // tốc xoay dấu (rad/s); mặc định 0.6
+  XOAY: { tb_snipe: 0, tb_sao: 0, tb_mimic: 0, tb_lua: 0.3, tb_xich: 0 },                    // tốc xoay dấu (rad/s); mặc định 0.6
+  LUON: { cmd_khien: '#fff0b8' }, // ảnh riêng vẫn tô màu: lưới khiên vàng nhạt của Holy Shield (ảnh gốc hồng)
   CHAN_MAU: '#9fd4ff',
   ds: [], _bo: [],     // dấu đang báo: { E, bao, B, o, T, ten }
   pop: [], _boP: [],   // dấu đang nổ/vỡ + hiệu ứng chỉ huy: { k, B, o, x, y, t0, song, ten, mau }
@@ -42,7 +43,7 @@ const TVF = {
   ten(n) { return this.CO.has(n) ? n : this.TAM[n] || n; },
   anh(n) { // ảnh dấu (đã tô màu nếu là ảnh mượn trắng) — dựng 1 lần
     const c = this._tm[n]; if (c) return c;
-    const t = this.ten(n), m = !this.CO.has(n) && this.TO[n];
+    const t = this.ten(n), m = this.LUON[n] || (!this.CO.has(n) && this.TO[n]);
     const a = m ? (typeof FXU !== 'undefined' && REN.img(t) ? FXU.mau(t, m) : null) : REN.img(t);
     if (a && (m || t === n)) this._tm[n] = a;
     return a;
@@ -136,12 +137,16 @@ const TVF = {
       const co = E.d.co, x = E.x, y = E.y, yb = y - co * 0.55;
       const K = E.khien;
       if (K && K.can) { // mảnh khiên: còn = sáng, đã vỡ (đủ loại ụ khác nhau) = tối; khiên tắt → mờ cả vòng chờ dựng lại
-        const r = co * 0.56, seg = this.CO.has('prism_seg');
+        const seg = this.CO.has('prism_seg'), r = co * 0.56;
         for (let i = 0; i < K.can; i++) {
-          const a = -Math.PI / 2 + i * Math.PI * 2 / K.can, con = K.on && i >= K.ds.size;
+          const a = -Math.PI / 2 + i * Math.PI * 2 / K.can, con = K.on && i >= K.ds.size, al = K.on ? (con ? 0.9 : 0.4) : 0.25;
           const im = con ? this.anh('prism_seg') : (seg ? this.anhChan('prism_seg') : REN.img('seg_tat'));
-          const w = seg ? co * 0.62 : 9;
-          PX.ve(ctx, im, x + Math.cos(a) * r, y + Math.sin(a) * r * 0.8, w, w, seg ? a + Math.PI / 2 : 0, K.on ? (con ? 0.95 : 0.45) : 0.3);
+          if (!im) continue;
+          if (seg) { // 1/4 vòng (tâm cong ở góc dưới-phải ảnh) → đặt tâm cong vào tâm trùm, xoay cho giữa cung ở góc a; 3 mảnh có khe
+            const w = co * 0.6, k = K.can > 4 ? 4 / K.can : 1;
+            ctx.save(); ctx.translate(x, y); ctx.rotate(a + Math.PI * 3 / 4); ctx.scale(k, k); ctx.globalAlpha = al;
+            ctx.drawImage(REN.mip(im, w * REN.s * REN.dpr), -w, -w, w, w); ctx.restore();
+          } else PX.ve(ctx, im, x + Math.cos(a) * r, y + Math.sin(a) * r * 0.8, 9, 9, 0, al);
         }
       }
       if (E.kho > 0) { const s = REN.img('h2_sao'); for (let i = 0; i < Math.min(5, E.kho); i++) PX.ve(ctx, s, x - (Math.min(5, E.kho) - 1) * 5 + i * 10, yb - 9, 9, 9, 0, 0.95); }
@@ -241,6 +246,16 @@ const TVF = {
   if (typeof UI !== 'undefined' && UI.canhBaoTrum) {
     const _cb = UI.canhBaoTrum;
     UI.canhBaoTrum = function (id) { try { TVF.napTruoc(id); } catch (e) { } return _cb.apply(this, arguments); };
+  }
+  // RAGE / HOLY SHIELD vừa bật: bỏ "bùng" hào quang buff đồng loạt trên mọi ụ (cả bàn loé vàng như chớp) — thay bằng làn
+  // viền cam / lưới khiên lan từ giữa bàn (veO). Bùng khi khiên CHẶN chiêu (VX.chanKhien) giữ nguyên.
+  if (typeof BVX !== 'undefined' && BVX.bung && BVX.capNhat) {
+    const _cn = BVX.capNhat, _bung = BVX.bung;
+    BVX.capNhat = function () { TVF._bvx = true; try { return _cn.apply(this, arguments); } finally { TVF._bvx = false; } };
+    BVX.bung = function (T, B, k) {
+      if (TVF._bvx && B && (k === 'max' || k === 'khien')) { const m = TVF.timMv(B, k === 'max' ? 'cuong' : 'khien'); if (m && TVF.tg() - m.t0 < 1.5) return; }
+      return _bung.apply(this, arguments);
+    };
   }
   if (typeof batDau === 'function') { const _bd = batDau; batDau = function () { TVF.ds.length = 0; TVF.pop.length = 0; TVF.mv.length = 0; return _bd.apply(this, arguments); }; }
   // vẽ: vòng chân trùm (dưới) + pha trùm (trên) quanh veQuai; RAGE/khiên ô (dưới ụ) + dấu báo chiêu (trên ụ) quanh veO; nổ/vỡ sau hiệu ứng
