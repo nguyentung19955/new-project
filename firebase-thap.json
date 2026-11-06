@@ -1,0 +1,57 @@
+{
+  "hosting": {
+    "site": "turret-merge",
+    "public": "thap",
+    "cleanUrls": false,
+    "trailingSlash": false,
+    "ignore": [
+      "**/.*",
+      "**/.*/**",
+      "**/*.md",
+      "**/*.py",
+      "**/*.psd",
+      "**/node_modules/**",
+      "nghe-am-thanh.html",
+      "docs/**",
+      "tools/**",
+      "raw/**",
+      "**/raw/**",
+      "**/*_raw.*",
+      "**/*-raw.*"
+    ],
+    "headers": [
+      {
+        "source": "/",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.json",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "/css/**",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      },
+      {
+        "source": "/js/!(skilldemo).js",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      },
+      {
+        "source": "/js/online/**",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      },
+      {
+        "source": "/js/skilldemo.js",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }]
+      },
+      {
+        "source": "/assets/**/*.@(png|jpg|jpeg|webp|gif|svg|woff|woff2|ttf|mp3|ogg|m4a|wav)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+      }
+    ]
+  }
+}
