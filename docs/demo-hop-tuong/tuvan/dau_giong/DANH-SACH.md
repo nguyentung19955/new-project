@@ -50,3 +50,8 @@ Copycat `saochep` | Legendary | gương bạc + ảo ảnh ụ tím (bản sao: 
 Chiller `lanhgia` | Rare | lõi băng + sương xanh-trắng (sương trong suốt tách theo họ màu băng → không khói hồng)
 Cloner `nhanban` | Epic | bầu kính tím có ụ nhỏ bên trong (session điều phối chọn thêm)
 Cleanser `taylo` | Epic | vòi sen + bọt xà phòng (khác Storm Gun)
+Ricochet `nayda` | Epic | lưỡi cưa tròn xanh chanh trong ngàm (khác Overclock)
+Fusion Mixer `tron` | Rare | bồn trộn 3 màu nước + cánh khuấy (khác xoáy tím Teleporter)
+Combo Core `combo` | Epic | lõi phản ứng + thang combo 3 vạch (khác vòng xích Chain Link)
+Mirror Gate `guongcong` | Legendary | gương bầu dục khung vàng (khác lưới xanh Resonance Grid)
+Pandora Vault `pandora` | Legendary | rương báu mở hé + 6 viên màu (khác ngọc tím Merge King)
