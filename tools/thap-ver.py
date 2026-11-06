@@ -47,7 +47,7 @@ if os.environ.get('THAP_WEBP', '1') != '0':
     from concurrent.futures import ProcessPoolExecutor
     KHO = os.path.expanduser('~/.cache/thap-webp'); os.makedirs(KHO, exist_ok=True)
     viec = [(t, os.path.join(A, t + '.png'), anh[t]) for t in anh
-            if not t.startswith('fonts/') and os.path.isfile(os.path.join(A, t + '.png')) and os.path.getsize(os.path.join(A, t + '.png')) >= 30000]
+            if not t.startswith(('fonts/', 'icon/')) and os.path.isfile(os.path.join(A, t + '.png')) and os.path.getsize(os.path.join(A, t + '.png')) >= 30000]
     with ProcessPoolExecutor() as ex:
         for t, kq in zip([v[0] for v in viec], ex.map(_webp, [(v[1], v[2], KHO) for v in viec], chunksize=4)):
             if kq:
