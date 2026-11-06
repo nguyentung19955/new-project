@@ -1,0 +1,838 @@
+TURRET MERGE — TỔNG KIỂM TOÁN VFX / GAME FEEL / ART DIRECTION
+BẢN GÓP Ý TOÀN DIỆN (93 Ụ + COMMANDER + 12 BOSS + UI + AUDIO + MOBILE)
+Ngày: 06/11/2026 | Ngôn ngữ: Tiếng Việt | Định dạng: UTF-8
+
+NGUỒN ĐỐI CHIẾU
+- HUONG-DAN-SKILL-U.md do người phát triển cung cấp, mô tả theo nhánh code ngày 06/11/2026.
+- Đây là BẢN REVIEW THIẾT KẾ dựa trên mô tả, không phải xác nhận đã trực tiếp chạy game, đo FPS, xem source renderer hoặc kiểm tra sprite thật.
+- Các thời gian, số frame, thang ưu tiên sau đây là MỤC TIÊU ĐỀ XUẤT, không phải số liệu hiện hành trong code.
+- Tuyệt đối không thêm cơ chế / thay damage / thay cooldown nếu chưa thống nhất gameplay; VFX phải biểu diễn ĐÚNG code.
+
+======================================================================
+I. KẾT LUẬN ĐIỀU HÀNH — CÁC ĐIỂM QUAN TRỌNG NHẤT
+======================================================================
+
+01. Trục ưu tiên số 1 không phải 'nổ to hơn', mà là PHÂN CẤP THỊ GIÁC. Trên bàn 5x3, 15 ụ có thể đồng thời bắn. Phát thường phải nhỏ, proc đặc biệt vừa, ultimate/boss lớn; nếu cái gì cũng sáng thì không cái gì nổi bật.
+02. Mỗi ụ có 'visual fingerprint' gồm silhouette đầu súng + màu thứ cấp + hình VFX + nhịp thời gian + âm thanh đặc trưng. Không tạo 93 hiệu ứng chỉ khác màu.
+03. Hành động được trả thưởng ngay: summon, merge, lên sao, kích hoạt combo, kích hoạt ultimate, vượt wave, mở rương. Ngắn–sắc–đúng thời điểm hơn là animation dài.
+04. Trước chiêu trùm, cảnh báo mục tiêu phải rõ và nhất quán. Đừng dùng cùng dấu ngắm đỏ cho Sniper/Focus Lens, khiến player nhầm.
+05. Ưu tiên gameplay truth: hiện tài liệu đã chỉ rõ nhiều trường hợp card text sai, mốc bất khả thi hoặc VFX không gây damage nhưng có thể làm player tưởng là thật.
+06. Cổ đại phải nổi bật bằng kết cấu, biến hình và 'nhịp điện ảnh', KHÔNG chỉ là thêm hạt và chớp màn.
+07. Hiệu ứng UI làm tăng giữ chân tốt hơn một số ultimate xa hoa: merge, power-up, card level, boss warning, chest reward xuất hiện liên tục.
+08. Đồ họa cần nhất quán hướng nhìn top-down cao, mép rõ, hơi bóng/cel shading, không pixel art, đọc được trên điện thoại. Tránh lệch góc nhìn giữa icon, turret head và VFX.
+09. Sprite sheet phải có frame center/pivot/scale chuẩn, không viền grid, không sai nền; nền magenta #FF00FF chỉ dùng nếu pipeline colorkey đã được kiểm tra. Nếu có thể, xuất alpha PNG chuẩn và giữ bản magenta làm bản preview/tương thích.
+10. Tạo 3 preset FX: Đầy đủ / Cân bằng / Tối giản (không khác damage, target, timing, hitbox).
+
+======================================================================
+II. HỆ THỐNG NGÔN NGỮ VFX CHUNG
+======================================================================
+
+A. THỨ BẬC SỨC NẶNG (mục tiêu đề xuất)
+- T0 / ambience: idle êm, rất ít hạt, 0 shake, không flash trắng.
+- T1 / đạn thường: anticipation 0–70 ms, impact 70–160 ms, fade 100–250 ms. Có thể giảm tần suất hạt khi nhiều ụ.
+- T2 / proc: tích lực 100–200 ms, pop 120–250 ms, trail 150–350 ms. Một cue audio duy nhất.
+- T3 / merge, tiến hóa: nén 100–180 ms, biến đổi 180–360 ms, payoff 200–350 ms. Không chặn thao tác quá lâu.
+- T4 / ultimate đỏ hoặc boss: cảnh báo 0,4–1,4 s tùy cơ chế, chiêu có silhouette nổi, payoff 200–450 ms, dư âm ngắn. Boss hiện có 1,4 s telegraph theo tài liệu: giữ nguyên gameplay timing.
+- Tránh hit-stop vật lý kéo dài trong PvP; ưu tiên hit-stop chỉ trên animation của đối tượng và âm thanh, không ngừng logic simulation.
+
+B. PHÂN LỚP RENDER (đề xuất)
+1) Ground decals và AO nhẹ: vùng độc, vòng cảnh báo, bóng đường đạn.
+2) Enemies + đường di chuyển; luôn giữ hình dáng và HP rõ.
+3) Projectiles / beam / impact mảnh.
+4) Turret body/head + sao trên bệ.
+5) Proc/highlight chọn lọc.
+6) Status icon, buff icon, skill-ready ring, boss targeting.
+7) HUD và nút thao tác luôn ở tầng trên.
+Lưu ý: hiệu ứng underlay thường nên nằm DƯỚI đơn vị, không chặn chọn ụ/merge.
+
+C. MÃ HÓA CƠ CHẾ BẰNG HÌNH DẠNG, KHÔNG CHỈ MÀU
+- Damage: tia nhọn, vỡ sắc / đạn.
+- Burn: vệt lửa và 3 hạt tàn dạng giọt.
+- Poison: bọt tròn nhỏ, viền chấm đứt đoạn.
+- Freeze: khối tinh thể góc cạnh; slow: gió lạnh/đường trơn mỏng.
+- Stun: các sao vàng nhỏ quay 1 vòng; shield: lục giác.
+- Mark/vulnerability: hình thoi nứt hoặc mục tiêu 4 góc tím.
+- Instant kill: liềm/biểu tượng xương xuất hiện NGAY KHI PROC.
+- Mana: hạt lam-vàng bay về UI; gold: đồng tiền vàng đặc; star: ngôi sao góc rõ.
+- Steal / curse: sao bị nứt và kéo đi; star gain: sao bay vào và bùng sáng.
+- Rewind: quỹ đạo cũ / đồng hồ ngược; teleport: cổng đầu-cuối; clone: scan từ dưới lên.
+- Silence/jam: đường sóng đứt, icon khóa; không được trông như đóng băng.
+
+D. QUY TẮC GLOW/FLASH
+- Vệt sáng ở nòng trước -> điểm trúng -> dư âm; không lóe toàn bộ ảnh cùng lúc nếu không phải ultimate.
+- Tránh full-screen flash trắng, đỏ, strobe liên tiếp; cung cấp tùy chọn Reduce Flash / Reduce Motion.
+- Có cap sáng theo tổng số vụ nổ trong khung hình, alpha tổng hợp và particle budget động.
+- Khi 3+ ultimate đồng thời, chỉ một hiệu ứng nhận tier ưu tiên T4; các hiệu ứng khác giảm overlay, không giảm gameplay.
+- Không làm màu đỏ cảnh báo boss bị lẫn với màu đỏ hiếm Cổ đại: cảnh báo boss cần nhấp nháy viền + hình tam giác/crosshair.
+
+E. NHỊP ANIMATION CÓ CHỦ ĐÍCH
+- Anticipation: người chơi biết chuẩn bị bắn/chặn/đổi dạng.
+- Action: đòn trúng khớp với frame server damage, tuyệt đối không thấy nổ trước khi damage tính.
+- Recovery: đủ ngắn để cảm giác súng có khối lượng nhưng không làm cảm giác bắn chậm sai code.
+- Đạn hitscan dùng 'flash path' 1–2 frame tại tốc độ máy; projectile có quỹ đạo thật, không teleport giả.
+- Khi chuyển dạng 0,6s, vị trí tâm và sao không được nhảy; trục đầu súng hướng vẫn đúng.
+
+F. VFX THIẾT KẾ THEO ĐỘ HIẾM
+TRẮNG: 1 lớp silhouette projectile + impact; ít/không dư âm.
+XANH: 2 lớp (trail / yếu tố nguyên tố) + 1 nét nhận dạng rõ.
+TÍM: proc có marker + anticipation + cấu trúc đặc thù.
+VÀNG: biến hình cơ khí, trạng thái chiến thuật rõ, proc premium nhưng không ép mọi phát thành chiêu lớn.
+ĐỎ: ultimate cinematic in-world, đa pha, nhấn bằng âm/nhịp thay vì full-screen cutscene che game.
+
+G. HỆ THỐNG 3★ / 5★ / 7★ (không tự ý sửa skill)
+3★: 1 flare ngắn + huy hiệu hình học trên bệ, đổi một chi tiết đầu súng nếu có thật; hiển thị skill unlock khi có.
+5★: 1 chi tiết máy lớn thay đổi + đường sáng mới cho proc đã tồn tại, không tạo hư cấu damage.
+7★: thân/nòng/phụ kiện rõ silhouette ngay cả khi FX tắt; halo nền rất mỏng, chỉ chiêu thật mới bùng lớn.
+Nếu unit không thể dùng lại kỹ năng sau 7★ vì chỉ kích hoạt khi merge, KHÔNG tạo trạng thái 'ready' vĩnh viễn.
+
+H. VÒNG NẠP VÀ VÒNG TRẠNG THÁI
+- Tối đa ba thông tin quanh ụ: vòng ngoài 3 cung = đổi dạng; vòng giữa = chu kỳ tấn công hoặc proc; vòng trong = skill tap-ready, KHÔNG cùng độ sáng.
+- Nếu không có active skill, đừng vẽ vòng trong giống nút dùng.
+- Thời gian nạp luôn hiển thị theo thời gian thực có buffs và mốc sao.
+- Ring active 100% -> không nhấp liên tục không giới hạn: nháy 1 lần rồi sáng ổn định/nhịp thở chậm.
+- Touch target trong bản mobile đủ rộng, thao tác merge không bị chồng với tap skill.
+- Sử dụng color + shape + vị trí, tránh chỉ phân biệt bằng màu.
+
+I. VFX KHI CÓ NHIỀU Ụ TRÙNG HIỆU ỨNG
+- Gộp status icon theo mỗi quái: tối đa 2 icon ưu tiên + các stack nhỏ nếu cần.
+- Không hiện FROZEN/MARKED/BLOCKED lặp lại trên cùng mục tiêu mỗi frame.
+- Damage numbers có giới hạn theo mục tiêu/time bucket: crit/boss/highest damage ưu tiên; các số li ti gộp.
+- Beam chain/Gatling/DoT có ngân sách particle riêng, không buộc vẽ 1 hit effect mỗi tick.
+- Khi nhiều hỗ trợ trùng nhau, chỉ vẽ link khi mới kích hoạt/touch chọn, không bật 15 dây cùng lúc.
+
+======================================================================
+III. KIỂM TOÁN CHI TIẾT ĐỦ 93 Ụ — SUGGESTION THEO TỪNG UNIT
+======================================================================
+Định dạng: VẤN ĐỀ / HÌNH ĐẦU SÚNG / ĐỀ XUẤT CHUYỂN ĐỘNG / RÀNG BUỘC ĐỌC HIỂU.
+Các đề xuất bên dưới áp dụng kết hợp với cơ chế nguyên văn ở tài liệu nguồn; không thay đổi số liệu kỹ năng.
+01. Cannon — Pháo Nổ | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu súng giật lùi mạnh, chớp lửa và khói ở nòng; quả đạn pháo có vệt bay theo đường cong; khi chạm: quả cầu nổ cam, vòng sóng cam đúng bằng vùng nổ, tia lửa bắn ra, màn hình rung nhẹ.
+    CHỈNH HÌNH: Nòng pháo tròn, hai miếng giáp che buồng nổ.
+    ANIMATION/VFX MỚI: Nổ ngắn màu hổ phách với lõi trắng, 3 mảnh kim loại văng ra; đạn đi có khối rõ.
+    KIỂM SOÁT: Không dùng vòng nổ rộng cho mọi phát; chỉ phát 5★ đôi mới tạo hai nhịp tách biệt.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+02. Dice Gun — Pháo May Rủi | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn pháo tròn có khói ở nòng. Số sát thương đổi màu theo vận: phát thấp (dưới 40%) số xám, phát cao (từ 240%) số vàng kèm nổ to và tia lửa nhiều hơn, đồng thời trên ô ụ bùng sáng một biểu tượng buff.
+    CHỈNH HÌNH: Khối xúc xắc cơ khí lộ 2 mặt khi xoay.
+    ANIMATION/VFX MỚI: Trước phát bắn, xúc xắc lóe 1 mặt; phát yếu chỉ bụi xám, jackpot là tia vàng dạng số chấm xúc xắc.
+    KIỂM SOÁT: Đừng giật màn theo vận may liên tục; chỉ jackpot có hit-stop ngắn.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+03. Gatling — Liên Thanh | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu súng rung giật liên tục, chớp lửa nhỏ ở nòng (thỉnh thoảng có khói), chuỗi đạn sáng nối đuôi nhau như một dòng tia, tia lửa vàng nhỏ ở chỗ trúng.
+    CHỈNH HÌNH: Cụm 3 nòng xoay và đai đạn.
+    ANIMATION/VFX MỚI: Nhịp muzzle flash cực nhỏ xen kẽ theo nòng, vệt đạn ngắn dạng chấm; quá nóng có hơi nhiệt.
+    KIỂM SOÁT: Giới hạn dấu va chạm 4–6 lần/giây mỗi mục tiêu.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+04. Scatter — Súng Phun Loạn | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: nòng giật nhẹ liên tục, chớp lửa nòng nhỏ lắc qua lại, đạn liên thanh nhỏ bay tỏa nhiều hướng, mỗi viên trúng tóe 1 tia lửa vàng.
+    CHỈNH HÌNH: Đầu súng đa cửa phóng, nghiêng ngẫu nhiên.
+    ANIMATION/VFX MỚI: Chùm tia tách nhiều góc nhỏ, màu nhạt; đường ngắm xoay liên tục theo mục tiêu.
+    KIỂM SOÁT: Không nhầm với shotgun lan: đạn nhắm mục tiêu ngẫu nhiên, không phải nổ hình quạt.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+05. Revolver — Súng Lục | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: nòng giật mạnh, khói nòng, một vệt tia vàng nhạt nối thẳng từ nòng tới quái rồi mờ đi, tia lửa vàng ở chỗ trúng, vỏ đạn văng ra sau ụ.
+    CHỈNH HÌNH: Ổ đạn sáu lỗ và búa giật.
+    ANIMATION/VFX MỚI: Một tia hitscan vàng đồng 2 lớp, ổ đạn xoay một nấc, vỏ đạn rơi.
+    KIỂM SOÁT: Vệt tia phải rất ngắn để phân biệt Railgun.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+06. Sniper — Bắn Tỉa | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu súng giật lùi mạnh, chớp lửa và chút khói ở nòng; một vệt đạn tỉa xanh lam thẳng tắp từ nòng tới quái rồi mờ dần (~0,3 giây); tia lửa xanh nhạt ở chỗ trúng.
+    CHỈNH HÌNH: Nòng dài + điểm laser xanh ngọc.
+    ANIMATION/VFX MỚI: Tia ngắm mảnh 0,1s trên quái nhiều máu, bắn đường thẳng xám xanh với lóe điểm cuối.
+    KIỂM SOÁT: Dùng ký hiệu mục tiêu hình thoi khác với tâm ngắm đỏ của boss.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+07. Tesla — Tesla | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: ngay trước khi bắn, đầu súng sáng lên và có quả cầu sáng vàng ở nòng; sau đó là các đoạn sét vàng ngoằn ngoèo nối từ nòng qua từng quái, chớp điện ở mỗi quái bị trúng.
+    CHỈNH HÌNH: Cuộn dây chữ U lộ sứ cách điện.
+    ANIMATION/VFX MỚI: Sét phân nhánh rõ theo thứ tự quái, điện tích nhảy từng đoạn 40–70ms.
+    KIỂM SOÁT: Số nhánh đúng với số sao; giảm độ sáng những nhánh sau.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+08. Guillotine — Máy Chém | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn tia sáng bay tới quái. Khi chém trúng: một lưỡi sáng rơi từ trên xuống ngay đầu quái, chớp đỏ, nổ và tia lửa đỏ, số sát thương màu đỏ, kèm biểu tượng đầu lâu bùng lên.
+    CHỈNH HÌNH: Mặt nạ lưỡi dao thẳng đứng trên thân.
+    ANIMATION/VFX MỚI: Khi giết ngay, silhouette lưỡi chém rơi một nhịp và icon đầu lâu chớp; phát thường chỉ là tia kim loại.
+    KIỂM SOÁT: Dấu giết ngay không dùng trên boss vì không có hiệu lực.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+09. Iron Fist — Nắm Đấm Sắt | Thường | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu ụ thụt tới trước rồi bật về như lò xo, vệt cam ngắn từ nòng tới quái, nổ pháo cam + vòng tròn cam lan ra, bụi văng và màn hình rung nhẹ.
+    CHỈNH HÌNH: Piston tay đấm và lò xo lớn.
+    ANIMATION/VFX MỚI: Nén lò xo rồi bật cú đấm cong, vòng chấn nhỏ sát mặt đường.
+    KIỂM SOÁT: Không rung toàn màn mỗi cú; chỉ dùng rung cục bộ trên ụ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+10. Armor Breaker — Phá Giáp | Thường | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: vòng nạp tím nhạt quanh bệ đầy dần trong 3 giây; khi kích hoạt bắn tia phép tím tới từng quái, nổ điện nhỏ và chữ nổi "EXPOSED" trên đầu quái. Đầu ụ quay theo quái đang bị lộ. Định kỳ có xung sáng tím ngắn chạy tới các ụ kề đang được buff.
+    CHỈNH HÌNH: Mũi khoan quét mục tiêu + mắt quét tím.
+    ANIMATION/VFX MỚI: Một đường chấm điểm yếu rồi vạch nứt trên giáp quái; dây buff thẳng chỉ lóe khi đổi mục tiêu.
+    KIỂM SOÁT: Ẩn nhãn EXPOSED trùng lặp khi nhiều quái.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+11. Hammer — Búa Đẩy | Thường | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu búa quay chậm; định kỳ có xung sáng vàng cam chạy tới các ụ kề được buff. Khi quái bị choáng có một vòng tròn vàng nhỏ loé quanh quái.
+    CHỈNH HÌNH: Búa dập công nghiệp dập nhịp chậm.
+    ANIMATION/VFX MỚI: Khi đồng minh crit, icon chấn động hình búa 1 nhịp tại quái; choáng biểu tượng sao vàng.
+    KIỂM SOÁT: Đọc được thời gian miễn choáng bằng một vòng mờ nhỏ, không cần chữ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+12. Frost — Băng | Thường | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: vòng nạp sáng màu xanh băng nhạt quanh bệ, càng đầy càng kín, gần đầy thì nhấp nháy; viên đạn băng có vệt hạt băng; khi trúng: mảnh băng vỡ tung và chữ "FROZEN" nổi trên đầu quái.
+    CHỈNH HÌNH: Tinh thể băng vươn lên khỏi đỉnh.
+    ANIMATION/VFX MỚI: Lớp băng đóng từ chân quái lên trên; nứt và vỡ khi hết đóng băng.
+    KIỂM SOÁT: Phân biệt đóng băng hoàn toàn và làm chậm bằng độ đặc của lớp băng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+13. Venom — Độc | Thường | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: vòng nạp sáng màu xanh lá quanh bệ; tia hạt xanh phun ra ở nòng; viên độc xanh có vệt hạt, trúng thì bung khói độc; chữ "MARKED" xanh trên đầu quái và biểu tượng suy yếu trên quái suốt 5 giây.
+    CHỈNH HÌNH: Ống chứa chất độc chia vạch và van nhỏ.
+    ANIMATION/VFX MỚI: Giọt độc nặng để lại bọt xanh lục đang sôi trên mục tiêu, DoT nảy nhịp đều.
+    KIỂM SOÁT: Tránh phun sương xanh phủ cả đường khi nhiều ụ trùng nhau.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+14. Mana Core — Máy Mana | Thường | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đầu máy không xoay, lơ lửng nhấp nhô và phát sáng tím theo nhịp; vòng nạp sáng màu tím quanh bệ; mỗi lần ra mana: số "+N" tím kèm biểu tượng mana nổi lên, hạt tím bay lên và một tinh thể mana bùng ra trên ô. Chạm vào ụ thấy dây năng lượng chạy tới thanh mana kèm nhãn "+N MANA".
+    CHỈNH HÌNH: Lõi năng lượng hình lục giác có vạch đếm.
+    ANIMATION/VFX MỚI: Tích hạt lam vào tâm, bùng 3 đồng mana sáng bay lên HUD mỗi lần nhận.
+    KIỂM SOÁT: Trạng thái 3★/7★ thể hiện đúng nhịp 6s/5s thay vì nhãn 7s.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+15. Time Bomb — Bom Hẹn Giờ | Thường | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: vòng nạp cam quanh bệ; bom bay tới và dính trên quái, phía trên có số đếm ngược (vàng, 1.5 giây cuối chuyển đỏ và đèn đỏ nháy nhanh). Khi nổ: chớp nổ lớn, vòng cam lan ra, tia lửa, màn hình rung, chữ nổi "WEAKENED".
+    CHỈNH HÌNH: Bom tròn kim loại với cửa sổ chữ số tối.
+    ANIMATION/VFX MỚI: Dính bom => đèn chớp đỏ, đồng hồ tích tắc; nổ xung kích gây suy yếu, icon giáp rạn.
+    KIỂM SOÁT: Tuyệt đối không làm nổ giống gây sát thương; bom hỏng phải có vệt khói riêng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+16. Ice Blade — Kiếm Băng | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn băng xanh có vệt đuôi; nổ vỡ băng ở chỗ trúng (to hơn khi trúng quái chậm), số sát thương xanh băng khi "SHATTER"; vòng sáng xanh nhạt 44 px khi hơi lạnh lan sang quái xung quanh.
+    CHỈNH HÌNH: Đĩa dao pha lê màu băng.
+    ANIMATION/VFX MỚI: Lưỡi rạch một cung xanh mảnh; đường dao tan vụn thành mảnh băng.
+    KIỂM SOÁT: Không dùng cả đóng băng dày và vòng chậm nếu kỹ năng chỉ có một trong hai.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+17. Drone Bay — Bệ Phóng Drone | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: drone nhỏ bay dọc đường, nhấp nhô, có bóng đổ và đuôi lửa xanh băng; nổ to kèm điện xanh, màn hình rung. Các drone xuất phát cách nhau 0.4 giây.
+    CHỈNH HÌNH: Cửa khoang mở hai cánh; drone có đèn nhận diện.
+    ANIMATION/VFX MỚI: Drone xuất phát theo đường cong, bắn với chớp nhỏ rồi trở về/bay vòng theo logic.
+    KIỂM SOÁT: Số drone hoạt động phải đếm được bằng icon nhỏ, không nhân hình giả.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+18. Energy Cannon — Pháo Năng Lượng | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu pháo sáng dần khi mana nhiều; càng nhiều mana thì giật nòng, chớp nòng, viên đạn và vụ nổ điện ở chỗ trúng càng to. Số sát thương màu tím. Dưới ô có tấm nhỏ biểu tượng mana + "+..%" (chữ vàng khi đạt +500%).
+    CHỈNH HÌNH: Ống tụ năng lượng giữa hai càng kim loại.
+    ANIMATION/VFX MỚI: Tích sáng dồn về nòng rồi bắn lõi xanh có vòng sóng phụ.
+    KIỂM SOÁT: Độ lớn lõi phản ánh sát thương; không kéo tia dài như Laser.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+19. Laser — Laser | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: tia hồng tím nối từ nòng tới quái, cuộn vân và rung nhẹ, càng giữ lâu tia càng to và sáng; đầu súng nóng sáng dần; đốm sáng ở nòng và ở chỗ trúng, tia lửa hồng lấm tấm. Tia bật/tắt mờ dần.
+    CHỈNH HÌNH: Bộ phát chùm tia liên tục với kính hội tụ.
+    ANIMATION/VFX MỚI: Tia mảnh lõi trắng, viền xanh, điểm cháy trên quái; tia tăng độ nóng theo thời gian.
+    KIỂM SOÁT: Không hiển thị sao chí mạng vì Laser không chí mạng theo code.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+20. Mortar — Súng Cối | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: nòng giật mạnh, chớp lửa và khói dày; quả đạn bay vòng rất cao có bóng đổ dưới đất; nổ cam to kèm bụi và rung màn; đạn chùm to hơn một chút và nổ thêm 3 đám lửa nhỏ quanh tâm.
+    CHỈNH HÌNH: Ống cối ngắn hướng lên + chân chống.
+    ANIMATION/VFX MỚI: Đạn bay vòng cung có bóng đất đi trước; nổ tròn tại vị trí tới.
+    KIỂM SOÁT: Cho rõ vùng nổ bằng vòng bụi sát mặt đường, không che boss.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+21. Toxic Pool — Bom Vũng Độc | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: vòng nạp xanh lá quanh bệ; bình độc bay vòng cung có đuôi, chạm đất thành đám khói độc xanh lá cuộn động trên đường rồi mờ dần; số sát thương độc màu xanh lá.
+    CHỈNH HÌNH: Bình phun áp lực với van xanh độc.
+    ANIMATION/VFX MỚI: Quả độc nổ bắn giọt rồi hình thành vùng axit lỗ chỗ có viền đứt quãng.
+    KIỂM SOÁT: Tách màu vùng tồn tại với hiệu ứng trúng tức thời.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+22. Mana Leech — Máy Hút Mana | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn tia sáng tím; khi nhả mana: hạt sáng tím bay lên từ quái và số "+3" (hoặc hơn) tím nổi cạnh ụ.
+    CHỈNH HÌNH: Kim hút năng lượng hai càng.
+    ANIMATION/VFX MỚI: Sợi hút lam mảnh từ quái về bình mana; cuối đường biến thành hạt đồng tiền.
+    KIỂM SOÁT: Không để nhầm là hút máu/sát thương chính.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+23. Mine Layer — Bệ Rải Mìn | Hiếm | Tấn công
+    Dấu hiệu thiết kế hiện tại: vòng nạp cam quanh bệ; đầu ụ quay về chỗ rải, quả mìn bay vòng cung rồi nằm trên đường, đèn đỏ nháy (mìn sao to hơn, đèn vàng). Nổ cam có bụi và rung màn hình; mìn sao nổ to hơn, tia lửa vàng.
+    CHỈNH HÌNH: Bệ cơ khí nhả quả mìn dẹt có đèn đỏ.
+    ANIMATION/VFX MỚI: Mìn nằm gọn trên đường; nhấp nháy trước kích nổ; phản ứng nổ có sóng mép rõ.
+    KIỂM SOÁT: Không nhấp nháy với tần số cao; cập nhật hiển thị nhịp đặt mìn thực.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+24. Crit Antenna — Ăng-ten Chí Mạng | Hiếm | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: ăng-ten quay chậm đều (không nhắm quái); định kỳ có xung sáng đỏ ngắn chạy tới các ụ kề. Khi chạm vào ụ: dây năng lượng tới từng ô kề và nhãn "+..% CRIT".
+    CHỈNH HÌNH: Ăng ten chạc kép màu đồng.
+    ANIMATION/VFX MỚI: Hạt sáng vàng đến đồng minh; khi crit lóe tia 4 cánh ngay điểm trúng.
+    KIỂM SOÁT: Không hiển thị +crit vượt trần 20% hỗ trợ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+25. Radar — Radar | Hiếm | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: chảo radar quay đều liên tục; khoảng 2,2 giây một lần có xung năng lượng cam ngắn chạy tới các ô đang nhận buff; ụ được buff có biểu tượng tốc bắn (mũi tên ») ở góc trên-trái. Chạm Radar: các ô khác tối đi, vòng năng lượng cam quét ra, dây nối tới ô kề và nhãn "+X% FIRE RATE".
+    CHỈNH HÌNH: Đĩa quét radar với vạch xoay.
+    ANIMATION/VFX MỚI: Quét hình nón mờ trên các ô kề; buff tốc bắn là các nấc trắng chạy quanh nòng.
+    KIỂM SOÁT: Không sử dụng vòng đầy liên tục nếu không có nạp kỹ năng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+26. Fusion Mixer — Bộ Trộn | Hiếm | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu ụ quay đều; định kỳ có xung sáng vàng ngắn chạy tới các ụ Tấn công kề. Chạm vào ụ: dây năng lượng tới từng ô và nhãn "+..% FIRE RATE".
+    CHỈNH HÌNH: Cánh trộn hai màu và hai cổng nạp.
+    ANIMATION/VFX MỚI: Hai dòng năng lượng vàng/xanh trộn thành một luồng tại lõi khi buff.
+    KIỂM SOÁT: Không được làm ngộ nhận rằng ụ hỗ trợ này tự ghép.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+27. Chiller — Máy Phát Lạnh | Hiếm | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu máy quay khá nhanh và đều, hạt hơi lạnh xanh nhạt bốc lên từ ụ, định kỳ có xung sáng xanh băng chạy tới các ụ kề. Chạm vào ụ: nhãn "+..% SLOW".
+    CHỈNH HÌNH: Quạt khí lạnh và dàn tản nhiệt.
+    ANIMATION/VFX MỚI: Phả gió sương xanh sát đất tới quái; viền quái chuyển xanh nhạt.
+    KIỂM SOÁT: Giảm số bông tuyết khi kết hợp Frost/Blizzard.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+28. Amplifier — Bộ Khuếch Đại | Hiếm | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu ụ quay chậm đều; định kỳ có xung sáng cam chạy tới các ụ Tấn công kề. Chạm vào ụ: nhãn "+..% / HIT ×5".
+    CHỈNH HÌNH: Loa khuếch đại hình parabol.
+    ANIMATION/VFX MỚI: Xung năng lượng đường thẳng đến ụ kề, mặt nòng đồng minh sáng theo nhịp.
+    KIỂM SOÁT: Không dựng các vòng tròn giao nhau dày đặc.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+29. Mana Doubler — Máy Nhân Mana | Hiếm | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia lửa tím. Lúc ghép: số "+mana" tím to nổi trên ô, 16 hạt sáng tím bay lên, biểu tượng mana bùng sáng trên ô và tiếng mana.
+    CHỈNH HÌNH: Hai bánh răng đồng bộ quanh lõi mana.
+    ANIMATION/VFX MỚI: Khi nhân mana, 1 hạt tách thành 2 vệt vàng chạy lên HUD.
+    KIỂM SOÁT: Chỉ phát sáng mạnh đúng lúc nhân, không liên tục.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+30. Mimic — Mimic | Hiếm | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đầu ụ luôn ánh sáng nhấp nháy và có đốm cầu vồng (hồng, vàng, xanh lá, xanh dương, tím) chạy vòng quanh; đạn là tia lửa nhỏ, trúng bắn tia màu hồng/xanh/vàng. Ụ nhận buff có biểu tượng sát thương ở góc ô.
+    CHỈNH HÌNH: Mặt nạ trung tính đổi hình có khe sáng.
+    ANIMATION/VFX MỚI: Bề mặt lật thành silhouette bóng mờ của mục tiêu trước khi ghép.
+    KIỂM SOÁT: Phải phân biệt với Copycat: Mimic không bắn như ụ gốc trước merge.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+31. Teleporter — Bệ Dịch Chuyển | Hiếm | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia lửa xanh nhạt. Khi đổi chỗ: ở cả hai ô có vòng xanh nhạt co lại và tia lửa, một tia phép nối hai ô, hai ụ bật nảy ở chỗ mới.
+    CHỈNH HÌNH: Cặp vòng dịch chuyển xanh lam.
+    ANIMATION/VFX MỚI: Ụ được kéo vào cổng xoắn nhỏ rồi bật ra tại ô đích với đường sét mảnh.
+    KIỂM SOÁT: Giữ rõ ô nguồn/ô đích; không dùng tia bay xuyên bàn che UI.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+32. Cooldown Horn — Loa Hồi Chiêu | Hiếm | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: loa quay chậm đều; mỗi phát bắn có một vòng vàng nhỏ quanh ụ. Lúc ghép: 3 vòng sóng âm vàng lan rộng dần từ ô ghép.
+    CHỈNH HÌNH: Loa còi đồng cuộn hướng lên.
+    ANIMATION/VFX MỚI: Phát một vành sóng âm răng cưa lan nhanh tới đối tượng hưởng lợi.
+    KIỂM SOÁT: Không dùng nốt nhạc để tránh trùng Quantum Choir.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+33. Berserker — Súng Cuồng Nộ | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: ụ có 3 dạng đầu súng: CALM bắn vạch vàng; RAGE bắn đạn cam kéo tàn lửa, đầu súng hơi sáng; FRENZY hai nòng bắn xen kẽ đạn đỏ-trắng, chớp nòng đôi, vỏ đạn văng, nổ lửa nhỏ khi trúng, đầu súng nhấp nháy. Khi vào NỘ/CUỒNG NỘ có bùng hào quang buff. Vòng 3 cung quanh ụ: cung phải sáng nửa khi NỘ, cung "vương miện" trên đỉnh tụt dần theo thời…
+    CHỈNH HÌNH: Súng đỏ có bánh răng khóa an toàn.
+    ANIMATION/VFX MỚI: Tốc bắn tăng thì các rãnh thân chuyển từ cam sang trắng, tàn lửa dày thêm.
+    KIỂM SOÁT: Chỉ thay trạng thái sau ngưỡng rõ, không nhấp nháy mỗi phát.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+34. Blizzard — Bão Tuyết | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu ụ là quạt tuyết quay đều liên tục. Quanh bệ có vòng nạp sáng màu xanh băng nhạt, càng đầy càng kín, gần đầy thì nhấp nháy. Khi phát: tuyết rơi khắp sân, cả màn hình loé xanh nhạt, mỗi con quái bị vỡ băng (mảnh băng bắn ra).
+    CHỈNH HÌNH: Cánh quạt bão tuyết hai tầng.
+    ANIMATION/VFX MỚI: Mây băng xoay ở vùng quái, hạt tuyết lao theo gió, lõi trong suốt.
+    KIỂM SOÁT: Không phủ lớp sương đục kín đường.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+35. Chain Link — Chuỗi Liên Kết | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: 3 dạng đầu súng: SINGLE bắn vòng tím rỗng; LINKED đạn kéo theo sợi xích từ nòng; CHAIN MASTER khi trúng có xích mắt tròn quật sang quái thứ 2. Dưới ô có tấm nhỏ "×số ụ trong chuỗi" kèm biểu tượng sát thương. Khi chuỗi dài thêm: xích sáng nối các ô. Chạm chọn ụ thì thấy xích nối cả chuỗi. Vòng 3 cung quanh ụ thể hiện độ dài chuỗi (2 → cung…
+    CHỈNH HÌNH: Các đầu nối điện hình mắt xích.
+    ANIMATION/VFX MỚI: Tia nối ụ theo các cạnh hình học; phát đạn kích điện chạy qua chuỗi theo thứ tự.
+    KIỂM SOÁT: Tránh trùng Tesla: chuỗi này nối các ụ trước rồi mới tác động quái.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+36. Fifth Shot — Nỏ Năm Nhịp | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: dưới bệ có 5 chấm nhịp: mỗi phát thường sáng thêm 1 chấm hồng; phát thứ 5 nỏ giật mạnh, chớp nòng lớn, 3 mũi tên to bay ra, nổ pháo kèm vòng hồng, ụ bùng hào quang chí mạng ngắn; xong 5 chấm tắt và đếm lại.
+    CHỈNH HÌNH: Bộ đếm 5 nấc trên nòng.
+    ANIMATION/VFX MỚI: Bốn phát mảnh; phát thứ 5 có dấu khóa và mũi tên xuyên nổi bật.
+    KIỂM SOÁT: Hiển thị 5 nấc ở thân thay vì chữ nổi mỗi lần.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+37. Storm Gun — Súng Bão | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: tia sét xanh lơ mảnh loé từ nòng tới quái mỗi phát, chớp nòng nhỏ, thỉnh thoảng nổ điện tại chỗ trúng; khi nảy thì thấy tia sét nhảy sang con thứ 2.
+    CHỈNH HÌNH: Rotor turbine sét.
+    ANIMATION/VFX MỚI: Bão tia xanh tím xoáy quanh nòng, luồng đạn có gió xé ngắn.
+    KIỂM SOÁT: Giới hạn tia sét nền để phân biệt Tesla.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+38. Lighthouse — Tháp Ánh Sáng | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: quanh đầu tháp có các quả cầu sáng quay vòng — số quả = số sao. Vòng nạp sáng màu vàng nhạt quanh bệ. Khi gọi ụ: một quả cầu ánh sáng bay vòng cung từ tháp tới ô trống, ụ mới hiện ra với hiệu ứng triệu hồi. Đạn là tia lửa vàng nhạt, trúng thì toé tia sáng.
+    CHỈNH HÌNH: Tháp thấu kính có tia quét 360 độ.
+    ANIMATION/VFX MỚI: Chùm đèn hình quạt quét trên đường; khi trúng có dấu sáng tròn.
+    KIỂM SOÁT: Rọi rõ quét hướng nào, tránh hình giống bắn tia đạn.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+39. Ricochet — Đĩa Nảy | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: lưỡi cưa xám quay tít, viền và vệt sáng màu vàng chanh, nảy qua lại giữa các quái; mỗi lần nảy đĩa to hơn, sáng hơn, bay nhanh hơn, có vòng sáng nhỏ và tia lửa ở chỗ trúng. Cú cuối nổ một chớp điện.
+    CHỈNH HÌNH: Bánh đĩa kim loại lệch tâm.
+    ANIMATION/VFX MỚI: Đĩa va quái bật chuyển hướng với tiếng ting, để lại điểm phản xạ ánh vàng.
+    KIỂM SOÁT: Vẽ đúng đường nảy thực; không tạo bản sao đĩa chỉ để trang trí.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+40. Combo Core — Lõi Combo | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: khi ghép đúng cặp hiện chữ cam to "COMBO ×N" và một vòng sáng; các Combo Core còn lại trên bàn lóe sáng. Quanh ụ có vòng phù văn cam quay (1 vòng lúc đầu, 2 vòng ngược chiều nhau ở COMBO 10+, lõi đỏ rực ở COMBO 20+). Đáy ô có tấm nhỏ ghi "×N" (chữ vàng khi tới 20). Có vòng 3 cung quanh ụ báo tiến độ tới dạng sau.
+    CHỈNH HÌNH: Lõi hiển thị số chuỗi dạng các nấc.
+    ANIMATION/VFX MỚI: Mỗi hit làm 1 nấc chớp; ở combo cao lõi đổi màu và cú kết thúc có vệt dày.
+    KIỂM SOÁT: Đừng spam chữ COMBO ×N theo từng phát.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+41. Lone Ace — Độc Tôn | Sử thi | Tấn công
+    Dấu hiệu thiết kế hiện tại: tia đỏ bắn thẳng vào quái đầu. Khi ACE: vòng đỏ sáng nhấp nháy quanh bệ, đầu súng sáng, lúc vào ACE có hiệu ứng buff bùng lên. Đáy ô có tấm "+100%" (chữ vàng) hoặc "−30%" khi chật.
+    CHỈNH HÌNH: Cờ hiệu quân át độc lập + mắt kính đơn.
+    ANIMATION/VFX MỚI: Khi đủ điều kiện đơn độc, đường sáng khép quanh ô rồi nòng dựng cao.
+    KIỂM SOÁT: Tắt hào quang ngay khi mất điều kiện để tránh hiểu nhầm.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+42. Cleanser — Máy Tẩy Lỗi | Sử thi | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu ụ quay chậm, xung sáng màu kem chạy tới các ô kề theo nhịp; vòng nạp sáng màu kem quanh bệ (đầy → quét). Khi tẩy: tia phép màu kem nối tới ụ được tẩy và một chữ thập trắng quét qua ụ đó. Chạm vào ụ: dây năng lượng tới 4 ô kề, khung góc sáng và nhãn "CLEANSE ×2 / 12s".
+    CHỈNH HÌNH: Vòi phun chất tẩy trắng-lam.
+    ANIMATION/VFX MỚI: Làn sóng trắng xóa dấu debuff trên ụ kèm mảnh vỡ trạng thái tan.
+    KIỂM SOÁT: Không thể hiện như hồi HP cho ụ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+43. Shield Gen — Máy Khiên | Sử thi | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu ụ quay chậm, xung sáng xanh băng tới các ô kề; vòng nạp xanh băng quanh bệ. Khi phát khiên: tia phép xanh nối tới từng ụ và vòng sáng xanh nở ra trên ụ đó; ụ đang có khiên mang bong bóng khiên lục giác. Khi khiên đỡ đòn: khiên lục giác bung ra và chữ "BLOCKED". Chạm vào ụ: nhãn "SHIELD / 18s".
+    CHỈNH HÌNH: Hai tấm giáp phát khiên lục giác.
+    ANIMATION/VFX MỚI: Các ô được che có viền lục giác mỏng; trúng đòn thì nứt 1 ô rồi phục hồi.
+    KIỂM SOÁT: Chỉ tô nổi các ô được bảo vệ khi nguy cơ tới.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+44. Star Lift — Bệ Nâng Sao | Sử thi | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu ụ quay chậm, xung sáng vàng tới các ô kề; vòng nạp vàng quanh bệ. Khi nhận nấc: chữ "★ PIP 1/3" vàng trên ụ; đủ nấc: chữ "+1★" to, tia lửa và vòng sáng vàng, có thể kèm hiệu ứng SKILL UP nếu ụ đó chạm mốc. Chạm vào ụ: nhãn "+x% LOW-STAR RATE".
+    CHỈNH HÌNH: Đòn bẩy nâng biểu tượng sao.
+    ANIMATION/VFX MỚI: Ngôi sao nổi lên trên ụ nhận lợi ích, bệ nâng thụt một nhịp.
+    KIỂM SOÁT: Biểu thị rõ tăng sao thật hay tăng sức mạnh theo sao.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+45. Reaper Pillar — Cột Tử Thần | Sử thi | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: cột quay chậm, xung sáng tím tới các ô kề theo nhịp. Khi giết ngay: dấu chém trên quái kèm nhát lưỡi hái. Chạm vào ụ: dây năng lượng tới 4 ô kề, nhãn "x% INSTANT KILL".
+    CHỈNH HÌNH: Cột gương đen có liềm đỏ.
+    ANIMATION/VFX MỚI: Khi kích hoạt giết ngay, bóng liềm quét qua mục tiêu và tắt sạch.
+    KIỂM SOÁT: Chỉ bật VFX tử thần khi proc thành công; nhớ trần 15%.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+46. Focus Lens — Thấu Kính | Sử thi | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu xoay chậm, cứ ~2.6 s phát xung xanh nhạt tới các ụ được buff. Khi chí mạng xuyên: tia xanh nhạt nối từ quái trúng sang quái phía sau. Chạm ụ: dây năng lượng tới ô kề, nhãn "+x% CRIT DMG · PIERCE".
+    CHỈNH HÌNH: Kính lúp đa lớp co chụm.
+    ANIMATION/VFX MỚI: Chùm hạt hội tụ lên một quái, tạo tâm sáng có bốn góc.
+    KIỂM SOÁT: Đừng giống dấu Sniper hay boss target; dùng màu xanh-vàng thay đỏ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+47. Cloner — Máy Nhân Bản | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia nhỏ. Khi ghép: vòng phù văn màu tím + biểu tượng Cloner bật lên ở ô ghép, một tia phép tím nối từ ô ghép sang ô vừa có ụ mới, ụ mới hiện ra với hiệu ứng triệu hồi.
+    CHỈNH HÌNH: Máy in ba chiều 2 buồng.
+    ANIMATION/VFX MỚI: Silhouette ụ nổi dạng đường scan từ đáy lên, chốt bằng tia xanh.
+    KIỂM SOÁT: Thể hiện ụ mới là bản sao có giới hạn/tạm thời nếu cơ chế quy định.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+48. Jammer — Kẹp Phá | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia nhỏ. Khi ghép: vòng phù văn + biểu tượng Jammer bật lên ở ô ghép; tia phép tím bắn sang từng ụ đối thủ bị kẹp kèm chữ "CLAMPED"; ở CO-OP/SOLO là tia xanh lá sang ụ được tăng tốc, ụ đó có hào quang tốc bắn.
+    CHỈNH HÌNH: Kẹp cơ học hai càng đen vàng.
+    ANIMATION/VFX MỚI: Kẹp ép lên mục tiêu cùng tia nhiễu vuông, icon khóa xuất hiện.
+    KIỂM SOÁT: Đặt tên thống nhất Jammer/Clamp; khóa 7★ không còn ghép được.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+49. Mystery Box — Hộp Bí Ẩn | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: 3 dạng: SEALED (0–70% thời gian) chọc 1 mảnh bài tím; UNSEALING (70–93%) bắn 3 tia "?" xoay vào 3 quái; ABOUT TO OPEN (93–100%) ngừng bắn, bắn pháo hoa nhiều màu. Hộp rung lắc ngày càng mạnh, có tia lửa tím bốc lên. Vòng nạp tím quanh bệ và vòng 3 cung quanh ụ chạy theo thời gian. Khi mở: màn biến hình ăn mừng ~0.75 giây, ụ mới hiện ra (k…
+    CHỈNH HÌNH: Hộp có các mặt số bị che.
+    ANIMATION/VFX MỚI: Mỗi chuyển dạng có một cú lật mặt/hộp nhả biểu tượng ngắn.
+    KIỂM SOÁT: Hạn chế confetti để khoảnh khắc thật sự nhận thưởng nổi bật.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+50. Scrambler — Máy Xáo Trộn | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia lửa màu hồng. Khi ghép: vòng phù văn + biểu tượng Scrambler bật lên; tia phép hồng nối sang từng ụ bị đổi, ụ đó bật nảy với vòng sáng, tia lửa và chớp sáng màu bậc của ụ mới.
+    CHỈNH HÌNH: Bộ đảo tín hiệu hình xoắn ốc hai màu.
+    ANIMATION/VFX MỚI: Hai ụ có các đường viền nhiễu rồi hoán đổi hình qua 4 dải dữ liệu.
+    KIỂM SOÁT: Chỉ hiện đường đến đúng ụ bị đổi; giải thích hiệu lực cả SOLO/CO-OP.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+51. Overclock — Bộ Ép Xung | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đạn tia nhỏ. Khi ép: Overclock bay sang ụ đích, ụ đích nảy lên và loé sáng, nổ tia điện lớn kèm tia lửa cam, bùng hào quang tốc bắn; sau đó ụ được ép mang biểu tượng/hào quang tăng tốc.
+    CHỈNH HÌNH: Bộ tản nhiệt + đồng hồ tua nhanh.
+    ANIMATION/VFX MỚI: Quạt tăng tốc dần, ống xả đỏ cam khi buff bật; bớt nhiệt khi hết.
+    KIỂM SOÁT: Tách rõ quá tải buff và trạng thái cháy của boss.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+52. Chrono Lock — Khoá Thời Gian | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: lồng kính bát giác có mặt đồng hồ bao quanh quái, vành xanh ngọc ngắn dần và kim trắng quay, số giây còn lại hiện trên đầu quái. Khi mở khoá: kính vỡ, vòng sáng xanh ngọc, chữ "TIME BURST <số>". Quanh bệ ụ có vòng nạp màu xanh ngọc đầy dần.
+    CHỈNH HÌNH: Khung đồng hồ lục giác khóa mục tiêu.
+    ANIMATION/VFX MỚI: Tia kim đồng hồ đóng dấu ổ khóa và vòng thời gian đóng khít quanh quái.
+    KIỂM SOÁT: Dùng xanh lam cho khóa, Chrono Throne dùng đỏ vàng cho tua ngược.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+53. Signal Jammer — Máy Nhiễu Sóng | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: tia phép tím bay từ ô vừa ghép tới các ụ đối thủ bị nhắm; sau đó chữ tím "JAMMED" trên các ụ đó. Co-op: tia tím sang bàn đồng đội, lúc họ triệu hồi hiện chữ "FREE". Solo: màn hình lóe tím.
+    CHỈNH HÌNH: Anten nhiễu phát sóng răng cưa.
+    ANIMATION/VFX MỚI: Nhiễu ô vuông tím xâm nhập ụ/quái mục tiêu, ngắt đột ngột khi hết.
+    KIỂM SOÁT: Không làm nhiễu thật màn hình quá mạnh gây khó đọc.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+54. Bounty Beacon — Đèn Săn Thưởng | Sử thi | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: huy hiệu "$" trên đầu mỗi quái bị truy nã; tia vàng từ nòng tới quái lúc gắn dấu; khi quái chết hiện chữ vàng "+n BOUNTY". Quanh bệ có vòng nạp màu vàng cam.
+    CHỈNH HÌNH: Đèn pha treo biểu tượng tiền vàng.
+    ANIMATION/VFX MỚI: Đánh dấu quái có viền tiền thưởng; hạ gục hạt vàng thu về HUD.
+    KIỂM SOÁT: Không lạm dụng chữ +mana và +gold cùng nơi.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+55. Purifier — Pháo Thanh Tẩy | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: tia sáng bay thẳng tới quái; trúng quái độc thì nổ tia xanh lá to, quái thường thì tóe điện vàng nhỏ. Khi giết: vụ nổ pháo vàng, vòng sóng vàng lan ra, màn hình rung nhẹ, chữ nổi "PURIFY" trên ụ.
+    CHỈNH HÌNH: Khẩu pháo trắng-vàng dạng lễ nghi.
+    ANIMATION/VFX MỚI: Tia thanh tẩy lõi trắng phóng ra, tạo lửa trắng ngắn và xóa debuff phù hợp.
+    KIỂM SOÁT: Tránh hình chữ thập lớn gây nhầm với Holy Halo.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+56. Railgun — Railgun | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: lúc nạp có đường ngắm xanh ngọc chạy từ nòng và đốm sáng lớn dần ở nòng; rồi tia xuyên sáng chói lóe qua màn, chớp điện ở mỗi quái trúng, nòng giật mạnh, màn rung. Có bộ đếm nhỏ trên ô (biểu tượng sát thương "n/5", tốc bắn "n/3") khi đã có từ 2 Railgun cùng hàng/cột; đủ BINGO thì cả hàng/cột lóe vàng kèm tiếng. Chạm Railgun thấy vệt sáng…
+    CHỈNH HÌNH: Hai thanh ray đồng tách rõ.
+    ANIMATION/VFX MỚI: Nạp điện chạy dọc 2 ray, chớp điểm trắng, đường xuyên cực mảnh, sóng xung kích ở đích.
+    KIỂM SOÁT: Duy trì tương phản rõ giữa Sniper và Railgun: Railgun có tích lực.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+57. Star Cannon — Pháo Ngôi Sao | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: tấm đếm ở đáy ô "tổng/mốc kế" với biểu tượng tốc hoặc sát thương, thành chữ vàng khi đứng đúng mốc. Ụ grow-up 3 dạng: SPARK (dưới 10★) bắn mảnh sao nhỏ; NOVA (từ 10★) bắn cặp mảnh sao có vệt lấp lánh; SUPERNOVA (từ 50★) bắn sao chổi, nổ hình ngôi sao, cứ phát thứ 5 gọi THIÊN THẠCH rơi vào quái nhiều máu nhất (×1.2, nổ lan, chữ "METEOR").…
+    CHỈNH HÌNH: Nòng pháo năm cánh biến dạng.
+    ANIMATION/VFX MỚI: Đạn ngôi sao phát 5 tia, ở dạng cuối tạo đuôi hạt vàng sắc nét.
+    KIỂM SOÁT: Mốc biến hình 3 trạng thái phải khác silhouette, không chỉ đổi màu.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+58. Werewolf — Sói Máy | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu sói đổi theo dạng (thường / thức tỉnh). Bản thường: vệt vuốt chéo màu cam. Bản thức tỉnh: hào quang thức tỉnh lặp, đầu đỏ chớp, tàn lửa đỏ bay lên, 3 vệt vuốt đỏ thẫm, bóng sói đỏ khi lướt, 3 vòng sóng âm khi hú, có tiếng "thức tỉnh" lúc vừa ra. Không có vòng đếm tiến độ vì dạng không đổi.
+    CHỈNH HÌNH: Đầu thú cơ khí và móng thép.
+    ANIMATION/VFX MỚI: Khi hóa thú các mảnh giáp bung thành hàm; cú táp có 3 vết cào cong.
+    KIỂM SOÁT: Không sử dụng vệt cào lên cả bàn nếu tấn công cự ly gần.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+59. Wall Projector — Máy Dựng Tường | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: vòng nạp sáng xanh ngọc quanh bệ; tia sáng từ nòng chiếu tới tường; tường là dải điện xanh ngọc ngang đường với 2 cột sáng ở mép, sắp nổ thì nhấp nháy; nổ điện + lửa, vòng sóng, rung màn. Tường vàng: tấm tường vàng lớn, lóe vàng khi xuất hiện, nổ to với 2 vòng vàng, tia lửa và chớp màn.
+    CHỈNH HÌNH: Cặp trụ năng lượng đặt vuông góc đường.
+    ANIMATION/VFX MỚI: Tường vàng khởi tạo từ 2 trụ hai bên, quái đâm vào có sóng ép.
+    KIỂM SOÁT: Giữ đường kính/chiều dài tường đúng hitbox; không che quái hoàn toàn.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+60. Hydra — Hydra | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: 1–3★ các nòng bắn kim ngọc lục bay; 4–6★ quạt kim xanh ngọc bắn tức thì, so le nhau, mỗi chỗ trúng để lại dấu ấn lục giác; 7★ tia trắng lõi, quầng xanh ngọc to, phù văn lục giác dọc tia, rung màn hình, chớp xanh và một cảnh đặc biệt (đầu rồng hợp nhất). Có vòng 3 cung quanh ụ báo dạng.
+    CHỈNH HÌNH: Ba cổ súng nổi rõ, đầu độc lập.
+    ANIMATION/VFX MỚI: Mỗi đầu nhắm mục tiêu với tia màu phân biệt rất nhẹ; dạng hợp nhất có lõi chung.
+    KIỂM SOÁT: Đạn vọng chỉ hiện nếu cơ chế thật có sát thương tương ứng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+61. Nine-Tail — Cửu Vĩ | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: 9 ngọn lửa nhỏ xếp vòng tròn quanh bệ, ngọn nào sáng là đã có đuôi (màu cam; 7★ màu xanh trắng). Đáy ô có tấm "n/9". Khi xả: 9 cầu lửa bung ra thành vòng rồi uốn lượn lao vào quái, có vệt lửa, nổ khi trúng. Đạn thường: 1 cầu lửa cam bay thẳng; từ 5 đuôi đạn bay uốn lượn có vệt lửa; 7★ đạn xanh trắng uốn lượn nổ vòng nhỏ 26 px (thêm 35% sá…
+    CHỈNH HÌNH: Chín ống năng lượng như đuôi quạt.
+    ANIMATION/VFX MỚI: Các đuôi sáng theo thứ tự, phóng đạn tạo vệt hoa văn cánh quạt.
+    KIỂM SOÁT: Giới hạn tối đa số đuôi hoạt họa có thể thấy ở góc top-down.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+62. Nemesis — Nữ Thần Phán Xử | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: tia đỏ thẫm từ nòng tới quái. Khi xử tử: nhát chém, chữ đỏ "JUDGED". Khi phán quyết trùm: nhát chém lớn và rung màn hình. 7★: tia đỏ nhảy từ quái bị xử tử sang quái kế bên. Có vòng 3 cung quanh ụ; đầu súng đổi dạng theo sao.
+    CHỈNH HÌNH: Vòng cân phán xét + lưỡi kiếm dọc.
+    ANIMATION/VFX MỚI: Dấu phán quyết đặt đúng quái, cú phán xử là trụ sáng hạ xuống.
+    KIỂM SOÁT: Không dùng cùng tâm đỏ của boss; dùng vàng-trắng hình cán cân.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+63. Eclipse — Nhật Thực | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: quanh bệ có 2 nửa vòng: nửa vàng (ngày) và nửa xanh (đêm), nửa nào sáng là chế độ đang bật; mỗi lần đổi có vòng sáng vàng/xanh. Ngày: tia vàng, than hồng bay lên trên quái đang cháy. Đêm: lưỡi liềm trăng nở ra theo hướng bắn. 7★: lúc đổi cả 2 nửa cùng sáng, có vụ nổ vòng sáng vàng nhạt quanh quái đầu. Có vòng 3 cung quanh ụ.
+    CHỈNH HÌNH: Đĩa nhật thực đen có viền lửa vàng.
+    ANIMATION/VFX MỚI: Lõi đen đi qua mặt phát sáng, từng pha ngày/đêm có màu và chuyển động riêng.
+    KIỂM SOÁT: Mỗi pha phải đọc qua hình/độ sáng chứ không chỉ chữ DAY/NIGHT bị tắt.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+64. Ember Relay — Lửa Tiếp Sức | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: lúc ghép: vòng lửa bung ở ô ghép, ngọn lửa nhỏ bay thẳng sang từng Relay kề, ụ nhận lửa loé sáng + biểu tượng tăng sát thương. Trên ụ: ngọn lửa ở 4 nhánh chữ thập (1–4 lửa), đủ 5 lửa thì thêm ngọn lửa lớn ở giữa. Đạn to dần theo số lửa. Đáy ô có bộ đếm "n/5". Vòng 3 cung quanh ụ màu cam (COLD RELAY → KINDLED → FULL BLAZE), dạng 3 có hào q…
+    CHỈNH HÌNH: Tản nhiệt tròn với 4 cổng lửa hình dấu cộng.
+    ANIMATION/VFX MỚI: Một viên than sáng chạy qua các ô cùng loại theo đúng hướng chữ +; ô nhận charge tăng số vạch đỏ.
+    KIỂM SOÁT: Không để ngọn lửa nối chéo; số charge tối đa phải có chỉ báo nhỏ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+65. Quantum Choir — Hợp Xướng Lượng Tử | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn tím, chỗ trúng có vòng nhỏ to dần theo số ụ khớp. Đáy ô có bộ đếm "×n" (biểu tượng sát thương), sáng lên khi đủ 7. Mỗi khi số ụ khớp tăng: hiệu ứng tím loé quanh ụ (dải 16 khung).
+    CHỈNH HÌNH: Bộ cộng hưởng 7 chạc + sóng violet.
+    ANIMATION/VFX MỚI: Các ụ cùng sao nhấp nhịp đồng bộ, nốt sao bay về tâm rồi vòng âm tím-vàng lan mảnh.
+    KIỂM SOÁT: Không dùng liên kết dây cyan như Resonance Grid; ưu tiên cộng hưởng nhịp.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+66. Fusion Archive — Kho Lưu Hợp Nhất | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: đạn xanh nhạt + tia lửa nhỏ khi trúng; đáy ô có số điểm lưu (sáng khi đủ 40). Vòng 3 cung quanh ụ màu xanh băng (EMPTY SHELVES → FILING → GRAND ARCHIVE), dạng 3 có hào quang thức tỉnh. Xung nổ: 3 lần nổ xanh (dải 16 khung) + rung màn.
+    CHỈNH HÌNH: Kho tròn + 5 phiếu dập lỗ kim loại.
+    ANIMATION/VFX MỚI: Mỗi lần merge, một thẻ vật lý bật lên từ bệ rồi cất vào kho; merge cùng loại phát xung hồ sơ hình bánh răng.
+    KIỂM SOÁT: Charge nên thể hiện bằng cọc phiếu/nấc, không phải chữ số dày.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+67. Prism Thief — Siêu Trộm Lăng Kính | Huyền thoại | Tấn công
+    Dấu hiệu thiết kế hiện tại: quầng sáng sau đầu súng mang màu đạn hiện tại (đỏ/vàng/xanh) đập nhịp nhẹ; đạn lăng kính bay tới quái. Ghép cùng màu: vòng sáng màu đó + nổ lăng kính (dải 16 khung).
+    CHỈNH HÌNH: Lăng kính ba mặt đỏ-vàng-lam trên đầu súng.
+    ANIMATION/VFX MỚI: Ba kiểu đạn giữ chung silhouette nhưng mỗi màu có vệt va chạm riêng; đổi màu qua cú lật lăng kính.
+    KIỂM SOÁT: Đảm bảo người chơi biết màu hiện tại qua đèn mặt trước ngay cả khi không bắn.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+68. Sync Cannon — Pháo Đồng Bộ | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: ụ grow-up 3 dạng: OFFLINE (chưa ụ nào khớp sao), SYNCED (có 1–2 ụ khớp), FULL SYNC (3 ụ trở lên); vòng 3 cung quanh ụ đầy dần theo số ụ khớp. Từ dạng SYNCED có vòng vàng đập nhịp mỗi 1 giây quanh ụ, đầu súng sáng hơn khi khớp nhiều. Có tấm đếm nhỏ ở đáy ô "×số ụ khớp" (thành chữ vàng khi đủ 3). Khi số ụ khớp thay đổi, hoặc khi chạm xem ụ,…
+    CHỈNH HÌNH: Hai đồng hồ xoay đồng trục.
+    ANIMATION/VFX MỚI: Các ụ kề đạt đồng bộ sẽ nháy cùng nhịp trước khi phát loạt.
+    KIỂM SOÁT: Dây đồng bộ chỉ hiển thị 0,25s lúc bắt đầu nhịp.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+69. Star Breaker — Súng Hạ Sao | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: xung ping đỏ tới ụ kề mỗi ~2,6 giây; ụ vừa ghép cạnh nó hiện nhãn "MERGE SURGE". Khi hạ/tặng sao: hoạt ảnh kẻ trộm sao (PVP) hoặc sứ giả sao (co-op/solo) bay sang ụ đích rồi sao vỡ / sao được tặng, chữ "−8% FIRE RATE", "+8% FIRE RATE" hoặc "ALLY +8%", nhãn "STAR BREAK" trên ụ; nếu ụ đối thủ có khiên thì hiện ấn khoá chặn.
+    CHỈNH HÌNH: Máy đập sao có đầu mũi nhọn.
+    ANIMATION/VFX MỚI: Một sao bị nứt hai nửa rồi vụn hóa trên ụ bị ảnh hưởng.
+    KIỂM SOÁT: Không dùng hiệu ứng giống ngôi sao tăng cấp của Merge King.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+70. Rainbow — Máy Cầu Vồng | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: vòng nạp hồng quanh bệ đầy dần trong 7 giây, gần đầy thì nhấp nháy. Khi vẽ: dải cầu vồng rộng mọc dọc đường trong 0,5 giây, nhãn "RAINBOW" trên ụ. Quái đứng trên vệt có dấu sắc màu đổi liên tục. Xung ping hồng tới ụ kề được buff.
+    CHỈNH HÌNH: Lăng kính nhiều lớp nhưng không dạng vũ khí.
+    ANIMATION/VFX MỚI: Tia buff màu chuyển qua các cửa màu và đổ đến đồng minh.
+    KIỂM SOÁT: Giảm bão hòa dải cầu vồng để khỏi cạnh tranh với Prism Thief.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+71. Resonance Grid — Lưới Cộng Hưởng | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: đầu hình chữ X luôn chỉ về 4 góc chéo; cứ ~2.4 s (khi cộng hưởng ~1.2 s) phát xung xanh ngọc tới các ô chéo được buff. Đáy ô có tấm "n/4" (chữ vàng khi đủ 4). Khi có 2+ ô chéo: đòn của ụ được buff lóe vòng tia xanh ngọc; khi cộng hưởng: cứ phát thứ 3 của mỗi ụ chéo có thêm 1 viên đạn vọng xanh ngọc (chỉ là hình). Có vòng 3 cung quanh ụ; c…
+    CHỈNH HÌNH: Bốn cực nối thành hình vuông điện từ.
+    ANIMATION/VFX MỚI: Đường kẻ ô phát xung theo mạch; tiếng vọng đạn dùng bóng mờ riêng.
+    KIỂM SOÁT: Chú thích rõ đạn vọng dạng 3 là trang trí, không gây damage.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+72. Mirror Gate — Cổng Gương | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: các mảnh gương bay vòng quanh tâm ụ (2 mảnh ở 1–3★, 4 mảnh ở 4–6★, 6 mảnh ở 7★), mờ khi đang nạp, sáng rõ và có quầng xanh nhạt khi sẵn sàng. Vòng nạp xanh nhạt quanh bệ. Khi dùng: vòng sáng, tiếng kính vỡ, chữ "REFLECT!" / "BLOCKED" / "MIRROR COPY"; tia sang ụ đối thủ kèm chữ "REFLECTED". Ụ kề có bong bóng mờ; khi kháng thành công hiện c…
+    CHỈNH HÌNH: Hai gương dọc trục đối xứng, khung bạc.
+    ANIMATION/VFX MỚI: Bề mặt gương rung nhẹ, một hình ụ phản xạ xuất hiện trong kính khi buff.
+    KIỂM SOÁT: Không cho cảm giác dịch chuyển như Teleporter.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+73. Sanctum — Thánh Địa | Huyền thoại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: lửa thánh + vòm sáng (dải 16 khung) ở ụ khi xuất hiện, tia phép vàng nhạt bắn sang từng ô kề; ụ được che có bong bóng khiên. Quanh bệ có VÒNG NẠP màu vàng kem (8 khung, càng đầy càng kín, >80% nhấp nháy) — khi mọi ô kề đã có khiên vòng đứng ở gần đầy và nhấp nháy. Nạp xong: tia phép + vòng sáng nhỏ ở ô được khiên lại. Chạm ụ: biểu tượng k…
+    CHỈNH HÌNH: Mái đền trắng + 4 chuông vàng nhỏ.
+    ANIMATION/VFX MỚI: Cửa chuông rung tạo dấu ấn bảo hộ trên 4 hoặc 8 ô; khi cản đòn hiển thị vòm nhỏ.
+    KIỂM SOÁT: Từ 5★ cần vẽ đủ 8 ô hỗ trợ, không chỉ 4 đường thẳng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+74. Merge King — Vua Ghép | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: bản vàng có quầng vàng phập phồng quanh ụ. Khi rê có huy hiệu sao xem trước kết quả. Lúc dùng: hoạt ảnh huy hiệu xoay → vương miện nổi trên ô → búa hoàng gia gõ → đóng dấu sao vàng; chữ lớn "+1★"/"+2★" và nhãn "MERGE KING +1★" hoặc "GOLD KING +2★".
+    CHỈNH HÌNH: Vương miện bệ ghép bằng hợp kim.
+    ANIMATION/VFX MỚI: Khi ghép hợp lệ, hai sao hút vào nhau, nén và nổ thành sao mới (+1/+2 đúng chế độ).
+    KIỂM SOÁT: Hạn chế các tia confetti làm che kết quả ngẫu nhiên.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+75. Twin Maker — Máy Sinh Đôi | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: không có chữ nổi; lúc kích hoạt có tia vàng bay từ ô ghép tới ô mới, vòng vàng quanh ụ mới và biểu tượng hai vòng nối lóe ~0,6 giây trên cả hai ô.
+    CHỈNH HÌNH: Hai khuôn đúc giống nhau hai bên.
+    ANIMATION/VFX MỚI: Một mô hình được sao đôi đối xứng và tách về hai ô.
+    KIỂM SOÁT: Chỉ hiển thị 2 đích khi ô trống hợp lệ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+76. Copycat — Máy Sao Chép | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: tia phép tím nối từ ụ gốc sang ô Copycat, nhãn "COPY". Bản sao có quầng tím nhấp nháy và biểu tượng Copycat nhỏ ở góc trên-trái ô để không nhầm với ụ thật.
+    CHỈNH HÌNH: Mặt gương tháo lắp được với lõi vàng.
+    ANIMATION/VFX MỚI: Sao chép bằng scan đường kẻ lên hình ụ gốc, chi tiết vàng giữ lại để nhận biết bản sao.
+    KIỂM SOÁT: Giữ dấu hiệu công suất sao chép giảm so với ụ thật.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+77. Evolver — Hộp Tiến Hoá | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: KHÔNG có đồng hồ hay số đếm ngược trên ụ trong trận, cũng không có bom (số đếm chỉ hiện trong clip minh hoạ ở trang hồ sơ ụ, vài giây cuối). Tiến độ thể hiện bằng vòng 3 cung: dạng INCUBATING (0–60%) cung trái đầy dần, bắn viên hổ phách nhỏ; FORGING (60–90%) cung phải đầy dần, bắn cục vàng nóng chảy vào 3 quái, nổ lan 20 px; ASCENDING (90…
+    CHỈNH HÌNH: Kén hợp kim chia 3 lớp có đồng hồ cơ.
+    ANIMATION/VFX MỚI: Mỗi giai đoạn mở một lớp vỏ, vòng 3 cung có khấc đếm thời gian; khi hoàn tất nhả hình mới.
+    KIỂM SOÁT: Cần biểu tượng đếm ngược rõ trên sân; sửa logic mất sao/giữ thời gian theo luật thống nhất.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+78. Orbital — Vệ Tinh | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: đầu ụ đung đưa chậm; thức tỉnh thì đung đưa nhanh, đầu sáng rực, vòng sáng xanh băng quay quanh đầu (mờ dần 2 giây cuối). Vòng 3 cung quanh ụ: STANDBY → UPLINK (có từ 2 Vệ Tinh) → AWAKENED (cung trên đỉnh co dần theo thời gian còn lại, nháy khi sắp hết). Lúc ghép: vòng sáng xanh lan ra, màn chớp xanh. Bom: tia sáng dọc từ đỉnh màn xuống,…
+    CHỈNH HÌNH: Đĩa gắn 6 vệ tinh đối xứng.
+    ANIMATION/VFX MỚI: Vệ tinh xoay vòng quanh thân, cùng phóng loạt khi nạp xong.
+    KIỂM SOÁT: Vệ tinh phải tránh che sao và điểm chạm; nhịp 1,5s từ 3★.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+79. Pandora Vault — Hộp Pandora | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: trên ô vừa ghép hiện đĩa quay 6 biểu tượng, quay chậm dần ~0.8 s, có kim lấp lánh ở đỉnh, ô trúng sáng lên; rồi chữ tên phép (ví dụ "FREEZE!") và vòng sáng màu phép, kèm cảnh đặc biệt mở hộp. 4–6★: 6 tia sáng nhiều màu lọt ra khe nắp; 7★: quả cầu cầu vồng lơ lửng đổi màu. Có vòng 3 cung quanh ụ.
+    CHỈNH HÌNH: Hầm kho nhiều chốt khóa có cánh cửa.
+    ANIMATION/VFX MỚI: Mở kho là một ánh sáng khó lường và 1 trong các biểu tượng kết quả, không phải nổ chung.
+    KIỂM SOÁT: 7★ không ghép thêm: chỉ giới thiệu hiệu ứng 2 phép tại thời điểm lên 7★.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+80. Scrap Forge — Lò Rèn Phế Liệu | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: ụ bị ăn bay vào Forge, nổ tia lửa cam, chữ cam "+n FORGE", tia phép cam nối tới ụ được nhận buff. Từ 4 cộng dồn Forge có quầng cam sau lưng, từ 10 cộng dồn quầng nhấp nháy; đầu súng sáng dần theo số cộng dồn. Đáy ô có tấm "n/15" (vàng khi đầy). Có vòng 3 cung quanh ụ.
+    CHỈNH HÌNH: Lò nấu phế liệu và búa dập.
+    ANIMATION/VFX MỚI: Khi hiến ụ, linh kiện hút thành dòng nóng đỏ vào Forge, rồi sợi buff đi tới ụ mục tiêu.
+    KIỂM SOÁT: Dấu cộng dồn nằm trên Forge, không báo VĨNH VIỄN trên ụ nhận.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+81. Marionette — Rối Máy | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: sân khấu rối nhỏ, bàn tay khổng lồ hiện trên đầu quái, 4 dây móc búng xuống, nhấc bổng quái và kéo lùi (có bóng dưới chân); mỗi lần đâm có tiếng nổ nhỏ; cuối cùng bàn tay nắm lại và con rối nổ tung như đồ chơi (vòng hồng 60 px, rung màn hình). Quanh bệ có vòng nạp màu đỏ mận. Có vòng 3 cung quanh ụ.
+    CHỈNH HÌNH: Khung rối có dây treo và kim cơ khí.
+    ANIMATION/VFX MỚI: 6 mũi kim từ các hướng đâm vào đúng các quái bị chọn, dây giật khi tấn công.
+    KIỂM SOÁT: Khớp thời gian animation với nhịp code 3★/7★; không phóng nhiều kim giả.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+82. Hero Foundry — Xưởng Anh Hùng | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: lúc ghép: hiệu ứng "đóng dấu" vàng (dải 16 khung) trên ô được chọn; sau đó dưới ô có vòng tròn vàng xoay chậm, đập nhịp, mờ dần trong 1.5 s cuối. Đáy ô Foundry có bộ đếm "n/2" (biểu tượng tốc bắn).
+    CHỈNH HÌNH: Khuôn ép sao vàng 5 cánh cùng giá đỡ.
+    ANIMATION/VFX MỚI: Búa dập một sao vàng vào ô được buff, tỏa tia lửa và 4 vệt chạy theo cạnh tile.
+    KIỂM SOÁT: Không viết thông số 7★ bất khả thi; chỉ hiệu ứng khi merge hợp lệ.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+83. Blood Circuit — Mạch Máu | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: tia máu đỏ bay tới quái. Lúc kéo-thả: ụ bay sang ô đích, vòng đỏ đậm + tia lửa đỏ bung ra, ụ mới hiện ra kiểu nổ. Xung máu: dải hiệu ứng 16 khung màu máu + rung màn. Từ 3 VAMP trở lên quanh ụ có quầng đỏ đập nhịp, càng nhiều VAMP đầu súng càng sáng.
+    CHỈNH HÌNH: Ống ampoule đỏ + 2 vòng hút không đều.
+    ANIMATION/VFX MỚI: Ụ hiến bị hóa thành các mảnh ánh đỏ và bị hút qua hai vòng đồng, năng lượng dồn vào lõi.
+    KIỂM SOÁT: Vẽ cảnh báo tiêu hao rõ; không cho kéo vào Blood Circuit khác.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+84. Hex Saboteur — Kẻ Nguyền | Huyền thoại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: âm thoa đỏ bay vòng cung từ ô ghép tới đích; trúng thì nổ "sao vỡ" (dải 16 khung) và tia lửa đỏ ở ụ bị −1★, hoặc vòng vàng ở ụ đồng đội được +1★; trượt thì chỉ có vòng đỏ nhạt.
+    CHỈNH HÌNH: Bọ cánh cứng vàng với càng tuning fork đỏ.
+    ANIMATION/VFX MỚI: Sóng âm hình răng cưa đỏ bắn tới sao mục tiêu, ngôi sao vỡ một góc, nhiễu đỏ rơi xuống.
+    KIỂM SOÁT: Rõ việc -1★ chứ không thành phá hủy ụ nếu chưa tới điều kiện.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+85. Black Hole — Hố Đen | Cổ đại | Tấn công
+    Dấu hiệu thiết kế hiện tại: vòng nạp sáng màu hồng quanh bệ; khi mở: đĩa xoáy tím hồng xoay, hạt sáng xoắn ốc bị hút vào; khoảnh khắc đặc biệt: mảnh đường bay lên, "mống mắt" hấp dẫn mở ra, xoáy, rồi nén lại nổ lớn và nhả quái còn sống ra (dùng lại trong 15 giây thì bản ngắn hơn). Lúc nghiền: chớp hồng, vòng sóng, rung màn mạnh.
+    CHỈNH HÌNH: Tròng hấp dẫn tối + 3 vòng lệch tâm.
+    ANIMATION/VFX MỚI: Đường bụi và vệt đạn cong hút vào tâm, nén lõi về chấm đen rồi bật sóng tím không gian.
+    KIỂM SOÁT: Không kéo camera mạnh; quái vẫn phải thấy được silhouette và thanh máu.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+86. Overlord — Overlord | Cổ đại | Tấn công
+    Dấu hiệu thiết kế hiện tại: đầu súng sáng dần theo độ nạp; vòng 3 cung quanh ụ: DORMANT (tia lửa tĩnh điện lấm tấm) → CHARGING (tia điện đỏ nhảy ra) → OVERCHARGED (cung đỉnh đầy dần); mỗi lần đổi dạng có hoạt ảnh biến hình. Khi bắn: nòng giật cực mạnh, 3 tia sét khổng lồ (từ nòng và từ trời) giáng xuống, cột sét từ trời, vòng cháy đen trên đất, chớp trắng cả màn, ru…
+    CHỈNH HÌNH: 3 tầng biến hình, hai cực sét lớn.
+    ANIMATION/VFX MỚI: Nạp ở vỏ → tia điện dẫn nòng → cột sét trời xuống và đường nứt trên đất.
+    KIỂM SOÁT: Chớp trắng toàn màn phải có chế độ giảm chớp; giới hạn rung mạnh 1 lần/chiêu.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+87. Hive Queen — Chúa Tổ | Cổ đại | Tấn công
+    Dấu hiệu thiết kế hiện tại: đàn ong máy nhỏ (ảnh PNG) bay vòng quanh ụ, vệt tia chích cam ngắn tới quái; ong chúa vàng to hơn ở 7★. Khi dùng SWARM: chữ "SWARM!", vòng lửa cam quanh ụ, từng con ong kéo vệt sáng lao xuống và nổ (có cảnh đặc biệt: nữ hoàng xoè thân, nổ tổ ong dọc đường). Vòng 3 cung quanh ụ (NEST → HIVE → ROYAL HIVE) + cung nạp mảnh bên trong màu đỏ ca…
+    CHỈNH HÌNH: Tổ 6 cạnh + nữ hoàng lớn khi 7★.
+    ANIMATION/VFX MỚI: Drone ra tổ theo làn rõ, khi SWARM xếp hình tổ ong rồi lao theo từng đợt nổ.
+    KIỂM SOÁT: Giới hạn 12 drone phải thấy rõ; không tạo ong giả; mốc 5★ kiểm tra logic.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+88. Leviathan — Thuỷ Quái | Cổ đại | Tấn công
+    Dấu hiệu thiết kế hiện tại: bọt nước xanh biển (to hơn ở 7★) nổ thành vòng nước; khi nuốt: xoáy nước quay hút quái biến mất rồi tia nước bay về ụ, chữ "+1 ABYSS"/"+3 ABYSS". Quanh ụ có các đốm sao vàng (4 / 8 / 12 cái khi ABYSS 0 / 40 / 80), số ABYSS hiện ở đáy ô. TIDAL BREATH: chữ "TIDAL BREATH!", màn hình loé xanh, hàm thuỷ quái trồi lên và dải nước chạy dọc đường…
+    CHỈNH HÌNH: Hàm nước xoáy chia thành hai cánh.
+    ANIMATION/VFX MỚI: Nuốt quái: xoáy khóa -> kéo xuống -> bọt nổi -> điểm ABYSS hút về thân; tia quét thủy triều bám đường.
+    KIỂM SOÁT: Tidal Breath đi đúng tuyến đường; giữ bộ đếm ABYSS rất dễ đọc.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+89. Wyrm Engine — Rồng Máy | Cổ đại | Tấn công
+    Dấu hiệu thiết kế hiện tại: nón lửa cam (1–3★), lửa XANH (4–6★), lửa TRẮNG viền xanh (7★) phun từ đầu súng, đốm than hồng trên đường. Đầu súng có 3 dạng ảnh khác nhau (WHELP → BLUE WYRM → WHITE WYRM) với hoạt ảnh biến hình. DRAGON DIVE: chữ "DRAGON DIVE!", màn rung, rồng thức giấc dang cánh rồi bay dọc đường phun lửa, kết thúc bằng huy hiệu rồng cháy. Vòng 3 cung qu…
+    CHỈNH HÌNH: Đầu rồng cơ khí có cánh xếp gọn.
+    ANIMATION/VFX MỚI: Lửa đổi cam→lam→trắng theo pha, Dragon Dive rồng lao dọc đường với bóng chiếu sát đất.
+    KIỂM SOÁT: Không phủ lửa màu trắng toàn bộ màn; thể hiện nón lửa đúng hitbox.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+90. Cryo Reactor — Lò Phản Ứng Băng | Cổ đại | Hỗ trợ
+    Dấu hiệu thiết kế hiện tại: ụ grow-up 3 dạng theo mức nạp: IDLE CORE (dưới 50%), HEATING (50–99%), CRYO STORM READY (đầy). Mỗi nhịp hào quang có vòng sương lạnh toả ra; từ dạng 2 thêm 3 kim băng bay tới quái chậm nhất (chỉ là hình); dạng 3 có sàn lưới băng lục giác dưới lò. Từ 3★ có vòng nạp mảnh bên trong, đầy thì nhấp nháy trắng. Khi dùng: vòng băng lớn, chớp trắn…
+    CHỈNH HÌNH: Lõi lục giác đóng sương có 3 tầng vỏ.
+    ANIMATION/VFX MỚI: Hào quang băng theo nhịp chậm, storm làm sàn băng kết tinh từ tâm ra mép rồi tan.
+    KIỂM SOÁT: Hiện rõ nút kỹ năng từ 1★ dù vòng nạp mảnh hiện từ 3★; báo tự kích hoạt.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+91. Holy Halo — Hào Quang Thánh | Cổ đại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: vòng nạp màu kem quanh bệ đầy dần, >80% thì nhấp nháy; đầy thì ụ có quầng sáng kem phập phồng; đầu quay chậm đều. Khi bật: vòng sáng lớn toả ra, chớp sáng, tia phép nối tới mọi ụ trên bàn, chữ "HOLY HALO!". Quái lọt lúc có hào quang biến mất với chữ "HALO" ở cuối đường.
+    CHỈNH HÌNH: Vành chuông trắng-vàng + cánh sáng mềm.
+    ANIMATION/VFX MỚI: Xung từ tâm tới các ụ, bảo hộ là vòm trắng lục giác, đạn boss vỡ thành hạt vàng.
+    KIỂM SOÁT: Phải phân biệt tự dùng và chạm dùng, hiệu lực giảm chiêu boss không phải chặn hoàn toàn.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+92. Chrono Throne — Ngai Thời Gian | Cổ đại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: dưới mỗi quái có cung tròn mảnh, dài dần theo độ chậm (đỏ khi tối đa). Kim vàng bay vụt xuyên quái; 4–6★ kim đóng dấu mặt đồng hồ lên quái đầu (chậm thêm 8% trong 1 s); 7★ kim xuyên cả đường và 0.3 s sau có "tiếng vọng" đánh lại 40%. Vòng nạp đỏ quanh bệ và vòng nạp mảnh của kỹ năng chủ động; đầy thì ụ rực đỏ nhấp nháy. Khi REWIND: chữ đỏ…
+    CHỈNH HÌNH: Ngai đồng hồ cơ có cánh kim đỏ vàng.
+    ANIMATION/VFX MỚI: Đồng hồ dừng khựng rồi quay ngược, quái để lại 2 bóng ma vị trí cũ, âm thanh đảo chiều.
+    KIỂM SOÁT: Không kéo quái về sai vị trí; 7★ hồi tim phải được thông báo rõ một lần/trận.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+93. Genesis Core — Lõi Khởi Sinh | Cổ đại | Đặc biệt
+    Dấu hiệu thiết kế hiện tại: 3 vành phù văn vàng/hồng quay quanh ụ; từ 4★ thêm 8 đốm sáng vàng như cánh sen; 7★ có quầng hồng và ngôi sao trắng ở lõi. Gần tới lượt nâng sao ụ loé sáng vàng. Khi nâng sao: tia sáng cong bay từ lõi sang ụ được nâng, chữ "GENESIS +1★". Khi dùng chiêu: chữ "GENESIS ×n (x★)", vòng hồng loé. Vòng 3 cung quanh ụ (SEED → BLOSSOM → LOTUS OF LI…
+    CHỈNH HÌNH: Mầm cơ khí ba vành sen sáng.
+    ANIMATION/VFX MỚI: Một hạt giống bay sang ụ ít sao nhất, bung ngôi sao đúng cấp; GENESIS nở ô trống thành ụ mới.
+    KIỂM SOÁT: Không chỉ hiện +damage khi nâng cấp thẻ nếu không có tác dụng.
+    Lưu ý kỹ thuật: cấp sao, phạm vi, thời điểm gây damage, vai trò hỗ trợ và hiệu lực riêng phải lấy trực tiếp từ dữ liệu game; không cho bóng/đạn/phép gây cảm giác có tác dụng ngoài code.
+======================================================================
+IV. COMMANDER — TẠO 'KHOẢNH KHẮC QUYẾT ĐỊNH' KHÁC SKILL Ụ
+======================================================================
+REINFORCE: tay máy từ mép trên kéo xuống 2 capsule, chạm đất mới mở ra 2 ụ; khi bàn đầy, 2 chùm sáng nhập thành +1★ ở ụ đúng mục tiêu. Nhãn số ụ thay thế phải giải thích vì sao không spawn. SFX cơ khí + kim loại mở khóa.
+RAGE: nhịp kick ngắn, lớp rãnh cam chạy quanh mép ô của các ụ, đầu súng ấm màu đỏ trong 10s. KHÔNG biến thành cháy/burn từ boss. Nút HUD có thanh 10s; dùng lại chỉ làm mới đếm ngược, không stack.
+HOLY SHIELD: màn khiên phủ một lớp đường lưới viền nhẹ tới đủ các ô, khi bị boss đánh chỉ Ô trúng nổ hình lục giác rồi lập tức ổn định; tránh một màn hình trắng. HUD đếm 8s + trạng thái chắn khả dụng. Phân biệt mạnh với Holy Halo (Halo chỉ giảm một số chiêu boss theo code).
+Các nút Commander phải thể hiện chi phí tăng gấp đôi sau mỗi lần dùng, cooldown thật, và trạng thái 'không đủ mana' không phát FX mua hụt giả.
+
+======================================================================
+V. 12 BOSS — HIỂN THỊ NGUY CƠ, PHẢN HỒI, PHẢN CÔNG
+======================================================================
+Telegraph nền 1,4 giây (theo tài liệu): T-1.4 hiện tên chiêu ngắn + animation đặc trưng; T-1.0 đánh dấu ô bị chọn; T-0.4 nén dấu ngắm; T0 phát effect. Nếu mục tiêu có khiên, thêm border xanh nhạt để nhận ra sẽ được bảo vệ, nhưng không hứa 100% chặn với cơ chế chỉ giảm hiệu lực.
+MAD CROWN / SCRAMBLE: mũ miện nghiêng, bắn 3 thẻ nhiễu hồng tới đúng 3 ụ, mỗi ụ lật mặt 180° thành loại mới; sao hiển thị giữ nguyên.
+FREEZER / DEEP FREEZE: thanh băng từ trùm phóng tới các ụ sao cao nhất, trước T0 có bông tuyết cảnh báo màu lam; đóng băng theo thứ tự và giữ biểu tượng disable đúng thời gian.
+JANUS CUBE / PETRIFY: một mặt khối xoay, ray xám trúng ụ, vật liệu chuyển thành đá từng mảng; dùng bệ đá cùng sao để player hiểu cách ghép giải.
+JOKER KING / FORCE MERGE: bàn tay hề thả token Mimic xuống một ụ; xuất hiện đường kéo ép tới ụ cùng sao và hình ghép xảy ra đúng logic.
+NIGHTMARE / SNIPE: crosshair ĐỎ bốn góc trên ụ sao cao nhất, đường laser đỏ quét thẳng, sao bị cắt một nấc; 1★ bị phá hoàn toàn thì có khói vụn.
+OCTOPUS EYES / BURN: 3 dấu mắt đỏ trên 3 ụ, lửa bám cạnh bệ trong 6s, lúc gần hết có cảnh báo sao sắp giảm; không che turret head.
+HIVE MOTHER / SWARM: vỏ tổ mở bung và drone nhỏ xuất hiện theo nhịp, chữ SWARM ×4/×6 không che boss HP, drone có bóng nhỏ trên đường.
+STATIC JAMMER / JAM: tia xích đen tím khóa 2 ụ ưu tiên support; icon cấm bắn/ghép/buff, âm electrical drop; không dùng màu băng.
+PRISM WARDEN / PRISM SHIELD: khiên 3 hoặc 4 cạnh/segment, mỗi chủng loại ụ khác nhau đánh trúng sẽ làm vỡ đúng một segment; giảm 90% damage khi chưa phá đủ. Đây là boss cần UI chiến thuật riêng, không chỉ cho cái bubble shield.
+TWIN CORE / SPLIT: khối lớn nứt 2 đường trước khi chết, tách thành 2 lõi nhỏ có tốc độ vệt chạy cao; HP bar mỗi lõi riêng.
+PATCH TITAN / REPAIR: dây sửa chữa màu xanh lục chạy từ tay boss qua quái cùng làn, hiện +12% ở boss và +35% vùng quái nếu cần; dùng icon cờ lê, không giả dạng hồi sinh.
+STAR LEECH / STAR THEFT: sao bị giật khỏi ụ mạnh nhất rồi hút vào boss, aura tăng tốc trước DASH; khi giết được, sao bay ngược về chính ụ được hoàn trả. Nếu mục tiêu biến mất trước đó, xử lý feedback theo code.
+Boss damage feedback: chỉ boss critical/weak point tạo impact lớn. Thêm thanh nguy cơ gần lối ra; cảnh báo mất 2 tim nếu boss lọt phải có ký hiệu tim ×2 rõ trước khi nó đến cuối đường.
+
+======================================================================
+VI. UI / META / TƯƠNG TÁC / TÍNH HẤP DẪN
+======================================================================
+A. SUMMON: ánh chớp ở ô đích (không mở panel chiếm màn), cổng xuất hiện từ chân ụ lên trong khoảng 250–400ms. Nhận rare trở lên có 1 cue âm và viền theo tier; không phát fanfare vàng cho mọi lần summon.
+B. MERGE: hai ụ sáng viền khi drag đúng điều kiện; đường kéo mỏng, đích sáng 1 vòng hình thoi; thả => hút vào tâm, rung nhẹ, sao mới bật lên trước rồi đầu súng ngẫu nhiên hiện sau. Không lộ kết quả trước random.
+C. INVALID MERGE: trả ụ về nhanh 100–160ms, bệ đỏ chớp 1 lần, click khô; không rung toàn màn.
+D. STAR 3/5/7: 3★ tia 3 cánh, 5★ ring vàng 5 cung, 7★ vương miện mảnh + 7 mảnh sao bắn ra theo thứ tự; biến đổi silhouette của các ụ có 3 dạng thật.
+E. POWER-UP MANA: giá 100/200/400/700 phải đọc được; khi mua đẩy 4 vạch nạp trên card cùng màu hệ, halo ngắn về các ụ cùng loại; đừng giả là nâng sao.
+F. OUT-OF-BATTLE CARD LV: mở khóa ngay thông tin 'mức skill tăng' rõ ràng, nút level-up có chốt cơ khí, progress copies + gold phản hồi đồng thời. Với unit không được lợi từ LV, phải sửa cơ chế hoặc UI; tránh bán một upgrade vô tác dụng.
+G. SHOP / EVENT / QUEST / WHEEL: mọi nút dùng thống nhất frame thép xanh, highlight vàng chỉ cho claim được; spin wheel cần pointer đứng yên và wheel quay (tránh đọc nhầm kết quả), banner không copy ba loại fx giống nhau.
+H. CHEST: mở khóa 3/4 nhịp: chốt bật -> khe sáng -> nắp mở -> vật phẩm bay lên; cấp rare điều khiển độ phức tạp, không kéo thời lượng hồi hộp quá lâu. Thưởng cuối trận hiển thị nguồn coin/card rõ ràng.
+I. GAME OVER/Victory: thua là âm trầm ngắn + màn hơi giảm saturation, không dùng explosion dài khiến player nản; thắng là 1 tiếng giải tỏa + sao/quà tỏa 2 bên. Cảnh thắng PvP/co-op có nhận dạng riêng.
+J. TUTORIAL FTUE: lần đầu biết merge -> 1 đoạn chỉ tay ngắn, có thể bỏ; lần đầu gặp PRISM WARDEN giải thích yêu cầu nhiều loại ụ bắn; lần đầu skill đỏ nạp xong -> 1 cue vòng trong và tap nổi bật.
+K. LIVE-OPS: clip 5–8s của một skill nên có ba nhịp: trạng thái bình thường -> setup đòn -> payoff; clip ngang/dọc crop vẫn thấy nòng và mục tiêu, không chỉ explosion vô nghĩa. Đừng quảng cáo FX khác game thực tế.
+
+======================================================================
+VII. AUDIO / HAPTIC / CAMERA — KHOÁ CẢM GIÁC CHẠM
+======================================================================
+- Một họ âm cho mỗi loại cơ chế: cơ khí (metal clamp), plasma (synth zap), băng (glass crystalline), độc (wet bubbling), mana (soft tonal chime), thời gian (reverse clock), ultimate (bass + tonal tail).
+- Layer âm: 1 attack dry + 1 impact material + 1 tail cho rare procs. Nếu thiếu nguồn lực, ưu tiên ấn tượng hình tác động trước ambient.
+- Giới hạn đồng thời 6–10 transient SFX thường (mục tiêu benchmark, cần test), ưu tiên crit/merge/skill/telegraph. Trộn âm ducking 100–250 ms khi ultimate.
+- Một số ultimate có thể giảm nhạc nền khoảng 2–4 dB trong 200–500 ms, nhưng phải test trên loa iPhone nhỏ.
+- Haptic iOS chỉ nên dành cho summon rare, merge thành công, commander, skill đỏ hoặc boss critical; không rung cho từng viên Gatling/Tesla.
+- Camera top-down cố định: micro-shake cục bộ (transform enemy/turret), không shake cả màn nhiều lần/giây; giảm motion sẽ tắt phần dư thừa.
+- Nên có tùy chọn giảm flash/rung/particle; mặc định không cần hoạt ảnh fullscreen white flash.
+
+======================================================================
+VIII. ASSET PIPELINE / SPRITE SHEET / ENGINE
+======================================================================
+1. Mỗi asset có ID cố định, target size trong gameplay, pivot, bbox, layer, FPS, duration, looping, additive/alpha, texture format và sự kiện gameplay tại frame nào.
+2. Hiệu ứng dạng one-shot ưu tiên sheet 4x4 = 16 frames, đọc trái -> phải, trên -> dưới; glow/beam có thể tách lớp riêng để tiết kiệm bộ nhớ. Đừng ép mọi thứ thành 16 frame nếu 6 frame có ý nghĩa hơn.
+3. Frame phải đồng kích thước, tâm cố định. VFX đạn phải có hướng gốc và pivot đúng; hiệu ứng nổ thường neo tâm hit, ánh sáng nền neo mặt đường.
+4. Với nền magenta #FF00FF: phát hiện rìa tím do anti-alias/blend trên ảnh có nền rồi mask; bản alpha thẳng hoặc premultiplied theo engine là tốt hơn. Tạo các hình với nền magenta nếu yêu cầu asset preview, nhưng kiểm thử transparency khi import.
+5. Không ghi text, số, frame line, ô grid vào sprite; UI text là render layer riêng để dễ bản địa hóa.
+6. Giữ turret head hướng theo gameplay: top-down khoảng 80–85°; hướng nòng phải nhất quán với đường đạn, không mang ngoại hình góc isometric 45° của game khác.
+7. Glow trong mobile: dùng sprite mềm, ít overdraw, cắt bớt vùng trong suốt khỏi atlas, tránh 6 lớp alpha full-screen.
+8. Dùng pooling cho particles, drone, floating texts. Chỉ tái tạo asset đổi dạng sau khi event thật phát sinh.
+9. Vùng hoạt động quái/turret và vùng UI tách batching; effect layer không có hit-test chuột/chạm.
+10. Texture atlas theo nhóm: common projectiles, status icons, gold upgrades, ancient skills, boss telegraphs; tránh tạo nhiều texture 4K lẻ.
+11. FX deterministic theo seed nếu PvP lockstep; random hạt có thể client-side nhưng tuyệt đối không đổi target, radius, tick damage.
+12. Performance goal để test: 60 FPS trên máy mục tiêu, 30 FPS ổn định trên máy yếu; đặt ngân sách particle và drawcalls theo thiết bị sau profiling. Đây là mục tiêu đo, chưa phải kết quả đã đạt.
+13. Test lúc 15 ụ bắn, 2 ụ Ancient dùng skill, 1 boss ra chiêu, 30+ enemies và có DoT; kiểm tra p95 frame time, spikes, RAM và nhiệt sau 15 phút.
+14. Tạo Low FX preset: giảm ambient, trail giả và debris; giữ projectile lõi, telegraph, status, skill-ready, kết quả merge và vùng tác dụng.
+15. Mỗi VFX có testcase: kích hoạt đúng frame; dừng nếu mục tiêu chết; không lưu hạt khi đổi wave; không bám nhầm ô sau swap/merge; âm đồng bộ; không làm lag drag.
+
+======================================================================
+IX. DANH SÁCH LỆCH CODE / UI CẦN ƯU TIÊN SỬA
+======================================================================
+Các mục sau ĐƯỢC GHI TRONG TÀI LIỆU NGUỒN là đang lệch; chưa tự kiểm tra trực tiếp code.
+
+P0 — Ảnh hưởng niềm tin vào cơ chế hoặc quyết định tiêu tài nguyên:
+- Time Bomb: card LV nói +damage trong khi bom không gây sát thương, nâng LV không mạnh hơn.
+- Scrap Forge: card LV +damage vô dụng; chữ 'VĨNH VIỄN' sai vì charge nằm trên Forge và buff có thể mất.
+- Genesis Core: card LV +damage không có tác dụng.
+- Holy Halo và các ụ không damage: rà soát toàn bộ dòng +damage trong thẻ.
+- Armor Breaker, Crit Antenna, Reaper Pillar: UI số buff/% giết vượt trần thật; hiển thị giá trị hiệu dụng kẹp trần.
+- Pandora Vault 7★: 'mỗi lần mở hai phép' chỉ xảy ra lúc tạo ra 7★; sau đó không thể merge thêm.
+- Hero Foundry 7★: UI hiển thị buff dựa trên khả năng merge bất khả thi.
+- Evolver mất sao: thiết kế nói reset đếm, code giữ thời gian đã chờ. Chốt rule và sửa một phía.
+- Sanctum 5★+: UI chỉ vẽ 4 link trong khi logic có 8 ô buff.
+
+P1 — Hiển thị thời gian/tên/mốc sai, gây khó hiểu:
+- Frost giảm thời gian đóng băng với quái to cần ghi rõ.
+- Mana Core 3★/7★ nhịp thực 6s/5s chứ không cố định 7s.
+- Laser 7★ +crit trong khi Laser không crit.
+- Mine Layer, Hydra, Marionette, Orbital: mô tả nhịp phát/tạo theo thời gian chưa tính mốc buff thật.
+- Radar 7★ ghi +25% fire rate nhưng tác dụng hiệu dụng bị trần 45%.
+- Cryo Reactor có tự kích hoạt khi đủ điều kiện; mô tả chỉ nói TAP.
+- Holy Halo cũng có tự kích hoạt trong tình huống nguy cấp; mô tả chỉ nói TAP.
+- Hive Queen 5★ QUICK BROOD ghi như breakpoint riêng nhưng code tăng đều từng sao.
+- Leviathan/Wyrm Engine: mốc 5★ nhưng biến đổi điều kiện 4★; diễn giải mốc và dạng nhất quán.
+- Jammer tên 'Clamp' ở roster nhưng game 'Jammer'; 7★ không ghép tiếp được.
+- Blood Circuit nói bất kỳ ụ, nhưng không nhận Blood Circuit khác.
+- Scrambler mô tả PVP nhưng code ảnh hưởng SOLO/CO-OP.
+- Mirror Gate/Scrap Forge role trong roster chưa đồng bộ vai trò code.
+- Resonance Grid 'đạn vọng' dạng 3 chỉ visual, không gây damage.
+- Nhiều nhãn proc như CLUSTER, JUDGMENT, OVERDRIVE, BINGO, DAY/NIGHT hiện tắt; dùng icon/shape thay vì trông chờ chữ.
+
+P2 — Thống nhất hệ thống:
+- Một chuẩn nguồn sự thật cho tooltip: dùng cùng công thức gameplay hiển thị cooldown, % hiệu dụng sau trần, và điều kiện sao.
+- Thêm icon hình trạng thái (không lệ thuộc 100% vào chữ tiếng Anh), mỗi icon tooltip 1 câu rất ngắn.
+- Khi đổi dạng, bản preview card phải khớp 3 dạng đã được asset hóa, không dùng hình bất kỳ.
+
+======================================================================
+X. BACKLOG / LỘ TRÌNH ƯU TIÊN ĐỂ KHÔNG TỐN CÔNG VÔ ÍCH
+======================================================================
+PHASE P0 — TÍNH ĐÚNG & ĐỌC ĐƯỢC (bắt buộc trước polish):
+[ ] Sửa tooltip LV vô hiệu, cap số liệu, sao/timer bất khả thi; 7★ merge-only.
+[ ] Chuẩn hóa icon status + màu/shape; 12 cảnh báo boss và timer boss.
+[ ] Hoàn thiện vòng active skill/charge/dạng trên 15 ô, không chồng nhau.
+[ ] FX hitbox khớp: Wall Projector, Toxic Pool, Black Hole, Wyrm Engine, Cryo Reactor.
+[ ] Sửa hình hỗ trợ 8 ô Sanctum và feedback auto skill Cryo/Holy Halo/Chrono.
+
+PHASE P1 — CORE FEEL (tác động xuyên suốt trận):
+[ ] Summon → merge → 3★/5★/7★ → power-up 4 cấp → chest reward.
+[ ] Bộ VFX tấn công chuẩn dùng chung: muzzle, projectile, impacts, elemental states, crit.
+[ ] Commander Reinforce/Rage/Holy Shield; UI hiệu lực/giá sử dụng.
+[ ] Boss 6 cũ + 6 mới: mỗi chiêu có telegraph và blocked/counter state.
+[ ] Settings Reduce Flash, Reduced Particles, mute haptic.
+
+PHASE P2 — SIGNATURE PREMIUM (ưu tiên marketing và khác biệt):
+[ ] Black Hole, Overlord, Hive Queen, Leviathan, Wyrm Engine.
+[ ] Cryo Reactor, Holy Halo, Chrono Throne, Genesis Core.
+[ ] Hero Foundry, Quantum Choir, Fusion Archive, Ember Relay, Prism Thief.
+[ ] Merge King, Copycat, Evolver, Pandora Vault, Blood Circuit, Hex Saboteur.
+
+PHASE P3 — HOÀN THIỆN & GIỮ CHÂN:
+[ ] Toàn bộ 93 visual signatures đạt tính nhất quán và độ rõ ở 2 mức zoom.
+[ ] Âm thanh SFX nhận diện, adaptive audio mix, haptic có kiểm soát.
+[ ] Animation hiếm khi mở chest, khi nâng LV, khi hoàn thành quest, khi mở khóa thẻ.
+[ ] Capture gameplay thật 5–8s mỗi cơ chế cho store page, social video và tutorial.
+[ ] QA trên thiết bị yếu, PvP wave đột tử, CO-OP 70 wave, trạng thái chồng nhiều.
+
+======================================================================
+XI. TIÊU CHUẨN NGHIỆM THU MỖI VFX — ACCEPTANCE CHECKLIST
+======================================================================
+[ ] Chỉ nhìn silhouette và hiệu ứng đã phân biệt được với các ụ cùng loại.
+[ ] Đúng màu, góc high top-down, pivot và kích thước khi vào ô 5×3.
+[ ] Mọi frame căn giữa, không có grid, text, viền magenta rò và shadow giả.
+[ ] Visual hoạt động theo trigger THẬT, không đánh lừa damage, star, range hoặc cooldown.
+[ ] Boss warning nêu được mục tiêu và thời điểm nguy hiểm ít nhất bằng icon/shape.
+[ ] Skill-ready rõ, không gây nhầm với proc tự động.
+[ ] Ở 1× mobile nhìn rõ, ở bàn đông effect không che sao, HP, đường quái.
+[ ] Có phương án low-FX giữ thông tin chiến thuật.
+[ ] Không có infinite flash, duplicate text, particle leak hoặc sfx spam.
+[ ] Animation nhập vào engine không kéo dài logic gameplay.
+[ ] Test với người chơi chưa biết game: nêu đúng 1) ai đang tấn công, 2) mục tiêu bị gì, 3) vì sao một ụ biến đổi, 4) làm gì để phản công boss.
+
+======================================================================
+XII. BRIEF MẪU ĐẶT VẼ / TẠO SPRITE SHEET
+======================================================================
+TÊN ASSET: <unit>_<event>_<tier>_v01
+GÓC NHÌN: high top-down khoảng 82°, sci-fi fantasy chibi, khối rõ, clean outline; không pixel art.
+SỐ FRAME: 4x4 (16) nếu chiêu có 3–4 pha; khác khi phù hợp; đọc trái-phải/trên-dưới.
+PHASE: f1–3 anticipation; f4–6 fire/proc; f7–11 sustain/impact; f12–16 fade. Điều chỉnh theo đúng event timeline.
+BACKGROUND: alpha PNG ưu tiên; nếu workflow cần thì solid #FF00FF chính xác, test colorkey.
+BỐ CỤC: cùng pivot, cùng kích thước mỗi frame, VFX nằm trọn cell, không dòng kẻ, không chữ, không khung, không logo.
+OUTPUT KÈM: duration_ms, frame FPS, blend mode, anchor, bbox, layer, event tag cho code, mẫu preview tốc độ gameplay.
+QA: test ở kích thước on-screen thực, trên điện thoại, 15 ụ hoạt động đồng thời.
+
+======================================================================
+XIII. KẾT LUẬN CUỐI
+======================================================================
+TURRET MERGE có 93 ụ, 12 boss và rất nhiều kỹ năng đủ khác biệt về logic. Muốn hình ảnh tạo cảm giác 'còn muốn ghép tiếp', hãy đầu tư vào sự khác biệt NGAY KHI NHÌN, sự phản hồi ĐÚNG VÀO LÚC TÁC ĐỘNG, và những đỉnh cảm xúc hiếm nhưng lớn. Ưu tiên hệ thống rõ ràng và phản hồi thao tác trước khi làm các vụ nổ hoành tráng.
+
+TÀI LIỆU NÀY CÓ THỂ DÙNG LÀM: art direction brief, danh sách QA thiết kế, yêu cầu artist tạo VFX, kế hoạch animation và backlog cho dev.
+LƯU Ý: đây là đề xuất, không phải xác nhận đã có sprite/engine code. Những thay đổi gameplay cần quyết định riêng và kiểm tra cân bằng trước khi làm art.
