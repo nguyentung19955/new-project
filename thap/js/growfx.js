@@ -144,11 +144,11 @@ VX.duoiDau = function (ctx, T, S, al, R) {
 //  ảnh ChatGPT: evo_bom (huy hiệu bom, ô số trống) · evo_xacbom (xác bom cháy) · fx_evo_xit (dải 16 khung nổ hụt) — docs/demo-hop-tuong/tuvan/evolver/CAN-VE.json
 //  chưa có ảnh → tạm fx_bomhen_hieu (bom đồng hồ có sẵn) / bản tối của nó / fx_bomhen_trung + fx_bui. CHỈ con số là chữ vẽ code (QUY-TAC-HINH mục 3).
 const EVO = {
-  co: {}, // ảnh ChatGPT đã về (đặt true khi file có trong assets — tránh tải thử file chưa có → 404)
+  co: { evo_bom: true, fx_evo_xit: true }, // ảnh ChatGPT đã về (đặt true khi file có trong assets — tránh tải thử file chưa có → 404)
   bom: () => EVO.co.evo_bom && REN.img('evo_bom') ? 'evo_bom' : 'fx_bomhen_hieu',
   xac: () => EVO.co.evo_xacbom && REN.img('evo_xacbom') ? 'evo_xacbom' : null,
   xit: () => EVO.co.fx_evo_xit && REN.img('fx_evo_xit') ? 'fx_evo_xit' : null,
-  so: { evo_bom: [0.02, 0.12, 0.30], fx_bomhen_hieu: [-0.04, 0.06, 0.26] }, // ô số trên ảnh: [dx, dy, cỡ chữ] theo cỡ huy hiệu
+  so: { evo_bom: [0, 0.035, 0.25], fx_bomhen_hieu: [-0.04, 0.06, 0.26] }, // ô số trên ảnh: [dx, dy, cỡ chữ] theo cỡ huy hiệu
 };
 function veEvoBom(ctx, T, S, al, R) {
   const t = VX.t;
@@ -174,7 +174,7 @@ function veEvoBom(ctx, T, S, al, R) {
   const ph = cuoi ? (con * 2) % 1 : con % 1;                     // nhịp "tích": mỗi giây (3 s cuối: mỗi nửa giây)
   const nay = 1 + (cuoi ? 0.12 : 0.05) * Math.pow(Math.max(0, ph - 0.7) / 0.3, 2);
   const rung = cuoi ? Math.sin(t * 38) * 0.12 * (1.2 - con / 3) : 0;
-  const d = S * 0.5 * nay, bx = S * 0.3, by = S * 0.27, ten = EVO.bom(), so = EVO.so[ten] || EVO.so.evo_bom;
+  const d = S * 0.56 * nay, bx = S * 0.31, by = S * 0.27, ten = EVO.bom(), so = EVO.so[ten] || EVO.so.evo_bom;
   ctx.translate(bx, by); ctx.rotate(rung);
   R.anhGiua(ctx, ten, 0, 0, d, 0, al);
   if (cuoi && ph > 0.55) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.35 * (ph - 0.55) / 0.45; R.anhGiua(ctx, R.cham1('#ff5a3c'), 0, 0, d * 1.1); ctx.globalCompositeOperation = 'source-over'; }
