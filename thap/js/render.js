@@ -285,6 +285,15 @@ const REN = {
     if (u > 0) ctx.drawImage(day, 0, 0, day.width * u, day.height, x, y, w * u, h);
   },
   rong() { return this._rong || (this._rong = Object.assign(document.createElement('canvas'), { width: 1, height: 1 })); },
+  // màu thuộc dải LỬA (đỏ–cam–vàng hổ phách)? — hạt than/tia lửa giữ ảnh gốc màu lửa, màu khác thì tô màu (kiểm: tools/thap-kt-mau.js)
+  laLua(mau) {
+    const M = this._laLua || (this._laLua = {}); if (M[mau] != null) return M[mau];
+    const m = /^#([0-9a-f]{6})$/i.exec(mau || ''); if (!m) return (M[mau] = true);
+    const n = parseInt(m[1], 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (mx - mn < 0.12) return (M[mau] = false);
+    let h = mx === r ? ((g - b) / (mx - mn)) % 6 : mx === g ? (b - r) / (mx - mn) + 2 : (r - g) / (mx - mn) + 4; h = (h * 60 + 360) % 360;
+    return (M[mau] = h <= 60 || h >= 340);
+  },
   // chấm sáng mềm theo màu = fx_cham_trang.png (ChatGPT T22) tô màu — không còn gradient vẽ code
   cham1(mau) {
     if (this.cham[mau]) return this.cham[mau];
@@ -1062,14 +1071,14 @@ const REN = {
       if (d._g == null) d._g = goc; else d._g += gocLech(d._g, goc) * Math.min(1, dt * 30); // hướng vẽ mượt (đạn đuổi rẽ cong êm)
       goc = d._g;
       const co = d.co * (1 + z / 140) * sc;
-      const dv2 = typeof FXU !== 'undefined' && ((d.T && FXU.DAN_CHUNG.has(d.img) && FXU.ten(d.T, 'dan')) || (FXU.THAY[d.img] && FXU.co(FXU.THAY[d.img]) && FXU.THAY[d.img]));
+      const dv2 = typeof FXU !== 'undefined' && !d.mau && ((d.T && FXU.DAN_CHUNG.has(d.img) && FXU.ten(d.T, 'dan')) || (FXU.THAY[d.img] && FXU.co(FXU.THAY[d.img]) && FXU.THAY[d.img]));
       if (dv2) { // đạn v2 của ụ (ảnh đã có vệt chuyển động) — neo ở thân đạn, xoay theo hướng bay
         ctx.globalCompositeOperation = 'source-over';
         FXU.veNeo(ctx, dv2, hx, hy, co * 0.85 * ((d.T && FXU.cfg(d.T.id).k) || 2.3), goc, hien);
         ctx.globalAlpha = 1; continue;
       }
       if (d.img !== 'dan_phao') {
-        const mau = MAU_VET[d.img] || '#ffd080', tracer = d.img === 'dan_lien' ? 2.6 : 1.5;
+        const mau = d.mau || MAU_VET[d.img] || '#ffd080', tracer = d.img === 'dan_lien' ? 2.6 : 1.5;
         let L = d.sp * k / 60 * tracer + co * 0.6;
         const tu = Math.hypot(hx - d.sx, hy - d.sy) + co * 0.3; // không kéo vệt ra sau đầu nòng
         L = Math.min(L, tu, 150);
@@ -1078,8 +1087,8 @@ const REN = {
         if (L > 2) { const wv = Math.max(5, co * 0.62), vt = typeof FXU !== 'undefined' && FXU.co('fx_vet_trang') && FXU.mau('fx_vet_trang', mau); ctx.globalAlpha = 0.9 * hien; ctx.drawImage(vt || this.vet(mau), -L + co * 0.18, -wv / 2, L, wv); }
       } else { ctx.save(); ctx.translate(hx, hy); ctx.rotate(goc); }
       ctx.globalAlpha = hien;
-      const im = this.co(d.img, d.co);
-      if (im) { const h = co * im.height / im.width; ctx.drawImage(im, -co / 2, -h / 2, co, h); }
+      const im = d.mau ? this.toMauA(d.img, d.mau, 0.6) : this.co(d.img, d.co); // đạn chung tô màu nguyên tố của ụ (ảnh PNG tô màu — QUY-TAC mục 3)
+      if (im && im.width > 1) { const h = co * im.height / im.width; ctx.drawImage(im, -co / 2, -h / 2, co, h); }
       else if (this.dbg) { ctx.fillStyle = '#ffd060'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, 7); ctx.fill(); } // vetay-ok: debug
       ctx.restore();
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
@@ -1125,7 +1134,7 @@ const REN = {
       const c = p.co * (p.k === 'than' ? 1 : 1 - u * 0.5);
       if (p.k === 'lua' && lua && (p.mau === '#ffb060' || p.mau === '#ffd080')) ctx.drawImage(lua, p.x - c / 2, p.y - c / 2, c, c);
       else if (p.mau === '#e8fbff' && tuyet) ctx.drawImage(tuyet, p.x - c * 1.1, p.y - c * 1.1, c * 2.2, c * 2.2);
-      else if (p.k === 'than' && than) ctx.drawImage(than, p.x - c, p.y - c, c * 2, c * 2);
+      else if (p.k === 'than' && than) { const tm = this.laLua(p.mau) ? than : FXU.mau('fx_than', p.mau); if (tm) ctx.drawImage(tm === than ? than : this.mip(tm, c * 2 * this.s * this.dpr), p.x - c, p.y - c, c * 2, c * 2); } // than KHÔNG phải lửa (băng / nước / tím…) → ảnh fx_than tô màu nguyên tố (trước: luôn than hồng cam)
       else if (v2) { const im = FXU.mau('fx_cham_trang', p.mau); if (im) ctx.drawImage(this.mip(im, c * 2 * this.s * this.dpr), p.x - c, p.y - c, c * 2, c * 2); }
       else ctx.drawImage(this.mip(this.cham1(p.mau), c * 2 * this.s * this.dpr), p.x - c, p.y - c, c * 2, c * 2);
     }

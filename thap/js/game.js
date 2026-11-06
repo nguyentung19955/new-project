@@ -87,6 +87,7 @@ function deckDoiThu() {
   return deckNgauNhien();
 }
 function batDau(che, deck, mv) {
+  if (typeof TVF !== 'undefined' && TVF.xoaHet) TVF.xoaHet();
   G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0;
   G.wave = 0; G.tWave = 0; G.t = 0; G.ketThuc = null; G.dung = false; G.cho = 1.2;
   FX.reset(); VX.reset();
@@ -335,6 +336,7 @@ function noLan(x, y, r, dmg, B, o) {
 function chet(E, B) {
   if (E.chet) return;
   E.chet = true; E.tChet = 0;
+  if (E.trum) huyBaoTrum(E); // trùm chết giữa lúc báo chiêu: dấu báo đi theo trùm
   SND.chet(!!E.trum);
   const pB = B || G.ban[G.duong[E.p].ban] || G.ban[0];
   const m = Math.round(manaGiet(G.wave) * (E.trum ? 12 : E.d.mana));
@@ -472,6 +474,38 @@ function capNhat(dt) {
   for (let i = G.bay.length - 1; i >= 0; i--) { G.bay[i].t += dt; if (G.bay[i].xong || G.bay[i].t > 3) G.bay.splice(i, 1); } // hết khi hoạt ảnh bay (thời gian thực) xong
   // dọn quái chết (sau hoạt ảnh vỡ)
   for (let i = G.quai.length - 1; i >= 0; i--) { const E = G.quai[i]; if (E.chet) { E.tChet += dt; if (E.tChet > 0.25) G.quai.splice(i, 1); } }
+  donNgam();
+}
+// BÁO CHIÊU TRÙM thuộc về trùm/chiêu đã tạo ra nó: trùm chết / lọt / bị huỷ chiêu / hết trận → xoá ngay (tâm ngắm phu_ngam + dấu trumvfx).
+// Trước đây T.st.ngam = 1,4 chỉ về 0 khi chiêu NỔ → trùm chết giữa lúc báo thì dấu đỏ nhấp nháy ở lại trên ụ mãi.
+// Tất định (online): chỉ đọc/ghi trạng thái trận, không Math.random, không phụ thuộc khung hình.
+function huyBaoTrum(E) {
+  if (!E || !E.bao) return;
+  const b = E.bao, B = G.ban[E.ban], B2 = b.ban2 != null ? G.ban[b.ban2] : null;
+  if (B) for (const T of B.t) if (T && b.muc && b.muc.includes(T.uid)) T.st.ngam = 0;
+  if (B2) for (const T of B2.t) if (T && b.muc2 && b.muc2.includes(T.uid)) T.st.ngam = 0;
+  E.bao = null;
+  if (typeof TVF !== 'undefined' && TVF.huy) try { TVF.huy(E, b); } catch (e) { }
+}
+function huyMoiBaoTrum() { // hết trận / về menu / dựng lại trận: không còn báo chiêu nào
+  for (const E of G.quai) if (E && E.trum) huyBaoTrum(E);
+  for (const B of G.ban || []) for (const T of B.t) if (T) T.st.ngam = 0;
+  if (typeof TVF !== 'undefined' && TVF.xoaHet) try { TVF.xoaHet(); } catch (e) { }
+}
+// quét an toàn mỗi nhịp: tâm ngắm chỉ còn khi có chủ — trùm còn sống đang báo chiêu nhắm ụ đó, ụ đang bị Hex (skills7),
+// hoặc Jam của Nhiễu Sóng còn hiệu lực (G.hu 'nhieu', 0,65 s). Mồ côi → về 0 ngay.
+const _NGAM = new Set();
+function donNgam() {
+  _NGAM.clear();
+  for (const E of G.quai) if (E.trum && E.bao) {
+    if (E.chet) { huyBaoTrum(E); continue; }
+    const b = E.bao, B = G.ban[E.ban], B2 = b.ban2 != null ? G.ban[b.ban2] : null;
+    if (B) for (const T of B.t) if (T && b.muc && b.muc.includes(T.uid)) _NGAM.add(T);
+    if (B2) for (const T of B2.t) if (T && b.muc2 && b.muc2.includes(T.uid)) _NGAM.add(T);
+  }
+  for (const o of G.hu) if (o.k === 'nhieu' && o.ds) for (const T of o.ds) _NGAM.add(T);
+  for (const B of G.ban) for (const T of B.t) if (T && T.st.ngam > 0 && !_NGAM.has(T) && !(T.hexT > 0)) T.st.ngam = 0;
+  if (typeof TVF !== 'undefined' && TVF.don) try { TVF.don(); } catch (e) { } // chỉ hiển thị
 }
 
 function capNhatBan(B, dt) {
@@ -585,6 +619,7 @@ function capNhatQuai(dt) {
 }
 function lot(E) {
   E.chet = true; E.tChet = 1;
+  if (E.trum) huyBaoTrum(E); // trùm lọt khỏi bàn: huỷ báo chiêu
   const p = G.duong[E.p], B = G.ban[p.ban];
   FX.sang(0.35, '#ff2030'); FX.lac(8);
   SND.lot();
@@ -759,6 +794,7 @@ function anBangTran() {
 function ketThuc(thang, ly) {
   if (G.ketThuc) return;
   G.ketThuc = { thang, ly, wave: G.wave };
+  huyMoiBaoTrum(); // thắng / thua / bỏ cuộc: bàn còn hiện 0,9 s — không để dấu báo chiêu
   SND.ketThuc(thang); SND.nhac(0);
   setTimeout(() => { anBangTran(); UI.ketQua(G.ketThuc); }, 900);
 }

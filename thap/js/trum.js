@@ -89,6 +89,7 @@ const TRUM_KN = {
     chon(E, B, ds) { const c = tronTrum(ds.filter(T => T.sao >= 2), rngTrum(E)).sort((a, b) => b.sao - a.sao); return c.length ? [c[0]] : null; },
     lam(E, B, muc) {
       for (const T of muc) {
+        if (T.sao < 2) continue; // QA ngâm: 2 Star Leech (PVP đột tử) cùng nhắm 1 ụ 2★ → con thứ 2 hút về 0★ — báo chiêu lúc ≥2★, tung chiêu thì kiểm lại
         const c = B.o[T.o]; G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: E.x, y1: E.y, mau: TRUM_MOI.leech.mau });
         T.sao--; T.sang = 1; E.kho++;
         FX.no('hasao_trung', c.x, c.y, 80, 0.45); TRM.chu(c.x, c.y - 20, '−1★ STOLEN', '#ff4b3e', 14);

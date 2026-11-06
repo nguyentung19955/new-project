@@ -509,13 +509,13 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
       if (dd > o.r) continue;
       if (E.p === o.p) E.keo = clamp((o.s - E.s) * 2.2, -120, 120) * (E.trum ? 0.3 : 1) - E.d.v * (E.trum ? 0.3 : 0.85);
       if (o.acc > 0.25) trung(E, o.dps * 0.25 * 2, { B: o.B, crit: false, im: true, mau: '#ff6ad5' });
-      if (Math.random() < dt * 6) FX.hat1('lua', E.x, E.y, (o.x - E.x) * 2, (o.y - E.y) * 2, 0.4, 7, '#ff5a8a');
+      if (Math.random() < dt * 6) FX.hat1('lua', E.x, E.y, (o.x - E.x) * 2, (o.y - E.y) * 2, 0.4, 7, '#c070ff');
     }
     if (o.acc > 0.25) o.acc = 0;
-    if (Math.random() < dt * 40) { const a = Math.random() * 6.28, r = o.r * rnd(0.6, 1.1); FX.hat1('lua', o.x + Math.cos(a) * r, o.y + Math.sin(a) * r, -Math.cos(a + 0.9) * r * 2.2, -Math.sin(a + 0.9) * r * 2.2, 0.45, 7, pick(['#ff3b6b', '#b04bff', '#ffffff'])); }
+    if (Math.random() < dt * 40) { const a = Math.random() * 6.28, r = o.r * rnd(0.6, 1.1); FX.hat1('lua', o.x + Math.cos(a) * r, o.y + Math.sin(a) * r, -Math.cos(a + 0.9) * r * 2.2, -Math.sin(a + 0.9) * r * 2.2, 0.45, 7, pick(['#9a4bff', '#b04bff', '#ffffff'])); }
     if (o.t >= o.song - 0.02 && !o.no) {
       o.no = true; noLan(o.x, o.y, o.r, o.dmg, o.B, { mau: '#ff6ad5' });
-      FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(8); FX.sang(0.25, '#ff3b6b'); FX.vong1(o.x, o.y, o.r, 4, '#ff5a8a', 0.3, 5); SND.no(1);
+      G.dangBan = o.T; FX.no('laser_trung', o.x, o.y, o.r * 3, 0.5); FX.lac(8); FX.sang(0.25, '#9a4bff'); FX.vong1(o.x, o.y, o.r, 4, '#c070ff', 0.3, 5); // nổ nghiền = ảnh fx_blackhole_trung TÍM của ụ (trước: G.dangBan trống → nổ laser đỏ-hồng chung) SND.no(1);
     }
   },
   ve(ctx, o, R) {
@@ -524,7 +524,7 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
     const hd = R.co('hu_hoden', o.r * 2); // đĩa xoáy ChatGPT (S4): code chỉ xoay + nhịp
     if (hd) {
       ctx.globalAlpha = mo; ctx.save(); ctx.rotate(-o.t * 4.5); const rr = o.r * (1.03 + 0.03 * Math.sin(o.t * 9)); // VFX P0 hitbox: mép đĩa nhìn thấy (ảnh lề ~5%) = bán kính hút/nghiền o.r ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
-      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 * mo; R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2);
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 * mo; { const lo = typeof FXU !== 'undefined' && FXU.co('fx_blackhole_hieu') && REN.img('fx_blackhole_hieu'); if (lo) PX.ve(ctx, lo, 0, 0, r * 2.2, r * 2.2 * lo.height / lo.width, o.t * 2, 0.35 * mo); else R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2); } // lõi xoáy = ảnh TÍM của Black Hole (trước: khung nổ laser đỏ-hồng)
       ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
     }
     // ảnh đĩa xoáy chưa nạp: không vẽ (bỏ lõi đen + tay xoáy vẽ code)

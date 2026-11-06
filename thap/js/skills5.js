@@ -315,6 +315,9 @@ HU.cungSang = { // tia sáng CONG từ lõi sang ụ đích (đầu sáng chạy
 //      để lại vệt cháy trên cả đường 3 s.
 // =====================================================================================================
 const RONG_MAU = [null, { a: '#ff3b1a', b: '#ffb43a', c: '#fff0b0' }, { a: '#1a5cff', b: '#3aa0ff', c: '#bfe8ff' }, { a: '#2a7aff', b: '#9fd8ff', c: '#ffffff' }];
+// VỆT CHÁY / THAN trên đường + quầng DRAGON DIVE: LUÔN màu lửa (than hồng cam/đỏ) ở MỌI dạng — lửa xanh/trắng chỉ là màu NÓN phun
+// (06/11 lỗi iPhone: rồng lửa đỏ bổ nhào để lại vệt XANH DA TRỜI vì vetChay/rongBo lấy RONG_MAU[gd] = bảng màu nón xanh)
+const RONG_THAN = [null, { a: '#ff3b1a', b: '#ffb43a' }, { a: '#ff4a12', b: '#ffc040' }, { a: '#ff5a1a', b: '#ffd870' }];
 SKILLS.ronglua = {
   vai: 'tc', dmg: 10, toc: 5, napMau: '#ff3b1a',
   goc: (T) => sao7r(T, [40, 45, 50, 55, 60, 65, 75]) * Math.PI / 180,
@@ -391,7 +394,7 @@ HU.vetChay = { // vệt cháy trên đường (vòng tròn than hồng mờ, n�
     return false;
   },
   ve(ctx, o, R) {
-    const u = o.t / o.song, a = (u < 0.1 ? u / 0.1 : 1 - Math.max(0, (u - 0.6) / 0.4)) * 0.55, m = RONG_MAU[o.gd || 1];
+    const u = o.t / o.song, a = (u < 0.1 ? u / 0.1 : 1 - Math.max(0, (u - 0.6) / 0.4)) * 0.55, m = RONG_THAN[o.gd || 1];
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
     R.anhGiua(ctx, R.cham1(m.a), o.x, o.y, 40); ctx.globalAlpha = a * 0.6; R.anhGiua(ctx, R.cham1(m.b), o.x, o.y, 20 + 3 * Math.sin(R.t * 9 + o.x));
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
@@ -412,7 +415,7 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
   },
   ve(ctx, o, R) {
     if (o.x == null) return;
-    const u = o.t / o.song, a = u < 0.08 ? u / 0.08 : u > 0.9 ? (1 - u) / 0.1 : 1, gd = gdSao(o.T), m = RONG_MAU[gd];
+    const u = o.t / o.song, a = u < 0.08 ? u / 0.08 : u > 0.9 ? (1 - u) / 0.1 : 1, gd = gdSao(o.T), m = RONG_THAN[gd];
     ctx.save(); ctx.translate(o.x, o.y);
     PX.bong(ctx, 6, 10, 60, 60, 0.35 * a); // bóng đổ = PNG tô đen
     ctx.rotate(o.g);
@@ -420,10 +423,10 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
     // thân rồng = ảnh PNG fx_ronglua_no (đầu rồng phun lửa, ChatGPT) — dạng 2/3 tô lửa xanh; vỗ cánh = nhịp phóng
     // (bỏ cánh/đốt thân/đầu/mắt vẽ bằng lineTo + arc). Chờ ảnh thân rồng bay từ trên xuống: raw_p4_fx_1 ô 'rong_bay'.
     const rd = typeof FXU !== 'undefined' && FXU.co('fx_ronglua_dacbiet') && REN.img('fx_ronglua_dacbiet'); // rồng bổ nhào nhìn từ trên (tờ G4, đầu hướng xuống ảnh → xoay −90°)
-    const ro = rd || (gd > 1 ? PX.mau('fx_ronglua_no', m.b) : REN.img('fx_ronglua_no')), vo = 1 + 0.06 * Math.sin(R.t * 18);
+    const ro = rd || REN.img('fx_ronglua_no'), vo = 1 + 0.06 * Math.sin(R.t * 18);
     ctx.globalCompositeOperation = 'source-over';
     if (ro) PX.ve(ctx, ro, 0, 0, 84 * vo, 84 * vo * ro.height / ro.width, rd ? -Math.PI / 2 : 0, a);
-    const non = anhNon(gd); ctx.globalCompositeOperation = 'lighter';
+    const non = anhNon(1); ctx.globalCompositeOperation = 'lighter'; // rồng bổ nhào thân ĐỎ → lửa phía trước CAM (không lấy nón xanh dạng 2/3)
     if (non) PX.ve(ctx, non, 50, 0, 60, 60 * non.height / non.width, 0, 0.8 * a);
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },

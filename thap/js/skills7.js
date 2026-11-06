@@ -58,7 +58,7 @@ SKILLS.mauhut = {
   ban(G, B, T, E) {
     giat(T, 0.7); const [x, y] = dauNong(T); SND.tia();
     const dmg = dmgU(T);
-    danThang(B, T, E, SK7.anh('mauhut', 'dan', 'dan_tia'), 600, 16, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff4a6a' }); });
+    const dm = danThang(B, T, E, SK7.anh('mauhut', 'dan', 'dan_tia'), 600, 16, (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff4a6a' }); }); if (dm.img === 'dan_tia') dm.mau = '#ff3a5a'; // chưa có ảnh đạn riêng: đạn chung tô ĐỎ MÁU (trước: vệt xanh lam mặc định của dan_tia)
     FX.no('chop_nong', x, y, 18, 0.08, T.goc);
   },
   ghepDB: {
