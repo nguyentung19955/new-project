@@ -280,15 +280,15 @@ async function menu(b, W, H, D, co) {
   await buoc(p, co, 'lui_home', async () => { await bam(p, '[data-act="hm-ve"]'); }, { cho: 500 });
   await buoc(p, co, 'bo_suu_tap', () => bam(p, '[data-act="hm-bst"]'), { cho: 600 });
   await buoc(p, co, 'lui_home2', () => p.evaluate(() => HM.di('hm')));
-  // mất mạng: màn "Connection lost" phủ CẢ cửa sổ (không chỉ cột giữa), nối lại → BACK TO MENU
+  // mất mạng ở MENU: KHÔNG che màn (bảng CONNECTION LOST / BACK ONLINE chỉ thuộc trận ONLINE — QA 2026-11, tools/thap-kt-qa-mang.js);
+  // có mạng lại → không bảng nào dính lại, menu vẫn bấm được
   await buoc(p, co, 'mat_mang', async () => {
     await p.context().setOffline(true); await sleep(700);
-    const m = await p.evaluate(() => { const e = document.getElementById('matmang'); if (!e || e.hidden) return null; const r = e.getBoundingClientRect(); return [r.left, r.top, r.width, r.height, innerWidth, innerHeight]; });
-    if (!m) throw new Error('tắt mạng mà không hiện màn mất mạng');
-    if (m[0] > 0.5 || m[1] > 0.5 || m[2] < m[4] - 1 || m[3] < m[5] - 1) throw new Error('màn mất mạng không phủ kín cửa sổ: ' + m.map(Math.round).join(','));
+    const m = await p.evaluate(() => { const e = document.getElementById('matmang'); return e && !e.hidden ? e.querySelector('.mm-ten').textContent : null; });
+    if (m) throw new Error('tắt mạng ở MENU mà hiện bảng "' + m + '" (bảng này chỉ dành cho trận online)');
   }, { cho: 100 });
   await p.context().setOffline(false);
-  await buoc(p, co, 'noi_lai', async () => { await sleep(500); const st = await p.evaluate(() => { const m = document.getElementById('matmang'); return m ? [m.hidden, TAI.mat, document.getElementById('mm-nut').textContent] : null; }); if (!st || st[0]) throw new Error('màn mất mạng biến mất trước khi bấm nối lại ' + JSON.stringify(st)); await bam(p, '#mm-nut'); /* có mạng lại → nút đã là BACK TO MENU (1 chạm về menu); còn RECONNECT → chạm thêm khi đổi */ await p.waitForFunction(() => document.getElementById('matmang').hidden || /BACK/.test(document.querySelector('#mm-nut').textContent), null, { timeout: 8000 }); if (await p.evaluate(() => !document.getElementById('matmang').hidden)) await bam(p, '#mm-nut'); await p.waitForFunction(() => document.getElementById('matmang').hidden && TAI.daBoot && document.getElementById('tai').hidden, null, { timeout: 30000 }); });
+  await buoc(p, co, 'noi_lai', async () => { await sleep(1500); const st = await p.evaluate(() => { const m = document.getElementById('matmang'); return [m ? m.hidden : true, TAI.mat]; }); if (!st[0] || st[1]) throw new Error('có mạng lại mà bảng mất mạng vẫn dính ' + JSON.stringify(st)); });
   // PLAY thật từ HOME → trận SOLO
   await buoc(p, co, 'play_solo', async () => {
     await p.evaluate(() => { UI.chon = ['canon', 'bang', 'tia', 'set', 'lien']; UI.veBoChon(); HM.che = 'solo'; HM.ve(); });
