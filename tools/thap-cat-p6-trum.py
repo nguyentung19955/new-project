@@ -17,7 +17,9 @@ O = 272  # ô khung dải đi (như trum_<cũ>_8.png)
 LAT_SIDE = {'hive'}
 # tấm fx ChatGPT vẽ CẢ THÂN trùm đang tung chiêu (nhìn về bàn) → cắt thành dải ĐÁNH trum_<id>_atk_16.png
 # cùng tâm/cỡ thân với dải đi (quaianim.js phát dải này trong lúc báo chiêu); không dùng làm hiệu ứng rời fx_trum_<id>
-THAN_FX = {'hive'}  # (jammer fx = hiệu ứng rời, không thân)
+THAN_FX = {'hive', 'twin_core'}  # twin_core fx = thân lõi nứt (dải ĐÁNH); jammer/prism/patcher/leech fx = hiệu ứng rời, không thân
+CO_CHANDUNG = set()  # điền bằng --giu-chandung
+OFX = 288  # ô khung fx rời: cỡ vẽ ≤ ~130 css px × 3 ≈ 390, tấm raw ô 313 px → 288 (không vượt độ nét raw)
 
 
 def khoa(im):
@@ -76,13 +78,19 @@ def lam(id):
     if os.path.exists(p('fx')) and id in THAN_FX:
         danh(id, khoa(Image.open(p('fx'))))
     elif os.path.exists(p('fx')):
-        f = vuong([khoa(x) for x in o_luoi(Image.open(p('fx')), 4, 4)], 192)
-        dai(f, 192).save(os.path.join(ASS, 'fx_trum_%s.png' % id), optimize=True); print('→ fx_trum_%s.png' % id)
-    if os.path.exists(p('portrait')):
+        fx_roi(id)
+
+    if os.path.exists(p('portrait')) and id not in CO_CHANDUNG:
         im = khoa(Image.open(p('portrait'))); im = im.crop(im.getbbox())
         c = max(im.size); q = Image.new('RGBA', (c, c), (0, 0, 0, 0)); q.paste(im, ((c - im.width) // 2, (c - im.height) // 2)); im = q  # vuông, giữa
         im = im.resize((600, 600), Image.LANCZOS) if c > 600 else im  # màn mở trận 200 css px × 3
         im.save(os.path.join(ASS, 'trum_%s_portrait.png' % id), optimize=True); print('→ trum_%s_portrait.png' % id)
+
+
+def fx_roi(id):
+    p = os.path.join(ART, 'raw_p6_%s_fx.png' % id)
+    f = vuong([khoa(x) for x in o_luoi(Image.open(p), 4, 4)], OFX)
+    dai(f, OFX).save(os.path.join(ASS, 'fx_trum_%s.png' % id), optimize=True); print('→ fx_trum_%s.png' % id)
 
 
 def danh(id, sheet):
@@ -127,6 +135,9 @@ def ghi_js():
 
 
 if __name__ == '__main__':
+    if sys.argv[1:2] == ['--chi-fx']:  # chỉ cắt lại hiệu ứng rời (không đụng dải đi đã ráp)
+        for id in sys.argv[2:]: fx_roi(id)
+        ghi_js(); sys.exit()
     ids = sys.argv[1:] or sorted({os.path.basename(f).split('_')[2] if not os.path.basename(f).startswith('raw_p6_twin_core') else 'twin_core'
                                   for f in glob.glob(os.path.join(ART, 'raw_p6_*.png'))})
     for id in ids: lam(id)

@@ -14,12 +14,20 @@ const K8 = { bo: 0.755, bay: 0.82, bay_bang: 0.92, khong_lo: 1.46, tach: 0.85, q
   freezer: 1.06, janus: 1.02, joker_king: 1.07, mad_crown: 1.03, nightmare: 1.02, octopus: 1.09 }; // trùm: id = E.id
 const TRUM8 = new Set(['freezer', 'mad_crown', 'nightmare', 'octopus', 'janus', 'joker_king']);
 // HƯỚNG NHÌN (Pass 5): dải 8 khung NGANG (đi sang phải; trái = lật) / SAU (đi lên) đã có trong assets/ — tools/thap-huong-quai.py tự cập nhật dòng dưới
-const HUONG8 = new Set(['quai_bay_back', 'quai_bay_bang_side', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_que_tach_side', 'quai_tach_back', 'quai_tach_side', 'trum_freezer_back', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_janus_side', 'trum_nightmare_back', 'trum_nightmare_side', 'trum_octopus_side']); // vd 'quai_bo_side', 'trum_octopus_back'
+const HUONG8 = new Set(['quai_bay_back', 'quai_bay_bang_back', 'quai_bay_bang_side', 'quai_bay_side', 'quai_bo_back', 'quai_bo_side', 'quai_khong_lo_back', 'quai_khong_lo_side', 'quai_que_tach_back', 'quai_que_tach_side', 'quai_tach_back', 'quai_tach_side', 'trum_freezer_back', 'trum_freezer_side', 'trum_hive_back', 'trum_hive_side', 'trum_jammer_back', 'trum_jammer_side', 'trum_janus_back', 'trum_janus_side', 'trum_joker_king_back', 'trum_joker_king_side', 'trum_mad_crown_back', 'trum_mad_crown_side', 'trum_nightmare_back', 'trum_nightmare_side', 'trum_octopus_back', 'trum_octopus_side']); // vd 'quai_bo_side', 'trum_octopus_back'
 const HUONG_NGHIENG = 0.139; // dải chưa có: dùng dải TRƯỚC nghiêng ≤ 8° về phía đi
 const HUONG_HOA = 0.12;      // hoà 120 ms khi đổi hướng nhìn ở khúc rẽ
 
 Object.assign(REN, {
   _xac: [],
+  _nut: [], // trùm đang phát dải ĐÁNH tại chỗ chết (TWIN CORE nứt lõi → tách đôi), thời gian thực
+  NUT_S: 0.75,
+  nutTrum(E) {
+    const g = 'trum_' + E.trum + '_atk_16'; if (!this.img(g)) return false;
+    E._pop = 1; // thay cho "xác nổ" thường
+    this._nut.push({ x: E.x, y: E.y, co: E.d.co * (K8[E.d.anh || E.trum] || 1), g, t: 0 });
+    return true;
+  },
   // bóng mềm = ảnh fx_cham_trang tô đen (PNG, không còn gradient vẽ code); chưa nạp → không vẽ bóng
   bong1() { return PX.mau('fx_cham_trang', '#000000'); },
   // tên dải ảnh dùng cho quái: ưu tiên bản 8 khung nếu đã nạp được
@@ -33,6 +41,7 @@ Object.assign(REN, {
   dsHuong() {
     const ds = []; for (const k of HUONG8) ds.push(k + '_8');
     if (typeof TRUM_ATK !== 'undefined') for (const id of TRUM_ATK) ds.push('trum_' + id + '_atk_16'); // dải đánh của trùm mới
+    if (typeof TRUM_FX !== 'undefined') for (const id of TRUM_FX) ds.push('fx_trum_' + id); // hiệu ứng chiêu rời (tải nền cùng ảnh trùm)
     return ds;
   },
   // dải ĐÁNH của trùm (thân tung chiêu, nhìn về BÀN ụ) — chỉ phát trong lúc báo chiêu; chưa có → null
@@ -113,6 +122,13 @@ Object.assign(REN, {
       if (X.w) { ctx.globalAlpha = al * (0.9 - 0.6 * u); this.khung0(ctx, X.w, X.f, X.co * sc); }
       ctx.restore();
       if (X.t - dt <= 0) FX.vong1(X.x, X.y, X.co * 0.2, X.co * 0.9, '#ffffff', 0.25, 3);
+    }
+    for (let i = this._nut.length - 1; i >= 0; i--) { // dải đánh tại chỗ chết: khung theo tiến độ, mờ 25% cuối
+      const N = this._nut[i]; N.t += dt; const u = N.t / this.NUT_S;
+      if (u >= 1) { this._nut.splice(i, 1); continue; }
+      const d = this.coDai(N.g, N.co); if (!d) continue;
+      ctx.save(); ctx.translate(N.x, N.y); ctx.globalAlpha = u < 0.75 ? 1 : 1 - (u - 0.75) / 0.25;
+      this.khung0(ctx, d, Math.min(d.nf - 1, Math.floor(u * d.nf)), N.co * (1 + 0.08 * u)); ctx.restore();
     }
     ctx.globalAlpha = 1;
     const bong = this.bong1(), dong = G.quai.length > 30, M = ctx.getTransform();
