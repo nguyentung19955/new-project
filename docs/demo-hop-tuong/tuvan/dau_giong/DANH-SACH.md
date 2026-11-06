@@ -55,3 +55,5 @@ Fusion Mixer `tron` | Rare | bồn trộn 3 màu nước + cánh khuấy (khác 
 Combo Core `combo` | Epic | lõi phản ứng + thang combo 3 vạch (khác vòng xích Chain Link)
 Mirror Gate `guongcong` | Legendary | gương bầu dục khung vàng (khác lưới xanh Resonance Grid)
 Pandora Vault `pandora` | Legendary | rương báu mở hé + 6 viên màu (khác ngọc tím Merge King)
+
+- rap2.png: trước | sau | ụ bị nhầm | PVP sau trên bàn trận 390×844 DPR3 — Cloner/Chiller (111e068) + 5 đầu d63a049.
