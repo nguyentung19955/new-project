@@ -1,0 +1,132 @@
+[
+{
+"name": "raw_u3_lualien.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Ember Relay': merging relays passes flame charges to same-type neighbours in a + cross; each charge = more damage and crit. Same game style as attached, top-down, facing right, round body, gold trims. Round gold-rimmed bronze heat sink, four outward cruciform copper flare ports, central white-hot orange ember, NO flamethrower barrel. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_lualien.png",
+"ref": "thap/assets/pilot_nemesis.png",
+"prompt": "Make an image. Commander-style portrait for gold turret 'Ember Relay'. Same style and framing as attached. Unique character: a fierce fire-dancer girl with ember-orange hair and a cross-shaped flame halo, holding a small brazier. Gold accents, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_lualien.png",
+"ref": "thap/assets/fx_vughep_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Ember Relay': flame charge passing in a + cross: orange ember orb pops out, four flame sparks shoot out in a cross, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_hopca.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Quantum Choir': gets stronger for every other turret on the board with the same star count. Same game style as attached, top-down, facing right, round body, gold trims. Compact circular gold resonator with concentric white-violet sound rings and seven small equidistant prongs, NO cyan network tiles. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_hopca.png",
+"ref": "thap/assets/pilot_nemesis.png",
+"prompt": "Make an image. Commander-style portrait for gold turret 'Quantum Choir'. Same style and framing as attached. Unique character: a calm choir-singer girl in white-violet robes with glowing sound rings around her, mouth open singing. Gold accents, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_hopca.png",
+"ref": "thap/assets/fx_vughep_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Quantum Choir': harmonic pulse: white-violet concentric sound rings expand from center with seven small star sparks, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_luutru.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Fusion Archive': every merge you make adds a permanent archive charge; archive-on-archive merge fires an area pulse. Same game style as attached, top-down, facing right, round body, gold trims. Low round gold vault with a fan of five physical punched-metal tally tabs and rising white-blue filing sparks, NOT a chest, no keyhole, no tubes. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_luutru.png",
+"ref": "thap/assets/pilot_nemesis.png",
+"prompt": "Make an image. Commander-style portrait for gold turret 'Fusion Archive'. Same style and framing as attached. Unique character: a scholarly librarian girl with round glasses and white-blue glowing tally cards floating around her. Gold accents, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_luutru.png",
+"ref": "thap/assets/fx_vughep_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Fusion Archive': archive pulse: white-blue ring burst with flying punched-metal tally cards spreading out, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_xuonganh.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Hero Foundry': merging two foundries stamps a gold HERO tile: the turret on it fires much faster for 12s. Same game style as attached, top-down, facing right, round body, gold trims. Gold round industrial stamping press with a raised five-point embossed star platen and triangular black/yellow side braces, NO treasure chest, no hologram mirror. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_xuonganh.png",
+"ref": "thap/assets/pilot_nemesis.png",
+"prompt": "Make an image. Commander-style portrait for gold turret 'Hero Foundry'. Same style and framing as attached. Unique character: a cheerful blacksmith girl with a big hammer, soot on cheeks, gold star emblem on her apron. Gold accents, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_xuonganh.png",
+"ref": "thap/assets/fx_vughep_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Hero Foundry': hero tile stamp: a gold star platen slams down, gold star glow ring on the floor tile, sparks burst, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_mauhut.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Blood Circuit': sacrifices any own turret to recycle it. Same game style as attached, top-down, facing right, round body, gold trims. Compact black-red siphon reactor with TWO unequal copper-gold rings and one crimson fluid ampoule pointing forward; no glass blender, no coins. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_nguyenrua.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Hex Saboteur': curses an enemy turret to lose a star. Same game style as attached, top-down, facing right, round body, gold trims. Gold mechanical scarab shell with a pointed red tuning-fork jammer at the front and a small cracked-star shape on the back; no mirror, no padlock. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_thanhdia.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Sanctum': cleanses and shields neighbour turrets. Same game style as attached, top-down, facing right, round body, gold trims. White marble shrine dome with a soft blue holy flame in the center and four small gold bell-shaped wards around it; no shield plate, no cross. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_u3_bienmau.png",
+"ref": "thap/assets/vughep_nong.png",
+"prompt": "Make an image. Turret head 'Prism Thief': cycles red, gold and blue shots. Same game style as attached, top-down, facing right, round body, gold trims. Sleek dark-violet body with a top-hat-like rim, a three-faceted prism lens at the front split red/yellow/blue, and a slim gun barrel; no rainbow arc, no mask. Single head centered, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_mauhut.png",
+"ref": "thap/assets/pilot_guongcong.png",
+"prompt": "Make an image. Character portrait for turret 'Blood Circuit', same style and framing as attached: pale vampire engineer in a black-red coat with copper-gold rings, holding a crimson ampoule. Solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_nguyenrua.png",
+"ref": "thap/assets/pilot_guongcong.png",
+"prompt": "Make an image. Character portrait for turret 'Hex Saboteur', same style and framing as attached: sly hex witch-mechanic in gold and dark red, holding a red tuning-fork wand with a cracked star charm. Solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_thanhdia.png",
+"ref": "thap/assets/pilot_guongcong.png",
+"prompt": "Make an image. Character portrait for turret 'Sanctum', same style and framing as attached: gentle shrine maiden in white and gold robes, a small blue holy flame floating over her palm, bell charms. Solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_pt_bienmau.png",
+"ref": "thap/assets/pilot_guongcong.png",
+"prompt": "Make an image. Character portrait for turret 'Prism Thief', same style and framing as attached: smiling gentleman thief with top hat and monocle, dark violet coat, a prism gem glowing red, gold and blue in his hand. Solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_mauhut.png",
+"ref": "thap/assets/fx_guongcong_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a crimson blood pulse - frames 1-4 red droplets pulled into a center, frames 5-12 a dark-red ring wave expands with copper sparks, frames 13-16 fade out. Each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_nguyenrua.png",
+"ref": "thap/assets/fx_guongcong_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a red hex curse - frames 1-6 a red tuning-fork sound wave flies in, frames 7-12 a gold star cracks and one shard falls off with red glitch sparks, frames 13-16 fade out. Each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_thanhdia.png",
+"ref": "thap/assets/fx_guongcong_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a holy cleanse - frames 1-6 a soft blue flame rises and opens, frames 7-12 a translucent gold-white dome forms with tiny bell sparks, frames 13-16 fade out. Each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_bienmau.png",
+"ref": "thap/assets/fx_guongcong_hieu.png",
+"prompt": "Make an image. 4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: row 1 a red fire bullet, row 2 a gold crit bullet, row 3 a blue frost bullet (each 4 frames, flying right, small), row 4 a three-colour prism burst (4 frames). Each frame centered in its cell, solid magenta #FF00FF background, no text."
+},
+{
+"name": "raw_fx_wallgen_vang.png",
+"ref": "thap/assets/fx_wallgen_hieu.png",
+"prompt": "Make an image. Game VFX sprite 'Golden Wall': a short, thick barrier of solid golden light standing across a road, seen top-down, long side horizontal (about 4:1). Bright gold-white energy core, ornate Egyptian-style gold frame posts at both ends, a few gold sparks. Same art style as attached. Single sprite centered, solid magenta #FF00FF background, no text, no shadow."
+},
+{
+"name": "raw_fx_orbital_thuc.png",
+"ref": "thap/assets/fx_orbital_dacbiet.png",
+"prompt": "Make an image. Game VFX sprite 'Orbital awakened halo': a round ring of pale-cyan and gold light with 6 small satellite nodes evenly spaced, seen top-down, to sit around a turret head. Thin, clean, glowing, empty centre. Same art style as attached. Single sprite centered, solid magenta #FF00FF background, no text."
+}
+]
