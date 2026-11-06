@@ -187,7 +187,9 @@ const KY_NANG_CAP = {
   vughep: { ten: 'Gold +2★', base: 10, buoc: 2, max: 22, dv: '%', dmg: true },      // xác suất ra Merge King vàng
   epxung: { ten: 'Overclock', base: 65, buoc: 2.5, max: 87.5, dv: '%', tien: '+', dmg: true },
   ngoisao: { ten: 'Milestones', base: 100, buoc: 5, max: 130, dv: '%', dmg: true },  // mọi mốc ★ (tốc/sát thương) × giá trị/100
-  soi: { ten: 'Awaken', base: 30, buoc: 3, max: 48, dv: '%', dmg: true },
+  soi: { ten: 'Awaken', base: 30, buoc: 1.5, max: 39, dv: '%', dmg: true },        // xác suất ra Sói THỨC TỈNH (DCDW Werewolf: 30% LV9 → +1.5%/cấp → 39% LV15, trần 50%)
+  orbital: { ten: 'Awaken', base: 23, buoc: 1, max: 29, dv: 's', dmg: true },       // ghép Vệ Tinh → MỌI Vệ Tinh trên bàn thức tỉnh N giây (DCDW Mafdet 23 s)
+  sinhdoi: { ten: '+1★ twin', base: 10, buoc: 1, max: 16, dv: '%', dmg: true },     // Twin Maker: xác suất ụ sinh đôi cao hơn 1★ (DCDW Berit)
   nhanmana: { ten: 'Merge mana', base: 32, buoc: 2, max: 56, dv: '', tien: '+', dmg: true },
   loa: { ten: 'Cooldown', base: 4.5, buoc: 0.25, max: 7.5, dv: 's', tien: '−', dmg: true },
   maychem: { ten: 'Execute', base: 3.75, buoc: 0.15, max: 5.85, dv: '%', dmg: true },

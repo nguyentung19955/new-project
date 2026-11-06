@@ -23,7 +23,7 @@ const SUP_LOAI = { radar: 'toc', chimang: 'crit', lanhgia: 'cham', khuech: 'dmg'
 // giá trị hiệu lực của ụ hỗ trợ (để bảng thông tin tách: gốc 1★ LV1 / phần sao / phần cấp / mốc sao)
 const SUP_GIA = { radar: (T) => SKILLS.radar.them(T), chimang: (T) => SKILLS.chimang.them(T), lanhgia: (T) => SKILLS.lanhgia.cham(T), khuech: (T) => SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T),
   phagiap: (T) => SKILLS.phagiap.k(T), bua: (T) => SKILLS.bua.cd(T), tron: (T) => SKILLS.tron.them(T), nangsao: (T) => SKILLS.nangsao.them(T), hasao: (T) => SKILLS.hasao.k(T),
-  guongcong: (T) => SKILLS.guongcong.khang(T), dongbo: (T) => SKILLS.dongbo.v(T, 1), cauvong: (T) => SKILLS.cauvong.k(T), lophanung: (T) => SKILLS.lophanung.cham(T), tuthan: (T) => SKILLS.tuthan.tile(T) };
+  guongcong: (T) => SKILLS.guongcong.khang(T), dongbo: (T) => SKILLS.dongbo.v(T), cauvong: (T) => SKILLS.cauvong.k(T), lophanung: (T) => SKILLS.lophanung.cham(T), tuthan: (T) => SKILLS.tuthan.tile(T) };
 
 // ký hiệu buff = icon ChatGPT ic_<loại>.png (8 loại đều có ảnh) — thư viện ký hiệu vector vẽ code ĐÃ XOÁ (QUY-TAC-HINH mục 1)
 // tương thích (skills3.js, tuongmoi-ui.js gọi veKyHieu): vẽ icon PNG ic_<k> quanh tâm, bán kính r
@@ -88,7 +88,7 @@ Object.assign(REN, {
     };
     // đích: ô kề theo đúng luật (oHoTro = 4 ô thẳng, 5★ thêm 4 ô chéo); ụ Khiên/Tẩy: các ụ đang có khiên / đang dính hiệu ứng xấu
     let dich;
-    if (SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && typeof HOTRO !== 'undefined') dich = HOTRO.oDich(T).map(o => ({ o, N: B.t[o] && (HOTRO.nhan(T, B.t[o]) || !SKILLS[T.id].chiTC && B.t[o] !== T) ? B.t[o] : null })); // hỗ trợ: đúng hình ô (hotro.js)
+    if (SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && typeof HOTRO !== 'undefined') dich = HOTRO.oDich(T).map(o => ({ o, N: B.t[o] && (HOTRO.nhan(T, B.t[o]) || !SKILLS[T.id].chiTC && B.t[o] !== T) && (!SKILLS[T.id].toanBan || SKILLS[T.id].khop(T, B.t[o])) ? B.t[o] : null })).filter(d => !SKILLS[T.id].toanBan || d.N); // Pháo Đồng Bộ (cả bàn): chỉ ô CÙNG SAO // hỗ trợ: đúng hình ô (hotro.js)
     else if (k === 'khien') dich = B.t.filter(N => N && N !== T && N.khien > 0).map(N => ({ o: N.o, N }));
     else if (k === 'taylo') dich = B.t.filter(N => N && N !== T && (N.st.bang > 0 || N.st.da || N.st.lua > 0 || N.st.kep > 0)).map(N => ({ o: N.o, N }));
     else if (k === 'mana') dich = [];
@@ -143,7 +143,7 @@ function hoTroTT(T) {
   const cu = (sao, lv) => { B.lv[id] = lv; const v = fn(Object.assign({}, T, { sao })); B.lv[id] = lv0; return v; };
   const lv = lv0 || 1, goc = cu(1, 1), saoV = cu(T.sao, 1), lvV = cu(T.sao, lv), he = heSoHT(T), hien = lvV * he;
   const pc = (v) => (id === 'tuthan' ? (v * 100).toFixed(1) : Math.round(v * 100)) + '%';
-  const o = HOTRO.oDich(T), nhan = o.filter(i => HOTRO.nhan(T, B.t[i])).length, max = SKILLS[id].vai === 'ht' && T.ht !== undefined ? null : null;
+  const o = HOTRO.oDich(T), nhan = o.filter(i => HOTRO.nhan(T, B.t[i]) && (!SKILLS[id].toanBan || SKILLS[id].khop(T, B.t[i]))).length, max = SKILLS[id].vai === 'ht' && T.ht !== undefined ? null : null;
   const capNote = o.some(i => B.t[i] && B.t[i].ht && B.t[i].ht.daMax && B.t[i].ht.daMax[k]) ? ' · CAP reached on a neighbour' : '';
   return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: HOTRO.tamChu(T) + ' · affecting ' + nhan + '/' + o.length + ' cells' + capNote,
     tach: 'Base 1★ LV1 +' + pc(goc) + ' · stars +' + pc(saoV - goc) + ' · power-up +' + (lv - 1) + ' +' + pc(lvV - saoV) + (he > 1 ? ' · milestone ×' + he : '') };

@@ -435,37 +435,37 @@
   "id": "dongbo",
   "ten": "Sync Cannon",
   "bac": "vang",
-  "dcdw": "Cosmem",
-  "kyNang": "Support: same-star Attack neighbours deal more damage (capped)",
+  "dcdw": "Dana",
+  "kyNang": "Support: EVERY same-star Attack turret on the board deals more damage; PVP: rival turrets −damage",
   "ten_vi": "Pháo Đồng Bộ",
-  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề CÙNG SAO +sát thương (có trần)"
+  "kyNang_vi": "Hỗ trợ: MỌI ụ Tấn công CÙNG SAO trên cả bàn +sát thương; PVP: ụ đối thủ −sát thương nhẹ"
  },
  {
   "id": "railgun",
   "ten": "Railgun",
   "bac": "vang",
   "dcdw": "Removal Tee",
-  "kyNang": "Bingo: full row +damage, full column +fire rate",
+  "kyNang": "Bingo: a full ROW of Railguns +200% damage, a full COLUMN of Railguns +150% fire rate (stones don't count)",
   "ten_vi": "Railgun",
-  "kyNang_vi": "Bingo: đủ hàng ngang +sát thương, đủ hàng dọc +tốc bắn"
+  "kyNang_vi": "Bingo: đủ HÀNG NGANG toàn Railgun +200% sát thương, đủ CỘT DỌC toàn Railgun +150% tốc bắn (ô đá không tính)"
  },
  {
   "id": "vughep",
   "ten": "Merge King",
   "bac": "vang",
   "dcdw": "Aurora King",
-  "kyNang": "Same-star merge: +1★ (Gold version +2★)",
+  "kyNang": "Same-star merge: +1★ keeping the type; 10%+ come out GOLDEN (+2★) · Merge King + Merge King → Merge King +1★",
   "ten_vi": "Vua Ghép",
-  "kyNang_vi": "Ghép cùng sao: +1 sao (bản vàng +2)"
+  "kyNang_vi": "Ghép cùng sao: +1 sao, giữ loại; 10%+ ra bản VÀNG (+2) · Vua Ghép + Vua Ghép → Vua Ghép +1 sao"
  },
  {
   "id": "sinhdoi",
   "ten": "Twin Maker",
   "bac": "vang",
   "dcdw": "Berit",
-  "kyNang": "On merge: summons an extra same-star turret",
+  "kyNang": "On merge: also summons a random same-star turret (10%: one star higher)",
   "ten_vi": "Máy Sinh Đôi",
-  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ cùng sao"
+  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ ngẫu nhiên cùng sao (10%: cao hơn 1 sao)"
  },
  {
   "id": "hasao",
@@ -490,54 +490,54 @@
   "ten": "Star Cannon",
   "bac": "vang",
   "dcdw": "Darby",
-  "kyNang": "Board ★ total: every 10 → faster; every 50 → more damage",
+  "kyNang": "Live board ★ total: every 10 → faster; every 50 → more damage (drops if stars fall)",
   "ten_vi": "Pháo Ngôi Sao",
-  "kyNang_vi": "Tổng ★ trên bàn: mỗi 10 → bắn nhanh hơn; mỗi 50 → mạnh hơn"
+  "kyNang_vi": "Tổng ★ ĐANG CÓ trên bàn: mỗi 10 → bắn nhanh hơn; mỗi 50 → mạnh hơn (mất nếu tổng sao giảm)"
  },
  {
   "id": "soi",
-  "ten": "Mech Wolf",
+  "ten": "Werewolf",
   "bac": "vang",
   "dcdw": "Werewolf",
-  "kyNang": "Melee wolf that GROWS: Pup → Hunter → Alpha (always crits)",
+  "kyNang": "Melee wolf: each summon/merge is Normal or AWAKENED by chance (30%+); Awakened always crits",
   "ten_vi": "Sói Máy",
-  "kyNang_vi": "Cận chiến, LỚN DẦN: Sói con → Thợ săn → Đầu đàn (luôn chí mạng)"
+  "kyNang_vi": "Sói cận chiến: mỗi lần gọi/ghép ra bản Thường hoặc THỨC TỈNH theo xác suất (30%+); bản thức tỉnh luôn chí mạng"
  },
  {
   "id": "tienhoa",
   "ten": "Evolver",
   "bac": "vang",
   "dcdw": "Moa",
-  "kyNang": "After a while becomes a random turret +1★",
+  "kyNang": "After a while becomes a random turret +1★ (higher stars take longer; 7★ never goes past 7★ — it salvages mana)",
   "ten_vi": "Hộp Tiến Hoá",
-  "kyNang_vi": "Sau một lúc biến thành ụ ngẫu nhiên +1 sao"
+  "kyNang_vi": "Sau một lúc biến thành ụ ngẫu nhiên +1 sao (sao cao chờ lâu hơn; 7★ không lên nữa — hoàn mana)"
  },
  {
   "id": "cauvong",
   "ten": "Rainbow",
   "bac": "vang",
   "dcdw": "Yuna",
-  "kyNang": "Support: paints a rainbow trail; Attack neighbours hit enemies on it harder",
+  "kyNang": "Support: rainbow trail — Co-op/Solo: enemies on it take more damage; PVP: painted on the rival's path, enemies there take less",
   "ten_vi": "Máy Cầu Vồng",
-  "kyNang_vi": "Hỗ trợ: vẽ vệt cầu vồng; ụ Tấn công kề đánh quái trên vệt mạnh hơn"
+  "kyNang_vi": "Hỗ trợ: vệt cầu vồng — Co-op/Solo: quái trên vệt nhận thêm sát thương; PVP: vẽ lên đường đối thủ, quái ở đó trâu hơn"
  },
  {
   "id": "wallgen",
   "ten": "Wall Projector",
   "bac": "vang",
   "dcdw": "Cleopatra",
-  "kyNang": "Raises a wall on the path, then it explodes",
+  "kyNang": "Raises walls that block, then explode; merging it raises a much stronger GOLDEN WALL",
   "ten_vi": "Máy Dựng Tường",
-  "kyNang_vi": "Dựng tường chặn đường rồi nổ"
+  "kyNang_vi": "Dựng tường chặn đường rồi nổ; khi GHÉP dựng TƯỜNG VÀNG mạnh hơn hẳn"
  },
  {
   "id": "orbital",
   "ten": "Orbital",
   "bac": "vang",
   "dcdw": "Mafdet",
-  "kyNang": "Special: on merge, a 20s sky bombardment (no normal shots)",
+  "kyNang": "Special: merging Orbitals AWAKENS every Orbital on the board (23s) — area bomb salvos (no normal shots)",
   "ten_vi": "Vệ Tinh",
-  "kyNang_vi": "Đặc biệt: khi GHÉP gọi bắn phá từ trời 20 s (không bắn thường)"
+  "kyNang_vi": "Đặc biệt: GHÉP Vệ Tinh → MỌI Vệ Tinh trên bàn THỨC TỈNH 23 s, thả loạt bom nổ lan (không bắn thường)"
  },
  {
   "id": "blackhole",
@@ -747,10 +747,10 @@
   "id": "loren",
   "ten": "Scrap Forge",
   "bac": "vang",
-  "dcdw": "Treant / Scrapper",
-  "kyNang": "Special: drag a 1–3★ turret onto it — your best Attack turret gains permanent damage (max +60%)",
+  "dcdw": "Original (Scrap Forge)",
+  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains permanent damage (max +60%). Only feeding counts, not other merges",
   "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Đặc biệt: kéo ụ 1–3★ vào để ăn — ụ Tấn công mạnh nhất +sát thương vĩnh viễn (tối đa +60%)",
+  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương vĩnh viễn (tối đa +60%). Chỉ tính lúc cho ăn, không tính ghép khác",
   "vai": "tc",
   "ho": "star",
   "moi": "TUONG-MOI-20"
@@ -759,10 +759,10 @@
   "id": "guongcong",
   "ten": "Mirror Gate",
   "bac": "vang",
-  "dcdw": "Eve / Mona",
-  "kyNang": "Support: neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill",
+  "dcdw": "Original (Mirror Gate)",
+  "kyNang": "Support (original): neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill",
   "ten_vi": "Cổng Gương",
-  "kyNang_vi": "Hỗ trợ: ụ kề kháng khống chế. PVP phản 1 khống chế / 20 s; Co-op chép 1 hiệu ứng ghép đồng đội; Solo chặn chiêu trùm",
+  "kyNang_vi": "Hỗ trợ (ụ riêng): ụ kề kháng khống chế. PVP phản 1 khống chế / 20 s; Co-op chép 1 hiệu ứng ghép đồng đội; Solo chặn chiêu trùm",
   "vai": "db",
   "ho": "guard",
   "moi": "TUONG-MOI-20"

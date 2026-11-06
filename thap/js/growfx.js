@@ -80,7 +80,7 @@ function tienDo(T) {
   if (s === 1) f = p / (v[0] || 1); else if (s === 2) f = v[0] != null ? (p - v[0]) / ((v[1] != null ? v[1] : 1) - v[0]) : p; else f = 1;
   const r = { s, f: clamp(f, 0, 1) };
   switch (T.id) {
-    case 'orbital': { const n = B ? demCungLoai(B, 'orbital') : 1; if (s === 1) r.f = Math.min(1, n / 2); else if (s === 2) r.f = 1; /* sẵn sàng: GHÉP 1 Vệ Tinh → bắn phá (cung nháy 2 Hz) */ if (s === 3 && B) { r.con = clamp(B.phao / 20, 0, 1); r.conS = B.phao; } break; }
+    case 'orbital': { const n = B ? demCungLoai(B, 'orbital') : 1; if (s === 1) r.f = Math.min(1, n / 2); else if (s === 2) r.f = 1; /* sẵn sàng: GHÉP 1 Vệ Tinh → bắn phá (cung nháy 2 Hz) */ if (s === 3 && T.thucT > 0) { r.con = clamp(T.thucT / (T.thucMax || 23), 0, 1); r.conS = T.thucT; } else if (s === 3 && B) { r.con = clamp(B.phao / 12, 0, 1); r.conS = B.phao; } break; }
     case 'cuongno': if (s === 1) r.f = 0; else if (s === 2) r.f = 0.5; else { const dai = ms(T, 5) ? 7 : 5; r.con = clamp(T.cuongT / dai, 0, 1); r.conS = T.cuongT; } break;
     case 'ngaithoigian': { const q = (T.sao - 1) / 6; r.f = s === 1 ? q / 0.5 : s === 2 ? (q - 0.5) / 0.5 : 1; break; }
     case 'cuuvi': if (s === 3) r.con = (T.duoi || 0) / 9; break;
@@ -386,13 +386,13 @@ HU.gSuong = { duoi: true, ve(ctx, o, R) { const u = o.t / o.song, r = o.r * (0.2
 HU.gBaoLuoi = { ve(ctx, o, R) { if (!GFX.coDOM) return; const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; veSanBang(ctx, o.x, o.y, o.r, (1 - u) * 0.85, u); if (gV(ctx, 'fx_lophanung_dan3', o.x, o.y, o.r * 1.3, u * Math.PI, (1 - u) * 0.8)) { ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return; } ctx.globalAlpha = (1 - u) * 0.35; R.anhGiua(ctx, R.cham1('#dffaff'), o.x, o.y, o.r * 2); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 
 // ---- SÓI MÁY (Warwolf): 1 vuốt cam → 2 vuốt chéo (lao tới) → THỨC TỈNH: 2 nhát chí mạng siêu nhanh, 3 vệt đỏ thẫm, mỗi 4 đòn LƯỚT tới ----
-ATK.soi = ['Single amber claw swipe', 'X-shaped double slash (two hits), head lunges', 'ALPHA: twin fast always-crit slashes, triple crimson claw marks, every 4th hit DASHES to the target'];
+ATK.soi = ['(unused — no Pup stage any more)', 'NORMAL Werewolf: X-shaped double slash (two hits), head lunges', 'AWAKENED Werewolf (chance on summon/merge): twin fast always-crit slashes, triple crimson claw marks, wide frenzy splash, every 4th hit DASHES to the target'];
 P.soi = () => {
   const sk = SKILLS.soi;
   sk.ban = function (G, B, T, E) {
     const s = gdU(T), dmg = dmgU(T), c = tamU(T);
     T.chop = 0.08;
-    const hit = (k, n, mau) => { if (E.chet) return; trung(E, dmg * k, { B }); noLan(E.x, E.y, 22, dmg * 0.4 * k, B, { phu: true }); G.hu.push({ k: 'gVuot', t: 0, song: n === 3 ? 0.26 : 0.22, x: E.x, y: E.y, goc: T.goc, n, mau, lech: Math.random() }); };
+    const hit = (k, n, mau) => { if (E.chet) return; trung(E, dmg * k, { B }); noLan(E.x, E.y, T.thuc ? 32 : 22, dmg * (T.thuc ? 0.6 : 0.4) * k, B, { phu: true }); G.hu.push({ k: 'gVuot', t: 0, song: n === 3 ? 0.26 : 0.22, x: E.x, y: E.y, goc: T.goc, n, mau, lech: Math.random() }); };
     if (s === 1) { T.rv += 300; hit(1, 1, '#ffb43a'); SND.gVuot(1); }
     else if (s === 2) { T.rv += 520; hit(0.5, 2, '#ff6a2a'); treU(T, 0.07, () => hit(0.5, 2, '#ff6a2a')); SND.gVuot(2); }
     else {
@@ -426,7 +426,7 @@ HU.gLuot = { // lướt tới: 3 bóng đầu sói đỏ mờ dọc đường đ
 
 // ---- VỆ TINH (Mafdet): tia lam → tia + vòng ngắm trước khi trúng → GHÉP: mọi Vệ Tinh thức tỉnh, mỗi phát = 3 GIÁO TRỜI có tâm ngắm đỏ (không nổ lan) ----
 // (QA vàng-đỏ: Vệ Tinh là ụ ĐẶC BIỆT không bắn thường — chữ cũ tả đạn từng dạng không có thật; P.orbital.ban bên dưới không bao giờ chạy)
-ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merge two to call the strike', 'BOMBARDMENT (20s after a merge): a sky lance every 0.32s on a random enemy, 30 px blast'];
+ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merging two awakens every Orbital', 'AWAKENED (23s after an Orbital merge, every Orbital on the board): a salvo of 3–7 sky bombs every 1.8s, 34 px blasts'];
 P.orbital = () => {
   const sk = SKILLS.orbital, bg = sk.ban;
   sk.ban = function (G, B, T, E) {

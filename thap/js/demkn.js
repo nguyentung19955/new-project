@@ -16,7 +16,7 @@ const DEMKN = {
     luoicheo(T) { const n = SKILLS.luoicheo.dem(T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/4' }], sang: n >= 4 } : null; },
     railgun(T, B) {
       const b = SKILLS.railgun.bingo(B, T), m = [];
-      if (b.ngang >= 2) m.push({ ic: 'ic_dmg', s: b.ngang + '/5' });
+      if (b.ngang >= 2) m.push({ ic: 'ic_dmg', s: b.ngang + '/5' }); // tiến độ tới hàng ĐẦY Railgun (chỉ hàng đầy mới có thưởng)
       if (b.doc >= 2) m.push({ ic: 'ic_toc', s: b.doc + '/3' });
       return m.length ? { m, sang: b.ngang >= 5 || b.doc >= 3 } : null;
     },
@@ -24,7 +24,7 @@ const DEMKN = {
     loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + SKILLS.loren.MAX }], sang: n >= SKILLS.loren.MAX } : null; },
     leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: '' + n }], sang: n >= 100 } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
-    soi(T) { const n = T.giet || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: '' + n }] } : null; },
+    // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
   },
   ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana'],

@@ -744,9 +744,9 @@ const REN = {
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2 * al;
         this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = al;
       } else E._lanhT = 0;
-      if ((E.yeu > 0 || E.cvT > 0 || E.giapT > 0) && !E.chet) { // dấu suy yếu (Phá Giáp: tím), cầu vồng (sắc màu), giáp đối thủ (vàng)
+      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0) && !E.chet) { // dấu suy yếu (Phá Giáp: tím), cầu vồng (sắc màu), giáp đối thủ (vàng)
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28 * al;
-        const mm = E.cvT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(this.t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
+        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(this.t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = al;
       }
       const dai = this.coDai(ten, co);

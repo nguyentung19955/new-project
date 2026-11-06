@@ -254,6 +254,7 @@ const ONS = {
     const T = B1.t[d.b];
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }
     if (B1.t[d.b] && d.vg != null && B1.t[d.b].id === 'vughep') B1.t[d.b].vang = !!d.vg; // cờ vàng Merge King theo đúng máy bạn kia
+    if (B1.t[d.b] && d.th != null && B1.t[d.b].id === 'soi') B1.t[d.b].thuc = !!d.th; // Sói THỨC TỈNH / thường (quay lúc ghép) theo đúng máy bạn kia
     if (B1.t[d.b] && d.bs != null) B1.t[d.b].banSao = !!d.bs; // bản sao Copycat: −50% + huy hiệu, như máy bạn kia
     if (B1.t[d.b] && d.da != null) B1.t[d.b].st.da = !!d.da; // ô ĐÁ: Merge King lên đá giữ đá · đá + đá ra đá (theo đúng máy bạn kia)
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
@@ -262,6 +263,7 @@ const ONS = {
       const X = B1.t[d.tw.o];
       if (X && d.tw.o === d.a && !(X.id === d.tw.id && X.sao === d.tw.s)) B1.t[d.tw.o] = null; // ô ụ kéo vừa trống bên kia
       if (!B1.t[d.tw.o]) sinhDoi(B1, d.tw.s, d.b, { o: d.tw.o, id: d.tw.id });
+      const X2 = B1.t[d.tw.o]; if (X2 && d.tw.f != null) { if (X2.id === 'vughep') X2.vang = /g/.test(d.tw.f); if (X2.id === 'soi') X2.thuc = /w/.test(d.tw.f); } // dạng quay lúc sinh của ụ sinh đôi
     }
   },
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
@@ -442,7 +444,7 @@ const ONS = {
       if (laToi) { G.ban[0]._tw = null; G.ban[0]._pd = null; G.ban[0]._hf = null; }
       const r = goc.apply(this, arguments);
       if (laToi && r) {
-        const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
+        const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, th: T.thuc ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
         if (db) { v.db = 1; v.sa = self.oTT(G.ban[0].t[ao]); v.sb = self.oTT(G.ban[0].t[bo]); } // trạng thái đúng của CẢ 2 ô sau ghép đặc biệt
         const pd = G.ban[0]._pd; if (pd) v.pd = pd; // Pandora: phép đã quay
         const hf = G.ban[0]._hf; if (hf != null) v.hf = hf; // Hero Foundry: ô anh hùng

@@ -40,7 +40,7 @@ const FXU = {
     const ds = ['fx_vet_trang', 'fx_cham_trang', 'fx_vong_mong', 'fx_than', 'fx_bui'].filter(t => this.co(t));
     ds.push('fx_laser_tia', 'fx_tia_sao', 'tai_day', 'fx_vong_trieu'); // ảnh nền của PX (vẽ hiệu ứng chỉ bằng PNG)
     for (const k of ['cham', 'dong', 'doc', 'chay', 'choang', 'yeu', 'cauvong', 'khienvang']) if (this.co('fx_st_' + k)) ds.push('fx_st_' + k);
-    for (const b of bans) for (const id of b.deck) for (const c of ['dan', 'no', 'trung', 'hieu', 'tia', 'dan2', 'dan3', 'trung3', 'dacbiet']) if (this.co('fx_' + id + '_' + c)) ds.push('fx_' + id + '_' + c);
+    for (const b of bans) for (const id of b.deck) for (const c of ['dan', 'no', 'trung', 'hieu', 'tia', 'dan2', 'dan3', 'trung3', 'dacbiet', 'vang', 'thuc']) if (this.co('fx_' + id + '_' + c)) ds.push('fx_' + id + '_' + c);
     for (const k in this.THAY) if (this.co(this.THAY[k]) && !ds.includes(this.THAY[k])) ds.push(this.THAY[k]);
     return ds;
   },
