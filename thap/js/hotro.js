@@ -24,13 +24,26 @@ const HOTRO = {
   kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
   // TRẦN HIỆU DỤNG khi ụ T là nguồn duy nhất (chữ hiển thị = số thật sau kẹp trần — VFX P0, REVIEW-VFX-93 IX):
   //  nhóm có điều kiện (lo/lanh/vet/amp) chung trần sát thương · khang 35% (cứng, như HOTRO.khang) · cham: đòn trúng kẹp 35% (khiTrung, không nhân bậc)
-  tran(T, k) {
-    const c = this.CAP_BAC[T && T.bac] || 1;
-    if (k === 'khang') return 0.35; // Mirror Gate: HOTRO.khang kẹp cứng 35% (không nhân bậc) — chữ phải theo đúng số này
-    if (k === 'cham') return this.CAP.cham;
-    const g = k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp' ? 'dmg' : k;
-    return this.CAP[g] != null ? this.CAP[g] * c : Infinity;
+  //  CẤP THẺ NÂNG TRẦN (KIEM.md mục IX 'Đã quyết' #2): mỗi cấp thẻ trên cấp đầu nới trần của nguồn này một chút — trải đều tới +18% trần ở LV15 (mọi bậc),
+  //   trần cứng ×1.18 → lên cấp thẻ luôn có ích cả khi ụ đã chạm trần. Reaper Pillar: mỗi bước POWER-UP trong trận +0.5% (điểm) vào trần giết ngay (cứng ≤ +2%).
+  //   online tất định: B.capThe (chuỗi bộ bài) + B.lv (lệnh nâng).
+  CAP_LV: 0.18, PU_CHET: 0.005,
+  capLvK(bac, k) { const n = typeof THE !== 'undefined' ? THE.lvMax - (THE.lvDau[bac] || 1) : 0; return k > 0 && n > 0 ? Math.min(this.CAP_LV, this.CAP_LV * k / n) : 0; }, // k = số cấp thẻ trên cấp đầu
+  capLv(T) {
+    const B = T && G.ban && G.ban[T.ban], r = T && G.rosterMap && G.rosterMap[T.id]; if (!B || !r) return 0;
+    return this.capLvK(r.bac, knCap(B, T.id));
   },
+  capHe(T) { return (this.CAP_BAC[T && T.bac] || 1) * (1 + this.capLv(T)); }, // hệ số trần theo bậc × cấp thẻ
+  puChet(T) { const B = T && G.ban && G.ban[T.ban]; return T && T.id === 'tuthan' ? this.PU_CHET * Math.min(4, knPU(B, 'tuthan')) : 0; },
+  // trần thuần theo bậc + phần nới cấp thẻ cl (0…0.18) — dùng cho hàng CARD LV (chưa vào trận)
+  tranGoc(bac, cl, k) {
+    const l = 1 + (cl || 0);
+    if (k === 'khang') return 0.35 * l; // Mirror Gate: kẹp 35% (không nhân bậc) × cấp thẻ — HOTRO.khang dùng đúng số này
+    if (k === 'cham') return this.CAP.cham * l; // làm chậm khi trúng: 35% × cấp thẻ (không nhân bậc; trùm vẫn 15%)
+    const g = k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp' ? 'dmg' : k;
+    return this.CAP[g] != null ? this.CAP[g] * (this.CAP_BAC[bac] || 1) * l : Infinity;
+  },
+  tran(T, k) { return this.tranGoc(T && T.bac, this.capLv(T), k) + (k === 'chet' ? this.puChet(T) : 0); },
   hd(T, k, v) { return Math.min(v, this.tran(T, k)); },
   laHT: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'ht'),
   // ô tác dụng của ụ hỗ trợ (chỉ số ô) — 4 ô thẳng mặc định, sk.huong(T) cho hình riêng
@@ -73,14 +86,14 @@ const HOTRO = {
     }
     for (const [N, m] of goc) {
       const ht = N.ht = { daMax: {} };
-      let capB = 1; for (const k in m) for (const id in m[k]) capB = Math.max(capB, this.CAP_BAC[m[k][id].T.bac] || 1);
-      ht.capDmg = this.CAP.dmg * capB; // trần sát thương (thường + có điều kiện) theo nguồn bậc cao nhất
+      let capD = this.CAP.dmg; for (const k in m) for (const id in m[k]) capD = Math.max(capD, this.tran(m[k][id].T, 'dmg'));
+      ht.capDmg = capD; // trần sát thương (thường + có điều kiện) theo nguồn có trần cao nhất (bậc × cấp thẻ)
+      ht.capCham = this.CAP.cham; if (m.cham) for (const id in m.cham) ht.capCham = Math.max(ht.capCham, this.tran(m.cham[id].T, 'cham'));
       for (const k in m) {
         const ds = Object.values(m[k]);
         let tong = k === 'cham' || k === 'xuyen' || k === 'soc' || k === 'ngNguong' ? Math.max(...ds.map(d => d.v)) : ds.reduce((a, d) => a + d.v, 0);
-        const capB = Math.max(...ds.map(d => this.CAP_BAC[d.T.bac] || 1)), cap = this.CAP[k] != null ? this.CAP[k] * capB : null;
+        const cap = this.CAP[k] != null || k === 'khang' ? Math.max(...ds.map(d => this.tran(d.T, k))) : null; // trần nguồn cao nhất (bậc × cấp thẻ; Reaper + power-up)
         if (cap != null && tong > cap) { tong = cap; ht.daMax[k] = 1; }
-        if (k === 'khang' && tong > 0.35 * capB) { tong = 0.35 * capB; ht.daMax[k] = 1; }
         if (this.NHOM.includes(k)) {
           if (k === 'cham') N.buf.cham = Math.max(N.buf.cham, tong); else N.buf[k] = (N.buf[k] || 0) + tong;
           const tl = ds.reduce((a, d) => a + d.v, 0) || 1;
@@ -128,7 +141,7 @@ const HOTRO = {
   // sau khi tính chí mạng: chậm khi trúng (trần thường 35% / trùm 15%), giết ngay (ngưỡng máu), choáng khi chí mạng
   khiTrung(T, E, dmg, crit, o) {
     const b = T.buf, h = T.ht || {};
-    if (b.cham > 0 && !E.d.khangCham) { E.chamT = Math.max(E.chamT, 2); E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : this.CAP.cham)); } // quái kháng chậm: không đồng hồ chậm (Ice Blade không coi là 'đang chậm')
+    if (b.cham > 0 && !E.d.khangCham) { E.chamT = Math.max(E.chamT, 2); E.cham = Math.max(E.cham, Math.min(b.cham, E.trum ? this.CHAM_TRUM : (h.capCham || this.CAP.cham))); } // quái kháng chậm: không đồng hồ chậm (Ice Blade không coi là 'đang chậm')
     if (b.chet > 0 && Math.random() < b.chet) {
       if (E.trum) dmg += Math.min(dmg, E.max * 0.01); // trùm: không giết ngay — thêm 1 đòn nhỏ có trần 1% máu tối đa
       else if ((!E.d.to || h.chetTo) && (E.hp - dmg) / E.max < (E.d.to ? 0.15 : (h.ngNguong || 0.25))) { dmg = Math.max(dmg, E.hp + 1); VX.chem(E); }
@@ -140,7 +153,7 @@ const HOTRO = {
   // kháng khống chế (Mirror Gate kề): true = chặn
   khang(B, X) {
     const M = B && X && this.keCo(B, X, 'guongcong'); if (!M) return false;
-    const p = Math.min(0.35, SKILLS.guongcong.khang(M));
+    const p = Math.min(this.tran(M, 'khang'), SKILLS.guongcong.khang(M)); // 35% × cấp thẻ Mirror Gate
     if (Math.random() >= p) return false;
     const c = B.o[X.o]; VX.chanKhien(B, X); FX.chu1(c.x, c.y - 18, 'RESIST', '#bff6ff', 11);
     return true;

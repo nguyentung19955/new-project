@@ -185,6 +185,8 @@ function hsThe(B, id) {
 //  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)
 //  ten: nhãn trang ụ ('Copy 50% → 57%') · dv: '%' | 's' | '' · tien: tiền tố ('+', '−') · ht: ụ hỗ trợ (giá trị này THAY cho "độ mạnh hỗ trợ ×½ % cấp")
 //  dmg: true = vẫn giữ thêm +% sát thương mỗi cấp (THE.pct) · không có mục ở đây = ụ tấn công thuần: chỉ +% sát thương như cũ
+//  pu: bước POWER-UP TRONG TRẬN (B.lv +1…MAX = 4 bước) cho ụ KHÔNG gây sát thương (KIEM.md mục IX 'Đã quyết' #1, kiểu DCDW):
+//      giá trị = giá trị cấp thẻ + pu × số bước — cộng SAU kẹp max của cấp thẻ (power-up luôn có tác dụng), online tất định (B.lv đi theo lệnh nâng)
 const KY_NANG_CAP = {
   saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
@@ -198,16 +200,16 @@ const KY_NANG_CAP = {
   loa: { ten: 'Cooldown', base: 6, buoc: 0.33, max: 9.96, dv: 's', tien: '−', dmg: true },
   maychem: { ten: 'Execute', base: 3.75, buoc: 0.15, max: 5.85, dv: '%', dmg: true },
   mana: { ten: 'Mana', base: 100, buoc: 4, max: 156, dv: '%' },                       // lượng mana sinh ra × giá trị/100
-  bang: { ten: 'Freeze', base: 2, buoc: 0.07, max: 2.98, dv: 's' },
-  doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+' },
-  khien: { ten: 'Recharge', base: 18, buoc: -0.4, max: 14.4, dv: 's' },
-  hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's' },
+  bang: { ten: 'Freeze', base: 2, buoc: 0.07, max: 2.98, dv: 's', pu: 0.15 },
+  doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+', pu: 0.75 },
+  khien: { ten: 'Recharge', base: 18, buoc: -0.4, max: 14.4, dv: 's', pu: -0.5 },
+  hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's', pu: -2 },
   // ụ KHÔNG gây sát thương (VFX P0 — REVIEW-VFX-93 IX): cấp thẻ nâng CHÍNH con số kỹ năng thay cho dòng '+damage' vô tác dụng
-  bomhen: { ten: 'Weaken', base: 10, buoc: 0.25, max: 13.5, dv: '%', tien: '+' },     // quái quanh vụ nổ nhận thêm % sát thương (vào trần suy yếu 25%)
-  tienhoa: { ten: 'Fuse time', base: 100, buoc: -2, max: 88, dv: '%' },               // thời gian đếm ngược × giá trị/100
-  haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's' },             // thời gian rào bất tử (trước mốc sao)
-  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+' },      // +% sát thương mỗi cộng dồn lò (trần +60% / ụ nhận giữ nguyên)
-  khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%' },            // chu kỳ +1★ × giá trị/100
+  bomhen: { ten: 'Weaken', base: 10, buoc: 0.25, max: 13.5, dv: '%', tien: '+', pu: 0.75 },     // quái quanh vụ nổ nhận thêm % sát thương (vào trần suy yếu 25%)
+  tienhoa: { ten: 'Fuse time', base: 100, buoc: -2, max: 88, dv: '%', pu: -3 },               // thời gian đếm ngược × giá trị/100
+  haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's', pu: 0.15 },             // thời gian rào bất tử (trước mốc sao)
+  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+', pu: 0.3 },      // +% sát thương mỗi cộng dồn lò (trần +60% / ụ nhận giữ nguyên)
+  khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%', pu: -3 },            // chu kỳ +1★ × giá trị/100
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
   phagiap: { ten: 'Exposed', base: 22, buoc: 0.6, max: 30.4, dv: '%', tien: '+', ht: 1 },
@@ -219,12 +221,12 @@ const KY_NANG_CAP = {
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
   nangsao: { ten: 'Rate buff', base: 24, buoc: 1.2, max: 34.8, dv: '%', tien: '+', ht: 1 },
   tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg (max 65%)', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
+  thaukinh: { ten: 'Crit dmg', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
   dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
   hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
   cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
   luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 25.99, dv: '%', tien: '+', ht: 1 },
-  guongcong: { ten: 'Resist (max 35%)', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
+  guongcong: { ten: 'Resist', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
   lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
 };
 // FX = VÙNG TRÚNG (REVIEW-VFX-93 X · PHASE P0): phần ảnh THẤY ĐƯỢC chiếm bao nhiêu nửa khung (đo bằng tools/thap-kt-vfx-p0.js trên ảnh thật,
@@ -234,8 +236,10 @@ const VUNG_ANH = { vungdoc: 0.97, p2_blackhole: 0.885, p2_cryo: 0.9, wyrmX: 0.96
 function knGt(e, k) { const v = e.base + e.buoc * Math.max(0, k | 0); return Math.round((e.buoc < 0 ? Math.max(e.max, v) : Math.min(e.max, v)) * 1000) / 1000; }
 // số cấp đã lên của thẻ id trên bàn B (trận: B.capThe — online = mức đã gửi trong chuỗi bộ bài; máy = trung bình); ngoài trận (B rỗng): bộ sưu tập
 function knCap(B, id) { if (B) return (B.capThe && B.capThe[id]) | 0; return typeof THEBAI !== 'undefined' ? THEBAI.the(id).k : 0; }
-// giá trị kỹ năng của thẻ id trên bàn B (null nếu thẻ không có mục kỹ năng theo cấp)
-function knThe(B, id) { const e = KY_NANG_CAP[id]; return e ? knGt(e, knCap(B, id)) : null; }
+// số bước POWER-UP trong trận của loại id trên bàn B (0 ngoài trận / chưa nâng; MAX = 4)
+function knPU(B, id) { return Math.max(0, (((B && B.lv && B.lv[id]) || 1) | 0) - 1); }
+// giá trị kỹ năng của thẻ id trên bàn B: cấp thẻ + bước power-up trong trận (mục có pu) — null nếu thẻ không có mục kỹ năng theo cấp
+function knThe(B, id) { const e = KY_NANG_CAP[id]; if (!e) return null; const v = knGt(e, knCap(B, id)); return e.pu && B ? Math.round((v + e.pu * knPU(B, id)) * 1000) / 1000 : v; }
 // hệ số so với cấp đầu (1 ở cấp đầu)
 function knHe(B, id) { const e = KY_NANG_CAP[id]; return e ? knGt(e, knCap(B, id)) / e.base : 1; }
 // bản sao Copycat: tỉ lệ sức mạnh (0.5 ở cấp đầu) — dùng cấp thẻ COPYCAT của bàn đó

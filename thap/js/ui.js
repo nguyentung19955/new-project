@@ -215,6 +215,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
     if (REN.dsHuong) ds.push(...REN.dsHuong()); // dải hướng nhìn ngang/sau (quaianim.js, Pass 5)
     if (typeof FXU !== 'undefined') ds.push(...FXU.dsAnh(bans)); // hiệu ứng đánh v2 của các ụ trong bộ bài (fxu.js)
+    // tờ VFX P3 (vfxp3.js, 4×4 → p3_<ụ>) của ụ trong bộ bài: nạp + GIẢI MÃ ở màn tải trận → lần nổ / ra chiêu đầu không chép giữa trận
+    if (typeof P3_META !== 'undefined') for (const b of bans) for (const id of b.deck) if (P3_META['p3_' + id] && !ds.includes('p3_' + id)) ds.push('p3_' + id);
     return ds;
   },
 

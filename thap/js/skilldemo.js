@@ -97,7 +97,7 @@ const SD_K = {
   tia: { q: Q.to(6), c: [[0.2, 'Picks the toughest enemy'], [1.0, '+100% damage vs big enemies', { ev: 'hit', cham: 0.6 }]] },
   set: { q: Q.hang(7, 205, 28, 5), lien: 1, c: [[0.2, 'Lightning jumps between enemies'], [1.0, (T, s) => 'Chains to ' + s + (s > 1 ? ' enemies' : ' enemy'), { ev: 'hit', cham: 0.6 }]] },
   maychem: { q: Q.nho(), may: [3.2, 4.4], c: [[0.2, 'Shoots the lead enemy'], [3.0, 'Can instantly kill small enemies', { ev: 'kill', cham: 0.6 }]] },
-  phagiap: { kieu: 'ht', truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Exposes the lead and toughest'], [1.4, (T) => 'Neighbours deal +' + Math.round(Math.min(SKILLS.phagiap.k(T), HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac]) * 100) + '% to exposed', { cham: 0.5 }]] },
+  phagiap: { kieu: 'ht', truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Exposes the lead and toughest'], [1.4, (T) => 'Neighbours deal +' + Math.round(Math.min(SKILLS.phagiap.k(T), HOTRO.tran(T, 'dmg')) * 100) + '% to exposed', { cham: 0.5 }]] },
   bua: { kieu: 'ht', may: [1.6, 3.2, 'ke'], c: [[0.2, 'Boosts neighbours’ crits'], [1.6, 'Crits hit harder and stagger', { cham: 0.6 }]] },
   nam: { o: 2, q: Q.nhom(5, 175, 16, 8), c: [[0.2, 'Melee: only hits enemies nearby'], [1.6, 'Each punch blasts enemies around its target', { ev: 'hit', cham: 0.5 }]] },
   bomhen: { q: Q.hang(4, 170, 34, 8), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Sticks a bomb on an enemy'], [1.2, 'It goes off after 5 seconds'], [5.5, (T) => 'Blast weakens: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken', { cham: 0.6 }]], dai: 9.4 },
@@ -179,7 +179,7 @@ const SD_K = {
   chimang: { may: [2.0, 3.6, 'ke'], c: [[0.2, 'Gives 4 neighbours crit chance'], [2.0, 'Crits deal double damage', { cham: 0.5 }]] },
   radar: { c: [[0.2, 'Speeds up 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
   lanhgia: { c: [[0.2, 'Neighbours’ shots also slow'], [1.6, 'Slow spreads to every target', { cham: 0.5 }]] },
-  khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + Math.round(Math.min(SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T), HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac]) * 100) + '% damage', { cham: 0.4 }]] },
+  khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + Math.round(Math.min(SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T), HOTRO.tran(T, 'dmg')) * 100) + '% damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may execute'], [2.2, 'Low-HP enemies are reaped', { ev: 'kill', cham: 0.6 }]] },
   // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
   // Ember Relay: ghép ở ô 8 → Relay ở ô kề 3 & 13 nhận 1 lửa thật (SKILLS.lualien.ghep); ô 13 đã có 4 lửa → đủ 5 (lõi lửa)
@@ -265,7 +265,7 @@ const SD_MO = {
   tienhoa: (T) => T.sao >= 7 ? 'Max 7★: fizzles — no skill' : 'Evolves into ' + Math.min(7, T.sao + 1) + '★',
   ngoisao: () => 'Every 10★ faster · every 50★ more damage',
   soi: (T) => Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% Awakened: always crits',
-  guongcong: (T) => 'Resist ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · mirror every ' + SKILLS.guongcong.h(T) + 's',
+  guongcong: (T) => 'Resist ' + Math.round(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T)) * 100) + '% · mirror every ' + SKILLS.guongcong.h(T) + 's',
   combo: (T) => 'Each combo: +' + Math.round(SKILLS.combo.c(T) * 100) + '% damage',
   cuuvi: (T) => '9 foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1),
   railgun: () => 'Full row / column of Railguns only',

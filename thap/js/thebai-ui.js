@@ -35,11 +35,12 @@ const TBUI = {
     const e = KY_NANG_CAP[id], kn = e ? this.knChu(e, t) : '', coDmg = !e || (e.dmg && SKILLS[id].dmg);
     const dmgC = (sau) => (e ? 'dmg ' : '') + pc(t.pct * k) + (sau ? ' → ' + pc(t.pctSau * k) : '') + (e ? '' : ' ' + ten);
     let phu, nut, phu2 = '';
-    if (t.max) { phu = (kn || dmgC(false)) + ' · max level'; if (kn && coDmg) phu2 = dmgC(false); nut = '<button class="tb-nut" disabled><b>MAX</b></button>'; }
+    if (t.max) { phu = (kn || dmgC(false)) + ' · max level'; if (kn && coDmg) phu2 = dmgC(false); else if (typeof THATSO !== 'undefined' && THATSO.capThe) phu2 = THATSO.capThe(id, t); nut = '<button class="tb-nut" disabled><b>MAX</b></button>'; }
     else {
       const thieu = t.n < t.can ? 'Need ' + (t.can - t.n) + ' more cop' + (t.can - t.n > 1 ? 'ies' : 'y') : vang < t.vang ? 'Need ' + this.so(t.vang - vang) + ' more gold' : '';
       phu = kn || thieu || dmgC(true);
       if (kn) phu2 = thieu || (coDmg ? dmgC(true) : ''); // ụ kỹ năng: dòng 2 = thiếu bản sao/vàng hoặc +% sát thương
+      if (!phu2 && typeof THATSO !== 'undefined' && THATSO.capThe) phu2 = THATSO.capThe(id, t); // ụ hỗ trợ: trần nới theo cấp thẻ
       nut = '<button class="tb-nut" data-up="tbnang"' + (THEBAI.nangDuoc(t) ? '' : ' disabled') + '><b>LEVEL UP</b><small><img src="assets/ngoc_vang.png" alt="">' + this.so(t.vang) + '</small></button>';
     }
     return '<div class="tb-cap" data-id="' + id + '"><div class="tb-cap-lv"><small>CARD LV</small><b>' + t.lv + '</b><em>/' + THE.lvMax + '</em></div>' +
