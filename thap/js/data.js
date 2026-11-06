@@ -227,6 +227,9 @@ const KY_NANG_CAP = {
   guongcong: { ten: 'Resist (max 35%)', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
   lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
 };
+// FX = VÙNG TRÚNG (REVIEW-VFX-93 X · PHASE P0): phần ảnh THẤY ĐƯỢC chiếm bao nhiêu nửa khung (đo bằng tools/thap-kt-vfx-p0.js trên ảnh thật,
+//  điểm sáng ≥ 60, phân vị 97 tính từ tâm khung) → cỡ vẽ = vùng trúng / tỉ lệ này. Đổi ảnh → kiểm báo lệch → cập nhật số ở đây.
+const VUNG_ANH = { vungdoc: 0.97, p2_blackhole: 0.885, p2_cryo: 0.9, wyrmX: 0.965, wyrmY: 0.63 };
 // giá trị kỹ năng ở k cấp trên cấp đầu (thuần)
 function knGt(e, k) { const v = e.base + e.buoc * Math.max(0, k | 0); return Math.round((e.buoc < 0 ? Math.max(e.max, v) : Math.min(e.max, v)) * 1000) / 1000; }
 // số cấp đã lên của thẻ id trên bàn B (trận: B.capThe — online = mức đã gửi trong chuỗi bộ bài; máy = trung bình); ngoài trận (B rỗng): bộ sưu tập

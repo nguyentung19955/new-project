@@ -40,7 +40,8 @@
   if (SKILLS.radar) {
     const mo = SKILLS.radar.mo;
     SKILLS.radar.odThat = (T) => Math.max(0, HOTRO.hd(T, 'toc', SKILLS.radar.them(T) + 0.25) - HOTRO.hd(T, 'toc', SKILLS.radar.them(T)));
-    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace('OVERDRIVE every 8s', 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s (fire-rate cap ' + pc(HOTRO.tran(T, 'toc')) + '%)') : s; };
+    // thay CẢ cụm 'OVERDRIVE every 8s: +25% for 2s (up to the …)' của skills.js (trước: chỉ thay đầu cụm → 2 câu chồng nhau '+7% … : +25% …')
+    SKILLS.radar.mo = function (T) { const s = mo.apply(this, arguments); return ms(T, 7) ? s.replace(/OVERDRIVE every 8s(: \+\d+% for 2s \([^)]*\))?/, 'OVERDRIVE every 8s: +' + pc(SKILLS.radar.odThat(T)) + '% for 2s (fire-rate cap ' + pc(HOTRO.tran(T, 'toc')) + '%)') : s; };
   }
   // Amplifier: tổng cộng dồn chung trần sát thương
   if (SKILLS.khuech) { const mo = SKILLS.khuech.mo; SKILLS.khuech.mo = function (T) { return mo.apply(this, arguments) + ' · all stacks together max +' + pc(HOTRO.tran(T, 'amp')) + '%'; }; }
@@ -105,7 +106,8 @@
   if (typeof ATK !== 'undefined' && ATK.luoicheo) ATK.luoicheo[2] = 'RESONANCE look: every 3rd shot of each diagonal turret shows a teal echo bolt (visual only, no extra damage)';
 
   // ---------- 5. skill TỰ PHÁT: huy hiệu PNG trên ụ ----------
-  const TU = ['lophanung', 'haoquang', 'ngaithoigian'];
+  // Cryo / Holy Halo / Chrono Throne (chữ ghi điều kiện) + 4 ụ đỏ nạp chung napChuDong (skills5.js: để đầy quá 6 s thì tự dùng khi đáng — mốc 3★ ghi 'auto-fires if left full')
+  const TU = ['lophanung', 'haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'khoisinh', 'ronglua'];
   window.THATSO.TU = TU;
   for (const id of TU) {
     const sk = SKILLS[id]; if (!sk || !sk.capNhat || !sk.chuDong) continue;
@@ -128,5 +130,34 @@
       ctx.globalAlpha = 1;
     };
   }
+  // ---------- 6. thanh soi ụ / bảng thông tin ụ hỗ trợ (buff.js hoTroTT): số 'hiện tại' = số THẬT sau trần (trước: số thô, vd Crit Antenna 7★ +30% trong khi trần 22%) ----------
+  //  + nhãn đúng thứ được buff (Sanctum: sát thương, Mirror Gate: kháng khống chế, Cryo: hào quang làm chậm — trước: 'Shield' / 'Shots slow')
+  const NHAN_HT = { thanhdia: 'Damage', guongcong: 'Control resist', lophanung: 'Aura slow' };
+  const TRAN_TT = (T, id) => id === 'khuech' ? HOTRO.tran(T, 'amp') : (TRAN_HT[id] && id !== 'lophanung') ? HOTRO.tran(T, TRAN_HT[id][0]) : Infinity; // Cryo: số ở đây là % làm chậm hào quang (trần làm chậm riêng, đã kẹp trong SKILLS.lophanung.cham)
+  if (typeof hoTroTT === 'function') {
+    const tt0 = hoTroTT;
+    hoTroTT = function (T) {
+      const h = tt0.apply(this, arguments); if (!h || !T) return h;
+      try {
+        const id = T.id, k = h.k, v = SUP_GIA[id](T), tran = TRAN_TT(T, id), ten = NHAN_HT[id] || BUFF[k].ten, pcs = (x) => (id === 'tuthan' ? (x * 100).toFixed(1) : Math.round(x * 100)) + '%';
+        const hien = Math.min(v, tran);
+        h.dong = ten + ' +' + pcs(hien) + ' (current)';
+        if (v > tran + 1e-9) h.tach += ' · capped at ' + pcs(tran);
+        h.that = hien; // cho kiểm
+      } catch (e) { }
+      return h;
+    };
+    window.THATSO.NHAN_HT = NHAN_HT;
+  }
+
+  // ---------- 7. POWER-UP trong trận (B.lv +1…MAX) chỉ nhân SÁT THƯƠNG / độ mạnh hỗ trợ: ụ không sát thương + kỹ năng không đọc B.lv → nâng không đổi gì ----------
+  //  Trang ụ (Turret File) không còn nói '+25% base damage' với các ụ này. (Có cho power-up tác dụng thật hay không: docs/demo-hop-tuong/tuvan/muc-ix/KIEM.md 'Cần bạn quyết')
+  const PU_KHONG = ['bang', 'doc', 'bomhen', 'khien', 'hopbi', 'tuthan', 'tienhoa', 'haoquang', 'loren', 'khoisinh'];
+  window.THATSO.PU_KHONG = PU_KHONG;
+  window.THATSO.chuPU = (id) => PU_KHONG.includes(id)
+    ? 'Values at your card level, before buffs. In-battle power-ups add base damage — this turret deals none, so they do not change it. Tap a row to test it.'
+    : (SKILLS[id] && !SKILLS[id].dmg) ? 'Values at your card level, before power-ups and buffs. In-battle power-ups make its skill stronger (+1 → MAX), not damage. Tap a row to test it.'
+    : null;
+
   if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['vfxp0_tudong', 'ic_phat']) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } } // giữ + giải mã sẵn (không giải mã giữa trận)
 })();

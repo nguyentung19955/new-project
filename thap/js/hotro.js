@@ -23,10 +23,10 @@ const HOTRO = {
   // cấp thẻ: giá trị buff theo bảng THE.kyNang (hỗ trợ) — thẻ chưa có mục: +½ % sát thương mỗi cấp như cũ
   kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
   // TRẦN HIỆU DỤNG khi ụ T là nguồn duy nhất (chữ hiển thị = số thật sau kẹp trần — VFX P0, REVIEW-VFX-93 IX):
-  //  nhóm có điều kiện (lo/lanh/vet/amp) chung trần sát thương · khang 35% × bậc · cham: đòn trúng kẹp 35% (khiTrung, không nhân bậc)
+  //  nhóm có điều kiện (lo/lanh/vet/amp) chung trần sát thương · khang 35% (cứng, như HOTRO.khang) · cham: đòn trúng kẹp 35% (khiTrung, không nhân bậc)
   tran(T, k) {
     const c = this.CAP_BAC[T && T.bac] || 1;
-    if (k === 'khang') return 0.35 * c;
+    if (k === 'khang') return 0.35; // Mirror Gate: HOTRO.khang kẹp cứng 35% (không nhân bậc) — chữ phải theo đúng số này
     if (k === 'cham') return this.CAP.cham;
     const g = k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp' ? 'dmg' : k;
     return this.CAP[g] != null ? this.CAP[g] * c : Infinity;

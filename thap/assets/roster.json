@@ -325,7 +325,7 @@
  },
  {
   "id": "kepha",
-  "ten": "Clamp",
+  "ten": "Jammer",
   "bac": "tim",
   "dcdw": "Myrina",
   "kyNang": "On merge: PVP slows rival turrets; Co-op speeds allies",
@@ -748,10 +748,10 @@
   "ten": "Scrap Forge",
   "bac": "vang",
   "dcdw": "Original (Scrap Forge)",
-  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains permanent damage (max +60%). Only feeding counts, not other merges",
+  "kyNang": "Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (max +60%). Only feeding counts, not other merges",
   "ten_vi": "Lò Rèn Phế Liệu",
-  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương vĩnh viễn (tối đa +60%). Chỉ tính lúc cho ăn, không tính ghép khác",
-  "vai": "tc",
+  "kyNang_vi": "Đặc biệt (ụ riêng): cho ĂN ụ 1–3★ — ụ Tấn công mạnh nhất +sát thương khi Lò còn trên bàn (tối đa +60%). Chỉ tính lúc cho ăn, không tính ghép khác",
+  "vai": "db",
   "ho": "star",
   "moi": "TUONG-MOI-20"
  },
@@ -763,7 +763,7 @@
   "kyNang": "Support (original): neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill",
   "ten_vi": "Cổng Gương",
   "kyNang_vi": "Hỗ trợ (ụ riêng): ụ kề kháng khống chế. PVP phản 1 khống chế / 20 s; Co-op chép 1 hiệu ứng ghép đồng đội; Solo chặn chiêu trùm",
-  "vai": "db",
+  "vai": "ht",
   "ho": "guard",
   "moi": "TUONG-MOI-20"
  },

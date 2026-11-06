@@ -1,4 +1,5 @@
-// TURRET MERGE — kiểm VFX P0 · SỐ THẬT & ĐỌC ĐƯỢC (docs/demo-hop-tuong/tuvan/vfx/REVIEW-VFX-93.txt mục IX/X; thap/js/thatso.js)
+// TURRET MERGE — kiểm VFX P0 · SỐ THẬT & ĐỌC ĐƯỢC (docs/demo-hop-tuong/tuvan/vfx/REVIEW-VFX-93.txt + REVIEW-VFX-93-v2-ANIM.txt mục IX/X; thap/js/thatso.js; bảng: docs/demo-hop-tuong/tuvan/muc-ix/KIEM.md)
+//  · v2: Radar 7★ một câu · Mirror Gate trần 35% · thanh soi ụ hỗ trợ sau trần · power-up vô tác dụng · huy hiệu tự phát 7 ụ · FX = vùng trúng (đo ảnh) · roster đồng bộ vai
 //  · mọi ụ, 1–7★, cấp thẻ đầu / cấp 15: chữ kỹ năng không lỗi, không NaN/undefined
 //  · ụ hỗ trợ: số trong SUP.chu + mô tả = số THẬT sau trần (HOTRO.hd), không còn số thô vượt trần
 //  · hàng CARD LV: ụ không gây sát thương KHÔNG có dòng '+damage' — có dòng kỹ năng chính (KY_NANG_CAP); 5 ụ mới đổi số thật theo cấp thẻ
@@ -147,6 +148,133 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   ok(r.n === 1 && r.g != null && r.nap === 0, 'Cryo Reactor tự phát → đánh dấu tự phát (huy hiệu PNG góc trên-trái)', JSON.stringify(r));
   r = await p.evaluate(() => { const B = G.ban[0], T = B.t[7]; T.nap = 1; const n0 = T.tuPhatN; SKILLS.lophanung.chuDong(G, B, T); return T.tuPhatN === n0; });
   ok(r, 'chạm tay (chuDong ngoài capNhat) KHÔNG bật huy hiệu tự phát');
+
+  // ===================== REVIEW-VFX-93-v2 mục IX / X (docs/demo-hop-tuong/tuvan/muc-ix/KIEM.md) =====================
+  // 8. Radar 7★: một câu OVERDRIVE (không chồng 2 câu) · Mirror Gate: số kháng = trần thật 35% của HOTRO.khang
+  r = await p.evaluate(() => {
+    const B = G.ban[0], S = (id, s) => { for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, s, 7)); B.t[7] = T; return T; };
+    const ra = SKILLS.radar.mo(S('radar', 7)), loi = [];
+    if ((ra.match(/OVERDRIVE/g) || []).length !== 1 || /\+25% for 2s/.test(ra)) loi.push('Radar 7★: ' + ra);
+    if (HOTRO.tran(S('guongcong', 1), 'khang') !== 0.35) loi.push('HOTRO.tran khang ≠ 0.35');
+    for (let s = 1; s <= 7; s++) { const T = S('guongcong', s), that = Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '%'; if (!SKILLS.guongcong.mo(T).includes('control ' + that) || !SUP.guongcong.chu(T).startsWith(that)) loi.push('Mirror Gate ' + s + '★ không ghi ' + that); }
+    return loi;
+  });
+  ok(!r.length, 'Radar 7★ một câu OVERDRIVE thật · Mirror Gate ghi đúng trần kháng 35% (code HOTRO.khang)', r.join(' ; '));
+
+  // 9. thanh soi ụ / bảng thông tin (buff.js hoTroTT): số 'hiện tại' ≤ trần thật, nhãn đúng thứ được buff
+  r = await p.evaluate(() => {
+    const B = G.ban[0], loi = []; let kep = 0;
+    for (const id in SUP_GIA) {
+      if (!SKILLS[id] || !G.rosterMap[id]) continue;
+      for (let s = 1; s <= 7; s++) {
+        for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, s, 7)); B.t[7] = T;
+        const h = hoTroTT(T), so = +(/\+([\d.]+)%/.exec(h.dong) || [])[1], tran = id === 'khuech' ? HOTRO.tran(T, 'amp') : (THATSO.TRAN_HT[id] && id !== 'lophanung') ? HOTRO.tran(T, THATSO.TRAN_HT[id][0]) : Infinity;
+        if (!(so <= tran * 100 + 0.51)) loi.push(id + ' ' + s + '★ "' + h.dong + '" > trần ' + Math.round(tran * 100) + '%');
+        if (SUP_GIA[id](T) > tran + 1e-9) { kep++; if (!/capped at/.test(h.tach)) loi.push(id + ' ' + s + '★ thiếu "capped at"'); }
+      }
+    }
+    for (const [id, ten] of [['thanhdia', 'Damage'], ['guongcong', 'Control resist'], ['lophanung', 'Aura slow']]) { for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 5, 7)); B.t[7] = T; if (!hoTroTT(T).dong.startsWith(ten + ' +')) loi.push(id + ' nhãn: ' + hoTroTT(T).dong); }
+    return { loi, kep };
+  });
+  ok(!r.loi.length && r.kep > 10, 'thanh soi ụ hỗ trợ: số hiện tại = số thật sau trần (' + r.kep + ' ca kẹp ghi "capped at") · nhãn Sanctum/Mirror Gate/Cryo đúng', r.loi.slice(0, 10).join(' ; '));
+
+  // 10. POWER-UP trong trận: ụ mà nâng không đổi gì (không sát thương, kỹ năng không đọc B.lv) = đúng danh sách THATSO.PU_KHONG; trang ụ không bán '+25% base damage' cho các ụ đó
+  r = await p.evaluate(() => {
+    const B = G.ban[0], khong = [];
+    for (const id of Object.keys(SKILLS)) {
+      const sk = SKILLS[id]; if (!G.rosterMap[id] || sk.dmg) continue;
+      const anh = [];
+      for (const lv of [1, 5]) {
+        B.lv[id] = lv; for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 4, 7)); B.t[7] = T; try { mocBuf(B); } catch (e) { }
+        let s = ''; try { s = (sk.mo ? sk.mo(T) : '') + '|' + (typeof SUP !== 'undefined' && SUP[id] ? SUP[id].chu(T) : '') + '|' + (SUP_GIA[id] ? SUP_GIA[id](T) : ''); } catch (e) { }
+        for (const k of Object.keys(sk)) if (typeof sk[k] === 'function' && sk[k].length === 1 && !/^(mo|sinh|ve|veThem|sangDau)$/.test(k)) { try { const v = sk[k](T); if (typeof v === 'number') s += '|' + k + Math.round(v * 1e5); } catch (e) { } }
+        anh.push(s);
+      }
+      B.lv[id] = 1;
+      if (anh[0] === anh[1]) khong.push(id);
+    }
+    const ds = THATSO.PU_KHONG.slice().sort().join(','), that = khong.sort().join(',');
+    const chu = THATSO.PU_KHONG.map(id => THATSO.chuPU(id)).filter(c => !c || /\+25%/.test(c));
+    return { ok: ds === that && !chu.length && !/\+25%/.test(THATSO.chuPU('radar') || ''), ds, that };
+  });
+  ok(r.ok, 'POWER-UP vô tác dụng: danh sách = đo thật (' + r.that + ') · trang ụ không ghi "+25% base damage" cho ụ không sát thương', JSON.stringify(r));
+
+  // 11. skill TỰ PHÁT bật huy hiệu cho cả Holy Halo, Chrono Throne và 4 ụ đỏ nạp chung (Hive Queen, Leviathan, Genesis, Wyrm)
+  r = await p.evaluate(() => {
+    const B = G.ban[0], loi = [];
+    for (const id of ['haoquang', 'ngaithoigian', 'chuato', 'leviathan', 'khoisinh', 'ronglua']) {
+      if (!THATSO.TU.includes(id) || !/_tuPhat/.test(SKILLS[id].capNhat.toString())) { loi.push(id + ' không trong THATSO.TU'); continue; }
+      if (id === 'chuato') continue; // cần quái thật trên đường (bầy lao vào chỗ đông) — đã kiểm móc ở trên
+      for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, 5, 7)); B.t[7] = T;
+      const sk = SKILLS[id], ai = sk.aiNen; sk.aiNen = () => true;
+      T.nap = 1; T.napDay = 9; if (id === 'chuato') T.bay = [1, 2, 3, 4, 5];
+      try { sk.capNhat(G, B, T, 0.05); } catch (e) { loi.push(id + ' lỗi ' + e.message); }
+      sk.aiNen = ai;
+      if (!(T.tuPhatN >= 1)) loi.push(id + ' tự phát không bật huy hiệu');
+      const n0 = T.tuPhatN || 0; T.nap = 1; try { sk.chuDong(G, B, T); } catch (e) { } if ((T.tuPhatN || 0) !== n0) loi.push(id + ' chạm tay bật huy hiệu');
+    }
+    return loi;
+  });
+  ok(!r.length, 'skill TỰ PHÁT → huy hiệu: Holy Halo, Chrono Throne, Hive Queen, Leviathan, Genesis, Wyrm (chạm tay thì không)', r.join(' ; '));
+
+  // 12. FX = VÙNG TRÚNG: đo ảnh THẬT (điểm sáng ≥ 60, phân vị 97 từ tâm khung) × cỡ code vẽ ↔ bán kính/nón trúng
+  r = await p.evaluate(async () => {
+    const loi = [], ghi = [];
+    const nap = (ten) => new Promise((ok) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = (typeof anhUrl === 'function' ? anhUrl(ten) : 'assets/' + ten + '.png'); });
+    const doc = async (ten, f0, f1, nk) => { // trả về [bán kính 97% / nửa khung, x99 / rộng khung, bề ngang ở 70% / cao khung, nửa bề ngang theo CỘT (≥ 3 điểm sáng) / nửa khung] trung bình các khung f0..f1
+      const im = await nap(ten); if (!im) return null; const n = nk || Math.max(1, Math.round(im.width / im.height)), fw = im.width / n, H = im.height;
+      const c = document.createElement('canvas'); c.width = Math.ceil(fw); c.height = H; const x = c.getContext('2d', { willReadFrequently: true }); const kq = [];
+      for (let f = f0; f <= Math.min(f1, n - 1); f++) {
+        x.clearRect(0, 0, c.width, H); x.drawImage(im, f * fw, 0, fw, H, 0, 0, fw, H); const d = x.getImageData(0, 0, c.width, H).data, R = [], X = [], P = [];
+        for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < c.width; xx++) { const i = (yy * c.width + xx) * 4; if (Math.max(d[i], d[i + 1], d[i + 2]) * d[i + 3] / 255 > 60) { R.push(Math.hypot(xx - fw / 2, yy - H / 2) / (fw / 2)); X.push(xx / fw); P.push([xx / fw, yy / H]); } }
+        if (!R.length) continue; const cot = new Map(); for (const v of X) { const k = Math.floor(v * fw); cot.set(k, (cot.get(k) || 0) + 1); } const ck = [...cot].filter(e => e[1] >= 3).map(e => e[0]);
+        const nua = ((fw / 2 - Math.min(...ck)) + (Math.max(...ck) + 1 - fw / 2)) / fw; R.sort((a, b) => a - b); X.sort((a, b) => a - b);
+        const xm = X[Math.floor(X.length * 0.99)], ys = P.filter(q => Math.abs(q[0] - 0.7 * xm) < 0.04).map(q => q[1]).sort((a, b) => a - b);
+        kq.push([R[Math.floor(R.length * 0.97)], xm, ys.length > 5 ? ys[Math.floor(ys.length * 0.98)] - ys[Math.floor(ys.length * 0.02)] : 0, nua]);
+      }
+      return [0, 1, 2, 3].map(j => kq.reduce((s, q) => s + q[j], 0) / kq.length);
+    };
+    const gan = (a, b, tol, ten) => { ghi.push(ten + ' ' + a.toFixed(1) + '/' + b.toFixed(1)); if (!(Math.abs(a - b) <= tol * b)) loi.push(ten + ': thấy ' + a.toFixed(1) + ' px ↔ trúng ' + b.toFixed(1) + ' px'); };
+    const B = G.ban[0], ctx = document.createElement('canvas').getContext('2d');
+    // Black Hole (tờ P2 16 khung) — bắt cỡ vẽ của REN.khungMuot
+    const km = REN.khungMuot; let co = 0; REN.khungMuot = function (c, ten, f, x, y, w) { co = w; return true; };
+    const bh = await doc('p2_blackhole', 0, 15), cr = await doc('p2_cryo', 8, 11);
+    await new Promise(ok => { REN.img('p2_blackhole'); REN.img('p2_cryo'); setTimeout(ok, 300); });
+    for (let i = 0; i < 40 && !(REN.img('p2_blackhole') && REN.img('p2_cryo')); i++) await new Promise(ok => setTimeout(ok, 100));
+    if (bh && P2.co('p2_blackhole')) { co = 0; HU.hoden.ve(ctx, { t: 1.5, song: 3, x: 100, y: 100, r: 80 }, REN); gan(co / 2 * bh[0], 80, 0.06, 'Black Hole mép xoáy'); } else loi.push('chưa nạp p2_blackhole');
+    if (cr && P2.co('p2_cryo')) { co = 0; const was = GFX.coDOM; GFX.coDOM = true; HU.gBaoLuoi.ve(ctx, { t: 0.5, song: 1.1, x: 100, y: 100, r: 200 }, REN); GFX.coDOM = was; gan(co / 2 * cr[0], 200, 0.06, 'Cryo FREEZE băng lan'); } else loi.push('chưa nạp p2_cryo');
+    REN.khungMuot = km;
+    // Toxic Pool: ảnh vũng (bầu dục) — trục dài DỌC đường, mép = r + 8
+    const vd = await doc('fx_vungdoc_hieu', 0, 0), ag = REN.anhGiua; let g = null;
+    REN.anhGiua = function (c, im, x, y, w, goc) { g = { w, goc }; return true; };
+    const p0 = G.duong[0], [px, py, pg] = viTri(p0, p0.len * 0.3);
+    HU.may.ve(ctx, { t: 1, song: 5, x: px, y: py, r: 44, goc: pg, _T: { id: 'vungdoc' }, T: undefined }, REN);
+    REN.anhGiua = ag;
+    if (vd && g) { gan(g.w / 2 * vd[3], 52, 0.06, 'Toxic Pool mép dọc đường'); if (Math.abs((g.goc || 0) - pg) > 1e-6) loi.push('Toxic Pool không xoay theo đường'); } else loi.push('Toxic Pool: không bắt được ảnh vũng');
+    // Wyrm Engine 1★: dải fx_wyrm_lua — mũi lửa = tầm, bề ngang lửa ở 70% = bề ngang nón trúng ở đó
+    const wy = await doc('fx_wyrm_lua', 4, 11, 16); // khung lặp lúc phun đều (HU.nonLua: 4 + …% 8)
+    for (let i = 0; i < 15; i++) B.t[i] = null; const W = sinhU(taoU(B, 'ronglua', 1, 7)); B.t[7] = W; W.phun = 0.3; W.goc = 0;
+    const sk = SIG.k; let sw = null; SIG.k = function (c, ten, f, x, y, w, o) { sw = { x, y, w, h: o.h, ax: o.ax }; return true; };
+    for (let i = 0; i < 40 && !REN.img('fx_wyrm_lua'); i++) await new Promise(ok => setTimeout(ok, 100));
+    HU.nonLua.ve(ctx, { T: W }, REN); SIG.k = sk;
+    if (wy && sw) {
+      const c0 = tamU(W), lech = Math.hypot(sw.x - c0.x, sw.y - c0.y), mui = lech + sw.w * (wy[1] - sw.ax), L = SKILLS.ronglua.tam(W);
+      gan(mui, L, 0.06, 'Wyrm mũi lửa');
+      const d7 = lech + sw.w * (0.7 * wy[1] - sw.ax), rong = 2 * d7 * Math.tan(SKILLS.ronglua.goc(W) / 2 + 0.08);
+      gan(sw.h * wy[2], rong, 0.12, 'Wyrm bề ngang lửa');
+    } else loi.push('Wyrm: không bắt được dải lửa');
+    // số đo ↔ hằng VUNG_ANH (đổi ảnh thì báo)
+    const ss = [['p2_blackhole', bh && bh[0]], ['p2_cryo', cr && cr[0]], ['vungdoc', vd && vd[3]], ['wyrmX', wy && wy[1]], ['wyrmY', wy && wy[2]]];
+    for (const [k, v] of ss) if (v && Math.abs(VUNG_ANH[k] - v) > 0.04) loi.push('VUNG_ANH.' + k + ' = ' + VUNG_ANH[k] + ' nhưng ảnh đo ' + v.toFixed(3));
+    return { loi, ghi };
+  });
+  ok(!r.loi.length, 'FX = vùng trúng: Black Hole, Cryo FREEZE, Toxic Pool, Wyrm Engine (đo ảnh thật) · ' + r.ghi.join(' · '), r.loi.join(' ; '));
+
+  // 13. roster.json (nguồn dữ liệu chính) đồng bộ vai trò code; tên Jammer
+  r = await p.evaluate(() => { const loi = []; for (const id in G.rosterMap) { const v = G.rosterMap[id].vai, sk = SKILLS[id]; if (sk && v && v !== sk.vai) loi.push(id + ' roster ' + v + ' ≠ code ' + sk.vai); } if (G.rosterMap.kepha && G.rosterMap.kepha.ten !== 'Jammer') loi.push('kepha tên ' + G.rosterMap.kepha.ten); return loi; });
+  const rj = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '../thap/assets/roster.json'), 'utf8'));
+  for (const x of rj) { if (x.id === 'kepha' && x.ten !== 'Jammer') r.push('roster.json kepha ' + x.ten); if (x.id === 'loren' && /vĩnh viễn|permanent/i.test(x.kyNang + x.kyNang_vi)) r.push('roster.json Scrap Forge còn "vĩnh viễn"'); }
+  ok(!r.length, 'roster: vai trò = code (Mirror Gate Hỗ trợ, Scrap Forge Đặc biệt), tên Jammer, Scrap Forge không "vĩnh viễn"', r.join(' ; '));
 
   if (SHOTS) {
     const fs = require('fs'); fs.mkdirSync(SHOTS, { recursive: true });

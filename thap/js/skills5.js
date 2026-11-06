@@ -377,7 +377,8 @@ HU.nonLua = { // nón lửa = dải 16 khung ChatGPT fx_wyrm_lua chạy ĐÚNG T
     const M = typeof SIG_META !== 'undefined' && SIG_META.fx_wyrm_lua, st = M && typeof SIG !== 'undefined' && REN.img('fx_wyrm_lua');
     if (st) {
       const e = R.t - LUA_BD.get(T), f = T.phun < 0.1 ? 12 + Math.min(3, Math.floor((0.1 - T.phun) / 0.1 * 4)) : e < 0.12 ? Math.floor(e / 0.12 * 4) : 4 + Math.floor(e * 16) % 8;
-      const hh = Math.max(L * 0.5, 1.5 * SKILLS.ronglua.tam(T) * Math.tan(goc / 2));
+      // VFX P0 hitbox: phép trúng = nón ±(goc/2 + 0.08 rad) tính từ tâm ụ → bề ngang lửa THẤY ĐƯỢC (≈ VUNG_ANH.wyrmY của khung, chỗ rộng nhất ~70% chiều dài) = bề ngang nón trúng ở đó
+      const lech = Math.hypot(x - c0.x, y - c0.y), hh = Math.max(L * 0.5, 2 * (lech + 0.7 * L) * Math.tan(goc / 2 + 0.08) / VUNG_ANH.wyrmY);
       if (gd === 1) { SIG.k(ctx, 'fx_wyrm_lua', f, x, y, L * 1.04, { g: T.goc, ax: 0.02, h: hh }); return; }
       const im = PX.mau('fx_wyrm_lua', RONG_MAU[gd].b) || st; // tô lửa xanh/trắng: 1 canvas dựng 1 lần
       ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);

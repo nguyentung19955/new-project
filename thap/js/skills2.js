@@ -342,9 +342,9 @@ SKILLS.vungdoc = { // Bom Vũng Độc (Flora): ném vũng độc lên đường
     if (T.nap >= 1 && E) {
       T.nap = 0; giat(T, 1.2); const [x, y] = chopNong(T, 24); SND.doc();
       const p = G.duong[E.p], dps = dmgU(T) * 3.5, r = (30 + 2 * T.sao) * (ms(T, 7) ? 1.5 : 1), yeu = ms(T, 5);
-      const nem = (s) => { const [px, py] = viTri(p, Math.min(p.len - 8, s));
+      const nem = (s) => { const [px, py, pg] = viTri(p, Math.min(p.len - 8, s)); // pg: hướng đường tại vũng (chỉ để vẽ trục dài vũng dọc đường — FX = vùng trúng)
         banDan({ img: 'dan_doc', x, y, px, py, sp: 220, co: 22, cong: 60, B, T, duoi: true,
-          trung(G, d) { G.hu.push({ k: 'may', t: 0, song: 5, x: d.x, y: d.y, r, dps, B, tick: 0, yeu }); FX.no('khoi_doc', d.x, d.y, r * 2.4, 0.5); FX.bui(d.x, d.y, 5, 6); } }); };
+          trung(G, d) { G.hu.push({ k: 'may', t: 0, song: 5, x: d.x, y: d.y, r, dps, B, tick: 0, yeu, goc: pg }); FX.no('khoi_doc', d.x, d.y, r * 2.4, 0.5); FX.bui(d.x, d.y, 5, 6); } }); };
       nem(E.s + 26);
       if (ms(T, 3)) nem(Math.max(10, E.s - 70)); // 3★ TWIN POOLS
       nhanU(T, 'POISON POOL', '#9dff5a');
