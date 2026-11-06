@@ -61,7 +61,7 @@ const CG = {
   ds: [], // { T, B, o, t0, n }
   ANH_SAO: ['h2_glint', 'cf_vong_ren', 'h2_sao_sang', 'fx_starup'],
   // ảnh ChatGPT P1 ĐÃ có trong assets/ (CAN-VE-p1.json) — chỉ gọi REN.img cho tên trong danh sách (ảnh thiếu → REN báo lỗi mạng)
-  CO_ANH: new Set([]),
+  CO_ANH: new Set(['p1_sao3', 'p1_sao5', 'p1_sao7', 'p1_manh_sao', 'p1_vach_lv']),
   img(t) { return this.CO_ANH.has(t) ? REN.img(t) : null; },
   saoLen(T, n) {
     const B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return;
@@ -92,7 +92,7 @@ const CG = {
   // 3★: 3 tia cách 120°, bung nhanh rồi mảnh dần
   ve3(ctx, c, S, tt, u, mo, fl) {
     const a = CG.img('p1_sao3'), s = 0.5 + 0.7 * VX.eo(u / 0.45);
-    if (a) { PX.ve(ctx, a, c.x, c.y, S * 1.5 * s, S * 1.5 * s * a.height / a.width, -0.35 + u * 0.4, mo * fl); return; }
+    if (a) { PX.ve(ctx, a, c.x, c.y, S * 2 * s, S * 2 * s * a.height / a.width, -0.35 + u * 0.4, mo * fl); return; }
     const g = REN.img('h2_glint'); if (!g) return; // thay tạm: 3 tia lấp lánh kéo dài
     for (let k = 0; k < 3; k++) {
       const ang = -Math.PI / 2 + k * Math.PI * 2 / 3 + u * 0.3, d = S * 0.3 * s;
@@ -110,13 +110,13 @@ const CG = {
   // 7★: vương miện mảnh + 7 mảnh sao bắn ra lần lượt (mỗi mảnh trễ 45 ms)
   ve7(ctx, e, c, S, tt, u, mo, fl) {
     const a = CG.img('p1_sao7'), s = 0.7 + 0.45 * VX.eo(u / 0.4);
-    if (a) PX.ve(ctx, a, c.x, c.y, S * 1.5 * s, S * 1.5 * s, -u * 0.5, mo * fl);
+    if (a) PX.ve(ctx, a, c.x, c.y, S * 1.85 * s, S * 1.85 * s, -u * 0.5, mo * fl);
     else { const r = REN.img('cf_vong_ren'); if (r) VX.khung(ctx, r, Math.min(5.99, u * 6), c.x, c.y, S * 1.55 * s, -u * 0.5, mo * fl * 0.9); }
     if (this.gon()) return; // tối giản: chỉ vương miện
     const m = CG.img('p1_manh_sao') || REN.img('h2_sao_sang'); if (!m) return;
     for (let k = 0; k < 7; k++) {
       const v = (tt - 0.08 - k * 0.045) / 0.42; if (v <= 0 || v >= 1) continue;
-      const ang = -Math.PI / 2 + k * Math.PI * 2 / 7, d = S * (0.35 + 0.55 * VX.eo(v)), w = S * 0.26 * (1 - 0.35 * v);
+      const ang = -Math.PI / 2 + k * Math.PI * 2 / 7, d = S * (0.35 + 0.55 * VX.eo(v)), w = S * (CG.CO_ANH.has('p1_manh_sao') ? 0.4 : 0.26) * (1 - 0.35 * v);
       PX.ve(ctx, m, c.x + Math.cos(ang) * d, c.y + Math.sin(ang) * d, w, w, ang + Math.PI / 2, (v < 0.15 ? v / 0.15 : 1 - VX.ei((v - 0.15) / 0.85)) * fl);
     }
   },
