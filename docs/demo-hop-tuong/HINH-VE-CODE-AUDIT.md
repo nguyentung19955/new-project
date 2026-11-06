@@ -1032,3 +1032,9 @@ Tiền tố: *"Same style as attached game screenshot, chunky sci-fi industrial 
 | raw_p11_nut | 1024×512, 1 hàng × 2 (ô 512) | 1 "Tiny square metal button with a speech-bubble icon, cyan glow" · 2 same, dimmed / pressed | `nut_lon_thep` + chữ CHAT (52×26 → 156×78) |
 | raw_p11_emo | 1024×1024, lưới 2×2 (ô 512) | round metal-rimmed emote badges, chunky cartoon faces on a small robot turret head: 1 cheering with stars · 2 thumbs-up / OK · 3 shocked with sweat drop · 4 crying / defeated | `ic_sao`, `p7_ic_xong`, `ic_bom`, `ic_thua` (46×46 → 138×138) |
 | raw_p11_bang | 1024×768, 1 ô | "Compact chat panel frame, dark riveted steel, thin cyan edge lights, empty inside, 9-slice friendly corners" | `khung_tt` bảng chat (318×300) |
+
+### P12 — cấp thẻ DCDW (06/11, js/thebai-ui.js) — đang mượn ảnh có sẵn, chờ gen
+| Tấm | Kích thước | Prompt (nền magenta #FF00FF đặc, same style as attached, no text) | Thay cho |
+|---|---|---|---|
+| raw_p12_vang | 1024×512, 1 hàng × 2 (ô 512) | 1 "Single shiny gold coin with an embossed gear-and-star mark, slight tilt, thick dark outline" · 2 "Small stack of 3 gold coins, same style" | `ngoc_vang` đang dùng làm biểu tượng VÀNG (trùng ngọc độ hiếm Huyền thoại) |
+| raw_p12_thanh | 1536×512, 3 hàng × 1 | 1 "Very thin empty progress bar frame, dark gunmetal, tiny rivets at both ends, stretchable middle" · 2 "Bar fill strip, glossy amber" · 3 "Bar fill strip, glossy bright green" | `h2_tag` + `tai_day` / `loi_khuc_day` (thanh bản sao n/m dưới thẻ) |

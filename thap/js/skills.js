@@ -233,7 +233,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT (đợt vai trò): KH
   // mốc sao chung 'khac' (3★ +20% nhịp · 5★ +25% · 7★ +30% hiệu lực) — trước đây chỉ là chữ, Vệ Tinh không bắn nên không áp; nay áp lên đợt bắn phá
   //   (sao của ụ Vệ Tinh đem ghép = phaoSao − 1). Chỉ huy RAGE (+100% toàn bàn) cũng áp lên giáo trời.
   mocK: (sao) => (sao - 1 >= 5 ? 1.25 : 1) * (sao - 1 >= 7 ? 1.3 : 1),
-  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * (((B && B.lv.orbital) || 1) - 1)) * SKILLS.orbital.mocK(sao) * (B && B.cuong > 0 ? 2 : 1),
+  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * hsLv(B, 'orbital') * SKILLS.orbital.mocK(sao) * (B && B.cuong > 0 ? 2 : 1),
   ghep(G, B, a, b) {
     B.phao = 20; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2;
     const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'ORBITAL STRIKE!', '#9fe6ff', 16, 'to');

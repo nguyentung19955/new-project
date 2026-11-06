@@ -9,7 +9,7 @@ Chỉ sửa luật, **không** đổi hình ảnh/hoạt ảnh, **không** đổ
 |---|------|-------|---------|
 | 1 | Giá triệu hồi | 10, 16, 22… (+6) | **10, 20, 30…** (lần thứ n = 10n), về 10 khi bắt đầu trận mới. Nút SUMMON vẫn hiện giá lần kế tiếp. Ô rỗng ngẫu nhiên, loại ngẫu nhiên đều trong bộ 5 (đã có sẵn). |
 | 2 | Ghép | đã đúng | Giữ nguyên: kéo A vào B cùng loại + cùng sao (<7) → quân mới ở ô B, sao +1, **loại ngẫu nhiên** trong bộ 5. Ngoại lệ tướng vàng (ghép đặc biệt, GLITCH chọn kết quả, BROKER hoàn mana) vẫn giữ. |
-| 3 | Nâng cấp theo loại | đã có | **Giữ hệ hiện có**: 80 / 160 / 300 / 500 / 800 mana, tối đa 5 cấp, +40% sát thương mỗi cấp, áp mọi bản cùng loại. (GDD đề xuất 100/200/400/700, 4 cấp, +20% — chưa đổi theo yêu cầu "giữ nếu đã có".) |
+| 3 | Nâng cấp theo loại | đã có | 06/11: power-up 100/200/400/700 mana, 4 bước (+1/+2/+3/MAX), **+25%** sát thương gốc mỗi bước, áp mọi bản cùng loại. Thêm **cấp thẻ ngoài trận** (bản sao + vàng) — xem DCDW-TANG-SUC-MANH.md. |
 | 4 | Archfiend | giá ×1,6 mỗi lần | **Giá ×2 mỗi lần**: OVERCLOCK 40 → 80 → 160 → 320 → 640 → 1280 (trần 1280); FIREWALL 30 → 60 → 120… Hồi chiêu giữ nguyên (30s / 35s). |
 | 5 | Cận chiến (PATCHWORK, ARC) | đánh quái trong 1,6 ô | Thêm điều kiện **ô phải sát đường**: tâm ô cách tâm hành lang ≤ **1,25 cạnh ô** mới ra đòn (quái vẫn phải trong 1,6 ô). PvP: 7 ô đánh được (cột trái + hàng dưới). Co-op (bàn người chơi): 5 ô hàng trên, sát hành lang giữa. |
 | 5b | Hiển thị cận chiến | — | Khi kéo/giữ một quân cận chiến: các ô nó đánh được **tô vàng cam viền đứt + biểu tượng kiếm**. Quân cận chiến đứng ô không với tới: **biểu tượng kiếm gạch chéo đỏ** nhấp nháy ở góc ô (đứng được nhưng không đánh). |

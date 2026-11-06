@@ -10,7 +10,7 @@
 const lvU = (T) => G.ban[T.ban].lv[T.id] || 1;
 const conTren = (T) => { const B = G.ban[T.ban]; return !!B && B.t[T.o] === T; };
 // hệ số sức mạnh không kèm buff (dùng cho hiệu ứng khi ghép, drone…)
-const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * (1 + 0.18 * ((B.lv[id] || 1) - 1));
+const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * hsLv(B, id);
 // nhãn kỹ năng ngắn hiện trên ụ khi kỹ năng kích hoạt
 function nhanU(T, s, mau, ep) {
   return; // BỎ nhãn chữ nổi trên ô (SHATTER ×5, CLONE +1…) — người dùng: vô dụng, rối bàn; buff/kỹ năng đã có hiệu ứng ảnh ChatGPT. Chỉ giữ số sát thương + tấm kết quả ghép.

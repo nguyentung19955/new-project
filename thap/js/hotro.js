@@ -16,7 +16,7 @@ const HOTRO = {
   NHOM: ['toc', 'dmg', 'crit', 'cdmg', 'cham', 'chet'],
   // nhóm có điều kiện / đặc biệt (không vào T.buf thường): lo (vs quái LỘ), lanh (vs quái chậm), vet (vs quái trên cầu vồng), amp (mỗi đòn liên tiếp),
   //   soc (choáng khi chí mạng, giây), xuyen (chí mạng xuyên), khang (kháng khống chế, xác suất), ngNguong (ngưỡng giết ngay), chacCrit
-  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)); },
+  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * (1 + 0.5 * (hsThe(B, T.id) - 1)); },
   laHT: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'ht'),
   // ô tác dụng của ụ hỗ trợ (chỉ số ô) — 4 ô thẳng mặc định, sk.huong(T) cho hình riêng
   oDich(T) {

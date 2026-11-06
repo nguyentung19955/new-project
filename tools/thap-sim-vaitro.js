@@ -13,7 +13,7 @@ function taoMoiTruong(hat) {
   let s = hat || 12345; // Math.random có hạt giống → kết quả lặp lại được
   const M = Object.create(Math); M.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
   const ctx = { console, Math: M, JSON, Set, Map, Promise, Object, Array, Number, String, Infinity, NaN, isFinite, parseInt, parseFloat, Symbol, Proxy, Reflect, Error,
-    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, localStorage: { getItem: () => null, setItem: noop } };
+    setTimeout: (f) => { ctx._cho.push(f); }, clearTimeout: noop, _cho: [], performance: { now: () => 0 }, location: { search: '', hash: '' }, localStorage: { getItem: () => null, setItem: noop } };
   ctx.window = ctx; ctx.document = { createElement: () => ({ getContext: () => ({}) }), querySelector: () => null, getElementById: () => null, addEventListener: noop };
   ctx.addEventListener = noop;
   ctx.SND = new Proxy({}, { get: () => noop });

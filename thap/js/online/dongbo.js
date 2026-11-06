@@ -46,8 +46,11 @@ const ONS = {
     this.on = true;
     const hop = (d) => { d = (d || []).filter(id => SKILLS[id] && G.rosterMap[id]); return d.length === 5 ? d : (UI.chon.length === 5 ? UI.chon.slice() : deckNgauNhien()); };
     G.debug.deck2 = hop(o.deckBan);
+    G.debug.cap2 = typeof THEBAI !== 'undefined' ? THEBAI.giaiMa(o.deckBan, G.debug.deck2) : null; // cấp thẻ của bạn (không có = bản cũ → cấp đầu)
+    if (!G.debug.cap2) G.debug.cap2 = {};
+    G.debug.cap0 = typeof THEBAI !== 'undefined' ? THEBAI.giaiMa(o.deckMe, hop(o.deckMe)) : null;
     batDau('coop', hop(o.deckMe), MAVUONG[o.mvMe] ? o.mvMe : 'hero');
-    delete G.debug.deck2;
+    delete G.debug.deck2; delete G.debug.cap2; delete G.debug.cap0;
     const B1 = G.ban[1];
     B1.net = true; B1.ten = escTen(o.tenBan) || 'ALLY';
     const mvB = MAVUONG[o.mvBan] ? o.mvBan : 'hero'; B1.mv = { id: mvB, gia: MAVUONG[mvB].gia, cd: 0 };

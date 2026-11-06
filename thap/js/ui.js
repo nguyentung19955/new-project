@@ -212,7 +212,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
-      chu(d._lv || (d._lv = d.querySelector('.lv')), 'LV' + lv);
+      chu(d._lv || (d._lv = d.querySelector('.lv')), typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(B, id) : 'LV' + lv);
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }
@@ -342,7 +342,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const L = [];
     let so = '';
     if (T) {
-      so = T.sao + '★ · LV' + (G.ban[T.ban].lv[id] || 1);
+      so = T.sao + '★ · ' + (typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(G.ban[T.ban], id) : 'LV' + (G.ban[T.ban].lv[id] || 1));
       if (sk.dmg) so += ' · ' + TEXT.ui.dmg + ' ' + Math.round(dmgU(T));
       const tc = tocTT(id, T); if (tc) so += ' · ' + tc;
       if (sk.mo && !(SUP_GIA[id])) so += ' · ' + sk.mo(T); // ụ hỗ trợ: hiệu lực hiện tại nằm ở dòng ký hiệu bên dưới (đã gồm mốc sao)

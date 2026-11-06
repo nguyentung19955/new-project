@@ -57,6 +57,8 @@ function taoBan(def, i, deck, mv) {
     manaNay: 0,
   };
   for (const id of deck) B.lv[id] = 1;
+  // CẤP THẺ ngoài trận (thebai.js): số cấp đã lên trên cấp đầu của bậc — người chơi = bộ sưu tập; máy = mức trung bình của người chơi; online = gửi kèm
+  B.capThe = typeof THEBAI !== 'undefined' ? THEBAI.capBan(i, B.deck, def) : {};
   for (let h = 0; h < 3; h++) for (let c = 0; c < 5; c++) B.o.push({ x: def.x + KHAY_COT[c] * def.w, y: def.y + KHAY_HANG[h] * def.h, c, h });
   B.cw = def.w * (KHAY_COT[1] - KHAY_COT[0]); B.ch = def.h * (KHAY_HANG[1] - KHAY_HANG[0]);
   return B;
@@ -236,7 +238,7 @@ function dungMV(B) {
 // ---------- chỉ số ----------
 function dmgU(T) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
-  let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * (1 + 0.18 * ((B.lv[T.id] || 1) - 1));
+  let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
   d *= 1 + T.buf.dmg;
   if (T.aurora > 0) d *= 1.5;
   if (T.banSao) d *= 0.5; // bản sao của Máy Sao Chép: −50% sát thương

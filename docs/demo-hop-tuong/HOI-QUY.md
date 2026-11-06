@@ -85,3 +85,7 @@ chạy lại `SIZES=1280x800x1` đủ luồng: XANH (chập chờn theo thời �
 4 cỡ: chỉ 1 lỗi "chữ tràn .ci-chu bị #cutin cắt" ở `solo_trum` (cutin chỉ huy đang trượt vào lúc chụp — chập chờn đã biết) → chạy lại
 `SIZES=1280x800x1,360x780x3 CHI=solo`: XANH. Mới trong hồi quy: `tools/thap-kt-nut-trieu.js` (nút SUMMON + ảnh nền HUD, SOLO/CO-OP/PVP).
 Riêng: `tools/thap-kt-freezer.js` XANH (số ụ theo wave, 6 s, Halo nửa, CO-OP chia, PVP, chọn mục tiêu tất định 8 trùm).
+## 06/11/2026 — cấp thẻ DCDW (thebai.js / thebai-ui.js)
+Lần 1 TRƯỢT 46 lỗi, 2 loại: (1) `ảnh méo` ruột thanh bản sao `.tb-day > img tai_day.png` (dải đầy kéo theo bề dài = mức đầy, QUY-TAC-HINH mục 3)
+→ thêm lớp `tai-day` cho ruột thanh (cùng ngoại lệ với thanh tải); (2) `vẽ tay` drop-shadow mũi tên nâng cấp thiếu nhãn `vetay-ok: png`.
+Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s).

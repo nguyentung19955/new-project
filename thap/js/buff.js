@@ -146,7 +146,7 @@ function hoTroTT(T) {
   const o = HOTRO.oDich(T), nhan = o.filter(i => HOTRO.nhan(T, B.t[i])).length, max = SKILLS[id].vai === 'ht' && T.ht !== undefined ? null : null;
   const capNote = o.some(i => B.t[i] && B.t[i].ht && B.t[i].ht.daMax && B.t[i].ht.daMax[k]) ? ' · CAP reached on a neighbour' : '';
   return { k, dong: BUFF[k].ten + ' +' + pc(hien) + ' (current)', tam: HOTRO.tamChu(T) + ' · affecting ' + nhan + '/' + o.length + ' cells' + capNote,
-    tach: 'Base 1★ LV1 +' + pc(goc) + ' · stars +' + pc(saoV - goc) + ' · LV' + lv + ' +' + pc(lvV - saoV) + (he > 1 ? ' · milestone ×' + he : '') };
+    tach: 'Base 1★ LV1 +' + pc(goc) + ' · stars +' + pc(saoV - goc) + ' · power-up +' + (lv - 1) + ' +' + pc(lvV - saoV) + (he > 1 ? ' · milestone ×' + he : '') };
 }
 
 // ===================================================== (C) PROC trên đối tượng =====================================================
