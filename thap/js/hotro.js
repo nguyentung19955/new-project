@@ -12,7 +12,7 @@
 const HOTRO = {
   K: [1, 1, 1.2, 1.45, 1.65, 1.9, 2.1, 2.35],
   CAP: { toc: 0.45, dmg: 0.35, crit: 0.20, cdmg: 0.50, cham: 0.35, chet: 0.15 },
-  VULN: 0.25, CHAM_TRUM: 0.15, SAN_TC: 0.55,
+  VULN: 0.25, CHAM_TRUM: 0.15,
   NHOM: ['toc', 'dmg', 'crit', 'cdmg', 'cham', 'chet'],
   // nhóm có điều kiện / đặc biệt (không vào T.buf thường): lo (vs quái LỘ), lanh (vs quái chậm), vet (vs quái trên cầu vồng), amp (mỗi đòn liên tiếp),
   //   soc (choáng khi chí mạng, giây), xuyen (chí mạng xuyên), khang (kháng khống chế, xác suất), ngNguong (ngưỡng giết ngay), chacCrit
@@ -189,23 +189,4 @@ lanDoc = function (E, B) {
   const Q = dsMucTieu(B || G.ban[0]).filter(Q => Q !== E && !Q.chet && !(Q.vmT > 1)).sort((a, b) => Math.hypot(a.x - E.x, a.y - E.y) - Math.hypot(b.x - E.x, b.y - E.y))[0];
   if (Q && Math.hypot(Q.x - E.x, Q.y - E.y) < 90) { Q.vmT = 5; Q.vmK = E.vmK; Q.vmLay = 1; Q.yeu = Math.max(Q.yeu, 5); G.hu.push({ k: 'tiaPhep', t: 0, song: 0.35, x0: E.x, y0: E.y, x1: Q.x, y1: Q.y, mau: '#9dff5a' }); }
 };
-// SÀN TẤN CÔNG (đợt vai trò): bàn có < 2 ụ Tấn công, hoặc ụ Tấn công < HOTRO.SAN_TC số ụ trên bàn → Triệu hồi / kết quả GHÉP chỉ ra thẻ Tấn công trong bộ
-// (bộ nhiều Hỗ trợ / Đặc biệt không chết yểu và luôn có ụ để buff)
-HOTRO.canTC = function (B, bo) {
-  const tc = B.deck.filter(id => SKILLS[id] && SKILLS[id].vai === 'tc');
-  if (!tc.length || tc.length === B.deck.length) return null;
-  const co = B.t.filter(T => T && T !== bo), soTC = co.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'tc').length;
-  return soTC < 2 || soTC < HOTRO.SAN_TC * (co.length + 1) ? tc : null;
-};
-const _trieuHT = trieu;
-trieu = function (B, mienPhi, idEp) {
-  if (!idEp && B && B.deck) { const tc = HOTRO.canTC(B); if (tc) idEp = pick(tc); }
-  return _trieuHT(B, mienPhi, idEp);
-};
-const _ghepSan = ghep;
-ghep = function (B, a, b, ep) {
-  const B2 = b && G.ban[b.ban], tc = B2 && a && a.id === b.id || (a && b && (a.id === 'mimic' || b.id === 'mimic')) ? HOTRO.canTC(B2, a) : null;
-  if (!tc) return _ghepSan(B, a, b, ep);
-  const goc = B2.deck; B2.deck = tc;
-  try { return _ghepSan(B, a, b, ep); } finally { B2.deck = goc; }
-};
+// (bỏ SÀN TẤN CÔNG — DCDW: Triệu hồi / kết quả GHÉP / Twin Maker chọn ĐỀU NGẪU NHIÊN trong 5 thẻ bộ bài, không thiên vị vai trò)

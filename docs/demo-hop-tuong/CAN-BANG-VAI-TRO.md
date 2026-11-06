@@ -43,7 +43,7 @@ Công cụ: `node tools/thap-sim-vaitro.js dem | dps | hotro | deck [n] [solo|co
 - Đường cong sao chung `HOTRO.K` = 1.00 / 1.20 / **1.45 (3★)** / 1.65 / **1.90 (5★)** / 2.10 / **2.35 (7★)** × cấp nâng (+6%/LV). 5★ = tiện ích phụ, 7★ = chiêu riêng (bảng mốc `MOC_RIENG`).
 - Nhiều bản cùng loại → lấy bản mạnh nhất; khác loại cùng nhóm → cộng rồi kẹp trần: tốc bắn 45%, sát thương 35% (gồm sát thương có điều kiện), chí mạng +20 điểm, sát thương chí mạng +50%, chậm 35% (trùm 15%), giết ngay 15%/đòn.
 - Suy yếu quái (Venom, Time Bomb, Rainbow, Breaker 7★, Toxic Pool, Cryo 7★…) cộng mọi nguồn, **trần 25%**.
-- **Sàn Tấn công**: bàn có < 2 ụ Tấn công hoặc ụ Tấn công < 55% số ụ → Triệu hồi và kết quả Ghép chỉ ra thẻ Tấn công (ghi trong nút SUMMON). Đây là đòn bẩy chính giúp bộ nhiều Hỗ trợ/Đặc biệt không chết yểu.
+- ~~Sàn Tấn công~~ (ĐÃ BỎ 2026-11-06 theo DCDW): Triệu hồi, kết quả Ghép, Twin Maker… chọn đều ngẫu nhiên trong 5 thẻ bộ bài, không thiên vị vai trò. Bộ nhiều Hỗ trợ/Đặc biệt có thể yếu — đúng DCDW; gợi ý "≥ 2 ụ Tấn công" chỉ còn ở màn bộ bài.
 - Hiển thị: hào quang buff dùng hệ có sẵn `buffvfx.js` (ảnh ChatGPT BUFF1/BUFF2); sát thương có điều kiện hiện ở hào quang DAMAGE, kháng khống chế = bong bóng SHIELD mờ. Chạm ụ hỗ trợ: tô đúng ô tác dụng + ghi "CAP reached" khi trần đã đầy. Không thêm hình vẽ bằng code.
 - PVP / CO-OP: Star Breaker, Mirror Gate, Clamp, Scrambler, Signal Jammer chạy trong mô hình cùng-wave (kiểm `che`: solo/coop/pvp 90 s không lỗi).
 

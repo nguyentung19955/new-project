@@ -500,9 +500,11 @@ function main() {
     ghi('hotro', 'Resonance Grid: +8% to diagonals only; all 4 diagonals filled → RESONANCE ×1.5', 'diag ' + p(R(ctx, 'G._a[0]')) + ' · straight ' + p(R(ctx, 'G._a[1]')) + ' · full ' + p(R(ctx, 'G._b')), gan(R(ctx, 'G._a[0]'), 0.08) && R(ctx, 'G._a[1]') === 0 && gan(R(ctx, 'G._b'), 0.12));
     const rm = R(ctx, `(() => { KT.moi(); const T = KT.dat(7, 'luoicheo', 7); return SKILLS.luoicheo.mo(T); })()`);
     ghi('hotro', 'Resonance Grid 7★ info: fire-rate ×1.5 shown only when resonance is full', rm, /\+12% fire rate/.test(rm));
-    // Star Breaker / hotro merge hooks + Attack floor
-    const san = R(ctx, `(() => { KT.moi(['radar', 'chimang', 'lien', 'mana', 'bang']); const B = G.ban[0]; B.mana = 1e6; const ds = []; for (let i = 0; i < 6; i++) { const T = trieu(B); ds.push(SKILLS[T.id].vai); } return ds; })()`);
-    ghi('hotro', 'Attack floor: board with <2 Attack turrets summons Attack cards only', san.join(','), san[0] === 'tc' && san[1] === 'tc');
+    // DCDW: KHÔNG có sàn Tấn công — Triệu hồi chọn đều trong 5 thẻ (bộ 1 Tấn công + 4 Hỗ trợ, 10k lần → mỗi thẻ ≈ 20% ±2%)
+    const deu = R(ctx, `(() => { const D = ['lien', 'radar', 'chimang', 'phagiap', 'bua']; const B = KT.moi(D); const dem = {}; D.forEach(id => dem[id] = 0); for (let i = 0; i < 10000; i++) { B.t.fill(null); const T = trieu(B, true); dem[T.id]++; G.hu.length = 0; } return D.map(id => [id, SKILLS[id].vai, dem[id] / 100]); })()`);
+    ghi('hotro', 'Summon is uniform over the deck (no Attack floor): 1 Attack + 4 Support, 10k summons → each ≈ 20% ±2%', deu.map(x => x[0] + '(' + x[1] + ') ' + x[2].toFixed(1) + '%').join(' · '), deu.every(x => Math.abs(x[2] - 20) <= 2) && deu.filter(x => x[1] === 'tc').length === 1);
+    const tw = R(ctx, `(() => { const D = ['lien', 'radar', 'chimang', 'phagiap', 'bua']; const B = KT.moi(D); let tc = 0, n = 0; for (let i = 0; i < 4000; i++) { B.t.fill(null); const T = sinhDoi(B, 1, 0); if (T) { n++; if (SKILLS[T.id].vai === 'tc') tc++; } G.hu.length = 0; } return [tc, n]; })()`);
+    ghi('hotro', 'Twin Maker extra turret is uniform over the deck too (Attack ≈ 20%)', tw[0] + '/' + tw[1] + ' Attack', tw[1] > 3000 && Math.abs(tw[0] / tw[1] - 0.2) <= 0.025);
   }
 
   // ===================================================== mọi ụ trong bộ: 60 s SOLO/CO-OP/PVP không lỗi + dòng thông tin =====================================================

@@ -142,8 +142,7 @@ function sinhDoi(B, sao, oNguon, ep) {
   let r = Math.random;
   if (!ep && typeof ONS !== 'undefined' && ONS.on) r = rngHat((ONS.seed || 1) * 7907 + Math.round(G.t * 60) * 31 + (oNguon | 0) * 977 + B.i * 13);
   const o = ep ? ep.o : tr[Math.floor(r() * tr.length)];
-  const tc = !ep && typeof HOTRO !== 'undefined' && HOTRO.canTC ? HOTRO.canTC(B) : null, bo = tc && tc.length ? tc : B.deck; // cùng thiên vị Tấn công như triệu hồi thường
-  const id = ep ? ep.id : bo[Math.floor(r() * bo.length)];
+  const id = ep ? ep.id : B.deck[Math.floor(r() * B.deck.length)]; // DCDW: đều ngẫu nhiên trong bộ bài như triệu hồi thường
   if (B.t[o] || !G.rosterMap[id]) return null;
   // DCDW Berit: 10% (LV9, +1%/cấp thẻ Twin Maker) ụ sinh đôi CAO HƠN 1★ (không vượt 7★) — online: máy chủ bàn quay, gói 'gh' mang đúng sao (ep.s)
   if (ep && ep.s) sao = ep.s; else if (!ep && sao < LUAT.saoMax && r() < (knThe(B, 'sinhdoi') || 10) / 100) sao++;
