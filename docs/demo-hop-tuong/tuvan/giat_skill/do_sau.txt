@@ -1,0 +1,117 @@
+== do1 (82 s) khung chuẩn 66.7 ms, JS TV 4 ms, long task 949
+  blackhole#1            xấu  166.7 ms  JS   24.1  rớt 7  >33 40  hạt 278  vẽ 893/25.4MP (khung xấu 893/25.4)  | snd:trung ×42, snd:gLua ×11, snd:crit ×9, snd:no ×6, snd:hoden ×3, snd:gCot ×3, hu:hoden/blackhole ×3, hu:set ×3, hu:gCot ×3, hu:gXem ×3
+      ↳ khung JS xấu (+1): snd:hoden snd:hoden snd:hoden snd:gCot snd:gCot snd:gCot snd:gLua snd:gLua snd:gLua hu:hoden/blackhole hu:hoden/blackhole hu:hoden/blackhole hu:set hu:gCot [scale 4ms×7]  ‖ trước: snd:sam snd:sam snd:sam hu:sam/overlord hu:sam/overlord hu:sam/overlord
+  overlord#1             xấu  183.3 ms  JS    9.2  rớt 7  >33 39  hạt 260  vẽ 1265/26MP (khung xấu 1265/15.2)  | snd:trung ×52, snd:crit ×11, snd:gNap ×3, snd:sam ×3, snd:gLua ×3, snd:no ×3, snd:gCot ×3, snd:gKhoa ×3, hu:sam/overlord ×3, hu:set ×3
+      ↳ khung JS xấu (+2):  [gc 3.2MB]  ‖ trước: snd:gNap snd:sam snd:gNap snd:sam snd:gNap snd:sam snd:gLua snd:gCot snd:gCot snd:gCot snd:gKhoa snd:gKhoa snd:gKhoa hu:sam/overlord
+  leviathan#1            xấu  116.7 ms  JS   13.7  rớt 1  >33 39  hạt 239  vẽ 704/21.6MP (khung xấu 660/9.9)  | snd:trung ×34, snd:gSongTho ×3, snd:gNap ×3, hu:thoThuy/leviathan ×3, sig:tho ×3, snd:gLua ×2, snd:crit, gc 3.3MB, snd:phao
+      ↳ khung JS xấu (+1): snd:gSongTho snd:gSongTho snd:gSongTho snd:gNap snd:gNap snd:gNap snd:gLua hu:thoThuy/leviathan hu:thoThuy/leviathan hu:thoThuy/leviathan sig:tho sig:tho sig:tho [scale 1.2ms×2] [gc 3.3MB]
+  ronglua#1              xấu  150.1 ms  JS    9.8  rớt 6  >33 40  hạt 292  vẽ 956/24.2MP (khung xấu 549/9.4)  | hu:chay/ronglua ×12, snd:gLua ×10, snd:trung ×7, snd:no ×3, snd:crit ×3, hu:vetChay/ronglua ×3, gc 3.3MB
+      ↳ khung JS xấu (+20): snd:gNap snd:gNap snd:gNap snd:gLua hu:vetChay/ronglua  ‖ trước: hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua
+  blackhole#2            xấu  183.4 ms  JS      7  rớt 7  >33 40  hạt 281  vẽ 1009/23.8MP (khung xấu 762/23.4)  | snd:trung ×42, snd:crit ×12, snd:gLua ×7, hu:vetChay/ronglua ×3, snd:no ×2, gc 3.4MB, snd:phao, hu:chay/ronglua
+  overlord#2             xấu  166.7 ms  JS    9.2  rớt 6  >33 39  hạt 300  vẽ 1365/26MP (khung xấu 1157/13.6)  | snd:trung ×28, snd:gLua ×6, snd:phao ×3, hu:vetChay/ronglua ×2, snd:crit ×2, gc 2.8MB, gc 3MB
+      ↳ khung JS xấu (+6): snd:gLua  ‖ trước: snd:gLua [gc 3MB]
+  leviathan#2            xấu    100 ms  JS    5.8  rớt 0  >33 40  hạt 279  vẽ 713/11.8MP (khung xấu 713/11.8)  | 
+  ronglua#2              xấu  133.4 ms  JS    9.2  rớt 6  >33 40  hạt 277  vẽ 978/24.2MP (khung xấu 622/10.3)  | snd:trung ×52, hu:vetChay/ronglua ×20, hu:chay/ronglua ×10, snd:gLua ×8, snd:no ×5, snd:crit ×3, snd:phao ×2, gc 3.3MB
+      ↳ khung JS xấu (+1): snd:gRong snd:gRong snd:gRong snd:gLua snd:gLua hu:rongBo/ronglua hu:rongBo/ronglua hu:rongBo/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua sig:rong sig:rong
+== do2 (102 s) khung chuẩn 83.3 ms, JS TV 5.3 ms, long task 1064
+  chuato#1               xấu  133.3 ms  JS   17.5  rớt 1  >33 40  hạt 174  vẽ 684/13.7MP (khung xấu 600/10.6)  | hu:ongLao/chuato ×6, snd:gSwarm ×3, sig:ong ×3, snd:trung ×3, hu:gSuong ×3, snd:crit ×2, snd:gEcho ×2, snd:tia ×2, hu:gKim ×2, scale 2.2ms×2
+      ↳ khung JS xấu (+14): snd:bang snd:gEcho snd:tia hu:gSuong hu:gSuong hu:gSuong hu:gKim  ‖ trước: snd:gEcho hu:gKim
+  ngaithoigian#1         xấu  116.6 ms  JS   16.4  rớt 0  >33 40  hạt 182  vẽ 774/21.5MP (khung xấu 774/12)  | snd:trung ×39, snd:crit ×4, hu:chich ×4, snd:tua ×3, snd:mv ×3, hu:rewind/ngaithoigian ×3, sig:rewind ×3, snd:gEcho, snd:tia, img:sig_m05_throne:0.8
+      ↳ khung JS xấu (+1): snd:tua snd:mv snd:tua snd:mv snd:tua snd:mv snd:gEcho snd:tia img:sig_m05_throne:0.8 hu:rewind/ngaithoigian hu:rewind/ngaithoigian hu:rewind/ngaithoigian hu:gKim hu:chich  ‖ trước: snd:lot hu:chich
+  khoisinh#1             xấu    100 ms  JS    7.6  rớt 0  >33 40  hạt 161  vẽ 638/14.1MP (khung xấu 611/11.8)  | 
+  lophanung#1            xấu  183.4 ms  JS    9.6  rớt 8  >33 40  hạt 284  vẽ 902/33.1MP (khung xấu 902/24.4)  | snd:trung ×23, snd:gEcho ×6, hu:gKim ×6, hu:gSuong ×6, hu:chich ×5, snd:crit ×3, snd:gBang ×3, snd:tia ×3, snd:bang ×2, snd:no
+      ↳ khung JS xấu (+2): snd:gEcho snd:gEcho snd:gEcho hu:gKim hu:gKim hu:gKim  ‖ trước: snd:mv snd:bang snd:mv snd:bang snd:mv snd:bang snd:gNap snd:gNap snd:gNap snd:gEcho snd:gKim snd:gEcho snd:gKhoa snd:gKhoa
+  chuato#2               xấu    100 ms  JS      7  rớt 0  >33 40  hạt 169  vẽ 691/12.2MP (khung xấu 552/11.7)  | 
+  ngaithoigian#2         xấu  116.7 ms  JS   11.4  rớt 0  >33 40  hạt 192  vẽ 829/24.4MP (khung xấu 641/11.5)  | 
+      ↳ khung JS xấu (+8): snd:gEcho snd:gEcho hu:gKim hu:gKim [gc 3.1MB]  ‖ trước: snd:gEcho snd:tia snd:tia snd:gBang hu:gKim hu:chich hu:chich hu:chich hu:gSuong hu:gSuong hu:gSuong hu:chich hu:chich
+  khoisinh#2             xấu    150 ms  JS    7.7  rớt 3  >33 40  hạt 168  vẽ 735/14.8MP (khung xấu 616/14.7)  | snd:trung ×9, hu:chich ×8, hu:gSuong ×3, snd:gEcho ×2, hu:gKim ×2, snd:tia ×2, snd:phao, snd:crit
+  lophanung#2            xấu  183.4 ms  JS   10.5  rớt 8  >33 40  hạt 276  vẽ 889/32.5MP (khung xấu 657/12.2)  | snd:trung ×18, hu:chich ×18, hu:gSuong ×9, hu:gKim ×3, snd:tia ×2, snd:gBang ×2, snd:crit ×2, snd:gKim ×2, hu:gDauGio ×2, hu:gTre/ngaithoigian ×2
+      ↳ khung JS xấu (+37): snd:gEcho hu:gSuong hu:gSuong hu:gSuong hu:chich hu:chich hu:gKim [gc 4MB]  ‖ trước: snd:gKim snd:gEcho snd:tia snd:gKim snd:tia hu:chich hu:chich hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:chich hu:gKim hu:gKim hu:gDauGio
+== vang1 (84 s) khung chuẩn 50 ms, JS TV 3.8 ms, long task 1017
+  hydra#1                xấu    100 ms  JS   11.6  rớt 2  >33 39  hạt 201  vẽ 764/19.8MP (khung xấu 706/8.8)  | snd:trung ×6, snd:crit ×3, snd:no ×3, hu:gVuot ×3, hu:gNoSao ×3, snd:gSao ×3, hu:gThienThach/ngoisao ×3, snd:gVuot, hu:gLuot/soi
+      ↳ khung JS xấu (+2): snd:gVuot hu:gVuot hu:gLuot/soi hu:gNoSao hu:gNoSao hu:gNoSao hu:gVuot  ‖ trước: snd:rail snd:rail snd:rail hu:hydraTia hu:hydraTia hu:hydraTia sig:hydra7 sig:hydra7 sig:hydra7
+  cuuvi#1                xấu    100 ms  JS    8.8  rớt 4  >33 39  hạt 234  vẽ 1024/20.8MP (khung xấu 673/8.1)  | snd:trung ×7, hu:gNoSao ×6, snd:crit ×4, snd:nap ×3, snd:no ×3, hu:gVuot ×3, hu:tuong/wallgen ×3, snd:gHo ×3, hu:gHoBay/cuuvi ×3, snd:gVuot
+      ↳ khung JS xấu (+1): snd:hoLy snd:hoLy snd:hoLy snd:gHo snd:gHo hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi  ‖ trước: snd:gVuot hu:gVuot hu:gVuot [gc 3.7MB]
+  ngoisao#1              xấu  100.1 ms  JS    7.7  rớt 8  >33 40  hạt 202  vẽ 828/17.9MP (khung xấu 768/9.1)  | snd:crit ×11, hu:gVuot ×10, snd:gSao ×8, snd:trung ×7, hu:gNoSao ×6, snd:gHo ×4, hu:gHoBay/cuuvi ×4, snd:gVuot ×3, gc 3.4MB, hu:gTre/soi
+  soi#1                  xấu   83.4 ms  JS    5.9  rớt 1  >33 36  hạt 175  vẽ 707/19.5MP (khung xấu 605/7.7)  | snd:gSao ×3
+  wallgen#1              xấu    100 ms  JS      8  rớt 6  >33 40  hạt 202  vẽ 872/20.4MP (khung xấu 690/7.8)  | snd:crit ×14, hu:gVuot ×14, snd:gVuot ×8, snd:gSao ×6, hu:gThienThach/ngoisao ×3, snd:trung ×3, snd:gHo ×2, hu:gHoBay/cuuvi ×2, hu:gTre/soi ×2, hu:gLuot/soi ×2
+  hydra#2                xấu   99.9 ms  JS    8.5  rớt 4  >33 40  hạt 181  vẽ 835/20.3MP (khung xấu 800/8.5)  | snd:crit ×3, snd:trung ×3, snd:thucTinh ×3, snd:hu ×3, hu:gNoSao ×3, hu:gVuot ×2, snd:no ×2, snd:gVuot, snd:gSao, hu:gThienThach/ngoisao
+      ↳ khung JS xấu (+30): snd:gSao snd:gSao snd:gSao snd:gVuot hu:gThienThach/ngoisao hu:gThienThach/ngoisao hu:gThienThach/ngoisao hu:gVuot hu:gTre/soi hu:gLuot/soi [gc 2.4MB]  ‖ trước: hu:gNoSao
+  cuuvi#2                xấu    100 ms  JS    8.4  rớt 4  >33 40  hạt 210  vẽ 916/19.9MP (khung xấu 523/8.5)  | snd:crit ×8, hu:gVuot ×8, snd:trung ×6, hu:gNoSao ×5, snd:gVuot ×4, snd:gSao ×3, snd:gHo ×3, hu:gHoBay/cuuvi ×3, snd:rail, hu:hydraTia
+      ↳ khung JS xấu (+32): snd:gVuot hu:gVuot hu:gNoSao hu:gVuot  ‖ trước: snd:gHo hu:gHoBay/cuuvi hu:gNoSao
+  ngoisao#2              xấu   99.9 ms  JS    7.5  rớt 1  >33 39  hạt 185  vẽ 840/20MP (khung xấu 621/8)  | snd:crit ×2, snd:trung ×2, hu:gVuot ×2, hu:gNoSao ×2, snd:gVuot, hu:gLuot/soi
+  soi#2                  xấu   83.4 ms  JS   13.6  rớt 6  >33 39  hạt 177  vẽ 789/19.3MP (khung xấu 687/8.1)  | snd:trung ×7, snd:crit ×4, hu:gVuot ×4, snd:gSao ×3, snd:gHo ×2, snd:gVuot ×2, hu:gHoBay/cuuvi ×2, hu:gNoSao ×2, snd:rail, hu:hydraTia
+      ↳ khung JS xấu (+31): snd:gHo hu:gHoBay/cuuvi hu:gNoSao [gc 2.4MB]  ‖ trước: snd:gHo hu:gNoSao hu:gNoSao hu:gVuot hu:gHoBay/cuuvi
+  wallgen#2              xấu    100 ms  JS    7.6  rớt 3  >33 40  hạt 191  vẽ 719/19.5MP (khung xấu 575/7.4)  | snd:crit ×4, hu:gVuot ×4, snd:nap ×3, snd:gVuot ×3, hu:tuong/wallgen ×3, hu:gTre/soi ×3, snd:lot ×2, hu:gNoSao ×2, snd:trung ×2, snd:gSao ×2
+== vang2 (77 s) khung chuẩn 33.4 ms, JS TV 2.5 ms, long task 148
+  marionette#1           xấu   66.7 ms  JS     11  rớt 2  >33 7  hạt 116  vẽ 357/6.2MP (khung xấu 313/5.8)  | snd:trung ×4, snd:mana ×3, hu:roi/marionette ×3, sig:roi ×3, img:fxb_crit:1.0, scale 2.9ms×2, snd:crit, snd:no
+      ↳ khung JS xấu (+1): snd:mana snd:mana snd:mana img:fxb_crit:1.0 hu:roi/marionette hu:roi/marionette hu:roi/marionette sig:roi sig:roi sig:roi [scale 2.9ms×2]
+  marionette#2           xấu   66.7 ms  JS    8.6  rớt 2  >33 3  hạt 101  vẽ 347/16.5MP (khung xấu 284/5.9)  | snd:trung, snd:no
+      ↳ khung JS xấu (+6): 
+  ghep:orbital3#1        xấu   66.7 ms  JS   20.4  rớt 8  >33 24  hạt 152  vẽ 454/16.6MP (khung xấu 316/6)  | snd:trung ×16, snd:gNap ×2, snd:mv, snd:ghep, scale 3.6ms×5, scale 3.6ms×11, snd:crit, snd:no, hu:vetinh
+      ↳ khung JS xấu (+1): snd:mv snd:ghep snd:gNap snd:gNap [scale 3.6ms×5] [dom 11 nut-trieu|bo-the]
+  ghep:pandora3#1        xấu   66.6 ms  JS   12.3  rớt 6  >33 19  hạt 146  vẽ 494/7.3MP (khung xấu 349/6.3)  | snd:trung ×10, snd:crit, hu:vetinh, snd:phao, snd:dat, snd:ghep, hu:tiaPhep
+      ↳ khung JS xấu (+6): snd:dat
+  ghep:sinhdoi3#1        xấu   66.7 ms  JS    7.1  rớt 3  >33 15  hạt 150  vẽ 448/17.4MP (khung xấu 375/6.5)  | snd:trung ×5, snd:no ×2, hu:vetinh ×2, snd:crit ×2, gc 3.8MB
+  ghep:canon2#1          xấu   66.6 ms  JS    9.2  rớt 7  >33 18  hạt 186  vẽ 499/17.2MP (khung xấu 350/6.4)  | snd:trung ×7, hu:vetinh ×2, snd:nang, snd:lo, snd:no, snd:phao, gc 3.4MB
+      ↳ khung JS xấu (+19): snd:nang snd:sao img:fx_starup:0.9  ‖ trước: hu:vetinh
+  ghep:canon5#1          xấu   50.1 ms  JS    7.6  rớt 1  >33 3  hạt 123  vẽ 333/6MP (khung xấu 313/5.6)  | 
+  ghep:orbital3#2        xấu   50.1 ms  JS    6.3  rớt 5  >33 20  hạt 134  vẽ 422/7MP (khung xấu 328/6.5)  | snd:trung ×5, snd:gKhoa ×2, snd:dat, snd:phao, snd:crit
+  ghep:pandora3#2        xấu   66.7 ms  JS     10  rớt 5  >33 22  hạt 141  vẽ 462/17MP (khung xấu 370/7)  | snd:trung ×5, snd:phao ×3, snd:crit
+      ↳ khung JS xấu (+20): snd:ghep img:fxb_toc:3.1 co:coDai:fxb_toc:3.1
+  ghep:sinhdoi3#2        xấu   50.1 ms  JS    4.5  rớt 2  >33 20  hạt 134  vẽ 458/7.7MP (khung xấu 445/7.7)  | snd:trung ×4, snd:phao ×2, gc 3.9MB
+  ghep:canon2#2          xấu   66.6 ms  JS    4.2  rớt 2  >33 15  hạt 138  vẽ 448/17.2MP (khung xấu 422/6.4)  | snd:phao
+  ghep:canon5#2          xấu   66.7 ms  JS    8.1  rớt 2  >33 5  hạt 125  vẽ 333/16.9MP (khung xấu 269/6.2)  | snd:trung ×2, snd:mana ×2, hu:roi/marionette ×2, sig:roi ×2, snd:no, snd:dat
+      ↳ khung JS xấu (+17):  [gc 3.6MB]
+== trum (182 s) khung chuẩn 33.3 ms, JS TV 2.3 ms, long task 252
+  trum:freezer           xấu   83.4 ms  JS   15.8  rớt 12  >33 15  hạt 160  vẽ 491/8.6MP (khung xấu 359/8.1)  | snd:trung ×20, hu:tiaTia ×17, hu:gDauAn ×17, hu:gTre/hydra ×11, snd:crit ×5, snd:lien ×4, snd:hoden ×3, hu:hoden/blackhole ×3, sig:hoden ×3, snd:no ×2
+      ↳ khung JS xấu (+3): snd:hoden snd:hoden snd:hoden hu:tiaTia hu:gDauAn hu:hoden/blackhole hu:hoden/blackhole hu:hoden/blackhole sig:hoden sig:hoden sig:hoden [scale 3.8ms×5]  ‖ trước: hu:gTre/hydra hu:gTre/hydra hu:gTre/hydra hu:tiaTia hu:gDauAn hu:tiaTia hu:gDauAn
+  chieu:freezer          xấu   66.7 ms  JS    8.4  rớt 26  >33 28  hạt 148  vẽ 455/8MP (khung xấu 361/7)  | snd:trung ×37, hu:tiaTia ×25, hu:gDauAn ×25, hu:gTre/hydra ×18, snd:lien ×7, snd:set ×3, hu:set/set ×3, hu:bangBay ×3, snd:phao ×2, snd:crit ×2
+      ↳ khung JS xấu (+13): snd:chieuTrum snd:bang hu:tiaTia hu:gDauAn hu:bangBay hu:bangBay hu:bangBay hu:bangPhep  ‖ trước: hu:tiaTia hu:gDauAn
+  trum:mad_crown         xấu   66.7 ms  JS    6.4  rớt 10  >33 13  hạt 75  vẽ 326/17MP (khung xấu 311/6.6)  | snd:trung ×12, hu:tiaTia ×9, hu:gDauAn ×9, hu:gTre/hydra ×6, snd:crit ×4, snd:lien ×2, snd:lot, snd:bao, snd:no, gc 3.2MB
+  chieu:mad_crown        xấu   66.7 ms  JS   13.5  rớt 15  >33 18  hạt 114  vẽ 359/6.8MP (khung xấu 321/6)  | snd:trung ×26, hu:tiaTia ×12, hu:gDauAn ×12, hu:gTre/hydra ×8, snd:set ×4, hu:set/set ×4, snd:lien ×3, hu:chieuTrum ×3, sig:hydraCan ×2, snd:crit ×2
+      ↳ khung JS xấu (+20):   ‖ trước: snd:chieuTrum hu:tiaTia hu:gDauAn hu:chieuTrum hu:chieuTrum hu:chieuTrum
+  trum:janus             xấu     50 ms  JS    4.6  rớt 4  >33 4  hạt 73  vẽ 304/6.5MP (khung xấu 249/6.2)  | snd:trung ×7, hu:tiaTia ×5, hu:gDauAn ×5, snd:crit ×3, snd:no, snd:set, hu:set/set, gc 3.6MB, snd:phao
+  chieu:janus            xấu   50.1 ms  JS   14.4  rớt 11  >33 13  hạt 114  vẽ 341/6.8MP (khung xấu 322/6.8)  | snd:trung ×10, hu:tiaTia ×7, hu:gDauAn ×7, hu:gTre/hydra ×3, gc 3.7MB ×2, snd:bang ×2, snd:set ×2, snd:no ×2, hu:set/set ×2, snd:hoden
+      ↳ khung JS xấu (+24): snd:chieuTrum hu:chieuTrum [scale 3.2ms×3]  ‖ trước: hu:tiaTia hu:gDauAn hu:tiaTia hu:gDauAn
+  trum:joker_king        xấu   66.7 ms  JS    3.6  rớt 10  >33 12  hạt 110  vẽ 356/7.7MP (khung xấu 350/6.5)  | snd:trung ×19, hu:tiaTia ×8, hu:gDauAn ×8, hu:gTre/hydra ×5, snd:lien ×2, snd:no, snd:set, hu:set/set
+  chieu:joker_king       xấu   66.7 ms  JS   20.3  rớt 28  >33 30  hạt 149  vẽ 402/7.3MP (khung xấu 291/6.4)  | snd:trung ×50, hu:tiaTia ×26, hu:gDauAn ×26, hu:gTre/hydra ×13, snd:lien ×6, snd:set ×5, hu:set/set ×5, snd:crit ×3, snd:phao ×2, sig:hydraCan ×2
+      ↳ khung JS xấu (+18): snd:chieuTrum snd:ghep hu:chieuTrum [scale 3.6ms×4]
+  trum:octopus           xấu   50.1 ms  JS    3.5  rớt 4  >33 6  hạt 65  vẽ 320/17.6MP (khung xấu 320/17.6)  | snd:trung ×2, hu:gTre/hydra ×2, hu:tiaTia ×2, hu:gDauAn ×2, gc 3.2MB, snd:lien, snd:phao
+  chieu:octopus          xấu   66.7 ms  JS    4.9  rớt 6  >33 9  hạt 54  vẽ 335/16.5MP (khung xấu 242/6.3)  | snd:trung ×10, hu:tiaTia ×7, hu:gDauAn ×7, hu:gTre/hydra ×3, snd:lien, snd:set, hu:set/set
+  trum:nightmare         xấu     50 ms  JS    4.3  rớt 3  >33 3  hạt 85  vẽ 343/6.6MP (khung xấu 266/6.1)  | snd:lien, snd:trung, hu:tiaTia, hu:gDauAn, gc 3.2MB
+  chieu:nightmare        xấu   50.1 ms  JS    5.6  rớt 6  >33 7  hạt 102  vẽ 418/17.7MP (khung xấu 198/5.8)  | snd:trung ×12, hu:gTre/hydra ×5, hu:tiaTia ×5, hu:gDauAn ×5, snd:crit ×4, snd:lien ×2, snd:no
+  trum:hive              xấu   50.1 ms  JS    4.7  rớt 5  >33 7  hạt 127  vẽ 351/6.6MP (khung xấu 309/6.2)  | snd:trung ×14, hu:tiaTia ×3, hu:gDauAn ×3, snd:set ×2, hu:set/set ×2, snd:lien ×2, hu:gTre/hydra ×2, gc 8MB, sig:hydraCan
+  chieu:hive             xấu   83.2 ms  JS    7.7  rớt 17  >33 20  hạt 229  vẽ 534/18.9MP (khung xấu 369/7)  | snd:trung ×56, hu:tiaTia ×5, hu:gDauAn ×5, snd:set ×3, hu:set/set ×3, snd:no ×3, hu:gTre/hydra ×3, snd:crit ×2, snd:chieuTrum, snd:phao
+  trum:jammer            xấu     50 ms  JS    4.5  rớt 4  >33 5  hạt 102  vẽ 295/6.2MP (khung xấu 219/6)  | snd:trung ×3, snd:set, hu:set/set, hu:tiaTia, hu:gDauAn
+  chieu:jammer           xấu   83.4 ms  JS    5.3  rớt 4  >33 5  hạt 121  vẽ 410/17.8MP (khung xấu 185/6)  | snd:trung ×3, hu:tiaTia ×2, hu:gDauAn ×2, snd:set, hu:set/set, snd:bang
+  trum:prism             xấu   83.2 ms  JS    5.6  rớt 19  >33 23  hạt 141  vẽ 425/17.6MP (khung xấu 425/17.6)  | snd:trung ×49, snd:crit ×7, hu:tiaTia ×5, hu:gDauAn ×5, snd:set ×3, hu:set/set ×3, snd:no ×3, snd:hoden ×2, hu:hoden/blackhole ×2, sig:hoden ×2
+  chieu:prism            xấu   50.1 ms  JS    7.3  rớt 8  >33 10  hạt 109  vẽ 414/6.8MP (khung xấu 270/6.1)  | snd:trung ×22, hu:gTre/hydra ×2, hu:tiaTia ×2, hu:gDauAn ×2, snd:set, hu:set/set, snd:lien, snd:crit, snd:no
+  trum:twin_core         xấu   50.1 ms  JS    3.5  rớt 7  >33 8  hạt 160  vẽ 480/6.8MP (khung xấu 322/6.3)  | snd:trung ×19, hu:gTre/hydra ×3, snd:lien ×2, hu:tiaTia ×2, hu:gDauAn ×2, snd:no, snd:set, snd:crit, hu:set/set
+  chieu:twin_core        xấu   66.6 ms  JS    2.7  rớt 3  >33 3  hạt 112  vẽ 312/17.7MP (khung xấu 288/6.3)  | snd:trung ×3, snd:no, hu:tiaTia, hu:gDauAn
+  trum:patcher           xấu   50.1 ms  JS    4.4  rớt 7  >33 11  hạt 107  vẽ 331/7MP (khung xấu 325/6.6)  | snd:trung ×9, hu:tiaTia ×3, hu:gDauAn ×3, snd:phao, snd:set, snd:crit, hu:set/set, snd:lien
+  chieu:patcher          xấu   50.1 ms  JS    5.4  rớt 7  >33 10  hạt 124  vẽ 332/6.7MP (khung xấu 332/6.7)  | snd:trung ×11, hu:gTre/hydra ×3, snd:bang ×2, hu:tiaTia ×2, hu:gDauAn ×2, snd:no, snd:crit, snd:set, hu:set/set, snd:lien
+  trum:leech             xấu   66.7 ms  JS    3.7  rớt 3  >33 4  hạt 91  vẽ 287/17.2MP (khung xấu 277/6.5)  | snd:trung ×5, hu:gTre/hydra ×3, snd:bao, snd:lien, snd:set, hu:set/set, hu:tiaTia, hu:gDauAn
+  chieu:leech            xấu    100 ms  JS    5.6  rớt 7  >33 8  hạt 94  vẽ 359/18.4MP (khung xấu 265/6.1)  | snd:trung ×6, hu:tiaTia ×2, gc 6.3MB, snd:set, hu:set/set, snd:chieuTrum, tai:fx_hasao_trung, hu:gDauAn
+  mv hero ok
+  mv dahlia ok
+  mv eve ok
+== chihuy (25 s) khung chuẩn 33.3 ms, JS TV 2.3 ms, long task 47
+  mv:hero                xấu   66.7 ms  JS    9.8  rớt 7  >33 7  hạt 67  vẽ 314/6MP (khung xấu 288/5.8)  | snd:trung ×20, snd:lien ×7, snd:set ×4, hu:set/set ×4, snd:crit, dom 22 mana|the-mv|nut-trieu, snd:tia, hu:tiaTia
+      ↳ khung JS xấu (+2): snd:set snd:set hu:set/set hu:set/set [dom 22 mana|the-mv|nut-trieu]  ‖ trước: snd:mv [dom 53 cutin|wrap]
+  mv:dahlia              xấu   83.3 ms  JS    7.5  rớt 20  >33 24  hạt 71  vẽ 384/17MP (khung xấu 378/7.1)  | snd:trung ×30, snd:lien ×23, snd:tia ×2, hu:tiaTia ×2, snd:no ×2, snd:set ×2, hu:set/set ×2, img:fxb_max:1.1, snd:crit
+  mv:eve                 xấu   83.3 ms  JS      8  rớt 23  >33 25  hạt 57  vẽ 344/18MP (khung xấu 282/18)  | snd:trung ×42, snd:lien ×21, snd:set ×4, hu:set/set ×4, snd:crit ×3, snd:no ×3, snd:phao ×2, img:fxb_khien:1.2, gc 2.8MB, gc 3.8MB
+== dong (51 s) khung chuẩn 66.6 ms, JS TV 4 ms, long task 505
+  cungluc#1              xấu  233.2 ms  JS   28.1  rớt 18  >33 40  hạt 278  vẽ 1517/29.4MP (khung xấu 1517/18.5)  | snd:trung ×95, hu:vetChay/ronglua ×58, snd:gLua ×27, hu:hoHoa/cuuvi ×27, hu:chay/ronglua ×14, snd:crit ×7, snd:gNap ×6, snd:gHo ×6, snd:gKhoa ×6, hu:gHoBay/cuuvi ×6
+      ↳ khung JS xấu (+4): hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:chay/ronglua hu:chay/ronglua sig:hydra7 sig:hoden sig:hydra7  ‖ trước: snd:gLua snd:gLua snd:gLua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:chay/ronglua sig:hoden sig:hydra7
+  cungluc#2              xấu    300 ms  JS   16.1  rớt 11  >33 40  hạt 296  vẽ 1459/26.5MP (khung xấu 1381/26.5)  | snd:trung ×152, hu:vetChay/ronglua ×37, snd:crit ×28, hu:hoHoa/cuuvi ×27, snd:gNap ×6, snd:gKhoa ×6, snd:gLua ×6, hu:chay/ronglua ×5, snd:gHo ×4, hu:gHoBay/cuuvi ×4
+      ↳ khung JS xấu (+1): snd:hoLy snd:hoLy snd:hoLy snd:gRong snd:gRong snd:gRong snd:hoden snd:gNap snd:sam snd:rail snd:hoden snd:gNap snd:sam snd:rail [gc 2.9MB]  ‖ trước: snd:rail snd:rail snd:rail hu:hydraTia hu:hydraTia hu:hydraTia sig:hydra7 sig:hydra7 sig:hydra7
+  cungluc#3              xấu  183.4 ms  JS    8.7  rớt 14  >33 40  hạt 296  vẽ 1387/28.9MP (khung xấu 1241/16.9)  | snd:trung ×68, hu:vetChay/ronglua ×39, hu:hoHoa/cuuvi ×27, snd:gLua ×16, snd:crit ×13, hu:chay/ronglua ×7, snd:gHo ×6, hu:gHoBay/cuuvi ×6, snd:lot ×4, snd:hoLy ×3
+      ↳ khung JS xấu (+2): snd:gHo snd:gLua snd:gHo hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua sig:hoden  ‖ trước: snd:hoLy snd:hoLy snd:hoLy snd:gRong snd:gRong snd:gRong snd:hoden snd:gNap snd:sam snd:rail snd:hoden snd:gNap snd:sam snd:rail [gc 2.2MB]
+== coop (117 s) khung chuẩn 150.1 ms, JS TV 10.7 ms, long task 666
+  cungluc#1              xấu  366.6 ms  JS   33.2  rớt 9  >33 40  hạt 269  vẽ 2365/45MP (khung xấu 2365/37.5)  | snd:trung ×287, snd:crit ×30, hu:vetChay/ronglua ×30, hu:hoHoa/cuuvi ×27, hu:ongLao/chuato ×12, snd:no ×12, sig:ong ×12, snd:mv ×6, hu:gSuong ×6, hu:gKim ×5
+      ↳ khung JS xấu (+4): hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gSuong hu:gSuong hu:gSuong sig:hydra7 sig:hoden sig:hydra7 sig:hoden sig:hydra7 sig:hoden sig:rong sig:rong [scale 2.2ms×6]  ‖ trước: snd:gKim snd:gHo snd:gHo snd:gEcho snd:gHo hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua [scale 2.2ms×2]
+  cungluc#2              xấu  333.3 ms  JS   20.1  rớt 6  >33 40  hạt 283  vẽ 2226/43.8MP (khung xấu 1616/20.9)  | snd:trung ×216, hu:vetChay/ronglua ×31, snd:crit ×26, snd:no ×15, sig:ong ×12, sig:tho ×3, hu:gSuong ×3, sig:hydra7 ×3, sig:rong ×3, snd:tia ×3
+      ↳ khung JS xấu (+11): snd:gKim snd:tia snd:gEcho snd:hoden snd:hoden snd:hoden hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gKim hu:hoden/blackhole  ‖ trước: snd:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian
+  cungluc#3              xấu  333.3 ms  JS   15.2  rớt 5  >33 40  hạt 268  vẽ 2121/43.1MP (khung xấu 2039/32.9)  | snd:trung ×139, snd:crit ×23, hu:vetChay/ronglua ×20, snd:no ×12, sig:ong ×12, hu:gKim ×8, snd:gKim ×6, hu:gDauGio ×6, hu:gTre/ngaithoigian ×6, sig:tho ×3
+      ↳ khung JS xấu (+5): snd:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:vetChay/ronglua [gc 6.6MB]  ‖ trước: snd:gKim snd:gHo snd:gHo snd:gKim snd:gEcho hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim

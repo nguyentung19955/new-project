@@ -1,0 +1,2179 @@
+{
+ "do1": {
+  "ten": "do1",
+  "khungChuan": 66.7,
+  "viecTV": 4,
+  "n": 1158,
+  "kq": [
+   {
+    "ten": "blackhole#1",
+    "xauDt": 166.7,
+    "xauV": 24.1,
+    "xauVi": 1,
+    "xauTag": "snd:hoden snd:hoden snd:hoden snd:gCot snd:gCot snd:gCot snd:gLua snd:gLua snd:gLua hu:hoden/blackhole hu:hoden/blackhole hu:hoden/blackhole hu:set hu:gCot [scale 4ms×7]",
+    "truocTag": "snd:sam snd:sam snd:sam hu:sam/overlord hu:sam/overlord hu:sam/overlord",
+    "rot": 7,
+    "qua33": 40,
+    "hatMax": 278,
+    "nvMax": 893,
+    "mpMax": 25.4,
+    "mpXau": 25.4,
+    "nvXau": 893,
+    "viec": [
+     "snd:trung ×42",
+     "snd:gLua ×11",
+     "snd:crit ×9",
+     "snd:no ×6",
+     "snd:hoden ×3",
+     "snd:gCot ×3",
+     "hu:hoden/blackhole ×3",
+     "hu:set ×3",
+     "hu:gCot ×3",
+     "hu:gXem ×3"
+    ]
+   },
+   {
+    "ten": "overlord#1",
+    "xauDt": 183.3,
+    "xauV": 9.2,
+    "xauVi": 2,
+    "xauTag": " [gc 3.2MB]",
+    "truocTag": "snd:gNap snd:sam snd:gNap snd:sam snd:gNap snd:sam snd:gLua snd:gCot snd:gCot snd:gCot snd:gKhoa snd:gKhoa snd:gKhoa hu:sam/overlord",
+    "rot": 7,
+    "qua33": 39,
+    "hatMax": 260,
+    "nvMax": 1265,
+    "mpMax": 26,
+    "mpXau": 15.2,
+    "nvXau": 1265,
+    "viec": [
+     "snd:trung ×52",
+     "snd:crit ×11",
+     "snd:gNap ×3",
+     "snd:sam ×3",
+     "snd:gLua ×3",
+     "snd:no ×3",
+     "snd:gCot ×3",
+     "snd:gKhoa ×3",
+     "hu:sam/overlord ×3",
+     "hu:set ×3"
+    ]
+   },
+   {
+    "ten": "leviathan#1",
+    "xauDt": 116.7,
+    "xauV": 13.7,
+    "xauVi": 1,
+    "xauTag": "snd:gSongTho snd:gSongTho snd:gSongTho snd:gNap snd:gNap snd:gNap snd:gLua hu:thoThuy/leviathan hu:thoThuy/leviathan hu:thoThuy/leviathan sig:tho sig:tho sig:tho [scale 1.2ms×2] [gc 3.3MB]",
+    "truocTag": "",
+    "rot": 1,
+    "qua33": 39,
+    "hatMax": 239,
+    "nvMax": 704,
+    "mpMax": 21.6,
+    "mpXau": 9.9,
+    "nvXau": 660,
+    "viec": [
+     "snd:trung ×34",
+     "snd:gSongTho ×3",
+     "snd:gNap ×3",
+     "hu:thoThuy/leviathan ×3",
+     "sig:tho ×3",
+     "snd:gLua ×2",
+     "snd:crit",
+     "gc 3.3MB",
+     "snd:phao"
+    ]
+   },
+   {
+    "ten": "ronglua#1",
+    "xauDt": 150.1,
+    "xauV": 9.8,
+    "xauVi": 20,
+    "xauTag": "snd:gNap snd:gNap snd:gNap snd:gLua hu:vetChay/ronglua",
+    "truocTag": "hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua",
+    "rot": 6,
+    "qua33": 40,
+    "hatMax": 292,
+    "nvMax": 956,
+    "mpMax": 24.2,
+    "mpXau": 9.4,
+    "nvXau": 549,
+    "viec": [
+     "hu:chay/ronglua ×12",
+     "snd:gLua ×10",
+     "snd:trung ×7",
+     "snd:no ×3",
+     "snd:crit ×3",
+     "hu:vetChay/ronglua ×3",
+     "gc 3.3MB"
+    ]
+   },
+   {
+    "ten": "blackhole#2",
+    "xauDt": 183.4,
+    "xauV": 7,
+    "xauVi": 24,
+    "xauTag": "snd:hoden snd:hoden snd:hoden snd:gLua hu:hoden/blackhole hu:hoden/blackhole hu:hoden/blackhole hu:vetChay/ronglua sig:hoden sig:hoden sig:hoden [gc 3.4MB]",
+    "truocTag": "snd:gLua hu:chay/ronglua hu:vetChay/ronglua",
+    "rot": 7,
+    "qua33": 40,
+    "hatMax": 281,
+    "nvMax": 1009,
+    "mpMax": 23.8,
+    "mpXau": 23.4,
+    "nvXau": 762,
+    "viec": [
+     "snd:trung ×42",
+     "snd:crit ×12",
+     "snd:gLua ×7",
+     "hu:vetChay/ronglua ×3",
+     "snd:no ×2",
+     "gc 3.4MB",
+     "snd:phao",
+     "hu:chay/ronglua"
+    ]
+   },
+   {
+    "ten": "overlord#2",
+    "xauDt": 166.7,
+    "xauV": 9.2,
+    "xauVi": 6,
+    "xauTag": "snd:gLua",
+    "truocTag": "snd:gLua [gc 3MB]",
+    "rot": 6,
+    "qua33": 39,
+    "hatMax": 300,
+    "nvMax": 1365,
+    "mpMax": 26,
+    "mpXau": 13.6,
+    "nvXau": 1157,
+    "viec": [
+     "snd:trung ×28",
+     "snd:gLua ×6",
+     "snd:phao ×3",
+     "hu:vetChay/ronglua ×2",
+     "snd:crit ×2",
+     "gc 2.8MB",
+     "gc 3MB"
+    ]
+   },
+   {
+    "ten": "leviathan#2",
+    "xauDt": 100,
+    "xauV": 5.8,
+    "xauVi": 1,
+    "xauTag": "snd:gSongTho snd:gSongTho snd:gSongTho snd:gNuot snd:gLua snd:gLua hu:thoThuy/leviathan hu:thoThuy/leviathan hu:thoThuy/leviathan hu:xoay/leviathan hu:vetChay/ronglua sig:tho sig:tho sig:tho [gc 3.3MB]",
+    "truocTag": "snd:gLua",
+    "rot": 0,
+    "qua33": 40,
+    "hatMax": 279,
+    "nvMax": 713,
+    "mpMax": 11.8,
+    "mpXau": 11.8,
+    "nvXau": 713,
+    "viec": []
+   },
+   {
+    "ten": "ronglua#2",
+    "xauDt": 133.4,
+    "xauV": 9.2,
+    "xauVi": 1,
+    "xauTag": "snd:gRong snd:gRong snd:gRong snd:gLua snd:gLua hu:rongBo/ronglua hu:rongBo/ronglua hu:rongBo/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua sig:rong sig:rong",
+    "truocTag": "",
+    "rot": 6,
+    "qua33": 40,
+    "hatMax": 277,
+    "nvMax": 978,
+    "mpMax": 24.2,
+    "mpXau": 10.3,
+    "nvXau": 622,
+    "viec": [
+     "snd:trung ×52",
+     "hu:vetChay/ronglua ×20",
+     "hu:chay/ronglua ×10",
+     "snd:gLua ×8",
+     "snd:no ×5",
+     "snd:crit ×3",
+     "snd:phao ×2",
+     "gc 3.3MB"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_ronglua_trung": [
+    1,
+    0.22
+   ],
+   "fx_canon_no": [
+    1,
+    0.13
+   ],
+   "fx_leviathan_no": [
+    1,
+    0.13
+   ],
+   "fx_leviathan_trung": [
+    1,
+    0.22
+   ],
+   "fx_canon_trung": [
+    1,
+    0.5
+   ],
+   "fx_overlord_trung": [
+    1,
+    0.22
+   ],
+   "fx_overlord_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_trung": [
+    1,
+    0.22
+   ]
+  },
+  "longTask": 949,
+  "longTaskMax": 177
+ },
+ "do2": {
+  "ten": "do2",
+  "khungChuan": 83.3,
+  "viecTV": 5.3,
+  "n": 1159,
+  "kq": [
+   {
+    "ten": "chuato#1",
+    "xauDt": 133.3,
+    "xauV": 17.5,
+    "xauVi": 14,
+    "xauTag": "snd:bang snd:gEcho snd:tia hu:gSuong hu:gSuong hu:gSuong hu:gKim",
+    "truocTag": "snd:gEcho hu:gKim",
+    "rot": 1,
+    "qua33": 40,
+    "hatMax": 174,
+    "nvMax": 684,
+    "mpMax": 13.7,
+    "mpXau": 10.6,
+    "nvXau": 600,
+    "viec": [
+     "hu:ongLao/chuato ×6",
+     "snd:gSwarm ×3",
+     "sig:ong ×3",
+     "snd:trung ×3",
+     "hu:gSuong ×3",
+     "snd:crit ×2",
+     "snd:gEcho ×2",
+     "snd:tia ×2",
+     "hu:gKim ×2",
+     "scale 2.2ms×2"
+    ]
+   },
+   {
+    "ten": "ngaithoigian#1",
+    "xauDt": 116.6,
+    "xauV": 16.4,
+    "xauVi": 1,
+    "xauTag": "snd:tua snd:mv snd:tua snd:mv snd:tua snd:mv snd:gEcho snd:tia img:sig_m05_throne:0.8 hu:rewind/ngaithoigian hu:rewind/ngaithoigian hu:rewind/ngaithoigian hu:gKim hu:chich",
+    "truocTag": "snd:lot hu:chich",
+    "rot": 0,
+    "qua33": 40,
+    "hatMax": 182,
+    "nvMax": 774,
+    "mpMax": 21.5,
+    "mpXau": 12,
+    "nvXau": 774,
+    "viec": [
+     "snd:trung ×39",
+     "snd:crit ×4",
+     "hu:chich ×4",
+     "snd:tua ×3",
+     "snd:mv ×3",
+     "hu:rewind/ngaithoigian ×3",
+     "sig:rewind ×3",
+     "snd:gEcho",
+     "snd:tia",
+     "img:sig_m05_throne:0.8"
+    ]
+   },
+   {
+    "ten": "khoisinh#1",
+    "xauDt": 100,
+    "xauV": 7.6,
+    "xauVi": 0,
+    "xauTag": "snd:gEcho snd:tia hu:gKim hu:chich",
+    "truocTag": "snd:gEcho hu:chich hu:gKim hu:chich [gc 3.5MB]",
+    "rot": 0,
+    "qua33": 40,
+    "hatMax": 161,
+    "nvMax": 638,
+    "mpMax": 14.1,
+    "mpXau": 11.8,
+    "nvXau": 611,
+    "viec": []
+   },
+   {
+    "ten": "lophanung#1",
+    "xauDt": 183.4,
+    "xauV": 9.6,
+    "xauVi": 2,
+    "xauTag": "snd:gEcho snd:gEcho snd:gEcho hu:gKim hu:gKim hu:gKim",
+    "truocTag": "snd:mv snd:bang snd:mv snd:bang snd:mv snd:bang snd:gNap snd:gNap snd:gNap snd:gEcho snd:gKim snd:gEcho snd:gKhoa snd:gKhoa",
+    "rot": 8,
+    "qua33": 40,
+    "hatMax": 284,
+    "nvMax": 902,
+    "mpMax": 33.1,
+    "mpXau": 24.4,
+    "nvXau": 902,
+    "viec": [
+     "snd:trung ×23",
+     "snd:gEcho ×6",
+     "hu:gKim ×6",
+     "hu:gSuong ×6",
+     "hu:chich ×5",
+     "snd:crit ×3",
+     "snd:gBang ×3",
+     "snd:tia ×3",
+     "snd:bang ×2",
+     "snd:no"
+    ]
+   },
+   {
+    "ten": "chuato#2",
+    "xauDt": 100,
+    "xauV": 7,
+    "xauVi": 4,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 0,
+    "qua33": 40,
+    "hatMax": 169,
+    "nvMax": 691,
+    "mpMax": 12.2,
+    "mpXau": 11.7,
+    "nvXau": 552,
+    "viec": []
+   },
+   {
+    "ten": "ngaithoigian#2",
+    "xauDt": 116.7,
+    "xauV": 11.4,
+    "xauVi": 8,
+    "xauTag": "snd:gEcho snd:gEcho hu:gKim hu:gKim [gc 3.1MB]",
+    "truocTag": "snd:gEcho snd:tia snd:tia snd:gBang hu:gKim hu:chich hu:chich hu:chich hu:gSuong hu:gSuong hu:gSuong hu:chich hu:chich",
+    "rot": 0,
+    "qua33": 40,
+    "hatMax": 192,
+    "nvMax": 829,
+    "mpMax": 24.4,
+    "mpXau": 11.5,
+    "nvXau": 641,
+    "viec": []
+   },
+   {
+    "ten": "khoisinh#2",
+    "xauDt": 150,
+    "xauV": 7.7,
+    "xauVi": 33,
+    "xauTag": "snd:gEcho snd:gEcho hu:gKim hu:gKim hu:chich",
+    "truocTag": "snd:tia hu:chich hu:chich hu:chich hu:chich",
+    "rot": 3,
+    "qua33": 40,
+    "hatMax": 168,
+    "nvMax": 735,
+    "mpMax": 14.8,
+    "mpXau": 14.7,
+    "nvXau": 616,
+    "viec": [
+     "snd:trung ×9",
+     "hu:chich ×8",
+     "hu:gSuong ×3",
+     "snd:gEcho ×2",
+     "hu:gKim ×2",
+     "snd:tia ×2",
+     "snd:phao",
+     "snd:crit"
+    ]
+   },
+   {
+    "ten": "lophanung#2",
+    "xauDt": 183.4,
+    "xauV": 10.5,
+    "xauVi": 37,
+    "xauTag": "snd:gEcho hu:gSuong hu:gSuong hu:gSuong hu:chich hu:chich hu:gKim [gc 4MB]",
+    "truocTag": "snd:gKim snd:gEcho snd:tia snd:gKim snd:tia hu:chich hu:chich hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:chich hu:gKim hu:gKim hu:gDauGio",
+    "rot": 8,
+    "qua33": 40,
+    "hatMax": 276,
+    "nvMax": 889,
+    "mpMax": 32.5,
+    "mpXau": 12.2,
+    "nvXau": 657,
+    "viec": [
+     "snd:trung ×18",
+     "hu:chich ×18",
+     "hu:gSuong ×9",
+     "hu:gKim ×3",
+     "snd:tia ×2",
+     "snd:gBang ×2",
+     "snd:crit ×2",
+     "snd:gKim ×2",
+     "hu:gDauGio ×2",
+     "hu:gTre/ngaithoigian ×2"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "bang_vo": [
+    6,
+    0.18
+   ],
+   "fx_chuato_no": [
+    2,
+    0.13
+   ],
+   "fx_canon_no": [
+    1,
+    0.13
+   ],
+   "fx_chuato_trung": [
+    1,
+    0.22
+   ],
+   "fx_ngaithoigian_no": [
+    1,
+    0.13
+   ],
+   "fx_ngaithoigian_trung": [
+    1,
+    0.22
+   ],
+   "fx_canon_trung": [
+    1,
+    0.5
+   ],
+   "fx_lophanung_trung": [
+    1,
+    0.45
+   ]
+  },
+  "longTask": 1064,
+  "longTaskMax": 215
+ },
+ "vang1": {
+  "ten": "vang1",
+  "khungChuan": 50,
+  "viecTV": 3.8,
+  "n": 1410,
+  "kq": [
+   {
+    "ten": "hydra#1",
+    "xauDt": 100,
+    "xauV": 11.6,
+    "xauVi": 2,
+    "xauTag": "snd:gVuot hu:gVuot hu:gLuot/soi hu:gNoSao hu:gNoSao hu:gNoSao hu:gVuot",
+    "truocTag": "snd:rail snd:rail snd:rail hu:hydraTia hu:hydraTia hu:hydraTia sig:hydra7 sig:hydra7 sig:hydra7",
+    "rot": 2,
+    "qua33": 39,
+    "hatMax": 201,
+    "nvMax": 764,
+    "mpMax": 19.8,
+    "mpXau": 8.8,
+    "nvXau": 706,
+    "viec": [
+     "snd:trung ×6",
+     "snd:crit ×3",
+     "snd:no ×3",
+     "hu:gVuot ×3",
+     "hu:gNoSao ×3",
+     "snd:gSao ×3",
+     "hu:gThienThach/ngoisao ×3",
+     "snd:gVuot",
+     "hu:gLuot/soi"
+    ]
+   },
+   {
+    "ten": "cuuvi#1",
+    "xauDt": 100,
+    "xauV": 8.8,
+    "xauVi": 1,
+    "xauTag": "snd:hoLy snd:hoLy snd:hoLy snd:gHo snd:gHo hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi hu:hoHoa/cuuvi",
+    "truocTag": "snd:gVuot hu:gVuot hu:gVuot [gc 3.7MB]",
+    "rot": 4,
+    "qua33": 39,
+    "hatMax": 234,
+    "nvMax": 1024,
+    "mpMax": 20.8,
+    "mpXau": 8.1,
+    "nvXau": 673,
+    "viec": [
+     "snd:trung ×7",
+     "hu:gNoSao ×6",
+     "snd:crit ×4",
+     "snd:nap ×3",
+     "snd:no ×3",
+     "hu:gVuot ×3",
+     "hu:tuong/wallgen ×3",
+     "snd:gHo ×3",
+     "hu:gHoBay/cuuvi ×3",
+     "snd:gVuot"
+    ]
+   },
+   {
+    "ten": "ngoisao#1",
+    "xauDt": 100.1,
+    "xauV": 7.7,
+    "xauVi": 33,
+    "xauTag": "snd:gSao snd:gSao snd:gSao hu:gVuot",
+    "truocTag": "snd:gVuot snd:gSao snd:gSao snd:rail snd:rail snd:gSao snd:rail hu:gNoSao hu:gVuot hu:gTre/soi hu:hydraTia hu:hydraTia hu:hydraTia sig:hydra7",
+    "rot": 8,
+    "qua33": 40,
+    "hatMax": 202,
+    "nvMax": 828,
+    "mpMax": 17.9,
+    "mpXau": 9.1,
+    "nvXau": 768,
+    "viec": [
+     "snd:crit ×11",
+     "hu:gVuot ×10",
+     "snd:gSao ×8",
+     "snd:trung ×7",
+     "hu:gNoSao ×6",
+     "snd:gHo ×4",
+     "hu:gHoBay/cuuvi ×4",
+     "snd:gVuot ×3",
+     "gc 3.4MB",
+     "hu:gTre/soi"
+    ]
+   },
+   {
+    "ten": "soi#1",
+    "xauDt": 83.4,
+    "xauV": 5.9,
+    "xauVi": 36,
+    "xauTag": "snd:gSao snd:gVuot hu:gVuot hu:gTre/soi [gc 3.7MB]",
+    "truocTag": "snd:gSao snd:gSao",
+    "rot": 1,
+    "qua33": 36,
+    "hatMax": 175,
+    "nvMax": 707,
+    "mpMax": 19.5,
+    "mpXau": 7.7,
+    "nvXau": 605,
+    "viec": [
+     "snd:gSao ×3"
+    ]
+   },
+   {
+    "ten": "wallgen#1",
+    "xauDt": 100,
+    "xauV": 8,
+    "xauVi": 8,
+    "xauTag": "snd:gVuot snd:gVuot hu:gVuot hu:gTre/soi hu:gNoSao hu:gVuot hu:gTre/soi hu:gNoSao [gc 3.8MB]",
+    "truocTag": "",
+    "rot": 6,
+    "qua33": 40,
+    "hatMax": 202,
+    "nvMax": 872,
+    "mpMax": 20.4,
+    "mpXau": 7.8,
+    "nvXau": 690,
+    "viec": [
+     "snd:crit ×14",
+     "hu:gVuot ×14",
+     "snd:gVuot ×8",
+     "snd:gSao ×6",
+     "hu:gThienThach/ngoisao ×3",
+     "snd:trung ×3",
+     "snd:gHo ×2",
+     "hu:gHoBay/cuuvi ×2",
+     "hu:gTre/soi ×2",
+     "hu:gLuot/soi ×2"
+    ]
+   },
+   {
+    "ten": "hydra#2",
+    "xauDt": 99.9,
+    "xauV": 8.5,
+    "xauVi": 30,
+    "xauTag": "snd:gSao snd:gSao snd:gSao snd:gVuot hu:gThienThach/ngoisao hu:gThienThach/ngoisao hu:gThienThach/ngoisao hu:gVuot hu:gTre/soi hu:gLuot/soi [gc 2.4MB]",
+    "truocTag": "hu:gNoSao",
+    "rot": 4,
+    "qua33": 40,
+    "hatMax": 181,
+    "nvMax": 835,
+    "mpMax": 20.3,
+    "mpXau": 8.5,
+    "nvXau": 800,
+    "viec": [
+     "snd:crit ×3",
+     "snd:trung ×3",
+     "snd:thucTinh ×3",
+     "snd:hu ×3",
+     "hu:gNoSao ×3",
+     "hu:gVuot ×2",
+     "snd:no ×2",
+     "snd:gVuot",
+     "snd:gSao",
+     "hu:gThienThach/ngoisao"
+    ]
+   },
+   {
+    "ten": "cuuvi#2",
+    "xauDt": 100,
+    "xauV": 8.4,
+    "xauVi": 32,
+    "xauTag": "snd:gVuot hu:gVuot hu:gNoSao hu:gVuot",
+    "truocTag": "snd:gHo hu:gHoBay/cuuvi hu:gNoSao",
+    "rot": 4,
+    "qua33": 40,
+    "hatMax": 210,
+    "nvMax": 916,
+    "mpMax": 19.9,
+    "mpXau": 8.5,
+    "nvXau": 523,
+    "viec": [
+     "snd:crit ×8",
+     "hu:gVuot ×8",
+     "snd:trung ×6",
+     "hu:gNoSao ×5",
+     "snd:gVuot ×4",
+     "snd:gSao ×3",
+     "snd:gHo ×3",
+     "hu:gHoBay/cuuvi ×3",
+     "snd:rail",
+     "hu:hydraTia"
+    ]
+   },
+   {
+    "ten": "ngoisao#2",
+    "xauDt": 99.9,
+    "xauV": 7.5,
+    "xauVi": 30,
+    "xauTag": "snd:gHo snd:gVuot hu:gNoSao hu:gNoSao hu:gHoBay/cuuvi hu:gVuot hu:gTre/soi [gc 4.4MB]",
+    "truocTag": "snd:gHo hu:gHoBay/cuuvi hu:gNoSao",
+    "rot": 1,
+    "qua33": 39,
+    "hatMax": 185,
+    "nvMax": 840,
+    "mpMax": 20,
+    "mpXau": 8,
+    "nvXau": 621,
+    "viec": [
+     "snd:crit ×2",
+     "snd:trung ×2",
+     "hu:gVuot ×2",
+     "hu:gNoSao ×2",
+     "snd:gVuot",
+     "hu:gLuot/soi"
+    ]
+   },
+   {
+    "ten": "soi#2",
+    "xauDt": 83.4,
+    "xauV": 13.6,
+    "xauVi": 31,
+    "xauTag": "snd:gHo hu:gHoBay/cuuvi hu:gNoSao [gc 2.4MB]",
+    "truocTag": "snd:gHo hu:gNoSao hu:gNoSao hu:gVuot hu:gHoBay/cuuvi",
+    "rot": 6,
+    "qua33": 39,
+    "hatMax": 177,
+    "nvMax": 789,
+    "mpMax": 19.3,
+    "mpXau": 8.1,
+    "nvXau": 687,
+    "viec": [
+     "snd:trung ×7",
+     "snd:crit ×4",
+     "hu:gVuot ×4",
+     "snd:gSao ×3",
+     "snd:gHo ×2",
+     "snd:gVuot ×2",
+     "hu:gHoBay/cuuvi ×2",
+     "hu:gNoSao ×2",
+     "snd:rail",
+     "hu:hydraTia"
+    ]
+   },
+   {
+    "ten": "wallgen#2",
+    "xauDt": 100,
+    "xauV": 7.6,
+    "xauVi": 30,
+    "xauTag": "hu:gNoSao [gc 4.1MB]",
+    "truocTag": "hu:gVuot",
+    "rot": 3,
+    "qua33": 40,
+    "hatMax": 191,
+    "nvMax": 719,
+    "mpMax": 19.5,
+    "mpXau": 7.4,
+    "nvXau": 575,
+    "viec": [
+     "snd:crit ×4",
+     "hu:gVuot ×4",
+     "snd:nap ×3",
+     "snd:gVuot ×3",
+     "hu:tuong/wallgen ×3",
+     "hu:gTre/soi ×3",
+     "snd:lot ×2",
+     "hu:gNoSao ×2",
+     "snd:trung ×2",
+     "snd:gSao ×2"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_soi_trung": [
+    1,
+    0.22
+   ],
+   "fx_cuuvi_no": [
+    1,
+    0.13
+   ],
+   "fx_ngoisao_no": [
+    1,
+    0.13
+   ],
+   "fx_ngoisao_trung": [
+    1,
+    0.22
+   ],
+   "fx_cuuvi_trung": [
+    1,
+    0.2
+   ],
+   "fx_hydra_no": [
+    1,
+    0.13
+   ],
+   "fx_hydra_trung": [
+    1,
+    0.22
+   ],
+   "fx_wallgen_no": [
+    1,
+    0.13
+   ],
+   "fx_wallgen_trung": [
+    1,
+    0.22
+   ]
+  },
+  "longTask": 1017,
+  "longTaskMax": 152
+ },
+ "vang2": {
+  "ten": "vang2",
+  "khungChuan": 33.4,
+  "viecTV": 2.5,
+  "n": 1970,
+  "kq": [
+   {
+    "ten": "marionette#1",
+    "xauDt": 66.7,
+    "xauV": 11,
+    "xauVi": 1,
+    "xauTag": "snd:mana snd:mana snd:mana img:fxb_crit:1.0 hu:roi/marionette hu:roi/marionette hu:roi/marionette sig:roi sig:roi sig:roi [scale 2.9ms×2]",
+    "truocTag": "",
+    "rot": 2,
+    "qua33": 7,
+    "hatMax": 116,
+    "nvMax": 357,
+    "mpMax": 6.2,
+    "mpXau": 5.8,
+    "nvXau": 313,
+    "viec": [
+     "snd:trung ×4",
+     "snd:mana ×3",
+     "hu:roi/marionette ×3",
+     "sig:roi ×3",
+     "img:fxb_crit:1.0",
+     "scale 2.9ms×2",
+     "snd:crit",
+     "snd:no"
+    ]
+   },
+   {
+    "ten": "marionette#2",
+    "xauDt": 66.7,
+    "xauV": 8.6,
+    "xauVi": 6,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 2,
+    "qua33": 3,
+    "hatMax": 101,
+    "nvMax": 347,
+    "mpMax": 16.5,
+    "mpXau": 5.9,
+    "nvXau": 284,
+    "viec": [
+     "snd:trung",
+     "snd:no"
+    ]
+   },
+   {
+    "ten": "ghep:orbital3#1",
+    "xauDt": 66.7,
+    "xauV": 20.4,
+    "xauVi": 1,
+    "xauTag": "snd:mv snd:ghep snd:gNap snd:gNap [scale 3.6ms×5] [dom 11 nut-trieu|bo-the]",
+    "truocTag": "",
+    "rot": 8,
+    "qua33": 24,
+    "hatMax": 152,
+    "nvMax": 454,
+    "mpMax": 16.6,
+    "mpXau": 6,
+    "nvXau": 316,
+    "viec": [
+     "snd:trung ×16",
+     "snd:gNap ×2",
+     "snd:mv",
+     "snd:ghep",
+     "scale 3.6ms×5",
+     "scale 3.6ms×11",
+     "snd:crit",
+     "snd:no",
+     "hu:vetinh"
+    ]
+   },
+   {
+    "ten": "ghep:pandora3#1",
+    "xauDt": 66.6,
+    "xauV": 12.3,
+    "xauVi": 6,
+    "xauTag": "snd:dat",
+    "truocTag": "",
+    "rot": 6,
+    "qua33": 19,
+    "hatMax": 146,
+    "nvMax": 494,
+    "mpMax": 7.3,
+    "mpXau": 6.3,
+    "nvXau": 349,
+    "viec": [
+     "snd:trung ×10",
+     "snd:crit",
+     "hu:vetinh",
+     "snd:phao",
+     "snd:dat",
+     "snd:ghep",
+     "hu:tiaPhep"
+    ]
+   },
+   {
+    "ten": "ghep:sinhdoi3#1",
+    "xauDt": 66.7,
+    "xauV": 7.1,
+    "xauVi": 1,
+    "xauTag": "snd:ghep",
+    "truocTag": "",
+    "rot": 3,
+    "qua33": 15,
+    "hatMax": 150,
+    "nvMax": 448,
+    "mpMax": 17.4,
+    "mpXau": 6.5,
+    "nvXau": 375,
+    "viec": [
+     "snd:trung ×5",
+     "snd:no ×2",
+     "hu:vetinh ×2",
+     "snd:crit ×2",
+     "gc 3.8MB"
+    ]
+   },
+   {
+    "ten": "ghep:canon2#1",
+    "xauDt": 66.6,
+    "xauV": 9.2,
+    "xauVi": 19,
+    "xauTag": "snd:nang snd:sao img:fx_starup:0.9",
+    "truocTag": "hu:vetinh",
+    "rot": 7,
+    "qua33": 18,
+    "hatMax": 186,
+    "nvMax": 499,
+    "mpMax": 17.2,
+    "mpXau": 6.4,
+    "nvXau": 350,
+    "viec": [
+     "snd:trung ×7",
+     "hu:vetinh ×2",
+     "snd:nang",
+     "snd:lo",
+     "snd:no",
+     "snd:phao",
+     "gc 3.4MB"
+    ]
+   },
+   {
+    "ten": "ghep:canon5#1",
+    "xauDt": 50.1,
+    "xauV": 7.6,
+    "xauVi": 34,
+    "xauTag": " [gc 3.1MB]",
+    "truocTag": "",
+    "rot": 1,
+    "qua33": 3,
+    "hatMax": 123,
+    "nvMax": 333,
+    "mpMax": 6,
+    "mpXau": 5.6,
+    "nvXau": 313,
+    "viec": []
+   },
+   {
+    "ten": "ghep:orbital3#2",
+    "xauDt": 50.1,
+    "xauV": 6.3,
+    "xauVi": 14,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 5,
+    "qua33": 20,
+    "hatMax": 134,
+    "nvMax": 422,
+    "mpMax": 7,
+    "mpXau": 6.5,
+    "nvXau": 328,
+    "viec": [
+     "snd:trung ×5",
+     "snd:gKhoa ×2",
+     "snd:dat",
+     "snd:phao",
+     "snd:crit"
+    ]
+   },
+   {
+    "ten": "ghep:pandora3#2",
+    "xauDt": 66.7,
+    "xauV": 10,
+    "xauVi": 20,
+    "xauTag": "snd:ghep img:fxb_toc:3.1 co:coDai:fxb_toc:3.1",
+    "truocTag": "",
+    "rot": 5,
+    "qua33": 22,
+    "hatMax": 141,
+    "nvMax": 462,
+    "mpMax": 17,
+    "mpXau": 7,
+    "nvXau": 370,
+    "viec": [
+     "snd:trung ×5",
+     "snd:phao ×3",
+     "snd:crit"
+    ]
+   },
+   {
+    "ten": "ghep:sinhdoi3#2",
+    "xauDt": 50.1,
+    "xauV": 4.5,
+    "xauVi": 21,
+    "xauTag": "hu:vetinh [gc 3.8MB]",
+    "truocTag": "",
+    "rot": 2,
+    "qua33": 20,
+    "hatMax": 134,
+    "nvMax": 458,
+    "mpMax": 7.7,
+    "mpXau": 7.7,
+    "nvXau": 445,
+    "viec": [
+     "snd:trung ×4",
+     "snd:phao ×2",
+     "gc 3.9MB"
+    ]
+   },
+   {
+    "ten": "ghep:canon2#2",
+    "xauDt": 66.6,
+    "xauV": 4.2,
+    "xauVi": 10,
+    "xauTag": " [gc 3.9MB]",
+    "truocTag": "",
+    "rot": 2,
+    "qua33": 15,
+    "hatMax": 138,
+    "nvMax": 448,
+    "mpMax": 17.2,
+    "mpXau": 6.4,
+    "nvXau": 422,
+    "viec": [
+     "snd:phao"
+    ]
+   },
+   {
+    "ten": "ghep:canon5#2",
+    "xauDt": 66.7,
+    "xauV": 8.1,
+    "xauVi": 17,
+    "xauTag": " [gc 3.6MB]",
+    "truocTag": "",
+    "rot": 2,
+    "qua33": 5,
+    "hatMax": 125,
+    "nvMax": 333,
+    "mpMax": 16.9,
+    "mpXau": 6.2,
+    "nvXau": 269,
+    "viec": [
+     "snd:trung ×2",
+     "snd:mana ×2",
+     "hu:roi/marionette ×2",
+     "sig:roi ×2",
+     "snd:no",
+     "snd:dat"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_sinhdoi_no": [
+    1,
+    0.13
+   ],
+   "fx_pandora_no": [
+    1,
+    0.13
+   ],
+   "fx_canon_no": [
+    1,
+    0.13
+   ],
+   "fx_marionette_no": [
+    1,
+    0.13
+   ],
+   "fx_pandora_trung": [
+    1,
+    0.22
+   ],
+   "fx_sinhdoi_trung": [
+    1,
+    0.22
+   ],
+   "fx_marionette_trung": [
+    1,
+    0.22
+   ],
+   "fx_canon_trung": [
+    1,
+    0.45
+   ],
+   "dien": [
+    6,
+    0.35
+   ],
+   "no_phao": [
+    6,
+    0.26
+   ]
+  },
+  "longTask": 148,
+  "longTaskMax": 93
+ },
+ "trum": {
+  "ten": "trum",
+  "khungChuan": 33.3,
+  "viecTV": 2.3,
+  "n": 4904,
+  "kq": [
+   {
+    "ten": "trum:freezer",
+    "xauDt": 83.4,
+    "xauV": 15.8,
+    "xauVi": 3,
+    "xauTag": "snd:hoden snd:hoden snd:hoden hu:tiaTia hu:gDauAn hu:hoden/blackhole hu:hoden/blackhole hu:hoden/blackhole sig:hoden sig:hoden sig:hoden [scale 3.8ms×5]",
+    "truocTag": "hu:gTre/hydra hu:gTre/hydra hu:gTre/hydra hu:tiaTia hu:gDauAn hu:tiaTia hu:gDauAn",
+    "rot": 12,
+    "qua33": 15,
+    "hatMax": 160,
+    "nvMax": 491,
+    "mpMax": 8.6,
+    "mpXau": 8.1,
+    "nvXau": 359,
+    "viec": [
+     "snd:trung ×20",
+     "hu:tiaTia ×17",
+     "hu:gDauAn ×17",
+     "hu:gTre/hydra ×11",
+     "snd:crit ×5",
+     "snd:lien ×4",
+     "snd:hoden ×3",
+     "hu:hoden/blackhole ×3",
+     "sig:hoden ×3",
+     "snd:no ×2"
+    ]
+   },
+   {
+    "ten": "chieu:freezer",
+    "xauDt": 66.7,
+    "xauV": 8.4,
+    "xauVi": 13,
+    "xauTag": "snd:chieuTrum snd:bang hu:tiaTia hu:gDauAn hu:bangBay hu:bangBay hu:bangBay hu:bangPhep",
+    "truocTag": "hu:tiaTia hu:gDauAn",
+    "rot": 26,
+    "qua33": 28,
+    "hatMax": 148,
+    "nvMax": 455,
+    "mpMax": 8,
+    "mpXau": 7,
+    "nvXau": 361,
+    "viec": [
+     "snd:trung ×37",
+     "hu:tiaTia ×25",
+     "hu:gDauAn ×25",
+     "hu:gTre/hydra ×18",
+     "snd:lien ×7",
+     "snd:set ×3",
+     "hu:set/set ×3",
+     "hu:bangBay ×3",
+     "snd:phao ×2",
+     "snd:crit ×2"
+    ]
+   },
+   {
+    "ten": "trum:mad_crown",
+    "xauDt": 66.7,
+    "xauV": 6.4,
+    "xauVi": 5,
+    "xauTag": "snd:bao hu:tiaTia hu:gDauAn",
+    "truocTag": "snd:hoden hu:tiaTia hu:gDauAn hu:hoden/blackhole sig:hoden",
+    "rot": 10,
+    "qua33": 13,
+    "hatMax": 75,
+    "nvMax": 326,
+    "mpMax": 17,
+    "mpXau": 6.6,
+    "nvXau": 311,
+    "viec": [
+     "snd:trung ×12",
+     "hu:tiaTia ×9",
+     "hu:gDauAn ×9",
+     "hu:gTre/hydra ×6",
+     "snd:crit ×4",
+     "snd:lien ×2",
+     "snd:lot",
+     "snd:bao",
+     "snd:no",
+     "gc 3.2MB"
+    ]
+   },
+   {
+    "ten": "chieu:mad_crown",
+    "xauDt": 66.7,
+    "xauV": 13.5,
+    "xauVi": 20,
+    "xauTag": "",
+    "truocTag": "snd:chieuTrum hu:tiaTia hu:gDauAn hu:chieuTrum hu:chieuTrum hu:chieuTrum",
+    "rot": 15,
+    "qua33": 18,
+    "hatMax": 114,
+    "nvMax": 359,
+    "mpMax": 6.8,
+    "mpXau": 6,
+    "nvXau": 321,
+    "viec": [
+     "snd:trung ×26",
+     "hu:tiaTia ×12",
+     "hu:gDauAn ×12",
+     "hu:gTre/hydra ×8",
+     "snd:set ×4",
+     "hu:set/set ×4",
+     "snd:lien ×3",
+     "hu:chieuTrum ×3",
+     "sig:hydraCan ×2",
+     "snd:crit ×2"
+    ]
+   },
+   {
+    "ten": "trum:janus",
+    "xauDt": 50,
+    "xauV": 4.6,
+    "xauVi": 6,
+    "xauTag": "snd:bao hu:tiaTia hu:gDauAn",
+    "truocTag": "hu:tiaTia hu:gDauAn",
+    "rot": 4,
+    "qua33": 4,
+    "hatMax": 73,
+    "nvMax": 304,
+    "mpMax": 6.5,
+    "mpXau": 6.2,
+    "nvXau": 249,
+    "viec": [
+     "snd:trung ×7",
+     "hu:tiaTia ×5",
+     "hu:gDauAn ×5",
+     "snd:crit ×3",
+     "snd:no",
+     "snd:set",
+     "hu:set/set",
+     "gc 3.6MB",
+     "snd:phao"
+    ]
+   },
+   {
+    "ten": "chieu:janus",
+    "xauDt": 50.1,
+    "xauV": 14.4,
+    "xauVi": 24,
+    "xauTag": "snd:chieuTrum hu:chieuTrum [scale 3.2ms×3]",
+    "truocTag": "hu:tiaTia hu:gDauAn hu:tiaTia hu:gDauAn",
+    "rot": 11,
+    "qua33": 13,
+    "hatMax": 114,
+    "nvMax": 341,
+    "mpMax": 6.8,
+    "mpXau": 6.8,
+    "nvXau": 322,
+    "viec": [
+     "snd:trung ×10",
+     "hu:tiaTia ×7",
+     "hu:gDauAn ×7",
+     "hu:gTre/hydra ×3",
+     "gc 3.7MB ×2",
+     "snd:bang ×2",
+     "snd:set ×2",
+     "snd:no ×2",
+     "hu:set/set ×2",
+     "snd:hoden"
+    ]
+   },
+   {
+    "ten": "trum:joker_king",
+    "xauDt": 66.7,
+    "xauV": 3.6,
+    "xauVi": 1,
+    "xauTag": "snd:canhBao snd:set hu:set/set [dom 41 canh-bao|tb-giua|tb-seg|tb-trum-chu|tb-trum-mau|nut-trieu]",
+    "truocTag": "",
+    "rot": 10,
+    "qua33": 12,
+    "hatMax": 110,
+    "nvMax": 356,
+    "mpMax": 7.7,
+    "mpXau": 6.5,
+    "nvXau": 350,
+    "viec": [
+     "snd:trung ×19",
+     "hu:tiaTia ×8",
+     "hu:gDauAn ×8",
+     "hu:gTre/hydra ×5",
+     "snd:lien ×2",
+     "snd:no",
+     "snd:set",
+     "hu:set/set"
+    ]
+   },
+   {
+    "ten": "chieu:joker_king",
+    "xauDt": 66.7,
+    "xauV": 20.3,
+    "xauVi": 18,
+    "xauTag": "snd:chieuTrum snd:ghep hu:chieuTrum [scale 3.6ms×4]",
+    "truocTag": "",
+    "rot": 28,
+    "qua33": 30,
+    "hatMax": 149,
+    "nvMax": 402,
+    "mpMax": 7.3,
+    "mpXau": 6.4,
+    "nvXau": 291,
+    "viec": [
+     "snd:trung ×50",
+     "hu:tiaTia ×26",
+     "hu:gDauAn ×26",
+     "hu:gTre/hydra ×13",
+     "snd:lien ×6",
+     "snd:set ×5",
+     "hu:set/set ×5",
+     "snd:crit ×3",
+     "snd:phao ×2",
+     "sig:hydraCan ×2"
+    ]
+   },
+   {
+    "ten": "trum:octopus",
+    "xauDt": 50.1,
+    "xauV": 3.5,
+    "xauVi": 17,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 4,
+    "qua33": 6,
+    "hatMax": 65,
+    "nvMax": 320,
+    "mpMax": 17.6,
+    "mpXau": 17.6,
+    "nvXau": 320,
+    "viec": [
+     "snd:trung ×2",
+     "hu:gTre/hydra ×2",
+     "hu:tiaTia ×2",
+     "hu:gDauAn ×2",
+     "gc 3.2MB",
+     "snd:lien",
+     "snd:phao"
+    ]
+   },
+   {
+    "ten": "chieu:octopus",
+    "xauDt": 66.7,
+    "xauV": 4.9,
+    "xauVi": 24,
+    "xauTag": "snd:set snd:chieuTrum hu:set/set hu:chieuTrum hu:chieuTrum hu:chieuTrum [scale 1.4ms×1]",
+    "truocTag": "",
+    "rot": 6,
+    "qua33": 9,
+    "hatMax": 54,
+    "nvMax": 335,
+    "mpMax": 16.5,
+    "mpXau": 6.3,
+    "nvXau": 242,
+    "viec": [
+     "snd:trung ×10",
+     "hu:tiaTia ×7",
+     "hu:gDauAn ×7",
+     "hu:gTre/hydra ×3",
+     "snd:lien",
+     "snd:set",
+     "hu:set/set"
+    ]
+   },
+   {
+    "ten": "trum:nightmare",
+    "xauDt": 50,
+    "xauV": 4.3,
+    "xauVi": 7,
+    "xauTag": "snd:set snd:bao hu:set/set",
+    "truocTag": "",
+    "rot": 3,
+    "qua33": 3,
+    "hatMax": 85,
+    "nvMax": 343,
+    "mpMax": 6.6,
+    "mpXau": 6.1,
+    "nvXau": 266,
+    "viec": [
+     "snd:lien",
+     "snd:trung",
+     "hu:tiaTia",
+     "hu:gDauAn",
+     "gc 3.2MB"
+    ]
+   },
+   {
+    "ten": "chieu:nightmare",
+    "xauDt": 50.1,
+    "xauV": 5.6,
+    "xauVi": 11,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 6,
+    "qua33": 7,
+    "hatMax": 102,
+    "nvMax": 418,
+    "mpMax": 17.7,
+    "mpXau": 5.8,
+    "nvXau": 198,
+    "viec": [
+     "snd:trung ×12",
+     "hu:gTre/hydra ×5",
+     "hu:tiaTia ×5",
+     "hu:gDauAn ×5",
+     "snd:crit ×4",
+     "snd:lien ×2",
+     "snd:no"
+    ]
+   },
+   {
+    "ten": "trum:hive",
+    "xauDt": 50.1,
+    "xauV": 4.7,
+    "xauVi": 2,
+    "xauTag": " [gc 8MB] [dom 11 tb-seg|tb-trum-chu|tb-trum-mau|top|tb-trum|canh-bao]",
+    "truocTag": "snd:canhBao [dom 41 canh-bao|tb-giua]",
+    "rot": 5,
+    "qua33": 7,
+    "hatMax": 127,
+    "nvMax": 351,
+    "mpMax": 6.6,
+    "mpXau": 6.2,
+    "nvXau": 309,
+    "viec": [
+     "snd:trung ×14",
+     "hu:tiaTia ×3",
+     "hu:gDauAn ×3",
+     "snd:set ×2",
+     "hu:set/set ×2",
+     "snd:lien ×2",
+     "hu:gTre/hydra ×2",
+     "gc 8MB",
+     "sig:hydraCan"
+    ]
+   },
+   {
+    "ten": "chieu:hive",
+    "xauDt": 83.2,
+    "xauV": 7.7,
+    "xauVi": 23,
+    "xauTag": "snd:chieuTrum snd:set img:fx_no_phao:0.9 hu:set/set",
+    "truocTag": "",
+    "rot": 17,
+    "qua33": 20,
+    "hatMax": 229,
+    "nvMax": 534,
+    "mpMax": 18.9,
+    "mpXau": 7,
+    "nvXau": 369,
+    "viec": [
+     "snd:trung ×56",
+     "hu:tiaTia ×5",
+     "hu:gDauAn ×5",
+     "snd:set ×3",
+     "hu:set/set ×3",
+     "snd:no ×3",
+     "hu:gTre/hydra ×3",
+     "snd:crit ×2",
+     "snd:chieuTrum",
+     "snd:phao"
+    ]
+   },
+   {
+    "ten": "trum:jammer",
+    "xauDt": 50,
+    "xauV": 4.5,
+    "xauVi": 7,
+    "xauTag": "snd:bao",
+    "truocTag": "",
+    "rot": 4,
+    "qua33": 5,
+    "hatMax": 102,
+    "nvMax": 295,
+    "mpMax": 6.2,
+    "mpXau": 6,
+    "nvXau": 219,
+    "viec": [
+     "snd:trung ×3",
+     "snd:set",
+     "hu:set/set",
+     "hu:tiaTia",
+     "hu:gDauAn"
+    ]
+   },
+   {
+    "ten": "chieu:jammer",
+    "xauDt": 83.4,
+    "xauV": 5.3,
+    "xauVi": 26,
+    "xauTag": "snd:chieuTrum hu:chieuTrum hu:chieuTrum",
+    "truocTag": "",
+    "rot": 4,
+    "qua33": 5,
+    "hatMax": 121,
+    "nvMax": 410,
+    "mpMax": 17.8,
+    "mpXau": 6,
+    "nvXau": 185,
+    "viec": [
+     "snd:trung ×3",
+     "hu:tiaTia ×2",
+     "hu:gDauAn ×2",
+     "snd:set",
+     "hu:set/set",
+     "snd:bang"
+    ]
+   },
+   {
+    "ten": "trum:prism",
+    "xauDt": 83.2,
+    "xauV": 5.6,
+    "xauVi": 23,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 19,
+    "qua33": 23,
+    "hatMax": 141,
+    "nvMax": 425,
+    "mpMax": 17.6,
+    "mpXau": 17.6,
+    "nvXau": 425,
+    "viec": [
+     "snd:trung ×49",
+     "snd:crit ×7",
+     "hu:tiaTia ×5",
+     "hu:gDauAn ×5",
+     "snd:set ×3",
+     "hu:set/set ×3",
+     "snd:no ×3",
+     "snd:hoden ×2",
+     "hu:hoden/blackhole ×2",
+     "sig:hoden ×2"
+    ]
+   },
+   {
+    "ten": "chieu:prism",
+    "xauDt": 50.1,
+    "xauV": 7.3,
+    "xauVi": 5,
+    "xauTag": " [gc 3.4MB]",
+    "truocTag": "",
+    "rot": 8,
+    "qua33": 10,
+    "hatMax": 109,
+    "nvMax": 414,
+    "mpMax": 6.8,
+    "mpXau": 6.1,
+    "nvXau": 270,
+    "viec": [
+     "snd:trung ×22",
+     "hu:gTre/hydra ×2",
+     "hu:tiaTia ×2",
+     "hu:gDauAn ×2",
+     "snd:set",
+     "hu:set/set",
+     "snd:lien",
+     "snd:crit",
+     "snd:no"
+    ]
+   },
+   {
+    "ten": "trum:twin_core",
+    "xauDt": 50.1,
+    "xauV": 3.5,
+    "xauVi": 0,
+    "xauTag": "",
+    "truocTag": "",
+    "rot": 7,
+    "qua33": 8,
+    "hatMax": 160,
+    "nvMax": 480,
+    "mpMax": 6.8,
+    "mpXau": 6.3,
+    "nvXau": 322,
+    "viec": [
+     "snd:trung ×19",
+     "hu:gTre/hydra ×3",
+     "snd:lien ×2",
+     "hu:tiaTia ×2",
+     "hu:gDauAn ×2",
+     "snd:no",
+     "snd:set",
+     "snd:crit",
+     "hu:set/set"
+    ]
+   },
+   {
+    "ten": "chieu:twin_core",
+    "xauDt": 66.6,
+    "xauV": 2.7,
+    "xauVi": 7,
+    "xauTag": "",
+    "truocTag": "hu:tiaTia hu:gDauAn",
+    "rot": 3,
+    "qua33": 3,
+    "hatMax": 112,
+    "nvMax": 312,
+    "mpMax": 17.7,
+    "mpXau": 6.3,
+    "nvXau": 288,
+    "viec": [
+     "snd:trung ×3",
+     "snd:no",
+     "hu:tiaTia",
+     "hu:gDauAn"
+    ]
+   },
+   {
+    "ten": "trum:patcher",
+    "xauDt": 50.1,
+    "xauV": 4.4,
+    "xauVi": 15,
+    "xauTag": "hu:tiaTia hu:gDauAn hu:tiaTia hu:gDauAn",
+    "truocTag": "hu:gTre/hydra hu:gTre/hydra hu:gTre/hydra hu:tiaTia hu:gDauAn sig:hydraCan",
+    "rot": 7,
+    "qua33": 11,
+    "hatMax": 107,
+    "nvMax": 331,
+    "mpMax": 7,
+    "mpXau": 6.6,
+    "nvXau": 325,
+    "viec": [
+     "snd:trung ×9",
+     "hu:tiaTia ×3",
+     "hu:gDauAn ×3",
+     "snd:phao",
+     "snd:set",
+     "snd:crit",
+     "hu:set/set",
+     "snd:lien"
+    ]
+   },
+   {
+    "ten": "chieu:patcher",
+    "xauDt": 50.1,
+    "xauV": 5.4,
+    "xauVi": 23,
+    "xauTag": "snd:chieuTrum",
+    "truocTag": "",
+    "rot": 7,
+    "qua33": 10,
+    "hatMax": 124,
+    "nvMax": 332,
+    "mpMax": 6.7,
+    "mpXau": 6.7,
+    "nvXau": 332,
+    "viec": [
+     "snd:trung ×11",
+     "hu:gTre/hydra ×3",
+     "snd:bang ×2",
+     "hu:tiaTia ×2",
+     "hu:gDauAn ×2",
+     "snd:no",
+     "snd:crit",
+     "snd:set",
+     "hu:set/set",
+     "snd:lien"
+    ]
+   },
+   {
+    "ten": "trum:leech",
+    "xauDt": 66.7,
+    "xauV": 3.7,
+    "xauVi": 13,
+    "xauTag": "",
+    "truocTag": "hu:tiaTia hu:gDauAn",
+    "rot": 3,
+    "qua33": 4,
+    "hatMax": 91,
+    "nvMax": 287,
+    "mpMax": 17.2,
+    "mpXau": 6.5,
+    "nvXau": 277,
+    "viec": [
+     "snd:trung ×5",
+     "hu:gTre/hydra ×3",
+     "snd:bao",
+     "snd:lien",
+     "snd:set",
+     "hu:set/set",
+     "hu:tiaTia",
+     "hu:gDauAn"
+    ]
+   },
+   {
+    "ten": "chieu:leech",
+    "xauDt": 100,
+    "xauV": 5.6,
+    "xauVi": 23,
+    "xauTag": "snd:chieuTrum tai:fx_hasao_trung hu:tiaTia",
+    "truocTag": "",
+    "rot": 7,
+    "qua33": 8,
+    "hatMax": 94,
+    "nvMax": 359,
+    "mpMax": 18.4,
+    "mpXau": 6.1,
+    "nvXau": 265,
+    "viec": [
+     "snd:trung ×6",
+     "hu:tiaTia ×2",
+     "gc 6.3MB",
+     "snd:set",
+     "hu:set/set",
+     "snd:chieuTrum",
+     "tai:fx_hasao_trung",
+     "hu:gDauAn"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_hydra_trung": [
+    1,
+    0.22
+   ],
+   "fx_hydra_no": [
+    1,
+    0.13
+   ],
+   "fx_set_trung": [
+    1,
+    0.2
+   ],
+   "fx_canon_no": [
+    1,
+    0.13
+   ],
+   "fx_canon_trung": [
+    1,
+    0.45
+   ],
+   "fx_bang_no": [
+    1,
+    0.13
+   ],
+   "fx_bang_trung": [
+    1,
+    0.3
+   ],
+   "bang_vo": [
+    6,
+    0.19
+   ],
+   "fx_blackhole_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_trung": [
+    1,
+    0.22
+   ],
+   "no_phao": [
+    6,
+    0.45
+   ],
+   "trum_jammer": [
+    16,
+    0.6
+   ],
+   "trum_patcher": [
+    16,
+    0.6
+   ],
+   "hasao_trung": [
+    0,
+    0.45
+   ],
+   "trum_leech": [
+    16,
+    0.6
+   ]
+  },
+  "longTask": 252,
+  "longTaskMax": 109
+ },
+ "chihuy": {
+  "ten": "chihuy",
+  "khungChuan": 33.3,
+  "viecTV": 2.3,
+  "n": 622,
+  "kq": [
+   {
+    "ten": "mv:hero",
+    "xauDt": 66.7,
+    "xauV": 9.8,
+    "xauVi": 2,
+    "xauTag": "snd:set snd:set hu:set/set hu:set/set [dom 22 mana|the-mv|nut-trieu]",
+    "truocTag": "snd:mv [dom 53 cutin|wrap]",
+    "rot": 7,
+    "qua33": 7,
+    "hatMax": 67,
+    "nvMax": 314,
+    "mpMax": 6,
+    "mpXau": 5.8,
+    "nvXau": 288,
+    "viec": [
+     "snd:trung ×20",
+     "snd:lien ×7",
+     "snd:set ×4",
+     "hu:set/set ×4",
+     "snd:crit",
+     "dom 22 mana|the-mv|nut-trieu",
+     "snd:tia",
+     "hu:tiaTia"
+    ]
+   },
+   {
+    "ten": "mv:dahlia",
+    "xauDt": 83.3,
+    "xauV": 7.5,
+    "xauVi": 21,
+    "xauTag": "snd:set hu:set/set",
+    "truocTag": "snd:tia hu:tiaTia",
+    "rot": 20,
+    "qua33": 24,
+    "hatMax": 71,
+    "nvMax": 384,
+    "mpMax": 17,
+    "mpXau": 7.1,
+    "nvXau": 378,
+    "viec": [
+     "snd:trung ×30",
+     "snd:lien ×23",
+     "snd:tia ×2",
+     "hu:tiaTia ×2",
+     "snd:no ×2",
+     "snd:set ×2",
+     "hu:set/set ×2",
+     "img:fxb_max:1.1",
+     "snd:crit"
+    ]
+   },
+   {
+    "ten": "mv:eve",
+    "xauDt": 83.3,
+    "xauV": 8,
+    "xauVi": 2,
+    "xauTag": "img:fxb_khien:1.2 [gc 2.8MB] [dom 19 mana|the-mv|nut-trieu|tn-khien]",
+    "truocTag": "snd:mv [dom 50 cutin|wrap]",
+    "rot": 23,
+    "qua33": 25,
+    "hatMax": 57,
+    "nvMax": 344,
+    "mpMax": 18,
+    "mpXau": 18,
+    "nvXau": 282,
+    "viec": [
+     "snd:trung ×42",
+     "snd:lien ×21",
+     "snd:set ×4",
+     "hu:set/set ×4",
+     "snd:crit ×3",
+     "snd:no ×3",
+     "snd:phao ×2",
+     "img:fxb_khien:1.2",
+     "gc 2.8MB",
+     "gc 3.8MB"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_lien_no": [
+    1,
+    0.13
+   ],
+   "fx_canon_no": [
+    1,
+    0.13
+   ],
+   "fx_tia_no": [
+    2,
+    0.13
+   ],
+   "fx_set_trung": [
+    1,
+    0.2
+   ],
+   "fx_canon_trung": [
+    1,
+    0.45
+   ],
+   "fx_bang_no": [
+    1,
+    0.13
+   ],
+   "fx_bang_trung": [
+    1,
+    0.3
+   ],
+   "bang_vo": [
+    6,
+    0.19
+   ]
+  },
+  "longTask": 47,
+  "longTaskMax": 76
+ },
+ "dong": {
+  "ten": "dong",
+  "khungChuan": 66.6,
+  "viecTV": 4,
+  "n": 714,
+  "kq": [
+   {
+    "ten": "cungluc#1",
+    "xauDt": 233.2,
+    "xauV": 28.1,
+    "xauVi": 4,
+    "xauTag": "hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:chay/ronglua hu:chay/ronglua sig:hydra7 sig:hoden sig:hydra7",
+    "truocTag": "snd:gLua snd:gLua snd:gLua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:chay/ronglua sig:hoden sig:hydra7",
+    "rot": 18,
+    "qua33": 40,
+    "hatMax": 278,
+    "nvMax": 1517,
+    "mpMax": 29.4,
+    "mpXau": 18.5,
+    "nvXau": 1517,
+    "viec": [
+     "snd:trung ×95",
+     "hu:vetChay/ronglua ×58",
+     "snd:gLua ×27",
+     "hu:hoHoa/cuuvi ×27",
+     "hu:chay/ronglua ×14",
+     "snd:crit ×7",
+     "snd:gNap ×6",
+     "snd:gHo ×6",
+     "snd:gKhoa ×6",
+     "hu:gHoBay/cuuvi ×6"
+    ]
+   },
+   {
+    "ten": "cungluc#2",
+    "xauDt": 300,
+    "xauV": 16.1,
+    "xauVi": 1,
+    "xauTag": "snd:hoLy snd:hoLy snd:hoLy snd:gRong snd:gRong snd:gRong snd:hoden snd:gNap snd:sam snd:rail snd:hoden snd:gNap snd:sam snd:rail [gc 2.9MB]",
+    "truocTag": "snd:rail snd:rail snd:rail hu:hydraTia hu:hydraTia hu:hydraTia sig:hydra7 sig:hydra7 sig:hydra7",
+    "rot": 11,
+    "qua33": 40,
+    "hatMax": 296,
+    "nvMax": 1459,
+    "mpMax": 26.5,
+    "mpXau": 26.5,
+    "nvXau": 1381,
+    "viec": [
+     "snd:trung ×152",
+     "hu:vetChay/ronglua ×37",
+     "snd:crit ×28",
+     "hu:hoHoa/cuuvi ×27",
+     "snd:gNap ×6",
+     "snd:gKhoa ×6",
+     "snd:gLua ×6",
+     "hu:chay/ronglua ×5",
+     "snd:gHo ×4",
+     "hu:gHoBay/cuuvi ×4"
+    ]
+   },
+   {
+    "ten": "cungluc#3",
+    "xauDt": 183.4,
+    "xauV": 8.7,
+    "xauVi": 2,
+    "xauTag": "snd:gHo snd:gLua snd:gHo hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua sig:hoden",
+    "truocTag": "snd:hoLy snd:hoLy snd:hoLy snd:gRong snd:gRong snd:gRong snd:hoden snd:gNap snd:sam snd:rail snd:hoden snd:gNap snd:sam snd:rail [gc 2.2MB]",
+    "rot": 14,
+    "qua33": 40,
+    "hatMax": 296,
+    "nvMax": 1387,
+    "mpMax": 28.9,
+    "mpXau": 16.9,
+    "nvXau": 1241,
+    "viec": [
+     "snd:trung ×68",
+     "hu:vetChay/ronglua ×39",
+     "hu:hoHoa/cuuvi ×27",
+     "snd:gLua ×16",
+     "snd:crit ×13",
+     "hu:chay/ronglua ×7",
+     "snd:gHo ×6",
+     "hu:gHoBay/cuuvi ×6",
+     "snd:lot ×4",
+     "snd:hoLy ×3"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "fx_ronglua_trung": [
+    1,
+    0.22
+   ],
+   "fx_cuuvi_no": [
+    1,
+    0.13
+   ],
+   "fx_cuuvi_trung": [
+    1,
+    0.2
+   ],
+   "fx_hydra_no": [
+    1,
+    0.13
+   ],
+   "fx_hydra_trung": [
+    1,
+    0.22
+   ],
+   "fx_overlord_trung": [
+    1,
+    0.22
+   ],
+   "fx_overlord_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_trung": [
+    1,
+    0.22
+   ]
+  },
+  "longTask": 505,
+  "longTaskMax": 290
+ },
+ "coop": {
+  "ten": "coop",
+  "khungChuan": 150.1,
+  "viecTV": 10.7,
+  "n": 714,
+  "kq": [
+   {
+    "ten": "cungluc#1",
+    "xauDt": 366.6,
+    "xauV": 33.2,
+    "xauVi": 4,
+    "xauTag": "hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gSuong hu:gSuong hu:gSuong sig:hydra7 sig:hoden sig:hydra7 sig:hoden sig:hydra7 sig:hoden sig:rong sig:rong [scale 2.2ms×6]",
+    "truocTag": "snd:gKim snd:gHo snd:gHo snd:gEcho snd:gHo hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua [scale 2.2ms×2]",
+    "rot": 9,
+    "qua33": 40,
+    "hatMax": 269,
+    "nvMax": 2365,
+    "mpMax": 45,
+    "mpXau": 37.5,
+    "nvXau": 2365,
+    "viec": [
+     "snd:trung ×287",
+     "snd:crit ×30",
+     "hu:vetChay/ronglua ×30",
+     "hu:hoHoa/cuuvi ×27",
+     "hu:ongLao/chuato ×12",
+     "snd:no ×12",
+     "sig:ong ×12",
+     "snd:mv ×6",
+     "hu:gSuong ×6",
+     "hu:gKim ×5"
+    ]
+   },
+   {
+    "ten": "cungluc#2",
+    "xauDt": 333.3,
+    "xauV": 20.1,
+    "xauVi": 11,
+    "xauTag": "snd:gKim snd:tia snd:gEcho snd:hoden snd:hoden snd:hoden hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gKim hu:hoden/blackhole",
+    "truocTag": "snd:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian",
+    "rot": 6,
+    "qua33": 40,
+    "hatMax": 283,
+    "nvMax": 2226,
+    "mpMax": 43.8,
+    "mpXau": 20.9,
+    "nvXau": 1616,
+    "viec": [
+     "snd:trung ×216",
+     "hu:vetChay/ronglua ×31",
+     "snd:crit ×26",
+     "snd:no ×15",
+     "sig:ong ×12",
+     "sig:tho ×3",
+     "hu:gSuong ×3",
+     "sig:hydra7 ×3",
+     "sig:rong ×3",
+     "snd:tia ×3"
+    ]
+   },
+   {
+    "ten": "cungluc#3",
+    "xauDt": 333.3,
+    "xauV": 15.2,
+    "xauVi": 5,
+    "xauTag": "snd:gKim hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:vetChay/ronglua [gc 6.6MB]",
+    "truocTag": "snd:gKim snd:gHo snd:gHo snd:gKim snd:gEcho hu:gKim hu:gDauGio hu:gTre/ngaithoigian hu:gHoBay/cuuvi hu:gHoBay/cuuvi hu:vetChay/ronglua hu:vetChay/ronglua hu:vetChay/ronglua hu:gKim",
+    "rot": 5,
+    "qua33": 40,
+    "hatMax": 268,
+    "nvMax": 2121,
+    "mpMax": 43.1,
+    "mpXau": 32.9,
+    "nvXau": 2039,
+    "viec": [
+     "snd:trung ×139",
+     "snd:crit ×23",
+     "hu:vetChay/ronglua ×20",
+     "snd:no ×12",
+     "sig:ong ×12",
+     "hu:gKim ×8",
+     "snd:gKim ×6",
+     "hu:gDauGio ×6",
+     "hu:gTre/ngaithoigian ×6",
+     "sig:tho ×3"
+    ]
+   }
+  ],
+  "loi": [],
+  "nhanh": {
+   "bang_vo": [
+    6,
+    0.18
+   ],
+   "fx_cuuvi_no": [
+    1,
+    0.13
+   ],
+   "fx_ronglua_trung": [
+    1,
+    0.22
+   ],
+   "fx_chuato_no": [
+    2,
+    0.13
+   ],
+   "fx_cuuvi_trung": [
+    1,
+    0.2
+   ],
+   "fx_ngaithoigian_no": [
+    1,
+    0.13
+   ],
+   "fx_ngaithoigian_trung": [
+    1,
+    0.22
+   ],
+   "fx_leviathan_no": [
+    1,
+    0.13
+   ],
+   "fx_chuato_trung": [
+    1,
+    0.22
+   ],
+   "fx_leviathan_trung": [
+    1,
+    0.22
+   ],
+   "fx_hydra_no": [
+    1,
+    0.13
+   ],
+   "fx_hydra_trung": [
+    1,
+    0.22
+   ],
+   "fx_overlord_trung": [
+    1,
+    0.22
+   ],
+   "fx_overlord_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_no": [
+    1,
+    0.13
+   ],
+   "fx_blackhole_trung": [
+    1,
+    0.22
+   ]
+  },
+  "longTask": 666,
+  "longTaskMax": 350
+ }
+}

@@ -8,7 +8,8 @@ const FX = {
   vong: [],       // vòng sóng (đáp đất, ping radar, nâng cấp)
   rung: 0, rungX: 0, rungY: 0,
   chop: 0, chopMau: '#fff',
-  MAX_HAT: 320, giam: 1, // giam: tỉ lệ giữ hạt (2×/3× sinh hạt nhanh hơn → bớt bằng xác suất để mật độ như 1×) MAX_CHU: 48, MAX_ANIM: 90,
+  MAX_HAT: 320, giam: 1, // giam: tỉ lệ giữ hạt (2×/3× sinh hạt nhanh hơn → bớt bằng xác suất để mật độ như 1×)
+  MAX_CHU: 48, MAX_ANIM: 90, // trần chữ nổi / dải nổ (trước 06/11 hai trần này nằm nhầm trong chú thích → không giới hạn: nhiều skill cùng lúc = hàng trăm dải nổ 1 khung)
   _kho: [], // kho tái dùng hạt
 
   reset() { this.hat.length = 0; this.chu.length = 0; this.anim.length = 0; this.vong.length = 0; this.rung = 0; this.chop = 0; },
@@ -42,7 +43,7 @@ const FX = {
   },
   // dải khung 'fx_<ten>' (6 khung), co = đường kính vẽ (px), goc = xoay
   no(ten, x, y, co, song, goc, bam) {
-    if (this.anim.length >= this.MAX_ANIM) this.anim.shift();
+    if (this.anim.length >= this.MAX_ANIM) { const i = this.anim.findIndex(A => A.co < 70); this.anim.splice(i >= 0 ? i : 0, 1); } // đầy: bỏ dải nổ NHỎ cũ nhất (giữ nổ lớn của chiêu)
     // hiệu ứng v2 theo ụ (fxu.js): chớp nòng / nổ trúng riêng của ụ đang bắn — 1 ảnh tĩnh, code chỉ phóng/xoay/mờ
     const U = typeof FXU !== 'undefined' && typeof G !== 'undefined' && G.dangBan;
     if (U) {
@@ -54,6 +55,8 @@ const FX = {
       const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // 2 = chiêu lớn / trùm / ụ đỏ: giữ chỗ cho cảnh hoành tráng
       co = Math.min(co, [46, 88, 170][cap]);
       song = Math.min(song || 0.42, [0.26, 0.45, 0.65][cap]);
+      // dải chiêu trùm 16 khung (fx_trum_<id>): ≥ 0,6 s (~27 khung/giây) — trần 0,26 s làm 16 khung chớp qua như nháy (giat_skill: Patch Titan)
+      if (ten.startsWith('trum_')) song = Math.max(song, 0.6);
     }
     const A = { ten, x, y, co, t: 0, song: song || 0.42, goc: goc || 0, bam: bam || null, T: null, dg: 0 };
     // chớp đầu nòng: bám theo ụ đang bắn (xoay + giật cùng nòng), sống tối thiểu ~5 khung để không "nháy mất"
