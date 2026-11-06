@@ -147,10 +147,20 @@ function sinhDoi(B, sao, oNguon, ep) {
   if (typeof VX !== 'undefined' && VX.sinhDoi) VX.sinhDoi(B, oNguon, T); else if (typeof VX !== 'undefined') VX.trieu(T);
   return T;
 }
+// ụ bị KHOÁ (hoá đá / đóng băng) không tự dùng kỹ năng; nhưng ụ KHOẺ kéo lên nó vẫn dùng được kỹ năng chỉ đổi SAO hoặc CHỖ
+// (ghepDB.quaKhoa: Merge King +★, Teleporter đổi chỗ) — luật DCDW: Aurora King nâng sao ô đá → 2 ô đá cùng sao ghép với nhau.
+function biKhoa(T) { return !!(T && (T.st.da || T.st.bang > 0)); }
+function ghepDBHop(a, b) {
+  if (!a || !b || a === b || biKhoa(a)) return null; // ụ kéo bị khoá: không dùng kỹ năng
+  const db = ghepDacBiet(a, b);
+  if (!db) return null;
+  if (!biKhoa(b)) return db;
+  return !db.dao && db.sk.ghepDB.quaKhoa ? db : null; // đích bị khoá: chỉ kỹ năng quaKhoa của ụ KÉO
+}
 function hopLeGhep(a, b) {
   if (!a || !b || a === b) return false;
+  if (ghepDBHop(a, b)) return true; // ghép đặc biệt (có loại không cần cùng sao; Merge King / Teleporter được lên ô đá/băng)
   if (a.st.bang > 0 || b.st.bang > 0) return false;
-  if (!a.st.da && !b.st.da && ghepDacBiet(a, b)) return true; // ghép đặc biệt (có loại không cần cùng sao)
   if (a.sao !== b.sao || a.sao >= LUAT.saoMax) return false;
   if (a.st.da || b.st.da) return a.st.da && b.st.da; // đá chỉ ghép với đá cùng sao
   if (a.id === b.id) return true;
@@ -170,11 +180,15 @@ function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
   const B2 = G.ban[b.ban];
   if (!ep) {
-    const db = ghepDacBiet(a, b);
+    const db = ghepDBHop(a, b);
     if (db) { const r = db.sk.ghepDB.lam(G, B2, db.a, db.b, db.dao); SND.ghep(); return r; }
   }
-  const coMimic = a.id === 'mimic' || b.id === 'mimic';
+  // ĐÁ + ĐÁ (DCDW: "돌덩이끼리 합체 → 등급 높은 돌덩이"): ra khối ĐÁ +1★ (loại ngẫu nhiên nằm dưới lớp đá),
+  // vẫn là đá cho tới khi được tẩy (Cleanser / Eve); 2 cục đá không có kỹ năng → không chạy kỹ năng KHI GHÉP, không buff Aurora
+  const daDa = !!(a.st.da && b.st.da);
+  const coMimic = !daDa && (a.id === 'mimic' || b.id === 'mimic');
   const ra = sinhU(taoU(B2, pick(B2.deck), Math.min(LUAT.saoMax, b.sao + 1), b.o));
+  if (daDa) ra.st.da = true;
   B2.t[a.o] = null; B2.t[b.o] = ra;
   ra.goc = b.goc;
   if (coMimic) ra.aurora = 8; // Aurora: ghép xong được buff tấn công
@@ -183,7 +197,7 @@ function ghep(B, a, b, ep) {
   // kỹ năng KHI GHÉP của 2 ụ nguyên liệu (mana, gọi ụ, khiên, phá đối thủ…) — nhãn chữ hiện lúc kết quả lộ ra
   const kh = [];
   G._treNhan = VX.TRE_LO;
-  for (const id of new Set([a.id, b.id])) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, a, b, B2.t[b.o] || ra); kh.push(id); } }
+  for (const id of (daDa ? [] : new Set([a.id, b.id]))) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, a, b, B2.t[b.o] || ra); kh.push(id); } }
   G._treNhan = 0;
   if (kh.length) VX.kichHoat(B2, b.o, kh);
   const kq = B2.t[b.o] || ra;
@@ -718,9 +732,9 @@ function aiBan(B, dt) {
   if (B.mana >= B.gia && oTrong(B).length) { trieu(B); return; }
   // ghép: ưu tiên sao thấp
   // kỹ năng chủ động của ụ ĐỎ: AI tự dùng khi nạp đầy
-  for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
+  for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && !biKhoa(T) && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
   ts.sort((a, b) => a.sao - b.sao);
-  const hl = (a, b) => hopLeGhep(a, b) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
+  const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
   if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
   if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { ghep(B, a, b); return; }
   const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => B.lv[a] - B.lv[b]);

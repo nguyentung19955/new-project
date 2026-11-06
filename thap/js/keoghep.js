@@ -97,7 +97,7 @@ const KG = {
   veMeo(ctx, src, hover) {
     const B = G.ban[src.ban];
     let s = null, c = null;
-    if (hover && hopLeGhep(src, hover)) { s = ghepDacBiet(src, hover) && !src.st.da ? this.TXT.tipDB : this.TXT.tip; c = B.o[hover.o]; }
+    if (hover && hopLeGhep(src, hover)) { s = ghepDBHop(src, hover) ? this.TXT.tipDB : this.TXT.tip; c = B.o[hover.o]; }
     else if (UI.chonGhep && !(UI.keo && UI.keo.dang)) { s = this.TXT.tapTip; c = B.o[src.o]; }
     if (!s) { this._tip = null; return; }
     if (this.soMeo() >= 3 && s !== this.TXT.tipDB) return;
