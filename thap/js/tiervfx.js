@@ -11,7 +11,12 @@
 const TVX = {
   lacT: -9, sangT: -9,
   bac: (T) => (T && TIERS[T.bac] ? TIERS[T.bac].thuTu : 0),
-  mau(T) { const h = typeof HO_CUA !== 'undefined' && HO_CUA[T.id]; return h ? HO[h.ho].mau : TIERS[T.bac].mau; },
+  // màu NGUYÊN TỐ của ụ cho hạt/vòng/than phụ (06/11 kiểm màu tools/thap-kt-mau.js): mặc định = màu họ kỹ năng; ụ có nguyên tố khác màu họ → ghi đè
+  //   (trước: Blood Circuit họ STAR rải hạt VÀNG, Black Hole họ TRAP rải hạt CAM lên đĩa xoáy tím, Laser/Overlord tia đỏ mà hạt lam, Eclipse quầng cam mà hạt lam, Scrap Forge lò lửa mà hạt vàng)
+  MAU_NT: { mauhut: '#ff3a5a', blackhole: '#b04bff', laser: '#ff4a8a', overlord: '#ff5a3a', nhatthuc: '#ff8a3a', loren: '#ff8a3a' },
+  mau(T) { if (this.MAU_NT[T.id]) return this.MAU_NT[T.id]; const h = typeof HO_CUA !== 'undefined' && HO_CUA[T.id]; return h ? HO[h.ho].mau : TIERS[T.bac].mau; },
+  // quầng trúng: ảnh trúng RIÊNG của ụ (FX.no + G.dangBan → fx_<id>_trung); ụ chưa có ảnh riêng → vòng màu nguyên tố (không dùng quầng laser_trung chung vàng chanh)
+  quang(T, x, y, co, song, m) { if (typeof FXU !== 'undefined' && FXU.ten(T, 'trung')) { const g = G.dangBan; G.dangBan = T; FX.no('laser_trung', x, y, co, song); G.dangBan = g; } else FX.vong1(x, y, 4, co * 0.5, m, song, 3); },
   // giới hạn chung toàn màn: rung / chớp không chồng liên tục dù nhiều ụ đỏ
   duocLac(cd) { if (G.t - this.lacT < cd) return false; this.lacT = G.t; return true; },
   duocSang(cd) { if (G.t - this.sangT < cd) return false; this.sangT = G.t; return true; },
@@ -29,19 +34,19 @@ const TVX = {
     FX.vong1(x, y, 4, b >= 3 ? 26 : 20, m, 0.22, 2);
     if (b < 3) return;
     // VÀNG+: tia lửa tung + quầng nhỏ
-    FX.tiaLua(x, y, crit ? 8 : 5, b >= 4 ? '#ffd0a0' : '#ffe9a0', 220, 9);
-    FX.no('laser_trung', x, y, 44, 0.22);
+    FX.tiaLua(x, y, crit ? 8 : 5, m, 220, 9); // tia lửa = màu nguyên tố (trước: vàng nhạt cố định cho mọi ụ — băng/nước/độc cũng tung tia vàng)
+    this.quang(T, x, y, 44, 0.22, m);
     if (b < 4) return;
     // ĐỎ: WOW (mỗi ụ tối đa ~1 lần / 0.9 s, chí mạng được ưu tiên)
     if (!this._cho(T, 'w', crit ? 0.6 : 0.9)) return;
-    this.wow(x, y, m);
+    this.wow(x, y, m, T);
   },
-  wow(x, y, m) {
-    FX.no('no_phao', x, y, 88, 0.4);
-    FX.no('laser_trung', x, y, 66, 0.3);
+  wow(x, y, m, T) {
+    if (T) { const g = G.dangBan; G.dangBan = T; FX.no('no_phao', x, y, 88, 0.4); G.dangBan = g; this.quang(T, x, y, 66, 0.3, m); } // nổ = ảnh trúng riêng của ụ (nổ pháo cam chung chỉ khi ụ chưa có ảnh)
+    else { FX.no('no_phao', x, y, 88, 0.4); FX.no('laser_trung', x, y, 66, 0.3); }
     FX.vong1(x, y, 6, 30, '#ffffff', 0.25, 3);
     FX.vong1(x, y, 10, 54, m, 0.38, 3);
-    for (let i = 0; i < 6; i++) FX.hat1('than', x + rnd(-16, 16), y + rnd(-10, 10), rnd(-14, 14), rnd(-34, -14), 0.6, 5, i % 2 ? '#ff8a2a' : m);
+    for (let i = 0; i < 6; i++) FX.hat1('than', x + rnd(-16, 16), y + rnd(-10, 10), rnd(-14, 14), rnd(-34, -14), 0.6, 5, m); // than đọng = màu nguyên tố (trước: than CAM cho mọi ụ đỏ — Cryo Reactor/Leviathan cũng rơi than lửa)
     if (this.duocSang(1.6)) FX.sang(0.08, m);
     if (this.duocLac(0.8)) FX.lac(2);
   },
@@ -56,6 +61,6 @@ const TVX = {
     const b = this.bac(T); if (b < 3) return;
     const yy = d.y - (d.z || 0);
     if (Math.random() < dt * (b >= 4 ? 34 : 24)) FX.hat1('lua', d.x + rnd(-2, 2), yy + rnd(-2, 2), rnd(-12, 12), rnd(-12, 12), 0.22, b >= 4 ? 7 : 6, this.mau(T));
-    if (b >= 4 && Math.random() < dt * 6) FX.hat1('than', d.x, yy, rnd(-8, 8), -16, 0.45, 4, '#ff8a2a');
+    if (b >= 4 && Math.random() < dt * 6) FX.hat1('than', d.x, yy, rnd(-8, 8), -16, 0.45, 4, this.mau(T)); // vệt than sau đạn ụ đỏ = màu nguyên tố (trước: cam cho mọi ụ)
   },
 };

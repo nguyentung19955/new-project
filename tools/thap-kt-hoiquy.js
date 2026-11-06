@@ -10,7 +10,7 @@
 //   python3 -m http.server 8765 &
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-online-mock-server.js 8787 &
 //   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-hoiquy.js            (SIZES=390x844x3 để chạy 1 cỡ; NHANH=1 bỏ wave 12)
-//   (gồm cả tools/thap-kt-online-sanh.js — sảnh online qua đường code Firebase với SDK + máy chủ giả, tự bật cổng 8790/8791; CHI=sanh)
+//   (gồm cả tools/thap-kt-mau.js — màu nguyên tố hiệu ứng 93 ụ; tools/thap-kt-online-sanh.js — sảnh online qua đường code Firebase với SDK + máy chủ giả, tự bật cổng 8790/8791; CHI=sanh)
 // Ảnh chụp mỗi lỗi: OUT (mặc định docs/demo-hop-tuong/hoiquy/). Thoát mã 1 nếu còn lỗi.
 'use strict';
 const { chromium } = require('playwright');
@@ -537,6 +537,11 @@ async function online(b, W, H, D, co) {
   if (!process.env.CHI || /vfx|kynang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vfx-p0.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ VFX P0 số thật (thap-kt-vfx-p0.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vfx-p0.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vfxp0', loai: 'VFX P0 số thật', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ VFX P0: lỗi chạy'); }
+  }
+  // MÀU NGUYÊN TỐ (93 ụ + Wyrm Engine vệt cháy/DRAGON DIVE + chỉ huy + preset EFFECTS/REDUCE FLASH): vệt/dấu/nổ trúng trên đường đúng màu nguyên tố — tools/thap-kt-mau.js
+  if (!process.env.CHI || /mau|vfx|solo|menu/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-mau.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { CHI: '', BASE }), timeout: 600000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^✗ /.test(l)); for (const l of (ds.length ? ds : ['thap-kt-mau.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'mau', loai: 'màu nguyên tố', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ màu nguyên tố: lỗi chạy'); }
   }
   // 4 ụ vàng mới đợt 1 (Ember Relay / Quantum Choir / Fusion Archive / Hero Foundry): luật, cấp thẻ, tất định online, cân bằng bậc Vàng — tools/thap-kt-vang-moi.js
   if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {

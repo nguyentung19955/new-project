@@ -164,7 +164,7 @@ const CG = {
     if (!E || !T || (T._cgCrit != null && G.t - T._cgCrit < 0.15)) return;
     T._cgCrit = G.t;
     FX.no('laser_trung', E.x, E.y, this.gon() ? 30 : 40, 0.2);
-    if (!this.gon()) FX.tiaLua(E.x, E.y, 3, '#ffd080', 170, 8);
+    if (!this.gon()) FX.tiaLua(E.x, E.y, 3, typeof TVX !== 'undefined' ? TVX.mau(T) : '#ffd080', 170, 8); // tia chí mạng = màu nguyên tố của ụ (trước: cam-vàng cố định → Leviathan/băng chí mạng toé tia lửa cam)
   },
 };
 window.CG = CG;

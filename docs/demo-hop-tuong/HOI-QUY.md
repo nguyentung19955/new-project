@@ -130,3 +130,6 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Sau rebase (390×844 NHANH): mọi bước XANH trừ `tiengviet` — 2 chuỗi mới của Copycat (đã thêm vi.json, thap-kt-vi chạy lại chỉ còn 3 chữ cài đặt P1 `EFFECTS/REDUCE FLASH/HAPTICS` của session VFX, đã ghi ở 532a2a8, không phải của việc này).
 ### 06/11 — ma trận tương tác (tools/thap-kt-matran.js)
 - Hồi quy đủ 4 cỡ trước khi rebase: XANH (2210 s). Sau khi rebase lên d2ba6b3 (session khác: Leviathan, VFX P0, Tiếng Việt), chạy nhanh 1 cỡ: ma trận XANH; còn 2 lỗi KHÔNG do đợt này: `thap-kt-vi` thiếu bản Việt dòng mô tả Leviathan ("Abyss 0/100 · …", session Tiếng Việt / Leviathan đang làm) · `thap-kt-vang-moi.js` báo 1 lần "document is not defined" ở `anBangTran` (setTimeout ketThuc chạy trong node — chạy lại riêng: 0 lỗi, chập chờn).
+## 06/11 — kiểm MÀU NGUYÊN TỐ (tools/thap-kt-mau.js, đã gắn vào thap-kt-hoiquy.js, CHI=mau)
+- Lỗi iPhone: Wyrm Engine 4★+ / DRAGON DIVE để lại vệt cháy XANH DA TRỜI (vetChay/rongBo lấy RONG_MAU[gd] = bảng màu nón lửa xanh). Sửa: RONG_THAN (than hồng cam/đỏ mọi dạng), rồng bổ nhào thân đỏ + lửa cam.
+- Bản gốc 56c9e49: 9 mục ĐỎ (ronglua ×5, blackhole, cuuvi, leviathan, mauhut). Sau sửa: 116 mục XANH (2 lần chạy). 36 mục "không có hiệu ứng trên đường" (ụ hỗ trợ / hiệu ứng nằm trên thân quái) được bỏ qua.
