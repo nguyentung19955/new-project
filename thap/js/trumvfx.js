@@ -18,7 +18,7 @@
 'use strict';
 const TVF = {
   // ảnh riêng đã về (thap/assets/<ten>.png) — tools cắt ảnh thêm tên vào đây
-  CO: new Set([]),
+  CO: new Set(['tb_doiloai', 'tb_bang', 'tb_da', 'tb_mimic', 'tb_snipe']),
   // tên ảnh riêng → ảnh mượn trong lúc chờ (ảnh có sẵn, cùng ý nghĩa nhất)
   TAM: {
     tb_doiloai: 'fx_st_cauvong', tb_bang: 'hu_vongbang', tb_da: 'cf_vong_ren', tb_mimic: 'tier_ring_vang', tb_snipe: 'fx_st_dau',
@@ -30,7 +30,7 @@ const TVF = {
   TO: { tb_khien: '#9fd8ff', tb_trum: '#ff7a3a', tb_to: '#ffb648', cmd_rage: '#ff9a3a' },
   DAU: { mad_crown: 'tb_doiloai', freezer: 'tb_bang', janus: 'tb_da', joker_king: 'tb_mimic', nightmare: 'tb_snipe', octopus: 'tb_lua', jammer: 'tb_xich', leech: 'tb_sao' },
   VONG: { hive: 'tb_to', patcher: 'tb_suachua', prism: 'tb_trum' }, // trùm tự niệm: vòng dưới chân
-  XOAY: { tb_snipe: 0, tb_sao: 0, tb_mimic: 0.35 },                  // tốc xoay dấu (rad/s); mặc định 0.6
+  XOAY: { tb_snipe: 0, tb_sao: 0, tb_mimic: 0, tb_lua: 0.3, tb_xich: 0.4 },                  // tốc xoay dấu (rad/s); mặc định 0.6
   CHAN_MAU: '#9fd4ff',
   ds: [], _bo: [],     // dấu đang báo: { E, bao, B, o, T, ten }
   pop: [], _boP: [],   // dấu đang nổ/vỡ + hiệu ứng chỉ huy: { k, B, o, x, y, t0, song, ten, mau }
