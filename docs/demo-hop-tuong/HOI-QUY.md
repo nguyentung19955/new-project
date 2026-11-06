@@ -75,3 +75,8 @@ Yêu cầu ảnh bị treo (máy kiểm giả mạng chậm rồi bỏ chặn gi
 tải lại URL mới; webp lỗi giải mã → .png. `CHI=landau` 4 cỡ ×3 lần: XANH.
 Còn lại: `online_tran` (bước vào trận online trong thap-kt-hoiquy.js) TRƯỢT cả trên nhánh gốc d8171e8 không có thay đổi của phiên này
 (thap-kt-online.js riêng thì OK) — chưa sửa, báo phiên ONLINE.
+
+## 2026-11-06 — màn tải đứng 100 % + lưới bộ bài chân dung nhỏ (pn/pilot_*)
+Chạy đủ 4 cỡ: 360x780 TRƯỢT "chân dung lọt khung — phóng quá độ nét 1,03" với ảnh nhỏ 200 px (chân dung phóng thêm theo khung mặt) →
+tạo lại 256 px (`tools/thap-pilot-nho.py`), `SIZES=360x780x3 CHI=menu`: XANH. 1280x800 `solo_trum` "chữ tràn .ci-chu bị #cutin cắt" 1 lần —
+chạy lại `SIZES=1280x800x1` đủ luồng: XANH (chập chờn theo thời điểm chụp cutin). 390/430: XANH. Kéo-thả 21/21 × 3 cỡ.

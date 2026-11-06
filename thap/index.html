@@ -10,7 +10,7 @@
   <!-- KHỞI ĐỘNG NHANH (tư vấn khởi động): màn tải hiện NGAY từ HTML + CSS nội tuyến dưới đây; mọi css/js của game nằm trong
        <template id="tm-nap"> và được nạp bởi đoạn script cuối trang (thanh % chạy từ yêu cầu đầu tiên, theo byte).
        THÊM css/js MỚI: đặt VÀO TRONG <template id="tm-nap"> (đúng thứ tự như trước) — đừng đặt ngoài template. -->
-  <link rel="preload" href="assets/hud_trum_khung.png" as="image">
+  <link rel="preload" href="assets/tai_khung.png" as="image">
   <link rel="preload" href="assets/tai_day.png" as="image">
   <link rel="preload" href="assets/nen_menu.jpg" as="image">
   <link rel="preload" href="assets/logo.png" as="image">
@@ -20,21 +20,25 @@
     html.dang-tai #wrap > * { visibility: hidden; }
     #tai { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 60; background: url(assets/nen_menu.jpg) center / cover no-repeat, #16171a url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAwACADASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAgQFAwEH/8QAIRAAAgICAgMAAwAAAAAAAAAAAQIDEQASITEEQVEiMsH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABcRAQEBAQAAAAAAAAAAAAAAAAARATH/2gAMAwEAAhEDEQA/APM0LyVHGNAOq7Y/Sc0hhcS7E2CbZfRw4oSkhDKVN/qfWPxQAj1lidTZomZ9ulB/FfQwNmjBjcBkYcrXKn6MqSxUKrEZIWaUBVLG7Cjs1ziUsaeKhDC22P3KkS8DrjJXjOeLFEHkZTikNcVlHZ1JGTPIBNgNrfu8ozyHTrJnkubtRZ+fcDOOZ5HZ3sm+SccimIHrEVKFN4nABHKnsHNITZrdQt0WOTNpIclmJGIPK8UokTYG+CMOYlTW6lSaDesBimhkldSK4Udsf5jdJX//2Q==) center / cover no-repeat; /* lớp dưới: nen_menu 32×48 (0,5 KB) hiện tức thì trong lúc ảnh thật (200 KB) đang về */ display: flex; align-items: center; justify-content: center; }
     #tai[hidden] { display: none; }
+    #tai:not(.san) .tai-giua { visibility: hidden; } /* đợi logo + khung (script dưới #tai) */
     #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; transform: scale(var(--tk, 1)); }
     #tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(assets/logo.png) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
-    #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/hud_trum_khung.png) 14 22 fill / 12px 19px stretch; }
-    #tai .tai-day { position: absolute; left: 14px; right: 14px; top: 9px; bottom: 9px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
+    #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.png) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
+    #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
     #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
-    #tai .tai-so { font-size: 12px; opacity: .7; }
   </style>
   <link rel="preload" href="assets/fonts/oxanium/oxanium-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
-  <div id="tai"><div class="tai-giua"><div class="tai-logo"></div><div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png" alt=""></div></div><div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span><span class="tai-so"></span></div></div></div>
+  <div id="tai"><div class="tai-giua"><div class="tai-logo"></div><div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png" alt=""></div></div><div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span></div></div></div>
   <script>(function () {
+    // logo + khung thanh hiện CÙNG LÚC khi ảnh đã giải mã (không bật logo/khung lẻ từng cái); quá 1,5 s thì hiện luôn
+    (function () { var t = document.getElementById('tai'), n = 2, hien = function () { if (t) t.classList.add('san'); }, xong = function () { if (--n <= 0) hien(); };
+      ['assets/logo.png', 'assets/tai_khung.png'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
+      setTimeout(hien, 1500); })();
     var vw = innerWidth || 390, vh = innerHeight || 844; document.documentElement.style.setProperty('--tk', Math.max(0.8, Math.min(1.6, vw / 430, vh / 640)).toFixed(3));
     // ảnh chỉ huy lớn của HOME (home.js) — tải SONG SONG với js thay vì đợi js chạy xong
     if (!/[?&](preview|mode)=/.test(location.search)) { var mv = 'hero'; try { var l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && /^(hero|dahlia|eve)$/.test(l.mv)) mv = l.mv; } catch (e) { }
@@ -209,6 +213,7 @@
   <link rel="stylesheet" href="css/nut-trieu.css"> <!-- nút SUMMON luôn hiện (bàn đầy = nút tắt rõ, không còn hốc trống) -->
   <link rel="stylesheet" href="css/chat.css"> <!-- chat nhanh online (js/online/chat.js) -->
   <link rel="stylesheet" href="css/nutlun.css"> <!-- nút chỉ lún khi nhấn, không rung: nạp cuối -->
+  <link rel="stylesheet" href="css/deckchon.css"> <!-- ụ trong bộ trên lưới kiểu DCDW (mờ + dấu tích, không viền) + cuộn mượt: nạp cuối -->
   <script src="js/donet.js"></script>
   <script src="js/font.js"></script>
   <script src="js/taitai-anh.js"></script>
@@ -297,10 +302,11 @@
       for (k in d.m) { var x = d.m[k]; tong += x.b; if (x.x) { ve += x.b; n++; } else if (x.t) dang++; }
       for (k in d.m) { var y = d.m[k]; if (!y.x && y.t) ve += Math.min(y.b * 0.9, (now - y.t) / 1000 * bw / Math.max(1, dang)); }
       var f = tong ? ve / tong : 0, p = Math.floor(d.tu + (d.den - d.tu) * Math.min(1, f));
+      if (!d.het && n < d.sl) p = Math.min(p, d.den - 1); // chưa xong hết tệp → không bao giờ báo đủ 100 %
       if (d.het) p = d.den;
       if (p < hien) p = hien; hien = p;
-      var a = el('.tai-day'), b = el('.tai-pt'), c = el('.tai-so'), t = document.getElementById('tai');
-      if (a) a.style.setProperty('--p', p + '%'); if (b) b.textContent = p + '%'; if (c) c.textContent = d.sl ? n + '/' + d.sl : ''; if (t) t.dataset.p = p;
+      var a = el('.tai-day'), b = el('.tai-pt'), t = document.getElementById('tai'); // chỉ %: bộ đếm tệp n/m bỏ (từng báo 100 % 256/309)
+      if (a) a.style.setProperty('--p', p + '%'); if (b) b.textContent = p + '%'; if (t) t.dataset.p = p;
     }
     function chay() { if (!hen) hen = setInterval(function () { ve(); if (!cur || cur.het) { clearInterval(hen); hen = 0; } }, 100); }
     return {

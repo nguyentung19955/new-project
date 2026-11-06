@@ -1,0 +1,29 @@
+/* TURRET MERGE — ụ ĐÃ TRONG BỘ trên lưới 85 ô (màn bộ bài + bộ sưu tập) kiểu DCDW + lưới cuộn mượt trên iPhone.
+   Người dùng (deck_chon_giat.png): "phần chọn tướng tham khảo dcdw, trang này giật giật".
+   Cũ: ô trong bộ = nhấc 1.04 + viền khung_chon 9-lát ở -5 px → tràn sang khe 6 px giữa các ô, nét lệch/đứt góc, đè ô bên cạnh.
+   Mới (DCDW): ô KHÔNG nhấc, KHÔNG viền; chân dung + viền độ hiếm mờ đi (opacity, tĩnh) + huy hiệu dấu tích chon_huy.png (ChatGPT) góc trên-phải.
+   Bộ sưu tập (.bst): chỉ huy hiệu, không mờ (mờ = khoá/chưa có ở DCDW).
+   Cuộn: không filter trên 248 viên ngọc, content-visibility cho hàng ngoài màn, lớp cuộn riêng (GPU). Nạp CUỐI. */
+
+/* 1) ô trong bộ: tắt nhấc + viền (chonthe.css / otoigian.css) */
+html body #wrap #chon #chon-luoi .c.ot.chon { translate: none !important; scale: none !important; z-index: auto; }
+html body #wrap #chon #chon-luoi .c.ot.chon::after { content: none !important; animation: none !important; border: 0 !important; border-image: none !important; }
+/* mờ tĩnh: chân dung + viền độ hiếm + ngọc (không filter → không vẽ lại khi cuộn) */
+html body #chon:not(.bst) #chon-luoi .c.ot.chon > img.anh,
+html body #chon:not(.bst) #chon-luoi .c.ot.chon > img.ov.ov,
+html body #chon:not(.bst) #chon-luoi .c.ot.chon > .ot-p { opacity: .42 !important; }
+/* huy hiệu dấu tích: hiện rõ (luật cũ ẩn .up-q bằng display:none), nằm trong ô, không che mặt */
+html body #chon #chon-luoi .c.ot .up-q { display: block !important; }
+html body #chon #chon-luoi .c.ot.chon .up-q { width: 46% !important; height: 46% !important; background: url(../assets/chon_huy.png) right 10px top 10px / 20px auto no-repeat !important; filter: none !important; opacity: 1 !important; } /* trong cửa sổ ảnh, dưới đinh góc khung (QUY-TAC 4) */
+
+/* 2) ô đang bị kéo (nguồn) ở lưới: mờ như ô trong bộ, không nhấc, không viền — bóng ma theo ngón tay mới là vật đang chọn */
+html body #chon #chon-luoi .c.ot.dk-nguon { opacity: .42; transition: none; }
+html body #chon #chon-luoi .c.ot.dk-nguon::after { content: none !important; }
+
+/* 3) cuộn mượt: ngọc độ hiếm không bóng filter trên lưới (248 lớp filter vẽ lại mỗi khung khi cuộn trên Safari) */
+html body #chon #chon-luoi .c.ot > .ot-p img { filter: none !important; }
+html body #chon #chon-luoi .c.ot > img.anh { transition: none !important; }
+/* hàng ngoài màn: bỏ qua vẽ (ô vuông, cỡ giữ bằng aspect-ratio + intrinsic) */
+html body #chon #chon-luoi .c.ot { content-visibility: auto; contain-intrinsic-size: auto 72px auto 72px; }
+/* lớp cuộn riêng → dịch lớp trên GPU thay vì vẽ lại cả lưới mỗi lần đổi scrollTop */
+html body #chon #chon-luoi { will-change: scroll-position; overscroll-behavior: contain; }

@@ -130,7 +130,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (let i = 0; i < 5; i++) {
       const id = this.chon[i], r = id && G.rosterMap[id];
       const o = document.createElement('div'); o.className = 'o-bo'; o.dataset.slot = i; // hợp đồng kéo-thả (QUY-TAC-HINH.md quy tắc 10)
-      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + portraitOf(id) + '" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
+      if (r) { o.style.setProperty('--m', TIERS[r.bac].mau); o.innerHTML = '<img decoding="async" ' + (typeof srcTai === 'function' ? srcTai() : 'src') + '="' + thumbOf(id) + '" alt=""><i></i>'; o.dataset.act = 'chon-u'; o.dataset.id = id; }
       b.appendChild(o);
     }
     $('#chon-dem').textContent = this.chon.length + '/5';
