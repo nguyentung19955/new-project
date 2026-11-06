@@ -12,3 +12,8 @@ Override the original brief:
 - Weekly event may give at most 1 Mythic copy at the very end of a long event track.
 - Gold/Common/Rare/Epic can be easier; Gold (Legendary) also clearly grindy but less than red.
 - Document the grind in KINH-TE.md: expected days of play per Mythic copy and to max a Mythic card (should be long, months).
+
+## Addendum (06/11 12:00 VN)
+User: "Đỏ vàng phải cày như trong game DCDW ấy" = BOTH red and gold must be as grindy as in DCDW.
+- Research and mirror DCDW's real economy as closely as possible: DCDW bag/box odds for Legendary and Ancient, Legendary box price in gems, gem income rates, Daily Specials Legendary price/frequency, copies needed per level (namu.wiki 데스티니 차일드:디펜스 워, inven.co.kr, bluestacks/tiprelay guides, YouTube box-opening stats). Cite sources in KINH-TE.md; where DCDW numbers are unknown, choose values at least as strict.
+- Gold (Legendary) is NOT "easier" than described above unless DCDW was — treat gold as DCDW Legendary-grind, red as DCDW Ancient-grind (rarer still).
