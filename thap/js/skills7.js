@@ -211,7 +211,7 @@ SKILLS.bienmau = {
     const c = B.o[b.o]; FX.vong1(c.x, c.y, 8, 50, PRISM_MAU[this.mau(a)], 0.4, 4); fx7('bienmau', c.x, c.y, 70, 0.4);
   },
   sangDau: () => 0.08,
-  veThem(ctx, T, S, al, R) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.32 + 0.08 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1(PRISM_MAU[SKILLS.bienmau.mau(T)]), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.16 + 0.05 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1(PRISM_MAU[SKILLS.bienmau.mau(T)]), 0, 0, S * 0.6); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================

@@ -215,8 +215,9 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   });
   ok(/Vamp \+6% → \+6\.5%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+10% → \+10\.7%/.test(r.thanhdia) && /Combo \+6% → \+6\.5%/.test(r.bienmau), 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
   if (SHOTS) {
-    await p.evaluate(() => { document.getElementById('chon').hidden = false; UI.veChon(); });
-    await sleep(800);
+    await p.evaluate(() => { const b = document.querySelector('[data-act="hm-bst"]'); if (b) b.click(); });
+    await sleep(1200);
+    try { await p.locator('text=SKIP TUTORIAL').first().click({ timeout: 2000 }); await sleep(1000); } catch (e) { }
     await p.evaluate(() => { const c = document.querySelector('#chon-luoi [data-id="mauhut"]'); if (c) c.scrollIntoView({ block: 'center' }); });
     await sleep(900); fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: SHOTS + 'bosuutap.png' });
     for (const id of ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']) { await p.evaluate((id) => { UP.mo(id); }, id); await sleep(900); await p.screenshot({ path: SHOTS + 'trang_' + id + '.png' }); await p.evaluate(() => { try { UP.dong && UP.dong(); } catch (e) { } }); await sleep(300); }
