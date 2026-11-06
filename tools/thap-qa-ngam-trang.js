@@ -191,6 +191,14 @@
         if (hetTrum && T.st.ngam > 0 && !(T.hexT > 0) && !G.hu.some(h => h.k === 'nhieu' && h.ds && h.ds.includes(T))) LOI('trum-de-lai', 'bàn ' + B.i + ' ô ' + o + ' ' + T.id + ': tâm ngắm trùm còn (st.ngam=' + T.st.ngam.toFixed(2) + ') khi không còn trùm');
         // Evolver 7★ xịt bị giảm sao → phải đếm lại (skill chỉ chạy khi ụ không bị khoá: băng / đá / câm Jammer / Hex) — kiểm khi còn xịt > 1 s lúc RẢNH
         if (T.id === 'tienhoa' && T.xit && T.sao < 7 && !biKhoa(T) && !(T.st.cam > 0) && !(T.hexT > 0)) { T._qaX = (T._qaX || 0) + BUOC * (Q.cfg.ktMoi || 4); if (T._qaX > 1) LOI('evolver-xit-sai', 'Evolver ' + T.sao + '★ vẫn xịt > 1 s khi không bị khoá'); } else T._qaX = 0;
+        // Evolver mất sao DƯỚI 7★ cũng phải đếm lại từ đầu (KIEM.md mục IX 'Đã quyết' #3): còn nhớ sao cũ cao hơn > 1 s lúc RẢNH = chưa đếm lại
+        //  + thấy sao giảm giữa 2 lần kiểm (cùng ụ, không bị khoá) mà bộ đếm vẫn lớn hơn khoảng thời gian đó → không đếm lại
+        if (T.id === 'tienhoa' && T.sao < 7) {
+          const ranh = !biKhoa(T) && !(T.st.cam > 0) && !(T.hexT > 0), w = BUOC * (Q.cfg.ktMoi || 4);
+          if (ranh && T.evoSao > T.sao) { T._qaE = (T._qaE || 0) + w; if (T._qaE > 1) LOI('evolver-ha-sao', 'Evolver ' + T.evoSao + '★→' + T.sao + '★ chưa đếm lại > 1 s khi không bị khoá'); } else T._qaE = 0;
+          if (ranh && T._qaR && T._qaS != null && T.sao < T._qaS && T.evoSao === T.sao && T.tuoi > w * 3.1 + 0.05) LOI('evolver-ha-sao', 'Evolver ' + T._qaS + '★→' + T.sao + '★: bộ đếm ' + T.tuoi.toFixed(2) + ' s không về 0');
+          T._qaS = T.sao; T._qaR = ranh;
+        }
       }
     }
     if (hetTrum && TVF.ds.length) LOI('trum-de-lai', 'TVF.ds còn ' + TVF.ds.length + ' dấu báo chiêu khi không còn trùm (' + TVF.ds.map(d => d.ten).join(',') + ')');

@@ -825,7 +825,10 @@ function aiBan(B, dt) {
   const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
   if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
   if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { ghep(B, a, b); return; }
-  const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => B.lv[a] - B.lv[b]);
+  // POWER-UP: mọi loại đều có ích (10 ụ không sát thương nâng chính số kỹ năng — KY_NANG_CAP.pu, KIEM.md mục IX 'Đã quyết' #1)
+  //  ưu tiên cấp thấp nhất, rồi loại đang có NHIỀU ụ trên bàn (nâng thứ đang đứng trên bàn); loại không có ụ nào trên bàn để sau
+  const dem = (id) => ts.reduce((n, T) => n + (T.id === id ? 1 : 0), 0);
+  const loai = B.deck.filter(id => B.lv[id] < 5).sort((a, b) => (dem(a) ? 0 : 1) - (dem(b) ? 0 : 1) || B.lv[a] - B.lv[b] || dem(b) - dem(a));
   if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
 

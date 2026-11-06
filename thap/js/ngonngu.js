@@ -63,7 +63,14 @@ const NN = (function () {
     return null;
   }
   const NGAN = [/(\n)/, /(\. (?=[A-Z0-9+−(]))/, /( · | • )/, /( — | – )/, /(; )/, /( \| )/, /(: )/, /( → )/, /(, )/];
+  // ghi chú trần chèn giữa câu (thatso.js: '41% (cap · LV raises it)') — dịch phần còn lại rồi chèn lại sau đúng con số đó
+  const GHI_TRAN = ' (cap · LV raises it)', GHI_TRAN_VI = ' (trần · LV nâng được)';
   function tra(s) {
+    const gi = s.indexOf(GHI_TRAN);
+    if (gi >= 0) {
+      const so = /(\d+(?:\.\d+)?%)$/.exec(s.slice(0, gi)), r0 = tra(s.slice(0, gi) + s.slice(gi + GHI_TRAN.length)); if (r0 == null) return null;
+      const j = so ? r0.indexOf(so[1]) : -1; return j >= 0 ? r0.slice(0, j + so[1].length) + GHI_TRAN_VI + r0.slice(j + so[1].length) : r0 + GHI_TRAN_VI;
+    }
     const r = traMot(s); if (r != null) return r;
     // tiền tố "3★  …" (bảng sao) / "LV9 · …"
     const tt = /^(\d+★\s+|LV\s?\d+\s·\s)([\s\S]+)$/.exec(s);

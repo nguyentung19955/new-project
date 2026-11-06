@@ -407,7 +407,7 @@ SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô C
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
   tamChu: '4 DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1) ? ' (damage cap)' : '') + ' to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), HOTRO.tran(T, 'dmg')) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > HOTRO.tran(T, 'dmg') ? ' (damage cap)' : '') + ' to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
   hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
   gocDau: (T, t) => 0, /* VFX P3: bỏ lắc đầu */ // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {

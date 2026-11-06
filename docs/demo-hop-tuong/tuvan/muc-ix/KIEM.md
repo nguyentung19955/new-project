@@ -68,9 +68,39 @@ Không đổi sát thương / hồi chiêu / cân bằng. Dữ liệu online kh�
 ## Tổng
 - **Đúng rồi: 25** (1, 3, 6–13, 15–18, 20, 21, 23, 24, 26–30, 31a, 32, 33 — mục 33 có làm thêm huy hiệu cho 4 ụ đỏ)
 - **Đã sửa: 8 mục** (2, 4, 5 + 5b, 14, 19, 22, 25, 31 b–e) — chữ/dữ liệu: 2, 4, 5b, 14, 19, 22 · UI: 5/25 (thanh soi ụ), 31b–e (4 FX); không có lỗi cơ chế phải sửa.
-- **Cần bạn quyết: 3**
+- **Cần bạn quyết: 0** — 3 mục đã quyết (xem 'Đã quyết' bên dưới)
 
-## Cần bạn quyết
+## Đã quyết (bạn trả lời 06/11 — đã làm)
+
+### 1. POWER-UP trong trận cho 10 ụ không gây sát thương → kiểu DCDW
+Mỗi bước power-up (+1 → MAX = 4 bước, giá như cũ) nâng **chính con số kỹ năng** — cộng sau số cấp thẻ (`KY_NANG_CAP[id].pu`, data.js `knThe`). Bước ≈ 6–10% số gốc (ụ sát thương: +25% ST/bước).
+
+| Ụ | Số kỹ năng | Mỗi bước | MAX (+4) | Ví dụ LV đầu, 1★ |
+|---|---|---|---|---|
+| Frost | Đóng băng | +0.15 s | +0.6 s | 2 s → 2.6 s |
+| Venom | Đánh dấu (quái nhận thêm ST) | +0.75% | +3% | 12% → 15% (vẫn trong trần suy yếu 25%) |
+| Time Bomb | Suy yếu | +0.75% | +3% | 10% → 13% (trần 25%) |
+| Shield Gen | Hồi khiên | −0.5 s | −2 s | 18 s → 16 s |
+| Mystery Box | Mở sau | −2 s | −8 s | 58 s → 50 s |
+| Reaper Pillar | Tỉ lệ giết ngay | +6% độ mạnh + **trần** +0.5% điểm | trần +2% | trần 19.5% → 21.5% (vẫn có trần) |
+| Evolver | Thời gian đếm | −3% | −12% | 100% → 88% |
+| Holy Halo | Kết giới | +0.15 s | +0.6 s | 3 s → 3.6 s |
+| Scrap Forge | % mỗi nấc lò | +0.3% | +1.2% | 4% → 5.2% (trần +60%/ụ giữ) |
+| Genesis Core | Chu kỳ +1★ | −3% | −12% | 100% → 88% |
+
+Chữ: Turret File 'Each in-battle power-up: Freeze +0.15s (+1 → MAX, no damage)'; bảng thông tin trong trận 'power-up +2: Freeze +0.3s' (chỉ khi đã nâng; số trong mô tả đã gồm). Bot: mọi loại đều đáng nâng → ưu tiên loại đang có trên bàn, cấp thấp trước. Online: B.lv đi theo lệnh nâng → tất định.
+
+### 2. Ụ hỗ trợ chạm trần → CẤP THẺ NỚI TRẦN
+Mỗi cấp thẻ trên cấp đầu nới trần của nguồn đó, trải đều tới **+18% trần ở LV15** (mọi bậc; trần cứng ×1.18) — `HOTRO.capLv / tran` (hotro.js), dùng cho cả số thật (apDung, kháng Mirror Gate, làm chậm khi trúng) và chữ.
+Ví dụ (LV đầu → LV15): Crit Antenna 22% → 26% · Armor Breaker 35% → 41.3% · Focus Lens 65% → 76.7% · Mirror Gate 35% → 41.3% · Rainbow 52.5% → 62% · Reaper Pillar 19.5% → 23% (+2% nữa khi power-up MAX).
+Chữ: thanh soi + bảng thông tin 'cap X% (LV raises it)'; mô tả (Turret File) '+22% (cap · LV raises it)'; hàng CARD LV 'cap 22% → 22.3%'. Nhãn trên bàn giữ gọn (chỉ số). Mốc sao bỏ số trần cứng ('reaches its cap (card LV raises it)').
+
+### 3. Evolver mất sao DƯỚI 7★ → đếm lại từ đầu
+Như luật 7★ xịt (c8d9e2e): mọi lần mất sao (5★ → 4★, cháy Octopus, Nightmare, Star Leech…) → bộ đếm về 0 theo sao mới; lên sao giữ thời gian đã chờ. `T.evoSao` (skills2.js) — thuần theo T.sao → online tất định. Chữ: mô tả 'losing a star restarts the countdown' + text.js.
+
+Kiểm hồi quy: `thap-kt-vfx-p0.js` mục 10 / 10b / 10c (power-up đổi số thật cho mọi ụ không sát thương + đúng số chốt; trần nới theo cấp, cứng ×1.18, crit thật tăng) · `thap-kt-matran.js` (Evolver 5★→4★ và 7★ xịt→6★ đếm lại, lên sao giữ) · ngâm `thap-qa-ngam-trang.js` bất biến `evolver-ha-sao`.
+
+## (cũ) Cần bạn quyết — đã trả lời ở trên
 1. **POWER-UP trong trận vô tác dụng với 10 ụ** không gây sát thương: Frost, Venom, Time Bomb, Shield Gen, Mystery Box, Reaper Pillar, Evolver, Holy Halo, Scrap Forge, Genesis Core (power-up chỉ nhân sát thương / độ mạnh hỗ trợ). Bot (AI) vẫn mua power-up cho các ụ này.
    - (a) Kiểu DCDW: power-up nâng đúng con số kỹ năng như cấp thẻ (vd Time Bomb Weaken +%, Holy Halo Barrier +s)
    - (b) Khoá / làm mờ nút power-up của các ụ này (và bot không mua)

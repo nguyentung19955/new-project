@@ -25,15 +25,19 @@
   const hieu = (T, id) => { const e = TRAN_HT[id]; if (!e) return null; const v = e[1](T); return { v, h: HOTRO.hd(T, e[0], v), k: e[0] }; };
   window.THATSO = { TRAN_HT, hieu };
   // thay số thô đầu tiên ('52%' / '56.4%') bằng số hiệu dụng
-  function thay(s, v, h) {
+  //  ghi = true (mô tả: thanh soi, Turret File): thêm ' (cap · LV raises it)' — trần nới theo cấp thẻ (KIEM.md 'Đã quyết' #2); nhãn SUP trên bàn: chỉ số (QUY-TAC 7)
+  const GHI_TRAN = ' (cap · LV raises it)';
+  function thay(s, v, h, ghi) {
     if (!(v > h + 1e-9) || typeof s !== 'string') return s;
+    if (ghi) s = s.replace(' (crit-buff cap)', '').replace(' (damage cap)', '');
     const a = [pc(v) + '%', (v * 100).toFixed(1) + '%'];
-    for (const t of a) { const i = s.indexOf(t); if (i >= 0) return s.slice(0, i) + (t.indexOf('.') > 0 ? (h * 100).toFixed(1) : pc(h)) + '%' + s.slice(i + t.length); }
+    for (const t of a) { const i = s.indexOf(t); if (i >= 0) return s.slice(0, i) + (t.indexOf('.') > 0 ? (h * 100).toFixed(1) : pc(h)) + '%' + (ghi ? GHI_TRAN : '') + s.slice(i + t.length); }
+    if (ghi && s.indexOf(GHI_TRAN) < 0) for (const t of [(h * 100).toFixed(1) + '%', pc(h) + '%']) { const i = s.indexOf(t); if (i >= 0) return s.slice(0, i + t.length) + GHI_TRAN + s.slice(i + t.length); } // mô tả đã tự kẹp (HOTRO.hd/tran): chỉ thêm ghi chú trần
     return s;
   }
   for (const id in TRAN_HT) {
     const sk = SKILLS[id]; if (!sk) continue;
-    if (sk.mo) { const mo = sk.mo; sk.mo = function (T) { const s = mo.apply(this, arguments); try { const r = hieu(T, id); return r ? thay(s, r.v, r.h) : s; } catch (e) { return s; } }; }
+    if (sk.mo) { const mo = sk.mo; sk.mo = function (T) { const s = mo.apply(this, arguments); try { const r = hieu(T, id); return r ? thay(s, r.v, r.h, true) : s; } catch (e) { return s; } }; }
     if (typeof SUP !== 'undefined' && SUP[id] && SUP[id].chu) { const chu = SUP[id].chu; SUP[id].chu = function (T) { const s = chu.apply(this, arguments); try { const r = hieu(T, id); return r ? thay(s, r.v, r.h) : s; } catch (e) { return s; } }; }
   }
   // Radar 7★ OVERDRIVE: +25% nằm TRONG trần tốc bắn → hiện phần thật được cộng
@@ -72,12 +76,12 @@
     M('haoquang', 3, 'STEADY HALO', 'Barrier +0.5s');
     M('haoquang', 7, 'BLESSING', 'Barrier +1s more + 30% speed');
     M('chimang', 3, 'SHARP EYE', 'More crit chance (curve ×1.45)');
-    M('chimang', 5, 'DEADLY EYE', 'Crit chance reaches the 22% cap + 10% crit damage');
+    M('chimang', 5, 'DEADLY EYE', 'Crit chance reaches its cap (card LV raises it) + 10% crit damage');
     M('chimang', 7, 'CERTAIN STRIKE', 'Every 6s a sure crit (crit chance stays at the cap)');
     M('radar', 7, 'OVERDRIVE', 'Aura ×2.35 + every 8s a 2s fire-rate burst (inside the fire-rate cap)');
-    M('tuthan', 5, 'DEEP REAP', 'Threshold 40% HP (kill chance is already at its cap)');
-    M('phagiap', 5, 'DOUBLE EXPOSE', 'Exposes 3 enemies (bonus is already at the 35% cap)');
-    M('cauvong', 5, 'DOUBLE ARC', '2 trails (bonus reaches the 52% cap)');
+    M('tuthan', 5, 'DEEP REAP', 'Threshold 40% HP (kill chance is at its cap; card LV and power-ups raise it)');
+    M('phagiap', 5, 'DOUBLE EXPOSE', 'Exposes 3 enemies (bonus is at its cap; card LV raises it)');
+    M('cauvong', 5, 'DOUBLE ARC', '2 trails (bonus reaches its cap; card LV raises it)');
     M('lophanung', 5, 'DEEP COLD', 'Bosses in the aura cast 25% slower; FREEZE lasts 4s (bosses 0.8s)');
     M('laser', 7, 'APEX', '+30% damage (the beam never crits)');
     M('pandora', 5, 'LUCKY SPIN', 'A merge that makes 6★ rolls twice, keeps the better');
@@ -142,7 +146,7 @@
         const id = T.id, k = h.k, v = SUP_GIA[id](T), tran = TRAN_TT(T, id), ten = NHAN_HT[id] || BUFF[k].ten, pcs = (x) => (id === 'tuthan' ? (x * 100).toFixed(1) : Math.round(x * 100)) + '%';
         const hien = Math.min(v, tran);
         h.dong = ten + ' +' + pcs(hien) + ' (current)';
-        if (v > tran + 1e-9) h.tach += ' · capped at ' + pcs(tran);
+        if (v > tran + 1e-9) h.tach += ' · cap ' + pcs(tran) + ' (LV raises it)';
         h.that = hien; // cho kiểm
       } catch (e) { }
       return h;
@@ -150,14 +154,31 @@
     window.THATSO.NHAN_HT = NHAN_HT;
   }
 
-  // ---------- 7. POWER-UP trong trận (B.lv +1…MAX) chỉ nhân SÁT THƯƠNG / độ mạnh hỗ trợ: ụ không sát thương + kỹ năng không đọc B.lv → nâng không đổi gì ----------
-  //  Trang ụ (Turret File) không còn nói '+25% base damage' với các ụ này. (Có cho power-up tác dụng thật hay không: docs/demo-hop-tuong/tuvan/muc-ix/KIEM.md 'Cần bạn quyết')
-  const PU_KHONG = ['bang', 'doc', 'bomhen', 'khien', 'hopbi', 'tuthan', 'tienhoa', 'haoquang', 'loren', 'khoisinh'];
-  window.THATSO.PU_KHONG = PU_KHONG;
-  window.THATSO.chuPU = (id) => PU_KHONG.includes(id)
-    ? 'Values at your card level, before buffs. In-battle power-ups add base damage — this turret deals none, so they do not change it. Tap a row to test it.'
+  // hàng CARD LV (trang ụ): ụ hỗ trợ có trần → 'cap 22% → 22.3%' (cấp thẻ nới trần — KIEM.md 'Đã quyết' #2); thẻ MAX: 'cap 26%'
+  window.THATSO.capThe = (id, t) => {
+    const e = id === 'khuech' ? ['amp'] : TRAN_HT[id], r = G.rosterMap && G.rosterMap[id]; if (!e || !r || id === 'lophanung' || !t) return '';
+    const f = (k) => HOTRO.tranGoc(r.bac, HOTRO.capLvK(r.bac, k), e[0]), v = (x) => +(x * 100).toFixed(1) + '%';
+    return 'cap ' + v(f(t.k)) + (t.max ? '' : ' → ' + v(f(t.k + 1)));
+  };
+
+  // ---------- 7. POWER-UP trong trận (B.lv +1…MAX) cho 10 ụ KHÔNG gây sát thương — KIEM.md mục IX 'Đã quyết' #1 (kiểu DCDW) ----------
+  //  mỗi bước nâng CHÍNH con số kỹ năng (KY_NANG_CAP[id].pu, data.js knThe) — Reaper Pillar: +6% độ mạnh + nới trần giết ngay +0.5%/bước (HOTRO.puChet).
+  //  Chữ: Turret File (chuPU) + bảng thông tin / thanh soi trong trận (puDong) — số lấy từ chính hàm chơi.
+  const PU_KN = ['bang', 'doc', 'bomhen', 'khien', 'hopbi', 'tuthan', 'tienhoa', 'haoquang', 'loren', 'khoisinh'];
+  window.THATSO.PU_KN = PU_KN;
+  window.THATSO.PU_KHONG = []; // (cũ) không còn ụ nào power-up vô tác dụng
+  const knV = (e, v) => (v < 0 ? '−' : '+') + (e.dv === 's' ? +Math.abs(v).toFixed(2) : +Math.abs(v).toFixed(2)) + (e.dv || '');
+  // 'Freeze +0.15s' / 'Recharge −0.5s' / 'kill-chance cap +0.5%' cho n bước
+  window.THATSO.puBuoc = (id, n) => {
+    if (id === 'tuthan') return 'kill-chance cap +' + +(HOTRO.PU_CHET * 100 * n).toFixed(1) + '%';
+    const e = KY_NANG_CAP[id]; return e && e.pu ? e.ten + ' ' + knV(e, e.pu * n) : '';
+  };
+  window.THATSO.chuPU = (id) => PU_KN.includes(id)
+    ? 'Values at your card level, before power-ups and buffs. Each in-battle power-up: ' + THATSO.puBuoc(id, 1) + (id === 'tuthan' ? ' and +6% strength' : '') + ' (+1 → MAX, no damage). Tap a row to test it.'
     : (SKILLS[id] && !SKILLS[id].dmg) ? 'Values at your card level, before power-ups and buffs. In-battle power-ups make its skill stronger (+1 → MAX), not damage. Tap a row to test it.'
     : null;
+  // dòng trong bảng thông tin trận (chỉ khi đã nâng): 'power-up +2: Freeze +0.3s'
+  window.THATSO.puDong = (B, id) => { const n = PU_KN.includes(id) && id !== 'tuthan' ? knPU(B, id) : 0; return n > 0 ? 'power-up +' + n + ': ' + THATSO.puBuoc(id, n) : ''; };
 
   if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['vfxp0_tudong', 'ic_phat']) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } } // giữ + giải mã sẵn (không giải mã giữa trận)
 })();

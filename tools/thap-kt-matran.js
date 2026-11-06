@@ -220,6 +220,10 @@ function trongTrang(arg) {
   { xoa(); const lv0 = Object.assign({}, B.lv); B.deck = ['lien']; B.lv.hopbi = 5; B.lv.lien = 1; const X = dat(B, 7, 'hopbi', 3); X.banSao = true; X.tuoi = 999; Math.random = rngHat(9); try { capNhatU(B, X, 0.02); } finally { Math.random = r0; }
     const K = B.t[7], F = taoU(B, 'lien', K.sao, 7); them.capLoai = K.id === 'lien' && Math.abs(dmgU(K) / dmgU(F) - heSaoChep(B)) < 1e-6; B.lv = lv0; B.deck = deck0; xoa(); }
   them.heso = heSaoChep(B);
+  // Evolver MẤT SAO (KIEM.md mục IX 'Đã quyết' #3): mọi lần mất sao → đếm ngược lại TỪ ĐẦU (dưới 7★ như ca 7★ xịt c8d9e2e); tăng sao giữ thời gian đã chờ
+  { const evo = (sao, f) => { xoa(); const X = dat(B, 7, 'tienhoa', sao); capNhatU(B, X, 0.02); X.tuoi = 12; f(X); capNhatU(B, X, 0.02); const r = { id: X.id, sao: X.sao, tuoi: X.tuoi, xit: !!X.xit }; xoa(); return r; };
+    const h5 = evo(5, X => haSao(B, X, 'kt')), h7 = evo(7, X => haSao(B, X, 'kt')), len = evo(3, X => { X.sao = 4; });
+    them.evo = { h5, h7, len, ok: h5.id === 'tienhoa' && h5.sao === 4 && h5.tuoi < 0.05 && h7.sao === 6 && !h7.xit && h7.tuoi < 0.05 && len.sao === 4 && len.tuoi > 11 }; }
   return { ra, them };
 }
 
@@ -253,6 +257,7 @@ function trongTrang(arg) {
     bang[r.s + '|' + r.e] = { k: L.k, ly: L.ly, ok: ok && !loiThem.length };
   }
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
+  if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
   for (const e of errs) LOI.push('✗ ' + e);
   console.log('— MA TRẬN: ' + ra.length + ' cặp · kiểm ' + kiem + ' · đạt ' + dat + ' · không thể có ' + na + ' · đối chứng không chạy ' + kad);

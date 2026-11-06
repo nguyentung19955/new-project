@@ -262,7 +262,7 @@ Object.assign(MOC_RIENG, {
   thanhdia: { 5: ['WIDE SANCTUM', 'Cleanse, shield and aura reach all 8 cells around'], 7: ['HOLY GROUND', 'Shields recharge every 4s'] },
   bienmau: { 5: ['MASTER THIEF', 'COMBO cap 15'], 7: ['FULL SPECTRUM', 'Every shot burns, crits and slows'] },
 });
-Object.assign(SUP, { thanhdia: { icon: 'sup_khien', mau: '#fff2b0', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(0.35 * HOTRO.CAP_BAC.vang, SKILLS.thanhdia.k(T))) + '% DAMAGE · SHIELD' } });
+Object.assign(SUP, { thanhdia: { icon: 'sup_khien', mau: '#fff2b0', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(HOTRO.tran(T, 'dmg'), SKILLS.thanhdia.k(T))) + '% DAMAGE · SHIELD' } });
 SUP_LOAI.thanhdia = 'khien';
 SUP_GIA.thanhdia = (T) => SKILLS.thanhdia.k(T);
 
