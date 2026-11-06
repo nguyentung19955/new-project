@@ -112,7 +112,7 @@ const KG = {
     ctx.globalAlpha = al;
     if (a) this.tam3(ctx, a, cx - w / 2, y - hh / 2, w, hh);
     const q = Math.min(sc, (w - bw - px * 1.2 * sc) / Math.max(1, im.tw)), tx = cx + bw / 2;
-    ctx.drawImage(im, tx - im.lw * q / 2, y - im.by * q + px * 0.36 * q, im.lw * q, im.lh * q);
+    REN.veChuAnh(ctx, im, tx - im.lw * q / 2, y - im.by * q + px * 0.36 * q, im.lw * q, im.lh * q);
     if (sao) { const hb = REN.huyHieuDong(sao, hh * 0.9); if (hb) ctx.drawImage(hb, cx - w / 2 - hh * 0.2, y - hh * 0.72, hh * 1.35, hh * 1.35); }
   },
 

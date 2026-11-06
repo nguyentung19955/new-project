@@ -30,7 +30,7 @@ const REN = {
     cv.parentNode.insertBefore(this.nen, cv);
     this.cv = cv; this.ctx = cv.getContext('2d');
     this.coLai(); // đổi cỡ/xoay/pageshow/visualViewport: taitai.js hoiKhung() gọi lại coLai()
-    if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this.donCache(); }); // phông về muộn: dựng lại ảnh chữ
+    if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this._glyph = null; this.donCache(); }); // phông về muộn: dựng lại ảnh chữ
     // quay lại trang/tab (iOS có thể đã xoá vùng nhớ canvas khi chạy nền) → dựng lại nền; ảnh lỗi → thử tải lại ngay
     const hoi = () => { if (document.hidden) return; this.thuLaiLoi(); if (G.ban.length) this.lamNen(); };
     document.addEventListener('visibilitychange', hoi); addEventListener('pageshow', hoi);
@@ -74,7 +74,7 @@ const REN = {
     this.cv.style.width = (this.cv.width * r / (this.s * thuc)) + 'px'; this.cv.style.height = (this.cv.height * r / (this.s * thuc)) + 'px';
     this.nen.style.width = this.cv.style.width; this.nen.style.height = this.cv.style.height;
     this.min(this.ctx); this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round'; // nét vẽ (vòng, tia, sét) đầu tròn, khử răng cưa
-    this.donCache(); this._chu = null;
+    this.donCache(); this._chu = null; this._glyph = null;
     if (G.ban.length) this.lamNen();
   },
   // làm tròn toạ độ logic về điểm ảnh thiết bị (UI tĩnh: tấm tên, khung) → ảnh không bị lọc lại lệch nửa điểm ảnh (nhoè)
@@ -197,7 +197,7 @@ const REN = {
     for (const k in this.anh) if (!giu.has(k) && !this.CO_DINH.has(k) && this.anh[k]._cv) delete this.anh[k];
     for (const k in this.trang) if (!giu.has(k)) delete this.trang[k];
     for (const k in this.xam) if (!k.startsWith('diu|') && !giu.has(k)) delete this.xam[k];
-    this.donCache(); this._chu = null;
+    this.donCache(); this._chu = null; this._glyph = null;
   },
   // ảnh TÌNH HUỐNG (hào quang buff, nổ/tia riêng của vài ụ, đồ vật kỹ năng): không bắt màn tải đợi giải mã trước trận —
   // tải khi vẽ lần đầu (img() tự tải), chỉ ảnh thật sự xuất hiện mới chiếm bộ nhớ. Ảnh đã cắt lại ở 3× nặng hơn → giữ ngân sách iOS.
@@ -352,6 +352,9 @@ const REN = {
     const k = this.s * this.dpr, key = s + '|' + mau + '|' + px;
     const M = this._chu || (this._chu = new Map());
     let c = M.get(key); if (c) return c;
+    // SỐ SÁT THƯƠNG (chỉ chữ số): ghép từ ảnh từng chữ số dựng sẵn (viền / ruột riêng) — không dựng canvas + vẽ chữ mới cho MỖI con số.
+    // Đợt nhiều skill cùng lúc sinh hàng chục số khác nhau trong 1 khung → trước đây 50–150 ms vẽ chữ (giật). Xem giat_skill/BAO-CAO.md.
+    if (/^[0-9]{1,12}$/.test(s)) return this.chuSo(s, mau, px);
     if (M.size > 200) M.clear();
     const f = '900 ' + px + 'px ' + FONT.display;
     const m = this._mx || (this._mx = document.createElement('canvas').getContext('2d'));
@@ -362,6 +365,36 @@ const REN = {
     const by = px + 3; x.strokeText(s, lw / 2, by); x.fillStyle = mau; x.fillText(s, lw / 2, by);
     c.tw = tw; c.lw = lw; c.lh = lh; c.by = by;
     M.set(key, c); return c;
+  },
+  // 1 chữ số → 2 ảnh (viền đen, ruột màu) ở mật độ điểm ảnh thật; số = dãy chữ số, vẽ 2 lượt (mọi viền rồi mọi ruột) như strokeText+fillText
+  chuSo(s, mau, px) {
+    const k = this.s * this.dpr, f = '900 ' + px + 'px ' + FONT.display;
+    const GM = this._glyph || (this._glyph = new Map());
+    const m = this._mx || (this._mx = document.createElement('canvas').getContext('2d'));
+    const lh = px * 1.35 + 6, by = px + 3, gl = [];
+    let x = 4;
+    for (const ch of s) {
+      const gk = ch + '|' + mau + '|' + px + '|' + k;
+      let g = GM.get(gk);
+      if (!g) {
+        m.font = f; const adv = m.measureText(ch).width, gw = adv + 8;
+        const mk = (vien) => { const c = document.createElement('canvas'); c.width = Math.ceil(gw * k); c.height = Math.ceil(lh * k);
+          const y = this.c2d(c); y.scale(k, k); y.font = f; y.textAlign = 'left'; y.lineJoin = 'round';
+          if (vien) { y.lineWidth = 3.5; y.strokeStyle = 'rgba(0,0,0,.85)'; y.strokeText(ch, 4, by); } else { y.fillStyle = mau; y.fillText(ch, 4, by); } return c; };
+        g = { adv, gw, v: mk(true), r: mk(false) }; GM.set(gk, g);
+      }
+      gl.push([g, x - 4]); x += g.adv;
+    }
+    const tw = x - 4, c = { so: gl, tw, lw: tw + 8, lh, by };
+    const M = this._chu; if (M.size > 400) M.clear(); M.set(s + '|' + mau + '|' + px, c);
+    return c;
+  },
+  // vẽ ảnh chữ (canvas hoặc số ghép) tại (x,y) cỡ w×h logic
+  veChuAnh(ctx, im, x, y, w, h) {
+    if (!im.so) { ctx.drawImage(im, x, y, w, h); return; }
+    const q = w / im.lw;
+    for (const [g, ox] of im.so) ctx.drawImage(g.v, x + ox * q, y, g.gw * q, h);
+    for (const [g, ox] of im.so) ctx.drawImage(g.r, x + ox * q, y, g.gw * q, h);
   },
   // quầng sáng tròn = fx_cham_trang.png tô màu (màu + độ mờ lấy từ mốc đầu) — thay gradient vẽ code
   glow(key, stops) {
@@ -1145,7 +1178,7 @@ const REN = {
         let q2 = q; if (im.lw * q2 > W - 12) q2 = (W - 12) / im.lw; // chữ dài: tự thu nhỏ cho vừa màn
         const w = im.lw * q2, h = im.lh * q2, cx = clamp(c.x, w / 2 + 2, W - w / 2 - 2);
         if (c.kieu === 'mana') this.anhGiua(ctx, 'ui_mana', cx - im.tw * q / 2 - 8, y - c.co * 0.35, 14);
-        ctx.drawImage(im, cx - w / 2, y - im.by * q2, w, h);
+        this.veChuAnh(ctx, im, cx - w / 2, y - im.by * q2, w, h);
         continue;
       }
       ctx.font = '900 ' + Math.round(c.co * sc) + 'px ' + FONT.display;
