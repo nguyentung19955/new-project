@@ -118,3 +118,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - 06/11 (cân bằng bậc, sau rebase 12 ụ vàng sửa DCDW): 4 cỡ 1 lỗi 1280x800 solo_trum 'chữ tràn' cut-in (.ci-chu, chập chờn đã biết) — chạy lại `SIZES=1280x800x1 CHI=solo`: XANH. Kiểm bậc: Trắng 0.88 < Xanh 1.13 < Tím 1.30 < Vàng 1.64 < Đỏ 3.75.
 ## 06/11 — giật khi ra skill
 - Hồi quy đủ 4 cỡ XANH (1717 s). Mới trong hồi quy: tools/thap-kt-giat.js (JS khung quanh skill đỏ lần đầu / trùm ra + tung chiêu / ghép / chỉ huy / mọi skill 1 khung ≤ 30 ms máy đo, thu nhỏ ảnh ≤ 12 ms/khung, không lỗi trang). Báo cáo tuvan/giat_skill/BAO-CAO.md.
+- 06/11 (giật skill, lần đẩy cuối): hồi quy solo 390×844 chỉ trượt `vangsua` Evolver "7★ xịt bị giảm sao → đếm lại" — trượt y hệt trên bản gốc b2b9739 (không có thay đổi giật skill) → lỗi của bản Evolver mới, không phải do giat_skill; thap-kt-giat.js XANH.
