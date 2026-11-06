@@ -1,0 +1,62 @@
+[
+ {
+  "name": "raw_u3_lualien.png",
+  "ref": "thap/assets/vughep_nong.png",
+  "prompt": "Make an image. Turret head 'Ember Relay': merging relays passes flame charges to same-type neighbours in a + cross; each charge = more damage and crit. Same game style as attached, top-down, facing right, round body, gold trims. Round gold-rimmed bronze heat sink, four outward cruciform copper flare ports, central white-hot orange ember, NO flamethrower barrel. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_pt_lualien.png",
+  "ref": "thap/assets/pilot_nemesis.png",
+  "prompt": "Make an image. Commander-style portrait for gold turret 'Ember Relay'. Same style and framing as attached. Unique character: a fierce fire-dancer girl with ember-orange hair and a cross-shaped flame halo, holding a small brazier. Gold accents, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_fx_lualien.png",
+  "ref": "thap/assets/fx_vughep_hieu.png",
+  "prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Ember Relay': flame charge passing in a + cross: orange ember orb pops out, four flame sparks shoot out in a cross, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_hopca.png",
+  "ref": "thap/assets/vughep_nong.png",
+  "prompt": "Make an image. Turret head 'Quantum Choir': gets stronger for every other turret on the board with the same star count. Same game style as attached, top-down, facing right, round body, gold trims. Compact circular gold resonator with concentric white-violet sound rings and seven small equidistant prongs, NO cyan network tiles. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_pt_hopca.png",
+  "ref": "thap/assets/pilot_nemesis.png",
+  "prompt": "Make an image. Commander-style portrait for gold turret 'Quantum Choir'. Same style and framing as attached. Unique character: a calm choir-singer girl in white-violet robes with glowing sound rings around her, mouth open singing. Gold accents, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_fx_hopca.png",
+  "ref": "thap/assets/fx_vughep_hieu.png",
+  "prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Quantum Choir': harmonic pulse: white-violet concentric sound rings expand from center with seven small star sparks, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_luutru.png",
+  "ref": "thap/assets/vughep_nong.png",
+  "prompt": "Make an image. Turret head 'Fusion Archive': every merge you make adds a permanent archive charge; archive-on-archive merge fires an area pulse. Same game style as attached, top-down, facing right, round body, gold trims. Low round gold vault with a fan of five physical punched-metal tally tabs and rising white-blue filing sparks, NOT a chest, no keyhole, no tubes. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_pt_luutru.png",
+  "ref": "thap/assets/pilot_nemesis.png",
+  "prompt": "Make an image. Commander-style portrait for gold turret 'Fusion Archive'. Same style and framing as attached. Unique character: a scholarly librarian girl with round glasses and white-blue glowing tally cards floating around her. Gold accents, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_fx_luutru.png",
+  "ref": "thap/assets/fx_vughep_hieu.png",
+  "prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Fusion Archive': archive pulse: white-blue ring burst with flying punched-metal tally cards spreading out, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_xuonganh.png",
+  "ref": "thap/assets/vughep_nong.png",
+  "prompt": "Make an image. Turret head 'Hero Foundry': merging two foundries stamps a gold HERO tile: the turret on it fires much faster for 12s. Same game style as attached, top-down, facing right, round body, gold trims. Gold round industrial stamping press with a raised five-point embossed star platen and triangular black/yellow side braces, NO treasure chest, no hologram mirror. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_pt_xuonganh.png",
+  "ref": "thap/assets/pilot_nemesis.png",
+  "prompt": "Make an image. Commander-style portrait for gold turret 'Hero Foundry'. Same style and framing as attached. Unique character: a cheerful blacksmith girl with a big hammer, soot on cheeks, gold star emblem on her apron. Gold accents, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_fx_xuonganh.png",
+  "ref": "thap/assets/fx_vughep_hieu.png",
+  "prompt": "Make an image. 4x4 grid, 16 animation frames left-to-right top-to-bottom, game skill effect for 'Hero Foundry': hero tile stamp: a gold star platen slams down, gold star glow ring on the floor tile, sparks burst, then fade. Same game style as attached, bright, soft glow, each frame centered in its cell, solid magenta #FF00FF background, no text."
+ }
+]
