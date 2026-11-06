@@ -39,3 +39,7 @@ Thẻ chỉ huy: sẵn sàng / thiếu mana (không trừ, không FX) / hồi ch
 ## Không làm (lý do)
 - Tên chiêu nổi trên sân lúc T-1,4: trái quy tắc "không chữ popup trong trận" (chỉ hiện khi bật Battle hints — đã có).
 - Boss crit/weak point, Reduce Flash cài đặt: phần của session P1.
+
+## Xuất bản
+dc97b39 trên claude/mobile-tower-defense-game-k5oxzo (thap/ = bản 6975b8d, ver 8c9500b72d). Hồi quy 4 cỡ XANH trên bản này.
+Lần chạy lại sau khi kéo P0/P1 (390, NHANH): chỉ trượt thap-kt-vi vì 3 chữ cài đặt mới của P1 (EFFECTS / REDUCE FLASH / HAPTICS — camgiac.js) chưa có bản Việt → chưa xuất bản phần P1; việc của session P1 / Tiếng Việt.
