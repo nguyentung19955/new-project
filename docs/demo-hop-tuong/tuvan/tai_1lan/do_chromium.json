@@ -1,0 +1,53 @@
+{
+ "br": "chromium",
+ "mang": "4g",
+ "lan1": {
+  "ms": 29844,
+  "moc": {
+   "dcl": 5085,
+   "roster": 5437,
+   "nap": 5437,
+   "home": 29811
+  },
+  "MB": 21.9,
+  "soYC": 631,
+  "sw": true
+ },
+ "tran_solo": {
+  "doiMs": 182,
+  "thieu": 0
+ },
+ "tran_coop": {
+  "doiMs": 982,
+  "thieu": 48
+ },
+ "tran_pvp": {
+  "doiMs": 285,
+  "thieu": 20
+ },
+ "tran_boKhac": {
+  "doiMs": 487,
+  "thieu": 34
+ },
+ "taiSauBoot": [],
+ "thoCon": 0,
+ "boNho": {
+  "canvasMB": 39.7,
+  "soCanvas": 112,
+  "lonNhatMB": 10.4,
+  "anhGocMB": 186.1
+ },
+ "lan2": {
+  "ms": 884,
+  "moc": {
+   "dcl": 435,
+   "roster": 663,
+   "nap": 663,
+   "home": 841
+  },
+  "MB": 0,
+  "soYC": 1,
+  "sw": true
+ },
+ "loi": []
+}

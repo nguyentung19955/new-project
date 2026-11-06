@@ -96,6 +96,12 @@ for f in os.listdir(os.path.join(D, 'css')):
         c2 = re.sub(r'url\(["\']?(\.\./assets/[^"\')?]+\.(?:png|jpg))(?:\?v=[0-9a-f]+)?["\']?\)', css_v, c)
         if c2 != c: open(cp, 'w', encoding='utf-8').write(c2)
 
+# assets/roster.json (dữ liệu ụ, ui.js fetch) → ?v=băm: Service Worker lấy từ máy, không hỏi mạng (đổi dữ liệu = URL mới)
+rp = os.path.join(D, 'assets/roster.json')
+if os.path.isfile(rp):
+    up = os.path.join(D, 'js/ui.js'); t = open(up, encoding='utf-8').read()
+    t2 = re.sub(r"'assets/roster\.json(?:\?v=[0-9a-f]+)?'", "'assets/roster.json?v=%s'" % bam(rp), t)
+    if t2 != t: open(up, 'w', encoding='utf-8').write(t2)
 ip = os.path.join(D, 'index.html')
 h = open(ip, encoding='utf-8').read()
 h = re.sub(r'\n?\s*<meta name="tm-ver"[^>]*>', '', h)
@@ -125,4 +131,9 @@ kt = ('<script id="tm-ver">(function(){var V="%s";try{fetch("ver.json?t="+Date.n
 h = h.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="tm-ver" content="%s">' % V, 1)
 open(ip, 'w', encoding='utf-8').write(h)
 json.dump({'v': V}, open(os.path.join(D, 'ver.json'), 'w'))
+# Service Worker (thap/sw.js): dán V → bản mới = SW mới (bỏ bộ đệm không băm cũ); tệp ?v=băm giữ trong 'tm-bam' (chỉ tệp đổi mới tải)
+sp = os.path.join(D, 'sw.js')
+if os.path.isfile(sp):
+    t = open(sp, encoding='utf-8').read(); t2 = re.sub(r"const V = '[^']*';", "const V = '%s';" % V, t, count=1)
+    if t2 != t: open(sp, 'w', encoding='utf-8').write(t2)
 print('thap-ver:', V, '·', len(anh), 'ảnh ·', len(W), 'webp ·', len(re.findall(r'\?v=', h)), 'tệp js/css')

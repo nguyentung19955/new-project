@@ -1,0 +1,35 @@
+{
+ "br": "iphone13",
+ "mang": "fast3g",
+ "lan1": {
+  "ms": 142678,
+  "moc": {
+   "dcl": 22304,
+   "roster": 23386,
+   "nap": 23386,
+   "home": 142646
+  },
+  "MB": 21.9,
+  "soYC": 633,
+  "sw": true
+ },
+ "boNho": {
+  "canvasMB": 0,
+  "soCanvas": 0,
+  "lonNhatMB": 0,
+  "anhGocMB": 69.2
+ },
+ "lan2": {
+  "ms": 1307,
+  "moc": {
+   "dcl": 1016,
+   "home": 1242,
+   "roster": 1242,
+   "nap": 1242
+  },
+  "MB": 0.2,
+  "soYC": 6,
+  "sw": true
+ },
+ "loi": []
+}

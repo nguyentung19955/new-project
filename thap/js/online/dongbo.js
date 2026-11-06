@@ -145,7 +145,7 @@ const ONS = {
   canh() {
     if (!this.on) return;
     if (!G.ban.length) { this.ketThucMang('leave'); return; }
-    const dangTai = (typeof TAI !== 'undefined' && TAI.cho) || (typeof VT !== 'undefined' && VT.mo);
+    const dangTai = (typeof TAI !== 'undefined' && (TAI.cho || TAI.doi)) || (typeof VT !== 'undefined' && VT.mo);
     if (!dangTai && !this.toiVao) { this.toiVao = true; NET.update(this.goc() + 'pl/' + this.me, { vao: true }); this.gui('vao'); }
     let now = Date.now();
     // máy MÌNH vừa bị đơ / ngưng JS (khung hình cách nhau > 3 s) → mình mới là người vắng: không tính im lặng của bạn, đồng bộ lại

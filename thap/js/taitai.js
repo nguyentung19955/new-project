@@ -97,7 +97,9 @@ const TAI = {
     let i = 0;
     const lam = async (it) => {
       const d = lay();
-      if (!this.sanSang(it)) {
+      if (it.tho) { // chỉ TẢI về máy (bộ đệm), chưa giải mã — giải mã nền sau khi HOME hiện (napNen)
+        if (!this.daXL.has(it.url) && !this.sanSang(it)) { if (d) d.them(it.url, this.byte(it.url)); await this.layTho(it.url); }
+      } else if (!this.sanSang(it)) {
         if (d) d.them(it.url, this.byte(it.url));
         const im = await this.mot(it);
         if (im) { this.daTai.add(it.url); if (it.ten) this.giao(it.ten, im); }
@@ -116,6 +118,15 @@ const TAI = {
   // đang đánh (trận chạy, không tạm dừng, không phải khung xem trước): việc tải NỀN (ảnh menu chưa cần) nghỉ → không giải mã ảnh
   // chồng lên khung hình trận (chống nóng máy — tuvan/nong). Tạm dừng / về menu / kết thúc → tải tiếp.
   dangDanh() { return !this.xem && typeof G !== 'undefined' && G.ban && G.ban.length > 0 && !G.dung && !G.ketThuc; },
+  // tải thô 1 tệp vào bộ đệm (Service Worker / HTTP); lỗi mạng → thử lại 2 lần, vẫn lỗi thì để REN.img tự tải khi cần
+  async layTho(u) {
+    for (let lan = 0; lan < 3; lan++) {
+      if (this.mat) throw TAI_MAT;
+      try { const r = await fetch(u); if (r.ok) { await r.arrayBuffer(); return true; } if (r.status === 404) return false; } catch (e) { }
+      await this.ngu(500 * (lan + 1));
+    }
+    return false;
+  },
   // ---------- danh sách ảnh ----------
   ds() {
     const m = new Map();
@@ -223,61 +234,105 @@ const TAI = {
     ctx.drawImage(REN.mip(a, d * REN.s * REN.dpr), -d / 2, -d / 2, d, d); ctx.restore();
   },
 
-  // ---------- khởi động: menu ----------
-  // KHỞI ĐỘNG NHANH: đợt 1 = chỉ ảnh HOME đang hiện (thanh tiếp nối % của đợt css/js) → HOME bấm được ngay;
-  // đợt 2 = phần còn lại của menu (bộ bài, bộ sưu tập, 85 chân dung, khung, ảnh CSS của trận…) tải NỀN, 4 luồng.
-  // Bấm nút menu khi đợt 2 chưa xong → màn tải (đợt 2) rồi mới mở (không bao giờ lộ hình thiếu ảnh). PLAY đủ bộ → vào trận (tran() tự đợi).
+  // ---------- khởi động: MỘT màn tải duy nhất ----------
+  // Người dùng: "đã vào game rồi, bấm màn khác lại vẫn load game" — trước đây đợt 1 chỉ tải ảnh HOME, phần còn lại tải NỀN;
+  // bấm DECK/COLLECTION/PLAY khi nền chưa xong → hiện lại màn tải ('LOADING', 'LOADING BATTLE').
+  // Giờ: màn tải đầu tải + giải mã HẾT ảnh của mọi màn (menu, bộ bài, bộ sưu tập, chân dung, HUD trận, quái, trùm, hiệu ứng,
+  // bộ bài đã lưu + chân dung chỉ huy). Xong là không màn nào hiện màn tải nữa trong phiên. Ảnh của ụ KHÁC (đổi bộ bài, bàn máy
+  // CO-OP/PVP) tải thô (không giải mã) vào bộ đệm sau đó → vào trận chỉ còn giải mã vài chục ms, không che màn.
+  dsTranBoot() {
+    if (this.xem || typeof UI === 'undefined' || !UI.dsTran) return [];
+    const deck = (UI.chon && UI.chon.length === 5) ? UI.chon : [];
+    let ds = []; try { ds = UI.dsTran([{ deck, mv: { id: UI.mv || 'hero' } }]); } catch (e) { console.warn('[TAI] dsTran', e); }
+    if (REN.boLuoi) ds = REN.boLuoi(ds);
+    for (const id in MAVUONG) ds.push(MAVUONG[id].anh); // chân dung cut-in mọi chỉ huy (bàn máy chọn ngẫu nhiên)
+    return ds;
+  },
   async napMenu() {
     const dauTien = !this.daBoot;
-    this.hien('LOADING', dauTien);
-    // trận đang chờ (lần đầu → trận hướng dẫn, ?mode=): HOME không hiện → không đợi ảnh menu nào (trước: đợi CẢ menu ~10 MB,
-    // gồm 85 chân dung, trước khi trận được tải); tran() tự lấy phần cần cho trận, còn lại tải nền SAU khi trận chạy
-    const tat = this.dsMenu(), home = this.xem ? tat : this.cho && dauTien ? [] : (this.dsHome() || tat);
-    const dot = this.cho ? null : TDO.dot(dauTien ? Math.max(TDO.p || 0, 20) : 0, 100, dauTien);
-    try { await this.nap(home, () => (this.cho ? null : dot)); }
+    if (dauTien) this.hien('LOADING', true);
+    // trận đang chờ (lần đầu → trận hướng dẫn, ?mode=): HOME không hiện → không đợi ảnh menu; tran() lấy phần của trận,
+    // menu tải + giải mã nền sau khi trận chạy (không còn màn tải nào sau đó — màn nào mở sớm thì ảnh hiện dần)
+    const tat = this.dsMenu();
+    let boot = tat;
+    if (dauTien && !this.xem) {
+      const d = this.ds(); for (const it of tat) d.them(it.url, it.ten); for (const t of this.dsTranBoot()) d.anh(t);
+      // ảnh TRÙM (~8 MB dải khung, trùm đầu ở wave 10): tải về máy trong màn tải nhưng giải mã SAU (nền) — lần mở sau
+      // không phải đợi giải mã 8 MB mới vào HOME
+      boot = d.ket().map(it => (/\/(fx_)?trum_/.test(it.url) ? Object.assign({}, it, { tho: true }) : it));
+    }
+    // LẦN MỞ SAU (Service Worker đang giữ trang + lần trước đã tải đủ CÙNG bản này): mọi tệp đã nằm trong máy → chỉ đợi ảnh
+    // HOME, phần còn lại giải mã nền từ bộ đệm (~1–2 s, không qua mạng). Bản mới / bộ đệm bị xoá → tải đủ như lần đầu.
+    this.nhanh = dauTien && !this.xem && !this.cho && this.daDu();
+    const home = this.cho && dauTien ? [] : this.nhanh ? (this.dsHome() || boot) : boot;
+    const dot = dauTien && !this.cho ? TDO.dot(Math.max(TDO.p || 0, 20), 100, true) : null;
+    try { await this.nap(home, () => (this.cho ? null : dot), 8); }
     catch (e) { if (e === TAI_MAT) return; throw e; }
     if (this.mat) return;
     if (dot) dot.ket();
-    this.daBoot = true; if (!this.cho) this.an(); // trận đang chờ tải (?mode= / khung xem trước) → giữ màn tải
+    this.daBoot = true; if (!this.cho && dauTien) this.an(); // trận đang chờ tải (?mode= / khung xem trước) → giữ màn tải
+    this.ganSrc();
     if (this._bootXong) this._bootXong();
     this.thaHoan();
-    this.napNen(tat);
-    if (dauTien) setTimeout(() => this.ktVer(), 1500);
+    this.napNen(boot);
+    if (dauTien) { this.tBoot = performance.now(); setTimeout(() => this.ktVer(), 1500); setTimeout(() => this.napTho(), 600); setTimeout(() => this.swGiu(), 3000); }
   },
   napNen(tat) {
-    const con = tat.filter(it => !this.sanSang(it));
-    this.nenCon = con; this.nenDot = null;
+    const con = tat.filter(it => !this.sanSang(it)).map(it => (it.tho ? { url: it.url, ten: it.ten } : it));
+    this.nenCon = con;
     if (!con.length) { this.nenXong = true; this.ganSrc(); return; }
     this.nenXong = false;
     const phien = this._nenPhien = (this._nenPhien || 0) + 1;
-    this.nenP = this.nap(con, () => this.nenDot, 4, true).then(() => {
+    this.nenP = this.nap(con, null, this.nhanh ? 6 : 4, true).then(() => {
       if (phien !== this._nenPhien) return;
-      this.nenXong = true; if (this.nenDot) this.nenDot.ket(); this.nenDot = null; this.ganSrc();
-      const b = this._choBam; this._choBam = null;
-      if (b) { if (!this.cho && !this.mat) this.an(); setTimeout(() => { try { b.click(); } catch (e) { } }, 30); }
+      this.nenXong = true; this.ganSrc();
     }, (e) => { if (e !== TAI_MAT) console.warn('[TAI] nen', e); });
   },
-  // REN.taiAnh gọi trước khi HOME hiện (ảnh canvas của trận: CO_DINH, hiệu ứng ghép, HUD…) → xếp hàng, gán src sau đợt HOME
+  // TẢI THÔ (không giải mã, không giữ bộ nhớ ảnh): ảnh trận của MỌI ụ khác + ảnh tình huống → vào bộ đệm (Service Worker / HTTP).
+  // Đổi bộ bài / bàn máy dùng ụ khác → vào trận lấy từ máy, giải mã ngay. 2 luồng, nhường khi đang cuộn / đang vào trận.
+  async napTho() {
+    if (this.xem || this._tho || typeof UI === 'undefined' || !UI.dsTran || !G.roster) return;
+    this._tho = true;
+    let ds = []; try { ds = UI.dsTran([{ deck: G.roster.map(r => r.id).filter(id => typeof SKILLS === 'undefined' || SKILLS[id]), mv: { id: UI.mv || 'hero' } }]); } catch (e) { return; }
+    const urls = [...new Set(ds.map(t => this.tuyetDoi(anhUrl(t))))].filter(u => !this.daXL.has(u) && !this.hua.has(u));
+    this.thoCon = urls.length;
+    let i = 0;
+    const luong = async () => {
+      while (i < urls.length) {
+        while (this.cho || this.doi || this.dangDanh() || performance.now() - TAI_CUON < 450) await this.ngu(300);
+        const u = urls[i++];
+        try { const r = await fetch(u); if (r.ok) await r.arrayBuffer(); } catch (e) { }
+        this.thoCon--;
+      }
+    };
+    await Promise.all([luong(), luong()]);
+  },
+  // lần trước đã tải đủ mọi tệp của ĐÚNG bản này vào bộ đệm Service Worker? (cờ đặt ở swGiu)
+  verTrang() { const m = document.querySelector('meta[name="tm-ver"]'); return m ? m.getAttribute('content') : ''; },
+  daDu() { try { const v = this.verTrang(); return !!(v && navigator.serviceWorker && navigator.serviceWorker.controller && localStorage.getItem('tm-du') === v); } catch (e) { return false; } },
+  // Service Worker (sw.js): giữ trong bộ đệm đúng bản hiện hành của từng tệp (?v=băm) — xoá các bản cũ cùng đường dẫn
+  swGiu() {
+    if (!this.nenXong) { setTimeout(() => this.swGiu(), 5000); return; } // (trận hướng dẫn lần đầu) đợi phần menu tải xong
+    try {
+      const sw = navigator.serviceWorker && navigator.serviceWorker.controller; if (!sw) return;
+      const m = {}, ghi = (u) => { try { const x = new URL(u, location.href); const v = x.searchParams.get('v'); if (v) m[x.pathname] = v; } catch (e) { } };
+      for (const e of document.querySelectorAll('script[src], link[href]')) ghi(e.getAttribute('src') || e.getAttribute('href'));
+      if (typeof ANH_V !== 'undefined') for (const t in ANH_V) { ghi('assets/' + t + '.png?v=' + ANH_V[t]); if (typeof ANH_W !== 'undefined' && ANH_W[t]) ghi('assets/' + t + '.webp?v=' + ANH_W[t]); }
+      // tệp tải TRƯỚC khi Service Worker nhận trang (lần mở đầu): đưa vào bộ đệm từ bộ đệm HTTP (không tải lại qua mạng)
+      const da = performance.getEntriesByType('resource').map(e => e.name).filter(u => u.indexOf(location.origin) === 0 && /[?&]v=[0-9a-f]{8}/.test(u));
+      sw.postMessage({ tmGiu: m, tmThem: da });
+      if (!this.nhanh) { const v = this.verTrang(); if (v) localStorage.setItem('tm-du', v); }
+    } catch (e) { }
+  },
+  // REN.taiAnh gọi trước khi HOME hiện (ảnh canvas của trận: CO_DINH, hiệu ứng ghép, HUD…) → xếp hàng, gán src sau màn tải
   _hoan: [],
   hoan(a, u, ten) { if (this.daBoot || this.xem || this.cho || this._hetHoan) return false; this._hoan.push([a, u, ten]); return true; },
-  // việc nạp ảnh của các tệp js lúc khởi động (KHUNG.tai, HUD2.tai…) không cần cho HOME → chạy sau khi HOME hiện
+  // việc nạp ảnh của các tệp js lúc khởi động (KHUNG.tai, HUD2.tai…) → chạy sau màn tải
   _sau: [],
   sauHome(fn) { if (this.daBoot || this.xem || this.cho || this._hetHoan) fn(); else this._sau.push(fn); },
   thaHoan() { this._hetHoan = true; const sau = this._sau; this._sau = []; for (const f of sau) { try { f(); } catch (e) { console.error('[TAI] sauHome', e); } } const ds = this._hoan; this._hoan = []; for (const [a, u, ten] of ds) if (!a.src && (!ten || REN.anh[ten] === a)) a.src = u; },
-  // ảnh thẻ dựng lúc khởi động (cardArt → data-tm-src) → gán src thật khi đợt nền đã tải xong (lấy từ bộ đệm)
+  // ảnh thẻ dựng lúc khởi động (cardArt → data-tm-src) → gán src thật (ảnh đã giải mã trong màn tải → hiện ngay)
   ganSrc(vung) { document.querySelectorAll(vung ? vung.split(',').map(v => v.trim() + ' img[data-tm-src]').join(',') : 'img[data-tm-src]').forEach(im => { im.setAttribute('src', im.getAttribute('data-tm-src')); im.removeAttribute('data-tm-src'); }); },
-  // bấm nút menu khi đợt nền chưa xong: hiện màn tải với % của phần còn lại, xong thì bấm lại hộ
-  choNen(el) {
-    this._choBam = el;
-    if (this.nenDot) return;
-    this.hien('LOADING', true);
-    const d = this.nenDot = TDO.dot(0, 100);
-    // LỖI CŨ ('LOADING 100% 256/309'): đăng ký + báo xong xen kẽ → lúc mới đăng ký vài tệp đầu (đã tải xong) thanh tính 100 %,
-    // rồi % không bao giờ lùi → đứng 100 % suốt lúc chờ. Giờ: đăng ký HẾT danh sách trước, sau đó mới báo các tệp đã xong.
-    const con = this.nenCon || [];
-    for (const it of con) d.them(it.url, this.byte(it.url), true);
-    for (const it of con) { if (this.daTai.has(it.url) || this.daXL.has(it.url) || this.sanSang(it)) d.xong(it.url); else if (this.hua.has(it.url)) d.them(it.url); }
-  },
   // ver.json (tools/thap-ver.py): bản trên máy chủ mới hơn bản đang chạy → nạp lại trang, nhưng CHỈ khi đang đứng ở HOME
   // (không bao giờ chặn màn tải đầu, không cắt ngang trận / bảng đang mở)
   ktVer() {
@@ -298,26 +353,35 @@ const TAI = {
   },
   // ---------- vào trận: đợi mọi ảnh của trận giải mã xong; vòng lặp đứng yên (TAI.cho) ----------
   tran(ds) {
-    const phien = ++this._phien; this.cho = true;
-    // ảnh tĩnh của HUD trận (index.html data-tm-src) → gán src; danh sách dưới đợi chúng giải mã. CHỈ vùng trận — lưới 85 thẻ
-    // của màn bộ bài (cũng data-tm-src) để đợt nền gán sau, không tranh băng thông với màn tải trận
+    const phien = ++this._phien;
+    // ảnh tĩnh của HUD trận (index.html data-tm-src) → gán src (đã giải mã trong màn tải đầu → hiện ngay)
     this.thaHoan(); this.ganSrc('#top, #duoi, #canh-bao, #cutin, #tt, #ketqua, #dung, #bang-wave, #tb-doi');
-    this.hien(this.xem ? 'LOADING' : 'LOADING BATTLE');
-    // ảnh TRÙM (~5 MB, 12 trùm × dải 8 khung/hướng; trùm đầu tiên ở wave 10): màn tải trận KHÔNG đợi — tải nền 3 luồng ngay khi
-    // trận chạy, theo thứ tự xuất hiện (REN.img vẫn tự tải nếu cần sớm hơn). Trận hướng dẫn lần đầu trên 3G: 137 s → ~66 s.
-    const sau = this.xem ? [] : ds.filter(t => /^(fx_)?trum_/.test(t)); if (sau.length) ds = ds.filter(t => !/^(fx_)?trum_/.test(t));
     const d = this.ds(); for (const t of ds) d.anh(t); d.anh('fx_vong_lv');
-    const dot = TDO.dot(0, 100);
+    // SAU MÀN TẢI ĐẦU: KHÔNG BAO GIỜ che màn nữa. Ảnh của trận gần như luôn sẵn (đã giải mã lúc khởi động / còn trong bộ đệm);
+    // ảnh nào chưa sẵn (đổi sang ụ khác, bàn máy) → giải mã từ bộ đệm; trận hiện NGAY, mô phỏng đứng yên tối đa 1,2 s (TAI.doi,
+    // bàn vẫn vẽ) để ảnh kịp vào, quá hạn thì chạy luôn — ảnh lẻ còn thiếu hiện dần (REN.img tự tải).
+    if (this.daBoot && !this.xem) {
+      this.cho = false;
+      const tatT = d.ket(), laTrum = (it) => /\/(fx_)?trum_/.test(it.url);
+      const thieu = tatT.filter(it => !laTrum(it) && !this.sanSang(it));
+      const trumCon = tatT.filter(it => laTrum(it) && !this.sanSang(it)); // trùm (wave 10+): giải mã nền, không bắt đợi
+      if (trumCon.length) this.nap(trumCon, null, 2).catch(() => { }); // không nghỉ khi đang đánh: trùm cần TRONG trận
+      this.tranThieu = thieu.length;
+      if (!thieu.length) { this.doi = false; return; }
+      this.doi = true;
+      const p = this.nap(thieu, null, 8).catch((e) => { if (e !== TAI_MAT) console.warn('[TAI] tran', e); });
+      Promise.race([p, this.ngu(1200)]).then(() => { if (phien === this._phien) this.doi = false; });
+      return;
+    }
+    // TRƯỚC khi màn tải đầu xong (?mode=, trận hướng dẫn lần đầu, khung xem trước Test range): đây CHÍNH là màn tải đầu
+    this.cho = true;
+    this.hien('LOADING', this.xem ? false : true);
+    // ảnh TRÙM (~5 MB): màn tải trận KHÔNG đợi — tải nền 3 luồng ngay khi trận chạy (trùm đầu tiên ở wave 10)
+    const sau = this.xem ? [] : ds.filter(t => /^(fx_)?trum_/.test(t));
+    let ls = d.ket(); if (sau.length) ls = ls.filter(it => !/\/(fx_)?trum_/.test(it.url));
+    const dot = TDO.dot(this.xem ? 0 : Math.max(TDO.p || 0, 20), 100, !this.xem);
     (async () => {
-      try {
-        await this.bootP; if (phien !== this._phien) return;
-        // đợt nền của menu chưa xong: lấy thêm ảnh CSS/DOM (HUD trận…) + chân dung của bộ bài đang ra trận, bỏ chân dung/icon khác
-        if (!this.nenXong && this.nenCon) {
-          const bo = new Set(); for (const b of (G.ban || [])) for (const id of b.deck || []) { bo.add(this.tuyetDoi(thumbOf(id))); bo.add(this.tuyetDoi(iconOf(id))); }
-          for (const it of this.nenCon) if (!/\/(pilot_|nho\/|af_)/.test(it.url) || bo.has(it.url)) d.them(it.url, it.ten);
-        }
-        await this.nap(d.ket(), () => (phien === this._phien ? dot : null));
-      }
+      try { await this.bootP; if (phien !== this._phien) return; await this.nap(ls, () => (phien === this._phien ? dot : null), 8); }
       catch (e) { if (e === TAI_MAT) return; throw e; }
       if (phien !== this._phien || this.mat) return;
       dot.ket(); this.cho = false; this.an();
@@ -414,17 +478,18 @@ addEventListener('pageshow', () => hoiKhung(true));
 addEventListener('load', () => { hoiKhung(true); setTimeout(() => hoiKhung(), 500); });
 if (window.visualViewport) visualViewport.addEventListener('resize', () => hoiKhung());
 document.addEventListener('visibilitychange', () => { if (!document.hidden) hoiKhung(true); });
+// SERVICE WORKER (sw.js, chỉ bản xuất bản có meta tm-ver): lần mở sau lấy tệp từ máy. ?nosw=1 → gỡ SW + xoá bộ đệm (gỡ lỗi).
+(function () {
+  if (!('serviceWorker' in navigator) || TAI.xem) return;
+  if (/[?&]nosw=1/.test(location.search)) { navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => { }); try { caches.keys().then(ks => ks.forEach(k => /^tm-/.test(k) && caches.delete(k))); } catch (e) { } return; }
+  if (!document.querySelector('meta[name="tm-ver"]')) return;
+  try { navigator.serviceWorker.register('sw.js', { scope: './' }).catch((e) => console.warn('[SW]', e)); } catch (e) { }
+})();
 TAI.bootP = new Promise(r => { TAI._bootXong = r; });
 TAI.dung();
 TAI.hien('LOADING', true); { const w = document.getElementById('wrap'); if (w) w.classList.remove('dang-tai'); document.documentElement.classList.remove('dang-tai'); } // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
-// cổng bấm: nút menu (ngoài HOME) cần ảnh của đợt nền → đợi đợt nền (pha capture, trước mọi bộ bắt khác)
-addEventListener('click', (e) => {
-  if (TAI.xem || !TAI.daBoot || TAI.nenXong || TAI.mat || TAI.cho || !e.isTrusted) return;
-  const el = e.target && e.target.closest && e.target.closest('#chon [data-act], #chon button, #chon label, #chon input'); if (!el) return;
-  if (el.dataset && el.dataset.act === 'hm-choi' && typeof UI !== 'undefined' && UI.chon && UI.chon.length >= 5) return; // vào trận: tran() tự đợi phần cần
-  e.preventDefault(); e.stopImmediatePropagation();
-  TAI.choNen(el);
-}, true);
+// (bỏ) cổng bấm "đợi đợt nền": sau màn tải đầu không còn màn tải nào; màn mở sớm (trận hướng dẫn lần đầu) → gán ảnh ngay, hiện dần
+addEventListener('click', (e) => { if (TAI.daBoot && !TAI.nenXong && !TAI.xem) TAI.ganSrc(); }, true);
 addEventListener('offline', () => TAI.matMang('offline'));
 addEventListener('online', () => TAI.thu());
 if (!navigator.onLine) TAI.matMang('boot-offline');

@@ -96,3 +96,4 @@ Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s). Sau rebase lên 
 Thêm `tools/thap-kt-nong.js` vào hồi quy (trận SOLO wave 13 chuẩn, 45 s, iPhone 13): trượt nếu CPU/khung > mốc 19,3 ms × 1,35.
 Lần chạy đầu: nút cài đặt "BATTERY SAVER: OFF" tràn khung 6 px (360/390) → đổi chữ "POWER SAVE: OFF". `#canh-bao` "WAVE 10 BOSS"
 tràn 3–4 px 1 lần ở 390 (chụp lúc băng đang hoạt ảnh, không do phiên này) — chạy lại `CHI='menu|solo'` 360+390: XANH; coop/pvp/online 4 cỡ: không lỗi. Sau rebase (cấp thẻ, cộng hưởng 2): đủ 4 cỡ XANH (CPU/khung 19,0 ms).
+- 07/11 một màn tải duy nhất + Service Worker (tai_1lan): 4 cỡ — chỉ 1 lỗi "chữ tràn .ci-chu" ở 360x780 solo_trum (cutin chập chờn đã biết) → chạy lại `SIZES=360x780x3 CHI=solo`: XANH. Sửa thêm: skilldemo.js nạp 2 lần (DOMContentLoaded phát 2 lần) → "SD already declared" ở kéo-thả 360px.

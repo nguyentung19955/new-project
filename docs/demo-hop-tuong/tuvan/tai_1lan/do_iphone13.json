@@ -1,0 +1,53 @@
+{
+ "br": "iphone13",
+ "mang": "4g",
+ "lan1": {
+  "ms": 29718,
+  "moc": {
+   "dcl": 5102,
+   "roster": 5447,
+   "nap": 5447,
+   "home": 29688
+  },
+  "MB": 21.9,
+  "soYC": 631,
+  "sw": true
+ },
+ "tran_solo": {
+  "doiMs": 300,
+  "thieu": 0
+ },
+ "tran_coop": {
+  "doiMs": 1015,
+  "thieu": 39
+ },
+ "tran_pvp": {
+  "doiMs": 892,
+  "thieu": 34
+ },
+ "tran_boKhac": {
+  "doiMs": 690,
+  "thieu": 27
+ },
+ "taiSauBoot": [],
+ "thoCon": 217,
+ "boNho": {
+  "canvasMB": 43.9,
+  "soCanvas": 180,
+  "lonNhatMB": 4.6,
+  "anhGocMB": 185.9
+ },
+ "lan2": {
+  "ms": 873,
+  "moc": {
+   "dcl": 440,
+   "roster": 649,
+   "nap": 649,
+   "home": 823
+  },
+  "MB": 0.2,
+  "soYC": 5,
+  "sw": true
+ },
+ "loi": []
+}
