@@ -462,7 +462,7 @@ async function online(b, W, H, D, co) {
         const sau = await A.p.evaluate(() => { const B = G.ban[0]; ghep(B, B.t[0], B.t[1]); return ONS.oCua(B); });
         const nSD = sau.filter(x => x).length;
         if (nSD !== 6) throw new Error('A: sau ghép Twin có ' + nSD + ' ụ (phải 6)');
-        if (!sau.some((x, i) => x && i !== 1 && !(i >= 5 && i < 9) && x.endsWith(':' + sao))) throw new Error('A: không có ụ sinh đôi ' + sao + '★ (' + sau.join(',') + ')');
+        if (!sau.some((x, i) => x && i !== 1 && !(i >= 5 && i < 9) && (x.endsWith(':' + sao) || x.endsWith(':' + (sao + 1))))) throw new Error('A: không có ụ sinh đôi ' + sao + '★ (hoặc +1★ — DCDW Berit 10%) (' + sau.join(',') + ')');
         await B.p.waitForFunction(() => ONS._kt.length > 0, null, { timeout: 10000 }).catch(() => { throw new Error('B không nhận gói ghép'); });
         const kt = await B.p.evaluate(() => ONS._kt.shift());
         if (!kt.d.tw) throw new Error('gói ghép không kèm ụ sinh đôi (d.tw)');
