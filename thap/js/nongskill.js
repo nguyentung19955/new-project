@@ -249,3 +249,61 @@
     UI.vaoTran = function () { NS.daNong.clear(); NS._tLuoi = 0; return vt.apply(this, arguments); };
   }
 })();
+
+// ---------- 4) băng chữ DOM: cut-in chỉ huy, băng báo trùm, băng WAVE (bổ sung 06/11 — đo tools/thap-do-giat-goi.js) ----------
+// Mỗi lần hiện, fitText thu cỡ chữ từng bước 0,5 px và MỖI bước bắt trình duyệt dựng lại bố cục (tới ~40 lần):
+// cut-in Hero 25–32 ms ngay khung dùng chỉ huy, báo trùm 3–13 ms (băng UI + băng hudtop đo 2 lần). Ở đây (chỉ trong các băng này):
+// tìm nhị phân (~6 lần đo, cùng kết quả) + nhớ theo chữ/khung/cỡ màn (lần sau chỉ 1 lần đo kiểm); số → 0 ('WAVE 23' dùng chung 'WAVE 47');
+// đo trước lúc vào trận (băng ẩn, mỗi khung 1 việc): cut-in chỉ huy của người chơi + tên mọi trùm.
+(() => {
+  if (typeof UI === 'undefined') return;
+  const NHO = new Map();
+  function fitNhanh(el, max, min) {
+    if (!el) return;
+    const tran = () => el.scrollWidth > el.clientWidth + 0.5 || el.scrollHeight > el.clientHeight + 0.5;
+    const key = (el.id || el.className || el.tagName) + '|' + (el.parentNode && el.parentNode.id) + '|' + el.parentNode.className + '|' + el.textContent.replace(/[0-9]/g, '0') + '|' + innerWidth + 'x' + innerHeight + '|' + max + '|' + min;
+    const v = NHO.get(key);
+    if (v) { el.style.fontSize = v + 'px'; if (v <= min || !tran()) return; }
+    el.style.fontSize = max + 'px';
+    let f = max;
+    if (tran()) {
+      el.style.fontSize = min + 'px';
+      if (tran()) f = min;
+      else { let lo = Math.round(min * 2), hi = Math.round(max * 2) - 1; while (lo < hi) { const m = (lo + hi + 1) >> 1; el.style.fontSize = (m / 2) + 'px'; if (tran()) hi = m - 1; else lo = m; } f = lo / 2; }
+      el.style.fontSize = f + 'px';
+    }
+    if (el.clientWidth > 0 && (!document.fonts || document.fonts.status === 'loaded')) { if (NHO.size > 400) NHO.clear(); NHO.set(key, f); }
+  }
+  const boc = (o, k) => { const f = o && o[k]; if (typeof f !== 'function') return; o[k] = function () { const cu = window.fitText; window.fitText = fitNhanh; try { return f.apply(this, arguments); } finally { window.fitText = cu; } }; };
+  for (const k of ['cutIn', 'canhBaoTrum', 'bangWave']) boc(UI, k);
+  if (typeof HT !== 'undefined') boc(HT, 'cbHien');
+  // đo trước (băng ẩn — visibility:hidden vẫn có bố cục)
+  const viec = [];
+  const doCutIn = () => {
+    const B = G.ban[0], c = document.getElementById('cutin'); if (!B || !B.mv || B.ai || !c || !c.hidden || !UI.cutIn) return;
+    c.style.visibility = 'hidden';
+    try { UI.cutIn(B.mv.id, B); } catch (e) { }
+    clearTimeout(UI._ci); clearTimeout(UI._ci2); c.hidden = true; c.classList.remove('chay', 'ra'); c.style.visibility = '';
+  };
+  const doTrum = (id) => () => {
+    const b = document.getElementById('canh-bao'), fb = b && b.querySelector('b'); if (!fb || !b.hidden || !TRUM[id]) return;
+    const cu = fb.textContent, cl = b.className;
+    b.style.visibility = 'hidden'; b.hidden = false;
+    try { fb.textContent = TRUM[id].ten; fitNhanh(fb, 26, 14); b.classList.add('cb-den'); fitNhanh(fb, 28, 13); } catch (e) { }
+    fb.textContent = cu; b.className = cl; fb.style.fontSize = ''; b.hidden = true; b.style.visibility = '';
+  };
+  const chay = () => {
+    if (!viec.length) return;
+    const san = typeof G !== 'undefined' && G.ban.length && !(typeof TAI !== 'undefined' && (TAI.cho || TAI.doi));
+    if (san) { const f = viec.shift(); try { f(); } catch (e) { } }
+    if (viec.length) requestAnimationFrame(chay);
+  };
+  if (typeof TAI !== 'undefined' && TAI.tran) {
+    const tr = TAI.tran;
+    TAI.tran = function () {
+      const r = tr.apply(this, arguments);
+      if (!viec.length) { viec.push(doCutIn); for (const id of (typeof TRUM_POOL !== 'undefined' ? TRUM_POOL : Object.keys(TRUM))) viec.push(doTrum(id)); requestAnimationFrame(chay); }
+      return r;
+    };
+  }
+})();
