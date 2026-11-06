@@ -378,10 +378,14 @@ HU.set = { // sét chuỗi: đoạn sét rung mỗi ~50 ms
     const u = Math.min(1, o.t / o.song), nhip = Math.floor(R.t / 0.045);
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, u / 0.08 + 0.35) * (1 - u * u);
     let x0 = o.x, y0 = o.y;
-    if (o.T && G.ban[o.T.ban].t[o.T.o] === o.T) [x0, y0] = dauNong(o.T);
-    for (let i = 0; i < o.ds.length; i++) {
-      const d = o.ds[i];
-      R.set(ctx, x0, y0, d.x, d.y, 26 - i * 2, o.seed + nhip * 7 + i);
+    if (o.T && G.ban[o.T.ban].t[o.T.o] === o.T) [x0, y0] = typeof AN !== 'undefined' ? AN.muzzle(o.T) : dauNong(o.T); // muzzle socket (anim.js)
+    // animation hybrid: sét lan theo DANH SÁCH TRÚNG THẬT, mỗi mắt xích sáng sau ~45 ms (chuỗi dài: tổng ≤ 160 ms) — không vẽ dài hơn chuỗi luật
+    const n = o.ds.length, buoc = Math.min(0.045, 0.16 / Math.max(1, n)), tt = o.t;
+    for (let i = 0; i < n; i++) {
+      const d = o.ds[i], v = (tt - i * buoc) / buoc;
+      if (v <= 0.02) break;
+      const k = v >= 1 ? 1 : 1 - (1 - v) * (1 - v);
+      R.set(ctx, x0, y0, x0 + (d.x - x0) * k, y0 + (d.y - y0) * k, 26 - i * 2, o.seed + nhip * 7 + i);
       x0 = d.x; y0 = d.y;
     }
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;

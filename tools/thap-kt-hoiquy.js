@@ -602,6 +602,12 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-giat-ghep.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { BASE }), timeout: 1800000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-giat-ghep.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'giatghep', loai: 'giật ghép / tấm tên', chi: l.trim().slice(0, 300), anh: '' }); console.log(ds.join('\n') || '  ✗ giật ghép: lỗi'); }
   }
+  // ANIMATION HYBRID (thap/js/anim.js, tuvan/anim): 93 ụ có nhóm chuyển động · 30 vs 60 FPS cùng kịch bản → sự kiện bắn + mọi đường cong
+  // giật / tụ lực / xung / quay nòng / rung cục bộ TRÙNG giá trị · đạn hiện ở cửa nòng (muzzle socket), không ở tâm ảnh · anim.js không Math.random
+  if (!process.env.CHI || /anim|solo/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-anim.js'), BASE], { stdio: 'pipe', env: process.env, timeout: 600000 }); console.log('  ✓ ' + String(o).trim().split('\n').pop() + ' (fps 30/60 + muzzle)'); }
+    catch (e) { const s = String(e.stdout || e.message || ''); let l = []; try { l = JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1)).loi || []; } catch (er) { l = ['thap-kt-anim.js lỗi ' + e.status]; } for (const x of (l.length ? l : ['thap-kt-anim.js lỗi'])) LOI.push({ co: '-', buoc: 'anim', loai: 'animation hybrid', chi: String(x).slice(0, 300), anh: '' }); console.log('  ✗ anim: ' + l.join(' | ')); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

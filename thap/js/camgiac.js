@@ -14,14 +14,15 @@
 
 const CG = {
   KEY: 'tm_camgiac',
-  TXT: { fx: 'EFFECTS', full: 'FULL', can: 'BALANCED', gon: 'MINIMAL', flash: 'REDUCE FLASH', rung: 'HAPTICS', on: 'ON', off: 'OFF' },
+  TXT: { fx: 'EFFECTS', full: 'FULL', can: 'BALANCED', gon: 'MINIMAL', flash: 'REDUCE FLASH', dong: 'REDUCE MOTION', rung: 'HAPTICS', on: 'ON', off: 'OFF' },
   PRESET: { full: { hat: 1, anim: 90, nhe: false }, can: { hat: 0.62, anim: 64, nhe: false }, gon: { hat: 0.3, anim: 40, nhe: true } },
   cfg: null,
   _acc: 0, _t4: null, _nT4: 0, _kTong: 1,
   doc() {
     if (this.cfg) return this.cfg;
     let c = {}; try { c = JSON.parse(localStorage.getItem(this.KEY) || '{}') || {}; } catch (e) { }
-    this.cfg = { fx: this.PRESET[c.fx] ? c.fx : 'full', flash: !!c.flash, rung: c.rung !== false };
+    let rm = false; try { rm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { }
+    this.cfg = { fx: this.PRESET[c.fx] ? c.fx : 'full', flash: !!c.flash, rung: c.rung !== false, dong: c.dong != null ? !!c.dong : rm }; // dong: REDUCE MOTION (anim.js: bỏ nhún/xoắn/rung cục bộ, giật ×0,5)
     return this.cfg;
   },
   luu() { try { localStorage.setItem(this.KEY, JSON.stringify(this.cfg)); } catch (e) { } },
@@ -42,6 +43,7 @@ const CG = {
     const c = this.doc(), T = this.TXT;
     document.querySelectorAll('[data-act="cg-fx"]').forEach(e => { e.textContent = T.fx + ': ' + T[c.fx]; });
     document.querySelectorAll('[data-act="cg-flash"]').forEach(e => { e.textContent = T.flash + ': ' + (c.flash ? T.on : T.off); });
+    document.querySelectorAll('[data-act="cg-dong"]').forEach(e => { e.textContent = T.dong + ': ' + (c.dong ? T.on : T.off); });
     document.querySelectorAll('[data-act="cg-rung"]').forEach(e => { e.textContent = T.rung + ': ' + (c.rung ? T.on : T.off); e.hidden = !CG._coRung; });
   },
   // rung tay ngắn (chỉ bàn của người chơi; máy không hỗ trợ → bỏ qua)
@@ -233,17 +235,18 @@ window.CG = CG;
     HM.moCai = function () {
       const r = g.apply(this, arguments);
       const h = document.querySelector('#hm-tam .hm-cai2');
-      if (h && !h.querySelector('[data-act="cg-fx"]')) h.insertAdjacentHTML('beforeend', '<button class="hm-nut2" data-act="cg-fx"></button><button class="hm-nut2" data-act="cg-flash"></button><button class="hm-nut2" data-act="cg-rung"></button>');
+      if (h && !h.querySelector('[data-act="cg-fx"]')) h.insertAdjacentHTML('beforeend', '<button class="hm-nut2" data-act="cg-fx"></button><button class="hm-nut2" data-act="cg-flash"></button><button class="hm-nut2" data-act="cg-dong"></button><button class="hm-nut2" data-act="cg-rung"></button>');
       CG.nhan(); return r;
     };
   }
   document.addEventListener('click', (e) => {
     const el = e.target.closest && e.target.closest('[data-act^="cg-"]'); if (!el) return;
-    const k = el.dataset.act; if (k !== 'cg-fx' && k !== 'cg-flash' && k !== 'cg-rung') return;
+    const k = el.dataset.act; if (k !== 'cg-fx' && k !== 'cg-flash' && k !== 'cg-dong' && k !== 'cg-rung') return;
     e.stopImmediatePropagation();
     const c = CG.doc();
     if (k === 'cg-fx') CG.dat('fx', c.fx === 'full' ? 'can' : c.fx === 'can' ? 'gon' : 'full');
     else if (k === 'cg-flash') CG.dat('flash', !c.flash);
+    else if (k === 'cg-dong') CG.dat('dong', !c.dong);
     else { CG.dat('rung', !c.rung); if (CG.doc().rung) CG.rung(12); }
     try { SND.nut(); } catch (er) { }
   }, true);

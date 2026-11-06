@@ -1,0 +1,6 @@
+[
+  {"name": "anim_lien_nong", "ref": "thap/assets/lien_nong.png", "prompt": "Top-down gatling barrel cluster only, 6 barrels, same style as attached, separate layer, centered pivot, no base, no text, solid magenta #FF00FF background"},
+  {"name": "anim_sungluc_oquay", "ref": "thap/assets/sungluc_nong.png", "prompt": "Top-down revolver cylinder only, 6 chambers, same style as attached, separate layer, centered pivot, no text, solid magenta #FF00FF background"},
+  {"name": "anim_bang_tinhthe", "ref": "thap/assets/bang_nong.png", "prompt": "4x2 grid sprite sheet: ice crystals growing from center then cracking and melting, top-down, same style as attached, no text, solid magenta #FF00FF background"},
+  {"name": "anim_doc_gon", "ref": "thap/assets/vungdoc_nong.png", "prompt": "Seamless top-down toxic green liquid surface ripple texture with small bubbles, round, same style as attached, no text, solid magenta #FF00FF background"}
+]
