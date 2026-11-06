@@ -9,7 +9,7 @@
   const Q = window.__QA = {
     inSim: false, rS: mb(1), rB: mb(2), cho: false, ve: false, cfg: null, buoc: 0, loi: [], daLoi: {}, nk: [], dem: {},
     max: { dan: 0, hu: 0, bay: 0, quai: 0, hat: 0, chu: 0, vx: 0, tvfPop: 0, tvfDs: 0, ve: 0, step: 0 },
-    tHetTrum: -1e9, coTrum: false, veTam: [], vong: [], tVe: [], tStep: [],
+    tHetTrum: -1e9, coTrum: false, veTam: [], vong: [], chu: [], tVe: [], tStep: [],
   };
   // Math.random: trong mô phỏng/bot = RNG hạt giống (tái lập), ngoài (vẽ, HUD, hoạt ảnh thời gian thực) = RNG thật
   Math.random = function () { return Q.inSim ? Q.rS() : r0(); };
@@ -28,10 +28,13 @@
   Q.cai = function () {
     if (Q._cai) return; Q._cai = true;
     const capThat = window.capNhat;
-    window.capNhat = function (dt) { if (!Q.cho) return; return capThat(dt); };
+    window.capNhat = function (dt) { if (Q.thuc && !Q.cho) { Q.motBuoc(); return; } if (!Q.cho) return; return capThat(dt); };
     Q.capThat = capThat;
     const veThat = REN.ve.bind(REN);
-    REN.ve = function (dt, a) { if (!Q.ve) return; return veThat(dt, a); };
+    REN.ve = function (dt, a) {
+      if (Q.thuc && !Q.ve) { const v0 = performance.now(); Q.ve = true; try { return veThat(dt, a); } finally { Q.ve = false; Q.tVe.push(performance.now() - v0); try { Q.ktVe(); } catch (e) { } } }
+      if (!Q.ve) return; return veThat(dt, a);
+    };
     Q.veThat = veThat;
     // batDau: hạt giống RNG mô phỏng + ghi bộ bài gốc mỗi bàn
     const bd = window.batDau;
@@ -84,6 +87,16 @@
         o[k] = function () { const c = Q.inSim; Q.inSim = false; try { return f.apply(this, arguments); } finally { Q.inSim = c; } };
       }
     }
+    const ft = P.fillText;
+    P.fillText = function (txt, x, y) {
+      if (Q.ve && Q.cfg && Q.cfg.chu && this.canvas && this.canvas.id === 'cv' && this.globalAlpha > 0.6 && String(txt).trim().length >= 3) {
+        const m = this.getTransform(), w = this.measureText(txt).width * Math.hypot(m.a, m.b), h = (parseFloat(this.font) || 10) * Math.hypot(m.c, m.d);
+        const X = m.a * x + m.c * y + m.e, Y = m.b * x + m.d * y + m.f, al = this.textAlign;
+        const L = al === 'center' ? X - w / 2 : al === 'right' || al === 'end' ? X - w : X;
+        Q.chu.push([String(txt), L, Y - h * 0.8, L + w, Y + h * 0.2]);
+      }
+      return ft.apply(this, arguments);
+    };
     // console.error → lỗi
     const ce = console.error.bind(console);
     console.error = function () { try { LOI('console-error', [...arguments].map(x => x && x.stack ? x.stack.split('\n').slice(0, 3).join(' | ') : String(x)).join(' ').slice(0, 300)); } catch (e) { } return ce.apply(console, arguments); };
@@ -213,11 +226,40 @@
       const a = V[i], b = V[j];
       if (Math.hypot(a[1] - b[1], a[2] - b[2]) < 3 && a[3] / b[3] > 0.8 && a[3] / b[3] < 1.25 && a[0] !== b[0]) LOI('vong-chong', 'hai vòng chồng cùng tâm: ' + a[0] + ' + ' + b[0] + ' (cỡ ' + Math.round(a[3]) + '/' + Math.round(b[3]) + ' px)');
     }
-    Q.veTam.length = 0; Q.vong.length = 0;
+    const C = Q.chu; // 2 dòng chữ KHÁC nhau đè lên nhau > 40 % phần nhỏ hơn (nhãn tên ụ / nhãn kỹ năng chồng nhau)
+    for (let i = 0; i < C.length; i++) for (let j = i + 1; j < C.length; j++) {
+      const a = C[i], b = C[j]; if (a[0] === b[0]) continue;
+      const ox = Math.min(a[3], b[3]) - Math.max(a[1], b[1]), oy = Math.min(a[4], b[4]) - Math.max(a[2], b[2]);
+      if (ox <= 0 || oy <= 0) continue;
+      const nho = Math.min((a[3] - a[1]) * (a[4] - a[2]), (b[3] - b[1]) * (b[4] - b[2]));
+      if (ox * oy > 0.4 * nho) LOI('chu-chong', 'chữ "' + a[0].slice(0, 24) + '" đè "' + b[0].slice(0, 24) + '"');
+    }
+    Q.veTam.length = 0; Q.vong.length = 0; Q.chu.length = 0;
   };
 
   // ---------- bước trận ----------
   // chạy n bước (dừng sớm khi hết trận / quá wall ms); vẽ 1 khung mỗi cfg.veMoi bước (mặc định 20 ≈ 3 khung / giây trận)
+  // 1 bước luật + bot + kiểm (dùng chung cho chế độ tua nhanh và chế độ THẬT theo rAF)
+  Q.motBuoc = function () {
+    const cfg = Q.cfg, s0 = performance.now();
+    Q.inSim = true;
+    try {
+      Q.capThat(BUOC);
+      // bot: mỗi bàn ra quyết định mỗi 0,25–0,8 s trận (bàn máy vẫn có AI sẵn của game)
+      if (!G.ketThuc) for (const B of G.ban) {
+        B._qaT = (B._qaT || 0) - BUOC;
+        if (B.net) continue; // online: bàn đồng đội là con rối (máy kia điều khiển)
+        if (B._qaT <= 0) { B._qaT = 0.25 + Q.rB() * 0.55; if (!B.ai || co(cfg.botMay != null ? cfg.botMay : 0.5)) Q.bot(B); }
+      }
+    } catch (e) { LOI('ngoai-le-sim', (e && e.message) + ' | ' + String(e && e.stack || '').split('\n').slice(1, 4).join(' | ').replace(/https?:\/\/[^/]+\/thap\//g, '')); }
+    finally { Q.inSim = false; }
+    Q.buoc++;
+    Q.ktNhanh();
+    if (Q.buoc % (cfg.ktMoi || 4) === 0) Q.kt();
+    const ds = performance.now() - s0; Q.max.step = Math.max(Q.max.step, ds);
+    if (ds > (cfg.buocCham || 250) && Q.buoc > 120) LOI('buoc-cham', '1 bước luật (1/60 s) mất ' + Math.round(ds) + ' ms');
+  };
+  // chạy n bước tua nhanh (dừng sớm khi hết trận / quá wall ms); vẽ 1 khung mỗi cfg.veMoi bước (mặc định 20 ≈ 3 khung / giây trận)
   Q.chay = function (n, wall) {
     const t0 = performance.now(), cfg = Q.cfg, veMoi = cfg.veMoi || 20, toc = cfg.toc || 1;
     let i = 0;
@@ -225,22 +267,8 @@
     try {
       for (; i < n && !G.ketThuc; i++) {
         if (performance.now() - t0 > (wall || 2500)) break;
-        const s0 = performance.now();
         chupTruoc();
-        Q.inSim = true;
-        try {
-          Q.capThat(BUOC);
-          // bot: mỗi bàn ra quyết định mỗi 0,25–0,8 s trận (bàn máy vẫn có AI sẵn của game)
-          for (const B of G.ban) {
-            B._qaT = (B._qaT || 0) - BUOC;
-            if (B._qaT <= 0) { B._qaT = 0.25 + Q.rB() * 0.55; if (!B.ai || co(cfg.botMay != null ? cfg.botMay : 0.5)) { const a = Q.bot(B); } }
-          }
-        } catch (e) { LOI('ngoai-le-sim', (e && e.message) + ' | ' + String(e && e.stack || '').split('\n').slice(1, 4).join(' | ').replace(/https?:\/\/[^/]+\/thap\//g, '')); }
-        finally { Q.inSim = false; }
-        Q.buoc++;
-        Q.ktNhanh();
-        if (Q.buoc % (cfg.ktMoi || 4) === 0) Q.kt();
-        const ds = performance.now() - s0; Q.max.step = Math.max(Q.max.step, ds);
+        Q.motBuoc();
         if (Q.buoc % veMoi === 0) {
           const v0 = performance.now();
           Q.ve = true;
@@ -255,6 +283,10 @@
     } finally { Q.cho = false; }
     return { i, het: !!G.ketThuc, wave: G.wave, t: G.t, buoc: Q.buoc, nloi: Q.loi.length };
   };
+  // chế độ THẬT: vòng rAF của game tự chạy (đúng nhịp 1×/2×/3×, hoạt ảnh thời gian thực, HUD) — bot + kiểm móc vào từng bước
+  Q.thucBat = function (v, cfg) { if (cfg) { Q.cfg = cfg; Q.loi = []; Q.daLoi = {}; Q.dem = {}; } Q.thuc = !!v; };
+  Q.oCua = (B) => B ? B.t.map(T => T ? T.id + T.sao : '-') : [];
+  Q.trangThai = () => ({ het: !!G.ketThuc, wave: G.wave, t: G.t, buoc: Q.buoc, nloi: Q.loi.length });
   // băm trạng thái (so tái lập)
   Q.bam = function () {
     let s = G.wave + '|' + G.t.toFixed(3) + '|' + G.quai.length + '|' + Math.round(G.quai.reduce((a, E) => a + (E.chet ? 0 : E.hp), 0));

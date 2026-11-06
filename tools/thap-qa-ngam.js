@@ -20,6 +20,7 @@ const SO = +(process.env.SO || 300), LUONG = +(process.env.LUONG || 2), SEED0 = 
 const CHE = (process.env.CHE || 'solo,coop,pvp').split(',');
 const NHIN = +(process.env.NHIN != null ? process.env.NHIN : 8), TAILAP = +(process.env.TAILAP != null ? process.env.TAILAP : 12);
 const PHUT = +(process.env.PHUT || 240), ONLINE = +(process.env.ONLINE != null ? process.env.ONLINE : 4);
+const DO = require('./thap-kt-tran-do.js');
 const TRANG = fs.readFileSync(path.join(__dirname, 'thap-qa-ngam-trang.js'), 'utf8');
 fs.mkdirSync(OUT + 'anh/', { recursive: true });
 const T0 = Date.now();
@@ -90,26 +91,84 @@ async function choiTran(W, cfg, ghiBam) {
   const bam = [];
   let anh = 0, tAnh = 0, r;
   const wallMax = +(process.env.TRAN_S || 240) * 1000;
+  if (W.nhin) await p.evaluate(() => __QA.thucBat(true)); // trận chụp ảnh: chơi THẬT theo rAF (hoạt ảnh thời gian thực đúng nhịp)
   for (;;) {
-    r = await p.evaluate(([n]) => __QA.chay(n, 2500), [600]);
+    if (W.nhin) { await sleep(1000); r = await p.evaluate(() => __QA.trangThai()); }
+    else r = await p.evaluate(([n]) => __QA.chay(n, 2500), [600]);
     if (ghiBam) bam.push(await p.evaluate(() => __QA.bam()));
     if (W.nhin && r.t - tAnh > 8) { // ảnh iPhone 13 mỗi ~8 s trận (vẽ khung thật rồi chụp)
       tAnh = r.t;
-      await p.evaluate(() => { __QA.ve = true; try { __QA.veThat(0, 1); UI.capNhat(); } finally { __QA.ve = false; } });
       const f = OUT + 'anh/' + cfg.che + '_s' + cfg.seed + '_w' + r.wave + '_' + (anh++) + '.jpg';
       await p.screenshot({ path: f, type: 'jpeg', quality: 70 });
-      const vis = await p.evaluate(() => __QA.ktManHinh ? __QA.ktManHinh() : null);
+      const d = await p.evaluate(DO, {}).catch(() => null);
+      if (d) for (const k of ['chu', 'anh', 'ngang']) for (const x of d[k].slice(0, 3)) await p.evaluate(([k, x]) => __QA.LOI('man-' + k, x), [k, x]);
     }
-    if (r.het || r.wave >= cfg.wMax || Date.now() - t0 > wallMax) break;
+    if (r.het || r.wave >= (W.nhin ? Math.min(cfg.wMax, (cfg.wave || 1) + 6) : cfg.wMax) || Date.now() - t0 > wallMax) break;
   }
+  if (W.nhin) await p.evaluate(() => __QA.thucBat(false));
   if (r.het) {
     await sleep(1400); // ketThuc → 900 ms → UI.ketQua
     await p.evaluate(() => __QA.ktKetQua());
-    if (W.nhin) await p.screenshot({ path: OUT + 'anh/' + cfg.che + '_s' + cfg.seed + '_ketqua.jpg', type: 'jpeg', quality: 70 });
+    if (W.nhin) {
+      await sleep(1500); // chờ số chạy xong
+      await p.screenshot({ path: OUT + 'anh/' + cfg.che + '_s' + cfg.seed + '_ketqua.jpg', type: 'jpeg', quality: 70 });
+      const d = await p.evaluate(DO, {}).catch(() => null);
+      if (d) for (const k of ['chu', 'anh', 'ngang']) for (const x of d[k].slice(0, 3)) await p.evaluate(([k, x]) => __QA.LOI('ketqua-' + k, x), [k, x]);
+    }
   }
   const tom = await p.evaluate(() => __QA.tom());
   for (const e of L.err) tom.loi.push({ loai: /^HTTP/.test(e) ? 'http' : 'pageerror', chi: e.slice(0, 400), seed: cfg.seed, che: cfg.che });
   return Object.assign({ cfg, v, wall: Date.now() - t0, bam }, tom);
+}
+
+async function choiOnline(b, cfg) {
+  const URL = `http://localhost:${MOCK}/thap/?net=mock&mockws=ws://localhost:${MOCK}&nointro=1&notut=1`;
+  const mo = async (ten, deck) => {
+    const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+    await ctx.addInitScript(TRANG);
+    const p = await ctx.newPage(), L = [];
+    p.on('pageerror', e => L.push('pageerror ' + e.message)); p.on('console', m => { if (m.type() === 'error' && !/favicon|ERR_|Failed to load/.test(m.text())) L.push('console ' + m.text().slice(0, 300)); });
+    await p.goto(URL, { waitUntil: 'load' });
+    await p.waitForFunction(() => typeof UI !== 'undefined' && UI.chon && document.querySelector('#onl-nut') && NET.ok && typeof __QA !== 'undefined', null, { timeout: 30000 });
+    await p.evaluate((d) => { __QA.cai(); UI.chon = d; UI.veBoChon(); }, deck);
+    return { ctx, p, L, ten };
+  };
+  const A = await mo('A', cfg.deck), B = await mo('B', cfg.deck2);
+  const loi = [], t0 = Date.now();
+  try {
+    await A.p.evaluate(() => ONL.moBang()); await A.p.click('[data-act="onl-tao"]');
+    await A.p.waitForFunction(() => /^[A-Z]{4}$/.test((document.querySelector('#sanh-ma') || {}).textContent || ''), null, { timeout: 15000 });
+    const code = await A.p.textContent('#sanh-ma');
+    await B.p.evaluate(() => ONL.moBang()); await B.p.fill('#onl-ma', code); await B.p.click('[data-act="onl-vao"]');
+    await A.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 15000 });
+    await A.p.click('#sanh-san'); await B.p.click('#sanh-san');
+    for (const X of [A, B]) await X.p.waitForFunction(() => ONS.on && G.ban.length === 2 && __QA.san(), null, { timeout: 30000 });
+    for (const X of [A, B]) await X.p.evaluate((c) => __QA.thucBat(true, c), Object.assign({}, cfg, { seed: cfg.seed + (X === B ? 1 : 0) }));
+    // so 2 máy mỗi 3 s: bàn mình ở máy này = bàn đồng đội ở máy kia (cho phép lệch thoáng qua; lệch 2 lần liền → lỗi)
+    let lechCu = 0, wave = 0;
+    while (Date.now() - t0 < +(process.env.ONLINE_S || 150) * 1000) {
+      await sleep(3000);
+      const [a, c] = await Promise.all([A.p.evaluate(() => ({ w: G.wave, kt: !!G.ketThuc, tim: G.ban[0].tim, toi: __QA.oCua(G.ban[0]), ban: __QA.oCua(G.ban[1]), tom: ONS.tom() })), B.p.evaluate(() => ({ w: G.wave, kt: !!G.ketThuc, tim: G.ban[0].tim, toi: __QA.oCua(G.ban[0]), ban: __QA.oCua(G.ban[1]), tom: ONS.tom() }))]);
+      wave = a.w;
+      const khac = (x, y) => x.reduce((n, v, i) => n + (v !== y[i] ? 1 : 0), 0);
+      const k = khac(a.toi, c.ban) + khac(c.toi, a.ban);
+      if (k > 2 && lechCu > 2) loi.push({ loai: 'online-lech-ban', chi: 'bàn soi gương lệch ' + k + ' ô hai lần liền (wave ' + a.w + '): A ' + a.toi.join(' ') + ' | B thấy ' + c.ban.join(' '), seed: cfg.seed, che: 'online' });
+      lechCu = k;
+      if (Math.abs(a.w - c.w) > 1) loi.push({ loai: 'online-lech-wave', chi: 'A wave ' + a.w + ' / B wave ' + c.w, seed: cfg.seed, che: 'online' });
+      if (a.tim !== c.tim && !a.kt && !c.kt) loi.push({ loai: 'online-lech-tim', chi: 'tim chung A ' + a.tim + ' / B ' + c.tim, seed: cfg.seed, che: 'online' });
+      if (a.tom.thay || c.tom.thay) loi.push({ loai: 'online-giao-ai', chi: 'mạng tốt nhưng bị giao AI: ' + a.tom.thay + '/' + c.tom.thay, seed: cfg.seed, che: 'online' });
+      if (a.kt || c.kt) break;
+    }
+    for (const X of [A, B]) {
+      await X.p.evaluate(() => __QA.thucBat(false));
+      const t = await X.p.evaluate(() => __QA.tom());
+      for (const l of t.loi) loi.push(Object.assign(l, { che: 'online-' + X.ten }));
+      for (const e of X.L) loi.push({ loai: 'pageerror', chi: X.ten + ' ' + e.slice(0, 300), seed: cfg.seed, che: 'online' });
+    }
+    // dedupe
+    const thay = new Set(); const L2 = loi.filter(l => { const k = l.loai + l.chi.replace(/\d+/g, '#').slice(0, 80); if (thay.has(k)) return false; thay.add(k); return true; });
+    return { cfg, wave, loi: L2, wall: Date.now() - t0 };
+  } finally { await A.ctx.close(); await B.ctx.close(); }
 }
 
 (async () => {
@@ -131,6 +190,7 @@ async function choiTran(W, cfg, ghiBam) {
       let WW = W;
       if (nhinCon > 0 && cfg.seed % 7 === 3) { nhinCon--; WW = await moTrang(b, true); }
       let kq;
+      if (WW !== W) cfg.chu = true;
       try { kq = await choiTran(WW, cfg, cfg.seed % Math.max(1, Math.round(tong / Math.max(1, TAILAP))) === 0); }
       catch (e) { kq = { cfg, loi: [{ loai: 'ngoai-le-node', chi: String(e.message).slice(0, 300), seed: cfg.seed, che: cfg.che }] }; try { await W.ctx.close(); } catch (er) { } W = workers[wi] = await moTrang(b, false); }
       if (WW !== W) await WW.ctx.close();
@@ -142,6 +202,15 @@ async function choiTran(W, cfg, ghiBam) {
     }
   };
   await Promise.all(workers.map((W, i) => chay(W, i)));
+  // ---------- ONLINE CO-OP: 2 trình duyệt + máy chủ giả, bot ở cả 2 máy, so 2 bàn soi gương ----------
+  for (let i = 0; i < ONLINE && Date.now() - T0 < PHUT * 60000; i++) {
+    const seed = 9000 + SEED0 + i, r = mb(seed);
+    const cfg = { seed, che: 'online', kieu: 'online', deck: r() < 0.5 ? BO_THAT[i % BO_THAT.length].slice() : taoBo(r, ROS), deck2: taoBo(r, ROS), toc: 1, dbP: 0.4 };
+    let kq;
+    try { kq = await choiOnline(b, cfg); } catch (e) { kq = { cfg, loi: [{ loai: 'online-ngoai-le', chi: String(e.message).slice(0, 300), seed, che: 'online' }] }; }
+    KQ.push(kq);
+    console.log(`[online ${i + 1}/${ONLINE}] s${seed} bộ=${cfg.deck.join(',')} + ${cfg.deck2.join(',')} → wave ${kq.wave}` + ((kq.loi || []).length ? '  ✗ ' + kq.loi.map(l => l.loai).join(',') : ''));
+  }
   // ---------- tái lập: chạy lại các trận đã ghi băm ----------
   const TL = [];
   const coBam = KQ.filter(k => k.bam && k.bam.length).slice(0, TAILAP);
