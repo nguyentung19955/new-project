@@ -1,0 +1,62 @@
+[
+ {
+  "name": "raw_p2_overlord.png",
+  "ref": "thap/assets/fx_overlord_dacbiet.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Thunder strike on one spot: frames 1-4 dark storm cloud swirl gathers and a thin pilot spark flickers; frames 5-7 one huge violet-white lightning bolt slams straight down with a bright flash; frames 8-11 round shockwave ring of purple electricity spreads out with crackling arcs; frames 12-16 scorched ground glow and small sparks fade away. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_cryo.png",
+  "ref": "thap/assets/fx_lophanung_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Ice freeze blast spreading from the center: frames 1-4 cold blue mist swirls inward and frost particles gather; frames 5-7 white-blue flash and a ring of sharp ice crystals bursts outward; frames 8-12 frost spreads over the ground in a wide round icy pattern with spikes; frames 13-16 the frost glitters and slowly fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_chronolock.png",
+  "ref": "thap/assets/hu_khoa.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Golden clock time-lock seal on one target: frames 1-4 a thin golden clock ring draws itself in a circle; frames 5-8 roman-numeral style tick marks light up and clock hands spin then stop; frames 9-12 the seal pulses with cyan time shards frozen in the air; frames 13-16 the clock face cracks and shatters into golden shards (release burst). Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_blackhole.png",
+  "ref": "thap/assets/hu_hoden.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Black hole vortex loop: a dark purple-black swirling vortex with a bright violet accretion ring and streaks of debris spiralling inward; each frame the spiral arms and debris rotate a little further so the 16 frames loop smoothly as one full rotation. Same size in every frame. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_evolver.png",
+  "ref": "thap/assets/evo_bom.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Mechanical time-bomb countdown loop: a round green-glowing evolution capsule with a ticking gear dial; frames 1-8 the dial arm rotates step by step and green energy lines crawl over the shell; frames 9-16 cracks of bright green light open, energy bubbles rise, and it glows brighter, ready to burst. Loops back to frame 1. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_rewind.png",
+  "ref": "thap/assets/fx_ngaithoigian_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Red-gold time rewind spiral: frames 1-4 a clock face appears; frames 5-12 its hands spin backwards fast with counter-clockwise red-gold sand streaks; frames 13-16 the spiral collapses into sparkles and fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_orbital.png",
+  "ref": "thap/assets/fx_orbital_thuc.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Awakened orbital satellite targeting halo loop: a thin cyan-white ring with 3 small satellites orbiting around it; each frame they move a little further along the ring with tiny engine trails, so the 16 frames loop smoothly as one orbit. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_halo.png",
+  "ref": "thap/assets/haoquang_nong.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Holy golden barrier dome: frames 1-4 golden light rays rise from the center; frames 5-8 a translucent golden hexagon shield dome forms with a bright rim; frames 9-12 the dome shimmers with soft holy light motes; frames 13-16 the dome breaks into golden feathers of light and fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_herotile.png",
+  "ref": "thap/assets/fx_xuonganh_sk.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Hero tile golden aura loop on a square floor tile, top-down: a glowing golden square frame with rotating rune marks and small flames rising at the corners; each frame they rotate a little further so the 16 frames loop smoothly. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_genesis.png",
+  "ref": "thap/assets/khoisinh_nong.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Genesis creation burst: frames 1-4 a tiny green-gold seed of light; frames 5-8 it blooms into a flower of light petals; frames 9-12 a bright pillar of creation light shoots up with spiralling motes; frames 13-16 petals drift and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_ember.png",
+  "ref": "thap/assets/fx_lualien_sk.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Small relay flame flying: a single orange-red fireball with a flickering tail, flame shape changes each frame so the 16 frames loop as living fire, pointing to the right. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p2_copycat.png",
+  "ref": "thap/assets/fx_khoathoigian_dan.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Copy magic: frames 1-4 cyan scan lines sweep over a square; frames 5-10 a glowing cyan-white wireframe silhouette of a turret builds up line by line; frames 11-16 it fills with light and flashes, then fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ }
+]
