@@ -66,3 +66,22 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 - Không dùng "ảnh tĩnh rung" làm hiệu ứng — phải là hoạt ảnh thật.
 - Ụ hỗ trợ không bắn (như DCDW). Thẻ đỏ/vàng phải "cày" như DCDW. Tối đa 1 ụ Thần thoại / bộ.
 - Không viết code thanh toán tiền thật lúc này.
+
+---
+## 9. CẬP NHẬT TIẾN ĐỘ (ghi dần, mới nhất ở cuối)
+
+### 07/11 05:55 (giờ VN)
+**Đã xong (code đã đẩy, chờ/đã lên live):**
+- Mục IX review v2 — LIVE `7458242`.
+- Icon app (mẫu A) + manifest PWA — code `4b8fb21`, chờ xuất bản.
+- VFX P3 đợt 2: 20 tờ ChatGPT đã gắn (`thap/assets/p3_*`) — code `38e6925`/`0480705`, chờ xuất bản.
+- Báo cáo giới hạn sức mạnh: `tuvan/gioi-han/BAO-CAO.md` (`8ebef51`).
+- Đề xuất cơ chế mới kiểu DCDW: `tuvan/co-che-moi/DE-XUAT.md` (`50d82d7`). Ghi chú: "Katarina" thật ra là **Kalaratri** (lửa theo chữ thập); ụ mũi tên + số **không tìm được nguồn** → thiết kế theo lời người dùng.
+- Chuyển động ụ: đã có `tuvan/anim/ARCHETYPE.md` + dải ảnh; cần 4 hình `tuvan/anim/CAN-VE.json` (nòng gatling, ổ quay revolver, tinh thể băng, mặt vũng độc).
+
+**Người dùng đã chốt (05:50):**
+- Giới hạn sức mạnh: **làm hết theo khuyên dùng** (mọi mục option A) → phiên `trig_017qHBP9YbuJ6aQ1xx5x2FQe` (không đụng Ember).
+- Cơ chế mới đợt 1: **B Lửa Thập Tự (Ember lan cả hàng + cột, trần 8, giữ lửa qua ghép) + A Pháo La Bàn (THAY Cannon, ngược hướng thì trừ ≥1 + bắn sóng nổ bù) + N Drone Kéo Xa** → phiên `trig_01NL75Vcu1n5v4KP6iwjCvBz` (sẽ ghi `tuvan/co-che-moi/CAN-VE.json` → vẽ ChatGPT).
+- Còn để đợt sau trong DE-XUAT §6: Bàn Poker (thay Quantum Choir), Ổ Mẹ (thay Fusion Archive), Máy Nghiêng Bàn 2048, Hộp Láng Giềng, Nỏ Nhịp Chung, ụ mới (Đồng Xu / Gương / Ký Sinh / Domino).
+
+**Đang chạy:** chuyển động ụ `trig_01Dhk2WW…`, 3 quyết định power-up/trần/Evolver `trig_01JhhwXL…`, gắn P3 (gần xong), icon (gần xong), cân bằng giới hạn `trig_017qHBP9…`, cơ chế mới đợt 1 `trig_01NL75Vc…`.
