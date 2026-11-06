@@ -96,12 +96,12 @@ SKILLS.combo = {
     if (G._treNhan && typeof VX !== 'undefined') VX.hen(G._treNhan, hien); else hien();
     for (const X of B.t) if (X && X.id === 'combo' && X !== ra) { X.sang = 1; buffNo(X, 'dmg', 0.6); }
   },
-  sangDau: (T) => (T.gd === 3 ? 0.28 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0),
+  sangDau: (T) => (T.gd === 3 ? 0.32 : T.gd === 2 ? 0.1 : 0), // VFX P3
   veThem(ctx, T, S, al, R, B) { // vòng số quay theo giai đoạn + nhãn ×N dưới bệ
     const n = (B && B.combo) || 0, gd = T.gd || 1;
     ctx.globalCompositeOperation = 'lighter'; // vòng số = vòng phù văn PNG tô cam, quay ngược nhau (thay nét đứt vẽ code)
     if (!MOT_VONG) for (let i = 0; i < Math.min(2, gd); i++) { const rr = S * (0.43 + i * 0.05), vp = PX.mau('fx_vong_trieu', gd === 3 ? '#ff5a1a' : '#ff8a2a'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i ? -1 : 1) * R.t * 0.6, al * 0.55); }
-    if (gd === 3) { ctx.globalAlpha = al * (0.3 + 0.12 * Math.sin(R.t * 8)); R.anhGiua(ctx, R.cham1('#ff5a1a'), 0, 0, S * 0.75); }
+    if (gd === 3) { ctx.globalAlpha = al * 0.34; R.anhGiua(ctx, R.cham1('#ff5a1a'), 0, 0, S * 0.75); } // VFX P3
     ctx.globalCompositeOperation = 'source-over';
     // số COMBO ×N: tấm đếm chung ở đáy ô (demkn.js)
   },
@@ -207,7 +207,7 @@ SKILLS.hydra = {
       FX.no('chop_nong', x, y, 16, 0.07, Math.atan2(Q.y - y, Q.x - x)); FX.tiaLua(Q.x, Q.y, 2, '#7dffc4', 110, 6);
     });
   },
-  sangDau: (T) => (T.gd === 2 ? 0.12 + 0.04 * Math.sin(G.t * 4) : T.gd === 3 ? 0.08 + T.nap * 0.3 : 0),
+  sangDau: (T) => (T.gd === 2 ? 0.13 : T.gd === 3 ? 0.08 + T.nap * 0.3 : 0), // VFX P3
 };
 HU.hydraTia = { // tia hợp đầu: lõi trắng + quầng xanh ngọc + vạch rung, mờ dần
   ve(ctx, o, R) {
@@ -259,13 +259,13 @@ SKILLS.cuuvi = {
     const dmg = dmgU(T);
     danThang(B, T, E, 'tia_lua', 520, 16, (G, d, M) => { if (M) trung(M, dmg, { B, mau: thuc ? '#cff4ff' : '#ffc070' }); FX.tiaLua(d.x, d.y, 2, thuc ? '#9fe8ff' : '#ffa020', 110, 6); });
   },
-  sangDau: (T) => (T.gd === 2 ? 0.14 + 0.06 * Math.sin(G.t * 6) : 0),
+  sangDau: (T) => (T.gd === 2 ? 0.16 : 0), // VFX P3
   veThem(ctx, T, S, al, R) { // 9 ngọn đuôi lửa trên vòng TRÒN quanh bệ: sáng = đã có
     const n = T.duoi || 0, thuc = T.sao >= 7, mau = thuc ? '#9fe8ff' : '#ffa020', r = S * 0.47;
     for (let i = 0; i < 9; i++) {
       const a = -Math.PI / 2 + i * Math.PI * 2 / 9, x = Math.cos(a) * r, y = Math.sin(a) * r;
       if (i < n) {
-        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.75 + 0.25 * Math.sin(R.t * 8 + i)); R.anhGiua(ctx, R.cham1(mau), x, y, S * 0.2);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.85; R.anhGiua(ctx, R.cham1(mau), x, y, S * 0.2); // VFX P3: đốm lửa bay vòng — không nhấp nháy
         PX.cham(ctx, x, y, 6, thuc ? '#eaffff' : '#fff0c0', al);
       } else { ctx.globalCompositeOperation = 'source-over'; PX.cham(ctx, x, y, 7, '#1b1d22', al * 0.55); } // chấm = fx_cham_trang tô màu
     }
@@ -343,12 +343,12 @@ SKILLS.pandora = {
     if (k === 'khien') for (const X of cacBan) { const ds = X.t.filter(N => N && !(N.khien > 0)).sort((p, q) => q.sao - p.sao).slice(0, 5); for (const N of ds) { N.khien = 1; const n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#73A9FF'); FX.vong1(n.x, n.y, 30, 10, '#73A9FF', 0.4, 3); } }
     if (k === 'cuong') for (const X of cacBan) for (const N of X.t) if (N && SKILLS[N.id].dmg) { N.tocT = Math.max(N.tocT, 10); N.tocV = Math.max(N.tocV, 0.6); } // 6 s +40% → 10 s +60% (đo bậc 06/11)
   },
-  sangDau: (T) => (T.gd === 2 ? 0.1 : T.gd === 3 ? 0.22 + 0.08 * Math.sin(G.t * 5) : 0),
+  sangDau: (T) => (T.gd === 2 ? 0.1 : T.gd === 3 ? 0.26 : 0), // VFX P3
   veThem(ctx, T, S, al, R) { // 4–6★: tia 6 màu lọt khe nắp · 7★: quả cầu cầu vồng lơ lửng (tròn)
     const gd = T.gd || 1; if (gd < 2) return;
     ctx.globalCompositeOperation = 'lighter';
     PANDORA.forEach((p, i) => { const a = R.t * 0.6 + i * Math.PI / 3, L = S * (gd === 3 ? 0.62 : 0.5); PX.tia(ctx, Math.cos(a) * S * 0.2, Math.sin(a) * S * 0.2, Math.cos(a) * L, Math.sin(a) * L, 2, p.mau, al * (gd === 3 ? 0.45 : 0.28)); });
-    if (gd === 3) { const k = Math.floor(R.t * 2) % 6, y = -S * 0.06 + Math.sin(R.t * 3) * 2; ctx.globalAlpha = al * 0.8; R.anhGiua(ctx, R.cham1(PANDORA[k].mau), 0, y, S * 0.5); ctx.globalAlpha = al; R.anhGiua(ctx, R.cham1('#ffffff'), 0, y, S * 0.16); }
+    if (gd === 3) { const k = Math.floor(R.t * 2) % 6, y = -S * 0.06; /* VFX P3: bỏ nhún */ ctx.globalAlpha = al * 0.8; R.anhGiua(ctx, R.cham1(PANDORA[k].mau), 0, y, S * 0.5); ctx.globalAlpha = al; R.anhGiua(ctx, R.cham1('#ffffff'), 0, y, S * 0.16); }
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al;
   },
 };
@@ -385,7 +385,7 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
     PANDORA.forEach((p, i) => {
       const a = g0 + i * Math.PI / 3, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r, trungo = quay >= 1 && o.chon.includes(i);
       ctx.save(); ctx.translate(x, y); ctx.globalAlpha = hien * (quay >= 1 ? (trungo ? 1 : 0.3) : 0.85);
-      if (trungo) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(p.mau), 0, 0, 30 + 6 * Math.sin(o.t * 20)); ctx.globalCompositeOperation = 'source-over'; }
+      if (trungo) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(p.mau), 0, 0, 32); ctx.globalCompositeOperation = 'source-over'; }
       vePandora(ctx, p.k, trungo ? 8 : 6, p.mau); ctx.restore();
     });
     // kim chỉ ở đỉnh
@@ -409,7 +409,7 @@ SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô C
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
   mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1) ? ' (damage cap)' : '') + ' to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
   hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
-  gocDau: (T, t) => (T.gd === 3 ? 0.06 * Math.sin(t * 6) : 0), // chữ X luôn chỉ 4 góc chéo
+  gocDau: (T, t) => 0, /* VFX P3: bỏ lắc đầu */ // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
     T.nhip = (T.nhip || 0) + dt / (T.gd === 3 ? 1.2 : 2.4);
     if (T.nhip >= 1) { T.nhip = 0; const ke = oCheo(T.o).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb: '69,224,200' }); }

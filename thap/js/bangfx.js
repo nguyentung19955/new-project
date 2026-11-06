@@ -32,7 +32,7 @@ const BANGFX = {
     if (tt < this.VAO) f = Math.min(3, Math.floor(tt / this.VAO * 4));                       // 1-4 hình thành
     else if (con < this.NUT) f = 8 + Math.min(3, Math.floor((1 - con / this.NUT) * 4));      // 9-12 nứt dần
     else f = 4 + (Math.floor(R.t * 7 + T.o * 1.3) & 3);                                      // 5-8 lấp lánh
-    const run = con < 0.6 ? Math.sin(R.t * 70) * 1.1 * (1 - con / 0.6) : 0; // sắp vỡ: rung nhẹ
+    const run = 0; // VFX P3: bỏ rung khối băng sắp vỡ (vỡ = dải fx_bang_vo)
     ctx.globalAlpha = al;
     this.khung(ctx, R, this.ANH.khoi, f, run, 0, S * this.KHOI_K, 0);
     // hạt sương rơi nhẹ (toạ độ thế giới, thưa)

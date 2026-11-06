@@ -248,3 +248,133 @@ window.CG = CG;
     try { SND.nut(); } catch (er) { }
   }, true);
 })();
+
+// =====================================================================================================
+// VFX P3 — BỘ DỰNG CHUỖI HẠT CHUNG (docs/demo-hop-tuong/tuvan/vfx-p3/AUDIT.md, tuvan/vfx/YEU-CAU-ANIM.md)
+//  User: KHÔNG lắc / phập phồng / phóng 1 ảnh tĩnh để giả chuyển động. Nổ trúng / chớp nòng của 79 ụ còn lại (trước: 1 ảnh tĩnh phóng
+//  0,6→1,1) → dải khung DỰNG SẴN từ chính ảnh ChatGPT của ụ (1 lần mỗi ảnh, mặt nạ PNG fx_cham_trang khoét tâm + bẻ mép) chạy đúng thứ tự
+//  loé → bung → tan, kèm tia lửa (fx_cham_trang tô MÀU LẤY TỪ ẢNH của ụ → đúng nguyên tố) bay ra và vòng dư âm mảnh cho đòn lớn.
+//  Chỉ TRÌNH BÀY: không đổi vùng / sát thương / nhịp; KHÔNG Math.random (hạt dùng băm định trước → không chạm RNG đã gieo của online);
+//  EFFECTS Full / Balanced / Minimal bớt hạt; REDUCE FLASH giảm khung loé. Bộ đệm có trần (bộ nhớ iOS), dựng ≤ 2 ảnh mỗi khung (không giật).
+// =====================================================================================================
+CG.K3 = {
+  _dai: new Map(), _mau: new Map(), _ngan: 0, _khung: -1,
+  hat: [], MAX: 140,
+  bam(i, s) { const v = Math.sin(i * 12.9898 + s * 78.233) * 43758.5453; return v - Math.floor(v); },
+  // ngân sách dựng: ≤ 2 ảnh mỗi khung vẽ
+  _cho() { const k = typeof REN !== 'undefined' ? REN.t : 0; if (k !== this._khung) { this._khung = k; this._ngan = 0; } return this._ngan < 2; },
+  // màu trội của ảnh (điểm bão hoà) → màu tia lửa đúng nguyên tố của ụ
+  mau(ten) {
+    if (this._mau.has(ten)) return this._mau.get(ten);
+    const a = REN.img(ten); if (!a) return null;
+    let m = '#ffffff';
+    try {
+      const c = document.createElement('canvas'); c.width = c.height = 20; const x = c.getContext('2d'); x.drawImage(a, 0, 0, 20, 20);
+      const d = x.getImageData(0, 0, 20, 20).data; let r = 0, g = 0, b = 0, w = 0;
+      for (let i = 0; i < d.length; i += 4) { const mx = Math.max(d[i], d[i + 1], d[i + 2]), mn = Math.min(d[i], d[i + 1], d[i + 2]), s = mx ? (mx - mn) / mx : 0, k = (d[i + 3] / 255) * s * s; r += d[i] * k; g += d[i + 1] * k; b += d[i + 2] * k; w += k; }
+      if (w > 0.5) { const mx = Math.max(r, g, b) / w || 1, f = 255 / mx; m = '#' + [r, g, b].map(v => Math.min(255, Math.round(v / w * f)).toString(16).padStart(2, '0')).join(''); }
+      c.width = c.height = 0;
+    } catch (e) { }
+    this._mau.set(ten, m); return m;
+  },
+  // dải khung dựng từ 1 ảnh: kieu 'trung' = 6 khung loé → bung → khoét tâm + bẻ mép → tan · 'no' = 4 khung chớp nòng (neo đầu nòng, phụt dài → tan)
+  dai(ten, kieu) {
+    const key = ten + '|' + kieu; let s = this._dai.get(key); if (s !== undefined) return s;
+    const a = REN.img(ten), mk = REN.img('fx_cham_trang'); if (!a || !mk || !this._cho()) return null;
+    this._ngan++;
+    if (this._dai.size > 48) { for (const [k, c] of this._dai) { if (c) c.width = c.height = 0; this._dai.delete(k); if (this._dai.size <= 36) break; } }
+    try {
+      const n = kieu === 'no' ? 4 : 6, M = typeof FXU_META !== 'undefined' && FXU_META[ten];
+      const S = Math.min(160, Math.max(a.width, a.height)), c = document.createElement('canvas'); c.width = S * n; c.height = S;
+      const x = c.getContext('2d');
+      for (let k = 0; k < n; k++) {
+        x.save(); x.beginPath(); x.rect(k * S, 0, S, S); x.clip(); // vetay-ok: mask — ô khung
+        if (kieu === 'no') { // neo mép trái (đầu nòng) ở 0.12 S giữa cao; ảnh dài dần + mỏng dần
+          const sx = [0.62, 1, 1.12, 1.18][k], sy = [0.78, 1, 0.86, 0.6][k], al = [1, 1, 0.7, 0.32][k];
+          const ax = M ? M[2] : 0, ay = M ? M[3] : 0.5, w = S * 0.86 * sx, h = w * a.height / a.width * sy / sx;
+          x.globalAlpha = al; x.drawImage(a, k * S + S * 0.06 - ax * w, S / 2 - ay * h, w, h);
+          if (k >= 2) { x.globalCompositeOperation = 'destination-out'; const r = S * [0, 0, 0.3, 0.5][k]; x.globalAlpha = 0.9; x.drawImage(mk, k * S + S * 0.06 - r, S / 2 - r, r * 2, r * 2); } // vetay-ok: mask — tắt dần từ đầu nòng ra
+        } else {
+          const sc = [0.74, 0.95, 1, 1.05, 1.09, 1.12][k], al = [1, 1, 0.96, 0.82, 0.58, 0.3][k], w = S * 0.88 * sc, h = w * a.height / a.width;
+          x.globalAlpha = al; x.drawImage(a, k * S + S / 2 - w / 2, S / 2 - h / 2, w, h);
+          x.globalCompositeOperation = 'destination-out';
+          const hr = S * [0, 0, 0.12, 0.24, 0.33, 0.4][k]; // khoét tâm: vụ nổ rỗng dần từ giữa ra (mặt nạ PNG mềm)
+          if (hr > 0) { x.globalAlpha = 1; x.drawImage(mk, k * S + S / 2 - hr, S / 2 - hr, hr * 2, hr * 2); }
+          if (k >= 3) for (let j = 0; j < 7; j++) { // bẻ mép: 7 lỗ mềm quanh viền → vỡ thành mảnh, không còn là 1 ảnh phóng
+            const g = j / 7 * 6.283 + this.bam(j, k) * 0.7, d = S * (0.3 + 0.08 * k), r = S * (0.05 + 0.035 * (k - 2)) * (0.7 + this.bam(j + 9, k) * 0.6);
+            x.globalAlpha = 0.95; x.drawImage(mk, k * S + S / 2 + Math.cos(g) * d - r, S / 2 + Math.sin(g) * d - r, r * 2, r * 2);
+          }
+        }
+        x.restore();
+      }
+      // ảnh lệch sắc nguyên tố (vd. Tesla: nổ cam) → phủ màu nguyên tố trong alpha của chính dải (tô màu PNG — QUY-TAC mục 3)
+      const mE = typeof P3 !== 'undefined' && P3.mauTen(ten), mA = this.mau(ten);
+      if (mE && mA && this.lechSac(mE, mA) > 50) { x.globalCompositeOperation = 'source-atop'; x.globalAlpha = 0.62; x.fillStyle = mE; x.fillRect(0, 0, c.width, c.height); } // vetay-ok: png — tô màu trong alpha ảnh
+      s = c;
+    } catch (e) { s = null; }
+    this._dai.set(key, s); return s;
+  },
+  sac(h) { const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16), mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx === mn) return 0; let q = mx === r ? ((g - b) / (mx - mn)) % 6 : mx === g ? (b - r) / (mx - mn) + 2 : (r - g) / (mx - mn) + 4; return (q * 60 + 360) % 360; },
+  lechSac(a, b) { const d = Math.abs(this.sac(a) - this.sac(b)); return Math.min(d, 360 - d); },
+  // tia lửa: n hạt từ (x,y) theo góc băm, vệt dài theo hướng bay; mau = màu nguyên tố (lấy từ ảnh)
+  tung(x, y, mau, n, v, co, song, seed, g0, g1) {
+    const P = this.p(); n = Math.round(n * P); if (n <= 0 || !mau) return;
+    const tk = typeof TKP !== 'undefined' && TKP.on(), cap = tk ? this.MAX / 2 : this.MAX;
+    for (let i = 0; i < n; i++) {
+      if (this.hat.length >= cap) this.hat.shift();
+      const r1 = this.bam(i, seed), r2 = this.bam(i + 17, seed), a = g1 == null ? (i + r1 * 0.8) / n * 6.283 : g0 + (g1 - g0) * (i + r1) / n;
+      const vv = v * (0.55 + 0.6 * r2);
+      this.hat.push({ x, y, vx: Math.cos(a) * vv, vy: Math.sin(a) * vv, t: 0, song: song * (0.75 + 0.4 * r1), co: co * (0.7 + 0.5 * r2), mau });
+    }
+  },
+  p() { const f = CG.doc().fx; return f === 'gon' ? 0.34 : f === 'can' ? 0.62 : 1; },
+  capNhat(dt) {
+    const H = this.hat;
+    for (let i = H.length - 1; i >= 0; i--) { const h = H[i]; h.t += dt; if (h.t >= h.song) { H[i] = H[H.length - 1]; H.pop(); continue; } h.x += h.vx * dt; h.y += h.vy * dt; const k = 1 - dt * 5.5; h.vx *= k; h.vy *= k; }
+  },
+  veHat(ctx) {
+    const H = this.hat; if (!H.length) return;
+    const op = ctx.globalCompositeOperation; ctx.globalCompositeOperation = 'lighter';
+    for (const h of H) {
+      const u = h.t / h.song, sp = Math.hypot(h.vx, h.vy), L = h.co * (1 + Math.min(2.2, sp / 90)), im = PX.mau('fx_cham_trang', h.mau);
+      PX.ve(ctx, im, h.x, h.y, L * (1 - u * 0.4), h.co * 0.55 * (1 - u * 0.5), Math.atan2(h.vy, h.vx), (1 - u) * (u < 0.1 ? u * 10 : 1) * 0.95);
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = op;
+  },
+  // vẽ 1 nổ trúng / chớp nòng của FX.anim (thay veMot): false = chưa dựng được (vẽ cách cũ khung này)
+  veMot(ctx, R, a, u) {
+    const s = this.dai(a.ten, a.mot); if (!s) return false;
+    const n = a.mot === 'no' ? 4 : 6, fl = CG.kFlash();
+    if (a.mot === 'no') {
+      let x = a.x, y = a.y, goc = a.goc; const T = a.T;
+      if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = dauNong(T); goc = T.goc + (a.dg || 0); }
+      const w = a.co / 0.86 * 1.02; // khung S ↔ ảnh rộng 0.86 S
+      ctx.save(); ctx.translate(x, y); ctx.rotate(goc || 0); // khung có đầu nòng tại 0.06 S → dời để neo trùng nòng
+      R.khungMuot(ctx, null, Math.min(n - 0.001, u * n), w * 0.44, 0, w, 0, (u < 0.25 ? 1 : fl > 0.9 ? 1 : 0.75), s);
+      ctx.restore();
+    } else {
+      let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
+      if (!a._k3) { // lần đầu vẽ: tia lửa bay ra (đòn lớn thêm vòng dư âm mảnh)
+        a._k3 = 1; const m = (typeof P3 !== 'undefined' && P3.mauTen(a.ten)) || this.mau(a.ten), cap = a.co >= 60 ? 2 : a.co >= 40 ? 1 : 0, sd = (a.x * 7 + a.y * 13) | 0;
+        this.tung(x, y, m, [3, 5, 8][cap], [110, 150, 190][cap], [5, 7, 9][cap], [0.22, 0.3, 0.4][cap], sd);
+        if (cap && !CG.gon()) FX.vong1(x, y, a.co * 0.25, a.co * 0.62, m, 0.32, 2);
+      }
+      const al = (u < 0.5 ? 1 : 1 - (u - 0.5) / 0.5 * 0.25) * (window.CG ? CG.kA(a) : 1) * (u < 0.2 ? 1 : fl > 0.9 ? 1 : 0.85);
+      R.khungMuot(ctx, null, Math.min(n - 0.001, u * n), x, y, a.co / 0.88, a.goc, al, s);
+    }
+    return true;
+  },
+};
+// gắn: cập nhật hạt cùng FX, vẽ sau lớp FX; REN.veMot dùng dải dựng sẵn
+(function () {
+  if (typeof FX === 'undefined' || typeof REN === 'undefined') return;
+  const cn = FX.capNhat; FX.capNhat = function (dt) { cn.call(this, dt); CG.K3.capNhat(dt); };
+  const rs = FX.reset; FX.reset = function () { rs.call(this); CG.K3.hat.length = 0; };
+  const vf = REN.veFx; REN.veFx = function (ctx) { vf.call(this, ctx); CG.K3.veHat(ctx); };
+  const vm = REN.veMot; REN.veMot = function (ctx, a, u) {
+    const op = ctx.globalCompositeOperation; ctx.globalCompositeOperation = 'source-over';
+    let ok = false; try { ok = CG.K3.veMot(ctx, this, a, u); } catch (e) { ok = false; }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = op;
+    if (!ok) vm.call(this, ctx, a, u);
+  };
+})();

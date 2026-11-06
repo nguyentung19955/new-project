@@ -884,7 +884,7 @@ const REN = {
     if (dau) {
       ctx.save();
       let goc = T.goc;
-      if (T.id === 'mana') { goc = 0; const p = 1 + 0.04 * Math.sin(this.t * 3 + T.pha) + 0.1 * T.sang; ctx.translate(0, -2 + Math.sin(this.t * 2 + T.pha) * 1.6); ctx.scale(p, p); }
+      if (T.id === 'mana') { goc = 0; const p = 1 + 0.1 * T.sang; ctx.translate(0, -2); ctx.scale(p, p); } // VFX P3: bỏ nhún + phập phồng ảnh đầu (lúc sinh mana vẫn phồng 1 nhịp theo T.sang)
       if (T.id === 'mimic') goc = T.goc;
       if (skT.gocDau) { const g2 = skT.gocDau(T, this.t, ctx); if (g2 != null) goc = g2; } // đầu không xoay theo mục tiêu (hộp, cột…)
       // đầu súng + bóng mềm đổ xuống bệ, dựng sẵn chung 1 ảnh → 1 lần vẽ xoay mỗi ụ (thay vì 2)
@@ -892,11 +892,11 @@ const REN = {
       if (!VX.veBien(ctx, T, C0, al, da, this)) this.veDauLop(ctx, T.id, gd, C0, al, 1, da); // đang biến hình: hoà 2 dạng
       // ánh sáng phụ: mimic cầu vồng, mana phát sáng, tesla cuộn nạp, laser nóng
       let sang = 0;
-      if (T.id === 'mana') sang = 0.15 + 0.15 * Math.sin(this.t * 3) + T.sang * 0.6;
+      if (T.id === 'mana') sang = 0.2 + T.sang * 0.6; // VFX P3: bỏ đầu sáng phập phồng
       if (T.id === 'set' && T.cd < 0.18 && !da) sang = (0.18 - T.cd) * 4;
       if (T.id === 'laser' && T.las && T.las.on) sang = 0.2 + T.las.ramp * 0.5;
       if (T.id === 'overlord') sang = T.nap * T.nap * 0.7;
-      if (T.id === 'mimic') sang = Math.max(sang, 0.25 + 0.2 * Math.sin(this.t * 4 + T.pha));
+      if (T.id === 'mimic') sang = Math.max(sang, 0.3); // VFX P3: bỏ nhấp nháy
       if (T.chop > 0) sang = Math.max(sang, T.chop * 3);
       if (skT.sangDau) sang = Math.max(sang, skT.sangDau(T, this.t) || 0);
       if (sang > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.45, sang * 0.6); ctx.drawImage(dau, -D / 2, -D / 2, D, D); }
@@ -923,7 +923,7 @@ const REN = {
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
     if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }
     // bản sao của Copycat: quầng TÍM (màu ảo ảnh của đầu Copycat) rõ hơn + huy hiệu nho/saochep ở góc trên-trái (nhandien.js) → không nhầm với ụ thật
-    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.07 * Math.sin(this.t * 5)); this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); ctx.restore(); ctx.globalAlpha = al; }
+    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.22; this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); /* VFX P3 */ ctx.restore(); ctx.globalAlpha = al; }
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
     // lớp phủ trạng thái
@@ -931,7 +931,8 @@ const REN = {
     if (T.st.bang > 0 && !o.ghost) { if (typeof BANGFX !== 'undefined') BANGFX.ve(ctx, T, S, al, this, B, x, y); else { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; } }
     else if (T._bangVe && !o.ghost && typeof BANGFX !== 'undefined') BANGFX.vo(T, B, x, y);
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
-    if (T.st.lua > 0) { const f = 1 + 0.04 * Math.sin(this.t * 22); ctx.save(); ctx.scale(f, f); this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
+    if (T.st.lua > 0) { const f = 1; ctx.save(); ctx.scale(f, f); // VFX P3: bỏ phập phồng ảnh lửa
+      this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
     if (T.st.ngam > 0 && !T.st.ngamK) { ctx.save(); ctx.rotate(this.t * 2); /* ngamK: dấu báo chiêu trùm riêng (trumvfx.js) */ const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }
     ctx.restore();
 
@@ -1043,15 +1044,17 @@ const REN = {
       T._la = (T._la || 0) + ((bat ? 1 : 0) - (T._la || 0)) * Math.min(1, dt * (bat ? 22 : 12));
       if (T._la < 0.02 || T._lx === undefined) continue;
       const [x, y] = dauNong(T), r = T._lr || 0, A = T._la, tt = this.t;
-      const w = (6 + r * 10 + Math.sin(tt * 37) * 1.2 + Math.sin(tt * 23.3) * 0.8) * (0.55 + 0.45 * A);
+      const w = (6 + r * 10) * (0.55 + 0.45 * A); // VFX P3: bỏ rung bề rộng tia (tia vẫn chạy = ảnh cuộn dọc)
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = A * (0.86 + 0.08 * Math.sin(tt * 29) + 0.06 * Math.sin(tt * 47.7));
+      ctx.globalAlpha = A * 0.9;
       this._T = T; this.tia(ctx, 'tia_laser', x, y, T._lx, T._ly, w, tt * 420); this._T = null;
       ctx.globalAlpha = A * 0.9;
       const lt = typeof FXU !== 'undefined' && FXU.ten(T, 'trung'), ln = typeof FXU !== 'undefined' && FXU.ten(T, 'no');
-      if (lt) { ctx.globalCompositeOperation = 'source-over'; this.anhGiua(ctx, lt, T._lx, T._ly, (26 + r * 18) * (0.75 + 0.25 * A) * (1 + 0.06 * Math.sin(tt * 31)), tt * 3, A * 0.95); ctx.globalCompositeOperation = 'lighter'; }
+      const ds3 = lt && typeof CG !== 'undefined' && CG.K3 && CG.K3.dai(lt, 'trung'); // VFX P3: điểm cháy = dải dựng sẵn (loé → bung → khoét) chạy LẶP khung 1–4, không còn ảnh tĩnh xoay + phập phồng
+      if (ds3) { ctx.globalCompositeOperation = 'source-over'; this.khungMuot(ctx, null, 1 + (tt * 12) % 3.999, T._lx, T._ly, (26 + r * 18) * (0.75 + 0.25 * A) / 0.88, 0, A * 0.95, ds3); ctx.globalCompositeOperation = 'lighter'; }
+      else if (lt) { ctx.globalCompositeOperation = 'source-over'; this.anhGiua(ctx, lt, T._lx, T._ly, (26 + r * 18) * (0.75 + 0.25 * A), 0, A * 0.95); ctx.globalCompositeOperation = 'lighter'; }
       else this.khungMuot(ctx, 'fx_laser_trung', 1 + (tt * 14) % 2.999, T._lx, T._ly, (30 + r * 26) * (0.7 + 0.3 * A), tt * 3, 1);
-      if (ln) FXU.veNeo(ctx, ln, x, y, (22 + r * 8) * (0.7 + 0.3 * A) * (1 + 0.05 * Math.sin(tt * 40)), T.goc, A * 0.9);
+      if (ln) FXU.veNeo(ctx, ln, x, y, (22 + r * 8) * (0.7 + 0.3 * A), T.goc, A * 0.9);
       else { ctx.globalAlpha = A * 0.6; this.anhGiua(ctx, this.cham1('#ff7af0'), x, y, (16 + r * 8) * (0.6 + 0.4 * A)); }
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }

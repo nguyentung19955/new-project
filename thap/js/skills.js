@@ -181,7 +181,7 @@ SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạ
     T.las.ramp = Math.min(1, T.las.ramp + dt / 3);
     const dps = dmgU(T) * (1 + 3 * T.las.ramp) * nhipU(T);
     T.las.acc += dps * dt; T.las.so += dt;
-    T.rx = -1.2 - Math.sin(G.t * 40) * 0.6; T.rv = 0;
+    T.rx = -1.5; T.rv = 0; // VFX P3: giật lùi đứng yên khi bắn tia (bỏ rung 40 rad/s)
     if (T.las.so > 0.25) { trung(E, T.las.acc, { B, crit: false, mau: '#ff8af0' }); T.las.acc = 0; T.las.so = 0; }
     if (Math.random() < dt * 20) FX.tiaLua(E.x, E.y, 1, '#ff8af0', 120, 8);
     if (!B.ai) SND.laser(); // tia âm duy trì, tự tắt dần khi ngừng bắn
@@ -468,20 +468,20 @@ HU.tuong = { // tường ánh sáng chặn đường rồi nổ · o.vang = TƯ�
     return false;
   },
   ve(ctx, o, R) {
-    const u = o.t / o.song, a = Math.min(1, o.t / 0.15) * (u > 0.85 ? 0.5 + 0.5 * Math.sin(o.t * 50) : 1);
+    const u = o.t / o.song, a = Math.min(1, o.t / 0.15) * (u > 0.85 ? (1 - u) / 0.15 * 0.6 + 0.4 : 1); // VFX P3: tắt dần thay nhấp nháy 50 rad/s
     const nx = -Math.sin(o.goc), ny = Math.cos(o.goc), L = DUONG_RONG * (o.vang ? 0.72 : 0.62);
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
     if (o.vang && typeof FXU !== 'undefined' && FXU.co('fx_wallgen_vang') && R.img('fx_wallgen_vang')) { // TƯỜNG VÀNG = ảnh ChatGPT (CAN-VE-3.json) dựng ngang đường
       const im = R.img('fx_wallgen_vang'), w = L * 2.3, h = w * im.height / im.width;
       ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc + Math.PI / 2); ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(im, -w / 2, -h / 2, w, h); ctx.restore();
-      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * (0.25 + 0.15 * Math.sin(o.t * 12)); R.anhGiua(ctx, R.cham1('#ffd23f'), o.x, o.y, L * 2.2);
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.3; R.anhGiua(ctx, R.cham1('#ffd23f'), o.x, o.y, L * 2.2);
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
     }
     if (o.vang) { // chờ ảnh: tường ánh sáng PNG tô VÀNG, dày hơn, 2 lớp
-      const day = 13 + 3 * Math.sin(o.t * 24);
+      const day = 14;
       PX.tia(ctx, o.x - nx * L, o.y - ny * L, o.x + nx * L, o.y + ny * L, day * 1.5, '#ffd23f', a * 0.85, o.t * 60);
       for (let k = -2; k <= 2; k++) { const ox = Math.cos(o.goc) * k * 4, oy = Math.sin(o.goc) * k * 4; R.tia(ctx, 'tia_lua', o.x - nx * L + ox, o.y - ny * L + oy, o.x + nx * L + ox, o.y + ny * L + oy, 18 - Math.abs(k) * 4, o.t * 150 + k * 40); }
-      for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#ffd23f'), o.x + nx * L * sg, o.y + ny * L * sg, 34 + 5 * Math.sin(o.t * 20));
+      for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#ffd23f'), o.x + nx * L * sg, o.y + ny * L * sg, 34);
       ctx.globalAlpha = a * 0.35; R.anhGiua(ctx, R.cham1('#ffe46b'), o.x, o.y, L * 2);
       ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
     }
@@ -490,14 +490,14 @@ HU.tuong = { // tường ánh sáng chặn đường rồi nổ · o.vang = TƯ�
     if (T && G.ban[T.ban].t[T.o] === T) { const [x, y] = dauNong(T); ctx.globalAlpha = a * 0.5; R.tia(ctx, 'tia_laser', x, y, o.x, o.y, 6, o.t * 200); ctx.globalAlpha = a; }
     // tấm tường ánh sáng: dải sáng dày + vạch quét + 2 cột phát ở mép đường
     ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
-    const day = 9 + 2 * Math.sin(o.t * 30);
+    const day = 10;
     ctx.restore(); // tấm tường = tia laser PNG dày tô lục lam (thay dải gradient + vạch fillRect vẽ code)
     PX.tia(ctx, o.x - nx * L, o.y - ny * L, o.x + nx * L, o.y + ny * L, day * 1.3, '#8affff', a * 0.75, o.t * 60);
     for (let k = -1; k <= 1; k++) {
       const ox = Math.cos(o.goc) * k * 4, oy = Math.sin(o.goc) * k * 4;
       R.tia(ctx, 'tia_set', o.x - nx * L + ox, o.y - ny * L + oy, o.x + nx * L + ox, o.y + ny * L + oy, 16 - Math.abs(k) * 5, o.t * 150 + k * 40);
     }
-    for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#7ffcff'), o.x + nx * L * sg, o.y + ny * L * sg, 26 + 4 * Math.sin(o.t * 20));
+    for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#7ffcff'), o.x + nx * L * sg, o.y + ny * L * sg, 27);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };

@@ -334,7 +334,7 @@ SIG.K = {
     ve(ctx, m) {
       const c = m.c; if (!c) return;
       const t = m.t + (m.ngan ? 0.27 : 0), x = c.x, y = c.y - 42, dich = m.chon.map(i => this.PDR[PANDORA[i].k]);
-      const rung = t < 0.27 ? Math.sin(t * 80) * 1.6 : 0;
+      const rung = 0; // VFX P3: hộp không lắc (khung 0–3 tự rung trong tờ)
       // hộp: rung (khung 0–3) → đứng yên trong lúc quay → mở (4–7)
       const fv = t < 0.27 ? (t / 0.27) * 3.99 : t < 0.8 ? 3 : 4 + Math.min(3.99, (t - 0.8) / 0.25 * 4);
       if (t < 1.22) this.k(ctx, 'sig_l16_vault', fv, x + rung, y + 2, 58, { a: this.mo(t, 0, 1.22, 0.05, 0.14) });

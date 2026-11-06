@@ -85,7 +85,7 @@ SKILLS.mauhut = {
   },
   ghep(G, B, a, b, ra) { /* ghép thường 2 Blood Circuit cùng sao: không hiệu ứng riêng */ },
   sangDau: (T) => { const B = G.ban[T.ban]; return Math.min(0.3, ((B && B.vamp) || 0) / 30); },
-  veThem(ctx, T, S, al, R) { const B = G.ban[T.ban], v = (B && B.vamp) || 0; if (v < 3) return; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.12 + v * 0.025 + 0.06 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#d0103a'), 0, 0, S * 0.95); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { const B = G.ban[T.ban], v = (B && B.vamp) || 0; if (v < 3) return; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.14 + v * 0.025); /* VFX P3 */ R.anhGiua(ctx, R.cham1('#d0103a'), 0, 0, S * 0.95); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================
@@ -224,7 +224,7 @@ SKILLS.bienmau = {
     const c = B.o[b.o]; FX.vong1(c.x, c.y, 8, 50, PRISM_MAU[this.mau(a)], 0.4, 4); fx7('bienmau', c.x, c.y, 70, 0.4);
   },
   sangDau: () => 0.08,
-  veThem(ctx, T, S, al, R) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.16 + 0.05 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1(PRISM_MAU[SKILLS.bienmau.mau(T)]), 0, 0, S * 0.6); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.18; /* VFX P3 */ R.anhGiua(ctx, R.cham1(PRISM_MAU[SKILLS.bienmau.mau(T)]), 0, 0, S * 0.6); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================
