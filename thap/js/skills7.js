@@ -11,7 +11,7 @@ const SK7 = {
   lv(B, id) { const r = G.rosterMap && G.rosterMap[id]; return ((r && typeof THE !== 'undefined' && THE.lvDau[r.bac]) || 9) + ((B && B.capThe && B.capThe[id]) || 0); },
   // RNG tất định: cùng (bàn chủ hành động, ô, số lần) → cùng kết quả trên cả 2 máy online
   rng(B, o, n, k) { const s = ((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : 7) | 0) * 1009 + (n | 0) * 7919 + (o | 0) * 131 + (k | 0) * 17; return rngHat(s); },
-  FX: new Set([]), // id đã có dải hiệu ứng ChatGPT assets/fx_<id>_sk.png (16 khung, tools/thap-lap-vangmoi1.py <id>) — vẽ qua VM1.fx (vangmoi1.js)
+  FX: new Set(['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']), // id đã có dải hiệu ứng ChatGPT assets/fx_<id>_sk.png (16 khung)
   anh(id, cot, du) { const t = 'fx_' + id + '_' + cot; return (typeof FXU !== 'undefined' && FXU.co && FXU.co(t)) ? t : du; },
 };
 // % kỹ năng theo cấp thẻ — bảng chung KY_NANG_CAP (data.js; trang ụ tự hiện 'Vamp +6% → +6.5%', online theo cấp trong chuỗi bộ bài)
@@ -24,9 +24,22 @@ Object.assign(KY_NANG_CAP, {
 const kn7 = (T) => (knThe(G.ban[T.ban], T.id) || KY_NANG_CAP[T.id].base) / 100;
 
 
-// hiệu ứng kỹ năng: dải 16 khung ChatGPT của ụ (nếu đã lắp) — chưa có → ảnh nổ chung laser_trung
+// hiệu ứng kỹ năng: dải 16 khung ChatGPT assets/fx_<id>_sk.png (lưới 4×4 CAN-VE-2 → 1 hàng 320 px/khung; code chỉ chọn khung/phóng/xoay/mờ)
+//  khung: mauhut 0–15 xung máu · nguyenrua 0–5 âm thoa bay, 6–15 sao vỡ · thanhdia 0–15 lửa thánh + vòm · bienmau 0–3/4–7/8–11 đạn đỏ/vàng/xanh, 12–15 nổ lăng kính
+const FX7_KHUNG = { mauhut: [0, 15], nguyenrua: [6, 15], thanhdia: [0, 15], bienmau: [12, 15] };
+function fx7Ve(ctx, R, id, f, x, y, w, al, goc) {
+  if (!SK7.FX.has(id)) return false;
+  const im = R.img('fx_' + id + '_sk'); if (!im) return false;
+  const fw = im.height, i = clamp(Math.floor(f), 0, 15);
+  ctx.save(); ctx.globalAlpha = al; ctx.translate(x, y); if (goc) ctx.rotate(goc);
+  ctx.drawImage(im, i * fw, 0, fw, fw, -w / 2, -w / 2, w, w); ctx.restore(); ctx.globalAlpha = 1;
+  return true;
+}
+HU.fx7 = { // 1 lần phát dải khung (f0 → f1) tại (x, y)
+  ve(ctx, o, R) { const u = o.t / o.song, [f0, f1] = o.k; ctx.globalCompositeOperation = 'lighter'; fx7Ve(ctx, R, o.id, f0 + u * (f1 - f0 + 1), o.x, o.y, o.w, 1 - Math.max(0, u - 0.85) / 0.15); ctx.globalCompositeOperation = 'source-over'; },
+};
 function fx7(id, x, y, w, song) {
-  if (SK7.FX.has(id) && typeof VM1 !== 'undefined' && typeof vm1Fx === 'function') { VM1.FXCO.add(id); vm1Fx(id, x, y, w * 1.4, Math.max(0.6, song * 1.6), '#ffffff'); return; }
+  if (SK7.FX.has(id)) { G.hu.push({ k: 'fx7', t: 0, song: Math.max(0.55, song * 1.6), id, x, y, w: w * 1.3, k: FX7_KHUNG[id] }); return; }
   FX.no('laser_trung', x, y, w, song);
 }
 
@@ -131,8 +144,8 @@ HU.hexBay = { // âm thoa đỏ bay tới đích 1.5 s rồi phán (kiểm khiê
     if (!dich) return;
     const x = o.x0 + (dich.x - o.x0) * u, y = o.y0 + (dich.y - o.y0) * u - Math.sin(u * Math.PI) * 40;
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.9;
-    const a = R.img(SK7.anh('nguyenrua', 'dan', 'dan_tia')); if (a) { ctx.save(); ctx.translate(x, y); ctx.rotate(R.t * 8); ctx.drawImage(a, -11, -11, 22, 22); ctx.restore(); }
-    R.anhGiua(ctx, R.cham1('#ff3a3a'), x, y, 30);
+    const g = Math.atan2(dich.y - o.y0, dich.x - o.x0);
+    if (!fx7Ve(ctx, R, 'nguyenrua', Math.min(5, u * 8), x, y, 46, 0.95, g)) { const a = R.img(SK7.anh('nguyenrua', 'dan', 'dan_tia')); if (a) { ctx.save(); ctx.translate(x, y); ctx.rotate(R.t * 8); ctx.drawImage(a, -11, -11, 22, 22); ctx.restore(); } R.anhGiua(ctx, R.cham1('#ff3a3a'), x, y, 30); }
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
   },
 };
@@ -232,6 +245,8 @@ aiBan = function (B, dt) {
   }
   return _aiBan7(B, dt);
 };
+const _batDau7 = batDau; // nạp sẵn dải hiệu ứng của ụ có trong các bộ bài trận này
+batDau = function () { const r = _batDau7.apply(this, arguments); try { for (const B of G.ban) for (const id of B.deck) if (SK7.FX.has(id)) REN.img('fx_' + id + '_sk'); } catch (e) { } return r; };
 const _deckNN7 = deckNgauNhien;
 deckNgauNhien = function (tru) { return _deckNN7([...(tru || []), ...SK7.CHUA_ANH]); };
 if (typeof DC !== 'undefined' && DC.ngauNhien) { /* dkcham.js nạp sau — xem cuối file */ }
