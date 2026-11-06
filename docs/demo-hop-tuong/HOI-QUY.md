@@ -91,3 +91,8 @@ Lần 1 TRƯỢT 46 lỗi, 2 loại: (1) `ảnh méo` ruột thanh bản sao `.t
 Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s). Sau rebase lên nhánh mới (lưới có content-visibility → thanh ngoài ô bị cắt) chuyển thanh bản sao vào TRONG ô; lần 3: **XANH — 0 lỗi** (1248 s).
 
 - 06/11 màn bộ bài CHẠM kiểu DCDW (js/dkcham.js): chạm ô = bỏ (ổ trống giữ chỗ), chạm thẻ = thêm / chế độ đổi khi đủ 5, giữ 400 ms = chi tiết, Mythic sai = ô lắc đỏ, PLAY mờ chạm được, PRESET 1–6 tự lưu. thap-kt-keo.js + bước cham_the đổi sang GIỮ = chi tiết. Hồi quy 390 XANH.
+
+## 2026-11-06 — (chống nóng máy, tuvan/nong) thêm bước "nong" + nút POWER SAVE
+Thêm `tools/thap-kt-nong.js` vào hồi quy (trận SOLO wave 13 chuẩn, 45 s, iPhone 13): trượt nếu CPU/khung > mốc 19,3 ms × 1,35.
+Lần chạy đầu: nút cài đặt "BATTERY SAVER: OFF" tràn khung 6 px (360/390) → đổi chữ "POWER SAVE: OFF". `#canh-bao` "WAVE 10 BOSS"
+tràn 3–4 px 1 lần ở 390 (chụp lúc băng đang hoạt ảnh, không do phiên này) — chạy lại `CHI='menu|solo'` 360+390: XANH; coop/pvp/online 4 cỡ: không lỗi. Sau rebase (cấp thẻ, cộng hưởng 2): đủ 4 cỡ XANH (CPU/khung 19,0 ms).

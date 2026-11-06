@@ -4,7 +4,7 @@
 // trận SOLO tới wave 12 (có trùm; triệu hồi, ghép kéo + chạm–chạm, xem nhanh, dừng/tiếp, tốc độ) → CO-OP, PVP với máy →
 // sảnh ONLINE (máy chủ giả) → cộng hưởng đá/băng (thap-kt-conghuong.js) → kết quả thắng/thua → chơi lại. Ở 360×780, 390×844, 430×932 (DPR 3) và 1280×800.
 // TRƯỢT khi có: lỗi trang / console · ảnh tải hỏng (4xx/5xx) · phần tử ra ngoài màn / nút bị nút khác đè · chữ tràn,
-// ảnh méo, cuộn ngang (thap-kt-tran-do.js) · chân dung lọt khung (thap-kt-vach.js) · ảnh bị phóng mờ (px hiển thị > 1,25 ×
+// ảnh méo, cuộn ngang (thap-kt-tran-do.js) · CPU mỗi khung trận chuẩn vượt mốc +35% (thap-kt-nong.js; CHI=nong) · chân dung lọt khung (thap-kt-vach.js) · ảnh bị phóng mờ (px hiển thị > 1,25 ×
 // px ảnh gốc ở DPR 3) · vẽ tay (thap-kt-vetay.js) · màn trống/đen · fps trận < 45 · kẹt (wave không chạy, nút không phản hồi).
 // Chạy (gốc repo):
 //   python3 -m http.server 8765 &
@@ -514,6 +514,12 @@ async function online(b, W, H, D, co) {
   if (CHI.test('sanh') || CHI.test('online')) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-online-sanh.js')], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log('  ✓ sảnh online (thap-kt-online-sanh.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^FAIL|Error/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-online-sanh.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'sanh', loai: 'online sảnh', chi: l.slice(0, 300), anh: '' }); console.log('  ✗ sảnh online: ' + ds.length + ' dòng (node tools/thap-kt-online-sanh.js)'); }
+  }
+  // NÓNG MÁY (tools/thap-kt-nong.js): trận chuẩn wave 13 bàn ~12 ụ, iPhone 13 DPR 3, 45 s — CPU trung bình mỗi khung không được
+  // vượt mốc (tools/thap-kt-nong-moc.json) quá 35 % (máy kiểm dao động ±10 %). Chạy RIÊNG trước khi mở trình duyệt khác (đo đúng).
+  if (CHI.test('nong') || CHI.test('solo')) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nong.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { GIAY: '45', CHE: 'solo', BO_HOME: '1', TEN: 'hoiquy', BASE, OUT }), timeout: 600000 }); console.log('  ' + String(o).trim().split('\n').filter(l => /✓|✗/.test(l)).join('\n  ')); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-nong.js lỗi ' + e.status])) LOI.push({ co: '390x844', buoc: 'nong', loai: 'nóng máy (CPU/khung)', chi: l, anh: '' }); console.log('  ' + (ds.join('\n  ') || '✗ nóng máy')); }
   }
   const b = await chromium.launch();
   for (const [W, H, D] of SIZES) {

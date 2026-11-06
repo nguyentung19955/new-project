@@ -24,7 +24,11 @@ const REN = {
   cv: null, ctx: null, s: 1, dpr: 1, anh: {}, nen: null, xam: {}, trang: {}, cham: {}, cache: {}, t: 0, thieu: new Set(), dt: 0, a: 1, _vet: {}, _glow: {},
 
   init(cv) {
-    this.cv = cv; this.ctx = cv.getContext('2d', { alpha: false }); // canvas đục: trình duyệt khỏi trộn nền khi ghép lớp
+    // NỀN TĨNH = 1 canvas DOM riêng (#cv-nen) nằm DƯỚI canvas trận, dựng 1 lần (lamNen). Canvas trận trong suốt: mỗi khung chỉ
+    // xoá + vẽ vật động. Trước đây mỗi khung vẽ lại cả tấm nền phóng 2×→3× (lọc 'high') ≈ 45% thời gian vẽ → máy nóng (tuvan/nong).
+    this.nen = document.createElement('canvas'); this.nen.id = 'cv-nen'; this.nen.setAttribute('aria-hidden', 'true'); this.nen.width = this.nen.height = 0;
+    cv.parentNode.insertBefore(this.nen, cv);
+    this.cv = cv; this.ctx = cv.getContext('2d');
     this.coLai(); // đổi cỡ/xoay/pageshow/visualViewport: taitai.js hoiKhung() gọi lại coLai()
     if (document.fonts) document.fonts.addEventListener('loadingdone', () => { this._chu = null; this.donCache(); }); // phông về muộn: dựng lại ảnh chữ
     // quay lại trang/tab (iOS có thể đã xoá vùng nhớ canvas khi chạy nền) → dựng lại nền; ảnh lỗi → thử tải lại ngay
@@ -68,6 +72,7 @@ const REN = {
     // cỡ CSS khớp CHÍNH XÁC số điểm ảnh canvas → 1 điểm canvas = 1 điểm màn (không bị kéo giãn/lọc lại)
     const r = thuc / this.dpr;
     this.cv.style.width = (this.cv.width * r / (this.s * thuc)) + 'px'; this.cv.style.height = (this.cv.height * r / (this.s * thuc)) + 'px';
+    this.nen.style.width = this.cv.style.width; this.nen.style.height = this.cv.style.height;
     this.min(this.ctx); this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round'; // nét vẽ (vòng, tia, sét) đầu tròn, khử răng cưa
     this.donCache(); this._chu = null;
     if (G.ban.length) this.lamNen();
@@ -77,17 +82,24 @@ const REN = {
   // bật lọc ảnh chất lượng cao cho mọi ngữ cảnh vẽ 2D
   min(x) { x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; return x; },
   c2d(c) { return this.min(c.getContext('2d')); },
-  // theo dõi thời gian khung: chỉ lùi 3× → 2× khi máy THẬT SỰ không giữ nổi 45 khung/giây VÌ VẼ NẶNG:
-  // TB khoảng khung > 22 ms suốt 5 s VÀ TB thời gian JS mỗi khung > 11 ms. Trước đây ngưỡng 18 ms / 3 s, không xét máy bận → iPhone
-  // chế độ Nguồn điện thấp (Safari khoá 30 Hz) hay vài cú giật lúc nổ trùm là tụt hẳn về 2× cho tới hết phiên → mọi hình phóng 1.5× (mờ).
+  // ĐỘ PHÂN GIẢI THÍCH ỨNG (chống nóng máy — tuvan/nong): bắt đầu đúng mật độ thật (3× nét); máy GỒNG kéo dài → lùi 2× (rồi 1,5× chỉ
+  // khi bật Tiết kiệm pin hoặc máy 2×). "Gồng" = khoảng khung > 1,3 × mục tiêu (16,7 ms; 33 ms khi tiết kiệm pin) suốt 4 s, HOẶC JS > 11 ms.
+  // Trước đây chỉ xét JS → Safari vẽ canvas ngoài JS nên không bao giờ lùi dù máy nóng. Khoá 30 Hz đều của "Nguồn điện thấp"
+  // (khung ~33 ms, rất đều) KHÔNG tính là gồng → không mờ oan. Đang kéo/ghép: không dựng lại canvas giữa chừng.
   doKhung(dt) {
-    if (this.dpr <= 2 || !G.ban.length || G.dung || !(dt > 0) || dt > 0.1 || (G.debug && G.debug.dpr)) return;
-    if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && (GF.cam || GF.mg.length || GF.ve.length))) return; // đang kéo/ghép: không dựng lại cả canvas giữa chừng (khựng ~0,8 s) — đợi thả xong
-    const v = (this._viec || 0) / 1000;
+    if (!G.ban.length || G.dung || !(dt > 0) || dt > 0.1 || (G.debug && G.debug.dpr)) return;
+    if ((typeof UI !== 'undefined' && UI.keo) || (typeof GF !== 'undefined' && (GF.cam || GF.mg.length || GF.ve.length))) return;
+    const tk = typeof TKP !== 'undefined' && TKP.on(), muc = tk ? 1 / 30 : 1 / 60, v = (this._viec || 0) / 1000;
     this._ft = this._ft == null ? dt : this._ft * 0.96 + dt * 0.04;
+    this._fj = this._fj == null ? 0 : this._fj * 0.96 + Math.abs(dt - this._ft) * 0.04;
     this._fv = this._fv == null ? v : this._fv * 0.96 + v * 0.04;
-    if (this._ft > 0.022 && this._fv > 0.011) {
-      if ((this._cham = (this._cham || 0) + dt) > 5) { this.dprMax = 2; this._ft = this._fv = null; this._cham = 0; this.coLai(); }
+    const khoa30 = !tk && Math.abs(this._ft - 1 / 30) < 0.003 && this._fj < 0.0025;
+    const nang = (this._ft > muc * 1.3 && !khoa30) || this._fv > 0.011;
+    if (typeof TKP !== 'undefined') TKP.baoNang(dt, nang);
+    const san = tk || (devicePixelRatio || 1) <= 2 ? 1.5 : 2;
+    if (this.dpr <= san) return;
+    if (nang) {
+      if ((this._cham = (this._cham || 0) + dt) > 4) { this.dprMax = this.dpr > 2 ? 2 : 1.5; this._ft = this._fv = this._fj = null; this._cham = 0; this.coLai(); }
     } else this._cham = Math.max(0, (this._cham || 0) - dt * 2);
   },
   // thu nhỏ chất lượng cao: giảm một nửa nhiều bước (mỗi bước lọc 'high') tới khi còn ≤ 2× đích, rồi mới vẽ lần cuối
@@ -436,7 +448,7 @@ const REN = {
   },
   lamNen0() {
     this._diuTam = false;
-    const c = this.nen || (this.nen = document.createElement('canvas'));
+    const c = this.nen;
     const dn = this.laIOS ? Math.min(2, this.dpr) : this.dpr, q = dn / this.dpr;
     const k = this.s * dn;
     c.width = Math.round(this.cv.width * q); c.height = Math.round(this.cv.height * q);
@@ -585,8 +597,11 @@ const REN = {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (this._choNen && G.ban.length && !(performance.now() - this._tNen < 1500)) this.lamNen(); // nền tạm → thử dựng lại
     if (G.debug && G.debug.log && !(performance.now() - (this._tLog || 0) < 10000)) { this._tLog = performance.now(); console.log('[bo-nho]', JSON.stringify(this.boNho())); }
-    if (!(this.nen && this.nen.width)) { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
-    if (this.nen && this.nen.width) ctx.drawImage(this.nen, 0, 0, this.cv.width, this.cv.height);
+    // nền nằm ở canvas DOM #cv-nen bên dưới → chỉ xoá; nền chưa dựng được: lót 1 màu đặc như cũ
+    const coNen = this.nen.width > 2 && G.ban.length > 0;
+    if (this._nenHien !== coNen) { this._nenHien = coNen; this.nen.style.visibility = coNen ? '' : 'hidden'; }
+    if (coNen) ctx.clearRect(0, 0, this.cv.width, this.cv.height);
+    else { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
     if (!G.ban.length) return;
     this.veDongChay(ctx);

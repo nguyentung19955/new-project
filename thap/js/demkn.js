@@ -41,15 +41,39 @@ const DEMKN = {
     return true;
   },
   // tấm đếm ở đáy ô (x giữa ô, yDay = mép dưới trong của ô), c = cạnh ô
+  // CHỐNG NÓNG MÁY: tấm đếm dựng sẵn thành ẢNH (đúng điểm ảnh thiết bị) theo nội dung — chỉ dựng lại khi số đổi
+  // (trước: mỗi khung đo chữ + viền chữ + tô chữ cho từng ụ). Đặt ảnh đúng lưới điểm ảnh → chữ nét y hệt vẽ trực tiếp.
   ve(ctx, T, B, x, yDay, c, al) {
     const v = this.lay(T, B); if (!v) return;
-    const h = Math.max(9, c * 0.2), f = h * 0.7, ic = h * 0.92, gap = h * 0.12, pad = h * 0.42;
+    const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
+    if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
+    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + v.m.map(p => p.ic + ':' + p.s).join(',');
+    let a = REN.cGet(key);
+    if (!a) {
+      if (!REN.img('h2_tag')) return;
+      const hl = hp / k, x0 = this.rong(v, hl);
+      a = document.createElement('canvas'); a.width = Math.ceil(x0 * k) + 2; a.height = Math.ceil(hl * k) + 3;
+      const q = REN.c2d(a); q.setTransform(k, 0, 0, k, 1, 1);
+      if (!this.ve0(q, v, x0 / 2, hl + 1, hl, 1)) return;
+      a._w = x0; REN.cSet(key, a);
+    }
+    const dx = Math.round(m.a * (x - a._w / 2) + m.e) - 1, dy = Math.round(m.d * (yDay - hp / k - 1) + m.f) - 1;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = al; ctx.drawImage(a, dx, dy); ctx.restore();
+  },
+  rong(v, h) {
+    const x = REN.ctxNong ? REN.ctxNong() : document.createElement('canvas').getContext('2d'), f = h * 0.7, ic = h * 0.92, gap = h * 0.12, pad = h * 0.42;
+    x.font = '900 ' + f.toFixed(2) + 'px ' + FONT.display;
+    let w = pad * 2; for (let i = 0; i < v.m.length; i++) w += ic + gap + x.measureText(v.m[i].s).width + (i ? h * 0.3 : 0);
+    return w;
+  },
+  ve0(ctx, v, x, yDay, h, al) {
+    const f = h * 0.7, ic = h * 0.92, gap = h * 0.12, pad = h * 0.42;
     ctx.save();
     ctx.font = '900 ' + f.toFixed(2) + 'px ' + FONT.display; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     let w = pad * 2; for (let i = 0; i < v.m.length; i++) w += ic + gap + ctx.measureText(v.m[i].s).width + (i ? h * 0.3 : 0);
     const y = yDay - h - 1; let xx = x - w / 2;
     ctx.globalAlpha = al;
-    if (!this.khung(ctx, xx, y, w, h)) { ctx.restore(); return; }
+    if (!this.khung(ctx, xx, y, w, h)) { ctx.restore(); return false; }
     xx += pad;
     for (let i = 0; i < v.m.length; i++) {
       const p = v.m[i]; if (i) xx += h * 0.3;
@@ -60,7 +84,7 @@ const DEMKN = {
       ctx.fillStyle = v.sang ? '#ffe46b' : '#f2f6fa'; ctx.fillText(p.s, xx, y + h / 2 + 0.5);
       xx += ctx.measureText(p.s).width;
     }
-    ctx.restore();
+    ctx.restore(); return true;
   },
 
   // ---------- DOM: số ụ trên bàn ở thẻ bộ bài (mình) + dải thẻ bên kia ----------

@@ -199,7 +199,7 @@ const CHAT = {
         return r;
       };
     }
-    const f = () => { try { this.veNutTran(); } catch (e) { } requestAnimationFrame(f); };
-    requestAnimationFrame(f);
+    // nút CHAT trong trận: chạy trong vòng rAF chung của UI (1 vòng duy nhất, chống nóng máy)
+    UI.moiKhung.push(() => this.veNutTran());
   },
 };

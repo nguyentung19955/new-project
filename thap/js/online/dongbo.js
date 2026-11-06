@@ -69,7 +69,7 @@ const ONS = {
       this._vis = (e) => this.khiHien(e);
       document.addEventListener('visibilitychange', this._vis); addEventListener('pageshow', this._vis); addEventListener('pagehide', this._vis);
     }
-    if (!this._raf) { const f = () => { this.canh(); this._raf = requestAnimationFrame(f); }; this._raf = requestAnimationFrame(f); }
+    if (!this._raf) { this._raf = true; UI.moiKhung.push(() => { if (this.on) this.canh(); }); } // canh trong vòng rAF chung của UI
   },
   // vào lại giữa trận (tải lại trang / REJOIN): đặt wave / tim / bàn từ dữ liệu trên máy chủ
   khoiPhuc() { this.dongBoLai(true); },
