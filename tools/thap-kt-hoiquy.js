@@ -320,7 +320,7 @@ function KT_SINHDOI() {
       if (dem(B) !== n0) loi.push(ten + ': số ụ ' + n0 + '→' + dem(B) + ' (phải giữ nguyên: −1 ghép +1 sinh đôi)');
       if (moi.length !== 1) { loi.push(ten + ': ' + moi.length + ' ụ sinh đôi'); continue; }
       const T = moi[0];
-      if (T.sao !== sao) loi.push(ten + ': ụ sinh đôi ' + T.sao + '★ (phải ' + sao + '★)');
+      if (T.sao !== sao && T.sao !== Math.min(LUAT.saoMax, sao + 1)) loi.push(ten + ': ụ sinh đôi ' + T.sao + '★ (phải ' + sao + '★, hoặc +1★ theo xác suất DCDW Berit)');
       if (day && T.o !== oa) loi.push(ten + ': bàn đầy mà ụ sinh đôi không ở ô vừa trống');
       if (!B.deck.includes(T.id)) loi.push(ten + ': ụ sinh đôi ' + T.id + ' không thuộc bộ bài');
       if (B.t[ob].sao !== Math.min(LUAT.saoMax, sao + 1)) loi.push(ten + ': ụ ghép ra ' + B.t[ob].sao + '★');
@@ -522,6 +522,11 @@ async function online(b, W, H, D, co) {
   if (!process.env.CHI || /mang|nong|solo/.test(process.env.CHI)) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-mang.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { GIAY: '45', HOME_GIAY: '10' }), timeout: 600000 }); console.log('  ✓ mạng trong trận: ' + String(o).trim().split('\n').filter(l => /^solo:|Firebase/.test(l)).join(' | ')); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /ĐỎ|✗|LỖI/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-mang.js lỗi ' + e.status])) LOI.push({ co: '390x664x3', buoc: 'mang', loai: 'mạng trong trận', chi: l.trim(), anh: '' }); console.log(ds.join('\n')); }
+  }
+  // 12 ụ vàng CŨ sửa theo DCDW (Werewolf thức tỉnh theo xác suất, Rainbow PVP/co-op, Orbital thức tỉnh cả bàn, Sync Cannon cả bàn, Railgun bingo cùng loại, Tường Vàng, Merge King, Twin +1★, Star Cannon, Evolver 7★, Mirror Gate) — tools/thap-kt-vang-sua.js
+  if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-sua.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 12 ụ vàng sửa theo DCDW (thap-kt-vang-sua.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-sua.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangsua', loai: 'sửa ụ vàng DCDW', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ sửa ụ vàng: lỗi chạy'); }
   }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,

@@ -203,7 +203,7 @@ SKILLS.mortar = { // Súng Cối (Nade): bắn quái ngẫu nhiên, đạn vòng
   },
 };
 // ============ VÀNG ============
-SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát thương, đủ hàng dọc +tốc bắn; tia xuyên
+SKILLS.railgun = { // Railgun (Removal Tee): BINGO — hàng ngang ĐẦY Railgun +sát thương, cột dọc ĐẦY Railgun +tốc bắn; tia xuyên
   vai: 'tc', dmg: 70, toc: 0.33, nham: 'dau', // đợt vai trò: −14% (đơn mục tiêu vượt trần ngách Huyền thoại)
   bingo(B, T) {
     const c = T.o % 5, h = (T.o / 5) | 0; let ngang = 0, doc = 0;
@@ -211,11 +211,14 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
     for (let i = 0; i < 3; i++) { const X = B.t[i * 5 + c]; if (X && X.id === 'railgun' && !X.st.da) doc++; }
     return { ngang, doc };
   },
-  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Row ' + b.ngang + '/5 · Column ' + b.doc + '/3'; },
+  // DCDW Removal Tee: chỉ tính HÀNG/CỘT ĐẦY toàn Railgun (cùng loại ụ; ô đá không tính) — không thưởng hàng dở dang.
+  //   HÀNG NGANG đủ 5 Railgun → +200% sát thương · CỘT DỌC đủ 3 Railgun → +150% tốc bắn (cả hai cùng lúc được)
+  BINGO_DMG: 2.0, BINGO_TOC: 1.5,
+  mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'BINGO counts Railguns only · full row ' + b.ngang + '/5 → +' + Math.round(this.BINGO_DMG * 100) + '% damage · full column ' + b.doc + '/3 → +' + Math.round(this.BINGO_TOC * 100) + '% fire rate'; },
   capNhat(G, B, T) {
     const b = this.bingo(B, T);
-    T.buf.dmg += (b.ngang - 1) * 0.12 + (b.ngang >= 5 ? 1 : 0);
-    T.buf.toc += (b.doc - 1) * 0.12 + (b.doc >= 3 ? 1 : 0);
+    if (b.ngang >= 5) T.buf.dmg += this.BINGO_DMG;
+    if (b.doc >= 3) T.buf.toc += this.BINGO_TOC;
     T.bingo = b.ngang >= 5 || b.doc >= 3;
     return false;
   },
@@ -224,32 +227,63 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
     SND.nap();
   },
 };
-SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn thường; khi GHÉP → cửa sổ bắn phá từ trời 20 s (phép tạm thời, không phải DPS thường trực)
+SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thường. DCDW Mafdet: GHÉP Vệ Tinh → MỌI Vệ Tinh đang có trên bàn THỨC TỈNH
+  //   (23 s ở LV9, +1 s/cấp thẻ → 29 s LV15); mỗi Vệ Tinh thức tỉnh tự bắn LOẠT BOM nổ lan (số bom theo sao). Ghép mà bàn không còn Vệ Tinh nào
+  //   (2 Vệ Tinh đem ghép ra ụ khác) → vẫn gọi 1 đợt bắn phá từ trời ngắn hơn (dự phòng cũ, 12 s) để lần ghép không mất trắng.
   vai: 'db', dmg: 0, toc: 0,
-  mo: (T) => ['STANDBY', 'UPLINK (2+ Orbitals)', 'BOMBARDMENT'][Math.max(1, giaiDoan(T)) - 1] + ' · on merge: orbital strike 20s (' + Math.round(SKILLS.orbital.phaoDmg(G.ban[T.ban], T.sao + 1)) + ' per lance)',
-  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.6 + (T.pha || 0)) * 0.5,
-  sangDau: (T) => (T.gd === 3 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // không có ảnh 3 dạng: dạng thức tỉnh = đầu sáng rực + hào quang fx_awaken
-  capNhat() { return true; },
-  // mốc sao chung 'khac' (3★ +20% nhịp · 5★ +25% · 7★ +30% hiệu lực) — trước đây chỉ là chữ, Vệ Tinh không bắn nên không áp; nay áp lên đợt bắn phá
-  //   (sao của ụ Vệ Tinh đem ghép = phaoSao − 1). Chỉ huy RAGE (+100% toàn bàn) cũng áp lên giáo trời.
-  mocK: (sao) => (sao - 1 >= 5 ? 1.25 : 1) * (sao - 1 >= 7 ? 1.3 : 1),
-  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * hsLv(B, 'orbital') * SKILLS.orbital.mocK(sao) * (B && B.cuong > 0 ? 2 : 1),
-  ghep(G, B, a, b) {
-    B.phao = 20; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2;
-    const c = B.o[b.o]; FX.chu1(c.x, c.y - 40, 'ORBITAL STRIKE!', '#9fe6ff', 16, 'to');
-    SND.mv();
+  dai: (B) => knThe(B, 'orbital') || 23,                                    // giây thức tỉnh (cấp thẻ)
+  soBom: (T) => 2 + Math.ceil(T.sao / 2) + (ms(T, 7) ? 1 : 0),              // 1★ 3 · 3★ 4 · 5★ 5 · 7★ 7 (JUSTICE RAIN +1)
+  nhip: (T) => 1.8 / (ms(T, 3) ? 1.2 : 1),                                  // 3★ QUICK HANDS: loạt nhanh 20%
+  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9,
+  mo: (T) => (T.thucT > 0 ? 'AWAKENED ' + Math.ceil(T.thucT) + 's · ' : '') + 'merging Orbitals awakens EVERY Orbital on the board for ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's: salvo of ' + SKILLS.orbital.soBom(T) + ' bombs every ' + SKILLS.orbital.nhip(T).toFixed(1) + 's (' + Math.round(SKILLS.orbital.bomDmg(G.ban[T.ban], T)) + ' area damage each)',
+  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (T.thucT > 0 ? 2.2 : 0.6) + (T.pha || 0)) * 0.5,
+  sangDau: (T) => (T.thucT > 0 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // dạng thức tỉnh = ảnh dạng 3 + đầu sáng rực
+  capNhat(G, B, T, dt) {
+    if (!(T.thucT > 0)) return true;
+    T.thucT = Math.max(0, T.thucT - dt); T.salvo = (T.salvo || 0) - dt;
+    if (T.salvo > 0) return true;
+    const ds = dsMucTieu(B).filter(E => !E.chet); if (!ds.length) { T.salvo = 0.2; return true; }
+    T.salvo += this.nhip(T); if (T.salvo < 0) T.salvo = 0.2;
+    const n = this.soBom(T), dmg = this.bomDmg(B, T);
+    for (let i = 0; i < n; i++) { const E = ds[Math.floor(Math.random() * ds.length)]; G.hu.push({ k: 'vetinh', t: -i * 0.08, song: 0.5, E, x: E.x + rnd(-8, 8), y: E.y, dmg, r: 34, B, da: false, vang: 1 }); }
+    T.sang = 1; giat(T, 0.6);
+    if (!B.ai) SND.nap();
+    return true;
   },
-  phaoBan(G, B, dt) { // gọi từ vòng cập nhật bàn khi B.phao > 0
+  thucTinh(G, B) { // gọi sau ghép: đánh thức MỌI Vệ Tinh trên bàn (kể cả ụ vừa ghép ra nếu là Vệ Tinh)
+    const dai = this.dai(B), ds = B.t.filter(X => X && X.id === 'orbital' && !X.st.da);
+    for (const X of ds) { X.thucT = dai; X.thucMax = dai; X.salvo = 0.4 + 0.15 * (X.o % 5); X.sang = 1; if (typeof VX !== 'undefined' && VX.hu) VX.hu(X); }
+    return ds.length;
+  },
+  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * hsLv(B, 'orbital') * (B && B.cuong > 0 ? 2 : 1),
+  ghep(G, B, a, b) {
+    const n = this.thucTinh(G, B);
+    if (!n) { B.phao = 12; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2; } // dự phòng: không còn Vệ Tinh nào trên bàn
+    const c = B.o[b.o]; FX.vong1(c.x, c.y, 10, 90, '#9fe6ff', 0.5, 4); FX.sang(0.25, '#9fe6ff');
+    if (!B.ai) SND.thucTinh(); SND.mv();
+  },
+  phaoBan(G, B, dt) { // dự phòng (không còn Vệ Tinh): 1 giáo / 0.32 s
     B.phao -= dt; B.phaoT -= dt;
     if (B.phaoT > 0) return;
-    B.phaoT = Math.max(0, B.phaoT + 0.32 / (B.phaoSao - 1 >= 3 ? 1.2 : 1)); // cộng dồn: đúng 1 giáo / 0.32 s (62 giáo / 20 s; Vệ Tinh 3★+ QUICK HANDS: /1.2) ở mọi tốc độ khung hình
+    B.phaoT = Math.max(0, B.phaoT + 0.32);
     const E = quaiNgauNhien(B); if (!E) return;
     G.hu.push({ k: 'vetinh', t: 0, song: 0.5, E, x: E.x + rnd(-6, 6), y: E.y, dmg: this.phaoDmg(B, B.phaoSao), B, da: false });
   },
 };
-SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): dựng tường ánh sáng chặn đường rồi nổ
+SKILLS.wallgen = { // Máy Dựng Tường (Cleopatra): định kỳ dựng tường ánh sáng chặn đường rồi nổ;
+  //   DCDW Cleopatra: khi GHÉP Máy Dựng Tường → TƯỜNG VÀNG mạnh hơn hẳn (đứng 6 s, nổ ×6 sát thương tường thường, vùng nổ to) trước quái đầu
   vai: 'tc', dmg: 26, toc: 1,
-  mo: (T) => 'Wall holds ' + (2.4 + 0.3 * T.sao).toFixed(1) + 's, then explodes',
+  VANG_SONG: 6, VANG_K: 6,
+  mo: (T) => 'Wall holds ' + (2.4 + 0.3 * T.sao).toFixed(1) + 's, then explodes · on merge: GOLDEN WALL holds 6s, explodes ×6',
+  ghep(G, B, a, b) { // TƯỜNG VÀNG (mọi chế độ; online: kỹ năng khi ghép chạy y hệt ở 2 máy)
+    const T0 = a.id === 'wallgen' ? a : b, E = quaiDau(B);
+    let pi, s;
+    if (E) { pi = E.p; s = Math.min(G.duong[pi].len - 10, E.s + 34); }
+    else { pi = G.duong.findIndex(p => p.ban === B.i); if (pi < 0) pi = 0; s = G.duong[pi].len * 0.55; }
+    const [x, y, goc] = viTri(G.duong[pi], s);
+    G.hu.push({ k: 'tuong', t: 0, song: this.VANG_SONG, p: pi, s, x, y, goc, T: null, B, vang: true, dmg: dmgU(T0) * 7 * this.VANG_K * (1 + 0.85 * T0.sao) / (1 + 0.85 * (T0.sao - 1)) });
+    FX.sang(0.25, '#ffd23f'); FX.vong1(x, y, 10, 70, '#ffd23f', 0.5, 4); if (!B.ai) SND.thucTinh();
+  },
   capNhat(G, B, T, dt) {
     const tg = G.hu.find(o => o.k === 'tuong' && o.T === T);
     if (tg) { xoayDau(T, null, dt, tg.x, tg.y); return true; }
@@ -399,13 +433,15 @@ HU.rail = { // railgun: vạch nạp → tia xuyên
 };
 HU.vetinh = { // tia bắn phá từ đỉnh màn hình
   cap(G, o) {
+    if (o.t < 0) return false; // loạt bom Vệ Tinh thức tỉnh: rơi so le
     if (!o.E.chet) { o.x = o.E.x; o.y = o.E.y; }
     if (!o.da && o.t > 0.16) {
-      o.da = true; noLan(o.x, o.y, 30, o.dmg, o.B, { mau: '#9fe6ff' });
-      FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); FX.lac(2);
+      o.da = true; noLan(o.x, o.y, o.r || 30, o.dmg, o.B, { mau: '#9fe6ff' });
+      FX.no('dien', o.x, o.y, 70, 0.35); FX.no('no_phao', o.x, o.y, 60, 0.4); if (!o.vang || TVX.duocLac && TVX.duocLac(0.5)) FX.lac(2);
     }
   },
   ve(ctx, o, R) {
+    if (o.t < 0) return;
     const u = Math.min(1, o.t / 0.16);
     ctx.globalCompositeOperation = 'lighter';
     ctx.globalAlpha = o.da ? Math.max(0, 1 - (o.t - 0.16) / 0.3) : 1;
@@ -415,23 +451,38 @@ HU.vetinh = { // tia bắn phá từ đỉnh màn hình
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
-HU.tuong = { // tường ánh sáng chặn đường rồi nổ
+HU.tuong = { // tường ánh sáng chặn đường rồi nổ · o.vang = TƯỜNG VÀNG (ghép Máy Dựng Tường): to hơn, đứng lâu, nổ lớn
   cap(G, o) {
-    const T = o.T;
     for (const E of G.quai) if (!E.chet && E.p === o.p && E.s < o.s && E.s > o.s - 26) { E.s = Math.max(E.s - 0.01, Math.min(E.s, o.s - 14)); E.chan = 0.05; }
     if (o.t >= o.song - 0.02 && !o.no) {
-      o.no = true; noLan(o.x, o.y, 58, o.dmg, o.B, { mau: '#9ffcff' });
-      FX.no('dien', o.x, o.y, 110, 0.4); FX.no('no_phao', o.x, o.y, 100, 0.5); FX.lac(5); FX.vong1(o.x, o.y, 8, 60, '#7ffcff', 0.35, 4); SND.no(0.7);
+      o.no = true; const r = o.vang ? 84 : 58, mau = o.vang ? '#ffd23f' : '#9ffcff';
+      noLan(o.x, o.y, r, o.dmg, o.B, { mau });
+      FX.no('dien', o.x, o.y, o.vang ? 170 : 110, 0.4); FX.no('no_phao', o.x, o.y, o.vang ? 170 : 100, 0.5); FX.lac(o.vang ? 8 : 5); FX.vong1(o.x, o.y, 8, r + 2, o.vang ? '#ffe46b' : '#7ffcff', 0.35, 4); SND.no(o.vang ? 1 : 0.7);
+      if (o.vang) { FX.vong1(o.x, o.y, 12, r * 1.5, '#ffd23f', 0.55, 6); FX.tiaLua(o.x, o.y, 22, '#ffe46b', 260, 12); FX.sang(0.3, '#ffd23f'); }
     }
-    return G.ban[T.ban].t[T.o] !== T && o.t > 0.2 && false;
+    return false;
   },
   ve(ctx, o, R) {
     const u = o.t / o.song, a = Math.min(1, o.t / 0.15) * (u > 0.85 ? 0.5 + 0.5 * Math.sin(o.t * 50) : 1);
-    const nx = -Math.sin(o.goc), ny = Math.cos(o.goc), L = DUONG_RONG * 0.62;
+    const nx = -Math.sin(o.goc), ny = Math.cos(o.goc), L = DUONG_RONG * (o.vang ? 0.72 : 0.62);
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
+    if (o.vang && typeof FXU !== 'undefined' && FXU.co('fx_wallgen_vang') && R.img('fx_wallgen_vang')) { // TƯỜNG VÀNG = ảnh ChatGPT (CAN-VE-3.json) dựng ngang đường
+      const im = R.img('fx_wallgen_vang'), w = L * 2.3, h = w * im.height / im.width;
+      ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc + Math.PI / 2); ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(im, -w / 2, -h / 2, w, h); ctx.restore();
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * (0.25 + 0.15 * Math.sin(o.t * 12)); R.anhGiua(ctx, R.cham1('#ffd23f'), o.x, o.y, L * 2.2);
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
+    }
+    if (o.vang) { // chờ ảnh: tường ánh sáng PNG tô VÀNG, dày hơn, 2 lớp
+      const day = 13 + 3 * Math.sin(o.t * 24);
+      PX.tia(ctx, o.x - nx * L, o.y - ny * L, o.x + nx * L, o.y + ny * L, day * 1.5, '#ffd23f', a * 0.85, o.t * 60);
+      for (let k = -2; k <= 2; k++) { const ox = Math.cos(o.goc) * k * 4, oy = Math.sin(o.goc) * k * 4; R.tia(ctx, 'tia_lua', o.x - nx * L + ox, o.y - ny * L + oy, o.x + nx * L + ox, o.y + ny * L + oy, 18 - Math.abs(k) * 4, o.t * 150 + k * 40); }
+      for (const sg of [-1, 1]) R.anhGiua(ctx, R.cham1('#ffd23f'), o.x + nx * L * sg, o.y + ny * L * sg, 34 + 5 * Math.sin(o.t * 20));
+      ctx.globalAlpha = a * 0.35; R.anhGiua(ctx, R.cham1('#ffe46b'), o.x, o.y, L * 2);
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
+    }
     // tia chiếu từ ụ tới tường
     const T = o.T;
-    if (G.ban[T.ban].t[T.o] === T) { const [x, y] = dauNong(T); ctx.globalAlpha = a * 0.5; R.tia(ctx, 'tia_laser', x, y, o.x, o.y, 6, o.t * 200); ctx.globalAlpha = a; }
+    if (T && G.ban[T.ban].t[T.o] === T) { const [x, y] = dauNong(T); ctx.globalAlpha = a * 0.5; R.tia(ctx, 'tia_laser', x, y, o.x, o.y, 6, o.t * 200); ctx.globalAlpha = a; }
     // tấm tường ánh sáng: dải sáng dày + vạch quét + 2 cột phát ở mép đường
     ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
     const day = 9 + 2 * Math.sin(o.t * 30);

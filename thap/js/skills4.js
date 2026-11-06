@@ -243,13 +243,13 @@ HU.non = { // sóng trăng hình nón (cung tròn đồng tâm, không méo)
 // G6 · SCRAP FORGE (loren) — Vàng TC: KÉO bất kỳ ụ 1–3★ khác loại thả lên Forge (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ (+4% sát thương/cộng dồn,
 //      tối đa 60, giữ khi ghép lên sao); ăn ụ 3★ = ×3. Búa nóng nổ 30 px; ≥40 cộng dồn: mỗi phát văng 1 mảnh sắt nóng vào 2 quái.
 // =====================================================================================================
-SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn; KÉO ụ 1–3★ khác loại thả lên (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ;
+SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của mình, không phải Aurora/Jacheongbi DCDW; khác Fusion Archive = mạnh theo MỌI lần ghép): KHÔNG bắn; KÉO ụ 1–3★ khác loại thả lên (hoặc kéo Forge lên nó) → ăn: +f cộng dồn LÒ;
   // mỗi cộng dồn = +4% sát thương VĨNH VIỄN cho ụ Tấn công mạnh nhất trên bàn (sao cao nhất), tối đa 15 cộng dồn (+60%, trần mỗi ụ nhận)
   vai: 'db', dmg: 0, toc: 0,
   MAX: 15,
   f: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]),
   dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
-  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' → +' + 4 * (T.lo || 0) + '% damage to your best Attack turret' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3)'; },
+  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' → +' + 4 * (T.lo || 0) + '% damage to your best Attack turret' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.8 + (T.pha || 0)) * 0.2,
   capNhat(G, B, T) {
     const X = this.dich(B); T.forgeX = X;
@@ -283,7 +283,7 @@ SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (đợt vai trò): K
 // G7 · MIRROR GATE (guongcong) — Vàng ĐB (hồi h s): PVP chặn + PHẢN hiệu ứng ghép của đối thủ lên bàn bạn (Clamp/Scramble/−1★/Jam → đối thủ bị Kẹp 4 s;
 //      7★ ×2) · Trùm: chặn (không phản) · Co-op: khi đồng đội ghép ụ có hiệu ứng ghép → sao chép lên bàn bạn ở ½ sao · Solo: chặn 1 kỹ năng trùm / h s.
 // =====================================================================================================
-SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (đợt vai trò): ụ kề kháng khống chế (xác suất, trần 35%); hồi 20 s (7★ 15 s): PVP chặn + PHẢN 1 hiệu ứng,
+SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (ụ RIÊNG: cơ chế PHẢN khống chế của mình — không phải Bari DCDW): ụ kề kháng khống chế (xác suất, trần 35%); hồi 20 s (7★ 15 s): PVP chặn + PHẢN 1 hiệu ứng,
   // trùm: chặn 1 chiêu · CO-OP: sao chép 1 hiệu ứng ghép của đồng đội ở ½ sao. Không bắn.
   vai: 'ht', dmg: 0, toc: 0, napMau: '#bff6ff',
   khang: (T) => 0.15 * HOTRO.k(T),

@@ -306,7 +306,9 @@ const UP = {
     if (gdc) {
       const coGd = co && typeof laGrow === 'function' && laGrow(id);
       gdc.hidden = !coGd;
-      gdc.innerHTML = coGd ? ['All', 'Stage 1', 'Stage 2', 'Stage 3'].map((t, g) => '<button data-up="gd" data-g="' + g + '"' + (g === 0 ? ' class="chon"' : '') + '>' + t + '</button>').join('') : '';
+      const dg = coGd && GROW[id].dang; // ụ chỉ có vài dạng CỐ ĐỊNH (Sói: Thường / Thức tỉnh — quay lúc sinh, không lớn dần)
+      gdc.innerHTML = !coGd ? '' : dg ? [[0, 'All']].concat(dg.map(g => [g, upSC(GROW[id].ten[g - 1])])).map(([g, t]) => '<button data-up="gd" data-g="' + g + '"' + (g === 0 ? ' class="chon"' : '') + '>' + t + '</button>').join('')
+        : ['All', 'Stage 1', 'Stage 2', 'Stage 3'].map((t, g) => '<button data-up="gd" data-g="' + g + '"' + (g === 0 ? ' class="chon"' : '') + '>' + t + '</button>').join('');
     }
     this.ganXem(id);
     this.chonSao(this.sao, true);
@@ -453,6 +455,12 @@ const UP = {
     let ph = String(g.dk).split(/\s+\/\s+|\s+·\s+/);
     if (ph.length === 2) ph = ['Starting form'].concat(ph);
     if (ph.length !== 3) ph = null;
+    if (g.dang) { // dạng cố định (không lớn dần): chỉ hiện các dạng có thật, nối bằng "or"
+      return '<div class="up-gd">' + g.dang.map((k1) => { const k = k1 - 1, t = g.ten[k];
+        return '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt=""></div>' +
+          '<b>' + upEsc(upSC(t)) + '</b>' + (g.dangMo && g.dangMo[k] ? '<span>' + upEsc(upSC(g.dangMo[k])) + '</span>' : '') + '</div>'; }).join('<b class="up-hoac">or</b>') + '</div>' +
+        '<p class="up-phu">' + upEsc(upSC(g.dk)) + '.</p>';
+    }
     return '<div class="up-gd">' + g.ten.map((t, k) =>
       '<div class="up-gd1" style="--g:' + g.mau + '"><div class="anh"><img class="de" src="assets/de_chung.png" alt=""><img class="dau s' + (k + 1) + (anh ? '' : ' loc') + '" src="assets/' + anhTen(id + '_nong' + (anh ? '_s' + (k + 1) : '')) + '.png" alt="" onerror="this.onerror=null;this.src=\'' + iconOf(id) + '\'"></div>' +
       '<b>' + (k + 1) + ' · ' + upEsc(upSC(t)) + '</b>' + (ph && ph[k] ? '<span>' + upEsc(upSC(ph[k])) + '</span>' : '') + '</div>').join('<img class="up-mt" src="assets/mui_tiep.png" alt="›">') + '</div>' +

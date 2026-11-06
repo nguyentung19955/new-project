@@ -23,6 +23,7 @@ const HOTRO = {
   // ô tác dụng của ụ hỗ trợ (chỉ số ô) — 4 ô thẳng mặc định, sk.huong(T) cho hình riêng
   oDich(T) {
     const sk = SKILLS[T.id] || {}, c = T.o % 5, h = (T.o / 5) | 0, ds = [];
+    if (sk.toanBan) { for (let i = 0; i < 15; i++) if (i !== T.o) ds.push(i); return ds; } // Pháo Đồng Bộ (Dana): cả bàn
     for (const [dc, dh] of (sk.huong ? sk.huong(T) : [[-1, 0], [1, 0], [0, -1], [0, 1]])) { const cc = c + dc, hh = h + dh; if (cc >= 0 && cc < 5 && hh >= 0 && hh < 3) ds.push(hh * 5 + cc); }
     return ds;
   },
@@ -40,7 +41,7 @@ const HOTRO = {
   nhip(G, B, T, dt, rgb, chuKy, quay) {
     if (quay) T.goc += dt * quay; else xoayDau(T, null, dt);
     T.nhip = (T.nhip || 0) + dt / chuKy;
-    if (T.nhip >= 1) { T.nhip = 0; const ke = this.oDich(T).map(o => B.t[o]).filter(N => this.nhan(T, N) || (N && N !== T && SKILLS[T.id].hoTro && !SKILLS[T.id].chiTC && !N.st.da)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb }); }
+    if (T.nhip >= 1) { T.nhip = 0; const sk0 = SKILLS[T.id], ke = this.oDich(T).map(o => B.t[o]).filter(N => !(sk0.toanBan && N && !sk0.khop(T, N))).filter(N => this.nhan(T, N) || (N && N !== T && SKILLS[T.id].hoTro && !SKILLS[T.id].chiTC && !N.st.da)); if (ke.length) G.hu.push({ k: 'ping', t: 0, song: 0.18, T, ke, rgb }); }
   },
   apDung(B, dt) {
     if (dt && B.halo > 0) B.halo = Math.max(0, B.halo - dt);

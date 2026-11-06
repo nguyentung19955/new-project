@@ -145,9 +145,11 @@ function sinhDoi(B, sao, oNguon, ep) {
   const tc = !ep && typeof HOTRO !== 'undefined' && HOTRO.canTC ? HOTRO.canTC(B) : null, bo = tc && tc.length ? tc : B.deck; // cùng thiên vị Tấn công như triệu hồi thường
   const id = ep ? ep.id : bo[Math.floor(r() * bo.length)];
   if (B.t[o] || !G.rosterMap[id]) return null;
+  // DCDW Berit: 10% (LV9, +1%/cấp thẻ Twin Maker) ụ sinh đôi CAO HƠN 1★ (không vượt 7★) — online: máy chủ bàn quay, gói 'gh' mang đúng sao (ep.s)
+  if (ep && ep.s) sao = ep.s; else if (!ep && sao < LUAT.saoMax && r() < (knThe(B, 'sinhdoi') || 10) / 100) sao++;
   const T = sinhU(taoU(B, id, Math.max(1, Math.min(LUAT.saoMax, sao | 0)), o));
   B.t[o] = T;
-  B._tw = { o, id, s: T.sao };
+  B._tw = { o, id, s: T.sao, f: (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') };
   if (typeof VX !== 'undefined' && VX.sinhDoi) VX.sinhDoi(B, oNguon, T); else if (typeof VX !== 'undefined') VX.trieu(T);
   return T;
 }
@@ -243,6 +245,7 @@ function dmgU(T) {
   if (T.aurora > 0) d *= 1 + knThe(B, 'mimic') / 100; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
   if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (50% ở cấp đầu → 92% cấp 15, theo cấp thẻ Copycat)
   if (B.cuong > 0) d *= 2;
+  if (G.che === 'pvp') d *= SKILLS.dongbo.heSoDoiThu(B); // Pháo Đồng Bộ (Dana) của đối thủ: −sát thương nhẹ
   d *= heSoMocDmg(T); // mốc sao chung 5★/7★ (phattrien.js)
   return d;
 }
@@ -311,6 +314,7 @@ function trung(E, dmg, o) {
   if (!o.phu && !o.im) { if (crit) SND.crit(); else SND.trung(); }
   const vu = HOTRO.vuln(E); if (vu) dmg *= 1 + vu;     // suy yếu quái: mọi nguồn cộng lại, trần 25% (hotro.js)
   if (E.giapT > 0) dmg *= 0.75;                    // giáp đối thủ (PVP)
+  if (E.cvPT > 0) dmg *= 1 - (E.cvPK || 0);         // PVP: cầu vồng (Yuna) của đối thủ — quái trên vệt nhận ít sát thương hơn
   // hỗ trợ kề (hotro.js): sát thương có điều kiện (lộ / chậm / cầu vồng / đòn liên tiếp), chậm khi trúng, giết ngay, choáng khi chí mạng
   if (T && T.buf && !o.phu) { if (T.ht) dmg *= HOTRO.dkHeSo(T, E); dmg = HOTRO.khiTrung(T, E, dmg, crit, o); }
   E.hp -= dmg; E.flash = 0.09;
@@ -564,6 +568,7 @@ function capNhatQuai(dt) {
     const p = G.duong[E.p];
     E.flash = Math.max(0, E.flash - dt); E.vao = Math.min(1, E.vao + dt * 3); E.yeu = Math.max(0, E.yeu - dt);
     if (E.fbT > 0) E.fbT -= dt; if (E.azT > 0) E.azT -= dt;
+    if (E.cvT > 0) E.cvT -= dt; if (E.cvPT > 0) E.cvPT -= dt; // vệt cầu vồng: hết khi rời vệt 0,6 s (trước đây không giảm → dính mãi)
     if (E.vmT > 0) E.vmT -= dt; if (E.ywT > 0) E.ywT -= dt; if (E.loT > 0) E.loT -= dt; if (E.tpT > 0) E.tpT -= dt; if (E.tempoT > 0) E.tempoT -= dt;
     if (E.chamT > 0) { E.chamT -= dt; if (E.chamT <= 0) E.cham = 0; }
     if (E.docT > 0) { E.docT -= dt; E.docAcc = (E.docAcc || 0) + E.doc * dt; if (E.docAcc >= 1 || E.docT <= 0) { trung(E, E.docAcc, { crit: false, mau: '#9dff5a', im: E.docAcc < 4, B: E.docB }); E.docAcc = 0; } if (E.docT <= 0) E.doc = 0; if (E.chet) continue; } // hết độc → xoá dps độc (không sống lại khi bị gắn cờ độc sau)

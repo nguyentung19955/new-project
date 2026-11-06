@@ -23,7 +23,7 @@ const SUP = {
   nangsao:  { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.nangsao.them(T)) + '% LOW-STAR RATE' },
   hasao:    { icon: 'sup_khuech',  mau: '#ff4b3e', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.hasao.k(T)) + '% DAMAGE' },
   guongcong:{ icon: 'sup_khien',   mau: '#bff6ff', link: 'sup_link',      ke: true, chu: (T) => pct(Math.min(0.35, SKILLS.guongcong.khang(T))) + '% RESIST' },
-  dongbo:   { icon: 'sup_khuech',  mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.dongbo.v(T, Math.max(1, SKILLS.dongbo.dem(G.ban[T.ban], T)))) + '% SAME-STAR' },
+  dongbo:   { icon: 'sup_khuech',  mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.dongbo.v(T)) + '% SAME-STAR' },
   cauvong:  { icon: 'sup_khuech',  mau: '#ff6ad5', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.cauvong.k(T)) + '% VS RAINBOW' },
   lophanung:{ icon: 'sup_lanhgia', mau: '#9fe6ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.lophanung.k(T)) + '% VS SLOWED' },
 };

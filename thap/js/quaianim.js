@@ -94,7 +94,7 @@ Object.assign(REN, {
     if (lanh && !s.dong && c('cham')) s.cham = 1;
     if (E.docT > 0 && c('doc')) s.doc = 1;
     if (E.chayT > 0 && c('chay')) s.chay = 1;
-    if (E.cvT > 0 && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && c('khienvang')) s.yeu = 'khienvang'; else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
+    if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && c('khienvang')) s.yeu = 'khienvang'; else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
     s.n = (s.dong || 0) + (s.choang || 0) + (s.cham || 0) + (s.doc || 0) + (s.chay || 0) + (s.yeu ? 1 : 0);
     return s;
   },
@@ -189,9 +189,9 @@ Object.assign(REN, {
         if (!st.cham) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.2;
           this.anhGiua(ctx, this.cham1('#78D9F5'), x, y, co * 0.75); ctx.restore(); ctx.globalAlpha = 1; }
       } else E._lanhT = 0;
-      if ((E.yeu > 0 || E.cvT > 0 || E.giapT > 0) && !st.yeu) {
+      if ((E.yeu > 0 || E.cvT > 0 || E.cvPT > 0 || E.giapT > 0) && !st.yeu) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.28;
-        const mm = E.cvT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
+        const mm = E.cvT > 0 || E.cvPT > 0 ? ['#ff4b8a', '#ffd23f', '#4bff9a', '#4fb8ff', '#c77dff'][Math.floor(t * 6 + E.uid) % 5] : E.giapT > 0 ? '#ffd23f' : '#c77dff';
         this.anhGiua(ctx, this.cham1(mm), x, y, co * 1.15); ctx.restore(); ctx.globalAlpha = 1;
       }
       // ---- thân ----
