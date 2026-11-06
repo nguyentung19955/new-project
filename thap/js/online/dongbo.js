@@ -216,6 +216,7 @@ const ONS = {
     if (!T) return 0;
     let f = (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') + (T.banSao ? 'c' : '') + (T.st && T.st.da ? 'S' : '');
     if (T.epxung) f += 'e' + Math.round(T.epxung * 100) + ';'; if (T.lo) f += 'l' + T.lo + ';';
+    if (T.lc) f += 'r' + T.lc + ';'; if (T.kho) f += 'k' + T.kho + ';'; // Ember Relay: lửa · Fusion Archive: điểm lưu (vangmoi1.js)
     return [T.id, T.sao, f];
   },
   datO(B, o, s) {
@@ -230,6 +231,7 @@ const ONS = {
     if (T.id === 'soi') T.thuc = c.includes('w');
     T.banSao = c.includes('c'); T.st.da = c.includes('S');
     T.epxung = so('e') / 100; if (T.id === 'loren') T.lo = so('l');
+    if (T.id === 'lualien') T.lc = so('r'); if (T.id === 'luutru') T.kho = so('k');
   },
   apGhep(B1, d) {
     if (!d) return;
@@ -244,7 +246,8 @@ const ONS = {
       const cl = a.id === b.id && a.id === d.id && ghepDBHop(a, b); // ghép đặc biệt CÙNG LOẠI (Merge King + Merge King): tất định → chạy y hệt (cùng hiệu ứng/nhãn)
       const deck = B1.deck; B1.deck = [d.id]; // ụ ra = đúng ụ bạn kia nhận được (pick trong bộ 1 phần tử)
       G._pdEp = Array.isArray(d.pd) ? d.pd : null; // Pandora: đúng phép máy bạn đã quay
-      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; G._pdEp = null; }
+      G._hfEp = d.hf != null ? d.hf : null; // Hero Foundry: đúng ô anh hùng máy bạn đã chọn
+      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; G._pdEp = null; G._hfEp = null; }
     }
     const T = B1.t[d.b];
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }
@@ -434,12 +437,13 @@ const ONS = {
     g('ghep', (goc) => function (B, a, b, ep) {
       const ao = a && a.o, bo = b && b.o, laToi = self.on && b && b.ban === 0 && !self._apDung;
       const db = laToi && !ep && a && b ? !!ghepDBHop(a, b) : false; // ghép ĐẶC BIỆT (Teleporter / Copycat / Overclock / Forge / Merge King)
-      if (laToi) { G.ban[0]._tw = null; G.ban[0]._pd = null; }
+      if (laToi) { G.ban[0]._tw = null; G.ban[0]._pd = null; G.ban[0]._hf = null; }
       const r = goc.apply(this, arguments);
       if (laToi && r) {
         const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
         if (db) { v.db = 1; v.sa = self.oTT(G.ban[0].t[ao]); v.sb = self.oTT(G.ban[0].t[bo]); } // trạng thái đúng của CẢ 2 ô sau ghép đặc biệt
         const pd = G.ban[0]._pd; if (pd) v.pd = pd; // Pandora: phép đã quay
+        const hf = G.ban[0]._hf; if (hf != null) v.hf = hf; // Hero Foundry: ô anh hùng
         const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại
         self.gui('gh', v);
       }

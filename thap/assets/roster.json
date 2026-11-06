@@ -826,5 +826,49 @@
   "vai": "tc",
   "ho": "blast",
   "moi": "TUONG-MOI-20"
+ },
+ {
+  "id": "lualien",
+  "ten": "Ember Relay",
+  "bac": "vang",
+  "dcdw": "Kalaratri",
+  "kyNang": "Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit",
+  "vai": "tc",
+  "ho": "blast",
+  "ten_vi": "Lửa Tiếp Sức",
+  "kyNang_vi": "Ghép → chia lửa cho Ember Relay ở 4 ô kề; mỗi lửa +sát thương & chí mạng"
+ },
+ {
+  "id": "hopca",
+  "ten": "Quantum Choir",
+  "bac": "vang",
+  "dcdw": "Cosmem",
+  "kyNang": "+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate",
+  "vai": "tc",
+  "ho": "star",
+  "ten_vi": "Hợp Xướng Lượng Tử",
+  "kyNang_vi": "+sát thương theo số ụ cùng sao trên bàn (tối đa 7); 7★ +tốc bắn"
+ },
+ {
+  "id": "luutru",
+  "ten": "Fusion Archive",
+  "bac": "vang",
+  "dcdw": "Aurora",
+  "kyNang": "Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses",
+  "vai": "tc",
+  "ho": "summon",
+  "ten_vi": "Kho Lưu Hợp Nhất",
+  "kyNang_vi": "Mỗi lần ghép +1 điểm lưu vĩnh viễn (+sát thương); Archive + Archive nổ 3 xung"
+ },
+ {
+  "id": "xuonganh",
+  "ten": "Hero Foundry",
+  "bac": "vang",
+  "dcdw": "Kintia",
+  "kyNang": "Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)",
+  "vai": "db",
+  "ho": "amp",
+  "ten_vi": "Xưởng Anh Hùng",
+  "kyNang_vi": "Ghép 2 Foundry: 1 ô ngẫu nhiên thành ô ANH HÙNG 12 s (+tốc bắn cho ụ trên ô)"
  }
 ]

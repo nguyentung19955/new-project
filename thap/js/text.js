@@ -142,6 +142,11 @@ const TEXT = {
     chuato:       { name: 'Hive Queen',     skill: 'Breeds hunter drones. Active (3★+): SWARM kamikaze' },
     leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for endless stacks. Active (3★+): TIDAL BREATH sweeps the path' },
     khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets' },
+    // đợt vàng mới 1 (vangmoi1.js)
+    lualien: { name: 'Ember Relay', skill: 'Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit' },
+    hopca: { name: 'Quantum Choir', skill: '+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate' },
+    luutru: { name: 'Fusion Archive', skill: 'Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses' },
+    xuonganh: { name: 'Hero Foundry', skill: 'Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)' },
     ronglua:      { name: 'Wyrm Engine',    skill: 'Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path' },
   },
 };
