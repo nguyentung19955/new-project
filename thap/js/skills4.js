@@ -346,7 +346,7 @@ ghep = function (B, a, b, ep) {
 SKILLS.marionette = {
   vai: 'db', dmg: 9, toc: 0.8, nham: 'dau', napMau: '#a01848',
   ky: (T) => sao7(T, [10, 9.5, 9, 8.5, 8, 7.5, 7]), t: (T) => sao7(T, [2, 2.5, 3, 3.5, 4, 4.5, 5]),
-  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? 2 : 1) + ' enemy (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams others for 30% of its HP, then explodes ×8 (60 px)',
+  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? 2 : 1) + ' enemy (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams up to 6 others for 30% of its HP (capped), then explodes ×8 (60 px)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
     if (T.nap >= 1 && !G.hu.some(o => o.k === 'roi' && o.T === T)) {

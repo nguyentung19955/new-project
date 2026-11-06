@@ -10,10 +10,10 @@ const SUP = {
   chimang:  { icon: 'sup_chimang', mau: '#ff5a64', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.chimang.them(T)) + '% CRIT' },
   lanhgia:  { icon: 'sup_lanhgia', mau: '#6fe0ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(SKILLS.lanhgia.cham(T)) + '% SLOW' },
   khuech:   { icon: 'sup_khuech',  mau: '#ff9a3a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% / HIT ×' + SKILLS.khuech.max(T) },
-  tuthan:   { icon: 'sup_tuthan',  mau: '#c77dff', link: 'sup_link',      ke: true, chu: (T) => (SKILLS.tuthan.tile(T) * 100).toFixed(1) + '% INSTANT KILL' },
-  mana:     { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.mana.luong(T) + ' MANA / 7s' },
+  tuthan:   { icon: 'sup_tuthan',  mau: '#c77dff', link: 'sup_link',      ke: true, chu: (T) => (Math.min(0.15, SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% INSTANT KILL' },
+  mana:     { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.mana.luong(T) + ' MANA / ' + SKILLS.mana.ky(T) + 's' },
   nhanmana: { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => 'MERGE: +' + SKILLS.nhanmana.luong(T.sao, G.ban[T.ban]) + ' MANA' },
-  hutmana:  { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.hutmana.luong(T).toFixed(1) + ' MANA / HIT' },
+  hutmana:  { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.hutmana.luong(T).toFixed(2) + ' MANA / HIT' },
   khien:    { icon: 'sup_khien',   mau: '#5fb8ff', link: 'sup_link', ke: true, chu: (T) => 'SHIELD / ' + SKILLS.khien.ky(T) + 's' },
   taylo:    { icon: 'sup_taylo',   mau: '#4bffb0', link: 'sup_link', ke: true, chu: (T) => 'CLEANSE ×' + SKILLS.taylo.so(T) + ' / ' + SKILLS.taylo.ky(T) + 's' },
   // đợt vai trò: ụ chuyển sang HỖ TRỢ (icon có sẵn theo loại buff)

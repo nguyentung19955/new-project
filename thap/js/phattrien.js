@@ -38,7 +38,7 @@ const HO_MOI = {
   canon: 'splash shells', xucxac: 'gambles damage 3–300%', mortar: 'CLUSTER shells split into bomblets', no5: 'every 5th shot: 3 exploding bolts',
   orbital: 'merging awakens EVERY Orbital on the board: area salvos (no normal shots)',
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
-  overlord: 'thunder blast + aftershock arcs (active-tier finisher)',
+  overlord: 'thunder blast + aftershock arcs (Mythic finisher, no active)',
   sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
   lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +90% fire rate (stacks)',
   bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'chance to come out AWAKENED: every hit crits',
@@ -48,9 +48,9 @@ const HO_MOI = {
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
   drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
-  sinhdoi: 'merge summons a SAME-STAR turret (10%: +1★)',
+  sinhdoi: 'merge summons a SAME-STAR turret (10%+: +1★)',
   nangsao: 'speeds up its lowest-star neighbours', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; punishes rival 5★', ngoisao: 'grows with total board stars',
-  mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
+  mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any same-star turret',
   khien: 'recharging shields for neighbours', taylo: 'pulses cleanse onto neighbours', kepha: 'merge clamps rivals / speeds allies', haoquang: 'short team-wide barrier (active)',
   hopbi: 'opens into a random 1–6★ turret', tienhoa: 'evolves into a random turret +1★',
 };
@@ -207,7 +207,7 @@ const nhip3 = (T) => (T && T.id && mocChung(T, 3) ? 1.2 : 1); // mốc chung 3�
 const NHIP = {
   laser: () => 'continuous beam', overlord: (T) => 'charges ' + ((7 - 0.5 * (T.sao - 1)) / nhip3(T)).toFixed(1) + 's',
   wallgen: (T) => 'wall every ' + (Math.max(5, 9 - 0.4 * T.sao) / nhip3(T)).toFixed(1) + 's', blackhole: (T) => 'hole every ' + (Math.max(6, 10 - 0.5 * T.sao) / nhip3(T)).toFixed(1) + 's',
-  vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + SKILLS.min.ky(T).toFixed(1) + 's',
+  vungdoc: (T) => 'pool every ' + SKILLS.vungdoc.ky(T).toFixed(1) + 's', min: (T) => 'mine every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + 's',
   baotuyet: (T) => 'pulse every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's', lophanung: () => 'aura 2.5 ticks/s',
 };
 function tocTT(id, T) {

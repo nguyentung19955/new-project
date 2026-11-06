@@ -12,8 +12,8 @@ const UP_XEM = UP_Q.get('preview');
 const UP_GIU = { PVP: 'PvP', HP: 'HP', LV: 'LV', AI: 'AI', ID: 'ID', OK: 'OK', BINGO: 'bingo' };
 function upSC(s) {
   if (s == null) return '';
-  s = String(s).replace(/\b[A-Z][A-Z'’]+\b/g, (w) => UP_GIU[w] || w.toLowerCase());
-  return s.replace(/^([^A-Za-z0-9]*)([a-z])/, (m, a, b) => a + b.toUpperCase());
+  s = String(s).replace(/(^|[^\p{L}\p{N}])(\p{Lu}[\p{Lu}'’]+)(?![\p{L}\p{N}])/gu, (m, a, w) => a + (UP_GIU[w] || w.toLowerCase()));
+  return s.replace(/^([^\p{L}\p{N}]*)(\p{Ll})/u, (m, a, b) => a + b.toUpperCase()); // \p{L}: chữ Việt có dấu (Đạn) không bị viết hoa giữa từ
 }
 const upEsc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const upTen = (id) => (TEXT.turret[id] && TEXT.turret[id].name) || (G.rosterMap[id] && G.rosterMap[id].ten) || id;
@@ -41,7 +41,7 @@ function upVai(id) {
 }
 function upNham(id) {
   const sk = SKILLS[id] || {};
-  if (!sk.dmg) return UP_TXT.target.khong;
+  if (!sk.dmg) return UP_TXT.target[{ bang: 'dau', doc: 'dau', bomhen: 'ngau' }[id] || 'khong'];
   if (sk.chonMuc || NHIP[id]) return UP_TXT.target.tu;
   return UP_TXT.target[sk.nham] || UP_TXT.target.dau;
 }
@@ -83,10 +83,10 @@ function upDauChan(id) {
 function upLuatGhep(id) {
   const sk = SKILLS[id] || {}, ten = upTen(id), L = [];
   const mo1 = upBanTam(id, (B) => { const T = taoU(B, id, 1, 7); B.t[7] = T; return sk.mo ? sk.mo(T) : ''; }) || '';
-  if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +50% attack for 8s.']);
+  if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic') || 50) + '% attack for 8s.']);
   else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
-  L.push(['Normal merge', 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
+  L.push(['Normal merge', id === 'vughep' ? 'Two Merge Kings of the same star merge into a Merge King at +1★. Max 7★.' : 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
   L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone). Merge King can still raise a stone\'s star; Cleanser or Eve breaks the stone.']);
   return L;
 }
@@ -97,7 +97,7 @@ function upCheDo(id) {
   if (co) L.push(['Co-op', upSC(co[1].trim()) || 'Helps your ally.']);
   if (so) L.push(['Solo', upSC(so[1].trim())]);
   if (!L.length) L.push(['All modes', 'Works the same in solo, co-op and PvP.']);
-  if (r && r.bac === 'do') L.push(['Mythic', 'Max 1 Mythic per deck.' + (sk.chuDong ? ' Tap it on the board when charged to fire its active skill.' : '')]);
+  if (r && r.bac === 'do') L.push(['Mythic', 'Max 1 Mythic per deck.' + (sk.chuDong ? ' Tap it on the board when charged to fire its active skill (some unlock it at 3★).' : '')]);
   if (sk.vai === 'tc') L.push(['Deck tip', 'Take at least 2 attack turrets.']);
   return L;
 }
@@ -144,7 +144,7 @@ function upSoSeri(id) { const i = G.roster.findIndex(r => r.id === id); return '
 // ===================================================== trang =====================================================
 // trang chỉ huy: thời lượng + giải thích (tiếng Anh như phần còn lại của giao diện)
 const UP_MV = {
-  hero: { lau: 'Instant', vai: 'Tempo · fills the board fast', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Fills only the empty cells left'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
+  hero: { lau: 'Instant', vai: 'Tempo · fills the board fast', dl: [['Effect', 'Summons two free 1★ turrets from your deck into empty cells'], ['Board full', 'Each missing cell gives +1★ to your weakest turret instead'], ['Best with', 'Merge-trigger turrets: more copies to merge']] },
   dahlia: { lau: '10s', vai: 'Burst · save it for a boss', dl: [['Effect', 'Every turret on your board deals double damage'], ['Stacks with', 'Stars, card levels and support buffs'], ['Best with', 'Cast it as a boss arrives']] },
   eve: { lau: '8s', vai: 'Counter · blocks boss skills', dl: [['Effect', 'Clears freeze, stone and burn from every turret'], ['Shield', 'Blocks every boss skill for 8 seconds'], ['Best with', 'Boss waves that lock your turrets']] },
 };
@@ -377,7 +377,8 @@ const UP = {
     if (grow) meta.push('GROW-UP');
     if (sk && sk.chuDong) meta.push('ACTIVE');
     if (!sk) meta.push('COMING SOON');
-    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div><div class="up-meta">' + meta.join(' • ') + '</div>' +
+    const tenVi = typeof NN !== 'undefined' && NN.vi() ? NN.tenVi(id) : ''; // Tiếng Việt: tên Việt nhỏ dưới tên riêng tiếng Anh
+    P.push('<div class="up-bien"><div class="up-ten">' + upEsc(ten) + '</div>' + (tenVi ? '<div class="up-tenvi" data-nn-giu="1">' + upEsc(tenVi) + '</div>' : '') + '<div class="up-meta">' + meta.join(' • ') + '</div>' +
       '<span class="up-bn-ic"><img class="ic" src="' + iconOf(id) + '" alt=""><img class="up-gl" alt="" hidden></span></div>');
     // 4 thông số 2×2
     const bs = sk ? upBangSao(id) : [];

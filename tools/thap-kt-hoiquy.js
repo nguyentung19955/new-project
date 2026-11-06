@@ -513,6 +513,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-kynangcap.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ kỹ năng theo cấp thẻ (thap-kt-kynangcap.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-kynangcap.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'kynangcap', loai: 'kỹ năng theo cấp thẻ', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kỹ năng theo cấp: lỗi chạy'); }
   }
+  // Tiếng Việt (Cài đặt → LANGUAGE): mọi khoá TEXT có bản Việt + màn chính không còn chữ Anh chưa dịch — tools/thap-kt-vi.js
+  if (!process.env.CHI || /vi|menu/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-vi.js')], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗|^  /.test(l)).slice(0, 40); for (const l of (ds.length ? ds : ['thap-kt-vi.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'tiengviet', loai: 'Tiếng Việt', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ Tiếng Việt: lỗi chạy'); }
+  }
   // 4 ụ vàng mới đợt 1 (Ember Relay / Quantum Choir / Fusion Archive / Hero Foundry): luật, cấp thẻ, tất định online, cân bằng bậc Vàng — tools/thap-kt-vang-moi.js
   if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }

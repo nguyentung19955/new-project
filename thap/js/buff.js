@@ -10,7 +10,7 @@
 const BUFF = {
   toc:   { ten: 'Fire rate',    mau: '#FFB547' }, // ba mũi tên >>>
   dmg:   { ten: 'Damage',       mau: '#FF7654' }, // lưỡi kiếm
-  crit:  { ten: 'Crit chance',  mau: '#F7D65B' }, // sao 4 cánh + chấm giữa
+  crit:  { ten: 'Crit',  mau: '#F7D65B' }, // sao 4 cánh + chấm giữa
   cham:  { ten: 'Shots slow',   mau: '#78D9F5' }, // bông tuyết 6 cánh
   chet:  { ten: 'Instant kill', mau: '#BA94F2' }, // đầu lâu góc cạnh
   mana:  { ten: 'Mana',         mau: '#58D9AD' }, // tinh thể thoi

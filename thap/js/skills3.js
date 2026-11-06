@@ -312,7 +312,7 @@ const PANDORA = [
 const PANDORA_TOT = ['sao', 'cuong', 'bom', 'mana', 'dong', 'khien']; // 6★: quay 2 lần → giữ cái đứng trước trong danh sách này
 SKILLS.pandora = {
   vai: 'db', dmg: 10, toc: 0.9, nham: 'dau',
-  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + (T.sao >= 7 ? ' · OPEN: 2 effects' : T.sao >= 5 ? ' · next merge (6★+) rolls twice, keeps the better' : ''),
+  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + (T.sao >= 7 ? ' · OPEN: its 7★ merge fired 2 effects' : T.sao >= 5 ? ' · merging into 6★ rolls twice (keeps the better), into 7★ fires 2 effects' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ffd86a', sp: 480 }); },
   ghep(G, B, a, b, ra) {
     const sao = Math.min(7, a.sao + 1), lay = () => rint(6);
@@ -544,7 +544,7 @@ themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)')
 Object.assign(MOC_RIENG, { // (luoicheo: mốc 5★/7★ ở phattrien.js — 'Diagonal +15% fire rate' cũ sai số, code = +5%×HOTRO.K)
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
   hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] },
-  pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'Every opening fires 2 effects'] },
+  pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'The merge into 7★ fires 2 effects'] },
   ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart)'] },
 });
 
@@ -559,7 +559,7 @@ Object.assign(GROW, {
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: T.sao >= 3 ? T.nap : (T.sao - 1) / 2, v: [] }) },
   combo: { mau: '#ff8a2a', khongAnh: true, ten: ['WARM-UP', 'ON A ROLL', 'OVERDRIVE'], dk: 'COMBO 0–9 / 10–19 (2 spinning rings) / 20+ (red-hot core)',
     gd: (T) => { const n = SKILLS.combo.hieuLuc(G.ban[T.ban] || { combo: 0 }); return { s: n >= 20 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 20), v: [0.5] }; } },
-  pandora: { mau: '#ffd23f', khongAnh: true, ten: ['LOCKED', 'AJAR', 'OPEN VAULT'], dk: '1–3★ locked / 4–6★ lid ajar (6 colours leak) / 7★ open: every merge fires 2 effects',
+  pandora: { mau: '#ffd23f', khongAnh: true, ten: ['LOCKED', 'AJAR', 'OPEN VAULT'], dk: '1–3★ locked / 4–6★ lid ajar (6 colours leak) / 7★ open: the merge into 7★ fires 2 effects',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: (T.sao - 1) / 6, v: [0.5] }) },
 });
 Object.assign(NHIP, { hydra: (T) => (T.sao >= 7 ? 'fused beam 0.6/s' : (SKILLS.hydra.toc * (1 + 0.2 * (T.sao >= 3))).toFixed(2) + ' volleys/s × ' + Math.min(6, T.sao) + ' barrels') });
