@@ -528,6 +528,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-sua.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 12 ụ vàng sửa theo DCDW (thap-kt-vang-sua.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-sua.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangsua', loai: 'sửa ụ vàng DCDW', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ sửa ụ vàng: lỗi chạy'); }
   }
+  // KINH TẾ / CỬA HÀNG (Daily Specials tất định, tỉ lệ cộng 100%, bảo hiểm, không nhận 2 lần, di chuyển bản lưu, gộp Firebase) — tools/thap-kt-shop.js
+  if (!process.env.CHI || /shop|menu/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-shop.js'), BASE], { stdio: 'pipe', timeout: 240000, env: process.env }); console.log('  ✓ kinh tế / cửa hàng (thap-kt-shop.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-shop.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'shop', loai: 'kinh tế / cửa hàng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cửa hàng: lỗi chạy'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

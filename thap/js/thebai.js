@@ -22,7 +22,8 @@ const THE = {
   // vàng cho cấp L → L+1 (theo cấp TUYỆT ĐỐI như DCDW/Random Dice: thẻ hiếm khởi đầu cao nên lên cấp đắt ngay)
   vangCan: [0, 20, 50, 100, 200, 400, 800, 1500, 2500, 4000, 6000, 9000, 13000, 18000, 25000],
   // túi thưởng: tỉ lệ độ hiếm mỗi lượt rút + số bản sao mỗi lượt
-  tiLe: [['trang', 55], ['xanh', 28], ['tim', 12], ['vang', 4.5], ['do', 0.5]],
+  // (06/11 người dùng: đỏ + vàng phải cày như DCDW — xem tuvan/shop/KINH-TE.md) trước 55/28/12/4,5/0,5
+  tiLe: [['trang', 58], ['xanh', 29], ['tim', 11], ['vang', 1.8], ['do', 0.2]],
   soBan: { trang: [3, 6], xanh: [2, 4], tim: [1, 2], vang: [1, 1], do: [1, 1] },
   kyNang: KY_NANG_CAP, // bảng kỹ năng theo cấp thẻ (data.js)
 };
@@ -113,7 +114,7 @@ const THEBAI = {
       gom[id] = (gom[id] || 0) + a + Math.floor(rng() * (c - a + 1));
     }
     const d = this.doc();
-    d.vang += vang;
+    if (typeof KT !== 'undefined' && KT.cong) KT.cong('vang', vang, 'battle'); else d.vang += vang; // mối nối tiền tệ (kinhte.js)
     for (const id in gom) { const t = this.the(id); d.c[id] = { lv: t.lv, n: t.n + gom[id] }; }
     delete d.moi;
     this.luu();
