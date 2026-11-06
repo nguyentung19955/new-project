@@ -72,7 +72,7 @@ HU.dia = { // đĩa nảy: bay đuổi mục tiêu, trúng → tìm quái gần 
 //      mọi Combo Core +c% sát thương × COMBO (c theo sao của chính ụ; sau COMBO 20 mỗi combo chỉ còn ½)
 // =====================================================================================================
 SKILLS.combo = {
-  vai: 'tc', dmg: 15, toc: 1, nham: 'dau',
+  vai: 'tc', dmg: 18, toc: 1, nham: 'dau', // 15 → 18 (đo bậc 06/11)
   c: (T) => sao7(T, [0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12]),
   hl: (n) => Math.min(n, 20) + Math.max(0, n - 20) * 0.5,               // COMBO hiệu lực (giảm ½ sau 20)
   hieuLuc(B) { // co-op: cả 2 cùng mang Combo Core → cộng thêm ½ COMBO của đồng đội
@@ -114,9 +114,9 @@ SKILLS.combo = {
 // =====================================================================================================
 SKILLS.khoathoigian = {
   vai: 'db', dmg: 10, toc: 0.8, nham: 'dau', napMau: '#45e0c8',
-  ky: (T) => sao7(T, [9, 8.5, 8, 7.5, 7, 6.5, 6]),
+  ky: (T) => sao7(T, [7.5, 7, 6.5, 6, 5.5, 5, 4.5]), // 9→6 s ⇒ 7.5→4.5 s (đo bậc 06/11)
   dai: (T) => sao7(T, [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5]),
-  no: (T) => sao7(T, [0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.75]),
+  no: (T) => sao7(T, [0.4, 0.45, 0.5, 0.6, 0.65, 0.75, 0.95]), // +~30% (đo bậc 06/11)
   mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
   capNhat(G, B, T, dt) {
     if (G.hu.some(o => o.k === 'khoa' && o.T === T)) return false; // tối đa 1 quái bị khoá / ụ
@@ -177,7 +177,7 @@ HU.khoa = { // ô thời gian lục giác trong suốt quanh quái + đồng h�
 //      7★ "HỢP ĐẦU": 6 nòng nhập 1 → tia khổng lồ xuyên toàn bộ quái trên 1 đường, ×6, 0.6 lần/s. Forms: 1–3★ / 4–6★ / 7★.
 // =====================================================================================================
 SKILLS.hydra = {
-  vai: 'tc', dmg: 15, toc: 1.2, nham: 'dau',
+  vai: 'tc', dmg: 19, /* 15 → 19 (đo bậc 06/11) */ toc: 1.2, nham: 'dau',
   nong: (T) => Math.min(6, T.sao),
   mo: (T) => T.sao >= 7 ? 'FUSED HEAD: piercing beam ×6 through every enemy in line · ' + (0.6 * (1 + T.buf.toc)).toFixed(2) + '/s' : SKILLS.hydra.nong(T) + ' barrels · each hits a different enemy for 55% · 7★: barrels fuse into a ×6 piercing beam',
   capNhat(G, B, T, dt) {
@@ -225,7 +225,7 @@ HU.hydraTia = { // tia hợp đầu: lõi trắng + quầng xanh ngọc + vạch
 //      Trùm: mỗi 8% máu tối đa trùm ụ này gây ra = +1 đuôi. Ghép giữ số đuôi cao hơn.
 // =====================================================================================================
 SKILLS.cuuvi = {
-  vai: 'tc', dmg: 16, toc: 1.2, nham: 'dau',
+  vai: 'tc', dmg: 20, /* 16 → 20 (đo bậc 06/11) */ toc: 1.2, nham: 'dau',
   sinh(G, T) { T.duoi = 0; T.trumAcc = 0; },
   heSo: (T) => 2 + 0.5 * T.sao,
   mo: (T) => 'Tails ' + (T.duoi || 0) + '/9 (+' + 5 * (T.duoi || 0) + '% fire rate) · at 9: 9 homing foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1) + (T.sao >= 5 ? ' · 20% double tail' : '') + (T.sao >= 7 ? ' · NINE-TAIL: blasts 40 px, restarts at 3 tails' : '') + ' · bosses: +1 tail per 8% HP dealt',
@@ -312,7 +312,7 @@ const PANDORA = [
 const PANDORA_TOT = ['sao', 'cuong', 'bom', 'mana', 'dong', 'khien']; // 6★: quay 2 lần → giữ cái đứng trước trong danh sách này
 SKILLS.pandora = {
   vai: 'db', dmg: 10, toc: 0.9, nham: 'dau',
-  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 3 bombs · 3 shields · frenzy)' + (T.sao >= 7 ? ' · OPEN: 2 effects' : T.sao >= 5 ? ' · next merge (6★+) rolls twice, keeps the better' : ''),
+  mo: (T) => 'On merge: opens the vault — 1 of 6 (mana rain · freeze all · +1★ gift · 5 bombs · 5 shields · frenzy)' + (T.sao >= 7 ? ' · OPEN: 2 effects' : T.sao >= 5 ? ' · next merge (6★+) rolls twice, keeps the better' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ffd86a', sp: 480 }); },
   ghep(G, B, a, b, ra) {
     const sao = Math.min(7, a.sao + 1), lay = () => rint(6);
@@ -327,20 +327,20 @@ SKILLS.pandora = {
   },
   lam(G, B, k, sao, c) {
     const D = G.che === 'coop' ? banKhac(B) : null, cacBan = D ? [B, D] : [B];
-    if (k === 'mana') { const n = 10 * sao; B.mana += n; B.manaNay += n; FX.chu1(c.x, c.y - 30, '+' + n, '#58D9AD', 18, 'mana'); for (let i = 0; i < 14; i++) FX.hat1('lua', c.x + rnd(-30, 30), c.y - rnd(30, 60), rnd(-10, 10), rnd(40, 90), 0.6, 7, '#58D9AD'); if (!B.ai) SND.mana(); }
+    if (k === 'mana') { const n = 25 * sao; /* 10 → 25 ×★ (đo bậc 06/11) */ B.mana += n; B.manaNay += n; FX.chu1(c.x, c.y - 30, '+' + n, '#58D9AD', 18, 'mana'); for (let i = 0; i < 14; i++) FX.hat1('lua', c.x + rnd(-30, 30), c.y - rnd(30, 60), rnd(-10, 10), rnd(40, 90), 0.6, 7, '#58D9AD'); if (!B.ai) SND.mana(); }
     if (k === 'dong') {
-      for (const E of dsMucTieu(B)) if (!E.chet) { E.chan = Math.max(E.chan || 0, E.trum ? 0.5 : 1.5); FX.no('bang_vo', E.x, E.y, 44, 0.3); }
+      for (const E of dsMucTieu(B)) if (!E.chet) { E.chan = Math.max(E.chan || 0, E.trum ? 0.8 : 2.5); /* 1.5 → 2.5 s (đo bậc 06/11) */ FX.no('bang_vo', E.x, E.y, 44, 0.3); }
       FX.sang(0.18, '#bff4ff'); SND.bang();
       // PVP: không gửi quái sang đối thủ (2 bên cùng wave)
     }
     if (k === 'sao') for (const X of cacBan) { const ds = X.t.filter(N => N && N.sao < LUAT.saoMax && !N.st.da); if (ds.length) { const N = pick(ds), n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#ffe46b'); nangSao(X, N, 1, X === B ? 'VAULT STAR' : 'ALLY STAR'); } }
     if (k === 'bom') {
-      const dmg = hsU('pandora', sao, B) * (3 + sao) * (B.cuong > 0 ? 2 : 1), ds = quaiTheoDau(B).slice(0, 3); // chỉ huy RAGE ×2 cũng áp lên bom hộp
+      const dmg = hsU('pandora', sao, B) * (3 + sao) * (B.cuong > 0 ? 2 : 1), ds = quaiTheoDau(B).slice(0, 5); /* 3 → 5 bom (đo bậc 06/11) */ // chỉ huy RAGE ×2 cũng áp lên bom hộp
       for (const E of ds) banDan({ img: 'dan_phao', x: c.x, y: c.y, muc: E, px: E.x, py: E.y, sp: 300, co: 18, cong: 60, B, T: null, duoi: true,
         trung(G, d) { noLan(d.x, d.y, 30, dmg, B, { phu: true, mau: '#ff7654' }); FX.no('no_phao', d.x, d.y, 70, 0.4); FX.vong1(d.x, d.y, 4, 30, '#ffb35a', 0.3, 3); SND.no(0.5); } });
     }
-    if (k === 'khien') for (const X of cacBan) { const ds = X.t.filter(N => N && !(N.khien > 0)).sort((p, q) => q.sao - p.sao).slice(0, 3); for (const N of ds) { N.khien = 1; const n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#73A9FF'); FX.vong1(n.x, n.y, 30, 10, '#73A9FF', 0.4, 3); } }
-    if (k === 'cuong') for (const X of cacBan) for (const N of X.t) if (N && SKILLS[N.id].dmg) { N.tocT = Math.max(N.tocT, 6); N.tocV = Math.max(N.tocV, 0.4); }
+    if (k === 'khien') for (const X of cacBan) { const ds = X.t.filter(N => N && !(N.khien > 0)).sort((p, q) => q.sao - p.sao).slice(0, 5); for (const N of ds) { N.khien = 1; const n = X.o[N.o]; tiaPhep(c.x, c.y, n.x, n.y, '#73A9FF'); FX.vong1(n.x, n.y, 30, 10, '#73A9FF', 0.4, 3); } }
+    if (k === 'cuong') for (const X of cacBan) for (const N of X.t) if (N && SKILLS[N.id].dmg) { N.tocT = Math.max(N.tocT, 10); N.tocV = Math.max(N.tocV, 0.6); } // 6 s +40% → 10 s +60% (đo bậc 06/11)
   },
   sangDau: (T) => (T.gd === 2 ? 0.1 : T.gd === 3 ? 0.22 + 0.08 * Math.sin(G.t * 5) : 0),
   veThem(ctx, T, S, al, R) { // 4–6★: tia 6 màu lọt khe nắp · 7★: quả cầu cầu vồng lơ lửng (tròn)

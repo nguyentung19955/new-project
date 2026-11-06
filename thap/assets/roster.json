@@ -166,9 +166,9 @@
   "ten": "Crit Antenna",
   "bac": "xanh",
   "dcdw": "Siren",
-  "kyNang": "Support: +crit chance for N/E/S/W neighbours (6% at 1★ → 20% at 7★)",
+  "kyNang": "Support: +crit chance for N/E/S/W neighbours (9% at 1★ → 30% at 7★)",
   "ten_vi": "Ăng-ten Chí Mạng",
-  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng cho 4 ô kề (6% ở 1★ → 20% ở 7★)"
+  "kyNang_vi": "Hỗ trợ: +tỉ lệ chí mạng cho 4 ô kề (9% ở 1★ → 30% ở 7★)"
  },
  {
   "id": "dichchuyen",
@@ -184,9 +184,9 @@
   "ten": "Radar",
   "bac": "xanh",
   "dcdw": "Kirinus",
-  "kyNang": "Support: +fire rate for N/E/S/W neighbours (12% at 1★ → 28% at 7★)",
+  "kyNang": "Support: +fire rate for N/E/S/W neighbours (18% at 1★ → 42% at 7★)",
   "ten_vi": "Radar",
-  "kyNang_vi": "Hỗ trợ: +tốc bắn cho 4 ô kề (12% ở 1★ → 28% ở 7★)"
+  "kyNang_vi": "Hỗ trợ: +tốc bắn cho 4 ô kề (18% ở 1★ → 42% ở 7★)"
  },
  {
   "id": "drone",
@@ -202,9 +202,9 @@
   "ten": "Fusion Mixer",
   "bac": "xanh",
   "dcdw": "Zarramim",
-  "kyNang": "Support: +6% fire rate to Attack neighbours, +2% per different type (max 12% at 1★)",
+  "kyNang": "Support: +9% fire rate to Attack neighbours, +3% per different type (max 18% at 1★)",
   "ten_vi": "Bộ Trộn",
-  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +6% tốc bắn, +2% mỗi loại Tấn công khác nhau (tối đa 12% ở 1★)"
+  "kyNang_vi": "Hỗ trợ: ụ Tấn công kề +9% tốc bắn, +3% mỗi loại Tấn công khác nhau (tối đa 18% ở 1★)"
  },
  {
   "id": "nangluong",
@@ -229,9 +229,9 @@
   "ten": "Chiller",
   "bac": "xanh",
   "dcdw": "Neptune",
-  "kyNang": "Support: neighbours’ hits also slow (max 35%, bosses 15%)",
+  "kyNang": "Support: neighbours’ hits also slow (max 38%, bosses 15%)",
   "ten_vi": "Máy Phát Lạnh",
-  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (tối đa 35%, trùm 15%)"
+  "kyNang_vi": "Hỗ trợ: đòn của ụ kề kèm làm chậm (tối đa 38%, trùm 15%)"
  },
  {
   "id": "mortar",
@@ -310,9 +310,9 @@
   "ten": "Cloner",
   "bac": "tim",
   "dcdw": "Ivory",
-  "kyNang": "On merge: summons an extra 1★ turret",
+  "kyNang": "On merge: summons an extra 1★ turret (2★ from 3★ merges)",
   "ten_vi": "Máy Nhân Bản",
-  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ 1 sao"
+  "kyNang_vi": "Khi GHÉP: gọi thêm 1 ụ 1 sao (2 sao khi ghép ra 3★+)"
  },
  {
   "id": "lienket",
@@ -355,9 +355,9 @@
   "ten": "Mystery Box",
   "bac": "tim",
   "dcdw": "Daron",
-  "kyNang": "After 47s becomes a random 1–7★ turret",
+  "kyNang": "After 58s becomes a random 1–6★ turret",
   "ten_vi": "Hộp Bí Ẩn",
-  "kyNang_vi": "Sau 47 s biến thành ụ ngẫu nhiên 1–7 sao"
+  "kyNang_vi": "Sau 58 s biến thành ụ ngẫu nhiên 1–6 sao"
  },
  {
   "id": "nangsao",
@@ -391,9 +391,9 @@
   "ten": "Overclock",
   "bac": "tim",
   "dcdw": "Pararamim",
-  "kyNang": "Drag onto a same-star turret: +65% fire rate",
+  "kyNang": "Drag onto a same-star turret: +90% fire rate",
   "ten_vi": "Bộ Ép Xung",
-  "kyNang_vi": "Ghép với ụ cùng sao: ụ đó +65% tốc bắn"
+  "kyNang_vi": "Ghép với ụ cùng sao: ụ đó +90% tốc bắn"
  },
  {
   "id": "no5",
@@ -571,9 +571,9 @@
   "ten": "Holy Halo",
   "bac": "do",
   "dcdw": "Halo Mona",
-  "kyNang": "Special: active 2s team barrier — leaks cost no hearts; boss skills only weakened",
+  "kyNang": "Special: active 3s team barrier — leaks cost no hearts; boss skills only weakened",
   "ten_vi": "Hào Quang Thánh",
-  "kyNang_vi": "Đặc biệt: chủ động khiên toàn đội 2 s — quái lọt không mất tim; chiêu trùm chỉ bị giảm"
+  "kyNang_vi": "Đặc biệt: chủ động khiên toàn đội 3 s — quái lọt không mất tim; chiêu trùm chỉ bị giảm"
  },
  {
   "id": "nayda",

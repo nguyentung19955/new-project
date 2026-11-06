@@ -158,7 +158,7 @@ SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳn
   },
 };
 SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép xong buff tấn công
-  vai: 'db', dmg: 6.67, toc: 1.2, nham: 'dau',
+  vai: 'db', dmg: 9, toc: 1.2, nham: 'dau', // 6.67 → 9 (đo bậc 06/11)
   mo: (T) => 'Merges with any same-star turret · result +' + Math.round(knThe(T && G.ban[T.ban], 'mimic')) + '% attack 8s',
   ban(G, B, T, E) {
     giat(T, 0.3);

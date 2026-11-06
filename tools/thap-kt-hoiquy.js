@@ -533,6 +533,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-shop.js'), BASE], { stdio: 'pipe', timeout: 240000, env: process.env }); console.log('  ✓ kinh tế / cửa hàng (thap-kt-shop.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-shop.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'shop', loai: 'kinh tế / cửa hàng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cửa hàng: lỗi chạy'); }
   }
+  // SỨC MẠNH THEO BẬC (đo bậc 06/11): trung vị 4★ Trắng < Xanh < Tím < Vàng < Đỏ — tools/thap-kt-tier.js (tất định, ≈ 3–5 phút)
+  if (!process.env.CHI || /tier|solo/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-tier.js')], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log(String(o).trim()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-tier.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'tier', loai: 'sức mạnh theo bậc', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ tier: lỗi chạy'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

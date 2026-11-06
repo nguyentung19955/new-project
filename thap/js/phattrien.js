@@ -40,19 +40,19 @@ const HO_MOI = {
   set: 'chain lightning', laser: 'beam that ramps up ×4', bao: 'instant hits that ARC to a 2nd enemy', railgun: 'piercing rail + BINGO lines',
   overlord: 'thunder blast + aftershock arcs (active-tier finisher)',
   sungluc: 'one heavy instant shot', tia: 'hunts the toughest enemy', nangluong: 'banked mana → up to +500% shot',
-  lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +65% fire rate (stacks)',
+  lien: 'very fast stream', phun: 'very fast at random enemies', radar: 'lends fire rate to neighbours', epxung: 'permanent +90% fire rate (stacks)',
   bua: 'neighbours’ crits hit harder and stagger', nam: 'melee ring blasts', chimang: 'gives crit to neighbours', cuongno: 'crits → RAGE → FRENZY', soi: 'chance to come out AWAKENED: every hit crits',
   phagiap: 'exposes the toughest enemy for its neighbours', khuech: 'boosts neighbours’ damage', lienket: 'stronger per LINKED twin', dongbo: 'buffs EVERY same-star Attack turret on the board',
   cauvong: 'co-op: trail enemies take more · PVP: rival trail enemies take less',
   bomhen: 'timed bomb that weakens a group', min: 'mines across the path', wallgen: 'walls block the path and explode; merge raises a GOLDEN wall', blackhole: 'pulls enemies together and crushes them',
   maychem: 'chance to execute small enemies', tuthan: 'neighbours execute low-HP enemies',
   mana: 'makes mana over time', hutmana: 'leech bolts: damage + capped mana', nhanmana: 'mana burst on merge',
-  drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★', anhsang: 'summons 1★ turrets over time',
+  drone: 'merge launches bomb drones', loa: 'merge cuts Archfiend cooldown', nhanban: 'merge summons a free 1★ (2★ from 3★ merges)', anhsang: 'summons 1★ turrets over time',
   sinhdoi: 'merge summons a SAME-STAR turret (10%: +1★)',
   nangsao: 'speeds up its lowest-star neighbours', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; punishes rival 5★', ngoisao: 'grows with total board stars',
   mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
   khien: 'recharging shields for neighbours', taylo: 'pulses cleanse onto neighbours', kepha: 'merge clamps rivals / speeds allies', haoquang: 'short team-wide barrier (active)',
-  hopbi: 'opens into a random 1–7★ turret', tienhoa: 'evolves into a random turret +1★',
+  hopbi: 'opens into a random 1–6★ turret', tienhoa: 'evolves into a random turret +1★',
 };
 const HO_CUA = {}; // id → { ho, i (bậc 0..4 trong họ) }
 for (const k in HO) HO[k].bac.forEach((ds, i) => ds.forEach(id => { HO_CUA[id] = { ho: k, i }; }));
