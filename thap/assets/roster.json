@@ -481,9 +481,9 @@
   "ten": "Copycat",
   "bac": "vang",
   "dcdw": "Shamash",
-  "kyNang": "Copies any same-star turret (less damage)",
+  "kyNang": "Copies any same-star turret, even stone (less damage)",
   "ten_vi": "Máy Sao Chép",
-  "kyNang_vi": "Sao chép ụ bất kỳ cùng sao (giảm sát thương)"
+  "kyNang_vi": "Sao chép ụ bất kỳ cùng sao, kể cả ụ hoá đá (giảm sát thương)"
  },
  {
   "id": "ngoisao",

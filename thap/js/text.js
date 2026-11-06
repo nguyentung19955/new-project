@@ -109,7 +109,7 @@ const TEXT = {
     vughep:     { name: 'Merge King',    skill: 'Same-star merge: +1★ keeping the type; 10%+ come out GOLDEN (+2★) · Merge King + Merge King → Merge King +1★' },
     sinhdoi:    { name: 'Twin Maker',    skill: 'On merge: also summons a random same-star turret (10%+: one star higher)' },
     hasao:      { name: 'Star Breaker',  skill: 'Support: Attack neighbours +damage, merge surge. PVP: first rival 5★ each wave −8% fire rate' },
-    saochep:    { name: 'Copycat',       skill: 'Copies any same-star turret (less damage), keeps its Awakened / Gold form' },
+    saochep:    { name: 'Copycat',       skill: 'Copies any same-star turret, even stone or frozen (less damage), keeps its Awakened / Gold form' },
     ngoisao:    { name: 'Star Cannon',   skill: 'Live board ★ total: every 10 → faster; every 50 → more damage (drops if stars fall)' },
     soi:        { name: 'Werewolf',     skill: 'Melee wolf: each summon/merge is Normal or AWAKENED by chance (30%+); Awakened always crits' },
     tienhoa:    { name: 'Evolver',       skill: 'Time bomb counts down, then becomes a random turret +1★ (higher stars take longer; at 7★ it fizzles — no skill)' },

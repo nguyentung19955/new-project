@@ -124,3 +124,6 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Hồi quy 390x844x3 NHANH: 1 lỗi — thap-kt-vang-sua.js "Evolver 7★ xịt bị giảm sao → đếm lại" kỳ vọng cũ `con > 40 s` (trước đợt cân bằng bậc Evolver (20+6★)→(14+5★) s = 35 s ở 6★). Sửa kỳ vọng thành "đếm lại đủ thời gian 6★" (≥ can(6★)). Chạy lại: XANH. Các bước khác (gồm thap-kt-tier.js) XANH.
 - 06/11 giật skill bổ sung (băng chữ DOM trong nongskill.js mục 4): CHI=solo 390 NHANH — giat ✓, nóng 18,2 ms ✓, vàng sửa ✓; 1 lần 'mạng trong trận' ĐỎ (4 yêu cầu ảnh tình huống tải nền 3 s sau vào trận — chập chờn: bản gốc dda0510 cũng ĐỎ 1 lần) → chạy lại thap-kt-mang.js: solo 0 yêu cầu → XANH.
 - 06/11 (Tiếng Việt + đối chiếu mô tả): hồi quy 390×844 XANH mọi bước, gồm kiểm mới `thap-kt-vi.js` (✓ Tiếng Việt đủ); chỉ còn `vangsua` Evolver "7★ xịt bị giảm sao → đếm lại" — chạy lại trên bản gốc 4f04f64 (chưa có thay đổi ngôn ngữ) trượt y hệt → lỗi có sẵn của bản Evolver (đã sửa ở dda0510 — kỳ vọng mới).
+
+## 06/11 Copycat chép ô đá/băng
+- Hồi quy đủ 4 cỡ: 1 lỗi `chữ tràn` 1280x800 solo_trum (`.ci-chu > b` băng giới thiệu trùm, cao 0 px lúc đang trượt vào — chụp giữa hoạt ảnh); chạy lại SIZES=1280x800x1 CHI=solo NHANH=1 → XANH. Không liên quan Copycat. Mới: tools/thap-kt-copycat-da.js ✓ (trong hồi quy), thap-kt-conghuong.js cập nhật ✓.

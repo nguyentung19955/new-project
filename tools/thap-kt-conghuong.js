@@ -2,7 +2,7 @@
 //  · Merge King (khoẻ) lên ô đá cùng sao → ô đá +1★ (vẫn đá); bản vàng +2★; MK lên MK đá; MK lên ô băng → +1★ vẫn băng
 //  · đá + đá cùng sao → khối ĐÁ +1★ (không chạy kỹ năng KHI GHÉP của 2 cục đá: Twin Maker đá không gọi ụ)
 //  · Teleporter lên ô đá / băng cùng sao → đổi chỗ, ô kia giữ trạng thái
-//  · KHÔNG đổi: Copycat / Overclock / Mimic / Scrap Forge lên đá → không được; ụ đá / băng kéo đi không dùng kỹ năng; đá + ụ khoẻ không ghép
+//  · Copycat lên đá/băng cùng sao → bản sao THƯỜNG (kiểm riêng: tools/thap-kt-copycat-da.js) · KHÔNG đổi: Overclock / Mimic / Scrap Forge lên đá → không được; ụ đá / băng kéo đi không dùng kỹ năng; đá + ụ khoẻ không ghép
 //  · Cleanser tẩy khối đá → ụ thường; online: hành động 'gh' mang cờ đá (ONS.apGhep) → bàn con rối cũng là đá
 //  · kéo chạm thật (CDP) 390×844: ô đá sáng là ô ghép được khi cầm Merge King; dải khung ảnh → SHOTS (mặc định docs/demo-hop-tuong/tuvan/conghuong/)
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-conghuong.js   (SHOTS=0: không chụp)
@@ -73,9 +73,9 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   ok(a && a.id === 'canon' && a.da && c && c.id === 'dichchuyen' && !c.da, 'Teleporter đổi chỗ với đá: đá sang ô Teleporter, vẫn đá', JSON.stringify([a, c]));
   await ghepO(5, 9); a = await o(5); c = await o(9);
   ok(a && a.id === 'canon' && a.bang && c && c.id === 'dichchuyen', 'Teleporter đổi chỗ với ô băng', JSON.stringify([a, c]));
-  // 7 giữ nguyên: Copycat / Overclock / Mimic / Forge lên đá: không; đá + ụ khoẻ cùng loại: không; băng + băng: không
+  // 7 giữ nguyên: Overclock / Mimic / Forge lên đá: không; đá + ụ khoẻ cùng loại: không; băng + băng: không
   await dung([[0, 'saochep', 2], [1, 'canon', 2, 'da'], [2, 'epxung', 2], [3, 'mimic', 2], [4, 'canon', 2], [5, 'loren', 2], [6, 'canon', 1, 'da'], [7, 'canon', 3, 'bang'], [8, 'canon', 3, 'bang']]);
-  ok(!(await hop(0, 1)), 'Copycat → đá: không (đá không có gì để chép)');
+  ok(await hop(0, 1), 'Copycat → đá cùng sao: chép được (06/11, docs/demo-hop-tuong/tuvan/copycat-da/DCDW.md)');
   ok(!(await hop(2, 1)), 'Overclock → đá: không');
   ok(!(await hop(3, 1)), 'Mimic → đá: không');
   ok(!(await hop(6, 5)) && !(await hop(5, 6)), 'Scrap Forge ↔ đá: không');
@@ -175,15 +175,15 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   await sleep(900); await khung(anh, '3 đã đổi chỗ');
   a = await o(2); c = await o(12); ok(a && a.da && a.id === 'canon' && c && c.id === 'dichchuyen', 'kéo thật: Teleporter đổi chỗ với đá', JSON.stringify([a, c]));
   await dai(anh, 'dai-teleporter-da.png');
-  // C: Merge King lên ô băng; Copycat lên đá bị từ chối
+  // C: Merge King lên ô băng; Copycat chép ô đá → bản sao thường, đá giữ nguyên
   await dung([[6, 'vughep', 3], [8, 'canon', 3, 'bang'], [1, 'saochep', 2], [11, 'set', 2, 'da']]);
   anh = []; await sleep(300); await khung(anh, '1 MK 3★ + băng 3★');
   sang = await keo(6, 8, anh, '2 cầm MK lên băng'); ok(sang, 'kéo MK: ô băng cùng sao sáng');
   await sleep(900); await khung(anh, '3 băng 4★');
   r = await o(8); ok(r && r.sao === 4 && r.bang, 'kéo thật: MK lên băng → 4★ vẫn băng', JSON.stringify(r));
-  sang = await keo(1, 11, anh, '4 Copycat lên đá: tối'); ok(!sang, 'kéo Copycat: ô đá KHÔNG sáng');
-  await sleep(500); await khung(anh, '5 không đổi');
-  r = await o(11); ok(r && r.id === 'set' && r.da && (await o(1)), 'Copycat thả lên đá: không gì đổi', JSON.stringify(r));
+  sang = await keo(1, 11, anh, '4 Copycat lên đá: sáng'); ok(sang, 'kéo Copycat: ô đá cùng sao SÁNG');
+  await sleep(900); await khung(anh, '5 bản sao + đá');
+  r = await o(11); a = await o(1); ok(r && r.id === 'set' && r.da && a && a.id === 'set' && !a.da && a.sao === 2, 'Copycat thả lên đá: ra bản sao Điện thường, đá giữ nguyên', JSON.stringify([a, r]));
   await dai(anh, 'dai-mk-bang-copycat-da.png');
 
   ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));
