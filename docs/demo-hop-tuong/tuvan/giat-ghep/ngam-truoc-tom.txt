@@ -1,0 +1,8 @@
+==== 60 trận, 9.3 phút ====
+{"pvp":{"tran":20,"waveMax":75,"waveTong":706,"thang":3},"solo":{"tran":20,"waveMax":70,"waveTong":915,"thang":6},"coop":{"tran":20,"waveMax":70,"waveTong":792,"thang":6}}
+đỉnh đối tượng: {"dan":30,"hu":96,"bay":4,"quai":173,"hat":320,"chu":48,"vx":21,"tvfPop":36,"tvfDs":17,"ve":402.39999999990687,"step":413}
+heap MB: 1:10=11.1 0:10=11 1:20=12.4 0:20=12.6 1:30=10.3
+✗ LỖI:
+1×  vong-chong | hai vòng chồng cùng tâm: h#_vong_xam + h#_vong_do (cỡ #/# px)
+     vd: 50:pvp
+     ["0:trieu b0","0:dungMV b1 dahlia","22:trieu b0","46:dungMV b0 dahlia","47:trieu b1","81:ghep saochep1→lualien1","81:chuyenU saochep→lualien1","101:trieu b1","110:trieu b0","129:ghep lualien(copy)1→lualien1","155:trieu b1"]

@@ -61,9 +61,18 @@ Lần đầu làm nóng 1 tờ rất lớn (p2_cryo, chân dung chỉ huy) vẫn
 - Ngâm: `tools/thap-qa-ngam.js` in thêm "bước luật chậm nhất/trận: p95 · max · số trận > 120 / > 250 ms"; `BUOC_CHAM=120` để coi bước > 120 ms là lỗi
   (dùng khi chạy `LUONG=1`; 2 luồng trên máy 2 lõi số giật bị ồn).
 
-## 5. Ngâm SO=60 (trước / sau)
+## 5. Ngâm SO=60 (trước / sau) — `SO=60 NHIN=0 ONLINE=0`, 2 luồng, máy 2 lõi, không hãm CPU
 
-(điền sau khi chạy)
+| | trận có bước luật > 120 ms | > 250 ms | bước chậm nhất p95 | max | lỗi |
+|---|---|---|---|---|---|
+| trước (cca6ae7) | 19 / 60 | 6 / 60 | 319 ms | 413 ms | 1 báo động giả `vong-chong` (s50 PVP) |
+| sau | 11 / 60 | 3 / 60 | 251 ms | 276 ms | **0 — XANH**; tái lập 6/6 trận KHỚP |
+
+Báo động giả s50 PVP: khung tròn biểu tượng kỹ năng-khi-ghép (`h2_vong_xam`, nổi trên ô) trùng tâm với chớp đỏ triệu hồi ở ô ngay trên —
+tình cờ hình học, không phải 2 vòng hiệu ứng chồng → bộ kiểm ngâm bỏ qua `h2_vong_xam` (khung biểu tượng). Số giật ở ngâm vẫn ồn
+(2 trận + máy chủ trên 2 lõi) — dùng `tools/thap-do-giat-ghep.js` (1 luồng, CPU ×4) để so chính xác.
+
+Hồi quy đầy đủ `tools/thap-kt-hoiquy.js` (4 cỡ màn, gồm bước `giatghep` mới) trên bản đã gộp VFX P3: **XANH**, 0 lỗi (3 179 s).
 
 ## 6. Chạy lại
 

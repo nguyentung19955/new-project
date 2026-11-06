@@ -280,6 +280,7 @@
     if (typeof NS.dsLuoi === 'function') ds = ds.concat(NS.dsLuoi()); // ảnh tình huống (đã tải nền ở mục 3c)
     // tờ P2 (vfxp2.js) của ụ trong bộ bài: Overlord / Black Hole / Rewind / Halo / Genesis / Ember / Copycat…
     if (typeof P2 !== 'undefined' && P2.TO) for (const B of G.ban) for (const id of B.deck || []) if (P2.TO[id]) ds.push(P2.TO[id]);
+    if (typeof P3 !== 'undefined' && P3.M) for (const B of G.ban) for (const id of B.deck || []) if (P3.M['p3_' + id]) ds.push('p3_' + id); // tờ P3 (vfxp3.js) khi đã có
     for (const t of ds) if (!laTrum(t) && !laQuai(t)) themTen(t);
   };
   // trùm của wave này / wave sau (cùng cách mục 3b): mọi tờ trum_<id>* / fx_trum_<id> đã tải
@@ -325,7 +326,7 @@
       if (it.b === 0) { if (!a._cv) NS._imgGoc.call(REN, t); it.b = 1; this.ds.unshift(it); }
       else {
         const c = a._cv || NS._imgGoc.call(REN, t);
-        const laMip = c && /^(p2_|fx_|sig_)/.test(t) && c.height >= 96 && c.width / c.height >= 3;
+        const laMip = c && /^(p2_|p3_|fx_|sig_)/.test(t) && c.height >= 96 && c.width / c.height >= 3;
         if (it.b === 1) { if (c && c.width && !c._am) veThu(c); if (c) c._am = 1; it.b = laMip ? 2 : 4; }
         // tờ hiệu ứng vẽ qua chuỗi mip (REN.khungMuot / hieuung.khung: P2, fx_*, sig_*): 2 tầng đầu dựng từ TỜ LỚN là phần đắt
         // nhất (20–60 ms ×4 CPU, đo p2_copycat / p2_halo) → dựng sẵn; tầng nhỏ hơn dựng từ tầng ¼ (rẻ) khi cần

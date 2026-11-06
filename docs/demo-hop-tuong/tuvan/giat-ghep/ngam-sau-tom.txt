@@ -1,0 +1,14 @@
+tái lập s10 coop: KHỚP 29 mốc
+tái lập s20 pvp: KHỚP 2 mốc
+tái lập s30 solo: KHỚP 3 mốc
+tái lập s40 coop: KHỚP 60 mốc
+tái lập s50 pvp: KHỚP 5 mốc
+tái lập s60 solo: KHỚP 11 mốc
+
+==== 60 trận, 9.3 phút ====
+{"pvp":{"tran":20,"waveMax":75,"waveTong":710,"thang":4},"solo":{"tran":20,"waveMax":70,"waveTong":927,"thang":6},"coop":{"tran":20,"waveMax":70,"waveTong":771,"thang":6}}
+đỉnh đối tượng: {"dan":359,"hu":105,"bay":4,"quai":173,"hat":320,"chu":48,"vx":22,"tvfPop":36,"tvfDs":23,"ve":301.5,"step":276.3999999985099}
+bước luật chậm nhất/trận: p95 251 ms · max 276 ms · trận có bước > 120 ms: 11 · > 250 ms: 3 / 60
+heap MB: 0:10=11.7 1:10=11.2 0:20=12.5 1:20=12.7 0:30=10.3
+✓ XANH — không lỗi
+EXIT 0
