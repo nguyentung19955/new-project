@@ -119,11 +119,10 @@ function veGauge(ctx, T, S, al, R) {
     ctx.globalCompositeOperation = 'lighter'; PX.cung(ctx, 0, 0, R0, a0, a2, nguoc, s === i + 1 && s < 3 && td.f >= 0.85 ? 2.8 : 2.2, m, al * 0.9 * nhay);
   }
   // dạng 3: đốm sáng chạy vòng (sống động, nhỏ)
-  // ụ ĐỎ có kỹ năng chủ động: cung nạp mảnh bên trong (đầy = sáng nhấp nháy, chạm để dùng)
+  // ụ ĐỎ có kỹ năng chủ động: vòng hồi chiêu xanh lá bên trong (đầy = thở nhẹ, chạm để dùng)
   const sk = SKILLS[T.id];
   if (sk && sk.chuDong && T.sao >= 3) {
-    const mm = sk.napMau || m, rr = R0 - 4.2;
-    ctx.globalCompositeOperation = 'lighter'; PX.cung(ctx, 0, 0, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(T.nap, 0, 1), false, 1.6, T.nap >= 1 ? '#ffffff' : mm, al * (T.nap >= 1 ? 0.6 + 0.4 * Math.sin(t * 9) : 0.75));
+    PX.vongHoi(ctx, T, T.nap, R0 - 4.2, al, t, true); // vòng hồi chiêu xanh lá chung (fxu.js)
   }
   ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over';
 }

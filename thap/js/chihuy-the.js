@@ -2,7 +2,7 @@
 //  · thiếu mana / bàn đầy: chân dung tối nhẹ (CSS ≤ 35 %) + huy hiệu PNG (vòng đỏ h2_vong_do + ngọc mana h2_ngoc)
 //  · sẵn sàng: quầng PNG khung_chon nhịp (css/chihuy-the.css)
 //  · tác dụng (RAGE 10 s / HOLY SHIELD 8 s): vòng PNG góc trên-trái, mức còn lại = mặt nạ quạt (--p) + số giây
-//  · hồi chiêu: vòng PNG góc trên-phải (rãnh h2_vong_xam + h2_vong_tim cắt quạt, đầy dần tới lúc sẵn sàng) + số giây
+//  · hồi chiêu: vòng PNG góc trên-phải (rãnh h2_vong_xam + h2_vong_xanh — vòng xanh lá chung — cắt quạt, đầy dần tới lúc sẵn sàng) + số giây
 //  · giá tăng ×2 mỗi lần dùng: số to trong ô giá + nhãn "×2/×4…" (giá hiện tại ÷ giá gốc)
 // Chỉ ảnh PNG ChatGPT + chữ/số (QUY-TAC-HINH.md). Luật đọc từ CH.trangThai (chihuy.js) — không đổi luật.
 'use strict';
@@ -14,7 +14,7 @@ const CHT = {
     te.insertAdjacentHTML('afterbegin', '<span class="cht-glow"></span>');
     te.insertAdjacentHTML('beforeend',
       '<span class="cht-khoa" hidden><img class="v" src="' + this.a('h2_vong_do') + '" alt=""><img class="g" src="' + this.a('h2_ngoc') + '" alt=""></span>' +
-      '<span class="cht-vong cd" hidden><img src="' + this.a('h2_vong_xam') + '" alt=""><img class="f" src="' + this.a('h2_vong_tim') + '" alt=""><b></b></span>' +
+      '<span class="cht-vong cd" hidden><img src="' + this.a('h2_vong_xam') + '" alt=""><img class="f" src="' + this.a('h2_vong_xanh') + '" alt=""><b></b></span>' +
       '<span class="cht-vong tac" hidden><img src="' + this.a('h2_vong_xam') + '" alt=""><img class="f" src="' + this.a('h2_vong_do') + '" alt=""><b></b></span>');
     const fu = te.querySelector('.tn-full'); if (fu) fu.textContent = 'BOARD FULL';
     const g = te.querySelector('.mv-gia'); if (g && !g.querySelector('.cht-x')) g.insertAdjacentHTML('beforeend', '<i class="cht-x" hidden></i>');
