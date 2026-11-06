@@ -26,7 +26,8 @@
     #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.png) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
     #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
-    #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
+    #tai .tai-chu { display: flex; justify-content: center; gap: 10px; align-items: baseline; white-space: nowrap; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+    #tai .tai-so { display: none; }
   </style>
   <link rel="preload" href="assets/fonts/oxanium/oxanium-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>

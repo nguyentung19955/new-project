@@ -24,8 +24,8 @@ html body #tai .tai-thanh .tai-day img { position: absolute; left: 0; top: 0; wi
   max-width: none !important; max-height: none !important; margin: 0 !important; object-fit: fill !important; object-position: 0 50% !important; transform: none !important; }
 /* nền màn tải phủ kín cả màn hình (cả 2 dải ngoài khung 430), không chỉ cột giữa */
 html.tai-mo, html.tai-mo body { background: #16171a url(../assets/nen_menu.jpg) center / cover no-repeat; }
-#tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px var(--f-display); color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
-#tai .tai-so { display: none; } /* bỏ bộ đếm tệp: chỉ hiện % */
+#tai .tai-chu { display: flex; justify-content: center; gap: 10px; align-items: baseline; white-space: nowrap; font: 800 16px var(--f-display); color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+#tai .tai-so { display: none; } /* bỏ bộ đếm n/m — nhãn % đứng giữa dưới thanh */
 /* khung xem trước (Test range): nền tối, chỉ thanh nhỏ ở giữa bàn */
 #tai.nho { background: #1d1f23; }
 #tai.nho .tai-logo { display: none; }
