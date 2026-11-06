@@ -114,3 +114,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Lần chạy đủ đầu: 39× ảnh mờ ic_sao.png (nút EVENT trên HOME dùng ảnh 64 px) → đổi sang ui_sao.png (256 px); chạy lại menu|landau 3 cỡ DPR 3: XANH.
 - 1280×800 online_2_nguoi/online_tran/online_sinhdoi kẹt 1 lần (thanh tải che nút onl-vao) → chạy lại CHI=online 1280: XANH (chập chờn, không liên quan cửa hàng).
 - Lắp 9 tấm ChatGPT cửa hàng (tools/thap-lap-shop.py → assets/shop_*.png: ngọc, vàng, 3 rương đóng/mở, dải bung 16 khung, vòng quay + khung + mũi tên, 4 nút HOME, 2 băng rôn, khung hàng nhiệm vụ) → hồi quy đủ 4 cỡ: XANH (0 lỗi, 1620 s).
+- 06/11 cân bằng bậc (tuvan/tier: TIERS.hs Tím/Vàng, HOTRO.BAC, số ụ lệch bậc, KY_NANG_CAP theo số mới): thêm `tools/thap-kt-tier.js` (trung vị 4★ Trắng < Xanh < Tím < Vàng < Đỏ) vào hồi quy — 4 cỡ: 0 lỗi, XANH (1552 s).
