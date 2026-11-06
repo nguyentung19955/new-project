@@ -415,7 +415,7 @@ const UP = {
         '<div class="up-bang"><div class="up-hang dau"><span>★</span><span>Damage</span><span>Rate</span><span>Effect</span></div>' +
         bs.map(x => '<button class="up-hang' + (moc[x.s] ? ' moc' : '') + '" data-up="sao" data-mo="1" data-s="' + x.s + '"><span class="s">' + x.s + '</span><span>' + (x.dmg != null ? x.dmg : '—') + '</span><span>' + upEsc(x.toc ? x.toc.replace(' shots/s', '/s') : '—') + '</span><span class="kn">' + upEsc(x.kn || '—') + '</span>' +
           (moc[x.s] ? '<em><b>' + x.s + '★ unlock · ' + upEsc(upSC(moc[x.s].ten)) + '.</b> ' + upEsc(upSC(moc[x.s].mo)) + '.</em>' : '') + '</button>').join('') +
-        '</div><p class="up-ghi">Values at your card level, before power-ups and buffs. Each in-battle power-up adds +25% base damage (+1 → MAX). Tap a row to test it.</p>'));
+        '</div><p class="up-ghi">' + ((typeof THATSO !== 'undefined' && THATSO.chuPU(id)) || 'Values at your card level, before power-ups and buffs. Each in-battle power-up adds +25% base damage (+1 → MAX). Tap a row to test it.') + '</p>'));
       if (grow) P.push(this.muc(n++, UP_TXT.sec.grow, this.growHTML(id)));
       const dc = upDauChan(id);
       if (dc) P.push(this.muc(n++, UP_TXT.sec.foot, this.chanHTML(id, dc)));

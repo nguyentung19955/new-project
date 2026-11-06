@@ -523,7 +523,7 @@ HU.hoden = { // hố đen: kéo quái về tâm, rút máu, cuối cùng nghiề
     ctx.save(); ctx.translate(o.x, o.y);
     const hd = R.co('hu_hoden', o.r * 2); // đĩa xoáy ChatGPT (S4): code chỉ xoay + nhịp
     if (hd) {
-      ctx.globalAlpha = mo; ctx.save(); ctx.rotate(-o.t * 4.5); const rr = o.r * (1.03 + 0.03 * Math.sin(o.t * 9)); // VFX P0 hitbox: mép đĩa nhìn thấy (ảnh lề ~5%) = bán kính hút/nghiền o.r ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
+      ctx.globalAlpha = mo; ctx.save(); ctx.rotate(-o.t * 4.5); const rr = o.r * 1.03; ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore(); // VFX P0 hitbox: mép đĩa nhìn thấy (ảnh lề ~5%) = bán kính hút/nghiền o.r (trước: lệnh vẽ nằm lọt trong chú thích → đĩa không hiện, save() không restore)
       ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 * mo; { const lo = typeof FXU !== 'undefined' && FXU.co('fx_blackhole_hieu') && REN.img('fx_blackhole_hieu'); if (lo) PX.ve(ctx, lo, 0, 0, r * 2.2, r * 2.2 * lo.height / lo.width, o.t * 2, 0.35 * mo); else R.khung(ctx, 'fx_laser_trung', 3, 0, 0, r * 2.6, o.t * 2); } // lõi xoáy = ảnh TÍM của Black Hole (trước: khung nổ laser đỏ-hồng)
       ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; return;
     }

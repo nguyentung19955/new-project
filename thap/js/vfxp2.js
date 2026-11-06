@@ -112,7 +112,7 @@ HU.p2fx = {
   const T0 = 'p2_blackhole', ve0 = HU.hoden.ve;
   HU.hoden.ve = function (ctx, o, R) {
     const u = o.t / o.song, mo = Math.min(1, o.t / 0.3) * (u > 0.9 ? (1 - u) * 10 : 1);
-    if (P2.co(T0)) { P2.k(ctx, T0, (o.t * 14) % 16, o.x, o.y, o.r * 2.08, mo); return; }
+    if (P2.co(T0)) { P2.k(ctx, T0, (o.t * 14) % 16, o.x, o.y, o.r * 2 / VUNG_ANH.p2_blackhole, mo); return; } // mép xoáy THẤY ĐƯỢC = bán kính hút/nghiền o.r
     const hd = R.co('hu_hoden', o.r * 2); if (!hd) return ve0.call(this, ctx, o, R);
     ctx.save(); ctx.translate(o.x, o.y); ctx.globalAlpha = mo; ctx.rotate(-o.t * 1.6); const rr = o.r * 1.03; ctx.drawImage(hd, -rr, -rr, rr * 2, rr * 2); ctx.restore();
     if (typeof SIG !== 'undefined' && SIG_META.sig_m01_swirl && REN.img('sig_m01_swirl')) SIG.k(ctx, 'sig_m01_swirl', Math.floor(o.t * 11) % 8, o.x, o.y, o.r * 2.1, { a: 0.55 * mo, add: true });
@@ -128,7 +128,7 @@ HU.p2fx = {
   const T0 = 'p2_cryo', ve0 = HU.gBaoLuoi.ve, P = [[0, 0.12, 0, 3], [0.12, 0.36, 4, 7], [0.36, 0.8, 8, 12], [0.8, 1.1, 13, 15]];
   HU.gBaoLuoi.ve = function (ctx, o, R) {
     if (!GFX.coDOM) return;
-    if (P2.co(T0)) { if (o.song < 1.1) o.song = P2.gon() ? 0.8 : 1.1; P2.k(ctx, T0, P2.f(o.t, P), o.x, o.y, o.r * 2.05, Math.min(1, (o.song - o.t) / 0.2), 0, true); return; }
+    if (P2.co(T0)) { if (o.song < 1.1) o.song = P2.gon() ? 0.8 : 1.1; P2.k(ctx, T0, P2.f(o.t, P), o.x, o.y, o.r * 2 / VUNG_ANH.p2_cryo, Math.min(1, (o.song - o.t) / 0.2), 0, true); return; } // băng lan sàn (khung 8–11) chạm đúng mép vùng đóng băng o.r
     const u = o.t / o.song; if (!REN.img('fx_bang_vo')) return ve0.call(this, ctx, o, R);
     ctx.globalCompositeOperation = 'lighter';
     veSanBang(ctx, o.x, o.y, o.r, (1 - u) * 0.85, 0);
