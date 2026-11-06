@@ -370,6 +370,7 @@ SD.bat = function (id, sao, gd) {
   if (doi || !G.ban.length) {
     const deck = mv ? ['lien', 'canon', 'set', 'bang', 'sungluc'] : [id].concat(['lien', 'canon', 'set', 'bang', 'sungluc'].filter(x => x !== id)).slice(0, 5);
     batDau('solo', deck, mv || 'hero');
+    G.ktDeck = false; // bàn demo đặt ụ tuỳ ý — tắt bất biến bộ bài (game.js ktDeck)
   }
   G.cho = 1e9; G.wave = 6; G.tocDo = 1; G.dung = !!this.dungMuon;
   this.ks = mv ? sdKichBanMV(mv) : sdKichBan(id);
@@ -380,7 +381,7 @@ SD.xep = function () {
   SD_RNG.s = 1234567 + s * 101 + (this.gd || 0) * 7;
   const deck = G.ban[0] ? G.ban[0].deck : [id];
   const B = taoBan(boCuc('solo').ban[0], 0, deck, this.mv || 'hero');
-  G.ban = [B]; this.B = B; this.D = null; UI.keo = null;
+  G.ktDeck = false; G.ban = [B]; this.B = B; this.D = null; UI.keo = null;
   // bàn đối thủ thu nhỏ: 3 ụ ở cột phải (cùng toạ độ ô) — trận tự vẽ, kỹ năng PVP tác động thật lên nó
   if (ks.doi) {
     const D = taoBan(boCuc('solo').ban[0], 1, ['canon', 'set', 'bang', 'lien', 'tia'], 'hero'); D.ten = 'Rival'; D.ai = false; D.mana = 0;

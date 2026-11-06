@@ -543,6 +543,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-mau.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { CHI: '', BASE }), timeout: 600000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^✗ /.test(l)); for (const l of (ds.length ? ds : ['thap-kt-mau.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'mau', loai: 'màu nguyên tố', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ màu nguyên tố: lỗi chạy'); }
   }
+  // BẤT BIẾN BỘ BÀI (DCDW): mọi ụ trên bàn chỉ từ 5 thẻ trong bộ — fuzz hàng nghìn trận không giao diện (SOLO/CO-OP/PVP, ụ biến hình, trùm Joker/Mad Crown) — tools/thap-kt-ngoai-deck.js
+  if (!process.env.CHI || /deck|solo|coop|pvp/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-ngoai-deck.js')], { stdio: 'pipe', env: Object.assign({}, process.env, process.env.NHANH ? { LAN: '600', DAI: '2' } : {}), timeout: 1200000 }); console.log('  ' + String(o).split(/[\r\n]/).filter(l => /✓ (fuzz|bất biến)/.test(l)).map(l => l.trim()).join(' · ')); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split(/[\r\n]/).filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-ngoai-deck.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'ngoaideck', loai: 'ụ ngoài bộ bài', chi: l.trim().slice(0, 300), anh: '' }); console.log(ds.join('\n') || '  ✗ bất biến bộ bài: lỗi chạy'); }
+  }
   // 4 ụ vàng mới đợt 1 (Ember Relay / Quantum Choir / Fusion Archive / Hero Foundry): luật, cấp thẻ, tất định online, cân bằng bậc Vàng — tools/thap-kt-vang-moi.js
   if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }
