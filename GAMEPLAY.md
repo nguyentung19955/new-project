@@ -3174,3 +3174,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - `firebase-thap.json` (gốc repo): đăng thư mục `thap/` lên site `turret-merge` (bỏ *.md, tệp ẩn, nghe-am-thanh.html, docs/tools/raw). Bộ đệm: `/`, *.html, *.json (ver.json, roster.json) no-cache; css/ + js/ (đã có `?v=băm`) 1 năm immutable, trừ js/skilldemo.js (nạp không ?v=) 5 phút; ảnh/phông/nhạc 1 ngày (nhiều ảnh còn nạp không ?v=).
 - Workflow mới `.github/workflows/thap-firebase-hosting.yml` ("Deploy TURRET MERGE to Firebase"): chạy khi đẩy thap/** lên nhánh chính hoặc bấm tay; thiếu secret `FIREBASE_SERVICE_ACCOUNT_TURRET_MERGE` → chỉ cảnh báo vàng. Không đụng firebase.json/.firebaserc/firebase-hosting.yml của game kia.
 - Đường dẫn trong game đều tương đối → chạy được cả ở gốc tên miền (web.app) lẫn /new-project/thap/ (GitHub Pages); link mời = tên miền đang mở. Hướng dẫn 4 bước: `docs/demo-hop-tuong/FIREBASE-HOSTING-THAP.md`.
+
+## claude/demo-hop-tuong — thap: 4 ụ VÀNG mới đợt 2 (06/11)
+- **Blood Circuit** (`mauhut`, Strigoi, Đặc biệt): kéo lên BẤT KỲ ụ của mình → cả 2 thành 1 ụ ngẫu nhiên trong bộ ở sao = max (không tự lên sao). Cùng sao +1 VAMP (7★ +2; tối đa 10; +6% sát thương/VAMP cho mọi Blood Circuit, LV15 +9%). Khác sao: tốn 2 VAMP → xung máu 220% (5★+ 300%).
+- **Hex Saboteur** (`nguyenrua`, Guiltyne, Đặc biệt): ghép 2 con → sau 1.5 s nguyền 1 ụ (RNG gieo hạt). PVP −1★ (1★: tê liệt 2.5 s), khiên / Mirror Gate chặn lúc trúng; CO-OP ụ đồng đội +1★ (7★ không bị chọn); SOLO quái đầu chậm + yếu. 35% (LV9) +2%/cấp +5%/sao, trần 80%; hồi chung 8 s.
+- **Sanctum** (`thanhdia`, Bari, Hỗ trợ): xuất hiện → tẩy + khiên ô kề; ụ Tấn công kề +sát thương; khiên nạp 14 s (7★ 4 s); 5★ 8 ô.
+- **Prism Thief** (`bienmau`, Lupin, Tấn công): đạn đổi màu đỏ (đốt) / vàng (+40% chí mạng) / xanh (chậm) mỗi 3 s; ghép 2 con cùng màu → COMBO (+6%/combo sát thương, +4% tốc; tối đa 10, có 5★ → 15); 7★ mỗi phát cả 3 màu.
+- js/skills7.js; % kỹ năng theo cấp thẻ trong KY_NANG_CAP; online: cờ ô VAMP/COMBO (dongbo.js); ngoài RANDOM tới khi có hình (SK7.CHUA_ANH). Kiểm: tools/thap-kt-vang-moi2.js (trong hồi quy). Hình: docs/demo-hop-tuong/tuvan/tuong_vang/CAN-VE-2.json.

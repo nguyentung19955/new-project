@@ -217,6 +217,7 @@ const ONS = {
     let f = (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') + (T.banSao ? 'c' : '') + (T.st && T.st.da ? 'S' : '');
     if (T.epxung) f += 'e' + Math.round(T.epxung * 100) + ';'; if (T.lo) f += 'l' + T.lo + ';';
     if (T.lc) f += 'r' + T.lc + ';'; if (T.kho) f += 'k' + T.kho + ';'; // Ember Relay: lửa · Fusion Archive: điểm lưu (vangmoi1.js)
+    { const B = G.ban[T.ban]; if (B && T.id === 'mauhut' && B.vamp) f += 'v' + B.vamp + ';'; if (B && T.id === 'bienmau' && B.prism) f += 'p' + B.prism + ';'; } // VAMP / COMBO chung bàn (skills7.js)
     return [T.id, T.sao, f];
   },
   datO(B, o, s) {
@@ -232,6 +233,7 @@ const ONS = {
     T.banSao = c.includes('c'); T.st.da = c.includes('S');
     T.epxung = so('e') / 100; if (T.id === 'loren') T.lo = so('l');
     if (T.id === 'lualien') T.lc = so('r'); if (T.id === 'luutru') T.kho = so('k');
+    if (T.id === 'mauhut') B.vamp = so('v'); if (T.id === 'bienmau') B.prism = so('p'); // skills7.js: trạng thái chung bàn theo máy bạn
   },
   apGhep(B1, d) {
     if (!d) return;

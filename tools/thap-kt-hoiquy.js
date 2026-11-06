@@ -513,6 +513,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-moi.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangmoi1', loai: 'ụ vàng mới đợt 1', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ụ vàng mới đợt 1: lỗi chạy'); }
   }
+  // 4 ụ VÀNG mới đợt 2 (Blood Circuit / Hex Saboteur / Sanctum / Prism Thief: luật, tất định, PVP/CO-OP, cấp thẻ, cờ online) — tools/thap-kt-vang-moi2.js
+  if (!process.env.CHI || /vang|solo|pvp|coop/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi2.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ ụ vàng mới đợt 2 (thap-kt-vang-moi2.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-moi2.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangmoi2', loai: 'ụ vàng mới đợt 2', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ụ vàng mới đợt 2'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần
