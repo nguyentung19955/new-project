@@ -40,8 +40,8 @@ function statThuc(T) {
   if (Math.abs(tuToc) > 0.0005) ds.push({ k: 'toc', ic: 'toc', txt: pc(tuToc) + ' rate · ' + tuTen });
   if (Math.abs(tuCrit) > 0.0005) ds.push({ k: 'crit', ic: 'crit', txt: pc(tuCrit) + ' crit · ' + tuTen });
   // hệ số nhân (đúng thứ tự trong dmgU)
-  if (T.aurora > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×1.5 · Mimic merge ' + Math.ceil(T.aurora) + 's' });
-  if (T.banSao) ds.push({ k: 'dmg', ic: 'dmg', xau: true, txt: '×0.5 · copy (−50%)' });
+  if (T.aurora > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×' + +(1 + knThe(B, 'mimic') / 100).toFixed(2) + ' · Mimic merge ' + Math.ceil(T.aurora) + 's' });
+  if (T.banSao) ds.push({ k: 'dmg', ic: 'dmg', xau: true, txt: '×' + +heSaoChep(B).toFixed(2) + ' · copy (' + Math.round(heSaoChep(B) * 100) + '% power)' });
   if (B && B.cuong > 0) ds.push({ k: 'dmg', ic: 'dmg', txt: '×2 · Rage ' + Math.ceil(B.cuong) + 's' });
   const moc = typeof heSoMocDmg === 'function' ? heSoMocDmg(T) : 1;
   if (moc !== 1) ds.push({ k: 'dmg', ic: 'dmg', txt: '×' + +moc.toFixed(3) + ' · star milestone' });

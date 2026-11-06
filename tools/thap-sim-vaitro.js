@@ -7,7 +7,7 @@
 'use strict';
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const goc = path.join(__dirname, '..', 'thap');
-const FILES = ['meta', 'text', 'data', 'fx', 'tiervfx', 'game', 'chihuy', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4', 'skills5', 'hotro'];
+const FILES = ['meta', 'text', 'data', 'thebai', 'fx', 'tiervfx', 'game', 'chihuy', 'skills', 'skills2', 'phattrien', 'artscale', 'skills3', 'skills4', 'skills5', 'hotro'];
 function taoMoiTruong(hat) {
   const noop = () => {};
   let s = hat || 12345; // Math.random có hạt giống → kết quả lặp lại được
@@ -100,6 +100,8 @@ function song(ctx, che, deck, maxT) {
   ctx._deck = deck; ctx._che = che;
   if (!ctx._coBot) { ctx._coBot = 1; R(ctx, BOT); }
   R(ctx, `G.debug = { auto: true }; G._bot = true; batDau(_che, _deck, 'hero');`);
+  // CAPTHE=k: mọi thẻ trên mọi bàn lên k cấp trên cấp đầu (kẹp cấp 15) — đo cân bằng cấp thẻ / kỹ năng theo cấp (KY_NANG_CAP)
+  if (process.env.CAPTHE) R(ctx, `for (const B of G.ban) { B.capThe = {}; for (const id of B.deck) B.capThe[id] = Math.min(${+process.env.CAPTHE | 0}, THE.lvMax - THE.lvDau[G.rosterMap[id].bac]); }`);
   buoc(ctx, maxT, true);
   return R(ctx, 'G.wave');
 }

@@ -64,3 +64,7 @@ Nguồn đọc được: bluestacks.com (dcdw-beginner-guide-en, dcdw-tips-trick
 ## 5. Ảnh
 
 `docs/demo-hop-tuong/tuvan/tangsucmanh/` — `<cỡ>_luoi.png` (lưới bộ sưu tập), `<cỡ>_trang_u.png` (trang ụ, hàng CARD LV), `<cỡ>_sau_len_cap.png` (sau khi bấm LEVEL UP), 4 cỡ 360×780 / 390×844 / 430×932 / 1280×800; `tran_*.png` (nhãn LV3+2 trong trận, túi thưởng).
+
+## 6. Bổ sung 06/11 — cấp thẻ tăng KỸ NĂNG (không chỉ sát thương)
+
+Xem `tuvan/kynang_cap/DCDW.md`: bảng `KY_NANG_CAP` (data.js). Copycat: bản sao = chỉ số ụ gốc × **50% (cấp 9) → 92% (cấp 15)**, +7%/cấp theo cấp thẻ Copycat. Hỗ trợ: giá trị buff chính tăng ≈ +40% ở cấp 15 (thay cho "+½ % sát thương"). Merge King, Overclock, Mimic, Star Cannon, Werewolf, Mana Core, Frost, Venom, Shield Gen, Mystery Box, Mana Doubler, Cooldown Horn, Guillotine: kỹ năng tăng theo cấp. Trang ụ: "Copy 50% → 57%".

@@ -13,6 +13,9 @@ const TBUI = {
     return '<span class="tb-sb' + (du ? ' du' : '') + '"><span class="tb-day tai-day" style="--p:' + p + '%"><img src="assets/' + (du ? 'loi_khuc_day' : 'tai_day') + '.png" alt="" draggable="false"></span>' +
       '<b>' + (t.max ? 'MAX' : t.n + '/' + t.can) + '</b></span>';
   },
+  // giá trị kỹ năng: 'Copy 50% → 57%' (max: 'Copy 92%')
+  knV(e, v) { const r = Math.round(v * 10) / 10; return (e.tien || '') + (e.dv === 's' ? r.toFixed(1) : String(r)) + (e.dv || ''); },
+  knChu(e, t) { const a = knGt(e, t.k); return e.ten + ' ' + this.knV(e, a) + (t.max ? '' : ' → ' + this.knV(e, knGt(e, t.k + 1))); },
   // gắn LV + thanh vào 1 thẻ lưới (idempotent)
   ganThe(c) {
     const id = c && c.dataset.id; if (!id || !SKILLS[id] || !G.rosterMap[id]) return;
@@ -28,15 +31,19 @@ const TBUI = {
     if (!SKILLS[id]) return '';
     const t = THEBAI.the(id), vang = THEBAI.doc().vang, pc = (v) => '+' + Math.round(v * 100) + '%';
     const ht = SKILLS[id].vai === 'ht' && !SKILLS[id].dmg, ten = ht ? 'support' : 'damage', k = ht ? 0.5 : 1;
-    let phu, nut;
-    if (t.max) { phu = pc(t.pct * k) + ' ' + ten + ' · max level'; nut = '<button class="tb-nut" disabled><b>MAX</b></button>'; }
+    // kỹ năng theo cấp (KY_NANG_CAP, data.js): 'Copy 50% → 57%' — ụ có cả sát thương thêm ' · dmg +0% → +10%'
+    const e = KY_NANG_CAP[id], kn = e ? this.knChu(e, t) : '', coDmg = !e || (e.dmg && SKILLS[id].dmg);
+    const dmgC = (sau) => (e ? 'dmg ' : '') + pc(t.pct * k) + (sau ? ' → ' + pc(t.pctSau * k) : '') + (e ? '' : ' ' + ten);
+    let phu, nut, phu2 = '';
+    if (t.max) { phu = (kn || dmgC(false)) + ' · max level'; if (kn && coDmg) phu2 = dmgC(false); nut = '<button class="tb-nut" disabled><b>MAX</b></button>'; }
     else {
       const thieu = t.n < t.can ? 'Need ' + (t.can - t.n) + ' more cop' + (t.can - t.n > 1 ? 'ies' : 'y') : vang < t.vang ? 'Need ' + this.so(t.vang - vang) + ' more gold' : '';
-      phu = (thieu || (pc(t.pct * k) + ' → ' + pc(t.pctSau * k) + ' ' + ten));
+      phu = kn || thieu || dmgC(true);
+      if (kn) phu2 = thieu || (coDmg ? dmgC(true) : ''); // ụ kỹ năng: dòng 2 = thiếu bản sao/vàng hoặc +% sát thương
       nut = '<button class="tb-nut" data-up="tbnang"' + (THEBAI.nangDuoc(t) ? '' : ' disabled') + '><b>LEVEL UP</b><small><img src="assets/ngoc_vang.png" alt="">' + this.so(t.vang) + '</small></button>';
     }
     return '<div class="tb-cap" data-id="' + id + '"><div class="tb-cap-lv"><small>CARD LV</small><b>' + t.lv + '</b><em>/' + THE.lvMax + '</em></div>' +
-      '<div class="tb-cap-giua">' + this.thanh(t) + '<small>' + phu + '</small><small class="tb-vi"><img src="assets/ngoc_vang.png" alt="">' + this.so(vang) + '</small></div>' + nut + '</div>';
+      '<div class="tb-cap-giua">' + this.thanh(t) + '<small class="tb-phu1">' + phu + '</small><small class="tb-phu2">' + phu2 + '</small><small class="tb-vi"><img src="assets/ngoc_vang.png" alt="">' + this.so(vang) + '</small></div>' + nut + '</div>';
   },
 
   // túi thưởng ở màn kết quả

@@ -503,6 +503,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-conghuong2.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ cộng hưởng kỹ năng × nhau (thap-kt-conghuong2.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-conghuong2.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'conghuong2', loai: 'cộng hưởng kỹ năng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cộng hưởng 2: lỗi chạy'); }
   }
+  // kỹ năng theo cấp thẻ (Copycat % sao chép, hỗ trợ +%, trang ụ 'Copy 50% → 57%', online đọc cấp từ chuỗi bộ bài) — tools/thap-kt-kynangcap.js
+  if (!process.env.CHI || /kynang|solo|menu/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-kynangcap.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ kỹ năng theo cấp thẻ (thap-kt-kynangcap.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-kynangcap.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'kynangcap', loai: 'kỹ năng theo cấp thẻ', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kỹ năng theo cấp: lỗi chạy'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

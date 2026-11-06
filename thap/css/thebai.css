@@ -20,16 +20,18 @@ html body .tb-sb .tb-day img { position: absolute; left: 0; top: 0; width: 100% 
   text-shadow: 0 1px 0 #000, 0 0 2px #000; white-space: nowrap; }
 
 /* ---------- trang ụ: hàng CARD LEVEL ---------- */
-#up .tb-cap { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; padding: 0 12px; height: 58px;
+#up .tb-cap { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; padding: 0 12px; height: 62px;
   border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png) 23.1 66.1 fill / 8px 14px stretch; }
 #up .tb-cap-lv { display: flex; flex-direction: column; align-items: center; min-width: 46px; line-height: 1; }
 #up .tb-cap-lv small { font-size: 9px; font-weight: 800; letter-spacing: .08em; color: var(--c-mo, #9aa6b4); }
 #up .tb-cap-lv b { font-family: var(--f-display, sans-serif); font-size: 22px; color: var(--m, #fff); margin-top: 2px; }
 #up .tb-cap-lv em { font-style: normal; font-size: 10px; font-weight: 700; color: var(--c-mo, #9aa6b4); }
-#up .tb-cap-giua { flex: 1; min-width: 0; display: grid; grid-template-columns: 1fr auto; gap: 3px 6px; align-items: center; }
-#up .tb-cap-giua .tb-sb { grid-column: 1 / -1; height: 18px; }
+#up .tb-cap-giua { flex: 1; min-width: 0; display: grid; grid-template-columns: 1fr auto; gap: 1px 6px; align-items: center; }
+#up .tb-cap-giua .tb-sb { grid-column: 1 / -1; height: 16px; margin-bottom: 1px; }
 #up .tb-cap-giua .tb-sb b { font-size: 11px; }
 #up .tb-cap-giua small { font-size: 11px; font-weight: 700; color: var(--c-mo, #c9ced6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#up .tb-cap-giua small.tb-phu1 { grid-column: 1 / -1; color: #e6eaf0; }
+#up .tb-cap-giua small.tb-phu2 { font-size: 10px; opacity: .85; }
 #up .tb-cap-giua small.tb-vi { display: flex; align-items: center; gap: 3px; color: #ffe08a; }
 #up .tb-cap img[src*="ngoc_vang"] { width: 12px; height: 12px; }
 #up .tb-nut { flex: none; width: 104px; height: 44px; padding: 0 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
@@ -42,7 +44,7 @@ html body .tb-sb .tb-day img { position: absolute; left: 0; top: 0; width: 100% 
 #up .tb-cap.tb-len .tb-cap-lv b { animation: tb-len .45s ease-out; }
 @keyframes tb-len { 0% { transform: scale(1.7); } 100% { transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { #up .tb-cap.tb-len .tb-cap-lv b { animation: none; } }
-@media (max-height: 700px) { #up .tb-cap { height: 50px; margin-bottom: 6px; } #up .tb-nut { height: 38px; } }
+@media (max-height: 700px) { #up .tb-cap { height: 56px; margin-bottom: 6px; } #up .tb-nut { height: 38px; } }
 
 /* ---------- màn kết quả: túi thưởng ---------- */
 #ketqua .tb-kq { margin: 8px 0 0; padding: 6px 10px; border: 0 solid transparent; border-width: 8px 14px; border-image: url(../assets/h2_tam.png) 23.1 66.1 fill / 8px 14px stretch; }

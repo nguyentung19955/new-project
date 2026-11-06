@@ -43,7 +43,7 @@ SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
 SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định kỳ ĐÓNG BĂNG quái đầu; không gây sát thương; trùm chỉ 0.6 s; không đóng băng nối tiếp (miễn 3 s)
   vai: 'db', dmg: 0, toc: 0, napMau: '#bff4ff',
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
-  dai: (T) => (ms(T, 3) ? 2.5 : 2),         // 3★ LONG FREEZE
+  dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
   mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (bosses 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
@@ -73,7 +73,7 @@ SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH D
   vai: 'db', dmg: 0, toc: 0, napMau: '#9dff5a',
   K: 0.12, ky: 2.5,
   so: (T) => (ms(T, 3) ? 2 : 1), // 3★ TWIN MARK
-  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +12% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
+  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +' + +knThe(G.ban[T.ban], 'doc').toFixed(1) + '% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B).filter(E => !E.chet && !(E.vmT > 1.2)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s));
     xoayDau(T, ds[0] || quaiDau(B), dt);
@@ -94,7 +94,7 @@ function biDoc(E) { return !!E && (E.docT > 0 || E.vmT > 0); }
 function danhDauDoc(E, T, B) {
   if (E.chet) return;
   if (!(E.vmT > 1.3)) FX.chu1(E.x, E.y - 24, 'MARKED', '#9dff5a', 10);
-  E.vmT = 5; E.vmK = SKILLS.doc.K; E.yeu = Math.max(E.yeu, 5);
+  E.vmT = 5; E.vmK = knThe(B, 'doc') / 100; E.yeu = Math.max(E.yeu, 5);
   if (ms(T, 5)) E.vmLay = 1;                                                                          // 5★ CONTAGION
   if (ms(T, 7) && !E.d.khangCham) { E.cham = Math.max(E.cham, 0.15); E.chamT = Math.max(E.chamT, 5); } // 7★ NEUROTOXIN
 }
@@ -127,7 +127,7 @@ SKILLS.set = { // Tesla (Arges): sét chuỗi N quái = số sao
 };
 SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
   vai: 'db', dmg: 0, toc: 0,
-  luong: (T) => Math.round(9 * T.sao * (1 + 0.25 * ((G.ban[T.ban].lv.mana || 1) - 1)) * TIERS[T.bac].hs * (ms(T, 5) ? 1.25 : 1)), // 5★ OVERFLOW
+  luong: (T) => Math.round(9 * knHe(G.ban[T.ban], 'mana') * T.sao * (1 + 0.25 * ((G.ban[T.ban].lv.mana || 1) - 1)) * TIERS[T.bac].hs * (ms(T, 5) ? 1.25 : 1)), // 5★ OVERFLOW
   ky: (T) => (ms(T, 7) ? 5 : ms(T, 3) ? 6 : 7), // 3★ FAST FLOW · 7★ WELLSPRING
   mo: (T) => '+' + SKILLS.mana.luong(T) + ' mana / ' + SKILLS.mana.ky(T) + ' s',
   capNhat(G, B, T, dt) {
@@ -159,7 +159,7 @@ SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳn
 };
 SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép xong buff tấn công
   vai: 'db', dmg: 6.67, toc: 1.2, nham: 'dau',
-  mo: () => 'Merges with any same-star turret · result +50% attack 8s',
+  mo: (T) => 'Merges with any same-star turret · result +' + Math.round(knThe(T && G.ban[T.ban], 'mimic')) + '% attack 8s',
   ban(G, B, T, E) {
     giat(T, 0.3);
     const dmg = dmgU(T);
