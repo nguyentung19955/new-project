@@ -661,6 +661,7 @@ const REN = {
     else { ctx.fillStyle = '#1d1f23'; ctx.fillRect(0, 0, this.cv.width, this.cv.height); } // vetay-ok: nen
     ctx.setTransform(k, 0, 0, k, FX.rungX * k, FX.rungY * k);
     if (!G.ban.length) return;
+    if (typeof AN !== 'undefined') AN.khung(); // animation hybrid: cài đặt FX / giảm chuyển động / LOD bàn đông (anim.js)
     this.veDongChay(ctx);
     this.veCongLoi(ctx);
     this.veNhanBan(ctx);
@@ -789,7 +790,8 @@ const REN = {
       if (E.trum) f = E.bao ? 3 : [0, 1, 2, 1][Math.floor(E.khung * 0.8) % 4];
       else { const kf = E.khung % 4; f = Math.floor(kf); const r = kf - f; if (r > 0.65) { f2 = (f + 1) % 4; fr = (r - 0.65) / 0.35; fr = fr * fr * (3 - 2 * fr); } }
       const goc = E.trum ? 0 : (E.gv != null ? E.gv : E.goc) - Math.PI / 2;
-      const x = E.x, y = E.y + oy, cv = co * sc;
+      let x = E.x, y = E.y + oy; const cv = co * sc;
+      if (typeof AN !== 'undefined' && AN._lac.length && !E.chet) { const q = AN.lacQuai(E); x += q[0]; y += q[1]; } // rung CỤC BỘ ở khung trúng đòn (anim.js)
       if (E.bao) { // trùm báo trước: quầng màu chiêu
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
         ctx.globalAlpha = 0.6 + 0.4 * Math.sin(this.t * 20); this.anhGiua(ctx, this.cham1(TRUM[E.trum].mau), x, y, co * 1.9); ctx.restore(); // quầng = PNG tô màu
@@ -896,6 +898,8 @@ const REN = {
     if (!o.ghost) VX.duoiDau(ctx, T, S, al, this); // hào quang dạng thức tỉnh + vòng tiến độ grow-up (dưới đầu súng)
     const D = C0 * this.dauK(T.id, gd);
     const dau = this.co(this.dauTen(T.id, gd), D, da ? 'xam' : '');
+    // animation hybrid (anim.js): thở / tụ lực / giật / hồi lò xo / xung hỗ trợ — hàm của thời gian sự kiện thật, không chặn phát bắn
+    const AU = typeof AN !== 'undefined' && !o.ghost && !T.st.bang ? AN.u(T, D) : null;
     if (dau) {
       ctx.save();
       let goc = T.goc;
@@ -903,8 +907,11 @@ const REN = {
       if (T.id === 'mimic') goc = T.goc;
       if (skT.gocDau) { const g2 = skT.gocDau(T, this.t, ctx); if (g2 != null) goc = g2; } // đầu không xoay theo mục tiêu (hộp, cột…)
       // đầu súng + bóng mềm đổ xuống bệ, dựng sẵn chung 1 ảnh → 1 lần vẽ xoay mỗi ụ (thay vì 2)
-      ctx.rotate(goc); ctx.translate(T.rx || 0, 0);
+      if (AU) { if (AU.by) ctx.translate(0, AU.by); AN.veDuoi(ctx, T, C0, al, gd, da, this, goc); }
+      ctx.rotate(goc + (AU ? AU.tw : 0)); ctx.translate(AU ? AU.rx : (T.rx || 0), AU ? AU.py : 0);
+      if (AU && (AU.sx !== 1 || AU.sy !== 1)) ctx.scale(AU.sx, AU.sy);
       if (!VX.veBien(ctx, T, C0, al, da, this)) this.veDauLop(ctx, T.id, gd, C0, al, 1, da); // đang biến hình: hoà 2 dạng
+      if (AU) AN.veTren(ctx, T, C0, al, gd, da, this);
       // ánh sáng phụ: mimic cầu vồng, mana phát sáng, tesla cuộn nạp, laser nóng
       let sang = 0;
       if (T.id === 'mana') sang = 0.2 + T.sang * 0.6; // VFX P3: bỏ đầu sáng phập phồng
@@ -914,6 +921,7 @@ const REN = {
       if (T.id === 'mimic') sang = Math.max(sang, 0.3); // VFX P3: bỏ nhấp nháy
       if (T.chop > 0) sang = Math.max(sang, T.chop * 3);
       if (skT.sangDau) sang = Math.max(sang, skT.sangDau(T, this.t) || 0);
+      if (AU && AU.glow > 0.004) sang = Math.max(sang, AU.glow); // thở lõi 1–3% · tụ lực · xung (anim.js)
       if (sang > 0 && !da) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * Math.min(0.45, sang * 0.6); ctx.drawImage(dau, -D / 2, -D / 2, D, D); }
       ctx.restore();
       if (T.id === 'mimic') { // ánh cầu vồng chạy vòng (bản sắc Mimic; buff Aurora hiện bằng ký hiệu)
@@ -1056,9 +1064,10 @@ const REN = {
       if (!T || T.id !== 'laser') continue;
       const E = T.las && T.las.E, bat = !!(T.las && T.las.on && E && !E.chet && !(T.st.bang > 0) && !T.st.da);
       if (bat) { T._lx = E.x; T._ly = E.y; T._lr = T.las.ramp; }
-      T._la = (T._la || 0) + ((bat ? 1 : 0) - (T._la || 0)) * Math.min(1, dt * (bat ? 22 : 12));
+      T._la = (T._la || 0) + ((bat ? 1 : 0) - (T._la || 0)) * (1 - Math.exp(-dt * (bat ? 22 : 12))); // theo thời gian (30/60 FPS như nhau)
       if (T._la < 0.02 || T._lx === undefined) continue;
-      const [x, y] = dauNong(T), r = T._lr || 0, A = T._la, tt = this.t;
+      const [x, y] = typeof AN !== 'undefined' ? AN.muzzle(T) : dauNong(T), r = T._lr || 0, tt = this.t;
+      const A = T._la * (0.94 + 0.06 * Math.sin(tt * 7.3 + (T.uid || 0))); // tia: alpha dao động rất nhẹ (không nhấp nháy)
       const w = (6 + r * 10) * (0.55 + 0.45 * A); // VFX P3: bỏ rung bề rộng tia (tia vẫn chạy = ảnh cuộn dọc)
       ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = A * 0.9;
@@ -1081,12 +1090,16 @@ const REN = {
     for (const d of G.dan) {
       const z = d.z || 0, hx = d.x, hy = d.y - z;
       d._ra = (d._ra || 0) + dt;
+      // muzzle: đạn sinh ở tâm ụ → che dưới đầu súng tới khi qua mũi nòng (anim.js) — hiện ra đúng cửa nòng
+      const che = typeof AN !== 'undefined' && d.T ? AN.danChe(d) : 0, di = che ? Math.hypot(hx - d.sx, hy - d.sy) : 0;
+      if (che && di < che) continue;
+      if (d._v0 === undefined) d._v0 = [hx, hy];
       const hien = Math.min(1, d._ra / 0.05), sc = 0.55 + 0.45 * hien;
       if (d.cong) { this.anhGiua(ctx, this.cham1('#000000'), d.x, d.y + 3, (4 + z * 0.02) * 2.6, 0, hien * 0.45); ctx.globalAlpha = 1; } // bóng đạn cong = PNG tô đen
       // hướng bay trên màn = hướng chuyển động giữa 2 bước (gồm cả độ cao vòng cung)
       let goc = d.goc || 0;
       if (d._x !== undefined) { const mx = hx - d._x, my = hy - (d._y - (d._z || 0)); if (mx * mx + my * my > 0.04) goc = Math.atan2(my, mx); }
-      if (d._g == null) d._g = goc; else d._g += gocLech(d._g, goc) * Math.min(1, dt * 30); // hướng vẽ mượt (đạn đuổi rẽ cong êm)
+      if (d._g == null) d._g = goc; else d._g += gocLech(d._g, goc) * (1 - Math.exp(-dt * 30)); // hướng vẽ mượt (đạn đuổi rẽ cong êm) — theo thời gian, không theo khung
       goc = d._g;
       const co = d.co * (1 + z / 140) * sc;
       const dv2 = typeof FXU !== 'undefined' && !d.mau && ((d.T && FXU.DAN_CHUNG.has(d.img) && FXU.ten(d.T, 'dan')) || (FXU.THAY[d.img] && FXU.co(FXU.THAY[d.img]) && FXU.THAY[d.img]));
@@ -1098,7 +1111,7 @@ const REN = {
       if (d.img !== 'dan_phao') {
         const mau = d.mau || MAU_VET[d.img] || '#ffd080', tracer = d.img === 'dan_lien' ? 2.6 : 1.5;
         let L = d.sp * k / 60 * tracer + co * 0.6;
-        const tu = Math.hypot(hx - d.sx, hy - d.sy) + co * 0.3; // không kéo vệt ra sau đầu nòng
+        const tu = Math.hypot(hx - d.sx, hy - d.sy) - che + co * 0.3; // không kéo vệt ra sau đầu nòng
         L = Math.min(L, tu, 150);
         ctx.save(); ctx.translate(hx, hy); ctx.rotate(goc);
         ctx.globalCompositeOperation = 'lighter';
@@ -1121,7 +1134,7 @@ const REN = {
       if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
       if (a.ten === 'chop_nong') { // chớp đầu nòng: bung nhanh (ease-out) rồi tắt mềm, bám theo nòng đang xoay/giật
         const T = a.T;
-        if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = dauNong(T); goc = T.goc + (a.dg || 0); }
+        if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = typeof AN !== 'undefined' ? AN.muzzle(T, a.lat) : dauNong(T); goc = T.goc + (a.dg || 0); } // muzzle socket (anim.js)
         sc = 0.55 + 0.6 * (1 - (1 - u) * (1 - u) * (1 - u)); al = (1 - u) * (1 - u) * (1.4 - 0.4 * u);
       } else {
         sc = 0.9 + 0.16 * (1 - (1 - u) * (1 - u));
@@ -1174,7 +1187,7 @@ const REN = {
     const op = ctx.globalCompositeOperation; ctx.globalCompositeOperation = 'source-over';
     if (a.mot === 'no') {
       let x = a.x, y = a.y, goc = a.goc; const T = a.T;
-      if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = dauNong(T); goc = T.goc + (a.dg || 0); }
+      if (T && G.ban[T.ban] && G.ban[T.ban].t[T.o] === T) { [x, y] = typeof AN !== 'undefined' ? AN.muzzle(T, a.lat) : dauNong(T); goc = T.goc + (a.dg || 0); } // muzzle socket (anim.js)
       const e = 1 - (1 - u) * (1 - u) * (1 - u);
       FXU.veNeo(ctx, a.ten, x, y, a.co * (0.55 + 0.6 * e), goc, Math.min(1, (1 - u) * (1 - u) * 1.3));
     } else {
