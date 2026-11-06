@@ -1,0 +1,4 @@
+/* TURRET MERGE — CẢM GIÁC CHẠM P1 (js/camgiac.js): vạch power-up trên thẻ · bàn chơi giảm bão hoà khi thua · nhịp mở rương */
+#bo-the .the .cg-vach { position: absolute; z-index: 30; left: 17%; right: 17%; top: calc(var(--khh, 74px) * .70); height: 8px; width: 66%; pointer-events: none; opacity: 0; transition: opacity .18s ease-out; }
+#bo-the .the .cg-vach.on { opacity: 1; transition-duration: .06s; }
+html.cg-thua #cv, html.cg-thua #cv-nen { filter: saturate(.45) brightness(.9); transition: filter .5s ease-out; }

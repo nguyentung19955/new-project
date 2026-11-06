@@ -22,12 +22,16 @@ const DEMKN = {
     },
     cuuvi(T) { const n = T.duoi || 0; return n > 0 ? { m: [{ ic: 'ic_chet', s: n + '/9' }], sang: n >= 8 } : null; },
     loren(T) { const n = T.lo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + SKILLS.loren.MAX }], sang: n >= SKILLS.loren.MAX } : null; },
-    leviathan(T) { const n = T.vuc || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: '' + n }], sang: n >= 100 } : null; },
+    // VỰC SÂU (ABYSS): icon xoáy vực riêng (không dùng ic_dmg chung) + chữ xanh biển sâu; đủ 100 → 'MAX' (chữ vàng)
+    leviathan(T) { const n = Math.min(100, T.vuc || 0); return n > 0 ? { m: [{ ic: DEMKN.icVuc(), s: n >= 100 ? 'MAX' : '' + n }], mau: n >= 100 ? '#b8f6ff' : '#5fe3ff' } : null; },
     nangluong(T, B) { const k = Math.round(SKILLS.nangluong.k(B) * 100); return k > 0 ? { m: [{ ic: 'ic_mana', s: '+' + k + '%' }], sang: k >= 500 } : null; },
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
   },
-  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana'],
+  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana', 'fx_leviathan_hieu'],
+  // icon VỰC SÂU: ảnh ChatGPT lev_abyss (docs/demo-hop-tuong/tuvan/leviathan/CAN-VE.json) — chưa có thì xoáy nước fx_leviathan_hieu (ảnh ChatGPT sẵn có)
+  IC_VUC: null,
+  icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },
 
   lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { return f(T, B); } catch (e) { return null; } },
 
@@ -81,7 +85,7 @@ const DEMKN = {
       xx += ic + gap;
       ctx.lineWidth = Math.max(1.5, f * 0.22); ctx.strokeStyle = '#000'; ctx.lineJoin = 'round';
       ctx.strokeText(p.s, xx, y + h / 2 + 0.5);
-      ctx.fillStyle = v.sang ? '#ffe46b' : '#f2f6fa'; ctx.fillText(p.s, xx, y + h / 2 + 0.5);
+      ctx.fillStyle = v.sang ? '#ffe46b' : v.mau || '#f2f6fa'; ctx.fillText(p.s, xx, y + h / 2 + 0.5);
       xx += ctx.measureText(p.s).width;
     }
     ctx.restore(); return true;

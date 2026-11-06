@@ -182,7 +182,8 @@ SKILLS.bomhen = { // Bom Hẹn Giờ (Hecate) — ĐẶC BIỆT (đợt vai trò
   vai: 'db', dmg: 0, toc: 0, napMau: '#ffb35a',
   r: (T) => 34 + 3 * T.sao,
   yeuDai: (T) => (ms(T, 3) ? 6 : 4),   // 3★ LONG FUSE
-  mo: (T) => 'Every 2s sticks a 5s bomb on a random enemy · blast (' + SKILLS.bomhen.r(T) + ' px) weakens: +10% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's' + (ms(T, 5) ? ' · staggers 0.5s' : '') + (ms(T, 7) ? ' · 2 bombs' : ''),
+  yw: (T) => (knThe(G.ban[T.ban], 'bomhen') || 10) / 100, // % suy yếu theo cấp thẻ (KY_NANG_CAP.bomhen)
+  mo: (T) => 'Every 2s sticks a 5s bomb on a random enemy · blast (' + SKILLS.bomhen.r(T) + ' px) weakens: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's' + (ms(T, 5) ? ' · staggers 0.5s' : '') + (ms(T, 7) ? ' · 2 bombs' : ''),
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B).filter(E => !E.chet && !E.bom);
     if (!T.muc || T.muc.chet || T.muc.bom || !banDuocQuai(B, T.muc)) T.muc = ds.length ? pick(ds) : null;
@@ -191,7 +192,7 @@ SKILLS.bomhen = { // Bom Hẹn Giờ (Hecate) — ĐẶC BIỆT (đợt vai trò
     if (T.nap < 1 || !T.muc) return true;
     T.nap = 0; giat(T, 0.7); chopNong(T, 20); SND.nap();
     const dsBom = [T.muc].concat(ms(T, 7) ? ds.filter(E => E !== T.muc).slice(0, 1) : []); // 7★ TWIN BOMBS
-    const o = { r: this.r(T), yw: 0.10, ywDai: this.yeuDai(T), soc: ms(T, 5) ? 0.5 : 0 }; // 5★ SHOCKWAVE
+    const o = { r: this.r(T), yw: this.yw(T), ywDai: this.yeuDai(T), soc: ms(T, 5) ? 0.5 : 0 }; // 5★ SHOCKWAVE
     for (const E of dsBom) {
       E.bom = true;
       danThang(B, T, E, 'dan_phao', 380, 13, (G, d, M) => { const Q = M || E; G.hu.push(Object.assign({ k: 'bom', t: 0, song: 5, E: Q, x: d.x, y: d.y, T, B, dmg: 0 }, o)); });
@@ -310,7 +311,7 @@ SKILLS.nangluong = { // Pháo Năng Lượng (Jupiter): sát thương tăng theo
 SKILLS.lanhgia = { // Máy Phát Lạnh (Neptune): HỖ TRỢ — ụ kề bắn kèm làm chậm (không cộng dồn với nguồn chậm khác; trần 35% / trùm 15%)
   vai: 'ht', dmg: 0, toc: 0,
   cham: (T) => 0.08 * HOTRO.k(T),
-  mo: (T) => 'Neighbours’ hits slow ' + Math.round(Math.min(0.35 * HOTRO.CAP_BAC[T.bac], SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 15%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
+  mo: (T) => 'Neighbours’ hits slow ' + Math.round(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T)) * 100) + '% for 2s (bosses max 15%)' + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * 100) + '% damage vs slowed' : '') + (ms(T, 7) ? ' · every 8s a hit freezes 0.8s' : ''),
   hoTro(G, T, N, ra) { ra.cham = this.cham(T); if (ms(T, 5)) ra.lanh = 0.05 * HOTRO.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '127,220,255', 2.4, 0.6);
@@ -584,7 +585,7 @@ SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có x
   vai: 'ht', dmg: 0, toc: 0,
   tile: (T) => 0.12 * HOTRO.k(T), // 0.08 → 0.12 (đo bậc 06/11)
   nguong: (T) => (ms(T, 5) ? 0.40 : 0.30),   // 5★ DEEP REAP
-  mo: (T) => 'Neighbours: ' + (Math.min(0.15, SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% per hit to execute normal enemies under ' + Math.round(SKILLS.tuthan.nguong(T) * 100) + '% HP' + (ms(T, 7) ? ' · big enemies under 15%' : '') + ' · bosses: small capped hit',
+  mo: (T) => 'Neighbours: ' + (HOTRO.hd(T, 'chet', SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% per hit to execute normal enemies under ' + Math.round(SKILLS.tuthan.nguong(T) * 100) + '% HP' + (ms(T, 7) ? ' · big enemies under 15%' : '') + ' · bosses: small capped hit',
   hoTro(G, T, N, ra) { ra.chet = this.tile(T); ra.ngNguong = this.nguong(T); if (ms(T, 7)) ra.chetTo = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '199,125,255', 2.8, 0.5); return true; },
 };
@@ -877,7 +878,7 @@ SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): BOM HẸN GIỜ đếm ngược �
   //   ụ 7★ xịt bị GIẢM sao (trùm hạ sao, ụ/skill khác…) → hết xịt, đếm ngược lại TỪ ĐẦU theo sao mới, biến đổi lại bình thường
   //   (luật thuần theo T.sao/T.tuoi → online tất định; con số đếm + xác bom chỉ là hình vẽ từ bộ đếm đó — growfx.js veEvoBom)
   vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f', bomDem: true,
-  can: (T) => (14 + 5 * T.sao) * (ms(T, 3) ? 0.8 : 1), // 3★ FAST GROWTH · 20+6★ → 14+5★ (đo bậc 06/11)
+  can: (T) => (14 + 5 * T.sao) * (ms(T, 3) ? 0.8 : 1) * (knThe(G.ban[T.ban], 'tienhoa') || 100) / 100, // × cấp thẻ (KY_NANG_CAP.tienhoa) // 3★ FAST GROWTH · 20+6★ → 14+5★ (đo bậc 06/11)
   con: (T) => Math.max(0, SKILLS.tienhoa.can(T) - T.tuoi), // giây còn lại tới lúc biến đổi
   mo: (T) => T.sao >= LUAT.saoMax
     ? 'MAX 7★ — the bomb fizzled: cannot evolve, no skill (just a 7★ turret) · losing a star restarts the countdown'
@@ -983,7 +984,7 @@ SKILLS.haoquang = { // Hào Quang Thánh (Halo Mona) — ĐẶC BIỆT (đợt v
   // chặn chiêu đối thủ) — chiêu TRÙM chỉ bị giảm nhẹ (không huỷ hẳn); hồi chiêu dài, không duy trì liên tục
   vai: 'db', dmg: 0, toc: 0, napMau: '#fff6c0',
   ky: (T) => Math.max(20, 30 - 2 * T.sao), // 40−2★ (≥28) → 30−2★ (≥20) (đo bậc 06/11: Đỏ yếu nhất bảng)
-  tg: (T) => 3 + (ms(T, 3) ? 0.5 : 0) + (ms(T, 7) ? 1 : 0), // 2 → 3 s
+  tg: (T) => (knThe(G.ban[T.ban], 'haoquang') || 3) + (ms(T, 3) ? 0.5 : 0) + (ms(T, 7) ? 1 : 0), // gốc theo cấp thẻ (KY_NANG_CAP.haoquang) // 2 → 3 s
   mo: (T) => (T.nap >= 1 ? 'READY' : 'charging ' + Math.round(T.nap * 100) + '%') + ' · TAP: team invulnerable ' + SKILLS.haoquang.tg(T) + 's (leaks cost no hearts; boss skills only weakened) · cooldown ' + SKILLS.haoquang.ky(T) + 's' + (ms(T, 5) ? ' · cleanses' : '') + (ms(T, 7) ? ' · +30% speed' : ''),
   gocDau: (T, t) => (T.pha || 0) + t * 0.3,
   capNhat(G, B, T, dt) {

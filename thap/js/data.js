@@ -200,6 +200,12 @@ const KY_NANG_CAP = {
   doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+' },
   khien: { ten: 'Recharge', base: 18, buoc: -0.4, max: 14.4, dv: 's' },
   hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's' },
+  // ụ KHÔNG gây sát thương (VFX P0 — REVIEW-VFX-93 IX): cấp thẻ nâng CHÍNH con số kỹ năng thay cho dòng '+damage' vô tác dụng
+  bomhen: { ten: 'Weaken', base: 10, buoc: 0.25, max: 13.5, dv: '%', tien: '+' },     // quái quanh vụ nổ nhận thêm % sát thương (vào trần suy yếu 25%)
+  tienhoa: { ten: 'Fuse time', base: 100, buoc: -2, max: 88, dv: '%' },               // thời gian đếm ngược × giá trị/100
+  haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's' },             // thời gian rào bất tử (trước mốc sao)
+  loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+' },      // +% sát thương mỗi cộng dồn lò (trần +60% / ụ nhận giữ nguyên)
+  khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%' },            // chu kỳ +1★ × giá trị/100
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
   phagiap: { ten: 'Exposed', base: 22, buoc: 0.6, max: 30.4, dv: '%', tien: '+', ht: 1 },

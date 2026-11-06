@@ -11,6 +11,7 @@ const KTA = {
   ru: { thuong: 'shop_ru_thuong', vang: 'shop_ru_vang', than: 'shop_ru_than' },       // rương đóng (raw_shop_ruong — tools/thap-lap-shop.py)
   ruMo: { thuong: 'shop_ru_thuong_mo', vang: 'shop_ru_vang_mo', than: 'shop_ru_than_mo' }, // rương mở
   fx: 'shop_fx_mo',                                                                      // dải 16 khung bung sáng (raw_shop_fx_mo)
+  khe: 'p1_ruong_khe',                                                                               // khe sáng nắp rương (nhịp 2): '' = chưa có ảnh → chỉ rương sáng lên; chờ raw_p1_ruong_khe (tuvan/vfx/CAN-VE-p1.json)
   bung: 'h2_burst', sao: 'ui_sao', quang: 'fx_vong_lv', lung: 'p7_o_trong', o: 'p7_o_co', oSang: 'p7_o_doi',
   banh: 'shop_banh', banhKhung: 'shop_banh_khung', mui: 'shop_mui',                     // vòng quay 8 ô (raw_shop_vongquay)
   nut: { shop: 'shop_nut_shop', vq: 'shop_nut_vq', nv: 'shop_nut_nv', sk: 'shop_nut_sk' }, // nút HOME (raw_shop_nut)
@@ -188,31 +189,41 @@ const KTUI = {
     try { SND.nang(3); } catch (e) { }
     this.phu('<b class="kt-phu-t">' + (tde || 'YOU GOT') + '</b><div class="kt-nhan">' + ds.join('') + '</div><button class="hm-nut2 vang kt-ok" data-act="kt-phu-dong"><b>OK</b></button>', 'kt-nh');
   },
-  // MỞ RƯƠNG: lắc 0,9 s → bung → lật thẻ 0,32 s/thẻ → tổng; chạm = bỏ qua
+  // MỞ RƯƠNG 4 nhịp (REVIEW-VFX-93 §VI.H, tuvan/vfx/p1): chốt bật 0,28 s → khe sáng 0,28 s (rương VÀNG/THẦN 0,42 s) → nắp mở + bung
+  //  → thẻ bay ra khỏi rương rồi lật 0,24 s/thẻ → tổng; chạm = bỏ qua. Trước đây lắc 0,9 s mới mở.
   moRuongAnim(r, them) {
     const giam = matchMedia('(prefers-reduced-motion: reduce)').matches;
     this._ruong = { r, b: 0, them };
     const the = r.the.map((x, i) => '<span class="kt-lat b-' + x.bac + '" data-i="' + i + '"><img class="kt-lat-q" src="' + this.a(KTA.quang) + '" alt=""><img class="kt-lat-l" src="' + this.a(KTA.lung) + '" alt=""><span class="kt-lat-m">' + OT.mini(x.id) + '<b>×' + x.n + '</b></span></span>').join('');
-    const p = this.phu('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><span class="kt-mr-fx"><img src="' + this.a(KTA.fx) + '" alt=""></span><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k]) + '" alt=""></div>' +
+    const p = this.phu('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><span class="kt-mr-fx"><img src="' + this.a(KTA.fx) + '" alt=""></span><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k]) + '" alt="">' + (KTA.khe ? '<img class="kt-mr-khe" src="' + this.a(KTA.khe) + '" alt="">' : '') + '</div>' +
       '<b class="kt-phu-t">' + KTC.ruong[r.k].ten + '</b><div class="kt-mr-the">' + the + '</div><small class="kt-mr-cham">TAP TO SKIP</small>' +
       '<div class="kt-mr-tong" hidden></div></div>', 'kt-mo');
     const mr = p.querySelector('.kt-mr');
-    mr.classList.add('lac'); try { SND.nut(); } catch (e) { }
+    const hiem = r.k !== 'thuong', T1 = giam ? 40 : 280, T2 = giam ? 40 : hiem ? 420 : 280;
+    mr.classList.add('chot'); try { SND.nut(); } catch (e) { }
     const lat = (i) => {
       const c = mr.querySelectorAll('.kt-lat'); if (!this._ruong || this._ruong.r !== r) return;
       if (i >= c.length) return this.tongRuong();
       c[i].classList.add('mo'); this._ruong.b = i + 1;
       try { const b = r.the[i].bac; if (b === 'vang' || b === 'do') SND.nang(5); else SND.nut(); } catch (e) { }
-      this._lat = setTimeout(() => lat(i + 1), giam ? 60 : 320);
+      this._lat = setTimeout(() => lat(i + 1), giam ? 60 : 240);
     };
-    this._lat = setTimeout(() => { mr.classList.remove('lac'); mr.classList.add('bung'); this.el('kt-phu').querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[r.k]); this._lat = setTimeout(() => lat(0), giam ? 50 : 450); }, giam ? 50 : 900);
+    this._lat = setTimeout(() => {
+      if (!this._ruong || this._ruong.r !== r) return;
+      mr.classList.remove('chot'); mr.classList.add('khe'); try { SND.nang(hiem ? 3 : 2); } catch (e) { }
+      this._lat = setTimeout(() => {
+        if (!this._ruong || this._ruong.r !== r) return;
+        mr.classList.remove('khe'); mr.classList.add('bung', 'bay'); this.el('kt-phu').querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[r.k]);
+        this._lat = setTimeout(() => lat(0), giam ? 50 : 360);
+      }, T2);
+    }, T1);
   },
   boQua() {
     const x = this._ruong; if (!x) return;
     clearTimeout(this._lat);
     const mr = this.el('kt-phu').querySelector('.kt-mr'); if (!mr) return;
     if (mr.querySelector('.kt-mr-tong:not([hidden])')) return;
-    mr.classList.remove('lac'); mr.classList.add('bung');
+    mr.classList.remove('lac', 'chot', 'khe'); mr.classList.add('bung', 'bay');
     mr.querySelector('.kt-mr-anh').src = this.a(KTA.ruMo[x.r.k]);
     mr.querySelectorAll('.kt-lat').forEach(c => c.classList.add('mo'));
     this.tongRuong();

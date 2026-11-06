@@ -3,10 +3,10 @@
 //    ô nguồn = hốc thép mở khoá (cf_o_nha) — KHÔNG còn khung xanh vuông / bản mờ / nét đứt.
 //  · Đang kéo: mọi ô ghép được thở nhẹ bằng vòng nam châm (cf_vong_hop, 1 đồng hồ chung); rê lên ô hợp lệ → vòng sáng 1.12×,
 //    ụ bị hút về tâm ≤0.12 ô, huy hiệu sao KẾ TIẾP bay lên; rê lên ô sai → vòng đỏ (h2_vong_do) 180 ms.
-//  · Ghép (780 ms + 40 ms dừng hình cục bộ): hút nam châm → hút xoáy (cf_hut) → chớp va chạm + rung nhẹ → vòng rèn + 4 mảnh tia
-//    → ụ mới bật ra (0.6→1.2→1.0) → dấu sao to đập xuống góc phải trên → huy hiệu thật hiện lại.
-//  · Triệu hồi (630 ms): cổng hầm (h2_vfx_cong) mở → ụ rơi xuống, chạm đất nhún + khói → vòng toả → cổng đóng.
-//  · Thả sai / huỷ: ụ nghiêng, bật cong về ô cũ (easeOutBack) ~340 ms.
+//  · Ghép (800 ms + 40 ms dừng hình cục bộ): hút nam châm → hút xoáy (cf_hut) → chớp va chạm + rung nhẹ → vòng rèn + 4 mảnh tia
+//    → dấu sao to đập xuống góc phải trên (380 ms) → ụ mới bật ra (470 ms, 0.6→1.2→1.0) → huy hiệu thật hiện lại (tuvan/vfx/p1).
+//  · Triệu hồi (~390 ms): chớp ở ô → cổng hầm (h2_vfx_cong) mở → ụ trồi lên từ hầm, bật nhẹ → viền màu bậc (chỉ XANH+) → cổng đóng.
+//  · Thả sai / huỷ: ụ nghiêng, bật cong về ô cũ ~150 ms; thả lên ụ không ghép được: bệ chớp đỏ 1 lần + lắc cục bộ ngắn.
 //  Chỉ TRÌNH BÀY: luật ghép/triệu hồi chạy ngay như cũ (ghep() đổi bàn ở t=0), không chặn thao tác, không dừng game.
 //  Mọi hình là ảnh ChatGPT (QUY-TAC-HINH); code chỉ đặt vị trí / phóng / xoay / mờ / chọn khung + rung nhẹ.
 //  Giảm chuyển động (prefers-reduced-motion): ghép ~410 ms, không rung, không mảnh tia.
@@ -15,7 +15,8 @@
 const GF = {
   ANH: ['cf_vong_hop', 'cf_o_nha', 'cf_hut', 'cf_no', 'cf_vong_ren', 'cf_dau_sao', 'fx_merge', 'h2_vfx_cong', 'h2_vfx_ghep', 'h2_glint', 'h2_vong_do', 'sup_ring', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'de_chung'],
   // mốc thời gian (ms) theo spec mục 6 — KHÔNG rút ngắn (trừ giảm chuyển động)
-  M: { snap: 95, hut: 205, no: 255, dung0: 230, dung: 40, lo: 405, loXong: 520, dau: 490, dauXong: 650, het: 780 },
+  // REVIEW-VFX-93 §VI.B: SAO MỚI bật lên TRƯỚC (dấu sao 380 ms) rồi đầu súng ngẫu nhiên mới hiện (470 ms) — loại chưa lộ trước khi sao đập xuống
+  M: { snap: 95, hut: 205, no: 255, dung0: 230, dung: 40, lo: 470, loXong: 585, dau: 380, dauXong: 540, het: 800 },
   cam: null,      // ụ đang cầm: { T, t0, x, y, sc, nghieng, vx }
   ve: [],         // ụ bật về ô cũ: { T, B, o, x, y, t0, sai }
   mg: [],         // phát lại ghép đang chạy
@@ -51,6 +52,7 @@ const GF = {
 
   // =================== TRẠNG THÁI CẦM / HOVER (mỗi khung) ===================
   capNhat() {
+    // gọi từ veDuoi VÀ veCam (veDuoi không chạy khi đã thả & không còn nguồn → trước đây ụ treo giữa đường tới khi có nguồn mới); gọi 2 lần/khung vô hại
     const now = this.now(), dt = Math.min(0.05, Math.max(0, (now - (this._tLast || now)) / 1000)); this._tLast = now;
     const k = UI.keo, B = this.ban0();
     // vừa thả / huỷ: ụ đang cầm không còn được kéo → nếu không có lệnh ghép thì bật về ô cũ
@@ -127,6 +129,7 @@ const GF = {
 
   // =================== LỚP CẦM: ô nguồn (hốc mở), bóng, ụ đang cầm, ụ bật về, phát lại ghép ===================
   veCam(ctx) {
+    this.capNhat();
     const now = this.now();
     // ô nguồn: hốc thép mở khoá (khung 0→5 trong 140 ms, rồi lắng về khung 3 = hốc trống tối)
     // vòng đỏ ô sai (180 ms) — dưới ụ đang cầm
@@ -145,7 +148,7 @@ const GF = {
     }
     // ụ bật về ô cũ (thả sai / huỷ)
     for (let i = this.ve.length - 1; i >= 0; i--) {
-      const r = this.ve[i], B = r.B, u0 = (now - r.t0) / 1000, dai = this.giam() ? 0.2 : 0.34, LAC = r.sai && !this.giam() ? 0.16 : 0;
+      const r = this.ve[i], B = r.B, u0 = (now - r.t0) / 1000, dai = this.giam() ? 0.1 : 0.15, LAC = r.sai ? 0.18 : 0; // §VI.C: về ô 150 ms; thả sai: bệ chớp đỏ 1 lần (180 ms)
       if (u0 >= dai + LAC || B.t[r.o] !== r.T || !G.ban.includes(B)) { this.ve.splice(i, 1); continue; }
       const u = Math.min(u0, dai - 1e-4);
       const o = B.o[r.o], C = this.tile(B);
@@ -157,7 +160,11 @@ const GF = {
         x = this.lerp(r.x, o.x, e); y = this.lerp(r.y, o.y, e) - Math.sin(v * Math.PI) * C * 0.18; // đường cong chỉ bằng toạ độ
         sc = this.lerp(1.03, 1, this.eo(v)); ng = -8 * Math.PI / 180 * (1 - this.eo(v));
       }
-      if (u0 >= dai && LAC) { const v = (u0 - dai) / LAC; x += Math.sin(v * Math.PI * 4) * C * 0.06 * (1 - v); } // lắc ngang 2 nhịp, tắt dần (≈160 ms)
+      if (u0 >= dai && LAC) {
+        const v = (u0 - dai) / LAC;
+        if (!this.giam() && v < 0.55) { const w = v / 0.55; x += Math.sin(w * Math.PI * 4) * C * 0.045 * (1 - w); } // lắc cục bộ 2 nhịp ≈100 ms (không rung màn)
+        const vd = this.img('h2_vong_do'); if (vd) REN.anhGiua(ctx, vd, o.x, o.y, C * (0.86 + 0.08 * Math.sin(v * Math.PI)), 0, 0.9 * (1 - v * v)); // bệ chớp đỏ 1 lần
+      }
       const f = Math.max(0, 3 - u / dai * 4); // hốc đóng lại 3→0
       this.khung(ctx, 'cf_o_nha', f, o.x, o.y, C * 0.9, 0, 0.95 * (1 - clamp((u - 0.28 * k) / (0.06 * k), 0, 1)));
       this.veUCam(ctx, r.T, x, y, sc, ng, C, o, 0);
@@ -278,8 +285,8 @@ const GF = {
         }
       }
     }
-    // 490–735: dấu sao to đập xuống góc phải trên + xung vòng
-    if (t >= M.dau && t < 735) this.veDau(ctx, r, t, o, C);
+    // 380–630: dấu sao to đập xuống góc phải trên + xung vòng (trước khi đầu súng mới lộ)
+    if (t >= M.dau && t < M.dauXong + 90) this.veDau(ctx, r, t, o, C);
     ctx.globalAlpha = 1;
     return true;
   },
@@ -332,7 +339,7 @@ const GF = {
       if (t < M.lo) return { sx: 1, sy: 1, oy: 0, al: 1, an: true, huy: 0, dong: true };
       const u = (t - M.lo) / (M.loXong - M.lo);
       const s = u < 0.55 ? this.lerp(0.6, 1.2, this.eo(u / 0.55)) : u < 1 ? this.lerp(1.2, 1, this.eo((u - 0.55) / 0.45)) : 1;
-      const huy = t < 600 ? 0 : clamp((t - 600) / 40, 0, 1);
+      const huy = t < 640 ? 0 : clamp((t - 640) / 40, 0, 1);
       return { sx: s, sy: s, oy: 0, al: clamp((t - M.lo) / 40, 0, 1), an: false, huy, dong: true };
     }
     const g = T._gs;
@@ -340,32 +347,41 @@ const GF = {
     return null;
   },
 
-  // =================== TRIỆU HỒI 630 ms ===================
+  // =================== TRIỆU HỒI ~390 ms (REVIEW-VFX-93 §VI.A: chớp ở ô đích, ụ trồi lên từ hầm 250–400 ms, viền bậc chỉ từ XANH) ===================
+  // mốc bên dưới theo thang gốc 0–630; chạy nhanh ×1/0.62 → 390 ms thật (giảm chuyển động: 285 ms)
+  K_TRIEU: 0.62,
   truocTrieu(ctx, T, g, x, y, S, now) {
-    const t = (now - g.t0) / (this.giam() ? 0.6 : 1);
+    const t = (now - g.t0) / (this.giam() ? 0.45 : this.K_TRIEU);
     if (t > 630) { T._gs = null; return null; }
-    const B = G.ban[T.ban] || G.ban[0], C = this.tile(B);
+    const B = G.ban[T.ban] || G.ban[0], C = this.tile(B), fl = typeof CG !== 'undefined' ? CG.kFlash() : 1;
+    const hiem = T.bac && T.bac !== 'trang', mau = TIERS[T.bac] ? TIERS[T.bac].mau : '#ffffff';
     ctx.save();
+    // 0–150: chớp ngắn ngay tại ô đích (ảnh chấm sáng fx_cham_trang)
+    if (t < 150) { const u = t / 150; ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.55 * (1 - u) * (1 - u) * fl; REN.anhGiua(ctx, REN.cham1(hiem ? mau : '#dff2ff'), x, y, C * (0.8 + 0.4 * this.eo(u))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; }
     // cổng hầm: mở 0–120 (khung 0→2), giữ sáng (3), đóng 500–630 (4→5)
     const fc = t < 120 ? t / 120 * 2 : t < 500 ? 2 + Math.min(1, (t - 120) / 200) : 3 + (t - 500) / 130 * 2;
     const sc = t < 120 ? this.lerp(0.6, 1, this.eo(t / 120)) : 1, ac = t < 120 ? t / 120 : t > 560 ? 1 - (t - 560) / 70 : 1;
     this.khungCung(ctx, 'h2_vfx_cong', fc, x, y + C * 0.02, C * 1.38 * sc, 0, ac);
-    // 340–500: vòng toả 1.0→1.25 (vòng nam châm khung sáng)
-    if (t > 330 && t < 520) { const u = (t - 330) / 190; this.khung(ctx, 'cf_vong_hop', 3, x, y, C * this.lerp(1.2, 1.6, this.eo(u)), 0, (1 - u) * 0.9); }
-    // 260–420: khói chạm đất (4 khung khoi_*)
+    // 300–630: viền theo bậc (vòng mảnh fx_vong_mong tô màu bậc) — chỉ XANH trở lên; TRẮNG không có viền
+    if (hiem && t > 300) { const u = (t - 300) / 330; PX.vong(ctx, x, y, C * this.lerp(0.4, 0.56, this.eo(u)), 3, mau, (u < 0.2 ? u / 0.2 : 1 - this.ei((u - 0.2) / 0.8)) * 0.95); }
+    // 260–460: bụi nhẹ khi ụ trồi lên (4 khung khoi_*) — bỏ khi nhiều sự kiện / tối giản
     if (!g.nhe && t > 260 && t < 460) {
       const u = (t - 260) / 200, f = Math.min(3, Math.floor(u * 4));
-      ctx.globalAlpha = 0.55 * (1 - u); REN.anhGiua(ctx, 'khoi_' + f, x, y + C * 0.18, C * (0.7 + 0.5 * u));
+      ctx.globalAlpha = 0.4 * (1 - u); REN.anhGiua(ctx, 'khoi_' + f, x, y + C * 0.18, C * (0.6 + 0.4 * u));
       ctx.globalAlpha = 1;
     }
     ctx.restore(); ctx.globalAlpha = 1;
-    if (t >= 260 && !g.dat) { g.dat = 1; try { SND.dat(); } catch (e) { } if (g.nguoi && !this.giam()) FX.lac(1.6); }
-    // ụ: ẩn → 120–260 rơi từ −0.28 ô, hiện dần ở 0.70 → 260–340 chạm 0.70→1.16 → 340–500 về 1.00
+    if (t >= 260 && !g.dat) {
+      g.dat = 1; try { SND.dat(); } catch (e) { }
+      const lon = T.bac === 'vang' || T.bac === 'do';
+      if (g.nguoi && lon) { if (!this.giam()) FX.lac(1.2); try { navigator.vibrate && navigator.vibrate(10); } catch (e) { } } // chỉ VÀNG/ĐỎ có rung — không "fanfare" mọi lần triệu hồi
+    }
+    // ụ: ẩn → 120–260 TRỒI lên từ hầm (0.45→0.85, từ dưới +0.1 ô) → 260–340 bật 0.85→1.12 → 340–500 về 1.00
     if (t < 120) return { sx: 1, sy: 1, oy: 0, al: 1, an: true, huy: 0, dong: true };
     let s, oy = 0, al = 1;
-    if (t < 260) { const u = (t - 120) / 140; s = 0.7; oy = -C * 0.28 * (1 - this.ei(u)); al = this.eo(u / 0.5); }
-    else if (t < 340) s = this.lerp(0.7, 1.16, this.eo((t - 260) / 80));
-    else if (t < 500) s = this.lerp(1.16, 1, this.bo((t - 340) / 160, 1.2));
+    if (t < 260) { const u = (t - 120) / 140; s = this.lerp(0.45, 0.85, this.eo(u)); oy = C * 0.1 * (1 - this.eo(u)); al = this.eo(u / 0.5); }
+    else if (t < 340) s = this.lerp(0.85, 1.12, this.eo((t - 260) / 80));
+    else if (t < 500) s = this.lerp(1.12, 1, this.bo((t - 340) / 160, 1.2));
     else s = 1;
     const huy = t < 500 ? 0 : clamp((t - 500) / 100, 0, 1);
     return { sx: s, sy: s, oy, al, an: false, huy, dong: true };

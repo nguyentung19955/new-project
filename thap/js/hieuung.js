@@ -93,7 +93,7 @@ const VX = {
     const lo = r && M ? (M.lo * r.k + (r.k === 1 ? M.dung : 0)) / 1000 : (ra && ra.vxA && ra.vxA.k === 'ghep' ? ra.vxA.lo : 0);
     const bay = 0.16; // tia chạy tới ô mới
     this.trieu(T);
-    if (T._gs) T._gs.t0 += (lo + bay) * 1000 - 120; // cổng hầm mở trước 120 ms → ụ bắt đầu hiện đúng lúc tia tới
+    if (T._gs) T._gs.t0 += (lo + bay) * 1000 - 120 * (typeof GF !== 'undefined' && GF.K_TRIEU ? GF.K_TRIEU : 1); // cổng hầm mở trước 120 ms → ụ bắt đầu hiện đúng lúc tia tới
     else if (T.vxA) T.vxA.t0 += lo + bay;
     this.ds.push({ k: 'td', B, o: oNguon, o2: T.o, T, t0: this.t + lo, dai: 1.0, bay });
     const c = B.o[T.o]; if (typeof HUD2 !== 'undefined' && HUD2.vfx && c) HUD2.vfx('cong', c.x, c.y, 66, 64, 360, Math.round((lo + bay) * 1000)); // nhịp triệu hồi bình thường (lớp DOM)
@@ -405,7 +405,22 @@ const VX = {
     ctx.restore();
   },
   // ụ đang được chọn (bảng thông tin mở): hiện liên kết của nó lâu dài (Chain Link, Sync Cannon, Railgun)
+  // Leviathan: vòng xanh mờ = tầm NUỐT thật (120 px quanh tâm ụ, như SKILLS.leviathan.capNhat) khi chọn / đang kéo → biết ô nào đủ sát đường
+  TAM_NUOT: { leviathan: 120 },
+  veTamNuot(ctx) {
+    const keo = UI.keo, ng = typeof KG !== 'undefined' ? KG.nguon() : (keo && keo.dang ? keo.T : null);
+    let T = ng && this.TAM_NUOT[ng.id] ? ng : null, x, y;
+    if (T && keo && keo.dang && keo.T === T) { x = keo.x; y = keo.y - (keo.lech || 0); }
+    else {
+      const X = UI.xemU; if (!T && X && X.T && this.TAM_NUOT[X.T.id] && performance.now() <= UI.ttHet && !$('#tt').hidden) T = X.T;
+      if (!T) return; const B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return; const c = tamU(T); x = c.x; y = c.y;
+    }
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    PX.vong(ctx, x, y, this.TAM_NUOT[T.id], 2, '#5fe3ff', 0.42 + 0.08 * Math.sin(this.t * 4));
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
   veChon(ctx) {
+    try { this.veTamNuot(ctx); } catch (e) { }
     const X = UI.xemU; if (!X || performance.now() > UI.ttHet || $('#tt').hidden) return;
     const T = X.T, B = G.ban[T.ban]; if (!B || B.t[T.o] !== T) return;
     const S = Math.min(B.cw, B.ch) * 0.98, nh = 0.75 + 0.25 * Math.sin(this.t * 6);

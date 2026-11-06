@@ -132,7 +132,8 @@ SKILLS.leviathan = {
   vai: 'tc', dmg: 24, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
-  mo: (T) => 'ABYSS ' + (T.vuc || 0) + '/100 (+' + 4 * (T.vuc || 0) + '% dmg) · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (120 px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' along the path' : 'TIDAL BREATH unlocks at 3★'),
+  // dòng bảng ụ: 'ABYSS 56/100 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
+  mo: (T) => 'ABYSS ' + Math.min(100, T.vuc || 0) + '/100 · +' + 4 * Math.min(100, T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (120 px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
   sinh(G, T) { T.vuc = 0; T.nuot = 0; },
   capNhat(G, B, T, dt) {
     T.buf.dmg += 0.04 * (T.vuc || 0);
@@ -239,7 +240,7 @@ HU.thoThuy = { // TIDAL BREATH: điểm cuối tia chạy dọc đường từ l
 // =====================================================================================================
 SKILLS.khoisinh = {
   vai: 'db', dmg: 0, toc: 0, napMau: '#ff3a6a',
-  g: (T) => sao7r(T, [30, 28, 26, 24, 22, 20, 16]),
+  g: (T) => Math.round(sao7r(T, [30, 28, 26, 24, 22, 20, 16]) * (knThe(G.ban[T.ban], 'khoisinh') || 100)) / 100, // × cấp thẻ (KY_NANG_CAP.khoisinh)
   k: (T) => sao7r(T, [1, 1, 2, 2, 2, 3, 3]),
   cd: 45,
   mo: (T) => '+1★ to your lowest turret every ' + SKILLS.khoisinh.g(T) + 's (next in ' + Math.max(0, SKILLS.khoisinh.g(T) - (T.sinhT || 0)).toFixed(0) + 's)' + (T.sao >= 4 ? ' · neighbours +15% damage' : '') + (T.sao >= 7 ? ' · each raise also summons a free 1★' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: GENESIS summons ' + SKILLS.khoisinh.k(T) + ' at average ★' : 'GENESIS unlocks at 3★'),
@@ -363,10 +364,12 @@ HU.nonLua = { // nón lửa: ảnh PNG fx_ronglua_dan kéo theo tầm + góc, 2 
   cap(G, o) { return !conTren(o.T) || o.T.id !== 'ronglua'; },
   ve(ctx, o, R) {
     const T = o.T; if (!(T.phun > 0)) return;
-    const gd = T.gd || gdSao(T), goc = SKILLS.ronglua.goc(T), L = SKILLS.ronglua.tam(T), [x, y] = dauNong(T);
+    const gd = T.gd || gdSao(T), goc = SKILLS.ronglua.goc(T), [x, y] = dauNong(T); let L = SKILLS.ronglua.tam(T);
     const a0 = anhNon(gd); if (!a0) return;
+    // VFX P0 hitbox: phép trúng đo từ TÂM ụ (tamU) tới L — ảnh bắt đầu ở nòng nên rút phần nòng ra khỏi chiều dài → mũi lửa = đúng tầm thật
+    const c0 = tamU(T); L = Math.max(20, L - Math.hypot(x - c0.x, y - c0.y));
     const al = Math.min(1, T.phun / 0.3), im = REN.mip(a0, L * REN.s * REN.dpr);
-    const hh = Math.max(L * a0.height / a0.width, 2 * L * Math.tan(goc / 2) * 0.95);
+    const hh = Math.max(L * a0.height / a0.width, 2 * SKILLS.ronglua.tam(T) * Math.tan(goc / 2));
     ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
     for (let i = 0; i < 2; i++) {
       const f = 1 + 0.06 * Math.sin(R.t * (31 + i * 17) + i);

@@ -95,7 +95,11 @@ Object.assign(REN, {
     if (E.docT > 0 && c('doc')) s.doc = 1;
     if (E.chayT > 0 && c('chay')) s.chay = 1;
     if ((E.cvT > 0 || E.cvPT > 0) && c('cauvong')) s.yeu = 'cauvong'; else if (E.giapT > 0 && c('khienvang')) s.yeu = 'khienvang'; else if (E.yeu > 0 && c('yeu')) s.yeu = 'yeu';
-    s.n = (s.dong || 0) + (s.choang || 0) + (s.cham || 0) + (s.doc || 0) + (s.chay || 0) + (s.yeu ? 1 : 0);
+    // VFX P0 (REVIEW-VFX-93 II.I): tối đa 2 dấu trạng thái mỗi quái — ưu tiên khống chế cứng > sát thương theo thời gian > dấu suy yếu > chậm
+    //  (mỗi trạng thái 1 hình riêng: đóng băng = khối tinh thể · choáng = sao vàng quay · cháy = lửa · độc = bọt xanh · lộ/dấu = vòng tím nứt / cầu vồng / khiên vàng · chậm = vòng gió lạnh)
+    let n = 0;
+    for (const k of ['dong', 'choang', 'chay', 'doc', 'yeu', 'cham']) { if (!s[k]) continue; if (n >= 2) s[k] = 0; else n++; }
+    s.n = n;
     return s;
   },
   // vẽ: cỡ = co × 1.1, alpha 0.85, thở ±6% 2 Hz; choáng xoay 120°/s trên đầu; đóng băng phủ lên thân

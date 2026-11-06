@@ -53,7 +53,7 @@ SKILLS.mauhut = {
   vai: 'db', dmg: 17, toc: 0.9, nham: 'dau', napMau: '#d0103a',
   MAX: 10,
   pv: (T) => kn7(T),
-  mo(T) { const B = G.ban[T.ban], v = (B && B.vamp) || 0; return 'Drag onto ANY of your turrets: both become 1 random deck turret at the higher star · same star: +1 VAMP (' + v + '/' + this.MAX + ', +' + (this.pv(T) * 100).toFixed(1) + '% damage each to every Blood Circuit) · different star: spends 2 VAMP for a ' + (T.sao >= 5 ? 300 : 220) + '% blood pulse' + (T.sao >= 7 ? ' · 7★: +2 VAMP per same-star feed' : ''); },
+  mo(T) { const B = G.ban[T.ban], v = (B && B.vamp) || 0; return 'Drag onto any other turret (not another Blood Circuit): both become 1 random deck turret at the higher star · same star: +1 VAMP (' + v + '/' + this.MAX + ', +' + (this.pv(T) * 100).toFixed(1) + '% damage each to every Blood Circuit) · different star: spends 2 VAMP for a ' + (T.sao >= 5 ? 300 : 220) + '% blood pulse' + (T.sao >= 7 ? ' · 7★: +2 VAMP per same-star feed' : ''); },
   capNhat(G, B, T) { const v = Math.min(this.MAX, B.vamp || 0); if (v) { T.buf.dmg += v * this.pv(T); T.nguon.push({ k: 'dmg', v: v * this.pv(T), T }); } return false; },
   ban(G, B, T, E) {
     giat(T, 0.7); const [x, y] = dauNong(T); SND.tia();
@@ -161,7 +161,7 @@ SKILLS.thanhdia = {
   ky: (T) => (ms(T, 7) ? 4 : 14),
   huong: (T) => (ms(T, 5) ? [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, -1], [-1, 1], [1, 1]] : [[-1, 0], [1, 0], [0, -1], [0, 1]]),
   xau: (X) => X.st.bang > 0 || X.st.da || X.st.lua > 0 || X.st.kep > 0 || X.giamT > 0 || X.hexT > 0,
-  mo: (T) => 'On arrival: cleanses ' + (ms(T, 5) ? 'the 8 cells around' : 'neighbours') + ' + 1-hit shield · Attack neighbours +' + Math.round(Math.min(0.35, SKILLS.thanhdia.k(T)) * 100) + '% damage · shields recharge every ' + SKILLS.thanhdia.ky(T) + 's',
+  mo: (T) => 'On arrival: cleanses ' + (ms(T, 5) ? 'the 8 cells around' : 'neighbours') + ' + 1-hit shield · Attack neighbours +' + Math.round(HOTRO.hd(T, 'dmg', SKILLS.thanhdia.k(T)) * 100) + '% damage · shields recharge every ' + SKILLS.thanhdia.ky(T) + 's',
   sinh(G, T) { T.moiDen = 1; },
   hoTro(G, T, N, ra) { ra.dmg = this.k(T); },
   ke(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(X => X && X !== T); },

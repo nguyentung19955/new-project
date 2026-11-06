@@ -74,6 +74,10 @@ const HB = {
     const X = UI.xemU, el = tt.querySelector('.hb-so'); if (!el) return;
     const h = this.soNgan(this._id, X && X.T && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null);
     if (el._h !== h) { el._h = h; el.innerHTML = h; }
+    // Leviathan: dòng kỹ năng = số ABYSS sống (đúng số trên tấm xoáy vực đáy ô) + gợi ý vòng nuốt xanh (hieuung.js veChon)
+    const kn = tt.querySelector('.tt-kn'), LT = X && X.T && X.T.id === 'leviathan' && G.ban[X.T.ban] && G.ban[X.T.ban].t[X.T.o] === X.T ? X.T : null;
+    if (kn && LT) { const n = Math.min(100, LT.vuc || 0), s = 'ABYSS ' + n + '/100 · +' + 4 * n + '% damage · devours enemies inside the cyan ring — place it next to the path to eat more'; if (kn._lev !== s) { kn._lev = s; kn.textContent = s; } }
+    else if (kn) kn._lev = null;
   },
   mo(tt, id, T) {
     this.dung(tt);

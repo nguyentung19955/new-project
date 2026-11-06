@@ -72,12 +72,15 @@ function upBangSao(id) {
   }) || [];
 }
 // ô được buff (lệch [cột, hàng] so với ụ) ở 1–4★ và từ 5★
+// ụ chỉ buff ô CHÉO (Resonance Grid) — Sanctum có sk.huong nhưng là 4 ô thẳng (5★: 8 ô)
+function upCheo(id) { const sk = SKILLS[id]; if (!sk || !sk.huong) return false; const h = sk.huong({ id, sao: 1 }); return h.every(([a, b]) => a && b); }
 function upDauChan(id) {
   const sk = SKILLS[id]; if (!sk || !sk.hoTro || !SUP_LOAI[id]) return null;
   const ke = [[0, -1], [1, 0], [0, 1], [-1, 0]], cheo = [[-1, -1], [1, -1], [-1, 1], [1, 1]];
-  const goc = sk.huong ? sk.huong() : ke;
+  // hình ô theo ĐÚNG sk.huong(T) ở 1★ và 5★ (Sanctum: 4 ô thẳng → 5★ đủ 8 ô; Resonance Grid: 4 ô chéo) — VFX P0
+  const goc = sk.huong ? sk.huong({ id, sao: 1 }) : ke, goc5 = sk.huong ? sk.huong({ id, sao: 5 }) : null;
   const co5 = loaiMoc(id) === 'ht' && !(MOC_RIENG[id] && MOC_RIENG[id][5]) && !sk.huong;
-  return { k: SUP_LOAI[id], a: goc, b: co5 ? ke.concat(cheo) : null };
+  return { k: SUP_LOAI[id], a: goc, b: co5 ? ke.concat(cheo) : goc5 && goc5.length !== goc.length ? goc5 : null };
 }
 // ghép: luật chung + luật riêng
 function upLuatGhep(id) {
@@ -386,7 +389,7 @@ const UP = {
     const tam = sk ? (typeof sk.tam === 'number' ? 'Melee' : 'Whole path') : '—';
     const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
     P.push('<div class="up-spec">' + (ht
-      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', sk.huong ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.oToc(s1.toc) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range
@@ -480,7 +483,7 @@ const UP = {
       return s + '</div>';
     };
     let tam = 'the 4 cells next to it (up, down, left, right)';
-    if (SKILLS[id].huong) tam = 'only the 4 diagonal cells';
+    if (upCheo(id)) tam = 'only the 4 diagonal cells';
     let v1 = '', v7 = '';
     const bs = upBangSao(id); if (bs.length) { v1 = bs[0].kn; v7 = bs[6].kn; }
     return '<div class="up-chan" style="--b:' + mau + '"><figure>' + luoi(dc.a) + '<figcaption>1–4★</figcaption></figure>' +
@@ -646,7 +649,7 @@ if (UP_XEM) {
       const dat = (o, x, sao) => { const T = sinhU(taoU(B, x, sao, o)); B.t[o] = T; return T; };
       this.T = dat(7, id, s);
       if (k === 'ht') {
-        const ke = SKILLS[id].huong ? [1, 3, 11, 13] : [2, 6, 8, 12];
+        const ke = upCheo(id) ? [1, 3, 11, 13] : [2, 6, 8, 12];
         ke.forEach((o, i) => dat(o, i % 2 ? 'canon' : 'lien', Math.max(1, s - 1)));
       } else if (k === 'ghep') {
         const ms = Math.min(s, 6); this.T.sao = ms;

@@ -22,6 +22,16 @@ const HOTRO = {
   k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (this.BAC[T.bac] || 1) * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T); },
   // cấp thẻ: giá trị buff theo bảng THE.kyNang (hỗ trợ) — thẻ chưa có mục: +½ % sát thương mỗi cấp như cũ
   kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
+  // TRẦN HIỆU DỤNG khi ụ T là nguồn duy nhất (chữ hiển thị = số thật sau kẹp trần — VFX P0, REVIEW-VFX-93 IX):
+  //  nhóm có điều kiện (lo/lanh/vet/amp) chung trần sát thương · khang 35% × bậc · cham: đòn trúng kẹp 35% (khiTrung, không nhân bậc)
+  tran(T, k) {
+    const c = this.CAP_BAC[T && T.bac] || 1;
+    if (k === 'khang') return 0.35 * c;
+    if (k === 'cham') return this.CAP.cham;
+    const g = k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp' ? 'dmg' : k;
+    return this.CAP[g] != null ? this.CAP[g] * c : Infinity;
+  },
+  hd(T, k, v) { return Math.min(v, this.tran(T, k)); },
   laHT: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'ht'),
   // ô tác dụng của ụ hỗ trợ (chỉ số ô) — 4 ô thẳng mặc định, sk.huong(T) cho hình riêng
   oDich(T) {
