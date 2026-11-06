@@ -427,7 +427,7 @@ const GF = {
   };
   // dựng sẵn 1 ụ theo từng bước nhỏ (1 bước / khung): ảnh gốc → bản đứng yên → bản đang nảy (không bóng nướng sẵn)
   GF.nongU = function (B, T) {
-    REN.nong('nu|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => { REN.img(REN.dauTen(T.id, 0)); REN.img('tier_ring_' + T.bac); REN.img('de_chung'); });
+    REN.nong('nu|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => { REN.img(REN.dauTen(T.id, 0)); REN.img('de_chung'); });
     REN.nong('nu1|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => REN.veU(REN.ctxNong(), T, 0, 0, { ghost: true, noBadge: true }));
     REN.nong('nu2|' + B.i + '|' + T.id + '|' + T.bac + '|' + (REN.s * REN.dpr), () => REN.veU(REN.ctxNong(), T, 0, 0, { ghost: true, noBadge: true, scale: 0.99 }));
   };

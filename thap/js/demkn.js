@@ -9,7 +9,7 @@
 const DEMKN = {
   // mỗi mục: (T, B) → null (không hiện) hoặc [{ ic, s }] (1–2 cặp icon+số), sang = true khi đạt mốc (chữ vàng)
   DS: {
-    ngoisao(T, B) { const n = SKILLS.ngoisao.tong(B); return { m: [{ ic: 'ic_sao', s: n + '/50' }], sang: n >= 50 || (n > 0 && n % 10 === 0) }; },
+    ngoisao(T, B) { const n = SKILLS.ngoisao.tong(B), L = SKILLS.ngoisao.luat(n); return { m: [{ ic: L.loai === 'dmg' ? 'ic_dmg' : 'ic_toc', s: n + '/' + L.moc }], sang: L.dung }; }, // tiến tới MỐC KẾ: icon tốc (bội 10) / sát thương (bội 50)
     combo(T, B) { const n = B.combo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 20 } : null; },
     lienket(T, B) { const n = SKILLS.lienket.nhom(B, T); return n >= 2 ? { m: [{ ic: 'ic_dmg', s: '×' + n }] } : null; },
     dongbo(T, B) { const n = SKILLS.dongbo.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 3 } : null; },

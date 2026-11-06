@@ -127,10 +127,6 @@ const HB = {
   // mana chạy mượt cả khi HUD chỉ cập nhật 30 lần/giây
   const vong = () => { try { if (G.ban.length) HB.mana(); } catch (e) { } requestAnimationFrame(vong); };
   requestAnimationFrame(vong);
-  // Triệu hồi khi bàn đầy: chạm → lắc nhẹ 180 ms (không bảng lớn)
-  document.addEventListener('click', (e) => {
-    const nt = e.target.closest && e.target.closest('#nut-trieu'); if (!nt || !nt.classList.contains('tn-day')) return;
-    nt.classList.remove('hb-lac'); void nt.offsetWidth; nt.classList.add('hb-lac'); setTimeout(() => nt.classList.remove('hb-lac'), 200);
-  }, true);
+  // Triệu hồi khi bàn đầy: chạm → chỉ lún (nutlun.css), không lắc
 })();
 window.HB = HB;

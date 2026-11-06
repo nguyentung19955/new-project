@@ -780,7 +780,7 @@ const REN = {
     for (const b of G.bay) VX.veBay(ctx, b, this);
   },
 
-  // vẽ 1 ụ: bóng · vòng bậc · bệ · đầu súng xoay (giật lùi) · lớp phủ trạng thái · xúc xắc sao
+  // vẽ 1 ụ: bóng · bệ · đầu súng xoay (giật lùi) · lớp phủ trạng thái · xúc xắc sao
   veU(ctx, T, x, y, o) {
     o = o || {};
     const B = G.ban[T.ban] || G.ban[0];
@@ -802,8 +802,7 @@ const REN = {
     if (T.st.lua > 0 || B.cuong > 0) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.1; this.anhGiua(ctx, this.cham1('#ff7a2a'), x, y, S * 1.1); ctx.restore(); ctx.globalAlpha = al; }
     ctx.save(); ctx.translate(x, y + oy); ctx.scale(sx, sy);
     const da = T.st.da;
-    // vòng bậc (sau bệ, ló viền + ngọc); vàng/đỏ ánh lấp lánh
-    // thân tĩnh (bệ + vòng bậc + xúc xắc sao) dựng sẵn 1 ảnh → mỗi khung chỉ 1 lần vẽ
+    // thân tĩnh (bệ chung) dựng sẵn 1 ảnh → mỗi khung chỉ 1 lần vẽ
     const than = this.than(T, S, da, bongSan);
     if (than) {
       if (bongSan && !oy) { // đứng yên: vẽ 1:1 đúng lưới điểm ảnh (nhanh nhất, không lọc ảnh)
@@ -871,7 +870,8 @@ const REN = {
     }
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
     if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }
-    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.08 + 0.04 * Math.sin(this.t * 6)); this.anhGiua(ctx, this.cham1('#ffd23f'), 0, 0, S * 0.95); ctx.restore(); ctx.globalAlpha = al; }
+    // bản sao của Copycat: quầng TÍM (màu ảo ảnh của đầu Copycat) rõ hơn + huy hiệu nho/saochep ở góc trên-trái (nhandien.js) → không nhầm với ụ thật
+    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.07 * Math.sin(this.t * 5)); this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); ctx.restore(); ctx.globalAlpha = al; }
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
     // lớp phủ trạng thái
@@ -909,10 +909,9 @@ const REN = {
   },
   // thân ụ dựng sẵn: BỆ CHUNG trung tính (de_chung.png, mọi ụ như nhau) + viên ngọc độ hiếm nhỏ ở mép bệ.
   // Không còn vòng bậc / ô xúc xắc sao (tư vấn B.2, G). Bệ = 70% cạnh ngắn ô (~60% cạnh dài), tròn tuyệt đối.
-  VONG_BAC: 0.94, // đường kính vòng bậc / cạnh ô
   than(T, S, da, bong) {
     const km = 0; // (vòng màu khoá đã bỏ)
-    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km + (this.img('tier_ring_' + T.bac) ? '|r' : '');
+    const k = this.s * this.dpr, n = Math.round(S * 1.5 * k), key = 'than|' + T.bac + '|' + (da ? 1 : 0) + '|' + n + (bong ? '|b' : '') + '|' + km;
     let c = this.cGet(key); if (c) return c;
     let de = da ? this.banXam('de_chung') : this.img('de_chung');
     if (!de && !(this.anh.de_chung && this.anh.de_chung._loi)) return null; // còn đang tải
@@ -925,10 +924,7 @@ const REN = {
     if (bong) { x.globalAlpha = 0.7; x.drawImage(this.cham1('#000000'), 2 - SB * 0.62, SB * 0.06 + 3 - SB * 0.62, SB * 1.24, SB * 1.24); x.globalAlpha = 1; } // bóng = PNG tô đen
     x.drawImage(de, -SB / 2, -SB / 2, SB, SB);
     // (bỏ vòng màu khoá vẽ code quanh bệ — QUY-TAC-HINH 1/4; nhận diện = biểu tượng vai trò PNG góc ô)
-    // ĐỘ HIẾM TRƯỚC TIÊN (như DCDW): vòng bậc ChatGPT tier_ring_<bac>.png (trắng/xanh/tím/vàng/đỏ) ôm bệ, dưới đầu súng.
-    // Không còn vòng màu vai trò / ngọc nhỏ — màu vòng = màu khung thẻ ở dải bộ bài (thẻ ↔ bàn khớp nhau).
-    const vb = da ? (this.banXam('tier_ring_' + T.bac) || this.img('tier_ring_' + T.bac)) : this.img('tier_ring_' + T.bac);
-    if (vb) { const w = S * this.VONG_BAC; x.drawImage(this.mip(vb, w * q), -w / 2, -w / 2, w, w); }
+    // (BỎ vòng bậc tier_ring_<bac> quanh bệ — người dùng 2026-11-06: đầu ụ đã thể hiện bậc; mọi chế độ / bóng kéo / bảng kết quả đều qua hàm này)
     return this.cSet(key, c);
   },
   // HUY HIỆU CẤP SAO (TU-VAN-NHAN-DIEN 7C): 1 lục giác tối cố định, viền vàng nhạt, SỐ to màu ngà (1–7) — cùng cỡ mọi cấp.

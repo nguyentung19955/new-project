@@ -86,6 +86,18 @@ const VX = {
       SND.sao();
     });
   },
+  // TWIN MAKER: ụ sinh đôi lộ ra CÙNG LÚC kết quả ghép — tia vàng (fx_bingo) từ ô ghép → ô mới, ụ mới triệu hồi bình thường khi tia tới,
+  // vòng vàng (fx_vong_trieu tô vàng) quanh ụ mới, biểu tượng 2 vòng nối (fx_sinhdoi_hieu) loé ~0,6 s trên CẢ 2 ô. Không chữ.
+  sinhDoi(B, oNguon, T) {
+    const ra = B.t[oNguon], r = ra && ra._gf, M = typeof GF !== 'undefined' ? GF.M : null;
+    const lo = r && M ? (M.lo * r.k + (r.k === 1 ? M.dung : 0)) / 1000 : (ra && ra.vxA && ra.vxA.k === 'ghep' ? ra.vxA.lo : 0);
+    const bay = 0.16; // tia chạy tới ô mới
+    this.trieu(T);
+    if (T._gs) T._gs.t0 += (lo + bay) * 1000 - 120; // cổng hầm mở trước 120 ms → ụ bắt đầu hiện đúng lúc tia tới
+    else if (T.vxA) T.vxA.t0 += lo + bay;
+    this.ds.push({ k: 'td', B, o: oNguon, o2: T.o, T, t0: this.t + lo, dai: 1.0, bay });
+    const c = B.o[T.o]; if (typeof HUD2 !== 'undefined' && HUD2.vfx && c) HUD2.vfx('cong', c.x, c.y, 66, 64, 360, Math.round((lo + bay) * 1000)); // nhịp triệu hồi bình thường (lớp DOM)
+  },
   kichHoat(B, o, ids) { this.ds.push({ k: 'kh', B, o, ids, t0: this.t + this.TRE_LO, dai: 0.8 + this.TRE_LO }); },
   hu(T) { const B = G.ban[T.ban]; if (!B) return; this.ds.push({ k: 'hu', B, o: T.o, t0: this.t, dai: 0.7 }); if (!B.ai) SND.hu(); },
 
@@ -104,6 +116,7 @@ const VX = {
     if (!A) return R;
     const tt = this.t - A.t0;
     if (A.k === 'trieu') {
+      if (tt < 0) { R.an = true; R.dong = true; R.huy = 0; return R; } // chờ lộ (ụ sinh đôi chờ kết quả ghép)
       if (tt > 0.6) { T.vxA = null; return R; }
       R.dong = true;
       const m = this.mauBac(T), lon = T.bac === 'vang' || T.bac === 'do';
@@ -310,7 +323,7 @@ const VX = {
     // lớp ngoài của biến hình (không xoay)
     for (const B of G.ban) for (const T of B.t) if (T && T.vxB) { const c = B.o[T.o]; this.veBienNgoai(ctx, T, c.x, c.y, Math.min(B.cw, B.ch) * 0.98); }
     for (const e of this.ds) {
-      const tt = this.t - e.t0; if (tt < 0 || !e.B || !'sao kh hu lk bg'.includes(e.k)) continue;
+      const tt = this.t - e.t0; if (tt < 0 || !e.B || !'sao kh hu lk bg td'.includes(e.k)) continue;
       const B = e.B, c = B.o[e.o], S = Math.min(B.cw, B.ch) * 0.98;
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       if (e.k === 'sao') { // đạt mốc sao: bùng sao vàng (phần sao của fx_starup, đã xoá vòng elip) + vòng tròn vàng
@@ -338,6 +351,26 @@ const VX = {
         const c2 = B.o[e.o2], u = tt / e.dai;
         const a = u < 0.8 ? 1 : (1 - u) / 0.2;
         this.veXich(ctx, c, c2, S, Math.min(5.99, tt / 0.25 * 5), a * (0.75 + 0.25 * Math.sin(tt * 14)), e.mau);
+      } else if (e.k === 'td') { // TWIN MAKER: tia vàng ô ghép → ô mới + vòng vàng + biểu tượng sinh đôi trên 2 ô
+        const c2 = B.o[e.o2], u = tt / e.dai, uB = clamp(tt / e.bay, 0, 1), e1 = this.eo(uB);
+        const xh = c.x + (c2.x - c.x) * e1, yh = c.y + (c2.y - c.y) * e1;
+        const aB = tt < 0.5 ? 1 : Math.max(0, 1 - (tt - 0.5) / 0.25);
+        if (aB > 0.01 && Math.hypot(xh - c.x, yh - c.y) > 2) this.veVet(ctx, 'fx_bingo', c.x, c.y, xh, yh, Math.min(5.99, 1 + tt * 9), aB, S * 0.62);
+        if (aB > 0.01) { ctx.globalAlpha = aB * 0.85; REN.anhGiua(ctx, REN.cham1('#ffe46b'), xh, yh, S * 0.55); }
+        // vòng vàng quanh ụ mới (sau khi tia tới)
+        const uR = (tt - e.bay) / 0.6;
+        if (uR > 0 && uR < 1) {
+          this.vongPhu(ctx, c2.x, c2.y, S * (0.42 + 0.3 * this.eo(uR)), '#ffd23f', (uR < 0.15 ? uR / 0.15 : 1 - this.ei((uR - 0.15) / 0.85)) * 0.95, tt * 4, true);
+          this.vong(ctx, c2.x, c2.y, S * (0.36 + 0.5 * this.eo(uR)), 2.6 * (1 - uR) + 0.6, '#ffe46b', (1 - uR) * 0.8);
+        }
+        // biểu tượng sinh đôi (ảnh ChatGPT fx_sinhdoi_hieu) loé ~0,6 s trên ô ghép và ô mới
+        const gl = REN.img('fx_sinhdoi_hieu');
+        if (gl) for (const [q, t1] of [[c, tt], [c2, tt - e.bay]]) {
+          const v = t1 / 0.6; if (v <= 0 || v >= 1) continue;
+          const sc = this.bo(Math.min(1, v / 0.3), 2), w = S * 0.5 * sc, h = w * gl.height / gl.width;
+          ctx.globalAlpha = v > 0.7 ? (1 - v) / 0.3 : 1;
+          ctx.drawImage(REN.mip(gl, w * REN.s * REN.dpr), q.x - w / 2, q.y - S * 0.5 - h / 2, w, h);
+        }
       } else if (e.k === 'bg') { // BINGO: vệt vàng quét qua hàng/cột (fx_bingo) + ô loé lần lượt
         const u = tt / e.dai, p0 = B.o[e.ds[0]], p1 = B.o[e.ds[e.ds.length - 1]];
         const ngang = p0.y === p1.y, ext = ngang ? B.cw * 0.5 : B.ch * 0.5;

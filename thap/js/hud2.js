@@ -116,16 +116,14 @@ const HUD2 = {
   const capGoc = UI.capNhat;
   UI.capNhat = function () { const r = capGoc.apply(this, arguments); try { HUD2.capNhat(); } catch (e) { console.error('HUD2', e); } return r; };
 
-  // nhấn Summon: giữ ảnh "nhấn" ít nhất 110 ms (chạm nhanh vẫn thấy lún); chạm khi thiếu mana → lắc 100 ms + giá đỏ
+  // nhấn Summon: chỉ LÚN (ảnh h2_trieu_an, hoặc dí xuống 2–3 px khi thiếu mana/bàn đầy) ~90 ms — KHÔNG lắc/rung (yêu cầu người chơi)
   const nt = $('#nut-trieu');
   if (nt) {
     let t0 = 0;
     nt.addEventListener('pointerdown', () => { t0 = performance.now(); });
-    nt.addEventListener('pointerup', () => { const con = 110 - (performance.now() - t0); if (con > 0) { nt.classList.add('an'); setTimeout(() => nt.classList.remove('an'), con); } });
-    nt.addEventListener('click', () => { if (nt.classList.contains('thieu')) HUD2.motLan2(nt, 'h2-lac', 110); });
+    nt.addEventListener('pointerup', () => { const con = 90 - (performance.now() - t0); if (con > 0) { nt.classList.add('an'); setTimeout(() => nt.classList.remove('an'), con); } });
   }
-  // thẻ: chạm khi chưa đủ mana → lắc nhẹ
-  document.addEventListener('click', (e) => { const d = e.target.closest && e.target.closest('#bo-the .the.thieu'); if (d) HUD2.motLan2(d, 'h2-lac', 110); });
+  // thẻ: chạm khi chưa đủ mana → chỉ lún (CSS :active), không lắc
 
   // luật chơi có sẵn → thêm hiệu ứng theo SỰ KIỆN THẬT
   if (typeof nangCap === 'function') {

@@ -68,6 +68,8 @@ const sdLaRed = (id) => G.rosterMap[id] && G.rosterMap[id].bac === 'do';
 // c: [t, chữ (hoặc hàm (T, sao)), {cham: giây trận quay chậm, ev: 'hit'|'kill'|'shot:N'|'mana'|'sao'|'moi'}]
 // keo: [t, ô kéo, ô đích] (ghép thật) · cham: [t] (chạm kỹ năng chủ động) · ke: [[ô, id, sao|'s']] · may: [t0, t1, 'ke'?]
 // truoc(T, B): chỉnh bộ đếm để kỹ năng định kỳ nổ sớm · lien: đánh số thứ tự trúng · mana: hiện ô mana · day: không làm mờ cột rìa
+// demo Star Cannon: lấp ô trống bằng Chain (★ tuỳ chọn) tới đúng tổng ★ n trên bàn → hiện mốc tốc (20) rồi mốc sát thương (50)
+function sdNgoiSao(B, n) { for (let o = 0; o < B.t.length; o++) { const k = n - SKILLS.ngoisao.tong(B); if (k <= 0) break; if (!B.t[o]) { const T = sinhU(taoU(B, 'lien', Math.min(7, k), o)); B.t[o] = T; T.goc = -Math.PI / 2; T.gd = null; } } }
 const SD_K = {
   canon: { q: Q.nhom(5, 175), c: [[0.2, 'Fires slow explosive shells'], [1.2, 'Blast hits the whole group', { ev: 'hit', cham: 0.5 }]] },
   xucxac: { q: Q.hang(3, 170, 50, 6), may: [5, 5.8], c: [[0.2, 'Each shot rolls 3–300% damage'], [1.5, 'Watch the numbers jump', { ev: 'hit', cham: 0.4 }], [4.8, 'Crits always roll the max', { ev: 'hit', cham: 0.5 }]] },
@@ -117,7 +119,7 @@ const SD_K = {
   sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merging adds a same-star twin', { ev: 'moi', cham: 0.6 }]] },
   hasao: { kieu: 'ht', them: [[4.0, (B, D, T) => { if (!T) return; T.da5Dau = 1; T.w5 = -1; const N = B.t.find(X => X && X !== T && SKILLS[X.id].vai === 'tc'); if (N && N.sao < 5) nangSao(B, N, 5 - N.sao); }]], c: [[0.2, 'Boosts Attack neighbours'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }], [4.0, 'PvP: punishes a rival’s first 5★']] },
   saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Becomes a copy (half damage)', { cham: 0.6 }]] },
-  ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], c: [[0.2, 'Counts every star on the board'], [1.6, '10★ total: faster fire', { cham: 0.5 }]] },
+  ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], them: [[1.6, (B) => sdNgoiSao(B, 20)], [3.2, (B) => sdNgoiSao(B, 50)]], c: [[0.2, 'Counts every star on the board'], [1.6, 'Every 10★: faster fire', { cham: 0.5 }], [3.2, 'Every 50★: more damage']] },
   soi: { o: 2, q: Q.nhom(5, 175, 18, 6), c: [[0.2, 'Melee wolf claws nearby enemies'], [1.6, 'Kills make it grow stronger', { ev: 'kill', cham: 0.5 }]] },
   tienhoa: { kieu: 'phu', dem: (T) => SKILLS.tienhoa.can(T) - T.tuoi, truoc: (T) => { T.tuoi = SKILLS.tienhoa.can(T) - 3.2; }, c: [[0.2, 'Charges up, then evolves'], [3.0, 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] },
   cauvong: { kieu: 'ht', q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Paints a rainbow trail'], [1.6, 'Neighbours hit enemies on it harder', { cham: 0.5 }]] },
@@ -208,7 +210,7 @@ const SD_MO = {
   dongbo: () => 'More same-star turrets, more damage',
   hopbi: (T) => 'Opens into ' + (T.sao >= 7 ? 5 : T.sao >= 5 ? 3 : 1) + '–7★',
   tienhoa: (T) => 'Evolves into ' + Math.min(7, T.sao + 1) + '★',
-  ngoisao: () => '50★ total: huge damage',
+  ngoisao: () => 'Every 10★ faster · every 50★ more damage',
   soi: () => 'Kills and stars grow it',
   guongcong: (T) => 'Resist ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · mirror every ' + SKILLS.guongcong.h(T) + 's',
   combo: () => 'Each combo: +6% damage',
