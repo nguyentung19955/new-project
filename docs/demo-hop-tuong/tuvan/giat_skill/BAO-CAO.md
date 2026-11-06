@@ -118,8 +118,9 @@ Dải khung 2 khoảnh khắc nặng (trái → phải ~0,3 s/ảnh): `khung_tru
 Số đầy đủ: `do_truoc.txt`, `do_sau.txt`, `kq_sau.json`, `bang_truoc_sau.md`.
 
 ## Kiểm hồi quy
-`tools/thap-kt-giat.js` (trong `thap-kt-hoiquy.js`, luồng `solo`/`giat`): Black Hole/Overlord/Leviathan/Fire Dragon lần đầu, Freezer/Hive/Janus/Patcher ra + tung chiêu, ghép Orbital, Dahlia, mọi skill cùng 1 khung — TRƯỢT nếu JS khung > 30 ms (máy đo; ≈ 15 ms iPhone), thu nhỏ ảnh > 12 ms/khung (ngân sách 4 ms + 1 việc không chia được), hoặc lỗi trang.
+`tools/thap-kt-giat.js` (trong `thap-kt-hoiquy.js`, luồng `solo`/`giat`): Black Hole/Overlord/Leviathan/Fire Dragon lần đầu, Freezer/Hive/Janus/Patcher ra + tung chiêu, ghép Orbital, Dahlia, mọi skill cùng 1 khung — TRƯỢT nếu JS khung > 30 ms (máy đo; ≈ 15 ms iPhone; riêng "mọi ụ 7★ kích hoạt cùng 1 khung" > 40 ms ≈ 18–20 ms iPhone; vượt thì chạy lại nhóm 1 lần, giật thật lặp lại cả 2 lần), thu nhỏ ảnh > 12 ms/khung (ngân sách 4 ms + 1 việc không chia được), hoặc lỗi trang.
 
 ## Còn lại / gợi ý
+- Sau khi gộp bản Cửa hàng (06/11 tối) khung "mọi ụ 7★ trên bàn kích hoạt cùng 1 khung" đo lại 31–39 ms máy đo (≈ 16–20 ms iPhone 13): không còn việc dựng ảnh lần đầu, chỉ là vẽ ~1 300 hiệu ứng thật của 15 chiêu cùng lúc (tia, sét, vệt lửa, nổ) — dưới 33 ms trên iPhone nhưng sát; muốn dư nữa phải giảm số hiệu ứng vẽ (đụng hình chiêu — chưa làm).
 - Bàn đầy 7★ CO-OP: ~2 400 lệnh vẽ, 35–49 MP phủ/khung (≈ 12–16 lớp màn hình) — tải GPU liên tục, không phải giật do skill; thuộc phần chống nóng (session nhiệt).
 - Chưa đo trên Safari thật (máy đo không có WebKit).
