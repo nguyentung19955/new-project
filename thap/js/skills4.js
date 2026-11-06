@@ -59,7 +59,7 @@ SKILLS.docton = {
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.16, x0: x, y0: y, x1, y1, mau: '#ff3a4a' });
   },
   sangDau: (T) => (T.ace ? 0.12 : 0),
-  veThem(ctx, T, S, al, R) { if (!T.ace || MOT_VONG) return; ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.44, 1.4, '#ff3a4a', al * (0.55 + 0.2 * Math.sin(R.t * 5))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { if (!T.ace || MOT_VONG) return; ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.44, 1.4, '#ff3a4a', al * 0.62); /* VFX P3 */ ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================
@@ -254,7 +254,7 @@ SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của m�
   tong: (T) => Math.min(0.6, SKILLS.loren.moi(T) * (T.lo || 0)),
   dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
   mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' (+' + +(this.moi(T) * 100).toFixed(2) + '% each, max +60%) → +' + Math.round(this.tong(T) * 100) + '% damage to your best Attack turret while this Forge stays on the board' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
-  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.8 + (T.pha || 0)) * 0.2,
+  gocDau: (T, t) => -Math.PI / 2, // VFX P3: bỏ đung đưa ảnh đầu
   capNhat(G, B, T) {
     const X = this.dich(B); T.forgeX = X;
     if (X && T.lo) {
@@ -280,7 +280,7 @@ SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của m�
   },
   ghep(G, B, a, b, ra) { if (ra.id === 'loren') ra.lo = Math.max(a.lo || 0, b.lo || 0); },
   sangDau: (T) => Math.min(0.35, (T.lo || 0) / 30),
-  veThem(ctx, T, S, al, R) { const n = T.lo || 0; if (n >= 4) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (n >= 10 ? 0.35 + 0.1 * Math.sin(R.t * 7) : 0.18); R.anhGiua(ctx, R.cham1('#ff6a1a'), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } },
+  veThem(ctx, T, S, al, R) { const n = T.lo || 0; if (n >= 4) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (n >= 10 ? 0.38 : 0.18); /* VFX P3 */ R.anhGiua(ctx, R.cham1('#ff6a1a'), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } },
 };
 
 // =====================================================================================================
@@ -302,7 +302,7 @@ SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (ụ RIÊNG: cơ chế PH�
       const mg = R.co('hu_manhguong', 11); // mảnh gương ChatGPT (S4)
       if (mg) { ctx.globalAlpha = al * (san ? 1 : 0.45); ctx.save(); ctx.translate(x, y); ctx.rotate(a + Math.PI / 2); ctx.drawImage(mg, -5.5, -5.5, 11, 11); ctx.restore(); continue; }
     }
-    if (san) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.1 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#bff6ff'), 0, 0, S); ctx.globalCompositeOperation = 'source-over'; }
+    if (san) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.24; R.anhGiua(ctx, R.cham1('#bff6ff'), 0, 0, S); /* VFX P3 */ ctx.globalCompositeOperation = 'source-over'; }
     ctx.globalAlpha = al;
   },
 };

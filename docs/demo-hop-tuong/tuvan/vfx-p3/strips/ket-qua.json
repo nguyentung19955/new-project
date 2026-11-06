@@ -1,0 +1,127 @@
+{
+ "KQ": {
+  "mana": {
+   "atk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "mimic": {
+   "atk": {
+    "pop": 1,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "laser": {
+   "atk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "luoicheo": {
+   "atk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "loren": {
+   "atk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "guongcong": {
+   "atk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "ping": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 0,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "ping": 1
+    },
+    "sig": {}
+   }
+  }
+ },
+ "errs": []
+}

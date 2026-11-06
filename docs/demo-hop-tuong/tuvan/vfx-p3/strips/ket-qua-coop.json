@@ -1,0 +1,150 @@
+{
+ "KQ": {
+  "canon": {
+   "atk": {
+    "pop": 24,
+    "nong": 88,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "tiaTia": 8,
+     "set": 4
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 27,
+    "nong": 84,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "tiaTia": 9
+    },
+    "sig": {}
+   }
+  },
+  "set": {
+   "atk": {
+    "pop": 29,
+    "nong": 85,
+    "dai": {},
+    "hu": {
+     "tiaTia": 8,
+     "sigDuoi": 1,
+     "set": 3
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 48,
+    "nong": 86,
+    "dai": {},
+    "hu": {
+     "tiaTia": 7,
+     "sigDuoi": 1,
+     "set": 9
+    },
+    "sig": {}
+   }
+  },
+  "bomhen": {
+   "atk": {
+    "pop": 20,
+    "nong": 90,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "bom": 2,
+     "tiaTia": 8,
+     "set": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 26,
+    "nong": 70,
+    "dai": {},
+    "hu": {
+     "tiaTia": 8,
+     "sigDuoi": 1,
+     "bom": 2,
+     "set": 1
+    },
+    "sig": {}
+   }
+  },
+  "laser": {
+   "atk": {
+    "pop": 13,
+    "nong": 85,
+    "dai": {},
+    "hu": {
+     "tiaTia": 10,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 14,
+    "nong": 89,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "tiaTia": 9
+    },
+    "sig": {}
+   }
+  },
+  "cuuvi": {
+   "atk": {
+    "pop": 28,
+    "nong": 83,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "tiaTia": 10
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 27,
+    "nong": 77,
+    "dai": {},
+    "hu": {
+     "tiaTia": 11,
+     "sigDuoi": 1,
+     "set": 1
+    },
+    "sig": {}
+   }
+  },
+  "chuato": {
+   "atk": {
+    "pop": 40,
+    "nong": 89,
+    "dai": {},
+    "hu": {
+     "toOng": 1,
+     "tiaTia": 9,
+     "sigDuoi": 1,
+     "set": 5
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 34,
+    "nong": 93,
+    "dai": {},
+    "hu": {
+     "toOng": 1,
+     "sigDuoi": 1,
+     "tiaTia": 7,
+     "set": 2,
+     "chich": 2
+    },
+    "sig": {}
+   }
+  }
+ },
+ "errs": []
+}

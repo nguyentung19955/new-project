@@ -62,7 +62,7 @@ SKILLS.chuato = {
     const c = tamU(T); FX.vong1(c.x, c.y, 10, 50, '#ff6a2a', 0.35, 3);
     return true;
   },
-  sangDau: (T) => (T.gd === 3 ? 0.14 + 0.06 * Math.sin(G.t * 7) : T.gd === 2 ? 0.08 : 0),
+  sangDau: (T) => (T.gd === 3 ? 0.17 : T.gd === 2 ? 0.08 : 0), // VFX P3
 };
 HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu trên ụ kề), tự săn quái gần nhất ≤150 px, tia chích ngắn
   cap(G, o, dt) {
@@ -73,7 +73,7 @@ HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu tr�
       d.ra = Math.min(1, d.ra + dt * 3);
       // chỗ đứng: drone 0..3 đậu trên ụ kề (GĐ2+), còn lại bay vòng tròn quanh tổ
       let tx, ty;
-      if (i < ke.length) { const n = tamU(ke[i]); tx = n.x + 10; ty = n.y - 12 + Math.sin(G.t * 4 + i) * 1.5; d.dau = true; }
+      if (i < ke.length) { const n = tamU(ke[i]); tx = n.x + 10; ty = n.y - 12; /* VFX P3: bỏ nhún */ d.dau = true; }
       else { d.g += dt * (1.6 + 0.1 * i); const r = 24 + (i % 3) * 5; tx = c.x + Math.cos(d.g) * r; ty = c.y + Math.sin(d.g) * r; d.dau = false; }
       d.x += (tx - d.x) * Math.min(1, dt * 8); d.y += (ty - d.y) * Math.min(1, dt * 8);
       d.cd -= dt * (1 + T.buf.toc);
@@ -95,7 +95,7 @@ HU.toOng = { // bầy drone của 1 tổ: bay vòng quanh tổ (GĐ2: đậu tr�
 };
 function veDrone(ctx, R, x, y, k, vang, pha, al) { // ong máy = ảnh PNG fx_chuato_dan / fx_chuato_hieu (ChatGPT); vỗ cánh = nhịp phóng ảnh
   const ten = vang ? (typeof FXU !== 'undefined' && FXU.co('fx_chuato_dan3') ? 'fx_chuato_dan3' : REN.img('fx_chuato_hieu') ? 'fx_chuato_hieu' : 'fx_chuato_dan') : 'fx_chuato_dan'; // ong chúa vàng = dan3 (tờ G4)
-  R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1) * (1 + 0.05 * Math.sin(pha * 0.7)), 0.15 * Math.sin(pha * 0.13), al == null ? 1 : al);
+  R.anhGiua(ctx, ten, x, y, 20 * k * (vang ? 1.15 : 1), 0, al == null ? 1 : al); // VFX P3: bỏ phập phồng + lắc ảnh ong (bay vòng = chuyển động thật)
 }
 HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, o.x0, o.y0, o.x1, o.y1, o.vang ? 2.4 : 1.6, o.vang ? '#ffe680' : '#ff9a50', 1 - u); ctx.globalAlpha = 1 - u; R.anhGiua(ctx, R.cham1(o.vang ? '#ffd23f' : '#ff6a2a'), o.x1, o.y1, 12 * (1 - u)); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } };
 HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông → nổ 35 px

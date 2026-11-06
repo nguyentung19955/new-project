@@ -209,7 +209,7 @@ const VX = {
       const m = this.mauBac(T), S0 = S;
       // hộp cũ rung + tối dần → mở ra
       if (tt < 0.3) {
-        const u = tt / 0.3, rung = tt < 0.12 ? Math.sin(tt * 90) * 0.09 : 0;
+        const u = tt / 0.3, rung = 0; // VFX P3: bỏ lắc ảnh đầu cũ (chuyển dạng = dải fx_evolve)
         ctx.save(); ctx.translate(x, y); ctx.rotate(A.goc + rung);
         const sc = tt < 0.12 ? 1 : 1 + 0.14 * this.eo((tt - 0.12) / 0.18);
         REN.veDauLop(ctx, A.tuId, A.tuGd, S0 / 0.98, 1 - this.ei((tt - 0.12) / 0.18), sc, false);
@@ -252,7 +252,8 @@ const VX = {
     const g = GROW[T.id], st = g.gd(T), m = g.mau;
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     // hào quang lặp (fx_awaken: vòng lửa nhìn thẳng từ trên, tròn) — tô theo màu ụ
-    if (T.gd === 3 && g.khongAnh) { ctx.globalAlpha = al * (0.28 + 0.1 * Math.sin(this.t * 6)); REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.2); } // không có ảnh dạng 3: quầng sáng thay thế
+    if (T.gd === 3 && g.khongAnh) { ctx.globalAlpha = al * 0.32; // VFX P3
+    REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.2); } // không có ảnh dạng 3: quầng sáng thay thế
     if (T.gd === 3) {
       const B = T.vxB, vao = B && B.len ? clamp((this.t - B.t0 - 0.3) / 0.25, 0, 1) : 1;
       const aw = m === '#ff4b3e' || m === '#ff5040' || m === '#ffd23f' || m === '#ffe46b' ? REN.img('fx_awaken') : REN.toMau('fx_awaken', m);
@@ -350,7 +351,7 @@ const VX = {
         if (!B.t[e.o] || !B.t[e.o2]) { ctx.restore(); continue; } // ụ đã rời ô: bỏ dây
         const c2 = B.o[e.o2], u = tt / e.dai;
         const a = u < 0.8 ? 1 : (1 - u) / 0.2;
-        this.veXich(ctx, c, c2, S, Math.min(5.99, tt / 0.25 * 5), a * (0.75 + 0.25 * Math.sin(tt * 14)), e.mau);
+        this.veXich(ctx, c, c2, S, Math.min(5.99, tt / 0.25 * 5), a * 0.85, e.mau); // VFX P3
       } else if (e.k === 'td') { // TWIN MAKER: tia vàng ô ghép → ô mới + vòng vàng + biểu tượng sinh đôi trên 2 ô
         const c2 = B.o[e.o2], u = tt / e.dai, uB = clamp(tt / e.bay, 0, 1), e1 = this.eo(uB);
         const xh = c.x + (c2.x - c.x) * e1, yh = c.y + (c2.y - c.y) * e1;

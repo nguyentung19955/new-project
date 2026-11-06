@@ -1,0 +1,94 @@
+{
+ "KQ": {
+  "canon": {
+   "atk": {
+    "pop": 3,
+    "nong": 2,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 4,
+    "nong": 3,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "set": {
+   "atk": {
+    "pop": 8,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "set": 3,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 20,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "set": 4,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "nam": {
+   "atk": {
+    "pop": 13,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "tiaTia": 10,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 16,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "tiaTia": 14,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "soi": {
+   "atk": {
+    "pop": 10,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "gVuot": 15,
+     "gTre": 8,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 22,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "gVuot": 22,
+     "gTre": 11,
+     "sigDuoi": 1,
+     "gLuot": 2
+    },
+    "sig": {}
+   }
+  }
+ },
+ "errs": []
+}

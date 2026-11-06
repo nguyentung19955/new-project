@@ -117,7 +117,8 @@ VX.duoiDau = function (ctx, T, S, al, R) {
   if (!laGrow(T.id) || T.st.da) return;
   const g = GROW[T.id], m = g.mau;
   ctx.save(); ctx.globalCompositeOperation = 'lighter';
-  if (T.gd === 3 && g.khongAnh && !g.dauMoi) { ctx.globalAlpha = al * (0.24 + 0.08 * Math.sin(this.t * 6)); REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.1); }
+  if (T.gd === 3 && g.khongAnh && !g.dauMoi) { ctx.globalAlpha = al * 0.27; // VFX P3
+    REN.anhGiua(ctx, REN.cham1(m), 0, 0, S * 1.1); }
   if (T.gd === 3) {
     const B = T.vxB, vao = B && B.len ? clamp((this.t - B.t0 - 0.33) / 0.25, 0, 1) : 1;
     const aw = m === '#ff4b3e' || m === '#ff5040' || m === '#ffd23f' || m === '#ffe46b' ? REN.img('fx_awaken') : this.toMau(REN.img('fx_awaken'), m);
@@ -790,7 +791,7 @@ if (GFX.coDOM && typeof REN !== 'undefined') {
       const D = C * this.dauK(id, gd) * (sc || 1) * (gd === 3 ? 1.13 : 1.08), tr = this.co(this.dauTen(id, gd), D, 'trang'), q = tr && VX.toMau(tr, GROW[id].mau);
       if (q) {
         const a0 = ctx.globalAlpha, op = ctx.globalCompositeOperation;
-        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (gd === 3 ? 0.5 + 0.15 * Math.sin(VX.t * 5) : 0.34);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (gd === 3 ? 0.55 : 0.34); // VFX P3
         ctx.drawImage(q, -D / 2, -D / 2, D, D); ctx.globalCompositeOperation = op; ctx.globalAlpha = a0;
       }
     }

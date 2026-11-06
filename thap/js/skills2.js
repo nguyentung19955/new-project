@@ -430,7 +430,7 @@ SKILLS.cuongno = { // Súng Cuồng Nộ (Danu): chí mạng → chế độ bù
     if (T.rage >= 2) { T.rage = 0; T.cuongT = dai; buffNo(T, 'max', 0.8); }
     else buffNo(T, 'dmg', 0.4);
   },
-  sangDau: (T) => T.cuongT > 0 ? 0.3 + 0.15 * Math.sin(G.t * 20) : (T.rage > 0 ? 0.12 : 0),
+  sangDau: (T) => T.cuongT > 0 ? 0.38 : (T.rage > 0 ? 0.12 : 0), // VFX P3: bỏ nhấp nháy 20 rad/s (bùng nổ = tia lửa vfxp3)
 };
 SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN BỘ quái
   vai: 'tc', dmg: 26, toc: 1, napMau: '#bff4ff', // 9 → 26 (đo bậc 06/11)
@@ -551,7 +551,7 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
   vai: 'db', dmg: 0, toc: 0, napMau: '#c77dff',
   can: (T) => (ms(T, 3) ? 46 : 58) - 58 + knThe(G.ban[T.ban], 'hopbi'), // 3★ QUICK OPEN · cấp thẻ: −1 s/cấp · 47/37 → 58/46 (đo bậc 06/11)
   mo: (T) => 'Opens in ' + Math.max(0, SKILLS.hopbi.can(T) - T.tuoi).toFixed(0) + 's → random ' + (ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1) + '–' + (ms(T, 7) ? 7 : 6) + '★ turret',
-  gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (6 + T.nap * 30)) * (0.05 + T.nap * T.nap * 0.35),
+  gocDau: (T, t) => -Math.PI / 2, // VFX P3: bỏ lắc ảnh hộp — sắp mở = tia sáng rỉ ra (hạt) / tờ p3_hopbi
   capNhat(G, B, T) {
     T.nap = Math.min(1, T.tuoi / this.can(T));
     if (T.nap >= 1) {
@@ -763,7 +763,7 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
       return b;
     },
   },
-  veThem(ctx, T, S, al, R) { if (T.vang) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.35 + 0.15 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 1.4); } },
+  veThem(ctx, T, S, al, R) { if (T.vang) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.4; R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 1.4); } }, // VFX P3: quầng vàng đứng yên
 };
 SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1 ụ ngẫu nhiên CÙNG SAO nguyên liệu (luôn có ô: ghép trả 1 ô)
   // · 2 Twin Maker ghép nhau / Twin + Mimic → đúng 1 ụ thêm (kỹ năng chạy 1 lần mỗi lần ghép).
@@ -876,7 +876,7 @@ SKILLS.soi = { // Sói Máy (Werewolf) — DCDW Werewolf: mỗi lần TRIỆU H�
     noLan(E.x, E.y, T.thuc ? 32 : 22, dmgU(T) * (T.thuc ? 0.6 : 0.4), B, { phu: true });
     G.hu.push({ k: 'vuot', t: 0, song: 0.22, x: E.x, y: E.y, goc: T.goc, mau: T.thuc ? '#ff4b3e' : '#ffe46b' });
   },
-  sangDau: (T) => (T.thuc ? 0.12 + 0.08 * Math.sin(G.t * 8) : 0),
+  sangDau: (T) => (T.thuc ? 0.16 : 0), // VFX P3
   veThem(ctx, T, S, al, R) { if (T.thuc && Math.random() < 0.1) { const c = tamU(T); FX.hat1('than', c.x + rnd(-14, 14), c.y + rnd(-6, 12), 0, -30, 0.6, 5, '#ff4b3e'); } },
 };
 SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): BOM HẸN GIỜ đếm ngược → biến thành ụ ngẫu nhiên +1 sao — sao càng cao càng LÂU (14 + 5 s/★)
@@ -1076,7 +1076,7 @@ HU.bom = { // bom hẹn giờ dính trên quái, đếm ngược rồi nổ
     FX.no('no_phao', o.x, o.y, o.r * 2.6, 0.5); FX.vong1(o.x, o.y, 4, o.r, '#ffb35a', 0.35, 4); FX.tiaLua(o.x, o.y, 14, '#ffb060', 220); FX.lac(3); SND.no(0.6);
   },
   ve(ctx, o, R) {
-    const con = Math.max(0, o.song - o.t), nhay = con < 1.5 ? Math.sin(o.t * 40) > 0 : Math.sin(o.t * 10) > 0;
+    const con = Math.max(0, o.song - o.t), nhay = !(typeof P3 !== 'undefined' && P3.bom(ctx, o, R, con)); // VFX P3: đèn bom nhấp nháy → ngòi cháy (tia lửa / tờ p3_bomhen)
     if (!R.ve1(ctx, 'ic_bom', 17, '', o.x + 8, o.y - 11)) R.anhGiua(ctx, 'dan_phao', o.x + 8, o.y - 10, 15, -0.6); // bom ChatGPT (S2)
     if (nhay) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#ff3b3b'), o.x + 8, o.y - 14, 16); ctx.globalCompositeOperation = 'source-over'; }
     ctx.font = '900 11px ' + FONT.display; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
@@ -1100,7 +1100,7 @@ HU.drone = { // drone bom bay ngược đường từ lõi về cổng, đâm qu
   ve(ctx, o, R) {
     if (o.t < 0) return;
     PX.bong(ctx, o.x + 3, o.y + 8, 18, 18, 0.35);
-    const bob = Math.sin(o.t * 14) * 1.5;
+    const bob = 0; // VFX P3: bỏ nhún ảnh drone (lửa đuôi = hạt)
     ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1('#7fdcff'), o.x - Math.cos(o.goc) * 12, o.y - Math.sin(o.goc) * 12 + bob, 20); ctx.globalCompositeOperation = 'source-over';
     R.anhGiua(ctx, 'drone_nong', o.x, o.y - 4 + bob, 34, o.goc);
   },
@@ -1119,7 +1119,7 @@ HU.min = { // mìn trên đường
   },
   ve(ctx, o, R) {
     if (!R.ve1(ctx, 'hu_min', o.sao3 ? 20 : 16, '', o.x, o.y)) R.anhGiua(ctx, 'dan_phao', o.x, o.y, o.sao3 ? 18 : 14, 0); // mìn ChatGPT (S4)
-    if (Math.sin(o.t * 6 + o.x) > 0.3) { ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 22 : 12); ctx.globalCompositeOperation = 'source-over'; }
+    if (!(typeof P3 !== 'undefined' && P3.min(ctx, o, R))) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 20 : 11); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } // VFX P3: đèn mìn sáng đều (không nhấp nháy)
   },
 };
 // Dải ảnh PNG chạy LIỀN dọc làn (qua góc rẽ không tách đôi): đoạn thẳng = ảnh lặp theo chiều dài; góc rẽ = khúc cong

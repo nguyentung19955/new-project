@@ -1,0 +1,144 @@
+{
+ "KQ": {
+  "canon": {
+   "atk": {
+    "pop": 9,
+    "nong": 3,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "set": 3,
+     "tiaTia": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 9,
+    "nong": 25,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "set": 1
+    },
+    "sig": {}
+   }
+  },
+  "set": {
+   "atk": {
+    "pop": 7,
+    "nong": 19,
+    "dai": {},
+    "hu": {
+     "set": 3,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 26,
+    "nong": 9,
+    "dai": {},
+    "hu": {
+     "set": 4,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   }
+  },
+  "bomhen": {
+   "atk": {
+    "pop": 6,
+    "nong": 16,
+    "dai": {},
+    "hu": {
+     "bom": 2,
+     "sigDuoi": 1,
+     "tiaTia": 2,
+     "set": 2
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 7,
+    "nong": 13,
+    "dai": {},
+    "hu": {
+     "bom": 2,
+     "sigDuoi": 1,
+     "set": 3,
+     "tiaTia": 1
+    },
+    "sig": {}
+   }
+  },
+  "laser": {
+   "atk": {
+    "pop": 2,
+    "nong": 0,
+    "dai": {},
+    "hu": {
+     "set": 1,
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 9,
+    "nong": 2,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "set": 2
+    },
+    "sig": {}
+   }
+  },
+  "cuuvi": {
+   "atk": {
+    "pop": 14,
+    "nong": 13,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 17,
+    "nong": 19,
+    "dai": {},
+    "hu": {
+     "sigDuoi": 1,
+     "tiaTia": 1
+    },
+    "sig": {}
+   }
+  },
+  "chuato": {
+   "atk": {
+    "pop": 12,
+    "nong": 12,
+    "dai": {},
+    "hu": {
+     "toOng": 1,
+     "sigDuoi": 1,
+     "tiaTia": 2
+    },
+    "sig": {}
+   },
+   "sk": {
+    "pop": 19,
+    "nong": 10,
+    "dai": {},
+    "hu": {
+     "toOng": 1,
+     "sigDuoi": 1,
+     "set": 2,
+     "chich": 2
+    },
+    "sig": {}
+   }
+  }
+ },
+ "errs": []
+}
