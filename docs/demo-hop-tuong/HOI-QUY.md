@@ -133,3 +133,8 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 ## 06/11 — kiểm MÀU NGUYÊN TỐ (tools/thap-kt-mau.js, đã gắn vào thap-kt-hoiquy.js, CHI=mau)
 - Lỗi iPhone: Wyrm Engine 4★+ / DRAGON DIVE để lại vệt cháy XANH DA TRỜI (vetChay/rongBo lấy RONG_MAU[gd] = bảng màu nón lửa xanh). Sửa: RONG_THAN (than hồng cam/đỏ mọi dạng), rồng bổ nhào thân đỏ + lửa cam.
 - Bản gốc 56c9e49: 9 mục ĐỎ (ronglua ×5, blackhole, cuuvi, leviathan, mauhut). Sau sửa: 116 mục XANH (2 lần chạy). 36 mục "không có hiệu ứng trên đường" (ụ hỗ trợ / hiệu ứng nằm trên thân quái) được bỏ qua.
+
+## 06/11 — ụ ngoài bộ bài (bất biến bộ bài, tools/thap-kt-ngoai-deck.js)
+- Lỗi người chơi (iPhone, SOLO wave 33, bộ Thánh Địa · Hộp Bí Ẩn · Thuỷ Quái · Hộp Tiến Hoá · Máy Sao Chép): **Mimic 6★** (đầu khối cầu vồng) nằm lại trên bàn. Nguyên nhân: trùm **Joker King** ném Mimic lên ụ 6★ duy nhất → không có bạn cùng sao để ép ghép → Mimic ở lại vĩnh viễn. Fuzz trên bản cũ tái hiện ngay (Mimic 2–7★, SOLO/CO-OP/PVP).
+- Sửa: Joker ưu tiên ụ có bạn cùng sao; lúc tung chiêu không còn bạn → chiêu hụt, ụ giữ nguyên. `deckTru` (Hộp Bí Ẩn / Tiến Hoá / Khởi Sinh) lọc hết → vẫn trong bộ (trước: lấy TOÀN BỘ danh sách ụ). Bất biến `ktDeck` mỗi bước (game.js): `?ktdeck` / mô phỏng ném lỗi kèm đường tạo ụ; bản thật ghi log + đổi ụ ngoài bộ thành ụ trong bộ cùng sao (tất định, bàn con rối online chỉ ghi log); localhost/URL debug tắt (công cụ tự đặt ụ). `taoU` có sẵn `nguon` (ụ sinh giữa vòng capNhatBan — Mạch Máu… — trước đây vỡ TypeError).
+- Fuzz 3000 trận + 6 trận dài bộ người chơi XANH (hồi quy NHANH: 600 + 2). Thêm bản Việt dòng Leviathan "Abyss …" (thap-kt-vi trượt do session Leviathan).
