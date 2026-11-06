@@ -6,11 +6,12 @@ const W = 430, H = 860;
 
 // 5 BẬC như DCDW: Thường→TRẮNG, Hiếm→XANH, Sử thi→TÍM, Huyền thoại→VÀNG, Cổ đại→ĐỎ
 // hs = hệ số sức mạnh (chỉ số tăng theo bậc), lv0 = cấp thẻ khởi đầu kiểu DCDW (chỉ để hiển thị)
+// 06/11 đo bậc (tools/thap-sim-tier.js, docs/demo-hop-tuong/tuvan/tier/BANG.md): Tím 1.65→2.0, Vàng 2.1→2.6 — trung vị Tấn công Tím/Vàng từng ngang Xanh
 const TIERS = {
   trang: { ten: TEXT.tier.trang, tenDai: TEXT.tier.trang, mau: '#e9eef4', mau2: '#9aa6b4', hs: 1.0, thuTu: 0 },
   xanh:  { ten: TEXT.tier.xanh, tenDai: TEXT.tier.xanh,  mau: '#4fb8ff', mau2: '#1f6fd1', hs: 1.3, thuTu: 1 },
-  tim:   { ten: TEXT.tier.tim, tenDai: TEXT.tier.tim, mau: '#c77dff', mau2: '#7b2cd6', hs: 1.65, thuTu: 2 },
-  vang:  { ten: TEXT.tier.vang, tenDai: TEXT.tier.vang, mau: '#ffd23f', mau2: '#d18b00', hs: 2.1, thuTu: 3 },
+  tim:   { ten: TEXT.tier.tim, tenDai: TEXT.tier.tim, mau: '#c77dff', mau2: '#7b2cd6', hs: 2.0, thuTu: 2 },
+  vang:  { ten: TEXT.tier.vang, tenDai: TEXT.tier.vang, mau: '#ffd23f', mau2: '#d18b00', hs: 2.6, thuTu: 3 },
   do:    { ten: TEXT.tier.do, tenDai: TEXT.tier.do, mau: '#ff4b3e', mau2: '#b3121c', hs: 2.7, thuTu: 4 },
 };
 const TIER_LIST = ['trang', 'xanh', 'tim', 'vang', 'do'];
@@ -179,43 +180,44 @@ function hsThe(B, id) {
 }
 // KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: lên cấp làm mạnh CHÍNH kỹ năng của Child, không chỉ sát thương gốc) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  giá trị = base + buoc × (số cấp đã lên trên cấp đầu), kẹp ở max (buoc âm = giảm, max là sàn). base = giá trị ở CẤP ĐẦU (= y như trước bản này).
+//  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)
 //  ten: nhãn trang ụ ('Copy 50% → 57%') · dv: '%' | 's' | '' · tien: tiền tố ('+', '−') · ht: ụ hỗ trợ (giá trị này THAY cho "độ mạnh hỗ trợ ×½ % cấp")
 //  dmg: true = vẫn giữ thêm +% sát thương mỗi cấp (THE.pct) · không có mục ở đây = ụ tấn công thuần: chỉ +% sát thương như cũ
 const KY_NANG_CAP = {
-  saochep: { ten: 'Copy', base: 50, buoc: 7, max: 92, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
+  saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
   vughep: { ten: 'Gold +2★', base: 10, buoc: 2, max: 22, dv: '%', dmg: true },      // xác suất ra Merge King vàng
-  epxung: { ten: 'Overclock', base: 65, buoc: 2.5, max: 87.5, dv: '%', tien: '+', dmg: true },
+  epxung: { ten: 'Overclock', base: 90, buoc: 2.5, max: 112.5, dv: '%', tien: '+', dmg: true },
   ngoisao: { ten: 'Milestones', base: 100, buoc: 5, max: 130, dv: '%', dmg: true },  // mọi mốc ★ (tốc/sát thương) × giá trị/100
   soi: { ten: 'Awaken', base: 30, buoc: 1.5, max: 39, dv: '%', dmg: true },        // xác suất ra Sói THỨC TỈNH (DCDW Werewolf: 30% LV9 → +1.5%/cấp → 39% LV15, trần 50%)
   orbital: { ten: 'Awaken', base: 23, buoc: 1, max: 29, dv: 's', dmg: true },       // ghép Vệ Tinh → MỌI Vệ Tinh trên bàn thức tỉnh N giây (DCDW Mafdet 23 s)
   sinhdoi: { ten: '+1★ twin', base: 10, buoc: 1, max: 16, dv: '%', dmg: true },     // Twin Maker: xác suất ụ sinh đôi cao hơn 1★ (DCDW Berit)
-  nhanmana: { ten: 'Merge mana', base: 32, buoc: 2, max: 56, dv: '', tien: '+', dmg: true },
-  loa: { ten: 'Cooldown', base: 4.5, buoc: 0.25, max: 7.5, dv: 's', tien: '−', dmg: true },
+  nhanmana: { ten: 'Merge mana', base: 44, buoc: 2.75, max: 77, dv: '', tien: '+', dmg: true },
+  loa: { ten: 'Cooldown', base: 6, buoc: 0.33, max: 9.96, dv: 's', tien: '−', dmg: true },
   maychem: { ten: 'Execute', base: 3.75, buoc: 0.15, max: 5.85, dv: '%', dmg: true },
   mana: { ten: 'Mana', base: 100, buoc: 4, max: 156, dv: '%' },                       // lượng mana sinh ra × giá trị/100
   bang: { ten: 'Freeze', base: 2, buoc: 0.07, max: 2.98, dv: 's' },
   doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+' },
   khien: { ten: 'Recharge', base: 18, buoc: -0.4, max: 14.4, dv: 's' },
-  hopbi: { ten: 'Opens in', base: 47, buoc: -1, max: 38, dv: 's' },
+  hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's' },
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15
-  radar: { ten: 'Rate buff', base: 12, buoc: 0.4, max: 16.8, dv: '%', tien: '+', ht: 1 },
+  radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
   phagiap: { ten: 'Exposed', base: 22, buoc: 0.6, max: 30.4, dv: '%', tien: '+', ht: 1 },
-  bua: { ten: 'Crit dmg', base: 30, buoc: 0.9, max: 42.6, dv: '%', tien: '+', ht: 1 },
-  chimang: { ten: 'Crit buff', base: 6, buoc: 0.2, max: 8.4, dv: '%', tien: '+', ht: 1 },
-  tron: { ten: 'Rate buff', base: 6, buoc: 0.2, max: 8.4, dv: '%', tien: '+', ht: 1 },
-  lanhgia: { ten: 'Slow', base: 8, buoc: 0.25, max: 11, dv: '%', ht: 1 },
-  khuech: { ten: 'Per hit', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
-  taylo: { ten: 'Dmg buff', base: 8, buoc: 0.4, max: 11.6, dv: '%', tien: '+', ht: 1 },
-  nangsao: { ten: 'Rate buff', base: 6, buoc: 0.3, max: 8.7, dv: '%', tien: '+', ht: 1 },
-  tuthan: { ten: 'Execute', base: 8, buoc: 0.4, max: 11.6, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg', base: 14, buoc: 0.6, max: 19.4, dv: '%', tien: '+', ht: 1 },
-  dongbo: { ten: 'Dmg buff', base: 7.5, buoc: 0.5, max: 10.5, dv: '%', tien: '+', ht: 1 },
-  hasao: { ten: 'Dmg buff', base: 10, buoc: 0.7, max: 14.2, dv: '%', tien: '+', ht: 1 },
-  cauvong: { ten: 'Trail dmg', base: 13, buoc: 0.9, max: 18.4, dv: '%', tien: '+', ht: 1 },
-  luoicheo: { ten: 'Dmg buff', base: 8, buoc: 0.55, max: 11.3, dv: '%', tien: '+', ht: 1 },
-  guongcong: { ten: 'Resist', base: 15, buoc: 1, max: 21, dv: '%', ht: 1 },
-  lophanung: { ten: 'Slowed dmg', base: 14, buoc: 1.4, max: 19.6, dv: '%', tien: '+', ht: 1 },
+  bua: { ten: 'Crit dmg', base: 18, buoc: 0.54, max: 25.56, dv: '%', tien: '+', ht: 1 },
+  chimang: { ten: 'Crit buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
+  tron: { ten: 'Rate buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
+  lanhgia: { ten: 'Slow', base: 12, buoc: 0.375, max: 16.5, dv: '%', ht: 1 },
+  khuech: { ten: 'Per hit', base: 13.5, buoc: 0.45, max: 18.9, dv: '%', tien: '+', ht: 1 },
+  taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
+  nangsao: { ten: 'Rate buff', base: 24, buoc: 1.2, max: 34.8, dv: '%', tien: '+', ht: 1 },
+  tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
+  thaukinh: { ten: 'Crit dmg', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
+  dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
+  hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
+  cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
+  luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 25.99, dv: '%', tien: '+', ht: 1 },
+  guongcong: { ten: 'Resist', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
+  lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
 };
 // giá trị kỹ năng ở k cấp trên cấp đầu (thuần)
 function knGt(e, k) { const v = e.base + e.buoc * Math.max(0, k | 0); return Math.round((e.buoc < 0 ? Math.max(e.max, v) : Math.min(e.max, v)) * 1000) / 1000; }

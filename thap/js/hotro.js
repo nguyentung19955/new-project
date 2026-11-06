@@ -13,10 +13,13 @@ const HOTRO = {
   K: [1, 1, 1.2, 1.45, 1.65, 1.9, 2.1, 2.35],
   CAP: { toc: 0.45, dmg: 0.35, crit: 0.20, cdmg: 0.50, cham: 0.35, chet: 0.15 },
   VULN: 0.25, CHAM_TRUM: 0.15,
+  // ĐỘ MẠNH THEO BẬC (06/11 đo bậc, tools/thap-sim-tier.js): hỗ trợ bậc cao buff mạnh hơn hẳn + được nới trần (trần nhóm × hệ số của nguồn bậc cao nhất)
+  BAC: { trang: 1, xanh: 1.5, tim: 2.0, vang: 2.3, do: 2.8 },
+  CAP_BAC: { trang: 1, xanh: 1.1, tim: 1.3, vang: 1.5, do: 1.7 },
   NHOM: ['toc', 'dmg', 'crit', 'cdmg', 'cham', 'chet'],
   // nhóm có điều kiện / đặc biệt (không vào T.buf thường): lo (vs quái LỘ), lanh (vs quái chậm), vet (vs quái trên cầu vồng), amp (mỗi đòn liên tiếp),
   //   soc (choáng khi chí mạng, giây), xuyen (chí mạng xuyên), khang (kháng khống chế, xác suất), ngNguong (ngưỡng giết ngay), chacCrit
-  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T); },
+  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (this.BAC[T.bac] || 1) * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T); },
   // cấp thẻ: giá trị buff theo bảng THE.kyNang (hỗ trợ) — thẻ chưa có mục: +½ % sát thương mỗi cấp như cũ
   kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
   laHT: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'ht'),
@@ -60,12 +63,14 @@ const HOTRO = {
     }
     for (const [N, m] of goc) {
       const ht = N.ht = { daMax: {} };
+      let capB = 1; for (const k in m) for (const id in m[k]) capB = Math.max(capB, this.CAP_BAC[m[k][id].T.bac] || 1);
+      ht.capDmg = this.CAP.dmg * capB; // trần sát thương (thường + có điều kiện) theo nguồn bậc cao nhất
       for (const k in m) {
         const ds = Object.values(m[k]);
         let tong = k === 'cham' || k === 'xuyen' || k === 'soc' || k === 'ngNguong' ? Math.max(...ds.map(d => d.v)) : ds.reduce((a, d) => a + d.v, 0);
-        const cap = this.CAP[k];
+        const capB = Math.max(...ds.map(d => this.CAP_BAC[d.T.bac] || 1)), cap = this.CAP[k] != null ? this.CAP[k] * capB : null;
         if (cap != null && tong > cap) { tong = cap; ht.daMax[k] = 1; }
-        if (k === 'khang' && tong > 0.35) { tong = 0.35; ht.daMax[k] = 1; }
+        if (k === 'khang' && tong > 0.35 * capB) { tong = 0.35 * capB; ht.daMax[k] = 1; }
         if (this.NHOM.includes(k)) {
           if (k === 'cham') N.buf.cham = Math.max(N.buf.cham, tong); else N.buf[k] = (N.buf[k] || 0) + tong;
           const tl = ds.reduce((a, d) => a + d.v, 0) || 1;
@@ -77,8 +82,8 @@ const HOTRO = {
         }
       }
       if (ht.xuyen) N.buf.xuyen = Math.max(N.buf.xuyen || 0, ht.xuyen);
-      ht.dmg = N.buf.dmg > 0 ? Math.min(this.CAP.dmg, (m.dmg ? Object.values(m.dmg).reduce((a, d) => a + d.v, 0) : 0)) : 0; // phần sát thương do hỗ trợ (để chia trần với sát thương có điều kiện)
-      N.buf.dkHien = Math.min(Math.max(0, this.CAP.dmg - ht.dmg), (ht.lo || 0) + (ht.lanh || 0) + (ht.vet || 0) + (ht.amp || 0) * 3); // cho hào quang buff (buffvfx)
+      ht.dmg = N.buf.dmg > 0 ? Math.min(ht.capDmg, (m.dmg ? Object.values(m.dmg).reduce((a, d) => a + d.v, 0) : 0)) : 0; // phần sát thương do hỗ trợ (để chia trần với sát thương có điều kiện)
+      N.buf.dkHien = Math.min(Math.max(0, ht.capDmg - ht.dmg), (ht.lo || 0) + (ht.lanh || 0) + (ht.vet || 0) + (ht.amp || 0) * 3); // cho hào quang buff (buffvfx)
     }
   },
   // suy yếu quái: cộng mọi nguồn, trần 25%
@@ -91,7 +96,7 @@ const HOTRO = {
     if (E.loT > 0 && E.loV) v += E.loV;            // Breaker 7★: lộ điểm yếu
     if (E.fbT > 0) v += 0.15;                      // (cũ) Frost 5★ FROSTBITE
     if (E.azT > 0) v += 0.10;                      // Cryo Reactor 7★ ABSOLUTE ZERO
-    if (E.truyNa) v += 0.10;                       // Bounty Beacon: quái truy nã +10%
+    if (E.truyNa) v += 0.15;                       // Bounty Beacon: quái truy nã +15% (10 → 15, đo bậc 06/11)
     return Math.min(this.VULN, v);
   },
   // hệ số sát thương có điều kiện của ụ T lên quái E (đã chia trần với buff sát thương thường)
@@ -108,7 +113,7 @@ const HOTRO = {
       b += h.amp * n;
     }
     if (!b) return 1;
-    return 1 + Math.min(b, Math.max(0, this.CAP.dmg - (h.dmg || 0)));
+    return 1 + Math.min(b, Math.max(0, (h.capDmg || this.CAP.dmg) - (h.dmg || 0)));
   },
   // sau khi tính chí mạng: chậm khi trúng (trần thường 35% / trùm 15%), giết ngay (ngưỡng máu), choáng khi chí mạng
   khiTrung(T, E, dmg, crit, o) {

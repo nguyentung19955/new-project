@@ -67,8 +67,8 @@ SKILLS.docton = {
 // =====================================================================================================
 SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
-  k: (T) => 0.14 * HOTRO.k(T),
-  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5, SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
+  k: (T) => 0.30 * HOTRO.k(T), // 0.14 → 0.30 (đo bậc 06/11)
+  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5 * HOTRO.CAP_BAC[T.bac], SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
   hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
 };
@@ -84,7 +84,7 @@ function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần 
 //      (miễn nhiễm 8 s; bỏ qua ụ đang dính hiệu ứng xấu) · Co-op: lần triệu hồi kế của đồng đội MIỄN PHÍ + đồng đội +10% tốc t s · Solo: quái chậm 20% t s
 // =====================================================================================================
 SKILLS.nhieusong = {
-  vai: 'db', dmg: 11, toc: 1, nham: 'dau',
+  vai: 'db', dmg: 18, toc: 1, nham: 'dau', // 11 → 18 (đo bậc 06/11)
   n: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]), t: (T) => sao7(T, [3, 3.5, 4, 4.5, 5, 5.5, 6]), m: (T) => sao7(T, [5, 5, 10, 10, 15, 15, 20]),
   mo: (T) => { const s = SKILLS.nhieusong, S = { sao: Math.min(7, T.sao + 1) }; return 'On merge (as ' + S.sao + '★): PVP jams ' + s.n(S) + ' rival turrets −40% for ' + s.t(S) + 's + their next summon +' + s.m(S) + ' mana · CO-OP ally next summon FREE + 10% speed ' + s.t(S) + 's · SOLO slows all 20% for ' + s.t(S) + 's'; }, // QA Tím: số hiện = số thật khi ghép (sao kết quả)
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 14, mau: '#8a7bff', sp: 540 }); },
@@ -137,8 +137,8 @@ trieu = function (B, mienPhi, idEp) {
 // =====================================================================================================
 SKILLS.santhuong = {
   vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#f0b030',
-  n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [2, 3, 3, 4, 5, 5, 6]),
-  mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +10% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
+  n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [4, 5, 5, 6, 7, 7, 8]), // +2 mana (đo bậc 06/11)
+  mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +15% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / 5);
     if (T.nap >= 1) {

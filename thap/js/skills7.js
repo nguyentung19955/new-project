@@ -18,7 +18,7 @@ const SK7 = {
 Object.assign(KY_NANG_CAP, {
   mauhut: { ten: 'Vamp', base: 6, buoc: 0.5, max: 9, dv: '%', tien: '+', dmg: true },     // +% sát thương mỗi VAMP
   nguyenrua: { ten: 'Hex', base: 35, buoc: 2, max: 47, dv: '%', dmg: true },              // xác suất nguyền ở 1★ (+5%/sao, trần 80%)
-  thanhdia: { ten: 'Dmg buff', base: 10, buoc: 0.7, max: 14.2, dv: '%', tien: '+', ht: 1 }, // buff sát thương 1★ (×HOTRO.K theo sao)
+  thanhdia: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, /* ×HOTRO.BAC.vang 2.3 (đo bậc 06/11) */ dv: '%', tien: '+', ht: 1 }, // buff sát thương 1★ (×HOTRO.K theo sao)
   bienmau: { ten: 'Combo', base: 6, buoc: 0.5, max: 9, dv: '%', tien: '+', dmg: true },   // +% sát thương mỗi COMBO
 });
 const kn7 = (T) => (knThe(G.ban[T.ban], T.id) || KY_NANG_CAP[T.id].base) / 100;
@@ -262,7 +262,7 @@ Object.assign(MOC_RIENG, {
   thanhdia: { 5: ['WIDE SANCTUM', 'Cleanse, shield and aura reach all 8 cells around'], 7: ['HOLY GROUND', 'Shields recharge every 4s'] },
   bienmau: { 5: ['MASTER THIEF', 'COMBO cap 15'], 7: ['FULL SPECTRUM', 'Every shot burns, crits and slows'] },
 });
-Object.assign(SUP, { thanhdia: { icon: 'sup_khien', mau: '#fff2b0', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(0.35, SKILLS.thanhdia.k(T))) + '% DAMAGE · SHIELD' } });
+Object.assign(SUP, { thanhdia: { icon: 'sup_khien', mau: '#fff2b0', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(0.35 * HOTRO.CAP_BAC.vang, SKILLS.thanhdia.k(T))) + '% DAMAGE · SHIELD' } });
 SUP_LOAI.thanhdia = 'khien';
 SUP_GIA.thanhdia = (T) => SKILLS.thanhdia.k(T);
 
