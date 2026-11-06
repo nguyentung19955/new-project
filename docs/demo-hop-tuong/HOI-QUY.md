@@ -144,3 +144,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Sau rebase lên 397e144 (390×844 NHANH, 1668 s): chỉ trượt `mau` nayda@1★ hue 87° (dải energy) → chạy lại `CHI=nayda node tools/thap-kt-mau.js` 2 lần: 77°/76° ✓ (bản gốc không motvong cũng dao động 76–78°) — chập chờn lấy mẫu, không do vòng/ngọc (nayda không có vòng/ngọc). Còn lại XANH.
 - Kiểm riêng: `node tools/thap-kt-motvong.js` (iPhone 13, Leviathan ×5 + Wyrm + Combo + Werewolf + Hive Queen, bảng chạm EN/VI, trang ụ) — 0 lỗi trang.
 - 06/11 (đợt kiểm mô tả lần 2 + VI bổ sung): hồi quy đủ 4 cỡ XANH trừ 3 bước online ở 1280x800 (thanh tải che nút onl-vao — chạy lại CHI=online SIZES=1280x800x1: XANH, lỗi chập chờn do máy bận).
+- 06/11 tối (sau gộp QA ngâm + VFX P0): chạy đủ 4 cỡ còn 6 lỗi chập chờn (online 390: thanh tải che onl-vao; 430: tam_dung 404 + chữ cut-in Reinforce) → chạy lại riêng CHI=solo SIZES=430x932x3 XANH, CHI=online SIZES=390x844x3 XANH.
