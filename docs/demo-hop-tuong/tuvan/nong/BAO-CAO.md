@@ -107,4 +107,7 @@ Firebase xếp hàng, nối lại thì tự gửi. Phòng / trận ONLINE không
 Kiểm: `tools/thap-kt-mang.js` (trong hồi quy, bước "mang") — TRƯỢT nếu trận SOLO > 1 yêu cầu/phút hoặc > 8 KB/phút, có WebSocket/tên miền
 ngoài trong SOLO, hoặc Firebase không ngắt khi đánh / không nối lại ở menu. Số liệu: `mang_ban_xuat.json`.
 
+Đo lại trên bản xuất bản mới nhất (có Service Worker "tải 1 lần" của phiên khác, 3b7c6ca): mở game lần đầu tải ~38 MB (nạp hết ảnh lúc mở),
+vào trận 7 tệp / 2,7 MB (3 tấm trùm PNG), **trong trận 0 yêu cầu**, mở lại trang 1,6 MB. Xuất bản: 3b7c6ca (chỉ thêm net.js mới).
+
 Gợi ý thêm cho người chơi 4G: lần mở đầu tải ~24 MB — mở game bằng Wi-Fi 1 lần rồi chơi 4G sẽ đỡ hơn nhiều.
