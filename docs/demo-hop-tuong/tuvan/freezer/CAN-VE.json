@@ -1,0 +1,11 @@
+{
+  "ghi_chu": "Trùm FREEZER (DEEP FREEZE) — ảnh cần gen bằng ChatGPT (QUY-TAC-HINH.md mục 2). Đính kèm phu_bang.png + fx_bang_vo.png làm mẫu style. Khi có: đặt raw vào docs/demo-hop-tuong/thap-art/, cắt khoá magenta về thap/assets/, đổi BANGFX.ANH trong thap/js/bangfx.js (khoi → dải bọc băng, song → dải sóng sương). Trong lúc chờ: phu_bang + fx_st_dong + fx_lanhgia_trung + fx_bang_dan + fx_lanhgia_dan + fx_bang_vo.",
+  "anh": [
+    { "ten": "raw_p14_ice_block.png", "dung": "BANGFX.ANH.khoi — bọc băng vừa khít 1 ô ụ (vuông bo góc), 4 pha: hình thành / lấp lánh / nứt / vỡ",
+      "prompt": "4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a clear blue ice block forming over a square rounded tile (frames 1-4 growing from the edges), translucent so the center stays see-through, idle shimmer (frames 5-8), cracks spreading (frames 9-12), shattering into shards (frames 13-16), centered in each cell, solid magenta #FF00FF background, no text" },
+    { "ten": "raw_p14_frost_wave.png", "dung": "BANGFX.ANH.song + manh — sóng sương + mảnh băng bay từ trùm tới ô (bay sang phải)",
+      "prompt": "4x2 grid, 8 frames, game VFX sprite sheet, same style as attached: a flying frost wave projectile with an ice shard tip and swirling snow trail, moving to the right, looping, centered, solid magenta #FF00FF background, no text" },
+    { "ten": "raw_p14_frost_cast.png", "dung": "BANGFX.ANH.vong — vòng sương bùng dưới chân trùm lúc tung chiêu",
+      "prompt": "4x2 grid, 8 frames, game VFX sprite sheet, same style as attached: top-down frost nova ring bursting outward with ice spikes and snowflakes, from small to large then fading, centered, solid magenta #FF00FF background, no text" }
+  ]
+}

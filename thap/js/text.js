@@ -42,7 +42,7 @@ const TEXT = {
   mob: { bo: 'Crawler', bay: 'Flyer', bay_bang: 'Frost Flyer', khong_lo: 'Giant', tach: 'Splitter', que_tach: 'Big Splitter', nho: 'Spawnling' },
   boss: {
     mad_crown:  { name: 'MAD CROWN',    skill: 'SCRAMBLE',    desc: 'Turns 3 turrets into random types' },
-    freezer:    { name: 'FREEZER',      skill: 'FREEZE',      desc: 'Freezes your strongest turret' },
+    freezer:    { name: 'FREEZER',      skill: 'DEEP FREEZE', desc: 'Freezes your 3 strongest turrets for 6 s (+1 every 20 waves, max 5)', descN: (n) => 'Freezes your ' + n + ' strongest turrets for 6 s' },
     janus:      { name: 'JANUS CUBE',   skill: 'PETRIFY',     desc: 'Turns 1 turret to stone (stone only merges with same-star stone)' },
     joker_king: { name: 'JOKER KING',   skill: 'FORCE MERGE', desc: 'Throws a Mimic onto 1 turret and forces a same-star merge' },
     nightmare:  { name: 'NIGHTMARE',    skill: 'SNIPE',       desc: 'Snipes your highest-star turret: −1★ (1★ explodes)' },

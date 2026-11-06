@@ -256,7 +256,7 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
   },
   canhBaoTrum(id) {
     const b = $('#canh-bao');
-    b.querySelector('b').textContent = TRUM[id].ten; b.querySelector('span').textContent = TRUM[id].kn + ': ' + TRUM[id].mo;
+    b.querySelector('b').textContent = TRUM[id].ten; b.querySelector('span').textContent = TRUM[id].kn + ': ' + (id === 'freezer' && typeof LUAT_BANG !== 'undefined' ? TEXT.boss.freezer.descN(LUAT_BANG.so(G.wave)) : TRUM[id].mo);
     b.hidden = false; b.classList.remove('chay'); void b.offsetWidth; fitText(b.querySelector('b'), 26, 14); b.classList.add('chay');
     SND.canhBao();
     clearTimeout(this._cb); this._cb = setTimeout(() => b.hidden = true, 2200);
