@@ -150,3 +150,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Vòng ngâm chính 303 trận (SOLO/CO-OP/PVP 100 mỗi loại + 3 ONLINE, ≈ 10 260 wave, tới wave 70–75): chỉ còn báo động giả (tâm ngắm Hex PVP — đã bỏ khỏi bộ kiểm) + cảnh báo giật. Báo cáo: docs/demo-hop-tuong/tuvan/qa-ngam/BAO-CAO.md.
 - Bước mới `qangam` (tools/thap-kt-qa-ngam-repro.js): 2 Star Leech → 0★, 404 ảnh trùm mới, nhãn LV dài tràn thẻ, trùm chết giữa báo chiêu, ngâm ngắn 9 trận.
 - Hồi quy 390×844 NHANH: chỉ trượt `qangam` (vòng tải ảnh + vòng triệu hồi chồng nhau — do bộ ngâm tua luật cả lúc TAI.doi, game thật đứng chờ) → bộ ngâm sửa theo vòng thật, chạy lại `qangam`: XANH (19 mục). Mọi bước khác XANH (1890 s).
+- 06/11 (VFX P2 chiêu lớn, js/vfxp2.js): hồi quy 4 cỡ 1 lỗi 360x780 solo_trum 'chữ tràn' cut-in (.ci-chu, chập chờn đã biết) — chạy lại `SIZES=360x780x3 CHI=solo NHANH=1`: XANH. thap-kt-mau XANH (116 mục).
