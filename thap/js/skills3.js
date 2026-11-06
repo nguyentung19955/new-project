@@ -317,9 +317,11 @@ SKILLS.pandora = {
   ghep(G, B, a, b, ra) {
     const sao = Math.min(7, a.sao + 1), lay = () => rint(6);
     let ds;
-    if (sao >= 7) { const x = lay(); let y = lay(); while (y === x) y = lay(); ds = [x, y]; }
+    if (G._pdEp) ds = G._pdEp.slice(); // online: bàn con rối mở ĐÚNG phép máy bạn đã quay (gói 'gh' d.pd)
+    else if (sao >= 7) { const x = lay(); let y = lay(); while (y === x) y = lay(); ds = [x, y]; }
     else if (sao >= 6) { const x = lay(), y = lay(); ds = [PANDORA_TOT.indexOf(PANDORA[x].k) <= PANDORA_TOT.indexOf(PANDORA[y].k) ? x : y]; }
     else ds = [lay()];
+    B._pd = ds.slice();
     G.hu.push({ k: 'pandora', t: 0, song: 1.5, B, o: b.o, T: ra, chon: ds, sao, da: false });
     if (!B.ai || G.che !== 'coop') SND.quay();
   },

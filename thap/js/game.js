@@ -115,6 +115,8 @@ function taoU(B, id, sao, o) {
 }
 // gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
 function sinhU(T) { const sk = SKILLS[T.id]; if (sk && sk.sinh) sk.sinh(G, T); return T; }
+// sinhU bằng RNG cho trước (chiêu trùm tất định: Mad Crown biến ra Merge King / Sói vẫn quay vàng / thức tỉnh, 2 máy online ra như nhau)
+function sinhR(T, r) { const r0 = Math.random; if (r) Math.random = r; try { return sinhU(T); } finally { Math.random = r0; } }
 // bàn còn lại (PVP = đối thủ, CO-OP = đồng đội), SOLO = null
 function banKhac(B) { return G.ban.find(X => X !== B) || null; }
 function oTrong(B) { const ds = []; for (let i = 0; i < 15; i++) if (!B.t[i]) ds.push(i); return ds; }
@@ -649,7 +651,7 @@ function thucHienChieu(E, B) {
   const deBan = (T, ten, mau) => { const c = rong(T); G.hu.push({ k: 'chieuTrum', t: 0, song: 0.45, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau }); };
   switch (E.trum) {
     case 'mad_crown': // biến ụ thành loại ngẫu nhiên trong bộ
-      for (const T of muc) { deBan(T, 0, '#ff6ad5'); const N = taoU(B, pk(B.deck), T.sao, T.o); N.anim = { k: 'no', t: 0 }; N.goc = T.goc; B.t[T.o] = N; FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
+      for (const T of muc) { deBan(T, 0, '#ff6ad5'); const N = sinhR(taoU(B, pk(B.deck), T.sao, T.o), r); N.anim = { k: 'no', t: 0 }; N.goc = T.goc; B.t[T.o] = N; FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
       break;
     case 'freezer': { // nhiều ụ, 6 s; Halo (khiên bàn từ Halo) → nửa thời gian, vẫn mọi ụ. Hình: BANGFX (js/bangfx.js) — mảnh băng bay → bọc băng → vỡ
       const dong = (BB, L, giay) => L.forEach((T, i) => { const tre = 0.32 + i * 0.09; T.st.bang = giay + tre; if (typeof BANGFX !== 'undefined') BANGFX.ban(E, BB, T, tre); else { const c = BB.o[T.o]; FX.no('bang_vo', c.x, c.y, 80, 0.45); } });

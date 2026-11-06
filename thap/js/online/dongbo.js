@@ -205,15 +205,43 @@ const ONS = {
     if (!d.f) B1.gia += LUAT.giaTrieuTang;
     if (B1.t[d.o]) { const T = B1.t[d.o]; if (T.id === d.id && T.sao === d.s) return; }
     const T = taoU(B1, d.id, d.s || 1, d.o); B1.t[d.o] = T;
+    if (d.vg) T.vang = true; if (d.th) T.thuc = true; // dạng quay lúc sinh (Merge King vàng / Sói thức tỉnh) theo máy bạn
     VX.trieu(T);
+  },
+  // trạng thái 1 ô gửi qua mạng: [id, sao, cờ] — cờ: g vàng · w thức tỉnh · c bản sao · S đá · e<ép xung> · l<lò>
+  oTT(T) {
+    if (!T) return 0;
+    let f = (T.vang ? 'g' : '') + (T.thuc ? 'w' : '') + (T.banSao ? 'c' : '') + (T.st && T.st.da ? 'S' : '');
+    if (T.epxung) f += 'e' + Math.round(T.epxung * 100) + ';'; if (T.lo) f += 'l' + T.lo + ';';
+    return [T.id, T.sao, f];
+  },
+  datO(B, o, s) {
+    if (s === undefined) return;
+    if (!s) { B.t[o] = null; return; }
+    const [id, sao, f] = s; if (!G.rosterMap[id]) return;
+    let T = B.t[o];
+    if (!T || T.id !== id) { T = taoU(B, id, sao, o); B.t[o] = T; }
+    T.sao = sao; T.o = o;
+    const c = String(f || ''), so = (k) => { const m = c.match(new RegExp(k + '(\\d+);')); return m ? +m[1] : 0; };
+    if (T.id === 'vughep') T.vang = c.includes('g');
+    if (T.id === 'soi') T.thuc = c.includes('w');
+    T.banSao = c.includes('c'); T.st.da = c.includes('S');
+    T.epxung = so('e') / 100; if (T.id === 'loren') T.lo = so('l');
   },
   apGhep(B1, d) {
     if (!d) return;
+    if (d.db) { // ghép ĐẶC BIỆT: chạy đúng kỹ năng (hình ảnh), rồi chốt 2 ô theo máy bạn — KHÔNG đi đường ghép thường (mất ụ / chạy kỹ năng khi ghép thừa)
+      const a = B1.t[d.a], b = B1.t[d.b];
+      if (a && b && a !== b && ghepDBHop(a, b)) { try { ghep(B1, a, b); } catch (e) { console.warn('[ONS] ghép đặc biệt', e); } }
+      this.datO(B1, d.a, d.sa); this.datO(B1, d.b, d.sb);
+      return;
+    }
     const a = B1.t[d.a], b = B1.t[d.b];
     if (a && b && a !== b) {
       const cl = a.id === b.id && a.id === d.id && ghepDBHop(a, b); // ghép đặc biệt CÙNG LOẠI (Merge King + Merge King): tất định → chạy y hệt (cùng hiệu ứng/nhãn)
       const deck = B1.deck; B1.deck = [d.id]; // ụ ra = đúng ụ bạn kia nhận được (pick trong bộ 1 phần tử)
-      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; }
+      G._pdEp = Array.isArray(d.pd) ? d.pd : null; // Pandora: đúng phép máy bạn đã quay
+      try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; G._pdEp = null; }
     }
     const T = B1.t[d.b];
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }
@@ -231,7 +259,7 @@ const ONS = {
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
   oCua(B) { return B.t.map(T => T ? T.id + ':' + T.sao : ''); },
   bam(c) { let h = 2166136261; const s = c.join('|'); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); },
-  anhBan(B) { const c = this.oCua(B); return { c, h: this.bam(c), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; },
+  anhBan(B) { const c = this.oCua(B); return { c, h: this.bam(c), f: B.t.map(T => (T && this.oTT(T)[2]) || ''), lv: B.lv, m: Math.round(B.mana), g: B.gia, mv: [B.mv.gia, Math.round(B.mv.cd * 10) / 10] }; },
   chupAnh() {
     if (!this.on || !G.ban.length || this._an || this._choDB) return; // đang ẩn / chờ đồng bộ lại: không ghi đè ảnh cũ bằng bàn lạc hậu
     const v = Object.assign({ w: G.wave, tk: Math.round(G.t * 60), ht: G.ban[0].tim }, this.anhBan(G.ban[0]));
@@ -265,10 +293,13 @@ const ONS = {
         if (c[i] === v.c[i]) continue;
         if (B.t[i] && B.t[i].anim) continue; // đang chạy hoạt ảnh ghép/triệu hồi: chờ ảnh chụp sau
         const [id, sao] = (v.c[i] || '').split(':');
-        B.t[i] = id && G.rosterMap[id] ? taoU(B, id, +sao || 1, i) : null; sua++;
+        if (id && B.t[i] && B.t[i].id === id) B.t[i].sao = +sao || 1; // cùng loại, lệch sao: chỉ sửa sao (giữ đá / bản sao / ép xung / dạng)
+        else B.t[i] = id && G.rosterMap[id] ? taoU(B, id, +sao || 1, i) : null;
+        sua++;
       }
       if (sua && !khoiPhuc) this.lech++;
     }
+    if (Array.isArray(v.f)) for (let i = 0; i < 15; i++) { const T = B.t[i]; if (T && !T.anim && v.c[i] === T.id + ':' + T.sao && (this.oTT(T)[2] || '') !== (v.f[i] || '')) this.datO(B, i, [T.id, T.sao, v.f[i]]); } // cờ ô (đá, bản sao, dạng…) theo máy bạn
     if (v.lv) for (const k in v.lv) if (B.lv[k] != null) B.lv[k] = v.lv[k];
     if (v.m != null) B.mana = v.m;
     if (v.g != null) B.gia = v.g;
@@ -394,19 +425,22 @@ const ONS = {
     g('trieu', (goc) => function (B, mienPhi, idEp) {
       if (self.on && B && B.net) return null; // bàn con rối chỉ nhận ụ từ hành động 'tr' của bạn kia (kể cả ụ do chỉ huy / kỹ năng gọi)
       const T = goc.apply(this, arguments);
-      if (self.on && T && B === G.ban[0]) self.gui('tr', { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 });
+      if (self.on && T && B === G.ban[0]) { const v = { o: T.o, id: T.id, s: T.sao, f: mienPhi ? 1 : 0 }; if (T.vang) v.vg = 1; if (T.thuc) v.th = 1; self.gui('tr', v); }
       return T;
     });
     g('ghep', (goc) => function (B, a, b, ep) {
       const ao = a && a.o, bo = b && b.o, laToi = self.on && b && b.ban === 0 && !self._apDung;
-      if (laToi) G.ban[0]._tw = null;
+      const db = laToi && !ep && a && b ? !!ghepDBHop(a, b) : false; // ghép ĐẶC BIỆT (Teleporter / Copycat / Overclock / Forge / Merge King)
+      if (laToi) { G.ban[0]._tw = null; G.ban[0]._pd = null; }
       const r = goc.apply(this, arguments);
       if (laToi && r) {
         const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
+        if (db) { v.db = 1; v.sa = self.oTT(G.ban[0].t[ao]); v.sb = self.oTT(G.ban[0].t[bo]); } // trạng thái đúng của CẢ 2 ô sau ghép đặc biệt
+        const pd = G.ban[0]._pd; if (pd) v.pd = pd; // Pandora: phép đã quay
         const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại
         self.gui('gh', v);
       }
-      if (laToi) G.ban[0]._tw = null;
+      if (laToi) { G.ban[0]._tw = null; G.ban[0]._pd = null; }
       return r;
     });
     g('nangCap', (goc) => function (B, id) {
