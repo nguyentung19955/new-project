@@ -1,0 +1,72 @@
+name: Deploy TURRET MERGE to Firebase
+
+# Mỗi lần xuất bản thap/ lên nhánh chính: đăng game TURRET MERGE lên https://turret-merge.web.app
+# (dự án Firebase riêng "turret-merge", cấu hình ở firebase-thap.json — không đụng firebase.json của game kia).
+# Hướng dẫn cài một lần: docs/demo-hop-tuong/FIREBASE-HOSTING-THAP.md
+on:
+  push:
+    branches: [claude/mobile-tower-defense-game-k5oxzo]
+    paths:
+      - 'thap/**'
+      - 'firebase-thap.json'
+      - '.github/workflows/thap-firebase-hosting.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: thap-firebase
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TURRET_MERGE }}
+    steps:
+      - name: Kiểm tra secret
+        id: secret
+        run: |
+          if [ -z "$FIREBASE_SA" ]; then
+            echo "::warning title=Chưa đăng TURRET MERGE lên Firebase::Thiếu secret FIREBASE_SERVICE_ACCOUNT_TURRET_MERGE. Làm theo docs/demo-hop-tuong/FIREBASE-HOSTING-THAP.md rồi chạy lại workflow."
+            {
+              echo "## ⚠️ Bỏ qua: chưa có secret FIREBASE_SERVICE_ACCOUNT_TURRET_MERGE"
+              echo ""
+              echo "Game vẫn chạy bình thường trên GitHub Pages. Muốn có thêm https://turret-merge.web.app:"
+              echo "làm 4 bước một lần trong **docs/demo-hop-tuong/FIREBASE-HOSTING-THAP.md**, rồi bấm **Run workflow**."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secret.outputs.ok == 'true'
+        with:
+          sparse-checkout: thap
+
+      - uses: actions/setup-node@v4
+        if: steps.secret.outputs.ok == 'true'
+        with:
+          node-version: 20
+
+      - name: Đăng thap/ lên Firebase Hosting (turret-merge, kênh live)
+        if: steps.secret.outputs.ok == 'true'
+        run: |
+          trap 'rm -f "$RUNNER_TEMP/sa.json"' EXIT
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx --yes firebase-tools@13 deploy --only hosting \
+            --config firebase-thap.json --project turret-merge \
+            --non-interactive --message "thap ${GITHUB_SHA::7}"
+
+      - name: Ghi đường dẫn
+        if: steps.secret.outputs.ok == 'true'
+        run: |
+          {
+            echo "## ✅ Đã đăng TURRET MERGE"
+            echo "- https://turret-merge.web.app — commit ${GITHUB_SHA::7}"
+            echo "- https://turret-merge.firebaseapp.com"
+          } >> "$GITHUB_STEP_SUMMARY"
