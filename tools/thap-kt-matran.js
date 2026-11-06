@@ -77,7 +77,8 @@ function luat(s, e) {
     if (['janus', 'freezer', 'nightmare', 'leech'].includes(e)) return s === 'da' ? L('na', 'trùm không nhắm ô đá') : e === 'freezer' ? L('na', 'đã băng') : L('giu', 'thêm/bớt trên ụ đang băng');
     if (['eve', 'sanctum', 'cleanser'].includes(e)) return L('mat', 'được tẩy');
     if (['onlCung', 'onlKhac'].includes(e)) return s === 'da' ? L('giu', 'cờ S') : L('na', 'băng do trùm chạy y hệt 2 máy');
-    if (e === 'forge' || e === 'mauhut' || e === 'copyLen') return L('chan', 'ô khoá không bị kéo lên');
+    if (e === 'copyLen') return L('mat', 'Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md)');
+    if (e === 'forge' || e === 'mauhut') return L('chan', 'ô khoá không bị kéo lên');
     return L('chan', 'khoá chặn kỹ năng, ghép, biến hình');
   }
   if (s === 'khien') {

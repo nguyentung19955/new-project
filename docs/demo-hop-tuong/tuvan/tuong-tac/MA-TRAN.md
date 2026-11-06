@@ -30,7 +30,7 @@ Nguồn DCDW: không đọc được namu.wiki (chặn tự động); trang ti�
 1. **Bản sao bị Scrambler / Mad Crown biến** — đang: vẫn là bản sao (để phá/biến không thành "quà" bỏ −%). Khác: biến = ụ mới đủ sức.
 2. **Overclock trên Evolver / ụ bị biến** — đang: +% tốc vĩnh viễn mất khi Evolver biến hình. Khác: mang sang ụ mới.
 3. **Copycat chép ụ có lò Forge / lửa Ember / điểm Archive / Orbital đang thức tỉnh** — đang: bản sao về 0 (thân mới), chỉ giữ DẠNG (vàng, thức tỉnh Sói). Khác: chép cả bộ đếm.
-4. **Copycat chép ô ĐÁ** — đang: không được (đá chặn). Session khác (trig_01TxYv79) đang làm "Copycat chép đá"; khi xong, đổi 1 dòng luật `copyLen × da` trong tool.
+4. ~~Copycat chép ô ĐÁ~~ — session Copycat-đá đã làm xong (9d79bd2): chép được ô đá/băng → bản sao thường (không mang khoá). Ma trận đã bắt được thay đổi này và đổi luật theo.
 5. **Hộp Bí Ẩn bản sao** — đồng hồ đếm lại từ đầu (thân mới), không lấy giờ còn lại của hộp gốc.
 6. **Tê liệt Hex (2.5 s)** — đang: dừng đồng hồ Hộp/Evolver như băng, nhưng vẫn kéo/ghép được. Khác: khoá hẳn như băng.
 7. **Bản sao Mana Core / ụ hỗ trợ** — % sao chép đang chỉ giảm SÁT THƯƠNG (và bom Orbital); mana sinh ra và buff hỗ trợ của bản sao vẫn đủ.
@@ -49,14 +49,14 @@ Nguồn DCDW: không đọc được namu.wiki (chặn tự động); trang ti�
 | **mkKeo** Merge King có trạng thái bị kéo đi (+★ cho ụ khác) | mất | CHẶN | CHẶN | mất | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — |
 | **teleLen** Teleporter kéo lên ụ (đổi chỗ) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
 | **teleKeo** Teleporter có trạng thái tự đổi chỗ | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | — | — | — |
-| **copyLen** Copycat chép ụ có trạng thái | GIỮ | CHẶN | CHẶN | GIỮ | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **copyLen** Copycat chép ụ có trạng thái | GIỮ | mất | mất | GIỮ | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
 | **copyKeo** Copycat có trạng thái đi chép ụ khác | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | mất | mất | mất | mất | mất | — | — | — |
 | **ocLen** Overclock lên ụ | GIỮ | CHẶN | CHẶN | GIỮ | GIỮ | · | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | · | GIỮ | GIỮ |
 | **mauhut** Blood Circuit hiến ụ (2 ụ → 1 ụ ngẫu nhiên) | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
 | **forge** Scrap Forge ăn ụ | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | · | mất | mất |
 | **hopMo** Mystery Box hết giờ → ụ ngẫu nhiên | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — |
 | **tienHoa** Evolver hết giờ → ụ ngẫu nhiên +★ | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — |
-| **xaoTron** Scrambler (SOLO/CO-OP: biến ụ lẻ thành cặp) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất |
+| **xaoTron** Scrambler SOLO (biến ụ lẻ của mình thành cặp) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất |
 | **xaoCoop** Scrambler CO-OP (biến ụ lẻ của đồng đội) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất |
 | **xaoPVP** Scrambler PVP (biến ụ đối thủ) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất |
 | **madCrown** Trùm Mad Crown biến ụ | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất |
@@ -84,7 +84,7 @@ Ký hiệu: **GIỮ** = ụ kết quả còn trạng thái · **mất** = không
 - **mkKeo** — mất: Merge King biến mất, ụ đích không nhận gì (banSao, vang, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (thuc, orbThuc, lo, lc, kho) · mất: Merge King biến mất (khien)
 - **teleLen** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
 - **teleKeo** — GIỮ: cùng thân (banSao, epxung, aurora, khien, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho)
-- **copyLen** — GIỮ: cùng thân (banSao) · CHẶN: ô khoá không bị kéo lên (da, bang) · GIỮ: bản sao giữ DẠNG (DCDW Shamash chép Sói thức tỉnh) (vang, thuc) · mất: thân mới: không chép buff/bộ đếm của ụ gốc (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · mất: bản sao lấy khiên của thân Copycat (khien)
+- **copyLen** — GIỮ: cùng thân (banSao) · mất: Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md) (da, bang) · GIỮ: bản sao giữ DẠNG (DCDW Shamash chép Sói thức tỉnh) (vang, thuc) · mất: thân mới: không chép buff/bộ đếm của ụ gốc (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · mất: bản sao lấy khiên của thân Copycat (khien)
 - **copyKeo** — GIỮ: cùng thân (banSao, khien) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: Copycat không có dạng này (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho) · GIỮ: buff trên thân Copycat đi theo bản sao (DCDW) (epxung, aurora) · mất: thân mới (tocT, giam, kep, lua, hex)
 - **ocLen** — GIỮ: cùng thân (banSao, vang, thuc, aurora, khien, tocT, giam, kep, lua, hex, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: cộng dồn (epxung)
 - **mauhut** — mất: ghép ra ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: ô khoá không bị kéo lên (da, bang) · mất: ụ mới (khien)
