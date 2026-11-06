@@ -30,6 +30,7 @@ const TT = [
   ['lo', 'Lò Scrap Forge (điểm ăn)', 'T.lo'],
   ['lc', 'Lửa Ember Relay', 'T.lc'],
   ['kho', 'Điểm lưu Fusion Archive', 'T.kho'],
+  ['cmSo', 'Mũi tên + số Pháo La Bàn (co-che-moi A)', 'T.huong + T.so'],
 ];
 // ---------------------------------------------------------------- SỰ KIỆN (B)
 const SK = [
@@ -66,8 +67,8 @@ const SK = [
   ['onlKhac', 'ONLINE: con rối nhận ụ khác loại (vd. Hộp Bí Ẩn mở bên máy bạn)'],
 ];
 const KHOA = new Set(['da', 'bang']);
-const TAM = new Set(['epxung', 'aurora', 'tocT', 'giam', 'kep', 'lua', 'hex', 'orbThuc', 'lo', 'lc', 'kho']);
-const DONG_BO = new Set(['banSao', 'da', 'vang', 'thuc', 'epxung', 'lo', 'lc', 'kho']); // cờ đi qua mạng (dongbo.js oTT/datO)
+const TAM = new Set(['epxung', 'aurora', 'tocT', 'giam', 'kep', 'lua', 'hex', 'orbThuc', 'lo', 'lc', 'kho', 'cmSo']);
+const DONG_BO = new Set(['banSao', 'da', 'vang', 'thuc', 'epxung', 'lo', 'lc', 'kho', 'cmSo']); // cờ đi qua mạng (dongbo.js oTT/datO)
 // ---------------------------------------------------------------- LUẬT (mặc định DCDW-lean; chú thích ngắn = lý do)
 function luat(s, e) {
   const L = (k, ly) => ({ k, ly: ly || '' });
@@ -89,11 +90,16 @@ function luat(s, e) {
     return L('giu', ['hopMo', 'tienHoa', 'xaoTron', 'xaoCoop'].includes(e) ? 'biến tại chỗ giữ khiên' : 'cùng thân');
   }
   if (s === 'vang' && (e === 'ghepKeo' || e === 'ghepDich')) return L('giu', 'Merge King + Merge King = 1 Merge King +1★, giữ vàng');
+  if (s === 'cmSo') { // Pháo La Bàn: ghép Pháo vào Pháo = ụ ĐÍCH +1★ giữ mũi tên của đích; số theo cùng/vuông/ngược hướng
+    if (e === 'ghepDich') return L('giu', 'ụ đích giữ mũi tên (ngược hướng: số trừ, tối thiểu 1 + sóng nổ)');
+    if (e === 'ghepKeo') return L('mat', 'ụ kéo mất; đích giữ mũi tên của đích');
+    if (e === 'copyLen') return L('giu', 'bản sao giữ mũi tên + số (× % sao chép)');
+  }
   // ghép = ụ MỚI; Blood Circuit / Forge / Twin / Cloner cũng là ụ mới
   if (['ghepKeo', 'ghepDich', 'ghepMimic', 'twin', 'cloner', 'mauhut', 'forge', 'joker'].includes(e)) return L('mat', e === 'forge' ? 'ụ bị ăn' : e === 'joker' ? 'bị ép GHÉP → ụ mới' : 'ghép ra ụ mới');
   if (e === 'mkKeo') return L('mat', 'Merge King biến mất, ụ đích không nhận gì');
   if (['onlCung', 'onlKhac'].includes(e)) {
-    if (DONG_BO.has(s)) { if (e === 'onlKhac' && ['vang', 'thuc', 'lo', 'lc', 'kho'].includes(s)) return L('na', 'cờ riêng của loại đó'); return L('giu', 'cờ ô qua mạng'); }
+    if (DONG_BO.has(s)) { if (e === 'onlKhac' && ['vang', 'thuc', 'lo', 'lc', 'kho', 'cmSo'].includes(s)) return L('na', 'cờ riêng của loại đó'); return L('giu', 'cờ ô qua mạng'); }
     return L('na', 'tạm, chạy y hệt 2 máy');
   }
   if (s === 'banSao') {
@@ -118,7 +124,7 @@ function luat(s, e) {
   if (e === 'ocLen' && s === 'epxung') return L('giu', 'cộng dồn');
   return L('giu', 'cùng thân');
 }
-const LOAI_TT = { vang: 'vughep', thuc: 'soi', orbThuc: 'orbital', lo: 'loren', lc: 'lualien', kho: 'luutru' };
+const LOAI_TT = { vang: 'vughep', thuc: 'soi', orbThuc: 'orbital', lo: 'loren', lc: 'lualien', kho: 'luutru', cmSo: 'canon' };
 const LOAI_SK = { mkKeo: 'vughep', teleKeo: 'dichchuyen', copyKeo: 'saochep', hopMo: 'hopbi', tienHoa: 'tienhoa', twin: 'sinhdoi', cloner: 'nhanban' };
 
 // ---------------------------------------------------------------- chạy trong trang
@@ -131,15 +137,15 @@ function trongTrang(arg) {
     vang: T => { T.vang = true; }, thuc: T => { T.thuc = true; }, orbThuc: T => { T.thucT = 20; },
     epxung: T => { T.epxung = 0.65; }, aurora: T => { T.aurora = 8; }, khien: T => { T.khien = 1; },
     tocT: T => { T.tocT = 6; T.tocV = 0.2; }, giam: T => { T.giamT = 6; T.giamV = 0.08; }, kep: T => { T.st.kep = 5; },
-    lua: T => { T.st.lua = 5; }, hex: T => { T.hexT = 2; }, lo: T => { T.lo = 5; }, lc: T => { T.lc = 3; }, kho: T => { T.kho = 33; },
+    lua: T => { T.st.lua = 5; }, hex: T => { T.hexT = 2; }, lo: T => { T.lo = 5; }, lc: T => { T.lc = 3; }, kho: T => { T.kho = 33; }, cmSo: T => { T.huong = 2; T.so = 4; },
   };
   const CO = {
     banSao: T => !!T.banSao, da: T => !!T.st.da, bang: T => T.st.bang > 0, vang: T => !!T.vang, thuc: T => !!T.thuc, orbThuc: T => T.thucT > 0,
     epxung: T => T.epxung > 0.6, aurora: T => T.aurora > 0, khien: T => T.khien > 0, tocT: T => T.tocT > 0 && T.tocV >= 0.2, giam: T => T.giamT > 0,
-    kep: T => T.st.kep > 0, lua: T => T.st.lua > 0, hex: T => T.hexT > 0, lo: T => T.lo >= 5, lc: T => T.lc >= 3, kho: T => T.kho >= 33,
+    kep: T => T.st.kep > 0, lua: T => T.st.lua > 0, hex: T => T.hexT > 0, lo: T => T.lo >= 5, lc: T => T.lc >= 3, kho: T => T.kho >= 33, cmSo: T => T.id === 'canon' && T.huong === 2 && T.so >= 2,
   };
   const xoa = () => { for (const X of G.ban) for (let i = 0; i < 15; i++) X.t[i] = null; G.quai = []; B.khien = 0; if (D) D.khien = 0; B.hero = []; G.bay.length = 0; };
-  const dat = (X, o, id, sao) => { const T = sinhU(taoU(X, id, sao, o)); T.vxA = null; if (T.id === 'vughep') T.vang = false; if (T.id === 'soi') T.thuc = false; X.t[o] = T; return T; };
+  const dat = (X, o, id, sao) => { const T = sinhU(taoU(X, id, sao, o)); T.vxA = null; if (T.id === 'vughep') T.vang = false; if (T.id === 'soi') T.thuc = false; if (T.id === 'canon') { T.huong = 0; T.so = 1; } X.t[o] = T; return T; }; // Pháo La Bàn: mũi tên ↑ số 1 cố định (đối chứng tất định)
   const fakeE = (trum, T) => ({ trum, x: 200, y: 200, kho: 0, d: { v: 1, co: 40 }, v0: 1, bao: { muc: [T.uid], muc2: [] }, rng: rngHat(77) });
   // mỗi sự kiện: (X = ụ có/không trạng thái, ở ô 7 bàn B — xaoPVP: bàn D) → { kq: ụ kết quả hoặc null, xay: có xảy ra }
   const EV = {
@@ -182,7 +188,7 @@ function trongTrang(arg) {
   const ra = [];
   const deck0 = B.deck.slice(), deckD = D ? D.deck.slice() : null;
   for (const [e] of SK) for (const [s] of TT) {
-    const loai = LOAI_SK[e] && LOAI_TT[s] && LOAI_SK[e] !== LOAI_TT[s] ? null : (LOAI_SK[e] || LOAI_TT[s] || 'canon');
+    const loai = LOAI_SK[e] && LOAI_TT[s] && LOAI_SK[e] !== LOAI_TT[s] ? null : (LOAI_SK[e] || LOAI_TT[s] || 'lien'); // ụ trơn mặc định: Gatling (Pháo La Bàn + Pháo La Bàn giờ là ghép giữ loại)
     if (!loai) { ra.push({ s, e, kq: 'na', ly: 'loại ụ không khớp' }); continue; }
     const sao = e === 'forge' ? 2 : (e === 'tienHoa' ? 2 : 3);
     const chay = (co) => {
@@ -224,6 +230,20 @@ function trongTrang(arg) {
   { const evo = (sao, f) => { xoa(); const X = dat(B, 7, 'tienhoa', sao); capNhatU(B, X, 0.02); X.tuoi = 12; f(X); capNhatU(B, X, 0.02); const r = { id: X.id, sao: X.sao, tuoi: X.tuoi, xit: !!X.xit }; xoa(); return r; };
     const h5 = evo(5, X => haSao(B, X, 'kt')), h7 = evo(7, X => haSao(B, X, 'kt')), len = evo(3, X => { X.sao = 4; });
     them.evo = { h5, h7, len, ok: h5.id === 'tienhoa' && h5.sao === 4 && h5.tuoi < 0.05 && h7.sao === 6 && !h7.xit && h7.tuoi < 0.05 && len.sao === 4 && len.tuoi > 11 }; }
+  // co-che-moi: Pháo La Bàn (cùng / vuông / ngược hướng), Lửa Thập Tự (cả hàng + cột, giữ lửa qua ghép), Drone Kéo Xa (quãng kéo)
+  { xoa(); const P = (o, h, n, s) => { const T = dat(B, o, 'canon', s || 2); T.huong = h; T.so = n; return T; };
+    let a = P(0, 1, 2), b = P(1, 1, 3); ghep(B, a, b); const c1 = [B.t[1] === b, b.sao, b.so, b.huong, !B.t[0]];
+    a = P(2, 0, 4, 3); ghep(B, a, b); const c2 = [b.sao, b.so, b.huong];
+    for (let i = 0; i < 4; i++) { const E = sinhQuai('bo', 0, 80 + i * 40, 1); E.vao = 1; } const h0 = G.quai.map(E => E.hp);
+    B._dsT = -1; a = P(3, 3, 7, 4); ghep(B, a, b); const c3 = [b.sao, b.so, b.huong, G.quai.every((E, i) => E.hp < h0[i])];
+    const C = dat(B, 9, 'saochep', 5); ghep(B, C, b); const k = B.t[9]; const c4 = [k && k.id, k && k.banSao, k && k.so, k && k.huong];
+    them.cm = JSON.stringify([c1, c2, c3, c4]); G.quai = []; xoa(); }
+  { xoa(); B.deck = ['lualien']; const R = (o, n) => { const T = dat(B, o, 'lualien', 3); T.lc = n; return T; };
+    const r0 = R(0, 0), r4 = R(4, 0), r12 = R(12, 0), r10 = R(10, 0), a = R(6, 5), b = R(2, 2); ghep(B, a, b);
+    them.lc = JSON.stringify([B.t[2] && B.t[2].lc, r0.lc, r4.lc, r12.lc, r10.lc]); B.deck = deck0; xoa(); }
+  { xoa(); const a = dat(B, 10, 'drone', 3), b = dat(B, 4, 'drone', 3), n0 = G.hu.filter(h => h.k === 'drone').length; ghep(B, a, b);
+    const n1 = G.hu.filter(h => h.k === 'drone').length - n0; const c = dat(B, 6, 'drone', 3), d = dat(B, 7, 'drone', 3); ghep(B, c, d);
+    them.dr = JSON.stringify([n1, G.hu.filter(h => h.k === 'drone').length - n0 - n1]); G.hu = G.hu.filter(h => h.k !== 'drone'); xoa(); }
   return { ra, them };
 }
 
@@ -258,6 +278,9 @@ function trongTrang(arg) {
   }
   if (Math.abs(them.orbital - them.heso) > 0.002) LOI.push('✗ bom Orbital của bản sao ×' + them.orbital + ' ≠ ×' + them.heso);
   if (!them.evo.ok) LOI.push('✗ Evolver mất sao phải đếm lại từ đầu (5★→4★, 7★ xịt→6★), lên sao giữ thời gian: ' + JSON.stringify(them.evo));
+  if (them.cm !== JSON.stringify([[true, 3, 5, 1, true], [4, 5, 1], [5, 1, 1, true], ['canon', true, 1, 1]])) LOI.push('✗ Pháo La Bàn: luật ghép sai ' + them.cm + ' (cần cùng hướng 2+3=5 · vuông góc giữ 5 · ngược 5−7→1 + sóng nổ trúng mọi quái · Copycat giữ mũi tên + số)');
+  if (them.lc !== JSON.stringify([6, 1, 1, 1, 0])) LOI.push('✗ Lửa Thập Tự: ' + them.lc + ' (cần ụ ra giữ max 5 rồi +1 = 6; ô 0 & 4 cùng hàng, ô 12 cùng cột +1; ô 10 không cùng hàng/cột = 0)');
+  if (them.dr !== JSON.stringify([7, 2])) LOI.push('✗ Drone Kéo Xa: ' + them.dr + ' (cần góc → góc 6 ô + 3★/3 = 7 drone; kề 1 ô = 2)');
   if (!them.capLoai) LOI.push('✗ Hộp Bí Ẩn (bản sao) mở ra: sức mạnh không theo cấp của LOẠI kết quả × % sao chép');
   for (const e of errs) LOI.push('✗ ' + e);
   console.log('— MA TRẬN: ' + ra.length + ' cặp · kiểm ' + kiem + ' · đạt ' + dat + ' · không thể có ' + na + ' · đối chứng không chạy ' + kad);

@@ -38,72 +38,72 @@ Nguồn DCDW: không đọc được namu.wiki (chặn tự động); trang ti�
 ## Bảng (sinh tự động)
 <!-- BANG-BAT-DAU -->
 <!-- BẢNG SINH TỰ ĐỘNG: GHI_MD=1 node tools/thap-kt-matran.js -->
-| Sự kiện \ Trạng thái | banSao | da | bang | vang | thuc | orbThuc | epxung | aurora | khien | tocT | giam | kep | lua | hex | lo | lc | kho |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **ghepKeo** Ghép thường — ụ có trạng thái là ụ KÉO | mất | CHẶN | CHẶN | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
-| **ghepDich** Ghép thường — ụ có trạng thái là ụ ĐÍCH | mất | CHẶN | CHẶN | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
-| **ghepMimic** Ghép với Mimic | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
-| **twin** Twin Maker: ụ sinh đôi khi ghép | mất | CHẶN | CHẶN | — | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — |
-| **cloner** Cloner: ụ tặng khi ghép | mất | CHẶN | CHẶN | — | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — |
-| **mkLen** Merge King kéo LÊN ụ (+★) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **mkKeo** Merge King có trạng thái bị kéo đi (+★ cho ụ khác) | mất | CHẶN | CHẶN | mất | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — |
-| **teleLen** Teleporter kéo lên ụ (đổi chỗ) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **teleKeo** Teleporter có trạng thái tự đổi chỗ | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | — | — | — |
-| **copyLen** Copycat chép ụ có trạng thái | GIỮ | mất | mất | GIỮ | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
-| **copyKeo** Copycat có trạng thái đi chép ụ khác | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | mất | mất | mất | mất | mất | — | — | — |
-| **ocLen** Overclock lên ụ | GIỮ | CHẶN | CHẶN | GIỮ | GIỮ | · | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | · | GIỮ | GIỮ |
-| **mauhut** Blood Circuit hiến ụ (2 ụ → 1 ụ ngẫu nhiên) | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
-| **forge** Scrap Forge ăn ụ | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | · | mất | mất |
-| **hopMo** Mystery Box hết giờ → ụ ngẫu nhiên | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — |
-| **tienHoa** Evolver hết giờ → ụ ngẫu nhiên +★ | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — |
-| **xaoTron** Scrambler SOLO (biến ụ lẻ của mình thành cặp) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất |
-| **xaoCoop** Scrambler CO-OP (biến ụ lẻ của đồng đội) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất |
-| **xaoPVP** Scrambler PVP (biến ụ đối thủ) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất |
-| **madCrown** Trùm Mad Crown biến ụ | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất |
-| **joker** Trùm Joker King ném Mimic + ép ghép | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất |
-| **janus** Trùm Janus hoá đá | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **freezer** Trùm Freezer đóng băng | GIỮ | — | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **nightmare** Trùm Nightmare −1★ | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **leech** Trùm Star Leech lấy 1★ | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **nangSao** +1★ bằng kỹ năng (REINFORCE / Pandora / Genesis / Star Lift — cùng hàm nangSao) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
-| **eve** Chỉ huy Eve HOLY SHIELD (tẩy) | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | GIỮ | GIỮ | GIỮ | GIỮ |
-| **sanctum** Sanctum xuất hiện cạnh ụ (tẩy + khiên) | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | mất | mất | mất | GIỮ | GIỮ | GIỮ |
-| **cleanser** Cleanser tẩy ụ kề | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ |
-| **onlCung** ONLINE: ảnh chụp bàn sửa cờ ô (cùng loại) | GIỮ | GIỮ | — | GIỮ | GIỮ | — | GIỮ | — | — | — | — | — | — | — | GIỮ | GIỮ | GIỮ |
-| **onlKhac** ONLINE: con rối nhận ụ khác loại (vd. Hộp Bí Ẩn mở bên máy bạn) | GIỮ | GIỮ | — | — | — | — | GIỮ | — | — | — | — | — | — | — | — | — | — |
+| Sự kiện \ Trạng thái | banSao | da | bang | vang | thuc | orbThuc | epxung | aurora | khien | tocT | giam | kep | lua | hex | lo | lc | kho | cmSo |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **ghepKeo** Ghép thường — ụ có trạng thái là ụ KÉO | mất | CHẶN | CHẶN | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **ghepDich** Ghép thường — ụ có trạng thái là ụ ĐÍCH | mất | CHẶN | CHẶN | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | GIỮ |
+| **ghepMimic** Ghép với Mimic | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **twin** Twin Maker: ụ sinh đôi khi ghép | mất | CHẶN | CHẶN | — | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — | — |
+| **cloner** Cloner: ụ tặng khi ghép | mất | CHẶN | CHẶN | — | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — | — |
+| **mkLen** Merge King kéo LÊN ụ (+★) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **mkKeo** Merge King có trạng thái bị kéo đi (+★ cho ụ khác) | mất | CHẶN | CHẶN | mất | — | — | mất | mất | mất | mất | mất | mất | mất | mất | — | — | — | — |
+| **teleLen** Teleporter kéo lên ụ (đổi chỗ) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **teleKeo** Teleporter có trạng thái tự đổi chỗ | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | — | — | — | — |
+| **copyLen** Copycat chép ụ có trạng thái | GIỮ | mất | mất | GIỮ | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | GIỮ |
+| **copyKeo** Copycat có trạng thái đi chép ụ khác | GIỮ | CHẶN | CHẶN | — | — | — | GIỮ | GIỮ | GIỮ | mất | mất | mất | mất | mất | — | — | — | — |
+| **ocLen** Overclock lên ụ | GIỮ | CHẶN | CHẶN | GIỮ | GIỮ | · | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | · | GIỮ | GIỮ | GIỮ |
+| **mauhut** Blood Circuit hiến ụ (2 ụ → 1 ụ ngẫu nhiên) | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **forge** Scrap Forge ăn ụ | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | mất | · | mất | mất | mất |
+| **hopMo** Mystery Box hết giờ → ụ ngẫu nhiên | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — | — |
+| **tienHoa** Evolver hết giờ → ụ ngẫu nhiên +★ | GIỮ | CHẶN | CHẶN | — | — | — | mất | mất | GIỮ | mất | mất | mất | mất | CHẶN | — | — | — | — |
+| **xaoTron** Scrambler SOLO (biến ụ lẻ của mình thành cặp) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **xaoCoop** Scrambler CO-OP (biến ụ lẻ của đồng đội) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | GIỮ | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **xaoPVP** Scrambler PVP (biến ụ đối thủ) | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **madCrown** Trùm Mad Crown biến ụ | GIỮ | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **joker** Trùm Joker King ném Mimic + ép ghép | mất | CHẶN | CHẶN | mất | mất | mất | mất | mất | CHẶN | mất | mất | mất | mất | mất | mất | mất | mất | mất |
+| **janus** Trùm Janus hoá đá | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **freezer** Trùm Freezer đóng băng | GIỮ | — | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **nightmare** Trùm Nightmare −1★ | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | CHẶN | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **leech** Trùm Star Leech lấy 1★ | GIỮ | — | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **nangSao** +1★ bằng kỹ năng (REINFORCE / Pandora / Genesis / Star Lift — cùng hàm nangSao) | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **eve** Chỉ huy Eve HOLY SHIELD (tẩy) | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **sanctum** Sanctum xuất hiện cạnh ụ (tẩy + khiên) | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | mất | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ |
+| **cleanser** Cleanser tẩy ụ kề | GIỮ | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ | mất | mất | mất | GIỮ | GIỮ | GIỮ | GIỮ | GIỮ |
+| **onlCung** ONLINE: ảnh chụp bàn sửa cờ ô (cùng loại) | GIỮ | GIỮ | — | GIỮ | GIỮ | — | GIỮ | — | — | — | — | — | — | — | GIỮ | GIỮ | GIỮ | GIỮ |
+| **onlKhac** ONLINE: con rối nhận ụ khác loại (vd. Hộp Bí Ẩn mở bên máy bạn) | GIỮ | GIỮ | — | — | — | — | GIỮ | — | — | — | — | — | — | — | — | — | — | — |
 
-Ký hiệu: **GIỮ** = ụ kết quả còn trạng thái · **mất** = không mang sang (ụ mới / hết) · **CHẶN** = sự kiện không xảy ra · **—** = không thể có trong trận · **·** = không áp dụng (vd. Overclock không lên ụ không bắn). Tổng 527 cặp: kiểm 455, đạt 455, không thể có 69, không áp dụng 3.
+Ký hiệu: **GIỮ** = ụ kết quả còn trạng thái · **mất** = không mang sang (ụ mới / hết) · **CHẶN** = sự kiện không xảy ra · **—** = không thể có trong trận · **·** = không áp dụng (vd. Overclock không lên ụ không bắn). Tổng 558 cặp: kiểm 478, đạt 478, không thể có 77, không áp dụng 3.
 
 ### Lý do từng cặp (rút gọn)
-- **ghepKeo** — mất: ghép ra ụ mới (banSao, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: Merge King + Merge King = 1 Merge King +1★, giữ vàng (vang) · mất: ụ mới (khien)
-- **ghepDich** — mất: ghép ra ụ mới (banSao, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: Merge King + Merge King = 1 Merge King +1★, giữ vàng (vang) · mất: ụ mới (khien)
-- **ghepMimic** — mất: ghép ra ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: ụ mới (khien)
-- **twin** — mất: ghép ra ụ mới (banSao, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho) · mất: ụ mới (khien)
-- **cloner** — mất: ghép ra ụ mới (banSao, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho) · mất: ụ mới (khien)
-- **mkLen** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
-- **mkKeo** — mất: Merge King biến mất, ụ đích không nhận gì (banSao, vang, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (thuc, orbThuc, lo, lc, kho) · mất: Merge King biến mất (khien)
-- **teleLen** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
-- **teleKeo** — GIỮ: cùng thân (banSao, epxung, aurora, khien, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho)
-- **copyLen** — GIỮ: cùng thân (banSao) · mất: Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md) (da, bang) · GIỮ: bản sao giữ DẠNG (DCDW Shamash chép Sói thức tỉnh) (vang, thuc) · mất: thân mới: không chép buff/bộ đếm của ụ gốc (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · mất: bản sao lấy khiên của thân Copycat (khien)
-- **copyKeo** — GIỮ: cùng thân (banSao, khien) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: Copycat không có dạng này (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho) · GIỮ: buff trên thân Copycat đi theo bản sao (DCDW) (epxung, aurora) · mất: thân mới (tocT, giam, kep, lua, hex)
-- **ocLen** — GIỮ: cùng thân (banSao, vang, thuc, aurora, khien, tocT, giam, kep, lua, hex, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: cộng dồn (epxung)
-- **mauhut** — mất: ghép ra ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: ô khoá không bị kéo lên (da, bang) · mất: ụ mới (khien)
-- **forge** — mất: ụ bị ăn (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lc, kho) · CHẶN: ô khoá không bị kéo lên (da, bang)
-- **hopMo** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: ụ là Hộp/Evolver (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho) · mất: biến hình: buff/đếm của thân cũ hết (epxung, aurora, tocT, giam, kep, lua) · GIỮ: biến tại chỗ giữ khiên (khien) · CHẶN: tê liệt: đồng hồ dừng (như băng) tới khi hết 2.5 s (hex)
-- **tienHoa** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: ụ là Hộp/Evolver (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho) · mất: biến hình: buff/đếm của thân cũ hết (epxung, aurora, tocT, giam, kep, lua) · GIỮ: biến tại chỗ giữ khiên (khien) · CHẶN: tê liệt: đồng hồ dừng (như băng) tới khi hết 2.5 s (hex)
-- **xaoTron** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: biến tại chỗ giữ khiên (khien)
-- **xaoCoop** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: biến tại chỗ giữ khiên (khien)
-- **xaoPVP** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khiên chặn phá của đối thủ (khien)
-- **madCrown** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
-- **joker** — mất: bị ép GHÉP → ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
-- **janus** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
-- **freezer** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · —: trùm không nhắm ô đá (da) · —: đã băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
-- **nightmare** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
-- **leech** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang)
-- **nangSao** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
-- **eve** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, lua) · GIỮ: không phải hiệu ứng xấu Eve tẩy (orbThuc, epxung, aurora, tocT, giam, kep, hex, lo, lc, kho)
-- **sanctum** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, giam, kep, lua, hex) · GIỮ: không xấu (orbThuc, epxung, aurora, tocT, lo, lc, kho)
-- **cleanser** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, giam, kep, lua) · GIỮ: không xấu (orbThuc, epxung, aurora, tocT, hex, lo, lc, kho)
-- **onlCung** — GIỮ: cờ ô qua mạng (banSao, vang, thuc, epxung, lo, lc, kho) · GIỮ: cờ S (da) · —: băng do trùm chạy y hệt 2 máy (bang) · —: tạm, chạy y hệt 2 máy (orbThuc, aurora, tocT, giam, kep, lua, hex) · —: khiên chạy y hệt 2 máy (khien)
-- **onlKhac** — GIỮ: cờ ô qua mạng (banSao, epxung) · GIỮ: cờ S (da) · —: băng do trùm chạy y hệt 2 máy (bang) · —: cờ riêng của loại đó (vang, thuc, lo, lc, kho) · —: tạm, chạy y hệt 2 máy (orbThuc, aurora, tocT, giam, kep, lua, hex) · —: khiên chạy y hệt 2 máy (khien)
+- **ghepKeo** — mất: ghép ra ụ mới (banSao, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: Merge King + Merge King = 1 Merge King +1★, giữ vàng (vang) · mất: ụ mới (khien) · mất: ụ kéo mất; đích giữ mũi tên của đích (cmSo)
+- **ghepDich** — mất: ghép ra ụ mới (banSao, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: Merge King + Merge King = 1 Merge King +1★, giữ vàng (vang) · mất: ụ mới (khien) · GIỮ: ụ đích giữ mũi tên (ngược hướng: số trừ, tối thiểu 1 + sóng nổ) (cmSo)
+- **ghepMimic** — mất: ghép ra ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: ụ mới (khien)
+- **twin** — mất: ghép ra ụ mới (banSao, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho, cmSo) · mất: ụ mới (khien)
+- **cloner** — mất: ghép ra ụ mới (banSao, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho, cmSo) · mất: ụ mới (khien)
+- **mkLen** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
+- **mkKeo** — mất: Merge King biến mất, ụ đích không nhận gì (banSao, vang, epxung, aurora, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (thuc, orbThuc, lo, lc, kho, cmSo) · mất: Merge King biến mất (khien)
+- **teleLen** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
+- **teleKeo** — GIỮ: cùng thân (banSao, epxung, aurora, khien, tocT, giam, kep, lua, hex) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: loại ụ không khớp (vang, thuc, orbThuc, lo, lc, kho, cmSo)
+- **copyLen** — GIỮ: cùng thân (banSao) · mất: Copycat chép được ô đá/băng → bản sao THƯỜNG đúng loại thật, ô gốc giữ khoá (9d79bd2, copycat-da/DCDW.md) (da, bang) · GIỮ: bản sao giữ DẠNG (DCDW Shamash chép Sói thức tỉnh) (vang, thuc) · mất: thân mới: không chép buff/bộ đếm của ụ gốc (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho) · mất: bản sao lấy khiên của thân Copycat (khien) · GIỮ: bản sao giữ mũi tên + số (× % sao chép) (cmSo)
+- **copyKeo** — GIỮ: cùng thân (banSao, khien) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: Copycat không có dạng này (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho, cmSo) · GIỮ: buff trên thân Copycat đi theo bản sao (DCDW) (epxung, aurora) · mất: thân mới (tocT, giam, kep, lua, hex)
+- **ocLen** — GIỮ: cùng thân (banSao, vang, thuc, aurora, khien, tocT, giam, kep, lua, hex, lc, kho, cmSo) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · GIỮ: cộng dồn (epxung)
+- **mauhut** — mất: ghép ra ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · CHẶN: ô khoá không bị kéo lên (da, bang) · mất: ụ mới (khien)
+- **forge** — mất: ụ bị ăn (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lc, kho, cmSo) · CHẶN: ô khoá không bị kéo lên (da, bang)
+- **hopMo** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: ụ là Hộp/Evolver (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho, cmSo) · mất: biến hình: buff/đếm của thân cũ hết (epxung, aurora, tocT, giam, kep, lua) · GIỮ: biến tại chỗ giữ khiên (khien) · CHẶN: tê liệt: đồng hồ dừng (như băng) tới khi hết 2.5 s (hex)
+- **tienHoa** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · —: ụ là Hộp/Evolver (vang, thuc) · —: loại ụ không khớp (orbThuc, lo, lc, kho, cmSo) · mất: biến hình: buff/đếm của thân cũ hết (epxung, aurora, tocT, giam, kep, lua) · GIỮ: biến tại chỗ giữ khiên (khien) · CHẶN: tê liệt: đồng hồ dừng (như băng) tới khi hết 2.5 s (hex)
+- **xaoTron** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · GIỮ: biến tại chỗ giữ khiên (khien)
+- **xaoCoop** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · GIỮ: biến tại chỗ giữ khiên (khien)
+- **xaoPVP** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · CHẶN: khiên chặn phá của đối thủ (khien)
+- **madCrown** — GIỮ: BIẾN tại chỗ: bản sao vẫn là bản sao (lỗi cũ: mất −%) (banSao) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · mất: thành loại khác (vang, thuc) · mất: biến hình: buff/đếm của thân cũ hết (orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
+- **joker** — mất: bị ép GHÉP → ụ mới (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · CHẶN: khoá chặn kỹ năng, ghép, biến hình (da, bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
+- **janus** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
+- **freezer** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · —: trùm không nhắm ô đá (da) · —: đã băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
+- **nightmare** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang) · CHẶN: khiên chặn chiêu trùm (khiên mất) (khien)
+- **leech** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · —: trùm không nhắm ô đá (da) · GIỮ: thêm/bớt trên ụ đang băng (bang)
+- **nangSao** — GIỮ: cùng thân (banSao, vang, thuc, orbThuc, epxung, aurora, khien, tocT, giam, kep, lua, hex, lo, lc, kho, cmSo) · GIỮ: chỉ đổi sao/chỗ, khoá giữ nguyên (da, bang)
+- **eve** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, lua) · GIỮ: không phải hiệu ứng xấu Eve tẩy (orbThuc, epxung, aurora, tocT, giam, kep, hex, lo, lc, kho, cmSo)
+- **sanctum** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, giam, kep, lua, hex) · GIỮ: không xấu (orbThuc, epxung, aurora, tocT, lo, lc, kho, cmSo)
+- **cleanser** — GIỮ: cùng thân (banSao, vang, thuc, khien) · mất: được tẩy (da, bang, giam, kep, lua) · GIỮ: không xấu (orbThuc, epxung, aurora, tocT, hex, lo, lc, kho, cmSo)
+- **onlCung** — GIỮ: cờ ô qua mạng (banSao, vang, thuc, epxung, lo, lc, kho, cmSo) · GIỮ: cờ S (da) · —: băng do trùm chạy y hệt 2 máy (bang) · —: tạm, chạy y hệt 2 máy (orbThuc, aurora, tocT, giam, kep, lua, hex) · —: khiên chạy y hệt 2 máy (khien)
+- **onlKhac** — GIỮ: cờ ô qua mạng (banSao, epxung) · GIỮ: cờ S (da) · —: băng do trùm chạy y hệt 2 máy (bang) · —: cờ riêng của loại đó (vang, thuc, lo, lc, kho, cmSo) · —: tạm, chạy y hệt 2 máy (orbThuc, aurora, tocT, giam, kep, lua, hex) · —: khiên chạy y hệt 2 máy (khien)
 <!-- BANG-KET-THUC -->

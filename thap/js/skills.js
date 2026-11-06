@@ -28,7 +28,7 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 //    ↓ thấp nhất, ← trái nhất); đạn XUYÊN: mọi quái trên đường thẳng từ ụ tới mục tiêu nhận 60%, nổ lan ở mục tiêu.
 //  · Mốc: 3★ chung (+20% tốc) · 5★ TRUE NORTH: mỗi số tính ×1.5 · 7★ FOUR WINDS: +30% sát thương, mỗi 8 s bắn 1 phát theo CẢ 4 hướng.
 SKILLS.canon = {
-  vai: 'tc', dmg: 32.73, toc: 0.55, nham: 'dau',
+  vai: 'tc', dmg: 26.5, toc: 0.55, nham: 'dau', // 32.73 → 26.5: ghép giữ loại + số làm Pháo mạnh hơn (sim 07/11 bộ 4 ụ trắng + Pháo: wave 13.1 cũ → ~14.0; 32.73 thì 16.2 = áp đảo)
   MUI: ['↑', '→', '↓', '←'], SONG_K: 6, XUYEN: 0.6,
   banKinh: (T) => 28 + 6 * T.sao,
   huong: (T) => ((T && T.huong) | 0) & 3,
