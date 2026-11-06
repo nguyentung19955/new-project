@@ -105,7 +105,7 @@
 
   // ---------- vào trận ----------
   Q.vaoTran = function (cfg) {
-    Q.cfg = cfg; Q.loi = []; Q.daLoi = {}; Q.dem = {}; Q.nk = []; Q.tVe = []; Q.tStep = [];
+    Q.cfg = cfg; Q.loi = []; Q.daLoi = {}; Q.dem = {}; Q.nk = []; Q.tVe = []; Q.tStep = []; Q.cham = [];
     for (const k in Q.max) Q.max[k] = 0;
     G.debug.seed = cfg.seed; G.debug.cap0 = cfg.cap0 || null; G.debug.cap2 = cfg.cap2 || null; G.debug.deck2 = cfg.deck2 || null; G.debug.wave = cfg.wave || 0; G.debug.mana = cfg.mana || 0; G.debug.fill = cfg.fill || 0;
     G.tocDo = cfg.toc || 1;
@@ -138,7 +138,8 @@
       th.sort((x, y) => x[0].sao - y[0].sao); const [a, b] = th[ri(Math.min(th.length, 3))]; ghep(B, a, b); return 'ghep';
     }
     // 6) power-up
-    if (co(0.35)) { const L = B.deck.filter(id => B.lv[id] < 5 && B.mana >= LUAT.giaNangCap[B.lv[id] - 1]); if (L.length) { const id = chon(L); nk('nang ' + id); nangCap(B, id); return 'nang'; } }
+    // (người chơi thật không đốt sạch mana đầu trận vào power-up khi bàn còn trống → chỉ nâng khi bàn ≥ 6 ụ hoặc dư đủ 1 lần triệu hồi)
+    if (co(0.35) && (ts.length >= 6 || !trong)) { const L = B.deck.filter(id => B.lv[id] < 5 && B.mana >= LUAT.giaNangCap[B.lv[id] - 1] + (trong ? B.gia : 0)); if (L.length) { const id = chon(L); nk('nang ' + id); nangCap(B, id); return 'nang'; } }
     return '';
   };
 
@@ -185,7 +186,7 @@
         if (!fin(T.goc) || !fin(T.cd) || !fin(T.rx)) LOI('nan-u', T.id + ' goc=' + T.goc + ' cd=' + T.cd + ' rx=' + T.rx);
         if (T.nap != null && !fin(T.nap)) LOI('nan-u', T.id + ' nap=' + T.nap);
         if (!(T.st.bang <= 30)) LOI('bang-qua-lau', T.id + ' bang=' + T.st.bang);
-        if (hetTrum && T.st.ngam > 0) LOI('trum-de-lai', 'bàn ' + B.i + ' ô ' + o + ' ' + T.id + ': tâm ngắm trùm còn (st.ngam=' + T.st.ngam.toFixed(2) + ') khi không còn trùm');
+        if (hetTrum && T.st.ngam > 0 && !(T.hexT > 0) && !G.hu.some(h => h.k === 'nhieu' && h.ds && h.ds.includes(T))) LOI('trum-de-lai', 'bàn ' + B.i + ' ô ' + o + ' ' + T.id + ': tâm ngắm trùm còn (st.ngam=' + T.st.ngam.toFixed(2) + ') khi không còn trùm');
         // Evolver 7★ xịt bị giảm sao → phải đếm lại (skill chỉ chạy khi ụ không bị khoá: băng / đá / câm Jammer / Hex) — kiểm khi còn xịt > 1 s lúc RẢNH
         if (T.id === 'tienhoa' && T.xit && T.sao < 7 && !biKhoa(T) && !(T.st.cam > 0) && !(T.hexT > 0)) { T._qaX = (T._qaX || 0) + BUOC * (Q.cfg.ktMoi || 4); if (T._qaX > 1) LOI('evolver-xit-sai', 'Evolver ' + T.sao + '★ vẫn xịt > 1 s khi không bị khoá'); } else T._qaX = 0;
       }
@@ -258,7 +259,8 @@
     Q.ktNhanh();
     if (Q.buoc % (cfg.ktMoi || 4) === 0) Q.kt();
     const ds = performance.now() - s0; Q.max.step = Math.max(Q.max.step, ds);
-    if (ds > (cfg.buocCham || 250) && Q.buoc > 120) LOI('buoc-cham', '1 bước luật (1/60 s) mất ' + Math.round(ds) + ' ms');
+    if (ds > 250 && Q.buoc > 120) { Q.cham = Q.cham || []; if (Q.cham.length < 5) Q.cham.push({ ms: Math.round(ds), wave: G.wave, nk: Q.nk.slice(-3) }); } // cảnh báo giật (máy đo 2 lõi dùng chung — không tính lỗi)
+    if (ds > (cfg.buocCham || 1000) && Q.buoc > 120) LOI('buoc-cham', '1 bước luật (1/60 s) mất ' + Math.round(ds) + ' ms');
   };
   // chạy n bước tua nhanh (dừng sớm khi hết trận / quá wall ms); vẽ 1 khung mỗi cfg.veMoi bước (mặc định 20 ≈ 3 khung / giây trận)
   Q.chay = function (n, wall) {
@@ -297,7 +299,7 @@
   };
   Q.tom = function () {
     const tv = Q.tVe.slice().sort((a, b) => a - b), p95 = tv.length ? tv[Math.floor(tv.length * 0.95)] : 0;
-    return { wave: G.wave, t: +G.t.toFixed(1), kt: G.ketThuc, max: Object.assign({}, Q.max), veP95: +p95.toFixed(1), loi: Q.loi, dem: Q.dem, bam: Q.bam(),
+    return { cham: Q.cham || [], wave: G.wave, t: +G.t.toFixed(1), kt: G.ketThuc, max: Object.assign({}, Q.max), veP95: +p95.toFixed(1), loi: Q.loi, dem: Q.dem, bam: Q.bam(),
       ban: G.ban.map(B => ({ deck: B.deck, mana: Math.round(B.mana), tim: B.tim, u: B.t.filter(Boolean).map(T => T.id + T.sao + (T.banSao ? 'c' : '') + (T.st.da ? 'D' : '')).join(' ') })) };
   };
   // sau khi hết trận: màn kết quả phải hiện, vừa màn, băng thông báo đã tắt, không còn dấu trùm

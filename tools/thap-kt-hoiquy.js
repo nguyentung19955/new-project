@@ -553,6 +553,12 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-ngoai-deck.js')], { stdio: 'pipe', env: Object.assign({}, process.env, process.env.NHANH ? { LAN: '600', DAI: '2' } : {}), timeout: 1200000 }); console.log('  ' + String(o).split(/[\r\n]/).filter(l => /✓ (fuzz|bất biến)/.test(l)).map(l => l.trim()).join(' · ')); }
     catch (e) { const ds = String(e.stdout || e.message || '').split(/[\r\n]/).filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-ngoai-deck.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'ngoaideck', loai: 'ụ ngoài bộ bài', chi: l.trim().slice(0, 300), anh: '' }); console.log(ds.join('\n') || '  ✗ bất biến bộ bài: lỗi chạy'); }
   }
+  // QA NGÂM: lỗi bot chơi thật tìm ra (2 Star Leech → 0★, 404 ảnh trùm mới, nhãn LV dài tràn thẻ, trùm chết giữa báo chiêu) + ngâm ngắn 9 trận — tools/thap-kt-qa-ngam-repro.js
+  //   (ngâm dài 300+ trận: tools/thap-qa-ngam.js — xem docs/demo-hop-tuong/tuvan/qa-ngam/BAO-CAO.md)
+  if (!process.env.CHI || /ngam|solo|coop|pvp/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-qa-ngam-repro.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { BASE }, process.env.NHANH ? { NGAM_SO: '3' } : {}), timeout: 1200000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-qa-ngam-repro.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'qangam', loai: 'QA ngâm', chi: l.trim().slice(0, 300), anh: '' }); console.log(ds.join('\n')); }
+  }
   // 4 ụ vàng mới đợt 1 (Ember Relay / Quantum Choir / Fusion Archive / Hero Foundry): luật, cấp thẻ, tất định online, cân bằng bậc Vàng — tools/thap-kt-vang-moi.js
   if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }
