@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="91b8cbaadd">
+  <meta name="tm-ver" content="ad7bc7e93b">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -11,7 +11,7 @@
   <!-- KHỞI ĐỘNG NHANH (tư vấn khởi động): màn tải hiện NGAY từ HTML + CSS nội tuyến dưới đây; mọi css/js của game nằm trong
        <template id="tm-nap"> và được nạp bởi đoạn script cuối trang (thanh % chạy từ yêu cầu đầu tiên, theo byte).
        THÊM css/js MỚI: đặt VÀO TRONG <template id="tm-nap"> (đúng thứ tự như trước) — đừng đặt ngoài template. -->
-  <link rel="preload" href="assets/hud_trum_khung.webp?v=bab7d1b7" as="image">
+  <link rel="preload" href="assets/tai_khung.webp?v=7509ba33" as="image">
   <link rel="preload" href="assets/tai_day.png?v=c4c087bd" as="image">
   <link rel="preload" href="assets/nen_menu.jpg?v=34f795d7" as="image">
   <link rel="preload" href="assets/logo.webp?v=d6964dd9" as="image">
@@ -21,21 +21,25 @@
     html.dang-tai #wrap > * { visibility: hidden; }
     #tai { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 60; background: url(assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat, #16171a url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAwACADASIAAhEBAxEB/8QAGQAAAwEBAQAAAAAAAAAAAAAAAgQFAwEH/8QAIRAAAgICAgMAAwAAAAAAAAAAAQIDEQASITEEQVEiMsH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABcRAQEBAQAAAAAAAAAAAAAAAAARATH/2gAMAwEAAhEDEQA/APM0LyVHGNAOq7Y/Sc0hhcS7E2CbZfRw4oSkhDKVN/qfWPxQAj1lidTZomZ9ulB/FfQwNmjBjcBkYcrXKn6MqSxUKrEZIWaUBVLG7Cjs1ziUsaeKhDC22P3KkS8DrjJXjOeLFEHkZTikNcVlHZ1JGTPIBNgNrfu8ozyHTrJnkubtRZ+fcDOOZ5HZ3sm+SccimIHrEVKFN4nABHKnsHNITZrdQt0WOTNpIclmJGIPK8UokTYG+CMOYlTW6lSaDesBimhkldSK4Udsf5jdJX//2Q==) center / cover no-repeat; /* lớp dưới: nen_menu 32×48 (0,5 KB) hiện tức thì trong lúc ảnh thật (200 KB) đang về */ display: flex; align-items: center; justify-content: center; }
     #tai[hidden] { display: none; }
+    #tai:not(.san) .tai-giua { visibility: hidden; } /* đợi logo + khung (script dưới #tai) */
     #tai .tai-giua { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 340px; transform: scale(var(--tk, 1)); }
     #tai .tai-logo { width: 290px; aspect-ratio: 704 / 288; background: url(assets/logo.webp?v=d6964dd9) center / contain no-repeat; filter: drop-shadow(0 3px 0 #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
-    #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/hud_trum_khung.webp?v=bab7d1b7) 14 22 fill / 12px 19px stretch; }
-    #tai .tai-day { position: absolute; left: 14px; right: 14px; top: 9px; bottom: 9px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
+    #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.webp?v=7509ba33) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
+    #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
     #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
-    #tai .tai-so { font-size: 12px; opacity: .7; }
   </style>
   <link rel="preload" href="assets/fonts/oxanium/oxanium-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
-  <div id="tai"><div class="tai-giua"><div class="tai-logo"></div><div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png?v=c4c087bd" alt=""></div></div><div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span><span class="tai-so"></span></div></div></div>
+  <div id="tai"><div class="tai-giua"><div class="tai-logo"></div><div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png?v=c4c087bd" alt=""></div></div><div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span></div></div></div>
   <script>(function () {
+    // logo + khung thanh hiện CÙNG LÚC khi ảnh đã giải mã (không bật logo/khung lẻ từng cái); quá 1,5 s thì hiện luôn
+    (function () { var t = document.getElementById('tai'), n = 2, hien = function () { if (t) t.classList.add('san'); }, xong = function () { if (--n <= 0) hien(); };
+      ['assets/logo.webp?v=d6964dd9', 'assets/tai_khung.webp?v=7509ba33'].forEach(function (u) { var im = new Image(); im.onload = im.onerror = function () { (im.decode ? im.decode() : Promise.resolve()).then(xong, xong); }; im.src = u; });
+      setTimeout(hien, 1500); })();
     var vw = innerWidth || 390, vh = innerHeight || 844; document.documentElement.style.setProperty('--tk', Math.max(0.8, Math.min(1.6, vw / 430, vh / 640)).toFixed(3));
     // ảnh chỉ huy lớn của HOME (home.js) — tải SONG SONG với js thay vì đợi js chạy xong
     if (!/[?&](preview|mode)=/.test(location.search)) { var mv = 'hero'; try { var l = JSON.parse(localStorage.getItem('turret_bo') || 'null'); if (l && /^(hero|dahlia|eve)$/.test(l.mv)) mv = l.mv; } catch (e) { }
@@ -181,7 +185,7 @@
   <link rel="stylesheet" href="css/statthuc.css?v=9d507576" data-b="2328">
   <link rel="stylesheet" href="css/unitpage.css?v=c8430741" data-b="16532">
   <link rel="stylesheet" href="css/pass2.css?v=ca74d981" data-b="10068">
-  <link rel="stylesheet" href="css/taitai.css?v=6414967b" data-b="4677">
+  <link rel="stylesheet" href="css/taitai.css?v=79426f7d" data-b="5050">
   <link rel="stylesheet" href="css/hud2.css?v=c40b233b" data-b="21984">
   <link rel="stylesheet" href="css/vaotran.css?v=2b6720c6" data-b="6425">
   <link rel="stylesheet" href="css/tien.css?v=430a9adf" data-b="4252">
@@ -210,19 +214,20 @@
   <link rel="stylesheet" href="css/nut-trieu.css?v=27b15ffe" data-b="879"> <!-- nút SUMMON luôn hiện (bàn đầy = nút tắt rõ, không còn hốc trống) -->
   <link rel="stylesheet" href="css/chat.css?v=0d883ca6" data-b="5522"> <!-- chat nhanh online (js/online/chat.js) -->
   <link rel="stylesheet" href="css/nutlun.css?v=13b6b229" data-b="1383"> <!-- nút chỉ lún khi nhấn, không rung: nạp cuối -->
-  <script src="js/ver-anh.js?v=b2d16bec"></script>
+  <link rel="stylesheet" href="css/deckchon.css?v=ccff88fd" data-b="3013"> <!-- ụ trong bộ trên lưới kiểu DCDW (mờ + dấu tích, không viền) + cuộn mượt: nạp cuối -->
+  <script src="js/ver-anh.js?v=9e5cdfdd"></script>
   <script src="js/donet.js?v=34c51606" data-b="2659"></script>
   <script src="js/font.js?v=26e0ac3d" data-b="1038"></script>
   <script src="js/taitai-anh.js?v=2adc1d8e" data-b="24519"></script>
-  <script src="js/taitai.js?v=d7b328cd" data-b="28647"></script>
+  <script src="js/taitai.js?v=1633c560" data-b="29618"></script>
   <script src="js/meta.js?v=eba46004" data-b="23193"></script>
-  <script src="js/text.js?v=ff3a8d11" data-b="16862"></script>
+  <script src="js/text.js?v=96358069" data-b="17541"></script>
   <script src="js/data.js?v=6ad6bb76" data-b="11578"></script>
   <script src="js/fx.js?v=5c4e1159" data-b="6628"></script>
   <script src="js/tiervfx.js?v=12117493" data-b="3539"></script>
   <script src="js/nhac.js?v=b2d9bde7" data-b="31905"></script>
   <script src="js/sound.js?v=b4841576" data-b="73616"></script>
-  <script src="js/game.js?v=cd912222" data-b="39085"></script>
+  <script src="js/game.js?v=1a24b3c0" data-b="42593"></script>
   <script src="js/chihuy.js?v=7fa5c6c9" data-b="4344"></script>
   <script src="js/skills.js?v=e1aa5e76" data-b="31099"></script>
   <script src="js/skills2.js?v=a62f00e2" data-b="81665"></script>
@@ -231,14 +236,14 @@
   <script src="js/skills3.js?v=8ca525a4" data-b="42108"></script>
   <script src="js/skills4.js?v=57d25b02" data-b="31203"></script>
   <script src="js/skills5.js?v=e82fa2bb" data-b="32754"></script>
-  <script src="js/hotro.js?v=07dbcdac" data-b="13997"></script>
-  <script src="js/render.js?v=0e04159d" data-b="82319"></script>
+  <script src="js/hotro.js?v=1a2cc318" data-b="14057"></script>
+  <script src="js/render.js?v=2e957b1a" data-b="82629"></script>
   <script src="js/corehud.js?v=213c5eae" data-b="8090"></script>
   <script src="js/quaianim.js?v=f056f920" data-b="19035"></script>
   <script src="js/support.js?v=d7ba6a7c" data-b="10536"></script>
   <script src="js/hieuung.js?v=3399940c" data-b="30793"></script>
   <script src="js/buff.js?v=c8f2afd2" data-b="14855"></script>
-  <script src="js/ui.js?v=1612fe6f" data-b="39246"></script>
+  <script src="js/ui.js?v=9a8a4d24" data-b="39365"></script>
   <script src="js/tuongmoi-ui.js?v=2d2f6953" data-b="1537"></script>
   <script src="js/glyph.js?v=913781ca" data-b="602"></script>
   <script src="js/nhandien.js?v=5015cf42" data-b="10385"></script>
@@ -249,11 +254,11 @@
   <script src="js/fxu-meta.js?v=0ce48198" data-b="16652"></script>
   <script src="js/fxu.js?v=275b8bdb" data-b="17226"></script>
   <script src="js/ttgon.js?v=0c631464" data-b="4287"></script>
-  <script src="js/doiphuong.js?v=36bc0ec1" data-b="2860"></script>
+  <script src="js/doiphuong.js?v=269495ae" data-b="2857"></script>
   <script src="js/khung.js?v=8fc30bfe" data-b="10857"></script>
   <script src="js/chandung.js?v=b899923b" data-b="15655"></script>
   <script src="js/hud2.js?v=885a4b1c" data-b="13433"></script>
-  <script src="js/vaotran.js?v=ed8b5958" data-b="9751"></script>
+  <script src="js/vaotran.js?v=1226944c" data-b="9750"></script>
   <script src="js/keoghep.js?v=84e0f1b3" data-b="8915"></script>
   <script src="js/ghepfx.js?v=98eef3ec" data-b="29537"></script>
   <script src="js/sig-meta.js?v=a1aa6b98" data-b="1649"></script>
@@ -265,10 +270,11 @@
   <script src="js/ketqua.js?v=58573e9e" data-b="8929"></script>
   <script src="js/hudtop.js?v=34512e54" data-b="11031"></script>
   <script src="js/demkn.js?v=7f2c8b78" data-b="7034"></script>
-  <script src="js/trum.js?v=5154cd1a" data-b="14785"></script>
+  <script src="js/trum.js?v=f4c85a1b" data-b="14863"></script>
+  <script src="js/bangfx.js?v=ab16341d" data-b="6825"></script> <!-- hình chiêu Freezer: mảnh băng bay, bọc băng, vỡ -->
   <script src="js/hudb.js?v=1788c2a8" data-b="9173"></script>
   <script src="js/home.js?v=577d6327" data-b="26828"></script>
-  <script src="js/dkkeo.js?v=2c43d785" data-b="19265"></script>
+  <script src="js/dkkeo.js?v=81027506" data-b="19977"></script>
   <!-- ONLINE: tài khoản + CO-OP 2 người (Firebase Realtime Database) — SDK chỉ tải khi cần -->
   <script src="js/online/firebase-config.js?v=9e21ce47" data-b="926"></script>
   <script src="js/online/net.js?v=662e6ca1" data-b="12474"></script>
@@ -281,7 +287,7 @@
   <!-- tư vấn B (trận dễ đọc): bọc HB/HT/REN/UI — nạp sau cùng -->
   <script src="js/tvb.js?v=33be3e97" data-b="15678"></script>
   <script src="js/tvA.js?v=a6b55dd1" data-b="1730"></script>
-  <script src="js/otoigian.js?v=38267cad" data-b="7614"></script>
+  <script src="js/otoigian.js?v=129ad7f5" data-b="7628"></script>
   <script src="js/dkdcdw.js?v=19490f0f" data-b="5362"></script>
   <script src="js/ctdeck.js?v=fd4a99c5" data-b="6752"></script> <!-- chi tiết ụ từ màn bộ bài: thêm/bỏ = quay về bộ bài -->
   <script src="js/bopopup.js?v=ec655e82" data-b="7029"></script> <!-- bỏ chú thích/popup chữ trong trận: nạp sau cùng -->
@@ -299,10 +305,11 @@
       for (k in d.m) { var x = d.m[k]; tong += x.b; if (x.x) { ve += x.b; n++; } else if (x.t) dang++; }
       for (k in d.m) { var y = d.m[k]; if (!y.x && y.t) ve += Math.min(y.b * 0.9, (now - y.t) / 1000 * bw / Math.max(1, dang)); }
       var f = tong ? ve / tong : 0, p = Math.floor(d.tu + (d.den - d.tu) * Math.min(1, f));
+      if (!d.het && n < d.sl) p = Math.min(p, d.den - 1); // chưa xong hết tệp → không bao giờ báo đủ 100 %
       if (d.het) p = d.den;
       if (p < hien) p = hien; hien = p;
-      var a = el('.tai-day'), b = el('.tai-pt'), c = el('.tai-so'), t = document.getElementById('tai');
-      if (a) a.style.setProperty('--p', p + '%'); if (b) b.textContent = p + '%'; if (c) c.textContent = d.sl ? n + '/' + d.sl : ''; if (t) t.dataset.p = p;
+      var a = el('.tai-day'), b = el('.tai-pt'), t = document.getElementById('tai'); // chỉ %: bộ đếm tệp n/m bỏ (từng báo 100 % 256/309)
+      if (a) a.style.setProperty('--p', p + '%'); if (b) b.textContent = p + '%'; if (t) t.dataset.p = p;
     }
     function chay() { if (!hen) hen = setInterval(function () { ve(); if (!cur || cur.het) { clearInterval(hen); hen = 0; } }, 100); }
     return {

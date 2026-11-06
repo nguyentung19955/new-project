@@ -87,16 +87,20 @@ const DK = {
   // tự cuộn lưới theo ngón tay (lưới touch-action:none ở màn bộ bài)
   cuonTay(e, t) {
     const d = this.d, l = document.getElementById('chon-luoi'); if (!l) return;
-    l.scrollTop = d.st0 - (e.clientY - d.y0);
     d.mau.push([t, e.clientY]); while (d.mau.length > 2 && t - d.mau[1][0] > 100) d.mau.shift();
+    if (typeof TAI_CUON !== 'undefined') TAI_CUON = performance.now(); // taitai.js: đợt nạp nền nhường khi đang cuộn
+    // mép trên lưới: đo 1 lần lúc bắt đầu cuộn (trước: getBoundingClientRect sau khi ghi scrollTop = ép bố cục mỗi pointermove)
+    if (d.lTop == null) d.lTop = l.getBoundingClientRect().top;
     // kéo lên khỏi mép trên lưới (về phía bộ bài) = nhấc thẻ dưới điểm chạm
-    const r = l.getBoundingClientRect();
-    if (d.el && d.tu === 'the' && e.clientY < r.top - 10 && e.clientY < d.y0) { d.cuon = false; l.scrollTop = d.st0; this.batDau(); } // trả lưới về chỗ cũ: người chơi muốn kéo, không muốn cuộn
+    if (d.el && d.tu === 'the' && e.clientY < d.lTop - 10 && e.clientY < d.y0) { d.cuon = false; if (d.raf) { cancelAnimationFrame(d.raf); d.raf = 0; } l.scrollTop = d.st0; this.batDau(); return; } // trả lưới về chỗ cũ: người chơi muốn kéo, không muốn cuộn
+    // gom các pointermove trong 1 khung hình → ghi scrollTop 1 lần / khung
+    d.cy = e.clientY;
+    if (!d.raf) d.raf = requestAnimationFrame(() => { d.raf = 0; if (this.d === d && d.cuon) l.scrollTop = d.st0 - (d.cy - d.y0); });
   },
   len(e) {
     const d = this.d;
     if (d && e.pointerId === d.pid && !this.keo) {
-      if (d.cuon) { this._chan = performance.now() + 350; this.quanTinh(); }
+      if (d.cuon) { if (d.raf) { cancelAnimationFrame(d.raf); d.raf = 0; const l = document.getElementById('chon-luoi'); if (l) l.scrollTop = d.st0 - (d.cy - d.y0); } this._chan = performance.now() + 350; this.quanTinh(); }
       this.huyD(); return; // chạm thường → click → home.js mở chi tiết
     }
     const k = this.keo; if (!k || e.pointerId !== k.pid) return;

@@ -11,6 +11,9 @@ const TAI_MAT = { matMang: true };
 var TAI_WEBP = true;
 // lúc tệp gần nhất về (PerformanceObserver): mạng còn chạy thì không huỷ ảnh đang tải chậm (TAI._mot)
 var TAI_VE = Date.now();
+// lúc cuộn gần nhất (js/dkkeo.js tự cuộn lưới bộ bài + sự kiện scroll gốc ở bộ sưu tập/bảng) → đợt nạp nền nhường
+var TAI_CUON = 0;
+addEventListener('scroll', () => { TAI_CUON = performance.now(); }, { capture: true, passive: true });
 try { new PerformanceObserver((l) => { if (l.getEntries().length) TAI_VE = Date.now(); }).observe({ type: 'resource', buffered: false }); } catch (e) { }
 function anhUrl(ten) {
   if (typeof anhTen === 'function') ten = anhTen(ten); // ?ucu=1: bộ đầu cũ <ten>_v1 (text.js)
@@ -32,7 +35,7 @@ const TAI = {
   dbg: /[?&]debug(=|&|$)/.test(location.search),
   xem: !!new URLSearchParams(location.search).get('preview'), // iframe Test range của trang ụ
   mat: false, lai: false, cho: false, daBoot: false, loiLien: 0, _phien: 0,
-  thieu: new Set(), daTai: new Set(), hua: new Map(), nenXong: false,
+  thieu: new Set(), daTai: new Set(), daXL: new Set(), hua: new Map(), nenXong: false,
   ngu(ms) { return new Promise(r => setTimeout(r, ms)); },
   tuyetDoi(u) { try { return new URL(u, location.href).href; } catch (e) { return u; } },
 
@@ -99,10 +102,13 @@ const TAI = {
         const im = await this.mot(it);
         if (im) { this.daTai.add(it.url); if (it.ten) this.giao(it.ten, im); }
       }
+      this.daXL.add(it.url); // đã xử lý (tải được HOẶC thiếu/lỗi) → choNen tính là xong, % và số tệp khớp nhau
       const d2 = lay(); if (d2) { d2.them(it.url, this.byte(it.url)); d2.xong(it.url); }
     };
     const d0 = lay(); if (d0) for (const it of ds) d0.them(it.url, this.byte(it.url), true);
-    const luong = async () => { while (i < ds.length) { while (nen && this.cho) await this.ngu(250); if (i >= ds.length) break; await lam(ds[i++]); } };
+    // nen: nhường khi đang tải trận (TAI.cho) VÀ khi người chơi đang cuộn lưới (giải mã ảnh nền giữa lúc cuộn = khung hình rớt trên iPhone)
+    const nhuong = () => this.cho || performance.now() - TAI_CUON < 450;
+    const luong = async () => { while (i < ds.length) { while (nen && nhuong()) await this.ngu(this.cho ? 250 : 150); if (i >= ds.length) break; await lam(ds[i++]); } };
     await Promise.all(Array.from({ length: Math.min(so || 6, ds.length) }, luong));
   },
 
@@ -116,7 +122,7 @@ const TAI = {
     };
     return { them, anh: (ten) => them(anhUrl(ten), ten), ket: () => [...m.values()] };
   },
-  ANH_TAI: ['assets/tai_day.png', 'assets/hud_trum_khung.webp?v=bab7d1b7', 'assets/fx_vong_lv.webp?v=22846933'],
+  ANH_TAI: ['assets/tai_day.png', 'assets/tai_khung.webp?v=7509ba33', 'assets/fx_vong_lv.webp?v=22846933'],
   CO_DINH: ['khay', 'duong_thang', 'duong_goc', 'cong', 'loi', 'tia_lua', 'khoi_0', 'khoi_1', 'khoi_2', 'khoi_3', 'ui_mana', 'fx_vong_lv'],
   dsMenu() {
     const d = this.ds();
@@ -134,7 +140,7 @@ const TAI = {
       }
       for (const im of document.images) d.them(im.getAttribute('src') || im.getAttribute('data-tm-src'));
       // thẻ ụ: icon + chân dung phi công; chỉ huy: chân dung + biểu tượng
-      for (const r of G.roster || []) { d.them(iconOf(r.id)); if (hasPilot(r.id)) d.them(portraitOf(r.id)); }
+      for (const r of G.roster || []) { d.them(iconOf(r.id)); if (hasPilot(r.id)) d.them(thumbOf(r.id)); }
       for (const id in MAVUONG) { d.them(anhUrl(MAVUONG[id].anh)); d.them(mvIcURL(id)); }
     }
     for (const t of this.CO_DINH) d.anh(t);
@@ -171,7 +177,7 @@ const TAI = {
       t = document.createElement('div'); t.id = 'tai';
       t.innerHTML = '<div class="tai-giua"><div class="tai-logo"></div>' +
         '<div class="tai-thanh"><div class="tai-day" style="--p:0%"><img src="assets/tai_day.png" alt=""></div></div>' +
-        '<div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span><span class="tai-so"></span></div></div>';
+        '<div class="tai-chu"><b>LOADING</b><span class="tai-pt">0%</span></div></div>';
     }
     if (this.xem) t.classList.add('nho');
     if (t.parentNode !== w) w.appendChild(t);
@@ -204,7 +210,6 @@ const TAI = {
     const p = tong ? Math.floor(xong / tong * 100) : 0;
     this.el.querySelector('.tai-day').style.setProperty('--p', p + '%');
     this.el.querySelector('.tai-pt').textContent = p + '%';
-    this.el.querySelector('.tai-so').textContent = tong ? xong + '/' + tong : '';
     this.el.dataset.p = p;
   },
   // vòng xoay PNG nhỏ (fx_vong_lv) trên canvas — chỗ một ảnh lẻ còn đang tải trong trận
@@ -263,7 +268,11 @@ const TAI = {
     if (this.nenDot) return;
     this.hien('LOADING', true);
     const d = this.nenDot = TDO.dot(0, 100);
-    for (const it of this.nenCon || []) { d.them(it.url, this.byte(it.url), true); if (this.daTai.has(it.url) || this.sanSang(it)) d.xong(it.url); else if (this.hua.has(it.url)) d.them(it.url); }
+    // LỖI CŨ ('LOADING 100% 256/309'): đăng ký + báo xong xen kẽ → lúc mới đăng ký vài tệp đầu (đã tải xong) thanh tính 100 %,
+    // rồi % không bao giờ lùi → đứng 100 % suốt lúc chờ. Giờ: đăng ký HẾT danh sách trước, sau đó mới báo các tệp đã xong.
+    const con = this.nenCon || [];
+    for (const it of con) d.them(it.url, this.byte(it.url), true);
+    for (const it of con) { if (this.daTai.has(it.url) || this.daXL.has(it.url) || this.sanSang(it)) d.xong(it.url); else if (this.hua.has(it.url)) d.them(it.url); }
   },
   // ver.json (tools/thap-ver.py): bản trên máy chủ mới hơn bản đang chạy → nạp lại trang, nhưng CHỈ khi đang đứng ở HOME
   // (không bao giờ chặn màn tải đầu, không cắt ngang trận / bảng đang mở)
@@ -300,7 +309,7 @@ const TAI = {
         await this.bootP; if (phien !== this._phien) return;
         // đợt nền của menu chưa xong: lấy thêm ảnh CSS/DOM (HUD trận…) + chân dung của bộ bài đang ra trận, bỏ chân dung/icon khác
         if (!this.nenXong && this.nenCon) {
-          const bo = new Set(); for (const b of (G.ban || [])) for (const id of b.deck || []) { bo.add(this.tuyetDoi(portraitOf(id))); bo.add(this.tuyetDoi(iconOf(id))); }
+          const bo = new Set(); for (const b of (G.ban || [])) for (const id of b.deck || []) { bo.add(this.tuyetDoi(thumbOf(id))); bo.add(this.tuyetDoi(iconOf(id))); }
           for (const it of this.nenCon) if (!/\/(pilot_|nho\/|af_)/.test(it.url) || bo.has(it.url)) d.them(it.url, it.ten);
         }
         await this.nap(d.ket(), () => (phien === this._phien ? dot : null));

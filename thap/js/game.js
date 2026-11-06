@@ -334,6 +334,19 @@ function chet(E, B) {
 // ---------- wave ----------
 // RNG có hạt giống (mulberry32) — PVP: wave sinh 1 lần rồi đổ GIỐNG HỆT vào cả 2 làn
 function rngHat(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+// RNG CHIÊU TRÙM (tất định): mỗi lần tung chiêu 1 hạt mới = hạt trận + wave + làn trùm (quy về làn chủ phòng khi online) + id trùm
+// + số lần tung → 2 máy online (lockstep) chọn CÙNG ụ mục tiêu, không dùng Math.random.
+function rngTrum(E) {
+  const lan = (typeof ONS !== 'undefined' && ONS.on && !ONS.host && G.ban.length === 2) ? 1 - E.ban : E.ban;
+  let h = 0; for (const ch of String(E.trum || '')) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) | 0;
+  E.nChieu = (E.nChieu || 0) + 1;
+  return rngHat(((G.hat || 1) * 2246822519 + G.wave * 3266489917 + lan * 668265263 + E.nChieu * 374761393 + h) | 0);
+}
+// trộn tất định (Fisher–Yates) theo thứ tự ô — không phụ thuộc thứ tự mảng đầu vào
+function tronTrum(ds, r) { const a = ds.slice().sort((x, y) => x.o - y.o); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function chonTrum(ds, r) { const a = tronTrum(ds, r); return a.length ? a[0] : null; }
+// FREEZER: số ụ bị đóng băng — 3 lúc đầu, +1 mỗi 20 wave, tối đa 5 · 6 s
+const LUAT_BANG = { giay: 6, so: (w) => Math.min(5, 3 + Math.floor(w / 20)) };
 // PVP: số wave đột tử đã qua (0 = chưa đột tử)
 function pvpDotTu(w) { return G.che === 'pvp' && w >= LUAT.pvpDotTu ? w - LUAT.pvpDotTu + 1 : 0; }
 // ---------- LỊCH TRÙM ----------
@@ -572,13 +585,28 @@ function capNhatTrum(E, dt) {
   // chọn mục tiêu + BÁO TRƯỚC 1,4 s (khung 3 tung chiêu + tâm ngắm đỏ trên ụ)
   const ds = B.t.filter(T => T && !T.st.da);
   if (!ds.length) { E.knT = 2; return; }
-  let muc = [];
-  if (E.trum === 'mad_crown' || E.trum === 'octopus') muc = ds.sort(() => Math.random() - 0.5).slice(0, 3);
-  else if (E.trum === 'freezer' || E.trum === 'nightmare') muc = [ds.sort((a, b) => b.sao - a.sao || Math.random() - 0.5)[0]];
-  else if (E.trum === 'janus') muc = [pick(ds)];
-  else if (E.trum === 'joker_king') muc = [pick(ds)];
-  E.bao = { t: 0, song: 1.4, muc: muc.map(T => T.uid) };
+  let muc = [], muc2 = [], ban2 = null;
+  const r = rngTrum(E); E.rng = r; // dùng lại lúc tung chiêu (mad_crown đổi loại, joker ghép) — vẫn tất định
+  if (E.trum === 'mad_crown' || E.trum === 'octopus') muc = tronTrum(ds, r).slice(0, 3);
+  else if (E.trum === 'nightmare') muc = tronTrum(ds, r).sort((a, b) => b.sao - a.sao).slice(0, 1);
+  else if (E.trum === 'freezer') {
+    // nhiều ụ: sao cao trước, cùng sao thì ngẫu nhiên (tất định). CO-OP: chia đôi cho 2 bàn (bàn trùm lấy phần lẻ), bàn nào thiếu ụ thì bàn kia bù
+    const n = LUAT_BANG.so(G.wave), xep = (L) => tronTrum(L, r).sort((a, b) => b.sao - a.sao);
+    const B2 = G.che === 'coop' && G.ban.length === 2 ? G.ban[1 - B.i] : null;
+    const ds2 = B2 ? B2.t.filter(T => T && !T.st.da && !(T.st.bang > 0)) : [];
+    const ds1 = ds.filter(T => !(T.st.bang > 0)).length ? ds.filter(T => !(T.st.bang > 0)) : ds;
+    let n1 = B2 ? Math.ceil(n / 2) : n, n2 = n - n1;
+    if (!B2) n2 = 0;
+    if (ds2.length < n2) { n1 += n2 - ds2.length; n2 = ds2.length; }
+    if (ds1.length < n1 && B2) { n2 = Math.min(ds2.length, n2 + n1 - ds1.length); }
+    muc = xep(ds1).slice(0, n1);
+    if (B2 && n2 > 0) { muc2 = xep(ds2).slice(0, n2); ban2 = B2.i; }
+  }
+  else if (E.trum === 'janus') muc = [chonTrum(ds, r)];
+  else if (E.trum === 'joker_king') muc = [chonTrum(ds, r)];
+  E.bao = { t: 0, song: 1.4, muc: muc.map(T => T.uid), muc2: muc2.map(T => T.uid), ban2 };
   for (const T of muc) T.st.ngam = 1.4;
+  for (const T of muc2) T.st.ngam = 1.4;
   FX.chu1(E.x, E.y - 52, TRUM[E.trum].kn + '!', TRUM[E.trum].mau, 18, 'to');
   SND.bao();
 }
@@ -594,6 +622,9 @@ function thucHienChieu(E, B) {
   const muc = B.t.filter(T => T && E.bao.muc.includes(T.uid));
   SND.chieuTrum(E.trum);
   for (const T of muc) T.st.ngam = 0;
+  const B2 = E.bao.ban2 != null ? G.ban[E.bao.ban2] : null, muc2 = B2 ? B2.t.filter(T => T && (E.bao.muc2 || []).includes(T.uid)) : [];
+  for (const T of muc2) T.st.ngam = 0;
+  const r = E.rng || rngTrum(E), pk = (L) => L[Math.floor(r() * L.length)];
   if (B.khien > 0) { // khiên Ma vương chặn chiêu trùm
     for (const T of muc) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#73A9FF', 11); }
     return;
@@ -604,12 +635,22 @@ function thucHienChieu(E, B) {
   const deBan = (T, ten, mau) => { const c = rong(T); G.hu.push({ k: 'chieuTrum', t: 0, song: 0.45, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau }); };
   switch (E.trum) {
     case 'mad_crown': // biến ụ thành loại ngẫu nhiên trong bộ
-      for (const T of muc) { deBan(T, 0, '#ff6ad5'); const N = taoU(B, pick(B.deck), T.sao, T.o); N.anim = { k: 'no', t: 0 }; N.goc = T.goc; B.t[T.o] = N; FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
+      for (const T of muc) { deBan(T, 0, '#ff6ad5'); const N = taoU(B, pk(B.deck), T.sao, T.o); N.anim = { k: 'no', t: 0 }; N.goc = T.goc; B.t[T.o] = N; FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
       break;
-    case 'freezer':
-      for (const T of muc) { deBan(T, 0, '#7fdcff'); T.st.bang = 7; const c = rong(T); FX.no('bang_vo', c.x, c.y, 80, 0.45); }
+    case 'freezer': { // nhiều ụ, 6 s; Halo (khiên bàn từ Halo) → nửa thời gian, vẫn mọi ụ. Hình: BANGFX (js/bangfx.js) — mảnh băng bay → bọc băng → vỡ
+      const dong = (BB, L, giay) => L.forEach((T, i) => { const tre = 0.32 + i * 0.09; T.st.bang = giay + tre; if (typeof BANGFX !== 'undefined') BANGFX.ban(E, BB, T, tre); else { const c = BB.o[T.o]; FX.no('bang_vo', c.x, c.y, 80, 0.45); } });
+      dong(B, muc, E.bao.haloA ? LUAT_BANG.giay / 2 : LUAT_BANG.giay);
+      if (B2 && B2 !== B && muc2.length) { // CO-OP: phần của bàn đồng đội — khiên/Halo của bàn đó
+        const halo2 = B2.halo > 0 && B2.khien > 0 && B2.khien <= B2.halo + 0.05;
+        let L = muc2.slice();
+        if (B2.khien > 0 && !halo2) { for (const T of L) VX.chanKhien(B2, T); L = []; }
+        else if (!halo2) for (let i = L.length - 1; i >= 0; i--) if (chanKhien(B2, L[i])) L.splice(i, 1);
+        dong(B2, L, halo2 ? LUAT_BANG.giay / 2 : LUAT_BANG.giay);
+      }
+      if (typeof BANGFX !== 'undefined') BANGFX.tung(E);
       SND.bang();
       break;
+    }
     case 'janus':
       for (const T of muc) { deBan(T, 0, '#e0c070'); T.st.da = true; const c = rong(T); FX.bui(c.x, c.y, 10, 16); FX.lac(4); }
       break;
@@ -618,7 +659,7 @@ function thucHienChieu(E, B) {
         deBan(T, 0, '#ffd23f');
         const M = taoU(B, 'mimic', T.sao, T.o); M.goc = T.goc; B.t[T.o] = M;
         const ban = B.t.filter(X => X && X !== M && X.sao === M.sao && !X.st.da && !X.st.bang);
-        if (ban.length && M.sao < 7) ghep(B, M, pick(ban), true);
+        if (ban.length && M.sao < 7) ghep(B, M, chonTrum(ban, r), true);
         else { M.anim = { k: 'no', t: 0 }; }
       }
       break;

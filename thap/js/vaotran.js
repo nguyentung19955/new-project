@@ -9,7 +9,7 @@
 const VT = {
   TONG: 4.0,          // giây — tự đóng (≥ 3 s đọc kịp; chạm CONTINUE / bất kỳ đâu để vào ngay)
   SO_TRUM: 3,         // số trùm xem trước
-  NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes your best turret', janus: 'Petrifies 1 turret',
+  NGUY: { mad_crown: 'Scrambles 3 turrets', freezer: 'Freezes 3–5 best turrets', janus: 'Petrifies 1 turret',
     joker_king: 'Forces a merge', nightmare: 'Snipes your top turret', octopus: 'Burns 3 turrets' },
   CHU: { boss: 'BOSSES THIS MATCH', wave: 'WAVE', you: 'YOUR DECK', ally: 'ALLY DECK', rival: 'RIVAL DECK', bossPvp: 'SAME WAVES & BOSSES FOR BOTH', allyLane: 'Ally lane', cmd: 'CMDR', tap: 'TAP TO START' },
   el: null, mo: false,
@@ -57,7 +57,7 @@ const VT = {
     if (G.ban[1]) { // bộ bài đồng đội / đối thủ: 1 dải gọn
       const B = G.ban[1], mv = MAVUONG[B.mv.id];
       h += '<div class="vt-doi"><small>' + (G.che === 'pvp' ? this.CHU.rival : this.CHU.ally) + '</small><span>' +
-        B.deck.map(id => { const r = G.rosterMap[id] || { bac: 'trang' }; return '<i class="vt-mini"><img class="po" src="' + portraitOf(id) + '" alt=""><img class="kh" src="' + KHUNG.url(r.bac) + '" alt=""></i>'; }).join('') +
+        B.deck.map(id => { const r = G.rosterMap[id] || { bac: 'trang' }; return '<i class="vt-mini"><img class="po" src="' + thumbOf(id) + '" alt=""><img class="kh" src="' + KHUNG.url(r.bac) + '" alt=""></i>'; }).join('') +
         (mv ? '<i class="vt-mini"><img class="po" src="' + (typeof anhUrl === 'function' ? anhUrl(mv.anh) : 'assets/' + mv.anh + '.png') + '" alt=""><img class="kh" src="' + KHUNG.url('mv') + '" alt=""></i>' : '') + '</span></div>';
     }
     h += '<div class="vt-cham"><b>CONTINUE</b><small class="vt-dem"></small></div>';

@@ -875,7 +875,9 @@ const REN = {
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
     // lớp phủ trạng thái
-    if (T.st.bang > 0) { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; }
+    // băng (Freezer & mọi nguồn): khối băng bọc ô + vành + lấp lánh; hết băng → vỡ (js/bangfx.js)
+    if (T.st.bang > 0 && !o.ghost) { if (typeof BANGFX !== 'undefined') BANGFX.ve(ctx, T, S, al, this, B, x, y); else { ctx.globalAlpha = al * 0.95; this.ve1(ctx, 'phu_bang', S * 1.12); ctx.globalAlpha = al; } }
+    else if (T._bangVe && !o.ghost && typeof BANGFX !== 'undefined') BANGFX.vo(T, B, x, y);
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
     if (T.st.lua > 0) { const f = 1 + 0.04 * Math.sin(this.t * 22); ctx.save(); ctx.scale(f, f); this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
     if (T.st.ngam > 0) { ctx.save(); ctx.rotate(this.t * 2); const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }

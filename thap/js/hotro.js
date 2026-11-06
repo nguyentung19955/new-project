@@ -145,16 +145,20 @@ capNhatTrum = function (E, dt) { return _capNhatTrumHT(E, E.tempoT > 0 ? dt * 0.
 const _chanKhienHT = chanKhien;
 chanKhien = function (B, T) { if (HOTRO.khang(B, T)) return true; return _chanKhienHT(B, T); };
 
-// Halo: chiêu TRÙM chỉ bị giảm nhẹ khi khiên bàn đến từ Halo (không huỷ hẳn): chiêu nhiều mục tiêu → còn trúng 1 ụ; Freezer → nửa thời gian
+// Halo: chiêu TRÙM chỉ bị giảm nhẹ khi khiên bàn đến từ Halo (không huỷ hẳn): chiêu nhiều mục tiêu → còn trúng 1 ụ; Freezer → mọi ụ, nửa thời gian
 const _thucHienChieuHT = thucHienChieu;
 thucHienChieu = function (E, B) {
   if (!(B && B.halo > 0 && B.khien > 0 && B.khien <= B.halo + 0.05 && E && E.bao)) return _thucHienChieuHT(E, B);
   const k = B.khien, muc = E.bao.muc.slice();
+  if (E.trum === 'freezer') { // Freezer nhiều ụ: Halo giữ mọi mục tiêu nhưng HALVE thời gian băng (game.js đọc E.bao.haloA)
+    E.bao.haloA = true; B.khien = 0;
+    try { _thucHienChieuHT(E, B); } finally { B.khien = k; }
+    return;
+  }
   for (const T of B.t) if (T && muc.slice(1).includes(T.uid)) { VX.chanKhien(B, T); const c = B.o[T.o]; FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#fff6c0', 11); }
   E.bao.muc = muc.slice(0, 1);
   B.khien = 0;
   try { _thucHienChieuHT(E, B); } finally { B.khien = k; }
-  if (E.trum === 'freezer') for (const T of B.t) if (T && muc[0] === T.uid && T.st.bang > 0) { T.st.bang = Math.min(T.st.bang, 3.5); const c = B.o[T.o]; FX.chu1(c.x, c.y - 30, 'HALO: HALF', '#fff6c0', 11); }
 };
 // Star Breaker: ghép ra ụ ở ô kề → bùng tốc 5 s · Shield Gen 7★: chặn xong +20% tốc 4 s
 const _ghepHT = ghep;

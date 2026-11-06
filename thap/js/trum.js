@@ -52,8 +52,9 @@ const TRUM_KN = {
   },
   jammer: {
     chon(E, B, ds) {
-      const ht = ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)).sort(() => Math.random() - 0.5);
-      const khac = ds.filter(T => !ht.includes(T) && !(T.st.cam > 0)).sort((a, b) => b.sao - a.sao || Math.random() - 0.5);
+      const r = rngTrum(E); // tất định (online lockstep) — game.js
+      const ht = tronTrum(ds.filter(T => SKILLS[T.id] && SKILLS[T.id].vai === 'ht' && !(T.st.cam > 0)), r);
+      const khac = tronTrum(ds.filter(T => !ht.includes(T) && !(T.st.cam > 0)), r).sort((a, b) => b.sao - a.sao);
       return ht.concat(khac).slice(0, TRM.JAM_N);
     },
     lam(E, B, muc) {
@@ -85,7 +86,7 @@ const TRUM_KN = {
     },
   },
   leech: {
-    chon(E, B, ds) { const c = ds.filter(T => T.sao >= 2).sort((a, b) => b.sao - a.sao || Math.random() - 0.5); return c.length ? [c[0]] : null; },
+    chon(E, B, ds) { const c = tronTrum(ds.filter(T => T.sao >= 2), rngTrum(E)).sort((a, b) => b.sao - a.sao); return c.length ? [c[0]] : null; },
     lam(E, B, muc) {
       for (const T of muc) {
         const c = B.o[T.o]; G.hu.push({ k: 'tiaTia', t: 0, song: 0.3, x0: c.x, y0: c.y, x1: E.x, y1: E.y, mau: TRUM_MOI.leech.mau });
@@ -188,9 +189,10 @@ chet = function (E, B) {
   }
   if (E.trum === 'leech' && E.kho > 0) {
     const BB = G.ban[E.ban];
+    const r = rngTrum(E);
     for (let i = 0; i < E.kho; i++) {
       const ds = BB.t.filter(T => T && T.sao < LUAT.saoMax && !T.st.da);
-      if (ds.length) { const T = pick(ds); T.sao++; T.sang = 1; const c = BB.o[T.o]; TRM.fx('leech', 'starup', c.x, c.y, 80, 0.5); TRM.chu(c.x, c.y - 22, '+1★ RETURNED', '#ffd84a', 13); }
+      if (ds.length) { const T = chonTrum(ds, r); T.sao++; T.sang = 1; const c = BB.o[T.o]; TRM.fx('leech', 'starup', c.x, c.y, 80, 0.5); TRM.chu(c.x, c.y - 22, '+1★ RETURNED', '#ffd84a', 13); }
       else BB.mana += manaGiet(G.wave) * 3;
     }
     E.kho = 0;
