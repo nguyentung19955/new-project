@@ -88,4 +88,4 @@ Riêng: `tools/thap-kt-freezer.js` XANH (số ụ theo wave, 6 s, Halo nửa, CO
 ## 06/11/2026 — cấp thẻ DCDW (thebai.js / thebai-ui.js)
 Lần 1 TRƯỢT 46 lỗi, 2 loại: (1) `ảnh méo` ruột thanh bản sao `.tb-day > img tai_day.png` (dải đầy kéo theo bề dài = mức đầy, QUY-TAC-HINH mục 3)
 → thêm lớp `tai-day` cho ruột thanh (cùng ngoại lệ với thanh tải); (2) `vẽ tay` drop-shadow mũi tên nâng cấp thiếu nhãn `vetay-ok: png`.
-Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s).
+Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s). Sau rebase lên nhánh mới (lưới có content-visibility → thanh ngoài ô bị cắt) chuyển thanh bản sao vào TRONG ô; lần 3: **XANH — 0 lỗi** (1248 s).

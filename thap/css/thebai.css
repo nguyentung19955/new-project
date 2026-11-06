@@ -2,13 +2,13 @@
    mũi tên ui_nangcap, ngọc vàng ngoc_vang (= vàng), nút nut_lon_xanh / nut_lon_thep. Code chỉ đặt vị trí, chữ số và mức đầy (clip-path). */
 
 /* ---------- lưới bộ sưu tập / xây bộ bài ---------- */
-html body #wrap #chon #chon-luoi .luoi { row-gap: calc(20px * var(--ot-k, 1)) !important; }
 #chon #chon-luoi .c > .tb-w { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
 #chon #chon-luoi .c .tb-lv { position: absolute; left: 7%; top: 5%; font: 800 10px/1 var(--f-ui, sans-serif); color: #fff; letter-spacing: .02em;
   text-shadow: 0 1px 0 #000, 0 0 2px #000, 0 0 3px #000; }
-#chon #chon-luoi .c .tb-sb { position: absolute; left: 2%; right: 2%; top: calc(100% + 3px); height: 14px; }
+/* thanh nằm TRONG ô (ô có content-visibility → phần tràn ra ngoài bị cắt): đáy ảnh chân dung, ngay trên hàng ngọc độ hiếm */
+#chon #chon-luoi .c .tb-sb { position: absolute; left: 12%; right: 12%; bottom: 17%; height: 13px; }
 #chon #chon-luoi .c .tb-sb b { font-size: 9px; }
-#chon #chon-luoi .c .tb-up { position: absolute; right: 2%; bottom: 22%; width: 34%; height: auto; filter: drop-shadow(0 1px 1px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
+#chon #chon-luoi .c .tb-up { position: absolute; right: 4%; top: 22%; width: 32%; height: auto; filter: drop-shadow(0 1px 1px #000a); } /* vetay-ok: png — bóng theo alpha của chính ảnh PNG */
 #chon #chon-luoi .c.khoa .tb-w { display: none; }
 
 /* thanh bản sao dùng chung: khung h2_tag + dải đầy cắt theo --p + số n/m */
