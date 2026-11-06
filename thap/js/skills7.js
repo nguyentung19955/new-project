@@ -98,7 +98,7 @@ SKILLS.nguyenrua = {
   vai: 'db', dmg: 13, toc: 1, nham: 'dau', napMau: '#ff3a3a',
   CD: 8, TRE: 1.5,
   p: (T) => Math.min(0.8, kn7(T) + 0.05 * (clamp(T.sao, 1, 7) - 1)),
-  mo(T) { const B = G.ban[T.ban], cd = B && B.hexCd > G.t ? Math.ceil(B.hexCd - G.t) : 0; return 'Merge two: hex a random turret after 1.5s — ' + Math.round(this.p(T) * 100) + '% · PVP: rival −1★ (1★: disabled 2.5s) · CO-OP: ally +1★ · SOLO: lead enemy slowed + weakened · team cooldown ' + this.CD + 's' + (cd ? ' (' + cd + 's)' : ''); },
+  mo(T) { const B = G.ban[T.ban], cd = B && B.hexCd > G.t ? Math.ceil(B.hexCd - G.t) : 0; return 'Merge two: hex a random turret after 1.5s — ' + Math.round(this.p(T) * 100) + '% · PVP: rival −1★ (1★: disabled 2.5s) · CO-OP: ally +1★ · SOLO (always): lead enemy slowed 30% + takes +15% for 4s · team cooldown ' + this.CD + 's' + (cd ? ' (' + cd + 's)' : ''); },
   ban(G, B, T, E) { banNhe(B, T, E, { img: SK7.anh('nguyenrua', 'dan', 'dan_tia'), co: 15, mau: '#ff3a3a', sp: 560 }); },
   ghep(G, B, a, b, ra) {
     if (B.hexCd > G.t) return; // hồi chung: bỏ, không xếp hàng

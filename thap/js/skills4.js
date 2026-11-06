@@ -14,7 +14,7 @@ SKILLS.nemesis = {
   p: (T) => sao7(T, [0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012]),
   x: (T) => sao7(T, [0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.15]),
   j: (T) => sao7(T, [0.02, 0.025, 0.03, 0.035, 0.04, 0.05, 0.06]),
-  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit · executes normal enemies under ' + Math.round(SKILLS.nemesis.x(T) * 100) + '% · bosses: JUDGMENT ' + (SKILLS.nemesis.j(T) * 100).toFixed(1) + '% max HP every 10 hits' + (T.sao >= 7 ? ' · executions leap once' : ''),
+  mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit' + (SKILLS.nemesis.p(T) > 0.008 ? ' (bosses 0.8%)' : '') + ' · executes normal enemies under ' + Math.round(SKILLS.nemesis.x(T) * 100) + '% · bosses: JUDGMENT ' + (SKILLS.nemesis.j(T) * 100).toFixed(1) + '% max HP every 10 hits' + (T.sao >= 7 ? ' · executions leap once' : ''),
   ban(G, B, T, E) {
     giat(T, 1.1); const [x, y] = chopNong(T, 28); SND.tia();
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.22, x0: x, y0: y, x1: E.x, y1: E.y, mau: '#d01e3a' });
@@ -68,7 +68,7 @@ SKILLS.docton = {
 SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
   k: (T) => 0.30 * HOTRO.k(T), // 0.14 → 0.30 (đo bậc 06/11)
-  mo: (T) => 'Neighbours: +' + Math.round(HOTRO.hd(T, 'cdmg', SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
+  mo: (T) => 'Neighbours: +' + Math.round(HOTRO.hd(T, 'cdmg', SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? '2 enemies' : '1 enemy') + ' behind (' + (ms(T, 7) ? 65 : 50) + '%)',
   hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
 };
@@ -138,7 +138,7 @@ trieu = function (B, mienPhi, idEp) {
 SKILLS.santhuong = {
   vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#f0b030',
   n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [4, 5, 5, 6, 7, 7, 8]), // +2 mana (đo bậc 06/11)
-  mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +15% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
+  mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + (SKILLS.santhuong.n(T) > 1 ? ' enemies' : ' enemy') + ' (big first): +15% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5; CO-OP: split with ally)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / 5);
     if (T.nap >= 1) {
@@ -292,7 +292,7 @@ SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (ụ RIÊNG: cơ chế PH�
   vai: 'ht', dmg: 0, toc: 0, napMau: '#bff6ff',
   khang: (T) => 0.15 * HOTRO.k(T),
   h: (T) => (ms(T, 7) ? 15 : 20),
-  mo: (T) => 'Neighbours resist control ' + Math.round(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T)) * 100) + '% · ' + (T.nap >= 1 ? 'MIRROR READY' : 'mirror ' + Math.round(T.nap * 100) + '%') + ' every ' + SKILLS.guongcong.h(T) + 's: PVP reflects 1 control · blocks a boss skill · CO-OP copies an ally merge at half stars',
+  mo: (T) => 'Neighbours resist control ' + Math.round(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T)) * 100) + '% · ' + (T.nap >= 1 ? 'MIRROR READY' : 'mirror ' + Math.round(T.nap * 100) + '%') + ' every ' + SKILLS.guongcong.h(T) + 's: PVP reflects 1 control' + (ms(T, 7) ? ' onto 2 rival turrets' : '') + ' · blocks a boss skill on 1 turret · CO-OP copies an ally merge at half stars',
   hoTro(G, T, N, ra) { ra.khang = this.khang(T); },
   capNhat(G, B, T, dt) { T.nap = Math.min(1, T.nap + dt / this.h(T)); HOTRO.nhip(G, B, T, dt, '191,246,255', 2.8, 0.3); return true; },
   san: (B) => B && B.t.find(X => X && X.id === 'guongcong' && X.nap >= 1 && !X.st.da && !(X.st.bang > 0)),
@@ -350,7 +350,7 @@ ghep = function (B, a, b, ep) {
 SKILLS.marionette = {
   vai: 'db', dmg: 9, toc: 0.8, nham: 'dau', napMau: '#a01848',
   ky: (T) => sao7(T, [10, 9.5, 9, 8.5, 8, 7.5, 7]), t: (T) => sao7(T, [2, 2.5, 3, 3.5, 4, 4.5, 5]),
-  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? 2 : 1) + ' enemy (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams up to 6 others for 30% of its HP (capped), then explodes ×8 (60 px)',
+  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? '2 enemies' : '1 enemy') + ' (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams others for 30% of its HP (max ×4 damage), then explodes ×8 (60 px)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
     if (T.nap >= 1 && !G.hu.some(o => o.k === 'roi' && o.T === T)) {
@@ -405,7 +405,7 @@ themHo('trap', 3, 'marionette', 'turns an enemy against its own wave');
 Object.assign(MOC_RIENG, {
   docton: { 7: ['DUELIST', 'ACE shots pierce 1 enemy'] },
   thaukinh: { 5: ['DOUBLE PIERCE', 'Crits pierce 2 enemies'], 7: ['TRUE FOCUS', 'Pierce hits deal 65% (not 50%)'] },
-  nemesis: { 7: ['REAPER LEAP', 'Executions leap to the nearest enemy'] },
+  nemesis: { 7: ['REAPER LEAP', 'An execution leaps a hit to the nearest enemy'] },
   nhatthuc: { 7: ['TOTAL ECLIPSE', 'Each swap: both modes 1.5s + ×4 ring blast'] },
   marionette: { 7: ['TWIN PUPPETS', 'Controls 2 enemies at once (4★+: big enemies too)'] },
   // Forge không bắn → mốc chung '+20% speed / +25% effect / +30% effect' không làm gì; sao thật sự đổi số cộng dồn mỗi lần ăn (f)

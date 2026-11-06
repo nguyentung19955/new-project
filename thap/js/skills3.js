@@ -117,7 +117,7 @@ SKILLS.khoathoigian = {
   ky: (T) => sao7(T, [7.5, 7, 6.5, 6, 5.5, 5, 4.5]), // 9→6 s ⇒ 7.5→4.5 s (đo bậc 06/11)
   dai: (T) => sao7(T, [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5]),
   no: (T) => sao7(T, [0.4, 0.45, 0.5, 0.6, 0.65, 0.75, 0.95]), // +~30% (đo bậc 06/11)
-  mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · bosses: 50% slow, half time · on merge: lock now',
+  mo: (T) => 'Every ' + (SKILLS.khoathoigian.ky(T) / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's locks the lead non-boss enemy ' + SKILLS.khoathoigian.dai(T) + 's · release bursts ' + Math.round(SKILLS.khoathoigian.no(T) * 100) + '% of stored damage (40 px) · a boss (only if nothing else): 50% slow, half time, half burst · on merge: lock now',
   capNhat(G, B, T, dt) {
     if (G.hu.some(o => o.k === 'khoa' && o.T === T)) return false; // tối đa 1 quái bị khoá / ụ
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
@@ -406,7 +406,7 @@ SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô C
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
   tamChu: '4 DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  mo: (T) => '+' + Math.round(SKILLS.luoicheo.them(T) * 100) + '% damage to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > HOTRO.CAP.dmg * (HOTRO.CAP_BAC[T.bac] || 1) ? ' (damage cap)' : '') + ' to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
   hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
   gocDau: (T, t) => (T.gd === 3 ? 0.06 * Math.sin(t * 6) : 0), // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
@@ -543,9 +543,9 @@ themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)')
 
 Object.assign(MOC_RIENG, { // (luoicheo: mốc 5★/7★ ở phattrien.js — 'Diagonal +15% fire rate' cũ sai số, code = +5%×HOTRO.K)
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
-  hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] },
-  pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merges into 6★+ roll twice, keep the better'], 7: ['OPEN VAULT', 'The merge into 7★ fires 2 effects'] },
-  ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart)'] },
+  hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.72/s'] },
+  pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merging 5★s rolls twice, keeps the better'], 7: ['OPEN VAULT', 'Merging 6★s (into 7★) fires 2 effects'] },
+  ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart; also saves 1 leak)'] },
 });
 
 Object.assign(GROW, {
@@ -562,6 +562,6 @@ Object.assign(GROW, {
   pandora: { mau: '#ffd23f', khongAnh: true, ten: ['LOCKED', 'AJAR', 'OPEN VAULT'], dk: '1–3★ locked / 4–6★ lid ajar (6 colours leak) / 7★ open: the merge into 7★ fires 2 effects',
     gd: (T) => ({ s: T.sao >= 7 ? 3 : T.sao >= 4 ? 2 : 1, p: (T.sao - 1) / 6, v: [0.5] }) },
 });
-Object.assign(NHIP, { hydra: (T) => (T.sao >= 7 ? 'fused beam 0.6/s' : (SKILLS.hydra.toc * (1 + 0.2 * (T.sao >= 3))).toFixed(2) + ' volleys/s × ' + Math.min(6, T.sao) + ' barrels') });
+Object.assign(NHIP, { hydra: (T) => (T.sao >= 7 ? 'fused beam ' + (0.6 * (1 + (T.buf ? T.buf.toc : 0.2))).toFixed(2) + '/s' : (SKILLS.hydra.toc * (1 + 0.2 * (T.sao >= 3))).toFixed(2) + ' volleys/s × ' + Math.min(6, T.sao) + ' barrels') });
 
 // (đã BỎ luật bộ bài "tối đa 2 ụ thao túng sao" + bộ lọc deckNgauNhien theo luật đó — người dùng không yêu cầu)

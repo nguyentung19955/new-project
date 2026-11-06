@@ -10,10 +10,10 @@
 const TRUM_MOI = {
   hive:      { ten: 'HIVE MOTHER',   kn: 'SWARM',        mo: 'Launches 4 drones ahead of itself (6 from wave 40)',            nguy: 'Launches drone swarms',            mau: '#ffb648', tuWave: 10, hp: 0.85, v: 13, anhTam: 'mad_crown' },
   jammer:    { ten: 'STATIC JAMMER', kn: 'JAM',          mo: 'Jams 2 turrets (supports first): no fire, no merge, no aura 6 s', nguy: 'Jams 2 turrets — supports first', mau: '#b77dff', tuWave: 20, hp: 0.9, v: 15, anhTam: 'freezer' },
-  prism:     { ten: 'PRISM WARDEN',  kn: 'PRISM SHIELD', mo: '−90% damage until hit by 3 different turret types (4 from wave 40)', nguy: 'Shield breaks to 3–4 turret types', mau: '#7ff0ff', tuWave: 20, hp: 1.15, v: 13, anhTam: 'janus' },
+  prism:     { ten: 'PRISM WARDEN',  kn: 'PRISM SHIELD', mo: '−90% damage until hit by 3 different turret types (4 from wave 40); re-shields ~8 s after breaking', nguy: 'Shield breaks to 3–4 turret types', mau: '#7ff0ff', tuWave: 20, hp: 1.15, v: 13, anhTam: 'janus' },
   twin_core: { ten: 'TWIN CORE',     kn: 'SPLIT',        mo: 'Splits into 2 fast cores when destroyed',      nguy: 'Splits in two when destroyed',     mau: '#ff4b5a', tuWave: 30, hp: 0.7, v: 15, anhTam: 'joker_king' },
   patcher:   { ten: 'PATCH TITAN',   kn: 'REPAIR',       mo: 'Heals itself 12% and every enemy in its lane 35%', nguy: 'Repairs itself and every enemy',  mau: '#5dff8a', tuWave: 30, hp: 0.85, v: 12, anhTam: 'octopus' },
-  leech:     { ten: 'STAR LEECH',    kn: 'STAR THEFT',   mo: 'Steals 1★ from your top turret, then dashes. Kill it to get the stars back', nguy: 'Steals stars — kill it to get them back', mau: '#ffd84a', tuWave: 40, hp: 0.8, v: 16, anhTam: 'nightmare' },
+  leech:     { ten: 'STAR LEECH',    kn: 'STAR THEFT',   mo: 'Steals 1★ from your top turret (2★+), then dashes. Kill it: the stolen stars return to random turrets', nguy: 'Steals stars — kill it to get them back', mau: '#ffd84a', tuWave: 40, hp: 0.8, v: 16, anhTam: 'nightmare' },
 };
 // trùm mới ĐÃ có ảnh ChatGPT riêng (trum_<id>_8.png…) — thêm id khi ảnh ráp xong
 // ↓ 5 dòng dưới do tools/thap-cat-p6-trum.py tự ghi theo ảnh có trong assets/ (đừng sửa tay)
@@ -139,7 +139,8 @@ capNhatTrum = function (E, dt) {
       SND.chieuTrum(E.trum);
       if (E.bao0) { // chiêu nhắm ụ → khiên Ma vương / Máy Khiên chặn như 6 trùm cũ
         if (B.khien > 0) { for (const T of muc) { const c = B.o[T.o]; VX.chanKhien(B, T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#73A9FF', 11); } return; }
-        for (let i = muc.length - 1; i >= 0; i--) if (chanKhien(B, muc[i])) muc.splice(i, 1);
+        G._trumDang = true; // chiêu TRÙM (như thucHienChieu): Mirror Gate chặn, không PHẢN sang đối thủ
+        try { for (let i = muc.length - 1; i >= 0; i--) if (chanKhien(B, muc[i])) muc.splice(i, 1); } finally { G._trumDang = false; }
         if (!muc.length) return;
       }
       K.lam && K.lam(E, B, muc);

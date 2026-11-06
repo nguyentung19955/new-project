@@ -75,7 +75,7 @@ function upBangSao(id) {
 // ụ chỉ buff ô CHÉO (Resonance Grid) — Sanctum có sk.huong nhưng là 4 ô thẳng (5★: 8 ô)
 function upCheo(id) { const sk = SKILLS[id]; if (!sk || !sk.huong) return false; const h = sk.huong({ id, sao: 1 }); return h.every(([a, b]) => a && b); }
 function upDauChan(id) {
-  const sk = SKILLS[id]; if (!sk || !sk.hoTro || !SUP_LOAI[id]) return null;
+  const sk = SKILLS[id]; if (!sk || !sk.hoTro || !SUP_LOAI[id] || sk.toanBan) return null; // toanBan (Sync Cannon): cả bàn — không vẽ sơ đồ 4 ô kề
   const ke = [[0, -1], [1, 0], [0, 1], [-1, 0]], cheo = [[-1, -1], [1, -1], [-1, 1], [1, 1]];
   // hình ô theo ĐÚNG sk.huong(T) ở 1★ và 5★ (Sanctum: 4 ô thẳng → 5★ đủ 8 ô; Resonance Grid: 4 ô chéo) — VFX P0
   const goc = sk.huong ? sk.huong({ id, sao: 1 }) : ke, goc5 = sk.huong ? sk.huong({ id, sao: 5 }) : null;
@@ -86,10 +86,10 @@ function upDauChan(id) {
 function upLuatGhep(id) {
   const sk = SKILLS[id] || {}, ten = upTen(id), L = [];
   const mo1 = upBanTam(id, (B) => { const T = taoU(B, id, 1, 7); B.t[7] = T; return sk.mo ? sk.mo(T) : ''; }) || '';
-  if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic') || 50) + '% attack for 8s.']);
+  if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
   else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
-  L.push(['Normal merge', id === 'vughep' ? 'Two Merge Kings of the same star merge into a Merge King at +1★. Max 7★.' : 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
+  L.push(['Normal merge', sk.ghepDB && sk.ghepDB.cungLoai ? 'Two ' + ten + ' of the same star become one ' + ten + ' at +1★ (Golden is kept). Max 7★.' : 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
   L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone). Merge King can still raise a stone\'s star; Copycat can still copy it (the copy is a normal turret); Cleanser or Eve breaks the stone.']);
   return L;
 }
@@ -389,7 +389,7 @@ const UP = {
     const tam = sk ? (typeof sk.tam === 'number' ? 'Melee' : 'Whole path') : '—';
     const ht = sk && !sk.dmg && SUP_LOAI[id] && BUFF[SUP_LOAI[id]]; // ụ hỗ trợ: thay sát thương/tốc bắn bằng loại buff + ô được buff
     P.push('<div class="up-spec">' + (ht
-      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
+      ? this.o('Boosts', upSC(BUFF[SUP_LOAI[id]].ten)) + this.o('Buffs', sk.toanBan ? 'Whole board' : upCheo(id) ? '4 diagonals' : '4 neighbours') + this.o('From 5★', (upDauChan(id) || {}).b ? '+ diagonals' : 'Same cells') + this.o('Target', upNham(id))
       : this.o('Damage', s1.dmg != null ? s1.dmg : '—') + this.oToc(s1.toc) +
         this.o('Range', tam) + this.o('Target', sk ? upNham(id) : '—')) + '</div>');
     // kỹ năng 1 dòng + Test range

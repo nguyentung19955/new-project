@@ -24,7 +24,7 @@ SKILLS.chuato = {
   c: (T) => sao7r(T, [4, 3.7, 3.4, 3.1, 2.8, 2.5, 2.2]),
   n: (T) => sao7r(T, [3, 4, 5, 6, 7, 8, 10]),
   cd: 30,
-  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 60% dmg each)' + (T.sao >= 4 ? ' · perched drones +10% fire rate to 4 neighbours' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
+  mo: (T) => (T.bay ? T.bay.length : 0) + '/' + SKILLS.chuato.n(T) + ' drones (1 per ' + SKILLS.chuato.c(T) + 's, 60% dmg each)' + (T.sao >= 4 ? ' · while it has drones: N/E/S/W neighbours +10% fire rate' : '') + (T.sao >= 7 ? ' · every 5th drone ROYAL ×3' : '') + ' · ' + (T.sao >= 3 ? 'TAP when full: SWARM kamikaze ×3 (35 px)' : 'SWARM unlocks at 3★'),
   sinh(G, T) { T.bay = []; T.de = 0; T.deDem = 0; },
   hoTro(G, T, N) { if (T.sao >= 4 && T.bay && T.bay.length) N.buf.toc += 0.1; },
   capNhat(G, B, T, dt) {
@@ -441,10 +441,10 @@ themHo('star', 4, 'khoisinh', 'raises your weakest turret over time + GENESIS (a
 themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (active)');
 
 Object.assign(MOC_RIENG, {
-  chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full)'], 5: ['QUICK BROOD', 'More drones, faster hatching'], 7: ['ROYAL BROOD', 'Every 5th drone is gold ×3'] },
-  leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks) — starts at 4★'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
-  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap when full)'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'], 7: ['SEED OF LIFE', 'Each raise also summons a free 1★'] },
-  ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses (starts at 4★)'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
+  chuato: { 3: ['SWARM', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['QUICK BROOD', 'Up to 7 drones, one every 2.8s'], 7: ['ROYAL BROOD', 'Every 5th drone is gold ×3'] },
+  leviathan: { 3: ['TIDAL BREATH', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['DEEP MAW', 'Devours big enemies (×3 stacks) — starts at 4★'], 7: ['ABYSS LORD', 'Devours every 5s, flyers too'] },
+  khoisinh: { 3: ['GENESIS', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['BLOOM', 'Neighbours +15% damage (starts at 4★)'], 7: ['SEED OF LIFE', 'Each raise also summons a free 1★'] },
+  ronglua: { 3: ['DRAGON DIVE', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 5: ['BLUE FLAME', '+30% vs big enemies and bosses (starts at 4★)'], 7: ['WHITE FLAME', 'Longer cone, burning trail 4s'] },
 });
 Object.assign(GROW, {
   chuato: { mau: '#ff6a2a', khongAnh: true, ten: ['NEST', 'HIVE', 'ROYAL HIVE'], dk: '1–3★ / 4–6★ (drones perch on neighbours) / 7★ ROYAL: every 5th drone gold ×3',

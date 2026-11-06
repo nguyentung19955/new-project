@@ -110,7 +110,7 @@ SKILLS.phun = { // Súng Phun Loạn (Hairball): bắn cực nhanh vào quái ng
 };
 SKILLS.sungluc = { // Súng Lục (Girl detective): một phát lớn trúng tức thì vào quái đầu
   vai: 'tc', dmg: 34.5, toc: 0.6, nham: 'dau', crit: 0.1,
-  mo: () => 'Heavy instant shot · 20% crit',
+  mo: (T) => 'Heavy instant shot · ' + Math.round((0.2 + (T ? themMocCrit(T) : 0)) * 100) + '% crit',
   ban(G, B, T, E) {
     giat(T, 1.6); const [x, y] = chopNong(T, 32); phutKhoi(x, y, 1); SND.tia();
     trung(E, dmgU(T), { B });
@@ -139,7 +139,7 @@ SKILLS.phagiap = { // Phá Giáp (Freya) — HỖ TRỢ (đợt vai trò): mỗi
   vai: 'ht', dmg: 0, toc: 0, chiTC: true, napMau: '#d9a8ff',
   k: (T) => 0.22 * HOTRO.k(T),
   so: (T) => (ms(T, 5) ? 3 : 2),          // toughest + lead · 5★ DOUBLE EXPOSE: +1
-  mo: (T) => 'Every 3s exposes the ' + (SKILLS.phagiap.so(T) > 2 ? 'lead + 2 toughest enemies' : 'lead + toughest enemy') + ' 6s · Attack neighbours +' + Math.round(SKILLS.phagiap.k(T) * 100) + '% damage to exposed' + (ms(T, 7) ? ' · exposed take +8% from all' : ''),
+  mo: (T) => 'Every 3s exposes the ' + (SKILLS.phagiap.so(T) > 2 ? 'lead + 2 toughest enemies' : 'lead + toughest enemy') + ' 6s · Attack neighbours +' + Math.round(SKILLS.phagiap.k(T) * 100) + '% damage to exposed' + (SKILLS.phagiap.k(T) > HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac] ? ' (damage-buff cap ' + Math.round(HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac] * 100) + '%)' : '') + (ms(T, 7) ? ' · exposed take +8% from all' : ''),
   hoTro(G, T, N, ra) { ra.lo = this.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '217,168,255', 2.4);
@@ -165,7 +165,7 @@ SKILLS.bua = { // Búa Đẩy (Atalante) — HỖ TRỢ (đợt vai trò): ụ T
   cd: (T) => 0.18 * HOTRO.k(T), // 0.30 → 0.18 (đo bậc 06/11: Hammer Trắng từng vượt hỗ trợ Vàng)
   crit: (T) => 0.04 * HOTRO.k(T), // 0.05 → 0.04 (đo bậc 06/11)
   soc: (T) => (ms(T, 7) ? 0.35 : 0.2),
-  mo: (T) => 'Attack neighbours: +' + Math.round(SKILLS.bua.crit(T) * 100) + '% crit chance, +' + Math.round(Math.min(0.5, SKILLS.bua.cd(T)) * 100) + '% crit damage · their crits stagger normal enemies ' + SKILLS.bua.soc(T) + 's' + (ms(T, 7) ? ' · also big enemies' : ''),
+  mo: (T) => 'Attack neighbours: +' + Math.round(SKILLS.bua.crit(T) * 100) + '% crit chance, +' + Math.round(Math.min(0.5, SKILLS.bua.cd(T)) * 100) + '% crit damage · their crits stagger normal enemies ' + SKILLS.bua.soc(T) + 's' + (ms(T, 7) ? ' · also big enemies' : '') + ' (not bosses; each enemy once per 3s)',
   hoTro(G, T, N, ra) { ra.cdmg = this.cd(T); ra.crit = this.crit(T); ra.soc = this.soc(T); if (ms(T, 7)) ra.socTo = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '255,208,128', 2.4, 0.5); return true; },
 };
@@ -245,7 +245,7 @@ SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang
 SKILLS.chimang = { // Ăng-ten Chí Mạng (Siren): HỖ TRỢ — +tỉ lệ chí mạng cho 4 ô thẳng (3 → 20 điểm %, trần 20)
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => [0.06, 0.08, 0.11, 0.13, 0.15, 0.18, 0.20][clamp(T.sao, 1, 7) - 1] * (1 + 0.06 * (lvU(T) - 1)) * HOTRO.kThe(G.ban[T.ban], T) * HOTRO.BAC.xanh, // ×bậc Xanh (đo bậc 06/11)
-  mo: (T) => '+' + Math.round(SKILLS.chimang.them(T) * 100) + '% crit chance to N/E/S/W neighbours' + (ms(T, 5) ? ' · +10% crit damage' : '') + (ms(T, 7) ? ' · every 6s a sure crit' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.chimang.them(T), HOTRO.CAP.crit * HOTRO.CAP_BAC[T.bac]) * 100) + '% crit chance to N/E/S/W neighbours' + (SKILLS.chimang.them(T) > HOTRO.CAP.crit * HOTRO.CAP_BAC[T.bac] ? ' (crit-buff cap)' : '') + (ms(T, 5) ? ' · +10% crit damage' : '') + (ms(T, 7) ? ' · every 6s a sure crit' : ''),
   hoTro(G, T, N, ra) { ra.crit = this.them(T); if (ms(T, 5)) ra.cdmg = 0.10; },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,80,90', 2.4, 0.9);
@@ -273,7 +273,7 @@ SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khá
 };
 SKILLS.drone = { // Bệ Phóng Drone (Hermes): khi GHÉP phóng drone bom chạy ngược đường đâm quái
   vai: 'tc', dmg: 11.5, toc: 1.5, nham: 'dau', // 8.67 → 11.5 (đo bậc 06/11)
-  mo: (T) => 'On merge: ' + (1 + Math.floor(T.sao / 3)) + ' bomb drones ×24',
+  mo: (T) => 'On merge: ' + (1 + Math.floor(T.sao / 3)) + ' bomb drone' + (T.sao >= 3 ? 's' : '') + ' (×24 damage, blast 46 px)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_lien', co: 14, snd: 'lien' }); },
   ghep(G, B, a, b, ra) {
     const n = 1 + Math.floor(a.sao / 3), dmg = hsU('drone', a.sao + 1, B) * 24;
@@ -327,7 +327,7 @@ SKILLS.khuech = { // Bộ Khuếch Đại (Mars): HỖ TRỢ — ụ Tấn công
   vai: 'ht', dmg: 0, toc: 0, chiTC: true,
   buoc: (T) => 0.09 * HOTRO.k(T),
   max: (T) => (ms(T, 5) ? 7 : 5),       // 5★ DEEP STACKS
-  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks, per enemy) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's without a hit (slow guns: one missed shot)',
+  mo: (T) => 'Attack neighbours: +' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% damage per hit on the same target (max ' + SKILLS.khuech.max(T) + ' stacks, per enemy; total up to +' + Math.round(HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac] * 100) + '%, damage-buff cap) · fades after ' + (ms(T, 7) ? 3 : 1.5) + 's without a hit (slow guns: one missed shot)',
   hoTro(G, T, N, ra) { ra.amp = this.buoc(T); ra.ampMax = this.max(T); if (ms(T, 7)) ra.ampGiu = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '255,120,60', 2.0); return true; },
 };
@@ -355,7 +355,7 @@ SKILLS.vungdoc = { // Bom Vũng Độc (Flora): ném vũng độc lên đường
 SKILLS.loa = { // Loa Hồi Chiêu (Melpomene): khi GHÉP giảm hồi chiêu kỹ năng Ma vương
   vai: 'db', dmg: 12.5, toc: 0.8, nham: 'dau',
   giam: (sao, B) => Math.round((4 + 2 * sao) * knHe(B, 'loa') * 10) / 10, // 3+1.5★ → 4+2★ (đo bậc 06/11)
-  mo: (T) => 'On merge: Archfiend cooldown −' + SKILLS.loa.giam(T.sao, G.ban[T.ban]) + 's (if ready: cost −15%)',
+  mo: (T) => 'On merge: Archfiend cooldown −' + SKILLS.loa.giam(T.sao, G.ban[T.ban]) + 's (if ready: cost −15%, not below its base cost)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 14, mau: '#ffe46b', sp: 440 }); const c = tamU(T); FX.vong1(c.x, c.y, 8, 22, '#ffe46b', 0.3, 2); },
   ghep(G, B, a, b, ra) {
     const mv = B.mv, g = this.giam(a.sao, B), c = B.o[b.o];
@@ -385,7 +385,7 @@ SKILLS.hutmana = { // Máy Hút Mana (Elizabeth) — TẤN CÔNG (đợt vai tr�
 SKILLS.min = { // Bệ Rải Mìn (Ptah): rải mìn trên đường; đôi khi mìn sao (×3)
   vai: 'tc', dmg: 9, toc: 1, napMau: '#ffb35a',
   ky: (T) => Math.max(2, 4 - 0.2 * T.sao),
-  mo: (T) => 'Mine ×7 every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + ' s · ' + (3 + 0.5 * (T.sao - 1)).toFixed(1) + '% star mine ×3',
+  mo: (T) => 'Mine ×7 every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + ' s (max 6 out) · ' + (3 + 0.5 * (T.sao - 1)).toFixed(1) + '% star mine ×3',
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B);
     const E = ds.length ? ds[0] : null;
@@ -436,7 +436,7 @@ SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN B�
   vai: 'tc', dmg: 26, toc: 1, napMau: '#bff4ff', // 9 → 26 (đo bậc 06/11)
   ky: (T) => Math.max(4, 11 - 0.6 * T.sao - (ms(T, 3) ? 1.5 : 0)), // 3★ SQUALL
   cham: (T) => Math.min(0.6, 0.3 + 0.03 * T.sao),
-  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's',
+  mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's · hits all for ' + (ms(T, 5) ? 450 : 150) + '% damage',
   capNhat(G, B, T, dt) {
     T.goc += dt * 0.8; // quạt tuyết quay đều
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / this.ky(T));
@@ -586,7 +586,7 @@ SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò):
 };
 SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có xác suất GIẾT NGAY quái thường dưới ngưỡng máu; trùm: chỉ thêm đòn nhỏ (≤1% máu tối đa)
   vai: 'ht', dmg: 0, toc: 0,
-  tile: (T) => 0.12 * HOTRO.k(T), // 0.08 → 0.12 (đo bậc 06/11)
+  tile: (T) => Math.min(HOTRO.CAP.chet * HOTRO.CAP_BAC[T.bac], 0.12 * HOTRO.k(T)), // 0.08 → 0.12 (đo bậc 06/11) · kẹp trần nhóm 'chet' (15% × bậc) ngay ở đây — trần thật của HOTRO.apDung (nguồn chet duy nhất) → số hiển thị = số thật
   nguong: (T) => (ms(T, 5) ? 0.40 : 0.30),   // 5★ DEEP REAP
   mo: (T) => 'Neighbours: ' + (HOTRO.hd(T, 'chet', SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% per hit to execute normal enemies under ' + Math.round(SKILLS.tuthan.nguong(T) * 100) + '% HP' + (ms(T, 7) ? ' · big enemies under 15%' : '') + ' · bosses: small capped hit',
   hoTro(G, T, N, ra) { ra.chet = this.tile(T); ra.ngNguong = this.nguong(T); if (ms(T, 7)) ra.chetTo = 1; },
@@ -618,7 +618,7 @@ SKILLS.xaotron = { // Máy Xáo Trộn (Neban): khi GHÉP — PVP đổi ngẫu 
 };
 SKILLS.epxung = { // Bộ Ép Xung (Pararamim): kéo lên ụ khác CÙNG SAO → ụ đó +65% tốc bắn vĩnh viễn
   vai: 'db', dmg: 5.62, toc: 1.6, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret: +' + +knThe(T && G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate (stacks)',
+  mo: (T) => 'Drag onto a same-star shooting turret: +' + +knThe(T && G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate (stacks)',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 15, sp: 560 }); },
   ghepDB: {
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'epxung' && b.ban === a.ban && !!SKILLS[b.id].dmg,
@@ -770,7 +770,7 @@ SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1
   // · Ghép ĐẶC BIỆT (Merge King/Bộ Trộn… kéo vào Twin) KHÔNG kích hoạt: đó là kỹ năng của ụ kéo, không phải ghép thường (giữ như cũ).
   // · Không chữ nổi; tín hiệu = tia vàng + vòng vàng + biểu tượng 2 vòng nối (fx_sinhdoi_hieu) trên 2 ô — VX.sinhDoi.
   vai: 'db', dmg: 7.86, toc: 1.4, nham: 'dau',
-  mo: (T) => 'On merge: also summons a random ' + T.sao + '★ turret (' + Math.round(knThe(T && G.ban[T.ban], 'sinhdoi') || 10) + '%: ' + Math.min(7, T.sao + 1) + '★ instead)',
+  mo: (T) => 'On merge: also summons a random ' + T.sao + '★ turret' + (T.sao < 7 ? ' (' + Math.round(knThe(T && G.ban[T.ban], 'sinhdoi') || 10) + '%: ' + (T.sao + 1) + '★ instead)' : ''),
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 17, sp: 580 }); },
   ghep(G, B, a, b, ra) { sinhDoi(B, a.sao, b.o); },
 };
@@ -779,7 +779,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
   vai: 'ht', dmg: 0, toc: 0, chiTC: true, napMau: '#ff4b3e',
   k: (T) => 0.10 * HOTRO.k(T),
   dot: (T) => 0.20 * HOTRO.k(T) / 1.45, // bùng tốc khi ghép cạnh (≈ +14% 1★ → +32% 7★)
-  mo: (T) => 'Attack neighbours +' + Math.round(SKILLS.hasao.k(T) * 100) + '% damage · a merge next to it: +' + Math.round(SKILLS.hasao.dot(T) * 100) + '% fire rate 5s · first 5★ each wave: PVP rival −8% fire rate 6s / CO-OP lowest ally +8% 6s',
+  mo: (T) => 'Attack neighbours +' + Math.round(Math.min(HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac], SKILLS.hasao.k(T)) * 100) + '% damage · a merge next to it: +' + Math.round(SKILLS.hasao.dot(T) * 100) + '% fire rate 5s · first 5★ each wave: PVP rival −8% fire rate 6s / CO-OP ally\'s lowest Attack turret +8% 6s / SOLO your lowest +8% 6s',
   hoTro(G, T, N, ra) { ra.dmg = this.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,90,70', 2.6, 0.4);
@@ -805,7 +805,7 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (−50% sát thương)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (stone or frozen too): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% power · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
+  mo: (T) => 'Drag onto same-star turret (stone or frozen too): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban,
@@ -860,7 +860,7 @@ SKILLS.soi = { // Sói Máy (Werewolf) — DCDW Werewolf: mỗi lần TRIỆU H�
   vai: 'tc', dmg: 17, toc: 1.8, nham: 'dau', tam: 108,
   tiLe: (B) => Math.min(0.5, knThe(B, 'soi') / 100),
   sinh(G, T) { T.thuc = Math.random() < this.tiLe(G.ban[T.ban]); if (T.thuc) setTimeout(() => { SND.thucTinh(); }, 250); },
-  mo: (T) => 'Melee 108 px · ' + (T && T.thuc ? 'AWAKENED: always crits, +40% speed, wide frenzy swipes' : 'NORMAL form (' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED: always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl +25% to neighbours' : ''),
+  mo: (T) => 'Melee 108 px · ' + (T && T.thuc ? 'AWAKENED: always crits, +40% speed, wide frenzy swipes' : 'NORMAL form (' + Math.round(SKILLS.soi.tiLe(T && G.ban[T.ban]) * 100) + '% of summons/merges come out AWAKENED: always crit)') + (ms(T, 3) ? ' · +10% crit' : '') + (ms(T, 5) ? ' · +25% damage' : '') + (ms(T, 7) ? ' · howl: neighbours +25% fire rate' : ''),
   luonCrit: (T) => !!T.thuc,
   chonMuc(G, B, T) { return quaiDauTam(B, T, this.tam); },
   capNhat(G, B, T, dt) {
@@ -919,7 +919,7 @@ SKILLS.cauvong = { // Máy Cầu Vồng (Yuna) — HỖ TRỢ: mỗi 7 s vẽ v�
   trau: (T) => Math.min(0.30, (0.08 + 0.02 * T.sao) * (1 + 0.5 * (HOTRO.kThe(G.ban[T.ban], T) - 1))), // PVP: quái đối thủ trên vệt −% sát thương nhận
   mo: (T) => G.che === 'pvp'
     ? 'PVP: every 7s paints a rainbow on the RIVAL\'s path ' + (6 + 0.5 * T.sao).toFixed(1) + 's — enemies on it take ' + Math.round(SKILLS.cauvong.trau(T) * 100) + '% LESS damage from the rival' + (ms(T, 5) ? ' · 2 trails' : '')
-    : 'Every 7s paints a rainbow trail ' + (6 + 0.5 * T.sao).toFixed(1) + 's on your path: enemies on it take +' + Math.round(SKILLS.cauvong.them(T) * 100) + '% from all · Attack neighbours +' + Math.round(SKILLS.cauvong.k(T) * 100) + '% vs enemies on it' + (ms(T, 5) ? ' · 2 trails' : '') + (ms(T, 7) ? ' · trail slows 10%' : '') + ' · PVP: the trail goes on the rival\'s path and makes enemies tougher',
+    : 'Every 7s paints a rainbow trail ' + (6 + 0.5 * T.sao).toFixed(1) + 's on your path: enemies on it take +' + Math.round(SKILLS.cauvong.them(T) * 100) + '% from all · Attack neighbours +' + Math.round(Math.min(HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac], SKILLS.cauvong.k(T)) * 100) + '% vs enemies on it' + (ms(T, 5) ? ' · 2 trails' : '') + (ms(T, 7) ? ' · trail slows 10%' : '') + ' · PVP: the trail goes on the rival\'s path and makes enemies tougher',
   hoTro(G, T, N, ra) { ra.vet = this.k(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,106,213', 2.4, 0.5);
@@ -946,7 +946,7 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ
   r: (T) => 110 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT
   cham: (T) => Math.min(0.4, 0.2 + 0.025 * (T.sao - 1)), // 15%+2%/★ → 20%+2.5%/★ (đo bậc 06/11)
   k: (T) => 0.2 * HOTRO.k(T), // 0.14 → 0.2
-  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses 15%) · Attack neighbours +' + Math.round(SKILLS.lophanung.k(T) * 100) + '% vs slowed · TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's',
+  mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses 15%) · Attack neighbours +' + Math.round(Math.min(HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac], SKILLS.lophanung.k(T)) * 100) + '% vs slowed · charges 24s, TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's (bosses 0.8s)',
   hoTro(G, T, N, ra) { ra.lanh = this.k(T); },
   capNhat(G, B, T, dt) {
     const r = this.r(T), ds = quaiTrongTam(B, T, r);

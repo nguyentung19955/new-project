@@ -219,12 +219,12 @@ const KY_NANG_CAP = {
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
   nangsao: { ten: 'Rate buff', base: 24, buoc: 1.2, max: 34.8, dv: '%', tien: '+', ht: 1 },
   tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
+  thaukinh: { ten: 'Crit dmg (max 65%)', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
   dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
   hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
   cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
   luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 25.99, dv: '%', tien: '+', ht: 1 },
-  guongcong: { ten: 'Resist', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
+  guongcong: { ten: 'Resist (max 35%)', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
   lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
 };
 // giá trị kỹ năng ở k cấp trên cấp đầu (thuần)

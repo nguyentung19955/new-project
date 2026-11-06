@@ -45,7 +45,7 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
   dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
-  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big enemies ×0.6, bosses 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity',
+  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity · Frost Flyers immune',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
   capNhat(G, B, T, dt) {
     const ds = this.ung(G, B);
@@ -111,7 +111,7 @@ SKILLS.tia = { // Bắn Tỉa (Artemis): nhắm quái nhiều máu nhất; +100%
 };
 SKILLS.set = { // Tesla (Arges): sét chuỗi N quái = số sao
   vai: 'tc', dmg: 18.21, toc: 0.7, nham: 'dau',
-  mo: (T) => 'Chains to ' + T.sao + ' enemies',
+  mo: (T) => 'Chains to ' + T.sao + (T.sao > 1 ? ' enemies (120 px jumps, −12% per jump)' : ' enemy'),
   ban(G, B, T, E) {
     giat(T, 0.4); const [x, y] = dauNong(T); SND.set();
     const dmg = dmgU(T), chuoi = [E], ds = dsMucTieu(B);
@@ -146,7 +146,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
 SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳng (hotro.js: 12% 1★ → 28% 7★, trần chung 45%)
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.12 * HOTRO.k(T),
-  mo: (T) => '+' + Math.round(SKILLS.radar.them(T) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.CAP.toc * HOTRO.CAP_BAC[T.bac]) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s (up to the ' + +(HOTRO.CAP.toc * HOTRO.CAP_BAC[T.bac] * 100).toFixed(1) + '% fire-rate cap)' : ''),
   hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — tính TRONG trần tốc 45%
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
@@ -168,7 +168,7 @@ SKILLS.mimic = { // Mimic (Aurora): ghép với BẤT KỲ ụ cùng sao; ghép 
 };
 SKILLS.laser = { // Laser (Nebula): tia liên tục, giữ càng lâu càng mạnh (đổi mục tiêu thì về 0)
   vai: 'tc', dmg: 12, toc: 1,
-  mo: (T) => 'Beam ramps to ×4 over 3s',
+  mo: (T) => 'Beam ramps to ×4 over 3s on the lead enemy (resets on switch) · beam never crits',
   capNhat(G, B, T, dt) {
     const E = quaiDau(B);
     if (E !== (T.las && T.las.E)) T.las = E ? { E, ramp: 0, acc: 0, so: 0 } : null;
