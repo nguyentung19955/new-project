@@ -1103,7 +1103,7 @@ const REN = {
       }
       ctx.globalAlpha = 1;
       const aI = this.img('fx_' + a.ten), nK = aI ? Math.round(aI.width / aI.height) : 6; // dải 6 khung (fx_*) hoặc 16 khung (fx_trum_<id>)
-      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(0.82, al)); // trần độ sáng cộng
+      this.khungMuot(ctx, 'fx_' + a.ten, u * (nK - 0.001), x, y, a.co * sc, goc, Math.min(0.82, al) * (window.CG ? CG.kA(a) : 1)); // trần độ sáng cộng · CG.kA: trần sáng chung + chỉ 1 dải T4 sáng đủ (camgiac.js)
     }
     const vm = typeof FXU !== 'undefined' && FXU.co('fx_vong_mong') && this.img('fx_vong_mong');
     for (const v of FX.vong) {
@@ -1154,7 +1154,7 @@ const REN = {
       const e = 1 - (1 - u) * (1 - u); let al = Math.min(1, u / 0.08);
       if (u > 0.65) { const v = (u - 0.65) / 0.35; al *= 1 - v * v * (3 - 2 * v); }
       let x = a.x, y = a.y; if (a.bam && !a.bam.chet) { x = a.bam.x; y = a.bam.y; }
-      this.anhGiua(ctx, a.ten, x, y, a.co * (0.6 + 0.5 * e), a.goc, al);
+      this.anhGiua(ctx, a.ten, x, y, a.co * (0.6 + 0.5 * e), a.goc, al * (window.CG ? CG.kA(a) : 1));
     }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = op;
   },

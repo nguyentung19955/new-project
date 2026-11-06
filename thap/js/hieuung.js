@@ -93,7 +93,7 @@ const VX = {
     const lo = r && M ? (M.lo * r.k + (r.k === 1 ? M.dung : 0)) / 1000 : (ra && ra.vxA && ra.vxA.k === 'ghep' ? ra.vxA.lo : 0);
     const bay = 0.16; // tia chạy tới ô mới
     this.trieu(T);
-    if (T._gs) T._gs.t0 += (lo + bay) * 1000 - 120; // cổng hầm mở trước 120 ms → ụ bắt đầu hiện đúng lúc tia tới
+    if (T._gs) T._gs.t0 += (lo + bay) * 1000 - 120 * (typeof GF !== 'undefined' && GF.K_TRIEU ? GF.K_TRIEU : 1); // cổng hầm mở trước 120 ms → ụ bắt đầu hiện đúng lúc tia tới
     else if (T.vxA) T.vxA.t0 += lo + bay;
     this.ds.push({ k: 'td', B, o: oNguon, o2: T.o, T, t0: this.t + lo, dai: 1.0, bay });
     const c = B.o[T.o]; if (typeof HUD2 !== 'undefined' && HUD2.vfx && c) HUD2.vfx('cong', c.x, c.y, 66, 64, 360, Math.round((lo + bay) * 1000)); // nhịp triệu hồi bình thường (lớp DOM)
