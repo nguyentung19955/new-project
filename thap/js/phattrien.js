@@ -103,7 +103,7 @@ const MOC_RIENG = {
   soi:       { 3: ['KEEN FANGS', '+10% crit chance'], 5: ['FERAL', '+25% damage'], 7: ['ALPHA HOWL', 'Neighbours +25% fire rate'] },
   mana:      { 3: ['FAST FLOW', 'Mana every 6s'], 5: ['OVERFLOW', '+25% mana'], 7: ['WELLSPRING', 'Mana every 5s'] },
   hopbi:     { 3: ['QUICK OPEN', 'Opens 10s sooner'], 5: ['LUCKY BOX', 'Result at least 3★'], 7: ['JACKPOT', 'Result at least 5★'] },
-  tienhoa:   { 3: ['FAST GROWTH', 'Evolves 20% faster'], 5: ['BREAKTHROUGH', '25% chance of +2★ (never above 7★)'], 7: ['SALVAGE', 'Can\'t go past 7★: each cycle refunds mana instead'] },
+  tienhoa:   { 3: ['FAST GROWTH', 'Evolves 20% faster'], 5: ['BREAKTHROUGH', '25% chance of +2★ (never above 7★)'], 7: ['DUD', 'At 7★ the bomb fizzles: no skill, just a 7★ turret (losing a star restarts it)'] },
 };
 // loại để chọn mốc chung
 const KHONG_DOI = new Set(['railgun', 'no5', 'bomhen']); // bắn có nhịp riêng → mốc 5★ chung = OVERCHARGE thay vì DOUBLE TAP

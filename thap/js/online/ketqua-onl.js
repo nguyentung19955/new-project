@@ -77,22 +77,13 @@ const KQO = {
     if (chu && phu) phu.textContent = chu;
     // "Fell at" chỉ cho thua thật
     if (so && ket.loai !== 'thua' && so.previousSibling && so.previousSibling.nodeType === 3) so.previousSibling.textContent = 'Reached ';
-    // thẻ "chuyện gì xảy ra": trung tính / xử thắng = không mẹo nâng cấp; thua thật có bạn rời = thêm một dòng trước mẹo
-    const meo = bang.querySelector('#kq-chi .kq-meo');
-    if (meo && viec) {
-      if (ket.loai === 'thua') {
-        const d = document.createElement('div'); d.className = 'kqo-roi'; d.innerHTML = '<small>WHAT HAPPENED</small><span></span>';
-        d.querySelector('span').textContent = viec; meo.insertBefore(d, meo.firstChild);
-        for (const s of meo.querySelectorAll(':scope > small')) if (/WHAT HAPPENED/.test(s.textContent) && !s.closest('.kqo-roi')) { const sp = s.nextElementSibling; s.remove(); if (sp && sp.tagName === 'SPAN') sp.remove(); }
-      } else {
-        meo.innerHTML = '<small>WHAT HAPPENED</small><span class="kqo-viec"></span>';
-        meo.querySelector('.kqo-viec').textContent = viec;
-      }
-    }
-    // dòng "WHAT HAPPENED" trong Match details: bỏ chữ kỹ thuật ("Online match ended")
-    for (const d of bang.querySelectorAll('#kq-chi .kq-ct .kq-dong')) {
-      const s = d.querySelector('small'); if (s && /WHAT HAPPENED/.test(s.textContent) && viec) d.querySelector('span').textContent = viec;
-    }
+    // một dòng "chuyện gì xảy ra" khi có người rời (không mẹo huấn luyện — màn kết quả gọn, 06/11)
+    let meo = bang.querySelector('#kq-chi .kq-meo');
+    if (viec) {
+      if (!meo) { meo = document.createElement('div'); meo.className = 'kq-meo'; const chi = bang.querySelector('#kq-chi'), hang = chi && chi.querySelector('.kq-hang'); if (chi) chi.insertBefore(meo, hang ? hang.nextSibling : chi.firstChild); }
+      meo.innerHTML = '<small>WHAT HAPPENED</small><span class="kqo-viec"></span>';
+      meo.querySelector('.kqo-viec').textContent = viec;
+    } else if (meo) meo.remove();
     for (const b of cu) b.hidden = true;
     this.batSau();
     this.veNut();

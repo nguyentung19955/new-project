@@ -62,9 +62,6 @@ const KQ = {
     let moi = false, b = KQ.best(), cu = b[m.che] || { wave: 0, trum: 0 };
     if (!m.tut) { if (wave > (cu.wave || 0)) { moi = true; b[m.che] = { wave, trum: m.trum, deck: m.deck, mv: m.mv }; KQ.luuBest(b); } }
     const bestWave = m.tut ? null : Math.max(wave, cu.wave || 0);
-    // thứ lấy nhiều tim nhất
-    const ds = Object.entries(m.lot).sort((a, c) => c[1] - a[1]);
-    const top = ds[0];
     let chi = bang.querySelector('#kq-chi');
     if (!chi) { chi = document.createElement('div'); chi.id = 'kq-chi'; bang.insertBefore(chi, bang.querySelector('.bang-nut')); }
     // HUD mượt C: màn riêng gọn — biểu tượng + VICTORY/DEFEAT + WAVE to (đếm lên) · 2 ô số · 1 thẻ "thử tiếp" · Chi tiết (chạm) · RETRY to + EDIT nhỏ
@@ -73,26 +70,17 @@ const KQ = {
     // tư vấn C §B18: 3 ô số (trùm hạ · kỷ lục · tim còn) · THUA có màn riêng: chữ "Fell at", nguyên nhân cụ thể, nhãn mẹo "FIX FOR NEXT RUN"
     const timCon = G.ban[0] ? Math.max(0, G.ban[0].tim | 0) : 0, timMax = (G.che === 'pvp' ? LUAT.timPvp : G.che === 'coop' ? LUAT.timCoop : LUAT.timSolo) || 3;
     let h = '<div class="kq-hang">' + o('BOSSES', m.trum) + (m.tut ? '' : o('BEST ' + m.che.toUpperCase(), bestWave, moi ? 'NEW BEST' : '')) + o('LIVES', timCon + '/' + timMax) + '</div>';
-    const nguyen = top ? '<small>' + (k.thang ? 'MOST LIVES LOST TO' : 'WHAT BROKE THROUGH') + '</small><span>' + ds.slice(0, 1).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n + (n > 1 ? ' lives' : ' life')).join('') + '</span>'
-      : (!k.thang && k.ly ? '<small>WHAT HAPPENED</small><span>' + k.ly + '</span>' : '');
-    if (!m.tut || !k.thang) h += '<div class="kq-meo">' + nguyen + '<small class="kq-tn">' + (k.thang ? 'TRY NEXT' : 'FIX FOR NEXT RUN') + '</small><p>' + KQ.meo(top && top[0]) + '</p></div>';
-    else if (nguyen) h += '<div class="kq-meo">' + nguyen + '</div>';
-    h += '<button class="kq-xem" data-kq="ct">Match details<img src="assets/mui_tiep.png" alt=""></button><div class="kq-ct">';
-    if (ds.length) h += '<div class="kq-dong"><small>' + (k.thang ? 'LIVES LOST' : 'WHAT GOT THROUGH') + '</small><span>' + ds.slice(0, 4).map(([key, n]) => '<b>' + KQ.tenKey(key) + '</b> −' + n).join(' · ') + '</span></div>';
-    else if (!k.thang) h += '<div class="kq-dong"><small>WHAT HAPPENED</small><span>' + (k.ly || '') + '</span></div>';
-    h += '<div class="kq-dong"><small>DECK PLAYED</small><div class="kq-bo">' + (typeof OT !== 'undefined' ? OT.hang(m.deck, MAVUONG[m.mv] ? m.mv : null) : m.deck.map(id => '<img src="' + iconOf(id) + '" alt="' + (G.rosterMap[id] || {}).ten + '">').join('')) +
-      (typeof OT === 'undefined' && MAVUONG[m.mv] ? '<img class="kq-mv" src="' + mvIcURL(m.mv) + '" alt=""><i>' + MAVUONG[m.mv].ten + '</i>' : '') + '</div></div></div>';
+    // 06/11 (người chơi): bỏ thẻ huấn luyện 'WHAT BROKE THROUGH / FIX FOR NEXT RUN' và Match details ('WHAT GOT THROUGH') — DCDW gọn:
+    // màn kết quả chỉ còn kết quả · 3 ô số · thưởng · nút (vừa một màn, nút luôn thấy)
     chi.innerHTML = h;
     // số wave đếm lên 0 → wave trong ~350 ms (giảm chuyển động: hiện ngay)
     const so = document.querySelector('#kq-so b');
     if (so && !k.thang && so.previousSibling && so.previousSibling.nodeType === 3) so.previousSibling.textContent = 'Fell at ';
-    const phu = document.getElementById('kq-phu'); if (phu && !k.thang && !top) phu.textContent = ''; // nguyên nhân đã ở thẻ "WHAT HAPPENED" — không lặp
     if (so && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       const t0 = performance.now(), D = 350; so.textContent = 'WAVE 0';
       const buoc = (t) => { const x = Math.min(1, (t - t0) / D); so.textContent = 'WAVE ' + Math.round(wave * (1 - Math.pow(1 - x, 3))); if (x < 1) requestAnimationFrame(buoc); };
       setTimeout(() => requestAnimationFrame(buoc), 260);
     }
-    if (!kq.dataset.kq7) { kq.dataset.kq7 = 1; kq.addEventListener('click', (e) => { if (e.target.closest('[data-kq="ct"]')) kq.classList.toggle('mo-ct'); }); }
     // nút: hướng dẫn → chơi lại hướng dẫn / chọn bộ; thường → RETRY SAME DECK / EDIT DECK
     const lai = bang.querySelector('[data-act="choilai"], [data-act="hd-choi"]'), sua = bang.querySelector('[data-act="doibo"]');
     if (m.tut) {

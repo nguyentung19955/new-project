@@ -69,7 +69,11 @@ const TAI = {
       if (st === 404 || st === 410 || (st >= 200 && st < 300 && lan >= 2) || (st >= 400 && lan >= 5)) {
         this.thieu.add(it.url); console.warn('[TAI] missing asset', it.url, st); return null;
       }
-      if (st < 0 && (++this.loiLien >= 4 || !navigator.onLine)) { this.matMang('fetch'); throw TAI_MAT; }
+      if (st < 0 && (++this.loiLien >= 4 || !navigator.onLine)) {
+        // chỉ màn tải ĐẦU (chưa vào được game) và trận ONLINE mới che màn mất mạng; menu / SOLO / Test range: đợi mạng rồi tải tiếp
+        if (this.canChe()) { this.matMang('fetch'); throw TAI_MAT; }
+        await this.choMang(); this.loiLien = 0; continue;
+      }
       await this.ngu(Math.min(8000, 500 * 2 ** lan));
     }
   },
@@ -390,8 +394,21 @@ const TAI = {
   },
 
   // ---------- mất mạng ----------
+  // Màn "CONNECTION LOST / BACK ONLINE" CHỈ thuộc về: (1) trận ONLINE (CO-OP / PVP qua phòng, ONS.on) đang đánh,
+  // (2) màn tải ĐẦU khi chưa vào được game (thiếu ảnh không chơi được). KHÔNG BAO GIỜ ở menu, trang ụ, Test range (iframe
+  // ?preview), SOLO / đấu máy — ở đó mất mạng chỉ làm ảnh lẻ tải chậm, có mạng lại thì tải tiếp (TAI.coMang).
+  trongTranOnl() { return !this.xem && typeof ONS !== 'undefined' && ONS.on && typeof G !== 'undefined' && G.ban && G.ban.length > 0 && !G.ketThuc; },
+  canChe() { return !this.xem && (!this.daBoot || this.trongTranOnl()); },
+  // đợi có mạng lại (sự kiện 'online' hoặc kiểm 3 s/lần) — không chặn gì, chỉ hoãn tải ảnh
+  choMang() { return new Promise((ok) => { const xong = () => { removeEventListener('online', xong); clearInterval(t); ok(); }; const t = setInterval(() => { if (navigator.onLine) xong(); }, 3000); addEventListener('online', xong); }); },
+  khiOffline() { if (this.canChe()) this.matMang('offline'); },
+  coMang() {
+    if (this.mat) { this.thu(); return; }
+    this.loiLien = 0; try { if (typeof REN !== 'undefined' && REN.thuLaiLoi) REN.thuLaiLoi(); } catch (e) { } // ảnh lẻ lỗi lúc mất mạng → tải lại
+  },
   matMang(lyDo) {
     if (this.mat) return;
+    if (!this.canChe()) { console.warn('[TAI] offline (no overlay outside online matches):', lyDo); return; }
     this.mat = true; this.lai = false; this.cho = false; this._phien++;
     console.warn('[TAI] connection lost:', lyDo);
     this.dung();
@@ -440,7 +457,7 @@ const TAI = {
     let ok = navigator.onLine;
     if (ok) { try { ok = (await fetch('assets/roster.json?ping=' + Date.now(), { cache: 'no-store' })).ok; } catch (e) { ok = false; } }
     this._kt = false;
-    if (!ok && ++this.loiLien >= 2) this.matMang('asset');
+    if (!ok && ++this.loiLien >= 2 && this.canChe()) this.matMang('asset');
     else if (ok) this.loiLien = 0;
   },
 };
@@ -490,6 +507,7 @@ TAI.dung();
 TAI.hien('LOADING', true); { const w = document.getElementById('wrap'); if (w) w.classList.remove('dang-tai'); document.documentElement.classList.remove('dang-tai'); } // che ngay từ đầu (khung xem trước: thanh nhỏ, đợi ảnh của ụ)
 // (bỏ) cổng bấm "đợi đợt nền": sau màn tải đầu không còn màn tải nào; màn mở sớm (trận hướng dẫn lần đầu) → gán ảnh ngay, hiện dần
 addEventListener('click', (e) => { if (TAI.daBoot && !TAI.nenXong && !TAI.xem) TAI.ganSrc(); }, true);
-addEventListener('offline', () => TAI.matMang('offline'));
-addEventListener('online', () => TAI.thu());
-if (!navigator.onLine) TAI.matMang('boot-offline');
+// mất / có mạng: KHÔNG che màn ở menu / SOLO / Test range (TAI.canChe) — chỉ màn tải đầu + trận online
+addEventListener('offline', () => TAI.khiOffline());
+addEventListener('online', () => TAI.coMang());
+// mở game khi đang mất mạng: bản đã lưu trong máy (Service Worker) vẫn chơi được → để bước tải ảnh tự báo nếu thật sự thiếu

@@ -826,17 +826,7 @@ const REN = {
       } else ctx.drawImage(than, -S * 0.75, -S * 0.75, S * 1.5, S * 1.5);
     }
     // (bỏ vòng bậc phát sáng trên sân — độ hiếm chỉ còn viên ngọc nhỏ ở bệ + viền thẻ)
-    // nạp năng lượng (overlord, tường, hố đen, mana): vòng sáng quanh bệ
     const skT = SKILLS[T.id] || {};
-    if (T.nap > 0.02 && !o.ghost && !laGrow(T.id) && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau)) {
-      const m = skT.napMau || (T.id === 'overlord' ? '#ff5040' : T.id === 'mana' ? '#c77dff' : T.id === 'blackhole' ? '#ff3b9b' : '#7ffcff');
-      ctx.save(); ctx.globalCompositeOperation = 'lighter';
-      const vn = this.toMauA('vong_nap_' + Math.min(7, Math.floor(T.nap * 8)), m, 0.55); // vòng nạp 8 khung ChatGPT (raw_p4_board_3) tô màu ụ
-      if (vn.width > 1) { ctx.globalAlpha = al * 0.9; this.anhGiua(ctx, vn, 0, 0, S * 0.9); }
-      else { ctx.globalAlpha = al * 0.55 * T.nap; this.anhGiua(ctx, this.toMauA('fx_vong_mong', m), 0, 0, S * 0.84); } // khung chưa tải: vòng PNG mảnh
-      if (T.nap > 0.8) { ctx.globalAlpha = al * (T.nap - 0.8) * 1.2 * (0.6 + 0.4 * Math.sin(this.t * 30)); this.anhGiua(ctx, this.cham1(m), 0, 0, S * 0.9); }
-      ctx.restore(); ctx.globalAlpha = al;
-    }
     // vòng quét nâng cấp
     const vlv = T.lvSang > 0 ? this.co('fx_vong_lv', S * 1.1) : null; // vòng lên cấp ChatGPT (S4): xoay, nở ra, mờ dần
     if (vlv) {
@@ -882,6 +872,11 @@ const REN = {
     if (T.id === 'set' && T.cd < 0.18 && !da && !o.ghost) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.18 - T.cd) * 3;
       this.anhGiua(ctx, this.cham1('#fff27a'), Math.cos(T.goc) * D * 0.4, Math.sin(T.goc) * D * 0.4, S * 0.5); ctx.restore(); ctx.globalAlpha = al;
+    }
+    // nạp năng lượng / hồi chiêu kỹ năng: VÒNG XANH LÁ đầy dần từ 12 giờ theo chiều kim đồng hồ (PX.vongHoi — cùng kiểu mọi chế độ)
+    // vẽ SAU đầu súng (không bị đầu che), TRƯỚC huy hiệu sao (huy hiệu luôn nằm trên)
+    if (T.nap > 0.02 && !o.ghost && !laGrow(T.id) && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau)) {
+      ctx.save(); PX.vongHoi(ctx, T, T.nap, S * 0.41, al, this.t, !!skT.chuDong); ctx.restore(); ctx.globalAlpha = al;
     }
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
     if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }

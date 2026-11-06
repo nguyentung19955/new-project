@@ -101,6 +101,7 @@ function cungGauge(B, r) {
 }
 function veGauge(ctx, T, S, al, R) {
   if (GFX.tat || !laGrow(T.id) || T.st.da) return;
+  if (SKILLS[T.id] && SKILLS[T.id].bomDem) return veEvoBom(ctx, T, S, al, R); // Evolver: BOM HẸN GIỜ đếm ngược thay vòng nạp
   const g = GROW[T.id], m = g.mau, td = tienDo(T), s = T.gd || td.s, r = S * 0.455, t = VX.t, Bn = G.ban[T.ban];
   if (!Bn) return;
   const B = T.vxB, tt = B ? VX.t - B.t0 : 9;
@@ -118,11 +119,10 @@ function veGauge(ctx, T, S, al, R) {
     ctx.globalCompositeOperation = 'lighter'; PX.cung(ctx, 0, 0, R0, a0, a2, nguoc, s === i + 1 && s < 3 && td.f >= 0.85 ? 2.8 : 2.2, m, al * 0.9 * nhay);
   }
   // dạng 3: đốm sáng chạy vòng (sống động, nhỏ)
-  // ụ ĐỎ có kỹ năng chủ động: cung nạp mảnh bên trong (đầy = sáng nhấp nháy, chạm để dùng)
+  // ụ ĐỎ có kỹ năng chủ động: vòng hồi chiêu xanh lá bên trong (đầy = thở nhẹ, chạm để dùng)
   const sk = SKILLS[T.id];
   if (sk && sk.chuDong && T.sao >= 3) {
-    const mm = sk.napMau || m, rr = R0 - 4.2;
-    ctx.globalCompositeOperation = 'lighter'; PX.cung(ctx, 0, 0, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(T.nap, 0, 1), false, 1.6, T.nap >= 1 ? '#ffffff' : mm, al * (T.nap >= 1 ? 0.6 + 0.4 * Math.sin(t * 9) : 0.75));
+    PX.vongHoi(ctx, T, T.nap, R0 - 4.2, al, t, true); // vòng hồi chiêu xanh lá chung (fxu.js)
   }
   ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over';
 }
@@ -139,6 +139,50 @@ VX.duoiDau = function (ctx, T, S, al, R) {
   }
   ctx.restore(); ctx.globalAlpha = al;
 };
+// ---- EVOLVER (Moa): BOM HẸN GIỜ đếm ngược trên ụ (thay vòng nạp / vòng kỹ năng) · 7★ = bom XỊT → nổ hụt 1 lần + XÁC BOM ở giữa ụ ----
+//  ảnh ChatGPT: evo_bom (huy hiệu bom, ô số trống) · evo_xacbom (xác bom cháy) · fx_evo_xit (dải 16 khung nổ hụt) — docs/demo-hop-tuong/tuvan/evolver/CAN-VE.json
+//  chưa có ảnh → tạm fx_bomhen_hieu (bom đồng hồ có sẵn) / bản tối của nó / fx_bomhen_trung + fx_bui. CHỈ con số là chữ vẽ code (QUY-TAC-HINH mục 3).
+const EVO = {
+  co: { evo_bom: true, fx_evo_xit: true }, // ảnh ChatGPT đã về (đặt true khi file có trong assets — tránh tải thử file chưa có → 404)
+  bom: () => EVO.co.evo_bom && REN.img('evo_bom') ? 'evo_bom' : 'fx_bomhen_hieu',
+  xac: () => EVO.co.evo_xacbom && REN.img('evo_xacbom') ? 'evo_xacbom' : null,
+  xit: () => EVO.co.fx_evo_xit && REN.img('fx_evo_xit') ? 'fx_evo_xit' : null,
+  so: { evo_bom: [0, 0.035, 0.25], fx_bomhen_hieu: [-0.04, 0.06, 0.26] }, // ô số trên ảnh: [dx, dy, cỡ chữ] theo cỡ huy hiệu
+};
+function veEvoBom(ctx, T, S, al, R) {
+  const t = VX.t;
+  ctx.save(); ctx.globalCompositeOperation = 'source-over';
+  if (T.sao >= LUAT.saoMax) { // 7★ xịt: nổ hụt (0–1.1 s sau khi lên 7★) rồi xác bom cố định ở giữa
+    const u = T.xitV != null ? t - T.xitV : 9, ka = clamp((u - 0.3) / 0.35, 0, 1), xac = EVO.xac();
+    if (ka > 0) {
+      if (xac) R.anhGiua(ctx, xac, 0, S * 0.04, S * 0.56, 0, al * ka);
+      else { const c = R.toMauA(EVO.bom(), '#1c1612', 0.72); if (c.width > 1) { ctx.globalAlpha = al * ka; R.anhGiua(ctx, c, 0, S * 0.04, S * 0.5); } }
+      if (!xac && Math.sin(t * 2.1 + (T.pha || 0)) > 0.2) { ctx.globalAlpha = al * ka * 0.35; R.anhGiua(ctx, 'fx_bui', S * 0.06, -S * 0.16 - ((t * 9) % 6), S * 0.26); } // khói mỏng (ảnh tạm)
+    }
+    if (u < 1.1) {
+      const xit = EVO.xit();
+      if (xit) VX.khung(ctx, REN.img(xit), Math.min(15.99, u / 1.1 * 16), 0, 0, S * 1.25, 0, al);
+      else {
+        if (u < 0.35) R.anhGiua(ctx, 'fx_bomhen_trung', 0, 0, S * (0.35 + u * 1.4), 0, al * (1 - u / 0.35));
+        const v = clamp((u - 0.12) / 0.98, 0, 1); R.anhGiua(ctx, 'fx_bui', 0, -S * 0.1 * v, S * (0.4 + 0.6 * v), 0, al * 0.85 * (1 - v));
+      }
+    }
+    ctx.restore(); ctx.globalAlpha = al; return;
+  }
+  const con = SKILLS.tienhoa.con(T), n = Math.max(0, Math.ceil(con - 1e-6)), cuoi = con <= 3;
+  const ph = cuoi ? (con * 2) % 1 : con % 1;                     // nhịp "tích": mỗi giây (3 s cuối: mỗi nửa giây)
+  const nay = 1 + (cuoi ? 0.12 : 0.05) * Math.pow(Math.max(0, ph - 0.7) / 0.3, 2);
+  const rung = cuoi ? Math.sin(t * 38) * 0.12 * (1.2 - con / 3) : 0;
+  const d = S * 0.56 * nay, bx = S * 0.31, by = S * 0.27, ten = EVO.bom(), so = EVO.so[ten] || EVO.so.evo_bom;
+  ctx.translate(bx, by); ctx.rotate(rung);
+  R.anhGiua(ctx, ten, 0, 0, d, 0, al);
+  if (cuoi && ph > 0.55) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * 0.35 * (ph - 0.55) / 0.45; R.anhGiua(ctx, R.cham1('#ff5a3c'), 0, 0, d * 1.1); ctx.globalCompositeOperation = 'source-over'; }
+  const f = Math.round(d * so[2] * 10) / 10;
+  ctx.globalAlpha = al; ctx.font = '900 ' + f + 'px ' + FONT.display; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(1.4, f * 0.2); ctx.strokeStyle = '#05070a'; ctx.strokeText(String(n), d * so[0], d * so[1]);
+  ctx.fillStyle = cuoi ? '#ff6a4a' : '#ffe9a8'; ctx.fillText(String(n), d * so[0], d * so[1]);
+  ctx.restore(); ctx.globalAlpha = al;
+}
 function moVeThem(id) {
   const sk = SKILLS[id]; if (!sk || sk._gfxVe) return;
   const goc = sk.veThem; sk._gfxVe = true;

@@ -508,9 +508,9 @@
   "ten": "Evolver",
   "bac": "vang",
   "dcdw": "Moa",
-  "kyNang": "After a while becomes a random turret +1★ (higher stars take longer; 7★ never goes past 7★ — it salvages mana)",
+  "kyNang": "Time bomb counts down, then becomes a random turret +1★ (higher stars take longer; at 7★ it fizzles — no skill)",
   "ten_vi": "Hộp Tiến Hoá",
-  "kyNang_vi": "Sau một lúc biến thành ụ ngẫu nhiên +1 sao (sao cao chờ lâu hơn; 7★ không lên nữa — hoàn mana)"
+  "kyNang_vi": "Bom hẹn giờ đếm ngược rồi biến thành ụ ngẫu nhiên +1 sao (sao cao chờ lâu hơn; 7★ thì bom xịt — không còn tác dụng)"
  },
  {
   "id": "cauvong",

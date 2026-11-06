@@ -112,7 +112,7 @@ const TEXT = {
     saochep:    { name: 'Copycat',       skill: 'Copies any same-star turret (less damage), keeps its Awakened / Gold form' },
     ngoisao:    { name: 'Star Cannon',   skill: 'Live board ★ total: every 10 → faster; every 50 → more damage (drops if stars fall)' },
     soi:        { name: 'Werewolf',     skill: 'Melee wolf: each summon/merge is Normal or AWAKENED by chance (30%+); Awakened always crits' },
-    tienhoa:    { name: 'Evolver',       skill: 'After a while becomes a random turret +1★ (higher stars take longer; 7★ never goes past 7★ — it salvages mana)' },
+    tienhoa:    { name: 'Evolver',       skill: 'Time bomb counts down, then becomes a random turret +1★ (higher stars take longer; at 7★ it fizzles — no skill)' },
     cauvong:    { name: 'Rainbow',       skill: 'Support: rainbow trail — Co-op/Solo: enemies on it take more damage; PVP: painted on the rival\'s path, enemies there take less' },
     wallgen:    { name: 'Wall Projector', skill: 'Raises walls that block, then explode; merging it raises a much stronger GOLDEN WALL' },
     orbital:    { name: 'Orbital',       skill: 'Special: merging Orbitals AWAKENS every Orbital on the board (23s) — area bomb salvos (no normal shots)' },

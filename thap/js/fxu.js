@@ -180,9 +180,9 @@ const PX = {
   // cung tròn a0→a1 (chiều kim đồng hồ; nguoc = ngược) = ảnh vòng bị cắt bởi hình quạt (mặt nạ vô hình)
   // (dựng sẵn từng cung vào bộ đệm theo góc lượng tử 1/128 vòng → mỗi khung chỉ 1 drawImage, không clip mỗi khung)
   _cung: new Map(),
-  cung(ctx, x, y, r, a0, a1, nguoc, w, mau, al) {
+  cung(ctx, x, y, r, a0, a1, nguoc, w, mau, al, im) {
     if (!(r > 0.5) || !(Math.abs(a1 - a0) >= 0.003) || (al != null && !(al > 0.01))) return; // góc NaN (tiến độ dạng chưa có) → bỏ, không tạo canvas 0 px làm vỡ cả lượt vẽ ụ
-    const vm = this.mau('fx_vong_mong', mau); if (!vm) return;
+    const vm = im || this.mau('fx_vong_mong', mau); if (!vm) return; // im: ảnh vòng riêng (vd. vòng hồi chiêu gọn) — mau vẫn là khoá bộ đệm
     const q = Math.PI / 64, b0 = Math.round(a0 / q), b1 = Math.round(a1 / q), S = r * this.K_VONG, n = Math.max(8, Math.round(S * REN.s * REN.dpr));
     const key = mau + '|' + n + '|' + b0 + '|' + b1 + '|' + (nguoc ? 1 : 0);
     let c = this._cung.get(key);
@@ -200,6 +200,35 @@ const PX = {
     }
     if (al != null) ctx.globalAlpha = Math.min(1, al * Math.min(1, 0.55 + (w || 2) * 0.18));
     ctx.drawImage(c, x - S / 2 + c.bx * S, y - S / 2 + c.by * S, c.bw * S, c.bh * S);
+  },
+  // VÒNG HỒI CHIÊU (mọi ụ/mọi chế độ, cùng 1 kiểu): rãnh tối mảnh + cung XANH LÁ đầy dần từ 12 giờ theo chiều kim đồng hồ
+  // (ảnh fx_vong_mong tô màu + mặt nạ quạt dựng sẵn — PX.cung; không xoay, không hạt). Đầy → 1 nhịp loé gọn rồi về 0.
+  // k = khoá trạng thái (ụ T) để bắt lúc vừa đầy/vừa nhả chiêu; chỉ hiển thị — không đụng luật/đồng bộ online.
+  HOI_MAU: '#3be36b', HOI_LOE: '#c9ffd8', HOI_RANH: '#04120a', _hoi: new WeakMap(), _hoiIm: {},
+  // ảnh vòng GỌN cho vòng hồi chiêu: fx_vong_mong tô màu, quầng mờ thu hẹp (alpha^2.2) → nét mảnh, sáng mềm; dựng 1 lần mỗi màu
+  anhHoi(mau) {
+    const c0 = this._hoiIm[mau]; if (c0) return c0;
+    const a = this.mau('fx_vong_mong', mau); if (!a) return null;
+    const c = document.createElement('canvas'); c.width = a.width; c.height = a.height;
+    const x = c.getContext('2d'); x.drawImage(a, 0, 0);
+    try { const d = x.getImageData(0, 0, c.width, c.height), p = d.data; for (let i = 3; i < p.length; i += 4) p[i] = Math.round(255 * Math.pow(p[i] / 255, 2.2)); x.putImageData(d, 0, 0); } catch (e) { } // vetay-ok: png — chỉnh alpha của chính ảnh PNG fx_vong_mong (thu quầng)
+    return (this._hoiIm[mau] = c);
+  },
+  vongHoi(ctx, k, p, r, al, t, cho) {
+    if (!(r > 0.5) || !(al > 0.01)) return;
+    p = p > 1 ? 1 : p > 0 ? p : 0;
+    let s = k && this._hoi.get(k);
+    if (k && !s) { s = { p: p, loe: -9 }; this._hoi.set(k, s); }
+    if (s) { if ((p >= 0.999 && s.p < 0.999) || (p < s.p - 0.45 && t - s.loe > 0.5)) s.loe = t; s.p = p; } // vừa đầy / vừa nhả (đầy chỉ 1 khung)
+    const op = ctx.globalCompositeOperation;
+    ctx.globalCompositeOperation = 'source-over'; this.vong(ctx, 0, 0, r, 2, this.HOI_RANH, al * 0.8); // rãnh tối
+    ctx.globalCompositeOperation = 'lighter';
+    const im = this.anhHoi(this.HOI_MAU), D = r * this.K_VONG;
+    if (p >= 0.999) this.ve(ctx, im, 0, 0, D, D, 0, al * (cho ? 0.8 + 0.2 * Math.sin(t * 5) : 1)); // đầy (chờ chạm: thở nhẹ)
+    else if (p > 0.004) this.cung(ctx, 0, 0, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p, false, 2, this.HOI_MAU + '~', al, im);
+    const e = s ? (t - s.loe) / 0.38 : 9;
+    if (e >= 0 && e < 1) this.vong(ctx, 0, 0, r * (1 + 0.16 * e), 2, this.HOI_LOE, al * (1 - e) * 0.9); // loé gọn khi đầy
+    ctx.globalCompositeOperation = op;
   },
   // đoạn thẳng sáng (dây, tia, đường ngắm): kéo dãn 1 ảnh; lech != null → lặp ảnh trượt theo lech (nhìn như chạy)
   tia(ctx, x0, y0, x1, y1, w, mau, al, lech) {

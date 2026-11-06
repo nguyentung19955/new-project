@@ -872,27 +872,28 @@ SKILLS.soi = { // Sói Máy (Werewolf) — DCDW Werewolf: mỗi lần TRIỆU H�
   sangDau: (T) => (T.thuc ? 0.12 + 0.08 * Math.sin(G.t * 8) : 0),
   veThem(ctx, T, S, al, R) { if (T.thuc && Math.random() < 0.1) { const c = tamU(T); FX.hat1('than', c.x + rnd(-14, 14), c.y + rnd(-6, 12), 0, -30, 0.6, 5, '#ff4b3e'); } },
 };
-SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): sau một lúc biến thành ụ ngẫu nhiên +1 sao — sao càng cao càng LÂU (20 + 6 s/★)
-  //   DCDW Moa: 7★ không lên được nữa → KHÔNG bao giờ ra 8★ (và không phí ô thành 7★ khác): 7★ = SALVAGE, mỗi vòng hoàn mana rồi nạp lại
-  vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f',
+SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): BOM HẸN GIỜ đếm ngược → biến thành ụ ngẫu nhiên +1 sao — sao càng cao càng LÂU (14 + 5 s/★)
+  //   7★: không lên được nữa → bom XỊT (nổ hụt 1 lần, hiện xác bom ở giữa ụ), bộ đếm dừng, KHÔNG có tác dụng gì — chỉ là 1 ụ 7★
+  //   ụ 7★ xịt bị GIẢM sao (trùm hạ sao, ụ/skill khác…) → hết xịt, đếm ngược lại TỪ ĐẦU theo sao mới, biến đổi lại bình thường
+  //   (luật thuần theo T.sao/T.tuoi → online tất định; con số đếm + xác bom chỉ là hình vẽ từ bộ đếm đó — growfx.js veEvoBom)
+  vai: 'db', dmg: 0, toc: 0, napMau: '#ffd23f', bomDem: true,
   can: (T) => (14 + 5 * T.sao) * (ms(T, 3) ? 0.8 : 1), // 3★ FAST GROWTH · 20+6★ → 14+5★ (đo bậc 06/11)
-  hoan: (T) => 120 + 10 * ((G.ban[T.ban] && G.ban[T.ban].lv.tienhoa || 1) - 1), // 7★ SALVAGE: mana mỗi vòng
+  con: (T) => Math.max(0, SKILLS.tienhoa.can(T) - T.tuoi), // giây còn lại tới lúc biến đổi
   mo: (T) => T.sao >= LUAT.saoMax
-    ? 'MAX 7★ — cannot evolve further · every ' + SKILLS.tienhoa.can(T).toFixed(0) + 's salvages +' + SKILLS.tienhoa.hoan(T) + ' mana (next in ' + Math.max(0, SKILLS.tienhoa.can(T) - T.tuoi).toFixed(0) + 's)'
-    : 'Evolves in ' + Math.max(0, SKILLS.tienhoa.can(T) - T.tuoi).toFixed(0) + 's → random ' + Math.min(7, T.sao + 1) + '★' + (ms(T, 5) ? ' (25%: ' + Math.min(7, T.sao + 2) + '★)' : '') + ' · higher stars take longer',
+    ? 'MAX 7★ — the bomb fizzled: cannot evolve, no skill (just a 7★ turret) · losing a star restarts the countdown'
+    : 'Evolves in ' + Math.ceil(SKILLS.tienhoa.con(T)) + 's → random ' + Math.min(7, T.sao + 1) + '★' + (ms(T, 5) ? ' (25%: ' + Math.min(7, T.sao + 2) + '★)' : '') + ' · higher stars take longer · 7★ fizzles',
   gocDau: (T, t) => -Math.PI / 2 + t * (0.4 + T.nap * 3),
   sangDau: (T) => T.nap * T.nap * 0.5,
   capNhat(G, B, T) {
+    if (T.sao >= LUAT.saoMax) { // 7★: bom xịt — dừng đếm, nổ hụt 1 lần (chỉ hình, không sát thương), từ đó chỉ là ụ 7★ không tác dụng
+      if (!T.xit) { T.xit = true; T.xitV = typeof VX !== 'undefined' ? VX.t : 0; if (B && !B.ai && typeof SND !== 'undefined' && SND.no) SND.no(0.25); }
+      T.nap = 0; T.tuoi = 0;
+      return true;
+    }
+    if (T.xit) { T.xit = false; T.xitV = null; T.tuoi = 0; T.nap = 0; } // bị giảm sao: hết xịt → đếm lại từ đầu
     T.nap = Math.min(1, T.tuoi / this.can(T));
     if (T.nap >= 1) {
       if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
-      if (T.sao >= LUAT.saoMax) { // 7★ SALVAGE: hoàn mana, nạp lại (không đổi ụ, không vượt 7★)
-        const n = this.hoan(T), c = tamU(T); B.mana += n; T.tuoi = 0; T.nap = 0; T.sang = 1;
-        if (typeof VX !== 'undefined' && VX.manaRa) VX.manaRa(B, T);
-        for (let i = 0; i < 10; i++) FX.hat1('lua', c.x + rnd(-14, 14), c.y + rnd(-8, 8), rnd(-10, 10), rnd(-60, -30), 0.6, 8, '#ffd23f');
-        if (!B.ai) SND.mana();
-        return true;
-      }
       const ds = deckTru(B, ['tienhoa']);
       const them = ms(T, 5) && Math.random() < 0.25 ? 2 : 1; // 5★ BREAKTHROUGH
       const sao = Math.min(LUAT.saoMax, T.sao + them);

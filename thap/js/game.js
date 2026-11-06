@@ -749,9 +749,15 @@ function aiBan(B, dt) {
   if (loai.length && B.mana >= LUAT.giaNangCap[B.lv[loai[0]] - 1] + (oTrong(B).length ? B.gia : 0)) nangCap(B, loai[0]);
 }
 
+// băng thông báo của trận (BOSS INCOMING, băng wave, cut-in) không được nằm đè lên màn kết quả: trận hết thì không còn ai
+// (HUD ngừng cập nhật) đếm ngược / tự tắt chúng → dọn hết khi hiện kết quả
+function anBangTran() {
+  try { if (typeof HT !== 'undefined' && HT.cbAn) HT.cbAn(false); } catch (e) { }
+  for (const s of ['#canh-bao', '#bang-wave', '#cutin']) { const e = document.querySelector(s); if (e) { e.hidden = true; e.classList.remove('chay', 'cb-bao', 'cb-den', 'cb-ra', 'ht-cb', 'ht-bw'); } }
+}
 function ketThuc(thang, ly) {
   if (G.ketThuc) return;
   G.ketThuc = { thang, ly, wave: G.wave };
   SND.ketThuc(thang); SND.nhac(0);
-  setTimeout(() => UI.ketQua(G.ketThuc), 900);
+  setTimeout(() => { anBangTran(); UI.ketQua(G.ketThuc); }, 900);
 }
