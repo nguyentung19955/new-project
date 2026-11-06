@@ -223,8 +223,8 @@ P2.evoBom = function (ctx, T, d, cuoi, al) {
   if (H && H.chuDong) { const cd = H.chuDong; H.chuDong = function (G, B, T) {
     const ok = cd.apply(this, arguments);
     if (ok && P2.M.p2_halo) { // vòm thánh trên ụ: dựng (0–3) → vòm (4–7) → giữ lặp (8–11) suốt thời gian khiên → vỡ thành lông vũ sáng (12–15)
-      const c = tamU(T), d = this.tg(T), w = Math.min(B.cw, B.ch) * 3.2;
-      P2.phat('p2_halo', c.x, c.y, w, [[0, 0.22, 0, 3], [0.22, 0.5, 4, 7], [0.5, d - 0.4, 8, 11, 10], [d - 0.4, d, 12, 15]], d, { add: true, ra: 0.1, a: 0.85 });
+      const c = tamU(T), d = this.tg(T), w = Math.min(B.cw, B.ch) * 2.6;
+      P2.phat('p2_halo', c.x, c.y, w, [[0, 0.22, 0, 3], [0.22, 0.5, 4, 7], [0.5, d - 0.4, 8, 11, 10], [d - 0.4, d, 12, 15]], d, { add: true, ra: 0.1, a: 0.62 }); // mờ: không che ụ đang bắn
     }
     return ok;
   }; }

@@ -5,9 +5,9 @@ import numpy as np, os, json
 from PIL import Image
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 SRC = os.path.join(ROOT, 'docs/demo-hop-tuong/thap-art/'); OUT = os.path.join(ROOT, 'thap/assets/')
-# cỡ khung (px) = 3× cỡ hiển thị CSS lớn nhất (đường kính vùng chiêu trên bàn SOLO 390 px ≈ 80–90 px CSS)
-CO = {'overlord': 256, 'cryo': 256, 'chronolock': 160, 'blackhole': 256, 'evolver': 128, 'rewind': 192, 'orbital': 192,
-      'halo': 256, 'herotile': 160, 'genesis': 160, 'ember': 96, 'copycat': 160}
+# cỡ khung (px): 3× cỡ hiển thị lớn nhất nhưng KHÔNG vượt độ nét ô raw (≈ 300 px/ô) — chiêu to (Overlord, Cryo, Black Hole, Halo) chạm trần raw
+CO = {'overlord': 288, 'cryo': 288, 'chronolock': 192, 'blackhole': 288, 'evolver': 160, 'rewind': 240, 'orbital': 240,
+      'halo': 288, 'herotile': 192, 'genesis': 192, 'ember': 128, 'copycat': 192}
 def khoa(im):
     a = np.asarray(im.convert('RGB')).astype(np.float32)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
@@ -24,19 +24,35 @@ def thu(im, w, h):
     q = np.dstack([np.asarray(c).astype(np.float32) / 255 for c in ch])
     A = q[..., 3:4]; rgb = np.where(A > 1e-4, q[..., :3] / np.maximum(A, 1e-4), 0)
     return Image.fromarray((np.dstack([np.clip(rgb, 0, 1), A]) * 255).astype(np.uint8), 'RGBA')
+# màu nguyên tố của ụ (tools/thap-kt-mau.js): tờ ChatGPT lệch màu → đặt lại SẮC (giữ độ sáng + độ bão hoà, điểm gần trắng giữ trắng)
+SAC = {'overlord': 338, 'blackhole': 278, 'chronolock': 168, 'halo': 46, 'copycat': 268}
+def doiSac(im, h):
+    a = np.asarray(im).astype(np.float32); rgb = a[..., :3] / 255
+    mx = rgb.max(-1); mn = rgb.min(-1); S = np.where(mx > 1e-4, (mx - mn) / np.maximum(mx, 1e-4), 0); V = mx
+    H = np.full(V.shape, h / 60.0); i = np.floor(H) % 6; f = H - np.floor(H)
+    p_, q_, t_ = V * (1 - S), V * (1 - S * f), V * (1 - S * (1 - f))
+    out = np.zeros_like(rgb)
+    for k, (r, g, b) in enumerate([(V, t_, p_), (q_, V, p_), (p_, V, t_), (p_, q_, V), (t_, p_, V), (V, p_, q_)]):
+        m = i == k; out[..., 0][m], out[..., 1][m], out[..., 2][m] = r[m], g[m], b[m]
+    return Image.fromarray(np.dstack([out * 255, a[..., 3]]).astype(np.uint8), 'RGBA')
 meta = {}
 for ten, fw in CO.items():
     p = SRC + 'raw_p2_' + ten + '.png'
     if not os.path.exists(p): continue
-    s = khoa(Image.open(p)); W, H = s.size; cw, ch = W // 4, H // 4
+    s = khoa(Image.open(p))
+    if ten in SAC: s = doiSac(s, SAC[ten])
+    W, H = s.size; cw, ch = W // 4, H // 4
     fr = [s.crop((x * cw + 4, y * ch + 4, (x + 1) * cw - 4, (y + 1) * ch - 4)) for y in range(4) for x in range(4)]
     # bán kính chung quanh TÂM ô (tâm cố định giữa các khung): khung vuông nhỏ nhất chứa mọi điểm alpha > 40
     rx = ry = 1; cx, cy = fr[0].size[0] / 2, fr[0].size[1] / 2
     for f in fr:
         ys, xs = np.where(np.asarray(f)[..., 3] > 40)
         if len(xs): rx = max(rx, abs(xs.min() - cx), abs(xs.max() + 1 - cx)); ry = max(ry, abs(ys.min() - cy), abs(ys.max() + 1 - cy))
-    R = int(min(max(rx, ry) + 2, min(cx, cy)))
-    fr = [thu(f.crop((int(cx - R), int(cy - R), int(cx + R), int(cy + R))), fw, fw) for f in fr]
+    R = int(min(max(rx, ry) + 2, max(cx, cy)))
+    def vuong(f):  # ô không vuông (ember 3:1, copycat 3:2): cắt quanh tâm trong ô rồi đặt giữa khung vuông 2R trong suốt
+        q = Image.new('RGBA', (2 * R, 2 * R), (0, 0, 0, 0)); x0, y0 = max(0, int(cx - R)), max(0, int(cy - R))
+        q.paste(f.crop((x0, y0, min(f.size[0], int(cx + R)), min(f.size[1], int(cy + R)))), (int(R - (cx - x0)), int(R - (cy - y0)))); return q
+    fr = [thu(vuong(f), fw, fw) for f in fr]
     st = Image.new('RGBA', (fw * 16, fw), (0, 0, 0, 0))
     for i, f in enumerate(fr): st.paste(f, (i * fw, 0))
     st.save(OUT + 'p2_' + ten + '.png', optimize=True)
