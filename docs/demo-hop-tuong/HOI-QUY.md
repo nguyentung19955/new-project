@@ -97,3 +97,10 @@ Thêm `tools/thap-kt-nong.js` vào hồi quy (trận SOLO wave 13 chuẩn, 45 s,
 Lần chạy đầu: nút cài đặt "BATTERY SAVER: OFF" tràn khung 6 px (360/390) → đổi chữ "POWER SAVE: OFF". `#canh-bao` "WAVE 10 BOSS"
 tràn 3–4 px 1 lần ở 390 (chụp lúc băng đang hoạt ảnh, không do phiên này) — chạy lại `CHI='menu|solo'` 360+390: XANH; coop/pvp/online 4 cỡ: không lỗi. Sau rebase (cấp thẻ, cộng hưởng 2): đủ 4 cỡ XANH (CPU/khung 19,0 ms).
 - 07/11 một màn tải duy nhất + Service Worker (tai_1lan): 4 cỡ — chỉ 1 lỗi "chữ tràn .ci-chu" ở 360x780 solo_trum (cutin chập chờn đã biết) → chạy lại `SIZES=360x780x3 CHI=solo`: XANH. Sửa thêm: skilldemo.js nạp 2 lần (DOMContentLoaded phát 2 lần) → "SD already declared" ở kéo-thả 360px.
+
+## 2026-11-06 — (chống nóng 4G) bước "mang" + Firebase ngắt khi đánh offline
+Thêm `tools/thap-kt-mang.js` (trận SOLO: ≤ 1 yêu cầu/phút, ≤ 8 KB/phút, không WebSocket; Firebase giả: goOffline khi đánh, goOnline ở menu).
+Hồi quy trên nhánh làm việc: ĐỎ vì việc của phiên khác (ụ vàng mới đợt 1/2 dùng đầu tạm → `thap-dau-giong.py` báo 5 cặp "ĐẦU GIỐNG"), không do net.js.
+Vì vậy bản xuất bản lần này = **bản đã xuất bản ac3a8b6 + chỉ js/online/net.js mới** (thap-ver.py chạy lại). Hồi quy trên bản đó: mạng ✓,
+sảnh online (Firebase giả + SDK thật, có theoDoiNgu) ✓, nóng/kéo/cộng hưởng ✓; các ✗ "ảnh mờ" là nợ ảnh đã biết — mốc `thap-kt-hoiquy-mo.json`
+không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). Ụ vàng đợt 2 chưa có trong bản xuất bản → kiểm của nó ✗ là đúng.
