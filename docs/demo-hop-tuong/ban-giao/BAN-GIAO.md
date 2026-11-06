@@ -85,3 +85,22 @@ Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ
 - Còn để đợt sau trong DE-XUAT §6: Bàn Poker (thay Quantum Choir), Ổ Mẹ (thay Fusion Archive), Máy Nghiêng Bàn 2048, Hộp Láng Giềng, Nỏ Nhịp Chung, ụ mới (Đồng Xu / Gương / Ký Sinh / Domino).
 
 **Đang chạy:** chuyển động ụ `trig_01Dhk2WW…`, 3 quyết định power-up/trần/Evolver `trig_01JhhwXL…`, gắn P3 (gần xong), icon (gần xong), cân bằng giới hạn `trig_017qHBP9…`, cơ chế mới đợt 1 `trig_01NL75Vc…`.
+
+### 07/11 06:15 (giờ VN) — NGƯỜI DÙNG YÊU CẦU DỪNG / TẠM HOÃN
+Đã ghi `ban-giao/DUNG-LAI.md` (bảo các phiên đang chạy dừng, không xuất bản). Đã tắt lịch kiểm tra định kỳ. Không thể tắt cưỡng bức phiên cloud từ phiên điều phối — phiên nào đang chạy có thể vẫn làm nốt.
+
+**Đã LIVE:** mục IX (`7458242`), icon app + manifest PWA (`3d05d02`).
+
+**Đã xong code nhưng CHƯA LIVE (lần sau chỉ cần 1 phiên xuất bản + kiểm hồi quy):**
+- VFX P3 đợt 2 — 20 tờ ChatGPT gắn vào game (`38e6925`, `0480705`).
+- Chuyển động ụ (anim.js: thở lõi, tụ lực, giật/hồi theo sự kiện bắn thật, cửa nòng, 13 kiểu) (`b1803e6`). Cần kiểm: ụ hỗ trợ KHÔNG bắn (`tuvan/anim/YEU-CAU-THEM.md`); 4 hình `raw_anim_*` đã tải (`d1d298c`) nhưng có thể chưa gắn.
+- 3 quyết định: power-up nâng số kỹ năng thật cho 10 ụ không sát thương, cấp thẻ nới trần hỗ trợ, Evolver mất sao đếm lại (`f8ab58b`) — kiểm xem phiên đã làm đủ chưa.
+
+**Đang dở (phiên có thể vẫn chạy khi bàn giao — kiểm list_triggers / git log):**
+- Cân bằng giới hạn sức mạnh (làm hết theo khuyên dùng, trừ Ember) — `trig_017qHBP9YbuJ6aQ1xx5x2FQe`. Đánh dấu "Đã làm" trong `tuvan/gioi-han/BAO-CAO.md`.
+- Cơ chế mới đợt 1: Lửa Thập Tự / Pháo La Bàn (thay Cannon, ngược hướng trừ + sóng nổ) / Drone Kéo Xa — `trig_01NL75Vcu1n5v4KP6iwjCvBz`. Đã ghi `tuvan/co-che-moi/CAN-VE.json` (`36e5e16`): huy hiệu mũi tên 4 hướng, đầu Pháo La Bàn, 3 dải VFX — **CHƯA vẽ** (phải vẽ bằng ChatGPT rồi tải lên `thap-art/`).
+- Gắn P3 `trig_01SBUxb3…` — đã commit xong, chỉ còn xuất bản.
+
+**Việc chờ (chưa mở):** cơ chế mới đợt 2 theo `tuvan/co-che-moi/DE-XUAT.md` §6 (Bàn Poker, Ổ Mẹ, 2048, Hộp Láng Giềng, Nỏ Nhịp Chung, ụ mới).
+
+**Khi tiếp tục:** xoá `ban-giao/DUNG-LAI.md`; xem git log từ `d301d0f`; xuất bản phần đã xong (kiểm hồi quy); vẽ CAN-VE cơ chế mới; mở lại phiên nào chưa xong.
