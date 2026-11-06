@@ -193,7 +193,7 @@ async function moTran(b, mode, deck) {
   ok(r.d50 > 3 && r.d49 < 0.01 && r.lai === r.d50, 'Star Cannon: mốc 50★ theo tổng HIỆN TẠI — tụt còn 49★ mất thưởng, lên lại có lại', JSON.stringify(r));
   ok(r.can[0] < r.can[1] && r.can[1] < r.can[2], 'Evolver: sao cao chờ lâu hơn', JSON.stringify(r.can));
   ok(r.e7[0] === 'tienhoa' && r.e7[1] === 7 && r.e7[2] === 0 && r.e7[3] && r.e7[4] === 0 && r.e7[5] === 0, 'Evolver 7★: bom XỊT — không đổi, không 8★, đếm dừng, KHÔNG hoàn mana / không tác dụng', JSON.stringify(r.e7));
-  ok(r.ha[0] === 6 && !r.ha[1] && r.ha[2] === 0 && r.ha[3] > 40 && r.haBien[0] && r.haBien[0] !== 'tienhoa' && r.haBien[1] === 7, 'Evolver 7★ xịt bị giảm sao → đếm lại từ đầu → biến đổi', JSON.stringify([r.ha, r.haBien]));
+  ok(r.ha[0] === 6 && !r.ha[1] && r.ha[2] === 0 && r.ha[3] >= Math.round(r.can[2]) - 1 && r.haBien[0] && r.haBien[0] !== 'tienhoa' && r.haBien[1] === 7, 'Evolver 7★ xịt bị giảm sao → đếm lại từ đầu → biến đổi', JSON.stringify([r.ha, r.haBien]));
   ok(r.chep[0] === 'tienhoa' && r.chep[1] && r.chep[2], 'Copycat chép Evolver 7★ → cũng xịt như Evolver', JSON.stringify(r.chep));
   ok(!/salvage|refund|mana/i.test(r.txt), 'Evolver: chữ không còn "hoàn mana"', r.txt);
   ok(r.e6 === 7, 'Evolver 6★ (5★ BREAKTHROUGH +2): tối đa 7★', String(r.e6));
