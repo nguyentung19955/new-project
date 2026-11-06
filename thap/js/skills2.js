@@ -381,7 +381,7 @@ SKILLS.hutmana = { // Máy Hút Mana (Elizabeth) — TẤN CÔNG (đợt vai tr�
 SKILLS.min = { // Bệ Rải Mìn (Ptah): rải mìn trên đường; đôi khi mìn sao (×3)
   vai: 'tc', dmg: 9, toc: 1, napMau: '#ffb35a',
   ky: (T) => Math.max(2, 4 - 0.2 * T.sao),
-  mo: (T) => 'Mine ×7 every ' + SKILLS.min.ky(T).toFixed(1) + ' s · ' + (3 + 0.5 * (T.sao - 1)).toFixed(1) + '% star mine ×3',
+  mo: (T) => 'Mine ×7 every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + ' s · ' + (3 + 0.5 * (T.sao - 1)).toFixed(1) + '% star mine ×3',
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B);
     const E = ds.length ? ds[0] : null;

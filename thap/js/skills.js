@@ -45,7 +45,7 @@ SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định k�
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
   dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
-  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (bosses 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity',
+  mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big enemies ×0.6, bosses 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
   capNhat(G, B, T, dt) {
     const ds = this.ung(G, B);

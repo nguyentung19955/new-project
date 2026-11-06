@@ -43,6 +43,7 @@
 
 /* bảng tên */
 .up-bien { padding: 12px 0 10px; border-bottom: 1px solid transparent; }
+.up-tenvi { font-family: var(--f-ui); font-size: 14px; font-weight: 700; line-height: 1.1; color: #e9e2cf; opacity: .85; margin: 1px 0 2px; white-space: nowrap; }
 .up-ten { font-family: var(--f-display); font-size: 30px; font-weight: 800; line-height: 1.05; color: var(--m); white-space: nowrap; overflow: hidden; }
 .up-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .up-chip { height: 22px; padding: 0 9px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; background: #2c3037; border: 1px solid transparent; }

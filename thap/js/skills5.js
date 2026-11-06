@@ -430,7 +430,7 @@ HU.rongBo = { // DRAGON DIVE: bóng rồng bay dọc đường (lõi → cổng)
 // đăng ký: họ kỹ năng, mốc sao riêng, grow-up 3 giai đoạn, nhịp hiển thị
 // =====================================================================================================
 themHo('summon', 4, 'chuato', 'a swarm of hunter drones + SWARM kamikaze (active)');
-themHo('heavy', 4, 'leviathan', 'devours enemies for endless stacks + TIDAL BREATH (active)');
+themHo('heavy', 4, 'leviathan', 'devours enemies for damage stacks (max 100) + TIDAL BREATH (active)');
 themHo('star', 4, 'khoisinh', 'raises your weakest turret over time + GENESIS (active)');
 themHo('blast', 4, 'ronglua', 'flame cone that burns crowds + DRAGON DIVE (active)');
 

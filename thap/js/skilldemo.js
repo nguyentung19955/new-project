@@ -22,7 +22,8 @@ Math.random = function () {
 };
 
 // ===================================================== chữ ngắn =====================================================
-const sdSC = (s) => { s = String(s || '').replace(/grow-?up\s*/ig, '').replace(/\bawaken(ed|s)?\b\s*/ig, '').replace(/\s+/g, ' ').trim(); return s.charAt(0).toUpperCase() + s.slice(1); };
+// (không xoá chữ "Awaken…": đó là tên trạng thái thật của Sói / Vệ Tinh — xoá đi làm câu thành ": always crits")
+const sdSC = (s) => { s = String(s || '').replace(/grow-?up\s*/ig, '').replace(/\s+/g, ' ').trim(); return s.charAt(0).toUpperCase() + s.slice(1); };
 function sdNgan(s) { // ≤ 6 từ, cắt ở dấu câu
   s = String(s).replace(/\b[A-Z]{2,}\b/g, (w) => ({ HP: 'HP', PVP: 'PvP' }[w] || w.toLowerCase()));
   s = sdSC(s.split(/;|\s\(|\s·\s|\s—\s/)[0]);
@@ -70,6 +71,20 @@ const sdLaRed = (id) => G.rosterMap[id] && G.rosterMap[id].bac === 'do';
 // truoc(T, B): chỉnh bộ đếm để kỹ năng định kỳ nổ sớm · lien: đánh số thứ tự trúng · mana: hiện ô mana · day: không làm mờ cột rìa
 // demo Star Cannon: lấp ô trống bằng Chain (★ tuỳ chọn) tới đúng tổng ★ n trên bàn → hiện mốc tốc (20) rồi mốc sát thương (50)
 function sdNgoiSao(B, n) { for (let o = 0; o < B.t.length; o++) { const k = n - SKILLS.ngoisao.tong(B); if (k <= 0) break; if (!B.t[o]) { const T = sinhU(taoU(B, 'lien', Math.min(7, k), o)); B.t[o] = T; T.goc = -Math.PI / 2; T.gd = null; } } }
+// đặt thêm ụ vào ô trống giữa clip (hiệu ứng triệu hồi thật) + hiện chỉ số ụ chính trước → sau (k: 'dmg' | 'toc')
+function sdThem(B, ds, T, k) {
+  const v0 = T && k ? sdSo(T, k) : null;
+  for (const [o, x, sao] of ds) { if (B.t[o]) continue; const N = sinhU(taoU(B, x, clamp(sao | 0, 1, 7), o)); B.t[o] = N; N.goc = -Math.PI / 2; VX.trieu(N); }
+  if (v0 != null) VX.hen(0.45, () => { if (B.t[T.o] === T) SD.soDoi = { o: T.o, a: v0, b: sdSo(T, k), ic: k === 'toc' ? 'ic_toc' : 'ic_dmg', t0: performance.now() }; });
+}
+// Hex Saboteur: chọn lượt nguyền (B.hexN) mà cú gieo THẬT của kỹ năng (SK7.rng) trúng — clip hiện ca may mắn, chú thích nói rõ xác suất
+function sdHexTrung(B, T, o) {
+  if (!T || typeof SK7 === 'undefined') return;
+  const p = SKILLS.nguyenrua.p(T);
+  for (let n = 1; n < 400; n++) { const r = SK7.rng(B, o, n, 2); r(); if (r() < p) { B.hexN = n - 1; return; } }
+}
+// Hero Foundry: % tốc của ô anh hùng vừa dập (giá trị thật trong B.hero — tính theo sao Foundry ghép, không theo ụ ra)
+function sdHero(T) { const B = G.ban[T.ban] || G.ban[0], h = B && B.hero && B.hero[B.hero.length - 1]; return h ? h.v : SKILLS.xuonganh.v(T); }
 const SD_K = {
   canon: { q: Q.nhom(5, 175), c: [[0.2, 'Fires slow explosive shells'], [1.2, 'Blast hits the whole group', { ev: 'hit', cham: 0.5 }]] },
   xucxac: { q: Q.hang(3, 170, 50, 6), may: [5, 5.8], c: [[0.2, 'Each shot rolls 3–300% damage'], [1.5, 'Watch the numbers jump', { ev: 'hit', cham: 0.4 }], [4.8, 'Crits always roll the max', { ev: 'hit', cham: 0.5 }]] },
@@ -77,17 +92,17 @@ const SD_K = {
   phun: { q: Q.nhom(6, 185, 24, 6), c: [[0.2, 'Sprays bullets at random enemies'], [1.6, 'Every enemy gets peppered', { ev: 'hit', cham: 0.4 }]] },
   sungluc: { q: Q.hang(3, 170, 55, 2), c: [[0.2, 'One heavy shot, instant hit'], [0.8, 'Hits the lead enemy', { ev: 'hit', cham: 0.5 }]] },
   bang: { q: Q.hang(4, 180, 40, 8), truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Freezes the lead enemy'], [1.3, (T) => 'Frozen ' + SKILLS.bang.dai(T) + 's, no damage, no chain', { cham: 0.6 }], [4.6, 'Next freeze picks a new enemy']] },
-  doc: { q: Q.nhom(4, 175, 22, 9), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Marks the lead enemy'], [1.4, 'Marked: +12% damage from all', { ev: 'hit', cham: 0.6 }]] },
+  doc: { q: Q.nhom(4, 175, 22, 9), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Marks the lead enemy'], [1.4, (T) => 'Marked: +' + +knThe(G.ban[T.ban], 'doc').toFixed(1) + '% damage from all', { cham: 0.6 }]] },
   tia: { q: Q.to(6), c: [[0.2, 'Picks the toughest enemy'], [1.0, '+100% damage vs big enemies', { ev: 'hit', cham: 0.6 }]] },
   set: { q: Q.hang(7, 205, 28, 5), lien: 1, c: [[0.2, 'Lightning jumps between enemies'], [1.0, (T, s) => 'Chains to ' + s + (s > 1 ? ' enemies' : ' enemy'), { ev: 'hit', cham: 0.6 }]] },
   maychem: { q: Q.nho(), may: [3.2, 4.4], c: [[0.2, 'Shoots the lead enemy'], [3.0, 'Can instantly kill small enemies', { ev: 'kill', cham: 0.6 }]] },
-  phagiap: { kieu: 'ht', truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Exposes the lead and toughest'], [1.4, (T) => 'Neighbours deal +' + Math.round(SKILLS.phagiap.k(T) * 100) + '% to exposed', { ev: 'hit', cham: 0.5 }]] },
+  phagiap: { kieu: 'ht', truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Exposes the lead and toughest'], [1.4, (T) => 'Neighbours deal +' + Math.round(SKILLS.phagiap.k(T) * 100) + '% to exposed', { cham: 0.5 }]] },
   bua: { kieu: 'ht', may: [1.6, 3.2, 'ke'], c: [[0.2, 'Boosts neighbours’ crits'], [1.6, 'Crits hit harder and stagger', { cham: 0.6 }]] },
   nam: { o: 2, q: Q.nhom(5, 175, 16, 8), c: [[0.2, 'Melee: only hits enemies nearby'], [1.6, 'Ring blasts hit all around', { ev: 'hit', cham: 0.5 }]] },
   bomhen: { q: Q.hang(4, 170, 34, 8), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Sticks a bomb on an enemy'], [1.2, 'It goes off after 5 seconds'], [5.5, 'Blast weakens: +10% damage taken', { cham: 0.6 }]], dai: 9.4 },
   nhanmana: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Mana Doublers'], [2.5, 'Merging gives bonus mana', { ev: 'mana', cham: 0.6 }]] },
-  kiembang: { q: Q.nhom(4, 170, 22, 12), c: [[0.2, 'Each hit chills nearby enemies'], [1.4, 'Slowed enemies take ×5 damage', { ev: 'hit', cham: 0.6 }]] },
-  mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, 'Result gets +50% attack', { ev: 'moi', cham: 0.6 }]] },
+  kiembang: { q: Q.nhom(4, 170, 22, 12), c: [[0.2, 'Each hit chills nearby enemies'], [1.4, (T) => 'Slowed enemies take ×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage', { ev: 'hit', cham: 0.6 }]] },
+  mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, (T) => 'Result gets +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack', { ev: 'moi', cham: 0.6 }]] },
   dichchuyen: { o: 2, q: Q.nhom(4, 170, 18, 9), ke: [[12, 'nam', 's']], keo: [2.6, 2, 12], c: [[0.2, 'Iron Fist is too far away'], [1.6, 'Drag onto a same-star turret'], [2.6, 'They swap places', { cham: 0.6 }], [4.2, 'Now it reaches the enemies']] },
   drone: { kieu: 'ghep', q: Q.hang(4, 175, 40, 5), c: [[0.2, 'Merge two Drone Bays'], [2.5, 'Merging launches bomb drones', { cham: 0.5 }], [4.4, 'Drones fly up the path']] },
   tron: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'set', 's'], [12, 'sungluc', 's']], c: [[0.2, 'Four different Attack types'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
@@ -104,36 +119,43 @@ const SD_K = {
   lienket: { q: Q.hang(3, 175, 50, 6), ke: [[6, 'lienket', 's'], [8, 'lienket', 's']], c: [[0.2, 'Linked twins power each other'], [1.4, (T) => 'Chain of ' + (T.chuoi || 3) + ': +' + Math.round(0.4 * ((T.chuoi || 3) - 1) * 100) + '% damage', { ev: 'hit', cham: 0.5 }]] },
   kepha: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Jammers'], [2.5, 'Rival turrets get clamped', { cham: 0.6 }], [4.0, 'Clamped: −40% fire rate']] },
   taylo: { kieu: 'ht', dong: [2, 6], truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Two neighbours are frozen'], [1.8, 'Its pulse cleanses them', { cham: 0.7 }]] },
-  khien: { kieu: 'ht', q: Q.trum('nightmare', 3.4, 80), truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Charges neighbours’ shields'], [1.4, 'Neighbours get a 1-hit shield', { cham: 0.5 }], [3.4, 'The boss aims a skill…'], [4.6, 'A shield blocks it', { ev: 'chan', cham: 0.6 }]], dai: 9 },
+  khien: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', (s) => Math.min(7, s + 1)], [12, 'canon', 's']], q: Q.trum('freezer', 3.4, 80), truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Charges neighbours’ shields'], [1.4, 'Neighbours get a 1-hit shield', { cham: 0.5 }], [3.4, 'The boss aims a skill…'], [4.6, 'A shield blocks it', { ev: 'chan', cham: 0.6 }]], dai: 9 },
   hopbi: { kieu: 'phu', dem: (T) => SKILLS.hopbi.can(T) - T.tuoi, truoc: (T) => { T.tuoi = SKILLS.hopbi.can(T) - 3.2; }, c: [[0.2, 'Counts down, then opens'], [3.0, (T, s) => 'Becomes a random ' + (s >= 7 ? 5 : s >= 5 ? 3 : 1) + '–' + (s >= 7 ? 7 : 6) + '★ turret', { ev: 'moi', cham: 0.6 }]] },
   nangsao: { kieu: 'ht', ke: [[2, 'lien', 1], [6, 'canon', 3], [8, 'set', 1], [12, 'sungluc', 4]], c: [[0.2, 'Finds its 2 lowest-star neighbours'], [1.6, (T) => 'They get +' + sdBuf(T) + ' fire rate', { cham: 0.5 }]] },
   xaotron: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], c: [[0.2, 'Merge two Scramblers'], [2.5, 'Rival turrets get shuffled', { cham: 0.7 }], [4.0, 'Their board layout breaks']] },
-  epxung: { kieu: 'gDB', ban: 'lien', so: { o: 8, k: 'toc' }, c: [[0.2, 'Drag onto a same-star turret'], [2.5, '+90% fire rate, it stacks', { cham: 0.6 }]] },
+  epxung: { kieu: 'gDB', ban: 'lien', so: { o: 8, k: 'toc' }, c: [[0.2, 'Drag onto a same-star turret'], [2.5, (T) => '+' + +knThe(G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate, it stacks', { cham: 0.6 }]] },
   no5: { q: Q.nhom(5, 175, 20, 9), c: [[0.2, 'Counts its shots'], [1.0, '5th shot fires 3 exploding bolts', { ev: 'shot%5', cham: 0.7 }]] },
   bao: { q: Q.hang(6, 200, 30, 10), may: [2.4, 3.6], lien: 1, c: [[0.2, 'Instant hits, very fast'], [2.3, 'Some hits arc to another', { ev: 'hit', cham: 0.5 }]] },
   anhsang: { q: Q.hang(3, 170, 50, 6), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Light orbs charge up'], [1.4, 'Summons a free 1★ turret', { ev: 'moi', cham: 0.6 }]] },
   aten: { q: Q.nhom(4, 175, 22, 5), ke: [[6, 'doc', 's']], c: [[0.2, 'Venom poisons, Purifier punishes'], [1.6, '×4 damage vs poisoned', { ev: 'hit', cham: 0.5 }], [3.4, 'Kills explode on nearby enemies', { ev: 'kill', cham: 0.5 }]] },
-  dongbo: { kieu: 'ht', ke: [[0, 'lien', 's'], [4, 'canon', 's'], [8, 'set', 1], [14, 'sungluc', 's'], [11, 'tia', 's']], c: [[0.2, 'Finds same-star Attack turrets anywhere'], [1.6, 'All of them deal more damage', { cham: 0.4 }], [3.4, 'PvP: rival turrets deal a bit less']] },
-  railgun: { day: 1, q: Q.hang(3, 175, 50, 8), ke: [[5, 'railgun', 's'], [6, 'railgun', 's'], [8, 'railgun', 's'], [9, 'railgun', 's'], [2, 'railgun', 's'], [12, 'railgun', 's']], c: [[0.2, 'A full row of Railguns: +damage'], [1.6, 'A full column of Railguns: faster fire', { cham: 0.5 }], [3.2, 'Other turrets don\'t count', { ev: 'hit', cham: 0.5 }]] },
-  vughep: { kieu: 'gDB', ban: 'canon', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Target gets +1★, keeps type', { ev: 'sao', cham: 0.6 }]] },
-  sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merging adds a same-star twin', { ev: 'moi', cham: 0.6 }], [4.2, 'Sometimes the twin is +1★']] },
-  hasao: { kieu: 'ht', them: [[4.0, (B, D, T) => { if (!T) return; T.da5Dau = 1; T.w5 = -1; const N = B.t.find(X => X && X !== T && SKILLS[X.id].vai === 'tc'); if (N && N.sao < 5) nangSao(B, N, 5 - N.sao); }]], c: [[0.2, 'Boosts Attack neighbours'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }], [4.0, 'PvP: punishes a rival’s first 5★']] },
-  saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Becomes a copy (half damage)', { cham: 0.6 }]] },
+  dongbo: { kieu: 'ht', day: 1, ke: [[0, 'lien', 's'], [4, 'canon', 's'], [8, 'set', (s) => s >= 3 ? s - 2 : s + 2], [14, 'sungluc', 's'], [11, 'tia', 's']], c: [[0.2, 'Finds same-star Attack turrets anywhere'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage, no need to touch', { cham: 0.4 }], [3.4, 'A different star gets nothing'], [4.8, (T) => 'PvP: rival turrets deal −' + Math.round(SKILLS.dongbo.giamPvp(T) * 100) + '% damage']] },
+  railgun: { day: 1, q: Q.hang(3, 175, 50, 8), ke: [[5, 'railgun', 's'], [6, 'railgun', 's'], [8, 'railgun', 's'], [9, 'railgun', 's'], [2, 'railgun', 's'], [12, 'railgun', 's']],
+    them: [[3.2, (B, D, T) => { if (!T || !B.t[6] || B.t[6].id !== 'railgun') return; B.t[6] = null; sdThem(B, [[6, 'canon', T.sao]], T, 'dmg'); }]],
+    c: [[0.2, () => 'A full row of Railguns: +' + Math.round(SKILLS.railgun.BINGO_DMG * 100) + '% damage'], [1.6, () => 'A full column of Railguns: +' + Math.round(SKILLS.railgun.BINGO_TOC * 100) + '% fire rate', { cham: 0.5 }], [3.2, 'Swap one for another turret…', { cham: 0.6 }], [4.4, 'The row bonus is gone: Railguns only']] },
+  vughep: { kieu: 'gDB', ke: [[8, 'canon', 's'], [12, 'vughep', 's'], [13, 'lien', 's']], keo: [[2.5, 7, 8], [4.6, 12, 13]],
+    truoc: (T, B) => { if (T) T.vang = false; const K = B.t[12]; if (K) K.vang = true; }, // vang = kết quả gieo khi xuất hiện (knThe 'vughep' %): clip cho xem cả 2 ca, chú thích nói xác suất
+    c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Target gets +1★, keeps type', { ev: 'sao', cham: 0.6 }], [3.6, (T) => Math.round(knThe(G.ban[T.ban], 'vughep')) + '% chance a Merge King is Golden'], [4.6, 'Golden King: target +2★', { ev: 'sao', cham: 0.6 }]], dai: 9 },
+  sinhdoi: { kieu: 'ghep', c: [[0.2, 'Merge two Twin Makers'], [2.5, 'Merging adds a same-star twin', { ev: 'moi', cham: 0.6 }], [4.2, (T) => Math.round(knThe(G.ban[T.ban], 'sinhdoi') || 10) + '% chance the twin is +1★']] },
+  hasao: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', 's'], [12, 'sungluc', 4]],
+    them: [[4.0, (B, D, T) => { if (!T) return; T.da5Dau = 1; T.w5 = -1; const N = B.t[12]; if (N && N.sao < 5) nangSao(B, N, 5 - N.sao); }]], // ô 12 luôn 4★ → lên 5★ thật = lần 5★ đầu của wave
+    c: [[0.2, 'Boosts Attack neighbours'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }], [4.0, 'First 5★ of the wave: weakest +8% fire rate', { ev: 'sao', cham: 0.6 }], [5.4, 'PvP: the rival’s first 5★ −8% fire rate']] },
+  saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, (T) => 'Becomes a copy at ' + Math.round(heSaoChep(G.ban[T.ban]) * 100) + '% power', { cham: 0.6 }]] },
   ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], them: [[1.6, (B) => sdNgoiSao(B, 20)], [3.2, (B) => sdNgoiSao(B, 50)]], c: [[0.2, 'Counts every star on the board'], [1.6, 'Every 10★: faster fire', { cham: 0.5 }], [3.2, 'Every 50★: more damage']] },
-  soi: { o: 2, q: Q.nhom(5, 175, 18, 6), ke: [[4, 'soi', 's']], truoc: (T, B) => { const g = SD.gd; if (T) { T.thuc = g === 3; T.gd = null; } const W = B && B.t[4]; if (W) { W.thuc = g ? g === 3 : true; W.gd = null; } }, c: [[0.2, 'Each Werewolf is Normal or Awakened'], [1.6, 'Awakened: always crits, faster', { ev: 'hit', cham: 0.5 }], [3.4, 'Card level raises the Awakened chance']] },
+  soi: { o: 2, q: Q.nhom(5, 175, 18, 6), ke: [[3, 'soi', 's']], truoc: (T, B) => { const g = SD.gd; if (T) { T.thuc = g === 3; T.gd = null; } const W = B && B.t[3]; if (W) { W.thuc = g ? g === 3 : true; W.gd = null; } }, // thuc = kết quả gieo tiLe khi xuất hiện: clip ép 1 Thường + 1 Thức tỉnh, chú thích nói xác suất thật
+    c: [[0.2, 'Each Werewolf is Normal or Awakened'], [1.6, 'Awakened: always crits, faster', { ev: 'hit', cham: 0.5 }], [3.4, (T) => 'Each summon or merge: ' + Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% chance to awaken']] },
   tienhoa: { kieu: 'phu', truoc: (T) => { if (T.sao < 7) T.tuoi = SKILLS.tienhoa.can(T) - 4.2; }, c: [[0.2, (T, s) => s >= 7 ? 'Max 7★: the bomb fizzles' : 'Time bomb counts down'], [4.3, (T, s) => s >= 7 ? 'Just a 7★ turret: no skill' : 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] }, // bom hẹn giờ trên ụ (growfx veEvoBom) — không cần số đếm riêng của clip
   cauvong: { kieu: 'ht', q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Paints a rainbow trail'], [1.6, 'Enemies on it take more damage', { cham: 0.5 }], [3.4, 'PvP: it paints the rival\'s path instead']] },
-  wallgen: { q: Q.dong(6, 0.55, 12), truoc: (T) => { T.nap = 0.7; }, them: [[4.6, (B, D, T) => { if (T) SKILLS.wallgen.ghep(G, B, T, T); }]], c: [[0.2, 'Raises a wall on the path'], [2.6, 'Wall stops enemies, then explodes', { cham: 0.6 }], [4.6, 'Merging it: a GOLDEN WALL', { cham: 0.6 }]], dai: 11 },
-  orbital: { kieu: 'ghep', q: Q.hang(4, 175, 40, 10), ke: [[2, 'orbital', 's'], [12, 'orbital', 's']], c: [[0.2, 'Merge two Orbitals'], [2.5, 'Every Orbital on the board awakens', { cham: 0.5 }], [4.2, 'Awakened: area bomb salvos']] },
+  wallgen: { kieu: 'ghep', q: Q.dong(6, 0.55, 12), ke: [[8, 'wallgen', 's']], keo: [4.6, 7, 8], truoc: (T) => { T.nap = 0.7; }, c: [[0.2, 'Raises a wall on the path'], [2.6, 'Wall stops enemies, then explodes', { cham: 0.6 }], [3.6, 'Merge two Wall Projectors'], [4.6, 'Merging: a Golden Wall, ×6 blast', { cham: 0.6 }]], dai: 11 },
+  orbital: { kieu: 'ghep', q: Q.hang(4, 175, 40, 10), ke: [[2, 'orbital', 's'], [12, 'orbital', 's']], c: [[0.2, 'Merge two Orbitals'], [2.5, (T) => 'Every Orbital on the board awakens for ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's', { cham: 0.5 }], [4.2, 'Awakened: area bomb salvos']] },
   blackhole: { q: Q.nhom(6, 190, 24, 14), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Opens a black hole'], [1.4, 'Pulls enemies in and crushes', { cham: 0.7 }]] },
   overlord: { q: Q.nhom(6, 190, 22, 10), truoc: (T) => { T.nap = 0.55; }, c: [[0.2, 'Slowly charges a thunder blast'], [2.6, 'Huge blast hits the group', { ev: 'hit', cham: 0.7 }]] },
-  lophanung: { kieu: 'ht', q: Q.nhom(5, 180, 22, 30), cham: [4.0], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Cold aura slows nearby enemies'], [1.6, 'Neighbours hit slowed enemies harder', { cham: 0.5 }], [4.0, 'Tap when charged: freeze all', { cham: 0.7 }]] },
+  lophanung: { kieu: 'ht', q: Q.nhom(5, 180, 22, 30), cham: [4.0], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Cold aura slows nearby enemies'], [1.6, 'Neighbours hit slowed enemies harder', { cham: 0.5 }], [4.0, 'Tap when charged: freeze nearby', { cham: 0.7 }]] },
   haoquang: { q: Q.trum('freezer', 2.0, 90), cham: [3.0], truoc: (T) => { T.nap = 1; T.napDay = -99; }, c: [[0.2, 'Does not shoot: charges a barrier'], [2.0, 'The boss aims a skill…'], [3.0, 'Tap: team barrier, boss skill weakened', { cham: 0.7 }]], dai: 9 },
   nayda: { q: Q.hang(7, 205, 30, 6), lien: 1, c: [[0.2, 'Disc bounces between enemies'], [1.0, (T, s) => 'Bounces ' + s + (s > 1 ? ' times' : ' time') + ', stronger each', { ev: 'hit', cham: 0.7 }]] },
   combo: { kieu: 'ghep', ke: [[2, 'combo', 's']], c: [[0.2, 'Merge two Combo Cores'], [2.5, 'Every Combo Core powers up', { cham: 0.6 }]] },
-  khoathoigian: { q: Q.hang(3, 175, 50, 12), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Freezes the lead enemy in time'], [1.2, 'Damage is stored while locked', { cham: 0.5 }], [2.6, 'Release: stored damage bursts', { ev: 'hit', cham: 0.5 }]] },
+  khoathoigian: { kieu: 'tc', q: Q.hang(3, 175, 50, 12), truoc: (T) => { T.nap = 0.86; }, c: [[0.2, 'Freezes the lead enemy in time'], [1.2, 'Damage is stored while locked', { cham: 0.5 }], [2.6, 'Release: stored damage bursts', { ev: 'hit', cham: 0.5 }]] },
   hydra: { q: Q.hang(7, 205, 28, 7), lien: 1, c: [[0.2, (T, s) => s >= 7 ? 'Barrels fuse into a beam' : s + (s > 1 ? ' barrels' : ' barrel') + ', different targets'], [1.2, (T, s) => s >= 7 ? 'Pierces the whole line' : 'Each barrel picks its own', { ev: 'hit', cham: 0.6 }]] },
-  cuuvi: { q: Q.dong(9, 0.4, 1), truoc: (T) => { T.duoi = 6; }, c: [[0.2, 'Kills grow fire tails'], [1.8, '9 tails: homing foxfires', { cham: 0.7 }]] },
+  cuuvi: { kieu: 'tc', q: Q.dong(9, 0.4, 1), truoc: (T) => { T.duoi = 6; }, c: [[0.2, 'Kills grow fire tails'], [1.8, '9 tails: homing foxfires', { cham: 0.7 }]] },
   pandora: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Pandora Vaults'], [2.5, 'The vault spins…', { cham: 0.8 }], [3.5, () => SD.pdr ? 'Vault opens: ' + SD.pdr.toLowerCase().replace('×3', '') .trim() : 'Opens 1 of 6 big effects', { cham: 0.5 }]] },
   luoicheo: { kieu: 'ht', ke: CHEO4.map((o, i) => [o, i % 2 ? 'canon' : 'lien', 's']), c: [[0.2, 'Buffs the 4 diagonal cells'], [2.0, 'All 4 filled: resonance', { cham: 0.5 }]] },
   ngaithoigian: { q: Q.nhom(5, 200, 26, 30), cham: [4.2], truoc: (T) => { T.nap = 0.92; T.napDay = -99; }, c: [[0.2, 'Enemies slow down over time'], [4.2, 'Tap: rewind pushes enemies back', { cham: 0.7 }]], dai: 9 },
@@ -156,8 +178,36 @@ const SD_K = {
   chimang: { may: [2.0, 3.6, 'ke'], c: [[0.2, 'Gives 4 neighbours crit chance'], [2.0, 'Crits deal double damage', { cham: 0.5 }]] },
   radar: { c: [[0.2, 'Speeds up 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
   lanhgia: { c: [[0.2, 'Neighbours’ shots also slow'], [1.6, 'Slow spreads to every target', { cham: 0.5 }]] },
-  khuech: { c: [[0.2, 'Buffs the 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
+  khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may execute'], [2.2, 'Low-HP enemies are reaped', { ev: 'kill', cham: 0.6 }]] },
+  // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
+  // Ember Relay: ghép ở ô 8 → Relay ở ô kề 3 & 13 nhận 1 lửa thật (SKILLS.lualien.ghep); ô 13 đã có 4 lửa → đủ 5 (lõi lửa)
+  lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' }, truoc: (T, B) => { if (B.t[13]) B.t[13].lc = 4; },
+    c: [[0.2, 'Merge two Ember Relays'], [2.5, 'Relays next to it catch a flame', { cham: 0.6 }], [3.9, (T) => 'Each flame: +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, +3% crit'], [5.0, '5 flames: full blaze']] },
+  // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
+  hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
+    them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
+    c: [[0.2, (T) => 'Counts other ' + T.sao + '★ turrets on your board'], [2.0, (T) => 'Each match: +' + VM1.pct(SKILLS.hopca.moi(T)) + '% damage', { cham: 0.6 }], [4.0, 'Other star levels don\'t count', { cham: 0.4 }]] },
+  // Fusion Archive: 2 ghép thường bất kỳ → +1 điểm lưu mỗi lần; cuối: Archive + Archive → 3 xung nổ
+  luutru: { kieu: 'ghep', ke: [[2, 'lien', 1], [3, 'lien', 1], [11, 'canon', 1], [12, 'canon', 1], [8, 'luutru', 's']], keo: [[1.6, 3, 2, { o: 7, k: 'dmg' }], [3.2, 12, 11, { o: 7, k: 'dmg' }], [5.0, 8, 7]],
+    c: [[0.2, 'Every merge you make charges it'], [1.6, (T) => '+1 charge: +' + VM1.pct(SKILLS.luutru.moi(T)) + '% damage', { cham: 0.5 }], [3.2, 'Any merge counts, not just its own'], [5.0, 'Archive + Archive: 3 big pulses', { cham: 0.7 }]], dai: 9.4 },
+  // Hero Foundry: ghép → ô ngẫu nhiên thật (VM1.rng) thành ô Anh hùng; hiện tốc bắn trước → sau của ụ đứng trên ô
+  xuonganh: { kieu: 'ghep', ke: [[2, 'lien', 's'], [3, 'set', 's'], [6, 'canon', 's'], [12, 'sungluc', 's']],
+    them: [[2.45, (B) => { SD._toc0 = B.t.map(X => X ? sdSo(X, 'toc') : null); }], [3.2, (B) => { const o = B._hf, N = o != null && B.t[o]; if (N && o !== 8 && SD._toc0 && SD._toc0[o]) SD.soDoi = { o, a: SD._toc0[o], b: sdSo(N, 'toc'), ic: 'ic_toc', t0: performance.now() }; }]],
+    c: [[0.2, 'Merge two Hero Foundries'], [2.5, 'A random turret gets a Hero tile', { cham: 0.6 }], [4.0, (T) => 'Hero tile: +' + VM1.pct(sdHero(T)) + '% fire rate for 12s']] },
+  // Blood Circuit: kéo lên ụ CÙNG sao (+1 Vamp) rồi lên ụ KHÁC sao (tốn 2 Vamp → xung máu); không bao giờ tự lên sao
+  mauhut: { kieu: 'gDB', ke: [[8, 'lien', 's'], [3, 'mauhut', 's'], [2, 'lien', (s) => s > 1 ? s - 1 : 2]], keo: [[2.5, 7, 8], [4.8, 3, 2]], truoc: (T, B) => { B.vamp = 1; },
+    c: [[0.2, 'Drag onto any of your turrets'], [2.5, 'Same star: both become a random turret', { ev: 'moi', cham: 0.5 }], [3.5, (T) => '+1 Vamp: +' + (SKILLS.mauhut.pv(T) * 100).toFixed(1) + '% damage each'], [4.8, (T) => 'Different star: 2 Vamp, ' + (T.sao >= 5 ? 300 : 220) + '% blood pulse', { cham: 0.7 }]], dai: 9 },
+  // Hex Saboteur: PvP thu nhỏ — lượt nguyền chọn sẵn để cú gieo thật trúng (ca may mắn), chú thích nói đúng xác suất
+  nguyenrua: { kieu: 'ghep', doi: [[4, 'canon', 3], [9, 'tia', 4], [14, 'set', 3]], truoc: (T, B) => sdHexTrung(B, T, 8),
+    c: [[0.2, 'Merge two Hex Saboteurs'], [2.5, 'A hex flies at a rival turret', { cham: 0.6 }], [4.0, (T) => Math.round(SKILLS.nguyenrua.p(T) * 100) + '% chance: the rival turret loses 1★', { ev: 'sao', cham: 0.6 }], [5.2, 'Co-op: an ally turret gets +1★']] },
+  // Sanctum: vào bàn lúc 1.8 s (triệu hồi thật → sinh/moiDen) → tẩy băng 2 ụ kề + khiên 1 lần; rồi hào quang sát thương
+  thanhdia: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'lien', 's'], [12, 'canon', 's']], dong: [2, 8], truoc: (T, B) => { if (T) B.t[T.o] = null; },
+    them: [[1.8, (B, D, T) => { if (!T || B.t[7]) return; const N = sinhU(taoU(B, 'thanhdia', T.sao, 7)); N.goc = -Math.PI / 2; B.t[7] = N; VX.trieu(N); }]],
+    c: [[0.2, 'Two turrets are frozen'], [1.8, 'Sanctum arrives: cleanses them', { ev: 'moi', cham: 0.7 }], [3.2, 'Neighbours get a 1-hit shield'], [4.6, (T) => 'Attack neighbours +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
+  // Prism Thief: 2 ụ đồng pha màu (tuoi) → ghép CÙNG màu = COMBO thật; Prism Thief thứ 3 (ô 12) nhận sát thương
+  bienmau: { kieu: 'ghep', ke: [[8, 'bienmau', 's'], [12, 'bienmau', 's']], keo: [4.2, 7, 8], so: { o: 12, k: 'dmg' }, truoc: (T, B) => { const P = B.t[8]; if (T && P) P.tuoi = T.tuoi + (T.uid % 3) - (P.uid % 3); },
+    c: [[0.2, 'Shots cycle red, gold, blue'], [1.4, 'Red burns, gold crits, blue slows'], [3.0, 'Merge two of the same colour'], [4.2, (T) => 'Combo: every Prism Thief +' + (SKILLS.bienmau.pc(T) * 100).toFixed(1) + '% damage', { cham: 0.6 }]], dai: 9 },
 };
 // ---------- chỉ huy (Ma vương): chạm nút → kỹ năng thật (dungMV) ----------
 const SD_MV = {
@@ -166,7 +216,7 @@ const SD_MV = {
   dahlia: { ke: [[2, 'lien', 3], [6, 'canon', 3], [7, 'sungluc', 3], [8, 'set', 3], [12, 'bang', 3]], q: Q.hang(3, 170, 46, 9).concat(Q.dong(14, 0.75, 9, 'bo', 1.2)), mana: 1, manaDau: 60, mvT: 2.6, dai: 13.6, glow: 1,
     c: [[0.2, 'Normal damage numbers'], [1.6, 'Tap the commander'], [2.7, 'Whole board: +100% damage', { cham: 0.7 }], [5.0, 'Every damage number doubles'], [8.4, 'Rage lasts 10 seconds']] },
   eve: { ke: [[2, 'lien', 3], [6, 'canon', 3], [7, 'sungluc', 4], [8, 'set', 3], [12, 'bang', 3]], dong: [6, 8], da: [12], q: Q.trum('freezer', 3.4, 90), mvT: 2.0, dai: 9.4,
-    c: [[0.2, 'Debuffs lock your turrets'], [1.1, 'Tap the commander'], [2.1, 'All debuffs cleared', { cham: 0.7 }], [3.4, 'The boss aims a skill…'], [4.8, 'Holy Shield blocks it', { ev: 'chan', cham: 0.7 }]] },
+    c: [[0.2, 'Debuffs lock your turrets'], [1.1, 'Tap the commander'], [2.1, 'Freeze, stone & burn cleared', { cham: 0.7 }], [3.4, 'The boss aims a skill…'], [4.8, 'Holy Shield blocks it', { ev: 'chan', cham: 0.7 }]] },
 };
 function sdKichBanMV(mv) {
   const r = Object.assign({}, SD_MV[mv]), d = MAVUONG[mv];
@@ -193,29 +243,32 @@ const SD_GD = {
   ronglua: ['Orange flame cone burns', 'Blue flame: +30% vs big', 'White flame, longer burning trail'],
   luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot adds an echo'],
   chuato: ['Stingers plus orbiting drones', 'Drones boost neighbours\u2019 fire rate', 'Every 5th drone is gold'],
-  leviathan: ['Bubble shot with splash', 'Wider splash, eats big enemies', 'Huge bubbles, eats flyers too'],
+  leviathan: ['Bubble shot with splash', 'Bigger splash ring, eats big enemies', 'Huge bubbles, eats flyers too'],
   combo: ['Warm-up: a plain core', 'On a roll: spinning rings', 'Overdrive: red-hot core'],
-  pandora: ['Locked vault', 'Lid ajar, colours leak', 'Open: every merge, 2 effects'],
+  pandora: ['Locked vault', 'Lid ajar, colours leak', 'Open: the 7★ merge fires 2 effects'],
   nemesis: ['Scales: plain executions', 'Scythe: heavier judgment', 'Executions leap to another enemy'],
   nhatthuc: ['Dusk: day and night swap', 'Corona: brighter swaps', 'Both modes on every swap'],
   loren: ['Cold forge', 'Bellows: forge heating', 'Hot forge: big bonus stored'],
   guongcong: ['One mirror pane', 'Twin mirror panes', 'Shard halo reflects twice'],
   marionette: ['Strings grab small enemies', 'Golden hand grabs big ones', 'Controls two puppets at once'],
   khoisinh: ['Rings raise your lowest turret', 'Neighbours get +15% damage', 'Each raise seeds a free 1★'],
+  lualien: ['Cold relay: no flames yet', 'Kindled: 1 to 4 flames', 'Full blaze: 5 flames'],
+  luutru: ['Empty shelves: under 10 charges', 'Filing: 10 to 29 charges', 'Grand archive: 30+ charges'],
 };
 // dòng số liệu cuối vòng (khi sk.mo là trạng thái tạm, không phải số liệu theo sao)
 const SD_MO = {
   cuongno: (T) => 'Frenzy +' + Math.round(SKILLS.cuongno.them(T) * 100) + '% fire rate',
   lienket: () => '+40% damage per link',
-  dongbo: () => 'Whole board: same-star Attack +damage',
+  dongbo: (T) => 'Every ' + T.sao + '★ Attack turret +' + Math.round(SKILLS.dongbo.v(T) * 100) + '% damage',
   hopbi: (T) => 'Opens into ' + (T.sao >= 7 ? 5 : T.sao >= 5 ? 3 : 1) + '–' + (T.sao >= 7 ? 7 : 6) + '★',
   tienhoa: (T) => T.sao >= 7 ? 'Max 7★: fizzles — no skill' : 'Evolves into ' + Math.min(7, T.sao + 1) + '★',
   ngoisao: () => 'Every 10★ faster · every 50★ more damage',
   soi: (T) => Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% Awakened: always crits',
   guongcong: (T) => 'Resist ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · mirror every ' + SKILLS.guongcong.h(T) + 's',
-  combo: () => 'Each combo: +6% damage',
+  combo: () => 'Each combo: +6–12% damage (by ★)',
   cuuvi: (T) => '9 foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1),
   railgun: () => 'Full row / column of Railguns only',
+  vughep: (T) => Math.round(knThe(G.ban[T.ban], 'vughep')) + '% Golden: target +2★',
   loren: () => '15 stacks: +60% to your best gun',
   orbital: (T) => 'Merge: every Orbital awakens ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's',
   nangluong: () => '+100% damage per 120 mana',
@@ -226,17 +279,18 @@ const SD_MO = {
   sungluc: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
   nam: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per punch',
   bomhen: (T) => 'Blast: +10% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's',
-  mimic: () => 'Result: +50% attack for 8s',
+  mimic: (T) => 'Result: +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack for 8s',
   dichchuyen: () => 'Swap with a same-star turret',
-  epxung: () => '+90% fire rate per drag',
+  epxung: (T) => '+' + +knThe(G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate per drag',
   vughep: () => 'Target +1★, keeps its type · 2 Merge Kings → Merge King +1★',
-  saochep: () => 'Copy deals 50% damage',
+  saochep: (T) => 'Copy has ' + Math.round(heSaoChep(G.ban[T.ban]) * 100) + '% power',
+  sinhdoi: (T) => Math.round(knThe(G.ban[T.ban], 'sinhdoi') || 10) + '% chance the twin is +1★',
   pandora: () => 'Merge: 1 of 6 vault effects',
   kepha: (T) => 'Merge: clamps ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets',
   xaotron: (T) => 'Merge: shuffles ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets',
   nhieusong: (T) => 'Merge: jams ' + SKILLS.nhieusong.n({ sao: Math.min(7, T.sao + 1) }) + ' rival turrets',
   cauvong: (T) => 'Neighbours +' + Math.round(SKILLS.cauvong.k(T) * 100) + '% vs enemies on it',
-  ngaithoigian: () => 'Enemies slow up to 15%',
+  ngaithoigian: () => 'Enemies slow up to 15–35% (by ★)',
   hydra: (T) => T.sao >= 7 ? 'Fused head: ×6 piercing beam' : T.sao + (T.sao > 1 ? ' barrels' : ' barrel') + ', 55% damage each',
   chuato: (T) => 'Up to ' + (/\/(\d+)/.exec(SKILLS.chuato.mo(T)) || [0, 3])[1] + ' hunter drones',
   leviathan: () => 'Each meal adds damage stacks',
@@ -247,6 +301,13 @@ const SD_MO = {
   laser: (T) => 'Beam ramps to ×4 over 3s',
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
+  lualien: (T) => 'Each flame +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, max 5',
+  hopca: (T) => '+' + VM1.pct(SKILLS.hopca.moi(T)) + '% damage per same-star turret',
+  luutru: (T) => '+' + VM1.pct(SKILLS.luutru.moi(T)) + '% damage per merge, max 40',
+  xuonganh: (T) => 'Hero tile: +' + VM1.pct(SKILLS.xuonganh.v(T)) + '% fire rate, 12s',
+  mauhut: (T) => '+' + (SKILLS.mauhut.pv(T) * 100).toFixed(1) + '% damage per Vamp, max 10',
+  nguyenrua: (T) => 'Hex chance ' + Math.round(SKILLS.nguyenrua.p(T) * 100) + '%, 8s team cooldown',
+  bienmau: (T) => 'Combo: +' + (SKILLS.bienmau.pc(T) * 100).toFixed(1) + '% damage, +4% fire rate',
 };
 // kỹ năng chủ động mở từ 3★
 const SD_KHOA3 = ['chuato', 'leviathan', 'khoisinh', 'ronglua', 'ngaithoigian'];
@@ -350,7 +411,8 @@ SD.xep = function () {
   this.saoCu = {}; for (const X of G.ban) for (const T of X.t) if (T) { this.saoCu[T.uid] = T.sao; this.da.add(T.uid); }
   this.buffT = {}; this.chan = []; this.soDoi = null; this.pdr = null; this.mvXong = false;
   this.kq = []; this.soMana = []; this.moi = []; this.vet = {}; this.nhan = []; this.manaCu = B.mana; this.banCu = 0;
-  this.cIdx = -1; this.chamDen = -1; this.cho = null; this.keoXong = false; this.chamXong = {}; this.themXong = {};
+  this.cIdx = -1; this.chamDen = -1; this.cho = null; this.chamXong = {}; this.themXong = {};
+  this.keoDs = ks.keo ? (Array.isArray(ks.keo[0]) ? ks.keo : [ks.keo]) : []; this.keoI = 0;
   this.ev = {};
   this.moSao = this.mv ? ks.mo : sdMoSao(id, this.T);
 };
@@ -387,8 +449,9 @@ SD.tick = function (dt) {
   }
 
   // việc theo giờ: kéo-ghép, chạm kỹ năng, thêm ụ…
-  if (ks.keo && !this.keoXong) {
-    const a = B.t[ks.keo[1]], b = B.t[ks.keo[2]], t0 = ks.keo[0] - 1.2;
+  const kq = this.keoDs && this.keoDs[this.keoI]; // keo: [t, ô kéo, ô đích, so?] hoặc danh sách nhiều lần kéo (cách nhau ≥ 1,3 s)
+  if (kq) {
+    const a = B.t[kq[1]], b = B.t[kq[2]], t0 = kq[0] - 1.2;
     // kéo thật của trận (UI.keo): giữ 0,25 s → rê theo cung → thả lên ô đích
     if (this.t >= t0 && a && b) {
       const ca = B.o[a.o], cb = B.o[b.o], u = clamp((this.t - t0 - 0.3) / 0.85, 0, 1), e = u * u * (3 - 2 * u);
@@ -396,12 +459,12 @@ SD.tick = function (dt) {
       g.px = g.x; g.py = g.y;
       g.x = ca.x + (cb.x - ca.x) * e; g.y = ca.y + (cb.y - ca.y) * e - Math.sin(e * Math.PI) * 26; g.dang = this.t > t0 + 0.3;
     }
-    if (this.t >= ks.keo[0]) {
-      this.keoXong = true; if (UI.keo && UI.keo.sd) UI.keo = null;
-      const so = ks.so, N0 = so && B.t[so.o], v0 = N0 ? sdSo(N0, so.k) : null;
+    if (this.t >= kq[0]) {
+      this.keoI++; if (UI.keo && UI.keo.sd) UI.keo = null;
+      const so = kq[3] || ks.so, N0 = so && B.t[so.o], v0 = N0 ? sdSo(N0, so.k) : null;
       if (a && b && hopLeGhep(a, b)) {
         const r = this.voiDoi(() => ghep(B, a, b));
-        if (r && r.id === this.id) this.T = r; else if (B.t[ks.keo[2]] && B.t[ks.keo[2]].id === this.id) this.T = B.t[ks.keo[2]]; else if (B.t[ks.keo[1]] && B.t[ks.keo[1]].id === this.id) this.T = B.t[ks.keo[1]];
+        if (r && r.id === this.id) this.T = r; else if (B.t[kq[2]] && B.t[kq[2]].id === this.id) this.T = B.t[kq[2]]; else if (B.t[kq[1]] && B.t[kq[1]].id === this.id) this.T = B.t[kq[1]];
         const hp = G.hu.find(h => h.k === 'pandora'); if (hp && typeof PANDORA !== 'undefined') this.pdr = PANDORA[hp.chon[0]].ten;
         if (so) VX.hen(0.75, () => { const N = B.t[so.o]; if (N && v0 != null) this.soDoi = { o: so.o, a: v0, b: sdSo(N, so.k), ic: so.k === 'toc' ? 'ic_toc' : 'ic_dmg', t0: performance.now() }; });
       }

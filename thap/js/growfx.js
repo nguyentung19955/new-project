@@ -470,7 +470,7 @@ HU.gLuot = { // lướt tới: 3 bóng đầu sói đỏ mờ dọc đường đ
 
 // ---- VỆ TINH (Mafdet): tia lam → tia + vòng ngắm trước khi trúng → GHÉP: mọi Vệ Tinh thức tỉnh, mỗi phát = 3 GIÁO TRỜI có tâm ngắm đỏ (không nổ lan) ----
 // (QA vàng-đỏ: Vệ Tinh là ụ ĐẶC BIỆT không bắn thường — chữ cũ tả đạn từng dạng không có thật; P.orbital.ban bên dưới không bao giờ chạy)
-ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merging two awakens every Orbital', 'AWAKENED (23s after an Orbital merge, every Orbital on the board): a salvo of 3–7 sky bombs every 1.8s, 34 px blasts'];
+ATK.orbital = ['STANDBY: no normal shots', 'UPLINK: 2+ Orbitals on board — merging two awakens every Orbital', 'AWAKENED (23s+ by card level after an Orbital merge, every Orbital on the board): a salvo of 3–7 sky bombs every 1.8s (1.5s from 3★), 34 px blasts'];
 P.orbital = () => {
   const sk = SKILLS.orbital, bg = sk.ban;
   sk.ban = function (G, B, T, E) {
@@ -619,7 +619,7 @@ HU.gXich = { ve(ctx, o, R) { const u = o.t / o.song; if (!o.Q.chet) { o.x1 = o.Q
 
 // ---- PHÁO ĐỒNG BỘ (Cosmem): viên vàng → viên + sóng nhịp ở nòng (mọi Pháo Đồng Bộ đập cùng nhịp 1 s) → FULL SYNC: tia vàng tức thì hội tụ ----
 // (QA vàng-đỏ: Pháo Đồng Bộ là ụ HỖ TRỢ không bắn — chữ cũ tả đạn/tia không có thật)
-ATK.dongbo = ['OFFLINE: no same-star Attack neighbour (no shots — Support)', 'SYNCED: 1–2 same-star Attack neighbours get +damage; pulses on a 1s beat', 'FULL SYNC: 3+ matched neighbours — the biggest +damage (5★: +fire rate too)'];
+ATK.dongbo = ['OFFLINE: no same-star Attack turret on the board (no shots — Support)', 'SYNCED: 1–2 same-star Attack turrets anywhere on the board get +damage; pulses on a 1s beat', 'FULL SYNC: 3+ same-star Attack turrets on the board, each gets the same +damage (5★: 2+ matched also +fire rate)'];
 P.dongbo = () => {
   const sk = SKILLS.dongbo, vt = sk.veThem;
   sk.ban = function (G, B, T, E) {
