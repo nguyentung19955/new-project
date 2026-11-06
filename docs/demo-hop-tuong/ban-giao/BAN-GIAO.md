@@ -1,0 +1,68 @@
+# BÀN GIAO — TURRET MERGE (07/11/2026, 05:25 giờ VN)
+
+> For the next Claude session/account: read this whole file first. Write to the user in **Vietnamese**; write prompts for other sessions/ChatGPT in **English**.
+
+## 1. Dự án
+- Game: **TURRET MERGE** — merge tower-defense kiểu DCDW (운빨존많겜 / Lucky Defense), 93 ụ, 12 trùm, chỉ huy; SOLO / CO-OP / PVP / ONLINE.
+- Repo: `nguyentung19955/new-project`
+  - Nhánh làm việc: `claude/demo-hop-tuong`, thư mục `thap/` (docs ở `docs/demo-hop-tuong/`).
+  - Nhánh live: `claude/mobile-tower-defense-game-k5oxzo` — xuất bản = chỉ thay thư mục `thap/` bằng bản của nhánh làm việc (`git fetch` → `git checkout FETCH_HEAD -- thap`), commit 'thap: xuất bản — …', push.
+- Live: https://nguyentung19955.github.io/new-project/thap/ và https://turret-merge.web.app (tự deploy từ nhánh live).
+- **KHÔNG đụng**: `demo/`, `firebase.json` gốc, `.firebaserc`, `.github/workflows/firebase-hosting.yml`. Không in/commit khoá API (PixelLab, Firebase apiKey, service account).
+- Luật bắt buộc trong code: `thap/QUY-TAC-HINH.md` (hình chỉ từ ChatGPT PNG; luật 6 = sửa ở 1 chỗ thì áp mọi chế độ/màn; luật 7 = nghiêng về DCDW; luật 8 = chạy `node tools/thap-kt-hoiquy.js` trước khi xuất bản). Online phải tất định (gameplay không phụ thuộc hiệu ứng/FPS).
+
+## 2. Người dùng làm việc thế nào (quan trọng)
+- Không rành kỹ thuật, dùng iPhone. Trả lời ngắn, tiếng Việt, chữ dễ hiểu.
+- Phiên chính = **điều phối**: tự tạo + chạy phiên mới (cloud session) theo phán đoán, không cần hỏi; ~3 phiên song song (đang dùng nhiều hơn khi việc độc lập); việc trùng thì xếp hàng.
+- Mỗi phần lên live → báo ngay kèm ảnh chụp + link. Tự kiểm kết quả trước khi gửi (không gửi rồi mới báo lỗi nhỏ).
+- Chỉ chạy test khi người dùng nói "test" (các phiên vẫn chạy hồi quy theo luật 8 trước khi xuất bản).
+- Góp ý ở 1 chỗ → áp cho mọi chỗ tương tự.
+- Câu cần người dùng chọn: hỏi bằng câu hỏi nhiều lựa chọn, lựa chọn khuyên dùng để đầu.
+- Hình: vẽ bằng **ChatGPT**, prompt tiếng Anh NGẮN, mở nhiều tab song song, xong là đóng tab.
+- Giờ kiểm tra định kỳ: tự kiểm, tự chạy việc tiếp theo, không hỏi.
+
+## 3. Cách điều phối (phiên chính)
+- Tạo phiên: tool `create_trigger` (prompt tự đủ: repo/nhánh/luật/việc/kiểm/xuất bản/trailer commit) rồi `fire_trigger`. Xem trạng thái: `list_triggers` (last_run PENDING = đang chạy, SUCCEEDED = xong).
+- Hẹn giờ kiểm: `send_later` (25–40 phút).
+- Kiểm nhanh: clone/fetch repo, `git log` nhánh làm việc + nhánh live; phiên xong mà chưa xuất bản → tạo phiên nhỏ chỉ để xuất bản.
+- Ghi chú cho phiên đang chạy: viết file vào repo (vd `tuvan/<việc>/YEU-CAU-THEM.md`) — không chắc nó đọc, nên kiểm lại sau.
+- Mỗi phiên khi cần hình sẽ ghi `docs/demo-hop-tuong/tuvan/<việc>/CAN-VE*.json` = `[{name, ref, prompt}]` → phiên chính vẽ bằng ChatGPT, tải lên `docs/demo-hop-tuong/thap-art/<name>`.
+
+## 4. Quy trình vẽ hình ChatGPT (Claude in Chrome, tài khoản ChatGPT của người dùng)
+Các script trong thư mục này:
+- `spoke.js` — dán vào mỗi tab ChatGPT mới (sau khi đặt `window._me='raw_x.png'; window._need=1;`). Nhận prompt + ảnh tham chiếu qua `BroadcastChannel('refch')`, tự dán prompt; kiểm `[window._n, độ dài .ProseMirror, số nút Remove]` rồi focus `.ProseMirror` + phím Return.
+- Ảnh tham chiếu: trang chatgpt.com không tải được raw.githubusercontent → mở 1 tab raw bằng `window.open` từ 1 tab spoke (tab "forwarder", gắn nút bấm REF2), trong tab raw vẽ ảnh lên canvas nền #FF00FF rồi `opener.postMessage({ref:1,to:[names],name,b64},'*')`; tab forwarder chuyển sang `BroadcastChannel('refch')`.
+- Lấy ảnh xong: trong mỗi tab lấy ảnh to nhất (`naturalWidth>=1000`, cái cuối), fetch → base64 → `BroadcastChannel('rel2')`; tab forwarder chuyển tới tab GitHub upload (mở bằng nút GH2 → `window._gh`).
+- Tab GitHub `https://github.com/nguyentung19955/new-project/upload/claude/demo-hop-tuong/docs/demo-hop-tuong/thap-art`: dán `github-upload-acc.js` (gom file), gửi `{flush:true}`, chờ hết "Uploading N", bấm "Commit changes". **Tối đa 3 file / commit.** Kiểm lại bằng `git ls-tree`.
+- `wave-gen.py` / `upload-gen.py`: sinh sẵn chuỗi lệnh browser_batch cho một đợt tab (sửa đường dẫn JSON cho đợt mới).
+- Lỗi hay gặp: ChatGPT "unable to generate" → nhắn "Please try again" trong cùng chat; đính kèm trùng → bấm Remove bớt; người dùng tự đóng tab giữa chừng → mở lại chat theo URL rồi lấy ảnh.
+
+## 5. Đang chạy lúc bàn giao (kiểm bằng list_triggers)
+| Phiên | Việc | Kết quả mong đợi / cần kiểm |
+|---|---|---|
+| trig_01Dhk2WWDTFpr3heTWP1axhX | Hệ thống chuyển động ụ (idle, ngắm, tụ lực, giật nòng, cửa nòng, 30/60 FPS) theo `tuvan/vfx/REVIEW-VFX-93-v2-ANIM.txt` | Kiểm luật thêm `tuvan/anim/YEU-CAU-THEM.md`: **ụ hỗ trợ KHÔNG bắn** (không ngắm/giật/đạn). Nếu chưa làm → mở phiên sửa. Có thể ghi `tuvan/anim/CAN-VE.json` → vẽ. |
+| trig_01SBUxb39vxr4G6Y6xT3THbf | Gắn 20 tờ VFX P3 (`raw_p3_*`, đã tải đủ) | Ảnh dải ở `tuvan/vfx-p3/strips-art/` → báo người dùng. |
+| trig_01UPThPfL1CU6XDWG3uk7Tvf | Icon app (mẫu A = `thap-art/raw_app_icon.png`; B/C = raw_app_icon_b/c) | Báo cách thêm vào màn hình chính iPhone (Safari → Chia sẻ → Thêm vào MH chính). |
+| trig_01JhhwXLB2rC3okXuDNFCWrU | 3 quyết định đã chốt: power-up kiểu DCDW cho 10 ụ không sát thương; cấp thẻ nâng trần ụ hỗ trợ; Evolver mất sao (mọi mức) → đếm lại | Báo bảng số mới. |
+| trig_012eqyYFpCzW1d8Yinz3BbbG | Rà giới hạn sức mạnh 93 ụ (trần stack, chỉ ô kề, +1/lần…) so DCDW — CHỈ báo cáo | `tuvan/gioi-han/BAO-CAO.md` → hỏi người dùng chọn → mở phiên sửa. Ember Relay đứng đầu (người dùng muốn kiểu Katarina: cả hàng/cột, không trần 5). |
+| trig_011V79mUjakXCii6dNJEDEWc | Thiết kế cơ chế ghép thú vị kiểu DCDW (ụ có HƯỚNG + SỐ: cùng hướng cộng, vuông góc giữ, ngược hướng trừ ≥1; hàng/cột…) — làm mới ~15–20 ụ — CHỈ đề xuất | `tuvan/co-che-moi/DE-XUAT.md` → hỏi người dùng chọn → mở phiên làm (hình mới vẽ bằng ChatGPT). |
+
+Bản live gần nhất lúc bàn giao: `7458242` (mục IX: số sau trần, Mirror Gate 35%, Radar 1 câu).
+
+## 6. Đã xong hôm nay (để khỏi làm lại)
+Rồng băng/lửa trồi lên từ ụ (16 khung) · một vòng xanh quanh ụ · nhãn ◆100/◆30-40 nâng lên · soát mô tả 93 ụ · VFX P2 (12 chiêu lớn, 16 khung) · VFX P3 đợt 1 (code, 79 ụ, bỏ ảnh rung) · QA ngâm 303 trận (`tuvan/qa-ngam/BAO-CAO.md`, chạy lại: `tools/thap-qa-ngam.js`) · chống giật lần đầu ra chiêu + tấm tên không đè · mục IX/X review v2.
+
+## 7. Tài liệu chính trong repo
+- `thap/QUY-TAC-HINH.md` — luật code/hình.
+- `docs/demo-hop-tuong/tuvan/` — mỗi việc 1 thư mục (yêu cầu, báo cáo, ảnh kiểm). Quan trọng: `vfx/REVIEW-VFX-93.txt`, `vfx/REVIEW-VFX-93-v2-ANIM.txt` (tư vấn ChatGPT), `vfx/YEU-CAU-ANIM.md` (không dùng ảnh rung), `muc-ix/KIEM.md`, `qa-ngam/BAO-CAO.md`, `tuong-tac/MA-TRAN.md`.
+- `docs/demo-hop-tuong/thap-art/` — mọi ảnh gốc ChatGPT (`raw_*.png`).
+- Hồi quy: `node tools/thap-kt-hoiquy.js`.
+
+## 8. Luật game người dùng đã chốt (nhắc lại)
+- Mọi ụ trên bàn chỉ đến từ 5 thẻ trong bộ bài (có bất biến + fuzz test).
+- Copycat giữ phần giảm sức mạnh qua mọi biến hình; chép được ụ hoá đá/đóng băng.
+- Evolver: bom hẹn giờ; 7★ = xác bom xịt, không tác dụng; mất sao → đếm lại.
+- Báo động chiêu trùm biến mất khi trùm chết. Hiệu ứng lửa phải màu lửa.
+- Không dùng "ảnh tĩnh rung" làm hiệu ứng — phải là hoạt ảnh thật.
+- Ụ hỗ trợ không bắn (như DCDW). Thẻ đỏ/vàng phải "cày" như DCDW. Tối đa 1 ụ Thần thoại / bộ.
+- Không viết code thanh toán tiền thật lúc này.
