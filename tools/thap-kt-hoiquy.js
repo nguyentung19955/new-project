@@ -483,6 +483,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-keo.js'), BASE], { stdio: 'pipe', env: process.env }); console.log(String(o).trim()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'keo', loai: 'kéo-thả bộ bài', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kéo-thả: kẹt'); }
   }
+  // màn kết quả VỪA MỘT MÀN (06/11): nút luôn trọn trong màn, không tràn, thưởng 1 hàng, không chữ huấn luyện — mọi chế độ × 5 cỡ (tools/thap-kt-ketqua-vua.js)
+  if (!process.env.CHI || /ketqua|solo|online/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-ketqua-vua.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1', BASE }), timeout: 900000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-ketqua-vua.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'ketqua_vua', loai: 'màn kết quả vừa một màn', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ màn kết quả: lỗi chạy'); }
+  }
   // đầu ụ phân biệt được (tools/thap-dau-giong.py --kiem): 2 ụ CÙNG ĐỘ HIẾM có đầu quá giống (vd. Copycat cũ ≈ Twin Maker) = TRƯỢT
   if (!process.env.CHI || /dau|menu/.test(process.env.CHI)) {
     try { const o = execFileSync('python3', [path.join(__dirname, 'thap-dau-giong.py'), '--kiem'], { stdio: 'pipe' }); console.log(String(o).trim().split('\n').pop()); }
