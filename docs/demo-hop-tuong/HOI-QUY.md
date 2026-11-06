@@ -153,3 +153,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - 06/11 (VFX P2 chiêu lớn, js/vfxp2.js): hồi quy 4 cỡ 1 lỗi 360x780 solo_trum 'chữ tràn' cut-in (.ci-chu, chập chờn đã biết) — chạy lại `SIZES=360x780x3 CHI=solo NHANH=1`: XANH. thap-kt-mau XANH (116 mục).
 - 06/11 (VFX P2 gắn 12 tờ p2_*): hồi quy 390x844 NHANH XANH (1863 s); thap-kt-mau 9 mục chiêu lớn XANH.
 - 06/11 VFX P3 đợt 1 (8e35116): SIZES=390x844x3 NHANH=1 → XANH, 0 lỗi (1752 s).
+- 06/11 GIẬT GHÉP + TẤM TÊN (tuvan/giat-ghep, đã gộp VFX P3): hồi quy đủ 4 cỡ (có bước mới `giatghep` — tools/thap-kt-giat-ghep.js) → XANH, 0 lỗi (3 179 s). Ngâm SO=60 XANH.
