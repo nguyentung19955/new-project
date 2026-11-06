@@ -108,3 +108,8 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 ## 06/11 — sửa 12 ụ vàng cũ theo DCDW
 - Hồi quy đủ 4 cỡ: chỉ trượt `online_sinhdoi` 360×780 — Twin Maker nay 10% ra ụ sinh đôi +1★ (DCDW Berit), kiểm cũ đòi đúng sao. Sửa kiểm: chấp nhận sao hoặc sao+1 (B vẫn phải dựng y hệt A). Chạy lại CHI=online 4 cỡ: XANH. KT_SINHDOI cũng chấp nhận +1★.
 - Mới trong hồi quy: tools/thap-kt-vang-sua.js (XANH).
+
+## 06/11 — Cửa hàng / rương / vòng quay / nhiệm vụ / sự kiện (kinhte.js)
+- Bước mới `shop` (tools/thap-kt-shop.js): Daily Specials tất định, tỉ lệ cộng 100%, bảo hiểm, không nhận 2 lần, lùi đồng hồ, di chuyển bản lưu, gộp Firebase, giao diện mở rương/quay — XANH.
+- Lần chạy đủ đầu: 39× ảnh mờ ic_sao.png (nút EVENT trên HOME dùng ảnh 64 px) → đổi sang ui_sao.png (256 px); chạy lại menu|landau 3 cỡ DPR 3: XANH.
+- 1280×800 online_2_nguoi/online_tran/online_sinhdoi kẹt 1 lần (thanh tải che nút onl-vao) → chạy lại CHI=online 1280: XANH (chập chờn, không liên quan cửa hàng).

@@ -12,7 +12,7 @@ const KTA = {
   ruMo: { thuong: 'fx_hopbi_no', vang: 'fx_hopbi_dacbiet', than: 'pandora_nong' },    // rương mở
   bung: 'h2_burst', sao: 'ui_sao', quang: 'fx_vong_lv', lung: 'p7_o_trong', o: 'p7_o_co', oSang: 'p7_o_doi',
   banh: 'pandora_dia', mui: 'mui_tiep',                                                  // vòng quay (chờ raw_shop_vongquay)
-  nut: { shop: 'ui_thuong', vq: 'pandora_dia', nv: 'p7_ic_xong', sk: 'ic_sao' },         // nút HOME (chờ raw_shop_nut)
+  nut: { shop: 'ui_thuong', vq: 'pandora_dia', nv: 'p7_ic_xong', sk: 'ui_sao' },         // nút HOME (chờ raw_shop_nut)
   banner: null, bannerSk: null,                                                          // chờ raw_shop_banner / _su
 };
 const KTUI = {
