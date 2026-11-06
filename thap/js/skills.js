@@ -250,6 +250,11 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
     if (!B.ai) SND.nap();
     return true;
   },
+  veThem(ctx, T, S, al, R) { // thức tỉnh: vòng sáng ChatGPT (CAN-VE-3 fx_orbital_thuc) quay quanh đầu, mờ dần 2 s cuối
+    if (!(T.thucT > 0) || typeof FXU === 'undefined' || !FXU.co('fx_orbital_thuc')) return;
+    ctx.globalCompositeOperation = 'lighter'; R.anhGiua(ctx, 'fx_orbital_thuc', 0, 0, S * 1.3, R.t * 0.8, al * Math.min(1, T.thucT / 2) * (0.75 + 0.2 * Math.sin(R.t * 6)));
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  },
   thucTinh(G, B) { // gọi sau ghép: đánh thức MỌI Vệ Tinh trên bàn (kể cả ụ vừa ghép ra nếu là Vệ Tinh)
     const dai = this.dai(B), ds = B.t.filter(X => X && X.id === 'orbital' && !X.st.da);
     for (const X of ds) { X.thucT = dai; X.thucMax = dai; X.salvo = 0.4 + 0.15 * (X.o % 5); X.sang = 1; if (typeof VX !== 'undefined' && VX.hu) VX.hu(X); }
