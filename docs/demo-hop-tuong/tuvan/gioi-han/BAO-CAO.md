@@ -73,7 +73,7 @@ Gợi ý thứ tự làm sau khi bạn chọn: (1) Relay → (2+3+4) trần hỗ
 
 ## 7. Trạng thái làm (07/11 — phiên cân bằng giới hạn, commit `9f16a1b`)
 
-**Dừng theo `ban-giao/DUNG-LAI.md`**: code đã commit + push lên `claude/demo-hop-tuong`; **CHƯA xuất bản** lên nhánh live (`claude/mobile-tower-defense-game-k5oxzo`), **chưa chạy đủ** `tools/thap-kt-hoiquy.js` (20 phút). Đã chạy XANH: `thap-kt-vfx-p0`, `thap-kt-matran`, `thap-kt-kynangcap`, `thap-kt-vi`, `thap-sim-vaitro che`; `thap-kt-kynang-tx` 162/194 (trước 161/194 — 32 lỗi còn lại là kiểm cũ có từ trước).
+**Dừng theo `ban-giao/DUNG-LAI.md`**: code đã commit + push lên `claude/demo-hop-tuong`; **CHƯA xuất bản** lên nhánh live (`claude/mobile-tower-defense-game-k5oxzo`), **chưa chạy đủ** `tools/thap-kt-hoiquy.js` (20 phút). Đã chạy XANH: `thap-kt-vfx-p0`, `thap-kt-matran`, `thap-kt-kynangcap`, `thap-kt-vi`, `thap-sim-vaitro che`; `thap-kt-kynang-tx` 162/194 (trước 161/194 — 32 lỗi còn lại là kiểm cũ có từ trước). Sau khi gộp phiên cơ chế mới đợt 1 (`2850979`, `a30abf8`): vfx-p0 + ma trận vẫn XANH; `thap-kt-vi` còn 7 chuỗi chưa dịch của Pháo La Bàn / Lửa Thập Tự (phần phiên đó, chưa xuất bản).
 
 Xây trên phiên mục IX (`f8ab58b`): power-up 10 ụ không sát thương (KY_NANG_CAP.pu) và cấp thẻ nới trần (+18% LV15) giữ nguyên; phần power-up trùng của phiên này đã bỏ.
 

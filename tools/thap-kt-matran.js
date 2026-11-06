@@ -70,7 +70,7 @@ const KHOA = new Set(['da', 'bang']);
 const TAM = new Set(['epxung', 'aurora', 'tocT', 'giam', 'kep', 'lua', 'hex', 'orbThuc', 'lo', 'lc', 'kho', 'cmSo']);
 const DONG_BO = new Set(['banSao', 'da', 'vang', 'thuc', 'epxung', 'lo', 'lc', 'kho', 'cmSo']); // cờ đi qua mạng (dongbo.js oTT/datO)
 // ---------------------------------------------------------------- LUẬT (mặc định DCDW-lean; chú thích ngắn = lý do)
-function luat(s, e) {
+function luat(s, e, r) {
   const L = (k, ly) => ({ k, ly: ly || '' });
   // khoá (đá / băng)
   if (KHOA.has(s)) {
@@ -95,6 +95,8 @@ function luat(s, e) {
     if (e === 'ghepKeo') return L('mat', 'ụ kéo mất; đích giữ mũi tên của đích');
     if (e === 'copyLen') return L('giu', 'bản sao giữ mũi tên + số (× % sao chép)');
   }
+  // ghép 2 ụ CÙNG LOẠI ra đúng loại đó: giữ max cộng dồn Overclock (BAO-CAO gioi-han §4 mục 6, game.js GIU_CONG_DON)
+  if (s === 'epxung' && (e === 'ghepKeo' || e === 'ghepDich') && r && r.id === (LOAI_TT[s] || 'lien')) return L('giu', 'ghép cùng loại ra cùng loại: giữ Ép Xung lớn nhất');
   // ghép = ụ MỚI; Blood Circuit / Forge / Twin / Cloner cũng là ụ mới
   if (['ghepKeo', 'ghepDich', 'ghepMimic', 'twin', 'cloner', 'mauhut', 'forge', 'joker'].includes(e)) return L('mat', e === 'forge' ? 'ụ bị ăn' : e === 'joker' ? 'bị ép GHÉP → ụ mới' : 'ghép ra ụ mới');
   if (e === 'mkKeo') return L('mat', 'Merge King biến mất, ụ đích không nhận gì');
@@ -263,7 +265,7 @@ function trongTrang(arg) {
   let kiem = 0, dat = 0, kad = 0, na = 0;
   const bang = {};
   for (const r of ra) {
-    const L = luat(r.s, r.e);
+    const L = luat(r.s, r.e, r);
     let ok, ghi;
     if (r.kq === 'na' || L.k === 'na') { na++; ghi = { k: 'na', ly: L.k === 'na' ? L.ly : r.ly }; bang[r.s + '|' + r.e] = ghi; continue; }
     if (r.kq === 'kad') { kad++; bang[r.s + '|' + r.e] = { k: 'kad', ly: r.ly }; continue; }
