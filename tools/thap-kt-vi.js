@@ -57,7 +57,8 @@ async function lay(p, ten) {
   // 2) màn chính
   const man = [
     ['HOME', () => { }], ['cài đặt', () => HM.moCai()], ['chế độ', () => HM.moChe()], ['bộ mẫu', () => HM.moPre()], ['lọc', () => HM.moLoc()],
-    ['bộ bài', () => { HM.dong(true); HM.di('dk'); }], ['bộ sưu tập', () => HM.di('dk', true)],
+    ['cửa hàng', () => KTUI.moTab('shop')], ['vòng quay', () => KTUI.moTab('vq')], ['nhiệm vụ', () => KTUI.moTab('nv')], ['sự kiện', () => KTUI.moTab('sk')],
+    ['bộ bài', () => { if (typeof KTUI !== 'undefined') KTUI.dong(); HM.dong(true); HM.di('dk'); }], ['bộ sưu tập', () => HM.di('dk', true)],
   ];
   for (const [ten, f] of man) { await p.evaluate(`(${f.toString()})()`).catch(() => { }); await sleep(500); await lay(p, ten); }
   const ids = await p.evaluate(() => G.roster.map(r => r.id));

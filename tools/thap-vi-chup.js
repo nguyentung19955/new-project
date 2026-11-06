@@ -30,6 +30,8 @@ const ev = (p, f, a) => p.evaluate(f, a).catch(e => LOI.push('eval ' + e.message
   await chup(p, '01_home');
   await ev(p, () => HM.moCai()); await sleep(700); await chup(p, '02_caidat');
   await ev(p, () => HM.moChe()); await sleep(700); await chup(p, '03_chedo');
+  for (const [k, n] of [['shop', '03a_cuahang'], ['vq', '03b_vongquay'], ['nv', '03c_nhiemvu'], ['sk', '03d_sukien']]) { await ev(p, (k) => KTUI.moTab(k), k); await sleep(900); await chup(p, n); }
+  await ev(p, () => KTUI.dong());
   await ev(p, () => { HM.dong(true); UI.chon = ['canon', 'bang', 'vughep', 'soi', 'mauhut']; UI.veBoChon(); HM.di('dk'); }); await sleep(1200); await chup(p, '04_bobai');
   await ev(p, () => HM.di('dk', true)); await sleep(1200); await chup(p, '05_bosuutap');
   let i = 6;

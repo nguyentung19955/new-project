@@ -11,6 +11,10 @@ Sửa thêm trong session này (ngoài 3 bảng dưới):
 Còn để ngỏ (cần quyết thiết kế, chưa đổi code): Laser không bao giờ chí mạng (tia luôn `crit:false` → mốc 7★ "+10% crit", Crit Antenna, Hammer vô tác dụng với Laser);
 Amplifier bảng buff hiện tổng ×5 vượt trần 35%; Pandora 7★ không mở lại được; Cryo Reactor xếp loại buff "Shots slow".
 
+Sau khi gộp đợt cân bằng bậc (HOTRO.BAC nhân buff theo độ hiếm, 06/11): số trong mô tả đã cập nhật theo code mới —
+Fusion Mixer +9% / +3% mỗi loại KHÁC THÊM (tối đa 18% ở 1★), Chiller 12% ở 1★ → 28% ở 7★ (trùm tối đa 15%), Overclock +90%+ (theo cấp thẻ, cộng dồn),
+Pandora 5 bom / 5 khiên, Mystery Box 1–6★, Evolver 7★ = bom xịt. Bảng dưới ghi số lúc đối chiếu (trước đợt cân bằng).
+
 ## Đợt 1 — ụ 1–31
 
 10 text patches in A1.json (all `old` strings verified unique; patched copies pass `node --check`).
