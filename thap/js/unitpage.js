@@ -86,6 +86,14 @@ function upDauChan(id) {
 function upLuatGhep(id) {
   const sk = SKILLS[id] || {}, ten = upTen(id), L = [];
   const mo1 = upBanTam(id, (B) => { const T = taoU(B, id, 1, 7); B.t[7] = T; return sk.mo ? sk.mo(T) : ''; }) || '';
+  if (id === 'canon') { // Pháo La Bàn: luật ghép mũi tên + số (co-che-moi A)
+    L.push(['Arrow + number', 'Each Compass Cannon gets a random arrow (↑ → ↓ ←) and the number 1. Each number +' + Math.round(knThe(null, 'canon')) + '% damage. It aims toward its arrow and its shells pierce the line.']);
+    L.push(['Same arrow', 'Drag onto a Compass Cannon with the same arrow: numbers add up (→2 + →1 = →3), +1★.']);
+    L.push(['Side arrow', 'Arrows at 90°: the target keeps its arrow and number, +1★. The dragged number is lost.']);
+    L.push(['Opposite arrow', 'Opposite arrows: target number minus dragged number (min 1), +1★, and a SHOCKWAVE hits every enemy on your lane (dragged number × 6 shots).']);
+    L.push(['Other merges', 'Mimic merges give a random turret as usual (number lost). Merge King raises the star and keeps arrow + number. A Copycat copy keeps arrow + number at its copy %.']);
+    return L.concat([['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone).']]);
+  }
   if (id === 'mimic') L.push(['Joker merge', 'Merges with any turret of the same star. The result gets +' + Math.round(knThe(null, 'mimic')) + '% damage for 8s.']);
   else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);

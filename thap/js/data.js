@@ -188,6 +188,7 @@ function hsThe(B, id) {
 //  pu: bước POWER-UP TRONG TRẬN (B.lv +1…MAX = 4 bước) cho ụ KHÔNG gây sát thương (KIEM.md mục IX 'Đã quyết' #1, kiểu DCDW):
 //      giá trị = giá trị cấp thẻ + pu × số bước — cộng SAU kẹp max của cấp thẻ (power-up luôn có tác dụng), online tất định (B.lv đi theo lệnh nâng)
 const KY_NANG_CAP = {
+  canon: { ten: 'Per number', base: 15, buoc: 1, max: 21, dv: '%', tien: '+', dmg: true }, // Pháo La Bàn: +% sát thương mỗi số trên huy hiệu
   saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
   vughep: { ten: 'Gold +2★', base: 10, buoc: 2, max: 22, dv: '%', dmg: true },      // xác suất ra Merge King vàng

@@ -1,12 +1,12 @@
 [
  {
   "id": "canon",
-  "ten": "Cannon",
+  "ten": "Compass Cannon",
   "bac": "trang",
   "dcdw": "Joan of Arc",
-  "kyNang": "Slow explosive shells; stars widen the blast",
-  "ten_vi": "Pháo Nổ",
-  "kyNang_vi": "Bắn chậm, nổ lan; sao tăng vùng nổ"
+  "kyNang": "Arrow + number: same-arrow merges add numbers, opposite merges subtract + shockwave; each number +damage",
+  "ten_vi": "Pháo La Bàn",
+  "kyNang_vi": "Mũi tên + số: ghép cùng hướng cộng số, ngược hướng trừ số + sóng nổ; mỗi số +sát thương"
  },
  {
   "id": "xucxac",
@@ -193,9 +193,9 @@
   "ten": "Drone Bay",
   "bac": "xanh",
   "dcdw": "Hermes",
-  "kyNang": "On merge: launches bomb drones up the path",
-  "ten_vi": "Bệ Phóng Drone",
-  "kyNang_vi": "Khi GHÉP: phóng drone bom chạy ngược đường đâm quái"
+  "kyNang": "On merge: 1 bomb drone per cell dragged (drag from far away)",
+  "ten_vi": "Drone Kéo Xa",
+  "kyNang_vi": "Khi GHÉP: mỗi ô kéo xa = 1 drone bom (kéo càng xa càng nhiều)"
  },
  {
   "id": "tron",
@@ -832,11 +832,11 @@
   "ten": "Ember Relay",
   "bac": "vang",
   "dcdw": "Kalaratri",
-  "kyNang": "Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit",
+  "kyNang": "Merging a Relay gives +1 flame to every Relay in the same row and column (max 8); each flame +damage & crit",
   "vai": "tc",
   "ho": "blast",
-  "ten_vi": "Lửa Tiếp Sức",
-  "kyNang_vi": "Ghép → chia lửa cho Ember Relay ở 4 ô kề; mỗi lửa +sát thương & chí mạng"
+  "ten_vi": "Lửa Thập Tự",
+  "kyNang_vi": "Ghép → +1 lửa cho mọi Ember Relay cùng hàng và cùng cột (tối đa 8); mỗi lửa +sát thương & chí mạng"
  },
  {
   "id": "hopca",

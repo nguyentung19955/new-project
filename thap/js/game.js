@@ -808,6 +808,20 @@ function capNhatDan(d, dt) {
 }
 
 // ---------- AI (đồng đội / đối thủ; ?auto=1 cho bàn mình khi kiểm thử) ----------
+// AI chọn cặp ghép KHÔN hơn cho ụ có cơ chế vị trí (co-che-moi): Pháo La Bàn — ưu tiên CÙNG mũi tên (cộng số), rồi vuông góc kéo số nhỏ
+// vào số lớn, ngược hướng sau cùng (vẫn có sóng nổ) · Drone Kéo Xa — cặp xa nhau nhất. Cặp khác: giữ nguyên lựa chọn cũ.
+function aiCapTot(ts, a, b, hl) {
+  if (a.id !== b.id || (a.id !== 'canon' && a.id !== 'drone')) return [a, b];
+  let best = [a, b], bv = -1e9;
+  for (const x of ts) for (const y of ts) {
+    if (x === y || x.id !== a.id || y.id !== a.id || x.sao !== a.sao || !hl(x, y)) continue;
+    let v;
+    if (a.id === 'drone') v = SKILLS.drone.quang(x.o, y.o) * 10 - x.o * 0.01;
+    else { const S = SKILLS.canon, k = S.ketQua(x, y); v = (k.kieu === 'cong' ? 1000 : k.kieu === 'giu' ? 500 : 0) + k.so * 10 + k.song * 3 - x.o * 0.01; }
+    if (v > bv) { bv = v; best = [x, y]; }
+  }
+  return best;
+}
 function aiBan(B, dt) {
   B.aiT -= dt; if (B.aiT > 0) return;
   B.aiT = G.che === 'pvp' && B.ai ? 0.9 : 0.6;
@@ -823,8 +837,8 @@ function aiBan(B, dt) {
   for (const T of ts) { const sk = SKILLS[T.id]; if (sk.chuDong && T.nap >= 1 && !biKhoa(T) && sk.aiNen(G, B, T)) { sk.chuDong(G, B, T); return; } }
   ts.sort((a, b) => a.sao - b.sao);
   const hl = (a, b) => hopLeGhep(a, b) && !(biKhoa(b) && !biKhoa(a)) && (a.id === b.id || a.id === 'mimic' || b.id === 'mimic' || (a.sao === b.sao && a.id !== 'dichchuyen' && SKILLS[b.id].vai !== 'ht'));
-  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { ghep(B, a, b); return; }
-  if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { ghep(B, a, b); return; }
+  if (oTrong(B).length <= 3) for (const a of ts) for (const b of ts) if (a !== b && a.sao < 6 && hl(a, b) && (SKILLS[a.id].vai !== 'ht' || ts.filter(x => x.id === a.id).length > 2)) { const [x, y] = aiCapTot(ts, a, b, hl); ghep(B, x, y); return; }
+  if (oTrong(B).length === 0) for (const a of ts) for (const b of ts) if (a !== b && hl(a, b)) { const [x, y] = aiCapTot(ts, a, b, hl); ghep(B, x, y); return; }
   // POWER-UP: mọi loại đều có ích (10 ụ không sát thương nâng chính số kỹ năng — KY_NANG_CAP.pu, KIEM.md mục IX 'Đã quyết' #1)
   //  ưu tiên cấp thấp nhất, rồi loại đang có NHIỀU ụ trên bàn (nâng thứ đang đứng trên bàn); loại không có ụ nào trên bàn để sau
   const dem = (id) => ts.reduce((n, T) => n + (T.id === id ? 1 : 0), 0);

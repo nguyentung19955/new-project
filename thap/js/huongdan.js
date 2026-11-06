@@ -15,7 +15,7 @@ const HD = {
   BUOC: [
     { id: 'muc', chu: 'Stop enemies reaching your CORE', phu: 'Each enemy that gets through costs a life. You have 3.', noi: 'tren', ok: true },
     { id: 'trieu', chu: 'Tap SUMMON twice', phu: 'A random turret from your deck appears. Each summon costs +10 mana.', noi: 'tren', dich: '#nut-trieu', can: 2 },
-    { id: 'ghep', chu: 'Drag a turret onto its twin', phu: 'Same turret + same ★ = merge: a RANDOM turret from your deck with +1★.', noi: 'tren', dich: 'cap' },
+    { id: 'ghep', chu: 'Drag a turret onto its twin', phu: 'Same turret + same ★ = merge: a RANDOM turret from your deck with +1★. (Compass Cannons stay Compass Cannons: same arrows add their numbers.)', noi: 'tren', dich: 'cap' },
     { id: 'tt', chu: 'Tap a turret (no drag)', phu: 'Its card shows what it does and its star skills.', noi: 'tren', dich: 'u' },
     { id: 'mv', chu: 'Tap your COMMANDER', phu: 'REINFORCE: two free turrets. Costs mana, doubles each use, then cools down.', noi: 'tren', dich: '#the-mv' },
     { id: 'tudo', chu: 'Keep summoning and merging', phu: 'Tap a card below to upgrade that turret with mana. Hold it to read it. Boss at wave 10.', noi: 'tren', ok: true, tu: 7 },
@@ -113,8 +113,9 @@ const HD = {
   // tìm cặp ghép hợp lệ (cùng ụ, cùng sao) trên bàn người chơi
   timCap(B) {
     const ts = B.t.filter(T => T && !T.st.bang && !T.st.da);
-    for (const a of ts) for (const c of ts) if (a !== c && a.id === c.id && a.sao === c.sao && a.sao < LUAT.saoMax) return [a, c];
-    return null;
+    let cl = null; // Pháo La Bàn ghép GIỮ LOẠI (cộng số) — bước này dạy ghép thường (ra ụ ngẫu nhiên) → ưu tiên cặp khác
+    for (const a of ts) for (const c of ts) if (a !== c && a.id === c.id && a.sao === c.sao && a.sao < LUAT.saoMax) { if (a.id !== 'canon') return [a, c]; cl = cl || [a, c]; }
+    return cl;
   },
 
   // ~30 lần/giây (theo UI.capNhat)
@@ -139,7 +140,7 @@ const HD = {
       this.daDat = true;
       let cap = this.timCap(B);
       if (!cap) {
-        const a = B.t.find(T => T && T.sao === 1) || trieu(B, true, this.DECK[0]);
+        const a = B.t.find(T => T && T.sao === 1 && T.id !== 'canon') || trieu(B, true, this.DECK[1]);
         const c = a && trieu(B, true, a.id);
         if (a && c) { a.sao = c.sao = 1; cap = [a, c]; const d = this.el.querySelector('.hd-dat'); d.textContent = 'Tutorial setup: a matching pair was placed for you.'; d.hidden = false; }
       }

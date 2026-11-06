@@ -51,7 +51,7 @@ const DEMKN = {
     const v = this.lay(T, B); if (!v) return;
     const h = Math.max(9, c * 0.2), m = ctx.getTransform(), k = m.a;
     if (!(k > 0) || Math.abs(m.b) > 1e-6 || Math.abs(m.c) > 1e-6 || Math.abs(m.d - k) > 1e-6 || typeof REN === 'undefined' || !REN.cGet) return this.ve0(ctx, v, x, yDay, h, al);
-    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + v.m.map(p => p.ic + ':' + p.s).join(',');
+    const hp = Math.round(h * k * 4) / 4, key = 'dk|' + hp + '|' + (v.sang ? 1 : 0) + '|' + (v.mau || '') + '|' + v.m.map(p => p.ic + ':' + (p.xoay || 0) + ':' + p.s).join(',');
     let a = REN.cGet(key);
     if (!a) {
       if (!REN.img('h2_tag')) return;
@@ -82,7 +82,9 @@ const DEMKN = {
     xx += pad;
     for (let i = 0; i < v.m.length; i++) {
       const p = v.m[i]; if (i) xx += h * 0.3;
-      const im = REN.img(p.ic); if (im) ctx.drawImage(REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im, xx, y + (h - ic) / 2, ic, ic);
+      const im = REN.img(p.ic), im2 = im && (REN.mip ? REN.mip(im, ic * REN.s * REN.dpr) : im);
+      if (im2 && p.xoay) { ctx.save(); ctx.translate(xx + ic / 2, y + h / 2); ctx.rotate(p.xoay); ctx.drawImage(im2, -ic / 2, -ic / 2, ic, ic); ctx.restore(); } // mũi tên Pháo La Bàn: xoay ảnh PNG (QT3)
+      else if (im2) ctx.drawImage(im2, xx, y + (h - ic) / 2, ic, ic);
       xx += ic + gap;
       ctx.lineWidth = Math.max(1.5, f * 0.22); ctx.strokeStyle = '#000'; ctx.lineJoin = 'round';
       ctx.strokeText(p.s, xx, y + h / 2 + 0.5);

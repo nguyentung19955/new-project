@@ -55,7 +55,7 @@ function chuyenU(B, T, id, sao, doi) {
 }
 // DẠNG cố định của 1 ụ (quay lúc sinh): Merge King vàng, Sói thức tỉnh — bản sao / con rối online giữ đúng dạng, không quay lại
 const BIEN_THE = { vughep: 'vang', soi: 'thuc' };
-function giuBienThe(N, X) { const k = N && X && N.id === X.id && BIEN_THE[N.id]; if (k) N[k] = !!X[k]; return N; }
+function giuBienThe(N, X) { const k = N && X && N.id === X.id && BIEN_THE[N.id]; if (k) N[k] = !!X[k]; if (N && X && N.id === 'canon' && X.id === 'canon') { N.huong = X.huong; N.so = X.so; } return N; } // Pháo La Bàn: bản sao giữ mũi tên + số
 // ụ trong BỘ BÀI trừ các loại `tru` (Hộp Bí Ẩn không ra chính nó…). Lọc hết → vẫn CHỈ trong bộ bài (kể cả loại bị trừ), KHÔNG BAO GIỜ lấy toàn bộ danh sách ụ (DCDW)
 function deckTru(B, tru) { const bo = B.deck.filter(id => SKILLS[id] && G.rosterMap[id]); const ds = bo.filter(id => !tru.includes(id)); return ds.length ? ds : bo; }
 function nangSao(B, T, n, chu) {
@@ -271,18 +271,25 @@ SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khá
     },
   },
 };
-SKILLS.drone = { // Bệ Phóng Drone (Hermes): khi GHÉP phóng drone bom chạy ngược đường đâm quái
+SKILLS.drone = { // DRONE KÉO XA (Hermes, co-che-moi/DE-XUAT.md §3-N): khi GHÉP phóng drone bom chạy ngược đường đâm quái —
+  //   số drone = QUÃNG KÉO (số ô Manhattan từ ụ kéo tới ụ đích) + sao/3 (tối đa 8). Kéo góc → góc (6 ô) = 6+ drone. Dây kéo ảnh nối 2 ô lúc ghép.
   vai: 'tc', dmg: 11.5, toc: 1.5, nham: 'dau', // 8.67 → 11.5 (đo bậc 06/11)
-  mo: (T) => 'On merge: ' + (1 + Math.floor(T.sao / 3)) + ' bomb drone' + (T.sao >= 3 ? 's' : '') + ' (×24 damage, blast 46 px)',
+  MAX: 8, NHAN: 15, // ×sát thương mỗi drone (cũ ×24 cho 1–3 drone; giờ nhiều drone hơn)
+  quang: (oa, ob) => Math.abs(oa % 5 - ob % 5) + Math.abs(((oa / 5) | 0) - ((ob / 5) | 0)),
+  so(sao, d) { return Math.max(1, Math.min(this.MAX, d + Math.floor(sao / 3))); },
+  mo: (T) => 'On merge: 1 bomb drone per cell dragged + ' + Math.floor(T.sao / 3) + ' (max 8, ×' + SKILLS.drone.NHAN + ' damage, blast 46 px) · drag from far away for more drones (corner to corner = ' + SKILLS.drone.so(T.sao, 6) + ')',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_lien', co: 14, snd: 'lien' }); },
   ghep(G, B, a, b, ra) {
-    const n = 1 + Math.floor(a.sao / 3), dmg = hsU('drone', a.sao + 1, B) * 24;
+    const d = this.quang(a.o, b.o), n = this.so(a.sao, d), dmg = hsU('drone', a.sao + 1, B) * this.NHAN;
     const ds = G.duong.map((p, i) => i).filter(i => G.duong[i].ban === B.i);
+    if (!ds.length) return;
     for (let i = 0; i < n; i++) {
       const pi = ds[i % ds.length], p = G.duong[pi];
-      G.hu.push({ k: 'drone', t: -i * 0.4, song: 12, p: pi, s: p.len, x: 0, y: 0, goc: 0, B, T: ra, dmg, r: 46 });
+      G.hu.push({ k: 'drone', t: -i * 0.3, song: 12, p: pi, s: p.len, x: 0, y: 0, goc: 0, B, T: ra, dmg, r: 46 });
     }
-    nhanU(ra, 'DRONES ×' + n, '#4fb8ff', true); SND.nap();
+    const c0 = B.o[a.o], c1 = B.o[b.o];
+    if (c0 && c1) G.hu.push({ k: 'dayKeo', t: 0, song: 0.55, x0: c0.x, y0: c0.y, x1: c1.x, y1: c1.y, n });
+    SND.nap();
   },
 };
 SKILLS.tron = { // Bộ Trộn (Zarramim) — HỖ TRỢ (đợt vai trò): ụ Tấn công kề +6% tốc bắn; mỗi LOẠI Tấn công khác nhau kề thêm +2% (tối đa 12% ở 1★)

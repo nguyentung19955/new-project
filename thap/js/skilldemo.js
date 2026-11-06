@@ -87,7 +87,10 @@ function sdHexTrung(B, T, o) {
 // Hero Foundry: % tốc của ô anh hùng vừa dập (giá trị thật trong B.hero — tính theo sao Foundry ghép, không theo ụ ra)
 function sdHero(T) { const B = G.ban[T.ban] || G.ban[0], h = B && B.hero && B.hero[B.hero.length - 1]; return h ? h.v : SKILLS.xuonganh.v(T); }
 const SD_K = {
-  canon: { q: Q.nhom(5, 175), c: [[0.2, 'Fires slow explosive shells'], [1.2, 'Blast hits the whole group', { ev: 'hit', cham: 0.5 }]] },
+  // Pháo La Bàn: ô 7 (→2) kéo vào ô 8 (→1): cùng mũi tên → →3 · rồi ô 13 (←1) kéo vào ô 8: ngược hướng → →2 + sóng nổ dọc làn
+  canon: { kieu: 'ghep', q: Q.nhom(6, 175, 26, 9), ke: [[8, 'canon', 's'], [13, 'canon', (s) => Math.min(7, s + 1)]], keo: [[2.6, 7, 8], [5.6, 13, 8]],
+    truoc: (T, B) => { if (T) { T.huong = 1; T.so = 2; } if (B.t[8]) { B.t[8].huong = 1; B.t[8].so = 1; } if (B.t[13]) { B.t[13].huong = 3; B.t[13].so = 1; } },
+    c: [[0.2, 'Each has an arrow and a number'], [2.6, 'Same arrow: numbers add up', { cham: 0.6 }], [4.2, (T) => 'Each number +' + Math.round(SKILLS.canon.moiSo(T) * 100) + '% damage'], [5.6, 'Opposite arrow: subtract + shockwave', { cham: 0.7 }]], dai: 9 },
   xucxac: { q: Q.hang(3, 170, 50, 6), may: [5, 5.8], c: [[0.2, 'Each shot rolls 3–300% damage'], [1.5, 'Watch the numbers jump', { ev: 'hit', cham: 0.4 }], [4.8, 'Crits always roll the max', { ev: 'hit', cham: 0.5 }]] },
   lien: { q: Q.dong(7, 0.55, 3), c: [[0.2, 'Very fast fire at the lead'], [2.4, (T, s) => s >= 3 ? 'Stars make it fire faster' : 'More stars, faster fire', { cham: 0.4 }]] },
   phun: { q: Q.nhom(6, 185, 24, 6), c: [[0.2, 'Sprays bullets at random enemies'], [1.6, 'Every enemy gets peppered', { ev: 'hit', cham: 0.4 }]] },
@@ -105,7 +108,8 @@ const SD_K = {
   kiembang: { q: Q.nhom(4, 170, 22, 12), c: [[0.2, 'Each hit chills nearby enemies'], [1.4, (T) => 'Slowed enemies take ×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage', { ev: 'hit', cham: 0.6 }]] },
   mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, (T) => 'Result gets +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack', { ev: 'moi', cham: 0.6 }]] },
   dichchuyen: { o: 2, q: Q.nhom(4, 170, 18, 9), ke: [[12, 'nam', 's']], keo: [2.6, 2, 12], c: [[0.2, 'Iron Fist is too far away'], [1.6, 'Drag onto a same-star turret'], [2.6, 'They swap places', { cham: 0.6 }], [4.2, 'Now it reaches the enemies']] },
-  drone: { kieu: 'ghep', q: Q.hang(4, 175, 40, 5), c: [[0.2, 'Merge two Drone Bays'], [2.5, 'Merging launches bomb drones', { cham: 0.5 }], [4.4, 'Drones fly up the path']] },
+  // Drone Kéo Xa: kéo từ góc dưới-trái (ô 11) lên góc trên-phải (ô 3) = 4 ô → 4 drone (+1 mỗi 3★)
+  drone: { kieu: 'ghep', o: 11, q: Q.hang(5, 175, 34, 5), ke: [[3, 'drone', 's']], keo: [2.5, 11, 3], c: [[0.2, 'Merge two Drone Bays far apart'], [2.5, (T) => 'Dragged 4 cells: ' + SKILLS.drone.so(T.sao, 4) + ' bomb drones', { cham: 0.6 }], [4.4, 'Farther drag, more drones']] },
   tron: { kieu: 'ht', ke: [[2, 'lien', 's'], [6, 'canon', 's'], [8, 'set', 's'], [12, 'sungluc', 's']], c: [[0.2, 'Four different Attack types'], [1.6, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
   nangluong: { q: Q.hang(3, 175, 50, 8), mana: 1, manaDau: 60, truoc: null, them: [[3.4, (B) => { B.mana += 600; }]], c: [[0.2, 'Damage grows with your mana'], [3.4, 'More mana, bigger hits', { ev: 'hit', cham: 0.6 }]] },
   laser: { q: Q.hang(3, 180, 50, 14), c: [[0.2, 'Locks a beam on one enemy'], [2.2, 'Beam ramps up to ×4', { cham: 0.5 }]] },
@@ -182,9 +186,11 @@ const SD_K = {
   khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + Math.round(Math.min(SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T), HOTRO.tran(T, 'dmg')) * 100) + '% damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may execute'], [2.2, 'Low-HP enemies are reaped', { ev: 'kill', cham: 0.6 }]] },
   // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
-  // Ember Relay: ghép ở ô 8 → Relay ở ô kề 3 & 13 nhận 1 lửa thật (SKILLS.lualien.ghep); ô 13 đã có 4 lửa → đủ 5 (lõi lửa)
-  lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' }, truoc: (T, B) => { if (B.t[13]) B.t[13].lc = 4; },
-    c: [[0.2, 'Merge two Ember Relays'], [2.5, 'Relays next to it catch a flame', { cham: 0.6 }], [3.9, (T) => 'Each flame: +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, +3% crit'], [5.0, '5 flames: full blaze']] },
+  // Lửa Thập Tự: ghép Relay ở ô 8 → MỌI Relay cùng hàng (ô 6) và cùng cột (ô 3, 13) +1 lửa; ô 11 không cùng hàng/cột → không nhận.
+  //   ụ ra (bộ bài chỉ Relay) giữ số lửa lớn nhất của 2 nguyên liệu (3) rồi +1; ô 13 có 7 lửa → đủ 8.
+  lualien: { kieu: 'ghep', ke: [[8, 'lualien', 's'], [6, 'lualien', 's'], [3, 'lualien', 's'], [13, 'lualien', 's'], [11, 'lualien', 's']], keo: [2.5, 7, 8], so: { o: 13, k: 'dmg' },
+    truoc: (T, B) => { B.deck = ['lualien']; if (T) T.lc = 3; if (B.t[8]) B.t[8].lc = 1; if (B.t[13]) B.t[13].lc = 7; },
+    c: [[0.2, 'Merge two Ember Relays'], [2.5, 'Whole row and column +1 flame', { cham: 0.6 }], [3.9, 'The result keeps its flames'], [5.0, (T) => 'Each flame: +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, +2% crit'], [6.2, '8 flames: full blaze']] },
   // Quantum Choir: thêm ụ cùng sao (trùng) và khác sao (không tính) — chỉ số sát thương trước → sau
   hopca: { q: Q.hang(4, 180, 40, 8), ke: [[6, 'lien', 's'], [8, 'canon', (s) => s > 1 ? s - 1 : 2]],
     them: [[2.0, (B, D, T) => { if (T) sdThem(B, [[2, 'set', T.sao], [12, 'bang', T.sao]], T, 'dmg'); }], [4.0, (B, D, T) => { if (T) sdThem(B, [[3, 'sungluc', T.sao > 1 ? T.sao - 1 : 2]], T, 'dmg'); }]],
@@ -253,7 +259,7 @@ const SD_GD = {
   guongcong: ['One mirror pane', 'Twin mirror panes', 'Shard halo reflects twice'],
   marionette: ['Strings grab small enemies', 'Golden hand grabs big ones', 'Controls two puppets at once'],
   khoisinh: ['Rings raise your lowest turret', 'Neighbours get +15% damage', 'Each raise seeds a free 1★'],
-  lualien: ['Cold relay: no flames yet', 'Kindled: 1 to 4 flames', 'Full blaze: 5 flames'],
+  lualien: ['Cold relay: no flames yet', 'Kindled: 1 to 7 flames', 'Full blaze: 8 flames'],
   luutru: ['Empty shelves: under 10 charges', 'Filing: 10 to 29 charges', 'Grand archive: 30+ charges'],
 };
 // dòng số liệu cuối vòng (khi sk.mo là trạng thái tạm, không phải số liệu theo sao)
@@ -302,7 +308,9 @@ const SD_MO = {
   laser: (T) => 'Beam ramps to ×4 over 3s',
   mortar: (T) => 'Damage ' + Math.round(dmgU(T)) + ', 46 px splash',
   no5: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
-  lualien: (T) => 'Each flame +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, max 5',
+  lualien: (T) => 'Each flame +' + VM1.pct(SKILLS.lualien.moiLua(T)) + '% damage, max 8',
+  canon: (T) => 'Each number +' + Math.round(SKILLS.canon.moiSo(T) * 100) + '% damage',
+  drone: (T) => '1 drone per cell dragged + ' + Math.floor(T.sao / 3),
   hopca: (T) => '+' + VM1.pct(SKILLS.hopca.moi(T)) + '% damage per same-star turret',
   luutru: (T) => '+' + VM1.pct(SKILLS.luutru.moi(T)) + '% damage per merge, max 40',
   xuonganh: (T) => 'Hero tile: +' + VM1.pct(SKILLS.xuonganh.v(T)) + '% fire rate, 12s',

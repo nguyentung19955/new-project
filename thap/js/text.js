@@ -56,7 +56,7 @@ const TEXT = {
   },
   // 64 ụ: name = tên hiển thị, skill = mô tả ngắn. portrait (tuỳ chọn) = đường dẫn ảnh thẻ thay thế (mặc định assets/nho/<id>.png)
   turret: {
-    canon:      { name: 'Cannon',        skill: 'Slow explosive shells; stars widen the blast' },
+    canon:      { name: 'Compass Cannon', skill: 'Arrow + number: merge onto a Compass Cannon — same arrow adds numbers, side arrow keeps the target, opposite subtracts (min 1) + shockwave; each number +15% damage; aims toward its arrow, shells pierce' },
     xucxac:     { name: 'Dice Gun',      skill: 'Random 3–300% damage; crits always roll max' },
     lien:       { name: 'Gatling',       skill: 'Very fast fire; stars raise fire rate' },
     phun:       { name: 'Scatter',       skill: 'Rapid fire at random enemies' },
@@ -77,7 +77,7 @@ const TEXT = {
     chimang:    { name: 'Crit Antenna',  skill: 'Support: +crit chance for N/E/S/W neighbours (9% at 1★ → 22% cap from 5★)' },
     dichchuyen: { name: 'Teleporter',    skill: 'Swaps places with a same-star turret (stone/frozen too)' },
     radar:      { name: 'Radar',         skill: 'Support: +fire rate for N/E/S/W neighbours (18% at 1★ → 42% at 7★)' },
-    drone:      { name: 'Drone Bay',     skill: 'On merge: launches bomb drones up the path' },
+    drone:      { name: 'Drone Bay',     skill: 'On merge: 1 bomb drone per cell dragged + 1 per 3★ (max 8) — drag from far away' },
     tron:       { name: 'Fusion Mixer',       skill: 'Support: +9% fire rate to Attack neighbours, +3% per extra different type (max 18% at 1★)' },
     nangluong:  { name: 'Energy Cannon', skill: 'Damage grows with your current mana' },
     laser:      { name: 'Laser',         skill: 'Continuous beam that grows stronger' },
@@ -143,7 +143,7 @@ const TEXT = {
     leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for ABYSS points — whirlpool tag under the cell, +4% damage each (max 100). Active (3★+): TIDAL BREATH — an ice dragon head drops from the sky and breathes along the path' },
     khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets; Co-op: may raise your ally’s lowest turret instead' },
     // đợt vàng mới 1 (vangmoi1.js)
-    lualien: { name: 'Ember Relay', skill: 'Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit' },
+    lualien: { name: 'Ember Relay', skill: 'Merging a Relay gives +1 flame to every Relay in the same row and column (max 8, kept through merges); each flame +damage & crit' },
     hopca: { name: 'Quantum Choir', skill: '+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate' },
     luutru: { name: 'Fusion Archive', skill: 'Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses' },
     xuonganh: { name: 'Hero Foundry', skill: 'Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)' },
