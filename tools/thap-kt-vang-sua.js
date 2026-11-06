@@ -6,7 +6,7 @@
 //  5 Railgun: chỉ HÀNG/CỘT ĐẦY Railgun (+200% / +150%), hàng dở dang & ụ khác loại không tính, ô đá không tính
 //  6 Wall Projector: ghép → TƯỜNG VÀNG (6 s, nổ ×6) · 7 Scrap Forge: chữ "feed" · 8 Merge King: vàng theo xác suất ~10% · MK+MK +1★
 //  9 Twin Maker: ~10% ụ sinh đôi +1★ (không quá 7★) · 10 Star Cannon: theo tổng ★ HIỆN TẠI (sao giảm → mất thưởng)
-//  11 Evolver: chờ lâu hơn khi sao cao; 7★ không bao giờ ra 8★ (hoàn mana) · 12 Mirror Gate: không gắn nhãn Bari
+//  11 Evolver: chờ lâu hơn khi sao cao; 7★ bom XỊT (không đổi, không tác dụng); bị giảm sao → đếm lại; Copycat chép giữ y hệt · 12 Mirror Gate: không gắn nhãn Bari
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-vang-sua.js
 const { chromium } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:8765/thap/';
@@ -177,14 +177,25 @@ async function moTran(b, mode, deck) {
     out.d50 = buf(); B.t[7] = null; out.d49 = buf(); __dat(B, 7, 'mana', 1); out.lai = buf();
     __xoa(); out.can = [1, 4, 6].map(s => SKILLS.tienhoa.can({ sao: s, id: 'tienhoa' }));
     const E7 = __dat(B, 0, 'tienhoa', 7), m0 = B.mana; E7.tuoi = SKILLS.tienhoa.can(E7) + 1; SKILLS.tienhoa.capNhat(G, B, E7);
-    out.e7 = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao, B.mana - m0];
+    E7.tuoi += 500; SKILLS.tienhoa.capNhat(G, B, E7); // bom xịt: đếm dừng, không làm gì dù bao lâu
+    out.e7 = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao, B.mana - m0, !!E7.xit, E7.tuoi, E7.nap];
+    // 7★ xịt bị giảm sao → hết xịt, đếm lại từ đầu (6★), hết giờ → biến đổi
+    haSao(B, E7, 'test'); SKILLS.tienhoa.capNhat(G, B, E7); out.ha = [E7.sao, !!E7.xit, E7.tuoi, Math.round(SKILLS.tienhoa.con(E7))];
+    E7.tuoi = SKILLS.tienhoa.can(E7) + 0.01; SKILLS.tienhoa.capNhat(G, B, E7); out.haBien = [B.t[0] && B.t[0].id, B.t[0] && B.t[0].sao];
+    // Copycat chép Evolver → cũng là Evolver (cùng bom đếm ngược / xịt ở 7★)
+    __xoa(); const Cp = __dat(B, 0, 'saochep', 7), Ev = __dat(B, 1, 'tienhoa', 7); const N = SKILLS.saochep.ghepDB.lam(G, B, Cp, Ev);
+    SKILLS.tienhoa.capNhat(G, B, N); out.chep = [N.id, !!N.banSao, !!N.xit];
+    out.txt = [SKILLS.tienhoa.mo({ sao: 7, id: 'tienhoa', tuoi: 0 }), TEXT.turret.tienhoa.skill, (typeof MOC_RIENG !== 'undefined' && MOC_RIENG.tienhoa && MOC_RIENG.tienhoa[7] || []).join(' ')].join(' | ');
     __seed(7); let max = 0; for (let i = 0; i < 200; i++) { __xoa(); const E6 = __dat(B, 0, 'tienhoa', 6); E6.tuoi = 1e4; SKILLS.tienhoa.capNhat(G, B, E6); max = Math.max(max, B.t[0].sao); }
     out.e6 = max;
     return out;
   });
   ok(r.d50 > 3 && r.d49 < 0.01 && r.lai === r.d50, 'Star Cannon: mốc 50★ theo tổng HIỆN TẠI — tụt còn 49★ mất thưởng, lên lại có lại', JSON.stringify(r));
   ok(r.can[0] < r.can[1] && r.can[1] < r.can[2], 'Evolver: sao cao chờ lâu hơn', JSON.stringify(r.can));
-  ok(r.e7[0] === 'tienhoa' && r.e7[1] === 7 && r.e7[2] > 0, 'Evolver 7★: không đổi / không 8★ — hoàn mana', JSON.stringify(r.e7));
+  ok(r.e7[0] === 'tienhoa' && r.e7[1] === 7 && r.e7[2] === 0 && r.e7[3] && r.e7[4] === 0 && r.e7[5] === 0, 'Evolver 7★: bom XỊT — không đổi, không 8★, đếm dừng, KHÔNG hoàn mana / không tác dụng', JSON.stringify(r.e7));
+  ok(r.ha[0] === 6 && !r.ha[1] && r.ha[2] === 0 && r.ha[3] > 40 && r.haBien[0] && r.haBien[0] !== 'tienhoa' && r.haBien[1] === 7, 'Evolver 7★ xịt bị giảm sao → đếm lại từ đầu → biến đổi', JSON.stringify([r.ha, r.haBien]));
+  ok(r.chep[0] === 'tienhoa' && r.chep[1] && r.chep[2], 'Copycat chép Evolver 7★ → cũng xịt như Evolver', JSON.stringify(r.chep));
+  ok(!/salvage|refund|mana/i.test(r.txt), 'Evolver: chữ không còn "hoàn mana"', r.txt);
   ok(r.e6 === 7, 'Evolver 6★ (5★ BREAKTHROUGH +2): tối đa 7★', String(r.e6));
   ok(!p.errs.length, 'solo: không lỗi trang', p.errs.slice(0, 3).join(' | '));
   await ctx.close();

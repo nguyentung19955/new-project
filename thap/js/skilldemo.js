@@ -121,7 +121,7 @@ const SD_K = {
   saochep: { kieu: 'gDB', ban: 'tia', c: [[0.2, 'Drag onto a same-star turret'], [2.5, 'Becomes a copy (half damage)', { cham: 0.6 }]] },
   ngoisao: { q: Q.hang(3, 175, 50, 6), ke: [[2, 'lien', 3], [6, 'canon', 3], [8, 'set', 3], [12, 'bang', 3]], them: [[1.6, (B) => sdNgoiSao(B, 20)], [3.2, (B) => sdNgoiSao(B, 50)]], c: [[0.2, 'Counts every star on the board'], [1.6, 'Every 10★: faster fire', { cham: 0.5 }], [3.2, 'Every 50★: more damage']] },
   soi: { o: 2, q: Q.nhom(5, 175, 18, 6), ke: [[4, 'soi', 's']], truoc: (T, B) => { const g = SD.gd; if (T) { T.thuc = g === 3; T.gd = null; } const W = B && B.t[4]; if (W) { W.thuc = g ? g === 3 : true; W.gd = null; } }, c: [[0.2, 'Each Werewolf is Normal or Awakened'], [1.6, 'Awakened: always crits, faster', { ev: 'hit', cham: 0.5 }], [3.4, 'Card level raises the Awakened chance']] },
-  tienhoa: { kieu: 'phu', dem: (T) => SKILLS.tienhoa.can(T) - T.tuoi, truoc: (T) => { T.tuoi = SKILLS.tienhoa.can(T) - 3.2; }, c: [[0.2, 'Charges up, then evolves'], [3.0, (T, s) => s >= 7 ? 'Max 7★: refunds mana instead' : 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] },
+  tienhoa: { kieu: 'phu', truoc: (T) => { if (T.sao < 7) T.tuoi = SKILLS.tienhoa.can(T) - 4.2; }, c: [[0.2, (T, s) => s >= 7 ? 'Max 7★: the bomb fizzles' : 'Time bomb counts down'], [4.3, (T, s) => s >= 7 ? 'Just a 7★ turret: no skill' : 'Becomes a random turret +1★', { ev: 'moi', cham: 0.6 }]] }, // bom hẹn giờ trên ụ (growfx veEvoBom) — không cần số đếm riêng của clip
   cauvong: { kieu: 'ht', q: Q.dong(6, 0.6, 9), truoc: (T) => { T.nap = 0.85; }, c: [[0.2, 'Paints a rainbow trail'], [1.6, 'Enemies on it take more damage', { cham: 0.5 }], [3.4, 'PvP: it paints the rival\'s path instead']] },
   wallgen: { q: Q.dong(6, 0.55, 12), truoc: (T) => { T.nap = 0.7; }, them: [[4.6, (B, D, T) => { if (T) SKILLS.wallgen.ghep(G, B, T, T); }]], c: [[0.2, 'Raises a wall on the path'], [2.6, 'Wall stops enemies, then explodes', { cham: 0.6 }], [4.6, 'Merging it: a GOLDEN WALL', { cham: 0.6 }]], dai: 11 },
   orbital: { kieu: 'ghep', q: Q.hang(4, 175, 40, 10), ke: [[2, 'orbital', 's'], [12, 'orbital', 's']], c: [[0.2, 'Merge two Orbitals'], [2.5, 'Every Orbital on the board awakens', { cham: 0.5 }], [4.2, 'Awakened: area bomb salvos']] },
@@ -209,7 +209,7 @@ const SD_MO = {
   lienket: () => '+40% damage per link',
   dongbo: () => 'Whole board: same-star Attack +damage',
   hopbi: (T) => 'Opens into ' + (T.sao >= 7 ? 5 : T.sao >= 5 ? 3 : 1) + '–' + (T.sao >= 7 ? 7 : 6) + '★',
-  tienhoa: (T) => T.sao >= 7 ? 'Max 7★: salvages mana' : 'Evolves into ' + Math.min(7, T.sao + 1) + '★',
+  tienhoa: (T) => T.sao >= 7 ? 'Max 7★: fizzles — no skill' : 'Evolves into ' + Math.min(7, T.sao + 1) + '★',
   ngoisao: () => 'Every 10★ faster · every 50★ more damage',
   soi: (T) => Math.round(SKILLS.soi.tiLe(G.ban[T.ban]) * 100) + '% Awakened: always crits',
   guongcong: (T) => 'Resist ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · mirror every ' + SKILLS.guongcong.h(T) + 's',
