@@ -1,6 +1,6 @@
 // TURRET MERGE — KIỂM TRÙM FREEZER (DEEP FREEZE): luật nhiều ụ + chia CO-OP + Halo nửa thời gian + tất định online + dải hình chiêu.
 // Chạy (gốc repo): python3 -m http.server 8765 &   NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-freezer.js [BASE]
-// Ảnh: docs/demo-hop-tuong/tuvan/freezer/freezer_dai_<chế độ>.png (tung chiêu → mảnh băng bay → bọc băng → vỡ)
+// Ảnh: docs/demo-hop-tuong/tuvan/freezer/fx_moi_<chế độ>.png (vòng sương → sóng sương bay → khối băng hình thành → lấp lánh → nứt → vỡ)
 'use strict';
 const { chromium } = require('playwright');
 const BASE = process.argv[2] || process.env.BASE || 'http://localhost:8765/thap/';
@@ -62,13 +62,15 @@ const TRUM = (w) => { G.wave = w; const E = sinhTrum('freezer', 0); E.s = 60; E.
     await p.waitForFunction(() => G.hu.some(o => o.k === 'bangCham'), null, { timeout: 8000 }); await chup('cham');
     await p.evaluate(() => { G.tocDo = 1; }); await sleep(700); await chup('boc');
     await sleep(1200); await chup('dong');
-    await p.evaluate(() => { for (const T of G.ban[0].t) if (T && T.st.bang > 0) T.st.bang = 0; G.tocDo = 1; });
-    await p.waitForFunction(() => G.ban[0].t.every(T => !T || !(T.st.bang > 0)), null, { timeout: 8000 }).catch(async (e) => { console.log(await p.evaluate(() => JSON.stringify({ d: G.dung, b: G.ban[0].t.map(T => T && T.st.bang), q: G.quai.map(E => [E.trum, E.knT, !!E.bao]) }))); throw e; }); await sleep(60); await chup('vo');
-    await sleep(250); await chup('vo2');
+    await p.evaluate(() => { for (const T of G.ban[0].t) if (T && T.st.bang > 0) T.st.bang = 0.75; }); await sleep(250); await chup('nut');
+    await p.evaluate(() => { for (const T of G.ban[0].t) if (T && T.st.bang > 0) T.st.bang = 0; G.tocDo = 0.2; });
+    await p.waitForFunction(() => G.ban[0].t.every(T => !T || !(T.st.bang > 0)), null, { timeout: 8000 }).catch(async (e) => { console.log(await p.evaluate(() => JSON.stringify({ d: G.dung, b: G.ban[0].t.map(T => T && T.st.bang), q: G.quai.map(E => [E.trum, E.knT, !!E.bao]) }))); throw e; }); await sleep(150); await chup('vo');
+    await sleep(500); await chup('vo2');
+    await p.evaluate(() => { G.tocDo = 1; });
     if (sharp) {
       const ims = await Promise.all(anh.map(([f]) => sharp(f).resize({ width: 360 }).toBuffer({ resolveWithObject: true })));
       const h0 = Math.max(...ims.map(i => i.info.height));
-      await sharp({ create: { width: 360 * ims.length, height: h0, channels: 3, background: '#111' } }).composite(ims.map((i, k) => ({ input: i.data, left: k * 360, top: 0 }))).png().toFile(OUT + 'freezer_dai_solo.png');
+      await sharp({ create: { width: 360 * ims.length, height: h0, channels: 3, background: '#111' } }).composite(ims.map((i, k) => ({ input: i.data, left: k * 360, top: 0 }))).png().toFile(OUT + 'fx_moi_solo.png');
       for (const [f] of anh) require('fs').unlinkSync(f);
     }
     ok(!p._loi.length, 'SOLO không lỗi trang ' + p._loi.slice(0, 2).join(' | '));
@@ -80,13 +82,13 @@ const TRUM = (w) => { G.wave = w; const E = sinhTrum('freezer', 0); E.s = 60; E.
     for (const [w, a, c] of [[10, 2, 1], [20, 2, 2], [40, 3, 2]]) {
       await p.evaluate(DAT); await p.evaluate(TRUM, w);
       await p.waitForFunction(() => G.ban.some(B => B.t.some(T => T && T.st.bang > 0)), null, { timeout: 8000 });
-      await sleep(200);
+      await sleep(w === 20 ? 900 : 200);
+      if (w === 20) await p.screenshot({ path: OUT + 'fx_moi_coop.png' });
       const r = await p.evaluate(() => G.ban.map(B => B.t.filter(T => T && T.st.bang > 0).length));
       ok(r[0] === a && r[1] === c, 'CO-OP wave ' + w + ': bàn trùm ' + r[0] + ' + bàn bạn ' + r[1] + ' (cần ' + a + '+' + c + ')');
       await p.evaluate(() => { G.quai.length = 0; for (const B of G.ban) for (const T of B.t) if (T) T.st.bang = 0; });
       await sleep(300);
     }
-    await p.screenshot({ path: OUT + 'freezer_coop.png' });
     ok(!p._loi.length, 'CO-OP không lỗi trang ' + p._loi.slice(0, 2).join(' | '));
     await ctx.close();
   }
@@ -97,7 +99,7 @@ const TRUM = (w) => { G.wave = w; const E = sinhTrum('freezer', 0); E.s = 60; E.
     await p.waitForFunction(() => G.ban[0].t.some(T => T && T.st.bang > 0), null, { timeout: 8000 }); await sleep(800);
     const r = await p.evaluate(() => G.ban.map(B => B.t.filter(T => T && T.st.bang > 0).length));
     ok(r[0] === 3 && r[1] === 0, 'PVP: 3 ụ bàn mình, 0 bàn đối thủ ' + JSON.stringify(r));
-    await p.screenshot({ path: OUT + 'freezer_pvp.png' });
+    await p.screenshot({ path: OUT + 'fx_moi_pvp.png' });
     ok(!p._loi.length, 'PVP không lỗi trang ' + p._loi.slice(0, 2).join(' | '));
     await ctx.close();
   }
