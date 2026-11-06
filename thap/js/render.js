@@ -923,7 +923,7 @@ const REN = {
     else if (T._bangVe && !o.ghost && typeof BANGFX !== 'undefined') BANGFX.vo(T, B, x, y);
     if (da) this.ve1(ctx, 'phu_da', S * 1.15);
     if (T.st.lua > 0) { const f = 1 + 0.04 * Math.sin(this.t * 22); ctx.save(); ctx.scale(f, f); this.ve1(ctx, 'phu_lua', S * 1.2, '', 0, -2); ctx.restore(); }
-    if (T.st.ngam > 0) { ctx.save(); ctx.rotate(this.t * 2); const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }
+    if (T.st.ngam > 0 && !T.st.ngamK) { ctx.save(); ctx.rotate(this.t * 2); /* ngamK: dấu báo chiêu trùm riêng (trumvfx.js) */ const f = 1.25 - 0.2 * (1 - T.st.ngam / 1.4); ctx.globalAlpha = al * (0.6 + 0.4 * Math.sin(this.t * 24)); this.anhGiua(ctx, 'phu_ngam', 0, 0, S * f); ctx.restore(); ctx.globalAlpha = al; }
     ctx.restore();
 
     // lớp UI trên ụ (không xoay theo đầu súng, neo theo ô): huy hiệu cấp sao + biểu tượng buff nhỏ

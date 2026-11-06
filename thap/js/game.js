@@ -225,8 +225,7 @@ function dungMV(B) {
   const r = CH.dung(B); // luật (điều kiện, trừ mana, giá ×2, hồi chiêu, bàn đầy, đồng hồ tác dụng): chihuy.js
   if (!r.ok) return false;
   const cx = B.x + B.w / 2, cy = B.y + B.h / 2, nguoi = !B.ai && B === G.ban[0];
-  if (mv.id === 'dahlia') FX.sang(0.5, '#ff7a3a');
-  if (mv.id === 'eve') FX.sang(0.4, '#9fe6ff');
+  // RAGE / HOLY SHIELD: không chớp toàn màn (reduce flash) — khoảnh khắc chỉ huy vẽ trên từng ô (trumvfx.js)
   FX.vong1(cx, cy, 20, 240, d.mau || '#ffffff', 0.6, 6);
   if (!nguoi) FX.chu1(cx, cy, d.ten, '#fff', 22, 'to'); // bàn máy/đồng đội: chữ nhỏ (đã kẹp trong màn); người chơi: cut-in
   // người chơi: cut-in chân dung chỉ huy ~2,2 s (lớp phủ) — hiệu ứng kỹ năng nổ NGAY, không chờ dải cut-in
