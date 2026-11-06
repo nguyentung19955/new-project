@@ -105,7 +105,7 @@
 
   // ---------- vào trận ----------
   Q.vaoTran = function (cfg) {
-    Q.cfg = cfg; Q.loi = []; Q.daLoi = {}; Q.dem = {}; Q.nk = []; Q.tVe = []; Q.tStep = []; Q.cham = [];
+    Q.cfg = cfg; Q.loi = []; Q.daLoi = {}; Q.dem = {}; Q.nk = []; Q.tVe = []; Q.tStep = []; Q.cham = []; Q.bams = [];
     for (const k in Q.max) Q.max[k] = 0;
     G.debug.seed = cfg.seed; G.debug.cap0 = cfg.cap0 || null; G.debug.cap2 = cfg.cap2 || null; G.debug.deck2 = cfg.deck2 || null; G.debug.wave = cfg.wave || 0; G.debug.mana = cfg.mana || 0; G.debug.fill = cfg.fill || 0;
     G.tocDo = cfg.toc || 1;
@@ -270,8 +270,10 @@
     try {
       for (; i < n && !G.ketThuc; i++) {
         if (performance.now() - t0 > (wall || 2500)) break;
+        if (typeof TAI !== 'undefined' && (TAI.cho || TAI.doi)) break; // như vòng thật: ảnh lẻ đang giải mã → luật đứng chờ (bàn vẫn vẽ)
         chupTruoc();
         Q.motBuoc();
+        if (cfg.ghiBam && Q.buoc % 600 === 0) Q.bams.push(Q.bam());
         if (Q.buoc % veMoi === 0) {
           const v0 = performance.now();
           Q.ve = true;
@@ -299,7 +301,7 @@
   };
   Q.tom = function () {
     const tv = Q.tVe.slice().sort((a, b) => a - b), p95 = tv.length ? tv[Math.floor(tv.length * 0.95)] : 0;
-    return { cham: Q.cham || [], wave: G.wave, t: +G.t.toFixed(1), kt: G.ketThuc, max: Object.assign({}, Q.max), veP95: +p95.toFixed(1), loi: Q.loi, dem: Q.dem, bam: Q.bam(),
+    return { bams: Q.bams || [], cham: Q.cham || [], wave: G.wave, t: +G.t.toFixed(1), kt: G.ketThuc, max: Object.assign({}, Q.max), veP95: +p95.toFixed(1), loi: Q.loi, dem: Q.dem, bam: Q.bam(),
       ban: G.ban.map(B => ({ deck: B.deck, mana: Math.round(B.mana), tim: B.tim, u: B.t.filter(Boolean).map(T => T.id + T.sao + (T.banSao ? 'c' : '') + (T.st.da ? 'D' : '')).join(' ') })) };
   };
   // sau khi hết trận: màn kết quả phải hiện, vừa màn, băng thông báo đã tắt, không còn dấu trùm

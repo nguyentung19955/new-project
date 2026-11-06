@@ -1,0 +1,5701 @@
+{
+"luc": "2026-11-06T11:58:24.256Z",
+"phut": 69,
+"tran": 303,
+"theoChe": {
+"pvp": {
+"tran": 100,
+"waveMax": 75,
+"waveTong": 3290,
+"thang": 11
+},
+"coop": {
+"tran": 100,
+"waveMax": 70,
+"waveTong": 3455,
+"thang": 22
+},
+"solo": {
+"tran": 100,
+"waveMax": 70,
+"waveTong": 3495,
+"thang": 19
+},
+"online": {
+"tran": 3,
+"waveMax": 7,
+"waveTong": 20,
+"thang": 0
+}
+},
+"maxObj": {
+"dan": 32,
+"hu": 102,
+"bay": 6,
+"quai": 180,
+"hat": 320,
+"chu": 48,
+"vx": 25,
+"tvfPop": 36,
+"tvfDs": 30,
+"ve": 788.7999999998137,
+"step": 1173.9000000003725
+},
+"heap": [
+{
+"w": 0,
+"n": 10,
+"mb": 13.4
+},
+{
+"w": 1,
+"n": 10,
+"mb": 11.2
+},
+{
+"w": 0,
+"n": 20,
+"mb": 14.3
+},
+{
+"w": 0,
+"n": 30,
+"mb": 9.3
+},
+{
+"w": 1,
+"n": 20,
+"mb": 12.4
+},
+{
+"w": 0,
+"n": 40,
+"mb": 10.7
+},
+{
+"w": 0,
+"n": 50,
+"mb": 12.5
+},
+{
+"w": 1,
+"n": 30,
+"mb": 10.7
+},
+{
+"w": 0,
+"n": 60,
+"mb": 11.3
+},
+{
+"w": 1,
+"n": 40,
+"mb": 11.7
+},
+{
+"w": 1,
+"n": 50,
+"mb": 13
+},
+{
+"w": 0,
+"n": 70,
+"mb": 12.2
+},
+{
+"w": 1,
+"n": 60,
+"mb": 10.3
+},
+{
+"w": 0,
+"n": 80,
+"mb": 9.5
+},
+{
+"w": 1,
+"n": 70,
+"mb": 12
+},
+{
+"w": 0,
+"n": 90,
+"mb": 11.2
+},
+{
+"w": 1,
+"n": 80,
+"mb": 9.8
+},
+{
+"w": 1,
+"n": 90,
+"mb": 11
+},
+{
+"w": 0,
+"n": 100,
+"mb": 12.2
+},
+{
+"w": 1,
+"n": 100,
+"mb": 12.1
+},
+{
+"w": 1,
+"n": 110,
+"mb": 10.7
+},
+{
+"w": 0,
+"n": 110,
+"mb": 11.5
+},
+{
+"w": 1,
+"n": 120,
+"mb": 12.4
+},
+{
+"w": 0,
+"n": 120,
+"mb": 12.9
+},
+{
+"w": 0,
+"n": 130,
+"mb": 9.3
+},
+{
+"w": 1,
+"n": 130,
+"mb": 10.2
+},
+{
+"w": 1,
+"n": 140,
+"mb": 11.7
+},
+{
+"w": 0,
+"n": 140,
+"mb": 11.5
+}
+],
+"taiLap": [
+{
+"seed": 1001,
+"che": "pvp",
+"khop": true,
+"lech": -1,
+"n": 6
+},
+{
+"seed": 1000,
+"che": "coop",
+"khop": false,
+"lech": 0,
+"n": 6
+},
+{
+"seed": 1002,
+"che": "solo",
+"khop": true,
+"lech": -1,
+"n": 6
+},
+{
+"seed": 1003,
+"che": "coop",
+"khop": true,
+"lech": -1,
+"n": 6
+},
+{
+"seed": 1005,
+"che": "solo",
+"khop": true,
+"lech": -1,
+"n": 7
+},
+{
+"seed": 1006,
+"che": "coop",
+"khop": true,
+"lech": -1,
+"n": 6
+},
+{
+"seed": 1007,
+"che": "pvp",
+"khop": true,
+"lech": -1,
+"n": 7
+},
+{
+"seed": 1008,
+"che": "solo",
+"khop": true,
+"lech": -1,
+"n": 7
+},
+{
+"seed": 1009,
+"che": "coop",
+"khop": true,
+"lech": -1,
+"n": 7
+},
+{
+"seed": 1010,
+"che": "pvp",
+"khop": true,
+"lech": -1,
+"n": 7
+}
+],
+"loi": {
+"buoc-cham | # bước luật (#/# s) mất # ms": {
+"n": 21,
+"mau": {
+"loai": "buoc-cham",
+"chi": "1 bước luật (1/60 s) mất 255 ms",
+"seed": 1000,
+"che": "coop",
+"buoc": 51134,
+"wave": 37,
+"t": 852.23,
+"nk": [
+"43758:ghep khien2→khien2",
+"43807:nang bomhen",
+"43925:ghep soi3→soi3",
+"44255:trieu b1",
+"44811:trieu b0",
+"45659:trieu b1",
+"46620:trieu b0",
+"47361:chuDong chuato3",
+"47408:trieu b0",
+"47882:ghep haoquang1→haoquang1",
+"49331:trieu b1",
+"50577:dungMV b0 eve",
+"50601:ghep mauhut5→khoathoigian1",
+"50629:ghep mauhut5→bomhen2"
+]
+},
+"seeds": [
+"1000:coop",
+"1002:solo",
+"1016:pvp",
+"1019:pvp",
+"1026:solo",
+"1091:pvp",
+"1098:solo",
+"1102:coop"
+]
+},
+"trum-de-lai | bàn # ô # dichchuyen: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 1,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 0 ô 4 dichchuyen: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1124,
+"che": "pvp",
+"buoc": 228,
+"wave": 1,
+"t": 3.8,
+"nk": [
+"0:trieu b0",
+"39:trieu b0",
+"47:trieu b1",
+"48:trieu b1",
+"78:ghep saochep1→dichchuyen1",
+"78:chuyenU saochep→dichchuyen1",
+"94:dungMV b1 eve",
+"101:trieu b1",
+"114:trieu b0",
+"134:ghep nguyenrua1→nguyenrua1",
+"194:trieu b0",
+"221:ghep dichchuyen(copy)1→thanhdia1"
+]
+},
+"seeds": [
+"1124:pvp"
+]
+},
+"trum-de-lai | bàn # ô # nangsao: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 1,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 0 ô 4 nangsao: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1157,
+"che": "pvp",
+"buoc": 10484,
+"wave": 9,
+"t": 174.73,
+"nk": [
+"7877:trieu b1",
+"8101:nang soi",
+"8130:ghep hydra2→hydra2",
+"8544:chuDong leviathan3",
+"8735:nang nguyenrua",
+"9065:trieu b1",
+"9088:ghep soi1→soi1",
+"9186:trieu b1",
+"9307:ghep sinhdoi2→sinhdoi2",
+"9307:sinhDoi b1",
+"9405:ghep hydra3→hydra3",
+"10083:trieu b1",
+"10392:ghep nguyenrua2→nguyenrua2",
+"10415:trieu b1"
+]
+},
+"seeds": [
+"1157:pvp"
+]
+},
+"trum-de-lai | bàn # ô # soi: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 1,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 0 ô 9 soi: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1157,
+"che": "pvp",
+"buoc": 20364,
+"wave": 16,
+"t": 339.4,
+"nk": [
+"18571:ghep nguyenrua2→nguyenrua2",
+"18653:ghep nguyenrua3→nguyenrua3",
+"18661:sao soi b0o9 2→1",
+"18801:ghep hydra4→hydra4",
+"19064:chuDong leviathan4",
+"19325:trieu b1",
+"19541:trieu b1",
+"19725:ghep soi1→soi1",
+"19803:trieu b1",
+"19987:ghep soi2→soi2",
+"20019:ghep sinhdoi1→sinhdoi1",
+"20019:sinhDoi b1",
+"20183:ghep hydra1→hydra1",
+"20271:ghep nguyenrua2→nguyenrua2"
+]
+},
+"seeds": [
+"1157:pvp"
+]
+},
+"trum-de-lai | bàn # ô # loren: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 2,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 1 ô 8 loren: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1178,
+"che": "pvp",
+"buoc": 9532,
+"wave": 8,
+"t": 158.87,
+"nk": [
+"6171:nang nguyenrua",
+"6456:nang cauvong",
+"6773:nang soi",
+"7384:nang hydra",
+"7542:nang chuato",
+"7761:trieu b0",
+"7928:trieu b0",
+"7967:ghep chuato1→chuato1",
+"8219:ghep hydra2→hydra2",
+"8668:trieu b0",
+"8799:ghep cauvong1→cauvong1",
+"8964:trieu b0",
+"9353:trieu b0",
+"9441:ghep nguyenrua1→nguyenrua1"
+]
+},
+"seeds": [
+"1178:pvp",
+"1265:pvp"
+]
+},
+"trum-de-lai | bàn # ô # sinhdoi: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 1,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 1 ô 11 sinhdoi: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1220,
+"che": "pvp",
+"buoc": 20512,
+"wave": 17,
+"t": 341.87,
+"nk": [
+"19379:ghep guongcong1→guongcong1",
+"19395:ghep lualien2→lualien2",
+"19429:trieu b0",
+"19703:trieu b1",
+"19736:ghep soi3→soi3",
+"19878:trieu b0",
+"19925:ghep nguyenrua1→nguyenrua1",
+"20015:sao sinhdoi b1o8 6→5",
+"20221:trieu b0",
+"20253:ghep haoquang1→haoquang1",
+"20339:chuDong haoquang4",
+"20351:trieu b1",
+"20418:ghep nguyenrua2→nguyenrua2",
+"20503:trieu b0"
+]
+},
+"seeds": [
+"1220:pvp"
+]
+},
+"trum-de-lai | bàn # ô # bomhen: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm": {
+"n": 1,
+"mau": {
+"loai": "trum-de-lai",
+"chi": "bàn 0 ô 2 bomhen: tâm ngắm trùm còn (st.ngam=0.05) khi không còn trùm",
+"seed": 1268,
+"che": "pvp",
+"buoc": 3104,
+"wave": 3,
+"t": 51.73,
+"nk": [
+"1224:trieu b0",
+"1346:ghep luoicheo1→luoicheo1",
+"1517:ghep bomhen2→bomhen2",
+"1775:trieu b1",
+"1974:ghep mauhut1→nguyenrua1",
+"2114:trieu b0",
+"2693:trieu b1",
+"2837:ghep saochep1→nguyenrua1",
+"2837:chuyenU saochep→nguyenrua1",
+"2849:dungMV b0 hero",
+"2849:trieu b0 free",
+"2849:trieu b0 free",
+"3012:ghep nguyenrua(copy)1→nguyenrua1",
+"3046:ghep luoicheo1→luoicheo1"
+]
+},
+"seeds": [
+"1268:pvp"
+]
+},
+"khong-tai-lap | coop": {
+"n": 1,
+"mau": {
+"loai": "khong-tai-lap",
+"chi": "cùng hạt giống → khác kết quả (lệch từ mốc 0)"
+},
+"seeds": [
+"1000:coop"
+]
+}
+},
+"tran_tom": [
+{
+"seed": 1001,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"soi",
+"nhatthuc",
+"nguyenrua",
+"hutmana",
+"marionette"
+],
+"wave": 31,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1000,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"haoquang",
+"thaukinh",
+"khoathoigian",
+"bomhen",
+"mauhut"
+],
+"wave": 62,
+"kq": null,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1002,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"marionette",
+"hasao",
+"guongcong",
+"ngaithoigian",
+"xaotron"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1003,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"sungluc",
+"thaukinh",
+"pandora",
+"ngoisao",
+"hopca"
+],
+"wave": 53,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1005,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"canon",
+"ngaithoigian",
+"nguyenrua",
+"hasao",
+"guongcong"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1006,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1007,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"xaotron",
+"leviathan",
+"anhsang",
+"tienhoa",
+"hydra"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1008,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"nguyenrua",
+"sinhdoi",
+"hasao",
+"nemesis",
+"haoquang"
+],
+"wave": 47,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1009,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"cuongno",
+"nhatthuc",
+"lualien",
+"ngoisao",
+"luutru"
+],
+"wave": 44,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1010,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"xuonganh",
+"leviathan",
+"luoicheo",
+"cuongno",
+"mimic"
+],
+"wave": 2,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1004,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 6,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1011,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 7,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1013,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"soi",
+"ngoisao",
+"thanhdia",
+"docton",
+"hopca"
+],
+"wave": 15,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1014,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"luutru",
+"ngaithoigian",
+"docton",
+"nguyenrua",
+"saochep"
+],
+"wave": 36,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1012,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"luutru",
+"leviathan",
+"radar",
+"sinhdoi",
+"cuuvi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1015,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"pandora",
+"ngaithoigian",
+"loren",
+"tron",
+"hasao"
+],
+"wave": 22,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1017,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"khien",
+"blackhole",
+"sinhdoi",
+"hasao",
+"soi"
+],
+"wave": 59,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1016,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"haoquang",
+"nhatthuc",
+"pandora",
+"luoicheo",
+"santhuong"
+],
+"wave": 31,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1019,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngaithoigian",
+"cuuvi",
+"nangsao",
+"hopca",
+"khien"
+],
+"wave": 2,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1020,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nguyenrua",
+"thanhdia",
+"hasao",
+"loren",
+"leviathan"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1018,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"wallgen",
+"haoquang",
+"hydra",
+"aten",
+"vughep"
+],
+"wave": 7,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1021,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 56,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1023,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"vughep",
+"chuato",
+"combo",
+"mimic",
+"orbital"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1022,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"nhatthuc",
+"lualien",
+"epxung",
+"saochep",
+"tienhoa"
+],
+"wave": 18,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1024,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1025,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"vughep",
+"ronglua",
+"dichchuyen",
+"hydra",
+"mauhut"
+],
+"wave": 4,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1027,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 19,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1026,
+"che": "solo",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"bua",
+"luutru",
+"luoicheo",
+"marionette",
+"lualien"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1029,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 36,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1028,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"epxung",
+"luoicheo",
+"no5",
+"nangsao",
+"pandora"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1030,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 56,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1031,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1033,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 44,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1034,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"leviathan",
+"loren",
+"lualien",
+"santhuong",
+"mimic"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1035,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"hydra",
+"anhsang",
+"cuuvi",
+"guongcong",
+"sinhdoi"
+],
+"wave": 33,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1032,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"nemesis",
+"vughep",
+"ngaithoigian",
+"cuuvi",
+"doc"
+],
+"wave": 40,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1037,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 23,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1036,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"docton",
+"tron",
+"xuonganh",
+"haoquang",
+"hopbi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1038,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"haoquang",
+"ngoisao",
+"xuonganh",
+"bao",
+"mauhut"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1039,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hasao",
+"khien",
+"taylo",
+"sinhdoi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1041,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 65,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1040,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"marionette",
+"mimic",
+"railgun",
+"luutru",
+"pandora"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1042,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"marionette",
+"xaotron",
+"epxung",
+"ngoisao",
+"cuuvi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1044,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"wallgen",
+"marionette",
+"no5",
+"hopbi",
+"soi"
+],
+"wave": 40,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1043,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"sinhdoi",
+"xuonganh",
+"mauhut",
+"lualien",
+"nhatthuc"
+],
+"wave": 57,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1045,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1047,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"soi",
+"cuuvi",
+"nguyenrua",
+"epxung",
+"mimic"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1048,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 27,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1049,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 4,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1050,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"kiembang",
+"mauhut",
+"hydra",
+"guongcong",
+"haoquang"
+],
+"wave": 8,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1046,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"santhuong",
+"haoquang",
+"pandora",
+"ngoisao",
+"phagiap"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1051,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"luoicheo",
+"haoquang",
+"cuuvi",
+"mauhut",
+"nangsao"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1052,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1053,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"blackhole",
+"vughep",
+"nhatthuc",
+"khien",
+"cauvong"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1055,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"hasao",
+"loren",
+"drone",
+"nhieusong",
+"nhatthuc"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1056,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"taylo",
+"sinhdoi",
+"hasao",
+"lualien",
+"pandora"
+],
+"wave": 17,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1054,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"vughep",
+"phagiap",
+"tienhoa",
+"dichchuyen",
+"canon"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1058,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"xaotron",
+"hydra",
+"leviathan",
+"guongcong",
+"vughep"
+],
+"wave": 4,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1057,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"nguyenrua",
+"mimic",
+"aten",
+"mauhut",
+"haoquang"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1060,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"vughep",
+"tienhoa",
+"nhatthuc",
+"mauhut",
+"cuuvi"
+],
+"wave": 56,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1059,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngaithoigian",
+"sinhdoi",
+"sungluc",
+"railgun",
+"hopca"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1061,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1062,
+"che": "solo",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1063,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 34,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1065,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 46,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1066,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"haoquang",
+"loren",
+"khoathoigian",
+"dongbo",
+"hydra"
+],
+"wave": 1,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1067,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"khuech",
+"leviathan",
+"hutmana",
+"xaotron",
+"nhatthuc"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1068,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"thanhdia",
+"nangluong",
+"nguyenrua",
+"nhatthuc",
+"luoicheo"
+],
+"wave": 24,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1064,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"chimang",
+"guongcong",
+"nemesis",
+"dongbo",
+"soi"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1070,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1071,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"chuato",
+"loren",
+"mana",
+"pandora",
+"mimic"
+],
+"wave": 3,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1069,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ngaithoigian",
+"soi",
+"loren",
+"tienhoa",
+"set"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1072,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"khoisinh",
+"khoathoigian",
+"lualien",
+"bomhen",
+"mauhut"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1074,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1075,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"cuuvi",
+"nguyenrua",
+"luoicheo",
+"guongcong",
+"khoisinh"
+],
+"wave": 43,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1076,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"tron",
+"soi",
+"marionette",
+"hopbi",
+"haoquang"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1077,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"lualien",
+"hasao",
+"xaotron",
+"lanhgia",
+"overlord"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1078,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1073,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1080,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1081,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1079,
+"che": "pvp",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1083,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1082,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"anhsang",
+"hutmana",
+"dichchuyen",
+"nemesis",
+"thanhdia"
+],
+"wave": 74,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1085,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"nguyenrua",
+"dichchuyen",
+"lien",
+"hydra",
+"bang"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1084,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1086,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"loren",
+"nhanban",
+"vughep",
+"soi",
+"nguyenrua"
+],
+"wave": 57,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1088,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"nhanban",
+"luoicheo",
+"thanhdia",
+"nemesis",
+"nangsao"
+],
+"wave": 8,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1087,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 19,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1089,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"taylo",
+"nangsao",
+"hopbi",
+"cuuvi",
+"ngoisao"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1090,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"set",
+"kiembang",
+"mauhut",
+"bienmau",
+"cauvong"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1092,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"khoisinh",
+"nayda",
+"xuonganh",
+"maychem",
+"taylo"
+],
+"wave": 20,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1093,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 36,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1094,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1095,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"baotuyet",
+"tia",
+"docton",
+"guongcong",
+"haoquang"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1091,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"lualien",
+"xuonganh",
+"khoisinh",
+"luutru",
+"luoicheo"
+],
+"wave": 75,
+"kq": null,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1097,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"lualien",
+"vughep",
+"luutru",
+"loren"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1096,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1098,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1099,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"leviathan",
+"luoicheo",
+"nangsao",
+"guongcong",
+"thanhdia"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1100,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"hasao",
+"cuuvi",
+"xuonganh",
+"lualien",
+"lanhgia"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1101,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 33,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1102,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"chuato",
+"mauhut",
+"sinhdoi",
+"bomhen",
+"hasao"
+],
+"wave": 27,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1104,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 16,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1105,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"khien",
+"nam",
+"pandora",
+"drone",
+"ngaithoigian"
+],
+"wave": 8,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1106,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"loren",
+"drone",
+"khien",
+"ngaithoigian",
+"ngoisao"
+],
+"wave": 59,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1107,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"luutru",
+"hasao",
+"saochep",
+"nangsao",
+"nhieusong"
+],
+"wave": 19,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1108,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"saochep",
+"mimic",
+"nemesis",
+"ngoisao",
+"hydra"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1109,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngaithoigian",
+"lualien",
+"marionette",
+"guongcong",
+"nam"
+],
+"wave": 21,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1110,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 33,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1103,
+"che": "pvp",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1111,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1113,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"mauhut",
+"xuonganh",
+"leviathan",
+"orbital",
+"sinhdoi"
+],
+"wave": 12,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1114,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"dongbo",
+"nguyenrua",
+"khien",
+"hydra",
+"tuthan"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1112,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1116,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"hopca",
+"no5",
+"epxung",
+"chuato",
+"saochep"
+],
+"wave": 52,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1115,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1117,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nemesis",
+"aten",
+"nhatthuc",
+"pandora",
+"vughep"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1119,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"leviathan",
+"hydra",
+"epxung",
+"xuonganh",
+"mimic"
+],
+"wave": 25,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1118,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"haoquang",
+"nhatthuc",
+"hopbi",
+"cuuvi",
+"wallgen"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1120,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 46,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1122,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"haoquang",
+"nguyenrua",
+"aten",
+"hopca",
+"mauhut"
+],
+"wave": 16,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1123,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"tienhoa",
+"lualien",
+"hasao",
+"ngaithoigian",
+"loren"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1121,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"hydra",
+"tienhoa",
+"luoicheo",
+"sinhdoi",
+"nemesis"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1124,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"saochep",
+"nhanmana",
+"thanhdia",
+"ronglua",
+"dichchuyen"
+],
+"wave": 12,
+"kq": false,
+"loi": [
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1126,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"maychem",
+"khoisinh",
+"luutru",
+"nangsao",
+"nam"
+],
+"wave": 43,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1127,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"guongcong",
+"nhatthuc",
+"luutru",
+"ronglua",
+"xuonganh"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1128,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 67,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1129,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1125,
+"che": "solo",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ronglua",
+"aten",
+"tuthan",
+"railgun",
+"hydra"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1131,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"phun",
+"nangsao",
+"saochep",
+"chuato",
+"thanhdia"
+],
+"wave": 37,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1132,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 12,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1133,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"leviathan",
+"thanhdia",
+"xuonganh",
+"kepha",
+"aten"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1134,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"hasao",
+"saochep",
+"khoisinh",
+"lualien",
+"khien"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1130,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"tron",
+"pandora",
+"leviathan",
+"lualien",
+"ngoisao"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1136,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"luutru",
+"haoquang",
+"nhatthuc",
+"nayda",
+"epxung"
+],
+"wave": 4,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1137,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"thanhdia",
+"hasao",
+"loren",
+"wallgen",
+"luutru"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1138,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"bienmau",
+"baotuyet",
+"cauvong",
+"saochep"
+],
+"wave": 47,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1139,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 2,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1135,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"orbital",
+"nemesis",
+"khoisinh",
+"vughep",
+"cuuvi"
+],
+"wave": 42,
+"kq": null,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1141,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"khoisinh",
+"hutmana",
+"bomhen",
+"docton",
+"guongcong"
+],
+"wave": 20,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1142,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"loren",
+"chimang",
+"ngoisao",
+"railgun",
+"chuato"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1143,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"nangluong",
+"thaukinh",
+"mimic",
+"xuonganh",
+"sinhdoi"
+],
+"wave": 35,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1144,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"thanhdia",
+"xuonganh",
+"khien",
+"mimic",
+"luoicheo"
+],
+"wave": 3,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1140,
+"che": "solo",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1146,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 19,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1147,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"sinhdoi",
+"loren",
+"drone",
+"hasao",
+"vughep"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1145,
+"che": "pvp",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"chuato",
+"mortar",
+"drone",
+"luutru",
+"hasao"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1148,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ngaithoigian",
+"xuonganh",
+"soi",
+"loren",
+"marionette"
+],
+"wave": 75,
+"kq": null,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1149,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1151,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"mauhut",
+"xuonganh",
+"ngoisao",
+"luoicheo",
+"pandora"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1150,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"chuato",
+"bienmau",
+"vughep",
+"combo",
+"xuonganh"
+],
+"wave": 22,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1153,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nhanban",
+"mortar",
+"saochep",
+"nemesis",
+"canon"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1152,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"mimic",
+"leviathan",
+"khien",
+"bienmau",
+"hydra"
+],
+"wave": 31,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1155,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"marionette",
+"luoicheo",
+"hopca",
+"epxung",
+"soi"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1156,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"luutru",
+"guongcong",
+"xuonganh",
+"bomhen",
+"sinhdoi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1154,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"mauhut",
+"tienhoa",
+"luoicheo",
+"vughep",
+"leviathan"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1158,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"chimang",
+"chuato",
+"khien",
+"hopbi",
+"soi"
+],
+"wave": 43,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1159,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"haoquang",
+"lualien",
+"dichchuyen",
+"sinhdoi",
+"orbital"
+],
+"wave": 44,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1160,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"marionette",
+"loren",
+"hutmana",
+"mana",
+"pandora"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1161,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"luoicheo",
+"lualien",
+"khoisinh",
+"hasao",
+"thanhdia"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1157,
+"che": "pvp",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"nangsao",
+"nangluong",
+"mauhut",
+"soi",
+"ngaithoigian"
+],
+"wave": 75,
+"kq": null,
+"loi": [
+"trum-de-lai",
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1162,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"luutru",
+"loren",
+"khoisinh",
+"bang",
+"tuthan"
+],
+"wave": 3,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1163,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"sinhdoi",
+"ngoisao",
+"nangsao",
+"xuonganh",
+"luoicheo"
+],
+"wave": 43,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1164,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"wallgen",
+"thanhdia",
+"loren",
+"khien",
+"vughep"
+],
+"wave": 55,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1165,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"orbital",
+"mauhut",
+"khoisinh",
+"guongcong",
+"marionette"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1166,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"haoquang",
+"drone",
+"taylo",
+"tienhoa",
+"cuuvi"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1167,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"kiembang",
+"bomhen",
+"ngoisao",
+"hasao",
+"hutmana"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1168,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ronglua",
+"taylo",
+"bienmau",
+"bomhen",
+"loren"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1169,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 25,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1170,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"thanhdia",
+"bua",
+"marionette",
+"ngoisao",
+"nangluong"
+],
+"wave": 63,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1172,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 2,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1173,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 27,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1174,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"set",
+"lualien",
+"mauhut",
+"xuonganh",
+"ngoisao"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1171,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1175,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 35,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1176,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"bienmau",
+"lanhgia",
+"nhatthuc",
+"haoquang",
+"xuonganh"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1178,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"cauvong",
+"nguyenrua",
+"chuato",
+"soi",
+"hydra"
+],
+"wave": 13,
+"kq": false,
+"loi": [
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1179,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"saochep",
+"cauvong",
+"dongbo",
+"nemesis",
+"bomhen"
+],
+"wave": 46,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1180,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"xuonganh",
+"ngoisao",
+"hopca",
+"kepha",
+"bienmau"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1177,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1182,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1181,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"bienmau",
+"maychem",
+"ngaithoigian",
+"xaotron",
+"guongcong"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1184,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"nemesis",
+"hasao",
+"mana",
+"khoisinh",
+"hutmana"
+],
+"wave": 52,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1185,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"phagiap",
+"ronglua",
+"cuuvi",
+"saochep",
+"lualien"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1186,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1187,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ronglua",
+"taylo",
+"luutru",
+"nguyenrua",
+"nam"
+],
+"wave": 2,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1188,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"thanhdia",
+"bua",
+"leviathan",
+"phagiap",
+"guongcong"
+],
+"wave": 54,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1189,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"hasao",
+"chuato",
+"kiembang",
+"tuthan",
+"mimic"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1183,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"xaotron",
+"vughep",
+"hopbi",
+"taylo",
+"nhatthuc"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1190,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 1,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1191,
+"che": "solo",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"bomhen",
+"chuato",
+"kiembang",
+"tienhoa",
+"guongcong"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1193,
+"che": "pvp",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"bienmau",
+"luoicheo",
+"marionette",
+"hasao",
+"nhanban"
+],
+"wave": 36,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1194,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 48,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1192,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1195,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"luoicheo",
+"soi",
+"hopca",
+"hasao",
+"bomhen"
+],
+"wave": 28,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1196,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"cuuvi",
+"ngaithoigian",
+"nemesis",
+"hydra",
+"luoicheo"
+],
+"wave": 31,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1198,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"loren",
+"hasao",
+"khoisinh",
+"vughep",
+"luoicheo"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1199,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"sinhdoi",
+"mauhut",
+"khien",
+"luutru",
+"taylo"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1200,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 35,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1197,
+"che": "solo",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1202,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"khien",
+"hasao",
+"marionette",
+"epxung",
+"cuuvi"
+],
+"wave": 45,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1203,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"kepha",
+"ngoisao",
+"loren",
+"bang",
+"marionette"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1201,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"nangsao",
+"saochep",
+"tienhoa",
+"thanhdia",
+"combo"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1204,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1205,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1206,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 33,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1207,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"tienhoa",
+"dichchuyen",
+"vughep",
+"xaotron",
+"marionette"
+],
+"wave": 30,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1209,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"nguyenrua",
+"nemesis",
+"hasao",
+"vughep",
+"tuthan"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1210,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"saochep",
+"nangsao",
+"khien",
+"hopca",
+"thanhdia"
+],
+"wave": 50,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1211,
+"che": "pvp",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 36,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1212,
+"che": "solo",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"nguyenrua",
+"hopca",
+"sinhdoi",
+"nemesis",
+"ronglua"
+],
+"wave": 35,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1208,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"nemesis",
+"cuuvi",
+"baotuyet",
+"khien",
+"loren"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1214,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"luutru",
+"saochep",
+"thanhdia",
+"cuuvi",
+"bienmau"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1213,
+"che": "coop",
+"kieu": "dai",
+"toc": 2,
+"bo": [
+"soi",
+"nguyenrua",
+"vughep",
+"mortar",
+"tienhoa"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1216,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"mauhut",
+"vughep",
+"pandora",
+"docton",
+"loren"
+],
+"wave": 35,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1217,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"bang",
+"radar",
+"lualien",
+"luoicheo",
+"leviathan"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1215,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"dichchuyen",
+"pandora",
+"bao",
+"tienhoa",
+"cuuvi"
+],
+"wave": 23,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1219,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"luoicheo",
+"luutru",
+"dichchuyen",
+"nemesis",
+"khoisinh"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1218,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 45,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1221,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"vughep",
+"luoicheo",
+"saochep",
+"ngoisao",
+"phagiap"
+],
+"wave": 17,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1222,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"mauhut",
+"marionette",
+"chuato",
+"docton",
+"aten"
+],
+"wave": 20,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1223,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"thanhdia",
+"luoicheo",
+"loren",
+"xaotron",
+"lualien"
+],
+"wave": 3,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1224,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"luoicheo",
+"bienmau",
+"lophanung",
+"mauhut",
+"xaotron"
+],
+"wave": 5,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1225,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"cuongno",
+"ngoisao",
+"marionette",
+"epxung",
+"bomhen"
+],
+"wave": 8,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1220,
+"che": "pvp",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"nhatthuc",
+"hydra",
+"haoquang",
+"marionette",
+"nguyenrua"
+],
+"wave": 75,
+"kq": null,
+"loi": [
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1227,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"chuato",
+"vughep",
+"luutru",
+"xaotron",
+"loa"
+],
+"wave": 14,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1228,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"bienmau",
+"aten",
+"cauvong",
+"dichchuyen",
+"bomhen"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1226,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"nam",
+"epxung",
+"railgun",
+"chuato",
+"lualien"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1230,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"mimic",
+"pandora",
+"ngoisao",
+"bienmau",
+"luoicheo"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1229,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"hopbi",
+"wallgen",
+"pandora",
+"loren",
+"luutru"
+],
+"wave": 5,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1232,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 1,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1233,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 10,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1231,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"dichchuyen",
+"ronglua",
+"xuonganh",
+"hydra",
+"hasao"
+],
+"wave": 20,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1234,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"soi",
+"docton",
+"orbital",
+"sinhdoi",
+"leviathan"
+],
+"wave": 63,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1235,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"lualien",
+"no5",
+"overlord",
+"thanhdia",
+"doc"
+],
+"wave": 22,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1237,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1236,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 27,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1239,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"sinhdoi",
+"chuato",
+"luutru",
+"thaukinh",
+"loren"
+],
+"wave": 48,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1240,
+"che": "coop",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"cuuvi",
+"lanhgia",
+"wallgen",
+"hopca",
+"nayda"
+],
+"wave": 45,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1238,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 31,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1242,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"khien",
+"haoquang",
+"guongcong",
+"pandora",
+"hutmana"
+],
+"wave": 9,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1243,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1244,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"chuato",
+"tienhoa",
+"saochep"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1245,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"nguyenrua",
+"marionette",
+"vungdoc",
+"ronglua",
+"nangsao"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1246,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1241,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1247,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"hydra",
+"combo",
+"ngaithoigian",
+"xuonganh",
+"mimic"
+],
+"wave": 2,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1249,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nhieusong",
+"docton",
+"dongbo",
+"vughep",
+"saochep"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1248,
+"che": "solo",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"tienhoa",
+"orbital",
+"loren",
+"leviathan",
+"xuonganh"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1250,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"ronglua",
+"luoicheo",
+"vughep",
+"marionette",
+"vungdoc"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1251,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"blackhole",
+"tienhoa",
+"saochep"
+],
+"wave": 31,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1253,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"loren",
+"pandora",
+"bienmau",
+"chuato",
+"hydra"
+],
+"wave": 4,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1252,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"soi",
+"khien",
+"ngaithoigian",
+"kepha",
+"epxung"
+],
+"wave": 20,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1254,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nemesis",
+"luutru",
+"hopca",
+"hydra",
+"leviathan"
+],
+"wave": 33,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1256,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"lualien",
+"xuonganh",
+"haoquang",
+"cauvong",
+"nhatthuc"
+],
+"wave": 18,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1257,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"thanhdia",
+"guongcong",
+"nguyenrua",
+"cuuvi",
+"hasao"
+],
+"wave": 3,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1258,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"hopbi",
+"nemesis",
+"saochep",
+"thanhdia",
+"orbital"
+],
+"wave": 6,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1255,
+"che": "coop",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"thanhdia",
+"nemesis",
+"lualien",
+"taylo",
+"luoicheo"
+],
+"wave": 46,
+"kq": null,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1259,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 63,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1261,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 19,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1262,
+"che": "pvp",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 63,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1263,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"khoisinh",
+"soi",
+"loren",
+"marionette",
+"drone"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1260,
+"che": "solo",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1265,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"saochep",
+"hydra",
+"sinhdoi",
+"thanhdia",
+"nguyenrua"
+],
+"wave": 28,
+"kq": false,
+"loi": [
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1266,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"vughep",
+"hopca",
+"nam",
+"bienmau",
+"tron"
+],
+"wave": 11,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1264,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"lienket",
+"vughep",
+"haoquang",
+"radar",
+"hopbi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1267,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1268,
+"che": "pvp",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"bomhen",
+"luoicheo",
+"soi",
+"xuonganh",
+"ngoisao"
+],
+"wave": 75,
+"kq": null,
+"loi": [
+"trum-de-lai"
+],
+"cham": []
+},
+{
+"seed": 1269,
+"che": "solo",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ronglua",
+"saochep",
+"dongbo",
+"thanhdia",
+"sinhdoi"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1271,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 31,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1272,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"leviathan",
+"hydra",
+"nhatthuc",
+"ngoisao",
+"luoicheo"
+],
+"wave": 44,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1273,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 8,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1274,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"khoisinh",
+"soi",
+"nhatthuc",
+"cauvong",
+"ngoisao"
+],
+"wave": 6,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1275,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"khien",
+"cuuvi",
+"nangluong",
+"luoicheo",
+"hopbi"
+],
+"wave": 12,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1270,
+"che": "coop",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1276,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"aten",
+"nhatthuc",
+"thanhdia",
+"chimang",
+"ngoisao"
+],
+"wave": 32,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1277,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"epxung",
+"cuuvi",
+"loa",
+"haoquang",
+"luoicheo"
+],
+"wave": 11,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1278,
+"che": "solo",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"hydra",
+"saochep",
+"guongcong",
+"bomhen",
+"tron"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1280,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"sinhdoi",
+"bomhen",
+"hopca",
+"ngoisao",
+"saochep"
+],
+"wave": 12,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1281,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"luutru",
+"wallgen",
+"nhatthuc",
+"lien",
+"nangluong"
+],
+"wave": 49,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1282,
+"che": "coop",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 27,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1279,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"epxung",
+"wallgen",
+"hopca",
+"vughep",
+"nhanmana"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1284,
+"che": "solo",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"lualien",
+"orbital",
+"khoathoigian",
+"thanhdia",
+"ngoisao"
+],
+"wave": 55,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1285,
+"che": "coop",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"haoquang",
+"xuonganh",
+"dongbo",
+"loren",
+"nangsao"
+],
+"wave": 6,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1286,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"chuato",
+"loren",
+"nemesis",
+"khuech",
+"ngoisao"
+],
+"wave": 2,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1283,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 31,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1288,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"luutru",
+"pandora",
+"cuongno",
+"nemesis",
+"mimic"
+],
+"wave": 7,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1287,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"nguyenrua",
+"ronglua",
+"lien",
+"xuonganh",
+"nhieusong"
+],
+"wave": 12,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1290,
+"che": "solo",
+"kieu": "thuong",
+"toc": 2,
+"bo": [
+"chimang",
+"canon",
+"loren",
+"ronglua",
+"luoicheo"
+],
+"wave": 5,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1291,
+"che": "coop",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"ngoisao",
+"saochep",
+"leviathan",
+"vughep",
+"mauhut"
+],
+"wave": 12,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1292,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"bang",
+"set",
+"cuuvi",
+"blackhole",
+"loren"
+],
+"wave": 13,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1293,
+"che": "solo",
+"kieu": "muon",
+"toc": 1,
+"bo": [
+"mauhut",
+"khoisinh",
+"ngoisao",
+"dichchuyen",
+"orbital"
+],
+"wave": 34,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1289,
+"che": "pvp",
+"kieu": "muon",
+"toc": 3,
+"bo": [
+"ngoisao",
+"hopbi",
+"khoisinh",
+"tienhoa",
+"saochep"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1294,
+"che": "coop",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"mauhut",
+"vughep",
+"hasao",
+"khuech",
+"xuonganh"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1296,
+"che": "solo",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"xuonganh",
+"mauhut",
+"blackhole",
+"pandora",
+"marionette"
+],
+"wave": 28,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1295,
+"che": "pvp",
+"kieu": "dai",
+"toc": 1,
+"bo": [
+"hopca",
+"nhatthuc",
+"nayda",
+"hasao",
+"marionette"
+],
+"wave": 75,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1298,
+"che": "pvp",
+"kieu": "thuong",
+"toc": 3,
+"bo": [
+"hasao",
+"ngoisao",
+"leviathan",
+"canon",
+"vughep"
+],
+"wave": 23,
+"kq": false,
+"loi": [
+"buoc-cham"
+],
+"cham": []
+},
+{
+"seed": 1297,
+"che": "coop",
+"kieu": "muon",
+"toc": 2,
+"bo": [
+"lanhgia",
+"luoicheo",
+"mauhut",
+"nhatthuc",
+"marionette"
+],
+"wave": 38,
+"kq": false,
+"loi": [],
+"cham": []
+},
+{
+"seed": 1299,
+"che": "solo",
+"kieu": "dai",
+"toc": 3,
+"bo": [
+"khoisinh",
+"hydra",
+"guongcong",
+"cuuvi",
+"vughep"
+],
+"wave": 70,
+"kq": true,
+"loi": [],
+"cham": []
+},
+{
+"seed": 10000,
+"che": "online",
+"kieu": "online",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"leviathan",
+"tienhoa",
+"saochep"
+],
+"wave": 6,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 10001,
+"che": "online",
+"kieu": "online",
+"toc": 1,
+"bo": [
+"orbital",
+"hydra",
+"thanhdia",
+"luutru",
+"ngaithoigian"
+],
+"wave": 7,
+"kq": null,
+"loi": [],
+"cham": []
+},
+{
+"seed": 10002,
+"che": "online",
+"kieu": "online",
+"toc": 1,
+"bo": [
+"ngoisao",
+"hopbi",
+"ronglua",
+"tienhoa",
+"saochep"
+],
+"wave": 7,
+"kq": null,
+"loi": [],
+"cham": []
+}
+]
+}

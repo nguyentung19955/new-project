@@ -1,0 +1,24 @@
+21×  buoc-cham | # bước luật (#/# s) mất # ms
+     vd: 1000:coop 1002:solo 1016:pvp 1019:pvp 1026:solo 1091:pvp 1098:solo 1102:coop
+     ["43758:ghep khien2→khien2","43807:nang bomhen","43925:ghep soi3→soi3","44255:trieu b1","44811:trieu b0","45659:trieu b1","46620:trieu b0","47361:chuDong chuato3","47408:trieu b0","47882:ghep haoquang1→haoquang1","49331:trieu b1","50577:dungMV b0 eve","50601:ghep mauhut5→khoathoigian1","50629:ghep mauhut5→bomhen2"]
+2×  trum-de-lai | bàn # ô # loren: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1178:pvp 1265:pvp
+     ["6171:nang nguyenrua","6456:nang cauvong","6773:nang soi","7384:nang hydra","7542:nang chuato","7761:trieu b0","7928:trieu b0","7967:ghep chuato1→chuato1","8219:ghep hydra2→hydra2","8668:trieu b0","8799:ghep cauvong1→cauvong1","8964:trieu b0","9353:trieu b0","9441:ghep nguyenrua1→nguyenrua1"]
+1×  trum-de-lai | bàn # ô # dichchuyen: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1124:pvp
+     ["0:trieu b0","39:trieu b0","47:trieu b1","48:trieu b1","78:ghep saochep1→dichchuyen1","78:chuyenU saochep→dichchuyen1","94:dungMV b1 eve","101:trieu b1","114:trieu b0","134:ghep nguyenrua1→nguyenrua1","194:trieu b0","221:ghep dichchuyen(copy)1→thanhdia1"]
+1×  trum-de-lai | bàn # ô # nangsao: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1157:pvp
+     ["7877:trieu b1","8101:nang soi","8130:ghep hydra2→hydra2","8544:chuDong leviathan3","8735:nang nguyenrua","9065:trieu b1","9088:ghep soi1→soi1","9186:trieu b1","9307:ghep sinhdoi2→sinhdoi2","9307:sinhDoi b1","9405:ghep hydra3→hydra3","10083:trieu b1","10392:ghep nguyenrua2→nguyenrua2","10415:trieu b1"]
+1×  trum-de-lai | bàn # ô # soi: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1157:pvp
+     ["18571:ghep nguyenrua2→nguyenrua2","18653:ghep nguyenrua3→nguyenrua3","18661:sao soi b0o9 2→1","18801:ghep hydra4→hydra4","19064:chuDong leviathan4","19325:trieu b1","19541:trieu b1","19725:ghep soi1→soi1","19803:trieu b1","19987:ghep soi2→soi2","20019:ghep sinhdoi1→sinhdoi1","20019:sinhDoi b1","20183:ghep hydra1→hydra1","20271:ghep nguyenrua2→nguyenrua2"]
+1×  trum-de-lai | bàn # ô # sinhdoi: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1220:pvp
+     ["19379:ghep guongcong1→guongcong1","19395:ghep lualien2→lualien2","19429:trieu b0","19703:trieu b1","19736:ghep soi3→soi3","19878:trieu b0","19925:ghep nguyenrua1→nguyenrua1","20015:sao sinhdoi b1o8 6→5","20221:trieu b0","20253:ghep haoquang1→haoquang1","20339:chuDong haoquang4","20351:trieu b1","20418:ghep nguyenrua2→nguyenrua2","20503:trieu b0"]
+1×  trum-de-lai | bàn # ô # bomhen: tâm ngắm trùm còn (st.ngam=#) khi không còn trùm
+     vd: 1268:pvp
+     ["1224:trieu b0","1346:ghep luoicheo1→luoicheo1","1517:ghep bomhen2→bomhen2","1775:trieu b1","1974:ghep mauhut1→nguyenrua1","2114:trieu b0","2693:trieu b1","2837:ghep saochep1→nguyenrua1","2837:chuyenU saochep→nguyenrua1","2849:dungMV b0 hero","2849:trieu b0 free","2849:trieu b0 free","3012:ghep nguyenrua(copy)1→nguyenrua1","3046:ghep luoicheo1→luoicheo1"]
+1×  khong-tai-lap | coop
+     vd: 1000:coop
+     []

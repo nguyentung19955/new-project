@@ -145,3 +145,8 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Kiểm riêng: `node tools/thap-kt-motvong.js` (iPhone 13, Leviathan ×5 + Wyrm + Combo + Werewolf + Hive Queen, bảng chạm EN/VI, trang ụ) — 0 lỗi trang.
 - 06/11 (đợt kiểm mô tả lần 2 + VI bổ sung): hồi quy đủ 4 cỡ XANH trừ 3 bước online ở 1280x800 (thanh tải che nút onl-vao — chạy lại CHI=online SIZES=1280x800x1: XANH, lỗi chập chờn do máy bận).
 - 06/11 tối (sau gộp QA ngâm + VFX P0): chạy đủ 4 cỡ còn 6 lỗi chập chờn (online 390: thanh tải che onl-vao; 430: tam_dung 404 + chữ cut-in Reinforce) → chạy lại riêng CHI=solo SIZES=430x932x3 XANH, CHI=online SIZES=390x844x3 XANH.
+
+## 06/11 — QA NGÂM (bot chơi thật, tools/thap-qa-ngam.js)
+- Vòng ngâm chính 303 trận (SOLO/CO-OP/PVP 100 mỗi loại + 3 ONLINE, ≈ 10 260 wave, tới wave 70–75): chỉ còn báo động giả (tâm ngắm Hex PVP — đã bỏ khỏi bộ kiểm) + cảnh báo giật. Báo cáo: docs/demo-hop-tuong/tuvan/qa-ngam/BAO-CAO.md.
+- Bước mới `qangam` (tools/thap-kt-qa-ngam-repro.js): 2 Star Leech → 0★, 404 ảnh trùm mới, nhãn LV dài tràn thẻ, trùm chết giữa báo chiêu, ngâm ngắn 9 trận.
+- Hồi quy 390×844 NHANH: chỉ trượt `qangam` (vòng tải ảnh + vòng triệu hồi chồng nhau — do bộ ngâm tua luật cả lúc TAI.doi, game thật đứng chờ) → bộ ngâm sửa theo vòng thật, chạy lại `qangam`: XANH (19 mục). Mọi bước khác XANH (1890 s).

@@ -86,6 +86,7 @@ async function heap(p) {
 async function choiTran(W, cfg, ghiBam) {
   const { p, L } = W; L.err.length = 0;
   const t0 = Date.now();
+  cfg.ghiBam = !!ghiBam;
   const v = await p.evaluate((c) => __QA.vaoTran(c), cfg);
   try { await p.waitForFunction(() => __QA.san(), null, { timeout: 60000 }); } catch (e) { return { cfg, v, loi: [{ loai: 'ket-vao-tran', chi: 'không vào được trận (TAI.cho / VT.mo) sau 60 s' }], wall: Date.now() - t0 }; }
   const bam = [];
@@ -94,8 +95,7 @@ async function choiTran(W, cfg, ghiBam) {
   if (W.nhin) await p.evaluate(() => __QA.thucBat(true)); // trận chụp ảnh: chơi THẬT theo rAF (hoạt ảnh thời gian thực đúng nhịp)
   for (;;) {
     if (W.nhin) { await sleep(1000); r = await p.evaluate(() => __QA.trangThai()); }
-    else r = await p.evaluate(([n]) => __QA.chay(n, 2500), [600]);
-    if (ghiBam) bam.push(await p.evaluate(() => __QA.bam()));
+    else { r = await p.evaluate(([n]) => __QA.chay(n, 2500), [600]); if (!r.i && !r.het) await sleep(120); } // đang chờ ảnh (TAI.doi)
     if (W.nhin && r.t - tAnh > 8) { // ảnh iPhone 13 mỗi ~8 s trận (vẽ khung thật rồi chụp)
       tAnh = r.t;
       const f = OUT + 'anh/' + cfg.che + '_s' + cfg.seed + '_w' + r.wave + '_' + (anh++) + '.jpg';
@@ -118,7 +118,7 @@ async function choiTran(W, cfg, ghiBam) {
   }
   const tom = await p.evaluate(() => __QA.tom());
   for (const e of L.err) tom.loi.push({ loai: /^HTTP/.test(e) ? 'http' : 'pageerror', chi: e.slice(0, 400), seed: cfg.seed, che: cfg.che });
-  return Object.assign({ cfg, v, wall: Date.now() - t0, bam }, tom);
+  return Object.assign({ cfg, v, wall: Date.now() - t0 }, tom, { bam: tom.bams, bams: undefined });
 }
 
 async function choiOnline(b, cfg) {
