@@ -1,0 +1,6 @@
+[
+ {"name": "raw_fx_wallgen_vang.png", "ref": "thap/assets/fx_wallgen_hieu.png",
+  "prompt": "Make an image. Game VFX sprite 'Golden Wall': a short, thick barrier of solid golden light standing across a road, seen top-down, long side horizontal (about 4:1). Bright gold-white energy core, ornate Egyptian-style gold frame posts at both ends, a few gold sparks. Same art style as attached. Single sprite centered, solid magenta #FF00FF background, no text, no shadow."},
+ {"name": "raw_fx_orbital_thuc.png", "ref": "thap/assets/fx_orbital_dacbiet.png",
+  "prompt": "Make an image. Game VFX sprite 'Orbital awakened halo': a round ring of pale-cyan and gold light with 6 small satellite nodes evenly spaced, seen top-down, to sit around a turret head. Thin, clean, glowing, empty centre. Same art style as attached. Single sprite centered, solid magenta #FF00FF background, no text."}
+]
