@@ -1,0 +1,17 @@
+[
+  {
+    "name": "raw_evo_bom.png",
+    "ref": ["thap/assets/tienhoa_nong_s3.png", "thap/assets/fx_bomhen_hieu.png"],
+    "prompt": "Single game UI badge, same style as attached: small sci-fi time bomb, round dark metal body with gold trims and a short fuse cap, one EMPTY dark rectangular digit window on the front (no numbers), clean outline, centered, solid magenta #FF00FF background, no text"
+  },
+  {
+    "name": "raw_evo_xacbom.png",
+    "ref": ["thap/assets/tienhoa_nong_s3.png", "thap/assets/fx_bomhen_hieu.png"],
+    "prompt": "Single game UI badge, same style as attached: the same small sci-fi time bomb but burnt and cracked, blackened metal, bent gold trims, broken dark digit window, thin smoke wisps rising, centered, solid magenta #FF00FF background, no text"
+  },
+  {
+    "name": "raw_fx_evo_xit.png",
+    "ref": ["thap/assets/fx_bomhen_no.png"],
+    "prompt": "4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a small failed dud explosion, a weak spark pop (frames 1-4), grey smoke puff growing (5-10), small metal debris falling and smoke fading (11-16), centered in each cell, solid magenta #FF00FF background, no text"
+  }
+]
