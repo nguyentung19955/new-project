@@ -124,3 +124,15 @@ Số đầy đủ: `do_truoc.txt`, `do_sau.txt`, `kq_sau.json`, `bang_truoc_sau.
 - Sau khi gộp bản Cửa hàng (06/11 tối) khung "mọi ụ 7★ trên bàn kích hoạt cùng 1 khung" đo lại 31–39 ms máy đo (≈ 16–20 ms iPhone 13): không còn việc dựng ảnh lần đầu, chỉ là vẽ ~1 300 hiệu ứng thật của 15 chiêu cùng lúc (tia, sét, vệt lửa, nổ) — dưới 33 ms trên iPhone nhưng sát; muốn dư nữa phải giảm số hiệu ứng vẽ (đụng hình chiêu — chưa làm).
 - Bàn đầy 7★ CO-OP: ~2 400 lệnh vẽ, 35–49 MP phủ/khung (≈ 12–16 lớp màn hình) — tải GPU liên tục, không phải giật do skill; thuộc phần chống nóng (session nhiệt).
 - Chưa đo trên Safari thật (máy đo không có WebKit).
+
+## Bổ sung 06/11 (lần chạy thứ 2 của việc này) — băng chữ DOM
+Đo lại theo **từng lời gọi hàm** (`tools/thap-do-giat-goi.js`: bọc FX/SND/VX/SIG/PX/FXU/REN/UI, ghi hàm > 2 ms mỗi khung; Chromium iPhone 13 DPR 3)
+trên bản đã có `nongskill.js`: phần ảnh đã ổn, còn **băng chữ DOM**:
+- **Cut-in chỉ huy Hero: 25,5 ms trong 1 khung** (`UI.cutIn` — `fitText` thu cỡ chữ từng bước 0,5 px, mỗi bước dựng lại bố cục ~40 lần);
+  Dahlia/Eve 3–5 ms (tên ngắn hơn). Báo trùm 3–13 ms (băng UI + băng hudtop đo 2 lần).
+- Sửa (`nongskill.js` mục 4, chỉ trong cut-in / báo trùm / băng WAVE): tìm nhị phân (~6 lần đo, cùng kết quả) + nhớ theo chữ/khung/cỡ màn;
+  đo trước lúc vào trận khi băng còn ẩn (cut-in chỉ huy của người chơi + tên mọi trùm, mỗi khung 1 việc).
+- Sau: cut-in Hero **25,5 → < 2 ms** (không còn trong danh sách hàm > 2 ms; khung xấu nhất lúc dùng Hero do việc khác 21 ms → không còn
+  khung > 33 ms), Dahlia 3,4 ms, Eve 2,3 ms; 5 đỏ + ghép + trùm Freezer cùng lúc **37 → 21,6 ms** việc/khung.
+- Ghi chú máy đo: CO-OP 2 bàn 30 ụ 7★ cùng kích đôi khi có 1 khung 70–110 ms nằm trong **một lệnh drawImage** (Chromium không GPU
+  raster muộn canvas bộ đệm mới dựng ở lần vẽ đầu) — đặc thù Chromium phần mềm, Safari/iPhone vẽ ngay khi dựng; không đổi gì thêm.

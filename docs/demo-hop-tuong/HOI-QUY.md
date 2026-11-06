@@ -122,3 +122,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 
 ## 06/11 (lần chạy lại tier) — trước xuất bản b2b9739
 - Hồi quy 390x844x3 NHANH: 1 lỗi — thap-kt-vang-sua.js "Evolver 7★ xịt bị giảm sao → đếm lại" kỳ vọng cũ `con > 40 s` (trước đợt cân bằng bậc Evolver (20+6★)→(14+5★) s = 35 s ở 6★). Sửa kỳ vọng thành "đếm lại đủ thời gian 6★" (≥ can(6★)). Chạy lại: XANH. Các bước khác (gồm thap-kt-tier.js) XANH.
+- 06/11 giật skill bổ sung (băng chữ DOM trong nongskill.js mục 4): CHI=solo 390 NHANH — giat ✓, nóng 18,2 ms ✓, vàng sửa ✓; 1 lần 'mạng trong trận' ĐỎ (4 yêu cầu ảnh tình huống tải nền 3 s sau vào trận — chập chờn: bản gốc dda0510 cũng ĐỎ 1 lần) → chạy lại thap-kt-mang.js: solo 0 yêu cầu → XANH.
