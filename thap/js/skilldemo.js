@@ -179,7 +179,7 @@ const SD_K = {
   chimang: { may: [2.0, 3.6, 'ke'], c: [[0.2, 'Gives 4 neighbours crit chance'], [2.0, 'Crits deal double damage', { cham: 0.5 }]] },
   radar: { c: [[0.2, 'Speeds up 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },
   lanhgia: { c: [[0.2, 'Neighbours’ shots also slow'], [1.6, 'Slow spreads to every target', { cham: 0.5 }]] },
-  khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + sdBuf(T) + ' damage', { cham: 0.4 }]] },
+  khuech: { c: [[0.2, 'Buffs Attack turrets around it'], [2.0, (T) => 'Repeat hits on one enemy: up to +' + Math.round(Math.min(SKILLS.khuech.buoc(T) * SKILLS.khuech.max(T), HOTRO.CAP.dmg * HOTRO.CAP_BAC[T.bac]) * 100) + '% damage', { cham: 0.4 }]] },
   tuthan: { q: Q.nho().concat(Q.dong(6, 0.6, 2, 'nho', 1.5)), may: [2.2, 3.6, 'ke'], c: [[0.2, 'Neighbours may execute'], [2.2, 'Low-HP enemies are reaped', { ev: 'kill', cham: 0.6 }]] },
   // ---------- vàng mới (vangmoi1.js / skills7.js) ----------
   // Ember Relay: ghép ở ô 8 → Relay ở ô kề 3 & 13 nhận 1 lửa thật (SKILLS.lualien.ghep); ô 13 đã có 4 lửa → đủ 5 (lõi lửa)

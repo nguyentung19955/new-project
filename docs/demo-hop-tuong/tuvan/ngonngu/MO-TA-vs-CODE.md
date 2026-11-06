@@ -186,3 +186,33 @@ None of the runs threw a page error or a console error.
   The captions match the code. Acting these out would need the mini rival board (`doi`) and more demo time.
 - xuonganh: the Hero tile cell is random through `VM1.rng`. It can land on the merge result, as it did in my runs. In that case there is no before → after number; the tile ring itself is still shown.
 - Commanders (hero, dahlia, eve): OK. They use real `dungMV`, the numbers match `MAVUONG` and `LUAT_MV`, and the Holy Shield block was confirmed.
+
+---
+
+# ĐỢT KIỂM LẦN 2 (06/11, chiều) — soát lại cả 93 ụ + chỉ huy + 12 trùm
+
+Lần chạy thứ 2 của cùng việc: 4 người soát song song, mỗi người 1 nhóm tệp, đọc đường code thật (game.js, hotro.js, support.js, trần buff HOTRO.CAP × CAP_BAC).
+Chi tiết từng dòng: [audit-A.md](audit-A.md) (skills.js, skills3.js, skills5.js) · [audit-B.md](audit-B.md) (skills2.js nửa đầu) ·
+[audit-C.md](audit-C.md) (skills2.js nửa sau, ụ vàng sửa lại) · [audit-D.md](audit-D.md) (skills4/7, vangmoi1, chỉ huy, trùm).
+
+Tổng: **≈100 chỗ chữ lệch code đã sửa** (A 30 · B 19 · C 30 · D 21) · **1 lỗi code** sửa (trùm) · **10 chú thích clip** sửa theo số thật.
+Chỗ hai đợt cùng sửa một dòng: giữ bản đúng code hơn (vd. Frost: trùm KHÔNG bị đóng băng, chỉ chậm 50% 0,6 s; Frost Flyer miễn).
+
+Quan trọng nhất:
+- **Trần buff hỗ trợ** (HOTRO.CAP): nhiều mô tả ghi số chưa cắt trần — Crit Antenna (tối đa 22% từ 5★, không phải 30%), Armor Breaker (+35%),
+  Amplifier (≈ +39%), Resonance Grid (52,5%), Radar (49,5% tốc), Star Breaker / Rainbow / Cryo Reactor 7★, Sanctum (52,5% chứ không 35%) → nay hiện số đã cắt.
+- **Reaper Pillar**: tỉ lệ chém thật bị chặn 19,5%, chỗ ghi 15%, chỗ ghi 24% → `SKILLS.tuthan.tile()` áp cùng trần (lối chơi không đổi), mọi chỗ hiện 19,5%.
+- **Sync Cannon**: 3 chỗ ghi "ụ kề" → đúng code: MỌI ụ Tấn công cùng sao trên cả bàn; trang ụ "Buffs: Whole board".
+- **Mốc sao sai số**: Holy Halo 3★/7★ (3,5 s / 4,5 s), Mystery Box mở sớm 12 s, Star Lift (+39% trần từ 2★), Star Breaker 7★ (×2,35), Hydra 7★ 0,72/s, Mine Layer 3★ (2,8 s).
+- **Pandora**: thưởng phụ thuộc sao của KẾT QUẢ ghép (ghép 5★ → gieo 2 lần; ghép 6★ → 2 hiệu ứng).
+- **Mana Core**: nhịp 7 s → 6 s từ 3★, 5 s ở 7★ (trước ghi cố định "/ 7s").
+- **Copycat**: bản sao 70% → 94% sát thương theo cấp thẻ (clip từng ghi "half damage").
+- **Holy Shield (Eve)**: chỉ gỡ đóng băng / hoá đá / cháy (không gỡ Clamp/Jam/Hex); còn chặn hiệu ứng ghép của đối thủ PVP.
+- **Trùm**: Octopus đốt ụ 1★ = phá ụ; Freezer nhắm ụ sao cao, CO-OP chia số ụ cho 2 bàn; Mad Crown đổi sang loại trong bộ bài, giữ sao;
+  Prism Warden cần 4 loại từ wave 40, khiên hồi ~8 s; Star Leech chỉ hút ụ 2★+, sao trả về ụ ngẫu nhiên.
+- **Lỗi code (trum.js)**: Static Jammer + Star Leech không gắn cờ "kỹ năng trùm" → Mirror Gate ở SOLO không chặn được, ở PVP còn phản đòn nhầm sang đối thủ.
+  Nay gắn cờ quanh bước chặn (kiểm Playwright: SOLO gương chặn, 1 ụ bị nhiễu thay vì 2; PVP 0 ụ đối thủ bị kẹp).
+
+Để ngỏ (cân bằng, chưa đổi code): Crit Antenna 6–7★ và Amplifier 5★/7★ vượt trần nên phần tăng thêm vô tác dụng; Reaper Pillar lên cấp thẻ không tăng
+(đã chạm trần); Mirror Gate kháng khống chế chạm trần 35% từ 1★; Focus Lens chạm trần 65% từ ~2★; Chrono Throne trần chậm trùm 20% ở 1–2★ cao hơn quái thường;
+Halo "chỉ làm yếu kỹ năng trùm" chưa áp cho 6 trùm mới; `buff.js hoTroTT` vẫn in số chưa cắt trần (đã có dòng "CAP reached").
