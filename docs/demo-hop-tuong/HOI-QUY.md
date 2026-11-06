@@ -151,3 +151,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - Bước mới `qangam` (tools/thap-kt-qa-ngam-repro.js): 2 Star Leech → 0★, 404 ảnh trùm mới, nhãn LV dài tràn thẻ, trùm chết giữa báo chiêu, ngâm ngắn 9 trận.
 - Hồi quy 390×844 NHANH: chỉ trượt `qangam` (vòng tải ảnh + vòng triệu hồi chồng nhau — do bộ ngâm tua luật cả lúc TAI.doi, game thật đứng chờ) → bộ ngâm sửa theo vòng thật, chạy lại `qangam`: XANH (19 mục). Mọi bước khác XANH (1890 s).
 - 06/11 (VFX P2 chiêu lớn, js/vfxp2.js): hồi quy 4 cỡ 1 lỗi 360x780 solo_trum 'chữ tràn' cut-in (.ci-chu, chập chờn đã biết) — chạy lại `SIZES=360x780x3 CHI=solo NHANH=1`: XANH. thap-kt-mau XANH (116 mục).
+- 06/11 (VFX P2 gắn 12 tờ p2_*): hồi quy 390x844 NHANH XANH (1863 s); thap-kt-mau 9 mục chiêu lớn XANH.

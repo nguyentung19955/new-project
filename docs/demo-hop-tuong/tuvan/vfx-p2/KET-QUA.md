@@ -7,7 +7,7 @@ Luật chơi KHÔNG đổi (vùng trúng / sát thương / thời điểm / mụ
 - Tờ `assets/p2_<ten>.png` (16 khung vuông, tâm cố định) chạy theo bảng pha báo trước → trúng → dư âm; EFFECTS Minimal rút dư âm, REDUCE FLASH giữ chớp màn ×0,3 sẵn có.
 - Ảnh về: `python3 tools/thap-cat-p2.py` (khoá magenta, Lanczos nhân-trước-alpha) → tự bật, không cần sửa code.
 
-| Ụ | Trước | Bây giờ (chưa có tờ) | Khi tờ về |
+| Ụ | Trước | Dự phòng (tờ chưa tải) | Tờ 16 khung (ĐÃ GẮN — assets/p2_*) |
 |---|---|---|---|
 | Overlord | cột sét ảnh tĩnh co lại + 4 ảnh tĩnh trượt, tia nhấp nháy alpha 40 Hz, vết cháy phóng | cột sét = dải điện fx_dien chạy khung (tô đỏ-hồng), tia không nhấp nháy, vết cháy chỉ mờ | báo trước trên quái đầu khi nạp ≥ 85% → sét giáng → sóng + vết cháy |
 | Black Hole | 1 ảnh đĩa xoay + phập phồng bán kính + lõi phập phồng (1,1–3 s) | đĩa quay đều (mép = vùng hút) + xoáy sig_m01_swirl lặp khung | xoáy 16 khung lặp |
@@ -25,3 +25,9 @@ Luật chơi KHÔNG đổi (vùng trúng / sát thương / thời điểm / mụ
 - `node tools/thap-kt-p2.js` → `*_strip.jpg` (10 khung/chiêu, iPhone 13). `STANDIN=1` thử đường tờ 16 khung bằng ảnh mượn (không xuất bản) — đã chạy: Overlord báo trước → trúng → dư âm, Cryo, Halo, Genesis, Copycat đúng pha, 0 lỗi trang.
 - Hiệu năng `node tools/thap-kt-p2-perf.js` (CPU ×4, bàn 15 ụ chiêu lớn ra chiêu mỗi 40 khung, 30 quái): trước p50 24,9 / 24,0 ms, tb 29,4 / 29,9 — sau p50 24,7 / 26,8, tb 29,5 / 31,4 (trong nhiễu đo, không tụt).
 - thap-kt-mau: xanh (cột sét dự phòng tô đỏ-hồng cho Overlord). Hồi quy 4 cỡ: 1 lỗi chập chờn đã biết (cut-in `.ci-chu` 360x780 solo_trum) → chạy lại riêng.
+
+## Tờ ảnh đã gắn (06/11 chiều)
+- 12 tờ ChatGPT `raw_p2_*.png` → `python3 tools/thap-cat-p2.py`: khung vuông tâm cố định, cỡ ≤ độ nét ô raw (288 px chiêu to). Màu lệch nguyên tố được đặt lại SẮC lúc cắt
+  (giữ sáng/bão hoà): Overlord đỏ-hồng, Black Hole tím, Chrono Lock ngọc lam, Holy Halo vàng, Copycat tím nhạt → thap-kt-mau XANH (9 mục chiêu lớn).
+- Dải kiểm `*_strip.jpg` chụp lại với tờ thật (SOLO, CO-OP bàn đồng đội, PVP bàn đối thủ, EFFECTS Minimal + REDUCE FLASH). Holy Halo vòm mờ 0,62 để không che ụ.
+- Hồi quy 390×844 NHANH: XANH (1863 s).
