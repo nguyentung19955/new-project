@@ -141,7 +141,7 @@ const ONL = {
   },
   toi() { // dữ liệu người chơi của mình trong phòng (vào lại trận đang chạy: GIỮ bộ bài + chỉ huy đã ghi, không ghi đè)
     const v = { name: TK.ho.name, av: TK.ho.av, on: true };
-    if (!this._laiVao && UI.chon.length === 5) { v.deck = UI.chon.join(','); v.mv = UI.mv; }
+    if (!this._laiVao && UI.chon.length === 5) { v.deck = UI.chon.join(',') + (typeof THEBAI !== 'undefined' ? ',' + THEBAI.maHoa(UI.chon) : ''); v.mv = UI.mv; } // cấp thẻ kèm cuối chuỗi deck (',#xxxxx' — bản cũ tự lọc)
     return v;
   },
   ghiToi(them) { return NET.update('rooms/' + this.code + '/pl/' + this.me(), Object.assign(this.toi(), them || {})); },

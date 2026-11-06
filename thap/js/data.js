@@ -22,7 +22,8 @@ const LUAT = {
   giaTrieuTang: 10,
   saoMax: 7,             // tối đa 7 sao
   cot: 5, hang: 3,       // bàn 5×3 = 15 ô
-  giaNangCap: [100, 200, 400, 700], // nâng cấp theo loại trong trận (LV1→5)
+  giaNangCap: [100, 200, 400, 700], // POWER-UP trong trận theo loại (kiểu DCDW: 4 bước +1/+2/+3/MAX, giá tăng dần, áp mọi bản cùng loại)
+  nangPct: 0.25,         // +% sát thương GỐC mỗi bước power-up (cộng dồn tuyến tính như DCDW: gốc × (1 + k·bước))
   timSolo: 3, timPvp: 3, timCoop: 3, // CO-OP: 3 tim CHUNG (giữ ở bàn 0); quái to / trùm lọt mất 2 tim
   songTrum: 10,          // trùm mỗi 10 wave
   waveMax: 70,
@@ -77,7 +78,7 @@ const TIEN = {
 const CHI = {
   trieu: { tien: 'mana', icon: 'h2_ngoc',    ten: 'SUMMON',    mo: 'Random 1★ turret from your deck. +10 each time. Fewer than 2 Attack turrets on board → always an Attack card.' },
   mv:    { tien: 'mana', icon: 'h2_ngoc',    ten: 'COMMANDER', mo: 'Commander skill. Cost ×2 after each cast.' },
-  nang:  { tien: 'mana', icon: 'ui_nangcap', ten: 'POWER-UP',  mo: 'Spends MANA: +18% damage to every turret of this type, this match only (LV1→5).' },
+  nang:  { tien: 'mana', icon: 'ui_nangcap', ten: 'POWER-UP',  mo: 'Spends MANA: +25% base damage to every turret of this type, this match only (+1 → +2 → +3 → MAX).' },
 };
 // biểu tượng kỹ năng Ma vương: ảnh trong assets/, riêng RAGE = ngọn lửa vẽ bằng code (SVG)
 const MV_LUA = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff2a10"/><stop offset=".6" stop-color="#ff8a1a"/><stop offset="1" stop-color="#ffd23a"/></linearGradient><linearGradient id="b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb21a"/><stop offset="1" stop-color="#fff6b0"/></linearGradient></defs><path d="M32 3c3 10 15 16 15 31a15 15 0 0 1-30 0c0-7 4-12 7-15 0 5 2 8 5 9-1-9 1-17 3-25z" fill="url(#a)" stroke="#5a0a00" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 30c2 6 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 4 3 5 0-4 0-8 1-12z" fill="url(#b)"/></svg>');
@@ -168,3 +169,12 @@ function boCuc(che) {
     duong: [{ pts: [[W - 26, y - 34], [lx, y - 34], [lx, y + th + 32], [W - 26, y + th + 32]], ban: 0 }],
   };
 }
+
+// HỆ SỐ SỨC MẠNH theo cấp: POWER-UP trong trận (B.lv 1..5) × CẤP THẺ ngoài trận (B.capThe[id] = số cấp đã lên trên cấp đầu của bậc)
+// — mọi công thức sát thương (dmgU, hsU, phaoDmg, statThuc) dùng chung hàm này → số hiển thị không lệch số đánh thật.
+function hsThe(B, id) {
+  const c = B && B.capThe && B.capThe[id]; if (!c) return 1;
+  const r = typeof G !== 'undefined' && G.rosterMap && G.rosterMap[id];
+  return 1 + c * ((typeof THE !== 'undefined' && r && THE.pct[r.bac]) || 0.05);
+}
+function hsLv(B, id) { return (1 + LUAT.nangPct * (((B && B.lv && B.lv[id]) || 1) - 1)) * hsThe(B, id); }
