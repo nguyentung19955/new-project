@@ -14,7 +14,7 @@ const CANH = [
   { ten: 'blackhole_coop', id: 'blackhole', sao: 4, mode: 'coop', ban: 1, n: 20, buoc: 0.18, lam: 'T.nap = 0.999', tam: 'hu:hoden' },
   { ten: 'cryo', id: 'lophanung', sao: 5, n: 26, buoc: 0.045, lam: 'T.nap = 1; SKILLS.lophanung.chuDong(G, B, T)', tam: 'T', co: 300 },
   { ten: 'cryo_gon', id: 'lophanung', sao: 5, n: 20, buoc: 0.05, lam: 'T.nap = 1; SKILLS.lophanung.chuDong(G, B, T)', tam: 'T', co: 300, cg: { fx: 'gon', flash: true } },
-  { ten: 'chronolock', id: 'khoathoigian', sao: 4, n: 30, buoc: 0.07, lam: 'SKILLS.khoathoigian.khoa(G, B, T, 4)', tam: 'hu:khoa', co: 160 },
+  { ten: 'chronolock', id: 'khoathoigian', sao: 4, n: 30, buoc: 0.07, lam: 'if (!SKILLS.khoathoigian.khoa(G, B, T, 4)) throw new Error("khoa=false q=" + quaiTheoDau(B).length)', tam: 'hu:khoa', co: 160 },
   { ten: 'rewind', id: 'ngaithoigian', sao: 3, n: 28, buoc: 0.05, lam: 'T.nap = 1; SKILLS.ngaithoigian.chuDong(G, B, T)', tam: 'T' },
   { ten: 'evolver', id: 'tienhoa', sao: 3, n: 20, buoc: 0.1, lam: '', tam: 'T', co: 120 },
   { ten: 'orbital', id: 'orbital', sao: 3, n: 24, buoc: 0.08, lam: 'SKILLS.orbital.thucTinh(G, B)', tam: 'T', co: 200 },
@@ -49,7 +49,7 @@ const CANH = [
       window._T = T; window._B = B; REN.ve(0.016, 1);
       return { che: G.che, nBan: G.ban.length };
     }, { c });
-    const cast = await p.evaluate(({ c }) => { const T = window._T, B = window._B, E0 = quaiDau(B); try { (new Function('G', 'B', 'T', 'E0', c.lam))(G, B, T, E0); } catch (e) { return 'ERR ' + e.message; } return G.hu.map(o => o.k).join(','); }, { c });
+    const cast = await p.evaluate(({ c }) => { const T = window._T, B = window._B; for (let i = 0; i < 6; i++) { chupTruoc(); capNhat(BUOC); } const E0 = quaiDau(B); try { (new Function('G', 'B', 'T', 'E0', c.lam))(G, B, T, E0); } catch (e) { return 'ERR ' + e.message; } return G.hu.map(o => o.k).join(','); }, { c });
     const khung = await p.evaluate(({ c }) => {
       const out = [], k = REN.s * REN.dpr, CO = (c.co || 260);
       let tam = null;
