@@ -1,0 +1,14 @@
+/* TURRET MERGE — NÚT CHỈ LÚN, KHÔNG RUNG (yêu cầu người chơi: "ấn nút triệu hồi chỉ cần hình nút bị dí xuống, không cần rung").
+   Áp cho mọi chế độ (SOLO / CO-OP / PVP / ONLINE / Test): nút Triệu hồi, thẻ nâng cấp trên khay, thẻ chỉ huy.
+   · Đủ mana: ảnh h2_trieu_an có sẵn (hud2.css) giữ ~90 ms (hud2.js).
+   · Thiếu mana / bàn đầy: nút đã tắt-mờ (ảnh h2_trieu_tat); chạm chỉ dí xuống 3 px + thu 0.97 ~90 ms, không triệu hồi.
+   · Không lắc, nảy, xoay, nhịp sáng, rung màn khi nhấn. Kéo-ghép ụ sai vẫn bật về như cũ (dkkeo, không đụng). */
+html body #nut-trieu.h2-lac, html body #nut-trieu.hb-lac, html body #bo-the .the.h2-lac, html body #the-mv.h2-lac { animation: none !important; }
+html body #nut-trieu.thieu:active, html body #nut-trieu.thieu.an,
+html body #nut-trieu.tn-day:active, html body #nut-trieu.tn-day.an { translate: 0 3px; scale: .97; transition: none; }
+html body #bo-the .the:active, html body #the-mv:active { translate: 0 2px; scale: .97; transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  html body #nut-trieu.thieu:active, html body #nut-trieu.thieu.an,
+  html body #nut-trieu.tn-day:active, html body #nut-trieu.tn-day.an,
+  html body #bo-the .the:active, html body #the-mv:active { translate: 0 2px; scale: none; }
+}

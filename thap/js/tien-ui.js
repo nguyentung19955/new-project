@@ -71,9 +71,8 @@ const TIENUI = {
     e.style.left = Math.round((te.right - wr.left) / k) + 'px';
     w.appendChild(e); setTimeout(() => e.remove(), 1300);
   },
-  // chạm khi không dùng được → lắc + lý do (không trừ gì)
+  // chạm khi không dùng được → chỉ lún (CSS :active) + lý do (không trừ gì), không lắc
   tuChoi(el, ly) {
-    this.lan(el, 'h2-lac', 110);
     const t = this.LY[ly]; if (!t) return;
     if (ly === 'thieu') { const B = G.ban[0]; this.bay('NEED ' + Math.ceil(B.mv.gia - B.mana) + ' MORE', 'tn-bay tn-do'); }
     else this.bay(t, 'tn-bay tn-do');

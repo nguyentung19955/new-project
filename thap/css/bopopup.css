@@ -6,7 +6,7 @@ html:not(.bp-goiy) body #the-mv .tn-full { display: none !important; }
 html body #nut-trieu.tn-day { opacity: .5; }
 /* Triệu hồi thiếu mana: số mana chớp 1 lần (đỏ + nảy nhẹ) */
 html body #mana-hop.bp-chop b { animation: bp-chop .42s ease-out; }
-@keyframes bp-chop { 0% { color: #ff5a4a; scale: 1.18; } 45% { color: #ff5a4a; scale: 1.06; } 100% { scale: 1; } }
+@keyframes bp-chop { 0%, 45% { color: #ff5a4a; } } /* chỉ đổi màu, không nảy */
 @media (prefers-reduced-motion: reduce) { html body #mana-hop.bp-chop b { animation: bp-chop2 .42s step-end; } @keyframes bp-chop2 { 0% { color: #ff5a4a; } } }
 /* công tắc BATTLE HINTS */
 .bp-nut.bp-bat { filter: none; }
