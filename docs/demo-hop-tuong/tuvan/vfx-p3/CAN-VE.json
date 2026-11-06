@@ -1,0 +1,102 @@
+[
+ {
+  "name": "raw_p3_canon.png",
+  "ref": "thap/assets/fx_canon_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Cannon shell explosion: frames 1-3 a small bright orange spark at the center; frames 4-7 a round fireball bursts out with a white-hot core; frames 8-11 the fire ring expands with flying embers and dark smoke puffs; frames 12-16 smoke and embers thin out and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_wallgen.png",
+  "ref": "thap/assets/fx_wallgen_vang.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Golden light wall: frames 1-4 a thin golden line glows on the ground and light rises from it; frames 5-8 a short wall of golden hexagon light panels grows up; frames 9-12 the wall hums with energy ripples running along it; frames 13-16 the wall cracks and blows apart into golden shards and sparks. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_bomhen.png",
+  "ref": "thap/assets/fx_bomhen_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Time bomb: frames 1-6 a small round bomb with a glowing red fuse light, the fuse spark burns shorter each frame; frames 7-9 a white-orange flash bursts; frames 10-13 a big fire explosion ring with debris; frames 14-16 smoke and embers fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_min.png",
+  "ref": "thap/assets/fx_min_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Land mine: frames 1-4 a flat metal mine whose red light turns on; frames 5-6 the mine pops up; frames 7-11 an orange fire blast shoots upward and outward with metal fragments; frames 12-16 a scorch mark and smoke fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_ngoisao.png",
+  "ref": "thap/assets/fx_ngoisao_dan3.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Falling star strike: frames 1-4 a golden star streaks down from above with a sparkling trail; frames 5-7 it hits with a bright golden-white flash; frames 8-12 a ring of golden star sparkles spreads out; frames 13-16 the sparkles twinkle and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_soi.png",
+  "ref": "thap/assets/fx_soi_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Mechanical werewolf claw attack: frames 1-3 three thin red glowing scratch lines start to draw; frames 4-7 three deep claw slashes rip across diagonally with sparks; frames 8-12 the slash marks glow red-orange and steam; frames 13-16 the marks fade into small sparks. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_railgun.png",
+  "ref": "thap/assets/fx_railgun_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Railgun impact: frames 1-3 cyan-blue electric charge sparks gather to a point; frames 4-6 a piercing blue-white flash and a straight shock spike; frames 7-11 a ring of blue electric arcs and metal sparks bursts out; frames 12-16 blue arcs crackle smaller and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_nemesis.png",
+  "ref": "thap/assets/fx_nemesis_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Judgment spear from the sky: frames 1-4 a glowing target rune appears on the ground; frames 5-7 a long white-gold light spear slams down into the center; frames 8-12 a cross-shaped burst of holy light and a shock ring; frames 13-16 light feathers drift and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_nhatthuc.png",
+  "ref": "thap/assets/fx_nhatthuc_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Solar eclipse wave: frames 1-4 a dark moon slides over a red-orange sun, the corona flares; frames 5-8 a crescent-shaped wave of red-orange fire is released forward; frames 9-12 the crescent wave spreads wider; frames 13-16 it breaks into embers and fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_cuuvi.png",
+  "ref": "thap/assets/fx_cuuvi_dan.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Nine-tail foxfire: frames 1-4 small orange-pink fox flames appear in a circle; frames 5-8 the flames swirl and grow into nine tail-shaped fire wisps; frames 9-12 the wisps burst outward in fire bursts; frames 13-16 embers fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_hydra.png",
+  "ref": "thap/assets/fx_hydra_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Hydra acid strike: frames 1-3 three teal glowing streams converge to the center; frames 4-7 a splash burst of teal-green energy with droplets; frames 8-12 a bubbling teal ring spreads; frames 13-16 the droplets fade away. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_aten.png",
+  "ref": "thap/assets/fx_aten_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Purifier cleansing blast: frames 1-3 green toxic sparks get sucked into the center; frames 4-7 a bright white-green purifying flash bursts; frames 8-12 a ring of green light with rising bubbles spreads out; frames 13-16 green motes fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_baotuyet.png",
+  "ref": "thap/assets/fx_baotuyet_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Blizzard gust: frames 1-4 icy wind swirls start spinning with snowflakes; frames 5-10 a round snowstorm whirl of white-blue wind and snow spins; frames 11-16 the whirl loosens and the snowflakes drift away and fade. Loopable middle frames. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_mortar.png",
+  "ref": "thap/assets/fx_mortar_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Mortar shell explosion: frames 1-3 a dust ring shadow on the ground; frames 4-7 a big orange fireball with dirt chunks flies up; frames 8-12 a wide shock ring of dust and flames; frames 13-16 grey smoke clouds fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_hopbi.png",
+  "ref": "thap/assets/fx_hopbi_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Mystery box opening: frames 1-4 a purple gift box shakes with light leaking from its seams; frames 5-8 the lid bursts open with a bright purple-gold flash; frames 9-12 sparkles, small stars and confetti of light fly out; frames 13-16 the light settles and fades. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_tuthan.png",
+  "ref": "thap/assets/fx_tuthan_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Reaper scythe execution: frames 1-3 a ghostly dark-purple scythe blade appears; frames 4-7 the scythe sweeps in one fast arc leaving a sharp crescent trail; frames 8-12 dark purple soul wisps burst out; frames 13-16 the wisps drift up and fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_maychem.png",
+  "ref": "thap/assets/fx_maychem_dan.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Guillotine drop: frames 1-4 a steel blade glints high above with a faint shadow below; frames 5-7 the blade slams down with a bright white slash line; frames 8-12 a horizontal cut burst with sparks; frames 13-16 sparks fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_set.png",
+  "ref": "thap/assets/fx_set_trung.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Tesla shock hit: frames 1-3 small blue sparks gather; frames 4-7 a bright blue-white electric burst with branching zigzag arcs; frames 8-12 electric arcs crawl around in a ring; frames 13-16 tiny sparks fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_vungdoc.png",
+  "ref": "thap/assets/fx_vungdoc_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Toxic pool loop: a round green poison puddle on the ground, bubbles rise and pop, green fumes curl up; each frame the bubbles move a little so the 16 frames loop smoothly. Same size every frame. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ },
+ {
+  "name": "raw_p3_bang.png",
+  "ref": "thap/assets/fx_bang_hieu.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A 4x4 grid sprite sheet of 16 animation frames, read left to right, top to bottom, every frame the same size with the effect centered at the same point, top-down view. Frost freeze: frames 1-4 frost particles swirl inward; frames 5-8 jagged ice crystals grow upward into a block of ice; frames 9-12 the ice block glints; frames 13-16 the ice cracks and shatters into ice shards that fade. Solid magenta #FF00FF background, no text, no grid lines, no frame borders."
+ }
+]
