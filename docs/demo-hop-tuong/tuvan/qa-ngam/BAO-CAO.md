@@ -73,10 +73,13 @@ mana đầu trận vào power-up — đã sửa bot).
 - **Giật khi ra 1 bước luật (cảnh báo, chưa phải lỗi chắc chắn):** 21 / 300 trận có 1 bước luật mất 250–1 170 ms (thường ngay sau ghép đặc
   biệt / Mad Crown / chỉ huy, lúc hiệu ứng dựng ảnh lần đầu). Máy đo dùng chung 2 lõi cho 2 trận + máy chủ nên số này ồn; đã ghi kèm sự kiện
   vào `tran.jsonl` (`cham`) để phiên "giật khi ra skill" xem tiếp. Bộ kiểm chỉ báo lỗi khi > 1 000 ms.
+  → **Đã xử lý 06/11** (`tuvan/giat-ghep/BAO-CAO.md`): nguyên nhân = lần đầu vẽ tờ ảnh lớn (chép + lên GPU + mip) và dọn rác dồn do canvas
+  tạo-rồi-bỏ; làm nóng lúc rảnh + canvas nháp dùng lại; hồi quy `tools/thap-kt-giat-ghep.js` (CPU ×4, ≤ 120 ms).
 - **Tái lập:** luật game tất định khi hiệu ứng hình dùng RNG riêng (bộ kiểm tách sẵn). 1 trận (hạt 1000, CO-OP) lệch ngay mốc đầu — đó là trận
   ĐẦU TIÊN của trang mới, lúc ảnh đầu súng còn đang tải: vị trí đầu nòng (nơi đạn bay ra) tính theo cỡ ảnh đầu súng → đạn trúng sớm/muộn vài
   khung. Không ảnh hưởng người chơi (online đồng bộ bằng hành động, không bằng sát thương), chỉ ghi lại.
-- **Nhãn tên ụ sau khi ghép đè nhau** khi ghép 2 ô cạnh nhau liên tiếp ở 3× (thấy ở ảnh tua nhanh; ở nhịp thật hiếm) — chưa sửa, mức nhẹ.
+- **Nhãn tên ụ sau khi ghép đè nhau** khi ghép 2 ô cạnh nhau liên tiếp ở 3× — **đã sửa 06/11** (`js/keoghep.js`: tấm mới thay tấm cũ chồng lên nó;
+  kiểm `tools/thap-kt-giat-ghep.js`, SOLO/CO-OP/PVP).
 - **ONLINE**: 3 trận × ~7 wave, 2 bàn soi gương khớp, cùng wave, cùng tim, không giao AI — ít trận vì mỗi trận phải chạy đúng nhịp thật
   (~2 phút). Muốn ngâm online lâu hơn: `ONLINE=10 ONLINE_S=300`.
 - Trận chụp ảnh chỉ chơi tới ~wave 7 (chơi nhịp thật, tốn thời gian); trùm và wave cao được soi bằng vẽ canvas thật trong chế độ tua nhanh.

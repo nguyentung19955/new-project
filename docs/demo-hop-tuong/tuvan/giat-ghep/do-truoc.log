@@ -1,0 +1,72 @@
+solo: wave 14 · 6000 bước · tải 1154 ms, vào trận 1901 ms · bước p50 0.1 p95 2.3 max 30.1 · vẽ p50 3.5 p95 9.1 max 69.3 · > 120 ms: 0
+   ve #1016 69.3 ms w8 [928:sao tienhoa b0o7 1→2 ; 958:ghep hopbi2→hopbi2 ; 975:trieu b0 ; 1009:ghep ngoisao4→ngoisao4]
+      việc: 
+      cpu: (garbage collector) :0 ×82 · P.drawImage :13 ×3 · o.<computed> :88 ×1
+coop: wave 13 · 6239 bước · tải 1204 ms, vào trận 2031 ms · bước p50 0.2 p95 3.3 max 60.1 · vẽ p50 5.5 p95 12.6 max 81.1 · > 120 ms: 0
+   ve #878 81.1 ms w8 [859:trieu b1 ; 865:ghep dichchuyen1→leviathan1 ; 875:ghep vughep1→hopbi1 ; 876:sao hopbi b1o8 1→2]
+      việc: taoCanvas 0 js/fxu.js:193 · taoCanvas 0 js/fxu.js:200 · taoCanvas 0 js/sigfx.js:51
+      cpu: (garbage collector) :0 ×70 · save :0 ×2 · P.drawImage :13 ×1 · Q.veThat :46 ×1
+   buoc #2290 60.1 ms w10 [2238:ghep dichchuyen(copy)3→leviathan3 ; 2280:ghep dichchuyen3→leviathan3 ; 2285:sinhTrum joker_king ; 2285:sinhTrum mad_crown]
+      việc: 
+      cpu: gd js/phattrien.js:164 ×10 · apDung js/hotro.js:59 ×5 · capNhatBan js/game.js:553 ×2 · capNhatTrum js/trum.js:129 ×2 · capNhat js/skills5.js:138 ×1
+pvp: wave 14 · 6204 bước · tải 1089 ms, vào trận 2223 ms · bước p50 0.2 p95 3.3 max 25.7 · vẽ p50 6 p95 12.9 max 65.6 · > 120 ms: 0
+   ve #2044 65.6 ms w10 [2019:chuyenU saochep→tienhoa1 ; 2039:ghep mauhut4→pandora2 ; 2043:sinhTrum joker_king ; 2043:sinhTrum joker_king]
+      việc: taoCanvas 0 js/fxu.js:54
+      cpu: VX.truoc js/ghepfx.js:412 ×7 · traLai js/render.js:617 ×4 · o.<computed> :88 ×1 · ND.veHuyHieu js/thatso.js:121 ×1 · Q.veThat :46 ×1
+   ve #805 60.1 ms w8 [796:trieu b0 ; 803:ghep pandora1→pandora1 ; 803:ghep vughep1→pandora1 ; 804:sao pandora b1o10 1→2]
+      việc: taoCanvas 0 js/render.js:184 · veTuImage 1 fxb_toc.png 1248x312 · drawImage 19.8 fxb_toc · taoCanvas 0 js/render.js:184 · veTuImage 3 fxb_khien.png 1248x312 · drawImage 11 fxb_khien · taoCanvas 0 js/nongskill.js:55 · taoCanvas 0 js/render.js:111
+      cpu: drawImage :0 ×36 · nhan js/tvb.js:74 ×3 · vuaThe js/hud2.js:76 ×2 · ve js/buffvfx.js:60 ×1 · veO js/render.js:822 ×1
+   cảnh báo: cd haoquang 121 ms — khung > 120 ms không có việc nặng (dọn rác/raster)
+solo — ra chiêu lần đầu: 23 việc, vượt 120 ms: 0 · làm nóng null
+   cd haoquang: làm 0.7 · bước max 4.7 · vẽ max 121
+      
+   cd chuato: làm 2 · bước max 5 · vẽ max 103.2
+      
+   db hopbi+hopbi: làm 1.1 · bước max 3.1 · vẽ max 98.4
+      taoCanvas 0 js/hud2.js:173
+   db leviathan+leviathan: làm 8.7 · bước max 4.8 · vẽ max 63.5
+      drawImage 6 64x64 · taoCanvas 0 js/render.js:371 · taoCanvas 0 js/hud2.js:173 · taoCanvas 0 js/render.js:111 · taoCanvas 0 js/render.js:111 · taoCanvas 0 js/render.js:111
+   cd ngaithoigian: làm 6 · bước max 7.7 · vẽ max 59.6
+      taoCanvas 0 js/render.js:184 · taoCanvas 0 js/fxu.js:54 · drawImage 38.3 p2_rewind · taoCanvas 0 js/fxu.js:54 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:134
+   mv eve: làm 12.1 · bước max 3.1 · vẽ max 49.7
+      
+   db mauhut+canon: làm 4.4 · bước max 5.1 · vẽ max 47.4
+      
+   trum mad_crown: làm 35.2 · bước max 18.5 · vẽ max 41.2
+      taoCanvas 0 js/render.js:184 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:973 · taoCanvas 0 js/render.js:184 · veTuImage 1 mimic_nong.png 216x216
+coop — ra chiêu lần đầu: 23 việc, vượt 120 ms: 0 · làm nóng null
+   cd haoquang: làm 4.3 · bước max 4.7 · vẽ max 86.5
+      drawImage 71.1 p2_halo · taoCanvas 0 js/fxu.js:54 · taoCanvas 0 js/render.js:134
+   cd ngaithoigian: làm 7.5 · bước max 8.4 · vẽ max 86.3
+      
+   cd leviathan: làm 1.7 · bước max 10.8 · vẽ max 77
+      
+   db vughep+canon: làm 4.6 · bước max 76.5 · vẽ max 22.1
+      
+   mv dahlia: làm 20.9 · bước max 3.5 · vẽ max 69.3
+      taoCanvas 0 js/fxu.js:193 · taoCanvas 0 js/fxu.js:200
+   mv eve: làm 18.6 · bước max 4 · vẽ max 67.2
+      
+   cd lophanung: làm 7.1 · bước max 5 · vẽ max 39.7
+      taoCanvas 0 js/render.js:184 · veTuImage 2.3 fx_st_choang.png 262x205 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:184 · taoCanvas 0 js/render.js:134 · drawImage 4.7 fx_st_dong
+   cd khoisinh: làm 1 · bước max 6.3 · vẽ max 38.2
+      taoCanvas 0 js/render.js:276 · taoCanvas 0 js/fxu.js:54 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:276 · taoCanvas 0 js/render.js:134 · taoCanvas 0 js/render.js:134
+   cảnh báo: cd haoquang 121.6 ms — khung > 120 ms không có việc nặng (dọn rác/raster)
+pvp — ra chiêu lần đầu: 23 việc, vượt 120 ms: 0 · làm nóng null
+   cd haoquang: làm 2.5 · bước max 3.7 · vẽ max 121.6
+      
+   cd leviathan: làm 0.4 · bước max 7.8 · vẽ max 68.8
+      
+   cd ngaithoigian: làm 12.2 · bước max 10.5 · vẽ max 66.6
+      taoCanvas 0 js/render.js:184 · taoCanvas 0 js/fxu.js:54 · drawImage 40.1 p2_rewind · taoCanvas 0 js/fxu.js:54 · taoCanvas 0 js/render.js:390 · taoCanvas 0 js/render.js:390
+   cd chuato: làm 0.6 · bước max 4.4 · vẽ max 66.3
+      drawImage 52.4 32x32
+   mv dahlia: làm 6.4 · bước max 8.1 · vẽ max 60.6
+      
+   cd leviathan: làm 1.8 · bước max 4.1 · vẽ max 60
+      taoCanvas 0 js/sigfx.js:51 · taoCanvas 0 js/sigfx.js:51
+   db pandora+pandora: làm 5.6 · bước max 10.4 · vẽ max 51
+      
+   db leviathan+leviathan: làm 6.1 · bước max 5 · vẽ max 44.4
+      
+→ /tmp/claude-0/-home-claude-new-project/9bb10303-ddf4-53ab-968d-25dbab1127e9/scratchpad/do-truoc.json  ✓ không bước/khung nào > 120 ms sau khởi động
