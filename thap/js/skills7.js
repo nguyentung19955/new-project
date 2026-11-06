@@ -6,11 +6,12 @@
 
 const SK7 = {
   IDS: ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'],
-  CHUA_ANH: new Set(['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']), // id còn dùng ảnh tạm → không vào RANDOM / bộ máy (bỏ id khi hình ChatGPT đã lắp)
+  CHUA_ANH: new Set([]), // id còn dùng ảnh tạm → không vào RANDOM / bộ máy (bỏ id khi hình ChatGPT đã lắp)
   // cấp thẻ tuyệt đối của ụ trên bàn B (9..15 với ụ vàng)
   lv(B, id) { const r = G.rosterMap && G.rosterMap[id]; return ((r && typeof THE !== 'undefined' && THE.lvDau[r.bac]) || 9) + ((B && B.capThe && B.capThe[id]) || 0); },
   // RNG tất định: cùng (bàn chủ hành động, ô, số lần) → cùng kết quả trên cả 2 máy online
   rng(B, o, n, k) { const s = ((typeof ONS !== 'undefined' && ONS.on ? ONS.seed : 7) | 0) * 1009 + (n | 0) * 7919 + (o | 0) * 131 + (k | 0) * 17; return rngHat(s); },
+  FX: new Set([]), // id đã có dải hiệu ứng ChatGPT assets/fx_<id>_sk.png (16 khung, tools/thap-lap-vangmoi1.py <id>) — vẽ qua VM1.fx (vangmoi1.js)
   anh(id, cot, du) { const t = 'fx_' + id + '_' + cot; return (typeof FXU !== 'undefined' && FXU.co && FXU.co(t)) ? t : du; },
 };
 // % kỹ năng theo cấp thẻ — bảng chung KY_NANG_CAP (data.js; trang ụ tự hiện 'Vamp +6% → +6.5%', online theo cấp trong chuỗi bộ bài)
@@ -22,6 +23,12 @@ Object.assign(KY_NANG_CAP, {
 });
 const kn7 = (T) => (knThe(G.ban[T.ban], T.id) || KY_NANG_CAP[T.id].base) / 100;
 
+
+// hiệu ứng kỹ năng: dải 16 khung ChatGPT của ụ (nếu đã lắp) — chưa có → ảnh nổ chung laser_trung
+function fx7(id, x, y, w, song) {
+  if (SK7.FX.has(id) && typeof VM1 !== 'undefined' && typeof vm1Fx === 'function') { VM1.FXCO.add(id); vm1Fx(id, x, y, w * 1.4, Math.max(0.6, song * 1.6), '#ffffff'); return; }
+  FX.no('laser_trung', x, y, w, song);
+}
 
 // =====================================================================================================
 // P6 · BLOOD CIRCUIT (mauhut) — Vàng ĐB: KÉO lên BẤT KỲ ụ của mình (mọi sao / loại) → cả 2 thành 1 ụ ngẫu nhiên trong bộ bài
@@ -56,7 +63,7 @@ SKILLS.mauhut = {
         B.vamp -= 2;
         const dmg = hsU('mauhut', a.sao, B) * (a.sao >= 5 ? 3 : 2.2) * (1 + (B.vamp || 0) * SKILLS.mauhut.pv(a));
         for (const E of dsMucTieu(B)) if (!E.chet && Math.hypot(E.x - c.x, E.y - c.y) < 120) trung(E, dmg, { B, T: a, phu: true, crit: false, mau: '#ff4a6a' });
-        FX.no(SK7.anh('mauhut', 'hieu', 'laser_trung'), c.x, c.y, 120, 0.45); FX.lac(3);
+        fx7('mauhut', c.x, c.y, 120, 0.45); FX.lac(3);
       }
       FX.vong1(c.x, c.y, 8, 56, '#d0103a', 0.4, 4); FX.tiaLua(c.x, c.y, 14, '#ff4a6a', 180, 10);
       SND.no(0.3);
@@ -104,18 +111,18 @@ HU.hexBay = { // âm thoa đỏ bay tới đích 1.5 s rồi phán (kiểm khiê
   cap(G, o) {
     if (o.t < o.song - 0.02 || o.xong) return false;
     o.xong = true;
-    if (o.kieu === 'solo') { const E = o.E; if (E && !E.chet) { E.cham = Math.max(E.cham, 0.3); E.chamT = Math.max(E.chamT, 4); E.ywT = Math.max(E.ywT || 0, 4); E.ywK = Math.max(E.ywK || 0, 0.15); FX.no(SK7.anh('nguyenrua', 'hieu', 'laser_trung'), E.x, E.y, 60, 0.4); } return true; }
+    if (o.kieu === 'solo') { const E = o.E; if (E && !E.chet) { E.cham = Math.max(E.cham, 0.3); E.chamT = Math.max(E.chamT, 4); E.ywT = Math.max(E.ywT || 0, 4); E.ywK = Math.max(E.ywK || 0, 0.15); fx7('nguyenrua', E.x, E.y, 60, 0.4); } return true; }
     const D = o.D, X = D.t[o.o]; if (!X || X.uid !== o.uid) return true; // ụ đã đổi/ghép mất trong lúc chờ → trượt
     const c = D.o[X.o];
     if (o.kieu === 'pvp') {
       if (chanKhien(D, X)) return true; // khiên / Mirror Gate (phản) chặn lúc trúng
       if (!o.cuoc) { FX.vong1(c.x, c.y, 6, 30, '#ff8080', 0.3, 2); return true; }
-      FX.no(SK7.anh('nguyenrua', 'hieu', 'laser_trung'), c.x, c.y, 64, 0.45);
+      fx7('nguyenrua', c.x, c.y, 64, 0.45);
       if (X.sao > 1) { X.sao--; X.sang = 1; FX.tiaLua(c.x, c.y, 12, '#ff3a3a', 150); }
       else X.hexT = 2.5;
     } else if (o.cuoc && X.sao < LUAT.saoMax) {
       const s0 = X.sao; X.sao++; X.sang = 1; X.anim = { k: 'no', t: 0.25 }; mocMoi(X, s0, 0.1);
-      FX.no(SK7.anh('nguyenrua', 'hieu', 'laser_trung'), c.x, c.y, 64, 0.45); FX.vong1(c.x, c.y, 6, 40, '#ffe46b', 0.4, 3);
+      fx7('nguyenrua', c.x, c.y, 64, 0.45); FX.vong1(c.x, c.y, 6, 40, '#ffe46b', 0.4, 3);
     }
     return true;
   },
@@ -155,7 +162,7 @@ SKILLS.thanhdia = {
         if (!(X.khien > 0)) X.khien = 1;
         const c = B.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#fff2b0');
       }
-      FX.no(SK7.anh('thanhdia', 'hieu', 'laser_trung'), c0.x, c0.y, 90, 0.5);
+      fx7('thanhdia', c0.x, c0.y, 90, 0.5);
       T.nap = 0; return true;
     }
     const ke = this.ke(B, T).filter(X => !X.st.da);
@@ -201,7 +208,7 @@ SKILLS.bienmau = {
   ghep(G, B, a, b, ra) {
     if (a.id !== 'bienmau' || b.id !== 'bienmau' || this.mau(a) !== this.mau(b)) return;
     B.prism = Math.min(this.tran(B), (B.prism || 0) + 1);
-    const c = B.o[b.o]; FX.vong1(c.x, c.y, 8, 50, PRISM_MAU[this.mau(a)], 0.4, 4); FX.no(SK7.anh('bienmau', 'hieu', 'laser_trung'), c.x, c.y, 70, 0.4);
+    const c = B.o[b.o]; FX.vong1(c.x, c.y, 8, 50, PRISM_MAU[this.mau(a)], 0.4, 4); fx7('bienmau', c.x, c.y, 70, 0.4);
   },
   sangDau: () => 0.08,
   veThem(ctx, T, S, al, R) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.32 + 0.08 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1(PRISM_MAU[SKILLS.bienmau.mau(T)]), 0, 0, S * 0.9); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
@@ -245,9 +252,6 @@ SUP_LOAI.thanhdia = 'khien';
 SUP_GIA.thanhdia = (T) => SKILLS.thanhdia.k(T);
 
 window.addEventListener('DOMContentLoaded', () => {
-  // ảnh tạm: neo chân dung / khung mặt theo ụ nguồn của ảnh tạm (bỏ khi có hình riêng)
-  const NG = { mauhut: 'loren', nguyenrua: 'nhieusong', thanhdia: 'taylo', bienmau: 'cauvong' };
-  for (const id in NG) { try { if (typeof PO_NEO !== 'undefined' && !PO_NEO[id] && PO_NEO[NG[id]]) PO_NEO[id] = PO_NEO[NG[id]]; if (typeof HERO_NEO !== 'undefined' && !HERO_NEO[id] && HERO_NEO[NG[id]]) HERO_NEO[id] = HERO_NEO[NG[id]]; if (typeof FACE_BOX !== 'undefined' && !FACE_BOX[id] && FACE_BOX[NG[id]]) FACE_BOX[id] = FACE_BOX[NG[id]]; } catch (e) { } }
   if (typeof DC !== 'undefined' && DC.ngauNhien && !DC._sk7) { // RANDOM lấp ổ trống (dkcham.js) dùng G.roster thẳng → lọc ụ chưa có hình
     const g = DC.ngauNhien; DC._sk7 = 1;
     DC.ngauNhien = function () { const r0 = G.roster; G.roster = r0.filter(r => !SK7.CHUA_ANH.has(r.id)); try { return g.apply(this, arguments); } finally { G.roster = r0; } };
