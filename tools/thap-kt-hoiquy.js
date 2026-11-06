@@ -488,6 +488,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('python3', [path.join(__dirname, 'thap-dau-giong.py'), '--kiem'], { stdio: 'pipe' }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-dau-giong.py lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'dau', loai: 'đầu ụ giống nhau', chi: l, anh: 'docs/demo-hop-tuong/tuvan/dau_giong/cap_giong.png' }); console.log(ds.join('\n')); }
   }
+  // nút SUMMON luôn hiện + ảnh nền HUD trận đã tải (tools/thap-kt-nut-trieu.js — lỗi 06/11 bàn đầy = hốc tròn trống)
+  if (!process.env.CHI || /solo|coop|pvp|hud/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nut-trieu.js'), BASE], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1' }), timeout: 600000 }); console.log(String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-nut-trieu.js kẹt'])) LOI.push({ co: '-', buoc: 'nut_trieu', loai: 'nút SUMMON / ảnh HUD', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ nút SUMMON: kẹt'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

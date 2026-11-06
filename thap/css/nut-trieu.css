@@ -1,0 +1,8 @@
+/* TURRET MERGE — NÚT SUMMON LUÔN HIỆN (nạp sau bopopup.css).
+   Lỗi 06/11 (ảnh tuvan/freezer_1o.png): bàn đầy 15 ụ → lớp .tn-day đổi nút sang ảnh tắt h2_trieu_tat, rồi 3 tệp cùng giấu chữ
+   (hudb.css giấu "SUMMON", tvb.css/tien.css giấu giá, bopopup.css giấu "FULL") + bopopup.css mờ 50 % → chỉ còn cái hốc tròn
+   trống, người chơi tưởng mất nút. Giờ: bàn đầy = nút tắt RÕ (ảnh h2_trieu_tat, độ mờ 1, chữ SUMMON + giá xám), như lúc thiếu mana. */
+html body #nut-trieu.tn-day { opacity: 1 !important; }
+html body #wrap #nut-trieu.tn-day .tr-ten { display: block !important; color: #2b2c2e; text-shadow: 0 1px 0 #9a9ea4; }
+html body #wrap #nut-trieu.tn-day .tr-gia { display: flex !important; color: #2b2c2e; }
+html body #wrap #nut-trieu.tn-day .tn-full { display: none !important; }
