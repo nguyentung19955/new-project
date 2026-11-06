@@ -28,9 +28,9 @@ const DEMKN = {
     // (Sói: bỏ bộ đếm mạng — Sói không còn lớn dần theo mạng; dạng thường / thức tỉnh quay lúc sinh)
     docton(T, B) { const n = SKILLS.docton.ke(B, T); return n === 0 ? { m: [{ ic: 'ic_toc', s: '+100%' }], sang: true } : n >= 3 ? { m: [{ ic: 'ic_toc', s: '−30%' }] } : null; },
   },
-  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana', 'fx_leviathan_hieu'],
+  ANH: ['h2_tag', 'h2_ic_chong', 'ic_sao', 'ic_dmg', 'ic_toc', 'ic_chet', 'ic_mana', 'fx_leviathan_hieu', 'lev_abyss'],
   // icon VỰC SÂU: ảnh ChatGPT lev_abyss (docs/demo-hop-tuong/tuvan/leviathan/CAN-VE.json) — chưa có thì xoáy nước fx_leviathan_hieu (ảnh ChatGPT sẵn có)
-  IC_VUC: null,
+  IC_VUC: 'lev_abyss',
   icVuc() { return this.IC_VUC || 'fx_leviathan_hieu'; },
 
   lay(T, B) { const f = this.DS[T.id]; if (!f || !B || T.st.da) return null; try { return f(T, B); } catch (e) { return null; } },

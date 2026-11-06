@@ -56,7 +56,8 @@ function chuyenU(B, T, id, sao, doi) {
 // DẠNG cố định của 1 ụ (quay lúc sinh): Merge King vàng, Sói thức tỉnh — bản sao / con rối online giữ đúng dạng, không quay lại
 const BIEN_THE = { vughep: 'vang', soi: 'thuc' };
 function giuBienThe(N, X) { const k = N && X && N.id === X.id && BIEN_THE[N.id]; if (k) N[k] = !!X[k]; return N; }
-function deckTru(B, tru) { let ds = B.deck.filter(id => SKILLS[id] && !tru.includes(id)); if (!ds.length) ds = Object.keys(SKILLS).filter(id => G.rosterMap[id] && !tru.includes(id)); return ds; }
+// ụ trong BỘ BÀI trừ các loại `tru` (Hộp Bí Ẩn không ra chính nó…). Lọc hết → vẫn CHỈ trong bộ bài (kể cả loại bị trừ), KHÔNG BAO GIỜ lấy toàn bộ danh sách ụ (DCDW)
+function deckTru(B, tru) { const bo = B.deck.filter(id => SKILLS[id] && G.rosterMap[id]); const ds = bo.filter(id => !tru.includes(id)); return ds.length ? ds : bo; }
 function nangSao(B, T, n, chu) {
   if (!T || T.sao >= LUAT.saoMax) return false;
   const saoCu = T.sao;

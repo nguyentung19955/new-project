@@ -88,6 +88,7 @@ function deckDoiThu() {
 }
 function batDau(che, deck, mv) {
   if (typeof TVF !== 'undefined' && TVF.xoaHet) TVF.xoaHet();
+  G.ktDeck = ktDeckBat(); G.ktDeckLoi = 0;
   G.che = che; G.quai.length = 0; G.dan.length = 0; G.hu.length = 0; G.bay.length = 0; G.hang.length = 0;
   G.wave = 0; G.tWave = 0; G.t = 0; G.ketThuc = null; G.dung = false; G.cho = 1.2;
   FX.reset(); VX.reset();
@@ -109,11 +110,12 @@ function batDau(che, deck, mv) {
 // ---------- ụ súng ----------
 function taoU(B, id, sao, o) {
   const r = rosterOf(id);
-  return {
+  const tu = G.ktDeck === 'nem' && B && B.deck && !B.deck.includes(id) ? String(new Error().stack || '').split('\n').slice(2, 9).join('\n') : undefined; // dev: ghi đường tạo ụ ngoài bộ (báo lỗi bất biến)
+  return { _tu: tu,
     uid: G.uid++, id, sao, bac: r.bac, ban: B.i, o, goc: -Math.PI / 2 + rnd(-0.4, 0.4), vgoc: 0, rx: 0, rv: 0,
     cd: rnd(0.1, 0.6), anim: null, st: { bang: 0, da: false, lua: 0, ngam: 0, kep: 0 }, buf: { toc: 0, dmg: 0, crit: 0, cham: 0, chet: 0 },
     nap: 0, muc: null, pha: Math.random() * 6.28, sang: 0, aurora: 0, chop: 0, lvSang: 0, banLan: 0,
-    khien: 0, tocT: 0, tocV: 0, epxung: 0, banSao: false, nhanT: 0, tuoi: 0,
+    khien: 0, tocT: 0, tocV: 0, epxung: 0, banSao: false, nhanT: 0, tuoi: 0, nguon: [], // nguon sẵn: ụ sinh GIỮA vòng capNhatBan (Sinh Đôi, Mạch Máu…) không vỡ khi kỹ năng đẩy buff
   };
 }
 // gọi hook 'sinh' của kỹ năng khi ụ xuất hiện (vd. Sói Máy 30% ra bản thức tỉnh)
@@ -366,6 +368,8 @@ function rngTrum(E) {
 }
 // trộn tất định (Fisher–Yates) theo thứ tự ô — không phụ thuộc thứ tự mảng đầu vào
 function tronTrum(ds, r) { const a = ds.slice().sort((x, y) => x.o - y.o); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+// Joker King: ụ T có ít nhất 1 ụ khác cùng sao (không đá/băng, < 7★) để ép ghép
+function coCapJoker(B, T) { return T.sao < LUAT.saoMax && B.t.some(X => X && X !== T && X.sao === T.sao && !X.st.da && !X.st.bang); }
 function chonTrum(ds, r) { const a = tronTrum(ds, r); return a.length ? a[0] : null; }
 // FREEZER: số ụ bị đóng băng — 3 lúc đầu, +1 mỗi 20 wave, tối đa 5 · 6 s
 const LUAT_BANG = { giay: 6, so: (w) => Math.min(5, 3 + Math.floor(w / 20)) };
@@ -446,6 +450,44 @@ function wavMoi() {
 // ---------- vòng cập nhật ----------
 function capNhat(dt) {
   if (G.ketThuc) return; // hiệu ứng (FX) chạy theo thời gian thực trong vòng lặp chính
+  ktDeck('trước bước (thao tác người chơi / gói mạng)');
+  try { capNhatTran(dt); } finally { ktDeck('sau bước'); }
+}
+// ---------- BẤT BIẾN BỘ BÀI (DCDW): mọi ụ trên bàn của 1 người chơi phải thuộc 5 thẻ trong bộ bài của người đó ----------
+// Ngoại lệ có tài liệu: KT_DECK_NGOAI (hiện trống — Mimic của Joker King chỉ tồn tại trong lúc ép ghép); ụ đá/băng vẫn là loại trong bộ.
+// G.ktDeck: 'nem' = dev/test (localhost, mô phỏng) → ném lỗi kèm đường tạo ụ; true = bản chơi thật → ghi log + sửa an toàn (đổi thành ụ trong bộ, cùng sao, tất định);
+// false = màn demo kỹ năng / trang ụ (bàn tạm đặt ụ tuỳ ý). Bàn con rối online (B.net): chỉ ghi log — máy bạn kia là chủ bàn đó.
+const KT_DECK_NGOAI = new Set();
+function ktDeckBat() { // bật khi vào trận thật (batDau); demo kỹ năng tự tắt sau batDau
+  if (typeof location === 'undefined' || typeof document === 'undefined' || !document.body) return false; // mô phỏng node: công cụ tự bật
+  const q = location.search || '';
+  if (/[?&]ktdeck\b/.test(q)) return 'nem'; // ?ktdeck: ném lỗi (dev)
+  // máy kiểm thử (localhost / URL debug) — công cụ tự đặt ụ tuỳ ý qua page.evaluate → tắt; bất biến được kiểm bằng tools/thap-kt-ngoai-deck.js
+  if (/^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(location.hostname || '') || /[?&](mode|deck|deck2|wave|mana|fill|seed|net|mockws|auto|preview|notut|nointro)=?/.test(q)) return false;
+  return true; // bản chơi thật: ghi log + sửa
+}
+function ktDeck(luc) {
+  const che = G.ktDeck; if (!che || !G.ban) return 0;
+  let n = 0;
+  for (const B of G.ban) {
+    if (!B || !B.deck || !B.deck.length) continue;
+    for (let o = 0; o < B.t.length; o++) {
+      const T = B.t[o]; if (!T || B.deck.includes(T.id) || KT_DECK_NGOAI.has(T.id) || T.ngoaiDeckOk) continue;
+      n++;
+      const chi = 'ụ ngoài bộ bài: ' + T.id + ' ' + T.sao + '★ ở ô ' + o + ' bàn ' + B.i + ' (' + G.che + ' wave ' + G.wave + ', ' + luc + ') · bộ = ' + B.deck.join(',') + (T._tu ? '\n  tạo tại:\n' + T._tu : '');
+      G.ktDeckLoi = (G.ktDeckLoi || 0) + 1;
+      if (che === 'nem') throw new Error('[BẤT BIẾN BỘ BÀI] ' + chi);
+      try { console.error('[BẤT BIẾN BỘ BÀI] ' + chi); } catch (e) { }
+      if (B.net) continue;
+      const bo = B.deck.filter(id => SKILLS[id] && G.rosterMap[id]); if (!bo.length) continue;
+      const id = bo[(o * 7 + T.sao * 3 + B.i) % bo.length], r0 = Math.random; // tất định, không tiêu RNG chung (online 2 máy như nhau)
+      Math.random = rngHat(1000003 + o * 131 + T.sao * 17 + B.i);
+      try { const N = sinhU(taoU(B, id, T.sao, o)); N.goc = T.goc; N.khien = T.khien; N.st.da = T.st.da; N.st.bang = T.st.bang; B.t[o] = N; } finally { Math.random = r0; }
+    }
+  }
+  return n;
+}
+function capNhatTran(dt) {
   G.t += dt;
   if (G.cho > 0) { G.cho -= dt; if (G.cho <= 0) wavMoi(); }
   else {
@@ -659,7 +701,7 @@ function capNhatTrum(E, dt) {
     if (B2 && n2 > 0) { muc2 = xep(ds2).slice(0, n2); ban2 = B2.i; }
   }
   else if (E.trum === 'janus') muc = [chonTrum(ds, r)];
-  else if (E.trum === 'joker_king') muc = [chonTrum(ds, r)];
+  else if (E.trum === 'joker_king') { const co = ds.filter(T => coCapJoker(B, T)); muc = [chonTrum(co.length ? co : ds, r)]; } // ưu tiên ụ CÓ bạn ghép cùng sao (Mimic không bao giờ nằm lại trên bàn)
   E.bao = { t: 0, song: 1.4, muc: muc.map(T => T.uid), muc2: muc2.map(T => T.uid), ban2 };
   for (const T of muc) T.st.ngam = 1.4;
   for (const T of muc2) T.st.ngam = 1.4;
@@ -715,10 +757,12 @@ function thucHienChieu(E, B) {
       for (const T of muc) {
         if (biKhoa(T)) continue; // đá / băng: không bị ném Mimic (khoá chặn biến + ghép)
         deBan(T, 0, '#ffd23f');
-        const M = giuKhiBien(taoU(B, 'mimic', T.sao, T.o), T); B.t[T.o] = M; // biến tại chỗ giữ bản sao; nếu ép ghép được → ghép thường ra ụ mới (hết bản sao)
-        const ban = B.t.filter(X => X && X !== M && X.sao === M.sao && !X.st.da && !X.st.bang);
-        if (ban.length && M.sao < 7) ghep(B, M, chonTrum(ban, r), true);
-        else { M.anim = { k: 'no', t: 0 }; }
+        // DCDW: mọi ụ trên bàn chỉ từ bộ bài → Mimic chỉ tồn tại TRONG lúc ép ghép. Không còn bạn cùng sao (6★ duy nhất, 7★, bàn đổi trong 1,4 s báo trước)
+        // → chiêu HỤT, ụ giữ nguyên (lỗi cũ 06/11: Mimic 6★ ngoài bộ bài nằm lại vĩnh viễn trên bàn SOLO wave 33)
+        const ban = B.t.filter(X => X && X !== T && X.sao === T.sao && !X.st.da && !X.st.bang);
+        if (!ban.length || T.sao >= LUAT.saoMax) { const c = rong(T); FX.chu1(c.x, c.y - 18, TEXT.fx.blocked, '#ffd23f', 11); continue; }
+        const M = giuKhiBien(taoU(B, 'mimic', T.sao, T.o), T); B.t[T.o] = M; // biến tại chỗ giữ bản sao; ép ghép → ghép thường ra ụ mới trong bộ (hết bản sao)
+        ghep(B, M, chonTrum(ban, r), true);
       }
       break;
     case 'nightmare':

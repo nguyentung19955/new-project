@@ -14,7 +14,7 @@ const SIG = {
 
   ten(id, g) { return 'sig_' + this.MA[id] + '_' + g; },
   // Leviathan TIDAL BREATH — ảnh ChatGPT mới (null = chưa có → dùng ảnh tạm có sẵn; không gọi tải ảnh chưa tồn tại)
-  LEV: { rong: null, bang: null },
+  LEV: { rong: 'lev_rong', bang: 'fx_lev_bang' },
   // tải lười: chỉ dải của ụ có trong bộ bài trên bàn (kiểm 1 lần/giây)
   nap() {
     if (this.t - this._tNap < 1) return; this._tNap = this.t;
@@ -22,6 +22,7 @@ const SIG = {
       const ma = this.MA[id]; if (!ma || this.daNap.has(id)) continue;
       this.daNap.add(id);
       for (const k in SIG_META) if (k.startsWith('sig_' + ma + '_')) REN.img(k);
+      if (id === 'leviathan') for (const k of [this.LEV.rong, this.LEV.bang, 'fx_bang_trung', 'fx_leviathan_trung']) if (k) REN.img(k);
     }
   },
   san(id, g) { const a = REN.anh[this.ten(id, g)]; return !!(a && (a._cv || (a.complete && a.naturalWidth))); },
@@ -100,6 +101,7 @@ const SIG = {
 };
 
 // ===================================================== PHÁT HIỆN (đúng lúc kỹ năng nổ ra) =====================================================
+if (typeof SIG_META !== 'undefined') SIG_META.fx_lev_bang = [16, 230, 77]; // dải 16 khung luồng băng (raw_fx_lev_bang.png, 4×4 → 1 hàng)
 SIG.PHAT = {
   roi(o) { // Marionette gắn dây rối
     const phu = this.ds.some(m => m.k === 'roi' && m.o.T === o.T && m.t < 1); // 7★ con rối thứ 2: tay nhỏ hơn
@@ -256,7 +258,7 @@ SIG.K = {
     ve(ctx, m) {
       const P = m.p, t = m.t; if (!P) return;
       const LA = SIG.LEV, kF = typeof CG !== 'undefined' ? CG.kFlash() : 1, gon = typeof CG !== 'undefined' && CG.gon(), can = typeof CG !== 'undefined' && CG.doc().fx === 'can';
-      const S0 = Math.max(0, P.len - 36), [hx, hy] = viTri(P, S0); // miệng rồng = đầu luồng (cạnh lõi, lùi vào trong đường để đầu rồng nằm trọn trên làn)
+      const S0 = Math.max(0, P.len - 62), [hx, hy] = viTri(P, S0); // miệng rồng = đầu luồng (cạnh lõi, lùi vào trong đường để đầu rồng nằm trọn trên làn)
       const TD = m.ngan ? 0.1 : 0.24; // rơi xuống
       const het = m.tHet != null ? m.t - m.tHet : -1;
       const dy = het >= 0 ? -250 * this.eo(het / 0.55) : -250 * (1 - this.eo(t / TD));
@@ -279,7 +281,7 @@ SIG.K = {
           const sc = s - buoc / 2, dau = s - buoc <= s1;
           if (!dau && gocs.some(q => Math.abs(sc - q.sJ) < XA)) continue;
           const [x, y, g] = viTri(P, sc);
-          if (bang) this.k(ctx, LA.bang, dau ? Math.min(3, (this.t * 16) % 4) : 4 + (Math.floor(this.t * 12) + i) % 8, x, y, buoc * 1.5, { g: g + Math.PI, a: a * (dau ? 0.9 : 1) });
+          if (bang) this.k(ctx, LA.bang, dau ? Math.min(3, (this.t * 16) % 4) : 4 + (Math.floor(this.t * 12) + i) % 8, x, y, buoc * 1.9, { g: g + Math.PI, a: a * (dau ? 0.95 : 1), h: 30 });
           else this.k(ctx, 'sig_m07_breath', dau ? 1 + Math.floor(this.t * 12) % 2 : 3 + (Math.floor(this.t * 10) + i) % 3, x, y, buoc * 1.45, { g, a: a * (dau ? 0.9 : 1) });
         }
         for (const q of gocs) {
@@ -291,6 +293,10 @@ SIG.K = {
       // 4) vệt sương băng đọng lại sau luồng (EFFECTS gọn: bỏ; cân bằng: thưa nửa) — mờ dần sau khi đầu rồng bay đi
       if (!gon && m.s1 != null) {
         const im = REN.img('fx_bang_trung'), aV = het >= 0 ? Math.max(0, 1 - het / 0.95) : Math.min(1, t / 0.3);
+        if (LA.bang && REN.img(LA.bang) && het >= 0 && aV > 0.01) { // vệt sương = 4 khung tan thành băng của dải ChatGPT, nằm dọc làn
+          const f = 12 + Math.min(3, Math.floor(het / 0.95 * 4)), st = can ? 68 : 34;
+          for (let s = S0, i = 0; s > 10 && i < 40; s -= st, i++) { const [x, y, g] = viTri(P, s - 17); this.k(ctx, LA.bang, f, x, y, 34 * 1.9, { g: g + Math.PI, a: 0.85 * Math.min(1, aV * 1.4), h: 30 }); }
+        }
         if (im && aV > 0.01) {
           ctx.save(); ctx.globalCompositeOperation = 'lighter';
           const st = can ? 92 : 46;
@@ -305,7 +311,7 @@ SIG.K = {
       if (aD > 0.01) {
         const gam = het < 0 && t > TD && t < TD + 0.3 ? Math.sin((t - TD) / 0.3 * Math.PI) : 0, sc = 1 + 0.07 * gam;
         const rong = LA.rong && REN.img(LA.rong);
-        if (rong) { const w = 116 * sc, h = w * rong.height / rong.width; PX.ve(ctx, rong, hx, hy + dy - h * 0.34, w, h, 0, aD); ctx.globalAlpha = 1; }
+        if (rong) { const w = 88 * sc, h = w * rong.height / rong.width; PX.ve(ctx, rong, hx, hy + dy - h * 0.34, w, h, 0, aD); ctx.globalAlpha = 1; }
         else this.k(ctx, 'sig_m07_neck', 7, hx, hy + dy - 34, 84 * sc, { a: aD });
         if (gam > 0 || (het < 0 && t < TD + 0.6)) { // loé họng khi gầm / bắt đầu phun
           const tr = REN.img('fx_leviathan_trung'), al = (gam > 0 ? gam : 0.35) * 0.8 * kF;

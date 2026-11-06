@@ -631,6 +631,7 @@ if (UP_XEM) {
       this.id = id; this.sao = clamp(sao || 3, 1, 7);
       const deck = [id].concat(['lien', 'canon', 'set', 'bang', 'sungluc'].filter(x => x !== id && SKILLS[x])).slice(0, 5);
       batDau('solo', deck, 'hero');
+      G.ktDeck = false; // bàn demo đặt ụ tuỳ ý — tắt bất biến bộ bài (game.js ktDeck)
       G.cho = 1e9; G.wave = 6; G.tocDo = 1; G.dung = !!this.dungMuon;
       this.xep(); G.quai.length = 0; this.tq = 0.2; this.tk = 0; this.tr = 0;
     },
