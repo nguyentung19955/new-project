@@ -11,7 +11,7 @@ const VM1 = {
   TAM: {}, // (đã lắp đầu + chân dung ChatGPT riêng cho cả 4 — 06/11)
   // dải hiệu ứng 16 khung (assets/fx_<id>_sk.png, 1 hàng) — có ảnh thì chơi, chưa có thì dùng ảnh v2 sẵn có
   FXN: 16,
-  FXCO: new Set([]), // id đã có dải assets/fx_<id>_sk.png (thêm khi lắp ảnh)
+  FXCO: new Set(['lualien', 'hopca', 'luutru', 'xuonganh']), // id đã có dải assets/fx_<id>_sk.png (thêm khi lắp ảnh)
   lv(T) { const B = G.ban[T.ban]; return THE.lvDau.vang + ((B && B.capThe && B.capThe[T.id]) || 0); },
   k(T) { return this.lv(T) - THE.lvDau.vang; },
   coAnh(id) { return !this.TAM[id]; },
@@ -117,7 +117,7 @@ SKILLS.hopca = {
     const B = G.ban[T.ban], n = B ? this.dem(B, T) : 0, p = this.moi(T);
     return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, max 7 (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
   },
-  capNhat(G, B, T) { const n = this.dem(B, T); T.hop = n; T.buf.dmg += n * this.moi(T); if (T.sao >= 7) T.buf.toc += 0.12; return false; },
+  capNhat(G, B, T) { const n = this.dem(B, T); if (n > (T.hop || 0) && T.tuoi > 0.3) { const c = B.o[T.o]; vm1Fx('hopca', c.x, c.y, B.cw * 1.7, 0.8, '#d9b8ff'); } T.hop = n; T.buf.dmg += n * this.moi(T); if (T.sao >= 7) T.buf.toc += 0.12; return false; },
   ban(G, B, T, E) {
     giat(T, 0.5); const [x, y] = chopNong(T, 20); SND.tia();
     const dmg = dmgU(T), n = T.hop || 0;
@@ -222,8 +222,8 @@ HU.vm1Hero = { // ô anh hùng: vòng vàng PNG dưới ụ (dải hiệu ứng 
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     for (const h of B.hero) {
       const c = B.o[h.o], con = h.het - G.t, a = Math.min(1, con / 1.5) * (0.75 + 0.25 * Math.sin(G.t * 6 + h.o));
-      const w = Math.min(B.cw, B.ch) * 1.05, f = Math.min(VM1.FXN - 1, ((G.t - h.t0) * 20) % VM1.FXN);
-      if (!VM1.fx(ctx, 'xuonganh', G.t - h.t0 < 0.8 ? (G.t - h.t0) / 0.8 * VM1.FXN : 10 + (f % 6), c.x, c.y, w * 1.25, a) && im) PX.ve(ctx, im, c.x, c.y, w, w, G.t * 0.6, a * 0.8);
+      const w = Math.min(B.cw, B.ch) * 1.05;
+      if (im && G.t - h.t0 > 0.5) PX.ve(ctx, im, c.x, c.y, w, w, G.t * 0.6, a * 0.8); // dập xong (dải 16 khung lúc ghép) → vòng vàng tới hết 12 s
     }
     ctx.restore(); ctx.globalAlpha = 1;
   },
@@ -272,3 +272,12 @@ if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded',
     xuonganh(T, B) { const n = (B.hero || []).filter(h => h.het > G.t).length; return n > 0 ? { m: [{ ic: 'ic_toc', s: n + '/2' }], sang: n >= 2 } : null; },
   });
 });
+// tải trước dải hiệu ứng + ảnh phụ của ụ có trong bộ bài trận (khỏi hụt khung đầu)
+{
+  const _batDauVM1 = batDau;
+  batDau = function (che, deck, mv) {
+    const r = _batDauVM1.apply(this, arguments);
+    if (typeof REN !== 'undefined' && REN.img) for (const B of G.ban) for (const id of B.deck || []) if (VM1.FXCO.has(id)) { REN.img('fx_' + id + '_sk'); if (id === 'lualien') REN.img('fx_cuuvi_dan'); if (id === 'xuonganh') REN.img('tier_ring_vang'); }
+    return r;
+  };
+}
