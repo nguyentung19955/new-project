@@ -136,3 +136,4 @@ trên bản đã có `nongskill.js`: phần ảnh đã ổn, còn **băng chữ 
   khung > 33 ms), Dahlia 3,4 ms, Eve 2,3 ms; 5 đỏ + ghép + trùm Freezer cùng lúc **37 → 21,6 ms** việc/khung.
 - Ghi chú máy đo: CO-OP 2 bàn 30 ụ 7★ cùng kích đôi khi có 1 khung 70–110 ms nằm trong **một lệnh drawImage** (Chromium không GPU
   raster muộn canvas bộ đệm mới dựng ở lần vẽ đầu) — đặc thù Chromium phần mềm, Safari/iPhone vẽ ngay khi dựng; không đổi gì thêm.
+- 06/11 (chạy lại): 8 ụ vàng mới — dải chiêu `fx_<id>_sk` trước chỉ bắt đầu tải lúc vào trận (chưa giải mã) → lần đầu ra skill phải giải mã + chép giữa trận. Nay nằm trong danh sách ảnh của trận (`fxu.js` dsAnh) → giải mã xong trước khi trận chạy (kiểm: 5/5 ảnh đã giải mã lúc vào trận). Tường Vàng `fx_wallgen_vang` và vòng thức tỉnh Orbital `fx_orbital_thuc` đã có trong danh sách (cột vang/thuc). Hồi quy CHI=solo 390: XANH.
