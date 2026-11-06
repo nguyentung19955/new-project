@@ -7,13 +7,14 @@
 //  → KTA dưới đây trỏ ảnh có sẵn gần nhất; ảnh mới về chỉ cần đổi tên trong KTA. Code chỉ đặt chữ/số, vị trí, xoay, mờ.
 'use strict';
 const KTA = {
-  vang: 'ui_thuong', ngoc: 'h2_ngoc', cham: 'ngoc_do', xong: 'p7_ic_xong', tin: 'p7_ic_tin', lui: 'p7_ic_lui',
-  ru: { thuong: 'fx_hopbi_no', vang: 'fx_hopbi_dacbiet', than: 'pandora_nong' },      // rương đóng (chờ raw_shop_ruong)
-  ruMo: { thuong: 'fx_hopbi_no', vang: 'fx_hopbi_dacbiet', than: 'pandora_nong' },    // rương mở
+  vang: 'shop_vang', ngoc: 'shop_ngoc', cham: 'ngoc_do', xong: 'p7_ic_xong', tin: 'p7_ic_tin', lui: 'p7_ic_lui',
+  ru: { thuong: 'shop_ru_thuong', vang: 'shop_ru_vang', than: 'shop_ru_than' },       // rương đóng (raw_shop_ruong — tools/thap-lap-shop.py)
+  ruMo: { thuong: 'shop_ru_thuong_mo', vang: 'shop_ru_vang_mo', than: 'shop_ru_than_mo' }, // rương mở
+  fx: 'shop_fx_mo',                                                                      // dải 16 khung bung sáng (raw_shop_fx_mo)
   bung: 'h2_burst', sao: 'ui_sao', quang: 'fx_vong_lv', lung: 'p7_o_trong', o: 'p7_o_co', oSang: 'p7_o_doi',
-  banh: 'pandora_dia', mui: 'mui_tiep',                                                  // vòng quay (chờ raw_shop_vongquay)
-  nut: { shop: 'ui_thuong', vq: 'pandora_dia', nv: 'p7_ic_xong', sk: 'ui_sao' },         // nút HOME (chờ raw_shop_nut)
-  banner: null, bannerSk: null,                                                          // chờ raw_shop_banner / _su
+  banh: 'shop_banh', banhKhung: 'shop_banh_khung', mui: 'shop_mui',                     // vòng quay 8 ô (raw_shop_vongquay)
+  nut: { shop: 'shop_nut_shop', vq: 'shop_nut_vq', nv: 'shop_nut_nv', sk: 'shop_nut_sk' }, // nút HOME (raw_shop_nut)
+  banner: 'shop_banner', bannerSk: 'shop_banner_su',                                     // (raw_shop_banner / _su); khung hàng nhiệm vụ: css shop_khung_nv
 };
 const KTUI = {
   tab: 'shop', mo: false,
@@ -93,7 +94,7 @@ const KTUI = {
   // ---------- SHOP ----------
   ve_shop() {
     const sp = KT.sp(), s = KT.doc();
-    let h = this.muc('DAILY SPECIALS', 'NEW IN <span data-dh="ngay"></span>') + '<div class="kt-sp">';
+    let h = '<div class="kt-bn"><img src="' + this.a(KTA.banner) + '" alt=""><div><b>DAILY SPECIALS</b><small>NEW IN <span data-dh="ngay"></span></small></div></div><div class="kt-sp">';
     for (const o of sp) {
       const cls = 'kt-o' + (o.da ? ' da' : '') + (o.free ? ' free' : '') + (o.bac === 'vang' || o.bac === 'do' ? ' hiem' : '');
       if (o.free) h += '<div class="' + cls + '">' + this.rIc(o.r) + '<small>DAILY GIFT</small><button class="hm-nut2 vang" data-act="kt-sp" data-i="' + o.i + '"' + (o.da ? ' disabled' : '') + '><b>' + (o.da ? 'CLAIMED' : 'FREE') + '</b></button></div>';
@@ -117,8 +118,8 @@ const KTUI = {
   // ---------- VÒNG QUAY ----------
   ve_vq() {
     const v = KT.vq(), g = this._goc || 0;
-    let h = '<div class="kt-vq"><div class="kt-vq-banh" id="kt-banh" style="transform:rotate(' + g + 'deg)"><img class="kt-vq-anh" src="' + this.a(KTA.banh) + '" alt="">';
-    KTC.vq.forEach((o, i) => { h += '<span class="kt-vq-o" style="--a:' + (i * 45) + 'deg">' + (o.jack ? '<span class="kt-r kt-r-jack"><img src="' + this.a(KTA.sao) + '" alt=""><b>JACKPOT</b></span>' : this.rIc(o.r)) + '</span>'; });
+    let h = '<div class="kt-vq"><img class="kt-vq-khung" src="' + this.a(KTA.banhKhung) + '" alt=""><div class="kt-vq-banh" id="kt-banh" style="transform:rotate(' + g + 'deg)"><img class="kt-vq-anh" src="' + this.a(KTA.banh) + '" alt="">';
+    KTC.vq.forEach((o, i) => { h += '<span class="kt-vq-o" style="--a:' + (i * 45 + 22.5) + 'deg">' + (o.jack ? '<span class="kt-r kt-r-jack"><img src="' + this.a(KTA.sao) + '" alt=""><b>JACKPOT</b></span>' : this.rIc(o.r)) + '</span>'; });
     h += '</div><img class="kt-vq-mui" src="' + this.a(KTA.mui) + '" alt=""></div>';
     h += '<div class="kt-vq-nut"><button class="hm-nut2 vang" data-act="kt-quay" data-tra="0"' + (v.free ? ' disabled' : '') + '><b>' + (v.free ? 'FREE IN' : 'FREE SPIN') + '</b>' + (v.free ? '<small data-dh="ngay"></small>' : '') + '</button>' +
       '<button class="hm-nut2 vang" data-act="kt-quay" data-tra="1"' + (v.tra >= KTC.vqMax ? ' disabled' : '') + '>' + this.gia({ ngoc: KTC.vqGia }, KT.ngoc < KTC.vqGia) + '<small>' + (KTC.vqMax - v.tra) + '/' + KTC.vqMax + ' LEFT</small></button></div>' +
@@ -143,13 +144,13 @@ const KTUI = {
     return h;
   },
   hangNv(ten, q, r, act, id) {
-    const t = { n: q.t, can: q.can, max: false }, nut = q.da ? '<img class="kt-tick" src="' + this.a(KTA.xong) + '" alt="Claimed">' : '<button class="hm-nut2' + (q.xong ? ' vang' : '') + '" data-act="' + act + '" data-id="' + id + '"' + (q.xong ? '' : ' disabled') + '><b>' + (q.xong ? 'CLAIM' : q.t + '/' + q.can) + '</b></button>';
+    const t = { n: q.t, can: q.can, max: false }, nut = q.da ? '<img class="kt-tick" src="' + this.a(KTA.xong) + '" alt="Claimed">' : '<button class="kt-slot' + (q.xong ? ' vang' : '') + '" data-act="' + act + '" data-id="' + id + '"' + (q.xong ? '' : ' disabled') + '><b>' + (q.xong ? 'CLAIM' : this.so(q.t) + '/' + this.so(q.can)) + '</b></button>';
     return '<div class="kt-h' + (q.da ? ' da' : q.xong ? ' xong' : '') + '">' + this.rIc(r) + '<div class="kt-h-g"><b>' + ten + '</b>' + TBUI.thanh(t) + '</div>' + nut + '</div>';
   },
   // ---------- SỰ KIỆN ----------
   ve_sk() {
     const id = KT.suKien(), e = KT.sk(), ds = KT.skDs(), cuoi = KTC.sk[KTC.sk.length - 1][0];
-    let h = '<div class="kt-skd">' + (id ? '<img class="kt-skd-po" src="' + portraitOf(id) + '" alt="">' : '') + '<div><small>FEATURED TURRET</small><b>' + (id ? this.ten(id) : '') + '</b><small>ENDS IN <span data-dh="tuan"></span></small></div></div>';
+    let h = '<div class="kt-skd"><img class="kt-skd-bn" src="' + this.a(KTA.bannerSk) + '" alt="">' + (id ? OT.mini(id) : '') + '<div><small>FEATURED TURRET</small><b>' + (id ? this.ten(id) : '') + '</b><small>ENDS IN <span data-dh="tuan"></span></small></div></div>';
     h += '<div class="kt-skp"><b>' + this.so(e.diem) + '</b><small>EVENT POINTS</small>' + TBUI.thanh({ n: Math.min(e.diem, cuoi), can: cuoi, max: false }) + '<p class="kt-chu">Every battle in any mode: wave reached + 10 for a win + 5 per boss (max ' + KTC.skMax + ').</p></div>';
     for (const m of ds) h += this.hangNv(this.rTen(m.r), { t: Math.min(e.diem, m.d), can: m.d, xong: m.xong, da: m.da }, m.r, 'kt-sk', m.i);
     return h;
@@ -192,7 +193,7 @@ const KTUI = {
     const giam = matchMedia('(prefers-reduced-motion: reduce)').matches;
     this._ruong = { r, b: 0, them };
     const the = r.the.map((x, i) => '<span class="kt-lat b-' + x.bac + '" data-i="' + i + '"><img class="kt-lat-q" src="' + this.a(KTA.quang) + '" alt=""><img class="kt-lat-l" src="' + this.a(KTA.lung) + '" alt=""><span class="kt-lat-m">' + OT.mini(x.id) + '<b>×' + x.n + '</b></span></span>').join('');
-    const p = this.phu('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><img class="kt-mr-bung" src="' + this.a(KTA.bung) + '" alt=""><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k]) + '" alt=""></div>' +
+    const p = this.phu('<div class="kt-mr" data-act="kt-boqua"><div class="kt-mr-ru"><span class="kt-mr-fx"><img src="' + this.a(KTA.fx) + '" alt=""></span><img class="kt-mr-anh" src="' + this.a(KTA.ru[r.k]) + '" alt=""></div>' +
       '<b class="kt-phu-t">' + KTC.ruong[r.k].ten + '</b><div class="kt-mr-the">' + the + '</div><small class="kt-mr-cham">TAP TO SKIP</small>' +
       '<div class="kt-mr-tong" hidden></div></div>', 'kt-mo');
     const mr = p.querySelector('.kt-mr');
@@ -232,7 +233,7 @@ const KTUI = {
     if (this._quay) return;
     const kq = KT.vqQuay(tra); if (!kq) { this.ve(); return; }
     const b = this.el('kt-banh'), giam = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const cu = this._goc || 0, dich = cu - (cu % 360) + 360 * 5 + (360 - kq.o * 45) % 360 + ((this.bam = (this.bam || 0) + 1) % 2 ? 9 : -9);
+    const cu = this._goc || 0, dich = cu - (cu % 360) + 360 * 5 + (360 - kq.o * 45 - 22.5 + 360) % 360 + ((this.bam = (this.bam || 0) + 1) % 2 ? 9 : -9);
     this._goc = dich; this._quay = 1;
     try { SND.nut(); } catch (e) { }
     if (b) { b.style.transition = 'transform ' + (giam ? 0.2 : 3.6) + 's cubic-bezier(.12,.72,.18,1)'; void b.offsetWidth; b.style.transform = 'rotate(' + dich + 'deg)'; }
