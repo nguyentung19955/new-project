@@ -143,7 +143,7 @@ VX.duoiDau = function (ctx, T, S, al, R) {
 //  ảnh ChatGPT: evo_bom (huy hiệu bom, ô số trống) · evo_xacbom (xác bom cháy) · fx_evo_xit (dải 16 khung nổ hụt) — docs/demo-hop-tuong/tuvan/evolver/CAN-VE.json
 //  chưa có ảnh → tạm fx_bomhen_hieu (bom đồng hồ có sẵn) / bản tối của nó / fx_bomhen_trung + fx_bui. CHỈ con số là chữ vẽ code (QUY-TAC-HINH mục 3).
 const EVO = {
-  co: { evo_bom: true, fx_evo_xit: true }, // ảnh ChatGPT đã về (đặt true khi file có trong assets — tránh tải thử file chưa có → 404)
+  co: { evo_bom: true, fx_evo_xit: true, evo_xacbom: true }, // ảnh ChatGPT đã về (đặt true khi file có trong assets — tránh tải thử file chưa có → 404)
   bom: () => EVO.co.evo_bom && REN.img('evo_bom') ? 'evo_bom' : 'fx_bomhen_hieu',
   xac: () => EVO.co.evo_xacbom && REN.img('evo_xacbom') ? 'evo_xacbom' : null,
   xit: () => EVO.co.fx_evo_xit && REN.img('fx_evo_xit') ? 'fx_evo_xit' : null,
