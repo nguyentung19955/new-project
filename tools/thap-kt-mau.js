@@ -21,7 +21,7 @@ const HUE = {
   ice: [[160, 235]],                           // băng / sương: lam nhạt – trắng xanh
   water: [[185, 245]],                         // nước sâu: lam đậm
   poison: [[62, 170]],                         // độc: xanh lá
-  energy: [[160, 300], [40, 82]],              // điện / năng lượng: lam điện – tím, hoặc vàng / vàng chanh sét
+  energy: [[160, 300], [40, 90]],              // điện / năng lượng: lam điện – tím, hoặc vàng / vàng chanh sét (≤ 90°: đạn Ricochet vàng chanh đo 76–87°, bản không anim cũng vậy — 06/11)
   gold: [[20, 72]],                            // sao / vàng / thánh quang / tiền thưởng hổ phách
   laser: [[295, 360], [0, 35]],                // tia laser đỏ – hồng (ảnh fx_laser_* / fx_overlord_*)
   eclipse: [[340, 360], [0, 55]],              // nhật thực: quầng mặt trời đỏ – cam (ảnh fx_nhatthuc_*)
@@ -75,6 +75,7 @@ function DUNG_CANH() {
   for (let yy = 0; yy < ch; yy++) for (let xx = 0; xx < cw; xx++) if ((xx - c.x * k) ** 2 + (yy - c.y * k) ** 2 < rr * rr) mask[yy * cw + xx] = 0;
   window.__MK = mask;
   window.__CANH = function (id, sao, coU, chuDong, noHu) {
+    { let s = 1234567; for (const ch of String(id) + sao) s = (s * 31 + ch.charCodeAt(0)) % 2147483647; Math.random = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648; } // hạt giống cố định mỗi cảnh: lấy mẫu không chập chờn (nayda 76–87° trước đây)
     const B = G.ban[0], p0 = G.duong[0]; B.tim = 1e9; B.mana = 1e6; G.dung = true;
     G.quai.length = 0; G.hang.length = 0; G.hu.length = 0; G.dan && (G.dan.length = 0); FX.reset(); if (typeof SIG !== 'undefined') SIG.ds.length = 0; G.cho = 0; G.tWave = 3; G.t = 100;
     for (let i = 0; i < B.t.length; i++) B.t[i] = null;
