@@ -1,0 +1,20 @@
+[
+  {
+    "name": "raw_lev_rong.png",
+    "ref": ["thap/assets/nho/leviathan.png", "thap/assets/sig_m07_jaw.png"],
+    "use": "TIDAL BREATH — big mechanical ice-dragon head that drops from the sky above the path, mouth open (code only moves/scales/fades it)",
+    "prompt": "Single game sprite, same style as attached: a huge mechanical ice-dragon head, front 3/4 view seen from above, mouth wide open roaring, cyan glowing eyes and throat, steel and ice-blue armor plates, frost horns, no neck below the jaw line, centered, solid magenta #FF00FF background, no text"
+  },
+  {
+    "name": "raw_fx_lev_bang.png",
+    "ref": ["thap/assets/sig_m07_breath.png", "thap/assets/fx_leviathan_tia.png"],
+    "use": "TIDAL BREATH — freezing ice/water breath segment laid along the path (frames 1-4 start, 5-12 loop, 13-16 fade to frost)",
+    "prompt": "4x4 grid, 16 frames, game VFX sprite sheet, same style as attached: a freezing ice-water breath stream flowing to the right, cyan and white with ice shards and frost mist, frames 1-4 forming, 5-12 looping flow, 13-16 dissolving into frost crystals, horizontal, centered in each cell, solid magenta #FF00FF background, no text"
+  },
+  {
+    "name": "raw_lev_abyss.png",
+    "ref": ["thap/assets/fx_leviathan_hieu.png", "thap/assets/ic_dmg.png"],
+    "use": "ABYSS counter icon on the small bottom tag of a Leviathan cell (shown ~10 px)",
+    "prompt": "Single small game icon, same style as attached: a deep-sea cyan abyss whirlpool spiral with a dark center, bold simple shape readable at tiny size, thick dark outline, centered, solid magenta #FF00FF background, no text"
+  }
+]
