@@ -107,7 +107,7 @@ const TEXT = {
     dongbo:     { name: 'Sync Cannon',   skill: 'Support: same-star Attack neighbours deal more damage (capped)' },
     railgun:    { name: 'Railgun',       skill: 'Bingo: full row +damage, full column +fire rate' },
     vughep:     { name: 'Merge King',    skill: 'Same-star merge: +1★ (Gold version +2★) · Merge King + Merge King → Merge King +1★' },
-    sinhdoi:    { name: 'Twin Maker',    skill: 'On merge: summons an extra same-star turret' },
+    sinhdoi:    { name: 'Twin Maker',    skill: 'On merge: also summons a random turret of the same ★ (needs an empty cell; the merge frees one)' },
     hasao:      { name: 'Star Breaker',  skill: 'Support: Attack neighbours +damage, merge surge. PVP: first rival 5★ each wave −8% fire rate' },
     saochep:    { name: 'Copycat',       skill: 'Copies any same-star turret (less damage)' },
     ngoisao:    { name: 'Star Cannon',   skill: 'Board ★ total: every 10 → faster; every 50 → more damage' },

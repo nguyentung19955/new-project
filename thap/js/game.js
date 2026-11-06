@@ -128,6 +128,25 @@ function trieu(B, mienPhi, idEp) {
   VX.trieu(T); // hiệu ứng triệu hồi theo thời gian thực (hieuung.js) — không chặn thao tác, luật chơi không chờ hoạt ảnh
   return T;
 }
+// TWIN MAKER (sinhdoi): gọi thêm 1 ụ NGẪU NHIÊN trong bộ bài, tạo THẲNG ở đúng sao (không đổi sao sau khi tạo → chỉ số, chip sao,
+// dạng ảnh/grow, bộ đếm trên bàn đều khớp ngay). Ô ngẫu nhiên trong các ô trống (ghép thường luôn trả 1 ô → luôn có chỗ).
+// Online: bàn con rối KHÔNG tự gọi — nhận đúng ụ/ô/sao qua gói 'gh' (d.tw) của máy chủ bàn; máy chủ bàn bốc bằng RNG hạt giống chung.
+// ep = { o, id } (áp lại từ mạng). Hiệu ứng: VX.sinhDoi (tia vàng từ ô ghép → ô mới, lộ cùng lúc kết quả ghép).
+function sinhDoi(B, sao, oNguon, ep) {
+  if (!ep && B.net && typeof ONS !== 'undefined' && ONS.on) return null;
+  const tr = oTrong(B); if (!tr.length) return null;
+  let r = Math.random;
+  if (!ep && typeof ONS !== 'undefined' && ONS.on) r = rngHat((ONS.seed || 1) * 7907 + Math.round(G.t * 60) * 31 + (oNguon | 0) * 977 + B.i * 13);
+  const o = ep ? ep.o : tr[Math.floor(r() * tr.length)];
+  const tc = !ep && typeof HOTRO !== 'undefined' && HOTRO.canTC ? HOTRO.canTC(B) : null, bo = tc && tc.length ? tc : B.deck; // cùng thiên vị Tấn công như triệu hồi thường
+  const id = ep ? ep.id : bo[Math.floor(r() * bo.length)];
+  if (B.t[o] || !G.rosterMap[id]) return null;
+  const T = sinhU(taoU(B, id, Math.max(1, Math.min(LUAT.saoMax, sao | 0)), o));
+  B.t[o] = T;
+  B._tw = { o, id, s: T.sao };
+  if (typeof VX !== 'undefined' && VX.sinhDoi) VX.sinhDoi(B, oNguon, T); else if (typeof VX !== 'undefined') VX.trieu(T);
+  return T;
+}
 function hopLeGhep(a, b) {
   if (!a || !b || a === b) return false;
   if (a.st.bang > 0 || b.st.bang > 0) return false;

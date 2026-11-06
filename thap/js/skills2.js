@@ -744,14 +744,14 @@ SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đ
   },
   veThem(ctx, T, S, al, R) { if (T.vang) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.35 + 0.15 * Math.sin(R.t * 5)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 1.4); } },
 };
-SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP gọi thêm 1 ụ cùng sao
+SKILLS.sinhdoi = { // Máy Sinh Đôi (Berit): khi GHÉP THƯỜNG gọi thêm 1 ụ ngẫu nhiên CÙNG SAO nguyên liệu (luôn có ô: ghép trả 1 ô)
+  // · 2 Twin Maker ghép nhau / Twin + Mimic → đúng 1 ụ thêm (kỹ năng chạy 1 lần mỗi lần ghép).
+  // · Ghép ĐẶC BIỆT (Merge King/Bộ Trộn… kéo vào Twin) KHÔNG kích hoạt: đó là kỹ năng của ụ kéo, không phải ghép thường (giữ như cũ).
+  // · Không chữ nổi; tín hiệu = tia vàng + vòng vàng + biểu tượng 2 vòng nối (fx_sinhdoi_hieu) trên 2 ô — VX.sinhDoi.
   vai: 'db', dmg: 7.86, toc: 1.4, nham: 'dau',
-  mo: (T) => 'On merge: extra ' + T.sao + '★',
+  mo: (T) => 'On merge: also summons a random ' + T.sao + '★ turret',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 17, sp: 580 }); },
-  ghep(G, B, a, b, ra) {
-    const N = trieu(B, true);
-    if (N) { N.sao = a.sao; const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ffe46b'); nhanU(ra, 'TWIN ' + a.sao + '★', '#ffe46b', true); }
-  },
+  ghep(G, B, a, b, ra) { sinhDoi(B, a.sao, b.o); },
 };
 SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): ụ Tấn công kề +sát thương; ghép ra ụ cạnh nó → bùng tốc 5 s;
   // PVP: lần đầu mỗi wave 1 ụ đối thủ lên 5★ → ụ đó −8% tốc 6 s · CO-OP: ụ sao thấp nhất của đồng đội +8% tốc 6 s · SOLO: ụ thấp nhất của mình

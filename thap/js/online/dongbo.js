@@ -220,6 +220,12 @@ const ONS = {
     if (B1.t[d.b] && d.vg != null && B1.t[d.b].id === 'vughep') B1.t[d.b].vang = !!d.vg; // cờ vàng Merge King theo đúng máy bạn kia
     if (B1.t[d.b] && d.bs != null) B1.t[d.b].banSao = !!d.bs; // bản sao Copycat: −50% + huy hiệu, như máy bạn kia
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
+    // Twin Maker: ụ sinh đôi đúng ô/loại/sao của máy bạn kia (bàn con rối không tự bốc — sinhDoi() trả null cho B.net)
+    if (d.tw && d.tw.o != null && G.rosterMap[d.tw.id]) {
+      const X = B1.t[d.tw.o];
+      if (X && d.tw.o === d.a && !(X.id === d.tw.id && X.sao === d.tw.s)) B1.t[d.tw.o] = null; // ô ụ kéo vừa trống bên kia
+      if (!B1.t[d.tw.o]) sinhDoi(B1, d.tw.s, d.b, { o: d.tw.o, id: d.tw.id });
+    }
   },
   // ---------------------------------------------------------------- ảnh chụp bàn (mỗi 1 s) + mã băm
   oCua(B) { return B.t.map(T => T ? T.id + ':' + T.sao : ''); },
@@ -392,8 +398,14 @@ const ONS = {
     });
     g('ghep', (goc) => function (B, a, b, ep) {
       const ao = a && a.o, bo = b && b.o, laToi = self.on && b && b.ban === 0 && !self._apDung;
+      if (laToi) G.ban[0]._tw = null;
       const r = goc.apply(this, arguments);
-      if (laToi && r) { const T = G.ban[0].t[bo] || r; self.gui('gh', { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0 }); }
+      if (laToi && r) {
+        const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0 };
+        const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại
+        self.gui('gh', v);
+      }
+      if (laToi) G.ban[0]._tw = null;
       return r;
     });
     g('nangCap', (goc) => function (B, id) {

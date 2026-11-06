@@ -299,6 +299,37 @@ async function menu(b, W, H, D, co) {
   await ctx.close();
 }
 
+// Twin Maker: chạy TRONG TRANG — trả danh sách lỗi (rỗng = đạt). Ca: 2 Twin (kéo cả 2 chiều), Twin + Mimic (2 chiều), bàn đầy, 7 sao.
+function KT_SINHDOI() {
+  const loi = [], keep = G.ban.map(B => B.t.slice()), mana = G.ban.map(B => B.mana);
+  const dem = (B) => B.t.filter(Boolean).length;
+  for (const B of G.ban) {
+    if (B.net) continue;
+    const ca = [['sinhdoi', 'sinhdoi', 0, 1], ['sinhdoi', 'sinhdoi', 1, 0], ['sinhdoi', 'mimic', 0, 1], ['mimic', 'sinhdoi', 0, 1]];
+    for (let lap = 0; lap < 6; lap++) for (const [ia, ib, oa, ob] of ca) for (const day of [false, true]) {
+      const sao = 1 + (lap % 6);
+      for (let i = 0; i < 15; i++) B.t[i] = null;
+      const put = (o, id, sv) => { const T = sinhU(taoU(B, id, sv, o)); T.vxA = null; B.t[o] = T; return T; };
+      put(oa, ia, sao); put(ob, ib, sao);
+      if (day) for (let i = 0; i < 15; i++) if (!B.t[i]) put(i, 'canon', 7); // bàn đầy: ô duy nhất trống = ô ụ kéo
+      const n0 = dem(B), cu = new Set(B.t.filter(Boolean)), a = B.t[oa], b = B.t[ob];
+      const r = ghep(B, a, b);
+      const ten = 'bàn ' + B.i + ' ' + ia + '→' + ib + ' ' + sao + '★' + (day ? ' đầy' : '');
+      if (!r) { loi.push(ten + ': không ghép được'); continue; }
+      const moi = B.t.filter(T => T && !cu.has(T) && T !== B.t[ob]);
+      if (dem(B) !== n0) loi.push(ten + ': số ụ ' + n0 + '→' + dem(B) + ' (phải giữ nguyên: −1 ghép +1 sinh đôi)');
+      if (moi.length !== 1) { loi.push(ten + ': ' + moi.length + ' ụ sinh đôi'); continue; }
+      const T = moi[0];
+      if (T.sao !== sao) loi.push(ten + ': ụ sinh đôi ' + T.sao + '★ (phải ' + sao + '★)');
+      if (day && T.o !== oa) loi.push(ten + ': bàn đầy mà ụ sinh đôi không ở ô vừa trống');
+      if (!B.deck.includes(T.id)) loi.push(ten + ': ụ sinh đôi ' + T.id + ' không thuộc bộ bài');
+      if (B.t[ob].sao !== Math.min(LUAT.saoMax, sao + 1)) loi.push(ten + ': ụ ghép ra ' + B.t[ob].sao + '★');
+    }
+  }
+  G.ban.forEach((B, i) => { for (let o = 0; o < 15; o++) B.t[o] = keep[i][o]; B.mana = mana[i]; });
+  return loi;
+}
+
 // 3) trận: SOLO đầy đủ thao tác, CO-OP/PVP với máy, kết quả, chơi lại
 async function tran(b, W, H, D, co, m) {
   const { ctx, p } = await mo(b, W, H, D, co, DA_XONG);
@@ -333,6 +364,11 @@ async function tran(b, W, H, D, co, m) {
   if (m !== 'solo') await buoc(p, co, m + '_ghep_vughep', async () => {
     const s = await p.evaluate(() => { const B = G.ban[0], o0 = B.t.findIndex(T => !T), keep = B.t.slice(); for (let i = 0; i < 15; i++) B.t[i] = null; B.t[0] = sinhU(taoU(B, 'vughep', 2, 0)); B.t[1] = sinhU(taoU(B, 'vughep', 2, 1)); const r = ghep(B, B.t[0], B.t[1]); const kq = [!!B.t[0], B.t[1] && B.t[1].id, B.t[1] && B.t[1].sao, r === B.t[1]]; for (let i = 0; i < 15; i++) B.t[i] = keep[i]; return kq; });
     if (s[0] || s[1] !== 'vughep' || s[2] !== 3 || !s[3]) throw new Error(m + ': Merge King★2 + Merge King★2 không ra Merge King★3 (' + JSON.stringify(s) + ')');
+  });
+  // TWIN MAKER (sinhdoi): mỗi lần ghép THƯỜNG có Twin Maker → đúng 1 ụ thêm, ĐÚNG sao nguyên liệu ngay khi tạo (mọi bàn của chế độ)
+  await buoc(p, co, m + '_ghep_sinhdoi', async () => {
+    const s = await p.evaluate(KT_SINHDOI);
+    if (s.length) throw new Error(m + ': Twin Maker — ' + s.slice(0, 4).join(' · '));
   });
   if (m === 'solo') {
     // ghép kéo + chạm–chạm
@@ -414,6 +450,25 @@ async function online(b, W, H, D, co) {
     await buoc(A.p, co, 'online_2_nguoi', async () => { await B.p.evaluate(() => ONL.moBang()); await B.p.fill('#onl-ma', code); await bam(B.p, '[data-act="onl-vao"]'); await A.p.waitForFunction(() => document.querySelectorAll('#sanh-ds .sanh-p:not(.trong)').length === 2, null, { timeout: 10000 }); });
     await buoc(A.p, co, 'online_tran', async () => { await bam(A.p, '#sanh-san'); await bam(B.p, '#sanh-san'); await A.p.waitForFunction(() => typeof ONS !== 'undefined' && ONS.on && G.ban.length === 2 && !TAI.cho, null, { timeout: 20000 }); await sleep(2500); }, { cho: 300 });
     await kiem(B.p, co, 'online_tran_B');
+    // TWIN MAKER online (lockstep): A ghép 2 Twin Maker → máy B dựng y hệt bàn A (ụ sinh đôi đúng ô/loại/sao) NGAY khi áp gói 'gh'
+    // (đo ngay sau ONS.apGhep — không nhờ ảnh chụp 1 s sửa lại)
+    await buoc(A.p, co, 'online_sinhdoi', async () => {
+      await B.p.evaluate(() => { ONS._kt = []; if (!ONS._ktBoc) { ONS._ktBoc = 1; const g = ONS.apGhep; ONS.apGhep = function (B1, d) { const r = g.apply(this, arguments); this._kt.push({ d, c: this.oCua(B1) }); return r; }; } });
+      for (let lan = 0; lan < 3; lan++) {
+        const sao = 2 + lan;
+        await A.p.evaluate((sao) => { const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null; const put = (o, id) => { const T = sinhU(taoU(B, id, sao, o)); T.vxA = null; B.t[o] = T; }; put(0, 'sinhdoi'); put(1, 'sinhdoi'); for (let i = 5; i < 9; i++) put(i, 'canon'); ONS.chupAnh(); }, sao);
+        const cA = await A.p.evaluate(() => ONS.oCua(G.ban[0]));
+        await B.p.waitForFunction((c) => JSON.stringify(ONS.oCua(G.ban[1])) === c, JSON.stringify(cA), { timeout: 15000 }).catch(() => { throw new Error('bàn A chưa đồng bộ sang B (ảnh chụp)'); });
+        const sau = await A.p.evaluate(() => { const B = G.ban[0]; ghep(B, B.t[0], B.t[1]); return ONS.oCua(B); });
+        const nSD = sau.filter(x => x).length;
+        if (nSD !== 6) throw new Error('A: sau ghép Twin có ' + nSD + ' ụ (phải 6)');
+        if (!sau.some((x, i) => x && i !== 1 && !(i >= 5 && i < 9) && x.endsWith(':' + sao))) throw new Error('A: không có ụ sinh đôi ' + sao + '★ (' + sau.join(',') + ')');
+        await B.p.waitForFunction(() => ONS._kt.length > 0, null, { timeout: 10000 }).catch(() => { throw new Error('B không nhận gói ghép'); });
+        const kt = await B.p.evaluate(() => ONS._kt.shift());
+        if (!kt.d.tw) throw new Error('gói ghép không kèm ụ sinh đôi (d.tw)');
+        if (JSON.stringify(kt.c) !== JSON.stringify(sau)) throw new Error('B dựng khác A: ' + kt.c.join(',') + ' ≠ ' + sau.join(','));
+      }
+    });
   } catch (e) { await loi(A && A.p, co, 'online', 'kẹt', [e.message.split('\n')[0]]); }
   if (A) await A.ctx.close(); if (B) await B.ctx.close();
 }
