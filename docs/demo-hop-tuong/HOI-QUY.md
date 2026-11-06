@@ -80,3 +80,8 @@ Còn lại: `online_tran` (bước vào trận online trong thap-kt-hoiquy.js) T
 Chạy đủ 4 cỡ: 360x780 TRƯỢT "chân dung lọt khung — phóng quá độ nét 1,03" với ảnh nhỏ 200 px (chân dung phóng thêm theo khung mặt) →
 tạo lại 256 px (`tools/thap-pilot-nho.py`), `SIZES=360x780x3 CHI=menu`: XANH. 1280x800 `solo_trum` "chữ tràn .ci-chu bị #cutin cắt" 1 lần —
 chạy lại `SIZES=1280x800x1` đủ luồng: XANH (chập chờn theo thời điểm chụp cutin). 390/430: XANH. Kéo-thả 21/21 × 3 cỡ.
+
+### 06/11 — Freezer nhiều ụ + nút SUMMON luôn hiện
+4 cỡ: chỉ 1 lỗi "chữ tràn .ci-chu bị #cutin cắt" ở `solo_trum` (cutin chỉ huy đang trượt vào lúc chụp — chập chờn đã biết) → chạy lại
+`SIZES=1280x800x1,360x780x3 CHI=solo`: XANH. Mới trong hồi quy: `tools/thap-kt-nut-trieu.js` (nút SUMMON + ảnh nền HUD, SOLO/CO-OP/PVP).
+Riêng: `tools/thap-kt-freezer.js` XANH (số ụ theo wave, 6 s, Halo nửa, CO-OP chia, PVP, chọn mục tiêu tất định 8 trùm).
