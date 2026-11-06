@@ -250,7 +250,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     const p0 = G.duong[0], [px, py, pg] = viTri(p0, p0.len * 0.3);
     HU.may.ve(ctx, { t: 1, song: 5, x: px, y: py, r: 44, goc: pg, _T: { id: 'vungdoc' }, T: undefined }, REN);
     REN.anhGiua = ag;
-    if (vd && g) { gan(g.w / 2 * vd[3], 52, 0.06, 'Toxic Pool mép dọc đường'); if (Math.abs((g.goc || 0) - pg) > 1e-6) loi.push('Toxic Pool không xoay theo đường'); } else loi.push('Toxic Pool: không bắt được ảnh vũng');
+    if (vd && g) { gan(g.w / 2 * vd[3], 52, 0.06, 'Toxic Pool mép dọc đường'); if (Math.abs((g.goc || 0) - pg) > 1e-6) loi.push('Toxic Pool không xoay theo đường'); } else loi.push('Toxic Pool: không bắt được ảnh vũng (đã gắn tờ P3 vungdoc? → vfxp3.js: cỡ vẽ = (r + 8) × 2 / tỉ lệ ảnh đo, rồi sửa bước kiểm này)');
     // Wyrm Engine 1★: dải fx_wyrm_lua — mũi lửa = tầm, bề ngang lửa ở 70% = bề ngang nón trúng ở đó
     const wy = await doc('fx_wyrm_lua', 4, 11, 16); // khung lặp lúc phun đều (HU.nonLua: 4 + …% 8)
     for (let i = 0; i < 15; i++) B.t[i] = null; const W = sinhU(taoU(B, 'ronglua', 1, 7)); B.t[7] = W; W.phun = 0.3; W.goc = 0;
