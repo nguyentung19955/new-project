@@ -38,3 +38,8 @@ Tờ lệch màu nguyên tố → điền `SAC = {'<ụ>': hue}` trong thap-cat-
 - Màu `thap-kt-mau`: XANH 117/117. Giật `thap-kt-giat-ghep`: XANH (p3_canon / p3_bang / p3_ngoisao có trong danh sách làm nóng; ra chiêu lần đầu 0 việc > 120 ms).
 - Hiệu năng `thap-kt-p3-perf` (CPU ×4, cùng máy, nhiều lần): trước (meta rỗng) p50 9,1–9,8 · p95 14,5–16,8 · tb 9,8–10,0 — sau p50 8,9–9,9 · p95 13,4–18,7 · tb 9,4–11,1 (trung vị p50 9,5 / p95 15,6 / tb 10,2: trong nhiễu, không tụt).
 - Hồi quy 390×844 NHANH: lần đầu trượt `mau` nayda@1★ (hue 83–105° ∉ energy; bản gốc 1684db5 không có tờ P3 cũng trượt 97° → lỗi có sẵn, không do P3). Sửa: màu vệt/vòng/tia Ricochet `#d6ff3a` (chanh 73°) → vàng điện `#f7ec3a`, `#e8ff8a` → `#f7f08a` (skills3.js) — hue đo 69–75°. Chạy lại: **XANH, 0 lỗi (1770 s)**; thap-kt-mau XANH.
+
+### Trạng thái (dừng theo ban-giao/DUNG-LAI.md)
+- Đã xong trên claude/demo-hop-tuong (38e6925 + 0480705): 20 tờ p3_* gắn + kiểm mọi chế độ / Turret File / Minimal+Reduce Flash, màu XANH, giật XANH, hồi quy 390×844 NHANH XANH (cả sau khi gộp anim.js + icon app: 1831 s, 0 lỗi).
+- CHƯA xuất bản lên claude/mobile-tower-defense-game-k5oxzo: DUNG-LAI.md (người dùng tạm dừng) cấm xuất bản; nhánh làm việc giờ còn có co-che-moi / gioi-han chưa được duyệt.
+  Khi tiếp tục: xuất bản thap/ (pull nhánh live, thay thap/, `python3 tools/thap-ver.py <thap xuất bản>`, hồi quy trên bản đó).
