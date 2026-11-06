@@ -23,6 +23,7 @@ const SIG = {
       this.daNap.add(id);
       for (const k in SIG_META) if (k.startsWith('sig_' + ma + '_')) REN.img(k);
       if (id === 'leviathan') for (const k of [this.LEV.rong, this.LEV.bang, 'fx_bang_trung', 'fx_leviathan_trung']) if (k) REN.img(k);
+      if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua', 'fx_ronglua_trung']) REN.img(k);
     }
   },
   san(id, g) { const a = REN.anh[this.ten(id, g)]; return !!(a && (a._cv || (a.complete && a.naturalWidth))); },
@@ -102,6 +103,7 @@ const SIG = {
 
 // ===================================================== PHÁT HIỆN (đúng lúc kỹ năng nổ ra) =====================================================
 if (typeof SIG_META !== 'undefined') SIG_META.fx_lev_bang = [16, 230, 77]; // dải 16 khung luồng băng (raw_fx_lev_bang.png, 4×4 → 1 hàng)
+if (typeof SIG_META !== 'undefined') SIG_META.fx_wyrm_lua = [16, 300, 150]; // dải 16 khung luồng lửa Wyrm (raw_fx_wyrm_lua.png, 4×4 → 1 hàng; tools/thap-cat-wyrm.py)
 SIG.PHAT = {
   roi(o) { // Marionette gắn dây rối
     const phu = this.ds.some(m => m.k === 'roi' && m.o.T === o.T && m.t < 1); // 7★ con rối thứ 2: tay nhỏ hơn
@@ -218,107 +220,97 @@ SIG.K = {
     },
   },
 
-  // ---------- M09 WYRM ENGINE: rồng thức giấc → dang cánh → bổ nhào dọc đường phun nón lửa → huy hiệu rồng cháy ----------
-  rong: {
-    cap(m) {
-      const o = m.o;
-      if (o.x != null) { m.x = o.x; m.y = o.y; m.g = o.g; }
-      if (!m.tHet && !this.conHu(o)) m.tHet = m.t;
-      return m.tHet != null && m.t - m.tHet > 0.5;
-    },
-    ve(ctx, m) {
-      const t = m.t;
-      if (!m.ngan) { // thức dậy + cánh thép trên chính ụ (0–0.55 s)
-        const fw = this.f(t, 0, 0.26, 6); if (fw >= 0) this.k(ctx, 'sig_m09_wake', fw, m.cx, m.cy - 8, 64);
-        const fg = this.f(t, 0.22, 0.56, 6); if (fg >= 0) this.k(ctx, 'sig_m09_wings', fg, m.cx, m.cy - 8, 112, { a: this.mo(t, 0.22, 0.56, 0.04, 0.1) });
-      }
-      if (m.tHet == null && m.x != null) { // rồng bay theo đúng vị trí bổ nhào (đầu hướng theo đường), lửa phun phía trước mõm
-        const g = m.g - Math.PI / 2, nc = this.n('ronglua', 'cone');
-        const u = m.o.t / m.o.song, a = Math.min(1, m.o.t / 0.1, (1 - u) / 0.1);
-        if (m.o.t < 0.16) this.k(ctx, 'sig_m09_wyrm', (m.o.t / 0.16) * 7.99, m.x, m.y, 92, { g: g - Math.PI / 4, a });
-        else this.k(ctx, 'sig_m09_cone', Math.min(nc - 1, 2 + (m.o.t - 0.16) * 14 % 4), m.x, m.y, 118, { g, ay: 0.22, a });
-      }
-      if (m.tHet != null) { const fc = this.f(m.t - m.tHet, 0, 0.5, 5); if (fc >= 0) this.k(ctx, 'sig_m09_crest', fc, m.x, m.y, 96, { a: this.mo(m.t - m.tHet, 0, 0.5, 0.04, 0.15) }); }
-    },
+  // ---------- ĐẦU RỒNG TỪ Ụ — M07 LEVIATHAN "TIDAL BREATH" (băng) + M09 WYRM ENGINE "DRAGON DIVE" (lửa) ----------
+  //   (user 06/11 16:36: "đầu rồng băng nhả từ chỗ ụ nhả ra, rồng lửa cũng thế"; 17:37: "như 1 cái ảnh rung, không phải animation khạc lửa")
+  //   đầu rồng PNG ChatGPT TRỒI LÊN từ chính ô ụ đang dùng chiêu (~1.7 ô, hơi trong suốt đè ô kề) → gầm (loé họng) →
+  //   luồng thở = dải 16 khung ChatGPT chạy ĐÚNG THỨ TỰ (1–4 hình thành → 5–12 chảy lặp → 13–16 tan) từ MIỆNG rồng tới đầu sóng trên đường
+  //   (= đúng điểm trúng của HU.thoThuy / HU.rongBo: cùng vùng trúng / sát thương / thời gian / đẩy lùi / cháy) rồi quét DỌC đường →
+  //   vệt (sương băng / than lửa cam-đỏ) → đầu rồng CHÌM lại vào ụ. Bản sao Copycat = cùng id → cùng hình. REDUCE FLASH giảm loé họng;
+  //   EFFECTS gọn bỏ vệt tan, cân bằng thưa nửa. Chưa tải xong ảnh → HU gốc tự vẽ (không bao giờ trống).
+  rongCap(m) {
+    const o = m.o; if (!m.p) m.p = o.p;
+    if (o.x != null) { m.x = o.x; m.y = o.y; }
+    if (m.tHet == null && !this.conHu(o)) m.tHet = m.t;
+    if (m.cx == null) { const c = this.o(m.T); if (c) { m.cx = c.x; m.cy = c.y; } }
+    if (m.pit == null) { const B = m.T && G.ban[m.T.ban]; m.pit = (B && B.o[1] && Math.abs(B.o[1].x - B.o[0].x)) || 60; }
+    return m.tHet != null && m.t - m.tHet > 0.95;
   },
-
-  // ---------- M07 LEVIATHAN — TIDAL BREATH (yêu cầu user 06/11: "triệu hồi đầu rồng khạc băng từ trên trời rơi xuống"):
-  //   tia nối xanh từ ụ tới điểm triệu hồi → ĐẦU RỒNG BĂNG cơ khí rơi từ trời xuống trên đường (cạnh lõi, nơi luồng bắt đầu) → gầm →
-  //   luồng băng-nước quét DỌC đường (đúng đầu sóng HU.thoThuy: cùng vùng trúng / sát thương / đẩy lùi / thời gian) → vệt sương băng → đầu rồng bay lên.
-  //   Ảnh ChatGPT: lev_rong (đầu rồng), fx_lev_bang (dải 16 khung luồng băng) — docs/demo-hop-tuong/tuvan/leviathan/CAN-VE.json;
-  //   chưa có → tạm sig_m07_neck (khung há miệng) + sig_m07_breath/corner. REDUCE FLASH / EFFECTS (camgiac.js) giảm loé + vệt sương.
-  tho: {
-    cap(m) {
-      const o = m.o;
-      if (o.x != null) { m.x = o.x; m.y = o.y; }
-      if (!m.tHet && !this.conHu(o)) m.tHet = m.t;
-      if (m.cx == null) { const c = this.o(m.T); if (c) { m.cx = c.x; m.cy = c.y; } }
-      return m.tHet != null && m.t - m.tHet > 0.95;
-    },
-    ve(ctx, m) {
-      const P = m.p, t = m.t; if (!P) return;
-      const LA = SIG.LEV, kF = typeof CG !== 'undefined' ? CG.kFlash() : 1, gon = typeof CG !== 'undefined' && CG.gon(), can = typeof CG !== 'undefined' && CG.doc().fx === 'can';
-      const S0 = Math.max(0, P.len - 62), [hx, hy] = viTri(P, S0); // miệng rồng = đầu luồng (cạnh lõi, lùi vào trong đường để đầu rồng nằm trọn trên làn)
-      const TD = m.ngan ? 0.1 : 0.24; // rơi xuống
-      const het = m.tHet != null ? m.t - m.tHet : -1;
-      const dy = het >= 0 ? -250 * this.eo(het / 0.55) : -250 * (1 - this.eo(t / TD));
-      const aD = het >= 0 ? Math.max(0, 1 - Math.max(0, het - 0.25) / 0.3) : Math.min(1, t / 0.06);
-      // 1) tia nối ngắn từ ụ đang dùng chiêu → điểm triệu hồi (lúc tung chiêu)
-      if (m.cx != null && t < 0.4) {
-        const al = Math.min(1, t / 0.04, (0.4 - t) / 0.18);
+  // tư thế đầu rồng: u 0 = nằm trong ụ, 1 = đã trồi hẳn; gam = nhịp gầm
+  rongTuThe(m, dau) {
+    const TR = m.ngan ? 0.08 : 0.15, het = m.tHet != null ? m.t - m.tHet : -1, P = m.pit;
+    const u = het >= 0 ? 1 - this.eo(het / 0.34) : this.eo(m.t / TR);
+    const gam = het < 0 && m.t > TR && m.t < TR + 0.26 ? Math.sin((m.t - TR) / 0.26 * Math.PI) : 0;
+    const w = P * 1.7 * (0.3 + 0.7 * u) * (1 + 0.08 * gam), h = w * dau.height / dau.width;
+    const x = m.cx, y = m.cy - P * 0.6 * u + Math.sin(this.t * 5) * 1.2 * u;
+    const ng = m.x != null ? Math.max(-0.3, Math.min(0.3, (m.x - x) / 260)) * u : 0; // nghiêng nhẹ về phía luồng
+    const d = h * 0.16; // tâm miệng ≈ 66% chiều cao ảnh
+    return { x, y, w, h, ng, u, gam, het, TR, a: Math.min(1, u * 1.8) * 0.88, mx: x - d * Math.sin(ng), my: y + d * Math.cos(ng) };
+  },
+  // khung luồng cho đoạn i: hình thành (0–3) theo tiến độ / chảy lặp (4–11) / tan (12–15)
+  rongKhung(i, e, het) {
+    if (het >= 0) return 12 + Math.min(3, Math.floor(het / 0.28 * 4));
+    if (e < 0.16) return Math.min(3, Math.floor(e / 0.16 * 4));
+    return 4 + (Math.floor(this.t * 14) + i * 3) % 8;
+  },
+  rongVe(ctx, m, cf) {
+    const dau = REN.img(cf.dau), meta = SIG_META[cf.luong]; if (!dau || !meta || !REN.img(cf.luong) || m.cx == null) return;
+    const P = m.p, t = m.t, kF = typeof CG !== 'undefined' ? CG.kFlash() : 1, gon = typeof CG !== 'undefined' && CG.gon(), can = typeof CG !== 'undefined' && CG.doc().fx === 'can';
+    const D = this.rongTuThe(m, dau), het = D.het, eL = t - D.TR * 0.7; // luồng bật ra khi đầu rồng gần trồi hẳn
+    // 1) luồng quét DỌC đường: từ lõi (nơi sóng bắt đầu) tới đầu sóng hiện tại
+    if (P && m.tHet == null) {
+      const o = m.o, uu = Math.min(1, o.t / o.song), a = Math.min(1, (1 - uu) / 0.12), s1 = P.len * (1 - uu), buoc = cf.buoc, gocs = cf.cua ? this.gocRe(P) : [], XA = 22;
+      for (let s = P.len - 4, i = 0; s > s1 && i < 44; s -= buoc, i++) {
+        const sc = s - buoc / 2, dau1 = s - buoc <= s1;
+        if (!dau1 && gocs.some(q => Math.abs(sc - q.sJ) < XA)) continue;
+        const [x, y, g] = viTri(P, sc);
+        this.k(ctx, cf.luong, dau1 ? Math.min(3, Math.floor(this.t * 16) % 4) : 4 + (Math.floor(this.t * 12) + i) % 8, x, y, buoc * 1.9, { g: g + Math.PI, a, h: cf.h });
+      }
+      for (const q of gocs) { if (q.sJ > P.len - 8 || s1 > q.sJ + 16) continue; this.cua(ctx, q, Math.min(3, Math.floor((q.sJ + 16 - s1) / 14)), a); }
+      m.s1 = s1;
+    }
+    // 2) vệt tan dọc làn sau khi luồng hết (khung 13–16: băng đọng / than tàn) — EFFECTS gọn: bỏ; cân bằng: thưa nửa
+    if (P && !gon && het >= 0 && m.s1 != null) {
+      const aV = Math.max(0, 1 - het / 0.95), f = 12 + Math.min(3, Math.floor(het / 0.95 * 4)), st = can ? cf.buoc * 2 : cf.buoc;
+      if (aV > 0.01) for (let s = P.len - 4, i = 0; s > Math.max(10, m.s1) && i < 44; s -= st, i++) { const [x, y, g] = viTri(P, s - cf.buoc / 2); this.k(ctx, cf.luong, f, x, y, cf.buoc * 1.9, { g: g + Math.PI, a: 0.85 * Math.min(1, aV * 1.4), h: cf.h }); }
+      const im = cf.vet && REN.img(cf.vet);
+      if (im && aV > 0.01) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        PX.tia(ctx, m.cx, m.cy, hx, hy - 40, 3.2, '#5fe3ff', al * 0.9);
-        const tr = REN.img('fx_leviathan_trung'); if (tr) { PX.ve(ctx, tr, m.cx, m.cy, 34, 34 * tr.height / tr.width, t * 4, al * 0.8 * kF); PX.ve(ctx, tr, hx, hy - 40, 26, 26 * tr.height / tr.width, -t * 4, al * 0.7 * kF); }
+        for (let s = P.len - 30, i = 0; s > m.s1 + 20 && i < 24; s -= (can ? 92 : 46), i++) { const [x, y] = viTri(P, s), w = 22 + (i % 3) * 4; PX.ve(ctx, im, x + ((i * 7) % 9) - 4, y + ((i * 5) % 7) - 3, w, w * im.height / im.width, i * 1.7, 0.42 * aV); }
         ctx.restore(); ctx.globalAlpha = 1;
       }
-      // 2) bóng mềm trên đường dưới đầu rồng (to dần khi rơi xuống)
-      { const k = 1 - Math.min(1, -dy / 250); PX.bong(ctx, hx, hy + 6, 70 * (0.5 + 0.5 * k), 22 * (0.5 + 0.5 * k), 0.35 * k * aD); ctx.globalAlpha = 1; }
-      // 3) luồng băng quét dọc đường (vẽ dưới đầu rồng)
-      if (m.tHet == null) {
-        const o = m.o, u = Math.min(1, o.t / o.song), a = Math.min(1, o.t / 0.08, (1 - u) / 0.12);
-        const s1 = P.len * (1 - u), buoc = 34, gocs = this.gocRe(P), XA = 22, bang = LA.bang && REN.img(LA.bang);
-        for (let s = S0 + 6, i = 0; s > s1 && i < 40; s -= buoc, i++) {
-          const sc = s - buoc / 2, dau = s - buoc <= s1;
-          if (!dau && gocs.some(q => Math.abs(sc - q.sJ) < XA)) continue;
-          const [x, y, g] = viTri(P, sc);
-          if (bang) this.k(ctx, LA.bang, dau ? Math.min(3, (this.t * 16) % 4) : 4 + (Math.floor(this.t * 12) + i) % 8, x, y, buoc * 1.9, { g: g + Math.PI, a: a * (dau ? 0.95 : 1), h: 30 });
-          else this.k(ctx, 'sig_m07_breath', dau ? 1 + Math.floor(this.t * 12) % 2 : 3 + (Math.floor(this.t * 10) + i) % 3, x, y, buoc * 1.45, { g, a: a * (dau ? 0.9 : 1) });
-        }
-        for (const q of gocs) {
-          if (q.sJ > P.len - 8 || s1 > q.sJ + 16) continue;
-          this.cua(ctx, q, Math.min(3, Math.floor((q.sJ + 16 - s1) / 14)), a);
-        }
-        m.s1 = s1;
-      }
-      // 4) vệt sương băng đọng lại sau luồng (EFFECTS gọn: bỏ; cân bằng: thưa nửa) — mờ dần sau khi đầu rồng bay đi
-      if (!gon && m.s1 != null) {
-        const im = REN.img('fx_bang_trung'), aV = het >= 0 ? Math.max(0, 1 - het / 0.95) : Math.min(1, t / 0.3);
-        if (LA.bang && REN.img(LA.bang) && het >= 0 && aV > 0.01) { // vệt sương = 4 khung tan thành băng của dải ChatGPT, nằm dọc làn
-          const f = 12 + Math.min(3, Math.floor(het / 0.95 * 4)), st = can ? 68 : 34;
-          for (let s = S0, i = 0; s > 10 && i < 40; s -= st, i++) { const [x, y, g] = viTri(P, s - 17); this.k(ctx, LA.bang, f, x, y, 34 * 1.9, { g: g + Math.PI, a: 0.85 * Math.min(1, aV * 1.4), h: 30 }); }
-        }
-        if (im && aV > 0.01) {
-          ctx.save(); ctx.globalCompositeOperation = 'lighter';
-          const st = can ? 92 : 46;
-          for (let s = P.len - 30, i = 0; s > m.s1 + 20 && i < 24; s -= st, i++) {
-            const [x, y] = viTri(P, s), w = 22 + (i % 3) * 4;
-            PX.ve(ctx, im, x + ((i * 7) % 9) - 4, y + ((i * 5) % 7) - 3, w, w * im.height / im.width, i * 1.7, 0.42 * aV);
-          }
-          ctx.restore(); ctx.globalAlpha = 1;
+    }
+    // 3) luồng từ MIỆNG rồng tới đầu sóng trên đường: chuỗi đoạn, mỗi đoạn 1 khung của dải (không phóng/rung 1 ảnh tĩnh)
+    if (m.x != null && eL > 0 && (het < 0 || het < 0.3)) {
+      const dx = m.x - D.mx, dy = m.y - D.my, L = Math.hypot(dx, dy);
+      if (L > 4) {
+        const g = Math.atan2(dy, dx), n = Math.max(1, Math.round(L / cf.doan)), sl = L / n;
+        const toi = het >= 0 ? n : eL < 0.16 ? Math.min(n, 1 + Math.floor(eL / 0.16 * n)) : n; // hình thành: luồng vươn dần từ miệng
+        const a = het >= 0 ? Math.max(0, 1 - het / 0.3) : 1;
+        for (let i = 0; i < toi; i++) {
+          const f = het >= 0 ? this.rongKhung(i, eL, het) : (i === toi - 1 && eL < 0.16 ? Math.min(3, Math.floor((eL / 0.16 * n - i) * 4)) : this.rongKhung(i, eL + 1, -1));
+          this.k(ctx, cf.luong, Math.max(0, f), D.mx + Math.cos(g) * i * sl, D.my + Math.sin(g) * i * sl, sl * 1.3, { g, ax: 0.06, a, h: cf.h * (0.75 + 0.25 * Math.min(1, (i + 1) / n)) });
         }
       }
-      // 5) đầu rồng băng: rơi từ trời → gầm (phồng nhẹ + loé xanh ở họng) → giữ phun → bay lên
-      if (aD > 0.01) {
-        const gam = het < 0 && t > TD && t < TD + 0.3 ? Math.sin((t - TD) / 0.3 * Math.PI) : 0, sc = 1 + 0.07 * gam;
-        const rong = LA.rong && REN.img(LA.rong);
-        if (rong) { const w = 88 * sc, h = w * rong.height / rong.width; PX.ve(ctx, rong, hx, hy + dy - h * 0.34, w, h, 0, aD); ctx.globalAlpha = 1; }
-        else this.k(ctx, 'sig_m07_neck', 7, hx, hy + dy - 34, 84 * sc, { a: aD });
-        if (gam > 0 || (het < 0 && t < TD + 0.6)) { // loé họng khi gầm / bắt đầu phun
-          const tr = REN.img('fx_leviathan_trung'), al = (gam > 0 ? gam : 0.35) * 0.8 * kF;
-          if (tr && al > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, tr, hx, hy + dy - 4, 46, 46 * tr.height / tr.width, t * 3, al); ctx.restore(); ctx.globalAlpha = 1; }
-        }
-      }
+    }
+    // 4) đầu rồng trên ô ụ (vẽ sau luồng → gốc luồng nằm trong miệng)
+    if (D.a > 0.01) { PX.ve(ctx, dau, D.x, D.y, D.w, D.h, D.ng, D.a); ctx.globalAlpha = 1; }
+    // 5) loé họng khi gầm / bắt đầu phun (REDUCE FLASH ×0.4)
+    const loe = cf.loe && REN.img(cf.loe), al = (D.gam > 0 ? D.gam : het < 0 && t < D.TR + 0.6 ? 0.35 : 0) * 0.8 * kF * D.u;
+    if (loe && al > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, loe, D.mx, D.my, D.w * 0.5, D.w * 0.5 * loe.height / loe.width, t * 3, al); ctx.restore(); ctx.globalAlpha = 1; }
+  },
+  // M09 WYRM ENGINE — DRAGON DIVE: ụ thức dậy → đầu rồng lửa trồi lên → khạc lửa (cam/đỏ) tới đường rồi dọc đường → huy hiệu rồng cháy ở cuối
+  rong: {
+    cap(m) { return this.rongCap(m); },
+    ve(ctx, m) {
+      if (!m.ngan) { const fw = this.f(m.t, 0, 0.26, 6); if (fw >= 0) this.k(ctx, 'sig_m09_wake', fw, m.cx, m.cy - 8, 64); }
+      this.rongVe(ctx, m, SIG.RONG.rong);
+      if (m.tHet != null && m.x != null) { const fc = this.f(m.t - m.tHet, 0, 0.5, 5); if (fc >= 0) this.k(ctx, 'sig_m09_crest', fc, m.x, m.y, 80, { a: this.mo(m.t - m.tHet, 0, 0.5, 0.04, 0.15) }); }
     },
+  },
+  // M07 LEVIATHAN — TIDAL BREATH: đầu rồng băng trồi lên từ ụ → phun luồng băng-nước tới đường rồi dọc đường → sương băng → chìm lại
+  tho: {
+    cap(m) { return this.rongCap(m); },
+    ve(ctx, m) { this.rongVe(ctx, m, SIG.RONG.tho); },
   },
 
   // ---------- L14 HYDRA 7★: các đầu rắn quấn thành đầu vương miện → tia rắn ngọc lục bảo → nổ trúng ----------
@@ -406,6 +398,15 @@ SIG.K = {
   },
 };
 
+// hàm dùng chung của 2 đầu rồng gọi bằng this = SIG
+for (const k of ['rongCap', 'rongTuThe', 'rongKhung', 'rongVe']) { SIG[k] = SIG.K[k]; delete SIG.K[k]; }
+// cấu hình 2 rồng: đầu (PNG), dải 16 khung luồng, loé họng, hạt vệt; buoc = bước đoạn dọc đường, doan = độ dài đoạn luồng từ miệng, h = bề dày luồng
+SIG.RONG = {
+  tho: { dau: 'lev_rong', luong: 'fx_lev_bang', loe: 'fx_leviathan_trung', vet: 'fx_bang_trung', buoc: 34, doan: 62, h: 30, cua: true },
+  rong: { dau: 'wyrm_rong', luong: 'fx_wyrm_lua', loe: 'fx_ronglua_trung', vet: null, buoc: 38, doan: 70, h: 34, cua: false },
+};
+SIG.sanRong = (k) => { const c = SIG.RONG[k]; return !!(REN.img(c.dau) && REN.img(c.luong)); };
+
 // ===================================================== MÓC NỐI (không đổi luật chơi) =====================================================
 (() => {
   // lớp trên: sau hiệu ứng sự kiện của bàn
@@ -418,7 +419,9 @@ SIG.K = {
   REN.noiSuy = function (a) { _ns.call(this, a); for (const m of SIG.ds) if (m.k === 'roi' && m.nhac > 0 && !m.E.chet) m.E.y -= m.nhac; };
   // hình gốc của các chiêu đã có bản PNG đặc biệt: tắt khi ảnh đã tải (thiếu ảnh → giữ hình cũ, không bao giờ trống)
   const thay = (k, id, g) => { const H = HU[k]; if (!H || !H.ve) return; const v = H.ve; H.ve = function (ctx, o, R) { if (SIG.san(id, g)) return; return v.call(this, ctx, o, R); }; };
-  thay('rongBo', 'ronglua', 'cone'); thay('thoThuy', 'leviathan', 'breath'); thay('pandora', 'pandora', 'vault'); thay('ongLao', 'chuato', 'drone');
+  // 2 đầu rồng: hình gốc chỉ tắt khi ảnh đầu rồng + dải luồng mới đã tải (SIG.rongVe vẽ thay)
+  const thayR = (k, r) => { const H = HU[k]; if (!H || !H.ve) return; const v = H.ve; H.ve = function (ctx, o, R) { if (SIG.sanRong(r)) return; return v.call(this, ctx, o, R); }; };
+  thayR('rongBo', 'rong'); thayR('thoThuy', 'tho'); thay('pandora', 'pandora', 'vault'); thay('ongLao', 'chuato', 'drone');
   // L04 Merge King: biết đúng ô đích + đúng kết quả (+1/+2★) ngay khi ghép thành công
   const V = SKILLS.vughep && SKILLS.vughep.ghepDB;
   if (V) { const lam = V.lam; V.lam = function (G, B, a, b) { const r = lam.apply(this, arguments); try { const c = B.o[b.o]; SIG.them('vua', 1.25, { x: c.x, y: c.y, ngan: SIG.ngan(b) }); } catch (e) { } return r; }; }

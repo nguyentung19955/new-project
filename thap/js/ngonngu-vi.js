@@ -2757,6 +2757,7 @@ const VI_MAU = {
 "Tap ‹ again to leave the room.": "Chạm ‹ lần nữa để rời phòng.",
 "Tap: dragon dives the path": "Chạm: rồng bổ nhào dọc đường đi",
 "Tap: ice dragon breath": "Chạm: rồng băng phun",
+"Tap: fire dragon breath": "Chạm: rồng lửa phun",
 "Tap: rewind pushes enemies back": "Chạm: tua ngược đẩy lùi quái",
 "Tap: summons new turrets": "Chạm: triệu hồi ụ mới",
 "Tap: team barrier #s": "Chạm: rào chắn cả đội #s",
