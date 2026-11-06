@@ -24,14 +24,20 @@ const P3 = {
   ten(id) { return 'p3_' + id; },
   co(id) { const t = this.ten(id); return this.M[t] && REN.img(t) ? t : null; },
   gon() { return typeof CG !== 'undefined' && CG.gon(); },
-  phat(id, x, y, w, P, song, o) { const t = this.co(id); if (!t || typeof P2 === 'undefined') return null; return P2.phat(t, x, y, w, P, song, o); },
+  phat(id, x, y, w, P, song, o) {
+    const t = this.co(id); if (!t || typeof P2 === 'undefined') return null;
+    // EFFECTS Minimal rút song → co bảng pha theo song (trước: pha cuối bị cắt → Blizzard / bom / mìn mất khung tan)
+    const T1 = Math.max(...P.map(p => p[1])); if (song < T1 - 1e-6) { const k = song / T1; P = P.map(p => [p[0] * k, p[1] * k, p[2], p[3]].concat(p[4] ? [p[4] / k] : [])); }
+    return P2.phat(t, x, y, w, P, song, o);
+  },
   // tia lửa ngòi bom / rỉ sáng: 1 chùm mỗi nhịp 0,12 s (băm theo đối tượng) — không Math.random
   _nhip: new WeakMap(),
   nhip(o, t, dt, fn) { const k = Math.floor(t / dt); if (this._nhip.get(o) === k) return; this._nhip.set(o, k); fn(k); },
   napBo() {
     const ds = [];
-    try { for (const B of G.ban) for (const id of (B.deck || []).concat(B.t.filter(Boolean).map(T => T.id))) { const t = this.ten(id); if (this.M[t]) REN.img(t); for (const c of ['trung', 'no']) if (typeof FXU !== 'undefined' && FXU.co('fx_' + id + '_' + c)) ds.push(['fx_' + id + '_' + c, c]); } } catch (e) { }
+    try { for (const B of G.ban) for (const id of (B.deck || []).concat(B.t.filter(Boolean).map(T => T.id))) { const t = this.ten(id); if (this.M[t]) REN.img(t); for (const c of ['trung', 'no']) if (typeof FXU !== 'undefined' && FXU.co('fx_' + id + '_' + c) && !(c === 'trung' && this.TRUNG[id] && this.M[t])) ds.push(['fx_' + id + '_' + c, c]); } } catch (e) { }
     // dựng sẵn dải nổ trúng / chớp nòng của bộ bài lúc rảnh (1 dải / 60 ms) → lần bắn đầu tiên không phải dựng giữa trận (chống giật)
+    // (ụ có tờ P3 nổ trúng: bỏ dải 'trung' — tờ p3_<ụ> đã nạp + giải mã ở màn tải trận (UI.dsTran) và làm nóng mip ở nongskill.js)
     let i = 0; const buoc = () => { if (i >= ds.length || typeof CG === 'undefined') return; const [t, c] = ds[i]; if (!REN.img(t) || !REN.img('fx_cham_trang')) { setTimeout(buoc, 200); return; } CG.K3._khung = -1; CG.K3.dai(t, c); i++; setTimeout(buoc, 60); };
     setTimeout(buoc, 400);
   },

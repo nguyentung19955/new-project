@@ -1118,8 +1118,9 @@ HU.min = { // mìn trên đường
     return false;
   },
   ve(ctx, o, R) {
+    if (typeof P3 !== 'undefined' && P3.co('min')) { P3.min(ctx, o, R); return; } // tờ VFX P3: mìn + đèn trong tờ (khung 0–3) — không chồng thêm ảnh mìn cũ
     if (!R.ve1(ctx, 'hu_min', o.sao3 ? 20 : 16, '', o.x, o.y)) R.anhGiua(ctx, 'dan_phao', o.x, o.y, o.sao3 ? 18 : 14, 0); // mìn ChatGPT (S4)
-    if (!(typeof P3 !== 'undefined' && P3.min(ctx, o, R))) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 20 : 11); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } // VFX P3: đèn mìn sáng đều (không nhấp nháy)
+    { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.7; R.anhGiua(ctx, R.cham1(o.sao3 ? '#ffd23f' : '#ff3b3b'), o.x, o.y - 3, o.sao3 ? 20 : 11); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; } // VFX P3: đèn mìn sáng đều (không nhấp nháy)
   },
 };
 // Dải ảnh PNG chạy LIỀN dọc làn (qua góc rẽ không tách đôi): đoạn thẳng = ảnh lặp theo chiều dài; góc rẽ = khúc cong

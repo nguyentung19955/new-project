@@ -27,7 +27,10 @@ function DUNG() {
     const c7 = B.o[OU]; let nk = 0; B.o.forEach((c, i) => { if (i !== OU && nk < 2 && Math.hypot(c.x - c7.x, c.y - c7.y) < Math.max(B.cw, B.ch) * 1.2) { B.t[i] = sinhU(taoU(B, 'mana', 1, i)); nk++; } });
     let s0 = 0, dm = 1e9; for (let s = 80; s < p0.len - 80; s += 4) { const [x, y] = viTri(p0, s), d = Math.hypot(x - c7.x, y - c7.y); if (d < dm) { dm = d; s0 = s; } }
     for (let i = 0; i < 8; i++) { const E = sinhQuai('bo', banI, s0 + (i - 3.5) * 20, 60); E.vao = 1; E.max = E.hp = 1e12; E.d = Object.assign({}, E.d, { v: 0 }); [E.x, E.y, E.goc] = viTri(p0, E.s); }
-    const tk = { pop: 0, nong: 0, dai: {}, hu: {}, sig: {} }, seen = new WeakSet(), out = [];
+    const tk = { pop: 0, nong: 0, dai: {}, hu: {}, sig: {}, p3: {} }, seen = new WeakSet(), out = [];
+    // tờ P3 (p3_<ụ>): ghi dãy khung đã vẽ (báo → nổ → tan) — REN.khungMuot bọc 1 lần
+    if (!REN.__p3) { REN.__p3 = 1; const km = REN.khungMuot; REN.khungMuot = function (ctx, ten, f) { if (window.__p3tk && typeof ten === 'string' && ten.startsWith('p3_')) (window.__p3tk[ten] = window.__p3tk[ten] || []).push(Math.floor(f)); return km.apply(this, arguments); }; }
+    window.__p3tk = tk.p3;
     const ghi = () => {
       for (const a of FX.anim) { if (seen.has(a)) continue; seen.add(a); if (a.mot === 'trung') tk.pop++; else if (a.mot === 'no') tk.nong++; else tk.dai[a.ten] = (tk.dai[a.ten] || 0) + 1; }
       for (const o of G.hu) { if (seen.has(o)) continue; seen.add(o); tk.hu[o.k] = (tk.hu[o.k] || 0) + 1; }
@@ -50,6 +53,7 @@ function DUNG() {
       }
     }
     if (!chup) REN.ve(0.016, 1);
+    window.__p3tk = null; for (const k in tk.p3) { const a = tk.p3[k]; tk.p3[k] = { n: a.length, min: Math.min(...a), max: Math.max(...a), dau: a.slice(0, 3), cuoi: a.slice(-3) }; }
     return { tk, anh: chup && nChup ? window.__dai.toDataURL('image/jpeg', 0.72) : null };
   };
 }
@@ -65,7 +69,7 @@ function DUNG() {
   await p.evaluate(DUNG);
   const ids = (await p.evaluate(() => G.roster.map(u => u.id))).filter(id => !BO.has(id) && (!CHI || CHI.includes(id)));
   // nạp trước ảnh của mọi ụ
-  await p.evaluate((ids) => { for (const id of ids) for (const s of ['dan', 'trung', 'no', 'hieu', 'dan2', 'dan3', 'trung3', 'dacbiet', 'tia', 'sk', 'vang', 'thuc']) if (typeof FXU !== 'undefined' && FXU.co('fx_' + id + '_' + s)) REN.img('fx_' + id + '_' + s); REN.img('fx_cham_trang'); }, ids);
+  await p.evaluate((ids) => { for (const id of ids) for (const s of ['dan', 'trung', 'no', 'hieu', 'dan2', 'dan3', 'trung3', 'dacbiet', 'tia', 'sk', 'vang', 'thuc']) if (typeof FXU !== 'undefined' && FXU.co('fx_' + id + '_' + s)) REN.img('fx_' + id + '_' + s); REN.img('fx_cham_trang'); if (typeof P3_META !== 'undefined') for (const t in P3_META) REN.img(t); }, ids);
   await p.waitForTimeout(3000);
   const banI = MODE === 'solo' ? 0 : 1, KQ = {};
   for (const id of ids) {
@@ -78,7 +82,7 @@ function DUNG() {
       (KQ[id] = KQ[id] || {})[pha] = r.tk;
     }
     const a = KQ[id].atk, s = KQ[id].sk;
-    console.log(id.padEnd(13), 'pop', String(a.pop).padStart(3), String(s.pop).padStart(3), 'nong', String(a.nong).padStart(3), '| dai', Object.keys(Object.assign({}, a.dai, s.dai)).join(',').slice(0, 60), '| hu', Object.keys(Object.assign({}, a.hu, s.hu)).join(','), '| sig', Object.keys(s.sig).join(','));
+    console.log(id.padEnd(13), 'pop', String(a.pop).padStart(3), String(s.pop).padStart(3), 'nong', String(a.nong).padStart(3), '| dai', Object.keys(Object.assign({}, a.dai, s.dai)).join(',').slice(0, 60), '| hu', Object.keys(Object.assign({}, a.hu, s.hu)).join(','), '| sig', Object.keys(s.sig).join(','), '| p3', JSON.stringify(Object.assign({}, a.p3, s.p3)));
   }
   fs.writeFileSync(OUT + '/ket-qua' + (MODE !== 'solo' ? '-' + MODE : '') + '.json', JSON.stringify({ KQ, errs }, null, 1));
   console.log('loi trang:', errs.length, errs.slice(0, 5));
