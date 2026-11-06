@@ -3262,5 +3262,17 @@
 "— you win by forfeit.": "— bạn thắng do đối thủ bỏ cuộc.",
 "−#% damage until hit by # different turret types (# from wave #)": "−#% ST cho đến khi trúng # loại ụ khác nhau (# từ đợt #)",
 "≥# IN CHEST": "≥# TRONG RƯƠNG",
-"≥# → Supernova": "≥# → Supernova"
+"≥# → Supernova": "≥# → Supernova",
+"ABYSS #/# · +#% damage · devours a small enemy every #s (# px) · bubble splash # px · TIDAL BREATH unlocks at #★": "ABYSS #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px) · bong bóng nổ lan # px · HƠI THỞ THUỶ TRIỀU mở ở #★",
+"ABYSS #/# · +#% damage · devours a small enemy every #s (# px) · bubble splash # px · TAP when full: TIDAL BREATH ×# — an ice dragon breathes along the path": "ABYSS #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px) · bong bóng nổ lan # px · CHẠM khi đầy: HƠI THỞ THUỶ TRIỀU ×# — rồng băng phun dọc đường đi",
+"ABYSS #/# · +#% damage · devours a small enemy every #s (# px, big ones ×#) · bubble splash # px · TAP when full: TIDAL BREATH ×# — an ice dragon breathes along the path": "ABYSS #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px, quái to ×#) · bong bóng nổ lan # px · CHẠM khi đầy: HƠI THỞ THUỶ TRIỀU ×# — rồng băng phun dọc đường đi",
+"ABYSS #/# · +#% damage · devours a small enemy every #s (# px, big ones ×#, flyers too) · bubble splash # px · TAP when full: TIDAL BREATH ×# — an ice dragon breathes along the path": "ABYSS #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px, quái to ×#, cả quái bay) · bong bóng nổ lan # px · CHẠM khi đầy: HƠI THỞ THUỶ TRIỀU ×# — rồng băng phun dọc đường đi",
+"ABYSS #/#": "ABYSS #/#",
+"Devours enemies for ABYSS points — whirlpool tag under the cell, +#% damage each (max #). Active (#★+): TIDAL BREATH — an ice dragon head drops from the sky and breathes along the path": "Nuốt quái để tích điểm ABYSS — tấm xoáy nước ở đáy ô, mỗi điểm +#% sát thương (tối đa #). Chủ động (#★+): HƠI THỞ THUỶ TRIỀU — đầu rồng băng từ trên trời rơi xuống, phun băng dọc đường đi",
+"Whirlpool tag = ABYSS points": "Tấm xoáy nước = điểm ABYSS",
+"Tap: ice dragon breath": "Chạm: rồng băng phun",
+"Whirlpool tag under the cell = ABYSS (+#% damage each, MAX #)": "Tấm xoáy nước đáy ô = ABYSS (mỗi điểm +#% sát thương, MAX #)",
+"+# ABYSS": "+# ABYSS",
+"ABYSS #/# · +#% damage · devours enemies inside the cyan ring — place it next to the path to eat more": "ABYSS #/# · +#% sát thương · Nuốt quái trong vòng xanh — đặt sát đường để nuốt nhiều hơn",
+"ABYSS #/# · +#% damage": "ABYSS #/# · +#% sát thương"
 }

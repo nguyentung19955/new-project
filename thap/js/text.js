@@ -140,7 +140,7 @@ const TEXT = {
     marionette:   { name: 'Marionette',     skill: 'Takes control of an enemy, walks it backward, then boom' },
     // đợt 3 — 4 ụ Đỏ (skills5.js)
     chuato:       { name: 'Hive Queen',     skill: 'Breeds hunter drones. Active (3★+): SWARM kamikaze' },
-    leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for damage stacks (max 100). Active (3★+): TIDAL BREATH sweeps the path' },
+    leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for ABYSS points — whirlpool tag under the cell, +4% damage each (max 100). Active (3★+): TIDAL BREATH — an ice dragon head drops from the sky and breathes along the path' },
     khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets' },
     // đợt vàng mới 1 (vangmoi1.js)
     lualien: { name: 'Ember Relay', skill: 'Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit' },

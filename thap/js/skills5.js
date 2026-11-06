@@ -132,7 +132,8 @@ SKILLS.leviathan = {
   vai: 'tc', dmg: 24, toc: 0.9, nham: 'dau', napMau: '#1fb6d9',
   e: (T) => sao7r(T, [9, 8.5, 8, 7, 6, 5.5, 5]),
   cd: 35,
-  mo: (T) => 'ABYSS ' + (T.vuc || 0) + '/100 (+' + 4 * (T.vuc || 0) + '% dmg) · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (120 px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' along the path' : 'TIDAL BREATH unlocks at 3★'),
+  // dòng bảng ụ: 'ABYSS 56/100 · +224% damage' (VI: '+224% sát thương') = đúng số trên tấm đếm xoáy vực ở đáy ô (demkn.js)
+  mo: (T) => 'ABYSS ' + Math.min(100, T.vuc || 0) + '/100 · +' + 4 * Math.min(100, T.vuc || 0) + '% damage · devours a small enemy every ' + SKILLS.leviathan.e(T) + 's (120 px' + (T.sao >= 4 ? ', big ones ×3' : '') + (T.sao >= 7 ? ', flyers too' : '') + ') · bubble splash 30 px · ' + (T.sao >= 3 ? 'TAP when full: TIDAL BREATH ×' + (4 + 0.1 * (T.vuc || 0)).toFixed(1) + ' — an ice dragon breathes along the path' : 'TIDAL BREATH unlocks at 3★'),
   sinh(G, T) { T.vuc = 0; T.nuot = 0; },
   capNhat(G, B, T, dt) {
     T.buf.dmg += 0.04 * (T.vuc || 0);
