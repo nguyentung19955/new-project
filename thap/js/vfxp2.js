@@ -78,11 +78,11 @@ HU.p2fx = {
   const coc = HU.gCot && HU.gCot.ve;
   if (coc) HU.gCot.ve = function (ctx, o, R) {
     if (P2.co(T0)) return; // tờ mới đã có cột sét + sóng
-    const im = REN.img('fx_dien'); if (!im) return coc.call(this, ctx, o, R);
+    const im = PX.mau('fx_dien', '#ff3a6a'); if (!im) return coc.call(this, ctx, o, R); // điện tô ĐỎ-HỒNG = màu nguyên tố Overlord (thap-kt-mau: laser)
     const u = o.t / o.song, f = Math.min(5.99, u * 6), a = 1 - Math.max(0, u - 0.6) / 0.4;
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) REN.khungMuot(ctx, 'fx_dien', (f + i * 2) % 6, o.x, o.y - 30 - i * 44, 62, Math.PI / 2, a); // cột sét = 3 khung điện chồng dọc, mỗi khung chạy riêng
-    for (let i = 0; i < 4; i++) { const g = i * Math.PI / 2 + o.seed, L = o.r * 0.55; REN.khungMuot(ctx, 'fx_dien', Math.min(5.99, Math.max(0, u * 7 - i * 0.4)), o.x + Math.cos(g) * L, o.y + Math.sin(g) * L, 34, g, a * 0.9); }
+    for (let i = 0; i < 3; i++) REN.khungMuot(ctx, 'fx_dien', (f + i * 2) % 6, o.x, o.y - 30 - i * 44, 62, Math.PI / 2, a, im); // cột sét = 3 khung điện chồng dọc, mỗi khung chạy riêng
+    for (let i = 0; i < 4; i++) { const g = i * Math.PI / 2 + o.seed, L = o.r * 0.55; REN.khungMuot(ctx, 'fx_dien', Math.min(5.99, Math.max(0, u * 7 - i * 0.4)), o.x + Math.cos(g) * L, o.y + Math.sin(g) * L, 34, g, a * 0.9, im); }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   };
   const xem = HU.gXem && HU.gXem.ve;

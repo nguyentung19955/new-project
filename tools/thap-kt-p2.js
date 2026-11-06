@@ -36,8 +36,10 @@ const CANH = [
     await p.goto(`${BASE}?mode=${c.mode || 'solo'}&deck=${deck}&deck2=${deck}&wave=6&fill=5&mana=99999&notut=1`, { waitUntil: 'load' });
     await p.waitForFunction(() => typeof G !== 'undefined' && G.ban && G.ban[0] && G.duong && G.duong.length && !TAI.cho, null, { timeout: 40000 });
     await p.waitForTimeout(4000);
-    await p.evaluate(() => { P2.napBo(); for (const k in P2.M) REN.img(k); ['fx_dien', 'fx_bang_vo', 'hu_hoden', 'hu_khoa', 'sig_m01_swirl', 'tier_ring_vang', 'fx_cuuvi_dan', 'fx_orbital_thuc', 'evo_bom'].forEach(t => REN.img(t)); });
+    await p.evaluate(() => { P2.napBo(); for (const k in P2.M) REN.img(k); ['fx_dien', 'fx_bang_vo', 'hu_hoden', 'hu_khoa', 'sig_m01_swirl', 'tier_ring_vang', 'fx_cuuvi_dan', 'fx_orbital_thuc', 'evo_bom', 'fx_evo_xit'].forEach(t => REN.img(t)); });
     await p.waitForTimeout(1500);
+    // STANDIN=1: thử đường vẽ tờ 16 khung khi chưa có ảnh P2 (mượn fx_evo_xit — CHỈ để kiểm code, không xuất bản)
+    if (process.env.STANDIN) await p.evaluate(() => { const a = REN.img('fx_evo_xit'); if (!a) return; for (const t of Object.values(P2.TO)) { P2.M[t] = [16, 256, 256, 1]; REN.anh[t] = { _cv: a, complete: true, naturalWidth: a.width, naturalHeight: a.height }; } });
     const r = await p.evaluate(({ c }) => {
       const B = G.ban[c.ban || 0], p0 = G.duong.find(q => q.ban === B.i) || G.duong[0]; for (const X of G.ban) { X.tim = 1e9; X.mana = 1e6; } G.dung = true;
       G.quai.length = 0; G.hang.length = 0; G.hu = G.hu.filter(o => o.k === 'sigDuoi'); FX.reset(); if (typeof SIG !== 'undefined') SIG.ds.length = 0; G.cho = 0; G.tWave = 3;
