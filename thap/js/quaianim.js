@@ -34,7 +34,8 @@ Object.assign(REN, {
   tenQuai(E) {
     const goc = E.trum ? 'trum_' + E.trum : 'quai_' + (E.d.anh || E.id);
     const co8 = E.trum ? TRUM8.has(E.trum) : QUAI8.has(E.d.anh || E.id);
-    if (co8) { const a = this.img(goc + '_8'); if (a) return goc + '_8'; }
+    // trùm mới chỉ có dải 8 hướng (không có trum_<id>.png cũ): chưa nạp xong vẫn trả tên _8 (vẽ bỏ qua 1 khung) — trước đây rơi về tên cũ → tải 404 lặp lại (QA ngâm)
+    if (co8) { const a = this.img(goc + '_8'); if (a || (E.trum && typeof TRUM_ANH !== 'undefined' && TRUM_ANH.has(E.trum))) return goc + '_8'; }
     return goc;
   },
   // ảnh hướng nhìn cần nạp trước (ui.js chuẩn bị trận)
