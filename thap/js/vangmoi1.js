@@ -1,0 +1,274 @@
+// TURRET MERGE — 4 Ụ VÀNG MỚI ĐỢT 1 (docs/demo-hop-tuong/tuvan/tuong_vang/CHATGPT-PLAN.txt §3, người dùng duyệt 06/11):
+//   P1 Ember Relay (lualien, Kalaratri) · P2 Quantum Choir (hopca, Cosmem) · P4 Fusion Archive (luutru, Aurora) · P5 Hero Foundry (xuonganh, Kintia)
+// Cấp thẻ bắt đầu LV9 (bậc vàng). % kỹ năng theo cấp thẻ: VM1.lv(T) = 9 + số cấp đã lên (B.capThe). Nạp SAU skills5.js, TRƯỚC hotro.js.
+// Online co-op: mọi ngẫu nhiên lấy từ rngHat (hạt giống phòng + ô + số lần); cờ cộng dồn gửi kèm ảnh chụp ô (dongbo.js oTT/datO).
+// Ảnh: đầu/chân dung/hiệu ứng là ảnh ChatGPT (CAN-VE-1.json); chưa có ảnh → mượn ảnh ụ khác (VM1.TAM) và ụ không vào bộ bài NGẪU NHIÊN.
+'use strict';
+
+const VM1 = {
+  IDS: ['lualien', 'hopca', 'luutru', 'xuonganh'],
+  // ảnh tạm (chưa có ảnh ChatGPT riêng): id → ụ cho mượn đầu/chân dung. Lắp ảnh xong thì xoá dòng đó.
+  TAM: {}, // (đã lắp đầu + chân dung ChatGPT riêng cho cả 4 — 06/11)
+  // dải hiệu ứng 16 khung (assets/fx_<id>_sk.png, 1 hàng) — có ảnh thì chơi, chưa có thì dùng ảnh v2 sẵn có
+  FXN: 16,
+  FXCO: new Set([]), // id đã có dải assets/fx_<id>_sk.png (thêm khi lắp ảnh)
+  lv(T) { const B = G.ban[T.ban]; return THE.lvDau.vang + ((B && B.capThe && B.capThe[T.id]) || 0); },
+  k(T) { return this.lv(T) - THE.lvDau.vang; },
+  coAnh(id) { return !this.TAM[id]; },
+  rng(B, a, b) { // ngẫu nhiên tất định (2 máy online ra như nhau): hạt giống trận + ô + số lần kích hoạt trên bàn
+    B._vmN = (B._vmN || 0) + 1;
+    const hat = (typeof ONS !== 'undefined' && ONS.on ? ONS.seed : G.hat) || 1;
+    return rngHat(hat * 7841 + B.i * 131 + (a | 0) * 977 + (b | 0) * 61 + B._vmN * 7919);
+  },
+  // vẽ khung f của dải hiệu ứng ụ (nếu ảnh đã có); trả false nếu chưa có ảnh
+  fx(ctx, id, f, x, y, w, al) {
+    if (!this.FXCO.has(id)) return false;
+    const im = REN.img('fx_' + id + '_sk'); if (!im || !(im.complete && im.naturalWidth) && !im._cv) return false;
+    const n = this.FXN, i = Math.max(0, Math.min(n - 1, Math.floor(f))), fw = (im.naturalWidth || im.width) / n, fh = im.naturalHeight || im.height;
+    ctx.globalAlpha = al == null ? 1 : al;
+    ctx.drawImage(im, i * fw, 0, fw, fh, x - w / 2, y - w * fh / fw / 2, w, w * fh / fw);
+    ctx.globalAlpha = 1; return true;
+  },
+  pct: (v) => Math.round(v * 1000) / 10,
+  // % kỹ năng theo cấp thẻ: bảng chung KY_NANG_CAP (data.js) — giá trị /100 ở cấp hiện tại và cấp kế
+  kn(T, id) { return knGt(KY_NANG_CAP[id], this.k(T)) / 100; },
+  knSau(T, id) { return knGt(KY_NANG_CAP[id], this.k(T) + 1) / 100; },
+  chuLv(T, id, f) { const lv = this.lv(T); return 'LV' + lv + (lv < THE.lvMax ? ' → LV' + (lv + 1) + ': ' + f(this.knSau(T, id)) : ''); },
+};
+// mục % kỹ năng theo cấp (LV9 → LV15) cho bảng chung — dmg: vẫn +% sát thương mỗi cấp như ụ tấn công
+Object.assign(KY_NANG_CAP, {
+  lualien: { ten: 'Per flame', base: 12, buoc: 1, max: 18, dv: '%', tien: '+', dmg: true },
+  hopca: { ten: 'Per match', base: 18, buoc: 2, max: 30, dv: '%', tien: '+', dmg: true },
+  luutru: { ten: 'Per charge', base: 2.5, buoc: 0.25, max: 4, dv: '%', tien: '+', dmg: true },
+  xuonganh: { ten: 'Hero rate', base: 20, buoc: 2, max: 32, dv: '%', tien: '+', dmg: true },
+});
+// hiệu ứng 1 lần (dải 16 khung) tại (x,y) — chưa có ảnh: vòng mảnh PNG màu ụ
+HU.vm1Fx = {
+  cap(G, o, dt) { o.t += dt; return o.t >= o.song; },
+  ve(ctx, o, R) {
+    const p = o.t / o.song;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    if (!VM1.fx(ctx, o.id, p * VM1.FXN, o.x, o.y, o.w, 1 - Math.max(0, p - 0.8) * 5)) PX.vong(ctx, o.x, o.y, o.w * (0.2 + 0.3 * p), 3, o.mau, 1 - p);
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
+function vm1Fx(id, x, y, w, song, mau) { G.hu.push({ k: 'vm1Fx', t: 0, song: song || 0.8, id, x, y, w, mau }); }
+
+// =====================================================================================================
+// P1 · EMBER RELAY (lualien) — Vàng TC. GHÉP có Ember Relay → +1 LỬA cho mỗi Ember Relay ở 4 ô KỀ (trên/dưới/trái/phải) ô ghép
+//      (và cho ụ ra nếu nó cũng là Ember Relay); tối đa 5 lửa / ụ. Mỗi lửa +12% sát thương (LV9, +1 điểm/cấp → LV15 18%) và +3% chí mạng.
+//      Ụ vừa nhận lửa +15% tốc bắn 5 s. Sao chỉ tăng sát thương gốc. PVP / CO-OP: chỉ mạng lửa của chính mình.
+// =====================================================================================================
+SKILLS.lualien = {
+  vai: 'tc', dmg: 17, toc: 1.0, nham: 'dau', napMau: null,
+  MAX: 5,
+  moiLua: (T) => VM1.kn(T, 'lualien'),
+  mo(T) {
+    const n = T.lc || 0, p = this.moiLua(T);
+    return 'Flames ' + n + '/5 → +' + VM1.pct(n * p) + '% damage, +' + n * 3 + '% crit · each flame +' + VM1.pct(p) + '% (' + VM1.chuLv(T, 'lualien', (v) => '+' + VM1.pct(v) + '%') + ') · merging a Relay passes 1 flame to Relays in the 4 N/E/S/W cells (+15% fire rate 5s)';
+  },
+  sinh(G, T) { T.lc = T.lc || 0; },
+  capNhat(G, B, T) { const n = Math.min(this.MAX, T.lc || 0); if (n) { T.buf.dmg += n * this.moiLua(T); T.buf.crit += n * 0.03; } return false; },
+  ban(G, B, T, E) {
+    giat(T, 0.6); const [x, y] = chopNong(T, 22); SND.lien();
+    const dmg = dmgU(T), n = T.lc || 0;
+    banDan({ img: 'tia_lua', x, y, muc: E, px: E.x, py: E.y, sp: 600, co: 13 + n, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#ff9a3a' }); FX.tiaLua(d.x, d.y, 2 + n, '#ff8a2a', 110, 6); } });
+  },
+  // ghép có Ember Relay (Relay+Relay hoặc Mimic+Relay): chia lửa theo hình chữ thập quanh ô ghép
+  ghep(G, B, a, b, ra) {
+    const o = b.o, c = o % 5, h = (o / 5) | 0, nh = [];
+    for (const [dc, dh] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const cc = c + dc, hh = h + dh; if (cc >= 0 && cc < 5 && hh >= 0 && hh < 3) nh.push(hh * 5 + cc); }
+    const ds = nh.map(i => B.t[i]).filter(X => X && X.id === 'lualien' && !X.st.da);
+    if (ra && ra.id === 'lualien') ds.push(ra);
+    const tam = B.o[o];
+    vm1Fx('lualien', tam.x, tam.y, B.cw * 2.6, 0.7, '#ff8a2a');
+    for (const X of ds) {
+      X.lc = Math.min(this.MAX, (X.lc || 0) + 1);
+      X.tocV = X.tocT > 0 ? Math.max(X.tocV || 0, 0.15) : 0.15; X.tocT = Math.max(X.tocT || 0, 5);
+      X.sang = 1; if (typeof buffNo === 'function') buffNo(X, 'dmg', 0.5);
+      const q = B.o[X.o]; if (X !== ra) G.hu.push({ k: 'vm1Tia', t: 0, song: 0.35, x0: tam.x, y0: tam.y, x1: q.x, y1: q.y });
+    }
+    if (!B.ai || G.che === 'pvp') SND.combo(Math.min(20, ds.length * 3 + 2));
+  },
+  veThem(ctx, T, S, al) { // lửa đang mang: ngọn lửa PNG ở 4 nhánh chữ thập (+ lõi khi đủ 5)
+    const n = Math.min(5, T.lc || 0); if (!n) return;
+    const im = REN.img('fx_cuuvi_dan'); if (!im) return;
+    ctx.globalCompositeOperation = 'lighter';
+    const pos = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    for (let i = 0; i < Math.min(4, n); i++) { const r = S * 0.36, w = S * (0.2 + 0.03 * Math.sin(G.t * 9 + i)); PX.ve(ctx, im, pos[i][0] * r, pos[i][1] * r, w, w, -Math.PI / 2, al * 0.85); }
+    if (n >= 5) PX.ve(ctx, im, 0, 0, S * 0.32, S * 0.32, -Math.PI / 2, al * (0.5 + 0.2 * Math.sin(G.t * 7)));
+    ctx.globalCompositeOperation = 'source-over';
+  },
+};
+HU.vm1Tia = { // lửa bay từ ô ghép sang ô kề: ngọn lửa PNG trượt theo đường thẳng
+  cap(G, o, dt) { o.t += dt; return o.t >= o.song; },
+  ve(ctx, o) { const p = Math.min(1, o.t / o.song), im = REN.img('fx_cuuvi_dan'); if (!im) return; ctx.save(); ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, im, o.x0 + (o.x1 - o.x0) * p, o.y0 + (o.y1 - o.y0) * p, 22, 22, Math.atan2(o.y1 - o.y0, o.x1 - o.x0), 1 - p * 0.3); ctx.restore(); ctx.globalAlpha = 1; },
+};
+
+// =====================================================================================================
+// P2 · QUANTUM CHOIR (hopca) — Vàng TC. Đếm ụ KHÁC trên bàn MÌNH có CÙNG SAO (mọi loại, tối đa 7; ô đá không tính):
+//      +18% sát thương mỗi ụ khớp (LV9, +2 điểm/cấp → LV15 30%). 7★: thêm +12% tốc bắn. CO-OP: sao bàn đồng đội không tính.
+// =====================================================================================================
+SKILLS.hopca = {
+  vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
+  moi: (T) => VM1.kn(T, 'hopca'),
+  dem(B, T) { let n = 0; for (const X of B.t) if (X && X !== T && X.sao === T.sao && !X.st.da) n++; return Math.min(7, n); },
+  mo(T) {
+    const B = G.ban[T.ban], n = B ? this.dem(B, T) : 0, p = this.moi(T);
+    return n + ' other ' + T.sao + '★ turret(s) → +' + VM1.pct(n * p) + '% damage · +' + VM1.pct(p) + '% per same-star turret, max 7 (' + VM1.chuLv(T, 'hopca', (v) => '+' + VM1.pct(v) + '%') + ')' + (T.sao >= 7 ? ' · 7★: +12% fire rate' : ' · 7★ adds +12% fire rate');
+  },
+  capNhat(G, B, T) { const n = this.dem(B, T); T.hop = n; T.buf.dmg += n * this.moi(T); if (T.sao >= 7) T.buf.toc += 0.12; return false; },
+  ban(G, B, T, E) {
+    giat(T, 0.5); const [x, y] = chopNong(T, 20); SND.tia();
+    const dmg = dmgU(T), n = T.hop || 0;
+    banDan({ img: 'dan_tia', x, y, muc: E, px: E.x, py: E.y, sp: 640, co: 14, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#e6c8ff' }); FX.vong1(d.x, d.y, 3, 10 + n * 2, '#d9b8ff', 0.2, 2); } });
+  },
+};
+
+// =====================================================================================================
+// P4 · FUSION ARCHIVE (luutru) — Vàng TC. MỌI lần ghép thành công trên bàn mình → +1 ĐIỂM LƯU cho mọi Fusion Archive đang có (tối đa 40);
+//      Archive mới xuất hiện nhận 50% tổng số lần ghép của trận (làm tròn xuống). Mỗi điểm +2.5% sát thương (LV9, +0.25 điểm/cấp → LV15 4%).
+//      Ghép Archive + Archive: 3 xung nổ 160% sát thương vào chỗ quái đông nhất. Chỉ đếm ghép của chính mình (PVP/CO-OP).
+// =====================================================================================================
+SKILLS.luutru = {
+  vai: 'tc', dmg: 15, toc: 1.0, nham: 'dau',
+  MAX: 40,
+  moi: (T) => VM1.kn(T, 'luutru'),
+  mo(T) {
+    const n = T.kho || 0, p = this.moi(T);
+    return 'Archive ' + n + '/40 → +' + VM1.pct(n * p) + '% damage · every merge you make +1 (+' + VM1.pct(p) + '% each, ' + VM1.chuLv(T, 'luutru', (v) => '+' + VM1.pct(v) + '%') + ') · new Archives start with 50% of your merges · Archive + Archive: 3 pulses × 160%';
+  },
+  sinh(G, T) { const B = G.ban[T.ban]; if (T.kho == null) T.kho = Math.min(this.MAX, Math.floor(((B && B.ghepN) || 0) * 0.5)); },
+  capNhat(G, B, T) { if (T.kho) T.buf.dmg += Math.min(this.MAX, T.kho) * this.moi(T); return false; },
+  ban(G, B, T, E) {
+    giat(T, 0.5); const [x, y] = chopNong(T, 20); SND.tia();
+    const dmg = dmgU(T);
+    banDan({ img: 'dan_tia', x, y, muc: E, px: E.x, py: E.y, sp: 620, co: 14, B, T, trung: (G, d, M) => { if (M) trung(M, dmg, { B, mau: '#bfe4ff' }); FX.tiaLua(d.x, d.y, 3, '#bfe4ff', 100, 5); } });
+  },
+  ghep(G, B, a, b, ra) {
+    if (a.id !== 'luutru' || b.id !== 'luutru') return; // chỉ Archive + Archive mới nổ xung
+    const ds = dsMucTieu(B).filter(E => !E.chet), tam = B.o[b.o];
+    let x = tam.x, y = tam.y;
+    if (ds.length) { let best = -1; for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 50 ? 1 : 0), 0); if (n > best) { best = n; x = E.x; y = E.y; } } }
+    const dmg = dmgU(b) * 1.6;
+    G.hu.push({ k: 'vm1Xung', t: 0, song: 0.9, x, y, B, dmg, n: 0 });
+  },
+};
+HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
+  cap(G, o, dt) {
+    o.t += dt;
+    while (o.n < 3 && o.t >= o.n * 0.25) { o.n++; noLan(o.x, o.y, 45, o.dmg, o.B, { B: o.B, mau: '#bfe4ff' }); vm1Fx('luutru', o.x, o.y, 110, 0.55, '#bfe4ff'); FX.lac(2); SND.no(0.4); }
+    return o.t >= o.song;
+  },
+  ve() { },
+};
+// đếm MỌI lần ghép thành công (thường + đặc biệt) của từng bàn → điểm lưu của Archive (bàn con rối online cũng chạy ghep → đếm như máy bạn)
+{
+  const _ghepVM1 = ghep;
+  ghep = function (B, a, b, ep) {
+    const B2 = b && G.ban[b.ban];
+    const r = _ghepVM1.apply(this, arguments);
+    if (r && B2) {
+      B2.ghepN = (B2.ghepN || 0) + 1;
+      for (const X of B2.t) if (X && X.id === 'luutru' && X !== r) X.kho = Math.min(SKILLS.luutru.MAX, (X.kho || 0) + 1);
+    }
+    return r;
+  };
+}
+
+// =====================================================================================================
+// P5 · HERO FOUNDRY (xuonganh) — Vàng ĐB. Ghép Foundry + Foundry → 1 ô NGẪU NHIÊN của mình (ưu tiên ô có ụ) thành ô ANH HÙNG 12 s:
+//      ụ đứng trên ô +20% tốc bắn (LV9, +2 điểm/cấp → LV15 32%) +4 điểm mỗi sao của Foundry ghép (7★ LV15 = 56%).
+//      Không cộng dồn (ô đã là ô anh hùng → làm mới). Tối đa 2 ô / người, ô cũ nhất bị thay. Ô vẫn còn khi ụ trên đó bị ghép đi.
+//      Không buff kỹ năng/chỉ huy (chỉ tốc bắn). PVP / CO-OP: chỉ bàn mình.
+// =====================================================================================================
+SKILLS.xuonganh = {
+  vai: 'db', dmg: 7.5, toc: 1.3, nham: 'dau',
+  SONG: 12, TOI_DA: 2,
+  v: (T, sao) => VM1.kn(T, 'xuonganh') + 0.04 * ((sao || T.sao) - 1),
+  mo(T) {
+    const v = this.v(T), s4 = 0.04 * (T.sao - 1);
+    return 'Merge 2 Foundries: a random own cell becomes a HERO tile for 12s → the turret on it +' + VM1.pct(v) + '% fire rate (' + VM1.chuLv(T, 'xuonganh', (x) => '+' + VM1.pct(x + s4) + '%') + ', +4% per ★) · max 2 tiles';
+  },
+  ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_tia', co: 15, sp: 600 }); },
+  ghep(G, B, a, b, ra) {
+    if (a.id !== 'xuonganh' || b.id !== 'xuonganh') return;
+    const ep = G._hfEp; // online: đúng ô máy bạn kia đã chọn
+    let o;
+    if (ep != null) o = ep;
+    else {
+      const r = VM1.rng(B, a.o, b.o), co = [], tr = [];
+      for (let i = 0; i < 15; i++) (B.t[i] || i === b.o ? co : tr).push(i);
+      const ds = co.length ? co : tr; o = ds[Math.floor(r() * ds.length)];
+    }
+    B._hf = o;
+    const v = this.v(b, b.sao), het = G.t + this.SONG;
+    B.hero = (B.hero || []).filter(h => h.het > G.t);
+    const cu = B.hero.find(h => h.o === o);
+    if (cu) { cu.het = het; cu.v = Math.max(cu.v, v); cu.t0 = G.t; }
+    else { if (B.hero.length >= this.TOI_DA) B.hero.shift(); B.hero.push({ o, het, v, t0: G.t }); }
+    const c = B.o[o];
+    vm1Fx('xuonganh', c.x, c.y, B.cw * 1.9, 0.7, '#ffd23f');
+    if (!G.hu.some(h => h.k === 'vm1Hero' && h.B === B)) G.hu.push({ k: 'vm1Hero', t: 0, song: 1e12, B });
+    if (!B.ai || G.che === 'pvp') SND.nang(3);
+  },
+};
+HU.vm1Hero = { // ô anh hùng: vòng vàng PNG dưới ụ (dải hiệu ứng khi có ảnh), hết hạn thì tắt
+  duoi: true,
+  cap(G, o, dt) { const B = o.B; if (!B || G.ban.indexOf(B) < 0) return true; if (B.hero) B.hero = B.hero.filter(h => h.het > G.t); return !(B.hero && B.hero.length) && (o.t += dt) > 0.5; },
+  ve(ctx, o, R) {
+    const B = o.B; if (!B || !B.hero) return;
+    const im = REN.img('tier_ring_vang');
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const h of B.hero) {
+      const c = B.o[h.o], con = h.het - G.t, a = Math.min(1, con / 1.5) * (0.75 + 0.25 * Math.sin(G.t * 6 + h.o));
+      const w = Math.min(B.cw, B.ch) * 1.05, f = Math.min(VM1.FXN - 1, ((G.t - h.t0) * 20) % VM1.FXN);
+      if (!VM1.fx(ctx, 'xuonganh', G.t - h.t0 < 0.8 ? (G.t - h.t0) / 0.8 * VM1.FXN : 10 + (f % 6), c.x, c.y, w * 1.25, a) && im) PX.ve(ctx, im, c.x, c.y, w, w, G.t * 0.6, a * 0.8);
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+  },
+};
+// áp tốc bắn ô anh hùng sau khi buff được đặt lại mỗi khung (cùng chỗ mốc sao chung)
+{
+  const _mocBufVM1 = mocBuf;
+  mocBuf = function (B) {
+    const r = _mocBufVM1.apply(this, arguments);
+    if (B && B.hero && B.hero.length) for (const h of B.hero) { if (h.het <= G.t) continue; const T = B.t[h.o]; if (T && !biKhoa(T)) { T.buf.toc += h.v; T.heroO = 1; } }
+    return r;
+  };
+}
+
+// =====================================================================================================
+// đăng ký: họ kỹ năng, mốc, grow-up (không ảnh dạng: vòng tiến độ), nhịp, ảnh tạm, bộ bài ngẫu nhiên, bộ đếm đáy ô
+// =====================================================================================================
+themHo('blast', 3, 'lualien', 'merges pass flames in a + cross: +damage & crit');
+themHo('star', 3, 'hopca', 'stronger for every same-star turret on board');
+themHo('summon', 3, 'luutru', 'every merge you make adds permanent damage');
+themHo('amp', 3, 'xuonganh', 'merge stamps a HERO tile: big fire-rate boost');
+Object.assign(GROW, {
+  lualien: { mau: '#ff8a2a', khongAnh: true, ten: ['COLD RELAY', 'KINDLED', 'FULL BLAZE'], dk: 'Flames 0 / 1–4 / 5 (full: +60% damage, +15% crit at LV9)',
+    gd: (T) => { const n = T.lc || 0; return { s: n >= 5 ? 3 : n >= 1 ? 2 : 1, p: n / 5, v: [0.2] }; } },
+  luutru: { mau: '#bfe4ff', khongAnh: true, ten: ['EMPTY SHELVES', 'FILING', 'GRAND ARCHIVE'], dk: 'Archive 0–9 / 10–29 / 30–40',
+    gd: (T) => { const n = T.kho || 0; return { s: n >= 30 ? 3 : n >= 10 ? 2 : 1, p: n / 40, v: [0.25, 0.75] }; } },
+});
+// ảnh tạm: tới khi ảnh ChatGPT riêng về, assets/<id>_nong.png, pilot_, pn/, hero/, nho/, glyph/ là BẢN SAO ảnh của ụ cho mượn (VM1.TAM);
+// cỡ đầu (HEAD_K) / mũi nòng (ART_META) mượn theo. Lắp ảnh thật (tools/thap-dau-u3.py …) thì xoá id khỏi VM1.TAM.
+for (const id in VM1.TAM) {
+  const m = VM1.TAM[id];
+  if (window.HEAD_K && HEAD_K[m] && !HEAD_K[id]) HEAD_K[id] = HEAD_K[m];
+  if (window.ART_META && ART_META[m] && !ART_META[id]) ART_META[id] = ART_META[m];
+}
+for (const id of VM1.IDS) PILOTS.add(id);
+// ụ chưa có ảnh riêng: KHÔNG vào bộ bài ngẫu nhiên (người chơi vẫn tự chọn được)
+{
+  const _dnnVM1 = deckNgauNhien;
+  deckNgauNhien = function (tru) { return _dnnVM1.call(this, (tru || []).concat(Object.keys(VM1.TAM))); };
+}
+if (typeof addEventListener === 'function') addEventListener('DOMContentLoaded', () => {
+  if (typeof DEMKN !== 'undefined') Object.assign(DEMKN.DS, {
+    lualien(T) { const n = T.lc || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/5' }], sang: n >= 5 } : null; },
+    hopca(T, B) { const n = SKILLS.hopca.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 7 } : null; },
+    luutru(T) { const n = T.kho || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '' }], sang: n >= 40 } : null; },
+    xuonganh(T, B) { const n = (B.hero || []).filter(h => h.het > G.t).length; return n > 0 ? { m: [{ ic: 'ic_toc', s: n + '/2' }], sang: n >= 2 } : null; },
+  });
+});

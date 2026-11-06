@@ -142,7 +142,17 @@ const TEXT = {
     chuato:       { name: 'Hive Queen',     skill: 'Breeds hunter drones. Active (3★+): SWARM kamikaze' },
     leviathan:    { name: 'Leviathan',      skill: 'Devours enemies for endless stacks. Active (3★+): TIDAL BREATH sweeps the path' },
     khoisinh:     { name: 'Genesis Core',   skill: 'Raises your lowest turret +1★ over time. Active (3★+): GENESIS summons turrets' },
+    // đợt vàng mới 1 (vangmoi1.js)
+    lualien: { name: 'Ember Relay', skill: 'Merging a Relay passes flames to Relays in the 4 N/E/S/W cells; each flame +damage & crit' },
+    hopca: { name: 'Quantum Choir', skill: '+damage for every other turret on your board with the same ★ (max 7); 7★ +fire rate' },
+    luutru: { name: 'Fusion Archive', skill: 'Every merge you make adds a permanent archive charge (+damage); Archive + Archive fires 3 pulses' },
+    xuonganh: { name: 'Hero Foundry', skill: 'Merge 2 Foundries: a random cell becomes a HERO tile for 12s (+fire rate to the turret on it)' },
     ronglua:      { name: 'Wyrm Engine',    skill: 'Flame cone burns crowds. Active (3★+): DRAGON DIVE down the path' },
+    // ụ vàng mới đợt 2 (skills7.js)
+    mauhut:       { name: 'Blood Circuit',  skill: 'Special: drag onto ANY of your turrets — both become a random deck turret at the higher star; same star = VAMP charge (+damage)' },
+    nguyenrua:    { name: 'Hex Saboteur',   skill: 'On merge: PVP hexes a rival turret −1★; Co-op gives an ally turret +1★; Solo weakens the lead enemy' },
+    thanhdia:     { name: 'Sanctum',        skill: 'Support: on arrival cleanses + shields neighbours; Attack neighbours +damage, shields recharge' },
+    bienmau:      { name: 'Prism Thief',    skill: 'Shots cycle red (burn) / gold (crit) / blue (slow); merging two of the same colour builds COMBO' },
   },
 };
 
@@ -151,7 +161,7 @@ const TEXT = {
 const PILOTS = new Set(['canon', 'xucxac', 'lien', 'phun', 'sungluc', 'bang', 'doc', 'mana', 'tia', 'set', 'maychem', 'phagiap', 'bua', 'nam', 'bomhen', 'nhanmana', 'kiembang', 'mimic', 'chimang', 'dichchuyen', 'radar', 'drone', 'tron', 'nangluong', 'laser', 'lanhgia', 'mortar', 'khuech', 'vungdoc', 'loa', 'hutmana', 'min', 'cuongno', 'baotuyet', 'nhanban', 'lienket', 'kepha', 'taylo', 'khien', 'hopbi', 'nangsao', 'tuthan', 'xaotron', 'epxung', 'no5', 'bao', 'anhsang', 'aten', 'dongbo', 'railgun', 'vughep', 'sinhdoi', 'hasao', 'saochep', 'ngoisao', 'soi', 'tienhoa', 'cauvong', 'wallgen', 'orbital', 'blackhole', 'overlord', 'lophanung', 'haoquang',
   'nayda', 'combo', 'khoathoigian', 'hydra', 'cuuvi', 'pandora', 'luoicheo', 'ngaithoigian',
   'nemesis', 'docton', 'thaukinh', 'nhieusong', 'santhuong', 'nhatthuc', 'loren', 'guongcong', 'marionette',
-  'chuato', 'leviathan', 'khoisinh', 'ronglua']);
+  'chuato', 'leviathan', 'khoisinh', 'ronglua', 'mauhut', 'nguyenrua', 'thanhdia', 'bienmau']);
 // ?ucu=1: nạp lại BỘ ĐẦU CŨ (trước bộ u2) — ảnh <ten>_v1.png (danh sách DAU_V1 + số cỡ ART_V1 trong artscale.js)
 window.UCU = /[?&]ucu=1(&|$)/.test(location.search);
 let _dauV1 = null;

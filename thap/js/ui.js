@@ -20,7 +20,7 @@ const UI = {
     let r = null;
     try { // tối đa 4 s (Safari đôi khi treo fetch lúc nạp lại trang) → dùng bản nhúng meta.js
       const ac = typeof AbortController !== 'undefined' ? new AbortController() : null, hen = ac && setTimeout(() => ac.abort(), 4000);
-      const res = await fetch('assets/roster.json', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
+      const res = await fetch('assets/roster.json?v=15cc8b03', { cache: 'no-cache', signal: ac ? ac.signal : undefined }); if (res.ok) r = await res.json(); clearTimeout(hen);
     } catch (e) { }
     G.roster = applyText(r || window.ROSTER_EMBED || []);
     SND.nutNhan(); // nhãn nút NHẠC/SFX theo trạng thái đã lưu
@@ -50,7 +50,7 @@ const UI = {
       if (tr < 0) tr = n;
       let thuc = (n - tr) / 1000; tr = n;
       if (!(thuc > 0)) thuc = 0; else if (thuc > 0.1) thuc = 0.1;
-      if (!G.dung && !TAI.cho && G.ban.length) { // TAI.cho: đang tải ảnh của trận → đứng yên dưới màn tải
+      if (!G.dung && !TAI.cho && !TAI.doi && G.ban.length) { // TAI.doi: vài ảnh lẻ đang giải mã (≤ 1,2 s) → bàn vẽ, mô phỏng đứng; TAI.cho: đang tải ảnh của trận → đứng yên dưới màn tải
         const k = G.tocDo || 1, toiDa = Math.ceil(k * 0.1 / BUOC) + 1;
         tichLuy += thuc * k;
         let so = 0;
@@ -60,7 +60,7 @@ const UI = {
         FX.giam = (k > 1 ? 1 / Math.sqrt(k) : 1) * (typeof TKP !== 'undefined' && TKP.on() ? 0.5 : 1); // tiết kiệm pin: nửa số hạt
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
       }
-      if (!TAI.cho) REN.ve(G.dung ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh)
+      if (!TAI.cho) REN.ve(G.dung || TAI.doi ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh); TAI.doi: vẽ bàn đứng yên
       if (G.ban.length && (this._hud = !this._hud || khoang > 20)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)
     };
@@ -188,15 +188,24 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     const seg = $('#tb-seg'); if (seg) { seg.innerHTML = ''; for (let i = 1; i <= LUAT.songTrum; i++) { const c = document.createElement('i'); if (i === LUAT.songTrum) c.className = 'boss'; seg.appendChild(c); } this._segW = -1; }
     const mv = MAVUONG[B.mv.id];
     $('#the-mv .mv-ic').innerHTML = mvArt(B.mv.id); $('#the-mv').style.setProperty('--mm', mv.mau); $('#the-mv .mv-ten').textContent = mv.ten; fitText($('#the-mv .mv-ten'), 12, 8);
+    const ds = this.dsTran(G.ban);
+    if (typeof FXU !== 'undefined') FXU.donMau();
+    REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
+    TAI.tran(REN.boLuoi ? REN.boLuoi(ds) : ds); // màn tải trận: đợi ảnh giải mã xong (img.decode) rồi mới chạy — trừ ảnh tình huống (REN.LUOI: tải khi vẽ lần đầu)
+  },
+
+  // danh sách ảnh canvas của 1 trận với các bàn bans = [{deck:[id…], mv:{id}}] — vaoTran dùng; TAI.napMenu gọi lúc KHỞI ĐỘNG
+  // (bộ bài đã lưu + phần chung: quái/trùm/HUD/hiệu ứng) để vào trận không còn màn tải.
+  dsTran(bans) {
     // nạp trước ảnh của mọi ụ trong các bộ bài + quái/trùm/hiệu ứng
     const ds = ['de_chung', 'sup_ring', 'sup_link', 'sup_link_vang', 'sup_khung', 'sup_radar', 'sup_chimang', 'sup_lanhgia', 'sup_khuech', 'sup_tuthan', 'sup_mana', 'sup_khien', 'sup_taylo', 'phu_bang', 'phu_da', 'phu_lua', 'phu_ngam', 'dan_phao', 'dan_bang', 'dan_lien', 'dan_doc', 'dan_tia', 'tia_laser', 'tia_set',
       'fx_no_phao', 'fx_bang_vo', 'fx_dien', 'fx_khoi_doc', 'fx_chop_nong', 'fx_laser_trung', 'mimic_nong'];
     ds.push('khung_chon', 'h2_vong_do', 'nhan_kn', 'h2_vfx_ghep'); // kéo ghép (keoghep.js)
     ds.push('fx_summon', 'fx_merge', 'fx_starup', 'fx_evolve', 'fx_link', 'fx_bingo', 'fx_awaken');
-    for (const b of G.ban) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
-    for (const b of G.ban) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
-    if (G.ban.some(b => b.deck.includes('sinhdoi'))) ds.push('fx_sinhdoi_hieu'); // biểu tượng sinh đôi (VX.sinhDoi)
-    for (const b of G.ban) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)
+    for (const b of bans) if (b.mv && MAVUONG[b.mv.id]) ds.push(MAVUONG[b.mv.id].anh); // chân dung chỉ huy (cut-in) — chỉ chỉ huy đang ra trận
+    for (const b of bans) for (const id of b.deck) { ds.push(id + '_nong', 'nho/' + id); if (laGrow(id) && STAGE_K[id]) ds.push(id + '_nong_s1', id + '_nong_s2', id + '_nong_s3'); }
+    if (bans.some(b => b.deck.includes('sinhdoi'))) ds.push('fx_sinhdoi_hieu'); // biểu tượng sinh đôi (VX.sinhDoi)
+    for (const b of bans) for (const id of b.deck) ds.push('glyph/' + id); // biểu tượng nhận diện (ảnh ChatGPT, bóng trắng)
     // ảnh ChatGPT thay hình vẽ code trên canvas: huy hiệu sao, ngọc độ hiếm, icon buff, lõi hư, mũi tên đường, bảng tên bàn
     ds.push('sao_hex', 'sao_hex7', 'ngoc_trang', 'ngoc_xanh', 'ngoc_tim', 'ngoc_vang', 'ngoc_do', 'loi_hu1', 'loi_hu2', 'duong_mui', 'hud_ten_ban', 'fx_vong_lv', 'vong_xich', 'fx_vong_trieu', 'hat_tuyet', 'pandora_dia', 'hu_hoden', 'hu_khoa', 'hu_luoicua', 'hu_manhguong', 'hu_trangkhuyet', 'hu_min', 'hu_cauvong',
       'ic_toc', 'ic_dmg', 'ic_crit', 'ic_cham', 'ic_chet', 'ic_mana', 'ic_khien', 'ic_taylo', 'ic_sao', 'ic_bom', 'ic_truyna');
@@ -205,9 +214,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     for (const t of TRUM_THU_TU) ds.push('trum_' + t);
     if (typeof QUAI8 !== 'undefined') { for (const q of QUAI8) ds.push('quai_' + q + '_8'); for (const t of TRUM8) ds.push('trum_' + t + '_8'); } // dải 8 khung mượt
     if (REN.dsHuong) ds.push(...REN.dsHuong()); // dải hướng nhìn ngang/sau (quaianim.js, Pass 5)
-    if (typeof FXU !== 'undefined') { ds.push(...FXU.dsAnh(G.ban)); FXU.donMau(); } // hiệu ứng đánh v2 của các ụ trong bộ bài (fxu.js)
-    REN.chiGiu(ds); // bỏ ảnh/bộ đệm của bộ bài trận trước
-    TAI.tran(REN.boLuoi ? REN.boLuoi(ds) : ds); // màn tải trận: đợi ảnh giải mã xong (img.decode) rồi mới chạy — trừ ảnh tình huống (REN.LUOI: tải khi vẽ lần đầu)
+    if (typeof FXU !== 'undefined') ds.push(...FXU.dsAnh(bans)); // hiệu ứng đánh v2 của các ụ trong bộ bài (fxu.js)
+    return ds;
   },
 
   // ---------- cập nhật HUD mỗi khung ----------

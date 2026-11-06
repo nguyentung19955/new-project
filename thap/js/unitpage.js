@@ -671,7 +671,8 @@ if (UP_XEM) {
   const _capNhatGoc = capNhat;
   capNhat = function (dt) { _capNhatGoc(dt); if (!window.SD) try { UPX.tick(dt); } catch (e) { } };
   // clip minh hoạ kỹ năng (skilldemo.js) — nạp sau mọi script của trang; lỗi nạp → giữ cảnh thử bắn cũ (UPX)
-  const napSD = () => { const sc = document.createElement('script'); sc.src = 'js/skilldemo.js'; document.body.appendChild(sc); };
+  // chỉ nạp 1 lần: DOMContentLoaded có thể phát 2 lần (bản gốc của trình duyệt + bản phát lại của bộ nạp index.html) → 'SD' khai báo 2 lần
+  const napSD = () => { if (window.__napSD) return; window.__napSD = 1; const sc = document.createElement('script'); sc.src = 'js/skilldemo.js'; document.body.appendChild(sc); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', napSD); else napSD();
   const batXem = (id, sao, gd) => (window.SD ? SD.bat(id, sao, gd) : UPX.bat(id, sao));
   // UI.init có thể đã chạy trước khi file này nạp (phông sẵn) → chờ roster + canvas sẵn sàng rồi dựng cảnh

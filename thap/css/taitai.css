@@ -29,6 +29,8 @@ html.tai-mo, html.tai-mo body { background: #16171a url(../assets/nen_menu.jpg?v
 /* khung xem trước (Test range): nền tối, chỉ thanh nhỏ ở giữa bàn */
 #tai.nho { background: #1d1f23; }
 #tai.nho .tai-logo { display: none; }
+/* khung xem trước chỉ là ô TV nhỏ trong trang ụ: không hiện thanh % (không phải màn tải) — chỉ nền tối tới khi bàn vẽ */
+#tai.nho .tai-giua { visibility: hidden; }
 #tai.nho .tai-giua { gap: 8px; width: 200px; }
 #tai.nho .tai-thanh { width: 190px; height: 28px; }
 #tai.nho .tai-day { top: 8px; bottom: 8px; left: 12px; right: 12px; }
