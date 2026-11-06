@@ -16,7 +16,7 @@ const HOTRO = {
   NHOM: ['toc', 'dmg', 'crit', 'cdmg', 'cham', 'chet'],
   // nhóm có điều kiện / đặc biệt (không vào T.buf thường): lo (vs quái LỘ), lanh (vs quái chậm), vet (vs quái trên cầu vồng), amp (mỗi đòn liên tiếp),
   //   soc (choáng khi chí mạng, giây), xuyen (chí mạng xuyên), khang (kháng khống chế, xác suất), ngNguong (ngưỡng giết ngay), chacCrit
-  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T); },
+  k(T) { const B = G.ban[T.ban]; return this.K[clamp(T.sao | 0, 1, 7)] * (1 + 0.06 * (((B && B.lv[T.id]) || 1) - 1)) * this.kThe(B, T) * ((typeof CB_BAC !== 'undefined' && CB_BAC.ht[T.id]) || 1); }, // CB_BAC.ht: cân bằng theo bậc (data.js)
   // cấp thẻ: giá trị buff theo bảng THE.kyNang (hỗ trợ) — thẻ chưa có mục: +½ % sát thương mỗi cấp như cũ
   kThe(B, T) { const h = KY_NANG_CAP[T.id] ? knHe(B, T.id) : 1 + 0.5 * (hsThe(B, T.id) - 1); return h; }, // bản sao Copycat của ụ hỗ trợ: buff giữ nguyên như trước (% sao chép chỉ áp vào sát thương)
   laHT: (T) => !!(T && SKILLS[T.id] && SKILLS[T.id].vai === 'ht'),

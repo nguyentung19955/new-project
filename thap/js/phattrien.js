@@ -52,7 +52,7 @@ const HO_MOI = {
   nangsao: 'speeds up its lowest-star neighbours', vughep: 'drag: +1★ and keeps the type', hasao: 'merge surge for neighbours; punishes rival 5★', ngoisao: 'grows with total board stars',
   mimic: 'merges with any same-star turret', tron: 'fire rate for mixed Attack neighbours', dichchuyen: 'swaps two turrets', xaotron: 'merge scrambles turrets', saochep: 'becomes a copy of any turret',
   khien: 'recharging shields for neighbours', taylo: 'pulses cleanse onto neighbours', kepha: 'merge clamps rivals / speeds allies', haoquang: 'short team-wide barrier (active)',
-  hopbi: 'opens into a random 1–7★ turret', tienhoa: 'evolves into a random turret +1★',
+  hopbi: 'opens into a random 1–4★ turret', tienhoa: 'evolves into a random turret +1★',
 };
 const HO_CUA = {}; // id → { ho, i (bậc 0..4 trong họ) }
 for (const k in HO) HO[k].bac.forEach((ds, i) => ds.forEach(id => { HO_CUA[id] = { ho: k, i }; }));

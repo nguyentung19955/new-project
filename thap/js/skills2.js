@@ -10,7 +10,7 @@
 const lvU = (T) => G.ban[T.ban].lv[T.id] || 1;
 const conTren = (T) => { const B = G.ban[T.ban]; return !!B && B.t[T.o] === T; };
 // hệ số sức mạnh không kèm buff (dùng cho hiệu ứng khi ghép, drone…)
-const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * hsLv(B, id);
+const hsU = (id, sao, B) => (SKILLS[id].dmg || 10) * TIERS[G.rosterMap[id].bac].hs * (1 + 0.85 * (sao - 1)) * hsLv(B, id, sao);
 // nhãn kỹ năng ngắn hiện trên ụ khi kỹ năng kích hoạt
 function nhanU(T, s, mau, ep) {
   return; // BỎ nhãn chữ nổi trên ô (SHATTER ×5, CLONE +1…) — người dùng: vô dụng, rối bàn; buff/kỹ năng đã có hiệu ứng ảnh ChatGPT. Chỉ giữ số sát thương + tấm kết quả ghép.
@@ -118,7 +118,7 @@ SKILLS.sungluc = { // Súng Lục (Girl detective): một phát lớn trúng t�
 };
 SKILLS.maychem = { // Máy Chém (Scaffold): xác suất giết ngay quái nhỏ
   vai: 'tc', dmg: 16.25, toc: 0.8, nham: 'dau',
-  tile: (T) => knThe(G.ban[T.ban], 'maychem') / 100 + 0.0075 * (T.sao - 1) + 0.005 * (lvU(T) - 1), // ×1.25: bắn chậm hơn (0.8/s) nên mỗi phát chém dễ hơn
+  tile: (T) => knThe(G.ban[T.ban], 'maychem') / 100 + 0.0055 * (T.sao - 1) + 0.004 * (lvU(T) - 1), // cân bằng theo bậc (tuvan/tier): cũ +0.75%/★ (ụ trắng mạnh hơn trung vị ụ xanh) // ×1.25: bắn chậm hơn (0.8/s) nên mỗi phát chém dễ hơn
   mo: (T) => 'Instant-kill small enemies ' + (SKILLS.maychem.tile(T) * 100).toFixed(1) + '% per shot',
   ban(G, B, T, E) {
     giat(T, 0.8); chopNong(T, 22); SND.lien();
@@ -204,7 +204,7 @@ SKILLS.bomhen = { // Bom Hẹn Giờ (Hecate) — ĐẶC BIỆT (đợt vai trò
 // ===================================================== XANH =====================================================
 SKILLS.nhanmana = { // Máy Nhân Mana (Thisbe): khi GHÉP nhận nhiều mana
   vai: 'db', dmg: 6.23, toc: 1.3, nham: 'dau',
-  luong: (sao, B) => Math.round(knThe(B, 'nhanmana') * sao * (1 + 0.25 * ((B.lv.nhanmana || 1) - 1))),
+  luong: (sao, B) => Math.round(1.3 * knThe(B, 'nhanmana') * sao * (1 + 0.25 * ((B.lv.nhanmana || 1) - 1))), // ×1.3 cân bằng theo bậc (tuvan/tier)
   mo: (T) => 'On merge: +' + SKILLS.nhanmana.luong(T.sao, G.ban[T.ban]) + ' mana',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#d9a8ff', sp: 420 }); },
   ghep(G, B, a, b, ra) {
@@ -240,7 +240,7 @@ SKILLS.kiembang = { // Kiếm Băng (Ymir): +400% sát thương vào quái đang
 };
 SKILLS.chimang = { // Ăng-ten Chí Mạng (Siren): HỖ TRỢ — +tỉ lệ chí mạng cho 4 ô thẳng (3 → 20 điểm %, trần 20)
   vai: 'ht', dmg: 0, toc: 0,
-  them: (T) => [0.06, 0.08, 0.11, 0.13, 0.15, 0.18, 0.20][clamp(T.sao, 1, 7) - 1] * (1 + 0.06 * (lvU(T) - 1)) * HOTRO.kThe(G.ban[T.ban], T),
+  them: (T) => [0.08, 0.10, 0.13, 0.15, 0.17, 0.19, 0.20][clamp(T.sao, 1, 7) - 1] * (1 + 0.06 * (lvU(T) - 1)) * HOTRO.kThe(G.ban[T.ban], T),
   mo: (T) => '+' + Math.round(SKILLS.chimang.them(T) * 100) + '% crit chance to N/E/S/W neighbours' + (ms(T, 5) ? ' · +10% crit damage' : '') + (ms(T, 7) ? ' · every 6s a sure crit' : ''),
   hoTro(G, T, N, ra) { ra.crit = this.them(T); if (ms(T, 5)) ra.cdmg = 0.10; },
   capNhat(G, B, T, dt) {
@@ -545,14 +545,15 @@ SKILLS.khien = { // Máy Khiên (Mona) — HỖ TRỢ (đợt vai trò): ụ k�
 SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nhiên 1–7 sao
   vai: 'db', dmg: 0, toc: 0, napMau: '#c77dff',
   can: (T) => (ms(T, 3) ? 37 : 47) - 47 + knThe(G.ban[T.ban], 'hopbi'), // 3★ QUICK OPEN · cấp thẻ: −1 s/cấp
-  mo: (T) => 'Opens in ' + Math.max(0, SKILLS.hopbi.can(T) - T.tuoi).toFixed(0) + 's → random ' + (ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1) + '–7★ turret',
+  mo: (T) => 'Opens in ' + Math.max(0, SKILLS.hopbi.can(T) - T.tuoi).toFixed(0) + 's → random ' + (ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1) + '–' + SKILLS.hopbi.toiDa(T) + '★ turret',
+  toiDa: (T) => (ms(T, 7) ? 7 : ms(T, 5) ? 6 : 4), // cân bằng theo bậc (tuvan/tier): 1★ 1–4★ (cũ 1–7★ — mạnh hơn cả ụ vàng)
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (6 + T.nap * 30)) * (0.05 + T.nap * T.nap * 0.35),
   capNhat(G, B, T) {
     T.nap = Math.min(1, T.tuoi / this.can(T));
     if (T.nap >= 1) {
       if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
       const toiThieu = ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1; // 5★ LUCKY BOX · 7★ JACKPOT
-      const sao = toiThieu + rint(8 - toiThieu), N = chuyenU(B, T, pick(deckTru(B, ['hopbi'])), sao, true);
+      const sao = toiThieu + rint(this.toiDa(T) + 1 - toiThieu), N = chuyenU(B, T, pick(deckTru(B, ['hopbi'])), sao, true);
       VX.hen(0.5, () => nhanU(N, 'BOX OPEN: ' + sao + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#c77dff', true)); SND.ghep();
     } else if (Math.random() < 0.02 + T.nap * 0.1) { const c = tamU(T); FX.hat1('lua', c.x + rnd(-12, 12), c.y + rnd(-12, 6), 0, -30, 0.5, 6, '#c77dff'); }
     return true;
@@ -560,10 +561,10 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
 };
 SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò): 2 ụ kề SAO THẤP NHẤT +6% tốc bắn mỗi sao của Star Lift (tối đa 30%); 5★: mỗi wave +1 nấc sao cho ụ kề thấp nhất
   vai: 'ht', dmg: 0, toc: 0, napMau: '#ffe46b',
-  them: (T) => Math.min(0.30, 0.06 * T.sao) * (1 + 0.06 * (lvU(T) - 1)) * HOTRO.kThe(G.ban[T.ban], T),
+  them: (T) => Math.min(0.40, 0.09 * T.sao) * (1 + 0.06 * (lvU(T) - 1)) * HOTRO.kThe(G.ban[T.ban], T), // cân bằng theo bậc (tuvan/tier): cũ 6%/★ trần 30%
   can: (T) => (ms(T, 7) ? 2 : 3),        // nấc cần cho +1★ (7★ STAR SURGE: 2)
-  thap(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)).sort((a, b) => a.sao - b.sao || a.o - b.o).slice(0, 2); },
-  mo: (T) => 'The 2 lowest-star neighbours: +' + Math.round(SKILLS.nangsao.them(T) * 100) + '% fire rate' + (ms(T, 5) ? ' · each wave the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★, max 2★ per match) · ' + (T.pipDa || 0) + '/2 used' : ''),
+  thap(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)).sort((a, b) => a.sao - b.sao || a.o - b.o).slice(0, 3); }, // cân bằng theo bậc (tuvan/tier): cũ 2 ụ
+  mo: (T) => 'The 3 lowest-star neighbours: +' + Math.round(SKILLS.nangsao.them(T) * 100) + '% fire rate' + (ms(T, 5) ? ' · each wave the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★, max 2★ per match) · ' + (T.pipDa || 0) + '/2 used' : ''),
   hoTro(G, T, N, ra) { if (this.thap(G.ban[T.ban], T).includes(N)) ra.toc = this.them(T); },
   capNhat(G, B, T, dt) {
     HOTRO.nhip(G, B, T, dt, '255,228,107', 2.4, 0.5);
@@ -582,7 +583,7 @@ SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò):
 SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có xác suất GIẾT NGAY quái thường dưới ngưỡng máu; trùm: chỉ thêm đòn nhỏ (≤1% máu tối đa)
   vai: 'ht', dmg: 0, toc: 0,
   tile: (T) => 0.08 * HOTRO.k(T),
-  nguong: (T) => (ms(T, 5) ? 0.40 : 0.30),   // 5★ DEEP REAP
+  nguong: (T) => (ms(T, 5) ? 0.50 : 0.40),   // 5★ DEEP REAP · cân bằng theo bậc (tuvan/tier): cũ 30% / 40%
   mo: (T) => 'Neighbours: ' + (Math.min(0.15, SKILLS.tuthan.tile(T)) * 100).toFixed(1) + '% per hit to execute normal enemies under ' + Math.round(SKILLS.tuthan.nguong(T) * 100) + '% HP' + (ms(T, 7) ? ' · big enemies under 15%' : '') + ' · bosses: small capped hit',
   hoTro(G, T, N, ra) { ra.chet = this.tile(T); ra.ngNguong = this.nguong(T); if (ms(T, 7)) ra.chetTo = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '199,125,255', 2.8, 0.5); return true; },
@@ -934,8 +935,8 @@ SKILLS.cauvong = { // Máy Cầu Vồng (Yuna) — HỖ TRỢ: mỗi 7 s vẽ v�
 SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ (đợt vai trò): hào quang làm chậm quái quanh; ụ Tấn công kề +sát thương vào quái đang chậm;
   // chủ động: BÃO BĂNG đóng băng quái gần (không gây sát thương). Không bắn.
   vai: 'ht', dmg: 0, toc: 0, chiTC: true, napMau: '#9fe6ff',
-  r: (T) => 110 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT
-  cham: (T) => Math.min(0.35, 0.15 + 0.02 * (T.sao - 1)),
+  r: (T) => 125 + 5 * T.sao + (ms(T, 3) ? 20 : 0), // 3★ COLD FRONT · cân bằng theo bậc (tuvan/tier): cũ 110
+  cham: (T) => Math.min(0.35, 0.28 + 0.02 * (T.sao - 1)), // cân bằng theo bậc (tuvan/tier): cũ 15% + 2%/★
   k: (T) => 0.14 * HOTRO.k(T),
   mo: (T) => 'Aura ' + SKILLS.lophanung.r(T) + ' px slows ' + Math.round(SKILLS.lophanung.cham(T) * 100) + '% (bosses 15%) · Attack neighbours +' + Math.round(SKILLS.lophanung.k(T) * 100) + '% vs slowed · TAP when full: FREEZE nearby ' + (ms(T, 5) ? 4 : 2.5) + 's',
   hoTro(G, T, N, ra) { ra.lanh = this.k(T); },
@@ -980,8 +981,8 @@ SKILLS.lophanung = { // Lò Phản Ứng Băng (Devil Cider Liza) — HỖ TRỢ
 SKILLS.haoquang = { // Hào Quang Thánh (Halo Mona) — ĐẶC BIỆT (đợt vai trò): KHÔNG bắn; chủ động: hàng rào BẤT TỬ ngắn cho cả đội (quái thường lọt không mất tim,
   // chặn chiêu đối thủ) — chiêu TRÙM chỉ bị giảm nhẹ (không huỷ hẳn); hồi chiêu dài, không duy trì liên tục
   vai: 'db', dmg: 0, toc: 0, napMau: '#fff6c0',
-  ky: (T) => Math.max(28, 40 - 2 * T.sao),
-  tg: (T) => 2 + (ms(T, 3) ? 0.5 : 0) + (ms(T, 7) ? 1 : 0),
+  ky: (T) => Math.max(20, 32 - 2 * T.sao),                              // cân bằng theo bậc (tuvan/tier): cũ max(28, 40 − 2★)
+  tg: (T) => 4 + (ms(T, 3) ? 0.5 : 0) + (ms(T, 7) ? 1.5 : 0),          // cũ 2 s (+0.5 / +1)
   mo: (T) => (T.nap >= 1 ? 'READY' : 'charging ' + Math.round(T.nap * 100) + '%') + ' · TAP: team invulnerable ' + SKILLS.haoquang.tg(T) + 's (leaks cost no hearts; boss skills only weakened) · cooldown ' + SKILLS.haoquang.ky(T) + 's' + (ms(T, 5) ? ' · cleanses' : '') + (ms(T, 7) ? ' · +30% speed' : ''),
   gocDau: (T, t) => (T.pha || 0) + t * 0.3,
   capNhat(G, B, T, dt) {

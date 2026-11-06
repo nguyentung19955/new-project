@@ -240,7 +240,7 @@ function dungMV(B) {
 // ---------- chỉ số ----------
 function dmgU(T) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
-  let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
+  let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id, T.sao);
   d *= 1 + T.buf.dmg;
   if (T.aurora > 0) d *= 1 + knThe(B, 'mimic') / 100; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
   if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (50% ở cấp đầu → 92% cấp 15, theo cấp thẻ Copycat)

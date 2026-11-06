@@ -11,7 +11,7 @@ const ttSao = (mau, ten, dk) => ({ mau, khongAnh: true, ten, dk, gd: (T) => ({ s
 // =====================================================================================================
 SKILLS.nemesis = {
   vai: 'tc', dmg: 26, toc: 0.8, nham: 'mau',
-  p: (T) => sao7(T, [0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.012]),
+  p: (T) => sao7(T, [0.002, 0.0025, 0.003, 0.0035, 0.0045, 0.006, 0.0075]), // cân bằng theo bậc (tuvan/tier): cũ 0.3%→1.2% (vượt trung vị ụ đỏ)
   x: (T) => sao7(T, [0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.15]),
   j: (T) => sao7(T, [0.02, 0.025, 0.03, 0.035, 0.04, 0.05, 0.06]),
   mo: (T) => '+' + (SKILLS.nemesis.p(T) * 100).toFixed(1) + '% max HP per hit · executes normal enemies under ' + Math.round(SKILLS.nemesis.x(T) * 100) + '% · bosses: JUDGMENT ' + (SKILLS.nemesis.j(T) * 100).toFixed(1) + '% max HP every 10 hits' + (T.sao >= 7 ? ' · executions leap once' : ''),
@@ -68,7 +68,7 @@ SKILLS.docton = {
 SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
   k: (T) => 0.14 * HOTRO.k(T),
-  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5, SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
+  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5, SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 90 : 70) + '%)',
   hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
 };
@@ -76,7 +76,7 @@ function xuyenCrit(E, dmg, T, o) { // chí mạng xuyên: quái phía sau gần 
   const B = o.B || G.ban[T.ban]; if (!B) return;
   const ds = dsMucTieu(B).filter(Q => Q !== E && !Q.chet && Q.p === E.p && Q.s < E.s && Math.hypot(Q.x - E.x, Q.y - E.y) < 60).sort((a, b) => b.s - a.s).slice(0, T.buf.xuyen);
   let x0 = E.x, y0 = E.y;
-  for (const Q of ds) { trung(Q, dmg * (T.ht && T.ht.xuyen100 ? 0.65 : 0.5), { B, T, phu: true, crit: false, mau: '#6fd0ff' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.18, x0, y0, x1: Q.x, y1: Q.y, mau: '#6fd0ff' }); x0 = Q.x; y0 = Q.y; }
+  for (const Q of ds) { trung(Q, dmg * (T.ht && T.ht.xuyen100 ? 0.9 : 0.7), { B, T, phu: true, crit: false, mau: '#6fd0ff' }); G.hu.push({ k: 'tiaTia', t: 0, song: 0.18, x0, y0, x1: Q.x, y1: Q.y, mau: '#6fd0ff' }); x0 = Q.x; y0 = Q.y; }
 }
 
 // =====================================================================================================
@@ -345,15 +345,15 @@ ghep = function (B, a, b, ep) {
 // =====================================================================================================
 SKILLS.marionette = {
   vai: 'db', dmg: 9, toc: 0.8, nham: 'dau', napMau: '#a01848',
-  ky: (T) => sao7(T, [10, 9.5, 9, 8.5, 8, 7.5, 7]), t: (T) => sao7(T, [2, 2.5, 3, 3.5, 4, 4.5, 5]),
-  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? 2 : 1) + ' enemy (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams others for 30% of its HP, then explodes ×8 (60 px)',
+  ky: (T) => sao7(T, [13, 12.5, 12, 11.5, 11, 10.5, 10]), /* cân bằng theo bậc (tuvan/tier): cũ 10→7 s */ t: (T) => sao7(T, [2, 2.5, 3, 3.5, 4, 4.5, 5]),
+  mo: (T) => 'Every ' + SKILLS.marionette.ky(T) + 's controls ' + (T.sao >= 7 ? 2 : 1) + ' enemy (' + (T.sao >= 4 ? 'big ones too' : 'no big ones') + '): walks it back ' + SKILLS.marionette.t(T) + 's, rams others for 30% of its HP, then explodes ×6 (60 px)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * (1 + T.buf.toc) / this.ky(T));
     if (T.nap >= 1 && !G.hu.some(o => o.k === 'roi' && o.T === T)) {
       const ds = dsMucTieu(B).filter(E => !E.chet && !E.trum && !E.roi && (T.sao >= 4 || !E.d.to)).sort((a, b) => b.hp - a.hp).slice(0, T.sao >= 7 ? 2 : 1);
       if (ds.length) {
         T.nap = 0;
-        for (const E of ds) { E.roi = true; E.gui = true; E.khongMana = true; G.hu.push({ k: 'roi', t: 0, song: this.t(T), E, B, T, dmg: dmgU(T) * 8, dam: [] }); }
+        for (const E of ds) { E.roi = true; E.gui = true; E.khongMana = true; G.hu.push({ k: 'roi', t: 0, song: this.t(T), E, B, T, dmg: dmgU(T) * 6 /* cân bằng theo bậc (tuvan/tier): cũ ×8 */, dam: [] }); }
         buffNo(T, 'crit', 1); if (!B.ai) SND.mana();
       }
     }

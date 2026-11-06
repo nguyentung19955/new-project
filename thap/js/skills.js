@@ -234,7 +234,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
   dai: (B) => knThe(B, 'orbital') || 23,                                    // giây thức tỉnh (cấp thẻ)
   soBom: (T) => 2 + Math.ceil(T.sao / 2) + (ms(T, 7) ? 1 : 0),              // 1★ 3 · 3★ 4 · 5★ 5 · 7★ 7 (JUSTICE RAIN +1)
   nhip: (T) => 1.8 / (ms(T, 3) ? 1.2 : 1),                                  // 3★ QUICK HANDS: loạt nhanh 20%
-  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9,
+  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital', T.sao) * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9,
   mo: (T) => (T.thucT > 0 ? 'AWAKENED ' + Math.ceil(T.thucT) + 's · ' : '') + 'merging Orbitals awakens EVERY Orbital on the board for ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's: salvo of ' + SKILLS.orbital.soBom(T) + ' bombs every ' + SKILLS.orbital.nhip(T).toFixed(1) + 's (' + Math.round(SKILLS.orbital.bomDmg(G.ban[T.ban], T)) + ' area damage each)',
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (T.thucT > 0 ? 2.2 : 0.6) + (T.pha || 0)) * 0.5,
   sangDau: (T) => (T.thucT > 0 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // dạng thức tỉnh = ảnh dạng 3 + đầu sáng rực
@@ -260,7 +260,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
     for (const X of ds) { X.thucT = dai; X.thucMax = dai; X.salvo = 0.4 + 0.15 * (X.o % 5); X.sang = 1; if (typeof VX !== 'undefined' && VX.hu) VX.hu(X); }
     return ds.length;
   },
-  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * hsLv(B, 'orbital') * (B && B.cuong > 0 ? 2 : 1),
+  phaoDmg: (B, sao) => 30 * TIERS.vang.hs * (1 + 0.85 * (sao - 1)) * hsLv(B, 'orbital', sao) * (B && B.cuong > 0 ? 2 : 1),
   ghep(G, B, a, b) {
     const n = this.thucTinh(G, B);
     if (!n) { B.phao = 12; B.phaoSao = Math.max(a.sao, b.sao) + 1; B.phaoT = 0.2; } // dự phòng: không còn Vệ Tinh nào trên bàn

@@ -192,7 +192,7 @@ const KY_NANG_CAP = {
   sinhdoi: { ten: '+1★ twin', base: 10, buoc: 1, max: 16, dv: '%', dmg: true },     // Twin Maker: xác suất ụ sinh đôi cao hơn 1★ (DCDW Berit)
   nhanmana: { ten: 'Merge mana', base: 32, buoc: 2, max: 56, dv: '', tien: '+', dmg: true },
   loa: { ten: 'Cooldown', base: 4.5, buoc: 0.25, max: 7.5, dv: 's', tien: '−', dmg: true },
-  maychem: { ten: 'Execute', base: 3.75, buoc: 0.15, max: 5.85, dv: '%', dmg: true },
+  maychem: { ten: 'Execute', base: 2.8, buoc: 0.11, max: 4.3, dv: '%', dmg: true }, // cân bằng theo bậc (tuvan/tier): cũ 3.75 / 0.15 / 5.85
   mana: { ten: 'Mana', base: 100, buoc: 4, max: 156, dv: '%' },                       // lượng mana sinh ra × giá trị/100
   bang: { ten: 'Freeze', base: 2, buoc: 0.07, max: 2.98, dv: 's' },
   doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+' },
@@ -227,4 +227,14 @@ function knThe(B, id) { const e = KY_NANG_CAP[id]; return e ? knGt(e, knCap(B, i
 function knHe(B, id) { const e = KY_NANG_CAP[id]; return e ? knGt(e, knCap(B, id)) / e.base : 1; }
 // bản sao Copycat: tỉ lệ sức mạnh (0.5 ở cấp đầu) — dùng cấp thẻ COPYCAT của bàn đó
 function heSaoChep(B) { return (knThe(B, 'saochep') || 50) / 100; }
-function hsLv(B, id) { return (1 + LUAT.nangPct * (((B && B.lv && B.lv[id]) || 1) - 1)) * hsThe(B, id); }
+// CÂN BẰNG THEO BẬC (đo bằng tools/thap-sim-tier.js → docs/demo-hop-tuong/tuvan/tier/BANG.md): hệ số nhân riêng từng ụ để trung vị sức mạnh
+//   trắng < xanh < tím < vàng < đỏ (mỗi bậc ≈ +30%). dmg = sát thương (qua hsLv: dmgU/hsU/trang ụ) · ht = độ mạnh buff ụ Hỗ trợ (HOTRO.k).
+//   Hằng số như nhau trên mọi máy → online vẫn tất định. Thay số → chạy lại thap-sim-tier.js + tools/thap-kt-tier.js.
+//   sao = +% sát thương mỗi ★ trên 1★ cho ụ lên sao yếu (giữ 7★ đúng bậc).
+const CB_BAC = {
+  dmg: { nam: 1.52, drone: 1.68, nangluong: 2.01, laser: 0.73, vungdoc: 0.58, hutmana: 1.36, min: 0.95, lienket: 1.68, no5: 0.75, anhsang: 1.82, aten: 2.12, railgun: 0.9, ngoisao: 1.35, soi: 1.42, wallgen: 0.75, overlord: 0.54, combo: 1.39, cuuvi: 1.37, lualien: 1.32, hopca: 1.29, luutru: 1.48, bienmau: 1.26, baotuyet: 1.63, hydra: 1.08, cuongno: 1.12, chuato: 1.09 },
+  ht: { radar: 1.35, tron: 1.25, lanhgia: 2, khuech: 1.6, taylo: 1.91, tuthan: 1.3, dongbo: 2.18, hasao: 2.5, cauvong: 2.5, lophanung: 2.5, thaukinh: 2, thanhdia: 2, luoicheo: 1.42 },
+  sao: { xucxac: 0.04, sungluc: 0.045, kiembang: 0.042, drone: 0.052, nangluong: 0.035, laser: 0.063, vungdoc: 0.111, hutmana: 0.045, cuongno: 0.078, lienket: 0.034, aten: 0.15, soi: 0.145, wallgen: 0.083, combo: 0.052, cuuvi: 0.15, docton: 0.049, chuato: 0.121, leviathan: 0.15, hopca: 0.05, luutru: 0.035, bienmau: 0.118, mortar: 0.035, railgun: 0.034, no5: 0.034, ngoisao: 0.036, lualien: 0.036 },
+};
+function cbDmg(id, sao) { return (CB_BAC.dmg[id] || 1) * (1 + (CB_BAC.sao[id] || 0) * Math.max(0, ((sao || 1) | 0) - 1)); }
+function hsLv(B, id, sao) { return (1 + LUAT.nangPct * (((B && B.lv && B.lv[id]) || 1) - 1)) * hsThe(B, id) * cbDmg(id, sao); }

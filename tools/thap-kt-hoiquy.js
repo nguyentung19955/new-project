@@ -528,6 +528,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-sua.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 12 ụ vàng sửa theo DCDW (thap-kt-vang-sua.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vang-sua.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vangsua', loai: 'sửa ụ vàng DCDW', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ sửa ụ vàng: lỗi chạy'); }
   }
+  // SỨC MẠNH THEO BẬC (tools/thap-kt-tier.js): trung vị 4★ trắng < xanh < tím < vàng < đỏ; ụ thấp bậc không vượt trung vị vàng — docs/demo-hop-tuong/tuvan/tier/BANG.md
+  if (!process.env.CHI || /tier|solo|menu/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-tier.js')], { stdio: 'pipe', timeout: 600000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-tier.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'tier', loai: 'sức mạnh theo bậc', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ tier: lỗi chạy'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần
