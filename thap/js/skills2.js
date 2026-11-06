@@ -41,9 +41,11 @@ function banNhe(B, T, E, o) {
 // tia phép nối 2 điểm (hiệu ứng ghép tác động lên ụ khác / bàn khác)
 function tiaPhep(x0, y0, x1, y1, mau) { G.hu.push({ k: 'tiaPhep', t: 0, song: 0.55, x0, y0, x1, y1, mau }); }
 // biến ụ tại chỗ thành loại khác (hộp bí ẩn, tiến hoá, xáo trộn…)
+// LUẬT BIẾN TẠI CHỖ (docs/demo-hop-tuong/tuvan/tuong-tac/MA-TRAN.md): ụ mới là CÙNG 1 ô "đổi hình" — giữ BẢN SAO (−% Copycat + dấu tím)
+//   và khiên; mọi buff/debuff tạm khác của thân cũ hết (thân mới). Ụ bị khoá (đá / băng) KHÔNG bị biến (người gọi tự bỏ qua).
+function giuKhiBien(N, T) { N.goc = T.goc; N.khien = T.khien; N.banSao = !!T.banSao; return N; }
 function chuyenU(B, T, id, sao, doi) {
-  const N = sinhU(taoU(B, id, clamp(sao, 1, LUAT.saoMax), T.o));
-  N.goc = T.goc; N.khien = T.khien;
+  const N = giuKhiBien(sinhU(taoU(B, id, clamp(sao, 1, LUAT.saoMax), T.o)), T);
   B.t[T.o] = N;
   if (doi) { VX.doi(N, T); mocMoi(N, T.sao, 0.62); return N; } // Hộp Bí Ẩn / Hộp Tiến Hoá: màn biến hình ăn mừng ~750 ms
   N.anim = { k: 'no', t: 0 };
@@ -597,13 +599,13 @@ SKILLS.xaotron = { // Máy Xáo Trộn (Neban): khi GHÉP — PVP đổi ngẫu 
     const n = 1 + Math.floor(a.sao / 2), c0 = B.o[b.o];
     if (G.che === 'pvp') {
       const D = banKhac(B); if (!D) return;
-      const ds = D.t.filter(X => X && !X.st.da).sort(() => Math.random() - 0.5).slice(0, n);
+      const ds = D.t.filter(X => X && !biKhoa(X)).sort(() => Math.random() - 0.5).slice(0, n); // đá / băng: không bị xáo
       for (const X of ds) { const c = D.o[X.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ff6ad5'); if (!chanKhien(D, X)) { const ds2 = D.deck.filter(id => id !== X.id && SKILLS[id]); chuyenU(D, X, ds2.length ? pick(ds2) : X.id, X.sao); } }
       nhanU(ra, 'RIVAL SCRAMBLED', '#ff6ad5', true);
     } else {
       const D = banKhac(B) || B; let k = 0;
       for (let i = 0; i < n; i++) {
-        const ts = D.t.filter(X => X && X !== ra && !X.st.da && X.sao < LUAT.saoMax);
+        const ts = D.t.filter(X => X && X !== ra && !biKhoa(X) && X.sao < LUAT.saoMax);
         const le = ts.filter(X => !ts.some(Y => Y !== X && Y.sao === X.sao && Y.id === X.id) && ts.some(Y => Y !== X && Y.sao === X.sao));
         if (!le.length) break;
         const X = le.sort((x, y) => x.sao - y.sao)[0], Y = ts.find(Y => Y !== X && Y.sao === X.sao);

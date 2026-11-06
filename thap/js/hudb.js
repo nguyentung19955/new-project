@@ -63,8 +63,11 @@ const HB = {
   soNgan(id, T) { // 2 số: DMG · RATE (trong trận, số thực) — ngoài ra lấy dòng số gốc
     if (T && typeof statThuc === 'function') {
       const s = statThuc(T), f = (v) => (typeof ST !== 'undefined' ? ST.so(v) : Math.round(v));
-      if (s.coDmg) return '<span><small>DMG</small><b>' + f(s.dmg) + '</b></span><span><small>RATE</small><b>' + (s.frozen ? '0' : s.toc.toFixed(2)) + '</b><i>/s</i></span>';
-      const sk = SKILLS[T.id]; if (sk && sk.vai === 'ht' && typeof hoTroTT === 'function') { const h = hoTroTT(T); if (h) return '<span class="ht">' + ST.esc(h.dong.replace(' (current)', '')) + '</span>'; }
+      // BẢN SAO Copycat: luôn hiện dấu Copycat (PNG) + % sức mạnh — cả sau khi biến hình (Hộp Bí Ẩn / Tiến Hoá / Xáo Trộn…) — MA-TRAN.md
+      const bs = T.banSao ? '<span class="hb-bs"><img src="assets/nho/saochep.webp?v=3be146d4" alt=""><small>COPY</small><b>' + Math.round(heSaoChep(G.ban[T.ban]) * 100) + '%</b></span>' : '';
+      if (s.coDmg) return '<span><small>DMG</small><b>' + f(s.dmg) + '</b></span><span><small>RATE</small><b>' + (s.frozen ? '0' : s.toc.toFixed(2)) + '</b><i>/s</i></span>' + bs;
+      const sk = SKILLS[T.id]; if (sk && sk.vai === 'ht' && typeof hoTroTT === 'function') { const h = hoTroTT(T); if (h) return bs + '<span class="ht">' + ST.esc(h.dong.replace(' (current)', '')) + '</span>'; }
+      if (bs) return bs;
     }
     const d = $('#tt .tt-so .d-so'), s = d ? d.textContent.replace(/^\s*\d+\s*★?\s*·\s*LV\s*\d+(\+\d+)?(\s*·\s*)?/, '') : ''; // bỏ "N★ · LVn" (sao đã có cạnh tên)
     return s ? '<span class="ht">' + (typeof ST !== 'undefined' ? ST.esc(s) : s) + '</span>' : '';

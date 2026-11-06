@@ -656,7 +656,8 @@ function thucHienChieu(E, B) {
   const deBan = (T, ten, mau) => { const c = rong(T); G.hu.push({ k: 'chieuTrum', t: 0, song: 0.45, x0: E.x, y0: E.y, x1: c.x, y1: c.y, mau }); };
   switch (E.trum) {
     case 'mad_crown': // biến ụ thành loại ngẫu nhiên trong bộ
-      for (const T of muc) { deBan(T, 0, '#ff6ad5'); const N = sinhR(taoU(B, pk(B.deck), T.sao, T.o), r); N.anim = { k: 'no', t: 0 }; N.goc = T.goc; B.t[T.o] = N; FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
+      for (const T of muc) { if (biKhoa(T)) continue; deBan(T, 0, '#ff6ad5'); const N = giuKhiBien(sinhR(taoU(B, pk(B.deck), T.sao, T.o), r), T); N.anim = { k: 'no', t: 0 }; B.t[T.o] = N; // biến tại chỗ: giữ bản sao (MA-TRAN.md); đá/băng: không biến
+        FX.tiaLua(rong(T).x, rong(T).y, 14, '#ff6ad5'); }
       break;
     case 'freezer': { // nhiều ụ, 6 s; Halo (khiên bàn từ Halo) → nửa thời gian, vẫn mọi ụ. Hình: BANGFX (js/bangfx.js) — mảnh băng bay → bọc băng → vỡ
       const dong = (BB, L, giay) => L.forEach((T, i) => { const tre = 0.32 + i * 0.09; T.st.bang = giay + tre; if (typeof BANGFX !== 'undefined') BANGFX.ban(E, BB, T, tre); else { const c = BB.o[T.o]; FX.no('bang_vo', c.x, c.y, 80, 0.45); } });
@@ -677,8 +678,9 @@ function thucHienChieu(E, B) {
       break;
     case 'joker_king': // ném mimic → ụ bị biến thành mimic rồi ép ghép với ụ cùng sao
       for (const T of muc) {
+        if (biKhoa(T)) continue; // đá / băng: không bị ném Mimic (khoá chặn biến + ghép)
         deBan(T, 0, '#ffd23f');
-        const M = taoU(B, 'mimic', T.sao, T.o); M.goc = T.goc; B.t[T.o] = M;
+        const M = giuKhiBien(taoU(B, 'mimic', T.sao, T.o), T); B.t[T.o] = M; // biến tại chỗ giữ bản sao; nếu ép ghép được → ghép thường ra ụ mới (hết bản sao)
         const ban = B.t.filter(X => X && X !== M && X.sao === M.sao && !X.st.da && !X.st.bang);
         if (ban.length && M.sao < 7) ghep(B, M, chonTrum(ban, r), true);
         else { M.anim = { k: 'no', t: 0 }; }

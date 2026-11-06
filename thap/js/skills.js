@@ -234,7 +234,7 @@ SKILLS.orbital = { // Vệ Tinh (Mafdet) — ĐẶC BIỆT: KHÔNG bắn thườ
   dai: (B) => knThe(B, 'orbital') || 23,                                    // giây thức tỉnh (cấp thẻ)
   soBom: (T) => 2 + Math.ceil(T.sao / 2) + (ms(T, 7) ? 1 : 0),              // 1★ 3 · 3★ 4 · 5★ 5 · 7★ 7 (JUSTICE RAIN +1)
   nhip: (T) => 1.8 / (ms(T, 3) ? 1.2 : 1),                                  // 3★ QUICK HANDS: loạt nhanh 20%
-  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9,
+  bomDmg: (B, T) => 30 * TIERS.vang.hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, 'orbital') * (ms(T, 5) ? 1.25 : 1) * (ms(T, 7) ? 1.3 : 1) * (B && B.cuong > 0 ? 2 : 1) * 0.9 * (T.banSao ? heSaoChep(B) : 1), // bản sao Copycat: bom cũng theo % sao chép (MA-TRAN.md)
   mo: (T) => (T.thucT > 0 ? 'AWAKENED ' + Math.ceil(T.thucT) + 's · ' : '') + 'merging Orbitals awakens EVERY Orbital on the board for ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's: salvo of ' + SKILLS.orbital.soBom(T) + ' bombs every ' + SKILLS.orbital.nhip(T).toFixed(1) + 's (' + Math.round(SKILLS.orbital.bomDmg(G.ban[T.ban], T)) + ' area damage each)',
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * (T.thucT > 0 ? 2.2 : 0.6) + (T.pha || 0)) * 0.5,
   sangDau: (T) => (T.thucT > 0 ? 0.3 + 0.12 * Math.sin(G.t * 9) : T.gd === 2 ? 0.1 : 0), // dạng thức tỉnh = ảnh dạng 3 + đầu sáng rực
