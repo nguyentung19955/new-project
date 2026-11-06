@@ -1,0 +1,2 @@
+# User rule (06/11 17:37): no "shaking still picture" effects
+Any skill/attack FX that is a single still image jittered/scaled/rotated to fake motion must become a real frame animation (sprite sheet frames played in order), or a proper particle/stream effect. Audit ALL 93 turrets + commanders + bosses (especially big ultimates: Wyrm Engine, Leviathan, Black Hole, Orbital, Overlord, Hive Queen…) — list each one that fakes motion and fix it; request missing sheets via CAN-VE json (coordinator generates). This belongs to VFX P2 and to the colour/animation audit session.
