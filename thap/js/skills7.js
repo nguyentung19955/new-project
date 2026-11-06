@@ -75,7 +75,7 @@ SKILLS.mauhut = {
 //      Xác suất: 35% (LV9, 1★) +2%/cấp thẻ +5%/sao người ghép, trần 80%. Hồi 8 s CHUNG cả bàn — ghép trong lúc hồi = bỏ (tất định).
 // =====================================================================================================
 SKILLS.nguyenrua = {
-  vai: 'db', dmg: 12, toc: 1, nham: 'dau', napMau: '#ff3a3a',
+  vai: 'db', dmg: 13, toc: 1, nham: 'dau', napMau: '#ff3a3a',
   CD: 8, TRE: 1.5,
   p: (T) => Math.min(0.8, kn7(T) + 0.05 * (clamp(T.sao, 1, 7) - 1)),
   mo(T) { const B = G.ban[T.ban], cd = B && B.hexCd > G.t ? Math.ceil(B.hexCd - G.t) : 0; return 'Merge two: hex a random turret after 1.5s — ' + Math.round(this.p(T) * 100) + '% · PVP: rival −1★ (1★: disabled 2.5s) · CO-OP: ally +1★ · SOLO: lead enemy slowed + weakened · team cooldown ' + this.CD + 's' + (cd ? ' (' + cd + 's)' : ''); },
