@@ -189,16 +189,18 @@ const PX = {
     const key = mau + '|' + n + '|' + b0 + '|' + b1 + '|' + (nguoc ? 1 : 0);
     let c = this._cung.get(key);
     if (!c) {
-      if (this._cung.size > 600) this._cung.clear();
-      c = document.createElement('canvas'); c.width = c.height = n; const g = c.getContext('2d'), h = n / 2;
-      g.beginPath(); g.moveTo(h, h); g.arc(h, h, h, b0 * q, b1 * q, !!nguoc); g.closePath(); g.clip(); // mặt nạ cắt quạt (vô hình) // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
-      g.drawImage(REN.mip(vm, n), 0, 0, n, n);
+      if (this._cung.size > 600) { for (const v of this._cung.values()) v.width = v.height = 0; this._cung.clear(); } // trả bộ nhớ ngay (không đợi dọn rác)
+      // canvas nháp dùng lại (REN.nhap) thay vì tạo n×n mới mỗi cung (tuvan/giat-ghep: bớt canvas tạo-rồi-bỏ → bớt dọn rác dồn)
+      c = REN.nhap ? REN.nhap(0, n, n) : Object.assign(document.createElement('canvas'), { width: n, height: n });
+      const g = c._x || c.getContext('2d'), h = n / 2;
+      g.save(); g.beginPath(); g.moveTo(h, h); g.arc(h, h, h, b0 * q, b1 * q, !!nguoc); g.closePath(); g.clip(); // mặt nạ cắt quạt (vô hình) // vetay-ok: mask — mặt nạ cắt/mờ dần ảnh PNG
+      g.drawImage(REN.mip(vm, n), 0, 0, n, n); g.restore();
       // cắt sát khung bao của cung (vòng sáng nằm trong 0.55–1.0 bán kính ảnh) → vẽ ít điểm ảnh hơn mỗi khung
       let x0 = n, y0 = n, x1 = 0, y1 = 0; const A0 = b0 * q, A1 = b1 * q, d = nguoc ? (A1 > A0 ? A1 - A0 - 2 * Math.PI : A1 - A0) : (A1 < A0 ? A1 - A0 + 2 * Math.PI : A1 - A0);
       for (let i = 0; i <= 24; i++) { const a = A0 + d * i / 24; for (const k of [0.55, 1]) { const px = h + Math.cos(a) * h * k, py = h + Math.sin(a) * h * k; x0 = Math.min(x0, px); y0 = Math.min(y0, py); x1 = Math.max(x1, px); y1 = Math.max(y1, py); } }
       x0 = Math.max(0, Math.floor(x0) - 1); y0 = Math.max(0, Math.floor(y0) - 1); x1 = Math.min(n, Math.ceil(x1) + 1); y1 = Math.min(n, Math.ceil(y1) + 1);
       const t = document.createElement('canvas'); t.width = Math.max(1, x1 - x0); t.height = Math.max(1, y1 - y0); t.getContext('2d').drawImage(c, -x0, -y0);
-      c.width = c.height = 0; t.bx = x0 / n; t.by = y0 / n; t.bw = t.width / n; t.bh = t.height / n; c = t; this._cung.set(key, c);
+      if (!c._nhap) c.width = c.height = 0; t.bx = x0 / n; t.by = y0 / n; t.bw = t.width / n; t.bh = t.height / n; c = t; this._cung.set(key, c);
     }
     if (al != null) ctx.globalAlpha = Math.min(1, al * Math.min(1, 0.55 + (w || 2) * 0.18));
     ctx.drawImage(c, x - S / 2 + c.bx * S, y - S / 2 + c.by * S, c.bw * S, c.bh * S);

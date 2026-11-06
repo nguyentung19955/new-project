@@ -104,13 +104,28 @@ const REN = {
   },
   // thu nhỏ chất lượng cao: giảm một nửa nhiều bước (mỗi bước lọc 'high') tới khi còn ≤ 2× đích, rồi mới vẽ lần cuối
   // → không lấm tấm/răng cưa như khi thu 1 lần từ ảnh 256–1290 px xuống vài chục px
+  // tầng trung gian dùng 2 canvas NHÁP cố định (đổi lượt nhau, chỉ lớn thêm, ≤ 1 M điểm mỗi cái) thay vì tạo canvas mới mỗi tầng:
+  // trước đây ~600 canvas tạo-rồi-bỏ mỗi phút trận → bộ nhớ ngoài tăng vọt → trình duyệt dọn rác dồn 40–140 ms (tuvan/giat-ghep)
+  _nhap: [null, null], NHAP_MAX: 1 << 20,
+  nhap(i, w, h) {
+    if (w * h > this.NHAP_MAX) { const t = document.createElement('canvas'); t.width = w; t.height = h; return t; }
+    let c = this._nhap[i];
+    if (!c) { c = this._nhap[i] = document.createElement('canvas'); c._nhap = true; c.width = w; c.height = h; c._x = c.getContext('2d'); }
+    else if (c.width < w || c.height < h) {
+      const nw = Math.max(c.width, w), nh = Math.max(c.height, h);
+      if (nw * nh > this.NHAP_MAX) { c.width = w; c.height = h; } else { c.width = nw; c.height = nh; }
+      c._x = c.getContext('2d');
+    } else { c._x.setTransform(1, 0, 0, 1, 0, 0); c._x.globalAlpha = 1; c._x.globalCompositeOperation = 'source-over'; c._x.filter = 'none'; c._x.clearRect(0, 0, w, h); }
+    return c;
+  },
   thuNho(a, sx, sy, sw, sh, nw, nh) {
-    let src = a, x0 = sx, y0 = sy, w = sw, h = sh;
+    let src = a, x0 = sx, y0 = sy, w = sw, h = sh, lan = 0;
     while (w >= nw * 2 && h >= nh * 2 && w > 4 && h > 4) {
       const w2 = Math.max(1, Math.round(w / 2)), h2 = Math.max(1, Math.round(h / 2));
-      const t = document.createElement('canvas'); t.width = w2; t.height = h2;
-      this.c2d(t).drawImage(src, x0, y0, w, h, 0, 0, w2, h2);
-      if (src !== a) src.width = src.height = 0; // trả bộ nhớ tầng trung gian ngay (Safari chỉ thu canvas rác rất muộn)
+      const t = this.nhap(lan++ & 1, w2, h2);
+      const tx = t._nhap ? t._x : this.c2d(t); tx.imageSmoothingEnabled = true; tx.imageSmoothingQuality = 'high';
+      tx.drawImage(src, x0, y0, w, h, 0, 0, w2, h2);
+      if (src !== a && !src._nhap) src.width = src.height = 0; // trả bộ nhớ tầng trung gian ngay (Safari chỉ thu canvas rác rất muộn)
       src = t; x0 = 0; y0 = 0; w = w2; h = h2;
     }
     return [src, x0, y0, w, h];
@@ -119,7 +134,7 @@ const REN = {
   veNho(x, a, sx, sy, sw, sh, dx, dy, dw, dh) {
     const [s2, x0, y0, w, h] = this.thuNho(a, sx, sy, sw, sh, dw, dh);
     x.drawImage(s2, x0, y0, w, h, dx, dy, dw, dh);
-    if (s2 !== a) s2.width = s2.height = 0;
+    if (s2 !== a && !s2._nhap) s2.width = s2.height = 0;
   },
   // chuỗi mipmap của 1 ảnh/canvas (mỗi tầng = ½ tầng trên): vẽ cỡ thay đổi từng khung (khói, hiệu ứng, tia, biểu tượng…)
   // lấy tầng nhỏ nhất vẫn ≥ cỡ cần (điểm ảnh thiết bị) → GPU chỉ thu ≤ 2× → mịn, không nhấp nháy

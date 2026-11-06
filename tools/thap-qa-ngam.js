@@ -59,6 +59,7 @@ function taoTran(seed, ROS, MV) {
   else if (k < 0.40) { cfg.kieu = 'muon'; cfg.wave = 30 + Math.floor(r() * 36); cfg.fill = 4 + Math.floor(r() * 3); cfg.mana = 3000; cfg.batTu = r() < 0.5; cfg.wMax = cfg.wave + 12; } // vào muộn: bàn đầy, trùm mới
   else { cfg.kieu = 'thuong'; cfg.wMax = 45; }                                                                       // thường: tới khi thua / wave 45
   if (che === 'pvp') { cfg.wMax = Math.min(cfg.wMax + 10, 75); cfg.batTu1 = r() < 0.75; }
+  if (process.env.BUOC_CHAM) cfg.buocCham = +process.env.BUOC_CHAM; // ngưỡng lỗi 1 bước luật (mặc định 1000 ms; tuvan/giat-ghep: 120 khi chạy 1 luồng)
   // cấp thẻ cố định theo hạt giống (không phụ thuộc bộ sưu tập đã lên sau các trận trước → tái lập)
   cfg.cap0 = {}; for (const id of cfg.deck) cfg.cap0[id] = Math.floor(r() * 11);
   cfg.cap2 = {}; for (const id of cfg.deck2) cfg.cap2[id] = Math.floor(r() * 11);
@@ -233,12 +234,15 @@ async function choiOnline(b, cfg) {
   for (const t of TL) if (!t.khop) { const key = 'khong-tai-lap | ' + t.che; (LOI[key] = LOI[key] || { n: 0, mau: { loai: 'khong-tai-lap', chi: 'cùng hạt giống → khác kết quả (lệch từ mốc ' + t.lech + ')' }, seeds: [] }).n++; LOI[key].seeds.push(t.seed + ':' + t.che); }
   const theoChe = {}; for (const k of KQ) { const c = k.cfg.che; const x = theoChe[c] = theoChe[c] || { tran: 0, waveMax: 0, waveTong: 0, thang: 0 }; x.tran++; x.waveMax = Math.max(x.waveMax, k.wave || 0); x.waveTong += k.wave || 0; if (k.kt && k.kt.thang) x.thang++; }
   const maxObj = {}; for (const k of KQ) if (k.max) for (const [a, v] of Object.entries(k.max)) maxObj[a] = Math.max(maxObj[a] || 0, v);
-  const tomTat = { luc: new Date().toISOString(), phut: +((Date.now() - T0) / 60000).toFixed(1), tran: KQ.length, theoChe, maxObj, heap: HEAP, taiLap: TL, loi: LOI };
+  // giật: bước luật chậm nhất mỗi trận (sau 120 bước khởi động) — tuvan/giat-ghep
+  const st = KQ.map(k => (k.max && k.max.step) || 0), giat = { tranTren120: st.filter(x => x > 120).length, tranTren250: st.filter(x => x > 250).length, max: Math.round(Math.max(0, ...st)), p95: Math.round(st.slice().sort((a, b) => a - b)[Math.floor(st.length * 0.95)] || 0) };
+  const tomTat = { luc: new Date().toISOString(), phut: +((Date.now() - T0) / 60000).toFixed(1), tran: KQ.length, theoChe, maxObj, heap: HEAP, taiLap: TL, loi: LOI, giat };
   fs.writeFileSync(OUT + 'ket-qua.json', JSON.stringify({ tomTat, tran: KQ.map(k => Object.assign({}, k, { bam: undefined })) }, null, 1));
   const txt = Object.entries(LOI).sort((a, b) => b[1].n - a[1].n).map(([k, v]) => `${v.n}×  ${k}\n     vd: ${v.seeds.join(' ')}\n     ${JSON.stringify(v.mau.nk || []).slice(0, 600)}`).join('\n');
   fs.writeFileSync(OUT + 'loi.txt', txt + '\n');
   console.log('\n==== ' + KQ.length + ' trận, ' + tomTat.phut + ' phút ====');
-  console.log(JSON.stringify(theoChe)); console.log('đỉnh đối tượng:', JSON.stringify(maxObj)); console.log('heap MB:', HEAP.map(h => h.w + ':' + h.n + '=' + h.mb).join(' '));
+  console.log(JSON.stringify(theoChe)); console.log('đỉnh đối tượng:', JSON.stringify(maxObj));
+  console.log(`bước luật chậm nhất/trận: p95 ${giat.p95} ms · max ${giat.max} ms · trận có bước > 120 ms: ${giat.tranTren120} · > 250 ms: ${giat.tranTren250} / ${KQ.length}`); console.log('heap MB:', HEAP.map(h => h.w + ':' + h.n + '=' + h.mb).join(' '));
   console.log(Object.keys(LOI).length ? '✗ LỖI:\n' + txt : '✓ XANH — không lỗi');
   process.exit(Object.keys(LOI).length ? 1 : 0);
 })();

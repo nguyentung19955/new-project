@@ -595,6 +595,13 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-giat.js'), BASE], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^  ✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-giat.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'giat', loai: 'giật khi ra skill', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ giật skill: lỗi'); }
   }
+  // GIẬT KHI GHÉP ĐẶC BIỆT / MAD CROWN / CHỈ HUY + TẤM TÊN GHÉP ĐÈ NHAU (tuvan/giat-ghep): tools/thap-kt-giat-ghep.js —
+  // tấm tên 2 ô cạnh nhau ghép liên tiếp ở 3× không đè (SOLO/CO-OP/PVP); iPhone 13 + CPU ×4: không bước luật/khung > 120 ms sau khởi động
+  // với bộ nặng ghép đặc biệt, ra chiêu LẦN ĐẦU từng ụ chủ động / chỉ huy / ghép đặc biệt / trùm ≤ 120 ms (NHANH=1: chỉ phần tấm tên)
+  if (!process.env.CHI || /giat|solo|coop|pvp/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-giat-ghep.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { BASE }), timeout: 1800000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-giat-ghep.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'giatghep', loai: 'giật ghép / tấm tên', chi: l.trim().slice(0, 300), anh: '' }); console.log(ds.join('\n') || '  ✗ giật ghép: lỗi'); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

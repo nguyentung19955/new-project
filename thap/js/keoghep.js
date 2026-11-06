@@ -106,6 +106,11 @@ const KG = {
     this.tam(ctx, s, c.x, c.y - Math.min(B.cw, B.ch) * 0.78, 13, '#eaf6ff', u, 0.9 + 0.1 * u);
   },
   // tấm chữ (ảnh nhan_kn) + chữ canvas
+  // khung bao của tấm chữ (cùng công thức với tam) — dùng để tấm mới THAY tấm cũ chồng lên nó (không bao giờ 2 tấm đè nhau)
+  khungTam(s, x, y, px, sc, sao) {
+    const im = REN.chuAnh(s, '#ffffff', px), hh = px * 2.1 * sc, bw = sao ? hh * 0.95 : 0, w = Math.min(W - 8, (im.tw + px * 1.6) * sc + bw), cx = clamp(x, w / 2 + 4, W - w / 2 - 4);
+    return [cx - w / 2 - (sao ? hh * 0.2 : 0), y - hh * 0.72, Math.max(cx + w / 2, cx - w / 2 + hh * 1.15), y + hh * 0.63];
+  },
   tam(ctx, s, x, y, px, mau, al, sc, sao) {
     const a = this.img('nhan_kn'), im = REN.chuAnh(s, mau, px);
     const hh = px * 2.1 * sc, bw = sao ? hh * 0.95 : 0, w = Math.min(W - 8, (im.tw + px * 1.6) * sc + bw), cx = clamp(x, w / 2 + 4, W - w / 2 - 4);
@@ -119,14 +124,31 @@ const KG = {
   // ---------- kết quả ghép: tấm tên + số sao to trên ô, ~1 s ----------
   hien(B, o) {
     const T = B.t[o]; if (!T) return;
-    this.lo = this.lo.filter(l => l.o !== o);
+    this.lo = this.lo.filter(l => !(l.B === B && l.o === o));
     this.lo.push({ B, o, T, t0: performance.now() });
     if (this.lo.length > 4) this.lo.shift();
+    this.boChong();
+  },
+  // ghép 2 ô cạnh nhau liên tiếp (3×: cách nhau vài chục ms) → tấm tên cũ bị tấm mới đè: tấm MỚI thay luôn tấm cũ chồng lên nó
+  // (tính theo khung lớn nhất lúc phóng 1.25 → không đè cả lúc nảy). Mọi chế độ: SOLO / CO-OP / PVP / ONLINE dùng chung KG.
+  khungLo(l) {
+    const c = l.B.o[l.o], C = Math.min(l.B.cw, l.B.ch), r = G.rosterMap[l.T.id];
+    return this.khungTam(r ? r.ten : l.T.id, c.x, c.y + C * 0.36, 12, 1.25, l.T.sao);
+  },
+  boChong() {
+    const giu = [];
+    for (let i = this.lo.length - 1; i >= 0; i--) {
+      const l = this.lo[i]; let k; try { k = this.khungLo(l); } catch (e) { giu.push(l); continue; }
+      if (giu.some(g => g._k && k[0] < g._k[2] && g._k[0] < k[2] && k[1] < g._k[3] && g._k[1] < k[3])) continue;
+      l._k = k; giu.push(l);
+    }
+    this.lo = giu.reverse();
   },
   veLo(ctx) {
     if (!this.lo.length) return;
     const now = performance.now();
     this.lo = this.lo.filter(l => now - l.t0 < this.LO_S * 1000 && l.B.t[l.o] === l.T && G.ban.includes(l.B));
+    if (this.lo.length > 1) this.boChong();
     for (const l of this.lo) {
       const u = (now - l.t0) / 1000, c = l.B.o[l.o], C = Math.min(l.B.cw, l.B.ch), r = G.rosterMap[l.T.id];
       const sc = u < 0.12 ? 1.25 - 0.25 * (u / 0.12) : 1, al = u < 0.08 ? u / 0.08 : u > this.LO_S - 0.25 ? (this.LO_S - u) / 0.25 : 1;

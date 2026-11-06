@@ -65,7 +65,9 @@
         const n = im.__tvf || im.__n;
         if (n) {
           if (im.__tvf || /^tb_|^prism_seg/.test(n)) Q.veTam.push(n);
-          if (/vong|ring/.test(n) && !/^loi_/.test(n) && arguments.length >= 5 && this.globalAlpha > 0.25) {
+          // h2_vong_xam = khung tròn của BIỂU TƯỢNG (kỹ năng khi ghép nổi trên ô — hieuung.js 'kh'), không phải vòng hiệu ứng: trùng tâm
+          // với chớp đỏ triệu hồi ở ô NGAY TRÊN là tình cờ hình học (ngâm 06/11 s50 PVP) → không xét
+          if (/vong|ring/.test(n) && !/^loi_|^h2_vong_xam$/.test(n) && arguments.length >= 5 && this.globalAlpha > 0.25) {
             const k = arguments.length >= 9 ? 5 : 1, w = arguments[k + 2], h = arguments[k + 3];
             if (w > 30) { const m = this.getTransform(), cx = arguments[k] + w / 2, cy = arguments[k + 1] + h / 2; Q.vong.push([n, m.a * cx + m.c * cy + m.e, m.b * cx + m.d * cy + m.f, Math.hypot(m.a, m.b) * w]); }
           }
