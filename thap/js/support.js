@@ -6,10 +6,10 @@
 const pct = (v) => Math.round(v * 100);
 // icon: ảnh biểu tượng · mau: màu đặc trưng · link: ảnh dây · ke: tác dụng lên 4 ô kề · den: đích đặc biệt · chu(T): nhãn
 const SUP = {
-  radar:    { icon: 'sup_radar',   mau: '#ffb43a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc'))) + '% FIRE RATE' },
-  chimang:  { icon: 'sup_chimang', mau: '#ff5a64', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(Math.min(SKILLS.chimang.them(T), HOTRO.tran(T, 'crit'))) + '% CRIT' },
+  radar:    { icon: 'sup_radar',   mau: '#ffb43a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'toc', SKILLS.radar.them(T))) + '% FIRE RATE' },
+  chimang:  { icon: 'sup_chimang', mau: '#ff5a64', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'crit', SKILLS.chimang.them(T))) + '% CRIT' },
   lanhgia:  { icon: 'sup_lanhgia', mau: '#6fe0ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'cham', SKILLS.lanhgia.cham(T))) + '% SLOW' },
-  khuech:   { icon: 'sup_khuech',  mau: '#ff9a3a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% / HIT ×' + SKILLS.khuech.max(T) + ' (MAX +' + pct(HOTRO.tran(T, 'dmg')) + '%)' },
+  khuech:   { icon: 'sup_khuech',  mau: '#ff9a3a', link: 'sup_link_vang', ke: true, chu: (T) => '+' + (SKILLS.khuech.buoc(T) * 100).toFixed(1) + '% / HIT ×' + SKILLS.khuech.max(T) + ' (MAX +' + pct(HOTRO.tran(T, 'amp')) + '%)' },
   tuthan:   { icon: 'sup_tuthan',  mau: '#c77dff', link: 'sup_link',      ke: true, chu: (T) => (SKILLS.tuthan.tile(T) * 100).toFixed(1) + '% INSTANT KILL' },
   mana:     { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => '+' + SKILLS.mana.luong(T) + ' MANA / ' + SKILLS.mana.ky(T) + 's' },
   nhanmana: { icon: 'sup_mana',    mau: '#c890ff', link: 'sup_link', den: 'mana', chu: (T) => 'MERGE: +' + SKILLS.nhanmana.luong(T.sao, G.ban[T.ban]) + ' MANA' },
@@ -17,15 +17,15 @@ const SUP = {
   khien:    { icon: 'sup_khien',   mau: '#5fb8ff', link: 'sup_link', ke: true, chu: (T) => 'SHIELD / ' + SKILLS.khien.ky(T) + 's' },
   taylo:    { icon: 'sup_taylo',   mau: '#4bffb0', link: 'sup_link', ke: true, chu: (T) => 'CLEANSE ×' + SKILLS.taylo.so(T) + ' / ' + SKILLS.taylo.ky(T) + 's' },
   // đợt vai trò: ụ chuyển sang HỖ TRỢ (icon có sẵn theo loại buff)
-  phagiap:  { icon: 'sup_khuech',  mau: '#d9a8ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(Math.min(SKILLS.phagiap.k(T), HOTRO.tran(T, 'dmg'))) + '% VS EXPOSED' },
+  phagiap:  { icon: 'sup_khuech',  mau: '#d9a8ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'lo', SKILLS.phagiap.k(T))) + '% VS EXPOSED' },
   bua:      { icon: 'sup_chimang', mau: '#ffd080', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'cdmg', SKILLS.bua.cd(T))) + '% CRIT DMG' },
   tron:     { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.tron.them(T)) + '% FIRE RATE' },
-  nangsao:  { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.nangsao.them(T)) + '% LOW-STAR RATE' },
-  hasao:    { icon: 'sup_khuech',  mau: '#ff4b3e', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(Math.min(HOTRO.tran(T, 'dmg'), SKILLS.hasao.k(T))) + '% DAMAGE' },
+  nangsao:  { icon: 'sup_radar',   mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.nangsao.gt(T)) + '% FIRE RATE' },
+  hasao:    { icon: 'sup_khuech',  mau: '#ff4b3e', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'dmg', SKILLS.hasao.k(T))) + '% DAMAGE' },
   guongcong:{ icon: 'sup_khien',   mau: '#bff6ff', link: 'sup_link',      ke: true, chu: (T) => pct(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T))) + '% RESIST' },
   dongbo:   { icon: 'sup_khuech',  mau: '#ffe46b', link: 'sup_link_vang', ke: true, chu: (T) => '+' + pct(SKILLS.dongbo.v(T)) + '% SAME-STAR' },
-  cauvong:  { icon: 'sup_khuech',  mau: '#ff6ad5', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(Math.min(HOTRO.tran(T, 'dmg'), SKILLS.cauvong.k(T))) + '% VS RAINBOW' },
-  lophanung:{ icon: 'sup_lanhgia', mau: '#9fe6ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(Math.min(HOTRO.tran(T, 'dmg'), SKILLS.lophanung.k(T))) + '% VS SLOWED' },
+  cauvong:  { icon: 'sup_khuech',  mau: '#ff6ad5', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'vet', SKILLS.cauvong.k(T))) + '% VS RAINBOW' },
+  lophanung:{ icon: 'sup_lanhgia', mau: '#9fe6ff', link: 'sup_link',      ke: true, chu: (T) => '+' + pct(HOTRO.hd(T, 'lanh', SKILLS.lophanung.k(T))) + '% VS SLOWED' },
 };
 const laHoTro = (T) => !!(T && SUP[T.id] && SKILLS[T.id]);
 

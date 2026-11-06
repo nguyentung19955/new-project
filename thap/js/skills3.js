@@ -400,15 +400,17 @@ HU.pandora = { // vòng quay 6 biểu tượng trên ô ụ vừa ghép (0.8 s, 
 // =====================================================================================================
 SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô CHÉO (không N/E/S/W): +8% sát thương (đường cong HOTRO.K); đủ 4 ô chéo → CỘNG HƯỞNG ×1.5 (7★: tốc bắn chéo ×1.5)
   vai: 'ht', dmg: 0, toc: 0,
-  goc: (T) => 0.08 * HOTRO.k(T),
-  heSo: () => 1.5,
+  goc: (T) => 0.07 * HOTRO.k(T), // 0.08 → 0.07: cộng hưởng nay có ở cả ô mép (BAO-CAO gioi-han §4 mục 8)
+  // CỘNG HƯỞNG khi MỌI ô chéo hiện có (≥2) đều có ụ: ô mép (2 ô chéo) ×1.3, đủ 4 ô chéo ×1.5 · +10% trần sát thương riêng cho ô nhận
+  heSo(T) { return oCheo(T.o).length >= 4 ? 1.5 : 1.3; },
   them(T) { return this.goc(T) * (this.du(T) ? this.heSo(T) : 1); },
-  du(T) { const B = G.ban[T.ban]; if (!B) return false; const ds = oCheo(T.o); return ds.length === 4 && ds.every(o => B.t[o] && !B.t[o].st.da); },
+  du(T) { const B = G.ban[T.ban]; if (!B) return false; const ds = oCheo(T.o); return ds.length >= 2 && ds.every(o => B.t[o] && !B.t[o].st.da); },
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
-  tamChu: '4 DIAGONAL cells only (not N/E/S/W)',
+  tamChu: 'DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), HOTRO.tran(T, 'dmg')) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > HOTRO.tran(T, 'dmg') ? ' (damage cap)' : '') + ' to the 4 DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/4 filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : ' · fill all 4 (middle row) for RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
-  hoTro(G, T, N, ra) { ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && this.du(T) ? 1.5 : 1); }, // 7★ GRAND RESONANCE: đủ 4 ô → tốc bắn ×1.5
+  tranR: (T) => HOTRO.tran(T, 'dmg') + (SKILLS.luoicheo.du(T) ? 0.1 : 0),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), SKILLS.luoicheo.tranR(T)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > SKILLS.luoicheo.tranR(T) ? ' (damage cap)' : '') + ' to the DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/' + oCheo(T.o).length + ' filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) + ' (damage cap +10%)' : oCheo(T.o).length >= 2 ? ' · fill every diagonal cell for RESONANCE (edge ×1.3, all 4 ×1.5)' : ' · a corner has only 1 diagonal cell: no RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  hoTro(G, T, N, ra) { const du = this.du(T); ra.dmg = this.them(T); if (du) ra.capRes = 0.1; if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && du ? 1.5 : 1); }, // 7★ GRAND RESONANCE: cộng hưởng → tốc bắn ×1.5
   gocDau: (T, t) => 0, /* VFX P3: bỏ lắc đầu */ // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
     T.nhip = (T.nhip || 0) + dt / (T.gd === 3 ? 1.2 : 2.4);
@@ -545,7 +547,7 @@ themHo('trap', 4, 'ngaithoigian', 'everything slows with age + REWIND (active)')
 
 Object.assign(MOC_RIENG, { // (luoicheo: mốc 5★/7★ ở phattrien.js — 'Diagonal +15% fire rate' cũ sai số, code = +5%×HOTRO.K)
   cuuvi: { 5: ['TWIN TAILS', '20% of kills grow 2 tails'], 7: ['NINE-TAIL', 'White-blue foxfires blast 40 px; restarts at 3 tails'] },
-  hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.72/s'] },
+  hydra: { 7: ['FUSED HEAD', 'Barrels fuse: ×6 piercing beam, 0.6/s'] }, // = nhịp thật capNhat (0.6/s × tốc bắn) — BAO-CAO §3
   pandora: { /* 3★ = mốc chung QUICK HANDS +20% (bản riêng cũ cùng chữ chặn mốc chung → không áp) */ 5: ['LUCKY SPIN', 'Merging 5★s rolls twice, keeps the better'], 7: ['OPEN VAULT', 'Merging 6★s (into 7★) fires 2 effects'] },
   ngaithoigian: { 3: ['REWIND', 'Unlocks the active skill (tap when full; auto-fires if left full)'], 7: ['TIME RESTORED', 'Rewind restores 1 heart once (Co-op: 1 shared heart; also saves 1 leak)'] },
 });

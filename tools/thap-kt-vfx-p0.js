@@ -72,7 +72,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
   });
   ok(!r.loi.length && r.vuot > 0, 'hỗ trợ: số buff hiển thị = số thật sau trần (' + r.vuot + ' ca đã kẹp: Armor Breaker, Crit Antenna, Reaper, Cryo…)', r.loi.slice(0, 12).join(' ; '));
   r = await p.evaluate(() => { const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, 'radar', 7, 7)); B.t[7] = T; return { od: SKILLS.radar.odThat(T), them: SKILLS.radar.them(T), tran: HOTRO.tran(T, 'toc'), mo: SKILLS.radar.mo(T) }; });
-  ok(r.od <= 0.25 && Math.abs(r.them + r.od - Math.min(r.tran, r.them + 0.25)) < 1e-9 && r.mo.includes('+' + Math.round(r.od * 100) + '% for 2s'), 'Radar 7★ OVERDRIVE: hiện +' + Math.round(r.od * 100) + '% thật (trần tốc ' + Math.round(r.tran * 100) + '%)', r.mo);
+  ok(r.od <= 0.25 && Math.abs(r.them + r.od - Math.max(r.them, Math.min(r.tran + 0.15, r.them + 0.25))) < 1e-9 && r.mo.includes('+' + Math.round(r.od * 100) + '% for 2s'), 'Radar 7★ OVERDRIVE: hiện +' + Math.round(r.od * 100) + '% thật (trần tốc ' + Math.round(r.tran * 100) + '% +15% lúc OVERDRIVE)', r.mo);
   r = await p.evaluate(() => { // phép thật: Armor Breaker 7★ + ụ kề → N.ht.lo = số hiển thị
     const B = G.ban[0]; for (let i = 0; i < 15; i++) B.t[i] = null;
     const T = sinhU(taoU(B, 'phagiap', 7, 7)), N = sinhU(taoU(B, 'canon', 1, 6)); B.t[7] = T; B.t[6] = N;
@@ -107,7 +107,7 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     }
     return out;
   });
-  ok(r.bomhen[1] > r.bomhen[0] && r.tienhoa[1] < r.tienhoa[0] && r.haoquang[1] > r.haoquang[0] && r.loren[1] > r.loren[0] && r.khoisinh[1] < r.khoisinh[0] && Math.abs(r.bomhen[0] - 0.10) < 1e-9 && Math.abs(r.haoquang[0] - 3.5) < 1e-9,
+  ok(r.bomhen[1] > r.bomhen[0] && r.tienhoa[1] < r.tienhoa[0] && r.haoquang[1] > r.haoquang[0] && r.loren[1] > r.loren[0] && r.khoisinh[1] < r.khoisinh[0] && Math.abs(r.bomhen[0] - 0.11) < 1e-9 /* 10% + 0.5%/★ trên 1★ (3★) — BAO-CAO gioi-han Mức 3 */ && Math.abs(r.haoquang[0] - 3.5) < 1e-9,
     'cấp thẻ nâng SỐ KỸ NĂNG THẬT: Time Bomb suy yếu, Evolver đếm, Holy Halo rào, Scrap Forge %/lò, Genesis chu kỳ (cấp đầu = như cũ)', JSON.stringify(r));
 
   // 4. 7★ ghép / mốc sao
@@ -155,11 +155,11 @@ const ok = (dk, ten, chi) => { if (dk) console.log('  ✓ ' + ten); else { conso
     const B = G.ban[0], S = (id, s) => { for (let i = 0; i < 15; i++) B.t[i] = null; const T = sinhU(taoU(B, id, s, 7)); B.t[7] = T; return T; };
     const ra = SKILLS.radar.mo(S('radar', 7)), loi = [];
     if ((ra.match(/OVERDRIVE/g) || []).length !== 1 || /\+25% for 2s/.test(ra)) loi.push('Radar 7★: ' + ra);
-    { const T = S('guongcong', 1); if (Math.abs(HOTRO.tran(T, 'khang') - 0.35 * (1 + HOTRO.capLv(T))) > 1e-9) loi.push('HOTRO.tran khang ≠ 35% × cấp thẻ'); }
-    for (let s = 1; s <= 7; s++) { const T = S('guongcong', s), that = Math.round(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T)) * 100) + '%'; if (!SKILLS.guongcong.mo(T).includes('control ' + that) || !SUP.guongcong.chu(T).startsWith(that)) loi.push('Mirror Gate ' + s + '★ không ghi ' + that); }
+    if (Math.abs(HOTRO.tran(S('guongcong', 1), 'khang') - 0.35 * HOTRO.CAP_BAC.vang * HOTRO.capThe(S('guongcong', 1))) > 1e-9) loi.push('HOTRO.tran khang ≠ 35% × bậc × thẻ');
+    for (let s = 1; s <= 7; s++) { const T = S('guongcong', s), that = Math.round(Math.min(HOTRO.tran(T, 'khang'), SKILLS.guongcong.khang(T)) * 100) + '%'; if (!SKILLS.guongcong.mo(T).includes('control ' + that) || !SUP.guongcong.chu(T).startsWith(that)) loi.push('Mirror Gate ' + s + '★ không ghi ' + that); }
     return loi;
   });
-  ok(!r.length, 'Radar 7★ một câu OVERDRIVE thật · Mirror Gate ghi đúng trần kháng 35% × cấp thẻ (code HOTRO.khang)', r.join(' ; '));
+  ok(!r.length, 'Radar 7★ một câu OVERDRIVE thật · Mirror Gate ghi đúng trần kháng 35% × bậc × thẻ (code HOTRO.khang)', r.join(' ; '));
 
   // 9. thanh soi ụ / bảng thông tin (buff.js hoTroTT): số 'hiện tại' ≤ trần thật, nhãn đúng thứ được buff
   r = await p.evaluate(() => {

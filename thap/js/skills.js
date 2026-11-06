@@ -125,7 +125,7 @@ SKILLS.lien = { // Liên Thanh (Esch): bắn rất nhanh; sao tăng tốc bắn
 SKILLS.bang = { // Băng (Liza) — ĐẶC BIỆT (đợt vai trò): định kỳ ĐÓNG BĂNG quái đầu; không gây sát thương; trùm chỉ 0.6 s; không đóng băng nối tiếp (miễn 3 s)
   vai: 'db', dmg: 0, toc: 0, napMau: '#bff4ff',
   ky: (T) => (ms(T, 5) ? 4.5 : 6),          // 5★ QUICK FROST
-  dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s
+  dai: (T) => Math.round(((ms(T, 3) ? 0.5 : 0) + knThe(G.ban[T.ban], 'bang')) * 10) / 10, // 3★ LONG FREEZE · cấp thẻ: 2 s → 3 s (+ power-up KY_NANG_CAP.pu)
   so: (T) => (ms(T, 7) ? 2 : 1),            // 7★ DOUBLE FREEZE
   mo: (T) => 'Every ' + SKILLS.bang.ky(T) + 's freezes ' + (SKILLS.bang.so(T) > 1 ? '2 lead enemies ' : 'the lead enemy ') + SKILLS.bang.dai(T) + 's (big ×0.6; bosses only 50% slow 0.6s) + 30% chill (bosses 15%) · 3s freeze immunity · Frost Flyers immune',
   ung: (G, B) => dsMucTieu(B).filter(E => !E.chet && !E.d.khangCham && !(E.bangMien > G.t)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s)),
@@ -155,7 +155,8 @@ SKILLS.doc = { // Độc (Unknown) — ĐẶC BIỆT (đợt vai trò): ĐÁNH D
   vai: 'db', dmg: 0, toc: 0, napMau: '#9dff5a',
   K: 0.12, ky: 2.5,
   so: (T) => (ms(T, 3) ? 2 : 1), // 3★ TWIN MARK
-  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +' + +knThe(G.ban[T.ban], 'doc').toFixed(1) + '% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
+  k: (T) => knThe(G.ban[T.ban], 'doc') / 100, // cấp thẻ + power-up (KY_NANG_CAP.pu)
+  mo: (T) => 'Every 2.5s marks ' + (SKILLS.doc.so(T) > 1 ? '2 lead enemies' : 'the lead enemy') + ' 5s: +' + +(SKILLS.doc.k(T) * 100).toFixed(1) + '% damage taken from all turrets' + (ms(T, 5) ? ' · mark spreads on death' : '') + (ms(T, 7) ? ' · marked slowed 15%' : ''),
   capNhat(G, B, T, dt) {
     const ds = dsMucTieu(B).filter(E => !E.chet && !(E.vmT > 1.2)).sort((a, b) => (G.duong[a.p].len - a.s) - (G.duong[b.p].len - b.s));
     xoayDau(T, ds[0] || quaiDau(B), dt);
@@ -176,7 +177,7 @@ function biDoc(E) { return !!E && (E.docT > 0 || E.vmT > 0); }
 function danhDauDoc(E, T, B) {
   if (E.chet) return;
   if (!(E.vmT > 1.3)) FX.chu1(E.x, E.y - 24, 'MARKED', '#9dff5a', 10);
-  E.vmT = 5; E.vmK = knThe(B, 'doc') / 100; E.yeu = Math.max(E.yeu, 5);
+  E.vmT = 5; E.vmK = T && T.id === 'doc' ? SKILLS.doc.k(T) : knThe(B, 'doc') / 100; E.yeu = Math.max(E.yeu, 5);
   if (ms(T, 5)) E.vmLay = 1;                                                                          // 5★ CONTAGION
   if (ms(T, 7) && !E.d.khangCham) { E.cham = Math.max(E.cham, 0.15); E.chamT = Math.max(E.chamT, 5); } // 7★ NEUROTOXIN
 }
@@ -229,7 +230,7 @@ SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳn
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.12 * HOTRO.k(T),
   mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s (up to the ' + +(HOTRO.tran(T, 'toc') * 100).toFixed(1) + '% fire-rate cap)' : ''),
-  hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — tính TRONG trần tốc 45%
+  hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (T.odCon > 0) ra.capOD = 0.15; if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — trần tốc +15% trong lúc OVERDRIVE (BAO-CAO gioi-han Mức 3)
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều
     T.nap += dt / 2.2;

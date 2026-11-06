@@ -291,7 +291,7 @@ function main() {
   }
   if (chay('chimang')) {
     const v = [1, 2, 3, 4, 5, 6, 7].map(s => R(ctx, `(() => { KT.moi(); return SKILLS.chimang.them(KT.dat(2, 'chimang', ${s})); })()`));
-    ghi('chimang', '+crit chance N/E/S/W: 6% at 1★ → 20% at 7★', v.map(x => Math.round(x * 100)).join('/'), gan(v[0], 0.06) && gan(v[6], 0.2));
+    ghi('chimang', '+crit chance N/E/S/W: 6.75% at 1★ → 22.5% at 7★ (table ×0.75, 07/11)', v.map(x => Math.round(x * 100)).join('/'), gan(v[0], 0.0675) && gan(v[6], 0.225));
     const moc = R(ctx, `mocCua('chimang').map(m => m.mo)`);
     const kh = moc[0].includes(Math.round(v[2] * 100) + '%') && moc[1].includes(Math.round(v[4] * 100) + '%');
     ghi('chimang', 'milestone text 3★/5★ = real crit value', moc.join(' | '), kh, 'real 3★ ' + Math.round(v[2] * 100) + '%, 5★ ' + Math.round(v[4] * 100) + '%');
@@ -444,13 +444,13 @@ function main() {
     const l = R(ctx, 'G._l');
     ghi('phagiap', 'every 3s EXPOSES the lead + the toughest enemy for 6s', l.map(x => f(x, 1)).join(' / ') + ' s', l[0] > 5.8 && l[1] > 5.8 && l[2] === 0);
     R(ctx, `capNhatBan(G.ban[0], 0); G._h = [G.ban[0].t[2].ht && G.ban[0].t[2].ht.lo, G.ban[0].t[6].ht];`);
-    ghi('phagiap', 'Attack neighbours +22% vs exposed (Frost neighbour gets nothing)', p(R(ctx, 'G._h[0]')) + ' / ' + R(ctx, 'G._h[1]'), gan(R(ctx, 'G._h[0]'), 0.22) && !R(ctx, 'G._h[1]'));
+    ghi('phagiap', 'Attack neighbours +13% vs exposed (Frost neighbour gets nothing)', p(R(ctx, 'G._h[0]')) + ' / ' + R(ctx, 'G._h[1]'), gan(R(ctx, 'G._h[0]'), 0.13) && !R(ctx, 'G._h[1]'));
     const so = R(ctx, `[SKILLS.phagiap.so({ sao: 1 }), SKILLS.phagiap.so({ sao: 5 })]`);
     ghi('phagiap', '5★ DOUBLE EXPOSE: 3 enemies', so.join('/'), so.join() === '2,3');
     R(ctx, `KT.moi(); const T = KT.dat(7, 'phagiap', 7); T.nap = 1; const A = KT.dung(KT.quai('bo', 300, 3000)); KT.buoc(0.1); G._v = HOTRO.vuln(A);`);
     ghi('phagiap', '7★ SHATTERED GUARD: exposed take +8% from all', p(R(ctx, 'G._v')), gan(R(ctx, 'G._v'), 0.08));
     R(ctx, `KT.moi(); KT.dat(2, 'sungluc', 1); const T = KT.dat(7, 'phagiap', 3); T.nap = 1; KT.quai('bo', 30, 9e4); KT.buoc(1); KT.log(1); KT.buoc(10); G._k = G._log.map(x => x.r / x.vao); G._k = [Math.min(...G._k), Math.max(...G._k)];`);
-    ghi('phagiap', 'measured: Revolver hit on the exposed lead next to Breaker 3★ = +31.9%', 'hit ×' + R(ctx, 'G._k').map(x => f(x, 3)).join(' / ×'), gan(R(ctx, 'G._k[0]'), 1.319));
+    ghi('phagiap', 'measured: Revolver hit on the exposed lead next to Breaker 3★ = +18.9%', 'hit ×' + R(ctx, 'G._k').map(x => f(x, 3)).join(' / ×'), gan(R(ctx, 'G._k[0]'), 1.1885));
   }
   if (chay('bua')) {
     const v = SAO.map(s => R(ctx, `(() => { KT.moi(); const T = KT.dat(2, 'bua', ${s}); return [SKILLS.bua.crit(T), SKILLS.bua.cd(T), SKILLS.bua.soc(T)]; })()`));

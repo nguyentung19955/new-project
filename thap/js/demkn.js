@@ -13,7 +13,7 @@ const DEMKN = {
     combo(T, B) { const n = B.combo || 0; return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 20 } : null; },
     lienket(T, B) { const n = SKILLS.lienket.nhom(B, T); return n >= 2 ? { m: [{ ic: 'ic_dmg', s: '×' + n }] } : null; },
     dongbo(T, B) { const n = SKILLS.dongbo.dem(B, T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: '×' + n }], sang: n >= 3 } : null; },
-    luoicheo(T) { const n = SKILLS.luoicheo.dem(T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/4' }], sang: n >= 4 } : null; },
+    luoicheo(T) { const n = SKILLS.luoicheo.dem(T); return n > 0 ? { m: [{ ic: 'ic_dmg', s: n + '/' + oCheo(T.o).length }], sang: SKILLS.luoicheo.du(T) } : null; }, // ô mép: 2/2 = cộng hưởng ×1.3
     railgun(T, B) {
       const b = SKILLS.railgun.bingo(B, T), m = [];
       if (b.ngang >= 2) m.push({ ic: 'ic_dmg', s: b.ngang + '/5' }); // tiến độ tới hàng ĐẦY Railgun (chỉ hàng đầy mới có thưởng)

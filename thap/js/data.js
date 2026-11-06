@@ -211,24 +211,24 @@ const KY_NANG_CAP = {
   haoquang: { ten: 'Barrier', base: 3, buoc: 0.125, max: 3.5, dv: 's', pu: 0.15 },             // thời gian rào bất tử (trước mốc sao)
   loren: { ten: 'Per stack', base: 4, buoc: 0.25, max: 5.5, dv: '%', tien: '+', pu: 0.3 },      // +% sát thương mỗi cộng dồn lò (trần +60% / ụ nhận giữ nguyên)
   khoisinh: { ten: 'Raise time', base: 100, buoc: -2, max: 92, dv: '%', pu: -3 },            // chu kỳ +1★ × giá trị/100
-  // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15
+  // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15 · 07/11: hạ 1★ của ụ chạm trần sớm (BAO-CAO gioi-han §4 mục 2)
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
-  phagiap: { ten: 'Exposed', base: 22, buoc: 0.6, max: 30.4, dv: '%', tien: '+', ht: 1 },
+  phagiap: { ten: 'Exposed', base: 13, buoc: 0.355, max: 17.964, dv: '%', tien: '+', ht: 1 },
   bua: { ten: 'Crit dmg', base: 18, buoc: 0.54, max: 25.56, dv: '%', tien: '+', ht: 1 },
-  chimang: { ten: 'Crit buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
+  chimang: { ten: 'Crit buff', base: 6.75, buoc: 0.225, max: 9.45, dv: '%', tien: '+', ht: 1 },
   tron: { ten: 'Rate buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
   lanhgia: { ten: 'Slow', base: 12, buoc: 0.375, max: 16.5, dv: '%', ht: 1 },
-  khuech: { ten: 'Per hit', base: 13.5, buoc: 0.45, max: 18.9, dv: '%', tien: '+', ht: 1 },
+  khuech: { ten: 'Per hit', base: 6.75, buoc: 0.225, max: 9.45, dv: '%', tien: '+', ht: 1 },
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
-  nangsao: { ten: 'Rate buff', base: 24, buoc: 1.2, max: 34.8, dv: '%', tien: '+', ht: 1 },
-  tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
+  nangsao: { ten: 'Rate buff', base: 10, buoc: 0.5, max: 14.5, dv: '%', tien: '+', ht: 1 },
+  tuthan: { ten: 'Execute', base: 12, buoc: 0.6, max: 17.4, dv: '%', ht: 1 },
+  thaukinh: { ten: 'Crit dmg', base: 36, buoc: 1.548, max: 49.932, dv: '%', tien: '+', ht: 1 },
   dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
   hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
   cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
-  luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 25.99, dv: '%', tien: '+', ht: 1 },
-  guongcong: { ten: 'Resist', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
-  lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
+  luoicheo: { ten: 'Dmg buff', base: 16.1, buoc: 1.107, max: 22.741, dv: '%', tien: '+', ht: 1 },
+  guongcong: { ten: 'Resist', base: 18.4, buoc: 1.227, max: 25.76, dv: '%', ht: 1 },
+  lophanung: { ten: 'Slowed dmg', base: 33.6, buoc: 3.36, max: 47.04, dv: '%', tien: '+', ht: 1 },
 };
 // FX = VÙNG TRÚNG (REVIEW-VFX-93 X · PHASE P0): phần ảnh THẤY ĐƯỢC chiếm bao nhiêu nửa khung (đo bằng tools/thap-kt-vfx-p0.js trên ảnh thật,
 //  điểm sáng ≥ 60, phân vị 97 tính từ tâm khung) → cỡ vẽ = vùng trúng / tỉ lệ này. Đổi ảnh → kiểm báo lệch → cập nhật số ở đây.
@@ -243,6 +243,6 @@ function knPU(B, id) { return Math.max(0, (((B && B.lv && B.lv[id]) || 1) | 0) -
 function knThe(B, id) { const e = KY_NANG_CAP[id]; if (!e) return null; const v = knGt(e, knCap(B, id)); return e.pu && B ? Math.round((v + e.pu * knPU(B, id)) * 1000) / 1000 : v; }
 // hệ số so với cấp đầu (1 ở cấp đầu)
 function knHe(B, id) { const e = KY_NANG_CAP[id]; return e ? knGt(e, knCap(B, id)) / e.base : 1; }
-// bản sao Copycat: tỉ lệ sức mạnh (0.5 ở cấp đầu) — dùng cấp thẻ COPYCAT của bàn đó
-function heSaoChep(B) { return (knThe(B, 'saochep') || 50) / 100; }
+// bản sao Copycat: tỉ lệ sức mạnh (0.7 ở cấp đầu → 0.94 thẻ max) — dùng cấp thẻ COPYCAT của bàn đó
+function heSaoChep(B) { return (knThe(B, 'saochep') || 70) / 100; } // fallback = base 70 (KY_NANG_CAP.saochep)
 function hsLv(B, id) { return (1 + LUAT.nangPct * (((B && B.lv && B.lv[id]) || 1) - 1)) * hsThe(B, id); }

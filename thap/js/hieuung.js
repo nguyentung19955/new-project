@@ -406,8 +406,8 @@ const VX = {
     ctx.restore();
   },
   // ụ đang được chọn (bảng thông tin mở): hiện liên kết của nó lâu dài (Chain Link, Sync Cannon, Railgun)
-  // Leviathan: vòng xanh mờ = tầm NUỐT thật (120 px quanh tâm ụ, như SKILLS.leviathan.capNhat) khi chọn / đang kéo → biết ô nào đủ sát đường
-  TAM_NUOT: { leviathan: 120 },
+  // Leviathan: vòng xanh mờ = tầm NUỐT thật (160 px quanh tâm ụ, như SKILLS.leviathan.capNhat) khi chọn / đang kéo → biết ô nào đủ sát đường
+  TAM_NUOT: { leviathan: 160 }, // = SKILLS.leviathan.TAM
   veTamNuot(ctx) {
     const keo = UI.keo, ng = typeof KG !== 'undefined' ? KG.nguon() : (keo && keo.dang ? keo.T : null);
     let T = ng && this.TAM_NUOT[ng.id] ? ng : null, x, y;

@@ -183,6 +183,7 @@ function ghepDacBiet(a, b) {
   if (sb && sb.ghepDB && sb.ghepDB.haiChieu && sb.ghepDB.hopLe(b, a)) return { sk: sb, a: b, b: a, dao: true };
   return null;
 }
+const GIU_CONG_DON = { loren: ['lo'], hopbi: ['tuoi'], tienhoa: ['tuoi'] }; // cộng dồn giữ khi ghép cùng loại ra cùng loại
 // ghép a (kéo) vào b → ở ô b ra ụ NGẪU NHIÊN trong bộ bài, +1 sao (luật DCDW / Random Dice)
 function ghep(B, a, b, ep) {
   if (!ep && !hopLeGhep(a, b)) return null;
@@ -208,6 +209,12 @@ function ghep(B, a, b, ep) {
   for (const id of (daDa ? [] : new Set([a.id, b.id]))) { const sk = SKILLS[id]; if (sk && sk.ghep) { sk.ghep(G, B2, a, b, B2.t[b.o] || ra); kh.push(id); } }
   G._treNhan = 0;
   if (kh.length) VX.kichHoat(B2, b.o, kh);
+  // GHÉP 2 ụ CÙNG LOẠI ra ĐÚNG loại đó → giữ cộng dồn lớn nhất của 2 nguyên liệu (BAO-CAO gioi-han §4 mục 6): Scrap Forge (lò), Overclock (ép xung trên thân),
+  //   Mystery Box / Evolver (bộ đếm). Leviathan: VỰC SÂU lưu theo bàn (skills5.js). Ember Relay: session khác (Lửa Thập Tự).
+  if (!daDa && a.id === b.id && B2.t[b.o] === ra && ra.id === a.id) {
+    for (const k of (GIU_CONG_DON[ra.id] || [])) ra[k] = Math.max(a[k] || 0, b[k] || 0, ra[k] || 0);
+    if (a.epxung || b.epxung) ra.epxung = Math.max(a.epxung || 0, b.epxung || 0, ra.epxung || 0);
+  }
   const kq = B2.t[b.o] || ra;
   // (+1★ hiện bằng con dấu sao ảnh trong phát lại ghép — ghepfx.js)
   if (kq === ra) mocMoi(ra, b.sao, VX.TRE_LO + 0.12);
@@ -244,7 +251,7 @@ function dmgU(T) {
   let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
   d *= 1 + T.buf.dmg;
   if (T.aurora > 0) d *= 1 + knThe(B, 'mimic') / 100; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
-  if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (50% ở cấp đầu → 92% cấp 15, theo cấp thẻ Copycat)
+  if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (70% ở cấp đầu → 94% thẻ max, theo cấp thẻ Copycat)
   if (B.cuong > 0) d *= 2;
   if (G.che === 'pvp') d *= SKILLS.dongbo.heSoDoiThu(B); // Pháo Đồng Bộ (Dana) của đối thủ: −sát thương nhẹ
   d *= heSoMocDmg(T); // mốc sao chung 5★/7★ (phattrien.js)
