@@ -80,3 +80,21 @@ Ví dụ người dùng nêu: Mythic LV11 cần 1 bản + 9 000 vàng → vàng 
 - Mọi lần cộng/trừ vàng, ngọc đi qua `KT.cong(loai, so, nguon)` (nguồn: quest login achieve event wheel shop chest battle exchange; để dành **iap ad pass**); tổng theo nguồn ở `turret_kt.nguon`.
 - Chỗ để dành, đang ẩn: `KTC.goiNgoc` (thẻ GEM PACKS chỉ hiện khi có gói), `KTC.skPremium` (hàng premium của Event Pass).
 - **Số sẽ đổi khi có ngọc trả tiền**: giá Rương Vàng / Thần thoại, giá lượt quay, giới hạn 5 lượt/ngày, bảo hiểm Cổ đại 120, lợi tức ngọc nhiệm vụ (thường giảm khi có gói bán), thêm Season Pass premium. Phải giữ tỉ lệ công khai (nút i) — luật nhiều nước bắt buộc.
+
+## 7. Đối chiếu yêu cầu "đỏ phải cày" (session cân bằng 06/11, kiểm bằng `tools/thap-kt-shop.js`)
+
+Bản cửa hàng đầu đã làm theo `YEU-CAU-NGUOI-DUNG.md`; session này rà lại từng mục, **không đổi số** (đều đạt), chỉ thêm kiểm tự động để sau này không ai nới lỏng nhầm.
+
+| Yêu cầu | Trong game | Kiểm |
+|---|---|---|
+| Không Cổ đại bảo đảm ở nguồn miễn phí | điểm danh ngày 7 = Rương Vàng (0,2%/thẻ), quà Daily Specials, quay miễn phí (jackpot = Huyền thoại), nhiệm vụ, thành tựu: **0 Cổ đại** | ✓ quét bảng thưởng + 2 000 lượt quay miễn phí giả → 0 Cổ đại |
+| Tỉ lệ đỏ rất nhỏ | túi trận 0,2%/lượt · Rương Vàng 0,2%/thẻ · Rương Thường 0 | ✓ ≤ 0,5% |
+| Bảo hiểm dài | Cổ đại ≤ 120 Rương Vàng (= 60 000 ngọc ≈ 2,4 năm ngọc của người chơi đều) | ✓ ≥ 100 |
+| Rương Thần thoại rất đắt | 6 000 ngọc ≈ 88 ngày dành ngọc | ✓ ≥ 5 000 |
+| Daily Specials đỏ hiếm + đắt | ~1 ngày/tuần, 60 000 vàng (≈ 27 ngày vàng) | ✓ ≤ 1/7 ngày, ≥ 50 000 |
+| Vòng quay: đỏ nhỏ, chỉ lượt ngọc | 0,3%/lượt ngọc, 0 ở lượt miễn phí | ✓ |
+| Sự kiện tuần ≤ 1 bản đỏ ở cuối | chỉ mốc 10/10 (1 700 điểm ≈ 9–10 trận/ngày cả tuần) | ✓ |
+
+**Thời gian cho người chơi đều (5 trận/ngày):** ~0,06 bản Cổ đại/ngày (túi trận 0,05 + Rương Vàng ~0,007) → **~15–18 ngày / 1 bản đỏ bất kỳ**;
+1 thẻ đỏ cụ thể trong bộ bài cần 11 bản → **~1 năm tới MAX** (cày 10+ trận/ngày + quay ngọc + mốc cuối sự kiện: ~5–6 tháng).
+Thẻ vàng: ~4–5 tháng tới MAX. Thường → Sử thi: dễ hơn (đúng yêu cầu).

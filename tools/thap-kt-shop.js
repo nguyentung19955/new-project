@@ -43,6 +43,17 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     o.tong = Object.values(KTC.ruong).map(C => Math.round(Object.values(C.tiLe).reduce((s, v) => s + v, 0) * 1000) / 1000);
     o.vqF = Math.round(KT.vqTiLe(false).reduce((s, v) => s + v, 0) * 1000) / 1000; o.vqT = Math.round(KT.vqTiLe(true).reduce((s, v) => s + v, 0) * 1000) / 1000;
     o.vqDo = KT.vqTiLe(true)[7] * 0.3; o.thuongDo = KTC.ruong.thuong.tiLe.do;
+    // ---- 3b. "đỏ phải cày" (YEU-CAU-NGUOI-DUNG.md): không nguồn MIỄN PHÍ nào bảo đảm Cổ đại ----
+    const coDo = (x) => !!x && JSON.stringify(x).includes('"do"');
+    o.mpDo = { dn: KTC.dn.some(coDo), spFree: KTC.spFree.some(coDo), vqFree: KTC.vq.some(v => coDo(v.r)), tt: KTC.tt.some(t => coDo(t.r)),
+      nv: KTC.nv.some(q => coDo(q.r)) || coDo(KTC.nvBonus), dn7: KTC.dn[6].ruong === 'than' };
+    const skDo = KTC.sk.map(([, x], i) => coDo(x) ? i : -1).filter(i => i >= 0);
+    o.skDo = skDo.length <= 1 && (!skDo.length || (skDo[0] === KTC.sk.length - 1 && KTC.sk[skDo[0]][1].the.n <= 1));
+    o.tyDo = { vang: KTC.ruong.vang.tiLe.do, pityD: KTC.ruong.vang.pityD, than: KTC.ruong.than.gia.ngoc, sp: KTC.spGia.do, spNgay: KTC.spDoNgay, tui: (THE.tiLe.find(x => x[0] === 'do') || [0, 0])[1] };
+    // lượt quay miễn phí 2 000 lần (giả) → không bao giờ ra Cổ đại
+    { const sv2 = j(KT.s), sd2 = j(THEBAI.doc()); let dF = 0; const t0 = new Date(2031, 0, 1);
+      for (let i = 0; i < 2000; i++) { const dd = new Date(t0); dd.setDate(dd.getDate() + i); KT._bay = () => dd; const x = KT.vqQuay(false); if (x && coDo(x.r || x)) dF++; }
+      KT._bay = null; o.vqFreeDo = dF; KT.s = JSON.parse(sv2); THEBAI.d = JSON.parse(sd2); }
     // ---- 4. bảo hiểm + bảo đảm + tất định ----
     const d = THEBAI.doc(); d.ngoc = 1e9; d.vang = 1e9;
     const sv = j(KT.s), sd = j(d);
@@ -98,6 +109,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   ok(r.doNgay > 0.09 && r.doNgay < 0.2 && r.vangNgay > 0.75, 'ô Cổ đại ~1 ngày/tuần (' + (r.doNgay * 100).toFixed(1) + '%), ngày còn lại Huyền thoại (' + (r.vangNgay * 100).toFixed(0) + '%)');
   ok(r.tong.every(t => t === 100) && r.vqF === 100 && r.vqT === 100, 'tỉ lệ rương / vòng quay cộng đủ 100%', JSON.stringify([r.tong, r.vqF, r.vqT]));
   ok(r.vqDo <= 0.3 && r.thuongDo === 0 && r.thDo === 0, 'Cổ đại: vòng quay ngọc ' + r.vqDo.toFixed(3) + '% (≤0,3), rương Thường 0');
+  ok(!Object.values(r.mpDo).some(Boolean) && r.vqFreeDo === 0 && r.skDo, 'đỏ phải cày: điểm danh (ngày 7 = Rương Vàng), quà shop, quay miễn phí (' + r.vqFreeDo + '/2000 Cổ đại), nhiệm vụ, thành tựu không có Cổ đại; sự kiện ≤1 bản ở mốc cuối', JSON.stringify([r.mpDo, r.skDo]));
+  ok(r.tyDo.vang <= 0.5 && r.tyDo.pityD >= 100 && r.tyDo.than >= 5000 && r.tyDo.sp >= 50000 && r.tyDo.spNgay <= 1 / 7 && r.tyDo.tui <= 0.5, 'tỉ lệ đỏ nhỏ: Rương Vàng ' + r.tyDo.vang + '%/thẻ (≤0,5), bảo hiểm ' + r.tyDo.pityD + ' rương (≥100), Rương Thần thoại ' + r.tyDo.than + ' ngọc, ô Cổ đại ' + r.tyDo.sp + ' vàng ≤1 ngày/tuần, túi trận ' + r.tyDo.tui + '%', JSON.stringify(r.tyDo));
   ok(r.maxV <= 9 && r.maxD <= 119, 'bảo hiểm: khoảng trống dài nhất ' + r.maxV + ' rương không Huyền thoại (≤9), ' + r.maxD + ' không Cổ đại (≤119)');
   ok(r.itTim && r.than && r.tatDinh && r.khongDu, 'bảo đảm Rương Vàng ≥1 Sử thi, Thần thoại ≥1 Cổ đại + 2 Huyền thoại; mở tất định; thiếu ngọc không mở', JSON.stringify([r.itTim, r.than, r.tatDinh, r.khongDu]));
   ok(r.f1 && r.f2 && r.m1 && r.m2 && r.d1 && r.d2 && r.v1 && r.v2 && r.vTra === 5 && r.q1 && r.q2 && r.b0 && r.b1 && r.b2 && r.t1 && r.t2 && r.e1 && r.e2 && r.e3, 'không nhận 2 lần (quà shop, mua, điểm danh, quay miễn phí, 5 lượt ngọc, nhiệm vụ, thưởng đủ 3, thành tựu, mốc sự kiện)', JSON.stringify(r));
