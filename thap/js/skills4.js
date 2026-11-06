@@ -59,7 +59,7 @@ SKILLS.docton = {
     G.hu.push({ k: 'tiaTia', t: 0, song: 0.16, x0: x, y0: y, x1, y1, mau: '#ff3a4a' });
   },
   sangDau: (T) => (T.ace ? 0.12 : 0),
-  veThem(ctx, T, S, al, R) { if (!T.ace) return; ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.44, 1.4, '#ff3a4a', al * (0.55 + 0.2 * Math.sin(R.t * 5))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
+  veThem(ctx, T, S, al, R) { if (!T.ace || MOT_VONG) return; ctx.globalCompositeOperation = 'lighter'; PX.vong(ctx, 0, 0, S * 0.44, 1.4, '#ff3a4a', al * (0.55 + 0.2 * Math.sin(R.t * 5))); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; },
 };
 
 // =====================================================================================================
@@ -215,6 +215,7 @@ SKILLS.nhatthuc = {
   },
   sangDau: (T) => (T.ca > 0 ? 0.35 : T.gd === 3 ? 0.12 : 0),
   veThem(ctx, T, S, al, R) { // nửa vành ngày/đêm quanh bệ (tròn): sáng phía chế độ đang bật
+    if (MOT_VONG) return; // MỘT VÒNG (06/11): chỉ còn vòng xanh nạp chiêu quanh ụ — chế độ ngày/đêm xem ở màu đòn bắn + bảng chạm
     ctx.globalCompositeOperation = 'lighter'; // 2 nửa vòng = ảnh vòng PNG tô màu, cắt nửa bằng mặt nạ
     PX.cung(ctx, 0, 0, S * 0.43, -Math.PI / 2, Math.PI / 2, false, 2.2, '#ffcc33', al * (!T.dem || T.ca > 0 ? 0.7 : 0.15));
     PX.cung(ctx, 0, 0, S * 0.43, Math.PI / 2, Math.PI * 1.5, false, 2.2, '#5a7bff', al * (T.dem || T.ca > 0 ? 0.7 : 0.15));

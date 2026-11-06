@@ -3302,5 +3302,10 @@
 "Abyss #/# · +#% damage · devours a small enemy every #s (# px, big ones ×#, flyers too) · bubble splash # px · tidal breath unlocks at #★": "Abyss #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px, quái to ×#, cả quái bay) · bong bóng nổ lan # px · hơi thở thuỷ triều mở ở #★",
 "Abyss #/# · +#% damage · devours a small enemy every #s (# px, big ones ×#, flyers too) · bubble splash # px · tidal breath unlocks at #": "Abyss #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px, quái to ×#, cả quái bay) · bong bóng nổ lan # px · hơi thở thuỷ triều mở ở #★",
 "Abyss #/# · +#% damage · devours a small enemy every #s (# px, big ones ×#, flyers too) · bubble splash # px · tap when full: tidal breath ×# — an ice dragon breathes along the path": "Abyss #/# · +#% sát thương · nuốt 1 quái nhỏ mỗi #s (# px, quái to ×#, cả quái bay) · bong bóng nổ lan # px · chạm khi đầy: hơi thở thuỷ triều ×# — rồng băng phun dọc đường đi",
-"Abyss #/#": "Abyss #/#"
+"Abyss #/#": "Abyss #/#",
+"tap when full: tidal breath ×#": "đầy thì chạm: hơi thở thủy triều ×#",
+"an ice dragon breathes along the path": "một con rồng băng phun hơi thở dọc đường đi",
+"tidal breath unlocks at #": "hơi thở thủy triều mở ở #",
+"devours a small enemy every #s (# px, big ones ×#)": "nuốt một quái nhỏ mỗi #s (# px, quái to ×#)",
+"devours a small enemy every #s (# px, big ones ×#, flyers too)": "nuốt một quái nhỏ mỗi #s (# px, quái to ×#, cả quái bay)"
 }

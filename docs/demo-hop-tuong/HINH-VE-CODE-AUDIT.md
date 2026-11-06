@@ -688,6 +688,8 @@ Single game UI icon: a white cartoon hand with index finger pointing down-left (
 ```
 (Đính kèm `thap/assets/ui_nut_trieu.png` làm mẫu phong cách.)
 
+> **Dùng thêm (MỘT VÒNG 06/11):** icon CHẠM khi chiêu chủ động đầy (góc trên-trái ô, `thap/js/motvong.js`). Gen xong `ui_tay.png` → đặt `MV.CO_TAY = true` trong `motvong.js` (đang tạm `ic_phat`). Cỡ hiển thị lớn nhất ≈ 24 px CSS → cắt 3× ≈ 72 px.
+
 ## 9. HUD v2 — làm theo TU-VAN-HUD.txt (backlog 15 mục) + S10/S11 (2026-11-05)
 
 Cắt: `python3 tools/thap-cat-hud2.py` (khoá magenta + khối liền theo hộp toạ độ, xén alpha, thu về cỡ dùng ×2; hình tròn kéo lại cho vuông rồi `tron()` — mọi vòng tròn lệch ≤1 px). Tờ tổng hợp: `docs/demo-hop-tuong/tuvan/hudv2/cut_contact.png`.

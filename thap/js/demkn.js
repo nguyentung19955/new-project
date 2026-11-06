@@ -55,6 +55,7 @@ const DEMKN = {
     let a = REN.cGet(key);
     if (!a) {
       if (!REN.img('h2_tag')) return;
+      if (v.m.some(q => !REN.img(q.ic))) return this.ve0(ctx, v, x, yDay, h, al); // icon chưa nạp: vẽ thẳng, chưa dựng ảnh đệm (tránh đệm thiếu icon mãi)
       const hl = hp / k, x0 = this.rong(v, hl);
       a = document.createElement('canvas'); a.width = Math.ceil(x0 * k) + 2; a.height = Math.ceil(hl * k) + 3;
       const q = REN.c2d(a); q.setTransform(k, 0, 0, k, 1, 1);
