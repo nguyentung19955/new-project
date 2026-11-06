@@ -544,7 +544,7 @@ async function online(b, W, H, D, co) {
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-tier.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'tier', loai: 'sức mạnh theo bậc', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ tier: lỗi chạy'); }
   }
   // giật khi ra skill (tools/thap-kt-giat.js): JS khung quanh kỹ năng đỏ lần đầu / trùm ra + tung chiêu / ghép / chỉ huy / nhiều skill 1 khung
-  // ≤ ngân sách, việc thu nhỏ ảnh ≤ 9 ms/khung, không lỗi trang (docs/demo-hop-tuong/tuvan/giat_skill/BAO-CAO.md)
+  // ≤ ngân sách, việc thu nhỏ ảnh ≤ 12 ms/khung, không lỗi trang (docs/demo-hop-tuong/tuvan/giat_skill/BAO-CAO.md)
   if (!process.env.CHI || /giat|solo/.test(process.env.CHI)) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-giat.js'), BASE], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /^  ✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-giat.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'giat', loai: 'giật khi ra skill', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ giật skill: lỗi'); }

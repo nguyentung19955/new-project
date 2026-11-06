@@ -18,7 +18,7 @@
   // ---------- 1) ngân sách dựng ảnh mỗi khung ----------
   REN._xay = 0;
   const veGoc = REN.ve;
-  REN.ve = function () { this._xay = 0; return veGoc.apply(this, arguments); };
+  REN.ve = function () { this._xay = 0; if (NS.amThanh) try { NS.amThanh(); } catch (e) { } return veGoc.apply(this, arguments); };
   const vnGoc = REN.veNho;
   REN.veNho = function () { const t0 = now(); try { return vnGoc.apply(this, arguments); } finally { this._xay += now() - t0; } };
   REN.hetNgan = function () { return trongTran() && this._xay > NS.NGAN; };
@@ -132,13 +132,48 @@
     };
   }
 
+  // ảnh tô màu (FXU.mau: vòng/vệt PNG tô theo màu ụ, mỗi màu dựng 1 canvas cỡ gốc): quá ngân sách → khung này bỏ qua, dựng trong hàng nóng
+  if (typeof FXU !== 'undefined' && FXU.mau) {
+    const mauGoc = FXU.mau;
+    FXU.mau = function (ten, mau) {
+      if (this._mau[ten + mau]) return this._mau[ten + mau];
+      if (REN.hetNgan()) { NS.thongKe.hoan++; xep('mau|' + ten + mau, () => mauGoc.call(FXU, ten, mau)); return null; }
+      const t0 = now(); try { return mauGoc.apply(this, arguments); } finally { REN._xay += now() - t0; }
+    };
+  }
+  // chữ số sát thương: dựng sẵn 0–9 cho 2 kiểu hay gặp nhất (thường / chí mạng) ngay đầu trận
+  NS.nongSo = function () { for (const [m, px] of [['#E9E8E2', 12], ['#F7D65B', 24]]) xep('so|' + m + px + '|' + REN.s * REN.dpr, () => REN.chuSo && REN.chuSo('0123456789', m, px)); };
+
+  // âm thanh (tổng hợp WebAudio: mỗi tiếng dựng 5–20 nút, 0,2–1,2 ms): nhiều skill cùng khung → mọi tiếng dồn 1 khung (~6 ms).
+  // Mỗi khung chỉ dựng tiếng tới khi tốn 2,5 ms; phần còn lại phát ở khung sau (trễ ≤ vài chục ms, tai không nhận ra); quá 0,25 s thì bỏ.
+  // Tiếng giống nhau đã có giới hạn giọng/tần suất riêng (sound.js LIM) — không đổi.
+  if (typeof SND !== 'undefined' && Array.isArray(SND.danhSach)) {
+    const hang = []; let khung = -1, tonKhung = 0;
+    const phat = (f, a) => { const t0 = now(); try { f.apply(SND, a); } catch (e) { } tonKhung += now() - t0; };
+    NS.amThanh = () => { // gọi đầu mỗi khung vẽ
+      khung = REN.t; tonKhung = 0; const h = now();
+      while (hang.length && tonKhung < 2.5) { const [f, a, t] = hang.shift(); if (h - t < 250) phat(f, a); }
+    };
+    for (const k of SND.danhSach) {
+      const f = SND[k]; if (typeof f !== 'function') continue;
+      SND[k] = function () {
+        if (!trongTran()) return f.apply(SND, arguments);
+        if (khung !== REN.t) { khung = REN.t; tonKhung = 0; }
+        if (tonKhung >= 2.5) { if (hang.length < 40) hang.push([f, arguments, now()]); return; }
+        phat(f, arguments);
+      };
+    }
+  }
+
   // ---------- 3a) ảnh tải lười giữa trận: chỉ dùng khi đã GIẢI MÃ xong (không giải mã đồng bộ ở lần vẽ đầu) ----------
   const taiGoc = REN.taiAnh;
   REN.taiAnh = function (ten) {
     const a = taiGoc.apply(this, arguments);
     if (a && a.decode && !a._cv) {
       a._chuaGiai = true;
-      a.addEventListener('load', () => { a.decode().then(() => { a._chuaGiai = false; }, () => { a._chuaGiai = false; }); }, { once: true });
+      // giải mã xong giữa trận → chép sang canvas trong hàng nóng luôn (không đợi lần vẽ đầu = đúng lúc ra chiêu)
+      const xong = () => { a._chuaGiai = false; if (trongTran() || (G.ban && G.ban.length)) xep('cp|' + ten, () => REN.img(ten)); };
+      a.addEventListener('load', () => { a.decode().then(xong, xong); }, { once: true });
       a.addEventListener('error', () => { a._chuaGiai = false; }, { once: true });
     }
     return a;
@@ -191,12 +226,13 @@
     if (typeof TRUM_DBG !== 'undefined' && TRUM_DBG) ds.add(TRUM_DBG);
     for (const id of ds) { const k = id + '|' + REN.s * REN.dpr; if (NS.daNong.has(k)) continue; if (NS.nongTrum(id)) NS.daNong.add(k); }
     // 3c) ảnh tình huống (REN.LUOI): tải + giải mã nền 3 s sau khi trận chạy (1 luồng, nhường khi cuộn/tải trận)
-    if (!NS._tLuoi) NS._tLuoi = t;
+    if (!NS._tLuoi) { NS._tLuoi = t; NS.nongSo(); }
     else if (NS._tLuoi > 0 && t - NS._tLuoi > 3000 && typeof TAI !== 'undefined' && TAI.ds && TAI.nap) {
       NS._tLuoi = -1;
       const d = TAI.ds(); let co = 0;
       for (const ten of NS.dsLuoi()) { const a = REN.anh[ten]; if (a && (a._cv || (a.complete && a.naturalWidth))) continue; d.anh(ten); co++; }
-      if (co) TAI.nap(d.ket(), null, 1, true).catch(() => { });
+      const ds = d.ket();
+      if (co) TAI.nap(ds, null, 1, true).then(() => { for (const it of ds) if (it.ten) xep('cp|' + it.ten, () => REN.img(it.ten)); }, () => { });
     }
   };
   NS.dsLuoi = function () {

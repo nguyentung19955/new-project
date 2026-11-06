@@ -18,7 +18,9 @@ Người dùng (iPhone): "Check lại khi ra skill có nhanh quá dẫn đến g
 | Leviathan lần đầu | leviathan#1 | 14 (có lần 29) ms | chép ảnh dải khoảnh khắc đặc biệt `sig_m07_jaw` sang canvas 8,6 ms ngay khung ra chiêu |
 | Patch Titan (quá nhanh) | dải `fx_trum_patcher` | — | 16 khung chạy trong 0,26 s (16 ms/khung) → nhìn như **nháy** |
 
-Không phải thủ phạm: âm thanh (tổng hợp WebAudio, đã có giới hạn giọng `LIM` theo loại; không lần gọi nào > 1 ms), DOM băng trùm (style ≤ 0,7 ms, layout ≤ 0,8 ms/khung), GC (scavenge 1–1,5 ms).
+| Âm thanh lúc nhiều skill cùng lúc | mọi skill 1 khung | ~6 ms | mỗi tiếng tổng hợp WebAudio chỉ 0,2–1,2 ms (đã có giới hạn giọng `LIM` cho tiếng giống nhau), nhưng 15 tiếng khác nhau dồn 1 khung ≈ 6 ms |
+
+Không phải thủ phạm: DOM băng trùm (style ≤ 0,7 ms, layout ≤ 0,8 ms/khung — đo bằng CDP trace), GC (scavenge 1–1,5 ms).
 
 ## Đã sửa (không đổi luật chơi / sát thương / thời điểm)
 1. **`js/nongskill.js` (mới)** — ngân sách dựng ảnh mỗi khung: đã tốn > 4 ms thu nhỏ trong khung → vẽ tạm từ ảnh gốc/cỡ đã có, việc dựng xếp vào hàng nóng. Hàng nóng chạy theo thời gian (≤ 3 ms/khung) thay vì 1 việc/khung.
@@ -28,9 +30,13 @@ Không phải thủ phạm: âm thanh (tổng hợp WebAudio, đã có giới h�
 5. Khoảnh khắc đặc biệt > 3 cái cùng khung → cái thứ 4+ lùi 60 ms mỗi cái (≤ 0,3 s) — chỉ là hình.
 6. `fx.js`: bật lại trần `MAX_CHU 48` / `MAX_ANIM 90` (đầy thì bỏ dải nổ NHỎ cũ nhất, giữ nổ lớn của chiêu).
 7. `render.js`: số sát thương ghép từ ảnh từng chữ số dựng sẵn (viền/ruột, vẽ 2 lượt như strokeText+fillText) — hết dựng canvas + vẽ chữ cho mỗi con số.
-8. **"Quá nhanh"**: dải chiêu trùm 16 khung (`fx_trum_*`) tối thiểu 0,6 s (~27 khung/giây). Đổi: **Patch Titan** (0,26 → 0,6 s); Jammer/Prism/Leech (0,45 → 0,6 s). Các dải nổ 6 khung (`no_phao` 43 ms/khung, `bang_vo` 30 ms/khung) và khoảnh khắc đặc biệt (≤ 1,2 s) đọc kịp — giữ nguyên.
+8. Ảnh tô màu theo ụ (`FXU.mau`) tính vào ngân sách; chữ số sát thương 0–9 dựng sẵn đầu trận; ảnh giải mã xong giữa trận được chép sang canvas ngay trong hàng nóng (không đợi lúc ra chiêu).
+9. Âm thanh: mỗi khung chỉ dựng tiếng tới 2,5 ms, phần dư phát khung sau (trễ vài chục ms, quá 0,25 s thì bỏ); tiếng giống nhau vẫn theo giới hạn `LIM`.
+10. **"Quá nhanh"**: dải chiêu trùm 16 khung (`fx_trum_*`) tối thiểu 0,6 s (~27 khung/giây). Đổi: **Patch Titan** (0,26 → 0,6 s); Jammer/Prism/Leech (0,45 → 0,6 s). Các dải nổ 6 khung (`no_phao` 43 ms/khung, `bang_vo` 30 ms/khung) và khoảnh khắc đặc biệt (≤ 1,2 s) đọc kịp — giữ nguyên.
 
 ## Trước / sau (JS khung xấu nhất quanh mỗi khoảnh khắc, ms — máy đo; iPhone 13 ước ~½)
+Bảng đo đầy đủ chạy với bước 1–8 (trước khi rebase lên bản chống nóng + tải 1 lần). Sau rebase thêm bước 8–9; kiểm `thap-kt-giat.js` trên bản cuối: Black Hole lần đầu 14,5–15 ms, Leviathan 12,7–13,9 ms, Freezer chiêu 5 ms, mọi skill cùng 1 khung (bàn 7★) 24,7–26,9 ms (trước 30,8–47 ms).
+
 Tệ nhất: **47,2 → 33,2 ms**; khoảnh khắc > 16 ms: **21 → 9**; > 24 ms: **9 → 3** (còn lại đều là "mọi ụ 7★ trên 2 bàn kích hoạt cùng 1 khung" và Black Hole lần đầu ở bàn 7★ dày đặc — dao động theo raster của máy đo). Thu nhỏ ảnh trong khung xấu: tới 21 ms → ≤ 4 ms. Không lỗi trang.
 
 | nhóm | khoảnh khắc | TRƯỚC | SAU | thu nhỏ ảnh TRƯỚC | SAU |
@@ -112,7 +118,7 @@ Dải khung 2 khoảnh khắc nặng (trái → phải ~0,3 s/ảnh): `khung_tru
 Số đầy đủ: `do_truoc.txt`, `do_sau.txt`, `kq_sau.json`, `bang_truoc_sau.md`.
 
 ## Kiểm hồi quy
-`tools/thap-kt-giat.js` (trong `thap-kt-hoiquy.js`, luồng `solo`/`giat`): Black Hole/Overlord/Leviathan/Fire Dragon lần đầu, Freezer/Hive/Janus/Patcher ra + tung chiêu, ghép Orbital, Dahlia, mọi skill cùng 1 khung — TRƯỢT nếu JS khung > 30 ms (máy đo; ≈ 15 ms iPhone), thu nhỏ ảnh > 9 ms/khung, hoặc lỗi trang.
+`tools/thap-kt-giat.js` (trong `thap-kt-hoiquy.js`, luồng `solo`/`giat`): Black Hole/Overlord/Leviathan/Fire Dragon lần đầu, Freezer/Hive/Janus/Patcher ra + tung chiêu, ghép Orbital, Dahlia, mọi skill cùng 1 khung — TRƯỢT nếu JS khung > 30 ms (máy đo; ≈ 15 ms iPhone), thu nhỏ ảnh > 12 ms/khung (ngân sách 4 ms + 1 việc không chia được), hoặc lỗi trang.
 
 ## Còn lại / gợi ý
 - Bàn đầy 7★ CO-OP: ~2 400 lệnh vẽ, 35–49 MP phủ/khung (≈ 12–16 lớp màn hình) — tải GPU liên tục, không phải giật do skill; thuộc phần chống nóng (session nhiệt).

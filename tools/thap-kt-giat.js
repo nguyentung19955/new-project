@@ -3,7 +3,7 @@
 // Hồ sơ headless: Chromium 390×844 DPR 3 (iPhone 13), ép DPR 3. Máy đo vẽ canvas bằng CPU (không GPU) → khoảng khung (dt) bị chi phối
 // bởi raster, KHÔNG dùng làm ngân sách. Ngân sách đo thứ code game điều khiển được, giống nhau trên mọi máy:
 //   · JS khung (REN._viec, trừ các lệnh drawImage trên canvas chính > 2 ms = raster của máy đo) ≤ NGAN_JS ms (mặc định 30 ≈ 15 ms trên iPhone 13: CPU máy đo chậm ~2×)
-//   · việc THU NHỎ ẢNH trong 1 khung (REN.veNho/mip) ≤ NGAN_SC ms (mặc định 9: ngân sách 4 ms + 1 việc)
+//   · việc THU NHỎ ẢNH trong 1 khung (REN.veNho/mip) ≤ NGAN_SC ms (mặc định 12: ngân sách 4 ms + 1 việc dựng không chia được)
 //   · không lỗi trang. Quanh mỗi khoảnh khắc: kỹ năng đỏ lần đầu, trùm ra + tung chiêu (đã làm nóng như trận thật), ghép Orbital,
 //     chỉ huy Dahlia, nhiều skill cùng 1 khung (bàn đầy 7★).
 'use strict';
@@ -12,7 +12,7 @@ if (process.argv[2]) process.env.BASE = process.argv[2];
 if (!process.env.OUT) process.env.OUT = require('os').tmpdir() + '/thap-kt-giat/';
 if (!process.env.TAG) process.env.TAG = 'kt';
 const D = require('./thap-do-giat.js');
-const NGAN_JS = +(process.env.NGAN_JS || 30), NGAN_SC = +(process.env.NGAN_SC || 9);
+const NGAN_JS = +(process.env.NGAN_JS || 30), NGAN_SC = +(process.env.NGAN_SC || 12);
 Object.assign(D.NHOM, {
   kt_do: { deck: ['blackhole', 'overlord', 'leviathan', 'ronglua', 'canon'], kich: ['blackhole', 'overlord', 'leviathan', 'ronglua'], sao: 7, motLan: true },
   kt_trum: { deck: ['blackhole', 'hydra', 'canon', 'set', 'bang'], trum: ['freezer', 'hive', 'janus', 'patcher'], sao: 4, mv: ['dahlia'], ghep: [['orbital', 3]], motLan: true },
