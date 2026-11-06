@@ -7,7 +7,7 @@ Kiểm: `tools/thap-kt-vfx-p0.js` (trong `thap-kt-hoiquy.js`, CHI=vfx). Ảnh: `
 | Mục review | Sự thật trong code | Sửa |
 |---|---|---|
 | Time Bomb / Scrap Forge / Genesis Core / Holy Halo / Evolver: CARD LV '+damage' | dmg = 0, +% sát thương vô tác dụng | KY_NANG_CAP mới: Weaken 10→13.5%, Per stack 4→5.5%, Raise time 100→92%, Barrier 3→3.5 s, Fuse time 100→88% — nối vào đúng công thức chơi; hàng CARD LV hiện dòng kỹ năng, không còn '+damage' |
-| Armor Breaker, Crit Antenna, Reaper, Radar 7★ vượt trần | trần nhóm HOTRO.CAP × bậc | số hiển thị = HOTRO.hd (số thật khi là nguồn duy nhất) + '(max)'; Radar 7★ OVERDRIVE ghi phần thật (+7% ở 7★) |
+| Armor Breaker, Crit Antenna, Reaper, Radar 7★ vượt trần | trần nhóm HOTRO.CAP × bậc | số hiển thị = HOTRO.hd (số thật khi là nguồn duy nhất); Radar 7★ OVERDRIVE ghi phần thật (+7% ở 7★) |
 | (thêm, tự tìm) Cryo, Rainbow, Star Breaker, Focus Lens (SUP), Mirror Gate (ghi 35% thay vì 52%), Sanctum (ghi 35% thay vì 52%), Chiller (38% thay vì 35%), Reaper mô tả 15% thay vì 19.5% | | cùng 1 hàm HOTRO.hd |
 | Pandora 7★, Hero Foundry 7★, Jammer 7★ | hiệu ứng ghép đọc sao ĐẦU VÀO; 7★ không ghép được | 7★: 'cannot merge again — merge skill off'; Pandora theo sao kết quả (5+5→6 quay 2, 6+6→7 mở 2 phép 1 lần); mốc 7★ chữ đổi, APEX ×1.3 chung vẫn áp |
 | Scrap Forge 'VĨNH VIỄN' | buff nằm trên Forge | 'while the Forge stays on the board' (EN + VI roster) |

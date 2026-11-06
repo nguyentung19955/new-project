@@ -1,6 +1,6 @@
 // TURRET MERGE — VFX P0 · SỐ THẬT & ĐỌC ĐƯỢC (docs/demo-hop-tuong/tuvan/vfx/REVIEW-VFX-93.txt mục IX P0/P1/P2, X 'PHASE P0')
 //  Nguồn sự thật DUY NHẤT cho chữ: mọi con số hiển thị lấy từ chính hàm chơi (SKILLS.*, HOTRO.hd/tran, knThe) — không chép số tay.
-//  1. Hỗ trợ: số buff hiển thị = số THẬT sau kẹp trần nhóm (HOTRO.tran, khi ụ này là nguồn duy nhất) — '(max)' khi đã chạm trần.
+//  1. Hỗ trợ: số buff hiển thị = số THẬT sau kẹp trần nhóm (HOTRO.tran, khi ụ này là nguồn duy nhất) (không thêm chữ — bản Việt dịch theo mẫu).
 //  2. Ụ chỉ có tác dụng KHI GHÉP: ở 7★ không ghép được nữa → nói rõ kỹ năng ghép tắt (không hứa số bất khả thi).
 //  3. Mốc sao (MOC_RIENG) sửa cho khớp code: Holy Halo, Crit Antenna, Radar 7★, Reaper, Laser 7★, Pandora, Hive Queen/Leviathan/Genesis/Wyrm…
 //  4. Mô tả nhịp THẬT (đã gồm tốc bắn & mốc sao): Mine Layer, Marionette · tự phát: Cryo Reactor / Holy Halo / Chrono Throne.
@@ -24,11 +24,11 @@
   // giá trị hiệu dụng (0..1) — dùng cho chữ và cho kiểm
   const hieu = (T, id) => { const e = TRAN_HT[id]; if (!e) return null; const v = e[1](T); return { v, h: HOTRO.hd(T, e[0], v), k: e[0] }; };
   window.THATSO = { TRAN_HT, hieu };
-  // thay số thô đầu tiên ('52%' / '56.4%') bằng số hiệu dụng + '(max)'
+  // thay số thô đầu tiên ('52%' / '56.4%') bằng số hiệu dụng
   function thay(s, v, h) {
     if (!(v > h + 1e-9) || typeof s !== 'string') return s;
     const a = [pc(v) + '%', (v * 100).toFixed(1) + '%'];
-    for (const t of a) { const i = s.indexOf(t); if (i >= 0) return s.slice(0, i) + (t.indexOf('.') > 0 ? (h * 100).toFixed(1) : pc(h)) + '% (max)' + s.slice(i + t.length); }
+    for (const t of a) { const i = s.indexOf(t); if (i >= 0) return s.slice(0, i) + (t.indexOf('.') > 0 ? (h * 100).toFixed(1) : pc(h)) + '%' + s.slice(i + t.length); }
     return s;
   }
   for (const id in TRAN_HT) {
