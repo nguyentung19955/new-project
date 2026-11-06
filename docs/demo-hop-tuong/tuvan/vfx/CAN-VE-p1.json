@@ -1,0 +1,32 @@
+[
+ {
+  "name": "raw_p1_sao3.png",
+  "ref": "thap/assets/h2_glint.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A short golden star flare with exactly 3 long thin sharp light rays spaced 120 degrees apart from a small bright white-gold core. Flat, seen from top. Centered, lots of empty space, solid magenta #FF00FF background, no text, no frame."
+ },
+ {
+  "name": "raw_p1_sao5.png",
+  "ref": "thap/assets/cf_vong_ren.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A thin perfectly round golden energy ring made of exactly 5 separate equal arc segments with small even gaps, bright gold edges, soft glow. Flat top-down, perfect circle, centered. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p1_sao7.png",
+  "ref": "thap/assets/cf_vong_ren.png",
+  "prompt": "Make an image. Same glowing VFX style as the attached image. A thin perfectly round red-gold crown circlet seen from straight above: a fine golden ring with exactly 7 small sharp spikes pointing outward, evenly spaced, tiny red gem light at each spike, soft glow. Elegant and thin. Centered. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p1_manh_sao.png",
+  "ref": "thap/assets/h2_sao_sang.png",
+  "prompt": "Make an image. Same style as the attached star. One small sharp 5-point star shard, bright white-gold with a glowing edge and a short faint motion tail, sharp clean corners. Single object centered. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p1_vach_lv.png",
+  "ref": "thap/assets/ui_lv.png",
+  "prompt": "Make an image. Same metal UI style as the attached image. A row of 2 small slanted rectangular level pips side by side with a gap: left = empty dark steel slot with thin bevel, right = the same slot filled with bright WHITE glowing energy (pure white so code can tint it). Flat front view. Solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_p1_ruong_khe.png",
+  "ref": "thap/assets/shop_ru_vang.png",
+  "prompt": "Make an image. Same style as the attached chest. Only the light effect, no chest: a bright warm white-gold light leaking out of a thin horizontal seam, wide flat glowing line with short soft rays fanning upward. Centered, wider than tall. Solid magenta #FF00FF background, no text."
+ }
+]
