@@ -518,6 +518,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-vi.js')], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗|^  /.test(l)).slice(0, 40); for (const l of (ds.length ? ds : ['thap-kt-vi.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'tiengviet', loai: 'Tiếng Việt', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ Tiếng Việt: lỗi chạy'); }
   }
+  // VFX P0 — số thật & đọc được (tooltip = công thức sau trần, không '+damage' ở ụ không sát thương, 7★ ghép, Sanctum 8 ô, ≤ 2 dấu trạng thái, skill tự phát) — tools/thap-kt-vfx-p0.js
+  if (!process.env.CHI || /vfx|kynang|solo|menu/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-vfx-p0.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ VFX P0 số thật (thap-kt-vfx-p0.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-vfx-p0.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'vfxp0', loai: 'VFX P0 số thật', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ VFX P0: lỗi chạy'); }
+  }
   // 4 ụ vàng mới đợt 1 (Ember Relay / Quantum Choir / Fusion Archive / Hero Foundry): luật, cấp thẻ, tất định online, cân bằng bậc Vàng — tools/thap-kt-vang-moi.js
   if (!process.env.CHI || /vang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-vang-moi.js')], { stdio: 'pipe', timeout: 300000 }); console.log('  ✓ 4 ụ vàng mới đợt 1 (thap-kt-vang-moi.js)'); }

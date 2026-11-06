@@ -99,7 +99,7 @@ const SD_K = {
   phagiap: { kieu: 'ht', truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Exposes the lead and toughest'], [1.4, (T) => 'Neighbours deal +' + Math.round(SKILLS.phagiap.k(T) * 100) + '% to exposed', { cham: 0.5 }]] },
   bua: { kieu: 'ht', may: [1.6, 3.2, 'ke'], c: [[0.2, 'Boosts neighbours’ crits'], [1.6, 'Crits hit harder and stagger', { cham: 0.6 }]] },
   nam: { o: 2, q: Q.nhom(5, 175, 16, 8), c: [[0.2, 'Melee: only hits enemies nearby'], [1.6, 'Ring blasts hit all around', { ev: 'hit', cham: 0.5 }]] },
-  bomhen: { q: Q.hang(4, 170, 34, 8), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Sticks a bomb on an enemy'], [1.2, 'It goes off after 5 seconds'], [5.5, 'Blast weakens: +10% damage taken', { cham: 0.6 }]], dai: 9.4 },
+  bomhen: { q: Q.hang(4, 170, 34, 8), ke: [[6, 'lien', 's'], [8, 'canon', 's']], truoc: (T) => { T.nap = 0.9; }, c: [[0.2, 'Sticks a bomb on an enemy'], [1.2, 'It goes off after 5 seconds'], [5.5, (T) => 'Blast weakens: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken', { cham: 0.6 }]], dai: 9.4 },
   nhanmana: { kieu: 'ghep', mana: 1, manaDau: 100, c: [[0.2, 'Merge two Mana Doublers'], [2.5, 'Merging gives bonus mana', { ev: 'mana', cham: 0.6 }]] },
   kiembang: { q: Q.nhom(4, 170, 22, 12), c: [[0.2, 'Each hit chills nearby enemies'], [1.4, (T) => 'Slowed enemies take ×' + (ms(T, 7) ? 8 : ms(T, 3) ? 6 : 5) + ' damage', { ev: 'hit', cham: 0.6 }]] },
   mimic: { kieu: 'ghep', ban: 'canon', c: [[0.2, 'Joker: merges with any turret'], [2.5, (T) => 'Result gets +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack', { ev: 'moi', cham: 0.6 }]] },
@@ -241,7 +241,7 @@ const SD_GD = {
   cuuvi: ['Straight foxfire orb', 'Foxfire curls with flame trail', 'Blue foxfire bursts in rings'],
   ngaithoigian: ['Piercing clock-hand dart', 'Dart stamps a slowing clock', 'Pierces the line, then echoes'],
   ronglua: ['Orange flame cone burns', 'Blue flame: +30% vs big', 'White flame, longer burning trail'],
-  luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot adds an echo'],
+  luoicheo: ['Diagonal damage buff', 'Buffed hits spark teal rings', 'Every 3rd shot shows an echo (visual only)'],
   chuato: ['Stingers plus orbiting drones', 'Drones boost neighbours\u2019 fire rate', 'Every 5th drone is gold'],
   leviathan: ['Bubble shot with splash', 'Bigger splash ring, eats big enemies', 'Huge bubbles, eats flyers too'],
   combo: ['Warm-up: a plain core', 'On a roll: spinning rings', 'Overdrive: red-hot core'],
@@ -269,7 +269,7 @@ const SD_MO = {
   cuuvi: (T) => '9 foxfires ×' + SKILLS.cuuvi.heSo(T).toFixed(1),
   railgun: () => 'Full row / column of Railguns only',
   vughep: (T) => Math.round(knThe(G.ban[T.ban], 'vughep')) + '% Golden: target +2★',
-  loren: () => '15 stacks: +60% to your best gun',
+  loren: (T) => '+' + +(SKILLS.loren.moi(T) * 100).toFixed(2) + '% per stack (max +60%) to your best gun',
   orbital: (T) => 'Merge: every Orbital awakens ' + SKILLS.orbital.dai(G.ban[T.ban]) + 's',
   nangluong: () => '+100% damage per 120 mana',
   mana: (T) => '+' + SKILLS.mana.luong(T) + ' mana every ' + SKILLS.mana.ky(T) + 's',
@@ -278,7 +278,7 @@ const SD_MO = {
   xucxac: (T) => 'Damage ' + Math.round(dmgU(T) * 0.03) + '–' + Math.round(dmgU(T) * 3) + ' per shot',
   sungluc: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per shot',
   nam: (T) => 'Damage ' + Math.round(dmgU(T)) + ' per punch',
-  bomhen: (T) => 'Blast: +10% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's',
+  bomhen: (T) => 'Blast: +' + +(SKILLS.bomhen.yw(T) * 100).toFixed(2) + '% damage taken ' + SKILLS.bomhen.yeuDai(T) + 's',
   mimic: (T) => 'Result: +' + Math.round(knThe(G.ban[T.ban], 'mimic')) + '% attack for 8s',
   dichchuyen: () => 'Swap with a same-star turret',
   epxung: (T) => '+' + +knThe(G.ban[T.ban], 'epxung').toFixed(1) + '% fire rate per drag',
@@ -334,7 +334,7 @@ function sdKichBan(id) {
   r.kieu = k; r.o = r.o != null ? r.o : 7; r.ke = (r.ke || []).slice(); r.dai = r.dai || 8.4;
   const ten = (TEXT.turret[id] || {}).name || id;
   if (k === 'ht') {
-    if (!SD_K[id] || !SD_K[id].ke) for (const [i, o] of (sk.huong ? CHEO4 : KE4).entries()) r.ke.push([o, i % 2 ? 'canon' : 'lien', 's']);
+    if (!SD_K[id] || !SD_K[id].ke) for (const [i, o] of (sk.huong && sk.huong({ id, sao: 1 }).every(([a, b]) => a && b) ? CHEO4 : KE4).entries()) r.ke.push([o, i % 2 ? 'canon' : 'lien', 's']);
     r.q = r.q || Q.hang(4, 190, 40, 9); r.buff = 1;
   } else if (k === 'ghep' || k === 'gDB') {
     const them = (o, x, ss) => { if (o !== r.o && !r.ke.some(q => q[0] === o)) r.ke.push([o, x, ss]); };

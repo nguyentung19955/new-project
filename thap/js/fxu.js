@@ -130,7 +130,7 @@ if (typeof HU !== 'undefined' && HU.may) {
     const id = idHu(o), im = id && FXU.ten({ id }, 'hieu');
     if (id !== 'vungdoc' || !im) return veCu.call(this, ctx, o, R);
     const u = o.t / o.song, a = u < 0.15 ? u / 0.15 : 1 - Math.max(0, (u - 0.6) / 0.4), n = Math.min(1, o.t / 0.3);
-    R.anhGiua(ctx, im, o.x, o.y, o.r * 2.3 * (0.4 + 0.6 * (1 - (1 - n) * (1 - n))), 0, a * 0.9);
+    R.anhGiua(ctx, im, o.x, o.y, (o.r + 8) * 2 * (0.4 + 0.6 * (1 - (1 - n) * (1 - n))), 0, a * 0.9); // VFX P0 hitbox: mép vũng = vùng trúng (HU.may: r + 8)
     ctx.globalAlpha = 1;
   };
 }

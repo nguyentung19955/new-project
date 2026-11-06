@@ -68,7 +68,7 @@ SKILLS.docton = {
 SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
   k: (T) => 0.30 * HOTRO.k(T), // 0.14 → 0.30 (đo bậc 06/11)
-  mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5 * HOTRO.CAP_BAC[T.bac], SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
+  mo: (T) => 'Neighbours: +' + Math.round(HOTRO.hd(T, 'cdmg', SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
   hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
 };
@@ -248,14 +248,17 @@ SKILLS.loren = { // Lò Rèn Phế Liệu — ĐẶC BIỆT (ụ RIÊNG của m�
   vai: 'db', dmg: 0, toc: 0,
   MAX: 15,
   f: (T) => sao7(T, [1, 1, 2, 2, 3, 3, 4]),
+  moi: (T) => (knThe(G.ban[T.ban], 'loren') || 4) / 100, // +% sát thương mỗi cộng dồn theo cấp thẻ (KY_NANG_CAP.loren)
+  // giá trị THẬT ụ nhận được (kẹp trần +60%) — chữ hiển thị dùng đúng số này
+  tong: (T) => Math.min(0.6, SKILLS.loren.moi(T) * (T.lo || 0)),
   dich: (B) => B.t.filter(X => X && SKILLS[X.id] && SKILLS[X.id].vai === 'tc').sort((a, b) => b.sao - a.sao || (SKILLS[b.id].dmg * TIERS[b.bac].hs) - (SKILLS[a.id].dmg * TIERS[a.bac].hs) || a.o - b.o)[0] || null,
-  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' → +' + 4 * (T.lo || 0) + '% damage to your best Attack turret' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
+  mo(T) { const X = this.dich(G.ban[T.ban]); return 'Forge ' + (T.lo || 0) + '/' + this.MAX + ' (+' + +(this.moi(T) * 100).toFixed(2) + '% each, max +60%) → +' + Math.round(this.tong(T) * 100) + '% damage to your best Attack turret while this Forge stays on the board' + (X ? ' (' + (TEXT.turret[X.id] ? TEXT.turret[X.id].name : X.id) + ' ' + X.sao + '★)' : '') + ' · FEED it: drag a 1–3★ turret onto it: +' + this.f(T) + ' (3★ food ×3) · only feeding counts (other merges don\'t)'; },
   gocDau: (T, t) => -Math.PI / 2 + Math.sin(t * 0.8 + (T.pha || 0)) * 0.2,
   capNhat(G, B, T) {
     const X = this.dich(B); T.forgeX = X;
     if (X && T.lo) {
       if (X._forgeT !== G.t) { X._forgeT = G.t; X._forgeS = 0; }
-      const v = Math.min(0.04 * T.lo, 0.6 - X._forgeS); // trần +60% cho mỗi ụ nhận (nhiều Forge không cộng quá)
+      const v = Math.min(this.tong(T), 0.6 - X._forgeS); // trần +60% cho mỗi ụ nhận (nhiều Forge không cộng quá)
       if (v > 0) { X._forgeS += v; X.buf.dmg += v; X.nguon.push({ k: 'dmg', v, T }); }
     }
     return true;
@@ -288,7 +291,7 @@ SKILLS.guongcong = { // Cổng Gương — HỖ TRỢ (ụ RIÊNG: cơ chế PH�
   vai: 'ht', dmg: 0, toc: 0, napMau: '#bff6ff',
   khang: (T) => 0.15 * HOTRO.k(T),
   h: (T) => (ms(T, 7) ? 15 : 20),
-  mo: (T) => 'Neighbours resist control ' + Math.round(Math.min(0.35, SKILLS.guongcong.khang(T)) * 100) + '% · ' + (T.nap >= 1 ? 'MIRROR READY' : 'mirror ' + Math.round(T.nap * 100) + '%') + ' every ' + SKILLS.guongcong.h(T) + 's: PVP reflects 1 control · blocks a boss skill · CO-OP copies an ally merge at half stars',
+  mo: (T) => 'Neighbours resist control ' + Math.round(HOTRO.hd(T, 'khang', SKILLS.guongcong.khang(T)) * 100) + '% · ' + (T.nap >= 1 ? 'MIRROR READY' : 'mirror ' + Math.round(T.nap * 100) + '%') + ' every ' + SKILLS.guongcong.h(T) + 's: PVP reflects 1 control · blocks a boss skill · CO-OP copies an ally merge at half stars',
   hoTro(G, T, N, ra) { ra.khang = this.khang(T); },
   capNhat(G, B, T, dt) { T.nap = Math.min(1, T.nap + dt / this.h(T)); HOTRO.nhip(G, B, T, dt, '191,246,255', 2.8, 0.3); return true; },
   san: (B) => B && B.t.find(X => X && X.id === 'guongcong' && X.nap >= 1 && !X.st.da && !(X.st.bang > 0)),
@@ -394,7 +397,7 @@ themHo('crit', 2, 'thaukinh', 'lends crit DAMAGE; crits pierce');
 themHo('guard', 2, 'nhieusong', 'merge jams rivals / frees an ally summon');
 themHo('mana', 2, 'santhuong', 'WANTED marks pay bonus mana on kill');
 themHo('frost', 3, 'nhatthuc', 'Day burn ⇄ Night slowing cone');
-themHo('star', 3, 'loren', 'eats 1–3★ turrets for permanent stacks');
+themHo('star', 3, 'loren', 'eats 1–3★ turrets for forge stacks (kept while the Forge stays)');
 themHo('guard', 3, 'guongcong', 'blocks & REFLECTS rival control');
 themHo('trap', 3, 'marionette', 'turns an enemy against its own wave');
 

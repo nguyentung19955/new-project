@@ -135,7 +135,7 @@ const TEXT = {
     nhieusong:    { name: 'Signal Jammer',  skill: 'On merge: PVP jams rival turrets; Co-op gives ally a free summon' },
     santhuong:    { name: 'Bounty Beacon',  skill: 'Marks enemies; marked kills give bonus mana' },
     nhatthuc:     { name: 'Eclipse',        skill: 'Day: burning beam. Night: slowing wave. Swaps every 8s' },
-    loren:        { name: 'Scrap Forge',    skill: 'Special (original): FEED it a 1–3★ turret — your best Attack turret gains permanent damage (max +60%). Only feeding counts, not other merges' },
+    loren:        { name: 'Scrap Forge',    skill: 'Special (original): FEED it a 1–3★ turret — your best Attack turret gains damage while the Forge stays on the board (max +60%). Only feeding counts, not other merges' },
     guongcong:    { name: 'Mirror Gate',    skill: 'Support (original): neighbours resist control. PVP reflects 1 control / 20s; Co-op copies an ally merge; Solo blocks a boss skill' },
     marionette:   { name: 'Marionette',     skill: 'Takes control of an enemy, walks it backward, then boom' },
     // đợt 3 — 4 ụ Đỏ (skills5.js)
