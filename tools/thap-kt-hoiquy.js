@@ -498,6 +498,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('python3', [path.join(__dirname, 'thap-dau-giong.py'), '--kiem'], { stdio: 'pipe' }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-dau-giong.py lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'dau', loai: 'đầu ụ giống nhau', chi: l, anh: 'docs/demo-hop-tuong/tuvan/dau_giong/cap_giong.png' }); console.log(ds.join('\n')); }
   }
+  // nhãn giá ◆ dưới thẻ + chỉ huy nằm gọn trong khay, không dính mép dưới / vùng home iPhone, không chồng LV/MAX (tools/thap-kt-nhangia.js — 06/11)
+  if (!process.env.CHI || /solo|coop|pvp|online|hud/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nhangia.js'), BASE], { stdio: 'pipe', env: process.env, timeout: 900000 }); console.log(String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-nhangia.js kẹt'])) LOI.push({ co: '-', buoc: 'nhan_gia', loai: 'nhãn giá khay', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ nhãn giá: kẹt'); }
+  }
   // nút SUMMON luôn hiện + ảnh nền HUD trận đã tải (tools/thap-kt-nut-trieu.js — lỗi 06/11 bàn đầy = hốc tròn trống)
   if (!process.env.CHI || /solo|coop|pvp|hud/.test(process.env.CHI)) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nut-trieu.js'), BASE], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1' }), timeout: 600000 }); console.log(String(o).trim().split('\n').pop()); }

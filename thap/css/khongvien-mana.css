@@ -24,3 +24,10 @@ html:root body #bo-the .the.thieu .gia { opacity: 1 !important; color: #ff8a7a !
 html:root body #bo-the .the.du .gia { color: #f4f7fb !important; }
 html:root body #the-mv.du .mv-gia, html:root.co-hud2 body #the-mv.cht-san .mv-gia { color: #f4f7fb !important; }
 html:root body #the-mv.du.tn-day .mv-gia { color: #ff8a7a !important; } /* bàn đầy: chỉ huy không dùng được → vẫn đỏ */
+
+/* 5) NHÂN GIÁ NÂNG LÊN (người dùng iPhone: "100 năng lượng với 40 năng lượng ở chỉ huy cao lên 1 chút" — tuvan/nhan-gia/).
+   Trước: giá ◆100 dưới thẻ và ◆30/◆40 dưới chỉ huy dính mép dưới khung khay (ống viền), sát thanh home iPhone.
+   Sau: nâng 6 px logic (≈5–6 px thật) → nằm gọn trong khay, ngay dưới ô; không đụng LV/MAX/số ụ (ở trên ô). Mọi chế độ chung #bo-the/#the-mv.
+   Kiểm: tools/thap-kt-nhangia.js (trong thap-kt-hoiquy.js). */
+html:root body #wrap #bo-the .the > .gia, html:root.co-hud2 body #wrap #bo-the .the > .gia, html:root.co-hud2.co-gia body #wrap #bo-the .the > .gia { bottom: 6px !important; }
+html:root body #wrap #the-mv > .mv-gia, html:root.co-hud2 body #wrap #the-mv > .mv-gia, html:root.co-hud2.co-gia body #wrap #the-mv > .mv-gia { top: 80px !important; bottom: auto !important; } /* chỉ huy neo top (chihuy-the.css top:86px) → 80px: tâm số thẳng hàng với giá thẻ */
