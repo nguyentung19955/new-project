@@ -483,6 +483,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-keo.js'), BASE], { stdio: 'pipe', env: process.env }); console.log(String(o).trim()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'keo', loai: 'kéo-thả bộ bài', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kéo-thả: kẹt'); }
   }
+  // dọn báo chiêu trùm (07/11 iPhone wave 11: trùm chết rồi dấu đỏ vẫn nhấp nháy trên ô) — 12 trùm × pha × chết/lọt/hết trận/dựng lại/chặn, SOLO+CO-OP+PVP
+  if (!process.env.CHI || /trum|solo|coop|pvp/.test(process.env.CHI)) {
+    try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-trum-don.js'), BASE], { stdio: 'pipe', env: process.env, timeout: 1500000 }); console.log('  ' + String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗|^    /.test(l)).slice(0, 12); for (const l of (ds.length ? ds : ['thap-kt-trum-don.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'trum_don', loai: 'dọn báo chiêu trùm', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ dọn báo chiêu trùm: lỗi chạy'); }
+  }
   // màn kết quả VỪA MỘT MÀN (06/11): nút luôn trọn trong màn, không tràn, thưởng 1 hàng, không chữ huấn luyện — mọi chế độ × 5 cỡ (tools/thap-kt-ketqua-vua.js)
   if (!process.env.CHI || /ketqua|solo|online/.test(process.env.CHI)) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-ketqua-vua.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1', BASE }), timeout: 900000 }); console.log('  ' + String(o).trim().split('\n').pop()); }

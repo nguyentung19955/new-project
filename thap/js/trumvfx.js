@@ -62,7 +62,7 @@ const TVF = {
   batDau(E) { // trùm vừa báo chiêu
     const ten = this.DAU[E.trum]; if (!ten || !E.bao) return;
     const them = (B, uids) => { if (!B || !uids) return; for (const T of B.t) if (T && uids.includes(T.uid)) {
-      const d = this._bo.pop() || {}; d.E = E; d.bao = E.bao; d.B = B; d.o = T.o; d.T = T; d.ten = ten; T.st.ngamK = ten; this.ds.push(d); } };
+      const d = this._bo.pop() || {}; d.E = E; d.bao = E.bao; d.B = B; d.o = T.o; d.T = T; d.ten = ten; d.t0 = this.tg(); T.st.ngamK = ten; this.ds.push(d); } };
     them(G.ban[E.ban], E.bao.muc);
     if (E.bao.ban2 != null) them(G.ban[E.bao.ban2], E.bao.muc2);
   },
@@ -76,6 +76,28 @@ const TVF = {
     }
     const v = this.VONG[E.trum]; if (v) this.themPop('vong', null, -1, E.x, E.y, 0.3, v, '', E);
     if (E.trum === 'patcher') { let n = 0; for (const Q of G.quai) if (Q !== E && !Q.chet && Q.p === E.p && n++ < 8) this.themPop('noi', null, -1, Q.x, Q.y, 0.45, '', TRUM[E.trum].mau, E); } // dây sửa chữa tới quái cùng làn
+  },
+  // trùm chết / lọt / chiêu bị huỷ (game.js huyBaoTrum): bỏ ngay mọi dấu + vòng của trùm đó (không nổ, không "trúng")
+  huy(E, bao) {
+    for (let i = this.ds.length - 1; i >= 0; i--) { const d = this.ds[i]; if (d.E === E || d.bao === bao) { if (d.T && d.T.st.ngamK === d.ten) d.T.st.ngamK = null; this.boDs(i); } }
+    for (let i = this.pop.length - 1; i >= 0; i--) { const p = this.pop[i]; if (p.E === E) this.boPop(i); }
+  },
+  xoaHet() { // hết trận / dựng trận mới / dựng lại online
+    while (this.ds.length) { const d = this.ds[this.ds.length - 1]; if (d.T && d.T.st.ngamK === d.ten) d.T.st.ngamK = null; this.boDs(this.ds.length - 1); }
+    while (this.pop.length) this.boPop(this.pop.length - 1);
+    this.mv.length = 0; this._chan = null;
+  },
+  don() { // quét an toàn mỗi nhịp luật (game.js donNgam): bỏ dấu mất chủ / quá hạn, pop đã tan — kể cả khi không vẽ (tạm dừng, ẩn bàn)
+    for (let i = this.ds.length - 1; i >= 0; i--) { const d = this.ds[i]; if (!this.conChu(d)) { if (d.T && d.T.st.ngamK === d.ten) d.T.st.ngamK = null; this.boDs(i); } }
+    const t = this.tg();
+    for (let i = this.pop.length - 1; i >= 0; i--) { const p = this.pop[i], e = (t - p.t0) / p.song; if (e >= 1 || e < 0 || (p.B && !G.ban.includes(p.B))) this.boPop(i); }
+  },
+  boPop(i) { const p = this.pop[i]; p.B = p.E = null; this._boP.push(p); this.pop[i] = this.pop[this.pop.length - 1]; this.pop.pop(); },
+  // dấu còn chủ? trùm còn trong trận + còn sống + đúng chiêu đó, bàn còn trong trận, ô còn đúng ụ, và chưa quá nhịp chiêu + 0,5 s
+  conChu(d) {
+    const E = d.E;
+    return !!(E && !E.chet && E.bao === d.bao && G.quai.includes(E) && G.ban.includes(d.B) && d.B.t[d.o] === d.T && d.T.st.ngam > 0 &&
+      !G.ketThuc && this.tg() - d.t0 <= (d.bao.song || 1.4) + 0.5);
   },
   boDs(i) { const d = this.ds[i]; d.E = d.bao = d.B = d.T = null; this._bo.push(d); this.ds[i] = this.ds[this.ds.length - 1]; this.ds.pop(); },
   themPop(k, B, o, x, y, song, ten, mau, E) {
@@ -109,7 +131,7 @@ const TVF = {
     const t = this.t();
     for (let i = this.ds.length - 1; i >= 0; i--) {
       const d = this.ds[i], E = d.E, T = d.T;
-      if (E.chet || E.bao !== d.bao || d.B.t[d.o] !== T || !(T.st.ngam > 0)) { if (T.st.ngamK === d.ten) T.st.ngamK = null; this.boDs(i); continue; }
+      if (!this.conChu(d)) { if (T.st.ngamK === d.ten) T.st.ngamK = null; this.boDs(i); continue; }
       const c = d.B.o[d.o], C = Math.min(d.B.cw, d.B.ch), u = clamp(d.bao.t / (d.bao.song || 1.4), 0, 1);
       const n = this.nhip(u, this._n), xo = this.XOAY[d.ten] != null ? this.XOAY[d.ten] : 0.6, goc = t * xo * (u > 0.71 ? 2 : 1);
       // sẽ được chặn: viền lục giác lam nhạt (không hứa 100% với Halo — chỉ báo có khiên)
@@ -121,7 +143,7 @@ const TVF = {
   veVongTrum(ctx) { // vòng dưới chân trùm: báo chiêu tự niệm / mọi trùm đang báo (vòng tô màu trùm) / Leech lao
     const t = this.t();
     for (const E of G.quai) {
-      if (!E.trum || E.chet) continue;
+      if (!E.trum || E.chet || G.ketThuc) continue;
       const co = E.d.co;
       if (E.bao) {
         const u = clamp(E.bao.t / (E.bao.song || 1.4), 0, 1), n = this.nhip(u, this._n), v = this.VONG[E.trum] || 'tb_trum';
@@ -189,7 +211,7 @@ const TVF = {
     const t = this.tg();
     for (let i = this.pop.length - 1; i >= 0; i--) {
       const p = this.pop[i], e = (t - p.t0) / p.song;
-      if (e >= 1 || e < 0) { p.B = p.E = null; this._boP.push(p); this.pop[i] = this.pop[this.pop.length - 1]; this.pop.pop(); continue; }
+      if (e >= 1 || e < 0 || (p.B && !G.ban.includes(p.B))) { this.boPop(i); continue; }
       const C = p.B ? Math.min(p.B.cw, p.B.ch) : 40;
       if (p.k === 'trung') { // chiêu trúng: dấu đập từ 0,82 → 1,3, tan
         ctx.globalCompositeOperation = 'lighter';
@@ -257,7 +279,7 @@ const TVF = {
       return _bung.apply(this, arguments);
     };
   }
-  if (typeof batDau === 'function') { const _bd = batDau; batDau = function () { TVF.ds.length = 0; TVF.pop.length = 0; TVF.mv.length = 0; return _bd.apply(this, arguments); }; }
+  if (typeof batDau === 'function') { const _bd = batDau; batDau = function () { TVF.xoaHet(); return _bd.apply(this, arguments); }; }
   // vẽ: vòng chân trùm (dưới) + pha trùm (trên) quanh veQuai; RAGE/khiên ô (dưới ụ) + dấu báo chiêu (trên ụ) quanh veO; nổ/vỡ sau hiệu ứng
   const _vq = REN.veQuai;
   REN.veQuai = function (ctx) { try { TVF.veVongTrum(ctx); } catch (e) { } const r = _vq.apply(this, arguments); try { TVF.veTrenTrum(ctx); } catch (e) { } return r; };
