@@ -207,8 +207,8 @@ SKILLS.railgun = { // Railgun (Removal Tee): BINGO — đủ hàng ngang +sát t
   vai: 'tc', dmg: 70, toc: 0.33, nham: 'dau', // đợt vai trò: −14% (đơn mục tiêu vượt trần ngách Huyền thoại)
   bingo(B, T) {
     const c = T.o % 5, h = (T.o / 5) | 0; let ngang = 0, doc = 0;
-    for (let i = 0; i < 5; i++) { const X = B.t[h * 5 + i]; if (X && X.id === 'railgun') ngang++; }
-    for (let i = 0; i < 3; i++) { const X = B.t[i * 5 + c]; if (X && X.id === 'railgun') doc++; }
+    for (let i = 0; i < 5; i++) { const X = B.t[h * 5 + i]; if (X && X.id === 'railgun' && !X.st.da) ngang++; /* ô ĐÁ không còn là ụ (DCDW: chỉ chiếm ô) → không tính bingo */ }
+    for (let i = 0; i < 3; i++) { const X = B.t[i * 5 + c]; if (X && X.id === 'railgun' && !X.st.da) doc++; }
     return { ngang, doc };
   },
   mo(T) { const b = this.bingo(G.ban[T.ban], T); return 'Row ' + b.ngang + '/5 · Column ' + b.doc + '/3'; },

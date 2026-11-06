@@ -51,6 +51,9 @@ function chuyenU(B, T, id, sao, doi) {
   FX.vong1(c.x, c.y, 8, 52, TIERS[N.bac].mau, 0.45, 4); FX.tiaLua(c.x, c.y, 18, TIERS[N.bac].mau, 210, 12); FX.no('laser_trung', c.x, c.y, 70, 0.35);
   return N;
 }
+// DẠNG cố định của 1 ụ (quay lúc sinh): Merge King vàng, Sói thức tỉnh — bản sao / con rối online giữ đúng dạng, không quay lại
+const BIEN_THE = { vughep: 'vang', soi: 'thuc' };
+function giuBienThe(N, X) { const k = N && X && N.id === X.id && BIEN_THE[N.id]; if (k) N[k] = !!X[k]; return N; }
 function deckTru(B, tru) { let ds = B.deck.filter(id => SKILLS[id] && !tru.includes(id)); if (!ds.length) ds = Object.keys(SKILLS).filter(id => G.rosterMap[id] && !tru.includes(id)); return ds; }
 function nangSao(B, T, n, chu) {
   if (!T || T.sao >= LUAT.saoMax) return false;
@@ -461,7 +464,7 @@ SKILLS.lienket = { // Chuỗi Liên Kết (Won): mạnh hơn theo số ụ cùng
   vai: 'tc', dmg: 13.33, toc: 0.9, nham: 'dau',
   nhom(B, T) { // loang theo ô kề (trên-dưới-trái-phải)
     const da = new Set([T.o]), hang = [T.o];
-    while (hang.length) { const o = hang.pop(); for (const N of keCan(B, o)) if (N && N.id === T.id && !da.has(N.o)) { da.add(N.o); hang.push(N.o); } }
+    while (hang.length) { const o = hang.pop(); for (const N of keCan(B, o)) if (N && N.id === T.id && !N.st.da && !da.has(N.o)) { da.add(N.o); hang.push(N.o); } }
     return da.size;
   },
   mo(T) { const n = this.nhom(G.ban[T.ban], T); return 'Chain of ' + n + ' linked → +' + Math.round(0.4 * (n - 1) * 100) + '% damage'; },
@@ -547,6 +550,7 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
   capNhat(G, B, T) {
     T.nap = Math.min(1, T.tuoi / this.can(T));
     if (T.nap >= 1) {
+      if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
       const toiThieu = ms(T, 7) ? 5 : ms(T, 5) ? 3 : 1; // 5★ LUCKY BOX · 7★ JACKPOT
       const sao = toiThieu + rint(8 - toiThieu), N = chuyenU(B, T, pick(deckTru(B, ['hopbi'])), sao, true);
       VX.hen(0.5, () => nhanU(N, 'BOX OPEN: ' + sao + '★ ' + (TEXT.turret[N.id] ? TEXT.turret[N.id].name.toUpperCase() : ''), '#c77dff', true)); SND.ghep();
@@ -648,8 +652,8 @@ SKILLS.no5 = { // Nỏ Năm Nhịp (Amor): phát thứ 5 bắn 3 mũi tên nổ
 };
 SKILLS.bao = { // Súng Bão (Pantheon): trúng tức thì, cực nhanh; chậm lại khi đứng cạnh ụ cùng loại
   vai: 'tc', dmg: 5.2, toc: 4.5, tocSao: 0.05, nham: 'dau',
-  mo(T) { const n = keCan(G.ban[T.ban], T.o).filter(N => N && N.id === 'bao').length; return 'Instant hits ' + tocU(T).toFixed(1) + '/s · 20% arc to a 2nd enemy' + (n ? ' · next to ' + n + ' ' + TEXT.turret.bao.name + ': −' + n * 30 + '% speed' : ''); },
-  capNhat(G, B, T) { const n = keCan(B, T.o).filter(N => N && N.id === 'bao').length; T.buf.toc -= 0.3 * n; return false; },
+  mo(T) { const n = keCan(G.ban[T.ban], T.o).filter(N => N && N.id === 'bao' && !N.st.da).length; return 'Instant hits ' + tocU(T).toFixed(1) + '/s · 20% arc to a 2nd enemy' + (n ? ' · next to ' + n + ' ' + TEXT.turret.bao.name + ': −' + n * 30 + '% speed' : ''); },
+  capNhat(G, B, T) { const n = keCan(B, T.o).filter(N => N && N.id === 'bao' && !N.st.da).length; T.buf.toc -= 0.3 * n; return false; },
   ban(G, B, T, E) {
     giat(T, 0.3); const [x, y] = dauNong(T); FX.no('chop_nong', x, y, 20, 0.05, T.goc); SND.set();
     trung(E, dmgU(T), { B, mau: '#9ffcff' });
@@ -786,12 +790,14 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (−50% sát thương)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: () => 'Drag onto same-star turret: becomes a copy (−50% damage)',
+  mo: () => 'Drag onto same-star turret: becomes a copy (−50% damage) · keeps its form (Awakened, Gold) and the Copycat\'s own buffs',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban,
     lam(G, B, a, b) {
+      // DCDW Shamash: bản sao giữ DẠNG của ụ gốc (Sói thức tỉnh, Merge King vàng) + buff trên thân Copycat (Aurora, Ép Xung) — không quay ngẫu nhiên lại
       const N = chuyenU(B, a, b.id, a.sao); N.banSao = true;
+      giuBienThe(N, b); N.aurora = Math.max(N.aurora || 0, a.aurora || 0); N.epxung = (N.epxung || 0) + (a.epxung || 0);
       const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#b98cff');
       nhanU(N, 'COPY', '#c9a2ff', true);
       return N;
@@ -863,6 +869,7 @@ SKILLS.tienhoa = { // Hộp Tiến Hoá (Moa): sau một lúc biến thành ụ 
   capNhat(G, B, T) {
     T.nap = Math.min(1, T.tuoi / this.can(T));
     if (T.nap >= 1) {
+      if (B.net && typeof ONS !== 'undefined' && ONS.on) return true; // bàn con rối online: chờ ảnh chụp bàn của bạn (không tự quay ụ khác máy bạn)
       let ds = deckTru(B, ['tienhoa']);
       if (ms(T, 7)) { const top = Math.max(...ds.map(id => TIERS[G.rosterMap[id].bac].thuTu)); ds = ds.filter(id => TIERS[G.rosterMap[id].bac].thuTu === top); } // 7★ ASCEND
       const them = ms(T, 5) && Math.random() < 0.25 ? 2 : 1; // 5★ BREAKTHROUGH
