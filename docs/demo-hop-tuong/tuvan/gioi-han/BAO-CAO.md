@@ -43,33 +43,66 @@ Mức 3/5 (hơi chặt, xem bảng đầy đủ): Radar (7★ OVERDRIVE bị tr�
    - **A (khuyên):** ghép Relay → +1 lửa cho **mọi Relay cùng hàng + cùng cột** (tia chữ thập, đúng câu gốc "십자 방향"); trần 8; +10%/lửa LV9 → 15% LV15 (tối đa +80→120%), +2% chí mạng/lửa; ụ ra là Relay nhận lửa = max của 2 nguyên liệu.
    - B: cả bàn nhận lửa; trần 6; +8→12%/lửa.
    - C: giữ 4 ô kề, chỉ bỏ "mất lửa khi ghép" + trần 5 → 8.
-2. **Trần hỗ trợ theo cấp thẻ (quyết định cũ chưa vào code) — công thức?**
+2. **Trần hỗ trợ theo cấp thẻ (quyết định cũ chưa vào code) — công thức?** — ✅ **Đã làm (07/11, A)**: trần nới theo cấp thẻ dùng chung khung của mục IX (+18% ở LV15, ≈ công thức A ~+20%); hạ 1★ 5 ụ (xem §7).
    - **A (khuyên):** trần = CAP × CAP_BAC × (1 + 0.5 × (hệ số thẻ − 1)) → thẻ max nới trần ~+20%; kèm **hạ giá trị 1★** của 5 ụ chạm trần sớm (Reaper, Mirror, Focus Lens, Armor Breaker, Crit Antenna) để ★ có ý nghĩa lại.
    - B: chỉ nới trần theo thẻ, không đổi giá trị 1★ (đơn giản nhưng ★ vẫn vô dụng với 5 ụ trên).
    - C: bỏ trần cho từng ụ, chỉ giữ trần nhóm tổng (gần DCDW nhất, rủi ro cân bằng cao).
-3. **Buff có điều kiện (đánh quái LỘ / chậm / cầu vồng / mỗi đòn) có chung trần 35% với buff sát thương thường?**
+3. **Buff có điều kiện (đánh quái LỘ / chậm / cầu vồng / mỗi đòn) có chung trần 35% với buff sát thương thường?** — ✅ **Đã làm (A)**
    - **A (khuyên):** tách trần riêng 35% × bậc cho nhóm có điều kiện.
    - B: giữ chung nhưng nâng trần chung 35 → 50% khi có ≥2 loại hỗ trợ.
    - C: giữ như cũ.
-4. **Trần chí mạng 20%:** **A (khuyên)** nâng 25% + thẻ nâng tiếp · B: giữ 20%, hạ bảng Crit Antenna ×0.75 · C: giữ nguyên.
-5. **Power-up với ụ không gây sát thương (`PU_KHONG`: Shield Gen, Mystery Box, Reaper, Evolver, Holy Halo, Scrap Forge + Time Bomb):**
+4. **Trần chí mạng 20%:** ✅ **Đã làm (A)** · **A (khuyên)** nâng 25% + thẻ nâng tiếp · B: giữ 20%, hạ bảng Crit Antenna ×0.75 · C: giữ nguyên.
+5. **Power-up với ụ không gây sát thương (`PU_KHONG`: Shield Gen, Mystery Box, Reaper, Evolver, Holy Halo, Scrap Forge + Time Bomb):** — ✅ **Đã làm** (phiên mục IX `f8ab58b`, KY_NANG_CAP.pu; phiên này giữ nguyên, không cộng thêm)
    - **A (khuyên):** mỗi bước power-up cho 1 hiệu ứng nhỏ riêng (vd. −3 s mở hộp, −1 s hồi Halo, +1% suy yếu Time Bomb, +3% trần Forge).
    - B: chỉ tăng thời gian/hồi chiêu chung 5%/bước cho mọi ụ trong danh sách.
    - C: giữ không bán power-up cho các ụ này.
-6. **Cộng dồn mất khi ghép (Relay, Forge, Leviathan, Overclock, Mystery Box):**
+6. **Cộng dồn mất khi ghép (Relay, Forge, Leviathan, Overclock, Mystery Box):** — ✅ **Đã làm (A)**, trừ Relay (phiên Lửa Thập Tự)
    - **A (khuyên):** nếu ụ ra **cùng loại** thì giữ max cộng dồn của 2 nguyên liệu; Leviathan lưu Vực Sâu theo bàn.
    - B: giữ 50% cộng dồn cho ụ ra bất kể loại.
    - C: giữ như cũ (mất hết — đúng "ghép ra ngẫu nhiên" của DCDW).
-7. **Ụ cần với tới đường (Leviathan, Wyrm Engine, Iron Fist) bị "chết" ở hàng giữa:**
+7. **Ụ cần với tới đường (Leviathan, Wyrm Engine, Iron Fist) bị "chết" ở hàng giữa:** — ✅ **Đã làm (A)**
    - **A (khuyên):** nới tầm để mọi ô với tới (Leviathan 160, Wyrm 165, Iron Fist 105 + 10/★).
    - B: không có quái trong tầm → đánh quái đầu với 50–60% sát thương.
    - C: giữ (coi là luật xếp chỗ).
-8. **Ụ cần đếm "loại khác nhau" / hình đặc biệt (Fusion Mixer, Resonance Grid, Star Lift):**
+8. **Ụ cần đếm "loại khác nhau" / hình đặc biệt (Fusion Mixer, Resonance Grid, Star Lift):** — ✅ **Đã làm (A)**
    - **A (khuyên):** đổi sang đếm cả hàng + cột / mọi ô chéo hiện có, như bảng top.
    - B: giữ hình, chỉ hạ điều kiện (7★ Mixer cần 3 loại; Grid cộng hưởng ≥2 ô chéo).
-9. **Lỗi nhỏ (mục 3):** **A (khuyên)** sửa hết cùng lúc khi làm đợt cân bằng · B: sửa riêng trước, không đợi.
+9. **Lỗi nhỏ (mục 3):** ✅ **Đã làm (A)** · **A (khuyên)** sửa hết cùng lúc khi làm đợt cân bằng · B: sửa riêng trước, không đợi.
 
 Gợi ý thứ tự làm sau khi bạn chọn: (1) Relay → (2+3+4) trần hỗ trợ (một đợt, chạy lại `tools/thap-sim-tier.js`) → (5+6) → (7+8).
+
+## 7. Trạng thái làm (07/11 — phiên cân bằng giới hạn, commit `9f16a1b`)
+
+**Dừng theo `ban-giao/DUNG-LAI.md`**: code đã commit + push lên `claude/demo-hop-tuong`; **CHƯA xuất bản** lên nhánh live (`claude/mobile-tower-defense-game-k5oxzo`), **chưa chạy đủ** `tools/thap-kt-hoiquy.js` (20 phút). Đã chạy XANH: `thap-kt-vfx-p0`, `thap-kt-matran`, `thap-kt-kynangcap`, `thap-kt-vi`, `thap-sim-vaitro che`; `thap-kt-kynang-tx` 162/194 (trước 161/194 — 32 lỗi còn lại là kiểm cũ có từ trước).
+
+Xây trên phiên mục IX (`f8ab58b`): power-up 10 ụ không sát thương (KY_NANG_CAP.pu) và cấp thẻ nới trần (+18% LV15) giữ nguyên; phần power-up trùng của phiên này đã bỏ.
+
+| Ụ / luật | Trước | Sau |
+|---|---|---|
+| Reaper Pillar (giết ngay 1★ / 4★ / 7★) | 19.5 / 19.5 / 19.5% | 12 / 19.5 / 19.5% (thẻ max 23%) |
+| Mirror Gate (kháng) | 34.5 / 35 / 35% | 18 / 30 / 43% (trần 52.5%, thẻ max 60%) |
+| Focus Lens (ST chí mạng) | 60 / 65 / 65% | 36 / 59 / 65% (thẻ max 77%) |
+| Armor Breaker (vs lộ) | 22 / 35 / 35% | 13 / 22 / 31% (trần riêng 35%) |
+| Crit Antenna (chí mạng) | 9 / 19.5 / 22% | 6.8 / 14.6 / 22.5% (trần 27.5%, thẻ max 31.5%) |
+| Amplifier (tổng cộng dồn) | 38.5 / 38.5 / 38.5% | 27.5 / 41 / 54% (trần riêng 25%+4%/★) |
+| Cryo Reactor (vs chậm) | 56 / 59.5 / 59.5% | 34 / 55 / 59.5% |
+| Star Lift | 2 ụ thấp nhất, 24%/★, trần 39%, tối đa 2★/trận | cả 4 ô, 10%/★ (thấp nhất ×1.5), trần 50%, nấc sao mỗi 2 wave |
+| Resonance Grid | 8%×K, chỉ đủ 4 ô chéo ×1.5 | 7%×K, mép đủ ô ×1.3, đủ 4 ×1.5, +10% trần |
+| Fusion Mixer | đếm 4 ô kề, 7★ cần 4 loại | đếm cả hàng + cột, 7★ cần 3 loại |
+| Trần chí mạng | 20% | 25% (× bậc × thẻ) |
+| Leviathan | nuốt 120 px, VỰC SÂU mất khi ghép | 160 px, VỰC SÂU theo bàn |
+| Wyrm Engine | tầm 100→135 px, dmg 10 | 130→165 px, dmg 8.5 |
+| Iron Fist | 105 px | 105 + 10/★ (7★ 165) |
+| Ghép cùng loại | mất cộng dồn | giữ max (Forge, Overclock, Box, Evolver) |
+
+Lỗi nhỏ §3 đã sửa: trần chậm một số (35% × bậc ở cả apDung và khiTrung) · Blizzard/Eclipse/Signal Jammer làm chậm trùm ≤15% · Jammer `tocV` lấy max · Time Bomb `ywK` lấy max · Genesis 4★ / Hive Queen 4★ vào trần chung · chữ Hydra 7★ 0.6/s · Copycat comment + fallback 70.
+
+Mức 3/5 đã làm (an toàn): Radar 7★ OVERDRIVE trần tốc +15% trong 2 s · Mana Leech trần/giây × power-up · Bounty Beacon thưởng = max(bảng, 15→30% mana giết của wave) · Marionette rối chết cho 50% mana · Storm Gun −15%/ụ kề, tối đa −30% · Rainbow phần toàn đội × cấp thẻ · Time Bomb +0.5%/★ · Mystery Box sàn kết quả = ★ của hộp · Cryo 0.2→0.12k.
+Mức 3/5 CHƯA làm: Railgun bậc 3/5–4/5 · Hive Queen trần 12 drone/bàn (nhẹ máy) · Hero Foundry 18 s · Prism Thief · Teleporter · Cleanser chu kỳ · Star Breaker 5★ · Star Cannon giữ mốc 5 s · Holy Halo 4 s · Lone Ace ≤1 ụ kề · giá Chỉ huy trần 16× · Nine-Tail tính đòn hỗ trợ · trần suy yếu 30% · Chrono Lock/Pandora mục cấp thẻ.
+
+Sim `tools/thap-sim-tier.js do … nhanh` (chỉ số 4★): Star Lift 0.78 → 1.31 (đã hạ 0.07 → 0.05/★ vì bản đầu ×2), Wyrm 3.9 → 4.7 (đã hạ dmg 10 → 8.5), Amplifier 1.60 → 1.15 (7★ giữ 1.70), Iron Fist 0.54 → 0.78. Ụ mạnh nhất vẫn Overlord 13.4 (không đổi); trung vị bậc vẫn tăng Trắng < Xanh < Tím < Vàng < Đỏ. Ụ Đặc biệt đo bằng wave ở chế độ nhanh rất nhiễu (±40% không đổi code).
+
+**Còn lại khi tiếp tục:** chạy `tools/thap-kt-hoiquy.js` đủ 4 cỡ → xuất bản thap/ lên nhánh live (`tools/thap-ver.py`) · Ember Relay do phiên Lửa Thập Tự.
 
 ---
 
