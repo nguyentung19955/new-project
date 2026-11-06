@@ -65,9 +65,17 @@ const chay = async (W) => {
     const top1 = await p.evaluate(() => document.getElementById('chon-luoi').scrollTop);
     ok('cuon-doc', top1 > top0 + 60);  ok('cuon-khong-doi-bo', JSON.stringify((await st()).deck) === JSON.stringify(s0.deck));
     await p.evaluate(() => { document.getElementById('chon-luoi').scrollTop = 0; }); await p.waitForTimeout(200); }
-  // chạm = mở chi tiết
-  let s = await st(); await p.tap(`#chon-luoi .c[data-id="${s.cards[0][0]}"]`); await p.waitForTimeout(500);
-  ok('cham-mo-chitiet', await p.evaluate(() => typeof UP !== 'undefined' && UP.el && !UP.el.hidden));
+  // chạm thẻ (js/dkcham.js): chưa trong bộ + còn ô = thêm; chạm ô bộ bài = bỏ; GIỮ ~400 ms = mở chi tiết
+  let s = await st();
+  { const t = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y]) => ({ x, y, id: 1 })) });
+    await p.evaluate(() => { UI.chon = UI.chon.slice(0, 3); UI.veBoChon(); }); await p.waitForTimeout(200); s = await st();
+    const f = s.cards.find(c => !s.deck.includes(c[0]) && true); const n0 = s.deck.length;
+    await t('touchStart', [[f[1], f[2]]]); await p.waitForTimeout(60); await t('touchEnd', []); await p.waitForTimeout(450);
+    s = await st(); ok('cham-them', s.deck.length === n0 + 1 && s.deck.includes(f[0]));
+    await t('touchStart', [[s.o[0][0], s.o[0][1]]]); await p.waitForTimeout(60); await t('touchEnd', []); await p.waitForTimeout(450);
+    s = await st(); ok('cham-o-bo', s.deck.length === n0);
+    await t('touchStart', [[s.cards[0][1], s.cards[0][2]]]); await p.waitForTimeout(600); await t('touchEnd', []); await p.waitForTimeout(500); }
+  ok('giu-mo-chitiet', await p.evaluate(() => typeof UP !== 'undefined' && UP.el && !UP.el.hidden));
   const hong = kq.filter(x => !x[1]).map(x => x[0]); if (errs.length) hong.push('loi-trang: ' + errs[0]);
   console.log((hong.length ? '✗ ' : '✓ ') + W + 'px kéo-thả ' + kq.filter(x => x[1]).length + '/' + kq.length + (hong.length ? '  TRƯỢT: ' + hong.join(', ') : ''));
   TRUOT += hong.length;

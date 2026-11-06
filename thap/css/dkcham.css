@@ -1,0 +1,48 @@
+/* TURRET MERGE — CHẠM ở màn XÂY BỘ BÀI (js/dkcham.js). Chỉ ảnh có sẵn: nut_cong.png (ổ trống), khung_chon.png (ô sáng / chế độ đổi),
+   chân dung. Code chỉ dịch / phóng / mờ / lọc màu ngắn (QUY-TAC-HINH 1–3). Lớp phủ trên ô: pointer-events none (quy tắc 10). Nạp cuối. */
+
+/* ổ trống: dấu cộng mờ giữa ô */
+html body #chon #chon-bo .o-bo > img.dc-cong { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; opacity: .5; pointer-events: none; z-index: 2; }
+html body #chon #chon-bo .o-bo[data-id] > img.dc-cong { display: none; }
+#chon #chon-bo .o-bo.dc-vao > img.dc-cong { animation: dc-vao .26s ease-out both; }
+@keyframes dc-vao { from { opacity: 0; scale: .4; } to { opacity: .5; scale: 1; } }
+
+/* chân dung ô vừa bỏ: co + mờ (js tạo, trong #wrap) */
+#wrap > img.dc-ma { position: absolute; z-index: 15; pointer-events: none; object-fit: contain; }
+/* ô đang chờ chân dung bay tới */
+#chon #chon-bo .o-bo.dc-cho > * { opacity: 0; }
+
+/* ô sáng 1 nhịp (ụ đã trong bộ / vừa vào ô): khung chọn hiện rồi tắt */
+#chon #chon-bo .o-bo.dc-sang::after { content: ''; position: absolute; z-index: 6; pointer-events: none; inset: -7px; box-sizing: border-box; border: 11px solid transparent;
+  border-image: url(../assets/khung_chon.png) 34 / 11px stretch; animation: dc-sang .6s ease-out both; }
+@keyframes dc-sang { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+
+/* nhịp nhẹ (ổ trống khi chạm PLAY lúc thiếu / bộ mẫu vừa nạp / RANDOM) */
+#chon #chon-bo .o-bo.dc-nhip { animation: dc-nhip .5s ease-in-out; }
+@keyframes dc-nhip { 0%, 100% { scale: 1; } 30% { scale: 1.08; } 60% { scale: .98; } 80% { scale: 1.03; } }
+
+/* sai luật Mythic: lắc ngắn + ửng đỏ (lọc màu ảnh có sẵn, ~0,4 s) */
+#chon #chon-bo .o-bo.dc-sai { animation: dc-lac .36s linear, dc-do .42s ease-out; }
+@keyframes dc-lac { 0%, 100% { translate: 0 0; } 15% { translate: -6px 0; } 35% { translate: 6px 0; } 55% { translate: -4px 0; } 75% { translate: 4px 0; } }
+@keyframes dc-do { 0%, 100% { filter: none; } 25% { filter: sepia(1) saturate(5) hue-rotate(-45deg) brightness(.85); } }
+
+/* CHẾ ĐỘ ĐỔI (bộ đủ 5, chạm thẻ chưa trong bộ): ô thay được sáng nhịp, ô không thay được (luật Mythic) mờ; thẻ được chọn nhấc lên */
+#chon #chon-bo .o-bo > img.dc-vien.dc-vien.dc-vien.dc-vien.dc-vien { /* thắng luật chân dung ô (.o-bo.co-kh > img…) như dk-vien */ position: absolute !important; left: -8px !important; top: -7px !important; width: calc(100% + 16px) !important; height: calc(100% + 14px) !important;
+  z-index: 6; pointer-events: none; object-fit: fill; clip-path: none !important; animation: dc-vien .8s ease-in-out infinite alternate; }
+@keyframes dc-vien { from { opacity: .45; } to { opacity: 1; } }
+#chon #chon-bo.dc-doi .o-bo.dc-hop { animation: dc-doi .8s ease-in-out infinite alternate; }
+@keyframes dc-doi { from { scale: 1; } to { scale: 1.045; } }
+#chon #chon-bo.dc-doi .o-bo:not(.dc-hop) { opacity: .45; }
+html body #wrap #chon #chon-luoi .c.dc-nhac { translate: 0 -5px !important; scale: 1.07 !important; z-index: 3; transition: translate .12s ease-out, scale .12s ease-out; }
+html body #wrap #chon #chon-luoi .c.dc-nhac::after { content: '' !important; position: absolute; inset: 0; z-index: 7; pointer-events: none; box-sizing: border-box; border: 9px solid transparent !important;
+  border-image: url(../assets/khung_chon.png) 34 / 9px stretch !important; background: none; animation: dc-vien .8s ease-in-out infinite alternate !important; }
+
+/* PLAY thiếu ụ: mờ như nút tắt nhưng vẫn chạm được (chạm = ổ trống nhịp) */
+#chon button.hm-choi.dc-tat { border-image-source: url(../assets/p7_nut1_tat.png); filter: none; color: var(--m-mo); }
+#chon button.hm-choi.dc-tat small { color: var(--m-mo); }
+#chon button.hm-choi.dc-tat:active b { text-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  #chon #chon-bo .o-bo.dc-nhip, #chon #chon-bo.dc-doi .o-bo.dc-hop, #chon #chon-bo .o-bo > img.dc-vien.dc-vien.dc-vien.dc-vien.dc-vien, #chon #chon-bo .o-bo.dc-vao > img.dc-cong { animation: none; }
+  #chon #chon-bo .o-bo.dc-sai { animation: dc-do .42s ease-out; }
+}

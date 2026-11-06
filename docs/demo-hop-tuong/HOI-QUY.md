@@ -89,3 +89,5 @@ Riêng: `tools/thap-kt-freezer.js` XANH (số ụ theo wave, 6 s, Halo nửa, CO
 Lần 1 TRƯỢT 46 lỗi, 2 loại: (1) `ảnh méo` ruột thanh bản sao `.tb-day > img tai_day.png` (dải đầy kéo theo bề dài = mức đầy, QUY-TAC-HINH mục 3)
 → thêm lớp `tai-day` cho ruột thanh (cùng ngoại lệ với thanh tải); (2) `vẽ tay` drop-shadow mũi tên nâng cấp thiếu nhãn `vetay-ok: png`.
 Lần 2 (4 cỡ, đủ luồng): **XANH — 0 lỗi** (1200 s). Sau rebase lên nhánh mới (lưới có content-visibility → thanh ngoài ô bị cắt) chuyển thanh bản sao vào TRONG ô; lần 3: **XANH — 0 lỗi** (1248 s).
+
+- 06/11 màn bộ bài CHẠM kiểu DCDW (js/dkcham.js): chạm ô = bỏ (ổ trống giữ chỗ), chạm thẻ = thêm / chế độ đổi khi đủ 5, giữ 400 ms = chi tiết, Mythic sai = ô lắc đỏ, PLAY mờ chạm được, PRESET 1–6 tự lưu. thap-kt-keo.js + bước cham_the đổi sang GIỮ = chi tiết. Hồi quy 390 XANH.
