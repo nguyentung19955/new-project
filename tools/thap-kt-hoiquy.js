@@ -311,6 +311,25 @@ async function tran(b, W, H, D, co, m) {
   await sleep(2500);
   const f = await fps(p, 3000); console.log('    fps ' + m + ': ' + f.fps.toFixed(0) + ' (game ' + f.p90.toFixed(1) + ' ms/khung p90)');
   if (f.thap) await loi(p, co, m + '_fps', 'fps thấp', ['fps ' + f.fps.toFixed(0) + ' < 45, game ' + f.p90.toFixed(1) + ' ms/khung (' + W + '×' + H + ' DPR ' + D + ')']);
+  // LUẬT Star Cannon (ngoisao) — tổng ★ trên bàn: mốc TỐC = bội 10 (không phải bội 50): +100% tốc khi đúng mốc, +10%/mốc đã qua;
+  // mốc SÁT THƯƠNG = bội 50: +350% sát thương khi đúng mốc, +50%/mốc đã qua. Tấm đếm trên bàn = n/mốc kế + icon loại mốc, sáng khi đúng mốc.
+  await buoc(p, co, m + '_ngoisao_luat', async () => {
+    const r = await p.evaluate(() => {
+      const B = G.ban[0], keep = B.t.slice(), out = {};
+      for (const n of [10, 19, 20, 50, 60, 100]) {
+        for (let i = 0; i < 15; i++) B.t[i] = null;
+        const T = B.t[0] = sinhU(taoU(B, 'ngoisao', 2, 0)); let k = n - 2, o = 1; while (k > 0) { const q = Math.min(7, k); B.t[o] = sinhU(taoU(B, 'mana', q, o)); o++; k -= q; }
+        const buf = { toc: 0, dmg: 0 }, T2 = Object.assign(Object.create(Object.getPrototypeOf(T)), T, { buf }); SKILLS.ngoisao.capNhat(G, B, T2);
+        const d = DEMKN.DS.ngoisao(T, B); out[n] = [SKILLS.ngoisao.tong(B), +buf.toc.toFixed(2), +buf.dmg.toFixed(2), d.m[0].ic, d.m[0].s, !!d.sang];
+      }
+      for (let i = 0; i < 15; i++) B.t[i] = keep[i];
+      return out;
+    });
+    const mong = { 10: [10, 1.1, 0, 'ic_toc', '10/10', true], 19: [19, 0.1, 0, 'ic_toc', '19/20', false], 20: [20, 1.2, 0, 'ic_toc', '20/20', true],
+      50: [50, 0.4, 4, 'ic_dmg', '50/50', true], 60: [60, 1.5, 0.5, 'ic_toc', '60/60', true], 100: [100, 0.8, 4.5, 'ic_dmg', '100/100', true] };
+    const sai = Object.keys(mong).filter(n => JSON.stringify(r[n]) !== JSON.stringify(mong[n]));
+    if (sai.length) throw new Error('Star Cannon luật sai ở ' + sai.map(n => n + ': ' + JSON.stringify(r[n]) + ' ≠ ' + JSON.stringify(mong[n])).join(' · '));
+  });
   if (m !== 'solo') await buoc(p, co, m + '_ghep_vughep', async () => {
     const s = await p.evaluate(() => { const B = G.ban[0], o0 = B.t.findIndex(T => !T), keep = B.t.slice(); for (let i = 0; i < 15; i++) B.t[i] = null; B.t[0] = sinhU(taoU(B, 'vughep', 2, 0)); B.t[1] = sinhU(taoU(B, 'vughep', 2, 1)); const r = ghep(B, B.t[0], B.t[1]); const kq = [!!B.t[0], B.t[1] && B.t[1].id, B.t[1] && B.t[1].sao, r === B.t[1]]; for (let i = 0; i < 15; i++) B.t[i] = keep[i]; return kq; });
     if (s[0] || s[1] !== 'vughep' || s[2] !== 3 || !s[3]) throw new Error(m + ': Merge King★2 + Merge King★2 không ra Merge King★3 (' + JSON.stringify(s) + ')');

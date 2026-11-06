@@ -796,17 +796,26 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
     },
   },
 };
-SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng sao trên bàn là bội 10 → tăng tốc; ≥50 sao → +350% sát thương
+SKILLS.ngoisao = { // Pháo Ngôi Sao (Darby): tổng ★ trên bàn — mỗi mốc 10 = mốc TỐC (+100% tốc khi đúng mốc, +10%/mốc đã qua); bội 50 = mốc SÁT THƯƠNG (+350% khi đúng mốc, +50%/mốc đã qua)
   vai: 'tc', dmg: 12.73, toc: 1.1, nham: 'dau',
   tong: (B) => B.t.reduce((s, X) => s + (X ? X.sao : 0), 0),
-  // bộ đếm kỹ năng = tổng ★ của MỌI ụ trên bàn của mình (không phải số Star Cannon) — hiện ở bảng chạm + vòng đo quanh ụ (growfx)
-  demTT(T) { const n = this.tong(G.ban[T.ban]); return 'Stars counted: ' + n + '/50' + (n >= 50 ? ' · SUPERNOVA +350% damage' : '') + (n > 0 && n % 10 === 0 ? ' · ' + n + ' = ×10: ×2 speed' : ' · next ×10 at ' + (Math.floor(n / 10) + 1) * 10); },
+  // LUẬT (thuần, tất định — online dùng chung): n = tổng ★ → { toc, dmg, moc: mốc kế tiếp (hoặc mốc đang đứng), loai: 'toc'|'dmg', dung: đúng mốc }
+  //   mốc tốc = bội 10 không phải bội 50 · mốc sát thương = bội 50
+  //   toc = 0.10 × (số mốc tốc ≤ n) + (đúng mốc tốc ? 1.00 : 0) · dmg = 0.50 × (số mốc sát thương ≤ n) + (đúng mốc sát thương ? 3.50 : 0)
+  luat(n) {
+    n = Math.max(0, n | 0);
+    const m10 = Math.floor(n / 10), m50 = Math.floor(n / 50), dung = n > 0 && n % 10 === 0;
+    const moc = dung ? n : (m10 + 1) * 10, loai = moc % 50 === 0 ? 'dmg' : 'toc';
+    return { toc: 0.1 * (m10 - m50) + (dung && loai === 'toc' ? 1 : 0), dmg: 0.5 * m50 + (dung && loai === 'dmg' ? 3.5 : 0), moc, loai, dung };
+  },
+  // bộ đếm kỹ năng = tổng ★ của MỌI ụ trên bàn của mình (không phải số Star Cannon) — hiện ở bảng chạm + tấm đếm trên bàn (demkn)
+  demTT(T) { const n = this.tong(G.ban[T.ban]), L = this.luat(n), pc = (x) => Math.round(x * 100);
+    return 'Board ★ ' + n + '/' + L.moc + (L.loai === 'dmg' ? ' (damage)' : ' (speed)') + ' · now +' + pc(L.toc) + '% fire rate, +' + pc(L.dmg) + '% damage'; },
   mo(T) { return this.demTT(T); },
   capNhat(G, B, T) {
-    const n = this.tong(B), boi = n % 10 === 0 && n > 0, thuc = n >= 50;
-    if (boi) T.buf.toc += 1; if (thuc) T.buf.dmg += 3.5;
-    if (n >= 10) T.buf.toc += 0.25; // dạng 2 NOVA
-    if (boi && !T.boi) nhanU(T, '10× STARS!', '#ffe46b', true);
+    const n = this.tong(B), L = this.luat(n);
+    T.buf.toc += L.toc; T.buf.dmg += L.dmg;
+    const boi = L.dung && L.loai === 'toc', thuc = L.dung && L.loai === 'dmg';
     if (thuc && !T.thucTinh) SND.thucTinh();
     T.boi = boi; T.thucTinh = thuc;
     return false;

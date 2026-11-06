@@ -174,7 +174,7 @@ const GROW = {
     gd: (T) => { const B = G.ban[T.ban], n = B ? demCungLoai(B, 'orbital') : 1, s = B && B.phao > 0 ? 3 : n >= 2 ? 2 : 1; return { s, p: s === 3 ? B.phao / 20 : s === 2 ? 0.5 : 0.2, v: [0.5] }; } },
   cuongno: { mau: '#ff5040', lap: true, ten: ['CALM', 'RAGE', 'FRENZY'], dk: '1st crit → Rage (+25% fire rate) · 2nd crit → Frenzy',
     gd: (T) => { const s = T.cuongT > 0 ? 3 : (T.rage || 0) > 0 ? 2 : 1; return { s, p: s === 3 ? T.cuongT / (ms(T, 5) ? 7 : 5) : s === 2 ? 0.5 : 0, v: [0.5] }; } },
-  ngoisao: { mau: '#ffe46b', ten: ['SPARK', 'NOVA', 'SUPERNOVA'], dk: 'Board stars ≥10 → Nova (+25% fire rate) · ≥50 → Supernova (+350% damage)',
+  ngoisao: { mau: '#ffe46b', ten: ['SPARK', 'NOVA', 'SUPERNOVA'], dk: 'Board stars ≥10 → Nova · ≥50 → Supernova · every 10★ faster, every 50★ more damage',
     gd: (T) => { const B = G.ban[T.ban], n = B ? SKILLS.ngoisao.tong(B) : 0; return { s: n >= 50 ? 3 : n >= 10 ? 2 : 1, p: Math.min(1, n / 50), v: [0.2, 1], n }; } },
   lienket: { mau: '#c77dff', ten: ['SINGLE', 'LINKED', 'CHAIN MASTER'], dk: '2 linked → Linked · 4+ linked → Chain Master (shots arc to 1 more enemy)',
     gd: (T) => { const n = T.chuoi || 1; return { s: n >= 4 ? 3 : n >= 2 ? 2 : 1, p: Math.min(1, (n - 1) / 3), v: [1 / 3, 1], n }; } },

@@ -195,13 +195,14 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const p = X(`(() => { KT_ban('pvp'); G.wave = 3; const T = KT_dat(7, 'hasao', 3); capNhat(1/30); const D = G.ban[1]; const X0 = KT_dat(4, 'lien', 5, 1); capNhat(1/30); return [X0.giamT, X0.giamV]; })()`);
   kt('Star Breaker', 'PVP: rival first 5★ each wave −8% fire rate 6s', f2(p[0] || 0) + 's −' + Math.round((p[1] || 0) * 100) + '%', p[0] > 5.5 && gan(p[1] || 0, 0.08));
 }
-// ---- Star Cannon (ngoisao): ≥10 board stars NOVA +25% fire rate, multiple of 10: +100%, ≥50: +350% damage
+// ---- Star Cannon (ngoisao): mốc 10 = TỐC (+100% đúng mốc, +10%/mốc đã qua) · bội 50 = SÁT THƯƠNG (+350% đúng mốc, +50%/mốc đã qua)
 {
   const r = X(`(() => { KT_ban(); const T = KT_dat(0, 'ngoisao', 4); const f = (n) => { for (let i = 1; i < 15; i++) G.ban[0].t[i] = null; let k = n - 4, o = 1; while (k > 0) { const q = Math.min(7, k); KT_dat(o++, 'mana', q); k -= q; } capNhat(1/30); return [T.buf.toc, T.buf.dmg, GROW.ngoisao.gd(T).s]; };
-    return [f(9), f(10), f(23), f(50), f(53)]; })()`);
+    return [f(9), f(10), f(23), f(50), f(53), f(60), f(100)]; })()`);
   for (const q of r) q[0] -= 0.2; // 4★ Star Cannon: mốc chung 3★ +20% tốc bắn
-  const ok = gan(r[0][0], 0) && gan(r[1][0], 1.25) && gan(r[2][0], 0.25) && gan(r[3][0], 1.25) && gan(r[3][1], 3.5) && gan(r[4][0], 0.25) && gan(r[4][1], 3.5) && r[0][2] === 1 && r[1][2] === 2 && r[3][2] === 3;
-  kt('Star Cannon', 'board ★ 9 / 10 / 23 / 50 / 53 → rate +0/+125/+25/+125/+25%, dmg +350% from 50, stage 1/2/2/3/3', r.map(q => '+' + Math.round(q[0] * 100) + '%/+' + Math.round(q[1] * 100) + '% s' + q[2]).join(' · '), ok);
+  const mong = [[0, 0], [1.1, 0], [0.2, 0], [0.4, 4], [0.4, 0.5], [1.5, 0.5], [0.8, 4.5]];
+  const ok = r.every((q, i) => gan(q[0], mong[i][0]) && gan(q[1], mong[i][1])) && r[0][2] === 1 && r[1][2] === 2 && r[3][2] === 3;
+  kt('Star Cannon', 'board ★ 9/10/23/50/53/60/100 → rate +0/+110/+20/+40/+40/+150/+80%, dmg +0/0/0/400/50/50/450%', r.map(q => '+' + Math.round(q[0] * 100) + '%/+' + Math.round(q[1] * 100) + '% s' + q[2]).join(' · '), ok);
   const p2 = moiPhat('ngoisao', 1, { truoc: 'T._epGd = 2;' }), p3 = moiPhat('ngoisao', 1, { truoc: 'T._epGd = 3;', t: 20 });
   kt('Star Cannon', 'NOVA pair shot = 2 × 0.5 (same damage per attack)', f2(p2.k), gan(p2.k, 1, 0.03));
   kt('Star Cannon', 'SUPERNOVA: 4 comets ×1 + every 5th a METEOR ×1.2 (+40% splash)', f2(p3.k), gan(p3.k, (4 + 1.2 * 1.4) / 5, 0.05));

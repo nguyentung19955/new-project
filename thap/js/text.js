@@ -110,7 +110,7 @@ const TEXT = {
     sinhdoi:    { name: 'Twin Maker',    skill: 'On merge: summons an extra same-star turret' },
     hasao:      { name: 'Star Breaker',  skill: 'Support: Attack neighbours +damage, merge surge. PVP: first rival 5★ each wave −8% fire rate' },
     saochep:    { name: 'Copycat',       skill: 'Copies any same-star turret (less damage)' },
-    ngoisao:    { name: 'Star Cannon',   skill: 'Sums board ★: every 10 → faster; 50★ → huge damage' },
+    ngoisao:    { name: 'Star Cannon',   skill: 'Board ★ total: every 10 → faster; every 50 → more damage' },
     soi:        { name: 'Werewolf',     skill: 'Melee wolf that GROWS: Pup → Hunter → Alpha (always crits)' },
     tienhoa:    { name: 'Evolver',       skill: 'After a while becomes a random turret +1★' },
     cauvong:    { name: 'Rainbow',       skill: 'Support: paints a rainbow trail; Attack neighbours hit enemies on it harder' },
