@@ -12,6 +12,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 let sharp = null; try { sharp = require('sharp'); } catch (e) { }
 const LOI = [], ok = (d, m) => { if (!d) LOI.push(m); console.log((d ? '  ✓ ' : '  ✗ ') + m); };
 const CHI = (process.env.CHI || '').split(',').filter(Boolean);
+const CHE = process.env.CHE || 'solo'; // solo | coop | pvp (quy tắc 6: mọi chế độ)
+const DUOI = CHE === 'solo' ? '' : '_' + CHE;
 const TRUM12 = ['mad_crown', 'freezer', 'janus', 'joker_king', 'nightmare', 'octopus', 'hive', 'jammer', 'prism', 'twin_core', 'patcher', 'leech'];
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -19,7 +21,7 @@ async function moTran(b, af) {
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   const p = await ctx.newPage(); p._loi = [];
   p.on('pageerror', e => p._loi.push(e.message + ' @ ' + String(e.stack).split('\n').slice(1, 3).join(' ')));
-  await p.goto(BASE + '?mode=solo&deck=canon,bang,tia,set,khien&mana=0&notut=1&seed=12345&af=' + (af || 'hero'), { waitUntil: 'load', timeout: 90000 });
+  await p.goto(BASE + '?mode=' + CHE + '&deck=canon,bang,tia,set,khien&deck2=canon,bang,tia,set,khien&mana=0&notut=1&seed=12345&af=' + (af || 'hero'), { waitUntil: 'load', timeout: 90000 });
   await p.waitForFunction(() => typeof G !== 'undefined' && G.ban && G.ban[0] && typeof TVF !== 'undefined', null, { timeout: 60000 });
   await sleep(4500);
   await p.waitForFunction(() => !G.dung, null, { timeout: 20000 }).catch(() => {}); await sleep(2500); // qua băng giới thiệu trùm/wave
@@ -43,6 +45,7 @@ async function clipCua(p) {
   return p.evaluate(() => {
     const r = document.getElementById('cv').getBoundingClientRect(), k = r.width / W, B = G.ban[0], E = G.quai.find(q => q.trum);
     let x0 = B.o[0].x - B.cw, y0 = B.o[0].y - B.ch, x1 = B.o[14].x + B.cw, y1 = B.o[14].y + B.ch;
+    for (const B2 of G.ban) { x0 = Math.min(x0, B2.o[0].x - B2.cw); y0 = Math.min(y0, B2.o[0].y - B2.ch); x1 = Math.max(x1, B2.o[14].x + B2.cw); y1 = Math.max(y1, B2.o[14].y + B2.ch); }
     if (E) { x0 = Math.min(x0, E.x - 70); y0 = Math.min(y0, E.y - 80); x1 = Math.max(x1, E.x + 70); y1 = Math.max(y1, E.y + 60); }
     const c = { x: r.left + x0 * k, y: r.top + y0 * k, width: (x1 - x0) * k, height: (y1 - y0) * k };
     c.x = Math.max(0, c.x); c.y = Math.max(0, c.y); c.width = Math.min(390 - c.x, c.width); c.height = Math.min(844 - c.y, c.height);
@@ -75,7 +78,7 @@ async function chupTrum(p, id, khien) {
     for (let i = 2; i < 5; i++) { const f = OUT + '_' + i + '.png'; await sleep(i === 2 ? 60 : 350); await p.screenshot({ path: f, clip }); anh.push(f); }
     const n = await p.evaluate(() => G.quai.filter(E => E.trum === 'twin_core' && E.con && !E.chet).length);
     ok(n === 2, id + ': tách 2 lõi, mỗi lõi thanh máu riêng');
-    await ghep(anh, OUT + 'trum_' + id + '.png', ['nứt <30%', 'nứt', 'SPLIT', '2 lõi', '2 lõi chạy']);
+    await ghep(anh, OUT + 'trum_' + id + DUOI + '.png', ['nứt <30%', 'nứt', 'SPLIT', '2 lõi', '2 lõi chạy']);
     return;
   }
   await cho(p, id, 0.05);
@@ -95,7 +98,7 @@ async function chupTrum(p, id, khien) {
       if (khien && TVF_DAU[id]) ok(r.includes('chan'), id + ': trạng thái BỊ CHẶN');
     }
   }
-  await ghep(anh, OUT + 'trum_' + id + (khien ? '_chan' : '') + '.png', nhan);
+  await ghep(anh, OUT + 'trum_' + id + (khien ? '_chan' : '') + DUOI + '.png', nhan);
 }
 const TVF_DAU = { mad_crown: 1, freezer: 1, janus: 1, joker_king: 1, nightmare: 1, octopus: 1, jammer: 1, leech: 1 };
 
@@ -125,7 +128,7 @@ const TVF_DAU = { mad_crown: 1, freezer: 1, janus: 1, joker_king: 1, nightmare: 
     for (const [i, ms] of [[1, 90], [2, 250], [3, 500], [4, 900]]) { await sleep(ms - (i > 1 ? [0, 90, 250, 500][i - 1] : 0)); const f = OUT + '_' + i + '.png'; await p.screenshot({ path: f, clip }); anh.push(f); }
     if (af !== 'hero') { await p.evaluate((af) => { const B = G.ban[0]; if (af === 'dahlia') B.cuong = 1.5; else B.khien = 1.5; }, af); await sleep(300); const f = OUT + '_5.png'; await p.screenshot({ path: f, clip }); anh.push(f); }
     const nhan = af === 'hero' ? ['trước', '0.03 s rơi', '0.08 s', '0.15 s mở', '0.3 s'] : ['trước', 'bật', 'lan', 'lan hết', 'giữ', '< 2 s: nhịp báo hết'];
-    await ghep(anh, OUT + 'mv_' + af + '.png', nhan);
+    await ghep(anh, OUT + 'mv_' + af + DUOI + '.png', nhan);
     ok(!p._loi.length, af + ': không lỗi trang ' + p._loi.slice(0, 2).join(' | '));
     await ctx.close();
   }
@@ -136,7 +139,7 @@ const TVF_DAU = { mad_crown: 1, freezer: 1, janus: 1, joker_king: 1, nightmare: 
     const clip = await clipCua(p), anh = [];
     await p.evaluate(() => { G.dung = false; return dungMV(G.ban[0]); });
     for (let i = 0; i < 3; i++) { await sleep(i ? 130 : 40); const f = OUT + '_' + i + '.png'; await p.screenshot({ path: f, clip }); anh.push(f); }
-    await ghep(anh, OUT + 'mv_hero_day.png', ['bàn đầy: tia +1★', '0.17 s', '0.3 s']);
+    await ghep(anh, OUT + 'mv_hero_day' + DUOI + '.png', ['bàn đầy: tia +1★', '0.17 s', '0.3 s']);
     ok(!p._loi.length, 'hero bàn đầy: không lỗi trang');
     await ctx.close();
   }

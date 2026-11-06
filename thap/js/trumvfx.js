@@ -74,6 +74,7 @@ const TVF = {
       this.boDs(i);
     }
     const v = this.VONG[E.trum]; if (v) this.themPop('vong', null, -1, E.x, E.y, 0.3, v, '', E);
+    if (E.trum === 'patcher') { let n = 0; for (const Q of G.quai) if (Q !== E && !Q.chet && Q.p === E.p && n++ < 8) this.themPop('noi', null, -1, Q.x, Q.y, 0.45, '', TRUM[E.trum].mau, E); } // dây sửa chữa tới quái cùng làn
   },
   boDs(i) { const d = this.ds[i]; d.E = d.bao = d.B = d.T = null; this._bo.push(d); this.ds[i] = this.ds[this.ds.length - 1]; this.ds.pop(); },
   themPop(k, B, o, x, y, song, ten, mau, E) {
@@ -196,6 +197,8 @@ const TVF = {
         ctx.globalCompositeOperation = 'lighter';
         PX.ve(ctx, this.anh(p.ten), x, y + co * 0.12, co * (1.1 + 0.7 * e), co * (1.1 + 0.7 * e) * 0.62, 0, 1 - e);
         ctx.globalCompositeOperation = 'source-over';
+      } else if (p.k === 'noi') { // Patch Titan: dây sửa chữa xanh lục từ trùm tới quái được hồi
+        const E = p.E; if (E && !E.chet) { ctx.globalCompositeOperation = 'lighter'; PX.tia(ctx, E.x, E.y, p.x, p.y, 2, p.mau, 0.8 * (1 - e), t * 80); ctx.globalCompositeOperation = 'source-over'; }
       } else if (p.k === 'cap') { // REINFORCE: khoang rơi từ trên xuống ô (0–60%), chạm đất mở ra (vòng bung)
         if (e < 0.6) { const f = e / 0.6, yy = p.y - (1 - f * f) * C * 2.4; PX.ve(ctx, this.anh(p.ten), p.x, yy, C * 0.7, C * 0.7, 0, 0.95); }
         else { const f = (e - 0.6) / 0.4; ctx.globalCompositeOperation = 'lighter'; PX.ve(ctx, this.anh(p.ten), p.x, p.y, C * (0.7 + 0.5 * f), C * (0.7 + 0.5 * f), 0, 1 - f); ctx.globalCompositeOperation = 'source-over'; }
