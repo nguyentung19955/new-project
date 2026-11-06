@@ -41,6 +41,8 @@ const FXU = {
     ds.push('fx_laser_tia', 'fx_tia_sao', 'tai_day', 'fx_vong_trieu'); // ảnh nền của PX (vẽ hiệu ứng chỉ bằng PNG)
     for (const k of ['cham', 'dong', 'doc', 'chay', 'choang', 'yeu', 'cauvong', 'khienvang']) if (this.co('fx_st_' + k)) ds.push('fx_st_' + k);
     for (const b of bans) for (const id of b.deck) for (const c of ['dan', 'no', 'trung', 'hieu', 'tia', 'dan2', 'dan3', 'trung3', 'dacbiet', 'vang', 'thuc']) if (this.co('fx_' + id + '_' + c)) ds.push('fx_' + id + '_' + c);
+    // 8 ụ vàng mới (skills7.js): dải chiêu fx_<id>_sk — nạp + GIẢI MÃ trong lần vào trận (trước chỉ bắt đầu tải ở batDau → lần đầu ra skill chép/giải mã giữa trận)
+    if (typeof SK7 !== 'undefined' && SK7.FX) for (const b of bans) for (const id of b.deck) if (SK7.FX.has(id) && !ds.includes('fx_' + id + '_sk')) ds.push('fx_' + id + '_sk');
     for (const k in this.THAY) if (this.co(this.THAY[k]) && !ds.includes(this.THAY[k])) ds.push(this.THAY[k]);
     return ds;
   },
