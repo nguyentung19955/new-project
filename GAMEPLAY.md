@@ -3181,3 +3181,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - **Sanctum** (`thanhdia`, Bari, Hỗ trợ): xuất hiện → tẩy + khiên ô kề; ụ Tấn công kề +sát thương; khiên nạp 14 s (7★ 4 s); 5★ 8 ô.
 - **Prism Thief** (`bienmau`, Lupin, Tấn công): đạn đổi màu đỏ (đốt) / vàng (+40% chí mạng) / xanh (chậm) mỗi 3 s; ghép 2 con cùng màu → COMBO (+6%/combo sát thương, +4% tốc; tối đa 10, có 5★ → 15); 7★ mỗi phát cả 3 màu.
 - js/skills7.js; % kỹ năng theo cấp thẻ trong KY_NANG_CAP; online: cờ ô VAMP/COMBO (dongbo.js); ngoài RANDOM tới khi có hình (SK7.CHUA_ANH). Kiểm: tools/thap-kt-vang-moi2.js (trong hồi quy). Hình: docs/demo-hop-tuong/tuvan/tuong_vang/CAN-VE-2.json.
+
+## claude/demo-hop-tuong — 4 ụ vàng mới đợt 1 (06/11)
+- Ember Relay (lualien): ghép có Relay → +1 lửa cho Relay ở 4 ô kề (tối đa 5); mỗi lửa +12% sát thương (LV15 18%) +3% chí mạng; nhận lửa +15% tốc 5 s.
+- Quantum Choir (hopca): +18%/ụ khác cùng sao trên bàn mình (tối đa 7; LV15 30%); 7★ +12% tốc.
+- Fusion Archive (luutru): mỗi lần ghép +1 điểm lưu (tối đa 40, +2.5%/điểm, LV15 4%); Archive mới nhận 50% số lần ghép; Archive+Archive = 3 xung 160%.
+- Hero Foundry (xuonganh): ghép 2 Foundry → ô ANH HÙNG 12 s, +20% tốc (+2%/cấp, +4%/★; tối đa 2 ô).
+- Code thap/js/vangmoi1.js, kiểm tools/thap-kt-vang-moi.js (trong hồi quy), ảnh kiểm docs/demo-hop-tuong/tuvan/tuong_vang/dot1/.
