@@ -8,7 +8,7 @@
 const VM1 = {
   IDS: ['lualien', 'hopca', 'luutru', 'xuonganh'],
   // ảnh tạm (chưa có ảnh ChatGPT riêng): id → ụ cho mượn đầu/chân dung. Lắp ảnh xong thì xoá dòng đó.
-  TAM: { lualien: 'cuuvi', hopca: 'dongbo', luutru: 'combo', xuonganh: 'vughep' },
+  TAM: {}, // (đã lắp đầu + chân dung ChatGPT riêng cho cả 4 — 06/11)
   // dải hiệu ứng 16 khung (assets/fx_<id>_sk.png, 1 hàng) — có ảnh thì chơi, chưa có thì dùng ảnh v2 sẵn có
   FXN: 16,
   FXCO: new Set([]), // id đã có dải assets/fx_<id>_sk.png (thêm khi lắp ảnh)

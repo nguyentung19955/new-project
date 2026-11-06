@@ -32,9 +32,10 @@ for id_ in IDS:
         xong.append('dau')
     raw = os.path.join(ART, 'raw_pt_%s.png' % id_)
     if os.path.exists(raw):
-        im = Image.open(raw).convert('RGB'); a = np.asarray(im).copy()
-        m = la_magenta(a)
-        if m.mean() > 0.05: a[m] = NEN  # nền magenta → nền tối
+        im = Image.open(raw).convert('RGB'); a = np.asarray(im)
+        if la_magenta(a).mean() > 0.05:  # nền magenta → khoá tách trộn (không viền hồng) rồi đặt lên nền tối
+            out, al = U2.khoa(a); al = al[..., None]
+            a = (out * al + np.array(NEN, float) * (1 - al)).clip(0, 255).astype(np.uint8)
         im = Image.fromarray(a); W, H = im.size
         s = min(W, H); vu = im.crop(((W - s) // 2, 0, (W - s) // 2 + s, s))
         vu.resize((427, 427), Image.LANCZOS).save(os.path.join(A, 'pilot_' + id_ + '.png'))
