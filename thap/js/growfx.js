@@ -102,27 +102,13 @@ function cungGauge(B, r) {
 function veGauge(ctx, T, S, al, R) {
   if (GFX.tat || !laGrow(T.id) || T.st.da) return;
   if (SKILLS[T.id] && SKILLS[T.id].bomDem) return veEvoBom(ctx, T, S, al, R); // Evolver: BOM HẸN GIỜ đếm ngược thay vòng nạp
-  const g = GROW[T.id], m = g.mau, td = tienDo(T), s = T.gd || td.s, r = S * 0.455, t = VX.t, Bn = G.ban[T.ban];
-  if (!Bn) return;
-  const B = T.vxB, tt = B ? VX.t - B.t0 : 9;
-  const siet = B && B.len && tt < 0.22 ? 1 - 0.08 * VX.eo(Math.min(1, tt / 0.1)) : 1; // báo trước: vòng SIẾT lại
-  const R0 = r * siet, CG = cungGauge(Bn, R0 * (S > 0 ? 1 : 1));
-  ctx.save(); // 3 cung = ảnh vòng fx_vong_mong cắt quạt (mặt nạ vô hình) — không còn arc/stroke vẽ code
-  for (let i = 0; i < 3; i++) {
-    const [a0, a1, nguoc] = CG[i];
-    let k = 0, nhay = 1;
-    if (s > i + 1) k = 1;
-    else if (s === i + 1) { if (s < 3) { k = td.f; if (td.f >= 0.85) nhay = 0.55 + 0.45 * Math.sin(t * Math.PI * 4); } else { k = td.con != null ? td.con : 1; if (td.conS != null && td.conS < 0.8) nhay = Math.sin(t * Math.PI * 8) > 0 ? 1 : 0.35; } }
-    if (s === 3 && (i < 2 || td.con == null)) continue; // dạng 3: không vẽ vòng đầy quanh ụ (chỉ cung thời hạn còn lại)
-    if (k <= 0.003) continue;
-    const a2 = a0 + (a1 - a0) * k;
-    ctx.globalCompositeOperation = 'lighter'; PX.cung(ctx, 0, 0, R0, a0, a2, nguoc, s === i + 1 && s < 3 && td.f >= 0.85 ? 2.8 : 2.2, m, al * 0.9 * nhay);
-  }
-  // dạng 3: đốm sáng chạy vòng (sống động, nhỏ)
-  // ụ ĐỎ có kỹ năng chủ động: vòng hồi chiêu xanh lá bên trong (đầy = thở nhẹ, chạm để dùng)
-  const sk = SKILLS[T.id];
-  if (sk && sk.chuDong && T.sao >= 3) {
-    PX.vongHoi(ctx, T, T.nap, R0 - 4.2, al, t, true); // vòng hồi chiêu xanh lá chung (fxu.js)
+  if (!G.ban[T.ban]) return;
+  // MỘT VÒNG (người dùng 06/11 "2 vòng chạy này là sao"): BỎ 3 cung dạng quanh đầu — dạng hiện bằng 3 viên ngọc cạnh huy hiệu sao (motvong.js).
+  // Vòng DUY NHẤT quanh ụ = vòng xanh lá nạp chiêu (PX.vongHoi), chỉ khi ụ có chiêu nạp được (MV.coNap — cùng luật render.js cho ụ thường).
+  const t = VX.t;
+  ctx.save();
+  if (typeof MV !== 'undefined' ? MV.coNap(T) : (SKILLS[T.id] && SKILLS[T.id].chuDong && T.sao >= 3)) {
+    PX.vongHoi(ctx, T, T.nap, S * 0.41, al, t, !!(SKILLS[T.id] && SKILLS[T.id].chuDong)); // cùng cỡ/kiểu vòng của ụ thường (render.js)
   }
   ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over';
 }
@@ -637,7 +623,7 @@ P.dongbo = () => {
   };
   sk.veThem = function (ctx, T, S, al, R, B) {
     if (vt) vt.call(this, ctx, T, S, al, R, B);
-    if (gdU(T) >= 2) { const k = Math.max(0, 1 - (G.t % 1) / 0.28); if (k > 0) { ctx.globalCompositeOperation = 'lighter'; VX.vong(ctx, 0, 0, S * (0.3 + 0.06 * (1 - k)), 2, '#ffe46b', al * k * 0.7); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } }
+    if (gdU(T) >= 2 && !MOT_VONG) { const k = Math.max(0, 1 - (G.t % 1) / 0.28); if (k > 0) { ctx.globalCompositeOperation = 'lighter'; VX.vong(ctx, 0, 0, S * (0.3 + 0.06 * (1 - k)), 2, '#ffe46b', al * k * 0.7); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = al; } }
   };
 };
 HU.gSong = { ve(ctx, o, R) { const u = o.t / o.song, im = gCo('fx_dongbo_dacbiet') ? REN.img('fx_dongbo_dacbiet') : PX.mau('fx_nhieusong_dan', '#ffe46b'); if (!im) return; ctx.globalCompositeOperation = 'lighter'; // sóng âm = PNG fx_nhieusong_dan tô vàng

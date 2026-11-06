@@ -917,7 +917,7 @@ const REN = {
     }
     // nạp năng lượng / hồi chiêu kỹ năng: VÒNG XANH LÁ đầy dần từ 12 giờ theo chiều kim đồng hồ (PX.vongHoi — cùng kiểu mọi chế độ)
     // vẽ SAU đầu súng (không bị đầu che), TRƯỚC huy hiệu sao (huy hiệu luôn nằm trên)
-    if (T.nap > 0.02 && !o.ghost && !laGrow(T.id) && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau)) {
+    if (!o.ghost && !laGrow(T.id) && (typeof MV !== 'undefined' ? MV.coNap(T) : T.nap > 0.02 && (T.id === 'overlord' || T.id === 'wallgen' || T.id === 'blackhole' || T.id === 'mana' || skT.napMau))) { // luật chung MV.coNap (motvong.js)
       ctx.save(); PX.vongHoi(ctx, T, T.nap, S * 0.41, al, this.t, !!skT.chuDong); ctx.restore(); ctx.globalAlpha = al;
     }
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ

@@ -3,6 +3,8 @@
 
 // Màn hình logic 430×860 (co giãn theo điện thoại)
 const W = 430, H = 860;
+// MỘT VÒNG (06/11): quanh ụ chỉ còn 1 vòng = vòng xanh lá nạp chiêu; vòng dạng/chế độ/trạng thái khác tắt (js/motvong.js)
+const MOT_VONG = true;
 
 // 5 BẬC như DCDW: Thường→TRẮNG, Hiếm→XANH, Sử thi→TÍM, Huyền thoại→VÀNG, Cổ đại→ĐỎ
 // hs = hệ số sức mạnh (chỉ số tăng theo bậc), lv0 = cấp thẻ khởi đầu kiểu DCDW (chỉ để hiển thị)

@@ -100,7 +100,7 @@ SKILLS.combo = {
   veThem(ctx, T, S, al, R, B) { // vòng số quay theo giai đoạn + nhãn ×N dưới bệ
     const n = (B && B.combo) || 0, gd = T.gd || 1;
     ctx.globalCompositeOperation = 'lighter'; // vòng số = vòng phù văn PNG tô cam, quay ngược nhau (thay nét đứt vẽ code)
-    for (let i = 0; i < Math.min(2, gd); i++) { const rr = S * (0.43 + i * 0.05), vp = PX.mau('fx_vong_trieu', gd === 3 ? '#ff5a1a' : '#ff8a2a'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i ? -1 : 1) * R.t * 0.6, al * 0.55); }
+    if (!MOT_VONG) for (let i = 0; i < Math.min(2, gd); i++) { const rr = S * (0.43 + i * 0.05), vp = PX.mau('fx_vong_trieu', gd === 3 ? '#ff5a1a' : '#ff8a2a'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i ? -1 : 1) * R.t * 0.6, al * 0.55); }
     if (gd === 3) { ctx.globalAlpha = al * (0.3 + 0.12 * Math.sin(R.t * 8)); R.anhGiua(ctx, R.cham1('#ff5a1a'), 0, 0, S * 0.75); }
     ctx.globalCompositeOperation = 'source-over';
     // số COMBO ×N: tấm đếm chung ở đáy ô (demkn.js)

@@ -287,7 +287,7 @@ SKILLS.khoisinh = {
   veThem(ctx, T, S, al, R) { // GĐ1: 3 vành vàng quay · GĐ2: + 8 cánh sen thép · GĐ3: + ngôi sao trắng ở lõi
     const gd = T.gd || 1, p = (T.sinhT || 0) / SKILLS.khoisinh.g(T);
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 3; i++) { const rr = S * (0.3 + i * 0.045), vp = PX.mau('fx_vong_trieu', i === 2 ? '#ff8ab0' : '#ffd23f'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i % 2 ? -1 : 1) * R.t * (0.4 + 0.2 * i), al * (0.35 + 0.15 * i)); } // vành = vòng phù văn PNG
+    if (!MOT_VONG) for (let i = 0; i < 3; i++) { const rr = S * (0.3 + i * 0.045), vp = PX.mau('fx_vong_trieu', i === 2 ? '#ff8ab0' : '#ffd23f'); if (vp) PX.ve(ctx, vp, 0, 0, rr * 2.3, rr * 2.3, (i % 2 ? -1 : 1) * R.t * (0.4 + 0.2 * i), al * (0.35 + 0.15 * i)); } // vành = vòng phù văn PNG
     if (gd >= 2) for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + R.t * 0.3; PX.sao(ctx, Math.cos(a) * S * 0.34, Math.sin(a) * S * 0.34, S * 0.12, '#ffd23f', al * 0.5, a); } // cánh sen = lấp lánh PNG
     if (gd === 3) { ctx.globalAlpha = al * (0.5 + 0.2 * Math.sin(R.t * 4)); R.anhGiua(ctx, R.cham1('#ff8ab0'), 0, 0, S * 0.7); ctx.globalAlpha = al; vePandora(ctx, 'sao', S * 0.09, '#ffffff'); }
     if (p > 0.9) { ctx.globalAlpha = al * (p - 0.9) * 6 * (0.6 + 0.4 * Math.sin(R.t * 20)); R.anhGiua(ctx, R.cham1('#ffd23f'), 0, 0, S * 0.8); }
