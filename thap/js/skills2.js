@@ -802,10 +802,13 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (−50% sát thương)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret: becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% power · keeps its form (Awakened, Gold) and the Copycat\'s own buffs',
+  mo: (T) => 'Drag onto same-star turret (stone or frozen too): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% power · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban,
+    // chép được cả ô ĐÁ (Janus) / ô BĂNG cùng sao: bản sao là ụ THƯỜNG đúng loại thật dưới lớp đá/băng (không thành đá), ô đá/băng giữ nguyên
+    // (DCDW: không nguồn nào cấm Shamash chép đá; Frey còn biến hình được ô đá — docs/demo-hop-tuong/tuvan/copycat-da/DCDW.md)
+    quaKhoa: true,
     lam(G, B, a, b) {
       // DCDW Shamash: bản sao giữ DẠNG của ụ gốc (Sói thức tỉnh, Merge King vàng) + buff trên thân Copycat (Aurora, Ép Xung) — không quay ngẫu nhiên lại
       const N = chuyenU(B, a, b.id, a.sao); N.banSao = true;
