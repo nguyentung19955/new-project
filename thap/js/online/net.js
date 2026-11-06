@@ -33,6 +33,26 @@ const NET = {
   _baoTK(u) { this.user = u; for (const cb of this._authCb) try { cb(u); } catch (e) { console.error(e); } },
   _baoNoi(v) { this.noi = !!v; for (const cb of this._noiCb) try { cb(this.noi); } catch (e) { console.error(e); } },
   gio() { return Date.now() + this.lechGio; },
+  // CHỐNG NÓNG 4G (tuvan/nong/BAO-CAO.md): kết nối Firebase (WebSocket + nhịp giữ kết nối) bật suốt phiên giữ sóng di động thức
+  // → đang đánh SOLO / CO-OP / PVP với máy (không phòng online), hoặc app bị ẩn khi không ở phòng → ngắt (goOffline);
+  // về menu / mở app lại → nối lại (goOnline). Ghi kết quả trận lúc ngắt được Firebase xếp hàng, nối lại thì gửi.
+  ngu(v) {
+    if (this.kieu !== 'firebase' || !this._db || !!v === !!this._ngu) return;
+    this._ngu = !!v;
+    try { if (v) this._db.goOffline(); else this._db.goOnline(); } catch (e) { }
+  },
+  canNgu() {
+    const phong = (typeof ONL !== 'undefined' && ONL.code) || (typeof ONS !== 'undefined' && ONS.on);
+    if (phong) return false;
+    if (document.hidden) return true;
+    return typeof G !== 'undefined' && G.ban && G.ban.length > 0; // trận offline (SOLO/CO-OP/PVP với máy, Test range)
+  },
+  theoDoiNgu() {
+    if (this._tdNgu) return; this._tdNgu = true;
+    const kt = () => this.ngu(this.canNgu());
+    setInterval(kt, 2000); // chỉ đọc biến trong máy (không dùng mạng)
+    document.addEventListener('visibilitychange', kt); addEventListener('pagehide', kt); addEventListener('pageshow', kt);
+  },
   TS: { '.sv': 'timestamp' }, // giờ máy chủ (Firebase ServerValue.TIMESTAMP)
 
   // ---------------------------------------------------------------- FIREBASE
@@ -52,7 +72,7 @@ const NET = {
       .then(() => {
         const fb = window.firebase;
         const app = fb.apps.find(a => a.name === 'turretmerge') || fb.initializeApp(cfg, 'turretmerge');
-        this.kieu = 'firebase'; this._fb = fb; this._auth = app.auth(); this._db = app.database();
+        this.kieu = 'firebase'; this._fb = fb; this._auth = app.auth(); this._db = app.database(); this.theoDoiNgu();
         this._db.ref('.info/connected').on('value', s => this._baoNoi(s.val()));
         this._db.ref('.info/serverTimeOffset').on('value', s => { this.lechGio = s.val() || 0; });
         // kết quả đăng nhập kiểu chuyển trang (iPhone ở chế độ ứng dụng / trình duyệt chặn cửa sổ bật lên)

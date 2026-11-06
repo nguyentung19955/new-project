@@ -1,0 +1,147 @@
+{
+ "wave": 17,
+ "loi": [],
+ "fbGia": {
+  "co": false
+ },
+ "khoidong": {
+  "giay": 20,
+  "yc": 957,
+  "kb": 24468.8,
+  "ycMoiPhut": 2810.8,
+  "kbMoiPhut": 71868.3,
+  "ws": 0,
+  "wsKhung": 0,
+  "mayChu": {
+   "yc": 703,
+   "yc304": 1,
+   "kb": 24295.6,
+   "top": [
+    "assets/fx_trum_prism.webp 463KB",
+    "assets/hero/home_af_hero.webp 451KB",
+    "assets/trum_hive_atk_16.webp 360KB",
+    "assets/fx_trum_jammer.webp 354KB",
+    "assets/trum_twin_core_atk_16.webp 320KB",
+    "assets/fx_trum_leech.webp 257KB",
+    "assets/trum_prism_side_8.webp 251KB",
+    "assets/fx_trum_patcher.webp 225KB",
+    "assets/trum_prism_back_8.webp 218KB",
+    "assets/trum_jammer_8.webp 208KB"
+   ]
+  },
+  "ngoai": [],
+  "top": [
+   "2× assets/tai_khung.webp?…",
+   "2× assets/tai_day.png?…",
+   "2× assets/nen_menu.jpg?…",
+   "2× assets/logo.webp?…",
+   "2× assets/fonts/oxanium/oxanium-latin-800-normal.woff2",
+   "2× assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2",
+   "2× assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-800-normal.woff2",
+   "2× assets/nen_home.jpg?…"
+  ]
+ },
+ "home": {
+  "giay": 60,
+  "yc": 0,
+  "kb": 0,
+  "ycMoiPhut": 0,
+  "kbMoiPhut": 0,
+  "ws": 0,
+  "wsKhung": 0,
+  "mayChu": {
+   "yc": 0,
+   "yc304": 0,
+   "kb": 0,
+   "top": []
+  },
+  "ngoai": [],
+  "top": []
+ },
+ "solo_dau": {
+  "giay": 22,
+  "yc": 754,
+  "kb": 3619.2,
+  "ycMoiPhut": 2077.5,
+  "kbMoiPhut": 9972,
+  "ws": 0,
+  "wsKhung": 0,
+  "mayChu": {
+   "yc": 52,
+   "yc304": 1,
+   "kb": 3606.4,
+   "top": [
+    "assets/trum_janus_8.png 852KB",
+    "assets/trum_freezer_8.png 850KB",
+    "assets/trum_joker_king_8.png 825KB",
+    "assets/fxb_mana.webp 126KB",
+    "assets/fxb_toc.webp 106KB",
+    "assets/fx_mana_hieu.webp 46KB",
+    "assets/fx_ngoisao_trung3.webp 41KB",
+    "assets/fx_mana_trung.webp 38KB",
+    "assets/fx_ngoisao_trung.webp 33KB",
+    "assets/fx_hutmana_hieu.webp 33KB"
+   ]
+  },
+  "ngoai": [],
+  "top": [
+   "2× assets/h2_lcd.webp?…",
+   "2× assets/p7_che.webp?…",
+   "2× assets/p7_nut1.webp?…",
+   "2× assets/p7_nut2.webp?…",
+   "2× assets/p7_dau.webp?…",
+   "2× assets/p7_tim.webp?…",
+   "2× assets/p7_nut1_tat.webp?…",
+   "2× assets/khung_tt.webp?…"
+  ]
+ },
+ "solo": {
+  "giay": 120,
+  "yc": 0,
+  "kb": 0,
+  "ycMoiPhut": 0,
+  "kbMoiPhut": 0,
+  "ws": 0,
+  "wsKhung": 0,
+  "mayChu": {
+   "yc": 0,
+   "yc304": 0,
+   "kb": 0,
+   "top": []
+  },
+  "ngoai": [],
+  "top": []
+ },
+ "taiLai": {
+  "giay": 15,
+  "yc": 738,
+  "kb": 1596.9,
+  "ycMoiPhut": 2920.1,
+  "kbMoiPhut": 6318.6,
+  "ws": 0,
+  "wsKhung": 0,
+  "mayChu": {
+   "yc": 8,
+   "yc304": 2,
+   "kb": 1595,
+   "top": [
+    "assets/trum_hive_portrait.png 740KB",
+    "assets/trum_jammer_portrait.png 489KB",
+    "assets/trum_twin_core_portrait.png 353KB",
+    "assets/tv_o_co.webp 13KB",
+    "ver.json 0KB"
+   ]
+  },
+  "ngoai": [],
+  "top": [
+   "2× assets/nen_hud_duoi.webp?…",
+   "2× assets/h2_lcd.webp?…",
+   "2× assets/p7_che.webp?…",
+   "2× assets/p7_nut1.webp?…",
+   "2× assets/p7_nut2.webp?…",
+   "2× assets/p7_dau.webp?…",
+   "2× assets/p7_tim.webp?…",
+   "2× assets/p7_nut1_tat.webp?…"
+  ]
+ }
+}

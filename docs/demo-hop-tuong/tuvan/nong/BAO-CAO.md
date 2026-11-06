@@ -73,3 +73,38 @@ Kéo-ghép (tools/thap-kt-muotghep.js, CPU chậm 4×): p95 khung 23,7 → 23,4 
 
 Bật **Settings → POWER SAVE: ON** (30 khung/giây, 2×). Phần còn lại khó giảm thêm mà không mất hình: hiệu ứng cộng sáng
 của đạn sao/vòng nạp (44 lần/khung SOLO, 87 CO-OP) và nhạc tổng hợp WebAudio (chạy trên luồng âm thanh, máy kiểm không đo được).
+
+## Thêm (06/11): "chơi 1 lúc bằng 4G là máy nóng" — đo MẠNG trong trận
+
+Sóng di động (4G) tốn pin và toả nhiệt mỗi lần phải bật lên gửi/nhận; sau mỗi gói tin nó còn thức thêm vài giây.
+Nên trong trận SOLO, game phải gần như **không dùng mạng**.
+
+Cách đo: `tools/thap-kt-mang.js` — máy chủ tĩnh giống GitHub Pages (max-age 600 + ETag), bản xuất bản thật
+(đã chạy `thap-ver.py`: ảnh .webp, ?v=băm), iPhone 13 giả lập, CDP Network + đếm byte ở máy chủ. Pha: mở game 20 s · HOME đứng yên 60 s ·
+20 s đầu trận SOLO · trận SOLO tự chơi 120 s (wave 11 → 13) · tải lại trang.
+
+| Pha | Yêu cầu thật qua mạng | Dữ liệu |
+|---|---|---|
+| Mở game lần đầu (20 s) | 703 tệp | **24 MB** (tải hết ảnh menu + nạp nền) |
+| HOME đứng yên 60 s | 0 | 0 |
+| Vào trận SOLO (20 s đầu) | 52 tệp | 3,6 MB (ảnh trận; 3 tấm trùm `trum_*_8.png` còn là PNG ~850 KB mỗi tấm) |
+| **Trong trận SOLO, 120 s** | **0 / phút** | **0 KB / phút** |
+| Mở lại trang (bộ đệm còn) | 8 tệp | 1,6 MB |
+
+Đã kiểm, không có: hỏi ver.json lặp lại (chỉ 1 lần lúc mở), tải lại ảnh có ?v= mỗi lần, fetch/XHR lặp, nhạc tải từ mạng
+(nhạc tự tổng hợp WebAudio, không có tệp âm thanh), thống kê/analytics. Bộ tải nền đã nghỉ khi đang đánh (sửa ở trên).
+Ở lần chạy đầu có vài ảnh hiệu ứng tải lúc đang đánh (`vong_nap_3..7.png`, ~90 KB, 1 lần) — phiên "tải 1 lần" (service worker,
+nạp hết lúc mở) sẽ xử lý.
+
+**Nguyên nhân mạng còn lại: kết nối Firebase (online) mở SUỐT phiên**, kể cả khi chơi SOLO một mình: 1,5 s sau khi vào menu
+game tải SDK Firebase, đăng nhập khách và mở WebSocket tới máy chủ (nghe `.info/connected`, giờ máy chủ). Kết nối này gửi gói
+giữ kết nối định kỳ (~45 s/lần) và nối lại mỗi khi mạng chập chờn → sóng 4G bị đánh thức liên tục suốt trận.
+(Máy kiểm không vào được máy chủ Firebase thật nên không đo được byte; kiểm bằng Firebase giả trong trang.)
+
+**Sửa** (`js/online/net.js`): đang đánh trận KHÔNG online (SOLO, CO-OP/PVP với máy, Test range) hoặc app bị ẩn mà không ở phòng
+online → `goOffline()` (đóng WebSocket); về menu / mở lại app → `goOnline()`. Ghi thành tích cuối trận lúc đang ngắt được
+Firebase xếp hàng, nối lại thì tự gửi. Phòng / trận ONLINE không bị ảnh hưởng.
+Kiểm: `tools/thap-kt-mang.js` (trong hồi quy, bước "mang") — TRƯỢT nếu trận SOLO > 1 yêu cầu/phút hoặc > 8 KB/phút, có WebSocket/tên miền
+ngoài trong SOLO, hoặc Firebase không ngắt khi đánh / không nối lại ở menu. Số liệu: `mang_ban_xuat.json`.
+
+Gợi ý thêm cho người chơi 4G: lần mở đầu tải ~24 MB — mở game bằng Wi-Fi 1 lần rồi chơi 4G sẽ đỡ hơn nhiều.
