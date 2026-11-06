@@ -189,7 +189,9 @@ const UP = {
   mo(id, tu) {
     const el = this.dung();
     this.ds = this.danhSach();
-    const moi = el.hidden;
+    // đang trượt ra (Back vừa đóng, 190 ms chưa ẩn hẳn) = coi như đã đóng → mở lại phải ghi lại 1 mục lịch sử; trước đây chạm thẻ
+    // ngay sau Back không ghi → lần Back kế tiếp THOÁT KHỎI GAME
+    const moi = el.hidden || el.classList.contains('ra');
     this.ve(id, 0);
     if (moi) this.hien(el);
     try { SND.nut(); } catch (e) { }
@@ -516,13 +518,20 @@ const UP = {
     if (!this.ifr) {
       const f = document.createElement('iframe');
       f.className = 'up-ifr'; f.title = 'Live preview'; f.setAttribute('aria-hidden', 'true'); f.tabIndex = -1;
-      f.src = 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&notut=1';
+      f.src = this.srcXem(id); this._ifrT = Date.now(); this._ssOK = false;
       this.ifr = f;
-    } else this.guiXem({ id, sao: this.sao, gd: this.gd });
+    } else { this.cuuXem(); this.guiXem({ id, sao: this.sao, gd: this.gd }); }
     if (!this.ifr.parentNode) { tv.querySelector('.up-tv-khung').appendChild(this.ifr); this.theoDoiXem(tv); }
     this.khungXem(); requestAnimationFrame(() => this.khungXem());
     if (this.giam() && this._lanDau !== false) { this.dungXem = true; this._lanDau = false; }
     this.guiXem({ dung: this.canDung() }); this.nutPhat();
+  },
+  srcXem(id) { return 'index.html?preview=' + encodeURIComponent(id) + '&star=' + this.sao + '&notut=1'; },
+  // iframe nạp sẵn lúc MẤT MẠNG (trang lỗi của trình duyệt, không bao giờ báo tmXemSS) → Test range đen mãi. Có mạng lại /
+  // mở Test range mà iframe chưa từng báo "đã nghe" sau 5 s → nạp lại iframe (cùng chỗ trong DOM, chỉ đổi src).
+  cuuXem() {
+    if (!this.ifr || this._ssOK || !navigator.onLine || Date.now() - (this._ifrT || 0) < 5000) return;
+    this._ifrT = Date.now(); this.ifr.src = this.srcXem(this._xemId || this.id);
   },
   // khung cắt: bàn 3×3 + đường trên + dải chú thích (toạ độ logic y 150…530), co theo bề rộng khung
   khungXem() {
@@ -564,8 +573,10 @@ if (!UP_XEM) {
   // iframe xem trước báo "đã nghe" → gửi lại trạng thái hiện tại (tin gửi lúc iframe còn đang nạp bị mất → trước đây khung đứng đen)
   addEventListener('message', (e) => {
     if (!e.data || !e.data.tmXemSS || !UP.ifr || e.source !== UP.ifr.contentWindow) return;
+    UP._ssOK = true;
     UP.guiXem({ id: UP._xemId, sao: UP.sao, gd: UP.gd || 0, dung: UP.canDung() });
   });
+  addEventListener('online', () => { UP._ifrT = 0; UP.cuuXem(); }); // có mạng lại → cứu iframe nạp hỏng lúc mất mạng
   // nạp sẵn Test range ~1.5 s sau khi màn chọn hiện (đã tải xong menu, không trong trận)
   let rnh = 0; const hen = setInterval(() => {
     const c = document.getElementById('chon');
