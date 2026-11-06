@@ -1,0 +1,32 @@
+[
+ {
+  "name": "raw_cm_muiten.png",
+  "ref": "thap/assets/sao_hex.png",
+  "use": "Compass Cannon direction badge (top-left corner of the cell). Code picks frame 1-4 = up/right/down/left; the number is drawn as text next to it.",
+  "prompt": "Make an image. Same game UI badge style as the attached star badge. A 2x2 grid of 4 small badges, same size, centered in each cell: a chunky gold-rimmed metal hexagon badge with a bold glowing white-orange ARROW inside, pointing UP (cell 1), RIGHT (cell 2), DOWN (cell 3), LEFT (cell 4). Solid magenta #FF00FF background, no text, no grid lines."
+ },
+ {
+  "name": "raw_cm_canon_dau.png",
+  "ref": "thap/assets/canon_nong.png",
+  "use": "OPTIONAL Compass Cannon head (only if the coordinator wants a new look; the old Cannon head is used until then).",
+  "prompt": "Make an image. Same style as the attached turret head, top-down view: the same heavy white cannon barrel, plus a small brass compass ring with an arrow notch on the turret base. Barrel points right. Centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_cm_songno.png",
+  "ref": "thap/assets/fx_canon_no.png",
+  "use": "Compass Cannon OPPOSITE merge: shockwave running along a lane line (stretched/rotated by code).",
+  "prompt": "Make an image. Same glowing VFX style as attached. A 4x4 grid sprite sheet of 16 frames, left to right, top to bottom, same size, centered: a horizontal orange-white shockwave band moving right; frames 1-4 a bright ring flash at the left, 5-12 a wide wave of energy and dust rolls to the right, 13-16 it fades into sparks. Solid magenta #FF00FF background, no text, no grid lines."
+ },
+ {
+  "name": "raw_cm_vetlua.png",
+  "ref": "thap/assets/p2_ember.png",
+  "use": "Cross Ember: fire trail running along the merge row/column when flames are passed (stretched/rotated by code).",
+  "prompt": "Make an image. Same glowing VFX style as attached. A 4x4 grid sprite sheet of 16 frames, left to right, top to bottom, same size, centered: a straight horizontal trail of orange-gold flames racing to the right; frames 1-4 a spark ignites at the left, 5-12 the flame line runs and flickers, 13-16 it burns out into embers. Solid magenta #FF00FF background, no text, no grid lines."
+ },
+ {
+  "name": "raw_cm_daykeo.png",
+  "ref": "thap/assets/fx_drone_dan.png",
+  "use": "Long-Drag Drone: tether/chain beam between the drag source and target cell while dragging / on merge (stretched/rotated by code).",
+  "prompt": "Make an image. Same glowing VFX style as attached. A 4x4 grid sprite sheet of 16 frames, left to right, top to bottom, same size, centered: a horizontal cyan energy tether with small chain links, stretching across the frame; frames 1-4 it snaps on, 5-12 pulses of light run along it, 13-16 it breaks into sparks. Solid magenta #FF00FF background, no text, no grid lines."
+ }
+]
