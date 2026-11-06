@@ -17,3 +17,11 @@ Override the original brief:
 User: "Đỏ vàng phải cày như trong game DCDW ấy" = BOTH red and gold must be as grindy as in DCDW.
 - Research and mirror DCDW's real economy as closely as possible: DCDW bag/box odds for Legendary and Ancient, Legendary box price in gems, gem income rates, Daily Specials Legendary price/frequency, copies needed per level (namu.wiki 데스티니 차일드:디펜스 워, inven.co.kr, bluestacks/tiprelay guides, YouTube box-opening stats). Cite sources in KINH-TE.md; where DCDW numbers are unknown, choose values at least as strict.
 - Gold (Legendary) is NOT "easier" than described above unless DCDW was — treat gold as DCDW Legendary-grind, red as DCDW Ancient-grind (rarer still).
+
+## Addendum 2 (06/11 12:01 VN) — future monetisation
+User: "Sau này tôi sẽ hướng tới đẩy lên store nên phải có cơ chế như vậy để thu tiền, nhưng đó là chuyện sau này"
+= Later the game will be published on the App Store / Google Play and must earn money; not now.
+- Design the economy IAP-READY like DCDW (gems are the premium currency; chests/passes/daily specials priced in gems), but add NO payment code, no store SDK, no real prices now.
+- Keep a clean seam: one module for currency grants (e.g. TIEN.cong(loai, so, nguon)) so a future IAP / ad-reward / server receipt can call it; record source tags ('quest','event','shop','iap' reserved).
+- Leave UI slots that can later hold paid offers (e.g. a hidden 'Gem packs' tab, a Season Pass track with free + premium rows where the premium row is locked/hidden for now).
+- Note in KINH-TE.md which numbers would change once paid gems exist.
