@@ -96,7 +96,7 @@
 
   // ---------- 4. nhịp thật / tự phát ----------
   const noi = (id, f) => { const sk = SKILLS[id]; if (!sk || !sk.mo) return; const mo = sk.mo; sk.mo = function (T) { const s = mo.apply(this, arguments); try { return f(T, s); } catch (e) { return s; } }; };
-  noi('min', (T, s) => s.replace('every ' + SKILLS.min.ky(T).toFixed(1) + ' s', 'every ' + (SKILLS.min.ky(T) / nhipU(T)).toFixed(1) + 's (with fire-rate buffs)'));
+  noi('min', (T, s) => s.replace('every ' + (SKILLS.min.ky(T) / nhip3(T)).toFixed(1) + ' s', 'every ' + (SKILLS.min.ky(T) / nhip3(T) / nhipU(T)).toFixed(1) + 's (with fire-rate buffs)'));
   noi('marionette', (T, s) => s.replace('Every ' + SKILLS.marionette.ky(T) + 's', 'Every ' + +(SKILLS.marionette.ky(T) / Math.max(0.1, 1 + T.buf.toc)).toFixed(1) + 's'));
   noi('haoquang', (T, s) => s + ' · fires BY ITSELF when full and in danger (boss skill, a turret locked, or last heart)');
   noi('lophanung', (T, s) => s.replace('FREEZE nearby', 'FREEZE in ' + Math.round(SKILLS.lophanung.r(T) * 1.6) + ' px') + ' · fires BY ITSELF after 6s full if 5+ enemies are near or a boss is on your path');

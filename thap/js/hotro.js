@@ -87,7 +87,7 @@ const HOTRO = {
           for (const d of ds) N.nguon.push({ k, v: k === 'cham' ? d.v : tong * d.v / tl, T: d.T });
         } else {
           ht[k] = tong;
-          if (k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp') for (const d of ds) N.nguon.push({ k: 'dmg', v: k === 'amp' ? d.v * 5 : d.v, T: d.T, dk: k });
+          if (k === 'lo' || k === 'lanh' || k === 'vet' || k === 'amp') for (const d of ds) N.nguon.push({ k: 'dmg', v: Math.min(ht.capDmg, k === 'amp' ? d.v * 5 : d.v), T: d.T, dk: k }); // nhãn hiển thị: không vượt trần sát thương (đòn thật kẹp ở dkHe)
           if (k === 'khang') for (const d of ds) N.nguon.push({ k: 'khien', v: d.v, T: d.T, dk: k });
         }
       }

@@ -16,7 +16,7 @@ const BOBAI = {
     { id: 'mana', ten: 'MANA ENGINE', che: 'SOLO', cc: '3A · 2 SP', deck: ['hutmana', 'nangluong', 'laser', 'mana', 'nhanmana'], mv: 'hero',
       plan: 'Mana Core and Mana Doubler bank mana, Mana Leech adds more; Energy Cannon hits harder the more you hold.' },
     { id: 'combo', ten: 'CHAIN COMBO', che: 'SOLO · CO-OP', cc: '2A · 1 SUP · 2 SP', deck: ['lienket', 'combo', 'dongbo', 'mimic', 'nhanban'], mv: 'hero',
-      plan: 'Fill the board with twins: Chain Link and Combo Core grow, Sync Cannon buffs same-star neighbours.' },
+      plan: 'Fill the board with twins: Chain Link and Combo Core grow, Sync Cannon buffs every same-star Attack turret on the board.' },
     { id: 'ho_tro', ten: 'SHIELD WALL', che: 'CO-OP', cc: '2A · 2 SUP · 1 SP', deck: ['set', 'lien', 'radar', 'khien', 'haoquang'], mv: 'eve',
       plan: 'Tesla and Gatling carry; Radar speeds the guns next to it, Shield Gen guards them, Holy Halo saves a leak.' },
   ],

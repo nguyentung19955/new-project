@@ -379,7 +379,7 @@ HU.gTiaVang = { // tia vàng mảnh (Hộp Tiến Hoá dạng 3 / Pháo Đồng 
 };
 
 // ---- LÒ PHẢN ỨNG BĂNG: nhịp hào quang = vòng sương → + kim băng → sàn lưới lục giác + BÃO BĂNG lấp lưới ----
-ATK.lophanung = ['Each aura tick: a thin frost ring sweeps out', 'Ring + 3 ice needles fly to the slowest enemies', 'Hex frost lattice floor; ICE STORM fills it white, enemies shatter into shards'];
+ATK.lophanung = ['Each aura tick: a thin frost ring sweeps out', 'Ring + 3 ice needles fly to the slowest enemies', 'Hex frost lattice floor; ICE STORM fills it white and freezes nearby enemies (no damage)'];
 // sàn băng = ảnh PNG hu_vongbang (vòng gạch băng ChatGPT S4) + fx_lanhgia_hieu (xoáy sương) — thay lưới lục giác vẽ code
 // chờ ảnh sàn lưới lục giác: raw_p4_fx_1 ô 'luoi_bang'
 function veSanBang(ctx, x, y, r, al, goc) {
@@ -726,7 +726,7 @@ HU.gDauGio = { ve(ctx, o, R) { const E = o.E, x = E && !E.chet ? E.x : o.x, y = 
 // ---- RỒNG MÁY (Wyrm Engine, skills5.js): nón lửa CAM → nón lửa XANH (+30% quái to) → nón TRẮNG viền xanh dài hơn + vệt cháy 4 s ----
 ATK.ronglua = ['Orange flame cone, burns 3s', 'BLUE flame cone: +30% vs big enemies, sparks at the cone edge', 'WHITE flame with blue rim: longer cone, burning trail stays 4s'];
 // ---- LƯỚI CỘNG HƯỞNG (hỗ trợ chéo): dạng 2 ụ chéo trúng có vòng ngọc lam · dạng 3 cứ phát thứ 3 của ụ chéo bắn thêm 1 đạn vọng ngọc lam ----
-ATK.luoicheo = ['Diagonal damage buff (no shot)', 'HUMMING: buffed diagonal turrets’ hits flash a teal spark ring', 'RESONANCE: every 3rd shot of each diagonal turret fires an extra teal echo bolt'];
+ATK.luoicheo = ['Diagonal damage buff (no shot)', 'HUMMING: buffed diagonal turrets’ hits flash a teal spark ring', 'RESONANCE: every 3rd shot of each diagonal turret adds a teal echo bolt (visual, no damage)'];
 P.luoicheo = () => {
   const sk = SKILLS.luoicheo, cn = sk.capNhat;
   sk.capNhat = function (G, B, T, dt) { const r = cn.call(this, G, B, T, dt); const s = gdU(T); if (s >= 2) for (const o of oCheo(T.o)) { const N = B.t[o]; if (N && !N.st.da) { N._luoiT = G.t; N._luoiS = s; } } return r; };
@@ -744,8 +744,8 @@ P.luoicheo = () => {
   };
 };
 // ---- 3 ụ Đỏ đợt 3 (chuato / leviathan / khoisinh) đổi dạng theo sao: đã vẽ riêng trong skills5.js (drone hoàng gia, bọt lớn, hoa sen) ----
-ATK.chuato = ['Stinger shots + up to 3–4 orbiting drones', 'HIVE: drones perch on neighbours (+10% fire rate)', 'ROYAL HIVE: every 5th drone is gold ×3'];
-ATK.leviathan = ['Bubble shot, 30 px splash', 'Bubble shot + wider splash ring; devours big enemies', 'ABYSS LORD: big double-ring bubbles; devours flyers'];
+ATK.chuato = ['Stinger shots + up to 3–5 orbiting drones', 'HIVE: drones perch on neighbours (+10% fire rate)', 'ROYAL HIVE: every 5th drone is gold ×3'];
+ATK.leviathan = ['Bubble shot, 30 px splash', 'Bubble shot, bigger splash ring (same 30 px); devours big enemies', 'ABYSS LORD: big double-ring bubbles; devours flyers'];
 ATK.khoisinh = ['3 rotating gold rings, raises your lowest turret', 'BLOSSOM: steel lotus petals, neighbours +15% damage', 'LOTUS OF LIFE: white star core, each raise also seeds a free 1★'];
 
 // =====================================================================================================
