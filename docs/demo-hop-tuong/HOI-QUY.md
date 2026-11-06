@@ -127,3 +127,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 
 ## 06/11 Copycat chép ô đá/băng
 - Hồi quy đủ 4 cỡ: 1 lỗi `chữ tràn` 1280x800 solo_trum (`.ci-chu > b` băng giới thiệu trùm, cao 0 px lúc đang trượt vào — chụp giữa hoạt ảnh); chạy lại SIZES=1280x800x1 CHI=solo NHANH=1 → XANH. Không liên quan Copycat. Mới: tools/thap-kt-copycat-da.js ✓ (trong hồi quy), thap-kt-conghuong.js cập nhật ✓.
+- Sau rebase (390×844 NHANH): mọi bước XANH trừ `tiengviet` — 2 chuỗi mới của Copycat (đã thêm vi.json, thap-kt-vi chạy lại chỉ còn 3 chữ cài đặt P1 `EFFECTS/REDUCE FLASH/HAPTICS` của session VFX, đã ghi ở 532a2a8, không phải của việc này).
