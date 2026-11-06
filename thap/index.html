@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="tm-ver" content="a1fc2954b8">
+  <meta name="tm-ver" content="05f7a2f41e">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -27,7 +27,8 @@
     #tai .tai-thanh { position: relative; width: 330px; height: 34px; box-sizing: border-box; border-style: solid; border-width: 0; border-image: url(assets/tai_khung.webp?v=7509ba33) 36.9 69 36.9 70 fill / 12px 23px stretch; } /* GIỐNG HỆT css/taitai.css (trước: lát 14 22 ≠ 36.9 58 → khung đổi hình giữa chừng) */
     #tai .tai-day { position: absolute; left: 11px; right: 11px; top: 9px; bottom: 10px; overflow: hidden; clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0); transition: clip-path .2s; }
     #tai .tai-day img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; object-fit: fill; }
-    #tai .tai-chu { display: flex; gap: 10px; align-items: baseline; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; }
+    #tai .tai-chu { display: flex; justify-content: center; gap: 10px; align-items: baseline; white-space: nowrap; font: 800 16px 'TM Display', system-ui, sans-serif; color: #fff6df; text-shadow: 0 2px 0 #000; letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+    #tai .tai-so { display: none; }
   </style>
   <link rel="preload" href="assets/fonts/oxanium/oxanium-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/saira-semi-condensed/saira-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -185,7 +186,7 @@
   <link rel="stylesheet" href="css/statthuc.css?v=9d507576" data-b="2328">
   <link rel="stylesheet" href="css/unitpage.css?v=c8430741" data-b="16532">
   <link rel="stylesheet" href="css/pass2.css?v=ca74d981" data-b="10068">
-  <link rel="stylesheet" href="css/taitai.css?v=79426f7d" data-b="5050">
+  <link rel="stylesheet" href="css/taitai.css?v=fce536df" data-b="5155">
   <link rel="stylesheet" href="css/hud2.css?v=c40b233b" data-b="21984">
   <link rel="stylesheet" href="css/vaotran.css?v=2b6720c6" data-b="6425">
   <link rel="stylesheet" href="css/tien.css?v=430a9adf" data-b="4252">
@@ -279,7 +280,7 @@
   <script src="js/online/firebase-config.js?v=9e21ce47" data-b="926"></script>
   <script src="js/online/net.js?v=662e6ca1" data-b="12474"></script>
   <script src="js/online/taikhoan.js?v=1c9ac284" data-b="7664"></script>
-  <script src="js/online/phong.js?v=7b3be700" data-b="28085"></script>
+  <script src="js/online/phong.js?v=21d65db6" data-b="28049"></script>
   <script src="js/online/dongbo.js?v=2df53f86" data-b="34014"></script>
   <script src="js/online/chat.js?v=623b7a17" data-b="13927"></script>
   <script src="js/online/khoidong.js?v=cfccd26c" data-b="1475"></script>

@@ -58,7 +58,7 @@ const ONL = {
     this._moi = c;
     const tai = typeof TAI !== 'undefined' && TAI.bootP ? TAI.bootP : Promise.resolve();
     tai.then(() => {
-      if (typeof TAI !== 'undefined' && TAI.hien) { TAI.hien('JOINING ROOM ' + c); TAI.tienDo(1, 1); const s = TAI.el && TAI.el.querySelector('.tai-so'); if (s) s.textContent = ''; }
+      if (typeof TAI !== 'undefined' && TAI.hien) { TAI.hien('JOINING ROOM ' + c); TAI.tienDo(9, 10); } // chưa vào phòng → không báo 100 %
       if (UI.chon.length !== 5) { UI.chon = deckNgauNhien(); if (UI.veBoChon) UI.veBoChon(); } // người mới: bộ ngẫu nhiên, đổi được ở sảnh (DECK)
       this.vaoPhong(c, true);
     });
