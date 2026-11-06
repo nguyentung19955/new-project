@@ -1,0 +1,152 @@
+ChatGPT said:
+
+TURRET MERGE — DESTINY CHILD: DEFENSE WAR LEGENDARY AUDIT
+Research date: 2026-11-06 | Plain-text design research | Sections 1–4
+
+IMPORTANT SCOPE / EVIDENCE
+DCDW (developed by Round2, published by ThumbAge using the Shift Up IP) ended service on 2024-07-25. Hence NO official 2025–2026 DCDW additions. Original Destiny Child is a different game; its skill pages do NOT document DCDW skills. The old Korean DCDW card wiki preserves detailed data for 14 Legendary CHILD UNITS, but its roster is old. A different Korean DCDW page identifies 35 Legendary collectible entries, including 7 Legendary DEVIL CANDIDATES (commanders). Contemporary press confirms later Legendary units Rita, Strigoi and Yami missing from that older list. Thus 35 is NOT the final complete roster. Below are 39 independently identified Legendary entries (33 ordinary Childs plus 6 commanders), NOT an attested exhaustive final patch roster. Exact current-at-shutdown numerical stats/awakenings cannot be recovered for most. Do not treat early-version numbers as final values.
+
+Evidence tags: [D] detailed archival DCDW card entry (historical values); [P] contemporary DCDW release announcement (mechanic, usually no numeric values); [N] named in archive only (skill UNVERIFIED). English names are transliterations or customary English equivalents, not guaranteed official localization. 'Same' = primary mechanic fits; 'Similar' = partial/changed; 'MISSING' = no close gold analogue. Candidate commanders are shown separately because they are NOT summonable gold turrets.
+
+KEY SOURCES (individual source codes linked in section 1)
+A  Historical DCDW card compendium, detailed old unit mechanics:
+   https://seore.org/w/데스티니%20차일드:디펜스%20워/카드
+B  Korean game article, Legendary bag roster (35 entries):
+   https://d.namu.moe/w/데스티니%20차일드:디펜스%20워
+C  DCDW closure date (2024-07-25):
+   https://onlinegame-pla.net/destinychild-defensewar/
+
+============================================================
+1. DCDW LEGENDARY ROSTER: KR / EN / ROLE / SKILL / SOURCE
+============================================================
+OLDER CARD COMPENDIUM — 14 detailed Legendary units (historical figures)
+01 아텐 / Aten | Attack [D]. Poisoned enemy takes +300% damage; kills create AoE explosions. Star/power raise base damage. Source A. TURRET: Purifier — SAME.
+02 코스밈 / Cosmem (Cosmim) | Attack [D]. Gains +100% damage PER OTHER CHILD of the same star; multiplier grows with own stars; card levels additionally improve attack speed. Source A. TURRET: Sync Cannon — MISSING (supporting adjacent same-star is NOT Cosmem's self-scaling attack).
+03 제거티 / Removal Tee (Jegerty) | Attack [D]. All-Removal-Tee full horizontal line = +250% damage; full vertical line = +400% attack speed (older entry). Source A. TURRET: Railgun — SIMILAR; verify bingo must require SAME CHILD, not merely filled cells.
+04 오로라밈킹 / Aurora King (Auroramim King) | Special [D]. Merge with any same-star Child: target gains +1 star; 10% golden-awaken spawn does +2 instead; max 7. Source A. TURRET: Merge King — SAME if gold is an awakened spawn with actual chance.
+05 베리트 / Berit | Special [D]. On merge summons a random additional same-star Child; historical +2-star chance 10% noted in card stats. Source A. TURRET: Twin Maker — SAME core spawn mechanic; missing bonus chance if desired.
+06 길티네 / Guiltyne (Giltine) | Control [D]. Merge: random opposing Child -1 star (1-star target disappears); in co-op a random partner Child +1 star. Delayed resolution (~2 s) allows evasion. Source A. TURRET: MISSING.
+07 샤마시 / Shamash | Special [D]. Freely merge into ANY same-star Child, copying it with -50% damage debuff (older base). Source A. TURRET: Copycat — SAME, ensure this is merge-to-copy, not passive cloning.
+08 다비 / Darby (Davi) | Attack [D]. Total board star thresholds: at every 10-star milestone major speed buff (+300% cited); reaching 50 total stars triggers +350% damage Blood Star state. Historical per-star speed value also reported. Source A. TURRET: Star Cannon — SIMILAR; threshold effects not necessarily incremental permanent stack; use live board total.
+09 워울프 / Werewolf | Attack [D]. 30% chance to SUMMON an AWAKENED Werewolf; awakened attacks rapidly in melee and ALWAYS crits; normal Werewolf does not inherently have that property. Historical attacks 1.4s normal, 1s awakened. Source A. TURRET: Werewolf — SIMILAR/WRONG evolution model.
+10 모아 / Moa | Special [D]. After 15s baseline transforms into random Child +1 star; higher-star Moa takes longer; 7-star Moa cannot advance. Source A. TURRET: Evolver — SAME if higher-star delay + 7-star edge case.
+11 자청비 / Jacheongbi (Jacheong-bi) | Attack [D]. Gains +10% damage EVERY 10s, indefinitely; on-board accumulated buff is retained when Aurora King adds stars. Source A. TURRET: Scrap Forge — SIMILAR in growth theme, NOT mechanic.
+12 유나 / Yuna | Control [D]. Paints rainbow on enemy path. PvP: monsters on rainbow receive LESS damage (historical 2% per star, cap 48%). Co-op: monsters receive MORE damage (historical 2% per star, cap 150%). Source A. TURRET: Rainbow — WRONG PvP sign; only co-op similar.
+13 클레오파트라 / Cleopatra | Special [D]. Summons path wall at 10s interval, persists 2.5s, explodes for 1120 base; on merge creates golden wall (6s, 11200 base explosion), older stats. Source A. TURRET: Wall Projector — SIMILAR; add golden MERGE wall.
+14 마프데트 / Mafdet | Attack [D]. MERGING Mafdet awakens EVERY Mafdet currently on board into Goddess of Justice for 23s; awakened units fire AoE Justice Bombardment (3 bombs, +150% bomb damage cited); stars add bomb count/damage. Source A. TURRET: Orbital — SIMILAR theme, WRONG trigger/targets if it merely makes a 20s generic sky barrage.
+
+ADDITIONAL 17 NON-COMMANDER LEGENDARIES IN ARCHIVED BAG ROSTER (B)
+15 피에타스 / Pietas | Attack? [N]. Final base skill NOT VERIFIED. 2023 special core makes Golden Pietas appear with strong damage independent of stars [P]. Source B; https://zdnet.co.kr/view/?no=20230425141736 . TURRET: MISSING.
+16 아우로라 / Aurora | Attack [P]. Damage permanently builds on EACH merge; special core: merging Aurora into Aurora summons damaging Star Aurora [P]. Source https://www.inven.co.kr/webzine/news/?news=261166 ; https://www.inven.co.kr/webzine/news/?news=285869 . TURRET: Scrap Forge — SIMILAR, but feed mechanic is not all-merges scaling.
+17 루살카 / Rusalka | Role/skill unverified [N]. Source B. TURRET: MISSING (mechanic unknown).
+18 새턴 / Saturn | Control [P], exact mechanic unverified. Source https://www.inven.co.kr/webzine/news/?news=262418 . TURRET: MISSING (mechanic unknown).
+19 아테나 / Athena | Role/skill unverified [N]. Source B. TURRET: MISSING (mechanic unknown).
+20 하데스 / Hades | Role/skill unverified [N]. Source B. TURRET: MISSING (mechanic unknown).
+21 디나시 / Dinasy | Role/skill unverified [N]. Source B. TURRET: MISSING (mechanic unknown).
+22 바리 / Bari | Support [P]. On creation cleanses neighboring units, buffs damage, and gives nearby units debuff immunity. Source https://www.inven.co.kr/webzine/news/?news=259238 . TURRET: Mirror Gate — SIMILAR in protection; cleanser component MISSING unless Cleanser (other rarity) covers it.
+23 킨티아 / Kintia (Cynthia?) | Support [P]. Merge SAME CHARACTER with same star to convert random tile to HERO tile granting attack speed. Source https://www.inven.co.kr/webzine/news/?news=265113 . TURRET: MISSING.
+24 샤를 / Charles | Role/skill unverified [N]; damage buff mentioned without skill detail. Source B; https://www.inven.co.kr/webzine/news/?news=259238 . TURRET: MISSING (mechanic unknown).
+25 베스 / Beth | Control [P]. Sends many Bunny Heads into opposing lane, disrupting gameplay. Source https://www.inven.co.kr/webzine/news/?news=254631 . TURRET: MISSING.
+26 다나 / Dana | Support/control [P]. Buffs damage of ALL allied Childs matching Dana's star; decreases opponent's damage. Source https://www.inven.co.kr/webzine/news/?news=257839 . TURRET: Sync Cannon — SIMILAR in star matching, BUT board-wide rather than adjacency; PvP debuff absent.
+27 페르세포네 / Persephone | Control [P]. On merge corrupts random opponent tile: occupant loses damage. Co-op instead creates trust tile increasing ally damage. Source https://m.inven.co.kr/webzine/wznews.php?idx=266293&iskin=webzine . TURRET: MISSING.
+28 시트리 / Sytry (Sitri) | Control [P]. Places cats in opponent field; cat-bearing enemy causes monsters to HEAL in PvP; co-op causes extra damage. Source https://zdnet.co.kr/view/?no=20220420104633 . TURRET: MISSING.
+29 헤스티아 / Hestia | Role/skill unverified [N]. Source B. TURRET: MISSING (mechanic unknown).
+30 카라라트리 / Kalaratri | Attack [P]. Every carried FLAME boosts own damage and crit chance; merging distributes flames to same Childs in cardinal (+) directions and grants attack speed. Exact buff numbers unknown. Source https://www.bodnara.co.kr/bbs/article.html?num=175562 . TURRET: MISSING.
+
+LATER VERIFIED LEGENDARY UNITS (NOT INCLUDED IN THE OLD 35-NAME BAG LIST)
+31 리타 / Rita | Control [P, 2023-04]. On summon links petrification thread to opposing Child; attempts to stone both. If star comparison prevents petrification, it may stone ONLY Rita; exact success math unverified. Source https://zdnet.co.kr/view/?no=20230425141736 . TURRET: MISSING.
+32 스트리고이 / Strigoi | Special [P, 2023-06]. Freely merges with ANY unit regardless of type OR star; merging either builds lifesteal stacks or amplifies damage based on those stacks, dependent on conditions (unpublished details). Source https://www.inven.co.kr/webzine/news/?news=285869 . TURRET: MISSING.
+33 야미 / Yami | Attack/support hybrid [P, 2023-11]. Summoned as attacker OR supporter facing random N/S/E/W. Supporter buffs damage or fire rate of attacking Yamis in facing direction according to supporter's star count. Source https://www.newspim.com/news/view/20231124000572 . TURRET: Resonance Grid — SIMILAR in directional adjacency only; Yami identity/dual-mode MISSING.
+
+SIX LEGENDARY DEVIL CANDIDATES / COMMANDERS — DO NOT COUNT AS SUMMONABLE GOLD TURRETS
+34 프레이 / Frej (Frey) | Commander [D]: active changes one selected unit into a random OTHER unit of SAME star; 30s cooldown. Source https://dark.namu.moe/w/데스티니%20차일드:디펜스%20워/카드 . TURRET: MISSING commander, not gold unit.
+35 바토리 / Bathory | Commander [D/P]: active +100% allied damage for 20s, 30s cooldown; passive chance (~40% old value) to block enemy attacks on units. Source https://www.inven.co.kr/webzine/news/?news=253244 ; card compendium. TURRET: MISSING commander.
+36 메브 / Medb (Maeve; KR 메브) | Commander [D]: starts with 2 random pumpkin tiles, units there +100% damage/+10% crit; active +150% fire rate for 10s on pumpkin occupants (old stats). Source card compendium / https://m.gameshot.net/common/con_view.php?code=GA60a73ce83830a . TURRET: MISSING commander.
+37 나탈리스 / Natalis | Commander [D]: strongest populated Child type receives scalable Blessing; active in PvP restores 90% enemy monster HP, in co-op reduces friendly monsters' HP 30%; old 40s CD. Source card compendium. TURRET: MISSING commander.
+38 로라 / Laura | Commander [P]: summons owl Mina to buff attack and attack speed. Source https://www.inven.co.kr/webzine/news/?news=271994 . TURRET: MISSING commander.
+39 도계화 / Dogyehwa | Commander [P, 2023-03]: Legendary demon candidate; skill not independently recovered. Source https://www.inven.co.kr/webzine/news/?game=9864 . TURRET: MISSING commander.
+COUNT NOTE: Archived bag roster = 35 names (30 Child units and 5 commanders). Later confirmed names = Rita, Strigoi, Yami (Child units), Dogyehwa (commander). TOTAL = 39 identified names: 33 Child units + 6 commanders. The numbered roster now runs 01–39. No authenticated complete shutdown roster exists in the sources reviewed.
+
+============================================================
+2. GOLD TURRET MATCH MATRIX (22 GOLD TURRETS)
+============================================================
+Merge King -> Aurora King SAME (golden +2 must be chance-based awakening).
+Copycat -> Shamash SAME.
+Scrap Forge -> Aurora/Jacheongbi SIMILAR (feed sacrifice != any-merge growth or passive time growth).
+Twin Maker -> Berit SAME (verify same-star extra and optional +2-star chance).
+Pandora Vault -> no direct verified equivalent; ORIGINAL.
+Orbital -> Mafdet SIMILAR / inaccurate awakening trigger.
+Mirror Gate -> Bari SIMILAR (immunity yes, reflection not Bari); ORIGINAL reflect effect.
+Purifier -> Aten SAME.
+Sync Cannon -> Dana SIMILAR (not Cosmem); Cosmem MISSING.
+Railgun -> Removal Tee SIMILAR (must match turret type in completed lines).
+Star Cannon -> Darby SAME concept, details check.
+Werewolf -> Werewolf SIMILAR / wrong 3-stage growth.
+Rainbow -> Yuna SIMILAR CO-OP, WRONG PVP.
+Wall Projector -> Cleopatra SIMILAR (missing golden merge wall).
+Hydra -> no supported direct equivalent; ORIGINAL.
+Nine-Tail -> no supported direct equivalent; ORIGINAL.
+Resonance Grid -> Yami VERY LOOSE SIMILAR (diagonal buff != same-name facing support); ORIGINAL mechanic.
+Nemesis -> no supported direct equivalent; ORIGINAL.
+Eclipse -> no supported direct equivalent; ORIGINAL.
+Marionette -> no supported direct equivalent; ORIGINAL.
+Star Breaker -> no supported direct equivalent; ORIGINAL.
+Evolver -> Moa SAME if 7-star locks and higher-star delay.
+
+HIGH CONFIDENCE MISSING: Cosmem, Guiltyne, Kalaratri, Kintia, Strigoi, Rita, Persephone, Sytry, Beth, Aurora (true merge scaling), Yami (dual mode), plus support commander ideas. NOT FAIR TO CLAIM all unverified-ability named Childs have definitely different mechanics.
+
+============================================================
+3. SIX NEW GOLD TURRET SKILL PLANS — ORIGINAL BALANCE PROPOSALS
+============================================================
+These numbers are TURRET MERGE design proposals, NOT historical DCDW stats. Assume stars s in 1..7; card LV9 baseline; LV15 max; 4 mana power-ups multiply ordinary base damage but NOT specified special percentages unless called out. Stats below: 1★ / 4★ / 7★ at LV9. On-board bonuses are recalculated after merges and star changes. Each same-unit effect cannot multiply itself recursively.
+
+[P1] EMBER RELAY (Kalaratri inspiration) — cross-shaped fire network / Attack
+Skill: each Ember Relay gains Flame Charges via MERGING an Ember Relay; give +1 charge to each same-type Relay in the four CARDINAL neighboring cells (max 5 charges/unit). Each charge gives +12% damage and +3% crit; charged turrets also gain +15% fire rate for 5s upon distribution. At 1★/4★/7★ base attack per shot 100/400/700 (normalized tuning units); fully charged damage bonus +60%, crit +15% at all stars; star increases attack count, not charge multiplier. LV9 damage-per-charge +12%, +1 percentage point/level -> LV15 +18%; crit remains +3%/charge. Synergy: Merge King preserves position; Twin Maker fills network; Railgun row formation. Counters: randomization breaks cross, enemy petrify/star-down; maximum buff 90% at LV15. PVP: only your Relay network; CO-OP: partner attacks not buffed, own Relay only. Art: round gold-rimmed bronze heat sink, four outward cruciform copper flare ports, central white-hot orange ember, NO flamethrower barrel, magenta background.
+
+[P2] QUANTUM CHOIR (Cosmem inspiration) — same-star harmonic self-scaling / Attack
+Skill: each Choir counts OTHER friendly board turrets with the same STAR (any type, max 7). Gains +18% damage per match at LV9. At 1★/4★/7★ with 3 matches, bonus +54% each; shot damage scales baseline 90/360/630. At 7★, also +12% attack speed (unlock only); max 7 matches = +126% dmg LV9. Card LV9 18% per match, +2 pp per level -> LV15 30% (cap +210%). Synergy: Twin Maker/Star Cannon/Sync Cannon, careful matching. Counters: Guiltyne-style star-down, chaotic Evolver, overmerge. PVP: own 15 cells only; CO-OP: partner stars don't count to avoid huge scaling. Art: compact circular gold resonator with concentric white-violet sound rings and seven small equidistant prongs, NO cyan network tiles.
+
+[P3] HEX SABOTEUR (Guiltyne inspiration) — adversarial merge disruptor / Control
+Skill: merge two Saboteurs: target random enemy turret (server-seeded) and after 1.5s try -1★; cannot reduce under 1★; instead a 1★ target is disabled 2.5s (does NOT delete unit). Success 1★/4★/7★ caster: 35%/50%/65%. Each activation has 8s team cooldown, extra activations queue/drop deterministically; immunity/reflect checked at impact. Card LV9 base success 35% at 1★, +2pp/level -> LV15 47%, +5pp per caster star (max 77% at 7★), hard cap 80%. Synergies: forces opponent to rebuild line bingo; Mirror Gate counters it, Copycat decoys, Merge King restores stars. PVP: opponent debuff; CO-OP: instead random ally turret +1★ with same probability (7★ ineligible), cooldown shared, never grief. Art: round gold mechanical scarab shell with a pointed red tuning-fork jammer and tiny broken-star glyph shape (NOT text), no mirror or padlock.
+
+[P4] FUSION ARCHIVE (Aurora inspiration) — grow through EVERY merge / Attack
+Skill: EVERY successful friendly merge adds +1 permanent archive charge to all on-board Fusion Archives; when an Archive is first summoned it inherits 50% of match-global charges (round down). Each charge +2.5% attack damage at LV9, max 40 charges; Archive-on-Archive merges cause short 3x area pulse, 160% attack damage. At 1★/4★/7★ (20 charges) = +50% damage; raw shot baseline 90/360/630. Card LV9 +2.5% per charge, +0.25pp/LV -> LV15 +4% (max +160%); pulse remains 160%. Synergy: Twin Maker/Evolver frequent merges, Scrap Forge growth. Counters: early rush, high-star jam, loss of board space; permanent record is match-local only. PVP/CO-OP: only own merges counted, no transfer; partner may benefit from combat result, not charge propagation. Art: low round gold vault with a fan of five physical punched-metal tally tabs and rising white-blue filing sparks, NOT Pandora chest/keyhole, no tubes.
+
+[P5] HERO FOUNDRY (Kintia inspiration) — create temporary high-speed tiles / Support
+Skill: merge Foundry into Foundry: convert random OWN tile (prefer occupied) into a gold HERO tile for 12s. Unit standing there gains attack speed 20%/32%/44% for merged Foundry caster at 1★/4★/7★; no stacking, refresh only; tile persists after unit merge. LV9 base 20% +2pp/level -> LV15 32%; star bonus +4pp/star -> 7★ 56%. Limit two active HERO tiles per player, oldest replaced; no self-target bias. Synergy: Hydra, Star Cannon, Railgun, slower attackers. Counters: forced relocation, board-star disruption; does not buff skill procs or commander effects. PVP only own side; CO-OP each player independent, no cross-board tile effects. Art: gold round industrial stamping press with a raised five-point embossed star platen and triangular black/yellow side braces, NO treasure chest, no hologram mirror.
+
+[P6] BLOOD CIRCUIT (Strigoi inspiration) — universal sacrificial merge / Special
+Skill: may be dragged onto any own turret irrespective of STAR/TYPE; replaces the two with one random deck turret at star = min(7, max(stars involved)) (NEVER freely produces a higher star). If consumed target is same star, add 1 Vamp Charge (+6% damage to all Blood Circuits, max 10 charges); if target differs, consume 2 charges and generate a small 220% attack-damage pulse (no free charge generation). 1★/4★/7★ Blood Circuit: basic shot 75/300/525; with 5 charges +30% damage. Card LV9 charge bonus +6%, +0.5pp per level -> LV15 +9% (max +90%). Synergy: resolves 7★ deadlocks, Copycat and Evolver; counter: destroys a valuable tower, loses charges if mismatched, Mirror Gate does NOT block own voluntary merge. PVP/CO-OP identical self-board behavior; no interaction with ally cards. Art: compact round black-red siphon reactor with TWO unequal copper-gold rings and a single crimson fluid ampoule, NO glass three-liquid blender (Fusion Mixer), NO coin or VFX.
+
+BALANCE SAFETY: PVP/CO-OP must resolve on authoritative server, seed all random effects deterministically, apply star cap 7 everywhere, make immunity decisions before star edits, log merge actor/star before mutation; never alter ally board in PVP. Attack speed bonuses require hard floor on firing interval. Check on 15-tile board with simulated 4 mana power-ups before production.
+
+============================================================
+4. EXISTING GOLD TURRET DIVERGENCES / FIX PRIORITIES
+============================================================
+CRITICAL 1 Werewolf — DCDW summons an awakened variant by chance (~30% historically); only AWAKENED automatically crits. Replace Pup->Hunter->Alpha growth with two spawn variants (Normal 70%, Awakened 30% LV9); level grows awakening chance +1.5pp/LV -> 39% LV15, cap 50%. Retain distinct model visuals as skins, not mandatory evolution stages. Source A.
+CRITICAL 2 Rainbow — Yuna in DCDW makes enemies tougher in PVP, weaker in CO-OP. Fix parity if mirroring: PvP enemy-on-rainbow -damage-taken, CO-OP +damage-taken. Otherwise call current version an original inverted Yuna-inspired support. Source A.
+CRITICAL 3 Orbital — Mafdet's merge awakens ALL on-board Mafdets into area-bombing state, not merely an unconditional sky strike. Fix: merging Orbital units grants every surviving Orbital 'Awakened' for 23s (LV9), firing area salvos; stars increase salvo count. Source A.
+HIGH 4 Sync Cannon — NOT Cosmem: Cosmem is a SELF-DAMAGE dealer scaling with COUNT of all same-star units, not a neighbor buffer. Reclassify Sync Cannon as Dana-like and use Quantum Choir for Cosmem. Sources A, https://www.inven.co.kr/webzine/news/?news=257839 .
+HIGH 5 Railgun — Removal Tee requires full ROW/COLUMN OF THE SAME CHARACTER, not just any turrets. Check orientation: horizontal +damage (250% old), vertical +fire rate (400% old); use live board. Source A.
+HIGH 6 Wall Projector — Cleopatra creates periodic normal walls AND a substantially stronger GOLDEN wall on merge; implement merge special with longer life and big explosion. Source A.
+HIGH 7 Scrap Forge — a sacrificed low-star feeding a single attacker is not Aurora (all merges scaling) or Jacheongbi (passive +10% every 10s); keep original or add a distinct Fusion Archive. Sources A, Aurora press.
+MED 8 Merge King — the +2-star variant is a chance-based golden-awakened SPAWN (historical 10%); should not trigger every time a base Merge King merges. Source A.
+MED 9 Twin Maker — Berit historical stat documents a +2-star chance (10%) in addition to same-star extra spawn; optional fidelity enhancement. Source A.
+MED 10 Star Cannon — Darby gets thresholds from current TOTAL board stars (not lifetime cumulative). At 50 current stars Blood Star damage unlocks; don't accidentally give permanent milestone unlock after stars fall. Source A.
+MED 11 Evolver — Moa's transform delay lengthens with stars and 7★ cannot +1. Ensure capped 7★ is immobile/convert into salvage rather than illegal 8★. Source A.
+MED 12 Mirror Gate — reflection of control is your original mechanic, not Bari's documented cleanse/immunity-on-spawn; do not label Same. Source Bari press.
+
+SOURCE RELIABILITY / NEXT VERIFICATION STEP
+- Archived wiki A is a historical snapshot, NOT guaranteed final tuning; marks D refer to observed early values, not final 2024 skills.
+- B bag roster is incomplete relative to press announcements from 2023; cannot legitimately call the list 'ALL current final roster.' Additional late Legendary releases may exist. Verify with final game-client data, official archived card screens, or full 2024 patch notes before implementing exact DCDW equivalence.
+- Awakening/core details are only documented where explicitly mentioned above. Do not extrapolate 'awakens' to other Childs.
+- The new six skill numbers were selected as test starting points, not certified balanced; run PvP/CO-OP win-rate simulation, especially Hex Saboteur and Blood Circuit.
+
+ChatGPT can make mistakes. Check important info.
+Latest response
+
+
+
+
+Thinking effort
+Medium
