@@ -409,6 +409,11 @@ async function online(b, W, H, D, co) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-keo.js'), BASE], { stdio: 'pipe', env: process.env }); console.log(String(o).trim()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of ds) LOI.push({ co: '-', buoc: 'keo', loai: 'kéo-thả bộ bài', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ kéo-thả: kẹt'); }
   }
+  // đầu ụ phân biệt được (tools/thap-dau-giong.py --kiem): 2 ụ CÙNG ĐỘ HIẾM có đầu quá giống (vd. Copycat cũ ≈ Twin Maker) = TRƯỢT
+  if (!process.env.CHI || /dau|menu/.test(process.env.CHI)) {
+    try { const o = execFileSync('python3', [path.join(__dirname, 'thap-dau-giong.py'), '--kiem'], { stdio: 'pipe' }); console.log(String(o).trim().split('\n').pop()); }
+    catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-dau-giong.py lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'dau', loai: 'đầu ụ giống nhau', chi: l, anh: 'docs/demo-hop-tuong/tuvan/dau_giong/cap_giong.png' }); console.log(ds.join('\n')); }
+  }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,
   // khách rời–vào lại, chủ phòng/khách tải lại ở sảnh (lỗi 05/11 "không vào game được") — tools/thap-kt-online-sanh.js, chạy 1 lần

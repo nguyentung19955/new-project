@@ -2,7 +2,7 @@
 
 Nguyên nhân phát hiện: người chơi tưởng có 2 **Twin Maker** (sinhdoi), thật ra con thứ 2 là **Copycat** (saochep) — 2 đầu cùng viền vàng, cùng tâm xám, cùng 2 màn hình xanh lơ phía trước. Luật chơi đúng, chỉ hình gây nhầm.
 
-Công cụ: `python3 tools/thap-dau-giong.py` (điểm = ½ dáng [màu HSV · SSIM · IoU bóng] + ½ bản đồ màu nhấn không tính màu viền độ hiếm). Kiểm hồi quy: `--kiem` (2 ụ cùng độ hiếm ≥ 0,80 → đỏ).
+Công cụ: `python3 tools/thap-dau-giong.py` (điểm = ½ dáng [màu HSV · SSIM · IoU bóng] + ½ bản đồ màu nhấn không tính màu viền độ hiếm). Kiểm hồi quy: `--kiem` (2 ụ cùng độ hiếm ≥ 0,86 → đỏ; máy chỉ bắt đầu gần trùng — cặp "cùng ý" như Copycat cũ ≈ Twin Maker (0,789) vẫn cần xem ảnh bằng mắt).
 
 Ảnh: `cap_giong_truoc.png` (trước), `cap_giong.png` (sau), `copycat_truoc_sau.png` (bàn chơi).
 

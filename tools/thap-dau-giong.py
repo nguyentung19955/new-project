@@ -17,7 +17,8 @@ from skimage.metrics import structural_similarity as ssim
 GOC = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 A = os.path.join(GOC, 'thap', 'assets'); JS = os.path.join(GOC, 'thap', 'js')
 OUT = os.path.join(GOC, 'docs', 'demo-hop-tuong', 'tuvan', 'dau_giong')
-NGUONG = 0.80          # cùng độ hiếm & điểm ≥ NGUONG → hỏng (Copycat/Twin Maker cũ ≈ 0.84)
+NGUONG = 0.86          # cùng độ hiếm & điểm ≥ NGUONG → hỏng. Cao nhất hiện tại 0.844 (đã xem bằng mắt). Đo máy chỉ chặn đầu gần TRÙNG;
+                       # cặp "cùng ý" (Copycat cũ ≈ Twin Maker = 0.789) vẫn phải xem cap_giong.png bằng mắt
 MIEN = {}              # cặp đã xem & chấp nhận: {'a|b': 'lý do'} (a<b)
 TEN_BAC = {'trang': 'Common (white)', 'xanh': 'Rare (blue)', 'tim': 'Epic (purple)', 'vang': 'Legendary (gold)', 'do': 'Mythic (red)'}
 N = 64

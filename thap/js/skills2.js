@@ -790,8 +790,8 @@ SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thà
     hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban,
     lam(G, B, a, b) {
       const N = chuyenU(B, a, b.id, a.sao); N.banSao = true;
-      const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#ffd23f');
-      nhanU(N, 'COPY', '#ffd23f', true);
+      const c0 = B.o[b.o], c = B.o[N.o]; tiaPhep(c0.x, c0.y, c.x, c.y, '#b98cff');
+      nhanU(N, 'COPY', '#c9a2ff', true);
       return N;
     },
   },

@@ -871,7 +871,8 @@ const REN = {
     }
     // vẽ thêm riêng của kỹ năng (quả cầu, đồng hồ bom, hào quang, dây liên kết…) — toạ độ quanh tâm ụ
     if (skT.veThem && !o.ghost) { ctx.save(); skT.veThem(ctx, T, S, al, this, B); ctx.restore(); ctx.globalAlpha = al; ctx.globalCompositeOperation = 'source-over'; }
-    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.08 + 0.04 * Math.sin(this.t * 6)); this.anhGiua(ctx, this.cham1('#ffd23f'), 0, 0, S * 0.95); ctx.restore(); ctx.globalAlpha = al; }
+    // bản sao của Copycat: quầng TÍM (màu ảo ảnh của đầu Copycat) rõ hơn + huy hiệu nho/saochep ở góc trên-trái (nhandien.js) → không nhầm với ụ thật
+    if (T.banSao && !o.ghost) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = al * (0.2 + 0.07 * Math.sin(this.t * 5)); this.anhGiua(ctx, this.cham1('#a35cff'), 0, 0, S * 1.05); ctx.restore(); ctx.globalAlpha = al; }
     const xich = T.st.kep > 0 && !o.ghost ? this.co('vong_xich', S * 0.9) : null; // vòng xích ChatGPT (S4), xoay chậm
     if (xich) { ctx.save(); ctx.globalAlpha = al * 0.9; ctx.rotate(this.t * 0.6); ctx.drawImage(xich, -S * 0.45, -S * 0.45, S * 0.9, S * 0.9); ctx.restore(); ctx.globalAlpha = al; }
     // lớp phủ trạng thái
