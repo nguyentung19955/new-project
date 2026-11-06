@@ -43,21 +43,21 @@ HU.dia = { // đĩa nảy: bay đuổi mục tiêu, trúng → tìm quái gần 
     // TRÚNG
     o.x = o.E.x; o.y = o.E.y;
     const k = 1 + o.b * o.n;
-    trung(o.E, o.dmg * k, { B: o.B, T: o.T, mau: o.n ? '#e8ff8a' : '#d6ff3a' });
+    trung(o.E, o.dmg * k, { B: o.B, T: o.T, mau: o.n ? '#f7f08a' : '#f7ec3a' });
     o.da.push(o.E);
-    FX.vong1(o.x, o.y, 4, 14 + o.n * 3, '#d6ff3a', 0.22, 2); FX.tiaLua(o.x, o.y, 3 + o.n, '#d6ff3a', 150, 7);
+    FX.vong1(o.x, o.y, 4, 14 + o.n * 3, '#f7ec3a', 0.22, 2); FX.tiaLua(o.x, o.y, 3 + o.n, '#f7ec3a', 150, 7);
     if (o.n >= o.max) { FX.no('dien', o.x, o.y, 30 + o.n * 3, 0.2); return true; }
     const N = this.ke(o, o.x, o.y); if (!N) return true;
     o.n++; o.E = N; SND.nay(o.n);
-    if (o.n >= 3 && o.n === o.max) nhanU(o.T, 'RICOCHET ×' + o.n, '#d6ff3a');
+    if (o.n >= 3 && o.n === o.max) nhanU(o.T, 'RICOCHET ×' + o.n, '#f7ec3a');
     return false;
   },
   ke(o, x, y) { let m = null, best = 90; for (const Q of dsMucTieu(o.B)) if (!Q.chet && !o.da.includes(Q)) { const d = Math.hypot(Q.x - x, Q.y - y); if (d < best) { best = d; m = Q; } } return m; },
   ve(ctx, o, R) {
     const r = 6 + o.n * 0.9;
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i + 1 < o.vet.length; i += 2) { const a = (i + 2) / o.vet.length; ctx.globalAlpha = a * 0.5; R.anhGiua(ctx, R.cham1('#d6ff3a'), o.vet[i], o.vet[i + 1], r * 2.2 * a); }
-    ctx.globalAlpha = 0.55 + 0.05 * o.n; R.anhGiua(ctx, R.cham1('#d6ff3a'), o.x, o.y, r * 4);
+    for (let i = 0; i + 1 < o.vet.length; i += 2) { const a = (i + 2) / o.vet.length; ctx.globalAlpha = a * 0.5; R.anhGiua(ctx, R.cham1('#f7ec3a'), o.vet[i], o.vet[i + 1], r * 2.2 * a); }
+    ctx.globalAlpha = 0.55 + 0.05 * o.n; R.anhGiua(ctx, R.cham1('#f7ec3a'), o.x, o.y, r * 4);
     ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     // lưỡi cưa tròn: đĩa xám + răng + vành vàng chanh (tròn tuyệt đối)
     ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.goc);
