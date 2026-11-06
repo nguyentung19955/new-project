@@ -186,7 +186,8 @@
         if (T.nap != null && !fin(T.nap)) LOI('nan-u', T.id + ' nap=' + T.nap);
         if (!(T.st.bang <= 30)) LOI('bang-qua-lau', T.id + ' bang=' + T.st.bang);
         if (hetTrum && T.st.ngam > 0) LOI('trum-de-lai', 'bàn ' + B.i + ' ô ' + o + ' ' + T.id + ': tâm ngắm trùm còn (st.ngam=' + T.st.ngam.toFixed(2) + ') khi không còn trùm');
-        if (T.id === 'tienhoa' && T.xit && T.sao < 7 && !biKhoa(T)) LOI('evolver-xit-sai', 'Evolver ' + T.sao + '★ vẫn xịt');
+        // Evolver 7★ xịt bị giảm sao → phải đếm lại (skill chỉ chạy khi ụ không bị khoá: băng / đá / câm Jammer / Hex) — kiểm khi còn xịt > 1 s lúc RẢNH
+        if (T.id === 'tienhoa' && T.xit && T.sao < 7 && !biKhoa(T) && !(T.st.cam > 0) && !(T.hexT > 0)) { T._qaX = (T._qaX || 0) + BUOC * (Q.cfg.ktMoi || 4); if (T._qaX > 1) LOI('evolver-xit-sai', 'Evolver ' + T.sao + '★ vẫn xịt > 1 s khi không bị khoá'); } else T._qaX = 0;
       }
     }
     if (hetTrum && TVF.ds.length) LOI('trum-de-lai', 'TVF.ds còn ' + TVF.ds.length + ' dấu báo chiêu khi không còn trùm (' + TVF.ds.map(d => d.ten).join(',') + ')');

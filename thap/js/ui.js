@@ -232,7 +232,8 @@ c.style.setProperty('--m', TIERS[r.bac].mau);
     nt.classList.toggle('du', du); nt.classList.toggle('thieu', !du);
     document.querySelectorAll('#bo-the .the').forEach(d => {
       const id = d.dataset.id, lv = B.lv[id];
-      chu(d._lv || (d._lv = d.querySelector('.lv')), typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(B, id) : 'LV' + lv);
+      const nlv = typeof THEBAI !== 'undefined' ? THEBAI.nhanTran(B, id) : 'LV' + lv, elv = d._lv || (d._lv = d.querySelector('.lv'));
+      chu(elv, nlv); if (elv && elv._dai !== (nlv.length >= 6)) { elv._dai = nlv.length >= 6; elv.classList.toggle('lv-dai', elv._dai); } // 'LV16+1' dài: canh giữa ô (QA ngâm: lòi ra khung thẻ ở iPhone 13)
       // số ụ loại này trên bàn: tấm đếm .dem-u (icon chồng ụ + số) — js/demkn.js
       const g = d._g || (d._g = d.querySelector('.gia b'));
       if (lv >= 5) { chu(g, TEXT.ui.max); d.classList.add('max'); d.classList.remove('du', 'thieu'); }

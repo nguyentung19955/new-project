@@ -61,6 +61,8 @@ html body #wrap #bo-the .the.ot > .lv { position: absolute !important; z-index: 
   top: calc(var(--ot-sq, 62px) * .66) !important; width: auto !important; height: auto !important; padding: 0 !important; margin: 0 !important; background: none !important; border: 0 !important; border-image: none !important;
   font: 800 calc(12px * var(--ot-k))/1 Oxanium, sans-serif !important; color: #fff !important; letter-spacing: 0 !important; overflow: visible !important; white-space: nowrap !important; text-align: left !important; clip-path: none !important; max-width: none !important; transform: none !important; scale: none !important;
   text-shadow: 0 0 2px #000, 0 1px 1px #000, 1px 0 1px #000, -1px 0 1px #000, 0 -1px 1px #000 !important; }
+/* nhãn dài 'LV16+1' (cấp thẻ + power-up): canh giữa cả ô — để lề trái 15% thì lòi ra khung thẻ phải (QA ngâm, iPhone 13) */
+html body #wrap #bo-the .the.ot > .lv.lv-dai { left: 0 !important; right: 0 !important; text-align: center !important; letter-spacing: -0.4px !important; }
 /* số ụ trên bàn: chip góc trên-phải (chỗ dành riêng) */
 html body #wrap #bo-the .the.ot > .dem-u { right: 4% !important; top: 4% !important; left: auto !important; bottom: auto !important; z-index: 6; }
 html body #bo-the .the.ot > .so { display: none !important; }

@@ -22,7 +22,7 @@ const NHIN = +(process.env.NHIN != null ? process.env.NHIN : 8), TAILAP = +(proc
 const PHUT = +(process.env.PHUT || 240), ONLINE = +(process.env.ONLINE != null ? process.env.ONLINE : 4);
 const DO = require('./thap-kt-tran-do.js');
 const TRANG = fs.readFileSync(path.join(__dirname, 'thap-qa-ngam-trang.js'), 'utf8');
-fs.mkdirSync(OUT + 'anh/', { recursive: true });
+fs.mkdirSync(OUT + 'anh/', { recursive: true }); try { fs.unlinkSync(OUT + 'tran.jsonl'); } catch (e) { }
 const T0 = Date.now();
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const mb = (a) => function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
@@ -196,6 +196,7 @@ async function choiOnline(b, cfg) {
       if (WW !== W) await WW.ctx.close();
       else if (++n % 10 === 0) { const h = await heap(W.p); HEAP.push({ w: wi, n, mb: h }); }
       KQ.push(kq); xong++;
+      fs.appendFileSync(OUT + 'tran.jsonl', JSON.stringify(Object.assign({}, kq, { bam: undefined })) + '\n');
       const nl = (kq.loi || []).length;
       console.log(`[${xong}/${tong}] s${cfg.seed} ${cfg.che} ${cfg.kieu} ${cfg.toc}× bộ=${cfg.deck.join(',')} → wave ${kq.wave} ${kq.kt ? (kq.kt.thang ? 'THẮNG' : 'thua') : ''} ${Math.round((kq.wall || 0) / 1000)}s` + (nl ? '  ✗ ' + kq.loi.map(l => l.loai).join(',') : ''));
       if (W.L && WW === W && n % 25 === 0) { try { await W.ctx.close(); } catch (e) { } W = workers[wi] = await moTrang(b, false); } // trang mới mỗi 25 trận (đo rò bộ nhớ theo từng chặng)
