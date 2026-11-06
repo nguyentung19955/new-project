@@ -174,7 +174,7 @@ const SD_K = {
   chuato: { q: Q.hang(5, 200, 36, 8), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.de = 99; }, c: [[0.2, 'Breeds hunter drones'], [4.6, 'Tap: the swarm dives in', { cham: 0.7 }]], dai: 9 },
   leviathan: { q: Q.nho().concat([{ k: 'khong_lo', s: 30, h: 30 }]), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; T.nuot = 99; }, c: [[0.2, 'Devours a small enemy'], [1.4, 'Whirlpool tag = ABYSS points'], [4.6, 'Tap: ice dragon breath', { cham: 0.7 }]], dai: 9 },
   khoisinh: { kieu: 'phu', cham: [4.6], truoc: (T) => { T.sinhT = SKILLS.khoisinh.g(T) - 1.4; T.nap = 0.95; T.napDay = -99; }, ke: [[6, 'lien', 1], [8, 'canon', 2], [2, 'set', 3]], c: [[0.2, 'Raises your lowest turret'], [1.4, 'Lowest turret gets +1★', { ev: 'sao', cham: 0.6 }], [4.6, 'Tap: summons new turrets', { cham: 0.6 }]], dai: 9 },
-  ronglua: { q: Q.nhom(6, 190, 20, 12), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; }, c: [[0.2, 'Flame cone burns crowds'], [4.6, 'Tap: dragon dives the path', { cham: 0.7 }]], dai: 9 },
+  ronglua: { q: Q.nhom(6, 190, 20, 12), cham: [4.6], truoc: (T) => { T.nap = 0.95; T.napDay = -99; }, c: [[0.2, 'Flame cone burns crowds'], [4.6, 'Tap: fire dragon breath', { cham: 0.7 }]], dai: 9 },
   mana: { kieu: 'phu', mana: 1, manaDau: 0, truoc: (T) => { T.nap = 0.8; }, c: [[0.2, 'Does not shoot'], [1.2, (T) => 'Makes mana every ' + SKILLS.mana.ky(T) + 's', { ev: 'mana', cham: 0.6 }]] },
   chimang: { may: [2.0, 3.6, 'ke'], c: [[0.2, 'Gives 4 neighbours crit chance'], [2.0, 'Crits deal double damage', { cham: 0.5 }]] },
   radar: { c: [[0.2, 'Speeds up 4 turrets around it'], [2.0, (T) => 'Each gets +' + sdBuf(T) + ' fire rate', { cham: 0.4 }]] },

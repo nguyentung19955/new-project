@@ -363,23 +363,34 @@ SKILLS.ronglua = {
 };
 // nón lửa = ảnh PNG fx_ronglua_dan (ChatGPT) — dạng 2/3 tô màu lửa xanh (thay sprite gradient + quadraticCurveTo dựng bằng code)
 function anhNon(gd) { if (gd > 1 && typeof FXU !== 'undefined' && FXU.co('fx_ronglua_dan' + gd)) return REN.img('fx_ronglua_dan' + gd); return gd > 1 ? PX.mau('fx_ronglua_dan', RONG_MAU[gd].b) : REN.img('fx_ronglua_dan'); }
-HU.nonLua = { // nón lửa: ảnh PNG fx_ronglua_dan kéo theo tầm + góc, 2 lớp lệch pha + rung nhẹ, chỉ hiện khi đang phun (mờ dần 0.3 s)
+const LUA_BD = new WeakMap(); // lúc bắt đầu phun của mỗi ụ (chỉ để chọn khung hình — không nằm trên T, không vào đồng bộ online)
+HU.nonLua = { // nón lửa = dải 16 khung ChatGPT fx_wyrm_lua chạy ĐÚNG THỨ TỰ (bắt lửa 1–4 → chảy lặp 5–12 → tàn 13–16) — user 06/11 17:37: bỏ 1 ảnh tĩnh rung/phóng
+  // dạng 2/3 (lửa XANH / TRẮNG theo luật) = cùng khung tô màu; chưa có dải → ảnh cũ fx_ronglua_dan (tĩnh, không rung)
   cap(G, o) { return !conTren(o.T) || o.T.id !== 'ronglua'; },
   ve(ctx, o, R) {
-    const T = o.T; if (!(T.phun > 0)) return;
-    const gd = T.gd || gdSao(T), goc = SKILLS.ronglua.goc(T), [x, y] = dauNong(T); let L = SKILLS.ronglua.tam(T);
-    const a0 = anhNon(gd); if (!a0) return;
+    const T = o.T, gd = T.gd || gdSao(T);
+    if (!(T.phun > 0)) { LUA_BD.delete(T); return; }
+    if (!LUA_BD.has(T)) LUA_BD.set(T, R.t);
+    const goc = SKILLS.ronglua.goc(T), [x, y] = dauNong(T); let L = SKILLS.ronglua.tam(T);
     // VFX P0 hitbox: phép trúng đo từ TÂM ụ (tamU) tới L — ảnh bắt đầu ở nòng nên rút phần nòng ra khỏi chiều dài → mũi lửa = đúng tầm thật
     const c0 = tamU(T); L = Math.max(20, L - Math.hypot(x - c0.x, y - c0.y));
+    const M = typeof SIG_META !== 'undefined' && SIG_META.fx_wyrm_lua, st = M && typeof SIG !== 'undefined' && REN.img('fx_wyrm_lua');
+    if (st) {
+      const e = R.t - LUA_BD.get(T), f = T.phun < 0.1 ? 12 + Math.min(3, Math.floor((0.1 - T.phun) / 0.1 * 4)) : e < 0.12 ? Math.floor(e / 0.12 * 4) : 4 + Math.floor(e * 16) % 8;
+      const hh = Math.max(L * 0.5, 1.5 * SKILLS.ronglua.tam(T) * Math.tan(goc / 2));
+      if (gd === 1) { SIG.k(ctx, 'fx_wyrm_lua', f, x, y, L * 1.04, { g: T.goc, ax: 0.02, h: hh }); return; }
+      const im = PX.mau('fx_wyrm_lua', RONG_MAU[gd].b) || st; // tô lửa xanh/trắng: 1 canvas dựng 1 lần
+      ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
+      ctx.drawImage(im, f * M[1], 0, M[1], M[2], -L * 1.04 * 0.02, -hh / 2, L * 1.04, hh);
+      if (gd === 3) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35; ctx.drawImage(st, f * M[1], 0, M[1], M[2], -L * 0.02, -hh * 0.3, L * 0.9, hh * 0.6); }
+      ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      return;
+    }
+    const a0 = anhNon(gd); if (!a0) return;
     const al = Math.min(1, T.phun / 0.3), im = REN.mip(a0, L * REN.s * REN.dpr);
     const hh = Math.max(L * a0.height / a0.width, 2 * SKILLS.ronglua.tam(T) * Math.tan(goc / 2));
-    ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc);
-    for (let i = 0; i < 2; i++) {
-      const f = 1 + 0.06 * Math.sin(R.t * (31 + i * 17) + i);
-      ctx.globalAlpha = al * (i ? 0.45 : 1); ctx.save(); ctx.rotate(0.05 * Math.sin(R.t * 13 + i * 2));
-      if (i) ctx.globalCompositeOperation = 'lighter';
-      ctx.drawImage(im, -2, -hh * f / 2, L * f, hh * f); ctx.restore();
-    }
+    ctx.save(); ctx.translate(x, y); ctx.rotate(T.goc); ctx.globalAlpha = al;
+    ctx.drawImage(im, -2, -hh / 2, L, hh);
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   },
 };
