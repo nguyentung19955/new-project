@@ -268,7 +268,7 @@ SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khá
   },
 };
 SKILLS.drone = { // Bệ Phóng Drone (Hermes): khi GHÉP phóng drone bom chạy ngược đường đâm quái
-  vai: 'tc', dmg: 13, toc: 1.5, nham: 'dau', // 8.67 → 13 (đo bậc 06/11)
+  vai: 'tc', dmg: 11.5, toc: 1.5, nham: 'dau', // 8.67 → 11.5 (đo bậc 06/11)
   mo: (T) => 'On merge: ' + (1 + Math.floor(T.sao / 3)) + ' bomb drones ×24',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'dan_lien', co: 14, snd: 'lien' }); },
   ghep(G, B, a, b, ra) {
@@ -361,7 +361,7 @@ SKILLS.loa = { // Loa Hồi Chiêu (Melpomene): khi GHÉP giảm hồi chiêu k�
   },
 };
 SKILLS.hutmana = { // Máy Hút Mana (Elizabeth) — TẤN CÔNG (đợt vai trò): bắn tia hút quái đầu; mỗi phát trúng hồi chút mana (có trần mana/giây)
-  vai: 'tc', dmg: 15, toc: 1.4, nham: 'dau', // 11 → 15 (đo bậc 06/11)
+  vai: 'tc', dmg: 13.5, toc: 1.4, nham: 'dau', // 11 → 13.5 (đo bậc 06/11)
   luong: (T) => (0.35 + 0.15 * (T.sao - 1)) * (1 + 0.2 * (lvU(T) - 1)),
   tran: (T) => 1.2 + 0.3 * (T.sao - 1),   // mana tối đa mỗi giây
   mo: (T) => '+' + SKILLS.hutmana.luong(T).toFixed(2) + ' mana per hit (max ' + SKILLS.hutmana.tran(T).toFixed(1) + '/s)',
@@ -429,7 +429,7 @@ SKILLS.cuongno = { // Súng Cuồng Nộ (Danu): chí mạng → chế độ bù
   sangDau: (T) => T.cuongT > 0 ? 0.3 + 0.15 * Math.sin(G.t * 20) : (T.rage > 0 ? 0.12 : 0),
 };
 SKILLS.baotuyet = { // Bão Tuyết (Mayauel): định kỳ làm chậm TOÀN BỘ quái
-  vai: 'tc', dmg: 20, toc: 1, napMau: '#bff4ff', // 9 → 20 (đo bậc 06/11)
+  vai: 'tc', dmg: 26, toc: 1, napMau: '#bff4ff', // 9 → 26 (đo bậc 06/11)
   ky: (T) => Math.max(4, 11 - 0.6 * T.sao - (ms(T, 3) ? 1.5 : 0)), // 3★ SQUALL
   cham: (T) => Math.min(0.6, 0.3 + 0.03 * T.sao),
   mo: (T) => 'Every ' + SKILLS.baotuyet.ky(T).toFixed(1) + 's: slow ALL enemies ' + Math.round(SKILLS.baotuyet.cham(T) * 100) + '% for 3s + freeze small ones ' + (ms(T, 7) ? 1 : 0.35) + 's',
@@ -561,7 +561,7 @@ SKILLS.hopbi = { // Hộp Bí Ẩn (Daron): sau 47 s biến thành ụ ngẫu nh
 };
 SKILLS.nangsao = { // Bệ Nâng Sao (Brownie) — HỖ TRỢ (đợt vai trò): 2 ụ kề SAO THẤP NHẤT +6% tốc bắn mỗi sao của Star Lift (tối đa 30%); 5★: mỗi wave +1 nấc sao cho ụ kề thấp nhất
   vai: 'ht', dmg: 0, toc: 0, napMau: '#ffe46b',
-  them: (T) => Math.min(0.30 * HOTRO.CAP_BAC[T.bac], 0.09 * T.sao * HOTRO.BAC[T.bac] * HOTRO.kThe(G.ban[T.ban], T)) * (1 + 0.06 * (lvU(T) - 1)), // ×bậc (đo bậc 06/11): Tím 6% → 18%/★
+  them: (T) => Math.min(0.30 * HOTRO.CAP_BAC[T.bac], 0.12 * T.sao * HOTRO.BAC[T.bac] * HOTRO.kThe(G.ban[T.ban], T)) * (1 + 0.06 * (lvU(T) - 1)), // ×bậc (đo bậc 06/11): Tím 6% → 24%/★
   can: (T) => (ms(T, 7) ? 2 : 3),        // nấc cần cho +1★ (7★ STAR SURGE: 2)
   thap(B, T) { return HOTRO.oDich(T).map(o => B.t[o]).filter(N => HOTRO.nhan(T, N)).sort((a, b) => a.sao - b.sao || a.o - b.o).slice(0, 2); },
   mo: (T) => 'The 2 lowest-star neighbours: +' + Math.round(SKILLS.nangsao.them(T) * 100) + '% fire rate' + (ms(T, 5) ? ' · each wave the lowest gets a star pip (' + SKILLS.nangsao.can(T) + ' pips = +1★, max 2★ per match) · ' + (T.pipDa || 0) + '/2 used' : ''),
@@ -589,7 +589,7 @@ SKILLS.tuthan = { // Cột Tử Thần (Thanatos): HỖ TRỢ — ụ kề có x
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '199,125,255', 2.8, 0.5); return true; },
 };
 SKILLS.xaotron = { // Máy Xáo Trộn (Neban): khi GHÉP — PVP đổi ngẫu nhiên ụ đối thủ; CO-OP/SOLO tạo cặp ghép cho bàn đồng đội/mình
-  vai: 'db', dmg: 11, toc: 1.35, nham: 'dau', // 6.67 → 11 (đo bậc 06/11)
+  vai: 'db', dmg: 14, toc: 1.35, nham: 'dau', // 6.67 → 14 (đo bậc 06/11)
   mo: (T) => 'On merge: PVP shuffles ' + (1 + Math.floor(T.sao / 2)) + ' rival turrets · CO-OP/SOLO makes loners mergeable',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#ff6ad5', sp: 480 }); },
   ghep(G, B, a, b, ra) {

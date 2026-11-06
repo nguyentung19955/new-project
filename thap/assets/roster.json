@@ -337,7 +337,7 @@
   "ten": "Cleanser",
   "bac": "tim",
   "dcdw": "Gemina",
-  "kyNang": "Support: every 12s cleanses 2 neighbours; nothing to clean = +8% damage",
+  "kyNang": "Support: every 12s cleanses 2 neighbours; nothing to clean = +18% damage",
   "ten_vi": "Máy Tẩy Lỗi",
   "kyNang_vi": "Hỗ trợ: mỗi 12 s tẩy hiệu ứng xấu cho 2 ụ kề; không có gì để tẩy → ụ kề +8% sát thương"
  },
@@ -364,7 +364,7 @@
   "ten": "Star Lift",
   "bac": "tim",
   "dcdw": "Brownie",
-  "kyNang": "Support: the 2 lowest-star neighbours fire faster (6% per ★); 5★ grants star pips",
+  "kyNang": "Support: the 2 lowest-star neighbours fire faster (24% per ★); 5★ grants star pips",
   "ten_vi": "Bệ Nâng Sao",
   "kyNang_vi": "Hỗ trợ: 2 ụ kề sao thấp nhất +6% tốc bắn mỗi sao; 5★ mỗi wave cho nấc sao"
  },

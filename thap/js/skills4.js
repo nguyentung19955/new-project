@@ -67,7 +67,7 @@ SKILLS.docton = {
 // =====================================================================================================
 SKILLS.thaukinh = { // Thấu Kính — HỖ TRỢ: 4 ô kề +sát thương chí mạng; chí mạng của ụ kề XUYÊN 1 quái phía sau (5★: 2; 7★: xuyên 100%)
   vai: 'ht', dmg: 0, toc: 0,
-  k: (T) => 0.22 * HOTRO.k(T), // 0.14 → 0.22 (đo bậc 06/11)
+  k: (T) => 0.30 * HOTRO.k(T), // 0.14 → 0.30 (đo bậc 06/11)
   mo: (T) => 'Neighbours: +' + Math.round(Math.min(0.5 * HOTRO.CAP_BAC[T.bac], SKILLS.thaukinh.k(T)) * 100) + '% crit damage · their crits pierce ' + (ms(T, 5) ? 2 : 1) + ' enemy behind (' + (ms(T, 7) ? 65 : 50) + '%)',
   hoTro(G, T, N, ra) { ra.cdmg = this.k(T); ra.xuyen = ms(T, 5) ? 2 : 1; if (ms(T, 7)) ra.xuyen100 = 1; },
   capNhat(G, B, T, dt) { HOTRO.nhip(G, B, T, dt, '111,208,255', 2.6, 0.4); return true; },
@@ -137,7 +137,7 @@ trieu = function (B, mienPhi, idEp) {
 // =====================================================================================================
 SKILLS.santhuong = {
   vai: 'db', dmg: 10, toc: 1, nham: 'dau', napMau: '#f0b030',
-  n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [3, 4, 4, 5, 6, 6, 7]), // +1 mana (đo bậc 06/11)
+  n: (T) => sao7(T, [1, 1, 2, 2, 2, 3, 3]), g: (T) => sao7(T, [4, 5, 5, 6, 7, 7, 8]), // +2 mana (đo bậc 06/11)
   mo: (T) => 'Every ' + (5 / (T.buf ? nhipU(T) : (T.sao >= 3 ? 1.2 : 1))).toFixed(1) + 's marks ' + SKILLS.santhuong.n(T) + ' enemies (big first): +15% damage taken, +' + SKILLS.santhuong.g(T) + ' mana when killed (boss ×5)',
   capNhat(G, B, T, dt) {
     T.nap = Math.min(1, T.nap + dt * nhipU(T) / 5);

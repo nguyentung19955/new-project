@@ -6,7 +6,7 @@
 //   · Tấn công  : DPS 1 ụ ở ô 2 (sát đường) — đơn mục tiêu (quái trâu) và đám đông (≤10 quái) — tại 1★/4★/7★; ụ đỏ tự dùng chủ động khi nạp đầy.
 //                 CHỈ SỐ = trung bình nhân (đơn × đám đông) / trung vị ụ Tấn công TRẮNG cùng sao.
 //   · Hỗ trợ    : % DPS tăng thêm cho bàn chuẩn 4 ụ Tấn công Trắng cùng sao quanh ô 7 (so với ô 7 = Mana Core). CHỈ SỐ = 4 × % tăng (= "đáng giá bao nhiêu ụ Tấn công Trắng").
-//   · Đặc biệt  : wave đạt được (20 lượt; nhanh 12) khi thêm vào bộ cố định [Gatling, Cannon, Tesla, Revolver] (AI của game chơi, nhiều hạt giống).
+//   · Đặc biệt  : wave đạt được (20 lượt; nhanh 16) khi thêm vào bộ cố định [Gatling, Cannon, Tesla, Revolver] (AI của game chơi, nhiều hạt giống).
 //                 CHỈ SỐ quy đổi từ wave bằng đường hồi quy log(chỉ số) ~ wave dựng trên chính các ụ Tấn công (cùng bộ, cùng AI).
 //   · Cột "wave bộ" có cho MỌI ụ (giá trị thật trong trận, gồm cơ chế phụ thuộc bàn như Star Cannon / Chain Link / Railgun).
 'use strict';
@@ -91,7 +91,7 @@ function doTatCa(nhanh, cu, chi) { // cu + chi: chỉ đo lại các id trong ch
   // Đặc biệt + ụ hạ gục tức thì: wave bộ bài LÀ chỉ số → nhiều lượt (20; nhanh 8). Tấn công / Hỗ trợ: 4 lượt chỉ để tham khảo (nhanh: bỏ).
   const CW = [11, 222, 3333, 44444, 555555].map(h => taoMoiTruong(h));
   for (const u of ds) {
-    const chinh = u.vai === 'db' || THEO_BO.includes(u.id), n = chinh ? (nhanh ? 12 : 20) : (nhanh ? 0 : 4);
+    const chinh = u.vai === 'db' || THEO_BO.includes(u.id), n = chinh ? (nhanh ? 16 : 20) : (nhanh ? 0 : 4);
     const w = []; for (let i = 0; i < n; i++) w.push(song(CW[i % CW.length], NEN.concat([u.id]), 2400));
     u.w = w.length ? w.reduce((a, b) => a + b, 0) / w.length : HQ_W0;
     process.stderr.write('.');

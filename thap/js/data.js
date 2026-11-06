@@ -180,13 +180,13 @@ function hsThe(B, id) {
 }
 // KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: lên cấp làm mạnh CHÍNH kỹ năng của Child, không chỉ sát thương gốc) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  giá trị = base + buoc × (số cấp đã lên trên cấp đầu), kẹp ở max (buoc âm = giảm, max là sàn). base = giá trị ở CẤP ĐẦU (= y như trước bản này).
-//  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, MK vàng 20%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)
+//  06/11 đo bậc (tools/thap-sim-tier.js): base/buoc/max cập nhật theo số mới (hỗ trợ: giá trị 1★ THẬT gồm hệ số bậc HOTRO.BAC; Copycat 70%, Overclock 90%, Mana Doubler 44, Horn 4+2★, Box 58 s)
 //  ten: nhãn trang ụ ('Copy 50% → 57%') · dv: '%' | 's' | '' · tien: tiền tố ('+', '−') · ht: ụ hỗ trợ (giá trị này THAY cho "độ mạnh hỗ trợ ×½ % cấp")
 //  dmg: true = vẫn giữ thêm +% sát thương mỗi cấp (THE.pct) · không có mục ở đây = ụ tấn công thuần: chỉ +% sát thương như cũ
 const KY_NANG_CAP = {
   saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
-  vughep: { ten: 'Gold +2★', base: 20, buoc: 2, max: 32, dv: '%', dmg: true },      // xác suất ra Merge King vàng
+  vughep: { ten: 'Gold +2★', base: 10, buoc: 2, max: 22, dv: '%', dmg: true },      // xác suất ra Merge King vàng
   epxung: { ten: 'Overclock', base: 90, buoc: 2.5, max: 112.5, dv: '%', tien: '+', dmg: true },
   ngoisao: { ten: 'Milestones', base: 100, buoc: 5, max: 130, dv: '%', dmg: true },  // mọi mốc ★ (tốc/sát thương) × giá trị/100
   soi: { ten: 'Awaken', base: 30, buoc: 1.5, max: 39, dv: '%', dmg: true },        // xác suất ra Sói THỨC TỈNH (DCDW Werewolf: 30% LV9 → +1.5%/cấp → 39% LV15, trần 50%)
@@ -209,9 +209,9 @@ const KY_NANG_CAP = {
   lanhgia: { ten: 'Slow', base: 12, buoc: 0.375, max: 16.5, dv: '%', ht: 1 },
   khuech: { ten: 'Per hit', base: 13.5, buoc: 0.45, max: 18.9, dv: '%', tien: '+', ht: 1 },
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
-  nangsao: { ten: 'Rate buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
+  nangsao: { ten: 'Rate buff', base: 24, buoc: 1.2, max: 34.8, dv: '%', tien: '+', ht: 1 },
   tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg', base: 44, buoc: 1.89, max: 61.01, dv: '%', tien: '+', ht: 1 },
+  thaukinh: { ten: 'Crit dmg', base: 60, buoc: 2.58, max: 83.22, dv: '%', tien: '+', ht: 1 },
   dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
   hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
   cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },

@@ -96,7 +96,7 @@ const TEXT = {
     taylo:      { name: 'Cleanser',      skill: 'Support: every 12s cleanses 2 neighbours; nothing to clean = +18% damage' },
     khien:      { name: 'Shield Gen',    skill: 'Support: neighbours get a 1-hit control shield, recharging every 18s' },
     hopbi:      { name: 'Mystery Box',   skill: 'After 58s becomes a random 1–6★ turret' },
-    nangsao:    { name: 'Star Lift',     skill: 'Support: the 2 lowest-star neighbours fire faster (18% per ★); 5★ grants star pips' },
+    nangsao:    { name: 'Star Lift',     skill: 'Support: the 2 lowest-star neighbours fire faster (24% per ★); 5★ grants star pips' },
     tuthan:     { name: 'Reaper Pillar', skill: 'Support: neighbours may execute normal enemies under 30% HP' },
     xaotron:    { name: 'Scrambler',     skill: 'On merge: PVP shuffles rival turrets' },
     epxung:     { name: 'Overclock',     skill: 'Drag onto a same-star turret: +90% fire rate' },

@@ -1,7 +1,7 @@
 // TURRET MERGE — kiểm KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: cấp thẻ tăng chính giá trị kỹ năng) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  · bảng KY_NANG_CAP (data.js): Copycat 50% → 92% (+7%/cấp, cấp 9 → 15), cấp đầu = y như trước
 //  · trận: bản sao Copycat = dmgU(ụ gốc) × % (theo cấp thẻ COPYCAT của bàn đó); cấp thẻ của ụ gốc vẫn áp vào chỉ số ụ gốc
-//  · hỗ trợ: Radar +18% → +25.2% (1★), Overclock +90% → +112.5%, Merge King vàng 20% → 32% (số sau đo bậc 06/11)
+//  · hỗ trợ: Radar +18% → +25.2% (1★), Overclock +90% → +112.5%, Merge King vàng 10% → 22% (số sau đo bậc 06/11)
 //  · online: cấp đọc từ chuỗi bộ bài ('#…') → 2 máy cùng số · trang ụ: hàng CARD LV hiện 'Copy 70% → 74%'
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-kynangcap.js  (SHOTS=thư mục: chụp trang ụ)
 const { chromium } = require('playwright');
@@ -73,7 +73,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   });
   ok(gan(r.r0, 0.18) && gan(r.r6, 0.216) && gan(r.r12, 0.252), 'Radar 1★: +18% (cấp đầu, ×bậc Xanh 1.5) → +21.6% → +25.2% (cấp 15)', JSON.stringify(r));
   ok(gan(r.ep, 1.125), 'Overclock max: +112.5% tốc bắn', String(r.ep));
-  ok(Math.abs(r.vang - 0.32) < 0.025, 'Merge King max: ~32% ra bản vàng', String(r.vang));
+  ok(Math.abs(r.vang - 0.22) < 0.025, 'Merge King max: ~22% ra bản vàng', String(r.vang));
 
   // 4. online: cấp gửi trong chuỗi bộ bài → giải mã ra đúng mức → cùng % sao chép
   r = await p.evaluate(() => { const deck = ['saochep', 'canon', 'radar', 'epxung', 'vughep']; const m = THEBAI.giaiMa(['saochep', 'canon', '#' + [3, 0, 7, 2, 6].map(x => x.toString(36)).join('')], deck); return { m, pc: heSaoChep({ capThe: m }), rd: knThe({ capThe: m }, 'radar') }; });
