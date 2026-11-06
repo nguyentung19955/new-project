@@ -154,3 +154,4 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 - 06/11 (VFX P2 gắn 12 tờ p2_*): hồi quy 390x844 NHANH XANH (1863 s); thap-kt-mau 9 mục chiêu lớn XANH.
 - 06/11 VFX P3 đợt 1 (8e35116): SIZES=390x844x3 NHANH=1 → XANH, 0 lỗi (1752 s).
 - 06/11 GIẬT GHÉP + TẤM TÊN (tuvan/giat-ghep, đã gộp VFX P3): hồi quy đủ 4 cỡ (có bước mới `giatghep` — tools/thap-kt-giat-ghep.js) → XANH, 0 lỗi (3 179 s). Ngâm SO=60 XANH.
+- 06/11 MỤC IX/X review VFX v2 (tuvan/muc-ix/KIEM.md; thap-kt-vfx-p0 thêm mục 8–13): hồi quy đủ 4 cỡ (3 125 s) — chỉ trượt `mau` nayda@1★ hue 87° (chập chờn đã biết) → `CHI=nayda node tools/thap-kt-mau.js` 2 lần ✓ → XANH.
