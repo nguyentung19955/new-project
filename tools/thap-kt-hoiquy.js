@@ -2,7 +2,7 @@
 // Mở game MỚI (localStorage trống + có bản lưu cũ), đi hết: màn tải → hướng dẫn lần đầu → HOME → chọn chế độ → cài đặt →
 // xây bộ bài (kéo thẻ, chạm→xem→thêm/bỏ→lui, lọc, bộ mẫu, bộ sưu tập) → chỉ huy → trang ụ + Test range →
 // trận SOLO tới wave 12 (có trùm; triệu hồi, ghép kéo + chạm–chạm, xem nhanh, dừng/tiếp, tốc độ) → CO-OP, PVP với máy →
-// sảnh ONLINE (máy chủ giả) → kết quả thắng/thua → chơi lại. Ở 360×780, 390×844, 430×932 (DPR 3) và 1280×800.
+// sảnh ONLINE (máy chủ giả) → cộng hưởng đá/băng (thap-kt-conghuong.js) → kết quả thắng/thua → chơi lại. Ở 360×780, 390×844, 430×932 (DPR 3) và 1280×800.
 // TRƯỢT khi có: lỗi trang / console · ảnh tải hỏng (4xx/5xx) · phần tử ra ngoài màn / nút bị nút khác đè · chữ tràn,
 // ảnh méo, cuộn ngang (thap-kt-tran-do.js) · chân dung lọt khung (thap-kt-vach.js) · ảnh bị phóng mờ (px hiển thị > 1,25 ×
 // px ảnh gốc ở DPR 3) · vẽ tay (thap-kt-vetay.js) · màn trống/đen · fps trận < 45 · kẹt (wave không chạy, nút không phản hồi).
@@ -492,6 +492,11 @@ async function online(b, W, H, D, co) {
   if (!process.env.CHI || /solo|coop|pvp|hud/.test(process.env.CHI)) {
     try { const o = execFileSync('node', [path.join(__dirname, 'thap-kt-nut-trieu.js'), BASE], { stdio: 'pipe', env: Object.assign({}, process.env, { KHONG_CHUP: '1' }), timeout: 600000 }); console.log(String(o).trim().split('\n').pop()); }
     catch (e) { const ds = String(e.stdout || e.message).split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-nut-trieu.js kẹt'])) LOI.push({ co: '-', buoc: 'nut_trieu', loai: 'nút SUMMON / ảnh HUD', chi: l.trim(), anh: '' }); console.log(ds.join('\n') || '  ✗ nút SUMMON: kẹt'); }
+  }
+  // cộng hưởng kỹ năng với ô ĐÁ / BĂNG (luật DCDW: Merge King nâng sao ô đá → 2 đá cùng sao ghép; Teleporter đổi chỗ đá; Copycat… không) — tools/thap-kt-conghuong.js
+  if (!process.env.CHI || /conghuong|solo/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-conghuong.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ cộng hưởng đá/băng (thap-kt-conghuong.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-conghuong.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'conghuong', loai: 'cộng hưởng đá/băng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cộng hưởng: lỗi chạy'); }
   }
   const CHI = process.env.CHI ? new RegExp(process.env.CHI) : /./;
   // SẢNH ONLINE trên đường code Firebase (SDK giả + máy chủ giả thi hành luật database thật): tạo/vào mã/link mời/READY/vào trận ≤ 3 s,

@@ -248,9 +248,10 @@ SKILLS.chimang = { // Ăng-ten Chí Mạng (Siren): HỖ TRỢ — +tỉ lệ ch
 };
 SKILLS.dichchuyen = { // Bệ Dịch Chuyển (Merlin): kéo thả lên ụ khác CÙNG SAO → đổi chỗ
   vai: 'db', dmg: 11.76, toc: 0.85, nham: 'dau',
-  mo: () => 'Drag onto same-star turret: SWAP (move melee to the edge)',
+  mo: () => 'Drag onto same-star turret: SWAP (move melee to the edge) · works on stone/frozen turrets too',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 15, mau: '#9fe6ff', sp: 480 }); },
   ghepDB: {
+    quaKhoa: true, // đổi chỗ được với ô đá / ô băng cùng sao (ô đó giữ nguyên trạng thái, chỉ đổi chỗ)
     hopLe: (a, b) => a.sao === b.sao && b.ban === a.ban,
     lam(G, B, a, b) {
       const oa = a.o, ob = b.o, ca = B.o[oa], cb = B.o[ob];
@@ -721,10 +722,11 @@ SKILLS.dongbo = { // Pháo Đồng Bộ (Cosmem) — HỖ TRỢ (đợt vai trò
 SKILLS.vughep = { // Vua Ghép (Aurora King): kéo lên ụ CÙNG SAO → ụ đó +1 sao (bản vàng 10% → +2)
   vai: 'db', dmg: 16.67, toc: 0.9, nham: 'dau',
   sinh(G, T) { T.vang = Math.random() < 0.1; },
-  mo: (T) => 'Drag onto same-star turret: +' + (T.vang ? 2 : 1) + '★, keeps its type' + (T.vang ? ' (GOLD)' : '') + ' · Merge King + Merge King: one Merge King +1★',
+  mo: (T) => 'Drag onto same-star turret: +' + (T.vang ? 2 : 1) + '★, keeps its type' + (T.vang ? ' (GOLD)' : '') + ' · also on stone (stays stone) · Merge King + Merge King: one Merge King +1★',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
     cungLoai: true, // Merge King + Merge King (cùng sao) → 1 Merge King sao kế tiếp (không ra ụ ngẫu nhiên)
+    quaKhoa: true, // DCDW: Aurora King vẫn nâng sao ô ĐÁ (đá giữ nguyên, +★) → 2 ô đá cùng sao ghép được với nhau; ô băng cũng nhận +★
     hopLe: (a, b) => a.sao === b.sao && b.sao < LUAT.saoMax && b.ban === a.ban,
     xemSao: (a, b) => Math.min(LUAT.saoMax, b.sao + (b.id === 'vughep' ? 1 : a.vang ? 2 : 1)), // huy hiệu sao xem trước khi rê
     lam(G, B, a, b) {

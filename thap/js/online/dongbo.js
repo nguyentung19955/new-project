@@ -211,7 +211,7 @@ const ONS = {
     if (!d) return;
     const a = B1.t[d.a], b = B1.t[d.b];
     if (a && b && a !== b) {
-      const cl = a.id === b.id && a.id === d.id && ghepDacBiet(a, b); // ghép đặc biệt CÙNG LOẠI (Merge King + Merge King): tất định → chạy y hệt (cùng hiệu ứng/nhãn)
+      const cl = a.id === b.id && a.id === d.id && ghepDBHop(a, b); // ghép đặc biệt CÙNG LOẠI (Merge King + Merge King): tất định → chạy y hệt (cùng hiệu ứng/nhãn)
       const deck = B1.deck; B1.deck = [d.id]; // ụ ra = đúng ụ bạn kia nhận được (pick trong bộ 1 phần tử)
       try { ghep(B1, a, b, !cl); } finally { B1.deck = deck; }
     }
@@ -219,6 +219,7 @@ const ONS = {
     if (!T || T.id !== d.id || T.sao !== d.s) { if (G.rosterMap[d.id]) B1.t[d.b] = taoU(B1, d.id, d.s, d.b); }
     if (B1.t[d.b] && d.vg != null && B1.t[d.b].id === 'vughep') B1.t[d.b].vang = !!d.vg; // cờ vàng Merge King theo đúng máy bạn kia
     if (B1.t[d.b] && d.bs != null) B1.t[d.b].banSao = !!d.bs; // bản sao Copycat: −50% + huy hiệu, như máy bạn kia
+    if (B1.t[d.b] && d.da != null) B1.t[d.b].st.da = !!d.da; // ô ĐÁ: Merge King lên đá giữ đá · đá + đá ra đá (theo đúng máy bạn kia)
     if (B1.t[d.a] && d.a !== d.b && !d.giuA) B1.t[d.a] = null;
     // Twin Maker: ụ sinh đôi đúng ô/loại/sao của máy bạn kia (bàn con rối không tự bốc — sinhDoi() trả null cho B.net)
     if (d.tw && d.tw.o != null && G.rosterMap[d.tw.id]) {
@@ -401,7 +402,7 @@ const ONS = {
       if (laToi) G.ban[0]._tw = null;
       const r = goc.apply(this, arguments);
       if (laToi && r) {
-        const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0 };
+        const T = G.ban[0].t[bo] || r, v = { a: ao, b: bo, id: T.id, s: T.sao, giuA: G.ban[0].t[ao] ? 1 : 0, vg: T.vang ? 1 : 0, bs: T.banSao ? 1 : 0, da: T.st && T.st.da ? 1 : 0 };
         const tw = G.ban[0]._tw; if (tw) v.tw = tw; // Twin Maker: ụ sinh đôi (ô/loại/sao) — bạn kia tạo y hệt, không bốc lại
         self.gui('gh', v);
       }

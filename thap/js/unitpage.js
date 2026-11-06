@@ -87,7 +87,7 @@ function upLuatGhep(id) {
   else if (sk.ghepDB) L.push(['Special merge', upSC(mo1 || (TEXT.turret[id] || {}).skill) + '.']);
   if (sk.ghep) L.push(['Merge trigger', upSC((TEXT.turret[id] || {}).skill || mo1) + '.']);
   L.push(['Normal merge', 'Two ' + ten + ' of the same star merge into a random turret from your deck at +1★. Max 7★.']);
-  L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star.']);
+  L.push(['Stone', 'If Janus Cube petrifies it, it only merges with stone of the same star (result: a higher-star stone). Merge King can still raise a stone\'s star; Cleanser or Eve breaks the stone.']);
   return L;
 }
 function upCheDo(id) {
