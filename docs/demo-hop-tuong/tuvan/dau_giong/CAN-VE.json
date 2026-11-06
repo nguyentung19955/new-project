@@ -1,0 +1,38 @@
+[
+ {
+  "name": "raw_u3_nayda.png",
+  "ref": "thap/assets/nayda_nong.png",
+  "avoid": "thap/assets/epxung_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Ricochet\": a disc bounces between enemies) so it looks clearly different from image 2 (Overclock). Same game style, top-down, facing right, round body, purple trims. New shape: a spinning saw-disc launcher - one big glowing lime-green ring blade held in a forked claw at the front, zig-zag bounce arrows on the hub instead of chevrons. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_tron.png",
+  "ref": "thap/assets/tron_nong.png",
+  "avoid": "thap/assets/dichchuyen_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Fusion Mixer\": support that blends neighbour fire rate) so it looks clearly different from image 2 (Teleporter). Same game style, top-down, facing right, round body, blue trims. New shape: a mixing tank - a clear glass drum with three coloured liquids (red, yellow, green) swirling, a whisk blade on top, no purple vortex. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_taylo.png",
+  "ref": "thap/assets/taylo_nong.png",
+  "avoid": "thap/assets/bao_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Cleanser\": support that washes debuffs off neighbours) so it looks clearly different from image 2 (Storm Gun). Same game style, top-down, facing right, round body, purple trims. New shape: a short wide spray nozzle shaped like a shower head with white soap bubbles and a small sponge pad, no long cyan barrel. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_combo.png",
+  "ref": "thap/assets/combo_nong.png",
+  "avoid": "thap/assets/lienket_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Combo Core\": every merge powers up all Combo Cores) so it looks clearly different from image 2 (Chain Link). Same game style, top-down, facing right, round body, purple trims. New shape: a glowing orange-magenta reactor core in a cage with three stacked rising bars (a combo meter) at the front, no chain rings. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_guongcong.png",
+  "ref": "thap/assets/guongcong_nong.png",
+  "avoid": "thap/assets/luoicheo_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Mirror Gate\": support that reflects control effects) so it looks clearly different from image 2 (Resonance Grid). Same game style, top-down, facing right, round body, gold trims. New shape: a tall silver hand-mirror gate - an oval polished mirror in a gold arch frame reflecting a white flash, no cyan grid or cyan tubes. Single head centered, solid magenta #FF00FF background, no text."
+ },
+ {
+  "name": "raw_u3_pandora.png",
+  "ref": "thap/assets/pandora_nong.png",
+  "avoid": "thap/assets/vughep_nong.png",
+  "prompt": "Make an image. Redesign image 1 (turret head \"Pandora Vault\": on merge opens the vault for 1 of 6 big effects) so it looks clearly different from image 2 (Merge King). Same game style, top-down, facing right, round body, gold trims. New shape: an ancient half-open treasure chest with a big keyhole, golden light and six small coloured orbs escaping from the lid, no purple gem or cube. Single head centered, solid magenta #FF00FF background, no text."
+ }
+]
