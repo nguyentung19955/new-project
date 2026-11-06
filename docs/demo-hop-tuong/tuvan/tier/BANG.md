@@ -1,4 +1,4 @@
-# ĐO SỨC MẠNH THEO BẬC — 85 ụ (06/11/2026)
+# ĐO SỨC MẠNH THEO BẬC — 85 ụ + 8 ụ vàng mới (06/11/2026)
 
 Công cụ: `node tools/thap-sim-tier.js do` (đo) · `bang truoc.json sau.json` (bảng này) · `bac` (bộ bài cùng bậc) · kiểm hồi quy `tools/thap-kt-tier.js` (trong `thap-kt-hoiquy.js`).
 Số đo thô: `do-truoc.json` (code trước đợt này) · `do-sau.json` (sau). Đề xuất làm lại kỹ năng Vàng/Đỏ (chưa làm, chờ duyệt): `DE-XUAT.md`.
@@ -12,7 +12,7 @@ Số đo thô: `do-truoc.json` (code trước đợt này) · `do-sau.json` (sau
 | Trắng | 0.95 | — | 0.83 | — | 1.05 → 1.01 | 10.0 → 10.0 |
 | Xanh | **0.93** (thấp hơn Trắng ✗) | −2% | 1.10 | +33% | 1.72 → 1.72 | 14.6 → 15.9 |
 | Tím | 0.97 | +4% | 1.34 | +22% | 1.78 → 2.16 | **13.2** (thấp hơn Xanh ✗) → 19.4 |
-| Vàng | 1.35 | +39% | 1.95 | +45% | 1.83 → 2.83 | 19.8 → 25.9 |
+| Vàng | 1.35 | +39% | 1.95 (22 ụ cũ) · 1.78 (cả 8 ụ vàng mới đợt 1/2) | +45% · +33% | 1.83 → 2.83 (22 cũ) · 2.31 (30) | 19.8 → 25.9 |
 | Đỏ | 3.89 | +188% | 3.03 | +56% | 4.75 → 4.75 | 37.4 → 36.8 |
 
 Bỏ 6 ụ chỉ có tác dụng ở PVP/CO-OP hoặc phòng thủ (Shield Gen, Reaper Pillar, Jammer, Scrambler, Signal Jammer, Mirror Gate — bài đo SOLO chấm ~0): trung vị SAU = Trắng 0.83 · Xanh 1.10 · Tím 1.43 (+30%) · Vàng 2.04 (+43%) · Đỏ 3.64.
@@ -49,6 +49,8 @@ Bỏ 6 ụ chỉ có tác dụng ở PVP/CO-OP hoặc phòng thủ (Shield Gen, 
 
 ## Còn lệch (ghi nhận)
 
+- **8 ụ vàng mới đợt 1/2** (session khác vừa lắp, có kiểm riêng `thap-kt-vang-moi*.js`) — đo SAU: Ember Relay 1.95, Fusion Archive 1.79, Quantum Choir 1.72 (Tấn công Vàng mà dưới trung vị Tấn công Tím 2.16), Hex Saboteur 1.24, Blood Circuit 1.21, Hero Foundry 1.02, Sanctum ~0 trong bài DPS (giá trị là tẩy/khiên). Prism Thief 2.25. Không đổi số các ụ này trong đợt này (đang có session riêng cân); chỉ áp hệ số hỗ trợ bậc Vàng cho Sanctum (+10% → +23% ở 1★, như mọi hỗ trợ Vàng). Đề nghị session ụ vàng mới nâng Relay/Archive/Choir ~+25%.
+
 - Ụ chỉ có tác dụng PVP/CO-OP hoặc phòng thủ (Shield Gen, Reaper Pillar, Jammer, Scrambler, Signal Jammer, Mirror Gate) — bài đo SOLO chấm thấp; giữ đơn giản (Tím) / đề xuất làm lại (Mirror Gate, V7).
 - Ụ Tấn công Tím có cơ chế phụ thuộc bàn (Chain Link, Lighthouse, Combo Core, Blizzard) thấp ở bài DPS 1 ụ nhưng mạnh trong bộ bài (Lighthouse 19.8 wave bộ cố định).
 - Vàng/Đỏ "chỉ là số" hoặc trùng mẹo bậc thấp → `DE-XUAT.md` (12 đề xuất, chờ duyệt): Purifier, Nemesis, Orbital, Evolver, Star Breaker, Sync Cannon, Mirror Gate, Scrap Forge, Black Hole, Overlord, Holy Halo, Cryo Reactor.
@@ -65,8 +67,8 @@ Bỏ 6 ụ chỉ có tác dụng ở PVP/CO-OP hoặc phòng thủ (Shield Gen, 
 | White | 15 | 0.88 | 0.95 | 0.98 | 1.05 | 1.20 | 0.74 | 12.8 | — | 0.83 | — | 12.8 |
 | Blue | 17 | 0.95 | 0.93 | 1.29 | 1.72 | 0.61 | 0.84 | 13.1 | +-2% | 1.10 | +33% | 13.8 |
 | Purple | 22 | 1.02 | 0.97 | 1.01 | 1.78 | 0.45 | 0.97 | 13.8 | +4% | 1.34 | +22% | 15.0 |
-| Gold | 22 | 1.37 | 1.35 | 1.40 | 1.83 | 0.79 | 1.37 | 14.8 | +39% | 1.95 | +45% | 15.8 |
-| Red | 9 | 3.72 | 3.89 | 2.54 | 4.75 | 0.50 | 2.12 | 18.5 | +188% | 3.03 | +56% | 18.2 |
+| Gold | 22 | 1.37 | 1.35 | 1.40 | 1.83 | 0.79 | 1.37 | 14.8 | +39% | 1.78 | +32% | 15.4 |
+| Red | 9 | 3.72 | 3.89 | 2.54 | 4.75 | 0.50 | 2.12 | 18.5 | +188% | 3.03 | +71% | 18.2 |
 
 ## Every turret (AFTER rebalance), ranked per tier
 
@@ -75,7 +77,7 @@ Index (×White Attack median): Attack = solo DPS (geo-mean single×crowd); Suppo
 | Tier | Turret | role | 1★ | 4★ | 7★ | deck wave | flag | before 4★ |
 |---|---|---|---|---|---|---|---|---|
 | White | Cannon (`canon`) | Attack | 1.55 | 1.59 | 1.59 | 15.5 |  | 1.59 |
-| White | Hammer (`bua`) | Support | 1.33 | 1.34 | 2.11 | 8.5 | ▲ | 1.71 |
+| White | Hammer (`bua`) | Support | 1.31 | 1.46 | 2.03 | 8.5 | ▲ | 1.71 |
 | White | Gatling (`lien`) | Attack | 0.94 | 1.14 | 1.27 | 12.8 |  | 1.14 |
 | White | Sniper (`tia`) | Attack | 1.41 | 1.09 | 0.98 | 13.8 |  | 1.09 |
 | White | Tesla (`set`) | Attack | 0.65 | 1.05 | 1.06 | 13.8 |  | 1.05 |
@@ -86,48 +88,48 @@ Index (×White Attack median): Attack = solo DPS (geo-mean single×crowd); Suppo
 | White | Guillotine (`maychem`) | Attack | 0.74 | 0.74 | 0.74 | 12.3 |  | 1.07 |
 | White | Venom (`doc`) | Special | 0.70 | 0.70 | 0.70 | 12.1 |  | 0.72 |
 | White | Time Bomb (`bomhen`) | Special | 0.70 | 0.70 | 0.70 | 12.1 |  | 0.79 |
-| White | Armor Breaker (`phagiap`) | Support | 0.50 | 0.68 | 0.68 | 11.5 |  | 0.68 |
 | White | Frost (`bang`) | Special | 0.68 | 0.68 | 0.68 | 11.9 |  | 0.68 |
+| White | Armor Breaker (`phagiap`) | Support | 0.48 | 0.57 | 0.64 | 11.5 |  | 0.68 |
 | White | Iron Fist (`nam`) | Attack | 0.41 | 0.39 | 0.40 | 13.3 |  | 0.39 |
 | Blue | Laser (`laser`) | Attack | 2.68 | 2.30 | 1.86 | 14.5 | ▲ | 2.30 |
 | Blue | Toxic Pool (`vungdoc`) | Attack | 2.37 | 2.28 | 1.68 | 15.8 | ▲ | 2.28 |
 | Blue | Mine Layer (`min`) | Attack | 2.04 | 2.01 | 2.56 | 16.8 |  | 2.01 |
 | Blue | Mortar (`mortar`) | Attack | 2.30 | 1.95 | 1.72 | 16.8 |  | 1.95 |
-| Blue | Chiller (`lanhgia`) | Support | 2.88 | 1.85 | 2.38 | 11.5 | ▲ ⚑ | 1.60 |
-| Blue | Amplifier (`khuech`) | Support | 1.60 | 1.61 | 1.49 | 14.0 | ▲ ⚑ | 1.37 |
+| Blue | Chiller (`lanhgia`) | Support | 2.72 | 1.92 | 2.38 | 11.5 | ▲ ⚑ | 1.60 |
+| Blue | Amplifier (`khuech`) | Support | 1.31 | 1.61 | 1.44 | 14.0 | ▲ ⚑ | 1.37 |
 | Blue | Ice Blade (`kiembang`) | Attack | 1.94 | 1.50 | 1.39 | 13.8 |  | 1.50 |
 | Blue | Mana Leech (`hutmana`) | Attack | 1.47 | 1.26 | 1.08 | 14.5 |  | 0.93 |
 | Blue | Drone Bay (`drone`) | Attack | 1.24 | 1.10 | 0.99 | 14.5 |  | 0.73 |
 | Blue | Energy Cannon (`nangluong`) | Attack | 1.14 | 0.99 | 0.78 | 15.0 | ▼ | 0.66 |
-| Blue | Radar (`radar`) | Support | 0.64 | 0.98 | 1.83 | 11.3 | ▲ ▼ | 0.61 |
+| Blue | Radar (`radar`) | Support | 0.55 | 0.95 | 1.81 | 11.3 | ▲ ▼ | 0.61 |
 | Blue | Mana Doubler (`nhanmana`) | Special | 0.94 | 0.94 | 0.94 | 13.4 |  | 0.79 |
-| Blue | Fusion Mixer (`tron`) | Support | 1.00 | 0.83 | 2.34 | 13.0 | ▲ ▼ | 0.51 |
+| Blue | Crit Antenna (`chimang`) | Support | 0.27 | 0.85 | 0.95 | 9.5 | ▲ ▼ | 0.58 |
+| Blue | Fusion Mixer (`tron`) | Support | 0.82 | 0.85 | 2.41 | 13.0 | ▲ ▼ | 0.51 |
 | Blue | Cooldown Horn (`loa`) | Special | 0.80 | 0.80 | 0.80 | 12.7 |  | 0.81 |
-| Blue | Crit Antenna (`chimang`) | Support | 0.29 | 0.80 | 1.01 | 9.5 | ▲ ▼ | 0.58 |
 | Blue | Mimic (`mimic`) | Special | 0.77 | 0.77 | 0.77 | 12.5 |  | 0.87 |
 | Blue | Teleporter (`dichchuyen`) | Special | 0.71 | 0.71 | 0.71 | 12.2 |  | 0.95 |
 | Purple | Fifth Shot (`no5`) | Attack | 4.09 | 3.38 | 2.98 | 17.8 | ▲ ⚑ | 2.78 |
-| Purple | Ricochet (`nayda`) | Attack | 1.83 | 2.74 | 3.58 | 15.8 |  | 2.26 |
-| Purple | Lone Ace (`docton`) | Attack | 3.20 | 2.73 | 2.28 | 14.0 |  | 2.25 |
-| Purple | Storm Gun (`bao`) | Attack | 2.68 | 2.63 | 2.48 | 16.3 |  | 2.17 |
+| Purple | Ricochet (`nayda`) | Attack | 1.83 | 2.74 | 3.58 | 15.8 | ▲ ⚑ | 2.26 |
+| Purple | Lone Ace (`docton`) | Attack | 3.20 | 2.73 | 2.28 | 14.0 | ▲ ⚑ | 2.25 |
+| Purple | Storm Gun (`bao`) | Attack | 2.68 | 2.63 | 2.48 | 16.3 | ▲ ⚑ | 2.17 |
 | Purple | Mystery Box (`hopbi`) | Special | 2.27 | 2.27 | 2.27 | 17.4 | ▲ ⚑ | 9.20 |
 | Purple | Berserker (`cuongno`) | Attack | 2.33 | 2.16 | 1.82 | 15.5 |  | 1.78 |
 | Purple | Combo Core (`combo`) | Attack | 1.87 | 1.58 | 1.46 | 17.0 | ▼ | 1.08 |
 | Purple | Lighthouse (`anhsang`) | Attack | 1.44 | 1.47 | 1.52 | 21.3 | ▼ | 1.01 |
 | Purple | Chain Link (`lienket`) | Attack | 1.68 | 1.43 | 1.27 | 15.8 | ▼ | 0.87 |
-| Purple | Jammer (`kepha`) | Special | 1.41 | 1.41 | 1.41 | 15.3 |  | 0.90 |
+| Purple | Jammer (`kepha`) | Special | 1.41 | 1.41 | 1.41 | 15.3 | ▲ ⚑ | 0.90 |
 | Purple | Chrono Lock (`khoathoigian`) | Special | 1.36 | 1.36 | 1.36 | 15.1 |  | 1.31 |
 | Purple | Bounty Beacon (`santhuong`) | Special | 1.32 | 1.32 | 1.32 | 14.9 |  | 1.05 |
 | Purple | Cloner (`nhanban`) | Special | 1.21 | 1.21 | 1.21 | 14.6 |  | 1.01 |
 | Purple | Signal Jammer (`nhieusong`) | Special | 1.21 | 1.21 | 1.21 | 14.6 |  | 0.93 |
 | Purple | Scrambler (`xaotron`) | Special | 1.18 | 1.18 | 1.18 | 14.4 |  | 0.72 |
-| Purple | Cleanser (`taylo`) | Support | 0.57 | 1.13 | 1.78 | 12.0 |  | 0.54 |
+| Purple | Cleanser (`taylo`) | Support | 0.51 | 1.04 | 1.70 | 12.0 |  | 0.54 |
 | Purple | Blizzard (`baotuyet`) | Attack | 0.76 | 0.94 | 1.78 | 18.8 | ▼ | 0.35 |
-| Purple | Focus Lens (`thaukinh`) | Support | 0.68 | 0.90 | 2.74 | 9.0 | ▼ | 0.45 |
-| Purple | Star Lift (`nangsao`) | Support | 0.53 | 0.72 | 0.76 | 9.3 | ▼ | 0.49 |
 | Purple | Overclock (`epxung`) | Special | 0.71 | 0.71 | 0.71 | 12.2 | ▼ | 0.76 |
-| Purple | Reaper Pillar (`tuthan`) | Support | 0.08 | 0.05 | 0.02 | 11.5 | ▼ | 0.02 |
-| Purple | Shield Gen (`khien`) | Support | 0.09 | 0.02 | 0.02 | 12.5 | ▼ | 0.06 |
+| Purple | Star Lift (`nangsao`) | Support | 0.44 | 0.70 | 0.76 | 9.3 | ▼ | 0.49 |
+| Purple | Focus Lens (`thaukinh`) | Support | 0.50 | 0.69 | 3.08 | 9.0 | ▼ | 0.45 |
+| Purple | Shield Gen (`khien`) | Support | 0.02 | 0.02 | 0.02 | 12.5 | ▼ | 0.06 |
+| Purple | Reaper Pillar (`tuthan`) | Support | 0.02 | 0.02 | 0.02 | 11.5 | ▼ | 0.02 |
 | Gold | Wall Projector (`wallgen`) | Attack | 6.10 | 4.46 | 5.39 | 18.8 |  | 3.60 |
 | Gold | Railgun (`railgun`) | Attack | 5.03 | 4.15 | 3.84 | 21.3 |  | 3.35 |
 | Gold | Eclipse (`nhatthuc`) | Attack | 3.84 | 3.76 | 3.91 | 16.8 |  | 3.04 |
@@ -136,20 +138,28 @@ Index (×White Attack median): Attack = solo DPS (geo-mean single×crowd); Suppo
 | Gold | Nine-Tail (`cuuvi`) | Attack | 3.11 | 2.83 | 1.39 | 18.0 |  | 1.83 |
 | Gold | Star Cannon (`ngoisao`) | Attack | 3.16 | 2.82 | 2.45 | 17.5 |  | 1.38 |
 | Gold | Werewolf (`soi`) | Attack | 2.42 | 2.31 | 2.91 | 20.5 |  | 1.12 |
+| Gold | Prism Thief (`bienmau`) | Attack | 2.59 | 2.25 | 1.58 | 15.5 |  | — |
 | Gold | Purifier (`aten`) | Attack | 3.02 | 2.22 | 1.06 | 17.5 |  | 1.10 |
 | Gold | Nemesis (`nemesis`) | Attack | 2.19 | 2.19 | 2.19 | 17.3 |  | 1.61 |
-| Gold | Sync Cannon (`dongbo`) | Support | 1.43 | 2.04 | 2.87 | 13.0 | ▲ ⚑ | 0.84 |
-| Gold | Resonance Grid (`luoicheo`) | Support | 1.36 | 1.86 | 4.34 | 12.8 | ▲ ⚑ | 0.79 |
+| Gold | Sync Cannon (`dongbo`) | Support | 1.31 | 2.07 | 2.78 | 13.0 | ▲ ⚑ | 0.84 |
+| Gold | Ember Relay (`lualien`) | Attack | 2.32 | 1.95 | 1.80 | 14.8 | ▼ | — |
+| Gold | Resonance Grid (`luoicheo`) | Support | 1.24 | 1.85 | 4.28 | 12.8 | ▲ ⚑ | 0.79 |
+| Gold | Fusion Archive (`luutru`) | Attack | 2.00 | 1.79 | 1.51 | 15.0 | ▼ | — |
 | Gold | Orbital (`orbital`) | Special | 1.76 | 1.76 | 1.76 | 16.3 |  | 1.66 |
-| Gold | Rainbow (`cauvong`) | Support | 1.07 | 1.60 | 1.87 | 15.8 | ▲ ⚑ | 0.83 |
+| Gold | Quantum Choir (`hopca`) | Attack | 2.05 | 1.72 | 1.68 | 16.0 | ▼ | — |
+| Gold | Rainbow (`cauvong`) | Support | 0.92 | 1.71 | 1.86 | 15.8 | ▲ ⚑ | 0.83 |
 | Gold | Twin Maker (`sinhdoi`) | Special | 1.59 | 1.59 | 1.59 | 15.8 |  | 1.43 |
 | Gold | Evolver (`tienhoa`) | Special | 1.59 | 1.59 | 1.59 | 15.8 |  | 1.70 |
-| Gold | Star Breaker (`hasao`) | Support | 0.93 | 1.45 | 2.09 | 12.5 | ▲ ⚑ | 0.55 |
+| Gold | Star Breaker (`hasao`) | Support | 0.94 | 1.50 | 2.15 | 12.5 | ▲ ⚑ | 0.55 |
 | Gold | Merge King (`vughep`) | Special | 1.41 | 1.41 | 1.41 | 15.3 |  | 1.26 |
 | Gold | Copycat (`saochep`) | Special | 1.40 | 1.40 | 1.40 | 15.2 |  | 1.32 |
+| Gold | Hex Saboteur (`nguyenrua`) | Special | 1.24 | 1.24 | 1.24 | 14.7 | ▼ | — |
+| Gold | Blood Circuit (`mauhut`) | Special | 1.21 | 1.21 | 1.21 | 14.6 | ▼ | — |
 | Gold | Pandora Vault (`pandora`) | Special | 1.20 | 1.20 | 1.20 | 14.5 | ▼ | 0.94 |
+| Gold | Hero Foundry (`xuonganh`) | Special | 1.02 | 1.02 | 1.02 | 13.8 | ▼ | — |
 | Gold | Scrap Forge (`loren`) | Special | 0.40 | 0.40 | 0.40 | 9.6 | ▼ | 0.34 |
-| Gold | Mirror Gate (`guongcong`) | Support | 0.02 | 0.11 | 0.02 | 13.3 | ▼ | 0.13 |
+| Gold | Mirror Gate (`guongcong`) | Support | 0.02 | 0.15 | 0.02 | 13.3 | ▼ | 0.13 |
+| Gold | Sanctum (`thanhdia`) | Support | 0.07 | 0.02 | 2.22 | 12.3 | ▼ | — |
 | Red | Overlord (`overlord`) | Attack | 12.25 | 13.16 | 16.09 | 17.3 |  | 13.16 |
 | Red | Black Hole (`blackhole`) | Attack | 5.65 | 6.03 | 7.19 | 21.8 |  | 6.03 |
 | Red | Leviathan (`leviathan`) | Attack | 5.92 | 4.75 | 2.44 | 23.3 |  | 4.75 |
@@ -157,7 +167,7 @@ Index (×White Attack median): Attack = solo DPS (geo-mean single×crowd); Suppo
 | Red | Wyrm Engine (`ronglua`) | Attack | 2.50 | 3.03 | 2.54 | 21.3 |  | 3.03 |
 | Red | Chrono Throne (`ngaithoigian`) | Special | 2.70 | 2.70 | 2.70 | 18.2 |  | 3.89 |
 | Red | Genesis Core (`khoisinh`) | Special | 2.29 | 2.29 | 2.29 | 17.4 |  | 2.12 |
-| Red | Cryo Reactor (`lophanung`) | Support | 0.14 | 0.65 | 1.40 | 15.8 | ▼ | 0.50 |
+| Red | Cryo Reactor (`lophanung`) | Support | 0.20 | 0.64 | 1.31 | 15.8 | ▼ | 0.50 |
 | Red | Holy Halo (`haoquang`) | Special | 0.63 | 0.63 | 0.63 | 11.6 | ▼ | 0.72 |
 
 

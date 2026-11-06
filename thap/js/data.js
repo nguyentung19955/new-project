@@ -184,7 +184,7 @@ function hsThe(B, id) {
 //  ten: nhãn trang ụ ('Copy 50% → 57%') · dv: '%' | 's' | '' · tien: tiền tố ('+', '−') · ht: ụ hỗ trợ (giá trị này THAY cho "độ mạnh hỗ trợ ×½ % cấp")
 //  dmg: true = vẫn giữ thêm +% sát thương mỗi cấp (THE.pct) · không có mục ở đây = ụ tấn công thuần: chỉ +% sát thương như cũ
 const KY_NANG_CAP = {
-  saochep: { ten: 'Copy', base: 70, buoc: 3, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
+  saochep: { ten: 'Copy', base: 70, buoc: 4, max: 94, dv: '%', dmg: true },          // bản sao = chỉ số ụ gốc × % này
   mimic: { ten: 'Merge buff', base: 50, buoc: 2, max: 74, dv: '%', tien: '+', dmg: true },
   vughep: { ten: 'Gold +2★', base: 20, buoc: 2, max: 32, dv: '%', dmg: true },      // xác suất ra Merge King vàng
   epxung: { ten: 'Overclock', base: 90, buoc: 2.5, max: 112.5, dv: '%', tien: '+', dmg: true },
@@ -193,17 +193,17 @@ const KY_NANG_CAP = {
   orbital: { ten: 'Awaken', base: 23, buoc: 1, max: 29, dv: 's', dmg: true },       // ghép Vệ Tinh → MỌI Vệ Tinh trên bàn thức tỉnh N giây (DCDW Mafdet 23 s)
   sinhdoi: { ten: '+1★ twin', base: 10, buoc: 1, max: 16, dv: '%', dmg: true },     // Twin Maker: xác suất ụ sinh đôi cao hơn 1★ (DCDW Berit)
   nhanmana: { ten: 'Merge mana', base: 44, buoc: 2.75, max: 77, dv: '', tien: '+', dmg: true },
-  loa: { ten: 'Cooldown', base: 6, buoc: 0.33, max: 10, dv: 's', tien: '−', dmg: true },
+  loa: { ten: 'Cooldown', base: 6, buoc: 0.33, max: 9.96, dv: 's', tien: '−', dmg: true },
   maychem: { ten: 'Execute', base: 3.75, buoc: 0.15, max: 5.85, dv: '%', dmg: true },
   mana: { ten: 'Mana', base: 100, buoc: 4, max: 156, dv: '%' },                       // lượng mana sinh ra × giá trị/100
   bang: { ten: 'Freeze', base: 2, buoc: 0.07, max: 2.98, dv: 's' },
   doc: { ten: 'Mark', base: 12, buoc: 0.4, max: 17.6, dv: '%', tien: '+' },
   khien: { ten: 'Recharge', base: 18, buoc: -0.4, max: 14.4, dv: 's' },
-  hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 48, dv: 's' },
+  hopbi: { ten: 'Opens in', base: 58, buoc: -1, max: 49, dv: 's' },
   // hỗ trợ: giá trị buff chính ở 1★ (đường cong sao HOTRO.K nhân lên như cũ) — ≈ +40% ở cấp 15
   radar: { ten: 'Rate buff', base: 18, buoc: 0.6, max: 25.2, dv: '%', tien: '+', ht: 1 },
   phagiap: { ten: 'Exposed', base: 22, buoc: 0.6, max: 30.4, dv: '%', tien: '+', ht: 1 },
-  bua: { ten: 'Crit dmg', base: 18, buoc: 0.54, max: 25.6, dv: '%', tien: '+', ht: 1 },
+  bua: { ten: 'Crit dmg', base: 18, buoc: 0.54, max: 25.56, dv: '%', tien: '+', ht: 1 },
   chimang: { ten: 'Crit buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
   tron: { ten: 'Rate buff', base: 9, buoc: 0.3, max: 12.6, dv: '%', tien: '+', ht: 1 },
   lanhgia: { ten: 'Slow', base: 12, buoc: 0.375, max: 16.5, dv: '%', ht: 1 },
@@ -211,11 +211,11 @@ const KY_NANG_CAP = {
   taylo: { ten: 'Dmg buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
   nangsao: { ten: 'Rate buff', base: 18, buoc: 0.9, max: 26.1, dv: '%', tien: '+', ht: 1 },
   tuthan: { ten: 'Execute', base: 24, buoc: 1.2, max: 34.8, dv: '%', ht: 1 },
-  thaukinh: { ten: 'Crit dmg', base: 44, buoc: 1.89, max: 61, dv: '%', tien: '+', ht: 1 },
+  thaukinh: { ten: 'Crit dmg', base: 44, buoc: 1.89, max: 61.01, dv: '%', tien: '+', ht: 1 },
   dongbo: { ten: 'Dmg buff', base: 17.25, buoc: 1.15, max: 24.15, dv: '%', tien: '+', ht: 1 },
   hasao: { ten: 'Dmg buff', base: 23, buoc: 1.61, max: 32.66, dv: '%', tien: '+', ht: 1 },
-  cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.3, dv: '%', tien: '+', ht: 1 },
-  luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 26, dv: '%', tien: '+', ht: 1 },
+  cauvong: { ten: 'Trail dmg', base: 29.9, buoc: 2.07, max: 42.32, dv: '%', tien: '+', ht: 1 },
+  luoicheo: { ten: 'Dmg buff', base: 18.4, buoc: 1.265, max: 25.99, dv: '%', tien: '+', ht: 1 },
   guongcong: { ten: 'Resist', base: 34.5, buoc: 2.3, max: 48.3, dv: '%', ht: 1 },
   lophanung: { ten: 'Slowed dmg', base: 56, buoc: 5.6, max: 78.4, dv: '%', tien: '+', ht: 1 },
 };

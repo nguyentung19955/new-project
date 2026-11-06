@@ -83,7 +83,7 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
   r = await p.evaluate(() => { const B = G.ban[0]; DUNG([[0, 'mauhut', 1], [1, 'nguyenrua', 1], [2, 'bienmau', 1], [3, 'thanhdia', 1]]); const k0 = [SKILLS.mauhut.pv(B.t[0]), SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.pc(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
     B.capThe = Object.assign({}, B.capThe, { mauhut: 6, nguyenrua: 6, bienmau: 6, thanhdia: 6 }); const k6 = [SKILLS.mauhut.pv(B.t[0]), SKILLS.nguyenrua.p(B.t[1]), SKILLS.bienmau.pc(B.t[2]), SKILLS.thanhdia.k(B.t[3])];
     B.t[1].sao = 7; const p7 = SKILLS.nguyenrua.p(B.t[1]); B.capThe = {}; return { k0, k6, p7 }; });
-  ok(r.k0.map(x => +x.toFixed(3)).join() === '0.06,0.35,0.06,0.1' && r.k6.map(x => +x.toFixed(3)).join() === '0.09,0.47,0.09,0.142' && Math.abs(r.p7 - 0.77) < 1e-9, 'cấp thẻ LV9 → LV15: Vamp 6→9%, Hex 35→47% (7★ 77%), Combo 6→9%, Sanctum +10→14.2%', JSON.stringify(r));
+  ok(r.k0.map(x => +x.toFixed(3)).join() === '0.06,0.35,0.06,0.23' && r.k6.map(x => +x.toFixed(3)).join() === '0.09,0.47,0.09,0.327' && Math.abs(r.p7 - 0.77) < 1e-9, 'cấp thẻ LV9 → LV15: Vamp 6→9%, Hex 35→47% (7★ 77%), Combo 6→9%, Sanctum +23→32.7% (×bậc Vàng)', JSON.stringify(r));
   // Sanctum
   r = await p.evaluate(() => {
     DUNG([[6, 'canon', 2, 'bang'], [8, 'canon', 2, 'da'], [2, 'lien', 2], [12, 'lien', 3], [3, 'canon', 2]]); const B = G.ban[0];
@@ -213,7 +213,7 @@ const MOI = ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau'];
     for (const id of ['mauhut', 'nguyenrua', 'thanhdia', 'bienmau']) { const d = THEBAI.doc(); d.c[id] = { lv: 9, n: 0 }; UP.mo(id); const el = document.querySelector('.tb-cap-giua'); out[id] = el ? [...el.querySelectorAll('small:not(.tb-vi)')].map(x => x.textContent).join(' · ') : ''; try { UP.dong && UP.dong(); } catch (e) { } }
     return out;
   });
-  ok(/Vamp \+6% → \+6\.5%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+10% → \+10\.7%/.test(r.thanhdia) && /Combo \+6% → \+6\.5%/.test(r.bienmau), 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
+  ok(/Vamp \+6% → \+6\.5%/.test(r.mauhut) && /Hex 35% → 37%/.test(r.nguyenrua) && /\+23% → \+24\.6%/.test(r.thanhdia) && /Combo \+6% → \+6\.5%/.test(r.bienmau), 'trang ụ: hàng CARD LV "now → next" cho 4 ụ', JSON.stringify(r));
   if (SHOTS) {
     await p.evaluate(() => { const b = document.querySelector('[data-act="hm-bst"]'); if (b) b.click(); });
     await sleep(1200);

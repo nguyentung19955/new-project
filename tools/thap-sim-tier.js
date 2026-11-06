@@ -11,7 +11,15 @@
 //   · Cột "wave bộ" có cho MỌI ụ (giá trị thật trong trận, gồm cơ chế phụ thuộc bàn như Star Cannon / Chain Link / Railgun).
 'use strict';
 const fs = require('fs'), path = require('path');
-const { taoMoiTruong, R } = require('./thap-sim-vaitro.js');
+const { taoMoiTruong: taoGoc, R } = require('./thap-sim-vaitro.js');
+// môi trường mô phỏng + các tệp ụ mới ngoài danh sách của thap-sim-vaitro.js (ụ vàng mới đợt 1/2)
+const THEM = ['vangmoi1', 'skills7'];
+function taoMoiTruong(hat) {
+  const ctx = taoGoc(hat), vm = require('vm');
+  vm.runInContext("if (typeof SUP === 'undefined') { var SUP = {}, SUP_LOAI = {}, SUP_GIA = {}; }", ctx); // bảng hiển thị hỗ trợ (support.js — không cần khi mô phỏng)
+  for (const f of THEM) { const p = path.join(__dirname, '..', 'thap', 'js', f + '.js'); if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f + '.js' }); }
+  return ctx;
+}
 const TIER = ['trang', 'xanh', 'tim', 'vang', 'do'];
 const TEN = { trang: 'White', xanh: 'Blue', tim: 'Purple', vang: 'Gold', do: 'Red' };
 const NEN = ['lien', 'canon', 'set', 'sungluc'];

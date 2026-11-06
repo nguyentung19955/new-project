@@ -1,8 +1,8 @@
 // TURRET MERGE — kiểm KỸ NĂNG THEO CẤP THẺ (kiểu DCDW: cấp thẻ tăng chính giá trị kỹ năng) — docs/demo-hop-tuong/tuvan/kynang_cap/DCDW.md
 //  · bảng KY_NANG_CAP (data.js): Copycat 50% → 92% (+7%/cấp, cấp 9 → 15), cấp đầu = y như trước
 //  · trận: bản sao Copycat = dmgU(ụ gốc) × % (theo cấp thẻ COPYCAT của bàn đó); cấp thẻ của ụ gốc vẫn áp vào chỉ số ụ gốc
-//  · hỗ trợ: Radar +12% → +16.8% (1★), Overclock +65% → +87.5%, Merge King vàng 10% → 22%
-//  · online: cấp đọc từ chuỗi bộ bài ('#…') → 2 máy cùng số · trang ụ: hàng CARD LV hiện 'Copy 50% → 57%'
+//  · hỗ trợ: Radar +18% → +25.2% (1★), Overclock +90% → +112.5%, Merge King vàng 20% → 32% (số sau đo bậc 06/11)
+//  · online: cấp đọc từ chuỗi bộ bài ('#…') → 2 máy cùng số · trang ụ: hàng CARD LV hiện 'Copy 70% → 74%'
 // Chạy: python3 -m http.server 8765 (gốc repo) · NODE_PATH=/opt/npm-tools/node_modules node tools/thap-kt-kynangcap.js  (SHOTS=thư mục: chụp trang ụ)
 const { chromium } = require('playwright');
 const BASE = process.env.BASE || 'http://localhost:8765/thap/';
@@ -23,7 +23,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
 
   // 1. bảng thuần
   let r = await p.evaluate(() => [0, 1, 2, 3, 4, 5, 6, 9].map(k => knGt(KY_NANG_CAP.saochep, k)));
-  ok(JSON.stringify(r) === JSON.stringify([50, 57, 64, 71, 78, 85, 92, 92]), 'Copycat: % sao chép 50 → 57 → … → 92 (kẹp ở cấp 15)', JSON.stringify(r));
+  ok(JSON.stringify(r) === JSON.stringify([70, 74, 78, 82, 86, 90, 94, 94]), 'Copycat: % sao chép 70 → 74 → … → 94 (kẹp ở cấp 15; đo bậc 06/11: 50 → 70)', JSON.stringify(r));
   r = await p.evaluate(() => { const ds = []; for (const id in KY_NANG_CAP) { const e = KY_NANG_CAP[id], bac = G.rosterMap[id] && G.rosterMap[id].bac; if (!bac || !SKILLS[id]) { ds.push(id + ':thiếu'); continue; } const n = THE.lvMax - THE.lvDau[bac]; if (Math.abs(knGt(e, n) - e.max) > 1e-6 || Math.abs(knGt(e, n - 1) - e.max) < 1e-6) ds.push(id); } return ds; });
   ok(!r.length, 'mọi mục bảng: chạm max đúng ở cấp 15 (không phí cấp, không vượt)', r.join(','));
 
@@ -41,10 +41,10 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     }
     return out;
   });
-  const mong = [0.5, 0.71, 0.92, 0.71];
-  ok(r.every((x, i) => x.bs && Math.abs(x.ti - mong[i]) < 1e-6), 'bản sao = sát thương ụ gốc × % Copycat (cấp đầu 50% · +3 cấp 71% · max 92%)', JSON.stringify(r.map(x => [x.kc, +x.ti.toFixed(4)])));
-  ok(r[3].the > 1.1, 'cấp thẻ của ụ GỐC vẫn áp (Cannon +4 cấp: bản sao = ụ gốc đã lên cấp × 71%)', String(r[3].the));
-  ok(/71% power/.test(r[1].st || ''), 'bảng chỉ số thật trong trận: "copy (71% power)"', r[1].st);
+  const mong = [0.7, 0.82, 0.94, 0.82];
+  ok(r.every((x, i) => x.bs && Math.abs(x.ti - mong[i]) < 1e-6), 'bản sao = sát thương ụ gốc × % Copycat (cấp đầu 70% · +3 cấp 82% · max 94%)', JSON.stringify(r.map(x => [x.kc, +x.ti.toFixed(4)])));
+  ok(r[3].the > 1.1, 'cấp thẻ của ụ GỐC vẫn áp (Cannon +4 cấp: bản sao = ụ gốc đã lên cấp × 82%)', String(r[3].the));
+  ok(/82% power/.test(r[1].st || ''), 'bảng chỉ số thật trong trận: "copy (82% power)"', r[1].st);
 
   // 2b. ảnh trận: bản sao Copycat (cấp +3 = 71%) cạnh Cannon thật — bảng thông tin ụ bản sao
   if (SHOTS) {
@@ -71,13 +71,13 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     for (let i = 0; i < 4000; i++) if (sinhU(taoU(B, 'vughep', 1, 3)).vang) v++; Math.random = r0; o.vang = v / 4000;
     return o;
   });
-  ok(gan(r.r0, 0.12) && gan(r.r6, 0.144) && gan(r.r12, 0.168), 'Radar 1★: +12% (cấp đầu) → +14.4% → +16.8% (cấp 15)', JSON.stringify(r));
-  ok(gan(r.ep, 0.875), 'Overclock max: +87.5% tốc bắn', String(r.ep));
-  ok(Math.abs(r.vang - 0.22) < 0.025, 'Merge King max: ~22% ra bản vàng', String(r.vang));
+  ok(gan(r.r0, 0.18) && gan(r.r6, 0.216) && gan(r.r12, 0.252), 'Radar 1★: +18% (cấp đầu, ×bậc Xanh 1.5) → +21.6% → +25.2% (cấp 15)', JSON.stringify(r));
+  ok(gan(r.ep, 1.125), 'Overclock max: +112.5% tốc bắn', String(r.ep));
+  ok(Math.abs(r.vang - 0.32) < 0.025, 'Merge King max: ~32% ra bản vàng', String(r.vang));
 
   // 4. online: cấp gửi trong chuỗi bộ bài → giải mã ra đúng mức → cùng % sao chép
   r = await p.evaluate(() => { const deck = ['saochep', 'canon', 'radar', 'epxung', 'vughep']; const m = THEBAI.giaiMa(['saochep', 'canon', '#' + [3, 0, 7, 2, 6].map(x => x.toString(36)).join('')], deck); return { m, pc: heSaoChep({ capThe: m }), rd: knThe({ capThe: m }, 'radar') }; });
-  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.71) && gan(r.rd, 14.8), 'online: chuỗi bộ bài "#30726" → Copycat 71%, Radar +14.8% (2 máy cùng số)', JSON.stringify(r));
+  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.82) && gan(r.rd, 22.2), 'online: chuỗi bộ bài "#30726" → Copycat 82%, Radar +22.2% (2 máy cùng số)', JSON.stringify(r));
 
   // 5. trang ụ (từ màn chính, ngoài trận): hàng CARD LV
   const p2 = await ctx.newPage(); p2.on('pageerror', e => errs.push('pageerror ' + e.message));
@@ -95,11 +95,11 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     return t;
   };
   const t1 = await trang('saochep', 9, 'saochep_lv9'), t2 = await trang('saochep', 12, 'saochep_lv12'), t3 = await trang('saochep', 15, 'saochep_lv15');
-  ok(/Copy 50% → 57%/.test(t1), 'trang ụ Copycat LV9: "Copy 50% → 57%"', t1);
-  ok(/Copy 71% → 78%/.test(t2), 'trang ụ Copycat LV12: "Copy 71% → 78%"', t2);
-  ok(/Copy 92%/.test(t3) && /max/.test(t3), 'trang ụ Copycat LV15: "Copy 92% · max"', t3);
+  ok(/Copy 70% → 74%/.test(t1), 'trang ụ Copycat LV9: "Copy 70% → 74%"', t1);
+  ok(/Copy 82% → 86%/.test(t2), 'trang ụ Copycat LV12: "Copy 82% → 86%"', t2);
+  ok(/Copy 94%/.test(t3) && /max/.test(t3), 'trang ụ Copycat LV15: "Copy 94% · max"', t3);
   const t4 = await trang('radar', 3, 'radar_lv3'), t5 = await trang('radar', 9, 'radar_lv9'), t6 = await trang('radar', 15, 'radar_lv15');
-  ok(/Rate buff \+12% → \+12\.4%/.test(t4) && /\+14\.4% → \+14\.8%/.test(t5) && /\+16\.8%/.test(t6), 'trang ụ Radar: "Rate buff +12% → +12.4%" … "+16.8% max"', [t4, t5, t6].join(' | '));
+  ok(/Rate buff \+18% → \+18\.6%/.test(t4) && /\+21\.6% → \+22\.2%/.test(t5) && /\+25\.2%/.test(t6), 'trang ụ Radar: "Rate buff +18% → +18.6%" … "+25.2% max"', [t4, t5, t6].join(' | '));
   for (const [id, ds] of [['epxung', [6, 10, 15]], ['vughep', [9, 12, 15]], ['dongbo', [9, 12, 15]]]) for (const lv of ds) await trang(id, lv, id + '_lv' + lv);
   await p2.evaluate(() => { localStorage.removeItem('turret_the'); });
   ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));
