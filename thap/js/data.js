@@ -236,5 +236,7 @@ const CB_BAC = {
   ht: { radar: 1.35, tron: 1.25, lanhgia: 2, khuech: 1.6, taylo: 1.91, tuthan: 1.3, dongbo: 2.18, hasao: 2.5, cauvong: 2.5, lophanung: 2.5, thaukinh: 2, thanhdia: 2, luoicheo: 1.42 },
   sao: { xucxac: 0.04, sungluc: 0.045, kiembang: 0.042, drone: 0.052, nangluong: 0.035, laser: 0.063, vungdoc: 0.111, hutmana: 0.045, cuongno: 0.078, lienket: 0.034, aten: 0.15, soi: 0.145, wallgen: 0.083, combo: 0.052, cuuvi: 0.15, docton: 0.049, chuato: 0.121, leviathan: 0.15, hopca: 0.05, luutru: 0.035, bienmau: 0.118, mortar: 0.035, railgun: 0.034, no5: 0.034, ngoisao: 0.036, lualien: 0.036 },
 };
+// bảng % kỹ năng theo cấp thẻ (trang ụ 'now → next') của ụ Hỗ trợ có hệ số CB_BAC.ht: nhân theo → số hiện = số thật (HOTRO.k chỉ dùng tỉ lệ knHe)
+for (const id in CB_BAC.ht) { const e = KY_NANG_CAP[id]; if (e && e.ht) for (const k of ['base', 'buoc', 'max']) e[k] = Math.round(e[k] * CB_BAC.ht[id] * 1000) / 1000; }
 function cbDmg(id, sao) { return (CB_BAC.dmg[id] || 1) * (1 + (CB_BAC.sao[id] || 0) * Math.max(0, ((sao || 1) | 0) - 1)); }
 function hsLv(B, id, sao) { return (1 + LUAT.nangPct * (((B && B.lv && B.lv[id]) || 1) - 1)) * hsThe(B, id) * cbDmg(id, sao); }

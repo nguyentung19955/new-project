@@ -108,3 +108,6 @@ không khớp tên có `?v=` của bản đã băm (không phải lỗi mới). 
 ## 06/11 — sửa 12 ụ vàng cũ theo DCDW
 - Hồi quy đủ 4 cỡ: chỉ trượt `online_sinhdoi` 360×780 — Twin Maker nay 10% ra ụ sinh đôi +1★ (DCDW Berit), kiểm cũ đòi đúng sao. Sửa kiểm: chấp nhận sao hoặc sao+1 (B vẫn phải dựng y hệt A). Chạy lại CHI=online 4 cỡ: XANH. KT_SINHDOI cũng chấp nhận +1★.
 - Mới trong hồi quy: tools/thap-kt-vang-sua.js (XANH).
+
+## 06/11 — cân bằng theo bậc (tuvan/tier)
+- Hồi quy 390x844x3 NHANH: chỉ 2 lỗi do số mới (Radar ×1.35, Sanctum ×2 — CB_BAC.ht) → bảng % cấp thẻ (KY_NANG_CAP) nhân theo hệ số để số hiện = số thật; cập nhật kỳ vọng trong thap-kt-kynangcap.js + thap-kt-vang-moi2.js → chạy lại cả 2: XANH. Thêm bước tools/thap-kt-tier.js (XANH).

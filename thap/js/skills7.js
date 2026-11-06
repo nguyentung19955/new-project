@@ -18,7 +18,7 @@ const SK7 = {
 Object.assign(KY_NANG_CAP, {
   mauhut: { ten: 'Vamp', base: 6, buoc: 0.5, max: 9, dv: '%', tien: '+', dmg: true },     // +% sát thương mỗi VAMP
   nguyenrua: { ten: 'Hex', base: 35, buoc: 2, max: 47, dv: '%', dmg: true },              // xác suất nguyền ở 1★ (+5%/sao, trần 80%)
-  thanhdia: { ten: 'Dmg buff', base: 10, buoc: 0.7, max: 14.2, dv: '%', tien: '+', ht: 1 }, // buff sát thương 1★ (×HOTRO.K theo sao)
+  thanhdia: { ten: 'Dmg buff', base: 20, buoc: 1.4, max: 28.4, dv: '%', tien: '+', ht: 1 }, // ×2 = CB_BAC.ht.thanhdia (cân bằng theo bậc; cũ 10 / 0.7 / 14.2) // buff sát thương 1★ (×HOTRO.K theo sao)
   bienmau: { ten: 'Combo', base: 6, buoc: 0.5, max: 9, dv: '%', tien: '+', dmg: true },   // +% sát thương mỗi COMBO
 });
 const kn7 = (T) => (knThe(G.ban[T.ban], T.id) || KY_NANG_CAP[T.id].base) / 100;

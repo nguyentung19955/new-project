@@ -71,13 +71,13 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
     for (let i = 0; i < 4000; i++) if (sinhU(taoU(B, 'vughep', 1, 3)).vang) v++; Math.random = r0; o.vang = v / 4000;
     return o;
   });
-  ok(gan(r.r0, 0.12) && gan(r.r6, 0.144) && gan(r.r12, 0.168), 'Radar 1★: +12% (cấp đầu) → +14.4% → +16.8% (cấp 15)', JSON.stringify(r));
+  ok(gan(r.r0, 0.162) && gan(r.r6, 0.1944) && gan(r.r12, 0.2268), 'Radar 1★: +16.2% (cấp đầu) → +19.4% → +22.7% (cấp 15) — ×1.35 cân bằng theo bậc', JSON.stringify(r));
   ok(gan(r.ep, 0.875), 'Overclock max: +87.5% tốc bắn', String(r.ep));
   ok(Math.abs(r.vang - 0.22) < 0.025, 'Merge King max: ~22% ra bản vàng', String(r.vang));
 
   // 4. online: cấp gửi trong chuỗi bộ bài → giải mã ra đúng mức → cùng % sao chép
   r = await p.evaluate(() => { const deck = ['saochep', 'canon', 'radar', 'epxung', 'vughep']; const m = THEBAI.giaiMa(['saochep', 'canon', '#' + [3, 0, 7, 2, 6].map(x => x.toString(36)).join('')], deck); return { m, pc: heSaoChep({ capThe: m }), rd: knThe({ capThe: m }, 'radar') }; });
-  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.71) && gan(r.rd, 14.8), 'online: chuỗi bộ bài "#30726" → Copycat 71%, Radar +14.8% (2 máy cùng số)', JSON.stringify(r));
+  ok(r.m && r.m.saochep === 3 && gan(r.pc, 0.71) && Math.abs(r.rd - 19.98) < 1e-6, 'online: chuỗi bộ bài "#30726" → Copycat 71%, Radar +19.98% (×1.35 cân bằng theo bậc; 2 máy cùng số)', JSON.stringify(r));
 
   // 5. trang ụ (từ màn chính, ngoài trận): hàng CARD LV
   const p2 = await ctx.newPage(); p2.on('pageerror', e => errs.push('pageerror ' + e.message));
@@ -99,7 +99,7 @@ const gan = (a, b) => Math.abs(a - b) < 1e-6;
   ok(/Copy 71% → 78%/.test(t2), 'trang ụ Copycat LV12: "Copy 71% → 78%"', t2);
   ok(/Copy 92%/.test(t3) && /max/.test(t3), 'trang ụ Copycat LV15: "Copy 92% · max"', t3);
   const t4 = await trang('radar', 3, 'radar_lv3'), t5 = await trang('radar', 9, 'radar_lv9'), t6 = await trang('radar', 15, 'radar_lv15');
-  ok(/Rate buff \+12% → \+12\.4%/.test(t4) && /\+14\.4% → \+14\.8%/.test(t5) && /\+16\.8%/.test(t6), 'trang ụ Radar: "Rate buff +12% → +12.4%" … "+16.8% max"', [t4, t5, t6].join(' | '));
+  ok(/Rate buff \+16\.2% → \+16\.7%/.test(t4) && /\+19\.4% → \+20%/.test(t5) && /\+22\.7%/.test(t6), 'trang ụ Radar: "Rate buff +16.2% → +16.7%" … "+22.7% max" (×1.35 cân bằng theo bậc)', [t4, t5, t6].join(' | '));
   for (const [id, ds] of [['epxung', [6, 10, 15]], ['vughep', [9, 12, 15]], ['dongbo', [9, 12, 15]]]) for (const lv of ds) await trang(id, lv, id + '_lv' + lv);
   await p2.evaluate(() => { localStorage.removeItem('turret_the'); });
   ok(!errs.length, 'không lỗi trang', errs.slice(0, 3).join(' | '));
