@@ -6,7 +6,8 @@ body { font-family: var(--f-ui); color: #fff; -webkit-font-smoothing: antialiase
 /* trước khi màn tải (taitai.js) dựng: chỉ hiện nền menu ChatGPT, ẩn DOM menu chưa có ảnh */
 #wrap.dang-tai { background: #16171a url(../assets/nen_menu.jpg?v=34f795d7) center / cover no-repeat; }
 #wrap.dang-tai > * { visibility: hidden; }
-#cv { position: absolute; inset: 0; display: block; }
+#cv, #cv-nen { position: absolute; inset: 0; display: block; }
+#cv-nen { pointer-events: none; }
 button { font-family: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: 0; }
 img { -webkit-user-drag: none; pointer-events: none; image-rendering: auto; }
 [hidden] { display: none !important; }

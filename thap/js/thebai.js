@@ -24,6 +24,7 @@ const THE = {
   // túi thưởng: tỉ lệ độ hiếm mỗi lượt rút + số bản sao mỗi lượt
   tiLe: [['trang', 55], ['xanh', 28], ['tim', 12], ['vang', 4.5], ['do', 0.5]],
   soBan: { trang: [3, 6], xanh: [2, 4], tim: [1, 2], vang: [1, 1], do: [1, 1] },
+  kyNang: KY_NANG_CAP, // bảng kỹ năng theo cấp thẻ (data.js)
 };
 
 const THEBAI = {

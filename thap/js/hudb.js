@@ -123,10 +123,9 @@ const HB = {
   UI.capNhat = function () { const r = capGoc.apply(this, arguments); try { HB.mana(); } catch (e) { } return r; };
   const vaoGoc = UI.vaoTran;
   UI.vaoTran = function () { HB._mH = null; const r = vaoGoc.apply(this, arguments); const tt = $('#tt'); tt.classList.remove('hb-qi', 'hb-rong'); return r; };
-  setInterval(() => { try { HB.veSo(); } catch (e) { } }, 250);
-  // mana chạy mượt cả khi HUD chỉ cập nhật 30 lần/giây
-  const vong = () => { try { if (G.ban.length) HB.mana(); } catch (e) { } requestAnimationFrame(vong); };
-  requestAnimationFrame(vong);
+  setInterval(() => { if (!G.ban.length || document.hidden) return; try { HB.veSo(); } catch (e) { } }, 250); // ngoài trận / ẩn tab: nghỉ
+  // mana chạy mượt cả khi HUD chỉ cập nhật 30 lần/giây — chạy trong vòng rAF chung của UI (không mở vòng rAF riêng: chống nóng máy)
+  UI.moiKhung.push(() => { if (G.ban.length) HB.mana(); });
   // Triệu hồi khi bàn đầy: chạm → chỉ lún (nutlun.css), không lắc
 })();
 window.HB = HB;

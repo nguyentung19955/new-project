@@ -106,12 +106,16 @@ const TAI = {
       const d2 = lay(); if (d2) { d2.them(it.url, this.byte(it.url)); d2.xong(it.url); }
     };
     const d0 = lay(); if (d0) for (const it of ds) d0.them(it.url, this.byte(it.url), true);
-    // nen: nhường khi đang tải trận (TAI.cho) VÀ khi người chơi đang cuộn lưới (giải mã ảnh nền giữa lúc cuộn = khung hình rớt trên iPhone)
-    const nhuong = () => this.cho || performance.now() - TAI_CUON < 450;
-    const luong = async () => { while (i < ds.length) { while (nen && nhuong()) await this.ngu(this.cho ? 250 : 150); if (i >= ds.length) break; await lam(ds[i++]); } };
+    // nen: nhường khi đang tải trận (TAI.cho), khi người chơi đang cuộn lưới (giải mã ảnh nền giữa lúc cuộn = khung hình rớt trên iPhone)
+    // VÀ khi đang đánh (dangDanh — chống nóng máy, tuvan/nong)
+    const nhuong = () => this.cho || performance.now() - TAI_CUON < 450 || this.dangDanh();
+    const luong = async () => { while (i < ds.length) { while (nen && nhuong()) await this.ngu(this.cho || this.dangDanh() ? 250 : 150); if (i >= ds.length) break; await lam(ds[i++]); } };
     await Promise.all(Array.from({ length: Math.min(so || 6, ds.length) }, luong));
   },
 
+  // đang đánh (trận chạy, không tạm dừng, không phải khung xem trước): việc tải NỀN (ảnh menu chưa cần) nghỉ → không giải mã ảnh
+  // chồng lên khung hình trận (chống nóng máy — tuvan/nong). Tạm dừng / về menu / kết thúc → tải tiếp.
+  dangDanh() { return !this.xem && typeof G !== 'undefined' && G.ban && G.ban.length > 0 && !G.dung && !G.ketThuc; },
   // ---------- danh sách ảnh ----------
   ds() {
     const m = new Map();

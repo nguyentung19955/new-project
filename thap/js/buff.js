@@ -129,7 +129,7 @@ function buffTongHop(T) {
   for (const s of T.nguon || []) if (s.v > 0.0005) them(s.k, s.v, ten(s.T), s.k === 'cham' ? 'highest' : null);
   if (T.tocT > 0) them('toc', T.tocV, 'Speed boost ' + T.tocT.toFixed(0) + 's');
   if (T.epxung > 0) them('toc', T.epxung, 'Overclock');
-  if (T.aurora > 0) them('dmg', 0.5, 'Mimic merge ' + T.aurora.toFixed(0) + 's');
+  if (T.aurora > 0) them('dmg', knThe(G.ban[T.ban], 'mimic') / 100, 'Mimic merge ' + T.aurora.toFixed(0) + 's');
   if (B && B.cuong > 0) them('dmg', 1, 'Archfiend RAGE ' + B.cuong.toFixed(0) + 's');
   const ds = Object.values(ra);
   if (T.khien > 0) ds.push({ k: 'khien', tong: T.khien, nguon: ['blocks ' + T.khien + ' boss/rival skill'], cach: 'charges' });

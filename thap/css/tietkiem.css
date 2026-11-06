@@ -1,0 +1,6 @@
+/* TURRET MERGE — gợi ý TIẾT KIỆM PIN (js/tietkiem.js): tấm PNG có sẵn (h2_tam_mong qua .hm-p-tam) + nút hm-nut2. */
+#tk-goiy { position: absolute; z-index: 60; left: 22px; right: 22px; top: 86px; padding: 12px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px;
+  font: 800 13px/1.25 var(--f-hien, sans-serif); color: #e9eef3; text-align: center; }
+#tk-goiy span { grid-column: 1 / -1; }
+#tk-goiy .hm-nut2 { height: 44px; }
+.up-xem #tk-goiy { display: none !important; }

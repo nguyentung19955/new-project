@@ -9,6 +9,8 @@ function fitText(el, max, min) {
 }
 const UI = {
   keo: null, xemHT: null, chon: [], mv: 'hero', che: 'solo', xep: 'bac', ttHet: 0, giu: null, manaCu: 0,
+  // việc chạy MỖI KHUNG của các tệp khác (mana HUD, nút chat, canh online…) — gộp vào 1 vòng requestAnimationFrame duy nhất
+  moiKhung: [], veLai: 0,
 
   // ---------- khởi động ----------
   async init() {
@@ -31,8 +33,19 @@ const UI = {
     TAI.napMenu(); // màn tải: mọi ảnh của menu (logo, nền, thẻ, phi công, khung) + ảnh nền trận cố định — thanh tiến độ thật
     // vòng lặp: mô phỏng bước cố định (BUOC) + bộ tích luỹ; vẽ NỘI SUY giữa 2 trạng thái → mượt ở mọi tần số màn hình.
     // Tăng tốc 2×/3× = nhiều bước hơn mỗi khung (cùng BUOC nhỏ). Sau khi chuyển tab: kẹp thời gian bù.
-    let tr = -1, tichLuy = 0, alpha = 1;
+    // CHỐNG NÓNG MÁY (tuvan/nong): 1 vòng rAF duy nhất · trần 60 khung/giây (màn 120 Hz bỏ khung thừa) · Tiết kiệm pin = 30 ·
+    // tạm dừng = vẽ lại 10 lần/giây · ngoài trận (HOME/menu) KHÔNG vẽ canvas (vẽ 1 lần rồi nghỉ) · tab ẩn: trình duyệt tự dừng rAF.
+    let tr = -1, tichLuy = 0, alpha = 1, tVe = -1e9, nghi = false;
     const vong = (n) => {
+      requestAnimationFrame(vong);
+      const tran = G.ban.length > 0;
+      const khoang = !tran ? 1e9 : (G.dung && !this.keo) ? 99 : (typeof TKP !== 'undefined' && TKP.on()) ? 1000 / 30 : 1000 / 60;
+      if (!tran && !nghi) { nghi = true; tVe = -1e9; } else if (tran) nghi = false;
+      const veNay = this.veLai > 0 || n - tVe >= khoang - 3.5;
+      if (this.veLai > 0) this.veLai--;
+      for (let i = 0; i < this.moiKhung.length; i++) { try { this.moiKhung[i](n); } catch (e) { } }
+      if (!veNay) { if (tran && !G.dung) return; else { tr = n; return; } } // bỏ khung: thời gian trận vẫn cộng dồn ở khung vẽ kế
+      tVe = n;
       const t0v = performance.now();
       if (tr < 0) tr = n;
       let thuc = (n - tr) / 1000; tr = n;
@@ -44,13 +57,12 @@ const UI = {
         while (tichLuy >= BUOC && so < toiDa) { chupTruoc(); capNhat(BUOC); tichLuy -= BUOC; so++; }
         if (tichLuy >= BUOC) tichLuy = BUOC * 0.999; // máy quá chậm: bỏ phần nợ, không "xoáy chết"
         alpha = tichLuy / BUOC;
-        FX.giam = k > 1 ? 1 / Math.sqrt(k) : 1;
+        FX.giam = (k > 1 ? 1 / Math.sqrt(k) : 1) * (typeof TKP !== 'undefined' && TKP.on() ? 0.5 : 1); // tiết kiệm pin: nửa số hạt
         FX.capNhat(thuc * (k > 1 ? Math.sqrt(k) : 1)); // hiệu ứng theo thời gian thực (nhanh lên êm khi tăng tốc)
       }
       if (!TAI.cho) REN.ve(G.dung ? 0 : thuc, alpha); // đang tải: không vẽ (không bao giờ lộ hình thiếu ảnh)
-      if (G.ban.length && (this._hud = !this._hud)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
+      if (G.ban.length && (this._hud = !this._hud || khoang > 20)) this.capNhat(); // HUD (DOM) 30 lần/giây là đủ, đỡ dựng lại bố cục
       REN._viec = performance.now() - t0v; // thời gian JS thật của khung (REN.doKhung: phân biệt máy bận với trần 30/60 Hz)
-      requestAnimationFrame(vong);
     };
     requestAnimationFrame(vong);
     if (G.debug.mode) { // ?mode=solo|coop|pvp → vào thẳng trận (kiểm thử)

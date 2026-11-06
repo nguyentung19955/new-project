@@ -26,7 +26,7 @@ const BVX = {
     const b = T.buf; out.max = out.dmg = out.toc = out.crit = out.khien = out.chet = out.cham = 0;
     if (!b) return out;
     const moc = typeof mocChung === 'function' && mocChung(T, 3) && loaiMoc(T.id) !== 'ht' ? 0.2 : 0;
-    out.dmg = (b.dmg || 0) + (b.dkHien || 0) + (T.aurora > 0 ? 0.5 : 0); // dkHien: sát thương có điều kiện từ hỗ trợ (hotro.js — lộ / chậm / cầu vồng / liên tiếp)
+    out.dmg = (b.dmg || 0) + (b.dkHien || 0) + (T.aurora > 0 ? knThe(G.ban[T.ban], 'mimic') / 100 : 0); // dkHien: sát thương có điều kiện từ hỗ trợ (hotro.js — lộ / chậm / cầu vồng / liên tiếp)
     out.toc = (b.toc || 0) - moc + (T.epxung || 0);
     out.crit = (b.crit || 0) + (b.cdmg || 0) * 0.3;
     out.cham = b.cham || 0; out.chet = b.chet || 0;

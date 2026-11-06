@@ -240,8 +240,8 @@ function dmgU(T) {
   const sk = SKILLS[T.id], B = G.ban[T.ban];
   let d = (sk.dmg || 0) * TIERS[T.bac].hs * (1 + 0.85 * (T.sao - 1)) * hsLv(B, T.id);
   d *= 1 + T.buf.dmg;
-  if (T.aurora > 0) d *= 1.5;
-  if (T.banSao) d *= 0.5; // bản sao của Máy Sao Chép: −50% sát thương
+  if (T.aurora > 0) d *= 1 + knThe(B, 'mimic') / 100; // Mimic: +50% ở cấp đầu, tăng theo cấp thẻ Mimic
+  if (T.banSao) d *= heSaoChep(B); // bản sao Copycat: chỉ số ụ gốc × % sao chép (50% ở cấp đầu → 92% cấp 15, theo cấp thẻ Copycat)
   if (B.cuong > 0) d *= 2;
   d *= heSoMocDmg(T); // mốc sao chung 5★/7★ (phattrien.js)
   return d;
