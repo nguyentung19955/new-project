@@ -513,6 +513,11 @@ async function online(b, W, H, D, co) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-conghuong2.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ cộng hưởng kỹ năng × nhau (thap-kt-conghuong2.js)'); }
     catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-conghuong2.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'conghuong2', loai: 'cộng hưởng kỹ năng', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ cộng hưởng 2: lỗi chạy'); }
   }
+  // MA TRẬN tương tác: mọi (trạng thái ụ × sự kiện biến/thay/nhân/dời/sinh ụ) theo luật docs/demo-hop-tuong/tuvan/tuong-tac/MA-TRAN.md — tools/thap-kt-matran.js
+  if (!process.env.CHI || /matran|conghuong|solo/.test(process.env.CHI)) {
+    try { execFileSync('node', [path.join(__dirname, 'thap-kt-matran.js')], { stdio: 'pipe', env: process.env, timeout: 300000 }); console.log('  ✓ ma trận tương tác (thap-kt-matran.js)'); }
+    catch (e) { const ds = String(e.stdout || e.message || '').split('\n').filter(l => /✗/.test(l)); for (const l of (ds.length ? ds : ['thap-kt-matran.js lỗi ' + e.status])) LOI.push({ co: '-', buoc: 'matran', loai: 'ma trận tương tác', chi: l, anh: '' }); console.log(ds.join('\n') || '  ✗ ma trận: lỗi chạy'); }
+  }
   // kỹ năng theo cấp thẻ (Copycat % sao chép, hỗ trợ +%, trang ụ 'Copy 50% → 57%', online đọc cấp từ chuỗi bộ bài) — tools/thap-kt-kynangcap.js
   if (!process.env.CHI || /kynang|solo|menu/.test(process.env.CHI)) {
     try { execFileSync('node', [path.join(__dirname, 'thap-kt-kynangcap.js')], { stdio: 'pipe', env: Object.assign({}, process.env, { SHOTS: '0' }), timeout: 300000 }); console.log('  ✓ kỹ năng theo cấp thẻ (thap-kt-kynangcap.js)'); }

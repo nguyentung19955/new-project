@@ -128,3 +128,6 @@ html body #wrap.co-tvb #tt.hb-qi.hb-rong .hb-sao.tvb-hang span { font-size: 17px
    chạm xuyên qua (nút triệu hồi/mana/bàn vẫn bấm được), chạm bất kỳ đâu = đóng dải (js/tvb.js). Cột số ngắn để tên không bị cắt. */
 html body #wrap.co-tvb #tt.hb-qi:not(.hb-rong) { pointer-events: none; }
 html body #wrap.co-tvb #tt.hb-qi .hb-so .ht { max-width: 118px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so .hb-bs { display: inline-grid; grid-template-columns: auto auto; column-gap: 3px; align-items: end; justify-items: end; } /* bản sao: dấu Copycat bên trái, COPY / % xếp chồng như DMG / RATE */
+html body #wrap.co-tvb #tt.hb-qi .hb-so .hb-bs img { grid-row: 1 / span 2; align-self: center; width: 18px; height: 18px; }
+html body #wrap.co-tvb #tt.hb-qi .hb-so .hb-bs small { grid-column: 2; } html body #wrap.co-tvb #tt.hb-qi .hb-so .hb-bs b { grid-column: 2; }
