@@ -3196,3 +3196,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Bài kiểm cập nhật theo luật mới: Lửa Thập Tự cả hàng + cột, tối đa 8 lửa (`thap-kt-vang-moi.js`); kiểm online bỏ trường mũi tên+số của Pháo La Bàn khi so cờ đá/bản sao (`thap-kt-conghuong2.js`, `thap-kt-copycat-da.js`).
 - Luật hình (`thap/QUY-TAC-HINH.md` mục 2): gen ảnh xong là đóng tab Chrome ngay.
 - Ảnh mới tải lên `thap-art/`: `raw_mod_*` (7 ụ mẫu kiểu module, nhánh claude/kiem-nhan-dien đo nhận diện).
+
+## claude/chong-roi — Chống rối hiệu ứng khi 15 ụ cùng bắn
+- Gộp nổ trúng trùng tâm (`fx.js FX.no`): cùng loại, < 0,3 ô, < 80 ms → phóng vụ cũ (≤ +25%) thay vì đẻ dải mới; chớp nòng / nổ lớn / trùm giữ nguyên.
+- Gộp số sát thương trùng chỗ trong 150 ms thành 1 số cộng dồn (`FX.chu1`).
+- Vòng nạp chiêu < 70% mờ 25% (trừ ụ đang chạm xem) — `fxu.js PX.vongHoi`; hào quang buff dịu về 20% sau 1,5 s (`buffvfx.js`).
+- Hố Đen vẽ dưới quái, đĩa/mở màn ≤ 50% đục, hố trùng tâm chỉ vẽ 1 lần (`render.js`, `vfxp2.js`, `sigfx.js`).
+- Chỉ đổi hình (không đổi luật, không thêm Math.random). Số đo trước/sau: `docs/demo-hop-tuong/tuvan/vfx15/sau/SAU.md`; công cụ `tools/thap-kt-15u.js` (thêm biến OUT).
