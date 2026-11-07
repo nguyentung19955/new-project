@@ -23,9 +23,9 @@ const SIG = {
       const ma = this.MA[id]; if (!ma || this.daNap.has(id)) continue;
       this.daNap.add(id);
       for (const k in SIG_META) if (k.startsWith('sig_' + ma + '_')) REN.img(k);
-      if (id === 'leviathan') for (const k of [this.LEV.rong, this.LEV.bang, 'fx_bang_trung', 'fx_leviathan_trung']) if (k) REN.img(k);
+      if (id === 'leviathan') for (const k of ['fx_leviathan_tia', 'fx_leviathan_dan', 'fx_leviathan_trung']) REN.img(k); // TIDAL BREATH mưa nước (bỏ đầu rồng lev_rong)
       if (id === 'marionette') for (const k of this.ROI) REN.img(k);
-      if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua', 'fx_ronglua_trung']) REN.img(k);
+      if (id === 'ronglua') for (const k of ['wyrm_rong', 'fx_wyrm_lua2', 'fx_wyrm_lua2_2', 'fx_wyrm_lua2_3', 'fx_wyrm_lua', 'fx_ronglua_trung']) REN.img(k);
     }
   },
   san(id, g) { const a = REN.anh[this.ten(id, g)]; return !!(a && (a._cv || (a.complete && a.naturalWidth))); },
@@ -107,7 +107,12 @@ const SIG = {
 if (typeof SIG_META !== 'undefined') SIG_META.fx_lev_bang = [16, 230, 77]; // dải 16 khung luồng băng (raw_fx_lev_bang.png, 4×4 → 1 hàng)
 // Rối Máy (07/11): găng vàng 8 khung (mở → nắm), thanh rối gỗ 6 khung (lắc), dây vàng 4 khung (lấp lánh) — tools/thap-cat-marionette.py
 if (typeof SIG_META !== 'undefined') Object.assign(SIG_META, { fx_marionette_tay: [8, 219, 240], fx_marionette_thanh: [6, 180, 162], fx_marionette_day: [4, 32, 180] });
-if (typeof SIG_META !== 'undefined') SIG_META.fx_wyrm_lua = [16, 300, 150]; // dải 16 khung luồng lửa Wyrm (raw_fx_wyrm_lua.png, 4×4 → 1 hàng; tools/thap-cat-wyrm.py)
+// Leviathan TIDAL BREATH mưa nước: 3 ảnh đơn ChatGPT sẵn có, khai báo 1 khung để vẽ qua SIG.k (bộ đệm thu nhỏ)
+if (typeof SIG_META !== 'undefined') Object.assign(SIG_META, { fx_leviathan_tia: [1, 1099, 114], fx_leviathan_dan: [1, 259, 139], fx_leviathan_trung: [1, 280, 236] });
+if (typeof SIG_META !== 'undefined') SIG_META.fx_wyrm_lua = [16, 300, 150];
+// luồng lửa Wyrm MỚI (07/11 19:05): 8 khung ChatGPT, nòng ở mép trái giữa khung (tools/thap-cat-wyrm2.py in số đo dưới)
+if (typeof SIG_META !== 'undefined') Object.assign(SIG_META, { fx_wyrm_lua2: [8, 271, 170], fx_wyrm_lua2_2: [8, 271, 170], fx_wyrm_lua2_3: [8, 271, 170] });
+if (typeof VUNG_ANH !== 'undefined') Object.assign(VUNG_ANH, { wyrm2X: 0.98, wyrm2Y: 0.755 }); // dải 16 khung luồng lửa Wyrm (raw_fx_wyrm_lua.png, 4×4 → 1 hàng; tools/thap-cat-wyrm.py)
 SIG.PHAT = {
   roi(o) { // Marionette gắn dây rối
     const phu = this.ds.some(m => m.k === 'roi' && m.o.T === o.T && m.t < 1); // 7★ con rối thứ 2: tay nhỏ hơn
@@ -354,10 +359,53 @@ SIG.K = {
       if (m.tHet != null && m.x != null) { const fc = this.f(m.t - m.tHet, 0, 0.5, 5); if (fc >= 0) this.k(ctx, 'sig_m09_crest', fc, m.x, m.y, 80, { a: this.mo(m.t - m.tHet, 0, 0.5, 0.04, 0.15) }); }
     },
   },
-  // M07 LEVIATHAN — TIDAL BREATH: đầu rồng băng trồi lên từ ụ → phun luồng băng-nước tới đường rồi dọc đường → sương băng → chìm lại
+  // M07 LEVIATHAN — TIDAL BREATH (user 07/11 19:05: bỏ đầu rồng): cột nước + quả cầu nước bắn THẲNG LÊN TRỜI từ ngọc ụ →
+  //   mưa giáo nước rơi xuống ĐỀU dọc CẢ đường (mỗi ~24 px một giọt, nằm đúng trên đường) → mỗi giọt chạm đất ĐÚNG nhịp HU.thoThuy
+  //   trừ máu chỗ đó: nhịp 0.1 s, quái cách đầu sóng ≤ 70 px (+0.3×cỡ) bị trúng → giọt ở s chạm đất ở nhịp đầu tiên có đầu sóng ≤ s + 85.
+  //   Ảnh ChatGPT sẵn có: fx_leviathan_tia (cột nước), fx_leviathan_dan (cầu/giáo nước), fx_leviathan_trung (vương miện bắn toé).
+  //   Code chỉ đặt vị trí / xoay / phóng / mờ. Không đổi luật: thời điểm + vùng trúng vẫn do HU.thoThuy (skills5.js).
   tho: {
-    cap(m) { return this.rongCap(m); },
-    ve(ctx, m) { this.rongVe(ctx, m, SIG.RONG.tho); },
+    cap(m) {
+      const o = m.o; if (!m.p) m.p = o.p;
+      if (m.tHet == null) { if (this.conHu(o)) m.ot = o.t; else m.tHet = m.t; }
+      return m.tHet != null && m.t - m.tHet > 0.5;
+    },
+    ve(ctx, m) {
+      const o = m.o, P = m.p, c = this.o(m.T); if (!P || m.ot == null) return;
+      if (m.gx == null && c) { m.gx = c.x; m.gy = c.y - 4; }
+      if (m.gx == null) return;
+      const song = o.song, tg = m.tHet == null ? m.ot : m.ot + (m.t - m.tHet), gon = typeof CG !== 'undefined' && CG.gon();
+      if (!m.giot) { // giọt đều dọc đường, toạ độ = điểm trên đường; tl = lúc chạm đất = nhịp trừ máu của quái đứng ở đó
+        const N = Math.max(8, Math.round(P.len / 24)), st = P.len / N; m.giot = [];
+        for (let k = 0; k < N; k++) {
+          const s = P.len - (k + 0.5) * st, [x, y, g] = viTri(P, s), l = ((k * 7) % 5 - 2) * 1.6; // lệch ngang ≤ 3 px (cố định, không random)
+          // nhịp k ở o.t ≈ 1/60 + 0.1k; quái trúng khi đầu sóng ≤ s + 70 + 0.3×cỡ quái (≈ 85 px với quái thường)
+          const tl = 1 / 60 + 0.1 * Math.max(0, Math.ceil((song * (1 - (s + 85) / P.len) - 1 / 60) / 0.1 - 1e-6));
+          m.giot.push({ x: x - Math.sin(g) * l, y: y + Math.cos(g) * l, tl });
+        }
+      }
+      // 1) cột nước + cầu nước bắn lên trời (0 → 0.12 s vươn, giữ, tắt dần tới 0.55 s)
+      const top = -30, Lc = (m.gy - top) * this.eo(tg / 0.12), aC = tg < 0.55 ? Math.min(1, (0.55 - tg) / 0.2) : 0;
+      if (aC > 0.01 && Lc > 4) {
+        this.k(ctx, 'fx_leviathan_tia', 0, m.gx, m.gy, Lc, { g: -Math.PI / 2, ax: 0, h: 20 * (0.8 + 0.2 * Math.sin(this.t * 40)), a: aC * 0.95, add: true });
+        if (tg < 0.18) this.k(ctx, 'fx_leviathan_dan', 0, m.gx, m.gy - Lc, 34, { g: -Math.PI / 2, ax: 0.75, a: 1 });
+        this.k(ctx, 'fx_leviathan_trung', 0, m.gx, m.gy, 40 * (0.8 + 0.3 * this.eo(tg / 0.2)), { a: aC * 0.7, add: true });
+      }
+      // 2) mưa giáo nước: rơi 0.24 s (nhanh dần) → chạm đường đúng tl → vương miện toé 0.32 s
+      const FALL = 0.24, CAO = 150;
+      m.giot.forEach((d, i) => {
+        if (gon && i % 2) return;
+        if (m.tHet != null && d.tl > m.ot + 0.001) return; // ụ mất giữa chừng → không còn giọt mới
+        const t0 = Math.max(d.tl - FALL, Math.min(0.1, d.tl - 0.05));
+        if (tg >= t0 && tg < d.tl) {
+          const u = (tg - t0) / (d.tl - t0), e = u * u;
+          this.k(ctx, 'fx_leviathan_dan', 0, d.x, d.y - CAO * (1 - e), 34, { g: Math.PI / 2, ax: 0.8, a: Math.min(1, u * 4) });
+        } else if (tg >= d.tl && tg < d.tl + 0.32) {
+          const v = (tg - d.tl) / 0.32;
+          this.k(ctx, 'fx_leviathan_trung', 0, d.x, d.y, 34 * (0.7 + 0.5 * v), { ay: 0.78, a: 1 - v * v });
+        }
+      });
+    },
   },
 
   // ---------- L14 HYDRA 7★: các đầu rắn quấn thành đầu vương miện → tia rắn ngọc lục bảo → nổ trúng ----------
@@ -452,7 +500,10 @@ SIG.RONG = {
   tho: { dau: 'lev_rong', luong: 'fx_lev_bang', loe: 'fx_leviathan_trung', vet: 'fx_bang_trung', buoc: 34, doan: 62, h: 30, cua: true },
   rong: { dau: 'wyrm_rong', luong: 'fx_wyrm_lua', loe: 'fx_ronglua_trung', vet: null, buoc: 38, doan: 70, h: 34, cua: false },
 };
-SIG.sanRong = (k) => { const c = SIG.RONG[k]; return !!(REN.img(c.dau) && REN.img(c.luong)); };
+SIG.sanRong = (k) => {
+  if (k === 'tho') return ['fx_leviathan_tia', 'fx_leviathan_dan', 'fx_leviathan_trung'].every(n => !!REN.img(n)); // mưa nước (thiếu ảnh → HU.thoThuy gốc tự vẽ)
+  const c = SIG.RONG[k]; return !!(REN.img(c.dau) && REN.img(c.luong));
+};
 
 // ===================================================== MÓC NỐI (không đổi luật chơi) =====================================================
 (() => {
