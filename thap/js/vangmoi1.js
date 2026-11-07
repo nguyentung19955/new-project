@@ -158,13 +158,20 @@ SKILLS.luutru = {
     let x = tam.x, y = tam.y;
     if (ds.length) { let best = -1; for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 50 ? 1 : 0), 0); if (n > best) { best = n; x = E.x; y = E.y; } } }
     const dmg = dmgU(b) * 1.6;
-    G.hu.push({ k: 'vm1Xung', t: 0, song: 0.9, x, y, B, dmg, n: 0 });
+    G.hu.push({ k: 'vm1Xung', t: 0, song: HU.vm1Xung.TRE + 0.9, x, y, B, dmg, n: 0 });
   },
 };
-HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px
+HU.vm1Xung = { // 3 xung nổ cách nhau 0.25 s, bán kính 45 px — xung đầu lúc ụ mới LỘ RA sau hoạt cảnh ghép (GF.M.lo 470 ms; rà VFX 07/11:
+  //   trước nổ lúc 0 ms, trước khi thấy kết quả ghép; o.t còn bị cộng 2 lần/bước → 3 xung dồn trong 0.25 s). Tổng sát thương giữ nguyên (3 × 160%).
+  TRE: 0.47,
   cap(G, o, dt) {
-    o.t += dt;
-    while (o.n < 3 && o.t >= o.n * 0.25) { o.n++; noLan(o.x, o.y, 45, o.dmg, o.B, { B: o.B, mau: '#bfe4ff' }); vm1Fx('luutru', o.x, o.y, 110, 0.55, '#bfe4ff'); FX.lac(2); SND.no(0.4); }
+    while (o.n < 3 && o.t >= this.TRE + o.n * 0.25) {
+      if (o.n === 0) { // chỗ quái đông nhất TẠI lúc nổ (quái đã đi tiếp 0.47 s) — cùng cách chọn như lúc ghép, tất định
+        const ds = dsMucTieu(o.B).filter(E => !E.chet);
+        if (ds.length) { let best = -1; for (const E of ds) { const n = ds.reduce((s, Q) => s + (Math.hypot(Q.x - E.x, Q.y - E.y) < 50 ? 1 : 0), 0); if (n > best) { best = n; o.x = E.x; o.y = E.y; } } }
+      }
+      o.n++; noLan(o.x, o.y, 45, o.dmg, o.B, { B: o.B, mau: '#bfe4ff' }); vm1Fx('luutru', o.x, o.y, 110, 0.55, '#bfe4ff'); FX.lac(2); SND.no(0.4);
+    }
     return o.t >= o.song;
   },
   ve() { },

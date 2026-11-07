@@ -3260,3 +3260,18 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Màn XÂY BỘ BÀI (js/dkkeo.js): cảm ứng trên thẻ lưới xê dịch > 8 px trước khi giữ đủ = CUỘN (mọi hướng — trước: đi ngang > 8 px hoặc giữ 150 ms = kéo); kéo chỉ khi giữ yên 280 ms hoặc kéo thẳng lên khỏi mép trên lưới; chuột vẫn kéo ngay. Giữ yên để mở trang chi tiết 400 → 550 ms (dkcham.js) để kịp bắt đầu kéo sau 280 ms. Bộ sưu tập (cuộn gốc) không đổi.
 - Test mới `tools/thap-kt-vuot-deck.js` (cảm ứng CDP 390×844 + chuột 1280×800). Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/the-tran/`.
 - 13:30 áp luật người dùng chốt (CAN-HOI 1B 3B 6B 7B 8B 10B): Mimic + Scrap Forge = ghép thường; khiên ụ chặn cả +mana Signal Jammer; Mirror phản bị khiên / Holy Shield đối thủ chặn (không dây chuyền); ụ đá/băng không nhận trạng thái xấu mới nhưng vẫn mất sao khi bị hạ sao; REINFORCE bỏ ụ băng; ô băng không nhận buff hỗ trợ. Test 361 cặp.
+
+## claude/demo-hop-tuong — rà soát VFX triệu hồi/đạn/chủ động (07/11)
+- Quay 16 hiệu ứng trong trận 844×390 + đo ms/khung + độ "bật" ảnh; bảng `docs/demo-hop-tuong/tuvan/vfx-ra-soat/BANG.md`, tư vấn ChatGPT `CHATGPT.md`.
+- Sửa hình (luật giữ nguyên): Overlord bỏ chớp trắng toàn màn + rung vừa; Hydra 7★ tia dừng sau quái xa nhất bị xuyên, bỏ phủ xanh toàn màn; Black Hole bỏ phủ tím toàn màn; đạn Mortar nhỏ lại (trước to hơn ụ).
+- Gen sẵn 5 dải ảnh (hoả hồ Nine-Tail, nổ Orbital, mìn chờ, nổ chùm Mortar, drone bom) — chưa gắn, chờ duyệt cùng danh sách việc đụng nhịp luật.
+
+## claude/demo-hop-tuong — gắn 5 hiệu ứng mới + Rồng bổ nhào + khớp nhịp (07/11)
+- 6 dải ChatGPT mới (cắt bằng `tools/thap-cat-vfx5.py`: tách trộn magenta, loang nền từ viền ô, khử viền, bỏ đảo lẻ, thu 3×) gắn trong `thap/js/vfxmoi.js`, ảnh chưa tải thì vẽ hình cũ:
+  lửa cáo Nine-Tail (`fx_cuuvi_hoho`, mũi lửa kéo sau hướng bay) · nổ quỹ đạo Orbital đúng lúc bom trừ máu (`fx_orbital_bomno`, bỏ 2 ảnh nổ cũ chồng) ·
+  mìn chờ đèn nháy Mine Layer (`fx_min_mo`) · nổ chùm 5 cánh Mortar CLUSTER (`fx_mortar_chum`) · drone bom Drone Bay (`fx_drone_bom`, quay theo hướng bay) ·
+  Rồng Máy DRAGON DIVE: rồng nhìn từ trên lao dọc đường (`fx_ronglua_dive`, raw `raw_fx_ronglua_dive.png` gen mới) đúng toạ độ trúng, vẽ trên lớp nổ; bỏ đầu rồng 1,7 ô trên ụ + luồng lửa kẻ từ ụ.
+- Fusion Archive: 3 xung nổ lúc ụ mới lộ ra (0,47 s, cách nhau 0,25 s) thay vì 0 ms; trước `o.t` bị cộng 2 lần/bước nên 3 xung dồn trong 0,25 s. Vị trí chọn lại ở xung đầu (chỗ quái đông nhất, tất định). Tổng sát thương giữ nguyên 3 × 160%.
+- Chúa Tổ SWARM: drone mất mục tiêu (quái chết do drone trước) bám quái sống GẦN CHỖ ĐÓ nhất thay vì quái đầu đường → không còn drone bay ngang bàn ~2 s sau khi chùm nổ xong. Sát thương mỗi drone giữ nguyên.
+- Lớp phủ màu cả màn sau sét Overlord: `FX.chop` (chớp màn) chỉ giảm trong vòng mô phỏng → bàn đứng (tạm dừng / TAI.doi giải mã ảnh sau chiêu lớn) thì đọng nguyên lớp phủ. Nay vẫn tắt theo thời gian thực (`js/ui.js`).
+- GIF trước/sau: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-<tên>.gif`.

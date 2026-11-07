@@ -101,7 +101,14 @@ HU.chich = { ve(ctx, o, R) { const u = o.t / o.song; ctx.globalCompositeOperatio
 HU.ongLao = { // SWARM: từng drone lao thành vệt sáng vào chỗ đông → nổ 35 px
   cap(G, o, dt) {
     if (o.t < 0) return false;
-    if (o.E.chet) { const ds = dsMucTieu(o.B).filter(E => !E.chet); if (!ds.length) return true; o.E = ds[0]; }
+    // mục tiêu chết giữa đường (drone trước đã nổ trúng nó): bám quái SỐNG GẦN CHỖ ĐÓ NHẤT — trước bám quái đầu đường (ds[0]) → drone bay
+    // ngang cả bàn ~2 s trong khi chùm nổ đã xong (rà VFX 07/11). Sát thương mỗi drone giữ nguyên; chọn theo khoảng cách, hoà → thứ tự ds (tất định).
+    if (o.E.chet) {
+      const ds = dsMucTieu(o.B).filter(E => !E.chet); if (!ds.length) return true;
+      const x0 = o.E.x, y0 = o.E.y; let best = ds[0], bd = Infinity;
+      for (const E of ds) { const d = (E.x - x0) * (E.x - x0) + (E.y - y0) * (E.y - y0); if (d < bd) { bd = d; best = E; } }
+      o.E = best;
+    }
     const dx = o.E.x - o.x, dy = o.E.y - o.y, L = Math.hypot(dx, dy) || 1, v = 380 + o.t * 500;
     o.vet.push(o.x, o.y); if (o.vet.length > 12) o.vet.splice(0, 2);
     if (L < v * dt + 6) {
