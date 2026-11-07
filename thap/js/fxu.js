@@ -224,14 +224,15 @@ const PX = {
     let s = k && this._hoi.get(k);
     if (k && !s) { s = { p: p, loe: -9 }; this._hoi.set(k, s); }
     if (s) { if ((p >= 0.999 && s.p < 0.999) || (p < s.p - 0.45 && t - s.loe > 0.5)) s.loe = t; s.p = p; } // vừa đầy / vừa nhả (đầy chỉ 1 khung)
-    const op = ctx.globalCompositeOperation;
+    const op = ctx.globalCompositeOperation, al0 = al;
+    if (p < 0.7 && !uDangXem(k)) al *= 0.25; // chống rối (claude/chong-roi): chưa tới 70% và không đang chạm xem ụ → vòng mờ ≤ 25% (loé khi đầy/nhả vẫn đủ sáng)
     ctx.globalCompositeOperation = 'source-over'; this.vong(ctx, 0, 0, r, 2, this.HOI_RANH, al * 0.8); // rãnh tối
     ctx.globalCompositeOperation = 'lighter';
     const im = this.anhHoi(this.HOI_MAU), D = r * this.K_VONG;
     if (p >= 0.999) this.ve(ctx, im, 0, 0, D, D, 0, al * (cho ? 0.8 + 0.2 * Math.sin(t * 5) : 1)); // đầy (chờ chạm: thở nhẹ)
     else if (p > 0.004) this.cung(ctx, 0, 0, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p, false, 2, this.HOI_MAU + '~', al, im);
     const e = s ? (t - s.loe) / 0.38 : 9;
-    if (e >= 0 && e < 1) this.vong(ctx, 0, 0, r * (1 + 0.16 * e), 2, this.HOI_LOE, al * (1 - e) * 0.9); // loé gọn khi đầy
+    if (e >= 0 && e < 1) this.vong(ctx, 0, 0, r * (1 + 0.16 * e), 2, this.HOI_LOE, al0 * (1 - e) * 0.9); // loé gọn khi đầy
     ctx.globalCompositeOperation = op;
   },
   // đoạn thẳng sáng (dây, tia, đường ngắm): kéo dãn 1 ảnh; lech != null → lặp ảnh trượt theo lech (nhìn như chạy)

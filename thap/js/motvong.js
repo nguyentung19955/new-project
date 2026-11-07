@@ -8,6 +8,7 @@
 //  Chỉ đặt ảnh PNG + chữ (QUY-TAC-HINH 3). Không đổi luật chơi / đồng bộ online.
 'use strict';
 const MV = {
+  GON: true, // bàn gọn: không vẽ hàng 3 viên ngọc dạng (false = hình cũ)
   NAP_KHAC: { overlord: 1, wallgen: 1, blackhole: 1, mana: 1 }, // ụ nạp tự kích không có napMau (giữ đúng danh sách cũ của render.js)
   TAY: 'ui_tay', CO_TAY: false, // bàn tay chạm ChatGPT (HINH-VE-CODE-AUDIT S12) — chưa gen: tạm ic_phat (nút bấm PNG có sẵn)
   // ụ có chiêu nạp được (kể cả đang 0)
@@ -42,6 +43,13 @@ const MV = {
   veNgoc(ctx, h) {
     const T = h.T; if (typeof DOTPHA !== 'undefined' && DOTPHA.NGUONG[T.id]) return; // ụ cộng dồn: dạng = mốc của chính bộ đếm → tấm đếm màu bậc đã nói đủ, bỏ 3 viên ngọc (người dùng 07/11)
     const d = this.dang(T); if (!d || T.st.da) return;
+    if (this.GON) { // BÀN GỌN (người dùng 07/11 15:48): bỏ hàng 3 viên ngọc cho MỌI ụ — dạng đã thấy ở hình ụ; chỉ còn 1 hạt ngọc nhỏ ở góc huy hiệu sao khi đã lên dạng (lam: dạng giữa · vàng: dạng cuối)
+      if (d.s < 2) return;
+      const im = REN.img(d.s >= d.n ? 'ngoc_vang' : 'ngoc_xanh'); if (!im) return;
+      const B = T.vxB, u = B && B.len ? (VX.t - B.t0) / 0.35 : 9, sc = u >= 0 && u < 1 ? 1 + 0.5 * Math.sin(u * Math.PI) : 1; // vừa lên dạng: hạt nảy nhẹ
+      const r = h.d * 0.36 * sc; ctx.globalAlpha = h.al; ctx.drawImage(REN.mip(im, r * REN.s * REN.dpr), h.sx + h.d * 0.36 - r / 2, h.sy + h.d * 0.36 - r / 2, r, r); ctx.globalAlpha = 1;
+      return;
+    }
     const px = h.d * 0.42, c = this.hangNgoc(d.n, d.s, px); if (!c) return;
     const B = T.vxB, u = B && B.len ? (VX.t - B.t0) / 0.35 : 9; // vừa lên dạng: hàng ngọc nảy nhẹ
     const sc = u >= 0 && u < 1 ? 1 + 0.35 * Math.sin(u * Math.PI) : 1;
@@ -129,7 +137,7 @@ window.MV = MV;
 
 (() => {
   if (typeof document === 'undefined') return;
-  if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['ngoc_xanh', 'ic_phat']) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
+  if (typeof REN !== 'undefined' && REN.CO_DINH) for (const t of ['ngoc_xanh', 'ngoc_vang', 'ic_phat']) { REN.CO_DINH.add(t); try { REN.img(t); } catch (e) { } }
   // lớp huy hiệu (sau đạn/hiệu ứng): ngọc dạng dưới huy hiệu sao + icon chạm góc trên-trái
   if (typeof ND !== 'undefined' && ND.veHuyHieu) {
     const veHH = ND.veHuyHieu;
