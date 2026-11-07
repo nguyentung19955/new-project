@@ -101,9 +101,9 @@ for (const che of ['solo', 'coop', 'pvp']) {
 // ---- cân bằng: DPS 1 ụ (quái wave 20 vào liên tục), so với dải các ụ Vàng tấn công hiện có ----
 function dps(id, sao, o) {
   o = o || {}; ctx._o = o;
-  R(`{ G.debug = { auto: false }; batDau('solo', ['${id}', 'lien', 'canon', 'bang', 'tia'], 'hero'); G.cho = 1e9; G.wave = 20; const B = G.ban[0]; B.t.fill(null); B.tim = 1e9; B.mana = 0;
+  R(`{ G.debug = { auto: false }; batDau('solo', ['${id}', 'lien', 'sungluc', 'bang', 'tia'], 'hero'); G.cho = 1e9; G.wave = 20; const B = G.ban[0]; B.t.fill(null); B.tim = 1e9; B.mana = 0;
     const T = sinhU(taoU(B, '${id}', ${sao}, 2)); B.t[2] = T; if (_o.lc) T.lc = _o.lc; if (_o.kho) T.kho = _o.kho;
-    if (_o.ban) for (const o of [0, 1, 3, 4, 10, 11, 12]) { const X = sinhU(taoU(B, 'canon', ${sao}, o)); B.t[o] = X; }
+    if (_o.ban) for (const o of [0, 1, 3, 4, 10, 11, 12]) { const X = sinhU(taoU(B, 'sungluc', ${sao}, o)); B.t[o] = X; } // đệm 7 ụ = Súng Lục (Pháo La Bàn mới có mũi tên ngẫu nhiên + sóng nổ → DPS dao động, trừ phần đệm sai)
     G._sum = 0; G._q = 0; }`);
   for (let t = 0; t < 40; t += 1 / 30) {
     if (t >= R('G._q') * 0.5) R(`{ G._q++; const d = taoWave(G.wave).ds; sinhQuai(pick(d), 0, 0, 6); G.quai[G.quai.length - 1].vao = 1; }`);
@@ -119,8 +119,8 @@ const MOI = [['lualien', { lc: 3 }, 'Ember Relay (3 lửa)'], ['hopca', { ban: 1
 if (process.env.BANG) { console.log('| Ụ | 1★ | 4★ | 7★ |'); for (const [id, v] of nen) console.log('| ' + id + ' | ' + v.join(' | ') + ' |'); }
 console.log('Cân bằng (dải Vàng hiện có 1★ ' + min[0] + '–' + max[0] + ' · 4★ ' + min[1] + '–' + max[1] + ' · 7★ ' + min[2] + '–' + max[2] + ')');
 for (const [id, o, ten] of MOI) {
-  const v = ds(id, o), v0 = o.ban ? ds('canon', { ban: 1 }).map((x, i) => x) : null;
-  const tu = o.ban ? v.map((x, i) => x - Math.round(dps('canon', [1, 4, 7][i], { ban: 1 }) - dps('canon', [1, 4, 7][i]))) : v; // Choir: trừ phần 7 Cannon
+  const v = ds(id, o), v0 = o.ban ? ds('sungluc', { ban: 1 }).map((x, i) => x) : null;
+  const tu = o.ban ? v.map((x, i) => x - Math.round(dps('sungluc', [1, 4, 7][i], { ban: 1 }) - dps('sungluc', [1, 4, 7][i]))) : v; // Choir: trừ phần 7 Cannon
   const trong = tu.every((x, i) => x >= min[i] * 0.75 && x <= max[i] * 1.2);
   ok(trong, ten + ' DPS ' + tu.join(' / ') + ' trong dải Vàng (±)');
 }
