@@ -819,11 +819,12 @@ SKILLS.hasao = { // Súng Hạ Sao (Giltine) — HỖ TRỢ (đợt vai trò): �
 };
 SKILLS.saochep = { // Máy Sao Chép (Shamash): kéo lên ụ CÙNG SAO → thành bản sao của ụ đó (70% chỉ số ở cấp đầu → 94% thẻ max, KY_NANG_CAP.saochep)
   vai: 'db', dmg: 13.33, toc: 1.2, nham: 'dau',
-  mo: (T) => 'Drag onto same-star turret (stone or frozen too): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
+  mo: (T) => 'Drag onto same-star turret (frozen too, NOT stone): becomes a copy at ' + Math.round(heSaoChep(T && G.ban[T.ban]) * 100) + '% damage · keeps its form (Awakened, Gold) and the Copycat\'s own buffs · the copy is never stone',
   ban(G, B, T, E) { banNhe(B, T, E, { img: 'tia_lua', co: 16, mau: '#ffe46b', sp: 480 }); },
   ghepDB: {
-    hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban,
-    // chép được cả ô ĐÁ (Janus) / ô BĂNG cùng sao: bản sao là ụ THƯỜNG đúng loại thật dưới lớp đá/băng (không thành đá), ô đá/băng giữ nguyên
+    // 08/11 người dùng chốt: KHÔNG chép ô ĐÁ (hoá đá) — ô BĂNG vẫn chép được
+    hopLe: (a, b) => a.sao === b.sao && b.id !== 'saochep' && b.ban === a.ban && !(b.st && b.st.da),
+    // (cũ 06/11: chép cả ô ĐÁ — đã bỏ) chép ô BĂNG cùng sao: bản sao là ụ THƯỜNG đúng loại thật dưới lớp đá/băng (không thành đá), ô đá/băng giữ nguyên
     // (DCDW: không nguồn nào cấm Shamash chép đá; Frey còn biến hình được ô đá — docs/demo-hop-tuong/tuvan/copycat-da/DCDW.md)
     quaKhoa: true,
     lam(G, B, a, b) {

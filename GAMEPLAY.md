@@ -3423,3 +3423,9 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
   mỗi đoạn bắt lửa → cháy lặp → chuyển tàn than → tắt hết trong đúng thời gian cháy 3 s (`thap/js/vfxmoi.js`, khối cuối).
 - Luật giữ nguyên (vùng cháy/sát thương/thời gian của HU.vetChay). Vệt dưới nón phun thường giữ hình cũ; chưa tải ảnh → hình cũ.
 - GIF trước/sau `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-vet-lua.gif`, ảnh `tran-390x844-vetlua.jpg`, `tran-844x390-vetlua.jpg`. Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vetay đạt.
+
+## claude/demo-hop-tuong — Copycat không chép ụ đang hoá đá (08/11)
+
+- Người dùng chốt: **Copycat (Máy Sao Chép) KHÔNG chép ô đang HOÁ ĐÁ**. Ô đá không sáng khi cầm Copycat, thả lên không có gì xảy ra. Ô BĂNG cùng sao vẫn chép được như cũ (bản sao thường).
+- Code: `SKILLS.saochep.ghepDB.hopLe` thêm `!b.st.da` (skills2.js); chữ kỹ năng: "frozen too, NOT stone".
+- Test cập nhật: `tools/thap-kt-copycat-da.js`, `tools/thap-kt-conghuong.js`.
