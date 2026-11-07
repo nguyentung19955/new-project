@@ -3281,3 +3281,6 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Chúa Tổ SWARM: drone mất mục tiêu (quái chết do drone trước) bám quái sống GẦN CHỖ ĐÓ nhất thay vì quái đầu đường → không còn drone bay ngang bàn ~2 s sau khi chùm nổ xong. Sát thương mỗi drone giữ nguyên.
 - Lớp phủ màu cả màn sau sét Overlord: `FX.chop` (chớp màn) chỉ giảm trong vòng mô phỏng → bàn đứng (tạm dừng / TAI.doi giải mã ảnh sau chiêu lớn) thì đọng nguyên lớp phủ. Nay vẫn tắt theo thời gian thực (`js/ui.js`).
 - GIF trước/sau: `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-<tên>.gif`.
+
+## claude/demo-hop-tuong — sửa drone SWARM nổ sớm, nổ chùm cối bị cắt mép (07/11)
+- SWARM: cả bầy cất cánh cùng lúc, chia mục tiêu lúc cất cánh (dự tính quái đã đủ chết) và cùng tới sau 0,5 s (trước lệch −0,05 s/con + chuỗi đổi mục tiêu kéo tới 1,3 s); ngòi chích thường (đạn cùng ảnh drone) không nổ "WOW" bậc đỏ trong lúc bầy bay — đây là "drone nổ sớm khúc dưới"; nổ chùm Mortar / nổ Orbital / Rồng bổ nhào sát mép canvas dời tâm vào trong (tối đa 40% bề rộng), không còn bị cắt. GIF `TRUOC-SAU-swarm2.gif`, `TRUOC-SAU-mortar-mep.gif`.

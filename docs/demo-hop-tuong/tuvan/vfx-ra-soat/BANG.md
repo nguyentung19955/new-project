@@ -66,4 +66,6 @@ tải nặng/GC; cần đo lại trên máy rảnh trước khi kết luận gi�
 | Fusion Archive | 3 xung lúc ụ mới lộ ra 0,47 / 0,72 / 0,97 s (trước 0 / 0,125 / 0,25 s do `o.t` cộng 2 lần); tổng sát thương giữ nguyên | `TRUOC-SAU-archive.gif` |
 | Hive Queen SWARM | mục tiêu chết giữa đường → bám quái gần chỗ đó nhất (trước: quái đầu đường, bay ngang bàn) | `TRUOC-SAU-swarm.gif` |
 | Overlord phủ màu | nguồn: `FX.chop` (chớp màn) chỉ giảm khi mô phỏng chạy → tạm dừng / TAI.doi (giải mã ảnh sau chiêu) đọng lớp phủ cả màn; nay tắt theo thời gian thực (`js/ui.js`). Kiểm: tạm dừng + chớp 0,1 → sau 0,8 s trước 0,1 / nay 0. Cảnh dựng lượt 1 không gọi `FX.capNhat` nên phủ màu + nổ FX đứng yên là do cách quay (lượt 2 đã gọi) | — |
+| Hive Queen SWARM (lượt 2b) | nguồn "1 drone nổ sớm ~0,6 s ở khúc dưới": ngòi chích thường của Chúa Tổ (đạn = ảnh drone `fx_chuato_dan`) trúng quái đầu đường → nổ WOW bậc đỏ (ảnh tổ ong) — nay hoãn nổ bậc trong lúc bầy bay; bầy cùng cất cánh, chia mục tiêu lúc cất cánh, cùng tới 0,5 s (trước 0,45 → 1,3 s). Sát thương mỗi drone giữ nguyên (cụm trâu: tổng trừ máu trùng khớp) | `TRUOC-SAU-swarm2.gif` |
+| Nổ to sát mép | nổ chùm Mortar / nổ Orbital / Rồng bổ nhào: tâm ảnh dời vào trong canvas (tối đa 40% bề rộng) khi quái sát mép | `TRUOC-SAU-mortar-mep.gif` |
 Ảnh trận: `tran-844x390-*.jpg`, `tran-390x844-*.jpg`.
