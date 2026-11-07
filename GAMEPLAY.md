@@ -3316,3 +3316,7 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Bỏ hàng 3 viên ngọc dạng (motvong.js `MV.veNgoc`) cho MỌI ụ (`MV.GON = true`; false = hình cũ). Dạng đã thấy ở hình ụ; chỉ còn 1 hạt ngọc nhỏ ở góc dưới-phải huy hiệu sao khi đã lên dạng (lam = dạng giữa, vàng = dạng cuối), nảy nhẹ lúc vừa lên dạng.
 - Ảnh trước/sau 93 ụ (7 trang × 15 ô, 3,5 s sau khi đặt): `docs/demo-hop-tuong/tuvan/ban-gon/{truoc,sau}-390x844.jpg`, `{truoc,sau}-844x390.jpg`; ụ có dạng: `dang-truoc-sau-390.jpg`.
 - Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vang-moi, thap-kt-mau, thap-kt-vetay XANH.
+
+## claude/u-module — gộp bàn gọn (8b577bc1) + sửa lệch RNG 30/60 FPS (07/11)
+- Gộp `claude/demo-hop-tuong` (bàn gọn: bỏ 3 viên ngọc dạng → 1 hạt ở huy hiệu sao, hào quang buff chỉ loé) — không xung đột.
+- `fx.js` `FX.no1`: góc xoay ảnh nổ trúng lấy từ toạ độ thay vì `Math.random()`. Lý do: `FX.no` gộp dải nổ theo `A.t` (chỉ tăng theo nhịp vẽ), nên số lần gọi `Math.random` trong bước luật phụ thuộc FPS → RNG luật lệch giữa 30/60 FPS (nguy cơ lệch online lockstep). Lỗi có sẵn, lộ ra khi hình học đầu nòng 93 ụ module đổi (thap-kt-anim đỏ → xanh).

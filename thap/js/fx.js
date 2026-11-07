@@ -102,7 +102,8 @@ const FX = {
       const cap = co >= 140 ? 2 : co >= 70 ? 1 : 0; // giữ ngân sách cỡ như FX.no, nhưng sống ≥ 0.2 s cho dễ đọc
       A.co = Math.min(co * 0.7, [36, 64, 110][cap]) * (cf.kt || 1); // ảnh đã cắt sát (dải cũ có lề) → nhỏ hơn số đường kính cũ
       A.song = clamp(song || 0.3, 0.2, [0.3, 0.45, 0.6][cap]);
-      A.goc = Math.random() * 6.28;
+      // góc xoay ngẫu nhiên lấy từ toạ độ (KHÔNG Math.random): FX.no gộp dải theo A.t (chỉ chạy theo nhịp vẽ) → gọi Math.random ở đây làm lệch RNG luật giữa 30/60 FPS (thap-kt-anim, online lockstep)
+      { const h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; A.goc = (h - Math.floor(h)) * 6.28; }
     }
     this.anim.push(A);
   },
