@@ -28,7 +28,8 @@ function danThang(B, T, E, img, sp, co, trungFn, duoi) {
 //    ↓ thấp nhất, ← trái nhất); đạn XUYÊN: mọi quái trên đường thẳng từ ụ tới mục tiêu nhận 60%, nổ lan ở mục tiêu.
 //  · Mốc: 3★ chung (+20% tốc) · 5★ TRUE NORTH: mỗi số tính ×1.5 · 7★ FOUR WINDS: +30% sát thương, mỗi 8 s bắn 1 phát theo CẢ 4 hướng.
 SKILLS.canon = {
-  vai: 'tc', dmg: 26.5, toc: 0.55, nham: 'dau', // 32.73 → 26.5: ghép giữ loại + số làm Pháo mạnh hơn (sim 07/11 bộ 4 ụ trắng + Pháo: wave 13.1 cũ → ~14.0; 32.73 thì 16.2 = áp đảo)
+  vai: 'tc', dmg: 20, toc: 0.55, nham: 'dau', // 07/11 20:10 người dùng: Pháo La Bàn lên bậc VÀNG (số cộng dồn không trần) — 26.5 × Trắng ×1.0 → 20 × Vàng ×2.6 (mô phỏng: trong dải Vàng)
+  // (cũ) // 32.73 → 26.5: ghép giữ loại + số làm Pháo mạnh hơn (sim 07/11 bộ 4 ụ trắng + Pháo: wave 13.1 cũ → ~14.0; 32.73 thì 16.2 = áp đảo)
   MUI: ['↑', '→', '↓', '←'], SONG_K: 6, XUYEN: 0.6,
   banKinh: (T) => 28 + 6 * T.sao,
   huong: (T) => ((T && T.huong) | 0) & 3,
@@ -73,7 +74,7 @@ SKILLS.canon = {
     this.banMot(G, B, T, Q, 1);
   },
   banMot(G, B, T, E, k) {
-    const [x, y] = dauNong(T), dmg = dmgU(T) * this.heSo(T) * (k || 1), r = this.banKinh(T), xu = this.XUYEN;
+    const [x, y] = dauNong(T), dmg = (CONG_GOP ? dmgU(T, this.moiSo(T) * this.soHieu(T)) * (ms(T, 7) ? 1.3 : 1) : dmgU(T) * this.heSo(T)) * (k || 1), r = this.banKinh(T), xu = this.XUYEN;
     banDan({ img: 'dan_phao', x, y, muc: E, px: E.x, py: E.y, sp: 300, co: 24 + Math.min(10, this.so(T)), cong: 30, B, T, duoi: true,
       trung(G, d) {
         // xuyên: mọi quái (trừ tâm nổ) trên đoạn thẳng từ nòng tới điểm nổ, lệch ≤ 16 px — xét theo uid tăng dần (tất định)
@@ -104,7 +105,7 @@ SKILLS.canon = {
   },
   // SÓNG NỔ bù (ghép ngược hướng): mọi quái trên làn của mình (uid tăng dần) nhận n × 6 lần sát thương 1 phát (không nhân số)
   songNo(G, B, T, n) {
-    const dmg = dmgU(T) * this.SONG_K * n;
+    const dmg = dmgU(T) * this.SONG_K * n; // (không nhân số — giữ nguyên)
     const ds = dsMucTieu(B).filter(E => !E.chet).sort((p, q) => p.uid - q.uid);
     for (const E of ds) trung(E, dmg, { B, T, phu: true });
     for (const pi of G.duong.map((p, i) => i).filter(i => G.duong[i].ban === B.i)) G.hu.push({ k: 'cmSong', t: 0, song: 0.9, p: pi, n });

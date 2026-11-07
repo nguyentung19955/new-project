@@ -85,11 +85,13 @@ const nhipU = (T) => Math.max(0.1, 1 + T.buf.toc + (T.epxung || 0)) * (T.st && T
 // ===================================================== TRẮNG =====================================================
 SKILLS.xucxac = { // Pháo May Rủi (Fenrir): sát thương ngẫu nhiên 3–300%; chí mạng = luôn tối đa
   vai: 'tc', dmg: 16, toc: 0.8, nham: 'dau', // đợt vai trò: DPS trung bình về ngân sách Thường (mục 6A)
-  mo: () => 'Each shot 3–300% damage · crit = 300%',
+  mo: () => 'Each shot 3–300% damage · crit = 300%' + ' · LOADED DICE (3+ stars): 12 shots in a row that roll all 3 bands (3–100%, 101–200%, 201–300%; crits don\'t count) → next 6 shots roll exactly 300%, +70% fire rate, +80% crit dmg (8s max, 30s cooldown)',
   ban(G, B, T, E) {
     giat(T, 0.9); const [x, y] = chopNong(T, 26); phutKhoi(x, y, 1); SND.phao();
     const chac = !!T._critChac; if (chac) T._critChac = false; // Crit Antenna 7★: cú chắc chắn chí mạng = cú tối đa (không nhân đôi thêm)
-    const crit = chac || Math.random() < critU(T), roll = crit ? 300 : 3 + rint(298), dmg = dmgU(T) * (crit ? 1.5 : roll / 100); // chí mạng: 150% × (2 + sát thương chí mạng) = 300% (+ Hammer/Focus Lens)
+    const ld = typeof JP !== 'undefined' && JP.dang(T, 'loaded'); // LOADED DICE (jackpot.js): phát không chí mạng quay đúng 300%
+    const crit = chac || Math.random() < critU(T), roll = crit || ld ? 300 : 3 + rint(298), dmg = dmgU(T) * (crit ? 1.5 : roll / 100);
+    if (typeof JP !== 'undefined') JP.xucxac(B, T, roll, crit); // chí mạng: 150% × (2 + sát thương chí mạng) = 300% (+ Hammer/Focus Lens)
     danThang(B, T, E, 'dan_phao', 520, 15, (G, d, M) => {
       if (M) trung(M, dmg, { B, crit, mau: roll >= 240 ? '#ffd23f' : roll < 40 ? '#9aa6b4' : '#ffffff' });
       FX.tiaLua(d.x, d.y, roll >= 240 ? 12 : 3, '#ffd080', 170, 8);
