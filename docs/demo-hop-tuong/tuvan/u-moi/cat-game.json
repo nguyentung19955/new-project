@@ -1029,7 +1029,7 @@
 0.91,
 1836.9359
 ],
-"nguon": "raw_mod_loa_v2.png",
+"nguon": "raw_mod_loa.png",
 "thu": 1.0,
 "tip": 0.987,
 "truc_o3": [
@@ -1179,7 +1179,7 @@
 1.0,
 2578.0974
 ],
-"nguon": "raw_mod_mana_v2.png",
+"nguon": "raw_mod_mana.png",
 "thu": 1.0,
 "tip": 0.259,
 "truc_o3": [
@@ -1912,7 +1912,7 @@
 0.98,
 2678.4663
 ],
-"nguon": "raw_mod_saochep_v2.png",
+"nguon": "raw_mod_saochep.png",
 "thu": 1.0,
 "tip": 0.974,
 "truc_o3": [
@@ -2137,7 +2137,7 @@
 0.85,
 1742.1147
 ],
-"nguon": "raw_mod_tienhoa_v2.png",
+"nguon": "raw_mod_tienhoa.png",
 "thu": 1.0,
 "tip": 0.947,
 "truc_o3": [
@@ -2212,7 +2212,7 @@
 0.99,
 3555.7585
 ],
-"nguon": "raw_mod_vughep_v2.png",
+"nguon": "raw_mod_vughep.png",
 "thu": 0.953,
 "tip": 0.891,
 "truc_o3": [
