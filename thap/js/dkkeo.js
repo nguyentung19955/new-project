@@ -136,10 +136,11 @@ const DK = {
     const w = document.getElementById('wrap'); if (!w) return;
     const rw = w.getBoundingClientRect(), s = rw.width / W, r = d.el.getBoundingClientRect();
     // bóng ma: cùng cỡ ô bộ bài lớn (70 × 85 logic), ảnh khung độ hiếm + chân dung + đế sáng
-    const mw = 76, mh = 92;
-    const ma = document.createElement('div'); ma.className = 'dk-ma';
+    // 07/11: ô vuông giống lưới — khung vuông chung o_vien_trang + viền mảnh màu bậc (css/otoigian.css), bỏ khung bậc Pass 9
+    const mw = 76, mh = 76;
+    const ma = document.createElement('div'); ma.className = 'dk-ma dk-ma-ot'; ma.style.setProperty('--otc', ({ trang: '#c9d1dc', xanh: '#3fa2ff', tim: '#b061ff', vang: '#ffc83a', do: '#ff4040' })[this.bac(d.id)] || '#c9d1dc');
     ma.style.width = mw + 'px'; ma.style.height = mh + 'px'; ma.style.setProperty('--khh', mh + 'px');
-    const kh = (typeof KHUNG !== 'undefined') ? KHUNG.url(this.bac(d.id)) : '';
+    const kh = typeof anhUrl === 'function' ? anhUrl('o_vien_trang') : 'assets/o_vien_trang.png';
     ma.innerHTML = '<img class="dk-ma-de" src="assets/chon_de_xanh.png" alt=""><div class="dk-ma-in"><img class="dk-ma-po" src="' + portraitOf(d.id) + '" alt="" draggable="false">' + (kh ? '<img class="dk-ma-kh" src="' + kh + '" alt="" draggable="false">' : '') + '</div>';
     w.appendChild(ma);
     const cx = (r.left + r.width / 2 - rw.left) / s, cy = (r.top + Math.min(r.height, r.width * 1.2) / 2 - rw.top) / s;

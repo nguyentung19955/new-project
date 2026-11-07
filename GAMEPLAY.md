@@ -3287,3 +3287,10 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Bỏ hàng 3 viên ngọc dạng (motvong.js `MV.veNgoc`) cho MỌI ụ (`MV.GON = true`; false = hình cũ). Dạng đã thấy ở hình ụ; chỉ còn 1 hạt ngọc nhỏ ở góc dưới-phải huy hiệu sao khi đã lên dạng (lam = dạng giữa, vàng = dạng cuối), nảy nhẹ lúc vừa lên dạng.
 - Ảnh trước/sau 93 ụ (7 trang × 15 ô, 3,5 s sau khi đặt): `docs/demo-hop-tuong/tuvan/ban-gon/{truoc,sau}-390x844.jpg`, `{truoc,sau}-844x390.jpg`; ụ có dạng: `dang-truoc-sau-390.jpg`.
 - Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vang-moi, thap-kt-mau, thap-kt-vetay XANH.
+
+## claude/demo-hop-tuong — bỏ khung bậc rườm rà trên thẻ, giữ khung vuông (07/11)
+- Người dùng: "bỏ khung vàng thừa, cả khung đỏ/xanh/tím; giữ khung vuông như giờ". Ô ụ mọi bậc (lưới XÂY BỘ BÀI + BỘ SƯU TẬP, 5 ô bộ bài, khay trận, dải vào trận/đối thủ, bảng xem nhanh/#tt, bóng kéo) dùng chung khung vuông `o_vien_trang.png`; bậc đọc bằng viền mảnh 1,5 px màu bậc (CSS outline: trắng bạc · xanh · tím · vàng · đỏ). Bỏ hàng ngọc bậc ở đáy ô.
+- Chỉ huy giữ viền vàng + vương miện (phân biệt chỉ huy). LV, bộ đếm 0/1, viền đang chọn, khoá/mờ giữ nguyên.
+- Code: `thap/js/otoigian.js` (OT.gan tham số mv; ụ → o_vien_trang, không ngọc), `thap/css/otoigian.css` (--otc theo data-otb), `thap/js/dkkeo.js` (bóng kéo ô vuông 76×76, thôi dùng khung Pass 9).
+- Ảnh trước/sau: `docs/demo-hop-tuong/tuvan/khung-the/` (deck, bộ sưu tập, khay trận 390×844; deck, bộ sưu tập 844×390; bóng kéo).
+- Test: thap-kt-vuot-deck 24/24, thap-kt-bo2hang, thap-kt-chon, thap-kt-bopopup không lỗi.
