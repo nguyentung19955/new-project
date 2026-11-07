@@ -12,7 +12,8 @@
 /* băng tiêu đề */
 #nd-gt .vt-bang { width: 300px; height: 46px; display: flex; align-items: center; justify-content: center; border: 0 solid transparent;
   border-image: url(../assets/bang_wave_nen.webp?v=4251b5c5) 40 110 fill / 16px 46px stretch; animation: vt-bang .32s cubic-bezier(.2,1.4,.4,1) both; animation-delay: var(--t, 0s); }
-#nd-gt .vt-bang.do { border-image-source: url(../assets/bang_trum_nen.webp?v=0ecab6eb); }
+#nd-gt .vt-bang.do { border-image: url(../assets/bang_trum_nen.webp?v=0ecab6eb) 40 70 fill / 13px 23px stretch; } /* băng trùm có tam giác ở 2 đầu: tỉ lệ đều ≈ 0,33 (cao 46 / ảnh 140) → tam giác không méo */
+#nd-gt .vt-bo .vt-bang.do { border-image-width: 11px 19px; }
 #nd-gt .vt-bang b { font-family: var(--f-ui, inherit); font-size: 16px; font-weight: 900; letter-spacing: 1.5px; color: #fff; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
 #nd-gt .vt-bang.do b { color: #ffe1dc; }
 #nd-gt .vt-bo .vt-bang { width: 240px; height: 38px; border-image-width: 14px 40px; animation-delay: var(--t); }
