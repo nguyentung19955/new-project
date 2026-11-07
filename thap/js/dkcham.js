@@ -5,7 +5,7 @@
 //  · Chạm thẻ LƯỚI: chưa trong bộ + còn ô trống → bay vào ô vừa bỏ (hoặc ô trống đầu tiên).
 //    Chưa trong bộ + bộ đủ 5 → CHẾ ĐỘ ĐỔI: thẻ nhấc lên, 5 ô sáng nhịp (khung_chon.png) — chạm 1 ô = thay ụ đó; chạm chỗ khác / chạm lại thẻ = huỷ.
 //    Đã trong bộ → ô của nó sáng 1 nhịp (không đổi gì); chạm lại trong 1,5 s = bỏ (như chạm ô).
-//  · GIỮ ~400 ms (ô hoặc thẻ, không xê dịch) = trang chi tiết ụ (UP.mo). Kéo-thả (js/dkkeo.js) giữ nguyên: thả lên ô = thay.
+//  · GIỮ ~550 ms (ô hoặc thẻ, không xê dịch) = trang chi tiết ụ (UP.mo). Kéo-thả (js/dkkeo.js) giữ nguyên: thả lên ô = thay.
 //  · Luật: tối đa 1 Mythic, không trùng. Sai luật = ô gây lỗi lắc ngắn + ửng đỏ, không chữ.
 //  · PLAY: mờ khi < 5 (không disabled → chạm được) — chạm = các ổ trống nhịp. Bộ mẫu PRESET 1–6 = 6 bộ của người chơi, TỰ LƯU sau mỗi thay đổi.
 //    RANDOM: còn ổ trống = lấp ổ trống; đủ 5 = quay lại cả bộ.
@@ -14,7 +14,7 @@
 'use strict';
 const DC = {
   o: [null, null, null, null, null], trongCuoi: -1, cho: null, nhay: { id: null, t: 0 }, _ke: null, pre: null, PKEY: 'turret_pre',
-  GIU_TT: 400,
+  GIU_TT: 550, // 07/11: kéo bắt đầu sau giữ 280 ms (dkkeo.js) → chừa ≥ 270 ms để bắt đầu kéo trước khi giữ yên mở trang chi tiết (trước 400)
   $: (id) => document.getElementById(id),
   giam: () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches),
   gon: (o) => o.filter(Boolean),
