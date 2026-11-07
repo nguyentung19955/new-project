@@ -30,3 +30,40 @@ không phải hiệu ứng nào cũng cần vòng to quanh ụ; vòng kín ô ch
 
 Ghi chú đo: đỉnh ms đơn lẻ (Hydra 352, Mortar 329, Lighthouse 215) rơi giữa chuỗi, không phải khung đầu → nhiều khả năng do máy đang
 tải nặng/GC; cần đo lại trên máy rảnh trước khi kết luận giật. "pop" thì là thật (đổi ảnh đột ngột: chớp/phủ màu toàn màn).
+
+## Đã sửa bằng code (chỉ hình, luật không đổi) — 07/11
+- **Overlord**: bỏ chớp trắng toàn màn (`FX.sang 0.7→0.1`), rung `12→6` → pop 46 → 16 (`TRUOC-SAU-overlord.gif`). Lớp phủ xám kéo dài vẫn còn — chưa rõ nguồn (có thể là màu nền wave/cảnh báo trùm), cần soi tiếp.
+- **Hydra 7★**: tia hợp nhất dừng sau quái xa nhất bị xuyên 40 px (luật xuyên 720 px giữ nguyên), bỏ phủ xanh toàn màn → pop 14.5 → 2.6 (`TRUOC-SAU-hydra.gif`).
+- **Black Hole**: bỏ phủ tím toàn màn lúc nén (`0.25→0.08`), rung `8→6` → pop 10.2 → 3.9 (`TRUOC-SAU-blackhole.gif`).
+- **Mortar**: đạn cối nhỏ lại (`FXU mortar k 2.3→1.3`, trước to hơn cả ụ) (`TRUOC-SAU-mortar.gif`).
+- Đo lại khi máy bớt tải: đỉnh ms của 4 hiệu ứng này còn 5–31 ms → các đỉnh 300+ ms lần đầu là do máy bận, không phải lỗi hiệu ứng.
+
+## Ảnh mới đã gen (top 5 cần hình — CHƯA gắn vào game, chờ duyệt) — `docs/demo-hop-tuong/thap-art/`
+| Ảnh | Dùng cho | Cách gắn đề xuất |
+|---|---|---|
+| `raw_fx_cuuvi_hoho.png` (6 khung) | Nine-Tail: hoả hồ thay chong chóng nâu | thay sprite `hoHoa`, cỡ 18–24% ô; bỏ vòng vàng kín ô → 9 icon đuôi nhỏ |
+| `raw_fx_orbital_bomno.png` (6 khung) | Orbital: nổ khi bom rơi | đặt ở điểm rơi đúng lúc trừ máu, 55–65% ô; vòng thức tỉnh to → chỉ chớp 250 ms đầu |
+| `raw_fx_min_mo.png` (6 khung, đèn nháy) | Mine Layer: mìn chờ thay hình "nổ đứng yên" | lặp 600–800 ms dưới chân quái; khi nổ mới dùng ảnh nổ |
+| `raw_fx_mortar_chum.png` (6 khung) | Mortar CLUSTER: nổ chùm 5 tia | phát ở điểm rơi viên đạn thứ 3 |
+| `raw_fx_drone_bom.png` (6 khung) | Drone Bay: drone bom rõ hơn | 25–30% ô, xoay theo hướng bay |
+
+## Cần người dùng duyệt (đụng nhịp luật hoặc cần thêm hình)
+1. **Fusion Archive**: 3 xung nổ lúc 0 ms (trước khi lộ kết quả ghép ~0,34–0,5 s) — sửa đúng là lùi cả sát thương theo (đổi nhịp luật ~0,4 s).
+2. **Hive Queen SWARM**: nổ trên đường trước khi drone tới — cần soi luật bay/trừ máu; có thể phải đổi thời điểm trừ máu.
+3. **Wyrm DRAGON DIVE**: muốn rồng thật lao dọc đường → cần dải rồng bổ nhào mới + đổi cách vẽ (hiện là tia).
+4. **Ember Relay / Lighthouse / Leviathan / Wall / Time Bomb**: các đề xuất hình phụ trong `CHATGPT.md` (ngọn lửa nhỏ nhảy tới Relay, cầu sáng to hơn, mặt sóng băng, dải dựng tường, nổ bom to hơn).
+5. **Chỉ huy (Hero/Dahlia/Eve)**: chưa quay được trong cảnh dựng (`CH.dung` từ chối) — làm lượt sau.
+
+## Lượt 2 (07/11, người dùng duyệt 14:24) — đã gắn / đã sửa
+| Mục | Làm gì | GIF trước/sau |
+|---|---|---|
+| Nine-Tail | lửa cáo `fx_cuuvi_hoho` (26 px, mũi lửa kéo sau hướng bay) thay cầu sáng tròn | `TRUOC-SAU-ninetail.gif` |
+| Orbital | nổ `fx_orbital_bomno` (≈ 2,7 × bán kính nổ) đúng lúc bom trừ máu (0,16 s); bỏ 2 ảnh nổ cũ chồng; vạch rơi tắt nhanh | `TRUOC-SAU-orbital.gif` |
+| Mine Layer | mìn chờ đèn nháy `fx_min_mo` lặp 0,75 s (mìn sao: to hơn + quầng vàng) | `TRUOC-SAU-mine.gif` |
+| Mortar CLUSTER | 1 dải nổ chùm 5 cánh `fx_mortar_chum` (132 px) thay 4 ảnh nổ rời | `TRUOC-SAU-mortar-chum.gif` |
+| Drone Bay | drone bom `fx_drone_bom` 34 px quay theo hướng bay | `TRUOC-SAU-drone.gif` |
+| Wyrm DRAGON DIVE | rồng nhìn từ trên `fx_ronglua_dive` (raw gen mới) lao dọc đường đúng toạ độ trúng, vẽ trên lớp nổ; bỏ đầu rồng 1,7 ô + luồng kẻ từ ụ | `TRUOC-SAU-dragondive.gif` |
+| Fusion Archive | 3 xung lúc ụ mới lộ ra 0,47 / 0,72 / 0,97 s (trước 0 / 0,125 / 0,25 s do `o.t` cộng 2 lần); tổng sát thương giữ nguyên | `TRUOC-SAU-archive.gif` |
+| Hive Queen SWARM | mục tiêu chết giữa đường → bám quái gần chỗ đó nhất (trước: quái đầu đường, bay ngang bàn) | `TRUOC-SAU-swarm.gif` |
+| Overlord phủ màu | nguồn: `FX.chop` (chớp màn) chỉ giảm khi mô phỏng chạy → tạm dừng / TAI.doi (giải mã ảnh sau chiêu) đọng lớp phủ cả màn; nay tắt theo thời gian thực (`js/ui.js`). Kiểm: tạm dừng + chớp 0,1 → sau 0,8 s trước 0,1 / nay 0. Cảnh dựng lượt 1 không gọi `FX.capNhat` nên phủ màu + nổ FX đứng yên là do cách quay (lượt 2 đã gọi) | — |
+Ảnh trận: `tran-844x390-*.jpg`, `tran-390x844-*.jpg`.

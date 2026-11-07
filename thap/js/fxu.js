@@ -9,7 +9,7 @@ const FXU = {
   // chỉnh riêng từng ụ (mặc định: đạn xoay theo hướng bay, rộng = d.co × k)
   //  k: hệ số cỡ đạn · kn: cỡ chớp nòng · kt: cỡ nổ trúng · tron: đạn tròn/vật lăn (không xoay theo hướng, tự lăn q°/s)
   CFG: {
-    canon: { k: 1.8 }, phagiap: { k: 1.8 }, mortar: { k: 2.3 }, bomhen: { k: 2.3 }, min: { k: 2.2 }, bua: { k: 2.4 }, nam: { k: 2.4 }, loren: { k: 2.3 },
+    canon: { k: 1.8 }, phagiap: { k: 1.8 }, mortar: { k: 1.3 } /* rà VFX 07/11: đạn cối từng to hơn cả ụ */, bomhen: { k: 2.3 }, min: { k: 2.2 }, bua: { k: 2.4 }, nam: { k: 2.4 }, loren: { k: 2.3 },
     lien: { k: 2.3 }, phun: { k: 2.4 }, sungluc: { k: 2.2 }, xucxac: { k: 2.6 }, tia: { k: 2.6 }, no5: { k: 2.3 },
     docton: { k: 2.4 }, bang: { k: 2.3 }, kiembang: { k: 2.4 }, baotuyet: { k: 2.3 }, khoathoigian: { k: 2.2 }, guongcong: { k: 2.3 },
     khien: { k: 2.2 }, taylo: { k: 2.3 }, anhsang: { k: 2.2 }, aten: { k: 2.3 }, haoquang: { k: 2.3 }, hasao: { k: 2.3 },
