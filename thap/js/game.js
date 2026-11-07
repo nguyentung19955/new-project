@@ -695,8 +695,8 @@ function capNhatTrum(E, dt) {
   if (E.trum === 'mad_crown' || E.trum === 'octopus') muc = tronTrum(ds, r).slice(0, 3);
   else if (E.trum === 'nightmare') muc = tronTrum(ds, r).sort((a, b) => b.sao - a.sao).slice(0, 1);
   else if (E.trum === 'freezer') {
-    // nhiều ụ: sao cao trước, cùng sao thì ngẫu nhiên (tất định). CO-OP: chia đôi cho 2 bàn (bàn trùm lấy phần lẻ), bàn nào thiếu ụ thì bàn kia bù
-    const n = LUAT_BANG.so(G.wave), xep = (L) => tronTrum(L, r).sort((a, b) => b.sao - a.sao);
+    // nhiều ụ: chọn NGẪU NHIÊN mỗi lần (tất định theo rngTrum — online vẫn khớp; người dùng chốt 07/11, bỏ ưu tiên sao cao). CO-OP: chia đôi cho 2 bàn (bàn trùm lấy phần lẻ), bàn nào thiếu ụ thì bàn kia bù
+    const n = LUAT_BANG.so(G.wave), xep = (L) => tronTrum(L, r);
     const B2 = G.che === 'coop' && G.ban.length === 2 ? G.ban[1 - B.i] : null;
     const ds2 = B2 ? B2.t.filter(T => T && !T.st.da && !(T.st.bang > 0)) : [];
     const ds1 = ds.filter(T => !(T.st.bang > 0)).length ? ds.filter(T => !(T.st.bang > 0)) : ds;
