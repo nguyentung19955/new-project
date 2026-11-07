@@ -3188,3 +3188,8 @@ nguồn vẽ `tools/pixel/ve-lai/*.js` → `tools/pixel/src/<nhóm>/<mã>.txt`, 
 - Fusion Archive (luutru): mỗi lần ghép +1 điểm lưu (tối đa 40, +2.5%/điểm, LV15 4%); Archive mới nhận 50% số lần ghép; Archive+Archive = 3 xung 160%.
 - Hero Foundry (xuonganh): ghép 2 Foundry → ô ANH HÙNG 12 s, +20% tốc (+2%/cấp, +4%/★; tối đa 2 ô).
 - Code thap/js/vangmoi1.js, kiểm tools/thap-kt-vang-moi.js (trong hồi quy), ảnh kiểm docs/demo-hop-tuong/tuvan/tuong_vang/dot1/.
+
+## claude/kiem-nhan-dien — Đo nhận diện silhouette 93 ụ (theo báo cáo ChatGPT V2 mục II, X.P0)
+- Tool mới `tools/thap-kt-nhandien.js` + `tools/thap-nhandien-bang.py`: vẽ 93 ụ bằng `REN.veU` ở cỡ ô thật iPhone (46,5 px CSS), xuất bảng màu / xám / xám 1× và chấm cặp dễ nhầm. `BE=rieng` thử thay bệ chung bằng bệ riêng `<id>_de.png` (chỉ trong trang chụp).
+- Kết quả: bệ chung làm cả 93 ụ cùng hình bóng (IoU cả ô 0,98); 1.553 cặp điểm ≥ 0,80. Bệ riêng có sẵn → 865 cặp (−44%).
+- Đề xuất + prompt gen 6 ụ mẫu (Cannon, Gatling, Tesla, Frost, Radar, Black Hole) kiểu module: `docs/demo-hop-tuong/tuvan/nhandien/DE-XUAT.md`. Không sửa code game.
