@@ -3429,3 +3429,15 @@ Nguồn: `docs/demo-hop-tuong/tuvan/tu-van-game/TOM-TAT.md` (người dùng duy�
 - Người dùng chốt: **Copycat (Máy Sao Chép) KHÔNG chép ô đang HOÁ ĐÁ**. Ô đá không sáng khi cầm Copycat, thả lên không có gì xảy ra. Ô BĂNG cùng sao vẫn chép được như cũ (bản sao thường).
 - Code: `SKILLS.saochep.ghepDB.hopLe` thêm `!b.st.da` (skills2.js); chữ kỹ năng: "frozen too, NOT stone".
 - Test cập nhật: `tools/thap-kt-copycat-da.js`, `tools/thap-kt-conghuong.js`.
+
+## claude/demo-hop-tuong — vệt lửa Dragon Dive: bám đuôi rồng + cua mềm (08/11)
+- User góp ý bản 0942d62d: vệt phải CHÁY DẦN sau lưng rồng, đầu vệt dính đuôi rồng; góc đường không gãy/chồng/hở; co-op không bay sang nửa đồng đội.
+- `thap/js/vfxmoi.js` (khối cuối, viết lại): vệt vẽ thẳng từ o.t của HU.rongBo (cùng công thức toạ độ rồng) → đầu vệt luôn ở đuôi rồng ở mọi khung/tốc độ (1×/2×/3×, khung thấp);
+  mỗi điểm trên đường có đồng hồ 3 s riêng tính từ lúc rồng qua (bắt lửa → cháy → tàn than nằm dưới, lửa lụi dần → tắt; đầu cũ tắt trước).
+  Dải dựng sẵn thành dải lặp liền (khung gối nhau), vẽ thành lát mỏng dọc tim đường: đoạn thẳng lát khít mép (ghim lưới điểm ảnh, không vằn sọc),
+  cua làm tròn tim đường (bán kính 30) + lát xoay theo hướng, nở phía ngoài cua. Vẽ dưới quái (ngay sau nhãn bàn). Chấm quầng cũ của vệt rải không vẽ nữa khi có ảnh.
+- `tools/thap-cat-vet-lua.py`: mép trên/dưới nền đất mềm hơn (không lộ mép hộp lúc tàn than).
+- Co-op (kiểm 2 máy, máy chủ giả): rồng của mình chỉ bay ĐƯỜNG CỦA MÌNH (làn mình + hành lang chung tới lõi), sát thương chỉ trúng quái mình được bắn
+  (banDuocQuai: làn mình + vùng chung) — không trúng làn riêng của đồng đội. Rồng thấy trên làn đồng đội = chiêu của ĐỒNG ĐỘI (máy B phát lại 'cd' trên bàn 1). Luật không đổi.
+- GIF `docs/demo-hop-tuong/tuvan/vfx-ra-soat/TRUOC-SAU-vet-lua-2.gif`, ảnh `tran-390x844-vetlua-2.jpg`, `tran-844x390-vetlua-2.jpg`, `goc-vetlua-truoc-sau.jpg`.
+  Test: thap-kt-vfx-p0, thap-kt-khong-ban, thap-kt-vetay đạt; tests/coop đạt; thap-kt-online như trước (cùng 1 lỗi sảnh có sẵn).

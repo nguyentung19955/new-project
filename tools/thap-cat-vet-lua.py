@@ -57,13 +57,13 @@ def main():
     nh = round(fh * FW / cw)
     strip = np.zeros((nh, FW * N, 4), np.uint8)
     yy = np.arange(Y0, Y1)[:, None] - YC
-    # mép trên/dưới nền đất: đất (điểm tối) mờ dần khi xa tim dải > 26 px, hết hẳn ở 46 px
-    mv = np.clip((46 - np.abs(yy)) / 20, 0, 1)
+    # mép trên/dưới nền đất: đất (điểm tối) mờ dần khi xa tim dải > 18 px, hết hẳn ở 40 px (không lộ mép hộp chữ nhật lúc tàn than)
+    mv = np.clip((40 - np.abs(yy)) / 22, 0, 1)
     for i in range(N):
         x0, x1 = int(round(i * cw)), int(round((i + 1) * cw))
         o = cat_o(a[Y0:Y1, x0:x1], bg)
         lum = o[..., :3].max(2)
-        toi = np.clip((170 - lum) / 70, 0, 1)            # 1 = đất tối, 0 = lửa sáng
+        toi = np.clip((190 - lum) / 80, 0, 1)            # 1 = đất tối, 0 = lửa sáng
         o[..., 3] *= 1 - toi * (1 - mv)
         w = x1 - x0
         xx = (np.arange(w) + 0.5) / w

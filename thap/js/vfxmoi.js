@@ -283,44 +283,108 @@ const VXD = {
 })();
 
 // =====================================================================================================
-// VỆT LỬA DRAGON DIVE (user 07/11 23:31 "vệt lửa hơi xấu" — thay chuỗi chấm quầng cam rời của HU.vetChay):
-//   dải ChatGPT fx_ronglua_vet (8 khung: 0–5 lửa cháy lặp, 6–7 tàn than) LÁT NỐI DỌC TIM ĐƯỜNG sau lưng rồng.
-//   Đoạn lửa đặt đều theo lưới trên đường (bước DOAN), xoay theo hướng đường, tâm dải = tim đường (mép được tràn, không cắt);
-//   2 đầu mỗi khung đã làm mềm sẵn (tools/thap-cat-vet-lua.py) → các đoạn gối lên nhau không lộ đường nối.
-//   Mỗi vệt cháy (HU.vetChay do HU.rongBo rải 0,08 s/lần) vẽ các đoạn lưới nằm trong quãng đường rồng vừa bay qua từ vệt trước
-//   → mỗi đoạn vẽ đúng 1 lần, mờ dần theo tuổi của vệt đó (bắt lửa → cháy → tàn than → tắt) trong suốt thời gian cháy.
-//   Chỉ TRÌNH BÀY: vùng cháy / sát thương / thời gian (cap() gốc) giữ nguyên. Chưa tải ảnh / vệt của nón phun → hình cũ.
+// VỆT LỬA DRAGON DIVE (user 07/11 23:31 "vệt lửa hơi xấu"; 08/11: bám ĐUÔI rồng, cháy dần từ đầu cũ, cua mềm):
+//   dải ChatGPT fx_ronglua_vet (8 khung: 0–5 lửa cháy lặp, 6–7 tàn than; 2 đầu khung làm mềm sẵn — tools/thap-cat-vet-lua.py)
+//   → dựng sẵn dải LẶP LIỀN (các khung gối nhau, chu kỳ 6 khung) rồi vẽ thành LÁT MỎNG dọc tim đường sau lưng rồng.
+//   · Đầu vệt = đuôi rồng ở MỌI khung hình / tốc độ: tính thẳng từ o.t của HU.rongBo (cùng công thức toạ độ rồng), không chờ vệt rải.
+//   · Mỗi điểm trên đường có đồng hồ riêng 3 s tính từ lúc rồng bay qua: bắt lửa → cháy → tàn than → tắt (đầu cũ tắt trước).
+//   · Cua: tim đường làm tròn (trung bình các điểm quanh góc, bán kính BO) + lát xoay theo hướng đường, lát nở rộng phía ngoài cua
+//     → không gãy / chồng / hở ở góc (cả cua chữ U).
+//   · Chỉ trên ĐÚNG đường của bàn ra chiêu (o.p = đường HU.rongBo bay = vùng sát thương thật). Không cắt ảnh, mép được tràn.
+//   Chỉ TRÌNH BÀY: vùng cháy / sát thương / thời gian (HU.vetChay, HU.rongBo gốc) giữ nguyên. Chưa tải ảnh → hình cũ.
 // =====================================================================================================
 (function () {
-  if (typeof HU === 'undefined' || !HU.vetChay || !HU.rongBo || typeof SIG_META === 'undefined') return;
-  SIG_META.fx_ronglua_vet = [8, 200, 159];
-  if (VXM.U.ronglua) VXM.U.ronglua.push('fx_ronglua_vet');
-  const AY = 0.557, CAO = 81, RONG = CAO * 200 / 159, DOAN = RONG * 0.68; // tim dải ở 55,7% chiều cao khung; lõi sáng ≈ 0,4·CAO ≈ 0,7 bề rộng đường
-  const VET = new WeakMap(), TRUOC = new WeakMap(); // vệt → { p, s0, s1 } (quãng đường nó phụ trách); rồng → s lúc rải vệt trước
+  if (typeof HU === 'undefined' || !HU.vetChay || !HU.rongBo || typeof SIG_META === 'undefined' || typeof REN === 'undefined') return;
+  const TEN = 'fx_ronglua_vet', FWN = 200, FHN = 159, GOI = 0.68; // khung gốc 200×159; bước lát = 68% bề ngang (2 đầu mềm gối nhau)
+  SIG_META[TEN] = [8, FWN, FHN];
+  if (VXM.U.ronglua) VXM.U.ronglua.push(TEN);
+  const AY = 0.557, CAO = 81, KX = FWN / (CAO * FWN / FHN); // tim dải ở 55,7% chiều cao khung; KX = px ảnh / px sân
+  const BUOC = Math.round(FWN * GOI), CHU = BUOC * 6, THEM = FWN; // chu kỳ dải lặp (px ảnh) + phần đệm để lát không vắt qua mép
+  const CHAY = 3, DS = 5, BO = 30, DUOI = 10; // giây cháy mỗi điểm · bước lát (px sân) · bán kính làm tròn cua · đầu vệt nằm dưới thân rồng
+  const DIVE = new Map(); let dai = null;
+  // dải lặp liền: dai[n] (n = 0–5) khung lửa xoay vòng lệch n · dai[6], dai[7] = tàn than
+  function dung() {
+    const im = REN.img(TEN); if (!im) return null;
+    const out = [];
+    for (let n = 0; n < 8; n++) {
+      const c = document.createElement('canvas'); c.width = CHU + THEM; c.height = FHN; const x = c.getContext('2d');
+      for (let j = -2; j < 8; j++) { const f = n < 6 ? (((j + n) % 6) + 6) % 6 : n; x.drawImage(im, f * FWN, 0, FWN, FHN, j * BUOC - (FWN - BUOC) / 2, 0, FWN, FHN); }
+      out.push(c);
+    }
+    return out;
+  }
+  // tim đường làm tròn ở cua: [x, y, góc]
+  function diem(P, c) {
+    let sx = 0, sy = 0;
+    for (let i = -2; i <= 2; i++) { const [x, y] = viTri(P, c + i * BO / 2); sx += x; sy += y; }
+    const [ax, ay] = viTri(P, c - BO), [bx, by] = viTri(P, c + BO);
+    return [sx / 5, sy / 5, Math.atan2(by - ay, bx - ax)];
+  }
+  // vệt rải của HU.rongBo: vẫn tính cháy như cũ, không vẽ chấm quầng nữa (vệt lửa dưới vẽ thay) — vệt dưới nón phun giữ hình cũ
+  const ve0 = HU.vetChay.ve;
+  HU.vetChay.ve = function (ctx, o, R) {
+    if (o._rong && dai) return;
+    return ve0.call(this, ctx, o, R);
+  };
   const cap0 = HU.rongBo.cap;
   HU.rongBo.cap = function (G, o, dt) {
-    const L0 = G.hu.length, s = o.p.len * (1 - Math.min(1, o.t / o.song));
-    const r = cap0.apply(this, arguments);
-    for (let i = L0; i < G.hu.length; i++) {
-      const v = G.hu[i];
-      if (v && v.k === 'vetChay' && v.T === o.T) { const s1 = TRUOC.has(o) ? TRUOC.get(o) : o.p.len; VET.set(v, { p: o.p, s0: s, s1 }); TRUOC.set(o, s); }
+    const L0 = G.hu.length, r = cap0.apply(this, arguments);
+    for (let i = L0; i < G.hu.length; i++) { const v = G.hu[i]; if (v && v.k === 'vetChay' && v.T === o.T) Object.defineProperty(v, '_rong', { value: 1, enumerable: false }); }
+    let d = DIVE.get(o); if (!d) { d = { o, p: o.p, song: o.song, t0: 0 }; DIVE.set(o, d); }
+    d.t0 = G.t - o.t; // giờ dive = G.t − t0 (khớp o.t lúc rồng còn bay, chạy tiếp sau khi rồng hết)
+    return r;
+  };
+  function ve1(ctx, d, R) {
+    const P = d.p, L = P.len, o = d.o, song = d.song, tt = G.t - d.t0;
+    const dangBay = tt < song && G.hu.indexOf(o) >= 0;
+    const sR = dangBay ? L * (1 - Math.min(1, o.t / song)) : 0; // vị trí rồng trên đường (cùng công thức HU.rongBo.cap)
+    const dau = dangBay ? Math.max(30, Math.min(L - 30, sR)) + DUOI : 0; // VXM.rong ghim rồng trong [30, L−30]
+    const n = Math.floor((R.t || 0) * 12) % 6, k = KX, m = ctx.getTransform();
+    const ghim = (v, i) => { const sc = i ? m.d : m.a, of = i ? m.f : m.e; return (Math.round(v * sc + of) - of) / sc; };
+    let truoc = null;
+    for (let c = L - 4; c > dau; c -= DS) {
+      const tuoi = tt - song * (1 - c / L); if (tuoi < 0) continue; // rồng chưa qua
+      const u = tuoi / CHAY; if (u >= 1) continue;
+      let a = Math.min(1, (c - dau) / 26) * Math.min(1, (L - c) / 22) * Math.min(1, c / 22); // ló ra dưới thân rồng · 2 đầu đường mềm
+      a *= 1 - Math.max(0, Math.min(1, (u - 0.84) / 0.16));
+      if (a <= 0.02) { truoc = null; continue; }
+      let [x, y, g] = diem(P, c), w = DS;
+      const tan = Math.max(0, Math.min(1, (u - 0.62) / 0.2));
+      const doc = Math.abs(Math.sin(g)) > 0.9999, ngang = Math.abs(Math.cos(g)) > 0.9999;
+      if (doc || ngang) {
+        // đoạn thẳng (đường chỉ có cạnh ngang/dọc): 2 mép lát lấy từ c ± DS/2 và ghim vào lưới điểm ảnh thiết bị
+        // → lát kề nhau khít mép, không chồng (không vằn sọc chỗ ảnh bán trong suốt), không hở
+        const [x0, y0] = viTri(P, c - DS / 2), [x1, y1] = viTri(P, c + DS / 2);
+        if (ngang) { const a0 = ghim(x0, 0), a1 = ghim(x1, 0); x = (a0 + a1) / 2; w = Math.abs(a1 - a0); }
+        else { const a0 = ghim(y0, 1), a1 = ghim(y1, 1); y = (a0 + a1) / 2; w = Math.abs(a1 - a0); }
+        truoc = null;
+      } else {
+        w = DS + 1.2;
+        if (truoc != null) { let dg = Math.abs(g - truoc); if (dg > Math.PI) dg = 2 * Math.PI - dg; w += dg * CAO * 0.62; } // cua: nở phía ngoài → không hở
+        truoc = g;
+      }
+      if (w < 0.01) continue;
+      const sx = ((c * k) % CHU + CHU) % CHU, sw = Math.min(THEM - 2, w * k);
+      ctx.save(); ctx.translate(x, y); ctx.rotate(g);
+      // tàn than nằm DƯỚI, hiện đủ trước khi lửa tắt hẳn → lửa lụi dần trên nền than (không bị nhạt bệch lúc chuyển)
+      if (tan > 0) { ctx.globalAlpha = a * Math.min(1, tan * 2); ctx.drawImage(dai[u > 0.8 ? 7 : 6], sx - sw / 2 + THEM / 2, 0, sw, FHN, -w / 2, -AY * CAO, w, CAO); }
+      if (tan < 1) { ctx.globalAlpha = a * (1 - tan); ctx.drawImage(dai[n], sx - sw / 2 + THEM / 2, 0, sw, FHN, -w / 2, -AY * CAO, w, CAO); }
+      ctx.restore();
+    }
+  }
+  // vẽ ngay TRƯỚC lớp vật trên đường (dưới quái), sau nhãn bàn
+  const vnb = REN.veNhanBan;
+  REN.veNhanBan = function (ctx) {
+    const r = vnb.apply(this, arguments);
+    if (!DIVE.size) return r;
+    if (!dai) dai = VXM.co(TEN) ? dung() : null;
+    for (const [o, d] of DIVE) {
+      const tt = G.t - d.t0;
+      if (tt > d.song + CHAY + 0.1 || tt < -1 || (G.hu.indexOf(o) < 0 && tt < d.song - 0.05)) { DIVE.delete(o); continue; } // hết cháy / ván mới
+      if (!dai) continue;
+      try { ve1(ctx, d, this); } finally { ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
     }
     return r;
   };
-  const ve0 = HU.vetChay.ve;
-  HU.vetChay.ve = function (ctx, o, R) {
-    const d = VET.get(o);
-    if (!d || !VXM.co('fx_ronglua_vet')) return ve0.call(this, ctx, o, R);
-    const u = o.t / o.song, P = d.p, lo = RONG * 0.3, hi = P.len - RONG * 0.3;
-    const aIn = Math.min(1, u / 0.03), tan = Math.max(0, Math.min(1, (u - 0.62) / 0.2)), aOut = 1 - Math.max(0, Math.min(1, (u - 0.84) / 0.16));
-    if (aIn * aOut <= 0.01) return;
-    const n = Math.floor((R.t || 0) * 12);
-    for (let k = Math.ceil(d.s0 / DOAN - 0.5); (k + 0.5) * DOAN <= d.s1; k++) {
-      const c = (k + 0.5) * DOAN; if (c <= d.s0 || c < lo || c > hi) continue;
-      const [x, y, g] = viTri(P, c), f = (k * 5 + n) % 6, a = aIn * aOut;
-      if (tan < 1) VXM.k(ctx, 'fx_ronglua_vet', f, x, y, RONG, { g, ay: AY, h: CAO, a: a * (1 - tan) });
-      if (tan > 0) VXM.k(ctx, 'fx_ronglua_vet', u > 0.8 ? 7 : 6, x, y, RONG, { g, ay: AY, h: CAO, a: a * tan });
-    }
-    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
-  };
+  if (typeof FX !== 'undefined' && FX.reset) { const rs = FX.reset; FX.reset = function () { DIVE.clear(); return rs.apply(this, arguments); }; }
 })();
