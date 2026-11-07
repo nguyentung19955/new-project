@@ -475,7 +475,7 @@ const K = { 1: 1, 3: 1.45, 5: 1.9, 7: 2.35 };
   const ch = X(`(() => { KT_ban(); const T = KT_dat(7, 'nemesis', 3); KT_dat(6, 'lanhgia', 7); KT_dat(8, 'lophanung', 7); KT_dat(2, 'bang', 7); const E = KT_quai('bo', KT_gan(T), 400); const B0 = KT_trum('janus', KT_gan(T) + 40, 1); for (let i = 0; i < 90; i++) capNhat(1/30); return [E.cham, B0.cham]; })()`);
   kt('(Support caps)', 'slow from Chiller + Cryo + hits: ≤35% (bosses ≤15%)', Math.round(ch[0] * 100) + '% / boss ' + Math.round(ch[1] * 100) + '%', ch[0] <= 0.35 + 1e-9 && ch[1] <= 0.15 + 1e-9 + 0.05);
   const vu = X(`(() => { KT_ban(); const E = KT_quai('bo', 300, 400); E.azT = 9; E.cvT = 9; E.cvK = 0.05; E.vmT = 9; E.vmK = 0.12; E.ywT = 9; E.ywK = 0.15; return HOTRO.vuln(E); })()`);
-  kt('(Support caps)', 'enemy weaken (Cryo 7★ + Rainbow + Venom + Time Bomb) capped 25%', Math.round(vu * 100) + '%', gan(vu, 0.25));
+  kt('(Support caps)', 'enemy weaken (Cryo 7★ + Rainbow + Venom + Time Bomb) adds up, no cap (07/11) = 42%', Math.round(vu * 100) + '%', gan(vu, 0.42));
   const lr = X(`(() => { KT_ban(); const F = KT_dat(7, 'loren', 7); F.lo = 15; const T = KT_dat(0, 'ngoisao', 4); KT_dat(1, 'khuech', 7); capNhat(1/30); capNhat(1/30); return T.buf.dmg; })()`);
   kt('(Support caps)', 'Scrap Forge 15 stacks (+60%, no cap) stack on top of the 35% support cap (separate, documented)', '+' + Math.round(lr * 100) + '%', lr <= 0.6 + 0.35 + 1e-9);
 }

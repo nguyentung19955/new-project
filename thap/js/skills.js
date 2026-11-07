@@ -229,7 +229,7 @@ SKILLS.mana = { // Máy Mana (Syrinx): không bắn; sinh mana mỗi 7 s
 SKILLS.radar = { // Radar (Kirinus): HỖ TRỢ — +tốc bắn cho 4 ô thẳng (hotro.js: 12% 1★ → 28% 7★, trần chung 45%)
   vai: 'ht', dmg: 0, toc: 0,
   them: (T) => 0.12 * HOTRO.k(T),
-  mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s (up to the ' + +(HOTRO.tran(T, 'toc') * 100).toFixed(1) + '% fire-rate cap)' : ''),
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.radar.them(T), HOTRO.tran(T, 'toc')) * 100) + '% fire rate to N/E/S/W neighbours' + (ms(T, 5) ? ' · +4% crit' : '') + (ms(T, 7) ? ' · OVERDRIVE every 8s: +25% for 2s' : ''),
   hoTro(G, T, N, ra) { ra.toc = this.them(T) + (T.odCon > 0 ? 0.25 : 0); if (T.odCon > 0) ra.capOD = 0.15; if (ms(T, 5)) ra.crit = 0.04; }, // 7★ OVERDRIVE: +25% trong 2 s — trần tốc +15% trong lúc OVERDRIVE (BAO-CAO gioi-han Mức 3)
   capNhat(G, B, T, dt) {
     T.goc += dt * 1.3; // chảo radar quay đều

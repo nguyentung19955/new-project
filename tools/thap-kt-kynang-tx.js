@@ -483,7 +483,7 @@ function main() {
     R(ctx, `KT.moi(); KT.dat(7, 'lien', 1); KT.dat(2, 'lanhgia', 7); G.ban[0].lv.lanhgia = 5; KT.dat(12, 'lophanung', 7); capNhatBan(G.ban[0], 0); G._s = G.ban[0].t[7].buf.cham;`);
     ghi('hotro', 'slow from supports: strongest only, cap 35%', p(R(ctx, 'G._s')), R(ctx, 'G._s') <= 0.35 + 1e-9);
     R(ctx, `KT.moi(); const E = KT.dung(KT.quai('bo', 200, 3000)); E.vmT = 5; E.vmK = 0.12; E.ywT = 5; E.ywK = 0.1; E.loT = 5; E.loV = 0.08; E.yeu = 5; E.tpT = 5; E.tpK = 0.15; G._v = HOTRO.vuln(E);`);
-    ghi('hotro', 'enemy weakness (Venom 12 + Time Bomb 10 + Breaker 7★ 8 + Toxic 15) caps at 25%', p(R(ctx, 'G._v')), gan(R(ctx, 'G._v'), 0.25));
+    ghi('hotro', 'enemy weakness (Venom 12 + Time Bomb 10 + Breaker 7★ 8 + Toxic 15) adds up with no cap (07/11) = 45%', p(R(ctx, 'G._v')), gan(R(ctx, 'G._v'), 0.45));
     R(ctx, `KT.moi(); const T = KT.dat(7, 'sungluc', 1); KT.dat(2, 'luoicheo', 7); KT.dat(8, 'khuech', 7); KT.dat(6, 'radar', 7); capNhatBan(G.ban[0], 0); const a = dmgU(T); G.ban[0].cuong = 5; capNhatBan(G.ban[0], 0); G._s = [dmgU(T) / a, T.buf.dmg];`);
     ghi('hotro', 'commander RAGE ×2 stacks on top of capped support buffs (not inside the cap)', '×' + f(R(ctx, 'G._s[0]'), 3) + ' with +' + p(R(ctx, 'G._s[1]')) + ' support damage', gan(R(ctx, 'G._s[0]'), 2));
     const vong = [[7, 'sungluc', 1], [2, 'khuech', 7], [6, 'radar', 7], [8, 'tron', 7], [12, 'phagiap', 7]];

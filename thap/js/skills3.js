@@ -408,9 +408,9 @@ SKILLS.luoicheo = { // Lưới Cộng Hưởng — HỖ TRỢ: CHỈ buff 4 ô C
   dem(T) { const B = G.ban[T.ban]; return B ? oCheo(T.o).filter(o => B.t[o] && !B.t[o].st.da).length : 0; },
   tamChu: 'DIAGONAL cells only (not N/E/S/W)',
   huong: () => [[-1, -1], [1, -1], [-1, 1], [1, 1]],
-  tranR: (T) => HOTRO.tran(T, 'dmg') + (SKILLS.luoicheo.du(T) ? 0.1 : 0),
-  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), SKILLS.luoicheo.tranR(T)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > SKILLS.luoicheo.tranR(T) ? ' (damage cap)' : '') + ' to the DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/' + oCheo(T.o).length + ' filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) + ' (damage cap +10%)' : oCheo(T.o).length >= 2 ? ' · fill every diagonal cell for RESONANCE (edge ×1.3, all 4 ×1.5)' : ' · a corner has only 1 diagonal cell: no RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
-  hoTro(G, T, N, ra) { const du = this.du(T); ra.dmg = this.them(T); if (du) ra.capRes = 0.1; if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && du ? 1.5 : 1); }, // 7★ GRAND RESONANCE: cộng hưởng → tốc bắn ×1.5
+  tranR: (T) => Infinity, // 07/11: bỏ trần sát thương (cộng hưởng chỉ còn ×1.3/×1.5)
+  mo: (T) => '+' + Math.round(Math.min(SKILLS.luoicheo.them(T), SKILLS.luoicheo.tranR(T)) * 100) + '% damage' + (SKILLS.luoicheo.them(T) > SKILLS.luoicheo.tranR(T) ? ' (damage cap)' : '') + ' to the DIAGONAL cells (never N/E/S/W) · ' + SKILLS.luoicheo.dem(T) + '/' + oCheo(T.o).length + ' filled' + (SKILLS.luoicheo.du(T) ? ' · RESONANCE ×' + SKILLS.luoicheo.heSo(T) : oCheo(T.o).length >= 2 ? ' · fill every diagonal cell for RESONANCE (edge ×1.3, all 4 ×1.5)' : ' · a corner has only 1 diagonal cell: no RESONANCE') + (ms(T, 5) ? ' · +' + Math.round(0.05 * HOTRO.k(T) * (ms(T, 7) && SKILLS.luoicheo.du(T) ? 1.5 : 1) * 100) + '% fire rate' : ''),
+  hoTro(G, T, N, ra) { const du = this.du(T); ra.dmg = this.them(T); if (ms(T, 5)) ra.toc = 0.05 * HOTRO.k(T) * (ms(T, 7) && du ? 1.5 : 1); }, // 7★ GRAND RESONANCE: cộng hưởng → tốc bắn ×1.5
   gocDau: (T, t) => 0, /* VFX P3: bỏ lắc đầu */ // chữ X luôn chỉ 4 góc chéo
   capNhat(G, B, T, dt) {
     T.nhip = (T.nhip || 0) + dt / (T.gd === 3 ? 1.2 : 2.4);
