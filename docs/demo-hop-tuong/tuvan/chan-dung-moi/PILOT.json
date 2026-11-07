@@ -1,0 +1,40 @@
+{
+ "foc": {
+  "overlord": [
+   0.5,
+   0.36
+  ],
+  "xuonganh": [
+   0.5,
+   0.3
+  ],
+  "bang": [
+   0.5,
+   0.31
+  ],
+  "set": [
+   0.49,
+   0.28
+  ],
+  "blackhole": [
+   0.5,
+   0.4
+  ],
+  "mimic": [
+   0.43,
+   0.3
+  ],
+  "hopbi": [
+   0.42,
+   0.33
+  ]
+ },
+ "tile_side": 0.46,
+ "face_at": 0.4,
+ "hero_crop": "center 1174x1024 -> 1170x1020",
+ "nguon": {
+  "overlord": "cd_overlord_v2.png",
+  "set": "cd_set_v2.png",
+  "canon": "thap/assets (đã chốt)"
+ }
+}
