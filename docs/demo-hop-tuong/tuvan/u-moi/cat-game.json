@@ -225,28 +225,28 @@
 ]
 },
 "canon": {
-"DE_RIENG": 1.0146,
-"HEAD_K": 0.8856,
-"PHU_K": 0.3644,
+"DE_RIENG": 1.0123,
+"HEAD_K": 0.802,
+"PHU_K": 0.3807,
 "co": {
 "de": 177,
-"nong": 266
+"nong": 241
 },
 "dao_bo": {},
 "khop_be": [
 1.0,
-1032.0776
+1488.2191
 ],
 "khop_dau": [
-0.875,
-3744.9661
+0.9,
+889.446
 ],
-"nguon": "raw_mod_canon.png",
+"nguon": "raw_mod_canon_v2.png",
 "thu": 1.0,
-"tip": 0.983,
+"tip": 0.987,
 "truc_o3": [
-315.4,
-358.0
+313.0,
+346.2
 ]
 },
 "cauvong": {
