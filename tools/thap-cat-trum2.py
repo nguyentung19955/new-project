@@ -23,6 +23,10 @@ QUAI = {'bo': 40, 'bay': 40, 'bay_bang': 42, 'khong_lo': 60, 'tach': 46, 'que_ta
 # cạnh lớn thân hiển thị mong muốn (đơn vị game) = cỡ cũ đo trên dải _8 cũ × ~1.05 (trùm: 80 cho cả 12, cũ 70–83)
 MUC = {'bo': 25, 'bay': 29, 'bay_bang': 34, 'khong_lo': 66, 'tach': 36, 'que_tach': 55}
 MUC_TRUM, CO_TRUM = 80, 86
+CHAN_VIEN = [False]
+CHAN_ID = {'mad_crown'}
+KHU_TIM = {'freezer'}  # ảnh không mắt 07/11: khói băng pha nền tím trong vòng (túi kín) → bỏ điểm tím/hồng (thân băng không có tím)
+KHU_TIM_ON = [False]  # ảnh không mắt 07/11: thân hồng, viền trái có khe → loang lọt
 ATK_K = 1.5  # ô dải chiêu / ô dải đi (quaianim.js ATK_K)
 DAI4 = {'quai': 192, 'trum': 260}  # trùm: nongskill làm nóng ở 86 px × 3  # dải 4 khung dự phòng
 
@@ -39,16 +43,20 @@ def tach_nen(cell, bg):
     mn, mx = np.minimum(r, b), np.maximum(r, b)
     # tầng 1: ĐÚNG sắc magenta ở mọi độ sáng (nền, bóng đổ tối) — slime tím (B > R, G ~20) / trùm hồng không lọt
     thuan = (mn > 60) & (g < bg[1] + 0.04 * mn + 4) & (np.abs(r - b - (bg[0] - bg[2]) * mn / 250) < 0.05 * mx + 4)
-    lab, n = ndimage.label(thuan)
+    tq = thuan
+    if CHAN_VIEN[0]:  # thân hồng sát màu nền: viền đen (giãn 2 px) chặn loang lọt qua khe viền vào thân
+        tq = thuan & ~ndimage.binary_dilation(np.maximum(np.maximum(r, g), b) < 90, iterations=2)
+    lab, n = ndimage.label(tq)
     vien = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]])).tolist())
     # túi nền kín (giữa vòng, lỗ): đúng màu nền, đủ lớn → cũng là nền
-    sat = (np.sqrt(((cell - bg) ** 2).sum(-1)) < 36) & thuan
+    sat = (np.sqrt(((cell - bg) ** 2).sum(-1)) < (12 if CHAN_VIEN[0] else 36)) & thuan  # thân hồng: túi nền phải đúng màu nền
     lab2, n2 = ndimage.label(sat)
-    if n2:
+    if n2 and CHAN_VIEN[0] != 2:  # 2 = dải đi thân hồng: không có lỗ thật, mảng hồng trong thân không phải túi nền
         sz = ndimage.sum(sat, lab2, range(1, n2 + 1))
         for k2 in 1 + np.nonzero(sz >= 40)[0]: vien |= set(np.unique(lab[lab2 == k2]).tolist())
     vien.discard(0)
     R = np.isin(lab, list(vien))
+    if CHAN_VIEN[0]: R = thuan & ndimage.binary_dilation(R, iterations=3)  # lấy lại dải nền sát viền
     # tầng 2: sương/khói SÁNG trong mờ pha nền (trắng/xanh băng mờ trên magenta) nối với nền → tách trộn theo kênh G
     mo = (((g >= bg[1] + 30) & (b > 200) & (r > 140)) | ((g >= bg[1] + 2) & (b > 150) & (r > 232))) & (g < mn - 30) & ~R  # + quầng vàng/cam mờ (R vẫn ~255)
     lab3, n3 = ndimage.label(mo | R)
@@ -86,6 +94,8 @@ def o_luoi(path):
     out = []
     for c in cells:
         a = tach_nen(c, bg)
+        if KHU_TIM_ON[0]:
+            a[..., 3] = np.where(np.minimum(c[..., 0], c[..., 2]) - c[..., 1] > 70, 0, a[..., 3])
         out.append(bo_dom(a, max(30, int(c.shape[0] * c.shape[1] * 0.0004))))
     return out
 
@@ -130,6 +140,8 @@ def dai(fr):
 
 def lam(id, trum):
     pre = 'trum_' if trum else 'quai_'
+    CHAN_VIEN[0] = 2 if id in CHAN_ID else 0
+    KHU_TIM_ON[0] = id in KHU_TIM
     di = o_luoi(os.path.join(ART, ('raw_trum2_%s_di.png' if trum else 'raw_quai2_%s.png') % id))
     bbs = [bbox(a) for a in di]
     x0 = min(b[0] for b in bbs); y0 = min(b[1] for b in bbs); x1 = max(b[2] for b in bbs); y1 = max(b[3] for b in bbs)
@@ -148,6 +160,7 @@ def lam(id, trum):
     if trum:
         cp = os.path.join(ART, 'raw_trum2_%s_chieu_v2.png' % id)
         if not os.path.exists(cp): cp = os.path.join(ART, 'raw_trum2_%s_chieu.png' % id)
+        if CHAN_VIEN[0]: CHAN_VIEN[0] = 1  # dải chiêu: còn túi nền thật giữa vòng xoáy
         ch = o_luoi(cp)
         # khớp thân: khung chiêu 8 (trung tính) ↔ trung vị khung đi
         L = [loi(a) for a in di]; L = [l for l in L if l]
