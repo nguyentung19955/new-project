@@ -195,3 +195,26 @@
 /* Test range đang tải: thanh tải nằm ở PHẦN TRÊN khung cắt (y logic 150…530) — trước đây ở giữa iframe (y≈430) bị thanh "Add to deck" che → khung trông đen */
 .up-xem #tai.nho { align-items: flex-start; padding-top: 200px; }
 .up-xem #matmang.nho { align-items: flex-start; padding-top: 150px; }
+
+/* CẤP THẺ KẾ TIẾP (07/11): hàng "Next level" dưới hàng CARD LV + số tăng nhỏ dưới giá trị ô thông số + danh sách trong bảng chi tiết.
+   Khung = ảnh tấm thép h2_tam (như ô thông số); chỉ chữ, không vẽ tay. Tối đa 2 dòng, không tràn ở 390 px. */
+#up.up7 .up-sau { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 34px; margin: 0 0 8px; padding: 1px 4px; text-align: left; color: var(--c-chu, #e8eaee); background: none;
+  border: 0 solid transparent; border-width: 6px 12px; border-image: url(../assets/h2_tam.png) 23.1 66.1 fill / 6px 12px stretch; font-family: var(--f-ui); }
+#up.up7 .up-sau > small { flex: none; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--c-mo, #9aa6b4); }
+#up.up7 .up-sau > span { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1px 10px; max-height: 32px; overflow: hidden; }
+#up.up7 .up-sau .m, #up.up7 .up-sau .them { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; line-height: 15px; font-weight: 700; }
+#up.up7 .up-sau .m i { font-style: normal; color: #c9ced5; }
+#up.up7 .up-sau .m b, #up.up7 .up-sau.max b { color: #7dff8a; font-weight: 800; }
+#up.up7 .up-sau .m em { font-style: normal; font-size: 11px; color: #7dff8a; opacity: .85; }
+#up.up7 .up-sau .them { color: var(--c-lam, #6fd6ff); }
+#up.up7 .up-sau:active { transform: translateY(1px); }
+#up.up7 .up-spec div { position: relative; }
+#up.up7 .up-spec div .up-tang { position: absolute; right: 0; bottom: 3px; max-width: 46%; font-style: normal; font-size: 11px; line-height: 12px; font-weight: 800; color: #7dff8a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#up .up-sau-ds { margin: 4px 0 0; padding: 0; list-style: none; }
+#up .up-sau-ds li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 0; font-size: 13px; line-height: 1.35; }
+#up .up-sau-ds li > span { color: #c9ced5; }
+#up .up-sau-ds li b { color: #7dff8a; font-family: var(--f-display); font-weight: 800; }
+#up .up-sau-ds li em { font-style: normal; color: #7dff8a; font-size: 12px; }
+#up .up-sau-ds li.seg { flex-direction: column; align-items: flex-start; }
+#up .up-sau-ds li.seg span { font-size: 12.5px; }
+@media (max-height: 700px) { #up.up7 .up-sau { margin-bottom: 6px; } }

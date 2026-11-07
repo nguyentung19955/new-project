@@ -71,7 +71,8 @@ const TBUI = {
   // trang ụ: hàng CARD LEVEL ngay trên 4 thông số
   if (typeof UP !== 'undefined') {
     const h = UP.html;
-    UP.html = function (id) { const s = h.apply(this, arguments); try { return s.replace('<div class="up-spec">', TBUI.hang(id) + '<div class="up-spec">'); } catch (e) { return s; } };
+    // (07/11) hàng "Next level" (unitpage.js .up-sau) nằm NGAY DƯỚI hàng CARD LV → chèn trước .up-sau nếu có, không thì trước 4 ô thông số
+    UP.html = function (id) { const s = h.apply(this, arguments); try { return s.replace(/<(?:div|button) class="up-sau|<div class="up-spec">/, (m) => TBUI.hang(id) + m); } catch (e) { return s; } };
   }
   document.addEventListener('click', (e) => {
     const b = e.target.closest && e.target.closest('[data-up="tbnang"]'); if (!b) return;
