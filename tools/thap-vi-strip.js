@@ -16,7 +16,7 @@ const OUT = process.env.OUT || 'docs/demo-hop-tuong/tuvan/ngonngu/';
   const shots = [];
   for (const t of times) {
     await p.waitForFunction(([t, lap]) => SD.t >= t || SD.lap !== lap, [t, lap], { timeout: 30000, polling: 16 });
-    const r = await p.evaluate(() => { const c = REN.cv.getBoundingClientRect(), k = c.width / W; return { x: c.x, y: c.y + 150 * k, w: c.width, h: 380 * k, t: SD.t, cap: (SD.cauChu() || {}).chu }; });
+    const r = await p.evaluate(() => { const c = REN.cv.getBoundingClientRect(), k = c.width / W; return { x: c.x, y: c.y + 112 * k, w: c.width, h: 420 * k, t: SD.t, cap: (SD.cauChu() || {}).chu }; });
     shots.push({ t: r.t, cap: r.cap, b: (await p.screenshot({ clip: { x: r.x, y: r.y, width: r.w, height: r.h } })).toString('base64') });
   }
   const q = await br.newPage();

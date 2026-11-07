@@ -646,11 +646,11 @@ const UP = {
     if (!this.ifr || this._ssOK || !navigator.onLine || Date.now() - (this._ifrT || 0) < 5000) return;
     this._ifrT = Date.now(); this.ifr.src = this.srcXem(this._xemId || this.id);
   },
-  // khung cắt: bàn 3×3 + đường trên + dải chú thích (toạ độ logic y 150…530), co theo bề rộng khung
+  // khung cắt: số sát thương + đường trên + bàn 3×3 + đường dưới + dải chú thích ở đáy (toạ độ logic y 112…532), co theo bề rộng khung
   khungXem() {
     const kh = this.el && this.el.querySelector('.up-tv-khung'); if (!kh || !this.ifr) return;
     const k = (kh.clientWidth || 344) / 430;
-    kh.style.setProperty('--k', k.toFixed(4)); kh.style.height = Math.round(380 * k) + 'px'; this.ifr.style.top = (-150 * k) + 'px';
+    kh.style.setProperty('--k', k.toFixed(4)); kh.style.height = Math.round(420 * k) + 'px'; this.ifr.style.top = (-112 * k) + 'px'; // khớp SD_Y0/SD_CAO (skilldemo.js)
   },
   // ra khỏi màn hình / ẩn tab → dừng clip (đỡ tốn pin); quay lại → chạy tiếp (trừ khi người xem đã bấm dừng)
   theoDoiXem(tv) {
