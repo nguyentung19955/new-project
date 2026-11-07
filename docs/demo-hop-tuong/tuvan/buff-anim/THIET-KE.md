@@ -232,3 +232,11 @@ Make an image. Game VFX sprite sheet: a 4x2 grid of 8 equal square cells, read l
 4. **Không làm hiệu ứng độc** (không có debuff độc trên ụ).
 
 **Tổng: 18 hiệu ứng** — đợt A 10 (A1–A10), đợt B 8 (B1–B8). Chưa gen: chờ session điều phối báo "GO" (Chrome đang bận).
+
+---
+
+## 6. Kết quả gen (07/11 chiều) — CHỜ NGƯỜI DÙNG DUYỆT GIF, chưa gắn vào game
+
+- Đã gen đủ **18/18** tấm 4x2 bằng ChatGPT → `docs/demo-hop-tuong/thap-art/raw_fxa_<k>.png`. Gen lại 3 tấm: `toc` (lần 1 ra lửa đỏ-cam giống `dmg` → đổi vàng điện), `crit` (khung 4 loé chéo đè giữa → loé nhỏ trên vành), `khien` (lục giác trong suốt ánh hồng → vàng đặc).
+- `fxa_mana` ChatGPT trả tấm 3:2 (ô 384×512) — cắt có đệm cho vuông, vẫn dùng được.
+- GIF xem thử trên ụ (canon) + bảng tổng: `gif/fxa_<k>.gif`, `gif/TONG-HOP.png`. Cắt bằng `scripts/cat_gif.py` (loang nền từ viền ô + tâm ô, khử viền 2 px, bỏ đảo điểm rời; hiệu ứng tông nóng đổi ánh hồng-tím sót thành khói xám). GIF: 280 px, 1 bảng MEDIANCUT, không dither; bùng 4 khung 100 ms → lặp 4 khung 125 ms ×3 (hiệu ứng 1 lần: 8 khung rồi nghỉ).
