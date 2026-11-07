@@ -4241,5 +4241,11 @@
 "Barrier +#s more + #% speed": "Khiên thêm # s + #% tốc độ",
 "Merging two #★ into #★ fires": "Ghép hai ụ #★ thành #★ thì kích",
 "#★ cannot merge again: hex off": "#★ không ghép được nữa: tắt nguyền",
-"Merge two of the same": "Ghép hai ụ giống nhau"
+"Merge two of the same": "Ghép hai ụ giống nhau",
+"CREDITS": "GHI CÔNG",
+"SOUND EFFECTS": "HIỆU ỨNG ÂM THANH",
+"Changes: trimmed, volume-normalised and layered with other sounds.": "Đã chỉnh sửa: cắt ngắn, chuẩn hoá âm lượng và trộn lớp với âm khác.",
+"Used for: breakthrough, jackpot, critical hit, button tap, back button, support pulse, victory and defeat.": "Dùng cho: đột phá, jackpot, chí mạng, chạm nút, nút quay lại, xung hỗ trợ, thắng và thua.",
+"All other sound effects are CC0 (public domain):": "Các hiệu ứng âm thanh khác là CC0 (phạm vi công cộng):",
+"Music and the remaining sounds are generated live in the game.": "Nhạc nền và các âm còn lại do game tự tạo trực tiếp."
 }

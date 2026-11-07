@@ -65,7 +65,7 @@ const JP = {
       for (const X of ds.slice(0, 4)) { const c = B.o[X.o]; if (c) G.hu.push({ k: 'jpNo', t: 0, song: 0.42, x: c.x, y: c.y, w: Math.min(B.cw, B.ch) * 1.5, mau: d.mau }); }
       const c = nguon && B.o[nguon.o]; if (c && typeof FX !== 'undefined') FX.chu1(c.x, c.y - Math.min(B.cw, B.ch) * 0.55, d.ten, d.mau, 13, 'to');
       if (!G.hu.some(o => o.k === 'jpVe')) G.hu.push({ k: 'jpVe', t: 0, song: 1e12 });
-      if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined' && SND.thucTinh) SND.thucTinh();
+      if ((!B.ai || G.che === 'pvp') && typeof SND !== 'undefined' && SND.thucTinh) { if (SND.jackpot) SND.jackpot(); else SND.thucTinh(); } // v4: âm jackpot riêng
     } catch (e) { }
   },
   // tiến độ cho tấm đếm (DEMKN): [n, N] hoặc null

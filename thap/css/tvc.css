@@ -203,3 +203,10 @@
 #nd-gt.vt7 .vt-cham { animation-delay: .24s; }
 #nd-gt.vt7 .vt-doi { animation-delay: .2s; }
 #chon button, #hm-mo button { transition-duration: var(--tg-nhan); }
+
+/* ============ GHI CÔNG (v4 âm thanh): nút CREDITS xếp CUỐI lưới (ô trống cạnh CHAT → không thêm hàng) + bảng chữ nhỏ, cuộn nếu thấp ============ */
+.hm-cai2 .hm-cre-nut { order: 99; }
+.hm-tam-cre .hm-cre { max-height: 62vh; overflow-y: auto; -webkit-overflow-scrolling: touch; font-size: 13px; line-height: 1.45; color: var(--tv-chu, #dfe4ea); }
+.hm-tam-cre .hm-cre b { display: block; font-size: 14px; letter-spacing: .08em; color: var(--tv-lam, #38e8ff); margin-bottom: 6px; }
+.hm-tam-cre .hm-cre p { margin: 0 0 8px; }
+.hm-tam-cre .hm-cre .hm-cre-by { color: var(--tv-mo, #9aa7b8); font-size: 12px; overflow-wrap: anywhere; }
